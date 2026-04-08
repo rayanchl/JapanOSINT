@@ -67,19 +67,22 @@ function randomInRange(min, max) {
 
 function generateSeedData() {
   const now = new Date();
-  return STATIONS.map(st => {
+  return STATIONS.map((st, i) => {
     // Urban stations tend to have higher values
     const isUrban = ['東京', '大阪', '名古屋', '横浜', '川崎', '北九州', '堺', '尼崎'].some(
       c => st.name.includes(c) || st.pref.includes(c)
     );
     const urbanFactor = isUrban ? 1.4 : 1.0;
 
-    const pm25 = randomInRange(5, 35) * urbanFactor;
-    const pm10 = randomInRange(10, 60) * urbanFactor;
-    const so2 = randomInRange(1, 15) * urbanFactor;
-    const no2 = randomInRange(5, 40) * urbanFactor;
-    const ox = randomInRange(10, 60);
-    const co = randomInRange(0.2, 1.5) * urbanFactor;
+    // Use station index for deterministic but varied values
+    const seed = (st.lat * 1000 + st.lon * 100 + i * 7) % 100 / 100;
+    const seasonFactor = 1.0 + 0.3 * Math.sin(Date.now() / 86400000); // varies by day
+    const pm25 = (3 + seed * 55 + (isUrban ? 15 : 0)) * seasonFactor;
+    const pm10 = (8 + seed * 80 + (isUrban ? 20 : 0)) * seasonFactor;
+    const so2 = (1 + seed * 20) * urbanFactor;
+    const no2 = (3 + seed * 50) * urbanFactor;
+    const ox = 10 + seed * 70;
+    const co = (0.1 + seed * 2.0) * urbanFactor;
 
     // AQI approximation based on PM2.5
     let aqi;

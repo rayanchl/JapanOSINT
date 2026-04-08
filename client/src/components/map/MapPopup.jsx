@@ -57,56 +57,115 @@ function CameraDetail({ properties }) {
 }
 
 function WeatherDetail({ properties }) {
+  const name = properties.prefecture_name || properties.station || properties.name || 'Station';
+  const condition = properties.weather_condition || properties.condition || '';
+  const tempHigh = properties.temperature_high ?? properties.temperature;
+  const tempLow = properties.temperature_low;
+  const humidity = properties.humidity_percent ?? properties.humidity;
+  const windSpeed = properties.wind_speed_ms ?? properties.wind_speed;
+  const windDir = properties.wind_direction || '';
+  const precip = properties.precipitation_probability;
+
   return (
     <div className="space-y-1">
-      <p className="text-sm font-medium">{properties.station || properties.name || 'Station'}</p>
-      {properties.temperature != null && (
-        <p className="font-mono text-neon-cyan text-lg">{properties.temperature}°C</p>
+      <p className="text-sm font-medium text-gray-200">{name}</p>
+      {condition && <p className="text-neon-cyan text-base">{condition}</p>}
+      {tempHigh != null && (
+        <div className="font-mono text-lg">
+          <span className="text-red-400">{tempHigh}°</span>
+          {tempLow != null && <span className="text-blue-400 ml-1">/ {tempLow}°</span>}
+        </div>
       )}
-      {properties.humidity != null && (
-        <p className="text-xs text-gray-400">Humidity: {properties.humidity}%</p>
+      {humidity != null && (
+        <p className="text-xs text-gray-400">Humidity: {humidity}%</p>
       )}
-      {properties.wind_speed != null && (
-        <p className="text-xs text-gray-400">Wind: {properties.wind_speed} m/s</p>
+      {windSpeed != null && (
+        <p className="text-xs text-gray-400">Wind: {windDir} {windSpeed} m/s</p>
       )}
-      {properties.condition && (
-        <p className="text-xs text-gray-300">{properties.condition}</p>
+      {precip != null && (
+        <p className="text-xs text-gray-400">Rain probability: {precip}%</p>
+      )}
+      {properties.weather_overview && (
+        <p className="text-xs text-gray-400 mt-1 line-clamp-3">{properties.weather_overview}</p>
       )}
     </div>
   );
 }
 
 function AirQualityDetail({ properties }) {
+  const pm25 = properties.pm25_ugm3 ?? properties.pm25;
   const aqi = properties.aqi ?? properties.value;
+  const category = properties.aqi_category || '';
+  const name = properties.station_name || properties.station || properties.name || 'Station';
+  const pref = properties.prefecture || '';
+
+  // Color based on PM2.5 or AQI
+  const val = pm25 ?? aqi ?? 0;
   let color = '#00ff88';
-  let label = 'Good';
-  if (aqi > 150) { color = '#ff4444'; label = 'Unhealthy'; }
-  else if (aqi > 100) { color = '#ff8c00'; label = 'Moderate-High'; }
-  else if (aqi > 50) { color = '#ffb74d'; label = 'Moderate'; }
+  let label = category || 'Good';
+  if (val > 55) { color = '#ff4444'; label = category || 'Unhealthy'; }
+  else if (val > 35) { color = '#ff8c00'; label = category || 'Unhealthy for Sensitive'; }
+  else if (val > 12) { color = '#ffb74d'; label = category || 'Moderate'; }
 
   return (
-    <div className="space-y-1">
-      <p className="text-sm font-medium">{properties.station || properties.name || 'Station'}</p>
+    <div className="space-y-2">
+      <p className="text-sm font-medium text-gray-200">{name}</p>
+      {pref && <p className="text-xs text-gray-500">{pref}</p>}
       <div className="flex items-center gap-2">
-        <span className="text-2xl font-mono font-bold" style={{ color }}>{aqi ?? '?'}</span>
-        <span className="text-xs px-2 py-0.5 rounded" style={{ background: color + '22', color }}>{label}</span>
+        <span className="text-2xl font-mono font-bold" style={{ color }}>{pm25 ?? aqi ?? '?'}</span>
+        <div>
+          <span className="text-xs px-2 py-0.5 rounded block" style={{ background: color + '22', color }}>{label}</span>
+          <span className="text-[10px] text-gray-500 mt-0.5 block">PM2.5 µg/m³</span>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
+        {properties.pm10_ugm3 != null && (
+          <><span className="text-gray-400">PM10</span><span className="font-mono text-gray-200">{properties.pm10_ugm3} µg/m³</span></>
+        )}
+        {properties.no2_ppb != null && (
+          <><span className="text-gray-400">NO₂</span><span className="font-mono text-gray-200">{properties.no2_ppb} ppb</span></>
+        )}
+        {properties.so2_ppb != null && (
+          <><span className="text-gray-400">SO₂</span><span className="font-mono text-gray-200">{properties.so2_ppb} ppb</span></>
+        )}
+        {properties.ox_ppb != null && (
+          <><span className="text-gray-400">Ox</span><span className="font-mono text-gray-200">{properties.ox_ppb} ppb</span></>
+        )}
+        {properties.co_ppm != null && (
+          <><span className="text-gray-400">CO</span><span className="font-mono text-gray-200">{properties.co_ppm} ppm</span></>
+        )}
       </div>
     </div>
   );
 }
 
 function RadiationDetail({ properties }) {
-  const value = properties.value ?? properties.nGy;
+  const value = properties.dose_rate_nGyh ?? properties.value ?? properties.nGy;
+  const name = properties.station_name || properties.station || properties.name || 'Station';
+  const pref = properties.prefecture || '';
+  const status = properties.status || '';
+
   let color = '#00ff88';
-  if (value > 100) color = '#ff4444';
-  else if (value > 50) color = '#ffd600';
+  let statusLabel = 'Normal';
+  if (value > 200) { color = '#ff4444'; statusLabel = 'Elevated'; }
+  else if (value > 100) { color = '#ff8c00'; statusLabel = 'Attention'; }
+  else if (value > 50) { color = '#ffd600'; statusLabel = 'Monitoring'; }
 
   return (
     <div className="space-y-1">
-      <p className="text-sm font-medium">{properties.station || properties.name || 'Station'}</p>
+      <p className="text-sm font-medium text-gray-200">{name}</p>
+      {pref && <p className="text-xs text-gray-500">{pref}</p>}
       <p className="font-mono text-xl font-bold" style={{ color }}>
-        {value ?? '?'} <span className="text-xs text-gray-400">nGy/h</span>
+        {value != null ? value.toFixed(1) : '?'} <span className="text-xs text-gray-400">nGy/h</span>
       </p>
+      <span className="text-xs px-2 py-0.5 rounded" style={{ background: color + '22', color }}>
+        {status || statusLabel}
+      </span>
+      {properties.measured_at && (
+        <p className="text-[10px] text-gray-500 mt-1 font-mono">
+          {new Date(properties.measured_at).toLocaleString('en-GB', { timeZone: 'Asia/Tokyo' })} JST
+        </p>
+      )}
     </div>
   );
 }
