@@ -1,0 +1,336 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   JapanOSINT Dark OSINT Theme
+   ======================================== */
+
+:root {
+  --osint-bg: #0a0e17;
+  --osint-surface: #111827;
+  --osint-panel: #1a2035;
+  --osint-border: #1e293b;
+  --neon-cyan: #00f0ff;
+  --neon-green: #00ff88;
+  --neon-orange: #ff8c00;
+  --neon-red: #ff4444;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--osint-bg);
+  color: #e5e7eb;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ========================================
+   Map Container
+   ======================================== */
+
+.map-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+.map-wrapper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* ========================================
+   Custom Scrollbar
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--osint-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2d3a52;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3b4f6e;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2d3a52 var(--osint-bg);
+}
+
+/* ========================================
+   Neon Glow Effects
+   ======================================== */
+
+.neon-glow-cyan {
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.4), 0 0 20px rgba(0, 240, 255, 0.1);
+}
+
+.neon-glow-green {
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.4), 0 0 20px rgba(0, 255, 136, 0.1);
+}
+
+.neon-glow-red {
+  box-shadow: 0 0 8px rgba(255, 68, 68, 0.4), 0 0 20px rgba(255, 68, 68, 0.1);
+}
+
+.neon-border {
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.neon-border:hover {
+  border-color: rgba(0, 240, 255, 0.6);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+}
+
+.neon-text {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+}
+
+/* ========================================
+   Pulse Animations for Live Data
+   ======================================== */
+
+@keyframes pulse-live {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.pulse-live {
+  animation: pulse-live 2s ease-in-out infinite;
+}
+
+.pulse-ring {
+  animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+.live-indicator {
+  position: relative;
+}
+
+.live-indicator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: inherit;
+  transform: translate(-50%, -50%);
+  animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+/* ========================================
+   MapLibre Popup Overrides (Dark Theme)
+   ======================================== */
+
+.maplibregl-popup-content {
+  background: rgba(17, 24, 39, 0.95) !important;
+  color: #e5e7eb !important;
+  border: 1px solid rgba(0, 240, 255, 0.3) !important;
+  border-radius: 8px !important;
+  padding: 12px 16px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 240, 255, 0.1) !important;
+  font-family: 'Inter', sans-serif !important;
+  max-width: 320px !important;
+}
+
+.maplibregl-popup-tip {
+  border-top-color: rgba(17, 24, 39, 0.95) !important;
+}
+
+.maplibregl-popup-close-button {
+  color: #9ca3af !important;
+  font-size: 18px !important;
+  padding: 4px 8px !important;
+}
+
+.maplibregl-popup-close-button:hover {
+  color: var(--neon-cyan) !important;
+  background: transparent !important;
+}
+
+/* MapLibre controls dark theme */
+.maplibregl-ctrl-group {
+  background: rgba(17, 24, 39, 0.9) !important;
+  border: 1px solid var(--osint-border) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+.maplibregl-ctrl-group button {
+  background-color: transparent !important;
+  border-color: var(--osint-border) !important;
+}
+
+.maplibregl-ctrl-group button:hover {
+  background-color: rgba(0, 240, 255, 0.1) !important;
+}
+
+.maplibregl-ctrl-group button + button {
+  border-top: 1px solid var(--osint-border) !important;
+}
+
+.maplibregl-ctrl-group button span {
+  filter: invert(1);
+}
+
+.maplibregl-ctrl-scale {
+  background: rgba(17, 24, 39, 0.8) !important;
+  color: #9ca3af !important;
+  border-color: #4b5563 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+}
+
+/* ========================================
+   Layer Panel
+   ======================================== */
+
+.layer-panel {
+  background: rgba(10, 14, 23, 0.92);
+  backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(0, 240, 255, 0.15);
+}
+
+.layer-toggle {
+  transition: all 0.2s ease;
+}
+
+.layer-toggle:hover {
+  background: rgba(0, 240, 255, 0.05);
+}
+
+.layer-toggle.active {
+  background: rgba(0, 240, 255, 0.08);
+  border-left: 2px solid var(--neon-cyan);
+}
+
+/* Toggle switch */
+.toggle-switch {
+  width: 36px;
+  height: 20px;
+  background: #374151;
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.toggle-switch.on {
+  background: rgba(0, 240, 255, 0.4);
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: #9ca3af;
+  border-radius: 50%;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.toggle-switch.on::after {
+  transform: translateX(16px);
+  background: var(--neon-cyan);
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
+}
+
+/* ========================================
+   Source Status Indicators
+   ======================================== */
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-online {
+  background: var(--neon-green);
+  box-shadow: 0 0 6px rgba(0, 255, 136, 0.6);
+}
+
+.status-degraded {
+  background: #ffb74d;
+  box-shadow: 0 0 6px rgba(255, 183, 77, 0.6);
+}
+
+.status-offline {
+  background: var(--neon-red);
+  box-shadow: 0 0 6px rgba(255, 68, 68, 0.6);
+}
+
+/* ========================================
+   Utility Classes
+   ======================================== */
+
+.glass-panel {
+  background: rgba(17, 24, 39, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  border-radius: 8px;
+}
+
+.data-value {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--neon-cyan);
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.scanline-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.3), transparent);
+  animation: scanline 4s linear infinite;
+  pointer-events: none;
+}
