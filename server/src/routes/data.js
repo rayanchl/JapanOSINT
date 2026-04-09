@@ -636,4 +636,39 @@ router.get('/coast-guard-stations', async (_req, res) => {
   await respondWithData(res, { sourceId: 'coast-guard-stations', layerType: 'coast-guard-stations', collectorKey: 'coast-guard-stations' });
 });
 
+// ===========================================================================
+// Wave 5: Industry + Energy Deep
+// ===========================================================================
+router.get('/auto-plants', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'auto-plants', layerType: 'auto-plants', collectorKey: 'auto-plants' });
+});
+
+router.get('/steel-mills', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'steel-mills', layerType: 'steel-mills', collectorKey: 'steel-mills' });
+});
+
+router.get('/petrochemical', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'petrochemical', layerType: 'petrochemical', collectorKey: 'petrochemical' });
+});
+
+router.get('/refineries', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'refineries', layerType: 'refineries', collectorKey: 'refineries' });
+});
+
+router.get('/semiconductor-fabs', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'semiconductor-fabs', layerType: 'semiconductor-fabs', collectorKey: 'semiconductor-fabs' });
+});
+
+router.get('/shipyards', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'shipyards', layerType: 'shipyards', collectorKey: 'shipyards' });
+});
+
+router.get('/petroleum-stockpile', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'petroleum-stockpile', layerType: 'petroleum-stockpile', collectorKey: 'petroleum-stockpile' });
+});
+
+router.get('/wind-turbines', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wind-turbines', layerType: 'wind-turbines', collectorKey: 'wind-turbines' });
+});
+
 export default router;

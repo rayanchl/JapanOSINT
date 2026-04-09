@@ -93,6 +93,16 @@ import usfjBases from './usfjBases.js';
 import radarSites from './radarSites.js';
 import coastGuardStations from './coastGuardStations.js';
 
+// Wave 5: Industry + Energy Deep
+import autoPlants from './autoPlants.js';
+import steelMills from './steelMills.js';
+import petrochemical from './petrochemical.js';
+import refineries from './refineries.js';
+import semiconductorFabs from './semiconductorFabs.js';
+import shipyards from './shipyards.js';
+import petroleumStockpile from './petroleumStockpile.js';
+import windTurbines from './windTurbines.js';
+
 export const collectors = {
   'jma-earthquake': jmaEarthquake,
   'jma-weather': jmaWeather,
@@ -183,6 +193,16 @@ export const collectors = {
   'usfj-bases': usfjBases,
   'radar-sites': radarSites,
   'coast-guard-stations': coastGuardStations,
+
+  // Wave 5: Industry + Energy Deep
+  'auto-plants': autoPlants,
+  'steel-mills': steelMills,
+  'petrochemical': petrochemical,
+  'refineries': refineries,
+  'semiconductor-fabs': semiconductorFabs,
+  'shipyards': shipyards,
+  'petroleum-stockpile': petroleumStockpile,
+  'wind-turbines': windTurbines,
 };
 
 /**

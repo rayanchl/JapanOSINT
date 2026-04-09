@@ -1948,6 +1948,248 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
       });
       break;
 
+    // Wave 5: Industry + Energy Deep
+    case 'autoPlants':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'employees'], 1500],
+            1000, 4,
+            5000, 8,
+            10000, 12,
+          ],
+          'circle-color': [
+            'match', ['get', 'brand'],
+            'Toyota', '#e53935', 'Lexus', '#b71c1c',
+            'Nissan', '#1565c0', 'Honda', '#00838f',
+            'Mazda', '#5d4037', 'Subaru', '#0277bd',
+            'Mitsubishi', '#c62828', 'Suzuki', '#1976d2',
+            'Daihatsu', '#d84315', 'Isuzu', '#388e3c',
+            'Hino', '#558b2f', 'Kawasaki', '#33691e',
+            'Yamaha', '#283593',
+            '#d84315',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'steelMills':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'capacity_mt_yr'], 1],
+            0, 5,
+            5, 9,
+            12, 14,
+          ],
+          'circle-color': [
+            'match', ['get', 'company'],
+            'Nippon Steel', '#5d4037',
+            'JFE', '#3e2723',
+            'Kobelco', '#8d6e63',
+            'Daido', '#6d4c41',
+            'Tokyo Steel', '#a1887f',
+            'Nisshin', '#795548',
+            '#5d4037',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'petrochemical':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'ethylene_capacity_kt_yr'], 200],
+            0, 6,
+            1000, 10,
+            3500, 16,
+          ],
+          'circle-color': '#6a1b9a',
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'refineries':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'capacity_bpd'], 100000],
+            50000, 5,
+            150000, 9,
+            300000, 13,
+            400000, 16,
+          ],
+          'circle-color': [
+            'match', ['get', 'company'],
+            'ENEOS', '#ff6f00',
+            'Idemitsu', '#e65100',
+            'Cosmo', '#bf360c',
+            'Showa Yokkaichi', '#d84315',
+            'Toa Oil', '#f57c00',
+            'Fuji Oil', '#fb8c00',
+            'Taiyo Oil', '#ef6c00',
+            'Seibu Oil', '#e65100',
+            'Kashima Oil', '#bf360c',
+            '#e65100',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'semiconductorFabs':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'wafer_size_mm'], 200],
+            100, 5,
+            200, 7,
+            300, 11,
+          ],
+          'circle-color': [
+            'match', ['get', 'company'],
+            'Kioxia', '#1565c0',
+            'Sony', '#00838f',
+            'Renesas', '#283593',
+            'Rohm', '#1976d2',
+            'Mitsubishi Electric', '#c62828',
+            'Fuji Electric', '#0277bd',
+            'TSMC JASM', '#d32f2f',
+            'Rapidus', '#7b1fa2',
+            'Micron Japan', '#1565c0',
+            'WD/Kioxia', '#00897b',
+            '#1565c0',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'shipyards':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'max_dwt'], 50000],
+            30000, 5,
+            150000, 9,
+            300000, 14,
+          ],
+          'circle-color': [
+            'match', ['get', 'kind'],
+            'commercial_navy', '#33691e',
+            'navy', '#1b5e20',
+            'submarine', '#d50000',
+            'commercial', '#00695c',
+            '#00695c',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'petroleumStockpile':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'capacity_kl'], 500000],
+            500000, 6,
+            2000000, 10,
+            6000000, 16,
+          ],
+          'circle-color': [
+            'match', ['get', 'kind'],
+            'national', '#bf360c',
+            'national_lpg', '#f57c00',
+            'commercial', '#a1887f',
+            '#bf360c',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffeb3b',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'windTurbines':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'capacity_mw'], 10],
+            5, 4,
+            30, 7,
+            100, 11,
+            150, 14,
+          ],
+          'circle-color': [
+            'match', ['get', 'kind'],
+            'offshore_floating', '#01579b',
+            'offshore', '#0277bd',
+            'onshore', '#43a047',
+            '#43a047',
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
     default:
       map.addLayer({
         id: mainLayerId,

@@ -516,6 +516,64 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/coast-guard-stations',
     category: 'Defense',
   },
+
+  // Wave 5: Industry + Energy Deep
+  autoPlants: {
+    name: 'Auto Plants',
+    icon: '\u{1F697}',
+    color: '#d84315',
+    endpoint: '/api/data/auto-plants',
+    category: 'Industry',
+  },
+  steelMills: {
+    name: 'Steel Mills',
+    icon: '\u{1F3ED}',
+    color: '#5d4037',
+    endpoint: '/api/data/steel-mills',
+    category: 'Industry',
+  },
+  petrochemical: {
+    name: 'Petrochemical',
+    icon: '\u{2697}',
+    color: '#6a1b9a',
+    endpoint: '/api/data/petrochemical',
+    category: 'Industry',
+  },
+  refineries: {
+    name: 'Oil Refineries',
+    icon: '\u{26FD}',
+    color: '#e65100',
+    endpoint: '/api/data/refineries',
+    category: 'Industry',
+  },
+  semiconductorFabs: {
+    name: 'Semiconductor Fabs',
+    icon: '\u{1F4BB}',
+    color: '#1565c0',
+    endpoint: '/api/data/semiconductor-fabs',
+    category: 'Industry',
+  },
+  shipyards: {
+    name: 'Shipyards',
+    icon: '\u{1F6A2}',
+    color: '#00695c',
+    endpoint: '/api/data/shipyards',
+    category: 'Industry',
+  },
+  petroleumStockpile: {
+    name: 'Petroleum Stockpile',
+    icon: '\u{1F6E2}',
+    color: '#bf360c',
+    endpoint: '/api/data/petroleum-stockpile',
+    category: 'Industry',
+  },
+  windTurbines: {
+    name: 'Wind Turbines',
+    icon: '\u{1F300}',
+    color: '#43a047',
+    endpoint: '/api/data/wind-turbines',
+    category: 'Industry',
+  },
 };
 
 export const LAYER_CATEGORIES = [
@@ -528,6 +586,7 @@ export const LAYER_CATEGORIES = [
   'Statistics',
   'Government',
   'Defense',
+  'Industry',
   'Social',
   'Marketplace',
   'Cyber',
