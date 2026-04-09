@@ -327,6 +327,603 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
       });
       break;
 
+    // ── Twitter/X geocoded posts ───────────────────────────────
+    case 'twitterGeo':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'engagement'], ['get', 'likes'], 1],
+            0, 3,
+            10, 5,
+            100, 8,
+            1000, 14,
+            10000, 22,
+          ],
+          'circle-color': '#1da1f2',
+          'circle-opacity': opacity * 0.75,
+          'circle-stroke-width': 0.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.4,
+        },
+      });
+      break;
+
+    // ── Facebook check-ins ─────────────────────────────────────
+    case 'facebookGeo':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'checkins'], 1],
+            0, 4,
+            100, 8,
+            1000, 14,
+            10000, 22,
+          ],
+          'circle-color': '#4267b2',
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.4,
+        },
+      });
+      break;
+
+    // ── Snapchat heatmap ───────────────────────────────────────
+    case 'snapchatHeatmap':
+      map.addLayer({
+        id: `${mainLayerId}-heat`,
+        type: 'heatmap',
+        source: sourceId,
+        paint: {
+          'heatmap-weight': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'activity'], ['get', 'snaps'], 1],
+            0, 0,
+            100, 1,
+          ],
+          'heatmap-intensity': 1.4,
+          'heatmap-color': [
+            'interpolate', ['linear'], ['heatmap-density'],
+            0, 'rgba(0,0,0,0)',
+            0.2, '#332b00',
+            0.4, '#806d00',
+            0.6, '#ccae00',
+            0.8, '#ffd700',
+            1, '#fffc00',
+          ],
+          'heatmap-radius': 30,
+          'heatmap-opacity': opacity * 0.75,
+        },
+      });
+      break;
+
+    // ── Marketplace: classifieds ───────────────────────────────
+    case 'classifieds':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 4,
+          'circle-color': [
+            'match', ['coalesce', ['get', 'category'], 'other'],
+            'free_items', '#4caf50',
+            'barter', '#ff9800',
+            'jobs', '#2196f3',
+            'services', '#9c27b0',
+            'vehicles', '#f44336',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.75,
+          'circle-stroke-width': 0.5,
+          'circle-stroke-color': '#000',
+          'circle-stroke-opacity': opacity * 0.3,
+        },
+      });
+      break;
+
+    // ── Real estate ────────────────────────────────────────────
+    case 'realEstate':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'price_jpy'], ['get', 'rent_jpy'], 50000],
+            0, 3,
+            50000, 5,
+            200000, 9,
+            1000000, 14,
+            50000000, 20,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'listing_type'], 'rent'],
+            'rent', '#8bc34a',
+            'sale', '#ff7043',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.75,
+          'circle-stroke-width': 0.5,
+          'circle-stroke-color': '#000',
+          'circle-stroke-opacity': opacity * 0.3,
+        },
+      });
+      break;
+
+    // ── Job boards ─────────────────────────────────────────────
+    case 'jobBoards':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 3.5,
+          'circle-color': [
+            'match', ['coalesce', ['get', 'employment_type'], 'other'],
+            'part_time', '#a1887f',
+            'full_time', '#6d4c41',
+            'temporary', '#bcaaa4',
+            'gig', '#ff7043',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.7,
+          'circle-stroke-width': 0.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.2,
+        },
+      });
+      break;
+
+    // ── Google dorking results ─────────────────────────────────
+    case 'googleDorking':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 5,
+          'circle-color': [
+            'match', ['coalesce', ['get', 'dork_category'], 'other'],
+            'exposed_admin', '#f44336',
+            'exposed_files', '#ff9800',
+            'open_directories', '#ffeb3b',
+            'cameras', '#e91e63',
+            'iot_devices', '#9c27b0',
+            'government', '#2196f3',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#000',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    // ── Shodan IoT devices ─────────────────────────────────────
+    case 'shodanIot':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 4,
+          'circle-color': [
+            'match', ['coalesce', ['get', 'device_type'], 'other'],
+            'ip_camera', '#e91e63',
+            'router', '#03a9f4',
+            'nas', '#4caf50',
+            'scada', '#f44336',
+            'plc', '#ff5722',
+            'printer', '#9e9e9e',
+            'database', '#9c27b0',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 0.5,
+          'circle-stroke-color': '#000',
+          'circle-stroke-opacity': opacity * 0.4,
+        },
+      });
+      break;
+
+    // ── Open webcams ───────────────────────────────────────────
+    case 'insecamWebcams':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 6,
+          'circle-color': '#e91e63',
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    // ── WiFi networks ──────────────────────────────────────────
+    case 'wifiNetworks':
+      map.addLayer({
+        id: `${mainLayerId}-heat`,
+        type: 'heatmap',
+        source: sourceId,
+        paint: {
+          'heatmap-weight': 0.5,
+          'heatmap-intensity': 1.2,
+          'heatmap-color': [
+            'interpolate', ['linear'], ['heatmap-density'],
+            0, 'rgba(0,0,0,0)',
+            0.2, '#003355',
+            0.4, '#005577',
+            0.6, '#0077aa',
+            0.8, '#00aacc',
+            1, '#00ffff',
+          ],
+          'heatmap-radius': 18,
+          'heatmap-opacity': opacity * 0.7,
+        },
+      });
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 2,
+          'circle-color': '#00bcd4',
+          'circle-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
+    // ── Maritime AIS ───────────────────────────────────────────
+    case 'maritimeAis':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'length_m'], 50],
+            0, 3,
+            50, 5,
+            150, 8,
+            300, 12,
+            400, 16,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'vessel_type'], 'other'],
+            'cargo', '#0277bd',
+            'tanker', '#ef6c00',
+            'fishing', '#558b2f',
+            'passenger', '#7c4dff',
+            'military', '#c62828',
+            'tug', '#5d4037',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 0.5,
+          'circle-stroke-color': '#000',
+          'circle-stroke-opacity': opacity * 0.4,
+        },
+      });
+      break;
+
+    // ── Flight ADS-B ───────────────────────────────────────────
+    case 'flightAdsb':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'altitude_ft'], 0],
+            0, 3,
+            10000, 5,
+            30000, 8,
+            40000, 11,
+          ],
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'altitude_ft'], 0],
+            0, '#7c4dff',
+            10000, '#536dfe',
+            20000, '#448aff',
+            30000, '#40c4ff',
+            40000, '#18ffff',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 0.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.4,
+        },
+      });
+      break;
+
+    // ── Full transport (nationwide rail) ───────────────────────
+    case 'fullTransport':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'match', ['coalesce', ['get', 'station_type'], 'other'],
+            'shinkansen', 7,
+            'jr_major', 5,
+            'subway', 3.5,
+            'private', 3,
+            4,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'station_type'], 'other'],
+            'shinkansen', '#e53935',
+            'jr_major', '#43a047',
+            'subway', '#1e88e5',
+            'private', '#fb8c00',
+            'monorail', '#8e24aa',
+            'tram', '#00897b',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 0.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.4,
+        },
+      });
+      break;
+
+    // ── Bus terminals ──────────────────────────────────────────
+    case 'busRoutes':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 5,
+          'circle-color': '#fb8c00',
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.4,
+        },
+      });
+      break;
+
+    // ── Ferry terminals ────────────────────────────────────────
+    case 'ferryRoutes':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 6,
+          'circle-color': '#039be5',
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    // ── Highway IC/JCT/SA/PA ───────────────────────────────────
+    case 'highwayTraffic':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'match', ['coalesce', ['get', 'facility_type'], 'IC'],
+            'JCT', 7,
+            'SA', 6,
+            'PA', 4,
+            'IC', 5,
+            5,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'congestion'], 'free'],
+            'jam', '#f44336',
+            'congested', '#ff9800',
+            'slow', '#ffeb3b',
+            '#4caf50',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#000',
+          'circle-stroke-opacity': opacity * 0.4,
+        },
+      });
+      break;
+
+    // ── Electrical grid ────────────────────────────────────────
+    case 'electricalGrid':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'capacity_mw'], 0],
+            0, 4,
+            500, 6,
+            1500, 9,
+            3000, 13,
+            6000, 18,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'facility_type'], 'other'],
+            'thermal', '#ff5722',
+            'hydro', '#03a9f4',
+            'hydro_pumped', '#0288d1',
+            'geothermal', '#d84315',
+            'wind', '#80deea',
+            'solar', '#ffd54f',
+            'substation', '#9e9e9e',
+            'frequency_converter', '#ab47bc',
+            'hvdc_converter', '#7e57c2',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#000',
+          'circle-stroke-opacity': opacity * 0.4,
+        },
+      });
+      break;
+
+    // ── Gas network ────────────────────────────────────────────
+    case 'gasNetwork':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'capacity_kt'], 0],
+            0, 4,
+            300, 7,
+            1000, 11,
+            3000, 16,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'facility_type'], 'other'],
+            'lng_terminal', '#ff5722',
+            'distribution', '#ff9800',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#000',
+          'circle-stroke-opacity': opacity * 0.4,
+        },
+      });
+      break;
+
+    // ── Water infrastructure ───────────────────────────────────
+    case 'waterInfra':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'capacity_mcm'], 0],
+            0, 4,
+            10, 6,
+            100, 9,
+            500, 13,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'facility_type'], 'other'],
+            'dam', '#1e88e5',
+            'water_treatment', '#29b6f6',
+            'sewage', '#7e57c2',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#000',
+          'circle-stroke-opacity': opacity * 0.4,
+        },
+      });
+      break;
+
+    // ── Cell towers ────────────────────────────────────────────
+    case 'cellTowers':
+      map.addLayer({
+        id: `${mainLayerId}-heat`,
+        type: 'heatmap',
+        source: sourceId,
+        paint: {
+          'heatmap-weight': 0.4,
+          'heatmap-intensity': 1.1,
+          'heatmap-color': [
+            'interpolate', ['linear'], ['heatmap-density'],
+            0, 'rgba(0,0,0,0)',
+            0.2, '#1a0033',
+            0.4, '#330066',
+            0.6, '#660099',
+            0.8, '#9c27b0',
+            1, '#e040fb',
+          ],
+          'heatmap-radius': 14,
+          'heatmap-opacity': opacity * 0.6,
+        },
+      });
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 2.5,
+          'circle-color': [
+            'match', ['coalesce', ['get', 'carrier'], 'other'],
+            'NTT Docomo', '#d32f2f',
+            'au by KDDI', '#fb8c00',
+            'SoftBank', '#9e9e9e',
+            'Rakuten Mobile', '#bf360c',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.7,
+          'circle-stroke-width': 0.3,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.3,
+        },
+      });
+      break;
+
+    // ── Nuclear facilities ─────────────────────────────────────
+    case 'nuclearFacilities':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'capacity_mw'], 0],
+            0, 6,
+            1000, 10,
+            3000, 14,
+            8000, 20,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'status'], 'other'],
+            'active', '#76ff03',
+            'restart_approved', '#cddc39',
+            'restart_pending', '#ffeb3b',
+            'suspended', '#ff9800',
+            'decommissioning', '#9e9e9e',
+            'commissioning', '#80d8ff',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffd600',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
     default:
       map.addLayer({
         id: mainLayerId,
