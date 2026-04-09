@@ -1204,6 +1204,273 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
       });
       break;
 
+    // ── Wave 2: Health + Statistics + Commerce ─────────────────────
+    case 'pharmacyMap':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 5,
+          'circle-color': '#26a69a',
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
+    case 'convenienceStores':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 4,
+          'circle-color': [
+            'match', ['get', 'brand'],
+            '7-Eleven', '#ff6b35',
+            'FamilyMart', '#1a73e8',
+            'Lawson', '#0077c8',
+            'MiniStop', '#f1c232',
+            'NewDays', '#43a047',
+            '#43a047',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    case 'gasStations':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 5,
+          'circle-color': [
+            'match', ['get', 'brand'],
+            'ENEOS', '#e60012',
+            'Idemitsu', '#ee7800',
+            'Cosmo', '#003da5',
+            'Shell', '#fbce07',
+            'JA-SS', '#43a047',
+            '#e64a19',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    case 'tabelogRestaurants':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'rating'], 3.5],
+            3.0, 4,
+            4.0, 7,
+            4.5, 10,
+            5.0, 14,
+          ],
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'rating'], 3.5],
+            3.0, '#ffcc80',
+            4.0, '#fb8c00',
+            4.5, '#e65100',
+            5.0, '#bf360c',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
+    case 'estatCensus':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'population'], 1000000],
+            500000, 6,
+            1000000, 10,
+            5000000, 18,
+            14000000, 30,
+          ],
+          'circle-color': '#5e35b1',
+          'circle-opacity': opacity * 0.55,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#b39ddb',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'resasPopulation':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'population'], 500000],
+            100000, 5,
+            500000, 9,
+            1500000, 15,
+            3700000, 24,
+          ],
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'age_65plus_pct'], 25],
+            15, '#3949ab',
+            25, '#7e57c2',
+            35, '#e91e63',
+            45, '#b71c1c',
+          ],
+          'circle-opacity': opacity * 0.7,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
+    case 'resasTourism':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'visitors_yr'], 1000000],
+            500000, 4,
+            5000000, 9,
+            15000000, 16,
+            100000000, 28,
+          ],
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'foreign_pct'], 20],
+            5, '#80deea',
+            25, '#00acc1',
+            50, '#006064',
+            70, '#311b92',
+          ],
+          'circle-opacity': opacity * 0.75,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
+    case 'resasIndustry':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'employees'], 100000],
+            10000, 5,
+            100000, 10,
+            500000, 18,
+            4500000, 30,
+          ],
+          'circle-color': [
+            'match', ['get', 'primary_sector'],
+            'manufacturing', '#6d4c41',
+            'services', '#1e88e5',
+            'agriculture', '#7cb342',
+            'fishery', '#0097a7',
+            '#9e9e9e',
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
+    case 'mlitTransaction':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'transactions_q'], 200],
+            50, 4,
+            200, 8,
+            300, 12,
+          ],
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'avg_price_yen_per_m2'], 1500000],
+            500000, '#a5d6a7',
+            1500000, '#66bb6a',
+            3500000, '#fb8c00',
+            6500000, '#b71c1c',
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
+    case 'damWaterLevel':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'capacity_m3'], 50000000],
+            10000000, 5,
+            100000000, 10,
+            300000000, 16,
+            660000000, 24,
+          ],
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'current_pct'], 70],
+            0, '#b71c1c',
+            40, '#fb8c00',
+            70, '#42a5f5',
+            90, '#0277bd',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
     default:
       map.addLayer({
         id: mainLayerId,

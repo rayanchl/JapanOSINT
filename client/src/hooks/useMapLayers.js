@@ -314,6 +314,78 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/jma-intensity',
     category: 'Environment',
   },
+
+  // ── Wave 2: Health + Statistics + Commerce ──────────────────────
+  pharmacyMap: {
+    name: 'Pharmacies',
+    icon: '\u{1F48A}',
+    color: '#26a69a',
+    endpoint: '/api/data/pharmacy-map',
+    category: 'Health',
+  },
+  convenienceStores: {
+    name: 'Konbini',
+    icon: '\u{1F3EA}',
+    color: '#43a047',
+    endpoint: '/api/data/convenience-stores',
+    category: 'Marketplace',
+  },
+  gasStations: {
+    name: 'Gas Stations',
+    icon: '\u{26FD}',
+    color: '#e64a19',
+    endpoint: '/api/data/gas-stations',
+    category: 'Infrastructure',
+  },
+  tabelogRestaurants: {
+    name: 'Restaurants',
+    icon: '\u{1F371}',
+    color: '#fb8c00',
+    endpoint: '/api/data/tabelog-restaurants',
+    category: 'Marketplace',
+  },
+  estatCensus: {
+    name: 'e-Stat Census',
+    icon: '\u{1F4CB}',
+    color: '#5e35b1',
+    endpoint: '/api/data/estat-census',
+    category: 'Statistics',
+  },
+  resasPopulation: {
+    name: 'RESAS Population',
+    icon: '\u{1F465}',
+    color: '#3949ab',
+    endpoint: '/api/data/resas-population',
+    category: 'Statistics',
+  },
+  resasTourism: {
+    name: 'Tourism Sites',
+    icon: '\u{1F5FE}',
+    color: '#00acc1',
+    endpoint: '/api/data/resas-tourism',
+    category: 'Statistics',
+  },
+  resasIndustry: {
+    name: 'Industry Hubs',
+    icon: '\u{1F3ED}',
+    color: '#6d4c41',
+    endpoint: '/api/data/resas-industry',
+    category: 'Statistics',
+  },
+  mlitTransaction: {
+    name: 'Land Transactions',
+    icon: '\u{1F3E0}',
+    color: '#558b2f',
+    endpoint: '/api/data/mlit-transaction',
+    category: 'Economy',
+  },
+  damWaterLevel: {
+    name: 'Dam Water Levels',
+    icon: '\u{1F3DE}',
+    color: '#0288d1',
+    endpoint: '/api/data/dam-water-level',
+    category: 'Infrastructure',
+  },
 };
 
 export const LAYER_CATEGORIES = [
@@ -322,6 +394,7 @@ export const LAYER_CATEGORIES = [
   'Safety',
   'Health',
   'Economy',
+  'Statistics',
   'Social',
   'Marketplace',
   'Cyber',

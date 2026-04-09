@@ -433,4 +433,88 @@ router.get('/jma-intensity', async (_req, res) => {
   });
 });
 
+// ===========================================================================
+// Wave 2: Health + Statistics + Commerce
+// ===========================================================================
+
+router.get('/pharmacy-map', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'pharmacy-map',
+    layerType: 'pharmacy-map',
+    collectorKey: 'pharmacy-map',
+  });
+});
+
+router.get('/convenience-stores', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'convenience-stores',
+    layerType: 'convenience-stores',
+    collectorKey: 'convenience-stores',
+  });
+});
+
+router.get('/gas-stations', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'gas-stations',
+    layerType: 'gas-stations',
+    collectorKey: 'gas-stations',
+  });
+});
+
+router.get('/tabelog-restaurants', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'tabelog-restaurants',
+    layerType: 'tabelog-restaurants',
+    collectorKey: 'tabelog-restaurants',
+  });
+});
+
+router.get('/estat-census', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'estat-census',
+    layerType: 'estat-census',
+    collectorKey: 'estat-census',
+  });
+});
+
+router.get('/resas-population', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'resas-population',
+    layerType: 'resas-population',
+    collectorKey: 'resas-population',
+  });
+});
+
+router.get('/resas-tourism', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'resas-tourism',
+    layerType: 'resas-tourism',
+    collectorKey: 'resas-tourism',
+  });
+});
+
+router.get('/resas-industry', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'resas-industry',
+    layerType: 'resas-industry',
+    collectorKey: 'resas-industry',
+  });
+});
+
+router.get('/mlit-transaction', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'mlit-transaction',
+    layerType: 'mlit-transaction',
+    collectorKey: 'mlit-transaction',
+  });
+});
+
+router.get('/dam-water-level', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'dam-water-level',
+    layerType: 'dam-water-level',
+    collectorKey: 'dam-water-level',
+  });
+});
+
 export default router;

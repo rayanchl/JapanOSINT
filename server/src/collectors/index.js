@@ -59,6 +59,18 @@ import hiNet from './hiNet.js';
 import kNet from './kNet.js';
 import jmaIntensity from './jmaIntensity.js';
 
+// Wave 2: Health + Statistics + Commerce
+import pharmacyMap from './pharmacyMap.js';
+import convenienceStores from './convenienceStores.js';
+import gasStations from './gasStations.js';
+import tabelogRestaurants from './tabelogRestaurants.js';
+import estatCensus from './estatCensus.js';
+import resasPopulation from './resasPopulation.js';
+import resasTourism from './resasTourism.js';
+import resasIndustry from './resasIndustry.js';
+import mlitTransaction from './mlitTransaction.js';
+import damWaterLevel from './damWaterLevel.js';
+
 export const collectors = {
   'jma-earthquake': jmaEarthquake,
   'jma-weather': jmaWeather,
@@ -115,6 +127,18 @@ export const collectors = {
   'hi-net': hiNet,
   'k-net': kNet,
   'jma-intensity': jmaIntensity,
+
+  // Wave 2: Health + Statistics + Commerce
+  'pharmacy-map': pharmacyMap,
+  'convenience-stores': convenienceStores,
+  'gas-stations': gasStations,
+  'tabelog-restaurants': tabelogRestaurants,
+  'estat-census': estatCensus,
+  'resas-population': resasPopulation,
+  'resas-tourism': resasTourism,
+  'resas-industry': resasIndustry,
+  'mlit-transaction': mlitTransaction,
+  'dam-water-level': damWaterLevel,
 };
 
 /**

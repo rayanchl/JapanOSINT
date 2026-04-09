@@ -209,32 +209,6 @@ const sources = [
     free: true,
     status: 'offline',
   },
-  {
-    id: 'estat-census',
-    name: 'e-Stat Census Data',
-    nameJa: 'e-Stat 国勢調査',
-    type: 'api',
-    category: 'statistics',
-    url: 'https://api.e-stat.go.jp/',
-    description: 'National census demographic data',
-    updateInterval: 86400,
-    layer: 'population',
-    free: true,
-    status: 'offline',
-  },
-  {
-    id: 'resas-population',
-    name: 'RESAS Population Flow',
-    nameJa: 'RESAS 人口流動',
-    type: 'api',
-    category: 'statistics',
-    url: 'https://opendata.resas-portal.go.jp/',
-    description: 'Regional Economy and Society Analyzing System population flow',
-    updateInterval: 86400,
-    layer: 'population',
-    free: true,
-    status: 'offline',
-  },
 
   // ── Real Estate / Prices ─────────────────────────────────────────────
   {
@@ -560,8 +534,6 @@ const sources = [
   { id: 'estat-household', name: 'e-Stat Household Data', nameJa: 'e-Stat 世帯データ', type: 'api', category: 'statistics', url: 'https://api.e-stat.go.jp/', description: 'Household composition statistics', updateInterval: 86400, layer: 'population', free: true, status: 'offline' },
   { id: 'estat-employment', name: 'e-Stat Employment', nameJa: 'e-Stat 雇用統計', type: 'api', category: 'statistics', url: 'https://api.e-stat.go.jp/', description: 'Employment and labor statistics', updateInterval: 86400, layer: 'economy', free: true, status: 'offline' },
   { id: 'estat-industry', name: 'e-Stat Industry Data', nameJa: 'e-Stat 産業統計', type: 'api', category: 'statistics', url: 'https://api.e-stat.go.jp/', description: 'Industrial production statistics by region', updateInterval: 86400, layer: 'economy', free: true, status: 'offline' },
-  { id: 'resas-industry', name: 'RESAS Industry Analysis', nameJa: 'RESAS 産業分析', type: 'api', category: 'statistics', url: 'https://opendata.resas-portal.go.jp/', description: 'Regional industry structure analysis', updateInterval: 86400, layer: 'economy', free: true, status: 'offline' },
-  { id: 'resas-tourism', name: 'RESAS Tourism Stats', nameJa: 'RESAS 観光統計', type: 'api', category: 'statistics', url: 'https://opendata.resas-portal.go.jp/', description: 'Tourism flow and visitor statistics', updateInterval: 86400, layer: 'population', free: true, status: 'offline' },
   { id: 'jstat-map', name: 'jSTAT MAP Grid Stats', nameJa: 'jSTAT MAP 統計地図', type: 'api', category: 'statistics', url: 'https://jstatmap.e-stat.go.jp/', description: 'Grid-square based statistical mapping', updateInterval: 86400, layer: 'population', free: true, status: 'offline' },
   { id: 'mhlw-health', name: 'MHLW Health Statistics', nameJa: '厚労省 保健統計', type: 'dataset', category: 'statistics', url: 'https://www.mhlw.go.jp/toukei/', description: 'Ministry of Health health statistics', updateInterval: 604800, layer: 'health', free: true, status: 'offline' },
   { id: 'mhlw-covid', name: 'MHLW COVID-19 Data', nameJa: '厚労省 COVID-19データ', type: 'api', category: 'statistics', url: 'https://www.mhlw.go.jp/stf/covid-19/', description: 'COVID-19 case and vaccination data', updateInterval: 3600, layer: 'health', free: true, status: 'offline' },
@@ -569,14 +541,9 @@ const sources = [
   // ── Economy Extended ────────────────────────────────────────────────
   { id: 'homes-co', name: 'Homes.co.jp Rentals', nameJa: 'HOME\'S 賃貸情報', type: 'scraped', category: 'economy', url: 'https://www.homes.co.jp/', description: 'Rental property listings and prices', updateInterval: 86400, layer: 'landprice', free: true, status: 'offline' },
   { id: 'athome-price', name: 'At Home Real Estate', nameJa: 'アットホーム 不動産', type: 'scraped', category: 'economy', url: 'https://www.athome.co.jp/', description: 'Real estate listing prices', updateInterval: 86400, layer: 'landprice', free: true, status: 'offline' },
-  { id: 'mlit-transaction', name: 'MLIT Transactions', nameJa: '国交省 不動産取引', type: 'api', category: 'economy', url: 'https://www.reinfolib.mlit.go.jp/', description: 'Actual real estate transaction records', updateInterval: 86400, layer: 'landprice', free: true, status: 'offline' },
-  { id: 'convenience-stores', name: 'Convenience Stores', nameJa: 'コンビニ店舗', type: 'scraped', category: 'economy', url: 'https://www.e-map.ne.jp/', description: '7-Eleven, FamilyMart, Lawson locations', updateInterval: 604800, layer: 'poi', free: true, status: 'offline' },
-  { id: 'gas-stations', name: 'Gas Station Prices', nameJa: 'ガソリン価格', type: 'scraped', category: 'economy', url: 'https://gogo.gs/', description: 'Gas station locations and fuel prices', updateInterval: 3600, layer: 'poi', free: true, status: 'offline' },
-  { id: 'tabelog-restaurants', name: 'Tabelog Restaurants', nameJa: '食べログ レストラン', type: 'scraped', category: 'economy', url: 'https://tabelog.com/', description: 'Restaurant ratings and locations', updateInterval: 86400, layer: 'poi', free: true, status: 'offline' },
 
   // ── Safety / Disaster Extended ──────────────────────────────────────
   { id: 'saigai-info', name: 'Cabinet Office Disaster', nameJa: '内閣府 災害情報', type: 'api', category: 'safety', url: 'https://www.bousai.go.jp/', description: 'Cabinet Office disaster information system', updateInterval: 300, layer: 'emergency', free: true, status: 'offline' },
-  { id: 'dam-water-level', name: 'Dam Water Levels', nameJa: 'ダム貯水位', type: 'api', category: 'safety', url: 'https://www.river.go.jp/', description: 'Dam reservoir water level monitoring', updateInterval: 600, layer: 'river', free: true, status: 'offline' },
 
   // ── Infrastructure Extended ─────────────────────────────────────────
   { id: 'mlit-dam', name: 'MLIT Dam Data', nameJa: '国交省 ダム情報', type: 'api', category: 'infrastructure', url: 'https://www.river.go.jp/', description: 'Dam operational data and water storage', updateInterval: 600, layer: 'river', free: true, status: 'offline' },
@@ -620,7 +587,6 @@ const sources = [
 
   // ── Health / Medical ────────────────────────────────────────────────
   { id: 'ndb-open', name: 'NDB Open Data', nameJa: 'NDB オープンデータ', type: 'dataset', category: 'health', url: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000177182.html', description: 'National Database of health insurance claims open data', updateInterval: 604800, layer: 'health', free: true, status: 'offline' },
-  { id: 'pharmacy-map', name: 'Pharmacy Locations', nameJa: '薬局マップ', type: 'dataset', category: 'health', url: 'https://www.mhlw.go.jp/', description: 'Pharmacy location database across Japan', updateInterval: 604800, layer: 'safety', free: true, status: 'offline' },
   { id: 'influenza-surveillance', name: 'NIID Influenza Watch', nameJa: '国立感染研 インフルエンザ', type: 'api', category: 'health', url: 'https://www.niid.go.jp/niid/ja/flu-map.html', description: 'NIID influenza surveillance by prefecture', updateInterval: 604800, layer: 'health', free: true, status: 'offline' },
   { id: 'food-poisoning', name: 'Food Poisoning Reports', nameJa: '食中毒情報', type: 'api', category: 'health', url: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/', description: 'MHLW food poisoning incident reports', updateInterval: 604800, layer: 'health', free: true, status: 'offline' },
   { id: 'cancer-registry', name: 'Cancer Registry Stats', nameJa: 'がん登録統計', type: 'dataset', category: 'health', url: 'https://ganjoho.jp/', description: 'National cancer registry incidence data', updateInterval: 604800, layer: 'health', free: true, status: 'offline' },
@@ -701,6 +667,18 @@ const sources = [
   { id: 'hi-net', name: 'NIED Hi-net Stations', nameJa: 'NIED Hi-net 観測点', type: 'dataset', category: 'environment', url: 'https://www.hinet.bosai.go.jp/', description: 'NIED Hi-net high-sensitivity seismograph stations across Japan', updateInterval: 86400, layer: 'hi-net', free: true, status: 'online' },
   { id: 'k-net', name: 'NIED K-NET Stations', nameJa: 'NIED K-NET 観測点', type: 'dataset', category: 'environment', url: 'https://www.kyoshin.bosai.go.jp/', description: 'NIED K-NET strong motion seismograph stations across Japan', updateInterval: 86400, layer: 'k-net', free: true, status: 'online' },
   { id: 'jma-intensity', name: 'JMA Seismic Intensity', nameJa: '気象庁 震度情報', type: 'api', category: 'environment', url: 'https://www.jma.go.jp/bosai/quake/', description: 'JMA seismic intensity reports for recent significant earthquakes', updateInterval: 60, layer: 'jma-intensity', free: true, status: 'online' },
+
+  // ── Wave 2: Health + Statistics + Commerce ──────────────────────────
+  { id: 'pharmacy-map', name: 'Pharmacy Map', nameJa: '薬局マップ', type: 'api', category: 'health', url: 'https://overpass-api.de/api/interpreter', description: 'Pharmacies across Japan (Matsumoto Kiyoshi, Welcia, Tsuruha, Sundrug, Sugi) via OSM Overpass', updateInterval: 604800, layer: 'pharmacy-map', free: true, status: 'online' },
+  { id: 'convenience-stores', name: 'Convenience Stores', nameJa: 'コンビニ店舗', type: 'api', category: 'marketplace', url: 'https://overpass-api.de/api/interpreter', description: 'Convenience stores (7-Eleven, FamilyMart, Lawson, MiniStop, NewDays) via OSM Overpass', updateInterval: 604800, layer: 'convenience-stores', free: true, status: 'online' },
+  { id: 'gas-stations', name: 'Gas Stations', nameJa: 'ガソリンスタンド', type: 'api', category: 'infrastructure', url: 'https://overpass-api.de/api/interpreter', description: 'Gas stations (ENEOS, Idemitsu, Cosmo, Shell, JA-SS) via OSM Overpass', updateInterval: 86400, layer: 'gas-stations', free: true, status: 'online' },
+  { id: 'tabelog-restaurants', name: 'Tabelog / HotPepper Restaurants', nameJa: '食べログ・ホットペッパー グルメ', type: 'api', category: 'marketplace', url: 'https://webservice.recruit.co.jp/hotpepper/gourmet/v1/', description: 'Famous Japanese restaurants + HotPepper Gourmet API listings', updateInterval: 86400, layer: 'tabelog-restaurants', free: false, status: 'online' },
+  { id: 'estat-census', name: 'e-Stat Census', nameJa: 'e-Stat 国勢調査', type: 'api', category: 'statistics', url: 'https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData', description: 'Prefecture-level census demographics from e-Stat (population, households, age structure)', updateInterval: 86400, layer: 'estat-census', free: true, status: 'online' },
+  { id: 'resas-population', name: 'RESAS Population by City', nameJa: 'RESAS 市町村別人口', type: 'api', category: 'statistics', url: 'https://opendata.resas-portal.go.jp/api/v1/', description: 'RESAS population by city with age composition (0-14, 15-64, 65+)', updateInterval: 86400, layer: 'resas-population', free: true, status: 'online' },
+  { id: 'resas-tourism', name: 'RESAS Tourism', nameJa: 'RESAS 観光統計', type: 'api', category: 'statistics', url: 'https://opendata.resas-portal.go.jp/api/v1/', description: 'RESAS tourism + major tourist sites with annual visitor counts and foreign visitor share', updateInterval: 86400, layer: 'resas-tourism', free: true, status: 'online' },
+  { id: 'resas-industry', name: 'RESAS Industry', nameJa: 'RESAS 産業構造', type: 'api', category: 'statistics', url: 'https://opendata.resas-portal.go.jp/api/v1/', description: 'RESAS industry composition by city - manufacturing, services, agriculture, fishery', updateInterval: 86400, layer: 'resas-industry', free: true, status: 'online' },
+  { id: 'mlit-transaction', name: 'MLIT Land Transactions', nameJa: '国交省 不動産取引価格', type: 'api', category: 'economy', url: 'https://www.land.mlit.go.jp/webland/api/TradeListSearch', description: 'MLIT real estate transaction prices by district (free public API)', updateInterval: 86400, layer: 'mlit-transaction', free: true, status: 'online' },
+  { id: 'dam-water-level', name: 'Dam Water Levels', nameJa: 'ダム貯水位', type: 'api', category: 'infrastructure', url: 'https://www1.river.go.jp/', description: 'Major Japanese dams - storage capacity and current reservoir levels (Tokuyama, Kurobe, Sameura, etc.)', updateInterval: 600, layer: 'dam-water-level', free: true, status: 'online' },
 ];
 
 export default sources;
