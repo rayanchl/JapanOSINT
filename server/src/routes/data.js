@@ -161,4 +161,192 @@ router.get('/social', async (_req, res) => {
   });
 });
 
+// ===========================================================================
+// Social media expansions
+// ===========================================================================
+
+router.get('/twitter-geo', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'twitter-geo',
+    layerType: 'twitter-geo',
+    collectorKey: 'twitter-geo',
+  });
+});
+
+router.get('/facebook-geo', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'facebook-geo',
+    layerType: 'facebook-geo',
+    collectorKey: 'facebook-geo',
+  });
+});
+
+router.get('/snapchat-heatmap', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'snapchat-heatmap',
+    layerType: 'snapchat-heatmap',
+    collectorKey: 'snapchat-heatmap',
+  });
+});
+
+// ===========================================================================
+// Marketplace / classifieds
+// ===========================================================================
+
+router.get('/classifieds', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'classifieds',
+    layerType: 'classifieds',
+    collectorKey: 'classifieds',
+  });
+});
+
+router.get('/real-estate', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'real-estate',
+    layerType: 'real-estate',
+    collectorKey: 'real-estate',
+  });
+});
+
+router.get('/job-boards', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'job-boards',
+    layerType: 'job-boards',
+    collectorKey: 'job-boards',
+  });
+});
+
+// ===========================================================================
+// Cyber OSINT
+// ===========================================================================
+
+router.get('/google-dorking', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'google-dorking',
+    layerType: 'google-dorking',
+    collectorKey: 'google-dorking',
+  });
+});
+
+router.get('/shodan-iot', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'shodan-iot',
+    layerType: 'shodan-iot',
+    collectorKey: 'shodan-iot',
+  });
+});
+
+router.get('/insecam-webcams', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'insecam-webcams',
+    layerType: 'insecam-webcams',
+    collectorKey: 'insecam-webcams',
+  });
+});
+
+router.get('/wifi-networks', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'wifi-networks',
+    layerType: 'wifi-networks',
+    collectorKey: 'wifi-networks',
+  });
+});
+
+// ===========================================================================
+// Transport (nationwide)
+// ===========================================================================
+
+router.get('/maritime-ais', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'maritime-ais',
+    layerType: 'maritime-ais',
+    collectorKey: 'maritime-ais',
+  });
+});
+
+router.get('/flight-adsb', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'flight-adsb',
+    layerType: 'flight-adsb',
+    collectorKey: 'flight-adsb',
+  });
+});
+
+router.get('/full-transport', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'full-transport',
+    layerType: 'full-transport',
+    collectorKey: 'full-transport',
+  });
+});
+
+router.get('/bus-routes', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'bus-routes',
+    layerType: 'bus-routes',
+    collectorKey: 'bus-routes',
+  });
+});
+
+router.get('/ferry-routes', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'ferry-routes',
+    layerType: 'ferry-routes',
+    collectorKey: 'ferry-routes',
+  });
+});
+
+router.get('/highway-traffic', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'highway-traffic',
+    layerType: 'highway-traffic',
+    collectorKey: 'highway-traffic',
+  });
+});
+
+// ===========================================================================
+// Infrastructure
+// ===========================================================================
+
+router.get('/electrical-grid', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'electrical-grid',
+    layerType: 'electrical-grid',
+    collectorKey: 'electrical-grid',
+  });
+});
+
+router.get('/gas-network', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'gas-network',
+    layerType: 'gas-network',
+    collectorKey: 'gas-network',
+  });
+});
+
+router.get('/water-infra', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'water-infra',
+    layerType: 'water-infra',
+    collectorKey: 'water-infra',
+  });
+});
+
+router.get('/cell-towers', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'cell-towers',
+    layerType: 'cell-towers',
+    collectorKey: 'cell-towers',
+  });
+});
+
+router.get('/nuclear-facilities', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'nuclear-facilities',
+    layerType: 'nuclear-facilities',
+    collectorKey: 'nuclear-facilities',
+  });
+});
+
 export default router;

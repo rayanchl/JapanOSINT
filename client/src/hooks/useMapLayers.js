@@ -85,6 +85,163 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/social',
     category: 'Social',
   },
+
+  // ── Social Media Geo (expanded) ─────────────────────────────────
+  twitterGeo: {
+    name: 'Twitter/X Geo',
+    icon: '\u{1F426}',
+    color: '#1da1f2',
+    endpoint: '/api/data/twitter-geo',
+    category: 'Social',
+  },
+  facebookGeo: {
+    name: 'Facebook Check-ins',
+    icon: '\u{1F4D8}',
+    color: '#4267b2',
+    endpoint: '/api/data/facebook-geo',
+    category: 'Social',
+  },
+  snapchatHeatmap: {
+    name: 'Snapchat Heatmap',
+    icon: '\u{1F47B}',
+    color: '#fffc00',
+    endpoint: '/api/data/snapchat-heatmap',
+    category: 'Social',
+  },
+
+  // ── Marketplace / Classifieds ───────────────────────────────────
+  classifieds: {
+    name: 'Classifieds (Jmty)',
+    icon: '\u{1F4DD}',
+    color: '#ff9800',
+    endpoint: '/api/data/classifieds',
+    category: 'Marketplace',
+  },
+  realEstate: {
+    name: 'Real Estate (Suumo)',
+    icon: '\u{1F3D8}',
+    color: '#8bc34a',
+    endpoint: '/api/data/real-estate',
+    category: 'Marketplace',
+  },
+  jobBoards: {
+    name: 'Job Boards',
+    icon: '\u{1F4BC}',
+    color: '#a1887f',
+    endpoint: '/api/data/job-boards',
+    category: 'Marketplace',
+  },
+
+  // ── Cyber OSINT ─────────────────────────────────────────────────
+  googleDorking: {
+    name: 'Google Dorks',
+    icon: '\u{1F50D}',
+    color: '#4285f4',
+    endpoint: '/api/data/google-dorking',
+    category: 'Cyber',
+  },
+  shodanIot: {
+    name: 'Shodan IoT',
+    icon: '\u{1F4E1}',
+    color: '#d62d20',
+    endpoint: '/api/data/shodan-iot',
+    category: 'Cyber',
+  },
+  insecamWebcams: {
+    name: 'Open Webcams',
+    icon: '\u{1F3A5}',
+    color: '#e91e63',
+    endpoint: '/api/data/insecam-webcams',
+    category: 'Cyber',
+  },
+  wifiNetworks: {
+    name: 'WiFi Networks',
+    icon: '\u{1F4F6}',
+    color: '#00bcd4',
+    endpoint: '/api/data/wifi-networks',
+    category: 'Cyber',
+  },
+
+  // ── Transport (nationwide) ──────────────────────────────────────
+  fullTransport: {
+    name: 'Japan Rail Network',
+    icon: '\u{1F684}',
+    color: '#43a047',
+    endpoint: '/api/data/full-transport',
+    category: 'Transport',
+  },
+  busRoutes: {
+    name: 'Bus Terminals',
+    icon: '\u{1F68C}',
+    color: '#fb8c00',
+    endpoint: '/api/data/bus-routes',
+    category: 'Transport',
+  },
+  ferryRoutes: {
+    name: 'Ferry Terminals',
+    icon: '\u{26F4}',
+    color: '#039be5',
+    endpoint: '/api/data/ferry-routes',
+    category: 'Transport',
+  },
+  highwayTraffic: {
+    name: 'Expressway IC/JCT',
+    icon: '\u{1F6E3}',
+    color: '#9e9e9e',
+    endpoint: '/api/data/highway-traffic',
+    category: 'Transport',
+  },
+  maritimeAis: {
+    name: 'AIS Ship Tracking',
+    icon: '\u{1F6A2}',
+    color: '#0277bd',
+    endpoint: '/api/data/maritime-ais',
+    category: 'Transport',
+  },
+  flightAdsb: {
+    name: 'ADS-B Flights',
+    icon: '\u{2708}',
+    color: '#7c4dff',
+    endpoint: '/api/data/flight-adsb',
+    category: 'Transport',
+  },
+
+  // ── Infrastructure ──────────────────────────────────────────────
+  electricalGrid: {
+    name: 'Electrical Grid',
+    icon: '\u{26A1}',
+    color: '#ffeb3b',
+    endpoint: '/api/data/electrical-grid',
+    category: 'Infrastructure',
+  },
+  gasNetwork: {
+    name: 'Gas Network',
+    icon: '\u{1F525}',
+    color: '#ff5722',
+    endpoint: '/api/data/gas-network',
+    category: 'Infrastructure',
+  },
+  waterInfra: {
+    name: 'Water Infrastructure',
+    icon: '\u{1F4A7}',
+    color: '#29b6f6',
+    endpoint: '/api/data/water-infra',
+    category: 'Infrastructure',
+  },
+  cellTowers: {
+    name: 'Cell Towers',
+    icon: '\u{1F4F1}',
+    color: '#9c27b0',
+    endpoint: '/api/data/cell-towers',
+    category: 'Infrastructure',
+  },
+  nuclearFacilities: {
+    name: 'Nuclear Facilities',
+    icon: '\u{2622}',
+    color: '#76ff03',
+    endpoint: '/api/data/nuclear-facilities',
+    category: 'Infrastructure',
+  },
 };
 
 export const LAYER_CATEGORIES = [
@@ -93,6 +250,8 @@ export const LAYER_CATEGORIES = [
   'Safety',
   'Economy',
   'Social',
+  'Marketplace',
+  'Cyber',
   'Infrastructure',
 ];
 
