@@ -1471,6 +1471,260 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
       });
       break;
 
+    // ── Wave 3: Maritime + Ocean + Aviation ────────────────────────
+    case 'jmaOceanWave':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'wave_height_m'], 1.5],
+            0.5, 4,
+            1.5, 8,
+            2.5, 14,
+            4.0, 22,
+          ],
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'wave_height_m'], 1.5],
+            0.5, '#80deea',
+            1.5, '#0288d1',
+            2.5, '#01579b',
+            4.0, '#311b92',
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    case 'jmaOceanTemp':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 9,
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'sst_c'], 18],
+            5, '#0d47a1',
+            12, '#039be5',
+            18, '#fdd835',
+            24, '#fb8c00',
+            28, '#b71c1c',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'anomaly_c'], 0],
+            0, 1,
+            2, 2,
+            3, 3,
+          ],
+          'circle-stroke-color': '#000000',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'jmaTide':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'level_cm'], 100],
+            70, 4,
+            100, 7,
+            130, 12,
+          ],
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'anomaly_cm'], 0],
+            -10, '#0d47a1',
+            0, '#0288d1',
+            5, '#26a69a',
+            10, '#fb8c00',
+            15, '#b71c1c',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
+    case 'nowphasWave':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'wave_height_m'], 1.5],
+            0.5, 4,
+            1.5, 8,
+            2.5, 14,
+          ],
+          'circle-color': [
+            'match', ['get', 'sensor_type'],
+            'gps_buoy', '#1565c0',
+            'ultrasonic', '#0288d1',
+            '#01579b',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'lighthouseMap':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'range_km'], 25],
+            15, 4,
+            25, 7,
+            40, 12,
+          ],
+          'circle-color': [
+            'case',
+            ['==', ['get', 'historic'], true], '#fdd835',
+            '#ffeb3b',
+          ],
+          'circle-opacity': opacity * 0.9,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#212121',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'jarticTraffic':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'congestion_km'], 3],
+            1, 5,
+            4, 10,
+            8, 18,
+          ],
+          'circle-color': [
+            'match', ['get', 'level'],
+            'moderate', '#fdd835',
+            'heavy', '#fb8c00',
+            'severe', '#b71c1c',
+            '#9e9e9e',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
+    case 'naritaFlights':
+    case 'hanedaFlights':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 5,
+          'circle-color': [
+            'match', ['get', 'type'],
+            'arrival', '#43a047',
+            'departure', '#e53935',
+            layerId === 'naritaFlights' ? '#3949ab' : '#1e88e5',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'droneNofly':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'radius_km'], 5],
+            1, 5,
+            5, 10,
+            9, 16,
+            25, 30,
+          ],
+          'circle-color': [
+            'match', ['get', 'restriction'],
+            'absolute', '#b71c1c',
+            'permit', '#fb8c00',
+            '#9e9e9e',
+          ],
+          'circle-opacity': opacity * 0.35,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': [
+            'match', ['get', 'restriction'],
+            'absolute', '#b71c1c',
+            'permit', '#fb8c00',
+            '#9e9e9e',
+          ],
+          'circle-stroke-opacity': opacity * 0.85,
+        },
+      });
+      break;
+
+    case 'jcgPatrol':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'vessels_count'], 5],
+            3, 5,
+            10, 9,
+            18, 14,
+          ],
+          'circle-color': [
+            'match', ['get', 'base_type'],
+            'rcgh', '#00695c',
+            'office', '#26a69a',
+            '#00838f',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
     default:
       map.addLayer({
         id: mainLayerId,

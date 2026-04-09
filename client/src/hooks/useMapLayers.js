@@ -386,10 +386,83 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/dam-water-level',
     category: 'Infrastructure',
   },
+
+  // ── Wave 3: Maritime + Ocean + Aviation ─────────────────────────
+  jmaOceanWave: {
+    name: 'Ocean Waves',
+    icon: '\u{1F30A}',
+    color: '#0288d1',
+    endpoint: '/api/data/jma-ocean-wave',
+    category: 'Ocean',
+  },
+  jmaOceanTemp: {
+    name: 'Sea Surface Temp',
+    icon: '\u{1F321}',
+    color: '#ff6f00',
+    endpoint: '/api/data/jma-ocean-temp',
+    category: 'Ocean',
+  },
+  jmaTide: {
+    name: 'Tide Levels',
+    icon: '\u{1F30A}',
+    color: '#0277bd',
+    endpoint: '/api/data/jma-tide',
+    category: 'Ocean',
+  },
+  nowphasWave: {
+    name: 'NOWPHAS Buoys',
+    icon: '\u{1F535}',
+    color: '#1565c0',
+    endpoint: '/api/data/nowphas-wave',
+    category: 'Ocean',
+  },
+  lighthouseMap: {
+    name: 'Lighthouses',
+    icon: '\u{1F3EE}',
+    color: '#fdd835',
+    endpoint: '/api/data/lighthouse-map',
+    category: 'Ocean',
+  },
+  jarticTraffic: {
+    name: 'Traffic Congestion',
+    icon: '\u{1F6A6}',
+    color: '#e53935',
+    endpoint: '/api/data/jartic-traffic',
+    category: 'Transport',
+  },
+  naritaFlights: {
+    name: 'Narita Flights',
+    icon: '\u{2708}',
+    color: '#3949ab',
+    endpoint: '/api/data/narita-flights',
+    category: 'Transport',
+  },
+  hanedaFlights: {
+    name: 'Haneda Flights',
+    icon: '\u{2708}',
+    color: '#1e88e5',
+    endpoint: '/api/data/haneda-flights',
+    category: 'Transport',
+  },
+  droneNofly: {
+    name: 'Drone No-Fly',
+    icon: '\u{1F6F8}',
+    color: '#c62828',
+    endpoint: '/api/data/drone-nofly',
+    category: 'Safety',
+  },
+  jcgPatrol: {
+    name: 'JCG Patrol Bases',
+    icon: '\u{1F6E5}',
+    color: '#00838f',
+    endpoint: '/api/data/jcg-patrol',
+    category: 'Safety',
+  },
 };
 
 export const LAYER_CATEGORIES = [
   'Environment',
+  'Ocean',
   'Transport',
   'Safety',
   'Health',

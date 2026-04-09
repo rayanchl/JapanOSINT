@@ -71,6 +71,18 @@ import resasIndustry from './resasIndustry.js';
 import mlitTransaction from './mlitTransaction.js';
 import damWaterLevel from './damWaterLevel.js';
 
+// Wave 3: Maritime + Ocean + Aviation
+import jmaOceanWave from './jmaOceanWave.js';
+import jmaOceanTemp from './jmaOceanTemp.js';
+import jmaTide from './jmaTide.js';
+import nowphasWave from './nowphasWave.js';
+import lighthouseMap from './lighthouseMap.js';
+import jarticTraffic from './jarticTraffic.js';
+import naritaFlights from './naritaFlights.js';
+import hanedaFlights from './hanedaFlights.js';
+import droneNofly from './droneNofly.js';
+import jcgPatrol from './jcgPatrol.js';
+
 export const collectors = {
   'jma-earthquake': jmaEarthquake,
   'jma-weather': jmaWeather,
@@ -139,6 +151,18 @@ export const collectors = {
   'resas-industry': resasIndustry,
   'mlit-transaction': mlitTransaction,
   'dam-water-level': damWaterLevel,
+
+  // Wave 3: Maritime + Ocean + Aviation
+  'jma-ocean-wave': jmaOceanWave,
+  'jma-ocean-temp': jmaOceanTemp,
+  'jma-tide': jmaTide,
+  'nowphas-wave': nowphasWave,
+  'lighthouse-map': lighthouseMap,
+  'jartic-traffic': jarticTraffic,
+  'narita-flights': naritaFlights,
+  'haneda-flights': hanedaFlights,
+  'drone-nofly': droneNofly,
+  'jcg-patrol': jcgPatrol,
 };
 
 /**

@@ -517,4 +517,88 @@ router.get('/dam-water-level', async (_req, res) => {
   });
 });
 
+// ===========================================================================
+// Wave 3: Maritime + Ocean + Aviation
+// ===========================================================================
+
+router.get('/jma-ocean-wave', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'jma-ocean-wave',
+    layerType: 'jma-ocean-wave',
+    collectorKey: 'jma-ocean-wave',
+  });
+});
+
+router.get('/jma-ocean-temp', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'jma-ocean-temp',
+    layerType: 'jma-ocean-temp',
+    collectorKey: 'jma-ocean-temp',
+  });
+});
+
+router.get('/jma-tide', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'jma-tide',
+    layerType: 'jma-tide',
+    collectorKey: 'jma-tide',
+  });
+});
+
+router.get('/nowphas-wave', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'nowphas-wave',
+    layerType: 'nowphas-wave',
+    collectorKey: 'nowphas-wave',
+  });
+});
+
+router.get('/lighthouse-map', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'lighthouse-map',
+    layerType: 'lighthouse-map',
+    collectorKey: 'lighthouse-map',
+  });
+});
+
+router.get('/jartic-traffic', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'jartic-traffic',
+    layerType: 'jartic-traffic',
+    collectorKey: 'jartic-traffic',
+  });
+});
+
+router.get('/narita-flights', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'narita-flights',
+    layerType: 'narita-flights',
+    collectorKey: 'narita-flights',
+  });
+});
+
+router.get('/haneda-flights', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'haneda-flights',
+    layerType: 'haneda-flights',
+    collectorKey: 'haneda-flights',
+  });
+});
+
+router.get('/drone-nofly', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'drone-nofly',
+    layerType: 'drone-nofly',
+    collectorKey: 'drone-nofly',
+  });
+});
+
+router.get('/jcg-patrol', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'jcg-patrol',
+    layerType: 'jcg-patrol',
+    collectorKey: 'jcg-patrol',
+  });
+});
+
 export default router;
