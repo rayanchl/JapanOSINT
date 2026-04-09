@@ -47,6 +47,18 @@ import waterInfra from './waterInfra.js';
 import cellTowers from './cellTowers.js';
 import nuclearFacilities from './nuclearFacilities.js';
 
+// Wave 1: Public Safety + Disaster
+import hospitalMap from './hospitalMap.js';
+import aedMap from './aedMap.js';
+import kobanMap from './kobanMap.js';
+import fireStationMap from './fireStationMap.js';
+import bosaiShelter from './bosaiShelter.js';
+import hazardMapPortal from './hazardMapPortal.js';
+import jshisSeismic from './jshisSeismic.js';
+import hiNet from './hiNet.js';
+import kNet from './kNet.js';
+import jmaIntensity from './jmaIntensity.js';
+
 export const collectors = {
   'jma-earthquake': jmaEarthquake,
   'jma-weather': jmaWeather,
@@ -91,6 +103,18 @@ export const collectors = {
   'water-infra': waterInfra,
   'cell-towers': cellTowers,
   'nuclear-facilities': nuclearFacilities,
+
+  // Wave 1: Public Safety + Disaster
+  'hospital-map': hospitalMap,
+  'aed-map': aedMap,
+  'koban-map': kobanMap,
+  'fire-station-map': fireStationMap,
+  'bosai-shelter': bosaiShelter,
+  'hazard-map-portal': hazardMapPortal,
+  'jshis-seismic': jshisSeismic,
+  'hi-net': hiNet,
+  'k-net': kNet,
+  'jma-intensity': jmaIntensity,
 };
 
 /**

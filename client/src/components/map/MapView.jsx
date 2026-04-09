@@ -924,6 +924,286 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
       });
       break;
 
+    // ── Wave 1: Public Safety + Disaster ──────────────────────────
+    case 'hospitalMap':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'beds'], 200],
+            0, 4,
+            300, 6,
+            600, 9,
+            1000, 13,
+            1500, 18,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'hospital_type'], 'general'],
+            'university', '#e53935',
+            'national', '#ad1457',
+            'specialized', '#f06292',
+            'public', '#fb8c00',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
+    case 'aedMap':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 5,
+          'circle-color': [
+            'match', ['coalesce', ['get', 'location_type'], 'public'],
+            'station', '#ff5252',
+            'airport', '#ff8a80',
+            'stadium', '#ff1744',
+            'tourist', '#f06292',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'kobanMap':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'match', ['coalesce', ['get', 'police_type'], 'station'],
+            'headquarters', 12,
+            'station', 7,
+            'koban', 4,
+            'chuzaisho', 4,
+            5,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'police_type'], 'station'],
+            'headquarters', '#0d47a1',
+            'station', '#1565c0',
+            'koban', '#42a5f5',
+            'chuzaisho', '#90caf9',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    case 'fireStationMap':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'match', ['coalesce', ['get', 'station_type'], 'station'],
+            'headquarters', 11,
+            'station', 6,
+            5,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'station_type'], 'station'],
+            'headquarters', '#bf360c',
+            'station', '#d84315',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffeb3b',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
+    case 'bosaiShelter':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'capacity'], 1000],
+            0, 4,
+            5000, 7,
+            20000, 11,
+            60000, 16,
+            100000, 22,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'shelter_type'], 'designated'],
+            'evacuation_area', '#00897b',
+            'designated', '#26a69a',
+            'tsunami_tower', '#0277bd',
+            'tsunami_building', '#039be5',
+            'assembly_point', '#4db6ac',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    case 'hazardMapPortal':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'max_depth_m'], ['get', 'alert_level'], 5],
+            0, 6,
+            5, 10,
+            15, 16,
+            30, 22,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'hazard_type'], 'flood'],
+            'tsunami', '#0277bd',
+            'volcano', '#bf360c',
+            'landslide', '#6d4c41',
+            'flood', '#0288d1',
+            'liquefaction', '#8d6e63',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.75,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffeb3b',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'jshisSeismic':
+      map.addLayer({
+        id: `${mainLayerId}-heat`,
+        type: 'heatmap',
+        source: sourceId,
+        maxzoom: 15,
+        paint: {
+          'heatmap-weight': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'prob_6lower_30yr'], 0.1],
+            0, 0,
+            0.5, 0.7,
+            1, 1,
+          ],
+          'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 0, 1, 12, 3],
+          'heatmap-color': [
+            'interpolate', ['linear'], ['heatmap-density'],
+            0, 'rgba(33, 102, 172, 0)',
+            0.2, '#3288bd',
+            0.4, '#fee08b',
+            0.6, '#f46d43',
+            0.8, '#d73027',
+            1, '#a50026',
+          ],
+          'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 20, 12, 60],
+          'heatmap-opacity': opacity * 0.7,
+        },
+      });
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        minzoom: 7,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'prob_6lower_30yr'], 0],
+            0, 4,
+            0.3, 7,
+            0.6, 12,
+            0.9, 18,
+          ],
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'prob_6lower_30yr'], 0],
+            0, '#3288bd',
+            0.3, '#fee08b',
+            0.6, '#f46d43',
+            0.9, '#a50026',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.4,
+        },
+      });
+      break;
+
+    case 'hiNet':
+    case 'kNet':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 5,
+          'circle-color': layerDef.color,
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    case 'jmaIntensity':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'intensity_numeric'], ['get', 'magnitude'], 5],
+            0, 5,
+            4, 9,
+            6, 16,
+            7, 24,
+          ],
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'intensity_numeric'], ['get', 'magnitude'], 5],
+            0, '#ffeb3b',
+            3, '#ff9800',
+            5, '#ff5722',
+            6, '#d84315',
+            7, '#b71c1c',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
     default:
       map.addLayer({
         id: mainLayerId,

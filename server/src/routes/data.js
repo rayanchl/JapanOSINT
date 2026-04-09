@@ -349,4 +349,88 @@ router.get('/nuclear-facilities', async (_req, res) => {
   });
 });
 
+// ===========================================================================
+// Wave 1: Public Safety + Disaster
+// ===========================================================================
+
+router.get('/hospital-map', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'hospital-map',
+    layerType: 'hospital-map',
+    collectorKey: 'hospital-map',
+  });
+});
+
+router.get('/aed-map', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'aed-map',
+    layerType: 'aed-map',
+    collectorKey: 'aed-map',
+  });
+});
+
+router.get('/koban-map', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'koban-map',
+    layerType: 'koban-map',
+    collectorKey: 'koban-map',
+  });
+});
+
+router.get('/fire-station-map', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'fire-station-map',
+    layerType: 'fire-station-map',
+    collectorKey: 'fire-station-map',
+  });
+});
+
+router.get('/bosai-shelter', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'bosai-shelter',
+    layerType: 'bosai-shelter',
+    collectorKey: 'bosai-shelter',
+  });
+});
+
+router.get('/hazard-map-portal', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'hazard-map-portal',
+    layerType: 'hazard-map-portal',
+    collectorKey: 'hazard-map-portal',
+  });
+});
+
+router.get('/jshis-seismic', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'jshis-seismic',
+    layerType: 'jshis-seismic',
+    collectorKey: 'jshis-seismic',
+  });
+});
+
+router.get('/hi-net', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'hi-net',
+    layerType: 'hi-net',
+    collectorKey: 'hi-net',
+  });
+});
+
+router.get('/k-net', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'k-net',
+    layerType: 'k-net',
+    collectorKey: 'k-net',
+  });
+});
+
+router.get('/jma-intensity', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'jma-intensity',
+    layerType: 'jma-intensity',
+    collectorKey: 'jma-intensity',
+  });
+});
+
 export default router;
