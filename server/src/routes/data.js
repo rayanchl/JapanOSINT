@@ -671,4 +671,35 @@ router.get('/wind-turbines', async (_req, res) => {
   await respondWithData(res, { sourceId: 'wind-turbines', layerType: 'wind-turbines', collectorKey: 'wind-turbines' });
 });
 
+// ===========================================================================
+// Wave 6: Telecom + Internet Infrastructure
+// ===========================================================================
+router.get('/data-centers', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'data-centers', layerType: 'data-centers', collectorKey: 'data-centers' });
+});
+
+router.get('/internet-exchanges', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'internet-exchanges', layerType: 'internet-exchanges', collectorKey: 'internet-exchanges' });
+});
+
+router.get('/submarine-cables', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'submarine-cables', layerType: 'submarine-cables', collectorKey: 'submarine-cables' });
+});
+
+router.get('/tor-exit-nodes', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'tor-exit-nodes', layerType: 'tor-exit-nodes', collectorKey: 'tor-exit-nodes' });
+});
+
+router.get('/5g-coverage', async (_req, res) => {
+  await respondWithData(res, { sourceId: '5g-coverage', layerType: '5g-coverage', collectorKey: '5g-coverage' });
+});
+
+router.get('/satellite-ground-stations', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'satellite-ground-stations', layerType: 'satellite-ground-stations', collectorKey: 'satellite-ground-stations' });
+});
+
+router.get('/amateur-radio-repeaters', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'amateur-radio-repeaters', layerType: 'amateur-radio-repeaters', collectorKey: 'amateur-radio-repeaters' });
+});
+
 export default router;

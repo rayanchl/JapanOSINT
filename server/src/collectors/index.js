@@ -103,6 +103,15 @@ import shipyards from './shipyards.js';
 import petroleumStockpile from './petroleumStockpile.js';
 import windTurbines from './windTurbines.js';
 
+// Wave 6: Telecom + Internet Infrastructure
+import dataCenters from './dataCenters.js';
+import internetExchanges from './internetExchanges.js';
+import submarineCables from './submarineCables.js';
+import torExitNodes from './torExitNodes.js';
+import coverage5g from './coverage5g.js';
+import satelliteGroundStations from './satelliteGroundStations.js';
+import amateurRadioRepeaters from './amateurRadioRepeaters.js';
+
 export const collectors = {
   'jma-earthquake': jmaEarthquake,
   'jma-weather': jmaWeather,
@@ -203,6 +212,15 @@ export const collectors = {
   'shipyards': shipyards,
   'petroleum-stockpile': petroleumStockpile,
   'wind-turbines': windTurbines,
+
+  // Wave 6: Telecom + Internet Infrastructure
+  'data-centers': dataCenters,
+  'internet-exchanges': internetExchanges,
+  'submarine-cables': submarineCables,
+  'tor-exit-nodes': torExitNodes,
+  '5g-coverage': coverage5g,
+  'satellite-ground-stations': satelliteGroundStations,
+  'amateur-radio-repeaters': amateurRadioRepeaters,
 };
 
 /**

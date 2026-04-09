@@ -574,6 +574,57 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/wind-turbines',
     category: 'Industry',
   },
+
+  // Wave 6: Telecom + Internet Infrastructure
+  dataCenters: {
+    name: 'Data Centers',
+    icon: '\u{1F5A5}',
+    color: '#00838f',
+    endpoint: '/api/data/data-centers',
+    category: 'Telecom',
+  },
+  internetExchanges: {
+    name: 'Internet Exchanges (IXP)',
+    icon: '\u{1F310}',
+    color: '#00acc1',
+    endpoint: '/api/data/internet-exchanges',
+    category: 'Telecom',
+  },
+  submarineCables: {
+    name: 'Submarine Cable Landings',
+    icon: '\u{1F30A}',
+    color: '#01579b',
+    endpoint: '/api/data/submarine-cables',
+    category: 'Telecom',
+  },
+  torExitNodes: {
+    name: 'Tor Exit Nodes',
+    icon: '\u{1F9C5}',
+    color: '#7b1fa2',
+    endpoint: '/api/data/tor-exit-nodes',
+    category: 'Telecom',
+  },
+  coverage5g: {
+    name: '5G Coverage',
+    icon: '\u{1F4F6}',
+    color: '#e91e63',
+    endpoint: '/api/data/5g-coverage',
+    category: 'Telecom',
+  },
+  satelliteGroundStations: {
+    name: 'Satellite Ground Stations',
+    icon: '\u{1F6F0}',
+    color: '#ffa726',
+    endpoint: '/api/data/satellite-ground-stations',
+    category: 'Telecom',
+  },
+  amateurRadioRepeaters: {
+    name: 'Amateur Radio Repeaters',
+    icon: '\u{1F4FB}',
+    color: '#8d6e63',
+    endpoint: '/api/data/amateur-radio-repeaters',
+    category: 'Telecom',
+  },
 };
 
 export const LAYER_CATEGORIES = [
@@ -587,6 +638,7 @@ export const LAYER_CATEGORIES = [
   'Government',
   'Defense',
   'Industry',
+  'Telecom',
   'Social',
   'Marketplace',
   'Cyber',

@@ -2190,6 +2190,224 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
       });
       break;
 
+    case 'dataCenters':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'tier'], 3],
+            2, 5,
+            3, 7,
+            4, 11,
+          ],
+          'circle-color': [
+            'match', ['get', 'operator'],
+            'Equinix', '#d50000',
+            'NTT', '#1565c0',
+            'KDDI', '#ef6c00',
+            'IIJ', '#6a1b9a',
+            'AWS', '#ff9900',
+            'Google', '#4285f4',
+            'Microsoft', '#00a4ef',
+            'IDC Frontier', '#388e3c',
+            'SAKURA', '#e91e63',
+            '#00838f',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'internetExchanges':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'members'], 30],
+            5, 5,
+            50, 9,
+            200, 14,
+            400, 18,
+          ],
+          'circle-color': [
+            'match', ['get', 'operator'],
+            'JPNAP', '#00acc1',
+            'JPIX', '#0288d1',
+            'BBIX', '#7e57c2',
+            'Equinix', '#d50000',
+            'DIX-IE', '#43a047',
+            '#00acc1',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'submarineCables':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['zoom'], 4, 5, 8, 9, 12, 13,
+          ],
+          'circle-color': [
+            'match', ['get', 'operator'],
+            'NTT', '#1565c0',
+            'KDDI', '#ef6c00',
+            'SoftBank', '#9e9e9e',
+            'Google', '#4285f4',
+            'Facebook/Meta', '#1877f2',
+            '#01579b',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffeb3b',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
+    case 'torExitNodes':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'bandwidth_mbps'], 50],
+            10, 4,
+            100, 7,
+            500, 11,
+            1500, 15,
+          ],
+          'circle-color': '#7b1fa2',
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#e1bee7',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'coverage5g':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'cells'], 100],
+            10, 5,
+            100, 8,
+            500, 12,
+            2000, 17,
+          ],
+          'circle-color': [
+            'match', ['get', 'operator'],
+            'NTT Docomo', '#d50000',
+            'KDDI', '#ef6c00',
+            'SoftBank', '#9e9e9e',
+            'Rakuten Mobile', '#bf360c',
+            '#e91e63',
+          ],
+          'circle-opacity': opacity * 0.7,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
+    case 'satelliteGroundStations':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'match', ['get', 'kind'],
+            'deep_space', 14,
+            'launch', 13,
+            'launch_tracking', 12,
+            'mission_control', 12,
+            'commercial_satcom', 10,
+            'satcom', 9,
+            'leo_gateway', 9,
+            'vlbi', 8,
+            'tt&c', 8,
+            'tracking', 7,
+            7,
+          ],
+          'circle-color': [
+            'match', ['get', 'operator'],
+            'JAXA', '#ff5722',
+            'NICT', '#9c27b0',
+            'KDDI', '#ef6c00',
+            'SKY Perfect JSAT', '#0288d1',
+            'NAOJ', '#1a237e',
+            'SoftBank', '#9e9e9e',
+            'Mitsubishi Electric', '#37474f',
+            '#ffa726',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'amateurRadioRepeaters':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'match', ['get', 'mode'],
+            'D-STAR', 8,
+            'C4FM', 8,
+            'DMR', 8,
+            'CW beacon', 9,
+            'SSB/CW', 9,
+            'FM', 6,
+            6,
+          ],
+          'circle-color': [
+            'match', ['get', 'mode'],
+            'D-STAR', '#1565c0',
+            'C4FM', '#6a1b9a',
+            'DMR', '#00838f',
+            'CW beacon', '#ef6c00',
+            'SSB/CW', '#d84315',
+            'FM', '#8d6e63',
+            '#8d6e63',
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
     default:
       map.addLayer({
         id: mainLayerId,
