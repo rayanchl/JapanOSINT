@@ -1725,6 +1725,229 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
       });
       break;
 
+    // Wave 4: Government + Defense
+    case 'governmentBuildings':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'match', ['get', 'kind'],
+            'cabinet', 12, 'parliament', 12, 'imperial', 12,
+            'ministry', 8, 'judiciary', 9, 'central_bank', 9,
+            'agency', 6, 'prefectural', 7,
+            5,
+          ],
+          'circle-color': [
+            'match', ['get', 'kind'],
+            'cabinet', '#d32f2f', 'parliament', '#c2185b', 'imperial', '#ad1457',
+            'ministry', '#6a1b9a', 'agency', '#7b1fa2', 'judiciary', '#4527a0',
+            'prefectural', '#5e35b2', 'central_bank', '#1565c0',
+            '#6a1b9a',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'cityHalls':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'population'], 100000],
+            50000, 4,
+            500000, 7,
+            2000000, 11,
+            4000000, 14,
+          ],
+          'circle-color': [
+            'match', ['get', 'kind'],
+            'designated_city', '#4a148c',
+            'core_city', '#7b1fa2',
+            'ward', '#9c27b0',
+            'townhall', '#ba68c8',
+            '#7b1fa2',
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'courtsPrisons':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'match', ['get', 'type'],
+            'high_court', 9,
+            'district_court', 6,
+            'courthouse', 5,
+            'prison', 8,
+            'detention', 9,
+            'medical_prison', 7,
+            'juvenile_prison', 7,
+            6,
+          ],
+          'circle-color': [
+            'match', ['get', 'type'],
+            'high_court', '#311b92',
+            'district_court', '#4527a0',
+            'courthouse', '#5e35b2',
+            'prison', '#b71c1c',
+            'detention', '#c62828',
+            'medical_prison', '#ad1457',
+            'juvenile_prison', '#d84315',
+            '#4527a0',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'embassies':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 5,
+          'circle-color': '#1565c0',
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.8,
+        },
+      });
+      break;
+
+    case 'jsdfBases':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'match', ['get', 'role'],
+            'army_hq', 12, 'mod_hq', 14, 'air_hq', 12, 'fleet_hq', 12,
+            'division', 9, 'fleet', 9, 'air_base', 9,
+            'brigade', 8, 'air_station', 8, 'fighter', 9,
+            'regiment', 6, 'aviation', 7, 'training', 6,
+            'airborne', 8, 'tank', 8, 'csbrn', 7, 'engineer', 6,
+            'logistics', 5, 'coastal', 7, 'training_range', 5,
+            6,
+          ],
+          'circle-color': [
+            'match', ['get', 'branch'],
+            'GSDF', '#33691e',
+            'MSDF', '#0d47a1',
+            'ASDF', '#01579b',
+            '#33691e',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'usfjBases':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'match', ['get', 'role'],
+            'air_hq', 13, 'army_hq', 13, 'fleet_hq', 13, 'hq', 12,
+            'fighter', 10, 'air_station', 9,
+            'fleet', 10, 'port', 8, 'depot', 7,
+            'training', 6, 'cmd', 8, 'support', 6,
+            'logistics', 6, 'medical', 6, 'comms', 6,
+            'housing', 5, 'army', 7, 'aux_field', 7,
+            6,
+          ],
+          'circle-color': [
+            'match', ['get', 'branch'],
+            'USAF', '#0d47a1',
+            'USN', '#1a237e',
+            'USMC', '#bf360c',
+            'USA', '#1b5e20',
+            '#1a237e',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.8,
+        },
+      });
+      break;
+
+    case 'radarSites':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'match', ['get', 'type'],
+            'bmd_xband', 12,
+            'air_defense', 8,
+            'weather', 6,
+            6,
+          ],
+          'circle-color': [
+            'match', ['get', 'type'],
+            'bmd_xband', '#d50000',
+            'air_defense', '#bf360c',
+            'weather', '#0277bd',
+            '#bf360c',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffeb3b',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'coastGuardStations':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'match', ['get', 'kind'],
+            'office', 7,
+            'station', 5,
+            6,
+          ],
+          'circle-color': '#0277bd',
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
     default:
       map.addLayer({
         id: mainLayerId,

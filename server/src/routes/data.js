@@ -601,4 +601,39 @@ router.get('/jcg-patrol', async (_req, res) => {
   });
 });
 
+// ===========================================================================
+// Wave 4: Government + Defense
+// ===========================================================================
+router.get('/government-buildings', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'government-buildings', layerType: 'government-buildings', collectorKey: 'government-buildings' });
+});
+
+router.get('/city-halls', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'city-halls', layerType: 'city-halls', collectorKey: 'city-halls' });
+});
+
+router.get('/courts-prisons', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'courts-prisons', layerType: 'courts-prisons', collectorKey: 'courts-prisons' });
+});
+
+router.get('/embassies', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'embassies', layerType: 'embassies', collectorKey: 'embassies' });
+});
+
+router.get('/jsdf-bases', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'jsdf-bases', layerType: 'jsdf-bases', collectorKey: 'jsdf-bases' });
+});
+
+router.get('/usfj-bases', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'usfj-bases', layerType: 'usfj-bases', collectorKey: 'usfj-bases' });
+});
+
+router.get('/radar-sites', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'radar-sites', layerType: 'radar-sites', collectorKey: 'radar-sites' });
+});
+
+router.get('/coast-guard-stations', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'coast-guard-stations', layerType: 'coast-guard-stations', collectorKey: 'coast-guard-stations' });
+});
+
 export default router;

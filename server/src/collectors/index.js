@@ -83,6 +83,16 @@ import hanedaFlights from './hanedaFlights.js';
 import droneNofly from './droneNofly.js';
 import jcgPatrol from './jcgPatrol.js';
 
+// Wave 4: Government + Defense
+import governmentBuildings from './governmentBuildings.js';
+import cityHalls from './cityHalls.js';
+import courtsPrisons from './courtsPrisons.js';
+import embassies from './embassies.js';
+import jsdfBases from './jsdfBases.js';
+import usfjBases from './usfjBases.js';
+import radarSites from './radarSites.js';
+import coastGuardStations from './coastGuardStations.js';
+
 export const collectors = {
   'jma-earthquake': jmaEarthquake,
   'jma-weather': jmaWeather,
@@ -163,6 +173,16 @@ export const collectors = {
   'haneda-flights': hanedaFlights,
   'drone-nofly': droneNofly,
   'jcg-patrol': jcgPatrol,
+
+  // Wave 4: Government + Defense
+  'government-buildings': governmentBuildings,
+  'city-halls': cityHalls,
+  'courts-prisons': courtsPrisons,
+  'embassies': embassies,
+  'jsdf-bases': jsdfBases,
+  'usfj-bases': usfjBases,
+  'radar-sites': radarSites,
+  'coast-guard-stations': coastGuardStations,
 };
 
 /**

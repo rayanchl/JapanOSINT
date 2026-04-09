@@ -458,6 +458,64 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/jcg-patrol',
     category: 'Safety',
   },
+
+  // Wave 4: Government + Defense
+  governmentBuildings: {
+    name: 'Government Buildings',
+    icon: '\u{1F3DB}',
+    color: '#6a1b9a',
+    endpoint: '/api/data/government-buildings',
+    category: 'Government',
+  },
+  cityHalls: {
+    name: 'City Halls',
+    icon: '\u{1F3E2}',
+    color: '#7b1fa2',
+    endpoint: '/api/data/city-halls',
+    category: 'Government',
+  },
+  courtsPrisons: {
+    name: 'Courts & Prisons',
+    icon: '\u{2696}',
+    color: '#4527a0',
+    endpoint: '/api/data/courts-prisons',
+    category: 'Government',
+  },
+  embassies: {
+    name: 'Embassies',
+    icon: '\u{1F3F3}',
+    color: '#1565c0',
+    endpoint: '/api/data/embassies',
+    category: 'Government',
+  },
+  jsdfBases: {
+    name: 'JSDF Bases',
+    icon: '\u{1F396}',
+    color: '#33691e',
+    endpoint: '/api/data/jsdf-bases',
+    category: 'Defense',
+  },
+  usfjBases: {
+    name: 'USFJ Bases',
+    icon: '\u{1F1FA}',
+    color: '#1a237e',
+    endpoint: '/api/data/usfj-bases',
+    category: 'Defense',
+  },
+  radarSites: {
+    name: 'Radar Sites',
+    icon: '\u{1F4E1}',
+    color: '#bf360c',
+    endpoint: '/api/data/radar-sites',
+    category: 'Defense',
+  },
+  coastGuardStations: {
+    name: 'Coast Guard Stations',
+    icon: '\u{1F6F0}',
+    color: '#0277bd',
+    endpoint: '/api/data/coast-guard-stations',
+    category: 'Defense',
+  },
 };
 
 export const LAYER_CATEGORIES = [
@@ -468,6 +526,8 @@ export const LAYER_CATEGORIES = [
   'Health',
   'Economy',
   'Statistics',
+  'Government',
+  'Defense',
   'Social',
   'Marketplace',
   'Cyber',
