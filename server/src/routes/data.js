@@ -702,4 +702,47 @@ router.get('/amateur-radio-repeaters', async (_req, res) => {
   await respondWithData(res, { sourceId: 'amateur-radio-repeaters', layerType: 'amateur-radio-repeaters', collectorKey: 'amateur-radio-repeaters' });
 });
 
+// ===========================================================================
+// Wave 7: Tourism + Culture
+// ===========================================================================
+router.get('/national-parks', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'national-parks', layerType: 'national-parks', collectorKey: 'national-parks' });
+});
+
+router.get('/unesco-heritage', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'unesco-heritage', layerType: 'unesco-heritage', collectorKey: 'unesco-heritage' });
+});
+
+router.get('/castles', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'castles', layerType: 'castles', collectorKey: 'castles' });
+});
+
+router.get('/museums', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'museums', layerType: 'museums', collectorKey: 'museums' });
+});
+
+router.get('/stadiums', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'stadiums', layerType: 'stadiums', collectorKey: 'stadiums' });
+});
+
+router.get('/racetracks', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'racetracks', layerType: 'racetracks', collectorKey: 'racetracks' });
+});
+
+router.get('/shrine-temple', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'shrine-temple', layerType: 'shrine-temple', collectorKey: 'shrine-temple' });
+});
+
+router.get('/onsen-map', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'onsen-map', layerType: 'onsen-map', collectorKey: 'onsen-map' });
+});
+
+router.get('/ski-resorts', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'ski-resorts', layerType: 'ski-resorts', collectorKey: 'ski-resorts' });
+});
+
+router.get('/anime-pilgrimage', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'anime-pilgrimage', layerType: 'anime-pilgrimage', collectorKey: 'anime-pilgrimage' });
+});
+
 export default router;

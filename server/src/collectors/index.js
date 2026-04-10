@@ -112,6 +112,18 @@ import coverage5g from './coverage5g.js';
 import satelliteGroundStations from './satelliteGroundStations.js';
 import amateurRadioRepeaters from './amateurRadioRepeaters.js';
 
+// Wave 7: Tourism + Culture
+import nationalParks from './nationalParks.js';
+import unescoHeritage from './unescoHeritage.js';
+import castles from './castles.js';
+import museums from './museums.js';
+import stadiums from './stadiums.js';
+import racetracks from './racetracks.js';
+import shrineTemple from './shrineTemple.js';
+import onsenMap from './onsenMap.js';
+import skiResorts from './skiResorts.js';
+import animePilgrimage from './animePilgrimage.js';
+
 export const collectors = {
   'jma-earthquake': jmaEarthquake,
   'jma-weather': jmaWeather,
@@ -221,6 +233,18 @@ export const collectors = {
   '5g-coverage': coverage5g,
   'satellite-ground-stations': satelliteGroundStations,
   'amateur-radio-repeaters': amateurRadioRepeaters,
+
+  // Wave 7: Tourism + Culture
+  'national-parks': nationalParks,
+  'unesco-heritage': unescoHeritage,
+  'castles': castles,
+  'museums': museums,
+  'stadiums': stadiums,
+  'racetracks': racetracks,
+  'shrine-temple': shrineTemple,
+  'onsen-map': onsenMap,
+  'ski-resorts': skiResorts,
+  'anime-pilgrimage': animePilgrimage,
 };
 
 /**

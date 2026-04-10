@@ -625,6 +625,78 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/amateur-radio-repeaters',
     category: 'Telecom',
   },
+
+  // ── Wave 7: Tourism + Culture ───────────────────────────────────
+  nationalParks: {
+    name: 'National Parks',
+    icon: '\u{1F3DE}',
+    color: '#2e7d32',
+    endpoint: '/api/data/national-parks',
+    category: 'Tourism',
+  },
+  unescoHeritage: {
+    name: 'UNESCO Heritage',
+    icon: '\u{1F3DB}',
+    color: '#ffa000',
+    endpoint: '/api/data/unesco-heritage',
+    category: 'Tourism',
+  },
+  castles: {
+    name: 'Castles',
+    icon: '\u{1F3F0}',
+    color: '#8d6e63',
+    endpoint: '/api/data/castles',
+    category: 'Tourism',
+  },
+  museums: {
+    name: 'Museums',
+    icon: '\u{1F3DB}',
+    color: '#5e35b1',
+    endpoint: '/api/data/museums',
+    category: 'Tourism',
+  },
+  stadiums: {
+    name: 'Stadiums',
+    icon: '\u{1F3DF}',
+    color: '#00897b',
+    endpoint: '/api/data/stadiums',
+    category: 'Tourism',
+  },
+  racetracks: {
+    name: 'Racetracks',
+    icon: '\u{1F3C7}',
+    color: '#c2185b',
+    endpoint: '/api/data/racetracks',
+    category: 'Tourism',
+  },
+  shrineTemple: {
+    name: 'Shrines & Temples',
+    icon: '\u{26E9}',
+    color: '#b71c1c',
+    endpoint: '/api/data/shrine-temple',
+    category: 'Culture',
+  },
+  onsenMap: {
+    name: 'Onsen (Hot Springs)',
+    icon: '\u{2668}',
+    color: '#ef6c00',
+    endpoint: '/api/data/onsen-map',
+    category: 'Culture',
+  },
+  skiResorts: {
+    name: 'Ski Resorts',
+    icon: '\u{1F3BF}',
+    color: '#0288d1',
+    endpoint: '/api/data/ski-resorts',
+    category: 'Tourism',
+  },
+  animePilgrimage: {
+    name: 'Anime Pilgrimage',
+    icon: '\u{1F38C}',
+    color: '#e91e63',
+    endpoint: '/api/data/anime-pilgrimage',
+    category: 'Culture',
+  },
 };
 
 export const LAYER_CATEGORIES = [
@@ -639,6 +711,8 @@ export const LAYER_CATEGORIES = [
   'Defense',
   'Industry',
   'Telecom',
+  'Tourism',
+  'Culture',
   'Social',
   'Marketplace',
   'Cyber',

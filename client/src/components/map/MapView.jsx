@@ -2408,6 +2408,230 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
       });
       break;
 
+    // ── Wave 7: Tourism + Culture ─────────────────────────────────
+    case 'nationalParks':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'area_ha'], 30000],
+            5000, 8, 30000, 14, 150000, 20,
+          ],
+          'circle-color': [
+            'match', ['get', 'kind'],
+            'national', '#2e7d32',
+            'quasi_national', '#66bb6a',
+            'protected_area', '#81c784',
+            '#2e7d32',
+          ],
+          'circle-opacity': opacity * 0.65,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#1b5e20',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'unescoHeritage':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 11,
+          'circle-color': [
+            'match', ['get', 'category'],
+            'cultural', '#ffa000',
+            'natural', '#2e7d32',
+            'mixed', '#ff6f00',
+            '#ffa000',
+          ],
+          'circle-opacity': opacity * 0.9,
+          'circle-stroke-width': 3,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity,
+        },
+      });
+      break;
+
+    case 'castles':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 8,
+          'circle-color': [
+            'match', ['get', 'era'],
+            'Edo', '#5d4037',
+            'Sengoku', '#8d6e63',
+            'Kamakura', '#795548',
+            'Ryukyu', '#ef6c00',
+            'Asuka', '#6d4c41',
+            'Nara', '#6d4c41',
+            'Yayoi', '#4e342e',
+            '#8d6e63',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#3e2723',
+          'circle-stroke-opacity': opacity * 0.8,
+        },
+      });
+      break;
+
+    case 'museums':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 7,
+          'circle-color': layerDef.color,
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.8,
+        },
+      });
+      break;
+
+    case 'stadiums':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'capacity'], 20000],
+            5000, 6, 30000, 10, 70000, 16,
+          ],
+          'circle-color': [
+            'match', ['get', 'kind'],
+            'baseball', '#d32f2f',
+            'football', '#2e7d32',
+            'multipurpose', '#1565c0',
+            'rugby', '#f9a825',
+            'sumo', '#880e4f',
+            '#00897b',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.8,
+        },
+      });
+      break;
+
+    case 'racetracks':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'capacity'], 15000],
+            5000, 6, 30000, 10, 200000, 18,
+          ],
+          'circle-color': [
+            'match', ['get', 'sport'],
+            'horse_jra', '#006400',
+            'horse_nar', '#228b22',
+            'keirin', '#1565c0',
+            'kyotei', '#0277bd',
+            'auto_race', '#c62828',
+            '#c2185b',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.8,
+        },
+      });
+      break;
+
+    case 'shrineTemple':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 6,
+          'circle-color': [
+            'match', ['get', 'religion'],
+            'shinto', '#d32f2f',
+            'buddhist', '#ffa000',
+            '#b71c1c',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
+    case 'onsenMap':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'est_visitors_yr'], 300000],
+            100000, 5, 1000000, 10, 5000000, 16,
+          ],
+          'circle-color': layerDef.color,
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.75,
+        },
+      });
+      break;
+
+    case 'skiResorts':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'lifts'], 8],
+            3, 5, 12, 9, 25, 14,
+          ],
+          'circle-color': layerDef.color,
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#e3f2fd',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'animePilgrimage':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 6,
+          'circle-color': layerDef.color,
+          'circle-opacity': opacity * 0.9,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.8,
+        },
+      });
+      break;
+
     default:
       map.addLayer({
         id: mainLayerId,
