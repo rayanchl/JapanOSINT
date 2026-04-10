@@ -4,6 +4,8 @@
  * Falls back to a curated seed of major tourist destinations with annual visitor counts.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
 const RESAS_KEY = process.env.RESAS_API_KEY || '';
 const RESAS_URL = 'https://opendata.resas-portal.go.jp/api/v1/tourism/foreigners/forFrom';
 
@@ -107,10 +109,40 @@ function generateSeedData() {
   }));
 }
 
+async function tryOSMTourism() {
+  return fetchOverpass(
+    'node["tourism"~"attraction|viewpoint|theme_park|museum|zoo|aquarium"]["wikidata"](area.jp);node["historic"~"castle|monument|ruins"]["wikidata"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        site_id: `OSM_${el.id}`,
+        name: el.tags?.['name:en'] || el.tags?.name || `Site ${i + 1}`,
+        name_ja: el.tags?.name || null,
+        category: el.tags?.tourism || el.tags?.historic || 'attraction',
+        wikidata: el.tags?.wikidata,
+        wikipedia: el.tags?.wikipedia || null,
+        website: el.tags?.website || null,
+        operator: el.tags?.operator || null,
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+  );
+}
+
 export default async function collectResasTourism() {
   let features = await tryResas();
+  let liveSource = 'resas_api';
+  if (!features || features.length === 0) {
+    features = await tryOSMTourism();
+    liveSource = 'osm_overpass';
+  }
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) {
+    features = generateSeedData();
+    liveSource = 'resas_tourism_seed';
+  }
   return {
     type: 'FeatureCollection',
     features,
@@ -119,7 +151,8 @@ export default async function collectResasTourism() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live,
-      description: 'RESAS tourism data + major tourist destinations with annual visitor counts',
+      live_source: liveSource,
+      description: 'Japanese tourism sites - RESAS + OSM tourism attractions with Wikidata IDs',
     },
     metadata: {},
   };

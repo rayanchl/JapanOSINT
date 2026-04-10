@@ -4,6 +4,30 @@
  * Falls back to a curated seed of major Hi-net observation stations.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["man_made"="monitoring_station"]["monitoring:seismic_activity"="yes"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        station_id: `HINET_LIVE_${String(i + 1).padStart(4, '0')}`,
+        code: el.tags?.ref || el.tags?.name || `H${el.id}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `Hi-net ${el.id}`,
+        depth_m: null,
+        network: 'Hi-net',
+        operator: el.tags?.operator || 'NIED',
+        prefecture: el.tags?.['addr:state'] || null,
+        country: 'JP',
+        updated_at: new Date().toISOString(),
+        source: 'hinet_live',
+      },
+    })
+  );
+}
+
 const SEED_HINET = [
   // Hokkaido
   { code: 'N.WTNH', name: '稚内', lat: 45.4047, lon: 141.6792, depth_m: 100, prefecture: '北海道' },
@@ -139,7 +163,9 @@ function generateSeedData() {
 }
 
 export default async function collectHiNet() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -147,7 +173,7 @@ export default async function collectHiNet() {
       source: 'hi_net',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      live: false,
+      live,
       description: 'NIED Hi-net high-sensitivity seismograph stations',
     },
     metadata: {},

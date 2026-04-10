@@ -4,6 +4,8 @@
  * Falls back to a curated seed of major industrial cities.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
 const RESAS_KEY = process.env.RESAS_API_KEY || '';
 const RESAS_URL = 'https://opendata.resas-portal.go.jp/api/v1/industry/power/forArea';
 
@@ -99,10 +101,38 @@ function generateSeedData() {
   }));
 }
 
+async function tryOSMIndustrial() {
+  return fetchOverpass(
+    'way["landuse"="industrial"]["name"](area.jp);node["industrial"]["name"](area.jp);way["industrial"]["name"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        city_id: `OSM_${el.id}`,
+        name: el.tags?.['name:en'] || el.tags?.name || `Industrial zone ${i + 1}`,
+        name_ja: el.tags?.name || null,
+        primary_sector: 'manufacturing',
+        sub_sector: el.tags?.industrial || 'mixed',
+        operator: el.tags?.operator || null,
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+  );
+}
+
 export default async function collectResasIndustry() {
   let features = await tryResas();
+  let liveSource = 'resas_api';
+  if (!features || features.length === 0) {
+    features = await tryOSMIndustrial();
+    liveSource = 'osm_overpass';
+  }
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) {
+    features = generateSeedData();
+    liveSource = 'resas_industry_seed';
+  }
   return {
     type: 'FeatureCollection',
     features,
@@ -111,7 +141,8 @@ export default async function collectResasIndustry() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live,
-      description: 'RESAS industry composition - manufacturing, services, agriculture by city',
+      live_source: liveSource,
+      description: 'Japanese industrial composition - RESAS + OSM landuse=industrial zones',
     },
     metadata: {},
   };

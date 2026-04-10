@@ -4,6 +4,8 @@
  * Falls back to seed of representative scheduled flights.
  */
 
+import { fetchJson } from './_liveHelpers.js';
+
 const AERODATABOX_KEY = process.env.AERODATABOX_KEY || '';
 const AERODATABOX_URL = 'https://aerodatabox.p.rapidapi.com/flights/airports/icao/RJAA';
 
@@ -110,10 +112,44 @@ function generateSeedData() {
   });
 }
 
+async function tryOpenSkyArea() {
+  // OpenSky Network - free, no key needed. Bounding box around Narita.
+  const url = 'https://opensky-network.org/api/states/all?lamin=35.6&lomin=140.2&lamax=35.9&lomax=140.6';
+  const data = await fetchJson(url, { timeoutMs: 8000 });
+  if (!data || !Array.isArray(data.states)) return null;
+  return data.states.filter(s => s[5] != null && s[6] != null).map((s, i) => ({
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: [s[5], s[6]] },
+    properties: {
+      flight_id: `NRT_OS_${String(i + 1).padStart(5, '0')}`,
+      flight_number: (s[1] || '').trim(),
+      icao24: s[0],
+      origin_country: s[2],
+      velocity_ms: s[9],
+      altitude_m: s[7],
+      heading_deg: s[10],
+      on_ground: s[8],
+      squawk: s[14],
+      last_contact: new Date((s[4] || 0) * 1000).toISOString(),
+      country: 'JP',
+      airport: 'Narita (RJAA/NRT)',
+      source: 'opensky_api',
+    },
+  }));
+}
+
 export default async function collectNaritaFlights() {
   let features = await tryAeroDataBox();
+  let liveSource = 'aerodatabox_api';
+  if (!features || features.length === 0) {
+    features = await tryOpenSkyArea();
+    liveSource = 'opensky_api';
+  }
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) {
+    features = generateSeedData();
+    liveSource = 'narita_seed';
+  }
   return {
     type: 'FeatureCollection',
     features,
@@ -122,7 +158,8 @@ export default async function collectNaritaFlights() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live,
-      description: 'Narita International Airport (RJAA/NRT) arrivals and departures',
+      live_source: liveSource,
+      description: 'Narita International Airport (RJAA/NRT) arrivals/departures - AeroDataBox + OpenSky',
     },
     metadata: {},
   };

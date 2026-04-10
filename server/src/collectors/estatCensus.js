@@ -4,6 +4,8 @@
  * Falls back to a curated seed of major prefecture-level census points.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
 const ESTAT_APP_ID = process.env.ESTAT_APP_ID || '';
 const ESTAT_URL = 'https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData';
 
@@ -104,10 +106,39 @@ function generateSeedData() {
   }));
 }
 
+async function tryOSMPrefectures() {
+  // admin_level=4 → prefectures. Each has a population tag set from recent census.
+  return fetchOverpass(
+    'relation["admin_level"="4"]["boundary"="administrative"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        mesh_id: `OSM_PREF_${el.id}`,
+        name: el.tags?.['name:en'] || el.tags?.name || `Prefecture ${i + 1}`,
+        name_ja: el.tags?.name || null,
+        population: parseInt(el.tags?.population) || null,
+        iso_code: el.tags?.['ISO3166-2'] || null,
+        wikidata: el.tags?.wikidata || null,
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+  );
+}
+
 export default async function collectEstatCensus() {
   let features = await tryEstat();
+  let liveSource = 'estat_api';
+  if (!features || features.length === 0) {
+    features = await tryOSMPrefectures();
+    liveSource = 'osm_overpass';
+  }
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) {
+    features = generateSeedData();
+    liveSource = 'estat_census_seed';
+  }
   return {
     type: 'FeatureCollection',
     features,
@@ -116,7 +147,8 @@ export default async function collectEstatCensus() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live,
-      description: 'e-Stat 2020 census population and household data by prefecture',
+      live_source: liveSource,
+      description: 'Japanese census - e-Stat API + OSM prefecture admin boundaries',
     },
     metadata: {},
   };

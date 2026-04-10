@@ -4,6 +4,26 @@
  * commercial stockpile bases.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["man_made"="storage_tank"]["content"="oil"](area.jp);way["man_made"="storage_tank"]["content"="oil"](area.jp);node["industrial"="oil"](area.jp);way["industrial"="oil"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        reserve_id: `STOCK_LIVE_${String(i + 1).padStart(5, '0')}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `Oil storage ${el.id}`,
+        kind: el.tags?.industrial === 'oil' ? 'commercial' : 'storage_tank',
+        operator: el.tags?.operator || null,
+        country: 'JP',
+        source: 'petroleum_stockpile_live',
+      },
+    })
+  );
+}
+
 const SEED_RESERVES = [
   // National reserves (10 sites operated by JOGMEC)
   { name: '苫小牧東部国家石油備蓄基地', lat: 42.6044, lon: 141.6919, kind: 'national', capacity_kl: 6400000 },
@@ -50,7 +70,9 @@ function generateSeedData() {
 }
 
 export default async function collectPetroleumStockpile() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -58,7 +80,7 @@ export default async function collectPetroleumStockpile() {
       source: 'petroleum_stockpile',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      live: false,
+      live,
       description: 'JOGMEC strategic petroleum reserves (10 oil + 5 LPG) and major commercial stockpile depots',
     },
     metadata: {},

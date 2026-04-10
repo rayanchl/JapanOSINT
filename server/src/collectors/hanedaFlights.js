@@ -4,6 +4,8 @@
  * Falls back to seed of representative scheduled flights.
  */
 
+import { fetchJson } from './_liveHelpers.js';
+
 const AERODATABOX_KEY = process.env.AERODATABOX_KEY || '';
 const AERODATABOX_URL = 'https://aerodatabox.p.rapidapi.com/flights/airports/icao/RJTT';
 
@@ -112,10 +114,44 @@ function generateSeedData() {
   });
 }
 
+async function tryOpenSkyArea() {
+  // OpenSky Network - free, no key. Bounding box around Haneda.
+  const url = 'https://opensky-network.org/api/states/all?lamin=35.4&lomin=139.6&lamax=35.7&lomax=140.0';
+  const data = await fetchJson(url, { timeoutMs: 8000 });
+  if (!data || !Array.isArray(data.states)) return null;
+  return data.states.filter(s => s[5] != null && s[6] != null).map((s, i) => ({
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: [s[5], s[6]] },
+    properties: {
+      flight_id: `HND_OS_${String(i + 1).padStart(5, '0')}`,
+      flight_number: (s[1] || '').trim(),
+      icao24: s[0],
+      origin_country: s[2],
+      velocity_ms: s[9],
+      altitude_m: s[7],
+      heading_deg: s[10],
+      on_ground: s[8],
+      squawk: s[14],
+      last_contact: new Date((s[4] || 0) * 1000).toISOString(),
+      country: 'JP',
+      airport: 'Haneda (RJTT/HND)',
+      source: 'opensky_api',
+    },
+  }));
+}
+
 export default async function collectHanedaFlights() {
   let features = await tryAeroDataBox();
+  let liveSource = 'aerodatabox_api';
+  if (!features || features.length === 0) {
+    features = await tryOpenSkyArea();
+    liveSource = 'opensky_api';
+  }
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) {
+    features = generateSeedData();
+    liveSource = 'haneda_seed';
+  }
   return {
     type: 'FeatureCollection',
     features,
@@ -124,7 +160,8 @@ export default async function collectHanedaFlights() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live,
-      description: 'Tokyo Haneda Airport (RJTT/HND) arrivals and departures',
+      live_source: liveSource,
+      description: 'Tokyo Haneda Airport (RJTT/HND) arrivals/departures - AeroDataBox + OpenSky',
     },
     metadata: {},
   };

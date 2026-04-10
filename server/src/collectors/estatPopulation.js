@@ -4,6 +4,8 @@
  * Fallback with representative mesh data for Tokyo, Osaka, Nagoya, Fukuoka, Sapporo
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
 const API_URL = 'https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData';
 const TIMEOUT_MS = 5000;
 
@@ -120,8 +122,44 @@ export default async function collectEstatPopulation() {
     }
     if (features.length === 0) throw new Error('No features parsed');
   } catch {
-    features = generateSeedData();
-    source = 'estat_seed';
+    // Unauth fallback: pull OSM admin boundaries with population tags.
+    const osmPts = await fetchOverpass(
+      'node["place"~"city|town"]["population"](area.jp);relation["admin_level"~"7|8"]["population"](area.jp);',
+      (el, i, coords) => {
+        const pop = parseInt(el.tags?.population) || 0;
+        const halfStep = STEP / 2;
+        return {
+          type: 'Feature',
+          geometry: {
+            type: 'Polygon',
+            coordinates: [[
+              [coords[0] - halfStep, coords[1] - halfStep],
+              [coords[0] + halfStep, coords[1] - halfStep],
+              [coords[0] + halfStep, coords[1] + halfStep],
+              [coords[0] - halfStep, coords[1] + halfStep],
+              [coords[0] - halfStep, coords[1] - halfStep],
+            ]],
+          },
+          properties: {
+            mesh_id: `OSM_${el.id}`,
+            city_area: el.tags?.['name:en'] || el.tags?.name || `Place ${i + 1}`,
+            place: el.tags?.place || 'admin',
+            population: pop,
+            density_per_sqkm: pop,
+            year: el.tags?.['population:date'] || null,
+            wikidata: el.tags?.wikidata || null,
+            source: 'osm_overpass',
+          },
+        };
+      },
+    );
+    if (osmPts && osmPts.length > 0) {
+      features = osmPts;
+      source = 'osm_overpass';
+    } else {
+      features = generateSeedData();
+      source = 'estat_seed';
+    }
   }
 
   return {
@@ -131,7 +169,9 @@ export default async function collectEstatPopulation() {
       source,
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      description: 'Population mesh data from e-Stat for major Japanese cities',
+      live: source === 'estat_live' || source === 'osm_overpass',
+      live_source: source,
+      description: 'Population mesh data - e-Stat + OSM admin boundary population tags',
     },
     metadata: {},
   };

@@ -4,6 +4,27 @@
  * 5G coverage zones across major Japanese cities.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["tower:type"="communication"]["communication:mobile_phone"="yes"](area.jp);node["man_made"="tower"]["tower:type"="communication"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        cell_id: `5G_LIVE_${String(i + 1).padStart(5, '0')}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `Tower ${el.id}`,
+        operator: el.tags?.operator || 'unknown',
+        tech: el.tags?.['communication:mobile_phone'] === 'yes' ? '5G/LTE' : 'communication',
+        bands: el.tags?.['communication:frequencies'] || null,
+        country: 'JP',
+        source: '5g_coverage_live',
+      },
+    })
+  );
+}
+
 const SEED_5G = [
   // Tokyo metropolitan
   { name: '東京 都心 5G カバー', lat: 35.6896, lon: 139.6917, operator: 'NTT Docomo', tech: '5G NSA+SA', bands: 'n78,n257' },
@@ -76,7 +97,9 @@ function generateSeedData() {
 }
 
 export default async function collect5gCoverage() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -84,7 +107,7 @@ export default async function collect5gCoverage() {
       source: '5g_coverage',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      live: false,
+      live,
       description: '5G NSA/SA coverage zones (Docomo, KDDI au, SoftBank, Rakuten Mobile) — n77/n78 sub-6 + n257 mmWave',
     },
     metadata: {},

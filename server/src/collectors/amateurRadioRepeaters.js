@@ -3,6 +3,39 @@
  * JARL repeater listings — VHF/UHF + D-STAR + DMR + HF beacons.
  */
 
+import { fetchText } from './_liveHelpers.js';
+
+async function tryLive() {
+  const text = await fetchText('https://www.repeaterbook.com/api/export.php?country=Japan');
+  if (!text || text.length < 40) return null;
+  const lines = text.split(/\r?\n/).filter((l) => l.trim() && !l.startsWith('#'));
+  const features = [];
+  for (let i = 0; i < lines.length; i++) {
+    const parts = lines[i].split(',');
+    if (parts.length < 9) continue;
+    const call = parts[0]?.trim();
+    const freq = parseFloat(parts[1]);
+    const lat = parseFloat(parts[7]);
+    const lon = parseFloat(parts[8]);
+    if (!call || isNaN(lat) || isNaN(lon) || isNaN(freq)) continue;
+    features.push({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [lon, lat] },
+      properties: {
+        repeater_id: `RPT_LIVE_${String(features.length + 1).padStart(5, '0')}`,
+        callsign: call,
+        name: `${call} ${parts[5] || ''}`.trim(),
+        freq_mhz: freq,
+        mode: 'FM',
+        kind: 'repeater',
+        country: 'JP',
+        source: 'repeaterbook_live',
+      },
+    });
+  }
+  return features.length > 0 ? features : null;
+}
+
 const SEED_REPEATERS = [
   // VHF/UHF analog (selected major mountain-top repeaters)
   { call: 'JR1VK', name: 'JR1VK 大山 神奈川', lat: 35.4406, lon: 139.2436, freq_mhz: 145.78, mode: 'FM', kind: 'mountain' },
@@ -60,7 +93,9 @@ function generateSeedData() {
 }
 
 export default async function collectAmateurRadioRepeaters() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -68,7 +103,7 @@ export default async function collectAmateurRadioRepeaters() {
       source: 'amateur_radio_repeaters',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      live: false,
+      live,
       description: 'JARL amateur radio repeaters: VHF/UHF FM, D-STAR, C4FM digital, HF beacons',
     },
     metadata: {},

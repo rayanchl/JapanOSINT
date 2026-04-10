@@ -5,6 +5,26 @@
  * Data points are centroids of well-known hazard areas published by MLIT.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["natural"="volcano"](area.jp);way["natural"="volcano"](area.jp);node["hazard"="landslide"](area.jp);way["hazard"="landslide"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        hazard_id: `HAZ_LIVE_${String(i + 1).padStart(5, '0')}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `Hazard ${el.id}`,
+        hazard: el.tags?.natural === 'volcano' ? 'volcano' : (el.tags?.hazard || 'unknown'),
+        prefecture: el.tags?.['addr:state'] || null,
+        country: 'JP',
+        source: 'hazard_map_live',
+      },
+    })
+  );
+}
+
 const HAZARD_ZONES = [
   // ── Tsunami inundation (Pacific coast) ─────────────────────────
   { name: '気仙沼湾 津波浸水想定', lat: 38.9067, lon: 141.5700, hazard: 'tsunami', max_depth_m: 15, prefecture: '宮城県' },
@@ -80,7 +100,9 @@ function generateSeedData() {
 }
 
 export default async function collectHazardMapPortal() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -88,7 +110,7 @@ export default async function collectHazardMapPortal() {
       source: 'hazard_map_portal',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      live: false,
+      live,
       description: 'Japan hazard zones - tsunami, volcano, landslide, flood, liquefaction',
     },
     metadata: {},

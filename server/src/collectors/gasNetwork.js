@@ -7,6 +7,27 @@
  * - Pipeline interconnects
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["man_made"="storage_tank"]["content"="gas"](area.jp);way["man_made"="gasometer"](area.jp);node["industrial"="gas"](area.jp);way["industrial"="gas"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        facility_id: `GAS_LIVE_${String(i + 1).padStart(4, '0')}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `Gas facility ${el.id}`,
+        operator: el.tags?.operator || 'unknown',
+        facility_type: el.tags?.man_made || el.tags?.industrial || 'gas',
+        country: 'JP',
+        updated_at: new Date().toISOString(),
+        source: 'gas_network',
+      },
+    })
+  );
+}
+
 const GAS_FACILITIES = [
   // LNG terminals - Tokyo Gas
   { name: '袖ケ浦工場', operator: '東京ガス', type: 'lng_terminal', lat: 35.4400, lon: 140.0100, capacity_kt: 2660, region: 'Kanto' },
@@ -77,7 +98,9 @@ function generateSeedData() {
 }
 
 export default async function collectGasNetwork() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -85,6 +108,7 @@ export default async function collectGasNetwork() {
       source: 'gas_network',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
       description: 'Japan gas network - LNG terminals, distribution stations, regional gas companies',
     },
     metadata: {},

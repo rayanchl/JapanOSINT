@@ -4,6 +4,27 @@
  * intra-Asia cables landing on Japanese coasts.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["telecom"="connection_point"](area.jp);way["submarine"="yes"](area.jp);node["communication:submarine_cable"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        cable_id: `CBL_LIVE_${String(i + 1).padStart(5, '0')}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `Cable landing ${el.id}`,
+        operator: el.tags?.operator || null,
+        region: el.tags?.['addr:state'] || null,
+        endpoints: el.tags?.['communication:submarine_cable'] || 'multi',
+        country: 'JP',
+        source: 'submarine_cables_live',
+      },
+    })
+  );
+}
+
 const SEED_CABLES = [
   // Major Trans-Pacific landings
   { name: 'JUPITER (Maruyama landing)', lat: 35.0033, lon: 139.8800, operator: 'Consortium', region: 'Chiba/Maruyama', endpoints: 'JP-US' },
@@ -62,7 +83,9 @@ function generateSeedData() {
 }
 
 export default async function collectSubmarineCables() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -70,7 +93,7 @@ export default async function collectSubmarineCables() {
       source: 'submarine_cables',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      live: false,
+      live,
       description: 'Submarine cable landing stations in Japan: trans-Pacific (Chiba), Asia (Aichi), Russia (Niigata), Korea (Saga), Okinawa',
     },
     metadata: {},

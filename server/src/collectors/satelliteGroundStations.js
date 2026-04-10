@@ -3,6 +3,27 @@
  * JAXA + KDDI + commercial satellite ground stations and tracking sites in Japan.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["man_made"="satellite_dish"](area.jp);way["man_made"="satellite_dish"](area.jp);node["building"="observatory"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        gs_id: `GS_LIVE_${String(i + 1).padStart(5, '0')}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `Ground station ${el.id}`,
+        operator: el.tags?.operator || null,
+        kind: el.tags?.building === 'observatory' ? 'observatory' : 'satellite_dish',
+        bands: el.tags?.['satellite:bands'] || null,
+        country: 'JP',
+        source: 'satellite_gs_live',
+      },
+    })
+  );
+}
+
 const SEED_GS = [
   // JAXA primary
   { name: '内之浦宇宙空間観測所 USC', lat: 31.2519, lon: 131.0817, operator: 'JAXA', kind: 'launch_tracking', bands: 'S,X' },
@@ -58,7 +79,9 @@ function generateSeedData() {
 }
 
 export default async function collectSatelliteGroundStations() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -66,7 +89,7 @@ export default async function collectSatelliteGroundStations() {
       source: 'satellite_ground_stations',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      live: false,
+      live,
       description: 'JAXA, NICT, KDDI, SKY Perfect JSAT, NAOJ ground stations and tracking facilities',
     },
     metadata: {},

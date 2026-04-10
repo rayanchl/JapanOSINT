@@ -4,6 +4,29 @@
  * Falls back to a curated seed of major K-NET observation stations.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["man_made"="monitoring_station"]["monitoring:strong_motion"="yes"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        station_id: `KNET_LIVE_${String(i + 1).padStart(4, '0')}`,
+        code: el.tags?.ref || el.tags?.name || `K${el.id}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `K-NET ${el.id}`,
+        network: 'K-NET',
+        operator: el.tags?.operator || 'NIED',
+        prefecture: el.tags?.['addr:state'] || null,
+        country: 'JP',
+        updated_at: new Date().toISOString(),
+        source: 'knet_live',
+      },
+    })
+  );
+}
+
 const SEED_KNET = [
   // Hokkaido (~10)
   { code: 'HKD001', name: 'Wakkanai', lat: 45.4181, lon: 141.6786, prefecture: '北海道' },
@@ -120,7 +143,9 @@ function generateSeedData() {
 }
 
 export default async function collectKNet() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -128,7 +153,7 @@ export default async function collectKNet() {
       source: 'k_net',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      live: false,
+      live,
       description: 'NIED K-NET strong motion seismograph stations',
     },
     metadata: {},

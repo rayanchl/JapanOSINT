@@ -1,11 +1,31 @@
 /**
  * Electrical Grid / Power Plants Collector
- * Maps power infrastructure across Japan:
- * - All 10 regional power companies (TEPCO, Kansai, Chubu, Tohoku, Chugoku, Shikoku, Kyushu, Hokkaido, Hokuriku, Okinawa)
- * - Power plants: thermal, hydro, solar, wind, geothermal, nuclear (referenced)
- * - Major substations and grid interconnects
- * - 50Hz/60Hz frequency boundary
+ * Live: OSM Overpass power=plant + power=substation across Japan.
+ * Fallback: curated list of regional power companies' major facilities.
  */
+
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return fetchOverpass(
+    'node["power"="plant"](area.jp);way["power"="plant"](area.jp);node["power"="substation"]["substation"!="minor_distribution"](area.jp);way["power"="substation"]["substation"!="minor_distribution"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        power_id: `OSM_${el.id}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `Power facility ${i + 1}`,
+        type: el.tags?.power === 'plant' ? 'plant' : 'substation',
+        fuel: el.tags?.['plant:source'] || el.tags?.['generator:source'] || 'unknown',
+        capacity_mw: parseFloat(el.tags?.['plant:output:electricity']) || null,
+        operator: el.tags?.operator || 'unknown',
+        voltage: el.tags?.voltage || null,
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+  );
+}
 
 const POWER_FACILITIES = [
   // Thermal power plants - TEPCO
@@ -106,7 +126,9 @@ function generateSeedData() {
 }
 
 export default async function collectElectricalGrid() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -114,6 +136,7 @@ export default async function collectElectricalGrid() {
       source: 'electrical_grid',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
       description: 'Japan electrical grid - power plants (thermal/hydro/wind/solar/geothermal), substations, frequency converters',
     },
     metadata: {},

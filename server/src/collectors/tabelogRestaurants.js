@@ -4,6 +4,8 @@
  * Falls back to a curated seed of famous Tabelog top-rated restaurants.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
 const HOTPEPPER_KEY = process.env.HOTPEPPER_API_KEY || '';
 const HOTPEPPER_URL = 'https://webservice.recruit.co.jp/hotpepper/gourmet/v1/';
 
@@ -99,10 +101,40 @@ function generateSeedData() {
   }));
 }
 
+async function tryOSMRestaurants() {
+  return fetchOverpass(
+    'node["amenity"="restaurant"]["name"](area.jp);node["amenity"="fast_food"]["name"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        facility_id: `OSM_${el.id}`,
+        name: el.tags?.name || `Restaurant ${i + 1}`,
+        name_en: el.tags?.['name:en'] || null,
+        genre: el.tags?.cuisine || 'unknown',
+        amenity: el.tags?.amenity,
+        address: el.tags?.['addr:full'] || el.tags?.['addr:city'] || null,
+        phone: el.tags?.phone || null,
+        website: el.tags?.website || null,
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+  );
+}
+
 export default async function collectTabelogRestaurants() {
   let features = await tryHotpepper();
+  let liveSource = 'hotpepper_api';
+  if (!features || features.length === 0) {
+    features = await tryOSMRestaurants();
+    liveSource = 'osm_overpass';
+  }
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) {
+    features = generateSeedData();
+    liveSource = 'tabelog_seed';
+  }
   return {
     type: 'FeatureCollection',
     features,
@@ -111,7 +143,8 @@ export default async function collectTabelogRestaurants() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live,
-      description: 'Japan restaurants - Tabelog top-rated + HotPepper Gourmet API',
+      live_source: liveSource,
+      description: 'Japan restaurants - Tabelog top-rated + HotPepper Gourmet API + OSM Overpass',
     },
     metadata: {},
   };

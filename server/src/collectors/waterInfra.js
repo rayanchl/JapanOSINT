@@ -7,6 +7,27 @@
  * - Major aqueducts
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["man_made"="water_works"](area.jp);way["man_made"="water_works"](area.jp);node["man_made"="water_tower"](area.jp);way["landuse"="reservoir"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        facility_id: `WTR_LIVE_${String(i + 1).padStart(4, '0')}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `Water facility ${el.id}`,
+        operator: el.tags?.operator || 'unknown',
+        facility_type: el.tags?.man_made || el.tags?.landuse || 'water',
+        country: 'JP',
+        updated_at: new Date().toISOString(),
+        source: 'water_infra',
+      },
+    })
+  );
+}
+
 const WATER_FACILITIES = [
   // Major dams
   { name: '黒部ダム', type: 'dam', operator: '関西電力', lat: 36.5667, lon: 137.6633, height_m: 186, capacity_mcm: 200, prefecture: '富山県' },
@@ -88,7 +109,9 @@ function generateSeedData() {
 }
 
 export default async function collectWaterInfra() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -96,6 +119,7 @@ export default async function collectWaterInfra() {
       source: 'water_infra',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
       description: 'Japan water infrastructure - dams, water treatment plants, sewage treatment',
     },
     metadata: {},

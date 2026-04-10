@@ -9,6 +9,41 @@
  * Results are geo-coded by IP / domain TLD (.jp) / organization location
  */
 
+import { fetchText } from './_liveHelpers.js';
+
+async function tryLive() {
+  const html = await fetchText('https://html.duckduckgo.com/html/?q=site%3Ajp+inurl%3Aadmin');
+  if (!html || html.length < 200) return null;
+  const re = /<a[^>]*class="result__a"[^>]*href="([^"]+)"[^>]*>([^<]*)<\/a>/gi;
+  const features = [];
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    let href = m[1];
+    try {
+      if (href.startsWith('//')) href = 'https:' + href;
+      const url = new URL(href.startsWith('http') ? href : 'https://' + href);
+      let target = url.searchParams.get('uddg') || url.href;
+      let host;
+      try { host = new URL(target).hostname; } catch { host = url.hostname; }
+      features.push({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [139.77 + (features.length % 10) * 0.001, 35.68 + Math.floor(features.length / 10) * 0.001] },
+        properties: {
+          result_id: `DORK_LIVE_${String(features.length + 1).padStart(5, '0')}`,
+          host,
+          url: target,
+          title: m[2].replace(/<[^>]+>/g, '').trim(),
+          category: 'exposed_admin',
+          country: 'JP',
+          source: 'duckduckgo_live',
+        },
+      });
+    } catch { /* skip */ }
+    if (features.length >= 50) break;
+  }
+  return features.length > 0 ? features : null;
+}
+
 const DORK_CATEGORIES = [
   {
     category: 'exposed_admin',
@@ -152,7 +187,9 @@ function generateSeedData() {
 }
 
 export default async function collectGoogleDorking() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
 
   return {
     type: 'FeatureCollection',
@@ -161,6 +198,7 @@ export default async function collectGoogleDorking() {
       source: 'google_dorking',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
       description: 'Google dorking results geo-coded to Japan - exposed panels, directories, configs, cameras',
     },
     metadata: {},

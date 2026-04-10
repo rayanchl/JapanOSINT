@@ -4,6 +4,8 @@
  * Falls back to a curated seed of major city population stats.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
 const RESAS_KEY = process.env.RESAS_API_KEY || '';
 const RESAS_URL = 'https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear';
 
@@ -91,10 +93,42 @@ function generateSeedData() {
   }));
 }
 
+async function tryOSMCityPopulation() {
+  return fetchOverpass(
+    'node["place"~"city|town"]["population"](area.jp);relation["admin_level"="7"]["population"](area.jp);',
+    (el, i, coords) => {
+      const pop = parseInt(el.tags?.population) || 0;
+      return {
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: coords },
+        properties: {
+          city_id: `OSM_${el.id}`,
+          name: el.tags?.['name:en'] || el.tags?.name || `Place ${i + 1}`,
+          name_ja: el.tags?.name || null,
+          total: pop,
+          place_type: el.tags?.place || 'admin',
+          wikidata: el.tags?.wikidata || null,
+          population_year: el.tags?.['population:date'] || null,
+          country: 'JP',
+          source: 'osm_overpass',
+        },
+      };
+    },
+  );
+}
+
 export default async function collectResasPopulation() {
   let features = await tryResas();
+  let liveSource = 'resas_api';
+  if (!features || features.length === 0) {
+    features = await tryOSMCityPopulation();
+    liveSource = 'osm_overpass';
+  }
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) {
+    features = generateSeedData();
+    liveSource = 'resas_population_seed';
+  }
   return {
     type: 'FeatureCollection',
     features,
@@ -103,7 +137,8 @@ export default async function collectResasPopulation() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live,
-      description: 'RESAS population composition by city - age distribution and aging rate',
+      live_source: liveSource,
+      description: 'City population - RESAS API + OSM Overpass admin boundaries',
     },
     metadata: {},
   };

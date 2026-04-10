@@ -3,7 +3,10 @@
  * Tries PeeringDB API for Japan IXPs, falls back to seed of major IXPs.
  */
 
-const PEERINGDB_URL = 'https://www.peeringdb.com/api/ix?country=JP';
+import { fetchJson } from './_liveHelpers.js';
+
+const PEERINGDB_IX_URL = 'https://www.peeringdb.com/api/ix?country=JP';
+const PEERINGDB_FAC_URL = 'https://www.peeringdb.com/api/fac?country=JP';
 
 const SEED_IX = [
   // JPNAP (Internet Multifeed)
@@ -39,35 +42,61 @@ const SEED_IX = [
 ];
 
 async function tryPeeringDb() {
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 10000);
-    const res = await fetch(PEERINGDB_URL, {
-      signal: ctrl.signal,
-      headers: { Accept: 'application/json' },
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data?.data?.length) return null;
-    // PeeringDB ix entries don't always include lat/lon — fall back to seed if they don't.
-    const features = data.data
-      .filter((ix) => ix.latitude != null && ix.longitude != null)
-      .map((ix) => ({
+  // PeeringDB `ix` entries don't have lat/lon. `fac` (facilities) do, and IX
+  // presence is listed at the fac level. We fetch both, then map IX → facility
+  // coordinates via the `ix_count` signal. Authless, free.
+  const [ixData, facData] = await Promise.all([
+    fetchJson(PEERINGDB_IX_URL, { timeoutMs: 10000, headers: { Accept: 'application/json' } }),
+    fetchJson(PEERINGDB_FAC_URL, { timeoutMs: 10000, headers: { Accept: 'application/json' } }),
+  ]);
+
+  const features = [];
+
+  // Use facilities that host at least one IX (ix_count > 0)
+  if (facData?.data?.length) {
+    for (const f of facData.data) {
+      if (!(f.latitude != null && f.longitude != null)) continue;
+      if ((f.ix_count || 0) === 0) continue;
+      features.push({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [f.longitude, f.latitude] },
+        properties: {
+          ix_id: `PDB_FAC_${f.id}`,
+          name: f.name,
+          operator: f.org_name || 'unknown',
+          city: f.city,
+          address: f.address1 || null,
+          ix_count: f.ix_count,
+          net_count: f.net_count,
+          country: 'JP',
+          source: 'peeringdb_fac',
+        },
+      });
+    }
+  }
+
+  // Also keep raw IX records (as city-level labels) so we don't lose JPIX/BBIX/JPNAP names
+  if (ixData?.data?.length) {
+    for (const ix of ixData.data) {
+      if (!(ix.latitude != null && ix.longitude != null)) continue;
+      features.push({
         type: 'Feature',
         geometry: { type: 'Point', coordinates: [ix.longitude, ix.latitude] },
         properties: {
-          ix_id: `PDB_${ix.id}`,
+          ix_id: `PDB_IX_${ix.id}`,
           name: ix.name,
-          operator: ix.org_name || 'unknown',
+          operator: ix.org_name || ix.name_long || 'unknown',
           city: ix.city,
-          source: 'peeringdb',
+          tech_email: ix.tech_email || null,
+          website: ix.website || null,
+          country: 'JP',
+          source: 'peeringdb_ix',
         },
-      }));
-    return features.length ? features : null;
-  } catch {
-    return null;
+      });
+    }
   }
+
+  return features.length ? features : null;
 }
 
 function generateSeedData() {

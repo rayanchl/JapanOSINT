@@ -4,6 +4,26 @@
  * METI semicon strategy + IR public data.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["industrial"="semiconductor"](area.jp);way["industrial"="semiconductor"](area.jp);node["industrial"="electronics"](area.jp);way["industrial"="electronics"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        fab_id: `FAB_LIVE_${String(i + 1).padStart(5, '0')}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `Fab ${el.id}`,
+        company: el.tags?.operator || el.tags?.brand || 'unknown',
+        tech: el.tags?.industrial || 'semiconductor',
+        country: 'JP',
+        source: 'semicon_live',
+      },
+    })
+  );
+}
+
 const SEED_FABS = [
   // Kioxia (formerly Toshiba Memory) — NAND flash
   { name: 'キオクシア 四日市工場', lat: 34.9311, lon: 136.6286, company: 'Kioxia', tech: 'NAND', wafer_size_mm: 300, fab_count: 6 },
@@ -72,7 +92,9 @@ function generateSeedData() {
 }
 
 export default async function collectSemiconductorFabs() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -80,7 +102,7 @@ export default async function collectSemiconductorFabs() {
       source: 'semiconductor_fabs',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      live: false,
+      live,
       description: 'Japanese semiconductor fabs: Kioxia, Sony, Renesas, Rohm, Mitsubishi, Fuji, TSMC JASM, Rapidus, Micron',
     },
     metadata: {},
