@@ -745,4 +745,39 @@ router.get('/anime-pilgrimage', async (_req, res) => {
   await respondWithData(res, { sourceId: 'anime-pilgrimage', layerType: 'anime-pilgrimage', collectorKey: 'anime-pilgrimage' });
 });
 
+// ===========================================================================
+// Wave 8: Crime + Vice + Wildlife
+// ===========================================================================
+router.get('/yakuza-hq', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'yakuza-hq', layerType: 'yakuza-hq', collectorKey: 'yakuza-hq' });
+});
+
+router.get('/red-light-zones', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'red-light-zones', layerType: 'red-light-zones', collectorKey: 'red-light-zones' });
+});
+
+router.get('/pachinko-density', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'pachinko-density', layerType: 'pachinko-density', collectorKey: 'pachinko-density' });
+});
+
+router.get('/bear-encounters', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'bear-encounters', layerType: 'bear-encounters', collectorKey: 'bear-encounters' });
+});
+
+router.get('/bird-flu-outbreaks', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'bird-flu-outbreaks', layerType: 'bird-flu-outbreaks', collectorKey: 'bird-flu-outbreaks' });
+});
+
+router.get('/sakura-front', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'sakura-front', layerType: 'sakura-front', collectorKey: 'sakura-front' });
+});
+
+router.get('/wanted-persons', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wanted-persons', layerType: 'wanted-persons', collectorKey: 'wanted-persons' });
+});
+
+router.get('/phone-scam-hotspots', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'phone-scam-hotspots', layerType: 'phone-scam-hotspots', collectorKey: 'phone-scam-hotspots' });
+});
+
 export default router;

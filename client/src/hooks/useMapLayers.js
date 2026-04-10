@@ -697,6 +697,64 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/anime-pilgrimage',
     category: 'Culture',
   },
+
+  // ── Wave 8: Crime + Vice + Wildlife ─────────────────────────────
+  yakuzaHq: {
+    name: 'Yakuza HQs',
+    icon: '\u{1F5E1}',
+    color: '#6a1b9a',
+    endpoint: '/api/data/yakuza-hq',
+    category: 'Crime',
+  },
+  redLightZones: {
+    name: 'Red Light Districts',
+    icon: '\u{1F4A1}',
+    color: '#d81b60',
+    endpoint: '/api/data/red-light-zones',
+    category: 'Crime',
+  },
+  pachinkoDensity: {
+    name: 'Pachinko Density',
+    icon: '\u{1F3B0}',
+    color: '#fdd835',
+    endpoint: '/api/data/pachinko-density',
+    category: 'Crime',
+  },
+  bearEncounters: {
+    name: 'Bear Encounters',
+    icon: '\u{1F43B}',
+    color: '#5d4037',
+    endpoint: '/api/data/bear-encounters',
+    category: 'Wildlife',
+  },
+  birdFluOutbreaks: {
+    name: 'Bird Flu Outbreaks',
+    icon: '\u{1F414}',
+    color: '#c62828',
+    endpoint: '/api/data/bird-flu-outbreaks',
+    category: 'Wildlife',
+  },
+  sakuraFront: {
+    name: 'Sakura Front',
+    icon: '\u{1F338}',
+    color: '#f8bbd0',
+    endpoint: '/api/data/sakura-front',
+    category: 'Wildlife',
+  },
+  wantedPersons: {
+    name: 'Wanted Persons',
+    icon: '\u{1F6A8}',
+    color: '#d32f2f',
+    endpoint: '/api/data/wanted-persons',
+    category: 'Crime',
+  },
+  phoneScamHotspots: {
+    name: 'Phone Scam Hotspots',
+    icon: '\u{1F4DE}',
+    color: '#ff7043',
+    endpoint: '/api/data/phone-scam-hotspots',
+    category: 'Crime',
+  },
 };
 
 export const LAYER_CATEGORIES = [
@@ -713,6 +771,8 @@ export const LAYER_CATEGORIES = [
   'Telecom',
   'Tourism',
   'Culture',
+  'Crime',
+  'Wildlife',
   'Social',
   'Marketplace',
   'Cyber',

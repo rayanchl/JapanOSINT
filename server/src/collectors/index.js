@@ -124,6 +124,16 @@ import onsenMap from './onsenMap.js';
 import skiResorts from './skiResorts.js';
 import animePilgrimage from './animePilgrimage.js';
 
+// Wave 8: Crime + Vice + Wildlife
+import yakuzaHq from './yakuzaHq.js';
+import redLightZones from './redLightZones.js';
+import pachinkoDensity from './pachinkoDensity.js';
+import bearEncounters from './bearEncounters.js';
+import birdFluOutbreaks from './birdFluOutbreaks.js';
+import sakuraFront from './sakuraFront.js';
+import wantedPersons from './wantedPersons.js';
+import phoneScamHotspots from './phoneScamHotspots.js';
+
 export const collectors = {
   'jma-earthquake': jmaEarthquake,
   'jma-weather': jmaWeather,
@@ -245,6 +255,16 @@ export const collectors = {
   'onsen-map': onsenMap,
   'ski-resorts': skiResorts,
   'anime-pilgrimage': animePilgrimage,
+
+  // Wave 8: Crime + Vice + Wildlife
+  'yakuza-hq': yakuzaHq,
+  'red-light-zones': redLightZones,
+  'pachinko-density': pachinkoDensity,
+  'bear-encounters': bearEncounters,
+  'bird-flu-outbreaks': birdFluOutbreaks,
+  'sakura-front': sakuraFront,
+  'wanted-persons': wantedPersons,
+  'phone-scam-hotspots': phoneScamHotspots,
 };
 
 /**

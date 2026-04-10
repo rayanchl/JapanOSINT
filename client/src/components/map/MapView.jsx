@@ -2632,6 +2632,210 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
       });
       break;
 
+    // ── Wave 8: Crime + Vice + Wildlife ─────────────────────────────
+    case 'yakuzaHq':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'members_est'], 100],
+            0, 5, 500, 9, 2000, 14, 4000, 18,
+          ],
+          'circle-color': [
+            'match',
+            ['get', 'designation'],
+            'tokutei', '#b71c1c',
+            'shitei', '#6a1b9a',
+            'shitei_sub', '#8e24aa',
+            'defunct', '#616161',
+            '#7b1fa2',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#fff8e1',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'redLightZones':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'est_establishments'], 50],
+            0, 4, 500, 8, 2000, 14, 4500, 20,
+          ],
+          'circle-color': [
+            'match',
+            ['get', 'type'],
+            'red_light_mixed', '#d81b60',
+            'soapland_zone', '#c2185b',
+            'hostess_zone', '#ec407a',
+            'nightclub_zone', '#ab47bc',
+            'geisha_quarter', '#ad1457',
+            'love_hotel_zone', '#e91e63',
+            'historic_red_light', '#795548',
+            '#d81b60',
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#fce4ec',
+          'circle-stroke-opacity': opacity * 0.85,
+        },
+      });
+      break;
+
+    case 'pachinkoDensity':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'parlor_count'], 10],
+            0, 5, 30, 10, 60, 16,
+          ],
+          'circle-color': layerDef.color,
+          'circle-opacity': opacity * 0.75,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.85,
+        },
+      });
+      break;
+
+    case 'bearEncounters':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'incidents_yr'], 10],
+            0, 4, 50, 8, 150, 12, 350, 18,
+          ],
+          'circle-color': [
+            'match',
+            ['get', 'species'],
+            'brown_bear', '#3e2723',
+            'asiatic_black_bear', '#5d4037',
+            '#6d4c41',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffccbc',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'birdFluOutbreaks':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'birds_culled'], 50000],
+            0, 5, 500000, 12, 3000000, 20,
+          ],
+          'circle-color': layerDef.color,
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffcdd2',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'sakuraFront':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 7,
+          'circle-color': [
+            'match',
+            ['get', 'region'],
+            'okinawa', '#ff80ab',
+            'amami', '#ff4081',
+            'kyushu', '#f48fb1',
+            'shikoku', '#f8bbd0',
+            'chugoku', '#fce4ec',
+            'kansai', '#f48fb1',
+            'tokai', '#f06292',
+            'chubu', '#ec407a',
+            'hokuriku', '#e91e63',
+            'kanto', '#d81b60',
+            'tohoku', '#c2185b',
+            'hokkaido', '#ad1457',
+            '#f8bbd0',
+          ],
+          'circle-opacity': opacity * 0.9,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.8,
+        },
+      });
+      break;
+
+    case 'wantedPersons':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'open_cases'], 30],
+            0, 5, 100, 9, 250, 14, 450, 20,
+          ],
+          'circle-color': layerDef.color,
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffebee',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'phoneScamHotspots':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'incidents_yr'], 100],
+            0, 5, 200, 10, 400, 15, 600, 20,
+          ],
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'damage_yen'], 300000000],
+            0, '#ffcc80',
+            500000000, '#ff7043',
+            1200000000, '#d84315',
+          ],
+          'circle-opacity': opacity * 0.8,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#fff3e0',
+          'circle-stroke-opacity': opacity * 0.85,
+        },
+      });
+      break;
+
     default:
       map.addLayer({
         id: mainLayerId,
