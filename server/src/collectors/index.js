@@ -142,6 +142,14 @@ import wagyuRanches from './wagyuRanches.js';
 import teaZones from './teaZones.js';
 import ricePaddies from './ricePaddies.js';
 
+// Wave 10: Niche + Pop Culture
+import vendingMachines from './vendingMachines.js';
+import karaokeChains from './karaokeChains.js';
+import mangaNetCafes from './mangaNetCafes.js';
+import sentoPublicBaths from './sentoPublicBaths.js';
+import manholeCovers from './manholeCovers.js';
+import themedCafes from './themedCafes.js';
+
 export const collectors = {
   'jma-earthquake': jmaEarthquake,
   'jma-weather': jmaWeather,
@@ -281,6 +289,14 @@ export const collectors = {
   'wagyu-ranches': wagyuRanches,
   'tea-zones': teaZones,
   'rice-paddies': ricePaddies,
+
+  // Wave 10: Niche + Pop Culture
+  'vending-machines': vendingMachines,
+  'karaoke-chains': karaokeChains,
+  'manga-net-cafes': mangaNetCafes,
+  'sento-public-baths': sentoPublicBaths,
+  'manhole-covers': manholeCovers,
+  'themed-cafes': themedCafes,
 };
 
 /**

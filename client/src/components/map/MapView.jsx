@@ -3000,6 +3000,210 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
       });
       break;
 
+    // ── Wave 10: Niche + Pop Culture ─────────────────────────────
+    case 'vendingMachines':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'vm_count_est'], 50],
+            0, 4, 50, 7, 150, 11, 300, 16, 400, 20,
+          ],
+          'circle-color': [
+            'match',
+            ['get', 'zone_type'],
+            'transit_hub', '#e91e63',
+            'commercial', '#ec407a',
+            'entertainment', '#d81b60',
+            'tourist', '#f06292',
+            'market', '#ad1457',
+            'remote', '#880e4f',
+            '#e91e63',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#fce4ec',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      map.addLayer({
+        id: `${mainLayerId}-heat`,
+        type: 'heatmap',
+        source: sourceId,
+        paint: {
+          'heatmap-weight': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'vm_count_est'], 50],
+            0, 0, 400, 1,
+          ],
+          'heatmap-intensity': 0.8,
+          'heatmap-radius': 30,
+          'heatmap-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    case 'karaokeChains':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'rooms'], 40],
+            0, 5, 30, 7, 50, 10, 70, 14,
+          ],
+          'circle-color': [
+            'match',
+            ['get', 'brand'],
+            'Big Echo', '#c2185b',
+            'Karaoke-kan', '#e91e63',
+            'JOYSOUND', '#7b1fa2',
+            'Club DAM', '#512da8',
+            'Manekineko', '#d81b60',
+            'Jankara', '#ad1457',
+            'Shidax', '#455a64',
+            'Uta Hiroba', '#6a1b9a',
+            'Banban', '#ec407a',
+            "Cote d'Azur", '#880e4f',
+            'Karaoke Mac', '#9c27b0',
+            '#d81b60',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#fce4ec',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'mangaNetCafes':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'seats'], 150],
+            0, 5, 100, 8, 180, 11, 220, 14,
+          ],
+          'circle-color': [
+            'match',
+            ['get', 'brand'],
+            'Jiyu-kukan', '#7b1fa2',
+            'Media Cafe Popeye', '#8e24aa',
+            'Bagus', '#6a1b9a',
+            'DiCE', '#9c27b0',
+            'Manboo!', '#ab47bc',
+            'Aprecio', '#5e35b1',
+            'Customa Cafe', '#4527a0',
+            '#8e24aa',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#f3e5f5',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'sentoPublicBaths':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'case',
+            ['==', ['get', 'landmark'], true], 10,
+            6,
+          ],
+          'circle-color': [
+            'match',
+            ['get', 'style'],
+            'miyazukuri', '#006064',
+            'machiya', '#00838f',
+            'kuroyu', '#212121',
+            'modern', '#0097a7',
+            'super_sento', '#00acc1',
+            'standard', '#26c6da',
+            '#0097a7',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#e0f7fa',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'manholeCovers':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'series'], 1],
+            1, 7, 4, 8, 8, 10,
+          ],
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'series'], 1],
+            1, '#455a64',
+            4, '#607d8b',
+            8, '#78909c',
+          ],
+          'circle-opacity': opacity * 0.9,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#eceff1',
+          'circle-stroke-opacity': opacity,
+        },
+      });
+      break;
+
+    case 'themedCafes':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 7,
+          'circle-color': [
+            'match',
+            ['get', 'theme'],
+            'maid', '#ec407a',
+            'cat', '#ff7043',
+            'owl', '#8d6e63',
+            'hedgehog', '#a1887f',
+            'rabbit', '#f8bbd0',
+            'capybara', '#6d4c41',
+            'dog', '#ffb74d',
+            'reptile', '#66bb6a',
+            'beetle', '#33691e',
+            'exotic', '#ab47bc',
+            'character', '#42a5f5',
+            'gaming', '#5c6bc0',
+            'anime', '#7e57c2',
+            'robot', '#78909c',
+            'butler', '#455a64',
+            'concept', '#ef5350',
+            '#f06292',
+          ],
+          'circle-opacity': opacity * 0.9,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#fce4ec',
+          'circle-stroke-opacity': opacity,
+        },
+      });
+      break;
+
     default:
       map.addLayer({
         id: mainLayerId,

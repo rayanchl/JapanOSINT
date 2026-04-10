@@ -807,4 +807,31 @@ router.get('/rice-paddies', async (_req, res) => {
   await respondWithData(res, { sourceId: 'rice-paddies', layerType: 'rice-paddies', collectorKey: 'rice-paddies' });
 });
 
+// ===========================================================================
+// Wave 10: Niche + Pop Culture
+// ===========================================================================
+router.get('/vending-machines', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'vending-machines', layerType: 'vending-machines', collectorKey: 'vending-machines' });
+});
+
+router.get('/karaoke-chains', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'karaoke-chains', layerType: 'karaoke-chains', collectorKey: 'karaoke-chains' });
+});
+
+router.get('/manga-net-cafes', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'manga-net-cafes', layerType: 'manga-net-cafes', collectorKey: 'manga-net-cafes' });
+});
+
+router.get('/sento-public-baths', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'sento-public-baths', layerType: 'sento-public-baths', collectorKey: 'sento-public-baths' });
+});
+
+router.get('/manhole-covers', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'manhole-covers', layerType: 'manhole-covers', collectorKey: 'manhole-covers' });
+});
+
+router.get('/themed-cafes', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'themed-cafes', layerType: 'themed-cafes', collectorKey: 'themed-cafes' });
+});
+
 export default router;

@@ -799,6 +799,50 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/rice-paddies',
     category: 'Agriculture',
   },
+
+  // ── Wave 10: Niche + Pop Culture ────────────────────────────────
+  vendingMachines: {
+    name: 'Vending Machines',
+    icon: '\u{1F964}',
+    color: '#e91e63',
+    endpoint: '/api/data/vending-machines',
+    category: 'Culture',
+  },
+  karaokeChains: {
+    name: 'Karaoke Chains',
+    icon: '\u{1F3A4}',
+    color: '#d81b60',
+    endpoint: '/api/data/karaoke-chains',
+    category: 'Culture',
+  },
+  mangaNetCafes: {
+    name: 'Manga / Net Cafes',
+    icon: '\u{1F4D6}',
+    color: '#8e24aa',
+    endpoint: '/api/data/manga-net-cafes',
+    category: 'Culture',
+  },
+  sentoPublicBaths: {
+    name: 'Sento Public Baths',
+    icon: '\u{1F6C0}',
+    color: '#0097a7',
+    endpoint: '/api/data/sento-public-baths',
+    category: 'Culture',
+  },
+  manholeCovers: {
+    name: 'Manhole Cards',
+    icon: '\u{1F36A}',
+    color: '#546e7a',
+    endpoint: '/api/data/manhole-covers',
+    category: 'Culture',
+  },
+  themedCafes: {
+    name: 'Themed Cafes',
+    icon: '\u{1F431}',
+    color: '#f06292',
+    endpoint: '/api/data/themed-cafes',
+    category: 'Culture',
+  },
 };
 
 export const LAYER_CATEGORIES = [
