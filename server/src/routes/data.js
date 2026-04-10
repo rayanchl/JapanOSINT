@@ -780,4 +780,31 @@ router.get('/phone-scam-hotspots', async (_req, res) => {
   await respondWithData(res, { sourceId: 'phone-scam-hotspots', layerType: 'phone-scam-hotspots', collectorKey: 'phone-scam-hotspots' });
 });
 
+// ===========================================================================
+// Wave 9: Food + Agriculture
+// ===========================================================================
+router.get('/sake-breweries', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'sake-breweries', layerType: 'sake-breweries', collectorKey: 'sake-breweries' });
+});
+
+router.get('/wineries-craftbeer', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wineries-craftbeer', layerType: 'wineries-craftbeer', collectorKey: 'wineries-craftbeer' });
+});
+
+router.get('/fish-markets', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'fish-markets', layerType: 'fish-markets', collectorKey: 'fish-markets' });
+});
+
+router.get('/wagyu-ranches', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wagyu-ranches', layerType: 'wagyu-ranches', collectorKey: 'wagyu-ranches' });
+});
+
+router.get('/tea-zones', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'tea-zones', layerType: 'tea-zones', collectorKey: 'tea-zones' });
+});
+
+router.get('/rice-paddies', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'rice-paddies', layerType: 'rice-paddies', collectorKey: 'rice-paddies' });
+});
+
 export default router;

@@ -134,6 +134,14 @@ import sakuraFront from './sakuraFront.js';
 import wantedPersons from './wantedPersons.js';
 import phoneScamHotspots from './phoneScamHotspots.js';
 
+// Wave 9: Food + Agriculture
+import sakeBreweries from './sakeBreweries.js';
+import wineriesCraftbeer from './wineriesCraftbeer.js';
+import fishMarkets from './fishMarkets.js';
+import wagyuRanches from './wagyuRanches.js';
+import teaZones from './teaZones.js';
+import ricePaddies from './ricePaddies.js';
+
 export const collectors = {
   'jma-earthquake': jmaEarthquake,
   'jma-weather': jmaWeather,
@@ -265,6 +273,14 @@ export const collectors = {
   'sakura-front': sakuraFront,
   'wanted-persons': wantedPersons,
   'phone-scam-hotspots': phoneScamHotspots,
+
+  // Wave 9: Food + Agriculture
+  'sake-breweries': sakeBreweries,
+  'wineries-craftbeer': wineriesCraftbeer,
+  'fish-markets': fishMarkets,
+  'wagyu-ranches': wagyuRanches,
+  'tea-zones': teaZones,
+  'rice-paddies': ricePaddies,
 };
 
 /**

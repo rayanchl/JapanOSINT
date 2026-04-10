@@ -2836,6 +2836,170 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
       });
       break;
 
+    // ── Wave 9: Food + Agriculture ─────────────────────────────────
+    case 'sakeBreweries':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'annual_production_koku'], 5000],
+            0, 5, 50000, 9, 250000, 14, 750000, 20,
+          ],
+          'circle-color': layerDef.color,
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#e8eaf6',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'wineriesCraftbeer':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 6,
+          'circle-color': [
+            'match',
+            ['get', 'category'],
+            'winery', '#880e4f',
+            'craft_beer', '#ef6c00',
+            'whisky', '#6d4c41',
+            '#ad1457',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#fce4ec',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'fishMarkets':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'throughput_tpy'], 10000],
+            0, 5, 60000, 9, 200000, 14, 500000, 20,
+          ],
+          'circle-color': [
+            'match',
+            ['get', 'kind'],
+            'central_wholesale', '#01579b',
+            'port_market', '#0277bd',
+            'local_wholesale', '#0288d1',
+            'tourist_morning_market', '#29b6f6',
+            'tourist_wholesale', '#4fc3f7',
+            '#0288d1',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#e1f5fe',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'wagyuRanches':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'head_count'], 5000],
+            0, 5, 10000, 9, 50000, 14, 120000, 20,
+          ],
+          'circle-color': [
+            'match',
+            ['get', 'tier'],
+            'premium', '#3e2723',
+            'regional', '#6d4c41',
+            'rare_breed', '#8d6e63',
+            'heritage', '#bf360c',
+            '#6d4c41',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#efebe9',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'teaZones':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'production_t'], 500],
+            0, 5, 1000, 9, 3000, 13, 6000, 18,
+          ],
+          'circle-color': [
+            'match',
+            ['get', 'variety'],
+            'matcha', '#1b5e20',
+            'matcha_gyokuro', '#2e7d32',
+            'gyokuro', '#388e3c',
+            'sencha', '#43a047',
+            'sencha_fukamushi', '#4caf50',
+            'kabusecha', '#66bb6a',
+            'kamairicha', '#81c784',
+            'hojicha', '#8d6e63',
+            'tamaryokucha', '#7cb342',
+            'traditional_gyokuro', '#1b5e20',
+            'organic_sencha', '#689f38',
+            '#43a047',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#e8f5e9',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'ricePaddies':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'production_t'], 10000],
+            0, 5, 50000, 10, 100000, 14, 200000, 20,
+          ],
+          'circle-color': [
+            'match',
+            ['get', 'grade'],
+            'special_a', '#558b2f',
+            'a', '#7cb342',
+            'terraced', '#ffa726',
+            'terraced_100', '#ff9800',
+            '#9ccc65',
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#f1f8e9',
+          'circle-stroke-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
     default:
       map.addLayer({
         id: mainLayerId,

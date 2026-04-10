@@ -755,6 +755,50 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/phone-scam-hotspots',
     category: 'Crime',
   },
+
+  // ── Wave 9: Food + Agriculture ──────────────────────────────────
+  sakeBreweries: {
+    name: 'Sake Breweries',
+    icon: '\u{1F376}',
+    color: '#7986cb',
+    endpoint: '/api/data/sake-breweries',
+    category: 'Food',
+  },
+  wineriesCraftbeer: {
+    name: 'Wineries & Craft Beer',
+    icon: '\u{1F377}',
+    color: '#ad1457',
+    endpoint: '/api/data/wineries-craftbeer',
+    category: 'Food',
+  },
+  fishMarkets: {
+    name: 'Fish Markets',
+    icon: '\u{1F41F}',
+    color: '#0288d1',
+    endpoint: '/api/data/fish-markets',
+    category: 'Food',
+  },
+  wagyuRanches: {
+    name: 'Wagyu Ranches',
+    icon: '\u{1F404}',
+    color: '#6d4c41',
+    endpoint: '/api/data/wagyu-ranches',
+    category: 'Food',
+  },
+  teaZones: {
+    name: 'Tea Zones',
+    icon: '\u{1F375}',
+    color: '#43a047',
+    endpoint: '/api/data/tea-zones',
+    category: 'Agriculture',
+  },
+  ricePaddies: {
+    name: 'Rice Paddies',
+    icon: '\u{1F33E}',
+    color: '#9ccc65',
+    endpoint: '/api/data/rice-paddies',
+    category: 'Agriculture',
+  },
 };
 
 export const LAYER_CATEGORIES = [
@@ -771,6 +815,8 @@ export const LAYER_CATEGORIES = [
   'Telecom',
   'Tourism',
   'Culture',
+  'Food',
+  'Agriculture',
   'Crime',
   'Wildlife',
   'Social',
