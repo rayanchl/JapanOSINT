@@ -858,6 +858,13 @@ const LAYER_DEFINITIONS = {
     category: 'Culture',
   },
 
+  // Business / Corporate registry
+  gbizinfoGeocoded: {
+    name: 'gBizINFO Corporates',
+    icon: '\u{1F3E2}',
+    color: '#5e35b1',
+    endpoint: '/api/data/gbizinfo-geocoded',
+    category: 'Business',
   // ── Wave 11: External Mapping Platforms ─────────────────────────
   marineTraffic: {
     name: 'MarineTraffic AIS',
@@ -907,6 +914,7 @@ export const LAYER_CATEGORIES = [
   'Government',
   'Defense',
   'Industry',
+  'Business',
   'Telecom',
   'Tourism',
   'Culture',

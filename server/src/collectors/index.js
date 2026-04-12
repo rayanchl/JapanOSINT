@@ -143,6 +143,8 @@ import wagyuRanches from './wagyuRanches.js';
 import teaZones from './teaZones.js';
 import ricePaddies from './ricePaddies.js';
 
+// Business / Corporate registry
+import gbizinfoGeocoded from './gbizinfoGeocoded.js';
 // Wave 11: External Mapping Platforms (MarineTraffic, VesselFinder, Sentinel Hub, Google Earth, My Maps)
 import marineTraffic from './marineTraffic.js';
 import vesselFinder from './vesselFinder.js';
@@ -301,6 +303,9 @@ export const collectors = {
   'wagyu-ranches': wagyuRanches,
   'tea-zones': teaZones,
   'rice-paddies': ricePaddies,
+
+  // Business / Corporate registry
+  'gbizinfo-geocoded': gbizinfoGeocoded,
 
   // Wave 10: Niche + Pop Culture
   'vending-machines': vendingMachines,

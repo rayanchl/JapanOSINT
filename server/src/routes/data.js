@@ -843,6 +843,10 @@ router.get('/themed-cafes', async (_req, res) => {
 });
 
 // ===========================================================================
+// Business / Corporate Registry
+// ===========================================================================
+router.get('/gbizinfo-geocoded', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'gbizinfo-geocoded', layerType: 'gbizinfo-geocoded', collectorKey: 'gbizinfo-geocoded' });
 // Wave 11: External Mapping Platforms (MarineTraffic, VesselFinder, Sentinel Hub, Google Earth, My Maps)
 // ===========================================================================
 router.get('/marine-traffic', async (_req, res) => {
