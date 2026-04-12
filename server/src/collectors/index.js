@@ -142,6 +142,13 @@ import wagyuRanches from './wagyuRanches.js';
 import teaZones from './teaZones.js';
 import ricePaddies from './ricePaddies.js';
 
+// Wave 11: External Mapping Platforms (MarineTraffic, VesselFinder, Sentinel Hub, Google Earth, My Maps)
+import marineTraffic from './marineTraffic.js';
+import vesselFinder from './vesselFinder.js';
+import sentinelHub from './sentinelHub.js';
+import googleEarth from './googleEarth.js';
+import googleMyMaps from './googleMyMaps.js';
+
 // Wave 10: Niche + Pop Culture
 import vendingMachines from './vendingMachines.js';
 import karaokeChains from './karaokeChains.js';
@@ -297,6 +304,13 @@ export const collectors = {
   'sento-public-baths': sentoPublicBaths,
   'manhole-covers': manholeCovers,
   'themed-cafes': themedCafes,
+
+  // Wave 11: External Mapping Platforms
+  'marine-traffic': marineTraffic,
+  'vessel-finder': vesselFinder,
+  'sentinel-hub': sentinelHub,
+  'google-earth': googleEarth,
+  'google-my-maps': googleMyMaps,
 };
 
 /**
