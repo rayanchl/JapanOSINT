@@ -10,6 +10,27 @@ export const OVERPASS_ENDPOINTS = [
 ];
 
 /**
+ * Per-process cache for Overpass responses. Keyed by the full query string.
+ * Public Overpass instances are rate-limited, so we cache results for 6h by
+ * default; collectors can override via `options.cacheTtlMs`.
+ */
+const overpassCache = new Map(); // key -> { features, expiresAt }
+const DEFAULT_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+
+function cacheGet(key) {
+  const hit = overpassCache.get(key);
+  if (!hit) return null;
+  if (hit.expiresAt < Date.now()) {
+    overpassCache.delete(key);
+    return null;
+  }
+  return hit.features;
+}
+function cacheSet(key, features, ttlMs) {
+  overpassCache.set(key, { features, expiresAt: Date.now() + ttlMs });
+}
+
+/**
  * Execute an Overpass QL query against Japan and map elements into GeoJSON features.
  * @param {string} overpassBody - the body of the query, e.g. `node["amenity"="bus_station"](area.jp);`
  * @param {(el: any, i: number) => any} mapFn - maps raw OSM element to GeoJSON feature
@@ -20,9 +41,29 @@ export const OVERPASS_ENDPOINTS = [
  * @returns {Promise<any[]|null>}
  */
 export async function fetchOverpass(overpassBody, mapFn, timeoutMs = 15000, options = {}) {
-  const { limit = 800, queryTimeout = 40 } = options;
+  const {
+    limit = 800,
+    queryTimeout = 40,
+    cacheTtlMs = DEFAULT_CACHE_TTL_MS,
+    useCache = true,
+  } = options;
   const outClause = limit && limit > 0 ? `out center ${limit};` : 'out center;';
   const query = `[out:json][timeout:${queryTimeout}];area["ISO3166-1"="JP"][admin_level=2]->.jp;(${overpassBody});${outClause}`;
+
+  if (useCache) {
+    const cached = cacheGet(query);
+    if (cached) {
+      // Re-run the mapFn so each call gets fresh feature objects (callers
+      // sometimes mutate the properties downstream).
+      return cached.map((el, i) => {
+        const coords = el.lat != null
+          ? [el.lon, el.lat]
+          : [el.center.lon, el.center.lat];
+        return mapFn(el, i, coords);
+      });
+    }
+  }
+
   for (const endpoint of OVERPASS_ENDPOINTS) {
     try {
       const ctrl = new AbortController();
@@ -45,6 +86,7 @@ export async function fetchOverpass(overpassBody, mapFn, timeoutMs = 15000, opti
         return false;
       });
       if (els.length === 0) continue;
+      if (useCache) cacheSet(query, els, cacheTtlMs);
       return els.map((el, i) => {
         const coords = el.lat != null
           ? [el.lon, el.lat]

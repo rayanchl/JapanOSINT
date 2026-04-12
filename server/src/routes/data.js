@@ -866,6 +866,26 @@ router.get('/google-my-maps', async (_req, res) => {
 });
 
 // ===========================================================================
+// Wave 12: Untapped OSM infrastructure tags
+// ===========================================================================
+router.get('/parking-facilities', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'parking-facilities', layerType: 'parking-facilities', collectorKey: 'parking-facilities' });
+});
+
+router.get('/water-towers', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'water-towers', layerType: 'water-towers', collectorKey: 'water-towers' });
+});
+
+router.get('/transmission-towers', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'transmission-towers', layerType: 'transmission-towers', collectorKey: 'transmission-towers' });
+});
+
+router.get('/utility-poles', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'utility-poles', layerType: 'utility-poles', collectorKey: 'utility-poles' });
+});
+
+router.get('/admin-boundaries', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'admin-boundaries', layerType: 'admin-boundaries', collectorKey: 'admin-boundaries' });
 // Wave 12: Unified Camera Discovery
 // ===========================================================================
 router.get('/camera-discovery', async (_req, res) => {

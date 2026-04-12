@@ -5,8 +5,30 @@ import {
   getLogsBySourceId,
   getStats,
 } from '../utils/database.js';
+import {
+  downloadExtract,
+  getExtractInfo,
+  isExtractFresh,
+} from '../utils/geofabrikExtract.js';
 
 const router = Router();
+
+// GET /api/sources/geofabrik/status - local OSM extract status
+router.get('/geofabrik/status', (_req, res) => {
+  const info = getExtractInfo();
+  res.json({
+    fresh: isExtractFresh(),
+    info: info || { exists: false },
+  });
+});
+
+// POST /api/sources/geofabrik/refresh - trigger a (re)download
+router.post('/geofabrik/refresh', async (req, res) => {
+  const force = req.query.force === '1' || req.query.force === 'true';
+  const result = await downloadExtract({ force });
+  if (result.ok) res.json(result);
+  else res.status(502).json(result);
+});
 
 // GET /api/sources/stats - aggregate stats (must be before /:id)
 router.get('/stats', (_req, res) => {
