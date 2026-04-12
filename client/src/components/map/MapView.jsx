@@ -11,7 +11,7 @@ import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 
 const ICON_IMAGE_SIZE = 48; // px — canvas resolution for icon images
 
-function createEmojiIconImage(emoji, color) {
+function createEmojiIconImage(emoji) {
   const size = ICON_IMAGE_SIZE;
   const canvas = document.createElement('canvas');
   canvas.width = size;
@@ -19,22 +19,12 @@ function createEmojiIconImage(emoji, color) {
   const ctx = canvas.getContext('2d');
   if (!ctx) return null;
 
-  // Subtle contrast background so icons remain readable on any basemap
-  ctx.beginPath();
-  ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(15, 20, 28, 0.75)';
-  ctx.fill();
-  ctx.lineWidth = 1.5;
-  ctx.strokeStyle = color || 'rgba(255, 255, 255, 0.5)';
-  ctx.stroke();
-
-  // Draw the emoji glyph
-  ctx.font = `${Math.round(size * 0.62)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","EmojiOne Color","Android Emoji","Twemoji Mozilla",sans-serif`;
+  // Flat 2D icon — no background disc, no stroke, just the glyph itself.
+  ctx.font = `${Math.round(size * 0.85)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","EmojiOne Color","Android Emoji","Twemoji Mozilla",sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = '#ffffff';
-  // Slight vertical nudge so emoji render centered across platforms
-  ctx.fillText(emoji, size / 2, size / 2 + 2);
+  ctx.fillText(emoji, size / 2, size / 2 + 1);
 
   return ctx.getImageData(0, 0, size, size);
 }
@@ -48,28 +38,16 @@ function registerLayerIcons(map) {
     if (!def?.icon) continue;
     const imgId = layerIconImageId(layerId);
     if (map.hasImage(imgId)) continue;
-    const imageData = createEmojiIconImage(def.icon, def.color);
+    const imageData = createEmojiIconImage(def.icon);
     if (imageData) {
       map.addImage(imgId, imageData, { pixelRatio: 2 });
     }
   }
 }
 
-// Convert a circle-radius value/expression into a reasonable icon-size
-// multiplier (1.0 = full 48px icon). Preserves data-driven scaling like
-// earthquake magnitude → size.
-function circleRadiusToIconSize(radiusExpr) {
-  const scale = (px) => Math.max(0.35, Math.min(1.1, px / 22));
-  if (typeof radiusExpr === 'number') return scale(radiusExpr);
-  if (Array.isArray(radiusExpr)) {
-    // Let MapLibre evaluate the radius expression, then scale & clamp it.
-    return [
-      'max', 0.35,
-      ['min', 1.1, ['/', radiusExpr, 22]],
-    ];
-  }
-  return 0.5;
-}
+// Fixed icon size for every layer — flat 2D, uniform scale, no
+// data-driven radius encoding.
+const UNIFORM_ICON_SIZE = 0.5;
 
 // Replace any `type: 'circle'` layer config with an equivalent
 // `type: 'symbol'` layer that renders the registered layer icon.
@@ -85,7 +63,7 @@ function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity) {
     ...(config.filter ? { filter: config.filter } : {}),
     layout: {
       'icon-image': iconImageId,
-      'icon-size': circleRadiusToIconSize(paint['circle-radius']),
+      'icon-size': UNIFORM_ICON_SIZE,
       'icon-allow-overlap': true,
       'icon-ignore-placement': true,
       'icon-anchor': 'center',
