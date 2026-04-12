@@ -3204,6 +3204,141 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
       });
       break;
 
+    // ── Wave 11: External Mapping Platforms ────────────────────
+    case 'marineTraffic':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'length_m'], 50],
+            0, 3, 50, 5, 150, 8, 300, 12, 400, 15,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'vessel_type'], 'other'],
+            'cargo', '#01579b',
+            'tanker', '#ef6c00',
+            'passenger', '#7c4dff',
+            'fishing', '#558b2f',
+            'harbour', '#37474f',
+            'port', '#263238',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 0.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    case 'vesselFinder':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'length_m'], 50],
+            0, 3, 50, 5, 150, 8, 300, 12, 400, 15,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'vessel_type'], 'other'],
+            'passenger', '#7c4dff',
+            'ferry_terminal', '#0288d1',
+            'cargo', '#01579b',
+            'tanker', '#ef6c00',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 0.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    case 'sentinelHub':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 10,
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'cloud_cover'], 0],
+            0, '#2e7d32',
+            20, '#9e9d24',
+            40, '#ef6c00',
+          ],
+          'circle-opacity': opacity * 0.55,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#1b5e20',
+          'circle-stroke-opacity': opacity,
+        },
+      });
+      break;
+
+    case 'googleEarth':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 6,
+          'circle-color': [
+            'match', ['coalesce', ['get', 'layer'], 'other'],
+            'volcano', '#bf360c',
+            'wikipedia', '#1a73e8',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity,
+        },
+      });
+      break;
+
+    case 'googleMyMaps':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 6,
+          'circle-color': [
+            'match', ['coalesce', ['get', 'category'], 'other'],
+            'landmark', '#ea4335',
+            'temple', '#d81b60',
+            'shrine', '#b71c1c',
+            'castle', '#6d4c41',
+            'park', '#2e7d32',
+            'nature', '#388e3c',
+            'onsen', '#ef6c00',
+            'market', '#fb8c00',
+            'district', '#7b1fa2',
+            'memorial', '#455a64',
+            'theme_park', '#f06292',
+            'aquarium', '#0288d1',
+            'garden', '#43a047',
+            'village', '#8d6e63',
+            'island', '#00acc1',
+            'canal', '#0097a7',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.9,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity,
+        },
+      });
+      break;
+
     default:
       map.addLayer({
         id: mainLayerId,

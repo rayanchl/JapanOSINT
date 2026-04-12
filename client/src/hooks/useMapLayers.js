@@ -843,6 +843,43 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/themed-cafes',
     category: 'Culture',
   },
+
+  // ── Wave 11: External Mapping Platforms ─────────────────────────
+  marineTraffic: {
+    name: 'MarineTraffic AIS',
+    icon: '\u{1F6A2}',
+    color: '#01579b',
+    endpoint: '/api/data/marine-traffic',
+    category: 'Mapping',
+  },
+  vesselFinder: {
+    name: 'VesselFinder AIS',
+    icon: '\u{26F4}',
+    color: '#0288d1',
+    endpoint: '/api/data/vessel-finder',
+    category: 'Mapping',
+  },
+  sentinelHub: {
+    name: 'Sentinel-2 Scenes',
+    icon: '\u{1F6F0}',
+    color: '#33691e',
+    endpoint: '/api/data/sentinel-hub',
+    category: 'Mapping',
+  },
+  googleEarth: {
+    name: 'Google Earth Layers',
+    icon: '\u{1F30D}',
+    color: '#1a73e8',
+    endpoint: '/api/data/google-earth',
+    category: 'Mapping',
+  },
+  googleMyMaps: {
+    name: 'Google My Maps',
+    icon: '\u{1F5FA}',
+    color: '#ea4335',
+    endpoint: '/api/data/google-my-maps',
+    category: 'Mapping',
+  },
 };
 
 export const LAYER_CATEGORIES = [
@@ -867,6 +904,7 @@ export const LAYER_CATEGORIES = [
   'Marketplace',
   'Cyber',
   'Infrastructure',
+  'Mapping',
 ];
 
 export { LAYER_DEFINITIONS };

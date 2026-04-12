@@ -1,15 +1,72 @@
 /**
  * Maritime AIS Ship Tracking Collector
- * Maps vessel positions around Japan using AIS data:
- * - MarineTraffic / VesselFinder scraping
- * - AIS receiver data
- * - Cargo ships, tankers, ferries, fishing boats, coast guard
- * Covers major ports: Tokyo Bay, Osaka Bay, Kobe, Yokohama, Nagoya, etc.
+ * Aggregates live AIS positions around Japan from:
+ *   1) MarineTraffic Exportvessels API (if MARINETRAFFIC_API_KEY set)
+ *   2) VesselFinder vesselslist API (if VESSELFINDER_API_KEY set)
+ *   3) OSM Overpass harbour nodes (public, always reachable)
+ *   4) Curated port seed (fallback when all above fail)
+ * Japan bbox: lat 24-46, lon 122-154.
  */
 
-import { fetchOverpass } from './_liveHelpers.js';
+import { fetchOverpass, fetchJson } from './_liveHelpers.js';
 
-async function tryLive() {
+const MARINETRAFFIC_API_KEY = process.env.MARINETRAFFIC_API_KEY || '';
+const VESSELFINDER_API_KEY = process.env.VESSELFINDER_API_KEY || '';
+
+// MarineTraffic Exportvessels - returns array of vessels inside bbox with last position
+async function tryMarineTraffic() {
+  if (!MARINETRAFFIC_API_KEY) return null;
+  const url = `https://services.marinetraffic.com/api/exportvessels/v:8/${MARINETRAFFIC_API_KEY}/protocol:jsono/minlat:24/maxlat:46/minlon:122/maxlon:154`;
+  const data = await fetchJson(url, { timeoutMs: 10000 });
+  if (!Array.isArray(data) || data.length === 0) return null;
+  return data.map((v, i) => ({
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: [parseFloat(v.LON), parseFloat(v.LAT)] },
+    properties: {
+      vessel_id: `MT_${v.MMSI || i}`,
+      mmsi: v.MMSI,
+      imo: v.IMO,
+      vessel_name: v.SHIPNAME || `MT${i}`,
+      vessel_type: (v.SHIPTYPE || 'other').toLowerCase(),
+      flag: v.FLAG,
+      speed_knots: v.SPEED != null ? parseFloat(v.SPEED) / 10 : null,
+      heading: v.HEADING,
+      destination: v.DESTINATION,
+      last_position_update: v.TIMESTAMP,
+      country: 'JP',
+      source: 'marinetraffic_api',
+    },
+  }));
+}
+
+// VesselFinder vesselslist - public REST key-gated endpoint
+async function tryVesselFinder() {
+  if (!VESSELFINDER_API_KEY) return null;
+  const url = `https://api.vesselfinder.com/vesselslist?userkey=${VESSELFINDER_API_KEY}&bbox=122,24,154,46&format=json`;
+  const data = await fetchJson(url, { timeoutMs: 10000 });
+  if (!Array.isArray(data) || data.length === 0) return null;
+  return data.map((v, i) => ({
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: [parseFloat(v.LONGITUDE), parseFloat(v.LATITUDE)] },
+    properties: {
+      vessel_id: `VF_${v.MMSI || i}`,
+      mmsi: v.MMSI,
+      imo: v.IMO,
+      vessel_name: v.NAME,
+      vessel_type: (v.TYPE || 'other').toLowerCase(),
+      flag: v.FLAG,
+      speed_knots: v.SPEED,
+      heading: v.COURSE,
+      destination: v.DESTINATION,
+      last_position_update: v.TIMESTAMP,
+      country: 'JP',
+      source: 'vesselfinder_api',
+    },
+  }));
+}
+
+// OSM Overpass fallback - harbour nodes (not live vessels but real geocoded ports)
+async function tryOverpassHarbours() {
   return await fetchOverpass(
     'node["seamark:type"="harbour"](area.jp);node["harbour"="yes"](area.jp);way["harbour"="yes"](area.jp);',
     (el, i, coords) => ({
@@ -22,7 +79,7 @@ async function tryLive() {
         port: el.tags?.name || null,
         operator: el.tags?.operator || null,
         country: 'JP',
-        source: 'maritime_live',
+        source: 'osm_overpass_harbours',
       },
     })
   );
@@ -160,9 +217,27 @@ function generateSeedData() {
 }
 
 export default async function collectMaritimeAis() {
-  let features = await tryLive();
+  let features = null;
+  let liveSource = null;
+
+  features = await tryMarineTraffic();
+  if (features && features.length) liveSource = 'marinetraffic_api';
+
+  if (!features || !features.length) {
+    features = await tryVesselFinder();
+    if (features && features.length) liveSource = 'vesselfinder_api';
+  }
+
+  if (!features || !features.length) {
+    features = await tryOverpassHarbours();
+    if (features && features.length) liveSource = 'osm_overpass_harbours';
+  }
+
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) {
+    features = generateSeedData();
+    liveSource = 'ais_seed';
+  }
 
   return {
     type: 'FeatureCollection',
@@ -172,7 +247,8 @@ export default async function collectMaritimeAis() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live,
-      description: 'AIS maritime vessel tracking around Japan - cargo, tankers, ferries, fishing vessels',
+      live_source: liveSource,
+      description: 'AIS maritime vessel tracking around Japan - MarineTraffic + VesselFinder + OSM harbours',
     },
     metadata: {},
   };
