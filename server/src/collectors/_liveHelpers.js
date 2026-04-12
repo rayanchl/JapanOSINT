@@ -14,10 +14,15 @@ export const OVERPASS_ENDPOINTS = [
  * @param {string} overpassBody - the body of the query, e.g. `node["amenity"="bus_station"](area.jp);`
  * @param {(el: any, i: number) => any} mapFn - maps raw OSM element to GeoJSON feature
  * @param {number} timeoutMs
+ * @param {object} [options]
+ * @param {number|null} [options.limit=800] - cap on returned elements; pass null/0 for no cap
+ * @param {number} [options.queryTimeout=40] - Overpass [timeout:] value in seconds
  * @returns {Promise<any[]|null>}
  */
-export async function fetchOverpass(overpassBody, mapFn, timeoutMs = 15000) {
-  const query = `[out:json][timeout:40];area["ISO3166-1"="JP"][admin_level=2]->.jp;(${overpassBody});out center 800;`;
+export async function fetchOverpass(overpassBody, mapFn, timeoutMs = 15000, options = {}) {
+  const { limit = 800, queryTimeout = 40 } = options;
+  const outClause = limit && limit > 0 ? `out center ${limit};` : 'out center;';
+  const query = `[out:json][timeout:${queryTimeout}];area["ISO3166-1"="JP"][admin_level=2]->.jp;(${overpassBody});${outClause}`;
   for (const endpoint of OVERPASS_ENDPOINTS) {
     try {
       const ctrl = new AbortController();

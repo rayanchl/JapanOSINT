@@ -281,6 +281,14 @@ router.get('/full-transport', async (_req, res) => {
   });
 });
 
+router.get('/mlit-n02-stations', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'mlit-n02-stations',
+    layerType: 'mlit-n02-stations',
+    collectorKey: 'mlit-n02-stations',
+  });
+});
+
 router.get('/bus-routes', async (_req, res) => {
   await respondWithData(res, {
     sourceId: 'bus-routes',

@@ -36,6 +36,7 @@ import wifiNetworks from './wifiNetworks.js';
 import maritimeAis from './maritimeAis.js';
 import flightAdsb from './flightAdsb.js';
 import fullTransport from './fullTransport.js';
+import mlitN02Stations from './mlitN02Stations.js';
 import busRoutes from './busRoutes.js';
 import ferryRoutes from './ferryRoutes.js';
 import highwayTraffic from './highwayTraffic.js';
@@ -191,6 +192,7 @@ export const collectors = {
   'maritime-ais': maritimeAis,
   'flight-adsb': flightAdsb,
   'full-transport': fullTransport,
+  'mlit-n02-stations': mlitN02Stations,
   'bus-routes': busRoutes,
   'ferry-routes': ferryRoutes,
   'highway-traffic': highwayTraffic,
