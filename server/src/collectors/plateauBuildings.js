@@ -4,6 +4,31 @@
  * Based on MLIT PLATEAU open data
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'way["building"="yes"]["building:levels"](area.jp);',
+    (el, i, coords) => {
+      const levels = parseInt(el.tags?.['building:levels'], 10) || 0;
+      return {
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: coords },
+        properties: {
+          building_id: `BLDG_LIVE_${String(i + 1).padStart(6, '0')}`,
+          name: el.tags?.name || el.tags?.['name:en'] || `Building ${el.id}`,
+          height: levels * 3,
+          floors: levels,
+          use: el.tags?.['building:use'] || 'unknown',
+          year: parseInt(el.tags?.start_date, 10) || null,
+          country: 'JP',
+          source: 'plateau_live',
+        },
+      };
+    }
+  );
+}
+
 // Building footprints for Marunouchi / Tokyo Station area (~50 buildings)
 // Real approximate coordinates and dimensions
 const BUILDINGS = [
@@ -94,9 +119,9 @@ function generateSeedData() {
 }
 
 export default async function collectPlateauBuildings() {
-  // PLATEAU data is provided as seed/demo data
-  // Full integration would use CityGML from https://www.geospatial.jp/ckan/dataset/plateau
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
 
   return {
     type: 'FeatureCollection',
@@ -105,6 +130,7 @@ export default async function collectPlateauBuildings() {
       source: 'plateau_seed',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
       description: 'Building footprints from PLATEAU 3D city model - Marunouchi/Tokyo Station area',
     },
     metadata: {},

@@ -1,10 +1,28 @@
 /**
  * Bus Routes / Terminals Collector
- * Maps bus terminals, depots and major stops across Japan:
- * - Highway bus terminals (JR Bus, Willer, etc.)
- * - City bus terminals (Toei, Hankyu Bus, etc.)
- * - Community/rural buses
+ * Live: OSM Overpass query for amenity=bus_station across Japan.
+ * Fallback: curated major highway/city bus terminals.
  */
+
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return fetchOverpass(
+    'node["amenity"="bus_station"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        bus_id: `OSM_${el.id}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `Bus station ${i + 1}`,
+        operator: el.tags?.operator || 'unknown',
+        bus_type: 'terminal',
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+  );
+}
 
 const BUS_TERMINALS = [
   // Major highway bus terminals
@@ -76,7 +94,9 @@ function generateSeedData() {
 }
 
 export default async function collectBusRoutes() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -84,6 +104,7 @@ export default async function collectBusRoutes() {
       source: 'bus_routes',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
       description: 'Bus terminals and depots across Japan - highway buses, city buses',
     },
     metadata: {},

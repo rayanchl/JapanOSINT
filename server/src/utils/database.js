@@ -104,7 +104,9 @@ const stmtSetCache = db.prepare(`
 // --------------- Helper functions ---------------
 
 export function upsertSource({ id, name, type, category, url, status = 'offline' }) {
-  return stmtUpsertSource.run({ id, name, type, category, url, status });
+  const allowedStatus = new Set(['online', 'offline', 'degraded']);
+  const safeStatus = allowedStatus.has(status) ? status : 'offline';
+  return stmtUpsertSource.run({ id, name, type, category, url, status: safeStatus });
 }
 
 export function updateSourceStatus({ id, status, response_time_ms = null, records_count = null, error_message = null }) {

@@ -7,6 +7,27 @@
  * Covers major ports: Tokyo Bay, Osaka Bay, Kobe, Yokohama, Nagoya, etc.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["seamark:type"="harbour"](area.jp);node["harbour"="yes"](area.jp);way["harbour"="yes"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        vessel_id: `AIS_LIVE_${String(i + 1).padStart(5, '0')}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `Harbour ${el.id}`,
+        vessel_type: 'harbour',
+        port: el.tags?.name || null,
+        operator: el.tags?.operator || null,
+        country: 'JP',
+        source: 'maritime_live',
+      },
+    })
+  );
+}
+
 const VESSEL_TYPES = ['cargo', 'tanker', 'container', 'ferry', 'fishing', 'coast_guard', 'cruise', 'tug', 'bulk_carrier', 'lng_carrier', 'passenger', 'navy'];
 
 const JAPAN_PORTS = [
@@ -139,7 +160,9 @@ function generateSeedData() {
 }
 
 export default async function collectMaritimeAis() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
 
   return {
     type: 'FeatureCollection',
@@ -148,6 +171,7 @@ export default async function collectMaritimeAis() {
       source: 'ais_tracking',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
       description: 'AIS maritime vessel tracking around Japan - cargo, tankers, ferries, fishing vessels',
     },
     metadata: {},

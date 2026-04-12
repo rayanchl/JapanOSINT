@@ -7,6 +7,29 @@
  * - Real-time congestion data when available
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["highway"="motorway_junction"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        node_id: `HWY_LIVE_${String(i + 1).padStart(4, '0')}`,
+        name: el.tags?.name || el.tags?.ref || `Junction ${el.id}`,
+        highway: el.tags?.highway || 'motorway_junction',
+        operator: el.tags?.operator || 'unknown',
+        node_type: 'JCT',
+        ref: el.tags?.ref || null,
+        country: 'JP',
+        updated_at: new Date().toISOString(),
+        source: 'highway_traffic',
+      },
+    })
+  );
+}
+
 const HIGHWAY_NODES = [
   // Tomei Expressway (東名高速)
   { name: '東京IC', highway: '東名高速', operator: 'NEXCO中日本', lat: 35.6101, lon: 139.6695, type: 'IC' },
@@ -120,7 +143,9 @@ function generateSeedData() {
 }
 
 export default async function collectHighwayTraffic() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -128,6 +153,7 @@ export default async function collectHighwayTraffic() {
       source: 'highway_traffic',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
       description: 'Japan expressway network - IC/JCT/SA/PA with congestion data (NEXCO East/Central/West, Shuto, Hanshin)',
     },
     metadata: {},

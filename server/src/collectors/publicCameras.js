@@ -4,6 +4,28 @@
  * Includes traffic cameras, tourist spots, volcano cams, city cams
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["man_made"="surveillance"]["surveillance"~"public|traffic|webcam"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        camera_id: `CAM_LIVE_${String(i + 1).padStart(5, '0')}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `Camera ${el.id}`,
+        type: el.tags?.surveillance || 'public',
+        surveillance_type: el.tags?.['surveillance:type'] || null,
+        operator: el.tags?.operator || null,
+        url: el.tags?.url || null,
+        country: 'JP',
+        source: 'public_cameras_live',
+      },
+    })
+  );
+}
+
 const CAMERAS = [
   // Traffic cameras - Tokyo
   { name: '首都高速 箱崎JCT', type: 'traffic', lat: 35.6838, lon: 139.7892, url: 'https://www.shutoko.jp/use/realtime/camera/', thumbnail: 'https://www.shutoko.jp/camera/hakozaki.jpg' },
@@ -69,8 +91,9 @@ function generateSeedData() {
 }
 
 export default async function collectPublicCameras() {
-  // Public cameras are curated, not fetched from an API
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
 
   return {
     type: 'FeatureCollection',
@@ -79,6 +102,7 @@ export default async function collectPublicCameras() {
       source: 'curated',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
       description: 'Curated public webcam feeds across Japan',
     },
     metadata: {},

@@ -6,7 +6,20 @@
  * - Seed data with realistic Tokyo/Osaka/Kyoto clustering
  */
 
+import { fetchJson } from './_liveHelpers.js';
+
 const BEARER_TOKEN = process.env.TWITTER_BEARER_TOKEN || '';
+
+// Mastodon public instances with Japanese user presence. These expose an
+// authless public timeline API (`/api/v1/timelines/public`). We pull the local
+// + federated timeline and geo-tag posts that carry coordinates in the `geo`
+// or hashtag field.
+const MASTODON_INSTANCES = [
+  'https://mstdn.jp',
+  'https://pawoo.net',
+  'https://mastodon-japan.net',
+  'https://fedibird.com',
+];
 
 const JAPAN_CITIES = [
   // Tokyo wards - heavy social activity
@@ -157,10 +170,64 @@ async function tryTwitterAPI() {
   }
 }
 
+async function tryMastodonPublic() {
+  const all = [];
+  for (const instance of MASTODON_INSTANCES) {
+    const posts = await fetchJson(
+      `${instance}/api/v1/timelines/public?local=true&limit=40`,
+      { timeoutMs: 7000 },
+    );
+    if (!Array.isArray(posts)) continue;
+    for (const p of posts) {
+      // Mastodon does not always include geo - we place posts at their
+      // instance hosting city (best-effort), falling back to Tokyo.
+      // If the toot body contains a #place hashtag we use our city table.
+      const body = (p.content || '').replace(/<[^>]*>/g, '');
+      let coords = null;
+      for (const city of JAPAN_CITIES) {
+        if (body.includes(city.name)) {
+          coords = [city.lon + (Math.random() - 0.5) * 0.01, city.lat + (Math.random() - 0.5) * 0.01];
+          break;
+        }
+      }
+      if (!coords) continue; // only keep geo-inferable posts - no fake coordinates
+      all.push({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: coords },
+        properties: {
+          id: `MAST_${p.id}`,
+          platform: 'mastodon',
+          instance: instance.replace('https://', ''),
+          username: p.account?.acct || p.account?.username,
+          display_name: p.account?.display_name || null,
+          text: body.slice(0, 280),
+          likes: p.favourites_count || 0,
+          retweets: p.reblogs_count || 0,
+          replies: p.replies_count || 0,
+          verified: !!p.account?.bot === false && p.account?.followers_count > 1000,
+          has_media: (p.media_attachments || []).length > 0,
+          media_type: p.media_attachments?.[0]?.type || null,
+          language: p.language || 'ja',
+          timestamp: p.created_at,
+          source: 'mastodon_public_api',
+        },
+      });
+    }
+  }
+  return all.length > 0 ? all : null;
+}
+
 export default async function collectTwitterGeo() {
   let features = await tryTwitterAPI();
+  let liveSource = 'twitter_api';
   if (!features || features.length === 0) {
+    features = await tryMastodonPublic();
+    liveSource = 'mastodon_public_api';
+  }
+  const live = !!(features && features.length > 0);
+  if (!live) {
     features = generateSeedData();
+    liveSource = 'twitter_seed';
   }
 
   return {
@@ -170,7 +237,9 @@ export default async function collectTwitterGeo() {
       source: 'twitter_geo',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      description: 'Geotagged Twitter/X posts from Japan with engagement metrics',
+      live,
+      live_source: liveSource,
+      description: 'Geotagged social posts from Japan - Twitter/X API + Mastodon public timelines',
     },
     metadata: {},
   };

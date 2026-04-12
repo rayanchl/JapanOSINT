@@ -7,6 +7,28 @@
  * - Waste storage sites
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["power"="plant"]["plant:source"="nuclear"](area.jp);way["power"="plant"]["plant:source"="nuclear"](area.jp);node["industrial"="nuclear"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        facility_id: `NUC_LIVE_${String(i + 1).padStart(4, '0')}`,
+        name: el.tags?.name || el.tags?.['name:en'] || `Nuclear facility ${el.id}`,
+        operator: el.tags?.operator || 'unknown',
+        facility_type: 'npp',
+        status: el.tags?.['plant:status'] || 'unknown',
+        country: 'JP',
+        updated_at: new Date().toISOString(),
+        source: 'nuclear_facilities',
+      },
+    })
+  );
+}
+
 const NUCLEAR_FACILITIES = [
   // Active / restartable nuclear power plants
   { name: '柏崎刈羽原子力発電所', operator: '東京電力', type: 'npp', status: 'restart_pending', units: 7, capacity_mw: 8212, lat: 37.4286, lon: 138.5950, prefecture: '新潟県' },
@@ -71,7 +93,9 @@ function generateSeedData() {
 }
 
 export default async function collectNuclearFacilities() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -79,6 +103,7 @@ export default async function collectNuclearFacilities() {
       source: 'nuclear_facilities',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
       description: 'Japan nuclear facilities - power plants, fuel cycle, research, waste storage',
     },
     metadata: {},

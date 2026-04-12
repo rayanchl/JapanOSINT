@@ -349,4 +349,489 @@ router.get('/nuclear-facilities', async (_req, res) => {
   });
 });
 
+// ===========================================================================
+// Wave 1: Public Safety + Disaster
+// ===========================================================================
+
+router.get('/hospital-map', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'hospital-map',
+    layerType: 'hospital-map',
+    collectorKey: 'hospital-map',
+  });
+});
+
+router.get('/aed-map', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'aed-map',
+    layerType: 'aed-map',
+    collectorKey: 'aed-map',
+  });
+});
+
+router.get('/koban-map', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'koban-map',
+    layerType: 'koban-map',
+    collectorKey: 'koban-map',
+  });
+});
+
+router.get('/fire-station-map', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'fire-station-map',
+    layerType: 'fire-station-map',
+    collectorKey: 'fire-station-map',
+  });
+});
+
+router.get('/bosai-shelter', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'bosai-shelter',
+    layerType: 'bosai-shelter',
+    collectorKey: 'bosai-shelter',
+  });
+});
+
+router.get('/hazard-map-portal', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'hazard-map-portal',
+    layerType: 'hazard-map-portal',
+    collectorKey: 'hazard-map-portal',
+  });
+});
+
+router.get('/jshis-seismic', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'jshis-seismic',
+    layerType: 'jshis-seismic',
+    collectorKey: 'jshis-seismic',
+  });
+});
+
+router.get('/hi-net', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'hi-net',
+    layerType: 'hi-net',
+    collectorKey: 'hi-net',
+  });
+});
+
+router.get('/k-net', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'k-net',
+    layerType: 'k-net',
+    collectorKey: 'k-net',
+  });
+});
+
+router.get('/jma-intensity', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'jma-intensity',
+    layerType: 'jma-intensity',
+    collectorKey: 'jma-intensity',
+  });
+});
+
+// ===========================================================================
+// Wave 2: Health + Statistics + Commerce
+// ===========================================================================
+
+router.get('/pharmacy-map', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'pharmacy-map',
+    layerType: 'pharmacy-map',
+    collectorKey: 'pharmacy-map',
+  });
+});
+
+router.get('/convenience-stores', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'convenience-stores',
+    layerType: 'convenience-stores',
+    collectorKey: 'convenience-stores',
+  });
+});
+
+router.get('/gas-stations', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'gas-stations',
+    layerType: 'gas-stations',
+    collectorKey: 'gas-stations',
+  });
+});
+
+router.get('/tabelog-restaurants', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'tabelog-restaurants',
+    layerType: 'tabelog-restaurants',
+    collectorKey: 'tabelog-restaurants',
+  });
+});
+
+router.get('/estat-census', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'estat-census',
+    layerType: 'estat-census',
+    collectorKey: 'estat-census',
+  });
+});
+
+router.get('/resas-population', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'resas-population',
+    layerType: 'resas-population',
+    collectorKey: 'resas-population',
+  });
+});
+
+router.get('/resas-tourism', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'resas-tourism',
+    layerType: 'resas-tourism',
+    collectorKey: 'resas-tourism',
+  });
+});
+
+router.get('/resas-industry', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'resas-industry',
+    layerType: 'resas-industry',
+    collectorKey: 'resas-industry',
+  });
+});
+
+router.get('/mlit-transaction', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'mlit-transaction',
+    layerType: 'mlit-transaction',
+    collectorKey: 'mlit-transaction',
+  });
+});
+
+router.get('/dam-water-level', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'dam-water-level',
+    layerType: 'dam-water-level',
+    collectorKey: 'dam-water-level',
+  });
+});
+
+// ===========================================================================
+// Wave 3: Maritime + Ocean + Aviation
+// ===========================================================================
+
+router.get('/jma-ocean-wave', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'jma-ocean-wave',
+    layerType: 'jma-ocean-wave',
+    collectorKey: 'jma-ocean-wave',
+  });
+});
+
+router.get('/jma-ocean-temp', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'jma-ocean-temp',
+    layerType: 'jma-ocean-temp',
+    collectorKey: 'jma-ocean-temp',
+  });
+});
+
+router.get('/jma-tide', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'jma-tide',
+    layerType: 'jma-tide',
+    collectorKey: 'jma-tide',
+  });
+});
+
+router.get('/nowphas-wave', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'nowphas-wave',
+    layerType: 'nowphas-wave',
+    collectorKey: 'nowphas-wave',
+  });
+});
+
+router.get('/lighthouse-map', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'lighthouse-map',
+    layerType: 'lighthouse-map',
+    collectorKey: 'lighthouse-map',
+  });
+});
+
+router.get('/jartic-traffic', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'jartic-traffic',
+    layerType: 'jartic-traffic',
+    collectorKey: 'jartic-traffic',
+  });
+});
+
+router.get('/narita-flights', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'narita-flights',
+    layerType: 'narita-flights',
+    collectorKey: 'narita-flights',
+  });
+});
+
+router.get('/haneda-flights', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'haneda-flights',
+    layerType: 'haneda-flights',
+    collectorKey: 'haneda-flights',
+  });
+});
+
+router.get('/drone-nofly', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'drone-nofly',
+    layerType: 'drone-nofly',
+    collectorKey: 'drone-nofly',
+  });
+});
+
+router.get('/jcg-patrol', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'jcg-patrol',
+    layerType: 'jcg-patrol',
+    collectorKey: 'jcg-patrol',
+  });
+});
+
+// ===========================================================================
+// Wave 4: Government + Defense
+// ===========================================================================
+router.get('/government-buildings', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'government-buildings', layerType: 'government-buildings', collectorKey: 'government-buildings' });
+});
+
+router.get('/city-halls', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'city-halls', layerType: 'city-halls', collectorKey: 'city-halls' });
+});
+
+router.get('/courts-prisons', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'courts-prisons', layerType: 'courts-prisons', collectorKey: 'courts-prisons' });
+});
+
+router.get('/embassies', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'embassies', layerType: 'embassies', collectorKey: 'embassies' });
+});
+
+router.get('/jsdf-bases', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'jsdf-bases', layerType: 'jsdf-bases', collectorKey: 'jsdf-bases' });
+});
+
+router.get('/usfj-bases', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'usfj-bases', layerType: 'usfj-bases', collectorKey: 'usfj-bases' });
+});
+
+router.get('/radar-sites', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'radar-sites', layerType: 'radar-sites', collectorKey: 'radar-sites' });
+});
+
+router.get('/coast-guard-stations', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'coast-guard-stations', layerType: 'coast-guard-stations', collectorKey: 'coast-guard-stations' });
+});
+
+// ===========================================================================
+// Wave 5: Industry + Energy Deep
+// ===========================================================================
+router.get('/auto-plants', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'auto-plants', layerType: 'auto-plants', collectorKey: 'auto-plants' });
+});
+
+router.get('/steel-mills', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'steel-mills', layerType: 'steel-mills', collectorKey: 'steel-mills' });
+});
+
+router.get('/petrochemical', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'petrochemical', layerType: 'petrochemical', collectorKey: 'petrochemical' });
+});
+
+router.get('/refineries', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'refineries', layerType: 'refineries', collectorKey: 'refineries' });
+});
+
+router.get('/semiconductor-fabs', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'semiconductor-fabs', layerType: 'semiconductor-fabs', collectorKey: 'semiconductor-fabs' });
+});
+
+router.get('/shipyards', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'shipyards', layerType: 'shipyards', collectorKey: 'shipyards' });
+});
+
+router.get('/petroleum-stockpile', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'petroleum-stockpile', layerType: 'petroleum-stockpile', collectorKey: 'petroleum-stockpile' });
+});
+
+router.get('/wind-turbines', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wind-turbines', layerType: 'wind-turbines', collectorKey: 'wind-turbines' });
+});
+
+// ===========================================================================
+// Wave 6: Telecom + Internet Infrastructure
+// ===========================================================================
+router.get('/data-centers', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'data-centers', layerType: 'data-centers', collectorKey: 'data-centers' });
+});
+
+router.get('/internet-exchanges', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'internet-exchanges', layerType: 'internet-exchanges', collectorKey: 'internet-exchanges' });
+});
+
+router.get('/submarine-cables', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'submarine-cables', layerType: 'submarine-cables', collectorKey: 'submarine-cables' });
+});
+
+router.get('/tor-exit-nodes', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'tor-exit-nodes', layerType: 'tor-exit-nodes', collectorKey: 'tor-exit-nodes' });
+});
+
+router.get('/5g-coverage', async (_req, res) => {
+  await respondWithData(res, { sourceId: '5g-coverage', layerType: '5g-coverage', collectorKey: '5g-coverage' });
+});
+
+router.get('/satellite-ground-stations', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'satellite-ground-stations', layerType: 'satellite-ground-stations', collectorKey: 'satellite-ground-stations' });
+});
+
+router.get('/amateur-radio-repeaters', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'amateur-radio-repeaters', layerType: 'amateur-radio-repeaters', collectorKey: 'amateur-radio-repeaters' });
+});
+
+// ===========================================================================
+// Wave 7: Tourism + Culture
+// ===========================================================================
+router.get('/national-parks', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'national-parks', layerType: 'national-parks', collectorKey: 'national-parks' });
+});
+
+router.get('/unesco-heritage', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'unesco-heritage', layerType: 'unesco-heritage', collectorKey: 'unesco-heritage' });
+});
+
+router.get('/castles', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'castles', layerType: 'castles', collectorKey: 'castles' });
+});
+
+router.get('/museums', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'museums', layerType: 'museums', collectorKey: 'museums' });
+});
+
+router.get('/stadiums', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'stadiums', layerType: 'stadiums', collectorKey: 'stadiums' });
+});
+
+router.get('/racetracks', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'racetracks', layerType: 'racetracks', collectorKey: 'racetracks' });
+});
+
+router.get('/shrine-temple', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'shrine-temple', layerType: 'shrine-temple', collectorKey: 'shrine-temple' });
+});
+
+router.get('/onsen-map', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'onsen-map', layerType: 'onsen-map', collectorKey: 'onsen-map' });
+});
+
+router.get('/ski-resorts', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'ski-resorts', layerType: 'ski-resorts', collectorKey: 'ski-resorts' });
+});
+
+router.get('/anime-pilgrimage', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'anime-pilgrimage', layerType: 'anime-pilgrimage', collectorKey: 'anime-pilgrimage' });
+});
+
+// ===========================================================================
+// Wave 8: Crime + Vice + Wildlife
+// ===========================================================================
+router.get('/yakuza-hq', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'yakuza-hq', layerType: 'yakuza-hq', collectorKey: 'yakuza-hq' });
+});
+
+router.get('/red-light-zones', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'red-light-zones', layerType: 'red-light-zones', collectorKey: 'red-light-zones' });
+});
+
+router.get('/pachinko-density', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'pachinko-density', layerType: 'pachinko-density', collectorKey: 'pachinko-density' });
+});
+
+router.get('/bear-encounters', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'bear-encounters', layerType: 'bear-encounters', collectorKey: 'bear-encounters' });
+});
+
+router.get('/bird-flu-outbreaks', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'bird-flu-outbreaks', layerType: 'bird-flu-outbreaks', collectorKey: 'bird-flu-outbreaks' });
+});
+
+router.get('/sakura-front', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'sakura-front', layerType: 'sakura-front', collectorKey: 'sakura-front' });
+});
+
+router.get('/wanted-persons', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wanted-persons', layerType: 'wanted-persons', collectorKey: 'wanted-persons' });
+});
+
+router.get('/phone-scam-hotspots', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'phone-scam-hotspots', layerType: 'phone-scam-hotspots', collectorKey: 'phone-scam-hotspots' });
+});
+
+// ===========================================================================
+// Wave 9: Food + Agriculture
+// ===========================================================================
+router.get('/sake-breweries', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'sake-breweries', layerType: 'sake-breweries', collectorKey: 'sake-breweries' });
+});
+
+router.get('/wineries-craftbeer', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wineries-craftbeer', layerType: 'wineries-craftbeer', collectorKey: 'wineries-craftbeer' });
+});
+
+router.get('/fish-markets', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'fish-markets', layerType: 'fish-markets', collectorKey: 'fish-markets' });
+});
+
+router.get('/wagyu-ranches', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wagyu-ranches', layerType: 'wagyu-ranches', collectorKey: 'wagyu-ranches' });
+});
+
+router.get('/tea-zones', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'tea-zones', layerType: 'tea-zones', collectorKey: 'tea-zones' });
+});
+
+router.get('/rice-paddies', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'rice-paddies', layerType: 'rice-paddies', collectorKey: 'rice-paddies' });
+});
+
+// ===========================================================================
+// Wave 10: Niche + Pop Culture
+// ===========================================================================
+router.get('/vending-machines', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'vending-machines', layerType: 'vending-machines', collectorKey: 'vending-machines' });
+});
+
+router.get('/karaoke-chains', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'karaoke-chains', layerType: 'karaoke-chains', collectorKey: 'karaoke-chains' });
+});
+
+router.get('/manga-net-cafes', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'manga-net-cafes', layerType: 'manga-net-cafes', collectorKey: 'manga-net-cafes' });
+});
+
+router.get('/sento-public-baths', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'sento-public-baths', layerType: 'sento-public-baths', collectorKey: 'sento-public-baths' });
+});
+
+router.get('/manhole-covers', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'manhole-covers', layerType: 'manhole-covers', collectorKey: 'manhole-covers' });
+});
+
+router.get('/themed-cafes', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'themed-cafes', layerType: 'themed-cafes', collectorKey: 'themed-cafes' });
+});
+
 export default router;

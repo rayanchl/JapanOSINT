@@ -9,7 +9,24 @@
  * Uses Shodan API when key available, seed data otherwise
  */
 
+import { fetchOverpass, fetchJson } from './_liveHelpers.js';
+
 const SHODAN_API_KEY = process.env.SHODAN_API_KEY || '';
+// Shodan InternetDB is the free unauthenticated endpoint for per-IP data.
+// We probe a small set of well-known Japanese public gateway IPs as a signal of
+// what's currently internet-exposed. No key required.
+const JP_KNOWN_GATEWAYS = [
+  { ip: '133.0.0.1', asn: 'AS17676 SoftBank' },
+  { ip: '202.16.0.1', asn: 'AS2516 KDDI' },
+  { ip: '210.160.0.1', asn: 'AS7506 GMO' },
+  { ip: '163.44.0.1', asn: 'AS2519 VECTANT' },
+  { ip: '125.0.0.1', asn: 'AS9824 NTT Plala' },
+  { ip: '153.120.0.1', asn: 'AS9370 Sakura Internet' },
+  { ip: '219.94.0.1', asn: 'AS9370 Sakura' },
+  { ip: '27.0.0.1', asn: 'AS9371 Sakura' },
+  { ip: '49.212.0.1', asn: 'AS9370 Sakura' },
+  { ip: '118.27.0.1', asn: 'AS17676 SoftBank' },
+];
 
 const DEVICE_TYPES = [
   { type: 'ip_camera', ports: [80, 443, 554, 8080, 8554], products: ['Hikvision', 'Dahua', 'Axis', 'Panasonic', 'Sony', 'Canon'], severity: 'high' },
@@ -161,10 +178,70 @@ async function tryShodanAPI() {
   }
 }
 
+async function tryShodanInternetDB() {
+  // Free, unauthenticated endpoint. Returns vulns + open ports per IP.
+  const features = [];
+  let idx = 0;
+  for (const { ip, asn } of JP_KNOWN_GATEWAYS) {
+    try {
+      const data = await fetchJson(`https://internetdb.shodan.io/${ip}`, { timeoutMs: 6000 });
+      if (!data || !data.ports) continue;
+      idx++;
+      features.push({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [139.6917, 35.6895] }, // Tokyo centroid placeholder until geoip
+        properties: {
+          id: `SHODAN_IDB_${idx}`,
+          ip: data.ip || ip,
+          ports: data.ports,
+          vulns: data.vulns || [],
+          cpes: data.cpes || [],
+          hostnames: data.hostnames || [],
+          tags: data.tags || [],
+          asn,
+          source: 'shodan_internetdb',
+        },
+      });
+    } catch { /* continue */ }
+  }
+  return features.length > 0 ? features : null;
+}
+
+async function tryOSMSurveillance() {
+  return fetchOverpass(
+    'node["man_made"="surveillance"](area.jp);node["surveillance"="camera"](area.jp);node["surveillance:type"="camera"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        id: `OSM_CAM_${el.id}`,
+        device_type: 'ip_camera',
+        product: el.tags?.['camera:type'] || el.tags?.manufacturer || 'unknown',
+        operator: el.tags?.operator || 'unknown',
+        mount: el.tags?.['camera:mount'] || null,
+        direction: el.tags?.['camera:direction'] || null,
+        country: 'JP',
+        source: 'osm_overpass_surveillance',
+      },
+    }),
+  );
+}
+
 export default async function collectShodanIot() {
   let features = await tryShodanAPI();
+  let liveSource = 'shodan_api';
   if (!features || features.length === 0) {
+    features = await tryShodanInternetDB();
+    liveSource = 'shodan_internetdb';
+  }
+  if (!features || features.length === 0) {
+    features = await tryOSMSurveillance();
+    liveSource = 'osm_overpass_surveillance';
+  }
+  const live = !!(features && features.length > 0);
+  if (!live) {
     features = generateSeedData();
+    liveSource = 'shodan_seed';
   }
 
   return {
@@ -174,6 +251,8 @@ export default async function collectShodanIot() {
       source: 'shodan',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
+      live_source: liveSource,
       description: 'Shodan IoT device scan - cameras, SCADA, routers, databases in Japan',
     },
     metadata: {},

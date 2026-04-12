@@ -9,6 +9,8 @@
  * Uses Wigle API when key available, seed data otherwise
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
 const WIGLE_API_KEY = process.env.WIGLE_API_KEY || '';
 
 const WIFI_ZONES = [
@@ -151,10 +153,40 @@ async function tryWigleAPI() {
   }
 }
 
+async function tryOSMWifiHotspots() {
+  return fetchOverpass(
+    'node["internet_access"="wlan"](area.jp);node["amenity"="internet_cafe"](area.jp);node["wifi"="free"](area.jp);node["internet_access"="yes"]["internet_access:fee"="no"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        id: `OSM_${el.id}`,
+        ssid: el.tags?.['internet_access:ssid'] || el.tags?.name || `Wi-Fi ${i + 1}`,
+        bssid: null,
+        encryption: el.tags?.['internet_access:fee'] === 'no' ? 'open' : 'unknown',
+        is_open: el.tags?.['internet_access:fee'] === 'no' || el.tags?.wifi === 'free',
+        is_free_wifi: el.tags?.['internet_access:fee'] === 'no' || el.tags?.wifi === 'free',
+        operator: el.tags?.operator || el.tags?.brand || null,
+        venue: el.tags?.amenity || el.tags?.shop || 'unknown',
+        zone_type: 'public_hotspot',
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+  );
+}
+
 export default async function collectWifiNetworks() {
   let features = await tryWigleAPI();
+  let liveSource = 'wigle_api';
   if (!features || features.length === 0) {
+    features = await tryOSMWifiHotspots();
+    liveSource = 'osm_overpass';
+  }
+  const live = !!(features && features.length > 0);
+  if (!live) {
     features = generateSeedData();
+    liveSource = 'wifi_seed';
   }
 
   return {
@@ -164,6 +196,8 @@ export default async function collectWifiNetworks() {
       source: 'wifi_scan',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
+      live_source: liveSource,
       description: 'WiFi networks in Japan - open, encrypted, free hotspots, enterprise networks',
     },
     metadata: {},

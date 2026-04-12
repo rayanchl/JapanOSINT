@@ -8,6 +8,28 @@
  * - CrowdWorks - freelance/micro jobs
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["office"="employment_agency"](area.jp);way["office"="employment_agency"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        listing_id: `JOB_LIVE_${String(i + 1).padStart(5, '0')}`,
+        area: el.tags?.name || el.tags?.['name:en'] || `HelloWork ${el.id}`,
+        pref: el.tags?.['addr:state'] || null,
+        job_type: 'employment_agency',
+        industry: 'office',
+        operator: el.tags?.operator || 'HelloWork',
+        country: 'JP',
+        source: 'job_boards_live',
+      },
+    })
+  );
+}
+
 const JOB_TYPES = ['part_time', 'full_time', 'contract', 'freelance', 'gig', 'barter', 'volunteer'];
 const INDUSTRIES = ['food_service', 'retail', 'warehouse', 'office', 'delivery', 'education', 'healthcare', 'it', 'construction', 'cleaning', 'event', 'entertainment'];
 
@@ -116,7 +138,9 @@ function generateSeedData() {
 }
 
 export default async function collectJobBoards() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
 
   return {
     type: 'FeatureCollection',
@@ -125,6 +149,7 @@ export default async function collectJobBoards() {
       source: 'job_boards',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
       description: 'Job listings from TownWork, Baitoru, Indeed Japan, Coconala - part-time, gigs, barter',
     },
     metadata: {},

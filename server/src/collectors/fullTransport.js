@@ -6,7 +6,32 @@
  * - Private railways (Tokyu, Odakyu, Keio, Hankyu, Hanshin, Kintetsu, Nankai, Meitetsu, Nishitetsu, etc.)
  * - All subway/metro systems (Tokyo Metro, Toei, Osaka Metro, Nagoya, Sapporo, Sendai, Fukuoka, Kyoto, Kobe)
  * - Monorails, trams, people movers
+ *
+ * Live: OSM Overpass `railway=station` + `station=subway/light_rail/monorail` across Japan.
  */
+
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return fetchOverpass(
+    'node["railway"="station"](area.jp);node["station"="subway"](area.jp);node["station"="light_rail"](area.jp);node["station"="monorail"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        station_id: `OSM_${el.id}`,
+        name: el.tags?.['name:en'] || el.tags?.name || `Station ${i + 1}`,
+        name_ja: el.tags?.name || null,
+        operator: el.tags?.operator || null,
+        line: el.tags?.line || null,
+        type: el.tags?.station || el.tags?.['railway:traffic_mode'] || 'railway',
+        network: el.tags?.network || null,
+        wikidata: el.tags?.wikidata || null,
+        source: 'osm_overpass',
+      },
+    }),
+  );
+}
 
 const STATIONS = [
   // ═══ SHINKANSEN STATIONS ═══
@@ -214,7 +239,9 @@ function generateSeedData() {
 }
 
 export default async function collectFullTransport() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
 
   return {
     type: 'FeatureCollection',
@@ -223,6 +250,8 @@ export default async function collectFullTransport() {
       source: 'full_transport',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
+      live_source: live ? 'osm_overpass' : 'rail_network_seed',
       description: 'Complete Japan rail network - Shinkansen, JR, Metro, Private, Tram, Monorail stations',
     },
     metadata: {},

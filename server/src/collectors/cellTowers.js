@@ -7,6 +7,8 @@
  * Uses OpenCellID-style data when available
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
 const OPENCELLID_KEY = process.env.OPENCELLID_KEY || '';
 
 // Major urban cell tower density zones
@@ -174,10 +176,38 @@ async function tryOpenCellID() {
   }
 }
 
+async function tryOSMCommTowers() {
+  return fetchOverpass(
+    'node["tower:type"="communication"](area.jp);way["tower:type"="communication"](area.jp);node["man_made"="mast"]["tower:type"~"communication|cellular"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        tower_id: `OSM_${el.id}`,
+        name: el.tags?.name || `Comm tower ${i + 1}`,
+        operator: el.tags?.operator || 'unknown',
+        carrier: el.tags?.operator || el.tags?.['operator:short'] || 'unknown',
+        tower_type: el.tags?.['tower:type'] || 'communication',
+        height_m: el.tags?.height ? parseFloat(el.tags.height) : null,
+        radio: el.tags?.['communication:mobile_phone'] ? 'mobile' : 'communication',
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+  );
+}
+
 export default async function collectCellTowers() {
   let features = await tryOpenCellID();
+  let source = 'opencellid_api';
   if (!features || features.length === 0) {
+    features = await tryOSMCommTowers();
+    source = 'osm_overpass';
+  }
+  const live = !!(features && features.length > 0);
+  if (!live) {
     features = generateSeedData();
+    source = 'cell_towers_seed';
   }
   return {
     type: 'FeatureCollection',
@@ -186,6 +216,8 @@ export default async function collectCellTowers() {
       source: 'cell_towers',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
+      live_source: source,
       description: 'Japan mobile network infrastructure - 4G/5G cell towers (Docomo, au, SoftBank, Rakuten)',
     },
     metadata: {},

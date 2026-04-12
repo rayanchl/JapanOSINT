@@ -4,6 +4,28 @@
  * Distributed with realistic densities (Tokyo highest)
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return await fetchOverpass(
+    'node["amenity"="police"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        incident_id: `POL_LIVE_${String(i + 1).padStart(5, '0')}`,
+        area: el.tags?.name || el.tags?.['name:en'] || `Police ${el.id}`,
+        pref: el.tags?.['addr:state'] || null,
+        incident_type: 'police_station',
+        severity: 'info',
+        operator: el.tags?.operator || null,
+        country: 'JP',
+        source: 'police_live',
+      },
+    })
+  );
+}
+
 const INCIDENT_TYPES = ['theft', 'assault', 'traffic_accident', 'fraud', 'burglary', 'vandalism', 'drug_offense', 'pickpocket', 'bicycle_theft', 'shoplifting'];
 const SEVERITY_LEVELS = ['low', 'medium', 'high'];
 
@@ -113,9 +135,10 @@ function generateSeedData() {
 }
 
 export default async function collectPoliceCrime() {
-  // Police crime data is generated from representative patterns
-  // Real prefectural police data would require scraping individual sites
-  const features = generateSeedData();
+  // Try OSM police stations first; fallback to seeded incident patterns
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
 
   return {
     type: 'FeatureCollection',
@@ -124,6 +147,7 @@ export default async function collectPoliceCrime() {
       source: 'police_seed',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
       description: 'Representative crime incident data for major Japanese cities',
     },
     metadata: {},

@@ -4,6 +4,8 @@
  * Uses Graph API when available, falls back to seed data
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
 const FB_ACCESS_TOKEN = process.env.FACEBOOK_ACCESS_TOKEN || '';
 
 const CHECKIN_LOCATIONS = [
@@ -130,8 +132,35 @@ export default async function collectFacebookGeo() {
     } catch { /* fall through to seed */ }
   }
 
+  let liveSource = 'facebook_api';
   if (!features || features.length === 0) {
+    // Public check-in proxy: OSM `tourism=attraction` + `amenity=place_of_worship`
+    // popular enough to carry a Wikidata ID (proxies real popularity without keys).
+    features = await fetchOverpass(
+      'node["tourism"="attraction"]["wikidata"](area.jp);node["amenity"="place_of_worship"]["wikidata"](area.jp);',
+      (el, i, coords) => ({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: coords },
+        properties: {
+          id: `OSM_${el.id}`,
+          platform: 'osm_popular_place',
+          place_name: el.tags?.['name:en'] || el.tags?.name || `Place ${i + 1}`,
+          place_name_ja: el.tags?.name || null,
+          category: el.tags?.tourism || el.tags?.amenity || 'place',
+          wikidata: el.tags?.wikidata,
+          wikipedia: el.tags?.wikipedia || null,
+          website: el.tags?.website || null,
+          source: 'osm_overpass',
+        },
+      }),
+    );
+    liveSource = 'osm_overpass';
+  }
+
+  const live = !!(features && features.length > 0);
+  if (!live) {
     features = generateSeedData();
+    liveSource = 'facebook_seed';
   }
 
   return {
@@ -141,7 +170,9 @@ export default async function collectFacebookGeo() {
       source: 'facebook_geo',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      description: 'Facebook public check-ins and geotagged posts across Japan',
+      live,
+      live_source: liveSource,
+      description: 'Facebook public check-ins + OSM popular attractions across Japan',
     },
     metadata: {},
   };

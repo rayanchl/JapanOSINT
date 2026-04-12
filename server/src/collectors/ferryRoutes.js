@@ -1,10 +1,28 @@
 /**
  * Ferry Routes / Terminals Collector
- * Maps ferry terminals and inter-island connections:
- * - Inter-island ferries (Hokkaido-Honshu, Honshu-Shikoku, Honshu-Kyushu, mainland-Okinawa)
- * - Inland sea ferries (Seto Inland Sea)
- * - Regional and tourist ferries
+ * Live: OSM Overpass amenity=ferry_terminal across Japan.
+ * Fallback: curated inter-island + inland sea + international terminals.
  */
+
+import { fetchOverpass } from './_liveHelpers.js';
+
+async function tryLive() {
+  return fetchOverpass(
+    'node["amenity"="ferry_terminal"](area.jp);way["amenity"="ferry_terminal"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        ferry_id: `OSM_${el.id}`,
+        name: el.tags?.name || `Ferry terminal ${i + 1}`,
+        operator: el.tags?.operator || 'unknown',
+        type: 'ferry_terminal',
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+  );
+}
 
 const FERRY_TERMINALS = [
   // Hokkaido <-> Honshu
@@ -80,7 +98,9 @@ function generateSeedData() {
 }
 
 export default async function collectFerryRoutes() {
-  const features = generateSeedData();
+  let features = await tryLive();
+  const live = !!(features && features.length > 0);
+  if (!live) features = generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
@@ -88,6 +108,7 @@ export default async function collectFerryRoutes() {
       source: 'ferry_routes',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
+      live,
       description: 'Ferry terminals across Japan - inter-island, inland sea, international routes',
     },
     metadata: {},
