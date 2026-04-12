@@ -3,7 +3,50 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 
+// OSM is the primary basemap. GSI is kept as a Japan-specific alternative
+// (cartography detail) and OSM Standard gives full-color OSM rendering.
 const MAP_STYLES = {
+  osm_dark: {
+    version: 8,
+    name: 'OSM Dark',
+    sources: {
+      osm: {
+        type: 'raster',
+        tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+        tileSize: 256,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+        maxzoom: 19,
+      },
+    },
+    layers: [
+      {
+        id: 'osm-tiles',
+        type: 'raster',
+        source: 'osm',
+        paint: {
+          'raster-saturation': -0.8,
+          'raster-brightness-max': 0.35,
+          'raster-contrast': 0.3,
+        },
+      },
+    ],
+  },
+  osm_standard: {
+    version: 8,
+    name: 'OSM Standard',
+    sources: {
+      osm: {
+        type: 'raster',
+        tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+        tileSize: 256,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+        maxzoom: 19,
+      },
+    },
+    layers: [
+      { id: 'osm-tiles', type: 'raster', source: 'osm' },
+    ],
+  },
   gsi_pale: {
     version: 8,
     name: 'GSI Pale (Dark)',
@@ -25,31 +68,6 @@ const MAP_STYLES = {
           'raster-saturation': -0.5,
           'raster-brightness-max': 0.4,
           'raster-contrast': 0.2,
-        },
-      },
-    ],
-  },
-  osm_dark: {
-    version: 8,
-    name: 'OSM Dark',
-    sources: {
-      osm: {
-        type: 'raster',
-        tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-        tileSize: 256,
-        attribution: '&copy; OpenStreetMap contributors',
-        maxzoom: 19,
-      },
-    },
-    layers: [
-      {
-        id: 'osm-tiles',
-        type: 'raster',
-        source: 'osm',
-        paint: {
-          'raster-saturation': -0.8,
-          'raster-brightness-max': 0.35,
-          'raster-contrast': 0.3,
         },
       },
     ],
@@ -3370,7 +3388,7 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
   const [mapReady, setMapReady] = useState(false);
   const [cursorCoords, setCursorCoords] = useState(null);
   const [zoom, setZoom] = useState(5);
-  const [currentStyle, setCurrentStyle] = useState('gsi_pale');
+  const [currentStyle, setCurrentStyle] = useState('osm_dark');
   const prevLayersRef = useRef({});
 
   // Initialize map

@@ -150,6 +150,13 @@ import sentinelHub from './sentinelHub.js';
 import googleEarth from './googleEarth.js';
 import googleMyMaps from './googleMyMaps.js';
 
+// Wave 12: Untapped OSM infrastructure tags
+import parkingFacilities from './parkingFacilities.js';
+import waterTowers from './waterTowers.js';
+import transmissionTowers from './transmissionTowers.js';
+import utilityPoles from './utilityPoles.js';
+import adminBoundaries from './adminBoundaries.js';
+
 // Wave 10: Niche + Pop Culture
 import vendingMachines from './vendingMachines.js';
 import karaokeChains from './karaokeChains.js';
@@ -313,6 +320,13 @@ export const collectors = {
   'sentinel-hub': sentinelHub,
   'google-earth': googleEarth,
   'google-my-maps': googleMyMaps,
+
+  // Wave 12: Untapped OSM infrastructure tags
+  'parking-facilities': parkingFacilities,
+  'water-towers': waterTowers,
+  'transmission-towers': transmissionTowers,
+  'utility-poles': utilityPoles,
+  'admin-boundaries': adminBoundaries,
 };
 
 /**

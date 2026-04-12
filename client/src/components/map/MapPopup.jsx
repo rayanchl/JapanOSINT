@@ -1,4 +1,48 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
+/**
+ * Fetch a reverse-geocoded address label for a feature, using the server's
+ * multi-provider chain (Nominatim -> Photon -> GSI). Renders nothing until
+ * the lookup resolves, and silently renders nothing on failure.
+ */
+function ReverseGeocodeLabel({ feature }) {
+  const [label, setLabel] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const coords = feature?.geometry?.coordinates;
+    if (!Array.isArray(coords) || coords.length < 2) return;
+    const [lon, lat] = coords;
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+
+    // Skip if the feature already has a human address tag.
+    const p = feature.properties || {};
+    if (p.address || p['addr:full']) return;
+
+    (async () => {
+      try {
+        const res = await fetch(`/api/geocode/reverse?lat=${lat}&lon=${lon}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled && data?.display_name) {
+          setLabel({ text: data.display_name, source: data.source });
+        }
+      } catch { /* silent */ }
+    })();
+
+    return () => { cancelled = true; };
+  }, [feature]);
+
+  if (!label) return null;
+  return (
+    <div className="mt-2 pt-2 border-t border-osint-border/50">
+      <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-0.5">
+        Address <span className="text-gray-600">({label.source})</span>
+      </div>
+      <p className="text-xs text-gray-300 leading-snug">{label.text}</p>
+    </div>
+  );
+}
 
 function EarthquakeDetail({ properties }) {
   return (
@@ -168,6 +212,7 @@ export default function MapPopup({ feature, layerType, onClose, position }) {
         </button>
       </div>
       <Renderer properties={properties} layerType={layerType} />
+      <ReverseGeocodeLabel feature={feature} />
     </div>
   );
 }

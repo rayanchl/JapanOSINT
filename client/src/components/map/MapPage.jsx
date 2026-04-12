@@ -33,12 +33,21 @@ export default function MapPage() {
 
     setIsSearching(true);
     try {
+      // Backend chains Nominatim -> Photon -> GSI, with caching.
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&countrycodes=jp&limit=5`
+        `/api/geocode?q=${encodeURIComponent(searchQuery)}`
       );
       if (res.ok) {
-        const results = await res.json();
-        setSearchResults(results);
+        const { results } = await res.json();
+        // Normalise to the shape the dropdown already expects.
+        setSearchResults(
+          (results || []).map((r) => ({
+            display_name: r.display_name,
+            lat: r.lat,
+            lon: r.lon,
+            source: r.source,
+          }))
+        );
       }
     } catch (err) {
       console.warn('[Search] Failed:', err.message);
