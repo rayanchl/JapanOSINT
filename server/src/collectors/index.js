@@ -156,6 +156,8 @@ import waterTowers from './waterTowers.js';
 import transmissionTowers from './transmissionTowers.js';
 import utilityPoles from './utilityPoles.js';
 import adminBoundaries from './adminBoundaries.js';
+// Wave 12: Unified camera discovery
+import cameraDiscovery from './cameraDiscovery.js';
 
 // Wave 10: Niche + Pop Culture
 import vendingMachines from './vendingMachines.js';
@@ -327,6 +329,8 @@ export const collectors = {
   'transmission-towers': transmissionTowers,
   'utility-poles': utilityPoles,
   'admin-boundaries': adminBoundaries,
+  // Wave 12: Unified camera discovery
+  'camera-discovery': cameraDiscovery,
 };
 
 /**

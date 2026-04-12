@@ -5,6 +5,77 @@ import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 
 // OSM is the primary basemap. GSI is kept as a Japan-specific alternative
 // (cartography detail) and OSM Standard gives full-color OSM rendering.
+// ─── Icon rendering ─────────────────────────────────────────────────
+// Each layer in LAYER_DEFINITIONS has an emoji `icon` (e.g. plane, boat,
+// police officer). We render these emoji to offscreen canvases and
+// register them with the map so that symbol layers can use them via
+// `icon-image`, replacing the uniform-looking colored circles.
+
+const ICON_IMAGE_SIZE = 48; // px — canvas resolution for icon images
+
+function createEmojiIconImage(emoji) {
+  const size = ICON_IMAGE_SIZE;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  // Flat 2D icon — no background disc, no stroke, just the glyph itself.
+  ctx.font = `${Math.round(size * 0.85)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","EmojiOne Color","Android Emoji","Twemoji Mozilla",sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(emoji, size / 2, size / 2 + 1);
+
+  return ctx.getImageData(0, 0, size, size);
+}
+
+function layerIconImageId(layerId) {
+  return `icon-${layerId}`;
+}
+
+function registerLayerIcons(map) {
+  for (const [layerId, def] of Object.entries(LAYER_DEFINITIONS)) {
+    if (!def?.icon) continue;
+    const imgId = layerIconImageId(layerId);
+    if (map.hasImage(imgId)) continue;
+    const imageData = createEmojiIconImage(def.icon);
+    if (imageData) {
+      map.addImage(imgId, imageData, { pixelRatio: 2 });
+    }
+  }
+}
+
+// Fixed icon size for every layer — flat 2D, uniform scale, no
+// data-driven radius encoding.
+const UNIFORM_ICON_SIZE = 0.5;
+
+// Replace any `type: 'circle'` layer config with an equivalent
+// `type: 'symbol'` layer that renders the registered layer icon.
+function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity) {
+  const paint = config.paint || {};
+  const iconOpacity =
+    paint['circle-opacity'] != null ? paint['circle-opacity'] : fallbackOpacity;
+
+  return {
+    id: config.id,
+    type: 'symbol',
+    source: config.source,
+    ...(config.filter ? { filter: config.filter } : {}),
+    layout: {
+      'icon-image': iconImageId,
+      'icon-size': UNIFORM_ICON_SIZE,
+      'icon-allow-overlap': true,
+      'icon-ignore-placement': true,
+      'icon-anchor': 'center',
+    },
+    paint: {
+      'icon-opacity': iconOpacity,
+    },
+  };
+}
+
 const MAP_STYLES = {
   osm_dark: {
     version: 8,
@@ -89,6 +160,36 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
 
   map.addSource(sourceId, { type: 'geojson', data: geojson });
 
+  // Intercept `map.addLayer` so that every `type: 'circle'` layer produced
+  // by the switch statement below gets transparently replaced with a symbol
+  // layer that renders the layer's category icon (plane, boat, police, …).
+  // Non-circle layers (heatmap, fill-extrusion, line, raster) pass through
+  // unchanged.
+  const iconImageId = layerIconImageId(layerId);
+  const hasIcon = typeof map.hasImage === 'function' && map.hasImage(iconImageId);
+  const originalAddLayer = map.addLayer.bind(map);
+  if (hasIcon) {
+    map.addLayer = (config, beforeId) => {
+      if (config && config.type === 'circle') {
+        return originalAddLayer(
+          convertCircleConfigToSymbol(config, iconImageId, opacity),
+          beforeId
+        );
+      }
+      return originalAddLayer(config, beforeId);
+    };
+  }
+
+  try {
+    addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayerId);
+  } finally {
+    if (hasIcon) {
+      map.addLayer = originalAddLayer;
+    }
+  }
+}
+
+function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayerId) {
   switch (layerId) {
     case 'earthquakes':
       map.addLayer({
@@ -3408,6 +3509,7 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
     map.addControl(new maplibregl.ScaleControl({ maxWidth: 150 }), 'bottom-right');
 
     map.on('load', () => {
+      registerLayerIcons(map);
       setMapReady(true);
     });
 
@@ -3495,8 +3597,10 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
     setCurrentStyle(styleKey);
     prevLayersRef.current = {};
 
-    // Re-add layers after style change
+    // Re-add layers after style change (icons must be re-registered
+    // because map.setStyle() drops all previously added images)
     mapRef.current.once('style.load', () => {
+      registerLayerIcons(mapRef.current);
       for (const [layerId, layerState] of Object.entries(layers)) {
         if (layerState.visible && layerData[layerId]) {
           addLayerToMap(

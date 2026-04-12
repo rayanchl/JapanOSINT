@@ -886,6 +886,14 @@ router.get('/utility-poles', async (_req, res) => {
 
 router.get('/admin-boundaries', async (_req, res) => {
   await respondWithData(res, { sourceId: 'admin-boundaries', layerType: 'admin-boundaries', collectorKey: 'admin-boundaries' });
+// Wave 12: Unified Camera Discovery
+// ===========================================================================
+router.get('/camera-discovery', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'camera-discovery',
+    layerType: 'camera-discovery',
+    collectorKey: 'camera-discovery',
+  });
 });
 
 export default router;
