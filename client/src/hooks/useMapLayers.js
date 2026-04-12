@@ -843,6 +843,15 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/themed-cafes',
     category: 'Culture',
   },
+
+  // Business / Corporate registry
+  gbizinfoGeocoded: {
+    name: 'gBizINFO Corporates',
+    icon: '\u{1F3E2}',
+    color: '#5e35b1',
+    endpoint: '/api/data/gbizinfo-geocoded',
+    category: 'Business',
+  },
 };
 
 export const LAYER_CATEGORIES = [
@@ -856,6 +865,7 @@ export const LAYER_CATEGORIES = [
   'Government',
   'Defense',
   'Industry',
+  'Business',
   'Telecom',
   'Tourism',
   'Culture',

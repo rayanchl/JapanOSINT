@@ -750,6 +750,9 @@ const sources = [
   { id: 'sento-public-baths', name: 'Sento Public Baths', nameJa: '銭湯', type: 'api', category: 'culture', url: 'https://www.1010.or.jp/', description: 'Traditional Japanese sento public bathhouses (~3,000 nationwide) - Tokyo Sento Association registered + OSM', updateInterval: 604800, layer: 'sento-public-baths', free: true, status: 'online' },
   { id: 'manhole-covers', name: 'Manhole Cards', nameJa: 'マンホールカード', type: 'dataset', category: 'culture', url: 'https://www.gk-p.jp/activity/mhcard/', description: 'GKP Manhole Card (マンホールカード) issuance sites - decorative civic manhole cover designs by municipality', updateInterval: 2592000, layer: 'manhole-covers', free: true, status: 'online' },
   { id: 'themed-cafes', name: 'Themed Cafes', nameJa: 'コンセプトカフェ', type: 'dataset', category: 'culture', url: 'https://animetourism88.com/', description: 'Japanese themed cafes - maid (Maidreamin, @home), cat/owl/hedgehog, character (Pokemon, Kirby), robot, butler', updateInterval: 2592000, layer: 'themed-cafes', free: true, status: 'online' },
+
+  // ── Business / Corporate Registry ───────────────────────────────────
+  { id: 'gbizinfo-geocoded', name: 'gBizINFO Corporate Registry', nameJa: 'gBizINFO 法人情報', type: 'api', category: 'business', url: 'https://info.gbiz.go.jp/hojin/v1/hojin', description: 'METI gBizINFO corporate database - geocoded HQ locations of major Japanese corporations (Toyota, Sony, MUFG, NTT, Nintendo, Takeda etc.) with capital, employees, industry', updateInterval: 86400, layer: 'gbizinfo-geocoded', free: true, status: 'online' },
 ];
 
 export default sources;

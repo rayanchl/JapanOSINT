@@ -834,4 +834,11 @@ router.get('/themed-cafes', async (_req, res) => {
   await respondWithData(res, { sourceId: 'themed-cafes', layerType: 'themed-cafes', collectorKey: 'themed-cafes' });
 });
 
+// ===========================================================================
+// Business / Corporate Registry
+// ===========================================================================
+router.get('/gbizinfo-geocoded', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'gbizinfo-geocoded', layerType: 'gbizinfo-geocoded', collectorKey: 'gbizinfo-geocoded' });
+});
+
 export default router;

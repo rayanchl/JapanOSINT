@@ -142,6 +142,9 @@ import wagyuRanches from './wagyuRanches.js';
 import teaZones from './teaZones.js';
 import ricePaddies from './ricePaddies.js';
 
+// Business / Corporate registry
+import gbizinfoGeocoded from './gbizinfoGeocoded.js';
+
 // Wave 10: Niche + Pop Culture
 import vendingMachines from './vendingMachines.js';
 import karaokeChains from './karaokeChains.js';
@@ -289,6 +292,9 @@ export const collectors = {
   'wagyu-ranches': wagyuRanches,
   'tea-zones': teaZones,
   'rice-paddies': ricePaddies,
+
+  // Business / Corporate registry
+  'gbizinfo-geocoded': gbizinfoGeocoded,
 
   // Wave 10: Niche + Pop Culture
   'vending-machines': vendingMachines,
