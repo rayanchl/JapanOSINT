@@ -757,6 +757,9 @@ const sources = [
   { id: 'sentinel-hub', name: 'Sentinel Hub (Sentinel-2)', nameJa: 'センチネルハブ', type: 'api', category: 'environment', url: 'https://services.sentinel-hub.com/api/v1/catalog/1.0.0/search', description: 'Copernicus Sentinel-2 L2A scene footprints via Sentinel Hub Catalog API - last 30 days <40% cloud (needs SENTINELHUB_CLIENT_ID/SECRET)', updateInterval: 86400, layer: 'sentinel-hub', free: false, status: 'online' },
   { id: 'google-earth', name: 'Google Earth Layers', nameJa: 'グーグルアース レイヤー', type: 'api', category: 'tourism', url: 'https://volcano.si.edu/ReportKMLs/Holocene.kml', description: 'Public KML/GeoRSS layers visible in Google Earth - Smithsonian GVP volcanoes + Wikipedia GeoSearch populated places, Japan bbox filtered', updateInterval: 604800, layer: 'google-earth', free: true, status: 'online' },
   { id: 'google-my-maps', name: 'Google My Maps', nameJa: 'グーグル マイマップ', type: 'api', category: 'tourism', url: 'https://www.google.com/maps/d/kml', description: 'Google My Maps public KML exports parsed to points (configure GOOGLE_MYMAPS_IDS env var with comma-separated mids)', updateInterval: 3600, layer: 'google-my-maps', free: true, status: 'online' },
+
+  // ── Wave 12: Unified Camera Discovery ───────────────────────────────
+  { id: 'camera-discovery', name: 'Unified Camera Discovery', nameJa: '統合カメラディスカバリー', type: 'api', category: 'cyber', url: 'https://overpass-api.de/api/interpreter', description: 'Fused public-camera discovery across every channel: OSM surveillance, JMA volcano cams, MLIT river cams, Shutoko/Hanshin/NEXCO expressway CCTV, NHK/YouTube/municipal livecams, ski/beach/port webcams, Insecam, Windy/SkylineWebcams/EarthCam aggregators, DuckDuckGo camera dorks, and Shodan camera queries', updateInterval: 3600, layer: 'camera-discovery', free: true, status: 'online' },
 ];
 
 export default sources;

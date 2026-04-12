@@ -149,6 +149,9 @@ import sentinelHub from './sentinelHub.js';
 import googleEarth from './googleEarth.js';
 import googleMyMaps from './googleMyMaps.js';
 
+// Wave 12: Unified camera discovery
+import cameraDiscovery from './cameraDiscovery.js';
+
 // Wave 10: Niche + Pop Culture
 import vendingMachines from './vendingMachines.js';
 import karaokeChains from './karaokeChains.js';
@@ -311,6 +314,9 @@ export const collectors = {
   'sentinel-hub': sentinelHub,
   'google-earth': googleEarth,
   'google-my-maps': googleMyMaps,
+
+  // Wave 12: Unified camera discovery
+  'camera-discovery': cameraDiscovery,
 };
 
 /**
