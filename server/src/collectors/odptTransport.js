@@ -1,11 +1,26 @@
 /**
  * ODPT Transport Collector
- * Open Data for Public Transportation - Tokyo metro/JR stations
- * Fallback with comprehensive station data
+ * Open Data for Public Transportation Japan - nationwide station coverage.
+ *
+ * Authentication: set ODPT_TOKEN (or ODPT_CHALLENGE_TOKEN) in env to unlock
+ * the full `odpt:Station` endpoint (~10,000 stations across all operators).
+ * Tokens are free from https://developer.odpt.org/ (Challenge) or
+ * https://api-challenge.odpt.org/.
+ *
+ * Without a token we fall back to curated seed data (major Tokyo/Kansai
+ * stations) so the layer still renders in dev environments.
  */
 
 const API_BASE = 'https://api.odpt.org/api/v4/';
-const TIMEOUT_MS = 5000;
+const CHALLENGE_API_BASE = 'https://api-challenge.odpt.org/api/v4/';
+const TIMEOUT_MS = 20000;
+
+function getOdptToken() {
+  return process.env.ODPT_TOKEN
+    || process.env.ODPT_CONSUMER_KEY
+    || process.env.ODPT_CHALLENGE_TOKEN
+    || null;
+}
 
 const STATIONS = [
   // JR Yamanote Line
@@ -143,40 +158,71 @@ function generateSeedData() {
   }));
 }
 
+function mapOdptStation(d) {
+  const lat = d['geo:lat'] ?? d.geo_lat;
+  const lon = d['geo:long'] ?? d.geo_long;
+  if (lat == null || lon == null) return null;
+  const titleJa = d['odpt:stationTitle']?.ja ?? d['dc:title'] ?? null;
+  const titleEn = d['odpt:stationTitle']?.en ?? null;
+  const railway = d['odpt:railway'] ?? null;
+  const operator = d['odpt:operator'] ?? null;
+  return {
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: [+lon, +lat] },
+    properties: {
+      station_id: d['owl:sameAs'] ?? d['@id'] ?? null,
+      station_name: titleEn || titleJa,
+      station_name_ja: titleJa,
+      line_name: railway,
+      operator: operator ? String(operator).replace(/^odpt\.Operator:/, '') : null,
+      station_code: d['odpt:stationCode'] ?? null,
+      connecting_railways: d['odpt:connectingRailway'] ?? null,
+      source: 'odpt_live',
+    },
+  };
+}
+
+async function fetchAllOdptStations(token) {
+  // Try production endpoint first, then challenge endpoint.
+  const bases = [API_BASE, CHALLENGE_API_BASE];
+  for (const base of bases) {
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+      const url = `${base}odpt:Station?acl:consumerKey=${encodeURIComponent(token)}`;
+      const res = await fetch(url, {
+        signal: controller.signal,
+        headers: { Accept: 'application/json', 'User-Agent': 'JapanOSINT/1.0' },
+      });
+      clearTimeout(timer);
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (!Array.isArray(data) || data.length === 0) continue;
+      const features = data.map(mapOdptStation).filter(Boolean);
+      if (features.length > 0) return { features, endpoint: base };
+    } catch { /* try next */ }
+  }
+  return null;
+}
+
 export default async function collectOdptTransport() {
+  const token = getOdptToken();
   let features = [];
-  let source = 'odpt_live';
+  let source = 'odpt_seed';
+  let endpoint = null;
 
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const res = await fetch(`${API_BASE}odpt:Station?odpt:railway=odpt.Railway:JR-East.Yamanote`, {
-      signal: controller.signal,
-      headers: { Accept: 'application/json' },
-    });
-    clearTimeout(timer);
-
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-
-    if (Array.isArray(data) && data.length > 0) {
-      features = data
-        .filter(d => d.geo_lat && d.geo_long)
-        .map(d => ({
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [+d.geo_long, +d.geo_lat] },
-          properties: {
-            station_id: d['owl:sameAs'] ?? d['@id'],
-            station_name: d['dc:title'] ?? d['odpt:stationTitle']?.ja ?? null,
-            line_name: d['odpt:railway'] ?? null,
-            source: 'odpt_live',
-          },
-        }));
+  if (token) {
+    const result = await fetchAllOdptStations(token);
+    if (result) {
+      features = result.features;
+      endpoint = result.endpoint;
+      source = 'odpt_live';
     }
-    if (features.length === 0) throw new Error('No features parsed');
-  } catch {
+  }
+
+  if (features.length === 0) {
     features = generateSeedData();
-    source = 'odpt_seed';
+    source = token ? 'odpt_seed_fallback' : 'odpt_seed_no_token';
   }
 
   return {
@@ -186,7 +232,9 @@ export default async function collectOdptTransport() {
       source,
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      description: 'Public transportation station data from ODPT',
+      endpoint,
+      has_token: !!token,
+      description: 'Public transportation station data from ODPT (Open Data for Public Transportation Japan)',
     },
     metadata: {},
   };

@@ -170,6 +170,13 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/full-transport',
     category: 'Transport',
   },
+  mlitN02Stations: {
+    name: 'MLIT N02 Rail Stations',
+    icon: '\u{1F68A}',
+    color: '#2e7d32',
+    endpoint: '/api/data/mlit-n02-stations',
+    category: 'Transport',
+  },
   busRoutes: {
     name: 'Bus Terminals',
     icon: '\u{1F68C}',
