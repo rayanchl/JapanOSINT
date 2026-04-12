@@ -281,6 +281,14 @@ router.get('/full-transport', async (_req, res) => {
   });
 });
 
+router.get('/mlit-n02-stations', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'mlit-n02-stations',
+    layerType: 'mlit-n02-stations',
+    collectorKey: 'mlit-n02-stations',
+  });
+});
+
 router.get('/bus-routes', async (_req, res) => {
   await respondWithData(res, {
     sourceId: 'bus-routes',
@@ -839,6 +847,37 @@ router.get('/themed-cafes', async (_req, res) => {
 // ===========================================================================
 router.get('/gbizinfo-geocoded', async (_req, res) => {
   await respondWithData(res, { sourceId: 'gbizinfo-geocoded', layerType: 'gbizinfo-geocoded', collectorKey: 'gbizinfo-geocoded' });
+// Wave 11: External Mapping Platforms (MarineTraffic, VesselFinder, Sentinel Hub, Google Earth, My Maps)
+// ===========================================================================
+router.get('/marine-traffic', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'marine-traffic', layerType: 'marine-traffic', collectorKey: 'marine-traffic' });
+});
+
+router.get('/vessel-finder', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'vessel-finder', layerType: 'vessel-finder', collectorKey: 'vessel-finder' });
+});
+
+router.get('/sentinel-hub', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'sentinel-hub', layerType: 'sentinel-hub', collectorKey: 'sentinel-hub' });
+});
+
+router.get('/google-earth', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'google-earth', layerType: 'google-earth', collectorKey: 'google-earth' });
+});
+
+router.get('/google-my-maps', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'google-my-maps', layerType: 'google-my-maps', collectorKey: 'google-my-maps' });
+});
+
+// ===========================================================================
+// Wave 12: Unified Camera Discovery
+// ===========================================================================
+router.get('/camera-discovery', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'camera-discovery',
+    layerType: 'camera-discovery',
+    collectorKey: 'camera-discovery',
+  });
 });
 
 export default router;

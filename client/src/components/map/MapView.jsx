@@ -3,6 +3,77 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 
+// ─── Icon rendering ─────────────────────────────────────────────────
+// Each layer in LAYER_DEFINITIONS has an emoji `icon` (e.g. plane, boat,
+// police officer). We render these emoji to offscreen canvases and
+// register them with the map so that symbol layers can use them via
+// `icon-image`, replacing the uniform-looking colored circles.
+
+const ICON_IMAGE_SIZE = 48; // px — canvas resolution for icon images
+
+function createEmojiIconImage(emoji) {
+  const size = ICON_IMAGE_SIZE;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  // Flat 2D icon — no background disc, no stroke, just the glyph itself.
+  ctx.font = `${Math.round(size * 0.85)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","EmojiOne Color","Android Emoji","Twemoji Mozilla",sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(emoji, size / 2, size / 2 + 1);
+
+  return ctx.getImageData(0, 0, size, size);
+}
+
+function layerIconImageId(layerId) {
+  return `icon-${layerId}`;
+}
+
+function registerLayerIcons(map) {
+  for (const [layerId, def] of Object.entries(LAYER_DEFINITIONS)) {
+    if (!def?.icon) continue;
+    const imgId = layerIconImageId(layerId);
+    if (map.hasImage(imgId)) continue;
+    const imageData = createEmojiIconImage(def.icon);
+    if (imageData) {
+      map.addImage(imgId, imageData, { pixelRatio: 2 });
+    }
+  }
+}
+
+// Fixed icon size for every layer — flat 2D, uniform scale, no
+// data-driven radius encoding.
+const UNIFORM_ICON_SIZE = 0.5;
+
+// Replace any `type: 'circle'` layer config with an equivalent
+// `type: 'symbol'` layer that renders the registered layer icon.
+function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity) {
+  const paint = config.paint || {};
+  const iconOpacity =
+    paint['circle-opacity'] != null ? paint['circle-opacity'] : fallbackOpacity;
+
+  return {
+    id: config.id,
+    type: 'symbol',
+    source: config.source,
+    ...(config.filter ? { filter: config.filter } : {}),
+    layout: {
+      'icon-image': iconImageId,
+      'icon-size': UNIFORM_ICON_SIZE,
+      'icon-allow-overlap': true,
+      'icon-ignore-placement': true,
+      'icon-anchor': 'center',
+    },
+    paint: {
+      'icon-opacity': iconOpacity,
+    },
+  };
+}
+
 const MAP_STYLES = {
   gsi_pale: {
     version: 8,
@@ -71,6 +142,36 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
 
   map.addSource(sourceId, { type: 'geojson', data: geojson });
 
+  // Intercept `map.addLayer` so that every `type: 'circle'` layer produced
+  // by the switch statement below gets transparently replaced with a symbol
+  // layer that renders the layer's category icon (plane, boat, police, …).
+  // Non-circle layers (heatmap, fill-extrusion, line, raster) pass through
+  // unchanged.
+  const iconImageId = layerIconImageId(layerId);
+  const hasIcon = typeof map.hasImage === 'function' && map.hasImage(iconImageId);
+  const originalAddLayer = map.addLayer.bind(map);
+  if (hasIcon) {
+    map.addLayer = (config, beforeId) => {
+      if (config && config.type === 'circle') {
+        return originalAddLayer(
+          convertCircleConfigToSymbol(config, iconImageId, opacity),
+          beforeId
+        );
+      }
+      return originalAddLayer(config, beforeId);
+    };
+  }
+
+  try {
+    addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayerId);
+  } finally {
+    if (hasIcon) {
+      map.addLayer = originalAddLayer;
+    }
+  }
+}
+
+function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayerId) {
   switch (layerId) {
     case 'earthquakes':
       map.addLayer({
@@ -3204,6 +3305,141 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
       });
       break;
 
+    // ── Wave 11: External Mapping Platforms ────────────────────
+    case 'marineTraffic':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'length_m'], 50],
+            0, 3, 50, 5, 150, 8, 300, 12, 400, 15,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'vessel_type'], 'other'],
+            'cargo', '#01579b',
+            'tanker', '#ef6c00',
+            'passenger', '#7c4dff',
+            'fishing', '#558b2f',
+            'harbour', '#37474f',
+            'port', '#263238',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 0.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    case 'vesselFinder':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'length_m'], 50],
+            0, 3, 50, 5, 150, 8, 300, 12, 400, 15,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'vessel_type'], 'other'],
+            'passenger', '#7c4dff',
+            'ferry_terminal', '#0288d1',
+            'cargo', '#01579b',
+            'tanker', '#ef6c00',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 0.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    case 'sentinelHub':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 10,
+          'circle-color': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'cloud_cover'], 0],
+            0, '#2e7d32',
+            20, '#9e9d24',
+            40, '#ef6c00',
+          ],
+          'circle-opacity': opacity * 0.55,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#1b5e20',
+          'circle-stroke-opacity': opacity,
+        },
+      });
+      break;
+
+    case 'googleEarth':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 6,
+          'circle-color': [
+            'match', ['coalesce', ['get', 'layer'], 'other'],
+            'volcano', '#bf360c',
+            'wikipedia', '#1a73e8',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity,
+        },
+      });
+      break;
+
+    case 'googleMyMaps':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 6,
+          'circle-color': [
+            'match', ['coalesce', ['get', 'category'], 'other'],
+            'landmark', '#ea4335',
+            'temple', '#d81b60',
+            'shrine', '#b71c1c',
+            'castle', '#6d4c41',
+            'park', '#2e7d32',
+            'nature', '#388e3c',
+            'onsen', '#ef6c00',
+            'market', '#fb8c00',
+            'district', '#7b1fa2',
+            'memorial', '#455a64',
+            'theme_park', '#f06292',
+            'aquarium', '#0288d1',
+            'garden', '#43a047',
+            'village', '#8d6e63',
+            'island', '#00acc1',
+            'canal', '#0097a7',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.9,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity,
+        },
+      });
+      break;
+
     default:
       map.addLayer({
         id: mainLayerId,
@@ -3255,6 +3491,7 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
     map.addControl(new maplibregl.ScaleControl({ maxWidth: 150 }), 'bottom-right');
 
     map.on('load', () => {
+      registerLayerIcons(map);
       setMapReady(true);
     });
 
@@ -3342,8 +3579,10 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
     setCurrentStyle(styleKey);
     prevLayersRef.current = {};
 
-    // Re-add layers after style change
+    // Re-add layers after style change (icons must be re-registered
+    // because map.setStyle() drops all previously added images)
     mapRef.current.once('style.load', () => {
+      registerLayerIcons(mapRef.current);
       for (const [layerId, layerState] of Object.entries(layers)) {
         if (layerState.visible && layerData[layerId]) {
           addLayerToMap(

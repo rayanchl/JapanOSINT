@@ -13,8 +13,10 @@
 import { fetchOverpass } from './_liveHelpers.js';
 
 async function tryLive() {
+  // Japan has ~9,000+ passenger rail stations across JR, private, subway, monorail, tram.
+  // Use a large cap so the dataset isn't silently truncated.
   return fetchOverpass(
-    'node["railway"="station"](area.jp);node["station"="subway"](area.jp);node["station"="light_rail"](area.jp);node["station"="monorail"](area.jp);',
+    'node["railway"="station"](area.jp);node["station"="subway"](area.jp);node["station"="light_rail"](area.jp);node["station"="monorail"](area.jp);node["railway"="tram_stop"](area.jp);node["railway"="halt"](area.jp);',
     (el, i, coords) => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: coords },
@@ -24,12 +26,14 @@ async function tryLive() {
         name_ja: el.tags?.name || null,
         operator: el.tags?.operator || null,
         line: el.tags?.line || null,
-        type: el.tags?.station || el.tags?.['railway:traffic_mode'] || 'railway',
+        type: el.tags?.station || el.tags?.['railway:traffic_mode'] || el.tags?.railway || 'railway',
         network: el.tags?.network || null,
         wikidata: el.tags?.wikidata || null,
         source: 'osm_overpass',
       },
     }),
+    30000,
+    { limit: 20000, queryTimeout: 120 },
   );
 }
 

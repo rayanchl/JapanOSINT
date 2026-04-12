@@ -154,6 +154,13 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/insecam-webcams',
     category: 'Cyber',
   },
+  cameraDiscovery: {
+    name: 'All Cameras (Unified)',
+    icon: '\u{1F4F9}',
+    color: '#ab47bc',
+    endpoint: '/api/data/camera-discovery',
+    category: 'Cyber',
+  },
   wifiNetworks: {
     name: 'WiFi Networks',
     icon: '\u{1F4F6}',
@@ -168,6 +175,13 @@ const LAYER_DEFINITIONS = {
     icon: '\u{1F684}',
     color: '#43a047',
     endpoint: '/api/data/full-transport',
+    category: 'Transport',
+  },
+  mlitN02Stations: {
+    name: 'MLIT N02 Rail Stations',
+    icon: '\u{1F68A}',
+    color: '#2e7d32',
+    endpoint: '/api/data/mlit-n02-stations',
     category: 'Transport',
   },
   busRoutes: {
@@ -851,6 +865,41 @@ const LAYER_DEFINITIONS = {
     color: '#5e35b1',
     endpoint: '/api/data/gbizinfo-geocoded',
     category: 'Business',
+  // ── Wave 11: External Mapping Platforms ─────────────────────────
+  marineTraffic: {
+    name: 'MarineTraffic AIS',
+    icon: '\u{1F6A2}',
+    color: '#01579b',
+    endpoint: '/api/data/marine-traffic',
+    category: 'Mapping',
+  },
+  vesselFinder: {
+    name: 'VesselFinder AIS',
+    icon: '\u{26F4}',
+    color: '#0288d1',
+    endpoint: '/api/data/vessel-finder',
+    category: 'Mapping',
+  },
+  sentinelHub: {
+    name: 'Sentinel-2 Scenes',
+    icon: '\u{1F6F0}',
+    color: '#33691e',
+    endpoint: '/api/data/sentinel-hub',
+    category: 'Mapping',
+  },
+  googleEarth: {
+    name: 'Google Earth Layers',
+    icon: '\u{1F30D}',
+    color: '#1a73e8',
+    endpoint: '/api/data/google-earth',
+    category: 'Mapping',
+  },
+  googleMyMaps: {
+    name: 'Google My Maps',
+    icon: '\u{1F5FA}',
+    color: '#ea4335',
+    endpoint: '/api/data/google-my-maps',
+    category: 'Mapping',
   },
 };
 
@@ -877,6 +926,7 @@ export const LAYER_CATEGORIES = [
   'Marketplace',
   'Cyber',
   'Infrastructure',
+  'Mapping',
 ];
 
 export { LAYER_DEFINITIONS };

@@ -36,6 +36,7 @@ import wifiNetworks from './wifiNetworks.js';
 import maritimeAis from './maritimeAis.js';
 import flightAdsb from './flightAdsb.js';
 import fullTransport from './fullTransport.js';
+import mlitN02Stations from './mlitN02Stations.js';
 import busRoutes from './busRoutes.js';
 import ferryRoutes from './ferryRoutes.js';
 import highwayTraffic from './highwayTraffic.js';
@@ -144,6 +145,15 @@ import ricePaddies from './ricePaddies.js';
 
 // Business / Corporate registry
 import gbizinfoGeocoded from './gbizinfoGeocoded.js';
+// Wave 11: External Mapping Platforms (MarineTraffic, VesselFinder, Sentinel Hub, Google Earth, My Maps)
+import marineTraffic from './marineTraffic.js';
+import vesselFinder from './vesselFinder.js';
+import sentinelHub from './sentinelHub.js';
+import googleEarth from './googleEarth.js';
+import googleMyMaps from './googleMyMaps.js';
+
+// Wave 12: Unified camera discovery
+import cameraDiscovery from './cameraDiscovery.js';
 
 // Wave 10: Niche + Pop Culture
 import vendingMachines from './vendingMachines.js';
@@ -187,6 +197,7 @@ export const collectors = {
   'maritime-ais': maritimeAis,
   'flight-adsb': flightAdsb,
   'full-transport': fullTransport,
+  'mlit-n02-stations': mlitN02Stations,
   'bus-routes': busRoutes,
   'ferry-routes': ferryRoutes,
   'highway-traffic': highwayTraffic,
@@ -303,6 +314,16 @@ export const collectors = {
   'sento-public-baths': sentoPublicBaths,
   'manhole-covers': manholeCovers,
   'themed-cafes': themedCafes,
+
+  // Wave 11: External Mapping Platforms
+  'marine-traffic': marineTraffic,
+  'vessel-finder': vesselFinder,
+  'sentinel-hub': sentinelHub,
+  'google-earth': googleEarth,
+  'google-my-maps': googleMyMaps,
+
+  // Wave 12: Unified camera discovery
+  'camera-discovery': cameraDiscovery,
 };
 
 /**
