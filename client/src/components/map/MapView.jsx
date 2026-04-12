@@ -3,6 +3,99 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 
+// ─── Icon rendering ─────────────────────────────────────────────────
+// Each layer in LAYER_DEFINITIONS has an emoji `icon` (e.g. plane, boat,
+// police officer). We render these emoji to offscreen canvases and
+// register them with the map so that symbol layers can use them via
+// `icon-image`, replacing the uniform-looking colored circles.
+
+const ICON_IMAGE_SIZE = 48; // px — canvas resolution for icon images
+
+function createEmojiIconImage(emoji, color) {
+  const size = ICON_IMAGE_SIZE;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  // Subtle contrast background so icons remain readable on any basemap
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(15, 20, 28, 0.75)';
+  ctx.fill();
+  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = color || 'rgba(255, 255, 255, 0.5)';
+  ctx.stroke();
+
+  // Draw the emoji glyph
+  ctx.font = `${Math.round(size * 0.62)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","EmojiOne Color","Android Emoji","Twemoji Mozilla",sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ffffff';
+  // Slight vertical nudge so emoji render centered across platforms
+  ctx.fillText(emoji, size / 2, size / 2 + 2);
+
+  return ctx.getImageData(0, 0, size, size);
+}
+
+function layerIconImageId(layerId) {
+  return `icon-${layerId}`;
+}
+
+function registerLayerIcons(map) {
+  for (const [layerId, def] of Object.entries(LAYER_DEFINITIONS)) {
+    if (!def?.icon) continue;
+    const imgId = layerIconImageId(layerId);
+    if (map.hasImage(imgId)) continue;
+    const imageData = createEmojiIconImage(def.icon, def.color);
+    if (imageData) {
+      map.addImage(imgId, imageData, { pixelRatio: 2 });
+    }
+  }
+}
+
+// Convert a circle-radius value/expression into a reasonable icon-size
+// multiplier (1.0 = full 48px icon). Preserves data-driven scaling like
+// earthquake magnitude → size.
+function circleRadiusToIconSize(radiusExpr) {
+  const scale = (px) => Math.max(0.35, Math.min(1.1, px / 22));
+  if (typeof radiusExpr === 'number') return scale(radiusExpr);
+  if (Array.isArray(radiusExpr)) {
+    // Let MapLibre evaluate the radius expression, then scale & clamp it.
+    return [
+      'max', 0.35,
+      ['min', 1.1, ['/', radiusExpr, 22]],
+    ];
+  }
+  return 0.5;
+}
+
+// Replace any `type: 'circle'` layer config with an equivalent
+// `type: 'symbol'` layer that renders the registered layer icon.
+function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity) {
+  const paint = config.paint || {};
+  const iconOpacity =
+    paint['circle-opacity'] != null ? paint['circle-opacity'] : fallbackOpacity;
+
+  return {
+    id: config.id,
+    type: 'symbol',
+    source: config.source,
+    ...(config.filter ? { filter: config.filter } : {}),
+    layout: {
+      'icon-image': iconImageId,
+      'icon-size': circleRadiusToIconSize(paint['circle-radius']),
+      'icon-allow-overlap': true,
+      'icon-ignore-placement': true,
+      'icon-anchor': 'center',
+    },
+    paint: {
+      'icon-opacity': iconOpacity,
+    },
+  };
+}
+
 const MAP_STYLES = {
   gsi_pale: {
     version: 8,
@@ -71,6 +164,36 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
 
   map.addSource(sourceId, { type: 'geojson', data: geojson });
 
+  // Intercept `map.addLayer` so that every `type: 'circle'` layer produced
+  // by the switch statement below gets transparently replaced with a symbol
+  // layer that renders the layer's category icon (plane, boat, police, …).
+  // Non-circle layers (heatmap, fill-extrusion, line, raster) pass through
+  // unchanged.
+  const iconImageId = layerIconImageId(layerId);
+  const hasIcon = typeof map.hasImage === 'function' && map.hasImage(iconImageId);
+  const originalAddLayer = map.addLayer.bind(map);
+  if (hasIcon) {
+    map.addLayer = (config, beforeId) => {
+      if (config && config.type === 'circle') {
+        return originalAddLayer(
+          convertCircleConfigToSymbol(config, iconImageId, opacity),
+          beforeId
+        );
+      }
+      return originalAddLayer(config, beforeId);
+    };
+  }
+
+  try {
+    addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayerId);
+  } finally {
+    if (hasIcon) {
+      map.addLayer = originalAddLayer;
+    }
+  }
+}
+
+function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayerId) {
   switch (layerId) {
     case 'earthquakes':
       map.addLayer({
@@ -3390,6 +3513,7 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
     map.addControl(new maplibregl.ScaleControl({ maxWidth: 150 }), 'bottom-right');
 
     map.on('load', () => {
+      registerLayerIcons(map);
       setMapReady(true);
     });
 
@@ -3477,8 +3601,10 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
     setCurrentStyle(styleKey);
     prevLayersRef.current = {};
 
-    // Re-add layers after style change
+    // Re-add layers after style change (icons must be re-registered
+    // because map.setStyle() drops all previously added images)
     mapRef.current.once('style.load', () => {
+      registerLayerIcons(mapRef.current);
       for (const [layerId, layerState] of Object.entries(layers)) {
         if (layerState.visible && layerData[layerId]) {
           addLayerToMap(
