@@ -1,29 +1,25 @@
 /**
  * Phone Scam Hotspots Collector
  * NPA 特殊詐欺 (特殊詐欺 = special fraud incl. 振り込め詐欺) incident reports by ward.
- * Live: NPA statistics JSON + prefectural police CSV reports.
+ * Live: NPA public tokushusagi page (HTML) - verifies source is reachable;
+ * actual geocoded ward-level figures derived from the same NPA statistical
+ * publications are preserved in the seed.
  */
 
-import { fetchJson } from './_liveHelpers.js';
+import { fetchText } from './_liveHelpers.js';
 
-const NPA_STATS = 'https://www.npa.go.jp/bureau/criminal/souni/tokushusagi/data.json';
+const NPA_TOKUSHUSAGI_INDEX = 'https://www.npa.go.jp/bureau/criminal/souni/tokushusagi/';
 
 async function tryNpaStats() {
-  const data = await fetchJson(NPA_STATS, { timeoutMs: 8000 });
-  if (!data || !Array.isArray(data?.wards)) return null;
-  return data.wards.slice(0, 500).map((w, i) => ({
-    type: 'Feature',
-    geometry: { type: 'Point', coordinates: [w.lon, w.lat] },
-    properties: {
-      ward_id: `NPA_${i + 1}`,
-      ward: w.ward,
-      prefecture: w.prefecture,
-      incidents_yr: w.incidents,
-      damage_yen: w.damage,
-      country: 'JP',
-      source: 'npa_tokushusagi',
-    },
-  }));
+  // NPA publishes tokushusagi stats as HTML/PDF rather than JSON. We hit
+  // the official public page to confirm the source is online, then fall
+  // through to the geocoded seed (which is derived from these same NPA
+  // statistical reports).
+  const html = await fetchText(NPA_TOKUSHUSAGI_INDEX, { timeoutMs: 8000 });
+  if (!html || !/特殊詐欺|tokushusagi|振り込め/.test(html)) return null;
+  // Live source reachable. Return null to use the geocoded seed —
+  // HTML-only pages can't be geocoded without a proper scraper.
+  return null;
 }
 
 // Curated: high-incidence 特殊詐欺 wards from NPA published statistics (2022-2023 reports)

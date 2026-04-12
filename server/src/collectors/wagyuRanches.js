@@ -1,30 +1,31 @@
 /**
  * Wagyu Ranches Collector
  * Certified wagyu production regions - Matsusaka, Kobe, Omi, Hida, Yonezawa, Maesawa, etc.
- * Live: No national registry; uses prefectural/regional certification associations.
+ * Live: OSM Overpass `landuse=farmyard` filtered by cattle/wagyu naming, plus
+ * `shop=butcher` with wagyu branding (which typically sits at the production region).
+ * No national JLEC JSON endpoint exists publicly, so we pull OSM geocoded points.
  */
 
-import { fetchJson } from './_liveHelpers.js';
+import { fetchOverpass } from './_liveHelpers.js';
 
-const JLEC_API = 'https://www.jlec.net/api/wagyu-regions.json';
-
-async function tryLiveJLEC() {
-  const data = await fetchJson(JLEC_API, { timeoutMs: 8000 });
-  if (!data || !Array.isArray(data?.regions)) return null;
-  return data.regions.slice(0, 200).map((r, i) => ({
-    type: 'Feature',
-    geometry: { type: 'Point', coordinates: [r.lon, r.lat] },
-    properties: {
-      ranch_id: `JLEC_${i + 1}`,
-      name: r.name,
-      brand: r.brand,
-      certification: r.certification,
-      head_count: r.head_count,
-      prefecture: r.prefecture,
-      country: 'JP',
-      source: 'jlec_wagyu',
-    },
-  }));
+async function tryLive() {
+  return fetchOverpass(
+    'node["landuse"="farmyard"]["name"~"牧場|和牛|牛|ranch|cattle"](area.jp);way["landuse"="farmyard"]["name"~"牧場|和牛|牛"](area.jp);node["shop"="butcher"]["name"~"松阪|神戸|近江|飛騨|米沢|前沢|仙台|宮崎|鹿児島|和牛"](area.jp);',
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        ranch_id: `OSM_${el.id}`,
+        name: el.tags?.['name:en'] || el.tags?.name || `Ranch ${i + 1}`,
+        name_ja: el.tags?.name || null,
+        operator: el.tags?.operator || null,
+        livestock: el.tags?.livestock || 'cattle',
+        kind: el.tags?.shop === 'butcher' ? 'retailer' : 'ranch',
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+  );
 }
 
 // Curated: major certified wagyu brands by production region
@@ -113,7 +114,7 @@ function generateSeedData() {
 }
 
 export default async function collectWagyuRanches() {
-  let features = await tryLiveJLEC();
+  let features = await tryLive();
   const live = !!(features && features.length > 0);
   if (!live) features = generateSeedData();
   return {
@@ -124,7 +125,7 @@ export default async function collectWagyuRanches() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live,
-      live_source: live ? 'jlec_wagyu' : 'wagyu_cert_seed',
+      live_source: live ? 'osm_overpass' : 'wagyu_cert_seed',
       description: 'Certified wagyu brand production regions - Matsusaka, Kobe, Omi, Hida and prefectural brands',
     },
     metadata: {},

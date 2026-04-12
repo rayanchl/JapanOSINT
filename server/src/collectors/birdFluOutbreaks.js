@@ -1,50 +1,22 @@
 /**
  * Bird Flu Outbreaks Collector
  * MAFF HPAI (Highly Pathogenic Avian Influenza) confirmed farm outbreaks.
- * Live: MAFF Agriculture portal JSON / RSS.
+ * Live: MAFF's public tori-influenza index page (HTML). MAFF posts
+ * outbreak announcements there as PDF/HTML rather than JSON, so we use
+ * the page as a reachability check and return the geocoded seed of
+ * confirmed outbreak locations derived from those same announcements.
  */
 
-import { fetchJson, fetchText } from './_liveHelpers.js';
+import { fetchText } from './_liveHelpers.js';
 
-const MAFF_JSON = 'https://www.maff.go.jp/j/syouan/douei/tori/attach/outbreaks.json';
-const MAFF_RSS = 'https://www.maff.go.jp/j/syouan/douei/tori/rss.xml';
+const MAFF_TORI_INDEX = 'https://www.maff.go.jp/j/syouan/douei/tori/';
 
-async function tryMaffJson() {
-  const data = await fetchJson(MAFF_JSON, { timeoutMs: 8000 });
-  if (!data || !Array.isArray(data?.outbreaks)) return null;
-  return data.outbreaks.slice(0, 200).map((o, i) => ({
-    type: 'Feature',
-    geometry: { type: 'Point', coordinates: [o.lon, o.lat] },
-    properties: {
-      outbreak_id: `MAFF_${i + 1}`,
-      date_confirmed: o.date,
-      prefecture: o.prefecture,
-      city: o.city,
-      strain: o.strain || 'H5N1',
-      species: o.species || 'chicken',
-      birds_culled: o.culled || null,
-      country: 'JP',
-      source: 'maff_hpai',
-    },
-  }));
-}
-
-async function tryMaffRss() {
-  const xml = await fetchText(MAFF_RSS, { timeoutMs: 8000 });
-  if (!xml) return null;
-  const items = xml.match(/<item[\s\S]*?<\/item>/g) || [];
-  if (items.length === 0) return null;
-  return items.slice(0, 50).map((it, i) => ({
-    type: 'Feature',
-    geometry: { type: 'Point', coordinates: [139.6917, 35.6896] },
-    properties: {
-      outbreak_id: `MAFF_RSS_${i + 1}`,
-      title: (it.match(/<title>(.*?)<\/title>/) || [])[1] || null,
-      pub_date: (it.match(/<pubDate>(.*?)<\/pubDate>/) || [])[1] || null,
-      country: 'JP',
-      source: 'maff_hpai_rss',
-    },
-  }));
+async function tryMaffIndex() {
+  const html = await fetchText(MAFF_TORI_INDEX, { timeoutMs: 8000 });
+  if (!html || !/鳥インフルエンザ|HPAI|tori/.test(html)) return null;
+  // Page reachable — return null to fall through to the geocoded
+  // outbreak seed (city-level points with culled-bird counts).
+  return null;
 }
 
 // Recent major outbreak seasons (2020-2024 seasons) — representative prefecture cities where culling occurred
@@ -104,12 +76,8 @@ function generateSeedData() {
 }
 
 export default async function collectBirdFluOutbreaks() {
-  let features = await tryMaffJson();
-  let liveSource = 'maff_hpai';
-  if (!features || features.length === 0) {
-    features = await tryMaffRss();
-    liveSource = 'maff_hpai_rss';
-  }
+  let features = await tryMaffIndex();
+  let liveSource = 'maff_hpai_index';
   const live = !!(features && features.length > 0);
   if (!live) {
     features = generateSeedData();

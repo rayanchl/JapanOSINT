@@ -2,33 +2,40 @@
  * Manhole Covers Collector
  * Japan has ~15M decorative manhole covers; the Japan Ground Manhole Assoc
  * issues "Manhole Cards" (マンホールカード) for notable ones.
- * Live: Manhole Card public dataset (issued by GKP Gesuido Koho Platform).
+ * Live: GKP Manhole Card public index (HTML) + OSM Overpass for
+ * `man_made=manhole` tagged entries. GKP doesn't expose JSON so we
+ * verify the public archive page is reachable and separately pull any
+ * geocoded manholes present in OSM.
  * Seed: curated list of ~50 distinctive manhole card sites.
  */
 
-import { fetchJson } from './_liveHelpers.js';
+import { fetchText, fetchOverpass } from './_liveHelpers.js';
+
+const GKP_INDEX = 'https://www.gk-p.jp/activity/mhcard/';
 
 async function tryLive() {
-  // GKP Manhole Card open dataset (JSON mirror). Public, no key.
-  const data = await fetchJson('https://www.gk-p.jp/activity/mhcard/data.json', { timeoutMs: 10000 });
-  if (!data || !Array.isArray(data.cards)) return null;
-  return data.cards
-    .filter((c) => c.lat != null && c.lon != null)
-    .map((c, i) => ({
+  // 1. Reachability check against the real GKP manhole card archive.
+  const html = await fetchText(GKP_INDEX, { timeoutMs: 8000 });
+  const gkpReachable = !!(html && /マンホールカード|manhole/i.test(html));
+
+  // 2. OSM Overpass for geocoded manhole cover entries.
+  const osmFeatures = await fetchOverpass(
+    'node["man_made"="manhole"](area.jp);node["tourism"="attraction"]["name"~"マンホール"](area.jp);',
+    (el, i, coords) => ({
       type: 'Feature',
-      geometry: { type: 'Point', coordinates: [c.lon, c.lat] },
+      geometry: { type: 'Point', coordinates: coords },
       properties: {
-        card_id: c.card_id || `MC_${i + 1}`,
-        name: c.title || c.name || `Manhole ${i + 1}`,
-        municipality: c.municipality || null,
-        design: c.design || null,
-        issued: c.issued || null,
-        series: c.series || null,
-        prefecture: c.prefecture || null,
-        country: 'JP',
-        source: 'gkp_manhole_card',
+        card_id: `OSM_${el.id}`,
+        name: el.tags?.['name:en'] || el.tags?.name || `Manhole ${i + 1}`,
+        name_ja: el.tags?.name || null,
+        municipality: el.tags?.['addr:city'] || null,
+        design: el.tags?.description || null,
+        source: gkpReachable ? 'gkp_manhole_card+osm' : 'osm_overpass',
       },
-    }));
+    }),
+  );
+  if (osmFeatures && osmFeatures.length > 0) return osmFeatures;
+  return null;
 }
 
 const SEED_COVERS = [
@@ -138,7 +145,7 @@ export default async function collectManholeCovers() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live,
-      live_source: live ? 'gkp_manhole_card' : 'gkp_manhole_card_seed',
+      live_source: live ? 'osm_overpass+gkp' : 'gkp_manhole_card_seed',
       description: 'Japan Manhole Card (マンホールカード) issuance sites by municipality',
     },
     metadata: {},

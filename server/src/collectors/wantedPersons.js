@@ -4,43 +4,21 @@
  * Live: NPA wanted list HTML scrape.
  */
 
-import { fetchJson, fetchText } from './_liveHelpers.js';
+import { fetchText } from './_liveHelpers.js';
 
-const NPA_WANTED_JSON = 'https://www.npa.go.jp/sousa/shimeitehai/data.json';
+// NPA's shimeitehai (指名手配) page is HTML-only; there is no public JSON
+// API. We hit the real index and verify it's reachable. Without a proper
+// scraper the individual wanted entries lack coordinates, so the live
+// signal is used as a reachability check and the geocoded prefectural
+// police HQ seed is returned as the actual map data.
 const NPA_WANTED_HTML = 'https://www.npa.go.jp/sousa/shimeitehai/index.html';
-
-async function tryNpaJson() {
-  const data = await fetchJson(NPA_WANTED_JSON, { timeoutMs: 8000 });
-  if (!data || !Array.isArray(data?.wanted)) return null;
-  return data.wanted.slice(0, 300).map((w, i) => ({
-    type: 'Feature',
-    geometry: { type: 'Point', coordinates: [w.lon || 139.6917, w.lat || 35.6896] },
-    properties: {
-      case_id: `NPA_${i + 1}`,
-      crime: w.crime || null,
-      issuing_pref: w.prefecture || null,
-      wanted_since: w.date || null,
-      country: 'JP',
-      source: 'npa_wanted',
-    },
-  }));
-}
 
 async function tryNpaHtml() {
   const html = await fetchText(NPA_WANTED_HTML, { timeoutMs: 8000 });
-  if (!html) return null;
-  // Very light scrape: count wanted entries referenced in the HTML
-  const matches = html.match(/<li[\s\S]*?<\/li>/g) || [];
-  if (matches.length === 0) return null;
-  return matches.slice(0, 50).map((_, i) => ({
-    type: 'Feature',
-    geometry: { type: 'Point', coordinates: [139.6917, 35.6896] },
-    properties: {
-      case_id: `NPA_HTML_${i + 1}`,
-      country: 'JP',
-      source: 'npa_wanted_html',
-    },
-  }));
+  if (!html || !/指名手配|shimeitehai/.test(html)) return null;
+  // Page reachable — return null to let the geocoded seed (prefectural
+  // police HQs with open-case counts) render on the map.
+  return null;
 }
 
 // Curated: prefectural police HQ coordinates serve as issuing-authority markers for unresolved
@@ -112,12 +90,8 @@ function generateSeedData() {
 }
 
 export default async function collectWantedPersons() {
-  let features = await tryNpaJson();
-  let liveSource = 'npa_wanted';
-  if (!features || features.length === 0) {
-    features = await tryNpaHtml();
-    liveSource = 'npa_wanted_html';
-  }
+  let features = await tryNpaHtml();
+  let liveSource = 'npa_wanted_html';
   const live = !!(features && features.length > 0);
   if (!live) {
     features = generateSeedData();
