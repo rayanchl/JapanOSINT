@@ -865,4 +865,15 @@ router.get('/google-my-maps', async (_req, res) => {
   await respondWithData(res, { sourceId: 'google-my-maps', layerType: 'google-my-maps', collectorKey: 'google-my-maps' });
 });
 
+// ===========================================================================
+// Wave 12: Unified Camera Discovery
+// ===========================================================================
+router.get('/camera-discovery', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'camera-discovery',
+    layerType: 'camera-discovery',
+    collectorKey: 'camera-discovery',
+  });
+});
+
 export default router;

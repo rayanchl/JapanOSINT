@@ -154,6 +154,13 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/insecam-webcams',
     category: 'Cyber',
   },
+  cameraDiscovery: {
+    name: 'All Cameras (Unified)',
+    icon: '\u{1F4F9}',
+    color: '#ab47bc',
+    endpoint: '/api/data/camera-discovery',
+    category: 'Cyber',
+  },
   wifiNetworks: {
     name: 'WiFi Networks',
     icon: '\u{1F4F6}',
