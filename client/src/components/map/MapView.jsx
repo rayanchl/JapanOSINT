@@ -6,14 +6,15 @@ import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 // OSM is the primary basemap. GSI is kept as a Japan-specific alternative
 // (cartography detail) and OSM Standard gives full-color OSM rendering.
 // ─── Icon rendering ─────────────────────────────────────────────────
-// Each layer in LAYER_DEFINITIONS has an emoji `icon` (e.g. plane, boat,
-// police officer). We render these emoji to offscreen canvases and
-// register them with the map so that symbol layers can use them via
-// `icon-image`, replacing the uniform-looking colored circles.
+// Each layer in LAYER_DEFINITIONS has a `color`. We draw a flat 2D pin
+// (teardrop with an inner white dot) tinted to that color on an
+// offscreen canvas and register it with the map so that symbol layers
+// can reference it via `icon-image`. This replaces the previous
+// emoji-based markers with a uniform, true 2D flat pin shape.
 
 const ICON_IMAGE_SIZE = 48; // px — canvas resolution for icon images
 
-function createEmojiIconImage(emoji) {
+function createPinIconImage(color) {
   const size = ICON_IMAGE_SIZE;
   const canvas = document.createElement('canvas');
   canvas.width = size;
@@ -21,12 +22,36 @@ function createEmojiIconImage(emoji) {
   const ctx = canvas.getContext('2d');
   if (!ctx) return null;
 
-  // Flat 2D icon — no background disc, no stroke, just the glyph itself.
-  ctx.font = `${Math.round(size * 0.85)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","EmojiOne Color","Android Emoji","Twemoji Mozilla",sans-serif`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
+  // Teardrop pin geometry. The tip sits at the bottom of the canvas so
+  // the pin can be anchored to its tip at the feature's coordinate.
+  const cx = size / 2;
+  const tipY = size - 1;
+  const headCy = size * 0.34;
+  const headR = size * 0.28;
+
+  // Flat pin body — single fill, no stroke, no gradient.
+  ctx.beginPath();
+  ctx.moveTo(cx, tipY);
+  ctx.bezierCurveTo(
+    cx - headR * 0.55, tipY - headR * 0.9,
+    cx - headR, headCy + headR * 0.55,
+    cx - headR, headCy,
+  );
+  ctx.arc(cx, headCy, headR, Math.PI, 0, false);
+  ctx.bezierCurveTo(
+    cx + headR, headCy + headR * 0.55,
+    cx + headR * 0.55, tipY - headR * 0.9,
+    cx, tipY,
+  );
+  ctx.closePath();
+  ctx.fillStyle = color || '#ffffff';
+  ctx.fill();
+
+  // Inner white dot gives the pin its recognisable head.
+  ctx.beginPath();
+  ctx.arc(cx, headCy, headR * 0.38, 0, Math.PI * 2);
   ctx.fillStyle = '#ffffff';
-  ctx.fillText(emoji, size / 2, size / 2 + 1);
+  ctx.fill();
 
   return ctx.getImageData(0, 0, size, size);
 }
@@ -37,10 +62,10 @@ function layerIconImageId(layerId) {
 
 function registerLayerIcons(map) {
   for (const [layerId, def] of Object.entries(LAYER_DEFINITIONS)) {
-    if (!def?.icon) continue;
+    if (!def) continue;
     const imgId = layerIconImageId(layerId);
     if (map.hasImage(imgId)) continue;
-    const imageData = createEmojiIconImage(def.icon);
+    const imageData = createPinIconImage(def.color);
     if (imageData) {
       map.addImage(imgId, imageData, { pixelRatio: 2 });
     }
@@ -68,7 +93,7 @@ function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity) {
       'icon-size': UNIFORM_ICON_SIZE,
       'icon-allow-overlap': true,
       'icon-ignore-placement': true,
-      'icon-anchor': 'center',
+      'icon-anchor': 'bottom',
     },
     paint: {
       'icon-opacity': iconOpacity,
