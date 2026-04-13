@@ -120,43 +120,87 @@ function generateSeedData() {
   return features.slice(0, 250);
 }
 
-async function tryJmtyScrape() {
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-    const res = await fetch('https://jmty.jp/all/sale', {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const html = await res.text();
-    // Parse listing items from HTML - extract titles, locations, prices
-    const items = [];
-    const regex = /<h2[^>]*class="[^"]*p-item-title[^"]*"[^>]*>(.*?)<\/h2>/g;
-    let match;
-    while ((match = regex.exec(html)) !== null && items.length < 50) {
-      items.push(match[1].replace(/<[^>]+>/g, '').trim());
-    }
-    if (items.length === 0) return null;
-    return null; // Need geo data to create features
-  } catch {
-    return null;
+import { fetchText } from './_liveHelpers.js';
+
+const AREA_BY_PREF = Object.fromEntries(JAPAN_AREAS.map((a) => [a.pref, a]));
+
+function findArea(text) {
+  if (!text) return null;
+  for (const a of JAPAN_AREAS) {
+    if (text.includes(a.area)) return a;
   }
+  for (const a of JAPAN_AREAS) {
+    if (text.includes(a.pref)) return a;
+  }
+  return null;
+}
+
+/**
+ * Iterate Jmty (ジモティー) listings nationwide. Jmty has per-prefecture
+ * URLs like https://jmty.jp/{pref-slug}/sale. We hit ~12 large areas and
+ * paginate up to 5 pages each.
+ */
+async function tryJmtyScrape() {
+  const slugs = ['tokyo', 'kanagawa', 'osaka', 'aichi', 'hokkaido', 'fukuoka',
+                 'hyogo', 'chiba', 'saitama', 'kyoto', 'hiroshima', 'miyagi'];
+  const features = [];
+  let idx = 0;
+  for (const slug of slugs) {
+    for (let page = 1; page <= 5; page++) {
+      const url = `https://jmty.jp/${slug}/sale?page=${page}`;
+      const html = await fetchText(url, { timeoutMs: 12_000, retries: 1 });
+      if (!html) break;
+      // Each item: link + title + city/area span
+      const items = html.split(/p-articles-list-item/).slice(1);
+      if (items.length === 0) break;
+      let pageMatched = 0;
+      for (const block of items) {
+        const titleMatch = block.match(/p-item-title[^>]*>([^<]+)</);
+        const priceMatch = block.match(/p-item-most-important[^>]*>([^<]+)</);
+        const areaMatch = block.match(/p-item-area[^>]*>([^<]+)</) || block.match(/データから[^>]*>([^<]+)</);
+        const linkMatch = block.match(/href="([^"]+)"/);
+        const title = titleMatch?.[1]?.trim();
+        if (!title) continue;
+        const areaTxt = areaMatch?.[1]?.trim() || '';
+        const area = findArea(areaTxt) || findArea(slug) || AREA_BY_PREF[areaTxt];
+        if (!area) continue;
+        const jLat = (Math.random() - 0.5) * 0.03;
+        const jLon = (Math.random() - 0.5) * 0.04;
+        idx++;
+        features.push({
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: [area.lon + jLon, area.lat + jLat] },
+          properties: {
+            id: `JMTY_${idx}`,
+            platform: 'jmty',
+            title,
+            price_display: priceMatch?.[1]?.trim() || null,
+            area: area.area,
+            prefecture: area.pref,
+            url: linkMatch?.[1] ? new URL(linkMatch[1], 'https://jmty.jp').href : null,
+            source: 'jmty_live',
+          },
+        });
+        pageMatched++;
+      }
+      if (pageMatched === 0) break;
+    }
+  }
+  return features.length > 0 ? features : null;
 }
 
 export default async function collectClassifieds() {
-  await tryJmtyScrape(); // Attempt scrape for future enhancement
-  const features = generateSeedData();
-
+  const live = await tryJmtyScrape();
+  const features = live && live.length > 0 ? live : generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
     _meta: {
-      source: 'classifieds',
+      source: live ? 'jmty_live' : 'classifieds_seed',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      description: 'Japanese classifieds from Jmty, Mercari, Yahoo Auctions - listings, free items, barter',
+      live: !!live,
+      description: 'Japanese classifieds from Jmty (ジモティー) — live nationwide scrape, geocoded by area',
     },
     metadata: {},
   };

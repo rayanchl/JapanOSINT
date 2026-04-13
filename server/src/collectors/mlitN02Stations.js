@@ -16,7 +16,7 @@
  * stations so the layer doesn't come back empty in dev.
  */
 
-import { fetchJson } from './_liveHelpers.js';
+import { fetchJson, fetchOverpassTiled } from './_liveHelpers.js';
 
 const ENV_URL = process.env.MLIT_N02_GEOJSON_URL || null;
 
@@ -113,28 +113,68 @@ async function tryUrl(url) {
   return features.length > 0 ? features : null;
 }
 
+/**
+ * Live nationwide fallback: pull every railway station mapped in OSM via the
+ * tiled Overpass helper. OSM coverage of JR/private lines in Japan is at
+ * parity with MLIT N02 in practice (~10k stations).
+ */
+async function tryOsmStations() {
+  return fetchOverpassTiled(
+    (bbox) => [
+      `node["railway"="station"](${bbox});`,
+      `node["railway"="halt"](${bbox});`,
+      `node["railway"="tram_stop"](${bbox});`,
+      `node["station"="subway"](${bbox});`,
+      `way["railway"="station"](${bbox});`,
+    ].join(''),
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        station_id: `OSM_${el.id}`,
+        name: el.tags?.['name:en'] || el.tags?.name || 'Station',
+        name_ja: el.tags?.name || el.tags?.['name:ja'] || null,
+        line: el.tags?.line || el.tags?.network || null,
+        operator: el.tags?.operator || null,
+        classification: el.tags?.railway || el.tags?.station || null,
+        wikidata: el.tags?.wikidata || null,
+        country: 'JP',
+        source: 'osm_overpass_railway',
+      },
+    }),
+    { queryTimeout: 180, timeoutMs: 90_000 },
+  );
+}
+
 export default async function collectMlitN02Stations() {
   const urls = [ENV_URL, ...MIRROR_URLS].filter(Boolean);
   let features = null;
   let usedUrl = null;
+  let liveSrc = null;
 
   for (const url of urls) {
     const result = await tryUrl(url);
     if (result) {
       features = result;
       usedUrl = url;
+      liveSrc = 'mlit_n02_live';
       break;
     }
   }
 
-  const live = !!features;
-  if (!features) features = generateSeedData();
+  if (!features) {
+    features = await tryOsmStations();
+    if (features && features.length) liveSrc = 'osm_overpass_railway';
+  }
+
+  const live = !!(features && features.length);
+  if (!live) features = generateSeedData();
 
   return {
     type: 'FeatureCollection',
     features,
     _meta: {
-      source: live ? 'mlit_n02_live' : 'mlit_n02_seed',
+      source: liveSrc || 'mlit_n02_seed',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live,

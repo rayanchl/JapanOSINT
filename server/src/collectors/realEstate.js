@@ -117,35 +117,89 @@ function generateSeedData() {
   return features.slice(0, 200);
 }
 
+import { fetchText } from './_liveHelpers.js';
+
+const PREF_BY_NAME = Object.fromEntries(REAL_ESTATE_AREAS.map((a) => [a.pref, a]));
+const AREA_BY_NAME = Object.fromEntries(REAL_ESTATE_AREAS.map((a) => [a.area, a]));
+
+function findArea(text) {
+  if (!text) return null;
+  for (const k of Object.keys(AREA_BY_NAME)) if (text.includes(k)) return AREA_BY_NAME[k];
+  for (const k of Object.keys(PREF_BY_NAME)) if (text.includes(k)) return PREF_BY_NAME[k];
+  return null;
+}
+
+/**
+ * Live SUUMO 賃貸 listings (chintai).
+ * SUUMO publishes per-prefecture listing pages. We iterate the largest
+ * 13 prefecture pages, paginate up to 5 each, and geocode by parsed
+ * address (matches against ward/city names).
+ */
 async function trySuumoScrape() {
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-    const res = await fetch('https://suumo.jp/chintai/tokyo/', {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    // Would parse listing data from HTML
-    return null;
-  } catch {
-    return null;
+  const slugs = [
+    'tokyo', 'kanagawa', 'osaka', 'aichi', 'hokkaido', 'fukuoka', 'hyogo',
+    'chiba', 'saitama', 'kyoto', 'hiroshima', 'miyagi', 'shizuoka',
+  ];
+  const features = [];
+  let idx = 0;
+  for (const slug of slugs) {
+    for (let page = 1; page <= 5; page++) {
+      const url = `https://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=030&bs=040&ta=${slug}&page=${page}`;
+      const html = await fetchText(url, { timeoutMs: 12_000, retries: 1 });
+      if (!html) break;
+      // Each property block contains "cassetteitem" / "property_view" classes
+      const items = html.split(/cassetteitem"/).slice(1);
+      if (items.length === 0) break;
+      let pageMatched = 0;
+      for (const block of items) {
+        const titleMatch = block.match(/cassetteitem_content-title[^>]*>([^<]+)</);
+        const addrMatch = block.match(/cassetteitem_detail-col1[^>]*>([^<]+)</);
+        const rentMatch = block.match(/cassetteitem_other-emphasis[^>]*>([^<]+)</);
+        const sizeMatch = block.match(/cassetteitem_madori[^>]*>([^<]+)</);
+        const title = titleMatch?.[1]?.trim();
+        const addr = addrMatch?.[1]?.trim();
+        if (!title || !addr) continue;
+        const area = findArea(addr);
+        if (!area) continue;
+        const jLat = (Math.random() - 0.5) * 0.02;
+        const jLon = (Math.random() - 0.5) * 0.02;
+        idx++;
+        features.push({
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: [area.lon + jLon, area.lat + jLat] },
+          properties: {
+            id: `SUUMO_${idx}`,
+            platform: 'suumo',
+            title,
+            address: addr,
+            rent_display: rentMatch?.[1]?.trim() || null,
+            size: sizeMatch?.[1]?.trim() || null,
+            area: area.area,
+            prefecture: area.pref,
+            listing_type: 'rent',
+            source: 'suumo_live',
+          },
+        });
+        pageMatched++;
+      }
+      if (pageMatched === 0) break;
+    }
   }
+  return features.length > 0 ? features : null;
 }
 
 export default async function collectRealEstate() {
-  await trySuumoScrape();
-  const features = generateSeedData();
-
+  const live = await trySuumoScrape();
+  const features = live && live.length > 0 ? live : generateSeedData();
   return {
     type: 'FeatureCollection',
     features,
     _meta: {
-      source: 'real_estate',
+      source: live ? 'suumo_live' : 'real_estate_seed',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      description: 'Real estate listings from Suumo, Homes.co.jp, AtHome - rent and sale properties',
+      live: !!live,
+      description: 'Real estate rental listings from SUUMO — live nationwide scrape, geocoded to ward',
     },
     metadata: {},
   };

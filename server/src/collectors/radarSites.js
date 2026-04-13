@@ -53,7 +53,7 @@ const SEED_RADAR = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:25];area["ISO3166-1"="JP"]->.jp;(node["man_made"="radar"](area.jp);way["man_made"="radar"](area.jp););out center 100;`;
+  const query = `[out:json][timeout:180];area["ISO3166-1"="JP"]->.jp;(node["man_made"="radar"](area.jp);way["man_made"="radar"](area.jp););out center;`;
   try {
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 12000);

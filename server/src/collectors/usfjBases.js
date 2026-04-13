@@ -49,7 +49,7 @@ const SEED_USFJ = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:25];area["ISO3166-1"="JP"]->.jp;(way["landuse"="military"]["operator"~"US|United States"](area.jp);relation["landuse"="military"]["operator"~"US|United States"](area.jp););out center 100;`;
+  const query = `[out:json][timeout:180];area["ISO3166-1"="JP"]->.jp;(way["landuse"="military"]["operator"~"US|United States"](area.jp);relation["landuse"="military"]["operator"~"US|United States"](area.jp););out center;`;
   try {
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 12000);

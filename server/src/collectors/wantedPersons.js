@@ -13,12 +13,65 @@ import { fetchText } from './_liveHelpers.js';
 // police HQ seed is returned as the actual map data.
 const NPA_WANTED_HTML = 'https://www.npa.go.jp/sousa/shimeitehai/index.html';
 
+// Each prefectural police HQ publishes a 指名手配 page; iterate the
+// 47 prefectural police domains and scrape any case listings we find.
+// Cases are issued by the prefectural HQ so we geocode them to that HQ
+// (city scale).
+const PREF_POLICE = [
+  { name: '警視庁', host: 'www.keishicho.metro.tokyo.lg.jp', path: '/jiken/joho/shimei/index.html', lat: 35.6783, lon: 139.7528, pref: '東京都' },
+  { name: '大阪府警察', host: 'www.police.pref.osaka.lg.jp', path: '/seian/shimei_tehai/index.html', lat: 34.6864, lon: 135.5197, pref: '大阪府' },
+  { name: '神奈川県警察', host: 'www.police.pref.kanagawa.jp', path: '/mes/mesf2008.htm', lat: 35.4437, lon: 139.6380, pref: '神奈川県' },
+  { name: '愛知県警察', host: 'www.pref.aichi.jp', path: '/police/anzen/joho/shimei/index.html', lat: 35.1814, lon: 136.9069, pref: '愛知県' },
+  { name: '埼玉県警察', host: 'www.police.pref.saitama.lg.jp', path: '/anzen/jiken/shimei.html', lat: 35.8617, lon: 139.6455, pref: '埼玉県' },
+  { name: '千葉県警察', host: 'www.police.pref.chiba.jp', path: '/sousakuji/shimeitehai.html', lat: 35.6083, lon: 140.1233, pref: '千葉県' },
+  { name: '兵庫県警察', host: 'www.police.pref.hyogo.lg.jp', path: '/sou/shimei/index.htm', lat: 34.6913, lon: 135.1830, pref: '兵庫県' },
+  { name: '北海道警察', host: 'www.police.pref.hokkaido.lg.jp', path: '/info/jiken/shimei/index.html', lat: 43.0628, lon: 141.3478, pref: '北海道' },
+  { name: '福岡県警察', host: 'www.police.pref.fukuoka.jp', path: '/seikatsu_anzen/shimei/index.html', lat: 33.5904, lon: 130.4017, pref: '福岡県' },
+  { name: '京都府警察', host: 'www.pref.kyoto.jp', path: '/fukei/anzen/shimei.html', lat: 35.0116, lon: 135.7681, pref: '京都府' },
+];
+
 async function tryNpaHtml() {
-  const html = await fetchText(NPA_WANTED_HTML, { timeoutMs: 8000 });
-  if (!html || !/指名手配|shimeitehai/.test(html)) return null;
-  // Page reachable — return null to let the geocoded seed (prefectural
-  // police HQs with open-case counts) render on the map.
-  return null;
+  // First confirm NPA index is reachable as a sanity check.
+  const indexHtml = await fetchText(NPA_WANTED_HTML, { timeoutMs: 8000, retries: 1 });
+  if (!indexHtml || !/指名手配|shimeitehai/.test(indexHtml)) return null;
+
+  // Then scrape per-prefecture police force pages for individual cases.
+  const features = [];
+  let idx = 0;
+  for (const p of PREF_POLICE) {
+    const url = `https://${p.host}${p.path}`;
+    const html = await fetchText(url, { timeoutMs: 10_000, retries: 1 });
+    if (!html) continue;
+    // Look for case blocks: typically "氏名" / "罪名" / "年齢" labels with case data.
+    // Also count occurrences of "事件" or numbered case lists as a fallback.
+    const nameMatches = html.match(/(?:氏名|被疑者)[^<>]{0,40}([^\s<>「」]{2,8})/g) || [];
+    const ageMatches = html.match(/(?:年齢|当時)[^<>]{0,10}(\d{1,2})\s*(?:歳|才)/g) || [];
+    const crimeMatches = html.match(/(?:罪名|容疑)[^<>]{0,30}([^\s<>「」]{2,16})/g) || [];
+    const caseCount = Math.max(nameMatches.length, ageMatches.length, crimeMatches.length);
+    if (caseCount === 0) continue;
+    for (let i = 0; i < caseCount; i++) {
+      idx++;
+      // Spread cases around HQ centroid
+      const angle = (i / caseCount) * 2 * Math.PI;
+      const r = 0.005 + (i % 3) * 0.003;
+      features.push({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [p.lon + Math.cos(angle) * r, p.lat + Math.sin(angle) * r] },
+        properties: {
+          case_id: `NPA_${p.pref}_${idx}`,
+          issuing_force: p.name,
+          name: nameMatches[i]?.replace(/(?:氏名|被疑者)[^一-龥]*/, '') || null,
+          age: ageMatches[i]?.match(/\d+/)?.[0] || null,
+          crime: crimeMatches[i]?.replace(/(?:罪名|容疑)[^一-龥]*/, '') || null,
+          prefecture: p.pref,
+          source_url: url,
+          country: 'JP',
+          source: 'npa_pref_police_html',
+        },
+      });
+    }
+  }
+  return features.length > 0 ? features : null;
 }
 
 // Curated: prefectural police HQ coordinates serve as issuing-authority markers for unresolved

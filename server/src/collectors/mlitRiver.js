@@ -4,8 +4,15 @@
  * Fallback with known major river monitoring stations
  */
 
-const API_URL = 'https://www.river.go.jp/kawabou/ipSuiiKensaku/srch';
-const TIMEOUT_MS = 5000;
+import { fetchOverpass, fetchJson } from './_liveHelpers.js';
+
+// MLIT/kawabou and DIAS public river-gauge endpoints (no auth required).
+const API_URLS = [
+  'https://www.river.go.jp/kawabou/api/suii/getStations.json',
+  'https://www.river.go.jp/kawabou/api/getCurrentStations.json',
+  'https://www1.river.go.jp/cgi/SiteInfoList.exe?ID=&KIND=1&PREF=00&format=json',
+];
+const TIMEOUT_MS = 15000;
 
 const RIVER_STATIONS = [
   // Tone River (利根川) - Japan's largest watershed
@@ -88,51 +95,79 @@ function generateSeedData() {
   });
 }
 
-export default async function collectMlitRiver() {
-  let features = [];
-  let source = 'mlit_live';
-
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const res = await fetch(API_URL, {
-      signal: controller.signal,
-      headers: { Accept: 'application/json' },
-    });
-    clearTimeout(timer);
-
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-
-    if (Array.isArray(data) && data.length > 0) {
-      features = data
-        .filter(d => d.lat && d.lon)
-        .map((d, i) => ({
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [+d.lon, +d.lat] },
-          properties: {
-            station_id: d.station_id ?? `RIV_LIVE_${i}`,
-            station_name: d.station_name ?? d.name,
-            river_name: d.river_name ?? d.river,
-            water_level_m: d.water_level ?? d.level ?? null,
-            source: 'mlit_live',
-          },
-        }));
+async function tryMlitJson() {
+  for (const url of API_URLS) {
+    const data = await fetchJson(url, { timeoutMs: TIMEOUT_MS, retries: 1 });
+    if (!data) continue;
+    const arr = Array.isArray(data) ? data : (data.stations || data.data || data.items || []);
+    if (!Array.isArray(arr) || arr.length === 0) continue;
+    const features = [];
+    for (let i = 0; i < arr.length; i++) {
+      const d = arr[i];
+      const lat = Number(d?.lat ?? d?.LAT ?? d?.緯度);
+      const lon = Number(d?.lon ?? d?.LON ?? d?.経度);
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+      features.push({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [lon, lat] },
+        properties: {
+          station_id: d?.station_id ?? d?.code ?? `RIV_LIVE_${i}`,
+          station_name: d?.station_name ?? d?.name ?? null,
+          river_name: d?.river_name ?? d?.river ?? null,
+          water_level_m: d?.water_level ?? d?.level ?? null,
+          source: 'mlit_river_live',
+        },
+      });
     }
-    if (features.length === 0) throw new Error('No features parsed');
-  } catch {
-    features = generateSeedData();
-    source = 'mlit_seed';
+    if (features.length > 0) return features;
   }
+  return null;
+}
+
+async function tryOsmGauges() {
+  return fetchOverpass(
+    [
+      'node["man_made"="monitoring_station"]["monitoring:water_level"="yes"](area.jp);',
+      'node["man_made"="water_well"](area.jp);',
+      'node["waterway"="water_point"](area.jp);',
+    ].join(''),
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        station_id: `OSM_${el.id}`,
+        station_name: el.tags?.['name:en'] || el.tags?.name || 'River gauge',
+        operator: el.tags?.operator || null,
+        ref: el.tags?.ref || null,
+        source: 'osm_overpass',
+      },
+    }),
+    60_000,
+    { limit: 0, queryTimeout: 120 },
+  );
+}
+
+export default async function collectMlitRiver() {
+  let features = await tryMlitJson();
+  let live = !!(features && features.length);
+  let liveSrc = live ? 'mlit_river_live' : null;
+
+  if (!live) {
+    features = await tryOsmGauges();
+    live = !!(features && features.length);
+    if (live) liveSrc = 'osm_water_monitoring';
+  }
+  if (!live) features = generateSeedData();
 
   return {
     type: 'FeatureCollection',
     features,
     _meta: {
-      source,
+      source: live ? liveSrc : 'mlit_seed',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      description: 'River water level monitoring data from MLIT',
+      live,
+      description: 'River water level monitoring stations across Japan',
     },
     metadata: {},
   };

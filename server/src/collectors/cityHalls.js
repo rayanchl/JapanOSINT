@@ -1,10 +1,10 @@
 /**
  * City Halls Collector
- * Tries OSM Overpass `amenity=townhall` then falls back to ~80 major
- * city/ward halls across Japan.
+ * Tries OSM Overpass `amenity=townhall` (full nationwide via shared helper)
+ * then falls back to ~80 major city/ward halls across Japan.
  */
 
-const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
+import { fetchOverpass } from './_liveHelpers.js';
 
 const SEED_CITY_HALLS = [
   // Tokyo 23 wards
@@ -91,40 +91,28 @@ const SEED_CITY_HALLS = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:25];area["ISO3166-1"="JP"]->.jp;(node["amenity"="townhall"](area.jp););out 600;`;
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 12000);
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      signal: ctrl.signal,
-      headers: { 'Content-Type': 'text/plain' },
-      body: query,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data?.elements?.length) return null;
-    return data.elements
-      .map((el) => {
-        const lat = el.lat ?? el.center?.lat;
-        const lon = el.lon ?? el.center?.lon;
-        if (lat == null || lon == null) return null;
-        return {
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [lon, lat] },
-          properties: {
-            hall_id: `OSM_${el.id}`,
-            name: el.tags?.name || 'City Hall',
-            kind: 'townhall',
-            source: 'osm_overpass',
-          },
-        };
-      })
-      .filter(Boolean);
-  } catch {
-    return null;
-  }
+  return fetchOverpass(
+    [
+      'node["amenity"="townhall"](area.jp);',
+      'way["amenity"="townhall"](area.jp);',
+      'node["office"="government"]["government"~"municipal|prefecture|cabinet"](area.jp);',
+    ].join(''),
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        hall_id: `OSM_${el.id}`,
+        name: el.tags?.['name:en'] || el.tags?.name || 'City Hall',
+        name_ja: el.tags?.name || null,
+        kind: el.tags?.amenity === 'townhall' ? 'townhall' : (el.tags?.government || 'government_office'),
+        operator: el.tags?.operator || null,
+        addr: el.tags?.['addr:full'] || el.tags?.['addr:city'] || null,
+        source: 'osm_overpass',
+      },
+    }),
+    60_000,
+    { limit: 0, queryTimeout: 180 },
+  );
 }
 
 function generateSeedData() {

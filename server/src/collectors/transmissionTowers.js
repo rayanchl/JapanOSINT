@@ -3,17 +3,20 @@
  * OSM `power=tower` / `tower:type=transmission` / `power=pole` across Japan.
  * Separate from the aggregate electrical-grid collector so that the raw tower
  * and pole inventory is available as its own layer.
+ *
+ * Tiled fetch — the nationwide power tower/pole inventory exceeds 100k nodes.
  */
 
-import { fetchOverpass } from './_liveHelpers.js';
+import { fetchOverpassTiled } from './_liveHelpers.js';
 
 async function tryLive() {
-  return fetchOverpass(
-    [
-      'node["power"="tower"](area.jp);',
-      'node["tower:type"="transmission"](area.jp);',
-      'node["power"="pole"]["tower:type"!="lighting"](area.jp);',
-      'node["power"="substation"](area.jp);way["power"="substation"](area.jp);',
+  return fetchOverpassTiled(
+    (bbox) => [
+      `node["power"="tower"](${bbox});`,
+      `node["tower:type"="transmission"](${bbox});`,
+      `node["power"="pole"]["tower:type"!="lighting"](${bbox});`,
+      `node["power"="substation"](${bbox});`,
+      `way["power"="substation"](${bbox});`,
     ].join(''),
     (el, i, coords) => ({
       type: 'Feature',
@@ -30,9 +33,7 @@ async function tryLive() {
         source: 'osm_overpass',
       },
     }),
-    25000,
-    // Towers/poles are dense; cap is higher and we scope to transmission-class.
-    { limit: 2000, queryTimeout: 60 },
+    { queryTimeout: 180, timeoutMs: 90_000 },
   );
 }
 
@@ -46,7 +47,7 @@ export default async function collectTransmissionTowers() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live: features.length > 0,
-      description: 'Electric transmission towers, poles and substations via OSM',
+      description: 'Electric transmission towers, poles and substations via tiled OSM',
     },
     metadata: {},
   };

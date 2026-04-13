@@ -1,13 +1,20 @@
 /**
  * Parking Facilities Collector
  * OSM `amenity=parking` / `amenity=parking_entrance` across Japan.
+ *
+ * Uses tiled Overpass (12 sub-region bboxes) because the nationwide dataset
+ * is far too large for a single Overpass call (>500k elements).
  */
 
-import { fetchOverpass } from './_liveHelpers.js';
+import { fetchOverpassTiled } from './_liveHelpers.js';
 
 async function tryLive() {
-  return fetchOverpass(
-    'node["amenity"="parking"](area.jp);way["amenity"="parking"](area.jp);node["amenity"="parking_entrance"](area.jp);',
+  return fetchOverpassTiled(
+    (bbox) => [
+      `node["amenity"="parking"](${bbox});`,
+      `way["amenity"="parking"](${bbox});`,
+      `node["amenity"="parking_entrance"](${bbox});`,
+    ].join(''),
     (el, i, coords) => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: coords },
@@ -24,8 +31,7 @@ async function tryLive() {
         source: 'osm_overpass',
       },
     }),
-    20000,
-    { limit: 1500, queryTimeout: 50 },
+    { queryTimeout: 180, timeoutMs: 90_000 },
   );
 }
 
@@ -39,7 +45,7 @@ export default async function collectParkingFacilities() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live: features.length > 0,
-      description: 'Parking facilities in Japan via OSM amenity=parking',
+      description: 'Parking facilities in Japan (tiled Overpass nationwide)',
     },
     metadata: {},
   };

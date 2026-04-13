@@ -4,7 +4,7 @@
  * Falls back to a curated seed of major prefectural fire HQs.
  */
 
-const OVERPASS_URL = process.env.OVERPASS_URL || 'https://overpass-api.de/api/interpreter';
+import { fetchOverpassTiled } from './_liveHelpers.js';
 
 const SEED_FIRE_STATIONS = [
   { name: '東京消防庁本庁', lat: 35.6919, lon: 139.7547, type: 'headquarters', prefecture: '東京都' },
@@ -40,46 +40,25 @@ const SEED_FIRE_STATIONS = [
 ];
 
 async function tryOverpass() {
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 25000);
-    const query = `[out:json][timeout:25];
-area["ISO3166-1"="JP"][admin_level=2]->.jp;
-(node["amenity"="fire_station"](area.jp);
- way["amenity"="fire_station"]["name"](area.jp););
-out center 800;`;
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'data=' + encodeURIComponent(query),
-      signal: ctrl.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data.elements || data.elements.length === 0) return null;
-    return data.elements
-      .map((el, i) => {
-        const lat = el.lat ?? el.center?.lat;
-        const lon = el.lon ?? el.center?.lon;
-        if (lat == null || lon == null) return null;
-        return {
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [lon, lat] },
-          properties: {
-            facility_id: `FIRE_${String(i + 1).padStart(5, '0')}`,
-            name: el.tags?.name || el.tags?.['name:en'] || 'Fire Station',
-            operator: el.tags?.operator || null,
-            phone: el.tags?.phone || null,
-            country: 'JP',
-            source: 'overpass_api',
-          },
-        };
-      })
-      .filter(Boolean);
-  } catch {
-    return null;
-  }
+  return fetchOverpassTiled(
+    (bbox) => [
+      `node["amenity"="fire_station"](${bbox});`,
+      `way["amenity"="fire_station"](${bbox});`,
+    ].join(''),
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        facility_id: `FIRE_${el.id}`,
+        name: el.tags?.name || el.tags?.['name:en'] || 'Fire Station',
+        operator: el.tags?.operator || null,
+        phone: el.tags?.phone || null,
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+    { queryTimeout: 180, timeoutMs: 90_000 },
+  );
 }
 
 function generateSeedData() {

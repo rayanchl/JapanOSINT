@@ -40,7 +40,7 @@ const SEED_REFINERIES = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:25];area["ISO3166-1"="JP"]->.jp;(way["industrial"="oil_refinery"](area.jp);way["industrial"="refinery"](area.jp);way["man_made"="petroleum_refinery"](area.jp););out center 50;`;
+  const query = `[out:json][timeout:180];area["ISO3166-1"="JP"]->.jp;(way["industrial"="oil_refinery"](area.jp);way["industrial"="refinery"](area.jp);way["man_made"="petroleum_refinery"](area.jp););out center;`;
   try {
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 12000);
