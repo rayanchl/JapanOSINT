@@ -766,6 +766,47 @@ const sources = [
 
   // ── Wave 12: Unified Camera Discovery ───────────────────────────────
   { id: 'camera-discovery', name: 'Unified Camera Discovery', nameJa: '統合カメラディスカバリー', type: 'api', category: 'cyber', url: 'https://overpass-api.de/api/interpreter', description: 'Fused public-camera discovery across every channel: OSM surveillance, JMA volcano cams, MLIT river cams, Shutoko/Hanshin/NEXCO expressway CCTV, NHK/YouTube/municipal livecams, ski/beach/port webcams, Insecam, Windy/SkylineWebcams/EarthCam aggregators, DuckDuckGo camera dorks, and Shodan camera queries', updateInterval: 3600, layer: 'camera-discovery', free: true, status: 'online' },
+
+  // ── Wave 13: Net-new live OSINT endpoints (2026 sweep) ──────────────
+  // Seismic / Weather mirrors & EEW
+  { id: 'p2pquake-jma', name: 'P2P Quake JMA mirror', nameJa: 'P2P地震情報 (JMA)', type: 'api', category: 'environment', url: 'https://api.p2pquake.net/v2/history?codes=551&limit=50', description: 'Free community JMA earthquake mirror, JSON + WebSocket. 60 req/min anonymous. Also: wss://api.p2pquake.net/v2/ws', updateInterval: 60, layer: 'earthquake', free: true, status: 'offline' },
+  { id: 'wolfx-eew', name: 'Wolfx JMA Earthquake Early Warning', nameJa: 'Wolfx 緊急地震速報', type: 'api', category: 'environment', url: 'https://api.wolfx.jp/jma_eew.json', description: 'JMA EEW (Earthquake Early Warning) JSON + WebSocket (wss://ws-api.wolfx.jp/jma_eew). No API key required', updateInterval: 10, layer: 'earthquake', free: true, status: 'offline' },
+  { id: 'wolfx-eqlist', name: 'Wolfx JMA Earthquake List', nameJa: 'Wolfx 地震一覧', type: 'api', category: 'environment', url: 'https://api.wolfx.jp/jma_eqlist.json', description: 'Latest 50 JMA earthquake reports. JSON, anonymous', updateInterval: 60, layer: 'earthquake', free: true, status: 'offline' },
+  { id: 'jma-forecast-area', name: 'JMA Regional Forecast JSON', nameJa: '気象庁 地域別天気予報', type: 'api', category: 'environment', url: 'https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json', description: 'JMA regional forecast JSON by 6-digit area code (iterate 47 prefecture codes). Anonymous', updateInterval: 3600, layer: 'weather', free: true, status: 'offline' },
+  { id: 'jma-typhoon-json', name: 'JMA Typhoon Track JSON', nameJa: '気象庁 台風経路', type: 'api', category: 'environment', url: 'https://www.jma.go.jp/bosai/typhoon/data/', description: 'JMA active typhoon track JSON endpoints', updateInterval: 900, layer: 'weather', free: true, status: 'offline' },
+  { id: 'openmeteo-jma', name: 'Open-Meteo JMA mirror', nameJa: 'Open-Meteo JMA', type: 'api', category: 'environment', url: 'https://api.open-meteo.com/v1/jma', description: 'Open-Meteo free public JMA forecast API (no key, rate-limited for non-commercial use)', updateInterval: 3600, layer: 'weather', free: true, status: 'offline' },
+  { id: 'nerv-feed', name: 'NERV Disaster Alerts', nameJa: '特務機関NERV', type: 'api', category: 'environment', url: 'https://unii-api.nerv.app/v1/lib/alerts.json', description: 'NERV Disaster Prevention multi-hazard alert aggregator (earthquakes, tsunami, volcano, weather)', updateInterval: 60, layer: 'earthquake', free: true, status: 'offline' },
+
+  // Maritime
+  { id: 'msil-umishiru', name: 'MSIL Umishiru Public APIs', nameJa: '海しる 公開API', type: 'api', category: 'transport', url: 'https://portal.msil.go.jp/apis', description: 'Japan Coast Guard MDA "Umishiru" (海しる) public API catalog - maritime geo, weather, ports. Free key via portal; bbox JSON (≤1,000 rec)', updateInterval: 900, layer: 'maritime-ais', free: true, status: 'offline' },
+  { id: 'jcg-navarea', name: 'JCG NAVAREA XI warnings', nameJa: '海上保安庁 航行警報', type: 'scraped', category: 'transport', url: 'https://www6.kaiho.mlit.go.jp/JAPANNAVAREA/', description: 'Japan Coast Guard NAVAREA XI navigation warnings and Maritime Safety Information (MSI)', updateInterval: 3600, layer: 'maritime-ais', free: true, status: 'offline' },
+
+  // Finance / Corporate
+  { id: 'edinet-filings', name: 'FSA EDINET Corporate Filings', nameJa: 'EDINET 有価証券報告書', type: 'api', category: 'government', url: 'https://api.edinet-fsa.go.jp/api/v2/documents.json', description: 'Japan FSA EDINET disclosures JSON API - every listed company, investment fund, REIT. Free Subscription-Key header; 3-5s throttle required', updateInterval: 3600, layer: 'edinet-filings', free: true, status: 'offline' },
+  { id: 'boj-stats', name: 'Bank of Japan statistics', nameJa: '日本銀行 統計', type: 'api', category: 'government', url: 'https://www.stat-search.boj.or.jp/', description: 'BOJ statistics portal - monetary aggregates, interest rates, balance of payments, exchange rates (CSV/JSON)', updateInterval: 21600, layer: 'edinet-filings', free: true, status: 'offline' },
+
+  // Government / Legal / Statistics
+  { id: 'egov-laws', name: 'e-Gov Law Search API', nameJa: 'e-Gov 法令検索 API', type: 'api', category: 'government', url: 'https://laws.e-gov.go.jp/api/1/lawlists/1', description: 'Japanese national laws, ordinances, ministerial regulations - full text XML/JSON. Anonymous', updateInterval: 86400, layer: 'edinet-filings', free: true, status: 'offline' },
+  { id: 'ndl-search', name: 'National Diet Library Search', nameJa: '国立国会図書館 サーチ', type: 'api', category: 'government', url: 'https://iss.ndl.go.jp/api/opensearch', description: 'NDL bibliographic OpenSearch API - books, articles, archives (RSS/Atom/JSON). Anonymous', updateInterval: 86400, layer: 'edinet-filings', free: true, status: 'offline' },
+  { id: 'data-go-jp-ckan', name: 'data.go.jp CKAN catalog', nameJa: 'data.go.jp CKAN', type: 'api', category: 'government', url: 'https://www.data.go.jp/data/api/action/package_search', description: 'Federated Japan government open-data CKAN catalog (action/package_search, action/package_show)', updateInterval: 86400, layer: 'edinet-filings', free: true, status: 'offline' },
+  { id: 'geospatial-jp-ckan', name: 'geospatial.jp CKAN catalog', nameJa: '地理空間情報 CKAN', type: 'api', category: 'geospatial', url: 'https://www.geospatial.jp/ckan/api/3/action/package_search', description: 'MLIT geospatial.jp open data catalog - PLATEAU, disaster hazard layers, transport GIS', updateInterval: 86400, layer: 'edinet-filings', free: true, status: 'offline' },
+
+  // News / Media
+  { id: 'nhk-news-rss', name: 'NHK News RSS', nameJa: 'NHKニュース RSS', type: 'api', category: 'government', url: 'https://www3.nhk.or.jp/rss/news/cat0.xml', description: 'NHK public broadcaster news RSS feeds - cat0 (main) + cat1-cat7 (politics, economy, intl, society, science, culture, sport)', updateInterval: 600, layer: 'news-feed', free: true, status: 'offline' },
+  { id: 'nhk-world-rss', name: 'NHK World English RSS', nameJa: 'NHK World EN RSS', type: 'api', category: 'government', url: 'https://www3.nhk.or.jp/nhkworld/en/news/feeds/', description: 'NHK World English news feed (Atom/RSS)', updateInterval: 600, layer: 'news-feed', free: true, status: 'offline' },
+  { id: 'kyodo-rss', name: 'Kyodo News English RSS', nameJa: '共同通信 英字 RSS', type: 'api', category: 'government', url: 'https://english.kyodonews.net/rss/news.xml', description: 'Kyodo News English RSS feed - domestic and international news wire', updateInterval: 600, layer: 'news-feed', free: true, status: 'offline' },
+
+  // Aviation
+  { id: 'opensky-japan', name: 'OpenSky Network ADS-B (JP bbox)', nameJa: 'OpenSky ADS-B 日本', type: 'api', category: 'transport', url: 'https://opensky-network.org/api/states/all?lamin=24&lomin=122&lamax=46&lomax=146', description: 'OpenSky crowd-sourced ADS-B flight positions, Japan bounding box. Free anonymous (rate-limited to ~10s intervals)', updateInterval: 30, layer: 'flight-adsb', free: true, status: 'offline' },
+
+  // Cyber / Infra
+  { id: 'jpcert-alerts-rss', name: 'JPCERT/CC Alerts RSS', nameJa: 'JPCERT/CC 注意喚起 RSS', type: 'api', category: 'cyber', url: 'https://www.jpcert.or.jp/rss/jpcert.rdf', description: 'JPCERT Coordination Center security advisories and alerts (RDF/RSS). Anonymous', updateInterval: 3600, layer: 'jpcert-alerts', free: true, status: 'offline' },
+  { id: 'ipa-vuln-rss', name: 'IPA Security Alerts RSS', nameJa: 'IPA 重要なセキュリティ情報 RSS', type: 'api', category: 'cyber', url: 'https://www.ipa.go.jp/security/announce/alert.rss', description: 'IPA (Information-technology Promotion Agency) critical security bulletins RSS', updateInterval: 3600, layer: 'jpcert-alerts', free: true, status: 'offline' },
+  { id: 'nict-atlas', name: 'NICT Atlas / NICTER stats', nameJa: 'NICT Atlas / NICTER', type: 'api', category: 'cyber', url: 'https://www.nicter.jp/atlas/', description: 'NICT darknet sensor network (NICTER) attack traffic visualization and JSON stats endpoints', updateInterval: 3600, layer: 'nicter-darknet', free: true, status: 'offline' },
+
+  // Geospatial / Reference
+  { id: 'gsi-geocode', name: 'GSI Address Search', nameJa: '国土地理院 住所検索', type: 'api', category: 'geospatial', url: 'https://msearch.gsi.go.jp/address-search/AddressSearch', description: 'GSI (Geospatial Information Authority) address → lat/lon geocoder (JSON). Anonymous', updateInterval: 86400, layer: 'geocode', free: true, status: 'offline' },
+  { id: 'japan-api-prefectures', name: 'Japan Prefectures REST API', nameJa: '都道府県 REST API', type: 'api', category: 'geospatial', url: 'https://japanapi.curtisbarnard.com/api/v1/prefectures', description: 'Community REST API for Japan prefectures, regions, demographics. Anonymous JSON', updateInterval: 604800, layer: 'admin-boundaries', free: true, status: 'offline' },
 ];
 
 export default sources;

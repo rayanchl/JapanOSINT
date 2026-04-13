@@ -159,6 +159,32 @@ import adminBoundaries from './adminBoundaries.js';
 // Wave 12: Unified camera discovery
 import cameraDiscovery from './cameraDiscovery.js';
 
+// Wave 13: Net-new live OSINT endpoints (2026 sweep)
+import p2pquakeJma from './p2pquakeJma.js';
+import wolfxEew from './wolfxEew.js';
+import wolfxEqlist from './wolfxEqlist.js';
+import jmaForecastArea from './jmaForecastArea.js';
+import jmaTyphoonJson from './jmaTyphoonJson.js';
+import openmeteoJma from './openmeteoJma.js';
+import nervFeed from './nervFeed.js';
+import msilUmishiru from './msilUmishiru.js';
+import jcgNavarea from './jcgNavarea.js';
+import edinetFilings from './edinetFilings.js';
+import bojStats from './bojStats.js';
+import egovLaws from './egovLaws.js';
+import ndlSearch from './ndlSearch.js';
+import dataGoJpCkan from './dataGoJpCkan.js';
+import geospatialJpCkan from './geospatialJpCkan.js';
+import nhkNewsRss from './nhkNewsRss.js';
+import nhkWorldRss from './nhkWorldRss.js';
+import kyodoRss from './kyodoRss.js';
+import openskyJapan from './openskyJapan.js';
+import jpcertAlertsRss from './jpcertAlertsRss.js';
+import ipaVulnRss from './ipaVulnRss.js';
+import nictAtlas from './nictAtlas.js';
+import gsiGeocode from './gsiGeocode.js';
+import japanApiPrefectures from './japanApiPrefectures.js';
+
 // Wave 10: Niche + Pop Culture
 import vendingMachines from './vendingMachines.js';
 import karaokeChains from './karaokeChains.js';
@@ -331,6 +357,32 @@ export const collectors = {
   'admin-boundaries': adminBoundaries,
   // Wave 12: Unified camera discovery
   'camera-discovery': cameraDiscovery,
+
+  // Wave 13: Net-new live OSINT endpoints (2026 sweep)
+  'p2pquake-jma': p2pquakeJma,
+  'wolfx-eew': wolfxEew,
+  'wolfx-eqlist': wolfxEqlist,
+  'jma-forecast-area': jmaForecastArea,
+  'jma-typhoon-json': jmaTyphoonJson,
+  'openmeteo-jma': openmeteoJma,
+  'nerv-feed': nervFeed,
+  'msil-umishiru': msilUmishiru,
+  'jcg-navarea': jcgNavarea,
+  'edinet-filings': edinetFilings,
+  'boj-stats': bojStats,
+  'egov-laws': egovLaws,
+  'ndl-search': ndlSearch,
+  'data-go-jp-ckan': dataGoJpCkan,
+  'geospatial-jp-ckan': geospatialJpCkan,
+  'nhk-news-rss': nhkNewsRss,
+  'nhk-world-rss': nhkWorldRss,
+  'kyodo-rss': kyodoRss,
+  'opensky-japan': openskyJapan,
+  'jpcert-alerts-rss': jpcertAlertsRss,
+  'ipa-vuln-rss': ipaVulnRss,
+  'nict-atlas': nictAtlas,
+  'gsi-geocode': gsiGeocode,
+  'japan-api-prefectures': japanApiPrefectures,
 };
 
 /**
