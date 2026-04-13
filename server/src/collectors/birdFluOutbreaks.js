@@ -11,9 +11,6 @@ import { fetchText } from './_liveHelpers.js';
 
 const MAFF_TORI_INDEX = 'https://www.maff.go.jp/j/syouan/douei/tori/';
 
-// Prefecture name → city centroid for geocoding outbreak announcements.
-const PREF_CENTROIDS = Object.fromEntries(SEED_OUTBREAKS.map((s) => [s.prefecture, [s.lon, s.lat]]));
-
 async function tryMaffIndex() {
   // Iterate annual season pages on MAFF site. Each season page lists every
   // confirmed case with prefecture, date and case number. We extract those.
@@ -102,6 +99,9 @@ const SEED_OUTBREAKS = [
   { prefecture: '宮崎県', lat: 31.9111, lon: 131.4239, strain: 'H5N1', season: '2020-21', birds_culled: 2530000, cases: 13 },
   { prefecture: '鹿児島県', lat: 31.5963, lon: 130.5571, strain: 'H5N1', season: '2022-23', birds_culled: 1040000, cases: 8 },
 ];
+
+// Prefecture name → city centroid for geocoding outbreak announcements.
+const PREF_CENTROIDS = Object.fromEntries(SEED_OUTBREAKS.map((s) => [s.prefecture, [s.lon, s.lat]]));
 
 function generateSeedData() {
   return SEED_OUTBREAKS.map((o, i) => ({
