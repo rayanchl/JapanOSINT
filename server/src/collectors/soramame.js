@@ -1,13 +1,23 @@
 /**
  * SORAMAME Air Quality Collector
- * Ministry of Environment air quality monitoring network
- * Fallback with known monitoring station locations across Japan
+ * Ministry of Environment 大気汚染物質広域監視システム ("そらまめくん").
+ *
+ * Tries several public SORAMAME / EnvJP endpoints (no auth required), then
+ * falls back to OSM `man_made=monitoring_station` + `monitoring:air_quality=yes`
+ * for any active sensor, then finally to a static seed of major stations
+ * with synthetic readings (clearly marked as `soramame_seed`).
  */
 
-const API_URL = 'http://soramame.env.go.jp/soramame/api/data';
-const TIMEOUT_MS = 5000;
+import { fetchJson, fetchOverpass, fetchText } from './_liveHelpers.js';
 
-// Major air quality monitoring stations across Japan with real coordinates
+const ATMOS_URLS = [
+  // Public atmospheric stations index (lat/lon list)
+  'https://soramame.env.go.jp/data/map/kyokuLatest/Pref01.json',
+  'https://soramame.env.go.jp/data/jsons/japan/atmos.json',
+  // Cross-government NIES backup (the AEROS feed)
+  'https://tenbou.nies.go.jp/download/Air_pollution/json/StationLatest.json',
+];
+
 const STATIONS = [
   { id: 'AQ001', name: '札幌北', pref: '北海道', lat: 43.091, lon: 141.341 },
   { id: 'AQ002', name: '旭川', pref: '北海道', lat: 43.771, lon: 142.365 },
@@ -61,33 +71,118 @@ const STATIONS = [
   { id: 'AQ050', name: '松山', pref: '愛媛県', lat: 33.842, lon: 132.766 },
 ];
 
+/**
+ * Fetch each prefecture-keyed JSON ("Pref01.json" .. "Pref47.json") if the
+ * primary endpoint pattern works. Returns features or null.
+ */
+async function tryPrefScan() {
+  const features = [];
+  // Iterate all 47 prefectures concurrently (low load — small JSON each)
+  const tasks = [];
+  for (let p = 1; p <= 47; p++) {
+    const code = String(p).padStart(2, '0');
+    const url = `https://soramame.env.go.jp/data/map/kyokuLatest/Pref${code}.json`;
+    tasks.push(fetchJson(url, { timeoutMs: 10_000 }).then((data) => {
+      if (!data || !Array.isArray(data)) return;
+      for (const r of data) {
+        const lat = Number(r?.緯度 ?? r?.lat ?? r?.LAT);
+        const lon = Number(r?.経度 ?? r?.lon ?? r?.LON);
+        if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+        features.push({
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: [lon, lat] },
+          properties: {
+            station_id: String(r?.測定局コード ?? r?.code ?? ''),
+            station_name: r?.測定局名称 ?? r?.name ?? null,
+            prefecture: r?.都道府県名 ?? null,
+            pm25_ugm3: r?.PM25 ?? null,
+            pm10_ugm3: r?.SPM ?? null,
+            so2_ppb: r?.SO2 ?? null,
+            no2_ppb: r?.NO2 ?? null,
+            ox_ppb: r?.OX ?? null,
+            co_ppm: r?.CO ?? null,
+            measured_at: r?.測定時刻 ?? null,
+            source: 'soramame_live',
+          },
+        });
+      }
+    }).catch(() => {}));
+  }
+  await Promise.all(tasks);
+  return features.length > 0 ? features : null;
+}
+
+async function tryAtmosJson() {
+  for (const url of ATMOS_URLS) {
+    const data = await fetchJson(url, { timeoutMs: 10_000 });
+    if (!data) continue;
+    const arr = Array.isArray(data) ? data : (data.features || data.stations || data.list || data.data);
+    if (!Array.isArray(arr) || arr.length === 0) continue;
+    const features = [];
+    for (const r of arr) {
+      // GeoJSON feature?
+      if (r?.geometry?.coordinates) {
+        features.push({
+          type: 'Feature',
+          geometry: r.geometry,
+          properties: { ...(r.properties || {}), source: 'soramame_live' },
+        });
+        continue;
+      }
+      const lat = Number(r?.lat ?? r?.LAT ?? r?.緯度);
+      const lon = Number(r?.lon ?? r?.LON ?? r?.経度);
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+      features.push({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [lon, lat] },
+        properties: {
+          station_id: r?.station_id ?? r?.code ?? null,
+          station_name: r?.name ?? r?.station_name ?? null,
+          prefecture: r?.pref ?? null,
+          pm25_ugm3: r?.pm25 ?? null,
+          source: 'soramame_live',
+        },
+      });
+    }
+    if (features.length > 0) return features;
+  }
+  return null;
+}
+
+async function tryOsmStations() {
+  return fetchOverpass(
+    [
+      'node["man_made"="monitoring_station"]["monitoring:air_quality"="yes"](area.jp);',
+      'node["man_made"="monitoring_station"]["monitoring:weather"="yes"](area.jp);',
+    ].join(''),
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        station_id: `OSM_${el.id}`,
+        station_name: el.tags?.['name:en'] || el.tags?.name || 'Air monitoring station',
+        operator: el.tags?.operator || null,
+        ref: el.tags?.ref || null,
+        source: 'osm_overpass',
+      },
+    }),
+    60_000,
+    { limit: 0, queryTimeout: 120 },
+  );
+}
+
 function randomInRange(min, max) {
   return Math.round((min + Math.random() * (max - min)) * 10) / 10;
 }
 
 function generateSeedData() {
   const now = new Date();
-  return STATIONS.map(st => {
-    // Urban stations tend to have higher values
-    const isUrban = ['東京', '大阪', '名古屋', '横浜', '川崎', '北九州', '堺', '尼崎'].some(
-      c => st.name.includes(c) || st.pref.includes(c)
+  return STATIONS.map((st) => {
+    const isUrban = ['東京', '大阪', '名古屋', '横浜', '川崎', '北九州'].some(
+      (c) => st.name.includes(c) || st.pref.includes(c),
     );
-    const urbanFactor = isUrban ? 1.4 : 1.0;
-
-    const pm25 = randomInRange(5, 35) * urbanFactor;
-    const pm10 = randomInRange(10, 60) * urbanFactor;
-    const so2 = randomInRange(1, 15) * urbanFactor;
-    const no2 = randomInRange(5, 40) * urbanFactor;
-    const ox = randomInRange(10, 60);
-    const co = randomInRange(0.2, 1.5) * urbanFactor;
-
-    // AQI approximation based on PM2.5
-    let aqi;
-    if (pm25 <= 12) aqi = 'Good';
-    else if (pm25 <= 35.4) aqi = 'Moderate';
-    else if (pm25 <= 55.4) aqi = 'Unhealthy for Sensitive Groups';
-    else aqi = 'Unhealthy';
-
+    const f = isUrban ? 1.4 : 1.0;
+    const pm25 = randomInRange(5, 35) * f;
     return {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [st.lon, st.lat] },
@@ -96,12 +191,6 @@ function generateSeedData() {
         station_name: st.name,
         prefecture: st.pref,
         pm25_ugm3: Math.round(pm25 * 10) / 10,
-        pm10_ugm3: Math.round(pm10 * 10) / 10,
-        so2_ppb: Math.round(so2 * 10) / 10,
-        no2_ppb: Math.round(no2 * 10) / 10,
-        ox_ppb: Math.round(ox * 10) / 10,
-        co_ppm: Math.round(co * 100) / 100,
-        aqi_category: aqi,
         measured_at: now.toISOString(),
         source: 'soramame_seed',
       },
@@ -110,53 +199,32 @@ function generateSeedData() {
 }
 
 export default async function collectSoramame() {
-  let features = [];
-  let source = 'soramame_live';
+  // Live cascade: prefecture scan → atmos JSON → OSM monitoring stations → seed
+  let features = await tryPrefScan();
+  let live = !!(features && features.length);
+  let liveSrc = live ? 'soramame_pref_scan' : null;
 
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const res = await fetch(API_URL, {
-      signal: controller.signal,
-      headers: { 'Accept': 'application/json' },
-    });
-    clearTimeout(timer);
-
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-
-    if (Array.isArray(data) && data.length > 0) {
-      features = data
-        .filter(d => d.lat && d.lon)
-        .map(d => ({
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [+d.lon, +d.lat] },
-          properties: {
-            station_id: d.station_id ?? d.id,
-            station_name: d.station_name ?? d.name,
-            pm25_ugm3: d.pm25 ?? null,
-            pm10_ugm3: d.pm10 ?? null,
-            so2_ppb: d.so2 ?? null,
-            no2_ppb: d.no2 ?? null,
-            ox_ppb: d.ox ?? null,
-            source: 'soramame_live',
-          },
-        }));
-    }
-    if (features.length === 0) throw new Error('No features parsed');
-  } catch {
-    features = generateSeedData();
-    source = 'soramame_seed';
+  if (!live) {
+    features = await tryAtmosJson();
+    live = !!(features && features.length);
+    if (live) liveSrc = 'soramame_atmos';
   }
+  if (!live) {
+    features = await tryOsmStations();
+    live = !!(features && features.length);
+    if (live) liveSrc = 'osm_monitoring_station';
+  }
+  if (!live) features = generateSeedData();
 
   return {
     type: 'FeatureCollection',
-    features,
+    features: features || [],
     _meta: {
-      source,
+      source: live ? liveSrc : 'soramame_seed',
       fetchedAt: new Date().toISOString(),
-      recordCount: features.length,
-      description: 'Air quality monitoring data from SORAMAME network',
+      recordCount: features?.length || 0,
+      live,
+      description: 'SORAMAME / NIES air quality monitoring stations across Japan',
     },
     metadata: {},
   };

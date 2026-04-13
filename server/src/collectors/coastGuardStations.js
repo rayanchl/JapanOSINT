@@ -5,7 +5,7 @@
  * — this layer contains the smaller offices and signal stations.
  */
 
-const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
+import { fetchOverpass } from './_liveHelpers.js';
 
 const SEED_STATIONS = [
   // 1st RCGH (Hokkaido)
@@ -66,40 +66,29 @@ const SEED_STATIONS = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:25];area["ISO3166-1"="JP"]->.jp;(node["operator"~"海上保安"](area.jp);node["amenity"="coast_guard"](area.jp););out 200;`;
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 12000);
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      signal: ctrl.signal,
-      headers: { 'Content-Type': 'text/plain' },
-      body: query,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data?.elements?.length) return null;
-    return data.elements
-      .map((el) => {
-        const lat = el.lat ?? el.center?.lat;
-        const lon = el.lon ?? el.center?.lon;
-        if (lat == null || lon == null) return null;
-        return {
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [lon, lat] },
-          properties: {
-            station_id: `OSM_${el.id}`,
-            name: el.tags?.name || 'JCG Station',
-            kind: 'station',
-            source: 'osm_overpass',
-          },
-        };
-      })
-      .filter(Boolean);
-  } catch {
-    return null;
-  }
+  return fetchOverpass(
+    [
+      'node["operator"~"海上保安"](area.jp);',
+      'way["operator"~"海上保安"](area.jp);',
+      'node["amenity"="coast_guard"](area.jp);',
+      'way["amenity"="coast_guard"](area.jp);',
+      'node["office"="government"]["government"="coast_guard"](area.jp);',
+    ].join(''),
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        station_id: `OSM_${el.id}`,
+        name: el.tags?.['name:en'] || el.tags?.name || 'JCG Station',
+        name_ja: el.tags?.name || null,
+        operator: el.tags?.operator || null,
+        kind: el.tags?.amenity === 'coast_guard' ? 'coast_guard' : 'station',
+        source: 'osm_overpass',
+      },
+    }),
+    60_000,
+    { limit: 0, queryTimeout: 180 },
+  );
 }
 
 function generateSeedData() {

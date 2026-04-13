@@ -66,7 +66,7 @@ const SEED_AUTO_PLANTS = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:25];area["ISO3166-1"="JP"]->.jp;(way["industrial"="automobile"](area.jp);way["industrial"="auto_parts"](area.jp););out center 100;`;
+  const query = `[out:json][timeout:180];area["ISO3166-1"="JP"]->.jp;(way["industrial"="automobile"](area.jp);way["industrial"="auto_parts"](area.jp););out center;`;
   try {
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 12000);

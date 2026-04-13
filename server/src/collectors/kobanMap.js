@@ -4,7 +4,7 @@
  * Falls back to a curated seed of major prefectural HQs and notable koban.
  */
 
-const OVERPASS_URL = process.env.OVERPASS_URL || 'https://overpass-api.de/api/interpreter';
+import { fetchOverpassTiled } from './_liveHelpers.js';
 
 const SEED_KOBAN = [
   { name: '警視庁本部', lat: 35.6789, lon: 139.7547, type: 'headquarters', prefecture: '東京都' },
@@ -41,51 +41,33 @@ const SEED_KOBAN = [
 ];
 
 async function tryOverpass() {
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 25000);
-    const query = `[out:json][timeout:25];
-area["ISO3166-1"="JP"][admin_level=2]->.jp;
-(node["amenity"="police"](area.jp);
- way["amenity"="police"]["name"](area.jp););
-out center 800;`;
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'data=' + encodeURIComponent(query),
-      signal: ctrl.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data.elements || data.elements.length === 0) return null;
-    return data.elements
-      .map((el, i) => {
-        const lat = el.lat ?? el.center?.lat;
-        const lon = el.lon ?? el.center?.lon;
-        if (lat == null || lon == null) return null;
-        const name = el.tags?.name || el.tags?.['name:en'] || 'Police';
-        const type = /交番|koban/i.test(name) ? 'koban' :
-                     /本部|headquarters/i.test(name) ? 'headquarters' :
-                     /駐在所/.test(name) ? 'chuzaisho' : 'station';
-        return {
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [lon, lat] },
-          properties: {
-            facility_id: `KOBAN_${String(i + 1).padStart(5, '0')}`,
-            name,
-            police_type: type,
-            phone: el.tags?.phone || null,
-            opening_hours: el.tags?.opening_hours || '24/7',
-            country: 'JP',
-            source: 'overpass_api',
-          },
-        };
-      })
-      .filter(Boolean);
-  } catch {
-    return null;
-  }
+  return fetchOverpassTiled(
+    (bbox) => [
+      `node["amenity"="police"](${bbox});`,
+      `way["amenity"="police"](${bbox});`,
+    ].join(''),
+    (el, _i, coords) => {
+      const name = el.tags?.name || el.tags?.['name:en'] || 'Police';
+      const ptype = /交番|koban/i.test(name) ? 'koban' :
+                    /本部|headquarters/i.test(name) ? 'headquarters' :
+                    /駐在所/.test(name) ? 'chuzaisho' : 'station';
+      return {
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: coords },
+        properties: {
+          facility_id: `KOBAN_${el.id}`,
+          name,
+          police_type: ptype,
+          operator: el.tags?.operator || null,
+          phone: el.tags?.phone || null,
+          opening_hours: el.tags?.opening_hours || '24/7',
+          country: 'JP',
+          source: 'osm_overpass',
+        },
+      };
+    },
+    { queryTimeout: 180, timeoutMs: 90_000 },
+  );
 }
 
 function generateSeedData() {

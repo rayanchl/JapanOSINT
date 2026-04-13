@@ -2,16 +2,18 @@
  * Utility Poles Collector
  * OSM `man_made=utility_pole` across Japan. Complements the transmission
  * tower collector with telecom / low-voltage distribution assets.
+ *
+ * Tiled fetch — Japan has hundreds of thousands of OSM-mapped poles.
  */
 
-import { fetchOverpass } from './_liveHelpers.js';
+import { fetchOverpassTiled } from './_liveHelpers.js';
 
 async function tryLive() {
-  return fetchOverpass(
-    [
-      'node["man_made"="utility_pole"](area.jp);',
-      'node["utility"="power"](area.jp);',
-      'node["utility"="telecom"](area.jp);',
+  return fetchOverpassTiled(
+    (bbox) => [
+      `node["man_made"="utility_pole"](${bbox});`,
+      `node["utility"="power"](${bbox});`,
+      `node["utility"="telecom"](${bbox});`,
     ].join(''),
     (el, i, coords) => ({
       type: 'Feature',
@@ -27,8 +29,7 @@ async function tryLive() {
         source: 'osm_overpass',
       },
     }),
-    25000,
-    { limit: 2000, queryTimeout: 60 },
+    { queryTimeout: 180, timeoutMs: 90_000 },
   );
 }
 
@@ -42,7 +43,7 @@ export default async function collectUtilityPoles() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live: features.length > 0,
-      description: 'Utility poles (power/telecom distribution) via OSM',
+      description: 'Utility poles (power/telecom distribution) via tiled OSM',
     },
     metadata: {},
   };

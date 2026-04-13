@@ -10,7 +10,7 @@
  * Env: GOOGLE_MYMAPS_IDS (comma-separated list of My Maps mids)
  */
 
-import { fetchText } from './_liveHelpers.js';
+import { fetchText, fetchOverpassTiled } from './_liveHelpers.js';
 
 const MAP_IDS = (process.env.GOOGLE_MYMAPS_IDS || '')
   .split(',')
@@ -129,9 +129,45 @@ function generateSeed() {
   }));
 }
 
+/**
+ * Live nationwide POI fallback: query OSM Overpass for every wikidata-tagged
+ * tourism attraction in Japan. This approximates the kind of curated POI
+ * collection commonly shared via Google My Maps and gives us thousands of
+ * geocoded Japan landmarks that update with OSM contributions.
+ */
+async function tryOsmTourism() {
+  return fetchOverpassTiled(
+    (bbox) => [
+      `node["tourism"="attraction"]["wikidata"](${bbox});`,
+      `node["tourism"="viewpoint"](${bbox});`,
+      `node["tourism"="museum"](${bbox});`,
+      `node["historic"]["wikidata"](${bbox});`,
+      `way["tourism"="attraction"]["wikidata"](${bbox});`,
+    ].join(''),
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        id: `OSM_TOUR_${el.id}`,
+        name: el.tags?.['name:en'] || el.tags?.name || el.tags?.tourism || 'POI',
+        category: el.tags?.tourism || el.tags?.historic || 'attraction',
+        wikidata: el.tags?.wikidata || null,
+        wikipedia: el.tags?.wikipedia || null,
+        country: 'JP',
+        source: 'osm_tourism',
+      },
+    }),
+    { queryTimeout: 180, timeoutMs: 90_000 },
+  );
+}
+
 export default async function collectGoogleMyMaps() {
   let features = await tryMyMaps();
   let liveSource = 'google_mymaps_kml';
+  if (!features || !features.length) {
+    features = await tryOsmTourism();
+    liveSource = 'osm_tourism';
+  }
   const live = !!(features && features.length > 0);
   if (!live) {
     features = generateSeed();

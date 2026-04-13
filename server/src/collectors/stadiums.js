@@ -52,7 +52,7 @@ async function tryOSMOverpass() {
   try {
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 10000);
-    const query = `[out:json][timeout:25];area["ISO3166-1"="JP"][admin_level=2];(node["leisure"="stadium"](area););out center 200;`;
+    const query = `[out:json][timeout:180];area["ISO3166-1"="JP"][admin_level=2];(node["leisure"="stadium"](area););out center;`;
     const res = await fetch(OVERPASS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

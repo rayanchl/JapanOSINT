@@ -11,9 +11,11 @@
  * stations) so the layer still renders in dev environments.
  */
 
+import { fetchOverpass } from './_liveHelpers.js';
+
 const API_BASE = 'https://api.odpt.org/api/v4/';
 const CHALLENGE_API_BASE = 'https://api-challenge.odpt.org/api/v4/';
-const TIMEOUT_MS = 20000;
+const TIMEOUT_MS = 30000;
 
 function getOdptToken() {
   return process.env.ODPT_TOKEN
@@ -205,6 +207,36 @@ async function fetchAllOdptStations(token) {
   return null;
 }
 
+async function fetchOsmStations() {
+  // Public-domain fallback when no ODPT token: pull every OSM rail station
+  // tagged `railway=station|halt|tram_stop` across Japan via Overpass.
+  return fetchOverpass(
+    [
+      'node["railway"="station"](area.jp);',
+      'node["railway"="halt"](area.jp);',
+      'node["railway"="tram_stop"](area.jp);',
+      'node["public_transport"="station"]["train"="yes"](area.jp);',
+      'node["public_transport"="station"]["subway"="yes"](area.jp);',
+    ].join(''),
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        station_id: `OSM_${el.id}`,
+        station_name: el.tags?.['name:en'] || el.tags?.name || 'Station',
+        station_name_ja: el.tags?.name || null,
+        line_name: el.tags?.line || el.tags?.network || null,
+        operator: el.tags?.operator || null,
+        railway: el.tags?.railway || el.tags?.public_transport || null,
+        wheelchair: el.tags?.wheelchair || null,
+        source: 'osm_overpass',
+      },
+    }),
+    60_000,
+    { limit: 0, queryTimeout: 180 },
+  );
+}
+
 export default async function collectOdptTransport() {
   const token = getOdptToken();
   let features = [];
@@ -217,6 +249,15 @@ export default async function collectOdptTransport() {
       features = result.features;
       endpoint = result.endpoint;
       source = 'odpt_live';
+    }
+  }
+
+  if (features.length === 0) {
+    // Fall back to OSM nationwide rail-station inventory (no token, no rate cap).
+    const osm = await fetchOsmStations();
+    if (osm && osm.length > 0) {
+      features = osm;
+      source = 'osm_overpass_railway_station';
     }
   }
 

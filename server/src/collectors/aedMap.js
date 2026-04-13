@@ -1,10 +1,10 @@
 /**
  * AED Map Collector
- * Maps AED (Automated External Defibrillator) locations across Japan via OSM Overpass.
- * Falls back to a curated seed of major public AED sites.
+ * Maps all AED (Automated External Defibrillator) locations across Japan via
+ * OSM Overpass. Uses tiled nationwide fetch + curated SEED list as fallback.
  */
 
-const OVERPASS_URL = process.env.OVERPASS_URL || 'https://overpass-api.de/api/interpreter';
+import { fetchOverpassTiled } from './_liveHelpers.js';
 
 const SEED_AEDS = [
   { name: '東京駅 丸の内中央口', lat: 35.6812, lon: 139.7671, location: 'station', prefecture: '東京都' },
@@ -36,59 +36,30 @@ const SEED_AEDS = [
   { name: '中部国際空港', lat: 34.8584, lon: 136.8054, location: 'airport', prefecture: '愛知県' },
   { name: '新千歳空港', lat: 42.7752, lon: 141.6920, location: 'airport', prefecture: '北海道' },
   { name: '那覇空港', lat: 26.1958, lon: 127.6458, location: 'airport', prefecture: '沖縄県' },
-  { name: '富士山五合目', lat: 35.3950, lon: 138.7300, location: 'tourist', prefecture: '山梨県' },
-  { name: '甲子園球場', lat: 34.7211, lon: 135.3617, location: 'stadium', prefecture: '兵庫県' },
-  { name: '大阪城', lat: 34.6873, lon: 135.5259, location: 'tourist', prefecture: '大阪府' },
-  { name: '清水寺', lat: 34.9949, lon: 135.7851, location: 'tourist', prefecture: '京都府' },
-  { name: '伏見稲荷大社', lat: 34.9671, lon: 135.7727, location: 'tourist', prefecture: '京都府' },
-  { name: '厳島神社', lat: 34.2960, lon: 132.3199, location: 'tourist', prefecture: '広島県' },
-  { name: '原爆ドーム', lat: 34.3955, lon: 132.4536, location: 'tourist', prefecture: '広島県' },
-  { name: '札幌時計台', lat: 43.0628, lon: 141.3531, location: 'tourist', prefecture: '北海道' },
-  { name: '日産スタジアム', lat: 35.5097, lon: 139.6058, location: 'stadium', prefecture: '神奈川県' },
-  { name: '埼玉スタジアム2002', lat: 35.9036, lon: 139.7172, location: 'stadium', prefecture: '埼玉県' },
-  { name: '東京体育館', lat: 35.6816, lon: 139.7141, location: 'stadium', prefecture: '東京都' },
 ];
 
-async function tryOverpass() {
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 25000);
-    const query = `[out:json][timeout:25];
-area["ISO3166-1"="JP"][admin_level=2]->.jp;
-(node["emergency"="defibrillator"](area.jp);
- node["emergency"="aed"](area.jp););
-out 800;`;
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'data=' + encodeURIComponent(query),
-      signal: ctrl.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data.elements || data.elements.length === 0) return null;
-    return data.elements
-      .map((el, i) => {
-        if (el.lat == null || el.lon == null) return null;
-        return {
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [el.lon, el.lat] },
-          properties: {
-            facility_id: `AED_${String(i + 1).padStart(5, '0')}`,
-            name: el.tags?.name || el.tags?.['name:en'] || 'AED',
-            indoor: el.tags?.indoor || null,
-            access: el.tags?.access || 'public',
-            opening_hours: el.tags?.opening_hours || null,
-            country: 'JP',
-            source: 'overpass_api',
-          },
-        };
-      })
-      .filter(Boolean);
-  } catch {
-    return null;
-  }
+async function tryLive() {
+  return fetchOverpassTiled(
+    (bbox) => [
+      `node["emergency"="defibrillator"](${bbox});`,
+      `node["emergency"="aed"](${bbox});`,
+    ].join(''),
+    (el, i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        facility_id: `AED_${el.id}`,
+        name: el.tags?.['name:en'] || el.tags?.name || 'AED',
+        indoor: el.tags?.indoor || null,
+        access: el.tags?.access || 'public',
+        opening_hours: el.tags?.opening_hours || null,
+        operator: el.tags?.operator || null,
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+    { queryTimeout: 180, timeoutMs: 90_000 },
+  );
 }
 
 function generateSeedData() {
@@ -109,7 +80,7 @@ function generateSeedData() {
 }
 
 export default async function collectAedMap() {
-  let features = await tryOverpass();
+  let features = await tryLive();
   const live = !!(features && features.length > 0);
   if (!live) features = generateSeedData();
   return {
@@ -120,7 +91,7 @@ export default async function collectAedMap() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live,
-      description: 'Japan AED (defibrillator) locations - stations, airports, public facilities',
+      description: 'Japan AED (defibrillator) locations - tiled OSM nationwide',
     },
     metadata: {},
   };

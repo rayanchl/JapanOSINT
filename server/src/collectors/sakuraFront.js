@@ -4,27 +4,105 @@
  * Live: JMA observation JSON + Weather News forecast JSON.
  */
 
-import { fetchJson } from './_liveHelpers.js';
+import { fetchJson, fetchText } from './_liveHelpers.js';
 
-const JMA_SAKURA = 'https://www.data.jma.go.jp/sakura/data/sakura004_00.csv';
-const WN_SAKURA = 'https://weathernews.jp/s/topics/sakura/json/forecast.json';
+const JMA_SAKURA_CSV_URLS = [
+  // JMA publishes annual sakura observation tables; column structure varies year-to-year.
+  'https://www.data.jma.go.jp/sakura/data/sakura004_00.csv',
+  'https://www.data.jma.go.jp/sakura/data/sakura004_06.csv',
+  'https://www.data.jma.go.jp/sakura/data/sakura004_07.csv',
+];
+const WN_SAKURA_URLS = [
+  'https://weathernews.jp/s/topics/sakura/json/forecast.json',
+  'https://weathernews.jp/sakura/json/spots.json',
+  'https://weathernews.jp/s/topics/sakura/json/spot_data.json',
+];
+
+// JMA 標本木 stations (58) — name → coords. Used to geocode the JMA CSV rows.
+const JMA_STATION_COORDS = {
+  '稚内': [45.4156, 141.6731], '旭川': [43.7706, 142.3650], '札幌': [43.0618, 141.3545],
+  '帯広': [42.9237, 143.1965], '釧路': [42.9849, 144.3820], '函館': [41.7686, 140.7286],
+  '青森': [40.8244, 140.7400], '盛岡': [39.7036, 141.1527], '仙台': [38.2683, 140.8694],
+  '秋田': [39.7186, 140.1023], '山形': [38.2407, 140.3633], '福島': [37.7503, 140.4675],
+  '東京': [35.6944, 139.7436], '宇都宮': [36.5658, 139.8836], '前橋': [36.3911, 139.0608],
+  '水戸': [36.3658, 140.4711], '熊谷': [36.1473, 139.3886], '銚子': [35.7339, 140.8567],
+  '横浜': [35.4437, 139.6380], '長野': [36.6483, 138.1942], '甲府': [35.6642, 138.5683],
+  '新潟': [37.9028, 139.0234], '富山': [36.6953, 137.2114], '金沢': [36.5614, 136.6564],
+  '福井': [36.0612, 136.2226], '岐阜': [35.3911, 136.7222], '名古屋': [35.1815, 136.9066],
+  '津': [34.7186, 136.5056], '彦根': [35.2756, 136.2592], '大津': [35.0044, 135.8686],
+  '京都': [35.0116, 135.7681], '奈良': [34.6850, 135.8050], '大阪': [34.6937, 135.5023],
+  '神戸': [34.6913, 135.1830], '和歌山': [34.2300, 135.1675], '岡山': [34.6551, 133.9195],
+  '広島': [34.3853, 132.4553], '松江': [35.4722, 133.0506], '鳥取': [35.5036, 134.2383],
+  '下関': [33.9577, 130.9408], '山口': [34.1858, 131.4706], '徳島': [34.0658, 134.5594],
+  '高松': [34.3401, 134.0434], '松山': [33.8417, 132.7656], '高知': [33.5597, 133.5311],
+  '福岡': [33.5904, 130.4017], '佐賀': [33.2494, 130.2989], '長崎': [32.7503, 129.8778],
+  '熊本': [32.8032, 130.7079], '大分': [33.2381, 131.6126], '宮崎': [31.9077, 131.4203],
+  '鹿児島': [31.5963, 130.5571], '名瀬': [28.3772, 129.4939], '沖縄': [26.2125, 127.6809],
+  '宮古島': [24.7964, 125.2814], '石垣島': [24.3367, 124.1564], '南大東島': [25.8294, 131.2289],
+  '宇和島': [33.2233, 132.5667],
+};
 
 async function tryWeatherNews() {
-  const data = await fetchJson(WN_SAKURA, { timeoutMs: 8000 });
-  if (!data || !Array.isArray(data?.spots)) return null;
-  return data.spots.slice(0, 1000).map((s, i) => ({
-    type: 'Feature',
-    geometry: { type: 'Point', coordinates: [s.lon, s.lat] },
-    properties: {
-      spot_id: `WN_${i + 1}`,
-      name: s.name,
-      bloom_date: s.bloom || null,
-      full_bloom_date: s.fullBloom || null,
-      prefecture: s.pref || null,
-      country: 'JP',
-      source: 'weathernews_sakura',
-    },
-  }));
+  for (const url of WN_SAKURA_URLS) {
+    const data = await fetchJson(url, { timeoutMs: 10_000, retries: 1 });
+    if (!data) continue;
+    const arr = Array.isArray(data) ? data : (data.spots || data.list || data.spot || []);
+    if (!Array.isArray(arr) || arr.length === 0) continue;
+    const features = arr
+      .map((s, i) => {
+        const lon = Number(s.lon ?? s.lng ?? s.longitude ?? s.x);
+        const lat = Number(s.lat ?? s.latitude ?? s.y);
+        if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+        return {
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: [lon, lat] },
+          properties: {
+            spot_id: `WN_${i + 1}`,
+            name: s.name || s.spotName || s.title || null,
+            bloom_date: s.bloom || s.bloomDate || s.kaika || null,
+            full_bloom_date: s.fullBloom || s.fullBloomDate || s.mankai || null,
+            prefecture: s.pref || s.prefecture || s.area || null,
+            country: 'JP',
+            source: 'weathernews_sakura',
+          },
+        };
+      })
+      .filter(Boolean);
+    if (features.length > 0) return features;
+  }
+  return null;
+}
+
+async function tryJmaCsv() {
+  for (const url of JMA_SAKURA_CSV_URLS) {
+    const text = await fetchText(url, { timeoutMs: 10_000, retries: 1 });
+    if (!text) continue;
+    const rows = text.split(/\r?\n/).filter((r) => r.trim());
+    const features = [];
+    for (const row of rows) {
+      const cols = row.split(',').map((c) => c.replace(/"/g, '').trim());
+      const station = cols.find((c) => JMA_STATION_COORDS[c]);
+      if (!station) continue;
+      const coords = JMA_STATION_COORDS[station];
+      // JMA bloom dates are formatted M/D within the same row
+      const dateCells = cols.filter((c) => /^\d{1,2}\/\d{1,2}$/.test(c));
+      features.push({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [coords[1], coords[0]] },
+        properties: {
+          spot_id: `JMA_${station}`,
+          name: `${station} 標本木`,
+          station,
+          bloom_date: dateCells[0] || null,
+          full_bloom_date: dateCells[1] || null,
+          country: 'JP',
+          source: 'jma_sakura_csv',
+        },
+      });
+    }
+    if (features.length > 0) return features;
+  }
+  return null;
 }
 
 // Curated: 58 representative sakura observation points matching JMA 標本木 network + major hanami spots
@@ -128,9 +206,19 @@ function generateSeedData() {
 }
 
 export default async function collectSakuraFront() {
-  let features = await tryWeatherNews();
-  const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  const wn = await tryWeatherNews();
+  const jma = await tryJmaCsv();
+  const seen = new Set();
+  const features = [];
+  for (const f of [...(wn || []), ...(jma || [])]) {
+    const k = f.properties?.spot_id;
+    if (!k || seen.has(k)) continue;
+    seen.add(k);
+    features.push(f);
+  }
+  const live = features.length > 0;
+  if (!live) features.push(...generateSeedData());
+  const liveSrc = wn && jma ? 'weathernews+jma' : (wn ? 'weathernews_sakura' : (jma ? 'jma_sakura_csv' : 'sakura_front_seed'));
   return {
     type: 'FeatureCollection',
     features,
@@ -139,7 +227,8 @@ export default async function collectSakuraFront() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live,
-      live_source: live ? 'weathernews_sakura' : 'sakura_front_seed',
+      live_source: liveSrc,
+      counts: { weathernews: wn?.length || 0, jma: jma?.length || 0 },
       description: 'Sakura zensen - cherry blossom progression front across Japan',
     },
     metadata: {},

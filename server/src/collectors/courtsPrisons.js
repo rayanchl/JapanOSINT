@@ -4,7 +4,7 @@
  * Falls back to seed of supreme/high/district courts and major correctional facilities.
  */
 
-const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
+import { fetchOverpass } from './_liveHelpers.js';
 
 const SEED_FACILITIES = [
   // High courts (8)
@@ -68,40 +68,30 @@ const SEED_FACILITIES = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:25];area["ISO3166-1"="JP"]->.jp;(node["amenity"="courthouse"](area.jp);node["amenity"="prison"](area.jp););out 400;`;
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 12000);
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      signal: ctrl.signal,
-      headers: { 'Content-Type': 'text/plain' },
-      body: query,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data?.elements?.length) return null;
-    return data.elements
-      .map((el) => {
-        const lat = el.lat ?? el.center?.lat;
-        const lon = el.lon ?? el.center?.lon;
-        if (lat == null || lon == null) return null;
-        return {
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [lon, lat] },
-          properties: {
-            facility_id: `OSM_${el.id}`,
-            name: el.tags?.name || 'Court / Prison',
-            type: el.tags?.amenity === 'prison' ? 'prison' : 'courthouse',
-            source: 'osm_overpass',
-          },
-        };
-      })
-      .filter(Boolean);
-  } catch {
-    return null;
-  }
+  return fetchOverpass(
+    [
+      'node["amenity"="courthouse"](area.jp);',
+      'way["amenity"="courthouse"](area.jp);',
+      'node["amenity"="prison"](area.jp);',
+      'way["amenity"="prison"](area.jp);',
+      'node["building"="prison"](area.jp);',
+      'way["building"="prison"](area.jp);',
+    ].join(''),
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        facility_id: `OSM_${el.id}`,
+        name: el.tags?.['name:en'] || el.tags?.name || 'Court / Prison',
+        name_ja: el.tags?.name || null,
+        type: el.tags?.amenity === 'prison' || el.tags?.building === 'prison' ? 'prison' : 'courthouse',
+        operator: el.tags?.operator || null,
+        source: 'osm_overpass',
+      },
+    }),
+    60_000,
+    { limit: 0, queryTimeout: 180 },
+  );
 }
 
 function generateSeedData() {

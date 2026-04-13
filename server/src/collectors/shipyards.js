@@ -58,7 +58,7 @@ const SEED_SHIPYARDS = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:25];area["ISO3166-1"="JP"]->.jp;(way["industrial"="shipyard"](area.jp);way["landuse"="industrial"]["shipyard"="yes"](area.jp););out center 80;`;
+  const query = `[out:json][timeout:180];area["ISO3166-1"="JP"]->.jp;(way["industrial"="shipyard"](area.jp);way["landuse"="industrial"]["shipyard"="yes"](area.jp););out center;`;
   try {
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 12000);

@@ -4,7 +4,7 @@
  * Falls back to a curated seed of major flagship stores.
  */
 
-const OVERPASS_URL = process.env.OVERPASS_URL || 'https://overpass-api.de/api/interpreter';
+import { fetchOverpassTiled } from './_liveHelpers.js';
 
 const SEED_KONBINI = [
   { name: '7-Eleven 渋谷スクランブル前店', lat: 35.6595, lon: 139.7008, brand: '7-Eleven', prefecture: '東京都' },
@@ -46,46 +46,26 @@ const SEED_KONBINI = [
 ];
 
 async function tryOverpass() {
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 25000);
-    const query = `[out:json][timeout:25];
-area["ISO3166-1"="JP"][admin_level=2]->.jp;
-(node["shop"="convenience"]["brand"](area.jp);
- way["shop"="convenience"]["brand"](area.jp););
-out center 1500;`;
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'data=' + encodeURIComponent(query),
-      signal: ctrl.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data.elements || data.elements.length === 0) return null;
-    return data.elements
-      .map((el, i) => {
-        const lat = el.lat ?? el.center?.lat;
-        const lon = el.lon ?? el.center?.lon;
-        if (lat == null || lon == null) return null;
-        return {
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [lon, lat] },
-          properties: {
-            facility_id: `KONBINI_${String(i + 1).padStart(5, '0')}`,
-            name: el.tags?.name || el.tags?.brand || 'Konbini',
-            brand: el.tags?.brand || null,
-            opening_hours: el.tags?.opening_hours || '24/7',
-            country: 'JP',
-            source: 'overpass_api',
-          },
-        };
-      })
-      .filter(Boolean);
-  } catch {
-    return null;
-  }
+  return fetchOverpassTiled(
+    (bbox) => [
+      `node["shop"="convenience"](${bbox});`,
+      `way["shop"="convenience"](${bbox});`,
+    ].join(''),
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        facility_id: `KONBINI_${el.id}`,
+        name: el.tags?.name || el.tags?.brand || 'Konbini',
+        brand: el.tags?.brand || null,
+        opening_hours: el.tags?.opening_hours || '24/7',
+        operator: el.tags?.operator || null,
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+    { queryTimeout: 180, timeoutMs: 90_000 },
+  );
 }
 
 function generateSeedData() {

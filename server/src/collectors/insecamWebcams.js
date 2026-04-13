@@ -90,43 +90,139 @@ function generateSeedData() {
   }));
 }
 
+import { fetchOverpass, fetchText } from './_liveHelpers.js';
+
+/**
+ * Scrape Insecam JP listing pages to discover live cameras.
+ * Each card contains a city/country label; we map each city to the
+ * municipality centroid for geocoding (city scale).
+ */
 async function tryInsecamScrape() {
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-    const res = await fetch('http://www.insecam.org/en/bycountry/JP/', {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-      signal: controller.signal,
+  // city → {lat,lon} for cities Insecam lists in JP
+  const cityCoords = {
+    'Tokyo': [35.6895, 139.6917],
+    'Osaka': [34.6937, 135.5023],
+    'Yokohama': [35.4478, 139.6425],
+    'Nagoya': [35.1815, 136.9066],
+    'Sapporo': [43.0642, 141.3469],
+    'Kobe': [34.6913, 135.1830],
+    'Kyoto': [35.0116, 135.7681],
+    'Fukuoka': [33.5904, 130.4017],
+    'Kawasaki': [35.5308, 139.7028],
+    'Saitama': [35.8569, 139.6489],
+    'Hiroshima': [34.3853, 132.4553],
+    'Sendai': [38.2682, 140.8721],
+    'Chiba': [35.6047, 140.1233],
+    'Naha': [26.2125, 127.6809],
+    'Niigata': [37.9028, 139.0234],
+    'Hamamatsu': [34.7108, 137.7261],
+    'Okayama': [34.6618, 133.9344],
+    'Kumamoto': [32.7898, 130.7417],
+    'Sakai': [34.5733, 135.4828],
+  };
+
+  const features = [];
+  // Insecam paginates JP cameras; iterate up to 30 pages
+  for (let page = 1; page <= 30; page++) {
+    const html = await fetchText(`http://www.insecam.org/en/bycountry/JP/?page=${page}`, {
+      timeoutMs: 12_000,
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; JapanOSINT/1.0)' },
     });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const html = await res.text();
-    // Parse camera entries - extract image URLs and coordinates
-    const cameras = [];
-    const imgRegex = /img[^>]*src="(http[^"]+)"/g;
-    let match;
-    while ((match = imgRegex.exec(html)) !== null && cameras.length < 50) {
-      cameras.push(match[1]);
+    if (!html) break;
+    // Each card: <div class="thumbnail-item"> ... <img src="...?id=NNN"> ... City ... </div>
+    const cards = html.split(/class="thumbnail-item"/).slice(1);
+    if (cards.length === 0) break;
+    let pageMatched = 0;
+    for (const card of cards) {
+      const idMatch = card.match(/id=(\d+)/) || card.match(/cameradetails\/(\d+)/);
+      const imgMatch = card.match(/img[^>]+src="([^"]+)"/);
+      const cityMatch = card.match(/(?:city[^"]*"[^>]*>|City:\s*)\s*([A-Z][A-Za-z\s\-]+)/);
+      const id = idMatch?.[1];
+      if (!id) continue;
+      const city = cityMatch?.[1]?.trim() || 'Tokyo';
+      const coord = cityCoords[city] || cityCoords['Tokyo'];
+      // Jitter so multiple cameras in same city don't stack
+      const jLat = (Math.random() - 0.5) * 0.05;
+      const jLon = (Math.random() - 0.5) * 0.05;
+      features.push({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [coord[1] + jLon, coord[0] + jLat] },
+        properties: {
+          camera_id: `INSECAM_${id}`,
+          name: `Insecam camera #${id} (${city})`,
+          camera_type: 'insecam',
+          city,
+          stream_url: imgMatch?.[1] || null,
+          country: 'JP',
+          discovered_via: 'insecam_scrape',
+          source: 'insecam_live',
+        },
+      });
+      pageMatched++;
     }
-    if (cameras.length === 0) return null;
-    return null; // Need coordinate data for proper geo features
-  } catch {
-    return null;
+    if (pageMatched === 0) break;
   }
+  return features.length > 0 ? features : null;
+}
+
+/** OSM-mapped surveillance cameras (man_made=surveillance) */
+async function tryOsmCameras() {
+  return fetchOverpass(
+    [
+      'node["man_made"="surveillance"](area.jp);',
+      'node["surveillance:type"="camera"](area.jp);',
+      'node["camera:type"](area.jp);',
+    ].join(''),
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        camera_id: `OSM_CAM_${el.id}`,
+        name: el.tags?.name || 'Surveillance camera',
+        surveillance: el.tags?.surveillance || null,
+        camera_type: el.tags?.['camera:type'] || el.tags?.['surveillance:type'] || 'osm_mapped',
+        operator: el.tags?.operator || null,
+        direction: el.tags?.['camera:direction'] || el.tags?.direction || null,
+        source: 'osm_overpass',
+      },
+    }),
+    60_000,
+    { limit: 0, queryTimeout: 120 },
+  );
 }
 
 export default async function collectInsecamWebcams() {
-  await tryInsecamScrape();
-  const features = generateSeedData();
+  const live = await tryInsecamScrape();
+  const osm = await tryOsmCameras();
+  const seed = generateSeedData();
+  const features = [
+    ...(live || []),
+    ...(osm || []),
+    ...seed,
+  ];
+  // Dedup by camera_id
+  const seen = new Set();
+  const dedup = features.filter((f) => {
+    const k = f.properties?.camera_id;
+    if (!k || seen.has(k)) return !!k && false;
+    seen.add(k);
+    return true;
+  });
 
   return {
     type: 'FeatureCollection',
-    features,
+    features: dedup,
     _meta: {
-      source: 'open_webcams',
+      source: live ? 'insecam_live+osm_overpass' : (osm ? 'osm_overpass' : 'open_webcams_seed'),
       fetchedAt: new Date().toISOString(),
-      recordCount: features.length,
-      description: 'Open webcams in Japan - Insecam, municipal, ski, beach, port, volcano cameras',
+      recordCount: dedup.length,
+      live: !!(live || osm),
+      counts: {
+        insecam_live: live?.length || 0,
+        osm: osm?.length || 0,
+        seed: seed.length,
+      },
+      description: 'Open webcams in Japan - Insecam scrape + OSM-mapped surveillance + curated seed',
     },
     metadata: {},
   };

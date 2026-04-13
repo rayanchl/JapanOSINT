@@ -4,7 +4,7 @@
  * Falls back to a curated seed of major designated emergency shelters.
  */
 
-const OVERPASS_URL = process.env.OVERPASS_URL || 'https://overpass-api.de/api/interpreter';
+import { fetchOverpassTiled } from './_liveHelpers.js';
 
 const SEED_SHELTERS = [
   { name: '東京体育館', lat: 35.6816, lon: 139.7141, capacity: 5000, type: 'designated', prefecture: '東京都' },
@@ -50,47 +50,29 @@ const SEED_SHELTERS = [
 ];
 
 async function tryOverpass() {
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 25000);
-    const query = `[out:json][timeout:25];
-area["ISO3166-1"="JP"][admin_level=2]->.jp;
-(node["emergency"="assembly_point"](area.jp);
- node["amenity"="shelter"]["shelter_type"="rescue_station"](area.jp);
- way["amenity"="shelter"]["shelter_type"="rescue_station"](area.jp););
-out center 600;`;
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'data=' + encodeURIComponent(query),
-      signal: ctrl.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data.elements || data.elements.length === 0) return null;
-    return data.elements
-      .map((el, i) => {
-        const lat = el.lat ?? el.center?.lat;
-        const lon = el.lon ?? el.center?.lon;
-        if (lat == null || lon == null) return null;
-        return {
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [lon, lat] },
-          properties: {
-            facility_id: `SHELTER_${String(i + 1).padStart(5, '0')}`,
-            name: el.tags?.name || el.tags?.['name:en'] || 'Evacuation Point',
-            shelter_type: el.tags?.shelter_type || 'assembly_point',
-            capacity: parseInt(el.tags?.capacity) || null,
-            country: 'JP',
-            source: 'overpass_api',
-          },
-        };
-      })
-      .filter(Boolean);
-  } catch {
-    return null;
-  }
+  return fetchOverpassTiled(
+    (bbox) => [
+      `node["emergency"="assembly_point"](${bbox});`,
+      `node["amenity"="shelter"](${bbox});`,
+      `way["amenity"="shelter"](${bbox});`,
+      `node["emergency"="evacuation_center"](${bbox});`,
+      `way["emergency"="evacuation_center"](${bbox});`,
+    ].join(''),
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        facility_id: `SHELTER_${el.id}`,
+        name: el.tags?.name || el.tags?.['name:en'] || 'Evacuation Point',
+        shelter_type: el.tags?.shelter_type || el.tags?.emergency || 'assembly_point',
+        capacity: parseInt(el.tags?.capacity) || null,
+        operator: el.tags?.operator || null,
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+    { queryTimeout: 180, timeoutMs: 90_000 },
+  );
 }
 
 function generateSeedData() {

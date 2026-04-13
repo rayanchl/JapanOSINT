@@ -4,7 +4,7 @@
  * Falls back to a curated seed of major pharmacy chain locations.
  */
 
-const OVERPASS_URL = process.env.OVERPASS_URL || 'https://overpass-api.de/api/interpreter';
+import { fetchOverpassTiled } from './_liveHelpers.js';
 
 const SEED_PHARMACIES = [
   // Big chains: Matsumoto Kiyoshi, Welcia, Tsuruha, Cocokara Fine, Sundrug
@@ -43,47 +43,28 @@ const SEED_PHARMACIES = [
 ];
 
 async function tryOverpass() {
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 25000);
-    const query = `[out:json][timeout:25];
-area["ISO3166-1"="JP"][admin_level=2]->.jp;
-(node["amenity"="pharmacy"](area.jp);
- way["amenity"="pharmacy"]["name"](area.jp););
-out center 1000;`;
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'data=' + encodeURIComponent(query),
-      signal: ctrl.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data.elements || data.elements.length === 0) return null;
-    return data.elements
-      .map((el, i) => {
-        const lat = el.lat ?? el.center?.lat;
-        const lon = el.lon ?? el.center?.lon;
-        if (lat == null || lon == null) return null;
-        return {
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [lon, lat] },
-          properties: {
-            facility_id: `PHARM_${String(i + 1).padStart(5, '0')}`,
-            name: el.tags?.name || el.tags?.['name:en'] || 'Pharmacy',
-            brand: el.tags?.brand || null,
-            opening_hours: el.tags?.opening_hours || null,
-            phone: el.tags?.phone || null,
-            country: 'JP',
-            source: 'overpass_api',
-          },
-        };
-      })
-      .filter(Boolean);
-  } catch {
-    return null;
-  }
+  return fetchOverpassTiled(
+    (bbox) => [
+      `node["amenity"="pharmacy"](${bbox});`,
+      `way["amenity"="pharmacy"](${bbox});`,
+      `node["shop"="chemist"](${bbox});`,
+    ].join(''),
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        facility_id: `PHARM_${el.id}`,
+        name: el.tags?.name || el.tags?.['name:en'] || el.tags?.brand || 'Pharmacy',
+        brand: el.tags?.brand || null,
+        operator: el.tags?.operator || null,
+        opening_hours: el.tags?.opening_hours || null,
+        phone: el.tags?.phone || null,
+        country: 'JP',
+        source: 'osm_overpass',
+      },
+    }),
+    { queryTimeout: 180, timeoutMs: 90_000 },
+  );
 }
 
 function generateSeedData() {

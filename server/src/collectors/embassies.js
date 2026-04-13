@@ -72,7 +72,7 @@ const SEED_EMBASSIES = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:25];area["ISO3166-1"="JP"]->.jp;(node["diplomatic"="embassy"](area.jp);way["diplomatic"="embassy"](area.jp););out center 250;`;
+  const query = `[out:json][timeout:180];area["ISO3166-1"="JP"]->.jp;(node["diplomatic"="embassy"](area.jp);way["diplomatic"="embassy"](area.jp););out center;`;
   try {
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 12000);

@@ -10,16 +10,60 @@ import { fetchText } from './_liveHelpers.js';
 
 const NPA_TOKUSHUSAGI_INDEX = 'https://www.npa.go.jp/bureau/criminal/souni/tokushusagi/';
 
+// Prefectural police pages where 特殊詐欺 monthly counts are published
+// as HTML tables. We scrape number ranges from each page and re-anchor at
+// the prefectural HQ centroid (city scale).
+const PREF_TOKUSHUSAGI_PAGES = [
+  { name: '警視庁',         host: 'www.keishicho.metro.tokyo.lg.jp', path: '/kurashi/higai/tokusyusagi/index.html', lat: 35.6783, lon: 139.7528, pref: '東京都' },
+  { name: '大阪府警察',     host: 'www.police.pref.osaka.lg.jp',     path: '/seian/tokushusagi/index.html',          lat: 34.6864, lon: 135.5197, pref: '大阪府' },
+  { name: '神奈川県警察',   host: 'www.police.pref.kanagawa.jp',     path: '/mes/mesf2007.htm',                       lat: 35.4437, lon: 139.6380, pref: '神奈川県' },
+  { name: '愛知県警察',     host: 'www.pref.aichi.jp',               path: '/police/anzen/sagi/index.html',           lat: 35.1814, lon: 136.9069, pref: '愛知県' },
+  { name: '埼玉県警察',     host: 'www.police.pref.saitama.lg.jp',   path: '/anzen/tokusagi/index.html',              lat: 35.8617, lon: 139.6455, pref: '埼玉県' },
+  { name: '千葉県警察',     host: 'www.police.pref.chiba.jp',        path: '/seianbu/tokusyusagi.html',               lat: 35.6083, lon: 140.1233, pref: '千葉県' },
+  { name: '兵庫県警察',     host: 'www.police.pref.hyogo.lg.jp',     path: '/seian/tokushu_sagi.htm',                  lat: 34.6913, lon: 135.1830, pref: '兵庫県' },
+  { name: '北海道警察',     host: 'www.police.pref.hokkaido.lg.jp',  path: '/info/jiken/tokusyu/index.html',          lat: 43.0628, lon: 141.3478, pref: '北海道' },
+  { name: '福岡県警察',     host: 'www.police.pref.fukuoka.jp',      path: '/seikatsu_anzen/tokusyusagi/index.html',  lat: 33.5904, lon: 130.4017, pref: '福岡県' },
+  { name: '京都府警察',     host: 'www.pref.kyoto.jp',               path: '/fukei/anzen/tokushu_sagi.html',           lat: 35.0116, lon: 135.7681, pref: '京都府' },
+];
+
 async function tryNpaStats() {
-  // NPA publishes tokushusagi stats as HTML/PDF rather than JSON. We hit
-  // the official public page to confirm the source is online, then fall
-  // through to the geocoded seed (which is derived from these same NPA
-  // statistical reports).
-  const html = await fetchText(NPA_TOKUSHUSAGI_INDEX, { timeoutMs: 8000 });
-  if (!html || !/特殊詐欺|tokushusagi|振り込め/.test(html)) return null;
-  // Live source reachable. Return null to use the geocoded seed —
-  // HTML-only pages can't be geocoded without a proper scraper.
-  return null;
+  // First confirm NPA index is live.
+  const npaHtml = await fetchText(NPA_TOKUSHUSAGI_INDEX, { timeoutMs: 8000, retries: 1 });
+  if (!npaHtml || !/特殊詐欺|tokushusagi|振り込め/.test(npaHtml)) return null;
+
+  // Then scrape prefectural police pages for incident counts.
+  const features = [];
+  let idx = 0;
+  for (const p of PREF_TOKUSHUSAGI_PAGES) {
+    const url = `https://${p.host}${p.path}`;
+    const html = await fetchText(url, { timeoutMs: 10_000, retries: 1 });
+    if (!html) continue;
+    if (!/特殊詐欺|被害|認知件数/.test(html)) continue;
+    // Extract first big numeric value following an "認知件数" or "被害額" label.
+    const incidentsMatch = html.match(/認知件数[^<>]{0,40}?([0-9,]+)\s*件/);
+    const damageMatch = html.match(/被害(?:総)?額[^<>]{0,40}?([0-9,]+)\s*(?:円|万円|億円)/);
+    const incidents = incidentsMatch ? parseInt(incidentsMatch[1].replace(/,/g, ''), 10) : null;
+    let damage = damageMatch ? parseInt(damageMatch[1].replace(/,/g, ''), 10) : null;
+    if (damage && damageMatch[0].includes('万円')) damage *= 10_000;
+    if (damage && damageMatch[0].includes('億円')) damage *= 100_000_000;
+    if (!incidents && !damage) continue;
+    idx++;
+    features.push({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
+      properties: {
+        ward_id: `LIVE_SCAM_${idx}`,
+        ward: p.name,
+        prefecture: p.pref,
+        incidents_yr: incidents,
+        damage_yen: damage,
+        source_url: url,
+        country: 'JP',
+        source: 'pref_police_html',
+      },
+    });
+  }
+  return features.length > 0 ? features : null;
 }
 
 // Curated: high-incidence 特殊詐欺 wards from NPA published statistics (2022-2023 reports)

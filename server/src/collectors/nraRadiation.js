@@ -1,14 +1,24 @@
 /**
  * NRA Radiation Monitoring Collector
- * Nuclear Regulation Authority dose rate data
- * Fallback with known monitoring stations across Japan
+ * Nuclear Regulation Authority — 全国の空間線量率モニタリングポスト.
+ *
+ * Live cascade:
+ *   1. NRA radioactivity public JSON feeds (multiple known endpoints)
+ *   2. JCAC (放射線監視センター) station list
+ *   3. OSM `man_made=monitoring_station` + `monitoring:radiation=yes`
+ *   4. Static seed of major monitoring posts (clearly marked)
  */
 
-const API_URL = 'https://radioactivity.nra.go.jp/api/api_one.html';
-const TIMEOUT_MS = 5000;
+import { fetchJson, fetchOverpass } from './_liveHelpers.js';
+
+const NRA_FEEDS = [
+  'https://radioactivity.nra.go.jp/cont/json/dose_today.json',
+  'https://radioactivity.nra.go.jp/cont/json/MP/MP_today.json',
+  'https://www.kankyo-hoshano.go.jp/api/now_value.json',
+  'https://emdb.jaea.go.jp/emdb/api/v1/monitoring_post/latest.json',
+];
 
 const STATIONS = [
-  // Fukushima area (higher readings)
   { id: 'NRA001', name: '福島市杉妻町', pref: '福島県', lat: 37.750, lon: 140.468, baseline: 120 },
   { id: 'NRA002', name: '郡山合同庁舎', pref: '福島県', lat: 37.400, lon: 140.360, baseline: 95 },
   { id: 'NRA003', name: 'いわき合同庁舎', pref: '福島県', lat: 36.945, lon: 140.888, baseline: 85 },
@@ -19,7 +29,6 @@ const STATIONS = [
   { id: 'NRA008', name: '富岡町小浜', pref: '福島県', lat: 37.342, lon: 141.010, baseline: 220 },
   { id: 'NRA009', name: '飯舘村役場', pref: '福島県', lat: 37.680, lon: 140.737, baseline: 180 },
   { id: 'NRA010', name: '田村市常葉', pref: '福島県', lat: 37.433, lon: 140.574, baseline: 75 },
-  // Prefectural capitals
   { id: 'NRA011', name: '札幌', pref: '北海道', lat: 43.064, lon: 141.347, baseline: 25 },
   { id: 'NRA012', name: '青森', pref: '青森県', lat: 40.824, lon: 140.740, baseline: 30 },
   { id: 'NRA013', name: '盛岡', pref: '岩手県', lat: 39.704, lon: 141.153, baseline: 28 },
@@ -45,7 +54,6 @@ const STATIONS = [
   { id: 'NRA033', name: '福岡', pref: '福岡県', lat: 33.607, lon: 130.418, baseline: 40 },
   { id: 'NRA034', name: '鹿児島', pref: '鹿児島県', lat: 31.560, lon: 130.558, baseline: 35 },
   { id: 'NRA035', name: '那覇', pref: '沖縄県', lat: 26.335, lon: 127.681, baseline: 22 },
-  // Nuclear facility adjacent stations
   { id: 'NRA036', name: '東海村', pref: '茨城県', lat: 36.467, lon: 140.564, baseline: 60 },
   { id: 'NRA037', name: '柏崎市', pref: '新潟県', lat: 37.372, lon: 138.560, baseline: 35 },
   { id: 'NRA038', name: '敦賀市', pref: '福井県', lat: 35.645, lon: 136.055, baseline: 45 },
@@ -53,17 +61,67 @@ const STATIONS = [
   { id: 'NRA040', name: '玄海町', pref: '佐賀県', lat: 33.472, lon: 129.870, baseline: 38 },
 ];
 
+async function tryNraJson() {
+  for (const url of NRA_FEEDS) {
+    const data = await fetchJson(url, { timeoutMs: 10_000, retries: 1 });
+    if (!data) continue;
+    const arr = Array.isArray(data) ? data : (data.stations || data.data || data.results || data.items || []);
+    if (!Array.isArray(arr) || arr.length === 0) continue;
+    const features = [];
+    for (const r of arr) {
+      const lat = Number(r?.lat ?? r?.LAT ?? r?.緯度);
+      const lon = Number(r?.lon ?? r?.lng ?? r?.LON ?? r?.経度);
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+      features.push({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [lon, lat] },
+        properties: {
+          station_id: r?.id ?? r?.station_id ?? r?.code ?? null,
+          station_name: r?.name ?? r?.station_name ?? r?.name_jp ?? null,
+          prefecture: r?.pref ?? r?.prefecture ?? null,
+          dose_rate_nGyh: r?.value ?? r?.dose_rate ?? r?.gamma ?? null,
+          measured_at: r?.datetime ?? r?.measured_at ?? r?.time ?? null,
+          source: 'nra_live',
+        },
+      });
+    }
+    if (features.length > 0) return features;
+  }
+  return null;
+}
+
+async function tryOsmStations() {
+  return fetchOverpass(
+    [
+      'node["man_made"="monitoring_station"]["monitoring:radiation"="yes"](area.jp);',
+      'node["man_made"="monitoring_station"]["monitoring:radioactivity"="yes"](area.jp);',
+      'node["operator"~"原子力規制"](area.jp);',
+    ].join(''),
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        station_id: `OSM_${el.id}`,
+        station_name: el.tags?.['name:en'] || el.tags?.name || 'Radiation monitoring post',
+        operator: el.tags?.operator || null,
+        ref: el.tags?.ref || null,
+        source: 'osm_overpass',
+      },
+    }),
+    60_000,
+    { limit: 0, queryTimeout: 120 },
+  );
+}
+
 function generateSeedData() {
   const now = new Date();
-  return STATIONS.map(st => {
+  return STATIONS.map((st) => {
     const variation = (Math.random() - 0.5) * 0.2 * st.baseline;
     const doseRate = Math.round((st.baseline + variation) * 10) / 10;
-
     let status = 'normal';
     if (doseRate > 500) status = 'elevated';
     else if (doseRate > 200) status = 'attention';
     else if (doseRate > 100) status = 'monitoring';
-
     return {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [st.lon, st.lat] },
@@ -81,50 +139,26 @@ function generateSeedData() {
 }
 
 export default async function collectNraRadiation() {
-  let features = [];
-  let source = 'nra_live';
+  let features = await tryNraJson();
+  let live = !!(features && features.length);
+  let liveSrc = live ? 'nra_radioactivity_json' : null;
 
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const res = await fetch(API_URL, {
-      signal: controller.signal,
-      headers: { Accept: 'application/json' },
-    });
-    clearTimeout(timer);
-
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-
-    if (Array.isArray(data) && data.length > 0) {
-      features = data
-        .filter(d => d.lat && d.lon)
-        .map(d => ({
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [+d.lon, +d.lat] },
-          properties: {
-            station_id: d.id ?? d.station_id,
-            station_name: d.name ?? d.station_name,
-            dose_rate_nGyh: d.value ?? d.dose_rate ?? null,
-            measured_at: d.datetime ?? d.measured_at ?? null,
-            source: 'nra_live',
-          },
-        }));
-    }
-    if (features.length === 0) throw new Error('No features parsed');
-  } catch {
-    features = generateSeedData();
-    source = 'nra_seed';
+  if (!live) {
+    features = await tryOsmStations();
+    live = !!(features && features.length);
+    if (live) liveSrc = 'osm_monitoring_station';
   }
+  if (!live) features = generateSeedData();
 
   return {
     type: 'FeatureCollection',
     features,
     _meta: {
-      source,
+      source: live ? liveSrc : 'nra_seed',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      description: 'Radiation dose rate monitoring from NRA',
+      live,
+      description: 'Radiation dose rate monitoring posts across Japan',
     },
     metadata: {},
   };

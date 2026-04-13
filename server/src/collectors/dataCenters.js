@@ -70,7 +70,7 @@ const SEED_DC = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:25];area["ISO3166-1"="JP"]->.jp;(node["telecom"="data_center"](area.jp);way["telecom"="data_center"](area.jp);node["building"="data_center"](area.jp););out center 100;`;
+  const query = `[out:json][timeout:180];area["ISO3166-1"="JP"]->.jp;(node["telecom"="data_center"](area.jp);way["telecom"="data_center"](area.jp);node["building"="data_center"](area.jp););out center;`;
   try {
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 12000);

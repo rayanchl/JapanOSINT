@@ -84,7 +84,7 @@ const SEED_JSDF = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:25];area["ISO3166-1"="JP"]->.jp;(way["landuse"="military"](area.jp);relation["landuse"="military"](area.jp););out center 200;`;
+  const query = `[out:json][timeout:180];area["ISO3166-1"="JP"]->.jp;(way["landuse"="military"](area.jp);relation["landuse"="military"](area.jp););out center;`;
   try {
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 12000);

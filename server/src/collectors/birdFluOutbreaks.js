@@ -11,12 +11,57 @@ import { fetchText } from './_liveHelpers.js';
 
 const MAFF_TORI_INDEX = 'https://www.maff.go.jp/j/syouan/douei/tori/';
 
+// Prefecture name → city centroid for geocoding outbreak announcements.
+const PREF_CENTROIDS = Object.fromEntries(SEED_OUTBREAKS.map((s) => [s.prefecture, [s.lon, s.lat]]));
+
 async function tryMaffIndex() {
-  const html = await fetchText(MAFF_TORI_INDEX, { timeoutMs: 8000 });
-  if (!html || !/鳥インフルエンザ|HPAI|tori/.test(html)) return null;
-  // Page reachable — return null to fall through to the geocoded
-  // outbreak seed (city-level points with culled-bird counts).
-  return null;
+  // Iterate annual season pages on MAFF site. Each season page lists every
+  // confirmed case with prefecture, date and case number. We extract those.
+  const seasonUrls = [
+    MAFF_TORI_INDEX,
+    'https://www.maff.go.jp/j/syouan/douei/tori/r5_hpai_kokunai.html',
+    'https://www.maff.go.jp/j/syouan/douei/tori/r4_hpai_kokunai.html',
+    'https://www.maff.go.jp/j/syouan/douei/tori/r3_hpai_kokunai.html',
+    'https://www.maff.go.jp/j/syouan/douei/tori/r2_hpai_kokunai.html',
+  ];
+  const features = [];
+  let idx = 0;
+  for (const url of seasonUrls) {
+    const html = await fetchText(url, { timeoutMs: 10_000, retries: 1 });
+    if (!html) continue;
+    if (!/鳥インフルエンザ|HPAI|tori/.test(html)) continue;
+    // Parse "X道府県NN例目" / "○○県（NN例目）" / "Pref Name" patterns.
+    // Each table row mentions the prefecture and case number.
+    const rowRx = /(北海道|青森県|岩手県|宮城県|秋田県|山形県|福島県|茨城県|栃木県|群馬県|埼玉県|千葉県|東京都|神奈川県|新潟県|富山県|石川県|福井県|山梨県|長野県|岐阜県|静岡県|愛知県|三重県|滋賀県|京都府|大阪府|兵庫県|奈良県|和歌山県|鳥取県|島根県|岡山県|広島県|山口県|徳島県|香川県|愛媛県|高知県|福岡県|佐賀県|長崎県|熊本県|大分県|宮崎県|鹿児島県|沖縄県)[^<>]{0,200}?(\d+)\s*例目/g;
+    const seen = new Set();
+    let m;
+    while ((m = rowRx.exec(html)) !== null) {
+      const pref = m[1];
+      const caseNo = m[2];
+      const key = `${pref}_${caseNo}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const c = PREF_CENTROIDS[pref];
+      if (!c) continue;
+      idx++;
+      // Spread cases around prefecture centroid
+      const angle = (idx * 2.4) % (2 * Math.PI);
+      const r = 0.05 + ((idx * 7) % 10) * 0.01;
+      features.push({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [c[0] + Math.cos(angle) * r, c[1] + Math.sin(angle) * r] },
+        properties: {
+          outbreak_id: `HPAI_LIVE_${pref}_${caseNo}`,
+          prefecture: pref,
+          case_no: parseInt(caseNo),
+          season_url: url,
+          country: 'JP',
+          source: 'maff_hpai_html',
+        },
+      });
+    }
+  }
+  return features.length > 0 ? features : null;
 }
 
 // Recent major outbreak seasons (2020-2024 seasons) — representative prefecture cities where culling occurred

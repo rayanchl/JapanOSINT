@@ -49,7 +49,7 @@ const SEED_WIND = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:25];area["ISO3166-1"="JP"]->.jp;(node["power"="generator"]["generator:source"="wind"](area.jp);way["power"="generator"]["generator:source"="wind"](area.jp););out center 200;`;
+  const query = `[out:json][timeout:180];area["ISO3166-1"="JP"]->.jp;(node["power"="generator"]["generator:source"="wind"](area.jp);way["power"="generator"]["generator:source"="wind"](area.jp););out center;`;
   try {
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 12000);

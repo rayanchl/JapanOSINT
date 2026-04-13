@@ -31,8 +31,8 @@ async function tryLive() {
         source: 'osm_overpass',
       },
     }),
-    20000,
-    { limit: 1000, queryTimeout: 40 },
+    60000,
+    { limit: 0, queryTimeout: 180 },
   );
 }
 
