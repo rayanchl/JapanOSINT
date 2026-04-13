@@ -7,6 +7,23 @@ import {
 } from './database.js';
 
 /**
+ * Some upstream endpoints only accept POST (e.g. Overpass `/api/interpreter`
+ * returns HTTP 400 on bare GET). Probing those with GET would always mark the
+ * source `degraded` even though the collector works fine. Map such URLs to a
+ * sibling endpoint that responds to GET with 2xx so the health probe reflects
+ * reality. The display URL in the registry stays accurate for humans.
+ */
+function probeUrlFor(url) {
+  if (!url) return url;
+  // Overpass: /api/interpreter is POST-only; /api/status is the plain-text
+  // health endpoint served by every Overpass mirror.
+  if (/^https?:\/\/[^/]*overpass[^/]*\/api\/interpreter(?:[/?#]|$)/i.test(url)) {
+    return url.replace(/\/api\/interpreter(?:[?#].*)?$/i, '/api/status');
+  }
+  return url;
+}
+
+/**
  * Attempt a simple HTTP fetch for a source URL, record timing and status.
  * Only runs for free API sources that have a real URL.
  */
@@ -16,7 +33,7 @@ async function fetchSource(source, wsServer) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15_000);
 
-    const res = await fetch(source.url, { signal: controller.signal });
+    const res = await fetch(probeUrlFor(source.url), { signal: controller.signal });
     clearTimeout(timeout);
 
     const duration = Date.now() - start;
