@@ -537,7 +537,6 @@ const sources = [
 
   // ── Economy Extended ────────────────────────────────────────────────
   { id: 'homes-co', name: 'Homes.co.jp Rentals', nameJa: 'HOME\'S 賃貸情報', type: 'scraped', category: 'economy', url: 'https://www.homes.co.jp/', description: 'Rental property listings and prices', updateInterval: 86400, layer: 'landprice', free: true, status: 'offline' },
-  { id: 'athome-price', name: 'At Home Real Estate', nameJa: 'アットホーム 不動産', type: 'scraped', category: 'economy', url: 'https://www.athome.co.jp/', description: 'Real estate listing prices', updateInterval: 86400, layer: 'landprice', free: true, status: 'offline' },
 
   // ── Safety / Disaster Extended ──────────────────────────────────────
   { id: 'saigai-info', name: 'Cabinet Office Disaster', nameJa: '内閣府 災害情報', type: 'api', category: 'safety', url: 'https://www.bousai.go.jp/', description: 'Cabinet Office disaster information system', updateInterval: 300, layer: 'emergency', free: true, status: 'offline' },
@@ -561,10 +560,7 @@ const sources = [
   // ── Social / Culture Extended ───────────────────────────────────────
   { id: 'instagram-geo', name: 'Instagram Geotagged', nameJa: 'Instagram ジオタグ', type: 'scraped', category: 'social', url: 'https://www.instagram.com/', description: 'Geotagged Instagram posts from Japan', updateInterval: 600, layer: 'social', free: false, status: 'offline' },
   { id: 'tiktok-geo', name: 'TikTok Geotagged', nameJa: 'TikTok ジオタグ', type: 'scraped', category: 'social', url: 'https://www.tiktok.com/', description: 'Geotagged TikTok content from Japan', updateInterval: 600, layer: 'social', free: false, status: 'offline' },
-  { id: 'google-trends-jp', name: 'Google Trends Japan', nameJa: 'Googleトレンド 日本', type: 'web_request', category: 'social', url: 'https://trends.google.co.jp/', description: 'Trending search topics by region in Japan', updateInterval: 3600, layer: 'social', free: true, status: 'offline' },
   { id: 'yahoo-realtime', name: 'Yahoo! Japan Realtime', nameJa: 'Yahoo!リアルタイム検索', type: 'scraped', category: 'social', url: 'https://search.yahoo.co.jp/realtime', description: 'Yahoo! Japan real-time trending topics', updateInterval: 300, layer: 'social', free: true, status: 'offline' },
-  { id: '5ch-activity', name: '5ch Board Activity', nameJa: '5ちゃんねる 掲示板', type: 'scraped', category: 'social', url: 'https://5ch.net/', description: '5ch/2ch anonymous board activity metrics', updateInterval: 600, layer: 'social', free: true, status: 'offline' },
-  { id: 'matsuri-events', name: 'Festival Calendar', nameJa: '祭り・イベント情報', type: 'scraped', category: 'social', url: 'https://www.walkerplus.com/festival/', description: 'Japanese festival and event calendar with locations', updateInterval: 86400, layer: 'events', free: true, status: 'offline' },
   { id: 'shrine-temple', name: 'Shrine & Temple Map', nameJa: '神社仏閣マップ', type: 'dataset', category: 'social', url: 'https://www.jinja.or.jp/', description: 'Shinto shrine and Buddhist temple locations', updateInterval: 604800, layer: 'poi', free: true, status: 'offline' },
   { id: 'onsen-map', name: 'Hot Spring Map', nameJa: '温泉マップ', type: 'dataset', category: 'social', url: 'https://www.onsen-r.co.jp/', description: 'Onsen (hot spring) locations across Japan', updateInterval: 604800, layer: 'poi', free: true, status: 'offline' },
 
@@ -586,7 +582,6 @@ const sources = [
   { id: 'ndb-open', name: 'NDB Open Data', nameJa: 'NDB オープンデータ', type: 'dataset', category: 'health', url: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000177182.html', description: 'National Database of health insurance claims open data', updateInterval: 604800, layer: 'health', free: true, status: 'offline' },
   { id: 'influenza-surveillance', name: 'NIID Influenza Watch', nameJa: '国立感染研 インフルエンザ', type: 'api', category: 'health', url: 'https://www.niid.go.jp/niid/ja/flu-map.html', description: 'NIID influenza surveillance by prefecture', updateInterval: 604800, layer: 'health', free: true, status: 'offline' },
   { id: 'food-poisoning', name: 'Food Poisoning Reports', nameJa: '食中毒情報', type: 'api', category: 'health', url: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/', description: 'MHLW food poisoning incident reports', updateInterval: 604800, layer: 'health', free: true, status: 'offline' },
-  { id: 'cancer-registry', name: 'Cancer Registry Stats', nameJa: 'がん登録統計', type: 'dataset', category: 'health', url: 'https://ganjoho.jp/', description: 'National cancer registry incidence data', updateInterval: 604800, layer: 'health', free: true, status: 'offline' },
 
   // ── Additional Infrastructure / Energy ──────────────────────────────
   { id: 'kyushu-power', name: 'Kyushu Electric Power', nameJa: '九州電力 電力使用状況', type: 'api', category: 'infrastructure', url: 'https://www.kyuden.co.jp/', description: 'Kyushu Electric Power usage', updateInterval: 300, layer: 'energy', free: true, status: 'offline' },
@@ -601,7 +596,6 @@ const sources = [
   // ── Additional Transport ────────────────────────────────────────────
   { id: 'vics-traffic', name: 'VICS Traffic Info', nameJa: 'VICS 道路交通情報', type: 'web_request', category: 'transport', url: 'https://www.vics.or.jp/', description: 'Vehicle Information Communication System traffic data', updateInterval: 300, layer: 'transport', free: true, status: 'offline' },
   { id: 'kansai-flights', name: 'Kansai Airport Flights', nameJa: '関西空港 フライト情報', type: 'web_request', category: 'transport', url: 'https://www.kansai-airport.or.jp/', description: 'Kansai International Airport flights', updateInterval: 300, layer: 'aviation', free: true, status: 'offline' },
-  { id: 'ekitan-transfer', name: 'Ekitan Transfer Info', nameJa: '駅探 乗換情報', type: 'scraped', category: 'transport', url: 'https://ekitan.com/', description: 'Station transfer and route information', updateInterval: 3600, layer: 'transport', free: true, status: 'offline' },
 
   // ── Additional Statistics ───────────────────────────────────────────
   { id: 'estat-education', name: 'e-Stat Education Stats', nameJa: 'e-Stat 教育統計', type: 'api', category: 'statistics', url: 'https://api.e-stat.go.jp/', description: 'School enrollment and education data by region', updateInterval: 86400, layer: 'population', free: true, status: 'offline' },
@@ -614,7 +608,6 @@ const sources = [
   { id: 'tochi-info', name: 'Tochi.info Land Use', nameJa: '土地情報 土地利用', type: 'api', category: 'economy', url: 'https://tochi.mlit.go.jp/', description: 'Land use and zoning information', updateInterval: 86400, layer: 'landprice', free: true, status: 'offline' },
 
   // ── Additional Social ───────────────────────────────────────────────
-  { id: 'hatena-bookmark', name: 'Hatena Bookmark', nameJa: 'はてなブックマーク', type: 'scraped', category: 'social', url: 'https://b.hatena.ne.jp/', description: 'Hatena Bookmark trending topics', updateInterval: 3600, layer: 'social', free: true, status: 'offline' },
 
   // ── Additional Geospatial ───────────────────────────────────────────
   { id: 'chiriin-place', name: 'GSI Place Names', nameJa: '地理院 地名情報', type: 'api', category: 'geospatial', url: 'https://www.gsi.go.jp/', description: 'Official geographic place name database', updateInterval: 86400, layer: 'basemap', free: true, status: 'offline' },
@@ -640,7 +633,7 @@ const sources = [
 
   // ── New: Transport (nationwide expansion) ───────────────────────────
   { id: 'maritime-ais', name: 'AIS Ship Tracking', nameJa: 'AIS 船舶追跡', type: 'api', category: 'transport', url: 'https://www.marinetraffic.com/', description: 'AIS vessel positions around Japan ports and shipping lanes', updateInterval: 300, layer: 'maritime-ais', free: false, status: 'online' },
-  { id: 'flight-adsb', name: 'ADS-B Flight Tracking', nameJa: 'ADS-B フライト追跡', type: 'api', category: 'transport', url: 'https://opensky-network.org/api/', description: 'ADS-B aircraft positions over Japan (airliners, GA, military)', updateInterval: 60, layer: 'flight-adsb', free: true, status: 'online' },
+  { id: 'flight-adsb', name: 'ADS-B Flight Tracking', nameJa: 'ADS-B フライト追跡', type: 'api', category: 'transport', url: 'https://opensky-network.org/api/states/all?lamin=24&lomin=122&lamax=46&lomax=154', description: 'ADS-B aircraft positions over Japan (airliners, GA, military)', updateInterval: 60, layer: 'flight-adsb', free: true, status: 'online' },
   { id: 'full-transport', name: 'Japan Rail Network', nameJa: '日本鉄道網', type: 'dataset', category: 'transport', url: 'https://www.jreast.co.jp/', description: 'Nationwide rail network: Shinkansen, JR lines, private railways, subways, monorails, trams', updateInterval: 86400, layer: 'full-transport', free: true, status: 'online' },
   { id: 'mlit-n02-stations', name: 'MLIT N02 Rail Stations', nameJa: '国土数値情報 鉄道駅 N02', type: 'dataset', category: 'transport', url: 'https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N02-v3_0.html', description: 'MLIT KSJ N02 authoritative nationwide rail station dataset (~10,000 stations, yearly updates) — set MLIT_N02_GEOJSON_URL to enable', updateInterval: 2592000, layer: 'mlit-n02-stations', free: true, status: 'online' },
   { id: 'bus-routes', name: 'Bus Terminals', nameJa: 'バスターミナル', type: 'dataset', category: 'transport', url: 'https://www.bus.or.jp/', description: 'Highway bus terminals and city bus depots across Japan', updateInterval: 86400, layer: 'bus-routes', free: true, status: 'online' },
@@ -761,7 +754,6 @@ const sources = [
   { id: 'marine-traffic', name: 'MarineTraffic AIS', nameJa: 'マリントラフィック AIS', type: 'api', category: 'transport', url: 'https://services.marinetraffic.com/api/exportvessels/v:8/', description: 'MarineTraffic Exportvessels REST API - live AIS positions in Japan bbox (needs MARINETRAFFIC_API_KEY, freemium)', updateInterval: 300, layer: 'marine-traffic', free: false, status: 'online' },
   { id: 'vessel-finder', name: 'VesselFinder AIS', nameJa: 'ベッセルファインダー AIS', type: 'api', category: 'transport', url: 'https://api.vesselfinder.com/vesselslist', description: 'VesselFinder Master REST API - live AIS positions in Japan bbox (needs VESSELFINDER_API_KEY, freemium)', updateInterval: 300, layer: 'vessel-finder', free: false, status: 'online' },
   { id: 'sentinel-hub', name: 'Sentinel-2 L2A Scenes', nameJa: 'センチネル2 L2A シーン', type: 'api', category: 'environment', url: 'https://earth-search.aws.element84.com/v1/search', description: 'Copernicus Sentinel-2 L2A scene footprints over Japan - last 10 days <40% cloud. Free-first fallback chain: Sentinel Hub (if creds) → Element84 Earth Search (AWS Open Data, no auth) → Microsoft Planetary Computer (no auth) → Copernicus Data Space OData (no auth) → seed tiles', updateInterval: 86400, layer: 'sentinel-hub', free: true, status: 'online' },
-  { id: 'google-earth', name: 'Google Earth Layers', nameJa: 'グーグルアース レイヤー', type: 'api', category: 'tourism', url: 'https://volcano.si.edu/ReportKMLs/Holocene.kml', description: 'Public KML/GeoRSS layers visible in Google Earth - Smithsonian GVP volcanoes + Wikipedia GeoSearch populated places, Japan bbox filtered', updateInterval: 604800, layer: 'google-earth', free: true, status: 'online' },
   { id: 'google-my-maps', name: 'Google My Maps', nameJa: 'グーグル マイマップ', type: 'api', category: 'tourism', url: 'https://www.google.com/maps/d/kml', description: 'Google My Maps public KML exports parsed to points (configure GOOGLE_MYMAPS_IDS env var with comma-separated mids)', updateInterval: 3600, layer: 'google-my-maps', free: true, status: 'online' },
 
   // ── Wave 12: Unified Camera Discovery ───────────────────────────────

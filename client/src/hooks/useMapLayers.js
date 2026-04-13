@@ -880,13 +880,6 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/sentinel-hub',
     category: 'Mapping',
   },
-  googleEarth: {
-    name: 'Google Earth Layers',
-    icon: '\u{1F30D}',
-    color: '#1a73e8',
-    endpoint: '/api/data/google-earth',
-    category: 'Mapping',
-  },
   googleMyMaps: {
     name: 'Google My Maps',
     icon: '\u{1F5FA}',

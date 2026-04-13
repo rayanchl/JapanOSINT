@@ -181,7 +181,7 @@ const JAPAN_TILES = [
   [41.35, 139.33, 45.55, 148.00], // NE Hokkaido + Kurils fringe
   [37.73, 139.33, 41.60, 142.05], // N Tohoku
   [34.55, 138.50, 37.80, 141.30], // Kanto + S Tohoku
-  [33.80, 135.20, 37.00, 138.60], // Chubu + Kansai
+  [33.80, 135.20, 37.80, 138.60], // Chubu + Kansai + Hokuriku (Niigata/Toyama/Ishikawa/Fukui)
   [33.10, 131.90, 35.50, 135.30], // Chugoku + Kansai
   [31.50, 129.80, 34.40, 132.40], // Kyushu W
   [31.20, 130.20, 33.80, 132.30], // Kyushu E + Shikoku S

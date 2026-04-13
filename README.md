@@ -43,7 +43,7 @@ npm run dev           # Start both server (4000) and client (3000)
 | Safety | 10+ | Police crime maps, hazard maps, shelter locations |
 | Infrastructure | 15+ | River levels, XRAIN radar, power grid, EV charging |
 | Cyber/IoT | 8+ | Shodan, NICTER darknet, JPCERT alerts |
-| Social | 10+ | Twitter/X, Flickr, YouTube, 5ch activity |
+| Social | 10+ | Twitter/X, Flickr, YouTube |
 | Satellite | 8+ | Tellus, Sentinel, Himawari-9, ALOS |
 | Health | 5+ | NDB, influenza surveillance, pharmacy map |
 | Commercial | 8+ | Docomo, Agoop, Zenrin, HERE Maps |
