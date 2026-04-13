@@ -76,72 +76,98 @@ function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity) {
   };
 }
 
+// Each entry carries a display `name` plus a `style` that MapLibre accepts —
+// either a full inline style spec (for raster basemaps) or a URL string that
+// points at a hosted vector style JSON (OpenFreeMap). Insertion order is the
+// order shown in the switcher, so OpenFreeMap Liberty appears first.
 const MAP_STYLES = {
+  openfreemap_liberty: {
+    name: 'OpenFreeMap Liberty',
+    // Hosted vector style — fonts, sprites, sources all resolved by MapLibre
+    // from the referenced JSON. Free, no key, no rate limits, and renders
+    // labels as real client-side text (scalable, HiDPI-sharp) with full
+    // POI coverage from OpenMapTiles.
+    style: 'https://tiles.openfreemap.org/styles/liberty',
+  },
+  openfreemap_positron: {
+    name: 'OpenFreeMap Positron',
+    style: 'https://tiles.openfreemap.org/styles/positron',
+  },
+  openfreemap_dark: {
+    name: 'OpenFreeMap Dark',
+    style: 'https://tiles.openfreemap.org/styles/dark',
+  },
   osm_dark: {
-    version: 8,
     name: 'OSM Dark',
-    sources: {
-      osm: {
-        type: 'raster',
-        tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-        tileSize: 256,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-        maxzoom: 19,
-      },
-    },
-    layers: [
-      {
-        id: 'osm-tiles',
-        type: 'raster',
-        source: 'osm',
-        paint: {
-          'raster-saturation': -0.8,
-          'raster-brightness-max': 0.35,
-          'raster-contrast': 0.3,
+    style: {
+      version: 8,
+      sources: {
+        osm: {
+          type: 'raster',
+          tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+          tileSize: 256,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+          maxzoom: 19,
         },
       },
-    ],
+      layers: [
+        {
+          id: 'osm-tiles',
+          type: 'raster',
+          source: 'osm',
+          paint: {
+            'raster-saturation': -0.8,
+            'raster-brightness-max': 0.35,
+            'raster-contrast': 0.3,
+          },
+        },
+      ],
+    },
   },
   osm_standard: {
-    version: 8,
     name: 'OSM Standard',
-    sources: {
-      osm: {
-        type: 'raster',
-        tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-        tileSize: 256,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-        maxzoom: 19,
-      },
-    },
-    layers: [
-      { id: 'osm-tiles', type: 'raster', source: 'osm' },
-    ],
-  },
-  gsi_pale: {
-    version: 8,
-    name: 'GSI Pale (Dark)',
-    sources: {
-      gsi: {
-        type: 'raster',
-        tiles: ['https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png'],
-        tileSize: 256,
-        attribution: '<a href="https://maps.gsi.go.jp/" target="_blank">GSI Japan</a>',
-        maxzoom: 18,
-      },
-    },
-    layers: [
-      {
-        id: 'gsi-tiles',
-        type: 'raster',
-        source: 'gsi',
-        paint: {
-          'raster-saturation': -0.5,
-          'raster-brightness-max': 0.4,
-          'raster-contrast': 0.2,
+    style: {
+      version: 8,
+      sources: {
+        osm: {
+          type: 'raster',
+          tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+          tileSize: 256,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+          maxzoom: 19,
         },
       },
-    ],
+      layers: [
+        { id: 'osm-tiles', type: 'raster', source: 'osm' },
+      ],
+    },
+  },
+  gsi_pale: {
+    name: 'GSI Pale (Dark)',
+    style: {
+      version: 8,
+      sources: {
+        gsi: {
+          type: 'raster',
+          tiles: ['https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png'],
+          tileSize: 256,
+          attribution: '<a href="https://maps.gsi.go.jp/" target="_blank">GSI Japan</a>',
+          maxzoom: 18,
+        },
+      },
+      layers: [
+        {
+          id: 'gsi-tiles',
+          type: 'raster',
+          source: 'gsi',
+          paint: {
+            'raster-saturation': -0.5,
+            'raster-brightness-max': 0.4,
+            'raster-contrast': 0.2,
+          },
+        },
+      ],
+    },
   },
 };
 
@@ -3468,7 +3494,7 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
   const [mapReady, setMapReady] = useState(false);
   const [cursorCoords, setCursorCoords] = useState(null);
   const [zoom, setZoom] = useState(5);
-  const [currentStyle, setCurrentStyle] = useState('osm_dark');
+  const [currentStyle, setCurrentStyle] = useState('openfreemap_liberty');
   const prevLayersRef = useRef({});
 
   // Initialize map
@@ -3477,7 +3503,7 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
 
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
-      style: MAP_STYLES[currentStyle],
+      style: MAP_STYLES[currentStyle].style,
       center: [138, 36.5],
       zoom: 5,
       maxBounds: [[120, 20], [155, 50]],
@@ -3572,7 +3598,7 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
   // Style switcher
   const switchStyle = useCallback((styleKey) => {
     if (!mapRef.current || styleKey === currentStyle) return;
-    mapRef.current.setStyle(MAP_STYLES[styleKey]);
+    mapRef.current.setStyle(MAP_STYLES[styleKey].style);
     setCurrentStyle(styleKey);
     prevLayersRef.current = {};
 
