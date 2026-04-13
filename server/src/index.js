@@ -11,6 +11,7 @@ import sourcesRouter from './routes/sources.js';
 import layersRouter from './routes/layers.js';
 import dataRouter from './routes/data.js';
 import geocodeRouter from './routes/geocode.js';
+import statusRouter from './routes/status.js';
 import { startScheduler } from './utils/scheduler.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -29,6 +30,7 @@ app.use('/api/sources', sourcesRouter);
 app.use('/api/layers', layersRouter);
 app.use('/api/data', dataRouter);
 app.use('/api/geocode', geocodeRouter);
+app.use('/api/status', statusRouter);
 
 // ── Health check ───────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {

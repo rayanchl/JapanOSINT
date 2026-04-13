@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, NavLink } from 'react-router-dom';
 import MapPage from './components/map/MapPage';
 import SourceDashboard from './components/dashboard/SourceDashboard';
+import ApiStatusPanel from './components/panels/ApiStatusPanel';
 import useDataSources from './hooks/useDataSources';
 
 function JSTClock() {
@@ -69,6 +70,7 @@ function RadarIcon() {
 
 export default function App() {
   const { sources, stats, isConnected, lastUpdate } = useDataSources();
+  const [showApiStatus, setShowApiStatus] = React.useState(false);
 
   const activeSources = stats?.online ?? 0;
 
@@ -138,6 +140,19 @@ export default function App() {
               Last: {new Date(lastUpdate).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })}
             </div>
           )}
+
+          <button
+            type="button"
+            onClick={() => setShowApiStatus((v) => !v)}
+            className={`px-2.5 py-1 rounded text-xs font-medium border transition-colors ${
+              showApiStatus
+                ? 'bg-neon-cyan/15 text-neon-cyan border-neon-cyan/40'
+                : 'bg-transparent text-gray-400 border-osint-border hover:text-neon-cyan hover:border-neon-cyan/40'
+            }`}
+            title="Show which APIs are working / configured"
+          >
+            APIs
+          </button>
         </div>
       </nav>
 
@@ -147,6 +162,12 @@ export default function App() {
           <Route path="/" element={<MapPage />} />
           <Route path="/sources" element={<SourceDashboard sources={sources} stats={stats} />} />
         </Routes>
+
+        {showApiStatus && (
+          <div className="absolute top-3 right-3 z-40">
+            <ApiStatusPanel onClose={() => setShowApiStatus(false)} />
+          </div>
+        )}
       </main>
     </div>
   );
