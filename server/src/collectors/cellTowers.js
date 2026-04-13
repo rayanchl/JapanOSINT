@@ -7,7 +7,7 @@
  * Uses OpenCellID-style data when available
  */
 
-import { fetchOverpass } from './_liveHelpers.js';
+import { fetchOverpassTiled } from './_liveHelpers.js';
 
 const OPENCELLID_KEY = process.env.OPENCELLID_KEY || '';
 
@@ -177,23 +177,40 @@ async function tryOpenCellID() {
 }
 
 async function tryOSMCommTowers() {
-  return fetchOverpass(
-    'node["tower:type"="communication"](area.jp);way["tower:type"="communication"](area.jp);node["man_made"="mast"]["tower:type"~"communication|cellular"](area.jp);',
+  // Japanese mobile infrastructure in OSM is tagged inconsistently. Cover the
+  // common patterns so seeds aren't shown in cities that actually have mapped
+  // towers:
+  //   - tower:type=communication (node + way)
+  //   - man_made=mast with communication/cellular tower:type (node + way)
+  //   - man_made=communications_tower (modern, growing usage)
+  //   - communication:mobile_phone=yes (explicit mobile equipment)
+  return fetchOverpassTiled(
+    (bbox) => [
+      `node["tower:type"="communication"](${bbox});`,
+      `way["tower:type"="communication"](${bbox});`,
+      `node["man_made"="mast"]["tower:type"~"communication|cellular"](${bbox});`,
+      `way["man_made"="mast"]["tower:type"~"communication|cellular"](${bbox});`,
+      `node["man_made"="communications_tower"](${bbox});`,
+      `way["man_made"="communications_tower"](${bbox});`,
+      `node["communication:mobile_phone"="yes"](${bbox});`,
+      `way["communication:mobile_phone"="yes"](${bbox});`,
+    ].join(''),
     (el, i, coords) => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: coords },
       properties: {
-        tower_id: `OSM_${el.id}`,
+        tower_id: `OSM_${el.type}_${el.id}`,
         name: el.tags?.name || `Comm tower ${i + 1}`,
         operator: el.tags?.operator || 'unknown',
         carrier: el.tags?.operator || el.tags?.['operator:short'] || 'unknown',
-        tower_type: el.tags?.['tower:type'] || 'communication',
+        tower_type: el.tags?.['tower:type'] || el.tags?.man_made || 'communication',
         height_m: el.tags?.height ? parseFloat(el.tags.height) : null,
-        radio: el.tags?.['communication:mobile_phone'] ? 'mobile' : 'communication',
+        radio: el.tags?.['communication:mobile_phone'] === 'yes' ? 'mobile' : 'communication',
         country: 'JP',
         source: 'osm_overpass',
       },
     }),
+    { queryTimeout: 180, timeoutMs: 90_000 },
   );
 }
 

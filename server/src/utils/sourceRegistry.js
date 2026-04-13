@@ -537,7 +537,6 @@ const sources = [
 
   // ── Economy Extended ────────────────────────────────────────────────
   { id: 'homes-co', name: 'Homes.co.jp Rentals', nameJa: 'HOME\'S 賃貸情報', type: 'scraped', category: 'economy', url: 'https://www.homes.co.jp/', description: 'Rental property listings and prices', updateInterval: 86400, layer: 'landprice', free: true, status: 'offline' },
-  { id: 'athome-price', name: 'At Home Real Estate', nameJa: 'アットホーム 不動産', type: 'scraped', category: 'economy', url: 'https://www.athome.co.jp/', description: 'Real estate listing prices', updateInterval: 86400, layer: 'landprice', free: true, status: 'offline' },
 
   // ── Safety / Disaster Extended ──────────────────────────────────────
   { id: 'saigai-info', name: 'Cabinet Office Disaster', nameJa: '内閣府 災害情報', type: 'api', category: 'safety', url: 'https://www.bousai.go.jp/', description: 'Cabinet Office disaster information system', updateInterval: 300, layer: 'emergency', free: true, status: 'offline' },
@@ -585,7 +584,6 @@ const sources = [
   { id: 'ndb-open', name: 'NDB Open Data', nameJa: 'NDB オープンデータ', type: 'dataset', category: 'health', url: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000177182.html', description: 'National Database of health insurance claims open data', updateInterval: 604800, layer: 'health', free: true, status: 'offline' },
   { id: 'influenza-surveillance', name: 'NIID Influenza Watch', nameJa: '国立感染研 インフルエンザ', type: 'api', category: 'health', url: 'https://www.niid.go.jp/niid/ja/flu-map.html', description: 'NIID influenza surveillance by prefecture', updateInterval: 604800, layer: 'health', free: true, status: 'offline' },
   { id: 'food-poisoning', name: 'Food Poisoning Reports', nameJa: '食中毒情報', type: 'api', category: 'health', url: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/', description: 'MHLW food poisoning incident reports', updateInterval: 604800, layer: 'health', free: true, status: 'offline' },
-  { id: 'cancer-registry', name: 'Cancer Registry Stats', nameJa: 'がん登録統計', type: 'dataset', category: 'health', url: 'https://ganjoho.jp/', description: 'National cancer registry incidence data', updateInterval: 604800, layer: 'health', free: true, status: 'offline' },
 
   // ── Additional Infrastructure / Energy ──────────────────────────────
   { id: 'kyushu-power', name: 'Kyushu Electric Power', nameJa: '九州電力 電力使用状況', type: 'api', category: 'infrastructure', url: 'https://www.kyuden.co.jp/', description: 'Kyushu Electric Power usage', updateInterval: 300, layer: 'energy', free: true, status: 'offline' },
