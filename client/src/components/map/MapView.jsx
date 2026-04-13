@@ -3402,27 +3402,6 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       });
       break;
 
-    case 'googleEarth':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': 6,
-          'circle-color': [
-            'match', ['coalesce', ['get', 'layer'], 'other'],
-            'volcano', '#bf360c',
-            'wikipedia', '#1a73e8',
-            layerDef.color,
-          ],
-          'circle-opacity': opacity * 0.85,
-          'circle-stroke-width': 1,
-          'circle-stroke-color': '#fff',
-          'circle-stroke-opacity': opacity,
-        },
-      });
-      break;
-
     case 'googleMyMaps':
       map.addLayer({
         id: mainLayerId,

@@ -143,11 +143,10 @@ import wagyuRanches from './wagyuRanches.js';
 import teaZones from './teaZones.js';
 import ricePaddies from './ricePaddies.js';
 
-// Wave 11: External Mapping Platforms (MarineTraffic, VesselFinder, Sentinel Hub, Google Earth, My Maps)
+// Wave 11: External Mapping Platforms (MarineTraffic, VesselFinder, Sentinel Hub, My Maps)
 import marineTraffic from './marineTraffic.js';
 import vesselFinder from './vesselFinder.js';
 import sentinelHub from './sentinelHub.js';
-import googleEarth from './googleEarth.js';
 import googleMyMaps from './googleMyMaps.js';
 
 // Wave 12: Untapped OSM infrastructure tags
@@ -346,7 +345,6 @@ export const collectors = {
   'marine-traffic': marineTraffic,
   'vessel-finder': vesselFinder,
   'sentinel-hub': sentinelHub,
-  'google-earth': googleEarth,
   'google-my-maps': googleMyMaps,
 
   // Wave 12: Untapped OSM infrastructure tags

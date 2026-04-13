@@ -843,7 +843,7 @@ router.get('/themed-cafes', async (_req, res) => {
 });
 
 // ===========================================================================
-// Wave 11: External Mapping Platforms (MarineTraffic, VesselFinder, Sentinel Hub, Google Earth, My Maps)
+// Wave 11: External Mapping Platforms (MarineTraffic, VesselFinder, Sentinel Hub, My Maps)
 // ===========================================================================
 router.get('/marine-traffic', async (_req, res) => {
   await respondWithData(res, { sourceId: 'marine-traffic', layerType: 'marine-traffic', collectorKey: 'marine-traffic' });
@@ -855,10 +855,6 @@ router.get('/vessel-finder', async (_req, res) => {
 
 router.get('/sentinel-hub', async (_req, res) => {
   await respondWithData(res, { sourceId: 'sentinel-hub', layerType: 'sentinel-hub', collectorKey: 'sentinel-hub' });
-});
-
-router.get('/google-earth', async (_req, res) => {
-  await respondWithData(res, { sourceId: 'google-earth', layerType: 'google-earth', collectorKey: 'google-earth' });
 });
 
 router.get('/google-my-maps', async (_req, res) => {
