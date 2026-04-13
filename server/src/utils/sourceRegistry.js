@@ -560,9 +560,7 @@ const sources = [
   // ── Social / Culture Extended ───────────────────────────────────────
   { id: 'instagram-geo', name: 'Instagram Geotagged', nameJa: 'Instagram ジオタグ', type: 'scraped', category: 'social', url: 'https://www.instagram.com/', description: 'Geotagged Instagram posts from Japan', updateInterval: 600, layer: 'social', free: false, status: 'offline' },
   { id: 'tiktok-geo', name: 'TikTok Geotagged', nameJa: 'TikTok ジオタグ', type: 'scraped', category: 'social', url: 'https://www.tiktok.com/', description: 'Geotagged TikTok content from Japan', updateInterval: 600, layer: 'social', free: false, status: 'offline' },
-  { id: 'google-trends-jp', name: 'Google Trends Japan', nameJa: 'Googleトレンド 日本', type: 'web_request', category: 'social', url: 'https://trends.google.co.jp/', description: 'Trending search topics by region in Japan', updateInterval: 3600, layer: 'social', free: true, status: 'offline' },
   { id: 'yahoo-realtime', name: 'Yahoo! Japan Realtime', nameJa: 'Yahoo!リアルタイム検索', type: 'scraped', category: 'social', url: 'https://search.yahoo.co.jp/realtime', description: 'Yahoo! Japan real-time trending topics', updateInterval: 300, layer: 'social', free: true, status: 'offline' },
-  { id: 'matsuri-events', name: 'Festival Calendar', nameJa: '祭り・イベント情報', type: 'scraped', category: 'social', url: 'https://www.walkerplus.com/festival/', description: 'Japanese festival and event calendar with locations', updateInterval: 86400, layer: 'events', free: true, status: 'offline' },
   { id: 'shrine-temple', name: 'Shrine & Temple Map', nameJa: '神社仏閣マップ', type: 'dataset', category: 'social', url: 'https://www.jinja.or.jp/', description: 'Shinto shrine and Buddhist temple locations', updateInterval: 604800, layer: 'poi', free: true, status: 'offline' },
   { id: 'onsen-map', name: 'Hot Spring Map', nameJa: '温泉マップ', type: 'dataset', category: 'social', url: 'https://www.onsen-r.co.jp/', description: 'Onsen (hot spring) locations across Japan', updateInterval: 604800, layer: 'poi', free: true, status: 'offline' },
 
@@ -598,7 +596,6 @@ const sources = [
   // ── Additional Transport ────────────────────────────────────────────
   { id: 'vics-traffic', name: 'VICS Traffic Info', nameJa: 'VICS 道路交通情報', type: 'web_request', category: 'transport', url: 'https://www.vics.or.jp/', description: 'Vehicle Information Communication System traffic data', updateInterval: 300, layer: 'transport', free: true, status: 'offline' },
   { id: 'kansai-flights', name: 'Kansai Airport Flights', nameJa: '関西空港 フライト情報', type: 'web_request', category: 'transport', url: 'https://www.kansai-airport.or.jp/', description: 'Kansai International Airport flights', updateInterval: 300, layer: 'aviation', free: true, status: 'offline' },
-  { id: 'ekitan-transfer', name: 'Ekitan Transfer Info', nameJa: '駅探 乗換情報', type: 'scraped', category: 'transport', url: 'https://ekitan.com/', description: 'Station transfer and route information', updateInterval: 3600, layer: 'transport', free: true, status: 'offline' },
 
   // ── Additional Statistics ───────────────────────────────────────────
   { id: 'estat-education', name: 'e-Stat Education Stats', nameJa: 'e-Stat 教育統計', type: 'api', category: 'statistics', url: 'https://api.e-stat.go.jp/', description: 'School enrollment and education data by region', updateInterval: 86400, layer: 'population', free: true, status: 'offline' },
@@ -611,7 +608,6 @@ const sources = [
   { id: 'tochi-info', name: 'Tochi.info Land Use', nameJa: '土地情報 土地利用', type: 'api', category: 'economy', url: 'https://tochi.mlit.go.jp/', description: 'Land use and zoning information', updateInterval: 86400, layer: 'landprice', free: true, status: 'offline' },
 
   // ── Additional Social ───────────────────────────────────────────────
-  { id: 'hatena-bookmark', name: 'Hatena Bookmark', nameJa: 'はてなブックマーク', type: 'scraped', category: 'social', url: 'https://b.hatena.ne.jp/', description: 'Hatena Bookmark trending topics', updateInterval: 3600, layer: 'social', free: true, status: 'offline' },
 
   // ── Additional Geospatial ───────────────────────────────────────────
   { id: 'chiriin-place', name: 'GSI Place Names', nameJa: '地理院 地名情報', type: 'api', category: 'geospatial', url: 'https://www.gsi.go.jp/', description: 'Official geographic place name database', updateInterval: 86400, layer: 'basemap', free: true, status: 'offline' },
