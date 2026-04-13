@@ -886,6 +886,9 @@ router.get('/utility-poles', async (_req, res) => {
 
 router.get('/admin-boundaries', async (_req, res) => {
   await respondWithData(res, { sourceId: 'admin-boundaries', layerType: 'admin-boundaries', collectorKey: 'admin-boundaries' });
+});
+
+// ===========================================================================
 // Wave 12: Unified Camera Discovery
 // ===========================================================================
 router.get('/camera-discovery', async (_req, res) => {
@@ -894,6 +897,105 @@ router.get('/camera-discovery', async (_req, res) => {
     layerType: 'camera-discovery',
     collectorKey: 'camera-discovery',
   });
+});
+
+// ===========================================================================
+// Wave 13: Net-new live OSINT endpoints (2026 sweep)
+// ===========================================================================
+router.get('/p2pquake', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'p2pquake-jma', layerType: 'earthquake', collectorKey: 'p2pquake-jma' });
+});
+
+router.get('/wolfx-eew', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wolfx-eew', layerType: 'earthquake', collectorKey: 'wolfx-eew' });
+});
+
+router.get('/wolfx-eqlist', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wolfx-eqlist', layerType: 'earthquake', collectorKey: 'wolfx-eqlist' });
+});
+
+router.get('/jma-forecast-area', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'jma-forecast-area', layerType: 'weather', collectorKey: 'jma-forecast-area' });
+});
+
+router.get('/jma-typhoon-json', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'jma-typhoon-json', layerType: 'weather', collectorKey: 'jma-typhoon-json' });
+});
+
+router.get('/openmeteo-jma', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'openmeteo-jma', layerType: 'weather', collectorKey: 'openmeteo-jma' });
+});
+
+router.get('/nerv-feed', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'nerv-feed', layerType: 'earthquake', collectorKey: 'nerv-feed' });
+});
+
+router.get('/msil-umishiru', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'msil-umishiru', layerType: 'maritime-ais', collectorKey: 'msil-umishiru' });
+});
+
+router.get('/jcg-navarea', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'jcg-navarea', layerType: 'maritime-ais', collectorKey: 'jcg-navarea' });
+});
+
+router.get('/edinet-filings', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'edinet-filings', layerType: 'edinet-filings', collectorKey: 'edinet-filings' });
+});
+
+router.get('/boj-stats', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'boj-stats', layerType: 'edinet-filings', collectorKey: 'boj-stats' });
+});
+
+router.get('/egov-laws', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'egov-laws', layerType: 'edinet-filings', collectorKey: 'egov-laws' });
+});
+
+router.get('/ndl-search', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'ndl-search', layerType: 'edinet-filings', collectorKey: 'ndl-search' });
+});
+
+router.get('/data-go-jp-ckan', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'data-go-jp-ckan', layerType: 'edinet-filings', collectorKey: 'data-go-jp-ckan' });
+});
+
+router.get('/geospatial-jp-ckan', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'geospatial-jp-ckan', layerType: 'edinet-filings', collectorKey: 'geospatial-jp-ckan' });
+});
+
+router.get('/nhk-news-rss', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'nhk-news-rss', layerType: 'news-feed', collectorKey: 'nhk-news-rss' });
+});
+
+router.get('/nhk-world-rss', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'nhk-world-rss', layerType: 'news-feed', collectorKey: 'nhk-world-rss' });
+});
+
+router.get('/kyodo-rss', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'kyodo-rss', layerType: 'news-feed', collectorKey: 'kyodo-rss' });
+});
+
+router.get('/opensky-japan', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'opensky-japan', layerType: 'flight-adsb', collectorKey: 'opensky-japan' });
+});
+
+router.get('/jpcert-alerts-rss', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'jpcert-alerts-rss', layerType: 'jpcert-alerts', collectorKey: 'jpcert-alerts-rss' });
+});
+
+router.get('/ipa-vuln-rss', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'ipa-vuln-rss', layerType: 'jpcert-alerts', collectorKey: 'ipa-vuln-rss' });
+});
+
+router.get('/nict-atlas', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'nict-atlas', layerType: 'nicter-darknet', collectorKey: 'nict-atlas' });
+});
+
+router.get('/gsi-geocode', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'gsi-geocode', layerType: 'geocode', collectorKey: 'gsi-geocode' });
+});
+
+router.get('/japan-api-prefectures', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'japan-api-prefectures', layerType: 'admin-boundaries', collectorKey: 'japan-api-prefectures' });
 });
 
 export default router;
