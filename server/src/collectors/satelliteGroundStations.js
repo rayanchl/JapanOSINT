@@ -34,12 +34,6 @@ async function tryLive() {
 }
 
 async function tryGeonet() {
-  const url = 'https://www.gsi.go.jp/ENGLISH/geonet_CSV_E.html';
-  // GSI provides station list as an HTML page; attempt to fetch a known CSV endpoint
-  const csvUrl = 'https://www.gsi.go.jp/ENGLISH/geonet_e.html';
-  // The actual machine-readable CSV from GSI GEONET public ftp/api
-  const geonetCsvUrl = 'https://terras.gsi.go.jp/en/pnt_info.html';
-
   try {
     // Try the GEONET station list in CSV format
     const res = await fetch(
