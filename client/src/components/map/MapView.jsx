@@ -3595,6 +3595,50 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
     }
   }, [layers, layerData, mapReady]);
 
+  // Temporary ground-track line layer for satellite tracking popups.
+  // Receives events from MapPopup's SatelliteTrackingDetail "Show ground track" button.
+  useEffect(() => {
+    if (!mapRef.current) return;
+    const TRACK_SOURCE = 'satellite-ground-track-source';
+    const TRACK_LAYER = 'satellite-ground-track-layer';
+
+    function removeTrack(map) {
+      if (map.getLayer(TRACK_LAYER)) map.removeLayer(TRACK_LAYER);
+      if (map.getSource(TRACK_SOURCE)) map.removeSource(TRACK_SOURCE);
+    }
+
+    async function onToggle(e) {
+      const { show, tleLine1, tleLine2, noradId } = e.detail || {};
+      const map = mapRef.current;
+      if (!map) return;
+      removeTrack(map);
+      if (!show) return;
+      const { computeGroundTrack } = await import('../../utils/groundTrack.js');
+      const geom = computeGroundTrack(tleLine1, tleLine2, { minutes: 90, stepSec: 30 });
+      map.addSource(TRACK_SOURCE, {
+        type: 'geojson',
+        data: { type: 'Feature', geometry: geom, properties: { noradId } },
+      });
+      map.addLayer({
+        id: TRACK_LAYER,
+        type: 'line',
+        source: TRACK_SOURCE,
+        paint: {
+          'line-color': '#ba68c8',
+          'line-width': 2,
+          'line-opacity': 0.85,
+          'line-dasharray': [4, 3],
+        },
+      });
+    }
+
+    window.addEventListener('satellite-track-toggle', onToggle);
+    return () => {
+      window.removeEventListener('satellite-track-toggle', onToggle);
+      if (mapRef.current) removeTrack(mapRef.current);
+    };
+  }, []);
+
   // Style switcher
   const switchStyle = useCallback((styleKey) => {
     if (!mapRef.current || styleKey === currentStyle) return;
