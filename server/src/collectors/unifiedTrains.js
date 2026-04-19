@@ -15,13 +15,11 @@ import osmTransportTrains from './osmTransportTrains.js';
 import { mergeFeatureCollections, dedupeByKeys, countBySource } from './_dedupe.js';
 import { computeLineColor } from './_lineColor.js';
 
-// Backfill line_color on any feature whose upstream source didn't already
-// stamp one — matches the hash used by track collectors so stations line
-// up with their tracks.
+// Always recompute line_color from the current canonical identity so stale
+// values from older hash algorithms get overwritten. A feature with no line
+// identity ends up with line_color: null and renders in the layer default.
 function ensureLineColor(feature) {
-  if (feature.properties?.line_color) return feature;
-  const color = computeLineColor(feature.properties);
-  if (!color) return feature;
+  const color = computeLineColor(feature.properties) || null;
   return { ...feature, properties: { ...feature.properties, line_color: color } };
 }
 

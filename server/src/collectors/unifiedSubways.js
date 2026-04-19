@@ -13,10 +13,10 @@ import osmTransportSubways from './osmTransportSubways.js';
 import { mergeFeatureCollections, dedupeByKeys, countBySource } from './_dedupe.js';
 import { computeLineColor } from './_lineColor.js';
 
+// Always recompute line_color so stale values from older hash algorithms
+// get overwritten. No identity → null → layer default color.
 function ensureLineColor(feature) {
-  if (feature.properties?.line_color) return feature;
-  const color = computeLineColor(feature.properties);
-  if (!color) return feature;
+  const color = computeLineColor(feature.properties) || null;
   return { ...feature, properties: { ...feature.properties, line_color: color } };
 }
 
