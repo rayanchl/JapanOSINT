@@ -5,9 +5,7 @@
  *   - AeroDataBox (scheduled arrivals/departures for NRT + HND, RapidAPI key)
  */
 
-const CLIENT_ID = process.env.OPENSKY_CLIENT_ID || '';
-const CLIENT_SECRET = process.env.OPENSKY_CLIENT_SECRET || '';
-const TOKEN_URL = 'https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token';
+import { getOAuthToken } from '../utils/openskyAuth.js';
 
 const AERODATABOX_KEY = process.env.AERODATABOX_KEY || '';
 const AERODATABOX_AIRPORTS = [
@@ -24,30 +22,6 @@ const CATEGORY_LABELS = [
   'Space/Trans-atmospheric', 'Emergency Vehicle', 'Service Vehicle',
   'Point Obstacle', 'Cluster Obstacle', 'Line Obstacle',
 ];
-
-// Simple in-memory token cache
-let cachedToken = null;
-let tokenExpiresAt = 0;
-
-async function getOAuthToken() {
-  if (!CLIENT_ID || !CLIENT_SECRET) return null;
-  if (cachedToken && Date.now() < tokenExpiresAt) return cachedToken;
-
-  try {
-    const res = await fetch(TOKEN_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `grant_type=client_credentials&client_id=${encodeURIComponent(CLIENT_ID)}&client_secret=${encodeURIComponent(CLIENT_SECRET)}`,
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    cachedToken = data.access_token;
-    tokenExpiresAt = Date.now() + (data.expires_in - 30) * 1000;
-    return cachedToken;
-  } catch {
-    return null;
-  }
-}
 
 const JAPAN_AIRPORTS = [
   { code: 'NRT', name: '成田国際空港', lat: 35.7720, lon: 140.3929, traffic: 10 },
