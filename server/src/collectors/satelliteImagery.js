@@ -303,6 +303,203 @@ async function tryUsgsHistorical() {
   return out.length ? out : null;
 }
 
+// ── 8. Sentinel-2 L2A (multi-source, first-wins internal fallback) ───────
+// Chain: Sentinel Hub Catalog (if creds) → Element84 Earth Search (AWS,
+// no auth) → Microsoft Planetary Computer STAC → Copernicus Data Space
+// OData. Emits a Feature per scene, centroid of scene footprint.
+
+const S2_CLIENT_ID = process.env.SENTINELHUB_CLIENT_ID || '';
+const S2_CLIENT_SECRET = process.env.SENTINELHUB_CLIENT_SECRET || '';
+const S2_CLOUD_MAX = 40;
+const S2_SCENE_LIMIT = 60;
+
+function s2IsoWindow(days = 10) {
+  const to = new Date();
+  const from = new Date(Date.now() - days * 86400e3);
+  return { from: from.toISOString(), to: to.toISOString() };
+}
+
+function s2CentroidFromGeom(geom) {
+  try {
+    const ring = geom?.type === 'Polygon'
+      ? geom.coordinates?.[0]
+      : geom?.type === 'MultiPolygon'
+        ? geom.coordinates?.[0]?.[0]
+        : null;
+    if (!ring?.length) return [139, 35];
+    const sum = ring.reduce((a, [x, y]) => [a[0] + x, a[1] + y], [0, 0]);
+    return [sum[0] / ring.length, sum[1] / ring.length];
+  } catch { return [139, 35]; }
+}
+
+function s2MapStacFeature(f, i, sourceTag) {
+  const geom = f.geometry || null;
+  const [cx, cy] = s2CentroidFromGeom(geom);
+  const preview = f.assets?.thumbnail?.href
+    || f.assets?.preview?.href
+    || f.assets?.visual?.href
+    || f.assets?.rendered_preview?.href
+    || null;
+  return {
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: [cx, cy] },
+    properties: {
+      id: `IMG_S2_${f.id || i}`,
+      platform: f.properties?.platform || 'Sentinel-2',
+      sensor: 'MSI',
+      scene_id: f.id,
+      datetime: f.properties?.datetime,
+      cloud_cover: f.properties?.['eo:cloud_cover'] ?? null,
+      preview_url: preview,
+      tile_url: null,
+      bbox_geom: geom,
+      archive_era: 'real-time',
+      source: sourceTag,
+      country: 'JP',
+    },
+  };
+}
+
+async function s2GetAccessToken() {
+  if (!S2_CLIENT_ID || !S2_CLIENT_SECRET) return null;
+  const body = new URLSearchParams({
+    grant_type: 'client_credentials',
+    client_id: S2_CLIENT_ID,
+    client_secret: S2_CLIENT_SECRET,
+  });
+  const data = await fetchJson(
+    'https://services.sentinel-hub.com/oauth/token',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+    },
+    10000
+  );
+  return data?.access_token || null;
+}
+
+async function s2TrySentinelHub() {
+  const token = await s2GetAccessToken();
+  if (!token) return null;
+  const { from, to } = s2IsoWindow(30);
+  const body = {
+    bbox: JAPAN_BBOX,
+    datetime: `${from}/${to}`,
+    collections: ['sentinel-2-l2a'],
+    limit: S2_SCENE_LIMIT,
+    filter: { op: '<=', args: [{ property: 'eo:cloud_cover' }, S2_CLOUD_MAX] },
+  };
+  const data = await fetchJson(
+    'https://services.sentinel-hub.com/api/v1/catalog/1.0.0/search',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+    }
+  );
+  const feats = data?.features || [];
+  return feats.length ? feats.map((f, i) => s2MapStacFeature(f, i, 'sentinel_hub_catalog')) : null;
+}
+
+async function s2TryEarthSearch() {
+  const { from, to } = s2IsoWindow();
+  const body = {
+    bbox: JAPAN_BBOX,
+    datetime: `${from}/${to}`,
+    collections: ['sentinel-2-l2a'],
+    limit: S2_SCENE_LIMIT,
+    query: { 'eo:cloud_cover': { lt: S2_CLOUD_MAX } },
+  };
+  const data = await fetchJson(
+    'https://earth-search.aws.element84.com/v1/search',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }
+  );
+  const feats = data?.features || [];
+  return feats.length ? feats.map((f, i) => s2MapStacFeature(f, i, 'earth_search_aws')) : null;
+}
+
+async function s2TryPlanetaryComputer() {
+  const { from, to } = s2IsoWindow();
+  const body = {
+    bbox: JAPAN_BBOX,
+    datetime: `${from}/${to}`,
+    collections: ['sentinel-2-l2a'],
+    limit: S2_SCENE_LIMIT,
+    query: { 'eo:cloud_cover': { lt: S2_CLOUD_MAX } },
+  };
+  const data = await fetchJson(
+    'https://planetarycomputer.microsoft.com/api/stac/v1/search',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }
+  );
+  const feats = data?.features || [];
+  return feats.length ? feats.map((f, i) => s2MapStacFeature(f, i, 'planetary_computer_s2')) : null;
+}
+
+async function s2TryCdseOData() {
+  const { from, to } = s2IsoWindow();
+  const [w, s, e, n] = JAPAN_BBOX;
+  const polygon = `POLYGON((${w} ${s},${e} ${s},${e} ${n},${w} ${n},${w} ${s}))`;
+  const filter = [
+    `Collection/Name eq 'SENTINEL-2'`,
+    `OData.CSC.Intersects(area=geography'SRID=4326;${polygon}')`,
+    `ContentDate/Start ge ${from}`,
+    `ContentDate/Start le ${to}`,
+    `Attributes/OData.CSC.DoubleAttribute/any(att:att/Name eq 'cloudCover' and att/OData.CSC.DoubleAttribute/Value lt ${S2_CLOUD_MAX}.0)`,
+    `contains(Name,'MSIL2A')`,
+  ].join(' and ');
+  const url = `https://catalogue.dataspace.copernicus.eu/odata/v1/Products?$filter=${encodeURIComponent(filter)}&$top=${S2_SCENE_LIMIT}&$orderby=ContentDate/Start desc`;
+  const data = await fetchJson(url, { headers: { Accept: 'application/json' } });
+  const items = data?.value || [];
+  if (!items.length) return null;
+  return items.map((it, i) => {
+    const geom = it.GeoFootprint || null;
+    const [cx, cy] = s2CentroidFromGeom(geom);
+    const cc = it.Attributes?.find?.((a) => a.Name === 'cloudCover')?.Value ?? null;
+    return {
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [cx, cy] },
+      properties: {
+        id: `IMG_S2_${it.Id || i}`,
+        platform: 'Sentinel-2',
+        sensor: 'MSI',
+        scene_id: it.Name,
+        datetime: it.ContentDate?.Start,
+        cloud_cover: cc,
+        preview_url: `https://catalogue.dataspace.copernicus.eu/odata/v1/Products(${it.Id})/$value`,
+        tile_url: null,
+        bbox_geom: geom,
+        archive_era: 'real-time',
+        source: 'cdse_odata',
+        country: 'JP',
+      },
+    };
+  });
+}
+
+// First-wins across the 4 S2 sub-providers.
+async function trySentinel2() {
+  const chain = [s2TrySentinelHub, s2TryEarthSearch, s2TryPlanetaryComputer, s2TryCdseOData];
+  for (const fn of chain) {
+    try {
+      const r = await fn();
+      if (r && r.length) return r;
+    } catch { /* try next */ }
+  }
+  return null;
+}
+
 // ── Seed fallback ─────────────────────────────────────────────────────────
 function generateSeed() {
   return IMAGERY_SEED_CENTROIDS.map((t, i) => ({
@@ -337,6 +534,7 @@ export default async function collectSatelliteImagery() {
     { name: 'rammb_slider_goes18', fn: async () => rammbGoes() },
     { name: 'jaxa_alos2_seed',  fn: async () => alos2Seed() },
     { name: 'usgs_m2m_historical', fn: tryUsgsHistorical },
+    { name: 'sentinel2_multi',  fn: trySentinel2 },
   ];
 
   for (const p of providers) {

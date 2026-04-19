@@ -845,13 +845,6 @@ const LAYER_DEFINITIONS = {
     category: 'Transport',
     hidden: true,
   },
-  sentinelHub: {
-    name: 'Sentinel-2 Scenes',
-    icon: '\u{1F6F0}',
-    color: '#33691e',
-    endpoint: '/api/data/sentinel-hub',
-    category: 'Mapping',
-  },
   googleMyMaps: {
     name: 'Google My Maps',
     icon: '\u{1F5FA}',

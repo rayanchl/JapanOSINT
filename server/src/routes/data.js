@@ -985,10 +985,6 @@ router.get('/vessel-finder', async (_req, res) => {
   await respondWithData(res, { sourceId: 'vessel-finder', layerType: 'vessel-finder', collectorKey: 'vessel-finder' });
 });
 
-router.get('/sentinel-hub', async (_req, res) => {
-  await respondWithData(res, { sourceId: 'sentinel-hub', layerType: 'sentinel-hub', collectorKey: 'sentinel-hub' });
-});
-
 router.get('/google-my-maps', async (_req, res) => {
   await respondWithData(res, { sourceId: 'google-my-maps', layerType: 'google-my-maps', collectorKey: 'google-my-maps' });
 });

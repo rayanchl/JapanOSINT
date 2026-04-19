@@ -732,7 +732,7 @@ const sources = [
     type: 'api',
     category: 'satellite',
     url: 'https://gibs.earthdata.nasa.gov/',
-    description: 'Aggregated satellite imagery over Japan: Himawari-9 (real-time), MODIS/VIIRS (NASA GIBS), Landsat 8/9 (Planetary Computer), GOES-18 (RAMMB), ALOS-2 (seed), CORONA + historical Landsat (USGS M2M). Preview feed shown on popup click.',
+    description: 'Aggregated satellite imagery over Japan: Himawari-9 (real-time), MODIS/VIIRS (NASA GIBS), Landsat 8/9 (Planetary Computer), GOES-18 (RAMMB), ALOS-2 (seed), CORONA + historical Landsat (USGS M2M), Sentinel-2 L2A (Sentinel Hub → Element84 AWS → Planetary Computer → CDSE fallback chain). Preview feed shown on popup click.',
     updateInterval: 1800,
     layer: 'satelliteImagery',
     free: true,
@@ -794,7 +794,6 @@ const sources = [
   // ── Wave 11: External Mapping Platforms ─────────────────────────────
   { id: 'marine-traffic', name: 'MarineTraffic AIS', nameJa: 'マリントラフィック AIS', type: 'api', category: 'transport', url: 'https://services.marinetraffic.com/api/exportvessels/v:8/', description: 'MarineTraffic Exportvessels REST API - live AIS positions in Japan bbox (needs MARINETRAFFIC_API_KEY, freemium)', updateInterval: 300, layer: 'marine-traffic', free: false, status: 'online' },
   { id: 'vessel-finder', name: 'VesselFinder AIS', nameJa: 'ベッセルファインダー AIS', type: 'api', category: 'transport', url: 'https://api.vesselfinder.com/vesselslist', description: 'VesselFinder Master REST API - live AIS positions in Japan bbox (needs VESSELFINDER_API_KEY, freemium)', updateInterval: 300, layer: 'vessel-finder', free: false, status: 'online' },
-  { id: 'sentinel-hub', name: 'Sentinel-2 L2A Scenes', nameJa: 'センチネル2 L2A シーン', type: 'api', category: 'environment', url: 'https://earth-search.aws.element84.com/v1/search', description: 'Copernicus Sentinel-2 L2A scene footprints over Japan - last 10 days <40% cloud. Free-first fallback chain: Sentinel Hub (if creds) → Element84 Earth Search (AWS Open Data, no auth) → Microsoft Planetary Computer (no auth) → Copernicus Data Space OData (no auth) → seed tiles', updateInterval: 86400, layer: 'sentinel-hub', free: true, status: 'online' },
   { id: 'google-my-maps', name: 'Google My Maps', nameJa: 'グーグル マイマップ', type: 'api', category: 'tourism', url: 'https://www.google.com/maps/d/kml', description: 'Google My Maps public KML exports parsed to points (configure GOOGLE_MYMAPS_IDS env var with comma-separated mids)', updateInterval: 3600, layer: 'google-my-maps', free: true, status: 'online' },
 
   // ── Wave 12: Unified Camera Discovery ───────────────────────────────

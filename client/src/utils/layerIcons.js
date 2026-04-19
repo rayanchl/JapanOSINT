@@ -252,7 +252,6 @@ export const LAYER_ICONS = {
   // External Mapping
   marineTraffic: FaShip,
   vesselFinder: MdDirectionsBoat,
-  sentinelHub: MdSatelliteAlt,
   googleMyMaps: MdMap,
 };
 

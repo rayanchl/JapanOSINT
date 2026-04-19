@@ -4,6 +4,19 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 import { getLayerIcon } from '../../utils/layerIcons';
 import { rasterizeIcon } from '../../utils/iconRaster';
+import { createRailwayLineTags } from '../../utils/railwayLineTags';
+
+// Per-layer handles for DOM-based add-ons (e.g. railway line tags) that
+// live outside MapLibre's layer system and must be torn down alongside
+// addLayerToMap / removeLayerFromMap.
+const layerAddonHandles = new Map();
+function clearLayerAddons(layerId) {
+  const h = layerAddonHandles.get(layerId);
+  if (h) {
+    try { h.destroy(); } catch (_) { /* ignore */ }
+    layerAddonHandles.delete(layerId);
+  }
+}
 
 // OSM is the primary basemap. GSI is kept as a Japan-specific alternative
 // (cartography detail) and OSM Standard gives full-color OSM rendering.
@@ -200,10 +213,18 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
   if (map.getLayer(`${mainLayerId}-extrude`)) map.removeLayer(`${mainLayerId}-extrude`);
   if (map.getLayer(`${mainLayerId}-line`)) map.removeLayer(`${mainLayerId}-line`);
   if (map.getSource(sourceId)) map.removeSource(sourceId);
+  clearLayerAddons(layerId);
 
   if (!geojson || !geojson.features || geojson.features.length === 0) return;
 
   map.addSource(sourceId, { type: 'geojson', data: geojson });
+
+  // DOM-based floating line tags for unified rail layers. Lives outside
+  // MapLibre so it can use the app's active-tag styling (translucent pill
+  // with line-colored background + text).
+  if (layerId === 'unifiedTrains' || layerId === 'unifiedSubways') {
+    layerAddonHandles.set(layerId, createRailwayLineTags(map, geojson));
+  }
 
   // Intercept `map.addLayer` so that every `type: 'circle'` layer produced
   // by the switch statement below gets transparently replaced with a symbol
@@ -303,6 +324,10 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
     case 'unifiedTrains':
     case 'unifiedSubways':
     case 'unifiedBuses': {
+      // Per-feature line_color (stamped by collectors from OSM colour tag
+      // or a deterministic hash fallback). Old cached features without the
+      // property coalesce to the layer default.
+      const perFeatureColor = ['coalesce', ['get', 'line_color'], layerDef.color];
       // Tracks first so station icons render on top of them.
       map.addLayer({
         id: `${mainLayerId}-line`,
@@ -310,7 +335,7 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
         source: sourceId,
         filter: ['==', ['geometry-type'], 'LineString'],
         paint: {
-          'line-color': layerDef.color,
+          'line-color': perFeatureColor,
           'line-width': [
             'interpolate', ['linear'], ['zoom'],
             5, 0.4,
@@ -330,7 +355,7 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
         filter: ['==', ['geometry-type'], 'Point'],
         paint: {
           'circle-radius': 4,
-          'circle-color': layerDef.color,
+          'circle-color': perFeatureColor,
           'circle-opacity': opacity * 0.9,
         },
       });
@@ -3407,27 +3432,6 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       });
       break;
 
-    case 'sentinelHub':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': 10,
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'cloud_cover'], 0],
-            0, '#2e7d32',
-            20, '#9e9d24',
-            40, '#ef6c00',
-          ],
-          'circle-opacity': opacity * 0.55,
-          'circle-stroke-width': 1.5,
-          'circle-stroke-color': '#1b5e20',
-          'circle-stroke-opacity': opacity,
-        },
-      });
-      break;
 
     case 'googleMyMaps':
       map.addLayer({
@@ -3487,6 +3491,7 @@ function removeLayerFromMap(map, layerId) {
     if (map.getLayer(lid)) map.removeLayer(lid);
   }
   if (map.getSource(sourceId)) map.removeSource(sourceId);
+  clearLayerAddons(layerId);
 }
 
 export default function MapView({ layers, layerData, onFeatureClick, onMapReady }) {
@@ -3671,6 +3676,10 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
     let currentSceneId = null;
 
     function removeCurrent() {
+      // MapLibre's getLayer/getSource dereference this.style, which is undefined
+      // after a WebGL-context-loss teardown. Bail out early when the style is
+      // gone so we don't crash the React tree.
+      if (!map.style) { currentSceneId = null; return; }
       if (map.getLayer(LAYER_ID)) map.removeLayer(LAYER_ID);
       if (map.getSource(SOURCE_ID)) map.removeSource(SOURCE_ID);
       currentSceneId = null;
