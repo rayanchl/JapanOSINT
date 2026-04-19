@@ -388,6 +388,14 @@ function SatelliteImageryDetail({ properties }) {
     }));
   }, [baked, opacity, sceneId, platform, tileUrl, previewUrl]);
 
+  useEffect(() => {
+    return () => {
+      window.dispatchEvent(new CustomEvent('satellite-imagery-bake', {
+        detail: { show: false, sceneId: properties.scene_id || properties.id },
+      }));
+    };
+  }, []);
+
   const highlighted = [
     'platform', 'sensor', 'scene_id', 'datetime',
     'cloud_cover', 'preview_url', 'tile_url', 'archive_era', 'source',
@@ -462,6 +470,14 @@ function SatelliteImageryDetail({ properties }) {
 
 function SatelliteTrackingDetail({ properties }) {
   const [showTrack, setShowTrack] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      window.dispatchEvent(new CustomEvent('satellite-track-toggle', {
+        detail: { show: false, noradId: properties.norad_id },
+      }));
+    };
+  }, []);
   const highlighted = [
     'name', 'norad_id', 'category', 'altitude_km', 'velocity_kms',
     'inclination_deg', 'next_pass_utc', 'tle_line1', 'tle_line2', 'source',
@@ -548,7 +564,11 @@ export default function MapPopup({ feature, layerType, onClose, position }) {
           x
         </button>
       </div>
-      <Renderer properties={properties} layerType={layerType} />
+      <Renderer
+        key={properties.id || properties.scene_id || properties.norad_id || properties.gs_id}
+        properties={properties}
+        layerType={layerType}
+      />
       <ReverseGeocodeLabel feature={feature} />
     </div>
   );
