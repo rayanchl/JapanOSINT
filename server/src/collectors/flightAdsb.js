@@ -6,6 +6,7 @@
  */
 
 import { getOAuthToken } from '../utils/openskyAuth.js';
+import { classifyMilitary } from './_militaryIcao.js';
 
 const AERODATABOX_KEY = process.env.AERODATABOX_KEY || '';
 const AERODATABOX_AIRPORTS = [
@@ -330,6 +331,14 @@ export default async function collectFlightAdsb() {
   if (features.length === 0) {
     features = generateSeedData();
     liveSource = 'seed';
+  }
+
+  for (const f of features) {
+    const tag = classifyMilitary({
+      icao24: f.properties?.icao24,
+      callsign: f.properties?.callsign || f.properties?.flight_number,
+    });
+    f.properties = { ...f.properties, ...tag };
   }
 
   return {
