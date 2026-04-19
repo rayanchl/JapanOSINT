@@ -67,6 +67,10 @@ function darkenHex(hex, factor = 0.8) {
 // rotated to match direction of travel.
 const ROTATING_LAYERS = new Set(['flightAdsb', 'maritimeAis', 'marineTraffic', 'vesselFinder']);
 
+// Layers that should NOT have their circle configs swapped for emoji-icon
+// symbol layers. Rendering stays as plain line-colored dots.
+const SKIP_ICON_SUBSTITUTION = new Set(['unifiedTrains', 'unifiedSubways', 'unifiedBuses']);
+
 // Replace any `type: 'circle'` layer config with an equivalent
 // `type: 'symbol'` layer that renders the registered layer icon.
 function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity, layerId) {
@@ -212,6 +216,7 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
   if (map.getLayer(`${mainLayerId}-heat`)) map.removeLayer(`${mainLayerId}-heat`);
   if (map.getLayer(`${mainLayerId}-extrude`)) map.removeLayer(`${mainLayerId}-extrude`);
   if (map.getLayer(`${mainLayerId}-line`)) map.removeLayer(`${mainLayerId}-line`);
+  if (map.getLayer(`${mainLayerId}-label`)) map.removeLayer(`${mainLayerId}-label`);
   if (map.getSource(sourceId)) map.removeSource(sourceId);
   clearLayerAddons(layerId);
 
@@ -219,20 +224,14 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
 
   map.addSource(sourceId, { type: 'geojson', data: geojson });
 
-  // DOM-based floating line tags for unified rail layers. Lives outside
-  // MapLibre so it can use the app's active-tag styling (translucent pill
-  // with line-colored background + text).
-  if (layerId === 'unifiedTrains' || layerId === 'unifiedSubways') {
-    layerAddonHandles.set(layerId, createRailwayLineTags(map, geojson));
-  }
-
   // Intercept `map.addLayer` so that every `type: 'circle'` layer produced
   // by the switch statement below gets transparently replaced with a symbol
   // layer that renders the layer's category icon (plane, boat, police, …).
   // Non-circle layers (heatmap, fill-extrusion, line, raster) pass through
-  // unchanged.
+  // unchanged. Skipped for transport layers that want plain colored dots.
   const iconImageId = layerIconImageId(layerId);
-  const hasIcon = typeof map.hasImage === 'function' && map.hasImage(iconImageId);
+  const hasIcon = typeof map.hasImage === 'function' && map.hasImage(iconImageId)
+    && !SKIP_ICON_SUBSTITUTION.has(layerId);
   const originalAddLayer = map.addLayer.bind(map);
   if (hasIcon) {
     map.addLayer = (config, beforeId) => {
@@ -345,9 +344,9 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           'line-opacity': opacity * 0.7,
         },
       });
-      // Station symbol layer — circle config gets converted by the
-      // addLayer intercept into a symbol layer using the layer's
-      // registered icon image. Filter keeps it Point-only.
+      // Station/stop dot — solid circle in the line color. The icon
+      // substitution intercept is skipped for these layers via
+      // SKIP_ICON_SUBSTITUTION so this renders as a plain dot.
       map.addLayer({
         id: mainLayerId,
         type: 'circle',
@@ -357,6 +356,41 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           'circle-radius': 4,
           'circle-color': perFeatureColor,
           'circle-opacity': opacity * 0.9,
+        },
+      });
+      // Line-name label. Rendered as native MapLibre symbol layer along
+      // each LineString, offset off the line and drawn with a thick colored
+      // halo so the label reads as a solid pill in the line color with
+      // white glyphs.
+      map.addLayer({
+        id: `${mainLayerId}-label`,
+        type: 'symbol',
+        source: sourceId,
+        filter: ['==', ['geometry-type'], 'LineString'],
+        minzoom: 10,
+        layout: {
+          'text-field': [
+            'coalesce',
+            ['get', 'line_ref'],
+            ['get', 'line'],
+            ['get', 'name'],
+            ['get', 'name_ja'],
+            '',
+          ],
+          'symbol-placement': 'line',
+          'text-offset': [1.2, -1.2],
+          'text-size': 11,
+          'text-padding': 2,
+          'text-allow-overlap': false,
+          'text-ignore-placement': false,
+          'symbol-spacing': 250,
+        },
+        paint: {
+          'text-color': '#ffffff',
+          'text-halo-color': perFeatureColor,
+          'text-halo-width': 3,
+          'text-halo-blur': 0.5,
+          'text-opacity': opacity,
         },
       });
       break;
@@ -3485,7 +3519,7 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
 function removeLayerFromMap(map, layerId) {
   const mainLayerId = `layer-${layerId}`;
   const sourceId = `source-${layerId}`;
-  const variants = [mainLayerId, `${mainLayerId}-heat`, `${mainLayerId}-extrude`, `${mainLayerId}-line`];
+  const variants = [mainLayerId, `${mainLayerId}-heat`, `${mainLayerId}-extrude`, `${mainLayerId}-line`, `${mainLayerId}-label`];
 
   for (const lid of variants) {
     if (map.getLayer(lid)) map.removeLayer(lid);
