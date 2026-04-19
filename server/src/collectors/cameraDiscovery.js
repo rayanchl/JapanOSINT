@@ -403,7 +403,7 @@ async function fromInsecam() {
 // ─── Channel: Shodan API (camera-scoped) ────────────────────────────────────
 async function fromShodanAPI() {
   if (!SHODAN_API_KEY) return [];
-  const query = SHODAN_CAMERA_QUERIES[0];
+  const query = 'country:JP';
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);

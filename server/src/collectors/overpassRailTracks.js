@@ -8,6 +8,7 @@
  */
 
 import { fetchOverpassWaysTiled } from './_liveHelpers.js';
+import { computeLineColor } from './_lineColor.js';
 
 export default async function collectOverpassRailTracks() {
   const features = await fetchOverpassWaysTiled(
@@ -28,6 +29,9 @@ export default async function collectOverpassRailTracks() {
         electrified: el.tags?.electrified || null,
         gauge: el.tags?.gauge || null,
         usage: el.tags?.usage || null,
+        colour: el.tags?.colour || null,
+        line_ref: el.tags?.ref || null,
+        line_color: computeLineColor(el.tags),
         country: 'JP',
         source: 'osm_overpass_rail_track',
       },

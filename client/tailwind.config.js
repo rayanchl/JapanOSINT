@@ -6,11 +6,13 @@ export default {
     extend: {
       colors: {
         osint: {
-          bg: '#0a0a0a',
-          surface: '#141414',
-          panel: '#1c1c1c',
-          border: '#262626',
-          'border-bright': '#353535',
+          bg: 'rgb(var(--osint-bg) / <alpha-value>)',
+          surface: 'rgb(var(--osint-surface) / <alpha-value>)',
+          panel: 'rgb(var(--osint-panel) / <alpha-value>)',
+          border: 'rgb(var(--osint-border) / <alpha-value>)',
+          'border-bright': 'rgb(var(--osint-border-bright) / <alpha-value>)',
+          text: 'rgb(var(--osint-text) / <alpha-value>)',
+          muted: 'rgb(var(--osint-text-muted) / <alpha-value>)',
         },
         neon: {
           cyan: '#00f0ff',

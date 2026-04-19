@@ -11,6 +11,7 @@
  */
 
 import { fetchOverpassTiled } from './_liveHelpers.js';
+import { computeLineColor } from './_lineColor.js';
 
 export default async function collectOsmTransportTrains() {
   const features = await fetchOverpassTiled(
@@ -34,6 +35,7 @@ export default async function collectOsmTransportTrains() {
         uic_ref: el.tags?.uic_ref || null,
         wikidata: el.tags?.wikidata || null,
         wheelchair: el.tags?.wheelchair || null,
+        line_color: computeLineColor(el.tags, { keys: ['line', 'network', 'operator', 'name'] }),
         country: 'JP',
         source: 'osm_transport_trains',
       },

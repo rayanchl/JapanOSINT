@@ -6,6 +6,32 @@ import SourcesPanel from './components/panels/SourcesPanel';
 import FollowPanel from './components/panels/FollowPanel';
 import useDataSources from './hooks/useDataSources';
 
+const THEME_STORAGE_KEY = 'osint:theme';
+
+function readInitialTheme() {
+  if (typeof window === 'undefined') return 'dark';
+  try {
+    const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+    if (stored === 'light' || stored === 'dark') return stored;
+  } catch { /* ignore */ }
+  if (window.matchMedia?.('(prefers-color-scheme: light)').matches) return 'light';
+  return 'dark';
+}
+
+function useTheme() {
+  const [theme, setTheme] = React.useState(readInitialTheme);
+  React.useEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute('data-theme', theme);
+    try { window.localStorage.setItem(THEME_STORAGE_KEY, theme); } catch { /* ignore */ }
+  }, [theme]);
+  const toggle = React.useCallback(
+    () => setTheme((t) => (t === 'dark' ? 'light' : 'dark')),
+    [],
+  );
+  return { theme, toggle };
+}
+
 function JSTClock() {
   const [time, setTime] = React.useState('');
 
@@ -37,6 +63,7 @@ function JSTClock() {
 
 export default function App() {
   const { sources, stats, isConnected, lastUpdate } = useDataSources();
+  const { theme, toggle: toggleTheme } = useTheme();
   const [showSources, setShowSources] = React.useState(false);
   const [showFollow, setShowFollow] = React.useState(false);
 
@@ -135,6 +162,16 @@ export default function App() {
             title="Follow live collector HTTP requests"
           >
             Follow
+          </button>
+
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="px-2.5 py-1 rounded text-xs font-medium border bg-transparent text-gray-400 border-osint-border hover:text-neon-cyan hover:border-neon-cyan/40 transition-colors"
+            title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+            aria-label="Toggle color theme"
+          >
+            {theme === 'dark' ? '\u2600' : '\u263D'}
           </button>
         </div>
       </nav>

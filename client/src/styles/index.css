@@ -6,15 +6,55 @@
    JapanOSINT Dark OSINT Theme
    ======================================== */
 
-:root {
-  --osint-bg: #0a0a0a;
-  --osint-surface: #141414;
-  --osint-panel: #1c1c1c;
-  --osint-border: #262626;
+/* Theme colors are stored as "R G B" channels so Tailwind opacity modifiers
+ * like `bg-osint-bg/50` work. Composite / glass surfaces keep their own
+ * fully-composed tokens. */
+:root,
+:root[data-theme='dark'] {
+  --osint-bg: 10 10 10;
+  --osint-surface: 20 20 20;
+  --osint-panel: 28 28 28;
+  --osint-border: 38 38 38;
+  --osint-border-bright: 53 53 53;
+  --osint-text: 229 231 235;
+  --osint-text-muted: 156 163 175;
+  --osint-scroll-thumb: #2d3a52;
+  --osint-scroll-thumb-hover: #3b4f6e;
+  --osint-popup-bg: rgba(17, 24, 39, 0.95);
+  --osint-popup-border: rgba(0, 240, 255, 0.3);
+  --osint-ctrl-bg: rgba(17, 24, 39, 0.9);
+  --osint-panel-glass: rgba(6, 10, 18, 0.95);
+  --osint-toggle-off: #374151;
+  --osint-toggle-knob: #9ca3af;
   --neon-cyan: #00f0ff;
   --neon-green: #00ff88;
   --neon-orange: #ff8c00;
   --neon-red: #ff4444;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --osint-bg: 245 247 251;
+  --osint-surface: 255 255 255;
+  --osint-panel: 240 243 249;
+  --osint-border: 214 219 228;
+  --osint-border-bright: 182 189 204;
+  --osint-text: 26 36 51;
+  --osint-text-muted: 91 100 117;
+  --osint-scroll-thumb: #b6bdcc;
+  --osint-scroll-thumb-hover: #8a94a8;
+  --osint-popup-bg: rgba(255, 255, 255, 0.96);
+  --osint-popup-border: rgba(0, 105, 140, 0.35);
+  --osint-ctrl-bg: rgba(255, 255, 255, 0.92);
+  --osint-panel-glass: rgba(255, 255, 255, 0.9);
+  --osint-toggle-off: #c7cdd8;
+  --osint-toggle-knob: #ffffff;
+  /* Darker accents so neon stays readable on white */
+  --neon-cyan: #0087b3;
+  --neon-green: #0d9f60;
+  --neon-orange: #c96500;
+  --neon-red: #c0392b;
+  color-scheme: light;
 }
 
 * {
@@ -23,11 +63,12 @@
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background: var(--osint-bg);
-  color: #e5e7eb;
+  background: rgb(var(--osint-bg));
+  color: rgb(var(--osint-text));
   margin: 0;
   padding: 0;
   overflow: hidden;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 /* ========================================
@@ -62,22 +103,22 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--osint-bg);
+  background: rgb(var(--osint-bg));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2d3a52;
+  background: var(--osint-scroll-thumb);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b4f6e;
+  background: var(--osint-scroll-thumb-hover);
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #2d3a52 var(--osint-bg);
+  scrollbar-color: var(--osint-scroll-thumb) rgb(var(--osint-bg));
 }
 
 /* ========================================
@@ -167,9 +208,9 @@ body {
    ======================================== */
 
 .maplibregl-popup-content {
-  background: rgba(17, 24, 39, 0.95) !important;
-  color: #e5e7eb !important;
-  border: 1px solid rgba(0, 240, 255, 0.3) !important;
+  background: var(--osint-popup-bg) !important;
+  color: rgb(var(--osint-text)) !important;
+  border: 1px solid var(--osint-popup-border) !important;
   border-radius: 8px !important;
   padding: 12px 16px !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 240, 255, 0.1) !important;
@@ -178,11 +219,11 @@ body {
 }
 
 .maplibregl-popup-tip {
-  border-top-color: rgba(17, 24, 39, 0.95) !important;
+  border-top-color: var(--osint-popup-bg) !important;
 }
 
 .maplibregl-popup-close-button {
-  color: #9ca3af !important;
+  color: rgb(var(--osint-text-muted)) !important;
   font-size: 18px !important;
   padding: 4px 8px !important;
 }
@@ -192,16 +233,16 @@ body {
   background: transparent !important;
 }
 
-/* MapLibre controls dark theme */
+/* MapLibre controls */
 .maplibregl-ctrl-group {
-  background: rgba(17, 24, 39, 0.9) !important;
-  border: 1px solid var(--osint-border) !important;
+  background: var(--osint-ctrl-bg) !important;
+  border: 1px solid rgb(var(--osint-border)) !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
 }
 
 .maplibregl-ctrl-group button {
   background-color: transparent !important;
-  border-color: var(--osint-border) !important;
+  border-color: rgb(var(--osint-border)) !important;
 }
 
 .maplibregl-ctrl-group button:hover {
@@ -209,17 +250,17 @@ body {
 }
 
 .maplibregl-ctrl-group button + button {
-  border-top: 1px solid var(--osint-border) !important;
+  border-top: 1px solid rgb(var(--osint-border)) !important;
 }
 
-.maplibregl-ctrl-group button span {
+:root[data-theme='dark'] .maplibregl-ctrl-group button span {
   filter: invert(1);
 }
 
 .maplibregl-ctrl-scale {
-  background: rgba(17, 24, 39, 0.8) !important;
-  color: #9ca3af !important;
-  border-color: #4b5563 !important;
+  background: var(--osint-ctrl-bg) !important;
+  color: rgb(var(--osint-text-muted)) !important;
+  border-color: rgb(var(--osint-border)) !important;
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 10px !important;
 }
@@ -229,7 +270,7 @@ body {
    ======================================== */
 
 .layer-panel {
-  background: rgba(6, 10, 18, 0.95);
+  background: var(--osint-panel-glass);
   backdrop-filter: blur(12px);
   border-right: 1px solid rgba(0, 240, 255, 0.15);
 }
@@ -251,7 +292,7 @@ body {
 .toggle-switch {
   width: 36px;
   height: 20px;
-  background: #374151;
+  background: var(--osint-toggle-off);
   border-radius: 10px;
   position: relative;
   cursor: pointer;
@@ -269,7 +310,7 @@ body {
   left: 2px;
   width: 16px;
   height: 16px;
-  background: #9ca3af;
+  background: var(--osint-toggle-knob);
   border-radius: 50%;
   transition: transform 0.3s ease, background 0.3s ease;
 }
@@ -316,7 +357,7 @@ body {
    ======================================== */
 
 .glass-panel {
-  background: rgba(6, 10, 18, 0.95);
+  background: var(--osint-panel-glass);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(0, 240, 255, 0.15);
   border-radius: 8px;
@@ -337,14 +378,14 @@ body {
   transform: translateX(-50%);
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-top: 8px solid rgba(0, 240, 255, 0.15);
+  border-top: 8px solid var(--osint-popup-border);
 }
 .map-popup-ridge::after {
   bottom: -7px;
   transform: translateX(-50%);
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
-  border-top: 7px solid rgba(17, 24, 39, 0.85);
+  border-top: 7px solid var(--osint-popup-bg);
 }
 
 .data-value {
