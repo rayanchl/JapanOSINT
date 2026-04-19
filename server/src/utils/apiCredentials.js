@@ -16,7 +16,10 @@ const CREDENTIALS = {
   // ── Cyber / OSINT ────────────────────────────────────────────────────
   'shodan-iot': { required: ['SHODAN_API_KEY'] },
   'shodan-japan': { required: ['SHODAN_API_KEY'] },
-  'wifi-networks': { required: ['WIGLE_API_KEY'] },
+  'wifi-networks': { required: ['WIGLE_API_KEY'], optional: ['SHODAN_API_KEY', 'MLS_API_KEY'] },
+
+  // ── Infrastructure ─────────────────────────────────────────────────────
+  'ev-charging': { optional: ['OPENCHARGEMAP_KEY'] },
 
   // ── Social media ─────────────────────────────────────────────────────
   'twitter-geo': { required: ['TWITTER_BEARER_TOKEN'] },
@@ -28,13 +31,11 @@ const CREDENTIALS = {
   'maritime-ais': { anyOf: ['MARINETRAFFIC_API_KEY', 'VESSELFINDER_API_KEY'] },
 
   // ── Aviation ─────────────────────────────────────────────────────────
-  'flight-adsb': { optional: ['OPENSKY_USER', 'OPENSKY_PASS'] },
-  'narita-flights': { required: ['AERODATABOX_KEY'] },
-  'haneda-flights': { required: ['AERODATABOX_KEY'] },
+  'flight-adsb': { optional: ['OPENSKY_CLIENT_ID', 'OPENSKY_CLIENT_SECRET', 'AERODATABOX_KEY'] },
+  'opensky-japan': { optional: ['OPENSKY_CLIENT_ID', 'OPENSKY_CLIENT_SECRET'] },
 
   // ── Statistics ───────────────────────────────────────────────────────
   'estat-population': { anyOf: ['ESTAT_API_KEY', 'ESTAT_APP_ID'] },
-  'resas-population': { required: ['RESAS_API_KEY'] },
   'resas-industry': { required: ['RESAS_API_KEY'] },
   'resas-tourism': { required: ['RESAS_API_KEY'] },
   'resas-municipality': { required: ['RESAS_API_KEY'] },

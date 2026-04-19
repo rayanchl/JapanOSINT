@@ -97,10 +97,48 @@ function generateSeedData() {
   }));
 }
 
+/* ── JOGMEC pipeline routes & underground storage ── */
+const JOGMEC_FACILITIES = [
+  // Pipelines (midpoint locations)
+  { name: '東京湾横断パイプライン', operator: '東京ガス', facility_type: 'pipeline', capacity: '200万m3/日', lat: 35.55, lon: 139.85, length_km: 28 },
+  { name: '新潟-仙台ガスパイプライン', operator: '石油資源開発', facility_type: 'pipeline', capacity: '300万m3/日', lat: 38.20, lon: 139.50, length_km: 250 },
+  { name: '名古屋-四日市パイプライン', operator: '東邦ガス', facility_type: 'pipeline', capacity: '150万m3/日', lat: 34.97, lon: 136.65, length_km: 35 },
+  { name: '苫小牧-札幌パイプライン', operator: '北海道ガス', facility_type: 'pipeline', capacity: '120万m3/日', lat: 42.95, lon: 141.50, length_km: 65 },
+  { name: '北海道幹線パイプライン', operator: '石油資源開発', facility_type: 'pipeline', capacity: '180万m3/日', lat: 43.20, lon: 141.80, length_km: 140 },
+  // Underground gas storage
+  { name: '南長岡地下貯蔵施設', operator: 'INPEX', facility_type: 'underground_storage', capacity: '6億5000万m3', lat: 37.40, lon: 138.85, storage_mcm: 650 },
+  { name: '茂原地下貯蔵施設', operator: '関東天然ガス開発', facility_type: 'underground_storage', capacity: '9200万m3', lat: 35.43, lon: 140.28, storage_mcm: 92 },
+  { name: 'INPEX越路原地下貯蔵施設', operator: 'INPEX', facility_type: 'underground_storage', capacity: '3億m3', lat: 37.50, lon: 138.90, storage_mcm: 300 },
+];
+
+function tryJOGMECData() {
+  const now = new Date().toISOString();
+  return JOGMEC_FACILITIES.map((f, i) => ({
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: [f.lon, f.lat] },
+    properties: {
+      facility_id: `JOGMEC_${String(i + 1).padStart(4, '0')}`,
+      name: f.name,
+      operator: f.operator,
+      facility_type: f.facility_type,
+      capacity: f.capacity,
+      storage_mcm: f.storage_mcm || null,
+      length_km: f.length_km || null,
+      country: 'JP',
+      updated_at: now,
+      source: 'jogmec',
+    },
+  }));
+}
+
 export default async function collectGasNetwork() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
   if (!live) features = generateSeedData();
+
+  const jogmecFeatures = tryJOGMECData();
+  features = [...features, ...jogmecFeatures];
+
   return {
     type: 'FeatureCollection',
     features,
@@ -109,7 +147,7 @@ export default async function collectGasNetwork() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live,
-      description: 'Japan gas network - LNG terminals, distribution stations, regional gas companies',
+      description: 'Japan gas network - LNG terminals, distribution stations, regional gas companies, JOGMEC pipelines & underground storage',
     },
     metadata: {},
   };

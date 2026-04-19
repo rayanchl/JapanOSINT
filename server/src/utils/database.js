@@ -24,27 +24,22 @@ db.exec(`
     type          TEXT NOT NULL CHECK(type IN ('api','dataset','scraped','web_request')),
     category      TEXT NOT NULL,
     url           TEXT,
-    status        TEXT NOT NULL DEFAULT 'offline' CHECK(status IN ('online','offline','degraded')),
+    status        TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('online','offline','degraded','pending')),
     last_check    TEXT,
     last_success  TEXT,
     response_time_ms INTEGER,
     records_count INTEGER DEFAULT 0,
-    error_message TEXT
+    error_message TEXT,
+    probe_request_url     TEXT,
+    probe_request_method  TEXT,
+    probe_request_headers TEXT,
+    probe_response_status INTEGER,
+    probe_response_headers TEXT,
+    probe_response_body   TEXT,
+    probe_kind            TEXT
   );
 
-  CREATE TABLE IF NOT EXISTS data_cache (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    source_id   TEXT NOT NULL REFERENCES sources(id),
-    layer_type  TEXT NOT NULL,
-    geojson     TEXT NOT NULL,
-    bbox        TEXT,
-    fetched_at  TEXT NOT NULL DEFAULT (datetime('now')),
-    expires_at  TEXT NOT NULL
-  );
-
-  CREATE INDEX IF NOT EXISTS idx_cache_source   ON data_cache(source_id);
-  CREATE INDEX IF NOT EXISTS idx_cache_layer    ON data_cache(layer_type);
-  CREATE INDEX IF NOT EXISTS idx_cache_expires  ON data_cache(expires_at);
+  DROP TABLE IF EXISTS data_cache;
 
   CREATE TABLE IF NOT EXISTS fetch_log (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,7 +53,102 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_log_source ON fetch_log(source_id);
   CREATE INDEX IF NOT EXISTS idx_log_ts     ON fetch_log(timestamp);
+
+  CREATE TABLE IF NOT EXISTS cameras (
+    camera_uid         TEXT PRIMARY KEY,
+    name               TEXT NOT NULL,
+    camera_type        TEXT,
+    lat                REAL NOT NULL,
+    lon                REAL NOT NULL,
+    url                TEXT,
+    thumbnail_url      TEXT,
+    operator           TEXT,
+    country            TEXT DEFAULT 'JP',
+    discovery_channels TEXT NOT NULL,
+    properties         TEXT NOT NULL,
+    first_seen_at      TEXT NOT NULL DEFAULT (datetime('now')),
+    last_seen_at       TEXT NOT NULL DEFAULT (datetime('now')),
+    seen_count         INTEGER NOT NULL DEFAULT 1
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_cameras_last_seen ON cameras(last_seen_at);
+  CREATE INDEX IF NOT EXISTS idx_cameras_type      ON cameras(camera_type);
+  CREATE INDEX IF NOT EXISTS idx_cameras_geo       ON cameras(lat, lon);
+
+  CREATE TABLE IF NOT EXISTS transport_stations (
+    station_uid    TEXT PRIMARY KEY,
+    mode           TEXT NOT NULL,
+    name           TEXT,
+    operator       TEXT,
+    line           TEXT,
+    lat            REAL NOT NULL,
+    lon            REAL NOT NULL,
+    sources        TEXT NOT NULL,
+    properties     TEXT NOT NULL,
+    first_seen_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    last_seen_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    seen_count     INTEGER NOT NULL DEFAULT 1
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_transport_stations_mode ON transport_stations(mode);
+  CREATE INDEX IF NOT EXISTS idx_transport_stations_geo  ON transport_stations(lat, lon);
+  CREATE INDEX IF NOT EXISTS idx_transport_stations_seen ON transport_stations(last_seen_at);
+
+  CREATE TABLE IF NOT EXISTS transport_lines (
+    line_uid       TEXT PRIMARY KEY,
+    mode           TEXT NOT NULL,
+    name           TEXT,
+    operator       TEXT,
+    coordinates    TEXT NOT NULL,
+    sources        TEXT NOT NULL,
+    properties     TEXT NOT NULL,
+    first_seen_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    last_seen_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    seen_count     INTEGER NOT NULL DEFAULT 1
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_transport_lines_mode ON transport_lines(mode);
+  CREATE INDEX IF NOT EXISTS idx_transport_lines_seen ON transport_lines(last_seen_at);
 `);
+
+// --------------- Schema migration ---------------
+// Older DBs were created without probe_* columns and with a CHECK constraint
+// that disallows 'pending'. SQLite can't ALTER a CHECK, so if we detect the
+// legacy shape we drop and recreate `sources`. Runtime health is re-derived
+// on the next scheduler sweep, so no real data is lost.
+(function ensureSchema() {
+  const cols = db.prepare("PRAGMA table_info(sources)").all();
+  const hasProbe = cols.some((c) => c.name === 'probe_request_url');
+  if (!hasProbe) {
+    console.log('[database] Migrating sources table for probe capture...');
+    db.pragma('foreign_keys = OFF');
+    db.exec(`
+      DELETE FROM fetch_log;
+      DROP TABLE IF EXISTS sources;
+      CREATE TABLE sources (
+        id            TEXT PRIMARY KEY,
+        name          TEXT NOT NULL,
+        type          TEXT NOT NULL CHECK(type IN ('api','dataset','scraped','web_request')),
+        category      TEXT NOT NULL,
+        url           TEXT,
+        status        TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('online','offline','degraded','pending')),
+        last_check    TEXT,
+        last_success  TEXT,
+        response_time_ms INTEGER,
+        records_count INTEGER DEFAULT 0,
+        error_message TEXT,
+        probe_request_url     TEXT,
+        probe_request_method  TEXT,
+        probe_request_headers TEXT,
+        probe_response_status INTEGER,
+        probe_response_headers TEXT,
+        probe_response_body   TEXT,
+        probe_kind            TEXT
+      );
+    `);
+    db.pragma('foreign_keys = ON');
+  }
+})();
 
 // --------------- Prepared statements ---------------
 
@@ -79,7 +169,14 @@ const stmtUpdateStatus = db.prepare(`
     last_success    = CASE WHEN @status = 'online' THEN datetime('now') ELSE last_success END,
     response_time_ms = @response_time_ms,
     records_count   = COALESCE(@records_count, records_count),
-    error_message   = @error_message
+    error_message   = @error_message,
+    probe_request_url     = @probe_request_url,
+    probe_request_method  = @probe_request_method,
+    probe_request_headers = @probe_request_headers,
+    probe_response_status = @probe_response_status,
+    probe_response_headers = @probe_response_headers,
+    probe_response_body   = @probe_response_body,
+    probe_kind            = @probe_kind
   WHERE id = @id
 `);
 
@@ -88,45 +185,72 @@ const stmtInsertLog = db.prepare(`
   VALUES (@source_id, @status, @records_fetched, @duration_ms, @error)
 `);
 
-const stmtGetCache = db.prepare(`
-  SELECT * FROM data_cache
-  WHERE source_id = @source_id AND layer_type = @layer_type
-    AND expires_at > datetime('now')
-  ORDER BY fetched_at DESC
-  LIMIT 1
-`);
-
-const stmtSetCache = db.prepare(`
-  INSERT INTO data_cache (source_id, layer_type, geojson, bbox, expires_at)
-  VALUES (@source_id, @layer_type, @geojson, @bbox, @expires_at)
-`);
-
 // --------------- Helper functions ---------------
 
-export function upsertSource({ id, name, type, category, url, status = 'offline' }) {
-  const allowedStatus = new Set(['online', 'offline', 'degraded']);
-  const safeStatus = allowedStatus.has(status) ? status : 'offline';
+export function upsertSource({ id, name, type, category, url, status = 'pending' }) {
+  const allowedStatus = new Set(['online', 'offline', 'degraded', 'pending']);
+  const safeStatus = allowedStatus.has(status) ? status : 'pending';
   return stmtUpsertSource.run({ id, name, type, category, url, status: safeStatus });
 }
 
-export function updateSourceStatus({ id, status, response_time_ms = null, records_count = null, error_message = null }) {
-  return stmtUpdateStatus.run({ id, status, response_time_ms, records_count, error_message });
+export function updateSourceStatus({
+  id,
+  status,
+  response_time_ms = null,
+  records_count = null,
+  error_message = null,
+  probe_request_url = null,
+  probe_request_method = null,
+  probe_request_headers = null,
+  probe_response_status = null,
+  probe_response_headers = null,
+  probe_response_body = null,
+  probe_kind = null,
+}) {
+  return stmtUpdateStatus.run({
+    id,
+    status,
+    response_time_ms,
+    records_count,
+    error_message,
+    probe_request_url,
+    probe_request_method,
+    probe_request_headers,
+    probe_response_status,
+    probe_response_headers,
+    probe_response_body,
+    probe_kind,
+  });
 }
 
 export function logFetch({ source_id, status, records_fetched = 0, duration_ms = null, error = null }) {
   return stmtInsertLog.run({ source_id, status, records_fetched, duration_ms, error });
 }
 
-export function getCachedData(source_id, layer_type) {
-  return stmtGetCache.get({ source_id, layer_type });
-}
-
-export function setCachedData({ source_id, layer_type, geojson, bbox = null, expires_at }) {
-  return stmtSetCache.run({ source_id, layer_type, geojson, bbox, expires_at });
-}
-
 export function getAllSources() {
   return db.prepare('SELECT * FROM sources ORDER BY category, name').all();
+}
+
+/**
+ * Delete any `sources` rows whose id isn't in the provided set. Also purges
+ * their dependent fetch_log rows so FK constraints stay happy.
+ * Used on startup to drop collectors that were removed from sourceRegistry.
+ */
+export function pruneSourcesNotIn(activeIds) {
+  const active = new Set(activeIds);
+  const existing = db.prepare('SELECT id FROM sources').all().map((r) => r.id);
+  const stale = existing.filter((id) => !active.has(id));
+  if (stale.length === 0) return [];
+  const delLog = db.prepare('DELETE FROM fetch_log WHERE source_id = ?');
+  const delSrc = db.prepare('DELETE FROM sources WHERE id = ?');
+  const tx = db.transaction((ids) => {
+    for (const id of ids) {
+      delLog.run(id);
+      delSrc.run(id);
+    }
+  });
+  tx(stale);
+  return stale;
 }
 
 export function getSourceById(id) {

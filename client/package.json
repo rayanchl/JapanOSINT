@@ -8,13 +8,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@deck.gl/aggregation-layers": "^9.1.4",
     "@deck.gl/core": "^9.1.4",
     "@deck.gl/layers": "^9.1.4",
     "@deck.gl/mapbox": "^9.1.4",
-    "@deck.gl/aggregation-layers": "^9.1.4",
     "maplibre-gl": "^4.7.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-icons": "^5.6.0",
     "react-router-dom": "^6.28.0",
     "recharts": "^2.15.0"
   },

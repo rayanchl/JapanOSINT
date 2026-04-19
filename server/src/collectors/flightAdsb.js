@@ -1,16 +1,53 @@
 /**
  * Flight ADS-B Tracking Collector
- * Maps aircraft positions over Japan using ADS-B data:
- * - Commercial flights (ANA, JAL, Peach, etc.)
- * - Cargo flights
- * - Military/JSDF aircraft
- * - Private aviation
- * - Helicopter traffic
- * Uses OpenSky Network API when available
+ * Fuses two data sources for a single plane layer over Japan:
+ *   - OpenSky Network (live ADS-B positions, OAuth2 optional)
+ *   - AeroDataBox (scheduled arrivals/departures for NRT + HND, RapidAPI key)
  */
 
-const OPENSKY_USER = process.env.OPENSKY_USER || '';
-const OPENSKY_PASS = process.env.OPENSKY_PASS || '';
+const CLIENT_ID = process.env.OPENSKY_CLIENT_ID || '';
+const CLIENT_SECRET = process.env.OPENSKY_CLIENT_SECRET || '';
+const TOKEN_URL = 'https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token';
+
+const AERODATABOX_KEY = process.env.AERODATABOX_KEY || '';
+const AERODATABOX_AIRPORTS = [
+  { icao: 'RJAA', iata: 'NRT', name: 'Narita', lat: 35.7720, lon: 140.3929 },
+  { icao: 'RJTT', iata: 'HND', name: 'Haneda', lat: 35.5494, lon: 139.7798 },
+];
+
+const POSITION_SOURCE = ['ADS-B', 'ASTERIX', 'MLAT', 'FLARM'];
+const CATEGORY_LABELS = [
+  'No info', 'No ADS-B category', 'Light (<15500 lbs)', 'Small (15500-75000 lbs)',
+  'Large (75000-300000 lbs)', 'High Vortex Large', 'Heavy (>300000 lbs)',
+  'High Performance', 'Rotorcraft', 'Glider/Sailplane', 'Lighter-than-air',
+  'Parachutist/Skydiver', 'Ultralight/Paraglider', 'Reserved', 'UAV',
+  'Space/Trans-atmospheric', 'Emergency Vehicle', 'Service Vehicle',
+  'Point Obstacle', 'Cluster Obstacle', 'Line Obstacle',
+];
+
+// Simple in-memory token cache
+let cachedToken = null;
+let tokenExpiresAt = 0;
+
+async function getOAuthToken() {
+  if (!CLIENT_ID || !CLIENT_SECRET) return null;
+  if (cachedToken && Date.now() < tokenExpiresAt) return cachedToken;
+
+  try {
+    const res = await fetch(TOKEN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `grant_type=client_credentials&client_id=${encodeURIComponent(CLIENT_ID)}&client_secret=${encodeURIComponent(CLIENT_SECRET)}`,
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    cachedToken = data.access_token;
+    tokenExpiresAt = Date.now() + (data.expires_in - 30) * 1000;
+    return cachedToken;
+  } catch {
+    return null;
+  }
+}
 
 const JAPAN_AIRPORTS = [
   { code: 'NRT', name: '成田国際空港', lat: 35.7720, lon: 140.3929, traffic: 10 },
@@ -107,9 +144,9 @@ function generateSeedData() {
           airline: airline.name,
           aircraft_type: aircraftType,
           altitude_ft: altitude,
-          speed_knots: speed,
+          ground_speed_knots: speed,
           heading,
-          vertical_rate: vertRate,
+          vertical_rate_fpm: vertRate,
           on_ground: altitude < 100,
           origin: airport.code,
           destination: otherAirport.code,
@@ -139,9 +176,9 @@ function generateSeedData() {
         airline: airline.name,
         aircraft_type: AIRCRAFT_TYPES[Math.floor(seededRandom(idx * 19) * AIRCRAFT_TYPES.length)],
         altitude_ft: Math.floor(30000 + seededRandom(idx * 23) * 12000),
-        speed_knots: Math.floor(400 + seededRandom(idx * 29) * 200),
+        ground_speed_knots: Math.floor(400 + seededRandom(idx * 29) * 200),
         heading: Math.floor(seededRandom(idx * 31) * 360),
-        vertical_rate: 0,
+        vertical_rate_fpm: 0,
         on_ground: false,
         status: 'en_route',
         last_update: new Date(now - Math.floor(seededRandom(idx * 37) * 3) * 60000).toISOString(),
@@ -157,10 +194,11 @@ async function tryOpenSkyAPI() {
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
+
     const headers = {};
-    if (OPENSKY_USER && OPENSKY_PASS) {
-      headers.Authorization = `Basic ${Buffer.from(`${OPENSKY_USER}:${OPENSKY_PASS}`).toString('base64')}`;
-    }
+    const token = await getOAuthToken();
+    if (token) headers.Authorization = `Bearer ${token}`;
+
     // Japan bounding box: lat 24-46, lon 122-154
     const res = await fetch(
       'https://opensky-network.org/api/states/all?lamin=24&lomin=122&lamax=46&lomax=154',
@@ -178,11 +216,22 @@ async function tryOpenSkyAPI() {
         icao24: s[0],
         callsign: (s[1] || '').trim(),
         origin_country: s[2],
-        altitude_ft: Math.round((s[7] || 0) * 3.28084),
-        speed_knots: Math.round((s[9] || 0) * 1.94384),
-        heading: Math.round(s[10] || 0),
-        vertical_rate: Math.round((s[11] || 0) * 196.85),
+        time_position: s[3],
+        last_contact: s[4],
+        baro_altitude_m: s[7],
+        altitude_ft: s[7] != null ? Math.round(s[7] * 3.28084) : null,
         on_ground: s[8],
+        velocity_mps: s[9],
+        ground_speed_knots: s[9] != null ? Math.round(s[9] * 1.94384) : null,
+        heading: Math.round(s[10] || 0),
+        true_track: s[10] != null ? Math.round(s[10]) : null,
+        vertical_rate_fpm: s[11] != null ? Math.round(s[11] * 196.85) : null,
+        geo_altitude_m: s[13],
+        geo_altitude_ft: s[13] != null ? Math.round(s[13] * 3.28084) : null,
+        squawk: s[14],
+        spi: s[15],
+        position_source: POSITION_SOURCE[s[16]] || s[16],
+        category: s[17] != null ? (CATEGORY_LABELS[s[17]] || s[17]) : null,
         source: 'opensky_api',
       },
     }));
@@ -191,10 +240,122 @@ async function tryOpenSkyAPI() {
   }
 }
 
+async function tryAeroDataBoxAirport(airport) {
+  if (!AERODATABOX_KEY) return [];
+  try {
+    const ctrl = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), 10000);
+    const now = new Date();
+    const start = now.toISOString().slice(0, 16);
+    const end = new Date(now.getTime() + 11 * 3600 * 1000).toISOString().slice(0, 16);
+    const url = `https://aerodatabox.p.rapidapi.com/flights/airports/icao/${airport.icao}/${start}/${end}?withLeg=true&direction=Both&withCancelled=true&withCargo=false`;
+    const res = await fetch(url, {
+      signal: ctrl.signal,
+      headers: {
+        'X-RapidAPI-Key': AERODATABOX_KEY,
+        'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com',
+      },
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return [];
+    const data = await res.json();
+    const arrivals = (data.arrivals || []).map(f => ({ f, dir: 'arrival' }));
+    const departures = (data.departures || []).map(f => ({ f, dir: 'departure' }));
+    const all = [...arrivals, ...departures].slice(0, 150);
+    return all.map(({ f, dir }, i) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [airport.lon, airport.lat] },
+      properties: {
+        id: `${airport.iata}_ADB_${String(i + 1).padStart(5, '0')}`,
+        callsign: f.number || null,
+        flight_number: f.number || null,
+        airline: f.airline?.name || null,
+        aircraft_type: f.aircraft?.model || null,
+        origin: dir === 'arrival' ? (f.movement?.airport?.iata || null) : airport.iata,
+        destination: dir === 'arrival' ? airport.iata : (f.movement?.airport?.iata || null),
+        status: f.status || null,
+        type: dir,
+        airport: `${airport.name} (${airport.icao}/${airport.iata})`,
+        scheduled_time: f.movement?.scheduledTime?.utc || null,
+        revised_time: f.movement?.revisedTime?.utc || null,
+        terminal: f.movement?.terminal || null,
+        source: 'aerodatabox_api',
+      },
+    }));
+  } catch {
+    return [];
+  }
+}
+
+// IATA→ICAO airline prefix map for callsign normalization (flights often appear
+// as "NH106" in AeroDataBox but "ANA106" in OpenSky callsigns).
+const IATA_TO_ICAO = {
+  NH: 'ANA', JL: 'JAL', MM: 'APJ', GK: 'JJP', BC: 'SKY', '7G': 'SFJ',
+  HD: 'ADO', '6J': 'SNA', KZ: 'NCA', NQ: 'AJX', JW: 'VNL', IJ: 'SJO',
+};
+
+function normalizeCallsign(raw) {
+  if (!raw) return null;
+  const s = String(raw).trim().toUpperCase().replace(/\s+/g, '');
+  if (!s) return null;
+  const m = s.match(/^([A-Z0-9]{2,3})(\d+[A-Z]?)$/);
+  if (!m) return s;
+  const [, prefix, num] = m;
+  const n = String(parseInt(num, 10));
+  const icao = IATA_TO_ICAO[prefix] || prefix;
+  return `${icao}${n}`;
+}
+
+function dedupeFeatures(openskyFeatures, aeroFeatures) {
+  const byKey = new Map();
+  const result = [];
+
+  for (const f of openskyFeatures || []) {
+    const key = normalizeCallsign(f.properties?.callsign);
+    if (key) byKey.set(key, f);
+    result.push(f);
+  }
+
+  for (const f of aeroFeatures) {
+    const key = normalizeCallsign(f.properties?.flight_number || f.properties?.callsign);
+    if (key && byKey.has(key)) {
+      const live = byKey.get(key);
+      live.properties = {
+        ...f.properties,
+        ...live.properties,
+        airline: live.properties.airline || f.properties.airline,
+        scheduled_time: f.properties.scheduled_time,
+        revised_time: f.properties.revised_time,
+        terminal: f.properties.terminal,
+        status: live.properties.status || f.properties.status,
+        type: live.properties.type || f.properties.type,
+        source: 'opensky+aerodatabox',
+      };
+      continue;
+    }
+    if (key) byKey.set(key, f);
+    result.push(f);
+  }
+
+  return result;
+}
+
 export default async function collectFlightAdsb() {
-  let features = await tryOpenSkyAPI();
-  if (!features || features.length === 0) {
+  const [openskyFeatures, ...aeroResults] = await Promise.all([
+    tryOpenSkyAPI(),
+    ...AERODATABOX_AIRPORTS.map(tryAeroDataBoxAirport),
+  ]);
+  const aeroFeatures = aeroResults.flat();
+
+  let features = dedupeFeatures(openskyFeatures, aeroFeatures);
+  let liveSource = 'mixed';
+  if (openskyFeatures && openskyFeatures.length > 0 && aeroFeatures.length > 0) liveSource = 'opensky+aerodatabox';
+  else if (openskyFeatures && openskyFeatures.length > 0) liveSource = 'opensky_api';
+  else if (aeroFeatures.length > 0) liveSource = 'aerodatabox_api';
+
+  if (features.length === 0) {
     features = generateSeedData();
+    liveSource = 'seed';
   }
 
   return {
@@ -204,7 +365,8 @@ export default async function collectFlightAdsb() {
       source: 'adsb_tracking',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      description: 'ADS-B flight tracking over Japan - commercial, cargo, military aircraft',
+      live_source: liveSource,
+      description: 'ADS-B aircraft over Japan (OpenSky) fused with scheduled NRT/HND flights (AeroDataBox)',
     },
     metadata: {},
   };

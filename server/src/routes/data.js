@@ -1,42 +1,107 @@
 import { Router } from 'express';
-import { getCachedData, getSourceById } from '../utils/database.js';
+import crypto from 'node:crypto';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { getSourceById } from '../utils/database.js';
 import { collectors } from '../collectors/index.js';
+import { captureSnapshot } from '../utils/screenshot.js';
+import { getAllCameras, cameraStats } from '../utils/cameraStore.js';
+import { isRunInFlight, runCameraDiscovery } from '../utils/cameraRunner.js';
+import { getTransportFeatureCollection, transportStats } from '../utils/transportStore.js';
+import { isTransportRunInFlight } from '../utils/transportRunner.js';
+import { withCollectorRun, annotateLastHit, getBroadcaster } from '../utils/collectorTap.js';
 
 const router = Router();
 
+// ── Camera snapshot cache ───────────────────────────────────────────────────
+// Lazy, one-time (per URL, 24h TTL) screenshots of embed-blocked webcams.
+// Stored as JPEG in server/data/snapshots/<sha1>.jpg.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const SNAPSHOT_DIR = path.resolve(__dirname, '..', '..', 'data', 'snapshots');
+const SNAPSHOT_TTL_MS = 24 * 60 * 60 * 1000;
+
+const SNAPSHOT_ALLOWLIST = new Set([
+  'skylinewebcams.com',
+  'www.skylinewebcams.com',
+  'embed.skylinewebcams.com',
+  'webcamtaxi.com',
+  'www.webcamtaxi.com',
+  'geocam.ru',
+  'www.geocam.ru',
+  'worldcams.tv',
+  'www.worldcams.tv',
+  'webcamera24.com',
+  'www.webcamera24.com',
+  'camstreamer.com',
+  'www.camstreamer.com',
+  'earthcam.com',
+  'www.earthcam.com',
+  'livecam.asia',
+  'www.livecam.asia',
+  'windy.com',
+  'www.windy.com',
+  'insecam.org',
+  'www.insecam.org',
+]);
+
+// In-flight capture dedup so two popup opens for the same URL don't launch
+// two captures in parallel.
+const inflight = new Map();
+
+function snapshotPath(url) {
+  const hash = crypto.createHash('sha1').update(url).digest('hex');
+  return path.join(SNAPSHOT_DIR, `${hash}.jpg`);
+}
+
+async function ensureSnapshotDir() {
+  await fs.mkdir(SNAPSHOT_DIR, { recursive: true });
+}
+
+async function readFreshCache(file) {
+  try {
+    const stat = await fs.stat(file);
+    if (Date.now() - stat.mtimeMs < SNAPSHOT_TTL_MS) return await fs.readFile(file);
+  } catch { /* miss */ }
+  return null;
+}
+
+async function captureAndCache(url, file) {
+  if (inflight.has(url)) return inflight.get(url);
+  const p = (async () => {
+    const buf = await captureSnapshot(url);
+    if (buf) {
+      await ensureSnapshotDir();
+      await fs.writeFile(file, buf);
+    }
+    return buf;
+  })().finally(() => { inflight.delete(url); });
+  inflight.set(url, p);
+  return p;
+}
+
 /**
- * Helper: try cache first, then fall back to a collector function, or return
- * an empty FeatureCollection with status info.
+ * Helper: run the collector live for this source, or return an empty
+ * FeatureCollection with status info if no collector is registered.
  */
 async function respondWithData(res, { sourceId, layerType, collectorKey }) {
   try {
-    // 1. Try cache
-    const cached = getCachedData(sourceId, layerType);
-    if (cached) {
-      try {
-        const geojson = JSON.parse(cached.geojson);
-        return res.json({
-          ...geojson,
-          _meta: {
-            ...geojson._meta,
-            fromCache: true,
-            fetched_at: cached.fetched_at,
-            expires_at: cached.expires_at,
-          },
-        });
-      } catch {
-        // corrupted cache, continue
-      }
-    }
-
-    // 2. Try collector from the registry
     const collector = collectorKey ? collectors[collectorKey] : null;
     if (collector) {
-      const data = await collector();
+      const data = await withCollectorRun(
+        collectorKey,
+        () => collector(),
+        { trigger: 'on-demand' },
+      );
+      // Tag the last fetched hit with the collector's parsed feature count
+      // so the FollowPanel can show records-per-request.
+      const recordCount = Array.isArray(data?.features)
+        ? data.features.length
+        : (Array.isArray(data) ? data.length : null);
+      if (recordCount != null) annotateLastHit({ record_count: recordCount });
       return res.json(data);
     }
 
-    // 3. No collector available, return source info + empty collection
     const source = getSourceById(sourceId);
     res.json({
       type: 'FeatureCollection',
@@ -98,13 +163,108 @@ router.get('/radiation', async (_req, res) => {
   });
 });
 
-// GET /api/data/cameras
-router.get('/cameras', async (_req, res) => {
-  await respondWithData(res, {
-    sourceId: 'traffic-cameras',
-    layerType: 'cameras',
-    collectorKey: 'public-cameras',
-  });
+// GET /api/data/cameras — served from the persistent `cameras` table.
+// The discovery fan-out runs in the background (scheduler.js); this endpoint
+// only reads the DB, so it's cheap and never hangs on a slow scraper.
+router.get('/cameras', (_req, res) => {
+  try {
+    const fc = getAllCameras();
+    const stats = cameraStats();
+    fc._meta = {
+      ...fc._meta,
+      run_in_flight: isRunInFlight(),
+      db_total: stats.total,
+      db_new_24h: stats.new24h,
+      by_type: stats.byType,
+    };
+    res.json(fc);
+  } catch (err) {
+    console.error('[data] /cameras failed:', err?.message);
+    res.status(500).json({ error: 'Failed to read cameras DB' });
+  }
+});
+
+// POST /api/data/cameras/trigger — kick a camera-discovery run on demand
+// (e.g. when the user toggles the Cameras layer on). The runner already
+// dedupes via _inflightRun, so repeated calls during an active run are safe.
+router.post('/cameras/trigger', (_req, res) => {
+  if (isRunInFlight()) {
+    return res.json({ started: false, already_running: true });
+  }
+  const wsServer = getBroadcaster();
+  withCollectorRun('cameraDiscovery', () => runCameraDiscovery(wsServer), { trigger: 'manual' })
+    .catch((err) => {
+      console.error('[data] manual camera run failed:', err?.message);
+    });
+  res.json({ started: true, already_running: false });
+});
+
+// ── Unified transport endpoints ────────────────────────────────────────────
+// Served from the persistent `transport_stations` + `transport_lines` tables.
+// The fan-out runs in the background (scheduler.js) — these endpoints only
+// read the DB so they're cheap and never hang on a slow Overpass tile.
+function respondWithTransport(res, mode) {
+  try {
+    const fc = getTransportFeatureCollection(mode);
+    const stats = transportStats(mode);
+    fc._meta = {
+      ...fc._meta,
+      run_in_flight: isTransportRunInFlight(),
+      db_stations: stats.stations,
+      db_lines: stats.lines,
+      db_new_24h: stats.new24h,
+    };
+    res.json(fc);
+  } catch (err) {
+    console.error(`[data] /unified-${mode} failed:`, err?.message);
+    res.status(500).json({ error: `Failed to read transport DB (${mode})` });
+  }
+}
+
+router.get('/unified-trains',     (_req, res) => respondWithTransport(res, 'train'));
+router.get('/unified-subways',    (_req, res) => respondWithTransport(res, 'subway'));
+router.get('/unified-buses',      (_req, res) => respondWithTransport(res, 'bus'));
+router.get('/unified-ais-ships',  (_req, res) => respondWithTransport(res, 'ship'));
+router.get('/unified-port-infra', (_req, res) => respondWithTransport(res, 'port'));
+
+// GET /api/data/cameras/snapshot?url=<encoded> — on-demand JPEG screenshot
+// of an embed-blocked webcam page, cached for 24h.
+router.get('/cameras/snapshot', async (req, res) => {
+  const raw = req.query.url;
+  if (typeof raw !== 'string' || !raw) {
+    return res.status(400).json({ error: 'url query param required' });
+  }
+  let parsed;
+  try {
+    parsed = new URL(raw);
+  } catch {
+    return res.status(400).json({ error: 'invalid url' });
+  }
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    return res.status(400).json({ error: 'only http/https allowed' });
+  }
+  if (!SNAPSHOT_ALLOWLIST.has(parsed.hostname.toLowerCase())) {
+    return res.status(400).json({ error: 'hostname not allowed' });
+  }
+
+  const file = snapshotPath(parsed.href);
+  const sendBuf = (buf) => {
+    res.setHeader('Content-Type', 'image/jpeg');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.send(buf);
+  };
+
+  const fresh = await readFreshCache(file);
+  if (fresh) return sendBuf(fresh);
+
+  try {
+    const buf = await captureAndCache(parsed.href, file);
+    if (!buf) return res.status(502).json({ error: 'capture failed' });
+    return sendBuf(buf);
+  } catch (err) {
+    console.error(`[snapshot] ${parsed.href}:`, err.message);
+    return res.status(500).json({ error: 'snapshot error' });
+  }
 });
 
 // GET /api/data/population
@@ -181,14 +341,6 @@ router.get('/facebook-geo', async (_req, res) => {
   });
 });
 
-router.get('/snapchat-heatmap', async (_req, res) => {
-  await respondWithData(res, {
-    sourceId: 'snapchat-heatmap',
-    layerType: 'snapchat-heatmap',
-    collectorKey: 'snapchat-heatmap',
-  });
-});
-
 // ===========================================================================
 // Marketplace / classifieds
 // ===========================================================================
@@ -220,14 +372,6 @@ router.get('/job-boards', async (_req, res) => {
 // ===========================================================================
 // Cyber OSINT
 // ===========================================================================
-
-router.get('/google-dorking', async (_req, res) => {
-  await respondWithData(res, {
-    sourceId: 'google-dorking',
-    layerType: 'google-dorking',
-    collectorKey: 'google-dorking',
-  });
-});
 
 router.get('/shodan-iot', async (_req, res) => {
   await respondWithData(res, {
@@ -357,6 +501,26 @@ router.get('/nuclear-facilities', async (_req, res) => {
   });
 });
 
+router.get('/ev-charging', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'ev-charging', layerType: 'evCharging', collectorKey: 'ev-charging' });
+});
+
+router.get('/airport-infra', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'airport-infra', layerType: 'airportInfra', collectorKey: 'airport-infra' });
+});
+
+router.get('/port-infra', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'port-infra', layerType: 'portInfra', collectorKey: 'port-infra' });
+});
+
+router.get('/bridge-tunnel-infra', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'bridge-tunnel-infra', layerType: 'bridgeTunnelInfra', collectorKey: 'bridge-tunnel-infra' });
+});
+
+router.get('/famous-places', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'famous-places', layerType: 'famousPlaces', collectorKey: 'famous-places' });
+});
+
 // ===========================================================================
 // Wave 1: Public Safety + Disaster
 // ===========================================================================
@@ -477,22 +641,6 @@ router.get('/tabelog-restaurants', async (_req, res) => {
   });
 });
 
-router.get('/estat-census', async (_req, res) => {
-  await respondWithData(res, {
-    sourceId: 'estat-census',
-    layerType: 'estat-census',
-    collectorKey: 'estat-census',
-  });
-});
-
-router.get('/resas-population', async (_req, res) => {
-  await respondWithData(res, {
-    sourceId: 'resas-population',
-    layerType: 'resas-population',
-    collectorKey: 'resas-population',
-  });
-});
-
 router.get('/resas-tourism', async (_req, res) => {
   await respondWithData(res, {
     sourceId: 'resas-tourism',
@@ -574,22 +722,6 @@ router.get('/jartic-traffic', async (_req, res) => {
     sourceId: 'jartic-traffic',
     layerType: 'jartic-traffic',
     collectorKey: 'jartic-traffic',
-  });
-});
-
-router.get('/narita-flights', async (_req, res) => {
-  await respondWithData(res, {
-    sourceId: 'narita-flights',
-    layerType: 'narita-flights',
-    collectorKey: 'narita-flights',
-  });
-});
-
-router.get('/haneda-flights', async (_req, res) => {
-  await respondWithData(res, {
-    sourceId: 'haneda-flights',
-    layerType: 'haneda-flights',
-    collectorKey: 'haneda-flights',
   });
 });
 
@@ -768,18 +900,6 @@ router.get('/pachinko-density', async (_req, res) => {
   await respondWithData(res, { sourceId: 'pachinko-density', layerType: 'pachinko-density', collectorKey: 'pachinko-density' });
 });
 
-router.get('/bear-encounters', async (_req, res) => {
-  await respondWithData(res, { sourceId: 'bear-encounters', layerType: 'bear-encounters', collectorKey: 'bear-encounters' });
-});
-
-router.get('/bird-flu-outbreaks', async (_req, res) => {
-  await respondWithData(res, { sourceId: 'bird-flu-outbreaks', layerType: 'bird-flu-outbreaks', collectorKey: 'bird-flu-outbreaks' });
-});
-
-router.get('/sakura-front', async (_req, res) => {
-  await respondWithData(res, { sourceId: 'sakura-front', layerType: 'sakura-front', collectorKey: 'sakura-front' });
-});
-
 router.get('/wanted-persons', async (_req, res) => {
   await respondWithData(res, { sourceId: 'wanted-persons', layerType: 'wanted-persons', collectorKey: 'wanted-persons' });
 });
@@ -832,10 +952,6 @@ router.get('/manga-net-cafes', async (_req, res) => {
 
 router.get('/sento-public-baths', async (_req, res) => {
   await respondWithData(res, { sourceId: 'sento-public-baths', layerType: 'sento-public-baths', collectorKey: 'sento-public-baths' });
-});
-
-router.get('/manhole-covers', async (_req, res) => {
-  await respondWithData(res, { sourceId: 'manhole-covers', layerType: 'manhole-covers', collectorKey: 'manhole-covers' });
 });
 
 router.get('/themed-cafes', async (_req, res) => {
@@ -946,10 +1062,6 @@ router.get('/egov-laws', async (_req, res) => {
   await respondWithData(res, { sourceId: 'egov-laws', layerType: 'edinet-filings', collectorKey: 'egov-laws' });
 });
 
-router.get('/ndl-search', async (_req, res) => {
-  await respondWithData(res, { sourceId: 'ndl-search', layerType: 'edinet-filings', collectorKey: 'ndl-search' });
-});
-
 router.get('/data-go-jp-ckan', async (_req, res) => {
   await respondWithData(res, { sourceId: 'data-go-jp-ckan', layerType: 'edinet-filings', collectorKey: 'data-go-jp-ckan' });
 });
@@ -976,10 +1088,6 @@ router.get('/opensky-japan', async (_req, res) => {
 
 router.get('/jpcert-alerts-rss', async (_req, res) => {
   await respondWithData(res, { sourceId: 'jpcert-alerts-rss', layerType: 'jpcert-alerts', collectorKey: 'jpcert-alerts-rss' });
-});
-
-router.get('/ipa-vuln-rss', async (_req, res) => {
-  await respondWithData(res, { sourceId: 'ipa-vuln-rss', layerType: 'jpcert-alerts', collectorKey: 'ipa-vuln-rss' });
 });
 
 router.get('/nict-atlas', async (_req, res) => {

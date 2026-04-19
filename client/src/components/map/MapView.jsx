@@ -2,74 +2,92 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
+import { getLayerIcon } from '../../utils/layerIcons';
+import { rasterizeIcon } from '../../utils/iconRaster';
 
 // OSM is the primary basemap. GSI is kept as a Japan-specific alternative
 // (cartography detail) and OSM Standard gives full-color OSM rendering.
 // ─── Icon rendering ─────────────────────────────────────────────────
-// Each layer in LAYER_DEFINITIONS has an emoji `icon` (e.g. plane, boat,
-// police officer). We render these emoji to offscreen canvases and
-// register them with the map so that symbol layers can use them via
-// `icon-image`, replacing the uniform-looking colored circles.
+// Each layer is represented by a flat react-icons glyph (Material Design
+// or FontAwesome) tinted with the layer color, rasterized once and
+// registered with MapLibre via addImage.
 
-const ICON_IMAGE_SIZE = 48; // px — canvas resolution for icon images
-
-function createEmojiIconImage(emoji) {
-  const size = ICON_IMAGE_SIZE;
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return null;
-
-  // Flat 2D icon — no background disc, no stroke, just the glyph itself.
-  ctx.font = `${Math.round(size * 0.85)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","EmojiOne Color","Android Emoji","Twemoji Mozilla",sans-serif`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = '#ffffff';
-  ctx.fillText(emoji, size / 2, size / 2 + 1);
-
-  return ctx.getImageData(0, 0, size, size);
-}
+const ICON_IMAGE_SIZE = 64;
 
 function layerIconImageId(layerId) {
   return `icon-${layerId}`;
 }
 
-function registerLayerIcons(map) {
-  for (const [layerId, def] of Object.entries(LAYER_DEFINITIONS)) {
-    if (!def?.icon) continue;
-    const imgId = layerIconImageId(layerId);
-    if (map.hasImage(imgId)) continue;
-    const imageData = createEmojiIconImage(def.icon);
-    if (imageData) {
-      map.addImage(imgId, imageData, { pixelRatio: 2 });
-    }
-  }
+async function registerLayerIcons(map) {
+  await Promise.all(
+    Object.entries(LAYER_DEFINITIONS).map(async ([layerId, def]) => {
+      const imgId = layerIconImageId(layerId);
+      if (map.hasImage(imgId)) return;
+      const Icon = getLayerIcon(layerId);
+      const tint = darkenHex(def?.color || '#ffffff', 0.8);
+      const imageData = await rasterizeIcon(Icon, tint, ICON_IMAGE_SIZE);
+      if (imageData && !map.hasImage(imgId)) {
+        map.addImage(imgId, imageData, { pixelRatio: 2 });
+      }
+    }),
+  );
 }
 
-// Fixed icon size for every layer — flat 2D, uniform scale, no
-// data-driven radius encoding.
-const UNIFORM_ICON_SIZE = 0.5;
+// Fixed icon size — flat 2D react-icons. Bumped 20% from the previous 0.5.
+const UNIFORM_ICON_SIZE = 0.6;
+
+// Darken a `#rrggbb` color by multiplying each channel. Used so rasterized
+// pin icons render deeper than the legend swatch color.
+function darkenHex(hex, factor = 0.8) {
+  if (typeof hex !== 'string') return hex;
+  const m = hex.trim().match(/^#?([0-9a-f]{6})$/i);
+  if (!m) return hex;
+  const n = parseInt(m[1], 16);
+  const r = Math.round(((n >> 16) & 0xff) * factor);
+  const g = Math.round(((n >> 8) & 0xff) * factor);
+  const b = Math.round((n & 0xff) * factor);
+  const to2 = (v) => v.toString(16).padStart(2, '0');
+  return `#${to2(r)}${to2(g)}${to2(b)}`;
+}
+
+// Layers whose features carry a heading/track and should have the icon
+// rotated to match direction of travel.
+const ROTATING_LAYERS = new Set(['flightAdsb', 'maritimeAis', 'marineTraffic', 'vesselFinder']);
 
 // Replace any `type: 'circle'` layer config with an equivalent
 // `type: 'symbol'` layer that renders the registered layer icon.
-function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity) {
+function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity, layerId) {
   const paint = config.paint || {};
   const iconOpacity =
     paint['circle-opacity'] != null ? paint['circle-opacity'] : fallbackOpacity;
+
+  const layout = {
+    'icon-image': iconImageId,
+    'icon-size': UNIFORM_ICON_SIZE,
+    'icon-allow-overlap': true,
+    'icon-ignore-placement': true,
+    'icon-anchor': 'center',
+  };
+
+  if (ROTATING_LAYERS.has(layerId)) {
+    layout['icon-rotate'] = [
+      'coalesce',
+      ['get', 'heading'],
+      ['get', 'true_track'],
+      ['get', 'heading_deg'],
+      ['get', 'course'],
+      0,
+    ];
+    layout['icon-rotation-alignment'] = 'map';
+    layout['icon-pitch-alignment'] = 'map';
+  }
 
   return {
     id: config.id,
     type: 'symbol',
     source: config.source,
     ...(config.filter ? { filter: config.filter } : {}),
-    layout: {
-      'icon-image': iconImageId,
-      'icon-size': UNIFORM_ICON_SIZE,
-      'icon-allow-overlap': true,
-      'icon-ignore-placement': true,
-      'icon-anchor': 'center',
-    },
+    layout,
     paint: {
       'icon-opacity': iconOpacity,
     },
@@ -79,7 +97,8 @@ function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity) {
 // Each entry carries a display `name` plus a `style` that MapLibre accepts —
 // either a full inline style spec (for raster basemaps) or a URL string that
 // points at a hosted vector style JSON (OpenFreeMap). Insertion order is the
-// order shown in the switcher, so OpenFreeMap Liberty appears first.
+// order shown in the switcher; the initial style loaded on mount is set by
+// the `currentStyle` useState default (OpenFreeMap Positron).
 const MAP_STYLES = {
   openfreemap_liberty: {
     name: 'OpenFreeMap Liberty',
@@ -198,7 +217,7 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
     map.addLayer = (config, beforeId) => {
       if (config && config.type === 'circle') {
         return originalAddLayer(
-          convertCircleConfigToSymbol(config, iconImageId, opacity),
+          convertCircleConfigToSymbol(config, iconImageId, opacity, layerId),
           beforeId
         );
       }
@@ -281,6 +300,58 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       });
       break;
 
+    case 'unifiedTrains':
+    case 'unifiedSubways':
+    case 'unifiedBuses': {
+      // Tracks first so station icons render on top of them.
+      map.addLayer({
+        id: `${mainLayerId}-line`,
+        type: 'line',
+        source: sourceId,
+        filter: ['==', ['geometry-type'], 'LineString'],
+        paint: {
+          'line-color': layerDef.color,
+          'line-width': [
+            'interpolate', ['linear'], ['zoom'],
+            5, 0.4,
+            10, 1.2,
+            14, 2.4,
+          ],
+          'line-opacity': opacity * 0.7,
+        },
+      });
+      // Station symbol layer — circle config gets converted by the
+      // addLayer intercept into a symbol layer using the layer's
+      // registered icon image. Filter keeps it Point-only.
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        filter: ['==', ['geometry-type'], 'Point'],
+        paint: {
+          'circle-radius': 4,
+          'circle-color': layerDef.color,
+          'circle-opacity': opacity * 0.9,
+        },
+      });
+      break;
+    }
+
+    case 'unifiedAisShips':
+    case 'unifiedPortInfra':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        filter: ['==', ['geometry-type'], 'Point'],
+        paint: {
+          'circle-radius': 4,
+          'circle-color': layerDef.color,
+          'circle-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
     case 'airQuality':
       map.addLayer({
         id: mainLayerId,
@@ -335,7 +406,22 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
         source: sourceId,
         paint: {
           'circle-radius': 6,
-          'circle-color': layerDef.color,
+          'circle-color': [
+            'match', ['coalesce', ['get', 'camera_type'], ['get', 'type'], 'other'],
+            'traffic', '#ff8c00',
+            'volcano', '#e53935',
+            'tourist', '#7c4dff',
+            'weather', '#40c4ff',
+            'surveillance', '#9e9e9e',
+            'insecam', '#e91e63',
+            'ip_camera', '#d62d20',
+            'river', '#0277bd',
+            'webcam', '#ce93d8',
+            'dork_hit', '#ff6f00',
+            'viewpoint', '#66bb6a',
+            'aggregator', '#ab47bc',
+            layerDef.color,
+          ],
           'circle-opacity': opacity * 0.85,
           'circle-stroke-width': 2,
           'circle-stroke-color': '#ffffff',
@@ -521,35 +607,6 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       });
       break;
 
-    // ── Snapchat heatmap ───────────────────────────────────────
-    case 'snapchatHeatmap':
-      map.addLayer({
-        id: `${mainLayerId}-heat`,
-        type: 'heatmap',
-        source: sourceId,
-        paint: {
-          'heatmap-weight': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'activity'], ['get', 'snaps'], 1],
-            0, 0,
-            100, 1,
-          ],
-          'heatmap-intensity': 1.4,
-          'heatmap-color': [
-            'interpolate', ['linear'], ['heatmap-density'],
-            0, 'rgba(0,0,0,0)',
-            0.2, '#332b00',
-            0.4, '#806d00',
-            0.6, '#ccae00',
-            0.8, '#ffd700',
-            1, '#fffc00',
-          ],
-          'heatmap-radius': 30,
-          'heatmap-opacity': opacity * 0.75,
-        },
-      });
-      break;
-
     // ── Marketplace: classifieds ───────────────────────────────
     case 'classifieds':
       map.addLayer({
@@ -629,32 +686,6 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       });
       break;
 
-    // ── Google dorking results ─────────────────────────────────
-    case 'googleDorking':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': 5,
-          'circle-color': [
-            'match', ['coalesce', ['get', 'dork_category'], 'other'],
-            'exposed_admin', '#f44336',
-            'exposed_files', '#ff9800',
-            'open_directories', '#ffeb3b',
-            'cameras', '#e91e63',
-            'iot_devices', '#9c27b0',
-            'government', '#2196f3',
-            layerDef.color,
-          ],
-          'circle-opacity': opacity * 0.8,
-          'circle-stroke-width': 1,
-          'circle-stroke-color': '#000',
-          'circle-stroke-opacity': opacity * 0.5,
-        },
-      });
-      break;
-
     // ── Shodan IoT devices ─────────────────────────────────────
     case 'shodanIot':
       map.addLayer({
@@ -678,23 +709,6 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           'circle-stroke-width': 0.5,
           'circle-stroke-color': '#000',
           'circle-stroke-opacity': opacity * 0.4,
-        },
-      });
-      break;
-
-    // ── Open webcams ───────────────────────────────────────────
-    case 'insecamWebcams':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': 6,
-          'circle-color': '#e91e63',
-          'circle-opacity': opacity * 0.85,
-          'circle-stroke-width': 1.5,
-          'circle-stroke-color': '#fff',
-          'circle-stroke-opacity': opacity * 0.5,
         },
       });
       break;
@@ -1065,6 +1079,172 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           'circle-stroke-width': 1.5,
           'circle-stroke-color': '#ffd600',
           'circle-stroke-opacity': opacity * 0.6,
+        },
+      });
+      break;
+
+    // ── EV Charging ────────────────────────────────────────────────
+    case 'evCharging':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'power_kw'], 7],
+            0, 4, 22, 6, 50, 9, 150, 12, 350, 16,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'connector_type'], 'other'],
+            'CHAdeMO', '#1565c0',
+            'CCS', '#2e7d32',
+            'Type2', '#e65100',
+            'Tesla', '#c62828',
+            'Type1', '#f9a825',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    // ── Airport Infrastructure ───────────────────────────────────────
+    case 'airportInfra':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'match', ['coalesce', ['get', 'facility_type'], 'other'],
+            'aerodrome', 10,
+            'military_base', 9,
+            'runway', 6,
+            'navaid', 4,
+            'control_tower', 5,
+            'terminal', 7,
+            6,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'facility_type'], 'other'],
+            'aerodrome', '#546e7a',
+            'military_base', '#c62828',
+            'runway', '#78909c',
+            'navaid', '#ff8f00',
+            'control_tower', '#00838f',
+            'terminal', '#5c6bc0',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    // ── Port Infrastructure ─────────────────────────────────────────
+    case 'portInfra':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'match', ['coalesce', ['get', 'port_class'], 'other'],
+            'international_strategic', 14,
+            'international_hub', 12,
+            'important', 9,
+            'local', 6,
+            'fishing', 5,
+            'ferry_terminal', 7,
+            6,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'port_class'], 'other'],
+            'international_strategic', '#c62828',
+            'international_hub', '#e65100',
+            'important', '#f9a825',
+            'local', '#66bb6a',
+            'fishing', '#00acc1',
+            'ferry_terminal', '#7c4dff',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    // ── Bridge & Tunnel Infrastructure ──────────────────────────────
+    case 'bridgeTunnelInfra':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'],
+            ['coalesce', ['get', 'length_m'], 500],
+            0, 4, 1000, 6, 5000, 9, 15000, 13, 50000, 18,
+          ],
+          'circle-color': [
+            'match', ['coalesce', ['get', 'facility_type'], 'other'],
+            'bridge', '#795548',
+            'tunnel', '#546e7a',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.85,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-opacity': opacity * 0.5,
+        },
+      });
+      break;
+
+    case 'famousPlaces':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 7,
+          'circle-color': [
+            'match', ['coalesce', ['get', 'tourism'], ['get', 'historic'], ['get', 'amenity'], ['get', 'leisure'], ['get', 'natural'], 'place'],
+            'attraction', '#d81b60',
+            'museum', '#8e24aa',
+            'viewpoint', '#00acc1',
+            'artwork', '#c2185b',
+            'theme_park', '#ec407a',
+            'zoo', '#43a047',
+            'aquarium', '#039be5',
+            'gallery', '#ab47bc',
+            'castle', '#5d4037',
+            'monument', '#6d4c41',
+            'memorial', '#757575',
+            'ruins', '#8d6e63',
+            'archaeological_site', '#6d4c41',
+            'place_of_worship', '#e65100',
+            'theatre', '#ad1457',
+            'arts_centre', '#7b1fa2',
+            'park', '#2e7d32',
+            'garden', '#388e3c',
+            'nature_reserve', '#1b5e20',
+            'peak', '#455a64',
+            'volcano', '#bf360c',
+            'waterfall', '#0277bd',
+            layerDef.color,
+          ],
+          'circle-opacity': opacity * 0.9,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.9,
         },
       });
       break;
@@ -1444,59 +1624,6 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       });
       break;
 
-    case 'estatCensus':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'population'], 1000000],
-            500000, 6,
-            1000000, 10,
-            5000000, 18,
-            14000000, 30,
-          ],
-          'circle-color': '#5e35b1',
-          'circle-opacity': opacity * 0.55,
-          'circle-stroke-width': 1.5,
-          'circle-stroke-color': '#b39ddb',
-          'circle-stroke-opacity': opacity * 0.7,
-        },
-      });
-      break;
-
-    case 'resasPopulation':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'population'], 500000],
-            100000, 5,
-            500000, 9,
-            1500000, 15,
-            3700000, 24,
-          ],
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'age_65plus_pct'], 25],
-            15, '#3949ab',
-            25, '#7e57c2',
-            35, '#e91e63',
-            45, '#b71c1c',
-          ],
-          'circle-opacity': opacity * 0.7,
-          'circle-stroke-width': 1.5,
-          'circle-stroke-color': '#ffffff',
-          'circle-stroke-opacity': opacity * 0.6,
-        },
-      });
-      break;
-
     case 'resasTourism':
       map.addLayer({
         id: mainLayerId,
@@ -1784,28 +1911,6 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           'circle-stroke-width': 1.5,
           'circle-stroke-color': '#ffffff',
           'circle-stroke-opacity': opacity * 0.6,
-        },
-      });
-      break;
-
-    case 'naritaFlights':
-    case 'hanedaFlights':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': 5,
-          'circle-color': [
-            'match', ['get', 'type'],
-            'arrival', '#43a047',
-            'departure', '#e53935',
-            layerId === 'naritaFlights' ? '#3949ab' : '#1e88e5',
-          ],
-          'circle-opacity': opacity * 0.85,
-          'circle-stroke-width': 1.5,
-          'circle-stroke-color': '#ffffff',
-          'circle-stroke-opacity': opacity * 0.7,
         },
       });
       break;
@@ -2857,84 +2962,6 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       });
       break;
 
-    case 'bearEncounters':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'incidents_yr'], 10],
-            0, 4, 50, 8, 150, 12, 350, 18,
-          ],
-          'circle-color': [
-            'match',
-            ['get', 'species'],
-            'brown_bear', '#3e2723',
-            'asiatic_black_bear', '#5d4037',
-            '#6d4c41',
-          ],
-          'circle-opacity': opacity * 0.85,
-          'circle-stroke-width': 1.5,
-          'circle-stroke-color': '#ffccbc',
-          'circle-stroke-opacity': opacity * 0.9,
-        },
-      });
-      break;
-
-    case 'birdFluOutbreaks':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'birds_culled'], 50000],
-            0, 5, 500000, 12, 3000000, 20,
-          ],
-          'circle-color': layerDef.color,
-          'circle-opacity': opacity * 0.8,
-          'circle-stroke-width': 1.5,
-          'circle-stroke-color': '#ffcdd2',
-          'circle-stroke-opacity': opacity * 0.9,
-        },
-      });
-      break;
-
-    case 'sakuraFront':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': 7,
-          'circle-color': [
-            'match',
-            ['get', 'region'],
-            'okinawa', '#ff80ab',
-            'amami', '#ff4081',
-            'kyushu', '#f48fb1',
-            'shikoku', '#f8bbd0',
-            'chugoku', '#fce4ec',
-            'kansai', '#f48fb1',
-            'tokai', '#f06292',
-            'chubu', '#ec407a',
-            'hokuriku', '#e91e63',
-            'kanto', '#d81b60',
-            'tohoku', '#c2185b',
-            'hokkaido', '#ad1457',
-            '#f8bbd0',
-          ],
-          'circle-opacity': opacity * 0.9,
-          'circle-stroke-width': 1.5,
-          'circle-stroke-color': '#ffffff',
-          'circle-stroke-opacity': opacity * 0.8,
-        },
-      });
-      break;
-
     case 'wantedPersons':
       map.addLayer({
         id: mainLayerId,
@@ -3287,32 +3314,6 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       });
       break;
 
-    case 'manholeCovers':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'series'], 1],
-            1, 7, 4, 8, 8, 10,
-          ],
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'series'], 1],
-            1, '#455a64',
-            4, '#607d8b',
-            8, '#78909c',
-          ],
-          'circle-opacity': opacity * 0.9,
-          'circle-stroke-width': 2,
-          'circle-stroke-color': '#eceff1',
-          'circle-stroke-opacity': opacity,
-        },
-      });
-      break;
-
     case 'themedCafes':
       map.addLayer({
         id: mainLayerId,
@@ -3488,13 +3489,13 @@ function removeLayerFromMap(map, layerId) {
   if (map.getSource(sourceId)) map.removeSource(sourceId);
 }
 
-export default function MapView({ layers, layerData, onFeatureClick }) {
+export default function MapView({ layers, layerData, onFeatureClick, onMapReady }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const [mapReady, setMapReady] = useState(false);
   const [cursorCoords, setCursorCoords] = useState(null);
   const [zoom, setZoom] = useState(5);
-  const [currentStyle, setCurrentStyle] = useState('openfreemap_liberty');
+  const [currentStyle, setCurrentStyle] = useState('openfreemap_positron');
   const prevLayersRef = useRef({});
 
   // Initialize map
@@ -3524,13 +3525,15 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
       // Change cursor on hover over interactive features
       const interactiveLayers = [];
       for (const layerId of Object.keys(LAYER_DEFINITIONS)) {
-        const mainId = `layer-${layerId}`;
-        if (map.getLayer(mainId)) interactiveLayers.push(mainId);
+        for (const suffix of ['', '-heat', '-extrude', '-line']) {
+          const id = `layer-${layerId}${suffix}`;
+          if (map.getLayer(id)) interactiveLayers.push(id);
+        }
       }
-      if (interactiveLayers.length > 0) {
-        const features = map.queryRenderedFeatures(e.point, { layers: interactiveLayers });
-        map.getCanvas().style.cursor = features.length > 0 ? 'pointer' : '';
-      }
+      const features = interactiveLayers.length > 0
+        ? map.queryRenderedFeatures(e.point, { layers: interactiveLayers })
+        : [];
+      map.getCanvas().style.cursor = features.length > 0 ? 'pointer' : 'default';
     });
 
     map.on('zoom', () => {
@@ -3538,11 +3541,13 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
     });
 
     map.on('click', (e) => {
-      // Check all interactive layers
+      // Check all interactive layers (including variants)
       const interactiveLayers = [];
       for (const layerId of Object.keys(LAYER_DEFINITIONS)) {
-        const mainId = `layer-${layerId}`;
-        if (map.getLayer(mainId)) interactiveLayers.push(mainId);
+        for (const suffix of ['', '-heat', '-extrude', '-line']) {
+          const id = `layer-${layerId}${suffix}`;
+          if (map.getLayer(id)) interactiveLayers.push(id);
+        }
       }
 
       if (interactiveLayers.length === 0) return;
@@ -3550,16 +3555,33 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
       const features = map.queryRenderedFeatures(e.point, { layers: interactiveLayers });
       if (features.length > 0) {
         const feature = features[0];
-        const layerType = feature.layer.id.replace('layer-', '');
+        const layerType = feature.layer.id.replace('layer-', '').replace(/-(heat|extrude|line)$/, '');
         if (onFeatureClick) {
-          onFeatureClick(feature, layerType, { x: e.point.x, y: e.point.y });
+          const coords = feature.geometry?.coordinates;
+          const lngLat = Array.isArray(coords) && Number.isFinite(coords[0]) && Number.isFinite(coords[1])
+            ? [coords[0], coords[1]]
+            : [e.lngLat.lng, e.lngLat.lat];
+          onFeatureClick(feature, layerType, lngLat);
         }
       }
     });
 
     mapRef.current = map;
+    if (onMapReady) onMapReady(map);
+
+    // Allow other panels (e.g. CameraDiscoveryThread) to recenter the map by
+    // dispatching a `japanosint:flyto` window event. Minimal coupling — no
+    // shared context or ref lifting needed.
+    const flyHandler = (ev) => {
+      const { lat, lon, zoom } = ev.detail || {};
+      if (Number.isFinite(lat) && Number.isFinite(lon)) {
+        map.flyTo({ center: [lon, lat], zoom: Number.isFinite(zoom) ? zoom : 13, speed: 1.4 });
+      }
+    };
+    window.addEventListener('japanosint:flyto', flyHandler);
 
     return () => {
+      window.removeEventListener('japanosint:flyto', flyHandler);
       map.remove();
       mapRef.current = null;
     };

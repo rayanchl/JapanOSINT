@@ -6,11 +6,11 @@ export default {
     extend: {
       colors: {
         osint: {
-          bg: '#0a0e17',
-          surface: '#111827',
-          panel: '#1a2035',
-          border: '#1e293b',
-          'border-bright': '#2d3a52',
+          bg: '#0a0a0a',
+          surface: '#141414',
+          panel: '#1c1c1c',
+          border: '#262626',
+          'border-bright': '#353535',
         },
         neon: {
           cyan: '#00f0ff',

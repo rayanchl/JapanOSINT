@@ -2,7 +2,8 @@ import React from 'react';
 import { Routes, Route, NavLink } from 'react-router-dom';
 import MapPage from './components/map/MapPage';
 import SourceDashboard from './components/dashboard/SourceDashboard';
-import ApiStatusPanel from './components/panels/ApiStatusPanel';
+import SourcesPanel from './components/panels/SourcesPanel';
+import FollowPanel from './components/panels/FollowPanel';
 import useDataSources from './hooks/useDataSources';
 
 function JSTClock() {
@@ -31,46 +32,16 @@ function JSTClock() {
     return () => clearInterval(interval);
   }, []);
 
-  return <span className="font-mono text-xs text-neon-cyan">{time}</span>;
-}
-
-function RadarIcon() {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      className="inline-block mr-2"
-    >
-      <circle cx="12" cy="12" r="10" stroke="#00f0ff" strokeWidth="1.5" opacity="0.3" />
-      <circle cx="12" cy="12" r="6" stroke="#00f0ff" strokeWidth="1.5" opacity="0.5" />
-      <circle cx="12" cy="12" r="2" fill="#00f0ff" />
-      <line
-        x1="12"
-        y1="12"
-        x2="19"
-        y2="5"
-        stroke="#00f0ff"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      >
-        <animateTransform
-          attributeName="transform"
-          type="rotate"
-          from="0 12 12"
-          to="360 12 12"
-          dur="3s"
-          repeatCount="indefinite"
-        />
-      </line>
-    </svg>
-  );
+  return <span className="font-mono text-xs text-gray-300">{time}</span>;
 }
 
 export default function App() {
   const { sources, stats, isConnected, lastUpdate } = useDataSources();
-  const [showApiStatus, setShowApiStatus] = React.useState(false);
+  const [showSources, setShowSources] = React.useState(false);
+  const [showFollow, setShowFollow] = React.useState(false);
+
+  const openSources = () => { setShowFollow(false); setShowSources((v) => !v); };
+  const openFollow = () => { setShowSources(false); setShowFollow((v) => !v); };
 
   const activeSources = stats?.online ?? 0;
 
@@ -81,9 +52,8 @@ export default function App() {
         {/* Left: Logo + Nav Links */}
         <div className="flex items-center gap-6">
           <NavLink to="/" className="flex items-center text-lg font-bold tracking-wide">
-            <RadarIcon />
-            <span className="neon-text">Japan</span>
-            <span className="text-gray-100">OSINT</span>
+            <span className="text-gray-100">Japan</span>
+            <span className="text-gray-400">OSINT</span>
           </NavLink>
 
           <div className="flex items-center gap-1 ml-4">
@@ -143,15 +113,28 @@ export default function App() {
 
           <button
             type="button"
-            onClick={() => setShowApiStatus((v) => !v)}
+            onClick={openSources}
             className={`px-2.5 py-1 rounded text-xs font-medium border transition-colors ${
-              showApiStatus
+              showSources
                 ? 'bg-neon-cyan/15 text-neon-cyan border-neon-cyan/40'
                 : 'bg-transparent text-gray-400 border-osint-border hover:text-neon-cyan hover:border-neon-cyan/40'
             }`}
-            title="Show which APIs are working / configured"
+            title="Show all sources with live probe detail"
           >
-            APIs
+            Sources
+          </button>
+
+          <button
+            type="button"
+            onClick={openFollow}
+            className={`px-2.5 py-1 rounded text-xs font-medium border transition-colors ${
+              showFollow
+                ? 'bg-neon-cyan/15 text-neon-cyan border-neon-cyan/40'
+                : 'bg-transparent text-gray-400 border-osint-border hover:text-neon-cyan hover:border-neon-cyan/40'
+            }`}
+            title="Follow live collector HTTP requests"
+          >
+            Follow
           </button>
         </div>
       </nav>
@@ -163,9 +146,15 @@ export default function App() {
           <Route path="/sources" element={<SourceDashboard sources={sources} stats={stats} />} />
         </Routes>
 
-        {showApiStatus && (
+        {showSources && (
           <div className="absolute top-3 right-3 z-40">
-            <ApiStatusPanel onClose={() => setShowApiStatus(false)} />
+            <SourcesPanel onClose={() => setShowSources(false)} />
+          </div>
+        )}
+
+        {showFollow && (
+          <div className="absolute top-3 right-3 z-40">
+            <FollowPanel onClose={() => setShowFollow(false)} />
           </div>
         )}
       </main>

@@ -1,8 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { MdSearch } from 'react-icons/md';
 import MapView from './MapView';
 import LayerPanel from './LayerPanel';
 import MapPopup from './MapPopup';
 import useMapLayers from '../../hooks/useMapLayers';
+import useMapProjection from '../../hooks/useMapProjection';
+import useCameraDiscoveryStream from '../../hooks/useCameraDiscoveryStream';
 
 export default function MapPage() {
   const {
@@ -14,14 +17,36 @@ export default function MapPage() {
     activeCount,
   } = useMapLayers();
 
+  const { activeRun: cameraActiveRun } = useCameraDiscoveryStream();
+
+  const camerasVisible = layers.cameras?.visible;
+  const cameraTriggerFiredRef = useRef(false);
+  useEffect(() => {
+    if (!camerasVisible) {
+      cameraTriggerFiredRef.current = false;
+      return;
+    }
+    if (cameraTriggerFiredRef.current) return;
+    cameraTriggerFiredRef.current = true;
+    fetch('/api/data/cameras/trigger', { method: 'POST' })
+      .catch((err) => console.warn('[MapPage] camera trigger failed:', err?.message));
+  }, [camerasVisible]);
+
   const [popup, setPopup] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const mapRef = useRef(null);
 
-  const handleFeatureClick = useCallback((feature, layerType, position) => {
-    setPopup({ feature, layerType, position });
+  const handleMapReady = useCallback((map) => {
+    mapRef.current = map;
   }, []);
+
+  const handleFeatureClick = useCallback((feature, layerType, lngLat) => {
+    setPopup({ feature, layerType, lngLat });
+  }, []);
+
+  const popupPosition = useMapProjection(mapRef, popup?.lngLat);
 
   const handleClosePopup = useCallback(() => {
     setPopup(null);
@@ -65,6 +90,7 @@ export default function MapPage() {
         layers={layers}
         layerData={layerData}
         onFeatureClick={handleFeatureClick}
+        onMapReady={handleMapReady}
       />
 
       {/* Layer Panel */}
@@ -74,6 +100,7 @@ export default function MapPage() {
         onToggleLayer={toggleLayer}
         onSetOpacity={setLayerOpacity}
         onSetAll={setAllLayers}
+        cameraRunActive={!!cameraActiveRun}
       />
 
       {/* Search Box */}
@@ -91,7 +118,7 @@ export default function MapPage() {
             className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-neon-cyan text-sm"
             aria-label="Search"
           >
-            {isSearching ? '...' : '\u{1F50D}'}
+            {isSearching ? '...' : <MdSearch size={16} />}
           </button>
         </form>
 
@@ -118,11 +145,11 @@ export default function MapPage() {
       </div>
 
       {/* Feature popup */}
-      {popup && (
+      {popup && popupPosition && (
         <MapPopup
           feature={popup.feature}
           layerType={popup.layerType}
-          position={popup.position}
+          position={popupPosition}
           onClose={handleClosePopup}
         />
       )}

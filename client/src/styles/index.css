@@ -7,10 +7,10 @@
    ======================================== */
 
 :root {
-  --osint-bg: #0a0e17;
-  --osint-surface: #111827;
-  --osint-panel: #1a2035;
-  --osint-border: #1e293b;
+  --osint-bg: #0a0a0a;
+  --osint-surface: #141414;
+  --osint-panel: #1c1c1c;
+  --osint-border: #262626;
   --neon-cyan: #00f0ff;
   --neon-green: #00ff88;
   --neon-orange: #ff8c00;
@@ -46,6 +46,10 @@ body {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.maplibregl-ctrl-group button {
+  cursor: default;
 }
 
 /* ========================================
@@ -225,7 +229,7 @@ body {
    ======================================== */
 
 .layer-panel {
-  background: rgba(10, 14, 23, 0.92);
+  background: rgba(6, 10, 18, 0.95);
   backdrop-filter: blur(12px);
   border-right: 1px solid rgba(0, 240, 255, 0.15);
 }
@@ -302,15 +306,45 @@ body {
   box-shadow: 0 0 6px rgba(255, 68, 68, 0.6);
 }
 
+.status-pending {
+  background: #9ca3af;
+  box-shadow: 0 0 6px rgba(156, 163, 175, 0.4);
+}
+
 /* ========================================
    Utility Classes
    ======================================== */
 
 .glass-panel {
-  background: rgba(17, 24, 39, 0.85);
+  background: rgba(6, 10, 18, 0.95);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(0, 240, 255, 0.15);
   border-radius: 8px;
+}
+
+/* Downward ridge centered on the bottom of the popup, pointing at the pin. */
+.map-popup-ridge::before,
+.map-popup-ridge::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+.map-popup-ridge::before {
+  bottom: -8px;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgba(0, 240, 255, 0.15);
+}
+.map-popup-ridge::after {
+  bottom: -7px;
+  transform: translateX(-50%);
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid rgba(17, 24, 39, 0.85);
 }
 
 .data-value {

@@ -21,6 +21,7 @@ const LAYER_DEFINITIONS = {
     color: '#66bb6a',
     endpoint: '/api/data/transport',
     category: 'Transport',
+    hidden: true,
   },
   airQuality: {
     name: 'Air Quality',
@@ -41,7 +42,7 @@ const LAYER_DEFINITIONS = {
     icon: '\u{1F4F7}',
     color: '#ce93d8',
     endpoint: '/api/data/cameras',
-    category: 'Infrastructure',
+    category: 'Cyber',
   },
   population: {
     name: 'Population',
@@ -101,14 +102,6 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/facebook-geo',
     category: 'Social',
   },
-  snapchatHeatmap: {
-    name: 'Snapchat Heatmap',
-    icon: '\u{1F47B}',
-    color: '#fffc00',
-    endpoint: '/api/data/snapchat-heatmap',
-    category: 'Social',
-  },
-
   // ── Marketplace / Classifieds ───────────────────────────────────
   classifieds: {
     name: 'Classifieds (Jmty)',
@@ -133,32 +126,11 @@ const LAYER_DEFINITIONS = {
   },
 
   // ── Cyber OSINT ─────────────────────────────────────────────────
-  googleDorking: {
-    name: 'Google Dorks',
-    icon: '\u{1F50D}',
-    color: '#4285f4',
-    endpoint: '/api/data/google-dorking',
-    category: 'Cyber',
-  },
   shodanIot: {
     name: 'Shodan IoT',
     icon: '\u{1F4E1}',
     color: '#d62d20',
     endpoint: '/api/data/shodan-iot',
-    category: 'Cyber',
-  },
-  insecamWebcams: {
-    name: 'Open Webcams',
-    icon: '\u{1F3A5}',
-    color: '#e91e63',
-    endpoint: '/api/data/insecam-webcams',
-    category: 'Cyber',
-  },
-  cameraDiscovery: {
-    name: 'All Cameras (Unified)',
-    icon: '\u{1F4F9}',
-    color: '#ab47bc',
-    endpoint: '/api/data/camera-discovery',
     category: 'Cyber',
   },
   wifiNetworks: {
@@ -176,6 +148,7 @@ const LAYER_DEFINITIONS = {
     color: '#43a047',
     endpoint: '/api/data/full-transport',
     category: 'Transport',
+    hidden: true,
   },
   mlitN02Stations: {
     name: 'MLIT N02 Rail Stations',
@@ -183,6 +156,7 @@ const LAYER_DEFINITIONS = {
     color: '#2e7d32',
     endpoint: '/api/data/mlit-n02-stations',
     category: 'Transport',
+    hidden: true,
   },
   busRoutes: {
     name: 'Bus Terminals',
@@ -190,9 +164,10 @@ const LAYER_DEFINITIONS = {
     color: '#fb8c00',
     endpoint: '/api/data/bus-routes',
     category: 'Transport',
+    hidden: true,
   },
   ferryRoutes: {
-    name: 'Ferry Terminals',
+    name: 'Ferries',
     icon: '\u{26F4}',
     color: '#039be5',
     endpoint: '/api/data/ferry-routes',
@@ -203,7 +178,7 @@ const LAYER_DEFINITIONS = {
     icon: '\u{1F6E3}',
     color: '#9e9e9e',
     endpoint: '/api/data/highway-traffic',
-    category: 'Transport',
+    category: 'Infrastructure',
   },
   maritimeAis: {
     name: 'AIS Ship Tracking',
@@ -211,9 +186,10 @@ const LAYER_DEFINITIONS = {
     color: '#0277bd',
     endpoint: '/api/data/maritime-ais',
     category: 'Transport',
+    hidden: true,
   },
   flightAdsb: {
-    name: 'ADS-B Flights',
+    name: 'Planes',
     icon: '\u{2708}',
     color: '#7c4dff',
     endpoint: '/api/data/flight-adsb',
@@ -254,6 +230,42 @@ const LAYER_DEFINITIONS = {
     icon: '\u{2622}',
     color: '#76ff03',
     endpoint: '/api/data/nuclear-facilities',
+    category: 'Infrastructure',
+  },
+  evCharging: {
+    name: 'EV Charging',
+    icon: '\u{1F50C}',
+    color: '#4caf50',
+    endpoint: '/api/data/ev-charging',
+    category: 'Infrastructure',
+  },
+  airportInfra: {
+    name: 'Airports',
+    icon: '\u{2708}',
+    color: '#546e7a',
+    endpoint: '/api/data/airport-infra',
+    category: 'Transport',
+  },
+  portInfra: {
+    name: 'Port Infrastructure',
+    icon: '\u{2693}',
+    color: '#1565c0',
+    endpoint: '/api/data/port-infra',
+    category: 'Transport',
+    hidden: true,
+  },
+  bridgeTunnelInfra: {
+    name: 'Bridges & Tunnels',
+    icon: '\u{1F309}',
+    color: '#795548',
+    endpoint: '/api/data/bridge-tunnel-infra',
+    category: 'Infrastructure',
+  },
+  famousPlaces: {
+    name: 'Famous Places',
+    icon: '\u{1F3EF}',
+    color: '#d81b60',
+    endpoint: '/api/data/famous-places',
     category: 'Infrastructure',
   },
 
@@ -358,20 +370,6 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/tabelog-restaurants',
     category: 'Marketplace',
   },
-  estatCensus: {
-    name: 'e-Stat Census',
-    icon: '\u{1F4CB}',
-    color: '#5e35b1',
-    endpoint: '/api/data/estat-census',
-    category: 'Statistics',
-  },
-  resasPopulation: {
-    name: 'RESAS Population',
-    icon: '\u{1F465}',
-    color: '#3949ab',
-    endpoint: '/api/data/resas-population',
-    category: 'Statistics',
-  },
   resasTourism: {
     name: 'Tourism Sites',
     icon: '\u{1F5FE}',
@@ -442,20 +440,6 @@ const LAYER_DEFINITIONS = {
     icon: '\u{1F6A6}',
     color: '#e53935',
     endpoint: '/api/data/jartic-traffic',
-    category: 'Transport',
-  },
-  naritaFlights: {
-    name: 'Narita Flights',
-    icon: '\u{2708}',
-    color: '#3949ab',
-    endpoint: '/api/data/narita-flights',
-    category: 'Transport',
-  },
-  hanedaFlights: {
-    name: 'Haneda Flights',
-    icon: '\u{2708}',
-    color: '#1e88e5',
-    endpoint: '/api/data/haneda-flights',
     category: 'Transport',
   },
   droneNofly: {
@@ -734,27 +718,6 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/pachinko-density',
     category: 'Crime',
   },
-  bearEncounters: {
-    name: 'Bear Encounters',
-    icon: '\u{1F43B}',
-    color: '#5d4037',
-    endpoint: '/api/data/bear-encounters',
-    category: 'Wildlife',
-  },
-  birdFluOutbreaks: {
-    name: 'Bird Flu Outbreaks',
-    icon: '\u{1F414}',
-    color: '#c62828',
-    endpoint: '/api/data/bird-flu-outbreaks',
-    category: 'Wildlife',
-  },
-  sakuraFront: {
-    name: 'Sakura Front',
-    icon: '\u{1F338}',
-    color: '#f8bbd0',
-    endpoint: '/api/data/sakura-front',
-    category: 'Wildlife',
-  },
   wantedPersons: {
     name: 'Wanted Persons',
     icon: '\u{1F6A8}',
@@ -843,13 +806,6 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/sento-public-baths',
     category: 'Culture',
   },
-  manholeCovers: {
-    name: 'Manhole Cards',
-    icon: '\u{1F36A}',
-    color: '#546e7a',
-    endpoint: '/api/data/manhole-covers',
-    category: 'Culture',
-  },
   themedCafes: {
     name: 'Themed Cafes',
     icon: '\u{1F431}',
@@ -864,14 +820,16 @@ const LAYER_DEFINITIONS = {
     icon: '\u{1F6A2}',
     color: '#01579b',
     endpoint: '/api/data/marine-traffic',
-    category: 'Mapping',
+    category: 'Transport',
+    hidden: true,
   },
   vesselFinder: {
     name: 'VesselFinder AIS',
     icon: '\u{26F4}',
     color: '#0288d1',
     endpoint: '/api/data/vessel-finder',
-    category: 'Mapping',
+    category: 'Transport',
+    hidden: true,
   },
   sentinelHub: {
     name: 'Sentinel-2 Scenes',
@@ -887,6 +845,50 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/google-my-maps',
     category: 'Mapping',
   },
+  // -- Unified transport collectors (fused + deduped) --
+  unifiedTrains: {
+    name: 'Trains',
+    icon: '\u{1F686}',
+    color: '#2e7d32',
+    endpoint: '/api/data/unified-trains',
+    category: 'Transport',
+  },
+  unifiedSubways: {
+    name: 'Subways & Trams',
+    icon: '\u{1F687}',
+    color: '#ff7043',
+    endpoint: '/api/data/unified-subways',
+    category: 'Transport',
+  },
+  unifiedBuses: {
+    name: 'Buses',
+    icon: '\u{1F68C}',
+    color: '#fb8c00',
+    endpoint: '/api/data/unified-buses',
+    category: 'Transport',
+  },
+  unifiedAisShips: {
+    name: 'Ships',
+    icon: '\u{1F6A2}',
+    color: '#0277bd',
+    endpoint: '/api/data/unified-ais-ships',
+    category: 'Transport',
+  },
+  unifiedPortInfra: {
+    name: 'Ports',
+    icon: '\u{2693}',
+    color: '#1565c0',
+    endpoint: '/api/data/unified-port-infra',
+    category: 'Transport',
+  },
+  militaryFlights: {
+    name: 'Military Planes',
+    icon: '\u{1F6E9}',
+    color: '#6d4c41',
+    endpoint: '/api/data/opensky-japan',
+    category: 'Transport',
+  },
+
 };
 
 export const LAYER_CATEGORIES = [

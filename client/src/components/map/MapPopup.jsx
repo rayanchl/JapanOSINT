@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { MdClose } from 'react-icons/md';
+import { getLayerIcon } from '../../utils/layerIcons';
+import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 
 /**
  * Fetch a reverse-geocoded address label for a feature, using the server's
@@ -167,31 +170,188 @@ function EarthquakeDetail({ properties }) {
   );
 }
 
+/**
+ * Extract a YouTube video ID from common URL forms.
+ * Returns null when the URL is not a recognised YouTube link.
+ */
+function youtubeVideoId(url) {
+  if (!url) return null;
+  // youtube.com/watch?v=ID  |  youtu.be/ID  |  youtube.com/embed/ID
+  const m = url.match(
+    /(?:youtube\.com\/(?:watch\?.*v=|embed\/)|youtu\.be\/)([\w-]{11})/
+  );
+  return m ? m[1] : null;
+}
+
+/**
+ * Heuristic: does this URL point directly at a JPEG/MJPEG snapshot we can
+ * render as an <img>? Covers Insecam previews, shutoko.jp thumbnails, etc.
+ */
+function isImageUrl(url) {
+  if (!url) return false;
+  return /\.(jpe?g|png|gif|bmp|webp)(\?.*)?$/i.test(url)
+    || /mjpg|snapshot|image\.cgi|\/camera\//i.test(url);
+}
+
+/**
+ * Hosts whose live-cam pages are designed to be iframe-embedded
+ * (player loads inside the page itself, X-Frame-Options permissive).
+ */
+// Hosts whose pages can actually be iframed (permissive X-Frame-Options /
+// no frame-ancestors CSP). Skylinewebcams and EarthCam are NOT listed here:
+// their pages send X-Frame-Options: DENY, so we route them to the server-
+// side Chromium snapshot pipeline instead of trying to iframe.
+const IFRAMEABLE_CAM_HOSTS = [
+  'river.go.jp',
+  'www.river.go.jp',
+  'windy.com',
+  'www.windy.com',
+  'livecam.asia',
+  'www.livecam.asia',
+];
+function iframeableCamUrl(url, channel) {
+  if (!url) return null;
+  if (channel === 'mlit_river') return url;
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    if (IFRAMEABLE_CAM_HOSTS.includes(host)) return url;
+  } catch { /* invalid url */ }
+  return null;
+}
+
+/**
+ * Discovery channels whose URLs we know are embed-blocked (X-Frame-Options
+ * DENY / CSP frame-ancestors). The popup renders a server-captured snapshot
+ * via /api/data/cameras/snapshot for these.
+ */
+const SNAPSHOT_CHANNELS = new Set([
+  'skylinewebcams',
+  'earthcam',
+  'webcamtaxi',
+  'geocam',
+  'worldcams',
+  'webcamera24',
+  'camstreamer',
+]);
+
+function CameraSnapshot({ url, name }) {
+  const [state, setState] = useState('loading'); // loading | ok | failed
+  const src = `/api/data/cameras/snapshot?url=${encodeURIComponent(url)}`;
+  return (
+    <div className="relative w-full aspect-video rounded border border-osint-border overflow-hidden bg-osint-panel">
+      {state !== 'failed' && (
+        <img
+          src={src}
+          alt={name}
+          loading="lazy"
+          className="w-full h-full object-cover"
+          onLoad={() => setState('ok')}
+          onError={() => setState('failed')}
+          style={state === 'loading' ? { opacity: 0 } : undefined}
+        />
+      )}
+      {state === 'loading' && (
+        <div className="absolute inset-0 flex items-center justify-center text-[11px] text-gray-400">
+          Capturing snapshot…
+        </div>
+      )}
+      {state === 'failed' && (
+        <div className="absolute inset-0 flex items-center justify-center text-[11px] text-gray-500">
+          Snapshot unavailable
+        </div>
+      )}
+    </div>
+  );
+}
+
 function CameraDetail({ properties }) {
-  const highlighted = ['name', 'thumbnail', 'location', 'url'];
+  const name = properties.name || properties.station || 'Camera';
+  const operator = properties.operator;
+  const status = properties.status;
+  const thumb = properties.thumbnail_url || properties.thumbnail;
+  const streamUrl = properties.stream_url || properties.url;
+  const channel = properties.discovery_channel;
+
+  // Purple tag shows the source (discovery channel).
+  const sourceColor = '#ce93d8';
+
+  const highlighted = [
+    'name', 'station', 'thumbnail', 'thumbnail_url', 'location', 'url',
+    'stream_url', 'camera_type', 'type', 'surveillance_type', 'operator',
+    'status', 'camera_id', 'camera_uid', 'source', 'discovery_channel',
+    'discovery_channels', 'country', 'id',
+  ];
+
+  // --- Determine what we can embed ---
+  const ytId = youtubeVideoId(streamUrl);
+  const iframeSrc = iframeableCamUrl(streamUrl, channel);
+  // Prefer thumbnail, then fall back to stream_url if it looks like an image
+  const imgSrc = thumb || (isImageUrl(streamUrl) ? streamUrl : null);
+  // Embed-blocked sources: fetch a server-captured JPEG snapshot.
+  const useSnapshot = !ytId && !iframeSrc && !imgSrc
+    && streamUrl && SNAPSHOT_CHANNELS.has(channel);
+
   return (
     <div className="space-y-2">
-      <p className="text-sm font-medium text-gray-200">{properties.name || 'Camera'}</p>
-      {properties.thumbnail && (
+      <p className="text-sm font-medium text-gray-200">{name}</p>
+      <div className="flex items-center gap-2">
+        {channel && (
+          <span
+            className="inline-block text-[10px] px-1.5 py-0.5 rounded font-mono uppercase"
+            style={{ background: sourceColor + '22', color: sourceColor }}
+          >
+            {channel}
+          </span>
+        )}
+        {operator && (
+          <span className="text-xs text-gray-400">{operator}</span>
+        )}
+      </div>
+
+      {/* ── Embedded feed ──────────────────────────────────────── */}
+      {ytId ? (
+        <iframe
+          src={`https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1`}
+          title={name}
+          className="w-full aspect-video rounded border border-osint-border"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+        />
+      ) : iframeSrc ? (
+        <iframe
+          src={iframeSrc}
+          title={name}
+          className="w-full aspect-video rounded border border-osint-border"
+          allow="autoplay; fullscreen"
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+      ) : imgSrc ? (
         <img
-          src={properties.thumbnail}
-          alt={properties.name || 'Camera feed'}
+          src={imgSrc}
+          alt={name}
           className="w-full rounded border border-osint-border"
           loading="lazy"
         />
-      )}
+      ) : useSnapshot ? (
+        <CameraSnapshot url={streamUrl} name={name} />
+      ) : null}
+
       {properties.location && (
         <p className="text-xs text-gray-400">{properties.location}</p>
       )}
-      {properties.url && (
+      {streamUrl && (
         <a
-          href={properties.url}
+          href={streamUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="text-xs text-neon-cyan hover:underline"
         >
-          View Feed
+          {ytId ? 'Open on YouTube' : 'Open Feed'}
         </a>
+      )}
+      {status && (
+        <p className="text-xs text-gray-500">Status: {status}</p>
       )}
       <PropertyTable properties={properties} exclude={highlighted} />
     </div>
@@ -343,6 +503,215 @@ function RiverDetail({ properties }) {
   );
 }
 
+function FlightDetail({ properties }) {
+  const callsign = properties.callsign;
+  const icao24 = properties.icao24;
+  const airline = properties.airline;
+  const aircraftType = properties.aircraft_type;
+  const category = properties.category;
+  const origin = properties.origin;
+  const destination = properties.destination;
+  const originCountry = properties.origin_country;
+  const squawk = properties.squawk;
+  const altFt = properties.altitude_ft;
+  const geoAltFt = properties.geo_altitude_ft;
+  const speed = properties.ground_speed_knots ?? properties.speed_knots;
+  const heading = properties.heading ?? properties.true_track;
+  const vertRate = properties.vertical_rate_fpm ?? properties.vertical_rate;
+  const onGround = properties.on_ground;
+  const posSrc = properties.position_source;
+
+  const coords = properties._coords; // injected below if available
+
+  const highlighted = [
+    'callsign', 'icao24', 'airline', 'aircraft_type', 'category',
+    'origin', 'destination', 'origin_country', 'squawk',
+    'altitude_ft', 'baro_altitude_m', 'geo_altitude_ft', 'geo_altitude_m',
+    'ground_speed_knots', 'speed_knots', 'velocity_mps',
+    'heading', 'true_track', 'vertical_rate_fpm', 'vertical_rate',
+    'on_ground', 'position_source', 'spi', 'id',
+    'time_position', 'last_contact', 'last_update', 'status', 'source',
+  ];
+
+  // Vertical rate arrow
+  let vertArrow = '';
+  if (vertRate != null && vertRate !== 0) {
+    vertArrow = vertRate > 0 ? ' \u2191' : ' \u2193';
+  }
+
+  return (
+    <div className="space-y-2">
+      {/* Header: callsign + icao24 */}
+      <div className="flex items-center gap-2">
+        <span className="text-lg font-mono font-bold text-neon-cyan">
+          {callsign || icao24 || '?'}
+        </span>
+        {callsign && icao24 && (
+          <span className="text-xs text-gray-500 font-mono">{icao24}</span>
+        )}
+        {onGround && (
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-900/40 text-green-400 uppercase">
+            Ground
+          </span>
+        )}
+      </div>
+
+      {/* Aircraft info line */}
+      {(airline || aircraftType || category) && (
+        <div className="text-xs text-gray-400 space-x-2">
+          {airline && <span>{airline}</span>}
+          {aircraftType && <span className="font-mono">{aircraftType}</span>}
+          {category && category !== 'No info' && category !== 'No ADS-B category' && (
+            <span className="text-gray-500">({category})</span>
+          )}
+        </div>
+      )}
+
+      {/* Route */}
+      {(origin || destination) && (
+        <p className="text-sm text-gray-300 font-mono">
+          {origin || '???'} &rarr; {destination || '???'}
+        </p>
+      )}
+      {originCountry && !origin && (
+        <p className="text-xs text-gray-400">Origin: {originCountry}</p>
+      )}
+
+      {/* Key metrics grid */}
+      <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+        {altFt != null && (
+          <>
+            <span className="text-gray-500">Baro Alt</span>
+            <span className="text-gray-200 font-mono text-right">{altFt.toLocaleString()} ft</span>
+          </>
+        )}
+        {geoAltFt != null && (
+          <>
+            <span className="text-gray-500">WGS-84 Alt</span>
+            <span className="text-gray-200 font-mono text-right">{geoAltFt.toLocaleString()} ft</span>
+          </>
+        )}
+        {speed != null && (
+          <>
+            <span className="text-gray-500">Ground Speed</span>
+            <span className="text-gray-200 font-mono text-right">{speed} kts</span>
+          </>
+        )}
+        {heading != null && (
+          <>
+            <span className="text-gray-500">Track</span>
+            <span className="text-gray-200 font-mono text-right">{heading}&deg;</span>
+          </>
+        )}
+        {vertRate != null && vertRate !== 0 && (
+          <>
+            <span className="text-gray-500">Vert Rate</span>
+            <span className="text-gray-200 font-mono text-right">
+              {vertRate > 0 ? '+' : ''}{vertRate} fpm{vertArrow}
+            </span>
+          </>
+        )}
+        {squawk && (
+          <>
+            <span className="text-gray-500">Squawk</span>
+            <span className={`font-mono text-right ${squawk === '7700' ? 'text-neon-red font-bold' : squawk === '7600' ? 'text-neon-orange font-bold' : squawk === '7500' ? 'text-neon-red font-bold' : 'text-gray-200'}`}>
+              {squawk}
+              {squawk === '7700' && ' EMERGENCY'}
+              {squawk === '7600' && ' RADIO FAIL'}
+              {squawk === '7500' && ' HIJACK'}
+            </span>
+          </>
+        )}
+        {posSrc && (
+          <>
+            <span className="text-gray-500">Source</span>
+            <span className="text-gray-200 font-mono text-right">{posSrc}</span>
+          </>
+        )}
+      </div>
+
+      <PropertyTable properties={properties} exclude={highlighted} />
+    </div>
+  );
+}
+
+function TwitterGeoDetail({ properties }) {
+  const platform = properties.platform || 'twitter';
+  const username = properties.username;
+  const displayName = properties.display_name;
+  const text = properties.text;
+  const timestamp = properties.timestamp;
+  const url = properties.url;
+  const instance = properties.instance;
+  const verified = properties.verified;
+  const isSeed = properties.source === 'twitter_seed';
+
+  const handle = username
+    ? (platform === 'mastodon'
+        ? `@${username}${username.includes('@') ? '' : (instance ? `@${instance}` : '')}`
+        : `@${username}`)
+    : null;
+
+  const platformColor = platform === 'mastodon' ? '#6364ff' : '#1da1f2';
+  const platformLabel = platform === 'mastodon' ? 'Mastodon' : 'Twitter/X';
+
+  const highlighted = [
+    'platform', 'username', 'display_name', 'text', 'timestamp',
+    'url', 'instance', 'verified', 'id', 'source',
+  ];
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2 flex-wrap">
+        <span
+          className="text-[10px] px-1.5 py-0.5 rounded font-mono uppercase"
+          style={{ background: platformColor + '22', color: platformColor }}
+        >
+          {platformLabel}
+        </span>
+        {handle && (
+          <span className="text-sm font-medium text-gray-200 break-all">
+            {displayName ? `${displayName} ` : ''}
+            <span className="text-gray-400 font-mono text-xs">{handle}</span>
+          </span>
+        )}
+        {verified && (
+          <span className="text-[10px] px-1 py-0.5 rounded bg-blue-900/40 text-blue-300">
+            verified
+          </span>
+        )}
+      </div>
+
+      {text && (
+        <p className="text-sm text-gray-200 leading-snug whitespace-pre-wrap break-words">
+          {text}
+        </p>
+      )}
+
+      {timestamp && (
+        <p className="text-xs text-gray-500 font-mono">
+          {formatTimestamp(timestamp)}
+        </p>
+      )}
+
+      {url ? (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block text-xs text-neon-cyan hover:underline"
+        >
+          Open original post &rarr;
+        </a>
+      ) : isSeed ? (
+        <p className="text-[10px] text-gray-600 italic">Seed sample (no live link)</p>
+      ) : null}
+
+      <PropertyTable properties={properties} exclude={highlighted} />
+    </div>
+  );
+}
+
 function GenericDetail({ properties }) {
   // Prefer showing a human title if the feature has one.
   const title =
@@ -372,6 +741,10 @@ const DETAIL_RENDERERS = {
   airQuality: AirQualityDetail,
   radiation: RadiationDetail,
   river: RiverDetail,
+  flightAdsb: FlightDetail,
+  'flight-adsb': FlightDetail,
+  twitterGeo: TwitterGeoDetail,
+  'twitter-geo': TwitterGeoDetail,
 };
 
 export default function MapPopup({ feature, layerType, onClose, position }) {
@@ -379,13 +752,17 @@ export default function MapPopup({ feature, layerType, onClose, position }) {
 
   const properties = feature.properties || feature;
   const Renderer = DETAIL_RENDERERS[layerType] || GenericDetail;
-  const layerLabel = layerType
-    ? layerType.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase())
-    : 'Feature';
+  const layerDef = layerType ? LAYER_DEFINITIONS[layerType] : null;
+  const LayerIcon = layerType ? getLayerIcon(layerType) : null;
+  const iconColor = layerDef?.color || '#22d3ee';
+  const layerLabel = layerDef?.name
+    || (layerType
+      ? layerType.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase())
+      : 'Feature');
 
   return (
     <div
-      className="absolute z-40 glass-panel p-3 min-w-[240px] max-w-[340px] shadow-lg"
+      className="absolute z-40 glass-panel map-popup-ridge p-3 min-w-[240px] max-w-[340px] shadow-lg"
       style={{
         left: position?.x ?? 0,
         top: position?.y ?? 0,
@@ -393,15 +770,18 @@ export default function MapPopup({ feature, layerType, onClose, position }) {
       }}
     >
       <div className="flex items-center justify-between mb-2">
-        <span className="text-[10px] uppercase tracking-wider text-neon-cyan font-medium">
+        <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-neon-cyan font-medium">
+          {LayerIcon && (
+            <LayerIcon size={16} color={iconColor} aria-hidden="true" />
+          )}
           {layerLabel}
         </span>
         <button
           onClick={onClose}
-          className="text-gray-500 hover:text-gray-200 text-sm leading-none ml-2"
+          className="text-gray-500 hover:text-gray-200 ml-2 p-0.5 rounded hover:bg-osint-border/40"
           aria-label="Close popup"
         >
-          x
+          <MdClose size={14} aria-hidden="true" />
         </button>
       </div>
       <Renderer properties={properties} layerType={layerType} />

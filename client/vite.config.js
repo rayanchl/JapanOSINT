@@ -9,6 +9,11 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:4000',
         changeOrigin: true,
+        // Camera discovery fans out across ~17 external channels; cold runs
+        // can take 30–60s before the SQLite cache warms. Give the proxy a
+        // generous window so the browser doesn't ECONNRESET mid-request.
+        timeout: 120000,
+        proxyTimeout: 120000,
       },
     },
   },

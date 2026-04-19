@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import StatusBadge from '../ui/StatusBadge';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import CameraDiscoveryThread from './CameraDiscoveryThread';
 
 const FILTERS = [
   { key: 'all', label: 'All' },
@@ -8,6 +9,7 @@ const FILTERS = [
   { key: 'online', label: 'Online' },
   { key: 'degraded', label: 'Degraded' },
   { key: 'offline', label: 'Offline' },
+  { key: 'pending', label: 'Pending' },
   { key: 'missingKey', label: 'Missing key' },
 ];
 
@@ -23,6 +25,15 @@ function relativeTime(iso) {
   const h = Math.floor(m / 60);
   if (h < 24) return `${h}h ago`;
   return `${Math.floor(h / 24)}d ago`;
+}
+
+function prettyJson(str) {
+  if (!str) return '';
+  try {
+    return JSON.stringify(JSON.parse(str), null, 2);
+  } catch {
+    return str;
+  }
 }
 
 function KeyPills({ api }) {
@@ -50,6 +61,77 @@ function KeyPills({ api }) {
     >
       ✗ Missing key
     </span>
+  );
+}
+
+function ProbeDetail({ api }) {
+  if (api.status === 'pending') {
+    return (
+      <div className="mt-2 px-2 py-1.5 rounded border border-osint-border/40 bg-osint-bg/40 text-[10px] text-gray-400 italic">
+        Awaiting first probe…
+      </div>
+    );
+  }
+
+  const hasRequest = api.probeRequestUrl || api.probeRequestMethod;
+  const hasResponse =
+    api.probeResponseStatus != null ||
+    api.probeResponseBody ||
+    api.probeResponseHeaders;
+
+  if (!hasRequest && !hasResponse) return null;
+
+  return (
+    <div className="mt-2 space-y-2">
+      {hasRequest && (
+        <div className="rounded border border-osint-border/40 bg-black/40 p-2">
+          <div className="text-[9px] uppercase tracking-wider text-neon-cyan mb-1">
+            Request
+          </div>
+          <div className="font-mono text-[10px] text-gray-300 break-all">
+            <span className="text-neon-green">
+              {api.probeRequestMethod || 'GET'}
+            </span>{' '}
+            {api.probeRequestUrl}
+          </div>
+          {api.probeRequestHeaders && (
+            <pre className="mt-1 font-mono text-[9.5px] text-gray-400 whitespace-pre-wrap break-all">
+              {prettyJson(api.probeRequestHeaders)}
+            </pre>
+          )}
+        </div>
+      )}
+      {hasResponse && (
+        <div className="rounded border border-osint-border/40 bg-black/40 p-2">
+          <div className="text-[9px] uppercase tracking-wider text-neon-cyan mb-1 flex items-center gap-2">
+            <span>Response</span>
+            {api.probeResponseStatus != null && (
+              <span
+                className={`font-mono ${
+                  api.probeResponseStatus >= 200 && api.probeResponseStatus < 300
+                    ? 'text-status-online'
+                    : api.probeResponseStatus >= 400
+                    ? 'text-status-offline'
+                    : 'text-status-degraded'
+                }`}
+              >
+                HTTP {api.probeResponseStatus}
+              </span>
+            )}
+          </div>
+          {api.probeResponseHeaders && (
+            <pre className="font-mono text-[9.5px] text-gray-400 whitespace-pre-wrap break-all max-h-32 overflow-y-auto">
+              {prettyJson(api.probeResponseHeaders)}
+            </pre>
+          )}
+          {api.probeResponseBody && (
+            <pre className="mt-1 font-mono text-[9.5px] text-gray-200 whitespace-pre-wrap break-all max-h-64 overflow-y-auto border-t border-osint-border/30 pt-1">
+              {api.probeResponseBody}
+            </pre>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -157,19 +239,21 @@ function ApiRow({ api, expanded, onToggle }) {
               </a>
             </div>
           )}
+          <ProbeDetail api={api} />
         </div>
       )}
     </div>
   );
 }
 
-export default function ApiStatusPanel({ onClose }) {
+export default function SourcesPanel({ onClose }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [expandedId, setExpandedId] = useState(null);
+  const [tab, setTab] = useState('sources'); // 'sources' | 'discovery'
 
   useEffect(() => {
     let cancelled = false;
@@ -207,6 +291,7 @@ export default function ApiStatusPanel({ onClose }) {
         if (filter === 'online') return a.status === 'online';
         if (filter === 'degraded') return a.status === 'degraded';
         if (filter === 'offline') return a.status === 'offline';
+        if (filter === 'pending') return a.status === 'pending';
         if (filter === 'missingKey') return a.requiresKey && !a.configured;
         return true;
       })
@@ -219,12 +304,13 @@ export default function ApiStatusPanel({ onClose }) {
         );
       })
       .sort((a, b) => {
-        // working first, then online, degraded, offline, missing key
         const rank = (x) => {
-          if (x.requiresKey && !x.configured) return 4;
+          if (x.requiresKey && !x.configured) return 5;
           if (x.status === 'online') return 0;
           if (x.status === 'degraded') return 1;
-          return 3;
+          if (x.status === 'offline') return 2;
+          if (x.status === 'pending') return 3;
+          return 4;
         };
         const r = rank(a) - rank(b);
         return r !== 0 ? r : a.name.localeCompare(b.name);
@@ -234,12 +320,28 @@ export default function ApiStatusPanel({ onClose }) {
   const summary = data?.summary;
 
   return (
-    <div className="glass-panel flex flex-col w-[460px] max-w-[95vw] max-h-[75vh] shadow-xl">
-      {/* Header */}
+    <div className="glass-panel flex flex-col w-[520px] max-w-[95vw] max-h-[80vh] shadow-xl">
       <div className="flex items-center justify-between px-4 py-2 border-b border-osint-border/50 flex-shrink-0">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-neon-cyan">API Status</span>
-          {summary && (
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setTab('sources')}
+            className={`text-sm font-bold transition-colors ${
+              tab === 'sources' ? 'text-neon-cyan' : 'text-gray-500 hover:text-gray-300'
+            }`}
+          >
+            Sources
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab('discovery')}
+            className={`text-sm font-bold transition-colors ${
+              tab === 'discovery' ? 'text-neon-cyan' : 'text-gray-500 hover:text-gray-300'
+            }`}
+          >
+            Discovery
+          </button>
+          {tab === 'sources' && summary && (
             <span className="text-[10px] text-gray-400 font-mono">
               {summary.working}/{summary.total} working
             </span>
@@ -255,9 +357,18 @@ export default function ApiStatusPanel({ onClose }) {
         </button>
       </div>
 
-      {/* Summary bar */}
+      {tab === 'discovery' && (
+        <div className="flex-1 flex flex-col min-h-0">
+          <CameraDiscoveryThread />
+        </div>
+      )}
+
+      {tab === 'sources' && (
+      <>
+
+
       {summary && (
-        <div className="grid grid-cols-4 gap-2 px-4 py-2 text-[10px] border-b border-osint-border/40 flex-shrink-0">
+        <div className="grid grid-cols-5 gap-2 px-4 py-2 text-[10px] border-b border-osint-border/40 flex-shrink-0">
           <div>
             <div className="text-gray-500">Online</div>
             <div className="font-mono text-status-online">{summary.online}</div>
@@ -275,6 +386,12 @@ export default function ApiStatusPanel({ onClose }) {
             </div>
           </div>
           <div>
+            <div className="text-gray-500">Pending</div>
+            <div className="font-mono text-gray-400">
+              {summary.pending ?? 0}
+            </div>
+          </div>
+          <div>
             <div className="text-gray-500">Keys set</div>
             <div className="font-mono text-neon-cyan">
               {summary.configured}/{summary.requiresKey}
@@ -283,11 +400,10 @@ export default function ApiStatusPanel({ onClose }) {
         </div>
       )}
 
-      {/* Controls */}
       <div className="px-3 py-2 border-b border-osint-border/40 space-y-2 flex-shrink-0">
         <input
           type="text"
-          placeholder="Search APIs…"
+          placeholder="Search sources…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full bg-osint-bg/60 border border-osint-border rounded px-2 py-1 text-xs text-gray-200 placeholder-gray-500 focus:outline-none focus:border-neon-cyan/50"
@@ -310,7 +426,6 @@ export default function ApiStatusPanel({ onClose }) {
         </div>
       </div>
 
-      {/* List */}
       <div className="flex-1 overflow-y-auto px-3 py-2 space-y-1">
         {loading && !data && (
           <div className="flex items-center justify-center py-6">
@@ -319,12 +434,12 @@ export default function ApiStatusPanel({ onClose }) {
         )}
         {error && !data && (
           <div className="text-status-offline text-xs px-2 py-3">
-            Failed to load API status: {error}
+            Failed to load sources: {error}
           </div>
         )}
         {data && filtered.length === 0 && (
           <div className="text-gray-500 text-xs px-2 py-4 text-center">
-            No APIs match the current filter.
+            No sources match the current filter.
           </div>
         )}
         {data &&
@@ -340,7 +455,6 @@ export default function ApiStatusPanel({ onClose }) {
           ))}
       </div>
 
-      {/* Footer */}
       {data && (
         <div className="px-3 py-1.5 border-t border-osint-border/40 text-[10px] text-gray-500 flex items-center justify-between flex-shrink-0">
           <span>Auto-refresh 30s</span>
@@ -348,6 +462,8 @@ export default function ApiStatusPanel({ onClose }) {
             Updated {relativeTime(data.timestamp)}
           </span>
         </div>
+      )}
+      </>
       )}
     </div>
   );

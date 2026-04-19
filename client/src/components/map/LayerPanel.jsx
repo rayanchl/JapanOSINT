@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { LAYER_DEFINITIONS, LAYER_CATEGORIES } from '../../hooks/useMapLayers';
+import { getLayerIcon } from '../../utils/layerIcons';
 import LoadingSpinner from '../ui/LoadingSpinner';
 
-function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, featureCount }) {
+function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, featureCount, forceLoading = false }) {
   const [showOpacity, setShowOpacity] = useState(false);
   const isActive = state.visible;
+  const Icon = getLayerIcon(id);
+  const showSpinner = state.loading || (forceLoading && isActive);
 
   return (
     <div className={`layer-toggle px-3 py-2 ${isActive ? 'active' : ''}`}>
@@ -27,7 +30,7 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, featureCou
           className="flex items-center gap-1.5 flex-1 min-w-0 text-left"
           onClick={() => setShowOpacity(!showOpacity)}
         >
-          <span className="text-sm">{def.icon}</span>
+          <Icon size={14} color={def.color} aria-hidden="true" />
           <span className={`text-xs truncate ${isActive ? 'text-gray-200' : 'text-gray-500'}`}>
             {def.name}
           </span>
@@ -35,7 +38,7 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, featureCou
 
         {/* Loading / Count */}
         <div className="flex-shrink-0 w-10 text-right">
-          {state.loading ? (
+          {showSpinner ? (
             <LoadingSpinner size="sm" />
           ) : featureCount > 0 ? (
             <span className="text-[10px] font-mono text-gray-500">{featureCount}</span>
@@ -71,14 +74,26 @@ export default function LayerPanel({
   onToggleLayer,
   onSetOpacity,
   onSetAll,
+  cameraRunActive = false,
 }) {
   const [collapsed, setCollapsed] = useState(false);
+  const [collapsedCategories, setCollapsedCategories] = useState(() => new Set());
+
+  const toggleCategory = (category) => {
+    setCollapsedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(category)) next.delete(category);
+      else next.add(category);
+      return next;
+    });
+  };
 
   const layersByCategory = {};
   for (const cat of LAYER_CATEGORIES) {
     layersByCategory[cat] = [];
   }
   for (const [id, def] of Object.entries(LAYER_DEFINITIONS)) {
+    if (def.hidden) continue; // upstream sources fused into a unified layer
     if (layersByCategory[def.category]) {
       layersByCategory[def.category].push(id);
     }
@@ -130,12 +145,27 @@ export default function LayerPanel({
             {LAYER_CATEGORIES.map((category) => {
               const ids = layersByCategory[category];
               if (!ids || ids.length === 0) return null;
+              const isCollapsed = collapsedCategories.has(category);
+              const activeInCat = ids.filter((id) => layers[id]?.visible).length;
               return (
                 <div key={category} className="border-b border-osint-border/50">
-                  <div className="px-3 py-1.5 text-[10px] uppercase tracking-widest text-gray-600 font-medium">
-                    {category}
-                  </div>
-                  {ids.map((id) => (
+                  <button
+                    type="button"
+                    onClick={() => toggleCategory(category)}
+                    className="w-full flex items-center justify-between px-3 py-1.5 text-[10px] uppercase tracking-widest text-gray-500 font-medium hover:bg-osint-surface/40 hover:text-gray-300 transition-colors"
+                    aria-expanded={!isCollapsed}
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <span className="inline-block w-3 text-gray-600">
+                        {isCollapsed ? '▸' : '▾'}
+                      </span>
+                      {category}
+                    </span>
+                    <span className="font-mono text-gray-600">
+                      {activeInCat > 0 ? `${activeInCat}/${ids.length}` : ids.length}
+                    </span>
+                  </button>
+                  {!isCollapsed && ids.map((id) => (
                     <LayerToggleItem
                       key={id}
                       id={id}
@@ -144,6 +174,7 @@ export default function LayerPanel({
                       onToggle={onToggleLayer}
                       onOpacityChange={onSetOpacity}
                       featureCount={getFeatureCount(id)}
+                      forceLoading={id === 'cameras' && cameraRunActive}
                     />
                   ))}
                 </div>

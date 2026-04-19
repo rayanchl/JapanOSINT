@@ -19,7 +19,6 @@ import socialMedia from './socialMedia.js';
 // Social media expansions
 import twitterGeo from './twitterGeo.js';
 import facebookGeo from './facebookGeo.js';
-import snapchatHeatmap from './snapchatHeatmap.js';
 
 // Marketplace / classifieds
 import classifieds from './classifieds.js';
@@ -27,7 +26,6 @@ import realEstate from './realEstate.js';
 import jobBoards from './jobBoards.js';
 
 // Cyber OSINT
-import googleDorking from './googleDorking.js';
 import shodanIot from './shodanIot.js';
 import insecamWebcams from './insecamWebcams.js';
 import wifiNetworks from './wifiNetworks.js';
@@ -37,9 +35,30 @@ import maritimeAis from './maritimeAis.js';
 import flightAdsb from './flightAdsb.js';
 import fullTransport from './fullTransport.js';
 import mlitN02Stations from './mlitN02Stations.js';
+import mlitN05RailHistory from './mlitN05RailHistory.js';
+import mlitN07BusRoutes from './mlitN07BusRoutes.js';
+import mlitP02Airports from './mlitP02Airports.js';
+import mlitP11BusStops from './mlitP11BusStops.js';
+import mlitC02Ports from './mlitC02Ports.js';
+import gtfsJp from './gtfsJp.js';
 import busRoutes from './busRoutes.js';
 import ferryRoutes from './ferryRoutes.js';
 import highwayTraffic from './highwayTraffic.js';
+
+// Transport (OSM always-on layer per category)
+import osmTransportTrains from './osmTransportTrains.js';
+import osmTransportSubways from './osmTransportSubways.js';
+import osmTransportBuses from './osmTransportBuses.js';
+import osmTransportPorts from './osmTransportPorts.js';
+import overpassRailTracks from './overpassRailTracks.js';
+import overpassSubwayTracks from './overpassSubwayTracks.js';
+
+// Transport (unified, deduplicated)
+import unifiedTrains from './unifiedTrains.js';
+import unifiedSubways from './unifiedSubways.js';
+import unifiedBuses from './unifiedBuses.js';
+import unifiedAisShips from './unifiedAisShips.js';
+import unifiedPortInfra from './unifiedPortInfra.js';
 
 // Infrastructure
 import electricalGrid from './electricalGrid.js';
@@ -47,6 +66,11 @@ import gasNetwork from './gasNetwork.js';
 import waterInfra from './waterInfra.js';
 import cellTowers from './cellTowers.js';
 import nuclearFacilities from './nuclearFacilities.js';
+import evCharging from './evCharging.js';
+import airportInfra from './airportInfra.js';
+import portInfra from './portInfra.js';
+import bridgeTunnelInfra from './bridgeTunnelInfra.js';
+import famousPlaces from './famousPlaces.js';
 
 // Wave 1: Public Safety + Disaster
 import hospitalMap from './hospitalMap.js';
@@ -65,8 +89,6 @@ import pharmacyMap from './pharmacyMap.js';
 import convenienceStores from './convenienceStores.js';
 import gasStations from './gasStations.js';
 import tabelogRestaurants from './tabelogRestaurants.js';
-import estatCensus from './estatCensus.js';
-import resasPopulation from './resasPopulation.js';
 import resasTourism from './resasTourism.js';
 import resasIndustry from './resasIndustry.js';
 import mlitTransaction from './mlitTransaction.js';
@@ -79,8 +101,6 @@ import jmaTide from './jmaTide.js';
 import nowphasWave from './nowphasWave.js';
 import lighthouseMap from './lighthouseMap.js';
 import jarticTraffic from './jarticTraffic.js';
-import naritaFlights from './naritaFlights.js';
-import hanedaFlights from './hanedaFlights.js';
 import droneNofly from './droneNofly.js';
 import jcgPatrol from './jcgPatrol.js';
 
@@ -129,9 +149,6 @@ import animePilgrimage from './animePilgrimage.js';
 import yakuzaHq from './yakuzaHq.js';
 import redLightZones from './redLightZones.js';
 import pachinkoDensity from './pachinkoDensity.js';
-import bearEncounters from './bearEncounters.js';
-import birdFluOutbreaks from './birdFluOutbreaks.js';
-import sakuraFront from './sakuraFront.js';
 import wantedPersons from './wantedPersons.js';
 import phoneScamHotspots from './phoneScamHotspots.js';
 
@@ -171,7 +188,6 @@ import jcgNavarea from './jcgNavarea.js';
 import edinetFilings from './edinetFilings.js';
 import bojStats from './bojStats.js';
 import egovLaws from './egovLaws.js';
-import ndlSearch from './ndlSearch.js';
 import dataGoJpCkan from './dataGoJpCkan.js';
 import geospatialJpCkan from './geospatialJpCkan.js';
 import nhkNewsRss from './nhkNewsRss.js';
@@ -179,7 +195,6 @@ import nhkWorldRss from './nhkWorldRss.js';
 import kyodoRss from './kyodoRss.js';
 import openskyJapan from './openskyJapan.js';
 import jpcertAlertsRss from './jpcertAlertsRss.js';
-import ipaVulnRss from './ipaVulnRss.js';
 import nictAtlas from './nictAtlas.js';
 import gsiGeocode from './gsiGeocode.js';
 import japanApiPrefectures from './japanApiPrefectures.js';
@@ -189,7 +204,6 @@ import vendingMachines from './vendingMachines.js';
 import karaokeChains from './karaokeChains.js';
 import mangaNetCafes from './mangaNetCafes.js';
 import sentoPublicBaths from './sentoPublicBaths.js';
-import manholeCovers from './manholeCovers.js';
 import themedCafes from './themedCafes.js';
 
 export const collectors = {
@@ -209,7 +223,6 @@ export const collectors = {
   // Social media expansions
   'twitter-geo': twitterGeo,
   'facebook-geo': facebookGeo,
-  'snapchat-heatmap': snapchatHeatmap,
 
   // Marketplace / classifieds
   'classifieds': classifieds,
@@ -217,7 +230,6 @@ export const collectors = {
   'job-boards': jobBoards,
 
   // Cyber OSINT
-  'google-dorking': googleDorking,
   'shodan-iot': shodanIot,
   'insecam-webcams': insecamWebcams,
   'wifi-networks': wifiNetworks,
@@ -227,9 +239,30 @@ export const collectors = {
   'flight-adsb': flightAdsb,
   'full-transport': fullTransport,
   'mlit-n02-stations': mlitN02Stations,
+  'mlit-n05-rail-history': mlitN05RailHistory,
+  'mlit-n07-bus-routes': mlitN07BusRoutes,
+  'mlit-p02-airports': mlitP02Airports,
+  'mlit-p11-bus-stops': mlitP11BusStops,
+  'mlit-c02-ports': mlitC02Ports,
+  'gtfs-jp': gtfsJp,
   'bus-routes': busRoutes,
   'ferry-routes': ferryRoutes,
   'highway-traffic': highwayTraffic,
+
+  // Transport (OSM always-on layer per category)
+  'osm-transport-trains': osmTransportTrains,
+  'osm-transport-subways': osmTransportSubways,
+  'osm-transport-buses': osmTransportBuses,
+  'osm-transport-ports': osmTransportPorts,
+  'overpass-rail-tracks': overpassRailTracks,
+  'overpass-subway-tracks': overpassSubwayTracks,
+
+  // Transport (unified, deduplicated)
+  'unified-trains': unifiedTrains,
+  'unified-subways': unifiedSubways,
+  'unified-buses': unifiedBuses,
+  'unified-ais-ships': unifiedAisShips,
+  'unified-port-infra': unifiedPortInfra,
 
   // Infrastructure
   'electrical-grid': electricalGrid,
@@ -237,6 +270,11 @@ export const collectors = {
   'water-infra': waterInfra,
   'cell-towers': cellTowers,
   'nuclear-facilities': nuclearFacilities,
+  'ev-charging': evCharging,
+  'airport-infra': airportInfra,
+  'port-infra': portInfra,
+  'bridge-tunnel-infra': bridgeTunnelInfra,
+  'famous-places': famousPlaces,
 
   // Wave 1: Public Safety + Disaster
   'hospital-map': hospitalMap,
@@ -255,8 +293,6 @@ export const collectors = {
   'convenience-stores': convenienceStores,
   'gas-stations': gasStations,
   'tabelog-restaurants': tabelogRestaurants,
-  'estat-census': estatCensus,
-  'resas-population': resasPopulation,
   'resas-tourism': resasTourism,
   'resas-industry': resasIndustry,
   'mlit-transaction': mlitTransaction,
@@ -269,8 +305,6 @@ export const collectors = {
   'nowphas-wave': nowphasWave,
   'lighthouse-map': lighthouseMap,
   'jartic-traffic': jarticTraffic,
-  'narita-flights': naritaFlights,
-  'haneda-flights': hanedaFlights,
   'drone-nofly': droneNofly,
   'jcg-patrol': jcgPatrol,
 
@@ -319,9 +353,6 @@ export const collectors = {
   'yakuza-hq': yakuzaHq,
   'red-light-zones': redLightZones,
   'pachinko-density': pachinkoDensity,
-  'bear-encounters': bearEncounters,
-  'bird-flu-outbreaks': birdFluOutbreaks,
-  'sakura-front': sakuraFront,
   'wanted-persons': wantedPersons,
   'phone-scam-hotspots': phoneScamHotspots,
 
@@ -338,7 +369,6 @@ export const collectors = {
   'karaoke-chains': karaokeChains,
   'manga-net-cafes': mangaNetCafes,
   'sento-public-baths': sentoPublicBaths,
-  'manhole-covers': manholeCovers,
   'themed-cafes': themedCafes,
 
   // Wave 11: External Mapping Platforms
@@ -369,7 +399,6 @@ export const collectors = {
   'edinet-filings': edinetFilings,
   'boj-stats': bojStats,
   'egov-laws': egovLaws,
-  'ndl-search': ndlSearch,
   'data-go-jp-ckan': dataGoJpCkan,
   'geospatial-jp-ckan': geospatialJpCkan,
   'nhk-news-rss': nhkNewsRss,
@@ -377,7 +406,6 @@ export const collectors = {
   'kyodo-rss': kyodoRss,
   'opensky-japan': openskyJapan,
   'jpcert-alerts-rss': jpcertAlertsRss,
-  'ipa-vuln-rss': ipaVulnRss,
   'nict-atlas': nictAtlas,
   'gsi-geocode': gsiGeocode,
   'japan-api-prefectures': japanApiPrefectures,
@@ -414,4 +442,4 @@ export async function runAllCollectors() {
   return output;
 }
 
-export default collectors;
+export default collectors;

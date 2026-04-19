@@ -254,6 +254,104 @@ export async function fetchOverpassTiled(bodyFn, mapFn, options = {}) {
 }
 
 /**
+ * Tile-fanout for Overpass `way` queries that need full geometry. Issues
+ * `out geom;` per tile, dedupes by way id across tiles, and feeds each way's
+ * inline node list to `mapFn` as an array of [lon,lat] pairs.
+ *
+ * Use this when you need the actual polyline (rail tracks, rivers, power
+ * lines) — `fetchOverpassTiled` only returns centroids via `out center`.
+ *
+ * @param {(bbox:string) => string} bodyFn - returns Overpass body given a
+ *        bbox string "s,w,n,e", typically a `way["railway"="rail"]` query.
+ * @param {(el, i, coords) => any} mapFn - mapper called with the OSM way,
+ *        its index, and `coords` = [[lon,lat],[lon,lat],...] from `el.geometry`.
+ * @param {object} [options]
+ * @param {number} [options.queryTimeout=180]
+ * @param {number} [options.timeoutMs=120000]
+ * @param {boolean} [options.useCache=true]
+ * @param {number} [options.cacheTtlMs]
+ * @returns {Promise<any[]|null>}
+ */
+export async function fetchOverpassWaysTiled(bodyFn, mapFn, options = {}) {
+  const {
+    queryTimeout = 180,
+    timeoutMs = 120_000,
+    useCache = true,
+    cacheTtlMs = DEFAULT_CACHE_TTL_MS,
+  } = options;
+
+  const queries = JAPAN_TILES.map((t) => {
+    const bbox = `${t[0]},${t[1]},${t[2]},${t[3]}`;
+    return `[out:json][timeout:${queryTimeout}];(${bodyFn(bbox)});out geom;`;
+  });
+
+  const cacheKey = 'WAYS:' + queries.join('|');
+  if (useCache) {
+    const cached = cacheGet(cacheKey);
+    if (cached) return mapWayElements(cached, mapFn);
+  }
+
+  const allElements = [];
+  const seen = new Set();
+
+  for (let i = 0; i < queries.length; i++) {
+    const q = queries[i];
+    let got = null;
+    for (let ei = 0; ei < OVERPASS_ENDPOINTS.length; ei++) {
+      const endpoint = OVERPASS_ENDPOINTS[(ei + i) % OVERPASS_ENDPOINTS.length];
+      got = await rateLimitedFetch(endpoint, () => overpassWayRequest(endpoint, q, timeoutMs));
+      if (got && got.length) break;
+    }
+    if (!got) continue;
+    for (const el of got) {
+      const key = el.type && el.id != null ? `${el.type}/${el.id}` : null;
+      if (key && seen.has(key)) continue;
+      if (key) seen.add(key);
+      allElements.push(el);
+    }
+  }
+
+  if (allElements.length === 0) return null;
+  if (useCache) cacheSet(cacheKey, allElements, cacheTtlMs);
+  return mapWayElements(allElements, mapFn);
+}
+
+async function overpassWayRequest(endpoint, query, timeoutMs) {
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'User-Agent': 'JapanOSINT/1.0 (+https://github.com/rayanchl/JapanOSINT)',
+      },
+      body: 'data=' + encodeURIComponent(query),
+      signal: ctrl.signal,
+    });
+    clearTimeout(timer);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return (data.elements || []).filter(
+      (e) => e.type === 'way' && Array.isArray(e.geometry) && e.geometry.length >= 2,
+    );
+  } catch { return null; }
+}
+
+function mapWayElements(elements, mapFn) {
+  const out = [];
+  for (let i = 0; i < elements.length; i++) {
+    const el = elements[i];
+    const coords = el.geometry
+      .map((n) => (Number.isFinite(n.lat) && Number.isFinite(n.lon) ? [n.lon, n.lat] : null))
+      .filter(Boolean);
+    if (coords.length < 2) continue;
+    out.push(mapFn(el, i, coords));
+  }
+  return out;
+}
+
+/**
  * Fetch JSON from any public endpoint with a timeout + optional retries.
  * Rate-limited per host.
  */
@@ -268,6 +366,7 @@ export async function fetchJson(url, { timeoutMs = 15000, headers = {}, retries 
           headers: {
             'User-Agent': 'JapanOSINT/1.0 (+https://github.com/rayanchl/JapanOSINT)',
             Accept: 'application/json',
+            'Accept-Language': 'ja-JP,ja;q=0.9,en;q=0.5',
             ...headers,
           },
           signal: ctrl.signal,
@@ -298,6 +397,7 @@ export async function fetchText(url, { timeoutMs = 15000, headers = {}, retries 
         const res = await fetch(url, {
           headers: {
             'User-Agent': 'Mozilla/5.0 (compatible; JapanOSINT/1.0)',
+            'Accept-Language': 'ja-JP,ja;q=0.9,en;q=0.5',
             ...headers,
           },
           signal: ctrl.signal,

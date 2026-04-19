@@ -38,7 +38,7 @@ export default function useDataSources() {
 
     try {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//localhost:4000`;
+      const wsUrl = `${protocol}//localhost:4000/ws`;
       const ws = new WebSocket(wsUrl);
 
       ws.onopen = () => {

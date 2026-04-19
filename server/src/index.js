@@ -12,7 +12,13 @@ import layersRouter from './routes/layers.js';
 import dataRouter from './routes/data.js';
 import geocodeRouter from './routes/geocode.js';
 import statusRouter from './routes/status.js';
+import followRouter from './routes/follow.js';
 import { startScheduler } from './utils/scheduler.js';
+import { installFetchTap, setBroadcaster } from './utils/collectorTap.js';
+
+// Patch globalThis.fetch BEFORE importing any collector code that may
+// capture a reference to it at module load time.
+installFetchTap();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 4000;
@@ -31,6 +37,7 @@ app.use('/api/layers', layersRouter);
 app.use('/api/data', dataRouter);
 app.use('/api/geocode', geocodeRouter);
 app.use('/api/status', statusRouter);
+app.use('/api/follow', followRouter);
 
 // ── Health check ───────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
@@ -58,6 +65,7 @@ wss.on('connection', (ws) => {
 });
 
 // ── Start scheduler & server ───────────────────────────────────────────
+setBroadcaster(wss);
 startScheduler(wss);
 
 server.listen(PORT, () => {

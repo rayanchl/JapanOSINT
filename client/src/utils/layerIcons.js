@@ -1,0 +1,261 @@
+// Per-layer flat icon mapping, powered by react-icons (Material Design +
+// Font Awesome where Material doesn't have a fit). Each entry is a React
+// component; consumers render it inline (LayerPanel) or stringify it
+// (MapView) to produce a raster for MapLibre's addImage.
+
+import {
+  MdPlace,
+  MdPublic,
+  MdWaves,
+  MdAir,
+  MdWarning,
+  MdDangerous,
+  MdLocalHospital,
+  MdFavorite,
+  MdLocalPharmacy,
+  MdLocalPolice,
+  MdLocalFireDepartment,
+  MdHome,
+  MdApartment,
+  MdBusinessCenter,
+  MdLocationCity,
+  MdAccountBalance,
+  MdGavel,
+  MdFlag,
+  MdSchool,
+  MdRestaurant,
+  MdLocalBar,
+  MdLocalCafe,
+  MdFastfood,
+  MdLocalDrink,
+  MdStore,
+  MdLocalGroceryStore,
+  MdLocalMall,
+  MdShoppingBag,
+  MdLocalGasStation,
+  MdEvStation,
+  MdElectricBolt,
+  MdWaterDrop,
+  MdWater,
+  MdWhatshot,
+  MdBolt,
+  MdCellTower,
+  MdSatelliteAlt,
+  MdRouter,
+  MdWifi,
+  MdPhoneIphone,
+  MdPhone,
+  MdCameraAlt,
+  MdPeople,
+  MdChat,
+  MdTrain,
+  MdDirectionsBus,
+  MdDirectionsBoat,
+  MdFlight,
+  MdDirectionsCar,
+  MdTraffic,
+  MdAnchor,
+  MdLocalShipping,
+  MdAttachMoney,
+  MdTrendingUp,
+  MdFactory,
+  MdPrecisionManufacturing,
+  MdComputer,
+  MdMemory,
+  MdStorage,
+  MdRocketLaunch,
+  MdShield,
+  MdSecurity,
+  MdRadar,
+  MdPark,
+  MdForest,
+  MdCastle,
+  MdMuseum,
+  MdStadium,
+  MdAttractions,
+  MdHotTub,
+  MdDownhillSkiing,
+  MdStar,
+  MdTempleBuddhist,
+  MdTempleHindu,
+  MdCasino,
+  MdMic,
+  MdBook,
+  MdBathtub,
+  MdEmojiFoodBeverage,
+  MdAgriculture,
+  MdSetMeal,
+  MdLocalLibrary,
+  MdDirectionsSubway,
+  MdMap,
+  MdPublicOff,
+  MdTravelExplore,
+  MdEmergency,
+  MdWindPower,
+  MdOilBarrel,
+  MdLightbulb,
+} from 'react-icons/md';
+
+import { FaShip, FaBridge, FaTowerBroadcast, FaFish, FaPlaneUp } from 'react-icons/fa6';
+
+export const LAYER_ICONS = {
+  // Environment
+  earthquakes: MdEmergency,
+  weather: MdAir,
+  airQuality: MdAir,
+  radiation: MdDangerous,
+  river: MdWater,
+  hiNet: MdCellTower,
+  kNet: MdCellTower,
+  jmaIntensity: MdEmergency,
+  jshisSeismic: MdEmergency,
+
+  // Ocean
+  jmaOceanWave: MdWaves,
+  jmaOceanTemp: MdWaves,
+  jmaTide: MdWaves,
+  nowphasWave: MdWaves,
+  lighthouseMap: MdLightbulb,
+
+  // Transport
+  transport: MdTrain,
+  fullTransport: MdTrain,
+  mlitN02Stations: MdDirectionsSubway,
+  busRoutes: MdDirectionsBus,
+  ferryRoutes: MdDirectionsBoat,
+  highwayTraffic: MdDirectionsCar,
+  maritimeAis: FaShip,
+  flightAdsb: FaPlaneUp,
+  jarticTraffic: MdTraffic,
+
+  // Transport (unified)
+  unifiedTrains: MdTrain,
+  unifiedSubways: MdDirectionsSubway,
+  unifiedBuses: MdDirectionsBus,
+  unifiedAisShips: FaShip,
+  unifiedPortInfra: MdAnchor,
+
+  // Infrastructure
+  electricalGrid: MdElectricBolt,
+  gasNetwork: MdWhatshot,
+  waterInfra: MdWaterDrop,
+  cellTowers: MdCellTower,
+  nuclearFacilities: MdDangerous,
+  evCharging: MdEvStation,
+  airportInfra: MdFlight,
+  portInfra: MdAnchor,
+  bridgeTunnelInfra: FaBridge,
+  famousPlaces: MdAttractions,
+  buildings: MdApartment,
+  gasStations: MdLocalGasStation,
+  damWaterLevel: MdWater,
+
+  // Health
+  hospitalMap: MdLocalHospital,
+  aedMap: MdFavorite,
+  pharmacyMap: MdLocalPharmacy,
+
+  // Safety
+  kobanMap: MdLocalPolice,
+  fireStationMap: MdLocalFireDepartment,
+  bosaiShelter: MdShield,
+  hazardMapPortal: MdWarning,
+  crime: MdLocalPolice,
+  droneNofly: MdWarning,
+  jcgPatrol: MdAnchor,
+
+  // Cyber / OSINT
+  cameras: MdCameraAlt,
+  shodanIot: MdRouter,
+  wifiNetworks: MdWifi,
+
+  // Social
+  population: MdPeople,
+  social: MdChat,
+  twitterGeo: MdChat,
+  facebookGeo: MdChat,
+
+  // Economy / Statistics / Marketplace
+  landPrice: MdAttachMoney,
+  classifieds: MdStore,
+  realEstate: MdHome,
+  jobBoards: MdBusinessCenter,
+  convenienceStores: MdLocalGroceryStore,
+  tabelogRestaurants: MdRestaurant,
+  resasTourism: MdAttractions,
+  resasIndustry: MdFactory,
+  mlitTransaction: MdHome,
+
+  // Government / Defense
+  governmentBuildings: MdAccountBalance,
+  cityHalls: MdLocationCity,
+  courtsPrisons: MdGavel,
+  embassies: MdFlag,
+  jsdfBases: MdShield,
+  usfjBases: MdShield,
+  radarSites: MdRadar,
+  coastGuardStations: MdAnchor,
+
+  // Industry
+  autoPlants: MdPrecisionManufacturing,
+  steelMills: MdFactory,
+  petrochemical: MdFactory,
+  refineries: MdOilBarrel,
+  semiconductorFabs: MdMemory,
+  shipyards: FaShip,
+  petroleumStockpile: MdOilBarrel,
+  windTurbines: MdWindPower,
+
+  // Telecom
+  dataCenters: MdStorage,
+  internetExchanges: MdRouter,
+  submarineCables: MdWaves,
+  torExitNodes: MdPublicOff,
+  coverage5g: MdCellTower,
+  satelliteGroundStations: MdSatelliteAlt,
+  amateurRadioRepeaters: FaTowerBroadcast,
+
+  // Tourism / Culture
+  nationalParks: MdPark,
+  unescoHeritage: MdMuseum,
+  castles: MdCastle,
+  museums: MdMuseum,
+  stadiums: MdStadium,
+  racetracks: MdAttractions,
+  shrineTemple: MdTempleBuddhist,
+  onsenMap: MdHotTub,
+  skiResorts: MdDownhillSkiing,
+  animePilgrimage: MdStar,
+
+  // Crime
+  yakuzaHq: MdSecurity,
+  redLightZones: MdLocalBar,
+  pachinkoDensity: MdCasino,
+  wantedPersons: MdEmergency,
+  phoneScamHotspots: MdPhone,
+
+  // Food / Agriculture
+  sakeBreweries: MdLocalBar,
+  wineriesCraftbeer: MdLocalBar,
+  fishMarkets: FaFish,
+  wagyuRanches: MdAgriculture,
+  teaZones: MdEmojiFoodBeverage,
+  ricePaddies: MdAgriculture,
+
+  // Pop Culture
+  vendingMachines: MdLocalDrink,
+  karaokeChains: MdMic,
+  mangaNetCafes: MdBook,
+  sentoPublicBaths: MdBathtub,
+  themedCafes: MdLocalCafe,
+
+  // External Mapping
+  marineTraffic: FaShip,
+  vesselFinder: MdDirectionsBoat,
+  sentinelHub: MdSatelliteAlt,
+  googleMyMaps: MdMap,
+};
+
+export function getLayerIcon(layerId) {
+  return LAYER_ICONS[layerId] || MdPlace;
+}

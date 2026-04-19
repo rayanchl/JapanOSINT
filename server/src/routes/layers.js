@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import sources from '../utils/sourceRegistry.js';
-import { getCachedData } from '../utils/database.js';
 
 const router = Router();
 
@@ -50,35 +49,14 @@ router.get('/:layerId/geojson', (req, res) => {
       return res.status(404).json({ error: 'Layer not found' });
     }
 
-    // Try to find cached data from any source that feeds this layer
-    for (const src of layer.sources) {
-      const cached = getCachedData(src.id, layerId);
-      if (cached) {
-        try {
-          const geojson = JSON.parse(cached.geojson);
-          return res.json({
-            ...geojson,
-            _meta: {
-              layer: layerId,
-              source_id: src.id,
-              fetched_at: cached.fetched_at,
-              expires_at: cached.expires_at,
-              fromCache: true,
-            },
-          });
-        } catch {
-          // corrupted cache entry, continue to next source
-        }
-      }
-    }
-
-    // No cached data available
+    // data_cache has been removed. Callers that want live data should hit
+    // /api/data/:layerId, which runs the collector on demand.
     res.json({
       type: 'FeatureCollection',
       features: [],
       _meta: {
         layer: layerId,
-        message: 'No cached data available. Data will be populated on next fetch cycle.',
+        message: 'Use /api/data/:layerId for live collector output.',
         sources: layer.sources.map((s) => s.id),
       },
     });

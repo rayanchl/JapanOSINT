@@ -4,6 +4,7 @@ const STATUS_STYLES = {
   online: 'bg-status-online/20 text-status-online border-status-online/30',
   degraded: 'bg-status-degraded/20 text-status-degraded border-status-degraded/30',
   offline: 'bg-status-offline/20 text-status-offline border-status-offline/30',
+  pending: 'bg-gray-600/20 text-gray-400 border-gray-500/30',
 };
 
 const TYPE_STYLES = {

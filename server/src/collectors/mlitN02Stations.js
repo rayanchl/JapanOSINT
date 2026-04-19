@@ -24,6 +24,8 @@ const ENV_URL = process.env.MLIT_N02_GEOJSON_URL || null;
 // tried in order; any 404 / network failure simply falls through.
 const MIRROR_URLS = [
   // Users may override / extend via env; keep this list short and stable.
+  // Prefer the latest annual release (N02-23) and fall through to N02-22.
+  'https://nlftp.mlit.go.jp/ksj/gml/data/N02/N02-23/N02-23_Station.geojson',
   'https://nlftp.mlit.go.jp/ksj/gml/data/N02/N02-22/N02-22_Station.geojson',
 ];
 
