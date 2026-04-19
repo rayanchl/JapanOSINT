@@ -26,9 +26,13 @@ import {
   transportStats,
 } from './transportStore.js';
 
-const RUN_CEILING_MS = 15 * 60 * 1000;
-const STATION_COLLECTOR_TIMEOUT_MS = 4 * 60 * 1000;
-const LINE_COLLECTOR_TIMEOUT_MS = 4 * 60 * 1000;
+// Transport runs are cold-start-heavy: _liveHelpers' in-memory Overpass
+// cache is lost on server restart, so the first run after boot does
+// nationwide Overpass pulls through a 2-per-host / 500ms-gap queue. Give
+// each collector up to 10 min and the whole run up to 45 min.
+const RUN_CEILING_MS = 45 * 60 * 1000;
+const STATION_COLLECTOR_TIMEOUT_MS = 10 * 60 * 1000;
+const LINE_COLLECTOR_TIMEOUT_MS = 10 * 60 * 1000;
 
 let _inflightRun = null;
 
