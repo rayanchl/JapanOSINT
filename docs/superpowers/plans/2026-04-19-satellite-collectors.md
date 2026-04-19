@@ -1651,6 +1651,233 @@ git commit -m "Polish satellite popups and layer rendering"
 
 ---
 
+## Task 13: Per-source "Bake feed on map" toggle + opacity slider
+
+**Goal:** Each satellite imagery popup gets a "Bake on map" checkbox. Clicking it overlays that source's tile feed onto the map. A new popup overlay becomes the active feed (replaces the previous one). Unchecking removes it. An opacity slider (0.0–1.0, default 0.6) controls overlay visibility so the basemap underneath stays legible.
+
+**Files:**
+- Modify: `client/src/components/map/MapPopup.jsx`
+- Modify: `client/src/components/map/MapView.jsx`
+
+- [ ] **Step 13.1: Extend `SatelliteImageryDetail` with the toggle + opacity slider**
+
+In `client/src/components/map/MapPopup.jsx`, replace the `SatelliteImageryDetail` function added in Task 10 with this expanded version:
+
+```jsx
+function SatelliteImageryDetail({ properties }) {
+  const [baked, setBaked] = useState(false);
+  const [opacity, setOpacity] = useState(0.6);
+  const highlighted = [
+    'platform', 'sensor', 'scene_id', 'datetime',
+    'cloud_cover', 'preview_url', 'tile_url', 'archive_era', 'source',
+  ];
+
+  // Notify MapView whenever bake/opacity changes.
+  useEffect(() => {
+    const evt = new CustomEvent('satellite-imagery-bake', {
+      detail: {
+        show: baked,
+        sceneId: properties.scene_id || properties.id,
+        platform: properties.platform,
+        tileUrl: properties.tile_url,
+        previewUrl: properties.preview_url,
+        opacity,
+      },
+    });
+    window.dispatchEvent(evt);
+  }, [baked, opacity, properties.scene_id, properties.id, properties.platform, properties.tile_url, properties.preview_url]);
+
+  const canBake = !!(properties.tile_url || properties.preview_url);
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium text-gray-200">
+          {properties.platform}
+        </span>
+        {properties.sensor && (
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-neon-cyan/20 text-neon-cyan font-mono">
+            {properties.sensor}
+          </span>
+        )}
+        {properties.archive_era === 'historical' && (
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 font-mono">
+            archive
+          </span>
+        )}
+      </div>
+      {properties.datetime && (
+        <p className="text-xs text-gray-500 font-mono">
+          {formatTimestamp(properties.datetime)}
+          {properties.cloud_cover != null && (
+            <span className="ml-2">cloud {properties.cloud_cover}%</span>
+          )}
+        </p>
+      )}
+      {properties.preview_url && (
+        <img
+          src={properties.preview_url}
+          alt={`${properties.platform} preview`}
+          style={{ maxWidth: 240, maxHeight: 180, objectFit: 'contain' }}
+          className="rounded border border-osint-border/50"
+          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+        />
+      )}
+      {canBake && (
+        <div className="pt-1 border-t border-osint-border/50 space-y-1.5">
+          <label className="flex items-center gap-2 text-xs text-gray-300 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={baked}
+              onChange={(e) => setBaked(e.target.checked)}
+              className="accent-neon-cyan"
+            />
+            Bake feed on map
+          </label>
+          {baked && (
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-gray-500 w-12">Opacity</span>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={opacity}
+                onChange={(e) => setOpacity(parseFloat(e.target.value))}
+                className="flex-1 h-1 accent-neon-cyan bg-gray-700 rounded appearance-none cursor-pointer"
+              />
+              <span className="text-[10px] text-gray-500 w-10 text-right font-mono">
+                {Math.round(opacity * 100)}%
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+      <p className="text-[10px] text-gray-600 font-mono">src: {properties.source}</p>
+      <PropertyTable properties={properties} exclude={highlighted} />
+    </div>
+  );
+}
+```
+
+Note: this component now uses `useState` and `useEffect` — confirm both are already imported at the top of `MapPopup.jsx` (they are — line 1 imports `useState`; add `useEffect` if it is not yet imported).
+
+- [ ] **Step 13.2: Render the baked imagery overlay in MapView**
+
+In `client/src/components/map/MapView.jsx`, add a new `useEffect` next to the ground-track `useEffect` from Task 11:
+
+```jsx
+  // Satellite imagery "bake on map" — overlays the clicked source's tile feed
+  // (or static preview as an image overlay over the Japan bbox if no tile url).
+  useEffect(() => {
+    if (!mapRef.current) return;
+    let currentLayer = null;
+    let currentSceneId = null;
+
+    async function onBake(e) {
+      const { show, sceneId, tileUrl, previewUrl, opacity } = e.detail || {};
+      if (!mapRef.current) return;
+      const L = (await import('leaflet')).default;
+
+      // If we're hiding, or switching to a different scene, remove any existing overlay.
+      if (currentLayer && (currentSceneId !== sceneId || !show)) {
+        mapRef.current.removeLayer(currentLayer);
+        currentLayer = null;
+        currentSceneId = null;
+      }
+
+      if (!show) return;
+
+      if (tileUrl) {
+        // Tile-based overlays (GIBS, Himawari tile template): use L.tileLayer.
+        // The tile templates in our collector use {x}/{y}/{z} placeholders,
+        // compatible with Leaflet's tileLayer URL syntax.
+        currentLayer = L.tileLayer(tileUrl, {
+          opacity: opacity ?? 0.6,
+          attribution: 'Satellite feed',
+          tileSize: 256,
+        });
+      } else if (previewUrl) {
+        // Static image preview: overlay stretched across the Japan bbox.
+        const bounds = [[24, 122], [46, 154]]; // [[S, W], [N, E]] for Leaflet
+        currentLayer = L.imageOverlay(previewUrl, bounds, {
+          opacity: opacity ?? 0.6,
+        });
+      } else {
+        return;
+      }
+      currentLayer.addTo(mapRef.current);
+      currentSceneId = sceneId;
+    }
+
+    // Opacity-only updates without remount.
+    function onOpacityUpdate(e) {
+      const { opacity } = e.detail || {};
+      if (currentLayer && typeof opacity === 'number') {
+        currentLayer.setOpacity(opacity);
+      }
+    }
+
+    window.addEventListener('satellite-imagery-bake', onBake);
+    window.addEventListener('satellite-imagery-opacity', onOpacityUpdate);
+    return () => {
+      window.removeEventListener('satellite-imagery-bake', onBake);
+      window.removeEventListener('satellite-imagery-opacity', onOpacityUpdate);
+      if (currentLayer && mapRef.current) {
+        mapRef.current.removeLayer(currentLayer);
+      }
+    };
+  }, []);
+```
+
+Since the bake event fires on every opacity change already (via the `useEffect` dependency on `opacity` in Task 13.1), the `onBake` handler remounts the layer each time. That's slightly wasteful. If `currentSceneId === sceneId` and `show === true` and only `opacity` changed, update opacity in place without removing the layer:
+
+Replace the top of `onBake` with:
+
+```jsx
+    async function onBake(e) {
+      const { show, sceneId, tileUrl, previewUrl, opacity } = e.detail || {};
+      if (!mapRef.current) return;
+
+      // Opacity-only update path: same scene still showing → just adjust opacity.
+      if (show && currentLayer && currentSceneId === sceneId) {
+        currentLayer.setOpacity(opacity ?? 0.6);
+        return;
+      }
+
+      const L = (await import('leaflet')).default;
+
+      if (currentLayer) {
+        mapRef.current.removeLayer(currentLayer);
+        currentLayer = null;
+        currentSceneId = null;
+      }
+
+      if (!show) return;
+      // ... rest unchanged
+```
+
+(Remove the separate `onOpacityUpdate` handler and its `addEventListener`/`removeEventListener` — only a single `onBake` handler is needed.)
+
+- [ ] **Step 13.3: Smoke-test**
+
+Start both dev servers. In browser:
+1. Enable Satellite Imagery layer, click a Himawari feature.
+2. Tick "Bake feed on map" → Himawari tile overlay appears covering Japan at 60% opacity.
+3. Drag opacity slider → overlay transparency updates live.
+4. Click a MODIS feature, tick its Bake checkbox → overlay switches to MODIS tiles (Himawari overlay goes away).
+5. Untick the MODIS checkbox → overlay clears.
+6. Close popup with no overlay active → basemap is clean.
+
+- [ ] **Step 13.4: Commit**
+
+```bash
+git add client/src/components/map/MapPopup.jsx client/src/components/map/MapView.jsx
+git commit -m "Add per-source bake-on-map toggle for satellite imagery feeds"
+```
+
+---
+
 ## Self-Review
 
 **Spec coverage check:**
