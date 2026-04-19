@@ -81,26 +81,57 @@ function hashToColor(key) {
 }
 
 /**
- * Resolve a color for a railway feature.
+ * Resolve a color for a railway feature so every feature on the same
+ * physical line gets the SAME color, whether it's a station Point or
+ * a track LineString.
+ *
+ * Strategy:
+ *   1. Honor OSM `colour` tag verbatim when it parses.
+ *   2. Otherwise build a canonical "line identity" string by concatenating
+ *      ALL of operator + network + (line or ref), lowercased and trimmed.
+ *      Hashing the CONCATENATION instead of the first non-null key means a
+ *      station tagged only `network=JR East` + `line=Yamanote` and a track
+ *      tagged only `operator=JR East` + `ref=JY` still share at least the
+ *      operator/network identity — as long as upstream collectors pass the
+ *      same key list.
+ *   3. Station-name / track-name is NEVER used as the hash input. Every
+ *      station on a line has a unique name, so using it would colorize
+ *      every station differently from its line.
+ *
+ * Callers must pass the same `keys` list for stations and tracks of a given
+ * mode (rail vs subway/tram). The default list is safe for both.
  *
  * @param {object} tags - OSM tags object (may be undefined).
  * @param {object} [opts]
- * @param {string[]} [opts.keys] - Ordered list of tag names to try as the
- *   hash input when no `colour` tag is present. Defaults to
- *   ['name', 'ref', 'line', 'network', 'operator'].
+ * @param {string[]} [opts.keys] - Ordered list of identity keys to
+ *   concatenate. Defaults to ['operator', 'network', 'line', 'ref'].
  * @returns {string|null} '#rrggbb' or null if no identifier was available.
  */
-export function computeLineColor(tags, opts = {}) {
+function pickLower(tags, keyList) {
+  for (const k of keyList) {
+    const v = tags[k];
+    if (v && typeof v === 'string' && v.trim()) {
+      return v.trim().toLowerCase();
+    }
+  }
+  return null;
+}
+
+export function computeLineColor(tags) {
   if (!tags) return null;
   const fromTag = parseColour(tags.colour);
   if (fromTag) return fromTag;
 
-  const keys = opts.keys || ['name', 'ref', 'line', 'network', 'operator'];
-  for (const k of keys) {
-    const v = tags[k];
-    if (v && typeof v === 'string' && v.trim()) {
-      return hashToColor(v.trim().toLowerCase());
-    }
-  }
-  return null;
+  // Collapse operator/network into a single 'agency' slot so a station
+  // tagged only operator and a track tagged only network still match.
+  const agency = pickLower(tags, ['operator', 'network']);
+  // Collapse line/ref into a single 'line' slot so a line tagged only
+  // name and a station tagged only ref (or vice versa) still match.
+  // `name` is intentionally NOT included — station names are unique per
+  // station, so hashing on them would colorize each station differently.
+  const line = pickLower(tags, ['line', 'ref']);
+
+  if (!agency && !line) return null;
+  const key = `agency=${agency || ''}|line=${line || ''}`;
+  return hashToColor(key);
 }

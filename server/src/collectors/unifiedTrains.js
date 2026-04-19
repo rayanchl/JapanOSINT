@@ -13,6 +13,17 @@ import odptTransport from './odptTransport.js';
 import fullTransport from './fullTransport.js';
 import osmTransportTrains from './osmTransportTrains.js';
 import { mergeFeatureCollections, dedupeByKeys, countBySource } from './_dedupe.js';
+import { computeLineColor } from './_lineColor.js';
+
+// Backfill line_color on any feature whose upstream source didn't already
+// stamp one — matches the hash used by track collectors so stations line
+// up with their tracks.
+function ensureLineColor(feature) {
+  if (feature.properties?.line_color) return feature;
+  const color = computeLineColor(feature.properties);
+  if (!color) return feature;
+  return { ...feature, properties: { ...feature.properties, line_color: color } };
+}
 
 const SUBWAY_TYPES = new Set(['subway', 'metro', 'underground']);
 const EXCLUDE_TYPES = new Set(['tram_stop', 'tram', 'monorail', 'light_rail']);
@@ -46,7 +57,7 @@ export default async function collectUnifiedTrains() {
       if (!sid) return null;
       return String(sid).includes(':') ? sid : null;
     },
-  ]);
+  ]).map(ensureLineColor);
 
   return {
     type: 'FeatureCollection',

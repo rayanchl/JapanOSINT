@@ -11,6 +11,14 @@ import odptTransport from './odptTransport.js';
 import fullTransport from './fullTransport.js';
 import osmTransportSubways from './osmTransportSubways.js';
 import { mergeFeatureCollections, dedupeByKeys, countBySource } from './_dedupe.js';
+import { computeLineColor } from './_lineColor.js';
+
+function ensureLineColor(feature) {
+  if (feature.properties?.line_color) return feature;
+  const color = computeLineColor(feature.properties);
+  if (!color) return feature;
+  return { ...feature, properties: { ...feature.properties, line_color: color } };
+}
 
 const SUBWAY_LIKE = new Set(['subway', 'metro', 'underground', 'light_rail', 'monorail', 'tram_stop', 'tram']);
 const SUBWAY_LINE_HINTS = [
@@ -53,7 +61,7 @@ export default async function collectUnifiedSubways() {
       if (!sid) return null;
       return String(sid).includes(':') ? sid : null;
     },
-  ]);
+  ]).map(ensureLineColor);
 
   return {
     type: 'FeatureCollection',

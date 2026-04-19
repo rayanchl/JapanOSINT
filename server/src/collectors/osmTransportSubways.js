@@ -35,7 +35,7 @@ export default async function collectOsmTransportSubways() {
         network: el.tags?.network || null,
         wikidata: el.tags?.wikidata || null,
         wheelchair: el.tags?.wheelchair || null,
-        line_color: computeLineColor(el.tags, { keys: ['line', 'network', 'operator', 'name'] }),
+        line_color: computeLineColor(el.tags),
         country: 'JP',
         source: 'osm_transport_subways',
       },
