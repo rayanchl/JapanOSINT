@@ -366,6 +366,28 @@ function GenericDetail({ properties }) {
 }
 
 function SatelliteImageryDetail({ properties }) {
+  const [baked, setBaked] = useState(false);
+  const [opacity, setOpacity] = useState(0.6);
+
+  const sceneId = properties.scene_id;
+  const platform = properties.platform;
+  const tileUrl = properties.tile_url;
+  const previewUrl = properties.preview_url;
+  const hasFeed = !!(tileUrl || previewUrl);
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('satellite-imagery-bake', {
+      detail: {
+        show: baked,
+        sceneId,
+        platform,
+        tileUrl,
+        previewUrl,
+        opacity,
+      },
+    }));
+  }, [baked, opacity, sceneId, platform, tileUrl, previewUrl]);
+
   const highlighted = [
     'platform', 'sensor', 'scene_id', 'datetime',
     'cloud_cover', 'preview_url', 'tile_url', 'archive_era', 'source',
@@ -403,6 +425,34 @@ function SatelliteImageryDetail({ properties }) {
           className="rounded border border-osint-border/50"
           onError={(e) => { e.currentTarget.style.display = 'none'; }}
         />
+      )}
+      {hasFeed && (
+        <label className="flex items-center gap-2 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={baked}
+            onChange={(e) => setBaked(e.target.checked)}
+            className="accent-neon-cyan"
+          />
+          <span className="text-xs text-gray-300">Bake feed on map</span>
+        </label>
+      )}
+      {baked && (
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-500">Opacity</span>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.05}
+            value={opacity}
+            onChange={(e) => setOpacity(Number(e.target.value))}
+            className="flex-1 accent-neon-cyan"
+          />
+          <span className="text-xs text-gray-400 font-mono w-8 text-right">
+            {Math.round(opacity * 100)}%
+          </span>
+        </div>
       )}
       <p className="text-[10px] text-gray-600 font-mono">src: {properties.source}</p>
       <PropertyTable properties={properties} exclude={highlighted} />

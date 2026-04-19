@@ -3639,6 +3639,66 @@ export default function MapView({ layers, layerData, onFeatureClick }) {
     };
   }, []);
 
+  // Satellite imagery "bake on map" — overlays the clicked source's tile or
+  // static preview onto the MapLibre map. A new source replaces the prior one.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const SOURCE_ID = 'satellite-bake-source';
+    const LAYER_ID = 'satellite-bake-layer';
+    let currentSceneId = null;
+
+    function removeCurrent() {
+      if (map.getLayer(LAYER_ID)) map.removeLayer(LAYER_ID);
+      if (map.getSource(SOURCE_ID)) map.removeSource(SOURCE_ID);
+      currentSceneId = null;
+    }
+
+    function onBake(e) {
+      const { show, sceneId, tileUrl, previewUrl, opacity } = e.detail || {};
+      if (!map) return;
+
+      // Opacity-only update path: same scene still showing → adjust opacity only.
+      if (show && currentSceneId === sceneId && map.getLayer(LAYER_ID)) {
+        map.setPaintProperty(LAYER_ID, 'raster-opacity', opacity ?? 0.6);
+        return;
+      }
+
+      removeCurrent();
+      if (!show) return;
+
+      if (tileUrl) {
+        map.addSource(SOURCE_ID, {
+          type: 'raster',
+          tiles: [tileUrl],
+          tileSize: 256,
+        });
+      } else if (previewUrl) {
+        // Static image stretched across Japan bbox (W, S, E, N = 122, 24, 154, 46).
+        map.addSource(SOURCE_ID, {
+          type: 'image',
+          url: previewUrl,
+          coordinates: [[122, 46], [154, 46], [154, 24], [122, 24]],
+        });
+      } else {
+        return;
+      }
+      map.addLayer({
+        id: LAYER_ID,
+        type: 'raster',
+        source: SOURCE_ID,
+        paint: { 'raster-opacity': opacity ?? 0.6 },
+      });
+      currentSceneId = sceneId;
+    }
+
+    window.addEventListener('satellite-imagery-bake', onBake);
+    return () => {
+      window.removeEventListener('satellite-imagery-bake', onBake);
+      removeCurrent();
+    };
+  }, []);
+
   // Style switcher
   const switchStyle = useCallback((styleKey) => {
     if (!mapRef.current || styleKey === currentStyle) return;
