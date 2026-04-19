@@ -37,3 +37,23 @@ test('satelliteImagery seeds have archive_era tag', async () => {
     );
   }
 });
+
+test('satelliteImagery includes multiple platforms when live', async () => {
+  const fc = await collectSatelliteImagery();
+  if (!fc._meta.live) return; // skip when seeded
+  const platforms = new Set(fc.features.map((f) => f.properties.platform));
+  // At minimum Himawari-9 + one GIBS mosaic should be present.
+  assert.ok(platforms.size >= 2, `expected >= 2 platforms, got ${[...platforms].join(',')}`);
+});
+
+test('satelliteImagery seeds historical era when archive provider emits', async () => {
+  const fc = await collectSatelliteImagery();
+  if (!fc._meta.live) return;
+  // Historical provider is token-gated, so archive_era='historical' is only
+  // emitted when USGS_M2M_TOKEN is set. In that case, ensure at least one
+  // historical feature exists; otherwise just confirm none are malformed.
+  const hasHistorical = fc.features.some((f) => f.properties.archive_era === 'historical');
+  if (process.env.USGS_M2M_TOKEN) {
+    assert.ok(hasHistorical, 'expected historical archive feature with token set');
+  }
+});

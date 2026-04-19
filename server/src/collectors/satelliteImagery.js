@@ -141,6 +141,168 @@ function gibsViirs() {
   }];
 }
 
+// ── 4. Landsat 8/9 via Microsoft Planetary Computer STAC (no auth) ──────
+async function tryLandsatPC() {
+  const now = new Date();
+  const from = new Date(Date.now() - 14 * 86400e3).toISOString();
+  const to = now.toISOString();
+  const body = {
+    bbox: JAPAN_BBOX,
+    datetime: `${from}/${to}`,
+    collections: ['landsat-c2-l2'],
+    limit: 20,
+    query: { 'eo:cloud_cover': { lt: 50 } },
+  };
+  const data = await fetchJson(
+    'https://planetarycomputer.microsoft.com/api/stac/v1/search',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }
+  );
+  const feats = data?.features || [];
+  if (!feats.length) return null;
+  return feats.map((f, i) => {
+    const geom = f.geometry || null;
+    const ring = geom?.coordinates?.[0] || [];
+    const [cx, cy] = ring.length
+      ? ring.reduce((a, p) => [a[0] + p[0], a[1] + p[1]], [0, 0]).map((v) => v / ring.length)
+      : [138, 36];
+    const thumb = f.assets?.rendered_preview?.href
+      || f.assets?.thumbnail?.href
+      || null;
+    return {
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [cx, cy] },
+      properties: {
+        id: `IMG_LANDSAT_${f.id || i}`,
+        platform: f.properties?.platform || 'Landsat-9',
+        sensor: 'OLI',
+        scene_id: f.id,
+        datetime: f.properties?.datetime,
+        cloud_cover: f.properties?.['eo:cloud_cover'] ?? null,
+        preview_url: thumb,
+        tile_url: null,
+        bbox_geom: geom,
+        archive_era: 'real-time',
+        source: 'planetary_computer',
+        country: 'JP',
+      },
+    };
+  });
+}
+
+// ── 5. NOAA GOES-18 (West Pacific edge) via RAMMB SLIDER ─────────────────
+function rammbGoes() {
+  const now = new Date();
+  const y = now.getUTCFullYear();
+  const m = String(now.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(now.getUTCDate()).padStart(2, '0');
+  // SLIDER publishes a tile archive; we emit a latest-image preview URL.
+  const stamp = `${y}${m}${d}`;
+  return [{
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: [150.0, 35.0] }, // east of Japan
+    properties: {
+      id: `IMG_GOES18_${stamp}`,
+      platform: 'GOES-18',
+      sensor: 'ABI',
+      scene_id: `GOES18_${stamp}`,
+      datetime: now.toISOString(),
+      cloud_cover: null,
+      preview_url: `https://rammb-slider.cira.colostate.edu/data/imagery/${stamp}/goes-18---full_disk/geocolor/latest/04/latest.png`,
+      tile_url: null,
+      archive_era: 'real-time',
+      source: 'rammb_slider',
+      country: 'JP',
+    },
+  }];
+}
+
+// ── 6. ALOS-2 / PALSAR-2 — JAXA G-Portal (auth-gated). Seed only here;
+//     live ingestion requires JAXA_GPORTAL_TOKEN and is not implemented
+//     because the portal's browse API requires an authenticated session.
+function alos2Seed() {
+  const day = TODAY_YMD();
+  return [{
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: [138.0, 36.0] },
+    properties: {
+      id: `IMG_ALOS2_SEED_${day}`,
+      platform: 'ALOS-2',
+      sensor: 'PALSAR-2',
+      scene_id: `ALOS2_${day}`,
+      datetime: `${day}T00:00:00Z`,
+      cloud_cover: null,
+      preview_url: 'https://www.eorc.jaxa.jp/ALOS-2/en/img_up/dis_pal2_sample.png',
+      tile_url: null,
+      archive_era: 'real-time',
+      source: 'jaxa_alos2_seed',
+      country: 'JP',
+      note: 'Seed only — JAXA G-Portal browse requires auth.',
+    },
+  }];
+}
+
+// ── 7. CORONA + historical Landsat 1–5 via USGS EarthExplorer M2M ──────
+// Token-gated; returns null when USGS_M2M_TOKEN missing.
+async function tryUsgsHistorical() {
+  const token = process.env.USGS_M2M_TOKEN;
+  if (!token) return null;
+
+  const datasets = ['corona2', 'landsat_mss_c2_l1']; // CORONA + Landsat 1-5 MSS
+  const out = [];
+  for (const dataset of datasets) {
+    const body = {
+      datasetName: dataset,
+      spatialFilter: {
+        filterType: 'mbr',
+        lowerLeft:  { latitude: JAPAN_BBOX[1], longitude: JAPAN_BBOX[0] },
+        upperRight: { latitude: JAPAN_BBOX[3], longitude: JAPAN_BBOX[2] },
+      },
+      maxResults: 20,
+    };
+    const data = await fetchJson(
+      'https://m2m.cr.usgs.gov/api/api/json/stable/scene-search',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': token,
+        },
+        body: JSON.stringify(body),
+      },
+      12000
+    );
+    const results = data?.data?.results || [];
+    for (const r of results) {
+      const cx = r.spatialCoverage?.centroid?.longitude
+        ?? (r.spatialBounds?.coordinates?.[0]?.[0]?.[0] ?? 138);
+      const cy = r.spatialCoverage?.centroid?.latitude
+        ?? (r.spatialBounds?.coordinates?.[0]?.[0]?.[1] ?? 36);
+      out.push({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [cx, cy] },
+        properties: {
+          id: `IMG_USGS_${dataset}_${r.entityId}`,
+          platform: dataset === 'corona2' ? 'CORONA' : 'Landsat 1-5',
+          sensor: dataset === 'corona2' ? 'KH-4B/KH-9' : 'MSS',
+          scene_id: r.entityId,
+          datetime: r.temporalCoverage?.endDate || r.publishDate || null,
+          cloud_cover: r.cloudCover ?? null,
+          preview_url: r.browse?.[0]?.browsePath || null,
+          tile_url: null,
+          archive_era: 'historical',
+          source: 'usgs_m2m',
+          country: 'JP',
+        },
+      });
+    }
+  }
+  return out.length ? out : null;
+}
+
 // ── Seed fallback ─────────────────────────────────────────────────────────
 function generateSeed() {
   return IMAGERY_SEED_CENTROIDS.map((t, i) => ({
@@ -168,9 +330,13 @@ export default async function collectSatelliteImagery() {
   const liveSources = [];
 
   const providers = [
-    { name: 'nict_himawari', fn: tryHimawari },
-    { name: 'nasa_gibs_modis', fn: async () => gibsModis() },
-    { name: 'nasa_gibs_viirs', fn: async () => gibsViirs() },
+    { name: 'nict_himawari',    fn: tryHimawari },
+    { name: 'nasa_gibs_modis',  fn: async () => gibsModis() },
+    { name: 'nasa_gibs_viirs',  fn: async () => gibsViirs() },
+    { name: 'planetary_computer_landsat', fn: tryLandsatPC },
+    { name: 'rammb_slider_goes18', fn: async () => rammbGoes() },
+    { name: 'jaxa_alos2_seed',  fn: async () => alos2Seed() },
+    { name: 'usgs_m2m_historical', fn: tryUsgsHistorical },
   ];
 
   for (const p of providers) {
