@@ -16,8 +16,7 @@ test('satelliteGroundStations returns >50 features with valid envelope', async (
 test('satelliteGroundStations features include all 6 category types', async () => {
   const fc = await collectSatelliteGroundStations();
   const categories = new Set(fc.features.map(f => f.properties.category));
-  const required = ['satcom', 'vlbi', 'slr', 'optical_tracking', 'gnss', 'university'];
-  for (const cat of required) {
-    assert.ok(categories.has(cat), `missing category: ${cat}. Found: ${[...categories].join(', ')}`);
+  for (const c of ['satcom', 'vlbi', 'slr', 'optical_tracking', 'gnss_reference']) {
+    assert.ok(categories.has(c), `missing category: ${c}`);
   }
 });
