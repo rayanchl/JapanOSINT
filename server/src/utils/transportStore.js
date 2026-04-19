@@ -193,13 +193,16 @@ export function upsertStation(feature, mode, source) {
   const prevSources = safeJson(existing.sources, []);
   const nextSources = Array.from(new Set([...prevSources, source, ...(p.sources || [])].filter(Boolean)));
   const prevProps = safeJson(existing.properties, {});
-  const mergedProps = { ...p, ...prevProps };
+  // Fresh collector output wins for computed fields (line_color, etc) so
+  // upstream algorithm fixes propagate. Falls back to previous values
+  // when the new payload omits a field.
+  const mergedProps = { ...prevProps, ...p };
 
   stmtStationUpdate.run({
     station_uid: uid,
-    name: existing.name || name,
-    operator: existing.operator || p.operator || null,
-    line: existing.line || p.line || p.line_name || null,
+    name: name || existing.name,
+    operator: p.operator || existing.operator || null,
+    line: p.line || p.line_name || existing.line || null,
     sources: JSON.stringify(nextSources),
     properties: JSON.stringify(mergedProps),
   });
@@ -244,12 +247,13 @@ export function upsertLine(feature, mode, source) {
   const prevSources = safeJson(existing.sources, []);
   const nextSources = Array.from(new Set([...prevSources, source, ...(p.sources || [])].filter(Boolean)));
   const prevProps = safeJson(existing.properties, {});
-  const mergedProps = { ...p, ...prevProps };
+  // Fresh collector output wins so upstream fixes propagate.
+  const mergedProps = { ...prevProps, ...p };
 
   stmtLineUpdate.run({
     line_uid: uid,
-    name: existing.name || name,
-    operator: existing.operator || operator,
+    name: name || existing.name,
+    operator: operator || existing.operator,
     coordinates: JSON.stringify(coordinates),
     sources: JSON.stringify(nextSources),
     properties: JSON.stringify(mergedProps),
