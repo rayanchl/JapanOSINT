@@ -706,6 +706,22 @@ router.get('/satellite-ground-stations', async (_req, res) => {
   await respondWithData(res, { sourceId: 'satellite-ground-stations', layerType: 'satellite-ground-stations', collectorKey: 'satellite-ground-stations' });
 });
 
+router.get('/satellite-imagery', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'satellite-imagery',
+    layerType: 'satelliteImagery',
+    collectorKey: 'satellite-imagery',
+  });
+});
+
+router.get('/satellite-tracking', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'satellite-tracking',
+    layerType: 'satelliteTracking',
+    collectorKey: 'satellite-tracking',
+  });
+});
+
 router.get('/amateur-radio-repeaters', async (_req, res) => {
   await respondWithData(res, { sourceId: 'amateur-radio-repeaters', layerType: 'amateur-radio-repeaters', collectorKey: 'amateur-radio-repeaters' });
 });
