@@ -8,7 +8,6 @@
 const MILITARY_RANGES = [
   // United States
   { start: 0xae0000, end: 0xafffff, note: 'USAF / USN / USA' },
-  { start: 0xadf7c0, end: 0xadf7ff, note: 'USA misc' },
   // United Kingdom
   { start: 0x43c000, end: 0x43cfff, note: 'RAF' },
   // Canada
@@ -16,7 +15,6 @@ const MILITARY_RANGES = [
   // Japan
   { start: 0x868000, end: 0x86ffff, note: 'JASDF / JMSDF / JGSDF' },
   // Australia
-  { start: 0x7c822d, end: 0x7c822f, note: 'RAAF sample' },
   { start: 0x7cf800, end: 0x7cffff, note: 'RAAF' },
   // Germany
   { start: 0x3ea000, end: 0x3ebfff, note: 'Luftwaffe' },
@@ -35,7 +33,7 @@ const MILITARY_RANGES = [
 // Callsign prefixes (case-insensitive). Anchored to start; must be followed
 // by a digit to avoid matching civil callsigns that happen to start with
 // the same letters.
-const CALLSIGN_RE = /^(RCH|CNV|EVAC|SAM|JFR|JAPAN|PAT|REACH|DUKE|SHARK|NAVY|RESCUE|BLUE|ATLAS|CONVOY|HKY|VADER|RAID|PACK)\d/i;
+const CALLSIGN_RE = /^(RCH|CNV|EVAC|SAM|JFR|JAPAN|PAT|REACH|DUKE|SHARK|NAVY|RESCUE|CONVOY|HKY|VADER|RAID|PACK)\d/i;
 
 export function isMilitaryByIcao24(icao24) {
   if (!icao24 || typeof icao24 !== 'string') return false;
@@ -53,6 +51,11 @@ export function isMilitaryByCallsign(callsign) {
   return CALLSIGN_RE.test(callsign.trim());
 }
 
+/**
+ * Returns { is_military, military_reason } for the given aircraft identifiers.
+ * ICAO24 range is checked first (hardware-assigned, higher confidence);
+ * callsign is a fallback for aircraft whose hex falls outside known military blocks.
+ */
 export function classifyMilitary({ icao24, callsign }) {
   if (isMilitaryByIcao24(icao24)) {
     return { is_military: true, military_reason: 'icao_range' };

@@ -13,6 +13,13 @@ test('USAF range AE0000-AFFFFF is military', () => {
   assert.equal(isMilitaryByIcao24('affffe'), true);
 });
 
+test('USAF range boundaries are inclusive', () => {
+  assert.equal(isMilitaryByIcao24('ae0000'), true);  // exact lower bound
+  assert.equal(isMilitaryByIcao24('afffff'), true);  // exact upper bound
+  assert.equal(isMilitaryByIcao24('adffff'), false); // one below lower bound
+  assert.equal(isMilitaryByIcao24('b00000'), false); // one above upper bound
+});
+
 test('JASDF range 86xxxx is military', () => {
   assert.equal(isMilitaryByIcao24('86f123'), true);
 });
