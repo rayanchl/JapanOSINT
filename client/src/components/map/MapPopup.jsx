@@ -734,6 +734,162 @@ function GenericDetail({ properties }) {
   );
 }
 
+function SatelliteImageryDetail({ properties }) {
+  const [baked, setBaked] = useState(false);
+  const [opacity, setOpacity] = useState(0.6);
+
+  const sceneId = properties.scene_id;
+  const platform = properties.platform;
+  const tileUrl = properties.tile_url;
+  const previewUrl = properties.preview_url;
+  const hasFeed = !!(tileUrl || previewUrl);
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('satellite-imagery-bake', {
+      detail: {
+        show: baked,
+        sceneId,
+        platform,
+        tileUrl,
+        previewUrl,
+        opacity,
+      },
+    }));
+  }, [baked, opacity, sceneId, platform, tileUrl, previewUrl]);
+
+  useEffect(() => {
+    return () => {
+      window.dispatchEvent(new CustomEvent('satellite-imagery-bake', {
+        detail: { show: false, sceneId: properties.scene_id || properties.id },
+      }));
+    };
+  }, []);
+
+  const highlighted = [
+    'platform', 'sensor', 'scene_id', 'datetime',
+    'cloud_cover', 'preview_url', 'tile_url', 'archive_era', 'source',
+  ];
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium text-gray-200">
+          {properties.platform}
+        </span>
+        {properties.sensor && (
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-neon-cyan/20 text-neon-cyan font-mono">
+            {properties.sensor}
+          </span>
+        )}
+        {properties.archive_era === 'historical' && (
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 font-mono">
+            archive
+          </span>
+        )}
+      </div>
+      {properties.datetime && (
+        <p className="text-xs text-gray-500 font-mono">
+          {formatTimestamp(properties.datetime)}
+          {properties.cloud_cover != null && (
+            <span className="ml-2">cloud {properties.cloud_cover}%</span>
+          )}
+        </p>
+      )}
+      {properties.preview_url && (
+        <img
+          src={properties.preview_url}
+          alt={`${properties.platform} preview`}
+          style={{ maxWidth: 240, maxHeight: 180, objectFit: 'contain' }}
+          className="rounded border border-osint-border/50"
+          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+        />
+      )}
+      {hasFeed && (
+        <label className="flex items-center gap-2 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={baked}
+            onChange={(e) => setBaked(e.target.checked)}
+            className="accent-neon-cyan"
+          />
+          <span className="text-xs text-gray-300">Bake feed on map</span>
+        </label>
+      )}
+      {baked && (
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-500">Opacity</span>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.05}
+            value={opacity}
+            onChange={(e) => setOpacity(Number(e.target.value))}
+            className="flex-1 accent-neon-cyan"
+          />
+          <span className="text-xs text-gray-400 font-mono w-8 text-right">
+            {Math.round(opacity * 100)}%
+          </span>
+        </div>
+      )}
+      <p className="text-[10px] text-gray-600 font-mono">src: {properties.source}</p>
+      <PropertyTable properties={properties} exclude={highlighted} />
+    </div>
+  );
+}
+
+function SatelliteTrackingDetail({ properties }) {
+  const [showTrack, setShowTrack] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      window.dispatchEvent(new CustomEvent('satellite-track-toggle', {
+        detail: { show: false, noradId: properties.norad_id },
+      }));
+    };
+  }, []);
+  const highlighted = [
+    'name', 'norad_id', 'category', 'altitude_km', 'velocity_kms',
+    'inclination_deg', 'next_pass_utc', 'tle_line1', 'tle_line2', 'source',
+  ];
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium text-gray-200">{properties.name}</span>
+        <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">
+          {properties.category}
+        </span>
+      </div>
+      <div className="text-xs text-gray-400 space-y-0.5 font-mono">
+        <div>NORAD: {properties.norad_id}</div>
+        {properties.altitude_km != null && <div>Altitude: {properties.altitude_km} km</div>}
+        {properties.velocity_kms != null && <div>Velocity: {properties.velocity_kms} km/s</div>}
+        {properties.inclination_deg != null && <div>Inclination: {properties.inclination_deg}°</div>}
+      </div>
+      <button
+        type="button"
+        className="text-xs px-2 py-1 rounded bg-neon-cyan/20 text-neon-cyan hover:bg-neon-cyan/30 transition"
+        onClick={() => {
+          setShowTrack((v) => !v);
+          // Dispatch a custom event so MapView picks it up and draws / clears
+          // the ground-track layer. Keeping MapPopup decoupled from map state.
+          const evt = new CustomEvent('satellite-track-toggle', {
+            detail: {
+              noradId: properties.norad_id,
+              tleLine1: properties.tle_line1,
+              tleLine2: properties.tle_line2,
+              show: !showTrack,
+            },
+          });
+          window.dispatchEvent(evt);
+        }}
+      >
+        {showTrack ? 'Hide ground track' : 'Show ground track'}
+      </button>
+      <PropertyTable properties={properties} exclude={highlighted} />
+    </div>
+  );
+}
+
 const DETAIL_RENDERERS = {
   earthquakes: EarthquakeDetail,
   cameras: CameraDetail,
@@ -745,6 +901,10 @@ const DETAIL_RENDERERS = {
   'flight-adsb': FlightDetail,
   twitterGeo: TwitterGeoDetail,
   'twitter-geo': TwitterGeoDetail,
+  satelliteImagery: SatelliteImageryDetail,
+  'satellite-imagery': SatelliteImageryDetail,
+  satelliteTracking: SatelliteTrackingDetail,
+  'satellite-tracking': SatelliteTrackingDetail,
 };
 
 export default function MapPopup({ feature, layerType, onClose, position }) {
@@ -784,7 +944,11 @@ export default function MapPopup({ feature, layerType, onClose, position }) {
           <MdClose size={14} aria-hidden="true" />
         </button>
       </div>
-      <Renderer properties={properties} layerType={layerType} />
+      <Renderer
+        key={properties.id || properties.scene_id || properties.norad_id || properties.gs_id}
+        properties={properties}
+        layerType={layerType}
+      />
       <ReverseGeocodeLabel feature={feature} />
     </div>
   );

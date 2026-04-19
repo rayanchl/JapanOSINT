@@ -13,6 +13,7 @@
     "express": "^4.21.1",
     "node-cron": "^3.0.3",
     "playwright": "^1.49.0",
+    "satellite.js": "^5.0.0",
     "ws": "^8.18.0"
   }
 }

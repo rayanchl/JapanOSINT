@@ -131,6 +131,8 @@ import submarineCables from './submarineCables.js';
 import torExitNodes from './torExitNodes.js';
 import coverage5g from './coverage5g.js';
 import satelliteGroundStations from './satelliteGroundStations.js';
+import satelliteImagery from './satelliteImagery.js';
+import satelliteTracking from './satelliteTracking.js';
 import amateurRadioRepeaters from './amateurRadioRepeaters.js';
 
 // Wave 7: Tourism + Culture
@@ -335,6 +337,8 @@ export const collectors = {
   'tor-exit-nodes': torExitNodes,
   '5g-coverage': coverage5g,
   'satellite-ground-stations': satelliteGroundStations,
+  'satellite-imagery':  satelliteImagery,
+  'satellite-tracking': satelliteTracking,
   'amateur-radio-repeaters': amateurRadioRepeaters,
 
   // Wave 7: Tourism + Culture
@@ -442,4 +446,4 @@ export async function runAllCollectors() {
   return output;
 }
 
-export default collectors;
+export default collectors;

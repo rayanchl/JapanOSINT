@@ -3617,6 +3617,110 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
     }
   }, [layers, layerData, mapReady]);
 
+  // Temporary ground-track line layer for satellite tracking popups.
+  // Receives events from MapPopup's SatelliteTrackingDetail "Show ground track" button.
+  useEffect(() => {
+    if (!mapRef.current) return;
+    const TRACK_SOURCE = 'satellite-ground-track-source';
+    const TRACK_LAYER = 'satellite-ground-track-layer';
+
+    function removeTrack(map) {
+      if (map.getLayer(TRACK_LAYER)) map.removeLayer(TRACK_LAYER);
+      if (map.getSource(TRACK_SOURCE)) map.removeSource(TRACK_SOURCE);
+    }
+
+    async function onToggle(e) {
+      const { show, tleLine1, tleLine2, noradId } = e.detail || {};
+      const map = mapRef.current;
+      if (!map) return;
+      removeTrack(map);
+      if (!show) return;
+      const { computeGroundTrack } = await import('../../utils/groundTrack.js');
+      const geom = computeGroundTrack(tleLine1, tleLine2, { minutes: 90, stepSec: 30 });
+      map.addSource(TRACK_SOURCE, {
+        type: 'geojson',
+        data: { type: 'Feature', geometry: geom, properties: { noradId } },
+      });
+      map.addLayer({
+        id: TRACK_LAYER,
+        type: 'line',
+        source: TRACK_SOURCE,
+        paint: {
+          'line-color': '#ba68c8',
+          'line-width': 2,
+          'line-opacity': 0.85,
+          'line-dasharray': [4, 3],
+        },
+      });
+    }
+
+    window.addEventListener('satellite-track-toggle', onToggle);
+    return () => {
+      window.removeEventListener('satellite-track-toggle', onToggle);
+      if (mapRef.current) removeTrack(mapRef.current);
+    };
+  }, []);
+
+  // Satellite imagery "bake on map" — overlays the clicked source's tile or
+  // static preview onto the MapLibre map. A new source replaces the prior one.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const SOURCE_ID = 'satellite-bake-source';
+    const LAYER_ID = 'satellite-bake-layer';
+    let currentSceneId = null;
+
+    function removeCurrent() {
+      if (map.getLayer(LAYER_ID)) map.removeLayer(LAYER_ID);
+      if (map.getSource(SOURCE_ID)) map.removeSource(SOURCE_ID);
+      currentSceneId = null;
+    }
+
+    function onBake(e) {
+      const { show, sceneId, tileUrl, previewUrl, opacity } = e.detail || {};
+      if (!map) return;
+
+      // Opacity-only update path: same scene still showing → adjust opacity only.
+      if (show && currentSceneId === sceneId && map.getLayer(LAYER_ID)) {
+        map.setPaintProperty(LAYER_ID, 'raster-opacity', opacity ?? 0.6);
+        return;
+      }
+
+      removeCurrent();
+      if (!show) return;
+
+      if (tileUrl) {
+        map.addSource(SOURCE_ID, {
+          type: 'raster',
+          tiles: [tileUrl],
+          tileSize: 256,
+        });
+      } else if (previewUrl) {
+        // Static image stretched across Japan bbox (W, S, E, N = 122, 24, 154, 46).
+        map.addSource(SOURCE_ID, {
+          type: 'image',
+          url: previewUrl,
+          coordinates: [[122, 46], [154, 46], [154, 24], [122, 24]],
+        });
+      } else {
+        return;
+      }
+      map.addLayer({
+        id: LAYER_ID,
+        type: 'raster',
+        source: SOURCE_ID,
+        paint: { 'raster-opacity': opacity ?? 0.6 },
+      });
+      currentSceneId = sceneId;
+    }
+
+    window.addEventListener('satellite-imagery-bake', onBake);
+    return () => {
+      window.removeEventListener('satellite-imagery-bake', onBake);
+      removeCurrent();
+    };
+  }, []);
+
   // Style switcher
   const switchStyle = useCallback((styleKey) => {
     if (!mapRef.current || styleKey === currentStyle) return;
