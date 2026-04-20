@@ -112,6 +112,38 @@ function safeJson(text, fallback) {
   try { return JSON.parse(text); } catch { return fallback; }
 }
 
+/**
+ * Chaikin corner-cutting. One iteration replaces every interior vertex
+ * with two new points at 1/4 and 3/4 along its adjacent segments; the
+ * first and last coordinate are preserved. Two iterations produce a
+ * visibly smoothed polyline without an explosion of points.
+ *
+ * Result length: for N input points, one pass emits ~2*(N-1); two
+ * passes emit ~4*(N-1). Short fragments (< 3 points) pass through.
+ *
+ * Used so the rendered track AND the live-vehicle simulator ride the
+ * same smoothed curve — the train can't drift off a track it's
+ * traversing the coords of.
+ */
+function chaikinOnce(coords) {
+  if (!Array.isArray(coords) || coords.length < 3) return coords;
+  const out = [coords[0]];
+  for (let i = 0; i < coords.length - 1; i++) {
+    const [ax, ay] = coords[i];
+    const [bx, by] = coords[i + 1];
+    out.push([ax + 0.25 * (bx - ax), ay + 0.25 * (by - ay)]);
+    out.push([ax + 0.75 * (bx - ax), ay + 0.75 * (by - ay)]);
+  }
+  out.push(coords[coords.length - 1]);
+  return out;
+}
+
+function chaikinSmooth(coords, iterations = 2) {
+  let c = coords;
+  for (let i = 0; i < iterations; i++) c = chaikinOnce(c);
+  return c;
+}
+
 function rowToStationFeature(row) {
   const properties = safeJson(row.properties, {});
   const sources = safeJson(row.sources, []);
@@ -136,7 +168,11 @@ function rowToStationFeature(row) {
 function rowToLineFeature(row) {
   const properties = safeJson(row.properties, {});
   const sources = safeJson(row.sources, []);
-  const coords = safeJson(row.coordinates, []);
+  const rawCoords = safeJson(row.coordinates, []);
+  // Soften OSM fragment zig-zag so the rendered track and the live-
+  // vehicle simulator share the same curve. Endpoints are preserved
+  // so adjacent fragments still meet at shared junctions.
+  const coords = chaikinSmooth(rawCoords, 2);
   return {
     type: 'Feature',
     geometry: { type: 'LineString', coordinates: coords },
