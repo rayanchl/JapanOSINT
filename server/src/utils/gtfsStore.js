@@ -231,3 +231,76 @@ export function getAgencyFeeds(agId) {
     WHERE ag_id = ?
   `).all(agId);
 }
+
+// Map of Shimada ag_id → ODPT agency code used in the GTFS-RT URL
+// api.odpt.org/api/v4/gtfs/realtime/<CODE>?acl:consumerKey=<TOKEN>.
+// Hand-maintained from ckan.odpt.org dataset slugs.
+const ODPT_AGENCY_MAP = {
+  'a13001': 'ToeiBus',
+  'a13101': 'KeiseiBus',
+  'a33208': 'UnoBus',
+  'a02201': 'AomoriCityBus',
+  'a10205': 'NagaiTransportation',
+};
+
+/**
+ * Refresh the gtfs_rt_feeds table. For every agency in gtfs_feeds whose
+ * rt_catalog_url references ckan.odpt.org AND whose ag_id is in the
+ * ODPT_AGENCY_MAP, upsert an entry with the canonical ODPT RT URL.
+ *
+ * Requires ODPT_CHALLENGE_TOKEN (or ODPT_TOKEN / ODPT_CONSUMER_KEY) in env;
+ * otherwise this is a no-op and the poller will run against nothing.
+ *
+ * Returns { seeded, skipped, reason? }.
+ */
+export function refreshRtFeedCatalogue() {
+  const token =
+    process.env.ODPT_CHALLENGE_TOKEN ||
+    process.env.ODPT_TOKEN ||
+    process.env.ODPT_CONSUMER_KEY ||
+    null;
+  if (!token) {
+    return { seeded: 0, skipped: 0, reason: 'no ODPT_CHALLENGE_TOKEN in env' };
+  }
+
+  const odptRows = db.prepare(`
+    SELECT feed_id, ag_id, ag_name
+    FROM gtfs_feeds
+    WHERE rt_catalog_url LIKE '%ckan.odpt.org%'
+      AND ag_id IN (${Object.keys(ODPT_AGENCY_MAP).map(() => '?').join(', ') || "''"})
+  `).all(...Object.keys(ODPT_AGENCY_MAP));
+
+  const upsert = db.prepare(`
+    INSERT INTO gtfs_rt_feeds
+      (feed_id, ag_id, ag_name, rt_url, poll_interval_s)
+    VALUES (?, ?, ?, ?, 30)
+    ON CONFLICT(feed_id) DO UPDATE SET
+      ag_id   = excluded.ag_id,
+      ag_name = excluded.ag_name,
+      rt_url  = excluded.rt_url
+  `);
+
+  let seeded = 0;
+  let skipped = 0;
+  const tx = db.transaction(() => {
+    for (const r of odptRows) {
+      const code = ODPT_AGENCY_MAP[r.ag_id];
+      if (!code) { skipped++; continue; }
+      const rtUrl = `https://api.odpt.org/api/v4/gtfs/realtime/${code}?acl:consumerKey=${encodeURIComponent(token)}`;
+      upsert.run(r.feed_id, r.ag_id, r.ag_name, rtUrl);
+      seeded++;
+    }
+  });
+  tx();
+  return { seeded, skipped };
+}
+
+/** Return all configured RT feed rows. */
+export function listRtFeeds() {
+  return db.prepare(`
+    SELECT feed_id, ag_id, ag_name, rt_url, poll_interval_s,
+           last_polled_at, last_ok_at, last_status, consecutive_fails
+    FROM gtfs_rt_feeds
+    ORDER BY ag_id
+  `).all();
+}

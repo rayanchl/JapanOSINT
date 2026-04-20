@@ -193,6 +193,33 @@ db.exec(`
     last_refreshed_at    TEXT
   );
   CREATE INDEX IF NOT EXISTS idx_gtfs_feeds_agency ON gtfs_feeds(ag_id);
+
+  CREATE TABLE IF NOT EXISTS gtfs_rt_feeds (
+    feed_id           TEXT PRIMARY KEY,
+    ag_id             TEXT NOT NULL,
+    ag_name           TEXT,
+    rt_url            TEXT NOT NULL,
+    poll_interval_s   INTEGER NOT NULL DEFAULT 30,
+    last_polled_at    TEXT,
+    last_ok_at        TEXT,
+    last_status       TEXT,
+    consecutive_fails INTEGER NOT NULL DEFAULT 0
+  );
+
+  CREATE TABLE IF NOT EXISTS gtfs_rt_positions (
+    org_id       TEXT NOT NULL,
+    trip_id      TEXT NOT NULL,
+    route_id     TEXT,
+    lat          REAL NOT NULL,
+    lon          REAL NOT NULL,
+    bearing      REAL,
+    speed_mps    REAL,
+    reported_at  INTEGER NOT NULL,
+    received_at  TEXT NOT NULL,
+    PRIMARY KEY (org_id, trip_id)
+  );
+  CREATE INDEX IF NOT EXISTS idx_gtfs_rt_positions_reported
+    ON gtfs_rt_positions(reported_at);
 `);
 
 // --------------- Schema migration ---------------
