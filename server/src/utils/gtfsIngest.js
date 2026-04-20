@@ -17,7 +17,7 @@ export function parseGtfsTime(s) {
 
 // Split one CSV line respecting double-quoted fields (GTFS stop names
 // occasionally contain commas inside quotes).
-function splitCsvLine(line) {
+export function splitCsvLine(line) {
   const out = [];
   let cur = '';
   let quoted = false;
@@ -36,7 +36,7 @@ function splitCsvLine(line) {
   return out;
 }
 
-function parseCsv(text) {
+export function parseCsv(text) {
   const lines = text.split(/\r?\n/).filter(Boolean);
   if (lines.length < 2) return { header: [], rows: [] };
   const header = splitCsvLine(lines[0]).map((s) => s.trim());

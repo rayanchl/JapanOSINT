@@ -175,6 +175,24 @@ db.exec(`
     end_date        TEXT,
     PRIMARY KEY (org_id, feed_id, service_id)
   );
+  CREATE TABLE IF NOT EXISTS gtfs_feeds (
+    feed_id              TEXT PRIMARY KEY,
+    ag_id                TEXT,
+    ag_name              TEXT,
+    pref_code            TEXT,
+    pref_name            TEXT,
+    feed_name            TEXT,
+    fixed_current_url    TEXT,
+    license_name         TEXT,
+    license_url          TEXT,
+    api_key_required     INTEGER NOT NULL DEFAULT 0,
+    feed_end_date        TEXT,
+    rt_catalog_url       TEXT,
+    rt_api_key_required  INTEGER NOT NULL DEFAULT 0,
+    rt_status            TEXT,
+    last_refreshed_at    TEXT
+  );
+  CREATE INDEX IF NOT EXISTS idx_gtfs_feeds_agency ON gtfs_feeds(ag_id);
 `);
 
 // --------------- Schema migration ---------------

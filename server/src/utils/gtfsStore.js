@@ -2,6 +2,7 @@
 // Scope: hydration state + next-departures at a stop.
 
 import db from './database.js';
+import { parseCsv } from './gtfsIngest.js';
 
 /** Return true if gtfs_operators row has a hydrated_at timestamp. */
 export function isOperatorHydrated(orgId) {
@@ -123,15 +124,15 @@ export function listHydratedOperators() {
   `).all();
 }
 
-/** Fetch the operator catalogue from gtfs-data.jp and return a list of org_ids. */
 export async function listUpstreamOperatorIds() {
-  const res = await fetch('https://api.gtfs-data.jp/v2/organizations');
-  if (!res.ok) throw new Error(`organizations HTTP ${res.status}`);
-  const body = await res.json();
-  const list = Array.isArray(body?.body) ? body.body : [];
-  return list
-    .map((o) => o.organization_id || o.id || o.organizationID)
-    .filter(Boolean);
+  const rows = db.prepare(`
+    SELECT DISTINCT ag_id FROM gtfs_feeds
+    WHERE ag_id IS NOT NULL
+      AND fixed_current_url IS NOT NULL
+      AND api_key_required = 0
+    ORDER BY ag_id
+  `).all();
+  return rows.map((r) => r.ag_id);
 }
 
 /**
@@ -145,4 +146,88 @@ export function listStaleOperatorIds(ageDays) {
     WHERE hydrated_at IS NULL OR hydrated_at < ?
     ORDER BY hydrated_at IS NULL DESC, hydrated_at ASC
   `).all(cutoff).map((r) => r.org_id);
+}
+
+const SHIMADA_CATALOGUE_URL = 'https://tshimada291.sakura.ne.jp/transport/dat/GTFS_opendata_jp_catalog.csv';
+
+/**
+ * Fetch the T.Shimada authoritative Japanese GTFS catalogue and upsert rows
+ * into gtfs_feeds. Called at boot and weekly via cron. Safe to call repeatedly
+ * — each row is keyed by feed_id so re-running refreshes URLs in place.
+ *
+ * Returns { total }.
+ */
+export async function refreshFeedCatalogue() {
+  const res = await fetch(SHIMADA_CATALOGUE_URL, {
+    headers: { 'User-Agent': 'japan-osint/1.0' },
+  });
+  if (!res.ok) throw new Error(`catalogue HTTP ${res.status}`);
+  const text = await res.text();
+  const { rows } = parseCsv(text);
+
+  const upsert = db.prepare(`
+    INSERT INTO gtfs_feeds (
+      feed_id, ag_id, ag_name, pref_code, pref_name, feed_name,
+      fixed_current_url, license_name, license_url,
+      api_key_required, feed_end_date,
+      rt_catalog_url, rt_api_key_required, rt_status,
+      last_refreshed_at
+    ) VALUES (
+      @feed_id, @ag_id, @ag_name, @pref_code, @pref_name, @feed_name,
+      @fixed_current_url, @license_name, @license_url,
+      @api_key_required, @feed_end_date,
+      @rt_catalog_url, @rt_api_key_required, @rt_status,
+      datetime('now')
+    )
+    ON CONFLICT(feed_id) DO UPDATE SET
+      ag_id               = excluded.ag_id,
+      ag_name             = excluded.ag_name,
+      pref_code           = excluded.pref_code,
+      pref_name           = excluded.pref_name,
+      feed_name           = excluded.feed_name,
+      fixed_current_url   = excluded.fixed_current_url,
+      license_name        = excluded.license_name,
+      license_url         = excluded.license_url,
+      api_key_required    = excluded.api_key_required,
+      feed_end_date       = excluded.feed_end_date,
+      rt_catalog_url      = excluded.rt_catalog_url,
+      rt_api_key_required = excluded.rt_api_key_required,
+      rt_status           = excluded.rt_status,
+      last_refreshed_at   = datetime('now')
+  `);
+
+  let count = 0;
+  const tx = db.transaction((entries) => {
+    for (const r of entries) {
+      if (!r.feed_id) continue;
+      upsert.run({
+        feed_id: r.feed_id,
+        ag_id: r.ag_id || null,
+        ag_name: r.ag_name || null,
+        pref_code: r.prefcode || null,
+        pref_name: r.prefname || null,
+        feed_name: r.feed_name || r.catalog_name || null,
+        fixed_current_url: r.fixed_current_url || null,
+        license_name: r.license_name || null,
+        license_url: r.license_url || null,
+        api_key_required: /^[1-9]/.test(r.api_key || '0') ? 1 : 0,
+        feed_end_date: r.feed_end_date || null,
+        rt_catalog_url: r.rt_catalog_url || null,
+        rt_api_key_required: /^[1-9]/.test(r.rt_api_key || '0') ? 1 : 0,
+        rt_status: r.rt_status || null,
+      });
+      count++;
+    }
+  });
+  tx(rows);
+  return { total: count };
+}
+
+/** Return feeds for one agency. */
+export function getAgencyFeeds(agId) {
+  return db.prepare(`
+    SELECT feed_id, fixed_current_url, api_key_required, rt_catalog_url, rt_api_key_required
+    FROM gtfs_feeds
+    WHERE ag_id = ?
+  `).all(agId);
 }
