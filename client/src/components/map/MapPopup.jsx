@@ -3,6 +3,7 @@ import { MdClose } from 'react-icons/md';
 import { getLayerIcon } from '../../utils/layerIcons';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 import StationPopup from './popups/StationPopup.jsx';
+import VehiclePopup from './popups/VehiclePopup.jsx';
 
 /**
  * Fetch a reverse-geocoded address label for a feature, using the server's
@@ -1065,6 +1066,7 @@ const DETAIL_RENDERERS = {
   'unified-subways': StationPopup,
   unifiedBuses: StationPopup,
   'unified-buses': StationPopup,
+  liveVehicle: VehiclePopup,
 };
 
 export default function MapPopup({ feature, layerType, onClose, position }) {

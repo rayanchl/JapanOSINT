@@ -3943,13 +3943,23 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
           if (map.getLayer(id)) interactiveLayers.push(id);
         }
       }
+      // Live-vehicle layers are managed outside addLayerToMap — include them
+      // explicitly so click surfaces VehiclePopup.
+      for (const id of ['live-vehicles-train-layer', 'live-vehicles-subway-layer', 'live-vehicles-bus-layer']) {
+        if (map.getLayer(id)) interactiveLayers.push(id);
+      }
 
       if (interactiveLayers.length === 0) return;
 
       const features = map.queryRenderedFeatures(e.point, { layers: interactiveLayers });
       if (features.length > 0) {
         const feature = features[0];
-        const layerType = feature.layer.id.replace('layer-', '').replace(/-(heat|extrude|line|fallback|ring[1-4])$/, '');
+        let layerType;
+        if (feature.layer.id.startsWith('live-vehicles-')) {
+          layerType = 'liveVehicle';
+        } else {
+          layerType = feature.layer.id.replace('layer-', '').replace(/-(heat|extrude|line|fallback|ring[1-4])$/, '');
+        }
         if (onFeatureClick) {
           const coords = feature.geometry?.coordinates;
           const lngLat = Array.isArray(coords) && Number.isFinite(coords[0]) && Number.isFinite(coords[1])

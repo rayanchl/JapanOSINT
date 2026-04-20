@@ -273,5 +273,56 @@ router.get('/station/:stationUid/summary', (req, res) => {
   }
 });
 
+// Structured vehicle info for a single active trip. trip_id arrives as
+// "org|feed|tripId" (the composite emitted by getActiveTripsAt) so we
+// split it to query the GTFS tables.
+router.get('/vehicle/:tripId/info', (req, res) => {
+  const raw = decodeURIComponent(String(req.params.tripId || ''));
+  const [orgId, feedId, tripId] = raw.split('|');
+  if (!orgId || !feedId || !tripId) {
+    return res.status(400).json({ error: 'bad tripId (expected org|feed|trip)' });
+  }
+  try {
+    const trip = db.prepare(`
+      SELECT t.trip_id, t.route_id, t.service_id, t.headsign,
+             r.short_name AS route_short, r.long_name AS route_long, r.color AS route_color
+      FROM gtfs_trips t
+      LEFT JOIN gtfs_routes r
+        ON r.org_id = t.org_id AND r.feed_id = t.feed_id AND r.route_id = t.route_id
+      WHERE t.org_id = ? AND t.feed_id = ? AND t.trip_id = ?
+    `).get(orgId, feedId, tripId);
+    if (!trip) return res.status(404).json({ error: 'trip not found' });
+
+    const nowSec = secondsSinceMidnight(new Date());
+    const nextStop = db.prepare(`
+      SELECT st.stop_sequence, st.stop_id, st.arrival_sec, st.departure_sec,
+             rt.arrival_delay_s AS delay_s
+      FROM gtfs_stop_times st
+      LEFT JOIN gtfs_rt_trip_updates rt
+        ON rt.org_id = st.org_id AND rt.trip_id = st.trip_id AND rt.stop_sequence = st.stop_sequence
+      WHERE st.org_id = ? AND st.feed_id = ? AND st.trip_id = ?
+        AND st.arrival_sec >= ?
+      ORDER BY st.arrival_sec ASC
+      LIMIT 1
+    `).get(orgId, feedId, tripId, nowSec);
+
+    res.json({
+      trip: {
+        trip_id: tripId,
+        org_id: orgId,
+        route_id: trip.route_id,
+        headsign: trip.headsign,
+        route_short: trip.route_short,
+        route_long: trip.route_long,
+        route_color: trip.route_color ? `#${trip.route_color}` : null,
+      },
+      next_stop: nextStop || null,
+    });
+  } catch (err) {
+    console.error('[transit/vehicle/info]', err);
+    res.status(500).json({ error: 'internal' });
+  }
+});
+
 export default router;
 
