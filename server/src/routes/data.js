@@ -1152,10 +1152,6 @@ router.get('/kyodo-rss', async (_req, res) => {
   await respondWithData(res, { sourceId: 'kyodo-rss', layerType: 'news-feed', collectorKey: 'kyodo-rss' });
 });
 
-router.get('/opensky-japan', async (_req, res) => {
-  await respondWithData(res, { sourceId: 'opensky-japan', layerType: 'flight-adsb', collectorKey: 'opensky-japan' });
-});
-
 router.get('/jpcert-alerts-rss', async (_req, res) => {
   await respondWithData(res, { sourceId: 'jpcert-alerts-rss', layerType: 'jpcert-alerts', collectorKey: 'jpcert-alerts-rss' });
 });

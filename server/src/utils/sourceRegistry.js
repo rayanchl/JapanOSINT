@@ -828,9 +828,6 @@ const sources = [
   { id: 'nhk-world-rss', name: 'NHK World English RSS', nameJa: 'NHK World EN RSS', type: 'api', category: 'government', url: 'https://www3.nhk.or.jp/nhkworld/en/news/feeds/', description: 'NHK World English news feed (Atom/RSS)', updateInterval: 600, layer: 'news-feed', free: true, status: 'offline' },
   { id: 'kyodo-rss', name: 'Kyodo News English RSS', nameJa: '共同通信 英字 RSS', type: 'api', category: 'government', url: 'https://english.kyodonews.net/rss/news.xml', description: 'Kyodo News English RSS feed - domestic and international news wire', updateInterval: 600, layer: 'news-feed', free: true, status: 'offline' },
 
-  // Aviation
-  { id: 'opensky-japan', name: 'OpenSky Network ADS-B (JP bbox)', nameJa: 'OpenSky ADS-B 日本', type: 'api', category: 'transport', url: 'https://opensky-network.org/api/states/all?lamin=24&lomin=122&lamax=46&lomax=146', description: 'OpenSky crowd-sourced ADS-B flight positions, Japan bounding box. Free anonymous (rate-limited to ~10s intervals)', updateInterval: 30, layer: 'flight-adsb', free: true, status: 'offline' },
-
   // Cyber / Infra
   { id: 'jpcert-alerts-rss', name: 'JPCERT/CC Alerts RSS', nameJa: 'JPCERT/CC 注意喚起 RSS', type: 'api', category: 'cyber', url: 'https://www.jpcert.or.jp/rss/jpcert.rdf', description: 'JPCERT Coordination Center security advisories and alerts (RDF/RSS). Anonymous', updateInterval: 3600, layer: 'jpcert-alerts', free: true, status: 'offline' },
   { id: 'ipa-vuln-rss', name: 'IPA Security Alerts RSS', nameJa: 'IPA 重要なセキュリティ情報 RSS', type: 'api', category: 'cyber', url: 'https://www.ipa.go.jp/security/announce/alert.rss', description: 'IPA (Information-technology Promotion Agency) critical security bulletins RSS', updateInterval: 3600, layer: 'jpcert-alerts', free: true, status: 'offline' },

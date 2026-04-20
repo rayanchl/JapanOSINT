@@ -194,7 +194,6 @@ import geospatialJpCkan from './geospatialJpCkan.js';
 import nhkNewsRss from './nhkNewsRss.js';
 import nhkWorldRss from './nhkWorldRss.js';
 import kyodoRss from './kyodoRss.js';
-import openskyJapan from './openskyJapan.js';
 import jpcertAlertsRss from './jpcertAlertsRss.js';
 import nictAtlas from './nictAtlas.js';
 import gsiGeocode from './gsiGeocode.js';
@@ -406,7 +405,6 @@ export const collectors = {
   'nhk-news-rss': nhkNewsRss,
   'nhk-world-rss': nhkWorldRss,
   'kyodo-rss': kyodoRss,
-  'opensky-japan': openskyJapan,
   'jpcert-alerts-rss': jpcertAlertsRss,
   'nict-atlas': nictAtlas,
   'gsi-geocode': gsiGeocode,
