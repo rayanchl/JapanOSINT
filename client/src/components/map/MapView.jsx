@@ -94,7 +94,7 @@ async function registerLayerIcons(map) {
   if (!map.hasImage('live-train-rect')) {
     const w = 64;   // width buffer
     const h = 32;   // height buffer (2:1)
-    const r = 8;    // corner radius in buffer px
+    const r = 12;   // corner radius in buffer px (more rounded)
     const data = new Uint8ClampedArray(w * h * 4);
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
