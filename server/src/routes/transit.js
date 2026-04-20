@@ -70,4 +70,101 @@ router.get('/routes', (req, res) => {
   }
 });
 
+import { ingestFeedZip } from '../utils/gtfsIngest.js';
+import {
+  isOperatorHydrated,
+  markOperatorHydrated,
+  getDeparturesAt,
+  listHydratedOperators,
+} from '../utils/gtfsStore.js';
+
+const GTFS_API = 'https://api.gtfs-data.jp/v2';
+
+// One-flight guard: concurrent hydrate calls for the same orgId share the
+// same in-flight promise so we don't download/ingest the same feeds twice.
+const inflightHydrate = new Map();
+
+async function hydrateOperator(orgId) {
+  if (isOperatorHydrated(orgId)) return { cached: true };
+  const existing = inflightHydrate.get(orgId);
+  if (existing) return existing;
+
+  const p = (async () => {
+    const feedsRes = await fetch(`${GTFS_API}/organizations/${orgId}/feeds`);
+    if (!feedsRes.ok) throw new Error(`feed list HTTP ${feedsRes.status}`);
+    const body = await feedsRes.json();
+    const feeds = Array.isArray(body?.body) ? body.body : [];
+    const feedIds = [];
+    const totals = { routes: 0, trips: 0, stop_times: 0, shapes: 0, calendar: 0, stops: 0 };
+    for (const f of feeds) {
+      const feedId = f.feed_id || f.id;
+      if (!feedId) continue;
+      const zipRes = await fetch(
+        `${GTFS_API}/organizations/${orgId}/feeds/${feedId}/files/archive.zip`,
+      );
+      if (!zipRes.ok) continue;
+      const buf = await zipRes.arrayBuffer();
+      try {
+        const c = ingestFeedZip(orgId, feedId, buf);
+        for (const k of Object.keys(totals)) {
+          if (typeof c[k] === 'number') totals[k] += c[k];
+        }
+        feedIds.push(feedId);
+      } catch (err) {
+        console.error(`[transit/hydrate] ${orgId}/${feedId} ingest failed:`, err?.message);
+      }
+    }
+    markOperatorHydrated(orgId, orgId, feedIds, {
+      stops: totals.stops,
+      trips: totals.trips,
+    });
+    return { cached: false, feedIds, counts: totals };
+  })();
+
+  inflightHydrate.set(orgId, p);
+  try {
+    return await p;
+  } finally {
+    inflightHydrate.delete(orgId);
+  }
+}
+
+router.post('/gtfs/hydrate/:orgId', async (req, res) => {
+  const raw = String(req.params.orgId || '');
+  const orgId = raw.replace(/[^a-z0-9_-]/gi, '');
+  if (!orgId) return res.status(400).json({ error: 'bad orgId' });
+  try {
+    const result = await hydrateOperator(orgId);
+    res.json({ ok: true, orgId, ...result });
+  } catch (err) {
+    console.error('[transit/gtfs/hydrate]', err);
+    res.status(502).json({ error: 'hydrate failed', detail: err?.message });
+  }
+});
+
+router.get('/gtfs/stop/:stopId/departures', (req, res) => {
+  const stopId = String(req.params.stopId || '');
+  if (!stopId) return res.status(400).json({ error: 'missing stopId' });
+  const limit = Math.min(20, Math.max(1, Number(req.query.limit) || 5));
+  const t = req.query.t ? new Date(String(req.query.t)) : new Date();
+  if (isNaN(t.getTime())) return res.status(400).json({ error: 'bad t (ISO date)' });
+  try {
+    const departures = getDeparturesAt(stopId, t, limit);
+    res.json({ stop_id: stopId, now: t.toISOString(), departures });
+  } catch (err) {
+    console.error('[transit/gtfs/departures]', err);
+    res.status(500).json({ error: 'internal' });
+  }
+});
+
+router.get('/gtfs/operators', (_req, res) => {
+  try {
+    res.json({ operators: listHydratedOperators() });
+  } catch (err) {
+    console.error('[transit/gtfs/operators]', err);
+    res.status(500).json({ error: 'internal' });
+  }
+});
+
 export default router;
+
