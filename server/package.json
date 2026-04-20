@@ -12,6 +12,7 @@
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "express": "^4.21.1",
+    "gtfs-realtime-bindings": "^1.1.1",
     "node-cron": "^3.0.3",
     "playwright": "^1.49.0",
     "satellite.js": "^5.0.0",
