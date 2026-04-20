@@ -493,11 +493,15 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       const STATION_RINGS = 5;
       const innerRadius = 4;
       const ringStep = 2;
+      // Typed array expression used by both the filter (length) and the
+      // color lookup (at). MapLibre needs the explicit ['array','string',…]
+      // cast or `at` returns null (→ black fill) instead of the string.
+      const colorsArray = ['array', 'string', ['coalesce', ['get', 'line_colors'], ['literal', []]]];
       for (let k = STATION_RINGS - 1; k >= 0; k--) {
         const radius = innerRadius + ringStep * k;
         const ringColor = [
           'coalesce',
-          ['at', k, ['get', 'line_colors']],
+          ['at', k, colorsArray],
           k === 0 ? perFeatureColor : 'rgba(0,0,0,0)',
         ];
         map.addLayer({
@@ -507,7 +511,7 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           filter: [
             'all',
             ['==', ['geometry-type'], 'Point'],
-            ['>', ['length', ['coalesce', ['get', 'line_colors'], ['literal', []]]], k],
+            ['>', ['length', colorsArray], k],
           ],
           paint: {
             'circle-radius': radius,
@@ -524,7 +528,7 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
         filter: [
           'all',
           ['==', ['geometry-type'], 'Point'],
-          ['==', ['length', ['coalesce', ['get', 'line_colors'], ['literal', []]]], 0],
+          ['==', ['length', colorsArray], 0],
         ],
         paint: {
           'circle-radius': innerRadius,
