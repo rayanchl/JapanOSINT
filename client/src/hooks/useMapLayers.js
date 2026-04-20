@@ -888,6 +888,28 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/unified-port-infra',
     category: 'Transport',
   },
+  // -- Live-transit vehicles (client-side simulator, no server endpoint) --
+  // Data comes from useLiveVehicles() fetching /api/transit/routes; the
+  // hook emits a GeoJSON FeatureCollection at 1 Hz which MapView pushes
+  // into a dedicated source via setData.
+  liveTransitTrains: {
+    name: 'Live trains (sim)',
+    icon: '\u{1F686}',
+    color: '#2e7d32',
+    category: 'Transport',
+  },
+  liveTransitSubways: {
+    name: 'Live subways (sim)',
+    icon: '\u{1F687}',
+    color: '#ff7043',
+    category: 'Transport',
+  },
+  liveTransitBuses: {
+    name: 'Live buses (sim)',
+    icon: '\u{1F68C}',
+    color: '#fb8c00',
+    category: 'Transport',
+  },
 };
 
 export const LAYER_CATEGORIES = [
@@ -934,6 +956,7 @@ export default function useMapLayers() {
   const fetchLayerData = useCallback(async (layerId) => {
     const def = LAYER_DEFINITIONS[layerId];
     if (!def) return;
+    if (!def.endpoint) return; // client-side-only layers (e.g. live-transit)
 
     if (cacheRef.current[layerId]) {
       setLayerData((prev) => ({ ...prev, [layerId]: cacheRef.current[layerId] }));

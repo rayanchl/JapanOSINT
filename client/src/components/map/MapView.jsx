@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
+import useLiveVehicles from '../../hooks/useLiveVehicles';
 import { getLayerIcon } from '../../utils/layerIcons';
 import { rasterizeIcon } from '../../utils/iconRaster';
 import { createRailwayLineTags } from '../../utils/railwayLineTags';
@@ -3821,6 +3822,13 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
   const [currentStyle, setCurrentStyle] = useState('openfreemap_positron');
   const prevLayersRef = useRef({});
 
+  // Slice A: client-side simulated vehicles for train / subway / bus. Each
+  // hook fetches /api/transit/routes once when enabled, spawns vehicles
+  // along every route, and emits a GeoJSON FeatureCollection at 1 Hz.
+  const liveTrainsGeo = useLiveVehicles('train', !!layers?.liveTransitTrains?.visible);
+  const liveSubwaysGeo = useLiveVehicles('subway', !!layers?.liveTransitSubways?.visible);
+  const liveBusesGeo = useLiveVehicles('bus', !!layers?.liveTransitBuses?.visible);
+
   // Initialize map
   useEffect(() => {
     if (mapRef.current || !mapContainerRef.current) return;
@@ -3943,6 +3951,65 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
       };
     }
   }, [layers, layerData, mapReady]);
+
+  // Live-transit vehicle layers — dedicated sources/layers managed outside
+  // the standard fetch-and-paint path because data is client-generated.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+
+    const specs = [
+      {
+        sourceId: 'live-vehicles-train',
+        layerId: 'live-vehicles-train-layer',
+        data: liveTrainsGeo,
+        visible: !!layers?.liveTransitTrains?.visible,
+        defaultColor: '#2e7d32',
+      },
+      {
+        sourceId: 'live-vehicles-subway',
+        layerId: 'live-vehicles-subway-layer',
+        data: liveSubwaysGeo,
+        visible: !!layers?.liveTransitSubways?.visible,
+        defaultColor: '#ff7043',
+      },
+      {
+        sourceId: 'live-vehicles-bus',
+        layerId: 'live-vehicles-bus-layer',
+        data: liveBusesGeo,
+        visible: !!layers?.liveTransitBuses?.visible,
+        defaultColor: '#fb8c00',
+      },
+    ];
+
+    for (const s of specs) {
+      if (!s.visible) {
+        if (map.getLayer(s.layerId)) map.removeLayer(s.layerId);
+        if (map.getSource(s.sourceId)) map.removeSource(s.sourceId);
+        continue;
+      }
+      if (!map.getSource(s.sourceId)) {
+        map.addSource(s.sourceId, { type: 'geojson', data: s.data });
+        map.addLayer({
+          id: s.layerId,
+          type: 'circle',
+          source: s.sourceId,
+          paint: {
+            'circle-radius': 4,
+            'circle-color': ['coalesce', ['get', 'line_color'], s.defaultColor],
+            'circle-stroke-width': 1.5,
+            'circle-stroke-color': '#ffffff',
+            'circle-stroke-opacity': 0.9,
+          },
+        });
+      } else {
+        map.getSource(s.sourceId).setData(s.data);
+      }
+    }
+  }, [mapReady, liveTrainsGeo, liveSubwaysGeo, liveBusesGeo,
+      layers?.liveTransitTrains?.visible,
+      layers?.liveTransitSubways?.visible,
+      layers?.liveTransitBuses?.visible]);
 
   // Temporary ground-track line layer for satellite tracking popups.
   // Receives events from MapPopup's SatelliteTrackingDetail "Show ground track" button.
