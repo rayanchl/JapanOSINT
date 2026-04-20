@@ -51,26 +51,41 @@ router.get('/routes', (req, res) => {
   }
   try {
     const lines = getLinesByMode(mode);
-    const features = [];
-    let truncated = false;
+    // Without a bbox, the first MAX_FEATURES rows cluster by insertion order
+    // (typically one prefecture). Scatter the cap by sampling with a
+    // deterministic-but-spread-out stride so the truncated result covers
+    // Japan rather than a single corner.
+    const candidates = [];
     for (const line of lines) {
       const coords = line?.geometry?.coordinates;
       if (!Array.isArray(coords) || coords.length < 2) continue;
       if (bbox && !lineIntersectsBbox(coords, bbox)) continue;
-      if (features.length >= MAX_FEATURES) { truncated = true; break; }
+      candidates.push(line);
+    }
+    let picked = candidates;
+    let truncated = false;
+    if (candidates.length > MAX_FEATURES) {
+      truncated = true;
+      const stride = candidates.length / MAX_FEATURES;
+      picked = new Array(MAX_FEATURES);
+      for (let i = 0; i < MAX_FEATURES; i++) {
+        picked[i] = candidates[Math.floor(i * stride)];
+      }
+    }
+    const features = picked.map((line) => {
       const p = line.properties || {};
-      features.push({
+      return {
         type: 'Feature',
-        geometry: { type: 'LineString', coordinates: coords },
+        geometry: { type: 'LineString', coordinates: line.geometry.coordinates },
         properties: {
           route_id: p.line_uid || null,
           name: p.name || null,
           line_color: p.line_color || null,
         },
-      });
-    }
+      };
+    });
     const body = { type: 'FeatureCollection', features };
-    if (truncated) body._meta = { truncated: true, limit: MAX_FEATURES };
+    if (truncated) body._meta = { truncated: true, limit: MAX_FEATURES, total: candidates.length };
     res.json(body);
   } catch (err) {
     console.error('[transit/routes]', err);

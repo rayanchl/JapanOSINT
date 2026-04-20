@@ -87,6 +87,45 @@ async function registerLayerIcons(map) {
     }
     map.addImage('ground-cross', { width: w, height: h, data }, { pixelRatio: 2 });
   }
+
+  // Rounded-rectangle icon for live-transit trains. White pixels so it can
+  // be tinted with `icon-color` via `sdf: true` at runtime. Baked at
+  // pixelRatio 2 like ground-cross. Aspect roughly 2:1 (train shape).
+  if (!map.hasImage('live-train-rect')) {
+    const w = 64;   // width buffer
+    const h = 32;   // height buffer (2:1)
+    const r = 8;    // corner radius in buffer px
+    const data = new Uint8ClampedArray(w * h * 4);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        // Compute distance to nearest corner; inside the rounded rect if
+        // either within the inner rect or the corner quarter-circle.
+        const inHorizCore = x >= r && x < w - r;
+        const inVertCore = y >= r && y < h - r;
+        let inside = false;
+        if (inHorizCore || inVertCore) {
+          inside = true;
+        } else {
+          // In a corner region — clamp to nearest corner center.
+          const cx = x < r ? r : (w - 1 - r);
+          const cy = y < r ? r : (h - 1 - r);
+          const dx = x - cx;
+          const dy = y - cy;
+          inside = dx * dx + dy * dy <= r * r;
+        }
+        if (inside) {
+          const i = (y * w + x) * 4;
+          data[i + 0] = 255;
+          data[i + 1] = 255;
+          data[i + 2] = 255;
+          data[i + 3] = 255;
+        }
+      }
+    }
+    // `sdf: true` lets MapLibre tint the pixels via icon-color at paint
+    // time. The pure-white pixel values act as the coverage mask.
+    map.addImage('live-train-rect', { width: w, height: h, data }, { pixelRatio: 2, sdf: true });
+  }
 }
 
 // Fixed icon size — flat 2D react-icons. Bumped 20% from the previous 0.5.
@@ -3990,16 +4029,30 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
       }
       if (!map.getSource(s.sourceId)) {
         map.addSource(s.sourceId, { type: 'geojson', data: s.data });
+        // Rounded-rectangle SDF icon, tinted with the line color (darkened),
+        // rotated by the vehicle's bearing, and ground-aligned so it lies
+        // flat against the basemap even when the camera is pitched — same
+        // treatment as the ground-cross pin marker.
         map.addLayer({
           id: s.layerId,
-          type: 'circle',
+          type: 'symbol',
           source: s.sourceId,
+          layout: {
+            'icon-image': 'live-train-rect',
+            'icon-size': 0.5,
+            'icon-rotate': ['coalesce', ['get', 'bearing'], 0],
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-pitch-alignment': 'map',
+            'icon-rotation-alignment': 'map',
+          },
           paint: {
-            'circle-radius': 4,
-            'circle-color': ['coalesce', ['get', 'line_color'], s.defaultColor],
-            'circle-stroke-width': 1.5,
-            'circle-stroke-color': '#ffffff',
-            'circle-stroke-opacity': 0.9,
+            'icon-color': ['coalesce', ['get', 'line_color'], s.defaultColor],
+            // `icon-halo-*` gives a subtle darker border without the white
+            // outline that the old circle layer had. Kept soft (width 1).
+            'icon-halo-color': 'rgba(0,0,0,0.55)',
+            'icon-halo-width': 1,
+            'icon-opacity': 0.9,
           },
         });
       } else {

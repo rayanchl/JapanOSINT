@@ -24,7 +24,25 @@ const VEHICLE_SPACING_M = {
 const MAX_VEHICLES_PER_ROUTE = 25;
 // Skip tiny branches/connectors; a ~500 m "line" is almost always a stub.
 const MIN_ROUTE_LENGTH_M = 500;
-const TICK_MS = 1000;
+// Render a fresh frame at most every RENDER_MS; motion math runs every rAF
+// so the vehicles move smoothly, but we only re-serialize the GeoJSON at
+// this cadence to keep setState / source.setData cheap.
+const RENDER_MS = 100;
+
+// Darken a #rrggbb color by multiplying each channel so the rendered
+// vehicle reads a bit deeper than the line itself (user request: trains
+// should be visibly darker than their line color).
+function darkenHex(hex, factor = 0.65) {
+  if (typeof hex !== 'string') return hex;
+  const m = hex.trim().match(/^#?([0-9a-f]{6})$/i);
+  if (!m) return hex;
+  const n = parseInt(m[1], 16);
+  const r = Math.round(((n >> 16) & 0xff) * factor);
+  const g = Math.round(((n >> 8) & 0xff) * factor);
+  const b = Math.round((n & 0xff) * factor);
+  const to2 = (v) => v.toString(16).padStart(2, '0');
+  return `#${to2(r)}${to2(g)}${to2(b)}`;
+}
 
 function spawnVehiclesForRoute(feature, mode) {
   const coords = feature?.geometry?.coordinates;
@@ -34,7 +52,8 @@ function spawnVehiclesForRoute(feature, mode) {
   if (total < MIN_ROUTE_LENGTH_M) return [];
   const spacing = VEHICLE_SPACING_M[mode];
   const n = Math.min(MAX_VEHICLES_PER_ROUTE, Math.max(1, Math.floor(total / spacing)));
-  const color = feature.properties?.line_color || null;
+  const rawColor = feature.properties?.line_color || null;
+  const color = rawColor ? darkenHex(rawColor, 0.65) : null;
   const routeId = feature.properties?.route_id || null;
   const vehicles = [];
   for (let i = 0; i < n; i++) {
@@ -88,43 +107,57 @@ export default function useLiveVehicles(mode, enabled) {
     return () => { cancelled = true; };
   }, [mode, enabled]);
 
-  // rAF tick loop — throttled to TICK_MS so we don't thrash setState at 60 Hz.
+  // rAF tick loop — advance motion every frame using real dt so movement is
+  // smooth. Serialize GeoJSON at most every RENDER_MS to avoid thrashing
+  // setState / source.setData at 60 Hz.
   useEffect(() => {
     if (!enabled) return;
     const speed = MODE_SPEED_MPS[mode];
+    let lastRenderAt = 0;
     const tick = (t) => {
       if (lastTickRef.current === null) lastTickRef.current = t;
-      const dt = (t - lastTickRef.current) / 1000;
-      if (dt >= TICK_MS / 1000) {
-        lastTickRef.current = t;
-        const delta = speed * dt;
-        const features = [];
-        for (const v of vehiclesRef.current) {
-          const next = advanceAlongLine(
-            v.coords,
-            v.segLens,
-            { segIdx: v.segIdx, segOffset: v.segOffset },
-            delta,
-          );
-          v.segIdx = next.segIdx;
-          v.segOffset = next.segOffset;
-          features.push({
+      const dt = (t - lastTickRef.current) / 1000; // seconds since last frame
+      lastTickRef.current = t;
+      const delta = speed * dt;
+
+      // Always advance positions — motion stays smooth at display refresh.
+      for (const v of vehiclesRef.current) {
+        const next = advanceAlongLine(
+          v.coords,
+          v.segLens,
+          { segIdx: v.segIdx, segOffset: v.segOffset },
+          delta,
+        );
+        v.segIdx = next.segIdx;
+        v.segOffset = next.segOffset;
+        v.lng = next.lng;
+        v.lat = next.lat;
+        v.bearing = next.bearing;
+      }
+
+      // Throttle the GeoJSON rebuild. 100 ms = 10 Hz is smooth enough to
+      // look continuous without hammering MapLibre's parser.
+      if (t - lastRenderAt >= RENDER_MS) {
+        lastRenderAt = t;
+        const features = new Array(vehiclesRef.current.length);
+        for (let i = 0; i < vehiclesRef.current.length; i++) {
+          const v = vehiclesRef.current[i];
+          features[i] = {
             type: 'Feature',
-            geometry: { type: 'Point', coordinates: [next.lng, next.lat] },
+            geometry: { type: 'Point', coordinates: [v.lng, v.lat] },
             properties: {
               route_id: v.routeId,
               mode: v.mode,
               line_color: v.color,
-              bearing: next.bearing,
+              bearing: v.bearing,
             },
-          });
+          };
         }
-        // Skip setState when there's nothing to render — avoids empty
-        // re-renders during the fetch window or when the layer is empty.
         if (features.length > 0 || vehiclesRef.current.length > 0) {
           setGeojson({ type: 'FeatureCollection', features });
         }
       }
+
       rafRef.current = requestAnimationFrame(tick);
     };
     rafRef.current = requestAnimationFrame(tick);
