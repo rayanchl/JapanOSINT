@@ -17,6 +17,7 @@ import { upsertCamera, cameraStats } from './cameraStore.js';
 const RUN_CEILING_MS = 10 * 60 * 1000;
 
 let _inflightRun = null;
+let _lastRunAt = null; // ISO timestamp of the most recent completed run
 
 function broadcast(wsServer, payload) {
   if (!wsServer) return;
@@ -114,9 +115,14 @@ export async function runCameraDiscovery(wsServer) {
     return result;
   } finally {
     _inflightRun = null;
+    _lastRunAt = new Date().toISOString();
   }
 }
 
 export function isRunInFlight() {
   return _inflightRun !== null;
+}
+
+export function getLastRunAt() {
+  return _lastRunAt;
 }
