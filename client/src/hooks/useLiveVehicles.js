@@ -3,9 +3,11 @@
 // requestAnimationFrame, and returns a GeoJSON FeatureCollection the MapView
 // can push to a map source via `setData`.
 //
-// This is Slice A: constant-speed simulation without schedule. Slice C will
-// swap the tick logic for schedule-grounded interpolation when GTFS is
-// hydrated for the operator.
+// Slice A (constant-speed) and Slice C (schedule-grounded) BOTH feed the
+// same emitted FeatureCollection. The tick loop advances Slice-A vehicles;
+// a parallel 20-second poll against /api/transit/active-trips fills
+// `scheduleTripsRef` with real GTFS-backed positions. When a schedule-backed
+// trip covers a given route, its position takes priority over the simulator.
 
 import { useEffect, useRef, useState } from 'react';
 import { segmentLengthsMeters, advanceAlongLine } from '../utils/polylineTraversal';
@@ -74,11 +76,18 @@ function spawnVehiclesForRoute(feature, mode) {
   return vehicles;
 }
 
-export default function useLiveVehicles(mode, enabled) {
+export default function useLiveVehicles(mode, enabled, viewport = null) {
   const [geojson, setGeojson] = useState({ type: 'FeatureCollection', features: [] });
   const vehiclesRef = useRef([]);
+  const scheduleTripsRef = useRef([]);
   const rafRef = useRef(null);
   const lastTickRef = useRef(null);
+
+  // Stable viewport key — the poll effect only re-fires when the string
+  // representation actually changes, not on every rerender.
+  const viewportKey = viewport
+    ? `${viewport.minLng.toFixed(3)},${viewport.minLat.toFixed(3)},${viewport.maxLng.toFixed(3)},${viewport.maxLat.toFixed(3)}`
+    : null;
 
   // Fetch routes + spawn vehicles when the hook becomes enabled (or the mode
   // changes). Clears state when disabled.
@@ -106,6 +115,38 @@ export default function useLiveVehicles(mode, enabled) {
     })();
     return () => { cancelled = true; };
   }, [mode, enabled]);
+
+  // Slice C — poll /api/transit/active-trips every 20s for schedule-backed
+  // positions. Today only the bus mode has any GTFS coverage via gtfs-data.jp,
+  // but we hit the endpoint for every mode and just merge whatever comes
+  // back; as train/subway GTFS feeds are added the same code picks them up.
+  useEffect(() => {
+    if (!enabled) { scheduleTripsRef.current = []; return; }
+    let cancelled = false;
+    let timer = null;
+    async function poll() {
+      if (cancelled) return;
+      try {
+        const qs = new URLSearchParams();
+        if (viewportKey) qs.set('bbox', viewportKey);
+        qs.set('limit', '500');
+        const res = await fetch(`/api/transit/active-trips?${qs.toString()}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const body = await res.json();
+        if (!cancelled) scheduleTripsRef.current = body.trips || [];
+      } catch (err) {
+        if (!cancelled) console.warn('[useLiveVehicles] active-trips', err?.message);
+      } finally {
+        if (!cancelled) timer = setTimeout(poll, 20_000);
+      }
+    }
+    poll();
+    return () => {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+      scheduleTripsRef.current = [];
+    };
+  }, [mode, enabled, viewportKey]);
 
   // rAF tick loop — advance motion every frame using real dt so movement is
   // smooth. Serialize GeoJSON at most every RENDER_MS to avoid thrashing
@@ -139,10 +180,22 @@ export default function useLiveVehicles(mode, enabled) {
       // look continuous without hammering MapLibre's parser.
       if (t - lastRenderAt >= RENDER_MS) {
         lastRenderAt = t;
-        const features = new Array(vehiclesRef.current.length);
-        for (let i = 0; i < vehiclesRef.current.length; i++) {
-          const v = vehiclesRef.current[i];
-          features[i] = {
+        // Schedule-backed trips override the sim for their route_id so we
+        // don't double-render a bus (simulator + real position) on the
+        // same route. Any route_id we haven't seen in schedule data falls
+        // back to the simulator vehicles.
+        const scheduledRouteIds = new Set();
+        for (const st of scheduleTripsRef.current) {
+          if (st.route_id) scheduledRouteIds.add(st.route_id);
+        }
+        const simVehicles = vehiclesRef.current;
+        const estimatedCount = scheduleTripsRef.current.length + simVehicles.length;
+        const features = [];
+        features.length = 0;
+        // (a) simulator vehicles for routes with no schedule data
+        for (const v of simVehicles) {
+          if (v.routeId && scheduledRouteIds.has(v.routeId)) continue;
+          features.push({
             type: 'Feature',
             geometry: { type: 'Point', coordinates: [v.lng, v.lat] },
             properties: {
@@ -151,9 +204,24 @@ export default function useLiveVehicles(mode, enabled) {
               line_color: v.color,
               bearing: v.bearing,
             },
-          };
+          });
         }
-        if (features.length > 0 || vehiclesRef.current.length > 0) {
+        // (b) schedule-backed positions
+        for (const st of scheduleTripsRef.current) {
+          features.push({
+            type: 'Feature',
+            geometry: { type: 'Point', coordinates: [st.lon, st.lat] },
+            properties: {
+              trip_id: st.trip_id,
+              route_id: st.route_id,
+              mode,
+              line_color: st.route_color,
+              headsign: st.headsign || null,
+              schedule_backed: true,
+            },
+          });
+        }
+        if (features.length > 0 || estimatedCount > 0) {
           setGeojson({ type: 'FeatureCollection', features });
         }
       }

@@ -3859,14 +3859,17 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
   const [cursorCoords, setCursorCoords] = useState(null);
   const [zoom, setZoom] = useState(5);
   const [currentStyle, setCurrentStyle] = useState('openfreemap_positron');
+  const [viewport, setViewport] = useState(null);
   const prevLayersRef = useRef({});
 
   // Slice A: client-side simulated vehicles for train / subway / bus. Each
   // hook fetches /api/transit/routes once when enabled, spawns vehicles
   // along every route, and emits a GeoJSON FeatureCollection at 1 Hz.
-  const liveTrainsGeo = useLiveVehicles('train', !!layers?.liveTransitTrains?.visible);
-  const liveSubwaysGeo = useLiveVehicles('subway', !!layers?.liveTransitSubways?.visible);
-  const liveBusesGeo = useLiveVehicles('bus', !!layers?.liveTransitBuses?.visible);
+  // Slice C: the same hook also polls /api/transit/active-trips using the
+  // viewport bbox, merging schedule-backed positions on top.
+  const liveTrainsGeo = useLiveVehicles('train', !!layers?.liveTransitTrains?.visible, viewport);
+  const liveSubwaysGeo = useLiveVehicles('subway', !!layers?.liveTransitSubways?.visible, viewport);
+  const liveBusesGeo = useLiveVehicles('bus', !!layers?.liveTransitBuses?.visible, viewport);
 
   // Initialize map
   useEffect(() => {
@@ -3884,10 +3887,27 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
     map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right');
     map.addControl(new maplibregl.ScaleControl({ maxWidth: 150 }), 'bottom-right');
 
+    const publishViewport = () => {
+      try {
+        const b = map.getBounds();
+        setViewport({
+          minLng: b.getWest(),
+          minLat: b.getSouth(),
+          maxLng: b.getEast(),
+          maxLat: b.getNorth(),
+        });
+      } catch { /* map not ready yet */ }
+    };
+
     map.on('load', () => {
       registerLayerIcons(map);
       setMapReady(true);
+      publishViewport();
     });
+
+    // Updated on pan/zoom settle so the hooks that key on viewport
+    // (useLiveVehicles Slice C poll) re-request with the current bbox.
+    map.on('moveend', publishViewport);
 
     map.on('mousemove', (e) => {
       setCursorCoords({ lat: e.lngLat.lat.toFixed(5), lng: e.lngLat.lng.toFixed(5) });
