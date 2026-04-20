@@ -888,29 +888,6 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/unified-port-infra',
     category: 'Transport',
   },
-  // -- Live-transit vehicles (client-side simulator, no server endpoint) --
-  // Data comes from useLiveVehicles() fetching /api/transit/routes; the
-  // hook emits a GeoJSON FeatureCollection at 1 Hz which MapView pushes
-  // into a dedicated source via setData.
-  liveTransitTrains: {
-    name: 'Live trains (sim)',
-    icon: '\u{1F686}',
-    color: '#2e7d32',
-    category: 'Transport',
-  },
-  liveTransitSubways: {
-    name: 'Live subways (sim)',
-    icon: '\u{1F687}',
-    color: '#ff7043',
-    category: 'Transport',
-  },
-  liveTransitBuses: {
-    name: 'Live buses (sim)',
-    icon: '\u{1F68C}',
-    color: '#fb8c00',
-    category: 'Transport',
-  },
-
   // ── Wave 11: broadened pulse ────────────────────────────────────
   japanPostOffices: {
     name: 'Post Offices',

@@ -4032,21 +4032,21 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
         sourceId: 'live-vehicles-train',
         layerId: 'live-vehicles-train-layer',
         data: liveTrainsGeo,
-        visible: !!layers?.liveTransitTrains?.visible,
+        visible: !!layers?.unifiedTrains?.visible,
         defaultColor: '#2e7d32',
       },
       {
         sourceId: 'live-vehicles-subway',
         layerId: 'live-vehicles-subway-layer',
         data: liveSubwaysGeo,
-        visible: !!layers?.liveTransitSubways?.visible,
+        visible: !!layers?.unifiedSubways?.visible,
         defaultColor: '#ff7043',
       },
       {
         sourceId: 'live-vehicles-bus',
         layerId: 'live-vehicles-bus-layer',
         data: liveBusesGeo,
-        visible: !!layers?.liveTransitBuses?.visible,
+        visible: !!layers?.unifiedBuses?.visible,
         defaultColor: '#fb8c00',
       },
     ];
@@ -4067,6 +4067,7 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
           id: s.layerId,
           type: 'symbol',
           source: s.sourceId,
+          minzoom: 10,
           layout: {
             'icon-image': 'live-train-rect',
             'icon-size': 0.6,
@@ -4096,9 +4097,9 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
     // produce a visible blink. The unmount-only teardown lives in a
     // separate effect below.
   }, [mapReady, liveTrainsGeo, liveSubwaysGeo, liveBusesGeo,
-      layers?.liveTransitTrains?.visible,
-      layers?.liveTransitSubways?.visible,
-      layers?.liveTransitBuses?.visible]);
+      layers?.unifiedTrains?.visible,
+      layers?.unifiedSubways?.visible,
+      layers?.unifiedBuses?.visible]);
 
   // Unmount-only cleanup of live-transit sources/layers. Deps are `[]` so
   // this fires once on the component unmount, not on every data update.
