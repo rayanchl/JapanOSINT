@@ -35,15 +35,40 @@ async function registerLayerIcons(map) {
   await Promise.all(
     Object.entries(LAYER_DEFINITIONS).map(async ([layerId, def]) => {
       const imgId = layerIconImageId(layerId);
-      if (map.hasImage(imgId)) return;
-      const Icon = getLayerIcon(layerId);
-      const tint = darkenHex(def?.color || '#ffffff', 0.8);
-      const imageData = await rasterizeIcon(Icon, tint, ICON_IMAGE_SIZE);
-      if (imageData && !map.hasImage(imgId)) {
-        map.addImage(imgId, imageData, { pixelRatio: 2 });
+      if (!map.hasImage(imgId)) {
+        const Icon = getLayerIcon(layerId);
+        const tint = darkenHex(def?.color || '#ffffff', 0.8);
+        const imageData = await rasterizeIcon(Icon, tint, ICON_IMAGE_SIZE);
+        if (imageData && !map.hasImage(imgId)) {
+          map.addImage(imgId, imageData, { pixelRatio: 2 });
+        }
       }
     }),
   );
+
+  // Red variant for military aircraft. Same glyph as flightAdsb, but tinted red.
+  if (!map.hasImage('icon-flightAdsb-mil')) {
+    const Icon = getLayerIcon('flightAdsb');
+    const imageData = await rasterizeIcon(Icon, '#ff3344', ICON_IMAGE_SIZE);
+    if (imageData && !map.hasImage('icon-flightAdsb-mil')) {
+      map.addImage('icon-flightAdsb-mil', imageData, { pixelRatio: 2 });
+    }
+  }
+
+  // Dropline sprite: a 2×100 semi-transparent gray vertical line.
+  // icon-anchor: 'bottom' + icon-size scales it to the desired pixel height.
+  if (!map.hasImage('dropline')) {
+    const w = 2;
+    const h = 100;
+    const data = new Uint8ClampedArray(w * h * 4);
+    for (let i = 0; i < w * h; i++) {
+      data[i * 4 + 0] = 180;
+      data[i * 4 + 1] = 180;
+      data[i * 4 + 2] = 180;
+      data[i * 4 + 3] = 115; // ~45% alpha
+    }
+    map.addImage('dropline', { width: w, height: h, data }, { pixelRatio: 2 });
+  }
 }
 
 // Fixed icon size — flat 2D react-icons. Bumped 20% from the previous 0.5.
