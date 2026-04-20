@@ -21,8 +21,27 @@ describe('polylineTraversal', () => {
     expect(next.segOffset).toBeCloseTo(50_000, -2);
     expect(next.lng).toBeGreaterThan(139.3);
     expect(next.lng).toBeLessThan(139.8);
-    expect(next.lat).toBeCloseTo(35.0, 2);
+    // Catmull-Rom bends toward the upcoming segment; the halfway point
+    // drifts slightly north of the chord but stays near lat 35.
+    expect(next.lat).toBeGreaterThan(34.9);
+    expect(next.lat).toBeLessThan(35.2);
     expect(typeof next.bearing).toBe('number');
+  });
+
+  it('advanceAlongLine differs from linear interp on a cornered polyline', () => {
+    // On an L-shaped polyline, Catmull-Rom deviates from the straight chord.
+    // We don't assert which direction — endpoint-reflected tangents pull the
+    // curve one way, interior-neighbor tangents the other — only that the
+    // result is not identical to linear `lng = 139 + 0.5`, `lat = 35.0`.
+    const lens = segmentLengthsMeters(coords);
+    const start = { segIdx: 0, segOffset: 0 };
+    const next = advanceAlongLine(coords, lens, start, lens[0] * 0.5);
+    const linearLng = 139.0 + 0.5 * (140.0 - 139.0);
+    const linearLat = 35.0;
+    const deviation = Math.hypot(next.lng - linearLng, next.lat - linearLat);
+    // Even a tiny deviation proves the curve is not the chord. Typical is
+    // ~0.01° on this test.
+    expect(deviation).toBeGreaterThan(0.001);
   });
 
   it('advanceAlongLine crosses a segment boundary', () => {
