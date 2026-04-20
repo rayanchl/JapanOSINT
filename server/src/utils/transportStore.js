@@ -287,18 +287,25 @@ const stmtStationColorUpdate = db.prepare(`
 `);
 
 /**
- * Apply a batch of { station_uid, color } pairs: overwrite each row's
- * properties.line_color (and no other field). Skips rows already at the
- * target color to avoid needless writes.
+ * Apply a batch of { station_uid, color, line_colors } pairs: overwrite
+ * each row's properties.line_color (primary, nearest line) and
+ * properties.line_colors (ordered list of unique colors whose lines pass
+ * within the snap radius — used for concentric-ring rendering of
+ * multi-line stations). Skips writes when both fields are already equal.
  */
 export const updateStationColorsTx = db.transaction((updates) => {
   let changed = 0;
-  for (const { station_uid, color } of updates) {
+  for (const { station_uid, color, line_colors } of updates) {
     const row = stmtStationGet.get(station_uid);
     if (!row) continue;
     const props = safeJson(row.properties, {});
-    if (props.line_color === color) continue;
+    const nextColors = Array.isArray(line_colors) ? line_colors : (color ? [color] : []);
+    const prevColors = Array.isArray(props.line_colors) ? props.line_colors : [];
+    const colorsEqual = prevColors.length === nextColors.length
+      && prevColors.every((v, i) => v === nextColors[i]);
+    if (props.line_color === color && colorsEqual) continue;
     props.line_color = color;
+    props.line_colors = nextColors;
     stmtStationColorUpdate.run({
       station_uid,
       properties: JSON.stringify(props),

@@ -305,8 +305,12 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
   const sourceId = `source-${layerId}`;
   const mainLayerId = `layer-${layerId}`;
 
-  // Remove main layer and any sub-layers we created (heat, extrude, line, dropline).
-  const SUFFIXES = ['', '-heat', '-extrude', '-line', '-dropline', '-label'];
+  // Remove main layer and any sub-layers we created (heat, extrude, line,
+  // dropline, label, ring1..4, fallback).
+  const SUFFIXES = [
+    '', '-heat', '-extrude', '-line', '-dropline', '-label',
+    '-fallback', '-ring1', '-ring2', '-ring3', '-ring4',
+  ];
   for (const s of SUFFIXES) {
     const id = `${mainLayerId}${s}`;
     if (map.getLayer(id)) map.removeLayer(id);
@@ -3757,7 +3761,18 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
 function removeLayerFromMap(map, layerId) {
   const mainLayerId = `layer-${layerId}`;
   const sourceId = `source-${layerId}`;
-  const variants = [mainLayerId, `${mainLayerId}-heat`, `${mainLayerId}-extrude`, `${mainLayerId}-line`, `${mainLayerId}-label`];
+  const variants = [
+    mainLayerId,
+    `${mainLayerId}-heat`,
+    `${mainLayerId}-extrude`,
+    `${mainLayerId}-line`,
+    `${mainLayerId}-label`,
+    `${mainLayerId}-fallback`,
+    `${mainLayerId}-ring1`,
+    `${mainLayerId}-ring2`,
+    `${mainLayerId}-ring3`,
+    `${mainLayerId}-ring4`,
+  ];
 
   for (const lid of variants) {
     if (map.getLayer(lid)) map.removeLayer(lid);
@@ -3802,7 +3817,7 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
       // Change cursor on hover over interactive features
       const interactiveLayers = [];
       for (const layerId of Object.keys(LAYER_DEFINITIONS)) {
-        for (const suffix of ['', '-heat', '-extrude', '-line']) {
+        for (const suffix of ['', '-heat', '-extrude', '-line', '-fallback', '-ring1', '-ring2', '-ring3', '-ring4']) {
           const id = `layer-${layerId}${suffix}`;
           if (map.getLayer(id)) interactiveLayers.push(id);
         }
@@ -3825,7 +3840,7 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
       // Check all interactive layers (including variants)
       const interactiveLayers = [];
       for (const layerId of Object.keys(LAYER_DEFINITIONS)) {
-        for (const suffix of ['', '-heat', '-extrude', '-line']) {
+        for (const suffix of ['', '-heat', '-extrude', '-line', '-fallback', '-ring1', '-ring2', '-ring3', '-ring4']) {
           const id = `layer-${layerId}${suffix}`;
           if (map.getLayer(id)) interactiveLayers.push(id);
         }
@@ -3836,7 +3851,7 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
       const features = map.queryRenderedFeatures(e.point, { layers: interactiveLayers });
       if (features.length > 0) {
         const feature = features[0];
-        const layerType = feature.layer.id.replace('layer-', '').replace(/-(heat|extrude|line)$/, '');
+        const layerType = feature.layer.id.replace('layer-', '').replace(/-(heat|extrude|line|fallback|ring[1-4])$/, '');
         if (onFeatureClick) {
           const coords = feature.geometry?.coordinates;
           const lngLat = Array.isArray(coords) && Number.isFinite(coords[0]) && Number.isFinite(coords[1])

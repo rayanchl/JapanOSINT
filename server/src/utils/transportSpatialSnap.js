@@ -123,8 +123,12 @@ export function snapStationsToNearestLine(mode, opts = {}) {
     const cx = Math.floor(lon / CELL_SIZE_DEG);
     const cy = Math.floor(lat / CELL_SIZE_DEG);
 
+    // Collect every distinct color whose nearest segment is within radius.
+    // Also track the overall nearest so single-color stations keep their
+    // dominant line as primary.
     let bestDsq = Infinity;
     let bestColor = null;
+    const colorBestSq = new Map(); // color -> nearest squared distance (m^2)
     for (let dx = -1; dx <= 1; dx++) {
       for (let dy = -1; dy <= 1; dy++) {
         const bucket = index.get(`${cx + dx}:${cy + dy}`);
@@ -135,6 +139,12 @@ export function snapStationsToNearestLine(mode, opts = {}) {
             bestDsq = dsq;
             bestColor = seg.color;
           }
+          if (dsq <= radiusSq) {
+            const prev = colorBestSq.get(seg.color);
+            if (prev === undefined || dsq < prev) {
+              colorBestSq.set(seg.color, dsq);
+            }
+          }
         }
       }
     }
@@ -142,7 +152,17 @@ export function snapStationsToNearestLine(mode, opts = {}) {
     if (bestColor && bestDsq <= radiusSq) {
       const uid = st.properties?.station_uid;
       if (uid) {
-        updates.push({ station_uid: uid, color: bestColor });
+        // Sort distinct colors by ascending distance so the closest/primary
+        // line is first. Cap at 5 concentric rings to keep rendering sane.
+        const sorted = [...colorBestSq.entries()]
+          .sort((a, b) => a[1] - b[1])
+          .slice(0, 5)
+          .map(([c]) => c);
+        updates.push({
+          station_uid: uid,
+          color: bestColor,
+          line_colors: sorted,
+        });
         matched++;
         continue;
       }
