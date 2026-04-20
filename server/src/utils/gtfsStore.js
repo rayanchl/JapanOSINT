@@ -122,3 +122,27 @@ export function listHydratedOperators() {
     ORDER BY hydrated_at DESC
   `).all();
 }
+
+/** Fetch the operator catalogue from gtfs-data.jp and return a list of org_ids. */
+export async function listUpstreamOperatorIds() {
+  const res = await fetch('https://api.gtfs-data.jp/v2/organizations');
+  if (!res.ok) throw new Error(`organizations HTTP ${res.status}`);
+  const body = await res.json();
+  const list = Array.isArray(body?.body) ? body.body : [];
+  return list
+    .map((o) => o.organization_id || o.id || o.organizationID)
+    .filter(Boolean);
+}
+
+/**
+ * Return org_ids whose `hydrated_at` is NULL or older than `ageDays`,
+ * ordered NULL-first then oldest-hydrated-first.
+ */
+export function listStaleOperatorIds(ageDays) {
+  const cutoff = new Date(Date.now() - ageDays * 24 * 3600 * 1000).toISOString();
+  return db.prepare(`
+    SELECT org_id FROM gtfs_operators
+    WHERE hydrated_at IS NULL OR hydrated_at < ?
+    ORDER BY hydrated_at IS NULL DESC, hydrated_at ASC
+  `).all(cutoff).map((r) => r.org_id);
+}
