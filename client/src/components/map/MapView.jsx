@@ -92,6 +92,13 @@ function darkenHex(hex, factor = 0.8) {
 // rotated to match direction of travel.
 const ROTATING_LAYERS = new Set(['flightAdsb', 'maritimeAis', 'marineTraffic', 'vesselFinder']);
 
+// Every icon floats 40 px above its true lng/lat so the pin stands up.
+// Aircraft get an altitude-scaled bonus on top; that's handled separately
+// in the flightAdsb case.
+const ICON_BASE_OFFSET_PX = 40;
+// The dropline sprite is 100 px tall; icon-size is a ratio, so 0.4 = 40 px.
+const DROPLINE_BASE_SIZE = ICON_BASE_OFFSET_PX / 100;
+
 // Layers that should NOT have their circle configs swapped for emoji-icon
 // symbol layers. Rendering stays as plain line-colored dots.
 const SKIP_ICON_SUBSTITUTION = new Set(['unifiedTrains', 'unifiedSubways', 'unifiedBuses']);
@@ -108,7 +115,9 @@ function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity, layer
     'icon-size': UNIFORM_ICON_SIZE,
     'icon-allow-overlap': true,
     'icon-ignore-placement': true,
-    'icon-anchor': 'center',
+    'icon-anchor': 'bottom',
+    'icon-translate': [0, -ICON_BASE_OFFSET_PX],
+    'icon-translate-anchor': 'viewport',
   };
 
   if (ROTATING_LAYERS.has(layerId)) {
@@ -236,12 +245,12 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
   const sourceId = `source-${layerId}`;
   const mainLayerId = `layer-${layerId}`;
 
-  // Remove existing
-  if (map.getLayer(mainLayerId)) map.removeLayer(mainLayerId);
-  if (map.getLayer(`${mainLayerId}-heat`)) map.removeLayer(`${mainLayerId}-heat`);
-  if (map.getLayer(`${mainLayerId}-extrude`)) map.removeLayer(`${mainLayerId}-extrude`);
-  if (map.getLayer(`${mainLayerId}-line`)) map.removeLayer(`${mainLayerId}-line`);
-  if (map.getLayer(`${mainLayerId}-label`)) map.removeLayer(`${mainLayerId}-label`);
+  // Remove main layer and any sub-layers we created (heat, extrude, line, dropline).
+  const SUFFIXES = ['', '-heat', '-extrude', '-line', '-dropline', '-label'];
+  for (const s of SUFFIXES) {
+    const id = `${mainLayerId}${s}`;
+    if (map.getLayer(id)) map.removeLayer(id);
+  }
   if (map.getSource(sourceId)) map.removeSource(sourceId);
   clearLayerAddons(layerId);
 
@@ -261,9 +270,32 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
   if (hasIcon) {
     map.addLayer = (config, beforeId) => {
       if (config && config.type === 'circle') {
+        // Dropline stem first (so the icon renders on top of it).
+        const stemOpacity =
+          (config.paint && config.paint['circle-opacity']) != null
+            ? config.paint['circle-opacity'] * 0.5
+            : opacity * 0.5;
+        originalAddLayer(
+          {
+            id: `${config.id}-dropline`,
+            type: 'symbol',
+            source: config.source,
+            ...(config.filter ? { filter: config.filter } : {}),
+            layout: {
+              'icon-image': 'dropline',
+              'icon-anchor': 'bottom',
+              'icon-size': DROPLINE_BASE_SIZE,
+              'icon-allow-overlap': true,
+              'icon-ignore-placement': true,
+            },
+            paint: { 'icon-opacity': stemOpacity },
+          },
+          beforeId,
+        );
+        // Then the icon itself (converted).
         return originalAddLayer(
           convertCircleConfigToSymbol(config, iconImageId, opacity, layerId),
-          beforeId
+          beforeId,
         );
       }
       return originalAddLayer(config, beforeId);
