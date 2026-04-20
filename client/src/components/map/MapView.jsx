@@ -55,14 +55,15 @@ async function registerLayerIcons(map) {
     }
   }
 
-  // Dropline sprite: a 3×120 semi-transparent gray vertical line.
-  // Width 3 (odd) gives a true center column so icon-anchor: 'bottom'
-  // centers cleanly under the icon — an even width renders on a half-pixel
-  // and looks off-center. pixelRatio: 1 keeps buffer dims = display dims.
-  // Height 120 supports the raised 60-px base plus aircraft altitude bonus.
-  if (!map.hasImage('dropline')) {
+  // Dropline sprites: semi-transparent gray vertical lines, always 3 px wide.
+  // We register one sprite per needed height so that every layer uses
+  // `icon-size: 1.0` — this keeps the stem width CONSTANT regardless of
+  // height, whereas scaling icon-size would proportionally widen the stem
+  // (an aircraft cruising at 40k ft would render a ~6-px stem).
+  // Width 3 (odd) + pixelRatio 1 gives a true center column and crisp
+  // display alignment under `icon-anchor: 'bottom'`.
+  const makeDropline = (h) => {
     const w = 3;
-    const h = 120;
     const data = new Uint8ClampedArray(w * h * 4);
     for (let i = 0; i < w * h; i++) {
       data[i * 4 + 0] = 180;
@@ -70,7 +71,17 @@ async function registerLayerIcons(map) {
       data[i * 4 + 2] = 180;
       data[i * 4 + 3] = 115; // ~45% alpha
     }
-    map.addImage('dropline', { width: w, height: h, data }, { pixelRatio: 1 });
+    return { width: w, height: h, data };
+  };
+  for (const h of [60, 72, 84, 100, 120]) {
+    const id = `dropline-${h}`;
+    if (!map.hasImage(id)) {
+      map.addImage(id, makeDropline(h), { pixelRatio: 1 });
+    }
+  }
+  // Backward-compat alias: the generic non-aircraft stem is 60 px tall.
+  if (!map.hasImage('dropline')) {
+    map.addImage('dropline', makeDropline(60), { pixelRatio: 1 });
   }
 }
 
@@ -99,9 +110,9 @@ const ROTATING_LAYERS = new Set(['flightAdsb', 'maritimeAis', 'marineTraffic', '
 // Aircraft get an altitude-scaled bonus on top; that's handled separately
 // in the flightAdsb case.
 const ICON_BASE_OFFSET_PX = 60;
-// The dropline sprite is 120 px tall; icon-size is a ratio, so 0.5 = 60 px.
-const DROPLINE_SPRITE_HEIGHT_PX = 120;
-const DROPLINE_BASE_SIZE = ICON_BASE_OFFSET_PX / DROPLINE_SPRITE_HEIGHT_PX;
+// For non-aircraft layers we use the dropline-60 sprite at icon-size 1.0,
+// keeping the stem 3 px wide regardless of layer or zoom.
+const DROPLINE_BASE_IMAGE = 'dropline-60';
 
 // Layers that should NOT have their circle configs swapped for emoji-icon
 // symbol layers. Rendering stays as plain line-colored dots.
@@ -261,7 +272,8 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
     for (const id of allLayers) {
       if (
         id.startsWith(`${mainLayerId}-b`) ||
-        id.startsWith(`${mainLayerId}-mil-b`)
+        id.startsWith(`${mainLayerId}-mil-b`) ||
+        id.startsWith(`${mainLayerId}-dropline-b`)
       ) {
         map.removeLayer(id);
       }
@@ -298,9 +310,9 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
             source: config.source,
             ...(config.filter ? { filter: config.filter } : {}),
             layout: {
-              'icon-image': 'dropline',
+              'icon-image': DROPLINE_BASE_IMAGE,
               'icon-anchor': 'bottom',
-              'icon-size': DROPLINE_BASE_SIZE,
+              'icon-size': 1,
               'icon-allow-overlap': true,
               'icon-ignore-placement': true,
             },
@@ -921,33 +933,44 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       //   2. 5 altitude buckets × 2 colors (civilian purple, military red) =
       //      10 icon layers, each with a fixed `icon-translate` since the
       //      property is not expression-capable.
+      // Each bucket picks a pre-sized dropline sprite so icon-size stays 1.0
+      // and the stem remains 3 px wide (scaling icon-size would widen it too).
       const ALT_BUCKETS = [
-        { minFt: -Infinity, maxFt: 2000,     translateY: -60 },
-        { minFt: 2000,      maxFt: 10000,    translateY: -72 },
-        { minFt: 10000,     maxFt: 20000,    translateY: -84 },
-        { minFt: 20000,     maxFt: 30000,    translateY: -100 },
-        { minFt: 30000,     maxFt: Infinity, translateY: -120 },
+        { minFt: -Infinity, maxFt: 2000,     translateY: -60,  stem: 'dropline-60'  },
+        { minFt: 2000,      maxFt: 10000,    translateY: -72,  stem: 'dropline-72'  },
+        { minFt: 10000,     maxFt: 20000,    translateY: -84,  stem: 'dropline-84'  },
+        { minFt: 20000,     maxFt: 30000,    translateY: -100, stem: 'dropline-100' },
+        { minFt: 30000,     maxFt: Infinity, translateY: -120, stem: 'dropline-120' },
       ];
 
-      // Dropline — single symbol layer, size scales with offsetPx / sprite height.
-      // offsetPx = 60 (base) + min(60, altitude_ft / 500) → max 120 at cruise.
-      map.addLayer({
-        id: `${mainLayerId}-dropline`,
-        type: 'symbol',
-        source: sourceId,
-        layout: {
-          'icon-image': 'dropline',
-          'icon-anchor': 'bottom',
-          'icon-size': [
-            '/',
-            ['+', 60, ['min', 60, ['/', ['coalesce', ['get', 'altitude_ft'], 0], 500]]],
-            DROPLINE_SPRITE_HEIGHT_PX,
-          ],
-          'icon-allow-overlap': true,
-          'icon-ignore-placement': true,
-        },
-        paint: { 'icon-opacity': opacity * 0.5 },
-      });
+      // Dropline stems — one symbol layer per altitude bucket, each using
+      // the correctly-sized sprite at icon-size: 1 so widths stay identical.
+      for (const b of ALT_BUCKETS) {
+        const altExpr =
+          b.minFt === -Infinity
+            ? ['<', ['coalesce', ['get', 'altitude_ft'], 0], b.maxFt]
+            : b.maxFt === Infinity
+              ? ['>=', ['coalesce', ['get', 'altitude_ft'], 0], b.minFt]
+              : [
+                  'all',
+                  ['>=', ['coalesce', ['get', 'altitude_ft'], 0], b.minFt],
+                  ['<',  ['coalesce', ['get', 'altitude_ft'], 0], b.maxFt],
+                ];
+        map.addLayer({
+          id: `${mainLayerId}-dropline-b${b.minFt}`,
+          type: 'symbol',
+          source: sourceId,
+          filter: altExpr,
+          layout: {
+            'icon-image': b.stem,
+            'icon-anchor': 'bottom',
+            'icon-size': 1,
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+          },
+          paint: { 'icon-opacity': opacity * 0.5 },
+        });
+      }
 
       // 5 buckets × 2 colors — 10 icon layers.
       for (const b of ALT_BUCKETS) {
