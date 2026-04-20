@@ -69,19 +69,19 @@ async function registerLayerIcons(map) {
       data[i * 4 + 0] = 180;
       data[i * 4 + 1] = 180;
       data[i * 4 + 2] = 180;
-      data[i * 4 + 3] = 115; // ~45% alpha
+      data[i * 4 + 3] = 180; // ~70% alpha
     }
     return { width: w, height: h, data };
   };
-  for (const h of [60, 72, 84, 100, 120]) {
+  for (const h of [30, 42, 54, 70, 90]) {
     const id = `dropline-${h}`;
     if (!map.hasImage(id)) {
       map.addImage(id, makeDropline(h), { pixelRatio: 1 });
     }
   }
-  // Backward-compat alias: the generic non-aircraft stem is 60 px tall.
+  // Backward-compat alias: the generic non-aircraft stem is 30 px tall.
   if (!map.hasImage('dropline')) {
-    map.addImage('dropline', makeDropline(60), { pixelRatio: 1 });
+    map.addImage('dropline', makeDropline(30), { pixelRatio: 1 });
   }
 }
 
@@ -106,13 +106,13 @@ function darkenHex(hex, factor = 0.8) {
 // rotated to match direction of travel.
 const ROTATING_LAYERS = new Set(['flightAdsb', 'maritimeAis', 'marineTraffic', 'vesselFinder']);
 
-// Every icon floats 60 px above its true lng/lat so the pin stands up.
+// Every icon floats 30 px above its true lng/lat so the pin stands up.
 // Aircraft get an altitude-scaled bonus on top; that's handled separately
 // in the flightAdsb case.
-const ICON_BASE_OFFSET_PX = 60;
-// For non-aircraft layers we use the dropline-60 sprite at icon-size 1.0,
+const ICON_BASE_OFFSET_PX = 30;
+// For non-aircraft layers we use the dropline-30 sprite at icon-size 1.0,
 // keeping the stem 3 px wide regardless of layer or zoom.
-const DROPLINE_BASE_IMAGE = 'dropline-60';
+const DROPLINE_BASE_IMAGE = 'dropline-30';
 
 // Droplines only make sense in a tilted/3D view — from straight overhead a
 // vertical line has no visible length. We fade stem opacity with pitch.
@@ -976,11 +976,11 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       // Each bucket picks a pre-sized dropline sprite so icon-size stays 1.0
       // and the stem remains 3 px wide (scaling icon-size would widen it too).
       const ALT_BUCKETS = [
-        { minFt: -Infinity, maxFt: 2000,     translateY: -60,  stem: 'dropline-60'  },
-        { minFt: 2000,      maxFt: 10000,    translateY: -72,  stem: 'dropline-72'  },
-        { minFt: 10000,     maxFt: 20000,    translateY: -84,  stem: 'dropline-84'  },
-        { minFt: 20000,     maxFt: 30000,    translateY: -100, stem: 'dropline-100' },
-        { minFt: 30000,     maxFt: Infinity, translateY: -120, stem: 'dropline-120' },
+        { minFt: -Infinity, maxFt: 2000,     translateY: -30, stem: 'dropline-30' },
+        { minFt: 2000,      maxFt: 10000,    translateY: -42, stem: 'dropline-42' },
+        { minFt: 10000,     maxFt: 20000,    translateY: -54, stem: 'dropline-54' },
+        { minFt: 20000,     maxFt: 30000,    translateY: -70, stem: 'dropline-70' },
+        { minFt: 30000,     maxFt: Infinity, translateY: -90, stem: 'dropline-90' },
       ];
 
       // Dropline stems — one symbol layer per altitude bucket, each using
