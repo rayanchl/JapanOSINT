@@ -109,6 +109,70 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_transport_lines_mode ON transport_lines(mode);
   CREATE INDEX IF NOT EXISTS idx_transport_lines_seen ON transport_lines(last_seen_at);
+
+  CREATE TABLE IF NOT EXISTS gtfs_operators (
+    org_id          TEXT PRIMARY KEY,
+    org_name        TEXT,
+    hydrated_at     TEXT,
+    feed_ids        TEXT NOT NULL DEFAULT '[]',
+    stop_count      INTEGER NOT NULL DEFAULT 0,
+    trip_count      INTEGER NOT NULL DEFAULT 0
+  );
+  CREATE TABLE IF NOT EXISTS gtfs_routes (
+    org_id          TEXT NOT NULL,
+    feed_id         TEXT NOT NULL,
+    route_id        TEXT NOT NULL,
+    short_name      TEXT,
+    long_name       TEXT,
+    route_type      INTEGER,
+    color           TEXT,
+    text_color      TEXT,
+    PRIMARY KEY (org_id, feed_id, route_id)
+  );
+  CREATE TABLE IF NOT EXISTS gtfs_trips (
+    org_id          TEXT NOT NULL,
+    feed_id         TEXT NOT NULL,
+    trip_id         TEXT NOT NULL,
+    route_id        TEXT,
+    service_id      TEXT,
+    shape_id        TEXT,
+    headsign        TEXT,
+    direction_id    INTEGER,
+    PRIMARY KEY (org_id, feed_id, trip_id)
+  );
+  CREATE TABLE IF NOT EXISTS gtfs_stop_times (
+    org_id          TEXT NOT NULL,
+    feed_id         TEXT NOT NULL,
+    trip_id         TEXT NOT NULL,
+    stop_sequence   INTEGER NOT NULL,
+    stop_id         TEXT,
+    arrival_sec     INTEGER,
+    departure_sec   INTEGER,
+    shape_dist_traveled REAL,
+    PRIMARY KEY (org_id, feed_id, trip_id, stop_sequence)
+  );
+  CREATE INDEX IF NOT EXISTS idx_gtfs_stop_times_stop
+    ON gtfs_stop_times(org_id, feed_id, stop_id);
+  CREATE TABLE IF NOT EXISTS gtfs_shapes (
+    org_id          TEXT NOT NULL,
+    feed_id         TEXT NOT NULL,
+    shape_id        TEXT NOT NULL,
+    seq             INTEGER NOT NULL,
+    lat             REAL,
+    lon             REAL,
+    dist_m          REAL,
+    PRIMARY KEY (org_id, feed_id, shape_id, seq)
+  );
+  CREATE TABLE IF NOT EXISTS gtfs_calendar (
+    org_id          TEXT NOT NULL,
+    feed_id         TEXT NOT NULL,
+    service_id      TEXT NOT NULL,
+    mon INTEGER, tue INTEGER, wed INTEGER, thu INTEGER,
+    fri INTEGER, sat INTEGER, sun INTEGER,
+    start_date      TEXT,
+    end_date        TEXT,
+    PRIMARY KEY (org_id, feed_id, service_id)
+  );
 `);
 
 // --------------- Schema migration ---------------
