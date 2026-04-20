@@ -57,18 +57,19 @@ async function registerLayerIcons(map) {
 
   // Ground-position cross sprite: a small "+" marker placed at the
   // feature's true lng/lat so users can see where the icon "belongs"
-  // even though the icon itself is offset upward. 16-display-px arms,
-  // 2-px stroke, semi-transparent gray. Baked at pixelRatio 2 inside
-  // a 64×64 buffer so it shares the icon sprite format (matches the
-  // placement math MapLibre uses for other icons).
+  // even though the icon itself is offset upward. 8-display-px arms,
+  // 3-display-px stroke (centered), semi-transparent gray. Baked at
+  // pixelRatio 2 inside a 64×64 buffer so it shares the icon sprite
+  // format (matches the placement math MapLibre uses for other icons).
   if (!map.hasImage('ground-cross')) {
     const w = 64;
     const h = 64;
     const data = new Uint8ClampedArray(w * h * 4);
     const cx = 32;
     const cy = 32;
-    const armPx = 16; // total arm length in buffer px (= 8 display px each side)
-    const strokePx = 2;
+    const armPx = 16;      // 16 buffer px = 8 display px each side of center
+    const strokePx = 6;    // 6 buffer px = 3 display px thickness
+    const halfStroke = Math.floor(strokePx / 2);
     const paint = (x, y) => {
       if (x < 0 || x >= w || y < 0 || y >= h) return;
       const i = (y * w + x) * 4;
@@ -78,9 +79,9 @@ async function registerLayerIcons(map) {
       data[i + 3] = 200;
     };
     for (let d = -armPx; d <= armPx; d++) {
-      for (let s = 0; s < strokePx; s++) {
-        paint(cx + d, cy + s);                // horizontal arm
-        paint(cx + s, cy + d);                // vertical arm
+      for (let s = -halfStroke; s < strokePx - halfStroke; s++) {
+        paint(cx + d, cy + s); // horizontal arm, centered on cy
+        paint(cx + s, cy + d); // vertical arm, centered on cx
       }
     }
     map.addImage('ground-cross', { width: w, height: h, data }, { pixelRatio: 2 });
