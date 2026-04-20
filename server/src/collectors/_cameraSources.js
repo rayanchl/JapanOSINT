@@ -171,6 +171,15 @@ export const EXPRESSWAY_CAMS = [
   { name: '常磐道 守谷SA', lat: 35.9642, lon: 140.0342, operator: 'NEXCO東' },
   { name: '九州道 古賀SA', lat: 33.7203, lon: 130.4697, operator: 'NEXCO西' },
   { name: '北海道道央道 岩見沢IC', lat: 43.1961, lon: 141.7775, operator: 'NEXCO東' },
+  // NEXCO driveplaza landmark seed (merged from nexcoCameras.js). Meishin/Suita
+  // is already above (名神高速 吹田IC) so it's omitted here to avoid duplicates.
+  { name: 'Tomei Exwy / Tokyo IC',       lat: 35.6262, lon: 139.6828, operator: 'NEXCO Central' },
+  { name: 'Meishin Exwy / Komaki JCT',   lat: 35.2932, lon: 136.9375, operator: 'NEXCO Central' },
+  { name: 'Tohoku Exwy / Urawa IC',      lat: 35.8596, lon: 139.6440, operator: 'NEXCO East' },
+  { name: 'Joban Exwy / Misato JCT',     lat: 35.8300, lon: 139.8722, operator: 'NEXCO East' },
+  { name: 'Hokuriku Exwy / Niigata JCT', lat: 37.9064, lon: 139.0364, operator: 'NEXCO East' },
+  { name: 'Chugoku Exwy / Yoka JCT',     lat: 35.3514, lon: 134.7875, operator: 'NEXCO West' },
+  { name: 'Kyushu Exwy / Dazaifu IC',    lat: 33.5164, lon: 130.5103, operator: 'NEXCO West' },
 ];
 
 // ─── 4. NHK, YouTube, municipal live stream cameras ──────────────────────────
@@ -567,4 +576,46 @@ export const NEW_AGGREGATOR_INDEX = {
   webcamera24: 'https://webcamera24.com/fr/countries/japan/',
   camstreamer: 'https://camstreamer.com/live/search?country=Japan',
   worldcam_eu: 'https://fr.worldcam.eu/webcams/asia/japan',
+  // Wave-12 additions
+  camscape: 'https://www.camscape.com/?s=japan',
+  webcamendirect: 'https://webcamendirect.net/japon',
+  tabicam: 'https://tabi.cam/japan/',
+  scsComUa: 'https://webcam.scs.com.ua/en/asia/japan/',
+  windy: 'https://api.windy.com/webcams/api/v3/webcams',
 };
+
+// ─── Manually-discovered direct-IP cams ─────────────────────────────────────
+// Raw Shodan-style finds. Channel: 'manual_ip_seed'. Lat/lon come from the
+// IP's WHOIS + Shodan geolocation; precise address is usually unknown so
+// these pin at city centroids.
+export const MANUAL_IP_CAMS = [
+  { ip: '163.58.63.217', port: 80,   lat: 35.4437, lon: 139.6380,
+    name: 'Yokohama MJPG-Streamer (its communications)',
+    product: 'MJPG-Streamer 0.2', operator: 'its communications Inc.' },
+  { ip: '106.176.46.20', port: 80,   lat: 35.4437, lon: 139.6380,
+    name: 'Yokohama MJPG-Streamer (KDDI)',
+    product: 'MJPG-Streamer 0.2', operator: 'KDDI CORPORATION' },
+  { ip: '125.52.32.134', port: 8080, lat: 34.6937, lon: 135.5023,
+    name: 'Mobotix Q22 (main)',
+    product: 'MOBOTIX Q22' },
+  { ip: '125.52.32.134', port: 3030, lat: 34.6937, lon: 135.5023,
+    name: 'Mobotix Q22 (control page)',
+    product: 'MOBOTIX Q22', path: '/control/userimage.html' },
+];
+
+// ─── webcamendirect.net explicit URLs (user-curated) ────────────────────────
+// Detail pages are JS-rendered so we can't extract a direct stream — we just
+// keep the page URL for the popup and tag with our best-guess lat/lon based
+// on the slug. Channel: 'webcamendirect_seed'.
+export const WEBCAMENDIRECT_SEED = [
+  { url: 'https://webcamendirect.net/webcam/12755-naha-jorydtv-qab-naha-airport.html',
+    name: 'Naha Airport (JoryDTV / QAB)', lat: 26.2063, lon: 127.6501 },
+  { url: 'https://webcamendirect.net/webcam/11237-fukushima-reacteur-4-fukushima.html',
+    name: 'Fukushima Daiichi Reactor 4', lat: 37.4231, lon: 141.0328 },
+  { url: 'https://webcamendirect.net/webcam/11238-fukushima-reacteur-1-fukushima.html',
+    name: 'Fukushima Daiichi Reactor 1', lat: 37.4231, lon: 141.0328 },
+  { url: 'https://webcamendirect.net/webcam/15018-tomi-gmo-athletes-park-yunomaru.html',
+    name: 'Tomi GMO Athletes Park (Yunomaru)', lat: 36.3690, lon: 138.3130 },
+  { url: 'https://webcamendirect.net/webcam/6007-tokyo.html',
+    name: 'Tokyo (webcamendirect)', lat: 35.6762, lon: 139.6503 },
+];

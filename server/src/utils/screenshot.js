@@ -221,6 +221,8 @@ async function _renderHtml(url, opts = {}) {
     acceptCookies = true,   // default: click "Accept all" (some sites hide content until consent); set false to refuse
     scrollPasses = 0,       // number of page-down scrolls for lazy-loaded content
     userAgent,              // override default UA (e.g. to pass bot filters)
+    clickSelector = null,   // optional CSS selector to click (e.g. a "show more" button)
+    clickCount = 1,         // number of times to click the selector (for progressive loaders)
   } = opts;
   let context = null;
   let page = null;
@@ -250,6 +252,16 @@ async function _renderHtml(url, opts = {}) {
     for (let i = 0; i < scrollPasses; i++) {
       await page.evaluate(() => window.scrollBy(0, 1500));
       await page.waitForTimeout(500);
+    }
+    if (clickSelector) {
+      // Click the "show more" / expander N times (e.g. tabi.cam). Tolerates
+      // the selector disappearing partway (e.g. when the list is fully loaded).
+      for (let i = 0; i < clickCount; i++) {
+        try {
+          await page.click(clickSelector, { timeout: 2500 });
+          await page.waitForTimeout(1200);
+        } catch { break; }
+      }
     }
     return await page.content();
   } catch (err) {

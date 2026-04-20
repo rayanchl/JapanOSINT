@@ -34,6 +34,8 @@ import {
   EARTHCAM_JP,
   PREFECTURE_CENTROIDS,
   NEW_AGGREGATOR_INDEX,
+  MANUAL_IP_CAMS,
+  WEBCAMENDIRECT_SEED,
 } from './_cameraSources.js';
 import { renderHtml, extractYouTubeEmbed } from '../utils/screenshot.js';
 import { geocodeFeatures } from '../utils/cameraGeocode.js';
@@ -825,6 +827,237 @@ function findCamsDeep(node, out = []) {
   return out;
 }
 
+// ─── Channel: manual IP cams (Shodan-style hand-picks) ─────────────────────
+function fromManualIpCams() {
+  return MANUAL_IP_CAMS.map((c) => {
+    const url = `http://${c.ip}:${c.port}${c.path || '/'}`;
+    return makeFeature({
+      lat: c.lat,
+      lon: c.lon,
+      name: c.name,
+      camera_type: 'ip_camera',
+      discovery_channel: 'manual_ip_seed',
+      ip: c.ip,
+      port: c.port,
+      product: c.product || null,
+      operator: c.operator || null,
+      url,
+    });
+  });
+}
+
+// ─── Channel: webcamendirect.net explicit URLs (seed) ──────────────────────
+function fromWebcamendirectSeed() {
+  return WEBCAMENDIRECT_SEED.map((c) =>
+    makeFeature({
+      lat: c.lat,
+      lon: c.lon,
+      name: c.name,
+      camera_type: 'aggregator_webcamendirect',
+      discovery_channel: 'webcamendirect_seed',
+      url: c.url,
+    }),
+  );
+}
+
+// ─── Channel: webcamendirect.net /japon listing ────────────────────────────
+async function fromWebcamendirectList() {
+  const base = NEW_AGGREGATOR_INDEX.webcamendirect;
+  const html = await fetchText(base, { timeoutMs: 20000, headers: { 'User-Agent': BROWSER_UA } });
+  if (!html) return [];
+  const features = [];
+  // Detail links look like /webcam/<id>-<slug>.html
+  const re = /<a[^>]+href="(\/webcam\/(\d+)-([a-z0-9-]+)\.html)"[^>]*>/gi;
+  const seen = new Set();
+  let m;
+  while ((m = re.exec(html)) !== null && features.length < 100) {
+    const href = m[1];
+    const id = m[2];
+    if (seen.has(id)) continue;
+    seen.add(id);
+    const slug = m[3];
+    // Derive a human name from slug
+    const name = slug
+      .split('-')
+      .filter((s) => !/^\d+$/.test(s))
+      .join(' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+      .trim() || `webcamendirect ${id}`;
+    const centroid = guessCentroidFromText(slug) || TOKYO_CENTROID;
+    const { lat, lon } = jitterAround(centroid, features.length);
+    features.push(
+      makeFeature({
+        lat, lon,
+        name,
+        camera_type: 'aggregator_webcamendirect',
+        discovery_channel: 'webcamendirect_list',
+        url: absUrl(href, base),
+      }),
+    );
+  }
+  await geocodeFeatures(features);
+  return features;
+}
+
+// ─── Channel: camscape.com search ?s=japan (pages 1–6) ─────────────────────
+async function fromCamscape() {
+  const base = NEW_AGGREGATOR_INDEX.camscape;
+  const features = [];
+  for (let page = 1; page <= 6; page++) {
+    const url = page === 1 ? base : `https://www.camscape.com/page/${page}/?s=japan`;
+    const html = await fetchText(url, { timeoutMs: 20000, headers: { 'User-Agent': BROWSER_UA } });
+    if (!html) continue;
+    // Each hit is an <article> with an <a> to the detail page + <h2> title
+    const re = /<article[\s\S]{0,400}?<a[^>]+href="([^"]+)"[^>]*>[\s\S]{0,200}?<h2[^>]*>([\s\S]{0,120}?)<\/h2>/gi;
+    let m;
+    while ((m = re.exec(html)) !== null && features.length < 200) {
+      const detailUrl = m[1];
+      const title = m[2].replace(/<[^>]+>/g, '').trim();
+      if (!detailUrl.includes('camscape.com')) continue;
+      const centroid = guessCentroidFromText(title) || TOKYO_CENTROID;
+      const { lat, lon } = jitterAround(centroid, features.length);
+      features.push(
+        makeFeature({
+          lat, lon,
+          name: title || 'camscape Japan feed',
+          camera_type: 'aggregator_camscape',
+          discovery_channel: 'camscape',
+          url: detailUrl,
+        }),
+      );
+    }
+  }
+  await geocodeFeatures(features);
+  return features;
+}
+
+// ─── Channel: tabi.cam /japan/ (JS show-more button) ───────────────────────
+async function fromTabiCam() {
+  const base = NEW_AGGREGATOR_INDEX.tabicam;
+  // Click the show-more button a few times to fully expand the list.
+  const html = await renderHtml(base, {
+    timeoutMs: 35000,
+    settleMs: 4000,
+    clickSelector: 'button, .show-more, [data-show-more]',
+    clickCount: 5,
+    userAgent: BROWSER_UA,
+  });
+  if (!html) return [];
+  const features = [];
+  const re = /<a[^>]+href="(https?:\/\/tabi\.cam\/japan\/[^"]+)"[^>]*>([\s\S]{0,160}?)<\/a>/gi;
+  const seen = new Set();
+  let m;
+  while ((m = re.exec(html)) !== null && features.length < 200) {
+    const href = m[1];
+    if (seen.has(href)) continue;
+    seen.add(href);
+    // tabi.cam URLs encode location as a slug. e.g. /japan/mount-fuji-325185/
+    const slugMatch = href.match(/\/japan\/([a-z0-9-]+)/i);
+    const slug = slugMatch ? slugMatch[1] : '';
+    const name = slug
+      .split('-')
+      .filter((s) => !/^\d+$/.test(s))
+      .join(' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+      .trim() || 'tabi.cam feed';
+    const centroid = guessCentroidFromText(slug) || TOKYO_CENTROID;
+    const { lat, lon } = jitterAround(centroid, features.length);
+    features.push(
+      makeFeature({
+        lat, lon,
+        name,
+        camera_type: 'aggregator_tabicam',
+        discovery_channel: 'tabi_cam',
+        url: href,
+      }),
+    );
+  }
+  await geocodeFeatures(features);
+  return features;
+}
+
+// ─── Channel: webcam.scs.com.ua /en/asia/japan/ (paginated) ────────────────
+async function fromScsComUa() {
+  const baseRoot = NEW_AGGREGATOR_INDEX.scsComUa;
+  const features = [];
+  for (let page = 1; page <= 5; page++) {
+    const url = page === 1 ? baseRoot : `${baseRoot}page-${page}/`;
+    const html = await fetchText(url, { timeoutMs: 20000, headers: { 'User-Agent': BROWSER_UA } });
+    if (!html) continue;
+    const re = /<a[^>]+href="(\/en\/asia\/japan\/[^"]+)"[^>]*>[\s\S]{0,160}?(?:alt|title)="([^"]{3,120})"/gi;
+    let m;
+    const seenLocal = new Set();
+    while ((m = re.exec(html)) !== null && features.length < 200) {
+      const href = m[1];
+      if (href.includes('/page-')) continue;
+      if (seenLocal.has(href)) continue;
+      seenLocal.add(href);
+      const label = m[2].replace(/<[^>]+>/g, '').trim();
+      const centroid = guessCentroidFromText(label) || TOKYO_CENTROID;
+      const { lat, lon } = jitterAround(centroid, features.length);
+      features.push(
+        makeFeature({
+          lat, lon,
+          name: label || 'scs webcam',
+          camera_type: 'aggregator_scs_com_ua',
+          discovery_channel: 'scs_com_ua',
+          url: absUrl(href, baseRoot),
+        }),
+      );
+    }
+  }
+  await geocodeFeatures(features);
+  return features;
+}
+
+// ─── Channel: Windy.com webcams API ────────────────────────────────────────
+// Only source with real lat/lon + embed URLs. Free key from api.windy.com.
+async function fromWindy() {
+  const key = process.env.WINDY_API_KEY;
+  if (!key) {
+    console.log('[cameraDiscovery] windy_api: WINDY_API_KEY not set, skipping');
+    return [];
+  }
+  const features = [];
+  const pageSize = 100;
+  for (let offset = 0; offset < 1000; offset += pageSize) {
+    const url = `https://api.windy.com/webcams/api/v3/webcams?country=JP&limit=${pageSize}&offset=${offset}&include=location,player,images`;
+    let data;
+    try {
+      data = await fetchJson(url, {
+        timeoutMs: 15000,
+        headers: { 'x-windy-api-key': key },
+      });
+    } catch (err) {
+      console.warn('[cameraDiscovery] windy_api fetch failed:', err?.message);
+      break;
+    }
+    const items = Array.isArray(data?.webcams) ? data.webcams : [];
+    if (items.length === 0) break;
+    for (const it of items) {
+      const lat = it.location?.latitude;
+      const lon = it.location?.longitude;
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+      const embed = it.player?.live?.embed || it.player?.day?.embed || null;
+      const thumb = it.images?.current?.thumbnail || it.images?.current?.preview || null;
+      features.push(
+        makeFeature({
+          lat, lon,
+          name: it.title || `Windy webcam ${it.webcamId}`,
+          camera_type: 'aggregator_windy',
+          discovery_channel: 'windy_api',
+          url: embed,
+          thumbnail_url: thumb,
+          windy_id: it.webcamId,
+          city: it.location?.city || null,
+        }),
+      );
+    }
+    if (items.length < pageSize) break;
+  }
+  return features;
+}
+
 // ─── Fusion + dedup ─────────────────────────────────────────────────────────
 function dedupe(features) {
   const seen = new Map();
@@ -864,22 +1097,30 @@ export default async function collectCameraDiscovery(opts = {}) {
   const { onCamera, onChannelDone, onChannelError } = opts;
 
   const channelDefs = [
-    ['osm_overpass',       fromOverpass],
-    ['jma_volcano',        fromJMAVolcano],
-    ['mlit_river',         fromMLITRiver],
-    ['expressway_cctv',    fromExpressway],
-    ['broadcast_livecam',  fromBroadcast],
-    ['tourism_webcam',     fromTourism],
-    ['insecam_scrape',     fromInsecam],
-    ['shodan_api',         fromShodanAPI],
-    ['skylinewebcams',     fromSkyline],
-    ['earthcam',           fromEarthCam],
-    ['webcamtaxi',         fromWebcamTaxi],
-    ['geocam',             fromGeocam],
-    ['worldcams',          fromWorldcams],
-    ['webcamera24',        fromWebcamera24],
-    ['camstreamer',        fromCamstreamer],
-    ['worldcam_eu',        fromWorldcamEu],
+    ['osm_overpass',          fromOverpass],
+    ['jma_volcano',           fromJMAVolcano],
+    ['mlit_river',            fromMLITRiver],
+    ['expressway_cctv',       fromExpressway],
+    ['broadcast_livecam',     fromBroadcast],
+    ['tourism_webcam',        fromTourism],
+    ['insecam_scrape',        fromInsecam],
+    ['shodan_api',            fromShodanAPI],
+    ['skylinewebcams',        fromSkyline],
+    ['earthcam',              fromEarthCam],
+    ['webcamtaxi',            fromWebcamTaxi],
+    ['geocam',                fromGeocam],
+    ['worldcams',             fromWorldcams],
+    ['webcamera24',           fromWebcamera24],
+    ['camstreamer',           fromCamstreamer],
+    ['worldcam_eu',           fromWorldcamEu],
+    // Wave-12 additions
+    ['manual_ip_seed',        fromManualIpCams],
+    ['webcamendirect_seed',   fromWebcamendirectSeed],
+    ['webcamendirect_list',   fromWebcamendirectList],
+    ['camscape',              fromCamscape],
+    ['tabi_cam',              fromTabiCam],
+    ['scs_com_ua',            fromScsComUa],
+    ['windy_api',             fromWindy],
   ];
 
   // Wrap each channel so (a) no per-channel deadline (it runs as long as it

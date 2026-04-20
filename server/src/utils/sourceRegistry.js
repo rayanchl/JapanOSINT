@@ -855,6 +855,17 @@ const sources = [
   { id: 'mercari-trending', name: 'Mercari Trending', nameJa: 'メルカリ トレンド', type: 'api', category: 'classifieds', url: 'https://jp.mercari.com/', description: 'Mercari trending search keywords (consumer demand signal). ToS caveat', updateInterval: 86400, layer: 'mercari-trending', free: true, status: 'offline' },
   { id: 'kanagawa-police', name: 'Kanagawa Police Crime Stats', nameJa: '神奈川県警察 犯罪統計', type: 'api', category: 'government', url: 'https://www.police.pref.kanagawa.jp/', description: 'Ward-level crime counts for Kanagawa prefecture. Seed + optional live CSV', updateInterval: 604800, layer: 'kanagawa-police', free: true, status: 'offline' },
   { id: 'greynoise-jp', name: 'GreyNoise (curated IPs)', nameJa: 'GreyNoise (IPリスト)', type: 'api', category: 'cyber', url: 'https://api.greynoise.io/v3/community', description: 'GreyNoise classifier output for a curated IP list. Free community tier; GREYNOISE_API_KEY raises limits', updateInterval: 3600, layer: 'greynoise-jp', free: true, status: 'offline' },
+
+  // Wave 12 — camera-discovery channel additions
+  // These feed the shared `cameras` layer via the camera-discovery fan-out;
+  // the updateInterval here is informational only (the actual cadence is the
+  // hourly cameraRunner cron).
+  { id: 'camscape-jp', name: 'Camscape (Japan search)', nameJa: 'Camscape 日本検索', type: 'scraped', category: 'cyber', url: 'https://www.camscape.com/?s=japan', description: 'Camscape search results for Japan cameras (6 pages, YouTube-backed feeds)', updateInterval: 3600, layer: 'cameras', free: true, status: 'offline' },
+  { id: 'webcamendirect-net', name: 'Webcamendirect (JP)', nameJa: 'webcamendirect 日本', type: 'scraped', category: 'cyber', url: 'https://webcamendirect.net/japon', description: 'webcamendirect.net /japon listing + 5 curated detail URLs', updateInterval: 3600, layer: 'cameras', free: true, status: 'offline' },
+  { id: 'tabi-cam-jp', name: 'tabi.cam (Japan)', nameJa: 'tabi.cam 日本', type: 'scraped', category: 'cyber', url: 'https://tabi.cam/japan/', description: 'tabi.cam Japan listing with JS "show more" expansion', updateInterval: 3600, layer: 'cameras', free: true, status: 'offline' },
+  { id: 'scs-com-ua', name: 'SCS Asia/Japan webcams', nameJa: 'SCS アジア日本 ウェブカメラ', type: 'scraped', category: 'cyber', url: 'https://webcam.scs.com.ua/en/asia/japan/', description: 'webcam.scs.com.ua /en/asia/japan paginated listing (5 pages)', updateInterval: 3600, layer: 'cameras', free: true, status: 'offline' },
+  { id: 'windy-webcams', name: 'Windy Webcams API (JP)', nameJa: 'Windy ウェブカメラ API', type: 'api', category: 'cyber', url: 'https://api.windy.com/webcams/api/v3/webcams', description: 'Windy.com webcams filtered to country=JP. Includes real lat/lon + embed URLs. Requires WINDY_API_KEY (free signup)', updateInterval: 3600, layer: 'cameras', free: false, status: 'offline' },
+  { id: 'manual-ip-cams', name: 'Manual IP Cameras (seed)', nameJa: '手動追加 IPカメラ', type: 'dataset', category: 'cyber', url: 'internal://manual-ip-cams', description: 'Hand-curated MJPG-Streamer / Mobotix cameras discovered via Shodan-style scans', updateInterval: 86400, layer: 'cameras', free: true, status: 'offline' },
 ];
 
 export default sources;
