@@ -159,15 +159,19 @@ function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity, layer
   const iconOpacity =
     paint['circle-opacity'] != null ? paint['circle-opacity'] : fallbackOpacity;
 
+  // Rotated icons (planes, ships) must pivot around their own CENTER so
+  // they don't swing horizontally away from the stem. Static icons keep
+  // the bottom anchor so they sit crisply on top of the stem.
+  const rotating = ROTATING_LAYERS.has(layerId);
   const layout = {
     'icon-image': iconImageId,
     'icon-size': UNIFORM_ICON_SIZE,
     'icon-allow-overlap': true,
     'icon-ignore-placement': true,
-    'icon-anchor': 'bottom',
+    'icon-anchor': rotating ? 'center' : 'bottom',
   };
 
-  if (ROTATING_LAYERS.has(layerId)) {
+  if (rotating) {
     layout['icon-rotate'] = [
       'coalesce',
       ['get', 'heading'],
@@ -180,6 +184,13 @@ function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity, layer
     layout['icon-pitch-alignment'] = 'map';
   }
 
+  // When anchored at center, translate up by (offset + half icon height) so
+  // the icon's visual bottom still rests at the stem top. Icon rendered size
+  // is UNIFORM_ICON_SIZE * ICON_IMAGE_SIZE / 2 (pixelRatio 2) = 0.6*64/2 = ~19 px;
+  // half of that is ~10 px.
+  const centerExtra = rotating ? (UNIFORM_ICON_SIZE * ICON_IMAGE_SIZE) / 4 : 0;
+  const translateY = -(ICON_BASE_OFFSET_PX + centerExtra);
+
   return {
     id: config.id,
     type: 'symbol',
@@ -188,7 +199,7 @@ function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity, layer
     layout,
     paint: {
       'icon-opacity': iconOpacity,
-      'icon-translate': [0, -ICON_BASE_OFFSET_PX],
+      'icon-translate': [0, translateY],
       'icon-translate-anchor': 'viewport',
     },
   };
@@ -469,16 +480,50 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           'line-opacity': opacity * 0.7,
         },
       });
-      // Station/stop dot — solid circle in the line color. The icon
-      // substitution intercept is skipped for these layers via
-      // SKIP_ICON_SUBSTITUTION so this renders as a plain dot.
+      // Station/stop rendering — up to 5 concentric rings, one per line
+      // whose track passes within the server-side spatial-snap radius
+      // (properties.line_colors[], ordered most-central first). A single-
+      // line station renders as a lone dot; Shinjuku / Tokyo get nested
+      // rings showing every line served. Widest ring drawn first so the
+      // primary (nearest) line stays dominant on top.
+      const STATION_RINGS = 5;
+      const innerRadius = 4;
+      const ringStep = 2;
+      for (let k = STATION_RINGS - 1; k >= 0; k--) {
+        const radius = innerRadius + ringStep * k;
+        const ringColor = [
+          'coalesce',
+          ['at', k, ['get', 'line_colors']],
+          k === 0 ? perFeatureColor : 'rgba(0,0,0,0)',
+        ];
+        map.addLayer({
+          id: k === 0 ? mainLayerId : `${mainLayerId}-ring${k}`,
+          type: 'circle',
+          source: sourceId,
+          filter: [
+            'all',
+            ['==', ['geometry-type'], 'Point'],
+            ['>', ['length', ['coalesce', ['get', 'line_colors'], ['literal', []]]], k],
+          ],
+          paint: {
+            'circle-radius': radius,
+            'circle-color': ringColor,
+            'circle-opacity': opacity * 0.9,
+          },
+        });
+      }
+      // Fallback for stations without line_colors (legacy, never snapped).
       map.addLayer({
-        id: mainLayerId,
+        id: `${mainLayerId}-fallback`,
         type: 'circle',
         source: sourceId,
-        filter: ['==', ['geometry-type'], 'Point'],
+        filter: [
+          'all',
+          ['==', ['geometry-type'], 'Point'],
+          ['==', ['length', ['coalesce', ['get', 'line_colors'], ['literal', []]]], 0],
+        ],
         paint: {
-          'circle-radius': 4,
+          'circle-radius': innerRadius,
           'circle-color': perFeatureColor,
           'circle-opacity': opacity * 0.9,
         },
@@ -1033,6 +1078,12 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
             ? ['==', ['coalesce', ['get', 'is_military'], false], true]
             : ['!=', ['coalesce', ['get', 'is_military'], false], true];
 
+          // Center anchor so rotation pivots around the icon center (bottom
+          // anchor would swing the icon away from the stem). Extra translate
+          // of half the rendered icon height so the icon's visual bottom
+          // still lines up with the stem top. UNIFORM_ICON_SIZE * sprite 64
+          // @ pixelRatio 2 → ~19 px rendered; half ≈ 10 px.
+          const aircraftCenterExtra = (UNIFORM_ICON_SIZE * ICON_IMAGE_SIZE) / 4;
           map.addLayer({
             id: `${mainLayerId}${mil ? '-mil' : ''}-b${b.minFt}`,
             type: 'symbol',
@@ -1041,7 +1092,7 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
             layout: {
               'icon-image': mil ? 'icon-flightAdsb-mil' : layerIconImageId('flightAdsb'),
               'icon-size': UNIFORM_ICON_SIZE,
-              'icon-anchor': 'bottom',
+              'icon-anchor': 'center',
               'icon-rotate': ['coalesce', ['get', 'heading'], ['get', 'true_track'], 0],
               'icon-rotation-alignment': 'map',
               'icon-pitch-alignment': 'map',
@@ -1050,7 +1101,7 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
             },
             paint: {
               'icon-opacity': opacity,
-              'icon-translate': [0, b.translateY],
+              'icon-translate': [0, b.translateY - aircraftCenterExtra],
               'icon-translate-anchor': 'viewport',
             },
           });
