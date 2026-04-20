@@ -36,6 +36,7 @@ const STATION_COLLECTOR_TIMEOUT_MS = 10 * 60 * 1000;
 const LINE_COLLECTOR_TIMEOUT_MS = 10 * 60 * 1000;
 
 let _inflightRun = null;
+let _lastRunAt = null; // ISO timestamp of the most recent completed run
 
 function broadcast(wsServer, payload) {
   if (!wsServer) return;
@@ -190,9 +191,14 @@ export async function runTransportDiscovery(wsServer) {
     return summaries;
   } finally {
     _inflightRun = null;
+    _lastRunAt = new Date().toISOString();
   }
 }
 
 export function isTransportRunInFlight() {
   return _inflightRun !== null;
+}
+
+export function getLastRunAt() {
+  return _lastRunAt;
 }
