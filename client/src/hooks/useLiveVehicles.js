@@ -53,7 +53,7 @@ function spawnVehiclesForRoute(feature, mode) {
   const spacing = VEHICLE_SPACING_M[mode];
   const n = Math.min(MAX_VEHICLES_PER_ROUTE, Math.max(1, Math.floor(total / spacing)));
   const rawColor = feature.properties?.line_color || null;
-  const color = rawColor ? darkenHex(rawColor, 0.65) : null;
+  const color = rawColor ? darkenHex(rawColor, 0.8) : null;
   const routeId = feature.properties?.route_id || null;
   const vehicles = [];
   for (let i = 0; i < n; i++) {

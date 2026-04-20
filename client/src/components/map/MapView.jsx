@@ -4030,17 +4030,19 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
       if (!map.getSource(s.sourceId)) {
         map.addSource(s.sourceId, { type: 'geojson', data: s.data });
         // Rounded-rectangle SDF icon, tinted with the line color (darkened),
-        // rotated by the vehicle's bearing, and ground-aligned so it lies
-        // flat against the basemap even when the camera is pitched — same
-        // treatment as the ground-cross pin marker.
+        // rotated so the long axis aligns with the track, ground-aligned
+        // so it lies flat against the basemap — same treatment as the
+        // ground-cross pin marker.
         map.addLayer({
           id: s.layerId,
           type: 'symbol',
           source: s.sourceId,
           layout: {
             'icon-image': 'live-train-rect',
-            'icon-size': 0.5,
-            'icon-rotate': ['coalesce', ['get', 'bearing'], 0],
+            'icon-size': 0.6,
+            // Add 90° so the rectangle's long axis sits along the track
+            // instead of perpendicular to it.
+            'icon-rotate': ['+', ['coalesce', ['get', 'bearing'], 0], 90],
             'icon-allow-overlap': true,
             'icon-ignore-placement': true,
             'icon-pitch-alignment': 'map',
@@ -4048,10 +4050,6 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
           },
           paint: {
             'icon-color': ['coalesce', ['get', 'line_color'], s.defaultColor],
-            // `icon-halo-*` gives a subtle darker border without the white
-            // outline that the old circle layer had. Kept soft (width 1).
-            'icon-halo-color': 'rgba(0,0,0,0.55)',
-            'icon-halo-width': 1,
             'icon-opacity': 0.9,
           },
         });
@@ -4063,23 +4061,28 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
         if (src && src.type === 'geojson') src.setData(s.data);
       }
     }
-
-    // Cleanup on unmount / before re-run: tear down our sources & layers if
-    // the map instance is still alive. `map.remove()` from the init effect
-    // already destroys everything, so this mostly no-ops — but it closes
-    // the race where this effect re-runs after a re-mount with stale state.
-    return () => {
-      const m = mapRef.current;
-      if (!m) return;
-      for (const s of specs) {
-        if (m.getLayer(s.layerId)) m.removeLayer(s.layerId);
-        if (m.getSource(s.sourceId)) m.removeSource(s.sourceId);
-      }
-    };
+    // NOTE: no cleanup return here. This effect re-runs at 10 Hz when the
+    // live GeoJSON refreshes; tearing down the source/layer each run would
+    // produce a visible blink. The unmount-only teardown lives in a
+    // separate effect below.
   }, [mapReady, liveTrainsGeo, liveSubwaysGeo, liveBusesGeo,
       layers?.liveTransitTrains?.visible,
       layers?.liveTransitSubways?.visible,
       layers?.liveTransitBuses?.visible]);
+
+  // Unmount-only cleanup of live-transit sources/layers. Deps are `[]` so
+  // this fires once on the component unmount, not on every data update.
+  useEffect(() => {
+    return () => {
+      const m = mapRef.current;
+      if (!m) return;
+      for (const id of ['live-vehicles-train', 'live-vehicles-subway', 'live-vehicles-bus']) {
+        const layerId = `${id}-layer`;
+        if (m.getLayer(layerId)) m.removeLayer(layerId);
+        if (m.getSource(id)) m.removeSource(id);
+      }
+    };
+  }, []);
 
   // Temporary ground-track line layer for satellite tracking popups.
   // Receives events from MapPopup's SatelliteTrackingDetail "Show ground track" button.
