@@ -18,8 +18,9 @@ import dbRouter from './routes/db.js';
 import { startScheduler } from './utils/scheduler.js';
 import { installFetchTap, setBroadcaster } from './utils/collectorTap.js';
 import { runBulkHydrate } from './utils/gtfsBulkHydrate.js';
-import { refreshFeedCatalogue } from './utils/gtfsStore.js';
+import { refreshFeedCatalogue, refreshRtFeedCatalogue } from './utils/gtfsStore.js';
 import { refreshOdptTrainInformationAlerts } from './utils/odptToGtfsRt.js';
+import { startRtPoller } from './utils/gtfsRtPoller.js';
 import cron from 'node-cron';
 
 // Patch globalThis.fetch BEFORE importing any collector code that may
@@ -101,6 +102,16 @@ async function refreshAndHydrate() {
     await runBulkHydrate({ fresherThanDays: 7 });
   } catch (err) {
     console.error('[index] bulk hydrate failed:', err?.message);
+  }
+  // Seed gtfs_rt_feeds from ODPT-capable operators and (re)start the
+  // GTFS-RT poller. Safe to call repeatedly — startRtPoller cancels any
+  // existing timers first. No-op when ODPT_CHALLENGE_TOKEN is unset.
+  try {
+    const rtSeed = refreshRtFeedCatalogue();
+    console.log('[index] RT feed catalogue seed →', rtSeed);
+    startRtPoller();
+  } catch (err) {
+    console.warn('[index] RT poller start failed:', err?.message);
   }
 }
 
