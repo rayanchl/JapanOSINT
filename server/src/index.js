@@ -18,6 +18,7 @@ import dbRouter from './routes/db.js';
 import { startScheduler } from './utils/scheduler.js';
 import { installFetchTap, setBroadcaster } from './utils/collectorTap.js';
 import { runBulkHydrate } from './utils/gtfsBulkHydrate.js';
+import { refreshFeedCatalogue } from './utils/gtfsStore.js';
 import cron from 'node-cron';
 
 // Patch globalThis.fetch BEFORE importing any collector code that may
@@ -75,21 +76,31 @@ setBroadcaster(wss);
 startScheduler(wss);
 
 // Nationwide GTFS hydrate — kicks off 15s after boot so the HTTP server and
-// scheduler get a chance to warm up first. Persists per-operator state in
+// scheduler get a chance to warm up first. Before the hydrate can run we
+// must refresh the Shimada catalogue (gtfs_feeds) so listUpstreamOperatorIds
+// has anything to return. Persists per-operator state in
 // gtfs_operators.hydrated_at so a restart resumes from the next stale entry.
-// The weekly cron re-hydrates anything past the 7-day freshness window.
-setTimeout(() => {
-  runBulkHydrate({ fresherThanDays: 7 }).catch((err) => {
-    console.error('[index] initial bulk hydrate failed:', err?.message);
-  });
-}, 15_000);
+// The weekly cron re-refreshes the catalogue and re-hydrates anything past
+// the 7-day freshness window.
+async function refreshAndHydrate() {
+  try {
+    const { total } = await refreshFeedCatalogue();
+    console.log(`[index] Shimada catalogue refreshed — ${total} feeds`);
+  } catch (err) {
+    console.error('[index] catalogue refresh failed:', err?.message);
+    // Proceed anyway — stale catalogue is better than no hydrate at all.
+  }
+  try {
+    await runBulkHydrate({ fresherThanDays: 7 });
+  } catch (err) {
+    console.error('[index] bulk hydrate failed:', err?.message);
+  }
+}
+
+setTimeout(() => { refreshAndHydrate(); }, 15_000);
 cron.schedule(
   '0 3 * * 0',
-  () => {
-    runBulkHydrate({ fresherThanDays: 7 }).catch((err) => {
-      console.error('[index] weekly bulk hydrate failed:', err?.message);
-    });
-  },
+  () => { refreshAndHydrate(); },
   { timezone: 'Asia/Tokyo' },
 );
 
