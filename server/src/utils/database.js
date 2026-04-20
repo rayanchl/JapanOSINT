@@ -220,6 +220,40 @@ db.exec(`
   );
   CREATE INDEX IF NOT EXISTS idx_gtfs_rt_positions_reported
     ON gtfs_rt_positions(reported_at);
+
+  CREATE TABLE IF NOT EXISTS gtfs_rt_trip_updates (
+    org_id             TEXT NOT NULL,
+    trip_id            TEXT NOT NULL,
+    route_id           TEXT,
+    stop_id            TEXT,
+    stop_sequence      INTEGER NOT NULL,
+    arrival_delay_s    INTEGER,
+    departure_delay_s  INTEGER,
+    reported_at        INTEGER NOT NULL,
+    received_at        TEXT NOT NULL,
+    PRIMARY KEY (org_id, trip_id, stop_sequence)
+  );
+  CREATE INDEX IF NOT EXISTS idx_gtfs_rt_trip_updates_stop
+    ON gtfs_rt_trip_updates(org_id, stop_id);
+  CREATE INDEX IF NOT EXISTS idx_gtfs_rt_trip_updates_reported
+    ON gtfs_rt_trip_updates(reported_at);
+
+  CREATE TABLE IF NOT EXISTS gtfs_rt_alerts (
+    org_id           TEXT NOT NULL,
+    alert_id         TEXT NOT NULL,
+    route_ids        TEXT NOT NULL DEFAULT '[]',
+    trip_ids         TEXT NOT NULL DEFAULT '[]',
+    stop_ids         TEXT NOT NULL DEFAULT '[]',
+    header_text      TEXT,
+    description_text TEXT,
+    cause            TEXT,
+    effect           TEXT,
+    reported_at      INTEGER NOT NULL,
+    received_at      TEXT NOT NULL,
+    PRIMARY KEY (org_id, alert_id)
+  );
+  CREATE INDEX IF NOT EXISTS idx_gtfs_rt_alerts_reported
+    ON gtfs_rt_alerts(reported_at);
 `);
 
 // --------------- Schema migration ---------------
