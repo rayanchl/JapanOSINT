@@ -1189,4 +1189,39 @@ router.get('/japan-post-offices', async (_req, res) => {
   await respondWithData(res, { sourceId: 'japan-post-offices', layerType: 'japan-post-offices', collectorKey: 'japan-post-offices' });
 });
 
+// Wave 11 (cont.)
+router.get('/wdcgg-co2', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wdcgg-co2', layerType: 'wdcgg-co2', collectorKey: 'wdcgg-co2' });
+});
+router.get('/censys-japan', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'censys-japan', layerType: 'censys-japan', collectorKey: 'censys-japan' });
+});
+router.get('/nicter-stats', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'nicter-stats', layerType: 'nicter-stats', collectorKey: 'nicter-stats' });
+});
+router.get('/misskey-timeline', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'misskey-timeline', layerType: 'misskey-timeline', collectorKey: 'misskey-timeline' });
+});
+router.get('/bird-makeup-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'bird-makeup-jp', layerType: 'bird-makeup-jp', collectorKey: 'bird-makeup-jp' });
+});
+router.get('/nexco-cameras', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'nexco-cameras', layerType: 'nexco-cameras', collectorKey: 'nexco-cameras' });
+});
+router.get('/suumo-rental-density', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'suumo-rental-density', layerType: 'suumo-rental-density', collectorKey: 'suumo-rental-density' });
+});
+router.get('/note-com-trending', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'note-com-trending', layerType: 'note-com-trending', collectorKey: 'note-com-trending' });
+});
+router.get('/mercari-trending', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'mercari-trending', layerType: 'mercari-trending', collectorKey: 'mercari-trending' });
+});
+router.get('/kanagawa-police', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'kanagawa-police', layerType: 'kanagawa-police', collectorKey: 'kanagawa-police' });
+});
+router.get('/greynoise-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'greynoise-jp', layerType: 'greynoise-jp', collectorKey: 'greynoise-jp' });
+});
+
 export default router;

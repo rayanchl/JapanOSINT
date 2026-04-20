@@ -202,6 +202,17 @@ import hatenaBookmark from './hatenaBookmark.js';
 import certstreamJp from './certstreamJp.js';
 import odptTrainDelay from './odptTrainDelay.js';
 import japanPostOffices from './japanPostOffices.js';
+import wdcggCo2 from './wdcggCo2.js';
+import censysJapan from './censysJapan.js';
+import nicterStats from './nicterStats.js';
+import misskeyTimeline from './misskeyTimeline.js';
+import birdMakeupJp from './birdMakeupJp.js';
+import nexcoCameras from './nexcoCameras.js';
+import suumoRentalDensity from './suumoRentalDensity.js';
+import noteComTrending from './noteComTrending.js';
+import mercariTrending from './mercariTrending.js';
+import kanagawaPolice from './kanagawaPolice.js';
+import greynoiseJp from './greynoiseJp.js';
 
 // Wave 10: Niche + Pop Culture
 import vendingMachines from './vendingMachines.js';
@@ -417,6 +428,17 @@ export const collectors = {
   'certstream-jp': certstreamJp,
   'odpt-train-delay': odptTrainDelay,
   'japan-post-offices': japanPostOffices,
+  'wdcgg-co2': wdcggCo2,
+  'censys-japan': censysJapan,
+  'nicter-stats': nicterStats,
+  'misskey-timeline': misskeyTimeline,
+  'bird-makeup-jp': birdMakeupJp,
+  'nexco-cameras': nexcoCameras,
+  'suumo-rental-density': suumoRentalDensity,
+  'note-com-trending': noteComTrending,
+  'mercari-trending': mercariTrending,
+  'kanagawa-police': kanagawaPolice,
+  'greynoise-jp': greynoiseJp,
 };
 
 /**

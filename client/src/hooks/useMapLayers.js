@@ -933,6 +933,43 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/certstream-jp',
     category: 'Cyber',
   },
+
+  // Wave 11 (cont.) — only the geospatial ones get map layers
+  wdcggCo2: {
+    name: 'GHG Stations',
+    icon: '\u{1F32B}',
+    color: '#66bb6a',
+    endpoint: '/api/data/wdcgg-co2',
+    category: 'Environment',
+  },
+  nexcoCameras: {
+    name: 'Expressway Cameras',
+    icon: '\u{1F4F7}',
+    color: '#ff7043',
+    endpoint: '/api/data/nexco-cameras',
+    category: 'Transport',
+  },
+  suumoRentalDensity: {
+    name: 'Rental Density',
+    icon: '\u{1F3E0}',
+    color: '#ab47bc',
+    endpoint: '/api/data/suumo-rental-density',
+    category: 'Social',
+  },
+  kanagawaPolice: {
+    name: 'Kanagawa Crime',
+    icon: '\u{1F46E}',
+    color: '#d32f2f',
+    endpoint: '/api/data/kanagawa-police',
+    category: 'Government',
+  },
+  censysJapan: {
+    name: 'Censys Hosts (JP)',
+    icon: '\u{1F5A5}',
+    color: '#78909c',
+    endpoint: '/api/data/censys-japan',
+    category: 'Cyber',
+  },
 };
 
 export const LAYER_CATEGORIES = [
