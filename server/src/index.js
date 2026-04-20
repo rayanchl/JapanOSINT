@@ -13,6 +13,7 @@ import dataRouter from './routes/data.js';
 import geocodeRouter from './routes/geocode.js';
 import statusRouter from './routes/status.js';
 import followRouter from './routes/follow.js';
+import transitRouter from './routes/transit.js';
 import { startScheduler } from './utils/scheduler.js';
 import { installFetchTap, setBroadcaster } from './utils/collectorTap.js';
 
@@ -38,6 +39,7 @@ app.use('/api/data', dataRouter);
 app.use('/api/geocode', geocodeRouter);
 app.use('/api/status', statusRouter);
 app.use('/api/follow', followRouter);
+app.use('/api/transit', transitRouter);
 
 // ── Health check ───────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
