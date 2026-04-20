@@ -3,8 +3,6 @@ import { Routes, Route, NavLink } from 'react-router-dom';
 import MapPage from './components/map/MapPage';
 import SourceDashboard from './components/dashboard/SourceDashboard';
 import SourcesPanel from './components/panels/SourcesPanel';
-import FollowPanel from './components/panels/FollowPanel';
-import DatabasePanel from './components/panels/DatabasePanel';
 import useDataSources from './hooks/useDataSources';
 
 const THEME_STORAGE_KEY = 'osint:theme';
@@ -66,12 +64,7 @@ export default function App() {
   const { sources, stats, isConnected, lastUpdate } = useDataSources();
   const { theme, toggle: toggleTheme } = useTheme();
   const [showSources, setShowSources] = React.useState(false);
-  const [showFollow, setShowFollow] = React.useState(false);
-  const [showDatabase, setShowDatabase] = React.useState(false);
-
-  const openSources = () => { setShowFollow(false); setShowDatabase(false); setShowSources((v) => !v); };
-  const openFollow = () => { setShowSources(false); setShowDatabase(false); setShowFollow((v) => !v); };
-  const openDatabase = () => { setShowSources(false); setShowFollow(false); setShowDatabase((v) => !v); };
+  const openSources = () => setShowSources((v) => !v);
 
   const activeSources = stats?.online ?? 0;
 
@@ -154,31 +147,6 @@ export default function App() {
             Sources
           </button>
 
-          <button
-            type="button"
-            onClick={openFollow}
-            className={`px-2.5 py-1 rounded text-xs font-medium border transition-colors ${
-              showFollow
-                ? 'bg-neon-cyan/15 text-neon-cyan border-neon-cyan/40'
-                : 'bg-transparent text-gray-400 border-osint-border hover:text-neon-cyan hover:border-neon-cyan/40'
-            }`}
-            title="Follow live collector HTTP requests"
-          >
-            Follow
-          </button>
-
-          <button
-            type="button"
-            onClick={openDatabase}
-            className={`px-2.5 py-1 rounded text-xs font-medium border transition-colors ${
-              showDatabase
-                ? 'bg-neon-cyan/15 text-neon-cyan border-neon-cyan/40'
-                : 'bg-transparent text-gray-400 border-osint-border hover:text-neon-cyan hover:border-neon-cyan/40'
-            }`}
-            title="Browse database tables and scheduler"
-          >
-            Database
-          </button>
 
           <button
             type="button"
@@ -205,17 +173,6 @@ export default function App() {
           </div>
         )}
 
-        {showFollow && (
-          <div className="absolute top-3 right-3 z-40">
-            <FollowPanel onClose={() => setShowFollow(false)} />
-          </div>
-        )}
-
-        {showDatabase && (
-          <div className="absolute top-3 right-3 z-40">
-            <DatabasePanel onClose={() => setShowDatabase(false)} />
-          </div>
-        )}
       </main>
     </div>
   );

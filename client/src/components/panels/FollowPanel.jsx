@@ -349,7 +349,7 @@ function FilterStrip({
 
 /* ── Main ──────────────────────────────────────────────────────────────── */
 
-export default function FollowPanel({ onClose }) {
+export default function FollowPanel({ onClose, embedded = false }) {
   const {
     hits, runs, activeRuns, connected, paused, setPaused, seeded, clear,
   } = useCollectorFollowStream();
@@ -398,9 +398,14 @@ export default function FollowPanel({ onClose }) {
     [hits],
   );
 
+  const outerClass = embedded
+    ? 'flex flex-col h-full'
+    : 'glass-panel flex flex-col w-[680px] max-w-[95vw] max-h-[80vh] shadow-xl';
+
   return (
-    <div className="glass-panel flex flex-col w-[680px] max-w-[95vw] max-h-[80vh] shadow-xl">
-      {/* Header */}
+    <div className={outerClass}>
+      {/* Header — skip when embedded (parent owns the tab chrome) */}
+      {!embedded && (
       <div className="flex items-center justify-between px-3 py-2 border-b border-osint-border/50 flex-shrink-0">
         <div className="flex items-center gap-2">
           <span
@@ -447,6 +452,38 @@ export default function FollowPanel({ onClose }) {
           </button>
         </div>
       </div>
+      )}
+      {/* Compact embedded toolbar */}
+      {embedded && (
+        <div className="flex items-center justify-between px-3 py-1 border-b border-osint-border/40 flex-shrink-0">
+          <span className="text-[10px] text-gray-400 font-mono">
+            {filtered.length}/{hits.length} hit{hits.length === 1 ? '' : 's'}
+            {inFlightCount > 0 && (
+              <span className="ml-2 text-neon-cyan">· {inFlightCount} live</span>
+            )}
+          </span>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setPaused((p) => !p)}
+              className={`px-2 py-0.5 rounded text-[10px] border font-mono transition-colors ${
+                paused
+                  ? 'bg-neon-orange/15 text-neon-orange border-neon-orange/40'
+                  : 'bg-osint-bg/40 text-gray-400 border-osint-border hover:text-gray-200'
+              }`}
+            >
+              {paused ? 'paused' : 'pause'}
+            </button>
+            <button
+              type="button"
+              onClick={clear}
+              className="px-2 py-0.5 rounded text-[10px] border border-osint-border bg-osint-bg/40 text-gray-400 hover:text-gray-200 font-mono"
+            >
+              clear
+            </button>
+          </div>
+        </div>
+      )}
 
       <RunBanner activeRuns={activeRuns} runs={runs} />
 

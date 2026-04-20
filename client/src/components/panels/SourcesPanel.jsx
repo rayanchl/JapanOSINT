@@ -2,6 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import StatusBadge from '../ui/StatusBadge';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import CameraDiscoveryThread from './CameraDiscoveryThread';
+import FollowPanel from './FollowPanel';
+import DatabaseExplorerTab from './DatabaseExplorerTab';
+import DatabaseSchedulerTab from './DatabaseSchedulerTab';
 
 const FILTERS = [
   { key: 'all', label: 'All' },
@@ -253,7 +256,8 @@ export default function SourcesPanel({ onClose }) {
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [expandedId, setExpandedId] = useState(null);
-  const [tab, setTab] = useState('sources'); // 'sources' | 'discovery'
+  // Tabs: sources | discovery | follow | tables | scheduler
+  const [tab, setTab] = useState('sources');
 
   useEffect(() => {
     let cancelled = false;
@@ -320,27 +324,27 @@ export default function SourcesPanel({ onClose }) {
   const summary = data?.summary;
 
   return (
-    <div className="glass-panel flex flex-col w-[520px] max-w-[95vw] max-h-[80vh] shadow-xl">
+    <div className="glass-panel flex flex-col w-[720px] max-w-[95vw] max-h-[80vh] shadow-xl">
       <div className="flex items-center justify-between px-4 py-2 border-b border-osint-border/50 flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => setTab('sources')}
-            className={`text-sm font-bold transition-colors ${
-              tab === 'sources' ? 'text-neon-cyan' : 'text-gray-500 hover:text-gray-300'
-            }`}
-          >
-            Sources
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab('discovery')}
-            className={`text-sm font-bold transition-colors ${
-              tab === 'discovery' ? 'text-neon-cyan' : 'text-gray-500 hover:text-gray-300'
-            }`}
-          >
-            Discovery
-          </button>
+        <div className="flex items-center gap-3 flex-wrap">
+          {[
+            { id: 'sources',   label: 'Sources' },
+            { id: 'discovery', label: 'Camera Discovery' },
+            { id: 'follow',    label: 'Follow' },
+            { id: 'tables',    label: 'DB Tables' },
+            { id: 'scheduler', label: 'Scheduler' },
+          ].map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => setTab(t.id)}
+              className={`text-sm font-bold transition-colors ${
+                tab === t.id ? 'text-neon-cyan' : 'text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
           {tab === 'sources' && summary && (
             <span className="text-[10px] text-gray-400 font-mono">
               {summary.working}/{summary.total} working
@@ -360,6 +364,24 @@ export default function SourcesPanel({ onClose }) {
       {tab === 'discovery' && (
         <div className="flex-1 flex flex-col min-h-0">
           <CameraDiscoveryThread />
+        </div>
+      )}
+
+      {tab === 'follow' && (
+        <div className="flex-1 flex flex-col min-h-0">
+          <FollowPanel embedded />
+        </div>
+      )}
+
+      {tab === 'tables' && (
+        <div className="flex-1 flex flex-col min-h-0">
+          <DatabaseExplorerTab />
+        </div>
+      )}
+
+      {tab === 'scheduler' && (
+        <div className="flex-1 flex flex-col min-h-0">
+          <DatabaseSchedulerTab />
         </div>
       )}
 

@@ -26,10 +26,12 @@ export default function DatabaseExplorerTab() {
   // Load the table list once.
   useEffect(() => {
     fetch('/api/db/tables')
-      .then((r) => r.ok ? r.json() : { tables: [] })
+      .then((r) => r.ok ? r.json() : [])
       .then((j) => {
-        setTables(j.tables || []);
-        if (j.tables?.length && !selected) setSelected(j.tables[0].name);
+        // Server returns a bare array; older code returned { tables: [...] }.
+        const list = Array.isArray(j) ? j : (j.tables || []);
+        setTables(list);
+        if (list.length && !selected) setSelected(list[0].name);
       })
       .catch(() => setTables([]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
