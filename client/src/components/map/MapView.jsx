@@ -55,11 +55,14 @@ async function registerLayerIcons(map) {
     }
   }
 
-  // Dropline sprite: a 2×100 semi-transparent gray vertical line.
-  // icon-anchor: 'bottom' + icon-size scales it to the desired pixel height.
+  // Dropline sprite: a 3×120 semi-transparent gray vertical line.
+  // Width 3 (odd) gives a true center column so icon-anchor: 'bottom'
+  // centers cleanly under the icon — an even width renders on a half-pixel
+  // and looks off-center. pixelRatio: 1 keeps buffer dims = display dims.
+  // Height 120 supports the raised 60-px base plus aircraft altitude bonus.
   if (!map.hasImage('dropline')) {
-    const w = 2;
-    const h = 100;
+    const w = 3;
+    const h = 120;
     const data = new Uint8ClampedArray(w * h * 4);
     for (let i = 0; i < w * h; i++) {
       data[i * 4 + 0] = 180;
@@ -67,7 +70,7 @@ async function registerLayerIcons(map) {
       data[i * 4 + 2] = 180;
       data[i * 4 + 3] = 115; // ~45% alpha
     }
-    map.addImage('dropline', { width: w, height: h, data }, { pixelRatio: 2 });
+    map.addImage('dropline', { width: w, height: h, data }, { pixelRatio: 1 });
   }
 }
 
@@ -92,12 +95,13 @@ function darkenHex(hex, factor = 0.8) {
 // rotated to match direction of travel.
 const ROTATING_LAYERS = new Set(['flightAdsb', 'maritimeAis', 'marineTraffic', 'vesselFinder']);
 
-// Every icon floats 40 px above its true lng/lat so the pin stands up.
+// Every icon floats 60 px above its true lng/lat so the pin stands up.
 // Aircraft get an altitude-scaled bonus on top; that's handled separately
 // in the flightAdsb case.
-const ICON_BASE_OFFSET_PX = 40;
-// The dropline sprite is 100 px tall; icon-size is a ratio, so 0.4 = 40 px.
-const DROPLINE_BASE_SIZE = ICON_BASE_OFFSET_PX / 100;
+const ICON_BASE_OFFSET_PX = 60;
+// The dropline sprite is 120 px tall; icon-size is a ratio, so 0.5 = 60 px.
+const DROPLINE_SPRITE_HEIGHT_PX = 120;
+const DROPLINE_BASE_SIZE = ICON_BASE_OFFSET_PX / DROPLINE_SPRITE_HEIGHT_PX;
 
 // Layers that should NOT have their circle configs swapped for emoji-icon
 // symbol layers. Rendering stays as plain line-colored dots.
@@ -918,14 +922,15 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       //      10 icon layers, each with a fixed `icon-translate` since the
       //      property is not expression-capable.
       const ALT_BUCKETS = [
-        { minFt: -Infinity, maxFt: 2000,     translateY: -40 },
-        { minFt: 2000,      maxFt: 10000,    translateY: -52 },
-        { minFt: 10000,     maxFt: 20000,    translateY: -64 },
-        { minFt: 20000,     maxFt: 30000,    translateY: -80 },
-        { minFt: 30000,     maxFt: Infinity, translateY: -100 },
+        { minFt: -Infinity, maxFt: 2000,     translateY: -60 },
+        { minFt: 2000,      maxFt: 10000,    translateY: -72 },
+        { minFt: 10000,     maxFt: 20000,    translateY: -84 },
+        { minFt: 20000,     maxFt: 30000,    translateY: -100 },
+        { minFt: 30000,     maxFt: Infinity, translateY: -120 },
       ];
 
-      // Dropline — single symbol layer, size scales with offsetPx / 100.
+      // Dropline — single symbol layer, size scales with offsetPx / sprite height.
+      // offsetPx = 60 (base) + min(60, altitude_ft / 500) → max 120 at cruise.
       map.addLayer({
         id: `${mainLayerId}-dropline`,
         type: 'symbol',
@@ -935,8 +940,8 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           'icon-anchor': 'bottom',
           'icon-size': [
             '/',
-            ['+', 40, ['min', 60, ['/', ['coalesce', ['get', 'altitude_ft'], 0], 500]]],
-            100,
+            ['+', 60, ['min', 60, ['/', ['coalesce', ['get', 'altitude_ft'], 0], 500]]],
+            DROPLINE_SPRITE_HEIGHT_PX,
           ],
           'icon-allow-overlap': true,
           'icon-ignore-placement': true,
