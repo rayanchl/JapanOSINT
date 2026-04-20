@@ -55,33 +55,36 @@ async function registerLayerIcons(map) {
     }
   }
 
-  // Dropline sprites: semi-transparent gray vertical lines, always 3 px wide.
-  // We register one sprite per needed height so that every layer uses
-  // `icon-size: 1.0` — this keeps the stem width CONSTANT regardless of
-  // height, whereas scaling icon-size would proportionally widen the stem
-  // (an aircraft cruising at 40k ft would render a ~6-px stem).
-  // Width 3 (odd) + pixelRatio 1 gives a true center column and crisp
-  // display alignment under `icon-anchor: 'bottom'`.
-  const makeDropline = (h) => {
-    const w = 3;
-    const data = new Uint8ClampedArray(w * h * 4);
-    for (let i = 0; i < w * h; i++) {
-      data[i * 4 + 0] = 180;
-      data[i * 4 + 1] = 180;
-      data[i * 4 + 2] = 180;
-      data[i * 4 + 3] = 180; // ~70% alpha
+  // Dropline sprites: 3-px visible gray strip centered inside a 64-wide
+  // buffer at pixelRatio 2 — matching the icon sprite format exactly so
+  // MapLibre's placement math produces identical sub-pixel anchor
+  // rounding for both layers (otherwise the stem drifts off-center).
+  // The buffer height is the display-px stem height × 2 (pixelRatio 2);
+  // only columns 30/31/32 are opaque, the rest are fully transparent.
+  const makeDropline = (displayH) => {
+    const w = 64;
+    const h = displayH * 2;
+    const data = new Uint8ClampedArray(w * h * 4); // all zeros → transparent
+    for (let y = 0; y < h; y++) {
+      for (const x of [30, 31, 32]) {
+        const i = (y * w + x) * 4;
+        data[i + 0] = 180;
+        data[i + 1] = 180;
+        data[i + 2] = 180;
+        data[i + 3] = 180; // ~70% alpha
+      }
     }
     return { width: w, height: h, data };
   };
   for (const h of [30, 42, 54, 70, 90]) {
     const id = `dropline-${h}`;
     if (!map.hasImage(id)) {
-      map.addImage(id, makeDropline(h), { pixelRatio: 1 });
+      map.addImage(id, makeDropline(h), { pixelRatio: 2 });
     }
   }
   // Backward-compat alias: the generic non-aircraft stem is 30 px tall.
   if (!map.hasImage('dropline')) {
-    map.addImage('dropline', makeDropline(30), { pixelRatio: 1 });
+    map.addImage('dropline', makeDropline(30), { pixelRatio: 2 });
   }
 }
 
