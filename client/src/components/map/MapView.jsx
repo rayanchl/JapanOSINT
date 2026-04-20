@@ -74,9 +74,9 @@ async function registerLayerIcons(map) {
     const paint = (x, y) => {
       if (x < 0 || x >= w || y < 0 || y >= h) return;
       const i = (y * w + x) * 4;
-      data[i + 0] = 180;
-      data[i + 1] = 180;
-      data[i + 2] = 180;
+      data[i + 0] = 90;
+      data[i + 1] = 90;
+      data[i + 2] = 90;
       data[i + 3] = 240;
     };
     for (let d = -armPx; d <= armPx; d++) {
@@ -4003,9 +4003,26 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
           },
         });
       } else {
-        map.getSource(s.sourceId).setData(s.data);
+        const src = map.getSource(s.sourceId);
+        // Defensive type check: only call setData on a GeoJSON source. If
+        // the same id were ever taken by a non-geojson source (style change,
+        // bug), this avoids a confusing runtime throw.
+        if (src && src.type === 'geojson') src.setData(s.data);
       }
     }
+
+    // Cleanup on unmount / before re-run: tear down our sources & layers if
+    // the map instance is still alive. `map.remove()` from the init effect
+    // already destroys everything, so this mostly no-ops — but it closes
+    // the race where this effect re-runs after a re-mount with stale state.
+    return () => {
+      const m = mapRef.current;
+      if (!m) return;
+      for (const s of specs) {
+        if (m.getLayer(s.layerId)) m.removeLayer(s.layerId);
+        if (m.getSource(s.sourceId)) m.removeSource(s.sourceId);
+      }
+    };
   }, [mapReady, liveTrainsGeo, liveSubwaysGeo, liveBusesGeo,
       layers?.liveTransitTrains?.visible,
       layers?.liveTransitSubways?.visible,
