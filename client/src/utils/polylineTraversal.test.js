@@ -41,4 +41,16 @@ describe('polylineTraversal', () => {
     expect(next.segIdx).toBe(0);
     expect(next.segOffset).toBeCloseTo(400, -1);
   });
+
+  it('advanceAlongLine terminates on an all-zero-length polyline', () => {
+    // Duplicated coord → every segment has length 0.
+    const degenerate = [[139.0, 35.0], [139.0, 35.0], [139.0, 35.0]];
+    const lens = segmentLengthsMeters(degenerate);
+    // Must return rather than hang. Timeout of 1000 ms should be plenty if
+    // the guard works; if it loops forever vitest kills the run.
+    const next = advanceAlongLine(degenerate, lens, { segIdx: 0, segOffset: 0 }, 1000);
+    expect(next.lng).toBe(139.0);
+    expect(next.lat).toBe(35.0);
+    expect(Number.isFinite(next.bearing)).toBe(true);
+  });
 });

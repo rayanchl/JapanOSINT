@@ -43,17 +43,26 @@ export function segmentLengthsMeters(coords) {
 /**
  * Advance from {segIdx, segOffset} by deltaMeters along `coords`. Wraps to
  * segIdx=0 when the polyline ends so the vehicle loops.
+ *
+ * `deltaMeters` must be >= 0 — negative values produce undefined output.
+ *
  * Returns { lng, lat, bearing, segIdx, segOffset }.
  *
  * Assumes segLens.length === coords.length - 1 and segLens.length > 0.
  */
 export function advanceAlongLine(coords, segLens, state, deltaMeters) {
+  const n = segLens.length;
   let segIdx = state.segIdx;
   let segOffset = state.segOffset + deltaMeters;
-  // Walk forward across segments, wrapping at the end.
+  // Walk forward across segments, wrapping at the end. Break if we've done
+  // a full lap without consuming any distance (all segments are zero-length,
+  // e.g. a polyline of duplicated coordinates).
+  let safetySteps = 0;
   while (segOffset > segLens[segIdx]) {
     segOffset -= segLens[segIdx];
-    segIdx = (segIdx + 1) % segLens.length;
+    segIdx = (segIdx + 1) % n;
+    safetySteps++;
+    if (safetySteps > n) break;
   }
   const a = coords[segIdx];
   const b = coords[segIdx + 1];
