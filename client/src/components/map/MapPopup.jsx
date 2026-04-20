@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { getLayerIcon } from '../../utils/layerIcons';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
+import StationPopup from './popups/StationPopup.jsx';
 
 /**
  * Fetch a reverse-geocoded address label for a feature, using the server's
@@ -1058,8 +1059,12 @@ const DETAIL_RENDERERS = {
   'satellite-imagery': SatelliteImageryDetail,
   satelliteTracking: SatelliteTrackingDetail,
   'satellite-tracking': SatelliteTrackingDetail,
-  unifiedBuses: BusStopDetail,
-  'unified-buses': BusStopDetail,
+  unifiedTrains: StationPopup,
+  'unified-trains': StationPopup,
+  unifiedSubways: StationPopup,
+  'unified-subways': StationPopup,
+  unifiedBuses: StationPopup,
+  'unified-buses': StationPopup,
 };
 
 export default function MapPopup({ feature, layerType, onClose, position }) {
