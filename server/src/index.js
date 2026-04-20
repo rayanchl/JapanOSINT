@@ -17,6 +17,8 @@ import transitRouter from './routes/transit.js';
 import dbRouter from './routes/db.js';
 import { startScheduler } from './utils/scheduler.js';
 import { installFetchTap, setBroadcaster } from './utils/collectorTap.js';
+import { runBulkHydrate } from './utils/gtfsBulkHydrate.js';
+import cron from 'node-cron';
 
 // Patch globalThis.fetch BEFORE importing any collector code that may
 // capture a reference to it at module load time.
@@ -71,6 +73,25 @@ wss.on('connection', (ws) => {
 // ── Start scheduler & server ───────────────────────────────────────────
 setBroadcaster(wss);
 startScheduler(wss);
+
+// Nationwide GTFS hydrate — kicks off 15s after boot so the HTTP server and
+// scheduler get a chance to warm up first. Persists per-operator state in
+// gtfs_operators.hydrated_at so a restart resumes from the next stale entry.
+// The weekly cron re-hydrates anything past the 7-day freshness window.
+setTimeout(() => {
+  runBulkHydrate({ fresherThanDays: 7 }).catch((err) => {
+    console.error('[index] initial bulk hydrate failed:', err?.message);
+  });
+}, 15_000);
+cron.schedule(
+  '0 3 * * 0',
+  () => {
+    runBulkHydrate({ fresherThanDays: 7 }).catch((err) => {
+      console.error('[index] weekly bulk hydrate failed:', err?.message);
+    });
+  },
+  { timezone: 'Asia/Tokyo' },
+);
 
 server.listen(PORT, () => {
   console.log(`[server] Japan OSINT Map backend running on http://localhost:${PORT}`);
