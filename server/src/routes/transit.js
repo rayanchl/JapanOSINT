@@ -1,4 +1,5 @@
 import express from 'express';
+import db from '../utils/database.js';
 import { getLinesByMode } from '../utils/transportStore.js';
 import { getDeparturesAt, listHydratedOperators } from '../utils/gtfsStore.js';
 import { hydrateOperator } from '../utils/gtfsHydrate.js';
@@ -144,6 +145,130 @@ router.get('/active-trips', (req, res) => {
     res.json({ now: t.toISOString(), count: trips.length, trips });
   } catch (err) {
     console.error('[transit/active-trips]', err);
+    res.status(500).json({ error: 'internal' });
+  }
+});
+
+function secondsSinceMidnight(d) {
+  return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+}
+
+// Structured summary for a single station: lines served + upcoming
+// departures + arrivals + service alerts. Powers the redesigned
+// StationPopup in the client.
+router.get('/station/:stationUid/summary', (req, res) => {
+  const stationUid = String(req.params.stationUid || '');
+  if (!stationUid) {
+    return res.status(400).json({ error: 'missing stationUid' });
+  }
+
+  try {
+    const station = db.prepare(`
+      SELECT station_uid, mode, name, operator, line, lat, lon, properties
+      FROM transport_stations
+      WHERE station_uid = ?
+    `).get(stationUid);
+    if (!station) return res.status(404).json({ error: 'station not found' });
+
+    let props = {};
+    try { props = JSON.parse(station.properties); } catch { /* leave empty */ }
+
+    // Lines served: prefer the line_colors[] / line_names[] / line_refs[]
+    // arrays populated by the spatial snap. Fall back to the single-line
+    // columns when snap hasn't run.
+    const lineColors = Array.isArray(props.line_colors) ? props.line_colors : [];
+    const lineNames = Array.isArray(props.line_names) ? props.line_names : [];
+    const lineRefs = Array.isArray(props.line_refs) ? props.line_refs : [];
+    const lines = lineColors.map((color, i) => ({
+      color: color || null,
+      name: lineNames[i] || null,
+      ref: lineRefs[i] || null,
+    }));
+    if (lines.length === 0 && station.line) {
+      lines.push({
+        color: props.line_color || null,
+        name: station.line,
+        ref: props.line_ref || null,
+      });
+    }
+
+    // Departures / arrivals are GTFS-backed. Most OSM-derived stations won't
+    // have a GTFS stop_id at all — that's expected, those rows just return
+    // empty arrays.
+    const stopId = props.stop_id || station.station_uid;
+    const nowSec = secondsSinceMidnight(new Date());
+
+    const departures = db.prepare(`
+      SELECT st.trip_id, st.stop_sequence, st.departure_sec,
+             tr.headsign, tr.route_id,
+             r.short_name AS route_short, r.long_name AS route_long,
+             r.color AS route_color,
+             rt.departure_delay_s AS delay_s
+      FROM gtfs_stop_times st
+      JOIN gtfs_trips tr
+        ON tr.org_id = st.org_id AND tr.feed_id = st.feed_id AND tr.trip_id = st.trip_id
+      LEFT JOIN gtfs_routes r
+        ON r.org_id = tr.org_id AND r.feed_id = tr.feed_id AND r.route_id = tr.route_id
+      LEFT JOIN gtfs_rt_trip_updates rt
+        ON rt.org_id = st.org_id AND rt.trip_id = st.trip_id AND rt.stop_sequence = st.stop_sequence
+      WHERE st.stop_id = ? AND st.departure_sec >= ?
+      ORDER BY st.departure_sec ASC
+      LIMIT 10
+    `).all(stopId, nowSec);
+
+    const arrivals = db.prepare(`
+      SELECT st.trip_id, st.stop_sequence, st.arrival_sec,
+             tr.headsign, tr.route_id,
+             r.short_name AS route_short, r.long_name AS route_long,
+             r.color AS route_color,
+             rt.arrival_delay_s AS delay_s
+      FROM gtfs_stop_times st
+      JOIN gtfs_trips tr
+        ON tr.org_id = st.org_id AND tr.feed_id = st.feed_id AND tr.trip_id = st.trip_id
+      LEFT JOIN gtfs_routes r
+        ON r.org_id = tr.org_id AND r.feed_id = tr.feed_id AND r.route_id = tr.route_id
+      LEFT JOIN gtfs_rt_trip_updates rt
+        ON rt.org_id = st.org_id AND rt.trip_id = st.trip_id AND rt.stop_sequence = st.stop_sequence
+      WHERE st.stop_id = ? AND st.arrival_sec >= ?
+      ORDER BY st.arrival_sec ASC
+      LIMIT 10
+    `).all(stopId, nowSec);
+
+    // Alerts for any route this station is on. LIKE match against the
+    // JSON-encoded route_ids column — it's small enough that a scan is fine.
+    const routeIds = new Set();
+    for (const row of [...departures, ...arrivals]) {
+      if (row.route_id) routeIds.add(row.route_id);
+    }
+    const alerts = [];
+    const stmtAlert = db.prepare(`
+      SELECT header_text, description_text, effect
+      FROM gtfs_rt_alerts
+      WHERE route_ids LIKE ?
+      LIMIT 10
+    `);
+    for (const rid of routeIds) {
+      const needle = `%"${rid}"%`;
+      for (const r of stmtAlert.all(needle)) alerts.push(r);
+      if (alerts.length >= 10) break;
+    }
+
+    res.json({
+      station: {
+        station_uid: station.station_uid,
+        mode: station.mode,
+        name: station.name,
+        operator: station.operator,
+        lat: station.lat,
+        lon: station.lon,
+      },
+      lines,
+      departures: departures.map((d) => ({ ...d, wall_sec: d.departure_sec })),
+      arrivals: arrivals.map((a) => ({ ...a, wall_sec: a.arrival_sec })),
+      alerts: alerts.slice(0, 10),
+    });
+  } catch (err) {
+    console.error('[transit/station/summary]', err);
     res.status(500).json({ error: 'internal' });
   }
 });
