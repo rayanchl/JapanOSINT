@@ -4115,6 +4115,76 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
     };
   }, []);
 
+  // Station building footprints for major metros. Only fires at high zoom
+  // (station buildings are invisible below zoom 14) and only when at least
+  // one transit layer is enabled — otherwise the polygons are noise.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+
+    const transitOn = !!(layers?.unifiedTrains?.visible
+                      || layers?.unifiedSubways?.visible
+                      || layers?.unifiedBuses?.visible);
+    const zoom = map.getZoom();
+    const shouldShow = transitOn && zoom >= 14 && viewport;
+
+    const SRC = 'station-boundaries';
+    const LYR = 'station-boundaries-fill';
+    const LYR_OUT = 'station-boundaries-outline';
+
+    if (!shouldShow) {
+      if (map.getLayer(LYR_OUT)) map.removeLayer(LYR_OUT);
+      if (map.getLayer(LYR)) map.removeLayer(LYR);
+      if (map.getSource(SRC)) map.removeSource(SRC);
+      return;
+    }
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const bbox = `${viewport.minLng},${viewport.minLat},${viewport.maxLng},${viewport.maxLat}`;
+        const res = await fetch(`/api/transit/station-boundaries?bbox=${encodeURIComponent(bbox)}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const fc = await res.json();
+        if (cancelled) return;
+        if (!map.getSource(SRC)) {
+          map.addSource(SRC, { type: 'geojson', data: fc });
+          map.addLayer({
+            id: LYR,
+            type: 'fill',
+            source: SRC,
+            minzoom: 14,
+            paint: {
+              'fill-color': '#888888',
+              'fill-opacity': 0.2,
+            },
+          });
+          map.addLayer({
+            id: LYR_OUT,
+            type: 'line',
+            source: SRC,
+            minzoom: 14,
+            paint: {
+              'line-color': '#aaaaaa',
+              'line-width': 1,
+              'line-opacity': 0.6,
+            },
+          });
+        } else {
+          const src = map.getSource(SRC);
+          if (src && src.type === 'geojson') src.setData(fc);
+        }
+      } catch (err) {
+        if (!cancelled) console.warn('[MapView] station-boundaries', err?.message);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [mapReady,
+      layers?.unifiedTrains?.visible,
+      layers?.unifiedSubways?.visible,
+      layers?.unifiedBuses?.visible,
+      viewport?.minLng, viewport?.minLat, viewport?.maxLng, viewport?.maxLat]);
+
   // Temporary ground-track line layer for satellite tracking popups.
   // Receives events from MapPopup's SatelliteTrackingDetail "Show ground track" button.
   useEffect(() => {

@@ -324,5 +324,44 @@ router.get('/vehicle/:tripId/info', (req, res) => {
   }
 });
 
+// Simple in-memory cache for station-boundary queries. The collector takes
+// 10-60s to run against Overpass and the data is monthly-stable, so a
+// long TTL is fine. Survives process lifetime only — restarts re-query.
+let _stationBoundaryCache = null;
+let _stationBoundaryFetchAt = 0;
+const STATION_BOUNDARY_TTL_MS = 24 * 60 * 60 * 1000;
+
+router.get('/station-boundaries', async (req, res) => {
+  const bbox = parseBbox(req.query.bbox);
+  if (bbox === 'invalid') {
+    return res.status(400).json({ error: 'bbox must be minLng,minLat,maxLng,maxLat' });
+  }
+  try {
+    const now = Date.now();
+    if (!_stationBoundaryCache || (now - _stationBoundaryFetchAt) > STATION_BOUNDARY_TTL_MS) {
+      const { default: collect } = await import('../collectors/osmTransportStationBoundaries.js');
+      _stationBoundaryCache = await collect();
+      _stationBoundaryFetchAt = now;
+    }
+    let features = _stationBoundaryCache.features || [];
+    if (bbox) {
+      features = features.filter((f) => {
+        const ring = f.geometry?.coordinates?.[0];
+        if (!Array.isArray(ring)) return false;
+        for (const [lng, lat] of ring) {
+          if (lng >= bbox.minLng && lng <= bbox.maxLng
+              && lat >= bbox.minLat && lat <= bbox.maxLat) return true;
+        }
+        return false;
+      });
+    }
+    res.json({ type: 'FeatureCollection', features });
+  } catch (err) {
+    console.error('[transit/station-boundaries]', err);
+    res.status(500).json({ error: 'internal' });
+  }
+});
+
 export default router;
+
 

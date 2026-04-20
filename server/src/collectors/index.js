@@ -52,6 +52,7 @@ import osmTransportBuses from './osmTransportBuses.js';
 import osmTransportPorts from './osmTransportPorts.js';
 import overpassRailTracks from './overpassRailTracks.js';
 import overpassSubwayTracks from './overpassSubwayTracks.js';
+import osmTransportStationBoundaries from './osmTransportStationBoundaries.js';
 
 // Transport (unified, deduplicated)
 import unifiedTrains from './unifiedTrains.js';
@@ -213,6 +214,9 @@ import mercariTrending from './mercariTrending.js';
 import kanagawaPolice from './kanagawaPolice.js';
 import greynoiseJp from './greynoiseJp.js';
 
+// Intelligence: global events
+import gdeltEvents from './gdeltEvents.js';
+
 // Wave 10: Niche + Pop Culture
 import vendingMachines from './vendingMachines.js';
 import karaokeChains from './karaokeChains.js';
@@ -270,6 +274,7 @@ export const collectors = {
   'osm-transport-ports': osmTransportPorts,
   'overpass-rail-tracks': overpassRailTracks,
   'overpass-subway-tracks': overpassSubwayTracks,
+  'osm-transport-station-boundaries': osmTransportStationBoundaries,
 
   // Transport (unified, deduplicated)
   'unified-trains': unifiedTrains,
@@ -437,6 +442,9 @@ export const collectors = {
   'mercari-trending': mercariTrending,
   'kanagawa-police': kanagawaPolice,
   'greynoise-jp': greynoiseJp,
+
+  // Intelligence: global events
+  'gdelt-events': gdeltEvents,
 };
 
 /**
