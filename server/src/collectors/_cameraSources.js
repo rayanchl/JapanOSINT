@@ -566,4 +566,5 @@ export const NEW_AGGREGATOR_INDEX = {
   worldcams: 'https://worldcams.tv/japan/',
   webcamera24: 'https://webcamera24.com/fr/countries/japan/',
   camstreamer: 'https://camstreamer.com/live/search?country=Japan',
+  worldcam_eu: 'https://fr.worldcam.eu/webcams/asia/japan',
 };

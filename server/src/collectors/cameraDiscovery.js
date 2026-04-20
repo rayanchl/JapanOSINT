@@ -712,6 +712,96 @@ async function fromCamstreamer() {
   return features;
 }
 
+// ─── Channel: worldcam.eu Japan listing ─────────────────────────────────────
+// Paginated at /webcams/asia/japan/p/<N>. Each index page carries ~33 cam
+// anchors of the form /webcams/asia/japan/<id>-<slug>. Detail pages embed the
+// camera's coords in <meta property="og:latitude"> / og:longitude, so we fetch
+// each detail with bounded concurrency for precise geolocation — fall back to
+// a city-name centroid guess when the detail fetch fails.
+//
+// The site does NOT proxy YouTube; cams are still-image thumbnails, so the
+// post-collection upgradeYouTubeStreamUrls pass won't do anything for this
+// channel — we still register the cam URL so OSINT users can click through.
+const WORLDCAM_EU_MAX_PAGES = 6;     // ~200 cams — balances coverage vs HTTP cost
+const WORLDCAM_EU_DETAIL_CONCURRENCY = 8;
+
+async function fromWorldcamEu() {
+  const base = NEW_AGGREGATOR_INDEX.worldcam_eu;
+  const pageUrls = [base, ...Array.from({ length: WORLDCAM_EU_MAX_PAGES - 1 }, (_, i) => `${base}/p/${i + 2}`)];
+  const pageHtmls = await Promise.all(pageUrls.map((u) =>
+    fetchText(u, { timeoutMs: 10000, headers: { 'User-Agent': BROWSER_UA } }).catch(() => null),
+  ));
+  const combined = pageHtmls.filter(Boolean).join('\n');
+  if (!combined) return [];
+
+  // Anchor: /webcams/asia/japan/<id>-<slug> — label is the anchor's inner text.
+  const camRe = /<a[^>]+href="(\/webcams\/asia\/japan\/(\d+)-([a-z0-9-]+))"[^>]*>([\s\S]*?)<\/a>/gi;
+  const seen = new Map();
+  let m;
+  while ((m = camRe.exec(combined)) !== null) {
+    const [, href, id, slug, rawLabel] = m;
+    if (seen.has(id)) continue;
+    const label = rawLabel.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+    if (!label) continue;
+    seen.set(id, { id, slug, href, label });
+  }
+  if (seen.size === 0) return [];
+
+  const cams = Array.from(seen.values());
+
+  // Fetch detail pages with bounded concurrency to pull og:latitude / og:longitude.
+  const ogLat = /<meta\s+property="og:latitude"\s+content="(-?\d+(?:\.\d+)?)"\s*\/?>/i;
+  const ogLon = /<meta\s+property="og:longitude"\s+content="(-?\d+(?:\.\d+)?)"\s*\/?>/i;
+  const queue = cams.slice();
+  async function detailWorker() {
+    while (queue.length) {
+      const cam = queue.shift();
+      try {
+        const html = await fetchText(absUrl(cam.href, base), {
+          timeoutMs: 8000,
+          headers: { 'User-Agent': BROWSER_UA },
+        });
+        if (!html) continue;
+        const la = html.match(ogLat);
+        const lo = html.match(ogLon);
+        if (la && lo) {
+          cam.lat = parseFloat(la[1]);
+          cam.lon = parseFloat(lo[1]);
+        }
+      } catch { /* leave coords undefined, fall back below */ }
+    }
+  }
+  await Promise.all(
+    Array.from({ length: WORLDCAM_EU_DETAIL_CONCURRENCY }, detailWorker),
+  );
+
+  const features = [];
+  for (const cam of cams) {
+    let lat, lon;
+    if (Number.isFinite(cam.lat) && Number.isFinite(cam.lon)) {
+      lat = cam.lat;
+      lon = cam.lon;
+    } else {
+      const centroid = guessCentroidFromText(cam.label) || TOKYO_CENTROID;
+      ({ lat, lon } = jitterAround(centroid, features.length));
+    }
+    features.push(
+      makeFeature({
+        lat, lon,
+        name: cam.label,
+        camera_type: 'aggregator_worldcam_eu',
+        discovery_channel: 'worldcam_eu',
+        url: absUrl(cam.href, base),
+      }),
+    );
+  }
+  // upgradeYouTubeStreamUrls is still worth calling in case individual cams
+  // turn out to embed YouTube (currently rare on worldcam.eu) — cheap no-op
+  // otherwise because extractYouTubeIdFast returns null fast.
+  await upgradeYouTubeStreamUrls(features, 4);
+  return features;
+}
+
 // Walk an arbitrary JSON tree and pull out objects that look like a camera.
 function findCamsDeep(node, out = []) {
   if (!node || typeof node !== 'object') return out;
@@ -789,6 +879,7 @@ export default async function collectCameraDiscovery(opts = {}) {
     ['worldcams',          fromWorldcams],
     ['webcamera24',        fromWebcamera24],
     ['camstreamer',        fromCamstreamer],
+    ['worldcam_eu',        fromWorldcamEu],
   ];
 
   // Wrap each channel so (a) no per-channel deadline (it runs as long as it

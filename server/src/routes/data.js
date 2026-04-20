@@ -45,6 +45,13 @@ const SNAPSHOT_ALLOWLIST = new Set([
   'www.windy.com',
   'insecam.org',
   'www.insecam.org',
+  'worldcam.eu',
+  'fr.worldcam.eu',
+  'de.worldcam.eu',
+  'es.worldcam.eu',
+  'www.worldcam.eu',
+  'worldcam.pl',
+  'www.worldcam.pl',
 ]);
 
 // In-flight capture dedup so two popup opens for the same URL don't launch
