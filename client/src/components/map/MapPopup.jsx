@@ -919,6 +919,93 @@ function SatelliteTrackingDetail({ properties }) {
   );
 }
 
+function BusStopDetail({ properties }) {
+  const [state, setState] = useState({ loading: true, departures: [], error: null });
+  const stopId = properties?.stop_id;
+  // GTFS-JP stop_ids are emitted by the gtfsJp collector as
+  // `GTFSJP_<orgId>_<rawStopId>`. Non-GTFS bus stops (OSM, MLIT P11) won't
+  // match — we show a clear message instead of calling the API.
+  const orgId = typeof stopId === 'string' && stopId.startsWith('GTFSJP_')
+    ? stopId.split('_')[1]
+    : null;
+
+  useEffect(() => {
+    if (!orgId || !stopId) {
+      setState({ loading: false, departures: [], error: 'No schedule data for this stop.' });
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        // POST is idempotent on the server; cached after first success.
+        await fetch(`/api/transit/gtfs/hydrate/${encodeURIComponent(orgId)}`, { method: 'POST' });
+        const res = await fetch(
+          `/api/transit/gtfs/stop/${encodeURIComponent(stopId)}/departures?limit=5`,
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (cancelled) return;
+        setState({ loading: false, departures: data.departures || [], error: null });
+      } catch (err) {
+        if (cancelled) return;
+        setState({ loading: false, departures: [], error: err?.message || 'fetch failed' });
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [stopId, orgId]);
+
+  const highlighted = ['stop_id', 'name', 'operator', 'feed_id', 'source'];
+
+  return (
+    <div className="space-y-2">
+      <div className="text-sm font-medium text-gray-200">
+        {properties?.name || 'Bus stop'}
+      </div>
+      {properties?.operator && (
+        <div className="text-[10px] text-gray-500 font-mono">{properties.operator}</div>
+      )}
+      {state.loading && (
+        <div className="text-xs text-gray-400">Loading schedule…</div>
+      )}
+      {!state.loading && state.departures.length === 0 && (
+        <div className="text-xs text-gray-500">
+          {state.error || 'No upcoming departures today.'}
+        </div>
+      )}
+      {!state.loading && state.departures.length > 0 && (
+        <div className="space-y-1">
+          {state.departures.map((d) => {
+            const color = d.route_color || '#888';
+            return (
+              <div key={`${d.trip_id}-${d.departure_sec}`} className="flex items-center gap-2 text-xs">
+                <span
+                  className="px-1.5 py-0.5 rounded font-mono text-[10px]"
+                  style={{
+                    background: `${color}33`,
+                    color,
+                    border: `1px solid ${color}`,
+                  }}
+                >
+                  {d.route_name}
+                </span>
+                <span className="text-gray-300 flex-1 truncate">
+                  {d.headsign || ''}
+                </span>
+                <span className="text-gray-400 font-mono">
+                  {d.seconds_until < 60
+                    ? 'now'
+                    : `${Math.round(d.seconds_until / 60)}m`}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+      <PropertyTable properties={properties} exclude={highlighted} />
+    </div>
+  );
+}
+
 const DETAIL_RENDERERS = {
   earthquakes: EarthquakeDetail,
   cameras: CameraDetail,
@@ -934,6 +1021,8 @@ const DETAIL_RENDERERS = {
   'satellite-imagery': SatelliteImageryDetail,
   satelliteTracking: SatelliteTrackingDetail,
   'satellite-tracking': SatelliteTrackingDetail,
+  unifiedBuses: BusStopDetail,
+  'unified-buses': BusStopDetail,
 };
 
 export default function MapPopup({ feature, layerType, onClose, position }) {
