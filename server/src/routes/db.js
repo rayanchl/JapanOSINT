@@ -11,7 +11,6 @@
 
 import { Router } from 'express';
 import db from '../utils/database.js';
-import sources from '../utils/sourceRegistry.js';
 import { getLastRunAt as getCameraLastRunAt } from '../utils/cameraRunner.js';
 import { getLastRunAt as getTransportLastRunAt } from '../utils/transportRunner.js';
 import nextCronRun from '../utils/nextCronRun.js';
@@ -31,7 +30,8 @@ const MAX_LIMIT = 200;
 
 function tableColumns(name) {
   // PRAGMA table_info returns [{cid, name, type, notnull, dflt_value, pk}].
-  return db.prepare(`PRAGMA table_info(${name})`).all();
+  // Use quoted identifier to be safe (name is always allowlisted before calling this).
+  return db.prepare(`PRAGMA table_info("${name}")`).all();
 }
 
 function textColumnsOf(cols) {
@@ -42,16 +42,23 @@ function textColumnsOf(cols) {
 
 router.get('/tables', (_req, res) => {
   try {
-    const rows = ALLOWED_TABLES.map((name) => {
+    // Only surface tables that actually exist (future-proofing).
+    const placeholders = ALLOWED_TABLES.map(() => '?').join(', ');
+    const existing = db
+      .prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name IN (${placeholders})`)
+      .all(...ALLOWED_TABLES)
+      .map((r) => r.name);
+
+    const rows = existing.map((name) => {
       const cols = tableColumns(name);
-      const { c } = db.prepare(`SELECT COUNT(*) AS c FROM ${name}`).get();
+      const { c } = db.prepare(`SELECT COUNT(*) AS c FROM "${name}"`).get();
       return {
         name,
         row_count: c,
         columns: cols.map((col) => ({ name: col.name, type: col.type || 'TEXT' })),
       };
     });
-    res.json({ tables: rows });
+    res.json(rows);
   } catch (err) {
     console.error('[db] /tables failed:', err?.message);
     res.status(500).json({ error: 'Failed to list tables' });
@@ -61,7 +68,7 @@ router.get('/tables', (_req, res) => {
 router.get('/tables/:name', (req, res) => {
   const name = String(req.params.name || '');
   if (!ALLOWED_TABLES.includes(name)) {
-    return res.status(400).json({ error: `Unknown table: ${name}` });
+    return res.status(400).json({ error: 'unknown table' });
   }
 
   const limit = Math.max(1, Math.min(MAX_LIMIT, parseInt(req.query.limit, 10) || 50));
@@ -74,24 +81,31 @@ router.get('/tables/:name', (req, res) => {
 
   const orderByRaw = typeof req.query.orderBy === 'string' ? req.query.orderBy : '';
   const orderBy = colNames.includes(orderByRaw) ? orderByRaw : null;
-  const orderDir = req.query.orderDir === 'ASC' ? 'ASC' : 'DESC';
+  // orderDir: accept ASC or DESC (case-insensitive), default ASC, ignore invalid values.
+  let orderDir = 'ASC';
+  if (req.query.orderDir) {
+    const d = String(req.query.orderDir).toUpperCase();
+    if (d === 'DESC') orderDir = 'DESC';
+    else if (d === 'ASC') orderDir = 'ASC';
+    // else: invalid → keep default ASC
+  }
 
   try {
     const params = [];
     let where = '';
     if (q && textCols.length) {
-      const ors = textCols.map((c) => `${c} LIKE ?`).join(' OR ');
+      const ors = textCols.map((c) => `"${c}" LIKE ?`).join(' OR ');
       where = `WHERE ${ors}`;
       for (let i = 0; i < textCols.length; i++) params.push(`%${q}%`);
     }
     const totalRow = db
-      .prepare(`SELECT COUNT(*) AS c FROM ${name} ${where}`)
+      .prepare(`SELECT COUNT(*) AS c FROM "${name}" ${where}`)
       .get(...params);
     const total = totalRow?.c ?? 0;
 
-    const orderSql = orderBy ? `ORDER BY ${orderBy} ${orderDir}` : '';
+    const orderSql = orderBy ? `ORDER BY "${orderBy}" ${orderDir}` : '';
     const rows = db
-      .prepare(`SELECT * FROM ${name} ${where} ${orderSql} LIMIT ? OFFSET ?`)
+      .prepare(`SELECT * FROM "${name}" ${where} ${orderSql} LIMIT ? OFFSET ?`)
       .all(...params, limit, offset);
 
     res.json({
@@ -123,61 +137,45 @@ router.get('/scheduler', (_req, res) => {
       .get();
 
     const now = new Date();
+    const toISO = (v) => {
+      if (!v) return null;
+      if (v instanceof Date) return v.toISOString();
+      return String(v);
+    };
+    const nextISO = (cron) => {
+      const d = nextCronRun(cron, now);
+      return d ? d.toISOString() : null;
+    };
     const jobs = [
       {
         id: 'source-probe',
         cron: SOURCE_PROBE_CRON,
-        description: 'Probe every free-API source for status + response time',
-        last_run: sourceProbeLastRow?.t || null,
-        next_run: nextCronRun(SOURCE_PROBE_CRON, now),
+        description: "Probe every source's health endpoint every 2 hours",
+        last_run: toISO(sourceProbeLastRow?.t),
+        next_run: nextISO(SOURCE_PROBE_CRON),
       },
       {
         id: 'camera-discovery',
         cron: CAMERA_CRON,
-        description: 'Fan out every camera-discovery channel, dedupe into cameras table',
-        last_run: getCameraLastRunAt(),
-        next_run: nextCronRun(CAMERA_CRON, now),
+        description: 'Re-run camera discovery hourly at :15',
+        last_run: toISO(getCameraLastRunAt()),
+        next_run: nextISO(CAMERA_CRON),
       },
       {
         id: 'transport-discovery',
         cron: TRANSPORT_CRON,
-        description: 'Fuse unified train/subway/bus/ship/port collectors into transport tables',
-        last_run: getTransportLastRunAt(),
-        next_run: nextCronRun(TRANSPORT_CRON, now),
+        description: 'Re-run transport fan-out hourly at :30',
+        last_run: toISO(getTransportLastRunAt()),
+        next_run: nextISO(TRANSPORT_CRON),
       },
     ];
 
-    // Merge DB status onto the registry entries so the grid has the full set
-    // (registry entries without a DB row still appear as pending).
-    const byId = new Map();
-    for (const s of sources) byId.set(s.id, s);
-
-    const dbRows = db
+    const sourcesOut = db
       .prepare(
-        `SELECT id, name, category, status, last_check, last_success,
-                response_time_ms, records_count
-         FROM sources`,
+        `SELECT id, name, category, last_check, last_success, status, records_count, response_time_ms
+         FROM sources ORDER BY id`,
       )
       .all();
-
-    const dbById = new Map();
-    for (const r of dbRows) dbById.set(r.id, r);
-
-    const sourcesOut = [];
-    for (const s of sources) {
-      const row = dbById.get(s.id);
-      sourcesOut.push({
-        id: s.id,
-        name: s.name,
-        category: s.category || null,
-        status: row?.status || s.status || 'pending',
-        last_check: row?.last_check || null,
-        last_success: row?.last_success || null,
-        records_count: row?.records_count ?? null,
-        response_time_ms: row?.response_time_ms ?? null,
-        probe_cron: SOURCE_PROBE_CRON,
-      });
-    }
 
     res.json({ jobs, sources: sourcesOut });
   } catch (err) {
