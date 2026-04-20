@@ -114,6 +114,40 @@ const ICON_BASE_OFFSET_PX = 60;
 // keeping the stem 3 px wide regardless of layer or zoom.
 const DROPLINE_BASE_IMAGE = 'dropline-60';
 
+// Droplines only make sense in a tilted/3D view — from straight overhead a
+// vertical line has no visible length. We fade stem opacity with pitch.
+// 0°–15° → hidden, 15°–45° → linear fade in, 45°+ → fully visible.
+// Each stem layer stores its base opacity in `droplineBaseOpacity.<layerId>`
+// so the fade can multiply without losing the paint-time value.
+const droplineBaseOpacity = new Map();
+
+function pitchFade(pitchDeg) {
+  if (pitchDeg <= 15) return 0;
+  if (pitchDeg >= 45) return 1;
+  return (pitchDeg - 15) / 30;
+}
+
+function applyDroplineFade(map) {
+  if (!map || !map.getStyle) return;
+  const factor = pitchFade(map.getPitch());
+  for (const [layerId, baseOpacity] of droplineBaseOpacity.entries()) {
+    if (!map.getLayer(layerId)) continue;
+    try {
+      map.setPaintProperty(layerId, 'icon-opacity', baseOpacity * factor);
+    } catch {
+      // Layer may have been removed between list build and set — ignore.
+    }
+  }
+}
+
+function registerDroplineLayer(layerId, baseOpacity) {
+  droplineBaseOpacity.set(layerId, baseOpacity);
+}
+
+function unregisterDroplineLayer(layerId) {
+  droplineBaseOpacity.delete(layerId);
+}
+
 // Layers that should NOT have their circle configs swapped for emoji-icon
 // symbol layers. Rendering stays as plain line-colored dots.
 const SKIP_ICON_SUBSTITUTION = new Set(['unifiedTrains', 'unifiedSubways', 'unifiedBuses']);
@@ -276,9 +310,12 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
         id.startsWith(`${mainLayerId}-dropline-b`)
       ) {
         map.removeLayer(id);
+        unregisterDroplineLayer(id);
       }
     }
   }
+  // Generic stem (non-aircraft layers).
+  unregisterDroplineLayer(`${mainLayerId}-dropline`);
   if (map.getSource(sourceId)) map.removeSource(sourceId);
   clearLayerAddons(layerId);
 
@@ -303,9 +340,11 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
           (config.paint && config.paint['circle-opacity']) != null
             ? config.paint['circle-opacity'] * 0.5
             : opacity * 0.5;
+        const stemLayerId = `${config.id}-dropline`;
+        const fadeFactor = pitchFade(map.getPitch());
         originalAddLayer(
           {
-            id: `${config.id}-dropline`,
+            id: stemLayerId,
             type: 'symbol',
             source: config.source,
             ...(config.filter ? { filter: config.filter } : {}),
@@ -316,10 +355,11 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
               'icon-allow-overlap': true,
               'icon-ignore-placement': true,
             },
-            paint: { 'icon-opacity': stemOpacity },
+            paint: { 'icon-opacity': stemOpacity * fadeFactor },
           },
           beforeId,
         );
+        registerDroplineLayer(stemLayerId, stemOpacity);
         // Then the icon itself (converted).
         return originalAddLayer(
           convertCircleConfigToSymbol(config, iconImageId, opacity, layerId),
@@ -945,6 +985,8 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
 
       // Dropline stems — one symbol layer per altitude bucket, each using
       // the correctly-sized sprite at icon-size: 1 so widths stay identical.
+      const aircraftStemBase = opacity * 0.5;
+      const aircraftFade = pitchFade(map.getPitch());
       for (const b of ALT_BUCKETS) {
         const altExpr =
           b.minFt === -Infinity
@@ -956,8 +998,9 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
                   ['>=', ['coalesce', ['get', 'altitude_ft'], 0], b.minFt],
                   ['<',  ['coalesce', ['get', 'altitude_ft'], 0], b.maxFt],
                 ];
+        const stemLayerId = `${mainLayerId}-dropline-b${b.minFt}`;
         map.addLayer({
-          id: `${mainLayerId}-dropline-b${b.minFt}`,
+          id: stemLayerId,
           type: 'symbol',
           source: sourceId,
           filter: altExpr,
@@ -968,8 +1011,9 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
             'icon-allow-overlap': true,
             'icon-ignore-placement': true,
           },
-          paint: { 'icon-opacity': opacity * 0.5 },
+          paint: { 'icon-opacity': aircraftStemBase * aircraftFade },
         });
+        registerDroplineLayer(stemLayerId, aircraftStemBase);
       }
 
       // 5 buckets × 2 colors — 10 icon layers.
@@ -3720,6 +3764,10 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
 
     map.on('zoom', () => {
       setZoom(map.getZoom().toFixed(1));
+    });
+
+    map.on('pitch', () => {
+      applyDroplineFade(map);
     });
 
     map.on('click', (e) => {
