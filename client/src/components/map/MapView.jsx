@@ -497,6 +497,10 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       // line_colors exists and is non-null on the feature. For the length
       // comparison we fall back to a literal empty array when absent; the
       // array typing is only applied to values we know are arrays.
+      // Outer rings (k >= 1) only render at high zoom — below zoom 11 they
+      // fade out so that a city-scale view shows only the primary center
+      // disc per station, avoiding the blurry "blob" effect when many
+      // stations cluster on screen.
       for (let k = STATION_RINGS - 1; k >= 0; k--) {
         const radius = RING_RADIUS + RING_STEP * k;
         const ringColor = [
@@ -505,8 +509,9 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           ['to-color', ['at', k, ['get', 'line_colors']]],
           k === 0 ? perFeatureColor : 'rgba(0,0,0,0)',
         ];
-        map.addLayer({
-          id: k === 0 ? mainLayerId : `${mainLayerId}-ring${k}`,
+        const isPrimary = k === 0;
+        const layerConfig = {
+          id: isPrimary ? mainLayerId : `${mainLayerId}-ring${k}`,
           type: 'circle',
           source: sourceId,
           filter: [
@@ -518,9 +523,18 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           paint: {
             'circle-radius': radius,
             'circle-color': ringColor,
-            'circle-opacity': opacity * 0.9,
+            'circle-opacity': isPrimary
+              ? opacity * 0.9
+              : [
+                  // Fade outer rings in between zoom 11 and 13.
+                  'interpolate', ['linear'], ['zoom'],
+                  11, 0,
+                  13, opacity * 0.9,
+                ],
           },
-        });
+        };
+        if (!isPrimary) layerConfig.minzoom = 11;
+        map.addLayer(layerConfig);
       }
       // Fallback for stations without line_colors (legacy, never snapped):
       // single dot in the primary line_color or layer default.
