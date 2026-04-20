@@ -486,22 +486,23 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       });
       // Station/stop rendering — up to 5 concentric rings, one per line
       // whose track passes within the server-side spatial-snap radius
-      // (properties.line_colors[], ordered most-central first). A single-
-      // line station renders as a lone dot; Shinjuku / Tokyo get nested
-      // rings showing every line served. Widest ring drawn first so the
-      // primary (nearest) line stays dominant on top.
+      // (properties.line_colors[], ordered most-central first). Every
+      // ring is a solid disc of radius 7 so each line's color is fully
+      // visible; widest ring drawn first so the primary (nearest) line
+      // stays dominant on top.
       const STATION_RINGS = 5;
-      const innerRadius = 4;
-      const ringStep = 2;
-      // Typed array expression used by both the filter (length) and the
-      // color lookup (at). MapLibre needs the explicit ['array','string',…]
-      // cast or `at` returns null (→ black fill) instead of the string.
-      const colorsArray = ['array', 'string', ['coalesce', ['get', 'line_colors'], ['literal', []]]];
+      const RING_RADIUS = 7;
+      const RING_STEP = 6; // each additional ring adds this to the radius
+      // Filter: `has('line_colors')` is the simplest way to check whether
+      // line_colors exists and is non-null on the feature. For the length
+      // comparison we fall back to a literal empty array when absent; the
+      // array typing is only applied to values we know are arrays.
       for (let k = STATION_RINGS - 1; k >= 0; k--) {
-        const radius = innerRadius + ringStep * k;
+        const radius = RING_RADIUS + RING_STEP * k;
         const ringColor = [
-          'coalesce',
-          ['at', k, colorsArray],
+          'case',
+          ['>', ['length', ['get', 'line_colors']], k],
+          ['to-color', ['at', k, ['get', 'line_colors']]],
           k === 0 ? perFeatureColor : 'rgba(0,0,0,0)',
         ];
         map.addLayer({
@@ -511,7 +512,8 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           filter: [
             'all',
             ['==', ['geometry-type'], 'Point'],
-            ['>', ['length', colorsArray], k],
+            ['has', 'line_colors'],
+            ['>', ['length', ['get', 'line_colors']], k],
           ],
           paint: {
             'circle-radius': radius,
@@ -520,7 +522,8 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           },
         });
       }
-      // Fallback for stations without line_colors (legacy, never snapped).
+      // Fallback for stations without line_colors (legacy, never snapped):
+      // single dot in the primary line_color or layer default.
       map.addLayer({
         id: `${mainLayerId}-fallback`,
         type: 'circle',
@@ -528,10 +531,10 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
         filter: [
           'all',
           ['==', ['geometry-type'], 'Point'],
-          ['==', ['length', colorsArray], 0],
+          ['!', ['has', 'line_colors']],
         ],
         paint: {
-          'circle-radius': innerRadius,
+          'circle-radius': RING_RADIUS,
           'circle-color': perFeatureColor,
           'circle-opacity': opacity * 0.9,
         },
