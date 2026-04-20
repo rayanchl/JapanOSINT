@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { MdInfoOutline } from 'react-icons/md';
 import useCameraDiscoveryStream from '../../hooks/useCameraDiscoveryStream';
 
 function flyTo(lat, lon) {
@@ -155,6 +156,12 @@ export default function CameraDiscoveryThread() {
 
   return (
     <div className="flex flex-col h-full">
+      <div className="px-3 py-2 border-b border-osint-border/40 flex items-start gap-2 text-xs text-gray-500">
+        <MdInfoOutline className="flex-shrink-0 mt-0.5 w-4 h-4" />
+        <div>
+          Camera Discovery — live stream of cameras being found by the discovery collector. Each row is a single camera either newly added to the DB (NEW) or re-confirmed (UPDATED). Runs are triggered hourly by the scheduler; toggle the Cameras layer on the map to force a run on demand.
+        </div>
+      </div>
       <RunBanner activeRun={activeRun} lastRun={lastRun} />
 
       {header && header.length > 0 && (
