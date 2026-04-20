@@ -48,6 +48,117 @@ const stmtNew24h = db.prepare(
   "SELECT COUNT(*) c FROM cameras WHERE first_seen_at >= datetime('now', '-1 day')",
 );
 
+// --------------- One-shot migration: collapse YouTube duplicates ---------------
+// Earlier builds stamped camera_uid from the aggregator URL before the YouTube
+// upgrade ran, so the same YouTube stream discovered through Skyline,
+// webcamera24, worldcams, etc. produced N distinct rows. New inserts now
+// canonicalize on yt:<id>, but legacy rows need to be merged. Idempotent: once
+// every youtube-id group has a single row, subsequent boots walk away quickly.
+(function migrateCollapseYouTubeDuplicates() {
+  try {
+    const rows = db.prepare(
+      "SELECT camera_uid, properties, discovery_channels, first_seen_at, last_seen_at, seen_count FROM cameras"
+    ).all();
+    const byYtId = new Map();
+    for (const r of rows) {
+      let p = {};
+      try { p = JSON.parse(r.properties); } catch {}
+      const ytId = p.youtube_id;
+      if (!ytId) continue;
+      const canonicalUid = `yt:${ytId}`;
+      let g = byYtId.get(ytId);
+      if (!g) {
+        g = { canonicalUid, members: [] };
+        byYtId.set(ytId, g);
+      }
+      g.members.push(r);
+    }
+
+    const groupsNeedingMerge = [];
+    for (const g of byYtId.values()) {
+      if (g.members.length === 1 && g.members[0].camera_uid === g.canonicalUid) continue;
+      groupsNeedingMerge.push(g);
+    }
+    if (groupsNeedingMerge.length === 0) return;
+
+    console.log(
+      `[cameraStore] migrating ${groupsNeedingMerge.length} YouTube-id groups to canonical uids`
+    );
+
+    const stmtDelete = db.prepare('DELETE FROM cameras WHERE camera_uid = ?');
+    const stmtUpsertCanonical = db.prepare(`
+      INSERT INTO cameras (
+        camera_uid, name, camera_type, lat, lon, url, thumbnail_url,
+        operator, country, discovery_channels, properties,
+        first_seen_at, last_seen_at, seen_count
+      ) VALUES (
+        @camera_uid, @name, @camera_type, @lat, @lon, @url, @thumbnail_url,
+        @operator, @country, @discovery_channels, @properties,
+        @first_seen_at, @last_seen_at, @seen_count
+      )
+      ON CONFLICT(camera_uid) DO UPDATE SET
+        discovery_channels = @discovery_channels,
+        properties         = @properties,
+        first_seen_at      = MIN(cameras.first_seen_at, excluded.first_seen_at),
+        last_seen_at       = MAX(cameras.last_seen_at, excluded.last_seen_at),
+        seen_count         = cameras.seen_count + excluded.seen_count
+    `);
+
+    const tx = db.transaction((groups) => {
+      for (const g of groups) {
+        // Pick the newest member as the identity-carrier (most recent name/url).
+        const sorted = g.members.slice().sort(
+          (a, b) => (b.last_seen_at || '').localeCompare(a.last_seen_at || '')
+        );
+        const winner = sorted[0];
+        const fullRow = db.prepare('SELECT * FROM cameras WHERE camera_uid = ?').get(winner.camera_uid);
+        if (!fullRow) continue;
+
+        const allChannels = new Set();
+        let earliest = fullRow.first_seen_at;
+        let latest = fullRow.last_seen_at;
+        let seenSum = 0;
+        let mergedProps = {};
+        for (const m of g.members) {
+          try {
+            for (const c of JSON.parse(m.discovery_channels)) allChannels.add(c);
+          } catch {}
+          if (m.first_seen_at && (!earliest || m.first_seen_at < earliest)) earliest = m.first_seen_at;
+          if (m.last_seen_at && (!latest || m.last_seen_at > latest)) latest = m.last_seen_at;
+          seenSum += m.seen_count || 1;
+          try { mergedProps = { ...JSON.parse(m.properties), ...mergedProps }; } catch {}
+        }
+        mergedProps.camera_uid = g.canonicalUid;
+
+        stmtUpsertCanonical.run({
+          camera_uid: g.canonicalUid,
+          name: fullRow.name,
+          camera_type: fullRow.camera_type,
+          lat: fullRow.lat,
+          lon: fullRow.lon,
+          url: fullRow.url,
+          thumbnail_url: fullRow.thumbnail_url,
+          operator: fullRow.operator,
+          country: fullRow.country || 'JP',
+          discovery_channels: JSON.stringify(Array.from(allChannels)),
+          properties: JSON.stringify(mergedProps),
+          first_seen_at: earliest,
+          last_seen_at: latest,
+          seen_count: seenSum,
+        });
+
+        for (const m of g.members) {
+          if (m.camera_uid !== g.canonicalUid) stmtDelete.run(m.camera_uid);
+        }
+      }
+    });
+    tx(groupsNeedingMerge);
+    console.log('[cameraStore] YouTube-id duplicate collapse complete');
+  } catch (err) {
+    console.error('[cameraStore] migration failed:', err?.message);
+  }
+})();
+
 function rowToFeature(row) {
   let properties = {};
   try { properties = JSON.parse(row.properties); } catch {}

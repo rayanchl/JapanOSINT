@@ -270,6 +270,11 @@ async function upgradeYouTubeStreamUrls(features, concurrency = 6) {
           f.properties.original_page_url = url;
           f.properties.url = `https://www.youtube.com/watch?v=${ytId}`;
           f.properties.youtube_id = ytId;
+          // Canonicalize camera_uid on the YouTube video id so two aggregators
+          // pointing at the same stream converge to the SAME row. The original
+          // uid (built from the aggregator URL at makeFeature time) would
+          // otherwise let the DB upsert create a fresh row per aggregator.
+          f.properties.camera_uid = `yt:${ytId}`;
         }
       } catch { /* skip */ }
     }
