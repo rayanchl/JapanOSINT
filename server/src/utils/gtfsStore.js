@@ -91,8 +91,15 @@ export function getDeparturesAt(stopId, now = new Date(), limit = 5) {
     if (!isServiceActive(r.org_id, r.feed_id, r.service_id)) continue;
     const tSec = r.departure_sec ?? r.arrival_sec;
     if (tSec == null) continue;
-    // One-minute grace so a user who opens the popup mid-pickup still sees it.
-    if (tSec + 60 < secOfDay) continue;
+    // GTFS lets departure_sec exceed 86400 (service day crosses midnight).
+    // The canonical wall-clock offset within the "now" day is tSec % 86400.
+    // We compute seconds_until by normalizing: if the trip already passed
+    // in wall-clock terms, assume it's tomorrow (add 86400). Trips that
+    // passed more than 60 s ago in the current day get skipped.
+    const wallSec = tSec % 86400;
+    let secondsUntil = wallSec - secOfDay;
+    if (secondsUntil + 60 < 0) continue; // already passed
+    if (secondsUntil < 0) secondsUntil += 86400; // within grace window
     out.push({
       trip_id: r.trip_id,
       route_id: r.route_id,
@@ -100,10 +107,10 @@ export function getDeparturesAt(stopId, now = new Date(), limit = 5) {
       route_name: r.route_short || r.route_long || r.route_id,
       route_color: r.route_color ? `#${r.route_color}` : null,
       departure_sec: tSec,
-      seconds_until: tSec - secOfDay,
+      seconds_until: secondsUntil,
     });
   }
-  out.sort((a, b) => a.departure_sec - b.departure_sec);
+  out.sort((a, b) => a.seconds_until - b.seconds_until);
   return out.slice(0, limit);
 }
 

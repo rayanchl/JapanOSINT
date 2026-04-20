@@ -152,7 +152,7 @@ db.exec(`
     PRIMARY KEY (org_id, feed_id, trip_id, stop_sequence)
   );
   CREATE INDEX IF NOT EXISTS idx_gtfs_stop_times_stop
-    ON gtfs_stop_times(org_id, feed_id, stop_id);
+    ON gtfs_stop_times(stop_id);
   CREATE TABLE IF NOT EXISTS gtfs_shapes (
     org_id          TEXT NOT NULL,
     feed_id         TEXT NOT NULL,

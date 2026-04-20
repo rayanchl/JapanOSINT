@@ -1,5 +1,13 @@
 import express from 'express';
 import { getLinesByMode } from '../utils/transportStore.js';
+import { ingestFeedZip } from '../utils/gtfsIngest.js';
+import {
+  isOperatorHydrated,
+  markOperatorHydrated,
+  getDeparturesAt,
+  listHydratedOperators,
+} from '../utils/gtfsStore.js';
+import db from '../utils/database.js';
 
 const router = express.Router();
 
@@ -70,14 +78,6 @@ router.get('/routes', (req, res) => {
   }
 });
 
-import { ingestFeedZip } from '../utils/gtfsIngest.js';
-import {
-  isOperatorHydrated,
-  markOperatorHydrated,
-  getDeparturesAt,
-  listHydratedOperators,
-} from '../utils/gtfsStore.js';
-
 const GTFS_API = 'https://api.gtfs-data.jp/v2';
 
 // One-flight guard: concurrent hydrate calls for the same orgId share the
@@ -95,7 +95,7 @@ async function hydrateOperator(orgId) {
     const body = await feedsRes.json();
     const feeds = Array.isArray(body?.body) ? body.body : [];
     const feedIds = [];
-    const totals = { routes: 0, trips: 0, stop_times: 0, shapes: 0, calendar: 0, stops: 0 };
+    const totals = { routes: 0, trips: 0, stop_times: 0, shapes: 0, calendar: 0 };
     for (const f of feeds) {
       const feedId = f.feed_id || f.id;
       if (!feedId) continue;
@@ -114,10 +114,16 @@ async function hydrateOperator(orgId) {
         console.error(`[transit/hydrate] ${orgId}/${feedId} ingest failed:`, err?.message);
       }
     }
-    markOperatorHydrated(orgId, orgId, feedIds, {
-      stops: totals.stops,
-      trips: totals.trips,
-    });
+    // stop_count = distinct stops observed in gtfs_stop_times for this org.
+    // Gives a meaningful number in the /gtfs/operators response.
+    let stopCount = 0;
+    try {
+      const row = db.prepare(
+        'SELECT COUNT(DISTINCT stop_id) AS c FROM gtfs_stop_times WHERE org_id = ?',
+      ).get(orgId);
+      stopCount = row?.c || 0;
+    } catch { /* leave stopCount at 0 */ }
+    markOperatorHydrated(orgId, orgId, feedIds, { stops: stopCount, trips: totals.trips });
     return { cached: false, feedIds, counts: totals };
   })();
 
