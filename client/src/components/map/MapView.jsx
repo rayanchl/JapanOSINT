@@ -76,7 +76,7 @@ async function registerLayerIcons(map) {
       data[i + 0] = 180;
       data[i + 1] = 180;
       data[i + 2] = 180;
-      data[i + 3] = 200;
+      data[i + 3] = 240;
     };
     for (let d = -armPx; d <= armPx; d++) {
       for (let s = -halfStroke; s < strokePx - halfStroke; s++) {
