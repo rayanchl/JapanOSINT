@@ -17,7 +17,8 @@ const MAX_BACKOFF_MS = 5 * 60_000;
 const LONG_PAUSE_MS = 60 * 60_000;
 const FAIL_THRESHOLD_FOR_PAUSE = 10;
 const TTL_SWEEP_MS = 60_000;
-const POSITION_TTL_S = 600;
+const POSITION_TTL_S = 600;   // 10 minutes
+const ALERT_TTL_S = 3600;     // 60 minutes
 
 const timers = new Map(); // feed_id → NodeJS.Timeout
 let sweepTimer = null;
@@ -37,6 +38,39 @@ const stmtUpsertPos = db.prepare(`
     received_at = excluded.received_at
 `);
 
+const stmtUpsertTripUpdate = db.prepare(`
+  INSERT INTO gtfs_rt_trip_updates (
+    org_id, trip_id, route_id,
+    stop_id, stop_sequence,
+    arrival_delay_s, departure_delay_s,
+    reported_at, received_at
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+  ON CONFLICT(org_id, trip_id, stop_sequence) DO UPDATE SET
+    stop_id           = excluded.stop_id,
+    arrival_delay_s   = excluded.arrival_delay_s,
+    departure_delay_s = excluded.departure_delay_s,
+    reported_at       = excluded.reported_at,
+    received_at       = excluded.received_at
+`);
+
+const stmtUpsertAlert = db.prepare(`
+  INSERT INTO gtfs_rt_alerts (
+    org_id, alert_id, route_ids, trip_ids, stop_ids,
+    header_text, description_text, cause, effect,
+    reported_at, received_at
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+  ON CONFLICT(org_id, alert_id) DO UPDATE SET
+    route_ids        = excluded.route_ids,
+    trip_ids         = excluded.trip_ids,
+    stop_ids         = excluded.stop_ids,
+    header_text      = excluded.header_text,
+    description_text = excluded.description_text,
+    cause            = excluded.cause,
+    effect           = excluded.effect,
+    reported_at      = excluded.reported_at,
+    received_at      = excluded.received_at
+`);
+
 const stmtUpdateFeed = db.prepare(`
   UPDATE gtfs_rt_feeds SET
     last_polled_at    = datetime('now'),
@@ -46,9 +80,29 @@ const stmtUpdateFeed = db.prepare(`
   WHERE feed_id = @feed_id
 `);
 
-const stmtTtlSweep = db.prepare(
+const stmtTtlSweepPositions = db.prepare(
   "DELETE FROM gtfs_rt_positions WHERE reported_at < unixepoch('now') - ?",
 );
+const stmtTtlSweepTripUpdates = db.prepare(
+  "DELETE FROM gtfs_rt_trip_updates WHERE reported_at < unixepoch('now') - ?",
+);
+const stmtTtlSweepAlerts = db.prepare(
+  "DELETE FROM gtfs_rt_alerts WHERE reported_at < unixepoch('now') - ?",
+);
+
+function toSeconds(v) {
+  if (v == null) return Math.floor(Date.now() / 1000);
+  if (typeof v === 'object' && typeof v.toNumber === 'function') return v.toNumber();
+  return Number(v);
+}
+
+// TranslatedString → best-effort JA/EN text.
+function pickTranslation(ts) {
+  const ts2 = ts?.translation || [];
+  const ja = ts2.find((t) => t.language === 'ja');
+  const en = ts2.find((t) => t.language === 'en');
+  return (ja || en || ts2[0])?.text || null;
+}
 
 async function pollOne(feed) {
   const label = `${feed.ag_id}`;
@@ -67,25 +121,67 @@ async function pollOne(feed) {
     let count = 0;
     const tx = db.transaction((entities) => {
       for (const ent of entities) {
-        const v = ent.vehicle;
-        if (!v || !v.trip || !v.trip.trip_id || !v.position) continue;
-        const { latitude, longitude, bearing, speed } = v.position;
-        if (typeof latitude !== 'number' || typeof longitude !== 'number') continue;
-        const tsRaw = v.timestamp ?? msg.header?.timestamp ?? Math.floor(Date.now() / 1000);
-        const reportedAt = typeof tsRaw === 'object' && tsRaw !== null && typeof tsRaw.toNumber === 'function'
-          ? tsRaw.toNumber()  // Long → number for older protobuf runtimes
-          : Number(tsRaw);
-        stmtUpsertPos.run(
-          feed.ag_id,
-          v.trip.trip_id,
-          v.trip.route_id || null,
-          latitude,
-          longitude,
-          typeof bearing === 'number' ? bearing : null,
-          typeof speed === 'number' ? speed : null,
-          reportedAt,
-        );
-        count++;
+        if (ent.vehicle) {
+          const v = ent.vehicle;
+          if (!v.trip?.trip_id || !v.position) continue;
+          const { latitude, longitude, bearing, speed } = v.position;
+          if (typeof latitude !== 'number' || typeof longitude !== 'number') continue;
+          const reportedAt = toSeconds(v.timestamp ?? msg.header?.timestamp);
+          stmtUpsertPos.run(
+            feed.ag_id,
+            v.trip.trip_id,
+            v.trip.route_id || null,
+            latitude,
+            longitude,
+            typeof bearing === 'number' ? bearing : null,
+            typeof speed === 'number' ? speed : null,
+            reportedAt,
+          );
+          count++;
+        } else if (ent.trip_update) {
+          const tu = ent.trip_update;
+          if (!tu.trip?.trip_id) continue;
+          const reportedAt = toSeconds(tu.timestamp ?? msg.header?.timestamp);
+          for (const stu of tu.stop_time_update || []) {
+            if (stu.stop_sequence == null) continue;
+            stmtUpsertTripUpdate.run(
+              feed.ag_id,
+              tu.trip.trip_id,
+              tu.trip.route_id || null,
+              stu.stop_id || null,
+              stu.stop_sequence,
+              stu.arrival?.delay ?? null,
+              stu.departure?.delay ?? null,
+              reportedAt,
+            );
+            count++;
+          }
+        } else if (ent.alert) {
+          const a = ent.alert;
+          const informedRouteIds = [];
+          const informedTripIds = [];
+          const informedStopIds = [];
+          for (const ie of a.informed_entity || []) {
+            if (ie.route_id) informedRouteIds.push(ie.route_id);
+            if (ie.trip?.trip_id) informedTripIds.push(ie.trip.trip_id);
+            if (ie.stop_id) informedStopIds.push(ie.stop_id);
+          }
+          const header = pickTranslation(a.header_text);
+          const desc = pickTranslation(a.description_text);
+          stmtUpsertAlert.run(
+            feed.ag_id,
+            ent.id,
+            JSON.stringify(informedRouteIds),
+            JSON.stringify(informedTripIds),
+            JSON.stringify(informedStopIds),
+            header,
+            desc,
+            a.cause != null ? String(a.cause) : null,
+            a.effect != null ? String(a.effect) : null,
+            toSeconds(msg.header?.timestamp),
+          );
+          count++;
+        }
       }
     });
     tx(msg.entity || []);
@@ -130,10 +226,11 @@ function scheduleNext(feed, lastResult) {
 
 function runSweep() {
   try {
-    const r = stmtTtlSweep.run(POSITION_TTL_S);
-    if (r.changes > 0) {
-      console.log(`[gtfsRtPoller] TTL sweep purged ${r.changes} stale positions`);
-    }
+    const a = stmtTtlSweepPositions.run(POSITION_TTL_S);
+    const b = stmtTtlSweepTripUpdates.run(POSITION_TTL_S);
+    const c = stmtTtlSweepAlerts.run(ALERT_TTL_S);
+    const total = (a.changes || 0) + (b.changes || 0) + (c.changes || 0);
+    if (total > 0) console.log(`[gtfsRtPoller] TTL swept ${total} stale rows`);
   } catch (err) {
     console.warn('[gtfsRtPoller] sweep failed:', err?.message);
   }
