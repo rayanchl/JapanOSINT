@@ -491,8 +491,8 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       // visible; widest ring drawn first so the primary (nearest) line
       // stays dominant on top.
       const STATION_RINGS = 5;
-      const RING_RADIUS = 7;
-      const RING_STEP = 6; // each additional ring adds this to the radius
+      const RING_RADIUS = 5;   // innermost (primary) disc radius
+      const RING_STEP = 5;     // each additional ring adds this to the radius
       // Filter: `has('line_colors')` is the simplest way to check whether
       // line_colors exists and is non-null on the feature. For the length
       // comparison we fall back to a literal empty array when absent; the
