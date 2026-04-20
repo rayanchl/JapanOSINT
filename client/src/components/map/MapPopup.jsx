@@ -521,6 +521,22 @@ function FlightDetail({ properties }) {
   const onGround = properties.on_ground;
   const posSrc = properties.position_source;
 
+  const [enriched, setEnriched] = useState(null);
+  const [enriching, setEnriching] = useState(false);
+
+  useEffect(() => {
+    const needsEnrich = (!origin || !destination) && properties.icao24;
+    if (!needsEnrich) return;
+    let cancelled = false;
+    setEnriching(true);
+    fetch(`/api/data/flight-adsb/enrich?icao24=${encodeURIComponent(properties.icao24)}`)
+      .then((r) => (r.ok ? r.json() : {}))
+      .then((data) => { if (!cancelled) setEnriched(data || {}); })
+      .catch(() => { if (!cancelled) setEnriched({}); })
+      .finally(() => { if (!cancelled) setEnriching(false); });
+    return () => { cancelled = true; };
+  }, [properties.icao24, origin, destination]);
+
   const coords = properties._coords; // injected below if available
 
   const highlighted = [
@@ -568,11 +584,24 @@ function FlightDetail({ properties }) {
       )}
 
       {/* Route */}
-      {(origin || destination) && (
-        <p className="text-sm text-gray-300 font-mono">
-          {origin || '???'} &rarr; {destination || '???'}
-        </p>
-      )}
+      {(() => {
+        const eOrig = enriched?.origin_icao;
+        const eDest = enriched?.destination_icao;
+        const showOrig = origin || eOrig;
+        const showDest = destination || eDest;
+        if (!showOrig && !showDest && !enriching) return null;
+        return (
+          <p className="text-sm text-gray-300 font-mono">
+            {enriching && !showOrig && !showDest ? (
+              <span className="text-gray-500">…</span>
+            ) : (
+              <>
+                {showOrig || '???'} &rarr; {showDest || '???'}
+              </>
+            )}
+          </p>
+        );
+      })()}
       {originCountry && !origin && (
         <p className="text-xs text-gray-400">Origin: {originCountry}</p>
       )}
