@@ -53,6 +53,42 @@ const SKIP_KEYS = new Set([
   'id', 'layerType', 'geometry', 'coordinates', '_index', '_idx',
 ]);
 
+// Keys that are aliases for a canonical key (left = canonical, right = alias).
+// When both are present with the same value, drop the alias so the popup
+// doesn't repeat "Name Ja: 代々木公園" twice under slightly different labels.
+// Checked case-insensitively after stringification.
+const ALIAS_GROUPS = [
+  ['name', 'station_name'],
+  ['name_ja', 'station_name_ja'],
+  ['line', 'line_name'],
+  ['classification', 'railway'],
+  ['type', 'classification'],
+  ['line_color', 'colour'],
+  ['line_ref', 'ref'],
+];
+
+// Collapse alias duplicates in-place. Returns a NEW object; does not mutate
+// the caller's properties. Keeps the canonical key when values match.
+function dedupeAliases(properties) {
+  const out = { ...properties };
+  for (const [canonical, alias] of ALIAS_GROUPS) {
+    if (canonical in out && alias in out) {
+      const a = out[canonical];
+      const b = out[alias];
+      // Normalize for comparison: stringify arrays/objects so they compare
+      // structurally, lowercase strings.
+      const norm = (v) => {
+        if (v == null) return null;
+        if (typeof v === 'string') return v.trim().toLowerCase();
+        if (Array.isArray(v) || typeof v === 'object') return JSON.stringify(v);
+        return String(v);
+      };
+      if (norm(a) === norm(b)) delete out[alias];
+    }
+  }
+  return out;
+}
+
 // Keys that look like ISO-8601 timestamps or unix seconds/millis.
 const TIME_KEY_RE = /(^|_)(time|timestamp|datetime|date|at|measured_at|updated_at|fetched_at|report_datetime|last_seen|forecast_date)$/i;
 
@@ -104,7 +140,8 @@ function isUrl(v) {
  */
 function PropertyTable({ properties, exclude = [] }) {
   const hide = new Set([...SKIP_KEYS, ...exclude]);
-  const entries = Object.entries(properties).filter(([k, v]) => {
+  const deduped = dedupeAliases(properties);
+  const entries = Object.entries(deduped).filter(([k, v]) => {
     if (hide.has(k)) return false;
     if (v == null || v === '') return false;
     return true;
