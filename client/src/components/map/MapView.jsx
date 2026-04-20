@@ -55,36 +55,35 @@ async function registerLayerIcons(map) {
     }
   }
 
-  // Dropline sprites: 3-px visible gray strip centered inside a 64-wide
-  // buffer at pixelRatio 2 — matching the icon sprite format exactly so
-  // MapLibre's placement math produces identical sub-pixel anchor
-  // rounding for both layers (otherwise the stem drifts off-center).
-  // The buffer height is the display-px stem height × 2 (pixelRatio 2);
-  // only columns 30/31/32 are opaque, the rest are fully transparent.
-  const makeDropline = (displayH) => {
+  // Ground-position cross sprite: a small "+" marker placed at the
+  // feature's true lng/lat so users can see where the icon "belongs"
+  // even though the icon itself is offset upward. 16-display-px arms,
+  // 2-px stroke, semi-transparent gray. Baked at pixelRatio 2 inside
+  // a 64×64 buffer so it shares the icon sprite format (matches the
+  // placement math MapLibre uses for other icons).
+  if (!map.hasImage('ground-cross')) {
     const w = 64;
-    const h = displayH * 2;
-    const data = new Uint8ClampedArray(w * h * 4); // all zeros → transparent
-    for (let y = 0; y < h; y++) {
-      for (const x of [30, 31, 32]) {
-        const i = (y * w + x) * 4;
-        data[i + 0] = 180;
-        data[i + 1] = 180;
-        data[i + 2] = 180;
-        data[i + 3] = 180; // ~70% alpha
+    const h = 64;
+    const data = new Uint8ClampedArray(w * h * 4);
+    const cx = 32;
+    const cy = 32;
+    const armPx = 16; // total arm length in buffer px (= 8 display px each side)
+    const strokePx = 2;
+    const paint = (x, y) => {
+      if (x < 0 || x >= w || y < 0 || y >= h) return;
+      const i = (y * w + x) * 4;
+      data[i + 0] = 180;
+      data[i + 1] = 180;
+      data[i + 2] = 180;
+      data[i + 3] = 200;
+    };
+    for (let d = -armPx; d <= armPx; d++) {
+      for (let s = 0; s < strokePx; s++) {
+        paint(cx + d, cy + s);                // horizontal arm
+        paint(cx + s, cy + d);                // vertical arm
       }
     }
-    return { width: w, height: h, data };
-  };
-  for (const h of [30, 42, 54, 70, 90]) {
-    const id = `dropline-${h}`;
-    if (!map.hasImage(id)) {
-      map.addImage(id, makeDropline(h), { pixelRatio: 2 });
-    }
-  }
-  // Backward-compat alias: the generic non-aircraft stem is 30 px tall.
-  if (!map.hasImage('dropline')) {
-    map.addImage('dropline', makeDropline(30), { pixelRatio: 2 });
+    map.addImage('ground-cross', { width: w, height: h, data }, { pixelRatio: 2 });
   }
 }
 
@@ -115,7 +114,10 @@ const ROTATING_LAYERS = new Set(['flightAdsb', 'maritimeAis', 'marineTraffic', '
 const ICON_BASE_OFFSET_PX = 30;
 // For non-aircraft layers we use the dropline-30 sprite at icon-size 1.0,
 // keeping the stem 3 px wide regardless of layer or zoom.
-const DROPLINE_BASE_IMAGE = 'dropline-30';
+// Small "+" marker drawn at the feature's true lng/lat. Replaces the
+// old vertical dropline stem — same pitch-fade behavior, just a cross
+// instead of a line.
+const DROPLINE_BASE_IMAGE = 'ground-cross';
 
 // Droplines only make sense in a tilted/3D view — from straight overhead a
 // vertical line has no visible length. We fade stem opacity with pitch.
@@ -318,21 +320,19 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
     const id = `${mainLayerId}${s}`;
     if (map.getLayer(id)) map.removeLayer(id);
   }
-  // Aircraft: altitude-bucket sub-layers created in the flightAdsb case.
+  // Aircraft: altitude-bucket icon sub-layers created in the flightAdsb case.
   if (layerId === 'flightAdsb' && map.getStyle) {
     const allLayers = (map.getStyle().layers || []).map((l) => l.id);
     for (const id of allLayers) {
       if (
         id.startsWith(`${mainLayerId}-b`) ||
-        id.startsWith(`${mainLayerId}-mil-b`) ||
-        id.startsWith(`${mainLayerId}-dropline-b`)
+        id.startsWith(`${mainLayerId}-mil-b`)
       ) {
         map.removeLayer(id);
-        unregisterDroplineLayer(id);
       }
     }
   }
-  // Generic stem (non-aircraft layers).
+  // Generic ground-cross (one per layer).
   unregisterDroplineLayer(`${mainLayerId}-dropline`);
   if (map.getSource(sourceId)) map.removeSource(sourceId);
   clearLayerAddons(layerId);
@@ -353,7 +353,10 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
   if (hasIcon) {
     map.addLayer = (config, beforeId) => {
       if (config && config.type === 'circle') {
-        // Dropline stem first (so the icon renders on top of it).
+        // Ground cross first (so the icon renders on top of it).
+        // pitch/rotation alignment: 'map' makes the cross behave as if
+        // painted on the ground — it foreshortens when the map tilts
+        // and rotates with compass, instead of facing the viewer.
         const stemOpacity =
           (config.paint && config.paint['circle-opacity']) != null
             ? config.paint['circle-opacity'] * 0.5
@@ -368,8 +371,10 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
             ...(config.filter ? { filter: config.filter } : {}),
             layout: {
               'icon-image': DROPLINE_BASE_IMAGE,
-              'icon-anchor': 'bottom',
+              'icon-anchor': 'center',
               'icon-size': 1,
+              'icon-rotation-alignment': 'map',
+              'icon-pitch-alignment': 'map',
               'icon-allow-overlap': true,
               'icon-ignore-placement': true,
             },
@@ -1040,54 +1045,41 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
 
     // ── Flight ADS-B ───────────────────────────────────────────
     case 'flightAdsb': {
-      // Aircraft: altitude-scaled offset + red variant for military. We skip
-      // the generic circle→symbol intercept and manually add:
-      //   1. Dropline stem, size expression-driven from altitude_ft.
-      //   2. 5 altitude buckets × 2 colors (civilian purple, military red) =
-      //      10 icon layers, each with a fixed `icon-translate` since the
-      //      property is not expression-capable.
-      // Each bucket picks a pre-sized dropline sprite so icon-size stays 1.0
-      // and the stem remains 3 px wide (scaling icon-size would widen it too).
+      // Aircraft: altitude-scaled icon offset + red variant for military.
+      // We skip the generic circle→symbol intercept and manually add:
+      //   1. Single ground-cross marker at the feature point (flat on map,
+      //      fades with pitch like every other layer's ground cross).
+      //   2. 5 altitude buckets × 2 colors (civilian purple, military red)
+      //      = 10 icon layers with fixed icon-translate (not expression-
+      //      capable so we bucket).
       const ALT_BUCKETS = [
-        { minFt: -Infinity, maxFt: 2000,     translateY: -30, stem: 'dropline-30' },
-        { minFt: 2000,      maxFt: 10000,    translateY: -42, stem: 'dropline-42' },
-        { minFt: 10000,     maxFt: 20000,    translateY: -54, stem: 'dropline-54' },
-        { minFt: 20000,     maxFt: 30000,    translateY: -70, stem: 'dropline-70' },
-        { minFt: 30000,     maxFt: Infinity, translateY: -90, stem: 'dropline-90' },
+        { minFt: -Infinity, maxFt: 2000,     translateY: -30 },
+        { minFt: 2000,      maxFt: 10000,    translateY: -42 },
+        { minFt: 10000,     maxFt: 20000,    translateY: -54 },
+        { minFt: 20000,     maxFt: 30000,    translateY: -70 },
+        { minFt: 30000,     maxFt: Infinity, translateY: -90 },
       ];
 
-      // Dropline stems — one symbol layer per altitude bucket, each using
-      // the correctly-sized sprite at icon-size: 1 so widths stay identical.
+      // Ground cross — single layer covering every aircraft, flat on map.
       const aircraftStemBase = opacity * 0.5;
       const aircraftFade = pitchFade(map.getPitch());
-      for (const b of ALT_BUCKETS) {
-        const altExpr =
-          b.minFt === -Infinity
-            ? ['<', ['coalesce', ['get', 'altitude_ft'], 0], b.maxFt]
-            : b.maxFt === Infinity
-              ? ['>=', ['coalesce', ['get', 'altitude_ft'], 0], b.minFt]
-              : [
-                  'all',
-                  ['>=', ['coalesce', ['get', 'altitude_ft'], 0], b.minFt],
-                  ['<',  ['coalesce', ['get', 'altitude_ft'], 0], b.maxFt],
-                ];
-        const stemLayerId = `${mainLayerId}-dropline-b${b.minFt}`;
-        map.addLayer({
-          id: stemLayerId,
-          type: 'symbol',
-          source: sourceId,
-          filter: altExpr,
-          layout: {
-            'icon-image': b.stem,
-            'icon-anchor': 'bottom',
-            'icon-size': 1,
-            'icon-allow-overlap': true,
-            'icon-ignore-placement': true,
-          },
-          paint: { 'icon-opacity': aircraftStemBase * aircraftFade },
-        });
-        registerDroplineLayer(stemLayerId, aircraftStemBase);
-      }
+      const stemLayerId = `${mainLayerId}-dropline`;
+      map.addLayer({
+        id: stemLayerId,
+        type: 'symbol',
+        source: sourceId,
+        layout: {
+          'icon-image': DROPLINE_BASE_IMAGE,
+          'icon-anchor': 'center',
+          'icon-size': 1,
+          'icon-rotation-alignment': 'map',
+          'icon-pitch-alignment': 'map',
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true,
+        },
+        paint: { 'icon-opacity': aircraftStemBase * aircraftFade },
+      });
+      registerDroplineLayer(stemLayerId, aircraftStemBase);
 
       // 5 buckets × 2 colors — 10 icon layers.
       for (const b of ALT_BUCKETS) {
