@@ -2,6 +2,7 @@ import express from 'express';
 import { getLinesByMode } from '../utils/transportStore.js';
 import { getDeparturesAt, listHydratedOperators } from '../utils/gtfsStore.js';
 import { hydrateOperator } from '../utils/gtfsHydrate.js';
+import { getActiveTripsAt } from '../utils/gtfsActiveTrips.js';
 
 const router = express.Router();
 
@@ -120,6 +121,29 @@ router.get('/gtfs/operators', (_req, res) => {
     res.json({ operators: listHydratedOperators() });
   } catch (err) {
     console.error('[transit/gtfs/operators]', err);
+    res.status(500).json({ error: 'internal' });
+  }
+});
+
+// Slice C: schedule-grounded vehicle positions. For the given wall-clock
+// time `t` (ISO, default now), return every active GTFS trip with its
+// projected lat/lon along its shape. Optional `bbox=minLng,minLat,
+// maxLng,maxLat` clips to a viewport.
+router.get('/active-trips', (req, res) => {
+  const t = req.query.t ? new Date(String(req.query.t)) : new Date();
+  if (Number.isNaN(t.getTime())) {
+    return res.status(400).json({ error: 'bad t (ISO date)' });
+  }
+  const bbox = parseBbox(req.query.bbox);
+  if (bbox === 'invalid') {
+    return res.status(400).json({ error: 'bbox must be minLng,minLat,maxLng,maxLat' });
+  }
+  const limit = Math.min(1000, Math.max(1, Number(req.query.limit) || 500));
+  try {
+    const trips = getActiveTripsAt({ now: t, bbox: bbox || null, limit });
+    res.json({ now: t.toISOString(), count: trips.length, trips });
+  } catch (err) {
+    console.error('[transit/active-trips]', err);
     res.status(500).json({ error: 'internal' });
   }
 });
