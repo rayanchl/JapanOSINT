@@ -840,7 +840,6 @@ const sources = [
   // Wave 11 — broadened web / cyber / transport pulse
   { id: 'hatena-bookmark', name: 'Hatena Bookmark Trending', nameJa: 'はてなブックマーク 人気エントリー', type: 'api', category: 'social', url: 'https://b.hatena.ne.jp/hotentry.rss', description: 'Japanese-language trending web articles (RDF/RSS). Anonymous', updateInterval: 1800, layer: 'hatena-bookmark', free: true, status: 'offline' },
   { id: 'certstream-jp', name: 'CertStream .jp CT Monitor', nameJa: 'CertStream .jp 証明書監視', type: 'api', category: 'cyber', url: 'wss://certstream.calidog.io/', description: 'Real-time Certificate Transparency log monitor filtered to .jp domains. Open WebSocket, MIT license', updateInterval: 60, layer: 'certstream-jp', free: true, status: 'offline' },
-  { id: 'odpt-train-delay', name: 'ODPT Train Information (Delays)', nameJa: 'ODPT 列車運行情報', type: 'api', category: 'transport', url: 'https://api-challenge.odpt.org/api/v4/odpt:TrainInformation', description: 'Live delay/service-status per railway for Tokyo Metro / Toei / TX / Rinkai / TWR. Requires ODPT_TOKEN (free key)', updateInterval: 120, layer: 'odpt-train-delay', free: true, status: 'offline' },
   { id: 'japan-post-offices', name: 'Japan Post Offices', nameJa: '郵便局', type: 'api', category: 'infrastructure', url: 'https://www.post.japanpost.jp/', description: 'Nationwide post office locations (OSM amenity=post_office, ~20k records)', updateInterval: 86400, layer: 'japan-post-offices', free: true, status: 'offline' },
 
   // Wave 11 (cont.) — broader signal

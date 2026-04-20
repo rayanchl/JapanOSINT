@@ -200,7 +200,6 @@ import gsiGeocode from './gsiGeocode.js';
 import japanApiPrefectures from './japanApiPrefectures.js';
 import hatenaBookmark from './hatenaBookmark.js';
 import certstreamJp from './certstreamJp.js';
-import odptTrainDelay from './odptTrainDelay.js';
 import japanPostOffices from './japanPostOffices.js';
 import wdcggCo2 from './wdcggCo2.js';
 import censysJapan from './censysJapan.js';
@@ -426,7 +425,6 @@ export const collectors = {
   'japan-api-prefectures': japanApiPrefectures,
   'hatena-bookmark': hatenaBookmark,
   'certstream-jp': certstreamJp,
-  'odpt-train-delay': odptTrainDelay,
   'japan-post-offices': japanPostOffices,
   'wdcgg-co2': wdcggCo2,
   'censys-japan': censysJapan,

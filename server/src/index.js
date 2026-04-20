@@ -19,6 +19,7 @@ import { startScheduler } from './utils/scheduler.js';
 import { installFetchTap, setBroadcaster } from './utils/collectorTap.js';
 import { runBulkHydrate } from './utils/gtfsBulkHydrate.js';
 import { refreshFeedCatalogue } from './utils/gtfsStore.js';
+import { refreshOdptTrainInformationAlerts } from './utils/odptToGtfsRt.js';
 import cron from 'node-cron';
 
 // Patch globalThis.fetch BEFORE importing any collector code that may
@@ -84,6 +85,12 @@ startScheduler(wss);
 // the 7-day freshness window.
 async function refreshAndHydrate() {
   try {
+    const r = await refreshOdptTrainInformationAlerts();
+    console.log('[index] ODPT TrainInformation →', r);
+  } catch (err) {
+    console.warn('[index] ODPT TrainInformation refresh failed:', err?.message);
+  }
+  try {
     const { total } = await refreshFeedCatalogue();
     console.log(`[index] Shimada catalogue refreshed — ${total} feeds`);
   } catch (err) {
@@ -101,6 +108,18 @@ setTimeout(() => { refreshAndHydrate(); }, 15_000);
 cron.schedule(
   '0 3 * * 0',
   () => { refreshAndHydrate(); },
+  { timezone: 'Asia/Tokyo' },
+);
+
+// Every 5 minutes: refresh ODPT TrainInformation. Status can change fast
+// during rush hour disruptions.
+cron.schedule(
+  '*/5 * * * *',
+  () => {
+    refreshOdptTrainInformationAlerts().catch((err) => {
+      console.warn('[index] scheduled TrainInformation refresh failed:', err?.message);
+    });
+  },
   { timezone: 'Asia/Tokyo' },
 );
 
