@@ -40,11 +40,15 @@ function spawnVehiclesForRoute(feature, mode) {
   for (let i = 0; i < n; i++) {
     // Evenly spaced along the total length; walk forward through segments
     // to find the starting (segIdx, segOffset).
+    const nSegs = segLens.length;
     let segIdx = 0;
     let segOffset = (total * i) / n;
-    while (segOffset > segLens[segIdx] && segIdx < segLens.length - 1) {
+    let safetySteps = 0;
+    while (segOffset > segLens[segIdx]) {
       segOffset -= segLens[segIdx];
-      segIdx++;
+      segIdx = (segIdx + 1) % nSegs;
+      safetySteps++;
+      if (safetySteps > nSegs) break;
     }
     vehicles.push({ routeId, mode, color, coords, segLens, segIdx, segOffset });
   }
@@ -55,7 +59,7 @@ export default function useLiveVehicles(mode, enabled) {
   const [geojson, setGeojson] = useState({ type: 'FeatureCollection', features: [] });
   const vehiclesRef = useRef([]);
   const rafRef = useRef(null);
-  const lastTickRef = useRef(0);
+  const lastTickRef = useRef(null);
 
   // Fetch routes + spawn vehicles when the hook becomes enabled (or the mode
   // changes). Clears state when disabled.
@@ -89,7 +93,7 @@ export default function useLiveVehicles(mode, enabled) {
     if (!enabled) return;
     const speed = MODE_SPEED_MPS[mode];
     const tick = (t) => {
-      if (!lastTickRef.current) lastTickRef.current = t;
+      if (lastTickRef.current === null) lastTickRef.current = t;
       const dt = (t - lastTickRef.current) / 1000;
       if (dt >= TICK_MS / 1000) {
         lastTickRef.current = t;
@@ -115,7 +119,11 @@ export default function useLiveVehicles(mode, enabled) {
             },
           });
         }
-        setGeojson({ type: 'FeatureCollection', features });
+        // Skip setState when there's nothing to render — avoids empty
+        // re-renders during the fetch window or when the layer is empty.
+        if (features.length > 0 || vehiclesRef.current.length > 0) {
+          setGeojson({ type: 'FeatureCollection', features });
+        }
       }
       rafRef.current = requestAnimationFrame(tick);
     };
@@ -123,7 +131,7 @@ export default function useLiveVehicles(mode, enabled) {
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
-      lastTickRef.current = 0;
+      lastTickRef.current = null;
     };
   }, [mode, enabled]);
 
