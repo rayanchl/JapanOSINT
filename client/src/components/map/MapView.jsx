@@ -3862,14 +3862,14 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
   const [viewport, setViewport] = useState(null);
   const prevLayersRef = useRef({});
 
-  // Slice A: client-side simulated vehicles for train / subway / bus. Each
-  // hook fetches /api/transit/routes once when enabled, spawns vehicles
-  // along every route, and emits a GeoJSON FeatureCollection at 1 Hz.
-  // Slice C: the same hook also polls /api/transit/active-trips using the
-  // viewport bbox, merging schedule-backed positions on top.
-  const liveTrainsGeo = useLiveVehicles('train', !!layers?.liveTransitTrains?.visible, viewport);
-  const liveSubwaysGeo = useLiveVehicles('subway', !!layers?.liveTransitSubways?.visible, viewport);
-  const liveBusesGeo = useLiveVehicles('bus', !!layers?.liveTransitBuses?.visible, viewport);
+  // Live vehicles ride along with the standard transport layer — no separate
+  // toggle. When the user enables "Trains", moving dots spawn on train routes
+  // (and similarly for subways/buses). Slice C: the same hook also polls
+  // /api/transit/active-trips using the viewport bbox, merging schedule-backed
+  // positions on top.
+  const liveTrainsGeo = useLiveVehicles('train', !!layers?.unifiedTrains?.visible, viewport);
+  const liveSubwaysGeo = useLiveVehicles('subway', !!layers?.unifiedSubways?.visible, viewport);
+  const liveBusesGeo = useLiveVehicles('bus', !!layers?.unifiedBuses?.visible, viewport);
 
   // Initialize map
   useEffect(() => {
