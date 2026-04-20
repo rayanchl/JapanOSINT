@@ -3789,11 +3789,25 @@ function removeLayerFromMap(map, layerId) {
     `${mainLayerId}-ring2`,
     `${mainLayerId}-ring3`,
     `${mainLayerId}-ring4`,
+    `${mainLayerId}-dropline`,
   ];
 
   for (const lid of variants) {
     if (map.getLayer(lid)) map.removeLayer(lid);
   }
+  // Aircraft: altitude-bucket icon sub-layers.
+  if (layerId === 'flightAdsb' && map.getStyle) {
+    const allLayers = (map.getStyle().layers || []).map((l) => l.id);
+    for (const id of allLayers) {
+      if (
+        id.startsWith(`${mainLayerId}-b`) ||
+        id.startsWith(`${mainLayerId}-mil-b`)
+      ) {
+        map.removeLayer(id);
+      }
+    }
+  }
+  unregisterDroplineLayer(`${mainLayerId}-dropline`);
   if (map.getSource(sourceId)) map.removeSource(sourceId);
   clearLayerAddons(layerId);
 }
