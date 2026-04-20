@@ -251,6 +251,18 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
     const id = `${mainLayerId}${s}`;
     if (map.getLayer(id)) map.removeLayer(id);
   }
+  // Aircraft: altitude-bucket sub-layers created in the flightAdsb case.
+  if (layerId === 'flightAdsb' && map.getStyle) {
+    const allLayers = (map.getStyle().layers || []).map((l) => l.id);
+    for (const id of allLayers) {
+      if (
+        id.startsWith(`${mainLayerId}-b`) ||
+        id.startsWith(`${mainLayerId}-mil-b`)
+      ) {
+        map.removeLayer(id);
+      }
+    }
+  }
   if (map.getSource(sourceId)) map.removeSource(sourceId);
   clearLayerAddons(layerId);
 
@@ -898,36 +910,80 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       break;
 
     // ── Flight ADS-B ───────────────────────────────────────────
-    case 'flightAdsb':
+    case 'flightAdsb': {
+      // Aircraft: altitude-scaled offset + red variant for military. We skip
+      // the generic circle→symbol intercept and manually add:
+      //   1. Dropline stem, size expression-driven from altitude_ft.
+      //   2. 5 altitude buckets × 2 colors (civilian purple, military red) =
+      //      10 icon layers, each with a fixed `icon-translate` since the
+      //      property is not expression-capable.
+      const ALT_BUCKETS = [
+        { minFt: -Infinity, maxFt: 2000,     translateY: -40 },
+        { minFt: 2000,      maxFt: 10000,    translateY: -52 },
+        { minFt: 10000,     maxFt: 20000,    translateY: -64 },
+        { minFt: 20000,     maxFt: 30000,    translateY: -80 },
+        { minFt: 30000,     maxFt: Infinity, translateY: -100 },
+      ];
+
+      // Dropline — single symbol layer, size scales with offsetPx / 100.
       map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
+        id: `${mainLayerId}-dropline`,
+        type: 'symbol',
         source: sourceId,
-        paint: {
-          'circle-radius': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'altitude_ft'], 0],
-            0, 3,
-            10000, 5,
-            30000, 8,
-            40000, 11,
+        layout: {
+          'icon-image': 'dropline',
+          'icon-anchor': 'bottom',
+          'icon-size': [
+            '/',
+            ['+', 40, ['min', 60, ['/', ['coalesce', ['get', 'altitude_ft'], 0], 500]]],
+            100,
           ],
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'altitude_ft'], 0],
-            0, '#7c4dff',
-            10000, '#536dfe',
-            20000, '#448aff',
-            30000, '#40c4ff',
-            40000, '#18ffff',
-          ],
-          'circle-opacity': opacity * 0.85,
-          'circle-stroke-width': 0.5,
-          'circle-stroke-color': '#fff',
-          'circle-stroke-opacity': opacity * 0.4,
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true,
         },
+        paint: { 'icon-opacity': opacity * 0.5 },
       });
+
+      // 5 buckets × 2 colors — 10 icon layers.
+      for (const b of ALT_BUCKETS) {
+        for (const mil of [false, true]) {
+          const altExpr =
+            b.minFt === -Infinity
+              ? ['<', ['coalesce', ['get', 'altitude_ft'], 0], b.maxFt]
+              : b.maxFt === Infinity
+                ? ['>=', ['coalesce', ['get', 'altitude_ft'], 0], b.minFt]
+                : [
+                    'all',
+                    ['>=', ['coalesce', ['get', 'altitude_ft'], 0], b.minFt],
+                    ['<',  ['coalesce', ['get', 'altitude_ft'], 0], b.maxFt],
+                  ];
+          const milExpr = mil
+            ? ['==', ['coalesce', ['get', 'is_military'], false], true]
+            : ['!=', ['coalesce', ['get', 'is_military'], false], true];
+
+          map.addLayer({
+            id: `${mainLayerId}${mil ? '-mil' : ''}-b${b.minFt}`,
+            type: 'symbol',
+            source: sourceId,
+            filter: ['all', altExpr, milExpr],
+            layout: {
+              'icon-image': mil ? 'icon-flightAdsb-mil' : layerIconImageId('flightAdsb'),
+              'icon-size': UNIFORM_ICON_SIZE,
+              'icon-anchor': 'bottom',
+              'icon-translate': [0, b.translateY],
+              'icon-translate-anchor': 'viewport',
+              'icon-rotate': ['coalesce', ['get', 'heading'], ['get', 'true_track'], 0],
+              'icon-rotation-alignment': 'map',
+              'icon-pitch-alignment': 'map',
+              'icon-allow-overlap': true,
+              'icon-ignore-placement': true,
+            },
+            paint: { 'icon-opacity': opacity },
+          });
+        }
+      }
       break;
+    }
 
     // ── Full transport (nationwide rail) ───────────────────────
     case 'fullTransport':
