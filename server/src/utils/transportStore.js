@@ -279,6 +279,35 @@ export const upsertLinesTx = db.transaction((features, mode, source) => {
   return out;
 });
 
+// ── Color patch (used by transportSpatialSnap) ─────────────────────────────
+
+const stmtStationColorUpdate = db.prepare(`
+  UPDATE transport_stations SET properties = @properties
+  WHERE station_uid = @station_uid
+`);
+
+/**
+ * Apply a batch of { station_uid, color } pairs: overwrite each row's
+ * properties.line_color (and no other field). Skips rows already at the
+ * target color to avoid needless writes.
+ */
+export const updateStationColorsTx = db.transaction((updates) => {
+  let changed = 0;
+  for (const { station_uid, color } of updates) {
+    const row = stmtStationGet.get(station_uid);
+    if (!row) continue;
+    const props = safeJson(row.properties, {});
+    if (props.line_color === color) continue;
+    props.line_color = color;
+    stmtStationColorUpdate.run({
+      station_uid,
+      properties: JSON.stringify(props),
+    });
+    changed++;
+  }
+  return changed;
+});
+
 // ── Read API ───────────────────────────────────────────────────────────────
 
 export function getStationsByMode(mode) {
@@ -322,6 +351,7 @@ export default {
   upsertLine,
   upsertStationsTx,
   upsertLinesTx,
+  updateStationColorsTx,
   getStationsByMode,
   getLinesByMode,
   getTransportFeatureCollection,

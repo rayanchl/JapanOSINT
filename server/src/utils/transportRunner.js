@@ -25,6 +25,7 @@ import {
   upsertLinesTx,
   transportStats,
 } from './transportStore.js';
+import { snapStationsToNearestLine } from './transportSpatialSnap.js';
 
 // Transport runs are cold-start-heavy: _liveHelpers' in-memory Overpass
 // cache is lost on server restart, so the first run after boot does
@@ -148,6 +149,21 @@ export async function runTransportDiscovery(wsServer) {
         console.error(`[transportRunner] ${cfg.mode} crashed:`, err?.message);
       }
     }
+
+    // Spatial snap: after all upserts, force each station's line_color to
+    // the nearest track's color so stations always match their line even
+    // when upstream sources disagree on operator/line text.
+    for (const mode of ['train', 'subway']) {
+      try {
+        const snap = snapStationsToNearestLine(mode);
+        console.log(
+          `[transportRunner] ${mode} snap — ${JSON.stringify(snap)}`,
+        );
+      } catch (err) {
+        console.error(`[transportRunner] ${mode} snap failed:`, err?.message);
+      }
+    }
+
     return summaries;
   })();
 
