@@ -1175,4 +1175,18 @@ router.get('/japan-api-prefectures', async (_req, res) => {
   await respondWithData(res, { sourceId: 'japan-api-prefectures', layerType: 'admin-boundaries', collectorKey: 'japan-api-prefectures' });
 });
 
+// Wave 11: broadened pulse collectors
+router.get('/hatena-bookmark', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'hatena-bookmark', layerType: 'hatena-bookmark', collectorKey: 'hatena-bookmark' });
+});
+router.get('/certstream-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'certstream-jp', layerType: 'certstream-jp', collectorKey: 'certstream-jp' });
+});
+router.get('/odpt-train-delay', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'odpt-train-delay', layerType: 'odpt-train-delay', collectorKey: 'odpt-train-delay' });
+});
+router.get('/japan-post-offices', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'japan-post-offices', layerType: 'japan-post-offices', collectorKey: 'japan-post-offices' });
+});
+
 export default router;

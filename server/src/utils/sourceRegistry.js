@@ -836,6 +836,12 @@ const sources = [
   // Geospatial / Reference
   { id: 'gsi-geocode', name: 'GSI Address Search', nameJa: '国土地理院 住所検索', type: 'api', category: 'geospatial', url: 'https://msearch.gsi.go.jp/address-search/AddressSearch', description: 'GSI (Geospatial Information Authority) address → lat/lon geocoder (JSON). Anonymous', updateInterval: 86400, layer: 'geocode', free: true, status: 'offline' },
   { id: 'japan-api-prefectures', name: 'Japan Prefectures REST API', nameJa: '都道府県 REST API', type: 'api', category: 'geospatial', url: 'https://japanapi.curtisbarnard.com/api/v1/prefectures', description: 'Community REST API for Japan prefectures, regions, demographics. Anonymous JSON', updateInterval: 604800, layer: 'admin-boundaries', free: true, status: 'offline' },
+
+  // Wave 11 — broadened web / cyber / transport pulse
+  { id: 'hatena-bookmark', name: 'Hatena Bookmark Trending', nameJa: 'はてなブックマーク 人気エントリー', type: 'api', category: 'social', url: 'https://b.hatena.ne.jp/hotentry.rss', description: 'Japanese-language trending web articles (RDF/RSS). Anonymous', updateInterval: 1800, layer: 'hatena-bookmark', free: true, status: 'offline' },
+  { id: 'certstream-jp', name: 'CertStream .jp CT Monitor', nameJa: 'CertStream .jp 証明書監視', type: 'api', category: 'cyber', url: 'wss://certstream.calidog.io/', description: 'Real-time Certificate Transparency log monitor filtered to .jp domains. Open WebSocket, MIT license', updateInterval: 60, layer: 'certstream-jp', free: true, status: 'offline' },
+  { id: 'odpt-train-delay', name: 'ODPT Train Information (Delays)', nameJa: 'ODPT 列車運行情報', type: 'api', category: 'transport', url: 'https://api-challenge.odpt.org/api/v4/odpt:TrainInformation', description: 'Live delay/service-status per railway for Tokyo Metro / Toei / TX / Rinkai / TWR. Requires ODPT_TOKEN (free key)', updateInterval: 120, layer: 'odpt-train-delay', free: true, status: 'offline' },
+  { id: 'japan-post-offices', name: 'Japan Post Offices', nameJa: '郵便局', type: 'api', category: 'infrastructure', url: 'https://www.post.japanpost.jp/', description: 'Nationwide post office locations (OSM amenity=post_office, ~20k records)', updateInterval: 86400, layer: 'japan-post-offices', free: true, status: 'offline' },
 ];
 
 export default sources;

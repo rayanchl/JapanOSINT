@@ -198,6 +198,10 @@ import jpcertAlertsRss from './jpcertAlertsRss.js';
 import nictAtlas from './nictAtlas.js';
 import gsiGeocode from './gsiGeocode.js';
 import japanApiPrefectures from './japanApiPrefectures.js';
+import hatenaBookmark from './hatenaBookmark.js';
+import certstreamJp from './certstreamJp.js';
+import odptTrainDelay from './odptTrainDelay.js';
+import japanPostOffices from './japanPostOffices.js';
 
 // Wave 10: Niche + Pop Culture
 import vendingMachines from './vendingMachines.js';
@@ -409,6 +413,10 @@ export const collectors = {
   'nict-atlas': nictAtlas,
   'gsi-geocode': gsiGeocode,
   'japan-api-prefectures': japanApiPrefectures,
+  'hatena-bookmark': hatenaBookmark,
+  'certstream-jp': certstreamJp,
+  'odpt-train-delay': odptTrainDelay,
+  'japan-post-offices': japanPostOffices,
 };
 
 /**

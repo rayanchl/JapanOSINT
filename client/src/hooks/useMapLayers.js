@@ -910,6 +910,29 @@ const LAYER_DEFINITIONS = {
     color: '#fb8c00',
     category: 'Transport',
   },
+
+  // ── Wave 11: broadened pulse ────────────────────────────────────
+  japanPostOffices: {
+    name: 'Post Offices',
+    icon: '\u{1F4EE}',
+    color: '#ef6c00',
+    endpoint: '/api/data/japan-post-offices',
+    category: 'Infrastructure',
+  },
+  odptTrainDelay: {
+    name: 'Train Delays (ODPT)',
+    icon: '\u{26A0}',
+    color: '#ffb300',
+    endpoint: '/api/data/odpt-train-delay',
+    category: 'Transport',
+  },
+  certstreamJp: {
+    name: '.jp CT Monitor',
+    icon: '\u{1F512}',
+    color: '#26a69a',
+    endpoint: '/api/data/certstream-jp',
+    category: 'Cyber',
+  },
 };
 
 export const LAYER_CATEGORIES = [
