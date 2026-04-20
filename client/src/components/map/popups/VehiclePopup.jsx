@@ -34,7 +34,7 @@ export default function VehiclePopup({ properties }) {
       <div className="flex items-center gap-1.5">
         <LineChip
           color={data.trip.route_color}
-          ref={data.trip.route_short}
+          refText={data.trip.route_short}
           name={data.trip.route_long}
         />
         {data.trip.headsign && (

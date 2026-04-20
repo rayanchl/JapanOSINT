@@ -38,7 +38,7 @@ export default function StationPopup({ properties }) {
       {data.lines.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {data.lines.map((l, i) => (
-            <LineChip key={i} color={l.color} ref={l.ref} name={l.name} />
+            <LineChip key={i} color={l.color} refText={l.ref} name={l.name} />
           ))}
         </div>
       )}

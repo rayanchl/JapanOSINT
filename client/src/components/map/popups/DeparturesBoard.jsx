@@ -29,7 +29,7 @@ export default function DeparturesBoard({ title, rows, emptyMsg, nowSec }) {
             <div key={`${d.trip_id}-${i}`} className="flex items-center gap-1.5 text-xs">
               <LineChip
                 color={d.route_color ? `#${d.route_color}` : null}
-                ref={d.route_short}
+                refText={d.route_short}
                 name={d.route_long}
               />
               <span className="flex-1 truncate text-gray-300" title={d.headsign || ''}>
