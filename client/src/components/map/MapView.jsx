@@ -116,8 +116,6 @@ function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity, layer
     'icon-allow-overlap': true,
     'icon-ignore-placement': true,
     'icon-anchor': 'bottom',
-    'icon-translate': [0, -ICON_BASE_OFFSET_PX],
-    'icon-translate-anchor': 'viewport',
   };
 
   if (ROTATING_LAYERS.has(layerId)) {
@@ -141,6 +139,8 @@ function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity, layer
     layout,
     paint: {
       'icon-opacity': iconOpacity,
+      'icon-translate': [0, -ICON_BASE_OFFSET_PX],
+      'icon-translate-anchor': 'viewport',
     },
   };
 }
@@ -970,15 +970,17 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
               'icon-image': mil ? 'icon-flightAdsb-mil' : layerIconImageId('flightAdsb'),
               'icon-size': UNIFORM_ICON_SIZE,
               'icon-anchor': 'bottom',
-              'icon-translate': [0, b.translateY],
-              'icon-translate-anchor': 'viewport',
               'icon-rotate': ['coalesce', ['get', 'heading'], ['get', 'true_track'], 0],
               'icon-rotation-alignment': 'map',
               'icon-pitch-alignment': 'map',
               'icon-allow-overlap': true,
               'icon-ignore-placement': true,
             },
-            paint: { 'icon-opacity': opacity },
+            paint: {
+              'icon-opacity': opacity,
+              'icon-translate': [0, b.translateY],
+              'icon-translate-anchor': 'viewport',
+            },
           });
         }
       }

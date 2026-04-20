@@ -32,7 +32,6 @@ const CREDENTIALS = {
 
   // ── Aviation ─────────────────────────────────────────────────────────
   'flight-adsb': { optional: ['OPENSKY_CLIENT_ID', 'OPENSKY_CLIENT_SECRET', 'AERODATABOX_KEY'] },
-  'opensky-japan': { optional: ['OPENSKY_CLIENT_ID', 'OPENSKY_CLIENT_SECRET'] },
 
   // ── Statistics ───────────────────────────────────────────────────────
   'estat-population': { anyOf: ['ESTAT_API_KEY', 'ESTAT_APP_ID'] },
