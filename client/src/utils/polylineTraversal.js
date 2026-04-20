@@ -40,36 +40,16 @@ export function segmentLengthsMeters(coords) {
   return out;
 }
 
-// Catmull-Rom interpolation between p1 and p2 using p0 and p3 as tangent
-// controls. `t` is 0..1 within the [p1, p2] segment. Produces a curve that
-// passes through p1 and p2, bending toward the neighboring vertices —
-// vehicles no longer visibly snap between chord endpoints on a coarse
-// polyline.
-function catmullRom(p0, p1, p2, p3, t) {
-  const t2 = t * t;
-  const t3 = t2 * t;
-  const lng = 0.5 * (
-    (2 * p1[0]) +
-    (-p0[0] + p2[0]) * t +
-    (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 +
-    (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3
-  );
-  const lat = 0.5 * (
-    (2 * p1[1]) +
-    (-p0[1] + p2[1]) * t +
-    (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 +
-    (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3
-  );
-  return [lng, lat];
-}
-
 /**
  * Advance from {segIdx, segOffset} by deltaMeters along `coords`. Wraps to
  * segIdx=0 when the polyline ends so the vehicle loops.
  *
- * Position is interpolated via Catmull-Rom using the two neighboring
- * vertices as curve controls — at polyline endpoints the tangents are
- * reflected so start/end remain well-defined.
+ * Uses straight linear interpolation between adjacent vertices — the same
+ * math MapLibre uses to render the track polyline. The server-side Chaikin
+ * smoothing (transportStore.chaikinSmooth, 2 passes) already densifies the
+ * coords so curves look smooth visually; adding a spline here would
+ * over-smooth the motion and let vehicles drift off the rendered track at
+ * sharp corners.
  *
  * `deltaMeters` must be >= 0 — negative values produce undefined output.
  *
@@ -91,17 +71,13 @@ export function advanceAlongLine(coords, segLens, state, deltaMeters) {
     safetySteps++;
     if (safetySteps > n) break;
   }
-  const p1 = coords[segIdx];
-  const p2 = coords[segIdx + 1];
+  const a = coords[segIdx];
+  const b = coords[segIdx + 1];
   const t = segLens[segIdx] === 0 ? 0 : segOffset / segLens[segIdx];
-  // Reflect p1/p2 to keep the curve well-defined at the polyline endpoints.
-  const p0 = coords[segIdx - 1] || [2 * p1[0] - p2[0], 2 * p1[1] - p2[1]];
-  const p3 = coords[segIdx + 2] || [2 * p2[0] - p1[0], 2 * p2[1] - p1[1]];
-  const [lng, lat] = catmullRom(p0, p1, p2, p3, t);
   return {
-    lng,
-    lat,
-    bearing: bearingDeg(p1, p2),
+    lng: a[0] + t * (b[0] - a[0]),
+    lat: a[1] + t * (b[1] - a[1]),
+    bearing: bearingDeg(a, b),
     segIdx,
     segOffset,
   };
