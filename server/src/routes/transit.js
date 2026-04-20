@@ -1,13 +1,7 @@
 import express from 'express';
 import { getLinesByMode } from '../utils/transportStore.js';
-import { ingestFeedZip } from '../utils/gtfsIngest.js';
-import {
-  isOperatorHydrated,
-  markOperatorHydrated,
-  getDeparturesAt,
-  listHydratedOperators,
-} from '../utils/gtfsStore.js';
-import db from '../utils/database.js';
+import { getDeparturesAt, listHydratedOperators } from '../utils/gtfsStore.js';
+import { hydrateOperator } from '../utils/gtfsHydrate.js';
 
 const router = express.Router();
 
@@ -92,63 +86,6 @@ router.get('/routes', (req, res) => {
     res.status(500).json({ error: 'internal' });
   }
 });
-
-const GTFS_API = 'https://api.gtfs-data.jp/v2';
-
-// One-flight guard: concurrent hydrate calls for the same orgId share the
-// same in-flight promise so we don't download/ingest the same feeds twice.
-const inflightHydrate = new Map();
-
-async function hydrateOperator(orgId) {
-  if (isOperatorHydrated(orgId)) return { cached: true };
-  const existing = inflightHydrate.get(orgId);
-  if (existing) return existing;
-
-  const p = (async () => {
-    const feedsRes = await fetch(`${GTFS_API}/organizations/${orgId}/feeds`);
-    if (!feedsRes.ok) throw new Error(`feed list HTTP ${feedsRes.status}`);
-    const body = await feedsRes.json();
-    const feeds = Array.isArray(body?.body) ? body.body : [];
-    const feedIds = [];
-    const totals = { routes: 0, trips: 0, stop_times: 0, shapes: 0, calendar: 0 };
-    for (const f of feeds) {
-      const feedId = f.feed_id || f.id;
-      if (!feedId) continue;
-      const zipRes = await fetch(
-        `${GTFS_API}/organizations/${orgId}/feeds/${feedId}/files/archive.zip`,
-      );
-      if (!zipRes.ok) continue;
-      const buf = await zipRes.arrayBuffer();
-      try {
-        const c = ingestFeedZip(orgId, feedId, buf);
-        for (const k of Object.keys(totals)) {
-          if (typeof c[k] === 'number') totals[k] += c[k];
-        }
-        feedIds.push(feedId);
-      } catch (err) {
-        console.error(`[transit/hydrate] ${orgId}/${feedId} ingest failed:`, err?.message);
-      }
-    }
-    // stop_count = distinct stops observed in gtfs_stop_times for this org.
-    // Gives a meaningful number in the /gtfs/operators response.
-    let stopCount = 0;
-    try {
-      const row = db.prepare(
-        'SELECT COUNT(DISTINCT stop_id) AS c FROM gtfs_stop_times WHERE org_id = ?',
-      ).get(orgId);
-      stopCount = row?.c || 0;
-    } catch { /* leave stopCount at 0 */ }
-    markOperatorHydrated(orgId, orgId, feedIds, { stops: stopCount, trips: totals.trips });
-    return { cached: false, feedIds, counts: totals };
-  })();
-
-  inflightHydrate.set(orgId, p);
-  try {
-    return await p;
-  } finally {
-    inflightHydrate.delete(orgId);
-  }
-}
 
 router.post('/gtfs/hydrate/:orgId', async (req, res) => {
   const raw = String(req.params.orgId || '');
