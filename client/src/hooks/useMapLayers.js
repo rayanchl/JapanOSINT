@@ -888,14 +888,6 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/unified-port-infra',
     category: 'Transport',
   },
-  militaryFlights: {
-    name: 'Military Planes',
-    icon: '\u{1F6E9}',
-    color: '#6d4c41',
-    endpoint: '/api/data/opensky-japan',
-    category: 'Transport',
-  },
-
 };
 
 export const LAYER_CATEGORIES = [
