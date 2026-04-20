@@ -11,6 +11,8 @@ import { isRunInFlight, runCameraDiscovery } from '../utils/cameraRunner.js';
 import { getTransportFeatureCollection, transportStats } from '../utils/transportStore.js';
 import { isTransportRunInFlight } from '../utils/transportRunner.js';
 import { withCollectorRun, annotateLastHit, getBroadcaster } from '../utils/collectorTap.js';
+import { getOAuthToken } from '../utils/openskyAuth.js';
+import { getEnrich, setEnrich } from '../utils/flightEnrichCache.js';
 
 const router = Router();
 
@@ -197,6 +199,62 @@ router.post('/cameras/trigger', (_req, res) => {
       console.error('[data] manual camera run failed:', err?.message);
     });
   res.json({ started: true, already_running: false });
+});
+
+// GET /api/data/flight-adsb/enrich?icao24=<6-hex>
+// Proxies OpenSky /flights/aircraft for on-click popup enrichment. Cached
+// per icao24 for 10 minutes (flightEnrichCache). Returns {} on miss or
+// { rate_limited: true } on 429. Rate-limited responses are NOT cached.
+router.get('/flight-adsb/enrich', async (req, res) => {
+  const raw = String(req.query.icao24 || '').trim().toLowerCase();
+  if (!/^[0-9a-f]{6}$/.test(raw)) {
+    return res.status(400).json({ error: 'icao24 must be 6 hex characters' });
+  }
+
+  const cached = getEnrich(raw);
+  if (cached) return res.json(cached);
+
+  try {
+    const now = Math.floor(Date.now() / 1000);
+    const begin = now - 2 * 3600;
+    const url = `https://opensky-network.org/api/flights/aircraft?icao24=${raw}&begin=${begin}&end=${now}`;
+    const token = await getOAuthToken();
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10_000);
+    const upstream = await fetch(url, { headers, signal: controller.signal });
+    clearTimeout(timer);
+
+    if (upstream.status === 429) {
+      return res.json({ rate_limited: true });
+    }
+    if (!upstream.ok) {
+      return res.json({});
+    }
+    const arr = await upstream.json();
+    if (!Array.isArray(arr) || arr.length === 0) {
+      setEnrich(raw, {});
+      return res.json({});
+    }
+    const best = [...arr]
+      .filter((f) => f.estDepartureAirport || f.estArrivalAirport)
+      .sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0))[0];
+
+    const data = best
+      ? {
+          origin_icao: best.estDepartureAirport || null,
+          destination_icao: best.estArrivalAirport || null,
+          first_seen_ts: best.firstSeen || null,
+          last_seen_ts: best.lastSeen || null,
+        }
+      : {};
+    setEnrich(raw, data);
+    return res.json(data);
+  } catch (err) {
+    console.error('[data] /flight-adsb/enrich failed:', err?.message);
+    return res.json({});
+  }
 });
 
 // ── Unified transport endpoints ────────────────────────────────────────────
