@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
@@ -7,6 +7,7 @@ import { getLayerIcon } from '../../utils/layerIcons';
 import { rasterizeIcon } from '../../utils/iconRaster';
 import { createRailwayLineTags } from '../../utils/railwayLineTags';
 import { useSatelliteTracks } from '../../hooks/useSatelliteTracks.js';
+import { satelliteColor } from '../../utils/satelliteColor.js';
 
 // Per-layer handles for DOM-based add-ons (e.g. railway line tags) that
 // live outside MapLibre's layer system and must be torn down alongside
@@ -197,7 +198,9 @@ function unregisterDroplineLayer(layerId) {
 
 // Layers that should NOT have their circle configs swapped for emoji-icon
 // symbol layers. Rendering stays as plain line-colored dots.
-const SKIP_ICON_SUBSTITUTION = new Set(['unifiedTrains', 'unifiedSubways', 'unifiedBuses']);
+const SKIP_ICON_SUBSTITUTION = new Set([
+  'unifiedTrains', 'unifiedSubways', 'unifiedBuses', 'satelliteTracking',
+]);
 
 // Replace any `type: 'circle'` layer config with an equivalent
 // `type: 'symbol'` layer that renders the registered layer icon.
@@ -2983,6 +2986,22 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       });
       break;
 
+    case 'satelliteTracking':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': 6,
+          'circle-color': ['coalesce', ['get', '_color'], '#ba68c8'],
+          'circle-opacity': opacity * 0.9,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': opacity * 0.7,
+        },
+      });
+      break;
+
     case 'amateurRadioRepeaters':
       map.addLayer({
         id: mainLayerId,
@@ -3872,8 +3891,23 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
   const liveSubwaysGeo = useLiveVehicles('subway', !!layers?.unifiedSubways?.visible, viewport);
   const liveBusesGeo = useLiveVehicles('bus', !!layers?.unifiedBuses?.visible, viewport);
 
+  const coloredSatelliteTrackingFc = useMemo(() => {
+    const fc = layerData?.satelliteTracking;
+    if (!fc || !Array.isArray(fc.features)) return fc;
+    return {
+      ...fc,
+      features: fc.features.map((f) => ({
+        ...f,
+        properties: {
+          ...(f.properties || {}),
+          _color: satelliteColor(f.properties?.norad_id),
+        },
+      })),
+    };
+  }, [layerData?.satelliteTracking]);
+
   const satelliteTrackFc = useSatelliteTracks(
-    layers?.satelliteTracking?.visible ? layerData?.satelliteTracking : null
+    layers?.satelliteTracking?.visible ? coloredSatelliteTrackingFc : null
   );
 
   // Initialize map
@@ -4005,7 +4039,9 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
       const def = LAYER_DEFINITIONS[layerId];
       if (!def) continue;
 
-      const data = layerData[layerId];
+      const data = layerId === 'satelliteTracking'
+        ? coloredSatelliteTrackingFc
+        : layerData[layerId];
       const prev = prevLayersRef.current[layerId];
       const wasVisible = prev?.visible;
       const wasData = prev?.dataLength;
@@ -4024,7 +4060,7 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
         dataLength: currentDataLength,
       };
     }
-  }, [layers, layerData, mapReady]);
+  }, [layers, layerData, mapReady, coloredSatelliteTrackingFc]);
 
   // Live-transit vehicle layers — dedicated sources/layers managed outside
   // the standard fetch-and-paint path because data is client-generated.
