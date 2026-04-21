@@ -694,6 +694,7 @@ export default async function collectSatelliteImagery() {
     { name: 'jaxa_alos2_seed',  fn: async () => alos2Seed() },
     { name: 'usgs_m2m_historical', fn: tryUsgsHistorical },
     { name: 'sentinel2_multi',  fn: trySentinel2 },
+    { name: 'sentinel1_multi',  fn: trySentinel1 },
   ];
 
   for (const p of providers) {
@@ -718,7 +719,7 @@ export default async function collectSatelliteImagery() {
       recordCount: features.length,
       live,
       live_source: live ? liveSources.join('+') : 'satellite_imagery_seed',
-      description: 'Live + archival satellite imagery over Japan (Himawari-9, MODIS, VIIRS; Landsat/GOES/ALOS/CORONA added by extension tasks)',
+      description: 'Live + archival satellite imagery over Japan (Himawari-9, MODIS, VIIRS; Landsat/GOES/ALOS/CORONA/Sentinel-2/Sentinel-1 added by extension tasks)',
     },
     metadata: {},
   };
