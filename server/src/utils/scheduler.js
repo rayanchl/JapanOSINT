@@ -10,6 +10,7 @@ import { redactUrl, redactHeaders, truncateBody } from './redact.js';
 import { runCameraDiscovery } from './cameraRunner.js';
 import { runTransportDiscovery } from './transportRunner.js';
 import { withCollectorRun } from './collectorTap.js';
+import { seedTtlsFromRegistry, pruneExpired } from './collectorCache.js';
 
 /**
  * Some upstream endpoints only accept POST (e.g. Overpass `/api/interpreter`
@@ -189,6 +190,25 @@ export function startScheduler(wsServer) {
 
   console.log(`[scheduler] Registered ${sources.length} sources in database`);
 
+  // 1b. Seed per-source TTLs from sourceRegistry.updateInterval. Idempotent —
+  //     runtime edits to collector_ttls survive restarts.
+  try {
+    const { inserted, total } = seedTtlsFromRegistry();
+    console.log(`[scheduler] Seeded collector TTLs — ${inserted} new (of ${total})`);
+  } catch (err) {
+    console.error('[scheduler] TTL seed failed:', err?.message);
+  }
+
+  // 1c. Prune expired collector_cache rows every 10 min.
+  cron.schedule('*/10 * * * *', () => {
+    try {
+      const removed = pruneExpired();
+      if (removed > 0) console.log(`[scheduler] Pruned ${removed} expired cache row(s)`);
+    } catch (err) {
+      console.error('[scheduler] cache prune failed:', err?.message);
+    }
+  });
+
   // 2. Schedule periodic probes for every source with a real http(s) URL.
   //    Paid sources without keys simply return 401/403 — that's honest info.
   //    Skip sentinel schemes (e.g. `internal://unified-subways`): those are
@@ -215,20 +235,13 @@ export function startScheduler(wsServer) {
   }, 30_000);
 
   // 5. Camera discovery runner — persistent deduplicated DB + live WS stream.
-  //    Hourly cron (at :15 so it doesn't collide with on-the-hour probes) +
-  //    one warm-up run 20s after boot.
+  //    Hourly cron at :15 so it doesn't collide with on-the-hour probes.
   cron.schedule('15 * * * *', () => {
     withCollectorRun('cameraDiscovery', () => runCameraDiscovery(wsServer), { trigger: 'cron' })
       .catch((err) => {
         console.error('[scheduler] camera run failed:', err?.message);
       });
   });
-  setTimeout(() => {
-    withCollectorRun('cameraDiscovery', () => runCameraDiscovery(wsServer), { trigger: 'boot' })
-      .catch((err) => {
-        console.error('[scheduler] boot camera run failed:', err?.message);
-      });
-  }, 20_000);
 
   // 6. Unified transport runner — same hourly cadence as cameras, offset to
   //    :30 so it doesn't collide on the same minute. Persists deduped
@@ -240,10 +253,4 @@ export function startScheduler(wsServer) {
         console.error('[scheduler] transport run failed:', err?.message);
       });
   });
-  setTimeout(() => {
-    withCollectorRun('transportDiscovery', () => runTransportDiscovery(wsServer), { trigger: 'boot' })
-      .catch((err) => {
-        console.error('[scheduler] boot transport run failed:', err?.message);
-      });
-  }, 40_000);
 }

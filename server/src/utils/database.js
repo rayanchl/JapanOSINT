@@ -254,6 +254,29 @@ db.exec(`
   );
   CREATE INDEX IF NOT EXISTS idx_gtfs_rt_alerts_reported
     ON gtfs_rt_alerts(reported_at);
+
+  -- Per-collector TTL table. One row per collector key; seeded at server
+  -- boot from sourceRegistry.updateInterval (seconds → ms, floor 60s,
+  -- ceiling 24h). Editable at runtime via sqlite or setTtlMs(). Existing
+  -- rows are preserved across restarts so manual tuning survives.
+  CREATE TABLE IF NOT EXISTS collector_ttls (
+    key        TEXT PRIMARY KEY,
+    ttl_ms     INTEGER NOT NULL,
+    source     TEXT NOT NULL,        -- 'registry' | 'default' | 'user'
+    updated_at INTEGER NOT NULL
+  );
+
+  -- Cached FeatureCollection per collector key. fetched_at is ms-since-epoch;
+  -- ttl_ms snapshotted at write so a live TTL edit doesn't retro-expire
+  -- already-cached entries. Pruned every 10 min by scheduler.
+  CREATE TABLE IF NOT EXISTS collector_cache (
+    key        TEXT PRIMARY KEY,
+    fc_json    TEXT NOT NULL,
+    fetched_at INTEGER NOT NULL,
+    ttl_ms     INTEGER NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS idx_collector_cache_fetched
+    ON collector_cache(fetched_at);
 `);
 
 // --------------- Schema migration ---------------

@@ -13,6 +13,12 @@ import { isTransportRunInFlight } from '../utils/transportRunner.js';
 import { withCollectorRun, annotateLastHit, getBroadcaster } from '../utils/collectorTap.js';
 import { getOAuthToken } from '../utils/openskyAuth.js';
 import { getEnrich, setEnrich } from '../utils/flightEnrichCache.js';
+import {
+  getCached, setCached, getTtlMs,
+} from '../utils/collectorCache.js';
+import {
+  broadcastLayerWorkStarted, broadcastLayerWorkFinished,
+} from '../utils/layerEvents.js';
 
 const router = Router();
 
@@ -90,37 +96,122 @@ async function captureAndCache(url, file) {
 }
 
 /**
+ * Normalise whatever the collector returned into the canonical FC envelope.
+ * Tolerates drift in _meta field names (record_count/live_source/timestamp).
+ */
+function normaliseFc(data, collectorKey) {
+  const features = Array.isArray(data?.features) ? data.features
+    : (Array.isArray(data) ? data : []);
+  const m = (data && typeof data === 'object') ? (data._meta || {}) : {};
+  return {
+    type: 'FeatureCollection',
+    features,
+    _meta: {
+      source: m.source ?? m.live_source ?? collectorKey,
+      fetchedAt: m.fetchedAt ?? m.timestamp ?? new Date().toISOString(),
+      recordCount: features.length,
+      live: (m.live != null) ? !!m.live : (features.length > 0),
+      description: m.description ?? null,
+    },
+  };
+}
+
+/**
  * Helper: run the collector live for this source, or return an empty
  * FeatureCollection with status info if no collector is registered.
+ *
+ * Caching: on every call we check collector_cache first (TTL per source
+ * from collector_ttls). On hit the cached FC returns immediately; on miss
+ * we invoke the collector, normalise, write to cache, and broadcast
+ * layer_work_* WS events so the client spinner fires on server work.
  */
 async function respondWithData(res, { sourceId, layerType, collectorKey }) {
   try {
     const collector = collectorKey ? collectors[collectorKey] : null;
-    if (collector) {
-      const data = await withCollectorRun(
+    if (!collector) {
+      const source = getSourceById(sourceId);
+      return res.json({
+        type: 'FeatureCollection',
+        features: [],
+        _meta: {
+          source: sourceId,
+          fetchedAt: new Date().toISOString(),
+          recordCount: 0,
+          live: false,
+          description: 'No collector registered for this source.',
+          cache_status: 'miss',
+          age_ms: 0,
+          status: source?.status ?? 'unknown',
+        },
+      });
+    }
+
+    // 1. Cache hit short-circuit
+    const cached = getCached(collectorKey);
+    if (cached) {
+      const fc = cached.fc;
+      // Re-stamp cache telemetry onto the response so the client can show
+      // freshness. _meta is preserved; only cache_status / age_ms overwrite.
+      fc._meta = {
+        ...(fc._meta || {}),
+        cache_status: 'hit',
+        age_ms: cached.ageMs,
+        ttl_ms: getTtlMs(collectorKey),
+      };
+      broadcastLayerWorkFinished({
+        layerId: layerType,
+        collectorKey,
+        sourceId,
+        durationMs: 0,
+        recordCount: fc.features?.length ?? 0,
+        cacheStatus: 'hit',
+      });
+      return res.json(fc);
+    }
+
+    // 2. Cache miss — invoke the collector
+    broadcastLayerWorkStarted({ layerId: layerType, collectorKey, sourceId });
+    const startedAt = Date.now();
+    let data;
+    try {
+      data = await withCollectorRun(
         collectorKey,
         () => collector(),
         { trigger: 'on-demand' },
       );
-      // Tag the last fetched hit with the collector's parsed feature count
-      // so the FollowPanel can show records-per-request.
-      const recordCount = Array.isArray(data?.features)
-        ? data.features.length
-        : (Array.isArray(data) ? data.length : null);
-      if (recordCount != null) annotateLastHit({ record_count: recordCount });
-      return res.json(data);
+    } catch (err) {
+      broadcastLayerWorkFinished({
+        layerId: layerType,
+        collectorKey,
+        sourceId,
+        durationMs: Date.now() - startedAt,
+        recordCount: 0,
+        cacheStatus: 'error',
+      });
+      throw err;
     }
 
-    const source = getSourceById(sourceId);
-    res.json({
-      type: 'FeatureCollection',
-      features: [],
-      _meta: {
-        source_id: sourceId,
-        status: source?.status ?? 'unknown',
-        message: 'No data currently available. Collector not yet implemented or source offline.',
-      },
+    const fc = normaliseFc(data, collectorKey);
+    const recordCount = fc.features.length;
+    annotateLastHit({ record_count: recordCount });
+
+    // Persist for the source's TTL window
+    const ttlMs = getTtlMs(collectorKey);
+    setCached(collectorKey, fc, ttlMs);
+
+    // Decorate the outgoing response with cache status
+    fc._meta = { ...fc._meta, cache_status: 'miss', age_ms: 0, ttl_ms: ttlMs };
+
+    broadcastLayerWorkFinished({
+      layerId: layerType,
+      collectorKey,
+      sourceId,
+      durationMs: Date.now() - startedAt,
+      recordCount,
+      cacheStatus: 'miss',
     });
+
+    return res.json(fc);
   } catch (err) {
     console.error(`[data] Error fetching ${sourceId}:`, err.message);
     res.status(500).json({ error: `Failed to fetch ${layerType} data` });
@@ -239,8 +330,12 @@ router.get('/flight-adsb/enrich', async (req, res) => {
 
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 10_000);
-    const upstream = await fetch(url, { headers, signal: controller.signal });
-    clearTimeout(timer);
+    let upstream;
+    try {
+      upstream = await fetch(url, { headers, signal: controller.signal });
+    } finally {
+      clearTimeout(timer);
+    }
 
     if (upstream.status === 429) {
       return res.json({ rate_limited: true });
