@@ -1016,20 +1016,31 @@ export default function useMapLayers() {
     return out;
   }, [serverLoadingByEndpoint]);
 
-  const fetchLayerData = useCallback(async (layerId) => {
+  // Is a cached FC still considered fresh? Use the server-supplied
+  // _meta.age_ms + _meta.ttl_ms (Track 1) to decide. A cached copy is fresh
+  // while its effective age is under half of TTL — past the halfway mark we
+  // still render it instantly but kick a background refresh (SWR).
+  const isCachedFresh = (fc) => {
+    const ttl = fc?._meta?.ttl_ms;
+    const age = fc?._meta?.age_ms;
+    if (!Number.isFinite(ttl) || ttl <= 0) return false;
+    const effectiveAge = Number.isFinite(age) ? age : 0;
+    return effectiveAge < ttl / 2;
+  };
+
+  // Internal: do the network fetch + cache update. `background: true` skips
+  // the `loading: true` flag so the spinner doesn't flash while we're
+  // silently refreshing behind an already-rendered cached copy.
+  const doFetch = useCallback(async (layerId, { background = false } = {}) => {
     const def = LAYER_DEFINITIONS[layerId];
-    if (!def) return;
-    if (!def.endpoint) return; // client-side-only layers (e.g. live-transit)
+    if (!def?.endpoint) return;
 
-    if (cacheRef.current[layerId]) {
-      setLayerData((prev) => ({ ...prev, [layerId]: cacheRef.current[layerId] }));
-      return;
+    if (!background) {
+      setLayers((prev) => ({
+        ...prev,
+        [layerId]: { ...prev[layerId], loading: true },
+      }));
     }
-
-    setLayers((prev) => ({
-      ...prev,
-      [layerId]: { ...prev[layerId], loading: true },
-    }));
 
     try {
       const res = await fetch(def.endpoint);
@@ -1045,17 +1056,40 @@ export default function useMapLayers() {
       setLayerData((prev) => ({ ...prev, [layerId]: geojson }));
     } catch (err) {
       console.warn(`[useMapLayers] Failed to fetch ${layerId}:`, err.message);
-      setLayerData((prev) => ({
-        ...prev,
-        [layerId]: { type: 'FeatureCollection', features: [] },
-      }));
+      if (!background) {
+        // Only surface the empty-collection fallback on foreground failure;
+        // a background-refresh error leaves the cached copy in place.
+        setLayerData((prev) => ({
+          ...prev,
+          [layerId]: { type: 'FeatureCollection', features: [] },
+        }));
+      }
     } finally {
-      setLayers((prev) => ({
-        ...prev,
-        [layerId]: { ...prev[layerId], loading: false },
-      }));
+      if (!background) {
+        setLayers((prev) => ({
+          ...prev,
+          [layerId]: { ...prev[layerId], loading: false },
+        }));
+      }
     }
   }, []);
+
+  const fetchLayerData = useCallback(async (layerId) => {
+    const def = LAYER_DEFINITIONS[layerId];
+    if (!def?.endpoint) return;
+
+    const cached = cacheRef.current[layerId];
+    if (cached) {
+      // Render cached copy immediately so the layer appears with no spinner
+      // flash. If stale (past half-TTL), kick a background refresh.
+      setLayerData((prev) => ({ ...prev, [layerId]: cached }));
+      if (!isCachedFresh(cached)) doFetch(layerId, { background: true });
+      return;
+    }
+
+    // No cache yet — do a foreground fetch with spinner.
+    await doFetch(layerId, { background: false });
+  }, [doFetch]);
 
   const toggleLayer = useCallback((layerId) => {
     setLayers((prev) => {
@@ -1063,7 +1097,9 @@ export default function useMapLayers() {
       if (!current) return prev;
       const newVisible = !current.visible;
 
-      if (newVisible && !cacheRef.current[layerId]) {
+      if (newVisible) {
+        // Always call fetchLayerData — it decides whether to render cached,
+        // background-refresh, or foreground-fetch based on cache state.
         fetchLayerData(layerId);
       }
 
@@ -1086,9 +1122,8 @@ export default function useMapLayers() {
       const updated = {};
       for (const key of Object.keys(prev)) {
         updated[key] = { ...prev[key], visible };
-        if (visible && !cacheRef.current[key]) {
-          fetchLayerData(key);
-        }
+        // fetchLayerData handles its own cache / staleness decision
+        if (visible) fetchLayerData(key);
       }
       return updated;
     });
