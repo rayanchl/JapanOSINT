@@ -513,10 +513,11 @@ function s1IsoWindow(days = S1_WINDOW_DAYS) {
 }
 
 function s1PlatformFromName(name) {
-  const up = String(name || '').toUpperCase();
-  if (up.startsWith('S1A')) return 'sentinel-1a';
-  if (up.startsWith('S1B')) return 'sentinel-1b';
-  if (up.startsWith('S1C')) return 'sentinel-1c';
+  const s = String(name || '');
+  const up = s.toUpperCase();
+  if (up.startsWith('S1A') || up.includes('SENTINEL-1A')) return 'sentinel-1a';
+  if (up.startsWith('S1B') || up.includes('SENTINEL-1B')) return 'sentinel-1b';
+  if (up.startsWith('S1C') || up.includes('SENTINEL-1C')) return 'sentinel-1c';
   return 'sentinel-1';
 }
 
@@ -604,8 +605,51 @@ async function s1TryPlanetaryComputer() {
   });
 }
 
+async function s1TryEarthSearch() {
+  const { from, to } = s1IsoWindow();
+  const body = {
+    bbox: JAPAN_BBOX,
+    datetime: `${from}/${to}`,
+    collections: ['sentinel-1-grd'],
+    limit: S1_SCENE_LIMIT,
+  };
+  const data = await fetchJson(
+    'https://earth-search.aws.element84.com/v1/search',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }
+  );
+  const feats = data?.features || [];
+  if (!feats.length) return null;
+  return feats.map((f, i) => {
+    const geom = f.geometry || null;
+    const [cx, cy] = s2CentroidFromGeom(geom);
+    return {
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [cx, cy] },
+      properties: {
+        id: `IMG_S1_${f.id || i}`,
+        platform: s1PlatformFromName(f.properties?.platform || f.id),
+        sensor: 'c-sar',
+        product_type: 'GRD',
+        polarization: 'VV',
+        scene_id: f.id,
+        datetime: f.properties?.datetime,
+        preview_url: f.assets?.thumbnail?.href || null,
+        tile_url: f.assets?.vv?.href || null,
+        bbox_geom: geom,
+        archive_era: 'real-time',
+        source: 'earth_search_s1',
+        country: 'JP',
+      },
+    };
+  });
+}
+
 export async function trySentinel1() {
-  const chain = [s1TryCdseOData, s1TryPlanetaryComputer];
+  const chain = [s1TryCdseOData, s1TryPlanetaryComputer, s1TryEarthSearch];
   for (const fn of chain) {
     try {
       const r = await fn();

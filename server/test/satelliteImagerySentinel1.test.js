@@ -81,3 +81,42 @@ test('trySentinel1 — falls back to Planetary Computer when CDSE empty', async 
     globalThis.fetch = origFetch;
   }
 });
+
+test('trySentinel1 — falls back to Earth Search when CDSE + PC empty', async () => {
+  globalThis.fetch = (url) => {
+    const u = String(url);
+    if (u.includes('catalogue.dataspace.copernicus.eu')) {
+      return makeJson({ value: [] });
+    }
+    if (u.includes('planetarycomputer.microsoft.com')) {
+      return makeJson({ features: [] });
+    }
+    if (u.includes('earth-search.aws.element84.com')) {
+      return makeJson({
+        features: [{
+          id: 'S1C_IW_GRDH_ES_999',
+          geometry: {
+            type: 'Polygon',
+            coordinates: [[[139, 35], [140, 35], [140, 36], [139, 36], [139, 35]]],
+          },
+          properties: {
+            platform: 'sentinel-1c',
+            datetime: '2026-04-20T09:30:00Z',
+          },
+          assets: { vv: { href: 'https://example/aws/s1c.tif' } },
+        }],
+      });
+    }
+    return makeJson({}, 404);
+  };
+  try {
+    const { trySentinel1 } = await import('../src/collectors/satelliteImagery.js');
+    const features = await trySentinel1();
+    assert.equal(features.length, 1);
+    assert.equal(features[0].properties.source, 'earth_search_s1');
+    assert.equal(features[0].properties.platform, 'sentinel-1c');
+    assert.equal(features[0].properties.tile_url, 'https://example/aws/s1c.tif');
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
