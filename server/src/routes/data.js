@@ -8,8 +8,6 @@ import { collectors } from '../collectors/index.js';
 import { captureSnapshot } from '../utils/screenshot.js';
 import { getAllCameras, cameraStats } from '../utils/cameraStore.js';
 import { isRunInFlight, runCameraDiscovery } from '../utils/cameraRunner.js';
-import { getTransportFeatureCollection, transportStats } from '../utils/transportStore.js';
-import { isTransportRunInFlight } from '../utils/transportRunner.js';
 import { withCollectorRun, annotateLastHit, getBroadcaster } from '../utils/collectorTap.js';
 import { getOAuthToken } from '../utils/openskyAuth.js';
 import { getEnrich, setEnrich } from '../utils/flightEnrichCache.js';
@@ -369,32 +367,25 @@ router.get('/flight-adsb/enrich', async (req, res) => {
 });
 
 // ── Unified transport endpoints ────────────────────────────────────────────
-// Served from the persistent `transport_stations` + `transport_lines` tables.
-// The fan-out runs in the background (scheduler.js) — these endpoints only
-// read the DB so they're cheap and never hang on a slow Overpass tile.
-function respondWithTransport(res, mode) {
-  try {
-    const fc = getTransportFeatureCollection(mode);
-    const stats = transportStats(mode);
-    fc._meta = {
-      ...fc._meta,
-      run_in_flight: isTransportRunInFlight(),
-      db_stations: stats.stations,
-      db_lines: stats.lines,
-      db_new_24h: stats.new24h,
-    };
-    res.json(fc);
-  } catch (err) {
-    console.error(`[data] /unified-${mode} failed:`, err?.message);
-    res.status(500).json({ error: `Failed to read transport DB (${mode})` });
-  }
-}
-
-router.get('/unified-trains',     (_req, res) => respondWithTransport(res, 'train'));
-router.get('/unified-subways',    (_req, res) => respondWithTransport(res, 'subway'));
-router.get('/unified-buses',      (_req, res) => respondWithTransport(res, 'bus'));
-router.get('/unified-ais-ships',  (_req, res) => respondWithTransport(res, 'ship'));
-router.get('/unified-port-infra', (_req, res) => respondWithTransport(res, 'port'));
+// These now flow through the standard respondWithData path — the registered
+// `unified-*` collectors read from the persistent transport_* SQLite tables
+// populated by the background transportRunner sweep. Caching + layer_work_*
+// telemetry come for free; the DB read itself is a millisecond-order lookup.
+router.get('/unified-trains', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'unified-trains', layerType: 'unified-trains', collectorKey: 'unified-trains' });
+});
+router.get('/unified-subways', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'unified-subways', layerType: 'unified-subways', collectorKey: 'unified-subways' });
+});
+router.get('/unified-buses', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'unified-buses', layerType: 'unified-buses', collectorKey: 'unified-buses' });
+});
+router.get('/unified-ais-ships', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'unified-ais-ships', layerType: 'unified-ais-ships', collectorKey: 'unified-ais-ships' });
+});
+router.get('/unified-port-infra', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'unified-port-infra', layerType: 'unified-port-infra', collectorKey: 'unified-port-infra' });
+});
 
 // GET /api/data/cameras/snapshot?url=<encoded> — on-demand JPEG screenshot
 // of an embed-blocked webcam page, cached for 24h.

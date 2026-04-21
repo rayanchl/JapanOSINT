@@ -55,11 +55,17 @@ import overpassSubwayTracks from './overpassSubwayTracks.js';
 import osmTransportStationBoundaries from './osmTransportStationBoundaries.js';
 
 // Transport (unified, deduplicated)
-import unifiedTrains from './unifiedTrains.js';
-import unifiedSubways from './unifiedSubways.js';
-import unifiedBuses from './unifiedBuses.js';
-import unifiedAisShips from './unifiedAisShips.js';
-import unifiedPortInfra from './unifiedPortInfra.js';
+// HTTP-path read-side collectors for unified transport (read the sweep DB,
+// return a conformant FC so respondWithData can cache + telemeter them).
+// The sweep-side ingest collectors (unifiedTrains.js etc.) are imported
+// directly by transportRunner.js, NOT through this index.
+import {
+  collectUnifiedTrainsRead,
+  collectUnifiedSubwaysRead,
+  collectUnifiedBusesRead,
+  collectUnifiedAisShipsRead,
+  collectUnifiedPortInfraRead,
+} from './transportRead.js';
 
 // Infrastructure
 import electricalGrid from './electricalGrid.js';
@@ -276,11 +282,14 @@ export const collectors = {
   'osm-transport-station-boundaries': osmTransportStationBoundaries,
 
   // Transport (unified, deduplicated)
-  'unified-trains': unifiedTrains,
-  'unified-subways': unifiedSubways,
-  'unified-buses': unifiedBuses,
-  'unified-ais-ships': unifiedAisShips,
-  'unified-port-infra': unifiedPortInfra,
+  // HTTP path reads from the sweep-populated DB for instant responses.
+  // The sweep-side ingest collectors (unifiedTrains, etc.) are invoked
+  // directly by transportRunner.js — they're not HTTP-path registered.
+  'unified-trains': collectUnifiedTrainsRead,
+  'unified-subways': collectUnifiedSubwaysRead,
+  'unified-buses': collectUnifiedBusesRead,
+  'unified-ais-ships': collectUnifiedAisShipsRead,
+  'unified-port-infra': collectUnifiedPortInfraRead,
 
   // Infrastructure
   'electrical-grid': electricalGrid,
