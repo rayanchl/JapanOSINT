@@ -168,15 +168,10 @@ function rowToStationFeature(row) {
 function rowToLineFeature(row) {
   const properties = safeJson(row.properties, {});
   const sources = safeJson(row.sources, []);
-  const rawCoords = safeJson(row.coordinates, []);
-  // Rail-type tracks (train / subway / tram / monorail — all emitted as
-  // mode 'train' or 'subway' by the track collectors) get 4 Chaikin passes
-  // for visibly rounded curves. Bus tracks keep raw coords: MLIT bus-route
-  // shapes are already digitised as smooth curves, so extra smoothing just
-  // blurs station-stop alignment. Ship / port modes have no tracks.
-  const coords = row.mode === 'bus'
-    ? rawCoords
-    : chaikinSmooth(rawCoords, 4);
+  const coords = safeJson(row.coordinates, []);
+  // Smoothing + stitching happens in getLinesByMode AFTER all rows are
+  // materialised — see stitchAndSmoothLines(). Per-row we only decode the
+  // raw coords exactly as stored.
   return {
     type: 'Feature',
     geometry: { type: 'LineString', coordinates: coords },
@@ -361,8 +356,149 @@ export function getStationsByMode(mode) {
   return stmtStationsByMode.all(mode).map(rowToStationFeature);
 }
 
+// Quantize a [lon, lat] to ~1 m precision so near-identical OSM endpoints
+// group into the same adjacency bucket despite trailing-digit noise.
+function endpointKey([x, y]) {
+  return `${x.toFixed(5)},${y.toFixed(5)}`;
+}
+
+// Reverse a coord array without mutating the caller.
+function reverseCoords(c) {
+  return c.slice().reverse();
+}
+
+/**
+ * Stitch connected LineString fragments into long polylines when the shared
+ * endpoint has exactly ONE other fragment hanging off it (a "through" point,
+ * not a real junction). Then Chaikin-smooth each merged polyline so curves
+ * round through the former junctions instead of kinking at them.
+ *
+ * The collectors emit one Feature per OSM way — typically 2–5 coords per
+ * fragment, with ~88k endpoints being through-points and only ~12k being
+ * real 3+-way junctions (measured on the live train dataset). Stitching
+ * those through-points drops fragment count by ~3× and lets smoothing
+ * actually work across each continuous railway.
+ *
+ * Rules:
+ *   - Only stitch when endpoint degree == 2 (exactly two incident fragments).
+ *   - Preserve `properties`: adopt the first fragment's, since fragments on
+ *     the same continuous railway share line colour/operator/ref in
+ *     practice. (Where they don't — e.g. a through-station where one
+ *     operator takes over — the endpoint would be tagged with a station,
+ *     often bumping degree to 3+ and protecting the join from stitching.)
+ *   - Features with MultiLineString geometry pass through untouched.
+ *   - Bus mode skips stitching + smoothing entirely (MLIT N07 shapes are
+ *     already digitised as long smooth polylines).
+ */
+function stitchAndSmoothLines(features, mode) {
+  if (mode === 'bus') return features;
+
+  const stitchable = [];
+  const passthrough = [];
+  for (const f of features) {
+    if (
+      f?.geometry?.type === 'LineString'
+      && Array.isArray(f.geometry.coordinates)
+      && f.geometry.coordinates.length >= 2
+    ) {
+      stitchable.push(f);
+    } else {
+      passthrough.push(f);
+    }
+  }
+  if (stitchable.length === 0) return passthrough;
+
+  // Build endpoint adjacency. Each fragment exposes two endpoint keys; the
+  // value is the fragment's index into `stitchable`.
+  const degree = new Map();  // key -> count
+  const headOf = new Array(stitchable.length);  // idx -> start key
+  const tailOf = new Array(stitchable.length);  // idx -> end key
+  for (let i = 0; i < stitchable.length; i++) {
+    const c = stitchable[i].geometry.coordinates;
+    const a = endpointKey(c[0]);
+    const b = endpointKey(c[c.length - 1]);
+    headOf[i] = a;
+    tailOf[i] = b;
+    degree.set(a, (degree.get(a) || 0) + 1);
+    degree.set(b, (degree.get(b) || 0) + 1);
+  }
+
+  // For each key, collect the list of fragment indices that touch it.
+  const incident = new Map();  // key -> idx[]
+  for (let i = 0; i < stitchable.length; i++) {
+    for (const k of [headOf[i], tailOf[i]]) {
+      let list = incident.get(k);
+      if (!list) { list = []; incident.set(k, list); }
+      list.push(i);
+    }
+  }
+
+  // Walk: starting from each unvisited fragment, extend forward from its
+  // tail and backward from its head along any endpoint of degree 2.
+  const visited = new Array(stitchable.length).fill(false);
+  const out = [];
+
+  function otherIncident(key, excludeIdx) {
+    const list = incident.get(key) || [];
+    for (const i of list) if (i !== excludeIdx) return i;
+    return -1;
+  }
+
+  for (let start = 0; start < stitchable.length; start++) {
+    if (visited[start]) continue;
+    visited[start] = true;
+
+    let coords = stitchable[start].geometry.coordinates.slice();
+    const baseProps = stitchable[start].properties || {};
+
+    // Extend forward (tail side).
+    let tailKey = tailOf[start];
+    let tailFromIdx = start;
+    while (degree.get(tailKey) === 2) {
+      const next = otherIncident(tailKey, tailFromIdx);
+      if (next === -1 || visited[next]) break;
+      visited[next] = true;
+      // Orient next fragment so its head aligns with our tail.
+      const nc = stitchable[next].geometry.coordinates;
+      const nextHead = headOf[next];
+      const appendCoords = (nextHead === tailKey) ? nc : reverseCoords(nc);
+      // Drop the duplicate shared endpoint.
+      for (let j = 1; j < appendCoords.length; j++) coords.push(appendCoords[j]);
+      tailKey = (nextHead === tailKey) ? tailOf[next] : headOf[next];
+      tailFromIdx = next;
+    }
+
+    // Extend backward (head side).
+    let headKey = headOf[start];
+    let headFromIdx = start;
+    while (degree.get(headKey) === 2) {
+      const prev = otherIncident(headKey, headFromIdx);
+      if (prev === -1 || visited[prev]) break;
+      visited[prev] = true;
+      const pc = stitchable[prev].geometry.coordinates;
+      const prevTail = tailOf[prev];
+      const prependCoords = (prevTail === headKey) ? pc : reverseCoords(pc);
+      // Drop the duplicate shared endpoint (which is prependCoords' last).
+      const without = prependCoords.slice(0, -1);
+      coords = without.concat(coords);
+      headKey = (prevTail === headKey) ? headOf[prev] : tailOf[prev];
+      headFromIdx = prev;
+    }
+
+    const smoothed = chaikinSmooth(coords, 4);
+    out.push({
+      type: 'Feature',
+      geometry: { type: 'LineString', coordinates: smoothed },
+      properties: baseProps,
+    });
+  }
+
+  return [...out, ...passthrough];
+}
+
 export function getLinesByMode(mode) {
-  return stmtLinesByMode.all(mode).map(rowToLineFeature);
+  const raw = stmtLinesByMode.all(mode).map(rowToLineFeature);
+  return stitchAndSmoothLines(raw, mode);
 }
 
 /**
