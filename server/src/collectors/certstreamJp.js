@@ -11,10 +11,10 @@
 
 import { getRecentJpCerts, startCertstream } from '../utils/certstreamBuffer.js';
 
-// Kick the subscriber off the first time any consumer loads this module.
-startCertstream();
-
 export default async function collectCertstreamJp() {
+  // Subscriber is lazy — started on first request so server boot doesn't
+  // open a WebSocket to a flaky public relay nobody is looking at.
+  startCertstream();
   const events = getRecentJpCerts({ limit: 500 });
 
   const features = events.map((ev, i) => ({

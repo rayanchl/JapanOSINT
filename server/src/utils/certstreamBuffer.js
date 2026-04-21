@@ -39,7 +39,6 @@ function connect() {
     });
 
     ws.on('open', () => {
-      retries = 0;
       console.log('[certstream] connected');
     });
 
@@ -47,6 +46,9 @@ function connect() {
       let msg;
       try { msg = JSON.parse(raw.toString()); } catch { return; }
       if (msg.message_type !== 'certificate_update') return;
+      // Reset backoff only once a real cert event lands — a bare socket
+      // open/close from the flaky upstream relay shouldn't count as healthy.
+      retries = 0;
       const leaf = msg.data?.leaf_cert;
       if (!leaf) return;
       const allDomains = Array.isArray(leaf.all_domains) ? leaf.all_domains : [];
