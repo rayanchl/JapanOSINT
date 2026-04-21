@@ -26,6 +26,7 @@ import {
   transportStats,
 } from './transportStore.js';
 import { snapStationsToNearestLine } from './transportSpatialSnap.js';
+import { withCollectorRun } from './collectorTap.js';
 
 // Transport runs are cold-start-heavy: _liveHelpers' in-memory Overpass
 // cache is lost on server restart, so the first run after boot does
@@ -78,16 +79,32 @@ async function settleFc(fn, label, timeoutMs) {
   return Array.isArray(fc?.features) ? fc.features : [];
 }
 
-async function runMode({ mode, source, stationCollector, lineCollectors = [] }) {
+async function runMode({
+  mode, source,
+  stationCollector, stationCollectorId,
+  lineCollectors = [], lineCollectorIds = [],
+}) {
+  // Each leaf collector gets its OWN withCollectorRun scope so the Follow
+  // panel attributes fetches to the specific source (unified-trains,
+  // overpass-rail-tracks, …) instead of all bleeding into the
+  // transportDiscovery umbrella. AsyncLocalStorage nests; the leaf `ctx`
+  // wins at fetch-tap emission time.
+  const stationThunk = stationCollectorId
+    ? () => withCollectorRun(stationCollectorId, stationCollector, { trigger: 'cron' })
+    : stationCollector;
   const stations = await settleFc(
-    stationCollector,
+    stationThunk,
     `${mode}:stations`,
     STATION_COLLECTOR_TIMEOUT_MS,
   );
   const lineFeatures = [];
   for (let i = 0; i < lineCollectors.length; i++) {
+    const leafId = lineCollectorIds[i];
+    const lineThunk = leafId
+      ? () => withCollectorRun(leafId, lineCollectors[i], { trigger: 'cron' })
+      : lineCollectors[i];
     const items = await settleFc(
-      lineCollectors[i],
+      lineThunk,
       `${mode}:lines[${i}]`,
       LINE_COLLECTOR_TIMEOUT_MS,
     );
@@ -130,11 +147,31 @@ export async function runTransportDiscovery(wsServer) {
   broadcast(wsServer, { type: 'transport_run_start', run_id });
 
   const modes = [
-    { mode: 'train',  source: 'unified_trains',     stationCollector: unifiedTrains,     lineCollectors: [overpassRailTracks] },
-    { mode: 'subway', source: 'unified_subways',    stationCollector: unifiedSubways,    lineCollectors: [overpassSubwayTracks] },
-    { mode: 'bus',    source: 'unified_buses',      stationCollector: unifiedBuses,      lineCollectors: [mlitN07BusRoutes] },
-    { mode: 'ship',   source: 'unified_ais_ships',  stationCollector: unifiedAisShips,   lineCollectors: [] },
-    { mode: 'port',   source: 'unified_port_infra', stationCollector: unifiedPortInfra,  lineCollectors: [] },
+    {
+      mode: 'train',  source: 'unified_trains',
+      stationCollector: unifiedTrains,     stationCollectorId: 'unified-trains',
+      lineCollectors: [overpassRailTracks], lineCollectorIds: ['overpass-rail-tracks'],
+    },
+    {
+      mode: 'subway', source: 'unified_subways',
+      stationCollector: unifiedSubways,       stationCollectorId: 'unified-subways',
+      lineCollectors: [overpassSubwayTracks], lineCollectorIds: ['overpass-subway-tracks'],
+    },
+    {
+      mode: 'bus',    source: 'unified_buses',
+      stationCollector: unifiedBuses,      stationCollectorId: 'unified-buses',
+      lineCollectors: [mlitN07BusRoutes], lineCollectorIds: ['mlit-n07-bus-routes'],
+    },
+    {
+      mode: 'ship',   source: 'unified_ais_ships',
+      stationCollector: unifiedAisShips,   stationCollectorId: 'unified-ais-ships',
+      lineCollectors: [],
+    },
+    {
+      mode: 'port',   source: 'unified_port_infra',
+      stationCollector: unifiedPortInfra,  stationCollectorId: 'unified-port-infra',
+      lineCollectors: [],
+    },
   ];
 
   const task = (async () => {
