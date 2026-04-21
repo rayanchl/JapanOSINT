@@ -169,10 +169,14 @@ function rowToLineFeature(row) {
   const properties = safeJson(row.properties, {});
   const sources = safeJson(row.sources, []);
   const rawCoords = safeJson(row.coordinates, []);
-  // Soften OSM fragment zig-zag so the rendered track and the live-
-  // vehicle simulator share the same curve. Endpoints are preserved
-  // so adjacent fragments still meet at shared junctions.
-  const coords = chaikinSmooth(rawCoords, 2);
+  // Rail-type tracks (train / subway / tram / monorail — all emitted as
+  // mode 'train' or 'subway' by the track collectors) get 4 Chaikin passes
+  // for visibly rounded curves. Bus tracks keep raw coords: MLIT bus-route
+  // shapes are already digitised as smooth curves, so extra smoothing just
+  // blurs station-stop alignment. Ship / port modes have no tracks.
+  const coords = row.mode === 'bus'
+    ? rawCoords
+    : chaikinSmooth(rawCoords, 4);
   return {
     type: 'Feature',
     geometry: { type: 'LineString', coordinates: coords },
