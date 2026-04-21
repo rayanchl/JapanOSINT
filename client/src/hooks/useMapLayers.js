@@ -1,6 +1,43 @@
 import { useState, useCallback, useRef, useMemo } from 'react';
 import useLayerLoading from './useLayerLoading.js';
 
+// sessionStorage survives page reloads within the same tab but clears on
+// tab close, so we can cache FCs across F5 without bloating long-term
+// storage. Keyed per-layer. Load lazily on mount; write through on every
+// cacheRef update (via a useEffect that mirrors cacheRef into storage).
+const SS_PREFIX = 'useMapLayers:cache:';
+const SS_MAX_BYTES_PER_LAYER = 5 * 1024 * 1024; // 5 MB cap; bigger layers skip storage
+
+function loadPersistedCache() {
+  const out = {};
+  if (typeof window === 'undefined' || !window.sessionStorage) return out;
+  try {
+    for (let i = 0; i < sessionStorage.length; i += 1) {
+      const key = sessionStorage.key(i);
+      if (!key || !key.startsWith(SS_PREFIX)) continue;
+      const layerId = key.slice(SS_PREFIX.length);
+      const raw = sessionStorage.getItem(key);
+      if (!raw) continue;
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object' && parsed.type === 'FeatureCollection') {
+          out[layerId] = parsed;
+        }
+      } catch { /* skip corrupt entries */ }
+    }
+  } catch { /* quota/privacy-mode errors: ignore */ }
+  return out;
+}
+
+function persistToSession(layerId, fc) {
+  if (typeof window === 'undefined' || !window.sessionStorage) return;
+  try {
+    const json = JSON.stringify(fc);
+    if (json.length > SS_MAX_BYTES_PER_LAYER) return;
+    sessionStorage.setItem(SS_PREFIX + layerId, json);
+  } catch { /* quota exceeded: silently drop this entry */ }
+}
+
 const LAYER_DEFINITIONS = {
   earthquakes: {
     name: 'Earthquakes',
@@ -1000,7 +1037,10 @@ export default function useMapLayers() {
 
   const [layerData, setLayerData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const cacheRef = useRef({});
+  // Seed cacheRef from sessionStorage so a hard reload restores cached
+  // FCs without round-tripping to the server. See persistToSession() for
+  // the write-through in doFetch().
+  const cacheRef = useRef(loadPersistedCache());
 
   // Server-driven loading flags keyed by endpoint-slug (e.g. 'fire-station-map')
   // — merged into per-layer `loading` via OR, so the spinner fires whenever
@@ -1053,6 +1093,7 @@ export default function useMapLayers() {
       };
 
       cacheRef.current[layerId] = geojson;
+      persistToSession(layerId, geojson);
       setLayerData((prev) => ({ ...prev, [layerId]: geojson }));
     } catch (err) {
       console.warn(`[useMapLayers] Failed to fetch ${layerId}:`, err.message);
@@ -1131,6 +1172,11 @@ export default function useMapLayers() {
 
   const refreshLayer = useCallback((layerId) => {
     delete cacheRef.current[layerId];
+    try {
+      if (typeof window !== 'undefined' && window.sessionStorage) {
+        sessionStorage.removeItem(SS_PREFIX + layerId);
+      }
+    } catch { /* ignore */ }
     fetchLayerData(layerId);
   }, [fetchLayerData]);
 
