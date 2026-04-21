@@ -906,15 +906,6 @@ function SatelliteImageryDetail({ properties }) {
 }
 
 function SatelliteTrackingDetail({ properties }) {
-  const [showTrack, setShowTrack] = useState(false);
-
-  useEffect(() => {
-    return () => {
-      window.dispatchEvent(new CustomEvent('satellite-track-toggle', {
-        detail: { show: false, noradId: properties.norad_id },
-      }));
-    };
-  }, []);
   const highlighted = [
     'name', 'norad_id', 'category', 'altitude_km', 'velocity_kms',
     'inclination_deg', 'next_pass_utc', 'tle_line1', 'tle_line2', 'source',
@@ -933,26 +924,6 @@ function SatelliteTrackingDetail({ properties }) {
         {properties.velocity_kms != null && <div>Velocity: {properties.velocity_kms} km/s</div>}
         {properties.inclination_deg != null && <div>Inclination: {properties.inclination_deg}°</div>}
       </div>
-      <button
-        type="button"
-        className="text-xs px-2 py-1 rounded bg-neon-cyan/20 text-neon-cyan hover:bg-neon-cyan/30 transition"
-        onClick={() => {
-          setShowTrack((v) => !v);
-          // Dispatch a custom event so MapView picks it up and draws / clears
-          // the ground-track layer. Keeping MapPopup decoupled from map state.
-          const evt = new CustomEvent('satellite-track-toggle', {
-            detail: {
-              noradId: properties.norad_id,
-              tleLine1: properties.tle_line1,
-              tleLine2: properties.tle_line2,
-              show: !showTrack,
-            },
-          });
-          window.dispatchEvent(evt);
-        }}
-      >
-        {showTrack ? 'Hide ground track' : 'Show ground track'}
-      </button>
       <PropertyTable properties={properties} exclude={highlighted} />
     </div>
   );
