@@ -947,6 +947,15 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/censys-japan',
     category: 'Cyber',
   },
+
+  // ── Intelligence ────────────────────────────────────────────────
+  gdeltEvents: {
+    name: 'GDELT Events',
+    icon: '\u{1F30D}',
+    color: '#ff8a65',
+    endpoint: '/api/data/gdelt',
+    category: 'Intelligence',
+  },
 };
 
 export const LAYER_CATEGORIES = [
@@ -973,6 +982,7 @@ export const LAYER_CATEGORIES = [
   'Cyber',
   'Infrastructure',
   'Mapping',
+  'Intelligence',
 ];
 
 export { LAYER_DEFINITIONS };

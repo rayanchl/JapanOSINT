@@ -136,6 +136,15 @@ router.get('/earthquake', async (_req, res) => {
   });
 });
 
+// GET /api/data/gdelt — on-demand fetch from GDELT 2.0 (Japan, 1d)
+router.get('/gdelt', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'gdelt-events',
+    layerType: 'gdelt',
+    collectorKey: 'gdelt-events',
+  });
+});
+
 // GET /api/data/weather
 router.get('/weather', async (_req, res) => {
   await respondWithData(res, {
