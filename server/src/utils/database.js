@@ -255,6 +255,35 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_gtfs_rt_alerts_reported
     ON gtfs_rt_alerts(reported_at);
 
+  -- Per-station ODPT timetable, ingested lazily on first station click.
+  -- One row per timetable entry (scheduled train at that station).
+  -- Ingest-once-per-station: rows are never overwritten, the fetched-marker
+  -- table below gates re-fetch.
+  CREATE TABLE IF NOT EXISTS odpt_station_timetable (
+    station_id      TEXT NOT NULL,
+    line_id         TEXT,
+    calendar        TEXT,
+    direction       TEXT,
+    seq             INTEGER NOT NULL,
+    departure_time  TEXT,
+    destination_ja  TEXT,
+    destination_en  TEXT,
+    train_type      TEXT,
+    train_name      TEXT,
+    is_last         INTEGER NOT NULL DEFAULT 0,
+    is_origin       INTEGER NOT NULL DEFAULT 0,
+    org_id          TEXT,
+    PRIMARY KEY (station_id, line_id, calendar, direction, seq)
+  );
+  CREATE INDEX IF NOT EXISTS idx_odpt_station_timetable_station
+    ON odpt_station_timetable(station_id);
+
+  CREATE TABLE IF NOT EXISTS odpt_station_timetable_fetched (
+    station_id   TEXT PRIMARY KEY,
+    fetched_at   TEXT NOT NULL,
+    entry_count  INTEGER NOT NULL DEFAULT 0
+  );
+
   -- Per-collector TTL table. One row per collector key; seeded at server
   -- boot from sourceRegistry.updateInterval (seconds → ms, floor 60s,
   -- ceiling 24h). Editable at runtime via sqlite or setTtlMs(). Existing

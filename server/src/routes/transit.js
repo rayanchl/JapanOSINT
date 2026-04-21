@@ -1,7 +1,7 @@
 import express from 'express';
 import db from '../utils/database.js';
 import { getLinesByMode } from '../utils/transportStore.js';
-import { getDeparturesAt, listHydratedOperators } from '../utils/gtfsStore.js';
+import { getDeparturesAt, listHydratedOperators, isOperatorHydrated } from '../utils/gtfsStore.js';
 import { hydrateOperator } from '../utils/gtfsHydrate.js';
 import { getActiveTripsAt } from '../utils/gtfsActiveTrips.js';
 
@@ -102,13 +102,14 @@ router.post('/gtfs/hydrate/:orgId', async (req, res) => {
   }
 });
 
-router.get('/gtfs/stop/:stopId/departures', (req, res) => {
+router.get('/gtfs/stop/:stopId/departures', async (req, res) => {
   const stopId = String(req.params.stopId || '');
   if (!stopId) return res.status(400).json({ error: 'missing stopId' });
   const limit = Math.min(20, Math.max(1, Number(req.query.limit) || 5));
   const t = req.query.t ? new Date(String(req.query.t)) : new Date();
   if (isNaN(t.getTime())) return res.status(400).json({ error: 'bad t (ISO date)' });
   try {
+    await lazyHydrateForStop(stopId);
     const departures = getDeparturesAt(stopId, t, limit);
     res.json({ stop_id: stopId, now: t.toISOString(), departures });
   } catch (err) {
@@ -153,10 +154,37 @@ function secondsSinceMidnight(d) {
   return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
 }
 
+// Stops produced by the gtfsJp collector are prefixed `GTFSJP_<orgId>_<raw>`.
+// When a popup click lands on such a stop, we can lazy-hydrate that single
+// operator instead of waiting for the weekly bulk cron.
+function orgIdFromStopId(stopId) {
+  if (typeof stopId !== 'string') return null;
+  const m = /^GTFSJP_([^_]+)_/.exec(stopId);
+  return m ? m[1] : null;
+}
+
+// Bound the popup wait: hydrate upstream feed can take 10s+ on cold cache, and
+// we don't want a station click to hang that long. If the hydrate outruns
+// this budget we fall through with empty departures — the client will see
+// populated data on the next click.
+const LAZY_HYDRATE_BUDGET_MS = 6000;
+
+async function lazyHydrateForStop(stopId) {
+  const orgId = orgIdFromStopId(stopId);
+  if (!orgId) return;
+  if (isOperatorHydrated(orgId)) return;
+  await Promise.race([
+    hydrateOperator(orgId).catch((err) => {
+      console.warn(`[transit/summary] lazy hydrate ${orgId} failed:`, err?.message);
+    }),
+    new Promise((resolve) => setTimeout(resolve, LAZY_HYDRATE_BUDGET_MS)),
+  ]);
+}
+
 // Structured summary for a single station: lines served + upcoming
 // departures + arrivals + service alerts. Powers the redesigned
 // StationPopup in the client.
-router.get('/station/:stationUid/summary', (req, res) => {
+router.get('/station/:stationUid/summary', async (req, res) => {
   const stationUid = String(req.params.stationUid || '');
   if (!stationUid) {
     return res.status(400).json({ error: 'missing stationUid' });
@@ -172,6 +200,11 @@ router.get('/station/:stationUid/summary', (req, res) => {
 
     let props = {};
     try { props = JSON.parse(station.properties); } catch { /* leave empty */ }
+
+    // Lazy hydrate this stop's operator on first click, so a user doesn't
+    // have to wait for the weekly bulk cron to fill gtfs_stop_times.
+    const stopIdForHydrate = props.stop_id || station.station_uid;
+    await lazyHydrateForStop(stopIdForHydrate);
 
     // Lines served: prefer the line_colors[] / line_names[] / line_refs[]
     // arrays populated by the spatial snap. Fall back to the single-line
