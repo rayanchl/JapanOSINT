@@ -6,6 +6,7 @@ import useLiveVehicles from '../../hooks/useLiveVehicles';
 import { getLayerIcon } from '../../utils/layerIcons';
 import { rasterizeIcon } from '../../utils/iconRaster';
 import { createRailwayLineTags } from '../../utils/railwayLineTags';
+import { useSatelliteTracks } from '../../hooks/useSatelliteTracks.js';
 
 // Per-layer handles for DOM-based add-ons (e.g. railway line tags) that
 // live outside MapLibre's layer system and must be torn down alongside
@@ -3871,6 +3872,10 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
   const liveSubwaysGeo = useLiveVehicles('subway', !!layers?.unifiedSubways?.visible, viewport);
   const liveBusesGeo = useLiveVehicles('bus', !!layers?.unifiedBuses?.visible, viewport);
 
+  const satelliteTrackFc = useSatelliteTracks(
+    layers?.satelliteTracking?.visible ? layerData?.satelliteTracking : null
+  );
+
   // Initialize map
   useEffect(() => {
     if (mapRef.current || !mapContainerRef.current) return;
@@ -4185,49 +4190,43 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
       layers?.unifiedBuses?.visible,
       viewport?.minLng, viewport?.minLat, viewport?.maxLng, viewport?.maxLat]);
 
-  // Temporary ground-track line layer for satellite tracking popups.
-  // Receives events from MapPopup's SatelliteTrackingDetail "Show ground track" button.
+  // Persistent per-satellite ground tracks. One 90-min forward orbit per
+  // tracked satellite, colour-matched to its marker via satelliteColor().
+  // Sits below the icon layer so markers stay on top.
   useEffect(() => {
-    if (!mapRef.current) return;
-    const TRACK_SOURCE = 'satellite-ground-track-source';
-    const TRACK_LAYER = 'satellite-ground-track-layer';
+    const map = mapRef.current;
+    if (!map || !mapReady) return undefined;
+    const SRC = 'satellite-tracks';
+    const LYR = 'satellite-tracks-line';
 
-    function removeTrack(map) {
-      if (map.getLayer(TRACK_LAYER)) map.removeLayer(TRACK_LAYER);
-      if (map.getSource(TRACK_SOURCE)) map.removeSource(TRACK_SOURCE);
+    function remove() {
+      if (!map.style) return;
+      if (map.getLayer(LYR)) map.removeLayer(LYR);
+      if (map.getSource(SRC)) map.removeSource(SRC);
     }
 
-    async function onToggle(e) {
-      const { show, tleLine1, tleLine2, noradId } = e.detail || {};
-      const map = mapRef.current;
-      if (!map) return;
-      removeTrack(map);
-      if (!show) return;
-      const { computeGroundTrack } = await import('../../utils/groundTrack.js');
-      const geom = computeGroundTrack(tleLine1, tleLine2, { minutes: 90, stepSec: 30 });
-      map.addSource(TRACK_SOURCE, {
-        type: 'geojson',
-        data: { type: 'Feature', geometry: geom, properties: { noradId } },
-      });
+    const empty = !satelliteTrackFc || !satelliteTrackFc.features?.length;
+    if (empty) { remove(); return undefined; }
+
+    if (!map.getSource(SRC)) {
+      map.addSource(SRC, { type: 'geojson', data: satelliteTrackFc });
       map.addLayer({
-        id: TRACK_LAYER,
+        id: LYR,
         type: 'line',
-        source: TRACK_SOURCE,
+        source: SRC,
         paint: {
-          'line-color': '#ba68c8',
-          'line-width': 2,
+          'line-color': ['get', 'color'],
+          'line-width': 3,
           'line-opacity': 0.85,
-          'line-dasharray': [4, 3],
         },
       });
+    } else {
+      const src = map.getSource(SRC);
+      if (src && src.type === 'geojson') src.setData(satelliteTrackFc);
     }
 
-    window.addEventListener('satellite-track-toggle', onToggle);
-    return () => {
-      window.removeEventListener('satellite-track-toggle', onToggle);
-      if (mapRef.current) removeTrack(mapRef.current);
-    };
-  }, []);
+    return undefined;
+  }, [mapReady, satelliteTrackFc]);
 
   // Satellite imagery "bake on map" — overlays the clicked source's tile or
   // static preview onto the MapLibre map. A new source replaces the prior one.
