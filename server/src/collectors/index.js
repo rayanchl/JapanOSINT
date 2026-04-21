@@ -66,6 +66,8 @@ import {
   collectUnifiedAisShipsRead,
   collectUnifiedPortInfraRead,
 } from './transportRead.js';
+// Read-side collector for /api/data/cameras (camera_store DB).
+import camerasCollector from './cameras.js';
 
 // Infrastructure
 import electricalGrid from './electricalGrid.js';
@@ -290,6 +292,9 @@ export const collectors = {
   'unified-buses': collectUnifiedBusesRead,
   'unified-ais-ships': collectUnifiedAisShipsRead,
   'unified-port-infra': collectUnifiedPortInfraRead,
+
+  // Cameras: read-side of the scheduled camera-discovery fan-out.
+  'cameras': camerasCollector,
 
   // Infrastructure
   'electrical-grid': electricalGrid,

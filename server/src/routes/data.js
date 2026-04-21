@@ -6,7 +6,6 @@ import { fileURLToPath } from 'node:url';
 import { getSourceById } from '../utils/database.js';
 import { collectors } from '../collectors/index.js';
 import { captureSnapshot } from '../utils/screenshot.js';
-import { getAllCameras, cameraStats } from '../utils/cameraStore.js';
 import { isRunInFlight, runCameraDiscovery } from '../utils/cameraRunner.js';
 import { withCollectorRun, annotateLastHit, getBroadcaster } from '../utils/collectorTap.js';
 import { getOAuthToken } from '../utils/openskyAuth.js';
@@ -270,25 +269,16 @@ router.get('/radiation', async (_req, res) => {
   });
 });
 
-// GET /api/data/cameras — served from the persistent `cameras` table.
-// The discovery fan-out runs in the background (scheduler.js); this endpoint
-// only reads the DB, so it's cheap and never hangs on a slow scraper.
-router.get('/cameras', (_req, res) => {
-  try {
-    const fc = getAllCameras();
-    const stats = cameraStats();
-    fc._meta = {
-      ...fc._meta,
-      run_in_flight: isRunInFlight(),
-      db_total: stats.total,
-      db_new_24h: stats.new24h,
-      by_type: stats.byType,
-    };
-    res.json(fc);
-  } catch (err) {
-    console.error('[data] /cameras failed:', err?.message);
-    res.status(500).json({ error: 'Failed to read cameras DB' });
-  }
+// GET /api/data/cameras — flows through the standard respondWithData path so
+// it gets the shared TTL cache + layer_work_* telemetry. The registered
+// `cameras` collector reads cameraStore's DB (populated by the hourly
+// camera-discovery sweep) and returns a conformant FC.
+router.get('/cameras', async (_req, res) => {
+  await respondWithData(res, {
+    sourceId: 'cameras',
+    layerType: 'cameras',
+    collectorKey: 'cameras',
+  });
 });
 
 // POST /api/data/cameras/trigger — kick a camera-discovery run on demand
