@@ -94,7 +94,14 @@ async function captureAndCache(url, file) {
 
 /**
  * Normalise whatever the collector returned into the canonical FC envelope.
- * Tolerates drift in _meta field names (record_count/live_source/timestamp).
+ * The canonical shape is { source, fetchedAt, recordCount, live,
+ * description } + any optional additive fields a collector chose to emit
+ * (live_source, by_type, db_total, etc). Additive fields pass through so
+ * downstream consumers keep them.
+ *
+ * We tolerate rare camel/snake drift (record_count, timestamp) as a fallback
+ * when a future collector slips up, but every collector in the tree today
+ * already emits the canonical keys — this is belt-and-braces, not a feature.
  */
 function normaliseFc(data, collectorKey) {
   const features = Array.isArray(data?.features) ? data.features
@@ -104,7 +111,8 @@ function normaliseFc(data, collectorKey) {
     type: 'FeatureCollection',
     features,
     _meta: {
-      source: m.source ?? m.live_source ?? collectorKey,
+      ...m,
+      source: m.source ?? collectorKey,
       fetchedAt: m.fetchedAt ?? m.timestamp ?? new Date().toISOString(),
       recordCount: features.length,
       live: (m.live != null) ? !!m.live : (features.length > 0),
