@@ -40,11 +40,12 @@ async function fetchJson(url, { timeoutMs = 6000, headers = {} } = {}) {
       headers: { 'User-Agent': USER_AGENT, Accept: 'application/json', ...headers },
       signal: ctrl.signal,
     });
-    clearTimeout(timer);
     if (!res.ok) return null;
     return await res.json();
   } catch {
     return null;
+  } finally {
+    clearTimeout(timer);
   }
 }
 

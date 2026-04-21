@@ -5,11 +5,10 @@ import { getCredentialStatus } from '../utils/apiCredentials.js';
 
 const router = Router();
 
-function buildRegistryIndex() {
-  const idx = new Map();
-  for (const src of sourceRegistry) idx.set(src.id, src);
-  return idx;
-}
+// Built once at module load — sourceRegistry is static, so no reason to rebuild
+// this Map on every /api/status request.
+const registryIdx = new Map();
+for (const src of sourceRegistry) registryIdx.set(src.id, src);
 
 function serializeRow(row, reg, creds) {
   return {
@@ -47,7 +46,6 @@ function serializeRow(row, reg, creds) {
 router.get('/', (_req, res) => {
   try {
     const dbSources = getAllSources();
-    const registryIdx = buildRegistryIndex();
 
     const apis = dbSources.map((row) => {
       const reg = registryIdx.get(row.id) || {};
@@ -85,7 +83,6 @@ router.get('/:id', (req, res) => {
   try {
     const row = getSourceById(req.params.id);
     if (!row) return res.status(404).json({ error: 'Source not found' });
-    const registryIdx = buildRegistryIndex();
     const reg = registryIdx.get(row.id) || {};
     const creds = getCredentialStatus(row.id);
     res.json(serializeRow(row, reg, creds));

@@ -77,13 +77,12 @@ wss.on('connection', (ws) => {
 setBroadcaster(wss);
 startScheduler(wss);
 
-// Nationwide GTFS hydrate — kicks off 15s after boot so the HTTP server and
-// scheduler get a chance to warm up first. Before the hydrate can run we
-// must refresh the Shimada catalogue (gtfs_feeds) so listUpstreamOperatorIds
-// has anything to return. Persists per-operator state in
-// gtfs_operators.hydrated_at so a restart resumes from the next stale entry.
-// The weekly cron re-refreshes the catalogue and re-hydrates anything past
-// the 7-day freshness window.
+// Nationwide GTFS hydrate — runs on the weekly cron below. Before the hydrate
+// can run we must refresh the Shimada catalogue (gtfs_feeds) so
+// listUpstreamOperatorIds has anything to return. Persists per-operator state
+// in gtfs_operators.hydrated_at so a restart resumes from the next stale
+// entry. The weekly cron re-refreshes the catalogue and re-hydrates anything
+// past the 7-day freshness window.
 async function refreshAndHydrate() {
   try {
     const r = await refreshOdptTrainInformationAlerts();
@@ -115,7 +114,6 @@ async function refreshAndHydrate() {
   }
 }
 
-setTimeout(() => { refreshAndHydrate(); }, 15_000);
 cron.schedule(
   '0 3 * * 0',
   () => { refreshAndHydrate(); },
