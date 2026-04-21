@@ -7,14 +7,13 @@
  * One run can take minutes (Overpass tiled, Chromium scrapers). The caller
  * passes the WebSocketServer so broadcasts reach every connected client.
  *
- * A 10-minute hard ceiling prevents a pathologically stuck channel from
- * blocking the next scheduled run.
+ * No run-ceiling: Promise.race can't actually cancel the underlying work,
+ * and _inflightRun already prevents run stacking, so the timeout was just
+ * hiding completed work from its own summary log.
  */
 
 import collectCameraDiscovery from '../collectors/cameraDiscovery.js';
 import { upsertCamera, cameraStats } from './cameraStore.js';
-
-const RUN_CEILING_MS = 10 * 60 * 1000;
 
 let _inflightRun = null;
 let _lastRunAt = null; // ISO timestamp of the most recent completed run
@@ -45,50 +44,37 @@ export async function runCameraDiscovery(wsServer) {
   console.log(`[cameraRunner] starting run ${run_id}`);
   broadcast(wsServer, { type: 'camera_run_start', run_id });
 
-  const task = (async () => {
-    const ceiling = new Promise((_, rej) =>
-      setTimeout(() => rej(new Error(`run ceiling ${RUN_CEILING_MS}ms exceeded`)), RUN_CEILING_MS),
-    );
-
-    const work = collectCameraDiscovery({
-      onCamera: (feature, channel) => {
-        runCounts[channel] = (runCounts[channel] || 0) + 1;
-        let result = null;
-        try {
-          result = upsertCamera(feature, channel);
-        } catch (err) {
-          console.error('[cameraRunner] upsert failed:', err?.message);
-          return;
-        }
-        if (!result) return;
-        if (result.kind === 'new') newCount++; else updatedCount++;
-        broadcast(wsServer, {
-          type: 'camera_discovered',
-          kind: result.kind,
-          channel,
-          camera: result.camera,
-          run_id,
-          run_counts: runCounts,
-        });
-      },
-      onChannelDone: (name, summary) => {
-        broadcast(wsServer, {
-          type: 'camera_channel_done',
-          channel: name,
-          ok: summary.ok,
-          count: summary.count,
-          run_id,
-        });
-      },
-    });
-
-    try {
-      return await Promise.race([work, ceiling]);
-    } catch (err) {
-      console.error('[cameraRunner] aborted:', err?.message);
-      return null;
-    }
-  })();
+  const task = collectCameraDiscovery({
+    onCamera: (feature, channel) => {
+      runCounts[channel] = (runCounts[channel] || 0) + 1;
+      let result = null;
+      try {
+        result = upsertCamera(feature, channel);
+      } catch (err) {
+        console.error('[cameraRunner] upsert failed:', err?.message);
+        return;
+      }
+      if (!result) return;
+      if (result.kind === 'new') newCount++; else updatedCount++;
+      broadcast(wsServer, {
+        type: 'camera_discovered',
+        kind: result.kind,
+        channel,
+        camera: result.camera,
+        run_id,
+        run_counts: runCounts,
+      });
+    },
+    onChannelDone: (name, summary) => {
+      broadcast(wsServer, {
+        type: 'camera_channel_done',
+        channel: name,
+        ok: summary.ok,
+        count: summary.count,
+        run_id,
+      });
+    },
+  });
 
   _inflightRun = task;
 
