@@ -500,6 +500,77 @@ async function trySentinel2() {
   return null;
 }
 
+// ── 9. Sentinel-1 GRD (multi-source, first-wins internal fallback) ───────
+// Chain order: CDSE OData → Planetary Computer STAC → Earth Search.
+// Grayscale VV polarization only.
+const S1_SCENE_LIMIT = 40;
+const S1_WINDOW_DAYS = 14;
+
+function s1IsoWindow(days = S1_WINDOW_DAYS) {
+  const to = new Date();
+  const from = new Date(Date.now() - days * 86400e3);
+  return { from: from.toISOString(), to: to.toISOString() };
+}
+
+function s1PlatformFromName(name) {
+  const up = String(name || '').toUpperCase();
+  if (up.startsWith('S1A')) return 'sentinel-1a';
+  if (up.startsWith('S1B')) return 'sentinel-1b';
+  if (up.startsWith('S1C')) return 'sentinel-1c';
+  return 'sentinel-1';
+}
+
+async function s1TryCdseOData() {
+  const { from, to } = s1IsoWindow();
+  const [w, s, e, n] = JAPAN_BBOX;
+  const polygon = `POLYGON((${w} ${s},${e} ${s},${e} ${n},${w} ${n},${w} ${s}))`;
+  const filter = [
+    `Collection/Name eq 'SENTINEL-1'`,
+    `OData.CSC.Intersects(area=geography'SRID=4326;${polygon}')`,
+    `ContentDate/Start ge ${from}`,
+    `ContentDate/Start le ${to}`,
+    `contains(Name,'GRD')`,
+  ].join(' and ');
+  const url = `https://catalogue.dataspace.copernicus.eu/odata/v1/Products?$filter=${encodeURIComponent(filter)}&$top=${S1_SCENE_LIMIT}&$orderby=ContentDate/Start desc`;
+  const data = await fetchJson(url, { headers: { Accept: 'application/json' } });
+  const items = data?.value || [];
+  if (!items.length) return null;
+  return items.map((it, i) => {
+    const geom = it.GeoFootprint || null;
+    const [cx, cy] = s2CentroidFromGeom(geom);
+    return {
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [cx, cy] },
+      properties: {
+        id: `IMG_S1_${it.Id || i}`,
+        platform: s1PlatformFromName(it.Name),
+        sensor: 'c-sar',
+        product_type: 'GRD',
+        polarization: 'VV',
+        scene_id: it.Name,
+        datetime: it.ContentDate?.Start,
+        preview_url: `https://catalogue.dataspace.copernicus.eu/odata/v1/Products(${it.Id})/$value`,
+        tile_url: null,
+        bbox_geom: geom,
+        archive_era: 'real-time',
+        source: 'cdse_odata',
+        country: 'JP',
+      },
+    };
+  });
+}
+
+export async function trySentinel1() {
+  const chain = [s1TryCdseOData];
+  for (const fn of chain) {
+    try {
+      const r = await fn();
+      if (r && r.length) return r;
+    } catch { /* try next */ }
+  }
+  return null;
+}
+
 // ── Seed fallback ─────────────────────────────────────────────────────────
 function generateSeed() {
   return IMAGERY_SEED_CENTROIDS.map((t, i) => ({
