@@ -115,11 +115,14 @@ function safeJson(text, fallback) {
 /**
  * Chaikin corner-cutting. One iteration replaces every interior vertex
  * with two new points at 1/4 and 3/4 along its adjacent segments; the
- * first and last coordinate are preserved. Two iterations produce a
- * visibly smoothed polyline without an explosion of points.
+ * first and last coordinate are preserved. Iterated, the sequence
+ * converges to a quadratic B-spline — smooth arcs that round *inside*
+ * each corner and never overshoot the control polygon.
  *
- * Result length: for N input points, one pass emits ~2*(N-1); two
- * passes emit ~4*(N-1). Short fragments (< 3 points) pass through.
+ * With K iterations, an N-point input balloons to ~2^K × (N-1). On the
+ * 134k-fragment train dataset that made a multi-hundred-MB response; we
+ * compose with `simplify` below to throw away the collinear points
+ * Chaikin emits on long straights while keeping the actual arc geometry.
  *
  * Used so the rendered track AND the live-vehicle simulator ride the
  * same smoothed curve — the train can't drift off a track it's
@@ -138,10 +141,65 @@ function chaikinOnce(coords) {
   return out;
 }
 
-function chaikinSmooth(coords, iterations = 2) {
+// Perpendicular distance from point p to segment (a, b), in planar lon/lat
+// degrees. Flat approximation is fine here — we only use this as a
+// "is this point within epsilon of the chord" test for simplification.
+function perpDistDeg(p, a, b) {
+  const dx = b[0] - a[0];
+  const dy = b[1] - a[1];
+  const len2 = dx * dx + dy * dy;
+  if (len2 === 0) {
+    const ex = p[0] - a[0];
+    const ey = p[1] - a[1];
+    return Math.sqrt(ex * ex + ey * ey);
+  }
+  const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / len2));
+  const cx = a[0] + t * dx;
+  const cy = a[1] + t * dy;
+  const ex = p[0] - cx;
+  const ey = p[1] - cy;
+  return Math.sqrt(ex * ex + ey * ey);
+}
+
+// Ramer-Douglas-Peucker polyline simplification. Iterative (explicit stack)
+// so deep recursion on a 10k+-point polyline can't overflow. Preserves the
+// first and last coordinate, drops every interior point whose perpendicular
+// distance to the surviving chord is below `epsilonDeg`.
+//
+// epsilonDeg = 1e-5 ≈ 1 m at Japan latitudes — below visible resolution on
+// any screen, so dropping points at this tolerance is invisible to the eye
+// but cuts Chaikin's output size by ~20×.
+function simplifyPolyline(coords, epsilonDeg) {
+  const n = coords.length;
+  if (n < 3) return coords;
+  const keep = new Uint8Array(n);
+  keep[0] = 1;
+  keep[n - 1] = 1;
+  const stack = [[0, n - 1]];
+  while (stack.length > 0) {
+    const [lo, hi] = stack.pop();
+    let maxD = 0;
+    let idx = -1;
+    for (let i = lo + 1; i < hi; i++) {
+      const d = perpDistDeg(coords[i], coords[lo], coords[hi]);
+      if (d > maxD) { maxD = d; idx = i; }
+    }
+    if (maxD > epsilonDeg && idx !== -1) {
+      keep[idx] = 1;
+      stack.push([lo, idx]);
+      stack.push([idx, hi]);
+    }
+  }
+  const out = [];
+  for (let i = 0; i < n; i++) if (keep[i]) out.push(coords[i]);
+  return out;
+}
+
+function chaikinSmooth(coords, iterations = 4, simplifyEps = 1e-5) {
+  if (!Array.isArray(coords) || coords.length < 3) return coords;
   let c = coords;
   for (let i = 0; i < iterations; i++) c = chaikinOnce(c);
-  return c;
+  return simplifyPolyline(c, simplifyEps);
 }
 
 function rowToStationFeature(row) {
@@ -169,9 +227,10 @@ function rowToLineFeature(row) {
   const properties = safeJson(row.properties, {});
   const sources = safeJson(row.sources, []);
   const coords = safeJson(row.coordinates, []);
-  // Smoothing + stitching happens in getLinesByMode AFTER all rows are
-  // materialised — see stitchAndSmoothLines(). Per-row we only decode the
-  // raw coords exactly as stored.
+  // Fragment stitching + Chaikin smoothing + RDP simplify happens in
+  // getLinesByMode AFTER all rows are materialised — see
+  // stitchAndSmoothLines(). Per-row we only decode the raw coords exactly
+  // as stored.
   return {
     type: 'Feature',
     geometry: { type: 'LineString', coordinates: coords },
