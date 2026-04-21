@@ -1,4 +1,5 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useMemo } from 'react';
+import useLayerLoading from './useLayerLoading.js';
 
 const LAYER_DEFINITIONS = {
   earthquakes: {
@@ -973,6 +974,21 @@ export const LAYER_CATEGORIES = [
 
 export { LAYER_DEFINITIONS };
 
+// Build a reverse index endpointSlug → layerKey so the server's
+// layer_work_* events (keyed on the kebab endpoint path) can be routed back
+// to the client's camelCase layer id used by the LayerPanel spinner.
+const ENDPOINT_TO_LAYER_ID = (() => {
+  const map = {};
+  for (const [key, def] of Object.entries(LAYER_DEFINITIONS)) {
+    if (!def?.endpoint) continue;
+    // Last path segment of the endpoint, which is what the server uses
+    // as layerType in respondWithData calls.
+    const seg = String(def.endpoint).split('/').filter(Boolean).pop();
+    if (seg && !map[seg]) map[seg] = key;
+  }
+  return map;
+})();
+
 export default function useMapLayers() {
   const [layers, setLayers] = useState(() => {
     const initial = {};
@@ -985,6 +1001,20 @@ export default function useMapLayers() {
   const [layerData, setLayerData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const cacheRef = useRef({});
+
+  // Server-driven loading flags keyed by endpoint-slug (e.g. 'fire-station-map')
+  // — merged into per-layer `loading` via OR, so the spinner fires whenever
+  // EITHER the client fetch is in flight OR the server is doing collector
+  // work on our behalf.
+  const serverLoadingByEndpoint = useLayerLoading();
+  const serverLoadingByLayerId = useMemo(() => {
+    const out = {};
+    for (const [endpointSlug, busy] of Object.entries(serverLoadingByEndpoint)) {
+      const layerId = ENDPOINT_TO_LAYER_ID[endpointSlug];
+      if (layerId) out[layerId] = busy;
+    }
+    return out;
+  }, [serverLoadingByEndpoint]);
 
   const fetchLayerData = useCallback(async (layerId) => {
     const def = LAYER_DEFINITIONS[layerId];
@@ -1071,8 +1101,23 @@ export default function useMapLayers() {
 
   const activeCount = Object.values(layers).filter((l) => l.visible).length;
 
+  // Merge server-driven loading into each layer's `loading` flag via OR so
+  // the LayerPanel spinner fires on either client-fetch-in-flight or
+  // server-collector-in-progress (the latter matters when the cache misses
+  // and the server does real work on our behalf).
+  const mergedLayers = useMemo(() => {
+    const out = {};
+    for (const [id, state] of Object.entries(layers)) {
+      const serverBusy = !!serverLoadingByLayerId[id];
+      out[id] = serverBusy && !state.loading
+        ? { ...state, loading: true }
+        : state;
+    }
+    return out;
+  }, [layers, serverLoadingByLayerId]);
+
   return {
-    layers,
+    layers: mergedLayers,
     layerDefinitions: LAYER_DEFINITIONS,
     toggleLayer,
     setLayerOpacity,
