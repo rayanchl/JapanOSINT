@@ -207,7 +207,6 @@ import censysJapan from './censysJapan.js';
 import nicterStats from './nicterStats.js';
 import misskeyTimeline from './misskeyTimeline.js';
 import birdMakeupJp from './birdMakeupJp.js';
-import nexcoCameras from './nexcoCameras.js';
 import suumoRentalDensity from './suumoRentalDensity.js';
 import noteComTrending from './noteComTrending.js';
 import mercariTrending from './mercariTrending.js';
@@ -436,7 +435,6 @@ export const collectors = {
   'nicter-stats': nicterStats,
   'misskey-timeline': misskeyTimeline,
   'bird-makeup-jp': birdMakeupJp,
-  'nexco-cameras': nexcoCameras,
   'suumo-rental-density': suumoRentalDensity,
   'note-com-trending': noteComTrending,
   'mercari-trending': mercariTrending,

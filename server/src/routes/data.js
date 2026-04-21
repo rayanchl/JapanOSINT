@@ -1211,9 +1211,6 @@ router.get('/misskey-timeline', async (_req, res) => {
 router.get('/bird-makeup-jp', async (_req, res) => {
   await respondWithData(res, { sourceId: 'bird-makeup-jp', layerType: 'bird-makeup-jp', collectorKey: 'bird-makeup-jp' });
 });
-router.get('/nexco-cameras', async (_req, res) => {
-  await respondWithData(res, { sourceId: 'nexco-cameras', layerType: 'nexco-cameras', collectorKey: 'nexco-cameras' });
-});
 router.get('/suumo-rental-density', async (_req, res) => {
   await respondWithData(res, { sourceId: 'suumo-rental-density', layerType: 'suumo-rental-density', collectorKey: 'suumo-rental-density' });
 });

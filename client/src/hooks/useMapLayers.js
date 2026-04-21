@@ -896,13 +896,6 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/japan-post-offices',
     category: 'Infrastructure',
   },
-  odptTrainDelay: {
-    name: 'Train Delays (ODPT)',
-    icon: '\u{26A0}',
-    color: '#ffb300',
-    endpoint: '/api/data/odpt-train-delay',
-    category: 'Transport',
-  },
   certstreamJp: {
     name: '.jp CT Monitor',
     icon: '\u{1F512}',
@@ -918,13 +911,6 @@ const LAYER_DEFINITIONS = {
     color: '#66bb6a',
     endpoint: '/api/data/wdcgg-co2',
     category: 'Environment',
-  },
-  nexcoCameras: {
-    name: 'Expressway Cameras',
-    icon: '\u{1F4F7}',
-    color: '#ff7043',
-    endpoint: '/api/data/nexco-cameras',
-    category: 'Transport',
   },
   suumoRentalDensity: {
     name: 'Rental Density',
