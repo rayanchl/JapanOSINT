@@ -3843,6 +3843,35 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
   }
 }
 
+// Enumerate every MapLibre layer ID on the map that belongs to an
+// interactive feature collection — the hit targets for hover/click.
+//
+// Covers:
+//   layer-<id>                              main layer
+//   layer-<id>-(heat|extrude|line|fallback) variants from the renderer switch
+//   layer-<id>-ring[1-4]                    unified-transport station rings
+//   layer-flightAdsb(-mil)?-b<num>          aircraft altitude-bucket sprites
+//   live-vehicles-(train|subway|bus)-layer  live-vehicle sprites (added by
+//                                           the vehicles effect, outside
+//                                           addLayerToMap)
+//
+// We walk map.getStyle().layers once and match by ID. That's cheaper than
+// the old Object.keys(LAYER_DEFINITIONS) × suffix cross-product and — more
+// importantly — catches the aircraft bucket layers whose suffixes weren't
+// in the original hardcoded list, leaving every plane un-clickable.
+function collectInteractiveLayerIds(map) {
+  const out = [];
+  const style = map.getStyle?.();
+  const all = style?.layers || [];
+  for (const l of all) {
+    const id = l.id;
+    if (!id) continue;
+    if (id.startsWith('layer-')) out.push(id);
+    else if (id.startsWith('live-vehicles-') && id.endsWith('-layer')) out.push(id);
+  }
+  return out;
+}
+
 function removeLayerFromMap(map, layerId) {
   const mainLayerId = `layer-${layerId}`;
   const sourceId = `source-${layerId}`;
@@ -3960,13 +3989,7 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
       setCursorCoords({ lat: e.lngLat.lat.toFixed(5), lng: e.lngLat.lng.toFixed(5) });
 
       // Change cursor on hover over interactive features
-      const interactiveLayers = [];
-      for (const layerId of Object.keys(LAYER_DEFINITIONS)) {
-        for (const suffix of ['', '-heat', '-extrude', '-line', '-fallback', '-ring1', '-ring2', '-ring3', '-ring4']) {
-          const id = `layer-${layerId}${suffix}`;
-          if (map.getLayer(id)) interactiveLayers.push(id);
-        }
-      }
+      const interactiveLayers = collectInteractiveLayerIds(map);
       const features = interactiveLayers.length > 0
         ? map.queryRenderedFeatures(e.point, { layers: interactiveLayers })
         : [];
@@ -3982,20 +4005,7 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
     });
 
     map.on('click', (e) => {
-      // Check all interactive layers (including variants)
-      const interactiveLayers = [];
-      for (const layerId of Object.keys(LAYER_DEFINITIONS)) {
-        for (const suffix of ['', '-heat', '-extrude', '-line', '-fallback', '-ring1', '-ring2', '-ring3', '-ring4']) {
-          const id = `layer-${layerId}${suffix}`;
-          if (map.getLayer(id)) interactiveLayers.push(id);
-        }
-      }
-      // Live-vehicle layers are managed outside addLayerToMap — include them
-      // explicitly so click surfaces VehiclePopup.
-      for (const id of ['live-vehicles-train-layer', 'live-vehicles-subway-layer', 'live-vehicles-bus-layer']) {
-        if (map.getLayer(id)) interactiveLayers.push(id);
-      }
-
+      const interactiveLayers = collectInteractiveLayerIds(map);
       if (interactiveLayers.length === 0) return;
 
       const features = map.queryRenderedFeatures(e.point, { layers: interactiveLayers });
@@ -4005,7 +4015,13 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
         if (feature.layer.id.startsWith('live-vehicles-')) {
           layerType = 'liveVehicle';
         } else {
-          layerType = feature.layer.id.replace('layer-', '').replace(/-(heat|extrude|line|fallback|ring[1-4])$/, '');
+          // Strip known suffixes: -heat/-extrude/-line/-fallback/-ringN,
+          // aircraft bucket suffixes (-b<num>|-mil-b<num>), and the
+          // generic -dropline ground-cross layer.
+          layerType = feature.layer.id
+            .replace('layer-', '')
+            .replace(/-(heat|extrude|line|fallback|dropline|ring[1-4])$/, '')
+            .replace(/(-mil)?-b-?\d+$/, '');
         }
         if (onFeatureClick) {
           const coords = feature.geometry?.coordinates;
