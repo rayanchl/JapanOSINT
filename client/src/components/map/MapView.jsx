@@ -147,6 +147,41 @@ function darkenHex(hex, factor = 0.8) {
   return `#${to2(r)}${to2(g)}${to2(b)}`;
 }
 
+// Fallback bake footprint for full-disk/mosaic products without a per-scene
+// polygon (Himawari, MODIS, VIIRS, GOES, ALOS). MapLibre wants
+// [top-left, top-right, bottom-right, bottom-left] in lon/lat.
+const JAPAN_BAKE_CORNERS = [[122, 46], [154, 46], [154, 24], [122, 24]];
+
+const slugifyBakeId = (s) => String(s).replace(/[^A-Za-z0-9_-]+/g, '_').slice(0, 120);
+const bakeSourceIdFor = (sceneId) => `satellite-bake-source-${slugifyBakeId(sceneId)}`;
+const bakeLayerIdFor = (sceneId) => `satellite-bake-layer-${slugifyBakeId(sceneId)}`;
+
+function imageCoordsFromGeom(geom) {
+  // MapLibre's queryRenderedFeatures() JSON-stringifies non-primitive
+  // feature properties, so bbox_geom arrives at the popup as a string.
+  let g = geom;
+  if (typeof g === 'string') {
+    try { g = JSON.parse(g); } catch { g = null; }
+  }
+  const ring = g?.type === 'Polygon'
+    ? g.coordinates?.[0]
+    : g?.type === 'MultiPolygon'
+      ? g.coordinates?.[0]?.[0]
+      : null;
+  if (!ring?.length) return JAPAN_BAKE_CORNERS;
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const pt of ring) {
+    const x = pt?.[0], y = pt?.[1];
+    if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+    if (x < minX) minX = x;
+    if (x > maxX) maxX = x;
+    if (y < minY) minY = y;
+    if (y > maxY) maxY = y;
+  }
+  if (!Number.isFinite(minX) || !Number.isFinite(maxX)) return JAPAN_BAKE_CORNERS;
+  return [[minX, maxY], [maxX, maxY], [maxX, minY], [minX, minY]];
+}
+
 // Layers whose features carry a heading/track and should have the icon
 // rotated to match direction of travel.
 const ROTATING_LAYERS = new Set(['flightAdsb', 'maritimeAis', 'marineTraffic', 'vesselFinder']);
@@ -3918,6 +3953,8 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
   const [currentStyle, setCurrentStyle] = useState('openfreemap_positron');
   const [viewport, setViewport] = useState(null);
   const prevLayersRef = useRef({});
+  const bakedSceneIdsRef = useRef(new Set());
+  const satelliteImageryVisibleRef = useRef(false);
 
   // Live vehicles ride along with the standard transport layer — no separate
   // toggle. When the user enables "Trains", moving dots spawn on train routes
@@ -4288,69 +4325,97 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
     return undefined;
   }, [mapReady, satelliteTrackFc]);
 
-  // Satellite imagery "bake on map" — overlays the clicked source's tile or
-  // static preview onto the MapLibre map. A new source replaces the prior one.
+  // Satellite imagery "bake on map" — overlays one or more clicked scenes as
+  // persistent raster layers. Each scene gets its own source/layer keyed by a
+  // slug of its sceneId, so multiple bakes coexist.
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    const SOURCE_ID = 'satellite-bake-source';
-    const LAYER_ID = 'satellite-bake-layer';
-    let currentSceneId = null;
+    const bakedIds = bakedSceneIdsRef.current;
 
-    function removeCurrent() {
-      // MapLibre's getLayer/getSource dereference this.style, which is undefined
-      // after a WebGL-context-loss teardown. Bail out early when the style is
-      // gone so we don't crash the React tree.
-      if (!map.style) { currentSceneId = null; return; }
-      if (map.getLayer(LAYER_ID)) map.removeLayer(LAYER_ID);
-      if (map.getSource(SOURCE_ID)) map.removeSource(SOURCE_ID);
-      currentSceneId = null;
+    function removeOne(sceneId) {
+      if (!map.style) { bakedIds.delete(sceneId); return; }
+      const lyr = bakeLayerIdFor(sceneId);
+      const src = bakeSourceIdFor(sceneId);
+      if (map.getLayer(lyr)) map.removeLayer(lyr);
+      if (map.getSource(src)) map.removeSource(src);
+      bakedIds.delete(sceneId);
+    }
+
+    function removeAll() {
+      for (const id of Array.from(bakedIds)) removeOne(id);
     }
 
     function onBake(e) {
-      const { show, sceneId, tileUrl, previewUrl, opacity } = e.detail || {};
-      if (!map) return;
+      const { show, sceneId, tileUrl, previewUrl, bboxGeom, opacity } = e.detail || {};
+      if (!map || !sceneId) return;
+      const lyr = bakeLayerIdFor(sceneId);
+      const src = bakeSourceIdFor(sceneId);
 
-      // Opacity-only update path: same scene still showing → adjust opacity only.
-      if (show && currentSceneId === sceneId && map.getLayer(LAYER_ID)) {
-        map.setPaintProperty(LAYER_ID, 'raster-opacity', opacity ?? 0.6);
+      // Same scene already on the map → opacity-only update.
+      if (show && bakedIds.has(sceneId) && map.getLayer(lyr)) {
+        map.setPaintProperty(lyr, 'raster-opacity', opacity ?? 0.6);
         return;
       }
 
-      removeCurrent();
-      if (!show) return;
+      if (!show) { removeOne(sceneId); return; }
+
+      // Fresh add. Defensive cleanup in case of stale leftovers.
+      if (map.getLayer(lyr)) map.removeLayer(lyr);
+      if (map.getSource(src)) map.removeSource(src);
 
       if (tileUrl) {
-        map.addSource(SOURCE_ID, {
-          type: 'raster',
-          tiles: [tileUrl],
-          tileSize: 256,
-        });
+        map.addSource(src, { type: 'raster', tiles: [tileUrl], tileSize: 256 });
       } else if (previewUrl) {
-        // Static image stretched across Japan bbox (W, S, E, N = 122, 24, 154, 46).
-        map.addSource(SOURCE_ID, {
+        map.addSource(src, {
           type: 'image',
           url: previewUrl,
-          coordinates: [[122, 46], [154, 46], [154, 24], [122, 24]],
+          coordinates: imageCoordsFromGeom(bboxGeom),
         });
       } else {
         return;
       }
-      map.addLayer({
-        id: LAYER_ID,
-        type: 'raster',
-        source: SOURCE_ID,
-        paint: { 'raster-opacity': opacity ?? 0.6 },
-      });
-      currentSceneId = sceneId;
+      // Insert beneath the first symbol layer so pins/icons stay on top.
+      const firstSymbol = map.getStyle()?.layers?.find((l) => l.type === 'symbol')?.id;
+      const visible = satelliteImageryVisibleRef.current;
+      map.addLayer(
+        {
+          id: lyr,
+          type: 'raster',
+          source: src,
+          layout: { visibility: visible ? 'visible' : 'none' },
+          paint: { 'raster-opacity': opacity ?? 0.6 },
+        },
+        firstSymbol,
+      );
+      bakedIds.add(sceneId);
     }
 
     window.addEventListener('satellite-imagery-bake', onBake);
     return () => {
       window.removeEventListener('satellite-imagery-bake', onBake);
-      removeCurrent();
+      removeAll();
     };
+    // `layers` is read via the closure above only for initial visibility of a
+    // newly-baked layer; visibility changes afterward are handled by the
+    // separate effect below, so we deliberately don't rebind this effect.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Sync baked-layer visibility with the Satellite Imagery layer toggle.
+  useEffect(() => {
+    const visible = !!layers?.satelliteImagery?.visible;
+    satelliteImageryVisibleRef.current = visible;
+    const map = mapRef.current;
+    if (!map || !map.style) return;
+    const vis = visible ? 'visible' : 'none';
+    for (const sceneId of bakedSceneIdsRef.current) {
+      const lyr = bakeLayerIdFor(sceneId);
+      if (map.getLayer(lyr)) {
+        map.setLayoutProperty(lyr, 'visibility', vis);
+      }
+    }
+  }, [layers?.satelliteImagery?.visible]);
 
   // Style switcher
   const switchStyle = useCallback((styleKey) => {

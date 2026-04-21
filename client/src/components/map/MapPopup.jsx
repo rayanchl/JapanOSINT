@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { getLayerIcon } from '../../utils/layerIcons';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
@@ -810,9 +810,16 @@ function SatelliteImageryDetail({ properties }) {
   const platform = properties.platform;
   const tileUrl = properties.tile_url;
   const previewUrl = properties.preview_url;
+  const bboxGeom = properties.bbox_geom;
   const hasFeed = !!(tileUrl || previewUrl);
 
+  // Only dispatch when the user has actively toggled Bake on. Closing the
+  // popup must NOT remove the baked layer — it persists until the user
+  // unchecks the box (which fires show:false via this same effect).
+  const hasDispatchedRef = useRef(false);
   useEffect(() => {
+    if (!baked && !hasDispatchedRef.current) return;
+    hasDispatchedRef.current = true;
     window.dispatchEvent(new CustomEvent('satellite-imagery-bake', {
       detail: {
         show: baked,
@@ -820,18 +827,11 @@ function SatelliteImageryDetail({ properties }) {
         platform,
         tileUrl,
         previewUrl,
+        bboxGeom,
         opacity,
       },
     }));
-  }, [baked, opacity, sceneId, platform, tileUrl, previewUrl]);
-
-  useEffect(() => {
-    return () => {
-      window.dispatchEvent(new CustomEvent('satellite-imagery-bake', {
-        detail: { show: false, sceneId: properties.scene_id || properties.id },
-      }));
-    };
-  }, []);
+  }, [baked, opacity, sceneId, platform, tileUrl, previewUrl, bboxGeom]);
 
   const highlighted = [
     'platform', 'sensor', 'scene_id', 'datetime',

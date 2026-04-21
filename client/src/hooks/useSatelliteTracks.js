@@ -28,13 +28,11 @@ export function buildTracks(fc) {
 }
 
 export function useSatelliteTracks(satelliteFc) {
-  const initial = useMemo(() => buildTracks(satelliteFc), [satelliteFc]);
-  const [features, setFeatures] = useState(initial);
-
-  useEffect(() => { setFeatures(buildTracks(satelliteFc)); }, [satelliteFc]);
+  const [features, setFeatures] = useState(() => buildTracks(satelliteFc));
 
   useEffect(() => {
-    if (!satelliteFc || !satelliteFc.features?.length) return undefined;
+    setFeatures(buildTracks(satelliteFc));
+    if (!satelliteFc?.features?.length) return undefined;
     const id = setInterval(() => {
       setFeatures(buildTracks(satelliteFc));
     }, REFRESH_MS);
