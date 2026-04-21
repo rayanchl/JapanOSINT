@@ -3,7 +3,7 @@
  * OSM Overpass `tourism=museum` + curated major museums.
  */
 
-const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
+import { fetchOverpass } from './_liveHelpers.js';
 
 const SEED_MUSEUMS = [
   // Tokyo majors
@@ -57,22 +57,11 @@ const SEED_MUSEUMS = [
 ];
 
 async function tryOSMOverpass() {
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 10000);
-    const query = `[out:json][timeout:180];area["ISO3166-1"="JP"][admin_level=2];(node["tourism"="museum"](area););out center;`;
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'data=' + encodeURIComponent(query),
-      signal: ctrl.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    return (data.elements || []).slice(0, 300).map((el, i) => ({
+  const features = await fetchOverpass(
+    'node["tourism"="museum"](area.jp);',
+    (el, i, coords) => ({
       type: 'Feature',
-      geometry: { type: 'Point', coordinates: [el.lon, el.lat] },
+      geometry: { type: 'Point', coordinates: coords },
       properties: {
         museum_id: `OSM_${el.id}`,
         name: el.tags?.name || el.tags?.['name:en'] || `Museum ${i + 1}`,
@@ -80,8 +69,10 @@ async function tryOSMOverpass() {
         country: 'JP',
         source: 'osm_overpass',
       },
-    }));
-  } catch { return null; }
+    }),
+  );
+  if (!features) return null;
+  return features.slice(0, 300);
 }
 
 function generateSeedData() {

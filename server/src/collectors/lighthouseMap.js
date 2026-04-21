@@ -4,15 +4,7 @@
  * Falls back to seed of major Japanese lighthouses.
  */
 
-const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
-const QUERY = `
-[out:json][timeout:25];
-area["ISO3166-1"="JP"][admin_level=2]->.jp;
-(
-  node["man_made"="lighthouse"](area.jp);
-);
-out center 2000;
-`;
+import { fetchOverpass } from './_liveHelpers.js';
 
 const SEED_LIGHTHOUSES = [
   // Top lighthouses by historic / strategic importance
@@ -54,23 +46,11 @@ const SEED_LIGHTHOUSES = [
 ];
 
 async function tryOverpass() {
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 15000);
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `data=${encodeURIComponent(QUERY)}`,
-      signal: ctrl.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    const elements = data.elements || [];
-    if (elements.length === 0) return null;
-    return elements.slice(0, 500).map((el, i) => ({
+  const features = await fetchOverpass(
+    'node["man_made"="lighthouse"](area.jp);',
+    (el, i, coords) => ({
       type: 'Feature',
-      geometry: { type: 'Point', coordinates: [el.lon || el.center?.lon, el.lat || el.center?.lat] },
+      geometry: { type: 'Point', coordinates: coords },
       properties: {
         lighthouse_id: `LH_${String(i + 1).padStart(5, '0')}`,
         name: el.tags?.name || el.tags?.['name:ja'] || 'Lighthouse',
@@ -78,10 +58,10 @@ async function tryOverpass() {
         country: 'JP',
         source: 'osm_overpass',
       },
-    }));
-  } catch {
-    return null;
-  }
+    }),
+  );
+  if (!features) return null;
+  return features.slice(0, 500);
 }
 
 function generateSeedData() {

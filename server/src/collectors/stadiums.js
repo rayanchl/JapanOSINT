@@ -3,7 +3,7 @@
  * J-League, NPB, Sumo, and major stadiums across Japan.
  */
 
-const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
+import { fetchOverpass } from './_liveHelpers.js';
 
 const SEED_STADIUMS = [
   // NPB baseball
@@ -49,22 +49,11 @@ const SEED_STADIUMS = [
 ];
 
 async function tryOSMOverpass() {
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 10000);
-    const query = `[out:json][timeout:180];area["ISO3166-1"="JP"][admin_level=2];(node["leisure"="stadium"](area););out center;`;
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'data=' + encodeURIComponent(query),
-      signal: ctrl.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    return (data.elements || []).slice(0, 200).map((el, i) => ({
+  const features = await fetchOverpass(
+    'node["leisure"="stadium"](area.jp);',
+    (el, i, coords) => ({
       type: 'Feature',
-      geometry: { type: 'Point', coordinates: [el.lon, el.lat] },
+      geometry: { type: 'Point', coordinates: coords },
       properties: {
         stadium_id: `OSM_${el.id}`,
         name: el.tags?.name || `Stadium ${i + 1}`,
@@ -73,8 +62,10 @@ async function tryOSMOverpass() {
         country: 'JP',
         source: 'osm_overpass',
       },
-    }));
-  } catch { return null; }
+    }),
+  );
+  if (!features) return null;
+  return features.slice(0, 200);
 }
 
 function generateSeedData() {

@@ -4,7 +4,7 @@
  * Japanese government buildings (cabinet, Diet, ministries).
  */
 
-const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
+import { fetchOverpass } from './_liveHelpers.js';
 
 const SEED_GOV_BUILDINGS = [
   // Tokyo: Cabinet & Diet & Imperial
@@ -56,40 +56,19 @@ const SEED_GOV_BUILDINGS = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:180];area["ISO3166-1"="JP"]->.jp;(node["office"="government"](area.jp);way["office"="government"](area.jp););out center;`;
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 12000);
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      signal: ctrl.signal,
-      headers: { 'Content-Type': 'text/plain' },
-      body: query,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data?.elements?.length) return null;
-    return data.elements
-      .map((el, i) => {
-        const lat = el.lat ?? el.center?.lat;
-        const lon = el.lon ?? el.center?.lon;
-        if (lat == null || lon == null) return null;
-        return {
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [lon, lat] },
-          properties: {
-            building_id: `OSM_GOV_${el.id}`,
-            name: el.tags?.name || el.tags?.['name:en'] || 'Government Office',
-            kind: el.tags?.government || 'government',
-            source: 'osm_overpass',
-          },
-        };
-      })
-      .filter(Boolean);
-  } catch {
-    return null;
-  }
+  return fetchOverpass(
+    'node["office"="government"](area.jp);way["office"="government"](area.jp);',
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        building_id: `OSM_GOV_${el.id}`,
+        name: el.tags?.name || el.tags?.['name:en'] || 'Government Office',
+        kind: el.tags?.government || 'government',
+        source: 'osm_overpass',
+      },
+    }),
+  );
 }
 
 function generateSeedData() {

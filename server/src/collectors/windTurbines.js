@@ -4,7 +4,7 @@
  * across Japan, with curated seed of major onshore + offshore farms.
  */
 
-const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
+import { fetchOverpass } from './_liveHelpers.js';
 
 const SEED_WIND = [
   // Hokkaido — windiest region
@@ -49,41 +49,22 @@ const SEED_WIND = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:180];area["ISO3166-1"="JP"]->.jp;(node["power"="generator"]["generator:source"="wind"](area.jp);way["power"="generator"]["generator:source"="wind"](area.jp););out center;`;
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 12000);
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      signal: ctrl.signal,
-      headers: { 'Content-Type': 'text/plain' },
-      body: query,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data?.elements?.length) return null;
-    return data.elements
-      .map((el) => {
-        const lat = el.center?.lat ?? el.lat;
-        const lon = el.center?.lon ?? el.lon;
-        if (lat == null || lon == null) return null;
-        const out = parseFloat(el.tags?.['generator:output:electricity'] || '0');
-        return {
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [lon, lat] },
-          properties: {
-            turbine_id: `OSM_${el.id}`,
-            name: el.tags?.name || 'Wind Turbine',
-            capacity_mw: out / 1000000,
-            source: 'osm_overpass',
-          },
-        };
-      })
-      .filter(Boolean);
-  } catch {
-    return null;
-  }
+  return fetchOverpass(
+    'node["power"="generator"]["generator:source"="wind"](area.jp);way["power"="generator"]["generator:source"="wind"](area.jp);',
+    (el, _i, coords) => {
+      const out = parseFloat(el.tags?.['generator:output:electricity'] || '0');
+      return {
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: coords },
+        properties: {
+          turbine_id: `OSM_${el.id}`,
+          name: el.tags?.name || 'Wind Turbine',
+          capacity_mw: out / 1_000_000,
+          source: 'osm_overpass',
+        },
+      };
+    },
+  );
 }
 
 function generateSeedData() {

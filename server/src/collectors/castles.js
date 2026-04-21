@@ -3,7 +3,7 @@
  * 100 Famous Japanese Castles + Top 100 Continued — historic castles across Japan.
  */
 
-const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
+import { fetchOverpass } from './_liveHelpers.js';
 
 const SEED_CASTLES = [
   // 100 Famous Castles selected list (existing structures or major reconstructions)
@@ -110,22 +110,11 @@ const SEED_CASTLES = [
 ];
 
 async function tryOSMOverpass() {
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 10000);
-    const query = `[out:json][timeout:180];area["ISO3166-1"="JP"][admin_level=2];(node["historic"="castle"](area););out center;`;
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'data=' + encodeURIComponent(query),
-      signal: ctrl.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    return (data.elements || []).slice(0, 200).map((el, i) => ({
+  const features = await fetchOverpass(
+    'node["historic"="castle"](area.jp);',
+    (el, i, coords) => ({
       type: 'Feature',
-      geometry: { type: 'Point', coordinates: [el.lon, el.lat] },
+      geometry: { type: 'Point', coordinates: coords },
       properties: {
         castle_id: `OSM_${el.id}`,
         name: el.tags?.name || el.tags?.['name:en'] || `Castle ${i + 1}`,
@@ -134,8 +123,10 @@ async function tryOSMOverpass() {
         country: 'JP',
         source: 'osm_overpass',
       },
-    }));
-  } catch { return null; }
+    }),
+  );
+  if (!features) return null;
+  return features.slice(0, 200);
 }
 
 function generateSeedData() {

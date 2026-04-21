@@ -3,7 +3,7 @@
  * OSM Overpass diplomatic=embassy in Japan, with seed of Tokyo embassies as fallback.
  */
 
-const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
+import { fetchOverpass } from './_liveHelpers.js';
 
 const SEED_EMBASSIES = [
   { country: 'United States', country_ja: 'アメリカ合衆国', lat: 35.6691, lon: 139.7416 },
@@ -72,40 +72,19 @@ const SEED_EMBASSIES = [
 ];
 
 async function tryOverpass() {
-  const query = `[out:json][timeout:180];area["ISO3166-1"="JP"]->.jp;(node["diplomatic"="embassy"](area.jp);way["diplomatic"="embassy"](area.jp););out center;`;
-  try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 12000);
-    const res = await fetch(OVERPASS_URL, {
-      method: 'POST',
-      signal: ctrl.signal,
-      headers: { 'Content-Type': 'text/plain' },
-      body: query,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data?.elements?.length) return null;
-    return data.elements
-      .map((el) => {
-        const lat = el.lat ?? el.center?.lat;
-        const lon = el.lon ?? el.center?.lon;
-        if (lat == null || lon == null) return null;
-        return {
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [lon, lat] },
-          properties: {
-            embassy_id: `OSM_${el.id}`,
-            name: el.tags?.name || 'Embassy',
-            country: el.tags?.country || el.tags?.['target:country'] || 'unknown',
-            source: 'osm_overpass',
-          },
-        };
-      })
-      .filter(Boolean);
-  } catch {
-    return null;
-  }
+  return fetchOverpass(
+    'node["diplomatic"="embassy"](area.jp);way["diplomatic"="embassy"](area.jp);',
+    (el, _i, coords) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        embassy_id: `OSM_${el.id}`,
+        name: el.tags?.name || 'Embassy',
+        country: el.tags?.country || el.tags?.['target:country'] || 'unknown',
+        source: 'osm_overpass',
+      },
+    }),
+  );
 }
 
 function generateSeedData() {
