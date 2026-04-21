@@ -46,3 +46,38 @@ test('trySentinel1 — CDSE OData maps Products to GRD features', async () => {
     globalThis.fetch = origFetch;
   }
 });
+
+test('trySentinel1 — falls back to Planetary Computer when CDSE empty', async () => {
+  globalThis.fetch = (url) => {
+    const u = String(url);
+    if (u.includes('catalogue.dataspace.copernicus.eu')) {
+      return makeJson({ value: [] });
+    }
+    if (u.includes('planetarycomputer.microsoft.com')) {
+      return makeJson({
+        features: [{
+          id: 'S1A_IW_GRDH_PC_XYZ',
+          geometry: {
+            type: 'Polygon',
+            coordinates: [[[139, 35], [140, 35], [140, 36], [139, 36], [139, 35]]],
+          },
+          properties: {
+            platform: 'sentinel-1a',
+            datetime: '2026-04-19T09:30:00Z',
+          },
+        }],
+      });
+    }
+    return makeJson({}, 404);
+  };
+  try {
+    const { trySentinel1 } = await import('../src/collectors/satelliteImagery.js');
+    const features = await trySentinel1();
+    assert.equal(features.length, 1);
+    assert.equal(features[0].properties.source, 'planetary_computer_s1');
+    assert.ok(features[0].properties.tile_url?.includes('planetarycomputer.microsoft.com'));
+    assert.ok(features[0].properties.tile_url?.includes('assets=vv'));
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});

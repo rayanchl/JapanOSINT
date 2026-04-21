@@ -560,8 +560,52 @@ async function s1TryCdseOData() {
   });
 }
 
+async function s1TryPlanetaryComputer() {
+  const { from, to } = s1IsoWindow();
+  const body = {
+    bbox: JAPAN_BBOX,
+    datetime: `${from}/${to}`,
+    collections: ['sentinel-1-grd'],
+    limit: S1_SCENE_LIMIT,
+  };
+  const data = await fetchJson(
+    'https://planetarycomputer.microsoft.com/api/stac/v1/search',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }
+  );
+  const feats = data?.features || [];
+  if (!feats.length) return null;
+  return feats.map((f, i) => {
+    const geom = f.geometry || null;
+    const [cx, cy] = s2CentroidFromGeom(geom);
+    const tile = `https://planetarycomputer.microsoft.com/api/data/v1/item/tiles/WebMercatorQuad/{z}/{x}/{y}?collection=sentinel-1-grd&item=${encodeURIComponent(f.id)}&assets=vv&rescale=-30,0`;
+    return {
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [cx, cy] },
+      properties: {
+        id: `IMG_S1_${f.id || i}`,
+        platform: s1PlatformFromName(f.properties?.platform || f.id),
+        sensor: 'c-sar',
+        product_type: 'GRD',
+        polarization: 'VV',
+        scene_id: f.id,
+        datetime: f.properties?.datetime,
+        preview_url: f.assets?.thumbnail?.href || f.assets?.rendered_preview?.href || null,
+        tile_url: tile,
+        bbox_geom: geom,
+        archive_era: 'real-time',
+        source: 'planetary_computer_s1',
+        country: 'JP',
+      },
+    };
+  });
+}
+
 export async function trySentinel1() {
-  const chain = [s1TryCdseOData];
+  const chain = [s1TryCdseOData, s1TryPlanetaryComputer];
   for (const fn of chain) {
     try {
       const r = await fn();
