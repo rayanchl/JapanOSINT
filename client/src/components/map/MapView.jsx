@@ -520,12 +520,20 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       // or a deterministic hash fallback). Old cached features without the
       // property coalesce to the layer default.
       const perFeatureColor = ['coalesce', ['get', 'line_color'], layerDef.color];
+      // Rail-type layers get rounded joins/caps to hide direction-change
+      // kinks inside each LineString and butt transitions where adjacent
+      // OSM way fragments meet. Buses intentionally keep the default
+      // miter/butt so bus routes render as the raw MLIT lines.
+      const isRail = layerId !== 'unifiedBuses';
       // Tracks first so station icons render on top of them.
       map.addLayer({
         id: `${mainLayerId}-line`,
         type: 'line',
         source: sourceId,
         filter: ['==', ['geometry-type'], 'LineString'],
+        ...(isRail
+          ? { layout: { 'line-join': 'round', 'line-cap': 'round' } }
+          : {}),
         paint: {
           'line-color': perFeatureColor,
           'line-width': [
