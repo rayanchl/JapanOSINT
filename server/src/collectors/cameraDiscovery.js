@@ -400,6 +400,9 @@ async function fromInsecam() {
         thumbnail_url: card.img,
         city: card.city,
         coord_source: real ? 'insecam_detail' : 'city_centroid',
+        // city_centroid is just a guessed hub + jitter — the LLM enricher
+        // can do better with the camera's name, so flag for re-geocoding.
+        location_uncertain: real ? 0 : 1,
         auth_required: false,
       }),
     );
@@ -1021,7 +1024,9 @@ async function fromWindy() {
   const features = [];
   const pageSize = 100;
   for (let offset = 0; offset < 1000; offset += pageSize) {
-    const url = `https://api.windy.com/webcams/api/v3/webcams?country=JP&limit=${pageSize}&offset=${offset}&include=location,player,images`;
+    // Windy v3 uses `countries=` (plural) for the country filter. The singular
+    // `country=` is silently ignored and returns the worldwide set.
+    const url = `https://api.windy.com/webcams/api/v3/webcams?countries=JP&limit=${pageSize}&offset=${offset}&include=location,player,images`;
     let data;
     try {
       data = await fetchJson(url, {
