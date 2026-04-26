@@ -469,7 +469,10 @@ export function findUncertainStationPairs() {
         if (j <= i) continue;
         const a = stations[i];
         const b = stations[j];
-        if (distSqM(a.lon, a.lat, b.lon, b.lat) > radiusSq) continue;
+        const dSq = distSqM(a.lon, a.lat, b.lon, b.lat);
+        if (dSq > radiusSq) continue;
+        // Pass-1 (wikidata) already merges these; don't waste LLM budget asking.
+        if (a.wikidata && b.wikidata && a.wikidata === b.wikidata) continue;
         const sameFp = a.fingerprint && b.fingerprint && a.fingerprint === b.fingerprint;
         const len = Math.min(a.fingerprint?.length || 0, b.fingerprint?.length || 0);
         const closeFp = len >= 3 && a.fingerprint && b.fingerprint
@@ -485,7 +488,7 @@ export function findUncertainStationPairs() {
         out.push({
           uid_a: pa.uid,  name_a: pa.name,  name_ja_a: pa.name_ja,  operator_a: pa.operator,  line_a: pa.line_name, mode_a: pa.mode, lat_a: pa.lat, lon_a: pa.lon,
           uid_b: pb.uid,  name_b: pb.name,  name_ja_b: pb.name_ja,  operator_b: pb.operator,  line_b: pb.line_name, mode_b: pb.mode, lat_b: pb.lat, lon_b: pb.lon,
-          dist_m: Math.sqrt(distSqM(a.lon, a.lat, b.lon, b.lat)),
+          dist_m: Math.sqrt(dSq),
         });
         if (out.length >= MAX_UNCERTAIN_PAIRS) return out;
       }
