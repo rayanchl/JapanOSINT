@@ -13,6 +13,16 @@ const DEFAULT_BATCH = Number(process.env.LLM_BATCH_SIZE || 50);
 const VISION = process.env.LLM_VISION === 'true';
 const TIMEOUT_MS = Number(process.env.LLM_TIMEOUT_MS || 30_000);
 const PLACE_CONFIDENCE_GATE = 0.5;
+// LLM_VISION_MODEL overrides LLM_MODEL when a prompt actually contains images.
+// This lets us run a fast text-only model for the bulk path (Qwen, Llama 3 8B, …)
+// and only spin up the bigger multimodal model (Gemma 4, Llava, …) when needed.
+const VISION_MODEL = process.env.LLM_VISION_MODEL || null;
+
+// True if the user-message content is an OpenAI multi-part array (i.e. has image_url).
+function promptUsesVision(messages) {
+  const user = messages.find((m) => m.role === 'user');
+  return Array.isArray(user?.content) && user.content.some((p) => p.type === 'image_url');
+}
 // Dedup pairs are recorded regardless of confidence; the clusterer
 // separately gates on >= 0.7 when deciding whether to merge.
 
@@ -204,7 +214,10 @@ async function drainTextRows({ rowsStmt, buildPrompt, onOk, onFail, llmChat, gsi
   let geocoded = 0;
   for (const row of rows) {
     const { messages, jsonSchema } = buildPrompt(row);
-    const out = await _llmChat({ messages, jsonSchema, timeoutMs: TIMEOUT_MS });
+    // Route vision-bearing prompts to LLM_VISION_MODEL when configured, else
+    // fall through to the default model from llmClient (LLM_MODEL).
+    const model = (VISION_MODEL && promptUsesVision(messages)) ? VISION_MODEL : undefined;
+    const out = await _llmChat({ messages, jsonSchema, timeoutMs: TIMEOUT_MS, model });
     if (!out || typeof out.place === 'undefined') {
       onFail(row, '__bad_json__', null);
       continue;
