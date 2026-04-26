@@ -1,5 +1,7 @@
 // server/src/utils/llmPrompts.js
-const MAX_TEXT_CHARS = 500;
+// Maximum length passed to clip(). Clipped output is n+1 chars (trailing
+// ellipsis), so this is a soft ceiling on the LLM's input budget per field.
+const CLIP_AT_CHARS = 500;
 const MAX_IMAGES = 2;
 
 const PLACE_SCHEMA = {
@@ -21,7 +23,7 @@ const DEDUP_SCHEMA = {
   required: ['same_station', 'confidence'],
 };
 
-function clip(s, n = MAX_TEXT_CHARS) {
+function clip(s, n = CLIP_AT_CHARS) {
   if (!s) return '';
   return s.length <= n ? s : s.slice(0, n) + '…';
 }
@@ -36,16 +38,16 @@ export function buildDedupPairPrompt(p) {
     'Different stations on overlapping platforms are NOT the same station.';
   const user =
     `Station A:\n` +
-    `  name: ${JSON.stringify(p.name_a ?? '')}\n` +
-    `  name_ja: ${JSON.stringify(p.name_ja_a ?? '')}\n` +
-    `  operator: ${JSON.stringify(p.operator_a ?? '')}\n` +
-    `  line: ${JSON.stringify(p.line_a ?? '')}\n` +
+    `  name: ${p.name_a ?? ''}\n` +
+    `  name_ja: ${p.name_ja_a ?? ''}\n` +
+    `  operator: ${p.operator_a ?? ''}\n` +
+    `  line: ${p.line_a ?? ''}\n` +
     `  mode: ${p.mode_a ?? ''}\n\n` +
     `Station B:\n` +
-    `  name: ${JSON.stringify(p.name_b ?? '')}\n` +
-    `  name_ja: ${JSON.stringify(p.name_ja_b ?? '')}\n` +
-    `  operator: ${JSON.stringify(p.operator_b ?? '')}\n` +
-    `  line: ${JSON.stringify(p.line_b ?? '')}\n` +
+    `  name: ${p.name_b ?? ''}\n` +
+    `  name_ja: ${p.name_ja_b ?? ''}\n` +
+    `  operator: ${p.operator_b ?? ''}\n` +
+    `  line: ${p.line_b ?? ''}\n` +
     `  mode: ${p.mode_b ?? ''}\n\n` +
     `Distance: ${Math.round(p.dist_m ?? 0)} m`;
   return {
