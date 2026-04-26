@@ -32,10 +32,14 @@ export async function enrichStationDedup(opts = {}) {
   const batchSize = opts.batchSize ?? DEFAULT_BATCH;
 
   let decided = 0;
+  let attempted = 0; // counts every LLM call, regardless of parse success.
+  // Bound the loop on attempts not on `decided` so a model that returns
+  // unparseable JSON can't drag us through all 500 candidate pairs in one tick.
   const pairs = pairsProvider();
   for (const p of pairs) {
-    if (decided >= batchSize) break;
+    if (attempted >= batchSize) break;
     if (stmtPairExists.get(p.uid_a, p.uid_b)) continue;
+    attempted++;
     const { messages, jsonSchema } = buildDedupPairPrompt(p);
     const out = await llmChat({ messages, jsonSchema, timeoutMs: TIMEOUT_MS });
     if (!out || typeof out.same_station !== 'boolean' || typeof out.confidence !== 'number') continue;
@@ -73,6 +77,7 @@ const stmtUpdateSocialFail = db.prepare(`
 `);
 
 export async function enrichSocialGeocode(opts = {}) {
+  const { llmChat, gsiSearch, batchSize } = opts;
   return drainTextRows({
     rowsStmt: stmtPendingSocial,
     buildPrompt: (row) => buildSocialGeocodePrompt({
@@ -81,7 +86,7 @@ export async function enrichSocialGeocode(opts = {}) {
     }),
     onOk: (row, place, hit) => stmtUpdateSocialOk.run(hit.lat, hit.lon, place, row.post_uid),
     onFail: (row, sentinel, place) => stmtUpdateSocialFail.run(sentinel, place, row.post_uid),
-    ...opts,
+    llmChat, gsiSearch, batchSize,
   });
 }
 
@@ -108,6 +113,7 @@ const stmtUpdateVideoFail = db.prepare(`
 `);
 
 export async function enrichVideoGeocode(opts = {}) {
+  const { llmChat, gsiSearch, batchSize } = opts;
   return drainTextRows({
     rowsStmt: stmtPendingVideo,
     buildPrompt: (row) => buildVideoGeocodePrompt({
@@ -116,7 +122,7 @@ export async function enrichVideoGeocode(opts = {}) {
     }),
     onOk: (row, place, hit) => stmtUpdateVideoOk.run(hit.lat, hit.lon, place, row.video_uid),
     onFail: (row, sentinel, place) => stmtUpdateVideoFail.run(sentinel, place, row.video_uid),
-    ...opts,
+    llmChat, gsiSearch, batchSize,
   });
 }
 
@@ -125,6 +131,7 @@ const stmtPendingCameras = db.prepare(`
   FROM cameras
   WHERE llm_geocoded_at IS NULL
     AND json_extract(properties, '$.location_uncertain') = 1
+  ORDER BY last_seen_at DESC
   LIMIT ?
 `);
 
@@ -136,6 +143,10 @@ const stmtUpdateCameraOk = db.prepare(`
   WHERE camera_uid = ?
 `);
 
+// cameras has no llm_failure column by design (Task 3 schema decision —
+// cameras only carry llm_place_name + llm_geocoded_at). Failure modes
+// collapse to "geocoded_at set, lat unchanged"; the operator can re-queue
+// by clearing llm_geocoded_at.
 const stmtUpdateCameraFail = db.prepare(`
   UPDATE cameras
   SET llm_geocoded_at = datetime('now'), llm_place_name = ?
