@@ -22,7 +22,7 @@ const DEFAULT_TIMEOUT_MS = 8000;
  */
 export async function gsiAddressSearch(query, opts = {}) {
   if (!query || typeof query !== 'string') return null;
-  const baseUrl = opts.baseUrl || DEFAULT_BASE;
+  const baseUrl = (opts.baseUrl || DEFAULT_BASE).replace(/\/$/, '');
   const timeoutMs = opts.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   const url = `${baseUrl}/address-search/AddressSearch?q=${encodeURIComponent(query)}`;
 
