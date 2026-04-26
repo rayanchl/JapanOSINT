@@ -110,6 +110,69 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_transport_lines_mode ON transport_lines(mode);
   CREATE INDEX IF NOT EXISTS idx_transport_lines_seen ON transport_lines(last_seen_at);
 
+  -- Canonical cross-mode station clusters. One row per physical place
+  -- (Shinjuku = one row, even though it spans JR / Tokyo Metro / Toei /
+  -- Keio / Odakyu). member_uids references transport_stations.station_uid
+  -- so we can always drill back down to the per-mode records.
+  CREATE TABLE IF NOT EXISTS station_clusters (
+    cluster_uid    TEXT PRIMARY KEY,
+    name           TEXT NOT NULL,
+    name_ja        TEXT,
+    lat            REAL NOT NULL,
+    lon            REAL NOT NULL,
+    member_uids    TEXT NOT NULL,
+    line_colors    TEXT,
+    line_names     TEXT,
+    line_refs      TEXT,
+    line_modes     TEXT,
+    mode_set       TEXT NOT NULL,
+    operator_set   TEXT,
+    first_seen_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    last_seen_at   TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_station_clusters_ll ON station_clusters(lat, lon);
+
+  -- OSM closed-way polygon footprints for station buildings (Shinjuku
+  -- building, Tokyo Station building, etc.). Linked to a cluster when the
+  -- cluster centroid falls inside the footprint bbox.
+  CREATE TABLE IF NOT EXISTS station_footprints (
+    footprint_id   TEXT PRIMARY KEY,
+    cluster_uid    TEXT,
+    name           TEXT,
+    name_ja        TEXT,
+    geometry       TEXT NOT NULL,
+    bbox_min_lat   REAL NOT NULL,
+    bbox_min_lon   REAL NOT NULL,
+    bbox_max_lat   REAL NOT NULL,
+    bbox_max_lon   REAL NOT NULL,
+    source         TEXT,
+    first_seen_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    last_seen_at   TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_station_footprints_cluster
+    ON station_footprints(cluster_uid);
+  CREATE INDEX IF NOT EXISTS idx_station_footprints_bbox
+    ON station_footprints(bbox_min_lat, bbox_min_lon, bbox_max_lat, bbox_max_lon);
+
+  -- One row per (cluster, way) pair, storing the snapped point on that
+  -- track's geometry closest to the cluster centroid. A two-track line
+  -- (up + down directions) produces two rows per cluster — one dot on
+  -- each rail at the station's projection. Renders as one colored dot
+  -- per track directly on the line geometry — Apple-Maps aesthetic.
+  CREATE TABLE IF NOT EXISTS station_line_dots (
+    cluster_uid  TEXT NOT NULL,
+    way_uid      TEXT NOT NULL,
+    line_color   TEXT NOT NULL,
+    line_mode    TEXT NOT NULL,
+    lon          REAL NOT NULL,
+    lat          REAL NOT NULL,
+    PRIMARY KEY (cluster_uid, way_uid)
+  );
+  CREATE INDEX IF NOT EXISTS idx_station_line_dots_cluster
+    ON station_line_dots(cluster_uid);
+  CREATE INDEX IF NOT EXISTS idx_station_line_dots_mode
+    ON station_line_dots(line_mode);
+
   CREATE TABLE IF NOT EXISTS gtfs_operators (
     org_id          TEXT PRIMARY KEY,
     org_name        TEXT,
@@ -306,6 +369,75 @@ db.exec(`
   );
   CREATE INDEX IF NOT EXISTS idx_collector_cache_fetched
     ON collector_cache(fetched_at);
+
+  -- Persisted social-media posts. Both geocoded and ungeocoded; ungeocoded
+  -- rows (lat IS NULL) are picked up by llmEnricher and resolved via LLM
+  -- → GSI address search. llm_geocoded_at marks the row as decided so the
+  -- worker doesn't loop on it; clear that column to re-process.
+  CREATE TABLE IF NOT EXISTS social_posts (
+    post_uid          TEXT PRIMARY KEY,
+    platform          TEXT NOT NULL,
+    author            TEXT,
+    text              TEXT,
+    title             TEXT,
+    url               TEXT,
+    media_urls        TEXT,
+    language          TEXT,
+    fetched_at        TEXT NOT NULL DEFAULT (datetime('now')),
+    posted_at         TEXT,
+    lat               REAL,
+    lon               REAL,
+    geo_source        TEXT,
+    llm_place_name    TEXT,
+    llm_geocoded_at   TEXT,
+    llm_failure       TEXT,
+    properties        TEXT NOT NULL DEFAULT '{}'
+  );
+  CREATE INDEX IF NOT EXISTS idx_social_posts_geo
+    ON social_posts(lat, lon);
+  CREATE INDEX IF NOT EXISTS idx_social_posts_pending
+    ON social_posts(llm_geocoded_at) WHERE llm_geocoded_at IS NULL;
+
+  -- Persisted video records (YouTube / Niconico / etc.). Same enrichment
+  -- shape as social_posts. No collector populates this table in this PR;
+  -- the schema lands so the enricher's drain function has somewhere to
+  -- read from when a video collector arrives.
+  CREATE TABLE IF NOT EXISTS video_items (
+    video_uid         TEXT PRIMARY KEY,
+    platform          TEXT NOT NULL,
+    channel           TEXT,
+    title             TEXT,
+    description       TEXT,
+    thumbnail_url     TEXT,
+    url               TEXT,
+    language          TEXT,
+    published_at      TEXT,
+    fetched_at        TEXT NOT NULL DEFAULT (datetime('now')),
+    lat               REAL,
+    lon               REAL,
+    geo_source        TEXT,
+    llm_place_name    TEXT,
+    llm_geocoded_at   TEXT,
+    llm_failure       TEXT,
+    properties        TEXT NOT NULL DEFAULT '{}'
+  );
+  CREATE INDEX IF NOT EXISTS idx_video_items_geo
+    ON video_items(lat, lon);
+  CREATE INDEX IF NOT EXISTS idx_video_items_pending
+    ON video_items(llm_geocoded_at) WHERE llm_geocoded_at IS NULL;
+
+  -- Pair-level "the LLM said these two transport_stations are/are-not the
+  -- same". stationClusterer reads this in Pass 3 and unions any pair with
+  -- same=1 AND confidence >= 0.7. Pair ordering: uid_a < uid_b lexically.
+  CREATE TABLE IF NOT EXISTS llm_station_merges (
+    uid_a       TEXT NOT NULL,
+    uid_b       TEXT NOT NULL,
+    same        INTEGER NOT NULL,
+    confidence  REAL NOT NULL,
+    reason      TEXT,
+    decided_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (uid_a, uid_b)
+  );
 `);
 
 // --------------- Schema migration ---------------
@@ -344,6 +476,56 @@ db.exec(`
       );
     `);
     db.pragma('foreign_keys = ON');
+  }
+})();
+
+// station_line_dots was originally keyed (cluster_uid, line_color, line_mode)
+// with one dot per colour. Current schema keys by (cluster_uid, way_uid) so a
+// two-track line emits one dot per physical track. Drop + recreate if we
+// detect the old schema — the clusterer rewrites every row on its next run.
+(function ensureStationLineDotsSchema() {
+  try {
+    const cols = db.prepare("PRAGMA table_info(station_line_dots)").all();
+    if (cols.length === 0) return; // table not created yet — CREATE TABLE handled it
+    const hasWayUid = cols.some((c) => c.name === 'way_uid');
+    if (!hasWayUid) {
+      console.log('[database] Migrating station_line_dots schema to include way_uid...');
+      db.exec(`
+        DROP TABLE IF EXISTS station_line_dots;
+        CREATE TABLE station_line_dots (
+          cluster_uid  TEXT NOT NULL,
+          way_uid      TEXT NOT NULL,
+          line_color   TEXT NOT NULL,
+          line_mode    TEXT NOT NULL,
+          lon          REAL NOT NULL,
+          lat          REAL NOT NULL,
+          PRIMARY KEY (cluster_uid, way_uid)
+        );
+        CREATE INDEX idx_station_line_dots_cluster
+          ON station_line_dots(cluster_uid);
+        CREATE INDEX idx_station_line_dots_mode
+          ON station_line_dots(line_mode);
+      `);
+    }
+  } catch (err) {
+    console.warn('[database] station_line_dots migration failed:', err?.message);
+  }
+})();
+
+// cameras.llm_place_name / cameras.llm_geocoded_at — LLM-resolved location.
+// Existing rows have NOT NULL lat/lon already; these columns let the
+// enricher overwrite uncertain coords once the LLM has spoken.
+(function ensureCamerasLlmColumns() {
+  try {
+    const cols = db.prepare('PRAGMA table_info(cameras)').all().map((c) => c.name);
+    if (!cols.includes('llm_place_name')) {
+      db.exec('ALTER TABLE cameras ADD COLUMN llm_place_name TEXT');
+    }
+    if (!cols.includes('llm_geocoded_at')) {
+      db.exec('ALTER TABLE cameras ADD COLUMN llm_geocoded_at TEXT');
+    }
+  } catch (err) {
+    console.warn('[database] cameras LLM columns migration failed:', err?.message);
   }
 })();
 
