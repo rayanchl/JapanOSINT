@@ -94,7 +94,6 @@ collectors rather than raw feeds.
 | utilityPoles | OSM (`man_made=utility_pole`) tiled | Utility poles (telecom/low-voltage) |
 | adminBoundaries | OSM (`boundary=administrative` admin_level 4/7) | Prefecture and municipality boundaries (centroids) |
 | **Geospatial & Mapping** | | |
-| plateauBuildings | PLATEAU (plateau.geospatial.jp) + OSM | MLIT 3D city model building footprints |
 | sentinelHub | Copernicus Sentinel-2 imagery (multiple STAC sources) | Sentinel-2 L2A scene footprints (free-first chain) |
 | googleMyMaps | Google My Maps KML export + OSM fallback | User-curated maps with tourism/historic/leisure POIs |
 | famousPlaces | OSM Overpass (tourism, historic, amenity, leisure, natural) tiled | Unified OSM famous places/POIs |
@@ -210,3 +209,39 @@ Files prefixed `_` under `server/src/collectors/`:
 - `_dedupe.js` — merge / dedupe utilities for fusion collectors
 - `_liveHelpers.js` — shared fetch/normalize helpers
 - `_municipalityCentroids.js` — precomputed city centroids for geographic lookups
+
+## LLM Enricher (`llmEnricher`)
+
+Async write-behind worker that uses a local LM Studio (OpenAI-compatible
+HTTP at `http://localhost:1234`) to:
+
+- Resolve uncertain station-merge pairs the string-fingerprint clusterer
+  can't decide. Pair-level decisions are written to `llm_station_merges`;
+  the next clusterer run honours rows with `same=1 AND confidence>=0.7`.
+- Extract Japanese place names from social posts (`social_posts`) and
+  video items (`video_items`) whose `lat` is null, then resolve the name
+  through the existing GSI address-search API to get coordinates. Result
+  is written back to the row's `lat / lon / llm_place_name / llm_geocoded_at`.
+- Refine cameras whose `properties.location_uncertain = 1` — overwrites
+  `cameras.lat / lon` with the LLM+GSI result, preserving the original in
+  `properties.original_lat / original_lon`. Today this fires for Insecam
+  rows that fell back to a city-centroid+jitter coordinate.
+
+The worker runs every 5 minutes via cron. It short-circuits to a no-op
+when `LLM_ENABLED != 'true'`. Vision-capable inference (sending images to
+the model) is gated by `LLM_VISION=true`.
+
+Configuration: `LLM_ENABLED`, `LLM_BASE_URL`, `LLM_MODEL`, `LLM_VISION`,
+`LLM_BATCH_SIZE`, `LLM_TIMEOUT_MS`.
+
+Failure sentinels written to `llm_failure` (on `social_posts` / `video_items`):
+
+- `__bad_json__` — LLM call failed or returned unparseable JSON.
+- `__no_match__` — LLM said no place is mentioned, or confidence < 0.5.
+- `__gsi_miss__` — GSI's address-search returned no result for the
+  LLM-extracted name.
+
+The `cameras` table has no `llm_failure` column by design; failure
+collapses to "geocoded_at set, lat unchanged".
+
+To re-process a row: clear its `llm_geocoded_at` (and `llm_failure`).
