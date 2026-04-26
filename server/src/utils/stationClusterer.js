@@ -156,6 +156,22 @@ function cluster(stations) {
     }
   }
 
+  // Pass 3: LLM-decided merges. The worker may have written rows into
+  // llm_station_merges since the previous run. We trust same=1 with
+  // confidence >= 0.7; lower confidences are ignored (the row just
+  // documents what the LLM thought, doesn't force a merge).
+  const indexByUid = new Map();
+  for (let i = 0; i < stations.length; i++) indexByUid.set(stations[i].uid, i);
+  const merges = db.prepare(`
+    SELECT uid_a, uid_b FROM llm_station_merges
+    WHERE same = 1 AND confidence >= 0.7
+  `).all();
+  for (const { uid_a, uid_b } of merges) {
+    const i = indexByUid.get(uid_a);
+    const j = indexByUid.get(uid_b);
+    if (i != null && j != null) dsu.union(i, j);
+  }
+
   // Collect groups.
   const groups = new Map();
   for (let i = 0; i < stations.length; i++) {
