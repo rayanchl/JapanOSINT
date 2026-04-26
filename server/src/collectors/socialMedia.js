@@ -1,18 +1,7 @@
-/**
- * Social Media Collector
- *
- * Real geotagged data only. Queries the Wikipedia GeoSearch API over a set of
- * Japanese urban hubs and returns Wikipedia articles that carry real
- * coordinates. No Instagram/Twitter/Flickr synthetic seed generation.
- *
- * Returns an empty FeatureCollection when the live call yields nothing.
- */
-
+// server/src/collectors/socialMedia.js
 import { fetchJson } from './_liveHelpers.js';
+import db from '../utils/database.js';
 
-// Geo hubs we sample to pull nearby real Wikipedia articles with coords.
-// Coordinates used only for the GeoSearch request — each returned article
-// carries its own real lat/lon.
 const GEO_HUBS = [
   { area: 'Tokyo',    lat: 35.6812, lon: 139.7671 },
   { area: 'Osaka',    lat: 34.6937, lon: 135.5023 },
@@ -27,45 +16,79 @@ const GEO_HUBS = [
   { area: 'Naha',     lat: 26.2124, lon: 127.6809 },
 ];
 
+const stmtUpsertPost = db.prepare(`
+  INSERT INTO social_posts
+    (post_uid, platform, author, text, title, url, media_urls, language,
+     posted_at, lat, lon, geo_source, properties)
+  VALUES
+    (@post_uid, @platform, @author, @text, @title, @url, @media_urls, @language,
+     @posted_at, @lat, @lon, @geo_source, @properties)
+  ON CONFLICT(post_uid) DO UPDATE SET
+    text = excluded.text,
+    title = excluded.title,
+    url = excluded.url,
+    media_urls = excluded.media_urls,
+    lat = COALESCE(social_posts.lat, excluded.lat),
+    lon = COALESCE(social_posts.lon, excluded.lon),
+    geo_source = COALESCE(social_posts.geo_source, excluded.geo_source)
+`);
+
+const stmtSelectGeocoded = db.prepare(`
+  SELECT post_uid, platform, author, text, title, url, lat, lon, geo_source,
+         llm_place_name, fetched_at
+  FROM social_posts
+  WHERE platform = 'wikipedia' AND lat IS NOT NULL AND lon IS NOT NULL
+  ORDER BY fetched_at DESC
+  LIMIT 5000
+`);
+
 async function fetchGeoArticles(hub) {
   const url =
     `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*` +
     `&list=geosearch&gscoord=${hub.lat}|${hub.lon}&gsradius=10000&gslimit=30`;
   const data = await fetchJson(url, { timeoutMs: 7000 });
   const pages = data?.query?.geosearch;
-  if (!Array.isArray(pages)) return [];
-  return pages
-    .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon))
-    .map((p) => ({
-      type: 'Feature',
-      geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
-      properties: {
-        post_id: `WIKI_${p.pageid}`,
-        platform: 'wikipedia',
-        content_type: 'article',
-        area_name: p.title,
-        hub: hub.area,
-        url: `https://en.wikipedia.org/?curid=${p.pageid}`,
-        timestamp: new Date().toISOString(),
-        has_location: true,
-        source: 'wikipedia_geosearch',
-      },
-    }));
+  if (!Array.isArray(pages)) return 0;
+  let n = 0;
+  for (const p of pages) {
+    if (!Number.isFinite(p.lat) || !Number.isFinite(p.lon)) continue;
+    stmtUpsertPost.run({
+      post_uid: `WIKI_${p.pageid}`,
+      platform: 'wikipedia',
+      author: null,
+      text: null,
+      title: p.title,
+      url: `https://en.wikipedia.org/?curid=${p.pageid}`,
+      media_urls: null,
+      language: 'en',
+      posted_at: null,
+      lat: p.lat,
+      lon: p.lon,
+      geo_source: 'native_geo',
+      properties: JSON.stringify({ hub: hub.area }),
+    });
+    n++;
+  }
+  return n;
 }
 
 export default async function collectSocialMedia() {
-  const results = await Promise.all(GEO_HUBS.map((h) => fetchGeoArticles(h)));
-  const seen = new Set();
-  const features = [];
-  for (const batch of results) {
-    for (const f of batch) {
-      const id = f.properties.post_id;
-      if (seen.has(id)) continue;
-      seen.add(id);
-      features.push(f);
-    }
-  }
-
+  await Promise.all(GEO_HUBS.map((h) => fetchGeoArticles(h).catch(() => 0)));
+  const rows = stmtSelectGeocoded.all();
+  const features = rows.map((r) => ({
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: [r.lon, r.lat] },
+    properties: {
+      post_id: r.post_uid,
+      platform: r.platform,
+      content_type: 'article',
+      area_name: r.title,
+      url: r.url,
+      timestamp: r.fetched_at,
+      has_location: true,
+      source: r.geo_source === 'llm_gsi' ? 'wikipedia_geosearch+llm' : 'wikipedia_geosearch',
+    },
+  }));
   return {
     type: 'FeatureCollection',
     features,
