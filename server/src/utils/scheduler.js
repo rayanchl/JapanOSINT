@@ -9,6 +9,8 @@ import {
 import { redactUrl, redactHeaders, truncateBody } from './redact.js';
 import { runCameraDiscovery } from './cameraRunner.js';
 import { runTransportDiscovery } from './transportRunner.js';
+import { runGtfsRtCatalogueRefresh } from './gtfsRtCatalogueRunner.js';
+import { runLlmEnricher } from './llmEnricher.js';
 import { withCollectorRun } from './collectorTap.js';
 import { seedTtlsFromRegistry, pruneExpired } from './collectorCache.js';
 
@@ -251,6 +253,31 @@ export function startScheduler(wsServer) {
     withCollectorRun('transportDiscovery', () => runTransportDiscovery(wsServer), { trigger: 'cron' })
       .catch((err) => {
         console.error('[scheduler] transport run failed:', err?.message);
+      });
+  });
+
+  // 7. GTFS-RT catalogue refresh — pull the nationwide gtfs-data.jp feed list,
+  //    upsert every live RT URL into gtfs_rt_feeds, and (re)start the poller.
+  //    Offset to :45 to avoid colliding with camera (:15) or transport (:30).
+  //    No boot-time call — same lazy activation as the sibling runners above.
+  cron.schedule('45 * * * *', () => {
+    withCollectorRun('gtfsRtCatalogueRefresh', () => runGtfsRtCatalogueRefresh(), { trigger: 'cron' })
+      .catch((err) => {
+        console.error('[scheduler] GTFS-RT catalogue refresh failed:', err?.message);
+      });
+  });
+
+  // 8. LLM enricher — every 5 minutes. Short-circuits when LLM_ENABLED!=true,
+  //    so registering unconditionally is safe even on machines without
+  //    LM Studio. Drains four queues per tick:
+  //      - station dedup pairs → llm_station_merges
+  //      - social posts        → social_posts.lat/lon
+  //      - video items         → video_items.lat/lon
+  //      - uncertain cameras   → cameras.lat/lon (overwrites)
+  cron.schedule('*/5 * * * *', () => {
+    withCollectorRun('llmEnricher', () => runLlmEnricher(), { trigger: 'cron' })
+      .catch((err) => {
+        console.error('[scheduler] llmEnricher failed:', err?.message);
       });
   });
 }
