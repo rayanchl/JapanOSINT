@@ -304,3 +304,112 @@ export function listRtFeeds() {
     ORDER BY ag_id
   `).all();
 }
+
+// ── gtfs-data.jp RT catalogue ─────────────────────────────────────────────
+// Nationwide RT feed discovery via the official GTFS Data Repository
+// (417 orgs / 564 feeds as of probe). Supplements the hand-maintained
+// ODPT_AGENCY_MAP seeder above: both paths upsert into gtfs_rt_feeds and
+// coexist without stepping on each other.
+//
+// API response shape (GET https://api.gtfs-data.jp/v2/feeds):
+//   { code: 200, message: "ok", body: [
+//     { organization_id, organization_name, feed_id, feed_name,
+//       real_time: { trip_update_url, vehicle_position_url, alert_url,
+//                    update_interval }, feed_is_discontinued, ... }, ...
+//   ] }
+// Most feeds (~90%) have empty real_time URLs; ~47 active feeds publish
+// at least one. update_interval is usually 0 (unreliable) so we default
+// to the same 30 s cadence the poller uses elsewhere.
+
+const GTFS_DATA_JP_FEEDS_URL = 'https://api.gtfs-data.jp/v2/feeds';
+const RT_KINDS = [
+  { field: 'trip_update_url',      kind: 'trip_updates' },
+  { field: 'vehicle_position_url', kind: 'vehicle_positions' },
+  { field: 'alert_url',            kind: 'alerts' },
+];
+
+function odptTokenFromEnv() {
+  return (
+    process.env.ODPT_CHALLENGE_TOKEN ||
+    process.env.ODPT_TOKEN ||
+    process.env.ODPT_CONSUMER_KEY ||
+    null
+  );
+}
+
+/**
+ * Append ?acl:consumerKey=... only for api.odpt.org URLs. Public hosts pass
+ * through unchanged. Returns null for ODPT URLs when no token is available,
+ * so the caller can skip the row.
+ */
+function decorateAuthIfOdpt(url, token) {
+  if (!/^https?:\/\/api\.odpt\.org\//.test(url)) return url;
+  if (!token) return null;
+  const sep = url.includes('?') ? '&' : '?';
+  return `${url}${sep}acl:consumerKey=${encodeURIComponent(token)}`;
+}
+
+/**
+ * Fetch the full feed catalogue and project every live GTFS-RT URL into a
+ * row keyed by (org, feed, rt_kind). Discontinued feeds are skipped.
+ * Throws on HTTP / JSON failure.
+ */
+async function fetchGtfsDataJpRtFeeds() {
+  const res = await fetch(GTFS_DATA_JP_FEEDS_URL, {
+    headers: { 'User-Agent': 'japan-osint/1.0', 'Accept': 'application/json' },
+  });
+  if (!res.ok) throw new Error(`gtfs-data.jp HTTP ${res.status}`);
+  const payload = await res.json();
+  const feeds = payload?.body;
+  if (!Array.isArray(feeds)) throw new Error('gtfs-data.jp: body is not an array');
+
+  const rows = [];
+  for (const f of feeds) {
+    if (f.feed_is_discontinued) continue;
+    const rt = f.real_time || {};
+    for (const { field, kind } of RT_KINDS) {
+      const url = (rt[field] || '').trim();
+      if (!url) continue;
+      rows.push({
+        feed_id: `gtfsdatajp:${f.organization_id}:${f.feed_id}:${kind}`,
+        ag_id:   f.organization_id,
+        ag_name: f.organization_name || f.organization_id,
+        rt_url:  url,
+      });
+    }
+  }
+  return rows;
+}
+
+/**
+ * Seed gtfs_rt_feeds from the gtfs-data.jp catalogue. Upsert-only; stale
+ * rows are left to the poller's backoff + 1 h pause rather than deleted.
+ * Returns { seeded, skipped, reason? }.
+ */
+export async function seedGtfsRtFeedsFromGtfsDataJp() {
+  const token = odptTokenFromEnv();
+  const rows = await fetchGtfsDataJpRtFeeds();
+  if (rows.length === 0) return { seeded: 0, skipped: 0, reason: 'catalogue empty' };
+
+  const upsert = db.prepare(`
+    INSERT INTO gtfs_rt_feeds (feed_id, ag_id, ag_name, rt_url, poll_interval_s)
+    VALUES (?, ?, ?, ?, 30)
+    ON CONFLICT(feed_id) DO UPDATE SET
+      ag_id   = excluded.ag_id,
+      ag_name = excluded.ag_name,
+      rt_url  = excluded.rt_url
+  `);
+
+  let seeded = 0;
+  let skipped = 0;
+  const tx = db.transaction(() => {
+    for (const r of rows) {
+      const url = decorateAuthIfOdpt(r.rt_url, token);
+      if (url === null) { skipped++; continue; }
+      upsert.run(r.feed_id, r.ag_id, r.ag_name, url);
+      seeded++;
+    }
+  });
+  tx();
+  return { seeded, skipped };
+}

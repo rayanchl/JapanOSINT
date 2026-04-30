@@ -13,6 +13,7 @@
     "cors": "^2.8.5",
     "express": "^4.21.1",
     "gtfs-realtime-bindings": "^1.1.1",
+    "iconv-lite": "^0.7.2",
     "node-cron": "^3.0.3",
     "playwright": "^1.49.0",
     "satellite.js": "^5.0.0",

@@ -4,6 +4,10 @@ import { getLinesByMode } from '../utils/transportStore.js';
 import { getDeparturesAt, listHydratedOperators, isOperatorHydrated } from '../utils/gtfsStore.js';
 import { hydrateOperator } from '../utils/gtfsHydrate.js';
 import { getActiveTripsAt } from '../utils/gtfsActiveTrips.js';
+import {
+  ingestStationTimetable, getStationTimetable, hasTimetableForStation,
+} from '../utils/odptStationTimetable.js';
+import { refreshOdptTrainInformationAlerts } from '../utils/odptToGtfsRt.js';
 
 const router = express.Router();
 
@@ -169,25 +173,73 @@ function orgIdFromStopId(stopId) {
 // populated data on the next click.
 const LAZY_HYDRATE_BUDGET_MS = 6000;
 
-async function lazyHydrateForStop(stopId) {
-  const orgId = orgIdFromStopId(stopId);
-  if (!orgId) return;
-  if (isOperatorHydrated(orgId)) return;
-  await Promise.race([
-    hydrateOperator(orgId).catch((err) => {
-      console.warn(`[transit/summary] lazy hydrate ${orgId} failed:`, err?.message);
-    }),
+function withBudget(promise) {
+  return Promise.race([
+    promise,
     new Promise((resolve) => setTimeout(resolve, LAZY_HYDRATE_BUDGET_MS)),
   ]);
+}
+
+// Lazy-hydrate the upstream source that owns this click, if we can identify
+// it. Two recognized shapes:
+//   - `GTFSJP_<orgId>_<raw>` → Shimada-catalogued bus operator (static GTFS).
+//   - ODPT station id (e.g. `odpt.Station:JR-East.Yamanote.Tokyo`) → ODPT
+//     station timetable ingest + piggyback TrainInformation refresh for
+//     live delay/disruption text on the alert side.
+async function lazyHydrateForStop(stopId, odptStationId = null) {
+  // Bus path: GTFS-JP static feed.
+  const orgId = orgIdFromStopId(stopId);
+  if (orgId && !isOperatorHydrated(orgId)) {
+    await withBudget(
+      hydrateOperator(orgId).catch((err) => {
+        console.warn(`[transit/summary] lazy hydrate ${orgId} failed:`, err?.message);
+      }),
+    );
+  }
+
+  // Train/subway path: ODPT StationTimetable + TrainInformation alerts.
+  if (typeof odptStationId === 'string' && odptStationId.startsWith('odpt.Station:')) {
+    const timetablePromise = hasTimetableForStation(odptStationId)
+      ? Promise.resolve({ cached: true })
+      : ingestStationTimetable(odptStationId).catch((err) => {
+          console.warn(
+            `[transit/summary] lazy ODPT timetable ${odptStationId} failed:`,
+            err?.message,
+          );
+          return null;
+        });
+    // TrainInformation is a single operator-wide document and is cheap
+    // (one HTTP round-trip, a few dozen rows). Refresh every click so the
+    // alerts in the popup are ~live without waiting for the 5-min cron.
+    const alertsPromise = refreshOdptTrainInformationAlerts().catch((err) => {
+      console.warn('[transit/summary] lazy ODPT TrainInformation failed:', err?.message);
+      return null;
+    });
+    await withBudget(Promise.all([timetablePromise, alertsPromise]));
+  }
+}
+
+// A cluster UID is 40 hex chars (sha1); a legacy per-mode UID always
+// contains ":". Route cluster UIDs to the cluster-aware summary handler.
+function isClusterUid(uid) {
+  return typeof uid === 'string' && /^[0-9a-f]{40}$/.test(uid);
 }
 
 // Structured summary for a single station: lines served + upcoming
 // departures + arrivals + service alerts. Powers the redesigned
 // StationPopup in the client.
+//
+// Accepts BOTH cluster UIDs (40-hex) and legacy per-mode UIDs (mode:lat:lon:
+// name). For cluster UIDs, fan out across every member station, concat +
+// dedupe departures/arrivals/alerts.
 router.get('/station/:stationUid/summary', async (req, res) => {
   const stationUid = String(req.params.stationUid || '');
   if (!stationUid) {
     return res.status(400).json({ error: 'missing stationUid' });
+  }
+
+  if (isClusterUid(stationUid)) {
+    return respondWithClusterSummary(req, res, stationUid);
   }
 
   try {
@@ -202,9 +254,14 @@ router.get('/station/:stationUid/summary', async (req, res) => {
     try { props = JSON.parse(station.properties); } catch { /* leave empty */ }
 
     // Lazy hydrate this stop's operator on first click, so a user doesn't
-    // have to wait for the weekly bulk cron to fill gtfs_stop_times.
+    // have to wait for the weekly bulk cron to fill gtfs_stop_times. Also
+    // ingests ODPT StationTimetable + refreshes TrainInformation alerts for
+    // stations that carry an ODPT id.
     const stopIdForHydrate = props.stop_id || station.station_uid;
-    await lazyHydrateForStop(stopIdForHydrate);
+    const odptStationId = typeof props.station_id === 'string'
+                       && props.station_id.startsWith('odpt.Station:')
+                       ? props.station_id : null;
+    await lazyHydrateForStop(stopIdForHydrate, odptStationId);
 
     // Lines served: prefer the line_colors[] / line_names[] / line_refs[]
     // arrays populated by the spatial snap. Fall back to the single-line
@@ -286,6 +343,22 @@ router.get('/station/:stationUid/summary', async (req, res) => {
       if (alerts.length >= 10) break;
     }
 
+    // ODPT StationTimetable departures (train/subway). Empty array unless
+    // this station carries an ODPT id AND has been hydrated (either via the
+    // lazy hook above this request, or a previous click). Filtered to
+    // entries at or after the current local HH:MM so the list is "upcoming
+    // from now" — we don't try to model calendar selection here.
+    let odptDepartures = [];
+    if (odptStationId) {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      odptDepartures = getStationTimetable(odptStationId, {
+        afterHHMM: `${hh}:${mm}`,
+        limit: 10,
+      });
+    }
+
     res.json({
       station: {
         station_uid: station.station_uid,
@@ -298,6 +371,8 @@ router.get('/station/:stationUid/summary', async (req, res) => {
       lines,
       departures: departures.map((d) => ({ ...d, wall_sec: d.departure_sec })),
       arrivals: arrivals.map((a) => ({ ...a, wall_sec: a.arrival_sec })),
+      odpt_departures: odptDepartures,
+      odpt_station_id: odptStationId,
       alerts: alerts.slice(0, 10),
     });
   } catch (err) {
@@ -305,6 +380,158 @@ router.get('/station/:stationUid/summary', async (req, res) => {
     res.status(500).json({ error: 'internal' });
   }
 });
+
+// Cluster-aware summary: fans out across every member station of a cluster,
+// concatenates departures / arrivals / ODPT timetable entries, dedupes
+// alerts by text, and returns a single merged view. Line metadata comes
+// straight from the cluster row (already pre-merged cross-mode).
+async function respondWithClusterSummary(_req, res, clusterUid) {
+  try {
+    const cluster = db.prepare(`
+      SELECT cluster_uid, name, name_ja, lat, lon,
+             member_uids, line_colors, line_names, line_refs, line_modes,
+             mode_set, operator_set
+      FROM station_clusters WHERE cluster_uid = ?
+    `).get(clusterUid);
+    if (!cluster) return res.status(404).json({ error: 'cluster not found' });
+
+    let memberUids = [];
+    try { memberUids = JSON.parse(cluster.member_uids); } catch { /* empty */ }
+
+    const members = memberUids.length
+      ? db.prepare(
+          `SELECT station_uid, mode, name, operator, lat, lon, properties
+           FROM transport_stations WHERE station_uid IN (${memberUids.map(() => '?').join(',')})`,
+        ).all(...memberUids)
+      : [];
+
+    // Hydrate every member that has an ODPT station id — cheap, and it
+    // populates the per-station timetable table so the merged odptDepartures
+    // below is populated on the NEXT click if not this one.
+    await Promise.all(members.map((m) => {
+      let p = {}; try { p = JSON.parse(m.properties); } catch { /* ignore */ }
+      const stopIdForHydrate = p.stop_id || m.station_uid;
+      const odptStationId = typeof p.station_id === 'string'
+                         && p.station_id.startsWith('odpt.Station:')
+                         ? p.station_id : null;
+      return lazyHydrateForStop(stopIdForHydrate, odptStationId);
+    }));
+
+    const nowSec = secondsSinceMidnight(new Date());
+    const allDepartures = [];
+    const allArrivals = [];
+    const odptDepartures = [];
+    const routeIds = new Set();
+
+    for (const m of members) {
+      let p = {}; try { p = JSON.parse(m.properties); } catch { /* empty */ }
+      const stopId = p.stop_id || m.station_uid;
+      const deps = db.prepare(`
+        SELECT st.trip_id, st.stop_sequence, st.departure_sec,
+               tr.headsign, tr.route_id,
+               r.short_name AS route_short, r.long_name AS route_long,
+               r.color AS route_color,
+               rt.departure_delay_s AS delay_s
+        FROM gtfs_stop_times st
+        JOIN gtfs_trips tr
+          ON tr.org_id = st.org_id AND tr.feed_id = st.feed_id AND tr.trip_id = st.trip_id
+        LEFT JOIN gtfs_routes r
+          ON r.org_id = tr.org_id AND r.feed_id = tr.feed_id AND r.route_id = tr.route_id
+        LEFT JOIN gtfs_rt_trip_updates rt
+          ON rt.org_id = st.org_id AND rt.trip_id = st.trip_id AND rt.stop_sequence = st.stop_sequence
+        WHERE st.stop_id = ? AND st.departure_sec >= ?
+        ORDER BY st.departure_sec ASC
+        LIMIT 10
+      `).all(stopId, nowSec);
+      const arrs = db.prepare(`
+        SELECT st.trip_id, st.stop_sequence, st.arrival_sec,
+               tr.headsign, tr.route_id,
+               r.short_name AS route_short, r.long_name AS route_long,
+               r.color AS route_color,
+               rt.arrival_delay_s AS delay_s
+        FROM gtfs_stop_times st
+        JOIN gtfs_trips tr
+          ON tr.org_id = st.org_id AND tr.feed_id = st.feed_id AND tr.trip_id = st.trip_id
+        LEFT JOIN gtfs_routes r
+          ON r.org_id = tr.org_id AND r.feed_id = tr.feed_id AND r.route_id = tr.route_id
+        LEFT JOIN gtfs_rt_trip_updates rt
+          ON rt.org_id = st.org_id AND rt.trip_id = st.trip_id AND rt.stop_sequence = st.stop_sequence
+        WHERE st.stop_id = ? AND st.arrival_sec >= ?
+        ORDER BY st.arrival_sec ASC
+        LIMIT 10
+      `).all(stopId, nowSec);
+      for (const d of deps) { allDepartures.push({ ...d, wall_sec: d.departure_sec, member_mode: m.mode }); if (d.route_id) routeIds.add(d.route_id); }
+      for (const a of arrs) { allArrivals.push({ ...a, wall_sec: a.arrival_sec, member_mode: m.mode }); if (a.route_id) routeIds.add(a.route_id); }
+
+      const odptStationId = typeof p.station_id === 'string'
+                         && p.station_id.startsWith('odpt.Station:')
+                         ? p.station_id : null;
+      if (odptStationId) {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        const entries = getStationTimetable(odptStationId, { afterHHMM: `${hh}:${mm}`, limit: 10 });
+        for (const e of entries) odptDepartures.push({ ...e, member_mode: m.mode });
+      }
+    }
+
+    allDepartures.sort((a, b) => a.wall_sec - b.wall_sec);
+    allArrivals.sort((a, b) => a.wall_sec - b.wall_sec);
+
+    const alerts = [];
+    const alertsSeen = new Set();
+    const stmtAlert = db.prepare(
+      'SELECT header_text, description_text, effect FROM gtfs_rt_alerts WHERE route_ids LIKE ? LIMIT 10',
+    );
+    for (const rid of routeIds) {
+      for (const a of stmtAlert.all(`%"${rid}"%`)) {
+        const k = `${a.header_text}|${a.description_text}`;
+        if (alertsSeen.has(k)) continue;
+        alertsSeen.add(k);
+        alerts.push(a);
+        if (alerts.length >= 10) break;
+      }
+      if (alerts.length >= 10) break;
+    }
+
+    const lineColors = safeParseArray(cluster.line_colors);
+    const lineNames  = safeParseArray(cluster.line_names);
+    const lineRefs   = safeParseArray(cluster.line_refs);
+    const lineModes  = safeParseArray(cluster.line_modes);
+    const lines = lineColors.map((color, i) => ({
+      color: color || null,
+      name:  lineNames[i]  || null,
+      ref:   lineRefs[i]   || null,
+      mode:  lineModes[i]  || null,
+    }));
+
+    res.json({
+      station: {
+        station_uid: cluster.cluster_uid,
+        cluster_uid: cluster.cluster_uid,
+        mode: safeParseArray(cluster.mode_set).join('/'),
+        name: cluster.name,
+        name_ja: cluster.name_ja,
+        operator: safeParseArray(cluster.operator_set).join(', ') || null,
+        lat: cluster.lat,
+        lon: cluster.lon,
+        member_count: members.length,
+      },
+      lines,
+      departures: allDepartures.slice(0, 20),
+      arrivals: allArrivals.slice(0, 20),
+      odpt_departures: odptDepartures.slice(0, 20),
+      alerts,
+    });
+  } catch (err) {
+    console.error('[transit/station/summary:cluster]', err);
+    res.status(500).json({ error: 'internal' });
+  }
+}
+
+function safeParseArray(text) {
+  try { const v = JSON.parse(text); return Array.isArray(v) ? v : []; } catch { return []; }
+}
 
 // Structured vehicle info for a single active trip. trip_id arrives as
 // "org|feed|tripId" (the composite emitted by getActiveTripsAt) so we

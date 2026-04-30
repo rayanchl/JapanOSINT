@@ -15,6 +15,7 @@ import statusRouter from './routes/status.js';
 import followRouter from './routes/follow.js';
 import transitRouter from './routes/transit.js';
 import dbRouter from './routes/db.js';
+import plateauCatalogRouter from './routes/plateauCatalog.js';
 import { startScheduler } from './utils/scheduler.js';
 import { installFetchTap, setBroadcaster } from './utils/collectorTap.js';
 import { runBulkHydrate } from './utils/gtfsBulkHydrate.js';
@@ -47,6 +48,7 @@ app.use('/api/status', statusRouter);
 app.use('/api/follow', followRouter);
 app.use('/api/transit', transitRouter);
 app.use('/api/db', dbRouter);
+app.use('/api/plateau', plateauCatalogRouter);
 
 // ── Health check ───────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {

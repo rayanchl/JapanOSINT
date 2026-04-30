@@ -21,14 +21,70 @@ export function mergeFeatureCollections(results) {
   return out;
 }
 
+// Katakana → hiragana: each katakana codepoint is exactly 0x60 higher than
+// its hiragana counterpart, so a single subtract on the BMP range 0x30A1…
+// 0x30F6 collapses half the script pair. Full-width katakana small
+// characters and the prolonged-sound mark fold the same way; we don't
+// bother with half-width katakana because NFKC normalisation below upgrades
+// those to full-width first.
+function katakanaToHiragana(s) {
+  let out = '';
+  for (let i = 0; i < s.length; i++) {
+    const c = s.charCodeAt(i);
+    if (c >= 0x30A1 && c <= 0x30F6) {
+      out += String.fromCharCode(c - 0x60);
+    } else {
+      out += s[i];
+    }
+  }
+  return out;
+}
+
 /** Normalise a Japanese station/stop name for fuzzy matching. */
 export function normName(raw) {
   if (!raw) return '';
   return String(raw)
+    .normalize('NFKC')
     .toLowerCase()
     .replace(/駅|station|停留所|バス停|stop/gi, '')
     .replace(/[\s・\-()（）、,.]/g, '')
     .trim();
+}
+
+/**
+ * Stricter fingerprint for cross-mode station clustering. Builds on normName
+ * and additionally strips the common Japanese station-suffix particles
+ * (〜前・〜口・〜入口) that OSM and MLIT disagree on, then folds katakana
+ * to hiragana so "シンジュク"/"しんじゅく" hash to the same key.
+ */
+export function stationNameFingerprint(raw) {
+  if (!raw) return '';
+  let s = normName(raw);
+  // Strip trailing position particles even after normName's 駅/station pass:
+  // 〜前 ("in front of"), 〜口 ("-mouth"/exit), 〜入口 ("entrance").
+  s = s.replace(/(入口|前|口)$/u, '');
+  return katakanaToHiragana(s);
+}
+
+/** Small Levenshtein for sub-3-character drift between name variants. */
+export function levenshtein(a, b) {
+  if (a === b) return 0;
+  if (!a.length) return b.length;
+  if (!b.length) return a.length;
+  const m = a.length;
+  const n = b.length;
+  let prev = new Array(n + 1);
+  let curr = new Array(n + 1);
+  for (let j = 0; j <= n; j++) prev[j] = j;
+  for (let i = 1; i <= m; i++) {
+    curr[0] = i;
+    for (let j = 1; j <= n; j++) {
+      const cost = a.charCodeAt(i - 1) === b.charCodeAt(j - 1) ? 0 : 1;
+      curr[j] = Math.min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost);
+    }
+    [prev, curr] = [curr, prev];
+  }
+  return prev[n];
 }
 
 /**

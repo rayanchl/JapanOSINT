@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useMemo } from 'react';
+import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import useLayerLoading from './useLayerLoading.js';
 
 // sessionStorage survives page reloads within the same tab but clears on
@@ -109,13 +109,6 @@ const LAYER_DEFINITIONS = {
     color: '#ef5350',
     endpoint: '/api/data/crime',
     category: 'Safety',
-  },
-  buildings: {
-    name: 'Buildings',
-    icon: '\u{1F3E2}',
-    color: '#78909c',
-    endpoint: '/api/data/buildings',
-    category: 'Infrastructure',
   },
   social: {
     name: 'Social Media',
@@ -235,6 +228,14 @@ const LAYER_DEFINITIONS = {
   },
 
   // ── Infrastructure ──────────────────────────────────────────────
+  plateauBuildings: {
+    name: 'PLATEAU 3D Buildings',
+    icon: '\u{1F3D9}',
+    color: '#90a4ae',
+    endpoint: null,
+    clientRendered: true,
+    category: 'Infrastructure',
+  },
   electricalGrid: {
     name: 'Electrical Grid',
     icon: '\u{26A1}',
@@ -926,6 +927,26 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/unified-port-infra',
     category: 'Transport',
   },
+  // Pin stack + station footprints auto-follow Trains / Subways / Buses
+  // visibility. Hidden from LayerPanel. Loaded when any mode is on; each
+  // feature carries `mode_set` so the client filters the on-map pins and
+  // fills to only the currently-enabled modes.
+  unifiedStations: {
+    name: 'Stations (auto)',
+    icon: '\u{1F68F}',
+    color: '#eceff1',
+    endpoint: '/api/data/unified-stations',
+    category: 'Transport',
+    hidden: true,
+  },
+  unifiedStationFootprints: {
+    name: 'Station Footprints (auto)',
+    icon: '\u{1F3E2}',
+    color: '#90a4ae',
+    endpoint: '/api/data/unified-station-footprints',
+    category: 'Transport',
+    hidden: true,
+  },
   // ── Wave 11: broadened pulse ────────────────────────────────────
   japanPostOffices: {
     name: 'Post Offices',
@@ -1179,6 +1200,30 @@ export default function useMapLayers() {
     } catch { /* ignore */ }
     fetchLayerData(layerId);
   }, [fetchLayerData]);
+
+  // Auto-follow: unifiedStations + unifiedStationFootprints mirror the
+  // Trains / Subways / Buses toggles. Visible when any mode is on, hidden
+  // when all are off. MapView filters features by current mode_set, so a
+  // cross-mode station only shows pins/footprint for the modes the user
+  // actually has enabled.
+  const transitModesOn = !!(
+    layers.unifiedTrains?.visible
+    || layers.unifiedSubways?.visible
+    || layers.unifiedBuses?.visible
+  );
+  useEffect(() => {
+    for (const followerId of ['unifiedStations', 'unifiedStationFootprints']) {
+      const current = layers[followerId];
+      if (!current) continue;
+      if (current.visible !== transitModesOn) {
+        if (transitModesOn) fetchLayerData(followerId);
+        setLayers((prev) => ({
+          ...prev,
+          [followerId]: { ...prev[followerId], visible: transitModesOn },
+        }));
+      }
+    }
+  }, [transitModesOn, fetchLayerData, layers]);
 
   const activeCount = Object.values(layers).filter((l) => l.visible).length;
 

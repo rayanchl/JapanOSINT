@@ -4,13 +4,21 @@
 const CLIP_AT_CHARS = 500;
 const MAX_IMAGES = 2;
 
+// queries: ordered list (most-specific first) of Japanese place strings the
+// GSI address-search API can resolve. Empty list = "no place inferable" — the
+// caller treats that the same as the old `place: null` sentinel.
 const PLACE_SCHEMA = {
   type: 'object',
   properties: {
-    place:      { type: ['string', 'null'], maxLength: 100 },
+    queries: {
+      type: 'array',
+      items: { type: 'string', maxLength: 100 },
+      minItems: 0,
+      maxItems: 3,
+    },
     confidence: { type: 'number', minimum: 0, maximum: 1 },
   },
-  required: ['place', 'confidence'],
+  required: ['queries', 'confidence'],
 };
 
 const DEDUP_SCHEMA = {
@@ -61,11 +69,17 @@ export function buildDedupPairPrompt(p) {
 
 export function buildSocialGeocodePrompt(p) {
   const system =
-    'You extract Japanese place names from social media posts. Return the ' +
-    'single most specific Japanese place mentioned in the post — a ' +
-    'neighbourhood, station, landmark, or address. Prefer the place where ' +
-    'the author is, not places merely mentioned in conversation. If no ' +
-    'place is mentioned, return null.';
+    'You extract Japanese place references from social media posts and turn ' +
+    'them into queries the GSI Japanese address-search API can resolve. ' +
+    'Return up to 3 queries ordered from most specific to broadest. Prefer ' +
+    'Japanese (kanji + kana) over romaji — GSI matches Japanese far better. ' +
+    'When you can confidently infer an administrative address, format the ' +
+    'most specific query as `<prefecture><city><ward><district>` (e.g. ' +
+    '`東京都渋谷区道玄坂`); when only a landmark or station is mentioned, ' +
+    'use that name (e.g. `東京タワー`, `渋谷駅`). Always include at least one ' +
+    'broader fallback (city or prefecture) as the last entry. Prefer the ' +
+    'place where the author is, not places merely mentioned in conversation. ' +
+    'If no place can be inferred, return an empty queries list.';
   const userText =
     `Platform: ${p.platform}\n` +
     `Author: ${p.author ?? ''}\n` +
@@ -88,10 +102,17 @@ export function buildSocialGeocodePrompt(p) {
 
 export function buildVideoGeocodePrompt(p) {
   const system =
-    'You extract Japanese place names from video metadata. Return the ' +
-    'single most specific Japanese place where the video was filmed or ' +
-    'that the video is about — a neighbourhood, station, landmark, or ' +
-    'address. If no place can be inferred, return null.';
+    'You extract Japanese place references from video metadata and turn ' +
+    'them into queries the GSI Japanese address-search API can resolve. ' +
+    'Return up to 3 queries ordered from most specific to broadest, where ' +
+    'the video was filmed or which the video is about. Prefer Japanese ' +
+    '(kanji + kana) over romaji — GSI matches Japanese far better. When ' +
+    'you can confidently infer an administrative address, format the most ' +
+    'specific query as `<prefecture><city><ward><district>` (e.g. ' +
+    '`東京都渋谷区道玄坂`); when only a landmark or station is mentioned, ' +
+    'use that name (e.g. `東京タワー`, `渋谷駅`). Always include at least one ' +
+    'broader fallback (city or prefecture) as the last entry. If no place ' +
+    'can be inferred, return an empty queries list.';
   const userText =
     `Platform: ${p.platform}\n` +
     `Channel: ${p.channel ?? ''}\n` +

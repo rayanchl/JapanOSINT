@@ -156,19 +156,6 @@ const sources = [
 
   // ── Geospatial ───────────────────────────────────────────────────────
   {
-    id: 'plateau-buildings',
-    name: 'PLATEAU 3D Buildings',
-    nameJa: 'PLATEAU 3D都市モデル',
-    type: 'dataset',
-    category: 'geospatial',
-    url: 'https://www.geospatial.jp/ckan/dataset/plateau',
-    description: 'MLIT PLATEAU 3D city model building data',
-    updateInterval: 604800,
-    layer: 'buildings',
-    free: true,
-    status: 'offline',
-  },
-  {
     id: 'gsi-tiles',
     name: 'GSI Map Tiles',
     nameJa: '国土地理院 地図タイル',
@@ -527,8 +514,6 @@ const sources = [
   { id: 'mlit-road-traffic', name: 'MLIT Road Traffic Census', nameJa: '国交省 道路交通センサス', type: 'dataset', category: 'transport', url: 'https://www.mlit.go.jp/road/', description: 'Road traffic volume census data', updateInterval: 604800, layer: 'transport', free: true, status: 'offline' },
 
   // ── Geospatial Extended ─────────────────────────────────────────────
-  { id: 'plateau-tokyo23', name: 'PLATEAU Tokyo 23 Wards', nameJa: 'PLATEAU 東京23区', type: 'dataset', category: 'geospatial', url: 'https://www.geospatial.jp/ckan/dataset/plateau-tokyo23ku', description: 'PLATEAU 3D model for all 23 Tokyo wards', updateInterval: 604800, layer: 'buildings', free: true, status: 'offline' },
-  { id: 'plateau-osaka', name: 'PLATEAU Osaka', nameJa: 'PLATEAU 大阪市', type: 'dataset', category: 'geospatial', url: 'https://www.geospatial.jp/ckan/dataset/plateau-osaka', description: 'PLATEAU 3D city model for Osaka', updateInterval: 604800, layer: 'buildings', free: true, status: 'offline' },
   { id: 'gsi-photo', name: 'GSI Aerial Photography', nameJa: '国土地理院 空中写真', type: 'api', category: 'geospatial', url: 'https://cyberjapandata.gsi.go.jp/', description: 'Aerial photography tiles from GSI', updateInterval: 86400, layer: 'basemap', free: true, status: 'offline' },
   { id: 'gsi-hazard', name: 'GSI Hazard Maps', nameJa: '国土地理院 ハザードマップ', type: 'api', category: 'geospatial', url: 'https://disaportal.gsi.go.jp/', description: 'Flood/landslide/tsunami hazard map overlays', updateInterval: 86400, layer: 'hazard', free: true, status: 'offline' },
   { id: 'gsi-active-fault', name: 'GSI Active Fault Map', nameJa: '国土地理院 活断層図', type: 'dataset', category: 'geospatial', url: 'https://www.gsi.go.jp/bousaichiri/active_fault.html', description: 'Active fault line locations', updateInterval: 604800, layer: 'hazard', free: true, status: 'offline' },
@@ -664,6 +649,8 @@ const sources = [
   { id: 'unified-buses', name: 'Unified Buses (fused)', nameJa: 'Unified Buses', type: 'dataset', category: 'transport', url: 'internal://unified-buses', description: 'Deduplicated nationwide bus stops + terminals - fused MLIT P11 + GTFS-JP + OSM transport + curated highway terminals', updateInterval: 86400, layer: 'unified-buses', free: true, status: 'offline' },
   { id: 'unified-ais-ships', name: 'Unified AIS Ships (fused)', nameJa: 'Unified AIS Ships', type: 'dataset', category: 'transport', url: 'internal://unified-ais-ships', description: 'Deduplicated AIS vessel positions - fuses MarineTraffic + VesselFinder + maritimeAis (dedup by MMSI/IMO, freshest position wins)', updateInterval: 300, layer: 'unified-ais-ships', free: true, status: 'offline' },
   { id: 'unified-port-infra', name: 'Unified Port Infrastructure (fused)', nameJa: 'Unified Port Infra', type: 'dataset', category: 'transport', url: 'internal://unified-port-infra', description: 'Deduplicated Japan port infrastructure - fuses curated PortInfra + OSM transport ports + MLIT C02 designated ports', updateInterval: 86400, layer: 'unified-port-infra', free: true, status: 'offline' },
+  { id: 'unified-stations', name: 'Unified Stations (cross-mode)', nameJa: 'Unified Stations', type: 'dataset', category: 'transport', url: 'internal://unified-stations', description: 'Cross-mode canonical stations - one row per physical place, merged from train + subway + tram + monorail via wikidata + spatial/name match', updateInterval: 86400, layer: 'unified-stations', free: true, status: 'offline' },
+  { id: 'unified-station-footprints', name: 'Station Footprints (nationwide)', nameJa: 'Station Footprints', type: 'dataset', category: 'transport', url: 'internal://unified-station-footprints', description: 'Nationwide OSM station-building polygons - floor-plan fills for major interchanges', updateInterval: 86400, layer: 'unified-station-footprints', free: true, status: 'offline' },
   { id: 'bus-routes', name: 'Bus Terminals', nameJa: 'バスターミナル', type: 'dataset', category: 'transport', url: 'https://www.bus.or.jp/', description: 'Highway bus terminals and city bus depots across Japan', updateInterval: 86400, layer: 'bus-routes', free: true, status: 'online' },
   { id: 'ferry-routes', name: 'Ferry Terminals', nameJa: 'フェリーターミナル', type: 'dataset', category: 'transport', url: 'https://www.jsanet.or.jp/', description: 'Ferry terminals (inter-island, Seto Inland, Okinawa, international)', updateInterval: 86400, layer: 'ferry-routes', free: true, status: 'online' },
   { id: 'highway-traffic', name: 'Expressway IC/JCT/SA/PA', nameJa: '高速道路 IC/JCT/SA/PA', type: 'web_request', category: 'transport', url: 'https://www.driveplaza.com/', description: 'NEXCO expressway interchanges, junctions, service areas, parking areas, congestion', updateInterval: 600, layer: 'highway-traffic', free: true, status: 'online' },

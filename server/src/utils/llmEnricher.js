@@ -163,6 +163,35 @@ const stmtUpdateCameraFail = db.prepare(`
   WHERE camera_uid = ?
 `);
 
+// Normalise the LLM's structured output to a clean ordered list of queries.
+// Returns null when the response is unparseable, [] when the LLM correctly
+// reported "no place inferable".
+function extractQueries(out) {
+  if (!out || !Array.isArray(out.queries)) return null;
+  const cleaned = [];
+  for (const q of out.queries) {
+    if (typeof q !== 'string') continue;
+    const trimmed = q.trim();
+    if (!trimmed) continue;
+    if (cleaned.includes(trimmed)) continue;
+    cleaned.push(trimmed);
+    if (cleaned.length >= 3) break;
+  }
+  return cleaned;
+}
+
+// Try queries in order; first GSI hit wins. Returns { hit, query } when a hit
+// lands (so the caller can record which level resolved), or { hit: null,
+// query: queries[0] } when every fallback missed (records the most-specific
+// attempted query for audit / re-queue).
+async function resolveViaQueries(queries, gsiSearch) {
+  for (const q of queries) {
+    const hit = await gsiSearch(q);
+    if (hit) return { hit, query: q };
+  }
+  return { hit: null, query: queries[0] };
+}
+
 export async function enrichCameras(opts = {}) {
   const llmChat = opts.llmChat || defaultChat;
   const gsiSearch = opts.gsiSearch || defaultGsi;
@@ -180,27 +209,28 @@ export async function enrichCameras(opts = {}) {
       vision: false,
     });
     const out = await llmChat({ messages, jsonSchema, timeoutMs: TIMEOUT_MS });
-    if (!out || typeof out.place === 'undefined') {
+    const queries = extractQueries(out);
+    if (queries === null) {
       stmtUpdateCameraFail.run(null, row.camera_uid);
       continue;
     }
-    if (!out.place) {
+    if (queries.length === 0) {
       stmtUpdateCameraFail.run(null, row.camera_uid);
       continue;
     }
     if (typeof out.confidence === 'number' && out.confidence < PLACE_CONFIDENCE_GATE) {
-      stmtUpdateCameraFail.run(out.place, row.camera_uid);
+      stmtUpdateCameraFail.run(queries[0], row.camera_uid);
       continue;
     }
-    const hit = await gsiSearch(out.place);
+    const { hit, query } = await resolveViaQueries(queries, gsiSearch);
     if (!hit) {
-      stmtUpdateCameraFail.run(out.place, row.camera_uid);
+      stmtUpdateCameraFail.run(queries[0], row.camera_uid);
       continue;
     }
     const props = safeJson(row.properties);
     props.original_lat = row.lat;
     props.original_lon = row.lon;
-    stmtUpdateCameraOk.run(hit.lat, hit.lon, out.place, JSON.stringify(props), row.camera_uid);
+    stmtUpdateCameraOk.run(hit.lat, hit.lon, query, JSON.stringify(props), row.camera_uid);
     geocoded++;
   }
   return { geocoded };
@@ -218,24 +248,25 @@ async function drainTextRows({ rowsStmt, buildPrompt, onOk, onFail, llmChat, gsi
     // fall through to the default model from llmClient (LLM_MODEL).
     const model = (VISION_MODEL && promptUsesVision(messages)) ? VISION_MODEL : undefined;
     const out = await _llmChat({ messages, jsonSchema, timeoutMs: TIMEOUT_MS, model });
-    if (!out || typeof out.place === 'undefined') {
+    const queries = extractQueries(out);
+    if (queries === null) {
       onFail(row, '__bad_json__', null);
       continue;
     }
-    if (out.place === null) {
+    if (queries.length === 0) {
       onFail(row, '__no_match__', null);
       continue;
     }
     if (typeof out.confidence === 'number' && out.confidence < PLACE_CONFIDENCE_GATE) {
-      onFail(row, '__no_match__', out.place);
+      onFail(row, '__no_match__', queries[0]);
       continue;
     }
-    const hit = await _gsiSearch(out.place);
+    const { hit, query } = await resolveViaQueries(queries, _gsiSearch);
     if (!hit) {
-      onFail(row, '__gsi_miss__', out.place);
+      onFail(row, '__gsi_miss__', queries[0]);
       continue;
     }
-    onOk(row, out.place, hit);
+    onOk(row, query, hit);
     geocoded++;
   }
   return { geocoded };

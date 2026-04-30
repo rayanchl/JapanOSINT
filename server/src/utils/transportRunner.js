@@ -27,6 +27,14 @@ import {
 } from './transportStore.js';
 import { snapStationsToNearestLine } from './transportSpatialSnap.js';
 import { withCollectorRun } from './collectorTap.js';
+import { runStationClusterer } from './stationClusterer.js';
+import collectOsmTransportStationBoundaries from '../collectors/osmTransportStationBoundaries.js';
+import {
+  upsertFootprintsTx,
+  linkClustersToFootprintsTx,
+  footprintCount,
+} from './stationFootprintsStore.js';
+import db from './database.js';
 
 // Transport runs are cold-start-heavy: _liveHelpers' in-memory Overpass
 // cache is lost on server restart, so the first run after boot does
@@ -200,6 +208,39 @@ export async function runTransportDiscovery(wsServer) {
       } catch (err) {
         console.error(`[transportRunner] ${mode} snap failed:`, err?.message);
       }
+    }
+
+    // Station clustering: build one canonical cross-mode station per
+    // physical place (Shinjuku = one row, spanning JR / Tokyo Metro /
+    // Toei / Keio / Odakyu). The clusterer rebuilds the table from scratch
+    // each run so member UIDs stay in sync with transport_stations.
+    try {
+      const cluster = runStationClusterer();
+      console.log(`[transportRunner] cluster — ${JSON.stringify(cluster)}`);
+    } catch (err) {
+      console.error('[transportRunner] cluster failed:', err?.message);
+    }
+
+    // Station footprints: nationwide OSM station-building polygons. Pull
+    // fresh and upsert; then stamp each footprint with the cluster whose
+    // centroid falls inside its bbox (for popup back-linking).
+    try {
+      const fps = await withTimeout(
+        collectOsmTransportStationBoundaries(),
+        LINE_COLLECTOR_TIMEOUT_MS,
+        'station-footprints',
+      );
+      const list = Array.isArray(fps?.features) ? fps.features : [];
+      if (list.length) upsertFootprintsTx(list);
+      const allClusters = db.prepare(
+        'SELECT cluster_uid, lat, lon FROM station_clusters',
+      ).all();
+      const linked = linkClustersToFootprintsTx(allClusters);
+      console.log(
+        `[transportRunner] footprints — fetched=${list.length}, total=${footprintCount()}, linked=${linked}`,
+      );
+    } catch (err) {
+      console.error('[transportRunner] footprints failed:', err?.message);
     }
 
     return summaries;

@@ -60,6 +60,31 @@ function segmentDistSqM(px, py, ax, ay, bx, by) {
 }
 
 /**
+ * Same as segmentDistSqM but also returns the closest (lon, lat) on the
+ * segment — used to "snap" a station's dot onto the line geometry so each
+ * line's pin sits exactly ON its track instead of all dots piling at the
+ * station centroid.
+ */
+function closestPointOnSegment(px, py, ax, ay, bx, by) {
+  const midLat = (ay + by) * 0.5;
+  const cosLat = Math.cos((midLat * Math.PI) / 180);
+  const ex = (bx - ax) * cosLat * METERS_PER_DEG_LAT;
+  const ey = (by - ay) * METERS_PER_DEG_LAT;
+  const dx = (px - ax) * cosLat * METERS_PER_DEG_LAT;
+  const dy = (py - ay) * METERS_PER_DEG_LAT;
+  const segLenSq = ex * ex + ey * ey;
+  let t = segLenSq === 0 ? 0 : (dx * ex + dy * ey) / segLenSq;
+  if (t < 0) t = 0; else if (t > 1) t = 1;
+  // Linear interpolation in lon/lat degrees works fine at the sub-300m
+  // scale we snap within.
+  const snappedLon = ax + t * (bx - ax);
+  const snappedLat = ay + t * (by - ay);
+  const ddx = dx - t * ex;
+  const ddy = dy - t * ey;
+  return { lon: snappedLon, lat: snappedLat, distSqM: ddx * ddx + ddy * ddy };
+}
+
+/**
  * Index all colored line segments into a cell map. Each segment is written
  * into every cell its endpoints touch (usually just one).
  */
@@ -71,11 +96,15 @@ function buildSegmentIndex(lines) {
     if (!color) continue;
     const coords = line.geometry?.coordinates;
     if (!Array.isArray(coords) || coords.length < 2) continue;
+    // Stamp each segment with its owning way id so the per-track snap can
+    // tell up-direction rail from down-direction rail (same colour,
+    // different way_uid = two parallel LineStrings).
+    const wayUid = line.properties?.line_uid || line.properties?.way_id || null;
     for (let i = 0; i < coords.length - 1; i++) {
       const a = coords[i];
       const b = coords[i + 1];
       if (!Array.isArray(a) || !Array.isArray(b)) continue;
-      const seg = { ax: a[0], ay: a[1], bx: b[0], by: b[1], color };
+      const seg = { ax: a[0], ay: a[1], bx: b[0], by: b[1], color, way_uid: wayUid };
       const keyA = cellKey(a[0], a[1]);
       const keyB = cellKey(b[0], b[1]);
       pushIntoCell(index, keyA, seg);
@@ -181,4 +210,110 @@ export function snapStationsToNearestLine(mode, opts = {}) {
     unmatched,
     changed,
   };
+}
+
+/**
+ * For a single (lon, lat) position, scan the segment index for `mode` and
+ * return, for every distinct line_color within `radiusM`, the closest (lon,
+ * lat) on that line. Used by the station clusterer to place one Apple-style
+ * dot on EACH line at a given station centroid.
+ *
+ * Rebuilds the segment index on every call — cheap enough for the runner's
+ * once-per-hour cluster pass; callers that need per-cluster iteration
+ * should use `buildSnapIndexForMode` + `snapLinesAt` below instead.
+ */
+export function buildSnapIndexForMode(mode, opts = {}) {
+  const radiusM = opts.radiusM || DEFAULT_RADIUS_M;
+  const lines = getLinesByMode(mode);
+  const colored = lines.filter((l) => l.properties?.line_color);
+  const { index } = buildSegmentIndex(colored);
+  return { index, radiusSqM: radiusM * radiusM };
+}
+
+export function snapLinesAt(index, lon, lat, { radiusSqM }) {
+  const cx = Math.floor(lon / CELL_SIZE_DEG);
+  const cy = Math.floor(lat / CELL_SIZE_DEG);
+  const bestByColor = new Map(); // color -> { distSq, lon, lat }
+  for (let dx = -1; dx <= 1; dx++) {
+    for (let dy = -1; dy <= 1; dy++) {
+      const bucket = index.get(`${cx + dx}:${cy + dy}`);
+      if (!bucket) continue;
+      for (const seg of bucket) {
+        const snap = closestPointOnSegment(lon, lat, seg.ax, seg.ay, seg.bx, seg.by);
+        if (snap.distSqM > radiusSqM) continue;
+        const prev = bestByColor.get(seg.color);
+        if (!prev || snap.distSqM < prev.distSqM) {
+          bestByColor.set(seg.color, { distSqM: snap.distSqM, lon: snap.lon, lat: snap.lat });
+        }
+      }
+    }
+  }
+  return bestByColor;
+}
+
+/**
+ * Per-direction snap: for each colour within radius, return one dot per
+ * physical track direction at the station's perpendicular projection.
+ *
+ * Strategy:
+ *   1. Find the nearest snap across all segments of this colour → rail A.
+ *   2. Find the next-nearest snap whose point is at least MIN_SEPARATION_M
+ *      away from rail A's snap, measured in screen space — that's rail B.
+ *   3. Emit 1 dot (single-track) or 2 (parallel double-track).
+ *
+ * The second-rail search ignores along-track displacement entirely. What
+ * matters is: two snap points on different parallel rails are separated
+ * by the rail gauge (~5-15 m apart in projected space) at the same
+ * station-perpendicular line. A second-best snap within MIN_SEPARATION_M
+ * of rail A is just another fragment of the SAME rail — dropped. The
+ * first snap more than MIN_SEPARATION_M away is the parallel rail.
+ *
+ * Returns Array<{ lon, lat, color, distSqM }>.
+ */
+const MIN_RAIL_SEPARATION_M = 3;    // rails closer than this = same track
+const MIN_RAIL_SEPARATION_SQ = MIN_RAIL_SEPARATION_M * MIN_RAIL_SEPARATION_M;
+
+export function snapAllWaysAt(index, lon, lat, { radiusSqM }) {
+  const cx = Math.floor(lon / CELL_SIZE_DEG);
+  const cy = Math.floor(lat / CELL_SIZE_DEG);
+
+  // Collect every snap within radius, grouped by colour.
+  const byColor = new Map();
+  for (let dx = -1; dx <= 1; dx++) {
+    for (let dy = -1; dy <= 1; dy++) {
+      const bucket = index.get(`${cx + dx}:${cy + dy}`);
+      if (!bucket) continue;
+      for (const seg of bucket) {
+        const snap = closestPointOnSegment(lon, lat, seg.ax, seg.ay, seg.bx, seg.by);
+        if (snap.distSqM > radiusSqM) continue;
+        let arr = byColor.get(seg.color);
+        if (!arr) { arr = []; byColor.set(seg.color, arr); }
+        arr.push({ lon: snap.lon, lat: snap.lat, distSqM: snap.distSqM });
+      }
+    }
+  }
+
+  // Cosine for local metric conversion.
+  const cosLat = Math.cos((lat * Math.PI) / 180);
+  const out = [];
+  for (const [color, points] of byColor) {
+    // Sort by distance-to-station ascending.
+    points.sort((a, b) => a.distSqM - b.distSqM);
+    // Rail A = closest.
+    const railA = points[0];
+    out.push({ lon: railA.lon, lat: railA.lat, distSqM: railA.distSqM, color });
+    // Rail B = first snap at least MIN_RAIL_SEPARATION_M away from rail A.
+    // Any closer is either a neighbouring fragment of rail A or a snap
+    // onto the same rail from a shorter OSM way.
+    for (let k = 1; k < points.length; k++) {
+      const p = points[k];
+      const dx = (p.lon - railA.lon) * cosLat * METERS_PER_DEG_LAT;
+      const dy = (p.lat - railA.lat) * METERS_PER_DEG_LAT;
+      const sqSep = dx * dx + dy * dy;
+      if (sqSep < MIN_RAIL_SEPARATION_SQ) continue;
+      out.push({ lon: p.lon, lat: p.lat, distSqM: p.distSqM, color });
+      break;
+    }
+  }
+  return out;
 }

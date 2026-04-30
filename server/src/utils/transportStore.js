@@ -166,9 +166,10 @@ function perpDistDeg(p, a, b) {
 // first and last coordinate, drops every interior point whose perpendicular
 // distance to the surviving chord is below `epsilonDeg`.
 //
-// epsilonDeg = 1e-5 ≈ 1 m at Japan latitudes — below visible resolution on
-// any screen, so dropping points at this tolerance is invisible to the eye
-// but cuts Chaikin's output size by ~20×.
+// epsilonDeg = 1e-6 ≈ 10 cm at Japan latitudes. Tight enough to preserve
+// the Chaikin arc geometry (a 1 m epsilon was aggressive enough to erase
+// ~90% of the smoothing, making tracks read as raw OSM again) while still
+// collapsing near-collinear runs on long straights.
 function simplifyPolyline(coords, epsilonDeg) {
   const n = coords.length;
   if (n < 3) return coords;
@@ -195,7 +196,7 @@ function simplifyPolyline(coords, epsilonDeg) {
   return out;
 }
 
-function chaikinSmooth(coords, iterations = 4, simplifyEps = 1e-5) {
+function chaikinSmooth(coords, iterations = 4, simplifyEps = 1e-6) {
   if (!Array.isArray(coords) || coords.length < 3) return coords;
   let c = coords;
   for (let i = 0; i < iterations; i++) c = chaikinOnce(c);

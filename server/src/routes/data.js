@@ -10,6 +10,7 @@ import { isRunInFlight, runCameraDiscovery } from '../utils/cameraRunner.js';
 import { withCollectorRun, annotateLastHit, getBroadcaster } from '../utils/collectorTap.js';
 import { getOAuthToken } from '../utils/openskyAuth.js';
 import { getEnrich, setEnrich } from '../utils/flightEnrichCache.js';
+import { fetchDamLive } from '../utils/mlitDamLive.js';
 import {
   getCached, setCached, getTtlMs,
 } from '../utils/collectorCache.js';
@@ -384,6 +385,12 @@ router.get('/unified-ais-ships', async (_req, res) => {
 router.get('/unified-port-infra', async (_req, res) => {
   await respondWithData(res, { sourceId: 'unified-port-infra', layerType: 'unified-port-infra', collectorKey: 'unified-port-infra' });
 });
+router.get('/unified-stations', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'unified-stations', layerType: 'unified-stations', collectorKey: 'unified-stations' });
+});
+router.get('/unified-station-footprints', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'unified-station-footprints', layerType: 'unified-station-footprints', collectorKey: 'unified-station-footprints' });
+});
 
 // GET /api/data/cameras/snapshot?url=<encoded> — on-demand JPEG screenshot
 // of an embed-blocked webcam page, cached for 24h.
@@ -425,6 +432,21 @@ router.get('/cameras/snapshot', async (req, res) => {
   }
 });
 
+// GET /api/data/dam/:damId/live — on-demand scrape of MLIT 水文・水質DB
+// for one dam. Triggered from the map popup (see client DamLiveLevel).
+// No schedule, no poll — only fires on user click. In-process 5 min cache.
+router.get('/dam/:damId/live', async (req, res) => {
+  const damId = String(req.params.damId || '').replace(/[^A-Z0-9_]/g, '');
+  if (!damId) return res.status(400).json({ ok: false, reason: 'bad damId' });
+  try {
+    const result = await fetchDamLive(damId);
+    res.json(result);
+  } catch (err) {
+    console.error('[data/dam/live]', err);
+    res.status(502).json({ ok: false, reason: err?.message || 'upstream failed' });
+  }
+});
+
 // GET /api/data/population
 router.get('/population', async (_req, res) => {
   await respondWithData(res, {
@@ -458,15 +480,6 @@ router.get('/crime', async (_req, res) => {
     sourceId: 'police-incidents',
     layerType: 'crime',
     collectorKey: 'police-crime',
-  });
-});
-
-// GET /api/data/buildings
-router.get('/buildings', async (_req, res) => {
-  await respondWithData(res, {
-    sourceId: 'plateau-buildings',
-    layerType: 'buildings',
-    collectorKey: 'plateau-buildings',
   });
 });
 

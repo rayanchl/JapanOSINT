@@ -295,6 +295,17 @@ export async function geocodeFeatures(features, opts = {}) {
     }
   }
   await Promise.all(Array.from({ length: concurrency }, worker));
+  // Anything that didn't reach 'geocoded' (and isn't already a trusted real-coord
+  // source like insecam_detail) is sitting on a jittered centroid — flag it so
+  // the LLM enricher picks it up. Channel-level flags (e.g. fromInsecam already
+  // sets location_uncertain explicitly) are preserved as-is.
+  const TRUSTED_SOURCES = new Set(['geocoded', 'insecam_detail']);
+  for (const f of targets) {
+    const props = f.properties;
+    if (!props) continue;
+    if (props.location_uncertain != null) continue;
+    props.location_uncertain = TRUSTED_SOURCES.has(props.coord_source) ? 0 : 1;
+  }
   saveCache();
   return { hit, miss };
 }

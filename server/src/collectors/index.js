@@ -13,7 +13,6 @@ import mlitLandprice from './mlitLandprice.js';
 import mlitRiver from './mlitRiver.js';
 import publicCameras from './publicCameras.js';
 import policeCrime from './policeCrime.js';
-import plateauBuildings from './plateauBuildings.js';
 import socialMedia from './socialMedia.js';
 
 // Social media expansions
@@ -66,6 +65,10 @@ import {
   collectUnifiedAisShipsRead,
   collectUnifiedPortInfraRead,
 } from './transportRead.js';
+import {
+  collectUnifiedStationsRead,
+  collectUnifiedStationFootprintsRead,
+} from './unifiedStationsRead.js';
 // Read-side collector for /api/data/cameras (camera_store DB).
 import camerasCollector from './cameras.js';
 
@@ -242,7 +245,6 @@ export const collectors = {
   'mlit-river': mlitRiver,
   'public-cameras': publicCameras,
   'police-crime': policeCrime,
-  'plateau-buildings': plateauBuildings,
   'social-media': socialMedia,
 
   // Social media expansions
@@ -292,6 +294,8 @@ export const collectors = {
   'unified-buses': collectUnifiedBusesRead,
   'unified-ais-ships': collectUnifiedAisShipsRead,
   'unified-port-infra': collectUnifiedPortInfraRead,
+  'unified-stations': collectUnifiedStationsRead,
+  'unified-station-footprints': collectUnifiedStationFootprintsRead,
 
   // Cameras: read-side of the scheduled camera-discovery fan-out.
   'cameras': camerasCollector,

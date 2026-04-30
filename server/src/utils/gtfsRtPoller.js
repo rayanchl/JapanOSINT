@@ -109,14 +109,22 @@ async function pollOne(feed) {
   try {
     const res = await fetch(feed.rt_url, {
       headers: { 'User-Agent': 'japan-osint/1.0', 'Accept': 'application/x-protobuf' },
-      // No timeout API on fetch directly — rely on the RT poll cadence being
-      // short enough that a hung request self-heals on the next schedule.
+      signal: AbortSignal.timeout(15_000),
     });
     if (!res.ok) {
       stmtUpdateFeed.run({ feed_id: feed.feed_id, ok: 0, status: `HTTP ${res.status}` });
       return { ok: false, reason: `HTTP ${res.status}` };
     }
+    const ct = (res.headers.get('content-type') || '').toLowerCase();
+    if (ct && !/(protobuf|octet-stream)/.test(ct)) {
+      stmtUpdateFeed.run({ feed_id: feed.feed_id, ok: 0, status: `bad content-type ${ct.slice(0, 40)}` });
+      return { ok: false, reason: `bad content-type ${ct}` };
+    }
     const ab = await res.arrayBuffer();
+    if (ab.byteLength === 0) {
+      stmtUpdateFeed.run({ feed_id: feed.feed_id, ok: 1, status: 'ok empty body' });
+      return { ok: true, count: 0 };
+    }
     const msg = FeedMessage.decode(new Uint8Array(ab));
     let count = 0;
     const tx = db.transaction((entities) => {
@@ -188,7 +196,11 @@ async function pollOne(feed) {
     stmtUpdateFeed.run({ feed_id: feed.feed_id, ok: 1, status: `ok ${count} vehicles` });
     return { ok: true, count };
   } catch (err) {
-    const reason = err?.message || String(err);
+    const code = err?.cause?.code || err?.code || null;
+    const base = err?.name === 'TimeoutError' || err?.name === 'AbortError'
+      ? 'timeout'
+      : (err?.message || String(err));
+    const reason = code ? `${base} (${code})` : base;
     stmtUpdateFeed.run({ feed_id: feed.feed_id, ok: 0, status: `err ${reason.slice(0, 80)}` });
     console.warn(`[gtfsRtPoller] ${label} poll failed: ${reason}`);
     return { ok: false, reason };

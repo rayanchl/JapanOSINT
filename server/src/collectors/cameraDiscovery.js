@@ -230,6 +230,7 @@ async function fromSkyline() {
   // upgrade url → youtube.com/watch?v=<id> when possible. The popup
   // (MapPopup.jsx) auto-embeds any YouTube URL as an inline player.
   await upgradeYouTubeStreamUrls(features, 4);
+  await geocodeFeatures(features);
   return features;
 }
 
@@ -596,6 +597,7 @@ async function fromWorldcams() {
     );
   }
   await upgradeYouTubeStreamUrls(features, 4);
+  await geocodeFeatures(features);
   return features;
 }
 
@@ -714,6 +716,7 @@ async function fromCamstreamer() {
       );
     }
   }
+  await geocodeFeatures(features);
   return features;
 }
 
@@ -1022,8 +1025,9 @@ async function fromWindy() {
     return [];
   }
   const features = [];
-  const pageSize = 100;
-  for (let offset = 0; offset < 1000; offset += pageSize) {
+  // Windy v3 caps `limit` at 50 — anything larger returns HTTP 400.
+  const pageSize = 50;
+  for (let offset = 0; offset < 2000; offset += pageSize) {
     // Windy v3 uses `countries=` (plural) for the country filter. The singular
     // `country=` is silently ignored and returns the worldwide set.
     const url = `https://api.windy.com/webcams/api/v3/webcams?countries=JP&limit=${pageSize}&offset=${offset}&include=location,player,images`;

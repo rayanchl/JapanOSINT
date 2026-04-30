@@ -16,7 +16,6 @@ import {
   MdLocalPolice,
   MdLocalFireDepartment,
   MdHome,
-  MdApartment,
   MdBusinessCenter,
   MdLocationCity,
   MdAccountBalance,
@@ -136,6 +135,7 @@ export const LAYER_ICONS = {
   unifiedPortInfra: MdAnchor,
 
   // Infrastructure
+  plateauBuildings: MdLocationCity,
   electricalGrid: MdElectricBolt,
   gasNetwork: MdWhatshot,
   waterInfra: MdWaterDrop,
@@ -146,7 +146,6 @@ export const LAYER_ICONS = {
   portInfra: MdAnchor,
   bridgeTunnelInfra: FaBridge,
   famousPlaces: MdAttractions,
-  buildings: MdApartment,
   gasStations: MdLocalGasStation,
   damWaterLevel: MdWater,
 

@@ -29,9 +29,22 @@ export default function StationPopup({ properties }) {
   const now = new Date();
   const nowSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
 
+  const isCluster = !!data.station?.cluster_uid;
+  const memberCount = data.station?.member_count;
+
   return (
     <div className="space-y-2">
-      <div className="text-sm font-medium text-gray-200">{data.station.name}</div>
+      <div className="flex items-baseline justify-between gap-2">
+        <div className="text-sm font-medium text-gray-200">{data.station.name}</div>
+        {isCluster && memberCount > 1 && (
+          <span className="text-[9px] uppercase tracking-wider text-gray-500">
+            {memberCount} platforms
+          </span>
+        )}
+      </div>
+      {data.station.name_ja && data.station.name_ja !== data.station.name && (
+        <div className="text-[11px] text-gray-400">{data.station.name_ja}</div>
+      )}
       {data.station.operator && (
         <div className="text-[10px] text-gray-500 font-mono">{data.station.operator}</div>
       )}

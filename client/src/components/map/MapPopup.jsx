@@ -49,6 +49,74 @@ function ReverseGeocodeLabel({ feature }) {
   );
 }
 
+/**
+ * On-demand live water-level fetch for MLIT-administered dams. One of three
+ * visible states once the request resolves:
+ *   - live data block (fill rate, storage, inflow/outflow, …)
+ *   - "No public data" tag for power-company dams MLIT does not administer
+ *     (J-Power / TEPCO / KEPCO etc. — ~17 of our 46 seed dams)
+ *   - nothing, if the request never resolves (network error / aborted)
+ */
+function DamLiveLevel({ feature, layerType }) {
+  const [state, setState] = useState({ status: 'idle' });
+
+  useEffect(() => {
+    if (layerType !== 'dam-water-level') { setState({ status: 'idle' }); return; }
+    const damId = feature?.properties?.dam_id;
+    if (!damId) { setState({ status: 'idle' }); return; }
+    let cancelled = false;
+    setState({ status: 'loading' });
+
+    (async () => {
+      try {
+        const res = await fetch(`/api/data/dam/${encodeURIComponent(damId)}/live`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (cancelled) return;
+        if (data?.ok) setState({ status: 'live', data });
+        else setState({ status: 'unavailable', reason: data?.reason || null });
+      } catch { /* silent */ }
+    })();
+
+    return () => { cancelled = true; };
+  }, [feature, layerType]);
+
+  if (state.status === 'idle' || state.status === 'loading') return null;
+
+  if (state.status === 'unavailable') {
+    // Power-company and prefecturally-administered dams legitimately aren't
+    // in MLIT's DB. Show a small tag so users understand the dam is known
+    // but no public realtime source is available.
+    return (
+      <div className="mt-2 pt-2 border-t border-osint-border/50">
+        <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-0.5">
+          Live water level <span className="text-gray-600">(MLIT)</span>
+        </div>
+        <div className="text-xs text-gray-500 italic leading-snug">
+          No public data — private / non-MLIT operator
+        </div>
+      </div>
+    );
+  }
+
+  const live = state.data;
+  return (
+    <div className="mt-2 pt-2 border-t border-osint-border/50">
+      <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-0.5">
+        Live water level <span className="text-gray-600">(MLIT)</span>
+      </div>
+      <div className="text-xs text-gray-300 leading-snug space-y-0.5">
+        {live.fill_pct != null && <div>貯水率: <span className="text-gray-100">{live.fill_pct}%</span></div>}
+        {live.storage_1000m3 != null && <div>貯水量: <span className="text-gray-100">{live.storage_1000m3.toLocaleString()}</span> ×10³m³</div>}
+        {live.inflow_m3s != null && <div>流入量: <span className="text-gray-100">{live.inflow_m3s}</span> m³/s</div>}
+        {live.outflow_m3s != null && <div>放流量: <span className="text-gray-100">{live.outflow_m3s}</span> m³/s</div>}
+        {live.rainfall_mm_h != null && <div>流域雨量: <span className="text-gray-100">{live.rainfall_mm_h}</span> mm/h</div>}
+        {live.observed_at && <div className="text-gray-500 mt-0.5">as of {live.observed_at}</div>}
+      </div>
+    </div>
+  );
+}
+
 /* ---------- shared value helpers ---------- */
 
 const SKIP_KEYS = new Set([
@@ -1037,6 +1105,8 @@ const DETAIL_RENDERERS = {
   'unified-subways': StationPopup,
   unifiedBuses: StationPopup,
   'unified-buses': StationPopup,
+  unifiedStations: StationPopup,
+  'unified-stations': StationPopup,
   liveVehicle: VehiclePopup,
 };
 
@@ -1083,6 +1153,7 @@ export default function MapPopup({ feature, layerType, onClose, position }) {
         layerType={layerType}
       />
       <ReverseGeocodeLabel feature={feature} />
+      <DamLiveLevel feature={feature} layerType={layerType} />
     </div>
   );
 }

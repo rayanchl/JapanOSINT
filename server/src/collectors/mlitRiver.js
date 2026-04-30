@@ -6,13 +6,23 @@
 
 import { fetchOverpass, fetchJson } from './_liveHelpers.js';
 
-// MLIT/kawabou and DIAS public river-gauge endpoints (no auth required).
-const API_URLS = [
-  'https://www.river.go.jp/kawabou/api/suii/getStations.json',
-  'https://www.river.go.jp/kawabou/api/getCurrentStations.json',
-  'https://www1.river.go.jp/cgi/SiteInfoList.exe?ID=&KIND=1&PREF=00&format=json',
-];
+// MLIT 川の防災情報 (www.river.go.jp/kawabou) does not publish a stable public
+// JSON station list. The site SPA builds its data layer dynamically with
+// session state, and the legacy www1.river.go.jp CGI endpoints return a 403
+// "tools prohibited" block to non-browser clients. The old speculative paths
+// were returning the SPA HTML fallback (5 KB of <!DOCTYPE html>) which fetchJson
+// silently rejected — producing noise, no data.
+//
+// No verified public JSON source at time of writing. Kept as an empty array so
+// the collector falls straight through to OSM (man_made=monitoring_station)
+// and then the curated seed list below.
+const API_URLS = [];
 const TIMEOUT_MS = 15000;
+const BROWSER_HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
+  'Referer': 'https://www.river.go.jp/kawabou/',
+  'Accept': 'application/json,text/javascript,*/*;q=0.8',
+};
 
 const RIVER_STATIONS = [
   // Tone River (利根川) - Japan's largest watershed
@@ -97,7 +107,11 @@ function generateSeedData() {
 
 async function tryMlitJson() {
   for (const url of API_URLS) {
-    const data = await fetchJson(url, { timeoutMs: TIMEOUT_MS, retries: 1 });
+    const data = await fetchJson(url, {
+      timeoutMs: TIMEOUT_MS,
+      retries: 1,
+      headers: BROWSER_HEADERS,
+    });
     if (!data) continue;
     const arr = Array.isArray(data) ? data : (data.stations || data.data || data.items || []);
     if (!Array.isArray(arr) || arr.length === 0) continue;

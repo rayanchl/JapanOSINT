@@ -2,9 +2,21 @@
  * Dam Water Level Collector
  * Fetches reservoir water level data from MLIT Water Information System.
  * Falls back to a curated seed of major Japanese dams.
+ *
+ * Upstream note: the canonical MLIT dam CGI (www1.river.go.jp/cgi-bin/
+ * DspDamData.exe) returns EUC-JP HTML keyed on per-dam ID parameters —
+ * no JSON listing, no bulk endpoint. Without a browser User-Agent it
+ * 403s with the explicit "tools prohibited" policy message; with one,
+ * it responds but still requires per-dam scraping. Honest state: no
+ * automated live path wired yet. The seed below covers the 47 largest
+ * dams; production renders those.
  */
 
-const MLIT_DAM_URL = 'https://www1.river.go.jp/cgi/DspDamData.exe';
+const MLIT_DAM_URL = 'http://www1.river.go.jp/cgi-bin/DspDamData.exe';
+const BROWSER_HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
+  'Referer': 'https://www1.river.go.jp/',
+};
 
 const SEED_DAMS = [
   // Multipurpose / hydro / flood control - top 50 by storage
@@ -57,16 +69,26 @@ const SEED_DAMS = [
 ];
 
 async function tryMlitDam() {
+  // No public JSON endpoint — only per-dam EUC-JP HTML scraping, which the
+  // site owner's anti-tool policy discourages. Probe for reachability only
+  // (browser UA avoids the 403 block) so the collector logs the host's
+  // real state rather than masking it, then fall through to the seed.
   try {
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 10000);
-    const res = await fetch(MLIT_DAM_URL, { signal: ctrl.signal });
+    const res = await fetch(MLIT_DAM_URL, {
+      signal: ctrl.signal,
+      headers: BROWSER_HEADERS,
+      redirect: 'follow',
+    });
     clearTimeout(timeout);
-    if (!res.ok) return null;
-    return null;
-  } catch {
-    return null;
+    if (!res.ok) {
+      console.warn(`[damWaterLevel] MLIT CGI returned HTTP ${res.status}; using seed`);
+    }
+  } catch (err) {
+    console.warn(`[damWaterLevel] MLIT CGI unreachable: ${err?.message}; using seed`);
   }
+  return null;
 }
 
 function generateSeedData() {

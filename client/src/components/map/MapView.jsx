@@ -1,6 +1,11 @@
 import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { MapboxOverlay } from '@deck.gl/mapbox';
+import { Tile3DLayer } from '@deck.gl/geo-layers';
+import { TextLayer } from '@deck.gl/layers';
+import { Tiles3DLoader } from '@loaders.gl/3d-tiles';
+import { Matrix4 } from '@math.gl/core';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 import useLiveVehicles from '../../hooks/useLiveVehicles';
 import { getLayerIcon } from '../../utils/layerIcons';
@@ -235,6 +240,9 @@ function unregisterDroplineLayer(layerId) {
 // symbol layers. Rendering stays as plain line-colored dots.
 const SKIP_ICON_SUBSTITUTION = new Set([
   'unifiedTrains', 'unifiedSubways', 'unifiedBuses', 'satelliteTracking',
+  // Station dots + footprints: circle / fill should render as-is, not as
+  // the generic layer-icon pin.
+  'unifiedStations', 'unifiedStationFootprints',
 ]);
 
 // Replace any `type: 'circle'` layer config with an equivalent
@@ -292,25 +300,21 @@ function convertCircleConfigToSymbol(config, iconImageId, fallbackOpacity, layer
 
 // Each entry carries a display `name` plus a `style` that MapLibre accepts —
 // either a full inline style spec (for raster basemaps) or a URL string that
-// points at a hosted vector style JSON (OpenFreeMap). Insertion order is the
-// order shown in the switcher; the initial style loaded on mount is set by
-// the `currentStyle` useState default (OpenFreeMap Positron).
+// points at a hosted vector style JSON. Insertion order is the order shown
+// in the switcher; the initial style loaded on mount is set by the
+// `currentStyle` useState default.
 const MAP_STYLES = {
-  openfreemap_liberty: {
-    name: 'OpenFreeMap Liberty',
-    // Hosted vector style — fonts, sprites, sources all resolved by MapLibre
-    // from the referenced JSON. Free, no key, no rate limits, and renders
-    // labels as real client-side text (scalable, HiDPI-sharp) with full
-    // POI coverage from OpenMapTiles.
-    style: 'https://tiles.openfreemap.org/styles/liberty',
+  carto_dark_matter: {
+    name: 'CARTO Dark Matter',
+    style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
   },
-  openfreemap_positron: {
-    name: 'OpenFreeMap Positron',
-    style: 'https://tiles.openfreemap.org/styles/positron',
+  carto_dark_matter_nolabels: {
+    name: 'CARTO Dark Matter (no labels)',
+    style: 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json',
   },
-  openfreemap_dark: {
-    name: 'OpenFreeMap Dark',
-    style: 'https://tiles.openfreemap.org/styles/dark',
+  carto_voyager: {
+    name: 'CARTO Voyager',
+    style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
   },
   osm_dark: {
     name: 'OSM Dark',
@@ -386,6 +390,207 @@ const MAP_STYLES = {
   },
 };
 
+// ── PLATEAU 3D buildings (deck.gl Tile3DLayer overlay) ───────────────
+// The MLIT PLATEAU project ships per-city Cesium 3D Tiles for buildings
+// across 300+ Japanese cities. We pull the catalog from /api/plateau/tilesets
+// (server-side GraphQL proxy, cached 24h), spawn one Tile3DLayer per city
+// tileset, and feed them all into a single MapboxOverlay attached to the
+// MapLibre map. When the layer is on, we also hide the basemap's flat
+// `building` fills so the 3D extrusions don't double up on top of 2D prints.
+
+// Module-scoped fetch dedupe so toggling on/off in the same session doesn't
+// re-hit /api/plateau/tilesets every time. Resolves to the array of tilesets.
+let _plateauTilesetsPromise = null;
+function loadPlateauTilesets() {
+  if (!_plateauTilesetsPromise) {
+    _plateauTilesetsPromise = fetch('/api/plateau/tilesets')
+      .then((r) => {
+        if (!r.ok) throw new Error(`tilesets HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((j) => Array.isArray(j?.tilesets) ? j.tilesets : [])
+      .catch((err) => {
+        // One failure shouldn't poison the cache forever — clear so the
+        // next toggle retries.
+        _plateauTilesetsPromise = null;
+        throw err;
+      });
+  }
+  return _plateauTilesetsPromise;
+}
+
+// Tweak this to shove PLATEAU buildings up (positive) or down (negative)
+// along the local ellipsoid normal at each tileset's center, in metres.
+// PLATEAU tiles are anchored on the WGS84 ellipsoid using true ellipsoidal
+// height; MapLibre's basemap is at sea level (the geoid). Across Japan the
+// geoid–ellipsoid separation is ~+30 to +43 m, so a negative offset of that
+// magnitude pulls foundations down onto the basemap plane.
+//   -37  ≈ Tokyo geoid undulation (good first guess)
+//   -42  ≈ Hokkaido / Tohoku
+//   -30  ≈ Okinawa
+// Eyeball it and adjust until buildings sit flush on the ground.
+const PLATEAU_Z_OFFSET_M = -40;
+
+// Theme-matched uniform color (RGB 0-255). Picked muted so 3D extrusions
+// read as architecture, not a data layer competing for attention.
+const PLATEAU_TINT_BY_STYLE = {
+  carto_dark_matter: [70, 78, 92],
+  carto_dark_matter_nolabels: [70, 78, 92],
+  carto_voyager: [200, 180, 150],
+  osm_dark: [80, 86, 96],
+  osm_standard: [185, 175, 160],
+  gsi_pale: [170, 165, 155],
+};
+
+// Override every loaded glTF material's baseColorFactor with the theme tint.
+// PLATEAU LOD1 ships untextured meshes whose default material is white, which
+// reads as a solid white blob on dark basemaps. We walk the gltf parse result
+// in-place; deck.gl's scenegraph layer picks up the change on its first draw.
+function tintGltfMaterials(gltf, tint /* [r,g,b] 0-255 */) {
+  if (!gltf?.materials?.length) return;
+  const r = tint[0] / 255, g = tint[1] / 255, b = tint[2] / 255;
+  for (const mat of gltf.materials) {
+    if (!mat.pbrMetallicRoughness) mat.pbrMetallicRoughness = {};
+    // Keep textured LOD2 materials intact — only repaint the white untextured
+    // ones. baseColorTexture presence = textured.
+    if (mat.pbrMetallicRoughness.baseColorTexture) continue;
+    mat.pbrMetallicRoughness.baseColorFactor = [r, g, b, 1];
+    // Slight roughness so faces still catch deck.gl's default lighting.
+    if (mat.pbrMetallicRoughness.roughnessFactor == null) {
+      mat.pbrMetallicRoughness.roughnessFactor = 0.85;
+    }
+    if (mat.pbrMetallicRoughness.metallicFactor == null) {
+      mat.pbrMetallicRoughness.metallicFactor = 0;
+    }
+  }
+}
+
+// Walk the current MapLibre style and toggle visibility on any layer
+// representing flat building footprints. CARTO vector styles ship layer
+// ids `building` and `building-top`; we also match anything sourced from
+// a `building` source-layer to be safe across future basemap swaps.
+// Raster basemaps (OSM, GSI) have no such layer — the helper no-ops.
+function setBasemapBuildingsHidden(map, hide) {
+  if (!map || !map.getStyle) return;
+  let style;
+  try { style = map.getStyle(); } catch { return; }
+  if (!style?.layers) return;
+  const vis = hide ? 'none' : 'visible';
+  for (const lyr of style.layers) {
+    const isBuilding =
+      /^building/i.test(lyr.id) ||
+      lyr['source-layer'] === 'building' ||
+      lyr['source-layer'] === 'building_label';
+    if (!isBuilding) continue;
+    try { map.setLayoutProperty(lyr.id, 'visibility', vis); } catch { /* layer gone */ }
+  }
+}
+
+// ── Re-channel basemap labels through deck.gl ──────────────────────────────
+// MapLibre's native symbol layers draw labels on the 2D map plane, so they
+// disappear behind PLATEAU 3D extrusions. We harvest every symbol layer's
+// rendered features in the current viewport and redraw them through a
+// deck.gl TextLayer at PLATEAU_LABEL_ALTITUDE_M, which the same MapboxOverlay
+// composites on top of the building meshes.
+const PLATEAU_LABEL_ALTITUDE_M = 200;
+
+function getBasemapSymbolLayerIds(map) {
+  if (!map?.getStyle) return [];
+  let style;
+  try { style = map.getStyle(); } catch { return []; }
+  if (!style?.layers) return [];
+  return style.layers.filter((l) => l.type === 'symbol').map((l) => l.id);
+}
+
+function setBasemapSymbolsHidden(map, hide) {
+  const ids = getBasemapSymbolLayerIds(map);
+  const vis = hide ? 'none' : 'visible';
+  for (const id of ids) {
+    try { map.setLayoutProperty(id, 'visibility', vis); } catch { /* layer gone */ }
+  }
+}
+
+// Pull a label string out of a feature regardless of which property the
+// basemap stores it in. CARTO/MapLibre styles normalize on `name_int`/`name`,
+// OSM-style sources may use `name:en`/`name:ja`/`ref`, etc.
+function pickLabelText(props) {
+  if (!props) return null;
+  const candidates = [
+    'name_int', 'name:latin', 'name_en', 'name:en', 'name', 'name:ja',
+    'ref', 'shield', 'house_num',
+  ];
+  for (const k of candidates) {
+    const v = props[k];
+    if (typeof v === 'string' && v.trim()) return v.trim();
+  }
+  return null;
+}
+
+// Pick a representative point for a feature. For Point geometries it's the
+// coordinate itself; for lines/polygons we use the first vertex (good enough
+// for billboard text since road / area labels normally come pre-anchored).
+function pickAnchor(geom) {
+  if (!geom) return null;
+  if (geom.type === 'Point') return geom.coordinates;
+  if (geom.type === 'LineString' || geom.type === 'MultiPoint') return geom.coordinates[0];
+  if (geom.type === 'Polygon') return geom.coordinates[0]?.[0];
+  if (geom.type === 'MultiLineString' || geom.type === 'MultiPolygon') {
+    return geom.coordinates[0]?.[0]?.[0] ?? geom.coordinates[0]?.[0];
+  }
+  return null;
+}
+
+// Harvest every visible symbol-layer feature in the viewport, dedupe by
+// label text + rounded position, and return TextLayer-ready data.
+function harvestBasemapLabels(map) {
+  if (!map?.queryRenderedFeatures) return [];
+  const symbolIds = getBasemapSymbolLayerIds(map);
+  if (symbolIds.length === 0) return [];
+  let feats;
+  try { feats = map.queryRenderedFeatures({ layers: symbolIds }); }
+  catch { return []; }
+  const seen = new Set();
+  const out = [];
+  for (const f of feats) {
+    const text = pickLabelText(f.properties);
+    if (!text) continue;
+    const anchor = pickAnchor(f.geometry);
+    if (!anchor || !Number.isFinite(anchor[0]) || !Number.isFinite(anchor[1])) continue;
+    // Dedupe key: label + ~110 m grid bucket so two identical labels close
+    // together don't overlap. Different positions for same label survive.
+    const key = `${text}|${anchor[0].toFixed(3)}|${anchor[1].toFixed(3)}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({
+      text,
+      position: [anchor[0], anchor[1], PLATEAU_LABEL_ALTITUDE_M],
+    });
+  }
+  return out;
+}
+
+// Filter unified station dots + footprints to the currently-enabled modes.
+// Each dot feature carries `line_mode` (one of 'train' | 'subway' | 'bus'),
+// so the filter is a direct `in` over the enabled modes set. Footprints
+// carry `mode_set` (array) — filter matches when any footprint mode is
+// enabled.
+export function applyUnifiedStationsModeFilter(map, enabledModes) {
+  if (!map) return;
+  const modes = Array.from(enabledModes);
+  const modeFilter = modes.length === 0
+    ? ['==', ['literal', 1], 2] // impossible match — hides all
+    : ['in', ['get', 'line_mode'], ['literal', modes]];
+  for (const id of ['layer-unifiedStations', 'layer-unifiedStations-label']) {
+    if (map.getLayer(id)) map.setFilter(id, modeFilter);
+  }
+  const modeSetExpr = ['coalesce', ['get', 'mode_set'], ['literal', []]];
+  const footprintFilter = modes.length === 0
+    ? ['==', ['literal', 1], 2]
+    : ['any', ...modes.map((m) => ['in', m, modeSetExpr])];
+  const footprintId = 'layer-unifiedStationFootprints';
+  if (map.getLayer(footprintId)) map.setFilter(footprintId, footprintFilter);
+}
+
 function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
   const sourceId = `source-${layerId}`;
   const mainLayerId = `layer-${layerId}`;
@@ -419,7 +624,12 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
 
   if (!geojson || !geojson.features || geojson.features.length === 0) return;
 
-  map.addSource(sourceId, { type: 'geojson', data: geojson });
+  // tolerance: 0 disables MapLibre's internal Douglas-Peucker simplification
+  // on the GeoJSON source. Default is 0.375 vector-tile pixels, which at
+  // zoom 10–13 strips out 40 cm–1.6 m of our server-side Chaikin arc points
+  // and makes rail polylines render as raw OSM angles. Our server has
+  // already run RDP at ~10 cm so the client has nothing useful left to prune.
+  map.addSource(sourceId, { type: 'geojson', data: geojson, tolerance: 0 });
 
   // Intercept `map.addLayer` so that every `type: 'circle'` layer produced
   // by the switch statement below gets transparently replaced with a symbol
@@ -571,83 +781,37 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           : {}),
         paint: {
           'line-color': perFeatureColor,
-          'line-width': [
-            'interpolate', ['linear'], ['zoom'],
-            5, 0.4,
-            10, 1.2,
-            14, 2.4,
-          ],
+          // Rail tracks render +2 px thicker than bus so they read as
+          // rails from a distance; bus keeps the old thin stroke.
+          'line-width': isRail
+            ? [
+                'interpolate', ['linear'], ['zoom'],
+                5, 2.4,
+                10, 3.2,
+                14, 4.4,
+              ]
+            : [
+                'interpolate', ['linear'], ['zoom'],
+                5, 0.4,
+                10, 1.2,
+                14, 2.4,
+              ],
           'line-opacity': opacity * 0.7,
         },
       });
-      // Station/stop rendering — up to 5 concentric rings, one per line
-      // whose track passes within the server-side spatial-snap radius
-      // (properties.line_colors[], ordered most-central first). Every
-      // ring is a solid disc of radius 7 so each line's color is fully
-      // visible; widest ring drawn first so the primary (nearest) line
-      // stays dominant on top.
-      const STATION_RINGS = 5;
-      const RING_RADIUS = 5;   // innermost (primary) disc radius
-      const RING_STEP = 5;     // each additional ring adds this to the radius
-      // Filter: `has('line_colors')` is the simplest way to check whether
-      // line_colors exists and is non-null on the feature. For the length
-      // comparison we fall back to a literal empty array when absent; the
-      // array typing is only applied to values we know are arrays.
-      // Outer rings (k >= 1) only render at high zoom — below zoom 11 they
-      // fade out so that a city-scale view shows only the primary center
-      // disc per station, avoiding the blurry "blob" effect when many
-      // stations cluster on screen.
-      for (let k = STATION_RINGS - 1; k >= 0; k--) {
-        const radius = RING_RADIUS + RING_STEP * k;
-        const ringColor = [
-          'case',
-          ['>', ['length', ['get', 'line_colors']], k],
-          ['to-color', ['at', k, ['get', 'line_colors']]],
-          k === 0 ? perFeatureColor : 'rgba(0,0,0,0)',
-        ];
-        const isPrimary = k === 0;
-        const layerConfig = {
-          id: isPrimary ? mainLayerId : `${mainLayerId}-ring${k}`,
-          type: 'circle',
-          source: sourceId,
-          filter: [
-            'all',
-            ['==', ['geometry-type'], 'Point'],
-            ['has', 'line_colors'],
-            ['>', ['length', ['get', 'line_colors']], k],
-          ],
-          paint: {
-            'circle-radius': radius,
-            'circle-color': ringColor,
-            'circle-opacity': isPrimary
-              ? opacity * 0.9
-              : [
-                  // Fade outer rings in between zoom 11 and 13.
-                  'interpolate', ['linear'], ['zoom'],
-                  11, 0,
-                  13, opacity * 0.9,
-                ],
-          },
-        };
-        if (!isPrimary) layerConfig.minzoom = 11;
-        map.addLayer(layerConfig);
-      }
-      // Fallback for stations without line_colors (legacy, never snapped):
-      // single dot in the primary line_color or layer default.
+      // Per-mode station Points are NOT rendered here — the canonical
+      // cross-mode station dot comes from the `unifiedStations` layer
+      // (one feature per physical place, spanning train + subway + tram +
+      // monorail). This case renders the LINE geometry only. Add a
+      // degenerate mainLayerId circle so popup click-routing still has a
+      // hittable target if the unified-stations layer is disabled — the
+      // filter `== 'nothing'` ensures nothing actually draws.
       map.addLayer({
-        id: `${mainLayerId}-fallback`,
+        id: mainLayerId,
         type: 'circle',
         source: sourceId,
-        filter: [
-          'all',
-          ['==', ['geometry-type'], 'Point'],
-          ['!', ['has', 'line_colors']],
-        ],
-        paint: {
-          'circle-radius': RING_RADIUS,
-          'circle-color': perFeatureColor,
-          'circle-opacity': opacity * 0.9,
-        },
+        filter: ['==', ['geometry-type'], 'nothing'],
+        paint: { 'circle-radius': 0, 'circle-opacity': 0 },
       });
       // Line-name label. Rendered as native MapLibre symbol layer along
       // each LineString, offset off the line and drawn with a thick colored
@@ -698,6 +862,82 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           'circle-radius': 4,
           'circle-color': layerDef.color,
           'circle-opacity': opacity * 0.9,
+        },
+      });
+      break;
+
+    case 'unifiedStations': {
+      // Apple-Maps station dots: one filled colored circle per (cluster,
+      // line) pair, positioned ON that line's track geometry (server
+      // snapped it to the nearest segment). Data is already one Point
+      // per dot — no client-side stacking. Filter by currently-enabled
+      // transit modes via applyUnifiedStationsModeFilter below.
+      const dotRadius = [
+        'interpolate', ['linear'], ['zoom'],
+        9, 2.2,
+        12, 3.2,
+        14, 4.5,
+        17, 6.5,
+      ];
+      map.addLayer({
+        id: mainLayerId,
+        type: 'circle',
+        source: sourceId,
+        paint: {
+          'circle-radius': dotRadius,
+          'circle-color': ['coalesce', ['get', 'line_color'], layerDef.color],
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-width': 1,
+          'circle-opacity': opacity,
+          'circle-stroke-opacity': opacity,
+        },
+      });
+      // Station name label — one PER STATION, not per dot. Filter to the
+      // "first dot" we see for each cluster. The simplest way: render the
+      // label on every dot but rely on MapLibre's text-allow-overlap=false
+      // to suppress duplicates — plus a per-cluster deterministic priority
+      // so the same dot wins placement each render.
+      map.addLayer({
+        id: `${mainLayerId}-label`,
+        type: 'symbol',
+        source: sourceId,
+        minzoom: 12,
+        layout: {
+          'text-field': ['coalesce', ['get', 'name'], ['get', 'name_ja'], ''],
+          'text-font': ['Noto Sans Regular'],
+          'text-size': [
+            'interpolate', ['linear'], ['zoom'],
+            12, 10,
+            14, 12,
+            17, 14,
+          ],
+          'text-anchor': 'top',
+          'text-offset': [0, 0.8],
+          'text-padding': 4,
+          'text-allow-overlap': false,
+          'text-optional': true,
+        },
+        paint: {
+          'text-color': '#ffffff',
+          'text-halo-color': '#0e1117',
+          'text-halo-width': 1.4,
+          'text-halo-blur': 0.4,
+          'text-opacity': opacity,
+        },
+      });
+      break;
+    }
+
+    case 'unifiedStationFootprints':
+      map.addLayer({
+        id: mainLayerId,
+        type: 'fill',
+        source: sourceId,
+        minzoom: 15,
+        paint: {
+          'fill-color': layerDef.color,
+          'fill-opacity': opacity * 0.22,
+          'fill-outline-color': '#ffffff',
         },
       });
       break;
@@ -867,20 +1107,6 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           ],
           'heatmap-radius': 25,
           'heatmap-opacity': opacity * 0.7,
-        },
-      });
-      break;
-
-    case 'buildings':
-      map.addLayer({
-        id: `${mainLayerId}-extrude`,
-        type: 'fill-extrusion',
-        source: sourceId,
-        paint: {
-          'fill-extrusion-color': layerDef.color,
-          'fill-extrusion-height': ['coalesce', ['get', 'height'], 20],
-          'fill-extrusion-base': 0,
-          'fill-extrusion-opacity': opacity * 0.6,
         },
       });
       break;
@@ -3950,11 +4176,28 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
   const [mapReady, setMapReady] = useState(false);
   const [cursorCoords, setCursorCoords] = useState(null);
   const [zoom, setZoom] = useState(5);
-  const [currentStyle, setCurrentStyle] = useState('openfreemap_positron');
+  const [currentStyle, setCurrentStyle] = useState('carto_dark_matter');
   const [viewport, setViewport] = useState(null);
   const prevLayersRef = useRef({});
   const bakedSceneIdsRef = useRef(new Set());
   const satelliteImageryVisibleRef = useRef(false);
+  // Single deck.gl MapboxOverlay shared by all client-rendered overlays
+  // (currently just PLATEAU 3D buildings). Created lazily on first use,
+  // re-used across toggle/style-switch cycles, never recreated.
+  const deckOverlayRef = useRef(null);
+  // Two independent sources of overlay layers — PLATEAU 3D buildings and
+  // re-channeled basemap labels. Each effect publishes into its slot via
+  // pushDeckLayers(); the reconciler concatenates and pushes once.
+  const deckLayerSlotsRef = useRef({ plateau: [], labels: [] });
+  const pushDeckLayers = useCallback((slot, layers) => {
+    deckLayerSlotsRef.current[slot] = layers || [];
+    if (!deckOverlayRef.current) return;
+    const merged = [
+      ...deckLayerSlotsRef.current.plateau,
+      ...deckLayerSlotsRef.current.labels,
+    ];
+    try { deckOverlayRef.current.setProps({ layers: merged }); } catch { /* overlay torn down */ }
+  }, []);
 
   // Live vehicles ride along with the standard transport layer — no separate
   // toggle. When the user enables "Trains", moving dots spawn on train routes
@@ -4121,6 +4364,17 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
         dataLength: currentDataLength,
       };
     }
+
+    // unifiedStations + unifiedStationFootprints are hidden auto-followed
+    // layers — visibility is managed by useMapLayers from mode toggles.
+    // The filter on pin slots + footprints reflects the CURRENTLY-ENABLED
+    // modes so only the relevant pins/fills render for a cross-mode
+    // station. Re-apply on every toggle change.
+    const enabledModes = new Set();
+    if (layers?.unifiedTrains?.visible) enabledModes.add('train');
+    if (layers?.unifiedSubways?.visible) enabledModes.add('subway');
+    if (layers?.unifiedBuses?.visible) enabledModes.add('bus');
+    applyUnifiedStationsModeFilter(map, enabledModes);
   }, [layers, layerData, mapReady, coloredSatelliteTrackingFc]);
 
   // Live-transit vehicle layers — dedicated sources/layers managed outside
@@ -4160,7 +4414,7 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
         continue;
       }
       if (!map.getSource(s.sourceId)) {
-        map.addSource(s.sourceId, { type: 'geojson', data: s.data });
+        map.addSource(s.sourceId, { type: 'geojson', data: s.data, tolerance: 0 });
         // Rounded-rectangle SDF icon, tinted with the line color (darkened),
         // rotated so the long axis aligns with the track, ground-aligned
         // so it lies flat against the basemap — same treatment as the
@@ -4417,6 +4671,144 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
     }
   }, [layers?.satelliteImagery?.visible]);
 
+  // PLATEAU 3D buildings: spin up a deck.gl MapboxOverlay on demand,
+  // mount per-city Tile3DLayer instances pointing at PLATEAU's nationwide
+  // 3D Tiles catalog, and hide the basemap's flat 2D building footprints
+  // while it's active. Re-applied on style switch via the switchStyle
+  // callback so basemap changes don't strand it.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    const visible = !!layers?.plateauBuildings?.visible;
+    const opacity = layers?.plateauBuildings?.opacity ?? 1;
+
+    if (!visible) {
+      pushDeckLayers('plateau', []);
+      setBasemapBuildingsHidden(map, false);
+      return;
+    }
+
+    // Lazy-create the overlay the first time we need it. addControl docks
+    // it into the map's WebGL context so deck layers interleave correctly.
+    if (!deckOverlayRef.current) {
+      deckOverlayRef.current = new MapboxOverlay({ interleaved: true, layers: [] });
+      map.addControl(deckOverlayRef.current);
+    }
+
+    let cancelled = false;
+    setBasemapBuildingsHidden(map, true);
+
+    loadPlateauTilesets()
+      .then((tilesets) => {
+        if (cancelled || !deckOverlayRef.current) return;
+        const tint = PLATEAU_TINT_BY_STYLE[currentStyle] ?? [120, 120, 120];
+        const deckLayers = tilesets.map((t) => new Tile3DLayer({
+          id: `plateau-bldg-${t.id}`,
+          data: t.tilesetUrl,
+          loader: Tiles3DLoader,
+          opacity,
+          // Shift the whole tileset up/down along the local ellipsoid normal
+          // by PLATEAU_Z_OFFSET_M so building foundations sit on the basemap
+          // plane instead of floating above it. Tweak the constant above to
+          // taste — the value is in metres, negative = down.
+          onTilesetLoad: (tileset) => {
+            const c = tileset?.cartographicCenter; // [lon°, lat°, h] (degrees)
+            if (!c || !Number.isFinite(c[0]) || !Number.isFinite(c[1])) return;
+            const lonRad = (c[0] * Math.PI) / 180;
+            const latRad = (c[1] * Math.PI) / 180;
+            // Local ellipsoid normal in ECEF (unit vector pointing "up").
+            const nx = Math.cos(latRad) * Math.cos(lonRad);
+            const ny = Math.cos(latRad) * Math.sin(lonRad);
+            const nz = Math.sin(latRad);
+            const dx = PLATEAU_Z_OFFSET_M * nx;
+            const dy = PLATEAU_Z_OFFSET_M * ny;
+            const dz = PLATEAU_Z_OFFSET_M * nz;
+            // Pre-multiply the existing modelMatrix (loaders.gl initializes
+            // it to a Matrix4 identity) so any baked-in transform is kept.
+            const base = tileset.modelMatrix instanceof Matrix4
+              ? tileset.modelMatrix
+              : new Matrix4(tileset.modelMatrix || undefined);
+            tileset.modelMatrix = new Matrix4().translate([dx, dy, dz]).multiplyRight(base);
+          },
+          // PLATEAU LOD1 meshes ship as untextured white; repaint them in
+          // the theme tint so they don't read as a solid white blob on
+          // dark basemaps. Textured LOD2 materials are left alone.
+          onTileLoad: (tile) => {
+            const gltf = tile?.content?.gltf;
+            if (gltf) tintGltfMaterials(gltf, tint);
+          },
+          pickable: false,
+        }));
+        pushDeckLayers('plateau', deckLayers);
+      })
+      .catch((err) => {
+        console.warn('[MapView] PLATEAU tilesets unavailable:', err?.message);
+      });
+
+    return () => { cancelled = true; };
+  }, [
+    mapReady,
+    layers?.plateauBuildings?.visible,
+    layers?.plateauBuildings?.opacity,
+    currentStyle,
+  ]);
+
+  // Re-channel basemap labels through deck.gl so they sit *above* PLATEAU
+  // 3D buildings instead of disappearing behind them. Always-on, always
+  // billboarded. Re-harvested on every moveend so labels track the viewport.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+
+    // Lazy-create the shared overlay if PLATEAU hasn't already.
+    if (!deckOverlayRef.current) {
+      deckOverlayRef.current = new MapboxOverlay({ interleaved: true, layers: [] });
+      map.addControl(deckOverlayRef.current);
+    }
+
+    setBasemapSymbolsHidden(map, true);
+
+    const refresh = () => {
+      // After a setStyle the new style ships its own symbol layers — hide them
+      // again on every refresh so style swaps don't strand native labels.
+      setBasemapSymbolsHidden(map, true);
+      const data = harvestBasemapLabels(map);
+      const layer = new TextLayer({
+        id: 'basemap-labels-rechanneled',
+        data,
+        getPosition: (d) => d.position,
+        getText: (d) => d.text,
+        getSize: 13,
+        getColor: [235, 235, 240, 230],
+        getAngle: 0,
+        billboard: true,
+        sizeUnits: 'pixels',
+        background: true,
+        getBackgroundColor: [10, 12, 18, 170],
+        backgroundPadding: [4, 2],
+        fontFamily: 'Inter, "Helvetica Neue", system-ui, sans-serif',
+        fontWeight: 500,
+        characterSet: 'auto',
+        outlineWidth: 2,
+        outlineColor: [0, 0, 0, 200],
+        fontSettings: { sdf: true },
+        pickable: false,
+      });
+      pushDeckLayers('labels', [layer]);
+    };
+
+    refresh();
+    map.on('moveend', refresh);
+    map.on('styledata', refresh);
+
+    return () => {
+      map.off('moveend', refresh);
+      map.off('styledata', refresh);
+      pushDeckLayers('labels', []);
+      setBasemapSymbolsHidden(map, false);
+    };
+  }, [mapReady, currentStyle, pushDeckLayers]);
+
   // Style switcher
   const switchStyle = useCallback((styleKey) => {
     if (!mapRef.current || styleKey === currentStyle) return;
@@ -4438,6 +4830,14 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
             layerState.opacity
           );
         }
+      }
+      // PLATEAU's overlay survives setStyle, but setLayoutProperty does
+      // not — re-hide the new basemap's flat building layer if PLATEAU
+      // is currently on. The PLATEAU effect will also re-fire because
+      // currentStyle is in its dep array; this just plugs the gap
+      // between style.load and the next React render.
+      if (layers?.plateauBuildings?.visible) {
+        setBasemapBuildingsHidden(mapRef.current, true);
       }
     });
   }, [currentStyle, layers, layerData]);
