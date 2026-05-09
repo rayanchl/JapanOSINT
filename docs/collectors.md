@@ -31,13 +31,12 @@ collectors rather than raw feeds.
 | odptTransport | ODPT (odpt.org) + OSM fallback | Nationwide station coverage (JR, private, subway) |
 | mlitN02Stations | MLIT N02 KSJ (railway) | Authoritative nationwide rail stations |
 | mlitN05RailHistory | MLIT N05 KSJ (historical railway data) | Long-term rail network history |
-| fullTransport | OSM Overpass (`railway=station`) nationwide | All rail/subway/monorail/tram stations |
 | osmTransportTrains | OSM Overpass (`railway=station`, `railway=halt`) | Always-on OSM mainline rail stations |
 | osmTransportSubways | OSM Overpass subway/metro/tram stops | Always-on OSM subway/metro/tram stations |
 | overpassRailTracks | OSM Overpass (`railway=rail`, `light_rail`) | Rail track LineStrings |
 | overpassSubwayTracks | OSM Overpass (subway/tram track ways) | Subway/metro track LineStrings |
-| unifiedTrains | *Fusion:* mlitN02Stations + odptTransport + fullTransport + osmTransportTrains | Deduplicated rail stations |
-| unifiedSubways | *Fusion:* mlitN02Stations + odptTransport + fullTransport + osmTransportSubways | Deduplicated subway/metro/tram stops |
+| unifiedTrains | *Fusion:* mlitN02Stations + odptTransport + osmTransportTrains | Deduplicated rail stations |
+| unifiedSubways | *Fusion:* mlitN02Stations + odptTransport + osmTransportSubways | Deduplicated subway/metro/tram stops |
 | **Transport — Bus & Traffic** | | |
 | mlitN07BusRoutes | MLIT N07 KSJ (bus route data) | Nationwide bus route geometry |
 | mlitP11BusStops | MLIT P11 KSJ (bus stops, ~200k) | Authoritative bus stop point dataset |
@@ -164,7 +163,6 @@ collectors rather than raw feeds.
 | publicCameras | OSM (`man_made=surveillance`) + JARTIC + JMA volcano cams | Public surveillance and traffic cameras |
 | **Cyber & Security** | | |
 | shodanIot | Shodan API (api.shodan.io) | Internet-connected IoT devices in Japan |
-| insecamWebcams | Insecam.org + Shodan RTSP streams | Publicly accessible IP cameras |
 | wifiNetworks | Wigle.net API (wigle.net) + OSM | Wireless network discovery |
 | cameraDiscovery | *Fusion:* OSM + JMA + MLIT + Shodan + YouTube + Insecam + Windy | Unified camera discovery from all known channels |
 | **Crime & Vice** | | |
@@ -194,8 +192,8 @@ collectors rather than raw feeds.
 
 These merge other in-repo collectors rather than raw upstream feeds:
 
-- `unifiedTrains` — mlitN02Stations + odptTransport + fullTransport + osmTransportTrains
-- `unifiedSubways` — mlitN02Stations + odptTransport + fullTransport + osmTransportSubways
+- `unifiedTrains` — mlitN02Stations + odptTransport + osmTransportTrains
+- `unifiedSubways` — mlitN02Stations + odptTransport + osmTransportSubways
 - `unifiedBuses` — mlitP11BusStops + gtfsJp + busRoutes + osmTransportBuses
 - `unifiedAisShips` — maritimeAis + marineTraffic + vesselFinder
 - `unifiedPortInfra` — portInfra + osmTransportPorts + mlitC02Ports
@@ -245,3 +243,72 @@ The `cameras` table has no `llm_failure` column by design; failure
 collapses to "geocoded_at set, lat unchanged".
 
 To re-process a row: clear its `llm_geocoded_at` (and `llm_failure`).
+
+## Wave 15 — Vuln / Threat / Breach intel + SOCINT (2026-05)
+
+37 new collectors. Keyless feeds run out of the box; key-required feeds
+gracefully no-op until env vars are set.
+
+| Collector (file) | Upstream source(s) | Notes / auth |
+|---|---|---|
+| **Vuln intel** | | |
+| myJvn | JVN iPedia / MyJVN getVulnOverviewList (jvndb.jvn.jp/myjvn) | JP-canonical CVE/advisory database. Free, no key. |
+| cisaKevJp | CISA KEV catalog (cisa.gov known_exploited_vulnerabilities.json) | Filtered to JP-vendor CPEs (Trend Micro, Fujitsu, NEC, Hitachi, Mitsubishi, Toshiba, Cybozu…). |
+| osvDev | OSV.dev queryBatch (api.osv.dev/v1/querybatch) | JP-popular OSS package vuln lookups. |
+| ghsaAdvisories | GitHub GHSA REST (api.github.com/advisories) | Recent 100 advisories. Optional GITHUB_TOKEN. |
+| pocInGithub | nomi-sec/PoC-in-GitHub raw JSON | CVE → public PoC mapping. |
+| trickestCve | trickest/cve raw markdown | Daily exploit/PoC harvester (alt to nomi-sec). |
+| **IOC / attacker activity** | | |
+| shadowserverJp | Shadowserver public dashboard (dashboard.shadowserver.org/api/) | Daily JP compromised-host counts. Free, no key. |
+| urlhausJp | abuse.ch URLhaus (urlhaus-api.abuse.ch) | JP-host malware URLs. ABUSE_CH_AUTH_KEY (free). |
+| threatfoxJp | abuse.ch ThreatFox (threatfox-api.abuse.ch) | JP-relevant IOCs. ABUSE_CH_AUTH_KEY. |
+| feodoTrackerJp | abuse.ch Feodo Tracker (feodotracker.abuse.ch) | Active botnet C2 IPs hosted in Japan. |
+| sslblJp | abuse.ch SSLBL (sslbl.abuse.ch) | Malicious certs ∩ JP-host set. |
+| spamhausDrop | Spamhaus DROP + ASN-DROP (spamhaus.org/drop/) | Hijacked/cybercrime networks (max 1×/hr). |
+| abuseipdbJp | AbuseIPDB blacklist (api.abuseipdb.com/api/v2/blacklist) | JP IPs ≥ confidence 90. ABUSEIPDB_API_KEY. |
+| alienvaultOtxJp | AlienVault OTX search (otx.alienvault.com) | Pulses matching "japan". OTX_API_KEY. |
+| phishingFeedsJp | OpenPhish + PhishTank | JP-brand & .jp-host phishing URLs. PHISHTANK_APP_KEY optional. |
+| sansIscFeeds | SANS ISC RSS + infocon (isc.sans.edu) | Handler diary + global infocon. |
+| **Asset / breach intel** | | |
+| leakixJp | LeakIX (leakix.net) | Exposed JP services. LEAKIX_API_KEY (free). |
+| netlasJp | Netlas (app.netlas.io) | JP-located internet responses. NETLAS_API_KEY (free). |
+| hudsonRockJp | HudsonRock Cavalier (cavalier.hudsonrock.com /osint-tools/) | Infostealer-infection summary per JP corp/gov. Free, no key. |
+| virustotalJp | VirusTotal v3 (virustotal.com/api/v3/domains) | JP-megacorp domain reputation. VIRUSTOTAL_API_KEY (free 500/d). |
+| chaosBugbountyJp | ProjectDiscovery Chaos (chaos-data.projectdiscovery.io) | JP-headquartered bug-bounty programs. Optional CHAOS_DOWNLOAD_FULL=1. |
+| **Network / BGP / DNS** | | |
+| peeringdbJp | PeeringDB (peeringdb.com/api) | JP IXPs, facilities, networks. |
+| bgpToolsJp | BGP.tools asns.csv ∩ RIPEstat JP set | JP-AS topology. Requires BGPTOOLS_USER_AGENT with real contact email. |
+| crtshHistorical | crt.sh (crt.sh/?output=json) | Historical certs for high-value JP targets. |
+| cloudflareRadarJp | Cloudflare Radar API (api.cloudflare.com/client/v4/radar) | DDoS / BGP leaks / DNS / IQI. CLOUDFLARE_API_TOKEN (free). |
+| ooniJp | OONI Explorer (api.ooni.io) | JP network-interference measurements. |
+| iodaJp | IODA Georgia Tech (api.ioda.inetintel.cc.gatech.edu/v2) | JP outage signals. |
+| ripestatJp | RIPEstat data API (stat.ripe.net/data) | JP country-resource + announced prefixes for top JP ASNs. |
+| **SOCINT / news** | | |
+| yahooRealtime | Yahoo! Realtime buzz scrape | Trending JP X keywords. EU/UK IPs blocked. |
+| mastodonJpInstances | Mastodon public local timelines (mstdn.jp / pawoo.net / fedibird.com / mastodon-japan.net) | |
+| blueskyJetstreamJp | Bluesky Jetstream WS (jetstream2.us-west.bsky.network) | JP-lang post snapshot (8s window). |
+| niconicoRanking | Niconico nvapi + live ranking | JP-IP geofenced. |
+| wikipediaJaRecent | Wikipedia (ja) recent changes API | Recent 200 mainspace edits. |
+| osmChangesetsJp | OSM API v0.6 changesets within JP bbox | Recent 100. |
+| yahooNewsJpRss | Yahoo! Japan News topics RSS | EU/UK blocked. |
+| jpNewsRss | Aggregated JP RSS bundle | Nikkei, Japan Times, Reuters JP, NHK World, Kantei, NDL. |
+| **Geo / disaster** | | |
+| nasaFirmsJp | NASA FIRMS area CSV (firms.modaps.eosdis.nasa.gov) | Active-fire pixels over Japan. NASA_FIRMS_MAP_KEY (free). |
+
+### Env-var summary (Wave 15)
+
+Set any of these to upgrade keyless no-ops to live data — none are required:
+
+```
+ABUSE_CH_AUTH_KEY        # URLhaus + ThreatFox (single key, free signup)
+ABUSEIPDB_API_KEY        # AbuseIPDB blacklist
+OTX_API_KEY              # AlienVault OTX
+LEAKIX_API_KEY           # LeakIX
+NETLAS_API_KEY           # Netlas
+VIRUSTOTAL_API_KEY       # VirusTotal v3
+CLOUDFLARE_API_TOKEN     # Cloudflare Radar (Radar Read scope)
+NASA_FIRMS_MAP_KEY       # FIRMS area CSV
+PHISHTANK_APP_KEY        # PhishTank rate-limit boost (optional)
+GITHUB_TOKEN             # raises GHSA / PoC-in-GitHub / Trickest rate limits
+BGPTOOLS_USER_AGENT      # required for BGP.tools (real contact email)
+```
