@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { getSourceById } from '../utils/database.js';
+import { getCameraByUid } from '../utils/cameraStore.js';
 import { collectors } from '../collectors/index.js';
 import { captureSnapshot } from '../utils/screenshot.js';
 import { isRunInFlight, runCameraDiscovery } from '../utils/cameraRunner.js';
@@ -11,9 +12,11 @@ import { withCollectorRun, annotateLastHit, getBroadcaster } from '../utils/coll
 import { getOAuthToken } from '../utils/openskyAuth.js';
 import { getEnrich, setEnrich } from '../utils/flightEnrichCache.js';
 import { fetchDamLive } from '../utils/mlitDamLive.js';
+import { getSnapshot as getFlightsSnapshot } from '../utils/planeAdsbPoller.js';
 import {
   getCached, setCached, getTtlMs,
 } from '../utils/collectorCache.js';
+import { upsertItems as upsertIntelItems } from '../utils/intelStore.js';
 import {
   broadcastLayerWorkStarted, broadcastLayerWorkFinished,
 } from '../utils/layerEvents.js';
@@ -195,6 +198,63 @@ async function respondWithData(res, { sourceId, layerType, collectorKey }) {
         cacheStatus: 'error',
       });
       throw err;
+    }
+
+    // ── Intel branch ──────────────────────────────────────────────────
+    // Non-spatial collectors return { kind:'intel', items, meta } and
+    // funnel into intel_items. /api/data/:id then returns an empty FC so
+    // any legacy map client gracefully renders nothing rather than 500-ing.
+    if (data && data.kind === 'intel') {
+      const items = Array.isArray(data.items) ? data.items : [];
+      const recordCount = items.length;
+      const fetchedAtIso = data?.meta?.fetchedAt || new Date().toISOString();
+      try {
+        await upsertIntelItems(items, sourceId, fetchedAtIso);
+      } catch (err) {
+        console.warn(`[data] intel upsert failed for ${sourceId}:`, err?.message);
+      }
+      annotateLastHit({ record_count: recordCount, data_type: 'intel' });
+      const emptyFc = {
+        type: 'FeatureCollection',
+        features: [],
+        _meta: {
+          source: sourceId,
+          fetchedAt: fetchedAtIso,
+          recordCount,
+          live: recordCount > 0,
+          description: data?.meta?.description ?? 'Migrated to /api/intel/items',
+          migrated_to_intel: true,
+          intel_endpoint: `/api/intel/items?source=${encodeURIComponent(sourceId)}`,
+          cache_status: 'miss',
+          age_ms: 0,
+        },
+      };
+      broadcastLayerWorkFinished({
+        layerId: layerType,
+        collectorKey,
+        sourceId,
+        durationMs: Date.now() - startedAt,
+        recordCount,
+        cacheStatus: 'miss',
+      });
+      return res.json(emptyFc);
+    }
+
+    // ── Hybrid branch ─────────────────────────────────────────────────
+    // Collectors that mix spatial features and non-spatial rows can return
+    // `{ type:'FeatureCollection', features, _meta, intel:{ items, meta } }`.
+    // Intel rows go to intel_items as a side effect; the FC is served as
+    // usual. Keeps the geocoded → map / non-geocoded → intel split inside
+    // a single collector.
+    if (data && Array.isArray(data.features) && data.intel && Array.isArray(data.intel.items)) {
+      try {
+        const items = data.intel.items;
+        if (items.length > 0) {
+          await upsertIntelItems(items, sourceId, data?._meta?.fetchedAt || new Date().toISOString());
+        }
+      } catch (err) {
+        console.warn(`[data] hybrid intel upsert failed for ${sourceId}:`, err?.message);
+      }
     }
 
     const fc = normaliseFc(data, collectorKey);
@@ -388,6 +448,19 @@ router.get('/unified-port-infra', async (_req, res) => {
 router.get('/unified-stations', async (_req, res) => {
   await respondWithData(res, { sourceId: 'unified-stations', layerType: 'unified-stations', collectorKey: 'unified-stations' });
 });
+router.get('/unified-airports', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'unified-airports', layerType: 'unified-airports', collectorKey: 'unified-airports' });
+});
+
+// Direct passthrough to the in-memory snapshot maintained by
+// planeAdsbPoller (OpenSky live + AeroDataBox scheduled, deduped). Skips the
+// transport_store DB indirection that the unified-* template uses — flight
+// positions are too ephemeral to round-trip through SQLite, and the pre-fused
+// snapshot already has everything iOS needs.
+router.get('/unified-flights', (_req, res) => {
+  res.json(getFlightsSnapshot());
+});
+
 router.get('/unified-station-footprints', async (_req, res) => {
   await respondWithData(res, { sourceId: 'unified-station-footprints', layerType: 'unified-station-footprints', collectorKey: 'unified-station-footprints' });
 });
@@ -429,6 +502,128 @@ router.get('/cameras/snapshot', async (req, res) => {
   } catch (err) {
     console.error(`[snapshot] ${parsed.href}:`, err.message);
     return res.status(500).json({ error: 'snapshot error' });
+  }
+});
+
+// ── Camera proxy (Shodan / manual_ip_seed / insecam_scrape) ────────────────
+// Fetches the upstream image server-side so iOS clients can avoid needing an
+// ATS exception per arbitrary IP. Strictly bounded: only previously-discovered
+// camera_uids are reachable (eliminates SSRF), 5 s timeout, 5 MB cap, image
+// content-type required. When the direct fetch fails and the camera's page
+// URL is in SNAPSHOT_ALLOWLIST, falls back to the puppeteer snapshot pipeline
+// so MJPEG-only and Referer-gated cameras still render.
+const PROXY_TTL_MS = 30 * 1000;
+const PROXY_MAX_BYTES = 5 * 1024 * 1024;
+const PROXY_TIMEOUT_MS = 5000;
+const PROXY_CACHE = new Map(); // camera_uid → { bytes, contentType, ts }
+
+router.get('/cameras/proxy', async (req, res) => {
+  const uid = String(req.query.camera_uid || '');
+  if (!uid) {
+    return res.status(400).json({ error: 'camera_uid query param required' });
+  }
+
+  const cached = PROXY_CACHE.get(uid);
+  if (cached && Date.now() - cached.ts < PROXY_TTL_MS) {
+    res.setHeader('Content-Type', cached.contentType);
+    res.setHeader('Cache-Control', 'public, max-age=30');
+    return res.send(cached.bytes);
+  }
+
+  const cam = getCameraByUid(uid);
+  if (!cam) return res.status(404).json({ error: 'camera not found' });
+  // Prefer the camera's image URL (insecam, etc.) over its page URL (which
+  // for aggregators is HTML and can't be served as an image).
+  const upstreamUrl = cam.thumbnail_url || cam.url;
+  if (!upstreamUrl) return res.status(400).json({ error: 'camera has no url' });
+
+  let parsed;
+  try { parsed = new URL(upstreamUrl); }
+  catch { return res.status(400).json({ error: 'invalid camera url' }); }
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    return res.status(400).json({ error: 'only http/https allowed' });
+  }
+
+  // Snapshot fallback: puppeteer-render `cam.url` when the direct fetch
+  // can't produce an image. Generic predicate (host in SNAPSHOT_ALLOWLIST)
+  // so any future channel that opts into the snapshot pipeline gets this
+  // fallback for free. Returns null when not applicable / capture failed.
+  const tryCaptureFallback = async () => {
+    const pageUrl = cam.url;
+    if (!pageUrl) return null;
+    let host;
+    try { host = new URL(pageUrl).hostname.toLowerCase(); }
+    catch { return null; }
+    if (!SNAPSHOT_ALLOWLIST.has(host)) return null;
+    const file = snapshotPath(pageUrl);
+    const fresh = await readFreshCache(file);
+    if (fresh) return fresh;
+    try {
+      return await captureAndCache(pageUrl, file);
+    } catch (err) {
+      console.warn(`[cameras/proxy] snapshot fallback for ${uid} failed: ${err.message}`);
+      return null;
+    }
+  };
+  const sendBufOrFail = async (errStatus, errBody) => {
+    const buf = await tryCaptureFallback();
+    if (buf) {
+      PROXY_CACHE.set(uid, { bytes: buf, contentType: 'image/jpeg', ts: Date.now() });
+      res.setHeader('Content-Type', 'image/jpeg');
+      res.setHeader('Cache-Control', 'public, max-age=30');
+      return res.send(buf);
+    }
+    return res.status(errStatus).json(errBody);
+  };
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), PROXY_TIMEOUT_MS);
+  try {
+    const upstream = await fetch(parsed.href, {
+      signal: controller.signal,
+      headers: {
+        'Accept': 'image/*',
+        'User-Agent': 'JapanOsintApp/1.0 (camera-proxy)',
+      },
+      redirect: 'follow',
+    });
+    if (!upstream.ok) {
+      return await sendBufOrFail(502, { error: `upstream ${upstream.status}` });
+    }
+    const ct = (upstream.headers.get('content-type') || '').split(';')[0].trim();
+    if (!ct.startsWith('image/')) {
+      return await sendBufOrFail(502, { error: 'upstream did not return an image' });
+    }
+
+    // Size-bounded read so a misconfigured camera streaming MJPEG forever
+    // doesn't pin our memory. We bail at PROXY_MAX_BYTES; AsyncImage will
+    // accept the partial JPEG up to that point or display the failure view.
+    const reader = upstream.body.getReader();
+    const chunks = [];
+    let total = 0;
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > PROXY_MAX_BYTES) {
+        try { await reader.cancel(); } catch {}
+        return await sendBufOrFail(502, { error: 'upstream too large' });
+      }
+      chunks.push(Buffer.from(value));
+    }
+    const bytes = Buffer.concat(chunks);
+    PROXY_CACHE.set(uid, { bytes, contentType: ct, ts: Date.now() });
+    res.setHeader('Content-Type', ct);
+    res.setHeader('Cache-Control', 'public, max-age=30');
+    return res.send(bytes);
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      return await sendBufOrFail(504, { error: 'upstream timeout' });
+    }
+    console.warn(`[cameras/proxy] ${uid} (${parsed.href}) failed: ${err.message}`);
+    return await sendBufOrFail(502, { error: 'fetch failed' });
+  } finally {
+    clearTimeout(timer);
   }
 });
 
@@ -480,15 +675,6 @@ router.get('/crime', async (_req, res) => {
     sourceId: 'police-incidents',
     layerType: 'crime',
     collectorKey: 'police-crime',
-  });
-});
-
-// GET /api/data/social
-router.get('/social', async (_req, res) => {
-  await respondWithData(res, {
-    sourceId: 'twitter-geo',
-    layerType: 'social',
-    collectorKey: 'social-media',
   });
 });
 
@@ -552,14 +738,6 @@ router.get('/shodan-iot', async (_req, res) => {
   });
 });
 
-router.get('/insecam-webcams', async (_req, res) => {
-  await respondWithData(res, {
-    sourceId: 'insecam-webcams',
-    layerType: 'insecam-webcams',
-    collectorKey: 'insecam-webcams',
-  });
-});
-
 router.get('/wifi-networks', async (_req, res) => {
   await respondWithData(res, {
     sourceId: 'wifi-networks',
@@ -585,14 +763,6 @@ router.get('/flight-adsb', async (_req, res) => {
     sourceId: 'flight-adsb',
     layerType: 'flight-adsb',
     collectorKey: 'flight-adsb',
-  });
-});
-
-router.get('/full-transport', async (_req, res) => {
-  await respondWithData(res, {
-    sourceId: 'full-transport',
-    layerType: 'full-transport',
-    collectorKey: 'full-transport',
   });
 });
 
@@ -978,6 +1148,18 @@ router.get('/petroleum-stockpile', async (_req, res) => {
   await respondWithData(res, { sourceId: 'petroleum-stockpile', layerType: 'petroleum-stockpile', collectorKey: 'petroleum-stockpile' });
 });
 
+router.get('/ccs-projects', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'ccs-projects', layerType: 'ccs-projects', collectorKey: 'ccs-projects' });
+});
+
+router.get('/geothermal-springs', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'geothermal-springs', layerType: 'geothermal-springs', collectorKey: 'geothermal-springs' });
+});
+
+router.get('/geothermal-projects', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'geothermal-projects', layerType: 'geothermal-projects', collectorKey: 'geothermal-projects' });
+});
+
 router.get('/wind-turbines', async (_req, res) => {
   await respondWithData(res, { sourceId: 'wind-turbines', layerType: 'wind-turbines', collectorKey: 'wind-turbines' });
 });
@@ -1012,7 +1194,7 @@ router.get('/satellite-ground-stations', async (_req, res) => {
 router.get('/satellite-imagery', async (_req, res) => {
   await respondWithData(res, {
     sourceId: 'satellite-imagery',
-    layerType: 'satelliteImagery',
+    layerType: 'satellite-imagery',
     collectorKey: 'satellite-imagery',
   });
 });
@@ -1020,7 +1202,7 @@ router.get('/satellite-imagery', async (_req, res) => {
 router.get('/satellite-tracking', async (_req, res) => {
   await respondWithData(res, {
     sourceId: 'satellite-tracking',
-    layerType: 'satelliteTracking',
+    layerType: 'satellite-tracking',
     collectorKey: 'satellite-tracking',
   });
 });
@@ -1075,10 +1257,6 @@ router.get('/anime-pilgrimage', async (_req, res) => {
 // ===========================================================================
 // Wave 8: Crime + Vice + Wildlife
 // ===========================================================================
-router.get('/yakuza-hq', async (_req, res) => {
-  await respondWithData(res, { sourceId: 'yakuza-hq', layerType: 'yakuza-hq', collectorKey: 'yakuza-hq' });
-});
-
 router.get('/red-light-zones', async (_req, res) => {
   await respondWithData(res, { sourceId: 'red-light-zones', layerType: 'red-light-zones', collectorKey: 'red-light-zones' });
 });
@@ -1093,6 +1271,38 @@ router.get('/wanted-persons', async (_req, res) => {
 
 router.get('/phone-scam-hotspots', async (_req, res) => {
   await respondWithData(res, { sourceId: 'phone-scam-hotspots', layerType: 'phone-scam-hotspots', collectorKey: 'phone-scam-hotspots' });
+});
+
+router.get('/pref-police-crime', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'pref-police-crime', layerType: 'pref-police-crime', collectorKey: 'pref-police-crime' });
+});
+
+router.get('/npa-missing-persons', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'npa-missing-persons', layerType: 'npa-missing-persons', collectorKey: 'npa-missing-persons' });
+});
+
+router.get('/npa-traffic-accidents', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'npa-traffic-accidents', layerType: 'npa-traffic-accidents', collectorKey: 'npa-traffic-accidents' });
+});
+
+router.get('/npa-important-wanted', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'npa-important-wanted', layerType: 'npa-important-wanted', collectorKey: 'npa-important-wanted' });
+});
+
+router.get('/npa-special-fraud', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'npa-special-fraud', layerType: 'npa-special-fraud', collectorKey: 'npa-special-fraud' });
+});
+
+router.get('/npa-cyber-threat-obs', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'npa-cyber-threat-obs', layerType: 'npa-cyber-threat-obs', collectorKey: 'npa-cyber-threat-obs' });
+});
+
+router.get('/estat-crime', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'estat-crime', layerType: 'estat-crime', collectorKey: 'estat-crime' });
+});
+
+router.get('/moj-crime-whitepaper', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'moj-crime-whitepaper', layerType: 'moj-crime-whitepaper', collectorKey: 'moj-crime-whitepaper' });
 });
 
 // ===========================================================================
@@ -1265,6 +1475,14 @@ router.get('/kyodo-rss', async (_req, res) => {
   await respondWithData(res, { sourceId: 'kyodo-rss', layerType: 'news-feed', collectorKey: 'kyodo-rss' });
 });
 
+router.get('/wifi-hotspots-jcfw', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wifi-hotspots-jcfw', layerType: 'wifi-hotspots', collectorKey: 'wifi-hotspots-jcfw' });
+});
+
+router.get('/wifi-hotspots-freespot', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wifi-hotspots-freespot', layerType: 'wifi-hotspots', collectorKey: 'wifi-hotspots-freespot' });
+});
+
 router.get('/jpcert-alerts-rss', async (_req, res) => {
   await respondWithData(res, { sourceId: 'jpcert-alerts-rss', layerType: 'jpcert-alerts', collectorKey: 'jpcert-alerts-rss' });
 });
@@ -1317,11 +1535,169 @@ router.get('/note-com-trending', async (_req, res) => {
 router.get('/mercari-trending', async (_req, res) => {
   await respondWithData(res, { sourceId: 'mercari-trending', layerType: 'mercari-trending', collectorKey: 'mercari-trending' });
 });
-router.get('/kanagawa-police', async (_req, res) => {
-  await respondWithData(res, { sourceId: 'kanagawa-police', layerType: 'kanagawa-police', collectorKey: 'kanagawa-police' });
-});
 router.get('/greynoise-jp', async (_req, res) => {
   await respondWithData(res, { sourceId: 'greynoise-jp', layerType: 'greynoise-jp', collectorKey: 'greynoise-jp' });
+});
+
+// Wave 14a: Fused expressway layer
+router.get('/unified-highway', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'unified-highway', layerType: 'unified-highway', collectorKey: 'unified-highway' });
+});
+
+// Wave 14: Offensive-recon OSINT
+router.get('/fofa-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'fofa-jp', layerType: 'fofa-jp', collectorKey: 'fofa-jp' });
+});
+router.get('/quake360-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'quake360-jp', layerType: 'quake360-jp', collectorKey: 'quake360-jp' });
+});
+router.get('/urlscan-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'urlscan-jp', layerType: 'urlscan-jp', collectorKey: 'urlscan-jp' });
+});
+router.get('/wayback-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wayback-jp', layerType: 'wayback-jp', collectorKey: 'wayback-jp' });
+});
+router.get('/github-leaks-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'github-leaks-jp', layerType: 'github-leaks-jp', collectorKey: 'github-leaks-jp' });
+});
+router.get('/chan-5ch', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'chan-5ch', layerType: 'chan-5ch', collectorKey: 'chan-5ch' });
+});
+router.get('/houjin-bangou', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'houjin-bangou', layerType: 'houjin-bangou', collectorKey: 'houjin-bangou' });
+});
+router.get('/strava-heatmap-bases', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'strava-heatmap-bases', layerType: 'strava-heatmap-bases', collectorKey: 'strava-heatmap-bases' });
+});
+router.get('/ipa-alerts-rss', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'ipa-alerts-rss', layerType: 'ipa-alerts', collectorKey: 'ipa-alerts-rss' });
+});
+router.get('/grayhat-buckets', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'grayhat-buckets', layerType: 'grayhat-buckets', collectorKey: 'grayhat-buckets' });
+});
+
+// ── Wave 15: high-penetrance vuln/threat/breach + SOCINT additions ──────
+// Vuln intel
+router.get('/my-jvn', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'my-jvn', layerType: 'my-jvn', collectorKey: 'my-jvn' });
+});
+router.get('/cisa-kev-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'cisa-kev-jp', layerType: 'cisa-kev-jp', collectorKey: 'cisa-kev-jp' });
+});
+router.get('/osv-dev', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'osv-dev', layerType: 'osv-dev', collectorKey: 'osv-dev' });
+});
+router.get('/ghsa-advisories', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'ghsa-advisories', layerType: 'ghsa-advisories', collectorKey: 'ghsa-advisories' });
+});
+router.get('/poc-in-github', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'poc-in-github', layerType: 'poc-in-github', collectorKey: 'poc-in-github' });
+});
+router.get('/trickest-cve', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'trickest-cve', layerType: 'trickest-cve', collectorKey: 'trickest-cve' });
+});
+
+// IOC / attacker activity
+router.get('/shadowserver-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'shadowserver-jp', layerType: 'shadowserver-jp', collectorKey: 'shadowserver-jp' });
+});
+router.get('/urlhaus-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'urlhaus-jp', layerType: 'urlhaus-jp', collectorKey: 'urlhaus-jp' });
+});
+router.get('/threatfox-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'threatfox-jp', layerType: 'threatfox-jp', collectorKey: 'threatfox-jp' });
+});
+router.get('/feodo-tracker-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'feodo-tracker-jp', layerType: 'feodo-tracker-jp', collectorKey: 'feodo-tracker-jp' });
+});
+router.get('/sslbl-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'sslbl-jp', layerType: 'sslbl-jp', collectorKey: 'sslbl-jp' });
+});
+router.get('/spamhaus-drop', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'spamhaus-drop', layerType: 'spamhaus-drop', collectorKey: 'spamhaus-drop' });
+});
+router.get('/abuseipdb-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'abuseipdb-jp', layerType: 'abuseipdb-jp', collectorKey: 'abuseipdb-jp' });
+});
+router.get('/alienvault-otx-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'alienvault-otx-jp', layerType: 'alienvault-otx-jp', collectorKey: 'alienvault-otx-jp' });
+});
+router.get('/phishing-feeds-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'phishing-feeds-jp', layerType: 'phishing-feeds-jp', collectorKey: 'phishing-feeds-jp' });
+});
+router.get('/sans-isc', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'sans-isc', layerType: 'sans-isc', collectorKey: 'sans-isc' });
+});
+
+// Asset / breach intel
+router.get('/leakix-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'leakix-jp', layerType: 'leakix-jp', collectorKey: 'leakix-jp' });
+});
+router.get('/netlas-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'netlas-jp', layerType: 'netlas-jp', collectorKey: 'netlas-jp' });
+});
+router.get('/hudson-rock-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'hudson-rock-jp', layerType: 'hudson-rock-jp', collectorKey: 'hudson-rock-jp' });
+});
+router.get('/virustotal-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'virustotal-jp', layerType: 'virustotal-jp', collectorKey: 'virustotal-jp' });
+});
+router.get('/chaos-bugbounty-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'chaos-bugbounty-jp', layerType: 'chaos-bugbounty-jp', collectorKey: 'chaos-bugbounty-jp' });
+});
+
+// Network / BGP / DNS history
+router.get('/peeringdb-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'peeringdb-jp', layerType: 'peeringdb-jp', collectorKey: 'peeringdb-jp' });
+});
+router.get('/bgp-tools-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'bgp-tools-jp', layerType: 'bgp-tools-jp', collectorKey: 'bgp-tools-jp' });
+});
+router.get('/crtsh-historical', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'crtsh-historical', layerType: 'crtsh-historical', collectorKey: 'crtsh-historical' });
+});
+router.get('/cloudflare-radar-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'cloudflare-radar-jp', layerType: 'cloudflare-radar-jp', collectorKey: 'cloudflare-radar-jp' });
+});
+router.get('/ooni-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'ooni-jp', layerType: 'ooni-jp', collectorKey: 'ooni-jp' });
+});
+router.get('/ioda-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'ioda-jp', layerType: 'ioda-jp', collectorKey: 'ioda-jp' });
+});
+router.get('/ripestat-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'ripestat-jp', layerType: 'ripestat-jp', collectorKey: 'ripestat-jp' });
+});
+
+// SOCINT / news
+router.get('/yahoo-realtime', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'yahoo-realtime', layerType: 'yahoo-realtime', collectorKey: 'yahoo-realtime' });
+});
+router.get('/mastodon-jp-instances', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'mastodon-jp-instances', layerType: 'mastodon-jp-instances', collectorKey: 'mastodon-jp-instances' });
+});
+router.get('/bluesky-jetstream-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'bluesky-jetstream-jp', layerType: 'bluesky-jetstream-jp', collectorKey: 'bluesky-jetstream-jp' });
+});
+router.get('/niconico-ranking', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'niconico-ranking', layerType: 'niconico-ranking', collectorKey: 'niconico-ranking' });
+});
+router.get('/wikipedia-ja-recent', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'wikipedia-ja-recent', layerType: 'wikipedia-ja-recent', collectorKey: 'wikipedia-ja-recent' });
+});
+router.get('/osm-changesets-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'osm-changesets-jp', layerType: 'osm-changesets-jp', collectorKey: 'osm-changesets-jp' });
+});
+router.get('/yahoo-news-jp-rss', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'yahoo-news-jp-rss', layerType: 'yahoo-news-jp-rss', collectorKey: 'yahoo-news-jp-rss' });
+});
+router.get('/jp-news-rss', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'jp-news-rss', layerType: 'jp-news-rss', collectorKey: 'jp-news-rss' });
+});
+
+// Geo / disaster
+router.get('/nasa-firms-jp', async (_req, res) => {
+  await respondWithData(res, { sourceId: 'nasa-firms-jp', layerType: 'nasa-firms-jp', collectorKey: 'nasa-firms-jp' });
 });
 
 export default router;

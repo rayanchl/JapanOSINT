@@ -16,7 +16,20 @@ const CREDENTIALS = {
   // ── Cyber / OSINT ────────────────────────────────────────────────────
   'shodan-iot': { required: ['SHODAN_API_KEY'] },
   'shodan-japan': { required: ['SHODAN_API_KEY'] },
-  'wifi-networks': { required: ['WIGLE_API_KEY'], optional: ['SHODAN_API_KEY', 'MLS_API_KEY'] },
+  'wifi-networks-wigle':  { required: ['WIGLE_API_KEY'] },
+  'wifi-networks-shodan': { required: ['SHODAN_API_KEY'] },
+  'wifi-networks-mls':    { required: ['MLS_API_KEY'] },
+  'fofa-jp':         { required: ['FOFA_API_KEY'] },
+  'greynoise-jp':    { required: ['GREYNOISE_API_KEY'] },
+  'quake360-jp':     { required: ['QUAKE_API_KEY'] },
+  'grayhat-buckets': { required: ['GRAYHAT_API_KEY'] },
+  // GitHub-backed sources — token is optional. The collectors run anonymously
+  // when unset, but the GitHub API drops them from 60/h to 5000/h once a
+  // token is present, which matters at scale.
+  'trickest-cve':    { optional: ['GITHUB_TOKEN'] },
+  'poc-in-github':   { optional: ['GITHUB_TOKEN'] },
+  'github-leaks-jp': { optional: ['GITHUB_TOKEN'] },
+  'ghsa-advisories': { optional: ['GITHUB_TOKEN'] },
 
   // ── Infrastructure ─────────────────────────────────────────────────────
   'ev-charging': { optional: ['OPENCHARGEMAP_KEY'] },
@@ -29,6 +42,7 @@ const CREDENTIALS = {
   'marine-traffic': { required: ['MARINETRAFFIC_API_KEY'] },
   'vessel-finder': { required: ['VESSELFINDER_API_KEY'] },
   'maritime-ais': { anyOf: ['MARINETRAFFIC_API_KEY', 'VESSELFINDER_API_KEY'] },
+  'msil-umishiru': { required: ['UMISHIRU_API_KEY'] },
 
   // ── Aviation ─────────────────────────────────────────────────────────
   'flight-adsb': { optional: ['OPENSKY_CLIENT_ID', 'OPENSKY_CLIENT_SECRET', 'AERODATABOX_KEY'] },
@@ -46,6 +60,9 @@ const CREDENTIALS = {
 
   // ── Satellite ────────────────────────────────────────────────────────
   'sentinel-japan': { required: ['SENTINELHUB_CLIENT_ID', 'SENTINELHUB_CLIENT_SECRET'] },
+  // USGS M2M token raises the daily quota; collector falls back to the
+  // public-tier endpoint when unset, so it's optional rather than required.
+  'satellite-imagery': { optional: ['USGS_M2M_TOKEN'] },
 
   // ── Marketplace / Tourism ────────────────────────────────────────────
   'tabelog-restaurants': { required: ['HOTPEPPER_API_KEY'] },
@@ -54,6 +71,19 @@ const CREDENTIALS = {
   // ── Infrastructure / Datasets ────────────────────────────────────────
   'cell-towers': { required: ['OPENCELLID_KEY'] },
   'mlit-n02-stations': { optional: ['MLIT_N02_GEOJSON_URL'] },
+
+  // ── Disclosure / filings ─────────────────────────────────────────────
+  'edinet-filings': { required: ['EDINET_API_KEY'] },
+
+  // ── Social ───────────────────────────────────────────────────────────
+  'misskey-timeline': { required: ['MISSKEY_TOKEN'] },
+
+  // ── Cameras (cameraDiscovery aggregator channel) ─────────────────────
+  // Read directly by `fromWindy()` in collectors/cameraDiscovery.js. The
+  // cameraDiscovery collector itself is a single source row but it pulls
+  // from many channels — only Windy needs a key, so we attach the env-var
+  // requirement to the discovery aggregator's source registry entry.
+  'windy-webcams': { required: ['WINDY_API_KEY'] },
 };
 
 function listVars(entry) {
@@ -123,6 +153,31 @@ export function getCredentialStatus(sourceId) {
     })),
     missingVars,
   };
+}
+
+/**
+ * Flatten the CREDENTIALS map to the unique set of env-var names used by any
+ * source, with each var's most-restrictive `role` ('required' > 'anyOf' >
+ * 'optional'). Used by the /api/keys route so the iOS API-keys tab can list
+ * exactly the vars the server actually consumes.
+ */
+export function getAllKnownVarNames() {
+  const ROLE_RANK = { required: 0, anyOf: 1, optional: 2 };
+  const byName = new Map();
+  for (const entry of Object.values(CREDENTIALS)) {
+    for (const role of ['required', 'anyOf', 'optional']) {
+      for (const name of entry[role] || []) {
+        const existing = byName.get(name);
+        if (!existing || ROLE_RANK[role] < ROLE_RANK[existing.role]) {
+          byName.set(name, { name, role });
+        }
+      }
+    }
+  }
+  return [...byName.values()].sort((a, b) => {
+    const r = ROLE_RANK[a.role] - ROLE_RANK[b.role];
+    return r !== 0 ? r : a.name.localeCompare(b.name);
+  });
 }
 
 export default CREDENTIALS;

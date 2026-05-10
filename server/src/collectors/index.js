@@ -13,7 +13,6 @@ import mlitLandprice from './mlitLandprice.js';
 import mlitRiver from './mlitRiver.js';
 import publicCameras from './publicCameras.js';
 import policeCrime from './policeCrime.js';
-import socialMedia from './socialMedia.js';
 
 // Social media expansions
 import twitterGeo from './twitterGeo.js';
@@ -26,13 +25,16 @@ import jobBoards from './jobBoards.js';
 
 // Cyber OSINT
 import shodanIot from './shodanIot.js';
-import insecamWebcams from './insecamWebcams.js';
 import wifiNetworks from './wifiNetworks.js';
+import wifiNetworksWigle from './wifiNetworksWigle.js';
+import wifiNetworksShodan from './wifiNetworksShodan.js';
+import wifiNetworksMls from './wifiNetworksMls.js';
+import wifiHotspotsJcfw from './wifiHotspotsJcfw.js';
+import wifiHotspotsFreespot from './wifiHotspotsFreespot.js';
 
 // Transport (nationwide expansion)
 import maritimeAis from './maritimeAis.js';
 import flightAdsb from './flightAdsb.js';
-import fullTransport from './fullTransport.js';
 import mlitN02Stations from './mlitN02Stations.js';
 import mlitN05RailHistory from './mlitN05RailHistory.js';
 import mlitN07BusRoutes from './mlitN07BusRoutes.js';
@@ -64,6 +66,8 @@ import {
   collectUnifiedBusesRead,
   collectUnifiedAisShipsRead,
   collectUnifiedPortInfraRead,
+  collectUnifiedAirportsRead,
+  collectUnifiedFlightsRead,
 } from './transportRead.js';
 import {
   collectUnifiedStationsRead,
@@ -134,6 +138,9 @@ import refineries from './refineries.js';
 import semiconductorFabs from './semiconductorFabs.js';
 import shipyards from './shipyards.js';
 import petroleumStockpile from './petroleumStockpile.js';
+import ccsAdvancedProjects from './ccsAdvancedProjects.js';
+import gsjGeothermalSprings from './gsjGeothermalSprings.js';
+import jogmecGeothermalProjects from './jogmecGeothermalProjects.js';
 import windTurbines from './windTurbines.js';
 
 // Wave 6: Telecom + Internet Infrastructure
@@ -160,11 +167,18 @@ import skiResorts from './skiResorts.js';
 import animePilgrimage from './animePilgrimage.js';
 
 // Wave 8: Crime + Vice + Wildlife
-import yakuzaHq from './yakuzaHq.js';
 import redLightZones from './redLightZones.js';
 import pachinkoDensity from './pachinkoDensity.js';
 import wantedPersons from './wantedPersons.js';
 import phoneScamHotspots from './phoneScamHotspots.js';
+import prefPoliceCrime from './prefPoliceCrime.js';
+import npaMissingPersons from './npaMissingPersons.js';
+import npaTrafficAccidents from './npaTrafficAccidents.js';
+import npaImportantWanted from './npaImportantWanted.js';
+import npaSpecialFraud from './npaSpecialFraud.js';
+import npaCyberThreatObs from './npaCyberThreatObs.js';
+import eStatCrime from './eStatCrime.js';
+import mojCrimeWhitepaper from './mojCrimeWhitepaper.js';
 
 // Wave 9: Food + Agriculture
 import sakeBreweries from './sakeBreweries.js';
@@ -221,11 +235,75 @@ import birdMakeupJp from './birdMakeupJp.js';
 import suumoRentalDensity from './suumoRentalDensity.js';
 import noteComTrending from './noteComTrending.js';
 import mercariTrending from './mercariTrending.js';
-import kanagawaPolice from './kanagawaPolice.js';
 import greynoiseJp from './greynoiseJp.js';
 
-// Intelligence: global events
-import gdeltEvents from './gdeltEvents.js';
+// Wave 14a: Fused expressway / road-traffic layer
+import unifiedHighway from './unifiedHighway.js';
+
+// Wave 14: Offensive-recon OSINT (FOFA, Quake, URLscan, Wayback, GitHub leaks,
+// 5ch, Houjin Bangou, Strava heatmap, IPA advisories, GrayhatWarfare)
+import fofaJp from './fofaJp.js';
+import quake360Jp from './quake360Jp.js';
+import urlscanJp from './urlscanJp.js';
+import waybackJp from './waybackJp.js';
+import githubLeaksJp from './githubLeaksJp.js';
+import chan5ch from './chan5ch.js';
+import houjinBangou from './houjinBangou.js';
+import stravaHeatmapBases from './stravaHeatmapBases.js';
+import ipaAlertsRss from './ipaAlertsRss.js';
+import grayhatBuckets from './grayhatBuckets.js';
+import gdelt from './gdelt.js';
+
+// Wave 15: high-penetrance vuln-intel + threat-intel + breach-intel + SOCINT
+//
+// Vuln intel
+import myJvn from './myJvn.js';
+import cisaKevJp from './cisaKevJp.js';
+import osvDev from './osvDev.js';
+import ghsaAdvisories from './ghsaAdvisories.js';
+import pocInGithub from './pocInGithub.js';
+import trickestCve from './trickestCve.js';
+//
+// IOC / attacker activity
+import shadowserverJp from './shadowserverJp.js';
+import urlhausJp from './urlhausJp.js';
+import threatfoxJp from './threatfoxJp.js';
+import feodoTrackerJp from './feodoTrackerJp.js';
+import sslblJp from './sslblJp.js';
+import spamhausDrop from './spamhausDrop.js';
+import abuseipdbJp from './abuseipdbJp.js';
+import alienvaultOtxJp from './alienvaultOtxJp.js';
+import phishingFeedsJp from './phishingFeedsJp.js';
+import sansIscFeeds from './sansIscFeeds.js';
+//
+// Asset / breach intel
+import leakixJp from './leakixJp.js';
+import netlasJp from './netlasJp.js';
+import hudsonRockJp from './hudsonRockJp.js';
+import virustotalJp from './virustotalJp.js';
+import chaosBugbountyJp from './chaosBugbountyJp.js';
+//
+// Network / BGP / DNS history
+import peeringdbJp from './peeringdbJp.js';
+import bgpToolsJp from './bgpToolsJp.js';
+import crtshHistorical from './crtshHistorical.js';
+import cloudflareRadarJp from './cloudflareRadarJp.js';
+import ooniJp from './ooniJp.js';
+import iodaJp from './iodaJp.js';
+import ripestatJp from './ripestatJp.js';
+//
+// SOCINT / news
+import yahooRealtime from './yahooRealtime.js';
+import mastodonJpInstances from './mastodonJpInstances.js';
+import blueskyJetstreamJp from './blueskyJetstreamJp.js';
+import niconicoRanking from './niconicoRanking.js';
+import wikipediaJaRecent from './wikipediaJaRecent.js';
+import osmChangesetsJp from './osmChangesetsJp.js';
+import yahooNewsJpRss from './yahooNewsJpRss.js';
+import jpNewsRss from './jpNewsRss.js';
+//
+// Geo / disaster
+import nasaFirmsJp from './nasaFirmsJp.js';
 
 // Wave 10: Niche + Pop Culture
 import vendingMachines from './vendingMachines.js';
@@ -245,7 +323,6 @@ export const collectors = {
   'mlit-river': mlitRiver,
   'public-cameras': publicCameras,
   'police-crime': policeCrime,
-  'social-media': socialMedia,
 
   // Social media expansions
   'twitter-geo': twitterGeo,
@@ -256,15 +333,19 @@ export const collectors = {
   'real-estate': realEstate,
   'job-boards': jobBoards,
 
-  // Cyber OSINT
+  // Cyber OSINT. Insecam was retired in favour of the unified `cameras`
+  // fan-out (see collectors/cameraDiscovery.js -> insecam_scrape channel).
   'shodan-iot': shodanIot,
-  'insecam-webcams': insecamWebcams,
   'wifi-networks': wifiNetworks,
+  'wifi-networks-wigle': wifiNetworksWigle,
+  'wifi-networks-shodan': wifiNetworksShodan,
+  'wifi-networks-mls': wifiNetworksMls,
+  'wifi-hotspots-jcfw': wifiHotspotsJcfw,
+  'wifi-hotspots-freespot': wifiHotspotsFreespot,
 
   // Transport (nationwide)
   'maritime-ais': maritimeAis,
   'flight-adsb': flightAdsb,
-  'full-transport': fullTransport,
   'mlit-n02-stations': mlitN02Stations,
   'mlit-n05-rail-history': mlitN05RailHistory,
   'mlit-n07-bus-routes': mlitN07BusRoutes,
@@ -296,6 +377,8 @@ export const collectors = {
   'unified-port-infra': collectUnifiedPortInfraRead,
   'unified-stations': collectUnifiedStationsRead,
   'unified-station-footprints': collectUnifiedStationFootprintsRead,
+  'unified-airports': collectUnifiedAirportsRead,
+  'unified-flights': collectUnifiedFlightsRead,
 
   // Cameras: read-side of the scheduled camera-discovery fan-out.
   'cameras': camerasCollector,
@@ -362,6 +445,9 @@ export const collectors = {
   'semiconductor-fabs': semiconductorFabs,
   'shipyards': shipyards,
   'petroleum-stockpile': petroleumStockpile,
+  'ccs-projects': ccsAdvancedProjects,
+  'geothermal-springs': gsjGeothermalSprings,
+  'geothermal-projects': jogmecGeothermalProjects,
   'wind-turbines': windTurbines,
 
   // Wave 6: Telecom + Internet Infrastructure
@@ -388,11 +474,18 @@ export const collectors = {
   'anime-pilgrimage': animePilgrimage,
 
   // Wave 8: Crime + Vice + Wildlife
-  'yakuza-hq': yakuzaHq,
   'red-light-zones': redLightZones,
   'pachinko-density': pachinkoDensity,
   'wanted-persons': wantedPersons,
   'phone-scam-hotspots': phoneScamHotspots,
+  'pref-police-crime': prefPoliceCrime,
+  'npa-missing-persons': npaMissingPersons,
+  'npa-traffic-accidents': npaTrafficAccidents,
+  'npa-important-wanted': npaImportantWanted,
+  'npa-special-fraud': npaSpecialFraud,
+  'npa-cyber-threat-obs': npaCyberThreatObs,
+  'estat-crime': eStatCrime,
+  'moj-crime-whitepaper': mojCrimeWhitepaper,
 
   // Wave 9: Food + Agriculture
   'sake-breweries': sakeBreweries,
@@ -420,8 +513,8 @@ export const collectors = {
   'transmission-towers': transmissionTowers,
   'utility-poles': utilityPoles,
   'admin-boundaries': adminBoundaries,
-  // Wave 12: Unified camera discovery
-  'camera-discovery': cameraDiscovery,
+  // camera-discovery is sweep-only (cameraRunner cron); the user-facing
+  // /api/data/cameras read-side is registered above as 'cameras'.
 
   // Wave 13: Net-new live OSINT endpoints (2026 sweep)
   'p2pquake-jma': p2pquakeJma,
@@ -456,11 +549,68 @@ export const collectors = {
   'suumo-rental-density': suumoRentalDensity,
   'note-com-trending': noteComTrending,
   'mercari-trending': mercariTrending,
-  'kanagawa-police': kanagawaPolice,
   'greynoise-jp': greynoiseJp,
 
-  // Intelligence: global events
-  'gdelt-events': gdeltEvents,
+  // Wave 14a: Fused expressway / road-traffic
+  'unified-highway': unifiedHighway,
+
+  // Wave 14: Offensive-recon OSINT
+  'fofa-jp': fofaJp,
+  'quake360-jp': quake360Jp,
+  'urlscan-jp': urlscanJp,
+  'wayback-jp': waybackJp,
+  'github-leaks-jp': githubLeaksJp,
+  'chan-5ch': chan5ch,
+  'houjin-bangou': houjinBangou,
+  'strava-heatmap-bases': stravaHeatmapBases,
+  'ipa-alerts-rss': ipaAlertsRss,
+  'grayhat-buckets': grayhatBuckets,
+  'gdelt': gdelt,
+
+  // Wave 15: high-penetrance vuln/threat/breach intel + SOCINT
+  // Vuln intel
+  'my-jvn': myJvn,
+  'cisa-kev-jp': cisaKevJp,
+  'osv-dev': osvDev,
+  'ghsa-advisories': ghsaAdvisories,
+  'poc-in-github': pocInGithub,
+  'trickest-cve': trickestCve,
+  // IOC / attacker activity
+  'shadowserver-jp': shadowserverJp,
+  'urlhaus-jp': urlhausJp,
+  'threatfox-jp': threatfoxJp,
+  'feodo-tracker-jp': feodoTrackerJp,
+  'sslbl-jp': sslblJp,
+  'spamhaus-drop': spamhausDrop,
+  'abuseipdb-jp': abuseipdbJp,
+  'alienvault-otx-jp': alienvaultOtxJp,
+  'phishing-feeds-jp': phishingFeedsJp,
+  'sans-isc': sansIscFeeds,
+  // Asset / breach intel
+  'leakix-jp': leakixJp,
+  'netlas-jp': netlasJp,
+  'hudson-rock-jp': hudsonRockJp,
+  'virustotal-jp': virustotalJp,
+  'chaos-bugbounty-jp': chaosBugbountyJp,
+  // Network / BGP / DNS history
+  'peeringdb-jp': peeringdbJp,
+  'bgp-tools-jp': bgpToolsJp,
+  'crtsh-historical': crtshHistorical,
+  'cloudflare-radar-jp': cloudflareRadarJp,
+  'ooni-jp': ooniJp,
+  'ioda-jp': iodaJp,
+  'ripestat-jp': ripestatJp,
+  // SOCINT / news
+  'yahoo-realtime': yahooRealtime,
+  'mastodon-jp-instances': mastodonJpInstances,
+  'bluesky-jetstream-jp': blueskyJetstreamJp,
+  'niconico-ranking': niconicoRanking,
+  'wikipedia-ja-recent': wikipediaJaRecent,
+  'osm-changesets-jp': osmChangesetsJp,
+  'yahoo-news-jp-rss': yahooNewsJpRss,
+  'jp-news-rss': jpNewsRss,
+  // Geo / disaster
+  'nasa-firms-jp': nasaFirmsJp,
 };
 
 /**
