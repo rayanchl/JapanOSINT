@@ -136,10 +136,48 @@ export function runTenancyMigration() {
     );
   `);
 
-  // Seed the legacy tenant. Existing single-tenant data will migrate into
-  // this row when tenant_id columns are added in a follow-up.
+  // Seed the legacy tenant. Existing single-tenant data is owned by it.
   db.prepare(`
     INSERT OR IGNORE INTO tenants (id, slug, name, plan)
     VALUES ('legacy', 'legacy', 'Legacy (pre-multi-tenant)', 'enterprise')
   `).run();
+
+  // ── Add tenant_id to user-data tables ───────────────────────────────────
+  // SQLite stores the literal default schema-only — adding the column does
+  // NOT rewrite existing rows. New inserts get 'legacy' until callers pass
+  // an explicit tenant_id. The wrapper in `utils/tenancy.js` enforces the
+  // predicate on new code paths.
+  addTenantIdColumn('intel_items');
+  addTenantIdColumn('app_preferences');
+
+  // Indexes that pay off the moment routes start filtering by tenant_id.
+  // `IF NOT EXISTS` so re-runs are no-ops.
+  db.exec(`
+    CREATE INDEX IF NOT EXISTS idx_intel_items_tenant_fetched
+      ON intel_items(tenant_id, fetched_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_intel_items_tenant_source
+      ON intel_items(tenant_id, source_id);
+  `);
+}
+
+/**
+ * ALTER TABLE ADD COLUMN if the column is missing. SQLite's ALTER is
+ * limited; we PRAGMA first so we don't error on re-run.
+ */
+function addTenantIdColumn(table) {
+  // PRAGMA table_info errors cleanly if the table doesn't exist yet (some
+  // user-data tables are created lazily by other modules). Skip silently
+  // in that case — the next boot after the table exists will pick it up.
+  let cols;
+  try {
+    cols = db.prepare(`PRAGMA table_info(${table})`).all();
+  } catch {
+    return;
+  }
+  if (cols.length === 0) return;
+  if (cols.some((c) => c.name === 'tenant_id')) return;
+  // ADD COLUMN with NOT NULL + DEFAULT 'legacy' is O(1) — SQLite stores the
+  // default value at the schema level until a row gets a different one.
+  db.exec(`ALTER TABLE ${table} ADD COLUMN tenant_id TEXT NOT NULL DEFAULT 'legacy'`);
+  console.log(`[tenancy] added tenant_id column to ${table}`);
 }

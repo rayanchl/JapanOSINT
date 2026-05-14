@@ -32,6 +32,10 @@ import intelRouter from './routes/intel.js';
 import apiKeysRouter from './routes/apiKeys.js';
 import adminRouter from './routes/admin.js';
 import breakGlassRouter from './routes/breakGlass.js';
+import { requireSupabaseAuth, MULTI_TENANT_ENABLED } from './middleware/auth.js';
+import { resolveTenant } from './middleware/tenant.js';
+import { auditWriter } from './middleware/audit.js';
+import { rateLimit } from './middleware/rateLimit.js';
 import { startScheduler } from './utils/scheduler.js';
 import { installFetchTap, setBroadcaster } from './utils/collectorTap.js';
 import { runBulkHydrate } from './utils/gtfsBulkHydrate.js';
@@ -70,6 +74,23 @@ app.use(cors({
 app.use(compression());
 app.use(express.json());
 
+// ── Health check (BEFORE auth — must answer even during outages) ──────
+app.get('/api/health', (_req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// ── Auth + tenant + audit + rate-limit (MULTI_TENANT_ENABLED only) ────
+// Order matters: auth populates req.supabaseUser; tenant materialises
+// req.tenant; audit + rate-limit both need req.tenant. Each middleware
+// is itself flag-aware and no-ops when disabled, so this stack is safe
+// to leave wired even in legacy single-tenant mode.
+if (MULTI_TENANT_ENABLED) {
+  app.use('/api', requireSupabaseAuth, resolveTenant, rateLimit, auditWriter);
+  console.log('[boot] multi-tenant mode ON — Supabase auth + tenant resolution + rate-limit + audit active');
+} else {
+  console.log('[boot] multi-tenant mode OFF — running in legacy single-tenant mode');
+}
+
 // ── API Routes ─────────────────────────────────────────────────────────
 app.use('/api/sources', sourcesRouter);
 app.use('/api/layers', layersRouter);
@@ -88,11 +109,6 @@ app.use('/api/admin', adminRouter);
 // can be reached without auth middleware getting in the way during an
 // outage.
 app.use('/admin/break-glass', breakGlassRouter);
-
-// ── Health check ───────────────────────────────────────────────────────
-app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
 
 // ── Serve static files in production ───────────────────────────────────
 const clientDist = resolve(__dirname, '../../client/dist');

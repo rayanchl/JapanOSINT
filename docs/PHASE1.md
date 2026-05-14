@@ -42,19 +42,41 @@ A sample lives in `.env.example`.
 
 ## Still to do (Phase 1, in order)
 
-### Week 2 (in progress, ~80% done — work above)
+### Week 2 — DONE ✓
 
-* [ ] Mount `requireSupabaseAuth` + `resolveTenant` on `/api/*` once a feature
-  flag confirms callers are ready. Today the middleware is built but not
-  wired into the route stack.
-* [ ] Sweep `process.env.X` references in `server/src/collectors/` and
-  `utils/apiCredentials.js` — replace with `resolveCredential(tenantId, 'X')`.
-  Roughly 30 sites. Until this lands, BYOK is a feature with no effect.
-* [ ] Audit log writer middleware: emit `audit_events` for every
-  state-changing route. 10% sample of reads.
-* [ ] Rate limiter: in-process token bucket per `(tenant_id, route_class)`.
-  Three classes: `read` (60 rpm), `search` (30 rpm), `mutate` (10 rpm). Plan
-  tiers scale 0.25× / 1× / 4× / unlimited.
+* [x] `apiCredentials.js` swept through `getEnv(tenantId, name)`. Both
+  `getCredentialStatus` and `getProbeAuthHeaders` accept an optional
+  `tenantId`; null passes through to env (legacy / scheduler paths).
+* [x] Audit log writer middleware (`server/src/middleware/audit.js`).
+  Mutations always logged; 10% sample of reads. Body fields matching
+  `password|secret|token|api[_-]?key|authorization` redacted.
+* [x] Rate limiter middleware (`server/src/middleware/rateLimit.js`).
+  Token bucket per `(tenant_id, route_class)`. Classes: `read` 60 rpm,
+  `search` 30 rpm, `mutate` 10 rpm. Plan multipliers: free 0.25×, pro 1×,
+  team 4×, enterprise unlimited. `Retry-After` + `X-RateLimit-*` headers.
+* [x] `tenant_id` columns added to `intel_items` (and `app_preferences` is
+  iOS-side / SwiftData so no-op). Indexes:
+  `idx_intel_items_tenant_fetched(tenant_id, fetched_at DESC)`,
+  `idx_intel_items_tenant_source(tenant_id, source_id)`.
+* [x] Middleware wired into `/api/*` behind `MULTI_TENANT_ENABLED`. Order:
+  `requireSupabaseAuth → resolveTenant → rateLimit → auditWriter`. Health
+  check (`/api/health`) is mounted BEFORE the auth stack so monitoring
+  works during an outage.
+
+### Remaining Week 2 (collector-side, deferred to its own session)
+
+* [ ] Sweep direct `process.env.X` reads inside individual collectors
+  (~25-30 sites under `server/src/collectors/`). The hub
+  (`apiCredentials.js`) already routes through `getEnv`, but module-load
+  top-level captures like `const KEY = process.env.X` need to be moved
+  inside their function bodies and threaded through with a tenantId. The
+  scheduler/cron paths can pass `null` as the tenantId (platform-only).
+  Hot sites: `cameraDiscovery.js` (Windy, Shodan, YouTube), `censysJapan.js`,
+  `flightAdsb.js`, `marineTraffic.js`, `edinetFilings.js`, `fofaJp.js`,
+  `quake360Jp.js`, `greynoiseJp.js`, `grayhatBuckets.js`,
+  `wifiNetworksShodan.js`, `shodanIot.js`, `nasaFirmsJp.js`,
+  `houjinBangou.js`, `dehashedBreach.js`, the OPENSKY / AERODATABOX pair.
+  Mechanical but high blast-radius — split across at least two PRs.
 
 ### Week 3
 

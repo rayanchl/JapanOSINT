@@ -96,6 +96,8 @@ const CREDENTIALS = {
   },
 };
 
+import { getEnv } from './credentials.js';
+
 function listVars(entry) {
   return [
     ...(entry.required || []),
@@ -104,8 +106,15 @@ function listVars(entry) {
   ];
 }
 
-function isSet(name) {
-  const v = process.env[name];
+/**
+ * Read a credential value through the tenant-aware resolver.
+ *   tenantId = null → platform default (process.env) only. Used by the
+ *                     scheduler and any cron-context caller.
+ *   tenantId = '<id>' → tenant BYOK first, then platform fallback (subject
+ *                       to the per-secret fallback_to_platform flag).
+ */
+function isSet(name, tenantId = null) {
+  const v = getEnv(tenantId, name);
   return typeof v === 'string' && v.trim().length > 0;
 }
 
@@ -115,7 +124,7 @@ function isSet(name) {
  * Returns an object that's safe to send to the browser: it never includes
  * the actual secret values, only the env-var names and a boolean for each.
  */
-export function getCredentialStatus(sourceId) {
+export function getCredentialStatus(sourceId, tenantId = null) {
   const entry = CREDENTIALS[sourceId];
   if (!entry) {
     // No credentials needed → consider "configured".
@@ -128,7 +137,7 @@ export function getCredentialStatus(sourceId) {
   }
 
   const allVars = listVars(entry);
-  const setMap = Object.fromEntries(allVars.map((v) => [v, isSet(v)]));
+  const setMap = Object.fromEntries(allVars.map((v) => [v, isSet(v, tenantId)]));
 
   const required = entry.required || [];
   const anyOf = entry.anyOf || [];
@@ -171,15 +180,22 @@ export function getCredentialStatus(sourceId) {
  * any of the required vars are missing — in that case the probe runs without
  * auth (and likely returns 401/403, which is itself useful info).
  */
-export function getProbeAuthHeaders(sourceId) {
+export function getProbeAuthHeaders(sourceId, tenantId = null) {
   const entry = CREDENTIALS[sourceId];
   if (!entry || typeof entry.probeHeaders !== 'function') return null;
   const required = entry.required || [];
   for (const name of required) {
-    if (!isSet(name)) return null;
+    if (!isSet(name, tenantId)) return null;
+  }
+  // Build a synthetic env-shaped object containing only the vars this
+  // source declares, with tenant-resolved values. The probeHeaders callback
+  // receives this in place of process.env so BYOK keys flow through.
+  const env = {};
+  for (const name of listVars(entry)) {
+    env[name] = getEnv(tenantId, name);
   }
   try {
-    return entry.probeHeaders(process.env) || null;
+    return entry.probeHeaders(env) || null;
   } catch {
     return null;
   }

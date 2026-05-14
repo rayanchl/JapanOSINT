@@ -92,6 +92,21 @@ function decrypt(tenantId, blob) {
  * through to process.env so existing collectors keep working until they're
  * tenant-aware.
  */
+/**
+ * Convenience for callers that only need the string value: returns the
+ * credential value or null. Identical resolution order to
+ * resolveCredential — drop-in replacement for `process.env[name]`.
+ *
+ *   process.env.SHODAN_API_KEY   →   getEnv(tenantId, 'SHODAN_API_KEY')
+ *
+ * Pass tenantId=null for platform-only resolution (legacy / scheduler / cron
+ * paths that have no request context).
+ */
+export function getEnv(tenantId, varName) {
+  const r = resolveCredential(tenantId, varName);
+  return r ? r.value : null;
+}
+
 export function resolveCredential(tenantId, varName) {
   if (tenantId && tenantId !== 'legacy') {
     const row = db.prepare(`
