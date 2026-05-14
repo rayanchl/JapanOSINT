@@ -81,6 +81,7 @@ struct RootView: View {
                     sidebarLabel(.console(.scheduler), icon: "calendar.badge.clock",         title: "Scheduler")
                     sidebarLabel(.console(.followLog), icon: "scroll",                       title: "Follow log")
                     sidebarLabel(.console(.cameras),   icon: "video.fill",                   title: "Camera discovery")
+                    sidebarLabel(.console(.alerts),    icon: "bell.badge.fill",              title: "Alerts")
                     sidebarLabel(.console(.apiKeys),   icon: "key.fill",                     title: "API keys")
                     sidebarLabel(.console(.settings),  icon: "gearshape.fill",               title: "Settings")
                 } header: {
@@ -130,6 +131,7 @@ struct RootView: View {
                 case .cameras:    CameraDiscoveryTab()
                 case .followLog:  FollowLogTab()
                 case .apiKeys:    ApiKeysTab()
+                case .alerts:     AlertsTab()
                 case .settings:   SettingsTab()
                 }
             }

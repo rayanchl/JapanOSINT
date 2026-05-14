@@ -7,10 +7,11 @@
  */
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
+import { getEnv } from '../utils/credentials.js';
 
 const SOURCE_ID = 'edinet-filings';
 const TIMEOUT_MS = 10000;
-const API_KEY = process.env.EDINET_API_KEY;
+const edinetKey = () => getEnv(null, 'EDINET_API_KEY');
 
 function today() {
   return new Date().toISOString().slice(0, 10);
@@ -20,6 +21,7 @@ export default async function collectEdinetFilings() {
   let items = [];
   let live = false;
 
+  const API_KEY = edinetKey();
   if (API_KEY) {
     try {
       const ctrl = new AbortController();

@@ -8,12 +8,13 @@
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
 import { fetchHead } from './_liveHelpers.js';
+import { getEnv } from '../utils/credentials.js';
 
 const SOURCE_ID = 'dehashed-breach';
 const PROBE_URL = 'https://api.dehashed.com/';
 
 export default async function collectDehashedBreach() {
-  const hasKey = !!(process.env.DEHASHED_USER && process.env.DEHASHED_KEY);
+  const hasKey = !!(getEnv(null, 'DEHASHED_USER') && getEnv(null, 'DEHASHED_KEY'));
   const live = await fetchHead(PROBE_URL).catch(() => false);
   return intelEnvelope({
     sourceId: SOURCE_ID,

@@ -9,8 +9,9 @@
  */
 
 import { fetchOverpass, fetchJson } from './_liveHelpers.js';
+import { getEnv } from '../utils/credentials.js';
 
-const OPENCHARGEMAP_KEY = process.env.OPENCHARGEMAP_KEY || '';
+const openChargeMapKey = () => getEnv(null, 'OPENCHARGEMAP_KEY') || '';
 
 const CONNECTOR_TYPE_MAP = {
   2: 'CHAdeMO',
@@ -22,7 +23,8 @@ const CONNECTOR_TYPE_MAP = {
 
 async function tryOpenChargeMap() {
   let url = 'https://api.openchargemap.io/v3/poi/?output=json&countrycode=JP&maxresults=500&compact=true&verbose=false';
-  if (OPENCHARGEMAP_KEY) url += `&key=${OPENCHARGEMAP_KEY}`;
+  const key = openChargeMapKey();
+  if (key) url += `&key=${key}`;
   const data = await fetchJson(url);
   if (!Array.isArray(data)) return [];
   return data

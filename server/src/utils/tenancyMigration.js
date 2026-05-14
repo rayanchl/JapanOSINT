@@ -113,13 +113,14 @@ export function runTenancyMigration() {
 
     CREATE INDEX IF NOT EXISTS idx_apikeys_tenant ON tenant_api_keys(tenant_id);
 
-    -- Pointer to a per-tenant SAML/SCIM connection in BoxyHQ Jackson (or
-    -- equivalent). One row each for SSO + SCIM. Owned by Jackson; we just
-    -- store the connection id so we can call its admin API.
+    -- Pointer to a per-tenant SAML/SCIM connection in the (future) IdP
+    -- adapter. One row each for SSO + SCIM. The provider_id is opaque to
+    -- us — the actual SSO product is TBD; this table just reserves the
+    -- shape so we don't migrate again when it ships.
     CREATE TABLE IF NOT EXISTS tenant_idp_connections (
       tenant_id     TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
       kind          TEXT NOT NULL CHECK(kind IN ('saml','scim')),
-      provider_id   TEXT NOT NULL,        -- Jackson connection id
+      provider_id   TEXT NOT NULL,        -- opaque id from the IdP adapter
       status        TEXT NOT NULL DEFAULT 'pending',
       last_synced   TEXT,
       created_at    TEXT NOT NULL DEFAULT (datetime('now')),
@@ -134,6 +135,46 @@ export function runTenancyMigration() {
       role        TEXT NOT NULL CHECK(role IN ('owner','admin','analyst','viewer')),
       PRIMARY KEY (tenant_id, group_name)
     );
+
+    -- Alert rules: per-tenant. predicate_json matches incoming intel_items
+    -- rows; channels_json is the list of delivery sinks. dedup_window_sec
+    -- and storm_cap_per_hour throttle noisy rules.
+    CREATE TABLE IF NOT EXISTS alert_rules (
+      id                   TEXT PRIMARY KEY,
+      tenant_id            TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+      name                 TEXT NOT NULL,
+      enabled              INTEGER NOT NULL DEFAULT 1,
+      predicate_json       TEXT NOT NULL DEFAULT '{}',
+      channels_json        TEXT NOT NULL DEFAULT '[]',
+      dedup_window_sec     INTEGER NOT NULL DEFAULT 3600,
+      storm_cap_per_hour   INTEGER NOT NULL DEFAULT 100,
+      muted_until          TEXT,
+      created_by           TEXT,
+      created_at           TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at           TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_alert_rules_tenant_enabled
+      ON alert_rules(tenant_id, enabled);
+
+    -- Per-firing history. dedup checks query this within dedup_window_sec.
+    -- delivered_channels_json captures which sinks accepted; suppressed=1
+    -- means the rule matched but was throttled (dedup or storm guard).
+    CREATE TABLE IF NOT EXISTS alert_events (
+      id                       TEXT PRIMARY KEY,
+      tenant_id                TEXT NOT NULL,
+      rule_id                  TEXT NOT NULL,
+      item_uid                 TEXT NOT NULL,
+      matched_at               TEXT NOT NULL DEFAULT (datetime('now')),
+      delivered_channels_json  TEXT NOT NULL DEFAULT '[]',
+      suppressed               INTEGER NOT NULL DEFAULT 0,
+      reason                   TEXT
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_alert_events_rule_item
+      ON alert_events(rule_id, item_uid);
+    CREATE INDEX IF NOT EXISTS idx_alert_events_rule_ts
+      ON alert_events(rule_id, matched_at DESC);
   `);
 
   // Seed the legacy tenant. Existing single-tenant data is owned by it.

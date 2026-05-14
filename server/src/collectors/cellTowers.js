@@ -8,8 +8,9 @@
  */
 
 import { fetchOverpassTiled } from './_liveHelpers.js';
+import { getEnv } from '../utils/credentials.js';
 
-const OPENCELLID_KEY = process.env.OPENCELLID_KEY || '';
+const openCellIdKey = () => getEnv(null, 'OPENCELLID_KEY') || '';
 
 // Major urban cell tower density zones
 const TOWER_ZONES = [
@@ -144,6 +145,7 @@ function generateSeedData() {
 }
 
 async function tryOpenCellID() {
+  const OPENCELLID_KEY = openCellIdKey();
   if (!OPENCELLID_KEY) return null;
   try {
     const controller = new AbortController();

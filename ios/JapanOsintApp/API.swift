@@ -91,6 +91,21 @@ struct API: Sendable {
         catch { throw APIError.decoding(error) }
     }
 
+    /// PATCH helper. Same shape as `put()` — used by alert-rule edits.
+    private func patch<T: Decodable>(_ path: String, body: Data,
+                                      timeout: TimeInterval? = API.userDefaultTimeout) async throws -> T {
+        let url = try makeURL(path)
+        let data = try await request(url, method: "PATCH", body: body, timeout: timeout)
+        do { return try JSONDecoder().decode(T.self, from: data) }
+        catch { throw APIError.decoding(error) }
+    }
+
+    /// DELETE helper — body-less, no response expected (204).
+    private func delete(_ path: String) async throws {
+        let url = try makeURL(path)
+        _ = try await request(url, method: "DELETE")
+    }
+
     // ── Layers / Sources / Status ──────────────────────────────────────────
     func health() async throws -> Data {
         try await request(try makeURL("/api/health"))
@@ -270,5 +285,43 @@ struct API: Sendable {
     func restartServer() async throws {
         let url = try makeURL("/api/admin/restart")
         _ = try await request(url, method: "POST", body: Data("{}".utf8), timeout: 10)
+    }
+
+    // ── Alerts ─────────────────────────────────────────────────────────────
+    func alertsList() async throws -> [AlertRule] {
+        let env: AlertRulesEnvelope = try await get("/api/alerts")
+        return env.data
+    }
+    func alertCreate(_ rule: AlertRule) async throws -> AlertRule {
+        let body = try JSONEncoder().encode(rule)
+        let env: AlertRuleEnvelope = try await post("/api/alerts", body: body, timeout: API.userDefaultTimeout)
+        return env.data
+    }
+    func alertUpdate(_ rule: AlertRule) async throws -> AlertRule {
+        let body = try JSONEncoder().encode(rule)
+        let env: AlertRuleEnvelope = try await patch("/api/alerts/\(rule.id)", body: body)
+        return env.data
+    }
+    func alertDelete(_ id: String) async throws {
+        try await delete("/api/alerts/\(id)")
+    }
+    func alertMute(_ id: String, durationSec: Int?) async throws {
+        let body = try JSONSerialization.data(
+            withJSONObject: ["duration_sec": durationSec as Any? ?? "forever"]
+        )
+        let _: [String: Bool] = try await post("/api/alerts/\(id)/mute", body: body, timeout: 10)
+    }
+    func alertUnmute(_ id: String) async throws {
+        let _: [String: Bool] = try await post("/api/alerts/\(id)/unmute", timeout: 10)
+    }
+    func alertTest(_ id: String) async throws {
+        let _: [String: Bool] = try await post("/api/alerts/\(id)/test", timeout: 10)
+    }
+    func alertEvents(_ id: String, limit: Int = 100) async throws -> [AlertEvent] {
+        let env: AlertEventsEnvelope = try await get(
+            "/api/alerts/\(id)/events",
+            query: [URLQueryItem(name: "limit", value: String(limit))]
+        )
+        return env.data
     }
 }

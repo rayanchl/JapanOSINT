@@ -14,8 +14,13 @@
 
 import { getOAuthToken } from '../utils/openskyAuth.js';
 import { classifyMilitary } from './_militaryIcao.js';
+import { getEnv } from '../utils/credentials.js';
 
-const AERODATABOX_KEY = process.env.AERODATABOX_KEY || '';
+// Read at call time (not module load) so a tenant's BYOK key — or a value
+// set via the API-keys overlay after boot — flows through. Platform-only
+// today (tenantId=null); pass a real tenantId once the scheduler is
+// tenant-aware.
+const aeroDataboxKey = () => getEnv(null, 'AERODATABOX_KEY') || '';
 const AERODATABOX_AIRPORTS = [
   { icao: 'RJAA', iata: 'NRT', name: 'Narita', lat: 35.7720, lon: 140.3929 },
   { icao: 'RJTT', iata: 'HND', name: 'Haneda', lat: 35.5494, lon: 139.7798 },
@@ -344,7 +349,8 @@ export function mergeLiveByIcao(...sources) {
 }
 
 export async function tryAeroDataBoxAirport(airport) {
-  if (!AERODATABOX_KEY) return [];
+  const key = aeroDataboxKey();
+  if (!key) return [];
   try {
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 10000);
@@ -355,7 +361,7 @@ export async function tryAeroDataBoxAirport(airport) {
     const res = await fetch(url, {
       signal: ctrl.signal,
       headers: {
-        'X-RapidAPI-Key': AERODATABOX_KEY,
+        'X-RapidAPI-Key': key,
         'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com',
       },
     });

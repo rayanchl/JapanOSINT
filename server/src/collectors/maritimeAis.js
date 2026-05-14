@@ -9,14 +9,16 @@
  */
 
 import { fetchOverpass, fetchJson } from './_liveHelpers.js';
+import { getEnv } from '../utils/credentials.js';
 
-const MARINETRAFFIC_API_KEY = process.env.MARINETRAFFIC_API_KEY || '';
-const VESSELFINDER_API_KEY = process.env.VESSELFINDER_API_KEY || '';
+const marineTrafficKey = () => getEnv(null, 'MARINETRAFFIC_API_KEY') || '';
+const vesselFinderKey  = () => getEnv(null, 'VESSELFINDER_API_KEY')  || '';
 
 // MarineTraffic Exportvessels - returns array of vessels inside bbox with last position
 async function tryMarineTraffic() {
-  if (!MARINETRAFFIC_API_KEY) return null;
-  const url = `https://services.marinetraffic.com/api/exportvessels/v:8/${MARINETRAFFIC_API_KEY}/protocol:jsono/minlat:24/maxlat:46/minlon:122/maxlon:154`;
+  const key = marineTrafficKey();
+  if (!key) return null;
+  const url = `https://services.marinetraffic.com/api/exportvessels/v:8/${key}/protocol:jsono/minlat:24/maxlat:46/minlon:122/maxlon:154`;
   const data = await fetchJson(url, { timeoutMs: 10000 });
   if (!Array.isArray(data) || data.length === 0) return null;
   return data.map((v, i) => ({
@@ -41,8 +43,9 @@ async function tryMarineTraffic() {
 
 // VesselFinder vesselslist - public REST key-gated endpoint
 async function tryVesselFinder() {
-  if (!VESSELFINDER_API_KEY) return null;
-  const url = `https://api.vesselfinder.com/vesselslist?userkey=${VESSELFINDER_API_KEY}&bbox=122,24,154,46&format=json`;
+  const key = vesselFinderKey();
+  if (!key) return null;
+  const url = `https://api.vesselfinder.com/vesselslist?userkey=${key}&bbox=122,24,154,46&format=json`;
   const data = await fetchJson(url, { timeoutMs: 10000 });
   if (!Array.isArray(data) || data.length === 0) return null;
   return data.map((v, i) => ({

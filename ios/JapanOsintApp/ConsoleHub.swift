@@ -35,6 +35,9 @@ struct ConsoleHub: View {
                     row(.cameras, icon: "video.fill",
                         title: "Camera discovery",
                         subtitle: "Probe public webcams")
+                    row(.alerts, icon: "bell.badge.fill",
+                        title: "Alerts",
+                        subtitle: "Rules, channels, history")
                 } header: {
                     sectionLabel("Discovery")
                 }
@@ -69,6 +72,7 @@ struct ConsoleHub: View {
         case .cameras:    CameraDiscoveryTab()
         case .followLog:  FollowLogTab()
         case .apiKeys:    ApiKeysTab()
+        case .alerts:     AlertsTab()
         case .settings:   SettingsTab()
         }
     }

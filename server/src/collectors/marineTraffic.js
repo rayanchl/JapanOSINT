@@ -10,10 +10,13 @@
  */
 
 import { fetchJson, fetchOverpass } from './_liveHelpers.js';
+import { getEnv } from '../utils/credentials.js';
 
-const API_KEY = process.env.MARINETRAFFIC_API_KEY || '';
+// Lazy read so tenant BYOK overrides land without a server restart.
+const apiKey = () => getEnv(null, 'MARINETRAFFIC_API_KEY') || '';
 
 async function tryApi() {
+  const API_KEY = apiKey();
   if (!API_KEY) return null;
   const url = `https://services.marinetraffic.com/api/exportvessels/v:8/${API_KEY}/protocol:jsono/minlat:24/maxlat:46/minlon:122/maxlon:154`;
   const data = await fetchJson(url, { timeoutMs: 10000 });

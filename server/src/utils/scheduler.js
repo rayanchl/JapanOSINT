@@ -15,6 +15,15 @@ import { runGtfsRtCatalogueRefresh } from './gtfsRtCatalogueRunner.js';
 import { runLlmEnricher } from './llmEnricher.js';
 import { withCollectorRun } from './collectorTap.js';
 import { seedTtlsFromRegistry, pruneExpired } from './collectorCache.js';
+import { hasFixture, captureFixture } from './collectorFixtures.js';
+import { evaluateRun } from './collectorDetection.js';
+
+// Cap on per-source fixture payload size (2MB). At 308 sources this caps
+// total fixture disk usage at ~600MB. Responses larger than this skip
+// capture rather than blowing the budget; the few sources that legitimately
+// exceed it (large GTFS dumps, bulk listings) can be handled later by a
+// runner-level tap that streams to disk instead of buffering.
+const FIXTURE_MAX_BYTES = 2 * 1024 * 1024;
 
 /**
  * Some upstream endpoints only accept POST (e.g. Overpass `/api/interpreter`
@@ -132,6 +141,40 @@ export async function fetchSource(source, wsServer) {
       error: ok ? null : `HTTP ${res.status}`,
     });
 
+    // Phase 1 detection: fire-and-forget so the LLM sanity check (up to 8s)
+    // never blocks the probe response. The DB writes inside evaluateRun
+    // outlive this function on the always-on server.
+    evaluateRun({
+      source,
+      statusOk: ok,
+      recordsCount,
+      rawBody,
+      duration,
+    }).catch((err) => console.warn(`[detect] evaluateRun crashed for ${source.id}: ${err?.message}`));
+
+    // Phase 0 fixture bootstrap: capture once per source on the first
+    // healthy run. Re-capture after verified fixes lands in Phase 3 — for
+    // now an existing fixture is treated as authoritative. Failure here
+    // is non-fatal: the probe already succeeded and downstream readers
+    // don't depend on the fixture yet.
+    if (ok && recordsCount > 0 && !hasFixture(source.id)) {
+      const byteLen = Buffer.byteLength(rawBody);
+      if (byteLen <= FIXTURE_MAX_BYTES) {
+        try {
+          captureFixture({
+            sourceId: source.id,
+            rawBody,
+            contentType: res.headers.get('content-type'),
+            statusCode: res.status,
+            recordsCount,
+            sourceUrl: source.url,
+          });
+        } catch (err) {
+          console.warn(`[fixtures] capture failed for ${source.id}: ${err?.message}`);
+        }
+      }
+    }
+
     broadcast(wsServer, {
       type: 'source_update',
       source_id: source.id,
@@ -164,6 +207,16 @@ export async function fetchSource(source, wsServer) {
       duration_ms: duration,
       error: errorMsg,
     });
+
+    // Phase 1 detection on the failure path: status_bad fires after 2
+    // consecutive non-online runs. No rawBody to feed the sanity check.
+    evaluateRun({
+      source,
+      statusOk: false,
+      recordsCount: 0,
+      rawBody: null,
+      duration,
+    }).catch((e) => console.warn(`[detect] evaluateRun crashed for ${source.id}: ${e?.message}`));
 
     broadcast(wsServer, {
       type: 'source_update',

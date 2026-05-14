@@ -11,7 +11,7 @@ enum AppTab: Int { case map = 0, intel, saved, console }
 /// isn't Map / Intel / Saved). The hub uses a `NavigationStack(path:)` so
 /// cross-tab actions like "open this API key" can deep-link straight in.
 enum ConsoleDestination: Hashable {
-    case sources, database, scheduler, cameras, followLog, apiKeys, settings
+    case sources, database, scheduler, cameras, followLog, apiKeys, alerts, settings
 }
 
 /// Cross-tab coordinator. Tabs other than Map (Camera Discovery, etc.) push

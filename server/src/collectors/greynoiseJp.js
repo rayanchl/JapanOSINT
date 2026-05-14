@@ -27,7 +27,7 @@ async function lookupOne(ip) {
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const key = process.env.GREYNOISE_API_KEY;
+    const key = getEnv(null, 'GREYNOISE_API_KEY');
     const res = await fetch(`${BASE}/${encodeURIComponent(ip)}`, {
       signal: controller.signal,
       headers: {
@@ -45,6 +45,7 @@ async function lookupOne(ip) {
 }
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
+import { getEnv } from '../utils/credentials.js';
 
 const SOURCE_ID = 'greynoise-jp';
 

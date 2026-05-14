@@ -11,13 +11,17 @@
  */
 
 import { createThreatIntelCollector } from '../utils/threatIntelCollectorFactory.js';
+import { getEnv } from '../utils/credentials.js';
 
 const BASE = 'https://search.censys.io/api/v2';
 const TIMEOUT_MS = 20000;
 
 function authHeader() {
-  const id = process.env.CENSYS_API_ID;
-  const secret = process.env.CENSYS_API_SECRET;
+  // Tenant-aware: when called from a per-tenant collector context the
+  // null can be replaced with req.tenant.id. Today scheduler calls
+  // through with null, which falls back to process.env.
+  const id = getEnv(null, 'CENSYS_API_ID');
+  const secret = getEnv(null, 'CENSYS_API_SECRET');
   if (!id || !secret) return null;
   return `Basic ${Buffer.from(`${id}:${secret}`).toString('base64')}`;
 }

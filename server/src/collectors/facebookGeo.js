@@ -5,11 +5,12 @@
  * is absent or the API call fails — no OSM proxy or seed fallback.
  */
 
-const FB_ACCESS_TOKEN = process.env.FACEBOOK_ACCESS_TOKEN || '';
+import { getEnv } from '../utils/credentials.js';
 
 export default async function collectFacebookGeo() {
   let features = [];
   let live = false;
+  const FB_ACCESS_TOKEN = getEnv(null, 'FACEBOOK_ACCESS_TOKEN') || '';
 
   if (FB_ACCESS_TOKEN) {
     try {

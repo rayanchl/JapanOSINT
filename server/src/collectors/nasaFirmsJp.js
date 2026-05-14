@@ -9,13 +9,15 @@
  * Source: 'firms_active_fire' — geometry from per-row latitude/longitude.
  */
 
+import { getEnv } from '../utils/credentials.js';
+
 const TIMEOUT_MS = 20000;
 
 const SENSOR = process.env.FIRMS_SENSOR || 'VIIRS_NOAA20_NRT';
 const DAYS = Math.min(Number(process.env.FIRMS_DAYS || 1), 10);
 
 export default async function collectNasaFirmsJp() {
-  const key = process.env.NASA_FIRMS_MAP_KEY || process.env.FIRMS_MAP_KEY || '';
+  const key = getEnv(null, 'NASA_FIRMS_MAP_KEY') || getEnv(null, 'FIRMS_MAP_KEY') || '';
   if (!key) {
     return {
       type: 'FeatureCollection',

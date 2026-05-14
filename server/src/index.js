@@ -31,12 +31,14 @@ import plateauCatalogRouter from './routes/plateauCatalog.js';
 import intelRouter from './routes/intel.js';
 import apiKeysRouter from './routes/apiKeys.js';
 import adminRouter from './routes/admin.js';
+import alertsRouter from './routes/alerts.js';
 import breakGlassRouter from './routes/breakGlass.js';
 import { requireSupabaseAuth, MULTI_TENANT_ENABLED } from './middleware/auth.js';
 import { resolveTenant } from './middleware/tenant.js';
 import { auditWriter } from './middleware/audit.js';
 import { rateLimit } from './middleware/rateLimit.js';
 import { startScheduler } from './utils/scheduler.js';
+import { startTriageWorker } from './utils/collectorTriage.js';
 import { installFetchTap, setBroadcaster } from './utils/collectorTap.js';
 import { runBulkHydrate } from './utils/gtfsBulkHydrate.js';
 import { refreshFeedCatalogue, refreshRtFeedCatalogue } from './utils/gtfsStore.js';
@@ -104,6 +106,7 @@ app.use('/api/plateau', plateauCatalogRouter);
 app.use('/api/intel', intelRouter);
 app.use('/api/keys', apiKeysRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/alerts', alertsRouter);
 // Break-glass admin path. Off unless BREAK_GLASS_ENABLED=1; the router
 // itself 404s when disabled. Intentionally NOT under /api/admin so it
 // can be reached without auth middleware getting in the way during an
@@ -180,6 +183,8 @@ startShipPoller();
     return;
   }
   startScheduler(wss);
+  // Maintenance-pod triage worker (Phase 2). No-ops unless LLM_ENABLED=true.
+  startTriageWorker();
   try {
     await rebuildAllAtBoot();
   } catch (err) {

@@ -5,8 +5,10 @@
  * Without a key we fall back to seed port positions.
  */
 
+import { getEnv } from '../utils/credentials.js';
+
 const TIMEOUT_MS = 10000;
-const API_KEY = process.env.UMISHIRU_API_KEY;
+const umishiruKey = () => getEnv(null, 'UMISHIRU_API_KEY');
 
 const SEED_PORTS = [
   { name: '東京港', lat: 35.61, lon: 139.77 },
@@ -22,6 +24,7 @@ const SEED_PORTS = [
 export default async function collectMsilUmishiru() {
   let features = [];
   let source = 'seed';
+  const API_KEY = umishiruKey();
   if (API_KEY) {
     try {
       const controller = new AbortController();

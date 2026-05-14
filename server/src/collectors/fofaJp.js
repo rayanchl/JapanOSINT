@@ -35,12 +35,13 @@ function decodeRow(arr) {
 }
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
+import { getEnv } from '../utils/credentials.js';
 
 const SOURCE_ID = 'fofa-jp';
 
 export default async function collectFofaJp() {
-  const key = process.env.FOFA_API_KEY;
-  const email = process.env.FOFA_EMAIL || '';
+  const key = getEnv(null, 'FOFA_API_KEY');
+  const email = getEnv(null, 'FOFA_EMAIL') || '';
   if (!key) {
     return intelEnvelope({
       sourceId: SOURCE_ID,

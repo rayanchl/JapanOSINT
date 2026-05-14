@@ -20,11 +20,12 @@ const DEFAULT_KEYWORDS = (process.env.GRAYHAT_KEYWORDS || [
 ].join(',')).split(',').map((s) => s.trim()).filter(Boolean);
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
+import { getEnv } from '../utils/credentials.js';
 
 const SOURCE_ID = 'grayhat-buckets';
 
 export default async function collectGrayhatBuckets() {
-  const key = process.env.GRAYHAT_API_KEY;
+  const key = getEnv(null, 'GRAYHAT_API_KEY');
   if (!key) {
     return intelEnvelope({
       sourceId: SOURCE_ID,

@@ -17,6 +17,17 @@ import db from './database.js';
 import { segmentForFts } from './jpTokenizer.js';
 import { defineFtsMirror } from './ftsMirror.js';
 import { registerMirror } from './ftsRegistry.js';
+// Lazy-loaded to dodge a potential circular-import path between
+// alertEngine (uses database.js) and any future engine code that may want
+// to read intel_items directly. Dynamic import at call time costs nothing
+// on the hot path because the module is cached after first hit.
+let _alertEngine = null;
+async function fireAlertsForNewItem(item) {
+  if (!_alertEngine) {
+    _alertEngine = await import('./alertEngine.js');
+  }
+  _alertEngine.evaluateForNewItem(item);
+}
 
 export const intelMirror = registerMirror(defineFtsMirror({
   name:             'intel_items_fts',
@@ -374,7 +385,29 @@ export function upsertItemSync(item, sourceId, fetchedAtIso) {
     if (seg) intelMirror.writeOne({ ...seg, keywords: '' });
   });
   tx();
-  return { kind: existed ? 'updated' : 'new', uid: String(item.uid) };
+  const result = { kind: existed ? 'updated' : 'new', uid: String(item.uid) };
+
+  // Fire-and-forget alert evaluation for net-new rows. The engine catches
+  // its own errors so a downstream channel failure can't surface back into
+  // the intel pipeline. See utils/alertEngine.js.
+  if (result.kind === 'new') {
+    fireAlertsForNewItem({
+      uid: String(item.uid),
+      source_id: sourceId,
+      tenant_id: item.tenant_id || 'legacy',
+      title: item.title ?? null,
+      summary: item.summary ?? null,
+      body: item.body ?? null,
+      link: item.link ?? null,
+      lat: geocoded ? lat : null,
+      lon: geocoded ? lon : null,
+      tags: toJson(item.tags, '[]'),
+      record_type: item.recordType ?? item.record_type ?? null,
+      fetched_at: fetchedAt,
+      published_at: item.published_at ?? null,
+    });
+  }
+  return result;
 }
 
 /**

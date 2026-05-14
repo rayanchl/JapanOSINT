@@ -16,6 +16,7 @@
  */
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
+import { getEnv } from '../utils/credentials.js';
 
 const SOURCE_ID = 'houjin-bangou';
 const BASE = 'https://api.houjin-bangou.nta.go.jp/4/diff';
@@ -26,7 +27,7 @@ function ymd(d) {
 }
 
 export default async function collectHoujinBangou() {
-  const id = process.env.HOUJIN_BANGOU_KEY;
+  const id = getEnv(null, 'HOUJIN_BANGOU_KEY');
   if (!id) {
     return intelEnvelope({
       sourceId: SOURCE_ID,

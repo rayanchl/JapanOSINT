@@ -8,10 +8,13 @@
  * no InternetDB gateway probing.
  */
 
+import { getEnv } from '../utils/credentials.js';
+
 async function tryShodanAPI() {
   // Read at call-time so iOS-set keys (which mutate process.env via
-  // apiKeysStore.setKey) take effect without a server restart.
-  const key = process.env.SHODAN_API_KEY || '';
+  // apiKeysStore.setKey) AND tenant BYOK overrides take effect without
+  // a server restart.
+  const key = getEnv(null, 'SHODAN_API_KEY') || '';
   if (!key) return null;
   try {
     const controller = new AbortController();

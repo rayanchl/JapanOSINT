@@ -490,6 +490,55 @@ struct IntelItemEnvelope: Decodable {
     let data: IntelItem
 }
 
+// ── Alerts ─────────────────────────────────────────────────────────────────
+
+struct AlertChannel: Codable, Hashable, Identifiable {
+    enum Kind: String, Codable, CaseIterable, Identifiable {
+        case email, webhook
+        var id: String { rawValue }
+        var label: String { self == .email ? "Email" : "Webhook" }
+    }
+    let type: Kind
+    var target: String
+    var secret: String?    // webhook only; server returns "••••" on reads
+    var id: String { "\(type.rawValue):\(target)" }
+}
+
+struct AlertPredicate: Codable, Hashable {
+    var q: String?
+    var source_ids: [String]?
+    var tags_any: [String]?
+    var tags_all: [String]?
+    var bbox: [Double]?              // [w, s, e, n]
+    var record_types: [String]?
+}
+
+struct AlertRule: Codable, Identifiable, Hashable {
+    let id: String
+    var name: String
+    var enabled: Bool
+    var predicate: AlertPredicate
+    var channels: [AlertChannel]
+    var dedup_window_sec: Int
+    var storm_cap_per_hour: Int
+    var muted_until: String?
+    let created_at: String?
+    let updated_at: String?
+}
+
+struct AlertRuleEnvelope: Decodable { let data: AlertRule }
+struct AlertRulesEnvelope: Decodable { let data: [AlertRule] }
+
+struct AlertEvent: Decodable, Identifiable, Hashable {
+    let id: String
+    let item_uid: String
+    let matched_at: String
+    let delivered_channels: [String]
+    let suppressed: Int
+    let reason: String?
+}
+struct AlertEventsEnvelope: Decodable { let data: [AlertEvent] }
+
 // ── Database explorer ──────────────────────────────────────────────────────
 
 struct DBTable: Decodable, Identifiable, Hashable {

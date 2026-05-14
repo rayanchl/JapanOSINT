@@ -391,6 +391,45 @@ db.exec(`
     decided_at  TEXT NOT NULL DEFAULT (datetime('now')),
     PRIMARY KEY (uid_a, uid_b)
   );
+
+  -- Maintenance-pod work queue. One row per detected anomaly on a source's
+  -- fetch run. Written by Phase 1 detection (deterministic signals + 4B
+  -- sanity classifier), drained by Phase 2 triage (12B) and Phase 3 repair
+  -- (12B / 27B). verdict is the detection layer's call; escalation_level
+  -- climbs as repair attempts fail. resolved_at is set when a fix is
+  -- verified or the anomaly is dismissed (transient, whitelisted, etc.).
+  CREATE TABLE IF NOT EXISTS collector_anomaly (
+    id                   INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_id            TEXT NOT NULL REFERENCES sources(id),
+    fetch_log_id         INTEGER REFERENCES fetch_log(id),
+    verdict              TEXT NOT NULL CHECK(verdict IN ('records_drop','status_bad','sanity_failed','duration_outlier','manual')),
+    reason               TEXT,
+    evidence             TEXT,
+    escalation_level     INTEGER NOT NULL DEFAULT 0,
+    created_at           TEXT NOT NULL DEFAULT (datetime('now')),
+    resolved_at          TEXT,
+    resolution           TEXT,
+    -- Phase 2 triage results. Populated by collectorTriage worker.
+    -- triage_class: 'transient'|'url_move'|'selector_drift'|'auth_break'
+    --              |'rate_limit'|'site_dead'|'structural'|'unknown'
+    -- triage_confidence: 0.0..1.0 from the model
+    -- triage_evidence: short string the model produced as justification
+    -- triage_suggested_fix: optional JSON sketch of the proposed fix
+    -- triaged_at: when the triage write completed
+    -- triage_model: which model produced this verdict (audit trail)
+    triage_class         TEXT,
+    triage_confidence    REAL,
+    triage_evidence      TEXT,
+    triage_suggested_fix TEXT,
+    triaged_at           TEXT,
+    triage_model         TEXT
+  );
+  CREATE INDEX IF NOT EXISTS idx_anomaly_open
+    ON collector_anomaly(source_id, created_at DESC) WHERE resolved_at IS NULL;
+  CREATE INDEX IF NOT EXISTS idx_anomaly_unresolved
+    ON collector_anomaly(created_at DESC) WHERE resolved_at IS NULL;
+  CREATE INDEX IF NOT EXISTS idx_anomaly_untriaged
+    ON collector_anomaly(created_at) WHERE resolved_at IS NULL AND triaged_at IS NULL;
 `);
 
 // --------------- Schema migration ---------------
@@ -623,6 +662,36 @@ db.exec(`
   }
 })();
 
+// collector_anomaly Phase 2 triage columns. Older DBs from Phase 0 have
+// the table without these — ADD COLUMN is idempotent and online. The
+// idx_anomaly_untriaged partial index references one of the new columns,
+// so create it after the columns exist.
+(function ensureAnomalyTriageSchema() {
+  try {
+    const cols = db.prepare('PRAGMA table_info(collector_anomaly)').all().map((c) => c.name);
+    if (cols.length === 0) return;
+    const adds = [
+      ['triage_class',         'TEXT'],
+      ['triage_confidence',    'REAL'],
+      ['triage_evidence',      'TEXT'],
+      ['triage_suggested_fix', 'TEXT'],
+      ['triaged_at',           'TEXT'],
+      ['triage_model',         'TEXT'],
+    ];
+    for (const [name, type] of adds) {
+      if (!cols.includes(name)) {
+        db.exec(`ALTER TABLE collector_anomaly ADD COLUMN ${name} ${type}`);
+      }
+    }
+    db.exec(`
+      CREATE INDEX IF NOT EXISTS idx_anomaly_untriaged
+        ON collector_anomaly(created_at) WHERE resolved_at IS NULL AND triaged_at IS NULL;
+    `);
+  } catch (err) {
+    console.warn('[database] collector_anomaly triage migration failed:', err?.message);
+  }
+})();
+
 // --------------- Prepared statements ---------------
 
 const stmtUpsertSource = db.prepare(`
@@ -660,6 +729,32 @@ const stmtInsertLog = db.prepare(`
 
 const stmtSetProbeConsent = db.prepare(`
   UPDATE sources SET probe_consent = @value WHERE id = @id
+`);
+
+const stmtInsertAnomaly = db.prepare(`
+  INSERT INTO collector_anomaly
+    (source_id, fetch_log_id, verdict, reason, evidence, escalation_level)
+  VALUES
+    (@source_id, @fetch_log_id, @verdict, @reason, @evidence, @escalation_level)
+`);
+
+const stmtResolveAnomaly = db.prepare(`
+  UPDATE collector_anomaly
+     SET resolved_at = datetime('now'),
+         resolution  = @resolution
+   WHERE id = @id AND resolved_at IS NULL
+`);
+
+const stmtEscalateAnomaly = db.prepare(`
+  UPDATE collector_anomaly
+     SET escalation_level = escalation_level + 1
+   WHERE id = @id AND resolved_at IS NULL
+`);
+
+const stmtRecordsBaseline = db.prepare(`
+  SELECT records_fetched FROM fetch_log
+   WHERE source_id = ? AND status = 'online'
+   ORDER BY id DESC LIMIT 30
 `);
 
 // --------------- Helper functions ---------------
@@ -739,7 +834,140 @@ export function getSourceById(id) {
 }
 
 export function getLogsBySourceId(id, limit = 50) {
-  return db.prepare('SELECT * FROM fetch_log WHERE source_id = ? ORDER BY timestamp DESC LIMIT ?').all(id, limit);
+  // Secondary sort by id breaks ties when many rows share the same
+  // datetime('now') second — without it, the detection layer occasionally
+  // saw "older" rows before newer ones from the same probe burst.
+  return db.prepare('SELECT * FROM fetch_log WHERE source_id = ? ORDER BY timestamp DESC, id DESC LIMIT ?').all(id, limit);
+}
+
+const ALLOWED_VERDICTS = new Set([
+  'records_drop',
+  'status_bad',
+  'sanity_failed',
+  'duration_outlier',
+  'manual',
+]);
+
+export function recordAnomaly({
+  source_id,
+  fetch_log_id = null,
+  verdict,
+  reason = null,
+  evidence = null,
+  escalation_level = 0,
+}) {
+  if (!ALLOWED_VERDICTS.has(verdict)) {
+    throw new Error(`recordAnomaly: unknown verdict "${verdict}"`);
+  }
+  return stmtInsertAnomaly.run({
+    source_id,
+    fetch_log_id,
+    verdict,
+    reason,
+    evidence,
+    escalation_level,
+  });
+}
+
+export function getOpenAnomalies({ sourceId = null, limit = 100 } = {}) {
+  if (sourceId) {
+    return db.prepare(`
+      SELECT * FROM collector_anomaly
+       WHERE source_id = ? AND resolved_at IS NULL
+       ORDER BY created_at DESC LIMIT ?
+    `).all(sourceId, limit);
+  }
+  return db.prepare(`
+    SELECT * FROM collector_anomaly
+     WHERE resolved_at IS NULL
+     ORDER BY created_at DESC LIMIT ?
+  `).all(limit);
+}
+
+export function resolveAnomaly(id, resolution = null) {
+  return stmtResolveAnomaly.run({ id, resolution });
+}
+
+export function escalateAnomaly(id) {
+  return stmtEscalateAnomaly.run({ id });
+}
+
+/**
+ * True when there's already an open anomaly of this verdict for this source.
+ * Used by the detection layer to suppress duplicates so a chronically-broken
+ * source generates one anomaly per failure mode, not one per cron tick.
+ */
+export function hasOpenAnomalyOfVerdict(sourceId, verdict) {
+  const row = db.prepare(`
+    SELECT 1 FROM collector_anomaly
+     WHERE source_id = ? AND verdict = ? AND resolved_at IS NULL
+     LIMIT 1
+  `).get(sourceId, verdict);
+  return !!row;
+}
+
+/**
+ * Untriaged open anomalies, oldest first — the triage worker drains this.
+ * Caps at `limit` so a backlog doesn't load the whole queue into memory.
+ */
+export function getUntriagedAnomalies(limit = 20) {
+  return db.prepare(`
+    SELECT * FROM collector_anomaly
+     WHERE resolved_at IS NULL AND triaged_at IS NULL
+     ORDER BY created_at ASC
+     LIMIT ?
+  `).all(limit);
+}
+
+export function getAnomalyById(id) {
+  return db.prepare('SELECT * FROM collector_anomaly WHERE id = ?').get(id);
+}
+
+/**
+ * Persist a triage result on an anomaly. Idempotent in the sense that
+ * re-triage overwrites the prior verdict and bumps triaged_at — the
+ * caller decides whether re-triage is allowed.
+ */
+export function recordTriage({
+  id,
+  triage_class,
+  triage_confidence,
+  triage_evidence = null,
+  triage_suggested_fix = null,
+  triage_model = null,
+}) {
+  return db.prepare(`
+    UPDATE collector_anomaly
+       SET triage_class         = @triage_class,
+           triage_confidence    = @triage_confidence,
+           triage_evidence      = @triage_evidence,
+           triage_suggested_fix = @triage_suggested_fix,
+           triage_model         = @triage_model,
+           triaged_at           = datetime('now')
+     WHERE id = @id AND resolved_at IS NULL
+  `).run({
+    id,
+    triage_class,
+    triage_confidence,
+    triage_evidence,
+    triage_suggested_fix,
+    triage_model,
+  });
+}
+
+/**
+ * Rolling baseline of records_fetched over the last 30 healthy runs.
+ * Used by Phase 1 detection to flag drops outside ±2σ. Returns null fields
+ * when fewer than 5 healthy samples exist (too noisy to be useful yet).
+ */
+export function getRecordsBaseline(sourceId) {
+  const rows = stmtRecordsBaseline.all(sourceId);
+  const n = rows.length;
+  if (n < 5) return { mean: null, stddev: null, count: n };
+  const values = rows.map((r) => r.records_fetched || 0);
+  const mean = values.reduce((s, v) => s + v, 0) / n;
+  const variance = values.reduce((s, v) => s + (v - mean) ** 2, 0) / n;
+  return { mean, stddev: Math.sqrt(variance), count: n };
 }
 
 export function getStats() {

@@ -10,7 +10,7 @@ land before the system goes live.
 | --- | --- | --- |
 | Tenant isolation | Shared DB, `tenant_id` everywhere | Same model 99% of vertical SaaS uses; defer physical isolation to the first on-prem deal. |
 | Primary auth | Supabase Auth | Free to 50k MAU; handles email + OAuth + magic link. |
-| Auth gateway pattern | Supabase JWT for normal users; backend verifies HS256 with `SUPABASE_JWT_SECRET`. Future: also accept Jackson-issued JWTs for SSO users. | Two issuers, one user model. |
+| Auth gateway pattern | Supabase JWT for normal users; backend verifies HS256 with `SUPABASE_JWT_SECRET`. SSO provider TBD. | Single issuer for now; pluggable later. |
 | Org / membership | Custom (`tenants`, `memberships`, `tenant_idp_connections`) | Built once, reused by every auth path. |
 | API key resolution | `tenant_secrets` → `process.env` → `null`. BYOK is opt-in; platform keys are the default. | Matches the "DB keeps its own keys, user can override" call. |
 | Billing | Stripe Billing (Phase 1 / Week 5). | Webhook flips `tenants.plan`; plan drives rate-limit + quota slice. |
@@ -95,17 +95,20 @@ A sample lives in `.env.example`.
   Integrations page (platform-key vs BYOK toggle per source with live quota
   display).
 
-### Week 4 — Jackson (SAML + SCIM)
+### Week 4 — SSO + SCIM (deferred — provider TBD)
 
-* [ ] Deploy BoxyHQ Jackson as a sidecar (Docker). Wire admin API behind the
-  owner role. Per-tenant connection storage in `tenant_idp_connections`.
-* [ ] Backend accepts Jackson-issued JWTs in addition to Supabase JWTs.
-  Update `middleware/auth.js` to try both issuers via JWKS.
-* [ ] SCIM webhook → `memberships` sync. `sso_group_role_map` for group →
-  role mapping.
-* [ ] Web: Settings → SSO page with SAML wizard + SCIM endpoint generator.
-* [ ] Conflict resolution for IdP-deprovisioned users (transfer BYOK
-  secrets + API keys to tenant owner; audit-log).
+Originally planned with BoxyHQ Jackson; that's been removed pending a
+deal that requires enterprise SSO. When it lands, evaluate Supabase Pro
+SAML, Jackson again, or a custom adapter — the `tenant_idp_connections`
+and `sso_group_role_map` tables are already in the schema with
+provider-agnostic columns, so no migration is needed when this resumes.
+
+* [ ] Pick an SSO/SCIM provider (re-evaluate on first enterprise deal).
+* [ ] Backend accepts a second JWT issuer alongside Supabase.
+* [ ] SCIM webhook → `memberships` sync via `sso_group_role_map`.
+* [ ] Web: Settings → SSO connection wizard.
+* [ ] Conflict resolution for IdP-deprovisioned users (BYOK secrets +
+  API keys transferred to tenant owner; audit-logged).
 
 ### Week 5 — Stripe + hardening
 
@@ -124,9 +127,9 @@ A sample lives in `.env.example`.
    user-data table that omits `tenant_id` is a data-leak vector. The
    `tenantDb` wrapper enforces this for new code; existing code paths
    need a separate sweep tracked in Week 3.
-2. **Two JWT issuers (Week 4)** — middleware will need to handle both
-   Supabase and Jackson tokens cleanly. Test matrix: (Supabase user,
-   Jackson user) × (free tenant, enterprise SSO-required tenant).
+2. **Two JWT issuers (post-SSO)** — when an SSO provider lands, middleware
+   will need to handle two issuers cleanly. Test matrix: (Supabase user,
+   SSO user) × (free tenant, enterprise SSO-required tenant).
 3. **SCIM event storms (Week 4)** — a new customer onboarding can fire
    thousands of SCIM creates in minutes. Queue + worker on our side.
 4. **Encryption master key rotation** — `SECRETS_MASTER_KEY` rotation
