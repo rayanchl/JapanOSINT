@@ -197,7 +197,7 @@ function tryJWWAFacilities() {
 export default async function collectWaterInfra() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
 
   const mlitFeatures = tryMLITDamLevels();
   const jwwaFeatures = tryJWWAFacilities();
@@ -213,6 +213,5 @@ export default async function collectWaterInfra() {
       live,
       description: 'Japan water infrastructure - dams, water treatment plants, sewage treatment, MLIT real-time dam levels, JWWA facilities',
     },
-    metadata: {},
   };
 }

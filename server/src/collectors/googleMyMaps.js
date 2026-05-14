@@ -91,6 +91,29 @@ async function tryOsmPois() {
 }
 
 export default async function collectGoogleMyMaps() {
+  // Without GOOGLE_MYMAPS_IDS the KML tier has nothing to fetch, and the
+  // Overpass fallback duplicates the famousPlaces collector while running a
+  // ~90s nationwide query — every cold request looked like a TIMEOUT in the
+  // iOS app. Short-circuit to a fast empty response with a hint so the layer
+  // toggles cleanly; users with their own KMLs still get them via the env
+  // var path below.
+  if (!MAP_IDS.length) {
+    return {
+      type: 'FeatureCollection',
+      features: [],
+      _meta: {
+        source: 'google-my-maps',
+        fetchedAt: new Date().toISOString(),
+        recordCount: 0,
+        live: false,
+        live_source: null,
+        mapIds: [],
+        env_hint: 'Set GOOGLE_MYMAPS_IDS to a comma-separated list of public Google My Maps mids to populate this layer.',
+        description: 'Google My Maps public KML — no map IDs configured.',
+      },
+    };
+  }
+
   let features = await tryMyMaps();
   let liveSource = 'google_mymaps_kml';
   if (!features || !features.length) {
@@ -111,6 +134,5 @@ export default async function collectGoogleMyMaps() {
       mapIds: MAP_IDS,
       description: 'Google My Maps public KML (primary) with OSM POI fallback — matches famousPlaces scope when KML unavailable',
     },
-    metadata: {},
   };
 }

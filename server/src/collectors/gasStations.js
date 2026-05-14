@@ -87,7 +87,7 @@ function generateSeedData() {
 export default async function collectGasStations() {
   let features = await tryOverpass();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -98,6 +98,5 @@ export default async function collectGasStations() {
       live,
       description: 'Japan gas stations - ENEOS, Idemitsu, Cosmo, JA-SS, Shell',
     },
-    metadata: {},
   };
 }

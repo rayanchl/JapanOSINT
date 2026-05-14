@@ -50,6 +50,5 @@ export default async function collectOverpassRailTracks() {
       live: list.length > 0,
       description: 'OSM way[railway=rail|light_rail|narrow_gauge] tracks for the unified-trains layer',
     },
-    metadata: {},
   };
 }

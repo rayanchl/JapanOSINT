@@ -121,7 +121,7 @@ router.get('/tilesets', async (req, res) => {
     });
   } catch (err) {
     console.warn('[plateau/tilesets] catalog fetch failed:', err?.message);
-    res.status(502).json({ error: 'catalog_unavailable', message: err?.message });
+    res.status(502).json({ error: 'catalog_unavailable' });
   }
 });
 

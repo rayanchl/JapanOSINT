@@ -3,19 +3,16 @@
  * Community/third-party alert aggregator replicating JMA multi-hazard pushes.
  */
 
+import { fetchJson } from './_liveHelpers.js';
+
 const API_URL = 'https://unii-api.nerv.app/v1/lib/alerts.json';
 const TIMEOUT_MS = 8000;
 
 export default async function collectNervFeed() {
   let features = [];
   let source = 'live';
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const res = await fetch(API_URL, { signal: controller.signal, headers: { 'User-Agent': 'JapanOSINT' } });
-    clearTimeout(timer);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+  const data = await fetchJson(API_URL, { timeoutMs: TIMEOUT_MS, headers: { 'User-Agent': 'JapanOSINT' } });
+  if (data) {
     const arr = Array.isArray(data) ? data : (data?.alerts ?? []);
     for (const a of arr) {
       const lat = a?.latitude ?? a?.lat ?? a?.location?.lat ?? null;
@@ -33,7 +30,8 @@ export default async function collectNervFeed() {
         },
       });
     }
-  } catch {
+  }
+  if (features.length === 0) {
     source = 'seed';
     features = [
       { lat: 35.69, lon: 139.69, kind: 'seed', headline: 'NERV seed alert', severity: 'info' },
@@ -52,6 +50,5 @@ export default async function collectNervFeed() {
       recordCount: features.length,
       description: 'NERV Disaster Prevention multi-hazard alerts',
     },
-    metadata: {},
   };
 }

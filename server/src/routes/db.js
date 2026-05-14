@@ -18,7 +18,11 @@ import nextCronRun from '../utils/nextCronRun.js';
 const router = Router();
 
 // Tables we surface. Users can only read from this set.
+// intel_items is the polymorphic master where every collector mirrors its
+// output (geocoded or not) — see utils/collectorMirror.js. Listed first so it
+// shows up at the top of the table selector.
 const ALLOWED_TABLES = [
+  'intel_items',
   'sources',
   'fetch_log',
   'cameras',

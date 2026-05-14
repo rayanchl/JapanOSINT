@@ -82,7 +82,7 @@ function generateSeedData() {
 export default async function collectJarticTraffic() {
   let features = await tryJartic();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -93,6 +93,5 @@ export default async function collectJarticTraffic() {
       live,
       description: 'JARTIC traffic congestion - urban expressways and national highways',
     },
-    metadata: {},
   };
 }

@@ -92,7 +92,7 @@ function generateSeedData() {
 export default async function collectShipyards() {
   let features = await tryOverpass();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -103,6 +103,5 @@ export default async function collectShipyards() {
       live,
       description: 'Japanese shipyards: Imabari, JMU, MHI, KHI, Mitsui ES, Tsuneishi, Onomichi, Hakodate Dock',
     },
-    metadata: {},
   };
 }

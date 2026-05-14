@@ -8,52 +8,38 @@
  * when vessel feeds are offline.
  */
 
-import { fetchOverpassTiled } from './_liveHelpers.js';
+import { createOsmTransportCollector } from '../utils/osmTransportCollectorFactory.js';
 
-export default async function collectOsmTransportPorts() {
-  const features = await fetchOverpassTiled(
-    (bbox) => [
-      `node["seamark:type"="harbour"](${bbox});`,
-      `node["harbour"="yes"](${bbox});`,
-      `way["harbour"="yes"](${bbox});`,
-      `node["amenity"="ferry_terminal"](${bbox});`,
-      `way["amenity"="ferry_terminal"](${bbox});`,
-      `node["leisure"="marina"](${bbox});`,
-      `way["leisure"="marina"](${bbox});`,
-    ].join(''),
-    (el, _i, coords) => {
-      const kind = el.tags?.amenity === 'ferry_terminal' ? 'ferry_terminal'
-        : el.tags?.leisure === 'marina' ? 'marina'
-        : 'harbour';
-      return {
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: coords },
-        properties: {
-          port_id: `OSM_${el.id}`,
-          name: el.tags?.['name:en'] || el.tags?.name || null,
-          name_ja: el.tags?.name || el.tags?.['name:ja'] || null,
-          classification: el.tags?.['seamark:harbour:category'] || kind,
-          kind,
-          operator: el.tags?.operator || null,
-          country: 'JP',
-          source: 'osm_transport_ports',
-        },
-      };
-    },
-    { queryTimeout: 120, timeoutMs: 90_000 },
-  );
-
-  const list = features || [];
-  return {
-    type: 'FeatureCollection',
-    features: list,
-    _meta: {
-      source: 'osm_transport_ports',
-      fetchedAt: new Date().toISOString(),
-      recordCount: list.length,
-      live: list.length > 0,
-      description: 'OSM always-on layer for harbours, ferry terminals, and marinas around Japan (reference for AIS dedup)',
-    },
-    metadata: {},
-  };
-}
+export default createOsmTransportCollector({
+  sourceId: 'osm_transport_ports',
+  description: 'OSM always-on layer for harbours, ferry terminals, and marinas around Japan (reference for AIS dedup)',
+  body: (bbox) => [
+    `node["seamark:type"="harbour"](${bbox});`,
+    `node["harbour"="yes"](${bbox});`,
+    `way["harbour"="yes"](${bbox});`,
+    `node["amenity"="ferry_terminal"](${bbox});`,
+    `way["amenity"="ferry_terminal"](${bbox});`,
+    `node["leisure"="marina"](${bbox});`,
+    `way["leisure"="marina"](${bbox});`,
+  ].join(''),
+  feature: (el, _i, coords) => {
+    const kind = el.tags?.amenity === 'ferry_terminal' ? 'ferry_terminal'
+      : el.tags?.leisure === 'marina' ? 'marina'
+      : 'harbour';
+    return {
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: coords },
+      properties: {
+        port_id: `OSM_${el.id}`,
+        name: el.tags?.['name:en'] || el.tags?.name || null,
+        name_ja: el.tags?.name || el.tags?.['name:ja'] || null,
+        classification: el.tags?.['seamark:harbour:category'] || kind,
+        kind,
+        operator: el.tags?.operator || null,
+        country: 'JP',
+        source: 'osm_transport_ports',
+      },
+    };
+  },
+  overpassOpts: { queryTimeout: 120, timeoutMs: 90_000 },
+});

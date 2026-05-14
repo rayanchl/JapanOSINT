@@ -17,6 +17,8 @@ import unifiedSubways from '../collectors/unifiedSubways.js';
 import unifiedBuses from '../collectors/unifiedBuses.js';
 import unifiedAisShips from '../collectors/unifiedAisShips.js';
 import unifiedPortInfra from '../collectors/unifiedPortInfra.js';
+import unifiedAirports from '../collectors/unifiedAirports.js';
+import unifiedFlights from '../collectors/unifiedFlights.js';
 import overpassRailTracks from '../collectors/overpassRailTracks.js';
 import overpassSubwayTracks from '../collectors/overpassSubwayTracks.js';
 import mlitN07BusRoutes from '../collectors/mlitN07BusRoutes.js';
@@ -35,6 +37,7 @@ import {
   footprintCount,
 } from './stationFootprintsStore.js';
 import db from './database.js';
+import { mirrorCollectorOutput } from './collectorMirror.js';
 
 // Transport runs are cold-start-heavy: _liveHelpers' in-memory Overpass
 // cache is lost on server restart, so the first run after boot does
@@ -132,6 +135,25 @@ async function runMode({
     console.error(`[transportRunner] ${mode} line upsert failed:`, e?.message);
   }
 
+  // Mirror the same (stations + lines) into the polymorphic master under the
+  // mode's parent layer id (e.g. 'unified-trains'). The route layer's mirror
+  // would do this on the next /api/data/unified-<mode> hit; doing it here
+  // makes intel_items immediately consistent after every cron sweep instead
+  // of lagging behind whatever transport_stations/lines just got new rows.
+  // Idempotent against the route-level mirror — same uids (NATIVE_ID_KEYS
+  // recognises station_uid + line_uid).
+  if (stationCollectorId && (stations.length > 0 || lineFeatures.length > 0)) {
+    try {
+      await mirrorCollectorOutput(
+        { type: 'FeatureCollection', features: [...stations, ...lineFeatures] },
+        stationCollectorId,
+        new Date().toISOString(),
+      );
+    } catch (e) {
+      console.warn(`[transportRunner] ${mode} master mirror failed:`, e?.message);
+    }
+  }
+
   const summary = {
     mode,
     stations_in: stations.length,
@@ -145,6 +167,57 @@ async function runMode({
   return summary;
 }
 
+/**
+ * Explicit per-mode sources — same shape as cameraDiscovery's `sources`
+ * export. Each entry is one mode's contributor set. Public so anything that
+ * wants to enumerate the modes (UI per-channel status, debugging) can read
+ * this rather than reach into the cron runner.
+ */
+export const sources = [
+  {
+    id: 'unified-trains',  label: 'Trains (stations + rail tracks)',
+    mode: 'train',         source: 'unified_trains',
+    stationCollector: unifiedTrains,     stationCollectorId: 'unified-trains',
+    lineCollectors: [overpassRailTracks], lineCollectorIds: ['overpass-rail-tracks'],
+  },
+  {
+    id: 'unified-subways', label: 'Subways (stations + subway tracks)',
+    mode: 'subway',        source: 'unified_subways',
+    stationCollector: unifiedSubways,       stationCollectorId: 'unified-subways',
+    lineCollectors: [overpassSubwayTracks], lineCollectorIds: ['overpass-subway-tracks'],
+  },
+  {
+    id: 'unified-buses',   label: 'Bus stops + MLIT N07 routes',
+    mode: 'bus',           source: 'unified_buses',
+    stationCollector: unifiedBuses,     stationCollectorId: 'unified-buses',
+    lineCollectors: [mlitN07BusRoutes], lineCollectorIds: ['mlit-n07-bus-routes'],
+  },
+  {
+    id: 'unified-ais-ships', label: 'AIS ships',
+    mode: 'ship',          source: 'unified_ais_ships',
+    stationCollector: unifiedAisShips,  stationCollectorId: 'unified-ais-ships',
+    lineCollectors: [],
+  },
+  {
+    id: 'unified-port-infra', label: 'Port infrastructure',
+    mode: 'port',          source: 'unified_port_infra',
+    stationCollector: unifiedPortInfra, stationCollectorId: 'unified-port-infra',
+    lineCollectors: [],
+  },
+  {
+    id: 'unified-airports', label: 'Airports',
+    mode: 'airport',       source: 'unified_airports',
+    stationCollector: unifiedAirports,  stationCollectorId: 'unified-airports',
+    lineCollectors: [],
+  },
+  {
+    id: 'unified-flights', label: 'Live flights (ADS-B + schedules)',
+    mode: 'flight',        source: 'unified_flights',
+    stationCollector: unifiedFlights,   stationCollectorId: 'unified-flights',
+    lineCollectors: [],
+  },
+];
+
 export async function runTransportDiscovery(wsServer) {
   if (_inflightRun) return _inflightRun;
 
@@ -154,6 +227,8 @@ export async function runTransportDiscovery(wsServer) {
   console.log(`[transportRunner] starting run ${run_id}`);
   broadcast(wsServer, { type: 'transport_run_start', run_id });
 
+  // runMode still consumes its config inline — the `sources` export above
+  // is the public/UI-facing shape, this is the cron driver.
   const modes = [
     {
       mode: 'train',  source: 'unified_trains',
@@ -178,6 +253,16 @@ export async function runTransportDiscovery(wsServer) {
     {
       mode: 'port',   source: 'unified_port_infra',
       stationCollector: unifiedPortInfra,  stationCollectorId: 'unified-port-infra',
+      lineCollectors: [],
+    },
+    {
+      mode: 'airport', source: 'unified_airports',
+      stationCollector: unifiedAirports,   stationCollectorId: 'unified-airports',
+      lineCollectors: [],
+    },
+    {
+      mode: 'flight',  source: 'unified_flights',
+      stationCollector: unifiedFlights,    stationCollectorId: 'unified-flights',
       lineCollectors: [],
     },
   ];
@@ -252,7 +337,7 @@ export async function runTransportDiscovery(wsServer) {
     const summaries = await task;
     const elapsed = Date.now() - started;
     const dbTotals = {};
-    for (const m of ['train', 'subway', 'bus', 'ship', 'port']) {
+    for (const m of ['train', 'subway', 'bus', 'ship', 'port', 'airport', 'flight']) {
       dbTotals[m] = transportStats(m);
     }
     console.log(

@@ -76,7 +76,7 @@ function generateSeedData() {
 export default async function collectNowphasWave() {
   let features = await tryNowphas();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -87,6 +87,5 @@ export default async function collectNowphasWave() {
       live,
       description: 'PARI NOWPHAS GPS-buoys + ultrasonic wave gauges around Japan',
     },
-    metadata: {},
   };
 }

@@ -7,3 +7,12 @@ dist/
 server/data/
 .DS_Store
 *.log
+
+# Xcode / iOS — exclude user-specific state
+xcuserdata/
+*.xcuserstate
+*.xcuserdatad
+.swiftpm/
+DerivedData/
+*.xcscmblueprint
+*.xccheckout

@@ -77,7 +77,7 @@ function generateSeedData() {
 export default async function collectJmaOceanTemp() {
   let features = await tryJmaSst();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -88,6 +88,5 @@ export default async function collectJmaOceanTemp() {
       live,
       description: 'JMA sea surface temperature - HQ daily SST grid with anomaly',
     },
-    metadata: {},
   };
 }

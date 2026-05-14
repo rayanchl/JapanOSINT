@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import apiUrl from '../../utils/apiUrl.js';
 import {
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip,
   ResponsiveContainer, Legend,
@@ -62,8 +63,8 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
   const fetchData = useCallback(async () => {
     try {
       const [srcRes, stRes] = await Promise.all([
-        fetch('/api/sources'),
-        fetch('/api/sources/stats'),
+        fetch(apiUrl('/api/sources')),
+        fetch(apiUrl('/api/sources/stats')),
       ]);
       if (srcRes.ok) {
         const data = await srcRes.json();
@@ -95,8 +96,12 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
 
   // Derived data
   const statusCounts = useMemo(() => {
-    const counts = { online: 0, degraded: 0, offline: 0 };
+    const counts = { online: 0, degraded: 0, offline: 0, gated: 0 };
     sources.forEach((s) => {
+      if (s.gated) {
+        counts.gated++;
+        return;
+      }
       const st = (s.status || 'offline').toLowerCase();
       if (counts[st] !== undefined) counts[st]++;
     });
@@ -188,11 +193,12 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3">
           <StatCard label="Total Sources" value={sources.length} color="#00f0ff" />
           <StatCard label="Online" value={statusCounts.online} color="#00ff88" />
           <StatCard label="Degraded" value={statusCounts.degraded} color="#ffb74d" />
           <StatCard label="Offline" value={statusCounts.offline} color="#ff4444" />
+          <StatCard label="Gated" value={statusCounts.gated} color="#9ca3af" />
           <StatCard label="Total Records" value={totalRecords.toLocaleString()} color="#a855f7" />
           <StatCard
             label="Last Update"

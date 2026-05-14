@@ -8,7 +8,7 @@
  *   • JMA volcano monitoring cameras
  *   • MLIT river / road monitoring cameras
  *   • Shutoko / Hanshin / NEXCO expressway CCTV
- *   • NHK + municipal + YouTube live-stream cameras
+ *   • NHK + municipal + YouTube live-stream cameras (seeded + Data API)
  *   • Ski / beach / port operator webcams
  *   • Insecam.org JP listing (scrape)
  *   • Windy / SkylineWebcams / EarthCam / livecam.asia aggregators (scrape)
@@ -39,8 +39,6 @@ import {
 } from './_cameraSources.js';
 import { renderHtml, extractYouTubeEmbed } from '../utils/screenshot.js';
 import { geocodeFeatures } from '../utils/cameraGeocode.js';
-
-const SHODAN_API_KEY = process.env.SHODAN_API_KEY || '';
 
 const BROWSER_UA =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
@@ -83,6 +81,11 @@ async function fromOverpass() {
     else if (t['surveillance:type']) camType = t['surveillance:type'];
     else if (t.surveillance) camType = t.surveillance;
     else if (t.webcam || t['contact:webcam']) camType = 'webcam';
+    else if (t.highway === 'speed_camera' || t.traffic_sign === 'JP:225') {
+      // オービス: police automatic speed-enforcement installations.
+      // Folded in from the retired surveillanceCameras collector.
+      camType = 'speed_camera';
+    }
     return makeFeature({
       lat: coords[1],
       lon: coords[0],
@@ -144,6 +147,60 @@ function fromExpressway() {
       thumbnail_url: c.thumbnail || null,
     }),
   );
+}
+
+// ─── Channel: YouTube Data API live broadcasts ──────────────────────────────
+// Requires YOUTUBE_API_KEY. Only emits broadcasts whose owner set
+// recordingDetails.location — without coordinates we'd just be jittering blind
+// search results around Tokyo, which is noise. Quota: search.list = 100 units,
+// videos.list ≈ 3 units; tune the scheduler interval to your daily quota.
+async function fromYouTubeLive() {
+  const apiKey = process.env.YOUTUBE_API_KEY;
+  if (!apiKey) return [];
+
+  const searchUrl =
+    'https://www.googleapis.com/youtube/v3/search'
+    + '?part=snippet&type=video&eventType=live&regionCode=JP&maxResults=50'
+    + `&key=${encodeURIComponent(apiKey)}`;
+  const search = await fetchJson(searchUrl);
+  const ids = (search?.items || []).map((it) => it?.id?.videoId).filter(Boolean);
+  if (ids.length === 0) return [];
+
+  const videosUrl =
+    'https://www.googleapis.com/youtube/v3/videos'
+    + '?part=snippet,liveStreamingDetails,recordingDetails'
+    + `&id=${ids.join(',')}`
+    + `&key=${encodeURIComponent(apiKey)}`;
+  const videos = await fetchJson(videosUrl);
+  const items = videos?.items || [];
+
+  const features = [];
+  for (const v of items) {
+    const loc = v?.recordingDetails?.location;
+    const lat = Number.isFinite(loc?.latitude) ? loc.latitude : null;
+    const lon = Number.isFinite(loc?.longitude) ? loc.longitude : null;
+    if (lat == null || lon == null) continue;
+    const sn = v.snippet || {};
+    const ls = v.liveStreamingDetails || {};
+    features.push(
+      makeFeature({
+        lat,
+        lon,
+        name: sn.title || `YouTube live ${v.id}`,
+        camera_type: 'youtube_live',
+        discovery_channel: 'youtube_live',
+        url: `https://www.youtube.com/watch?v=${v.id}`,
+        thumbnail_url: sn.thumbnails?.high?.url || sn.thumbnails?.default?.url || null,
+        operator: sn.channelTitle || null,
+        youtube_id: v.id,
+        youtube_channel: sn.channelId || null,
+        concurrent_viewers: ls.concurrentViewers != null ? Number(ls.concurrentViewers) : null,
+        actual_start_time: ls.actualStartTime || null,
+        location_description: v.recordingDetails.locationDescription || null,
+      }),
+    );
+  }
+  return features;
 }
 
 // ─── Channel: broadcast / YouTube / municipal livecams ──────────────────────
@@ -237,25 +294,39 @@ async function fromSkyline() {
 // YT-id extraction via plain HTTP — aggregator detail pages usually inline
 // the video in server-rendered HTML (youtube/youtube-nocookie iframe src or a
 // JSON-LD VideoObject.embedUrl). Much cheaper than spinning up Chromium.
-const YT_ID_RE = /(?:youtube(?:-nocookie)?\.com\/(?:embed\/|watch\?[^"'\s]*?v=)|youtu\.be\/)([\w-]{11})/;
+// Negative lookahead `(?!live_stream)` is critical: `live_stream` is exactly
+// 11 chars of [\w-], so the bare ID class would happily capture it from a
+// channel-live embed URL (`embed/live_stream?channel=UC…`), producing a bogus
+// `watch?v=live_stream` rewrite. The channel-live form is handled by the
+// dedicated regex below.
+const YT_ID_RE = /(?:youtube(?:-nocookie)?\.com\/(?:embed\/(?!live_stream\b)|watch\?[^"'\s]*?v=)|youtu\.be\/)([\w-]{11})/;
+const YT_CHANNEL_LIVE_RE = /youtube(?:-nocookie)?\.com\/embed\/live_stream\?[^"'\s]*?channel=(UC[\w-]{22})/i;
 
-async function extractYouTubeIdFast(url) {
+// Returns `{ kind: 'video' | 'channel', id }` when the page embeds a YouTube
+// stream, or null. Channel-live embeds (e.g. scs.com.ua) point at a YouTube
+// channel rather than a static video ID; YouTube resolves the live broadcast
+// at iframe-load time. Single fetch covers both regexes.
+async function extractYouTubeIdOrChannelFast(url) {
   try {
     const html = await fetchText(url, {
       timeoutMs: 6000,
       headers: { 'User-Agent': BROWSER_UA },
     });
     if (!html) return null;
-    const m = html.match(YT_ID_RE);
-    return m ? m[1] : null;
+    const cm = html.match(YT_CHANNEL_LIVE_RE);
+    if (cm) return { kind: 'channel', id: cm[1] };
+    const vm = html.match(YT_ID_RE);
+    if (vm) return { kind: 'video', id: vm[1] };
+    return null;
   } catch {
     return null;
   }
 }
 
-// Resolve each feature's `url` to a YouTube watch link when the source page
-// embeds a YouTube live stream. Runs plain fetch first (instant, no Chromium
-// contention); falls back to Chromium only when the cheap path misses.
+// Resolve each feature's `url` to a YouTube watch link (or channel-live embed
+// URL) when the source page embeds a YouTube stream. Runs plain fetch first
+// (instant, no Chromium contention); falls back to Chromium only when the
+// cheap path misses (Chromium path only finds video IDs today).
 async function upgradeYouTubeStreamUrls(features, concurrency = 6) {
   const queue = features.slice();
   async function worker() {
@@ -264,20 +335,25 @@ async function upgradeYouTubeStreamUrls(features, concurrency = 6) {
       const url = f.properties?.url;
       if (!url) continue;
       try {
-        let ytId = await extractYouTubeIdFast(url);
-        if (!ytId) {
-          // Page probably renders the iframe via JS — pay the Chromium cost.
-          ytId = await extractYouTubeEmbed(url);
+        let result = await extractYouTubeIdOrChannelFast(url);
+        if (!result) {
+          const ytId = await extractYouTubeEmbed(url);
+          if (ytId) result = { kind: 'video', id: ytId };
         }
-        if (ytId) {
-          f.properties.original_page_url = url;
-          f.properties.url = `https://www.youtube.com/watch?v=${ytId}`;
-          f.properties.youtube_id = ytId;
+        if (!result) continue;
+        f.properties.original_page_url = url;
+        if (result.kind === 'video') {
+          f.properties.url = `https://www.youtube.com/watch?v=${result.id}`;
+          f.properties.youtube_id = result.id;
           // Canonicalize camera_uid on the YouTube video id so two aggregators
           // pointing at the same stream converge to the SAME row. The original
           // uid (built from the aggregator URL at makeFeature time) would
           // otherwise let the DB upsert create a fresh row per aggregator.
-          f.properties.camera_uid = `yt:${ytId}`;
+          f.properties.camera_uid = `yt:${result.id}`;
+        } else {
+          f.properties.url = `https://www.youtube.com/embed/live_stream?channel=${result.id}`;
+          f.properties.youtube_channel = result.id;
+          f.properties.camera_uid = `ytc:${result.id}`;
         }
       } catch { /* skip */ }
     }
@@ -413,13 +489,16 @@ async function fromInsecam() {
 
 // ─── Channel: Shodan API (camera-scoped) ────────────────────────────────────
 async function fromShodanAPI() {
-  if (!SHODAN_API_KEY) return [];
+  // Read at call-time so keys set via the iOS Sources panel (which mutates
+  // process.env via apiKeysStore.setKey) take effect without a server restart.
+  const key = process.env.SHODAN_API_KEY || '';
+  if (!key) return [];
   const query = 'country:JP';
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
     const res = await fetch(
-      `https://api.shodan.io/shodan/host/search?key=${SHODAN_API_KEY}&query=${encodeURIComponent(query)}`,
+      `https://api.shodan.io/shodan/host/search?key=${key}&query=${encodeURIComponent(query)}`,
       { signal: controller.signal },
     );
     clearTimeout(timeout);
@@ -481,8 +560,9 @@ function absUrl(href, base) {
 // ─── Channel: webcamtaxi.com Japan listing ──────────────────────────────────
 async function fromWebcamTaxi() {
   const base = NEW_AGGREGATOR_INDEX.webcamtaxi;
-  // Site is Cloudflare-protected — plain fetch 403s. Playwright with a real
-  // User-Agent passes the challenge.
+  // Site now ships a Cloudflare "Access denied" (error 1005, hard IP block,
+  // not a JS challenge) to most datacenter IPs — Playwright cannot bypass.
+  // Channel typically returns 0 from cloud hosts; works from residential IPs.
   const html = await renderHtml(base, {
     timeoutMs: 25000,
     settleMs: 3000,
@@ -867,65 +947,110 @@ function fromWebcamendirectSeed() {
 }
 
 // ─── Channel: webcamendirect.net /japon listing ────────────────────────────
+// Site refactored: /japon is now just a category+country menu. JP cams live
+// under /japon/<category> subpages, but those pages mix in non-JP "related"
+// cams (e.g. a Costa Rica surf cam on the `/japon/plage` page). Each cam's
+// <img alt="<Category> / <Country>"> reveals its country — we filter to alt
+// ending in "/ Japon" (FR) or "/ Japan" (EN fallback) so cross-promos don't
+// pollute the JP camera fleet. A previous attempt to drop this filter
+// (relying only on the URL scope) leaked Costa Rica / other non-JP cams.
 async function fromWebcamendirectList() {
   const base = NEW_AGGREGATOR_INDEX.webcamendirect;
-  const html = await fetchText(base, { timeoutMs: 20000, headers: { 'User-Agent': BROWSER_UA } });
-  if (!html) return [];
+  const indexHtml = await fetchText(base, { timeoutMs: 20000, headers: { 'User-Agent': BROWSER_UA } });
+  if (!indexHtml) return [];
+
+  // Discover JP category subpages: /japon/<slug>
+  const catRe = /href="(\/japon\/[a-z0-9-]+)"/gi;
+  const categories = [...new Set([...indexHtml.matchAll(catRe)].map((m) => m[1]))];
+  if (categories.length === 0) return [];
+
   const features = [];
-  // Detail links look like /webcam/<id>-<slug>.html
-  const re = /<a[^>]+href="(\/webcam\/(\d+)-([a-z0-9-]+)\.html)"[^>]*>/gi;
-  const seen = new Set();
-  let m;
-  while ((m = re.exec(html)) !== null && features.length < 100) {
-    const href = m[1];
-    const id = m[2];
-    if (seen.has(id)) continue;
-    seen.add(id);
-    const slug = m[3];
-    // Derive a human name from slug
-    const name = slug
-      .split('-')
-      .filter((s) => !/^\d+$/.test(s))
-      .join(' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase())
-      .trim() || `webcamendirect ${id}`;
-    const centroid = guessCentroidFromText(slug) || TOKYO_CENTROID;
-    const { lat, lon } = jitterAround(centroid, features.length);
-    features.push(
-      makeFeature({
-        lat, lon,
-        name,
-        camera_type: 'aggregator_webcamendirect',
-        discovery_channel: 'webcamendirect_list',
-        url: absUrl(href, base),
-      }),
-    );
+  const seenId = new Set();
+
+  for (const cat of categories) {
+    if (features.length >= 200) break;
+    const url = absUrl(cat, base);
+    const html = await fetchText(url, { timeoutMs: 20000, headers: { 'User-Agent': BROWSER_UA } });
+    if (!html) continue;
+
+    // Match cam-tile anchors whose image alt ends in "/ Japon" (or "/ Japan")
+    const tileRe = /<a[^>]+href="(https?:\/\/webcamendirect\.net\/webcam\/(\d+)-([a-z0-9-]+)\.html)"[^>]*>\s*<img[^>]+alt="[^"]*\/\s*Jap(?:on|an)"/gi;
+    let m;
+    while ((m = tileRe.exec(html)) !== null && features.length < 200) {
+      const detailUrl = m[1];
+      const id = m[2];
+      const slug = m[3];
+      if (seenId.has(id)) continue;
+      seenId.add(id);
+
+      // Try to grab the <h3 class="mv-name"> name near the matching id; fall
+      // back to slug-derived title.
+      const nameRe = new RegExp(`webcam/${id}-[^"]+\\.html"[^>]*>\\s*<h3[^>]*>([^<]+)</h3>`, 'i');
+      const nameMatch = html.match(nameRe);
+      const name = (nameMatch && nameMatch[1].trim())
+        || slug.split('-').filter((s) => !/^\d+$/.test(s)).join(' ')
+              .replace(/\b\w/g, (c) => c.toUpperCase()).trim()
+        || `webcamendirect ${id}`;
+
+      const centroid = guessCentroidFromText(slug) || TOKYO_CENTROID;
+      const { lat, lon } = jitterAround(centroid, features.length);
+      features.push(
+        makeFeature({
+          lat, lon,
+          name,
+          camera_type: 'aggregator_webcamendirect',
+          discovery_channel: 'webcamendirect_list',
+          url: detailUrl,
+        }),
+      );
+    }
   }
+
   await geocodeFeatures(features);
   return features;
 }
 
 // ─── Channel: camscape.com search ?s=japan (pages 1–6) ─────────────────────
+// Site renders each result as TWO anchors per slug: an image-card anchor
+// (empty text, just a wrapped <img>) and a title-text anchor. The old regex
+// required 3+ chars of plain text between <a> and </a>, which dropped every
+// image-card anchor — roughly half of all matches. Loosened to match any
+// anchor by href and derive the name from inner text if present, otherwise
+// from the slug. Dedup by detail URL keeps "two anchors, one cam".
 async function fromCamscape() {
   const base = NEW_AGGREGATOR_INDEX.camscape;
   const features = [];
+  const seen = new Set();
   for (let page = 1; page <= 6; page++) {
     const url = page === 1 ? base : `https://www.camscape.com/page/${page}/?s=japan`;
     const html = await fetchText(url, { timeoutMs: 20000, headers: { 'User-Agent': BROWSER_UA } });
     if (!html) continue;
-    // Each hit is an <article> with an <a> to the detail page + <h2> title
-    const re = /<article[\s\S]{0,400}?<a[^>]+href="([^"]+)"[^>]*>[\s\S]{0,200}?<h2[^>]*>([\s\S]{0,120}?)<\/h2>/gi;
+    // Capture: 1=detail URL, 2=slug, 3=inner content up to </a> (may be
+    // image-only or contain a title). The slug is the deterministic fallback
+    // for naming when inner text is empty.
+    const re = /<a[^>]+href="(https?:\/\/www\.camscape\.com\/webcam\/([a-z0-9-]+)\/?)"[^>]*>([\s\S]{0,400}?)<\/a>/gi;
     let m;
     while ((m = re.exec(html)) !== null && features.length < 200) {
       const detailUrl = m[1];
-      const title = m[2].replace(/<[^>]+>/g, '').trim();
-      if (!detailUrl.includes('camscape.com')) continue;
+      if (seen.has(detailUrl)) continue;
+      seen.add(detailUrl);
+      const slug = m[2];
+      const innerText = m[3]
+        .replace(/&#?[a-z0-9]+;/gi, ' ')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      const title = innerText.length >= 3
+        ? innerText
+        : slug.split('-').filter((s) => !/^\d+$/.test(s)).join(' ')
+              .replace(/\b\w/g, (c) => c.toUpperCase()).trim()
+          || 'camscape Japan feed';
       const centroid = guessCentroidFromText(title) || TOKYO_CENTROID;
       const { lat, lon } = jitterAround(centroid, features.length);
       features.push(
         makeFeature({
           lat, lon,
-          name: title || 'camscape Japan feed',
+          name: title,
           camera_type: 'aggregator_camscape',
           discovery_channel: 'camscape',
           url: detailUrl,
@@ -937,35 +1062,30 @@ async function fromCamscape() {
   return features;
 }
 
-// ─── Channel: tabi.cam /japan/ (JS show-more button) ───────────────────────
+// ─── Channel: tabi.cam /japan/ ─────────────────────────────────────────────
+// Site now ships the full JP listing in initial HTML and uses RELATIVE hrefs
+// like /japan/<slug>-<id>/. Plain fetch yields ~40 cams without Playwright.
 async function fromTabiCam() {
   const base = NEW_AGGREGATOR_INDEX.tabicam;
-  // Click the show-more button a few times to fully expand the list.
-  const html = await renderHtml(base, {
-    timeoutMs: 35000,
-    settleMs: 4000,
-    clickSelector: 'button, .show-more, [data-show-more]',
-    clickCount: 5,
-    userAgent: BROWSER_UA,
-  });
+  const html = await fetchText(base, { timeoutMs: 20000, headers: { 'User-Agent': BROWSER_UA } });
   if (!html) return [];
   const features = [];
-  const re = /<a[^>]+href="(https?:\/\/tabi\.cam\/japan\/[^"]+)"[^>]*>([\s\S]{0,160}?)<\/a>/gi;
+  // Accept both relative (/japan/...) and absolute (https://tabi.cam/japan/...)
+  const re = /<a[^>]+href="((?:https?:\/\/tabi\.cam)?\/japan\/[a-z0-9-]+\/?)"[^>]*>([\s\S]{0,260}?)<\/a>/gi;
   const seen = new Set();
   let m;
   while ((m = re.exec(html)) !== null && features.length < 200) {
     const href = m[1];
     if (seen.has(href)) continue;
     seen.add(href);
-    // tabi.cam URLs encode location as a slug. e.g. /japan/mount-fuji-325185/
     const slugMatch = href.match(/\/japan\/([a-z0-9-]+)/i);
     const slug = slugMatch ? slugMatch[1] : '';
-    const name = slug
-      .split('-')
-      .filter((s) => !/^\d+$/.test(s))
-      .join(' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase())
-      .trim() || 'tabi.cam feed';
+    // Prefer the anchor's visible text; fall back to slug-derived title.
+    const innerText = m[2].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const name = innerText
+      || slug.split('-').filter((s) => !/^\d+$/.test(s)).join(' ')
+              .replace(/\b\w/g, (c) => c.toUpperCase()).trim()
+      || 'tabi.cam feed';
     const centroid = guessCentroidFromText(slug) || TOKYO_CENTROID;
     const { lat, lon } = jitterAround(centroid, features.length);
     features.push(
@@ -974,7 +1094,7 @@ async function fromTabiCam() {
         name,
         camera_type: 'aggregator_tabicam',
         discovery_channel: 'tabi_cam',
-        url: href,
+        url: absUrl(href, base),
       }),
     );
   }
@@ -983,21 +1103,38 @@ async function fromTabiCam() {
 }
 
 // ─── Channel: webcam.scs.com.ua /en/asia/japan/ (paginated) ────────────────
+// Three correctness traps fixed here vs. the previous version:
+//   1. The 200-feature cap used to be checked inside the while-loop, which
+//      meant page 1 alone could fill it (200 unique anchors) and pages 2-5
+//      were fetched-but-discarded. Raised to a per-run budget that allows
+//      every page to contribute. The fetched-but-discarded outcome was the
+//      "DB has 308 cams but live scrape only returns 200" mismatch.
+//   2. `seenLocal` was scoped to a single page, so a cam re-listed on
+//      multiple pages (sticky / featured) could double-count. Lifted to
+//      `seenHref` outside the page loop for cross-page dedup.
+//   3. The regex matched ANY anchor under /en/asia/japan/ — including the
+//      sort/filter UI controls (e.g. `/?sort_by=popularity` → "Sort by
+//      Popularity"). Exclude hrefs containing `?` or whitelist-known UI
+//      segments (`/sort`, `/filter`).
 async function fromScsComUa() {
   const baseRoot = NEW_AGGREGATOR_INDEX.scsComUa;
   const features = [];
+  const seenHref = new Set();
+  const MAX = 1000;  // 5 pages × ~200 anchors; headroom for sticky entries
   for (let page = 1; page <= 5; page++) {
+    if (features.length >= MAX) break;
     const url = page === 1 ? baseRoot : `${baseRoot}page-${page}/`;
     const html = await fetchText(url, { timeoutMs: 20000, headers: { 'User-Agent': BROWSER_UA } });
     if (!html) continue;
     const re = /<a[^>]+href="(\/en\/asia\/japan\/[^"]+)"[^>]*>[\s\S]{0,160}?(?:alt|title)="([^"]{3,120})"/gi;
     let m;
-    const seenLocal = new Set();
-    while ((m = re.exec(html)) !== null && features.length < 200) {
+    while ((m = re.exec(html)) !== null && features.length < MAX) {
       const href = m[1];
       if (href.includes('/page-')) continue;
-      if (seenLocal.has(href)) continue;
-      seenLocal.add(href);
+      if (href.includes('?')) continue;        // /?sort_by=…
+      if (/\/(sort|filter)\b/i.test(href)) continue;
+      if (seenHref.has(href)) continue;
+      seenHref.add(href);
       const label = m[2].replace(/<[^>]+>/g, '').trim();
       const centroid = guessCentroidFromText(label) || TOKYO_CENTROID;
       const { lat, lon } = jitterAround(centroid, features.length);
@@ -1012,6 +1149,9 @@ async function fromScsComUa() {
       );
     }
   }
+  // Detail pages embed a YouTube channel-live iframe; resolve the channel ID
+  // so the iOS resolver can route to a working iframe URL.
+  await upgradeYouTubeStreamUrls(features, 4);
   await geocodeFeatures(features);
   return features;
 }
@@ -1102,35 +1242,45 @@ function dedupe(features) {
  *        fired when a channel settles (fulfilled or rejected).
  * @param {(channel, error) => void} [opts.onChannelError]
  */
+/**
+ * Explicit sources contract — the 23 channels surfaced as { id, label, run }.
+ * Lets the SourcesPanel display per-channel status (count + error) for one
+ * collector, and lets callers run a subset of channels (testing, debugging).
+ *
+ * The default-export function below still consumes the same list internally
+ * so collectCameraDiscovery() behaves identically to before.
+ */
+export const sources = [
+  { id: 'osm_overpass',        label: 'OSM Overpass',           run: fromOverpass },
+  { id: 'jma_volcano',         label: 'JMA volcano cams',       run: fromJMAVolcano },
+  { id: 'mlit_river',          label: 'MLIT river cams',        run: fromMLITRiver },
+  { id: 'expressway_cctv',     label: 'Expressway CCTV',        run: fromExpressway },
+  { id: 'broadcast_livecam',   label: 'Broadcast livecams',     run: fromBroadcast },
+  { id: 'tourism_webcam',      label: 'Tourism webcams',        run: fromTourism },
+  { id: 'insecam_scrape',      label: 'Insecam scrape',         run: fromInsecam },
+  { id: 'shodan_api',          label: 'Shodan API',             run: fromShodanAPI },
+  { id: 'skylinewebcams',      label: 'Skylinewebcams',         run: fromSkyline },
+  { id: 'earthcam',            label: 'EarthCam',               run: fromEarthCam },
+  { id: 'webcamtaxi',          label: 'WebcamTaxi',             run: fromWebcamTaxi },
+  { id: 'geocam',              label: 'Geocam',                 run: fromGeocam },
+  { id: 'worldcams',           label: 'Worldcams',              run: fromWorldcams },
+  { id: 'webcamera24',         label: 'Webcamera24',            run: fromWebcamera24 },
+  { id: 'camstreamer',         label: 'Camstreamer',            run: fromCamstreamer },
+  { id: 'worldcam_eu',         label: 'WorldCam.eu',            run: fromWorldcamEu },
+  { id: 'manual_ip_seed',      label: 'Manual IP cam seed',     run: fromManualIpCams },
+  { id: 'webcamendirect_seed', label: 'Webcam-en-direct seed',  run: fromWebcamendirectSeed },
+  { id: 'webcamendirect_list', label: 'Webcam-en-direct list',  run: fromWebcamendirectList },
+  { id: 'camscape',            label: 'Camscape',               run: fromCamscape },
+  { id: 'tabi_cam',            label: 'Tabi-cam',               run: fromTabiCam },
+  { id: 'scs_com_ua',          label: 'scs.com.ua',             run: fromScsComUa },
+  { id: 'windy_api',           label: 'Windy API',              run: fromWindy },
+  { id: 'youtube_live',        label: 'YouTube Live API',       run: fromYouTubeLive },
+];
+
 export default async function collectCameraDiscovery(opts = {}) {
   const { onCamera, onChannelDone, onChannelError } = opts;
 
-  const channelDefs = [
-    ['osm_overpass',          fromOverpass],
-    ['jma_volcano',           fromJMAVolcano],
-    ['mlit_river',            fromMLITRiver],
-    ['expressway_cctv',       fromExpressway],
-    ['broadcast_livecam',     fromBroadcast],
-    ['tourism_webcam',        fromTourism],
-    ['insecam_scrape',        fromInsecam],
-    ['shodan_api',            fromShodanAPI],
-    ['skylinewebcams',        fromSkyline],
-    ['earthcam',              fromEarthCam],
-    ['webcamtaxi',            fromWebcamTaxi],
-    ['geocam',                fromGeocam],
-    ['worldcams',             fromWorldcams],
-    ['webcamera24',           fromWebcamera24],
-    ['camstreamer',           fromCamstreamer],
-    ['worldcam_eu',           fromWorldcamEu],
-    // Wave-12 additions
-    ['manual_ip_seed',        fromManualIpCams],
-    ['webcamendirect_seed',   fromWebcamendirectSeed],
-    ['webcamendirect_list',   fromWebcamendirectList],
-    ['camscape',              fromCamscape],
-    ['tabi_cam',              fromTabiCam],
-    ['scs_com_ua',            fromScsComUa],
-    ['windy_api',             fromWindy],
-  ];
+  const channelDefs = sources.map((s) => [s.id, s.run]);
 
   // Wrap each channel so (a) no per-channel deadline (it runs as long as it
   // needs, bounded only by the per-request HTTP timeouts inside fetchText /
@@ -1198,6 +1348,5 @@ export default async function collectCameraDiscovery(opts = {}) {
       description:
         'Unified Japan camera discovery: OSM + JMA volcano + MLIT river + expressway + broadcast + tourism + Insecam + Shodan + aggregators',
     },
-    metadata: {},
   };
 }

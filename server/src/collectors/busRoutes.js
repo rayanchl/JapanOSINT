@@ -96,7 +96,7 @@ function generateSeedData() {
 export default async function collectBusRoutes() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -107,6 +107,5 @@ export default async function collectBusRoutes() {
       live,
       description: 'Bus terminals and depots across Japan - highway buses, city buses',
     },
-    metadata: {},
   };
 }

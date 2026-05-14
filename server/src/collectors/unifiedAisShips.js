@@ -124,6 +124,5 @@ export default async function collectUnifiedAisShips() {
       dedup_strategy: 'mmsi > imo > name+coord; freshest last_position_update wins, fields merged',
       description: 'Deduplicated AIS vessel positions - fuses MarineTraffic + VesselFinder + maritimeAis (vessels only; ports live in unifiedPortInfra)',
     },
-    metadata: {},
   };
 }

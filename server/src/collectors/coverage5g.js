@@ -99,7 +99,7 @@ function generateSeedData() {
 export default async function collect5gCoverage() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -110,6 +110,5 @@ export default async function collect5gCoverage() {
       live,
       description: '5G NSA/SA coverage zones (Docomo, KDDI au, SoftBank, Rakuten Mobile) — n77/n78 sub-6 + n257 mmWave',
     },
-    metadata: {},
   };
 }

@@ -48,6 +48,5 @@ export default async function collectWaterTowers() {
       live: features.length > 0,
       description: 'Water towers, waterworks and covered reservoirs via OSM',
     },
-    metadata: {},
   };
 }

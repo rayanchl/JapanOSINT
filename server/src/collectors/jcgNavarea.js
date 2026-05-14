@@ -1,39 +1,34 @@
 /**
- * JCG NAVAREA XI warnings - Maritime Safety Information
+ * JCG NAVAREA XI warnings — Maritime Safety Information.
  * https://www6.kaiho.mlit.go.jp/JAPANNAVAREA/
- * HTML listing; we return a seed envelope of the coordinating station plus
- * attempt a reachability ping so status reflects upstream availability.
+ *
+ * The portal is HTML-only — we ship a single intel item recording portal
+ * status; can grow to per-warning entries once we parse the listing.
  */
 
+import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
+import { fetchHead } from './_liveHelpers.js';
+
+const SOURCE_ID = 'jcg-navarea';
 const PROBE_URL = 'https://www6.kaiho.mlit.go.jp/JAPANNAVAREA/';
-const TIMEOUT_MS = 8000;
 
 export default async function collectJcgNavarea() {
-  let source = 'seed';
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const res = await fetch(PROBE_URL, { method: 'HEAD', signal: controller.signal });
-    clearTimeout(timer);
-    if (res.ok) source = 'live';
-  } catch { /* offline */ }
+  const live = await fetchHead(PROBE_URL);
+  const items = [{
+    uid: intelUid(SOURCE_ID, 'navarea-xi-portal'),
+    title: 'JCG NAVAREA XI navigation warnings',
+    summary: 'Japan Coast Guard maritime safety information for the West Pacific NAVAREA XI region',
+    link: PROBE_URL,
+    language: 'ja',
+    published_at: new Date().toISOString(),
+    tags: ['maritime', 'msi', 'navarea-xi', live ? 'reachable' : 'unreachable'],
+    properties: { coordinator: 'Japan Coast Guard HQ', role: 'NAVAREA XI coordinator', reachable: live },
+  }];
 
-  const features = [
-    {
-      type: 'Feature',
-      geometry: { type: 'Point', coordinates: [139.77, 35.65] },
-      properties: { name: 'Japan Coast Guard HQ (NAVAREA XI)', role: 'coordinator', source: 'jcg_navarea' },
-    },
-  ];
-  return {
-    type: 'FeatureCollection',
-    features,
-    _meta: {
-      source,
-      fetchedAt: new Date().toISOString(),
-      recordCount: features.length,
-      description: 'JCG NAVAREA XI navigation warnings (MSI)',
-    },
-    metadata: {},
-  };
+  return intelEnvelope({
+    sourceId: SOURCE_ID,
+    items,
+    live,
+    description: 'JCG NAVAREA XI navigation warnings (MSI)',
+  });
 }

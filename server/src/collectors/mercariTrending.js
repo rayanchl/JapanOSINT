@@ -9,10 +9,12 @@
  * guidelines that likely disallow automated extraction at scale. Use
  * at low cadence (>= daily) and keep it to trending-only, not bulk
  * listing scrape.
- *
- * Non-geospatial. Returns zero-geometry features.
  */
 
+import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
+import { fetchJson } from './_liveHelpers.js';
+
+const SOURCE_ID = 'mercari-trending';
 const BASE = 'https://jp.mercari.com';
 const TIMEOUT_MS = 12000;
 
@@ -21,58 +23,31 @@ const TIMEOUT_MS = 12000;
 const TRENDING_PATH = '/v1/web/suggest/trends';
 
 export default async function collectMercariTrending() {
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const res = await fetch(`${BASE}${TRENDING_PATH}`, {
-      signal: controller.signal,
-      headers: {
-        'user-agent': 'JapanOSINT/1.0',
-        'accept': 'application/json',
-      },
-    });
-    clearTimeout(timer);
-    if (!res.ok) return empty(`mercari_http_${res.status}`);
-    const data = await res.json();
-    const items = Array.isArray(data?.trends) ? data.trends : Array.isArray(data) ? data : [];
-    const features = items.slice(0, 50).map((it, i) => ({
-      type: 'Feature',
-      geometry: null,
-      properties: {
-        id: `MERCARI_${i + 1}`,
-        keyword: typeof it === 'string' ? it : (it.keyword || it.name || null),
-        rank: i + 1,
-        source: 'mercari_trending',
-      },
-    })).filter((f) => f.properties.keyword);
-
-    return {
-      type: 'FeatureCollection',
-      features,
-      _meta: {
-        source: features.length ? 'mercari_live' : 'mercari_empty',
-        fetchedAt: new Date().toISOString(),
-        recordCount: features.length,
-        description: 'Mercari trending search keywords (Japan consumer demand signal)',
-      },
-      metadata: {},
-    };
-  } catch (err) {
-    console.warn('[mercariTrending] fetch failed:', err?.message);
-    return empty('mercari_error');
+  const data = await fetchJson(`${BASE}${TRENDING_PATH}`, {
+    timeoutMs: TIMEOUT_MS,
+    headers: { 'user-agent': 'JapanOSINT/1.0' },
+  });
+  let items = [];
+  if (data) {
+    const list = Array.isArray(data?.trends) ? data.trends : Array.isArray(data) ? data : [];
+    items = list.slice(0, 50).map((it, i) => {
+      const keyword = typeof it === 'string' ? it : (it.keyword || it.name || null);
+      if (!keyword) return null;
+      return {
+        uid: intelUid(SOURCE_ID, keyword, `rank_${i + 1}`),
+        title: keyword,
+        summary: `Trending #${i + 1}`,
+        link: `${BASE}/search?keyword=${encodeURIComponent(keyword)}`,
+        language: 'ja',
+        tags: ['mercari', 'trending', `rank:${i + 1}`],
+        properties: { keyword, rank: i + 1 },
+      };
+    }).filter(Boolean);
   }
-}
-
-function empty(source) {
-  return {
-    type: 'FeatureCollection',
-    features: [],
-    _meta: {
-      source,
-      fetchedAt: new Date().toISOString(),
-      recordCount: 0,
-      description: 'Mercari trending (unavailable)',
-    },
-    metadata: {},
-  };
+  return intelEnvelope({
+    sourceId: SOURCE_ID,
+    items,
+    live: items.length > 0,
+    description: 'Mercari trending search keywords (Japan consumer demand signal)',
+  });
 }

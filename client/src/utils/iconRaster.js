@@ -51,11 +51,33 @@ function findInkBoundsAndOffset(imageData, size) {
   };
 }
 
+// Module-scoped cache. The expensive bits — `renderToStaticMarkup`,
+// loading the SVG into an Image, drawing twice to a canvas, and reading
+// back the pixel buffer — would otherwise re-run for every icon every
+// time the user navigates away from the map and back (each remount
+// produces a fresh MapLibre instance whose own image cache is empty).
+// Keying on (icon name, color, size) reuses the resolved ImageData
+// across remounts of the same browser session.
+const rasterCache = new Map(); // key -> ImageData
+const inflight = new Map();    // key -> Promise<ImageData|null>
+
+function rasterCacheKey(IconComponent, color, size) {
+  const name = IconComponent?.displayName || IconComponent?.name || 'icon';
+  return `${name}|${color}|${size}`;
+}
+
 export function rasterizeIcon(IconComponent, color, size = 64) {
   if (typeof document === 'undefined') return Promise.resolve(null);
+
+  const key = rasterCacheKey(IconComponent, color, size);
+  const cached = rasterCache.get(key);
+  if (cached) return Promise.resolve(cached);
+  const pending = inflight.get(key);
+  if (pending) return pending;
+
   const url = iconToDataUrl(IconComponent, color, size);
 
-  return new Promise((resolve) => {
+  const p = new Promise((resolve) => {
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
@@ -86,5 +108,12 @@ export function rasterizeIcon(IconComponent, color, size = 64) {
     };
     img.onerror = () => resolve(null);
     img.src = url;
+  }).then((data) => {
+    inflight.delete(key);
+    if (data) rasterCache.set(key, data);
+    return data;
   });
+
+  inflight.set(key, p);
+  return p;
 }

@@ -88,7 +88,7 @@ function generateSeedData() {
 export default async function collectDroneNofly() {
   let features = await tryMlitDrone();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -99,6 +99,5 @@ export default async function collectDroneNofly() {
       live,
       description: 'MLIT/JCAB drone no-fly zones - airports, DID, nuclear, military, imperial',
     },
-    metadata: {},
   };
 }

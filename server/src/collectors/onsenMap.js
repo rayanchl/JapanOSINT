@@ -130,7 +130,7 @@ function generateSeedData() {
 export default async function collectOnsenMap() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -142,6 +142,5 @@ export default async function collectOnsenMap() {
       live_source: live ? 'osm_overpass' : 'onsen_association_seed',
       description: 'Japanese onsen hot springs - major towns and public bath facilities',
     },
-    metadata: {},
   };
 }

@@ -86,7 +86,7 @@ function generateSeedData() {
 export default async function collectRadarSites() {
   let features = await tryOverpass();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -97,6 +97,5 @@ export default async function collectRadarSites() {
       live,
       description: 'JADGE air-defense radar, BMD X-band (AN/TPY-2), and JMA weather radar',
     },
-    metadata: {},
   };
 }

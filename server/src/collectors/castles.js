@@ -146,7 +146,7 @@ function generateSeedData() {
 
 export default async function collectCastles() {
   let features = await tryOSMOverpass();
-  if (!features || features.length === 0) features = generateSeedData();
+  if (!features || features.length === 0) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -157,6 +157,5 @@ export default async function collectCastles() {
       live: features?.[0]?.properties?.source === 'osm_overpass',
       description: '100 Famous Castles + 100 Continued — historic Japanese castles',
     },
-    metadata: {},
   };
 }

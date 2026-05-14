@@ -106,7 +106,7 @@ function generateSeedData() {
 export default async function collectNationalParks() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -117,6 +117,5 @@ export default async function collectNationalParks() {
       live,
       description: 'Ministry of Environment national parks (34) and quasi-national parks',
     },
-    metadata: {},
   };
 }

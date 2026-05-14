@@ -239,6 +239,11 @@ export const OVERPASS_CAMERA_QUERIES = [
   'node["contact:webcam"](area.jp);',
   // Traffic cam explicit
   'node["traffic_signals"="camera"](area.jp);',
+  // オービス police speed-camera installations (formerly the dedicated
+  // surveillanceCameras collector — folded in here so discovery is the
+  // single source of truth for every OSM camera node).
+  'node["traffic_sign"="JP:225"](area.jp);',
+  'node["highway"="speed_camera"](area.jp);',
 ];
 
 // ─── 7. Search dorks for public Japanese camera feeds ────────────────────────

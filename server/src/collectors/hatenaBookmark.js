@@ -9,6 +9,9 @@
  * the client does not render a map layer for this source.
  */
 
+import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
+
+const SOURCE_ID = 'hatena-bookmark';
 const FEED_URL = 'https://b.hatena.ne.jp/hotentry.rss';
 const TIMEOUT_MS = 15000;
 
@@ -72,30 +75,27 @@ export default async function collectHatenaBookmark() {
     items = [];
   }
 
-  const features = items.map((it, i) => ({
-    type: 'Feature',
-    geometry: null,
-    properties: {
-      id: `HATENA_${i + 1}`,
-      title: it.title,
-      url: it.link,
-      bookmarks: it.bookmarks,
-      category: it.subject,
-      published_at: it.date,
-      source: liveSource,
-    },
+  const intelItems = items.map((it, i) => ({
+    uid: intelUid(SOURCE_ID, it.link, `idx_${i}`),
+    title: it.title,
+    summary: `${it.bookmarks} bookmarks${it.subject ? ` · ${it.subject}` : ''}`,
+    link: it.link,
+    language: 'ja',
+    published_at: it.date ? safeIso(it.date) : null,
+    tags: ['hatena', 'trending', it.subject ? `cat:${it.subject}` : null].filter(Boolean),
+    properties: { bookmarks: it.bookmarks, subject: it.subject || null },
   }));
 
-  return {
-    type: 'FeatureCollection',
-    features,
-    _meta: {
-      source: liveSource,
-      fetchedAt: new Date().toISOString(),
-      recordCount: features.length,
-      feed_url: FEED_URL,
-      description: 'Hatena Bookmark trending articles (Japanese web pulse)',
-    },
-    metadata: {},
-  };
+  return intelEnvelope({
+    sourceId: SOURCE_ID,
+    items: intelItems,
+    live: liveSource === 'hatena_live',
+    description: 'Hatena Bookmark trending articles (Japanese web pulse)',
+    extraMeta: { feed_url: FEED_URL },
+  });
+}
+
+function safeIso(s) {
+  const d = new Date(s);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString();
 }

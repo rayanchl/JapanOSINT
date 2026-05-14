@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>insecam.org</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>JapanOsintApp connects to your local JapanOSINT backend on this Wi-Fi network.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Optional: center the map on your current location.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Authenticate to unlock Settings and to reveal or modify API keys.</string>
+</dict>
+</plist>

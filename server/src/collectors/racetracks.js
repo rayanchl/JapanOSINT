@@ -119,7 +119,7 @@ function generateSeedData() {
 export default async function collectRacetracks() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -131,6 +131,5 @@ export default async function collectRacetracks() {
       live_source: live ? 'osm_overpass' : 'racetracks_seed',
       description: 'Japan racetracks - JRA/NAR horse racing, keirin, kyotei, auto race',
     },
-    metadata: {},
   };
 }

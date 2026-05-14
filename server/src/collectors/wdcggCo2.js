@@ -111,6 +111,5 @@ export default async function collectWdcggCo2() {
       env_hint: 'Set WDCGG_REGISTRY_URL to a CSV of GAW stations to enable full-coverage live mode',
       description: 'Greenhouse-gas monitoring stations from WMO GAW / WDCGG (Japan + neighbours)',
     },
-    metadata: {},
   };
 }

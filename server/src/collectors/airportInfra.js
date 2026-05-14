@@ -120,14 +120,14 @@ export default async function collectAirportInfra() {
   if (live) {
     // Merge: add seed entries whose ICAO is not already present in live data
     const liveIcao = new Set(features.map(f => f.properties.icao).filter(Boolean));
-    const seed = generateSeedData();
+    const seed = [];
     for (const s of seed) {
       if (!s.properties.icao || !liveIcao.has(s.properties.icao)) {
         features.push(s);
       }
     }
   } else {
-    features = generateSeedData();
+    features = [];
   }
 
   return {
@@ -140,6 +140,5 @@ export default async function collectAirportInfra() {
       live,
       description: 'Japan airport infrastructure - aerodromes, military bases, navigation aids, control towers',
     },
-    metadata: {},
   };
 }

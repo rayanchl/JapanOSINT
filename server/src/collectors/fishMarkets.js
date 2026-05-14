@@ -118,7 +118,7 @@ function generateSeedData() {
 export default async function collectFishMarkets() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -130,6 +130,5 @@ export default async function collectFishMarkets() {
       live_source: live ? 'osm_overpass' : 'maff_fish_seed',
       description: 'MAFF wholesale fish markets, port fish markets and tourist morning markets across Japan',
     },
-    metadata: {},
   };
 }

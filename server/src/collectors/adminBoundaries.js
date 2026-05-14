@@ -45,6 +45,5 @@ export default async function collectAdminBoundaries() {
       live: features.length > 0,
       description: 'Japan administrative boundaries (prefecture + municipality) via OSM',
     },
-    metadata: {},
   };
 }

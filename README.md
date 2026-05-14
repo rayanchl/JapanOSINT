@@ -46,7 +46,7 @@ npm run dev           # Start both server (4000) and client (3000)
 | Social | 10+ | Twitter/X, Flickr, YouTube |
 | Satellite | 8+ | Tellus, Sentinel, Himawari-9, ALOS |
 | Health | 5+ | NDB, influenza surveillance, pharmacy map |
-| Commercial | 8+ | Docomo, Agoop, Zenrin, HERE Maps |
+| Commercial | 8+ | Docomo, Agoop, HERE Maps |
 | Ocean/Marine | 7+ | AIS vessels, wave data, sea temperature |
 
 ## License

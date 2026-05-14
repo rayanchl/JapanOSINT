@@ -16,7 +16,14 @@ const CREDENTIALS = {
   // ── Cyber / OSINT ────────────────────────────────────────────────────
   'shodan-iot': { required: ['SHODAN_API_KEY'] },
   'shodan-japan': { required: ['SHODAN_API_KEY'] },
-  'wifi-networks-wigle':  { required: ['WIGLE_API_KEY'] },
+  // Camera-discovery Shodan channel. Without this entry the iOS source-detail
+  // card wouldn't render an "API key" section because the server's
+  // getCredentialStatus() returns requiresKey:false for unmapped ids.
+  'shodan-cameras-jp': { required: ['SHODAN_API_KEY'] },
+  'wifi-networks-wigle':  {
+    required: ['WIGLE_API_KEY'],
+    probeHeaders: (env) => ({ Authorization: `Basic ${env.WIGLE_API_KEY}` }),
+  },
   'wifi-networks-shodan': { required: ['SHODAN_API_KEY'] },
   'wifi-networks-mls':    { required: ['MLS_API_KEY'] },
   'fofa-jp':         { required: ['FOFA_API_KEY'] },
@@ -83,7 +90,10 @@ const CREDENTIALS = {
   // cameraDiscovery collector itself is a single source row but it pulls
   // from many channels — only Windy needs a key, so we attach the env-var
   // requirement to the discovery aggregator's source registry entry.
-  'windy-webcams': { required: ['WINDY_API_KEY'] },
+  'windy-webcams': {
+    required: ['WINDY_API_KEY'],
+    probeHeaders: (env) => ({ 'x-windy-api-key': env.WINDY_API_KEY }),
+  },
 };
 
 function listVars(entry) {
@@ -153,6 +163,26 @@ export function getCredentialStatus(sourceId) {
     })),
     missingVars,
   };
+}
+
+/**
+ * Returns the auth headers a probe should send for the given source, reading
+ * env vars at call time. Null when the source declares no `probeHeaders` or
+ * any of the required vars are missing — in that case the probe runs without
+ * auth (and likely returns 401/403, which is itself useful info).
+ */
+export function getProbeAuthHeaders(sourceId) {
+  const entry = CREDENTIALS[sourceId];
+  if (!entry || typeof entry.probeHeaders !== 'function') return null;
+  const required = entry.required || [];
+  for (const name of required) {
+    if (!isSet(name)) return null;
+  }
+  try {
+    return entry.probeHeaders(process.env) || null;
+  } catch {
+    return null;
+  }
 }
 
 /**

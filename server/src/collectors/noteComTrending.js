@@ -9,6 +9,9 @@
  * on any failure. Non-geospatial; returns text features.
  */
 
+import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
+
+const SOURCE_ID = 'note-com-trending';
 const BASE = 'https://note.com';
 const TIMEOUT_MS = 12000;
 
@@ -54,29 +57,22 @@ export default async function collectNoteComTrending() {
   };
   if (data) walk(data);
 
-  const features = items.slice(0, 100).map((it, i) => ({
-    type: 'Feature',
-    geometry: null,
-    properties: {
-      id: `NOTE_${i + 1}`,
-      title: it.title,
-      url: it.url,
-      kind: it.kind,
-      source: 'note_com',
-    },
+  const intelItems = items.slice(0, 100).map((it, i) => ({
+    uid: intelUid(SOURCE_ID, it.url, `idx_${i}`),
+    title: it.title,
+    link: it.url,
+    language: 'ja',
+    tags: ['note-com', `kind:${it.kind}`],
+    properties: { kind: it.kind },
   }));
 
-  return {
-    type: 'FeatureCollection',
-    features,
-    _meta: {
-      source: features.length ? 'note_com_live' : 'note_com_unavailable',
-      fetchedAt: new Date().toISOString(),
-      recordCount: features.length,
+  return intelEnvelope({
+    sourceId: SOURCE_ID,
+    items: intelItems,
+    description: 'note.com trending hashtags/notes (Japanese long-form)',
+    extraMeta: {
       endpoint_used: usedPath,
       caveat: 'Unofficial/undocumented endpoints; likely to break on schema change',
-      description: 'note.com trending hashtags/notes (Japanese long-form)',
     },
-    metadata: {},
-  };
+  });
 }

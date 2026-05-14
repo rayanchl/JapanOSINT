@@ -202,6 +202,5 @@ export default async function collectClassifieds() {
       live: !!live,
       description: 'Japanese classifieds from Jmty (ジモティー) — live nationwide scrape, geocoded by area',
     },
-    metadata: {},
   };
 }

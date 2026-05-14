@@ -7,10 +7,40 @@
 const API_URL = 'https://www.jma.go.jp/bosai/quake/data/list.json';
 const TIMEOUT_MS = 5000;
 
+// JMA's list.json encodes the hypocenter in a single ISO 6709 string
+// (`cod` field, e.g. "+36.5+137.9-10000/" → lat 36.5, lon 137.9, depth 10000m).
+// Returns { lat, lon, depthKm } or null if it can't be parsed.
+function parseIso6709(cod) {
+  if (typeof cod !== 'string') return null;
+  // Two or three signed decimal numbers in a row, optional trailing '/'.
+  const m = cod.match(/^([+-]\d+(?:\.\d+)?)([+-]\d+(?:\.\d+)?)(?:([+-]\d+(?:\.\d+)?))?/);
+  if (!m) return null;
+  const lat = parseFloat(m[1]);
+  const lon = parseFloat(m[2]);
+  const depthM = m[3] != null ? parseFloat(m[3]) : null;
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+  return {
+    lat,
+    lon,
+    depthKm: depthM != null && Number.isFinite(depthM) ? Math.abs(depthM) / 1000 : null,
+  };
+}
+
 function buildFeature(eq) {
-  const lat = eq.lat ?? eq.hypocenter?.lat;
-  const lon = eq.lon ?? eq.hypocenter?.lon;
-  if (lat == null || lon == null) return null;
+  let lat = eq.lat ?? eq.hypocenter?.lat;
+  let lon = eq.lon ?? eq.hypocenter?.lon;
+  let depthKm = eq.dep ?? eq.depth ?? null;
+  if (lat == null || lon == null) {
+    const parsed = parseIso6709(eq.cod);
+    if (!parsed) return null;
+    lat = parsed.lat;
+    lon = parsed.lon;
+    if (depthKm == null) depthKm = parsed.depthKm;
+  }
+
+  const magRaw = eq.mag ?? eq.magnitude ?? null;
+  const mag = magRaw != null && magRaw !== '' ? parseFloat(magRaw) : null;
+  const maxIntensity = eq.maxi ?? eq.maxIntensity ?? null;
 
   return {
     type: 'Feature',
@@ -20,11 +50,12 @@ function buildFeature(eq) {
     },
     properties: {
       earthquake_id: eq.eid ?? eq.id ?? null,
-      magnitude: eq.mag ?? eq.magnitude ?? null,
-      depth_km: eq.dep ?? eq.depth ?? null,
-      max_intensity: eq.maxi ?? eq.maxIntensity ?? null,
-      timestamp: eq.at ?? eq.time ?? null,
-      place: eq.anm ?? eq.areaName ?? eq.hypocenter?.name ?? null,
+      magnitude: Number.isFinite(mag) ? mag : magRaw,
+      depth_km: depthKm,
+      max_intensity: maxIntensity,
+      timestamp: eq.at ?? eq.time ?? eq.rdt ?? null,
+      place: eq.anm ?? eq.areaName ?? eq.hypocenter?.name ?? eq.en_anm ?? null,
+      title: eq.ttl ?? null,
       tsunami_warning: eq.tsu ?? false,
       source: 'jma',
     },
@@ -109,6 +140,5 @@ export default async function collectJmaEarthquake() {
       recordCount: features.length,
       description: 'Earthquake data from Japan Meteorological Agency',
     },
-    metadata: {},
   };
 }

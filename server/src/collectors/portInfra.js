@@ -116,7 +116,7 @@ export default async function collectPortInfra() {
   let osmFeatures = results[0].status === 'fulfilled' ? results[0].value : null;
 
   const live = !!(osmFeatures && osmFeatures.length > 0);
-  const seedFeatures = generateSeedData();
+  const seedFeatures = [];
 
   const features = live ? [...osmFeatures, ...seedFeatures] : seedFeatures;
 
@@ -130,6 +130,5 @@ export default async function collectPortInfra() {
       live,
       description: 'Japan port infrastructure - international strategic ports, important ports, fishing ports, ferry terminals',
     },
-    metadata: {},
   };
 }

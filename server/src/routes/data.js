@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { getSourceById } from '../utils/database.js';
-import { getCameraByUid } from '../utils/cameraStore.js';
+import { getCameraByUid, getDiscoveryFeed } from '../utils/cameraStore.js';
 import { collectors } from '../collectors/index.js';
 import { captureSnapshot } from '../utils/screenshot.js';
 import { isRunInFlight, runCameraDiscovery } from '../utils/cameraRunner.js';
@@ -16,12 +16,37 @@ import { getSnapshot as getFlightsSnapshot } from '../utils/planeAdsbPoller.js';
 import {
   getCached, setCached, getTtlMs,
 } from '../utils/collectorCache.js';
-import { upsertItems as upsertIntelItems } from '../utils/intelStore.js';
+import { mirrorCollectorOutput } from '../utils/collectorMirror.js';
+import { selectGeoFeatures } from '../utils/intelStore.js';
 import {
   broadcastLayerWorkStarted, broadcastLayerWorkFinished,
 } from '../utils/layerEvents.js';
+import { getTemporalForLayer } from '../utils/layerTemporal.js';
 
 const router = Router();
+
+// Time-slider query parsing. iOS / web clients hitting /api/data/:layer can
+// pass ?at=<iso>&window=<seconds> to request a historical snapshot. Parsed
+// once here and stashed on res.locals so respondWithData (and any sibling
+// route) can reach the values without threading req through every helper.
+router.use((req, res, next) => {
+  const atRaw = req.query.at;
+  const windowRaw = req.query.window;
+  if (atRaw == null && windowRaw == null) {
+    res.locals.timeQuery = { at: null, windowSec: null };
+    return next();
+  }
+  const at = atRaw ? new Date(String(atRaw)) : null;
+  if (atRaw && Number.isNaN(at?.getTime())) {
+    return res.status(400).json({ error: 'invalid_at' });
+  }
+  const windowSec = windowRaw != null ? Number(windowRaw) : null;
+  if (at && !(Number.isFinite(windowSec) && windowSec > 0)) {
+    return res.status(400).json({ error: 'missing_window' });
+  }
+  res.locals.timeQuery = { at, windowSec };
+  next();
+});
 
 // ── Camera snapshot cache ───────────────────────────────────────────────────
 // Lazy, one-time (per URL, 24h TTL) screenshots of embed-blocked webcams.
@@ -126,19 +151,97 @@ function normaliseFc(data, collectorKey) {
 }
 
 /**
+ * Build the map FC for a layer by reading from intel_items (the polymorphic
+ * master). Returns null if the source has no rows there yet — caller falls
+ * back to the legacy collector_cache FC.
+ *
+ * The cached FC is still the TTL gate: when fresh, we skip running the
+ * collector and serve from intel_items. When stale, we run + mirror + read.
+ */
+function buildFcFromIntel(sourceId, { extraMeta = {}, at = null, windowSec = null, field, fallbackField } = {}) {
+  const fc = selectGeoFeatures({ sourceId, at, windowSec, field, fallbackField });
+  if (!fc || fc.features.length === 0) return null;
+  return {
+    ...fc,
+    _meta: {
+      source: sourceId,
+      fetchedAt: new Date().toISOString(),
+      recordCount: fc.features.length,
+      live: at == null,
+      description: null,
+      served_from: 'intel_items',
+      ...(at ? { replay: { at: at instanceof Date ? at.toISOString() : String(at), window: windowSec } } : {}),
+      ...extraMeta,
+    },
+  };
+}
+
+const EMPTY_FC = Object.freeze({
+  type: 'FeatureCollection',
+  features: [],
+  _meta: { source: null, fetchedAt: null, recordCount: 0, live: false, description: 'empty' },
+});
+
+function emptyReplayFc(sourceId, reason, { at = null, windowSec = null } = {}) {
+  return {
+    type: 'FeatureCollection',
+    features: [],
+    _meta: {
+      source: sourceId,
+      fetchedAt: new Date().toISOString(),
+      recordCount: 0,
+      live: false,
+      description: reason,
+      ...(at ? { replay: { at: at instanceof Date ? at.toISOString() : String(at), window: windowSec } } : {}),
+    },
+  };
+}
+
+/**
  * Helper: run the collector live for this source, or return an empty
  * FeatureCollection with status info if no collector is registered.
  *
- * Caching: on every call we check collector_cache first (TTL per source
- * from collector_ttls). On hit the cached FC returns immediately; on miss
- * we invoke the collector, normalise, write to cache, and broadcast
- * layer_work_* WS events so the client spinner fires on server work.
+ * Post-Phase-B flow:
+ *  1. If TTL is fresh (collector_cache hit): respond from intel_items (or
+ *     fall back to the cached FC if intel_items has nothing yet).
+ *  2. If TTL is stale: run the collector → mirror → respond from intel_items
+ *     (or fall back to the freshly-normalised FC).
  */
 async function respondWithData(res, { sourceId, layerType, collectorKey }) {
   try {
+    // ── Time-slider short-circuit ──────────────────────────────────────────
+    // When the caller passed ?at=<iso>&window=<seconds>, bypass the live
+    // collector flow and serve a historical snapshot from intel_items.
+    // - liveOnly layers (e.g. unified-flights): no archive exists, return empty.
+    // - static layers (transport reference tables): no per-row event time,
+    //   fall through to the normal flow so the user sees current state.
+    // - temporal layers (everything else): query intel_items with the
+    //   trailing time window applied to the layer's declared event-time
+    //   column (COALESCE-fallback to fetched_at handled inside selectGeoFeatures).
+    const { at, windowSec } = res.locals.timeQuery || {};
+    if (at) {
+      const t = getTemporalForLayer(layerType);
+      if (t?.liveOnly) {
+        return res.json(emptyReplayFc(sourceId, 'liveOnly layer hidden in replay', { at, windowSec }));
+      }
+      if (t) {
+        const intelFc = buildFcFromIntel(sourceId, {
+          at, windowSec,
+          field: t.field, fallbackField: t.fallbackField,
+          extraMeta: { cache_status: 'skip', age_ms: 0 },
+        });
+        return res.json(intelFc || emptyReplayFc(sourceId, 'no rows in window', { at, windowSec }));
+      }
+      // t == null → static; fall through to live data path below.
+    }
+
     const collector = collectorKey ? collectors[collectorKey] : null;
     if (!collector) {
       const source = getSourceById(sourceId);
+      // Even with no collector registered, intel_items may have rows that
+      // landed via /api/intel/sources/:id/run or another path. Serve those.
+      const intelFc = buildFcFromIntel(sourceId, { extraMeta: { cache_status: 'miss', age_ms: 0 } });
+      if (intelFc) return res.json(intelFc);
       return res.json({
         type: 'FeatureCollection',
         features: [],
@@ -155,17 +258,33 @@ async function respondWithData(res, { sourceId, layerType, collectorKey }) {
       });
     }
 
-    // 1. Cache hit short-circuit
+    // 1. Cache hit short-circuit — TTL is fresh, no need to re-run the
+    // collector. Serve the geocoded subset from intel_items if available;
+    // legacy collector_cache FC as fallback (covers sources that haven't
+    // been mirrored since the Phase A migration).
     const cached = getCached(collectorKey);
     if (cached) {
+      const intelFc = buildFcFromIntel(sourceId, {
+        extraMeta: {
+          cache_status: 'hit',
+          age_ms: cached.ageMs,
+          ttl_ms: getTtlMs(collectorKey),
+        },
+      });
+      if (intelFc) {
+        broadcastLayerWorkFinished({
+          layerId: layerType, collectorKey, sourceId,
+          durationMs: 0, recordCount: intelFc.features.length, cacheStatus: 'hit',
+        });
+        return res.json(intelFc);
+      }
       const fc = cached.fc;
-      // Re-stamp cache telemetry onto the response so the client can show
-      // freshness. _meta is preserved; only cache_status / age_ms overwrite.
       fc._meta = {
         ...(fc._meta || {}),
         cache_status: 'hit',
         age_ms: cached.ageMs,
         ttl_ms: getTtlMs(collectorKey),
+        served_from: 'collector_cache',
       };
       broadcastLayerWorkFinished({
         layerId: layerType,
@@ -200,26 +319,34 @@ async function respondWithData(res, { sourceId, layerType, collectorKey }) {
       throw err;
     }
 
+    // ── Mirror to intel_items (polymorphic master) ────────────────────
+    // Every collector run side-effects into intel_items: FC features, intel
+    // envelope items, and hybrid (FC + intel) all flow through one bridge.
+    // The map response continues to come from collector_cache as before;
+    // the mirror is what makes intel_items the unified store for the Intel
+    // tab. Errors are logged but never break the map response.
+    const mirrorFetchedAt = data?.meta?.fetchedAt || data?._meta?.fetchedAt || new Date().toISOString();
+    let mirrorCounts = null;
+    try {
+      mirrorCounts = await mirrorCollectorOutput(data, sourceId, mirrorFetchedAt);
+    } catch (err) {
+      console.warn(`[data] mirror failed for ${sourceId}:`, err?.message);
+    }
+
     // ── Intel branch ──────────────────────────────────────────────────
-    // Non-spatial collectors return { kind:'intel', items, meta } and
-    // funnel into intel_items. /api/data/:id then returns an empty FC so
-    // any legacy map client gracefully renders nothing rather than 500-ing.
+    // Non-spatial collectors return { kind:'intel', items, meta }. The
+    // mirror above already upserted them; here we just shape an empty FC
+    // for legacy map clients that hit /api/data/:id.
     if (data && data.kind === 'intel') {
       const items = Array.isArray(data.items) ? data.items : [];
       const recordCount = items.length;
-      const fetchedAtIso = data?.meta?.fetchedAt || new Date().toISOString();
-      try {
-        await upsertIntelItems(items, sourceId, fetchedAtIso);
-      } catch (err) {
-        console.warn(`[data] intel upsert failed for ${sourceId}:`, err?.message);
-      }
       annotateLastHit({ record_count: recordCount, data_type: 'intel' });
       const emptyFc = {
         type: 'FeatureCollection',
         features: [],
         _meta: {
           source: sourceId,
-          fetchedAt: fetchedAtIso,
+          fetchedAt: mirrorFetchedAt,
           recordCount,
           live: recordCount > 0,
           description: data?.meta?.description ?? 'Migrated to /api/intel/items',
@@ -227,6 +354,7 @@ async function respondWithData(res, { sourceId, layerType, collectorKey }) {
           intel_endpoint: `/api/intel/items?source=${encodeURIComponent(sourceId)}`,
           cache_status: 'miss',
           age_ms: 0,
+          ingested: mirrorCounts?.intel || null,
         },
       };
       broadcastLayerWorkFinished({
@@ -240,44 +368,38 @@ async function respondWithData(res, { sourceId, layerType, collectorKey }) {
       return res.json(emptyFc);
     }
 
-    // ── Hybrid branch ─────────────────────────────────────────────────
-    // Collectors that mix spatial features and non-spatial rows can return
-    // `{ type:'FeatureCollection', features, _meta, intel:{ items, meta } }`.
-    // Intel rows go to intel_items as a side effect; the FC is served as
-    // usual. Keeps the geocoded → map / non-geocoded → intel split inside
-    // a single collector.
-    if (data && Array.isArray(data.features) && data.intel && Array.isArray(data.intel.items)) {
-      try {
-        const items = data.intel.items;
-        if (items.length > 0) {
-          await upsertIntelItems(items, sourceId, data?._meta?.fetchedAt || new Date().toISOString());
-        }
-      } catch (err) {
-        console.warn(`[data] hybrid intel upsert failed for ${sourceId}:`, err?.message);
-      }
-    }
-
     const fc = normaliseFc(data, collectorKey);
     const recordCount = fc.features.length;
     annotateLastHit({ record_count: recordCount });
 
-    // Persist for the source's TTL window
+    // Persist for the source's TTL window — the cache is now a marker, not
+    // the source of truth. We keep storing the FC so older callers (and the
+    // fallback path above) still work for sources that haven't been mirrored.
     const ttlMs = getTtlMs(collectorKey);
     setCached(collectorKey, fc, ttlMs);
 
-    // Decorate the outgoing response with cache status
-    fc._meta = { ...fc._meta, cache_status: 'miss', age_ms: 0, ttl_ms: ttlMs };
+    // Prefer the intel_items reconstruction: it carries the polymorphic
+    // master's properties (record_type, sub_source_id, geom_source, …) which
+    // the cached FC doesn't. Falls back to the normalised collector output
+    // when the mirror produced nothing for this source.
+    const intelFc = buildFcFromIntel(sourceId, {
+      extraMeta: { cache_status: 'miss', age_ms: 0, ttl_ms: ttlMs },
+    });
+    const out = intelFc || (() => {
+      fc._meta = { ...fc._meta, cache_status: 'miss', age_ms: 0, ttl_ms: ttlMs, served_from: 'collector_cache' };
+      return fc;
+    })();
 
     broadcastLayerWorkFinished({
       layerId: layerType,
       collectorKey,
       sourceId,
       durationMs: Date.now() - startedAt,
-      recordCount,
+      recordCount: out.features.length,
       cacheStatus: 'miss',
     });
 
-    return res.json(fc);
+    return res.json(out);
   } catch (err) {
     console.error(`[data] Error fetching ${sourceId}:`, err.message);
     res.status(500).json({ error: `Failed to fetch ${layerType} data` });
@@ -348,6 +470,22 @@ router.get('/cameras', async (_req, res) => {
     layerType: 'cameras',
     collectorKey: 'cameras',
   });
+});
+
+// GET /api/data/cameras/discovery-feed — backfill for the Camera Discovery
+// thread. Returns rows in the same shape the WS hook already consumes so the
+// client can seed its event list without a live run firing first.
+router.get('/cameras/discovery-feed', (req, res) => {
+  try {
+    const limit  = req.query.limit  != null ? Number(req.query.limit) : 500;
+    const cursor = req.query.cursor ? String(req.query.cursor) : null;
+    const channel = req.query.channel ? String(req.query.channel) : null;
+    const { events, cursor: nextCursor } = getDiscoveryFeed({ limit, cursor, channel });
+    res.json({ events, cursor: nextCursor });
+  } catch (err) {
+    console.error('[data] discovery-feed failed:', err.message);
+    res.status(500).json({ error: 'Failed to load discovery feed' });
+  }
 });
 
 // POST /api/data/cameras/trigger — kick a camera-discovery run on demand
@@ -458,6 +596,8 @@ router.get('/unified-airports', async (_req, res) => {
 // positions are too ephemeral to round-trip through SQLite, and the pre-fused
 // snapshot already has everything iOS needs.
 router.get('/unified-flights', (_req, res) => {
+  const { at, windowSec } = res.locals.timeQuery || {};
+  if (at) return res.json(emptyReplayFc('unified-flights', 'liveOnly layer hidden in replay', { at, windowSec }));
   res.json(getFlightsSnapshot());
 });
 

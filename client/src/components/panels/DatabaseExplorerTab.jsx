@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import apiUrl from '../../utils/apiUrl.js';
 
 const PAGE_SIZES = [25, 50, 100, 200];
 
@@ -25,7 +26,7 @@ export default function DatabaseExplorerTab() {
 
   // Load the table list once.
   useEffect(() => {
-    fetch('/api/db/tables')
+    fetch(apiUrl('/api/db/tables'))
       .then((r) => r.ok ? r.json() : [])
       .then((j) => {
         // Server returns a bare array; older code returned { tables: [...] }.
@@ -49,7 +50,7 @@ export default function DatabaseExplorerTab() {
       params.set('orderDir', orderDir);
     }
     setLoading(true);
-    fetch(`/api/db/tables/${encodeURIComponent(selected)}?${params}`)
+    fetch(apiUrl(`/api/db/tables/${encodeURIComponent(selected)}?${params}`))
       .then((r) => r.ok ? r.json() : null)
       .then((j) => setData(j))
       .catch(() => setData(null))

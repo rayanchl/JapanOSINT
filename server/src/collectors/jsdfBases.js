@@ -124,7 +124,7 @@ function generateSeedData() {
 export default async function collectJsdfBases() {
   let features = await tryOverpass();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -135,6 +135,5 @@ export default async function collectJsdfBases() {
       live,
       description: 'Japan Self-Defense Forces installations: GSDF, MSDF, ASDF',
     },
-    metadata: {},
   };
 }

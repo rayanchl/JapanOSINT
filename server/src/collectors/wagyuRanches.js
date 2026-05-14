@@ -116,7 +116,7 @@ function generateSeedData() {
 export default async function collectWagyuRanches() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -128,6 +128,5 @@ export default async function collectWagyuRanches() {
       live_source: live ? 'osm_overpass' : 'wagyu_cert_seed',
       description: 'Certified wagyu brand production regions - Matsusaka, Kobe, Omi, Hida and prefectural brands',
     },
-    metadata: {},
   };
 }

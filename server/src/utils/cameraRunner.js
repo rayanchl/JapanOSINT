@@ -14,6 +14,7 @@
 
 import collectCameraDiscovery from '../collectors/cameraDiscovery.js';
 import { upsertCamera, cameraStats } from './cameraStore.js';
+import { mirrorCollectorOutput } from './collectorMirror.js';
 
 let _inflightRun = null;
 let _lastRunAt = null; // ISO timestamp of the most recent completed run
@@ -80,6 +81,16 @@ export async function runCameraDiscovery(wsServer) {
 
   try {
     const result = await task;
+    // Mirror the full discovered FC into the polymorphic master in one batch.
+    // The mirror upserts by uid (camera_uid via NATIVE_ID_KEYS), so this is
+    // idempotent against the per-feature upsertCamera calls above; together
+    // they keep the typed `cameras` table and `intel_items` in sync after
+    // each cron tick without depending on a /api/data/cameras hit landing.
+    try {
+      await mirrorCollectorOutput(result, 'camera-discovery', new Date().toISOString());
+    } catch (err) {
+      console.warn('[cameraRunner] master mirror failed:', err?.message);
+    }
     const stats = cameraStats();
     const elapsed = Date.now() - started;
     console.log(

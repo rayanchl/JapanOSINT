@@ -122,6 +122,5 @@ export default async function collectMlitLandprice() {
       live,
       description: 'MLIT 不動産取引価格 nationwide transactions, geocoded to municipality centroid',
     },
-    metadata: {},
   };
 }

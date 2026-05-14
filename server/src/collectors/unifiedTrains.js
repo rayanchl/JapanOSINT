@@ -2,7 +2,6 @@
  * Unified Train Stations — fuses and deduplicates every rail source:
  *   - MLIT N02 (authoritative station geometry)
  *   - ODPT (live, JR East + Tokyo Metro + Toei + challenge operators)
- *   - fullTransport (OSM railway=station + curated Shinkansen seed)
  *   - osmTransportTrains (always-on OSM transport layer for mainline rail)
  *
  * Excludes subway/tram/monorail — those feed unifiedSubways instead.
@@ -10,18 +9,9 @@
 
 import mlitN02Stations from './mlitN02Stations.js';
 import odptTransport from './odptTransport.js';
-import fullTransport from './fullTransport.js';
 import osmTransportTrains from './osmTransportTrains.js';
-import { mergeFeatureCollections, dedupeByKeys, countBySource } from './_dedupe.js';
 import { computeLineColor } from './_lineColor.js';
-
-// Always recompute line_color from the current canonical identity so stale
-// values from older hash algorithms get overwritten. A feature with no line
-// identity ends up with line_color: null and renders in the layer default.
-function ensureLineColor(feature) {
-  const color = computeLineColor(feature.properties) || null;
-  return { ...feature, properties: { ...feature.properties, line_color: color } };
-}
+import { createUnifiedCollector } from '../utils/unifiedCollectorTemplate.js';
 
 const SUBWAY_TYPES = new Set(['subway', 'metro', 'underground']);
 const EXCLUDE_TYPES = new Set(['tram_stop', 'tram', 'monorail', 'light_rail']);
@@ -33,46 +23,30 @@ function isTrainFeature(f) {
   return true;
 }
 
-export default async function collectUnifiedTrains() {
-  const [n02, odpt, full, osm] = await Promise.allSettled([
-    mlitN02Stations(),
-    odptTransport(),
-    fullTransport(),
-    osmTransportTrains(),
-  ]);
+// Always recompute line_color from the current canonical identity so stale
+// values from older hash algorithms get overwritten. A feature with no line
+// identity ends up with line_color: null and renders in the layer default.
+function ensureLineColor(feature) {
+  const color = computeLineColor(feature.properties) || null;
+  return { ...feature, properties: { ...feature.properties, line_color: color } };
+}
 
-  const raw = mergeFeatureCollections([
-    n02.status === 'fulfilled' ? n02.value : null,
-    odpt.status === 'fulfilled' ? odpt.value : null,
-    full.status === 'fulfilled' ? full.value : null,
-    osm.status === 'fulfilled' ? osm.value : null,
-  ]).filter(isTrainFeature);
-
-  const features = dedupeByKeys(raw, [
+export default createUnifiedCollector({
+  sourceId: 'unified_trains',
+  description: 'Deduplicated nationwide train stations - merges MLIT N02 + ODPT + OSM transport layer',
+  upstreams: [
+    { name: 'mlit-n02-stations',     fn: mlitN02Stations },
+    { name: 'odpt-transport',        fn: odptTransport },
+    { name: 'osm-transport-trains',  fn: osmTransportTrains },
+  ],
+  filter: isTrainFeature,
+  dedupeKeys: [
     (f) => f.properties?.station_code || null,
     (f) => {
       const sid = f.properties?.station_id;
       if (!sid) return null;
       return String(sid).includes(':') ? sid : null;
     },
-  ]).map(ensureLineColor);
-
-  return {
-    type: 'FeatureCollection',
-    features,
-    _meta: {
-      source: 'unified_trains',
-      fetchedAt: new Date().toISOString(),
-      recordCount: features.length,
-      upstream: {
-        'mlit-n02-stations': n02.status === 'fulfilled' ? (n02.value.features?.length || 0) : 0,
-        'odpt-transport': odpt.status === 'fulfilled' ? (odpt.value.features?.length || 0) : 0,
-        'full-transport': full.status === 'fulfilled' ? (full.value.features?.length || 0) : 0,
-        'osm-transport-trains': osm.status === 'fulfilled' ? (osm.value.features?.length || 0) : 0,
-      },
-      bySource: countBySource(features),
-      description: 'Deduplicated nationwide train stations - merges MLIT N02 + ODPT + OSM transport layer',
-    },
-    metadata: {},
-  };
-}
+  ],
+  postProcess: ensureLineColor,
+});

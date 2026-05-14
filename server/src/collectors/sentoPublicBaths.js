@@ -115,7 +115,7 @@ function generateSeedData() {
 export default async function collectSentoPublicBaths() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -127,6 +127,5 @@ export default async function collectSentoPublicBaths() {
       live_source: live ? 'osm_overpass' : 'sento_association_seed',
       description: 'Traditional Japanese sento public bathhouses (~3,000 nationwide, ~500 in Tokyo)',
     },
-    metadata: {},
   };
 }

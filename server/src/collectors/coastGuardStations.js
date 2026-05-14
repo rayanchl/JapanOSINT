@@ -109,7 +109,7 @@ function generateSeedData() {
 export default async function collectCoastGuardStations() {
   let features = await tryOverpass();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -120,6 +120,5 @@ export default async function collectCoastGuardStations() {
       live,
       description: 'Japan Coast Guard offices and signal stations across 11 regions',
     },
-    metadata: {},
   };
 }

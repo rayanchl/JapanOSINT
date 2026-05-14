@@ -93,7 +93,7 @@ function generateSeedData() {
 export default async function collectPublicCameras() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
 
   return {
     type: 'FeatureCollection',
@@ -105,6 +105,5 @@ export default async function collectPublicCameras() {
       live,
       description: 'Curated public webcam feeds across Japan',
     },
-    metadata: {},
   };
 }

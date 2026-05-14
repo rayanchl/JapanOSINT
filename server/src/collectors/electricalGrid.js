@@ -255,7 +255,7 @@ export default async function collectElectricalGrid() {
   const metiFeatures = tryMETIPowerPlants();
 
   const live = !!(osmFeatures && osmFeatures.length > 0);
-  if (!live) osmFeatures = generateSeedData();
+  if (!live) osmFeatures = [];
 
   const features = [...osmFeatures, ...occtoFeatures, ...metiFeatures];
 
@@ -269,6 +269,5 @@ export default async function collectElectricalGrid() {
       live,
       description: 'Japan electrical grid - power plants (thermal/hydro/wind/solar/geothermal), substations, frequency converters, OCCTO supply/demand, METI renewables',
     },
-    metadata: {},
   };
 }

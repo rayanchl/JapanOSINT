@@ -1,5 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
-
 /**
  * Subscribe to the /ws stream and surface every collector HTTP hit.
  *
@@ -14,31 +12,97 @@ import { useEffect, useRef, useState } from 'react';
  * matching row.
  */
 
+import { useCallback, useEffect, useRef, useState } from 'react';
+import useWebSocket from './useWebSocket.js';
+import apiUrl from '../utils/apiUrl.js';
+
 const HIT_CAP = 1000;
 const RUN_CAP = 200;
 
 export default function useCollectorFollowStream() {
   const [hits, setHits] = useState([]);            // newest first
   const [runs, setRuns] = useState([]);            // newest first
-  const [connected, setConnected] = useState(false);
   const [paused, setPaused] = useState(false);
   const [seeded, setSeeded] = useState(false);
-  const pausedRef = useRef(false);
-  const wsRef = useRef(null);
-  const retryRef = useRef(0);
 
-  // Keep ref in sync so the WS handler reads the latest pause state
-  // without having to re-subscribe.
-  useEffect(() => { pausedRef.current = paused; }, [paused]);
+  // ── Coalescer ─────────────────────────────────────────────────────────
+  // Burst WS traffic (every collector request emits start+end frames) used
+  // to fire one setHits per message. With up to 1000 buffered hits and no
+  // virtualization, that pinned the main thread. We buffer events in a ref
+  // and flush them once per animation frame.
+  const pendingRef = useRef([]);
+  const rafRef = useRef(null);
 
+  const flush = useCallback(() => {
+    rafRef.current = null;
+    const batch = pendingRef.current;
+    if (batch.length === 0) return;
+    pendingRef.current = [];
+    setHits((prev) => {
+      let next = prev;
+      for (const msg of batch) {
+        if (msg.type === 'collector_request_hit') {
+          next = upsertHit(next, msg);
+        } else if (msg.type === 'collector_hit_annotate') {
+          next = next.map((h) => (
+            h.run_id === msg.run_id && h.request_seq === msg.request_seq
+              ? {
+                  ...h,
+                  record_count: msg.record_count ?? h.record_count,
+                  data_type: msg.data_type ?? h.data_type,
+                }
+              : h
+          ));
+        }
+      }
+      return next;
+    });
+    setRuns((prev) => {
+      let next = prev;
+      for (const msg of batch) {
+        if (msg.type === 'collector_run_start') {
+          next = upsertRun(next, {
+            run_id: msg.run_id,
+            collector_key: msg.collector_key,
+            source_id: msg.source_id,
+            source_name: msg.source_name,
+            trigger: msg.trigger,
+            started_ms: Date.now(),
+            ended_ms: null,
+            status: null,
+            hit_count: 0,
+          });
+        } else if (msg.type === 'collector_run_end') {
+          next = next.map((r) => (
+            r.run_id === msg.run_id
+              ? {
+                  ...r,
+                  ended_ms: Date.now(),
+                  status: msg.status,
+                  hit_count: msg.hit_count,
+                  error: msg.error,
+                  duration_ms: msg.duration_ms,
+                }
+              : r
+          ));
+        }
+      }
+      return next;
+    });
+  }, []);
+
+  const enqueue = useCallback((msg) => {
+    pendingRef.current.push(msg);
+    if (rafRef.current == null) rafRef.current = requestAnimationFrame(flush);
+  }, [flush]);
+
+  // Seed from the server's ring buffer so we paint history before WS
+  // delivers anything.
   useEffect(() => {
     let cancelled = false;
-
-    // Seed from the server's ring buffer so we paint history before WS
-    // delivers anything.
     (async () => {
       try {
-        const res = await fetch('/api/follow/recent?limit=500');
+        const res = await fetch(apiUrl('/api/follow/recent?limit=500'));
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
         if (cancelled || !Array.isArray(json.events)) return;
@@ -49,56 +113,33 @@ export default function useCollectorFollowStream() {
         if (!cancelled) setSeeded(true);
       }
     })();
-
-    const connect = () => {
-      if (cancelled) return;
-      try {
-        const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const ws = new WebSocket(`${proto}//localhost:4000/ws`);
-        wsRef.current = ws;
-
-        ws.onopen = () => {
-          setConnected(true);
-          retryRef.current = 0;
-        };
-
-        ws.onmessage = (ev) => {
-          if (pausedRef.current) return;
-          let msg;
-          try { msg = JSON.parse(ev.data); } catch { return; }
-          applyEvent(msg, setHits, setRuns);
-        };
-
-        ws.onerror = () => { /* handled by onclose */ };
-
-        ws.onclose = () => {
-          setConnected(false);
-          wsRef.current = null;
-          if (cancelled) return;
-          const delay = Math.min(1000 * Math.pow(2, retryRef.current), 30000);
-          retryRef.current += 1;
-          setTimeout(connect, delay);
-        };
-      } catch {
-        setTimeout(connect, 2000);
-      }
-    };
-
-    connect();
-
-    return () => {
-      cancelled = true;
-      if (wsRef.current) {
-        wsRef.current.onclose = null;
-        wsRef.current.close();
-      }
-    };
+    return () => { cancelled = true; };
   }, []);
 
-  const clear = () => {
-    setHits([]);
-    setRuns([]);
-  };
+  const onMessage = useCallback((msg) => {
+    if (paused) return;
+    // Only event types we actually consume — drop everything else
+    // (camera_*, source_update, heartbeat, …) before queueing so the
+    // buffer doesn't grow during idle bursts.
+    if (
+      msg.type === 'collector_request_hit'
+      || msg.type === 'collector_run_start'
+      || msg.type === 'collector_run_end'
+      || msg.type === 'collector_hit_annotate'
+    ) {
+      enqueue(msg);
+    }
+  }, [paused, enqueue]);
+
+  const { connected } = useWebSocket('/ws', { onMessage });
+
+  // Cleanup pending rAF when unmounting.
+  useEffect(() => () => {
+    if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+    pendingRef.current = [];
+  }, []);
+
+  const clear = () => { setHits([]); setRuns([]); };
 
   return {
     hits,
@@ -113,55 +154,6 @@ export default function useCollectorFollowStream() {
 }
 
 // ─── Reducers ────────────────────────────────────────────────────────────
-
-function applyEvent(msg, setHits, setRuns) {
-  switch (msg.type) {
-    case 'collector_request_hit':
-      setHits((prev) => upsertHit(prev, msg));
-      break;
-    case 'collector_run_start':
-      setRuns((prev) => upsertRun(prev, {
-        run_id: msg.run_id,
-        collector_key: msg.collector_key,
-        source_id: msg.source_id,
-        source_name: msg.source_name,
-        trigger: msg.trigger,
-        started_ms: Date.now(),
-        ended_ms: null,
-        status: null,
-        hit_count: 0,
-      }));
-      break;
-    case 'collector_run_end':
-      setRuns((prev) => prev.map((r) => (
-        r.run_id === msg.run_id
-          ? {
-              ...r,
-              ended_ms: Date.now(),
-              status: msg.status,
-              hit_count: msg.hit_count,
-              error: msg.error,
-              duration_ms: msg.duration_ms,
-            }
-          : r
-      )));
-      break;
-    case 'collector_hit_annotate':
-      setHits((prev) => prev.map((h) => (
-        h.run_id === msg.run_id && h.request_seq === msg.request_seq
-          ? {
-              ...h,
-              record_count: msg.record_count ?? h.record_count,
-              data_type: msg.data_type ?? h.data_type,
-            }
-          : h
-      )));
-      break;
-    default:
-      // ignore camera_*, source_update, heartbeat, connected, etc.
-      break;
-  }
-}
 
 function upsertHit(prev, msg) {
   const key = `${msg.run_id}:${msg.request_seq}`;

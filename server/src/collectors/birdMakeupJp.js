@@ -48,46 +48,56 @@ async function fetchOutbox(handle) {
   }
 }
 
+import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
+
+const SOURCE_ID = 'bird-makeup-jp';
+
 export default async function collectBirdMakeupJp() {
   const results = await Promise.all(DEFAULT_HANDLES.map(fetchOutbox));
-  const features = [];
+  const items = [];
 
   for (let i = 0; i < results.length; i++) {
     const outbox = results[i];
     const handle = DEFAULT_HANDLES[i];
-    const items = Array.isArray(outbox?.orderedItems) ? outbox.orderedItems : [];
-    for (const item of items) {
-      const obj = item.object;
+    const entries = Array.isArray(outbox?.orderedItems) ? outbox.orderedItems : [];
+    for (const entry of entries) {
+      const obj = entry.object;
       if (!obj || typeof obj !== 'object') continue;
-      const rawText = typeof obj.content === 'string' ? obj.content.replace(/<[^>]+>/g, '') : '';
+      const rawText = typeof obj.content === 'string' ? obj.content.replace(/<[^>]+>/g, '').trim() : '';
       if (!rawText) continue;
-      features.push({
-        type: 'Feature',
-        geometry: null,
+      const publishedRaw = obj.published || entry.published || null;
+      const publishedIso = publishedRaw ? safeIso(publishedRaw) : null;
+      items.push({
+        uid: intelUid(SOURCE_ID, entry.id, obj.id, `${handle}_${publishedRaw || rawText.slice(0, 32)}`),
+        title: rawText.slice(0, 120),
+        body: rawText,
+        summary: rawText.slice(0, 240),
+        link: obj.url || obj.id || null,
+        author: handle,
+        language: 'ja',
+        published_at: publishedIso,
+        tags: ['x-twitter', 'bird-makeup', `handle:${handle}`],
         properties: {
-          id: `BIRD_${handle}_${item.id || obj.id}`,
           handle,
-          text: rawText.slice(0, 280),
-          published: obj.published || item.published || null,
-          url: obj.url || obj.id || null,
-          source: 'bird_makeup',
+          remote_id: entry.id || obj.id || null,
         },
       });
     }
   }
 
-  return {
-    type: 'FeatureCollection',
-    features,
-    _meta: {
-      source: features.length ? 'bird_makeup_live' : 'bird_makeup_unavailable',
-      fetchedAt: new Date().toISOString(),
-      recordCount: features.length,
+  return intelEnvelope({
+    sourceId: SOURCE_ID,
+    items,
+    description: 'X posts mirrored via bird.makeup ActivityPub bridge (JP-relevant accounts)',
+    extraMeta: {
       handles: DEFAULT_HANDLES,
       env_hint: 'Override with BIRD_HANDLES=comma,separated,handles',
-      description: 'X posts mirrored via bird.makeup ActivityPub bridge (JP-relevant accounts)',
       legal_note: 'bird.makeup content originates from X; use responsibly',
     },
-    metadata: {},
-  };
+  });
+}
+
+function safeIso(s) {
+  const d = new Date(s);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString();
 }

@@ -187,6 +187,5 @@ export default async function collectSatelliteGroundStations() {
       live,
       description: 'JAXA, NICT, KDDI, SKY Perfect JSAT, NAOJ ground stations, VLBI, SLR, optical tracking, university, and GEONET GNSS reference stations',
     },
-    metadata: {},
   };
 }

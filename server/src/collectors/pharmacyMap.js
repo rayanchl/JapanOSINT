@@ -87,7 +87,7 @@ function generateSeedData() {
 export default async function collectPharmacyMap() {
   let features = await tryOverpass();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -98,6 +98,5 @@ export default async function collectPharmacyMap() {
       live,
       description: 'Japan pharmacies - major drugstore chains and dispensing pharmacies',
     },
-    metadata: {},
   };
 }

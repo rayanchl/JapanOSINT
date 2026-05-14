@@ -3,6 +3,8 @@
  * https://api.open-meteo.com/v1/jma
  */
 
+import { fetchJson } from './_liveHelpers.js';
+
 const CITIES = [
   { name: 'Sapporo', lat: 43.06, lon: 141.35 },
   { name: 'Sendai', lat: 38.27, lon: 140.87 },
@@ -17,18 +19,9 @@ const CITIES = [
 const TIMEOUT_MS = 8000;
 
 async function fetchCity(c) {
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const url = `https://api.open-meteo.com/v1/jma?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,wind_speed_10m,precipitation`;
-    const res = await fetch(url, { signal: controller.signal });
-    clearTimeout(timer);
-    if (!res.ok) return null;
-    const d = await res.json();
-    return d?.current ?? null;
-  } catch {
-    return null;
-  }
+  const url = `https://api.open-meteo.com/v1/jma?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,wind_speed_10m,precipitation`;
+  const d = await fetchJson(url, { timeoutMs: TIMEOUT_MS });
+  return d?.current ?? null;
 }
 
 export default async function collectOpenmeteoJma() {
@@ -72,6 +65,5 @@ export default async function collectOpenmeteoJma() {
       recordCount: features.length,
       description: 'Open-Meteo JMA free weather mirror',
     },
-    metadata: {},
   };
 }

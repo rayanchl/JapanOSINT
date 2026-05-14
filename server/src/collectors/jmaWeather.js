@@ -152,6 +152,5 @@ export default async function collectJmaWeather() {
       recordCount: features.length,
       description: 'Weather forecast data from JMA for all 47 prefectures',
     },
-    metadata: {},
   };
 }

@@ -166,11 +166,18 @@ collectors rather than raw feeds.
 | wifiNetworks | Wigle.net API (wigle.net) + OSM | Wireless network discovery |
 | cameraDiscovery | *Fusion:* OSM + JMA + MLIT + Shodan + YouTube + Insecam + Windy | Unified camera discovery from all known channels |
 | **Crime & Vice** | | |
-| yakuzaHq | NPA designated organized crime (npa.go.jp) | Designated bouryokudan HQs |
 | redLightZones | OSM (`amenity=stripclub`, `amenity=brothel`, `amenity=nightclub`) | Entertainment districts and venues |
 | pachinkoDensity | OSM (`leisure=adult_gaming_centre`) | Pachinko parlor density |
 | wantedPersons | NPA wanted persons list (npa.go.jp/sousa/shimeitehai) | 指名手配犯 (public wanted persons) |
 | phoneScamHotspots | NPA 特殊詐欺 statistics by prefecture (npa.go.jp) | Phone scam incident density |
+| prefPoliceCrime | All 47 prefectural police forces (curated homepages + per-prefecture CSV adapters via env vars) | Unified per-prefecture monthly crime counts; map features carry year_month for temporal filtering, full directory in intel |
+| npaMissingPersons | NPA Annual Missing-Persons CSV (npa.go.jp/safetylife/seianki/fumei/) | Yearly nationwide aggregates with sex / age / cause breakdowns; one feature per year tagged year_month |
+| npaTrafficAccidents | NPA Traffic Accident open data (npa.go.jp/publications/statistics/koutsuu/opendata/) | Per-incident lat/lon traffic accidents; aggregated to a 1.1km grid × month for nationwide heatmap |
+| npaImportantWanted | NPA jyuyo1 / jyuyo2 HTML (npa.go.jp/bureau/criminal/wanted/) | NPA-designated 重要指名手配 high-profile suspects with photos; sensitive layer (opt-in gate) |
+| npaSpecialFraud | NPA hurikomesagi_toukei.csv (npa.go.jp/bureau/criminal/souni/tokusyusagi/) | Monthly nationwide special-fraud (特殊詐欺) recognised cases, damage in JPY, arrests; tagged year_month |
+| npaCyberThreatObs | NPA Cyber Police observation dashboard (npa.go.jp/bureau/cyber/koho/observation.html) | Single map pin at NPA HQ linking the live darknet/honeypot scan-traffic graphs |
+| estatCrime | e-Stat 犯罪統計 API (e-stat.go.jp, statsCode 00130001) | Canonical per-prefecture crime totals via Govt Statistics API; requires free ESTAT_APP_ID env var |
+| mojCrimeWhitepaper | Ministry of Justice annual crime white paper (hakusyo1.moj.go.jp) | Prosecution / sentencing / recidivism / juvenile-justice annual report; intel + map pin at MOJ HQ |
 | **Classifieds & Real Estate** | | |
 | classifieds | OSM (`office=employment_agency`) + Jmty/Mercari/Yahoo seed | Japanese classifieds |
 | realEstate | Suumo (suumo.jp) + Homes.co.jp + AtHome (scraped) | Rental/sales listings with prices |
@@ -187,6 +194,7 @@ collectors rather than raw feeds.
 | kyodoRss | Kyodo News English (english.kyodonews.net/rss) | Japanese news agency in English |
 | jpcertAlertsRss | JPCERT/CC RDF/RSS (jpcert.or.jp/rss) | Cybersecurity vulnerability advisories |
 | nictAtlas | NICT NICTER darknet sensor (nicter.jp/atlas) | Darknet attack visualization |
+| gdelt | GDELT 2.0 raw event export (data.gdeltproject.org, no API key) | Latest 15-min slice of Japan events (FIPS `JA`), `GDELT_SLICES` widens window (4 ≈ 1h, 96 ≈ 24h); CAMEO event codes, Goldstein score, mention/source counts, tone; geocoded → map, ungeocoded → intel store |
 
 ## Fusion collectors
 
@@ -311,4 +319,5 @@ NASA_FIRMS_MAP_KEY       # FIRMS area CSV
 PHISHTANK_APP_KEY        # PhishTank rate-limit boost (optional)
 GITHUB_TOKEN             # raises GHSA / PoC-in-GitHub / Trickest rate limits
 BGPTOOLS_USER_AGENT      # required for BGP.tools (real contact email)
+YOUTUBE_API_KEY          # YouTube Data API v3 — adds the youtube_live channel to camera-discovery
 ```

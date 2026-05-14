@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import useLayerLoading from './useLayerLoading.js';
+import apiUrl from '../utils/apiUrl.js';
 
 // sessionStorage survives page reloads within the same tab but clears on
 // tab close, so we can cache FCs across F5 without bloating long-term
@@ -110,14 +111,6 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/crime',
     category: 'Safety',
   },
-  social: {
-    name: 'Social Media',
-    icon: '\u{1F4AC}',
-    color: '#f06292',
-    endpoint: '/api/data/social',
-    category: 'Social',
-  },
-
   // ── Social Media Geo (expanded) ─────────────────────────────────
   twitterGeo: {
     name: 'Twitter/X Geo',
@@ -173,14 +166,6 @@ const LAYER_DEFINITIONS = {
   },
 
   // ── Transport (nationwide) ──────────────────────────────────────
-  fullTransport: {
-    name: 'Japan Rail Network',
-    icon: '\u{1F684}',
-    color: '#43a047',
-    endpoint: '/api/data/full-transport',
-    category: 'Transport',
-    hidden: true,
-  },
   mlitN02Stations: {
     name: 'MLIT N02 Rail Stations',
     icon: '\u{1F68A}',
@@ -204,12 +189,21 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/ferry-routes',
     category: 'Transport',
   },
+  // Folded into unifiedHighway ("Expressways"). Hidden from LayerPanel.
   highwayTraffic: {
     name: 'Expressway IC/JCT',
     icon: '\u{1F6E3}',
     color: '#9e9e9e',
     endpoint: '/api/data/highway-traffic',
     category: 'Infrastructure',
+    hidden: true,
+  },
+  unifiedHighway: {
+    name: 'Expressways',
+    icon: '\u{1F6E3}',
+    color: '#9e9e9e',
+    endpoint: '/api/data/unified-highway',
+    category: 'Transport',
   },
   maritimeAis: {
     name: 'AIS Ship Tracking',
@@ -474,12 +468,14 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/lighthouse-map',
     category: 'Ocean',
   },
+  // Folded into unifiedHighway ("Expressways"). Hidden from LayerPanel.
   jarticTraffic: {
     name: 'Traffic Congestion',
     icon: '\u{1F6A6}',
     color: '#e53935',
     endpoint: '/api/data/jartic-traffic',
     category: 'Transport',
+    hidden: true,
   },
   droneNofly: {
     name: 'Drone No-Fly',
@@ -602,6 +598,27 @@ const LAYER_DEFINITIONS = {
     icon: '\u{1F6E2}',
     color: '#bf360c',
     endpoint: '/api/data/petroleum-stockpile',
+    category: 'Industry',
+  },
+  ccsProjects: {
+    name: 'CCS Projects',
+    icon: '\u{1F30D}',
+    color: '#0288d1',
+    endpoint: '/api/data/ccs-projects',
+    category: 'Industry',
+  },
+  geothermalSprings: {
+    name: 'Geothermal Springs',
+    icon: '\u{2668}',
+    color: '#7e57c2',
+    endpoint: '/api/data/geothermal-springs',
+    category: 'Industry',
+  },
+  geothermalProjects: {
+    name: 'Geothermal Projects',
+    icon: '\u{1F30B}',
+    color: '#5e35b1',
+    endpoint: '/api/data/geothermal-projects',
     category: 'Industry',
   },
   windTurbines: {
@@ -750,13 +767,6 @@ const LAYER_DEFINITIONS = {
   },
 
   // ── Wave 8: Crime + Vice + Wildlife ─────────────────────────────
-  yakuzaHq: {
-    name: 'Yakuza HQs',
-    icon: '\u{1F5E1}',
-    color: '#6a1b9a',
-    endpoint: '/api/data/yakuza-hq',
-    category: 'Crime',
-  },
   redLightZones: {
     name: 'Red Light Districts',
     icon: '\u{1F4A1}',
@@ -777,12 +787,80 @@ const LAYER_DEFINITIONS = {
     color: '#d32f2f',
     endpoint: '/api/data/wanted-persons',
     category: 'Crime',
+    sensitive: true,
   },
   phoneScamHotspots: {
     name: 'Phone Scam Hotspots',
     icon: '\u{1F4DE}',
     color: '#ff7043',
     endpoint: '/api/data/phone-scam-hotspots',
+    category: 'Crime',
+  },
+  prefPoliceCrime: {
+    name: 'Prefectural Police Crime',
+    icon: '\u{1F46E}',
+    color: '#7e57c2',
+    endpoint: '/api/data/pref-police-crime',
+    category: 'Crime',
+    temporal: true,
+    temporalKey: 'year_month',
+  },
+  npaMissingPersons: {
+    name: 'Missing Persons (NPA)',
+    icon: '\u{1F50D}',
+    color: '#ec407a',
+    endpoint: '/api/data/npa-missing-persons',
+    category: 'Safety',
+    temporal: true,
+    temporalKey: 'year_month',
+  },
+  npaTrafficAccidents: {
+    name: 'Traffic Accidents',
+    icon: '\u{1F697}',
+    color: '#ef5350',
+    endpoint: '/api/data/npa-traffic-accidents',
+    category: 'Safety',
+    temporal: true,
+    temporalKey: 'year_month',
+  },
+  npaImportantWanted: {
+    name: 'Important Wanted (NPA)',
+    icon: '\u{1F6A8}',
+    color: '#b71c1c',
+    endpoint: '/api/data/npa-important-wanted',
+    category: 'Crime',
+    sensitive: true,
+  },
+  npaSpecialFraud: {
+    name: 'Special Fraud (Monthly)',
+    icon: '\u{1F4B8}',
+    color: '#ff8a65',
+    endpoint: '/api/data/npa-special-fraud',
+    category: 'Crime',
+    temporal: true,
+    temporalKey: 'year_month',
+  },
+  npaCyberThreatObs: {
+    name: 'Cyber Threat Observation',
+    icon: '\u{1F310}',
+    color: '#26c6da',
+    endpoint: '/api/data/npa-cyber-threat-obs',
+    category: 'Cyber',
+  },
+  estatCrime: {
+    name: 'e-Stat Crime (per prefecture)',
+    icon: '\u{1F4CA}',
+    color: '#5e35b1',
+    endpoint: '/api/data/estat-crime',
+    category: 'Crime',
+    temporal: true,
+    temporalKey: 'year_month',
+  },
+  mojCrimeWhitepaper: {
+    name: 'MOJ Crime White Paper',
+    icon: '\u{1F4D8}',
+    color: '#3949ab',
+    endpoint: '/api/data/moj-crime-whitepaper',
     category: 'Crime',
   },
 
@@ -893,18 +971,22 @@ const LAYER_DEFINITIONS = {
   },
   // -- Unified transport collectors (fused + deduped) --
   unifiedTrains: {
-    name: 'Trains',
+    name: 'Trains & Subways',
     icon: '\u{1F686}',
     color: '#2e7d32',
     endpoint: '/api/data/unified-trains',
     category: 'Transport',
   },
+  // Subways are folded into the Trains toggle — visibility auto-mirrors
+  // unifiedTrains so subway features still render via the unified-stations
+  // line-dot layer. Hidden from LayerPanel.
   unifiedSubways: {
     name: 'Subways & Trams',
     icon: '\u{1F687}',
     color: '#ff7043',
     endpoint: '/api/data/unified-subways',
     category: 'Transport',
+    hidden: true,
   },
   unifiedBuses: {
     name: 'Buses',
@@ -978,13 +1060,6 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/suumo-rental-density',
     category: 'Social',
   },
-  kanagawaPolice: {
-    name: 'Kanagawa Crime',
-    icon: '\u{1F46E}',
-    color: '#d32f2f',
-    endpoint: '/api/data/kanagawa-police',
-    category: 'Government',
-  },
   censysJapan: {
     name: 'Censys Hosts (JP)',
     icon: '\u{1F5A5}',
@@ -1000,6 +1075,270 @@ const LAYER_DEFINITIONS = {
     color: '#ff8a65',
     endpoint: '/api/data/gdelt',
     category: 'Intelligence',
+  },
+
+  // ── Wave 15: vuln-intel ───────────────────────────────────────────
+  myJvn: {
+    name: 'JVN iPedia',
+    icon: '\u{1F4DC}',
+    color: '#ef5350',
+    endpoint: '/api/data/my-jvn',
+    category: 'Cyber',
+  },
+  cisaKevJp: {
+    name: 'CISA KEV (JP)',
+    icon: '\u{2622}',
+    color: '#d32f2f',
+    endpoint: '/api/data/cisa-kev-jp',
+    category: 'Cyber',
+  },
+  osvDev: {
+    name: 'OSV.dev',
+    icon: '\u{1F4E6}',
+    color: '#ab47bc',
+    endpoint: '/api/data/osv-dev',
+    category: 'Cyber',
+  },
+  ghsaAdvisories: {
+    name: 'GitHub GHSA',
+    icon: '\u{1F4DC}',
+    color: '#7e57c2',
+    endpoint: '/api/data/ghsa-advisories',
+    category: 'Cyber',
+  },
+  pocInGithub: {
+    name: 'PoC-in-GitHub',
+    icon: '\u{1F4A3}',
+    color: '#e53935',
+    endpoint: '/api/data/poc-in-github',
+    category: 'Cyber',
+  },
+  trickestCve: {
+    name: 'Trickest CVE',
+    icon: '\u{1F4A3}',
+    color: '#ef6c00',
+    endpoint: '/api/data/trickest-cve',
+    category: 'Cyber',
+  },
+
+  // ── Wave 15: IOC / attacker activity ─────────────────────────────
+  shadowserverJp: {
+    name: 'Shadowserver (JP)',
+    icon: '\u{1F575}',
+    color: '#37474f',
+    endpoint: '/api/data/shadowserver-jp',
+    category: 'Cyber',
+  },
+  urlhausJp: {
+    name: 'URLhaus (JP)',
+    icon: '\u{1F517}',
+    color: '#c2185b',
+    endpoint: '/api/data/urlhaus-jp',
+    category: 'Cyber',
+  },
+  threatfoxJp: {
+    name: 'ThreatFox (JP)',
+    icon: '\u{1F98A}',
+    color: '#b71c1c',
+    endpoint: '/api/data/threatfox-jp',
+    category: 'Cyber',
+  },
+  feodoTrackerJp: {
+    name: 'Feodo C2 (JP)',
+    icon: '\u{1F47E}',
+    color: '#4a148c',
+    endpoint: '/api/data/feodo-tracker-jp',
+    category: 'Cyber',
+  },
+  sslblJp: {
+    name: 'SSLBL (JP)',
+    icon: '\u{1F512}',
+    color: '#880e4f',
+    endpoint: '/api/data/sslbl-jp',
+    category: 'Cyber',
+  },
+  spamhausDrop: {
+    name: 'Spamhaus DROP',
+    icon: '\u{1F6D1}',
+    color: '#bf360c',
+    endpoint: '/api/data/spamhaus-drop',
+    category: 'Cyber',
+  },
+  abuseipdbJp: {
+    name: 'AbuseIPDB (JP)',
+    icon: '\u{1F6A8}',
+    color: '#f4511e',
+    endpoint: '/api/data/abuseipdb-jp',
+    category: 'Cyber',
+  },
+  alienvaultOtxJp: {
+    name: 'OTX (JP-targeted)',
+    icon: '\u{1F47D}',
+    color: '#00897b',
+    endpoint: '/api/data/alienvault-otx-jp',
+    category: 'Cyber',
+  },
+  phishingFeedsJp: {
+    name: 'Phishing (JP brands)',
+    icon: '\u{1F41F}',
+    color: '#0277bd',
+    endpoint: '/api/data/phishing-feeds-jp',
+    category: 'Cyber',
+  },
+  sansIsc: {
+    name: 'SANS ISC',
+    icon: '\u{26C8}',
+    color: '#0288d1',
+    endpoint: '/api/data/sans-isc',
+    category: 'Cyber',
+  },
+
+  // ── Wave 15: asset / breach intel ────────────────────────────────
+  leakixJp: {
+    name: 'LeakIX (JP)',
+    icon: '\u{1F4A7}',
+    color: '#00838f',
+    endpoint: '/api/data/leakix-jp',
+    category: 'Cyber',
+  },
+  netlasJp: {
+    name: 'Netlas (JP)',
+    icon: '\u{1F50E}',
+    color: '#5d4037',
+    endpoint: '/api/data/netlas-jp',
+    category: 'Cyber',
+  },
+  hudsonRockJp: {
+    name: 'HudsonRock (JP)',
+    icon: '\u{1F575}',
+    color: '#3e2723',
+    endpoint: '/api/data/hudson-rock-jp',
+    category: 'Cyber',
+  },
+  virustotalJp: {
+    name: 'VirusTotal (JP)',
+    icon: '\u{1F9EA}',
+    color: '#1565c0',
+    endpoint: '/api/data/virustotal-jp',
+    category: 'Cyber',
+  },
+  chaosBugbountyJp: {
+    name: 'Chaos BB (JP)',
+    icon: '\u{1F41B}',
+    color: '#558b2f',
+    endpoint: '/api/data/chaos-bugbounty-jp',
+    category: 'Cyber',
+  },
+
+  // ── Wave 15: network / BGP / DNS history ─────────────────────────
+  peeringdbJp: {
+    name: 'PeeringDB (JP)',
+    icon: '\u{1F517}',
+    color: '#455a64',
+    endpoint: '/api/data/peeringdb-jp',
+    category: 'Telecom',
+  },
+  bgpToolsJp: {
+    name: 'BGP.tools (JP)',
+    icon: '\u{1F310}',
+    color: '#37474f',
+    endpoint: '/api/data/bgp-tools-jp',
+    category: 'Telecom',
+  },
+  crtshHistorical: {
+    name: 'crt.sh history',
+    icon: '\u{1F510}',
+    color: '#26a69a',
+    endpoint: '/api/data/crtsh-historical',
+    category: 'Cyber',
+  },
+  cloudflareRadarJp: {
+    name: 'CF Radar (JP)',
+    icon: '\u{1F4E1}',
+    color: '#ff8f00',
+    endpoint: '/api/data/cloudflare-radar-jp',
+    category: 'Cyber',
+  },
+  ooniJp: {
+    name: 'OONI (JP)',
+    icon: '\u{1F578}',
+    color: '#1b5e20',
+    endpoint: '/api/data/ooni-jp',
+    category: 'Cyber',
+  },
+  iodaJp: {
+    name: 'IODA (JP)',
+    icon: '\u{1F4C9}',
+    color: '#827717',
+    endpoint: '/api/data/ioda-jp',
+    category: 'Cyber',
+  },
+
+  // ── Wave 15: SOCINT / news ───────────────────────────────────────
+  yahooRealtime: {
+    name: 'Yahoo! Realtime',
+    icon: '\u{1F525}',
+    color: '#e64a19',
+    endpoint: '/api/data/yahoo-realtime',
+    category: 'Social',
+  },
+  mastodonJpInstances: {
+    name: 'Mastodon JP',
+    icon: '\u{1F418}',
+    color: '#3f51b5',
+    endpoint: '/api/data/mastodon-jp-instances',
+    category: 'Social',
+  },
+  blueskyJetstreamJp: {
+    name: 'Bluesky JP',
+    icon: '\u{1F98B}',
+    color: '#0288d1',
+    endpoint: '/api/data/bluesky-jetstream-jp',
+    category: 'Social',
+  },
+  niconicoRanking: {
+    name: 'Niconico Ranking',
+    icon: '\u{1F4FA}',
+    color: '#212121',
+    endpoint: '/api/data/niconico-ranking',
+    category: 'Social',
+  },
+  wikipediaJaRecent: {
+    name: 'Wikipedia ja',
+    icon: '\u{1F4D6}',
+    color: '#616161',
+    endpoint: '/api/data/wikipedia-ja-recent',
+    category: 'Social',
+  },
+  osmChangesetsJp: {
+    name: 'OSM Changesets',
+    icon: '\u{1F5FA}',
+    color: '#558b2f',
+    endpoint: '/api/data/osm-changesets-jp',
+    category: 'Social',
+  },
+  yahooNewsJpRss: {
+    name: 'Yahoo News JP',
+    icon: '\u{1F5DE}',
+    color: '#d50000',
+    endpoint: '/api/data/yahoo-news-jp-rss',
+    category: 'Social',
+  },
+  jpNewsRss: {
+    name: 'JP News RSS',
+    icon: '\u{1F4F0}',
+    color: '#37474f',
+    endpoint: '/api/data/jp-news-rss',
+    category: 'Social',
+  },
+
+  // ── Wave 15: geo / disaster ──────────────────────────────────────
+  nasaFirmsJp: {
+    name: 'NASA FIRMS Fires',
+    icon: '\u{1F525}',
+    color: '#ff5722',
+    endpoint: '/api/data/nasa-firms-jp',
+    category: 'Environment',
   },
 };
 
@@ -1051,7 +1390,16 @@ export default function useMapLayers() {
   const [layers, setLayers] = useState(() => {
     const initial = {};
     for (const key of Object.keys(LAYER_DEFINITIONS)) {
-      initial[key] = { visible: false, opacity: 1, loading: false };
+      const def = LAYER_DEFINITIONS[key];
+      initial[key] = {
+        visible: false,
+        opacity: 1,
+        loading: false,
+        // Temporal layers carry a [start, end] year_month window; null = "all".
+        // Defaults to the full range so toggling on doesn't filter anything
+        // out until the user moves the slider.
+        ...(def?.temporal ? { temporalWindow: null } : {}),
+      };
     }
     return initial;
   });
@@ -1104,7 +1452,7 @@ export default function useMapLayers() {
     }
 
     try {
-      const res = await fetch(def.endpoint);
+      const res = await fetch(apiUrl(def.endpoint));
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
@@ -1154,6 +1502,20 @@ export default function useMapLayers() {
   }, [doFetch]);
 
   const toggleLayer = useCallback((layerId) => {
+    const def = LAYER_DEFINITIONS[layerId];
+    // Sensitivity gate: layers carrying PII (wanted-person photos, suspect
+    // details) require an explicit one-shot user opt-in. Acceptance is
+    // persisted in localStorage so the prompt fires once per browser, not
+    // on every toggle.
+    if (def?.sensitive) {
+      try {
+        const ok = typeof window !== 'undefined'
+          && (window.localStorage?.getItem('japanosint.sensitive_acknowledged') === '1'
+              || window.confirm('This layer contains sensitive content (suspect photos / personal details). Show anyway?'));
+        if (!ok) return;
+        if (typeof window !== 'undefined') window.localStorage?.setItem('japanosint.sensitive_acknowledged', '1');
+      } catch { /* fail open in non-browser envs */ }
+    }
     setLayers((prev) => {
       const current = prev[layerId];
       if (!current) return prev;
@@ -1179,6 +1541,22 @@ export default function useMapLayers() {
     }));
   }, []);
 
+  /**
+   * Set the time window for a temporal layer. Pass `null` to clear the filter
+   * (show all features). `window` is a `[startYM, endYM]` pair where each is
+   * a `'YYYY-MM'` string (or `'YYYY'` to mean the whole year).
+   */
+  const setLayerTemporalWindow = useCallback((layerId, window) => {
+    setLayers((prev) => {
+      const current = prev[layerId];
+      if (!current) return prev;
+      return {
+        ...prev,
+        [layerId]: { ...current, temporalWindow: window },
+      };
+    });
+  }, []);
+
   const setAllLayers = useCallback((visible) => {
     setLayers((prev) => {
       const updated = {};
@@ -1201,11 +1579,24 @@ export default function useMapLayers() {
     fetchLayerData(layerId);
   }, [fetchLayerData]);
 
-  // Auto-follow: unifiedStations + unifiedStationFootprints mirror the
-  // Trains / Subways / Buses toggles. Visible when any mode is on, hidden
-  // when all are off. MapView filters features by current mode_set, so a
-  // cross-mode station only shows pins/footprint for the modes the user
-  // actually has enabled.
+  // Auto-follow: unifiedSubways visibility mirrors unifiedTrains (subways
+  // are folded under the Trains toggle in the panel). unifiedStations +
+  // unifiedStationFootprints mirror whether any transit mode is on. MapView
+  // filters features by current mode_set, so a cross-mode station only
+  // shows pins/footprint for the modes that are enabled.
+  const trainsOn = !!layers.unifiedTrains?.visible;
+  useEffect(() => {
+    const subway = layers.unifiedSubways;
+    if (!subway) return;
+    if (subway.visible !== trainsOn) {
+      if (trainsOn) fetchLayerData('unifiedSubways');
+      setLayers((prev) => ({
+        ...prev,
+        unifiedSubways: { ...prev.unifiedSubways, visible: trainsOn },
+      }));
+    }
+  }, [trainsOn, fetchLayerData, layers]);
+
   const transitModesOn = !!(
     layers.unifiedTrains?.visible
     || layers.unifiedSubways?.visible
@@ -1247,6 +1638,7 @@ export default function useMapLayers() {
     layerDefinitions: LAYER_DEFINITIONS,
     toggleLayer,
     setLayerOpacity,
+    setLayerTemporalWindow,
     setAllLayers,
     refreshLayer,
     layerData,

@@ -1,194 +1,57 @@
 /**
- * Persistent deduplicated camera store.
- *
- * Keyed by `camera_uid` (from cameraDiscovery.cameraUid). Every camera ever
- * surfaced by any discovery channel is upserted into the `cameras` table;
- * repeat sightings union their discovery_channels, bump seen_count, and
- * refresh last_seen_at while leaving first_seen_at intact.
- *
- * Returns GeoJSON-shaped objects so the rest of the app (map layer, WS
- * broadcasts) can consume them without translation.
+ * Camera storage layer — thin wrapper around intel_items (the polymorphic
+ * master) keyed by `camera-discovery|<camera_uid>`. The legacy `cameras`
+ * typed table + `cameras_fts` mirror were retired in the Phase B cutover;
+ * this module preserves the read/write API its callers expect (cameraRunner,
+ * routes/data.js, llmEnricher) so they don't need to change.
  */
 
 import db from './database.js';
+import {
+  getItemBySourceUid, selectGeoFeatures,
+  applyGeocodeToMaster, applyGeocodeFailToMaster,
+  upsertItemSync,
+} from './intelStore.js';
 
-const stmtGet = db.prepare('SELECT * FROM cameras WHERE camera_uid = ?');
+const CAMERA_SOURCE_ID = 'camera-discovery';
 
-const stmtInsert = db.prepare(`
-  INSERT INTO cameras (
-    camera_uid, name, camera_type, lat, lon, url, thumbnail_url,
-    operator, country, discovery_channels, properties
-  ) VALUES (
-    @camera_uid, @name, @camera_type, @lat, @lon, @url, @thumbnail_url,
-    @operator, @country, @discovery_channels, @properties
-  )
-`);
-
-const stmtUpdate = db.prepare(`
-  UPDATE cameras SET
-    name               = @name,
-    camera_type        = @camera_type,
-    url                = @url,
-    thumbnail_url      = @thumbnail_url,
-    operator           = @operator,
-    discovery_channels = @discovery_channels,
-    properties         = @properties,
-    last_seen_at       = datetime('now'),
-    seen_count         = seen_count + 1
-  WHERE camera_uid = @camera_uid
-`);
-
-const stmtAll = db.prepare('SELECT * FROM cameras');
-const stmtRecent = db.prepare('SELECT * FROM cameras ORDER BY last_seen_at DESC LIMIT ?');
-const stmtCountByType = db.prepare(
-  "SELECT camera_type, COUNT(*) c FROM cameras GROUP BY camera_type",
-);
-const stmtTotal = db.prepare('SELECT COUNT(*) c FROM cameras');
-const stmtNew24h = db.prepare(
-  "SELECT COUNT(*) c FROM cameras WHERE first_seen_at >= datetime('now', '-1 day')",
-);
-
-// --------------- One-shot migration: collapse YouTube duplicates ---------------
-// Earlier builds stamped camera_uid from the aggregator URL before the YouTube
-// upgrade ran, so the same YouTube stream discovered through Skyline,
-// webcamera24, worldcams, etc. produced N distinct rows. New inserts now
-// canonicalize on yt:<id>, but legacy rows need to be merged. Idempotent: once
-// every youtube-id group has a single row, subsequent boots walk away quickly.
-(function migrateCollapseYouTubeDuplicates() {
-  try {
-    const rows = db.prepare(
-      "SELECT camera_uid, properties, discovery_channels, first_seen_at, last_seen_at, seen_count FROM cameras"
-    ).all();
-    const byYtId = new Map();
-    for (const r of rows) {
-      let p = {};
-      try { p = JSON.parse(r.properties); } catch {}
-      const ytId = p.youtube_id;
-      if (!ytId) continue;
-      const canonicalUid = `yt:${ytId}`;
-      let g = byYtId.get(ytId);
-      if (!g) {
-        g = { canonicalUid, members: [] };
-        byYtId.set(ytId, g);
-      }
-      g.members.push(r);
-    }
-
-    const groupsNeedingMerge = [];
-    for (const g of byYtId.values()) {
-      if (g.members.length === 1 && g.members[0].camera_uid === g.canonicalUid) continue;
-      groupsNeedingMerge.push(g);
-    }
-    if (groupsNeedingMerge.length === 0) return;
-
-    console.log(
-      `[cameraStore] migrating ${groupsNeedingMerge.length} YouTube-id groups to canonical uids`
-    );
-
-    const stmtDelete = db.prepare('DELETE FROM cameras WHERE camera_uid = ?');
-    const stmtUpsertCanonical = db.prepare(`
-      INSERT INTO cameras (
-        camera_uid, name, camera_type, lat, lon, url, thumbnail_url,
-        operator, country, discovery_channels, properties,
-        first_seen_at, last_seen_at, seen_count
-      ) VALUES (
-        @camera_uid, @name, @camera_type, @lat, @lon, @url, @thumbnail_url,
-        @operator, @country, @discovery_channels, @properties,
-        @first_seen_at, @last_seen_at, @seen_count
-      )
-      ON CONFLICT(camera_uid) DO UPDATE SET
-        discovery_channels = @discovery_channels,
-        properties         = @properties,
-        first_seen_at      = MIN(cameras.first_seen_at, excluded.first_seen_at),
-        last_seen_at       = MAX(cameras.last_seen_at, excluded.last_seen_at),
-        seen_count         = cameras.seen_count + excluded.seen_count
-    `);
-
-    const tx = db.transaction((groups) => {
-      for (const g of groups) {
-        // Pick the newest member as the identity-carrier (most recent name/url).
-        const sorted = g.members.slice().sort(
-          (a, b) => (b.last_seen_at || '').localeCompare(a.last_seen_at || '')
-        );
-        const winner = sorted[0];
-        const fullRow = db.prepare('SELECT * FROM cameras WHERE camera_uid = ?').get(winner.camera_uid);
-        if (!fullRow) continue;
-
-        const allChannels = new Set();
-        let earliest = fullRow.first_seen_at;
-        let latest = fullRow.last_seen_at;
-        let seenSum = 0;
-        let mergedProps = {};
-        for (const m of g.members) {
-          try {
-            for (const c of JSON.parse(m.discovery_channels)) allChannels.add(c);
-          } catch {}
-          if (m.first_seen_at && (!earliest || m.first_seen_at < earliest)) earliest = m.first_seen_at;
-          if (m.last_seen_at && (!latest || m.last_seen_at > latest)) latest = m.last_seen_at;
-          seenSum += m.seen_count || 1;
-          try { mergedProps = { ...JSON.parse(m.properties), ...mergedProps }; } catch {}
-        }
-        mergedProps.camera_uid = g.canonicalUid;
-
-        stmtUpsertCanonical.run({
-          camera_uid: g.canonicalUid,
-          name: fullRow.name,
-          camera_type: fullRow.camera_type,
-          lat: fullRow.lat,
-          lon: fullRow.lon,
-          url: fullRow.url,
-          thumbnail_url: fullRow.thumbnail_url,
-          operator: fullRow.operator,
-          country: fullRow.country || 'JP',
-          discovery_channels: JSON.stringify(Array.from(allChannels)),
-          properties: JSON.stringify(mergedProps),
-          first_seen_at: earliest,
-          last_seen_at: latest,
-          seen_count: seenSum,
-        });
-
-        for (const m of g.members) {
-          if (m.camera_uid !== g.canonicalUid) stmtDelete.run(m.camera_uid);
-        }
-      }
-    });
-    tx(groupsNeedingMerge);
-    console.log('[cameraStore] YouTube-id duplicate collapse complete');
-  } catch (err) {
-    console.error('[cameraStore] migration failed:', err?.message);
-  }
-})();
-
-function rowToFeature(row) {
-  let properties = {};
-  try { properties = JSON.parse(row.properties); } catch {}
-  let channels = [];
-  try { channels = JSON.parse(row.discovery_channels); } catch {}
+/**
+ * Translate a master intel_items record back into the legacy cameras-row
+ * shape callers expect. The properties JSON carries the original feature
+ * fields (camera_uid, name, camera_type, url, thumbnail_url, …) because the
+ * mirror + upsertCamera preserve them verbatim. lat/lon and timestamps come
+ * from the indexed master columns.
+ */
+function masterItemToCameraRow(item) {
+  const props = item.properties || {};
   return {
-    type: 'Feature',
-    geometry: { type: 'Point', coordinates: [row.lon, row.lat] },
-    properties: {
-      ...properties,
-      camera_uid: row.camera_uid,
-      name: row.name,
-      camera_type: row.camera_type,
-      url: row.url,
-      thumbnail_url: row.thumbnail_url,
-      operator: row.operator,
-      country: row.country,
-      discovery_channels: channels,
-      first_seen_at: row.first_seen_at,
-      last_seen_at: row.last_seen_at,
-      seen_count: row.seen_count,
-    },
+    camera_uid:         props.camera_uid ?? item.uid?.split('|').slice(1).join('|') ?? null,
+    name:               props.name ?? item.title ?? null,
+    camera_type:        props.camera_type ?? null,
+    lat:                item.lat ?? null,
+    lon:                item.lon ?? null,
+    url:                props.url ?? item.link ?? null,
+    thumbnail_url:      props.thumbnail_url ?? null,
+    operator:           props.operator ?? null,
+    country:            props.country ?? 'JP',
+    discovery_channels: typeof props.discovery_channels === 'string'
+      ? props.discovery_channels
+      : JSON.stringify(props.discovery_channels || []),
+    properties:         JSON.stringify(props),
+    first_seen_at:      props.first_seen_at ?? null,
+    last_seen_at:       props.last_seen_at ?? item.fetched_at ?? null,
+    seen_count:         props.seen_count ?? 1,
+    llm_place_name:     props.llm_place_name ?? null,
+    llm_geocoded_at:    props.llm_geocoded_at ?? item.geom_at ?? null,
   };
 }
 
 /**
  * Upsert a single GeoJSON feature produced by a camera discovery channel.
- * @param {object} feature  - GeoJSON Point feature (as built by makeFeature)
- * @param {string} channel  - discovery_channel name
- * @returns {{kind: 'new'|'updated', camera: object}}
+ * Master-only — preserves channel-union + existing-non-null-wins merge
+ * semantics by reading the existing intel_items row's properties JSON.
+ *
+ * @returns {{kind: 'new'|'updated', camera: GeoJSON feature} | null}
  */
 export function upsertCamera(feature, channel) {
   const p = feature?.properties || {};
@@ -197,43 +60,59 @@ export function upsertCamera(feature, channel) {
   const [lon, lat] = coords;
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
 
-  const existing = stmtGet.get(p.camera_uid);
+  const masterUid = `${CAMERA_SOURCE_ID}|${p.camera_uid}`;
+  const existing = getItemBySourceUid(CAMERA_SOURCE_ID, p.camera_uid);
+  const prevProps = existing?.properties || {};
+  const prevChannels = Array.isArray(prevProps.discovery_channels)
+    ? prevProps.discovery_channels
+    : [];
+  const nextChannels = Array.from(new Set([
+    ...prevChannels, channel, ...(p.discovery_channels || []),
+  ].filter(Boolean)));
 
-  if (!existing) {
-    const channels = Array.from(new Set([channel, ...(p.discovery_channels || [])].filter(Boolean)));
-    stmtInsert.run({
-      camera_uid: p.camera_uid,
-      name: p.name || 'Unknown camera',
-      camera_type: p.camera_type || 'unknown',
-      lat,
-      lon,
-      url: p.url || null,
-      thumbnail_url: p.thumbnail_url || null,
-      operator: p.operator || null,
-      country: p.country || 'JP',
-      discovery_channels: JSON.stringify(channels),
-      properties: JSON.stringify(p),
-    });
-    return { kind: 'new', camera: rowToFeature(stmtGet.get(p.camera_uid)) };
-  }
+  const mergedName     = prevProps.name          || p.name          || 'Unknown camera';
+  const mergedType     = prevProps.camera_type   || p.camera_type   || 'unknown';
+  const mergedUrl      = prevProps.url           || p.url           || null;
+  const mergedThumb    = prevProps.thumbnail_url || p.thumbnail_url || null;
+  const mergedOperator = prevProps.operator      || p.operator      || null;
+  const mergedCountry  = prevProps.country       || p.country       || 'JP';
+  const mergedFirstSeen = prevProps.first_seen_at || new Date().toISOString();
+  const seenCount      = (prevProps.seen_count ?? 0) + 1;
+  const mergedProps = {
+    ...p,
+    ...prevProps,
+    camera_uid:         p.camera_uid,
+    name:               mergedName,
+    camera_type:        mergedType,
+    url:                mergedUrl,
+    thumbnail_url:      mergedThumb,
+    operator:           mergedOperator,
+    country:            mergedCountry,
+    discovery_channels: nextChannels,
+    first_seen_at:      mergedFirstSeen,
+    last_seen_at:       new Date().toISOString(),
+    seen_count:         seenCount,
+  };
 
-  // Merge: union channels, fill missing fields, prefer existing non-null.
-  const prevChannels = (() => { try { return JSON.parse(existing.discovery_channels); } catch { return []; } })();
-  const nextChannels = Array.from(new Set([...prevChannels, channel, ...(p.discovery_channels || [])].filter(Boolean)));
-  const prevProps = (() => { try { return JSON.parse(existing.properties); } catch { return {}; } })();
-  const mergedProps = { ...p, ...prevProps }; // existing wins for conflicts (stable identity)
+  const result = upsertItemSync({
+    uid:        masterUid,
+    title:      mergedName,
+    lat,
+    lon,
+    geomSource: existing?.geom_source === 'llm' ? 'llm' : 'native',
+    geometry:   { type: 'Point', coordinates: [lon, lat] },
+    recordType: 'camera',
+    properties: mergedProps,
+  }, CAMERA_SOURCE_ID);
 
-  stmtUpdate.run({
-    camera_uid: p.camera_uid,
-    name: existing.name || p.name || 'Unknown camera',
-    camera_type: existing.camera_type || p.camera_type || 'unknown',
-    url: existing.url || p.url || null,
-    thumbnail_url: existing.thumbnail_url || p.thumbnail_url || null,
-    operator: existing.operator || p.operator || null,
-    discovery_channels: JSON.stringify(nextChannels),
-    properties: JSON.stringify(mergedProps),
-  });
-  return { kind: 'updated', camera: rowToFeature(stmtGet.get(p.camera_uid)) };
+  return {
+    kind: result?.kind ?? 'new',
+    camera: {
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [lon, lat] },
+      properties: mergedProps,
+    },
+  };
 }
 
 /** Bulk upsert wrapped in a transaction for cheap per-run I/O. */
@@ -246,28 +125,192 @@ export const upsertCamerasTx = db.transaction((features, channel) => {
   return results;
 });
 
+/** LLM enricher success path. Master-only write. */
+export function applyGeocodeOk({ camera_uid, lat, lon }) {
+  return applyGeocodeToMaster({ uid: `${CAMERA_SOURCE_ID}|${camera_uid}`, lat, lon });
+}
+
+/** LLM enricher failure path. Increments geom_failed; sentinels at 5. */
+export function applyGeocodeFail({ camera_uid }) {
+  return applyGeocodeFailToMaster({ uid: `${CAMERA_SOURCE_ID}|${camera_uid}` });
+}
+
+/**
+ * Look up a single camera by `camera_uid`. Reads from intel_items and shapes
+ * the row to look like the legacy cameras-table row so callers (camera
+ * popup, snapshot endpoint) keep working unchanged.
+ */
+export function getCameraByUid(uid) {
+  if (!uid) return null;
+  const item = getItemBySourceUid(CAMERA_SOURCE_ID, uid);
+  return item ? masterItemToCameraRow(item) : null;
+}
+
+/** Whole-camera FeatureCollection backed by intel_items. */
 export function getAllCameras() {
-  const rows = stmtAll.all();
+  const fc = selectGeoFeatures({ sourceId: CAMERA_SOURCE_ID });
   return {
-    type: 'FeatureCollection',
-    features: rows.map(rowToFeature),
+    ...fc,
     _meta: {
       source: 'camera_store',
-      recordCount: rows.length,
+      recordCount: fc.features.length,
       fetchedAt: new Date().toISOString(),
+      served_from: 'intel_items',
     },
   };
 }
 
 export function getRecentCameras(limit = 200) {
-  return stmtRecent.all(limit).map(rowToFeature);
+  const rows = db.prepare(
+    `SELECT uid, lat, lon, properties, fetched_at
+       FROM intel_items
+      WHERE source_id = ?
+        AND lat IS NOT NULL
+      ORDER BY fetched_at DESC
+      LIMIT ?`,
+  ).all(CAMERA_SOURCE_ID, limit);
+  return rows.map((r) => {
+    let properties = {};
+    try { properties = JSON.parse(r.properties); } catch { /* ignore */ }
+    return {
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [r.lon, r.lat] },
+      properties: {
+        ...properties,
+        camera_uid: properties.camera_uid ?? r.uid?.split('|').slice(1).join('|'),
+      },
+    };
+  });
+}
+
+/**
+ * Backfill feed for the Camera Discovery thread. Returns rows from
+ * intel_items in reverse-chronological order with the shape the WS hook
+ * already consumes ({ts, kind, channel, camera, run_id}). Covers both the
+ * fused `record_type='camera'` rows written by `upsertCamera` and the
+ * per-channel `record_type='camera-discovery'` rows written by the bulk
+ * mirror — so every channel that has ever surfaced a camera shows up here
+ * even when no live run is in flight.
+ *
+ * Pagination: pass the previous response's `cursor` to fetch the next page.
+ * The cursor is an opaque base64 of `<ts>|<uid>` and uses a (ts, uid) tuple
+ * comparison to stay stable when rows share a timestamp.
+ */
+export function getDiscoveryFeed({ limit = 500, cursor = null, channel = null } = {}) {
+  const cap = Math.max(1, Math.min(5000, Number(limit) || 500));
+  const where = [
+    "source_id = ?",
+    "record_type IN ('camera','camera-discovery')",
+    "lat IS NOT NULL",
+  ];
+  const params = [CAMERA_SOURCE_ID];
+
+  // Channel filter — exact match on primary discovery_channel, with a
+  // fallback for fused rows that store the channel inside discovery_channels[].
+  if (channel) {
+    where.push(`(
+      json_extract(properties, '$.discovery_channel') = ?
+      OR EXISTS (SELECT 1 FROM json_each(json_extract(properties, '$.discovery_channels'))
+                 WHERE json_each.value = ?)
+    )`);
+    params.push(channel, channel);
+  }
+
+  // Cursor: rows strictly older than the (ts, uid) anchor. ts orders rows
+  // by last activity; uid breaks ties so identical timestamps don't drop
+  // entries on subsequent pages.
+  let cursorTs = null;
+  let cursorUid = null;
+  if (cursor) {
+    try {
+      const decoded = Buffer.from(String(cursor), 'base64').toString('utf8');
+      const sep = decoded.indexOf('|');
+      if (sep > 0) {
+        cursorTs  = decoded.slice(0, sep);
+        cursorUid = decoded.slice(sep + 1);
+      }
+    } catch { /* malformed cursor: ignore, return from the top */ }
+  }
+  if (cursorTs && cursorUid) {
+    where.push(`(
+      COALESCE(json_extract(properties, '$.last_seen_at'), fetched_at) < ?
+      OR (COALESCE(json_extract(properties, '$.last_seen_at'), fetched_at) = ? AND uid < ?)
+    )`);
+    params.push(cursorTs, cursorTs, cursorUid);
+  }
+
+  // limit + 1 lets us know if there's another page without a second query.
+  const rows = db.prepare(`
+    SELECT uid, lat, lon, geometry, properties, fetched_at,
+           COALESCE(json_extract(properties, '$.last_seen_at'), fetched_at) AS ts
+      FROM intel_items
+     WHERE ${where.join(' AND ')}
+     ORDER BY ts DESC, uid DESC
+     LIMIT ?
+  `).all(...params, cap + 1);
+
+  const hasMore = rows.length > cap;
+  const page = hasMore ? rows.slice(0, cap) : rows;
+
+  const events = page.map((r) => {
+    let properties = {};
+    try { properties = r.properties ? JSON.parse(r.properties) : {}; } catch { /* keep empty */ }
+    let geometry = null;
+    if (r.geometry) {
+      try { geometry = JSON.parse(r.geometry); } catch { /* fall through */ }
+    }
+    if (!geometry && r.lat != null && r.lon != null) {
+      geometry = { type: 'Point', coordinates: [r.lon, r.lat] };
+    }
+    return {
+      ts: r.ts,
+      kind: 'historical',
+      channel: properties.discovery_channel
+            || (Array.isArray(properties.discovery_channels) ? properties.discovery_channels[0] : null)
+            || 'unknown',
+      camera: {
+        type: 'Feature',
+        geometry,
+        properties: {
+          ...properties,
+          camera_uid: properties.camera_uid ?? r.uid?.split('|').slice(1).join('|'),
+        },
+      },
+      run_id: null,
+    };
+  });
+
+  let nextCursor = null;
+  if (hasMore) {
+    const last = page[page.length - 1];
+    nextCursor = Buffer.from(`${last.ts}|${last.uid}`, 'utf8').toString('base64');
+  }
+  return { events, cursor: nextCursor };
 }
 
 export function cameraStats() {
-  const total = stmtTotal.get().c;
-  const new24h = stmtNew24h.get().c;
-  const byType = stmtCountByType.all();
-  return { total, new24h, byType };
+  const stats = db.prepare(
+    `SELECT COUNT(*) AS total,
+            SUM(CASE WHEN fetched_at >= datetime('now','-24 hours') THEN 1 ELSE 0 END) AS new24h
+       FROM intel_items
+      WHERE source_id = ?`,
+  ).get(CAMERA_SOURCE_ID);
+  const byType = db.prepare(
+    `SELECT json_extract(properties, '$.camera_type') AS camera_type,
+            COUNT(*) AS c
+       FROM intel_items
+      WHERE source_id = ?
+      GROUP BY json_extract(properties, '$.camera_type')`,
+  ).all(CAMERA_SOURCE_ID);
+  return {
+    total:  stats?.total  ?? 0,
+    new24h: stats?.new24h ?? 0,
+    byType,
+  };
 }
 
-export default { upsertCamera, upsertCamerasTx, getAllCameras, getRecentCameras, cameraStats };
+export default {
+  upsertCamera, upsertCamerasTx,
+  getAllCameras, getRecentCameras, cameraStats, getDiscoveryFeed,
+  getCameraByUid, applyGeocodeOk, applyGeocodeFail,
+};

@@ -49,6 +49,5 @@ export default async function collectTransmissionTowers() {
       live: features.length > 0,
       description: 'Electric transmission towers, poles and substations via tiled OSM',
     },
-    metadata: {},
   };
 }

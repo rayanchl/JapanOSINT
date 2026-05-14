@@ -73,10 +73,10 @@ async function fetchFeedStops(orgId, feedId, source_label) {
     const cols = lines[r].split(',');
     const lat = parseFloat(cols[iLat]);
     const lon = parseFloat(cols[iLon]);
-    if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+    const geocoded = Number.isFinite(lat) && Number.isFinite(lon);
     out.push({
       type: 'Feature',
-      geometry: { type: 'Point', coordinates: [lon, lat] },
+      geometry: geocoded ? { type: 'Point', coordinates: [lon, lat] } : null,
       properties: {
         stop_id: `GTFSJP_${orgId}_${(cols[iId] || r).replace(/"/g, '')}`,
         name: (cols[iName] || '').replace(/^"|"$/g, '') || null,
@@ -167,6 +167,5 @@ export default async function collectGtfsJp() {
       stop_cap: STOP_CAP,
       description: 'GTFS-JP nationwide bus schedule aggregator (gtfs-data.jp, 400+ operators)',
     },
-    metadata: {},
   };
 }

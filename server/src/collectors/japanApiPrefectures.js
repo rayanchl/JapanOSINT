@@ -3,6 +3,8 @@
  * https://japanapi.curtisbarnard.com/api/v1/prefectures
  */
 
+import { fetchJson } from './_liveHelpers.js';
+
 const API_URL = 'https://japanapi.curtisbarnard.com/api/v1/prefectures';
 const TIMEOUT_MS = 10000;
 
@@ -15,32 +17,25 @@ const SEED_PREFS = [
 export default async function collectJapanApiPrefectures() {
   let features = [];
   let source = 'live';
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const res = await fetch(API_URL, { signal: controller.signal });
-    clearTimeout(timer);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const list = Array.isArray(data) ? data : (data?.data ?? data?.prefectures ?? []);
-    for (const p of list) {
-      const lat = p?.latitude ?? p?.lat;
-      const lon = p?.longitude ?? p?.lon;
-      if (lat == null || lon == null) continue;
-      features.push({
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [Number(lon), Number(lat)] },
-        properties: {
-          name: p.name ?? p.english ?? null,
-          name_ja: p.japanese ?? p.nameJa ?? null,
-          region: p.region ?? null,
-          population: p.population ?? null,
-          source: 'japan_api',
-        },
-      });
-    }
-    if (features.length === 0) throw new Error('empty');
-  } catch {
+  const data = await fetchJson(API_URL, { timeoutMs: TIMEOUT_MS });
+  const list = Array.isArray(data) ? data : (data?.data ?? data?.prefectures ?? []);
+  for (const p of list) {
+    const lat = p?.latitude ?? p?.lat;
+    const lon = p?.longitude ?? p?.lon;
+    if (lat == null || lon == null) continue;
+    features.push({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [Number(lon), Number(lat)] },
+      properties: {
+        name: p.name ?? p.english ?? null,
+        name_ja: p.japanese ?? p.nameJa ?? null,
+        region: p.region ?? null,
+        population: p.population ?? null,
+        source: 'japan_api',
+      },
+    });
+  }
+  if (features.length === 0) {
     source = 'seed';
     features = SEED_PREFS.map(p => ({
       type: 'Feature',
@@ -57,6 +52,5 @@ export default async function collectJapanApiPrefectures() {
       recordCount: features.length,
       description: 'Community REST API for Japan prefectures',
     },
-    metadata: {},
   };
 }

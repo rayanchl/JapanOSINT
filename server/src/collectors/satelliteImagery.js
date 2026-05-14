@@ -721,6 +721,5 @@ export default async function collectSatelliteImagery() {
       live_source: live ? liveSources.join('+') : 'satellite_imagery_seed',
       description: 'Live + archival satellite imagery over Japan (Himawari-9, MODIS, VIIRS; Landsat/GOES/ALOS/CORONA/Sentinel-2/Sentinel-1 added by extension tasks)',
     },
-    metadata: {},
   };
 }

@@ -45,6 +45,5 @@ export default async function collectUtilityPoles() {
       live: features.length > 0,
       description: 'Utility poles (power/telecom distribution) via tiled OSM',
     },
-    metadata: {},
   };
 }

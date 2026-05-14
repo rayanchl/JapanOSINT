@@ -63,3 +63,9 @@ export async function collectUnifiedAisShipsRead() {
 export async function collectUnifiedPortInfraRead() {
   return readMode('port', 'Unified port infrastructure (berths, harbours) from transport_store');
 }
+export async function collectUnifiedAirportsRead() {
+  return readMode('airport', 'Unified airport infrastructure (MLIT P02 + OSM aeroway) from transport_store');
+}
+export async function collectUnifiedFlightsRead() {
+  return readMode('flight', 'Unified live flights (ADS-B + airport schedules) from transport_store');
+}

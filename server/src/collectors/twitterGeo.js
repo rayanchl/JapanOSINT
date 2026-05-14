@@ -1,6 +1,7 @@
 // server/src/collectors/twitterGeo.js
 import { fetchJson } from './_liveHelpers.js';
 import db from '../utils/database.js';
+import { upsertPosts } from '../utils/socialPostsStore.js';
 
 const BEARER_TOKEN = process.env.TWITTER_BEARER_TOKEN || '';
 
@@ -44,28 +45,26 @@ const JAPAN_PLACES = [
   { name: '広島駅', lat: 34.3978, lon: 132.4752 },
 ];
 
-const stmtUpsertPost = db.prepare(`
-  INSERT INTO social_posts
-    (post_uid, platform, author, text, title, url, media_urls, language,
-     posted_at, lat, lon, geo_source, properties)
-  VALUES
-    (@post_uid, @platform, @author, @text, @title, @url, @media_urls, @language,
-     @posted_at, @lat, @lon, @geo_source, @properties)
-  ON CONFLICT(post_uid) DO UPDATE SET
-    text = excluded.text,
-    title = excluded.title,
-    url = excluded.url,
-    media_urls = excluded.media_urls,
-    lat = COALESCE(social_posts.lat, excluded.lat),
-    lon = COALESCE(social_posts.lon, excluded.lon),
-    geo_source = COALESCE(social_posts.geo_source, excluded.geo_source)
-`);
-
+// Post-cutover: geocoded social posts live in intel_items under various
+// platform-derived source_ids. Pull the legacy column shape this collector
+// expects (post_uid / platform / author / text / url / lat / lon / properties)
+// out of the master record.
 const stmtSelectGeocoded = db.prepare(`
-  SELECT post_uid, platform, author, text, url, lat, lon, geo_source,
-         llm_place_name, fetched_at, properties
-  FROM social_posts
-  WHERE platform IN ('twitter', 'mastodon')
+  SELECT
+    substr(uid, instr(uid, '|') + 1)                  AS post_uid,
+    COALESCE(sub_source_id, source_id)                AS platform,
+    author,
+    body                                              AS text,
+    link                                              AS url,
+    lat, lon,
+    geom_source                                       AS geo_source,
+    json_extract(properties, '$.llm_place_name')      AS llm_place_name,
+    fetched_at,
+    properties
+  FROM intel_items
+  WHERE record_type = 'post'
+    AND (source_id IN ('twitter-geo','misskey-timeline')
+         OR sub_source_id IN ('twitter','mastodon'))
     AND lat IS NOT NULL AND lon IS NOT NULL
   ORDER BY fetched_at DESC
   LIMIT 5000
@@ -85,14 +84,14 @@ async function tryTwitterAPI() {
     if (!res.ok) return false;
     const data = await res.json();
     if (!Array.isArray(data?.data)) return false;
-    for (const tweet of data.data) {
+    const posts = data.data.map((tweet) => {
       const coords = tweet.geo?.coordinates?.coordinates;
       const username = tweet.author?.username || tweet.username || null;
       const tweetUrl = username
         ? `https://twitter.com/${username}/status/${tweet.id}`
         : `https://twitter.com/i/web/status/${tweet.id}`;
       const hasGeo = Array.isArray(coords) && coords.length === 2;
-      stmtUpsertPost.run({
+      return {
         post_uid: `TW_${tweet.id}`,
         platform: 'twitter',
         author: username,
@@ -109,8 +108,9 @@ async function tryTwitterAPI() {
           likes: tweet.public_metrics?.like_count || 0,
           retweets: tweet.public_metrics?.retweet_count || 0,
         }),
-      });
-    }
+      };
+    });
+    await upsertPosts(posts);
     return true;
   } catch {
     clearTimeout(timeout);
@@ -126,7 +126,7 @@ async function tryMastodonPublic() {
       { timeoutMs: 7000 },
     );
     if (!Array.isArray(posts)) continue;
-    for (const p of posts) {
+    const batch = posts.map((p) => {
       const body = (p.content || '').replace(/<[^>]*>/g, '');
       let place = null;
       for (const candidate of JAPAN_PLACES) {
@@ -135,7 +135,7 @@ async function tryMastodonPublic() {
       const mediaUrls = (p.media_attachments || [])
         .filter((m) => m.type === 'image' && m.url)
         .map((m) => m.url);
-      stmtUpsertPost.run({
+      return {
         post_uid: `MAST_${instance.replace('https://', '')}_${p.id}`,
         platform: 'mastodon',
         author: p.account?.acct || p.account?.username || null,
@@ -153,7 +153,10 @@ async function tryMastodonPublic() {
           area: place?.name || null,
           favourites: p.favourites_count || 0,
         }),
-      });
+      };
+    });
+    if (batch.length > 0) {
+      await upsertPosts(batch);
       any = true;
     }
   }
@@ -192,6 +195,5 @@ export default async function collectTwitterGeo() {
       live_source: features.length > 0 ? liveSource : null,
       description: 'Geotagged social posts from Japan — Twitter/X API + Mastodon public timelines (live only)',
     },
-    metadata: {},
   };
 }

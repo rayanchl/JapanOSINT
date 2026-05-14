@@ -25,6 +25,7 @@ async function tryLive() {
         source: 'osm_overpass',
       },
     }),
+    180_000,
   );
 }
 
@@ -138,6 +139,5 @@ export default async function collectShrineTemple() {
       live_source: live ? 'osm_overpass' : 'shrine_temple_seed',
       description: 'Shinto shrines and Buddhist temples - major historic sites across Japan',
     },
-    metadata: {},
   };
 }

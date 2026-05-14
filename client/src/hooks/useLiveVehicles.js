@@ -11,6 +11,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { segmentLengthsMeters, advanceAlongLine } from '../utils/polylineTraversal';
+import { darkenHex } from '../utils/colorOps.js';
+import apiUrl from '../utils/apiUrl.js';
 
 // Mode-specific constants.
 const MODE_SPEED_MPS = {
@@ -30,21 +32,6 @@ const MIN_ROUTE_LENGTH_M = 500;
 // so the vehicles move smoothly, but we only re-serialize the GeoJSON at
 // this cadence to keep setState / source.setData cheap.
 const RENDER_MS = 100;
-
-// Darken a #rrggbb color by multiplying each channel so the rendered
-// vehicle reads a bit deeper than the line itself (user request: trains
-// should be visibly darker than their line color).
-function darkenHex(hex, factor = 0.65) {
-  if (typeof hex !== 'string') return hex;
-  const m = hex.trim().match(/^#?([0-9a-f]{6})$/i);
-  if (!m) return hex;
-  const n = parseInt(m[1], 16);
-  const r = Math.round(((n >> 16) & 0xff) * factor);
-  const g = Math.round(((n >> 8) & 0xff) * factor);
-  const b = Math.round((n & 0xff) * factor);
-  const to2 = (v) => v.toString(16).padStart(2, '0');
-  return `#${to2(r)}${to2(g)}${to2(b)}`;
-}
 
 function spawnVehiclesForRoute(feature, mode) {
   const coords = feature?.geometry?.coordinates;
@@ -100,7 +87,7 @@ export default function useLiveVehicles(mode, enabled, viewport = null) {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(`/api/transit/routes?mode=${encodeURIComponent(mode)}`);
+        const res = await fetch(apiUrl(`/api/transit/routes?mode=${encodeURIComponent(mode)}`));
         const data = await res.json();
         if (cancelled) return;
         const spawned = [];
@@ -130,7 +117,7 @@ export default function useLiveVehicles(mode, enabled, viewport = null) {
         const qs = new URLSearchParams();
         if (viewportKey) qs.set('bbox', viewportKey);
         qs.set('limit', '500');
-        const res = await fetch(`/api/transit/active-trips?${qs.toString()}`);
+        const res = await fetch(apiUrl(`/api/transit/active-trips?${qs.toString()}`));
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const body = await res.json();
         if (!cancelled) scheduleTripsRef.current = body.trips || [];
@@ -162,19 +149,24 @@ export default function useLiveVehicles(mode, enabled, viewport = null) {
       const delta = speed * dt;
 
       // Always advance positions — motion stays smooth at display refresh.
-      for (const v of vehiclesRef.current) {
+      // Build a new array of new objects so the throttled GeoJSON serializer
+      // below sees a coherent snapshot rather than half-mutated vehicles.
+      vehiclesRef.current = vehiclesRef.current.map((v) => {
         const next = advanceAlongLine(
           v.coords,
           v.segLens,
           { segIdx: v.segIdx, segOffset: v.segOffset },
           delta,
         );
-        v.segIdx = next.segIdx;
-        v.segOffset = next.segOffset;
-        v.lng = next.lng;
-        v.lat = next.lat;
-        v.bearing = next.bearing;
-      }
+        return {
+          ...v,
+          segIdx: next.segIdx,
+          segOffset: next.segOffset,
+          lng: next.lng,
+          lat: next.lat,
+          bearing: next.bearing,
+        };
+      });
 
       // Throttle the GeoJSON rebuild. 100 ms = 10 Hz is smooth enough to
       // look continuous without hammering MapLibre's parser.

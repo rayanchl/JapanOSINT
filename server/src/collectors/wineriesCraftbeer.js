@@ -108,7 +108,7 @@ function generateSeedData() {
 export default async function collectWineriesCraftbeer() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -120,6 +120,5 @@ export default async function collectWineriesCraftbeer() {
       live_source: live ? 'osm_overpass' : 'nta_beverage_seed',
       description: 'Wineries, craft beer breweries and whisky distilleries across Japan (NTA license registry)',
     },
-    metadata: {},
   };
 }

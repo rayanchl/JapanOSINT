@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useRef, useCallback, memo } from 'react';
 import useCollectorFollowStream from '../../hooks/useCollectorFollowStream';
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
@@ -101,9 +101,19 @@ function StatusCell({ hit }) {
   );
 }
 
-function HitRow({ hit, expanded, onToggle }) {
+// Memoized so the unvirtualized 1000-row list doesn't re-render every row
+// on each WS-driven state update. Identity-stable rows (the common case
+// during a burst — only the head of the list mutates) skip rendering.
+// `setExpanded` is a setState function and therefore reference-stable, so
+// we pass it through and build the toggle inside the row to avoid
+// per-render closures invalidating memo.
+const HitRow = memo(function HitRow({ hit, hitKey, expanded, setExpanded }) {
   const klass = statusClass(hit);
   const inFlight = klass === 'in-flight';
+  const onToggle = useCallback(
+    () => setExpanded((cur) => (cur === hitKey ? null : hitKey)),
+    [hitKey, setExpanded],
+  );
   return (
     <div
       className={`border-b border-osint-border/30 ${
@@ -215,7 +225,7 @@ function HitRow({ hit, expanded, onToggle }) {
       )}
     </div>
   );
-}
+});
 
 function RunBanner({ activeRuns, runs }) {
   // Tick once a second so elapsed timers update on screen.
@@ -531,9 +541,10 @@ export default function FollowPanel({ onClose, embedded = false }) {
           filtered.map((h) => (
             <HitRow
               key={h.key}
+              hitKey={h.key}
               hit={h}
               expanded={expanded === h.key}
-              onToggle={() => setExpanded((e) => (e === h.key ? null : h.key))}
+              setExpanded={setExpanded}
             />
           ))
         )}

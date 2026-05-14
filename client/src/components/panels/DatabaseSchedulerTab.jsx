@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import apiUrl from '../../utils/apiUrl.js';
 
 function relativeTime(iso) {
   if (!iso) return 'never';
@@ -62,7 +63,7 @@ export default function DatabaseSchedulerTab() {
   useEffect(() => {
     let alive = true;
     setLoading(true);
-    fetch('/api/db/scheduler')
+    fetch(apiUrl('/api/db/scheduler'))
       .then((r) => r.ok ? r.json() : null)
       .then((j) => { if (alive) setState(j); })
       .catch(() => {})

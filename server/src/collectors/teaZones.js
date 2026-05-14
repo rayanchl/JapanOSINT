@@ -132,7 +132,7 @@ function generateSeedData() {
 export default async function collectTeaZones() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -144,6 +144,5 @@ export default async function collectTeaZones() {
       live_source: live ? 'osm_overpass' : 'maff_tea_seed',
       description: 'Japanese tea-growing regions - Shizuoka, Kagoshima, Uji, Yame, Sayama and regional producers',
     },
-    metadata: {},
   };
 }

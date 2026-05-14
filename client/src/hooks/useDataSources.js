@@ -1,20 +1,17 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import useWebSocket from './useWebSocket.js';
+import apiUrl from '../utils/apiUrl.js';
 
 export default function useDataSources() {
   const [sources, setSources] = useState([]);
   const [stats, setStats] = useState(null);
-  const [isConnected, setIsConnected] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(null);
-  const wsRef = useRef(null);
-  const reconnectTimeout = useRef(null);
-  const reconnectAttempts = useRef(0);
-  const maxReconnectAttempts = 10;
 
   const fetchSources = useCallback(async () => {
     try {
       const [sourcesRes, statsRes] = await Promise.all([
-        fetch('/api/sources'),
-        fetch('/api/sources/stats'),
+        fetch(apiUrl('/api/sources')),
+        fetch(apiUrl('/api/sources/stats')),
       ]);
 
       if (sourcesRes.ok) {
@@ -33,94 +30,49 @@ export default function useDataSources() {
     }
   }, []);
 
-  const connectWebSocket = useCallback(() => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) return;
-
-    try {
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//localhost:4000/ws`;
-      const ws = new WebSocket(wsUrl);
-
-      ws.onopen = () => {
-        console.log('[WebSocket] Connected');
-        setIsConnected(true);
-        reconnectAttempts.current = 0;
-      };
-
-      ws.onmessage = (event) => {
-        try {
-          const message = JSON.parse(event.data);
-
-          switch (message.type) {
-            case 'source_update':
-              setSources((prev) => {
-                const idx = prev.findIndex((s) => s.id === message.data?.id);
-                if (idx >= 0) {
-                  const updated = [...prev];
-                  updated[idx] = { ...updated[idx], ...message.data };
-                  return updated;
-                }
-                return prev;
-              });
-              setLastUpdate(new Date().toISOString());
-              break;
-
-            case 'stats_update':
-              setStats(message.data);
-              break;
-
-            case 'sources_refresh':
-              if (Array.isArray(message.data)) {
-                setSources(message.data);
-              }
-              setLastUpdate(new Date().toISOString());
-              break;
-
-            default:
-              break;
+  const onMessage = useCallback((message) => {
+    switch (message.type) {
+      case 'source_update':
+        setSources((prev) => {
+          const idx = prev.findIndex((s) => s.id === message.data?.id);
+          if (idx >= 0) {
+            const updated = [...prev];
+            updated[idx] = { ...updated[idx], ...message.data };
+            return updated;
           }
-        } catch (err) {
-          console.warn('[WebSocket] Failed to parse message:', err.message);
+          return prev;
+        });
+        setLastUpdate(new Date().toISOString());
+        break;
+
+      case 'stats_update':
+        setStats(message.data);
+        break;
+
+      case 'sources_refresh':
+        if (Array.isArray(message.data)) {
+          setSources(message.data);
         }
-      };
+        setLastUpdate(new Date().toISOString());
+        break;
 
-      ws.onerror = (err) => {
-        console.warn('[WebSocket] Error:', err);
-      };
-
-      ws.onclose = () => {
-        console.log('[WebSocket] Disconnected');
-        setIsConnected(false);
-        wsRef.current = null;
-
-        if (reconnectAttempts.current < maxReconnectAttempts) {
-          const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 30000);
-          reconnectAttempts.current += 1;
-          reconnectTimeout.current = setTimeout(connectWebSocket, delay);
-        }
-      };
-
-      wsRef.current = ws;
-    } catch (err) {
-      console.warn('[WebSocket] Connection failed:', err.message);
+      default:
+        break;
     }
   }, []);
 
+  // 10 reconnect attempts at base/max -> map onto useWebSocket's 30s cap.
+  // Long-lived dashboard hook benefits from online/visibility wake-ups.
+  const { connected } = useWebSocket('/ws', {
+    onMessage,
+    respondToOnline: true,
+  });
+
   useEffect(() => {
     fetchSources();
-    connectWebSocket();
-
     const pollInterval = setInterval(fetchSources, 60000);
+    return () => clearInterval(pollInterval);
+  }, [fetchSources]);
 
-    return () => {
-      clearInterval(pollInterval);
-      if (reconnectTimeout.current) clearTimeout(reconnectTimeout.current);
-      if (wsRef.current) {
-        wsRef.current.onclose = null;
-        wsRef.current.close();
-      }
-    };
-  }, [fetchSources, connectWebSocket]);
-
-  return { sources, stats, isConnected, lastUpdate };
+  return { sources, stats, isConnected: connected, lastUpdate };
 }

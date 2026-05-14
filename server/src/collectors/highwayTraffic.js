@@ -145,7 +145,7 @@ function generateSeedData() {
 export default async function collectHighwayTraffic() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -156,6 +156,5 @@ export default async function collectHighwayTraffic() {
       live,
       description: 'Japan expressway network - IC/JCT/SA/PA with congestion data (NEXCO East/Central/West, Shuto, Hanshin)',
     },
-    metadata: {},
   };
 }

@@ -111,7 +111,7 @@ function generateSeedData() {
 export default async function collectJshisSeismic() {
   let features = await tryJshis();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -122,6 +122,5 @@ export default async function collectJshisSeismic() {
       live,
       description: 'NIED J-SHIS seismic hazard probability mesh (intensity 6-lower or higher in 30 years)',
     },
-    metadata: {},
   };
 }

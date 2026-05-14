@@ -100,35 +100,51 @@ export function buildSocialGeocodePrompt(p) {
   };
 }
 
-export function buildVideoGeocodePrompt(p) {
+// ── Intel keyword extraction ──────────────────────────────────────────────
+// Used by enrichIntelKeywords(): an LM-Studio-hosted local model (Gemma)
+// reads a non-spatial intel item (RSS article, advisory, doc index entry…)
+// and returns a small list of search keywords. Output is dual-language when
+// applicable so a JA-only article is searchable by the English equivalent
+// term, and vice versa.
+
+const INTEL_KEYWORDS_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['keywords'],
+  properties: {
+    keywords: {
+      type: 'array',
+      minItems: 0,
+      maxItems: 20,
+      items: { type: 'string', minLength: 1, maxLength: 80 },
+    },
+  },
+};
+
+const INTEL_KEYWORDS_BODY_CLIP = 4000;
+
+export function buildIntelKeywordsPrompt({ title, body, summary, language, source_id }) {
+  const text = [title, summary || body]
+    .filter(Boolean)
+    .join('\n\n')
+    .slice(0, INTEL_KEYWORDS_BODY_CLIP);
   const system =
-    'You extract Japanese place references from video metadata and turn ' +
-    'them into queries the GSI Japanese address-search API can resolve. ' +
-    'Return up to 3 queries ordered from most specific to broadest, where ' +
-    'the video was filmed or which the video is about. Prefer Japanese ' +
-    '(kanji + kana) over romaji — GSI matches Japanese far better. When ' +
-    'you can confidently infer an administrative address, format the most ' +
-    'specific query as `<prefecture><city><ward><district>` (e.g. ' +
-    '`東京都渋谷区道玄坂`); when only a landmark or station is mentioned, ' +
-    'use that name (e.g. `東京タワー`, `渋谷駅`). Always include at least one ' +
-    'broader fallback (city or prefecture) as the last entry. If no place ' +
-    'can be inferred, return an empty queries list.';
-  const userText =
-    `Platform: ${p.platform}\n` +
-    `Channel: ${p.channel ?? ''}\n` +
-    `Title: ${clip(p.title) || '(none)'}\n` +
-    `Description: ${clip(p.description) || '(none)'}`;
-  const images = (p.vision && p.thumbnailUrl)
-    ? [{ type: 'image_url', image_url: { url: p.thumbnailUrl } }]
-    : [];
-  const userContent = images.length === 0
-    ? userText
-    : [{ type: 'text', text: userText }, ...images];
+    'You extract search keywords for a Japan-focused OSINT index. Given a ' +
+    'title and body, return 5–15 keywords that would let someone find this ' +
+    'item later via full-text search. INCLUDE: proper nouns (people, places, ' +
+    'organisations, product names), key topical nouns. For Japanese sources ' +
+    'output BOTH the original Japanese AND a romaji or English equivalent ' +
+    'when one exists (e.g. include both "東京" and "Tokyo", "気象庁" and ' +
+    '"JMA"). Avoid generic stopwords. Output JSON only.';
+  const user =
+    `Source: ${source_id || '(unknown)'}\n` +
+    `Language: ${language || 'auto'}\n\n` +
+    text;
   return {
     messages: [
       { role: 'system', content: system },
-      { role: 'user', content: userContent },
+      { role: 'user', content: user },
     ],
-    jsonSchema: PLACE_SCHEMA,
+    jsonSchema: INTEL_KEYWORDS_SCHEMA,
   };
 }

@@ -4,40 +4,35 @@
  * No API key. Also WebSocket: wss://ws-api.wolfx.jp/jma_eew
  */
 
+import { fetchJson } from './_liveHelpers.js';
+
 const API_URL = 'https://api.wolfx.jp/jma_eew.json';
 const TIMEOUT_MS = 6000;
 
 export default async function collectWolfxEew() {
   let features = [];
   let source = 'live';
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const res = await fetch(API_URL, { signal: controller.signal });
-    clearTimeout(timer);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const d = await res.json();
-    if (d?.Latitude != null && d?.Longitude != null) {
-      features.push({
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [Number(d.Longitude), Number(d.Latitude)] },
-        properties: {
-          event_id: d.EventID ?? null,
-          serial: d.Serial ?? null,
-          magnitude: d.Magunitude ?? d.Magnitude ?? null,
-          depth_km: d.Depth ?? null,
-          max_intensity: d.MaxIntensity ?? null,
-          hypocenter: d.Hypocenter ?? null,
-          announced_time: d.AnnouncedTime ?? null,
-          origin_time: d.OriginTime ?? null,
-          is_final: d.isFinal ?? null,
-          is_cancel: d.isCancel ?? null,
-          is_warn: d.isWarn ?? null,
-          source: 'wolfx_jma_eew',
-        },
-      });
-    }
-  } catch {
+  const d = await fetchJson(API_URL, { timeoutMs: TIMEOUT_MS });
+  if (d?.Latitude != null && d?.Longitude != null) {
+    features.push({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [Number(d.Longitude), Number(d.Latitude)] },
+      properties: {
+        event_id: d.EventID ?? null,
+        serial: d.Serial ?? null,
+        magnitude: d.Magunitude ?? d.Magnitude ?? null,
+        depth_km: d.Depth ?? null,
+        max_intensity: d.MaxIntensity ?? null,
+        hypocenter: d.Hypocenter ?? null,
+        announced_time: d.AnnouncedTime ?? null,
+        origin_time: d.OriginTime ?? null,
+        is_final: d.isFinal ?? null,
+        is_cancel: d.isCancel ?? null,
+        is_warn: d.isWarn ?? null,
+        source: 'wolfx_jma_eew',
+      },
+    });
+  } else if (d == null) {
     source = 'seed';
     features = [{
       type: 'Feature',
@@ -65,6 +60,5 @@ export default async function collectWolfxEew() {
       recordCount: features.length,
       description: 'Wolfx JMA Earthquake Early Warning (EEW)',
     },
-    metadata: {},
   };
 }

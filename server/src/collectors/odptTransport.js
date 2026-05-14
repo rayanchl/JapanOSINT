@@ -262,7 +262,7 @@ export default async function collectOdptTransport() {
   }
 
   if (features.length === 0) {
-    features = generateSeedData();
+    features = [];
     source = token ? 'odpt_seed_fallback' : 'odpt_seed_no_token';
   }
 
@@ -277,6 +277,5 @@ export default async function collectOdptTransport() {
       has_token: !!token,
       description: 'Public transportation station data from ODPT (Open Data for Public Transportation Japan)',
     },
-    metadata: {},
   };
 }

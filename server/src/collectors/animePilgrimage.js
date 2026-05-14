@@ -168,7 +168,7 @@ function generateSeedData() {
 export default async function collectAnimePilgrimage() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -180,6 +180,5 @@ export default async function collectAnimePilgrimage() {
       live_source: live ? 'osm_overpass' : 'anime_pilgrimage_seed',
       description: 'Anime seichi junrei - real-world locations featured in anime/manga',
     },
-    metadata: {},
   };
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import apiUrl from '../../utils/apiUrl.js';
 import StatusBadge from '../ui/StatusBadge';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import CameraDiscoveryThread from './CameraDiscoveryThread';
@@ -13,6 +14,7 @@ const FILTERS = [
   { key: 'degraded', label: 'Degraded' },
   { key: 'offline', label: 'Offline' },
   { key: 'pending', label: 'Pending' },
+  { key: 'gated', label: 'Gated' },
   { key: 'missingKey', label: 'Missing key' },
 ];
 
@@ -138,7 +140,49 @@ function ProbeDetail({ api }) {
   );
 }
 
-function ApiRow({ api, expanded, onToggle }) {
+function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
+  const [pinging, setPinging] = useState(false);
+  const [consentBusy, setConsentBusy] = useState(false);
+  const [actionError, setActionError] = useState(null);
+
+  const pingNow = async (e) => {
+    e.stopPropagation();
+    setActionError(null);
+    setPinging(true);
+    try {
+      const res = await fetch(apiUrl(`/api/status/${encodeURIComponent(api.id)}/probe`), {
+        method: 'POST',
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const updated = await res.json();
+      onApiUpdate?.(updated);
+    } catch (err) {
+      setActionError(err.message || 'Ping failed');
+    } finally {
+      setPinging(false);
+    }
+  };
+
+  const toggleConsent = async (e) => {
+    e.stopPropagation();
+    setActionError(null);
+    setConsentBusy(true);
+    try {
+      const res = await fetch(apiUrl(`/api/status/${encodeURIComponent(api.id)}/consent`), {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ allow: !api.probeConsent }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const updated = await res.json();
+      onApiUpdate?.(updated);
+    } catch (err) {
+      setActionError(err.message || 'Consent update failed');
+    } finally {
+      setConsentBusy(false);
+    }
+  };
+
   return (
     <div className="border border-osint-border/40 rounded bg-osint-bg/40">
       <button
@@ -153,9 +197,19 @@ function ApiRow({ api, expanded, onToggle }) {
           {api.nameJa && (
             <div className="text-[9px] text-gray-500 truncate">{api.nameJa}</div>
           )}
+          {api.gated && (
+            <div className="mt-0.5">
+              <span
+                className="px-1.5 py-0.5 rounded text-[9px] bg-status-degraded/15 text-status-degraded border border-status-degraded/30"
+                title="Open the card and use Ping / Allow scheduled probing"
+              >
+                Probing needs API credentials — manual ping in card settings
+              </span>
+            </div>
+          )}
         </div>
         <div className="col-span-3">
-          <StatusBadge type="status" value={api.status} />
+          <StatusBadge type="status" value={api.gated ? 'gated' : api.status} />
         </div>
         <div className="col-span-3 flex justify-end">
           <KeyPills api={api} />
@@ -199,6 +253,30 @@ function ApiRow({ api, expanded, onToggle }) {
                 <span className="text-gray-200">{api.recordsCount}</span>
               </div>
             )}
+            {(api.intelTotal ?? 0) > 0 && (
+              <div className="col-span-2 pt-0.5 mt-0.5 border-t border-osint-border/30">
+                <span className="text-gray-500">Intel master:</span>{' '}
+                <span className="text-gray-200">{api.intelTotal.toLocaleString()}</span>
+                {' · '}
+                <span className="text-status-online">{api.intelGeocoded.toLocaleString()} geocoded</span>
+                {api.intelUngeocoded > 0 && (
+                  <>
+                    {' · '}
+                    <span className="text-gray-400">
+                      {api.intelUngeocoded.toLocaleString()} ungeocoded
+                    </span>
+                  </>
+                )}
+                {api.intelAwaitingGeo > 0 && (
+                  <>
+                    {' · '}
+                    <span className="text-status-pending" title="Awaiting LLM geocoder">
+                      {api.intelAwaitingGeo.toLocaleString()} awaiting geo
+                    </span>
+                  </>
+                )}
+              </div>
+            )}
           </div>
           {api.errorMessage && (
             <div className="text-status-offline break-words">
@@ -228,6 +306,45 @@ function ApiRow({ api, expanded, onToggle }) {
                   </span>
                 ))}
               </div>
+            </div>
+          )}
+          {api.requiresKey && (
+            <div className="pt-1 flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={pingNow}
+                disabled={pinging || !api.configured}
+                title={!api.configured ? `Set ${api.missingVars.join(', ')} first` : 'Probe once with your credentials'}
+                className="px-2 py-0.5 rounded text-[10px] border bg-neon-cyan/10 text-neon-cyan border-neon-cyan/40 hover:bg-neon-cyan/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                {pinging ? 'Pinging…' : 'Ping now'}
+              </button>
+              <button
+                type="button"
+                onClick={toggleConsent}
+                disabled={consentBusy || (!api.probeConsent && !api.configured)}
+                title={
+                  !api.configured && !api.probeConsent
+                    ? `Set ${api.missingVars.join(', ')} first`
+                    : api.probeConsent
+                    ? 'Stop the scheduler from probing this source'
+                    : 'Allow the scheduler to probe this source every 2h'
+                }
+                className={`px-2 py-0.5 rounded text-[10px] border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                  api.probeConsent
+                    ? 'bg-status-online/10 text-status-online border-status-online/40 hover:bg-status-online/20'
+                    : 'bg-gray-700/40 text-gray-300 border-gray-600/40 hover:bg-gray-600/40'
+                }`}
+              >
+                {consentBusy
+                  ? '…'
+                  : api.probeConsent
+                  ? '✓ Scheduled probing on'
+                  : 'Allow scheduled probing'}
+              </button>
+              {actionError && (
+                <span className="text-[9px] text-status-offline">{actionError}</span>
+              )}
             </div>
           )}
           {api.url && (
@@ -263,7 +380,7 @@ export default function SourcesPanel({ onClose }) {
     let cancelled = false;
     const load = async () => {
       try {
-        const res = await fetch('/api/status');
+        const res = await fetch(apiUrl('/api/status'));
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
         if (!cancelled) {
@@ -290,12 +407,13 @@ export default function SourcesPanel({ onClose }) {
     return data.apis
       .filter((a) => {
         if (filter === 'working') {
-          return a.status === 'online' && (!a.requiresKey || a.configured);
+          return !a.gated && a.status === 'online' && (!a.requiresKey || a.configured);
         }
-        if (filter === 'online') return a.status === 'online';
-        if (filter === 'degraded') return a.status === 'degraded';
-        if (filter === 'offline') return a.status === 'offline';
-        if (filter === 'pending') return a.status === 'pending';
+        if (filter === 'online') return !a.gated && a.status === 'online';
+        if (filter === 'degraded') return !a.gated && a.status === 'degraded';
+        if (filter === 'offline') return !a.gated && a.status === 'offline';
+        if (filter === 'pending') return !a.gated && a.status === 'pending';
+        if (filter === 'gated') return a.gated;
         if (filter === 'missingKey') return a.requiresKey && !a.configured;
         return true;
       })
@@ -309,12 +427,13 @@ export default function SourcesPanel({ onClose }) {
       })
       .sort((a, b) => {
         const rank = (x) => {
-          if (x.requiresKey && !x.configured) return 5;
+          if (x.requiresKey && !x.configured) return 6;
+          if (x.gated) return 4;
           if (x.status === 'online') return 0;
           if (x.status === 'degraded') return 1;
           if (x.status === 'offline') return 2;
           if (x.status === 'pending') return 3;
-          return 4;
+          return 5;
         };
         const r = rank(a) - rank(b);
         return r !== 0 ? r : a.name.localeCompare(b.name);
@@ -390,7 +509,7 @@ export default function SourcesPanel({ onClose }) {
 
 
       {summary && (
-        <div className="grid grid-cols-5 gap-2 px-4 py-2 text-[10px] border-b border-osint-border/40 flex-shrink-0">
+        <div className="grid grid-cols-6 gap-2 px-4 py-2 text-[10px] border-b border-osint-border/40 flex-shrink-0">
           <div>
             <div className="text-gray-500">Online</div>
             <div className="font-mono text-status-online">{summary.online}</div>
@@ -411,6 +530,12 @@ export default function SourcesPanel({ onClose }) {
             <div className="text-gray-500">Pending</div>
             <div className="font-mono text-gray-400">
               {summary.pending ?? 0}
+            </div>
+          </div>
+          <div>
+            <div className="text-gray-500">Gated</div>
+            <div className="font-mono text-gray-300">
+              {summary.gated ?? 0}
             </div>
           </div>
           <div>
@@ -472,6 +597,16 @@ export default function SourcesPanel({ onClose }) {
               expanded={expandedId === api.id}
               onToggle={() =>
                 setExpandedId((id) => (id === api.id ? null : api.id))
+              }
+              onApiUpdate={(updated) =>
+                setData((prev) =>
+                  prev
+                    ? {
+                        ...prev,
+                        apis: prev.apis.map((a) => (a.id === updated.id ? { ...a, ...updated } : a)),
+                      }
+                    : prev,
+                )
               }
             />
           ))}

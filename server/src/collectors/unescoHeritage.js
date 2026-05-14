@@ -86,7 +86,7 @@ function generateSeedData() {
 export default async function collectUnescoHeritage() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -97,6 +97,5 @@ export default async function collectUnescoHeritage() {
       live,
       description: 'UNESCO World Heritage Sites in Japan: cultural (21) + natural (5)',
     },
-    metadata: {},
   };
 }

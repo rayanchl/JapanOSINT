@@ -87,10 +87,10 @@ async function tryPrefScan() {
       for (const r of data) {
         const lat = Number(r?.緯度 ?? r?.lat ?? r?.LAT);
         const lon = Number(r?.経度 ?? r?.lon ?? r?.LON);
-        if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+        const geocoded = Number.isFinite(lat) && Number.isFinite(lon);
         features.push({
           type: 'Feature',
-          geometry: { type: 'Point', coordinates: [lon, lat] },
+          geometry: geocoded ? { type: 'Point', coordinates: [lon, lat] } : null,
           properties: {
             station_id: String(r?.測定局コード ?? r?.code ?? ''),
             station_name: r?.測定局名称 ?? r?.name ?? null,
@@ -131,10 +131,10 @@ async function tryAtmosJson() {
       }
       const lat = Number(r?.lat ?? r?.LAT ?? r?.緯度);
       const lon = Number(r?.lon ?? r?.LON ?? r?.経度);
-      if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+      const geocoded = Number.isFinite(lat) && Number.isFinite(lon);
       features.push({
         type: 'Feature',
-        geometry: { type: 'Point', coordinates: [lon, lat] },
+        geometry: geocoded ? { type: 'Point', coordinates: [lon, lat] } : null,
         properties: {
           station_id: r?.station_id ?? r?.code ?? null,
           station_name: r?.name ?? r?.station_name ?? null,
@@ -214,7 +214,7 @@ export default async function collectSoramame() {
     live = !!(features && features.length);
     if (live) liveSrc = 'osm_monitoring_station';
   }
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
 
   return {
     type: 'FeatureCollection',
@@ -226,6 +226,5 @@ export default async function collectSoramame() {
       live,
       description: 'SORAMAME / NIES air quality monitoring stations across Japan',
     },
-    metadata: {},
   };
 }

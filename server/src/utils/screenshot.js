@@ -191,6 +191,14 @@ async function _captureSnapshot(url, opts = {}) {
     // need a second pass.
     await acceptCookieBanner(page, { waitMs: 1500 });
     await page.waitForTimeout(Math.min(settleMs, 1500));
+
+    // Host-specific extraction. For sources that embed the actual feed in an
+    // <img>/<video> on the wrapper page (Insecam being the canonical case),
+    // grab the inner asset URL and fetch its bytes directly — gives the user
+    // the camera frame, not a screenshot of the whole page chrome.
+    const extracted = await tryHostExtraction(page, context, url);
+    if (extracted) return extracted;
+
     const buf = await page.screenshot({
       type: 'jpeg',
       quality: 70,
@@ -204,6 +212,73 @@ async function _captureSnapshot(url, opts = {}) {
     try { if (page) await page.close(); } catch { /* ignore */ }
     try { if (context) await context.close(); } catch { /* ignore */ }
   }
+}
+
+// ─── Host-specific feed extractors ──────────────────────────────────────────
+// Each entry maps a hostname to a function that returns the URL of the actual
+// camera image embedded in the page (or null if it can't find one). The
+// captureSnapshot pipeline then fetches those bytes via the same Playwright
+// context (referrer + cookies preserved) and returns them in place of the
+// full-page screenshot.
+
+const HOST_EXTRACTORS = {
+  'insecam.org':     extractInsecamImage,
+  'www.insecam.org': extractInsecamImage,
+};
+
+async function tryHostExtraction(page, context, url) {
+  let host = null;
+  try { host = new URL(url).hostname.toLowerCase(); } catch { return null; }
+  const extractor = HOST_EXTRACTORS[host];
+  if (!extractor) return null;
+  let imgUrl = null;
+  try {
+    imgUrl = await extractor(page);
+  } catch (err) {
+    console.warn(`[screenshot] extractor for ${host} threw: ${err.message}`);
+    return null;
+  }
+  if (!imgUrl) return null;
+  try {
+    const resp = await context.request.get(imgUrl, {
+      headers: { Referer: url, Accept: 'image/*' },
+      timeout: 10000,
+    });
+    if (!resp.ok()) return null;
+    const ct = resp.headers()['content-type'] || '';
+    if (!ct.startsWith('image/')) return null;
+    return await resp.body();
+  } catch (err) {
+    console.warn(`[screenshot] extractor fetch failed for ${imgUrl}: ${err.message}`);
+    return null;
+  }
+}
+
+/// Returns the absolute URL of the live image element on an Insecam view
+/// page, or null when it can't be found. Insecam markup has shifted over the
+/// years, so we try a few selectors and pick the first non-placeholder src.
+async function extractInsecamImage(page) {
+  return page.evaluate(() => {
+    const selectors = [
+      'img.thumbnail-item',
+      'img#image0',
+      'img#image1',
+      '.video-img img',
+      '.detail-img img',
+      'img[src*="cgi-bin"]',
+      'img[src*="mjpg"]',
+      'img[src*="snapshot"]',
+    ];
+    for (const sel of selectors) {
+      const el = document.querySelector(sel);
+      if (!el) continue;
+      const src = el.currentSrc || el.src || el.getAttribute('data-src');
+      if (src && /^https?:\/\//i.test(src) && !/placeholder|noimage|loading/i.test(src)) {
+        return src;
+      }
+    }
+    return null;
+  });
 }
 
 /**

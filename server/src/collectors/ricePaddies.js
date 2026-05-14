@@ -139,7 +139,7 @@ function generateSeedData() {
 export default async function collectRicePaddies() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -151,6 +151,5 @@ export default async function collectRicePaddies() {
       live_source: live ? 'osm_overpass' : 'maff_rice_seed',
       description: 'Major rice-producing regions across Japan - premium brand areas and heritage tanada',
     },
-    metadata: {},
   };
 }

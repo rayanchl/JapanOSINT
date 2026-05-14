@@ -63,6 +63,5 @@ export default async function collectMsilUmishiru() {
       description: 'MSIL Umishiru ports (JCG MDA)',
       key_required: true,
     },
-    metadata: {},
   };
 }

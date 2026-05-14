@@ -92,7 +92,7 @@ function generateSeedData() {
 
 export default async function collectMuseums() {
   let features = await tryOSMOverpass();
-  if (!features || features.length === 0) features = generateSeedData();
+  if (!features || features.length === 0) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -103,6 +103,5 @@ export default async function collectMuseums() {
       live: features?.[0]?.properties?.source === 'osm_overpass',
       description: 'Major Japanese museums: national, art, science, history',
     },
-    metadata: {},
   };
 }

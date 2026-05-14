@@ -49,6 +49,5 @@ export default async function collectJapanPostOffices() {
       recordCount: live ? features.length : 0,
       description: 'Japan Post office locations (郵便局) from OSM amenity=post_office',
     },
-    metadata: {},
   };
 }

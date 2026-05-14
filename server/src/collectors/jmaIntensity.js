@@ -91,7 +91,7 @@ function generateSeedData() {
 export default async function collectJmaIntensity() {
   let features = await tryJma();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -102,6 +102,5 @@ export default async function collectJmaIntensity() {
       live,
       description: 'JMA seismic intensity reports for recent significant earthquakes',
     },
-    metadata: {},
   };
 }

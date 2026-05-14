@@ -159,7 +159,6 @@ export default async function collectSatelliteTracking() {
         live_source: 'satellite_tracking_seed',
         description: 'Live satellite positions over Japan (SGP4 from CelesTrak TLEs). Seed ISS only.',
       },
-      metadata: {},
     };
   }
 
@@ -189,6 +188,5 @@ export default async function collectSatelliteTracking() {
       live_source: 'celestrak',
       description: 'Live satellite positions over Japan (SGP4 from CelesTrak TLEs).',
     },
-    metadata: {},
   };
 }

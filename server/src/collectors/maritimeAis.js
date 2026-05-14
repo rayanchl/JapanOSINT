@@ -235,7 +235,7 @@ export default async function collectMaritimeAis() {
 
   const live = !!(features && features.length > 0);
   if (!live) {
-    features = generateSeedData();
+    features = [];
     liveSource = 'ais_seed';
   }
 
@@ -250,6 +250,5 @@ export default async function collectMaritimeAis() {
       live_source: liveSource,
       description: 'AIS maritime vessel tracking around Japan - MarineTraffic + VesselFinder + OSM harbours',
     },
-    metadata: {},
   };
 }

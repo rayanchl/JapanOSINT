@@ -123,6 +123,5 @@ export default async function collectSuumoRentalDensity() {
       cadence_hint: 'Run at most once per 24 h — respect Suumo robots.txt',
       description: 'Suumo rental-listing counts per prefecture (density proxy)',
     },
-    metadata: {},
   };
 }

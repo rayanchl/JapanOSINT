@@ -90,7 +90,7 @@ function generateSeedData() {
 export default async function collectKobanMap() {
   let features = await tryOverpass();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -101,6 +101,5 @@ export default async function collectKobanMap() {
       live,
       description: 'Japan police boxes (koban) and police stations',
     },
-    metadata: {},
   };
 }

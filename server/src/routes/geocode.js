@@ -16,20 +16,20 @@ const router = Router();
 const USER_AGENT = 'JapanOSINT/1.0 (github.com/rayanchl/JapanOSINT)';
 
 // ── Simple in-memory TTL cache ─────────────────────────────────────────────
-const geocodeCache = new Map(); // key -> { value, expiresAt }
+const GEOCODE_CACHE = new Map(); // key -> { value, expiresAt }
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24h
 
 function cacheGet(key) {
-  const hit = geocodeCache.get(key);
+  const hit = GEOCODE_CACHE.get(key);
   if (!hit) return null;
   if (hit.expiresAt < Date.now()) {
-    geocodeCache.delete(key);
+    GEOCODE_CACHE.delete(key);
     return null;
   }
   return hit.value;
 }
 function cacheSet(key, value) {
-  geocodeCache.set(key, { value, expiresAt: Date.now() + CACHE_TTL_MS });
+  GEOCODE_CACHE.set(key, { value, expiresAt: Date.now() + CACHE_TTL_MS });
 }
 
 async function fetchJson(url, { timeoutMs = 6000, headers = {} } = {}) {
@@ -98,14 +98,24 @@ async function forwardGsi(q) {
 
 // ── Reverse geocoding providers ────────────────────────────────────────────
 async function reverseNominatim(lat, lon) {
-  const url = `https://nominatim.openstreetmap.org/reverse?format=json&addressdetails=1&zoom=18&lat=${lat}&lon=${lon}&accept-language=ja`;
-  const data = await fetchJson(url);
-  if (!data || data.error) return null;
+  // Run JA + EN in parallel — Nominatim's `accept-language` controls the
+  // localised label and is the only difference between the two requests, so
+  // the cost of doing both is one extra round-trip.
+  const base = `https://nominatim.openstreetmap.org/reverse?format=json&addressdetails=1&zoom=18&lat=${lat}&lon=${lon}`;
+  const [ja, en] = await Promise.all([
+    fetchJson(`${base}&accept-language=ja`),
+    fetchJson(`${base}&accept-language=en`),
+  ]);
+  // Pick whichever one we got back as the canonical hit; if both failed, bail.
+  const primary = ja || en;
+  if (!primary || primary.error) return null;
   return {
-    lat: parseFloat(data.lat),
-    lon: parseFloat(data.lon),
-    display_name: data.display_name,
-    address: data.address || null,
+    lat: parseFloat(primary.lat),
+    lon: parseFloat(primary.lon),
+    display_name: ja?.display_name || en?.display_name || null,
+    display_name_ja: ja?.display_name || null,
+    display_name_en: en?.display_name || null,
+    address: primary.address || null,
     source: 'nominatim',
   };
 }
@@ -143,14 +153,13 @@ async function reverseGsi(lat, lon) {
 
 // ── Routes ─────────────────────────────────────────────────────────────────
 
-// GET /api/geocode?q=...  — forward geocoding with fallback chain
-router.get('/', async (req, res) => {
-  const q = (req.query.q || '').toString().trim();
-  if (!q) return res.status(400).json({ error: 'missing q parameter' });
-
+// Forward-geocode one query through the provider fallback chain. Returns
+// { hits, provider } or { hits: [], provider: null } if every provider missed.
+// Cached per-query (24h TTL) so repeat queries skip the network entirely.
+async function forwardGeocodeOne(q) {
   const cacheKey = `fwd:${q}`;
   const cached = cacheGet(cacheKey);
-  if (cached) return res.json({ results: cached, fromCache: true });
+  if (cached) return { hits: cached, provider: cached[0]?.source ?? null, fromCache: true };
 
   const providers = [forwardNominatim, forwardPhoton, forwardGsi];
   for (const provider of providers) {
@@ -158,13 +167,55 @@ router.get('/', async (req, res) => {
       const hits = await provider(q);
       if (hits && hits.length > 0) {
         cacheSet(cacheKey, hits);
-        return res.json({ results: hits, provider: hits[0].source });
+        return { hits, provider: hits[0].source, fromCache: false };
       }
     } catch (err) {
       console.warn(`[geocode] ${provider.name} failed:`, err.message);
     }
   }
-  res.json({ results: [], provider: null });
+  return { hits: [], provider: null, fromCache: false };
+}
+
+// GET /api/geocode?q=...&qAlt=...  — forward geocoding with fallback chain.
+// When qAlt is provided alongside q, run both queries in parallel and merge
+// hits, tagging qAlt-only hits with via_translation:true. Used by the iOS
+// bilingual search UX so the user sees both English and Japanese matches.
+router.get('/', async (req, res) => {
+  const q    = (req.query.q    || '').toString().trim();
+  const qAlt = (req.query.qAlt || '').toString().trim();
+  if (!q) return res.status(400).json({ error: 'missing q parameter' });
+
+  // Single-query path — unchanged response shape.
+  if (!qAlt || qAlt === q) {
+    const { hits, provider, fromCache } = await forwardGeocodeOne(q);
+    return res.json({ results: hits, provider, ...(fromCache ? { fromCache: true } : {}) });
+  }
+
+  const [primary, secondary] = await Promise.all([
+    forwardGeocodeOne(q),
+    forwardGeocodeOne(qAlt),
+  ]);
+  // Merge by (lat, lon) rounded to 5 decimals (~1.1 m). Same point from both
+  // queries is one row — keep the primary-query attribution.
+  const key = (h) => `${h.lat.toFixed(5)},${h.lon.toFixed(5)}`;
+  const seen = new Set();
+  const merged = [];
+  for (const h of primary.hits) {
+    const k = key(h);
+    if (seen.has(k)) continue;
+    seen.add(k);
+    merged.push({ ...h, via_translation: false });
+  }
+  for (const h of secondary.hits) {
+    const k = key(h);
+    if (seen.has(k)) continue;
+    seen.add(k);
+    merged.push({ ...h, via_translation: true, matched_alt: qAlt });
+  }
+  res.json({
+    results: merged,
+    provider: primary.provider || secondary.provider || null,
+  });
 });
 
 // GET /api/geocode/reverse?lat=...&lon=...  — reverse geocoding with fallback
@@ -175,8 +226,11 @@ router.get('/reverse', async (req, res) => {
     return res.status(400).json({ error: 'lat and lon required' });
   }
 
-  // Round to 5 decimals (~1.1 m) for cache-key stability
-  const cacheKey = `rev:${lat.toFixed(5)},${lon.toFixed(5)}`;
+  // Round to 5 decimals (~1.1 m) for cache-key stability. The `rev2:` prefix
+  // invalidates older entries that pre-date the JA+EN parallel fetch — those
+  // only have `display_name`, so reusing them would surface the JA string in
+  // the EN slot.
+  const cacheKey = `rev2:${lat.toFixed(5)},${lon.toFixed(5)}`;
   const cached = cacheGet(cacheKey);
   if (cached) return res.json({ ...cached, fromCache: true });
 

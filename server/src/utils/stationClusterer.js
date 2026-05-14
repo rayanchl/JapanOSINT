@@ -69,10 +69,25 @@ function makeDSU(n) {
 }
 
 // --- Read side ---
+// Post-cutover: stations live in intel_items under source_id 'unified-trains'
+// or 'unified-subways'. Pull the fields the clusterer needs (station_uid,
+// mode, name, operator, lat, lon, properties JSON) by deriving them the
+// same way the master-store read path does.
 const stmtStations = db.prepare(`
-  SELECT station_uid, mode, name, operator, lat, lon, properties
-  FROM transport_stations
-  WHERE mode IN ('train', 'subway')
+  SELECT
+    substr(uid, instr(uid, '|') + 1)               AS station_uid,
+    COALESCE(sub_source_id,
+             CASE WHEN source_id = 'unified-trains'  THEN 'train'
+                  WHEN source_id = 'unified-subways' THEN 'subway'
+                  ELSE NULL END)                    AS mode,
+    title                                           AS name,
+    json_extract(properties, '$.operator')          AS operator,
+    lat, lon,
+    properties
+  FROM intel_items
+  WHERE source_id IN ('unified-trains', 'unified-subways')
+    AND lat IS NOT NULL
+    AND (geometry IS NULL OR json_extract(geometry, '$.type') = 'Point')
 `);
 
 function loadStations() {

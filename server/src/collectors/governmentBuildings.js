@@ -89,7 +89,7 @@ function generateSeedData() {
 export default async function collectGovernmentBuildings() {
   let features = await tryOverpass();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -100,6 +100,5 @@ export default async function collectGovernmentBuildings() {
       live,
       description: 'Japanese government buildings: cabinet, Diet, ministries, agencies, prefectural HQ',
     },
-    metadata: {},
   };
 }

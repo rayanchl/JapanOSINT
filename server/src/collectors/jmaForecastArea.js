@@ -74,6 +74,5 @@ export default async function collectJmaForecastArea() {
       recordCount: features.length,
       description: 'JMA regional weather forecast per prefecture',
     },
-    metadata: {},
   };
 }

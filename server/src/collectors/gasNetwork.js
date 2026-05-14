@@ -134,7 +134,7 @@ function tryJOGMECData() {
 export default async function collectGasNetwork() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
 
   const jogmecFeatures = tryJOGMECData();
   features = [...features, ...jogmecFeatures];
@@ -149,6 +149,5 @@ export default async function collectGasNetwork() {
       live,
       description: 'Japan gas network - LNG terminals, distribution stations, regional gas companies, JOGMEC pipelines & underground storage',
     },
-    metadata: {},
   };
 }

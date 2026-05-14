@@ -71,10 +71,10 @@ async function tryNraJson() {
     for (const r of arr) {
       const lat = Number(r?.lat ?? r?.LAT ?? r?.緯度);
       const lon = Number(r?.lon ?? r?.lng ?? r?.LON ?? r?.経度);
-      if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+      const geocoded = Number.isFinite(lat) && Number.isFinite(lon);
       features.push({
         type: 'Feature',
-        geometry: { type: 'Point', coordinates: [lon, lat] },
+        geometry: geocoded ? { type: 'Point', coordinates: [lon, lat] } : null,
         properties: {
           station_id: r?.id ?? r?.station_id ?? r?.code ?? null,
           station_name: r?.name ?? r?.station_name ?? r?.name_jp ?? null,
@@ -148,7 +148,7 @@ export default async function collectNraRadiation() {
     live = !!(features && features.length);
     if (live) liveSrc = 'osm_monitoring_station';
   }
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
 
   return {
     type: 'FeatureCollection',
@@ -160,6 +160,5 @@ export default async function collectNraRadiation() {
       live,
       description: 'Radiation dose rate monitoring posts across Japan',
     },
-    metadata: {},
   };
 }

@@ -8,15 +8,16 @@
  * no InternetDB gateway probing.
  */
 
-const SHODAN_API_KEY = process.env.SHODAN_API_KEY || '';
-
 async function tryShodanAPI() {
-  if (!SHODAN_API_KEY) return null;
+  // Read at call-time so iOS-set keys (which mutate process.env via
+  // apiKeysStore.setKey) take effect without a server restart.
+  const key = process.env.SHODAN_API_KEY || '';
+  if (!key) return null;
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
     const res = await fetch(
-      `https://api.shodan.io/shodan/host/search?key=${SHODAN_API_KEY}&query=country:JP&facets=port`,
+      `https://api.shodan.io/shodan/host/search?key=${key}&query=country:JP&facets=port`,
       { signal: controller.signal }
     );
     clearTimeout(timeout);
@@ -65,6 +66,5 @@ export default async function collectShodanIot() {
       live_source: live ? 'shodan_api' : null,
       description: 'Shodan IoT device scan — Japan hosts via authenticated Search API (live only)',
     },
-    metadata: {},
   };
 }

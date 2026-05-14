@@ -100,7 +100,7 @@ function generateSeedData() {
 export default async function collectFerryRoutes() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -111,6 +111,5 @@ export default async function collectFerryRoutes() {
       live,
       description: 'Ferry terminals across Japan - inter-island, inland sea, international routes',
     },
-    metadata: {},
   };
 }

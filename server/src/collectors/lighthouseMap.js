@@ -85,7 +85,7 @@ function generateSeedData() {
 export default async function collectLighthouseMap() {
   let features = await tryOverpass();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -96,6 +96,5 @@ export default async function collectLighthouseMap() {
       live,
       description: 'JCG lighthouses across Japan - historic Meiji-era + modern',
     },
-    metadata: {},
   };
 }

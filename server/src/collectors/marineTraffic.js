@@ -104,7 +104,7 @@ export default async function collectMarineTraffic() {
   }
   const live = !!(features && features.length > 0);
   if (!live) {
-    features = generateSeed();
+    features = [];
     liveSource = 'marinetraffic_seed';
   }
   return {
@@ -118,6 +118,5 @@ export default async function collectMarineTraffic() {
       live_source: liveSource,
       description: 'MarineTraffic live AIS vessels + Japanese port facilities',
     },
-    metadata: {},
   };
 }

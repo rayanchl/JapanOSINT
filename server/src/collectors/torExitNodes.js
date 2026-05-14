@@ -73,7 +73,7 @@ function generateSeedData() {
 export default async function collectTorExitNodes() {
   let features = await tryOnionoo();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -84,6 +84,5 @@ export default async function collectTorExitNodes() {
       live,
       description: 'Tor exit relays in Japan via Tor Project onionoo API',
     },
-    metadata: {},
   };
 }

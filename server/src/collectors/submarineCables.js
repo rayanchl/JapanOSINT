@@ -85,7 +85,7 @@ function generateSeedData() {
 export default async function collectSubmarineCables() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -96,6 +96,5 @@ export default async function collectSubmarineCables() {
       live,
       description: 'Submarine cable landing stations in Japan: trans-Pacific (Chiba), Asia (Aichi), Russia (Niigata), Korea (Saga), Okinawa',
     },
-    metadata: {},
   };
 }

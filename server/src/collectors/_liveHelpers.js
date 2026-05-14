@@ -95,6 +95,12 @@ function cacheSet(key, features, ttlMs) {
   overpassCache.set(key, { features, expiresAt: Date.now() + ttlMs });
 }
 
+// Skip Overpass elements with no usable coords. These are rare (Overpass
+// usually returns `center` for ways) and the row would have nothing useful
+// to put in properties even if we tried — OSM tags travel with the same
+// element. Real ungeocoded rows come from collectors that fetch a non-OSM
+// dataset and fail to attach coords; those flow through the polymorphic
+// master via collectorMirror.
 function mapElements(elements, mapFn) {
   const out = [];
   for (let i = 0; i < elements.length; i++) {
@@ -386,6 +392,33 @@ export async function fetchJson(url, { timeoutMs = 15000, headers = {}, retries 
 }
 
 /**
+ * HEAD-ping a URL to check reachability without downloading the body.
+ * Used by the "portal status" collectors that emit a single intel item
+ * recording whether a non-JSON portal is up. Rate-limited per host.
+ *
+ * Returns true if the host responded with 2xx/3xx, false for any error
+ * including timeout, network failure, or 4xx/5xx.
+ */
+export async function fetchHead(url, { timeoutMs = 8000, headers = {} } = {}) {
+  return rateLimitedFetch(url, async () => {
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+      const res = await fetch(url, {
+        method: 'HEAD',
+        headers: {
+          'User-Agent': 'JapanOSINT/1.0 (+https://github.com/rayanchl/JapanOSINT)',
+          ...headers,
+        },
+        signal: ctrl.signal,
+      });
+      clearTimeout(timer);
+      return res.ok || (res.status >= 300 && res.status < 400);
+    } catch { return false; }
+  });
+}
+
+/**
  * Fetch raw text (HTML, CSV, XML). Rate-limited per host.
  */
 export async function fetchText(url, { timeoutMs = 15000, headers = {}, retries = 1 } = {}) {
@@ -413,4 +446,103 @@ export async function fetchText(url, { timeoutMs = 15000, headers = {}, retries 
     }
     return null;
   });
+}
+
+/**
+ * Fetch a binary resource and return its ArrayBuffer (rate-limited, retried
+ * on 429/503). Use for non-UTF-8 payloads (Shift_JIS CSVs, XLSX, PDFs).
+ */
+export async function fetchArrayBuffer(url, { timeoutMs = 30000, headers = {}, retries = 1 } = {}) {
+  return rateLimitedFetch(url, async () => {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+        const res = await fetch(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (compatible; JapanOSINT/1.0)',
+            'Accept-Language': 'ja-JP,ja;q=0.9,en;q=0.5',
+            ...headers,
+          },
+          signal: ctrl.signal,
+        });
+        clearTimeout(timer);
+        if (res.status === 429 || res.status === 503) {
+          await new Promise((r) => setTimeout(r, 1000 * Math.pow(2, attempt)));
+          continue;
+        }
+        if (!res.ok) return null;
+        return await res.arrayBuffer();
+      } catch { /* retry */ }
+    }
+    return null;
+  });
+}
+
+/**
+ * Decode a Shift_JIS-encoded buffer (Node Buffer or ArrayBuffer) to a
+ * JavaScript string. Falls back to UTF-8 if Shift_JIS decoding throws.
+ * Mirrors the pattern in `chan5ch.js`.
+ */
+export function decodeShiftJis(input) {
+  const buf = input instanceof ArrayBuffer ? Buffer.from(input) : Buffer.from(input);
+  try {
+    return new TextDecoder('shift_jis').decode(buf);
+  } catch {
+    return buf.toString('utf8');
+  }
+}
+
+/**
+ * Minimal CSV parser that handles double-quoted fields with embedded commas
+ * and escaped quotes (`""`). Returns an array of arrays. If `headers` is
+ * `true`, the first row is treated as header names and subsequent rows are
+ * returned as objects keyed by those names.
+ */
+export function parseCsv(text, { headers = false } = {}) {
+  if (!text) return [];
+  const rows = [];
+  let cur = [];
+  let field = '';
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; }
+        else inQuotes = false;
+      } else {
+        field += ch;
+      }
+    } else {
+      if (ch === '"') inQuotes = true;
+      else if (ch === ',') { cur.push(field); field = ''; }
+      else if (ch === '\n') { cur.push(field); rows.push(cur); cur = []; field = ''; }
+      else if (ch === '\r') { /* ignore CR */ }
+      else field += ch;
+    }
+  }
+  if (field.length > 0 || cur.length > 0) { cur.push(field); rows.push(cur); }
+  if (!headers) return rows;
+  if (rows.length === 0) return [];
+  const head = rows[0].map((h) => h.trim());
+  return rows.slice(1).map((r) => {
+    const o = {};
+    for (let i = 0; i < head.length; i++) o[head[i]] = r[i] ?? '';
+    return o;
+  });
+}
+
+/**
+ * In-memory keyed TTL cache. Generic counterpart to `overpassCache` for
+ * collectors that want a tiny memoization layer (e.g. annual CSVs that
+ * shouldn't be re-fetched on every TTL refresh).
+ */
+const _namedCache = new Map();
+export async function namedCache(key, ttlMs, fn) {
+  const hit = _namedCache.get(key);
+  if (hit && hit.expiresAt > Date.now()) return hit.value;
+  const value = await fn();
+  _namedCache.set(key, { value, expiresAt: Date.now() + ttlMs });
+  return value;
 }

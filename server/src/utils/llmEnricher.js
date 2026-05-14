@@ -6,8 +6,17 @@ import { findUncertainStationPairs as defaultPairs } from './stationClusterer.js
 import {
   buildDedupPairPrompt,
   buildSocialGeocodePrompt,
-  buildVideoGeocodePrompt,
+  buildIntelKeywordsPrompt,
 } from './llmPrompts.js';
+import { updateItemKeywords } from './intelStore.js';
+import {
+  applyGeocodeOk as applySocialGeocodeOk,
+  applyGeocodeFail as applySocialGeocodeFail,
+} from './socialPostsStore.js';
+import {
+  applyGeocodeOk as applyCameraGeocodeOk,
+  applyGeocodeFail as applyCameraGeocodeFail,
+} from './cameraStore.js';
 
 const DEFAULT_BATCH = Number(process.env.LLM_BATCH_SIZE || 50);
 const VISION = process.env.LLM_VISION === 'true';
@@ -64,26 +73,25 @@ export async function enrichStationDedup(opts = {}) {
   return { decided };
 }
 
+// Post-cutover: pending social posts live in intel_items under various
+// platform-derived source_ids ('misskey-timeline', 'twitter-geo', …).
+// Pending = record_type='post' AND lat IS NULL AND geom_source IS NULL.
+// post_uid is reconstructed from the master uid suffix.
 const stmtPendingSocial = db.prepare(`
-  SELECT post_uid, platform, author, text, title, media_urls
-  FROM social_posts
-  WHERE llm_geocoded_at IS NULL
-    AND (text IS NOT NULL OR title IS NOT NULL)
+  SELECT
+    substr(uid, instr(uid, '|') + 1)              AS post_uid,
+    COALESCE(sub_source_id, source_id)            AS platform,
+    author,
+    body                                          AS text,
+    title,
+    json_extract(properties, '$.media_urls')      AS media_urls
+  FROM intel_items
+  WHERE record_type = 'post'
+    AND lat IS NULL
+    AND geom_source IS NULL
+    AND (body IS NOT NULL OR title IS NOT NULL)
   ORDER BY fetched_at DESC
   LIMIT ?
-`);
-
-const stmtUpdateSocialOk = db.prepare(`
-  UPDATE social_posts
-  SET lat = ?, lon = ?, geo_source = 'llm_gsi',
-      llm_place_name = ?, llm_geocoded_at = datetime('now'), llm_failure = NULL
-  WHERE post_uid = ?
-`);
-
-const stmtUpdateSocialFail = db.prepare(`
-  UPDATE social_posts
-  SET llm_geocoded_at = datetime('now'), llm_failure = ?, llm_place_name = ?
-  WHERE post_uid = ?
 `);
 
 export async function enrichSocialGeocode(opts = {}) {
@@ -94,74 +102,37 @@ export async function enrichSocialGeocode(opts = {}) {
       platform: row.platform, author: row.author, text: row.text, title: row.title,
       imageUrls: parseJsonArray(row.media_urls), vision: VISION,
     }),
-    onOk: (row, place, hit) => stmtUpdateSocialOk.run(hit.lat, hit.lon, place, row.post_uid),
-    onFail: (row, sentinel, place) => stmtUpdateSocialFail.run(sentinel, place, row.post_uid),
+    onOk: (row, place, hit) => applySocialGeocodeOk({
+      post_uid: row.post_uid, lat: hit.lat, lon: hit.lon, llm_place_name: place,
+    }),
+    onFail: (row, sentinel, place) => applySocialGeocodeFail({
+      post_uid: row.post_uid, sentinel, llm_place_name: place,
+    }),
     llmChat, gsiSearch, batchSize,
   });
 }
 
-const stmtPendingVideo = db.prepare(`
-  SELECT video_uid, platform, channel, title, description, thumbnail_url
-  FROM video_items
-  WHERE llm_geocoded_at IS NULL
-    AND (title IS NOT NULL OR description IS NOT NULL)
+// Post-cutover: pending cameras = intel_items rows with source_id =
+// 'camera-discovery', properties.location_uncertain = 1, and no LLM-resolved
+// geom yet. camera_uid is the uid suffix.
+const stmtPendingCameras = db.prepare(`
+  SELECT
+    substr(uid, instr(uid, '|') + 1)              AS camera_uid,
+    title                                         AS name,
+    lat, lon,
+    properties
+  FROM intel_items
+  WHERE source_id = 'camera-discovery'
+    AND geom_source IS NULL OR geom_source = 'native'
+    AND json_extract(properties, '$.location_uncertain') = 1
   ORDER BY fetched_at DESC
   LIMIT ?
 `);
 
-const stmtUpdateVideoOk = db.prepare(`
-  UPDATE video_items
-  SET lat = ?, lon = ?, geo_source = 'llm_gsi',
-      llm_place_name = ?, llm_geocoded_at = datetime('now'), llm_failure = NULL
-  WHERE video_uid = ?
-`);
-
-const stmtUpdateVideoFail = db.prepare(`
-  UPDATE video_items
-  SET llm_geocoded_at = datetime('now'), llm_failure = ?, llm_place_name = ?
-  WHERE video_uid = ?
-`);
-
-export async function enrichVideoGeocode(opts = {}) {
-  const { llmChat, gsiSearch, batchSize } = opts;
-  return drainTextRows({
-    rowsStmt: stmtPendingVideo,
-    buildPrompt: (row) => buildVideoGeocodePrompt({
-      platform: row.platform, channel: row.channel, title: row.title,
-      description: row.description, thumbnailUrl: row.thumbnail_url, vision: VISION,
-    }),
-    onOk: (row, place, hit) => stmtUpdateVideoOk.run(hit.lat, hit.lon, place, row.video_uid),
-    onFail: (row, sentinel, place) => stmtUpdateVideoFail.run(sentinel, place, row.video_uid),
-    llmChat, gsiSearch, batchSize,
-  });
-}
-
-const stmtPendingCameras = db.prepare(`
-  SELECT camera_uid, name, lat, lon, properties
-  FROM cameras
-  WHERE llm_geocoded_at IS NULL
-    AND json_extract(properties, '$.location_uncertain') = 1
-  ORDER BY last_seen_at DESC
-  LIMIT ?
-`);
-
-const stmtUpdateCameraOk = db.prepare(`
-  UPDATE cameras
-  SET lat = ?, lon = ?, llm_place_name = ?,
-      llm_geocoded_at = datetime('now'),
-      properties = ?
-  WHERE camera_uid = ?
-`);
-
-// cameras has no llm_failure column by design (Task 3 schema decision —
-// cameras only carry llm_place_name + llm_geocoded_at). Failure modes
-// collapse to "geocoded_at set, lat unchanged"; the operator can re-queue
-// by clearing llm_geocoded_at.
-const stmtUpdateCameraFail = db.prepare(`
-  UPDATE cameras
-  SET llm_geocoded_at = datetime('now'), llm_place_name = ?
-  WHERE camera_uid = ?
-`);
+// camera write paths (base + FTS atomic) live in cameraStore.applyGeocodeOk /
+// applyGeocodeFail. cameras has no llm_failure column by design (Task 3 schema
+// decision — only llm_place_name + llm_geocoded_at). Failure modes collapse to
+// "geocoded_at set, lat unchanged"; clear llm_geocoded_at to re-queue.
 
 // Normalise the LLM's structured output to a clean ordered list of queries.
 // Returns null when the response is unparseable, [] when the LLM correctly
@@ -211,26 +182,32 @@ export async function enrichCameras(opts = {}) {
     const out = await llmChat({ messages, jsonSchema, timeoutMs: TIMEOUT_MS });
     const queries = extractQueries(out);
     if (queries === null) {
-      stmtUpdateCameraFail.run(null, row.camera_uid);
+      applyCameraGeocodeFail({ camera_uid: row.camera_uid, llm_place_name: null });
       continue;
     }
     if (queries.length === 0) {
-      stmtUpdateCameraFail.run(null, row.camera_uid);
+      applyCameraGeocodeFail({ camera_uid: row.camera_uid, llm_place_name: null });
       continue;
     }
     if (typeof out.confidence === 'number' && out.confidence < PLACE_CONFIDENCE_GATE) {
-      stmtUpdateCameraFail.run(queries[0], row.camera_uid);
+      applyCameraGeocodeFail({ camera_uid: row.camera_uid, llm_place_name: queries[0] });
       continue;
     }
     const { hit, query } = await resolveViaQueries(queries, gsiSearch);
     if (!hit) {
-      stmtUpdateCameraFail.run(queries[0], row.camera_uid);
+      applyCameraGeocodeFail({ camera_uid: row.camera_uid, llm_place_name: queries[0] });
       continue;
     }
     const props = safeJson(row.properties);
     props.original_lat = row.lat;
     props.original_lon = row.lon;
-    stmtUpdateCameraOk.run(hit.lat, hit.lon, query, JSON.stringify(props), row.camera_uid);
+    applyCameraGeocodeOk({
+      camera_uid: row.camera_uid,
+      lat: hit.lat,
+      lon: hit.lon,
+      llm_place_name: query,
+      propertiesJson: JSON.stringify(props),
+    });
     geocoded++;
   }
   return { geocoded };
@@ -250,23 +227,23 @@ async function drainTextRows({ rowsStmt, buildPrompt, onOk, onFail, llmChat, gsi
     const out = await _llmChat({ messages, jsonSchema, timeoutMs: TIMEOUT_MS, model });
     const queries = extractQueries(out);
     if (queries === null) {
-      onFail(row, '__bad_json__', null);
+      await onFail(row, '__bad_json__', null);
       continue;
     }
     if (queries.length === 0) {
-      onFail(row, '__no_match__', null);
+      await onFail(row, '__no_match__', null);
       continue;
     }
     if (typeof out.confidence === 'number' && out.confidence < PLACE_CONFIDENCE_GATE) {
-      onFail(row, '__no_match__', queries[0]);
+      await onFail(row, '__no_match__', queries[0]);
       continue;
     }
     const { hit, query } = await resolveViaQueries(queries, _gsiSearch);
     if (!hit) {
-      onFail(row, '__gsi_miss__', queries[0]);
+      await onFail(row, '__gsi_miss__', queries[0]);
       continue;
     }
-    onOk(row, query, hit);
+    await onOk(row, query, hit);
     geocoded++;
   }
   return { geocoded };
@@ -281,14 +258,161 @@ function safeJson(s) {
   try { return JSON.parse(s); } catch { return {}; }
 }
 
+// ── Intel keyword enrichment ──────────────────────────────────────────────
+// Walks intel_items rows whose `keywords` is NULL and asks the local LLM
+// (LM Studio + Gemma) for 5–15 search keywords each. On success, writes the
+// JSON array to intel_items.keywords AND updates the segmented mirror in
+// intel_items_fts.keywords so the next FTS MATCH hits the new tokens. On
+// failure, increments keywords_failed; when that counter reaches 5 the row
+// is permanently skipped (still searchable via title/body/summary).
+
+const stmtPendingIntel = db.prepare(`
+  SELECT uid, source_id, title, body, summary, language
+  FROM intel_items
+  WHERE keywords IS NULL
+    AND COALESCE(keywords_failed, 0) < 5
+  ORDER BY fetched_at DESC
+  LIMIT ?
+`);
+
+// intel base+FTS atomic write goes through intelStore.updateItemKeywords;
+// the failure-counter bump is the only UPDATE we issue inline.
+const stmtUpdateIntelFail = db.prepare(`
+  UPDATE intel_items
+  SET keywords_failed = COALESCE(keywords_failed, 0) + 1
+  WHERE uid = ?
+`);
+
+function sanitizeKeywords(arr) {
+  if (!Array.isArray(arr)) return [];
+  const cleaned = arr
+    .filter((k) => typeof k === 'string')
+    .map((k) => k.trim())
+    .filter(Boolean);
+  return [...new Set(cleaned)].slice(0, 20);
+}
+
+export async function enrichIntelKeywords(opts = {}) {
+  const llmChat = opts.llmChat || defaultChat;
+  const batchSize = opts.batchSize ?? DEFAULT_BATCH;
+  const rows = stmtPendingIntel.all(batchSize);
+
+  let enriched = 0;
+  let failed = 0;
+  for (const row of rows) {
+    const { messages, jsonSchema } = buildIntelKeywordsPrompt({
+      title: row.title,
+      body: row.body,
+      summary: row.summary,
+      language: row.language,
+      source_id: row.source_id,
+    });
+    const out = await llmChat({ messages, jsonSchema, timeoutMs: TIMEOUT_MS });
+    const cleaned = out && Array.isArray(out.keywords) ? sanitizeKeywords(out.keywords) : null;
+    if (!cleaned || cleaned.length === 0) {
+      stmtUpdateIntelFail.run(row.uid);
+      failed += 1;
+      continue;
+    }
+
+    // intelStore.updateItemKeywords handles JSON encoding for the base column,
+    // kuromoji segmentation for the FTS column, and the atomic dual-write txn.
+    await updateItemKeywords(row.uid, cleaned);
+    enriched += 1;
+  }
+  return { attempted: rows.length, enriched, failed };
+}
+
+// Geocode pass for intel_items rows without coords. Mirrors enrichCameras:
+// LLM extracts place queries from title/body/summary, GSI resolves to lat/lon,
+// we write back with geom_source='llm'. After 5 failed attempts we sentinel
+// geom_source='failed' so we stop retrying — clear that column to re-queue.
+const stmtPendingIntelGeo = db.prepare(`
+  SELECT uid, source_id, title, body, summary, language
+  FROM intel_items
+  WHERE lat IS NULL
+    AND geom_source IS NULL
+    AND COALESCE(geom_failed, 0) < 5
+    AND (title IS NOT NULL OR body IS NOT NULL OR summary IS NOT NULL)
+  ORDER BY fetched_at DESC
+  LIMIT ?
+`);
+
+const stmtIntelGeoOk = db.prepare(`
+  UPDATE intel_items
+     SET lat = ?, lon = ?,
+         geom_source = 'llm',
+         geom_at = datetime('now'),
+         geom_failed = 0
+   WHERE uid = ?
+`);
+
+const stmtIntelGeoFail = db.prepare(`
+  UPDATE intel_items
+     SET geom_failed = COALESCE(geom_failed, 0) + 1,
+         geom_source = CASE WHEN COALESCE(geom_failed, 0) + 1 >= 5 THEN 'failed' ELSE geom_source END
+   WHERE uid = ?
+`);
+
+export async function enrichIntelGeocode(opts = {}) {
+  const llmChat = opts.llmChat || defaultChat;
+  const gsiSearch = opts.gsiSearch || defaultGsi;
+  const batchSize = opts.batchSize ?? DEFAULT_BATCH;
+
+  const rows = stmtPendingIntelGeo.all(batchSize);
+  let geocoded = 0;
+  let failed = 0;
+  for (const row of rows) {
+    // Re-use the social-geocode prompt — its job is to pick place names out
+    // of arbitrary text, which is exactly the intel case. Vision is off; intel
+    // rows don't carry image URLs.
+    const text = [row.title, row.summary, row.body].filter(Boolean).join('\n\n');
+    if (!text.trim()) {
+      stmtIntelGeoFail.run(row.uid);
+      failed += 1;
+      continue;
+    }
+    const { messages, jsonSchema } = buildSocialGeocodePrompt({
+      platform: 'intel',
+      author: '',
+      text,
+      title: row.title,
+      imageUrls: [],
+      vision: false,
+    });
+    const out = await llmChat({ messages, jsonSchema, timeoutMs: TIMEOUT_MS });
+    const queries = extractQueries(out);
+    if (!queries || queries.length === 0) {
+      stmtIntelGeoFail.run(row.uid);
+      failed += 1;
+      continue;
+    }
+    if (typeof out.confidence === 'number' && out.confidence < PLACE_CONFIDENCE_GATE) {
+      stmtIntelGeoFail.run(row.uid);
+      failed += 1;
+      continue;
+    }
+    const { hit } = await resolveViaQueries(queries, gsiSearch);
+    if (!hit) {
+      stmtIntelGeoFail.run(row.uid);
+      failed += 1;
+      continue;
+    }
+    stmtIntelGeoOk.run(hit.lat, hit.lon, row.uid);
+    geocoded += 1;
+  }
+  return { attempted: rows.length, geocoded, failed };
+}
+
 export async function runLlmEnricher() {
   if (process.env.LLM_ENABLED !== 'true') return { skipped: true };
   const out = { skipped: false };
   for (const [name, fn] of [
     ['stationDedup', enrichStationDedup],
     ['social', enrichSocialGeocode],
-    ['video', enrichVideoGeocode],
     ['cameras', enrichCameras],
+    ['intelGeo', enrichIntelGeocode],
+    ['intelKeywords', enrichIntelKeywords],
   ]) {
     try {
       out[name] = await fn();

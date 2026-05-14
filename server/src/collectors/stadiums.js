@@ -86,7 +86,7 @@ function generateSeedData() {
 
 export default async function collectStadiums() {
   let features = await tryOSMOverpass();
-  if (!features || features.length === 0) features = generateSeedData();
+  if (!features || features.length === 0) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -97,6 +97,5 @@ export default async function collectStadiums() {
       live: features?.[0]?.properties?.source === 'osm_overpass',
       description: 'J-League football, NPB baseball, sumo, rugby, indoor arenas',
     },
-    metadata: {},
   };
 }

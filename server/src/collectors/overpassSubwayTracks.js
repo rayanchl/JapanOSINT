@@ -44,6 +44,5 @@ export default async function collectOverpassSubwayTracks() {
       live: list.length > 0,
       description: 'OSM way[railway=subway|tram|monorail] tracks for the unified-subways layer',
     },
-    metadata: {},
   };
 }

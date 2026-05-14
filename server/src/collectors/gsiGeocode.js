@@ -38,6 +38,5 @@ export default async function collectGsiGeocode() {
       recordCount: features.length,
       description: 'GSI address-search geocoder probe',
     },
-    metadata: {},
   };
 }

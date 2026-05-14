@@ -118,11 +118,11 @@ export const LAYER_ICONS = {
 
   // Transport
   transport: MdTrain,
-  fullTransport: MdTrain,
   mlitN02Stations: MdDirectionsSubway,
   busRoutes: MdDirectionsBus,
   ferryRoutes: MdDirectionsBoat,
   highwayTraffic: MdDirectionsCar,
+  unifiedHighway: MdDirectionsCar,
   maritimeAis: FaShip,
   flightAdsb: FaPlaneUp,
   jarticTraffic: MdTraffic,
@@ -170,7 +170,6 @@ export const LAYER_ICONS = {
 
   // Social
   population: MdPeople,
-  social: MdChat,
   twitterGeo: MdChat,
   facebookGeo: MdChat,
 
@@ -227,7 +226,14 @@ export const LAYER_ICONS = {
   animePilgrimage: MdStar,
 
   // Crime
-  yakuzaHq: MdSecurity,
+  prefPoliceCrime: MdLocalPolice,
+  npaMissingPersons: MdEmergency,
+  npaTrafficAccidents: MdWarning,
+  npaImportantWanted: MdEmergency,
+  npaSpecialFraud: MdPhone,
+  npaCyberThreatObs: MdSecurity,
+  estatCrime: MdGavel,
+  mojCrimeWhitepaper: MdGavel,
   redLightZones: MdLocalBar,
   pachinkoDensity: MdCasino,
   wantedPersons: MdEmergency,
@@ -252,6 +258,54 @@ export const LAYER_ICONS = {
   marineTraffic: FaShip,
   vesselFinder: MdDirectionsBoat,
   googleMyMaps: MdMap,
+
+  // Wave 15 — vuln intel
+  myJvn: MdSecurity,
+  cisaKevJp: MdDangerous,
+  osvDev: MdShield,
+  ghsaAdvisories: MdSecurity,
+  pocInGithub: MdEmergency,
+  trickestCve: MdEmergency,
+
+  // Wave 15 — IOC / attacker activity
+  shadowserverJp: MdShield,
+  urlhausJp: MdWarning,
+  threatfoxJp: MdWarning,
+  feodoTrackerJp: MdDangerous,
+  sslblJp: MdSecurity,
+  spamhausDrop: MdDangerous,
+  abuseipdbJp: MdWarning,
+  alienvaultOtxJp: MdShield,
+  phishingFeedsJp: MdWarning,
+  sansIsc: MdShield,
+
+  // Wave 15 — asset / breach
+  leakixJp: MdRouter,
+  netlasJp: MdRouter,
+  hudsonRockJp: MdSecurity,
+  virustotalJp: MdSecurity,
+  chaosBugbountyJp: MdShield,
+
+  // Wave 15 — network / BGP / DNS
+  peeringdbJp: MdRouter,
+  bgpToolsJp: MdPublic,
+  crtshHistorical: MdSecurity,
+  cloudflareRadarJp: MdRadar,
+  ooniJp: MdPublic,
+  iodaJp: MdPublic,
+
+  // Wave 15 — SOCINT / news
+  yahooRealtime: MdTrendingUp,
+  mastodonJpInstances: MdChat,
+  blueskyJetstreamJp: MdChat,
+  niconicoRanking: MdMic,
+  wikipediaJaRecent: MdBook,
+  osmChangesetsJp: MdMap,
+  yahooNewsJpRss: MdChat,
+  jpNewsRss: MdChat,
+
+  // Wave 15 — geo / disaster
+  nasaFirmsJp: MdWhatshot,
 };
 
 export function getLayerIcon(layerId) {

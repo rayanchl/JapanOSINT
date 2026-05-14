@@ -102,7 +102,7 @@ function generateSeedData() {
 export default async function collectRedLightZones() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -114,6 +114,5 @@ export default async function collectRedLightZones() {
       live_source: live ? 'osm_overpass' : 'red_light_seed',
       description: 'Tolerated entertainment districts - historic yukaku and modern fuzoku zones',
     },
-    metadata: {},
   };
 }

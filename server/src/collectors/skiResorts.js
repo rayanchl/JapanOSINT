@@ -126,7 +126,7 @@ function generateSeedData() {
 export default async function collectSkiResorts() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -138,6 +138,5 @@ export default async function collectSkiResorts() {
       live_source: live ? 'osm_overpass' : 'ski_resort_seed',
       description: 'Japanese ski resorts and snow parks across Hokkaido/Tohoku/Niigata/Nagano/Gifu',
     },
-    metadata: {},
   };
 }

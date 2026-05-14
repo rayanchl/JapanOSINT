@@ -6,12 +6,14 @@ import MapPopup from './MapPopup';
 import useMapLayers from '../../hooks/useMapLayers';
 import useMapProjection from '../../hooks/useMapProjection';
 import useCameraDiscoveryStream from '../../hooks/useCameraDiscoveryStream';
+import apiUrl from '../../utils/apiUrl.js';
 
 export default function MapPage() {
   const {
     layers,
     toggleLayer,
     setLayerOpacity,
+    setLayerTemporalWindow,
     setAllLayers,
     layerData,
     activeCount,
@@ -28,9 +30,25 @@ export default function MapPage() {
     }
     if (cameraTriggerFiredRef.current) return;
     cameraTriggerFiredRef.current = true;
-    fetch('/api/data/cameras/trigger', { method: 'POST' })
-      .catch((err) => console.warn('[MapPage] camera trigger failed:', err?.message));
+    const ctrl = new AbortController();
+    fetch(apiUrl('/api/data/cameras/trigger'), { method: 'POST', signal: ctrl.signal })
+      .catch((err) => {
+        if (err?.name !== 'AbortError') {
+          console.warn('[MapPage] camera trigger failed:', err?.message);
+        }
+      });
+    return () => ctrl.abort();
   }, [camerasVisible]);
+
+  // Camera Discovery panel's "View on map" with no filters active asks the
+  // map to surface the global Cameras layer if it's currently hidden.
+  useEffect(() => {
+    const handler = () => {
+      if (!layers.cameras?.visible) toggleLayer('cameras');
+    };
+    window.addEventListener('japanosint:show-cameras-layer', handler);
+    return () => window.removeEventListener('japanosint:show-cameras-layer', handler);
+  }, [layers.cameras?.visible, toggleLayer]);
 
   const [popup, setPopup] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -99,6 +117,7 @@ export default function MapPage() {
         layerData={layerData}
         onToggleLayer={toggleLayer}
         onSetOpacity={setLayerOpacity}
+        onSetTemporalWindow={setLayerTemporalWindow}
         onSetAll={setAllLayers}
         cameraRunActive={!!cameraActiveRun}
       />
@@ -125,9 +144,9 @@ export default function MapPage() {
         {/* Search results dropdown */}
         {searchResults.length > 0 && (
           <div className="mt-1 glass-panel overflow-hidden">
-            {searchResults.map((r, i) => (
+            {searchResults.map((r) => (
               <button
-                key={i}
+                key={`${r.lat},${r.lon}|${r.display_name}`}
                 className="w-full text-left px-3 py-2 text-xs text-gray-300 hover:bg-neon-cyan/10 hover:text-neon-cyan border-b border-osint-border/50 last:border-0 transition-colors"
                 onClick={() => {
                   setSearchResults([]);

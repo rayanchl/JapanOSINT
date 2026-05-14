@@ -191,6 +191,5 @@ export default async function collectFamousPlaces() {
       live_source: list.length > 0 ? 'osm_overpass' : null,
       description: 'Famous places & noteworthy OSM POIs across Japan — tourism/historic/worship/leisure/natural (nationwide tiled Overpass, full metadata)',
     },
-    metadata: {},
   };
 }

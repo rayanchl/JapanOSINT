@@ -56,6 +56,5 @@ export default async function collectFacebookGeo() {
       live_source: live ? 'facebook_api' : null,
       description: 'Facebook public check-ins across Japan (Graph API only)',
     },
-    metadata: {},
   };
 }

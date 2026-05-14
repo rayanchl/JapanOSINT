@@ -120,10 +120,10 @@ async function tryMlitJson() {
       const d = arr[i];
       const lat = Number(d?.lat ?? d?.LAT ?? d?.緯度);
       const lon = Number(d?.lon ?? d?.LON ?? d?.経度);
-      if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+      const geocoded = Number.isFinite(lat) && Number.isFinite(lon);
       features.push({
         type: 'Feature',
-        geometry: { type: 'Point', coordinates: [lon, lat] },
+        geometry: geocoded ? { type: 'Point', coordinates: [lon, lat] } : null,
         properties: {
           station_id: d?.station_id ?? d?.code ?? `RIV_LIVE_${i}`,
           station_name: d?.station_name ?? d?.name ?? null,
@@ -171,7 +171,7 @@ export default async function collectMlitRiver() {
     live = !!(features && features.length);
     if (live) liveSrc = 'osm_water_monitoring';
   }
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
 
   return {
     type: 'FeatureCollection',
@@ -183,6 +183,5 @@ export default async function collectMlitRiver() {
       live,
       description: 'River water level monitoring stations across Japan',
     },
-    metadata: {},
   };
 }

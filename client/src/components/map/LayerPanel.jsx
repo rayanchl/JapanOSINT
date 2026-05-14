@@ -3,11 +3,27 @@ import { LAYER_DEFINITIONS, LAYER_CATEGORIES } from '../../hooks/useMapLayers';
 import { getLayerIcon } from '../../utils/layerIcons';
 import LoadingSpinner from '../ui/LoadingSpinner';
 
-function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, featureCount, forceLoading = false }) {
+function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporalChange, featureData, featureCount, forceLoading = false }) {
   const [showOpacity, setShowOpacity] = useState(false);
   const isActive = state.visible;
   const Icon = getLayerIcon(id);
   const showSpinner = state.loading || (forceLoading && isActive);
+
+  // For temporal layers, derive the sorted list of distinct year_month
+  // values present in the loaded data so the slider can snap to real months.
+  const temporalKey = def.temporal ? (def.temporalKey || 'year_month') : null;
+  const months = (() => {
+    if (!temporalKey) return null;
+    const features = featureData?.features || [];
+    if (features.length === 0) return [];
+    const set = new Set();
+    for (const f of features) {
+      const v = f?.properties?.[temporalKey];
+      if (v) set.add(String(v));
+    }
+    return Array.from(set).sort();
+  })();
+  const window = state.temporalWindow || null;
 
   return (
     <div className={`layer-toggle px-3 py-2 ${isActive ? 'active' : ''}`}>
@@ -64,6 +80,37 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, featureCou
           </span>
         </div>
       )}
+
+      {/* Temporal window selector */}
+      {showOpacity && isActive && temporalKey && months && months.length > 0 && (
+        <div className="mt-2 ml-10">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[10px] text-gray-500 w-8">Window</span>
+            <select
+              value={window ? `${window[0]}|${window[1]}` : 'all'}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (v === 'all') onTemporalChange?.(id, null);
+                else {
+                  const [s, e2] = v.split('|');
+                  onTemporalChange?.(id, [s, e2]);
+                }
+              }}
+              className="flex-1 text-[10px] bg-osint-surface border border-osint-border-bright rounded px-1 py-0.5 text-gray-300"
+            >
+              <option value="all">All ({months.length})</option>
+              {months.map((m) => (
+                <option key={m} value={`${m}|${m}`}>{m}</option>
+              ))}
+              {months.length > 1 && (
+                <option value={`${months[0]}|${months[months.length - 1]}`}>
+                  Range {months[0]} → {months[months.length - 1]}
+                </option>
+              )}
+            </select>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -73,6 +120,7 @@ export default function LayerPanel({
   layerData,
   onToggleLayer,
   onSetOpacity,
+  onSetTemporalWindow,
   onSetAll,
   cameraRunActive = false,
 }) {
@@ -173,6 +221,8 @@ export default function LayerPanel({
                       state={layers[id]}
                       onToggle={onToggleLayer}
                       onOpacityChange={onSetOpacity}
+                      onTemporalChange={onSetTemporalWindow}
+                      featureData={layerData[id]}
                       featureCount={getFeatureCount(id)}
                       forceLoading={id === 'cameras' && cameraRunActive}
                     />

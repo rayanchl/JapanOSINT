@@ -143,7 +143,7 @@ function generateSeedData() {
 export default async function collectSakeBreweries() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -155,6 +155,5 @@ export default async function collectSakeBreweries() {
       live_source: live ? 'osm_overpass' : 'jsba_seed',
       description: 'Japan Sake Brewers Association registered breweries (~1,200 nationwide)',
     },
-    metadata: {},
   };
 }

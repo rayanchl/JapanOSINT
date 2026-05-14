@@ -3,19 +3,18 @@
  * When no active typhoons exist the index is empty - we return seed sample.
  */
 
+import { fetchJson } from './_liveHelpers.js';
+
 const INDEX_URL = 'https://www.jma.go.jp/bosai/typhoon/data/targetTc.json';
 const TIMEOUT_MS = 8000;
 
 export default async function collectJmaTyphoonJson() {
   let features = [];
   let source = 'live';
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const res = await fetch(INDEX_URL, { signal: controller.signal });
-    clearTimeout(timer);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+  const data = await fetchJson(INDEX_URL, { timeoutMs: TIMEOUT_MS });
+  if (data == null) {
+    source = 'seed';
+  } else {
     const list = Array.isArray(data) ? data : [];
     for (const tc of list) {
       if (tc?.lat != null && tc?.lon != null) {
@@ -26,8 +25,6 @@ export default async function collectJmaTyphoonJson() {
         });
       }
     }
-  } catch {
-    source = 'seed';
   }
   if (features.length === 0 && source !== 'live') {
     features = [
@@ -47,6 +44,5 @@ export default async function collectJmaTyphoonJson() {
       recordCount: features.length,
       description: 'JMA active typhoon tracks',
     },
-    metadata: {},
   };
 }

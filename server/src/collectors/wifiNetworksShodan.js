@@ -8,14 +8,15 @@
 
 import { fetchJson } from './_liveHelpers.js';
 
-const SHODAN_API_KEY = process.env.SHODAN_API_KEY || '';
-
 async function tryShodanWifiAPs() {
-  if (!SHODAN_API_KEY) return [];
+  // Read at call-time so iOS-set keys (which mutate process.env via
+  // apiKeysStore.setKey) take effect without a server restart.
+  const key = process.env.SHODAN_API_KEY || '';
+  if (!key) return [];
   try {
     const query = encodeURIComponent('country:JP wifi OR "wireless" port:80,8080');
     const data = await fetchJson(
-      `https://api.shodan.io/shodan/host/search?key=${SHODAN_API_KEY}&query=${query}`
+      `https://api.shodan.io/shodan/host/search?key=${key}&query=${query}`
     );
     if (!data || !data.matches) return [];
     return data.matches.slice(0, 50).map((m, i) => ({

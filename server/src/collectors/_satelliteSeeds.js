@@ -4,6 +4,10 @@
 
 export const JAPAN_BBOX = [122, 24, 154, 46]; // [W, S, E, N]
 
+// Tokyo centroid — used as a fallback geometry by threat-intel collectors
+// whose rows have no per-record lat/lon (most do not).
+export const TOKYO = [139.6917, 35.6895];
+
 // Imagery fallback grid — 5x3 centroids over Japan, used when all live
 // imagery providers fail.
 export const IMAGERY_SEED_CENTROIDS = [

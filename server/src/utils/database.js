@@ -14,6 +14,12 @@ const db = new Database(dbPath);
 // Enable WAL mode for better concurrent read performance
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
+// better-sqlite3 defaults busy_timeout to 0 — any concurrent writer (manual
+// sqlite3 CLI, a `--watch` restart racing the previous instance, the boot
+// migrations themselves) trips an instant SQLITE_BUSY and aborts boot.
+// 10 seconds is generous enough to outlast normal contention and short
+// enough that a genuinely-stuck holder still surfaces as a real error.
+db.pragma('busy_timeout = 10000');
 
 // --------------- Schema ---------------
 
@@ -36,7 +42,8 @@ db.exec(`
     probe_response_status INTEGER,
     probe_response_headers TEXT,
     probe_response_body   TEXT,
-    probe_kind            TEXT
+    probe_kind            TEXT,
+    probe_consent         INTEGER NOT NULL DEFAULT 0
   );
 
   DROP TABLE IF EXISTS data_cache;
@@ -54,61 +61,11 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_log_source ON fetch_log(source_id);
   CREATE INDEX IF NOT EXISTS idx_log_ts     ON fetch_log(timestamp);
 
-  CREATE TABLE IF NOT EXISTS cameras (
-    camera_uid         TEXT PRIMARY KEY,
-    name               TEXT NOT NULL,
-    camera_type        TEXT,
-    lat                REAL NOT NULL,
-    lon                REAL NOT NULL,
-    url                TEXT,
-    thumbnail_url      TEXT,
-    operator           TEXT,
-    country            TEXT DEFAULT 'JP',
-    discovery_channels TEXT NOT NULL,
-    properties         TEXT NOT NULL,
-    first_seen_at      TEXT NOT NULL DEFAULT (datetime('now')),
-    last_seen_at       TEXT NOT NULL DEFAULT (datetime('now')),
-    seen_count         INTEGER NOT NULL DEFAULT 1
-  );
-
-  CREATE INDEX IF NOT EXISTS idx_cameras_last_seen ON cameras(last_seen_at);
-  CREATE INDEX IF NOT EXISTS idx_cameras_type      ON cameras(camera_type);
-  CREATE INDEX IF NOT EXISTS idx_cameras_geo       ON cameras(lat, lon);
-
-  CREATE TABLE IF NOT EXISTS transport_stations (
-    station_uid    TEXT PRIMARY KEY,
-    mode           TEXT NOT NULL,
-    name           TEXT,
-    operator       TEXT,
-    line           TEXT,
-    lat            REAL NOT NULL,
-    lon            REAL NOT NULL,
-    sources        TEXT NOT NULL,
-    properties     TEXT NOT NULL,
-    first_seen_at  TEXT NOT NULL DEFAULT (datetime('now')),
-    last_seen_at   TEXT NOT NULL DEFAULT (datetime('now')),
-    seen_count     INTEGER NOT NULL DEFAULT 1
-  );
-
-  CREATE INDEX IF NOT EXISTS idx_transport_stations_mode ON transport_stations(mode);
-  CREATE INDEX IF NOT EXISTS idx_transport_stations_geo  ON transport_stations(lat, lon);
-  CREATE INDEX IF NOT EXISTS idx_transport_stations_seen ON transport_stations(last_seen_at);
-
-  CREATE TABLE IF NOT EXISTS transport_lines (
-    line_uid       TEXT PRIMARY KEY,
-    mode           TEXT NOT NULL,
-    name           TEXT,
-    operator       TEXT,
-    coordinates    TEXT NOT NULL,
-    sources        TEXT NOT NULL,
-    properties     TEXT NOT NULL,
-    first_seen_at  TEXT NOT NULL DEFAULT (datetime('now')),
-    last_seen_at   TEXT NOT NULL DEFAULT (datetime('now')),
-    seen_count     INTEGER NOT NULL DEFAULT 1
-  );
-
-  CREATE INDEX IF NOT EXISTS idx_transport_lines_mode ON transport_lines(mode);
-  CREATE INDEX IF NOT EXISTS idx_transport_lines_seen ON transport_lines(last_seen_at);
+  -- The cameras, transport_stations, transport_lines, social_posts tables
+  -- and their FTS mirrors used to live here. They were retired in the Phase
+  -- B intel_items master cutover -- every reader and writer now goes through
+  -- utils/intelStore (the polymorphic master). The drop migration below
+  -- cleans them up on existing DBs; new DBs never see them.
 
   -- Canonical cross-mode station clusters. One row per physical place
   -- (Shinjuku = one row, even though it spans JR / Tokyo Metro / Toei /
@@ -370,61 +327,57 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_collector_cache_fetched
     ON collector_cache(fetched_at);
 
-  -- Persisted social-media posts. Both geocoded and ungeocoded; ungeocoded
-  -- rows (lat IS NULL) are picked up by llmEnricher and resolved via LLM
-  -- → GSI address search. llm_geocoded_at marks the row as decided so the
-  -- worker doesn't loop on it; clear that column to re-process.
-  CREATE TABLE IF NOT EXISTS social_posts (
-    post_uid          TEXT PRIMARY KEY,
-    platform          TEXT NOT NULL,
-    author            TEXT,
-    text              TEXT,
-    title             TEXT,
-    url               TEXT,
-    media_urls        TEXT,
-    language          TEXT,
-    fetched_at        TEXT NOT NULL DEFAULT (datetime('now')),
-    posted_at         TEXT,
-    lat               REAL,
-    lon               REAL,
-    geo_source        TEXT CHECK(geo_source IS NULL OR geo_source IN ('native_geo','place_match','llm_gsi')),
-    llm_place_name    TEXT,
-    llm_geocoded_at   TEXT,
-    llm_failure       TEXT,
-    properties        TEXT NOT NULL DEFAULT '{}'
+  -- Non-spatial collector output. Every source registered with kind:'intel'
+  -- (RSS feeds, advisories, document indexes, reference tables, TLE etc.)
+  -- upserts here on each run. uid is "<source_id>|<stable-record-key>" so
+  -- repeat fetches are idempotent. Long bodies (filings, court rulings) live
+  -- inline; if a source pushes the table past comfort we'll add chunking.
+  CREATE TABLE IF NOT EXISTS intel_items (
+    uid          TEXT PRIMARY KEY,
+    source_id    TEXT NOT NULL,
+    title        TEXT,
+    body         TEXT,
+    summary      TEXT,
+    link         TEXT,
+    author       TEXT,
+    language     TEXT,
+    published_at TEXT,
+    fetched_at   TEXT NOT NULL,
+    tags         TEXT,
+    properties   TEXT NOT NULL DEFAULT '{}'
   );
-  CREATE INDEX IF NOT EXISTS idx_social_posts_geo
-    ON social_posts(lat, lon);
-  CREATE INDEX IF NOT EXISTS idx_social_posts_pending
-    ON social_posts(llm_geocoded_at) WHERE llm_geocoded_at IS NULL;
+  CREATE INDEX IF NOT EXISTS idx_intel_items_source
+    ON intel_items(source_id, published_at DESC);
+  CREATE INDEX IF NOT EXISTS idx_intel_items_fetched
+    ON intel_items(fetched_at DESC);
 
-  -- Persisted video records (YouTube / Niconico / etc.). Same enrichment
-  -- shape as social_posts. No collector populates this table in this PR;
-  -- the schema lands so the enricher's drain function has somewhere to
-  -- read from when a video collector arrives.
-  CREATE TABLE IF NOT EXISTS video_items (
-    video_uid         TEXT PRIMARY KEY,
-    platform          TEXT NOT NULL,
-    channel           TEXT,
-    title             TEXT,
-    description       TEXT,
-    thumbnail_url     TEXT,
-    url               TEXT,
-    language          TEXT,
-    published_at      TEXT,
-    fetched_at        TEXT NOT NULL DEFAULT (datetime('now')),
-    lat               REAL,
-    lon               REAL,
-    geo_source        TEXT CHECK(geo_source IS NULL OR geo_source IN ('native_geo','place_match','llm_gsi')),
-    llm_place_name    TEXT,
-    llm_geocoded_at   TEXT,
-    llm_failure       TEXT,
-    properties        TEXT NOT NULL DEFAULT '{}'
+  -- FTS5 mirror tables (intel_items_fts, social_posts_fts, etc.) are owned
+  -- by utils/ftsMirror.js — each store module calls defineFtsMirror({...})
+  -- which handles CREATE / DROP+RECREATE based on a fingerprint stored in
+  -- _fts_meta below. Don't create them here.
+  --
+  -- _fts_meta is the source of truth for "what shape is each FTS table on
+  -- disk in." ftsMirror.ensureSchema() compares the live config against the
+  -- stored fingerprint and rebuilds when they diverge (column list change,
+  -- tokenizer change, segmenter version bump). Fingerprint is written only
+  -- after a successful rebuild so an interrupted rebuild self-heals.
+  CREATE TABLE IF NOT EXISTS _fts_meta (
+    name         TEXT PRIMARY KEY,
+    fingerprint  TEXT NOT NULL,
+    columns      TEXT NOT NULL,
+    tokenizer    TEXT NOT NULL,
+    version      INTEGER NOT NULL,
+    rebuilt_at   TEXT NOT NULL
   );
-  CREATE INDEX IF NOT EXISTS idx_video_items_geo
-    ON video_items(lat, lon);
-  CREATE INDEX IF NOT EXISTS idx_video_items_pending
-    ON video_items(llm_geocoded_at) WHERE llm_geocoded_at IS NULL;
+
+  -- (social_posts retired — see comment above where cameras/transport_*
+  --  CREATEs used to live. All social posts now go through intel_items.)
+
+  -- video_items was scaffolding for a YouTube/Niconico video-detail collector
+  -- that never landed. Niconico ranking now persists into social_posts (see
+  -- collectors/niconicoRanking.js), so video_items has no writers. The table,
+  -- its FTS mirror, and store/enricher paths were removed; the cleanup IIFE
+  -- below DROPs leftover artefacts on existing DBs.
 
   -- Pair-level "the LLM said these two transport_stations are/are-not the
   -- same". stationClusterer reads this in Pass 3 and unions any pair with
@@ -441,41 +394,85 @@ db.exec(`
 `);
 
 // --------------- Schema migration ---------------
-// Older DBs were created without probe_* columns and with a CHECK constraint
-// that disallows 'pending'. SQLite can't ALTER a CHECK, so if we detect the
-// legacy shape we drop and recreate `sources`. Runtime health is re-derived
-// on the next scheduler sweep, so no real data is lost.
+// Older DBs were created without probe_* columns. SQLite can ADD COLUMN
+// in-place, so just append whatever's missing — no data loss, no fetch_log
+// wipe. The legacy CHECK constraint on `status` did not include 'pending';
+// if we still see that shape we recreate the table while preserving every
+// row (and their fetch_log foreign-key relationships).
 (function ensureSchema() {
   const cols = db.prepare("PRAGMA table_info(sources)").all();
-  const hasProbe = cols.some((c) => c.name === 'probe_request_url');
-  if (!hasProbe) {
-    console.log('[database] Migrating sources table for probe capture...');
+  if (cols.length === 0) return; // fresh DB — main CREATE handled it
+
+  const colNames = new Set(cols.map((c) => c.name));
+  const probeCols = [
+    ['probe_request_url',     'TEXT'],
+    ['probe_request_method',  'TEXT'],
+    ['probe_request_headers', 'TEXT'],
+    ['probe_response_status', 'INTEGER'],
+    ['probe_response_headers','TEXT'],
+    ['probe_response_body',   'TEXT'],
+    ['probe_kind',            'TEXT'],
+    ['probe_consent',         'INTEGER NOT NULL DEFAULT 0'],
+  ];
+
+  // Detect the legacy CHECK constraint that omits 'pending'. PRAGMA doesn't
+  // expose CHECK clauses, so peek at sqlite_master.sql.
+  const tableSql = db
+    .prepare("SELECT sql FROM sqlite_master WHERE type='table' AND name='sources'")
+    .get()?.sql || '';
+  const hasPendingInCheck = /CHECK\s*\(\s*status\s+IN[^)]*'pending'/i.test(tableSql);
+  const needsRebuild = !hasPendingInCheck;
+
+  if (needsRebuild) {
+    console.log('[database] Rebuilding sources table to widen status CHECK (preserving rows)...');
     db.pragma('foreign_keys = OFF');
-    db.exec(`
-      DELETE FROM fetch_log;
-      DROP TABLE IF EXISTS sources;
-      CREATE TABLE sources (
-        id            TEXT PRIMARY KEY,
-        name          TEXT NOT NULL,
-        type          TEXT NOT NULL CHECK(type IN ('api','dataset','scraped','web_request')),
-        category      TEXT NOT NULL,
-        url           TEXT,
-        status        TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('online','offline','degraded','pending')),
-        last_check    TEXT,
-        last_success  TEXT,
-        response_time_ms INTEGER,
-        records_count INTEGER DEFAULT 0,
-        error_message TEXT,
-        probe_request_url     TEXT,
-        probe_request_method  TEXT,
-        probe_request_headers TEXT,
-        probe_response_status INTEGER,
-        probe_response_headers TEXT,
-        probe_response_body   TEXT,
-        probe_kind            TEXT
-      );
-    `);
+    const tx = db.transaction(() => {
+      db.exec(`
+        CREATE TABLE sources_new (
+          id            TEXT PRIMARY KEY,
+          name          TEXT NOT NULL,
+          type          TEXT NOT NULL CHECK(type IN ('api','dataset','scraped','web_request')),
+          category      TEXT NOT NULL,
+          url           TEXT,
+          status        TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('online','offline','degraded','pending')),
+          last_check    TEXT,
+          last_success  TEXT,
+          response_time_ms INTEGER,
+          records_count INTEGER DEFAULT 0,
+          error_message TEXT,
+          probe_request_url     TEXT,
+          probe_request_method  TEXT,
+          probe_request_headers TEXT,
+          probe_response_status INTEGER,
+          probe_response_headers TEXT,
+          probe_response_body   TEXT,
+          probe_kind            TEXT,
+          probe_consent         INTEGER NOT NULL DEFAULT 0
+        );
+      `);
+      // Copy whatever columns exist; missing columns become NULL.
+      const oldCols = [...colNames];
+      const sharedNewCols = [
+        'id','name','type','category','url','status',
+        'last_check','last_success','response_time_ms','records_count','error_message',
+        ...probeCols.map(([c]) => c),
+      ];
+      const selectList = sharedNewCols
+        .map((c) => oldCols.includes(c) ? `"${c}"` : `NULL AS "${c}"`)
+        .join(', ');
+      db.exec(`INSERT INTO sources_new (${sharedNewCols.map((c) => `"${c}"`).join(', ')}) SELECT ${selectList} FROM sources;`);
+      db.exec(`DROP TABLE sources;`);
+      db.exec(`ALTER TABLE sources_new RENAME TO sources;`);
+    });
+    tx();
     db.pragma('foreign_keys = ON');
+  } else {
+    // Modern shape — just patch any missing probe columns in place.
+    for (const [name, type] of probeCols) {
+      if (!colNames.has(name)) {
+        db.exec(`ALTER TABLE sources ADD COLUMN ${name} ${type};`);
+      }
+    }
   }
 })();
 
@@ -512,20 +509,117 @@ db.exec(`
   }
 })();
 
-// cameras.llm_place_name / cameras.llm_geocoded_at — LLM-resolved location.
-// Existing rows have NOT NULL lat/lon already; these columns let the
-// enricher overwrite uncertain coords once the LLM has spoken.
-(function ensureCamerasLlmColumns() {
+// One-shot drop of video_items + its FTS mirror. Boot logs from the FTS PR
+// confirmed the table was empty in production; nothing of value is lost.
+// Idempotent — DROP ... IF EXISTS makes subsequent boots no-ops.
+(function dropVideoItemsTable() {
   try {
-    const cols = db.prepare('PRAGMA table_info(cameras)').all().map((c) => c.name);
-    if (!cols.includes('llm_place_name')) {
-      db.exec('ALTER TABLE cameras ADD COLUMN llm_place_name TEXT');
-    }
-    if (!cols.includes('llm_geocoded_at')) {
-      db.exec('ALTER TABLE cameras ADD COLUMN llm_geocoded_at TEXT');
-    }
+    db.exec(`
+      DROP TABLE IF EXISTS video_items_fts;
+      DROP TABLE IF EXISTS video_items;
+    `);
+    db.prepare(`DELETE FROM _fts_meta WHERE name = 'video_items_fts'`).run();
   } catch (err) {
-    console.warn('[database] cameras LLM columns migration failed:', err?.message);
+    console.warn('[database] video_items drop failed:', err?.message);
+  }
+})();
+
+// Phase B retirement: drop typed spatial tables now that every reader and
+// writer goes through intel_items (the polymorphic master). Data was
+// preserved by intelBackfill.js; this just removes the now-unused storage.
+// Idempotent — DROP IF EXISTS + delete from _fts_meta.
+(function dropTypedSpatialTables() {
+  try {
+    db.exec(`
+      DROP TABLE IF EXISTS cameras_fts;
+      DROP TABLE IF EXISTS social_posts_fts;
+      DROP TABLE IF EXISTS cameras;
+      DROP TABLE IF EXISTS transport_stations;
+      DROP TABLE IF EXISTS transport_lines;
+      DROP TABLE IF EXISTS social_posts;
+    `);
+    db.prepare(`DELETE FROM _fts_meta WHERE name IN ('cameras_fts','social_posts_fts')`).run();
+  } catch (err) {
+    console.warn('[database] typed-table drop failed:', err?.message);
+  }
+})();
+
+// (cameras.llm_place_name / cameras.llm_geocoded_at migration retired —
+//  the cameras table is gone and its data lives in intel_items, where
+//  geom_source = 'llm' + geom_at do the same job.)
+
+// intel_items keywords overlay. ADD COLUMNs are idempotent. The legacy
+// content='intel_items' triggers belonged to the pre-mirror FTS design;
+// drop them unconditionally. FTS table shape is now governed by
+// utils/ftsMirror.js via _fts_meta fingerprinting — see ftsMirror.ensureSchema().
+(function ensureIntelKeywordsSchema() {
+  try {
+    const cols = db.prepare('PRAGMA table_info(intel_items)').all().map((c) => c.name);
+    if (cols.length === 0) return;
+    if (!cols.includes('keywords')) {
+      db.exec('ALTER TABLE intel_items ADD COLUMN keywords TEXT');
+    }
+    if (!cols.includes('keywords_at')) {
+      db.exec('ALTER TABLE intel_items ADD COLUMN keywords_at TEXT');
+    }
+    if (!cols.includes('keywords_failed')) {
+      db.exec('ALTER TABLE intel_items ADD COLUMN keywords_failed INTEGER DEFAULT 0');
+    }
+    db.exec(`
+      DROP TRIGGER IF EXISTS intel_items_ai;
+      DROP TRIGGER IF EXISTS intel_items_au;
+      DROP TRIGGER IF EXISTS intel_items_ad;
+    `);
+  } catch (err) {
+    console.warn('[database] intel_items keywords migration failed:', err?.message);
+  }
+})();
+
+// intel_items polymorphic-master upgrade. Adds geometry + record_type +
+// sub_source_id so every collector (spatial or not) can write here. Geometry
+// columns are nullable: rows without coords still land in the table, and the
+// llmEnricher fills them later. record_type is the cheap discriminator we
+// filter on instead of digging into properties JSON. sub_source_id captures
+// which channel/source-within-collector emitted the row (e.g. 'osm-overpass'
+// inside camera-discovery), so the SourcesPanel can show per-channel status.
+(function ensureIntelMasterSchema() {
+  try {
+    const cols = db.prepare('PRAGMA table_info(intel_items)').all().map((c) => c.name);
+    if (cols.length === 0) return;
+    const adds = [
+      ['lat',           'REAL'],
+      ['lon',           'REAL'],
+      ['geom_source',   'TEXT'],
+      ['geom_at',       'TEXT'],
+      ['record_type',   'TEXT'],
+      ['sub_source_id', 'TEXT'],
+      // Full GeoJSON geometry as JSON string. lat/lon hold the indexed
+      // representative point (centroid for polygons, the point itself for
+      // points). geometry preserves polygons / lines / multi-shapes for
+      // map rendering when the cutover lands.
+      ['geometry',      'TEXT'],
+      // LLM-geocode failure counter. Matches the keywords_failed pattern.
+      // After 5 attempts we stop trying so we don't loop on rows the LLM
+      // can't resolve. Clear this column to re-queue a row.
+      ['geom_failed',   'INTEGER DEFAULT 0'],
+    ];
+    for (const [name, type] of adds) {
+      if (!cols.includes(name)) {
+        db.exec(`ALTER TABLE intel_items ADD COLUMN ${name} ${type}`);
+      }
+    }
+    db.exec(`
+      CREATE INDEX IF NOT EXISTS idx_intel_items_geom
+        ON intel_items(lat, lon) WHERE lat IS NOT NULL;
+      CREATE INDEX IF NOT EXISTS idx_intel_items_type
+        ON intel_items(record_type, source_id);
+      CREATE INDEX IF NOT EXISTS idx_intel_items_subsrc
+        ON intel_items(source_id, sub_source_id);
+      CREATE INDEX IF NOT EXISTS idx_intel_items_geom_pending
+        ON intel_items(source_id) WHERE lat IS NULL AND geom_source IS NULL;
+    `);
+  } catch (err) {
+    console.warn('[database] intel_items master migration failed:', err?.message);
   }
 })();
 
@@ -562,6 +656,10 @@ const stmtUpdateStatus = db.prepare(`
 const stmtInsertLog = db.prepare(`
   INSERT INTO fetch_log (source_id, status, records_fetched, duration_ms, error)
   VALUES (@source_id, @status, @records_fetched, @duration_ms, @error)
+`);
+
+const stmtSetProbeConsent = db.prepare(`
+  UPDATE sources SET probe_consent = @value WHERE id = @id
 `);
 
 // --------------- Helper functions ---------------
@@ -604,6 +702,10 @@ export function updateSourceStatus({
 
 export function logFetch({ source_id, status, records_fetched = 0, duration_ms = null, error = null }) {
   return stmtInsertLog.run({ source_id, status, records_fetched, duration_ms, error });
+}
+
+export function setProbeConsent(id, value) {
+  return stmtSetProbeConsent.run({ id, value: value ? 1 : 0 });
 }
 
 export function getAllSources() {

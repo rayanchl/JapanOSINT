@@ -75,6 +75,5 @@ export default async function collectNicterStats() {
       scrape_caveat: 'Numbers are best-effort regex matches on a JS-rendered page; may be null',
       description: 'NICTER darknet observatory daily stats (scraped)',
     },
-    metadata: {},
   };
 }

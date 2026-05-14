@@ -135,9 +135,9 @@ export default async function collectBridgeTunnelInfra() {
   let osmFeatures = results[0].status === 'fulfilled' ? results[0].value : null;
 
   const live = !!(osmFeatures && osmFeatures.length > 0);
-  if (!live) osmFeatures = generateSeedData();
+  if (!live) osmFeatures = [];
 
-  const seedFeatures = generateSeedData();
+  const seedFeatures = [];
 
   // Merge: OSM live data + seed data (seed always included for curated details)
   const features = live ? [...osmFeatures, ...seedFeatures] : seedFeatures;
@@ -152,6 +152,5 @@ export default async function collectBridgeTunnelInfra() {
       live,
       description: 'Japan bridge & tunnel infrastructure - iconic bridges, expressway bridges, Shinkansen tunnels, undersea tunnels, landmark structures',
     },
-    metadata: {},
   };
 }

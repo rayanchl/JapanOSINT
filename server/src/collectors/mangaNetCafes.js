@@ -116,7 +116,7 @@ function generateSeedData() {
 export default async function collectMangaNetCafes() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -128,6 +128,5 @@ export default async function collectMangaNetCafes() {
       live_source: live ? 'osm_overpass' : 'chain_seed',
       description: 'Japanese manga/internet cafes — 24-hr chains (Jiyu-kukan, Popeye, Bagus, DiCE, Manboo!)',
     },
-    metadata: {},
   };
 }

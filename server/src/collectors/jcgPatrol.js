@@ -77,7 +77,7 @@ function generateSeedData() {
 export default async function collectJcgPatrol() {
   let features = await tryJcg();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -88,6 +88,5 @@ export default async function collectJcgPatrol() {
       live,
       description: 'Japan Coast Guard - 11 regional headquarters and patrol vessel bases',
     },
-    metadata: {},
   };
 }

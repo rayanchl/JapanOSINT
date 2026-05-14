@@ -47,6 +47,5 @@ export default async function collectParkingFacilities() {
       live: features.length > 0,
       description: 'Parking facilities in Japan (tiled Overpass nationwide)',
     },
-    metadata: {},
   };
 }

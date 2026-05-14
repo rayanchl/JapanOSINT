@@ -138,7 +138,7 @@ export default async function collectPoliceCrime() {
   // Try OSM police stations first; fallback to seeded incident patterns
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
 
   return {
     type: 'FeatureCollection',
@@ -150,6 +150,5 @@ export default async function collectPoliceCrime() {
       live,
       description: 'Representative crime incident data for major Japanese cities',
     },
-    metadata: {},
   };
 }

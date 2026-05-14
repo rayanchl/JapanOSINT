@@ -102,7 +102,7 @@ function generateSeedData() {
 export default async function collectHazardMapPortal() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -113,6 +113,5 @@ export default async function collectHazardMapPortal() {
       live,
       description: 'Japan hazard zones - tsunami, volcano, landslide, flood, liquefaction',
     },
-    metadata: {},
   };
 }

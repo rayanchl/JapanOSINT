@@ -203,7 +203,7 @@ export default async function collectEvCharging() {
       live = true;
     }
   }
-  if (features.length === 0) features = generateSeedData();
+  if (features.length === 0) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -214,6 +214,5 @@ export default async function collectEvCharging() {
       live,
       description: 'EV charging stations across Japan',
     },
-    metadata: {},
   };
 }

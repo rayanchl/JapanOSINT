@@ -147,7 +147,7 @@ export default async function collectWantedPersons() {
   let liveSource = 'npa_wanted_html';
   const live = !!(features && features.length > 0);
   if (!live) {
-    features = generateSeedData();
+    features = [];
     liveSource = 'npa_wanted_seed';
   }
   return {
@@ -161,6 +161,5 @@ export default async function collectWantedPersons() {
       live_source: liveSource,
       description: 'NPA designated wanted persons (指名手配) by issuing prefectural police',
     },
-    metadata: {},
   };
 }

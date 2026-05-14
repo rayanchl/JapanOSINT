@@ -120,7 +120,7 @@ function generateSeedData() {
 export default async function collectKaraokeChains() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -132,6 +132,5 @@ export default async function collectKaraokeChains() {
       live_source: live ? 'osm_overpass' : 'chain_seed',
       description: 'Japanese karaoke box chains (Big Echo, Karaoke-kan, JOYSOUND, Manekineko, Jankara)',
     },
-    metadata: {},
   };
 }

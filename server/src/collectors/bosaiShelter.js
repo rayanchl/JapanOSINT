@@ -96,7 +96,7 @@ function generateSeedData() {
 export default async function collectBosaiShelter() {
   let features = await tryOverpass();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -107,6 +107,5 @@ export default async function collectBosaiShelter() {
       live,
       description: 'Japan disaster evacuation shelters and assembly points',
     },
-    metadata: {},
   };
 }

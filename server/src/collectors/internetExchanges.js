@@ -119,7 +119,7 @@ function generateSeedData() {
 export default async function collectInternetExchanges() {
   let features = await tryPeeringDb();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -130,6 +130,5 @@ export default async function collectInternetExchanges() {
       live,
       description: 'Japanese internet exchange points: JPNAP, JPIX, BBIX, Equinix IX, DIX-IE, regional IXPs (PeeringDB API)',
     },
-    metadata: {},
   };
 }

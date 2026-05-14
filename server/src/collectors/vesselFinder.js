@@ -104,7 +104,7 @@ export default async function collectVesselFinder() {
   }
   const live = !!(features && features.length > 0);
   if (!live) {
-    features = generateSeed();
+    features = [];
     liveSource = 'vesselfinder_seed';
   }
   return {
@@ -118,6 +118,5 @@ export default async function collectVesselFinder() {
       live_source: liveSource,
       description: 'VesselFinder live AIS vessels + ferry/cruise terminals around Japan',
     },
-    metadata: {},
   };
 }

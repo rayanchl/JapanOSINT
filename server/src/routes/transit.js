@@ -243,12 +243,24 @@ router.get('/station/:stationUid/summary', async (req, res) => {
   }
 
   try {
-    const station = db.prepare(`
-      SELECT station_uid, mode, name, operator, line, lat, lon, properties
-      FROM transport_stations
-      WHERE station_uid = ?
+    // Post-cutover: stations live in intel_items under '<unified-mode>|<station_uid>'.
+    // Look up by suffix match across the seven transport source_ids.
+    const stationRow = db.prepare(`
+      SELECT
+        substr(uid, instr(uid, '|') + 1) AS station_uid,
+        COALESCE(sub_source_id, '')      AS mode,
+        title                            AS name,
+        json_extract(properties, '$.operator') AS operator,
+        json_extract(properties, '$.line')     AS line,
+        lat, lon,
+        properties
+      FROM intel_items
+      WHERE record_type = 'station'
+        AND uid LIKE '%|' || ?
+      LIMIT 1
     `).get(stationUid);
-    if (!station) return res.status(404).json({ error: 'station not found' });
+    if (!stationRow) return res.status(404).json({ error: 'station not found' });
+    const station = stationRow;
 
     let props = {};
     try { props = JSON.parse(station.properties); } catch { /* leave empty */ }
@@ -398,11 +410,22 @@ async function respondWithClusterSummary(_req, res, clusterUid) {
     let memberUids = [];
     try { memberUids = JSON.parse(cluster.member_uids); } catch { /* empty */ }
 
+    // Post-cutover: stations are in intel_items keyed by '<source>|<station_uid>'.
+    // Each member_uid is the inner station_uid; pull rows by suffix match.
     const members = memberUids.length
-      ? db.prepare(
-          `SELECT station_uid, mode, name, operator, lat, lon, properties
-           FROM transport_stations WHERE station_uid IN (${memberUids.map(() => '?').join(',')})`,
-        ).all(...memberUids)
+      ? memberUids.map((mu) => db.prepare(`
+          SELECT
+            substr(uid, instr(uid, '|') + 1) AS station_uid,
+            COALESCE(sub_source_id, '')      AS mode,
+            title                            AS name,
+            json_extract(properties, '$.operator') AS operator,
+            lat, lon,
+            properties
+          FROM intel_items
+          WHERE record_type = 'station'
+            AND uid LIKE '%|' || ?
+          LIMIT 1
+        `).get(mu)).filter(Boolean)
       : [];
 
     // Hydrate every member that has an ODPT station id — cheap, and it

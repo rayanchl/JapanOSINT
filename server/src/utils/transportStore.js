@@ -13,78 +13,9 @@
 
 import crypto from 'node:crypto';
 import db from './database.js';
+import { upsertItemSync } from './intelStore.js';
 
 // ── Stations ───────────────────────────────────────────────────────────────
-
-const stmtStationGet = db.prepare(
-  'SELECT * FROM transport_stations WHERE station_uid = ?',
-);
-
-const stmtStationInsert = db.prepare(`
-  INSERT INTO transport_stations (
-    station_uid, mode, name, operator, line, lat, lon, sources, properties
-  ) VALUES (
-    @station_uid, @mode, @name, @operator, @line, @lat, @lon, @sources, @properties
-  )
-`);
-
-const stmtStationUpdate = db.prepare(`
-  UPDATE transport_stations SET
-    name         = @name,
-    operator     = @operator,
-    line         = @line,
-    sources      = @sources,
-    properties   = @properties,
-    last_seen_at = datetime('now'),
-    seen_count   = seen_count + 1
-  WHERE station_uid = @station_uid
-`);
-
-const stmtStationsByMode = db.prepare(
-  'SELECT * FROM transport_stations WHERE mode = ?',
-);
-
-const stmtStationCountByMode = db.prepare(
-  "SELECT COUNT(*) c FROM transport_stations WHERE mode = ?",
-);
-
-const stmtStationNew24hByMode = db.prepare(
-  "SELECT COUNT(*) c FROM transport_stations WHERE mode = ? AND first_seen_at >= datetime('now', '-1 day')",
-);
-
-// ── Lines ──────────────────────────────────────────────────────────────────
-
-const stmtLineGet = db.prepare(
-  'SELECT * FROM transport_lines WHERE line_uid = ?',
-);
-
-const stmtLineInsert = db.prepare(`
-  INSERT INTO transport_lines (
-    line_uid, mode, name, operator, coordinates, sources, properties
-  ) VALUES (
-    @line_uid, @mode, @name, @operator, @coordinates, @sources, @properties
-  )
-`);
-
-const stmtLineUpdate = db.prepare(`
-  UPDATE transport_lines SET
-    name         = @name,
-    operator     = @operator,
-    coordinates  = @coordinates,
-    sources      = @sources,
-    properties   = @properties,
-    last_seen_at = datetime('now'),
-    seen_count   = seen_count + 1
-  WHERE line_uid = @line_uid
-`);
-
-const stmtLinesByMode = db.prepare(
-  'SELECT * FROM transport_lines WHERE mode = ?',
-);
-
-const stmtLineCountByMode = db.prepare(
-  "SELECT COUNT(*) c FROM transport_lines WHERE mode = ?",
-);
 
 // ── UID derivation ─────────────────────────────────────────────────────────
 
@@ -203,60 +134,23 @@ function chaikinSmooth(coords, iterations = 4, simplifyEps = 1e-6) {
   return simplifyPolyline(c, simplifyEps);
 }
 
-function rowToStationFeature(row) {
-  const properties = safeJson(row.properties, {});
-  const sources = safeJson(row.sources, []);
-  return {
-    type: 'Feature',
-    geometry: { type: 'Point', coordinates: [row.lon, row.lat] },
-    properties: {
-      ...properties,
-      station_uid: row.station_uid,
-      mode: row.mode,
-      name: row.name,
-      operator: row.operator,
-      line: row.line,
-      sources,
-      first_seen_at: row.first_seen_at,
-      last_seen_at: row.last_seen_at,
-      seen_count: row.seen_count,
-    },
-  };
-}
-
-function rowToLineFeature(row) {
-  const properties = safeJson(row.properties, {});
-  const sources = safeJson(row.sources, []);
-  const coords = safeJson(row.coordinates, []);
-  // Fragment stitching + Chaikin smoothing + RDP simplify happens in
-  // getLinesByMode AFTER all rows are materialised — see
-  // stitchAndSmoothLines(). Per-row we only decode the raw coords exactly
-  // as stored.
-  return {
-    type: 'Feature',
-    geometry: { type: 'LineString', coordinates: coords },
-    properties: {
-      ...properties,
-      line_uid: row.line_uid,
-      mode: row.mode,
-      name: row.name,
-      operator: row.operator,
-      sources,
-      first_seen_at: row.first_seen_at,
-      last_seen_at: row.last_seen_at,
-      seen_count: row.seen_count,
-      kind: 'track',
-    },
-  };
-}
+// rowToStationFeature / rowToLineFeature were the typed-table read paths.
+// Replaced by masterStationRow / masterLineRow below, which read from
+// intel_items. The legacy helpers were deleted alongside the typed tables.
 
 // ── Upserts ────────────────────────────────────────────────────────────────
 
+// Read by intel_items uid (master form). Used by the new master-only upserts
+// to read previous properties for the merge step.
+const stmtMasterGet = db.prepare('SELECT properties, geom_source FROM intel_items WHERE uid = ?');
+
 /**
- * Upsert one Point station feature.
- * @param {object} feature  GeoJSON Point feature
- * @param {string} mode     'train' | 'subway' | 'bus' | 'ship' | 'port'
- * @param {string} source   upstream contributor name
+ * Upsert one Point station feature into intel_items. Master-only — the
+ * typed transport_stations table is gone. Preserves source-union + new-
+ * payload-wins merge semantics by reading the existing master row's
+ * properties JSON.
+ *
+ * @returns {{kind: 'new'|'updated', feature: GeoJSON feature}}
  */
 export function upsertStation(feature, mode, source) {
   const p = feature?.properties || {};
@@ -265,53 +159,69 @@ export function upsertStation(feature, mode, source) {
   const [lon, lat] = coords;
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
 
+  const sourceId = MODE_TO_SOURCE_ID[mode];
+  if (!sourceId) return null;
+
   const name = p.name || p.station_name || null;
-  const uid = stationUid({ mode, lat, lon, name });
-  const existing = stmtStationGet.get(uid);
+  const stationUidVal = stationUid({ mode, lat, lon, name });
+  const masterUid = `${sourceId}|${stationUidVal}`;
 
-  if (!existing) {
-    const sources = Array.from(new Set([source, ...(p.sources || [])].filter(Boolean)));
-    stmtStationInsert.run({
-      station_uid: uid,
-      mode,
-      name,
-      operator: p.operator || null,
-      line: p.line || p.line_name || null,
-      lat,
-      lon,
-      sources: JSON.stringify(sources),
-      properties: JSON.stringify(p),
-    });
-    return { kind: 'new', feature: rowToStationFeature(stmtStationGet.get(uid)) };
-  }
+  const existingRow = stmtMasterGet.get(masterUid);
+  const prevProps = existingRow ? safeJson(existingRow.properties, {}) : {};
+  const prevSources = Array.isArray(prevProps.sources)
+    ? prevProps.sources
+    : safeJson(prevProps.sources, []);
+  const nextSources = Array.from(new Set([
+    ...prevSources, source, ...(p.sources || []),
+  ].filter(Boolean)));
 
-  const prevSources = safeJson(existing.sources, []);
-  const nextSources = Array.from(new Set([...prevSources, source, ...(p.sources || [])].filter(Boolean)));
-  const prevProps = safeJson(existing.properties, {});
-  // Fresh collector output wins for computed fields (line_color, etc) so
-  // upstream algorithm fixes propagate. Falls back to previous values
-  // when the new payload omits a field.
-  const mergedProps = { ...prevProps, ...p };
+  const nowIso = new Date().toISOString();
+  // Fresh collector output wins for computed fields (line_color etc.) so
+  // upstream algorithm fixes propagate. Falls back to previous values when
+  // the new payload omits a field.
+  const mergedProps = {
+    ...prevProps,
+    ...p,
+    station_uid:   stationUidVal,
+    mode,
+    name:          name || prevProps.name || null,
+    operator:      p.operator || prevProps.operator || null,
+    line:          p.line || p.line_name || prevProps.line || null,
+    sources:       nextSources,
+    first_seen_at: prevProps.first_seen_at || nowIso,
+    last_seen_at:  nowIso,
+    seen_count:    (prevProps.seen_count ?? 0) + 1,
+  };
 
-  stmtStationUpdate.run({
-    station_uid: uid,
-    name: name || existing.name,
-    operator: p.operator || existing.operator || null,
-    line: p.line || p.line_name || existing.line || null,
-    sources: JSON.stringify(nextSources),
-    properties: JSON.stringify(mergedProps),
-  });
-  return { kind: 'updated', feature: rowToStationFeature(stmtStationGet.get(uid)) };
+  const result = upsertItemSync({
+    uid:        masterUid,
+    title:      mergedProps.name,
+    lat,
+    lon,
+    geomSource: existingRow?.geom_source === 'llm' ? 'llm' : 'native',
+    geometry:   { type: 'Point', coordinates: [lon, lat] },
+    recordType: 'station',
+    subSourceId: mode,
+    properties: mergedProps,
+  }, sourceId);
+
+  return {
+    kind: result?.kind ?? 'new',
+    feature: {
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [lon, lat] },
+      properties: mergedProps,
+    },
+  };
 }
 
 /**
- * Upsert one LineString track feature.
+ * Upsert one LineString track feature into intel_items. Master-only.
  */
 export function upsertLine(feature, mode, source) {
   const p = feature?.properties || {};
   const geom = feature?.geometry;
   if (!geom) return null;
-  // Accept LineString and MultiLineString (collapse multi to first segment).
   let coordinates = null;
   if (geom.type === 'LineString' && Array.isArray(geom.coordinates) && geom.coordinates.length >= 2) {
     coordinates = geom.coordinates;
@@ -320,40 +230,60 @@ export function upsertLine(feature, mode, source) {
   }
   if (!coordinates || coordinates.length < 2) return null;
 
+  const sourceId = MODE_TO_SOURCE_ID[mode];
+  if (!sourceId) return null;
+
   const name = p.name || p.line_name || p.route_name || null;
   const operator = p.operator || null;
-  const uid = lineUid({ mode, name, operator, coordinates });
-  const existing = stmtLineGet.get(uid);
+  const lineUidVal = lineUid({ mode, name, operator, coordinates });
+  const masterUid = `${sourceId}|line:${lineUidVal}`;
 
-  if (!existing) {
-    const sources = Array.from(new Set([source, ...(p.sources || [])].filter(Boolean)));
-    stmtLineInsert.run({
-      line_uid: uid,
-      mode,
-      name,
-      operator,
-      coordinates: JSON.stringify(coordinates),
-      sources: JSON.stringify(sources),
-      properties: JSON.stringify(p),
-    });
-    return { kind: 'new', feature: rowToLineFeature(stmtLineGet.get(uid)) };
-  }
+  const existingRow = stmtMasterGet.get(masterUid);
+  const prevProps = existingRow ? safeJson(existingRow.properties, {}) : {};
+  const prevSources = Array.isArray(prevProps.sources)
+    ? prevProps.sources
+    : safeJson(prevProps.sources, []);
+  const nextSources = Array.from(new Set([
+    ...prevSources, source, ...(p.sources || []),
+  ].filter(Boolean)));
 
-  const prevSources = safeJson(existing.sources, []);
-  const nextSources = Array.from(new Set([...prevSources, source, ...(p.sources || [])].filter(Boolean)));
-  const prevProps = safeJson(existing.properties, {});
-  // Fresh collector output wins so upstream fixes propagate.
-  const mergedProps = { ...prevProps, ...p };
+  const nowIso = new Date().toISOString();
+  const mergedProps = {
+    ...prevProps,
+    ...p,
+    line_uid:      lineUidVal,
+    mode,
+    name:          name || prevProps.name || null,
+    operator:      operator || prevProps.operator || null,
+    sources:       nextSources,
+    first_seen_at: prevProps.first_seen_at || nowIso,
+    last_seen_at:  nowIso,
+    seen_count:    (prevProps.seen_count ?? 0) + 1,
+    kind:          'track',
+  };
 
-  stmtLineUpdate.run({
-    line_uid: uid,
-    name: name || existing.name,
-    operator: operator || existing.operator,
-    coordinates: JSON.stringify(coordinates),
-    sources: JSON.stringify(nextSources),
-    properties: JSON.stringify(mergedProps),
-  });
-  return { kind: 'updated', feature: rowToLineFeature(stmtLineGet.get(uid)) };
+  // Indexed centroid: first coord pair. The full LineString is in geometry.
+  const [lon, lat] = coordinates[0];
+  const result = upsertItemSync({
+    uid:        masterUid,
+    title:      mergedProps.name,
+    lat,
+    lon,
+    geomSource: existingRow?.geom_source === 'llm' ? 'llm' : 'native',
+    geometry:   { type: 'LineString', coordinates },
+    recordType: 'track',
+    subSourceId: mode,
+    properties: mergedProps,
+  }, sourceId);
+
+  return {
+    kind: result?.kind ?? 'new',
+    feature: {
+      type: 'Feature',
+      geometry: { type: 'LineString', coordinates },
+      properties: mergedProps,
+    },
+  };
 }
 
 export const upsertStationsTx = db.transaction((features, mode, source) => {
@@ -376,22 +306,30 @@ export const upsertLinesTx = db.transaction((features, mode, source) => {
 
 // ── Color patch (used by transportSpatialSnap) ─────────────────────────────
 
-const stmtStationColorUpdate = db.prepare(`
-  UPDATE transport_stations SET properties = @properties
-  WHERE station_uid = @station_uid
+// Read + UPDATE properties JSON on intel_items by station_uid. Stations are
+// keyed master-side as `<sourceId>|<station_uid>` for whichever mode owns
+// them. The snap caller passes raw station_uid; we look it up across all
+// transport sources via uid LIKE pattern. Cheap enough at the per-station
+// granularity (callers batch into a single tx).
+const stmtMasterStationGetByUidSuffix = db.prepare(`
+  SELECT uid, properties FROM intel_items
+   WHERE record_type = 'station'
+     AND uid LIKE '%|' || ?
+   LIMIT 1
+`);
+const stmtMasterStationPropsUpdate = db.prepare(`
+  UPDATE intel_items SET properties = @properties WHERE uid = @uid
 `);
 
 /**
  * Apply a batch of { station_uid, color, line_colors } pairs: overwrite
- * each row's properties.line_color (primary, nearest line) and
- * properties.line_colors (ordered list of unique colors whose lines pass
- * within the snap radius — used for concentric-ring rendering of
- * multi-line stations). Skips writes when both fields are already equal.
+ * each row's properties.line_color and properties.line_colors. Skips
+ * writes when both fields are already equal.
  */
 export const updateStationColorsTx = db.transaction((updates) => {
   let changed = 0;
   for (const { station_uid, color, line_colors } of updates) {
-    const row = stmtStationGet.get(station_uid);
+    const row = stmtMasterStationGetByUidSuffix.get(station_uid);
     if (!row) continue;
     const props = safeJson(row.properties, {});
     const nextColors = Array.isArray(line_colors) ? line_colors : (color ? [color] : []);
@@ -401,8 +339,8 @@ export const updateStationColorsTx = db.transaction((updates) => {
     if (props.line_color === color && colorsEqual) continue;
     props.line_color = color;
     props.line_colors = nextColors;
-    stmtStationColorUpdate.run({
-      station_uid,
+    stmtMasterStationPropsUpdate.run({
+      uid: row.uid,
       properties: JSON.stringify(props),
     });
     changed++;
@@ -412,8 +350,124 @@ export const updateStationColorsTx = db.transaction((updates) => {
 
 // ── Read API ───────────────────────────────────────────────────────────────
 
+// Mode ↔ source_id mapping. Same as intelBackfill / route layer; lives here
+// so the read path can swap typed-table SELECTs for intel_items SELECTs.
+const MODE_TO_SOURCE_ID = {
+  train:   'unified-trains',
+  subway:  'unified-subways',
+  bus:     'unified-buses',
+  ship:    'unified-ais-ships',
+  port:    'unified-port-infra',
+  airport: 'unified-airports',
+  flight:  'unified-flights',
+};
+
+// Stations have lat/lon set and either no stored geometry or a Point geometry.
+// (Backfilled rows always have a Point geometry; live-mirrored rows may have
+// either a Point geometry or rely on the indexed lat/lon.)
+const stmtMasterStationsByMode = db.prepare(`
+  SELECT uid, lat, lon, properties, sub_source_id, title,
+         fetched_at, geom_at
+    FROM intel_items
+   WHERE source_id = ?
+     AND lat IS NOT NULL
+     AND (geometry IS NULL OR json_extract(geometry, '$.type') = 'Point')
+`);
+
+// Lines have a LineString geometry stored. Indexed lat/lon hold the centroid
+// (set by the mirror / backfill) but coordinates come from the geometry JSON.
+const stmtMasterLinesByMode = db.prepare(`
+  SELECT uid, geometry, properties, sub_source_id, title,
+         fetched_at, geom_at
+    FROM intel_items
+   WHERE source_id = ?
+     AND geometry IS NOT NULL
+     AND json_extract(geometry, '$.type') = 'LineString'
+`);
+
+const stmtMasterStationCountByMode = db.prepare(
+  "SELECT COUNT(*) c FROM intel_items WHERE source_id = ? AND lat IS NOT NULL AND (geometry IS NULL OR json_extract(geometry, '$.type') = 'Point')",
+);
+
+const stmtMasterLineCountByMode = db.prepare(
+  "SELECT COUNT(*) c FROM intel_items WHERE source_id = ? AND geometry IS NOT NULL AND json_extract(geometry, '$.type') = 'LineString'",
+);
+
+const stmtMasterStationNew24hByMode = db.prepare(
+  "SELECT COUNT(*) c FROM intel_items WHERE source_id = ? AND lat IS NOT NULL AND fetched_at >= datetime('now', '-1 day')",
+);
+
+// Strip the "<sourceId>|" namespace prefix off a master uid to recover the
+// inner key (station_uid, line_uid, etc).
+function stripSourcePrefix(masterUid, sourceId) {
+  if (!masterUid) return null;
+  const prefix = `${sourceId}|`;
+  return masterUid.startsWith(prefix) ? masterUid.slice(prefix.length) : masterUid;
+}
+
+// Strip the optional "line:" sub-prefix used by the line backfill.
+function stripLinePrefix(s) {
+  if (!s) return null;
+  return s.startsWith('line:') ? s.slice('line:'.length) : s;
+}
+
+// Build a station feature from one intel_items row. Live-mirrored rows carry
+// station_uid/mode/name/operator/sources in `properties` (rowToStationFeature
+// spreads those in before mirroring). Backfilled rows store them more
+// compactly: station_uid in master uid, mode in sub_source_id, name in
+// title. We fall through, properties first then derived.
+function masterStationRow(row, mode, sourceId) {
+  const properties = safeJson(row.properties, {});
+  const sources = Array.isArray(properties.sources)
+    ? properties.sources
+    : safeJson(properties.sources, []);
+  return {
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: [row.lon, row.lat] },
+    properties: {
+      ...properties,
+      station_uid:   properties.station_uid ?? stripSourcePrefix(row.uid, sourceId),
+      mode:          properties.mode ?? row.sub_source_id ?? mode,
+      name:          properties.name ?? row.title ?? null,
+      operator:      properties.operator ?? null,
+      line:          properties.line ?? null,
+      sources,
+      first_seen_at: properties.first_seen_at ?? row.fetched_at ?? null,
+      last_seen_at:  properties.last_seen_at ?? row.fetched_at ?? null,
+      seen_count:    properties.seen_count ?? 1,
+    },
+  };
+}
+
+function masterLineRow(row, mode, sourceId) {
+  const properties = safeJson(row.properties, {});
+  const sources = Array.isArray(properties.sources)
+    ? properties.sources
+    : safeJson(properties.sources, []);
+  const geom = safeJson(row.geometry, null);
+  const coords = Array.isArray(geom?.coordinates) ? geom.coordinates : [];
+  return {
+    type: 'Feature',
+    geometry: { type: 'LineString', coordinates: coords },
+    properties: {
+      ...properties,
+      line_uid:      properties.line_uid ?? stripLinePrefix(stripSourcePrefix(row.uid, sourceId)),
+      mode:          properties.mode ?? row.sub_source_id ?? mode,
+      name:          properties.name ?? row.title ?? null,
+      operator:      properties.operator ?? null,
+      sources,
+      first_seen_at: properties.first_seen_at ?? row.fetched_at ?? null,
+      last_seen_at:  properties.last_seen_at ?? row.fetched_at ?? null,
+      seen_count:    properties.seen_count ?? 1,
+      kind:          properties.kind ?? 'track',
+    },
+  };
+}
+
 export function getStationsByMode(mode) {
-  return stmtStationsByMode.all(mode).map(rowToStationFeature);
+  const sourceId = MODE_TO_SOURCE_ID[mode];
+  if (!sourceId) return [];
+  return stmtMasterStationsByMode.all(sourceId).map((r) => masterStationRow(r, mode, sourceId));
 }
 
 // Quantize a [lon, lat] to ~1 m precision so near-identical OSM endpoints
@@ -557,7 +611,9 @@ function stitchAndSmoothLines(features, mode) {
 }
 
 export function getLinesByMode(mode) {
-  const raw = stmtLinesByMode.all(mode).map(rowToLineFeature);
+  const sourceId = MODE_TO_SOURCE_ID[mode];
+  if (!sourceId) return [];
+  const raw = stmtMasterLinesByMode.all(sourceId).map((r) => masterLineRow(r, mode, sourceId));
   return stitchAndSmoothLines(raw, mode);
 }
 
@@ -582,10 +638,12 @@ export function getTransportFeatureCollection(mode) {
 }
 
 export function transportStats(mode) {
+  const sourceId = MODE_TO_SOURCE_ID[mode];
+  if (!sourceId) return { stations: 0, lines: 0, new24h: 0 };
   return {
-    stations: stmtStationCountByMode.get(mode).c,
-    lines: stmtLineCountByMode.get(mode).c,
-    new24h: stmtStationNew24hByMode.get(mode).c,
+    stations: stmtMasterStationCountByMode.get(sourceId).c,
+    lines:    stmtMasterLineCountByMode.get(sourceId).c,
+    new24h:   stmtMasterStationNew24hByMode.get(sourceId).c,
   };
 }
 

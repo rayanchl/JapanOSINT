@@ -140,7 +140,7 @@ export default async function collectResasTourism() {
   }
   const live = !!(features && features.length > 0);
   if (!live) {
-    features = generateSeedData();
+    features = [];
     liveSource = 'resas_tourism_seed';
   }
   return {
@@ -154,6 +154,5 @@ export default async function collectResasTourism() {
       live_source: liveSource,
       description: 'Japanese tourism sites - RESAS + OSM tourism attractions with Wikidata IDs',
     },
-    metadata: {},
   };
 }

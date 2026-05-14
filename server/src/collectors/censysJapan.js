@@ -6,12 +6,11 @@
  * query and limited host-history window; for larger corpora upgrade to
  * a paid plan.
  *
- * We use Censys Search v2 REST endpoints:
- *   POST https://search.censys.io/api/v2/hosts/search
- * with query = "location.country_code: JP" and fields.
- *
- * Empty FeatureCollection when keys are missing — no scraping fallback.
+ * Censys Search v2: POST https://search.censys.io/api/v2/hosts/search
+ * with query = "location.country_code: JP".
  */
+
+import { createThreatIntelCollector } from '../utils/threatIntelCollectorFactory.js';
 
 const BASE = 'https://search.censys.io/api/v2';
 const TIMEOUT_MS = 20000;
@@ -23,39 +22,30 @@ function authHeader() {
   return `Basic ${Buffer.from(`${id}:${secret}`).toString('base64')}`;
 }
 
-export default async function collectCensysJapan() {
-  const auth = authHeader();
-  if (!auth) {
-    return {
-      type: 'FeatureCollection',
-      features: [],
-      _meta: {
-        source: 'censys_no_key',
-        fetchedAt: new Date().toISOString(),
-        recordCount: 0,
-        env_hint: 'Set CENSYS_API_ID and CENSYS_API_SECRET (free signup: https://search.censys.io/)',
-        description: 'Censys hosts located in Japan',
-      },
-      metadata: {},
-    };
-  }
-
-  const url = `${BASE}/hosts/search`;
-  const body = {
-    q: 'location.country_code: JP',
-    per_page: 100,
-  };
-
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+export default createThreatIntelCollector({
+  sourceId: 'censys',
+  description: 'Censys internet-exposed hosts, country_code: JP',
+  // Censys uses two env vars (id+secret) so we manage the key check ourselves
+  // by pointing envKey at the id and verifying both inside run().
+  envKey: 'CENSYS_API_ID',
+  envHint: 'Set CENSYS_API_ID and CENSYS_API_SECRET (free signup: https://search.censys.io/)',
+  run: async () => {
+    const auth = authHeader();
+    if (!auth) {
+      // Secret missing even though id is set — surface as a key error.
+      throw new Error('CENSYS_API_SECRET not set');
+    }
+    const url = `${BASE}/hosts/search`;
+    const body = { q: 'location.country_code: JP', per_page: 100 };
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
     const res = await fetch(url, {
       method: 'POST',
-      signal: controller.signal,
+      signal: ctrl.signal,
       headers: {
-        'authorization': auth,
+        authorization: auth,
         'content-type': 'application/json',
-        'accept': 'application/json',
+        accept: 'application/json',
       },
       body: JSON.stringify(body),
     });
@@ -63,7 +53,6 @@ export default async function collectCensysJapan() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     const hits = data?.result?.hits || [];
-
     const features = hits.map((h) => {
       const lat = h.location?.coordinates?.latitude;
       const lon = h.location?.coordinates?.longitude;
@@ -88,32 +77,6 @@ export default async function collectCensysJapan() {
         },
       };
     });
-
-    return {
-      type: 'FeatureCollection',
-      features,
-      _meta: {
-        source: 'censys_live',
-        fetchedAt: new Date().toISOString(),
-        recordCount: features.length,
-        query: body.q,
-        description: 'Censys internet-exposed hosts, country_code: JP',
-      },
-      metadata: {},
-    };
-  } catch (err) {
-    console.warn('[censysJapan] fetch failed:', err?.message);
-    return {
-      type: 'FeatureCollection',
-      features: [],
-      _meta: {
-        source: 'censys_error',
-        fetchedAt: new Date().toISOString(),
-        recordCount: 0,
-        error: err?.message,
-        description: 'Censys fetch failed — check credentials and rate limit',
-      },
-      metadata: {},
-    };
-  }
-}
+    return { features, source: 'censys_live', extraMeta: { query: body.q } };
+  },
+});

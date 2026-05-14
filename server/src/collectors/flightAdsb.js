@@ -1,8 +1,15 @@
 /**
  * Flight ADS-B Tracking Collector
- * Fuses two data sources for a single plane layer over Japan:
- *   - OpenSky Network (live ADS-B positions, OAuth2 optional)
+ * Fuses three data sources for a single plane layer over Japan:
+ *   - OpenSky Network (live ADS-B positions, OAuth2 — anonymous tier 429s)
+ *   - adsb.lol (live ADS-B positions, no auth, community-fed dump1090 feed)
  *   - AeroDataBox (scheduled arrivals/departures for NRT + HND, RapidAPI key)
+ *
+ * The two live sources are merged by ICAO24; adsb.lol wins on collision
+ * (community feeders surface fresher positions than OpenSky's aggregation
+ * lag) but property bags are unioned so OpenSky-only fields are preserved.
+ * Either source returning data is enough — only when both fail do we fall
+ * back to the seed generator.
  */
 
 import { getOAuthToken } from '../utils/openskyAuth.js';
@@ -165,7 +172,9 @@ function generateSeedData() {
   return features;
 }
 
-async function tryOpenSkyAPI() {
+export { AERODATABOX_AIRPORTS };
+
+export async function tryOpenSkyAPI() {
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
@@ -215,7 +224,126 @@ async function tryOpenSkyAPI() {
   }
 }
 
-async function tryAeroDataBoxAirport(airport) {
+// adsb.lol is a community ADS-B aggregator that exposes a dump1090-style
+// JSON feed at /v2/lat/<lat>/lon/<lon>/dist/<nm>. The radius is capped at
+// 250 nm (~463 km), so covering the Japanese archipelago needs four
+// overlapping queries — Hokkaido, Honshu, Kyushu/Shikoku, and Sakishima/
+// Okinawa. Inter-quadrant duplicates collapse on ICAO24 inside the helper
+// so the caller sees one Feature per aircraft.
+const ADSBLOL_QUADRANTS = [
+  { lat: 43, lon: 142, dist: 250 }, // Hokkaido + northern Tohoku
+  { lat: 36, lon: 138, dist: 250 }, // central Honshu
+  { lat: 32, lon: 131, dist: 250 }, // Kyushu / Shikoku
+  { lat: 26, lon: 128, dist: 250 }, // Okinawa / Sakishima
+];
+
+export async function tryAdsbLol() {
+  const ok = [];
+  let failedQuadrants = 0;
+  await Promise.all(ADSBLOL_QUADRANTS.map(async (q) => {
+    const ctrl = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), 8000);
+    try {
+      const res = await fetch(
+        `https://api.adsb.lol/v2/lat/${q.lat}/lon/${q.lon}/dist/${q.dist}`,
+        { signal: ctrl.signal, headers: { accept: 'application/json' } }
+      );
+      if (!res.ok) { failedQuadrants += 1; return; }
+      const data = await res.json();
+      if (Array.isArray(data?.ac)) ok.push(...data.ac);
+    } catch {
+      failedQuadrants += 1;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }));
+  // Treat a complete blackout as a hard failure so the poller can mark the
+  // source down and back off. Partial failures (1–3 quadrants) still yield
+  // useful coverage and are reported as success.
+  if (failedQuadrants === ADSBLOL_QUADRANTS.length) return null;
+
+  const byIcao = new Map();
+  for (const ac of ok) {
+    const icao = (ac?.hex || '').toLowerCase();
+    if (!icao) continue;
+    if (typeof ac.lat !== 'number' || typeof ac.lon !== 'number') continue;
+    byIcao.set(icao, ac);
+  }
+  return [...byIcao.values()].map((ac) => {
+    const callsign = (ac.flight || '').trim() || null;
+    const heading = typeof ac.track === 'number' ? Math.round(ac.track)
+      : typeof ac.true_heading === 'number' ? Math.round(ac.true_heading)
+      : 0;
+    const altFt = typeof ac.alt_baro === 'number' ? ac.alt_baro : null;
+    const onGround = ac.alt_baro === 'ground';
+    return {
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [ac.lon, ac.lat] },
+      properties: {
+        id: `ADSBLOL_${ac.hex}`,
+        icao24: ac.hex.toLowerCase(),
+        callsign,
+        registration: ac.r || null,
+        aircraft_type: ac.t || null,
+        altitude_ft: altFt,
+        geo_altitude_ft: typeof ac.alt_geom === 'number' ? ac.alt_geom : null,
+        ground_speed_knots: typeof ac.gs === 'number' ? Math.round(ac.gs) : null,
+        true_airspeed_knots: typeof ac.tas === 'number' ? Math.round(ac.tas) : null,
+        indicated_airspeed_knots: typeof ac.ias === 'number' ? Math.round(ac.ias) : null,
+        mach: typeof ac.mach === 'number' ? ac.mach : null,
+        heading,
+        true_track: typeof ac.track === 'number' ? Math.round(ac.track) : null,
+        magnetic_heading: typeof ac.mag_heading === 'number' ? Math.round(ac.mag_heading) : null,
+        vertical_rate_fpm: typeof ac.baro_rate === 'number' ? ac.baro_rate
+          : typeof ac.geom_rate === 'number' ? ac.geom_rate
+          : null,
+        squawk: ac.squawk || null,
+        category: ac.category || null, // already an ADS-B category string ("A3" etc.)
+        emergency: ac.emergency || null,
+        on_ground: onGround,
+        last_seen_s: typeof ac.seen === 'number' ? ac.seen : null,
+        rssi: typeof ac.rssi === 'number' ? ac.rssi : null,
+        source: 'adsblol_api',
+      },
+    };
+  });
+}
+
+/**
+ * Merge any number of live-position source arrays into a single ICAO24-
+ * keyed list. Later sources overwrite earlier ones on the geometry / id /
+ * source fields, but property bags are unioned so each source's unique
+ * fields survive. Pass sources in order of increasing freshness — for
+ * Japan that's [opensky, adsblol]: adsb.lol's community feed sees aircraft
+ * seconds after they squawk, OpenSky's aggregation runs minutes behind.
+ */
+export function mergeLiveByIcao(...sources) {
+  const merged = new Map();
+  for (const list of sources) {
+    if (!Array.isArray(list)) continue;
+    for (const f of list) {
+      const icao = (f?.properties?.icao24 || '').toLowerCase();
+      if (!icao) continue;
+      f.properties.icao24 = icao;
+      const prev = merged.get(icao);
+      if (prev) {
+        const prevSrc = prev.properties.source;
+        const thisSrc = f.properties.source;
+        f.properties = {
+          ...prev.properties,
+          ...f.properties,
+          source: prevSrc && thisSrc && prevSrc !== thisSrc
+            ? `${prevSrc}+${thisSrc}`
+            : (thisSrc || prevSrc || null),
+        };
+      }
+      merged.set(icao, f);
+    }
+  }
+  return [...merged.values()];
+}
+
+export async function tryAeroDataBoxAirport(airport) {
   if (!AERODATABOX_KEY) return [];
   try {
     const ctrl = new AbortController();
@@ -269,7 +397,7 @@ const IATA_TO_ICAO = {
   HD: 'ADO', '6J': 'SNA', KZ: 'NCA', NQ: 'AJX', JW: 'VNL', IJ: 'SJO',
 };
 
-function normalizeCallsign(raw) {
+export function normalizeCallsign(raw) {
   if (!raw) return null;
   const s = String(raw).trim().toUpperCase().replace(/\s+/g, '');
   if (!s) return null;
@@ -281,7 +409,7 @@ function normalizeCallsign(raw) {
   return `${icao}${n}`;
 }
 
-function dedupeFeatures(openskyFeatures, aeroFeatures) {
+export function dedupeFeatures(openskyFeatures, aeroFeatures) {
   const byKey = new Map();
   const result = [];
 
@@ -316,20 +444,24 @@ function dedupeFeatures(openskyFeatures, aeroFeatures) {
 }
 
 export default async function collectFlightAdsb() {
-  const [openskyFeatures, ...aeroResults] = await Promise.all([
+  const [openskyFeatures, adsbLolFeatures, ...aeroResults] = await Promise.all([
     tryOpenSkyAPI(),
+    tryAdsbLol(),
     ...AERODATABOX_AIRPORTS.map(tryAeroDataBoxAirport),
   ]);
   const aeroFeatures = aeroResults.flat();
+  // OpenSky first so adsb.lol's fresher position wins on the union.
+  const liveFeatures = mergeLiveByIcao(openskyFeatures, adsbLolFeatures);
 
-  let features = dedupeFeatures(openskyFeatures, aeroFeatures);
-  let liveSource = 'mixed';
-  if (openskyFeatures && openskyFeatures.length > 0 && aeroFeatures.length > 0) liveSource = 'opensky+aerodatabox';
-  else if (openskyFeatures && openskyFeatures.length > 0) liveSource = 'opensky_api';
-  else if (aeroFeatures.length > 0) liveSource = 'aerodatabox_api';
+  let features = dedupeFeatures(liveFeatures, aeroFeatures);
+  const tags = [];
+  if (Array.isArray(openskyFeatures) && openskyFeatures.length) tags.push('opensky');
+  if (Array.isArray(adsbLolFeatures) && adsbLolFeatures.length) tags.push('adsblol');
+  if (aeroFeatures.length) tags.push('aerodatabox');
+  let liveSource = tags.length ? tags.join('+') : 'seed';
 
   if (features.length === 0) {
-    features = generateSeedData();
+    features = [];
     liveSource = 'seed';
   }
 
@@ -349,8 +481,7 @@ export default async function collectFlightAdsb() {
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
       live_source: liveSource,
-      description: 'ADS-B aircraft over Japan (OpenSky) fused with scheduled NRT/HND flights (AeroDataBox)',
+      description: 'ADS-B aircraft over Japan (OpenSky + adsb.lol) fused with scheduled NRT/HND flights (AeroDataBox)',
     },
-    metadata: {},
   };
 }

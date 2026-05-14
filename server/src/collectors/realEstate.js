@@ -201,6 +201,5 @@ export default async function collectRealEstate() {
       live: !!live,
       description: 'Real estate rental listings from SUUMO — live nationwide scrape, geocoded to ward',
     },
-    metadata: {},
   };
 }

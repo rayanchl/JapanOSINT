@@ -127,7 +127,7 @@ function generateSeedData() {
 export default async function collectVendingMachines() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -139,6 +139,5 @@ export default async function collectVendingMachines() {
       live_source: live ? 'osm_overpass' : 'density_seed',
       description: 'Japanese vending machine locations and density zones (~2.3M nationwide)',
     },
-    metadata: {},
   };
 }

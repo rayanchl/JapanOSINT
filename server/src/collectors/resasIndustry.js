@@ -130,7 +130,7 @@ export default async function collectResasIndustry() {
   }
   const live = !!(features && features.length > 0);
   if (!live) {
-    features = generateSeedData();
+    features = [];
     liveSource = 'resas_industry_seed';
   }
   return {
@@ -144,6 +144,5 @@ export default async function collectResasIndustry() {
       live_source: liveSource,
       description: 'Japanese industrial composition - RESAS + OSM landuse=industrial zones',
     },
-    metadata: {},
   };
 }

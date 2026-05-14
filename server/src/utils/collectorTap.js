@@ -70,6 +70,11 @@ function broadcast(payload) {
   }
 }
 
+/** Public broadcast used by non-collector subsystems (e.g. ftsRegistry's fts_ready). */
+export function broadcastEvent(payload) {
+  broadcast(payload);
+}
+
 function pushRing(ev) {
   ringBuffer.push(ev);
   if (ringBuffer.length > RING_CAPACITY) {

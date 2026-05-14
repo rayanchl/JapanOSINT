@@ -157,7 +157,7 @@ export default async function collectEstatPopulation() {
       features = osmPts;
       source = 'osm_overpass';
     } else {
-      features = generateSeedData();
+      features = [];
       source = 'estat_seed';
     }
   }
@@ -173,6 +173,5 @@ export default async function collectEstatPopulation() {
       live_source: source,
       description: 'Population mesh data - e-Stat + OSM admin boundary population tags',
     },
-    metadata: {},
   };
 }

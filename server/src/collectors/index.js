@@ -312,6 +312,75 @@ import mangaNetCafes from './mangaNetCafes.js';
 import sentoPublicBaths from './sentoPublicBaths.js';
 import themedCafes from './themedCafes.js';
 
+// Wave 16: high-alpha additions
+import jcabNotams from './jcabNotams.js';
+import jcgMsi from './jcgMsi.js';
+import tdnetDisclosure from './tdnetDisclosure.js';
+import mofaTravelAdvisory from './mofaTravelAdvisory.js';
+import yahooCrowdMap from './yahooCrowdMap.js';
+import docomoMobaku from './docomoMobaku.js';
+import jreastDelay from './jreastDelay.js';
+import bikeShareGbfs from './bikeShareGbfs.js';
+import tmpProtestApplications from './tmpProtestApplications.js';
+import gridUsageRealtime from './gridUsageRealtime.js';
+import teleGeographyCables from './teleGeographyCables.js';
+
+// Wave 17: 70-source expansion
+//   Axe 1 — SIGINT / breach
+import intelxLeaks from './intelxLeaks.js';
+import dehashedBreach from './dehashedBreach.js';
+import leakcheckBreach from './leakcheckBreach.js';
+import hibpBreach from './hibpBreach.js';
+import psbdmpPastes from './psbdmpPastes.js';
+import breachDirectoryLookup from './breachDirectoryLookup.js';
+import securityTrailsHistory from './securityTrailsHistory.js';
+import whoisXmlReverse from './whoisXmlReverse.js';
+import gitlabBitbucketLeaks from './gitlabBitbucketLeaks.js';
+import nitterMirrors from './nitterMirrors.js';
+import snusbaseBreach from './snusbaseBreach.js';
+//   Axe 2 — social geo
+import tiktokJpDiscover from './tiktokJpDiscover.js';
+import stravaSegmentsJp from './stravaSegmentsJp.js';
+import pogoRaidsJp from './pogoRaidsJp.js';
+import wantedlyBizreach from './wantedlyBizreach.js';
+import steamJpUsers from './steamJpUsers.js';
+import vrchatActiveJp from './vrchatActiveJp.js';
+import redditJpSubs from './redditJpSubs.js';
+import yahooChiebukuro from './yahooChiebukuro.js';
+import twitchJpStreams from './twitchJpStreams.js';
+//   Axe 3 — gov / finance / legal
+import jpoPatents from './jpoPatents.js';
+import teikokuFailures from './teikokuFailures.js';
+import tsrClosures from './tsrClosures.js';
+import micElections from './micElections.js';
+import jntoArrivals from './jntoArrivals.js';
+import jrBoardingStats from './jrBoardingStats.js';
+import ndlSearch from './ndlSearch.js';
+import saibansyoRulings from './saibansyoRulings.js';
+import jpoTrademarks from './jpoTrademarks.js';
+import jftcMergers from './jftcMergers.js';
+import jpxQuotes from './jpxQuotes.js';
+import fsaCryptoExchanges from './fsaCryptoExchanges.js';
+//   Axe 4 — real-time
+import tepcoOutage from './tepcoOutage.js';
+import regionalGridOutages from './regionalGridOutages.js';
+import gasOutages from './gasOutages.js';
+import blitzortungLightning from './blitzortungLightning.js';
+import nexcoRoadwork from './nexcoRoadwork.js';
+import kafunPollen from './kafunPollen.js';
+import earthquakeNetworkCitizen from './earthquakeNetworkCitizen.js';
+import niedMowlas from './niedMowlas.js';
+//   Axe 5 — niche
+import comiketEvents from './comiketEvents.js';
+import sumoTournaments from './sumoTournaments.js';
+import micBroadcastTowers from './micBroadcastTowers.js';
+import yahooAuctionsSellers from './yahooAuctionsSellers.js';
+import kakakuPrices from './kakakuPrices.js';
+import michiNoEki from './michiNoEki.js';
+import nhkRelayTowers from './nhkRelayTowers.js';
+import mextSchools from './mextSchools.js';
+import luupPorts from './luupPorts.js';
+
 export const collectors = {
   'jma-earthquake': jmaEarthquake,
   'jma-weather': jmaWeather,
@@ -565,7 +634,7 @@ export const collectors = {
   'strava-heatmap-bases': stravaHeatmapBases,
   'ipa-alerts-rss': ipaAlertsRss,
   'grayhat-buckets': grayhatBuckets,
-  'gdelt': gdelt,
+  'gdelt-events': gdelt,
 
   // Wave 15: high-penetrance vuln/threat/breach intel + SOCINT
   // Vuln intel
@@ -611,6 +680,74 @@ export const collectors = {
   'jp-news-rss': jpNewsRss,
   // Geo / disaster
   'nasa-firms-jp': nasaFirmsJp,
+
+  // Wave 16: high-alpha additions
+  'jcab-notams': jcabNotams,
+  'jcg-msi': jcgMsi,
+  'tdnet-disclosure': tdnetDisclosure,
+  'mofa-travel-advisory': mofaTravelAdvisory,
+  'yahoo-crowd-map': yahooCrowdMap,
+  'docomo-mobaku': docomoMobaku,
+  'jr-east-delay': jreastDelay,
+  'bike-share-gbfs': bikeShareGbfs,
+  'tmp-protests': tmpProtestApplications,
+  'grid-usage-realtime': gridUsageRealtime,
+  'telegeography-cables': teleGeographyCables,
+
+  // Wave 17: 70-source expansion (Axe 1-5). Register-only entries (Telegram
+  // MTProto, Discord-disboard, Doxbin, Russian Market stealer, Instagram,
+  // Eight/Sansan, LinkedIn, PSN/Xbox, Tinder/Bumble, LUUP, DNSTwist worker,
+  // Houmukyoku commercial registry) have NO collector mapping and will
+  // show 'offline' until a worker / Playwright pass is added.
+  'intelx-leaks': intelxLeaks,
+  'dehashed-breach': dehashedBreach,
+  'leakcheck-breach': leakcheckBreach,
+  'hibp-breach': hibpBreach,
+  'psbdmp-pastes': psbdmpPastes,
+  'breach-directory': breachDirectoryLookup,
+  'securitytrails-history': securityTrailsHistory,
+  'whoisxml-reverse': whoisXmlReverse,
+  'gitlab-bitbucket-leaks': gitlabBitbucketLeaks,
+  'nitter-mirrors': nitterMirrors,
+  'snusbase-breach': snusbaseBreach,
+  'tiktok-jp-discover': tiktokJpDiscover,
+  'strava-segments-jp': stravaSegmentsJp,
+  'pogo-raids-jp': pogoRaidsJp,
+  'wantedly-bizreach': wantedlyBizreach,
+  'steam-jp-users': steamJpUsers,
+  'vrchat-active-jp': vrchatActiveJp,
+  'reddit-jp-subs': redditJpSubs,
+  'yahoo-chiebukuro': yahooChiebukuro,
+  'twitch-jp-streams': twitchJpStreams,
+  'jpo-jplatpat': jpoPatents,
+  'teikoku-failures': teikokuFailures,
+  'tsr-closures': tsrClosures,
+  'mic-elections': micElections,
+  'jnto-arrivals': jntoArrivals,
+  'jr-boarding-stats': jrBoardingStats,
+  'ndl-search': ndlSearch,
+  'saibansyo-rulings': saibansyoRulings,
+  'jpo-trademarks': jpoTrademarks,
+  'jftc-mergers': jftcMergers,
+  'jpx-quotes': jpxQuotes,
+  'fsa-crypto-exchanges': fsaCryptoExchanges,
+  'tepco-outage': tepcoOutage,
+  'regional-grid-outages': regionalGridOutages,
+  'gas-outages': gasOutages,
+  'blitzortung-lightning': blitzortungLightning,
+  'nexco-roadwork': nexcoRoadwork,
+  'kafun-pollen': kafunPollen,
+  'earthquake-network-citizen': earthquakeNetworkCitizen,
+  'nied-mowlas': niedMowlas,
+  'comiket-events': comiketEvents,
+  'sumo-tournaments': sumoTournaments,
+  'mic-broadcast-towers': micBroadcastTowers,
+  'yahoo-auctions': yahooAuctionsSellers,
+  'kakaku-prices': kakakuPrices,
+  'michi-no-eki': michiNoEki,
+  'nhk-relay-towers': nhkRelayTowers,
+  'mext-schools': mextSchools,
+  'luup-private': luupPorts,
 };
 
 /**

@@ -44,14 +44,21 @@ async function lookupOne(ip) {
   }
 }
 
+import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
+
+const SOURCE_ID = 'greynoise-jp';
+
 export default async function collectGreynoiseJp() {
   const results = await Promise.all(DEFAULT_IPS.map(lookupOne));
 
-  const features = results.map((r) => ({
-    type: 'Feature',
-    geometry: null, // GeoJSON-first frameworks would IP-geolocate here
+  const items = results.map((r) => ({
+    uid: intelUid(SOURCE_ID, r.ip),
+    title: `${r.ip} — ${r.classification || 'unknown'}`,
+    summary: r.name || (r.noise ? 'Noise (background scanner)' : 'Quiet'),
+    language: 'en',
+    published_at: r.last_seen || null,
+    tags: ['ip-classifier', r.classification ? `class:${r.classification}` : null, r.noise ? 'noise' : null].filter(Boolean),
     properties: {
-      id: `GN_${r.ip}`,
       ip: r.ip,
       noise: r.noise ?? null,
       classification: r.classification || null,
@@ -60,21 +67,16 @@ export default async function collectGreynoiseJp() {
       first_seen: r.first_seen || null,
       rate_limited: r.rate_limited || false,
       error: r.error || null,
-      source: 'greynoise_community',
     },
   }));
 
-  return {
-    type: 'FeatureCollection',
-    features,
-    _meta: {
-      source: 'greynoise_community',
-      fetchedAt: new Date().toISOString(),
-      recordCount: features.length,
+  return intelEnvelope({
+    sourceId: SOURCE_ID,
+    items,
+    description: 'GreyNoise community classification for a curated IP list',
+    extraMeta: {
       ips_polled: DEFAULT_IPS.length,
       env_hint: 'Set GREYNOISE_API_KEY for higher rate limits; GREYNOISE_IPS=ip1,ip2,... to customise the lookup list',
-      description: 'GreyNoise community classification for a curated IP list',
     },
-    metadata: {},
-  };
+  });
 }

@@ -95,7 +95,7 @@ function generateSeedData() {
 export default async function collectAmateurRadioRepeaters() {
   let features = await tryLive();
   const live = !!(features && features.length > 0);
-  if (!live) features = generateSeedData();
+  if (!live) features = [];
   return {
     type: 'FeatureCollection',
     features,
@@ -106,6 +106,5 @@ export default async function collectAmateurRadioRepeaters() {
       live,
       description: 'JARL amateur radio repeaters: VHF/UHF FM, D-STAR, C4FM digital, HF beacons',
     },
-    metadata: {},
   };
 }

@@ -334,7 +334,7 @@ export default async function collectCellTowers() {
   }
   const live = !!(features && features.length > 0);
   if (!live) {
-    features = generateSeedData();
+    features = [];
     source = 'cell_towers_seed';
   }
 
@@ -353,6 +353,5 @@ export default async function collectCellTowers() {
       live_source: source,
       description: 'Japan mobile network infrastructure - 4G/5G cell towers (Docomo, au, SoftBank, Rakuten), MIC registry, Rakuten coverage',
     },
-    metadata: {},
   };
 }

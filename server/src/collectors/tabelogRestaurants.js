@@ -132,7 +132,7 @@ export default async function collectTabelogRestaurants() {
   }
   const live = !!(features && features.length > 0);
   if (!live) {
-    features = generateSeedData();
+    features = [];
     liveSource = 'tabelog_seed';
   }
   return {
@@ -146,6 +146,5 @@ export default async function collectTabelogRestaurants() {
       live_source: liveSource,
       description: 'Japan restaurants - Tabelog top-rated + HotPepper Gourmet API + OSM Overpass',
     },
-    metadata: {},
   };
 }

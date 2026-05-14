@@ -8,6 +8,7 @@
 
 import db from './database.js';
 import { getOdptToken } from './odptAuth.js';
+import { writeAlertFts } from './gtfsRtAlertsStore.js';
 
 const ENDPOINT_CHALLENGE = 'https://api-challenge.odpt.org/api/v4/odpt:TrainInformation';
 const ENDPOINT_PROD = 'https://api.odpt.org/api/v4/odpt:TrainInformation';
@@ -67,6 +68,12 @@ export async function refreshOdptTrainInformationAlerts() {
         null,
         now,
       );
+      writeAlertFts({
+        org_id:           op,
+        alert_id:         id,
+        header_text:      statusLabel,
+        description_text: statusText,
+      });
       seeded++;
     }
   });
