@@ -13,6 +13,12 @@ import { existsSync } from 'fs';
 import { applyOverlayToEnv } from './utils/apiKeysStore.js';
 applyOverlayToEnv();
 
+// Tenancy schema migration — additive only, idempotent. Runs every boot.
+// Multi-tenant routing is gated by MULTI_TENANT_ENABLED so legacy
+// single-tenant deployments keep working unchanged.
+import { runTenancyMigration } from './utils/tenancyMigration.js';
+runTenancyMigration();
+
 import sourcesRouter from './routes/sources.js';
 import layersRouter from './routes/layers.js';
 import dataRouter from './routes/data.js';
@@ -25,6 +31,7 @@ import plateauCatalogRouter from './routes/plateauCatalog.js';
 import intelRouter from './routes/intel.js';
 import apiKeysRouter from './routes/apiKeys.js';
 import adminRouter from './routes/admin.js';
+import breakGlassRouter from './routes/breakGlass.js';
 import { startScheduler } from './utils/scheduler.js';
 import { installFetchTap, setBroadcaster } from './utils/collectorTap.js';
 import { runBulkHydrate } from './utils/gtfsBulkHydrate.js';
@@ -76,6 +83,11 @@ app.use('/api/plateau', plateauCatalogRouter);
 app.use('/api/intel', intelRouter);
 app.use('/api/keys', apiKeysRouter);
 app.use('/api/admin', adminRouter);
+// Break-glass admin path. Off unless BREAK_GLASS_ENABLED=1; the router
+// itself 404s when disabled. Intentionally NOT under /api/admin so it
+// can be reached without auth middleware getting in the way during an
+// outage.
+app.use('/admin/break-glass', breakGlassRouter);
 
 // ── Health check ───────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {

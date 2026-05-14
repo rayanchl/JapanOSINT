@@ -14,6 +14,7 @@
     "express": "^4.21.1",
     "gtfs-realtime-bindings": "^1.1.1",
     "iconv-lite": "^0.7.2",
+    "jose": "^5.10.0",
     "kuromoji": "^0.1.2",
     "node-cron": "^3.0.3",
     "playwright": "^1.49.0",
