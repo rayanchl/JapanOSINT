@@ -36,7 +36,7 @@ mkdir -p "$RUN"
 # ---- launch tags (env wins → flags override → these prod defaults) ---------
 # Runtime / server pod
 : "${PORT:=4072}"                                   # httpd port (Node used 4000)
-: "${JO_DB:=$REPO/server/data/japanmap.db}"         # sqlite db
+: "${JO_DB:=$REPO/data/japanmap.db}"                # sqlite db
 : "${JO_SCHEMA:=$NATIVE/core/schema.sql}"           # schema (auto-applied)
 : "${JO_ENV_FILE:=$REPO/.env}"                      # binary self-loads this
 : "${JO_NO_SCHED:=}"                                # set=1 → serve w/o scheduler
@@ -49,12 +49,12 @@ mkdir -p "$RUN"
 : "${LLM_BASE_URL:=http://127.0.0.1:8080}"          # llama-server endpoint
 : "${LLM_MODEL:=}"                                  # optional model-name pin
 : "${LLAMA_BIN:=$NATIVE/llama/llama-server}"
-: "${LLAMA_MODEL:=$REPO/server/models/gpt-oss-20b-Q4_K_M.gguf}"
+: "${LLAMA_MODEL:=$REPO/models/gpt-oss-20b-Q4_K_M.gguf}"
 : "${LLAMA_PORT:=8080}"
 : "${LLAMA_CTX:=16384}"
 : "${LLAMA_HOST:=127.0.0.1}"
 # Orchestrator behaviour
-: "${EXPECT_SOURCES:=375}"                          # warn if registry differs
+: "${EXPECT_SOURCES:=476}"                          # warn if registry differs
 : "${LLAMA_WAIT:=240}"                              # s to wait for model load
 : "${SERVER_WAIT:=30}"                              # s to wait for httpd listen
 

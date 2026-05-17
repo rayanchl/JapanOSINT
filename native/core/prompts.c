@@ -473,39 +473,24 @@ char *prompt_entity_extraction(const char *title, const char *body,
 }
 
 /* ── prompt_entity_dedup — entityExtractor.js buildEntityDedupPrompt ────── */
-static void sb_add_jsonesc(sb *b, const char *s) {
-  if (!s) return;
-  for (const unsigned char *p = (const unsigned char *)s; *p; p++) {
-    char e[8];
-    switch (*p) {
-      case '"':  sb_add(b, "\\\""); break;
-      case '\\': sb_add(b, "\\\\"); break;
-      case '\n': sb_add(b, "\\n");  break;
-      case '\r': sb_add(b, "\\r");  break;
-      case '\t': sb_add(b, "\\t");  break;
-      default:
-        if (*p < 0x20) { snprintf(e, sizeof e, "\\u%04x", *p); sb_add(b, e); }
-        else { char c[2] = { (char)*p, 0 }; sb_add(b, c); }
-    }
-  }
-}
-
 char *prompt_entity_dedup(const char *type, const char *canon_a,
                           const char *canon_b) {
-  /* messages JSON array (system+user) for llm_chat — escaping is required
-   * here since values are embedded in JSON (the extraction prompt is raw). */
+  /* Flat completion prompt for llm_complete (raw /completion path, no chat
+     template). The former system role is folded in as a leading instruction;
+     no JSON escaping since values are no longer embedded in a JSON string. */
   sb b = {0};
-  sb_add(&b, "[{\"role\":\"system\",\"content\":\"You decide whether two "
-             "extracted OSINT entities of the same type refer to the SAME "
-             "real-world subject. Account for Japanese kanji/kana vs romaji "
-             "spellings, company suffixes, and transliteration drift. Output "
-             "JSON only.\"},{\"role\":\"user\",\"content\":\"Type: ");
-  sb_add_jsonesc(&b, type ? type : "");
-  sb_add(&b, "\\nA: ");
-  sb_add_jsonesc(&b, canon_a ? canon_a : "");
-  sb_add(&b, "\\nB: ");
-  sb_add_jsonesc(&b, canon_b ? canon_b : "");
-  sb_add(&b, "\\n\\nSame subject?\"}]");
+  sb_add(&b, "You decide whether two extracted OSINT entities of the same "
+             "type refer to the SAME real-world subject. Account for Japanese "
+             "kanji/kana vs romaji spellings, company suffixes, and "
+             "transliteration drift. Output JSON only.\n\nType: ");
+  sb_add(&b, type ? type : "");
+  sb_add(&b, "\nA: ");
+  sb_add(&b, canon_a ? canon_a : "");
+  sb_add(&b, "\nB: ");
+  sb_add(&b, canon_b ? canon_b : "");
+  sb_add(&b, "\n\nSame subject? Respond with JSON only: "
+             "{\"same\": true|false, \"confidence\": 0.0-1.0, "
+             "\"reason\": \"...\"}");
   return sb_take(&b);
 }
 

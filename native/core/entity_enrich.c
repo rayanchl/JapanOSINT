@@ -185,9 +185,9 @@ int entity_enrich_resolve(db_handle *db, llm_client *llm, int batch) {
   for (int i = 0; i < np && attempted < batch; i++) {
     if (es_merge_pair_exists(db, ps[i].a, ps[i].b)) continue;
     attempted++;
-    char *msgs = prompt_entity_dedup(ps[i].ty, ps[i].ca, ps[i].cb);
-    char *raw = llm_chat(llm, msgs, NULL, 0.2, TIMEOUT);
-    free(msgs);
+    char *pr = prompt_entity_dedup(ps[i].ty, ps[i].ca, ps[i].cb);
+    char *raw = llm_complete(llm, pr, NULL, 512, 0.2, TIMEOUT);
+    free(pr);
     cJSON *out = extract_json(raw);
     free(raw);
     cJSON *sm = out ? cJSON_GetObjectItem(out, "same") : NULL;

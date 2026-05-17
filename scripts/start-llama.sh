@@ -17,7 +17,7 @@ set -euo pipefail
 LLAMA_PORT="${LLAMA_PORT:-8080}"
 
 # Self-contained: binary + model are vendored into JapanOSINT. Paths resolve
-# relative to this script (JapanOSINT/server/scripts/) so the repo is
+# relative to this script (JapanOSINT/scripts/) so the repo is
 # relocatable and has no OSINTsaas runtime dependency.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"

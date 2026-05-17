@@ -39,8 +39,8 @@ char *prompt_entity_extraction(const char *title, const char *body,
                                const char *source_id);
 
 /* Tier-2 entity-dedup prompt (port of entityExtractor.js
- * buildEntityDedupPrompt) — returns a JSON messages array string for
- * llm_chat (values JSON-escaped). Caller frees. */
+ * buildEntityDedupPrompt) — returns a flat completion prompt for
+ * llm_complete (raw /completion path). Caller frees. */
 char *prompt_entity_dedup(const char *type, const char *canon_a,
                           const char *canon_b);
 

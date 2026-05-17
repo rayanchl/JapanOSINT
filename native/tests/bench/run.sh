@@ -62,7 +62,7 @@ cleanup() {
   [ -n "$NPID" ] && kill -9 "$NPID" 2>/dev/null || true
   free_ports
   # Drop the auto-provisioned bench tenant/user (first /api/me call creates it).
-  sqlite3 "$ROOT/server/data/japanmap.db" \
+  sqlite3 "$ROOT/data/japanmap.db" \
     "DELETE FROM memberships WHERE user_id IN (SELECT id FROM users WHERE supabase_user_id='bench');
      DELETE FROM tenants WHERE id IN (SELECT tenant_id FROM memberships WHERE user_id IN (SELECT id FROM users WHERE supabase_user_id='bench'));
      DELETE FROM tenants WHERE name LIKE 'bench@local%';
@@ -94,7 +94,7 @@ TOK=$(mk_token)
 # next() with no cap). C has no rate limiter, so both now do real work.
 curl -s -o /dev/null -H "Authorization: Bearer $TOK" http://127.0.0.1:4071/api/me || true
 curl -s -o /dev/null -H "Authorization: Bearer $TOK" http://127.0.0.1:4072/api/me || true
-sqlite3 "$ROOT/server/data/japanmap.db" \
+sqlite3 "$ROOT/data/japanmap.db" \
   "UPDATE tenants SET plan='enterprise' WHERE id IN
      (SELECT m.tenant_id FROM memberships m
         JOIN users u ON u.id=m.user_id WHERE u.supabase_user_id='bench');" 2>/dev/null || true

@@ -7,7 +7,7 @@
     "dev:full": "concurrently \"npm run dev:llama\" \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
-    "dev:llama": "bash server/scripts/start-llama.sh",
+    "dev:llama": "bash scripts/start-llama.sh",
     "build": "cd client && npm run build",
     "start": "cd server && npm start",
     "install:all": "npm install && cd server && npm install && cd ../client && npm install"
