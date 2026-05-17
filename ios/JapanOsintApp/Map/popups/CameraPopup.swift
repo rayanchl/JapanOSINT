@@ -200,7 +200,7 @@ struct CameraPopup: View {
         case let n as Int:        return String(n)
         case let n as Double:     return String(n)
         case let n as NSNumber:   return n.stringValue
-        default:                  return String(describing: v!)
+        default:                  return v.map { String(describing: $0) } ?? "—"
         }
     }
 }

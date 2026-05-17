@@ -10,10 +10,10 @@
  */
 
 import { fetchJson, fetchOverpass } from './_liveHelpers.js';
-import { getEnv } from '../utils/credentials.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 // Lazy read so tenant BYOK overrides land without a server restart.
-const apiKey = () => getEnv(null, 'MARINETRAFFIC_API_KEY') || '';
+const apiKey = () => envFor('MARINETRAFFIC_API_KEY') || '';
 
 async function tryApi() {
   const API_KEY = apiKey();

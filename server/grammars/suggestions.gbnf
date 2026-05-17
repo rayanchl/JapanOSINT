@@ -1,0 +1,17 @@
+# GBNF Grammar for OSINT Suggestions
+# Format: JSON array of 9 suggestion strings
+# CRITICAL: Use {m,n} to prevent infinite repetition
+
+root ::= "[" ws suggestion comma suggestion comma suggestion comma suggestion comma suggestion comma suggestion comma suggestion comma suggestion comma suggestion ws "]"
+
+suggestion ::= ws "\"" text "\"" ws
+
+comma ::= ws "," ws
+
+# Allow letters, numbers, spaces, and common punctuation
+# Limited to 100 chars per suggestion to prevent garbage output
+text ::= char{1,100}
+char ::= [a-zA-Z0-9] | " " | "@" | "." | "-" | "_" | "/" | ":" | "(" | ")" | "#" | "&" | "+" | "'"
+
+# Compact output - single optional space only
+ws ::= " "?

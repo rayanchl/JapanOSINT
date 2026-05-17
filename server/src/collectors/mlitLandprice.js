@@ -11,6 +11,7 @@
  */
 
 import { fetchJson } from './_liveHelpers.js';
+import { intelHashKey } from '../utils/intelHelpers.js';
 import { MUNICIPALITY_CENTROIDS } from './_municipalityCentroids.js';
 
 const API_URL = 'https://www.land.mlit.go.jp/webland/api/TradeListSearch';
@@ -74,7 +75,7 @@ async function tryLive() {
         type: 'Feature',
         geometry: { type: 'Point', coordinates: [center.lon + jitterLon, center.lat + jitterLat] },
         properties: {
-          point_id: `MLIT_${pref}_${i}_${t?.Period || ''}`,
+          point_id: `MLIT_${pref}_${intelHashKey(t?.MunicipalityCode, t?.DistrictName, t?.TradePrice, t?.Area, t?.Period, t?.Type, t?.Purpose)}`,
           price_total_yen: Math.round(price),
           area_sqm: area,
           price_per_sqm: Math.round(price / area),
@@ -98,7 +99,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [pt.lon, pt.lat] },
     properties: {
-      point_id: `LP_${String(i + 1).padStart(3, '0')}`,
+      point_id: `LP_${intelHashKey(pt.name, pt.lat, pt.lon)}`,
       name: pt.name,
       area: pt.area,
       price_per_sqm: pt.price,

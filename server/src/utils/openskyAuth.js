@@ -6,14 +6,16 @@
  * callers to fall back to anonymous (rate-limited) access.
  */
 
+import { getEnv } from './credentials.js';
+
 const TOKEN_URL = 'https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token';
 
 let cachedToken = null;
 let tokenExpiresAt = 0;
 
 export async function getOAuthToken() {
-  const clientId = process.env.OPENSKY_CLIENT_ID || '';
-  const clientSecret = process.env.OPENSKY_CLIENT_SECRET || '';
+  const clientId = getEnv(null, 'OPENSKY_CLIENT_ID') || '';
+  const clientSecret = getEnv(null, 'OPENSKY_CLIENT_SECRET') || '';
   if (!clientId || !clientSecret) return null;
   if (cachedToken && Date.now() < tokenExpiresAt) return cachedToken;
 

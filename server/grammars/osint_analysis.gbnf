@@ -1,0 +1,77 @@
+# GBNF Grammar for OSINT Analysis - Compact JSON Output
+# FIXED: Enumerated service names prevent truncation (e.g., "IP_GRE" -> must be full "IP_GEOLOCATION")
+# FIXED: Alphanumeric boundaries prevent garbage like "..........." or "34.4... ... etc.."
+
+root ::= "{" ws entities ws "," ws services ws "," ws complexity ws "," ws analysis ws chain-reason ws "}"
+
+# Field definitions with literal keys
+entities ::= "\"entities\"" ws ":" ws "[" ws entities-list? ws "]"
+# Allow up to 15 entities (1 required + 14 optional)
+entities-list ::= entity-obj (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)?
+
+# Limit recommended_services to max 10 items
+services ::= "\"recommended_services\"" ws ":" ws "[" ws services-list? ws "]"
+services-list ::= service-name (ws "," ws service-name)? (ws "," ws service-name)? (ws "," ws service-name)? (ws "," ws service-name)? (ws "," ws service-name)? (ws "," ws service-name)? (ws "," ws service-name)? (ws "," ws service-name)? (ws "," ws service-name)?
+
+complexity ::= "\"complexity\"" ws ":" ws ("\"low\"" | "\"medium\"" | "\"high\"")
+analysis ::= "\"analysis\"" ws ":" ws analysis-str
+
+# REQUIRED chain_reason boolean
+chain-reason ::= "," ws "\"chain_reason\"" ws ":" ws bool
+bool ::= "true" | "false"
+
+# Entity object with services array (max 8 services per entity)
+entity-obj ::= "{" ws "\"value\"" ws ":" ws value-str ws "," ws "\"type\"" ws ":" ws etype ws "," ws "\"confidence\"" ws ":" ws conf ws "," ws "\"services\"" ws ":" ws entity-services ws "}"
+
+# Entity services - REQUIRE at least one service (no empty arrays)
+entity-services ::= "[" ws service-name (ws "," ws service-name)? (ws "," ws service-name)? (ws "," ws service-name)? (ws "," ws service-name)? (ws "," ws service-name)? (ws "," ws service-name)? (ws "," ws service-name)? ws "]"
+
+# Service name - EXPLICIT ENUMERATION of all valid services from osint_dispatcher.c registry
+# This prevents truncated names like "IP_GRE" - must be complete valid service name
+service-name ::= "\"" service-enum "\""
+
+# All 100+ valid service names from osint_dispatcher.c service_registry[]
+service-enum ::= (
+  "EMAIL_VALIDATOR_HOLEHE" | "EMAIL_HARVESTER" | "BREACH_CHECKER" | "SOCIAL_SEARCH" | "EMAIL_REPUTATION" | "EMAIL_VALIDATOR_NEW" |
+  "SHERLOCK_SEARCH" | "WHATSMYNAME_SEARCH" | "USERNAME_CHECKER" | "SOCIAL_ANALYZER" |
+  "GITHUB_USER_LOOKUP" | "REDDIT_LOOKUP" | "TWITTER_LOOKUP" | "INSTAGRAM_LOOKUP" | "LINKEDIN_LOOKUP" | "FACEBOOK_LOOKUP" |
+  "PERSON_SEARCH" | "PEOPLE_FINDER" |
+  "PHONE_LOOKUP" | "CARRIER_LOOKUP" | "PHONE_REPUTATION" |
+  "IP_GEOLOCATION" | "REVERSE_DNS" | "ASN_LOOKUP" | "BGP_LOOKUP" | "THREAT_INTEL" | "IP_REPUTATION" |
+  "DNS_RECORDS" | "SUBDOMAIN_FINDER" | "DOMAIN_WHOIS" | "URL_ANALYZER" | "DNS_INTEL" | "DOMAIN_DNS_INTEL" | "DOMAIN_AGE" | "DOMAIN_HISTORY" |
+  "COMPANY_LOOKUP" | "OPENCORPORATES_SEARCH" | "SEC_EDGAR_SEARCH" | "LEI_SEARCH" | "VAT_VALIDATOR" |
+  "CRYPTO_TRACKER" | "BLOCKCHAIN_EXPLORER" | "CRYPTO_EXCHANGE_MONITOR" | "WHALE_ALERT" | "EXCHANGE_FLOW" | "DEFI_TRACKER" |
+  "ADDRESS_RESOLVER" | "GEOCODING" | "REVERSE_GEOCODING" |
+  "PASTE_SITE_SEARCH" | "DATA_LEAK_MONITOR" | "CERTIFICATE_TRANSPARENCY" | "WAYBACK_MACHINE" | "ARCHIVE_SEARCH" |
+  "MALWARE_ANALYSIS" | "URL_SCANNER" | "SHODAN_SEARCH" | "CENSYS_SEARCH" | "HISTORICAL_WHOIS" |
+  "ACADEMIC_SEARCH" | "PUBMED_SEARCH" | "ARXIV_SEARCH" | "SCHOLAR_SEARCH" |
+  "WEATHER_SERVICE" | "EARTHQUAKE_MONITOR" | "SATELLITE_TRACKER" |
+  "IMAGE_RECOGNITION_FULL" | "EXIF_EXTRACTOR" | "REVERSE_IMAGE_SEARCH" | "FACE_DETECTION" | "OCR_PROCESSOR" | "OBJECT_DETECTION" | "SCENE_CLASSIFIER" |
+  "TOR_EXIT_CHECK" | "MAC_VENDOR_LOOKUP" | "PORT_SCANNER" | "TECH_STACK_DETECTION" |
+  "SANCTIONS_CHECK" | "PEP_CHECK" | "WATCHLIST_CHECK_NEW" | "GITHUB_CODE_SEARCH" | "CREDENTIAL_LEAK_SEARCH" |
+  "DARK_WEB_MONITOR" | "DEEP_WEB_SEARCH" | "DOCUMENT_ANALYZER" | "PDF_ANALYZER" | "DEHASHED_SEARCH" | "PASSWORD_LEAK_CHECK" |
+  "TRADEMARK_SEARCH" | "PATENT_SEARCH" |
+  "VEHICLE_LOOKUP" | "LICENSE_PLATE_LOOKUP" | "FLIGHT_TRACKER" | "VESSEL_TRACKER" | "MARITIME_DATABASE" |
+  "SSL_ANALYZER" | "PASSWORD_CHECKER" | "NEWS_AGGREGATOR" | "NEWS_ARCHIVE" | "HASH_LOOKUP" | "WIFI_LOOKUP" | "BSSID_LOOKUP" | "DATA_EXTRACTOR" |
+  "SOCIAL_INTEL" | "PROFILE_SEARCH" | "THREAT_FEED_LOOKUP" | "IOC_LOOKUP" | "MALWARE_CHECK_NEW" |
+  "COURT_RECORDS" | "LEGAL_SEARCH" | "BANKRUPTCY_SEARCH" | "CRIMINAL_RECORDS"
+)
+
+# Entity type - lowercase with underscores only (strict enumeration)
+etype ::= "\"" ("email" | "ip" | "domain" | "phone" | "username" | "person" | "company" | "address" | "url" | "vehicle" | "flight" | "vessel" | "container" | "crypto" | "iban" | "swift" | "credit_card" | "bank_account" | "dns" | "asn" | "mac" | "subnet" | "port" | "coordinates" | "timezone" | "ssn" | "passport" | "license" | "national_id" | "tax_id" | "hash" | "cve" | "api_key" | "jwt" | "uuid" | "file_path" | "registry" | "imei" | "imsi" | "serial" | "barcode" | "qr" | "image" | "keyword" | "unknown") "\""
+
+# Confidence enum
+conf ::= "\"high\"" | "\"medium\"" | "\"low\""
+
+# Value string - permissive character class with length bounds
+# Allows IPs (34.4.76.23), emails (john@example.com), URLs, etc.
+# Requires alphanumeric start to prevent leading garbage
+# NOTE: hyphen must be at END of character class to be literal
+value-str ::= "\"" [a-zA-Z0-9] [a-zA-Z0-9@._:/+' -]{0,198} "\""
+
+# Analysis string - permissive for natural language descriptions
+# Requires alphanumeric start, allows punctuation and spaces
+analysis-str ::= "\"" [a-zA-Z0-9] [a-zA-Z0-9 ,.:;'()-]{0,148} "\""
+
+# Whitespace - compact single-line JSON (no newlines)
+ws ::= " "?

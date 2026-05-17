@@ -9,10 +9,13 @@
  */
 
 import { fetchJson, fetchOverpass } from './_liveHelpers.js';
+import { envFor } from '../utils/collectorEnv.js';
 
-const API_KEY = process.env.VESSELFINDER_API_KEY || '';
+// Lazy read so tenant BYOK overrides land without a server restart.
+const apiKey = () => envFor('VESSELFINDER_API_KEY') || '';
 
 async function tryApi() {
+  const API_KEY = apiKey();
   if (!API_KEY) return null;
   const url = `https://api.vesselfinder.com/vesselslist?userkey=${API_KEY}&bbox=122,24,154,46&format=json`;
   const data = await fetchJson(url, { timeoutMs: 10000 });

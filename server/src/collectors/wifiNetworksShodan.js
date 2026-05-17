@@ -7,12 +7,12 @@
  */
 
 import { fetchJson } from './_liveHelpers.js';
-import { getEnv } from '../utils/credentials.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 async function tryShodanWifiAPs() {
   // Read at call-time so iOS-set keys (apiKeysStore.setKey) AND tenant
   // BYOK overrides take effect without a server restart.
-  const key = getEnv(null, 'SHODAN_API_KEY') || '';
+  const key = envFor('SHODAN_API_KEY') || '';
   if (!key) return [];
   try {
     const query = encodeURIComponent('country:JP wifi OR "wireless" port:80,8080');

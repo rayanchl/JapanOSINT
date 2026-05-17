@@ -1,0 +1,26 @@
+# GBNF Grammar for Entity Extraction
+# FIXED: Restricted character sets to prevent garbage output
+
+root ::= "{" ws "\"entities\"" ws ":" ws "[" ws entities-list? ws "]" ws "}"
+
+# Allow up to 20 entities
+entities-list ::= entity-obj (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)? (ws "," ws entity-obj)?
+
+# Entity object: value, type, confidence, source
+entity-obj ::= "{" ws "\"value\"" ws ":" ws value-str ws "," ws "\"type\"" ws ":" ws etype ws "," ws "\"confidence\"" ws ":" ws conf ws "," ws "\"source\"" ws ":" ws source-str ws "}"
+
+# Entity type - strict enumeration
+etype ::= "\"" ("email" | "ip" | "domain" | "phone" | "username" | "person" | "company" | "address" | "url" | "vehicle" | "flight" | "vessel" | "container" | "crypto" | "iban" | "swift" | "credit_card" | "bank_account" | "dns" | "asn" | "mac" | "subnet" | "port" | "coordinates" | "timezone" | "ssn" | "passport" | "license" | "national_id" | "tax_id" | "hash" | "cve" | "api_key" | "jwt" | "uuid" | "file_path" | "registry" | "imei" | "imsi" | "serial" | "barcode" | "qr" | "image" | "keyword" | "unknown") "\""
+
+# Confidence levels
+conf ::= "\"high\"" | "\"medium\"" | "\"low\""
+
+# Value string - for entity values (alphanumeric + safe URL chars)
+# NOTE: hyphen must be at END of character class to be literal, not a range
+value-str ::= "\"" [a-zA-Z0-9@._:/+ '-]{1,200} "\""
+
+# Source string - simple description
+source-str ::= "\"" [a-zA-Z0-9 _-]{1,50} "\""
+
+# Whitespace - single space only
+ws ::= " "?

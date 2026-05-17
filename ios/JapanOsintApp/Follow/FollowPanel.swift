@@ -3,6 +3,7 @@ import Combine
 
 struct FollowPanel: View {
     @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var ws: WebSocketClient
     @Environment(\.theme) private var theme
 
@@ -96,6 +97,23 @@ struct FollowPanel: View {
         }
         .padding(6)
         .background(theme.surfaceElevated)
+        // Collapse the columns into one spoken phrase; otherwise VoiceOver
+        // reads "GET", "200", the URL and each metric as separate elements.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityLabel(ev))
+    }
+
+    private func accessibilityLabel(_ ev: FollowEvent) -> String {
+        var parts: [String] = [
+            ev.method ?? "GET",
+            "status \(statusText(ev.status))",
+            ev.url ?? "no URL"
+        ]
+        if let c = ev.collector { parts.append("collector \(c)") }
+        if let n = ev.record_count { parts.append("\(n) records") }
+        if let ms = ev.duration_ms { parts.append("\(Int(ms)) milliseconds") }
+        if let b = ev.bytes { parts.append(byteFmt(b)) }
+        return parts.joined(separator: ", ")
     }
 
     private func statusText(_ s: Int?) -> String {
@@ -132,7 +150,7 @@ struct FollowPanel: View {
         loading = true
         defer { loading = false }
         do {
-            let env = try await API(baseURL: settings.backendBaseURL).recentFollow(limit: maxEvents)
+            let env = try await apiClient.api.recentFollow(limit: maxEvents)
             events = env.events
             primeFailed = false
         } catch {

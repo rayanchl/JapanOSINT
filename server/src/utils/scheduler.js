@@ -6,6 +6,8 @@ import {
   logFetch,
   pruneSourcesNotIn,
   getSourceById,
+  getActiveQuarantine,
+  clearQuarantine,
 } from './database.js';
 import { getProbeAuthHeaders, getCredentialStatus } from './apiCredentials.js';
 import { redactUrl, redactHeaders, truncateBody } from './redact.js';
@@ -141,6 +143,10 @@ export async function fetchSource(source, wsServer) {
       error: ok ? null : `HTTP ${res.status}`,
     });
 
+    // Circuit breaker half-open -> closed: a healthy probe means the page
+    // recovered, so lift any quarantine. No-op when not quarantined.
+    if (ok) clearQuarantine(source.id);
+
     // Phase 1 detection: fire-and-forget so the LLM sanity check (up to 8s)
     // never blocks the probe response. The DB writes inside evaluateRun
     // outlive this function on the always-on server.
@@ -250,27 +256,35 @@ function broadcast(wsServer, data) {
  * slot after `timeoutMs` so a stuck runner doesn't permanently lock out
  * future cron firings.
  */
-const inFlightRuns = new Set();
+// name -> { token, startedAt }. The slot is held for the *entire* duration
+// of the run (never released by a timer mid-flight — that is what previously
+// let the next cron tick stack a second concurrent run on the same tables).
+// A genuinely stuck run is only taken over once it exceeds `timeoutMs`, and
+// a late-finishing stale run can't clear the newer run's slot (token check).
+const inFlightRuns = new Map();
 function scheduleGuardedRun(name, fn, timeoutMs) {
   return () => {
-    if (inFlightRuns.has(name)) {
-      console.warn(`[scheduler] ${name} previous run still in flight, skipping`);
-      return;
+    const existing = inFlightRuns.get(name);
+    if (existing) {
+      const age = Date.now() - existing.startedAt;
+      if (age < timeoutMs) {
+        console.warn(`[scheduler] ${name} previous run still in flight (${age}ms), skipping`);
+        return;
+      }
+      console.error(`[scheduler] ${name} previous run stuck >${timeoutMs}ms — starting a fresh run`);
     }
-    inFlightRuns.add(name);
-    const timer = setTimeout(() => {
-      console.error(`[scheduler] ${name} exceeded ${timeoutMs}ms — releasing slot (run continues in background)`);
-      inFlightRuns.delete(name);
-    }, timeoutMs);
-    timer.unref?.();
+    const token = Symbol(name);
+    inFlightRuns.set(name, { token, startedAt: Date.now() });
     Promise.resolve()
       .then(() => withCollectorRun(name, fn, { trigger: 'cron' }))
       .catch((err) => {
         console.error(`[scheduler] ${name} failed:`, err?.message);
       })
       .finally(() => {
-        clearTimeout(timer);
-        inFlightRuns.delete(name);
+        // Only clear if we still own the slot — a stuck run that was taken
+        // over must not evict the newer run's entry.
+        const cur = inFlightRuns.get(name);
+        if (cur && cur.token === token) inFlightRuns.delete(name);
       });
   };
 }
@@ -341,6 +355,11 @@ export function startScheduler(wsServer) {
   for (const src of schedulable) {
     const cronExpr = intervalToCron(src.updateInterval);
     cron.schedule(cronExpr, () => {
+      // Phase 4 circuit breaker: stop hammering a page the repair pod has
+      // quarantined. Once the cooldown lapses getActiveQuarantine returns
+      // null (half-open) and this probe runs again; a healthy run clears
+      // the flag in fetchSource's success path.
+      if (getActiveQuarantine(src.id)) return;
       // Skip keyed sources without user consent — they require credentials
       // and the user must opt-in to scheduled probing per-source. Check the
       // live DB row so toggling consent at runtime takes effect immediately.

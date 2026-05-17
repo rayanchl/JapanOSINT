@@ -27,6 +27,11 @@
  */
 
 import { randomUUID } from 'crypto';
+// TENANCY EXCEPTION (intentional): this engine is NOT serving one tenant's
+// request — it evaluates the platform-global intel pool against EVERY
+// tenant's rules (stmtAllEnabledRules) and attributes events per
+// rule.tenant_id. It therefore uses raw `db`, not tenantDb(). Do not
+// "fix" this to tenantDb — cross-tenant evaluation is the whole point.
 import db from './database.js';
 import { sendEmail } from './channels/email.js';
 import { sendWebhook } from './channels/webhook.js';
@@ -37,6 +42,19 @@ const stmtRulesForTenant = db.prepare(`
     FROM alert_rules
    WHERE tenant_id = ?
      AND enabled = 1
+     AND (muted_until IS NULL OR muted_until < datetime('now'))
+`);
+
+// Shared-pool intel_items carry tenant_id = NULL by design (see
+// intelStore.js header): collected OSINT is platform-global. Such items
+// must be matched against EVERY tenant's enabled rules — each rule's own
+// predicate scopes what it cares about. Event rows are attributed to
+// `rule.tenant_id`, not the (null) item tenant.
+const stmtAllEnabledRules = db.prepare(`
+  SELECT id, tenant_id, name, predicate_json, channels_json,
+         dedup_window_sec, storm_cap_per_hour, muted_until
+    FROM alert_rules
+   WHERE enabled = 1
      AND (muted_until IS NULL OR muted_until < datetime('now'))
 `);
 
@@ -83,8 +101,12 @@ export function evaluateForNewItem(item) {
 }
 
 async function evaluate(item) {
-  const tenantId = item.tenant_id || 'legacy';
-  const rules = stmtRulesForTenant.all(tenantId);
+  // A real collected item is shared-pool (tenant_id NULL) → evaluate it
+  // against all tenants' rules. The /alerts/:id/test path passes a fake
+  // item carrying the caller's tenant → scope to just that tenant.
+  const rules = item.tenant_id
+    ? stmtRulesForTenant.all(item.tenant_id)
+    : stmtAllEnabledRules.all();
   if (rules.length === 0) return;
 
   for (const rule of rules) {
@@ -100,7 +122,7 @@ async function evaluate(item) {
     const dedupWin = `-${Math.max(1, rule.dedup_window_sec || 3600)} seconds`;
     if (stmtRecentDuplicate.get(rule.id, item.uid, dedupWin)) {
       stmtInsertEvent.run(
-        randomUUID(), tenantId, rule.id, item.uid,
+        randomUUID(), rule.tenant_id, rule.id, item.uid,
         '[]', 1, 'duplicate',
       );
       continue;
@@ -111,7 +133,7 @@ async function evaluate(item) {
     const recent = stmtFiresInLastHour.get(rule.id).n;
     if (recent >= cap) {
       stmtInsertEvent.run(
-        randomUUID(), tenantId, rule.id, item.uid,
+        randomUUID(), rule.tenant_id, rule.id, item.uid,
         '[]', 1, `storm_cap(${cap}/h)`,
       );
       stmtMuteRule.run(rule.id);
@@ -138,7 +160,7 @@ async function evaluate(item) {
     }));
 
     stmtInsertEvent.run(
-      randomUUID(), tenantId, rule.id, item.uid,
+      randomUUID(), rule.tenant_id, rule.id, item.uid,
       JSON.stringify(delivered),
       0,
       failures.length ? failures.join(' | ').slice(0, 500) : null,

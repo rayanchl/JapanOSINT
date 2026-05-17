@@ -4,6 +4,8 @@
  * Falls back to a curated mesh of high-probability zones.
  */
 
+import { intelHashKey } from '../utils/intelHelpers.js';
+
 const JSHIS_URL = 'https://www.j-shis.bosai.go.jp/map/api/pshm/Y2020/PT01/T30_I50_PS.geojson';
 
 // Major seismic hazard mesh points - probability of seismic intensity 6-lower or higher in 30 years
@@ -80,7 +82,7 @@ async function tryJshis() {
       type: 'Feature',
       geometry: f.geometry,
       properties: {
-        mesh_id: `JSHIS_${String(i + 1).padStart(6, '0')}`,
+        mesh_id: `JSHIS_${intelHashKey(JSON.stringify(f.geometry))}`,
         prob_6lower_30yr: f.properties?.T30_I50_PS || null,
         country: 'JP',
         source: 'jshis_api',
@@ -97,7 +99,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [m.lon, m.lat] },
     properties: {
-      mesh_id: `JSHIS_${String(i + 1).padStart(6, '0')}`,
+      mesh_id: `JSHIS_${intelHashKey(m.name, m.lat, m.lon)}`,
       name: m.name,
       prob_6lower_30yr: m.prob_6lower_30yr,
       prefecture: m.prefecture,

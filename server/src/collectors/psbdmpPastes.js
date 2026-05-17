@@ -26,7 +26,8 @@ export default async function collectPsbdmpPastes() {
       tags: ['paste', 'leak', 'psbdmp', live ? 'reachable' : 'unreachable'],
       properties: { reachable: live, requires_key: false },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'PSBDMP pastebin mirror search',
   });
 }

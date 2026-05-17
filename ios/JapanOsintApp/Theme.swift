@@ -49,7 +49,7 @@ struct ThemePalette: Equatable {
 }
 
 private struct ThemeKey: EnvironmentKey {
-    static let defaultValue: ThemePalette = .cyberpunk
+    static let defaultValue: ThemePalette = .system
 }
 
 extension EnvironmentValues {

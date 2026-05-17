@@ -2,8 +2,10 @@
 import { fetchJson } from './_liveHelpers.js';
 import db from '../utils/database.js';
 import { upsertPosts } from '../utils/socialPostsStore.js';
+import { envFor } from '../utils/collectorEnv.js';
 
-const BEARER_TOKEN = process.env.TWITTER_BEARER_TOKEN || '';
+// Lazy read so tenant BYOK overrides land without a server restart.
+const bearerToken = () => envFor('TWITTER_BEARER_TOKEN') || '';
 
 const MASTODON_INSTANCES = [
   'https://mstdn.jp',
@@ -71,6 +73,7 @@ const stmtSelectGeocoded = db.prepare(`
 `);
 
 async function tryTwitterAPI() {
+  const BEARER_TOKEN = bearerToken();
   if (!BEARER_TOKEN) return false;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);

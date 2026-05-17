@@ -43,7 +43,14 @@ db.exec(`
     probe_response_headers TEXT,
     probe_response_body   TEXT,
     probe_kind            TEXT,
-    probe_consent         INTEGER NOT NULL DEFAULT 0
+    probe_consent         INTEGER NOT NULL DEFAULT 0,
+    -- Phase 4 circuit breaker. quarantined_until is the cooldown deadline:
+    -- the scheduler skips probing while now < quarantined_until, then goes
+    -- half-open (one probe allowed) and clears the quarantine on the next
+    -- healthy run. quarantined_at/reason are the audit trail.
+    quarantined_at        TEXT,
+    quarantined_until     TEXT,
+    quarantine_reason     TEXT
   );
 
   DROP TABLE IF EXISTS data_cache;
@@ -428,8 +435,39 @@ db.exec(`
     ON collector_anomaly(source_id, created_at DESC) WHERE resolved_at IS NULL;
   CREATE INDEX IF NOT EXISTS idx_anomaly_unresolved
     ON collector_anomaly(created_at DESC) WHERE resolved_at IS NULL;
-  CREATE INDEX IF NOT EXISTS idx_anomaly_untriaged
-    ON collector_anomaly(created_at) WHERE resolved_at IS NULL AND triaged_at IS NULL;
+  -- idx_anomaly_untriaged is created in the triage migration block below,
+  -- after the triage_* columns are guaranteed to exist on legacy DBs.
+
+  -- Phase 3 repair audit. One row per repair attempt against an anomaly.
+  -- The maintenance pod NEVER mutates a collector silently — every model
+  -- proposal, gate result, and PR/merge outcome is recorded here so the
+  -- Phase 4 digest can answer "what got auto-fixed, what's awaiting review,
+  -- what's quarantined". status:
+  --   verified     gate passed, change applied/committed (no auto-merge)
+  --   merged       gate passed AND safe-class auto-merge fast path taken
+  --   rejected     a deterministic gate check failed (anomaly re-escalated)
+  --   needs_human   class isn't machine-fixable (selector/auth/etc.)
+  --   error         the attempt threw before reaching a verdict
+  CREATE TABLE IF NOT EXISTS collector_repair (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    anomaly_id  INTEGER NOT NULL REFERENCES collector_anomaly(id),
+    source_id   TEXT NOT NULL REFERENCES sources(id),
+    status      TEXT NOT NULL CHECK(status IN ('verified','merged','rejected','needs_human','error')),
+    action      TEXT,
+    -- Snapshot of the triage class *at attempt time*. The anomaly's own
+    -- triage_class is cleared by reopenForRetriage, so metrics must read
+    -- this frozen copy, not join back to collector_anomaly.
+    triage_class TEXT,
+    patch       TEXT,
+    gate        TEXT,
+    model       TEXT,
+    pr_url      TEXT,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_repair_anomaly
+    ON collector_repair(anomaly_id);
+  CREATE INDEX IF NOT EXISTS idx_repair_source
+    ON collector_repair(source_id, created_at DESC);
 `);
 
 // --------------- Schema migration ---------------
@@ -689,6 +727,58 @@ db.exec(`
     `);
   } catch (err) {
     console.warn('[database] collector_anomaly triage migration failed:', err?.message);
+  }
+})();
+
+// collector_repair (Phase 3). DBs that predate Phase 3 won't have this
+// table; CREATE TABLE IF NOT EXISTS in the main schema block only runs on
+// the statements that are part of that exec, and legacy DBs already passed
+// it — so create it explicitly here too. Idempotent.
+(function ensureRepairSchema() {
+  try {
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS collector_repair (
+        id          INTEGER PRIMARY KEY AUTOINCREMENT,
+        anomaly_id  INTEGER NOT NULL REFERENCES collector_anomaly(id),
+        source_id   TEXT NOT NULL REFERENCES sources(id),
+        status      TEXT NOT NULL CHECK(status IN ('verified','merged','rejected','needs_human','error')),
+        action      TEXT,
+        triage_class TEXT,
+        patch       TEXT,
+        gate        TEXT,
+        model       TEXT,
+        pr_url      TEXT,
+        created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+      );
+      CREATE INDEX IF NOT EXISTS idx_repair_anomaly ON collector_repair(anomaly_id);
+      CREATE INDEX IF NOT EXISTS idx_repair_source  ON collector_repair(source_id, created_at DESC);
+    `);
+    // Phase-3 DBs created before the metrics fix have the table but not
+    // triage_class — add it in place.
+    const rcols = db.prepare('PRAGMA table_info(collector_repair)').all().map((c) => c.name);
+    if (!rcols.includes('triage_class')) {
+      db.exec('ALTER TABLE collector_repair ADD COLUMN triage_class TEXT');
+    }
+  } catch (err) {
+    console.warn('[database] collector_repair migration failed:', err?.message);
+  }
+})();
+
+// sources quarantine columns (Phase 4). Legacy DBs predate the circuit
+// breaker — ADD COLUMN is idempotent and online.
+(function ensureQuarantineSchema() {
+  try {
+    const cols = db.prepare('PRAGMA table_info(sources)').all().map((c) => c.name);
+    if (cols.length === 0) return;
+    for (const [name, type] of [
+      ['quarantined_at', 'TEXT'],
+      ['quarantined_until', 'TEXT'],
+      ['quarantine_reason', 'TEXT'],
+    ]) {
+      if (!cols.includes(name)) db.exec(`ALTER TABLE sources ADD COLUMN ${name} ${type}`);
+    }
+  } catch (err) {
+    console.warn('[database] sources quarantine migration failed:', err?.message);
   }
 })();
 
@@ -953,6 +1043,240 @@ export function recordTriage({
     triage_suggested_fix,
     triage_model,
   });
+}
+
+/**
+ * Re-open a triaged anomaly for higher-tier triage. Called by Phase 3 when
+ * a proposed fix fails the verification gate: bump escalation_level and
+ * clear the triage_* fields so the triage worker re-picks it (its bundle
+ * already carries escalation_level, so a higher tier sees it climbed). The
+ * anomaly stays open — escalation is the signal that the cheap path failed.
+ */
+export function reopenForRetriage(id) {
+  return db.prepare(`
+    UPDATE collector_anomaly
+       SET escalation_level     = escalation_level + 1,
+           triage_class         = NULL,
+           triage_confidence    = NULL,
+           triage_evidence      = NULL,
+           triage_suggested_fix = NULL,
+           triaged_at           = NULL,
+           triage_model         = NULL
+     WHERE id = @id AND resolved_at IS NULL
+  `).run({ id });
+}
+
+/**
+ * Triaged, still-open anomalies the repair worker should consider, oldest
+ * first. The worker itself decides per-class whether each is machine-fixable
+ * and enforces the per-anomaly attempt cap (getRepairAttemptCount).
+ */
+export function getRepairCandidates(limit = 10) {
+  return db.prepare(`
+    SELECT * FROM collector_anomaly
+     WHERE resolved_at IS NULL AND triaged_at IS NOT NULL
+     ORDER BY created_at ASC
+     LIMIT ?
+  `).all(limit);
+}
+
+const stmtInsertRepair = db.prepare(`
+  INSERT INTO collector_repair
+    (anomaly_id, source_id, status, action, triage_class, patch, gate, model, pr_url)
+  VALUES
+    (@anomaly_id, @source_id, @status, @action, @triage_class, @patch, @gate, @model, @pr_url)
+`);
+
+const REPAIR_STATUSES = new Set(['verified', 'merged', 'rejected', 'needs_human', 'error']);
+
+export function recordRepair({
+  anomaly_id,
+  source_id,
+  status,
+  action = null,
+  triage_class = null,
+  patch = null,
+  gate = null,
+  model = null,
+  pr_url = null,
+}) {
+  if (!REPAIR_STATUSES.has(status)) {
+    throw new Error(`recordRepair: unknown status "${status}"`);
+  }
+  return stmtInsertRepair.run({
+    anomaly_id, source_id, status, action, triage_class, patch, gate, model, pr_url,
+  });
+}
+
+// 'await_recovery' rows are bookkeeping for the transient path — no model
+// ran and no fix was attempted — so they must not count as repair attempts
+// or as failed cycles. Everything else with these statuses does.
+const NOT_AWAIT = `(action IS NULL OR action <> 'await_recovery')`;
+
+/**
+ * How many real repair attempts (model proposal actually run and gated)
+ * have been made for this anomaly. needs_human and transient await_recovery
+ * rows don't count — no model patch was attempted — so a class flip after
+ * re-triage still gets a shot.
+ */
+export function getRepairAttemptCount(anomalyId) {
+  return db.prepare(`
+    SELECT COUNT(*) AS n FROM collector_repair
+     WHERE anomaly_id = ?
+       AND status IN ('verified','merged','rejected','error')
+       AND ${NOT_AWAIT}
+  `).get(anomalyId).n;
+}
+
+export function getRepairsByAnomaly(anomalyId) {
+  return db.prepare(
+    'SELECT * FROM collector_repair WHERE anomaly_id = ? ORDER BY created_at ASC, id ASC',
+  ).all(anomalyId);
+}
+
+/**
+ * True if this anomaly already has a verified-but-unapplied fix staged. In
+ * dry / branch / PR-pending mode the repair worker records `verified` but
+ * does NOT resolve the anomaly (the URL isn't live yet). Without this guard
+ * the worker would re-propose the same fix every tick, burning LLM calls
+ * and piling up duplicate rows. A staged anomaly is parked until the fix
+ * actually merges (then it resolves) or a human acts.
+ */
+export function hasStagedRepair(anomalyId) {
+  return !!db.prepare(`
+    SELECT 1 FROM collector_repair
+     WHERE anomaly_id = ? AND status = 'verified'
+     LIMIT 1
+  `).get(anomalyId);
+}
+
+/**
+ * Number of *failed* repair cycles (rejected or error) for a source within
+ * the last `hours`. The Phase 4 breaker quarantines a source once this
+ * crosses its threshold so the pod stops hammering a page it can't fix.
+ * Excludes transient await_recovery — a flapping page recovering on its own
+ * is not the pod failing to fix it.
+ */
+export function countRecentFailedRepairs(sourceId, hours = 24) {
+  return db.prepare(`
+    SELECT COUNT(*) AS n FROM collector_repair
+     WHERE source_id = ?
+       AND status IN ('rejected','error')
+       AND ${NOT_AWAIT}
+       AND created_at >= datetime('now', ?)
+  `).get(sourceId, `-${hours} hours`).n;
+}
+
+/** Quarantine a source for `hours` (cooldown from now). */
+export function quarantineSource(id, hours, reason) {
+  return db.prepare(`
+    UPDATE sources
+       SET quarantined_at    = datetime('now'),
+           quarantined_until = datetime('now', ?),
+           quarantine_reason = ?
+     WHERE id = ?
+  `).run(`+${hours} hours`, reason, id);
+}
+
+export function clearQuarantine(id) {
+  return db.prepare(`
+    UPDATE sources
+       SET quarantined_at = NULL, quarantined_until = NULL, quarantine_reason = NULL
+     WHERE id = ? AND quarantined_until IS NOT NULL
+  `).run(id);
+}
+
+/**
+ * The source row iff it's *actively* quarantined (cooldown not yet elapsed).
+ * Past the deadline the row stays flagged but this returns null — that's the
+ * half-open state: the scheduler is allowed one probe, and a healthy run
+ * clears the flag.
+ */
+export function getActiveQuarantine(id) {
+  return db.prepare(`
+    SELECT id, quarantined_at, quarantined_until, quarantine_reason
+      FROM sources
+     WHERE id = ? AND quarantined_until IS NOT NULL
+       AND quarantined_until > datetime('now')
+  `).get(id);
+}
+
+/** Every flagged source (active or half-open) — for the digest. */
+export function getQuarantinedSources() {
+  return db.prepare(`
+    SELECT id, name, category, quarantined_at, quarantined_until, quarantine_reason,
+           (quarantined_until > datetime('now')) AS active
+      FROM sources
+     WHERE quarantined_until IS NOT NULL
+     ORDER BY quarantined_at DESC
+  `).all();
+}
+
+/** Repair outcome counts within the last `hours`, optionally grouped. */
+export function getRepairTotals(hours = 24) {
+  return db.prepare(`
+    SELECT status, COUNT(*) AS n
+      FROM collector_repair
+     WHERE created_at >= datetime('now', ?)
+     GROUP BY status
+  `).all(`-${hours} hours`);
+}
+
+/**
+ * Fix-success rate per triage class and per source over `hours`. success =
+ * verified|merged, fail = rejected|error, needs_human is a hand-off (not a
+ * failure). Grouped on the *frozen* r.triage_class so re-triage can't
+ * misattribute; transient await_recovery bookkeeping is excluded entirely.
+ */
+export function getRepairSuccessBreakdown(hours = 24) {
+  const since = `-${hours} hours`;
+  const byClass = db.prepare(`
+    SELECT COALESCE(triage_class,'?') AS klass,
+           SUM(status IN ('verified','merged')) AS success,
+           SUM(status IN ('rejected','error'))  AS fail,
+           SUM(status = 'needs_human')           AS needs_human
+      FROM collector_repair
+     WHERE created_at >= datetime('now', ?) AND ${NOT_AWAIT}
+     GROUP BY klass
+     ORDER BY (success + fail) DESC
+  `).all(since);
+  const bySource = db.prepare(`
+    SELECT source_id,
+           SUM(status IN ('verified','merged')) AS success,
+           SUM(status IN ('rejected','error'))  AS fail
+      FROM collector_repair
+     WHERE created_at >= datetime('now', ?) AND ${NOT_AWAIT}
+     GROUP BY source_id
+     HAVING (success + fail) > 0
+     ORDER BY fail DESC, success DESC
+     LIMIT 50
+  `).all(since);
+  return { byClass, bySource };
+}
+
+/** Recent repair rows of a given status (digest detail lists). */
+export function getRecentRepairs(status, hours = 24, limit = 50) {
+  return db.prepare(`
+    SELECT id, anomaly_id, source_id, status, action, triage_class, pr_url, created_at
+      FROM collector_repair
+     WHERE status = ? AND created_at >= datetime('now', ?)
+     ORDER BY created_at DESC
+     LIMIT ?
+  `).all(status, `-${hours} hours`, limit);
+}
+
+/**
+ * Most recent healthy fetch_log row strictly after `afterTs` (ISO/SQLite
+ * datetime string). Used by the repair worker to auto-dismiss `transient`
+ * anomalies whose source has since recovered on its own.
+ */
+export function getLatestHealthyRunAfter(sourceId, afterTs) {
+  return db.prepare(`
+    SELECT * FROM fetch_log
+     WHERE source_id = ? AND status = 'online' AND timestamp > ?
+     ORDER BY timestamp DESC, id DESC
+     LIMIT 1
+  `).get(sourceId, afterTs);
 }
 
 /**

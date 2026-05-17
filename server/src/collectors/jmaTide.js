@@ -14,6 +14,8 @@
  * fail.
  */
 
+import { intelHashKey } from '../utils/intelHelpers.js';
+
 const TIDE_AREA_URL = 'https://www.jma.go.jp/bosai/tidelevel/const/tide_area.json';
 const TIDE_ESTIMATE_URL = 'https://www.jma.go.jp/bosai/tidelevel/data/tide/tide_estimate.json';
 
@@ -124,7 +126,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [s.lon, s.lat] },
     properties: {
-      station_id: `TIDE_${String(i + 1).padStart(5, '0')}`,
+      station_id: `TIDE_${intelHashKey(s.name, s.lat, s.lon)}`,
       name: s.name,
       level_cm: s.level_cm,
       anomaly_cm: s.anomaly_cm,

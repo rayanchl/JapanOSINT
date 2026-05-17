@@ -28,7 +28,8 @@ export default async function collectKakakuPrices() {
       tags: ['marketplace', 'price', 'kakaku', live ? 'reachable' : 'unreachable'],
       properties: { operator: '価格.com', reachable: live },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'Kakaku.com price-intelligence portal',
   });
 }

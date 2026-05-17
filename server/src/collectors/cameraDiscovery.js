@@ -39,7 +39,7 @@ import {
 } from './_cameraSources.js';
 import { renderHtml, extractYouTubeEmbed } from '../utils/screenshot.js';
 import { geocodeFeatures } from '../utils/cameraGeocode.js';
-import { getEnv } from '../utils/credentials.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const BROWSER_UA =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
@@ -156,7 +156,7 @@ function fromExpressway() {
 // search results around Tokyo, which is noise. Quota: search.list = 100 units,
 // videos.list ≈ 3 units; tune the scheduler interval to your daily quota.
 async function fromYouTubeLive() {
-  const apiKey = getEnv(null, 'YOUTUBE_API_KEY');
+  const apiKey = envFor('YOUTUBE_API_KEY');
   if (!apiKey) return [];
 
   const searchUrl =
@@ -492,7 +492,7 @@ async function fromInsecam() {
 async function fromShodanAPI() {
   // Read at call-time so keys set via the iOS Sources panel (which mutates
   // process.env via apiKeysStore.setKey) take effect without a server restart.
-  const key = getEnv(null, 'SHODAN_API_KEY') || '';
+  const key = envFor('SHODAN_API_KEY') || '';
   if (!key) return [];
   const query = 'country:JP';
   try {
@@ -1160,7 +1160,7 @@ async function fromScsComUa() {
 // ─── Channel: Windy.com webcams API ────────────────────────────────────────
 // Only source with real lat/lon + embed URLs. Free key from api.windy.com.
 async function fromWindy() {
-  const key = getEnv(null, 'WINDY_API_KEY');
+  const key = envFor('WINDY_API_KEY');
   if (!key) {
     console.log('[cameraDiscovery] windy_api: WINDY_API_KEY not set, skipping');
     return [];

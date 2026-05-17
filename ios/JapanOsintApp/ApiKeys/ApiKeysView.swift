@@ -1,19 +1,58 @@
 import SwiftUI
 import Combine
 
+/// Which key store this view edits.
+/// - `.workspace`: the signed-in user's own per-tenant BYOK keys
+///   (`/api/tenant-keys`, AES-encrypted server-side). The default — this is
+///   the user-facing API Keys tab.
+/// - `.platform`: the server-wide operator overlay (`/api/keys`). Reached
+///   only from Settings → Admin and gated to owner/admin server-side.
+enum KeyScope: Equatable { case workspace, platform }
+
+/// Unified row the list/detail render, mapped from either `TenantKeyMeta`
+/// (workspace) or `ApiKeyMeta` (platform). `byok` means "a value is set in
+/// *this* store specifically" — the tenant's own key, or an overlay value.
+/// `source` is workspace-only: "tenant" | "platform" | nil.
+struct KeyRow: Identifiable, Hashable {
+    let name: String
+    let role: String
+    let set: Bool
+    let byok: Bool
+    let source: String?
+    var id: String { name }
+
+    init(name: String, role: String, set: Bool, byok: Bool, source: String?) {
+        self.name = name; self.role = role; self.set = set
+        self.byok = byok; self.source = source
+    }
+    init(_ m: TenantKeyMeta) {
+        name = m.name; role = m.role; set = m.set; byok = m.byok; source = m.source
+    }
+    init(_ m: ApiKeyMeta) {
+        name = m.name; role = m.role; set = m.set
+        byok = m.hasOverlay
+        source = m.set ? (m.hasOverlay ? "tenant" : "platform") : nil
+    }
+}
+
 /// Lists every env-var the server consumes, with status. Tapping a row opens
 /// a Face-ID-gated detail sheet for reveal/edit/clear. Search + filter sheet
 /// mirror the visual scaffolding used by the cameras and saved tabs.
 struct ApiKeysView: View {
-    @EnvironmentObject var settings: AppSettings
+    let scope: KeyScope
+    init(scope: KeyScope = .workspace) { self.scope = scope }
+
+    @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var nav: MapNavigation
     @Environment(\.theme) private var theme
 
-    @State private var items: [ApiKeyMeta] = []
+    @State private var items: [KeyRow] = []
+    /// Owner-policy gate (workspace scope). Platform scope is always editable
+    /// — the route itself is admin-gated, so reaching it implies the right.
+    @State private var canManage: Bool = true
+    @State private var policy: String = ""
     /// Snapshot of `/api/status` used by the detail sheet to show which
-    /// sources/collectors reference each key. Best-effort: failure here
-    /// leaves the array empty and the detail's "Used by" section just
-    /// shows its empty state.
+    /// sources/collectors reference each key. Best-effort.
     @State private var statusRows: [StatusRow] = []
     @State private var loading: Bool = true
     @State private var error: String?
@@ -22,20 +61,22 @@ struct ApiKeysView: View {
     @State private var statusFilter: StatusFilter = .all
     @State private var roleFilter: Set<String> = []
     @State private var showFilters: Bool = false
-    @State private var selected: ApiKeyMeta?
+    @State private var selected: KeyRow?
 
-    enum StatusFilter: String, CaseIterable, Identifiable {
-        case all, set, unset, overlay
+    enum StatusFilter: String, FilterChoice {
+        case all, set, unset, mine
         var id: String { rawValue }
         var label: String {
             switch self {
-            case .all:     return "All"
-            case .set:     return "Set"
-            case .unset:   return "Unset"
-            case .overlay: return "Overlay"
+            case .all:   return "All"
+            case .set:   return "Set"
+            case .unset: return "Unset"
+            case .mine:  return "Custom"
             }
         }
     }
+
+    private var title: String { scope == .platform ? "Platform Keys" : "API Keys" }
 
     var body: some View {
         Group {
@@ -54,7 +95,7 @@ struct ApiKeysView: View {
             }
         }
         .background(theme.surface.ignoresSafeArea())
-        .navigationTitle("API Keys")
+        .navigationTitle(title)
         .searchable(
             text: $searchText,
             placement: .navigationBarDrawer(displayMode: .always),
@@ -62,12 +103,9 @@ struct ApiKeysView: View {
         )
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button { showFilters = true } label: {
-                    Image(systemName: filtersAreActive
-                          ? "line.3.horizontal.decrease.circle.fill"
-                          : "line.3.horizontal.decrease.circle")
+                FilterToolbarButton(isActive: filtersAreActive) {
+                    showFilters = true
                 }
-                .accessibilityLabel("Filters")
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button { Task { await load() } } label: {
@@ -78,14 +116,16 @@ struct ApiKeysView: View {
         }
         .task {
             await load()
-            // Console may have pushed us in response to `showApiKey(_:)` —
-            // the published value can land before this view mounts, so the
-            // `.onReceive` below would miss the initial value. Consume it here.
-            if let name = nav.pendingApiKeyName { await openKey(name) }
+            if scope == .workspace, let name = nav.pendingApiKeyName {
+                await openKey(name)
+            }
         }
         .refreshable { await load() }
-        .sheet(item: $selected) { meta in
-            ApiKeyDetailView(meta: meta, statusRows: statusRows) { updated in
+        .sheet(item: $selected) { row in
+            ApiKeyDetailView(row: row,
+                             scope: scope,
+                             canManage: canManage,
+                             statusRows: statusRows) { updated in
                 if let i = items.firstIndex(where: { $0.id == updated.id }) {
                     items[i] = updated
                 }
@@ -93,7 +133,7 @@ struct ApiKeysView: View {
         }
         .sheet(isPresented: $showFilters) { filtersSheet }
         .onReceive(nav.$pendingApiKeyName.compactMap { $0 }) { name in
-            Task { await openKey(name) }
+            if scope == .workspace { Task { await openKey(name) } }
         }
     }
 
@@ -101,6 +141,16 @@ struct ApiKeysView: View {
 
     private var listView: some View {
         Form {
+            if scope == .workspace && !canManage {
+                Section {
+                    Label(
+                        "Read-only — your workspace owner restricts who can edit keys.",
+                        systemImage: "lock.fill"
+                    )
+                    .font(.caption)
+                    .foregroundStyle(theme.textMuted)
+                }
+            }
             if filteredItems.isEmpty {
                 Text(searchText.isEmpty
                      ? "No keys match the current filters."
@@ -118,7 +168,7 @@ struct ApiKeysView: View {
         }
     }
 
-    private func row(_ item: ApiKeyMeta) -> some View {
+    private func row(_ item: KeyRow) -> some View {
         HStack(spacing: 10) {
             Image(systemName: item.set ? "key.fill" : "key.slash")
                 .foregroundStyle(item.set ? theme.success : theme.textMuted)
@@ -130,7 +180,7 @@ struct ApiKeysView: View {
                     .lineLimit(1)
                 HStack(spacing: 4) {
                     rolePill(item.role)
-                    if item.hasOverlay { overlayPill }
+                    sourcePill(item)
                 }
             }
             Spacer()
@@ -146,8 +196,20 @@ struct ApiKeysView: View {
         Pill(text: role.uppercased(), tone: roleTone(role))
     }
 
-    private var overlayPill: some View {
-        Pill(text: "OVERLAY", tone: .accent)
+    /// Where the active value comes from. Workspace: "YOUR KEY" vs "ADMIN"
+    /// (operator-provided fallback; its value stays hidden from members).
+    /// Platform: "OVERLAY" when the operator set a value.
+    @ViewBuilder
+    private func sourcePill(_ item: KeyRow) -> some View {
+        if scope == .workspace {
+            if item.byok {
+                Pill(text: "YOUR KEY", tone: .accent, size: .md)
+            } else if item.source == "platform" {
+                Pill(text: "ADMIN", tone: .neutral, size: .md)
+            }
+        } else if item.byok {
+            Pill(text: "OVERLAY", tone: .accent)
+        }
     }
 
     private func statusPill(_ set: Bool) -> some View {
@@ -168,14 +230,14 @@ struct ApiKeysView: View {
         statusFilter != .all || !roleFilter.isEmpty
     }
 
-    private var filteredItems: [ApiKeyMeta] {
+    private var filteredItems: [KeyRow] {
         let q = searchText.trimmingCharacters(in: .whitespaces).lowercased()
         return items.filter { item in
             switch statusFilter {
-            case .all:     break
-            case .set:     if !item.set         { return false }
-            case .unset:   if item.set          { return false }
-            case .overlay: if !item.hasOverlay  { return false }
+            case .all:   break
+            case .set:   if !item.set   { return false }
+            case .unset: if item.set    { return false }
+            case .mine:  if !item.byok  { return false }
             }
             if !roleFilter.isEmpty, !roleFilter.contains(item.role) {
                 return false
@@ -189,7 +251,6 @@ struct ApiKeysView: View {
 
     private var availableRoles: [String] {
         Array(Set(items.map(\.role))).sorted { a, b in
-            // required → anyOf → optional, matching server-side ranking.
             let rank: [String: Int] = ["required": 0, "anyOf": 1, "optional": 2]
             return (rank[a] ?? 99) < (rank[b] ?? 99)
         }
@@ -203,52 +264,24 @@ struct ApiKeysView: View {
     // MARK: - Filters sheet
 
     private var filtersSheet: some View {
-        NavigationStack {
-            Form {
-                Section("Status") {
-                    Picker("Status", selection: $statusFilter) {
-                        ForEach(StatusFilter.allCases) { Text($0.label).tag($0) }
-                    }
-                    .pickerStyle(.segmented)
-                }
-                Section("Role") {
-                    if availableRoles.isEmpty {
-                        Text("No roles yet")
-                            .foregroundStyle(theme.textMuted)
-                    } else {
-                        ForEach(availableRoles, id: \.self) { role in
-                            Button { toggleRole(role) } label: {
-                                HStack {
-                                    Text(role.capitalized)
-                                        .foregroundStyle(theme.text)
-                                    Spacer()
-                                    if roleFilter.contains(role) {
-                                        Image(systemName: "checkmark")
-                                            .foregroundStyle(theme.accent)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                if filtersAreActive {
-                    Section {
-                        Button("Reset filters", role: .destructive) {
-                            statusFilter = .all
-                            roleFilter.removeAll()
-                        }
-                    }
-                }
-            }
-            .navigationTitle("Filters")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") { showFilters = false }
-                }
-            }
+        FilterSheet(
+            isActive: filtersAreActive,
+            onReset: {
+                statusFilter = .all
+                roleFilter.removeAll()
+            },
+            onDone: { showFilters = false }
+        ) {
+            FilterSegmentedSection(title: "Status", selection: $statusFilter)
+            FilterMultiSelectSection(
+                title: "Role",
+                items: availableRoles,
+                emptyText: "No roles yet",
+                label: { $0.capitalized },
+                isSelected: { roleFilter.contains($0) },
+                toggle: { toggleRole($0) }
+            )
         }
-        .presentationDetents([.medium, .large])
     }
 
     // MARK: - Loading
@@ -256,17 +289,26 @@ struct ApiKeysView: View {
     private func load() async {
         loading = true
         defer { loading = false }
-        let api = API(baseURL: settings.backendBaseURL)
-        // Fetch keys + status concurrently. Status is best-effort — if it
-        // fails we still show the keys list, the detail sheet's "Used by"
-        // section just won't have data to display.
-        async let keysTask = api.apiKeys()
+        let api = apiClient.api
         async let statusTask = api.status()
         do {
-            let fresh = try await keysTask
+            var fresh: [KeyRow] = []
+            var manage = true
+            var pol = ""
+            switch scope {
+            case .workspace:
+                let env = try await api.tenantKeys()
+                fresh = env.items.map(KeyRow.init)
+                manage = env.canManage
+                pol = env.policy
+            case .platform:
+                fresh = try await api.apiKeys().map(KeyRow.init)
+            }
             let env = try? await statusTask
             await MainActor.run {
                 self.items = fresh
+                self.canManage = manage
+                self.policy = pol
                 self.statusRows = env?.apis ?? []
                 self.error = nil
             }
@@ -277,8 +319,7 @@ struct ApiKeysView: View {
         }
     }
 
-    /// Cross-tab nav target: open the detail sheet for `name`. If the keys
-    /// list hasn't loaded yet, fetch first so we can resolve the metadata.
+    /// Cross-tab nav target (workspace only): open the detail sheet for `name`.
     private func openKey(_ name: String) async {
         if items.isEmpty { await load() }
         if let m = items.first(where: { $0.name == name }) {

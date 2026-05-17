@@ -4,6 +4,8 @@
  * Falls back to seed of major congestion points.
  */
 
+import { intelHashKey } from '../utils/intelHelpers.js';
+
 const JARTIC_URL = 'https://www.jartic.or.jp/d/traffic_info/road_traffic.json';
 
 const SEED_TRAFFIC_POINTS = [
@@ -66,7 +68,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
     properties: {
-      point_id: `JTC_${String(i + 1).padStart(5, '0')}`,
+      point_id: `JTC_${intelHashKey(p.road, p.section, p.lat, p.lon)}`,
       road: p.road,
       section: p.section,
       congestion_km: p.congestion_km,

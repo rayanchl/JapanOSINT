@@ -4,6 +4,45 @@
 const CLIP_AT_CHARS = 500;
 const MAX_IMAGES = 2;
 
+// ── Entity extraction (corpus NER) ────────────────────────────────────────
+// Used by entityExtractor.js via the llama.cpp /completion + GBNF path
+// (llmClient.complete). Output shape is constrained by the VERBATIM OSINTsaas
+// grammar server/grammars/entity_extraction.gbnf, so the vocabulary here is
+// byte-identical to the tuned C taxonomy (entity_types.h). Returns a single
+// prompt string; the grammar — not a JSON schema — enforces structure.
+
+const ENTITY_TYPES_PROMPT =
+  'Entity types to identify:\n' +
+  '- CORE: email, ip, domain, phone, username, person, company, address, url\n' +
+  '- TRANSPORT: vehicle, flight, vessel, container\n' +
+  '- FINANCIAL: crypto, iban, swift, credit_card, bank_account\n' +
+  '- NETWORK: dns, asn, mac, subnet, port\n' +
+  '- LOCATION: coordinates, timezone\n' +
+  '- IDENTITY: ssn, passport, license, national_id, tax_id\n' +
+  '- TECHNICAL: hash, cve, api_key, jwt, uuid, file_path, registry\n' +
+  '- DEVICE: imei, imsi, serial, barcode, qr\n' +
+  '- OTHER: image, keyword, unknown\n';
+
+const ENTITY_EXTRACTION_BODY_CLIP = 4000;
+
+export function buildEntityExtractionPrompt({ title, body, summary, language, source_id }) {
+  const text = [title, summary || body]
+    .filter(Boolean)
+    .join('\n\n')
+    .slice(0, ENTITY_EXTRACTION_BODY_CLIP);
+  const prompt =
+    'Extract OSINT entities from the intelligence item below.\n\n' +
+    'CRITICAL: The entity VALUE must contain ONLY the identifier itself, NEVER ' +
+    'context words. Output compact JSON.\n\n' +
+    ENTITY_TYPES_PROMPT +
+    '\nFor Japanese sources, prefer the form as written (kanji/kana) for the ' +
+    'value; the system links kanji/romaji variants separately.\n\n' +
+    `Source: ${source_id || '(unknown)'}\nLanguage: ${language || 'auto'}\n\n` +
+    `Content:\n${text}\n\n` +
+    'Return JSON: {"entities":[{"value":"...","type":"...","confidence":"high|medium|low","source":"..."}]}';
+  return { prompt };
+}
+
 // queries: ordered list (most-specific first) of Japanese place strings the
 // GSI address-search API can resolve. Empty list = "no place inferable" — the
 // caller treats that the same as the old `place: null` sentinel.

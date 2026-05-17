@@ -14,6 +14,7 @@
  */
 
 import db from './database.js';
+import sourceRegistry from './sourceRegistry.js';
 import { segmentForFts } from './jpTokenizer.js';
 import { defineFtsMirror } from './ftsMirror.js';
 import { registerMirror } from './ftsRegistry.js';
@@ -196,6 +197,18 @@ export function listSources() {
 }
 
 /**
+ * TENANCY (decided 2026-05-16): `intel_items` is a PLATFORM-GLOBAL shared
+ * pool, not per-tenant data. The ~308 collectors pull public Japan OSINT on
+ * a single platform-wide schedule (the scheduler runs with no tenant), so
+ * every tenant queries the same collected corpus by design — that shared
+ * aggregation IS the product. Reads here are therefore intentionally NOT
+ * tenant-scoped, and the `intel_items.tenant_id` column is provenance only,
+ * never a filter. Genuinely per-tenant artifacts (alert_rules,
+ * tenant_secrets, saved items, audit_events) are scoped in their own
+ * routes via explicit `AND tenant_id = ?` predicates. Operator-only raw
+ * access is gated by `requirePlatformOperator` on /api/db. Do NOT add a
+ * tenant_id predicate to the queries below.
+ *
  * Paginated listing with optional filters. When `q` is set we go through the
  * FTS virtual table (joined back on uid); otherwise a plain index lookup
  * keyed by source_id + published_at. Cursor is opaque base64 of the last
@@ -293,6 +306,40 @@ export function getItem(uid) {
   return rowToItem(row, { full: true });
 }
 
+// Source registry is a static array (no imports) → cycle-safe to index here.
+const _sourceById = new Map(sourceRegistry.map((s) => [s.id, s]));
+
+/**
+ * Per-data-point provenance — the "full info path" for one row: which
+ * collector emitted it, the upstream origin URL the collector pulls from,
+ * this datum's own link, when it was fetched/published, and (when the
+ * collector or registry supplies them) license + confidence. Always present
+ * so the iOS detail surfaces never have to guess; fields the system can't
+ * determine are null rather than omitted.
+ */
+function buildProvenance(row, properties) {
+  const meta = _sourceById.get(row.source_id) || {};
+  const license =
+    properties.license || properties.license_id || properties.license_name ||
+    meta.license || null;
+  const rawConf = properties.confidence ?? properties._confidence;
+  const confidence = typeof rawConf === 'number' ? rawConf : null;
+  return {
+    source_id: row.source_id,
+    source_name: meta.name || row.source_id,
+    source_name_ja: meta.nameJa || null,
+    category: meta.category || null,
+    collection_method: meta.type || null,   // 'api' | 'scrape' | 'rss' | …
+    source_url: meta.url || null,            // upstream origin the collector hits
+    item_url: row.link || null,              // this datum's own upstream link
+    sub_source_id: row.sub_source_id || null,
+    fetched_at: row.fetched_at || null,
+    published_at: row.published_at || null,
+    license: license != null ? String(license) : null,
+    confidence,
+  };
+}
+
 function rowToItem(row, { full = false } = {}) {
   let tags = [];
   try { tags = row.tags ? JSON.parse(row.tags) : []; } catch { /* ignore */ }
@@ -318,6 +365,7 @@ function rowToItem(row, { full = false } = {}) {
     record_type: row.record_type ?? null,
     sub_source_id: row.sub_source_id ?? null,
   };
+  out.provenance = buildProvenance(row, properties);
   if (row._excerpt != null) out._excerpt = row._excerpt;
   if (full) {
     out.body = row.body;
@@ -394,7 +442,7 @@ export function upsertItemSync(item, sourceId, fetchedAtIso) {
     fireAlertsForNewItem({
       uid: String(item.uid),
       source_id: sourceId,
-      tenant_id: item.tenant_id || 'legacy',
+      tenant_id: item.tenant_id ?? null,
       title: item.title ?? null,
       summary: item.summary ?? null,
       body: item.body ?? null,

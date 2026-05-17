@@ -26,7 +26,8 @@ export default async function collectSumoTournaments() {
       tags: ['sumo', 'sport', 'jsa', live ? 'reachable' : 'unreachable'],
       properties: { operator: 'Japan Sumo Association', reachable: live },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'JSA sumo tournament calendar + bout data',
   });
 }

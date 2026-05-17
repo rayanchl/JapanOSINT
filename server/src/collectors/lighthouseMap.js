@@ -5,6 +5,7 @@
  */
 
 import { fetchOverpass } from './_liveHelpers.js';
+import { intelHashKey } from '../utils/intelHelpers.js';
 
 const SEED_LIGHTHOUSES = [
   // Top lighthouses by historic / strategic importance
@@ -52,7 +53,7 @@ async function tryOverpass() {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: coords },
       properties: {
-        lighthouse_id: `LH_${String(i + 1).padStart(5, '0')}`,
+        lighthouse_id: `LH_OSM_${el.id}`,
         name: el.tags?.name || el.tags?.['name:ja'] || 'Lighthouse',
         height_m: parseFloat(el.tags?.height) || null,
         country: 'JP',
@@ -69,7 +70,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [l.lon, l.lat] },
     properties: {
-      lighthouse_id: `LH_${String(i + 1).padStart(5, '0')}`,
+      lighthouse_id: `LH_${intelHashKey(l.name, l.lat, l.lon)}`,
       name: l.name,
       height_m: l.height_m,
       range_km: l.range_km,

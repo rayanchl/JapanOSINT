@@ -4,7 +4,7 @@ import SwiftUI
 struct IntelSourceItemsView: View {
     let source: IntelSource
 
-    @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var intelCache: IntelCache
     @Environment(\.theme) private var theme
 
@@ -15,12 +15,28 @@ struct IntelSourceItemsView: View {
     @State private var searchText = ""
     @State private var running = false
 
+    @State private var showFilters = false
+    @State private var selectedLanguages: Set<String> = []
+    @State private var linkPresence: LinkPresence = .all
+
+    enum LinkPresence: String, FilterChoice {
+        case all, hasLink, noLink
+        var id: String { rawValue }
+        var label: String {
+            switch self {
+            case .all:     return "All"
+            case .hasLink: return "Has link"
+            case .noLink:  return "No link"
+            }
+        }
+    }
+
     var body: some View {
         Group {
             if loading && items.isEmpty {
                 ProgressView("Loading items…")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else if items.isEmpty && error == nil {
+            } else if items.isEmpty {
                 emptyState
             } else {
                 list
@@ -40,7 +56,13 @@ struct IntelSourceItemsView: View {
                 .disabled(running)
                 .accessibilityLabel(running ? "Running…" : "Run \(source.name)")
             }
+            ToolbarItem(placement: .topBarTrailing) {
+                FilterToolbarButton(isActive: filtersAreActive) {
+                    showFilters = true
+                }
+            }
         }
+        .sheet(isPresented: $showFilters) { filtersSheet }
         // Hide the tab bar while a source is open — the top nav back button
         // is the only "go back" we want; the tab bar at the bottom doubles
         // as another navigation affordance and competes visually.
@@ -97,7 +119,19 @@ struct IntelSourceItemsView: View {
 
     private var list: some View {
         List {
-            ForEach(items) { item in
+            if let error {
+                Label(error, systemImage: "exclamationmark.triangle.fill")
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+                    .listRowBackground(Color.orange.opacity(0.12))
+                    .accessibilityLabel("Error: \(error)")
+            }
+            if !items.isEmpty && filteredItems.isEmpty {
+                Text("No items match the current filters.")
+                    .font(.caption)
+                    .foregroundStyle(theme.textMuted)
+            }
+            ForEach(filteredItems) { item in
                 NavigationLink(value: item) {
                     IntelItemRow(item: item)
                 }
@@ -121,12 +155,79 @@ struct IntelSourceItemsView: View {
     }
 
     private var emptyState: some View {
-        OfflineStateView(
-            kind: .empty,
-            title: "No items yet.",
-            message: error,
-            systemImage: "tray"
-        )
+        if let error {
+            OfflineStateView(
+                kind: .error,
+                title: "Couldn’t load items.",
+                message: error,
+                systemImage: "exclamationmark.triangle",
+                retry: { Task { await reload() } }
+            )
+        } else {
+            OfflineStateView(
+                kind: .empty,
+                title: "No items yet.",
+                message: nil,
+                systemImage: "tray"
+            )
+        }
+    }
+
+    // ── Filtering ───────────────────────────────────────────────────────────
+
+    private var filtersAreActive: Bool {
+        !selectedLanguages.isEmpty || linkPresence != .all
+    }
+
+    /// Client-side narrowing of the loaded page. Free-text search stays
+    /// server-side (`q`) so it spans the full source, not just this page.
+    private var filteredItems: [IntelItem] {
+        items.filter { item in
+            if !selectedLanguages.isEmpty {
+                guard let lang = item.language, selectedLanguages.contains(lang) else { return false }
+            }
+            switch linkPresence {
+            case .all:     break
+            case .hasLink: if (item.link?.isEmpty ?? true) { return false }
+            case .noLink:  if !(item.link?.isEmpty ?? true) { return false }
+            }
+            return true
+        }
+    }
+
+    private var availableLanguages: [String] {
+        var counts: [String: Int] = [:]
+        for i in items { if let l = i.language { counts[l, default: 0] += 1 } }
+        return counts.keys.sorted {
+            counts[$0]! == counts[$1]! ? $0 < $1 : counts[$0]! > counts[$1]!
+        }
+    }
+
+    private func toggleLanguage(_ l: String) {
+        if selectedLanguages.contains(l) { selectedLanguages.remove(l) }
+        else { selectedLanguages.insert(l) }
+    }
+
+    private var filtersSheet: some View {
+        FilterSheet(
+            isActive: filtersAreActive,
+            onReset: {
+                selectedLanguages.removeAll()
+                linkPresence = .all
+            },
+            onDone: { showFilters = false }
+        ) {
+            FilterSegmentedSection(title: "Link", selection: $linkPresence)
+            FilterMultiSelectSection(
+                title: "Language",
+                items: availableLanguages,
+                emptyText: "No language tags on this page",
+                label: { $0.uppercased() },
+                count: { l in items.filter { $0.language == l }.count },
+                isSelected: { selectedLanguages.contains($0) },
+                toggle: { toggleLanguage($0) }
+            )
+        }
     }
 
     // ── Data ───────────────────────────────────────────────────────────────
@@ -135,7 +236,7 @@ struct IntelSourceItemsView: View {
         loading = true
         defer { loading = false }
         do {
-            let env = try await API(baseURL: settings.backendBaseURL)
+            let env = try await apiClient.api
                 .intelItems(source: source.id, q: searchText.isEmpty ? nil : searchText, limit: 50, cursor: nil)
             items = env.data
             nextCursor = env.page?.next_cursor
@@ -155,9 +256,14 @@ struct IntelSourceItemsView: View {
         running = true
         defer { running = false }
         do {
-            _ = try await API(baseURL: settings.backendBaseURL).intelRunSource(source.id)
+            _ = try await apiClient.api.intelRunSource(source.id)
+            Haptics.success()
             await reload()
-        } catch { /* leave existing items in place */ }
+        } catch {
+            // Keep existing items, but tell the user the run didn't kick off.
+            self.error = "Run failed: \(error.localizedDescription)"
+            Haptics.error()
+        }
     }
 
     private func loadMore() async {
@@ -165,10 +271,15 @@ struct IntelSourceItemsView: View {
         loading = true
         defer { loading = false }
         do {
-            let env = try await API(baseURL: settings.backendBaseURL)
+            let env = try await apiClient.api
                 .intelItems(source: source.id, q: searchText.isEmpty ? nil : searchText, limit: 50, cursor: cursor)
             items.append(contentsOf: env.data)
             nextCursor = env.page?.next_cursor
-        } catch { /* keep existing items */ }
+            error = nil
+        } catch {
+            // Keep the items we have; surface why the next page didn't load.
+            self.error = "Couldn’t load more: \(error.localizedDescription)"
+            Haptics.error()
+        }
     }
 }

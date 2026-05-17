@@ -28,7 +28,8 @@ export default async function collectTiktokJpDiscover() {
       tags: ['tiktok', 'social', 'discover', live ? 'reachable' : 'unreachable'],
       properties: { reachable: live, tos_caveat: true },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'TikTok JP discover (trending hashtags / sounds / geo posts)',
   });
 }

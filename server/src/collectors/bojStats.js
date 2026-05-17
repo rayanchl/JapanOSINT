@@ -32,7 +32,8 @@ export default async function collectBojStats() {
   return intelEnvelope({
     sourceId: SOURCE_ID,
     items,
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'Bank of Japan statistics portal reachability + index',
   });
 }

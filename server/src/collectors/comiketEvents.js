@@ -26,7 +26,8 @@ export default async function collectComiketEvents() {
       tags: ['event', 'doujin', 'comiket', live ? 'reachable' : 'unreachable'],
       properties: { operator: 'Comiket Preparatory Committee', reachable: live },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'Comiket event calendar',
   });
 }

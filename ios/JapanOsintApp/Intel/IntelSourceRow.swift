@@ -7,7 +7,7 @@ struct IntelSourceRow: View {
     /// Fires after a successful manual Run so the parent can refresh.
     var onRunComplete: (() -> Void)? = nil
 
-    @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var registry: LayerRegistry
     @Environment(\.theme) private var theme
 
@@ -77,7 +77,7 @@ struct IntelSourceRow: View {
         runError = nil
         defer { running = false }
         do {
-            _ = try await API(baseURL: settings.backendBaseURL).intelRunSource(source.id)
+            _ = try await apiClient.api.intelRunSource(source.id)
             onRunComplete?()
         } catch {
             runError = error.localizedDescription

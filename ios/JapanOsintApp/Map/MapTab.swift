@@ -4,11 +4,13 @@ import Combine
 
 struct MapTab: View {
     @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var registry: LayerRegistry
     @EnvironmentObject var ws: WebSocketClient
     @EnvironmentObject var nav: MapNavigation
     @EnvironmentObject var stats: FeatureStats
     @EnvironmentObject var playback: PlaybackState
+    @EnvironmentObject var layerCache: LayerFeatureCache
     @Environment(\.theme) private var theme
 
     @State private var cameraPosition: MapCameraPosition = .region(
@@ -55,9 +57,6 @@ struct MapTab: View {
         }
     }
 
-    @State private var jstNow = Date()
-    private let jstTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-
     /// Drives the pulsing screen-wide replay border. Flipped on a repeating
     /// `easeInOut` animation while `playback.isReplaying`; toggled off
     /// otherwise so the border collapses to its base width.
@@ -84,6 +83,12 @@ struct MapTab: View {
                 .background(theme.surface.ignoresSafeArea())
                 .task {
                     liveVehicles.bind(to: ws)
+                    // One-shot intro after onboarding. Clear the flag first
+                    // so it never replays when the tab regains focus.
+                    if settings.requestMapIntro {
+                        settings.requestMapIntro = false
+                        introFlyIn()
+                    }
                     // Only fetch layers we don't already have data for. This
                     // makes the .task idempotent — if SwiftUI re-runs it when
                     // the tab regains focus, we don't flash "loading" badges
@@ -160,7 +165,6 @@ struct MapTab: View {
                 .onChange(of: settings.liveTrainsEnabled)    { _, _ in clearIfAllOff() }
                 .onChange(of: settings.liveSubwaysEnabled)   { _, _ in clearIfAllOff() }
                 .onChange(of: settings.liveBusesEnabled)     { _, _ in clearIfAllOff() }
-                .onReceive(jstTimer) { jstNow = $0 }
                 .sheet(item: $selectedFeature) { feat in
                     NavigationStack {
                         popup(for: feat)
@@ -490,7 +494,7 @@ struct MapTab: View {
                 onChange: { text in
                     searchModel.debounce(
                         text,
-                        api: { API(baseURL: settings.backendBaseURL) },
+                        api: { apiClient.api },
                         featureSearch: { searchActiveFeatures(matching: $0) }
                     )
                 }
@@ -504,7 +508,7 @@ struct MapTab: View {
     private func runGeocodeSearch() {
         Task {
             await searchModel.runSearch(
-                api: API(baseURL: settings.backendBaseURL),
+                api: apiClient.api,
                 featureSearch: { searchActiveFeatures(matching: $0) }
             )
         }
@@ -634,12 +638,14 @@ struct MapTab: View {
 
             Text("·").font(.caption2).foregroundStyle(.tertiary)
 
-            Text(jstFormatted)
-                .font(.caption2.monospacedDigit())
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-                .contentTransition(.numericText())
-                .animation(.snappy, value: jstNow)
+            TimelineView(.periodic(from: .now, by: 1)) { ctx in
+                Text(jstFormatted(ctx.date))
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .contentTransition(.numericText())
+                    .animation(.snappy, value: ctx.date)
+            }
 
             Spacer()
 
@@ -664,11 +670,11 @@ struct MapTab: View {
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 
-    private var jstFormatted: String {
+    private func jstFormatted(_ date: Date) -> String {
         let f = DateFormatter()
         f.dateFormat = "HH:mm:ss"
         f.timeZone = TimeZone(identifier: "Asia/Tokyo")
-        return "\(f.string(from: jstNow)) JST"
+        return "\(f.string(from: date)) JST"
     }
 
     // MARK: - Popup dispatch
@@ -766,13 +772,28 @@ struct MapTab: View {
 
     private func fetchOne(_ layer: LayerDef) async {
         let id = layer.id
+        // Static layers are immutable for the session — serve a prior fetch
+        // straight from the in-memory cache so toggling visibility off→on
+        // doesn't re-download multi-MB GeoJSON. Time-coded / liveOnly layers
+        // skip the cache: their payload tracks the playback cursor.
+        if layer.isStatic, let cached = layerCache.collection(for: id) {
+            featuresByLayer[id] = cached.features
+            stats.record(
+                layerId: id,
+                total: cached.features.count,
+                bySource: extractBySource(cached.meta?["bySource"]?.value)
+            )
+            errorMessage = nil
+            layerLoadState.removeValue(forKey: id)
+            return
+        }
         layerLoadState[id] = .loading
         // Cached server responses can return in <50ms — the loading-state
         // flicker would collapse into one render cycle, hiding siblings that
         // haven't finished. Hold each row visible for ~350ms minimum.
         let startedAt = Date()
         do {
-            let api = API(baseURL: settings.backendBaseURL)
+            let api = apiClient.api
             // Pass the current slider position into the layer fetch. The
             // server honours `at`+`window` for time-coded layers, ignores them
             // for static, and short-circuits to an empty FC for liveOnly.
@@ -782,6 +803,12 @@ struct MapTab: View {
                 windowSeconds: playback.isReplaying ? playback.window.seconds : nil
             )
             featuresByLayer[id] = fc.features
+            // Retain static-layer payloads for the rest of the session so a
+            // later re-activation is instant. Skipped for time-coded/live
+            // layers whose data changes with the slider.
+            if layer.isStatic {
+                layerCache.store(fc, for: id)
+            }
             stats.record(
                 layerId: id,
                 total: fc.features.count,
@@ -849,6 +876,31 @@ struct MapTab: View {
         }
     }
 
+    /// One-shot post-onboarding intro. Snaps the camera out to a space-level
+    /// view of the planet (no animation, so the first frame really is "from
+    /// far away"), then on the next runloop tick glides down into the
+    /// standard Japan region.
+    private func introFlyIn() {
+        let japan = CLLocationCoordinate2D(latitude: 36.2, longitude: 138.25)
+        cameraPosition = .camera(
+            MapCamera(centerCoordinate: japan,
+                      distance: 26_000_000, heading: 0, pitch: 0)
+        )
+        Task { @MainActor in
+            // One runloop tick so the space-level frame actually renders
+            // before we start the glide down.
+            try? await Task.sleep(for: .milliseconds(50))
+            withAnimation(.easeInOut(duration: 2.2)) {
+                cameraPosition = .region(
+                    MKCoordinateRegion(
+                        center: japan,
+                        span: MKCoordinateSpan(latitudeDelta: 14, longitudeDelta: 14)
+                    )
+                )
+            }
+        }
+    }
+
     /// Screen-wide pulsing border, drawn only while the time slider is in
     /// replay mode. Sits in a sibling layer above the NavigationStack with
     /// `.ignoresSafeArea()` so it traces the device's full perimeter; the
@@ -879,7 +931,7 @@ extension MKMapRect {
 
 // Required so SwiftUI's `.sheet(item:)` can drive presentation off
 // the optional fetched scene.
-extension MKLookAroundScene: Identifiable {
+extension MKLookAroundScene: @retroactive Identifiable {
     public var id: ObjectIdentifier { ObjectIdentifier(self) }
 }
 

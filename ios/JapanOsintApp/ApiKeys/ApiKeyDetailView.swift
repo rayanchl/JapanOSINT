@@ -1,48 +1,75 @@
 import SwiftUI
 
 /// Detail sheet for one API key. Reveal value (Face ID), edit + save (Face
-/// ID), or clear the overlay (Face ID). The list view is updated via the
-/// `onUpdate` closure so callers don't need to re-fetch the whole list after
-/// every mutation.
+/// ID), or clear it (Face ID). Works for both the workspace BYOK store and
+/// the operator platform overlay (selected by `scope`). The list view is
+/// updated via the `onUpdate` closure so callers don't re-fetch the whole
+/// list after every mutation.
 struct ApiKeyDetailView: View {
-    let meta: ApiKeyMeta
-    let onUpdate: (ApiKeyMeta) -> Void
+    let row: KeyRow
+    let scope: KeyScope
+    /// Owner-policy gate (workspace). False → reveal-only, no edit/clear.
+    let canManage: Bool
+    let onUpdate: (KeyRow) -> Void
 
-    @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var nav: MapNavigation
     @Environment(\.theme) private var theme
     @Environment(\.dismiss) private var dismiss
 
     @State private var revealedValue: String?
     @State private var newValue: String = ""
-    @State private var workingMeta: ApiKeyMeta
-    /// Local copy of `/api/status` rows (snapshot from parent) so we can
-    /// reflect inline probe / consent changes from `ProbeActionsView`
-    /// without round-tripping through the parent. Empty when the parent's
-    /// status fetch failed — the "Used by" section then renders its empty
-    /// state.
+    @State private var workingRow: KeyRow
     @State private var statusRows: [StatusRow]
     @State private var inFlight: Bool = false
     @State private var error: String?
     @State private var savedHint: Bool = false
 
-    init(meta: ApiKeyMeta,
+    init(row: KeyRow,
+         scope: KeyScope,
+         canManage: Bool,
          statusRows: [StatusRow] = [],
-         onUpdate: @escaping (ApiKeyMeta) -> Void) {
-        self.meta = meta
+         onUpdate: @escaping (KeyRow) -> Void) {
+        self.row = row
+        self.scope = scope
+        self.canManage = canManage
         self.onUpdate = onUpdate
-        self._workingMeta = State(initialValue: meta)
+        self._workingRow = State(initialValue: row)
         self._statusRows = State(initialValue: statusRows)
     }
 
+    private var api: API { apiClient.api }
+
+    /// Whether `workingRow` currently has a value set in *this* store
+    /// (tenant key for workspace, overlay value for platform).
+    private var hasOwnValue: Bool { workingRow.byok }
+
     private var sourcesUsingKey: [StatusRow] {
-        statusRows.filter { row in
-            row.envVars?.contains { $0.name == meta.name } == true
+        statusRows.filter { r in
+            r.envVars?.contains { $0.name == row.name } == true
         }
     }
 
-    private func role(for row: StatusRow) -> String? {
-        row.envVars?.first(where: { $0.name == meta.name })?.role
+    private func role(for r: StatusRow) -> String? {
+        r.envVars?.first(where: { $0.name == row.name })?.role
+    }
+
+    /// Shown when Reveal returns no value. For workspace scope an admin-set
+    /// key has no tenant value to reveal — make explicit that the key exists
+    /// but its value is hidden from members.
+    private var revealEmptyMessage: String {
+        guard scope == .workspace else { return "(no value set)" }
+        return workingRow.source == "platform"
+            ? "(provided by admin — value hidden)"
+            : "(no key set for this workspace)"
+    }
+
+    private var sourceLabel: String {
+        switch workingRow.source {
+        case "tenant":   return scope == .workspace ? "Your key" : "Overlay"
+        case "platform": return scope == .workspace ? "Set by admin" : "Platform default"
+        default:         return "Not set"
+        }
     }
 
     var body: some View {
@@ -50,35 +77,37 @@ struct ApiKeyDetailView: View {
             Form {
                 Section {
                     LabeledContent("Name") {
-                        Text(workingMeta.name)
+                        Text(workingRow.name)
                             .font(.system(.body, design: .monospaced))
                     }
                     LabeledContent("Role") {
-                        Text(workingMeta.role.capitalized)
+                        Text(workingRow.role.capitalized)
                             .foregroundStyle(theme.textMuted)
                     }
                     LabeledContent("Status") {
-                        Text(workingMeta.set ? "Set" : "Unset")
-                            .foregroundStyle(workingMeta.set ? theme.success : theme.warning)
+                        Text(workingRow.set ? "Set" : "Unset")
+                            .foregroundStyle(workingRow.set ? theme.success : theme.warning)
                     }
-                    LabeledContent("Overlay") {
-                        Text(workingMeta.hasOverlay ? "Yes" : "No")
-                            .foregroundStyle(workingMeta.hasOverlay ? theme.accent : theme.textMuted)
+                    LabeledContent("Source") {
+                        Text(sourceLabel)
+                            .foregroundStyle(workingRow.byok ? theme.accent : theme.textMuted)
                     }
                 } header: {
                     Text("Key")
+                } footer: {
+                    if scope == .workspace {
+                        Text("Your key is encrypted per workspace. When unset, collectors fall back to the platform default automatically.")
+                            .font(.caption2)
+                    }
                 }
 
                 Section {
                     if let revealed = revealedValue {
                         if revealed.isEmpty {
-                            Text("(no value set)")
+                            Text(revealEmptyMessage)
                                 .foregroundStyle(theme.textMuted)
                                 .italic()
                         } else {
-                            // Use a TextField for the revealed value so the
-                            // user can scroll/select/copy. Disabled because
-                            // edits go through the SecureField below.
                             TextField("Value", text: .constant(revealed), axis: .vertical)
                                 .font(.system(.body, design: .monospaced))
                                 .disabled(true)
@@ -100,62 +129,71 @@ struct ApiKeyDetailView: View {
                 } header: {
                     Text("Current value")
                 } footer: {
-                    Text("Reveal requires Face ID (or device passcode).")
+                    Text(scope == .workspace
+                         ? "Reveals your workspace's own key only (never the platform key). Requires Face ID."
+                         : "Reveal requires Face ID (or device passcode).")
                         .font(.caption2)
                 }
 
-                Section {
-                    HStack(spacing: 8) {
-                        SecureField("New value", text: $newValue)
-                            .font(.system(.body, design: .monospaced))
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled(true)
-                            .submitLabel(.go)
-                            .onSubmit {
-                                if !newValue.isEmpty && !inFlight {
-                                    Task { await save() }
-                                }
-                            }
-                        // Inline trailing button — `.borderless` keeps the
-                        // button's tap target tight to the icon so the
-                        // surrounding row doesn't swallow taps meant for the
-                        // text field.
-                        Button {
-                            Task { await save() }
-                        } label: {
-                            Group {
-                                if inFlight {
-                                    ProgressView().controlSize(.small)
-                                } else {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .font(.title3)
-                                }
-                            }
-                            .frame(width: 28, height: 28)
-                        }
-                        .buttonStyle(.borderless)
-                        .disabled(inFlight || newValue.isEmpty)
-                        .accessibilityLabel("Save")
-                    }
-                } header: {
-                    Text("Modify")
-                } footer: {
-                    Text("Save requires Face ID. Empty values aren't accepted here — use 'Clear override' below to drop back to the .env value.")
-                        .font(.caption2)
-                }
-
-                if workingMeta.hasOverlay {
+                if canManage {
                     Section {
-                        Button(role: .destructive) {
-                            Task { await clear() }
-                        } label: {
-                            Label(inFlight ? "Clearing…" : "Clear override",
-                                  systemImage: "xmark.circle")
+                        HStack(spacing: 8) {
+                            SecureField("New value", text: $newValue)
+                                .font(.system(.body, design: .monospaced))
+                                .textInputAutocapitalization(.never)
+                                .autocorrectionDisabled(true)
+                                .submitLabel(.go)
+                                .onSubmit {
+                                    if !newValue.isEmpty && !inFlight {
+                                        Task { await save() }
+                                    }
+                                }
+                            Button {
+                                Task { await save() }
+                            } label: {
+                                Group {
+                                    if inFlight {
+                                        ProgressView().controlSize(.small)
+                                    } else {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .font(.title3)
+                                    }
+                                }
+                                .frame(width: 28, height: 28)
+                            }
+                            .buttonStyle(.borderless)
+                            .disabled(inFlight || newValue.isEmpty)
+                            .accessibilityLabel("Save")
                         }
-                        .disabled(inFlight)
+                    } header: {
+                        Text("Modify")
                     } footer: {
-                        Text("Removes the value the iOS app stored on the server. The server falls back to the .env-baked value if any.")
+                        Text("Save requires Face ID. Empty values aren't accepted here — use 'Clear' below to drop back to the platform default.")
                             .font(.caption2)
+                    }
+
+                    if hasOwnValue {
+                        Section {
+                            Button(role: .destructive) {
+                                Task { await clear() }
+                            } label: {
+                                Label(inFlight ? "Clearing…" : "Clear",
+                                      systemImage: "xmark.circle")
+                            }
+                            .disabled(inFlight)
+                        } footer: {
+                            Text(scope == .workspace
+                                 ? "Removes your workspace's key. Collectors fall back to the platform default if one exists."
+                                 : "Removes the overlay value. The server falls back to the .env-baked value if any.")
+                                .font(.caption2)
+                        }
+                    }
+                } else {
+                    Section {
+                        Label("Editing is restricted by your workspace owner.",
+                              systemImage: "lock.fill")
+                            .font(.caption)
+                            .foregroundStyle(theme.textMuted)
                     }
                 }
 
@@ -176,7 +214,7 @@ struct ApiKeyDetailView: View {
                     }
                 }
             }
-            .navigationTitle(meta.name)
+            .navigationTitle(row.name)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -213,8 +251,8 @@ struct ApiKeyDetailView: View {
                             }
                         }
                         VStack(spacing: 1) {
-                            ForEach(collector.sources) { row in
-                                usedByRow(row)
+                            ForEach(collector.sources) { r in
+                                usedByRow(r)
                             }
                         }
                         .clipShape(RoundedRectangle(cornerRadius: 6))
@@ -231,30 +269,30 @@ struct ApiKeyDetailView: View {
         }
     }
 
-    private func usedByRow(_ row: StatusRow) -> some View {
+    private func usedByRow(_ r: StatusRow) -> some View {
         VStack(spacing: 6) {
             Button {
-                let target = row.id
+                let target = r.id
                 dismiss()
                 nav.showSource(target)
             } label: {
                 HStack(spacing: 8) {
-                    Circle().fill(statusColor(row.status))
+                    Circle().fill(statusColor(r.status))
                         .frame(width: 8, height: 8)
                     VStack(alignment: .leading, spacing: 1) {
-                        Text(row.name ?? row.id)
+                        Text(r.name ?? r.id)
                             .font(.caption)
                             .foregroundStyle(theme.text)
                             .lineLimit(1)
-                        if let cat = row.category {
+                        if let cat = r.category {
                             Text(cat)
                                 .font(.caption2)
                                 .foregroundStyle(theme.textMuted)
                         }
                     }
                     Spacer()
-                    if let r = role(for: row) {
-                        rolePill(r)
+                    if let rl = role(for: r) {
+                        rolePill(rl)
                     }
                     Image(systemName: "chevron.right")
                         .font(.caption2)
@@ -265,17 +303,14 @@ struct ApiKeyDetailView: View {
             }
             .buttonStyle(.plain)
 
-            if row.requiresKey == true {
-                ProbeActionsView(row: row) { updated in
+            if r.requiresKey == true {
+                ProbeActionsView(row: r) { updated in
                     applyStatusUpdate(updated)
                 }
             }
         }
     }
 
-    /// Replace the matching row in the local `statusRows` snapshot so the
-    /// "Used by" section reflects probe / consent changes immediately
-    /// without re-fetching `/api/status`.
     private func applyStatusUpdate(_ updated: StatusRow) {
         if let i = statusRows.firstIndex(where: { $0.id == updated.id }) {
             statusRows[i] = updated
@@ -321,8 +356,9 @@ struct ApiKeyDetailView: View {
             break
         }
         do {
-            let v = try await API(baseURL: settings.backendBaseURL)
-                .apiKeyValue(name: workingMeta.name)
+            let v = scope == .workspace
+                ? try await api.tenantKeyValue(name: workingRow.name)
+                : try await api.apiKeyValue(name: workingRow.name)
             await MainActor.run {
                 self.revealedValue = v.value ?? ""
                 self.newValue = v.value ?? ""
@@ -346,10 +382,9 @@ struct ApiKeyDetailView: View {
             break
         }
         do {
-            let updated = try await API(baseURL: settings.backendBaseURL)
-                .apiKeySet(name: workingMeta.name, value: newValue)
+            let updated = try await write(value: newValue)
             await MainActor.run {
-                self.workingMeta = updated
+                self.workingRow = updated
                 self.revealedValue = newValue
                 self.savedHint = true
                 self.onUpdate(updated)
@@ -364,7 +399,7 @@ struct ApiKeyDetailView: View {
         savedHint = false
         inFlight = true
         defer { inFlight = false }
-        switch await BiometricAuth.authenticate(reason: "Clear API key override") {
+        switch await BiometricAuth.authenticate(reason: "Clear API key") {
         case .failure(let msg):
             error = msg
             return
@@ -372,12 +407,11 @@ struct ApiKeyDetailView: View {
             break
         }
         do {
-            let updated = try await API(baseURL: settings.backendBaseURL)
-                .apiKeySet(name: workingMeta.name, value: "")
+            let updated = try await write(value: "")
             await MainActor.run {
-                self.workingMeta = updated
-                // After clearing, force a re-reveal — the server may have
-                // restored a different (.env) value or none at all.
+                self.workingRow = updated
+                // Force a re-reveal — the server may now resolve to a
+                // different (platform) value or none at all.
                 self.revealedValue = nil
                 self.newValue = ""
                 self.savedHint = true
@@ -385,6 +419,20 @@ struct ApiKeyDetailView: View {
             }
         } catch {
             await MainActor.run { self.error = error.localizedDescription }
+        }
+    }
+
+    /// Routes the write to the right store and maps the response back into a
+    /// `KeyRow`, preserving `role` (the tenant write response omits it).
+    private func write(value: String) async throws -> KeyRow {
+        switch scope {
+        case .workspace:
+            let w = try await api.tenantKeySet(name: workingRow.name, value: value)
+            return KeyRow(name: w.name, role: workingRow.role,
+                          set: w.set, byok: w.byok, source: w.source)
+        case .platform:
+            let m = try await api.apiKeySet(name: workingRow.name, value: value)
+            return KeyRow(m)
         }
     }
 }

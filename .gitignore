@@ -16,3 +16,10 @@ xcuserdata/
 DerivedData/
 *.xcscmblueprint
 *.xccheckout
+
+# Vendored LLM model + binary (large; not committed)
+server/models/*.gguf
+native/llama/llama-server
+
+# C build artifacts
+native/obj/

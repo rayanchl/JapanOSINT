@@ -13,19 +13,21 @@
 const BASE = 'https://buckets.grayhatwarfare.com/api/v2/buckets';
 const TIMEOUT_MS = 15000;
 
-const DEFAULT_KEYWORDS = (process.env.GRAYHAT_KEYWORDS || [
+// Default JP-org keyword filter when GRAYHAT_KEYWORDS is unset. These are
+// *query inputs* (what to search the bucket index for), not fabricated data.
+const DEFAULT_KEYWORDS = [
   'co.jp', 'go.jp', 'japan', 'tokyo',
   'rakuten', 'mizuho', 'mufg', 'smbc',
   'softbank', 'docomo', 'kddi', 'ntt',
-].join(',')).split(',').map((s) => s.trim()).filter(Boolean);
+];
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
-import { getEnv } from '../utils/credentials.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const SOURCE_ID = 'grayhat-buckets';
 
 export default async function collectGrayhatBuckets() {
-  const key = getEnv(null, 'GRAYHAT_API_KEY');
+  const key = envFor('GRAYHAT_API_KEY');
   if (!key) {
     return intelEnvelope({
       sourceId: SOURCE_ID,
@@ -36,7 +38,14 @@ export default async function collectGrayhatBuckets() {
     });
   }
 
-  const params = new URLSearchParams({ keywords: DEFAULT_KEYWORDS.join(','), limit: '100' });
+  // Read at call time so a tenant's BYOK / API-keys overlay can override the
+  // keyword set; falls back to DEFAULT_KEYWORDS for platform/scheduler runs.
+  const kwOverride = envFor('GRAYHAT_KEYWORDS');
+  const keywords = kwOverride
+    ? kwOverride.split(',').map((s) => s.trim()).filter(Boolean)
+    : DEFAULT_KEYWORDS;
+
+  const params = new URLSearchParams({ keywords: keywords.join(','), limit: '100' });
 
   let items = [];
   let live = false;
@@ -81,6 +90,6 @@ export default async function collectGrayhatBuckets() {
     items,
     live,
     description: 'GrayhatWarfare exposed buckets — JP keyword set',
-    extraMeta: { keywords: DEFAULT_KEYWORDS },
+    extraMeta: { keywords },
   });
 }

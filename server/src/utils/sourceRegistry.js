@@ -140,47 +140,8 @@ const sources = [
     free: true,
     status: 'offline',
   },
-  {
-    id: 'navitime',
-    name: 'Navitime Transit',
-    nameJa: 'ナビタイム 交通情報',
-    type: 'web_request',
-    category: 'transport',
-    url: 'https://www.navitime.co.jp/',
-    description: 'Transit and route information (placeholder)',
-    updateInterval: 300,
-    layer: 'transport',
-    free: false,
-    status: 'offline',
-  },
 
   // ── Geospatial ───────────────────────────────────────────────────────
-  {
-    id: 'gsi-tiles',
-    name: 'GSI Map Tiles',
-    nameJa: '国土地理院 地図タイル',
-    type: 'api',
-    category: 'geospatial',
-    url: 'https://cyberjapandata.gsi.go.jp/',
-    description: 'Geospatial Information Authority base map tiles',
-    updateInterval: 86400,
-    layer: 'basemap',
-    free: true,
-    status: 'offline',
-  },
-  {
-    id: 'gsi-elevation',
-    name: 'GSI Elevation',
-    nameJa: '国土地理院 標高データ',
-    type: 'api',
-    category: 'geospatial',
-    url: 'https://cyberjapandata.gsi.go.jp/',
-    description: 'Digital elevation model tiles',
-    updateInterval: 86400,
-    layer: 'elevation',
-    free: true,
-    status: 'offline',
-  },
   {
     id: 'nlni-landuse',
     name: 'National Land Numerical Info',
@@ -319,32 +280,6 @@ const sources = [
     free: true,
     status: 'offline',
   },
-  {
-    id: 'traffic-cameras',
-    name: 'Road Traffic Cameras (JARTIC)',
-    nameJa: 'JARTIC 道路交通カメラ',
-    type: 'web_request',
-    category: 'infrastructure',
-    url: 'https://www.jartic.or.jp/',
-    description: 'Live road traffic camera feeds',
-    updateInterval: 300,
-    layer: 'cameras',
-    free: true,
-    status: 'offline',
-  },
-  {
-    id: 'public-webcams',
-    name: 'Public Webcams / Livecams',
-    nameJa: '公開ウェブカメラ',
-    type: 'scraped',
-    category: 'infrastructure',
-    url: 'https://livecam.asia/',
-    description: 'Aggregated public webcam and livecam feeds across Japan',
-    updateInterval: 3600,
-    layer: 'cameras',
-    free: true,
-    status: 'offline',
-  },
 
   // ── Communications / Cyber ───────────────────────────────────────────
   {
@@ -360,47 +295,8 @@ const sources = [
     free: false,
     status: 'offline',
   },
-  {
-    id: 'censys-japan',
-    name: 'Censys Japan Scan Data',
-    nameJa: 'Censys 日本スキャンデータ',
-    type: 'api',
-    category: 'cyber',
-    url: 'https://search.censys.io/api/',
-    description: 'Host and certificate scan data for Japanese IP ranges',
-    updateInterval: 86400,
-    layer: 'cyber',
-    free: false,
-    status: 'offline',
-  },
-  {
-    id: 'insecam-japan',
-    name: 'Insecam Public Cameras',
-    nameJa: 'Insecam 公開カメラ',
-    type: 'scraped',
-    category: 'cyber',
-    url: 'http://www.insecam.org/en/bycountry/JP/',
-    description: 'Publicly accessible IP cameras in Japan',
-    updateInterval: 86400,
-    layer: 'cameras',
-    free: true,
-    status: 'offline',
-  },
 
   // ── Social / Media ───────────────────────────────────────────────────
-  {
-    id: 'twitter-geo',
-    name: 'Twitter/X Geotagged Posts',
-    nameJa: 'Twitter/X ジオタグ投稿',
-    type: 'api',
-    category: 'social',
-    url: 'https://api.twitter.com/2/',
-    description: 'Geotagged tweets from Japan',
-    updateInterval: 300,
-    layer: 'social',
-    free: false,
-    status: 'offline',
-  },
   {
     id: 'flickr-geo',
     name: 'Flickr Geotagged Photos',
@@ -471,9 +367,7 @@ const sources = [
   },
 
   // ── Environment Extended ────────────────────────────────────────────
-  { id: 'jma-amedas', name: 'JMA AMeDAS', nameJa: 'アメダス', type: 'api', category: 'environment', url: 'https://www.jma.go.jp/bosai/amedas/', description: 'Automated Meteorological Data Acquisition System stations', updateInterval: 600, layer: 'weather', free: true, status: 'offline' },
   { id: 'jma-himawari', name: 'JMA Himawari Satellite', nameJa: 'ひまわり衛星', type: 'api', category: 'environment', url: 'https://www.jma.go.jp/bosai/map.html', description: 'Himawari-9 geostationary satellite imagery', updateInterval: 600, layer: 'satellite', free: true, status: 'offline' },
-  { id: 'jma-typhoon', name: 'JMA Typhoon Track', nameJa: '気象庁 台風情報', type: 'api', category: 'environment', url: 'https://www.jma.go.jp/bosai/map.html#contents=typhoon', description: 'Typhoon tracking and forecast paths', updateInterval: 3600, layer: 'weather', free: true, status: 'offline' },
   { id: 'jma-uv', name: 'JMA UV Index', nameJa: '気象庁 紫外線情報', type: 'api', category: 'environment', url: 'https://www.jma.go.jp/bosai/uv/', description: 'UV index forecast data', updateInterval: 3600, layer: 'weather', free: true, status: 'offline' },
   { id: 'jma-pollen', name: 'Pollen Forecast', nameJa: '環境省花粉情報', type: 'api', category: 'environment', url: 'https://kafun.env.go.jp/', description: 'Cedar and cypress pollen distribution forecast', updateInterval: 3600, layer: 'air-quality', free: true, status: 'offline' },
   { id: 'pm25-japan', name: 'PM2.5 Distribution', nameJa: 'PM2.5分布予測', type: 'api', category: 'environment', url: 'https://pm25.jp/', description: 'PM2.5 real-time distribution map', updateInterval: 3600, layer: 'air-quality', free: true, status: 'offline' },
@@ -500,8 +394,6 @@ const sources = [
   { id: 'mlit-road-traffic', name: 'MLIT Road Traffic Census', nameJa: '国交省 道路交通センサス', type: 'dataset', category: 'transport', url: 'https://www.mlit.go.jp/road/', description: 'Road traffic volume census data', updateInterval: 604800, layer: 'transport', free: true, status: 'offline' },
 
   // ── Geospatial Extended ─────────────────────────────────────────────
-  { id: 'gsi-photo', name: 'GSI Aerial Photography', nameJa: '国土地理院 空中写真', type: 'api', category: 'geospatial', url: 'https://cyberjapandata.gsi.go.jp/', description: 'Aerial photography tiles from GSI', updateInterval: 86400, layer: 'basemap', free: true, status: 'offline' },
-  { id: 'gsi-hazard', name: 'GSI Hazard Maps', nameJa: '国土地理院 ハザードマップ', type: 'api', category: 'geospatial', url: 'https://disaportal.gsi.go.jp/', description: 'Flood/landslide/tsunami hazard map overlays', updateInterval: 86400, layer: 'hazard', free: true, status: 'offline' },
   { id: 'gsi-active-fault', name: 'GSI Active Fault Map', nameJa: '国土地理院 活断層図', type: 'dataset', category: 'geospatial', url: 'https://www.gsi.go.jp/bousaichiri/active_fault.html', description: 'Active fault line locations', updateInterval: 604800, layer: 'hazard', free: true, status: 'offline' },
   { id: 'openstreetmap-jp', name: 'OpenStreetMap Japan', nameJa: 'OpenStreetMap 日本', type: 'dataset', category: 'geospatial', url: 'https://download.geofabrik.de/asia/japan.html', description: 'OpenStreetMap Japan data extract', updateInterval: 604800, layer: 'basemap', free: true, status: 'online' },
   { id: 'parking-facilities', name: 'OSM Parking Facilities', nameJa: 'OSM 駐車場', type: 'api', category: 'geospatial', url: 'https://overpass-api.de/', description: 'amenity=parking / parking_entrance via Overpass', updateInterval: 86400, layer: 'poi', free: true, status: 'online' },
@@ -517,7 +409,6 @@ const sources = [
   { id: 'estat-industry', name: 'e-Stat Industry Data', nameJa: 'e-Stat 産業統計', type: 'api', category: 'statistics', url: 'https://api.e-stat.go.jp/', description: 'Industrial production statistics by region', updateInterval: 86400, layer: 'economy', free: true, status: 'offline' },
   { id: 'jstat-map', name: 'jSTAT MAP Grid Stats', nameJa: 'jSTAT MAP 統計地図', type: 'api', category: 'statistics', url: 'https://jstatmap.e-stat.go.jp/', description: 'Grid-square based statistical mapping', updateInterval: 86400, layer: 'population', free: true, status: 'offline' },
   { id: 'mhlw-health', name: 'MHLW Health Statistics', nameJa: '厚労省 保健統計', type: 'dataset', category: 'statistics', url: 'https://www.mhlw.go.jp/toukei/', description: 'Ministry of Health health statistics', updateInterval: 604800, layer: 'health', free: true, status: 'offline' },
-  { id: 'mhlw-covid', name: 'MHLW COVID-19 Data', nameJa: '厚労省 COVID-19データ', type: 'api', category: 'statistics', url: 'https://www.mhlw.go.jp/stf/covid-19/', description: 'COVID-19 case and vaccination data', updateInterval: 3600, layer: 'health', free: true, status: 'offline' },
 
   // ── Economy Extended ────────────────────────────────────────────────
   { id: 'homes-co', name: 'Homes.co.jp Rentals', nameJa: 'HOME\'S 賃貸情報', type: 'scraped', category: 'economy', url: 'https://www.homes.co.jp/', description: 'Rental property listings and prices', updateInterval: 86400, layer: 'landprice', free: true, status: 'offline' },
@@ -531,22 +422,14 @@ const sources = [
   { id: 'kepco-power', name: 'KEPCO Power Usage', nameJa: '関西電力 電力使用状況', type: 'api', category: 'infrastructure', url: 'https://www.kepco.co.jp/', description: 'Kansai Electric Power usage data', updateInterval: 300, layer: 'energy', free: true, status: 'offline' },
   { id: 'chubu-power', name: 'Chubu Electric Power', nameJa: '中部電力 電力使用状況', type: 'api', category: 'infrastructure', url: 'https://www.chuden.co.jp/', description: 'Chubu Electric Power usage', updateInterval: 300, layer: 'energy', free: true, status: 'offline' },
   { id: 'tohoku-power', name: 'Tohoku Electric Power', nameJa: '東北電力 電力使用状況', type: 'api', category: 'infrastructure', url: 'https://www.tohoku-epco.co.jp/', description: 'Tohoku Electric Power usage', updateInterval: 300, layer: 'energy', free: true, status: 'offline' },
-  { id: 'cell-tower-jp', name: 'Cell Tower Locations', nameJa: '携帯基地局', type: 'dataset', category: 'infrastructure', url: 'https://www.tele.soumu.go.jp/', description: 'Cell tower and base station locations', updateInterval: 604800, layer: 'telecom', free: true, status: 'offline' },
   { id: 'ev-charging', name: 'EV Charging Stations', nameJa: 'EV充電スタンド', type: 'api', category: 'infrastructure', url: 'https://ev.gogo.gs/', description: 'Electric vehicle charging station map', updateInterval: 86400, layer: 'poi', free: true, status: 'offline' },
-  { id: 'wifi-hotspot', name: 'Free WiFi Hotspots', nameJa: 'フリーWiFiスポット', type: 'dataset', category: 'infrastructure', url: 'https://flets.com/freewifi/', description: 'Free WiFi hotspot locations across Japan', updateInterval: 604800, layer: 'telecom', free: true, status: 'offline' },
 
   // ── Cyber / IoT Extended ────────────────────────────────────────────
-  { id: 'nicter-darknet', name: 'NICTER Darknet Monitor', nameJa: 'NICTER ダークネット観測', type: 'web_request', category: 'cyber', url: 'https://www.nicter.jp/', description: 'NICT darknet traffic monitoring', updateInterval: 3600, layer: 'cyber', free: true, status: 'offline' },
-  { id: 'jpcert-alerts', name: 'JPCERT/CC Alerts', nameJa: 'JPCERT/CC 注意喚起', type: 'api', category: 'cyber', url: 'https://www.jpcert.or.jp/', description: 'JPCERT Coordination Center security alerts', updateInterval: 3600, layer: 'cyber', free: true, status: 'offline' },
-  { id: 'ipa-vuln', name: 'IPA Vulnerability DB', nameJa: 'IPA 脆弱性対策情報', type: 'api', category: 'cyber', url: 'https://jvndb.jvn.jp/', description: 'IPA/JVN vulnerability database', updateInterval: 86400, layer: 'cyber', free: true, status: 'offline' },
   { id: 'atlas-jp', name: 'RIPE Atlas Japan Probes', nameJa: 'RIPE Atlas 日本プローブ', type: 'api', category: 'cyber', url: 'https://atlas.ripe.net/', description: 'RIPE Atlas internet measurement probes in Japan', updateInterval: 3600, layer: 'cyber', free: true, status: 'offline' },
 
   // ── Social / Culture Extended ───────────────────────────────────────
   { id: 'instagram-geo', name: 'Instagram Geotagged', nameJa: 'Instagram ジオタグ', type: 'scraped', category: 'social', url: 'https://www.instagram.com/', description: 'Geotagged Instagram posts from Japan', updateInterval: 600, layer: 'social', free: false, status: 'offline' },
   { id: 'tiktok-geo', name: 'TikTok Geotagged', nameJa: 'TikTok ジオタグ', type: 'scraped', category: 'social', url: 'https://www.tiktok.com/', description: 'Geotagged TikTok content from Japan', updateInterval: 600, layer: 'social', free: false, status: 'offline' },
-  { id: 'yahoo-realtime', name: 'Yahoo! Japan Realtime', nameJa: 'Yahoo!リアルタイム検索', type: 'scraped', category: 'social', url: 'https://search.yahoo.co.jp/realtime', description: 'Yahoo! Japan real-time trending topics', updateInterval: 300, layer: 'social', free: true, status: 'offline' },
-  { id: 'shrine-temple', name: 'Shrine & Temple Map', nameJa: '神社仏閣マップ', type: 'dataset', category: 'social', url: 'https://www.jinja.or.jp/', description: 'Shinto shrine and Buddhist temple locations', updateInterval: 604800, layer: 'poi', free: true, status: 'offline' },
-  { id: 'onsen-map', name: 'Hot Spring Map', nameJa: '温泉マップ', type: 'dataset', category: 'social', url: 'https://www.onsen-r.co.jp/', description: 'Onsen (hot spring) locations across Japan', updateInterval: 604800, layer: 'poi', free: true, status: 'offline' },
 
   // ── Satellite Extended ──────────────────────────────────────────────
   { id: 'alos-palsar', name: 'ALOS/PALSAR SAR', nameJa: 'ALOS/PALSAR 合成開口レーダー', type: 'api', category: 'satellite', url: 'https://www.eorc.jaxa.jp/ALOS/', description: 'JAXA ALOS synthetic aperture radar data', updateInterval: 604800, layer: 'satellite', free: true, status: 'offline' },
@@ -578,7 +461,6 @@ const sources = [
 
   // ── Additional Transport ────────────────────────────────────────────
   { id: 'vics-traffic', name: 'VICS Traffic Info', nameJa: 'VICS 道路交通情報', type: 'web_request', category: 'transport', url: 'https://www.vics.or.jp/', description: 'Vehicle Information Communication System traffic data', updateInterval: 300, layer: 'transport', free: true, status: 'offline' },
-  { id: 'kansai-flights', name: 'Kansai Airport Flights', nameJa: '関西空港 フライト情報', type: 'web_request', category: 'transport', url: 'https://www.kansai-airport.or.jp/', description: 'Kansai International Airport flights', updateInterval: 300, layer: 'aviation', free: true, status: 'offline' },
 
   // ── Additional Statistics ───────────────────────────────────────────
   { id: 'estat-education', name: 'e-Stat Education Stats', nameJa: 'e-Stat 教育統計', type: 'api', category: 'statistics', url: 'https://api.e-stat.go.jp/', description: 'School enrollment and education data by region', updateInterval: 86400, layer: 'population', free: true, status: 'offline' },
@@ -595,7 +477,6 @@ const sources = [
   // ── Additional Geospatial ───────────────────────────────────────────
   { id: 'chiriin-place', name: 'GSI Place Names', nameJa: '地理院 地名情報', type: 'api', category: 'geospatial', url: 'https://www.gsi.go.jp/', description: 'Official geographic place name database', updateInterval: 86400, layer: 'basemap', free: true, status: 'offline' },
   { id: 'gcom-w', name: 'GCOM-W Water Cycle', nameJa: 'GCOM-W 水循環', type: 'api', category: 'satellite', url: 'https://suzaku.eorc.jaxa.jp/GCOM_W/', description: 'GCOM-W satellite water cycle observation', updateInterval: 86400, layer: 'satellite', free: true, status: 'offline' },
-  { id: 'bgp-japan', name: 'BGP Routing Japan', nameJa: 'BGPルーティング 日本', type: 'api', category: 'cyber', url: 'https://stat.ripe.net/', description: 'BGP routing data for Japanese ASNs', updateInterval: 86400, layer: 'cyber', free: true, status: 'offline' },
   { id: 'mapfan-api', name: 'MapFan API', nameJa: 'MapFan API', type: 'api', category: 'commercial', url: 'https://mapfan.com/', description: 'MapFan mapping and POI data', updateInterval: 86400, layer: 'basemap', free: false, status: 'offline' },
 
   // ── New: Social Media Geo (twitter/facebook enhanced) ──────
@@ -681,8 +562,6 @@ const sources = [
   { id: 'nowphas-wave', name: 'NOWPHAS Wave Network', nameJa: 'NOWPHAS 波浪観測網', type: 'api', category: 'environment', url: 'https://nowphas.mlit.go.jp/', description: 'PARI NOWPHAS GPS-buoys + ultrasonic wave gauges around Japan', updateInterval: 1800, layer: 'nowphas-wave', free: true, status: 'online' },
   { id: 'lighthouse-map', name: 'Lighthouses', nameJa: '灯台マップ', type: 'api', category: 'transport', url: 'https://overpass-api.de/api/interpreter', description: 'JCG lighthouses across Japan via OSM Overpass + historic Meiji-era register', updateInterval: 604800, layer: 'lighthouse-map', free: true, status: 'online' },
   { id: 'jartic-traffic', name: 'JARTIC Traffic', nameJa: 'JARTIC 道路交通情報', type: 'api', category: 'transport', url: 'https://www.jartic.or.jp/', description: 'JARTIC traffic congestion - urban expressways and national highway hotspots', updateInterval: 300, layer: 'jartic-traffic', free: true, status: 'online' },
-  { id: 'narita-flights', name: 'Narita Airport Flights', nameJa: '成田空港 発着便', type: 'api', category: 'transport', url: 'https://aerodatabox.p.rapidapi.com/', description: 'Narita International Airport (RJAA/NRT) arrivals + departures via AeroDataBox', updateInterval: 300, layer: 'narita-flights', free: false, status: 'online' },
-  { id: 'haneda-flights', name: 'Haneda Airport Flights', nameJa: '羽田空港 発着便', type: 'api', category: 'transport', url: 'https://aerodatabox.p.rapidapi.com/', description: 'Tokyo Haneda Airport (RJTT/HND) arrivals + departures via AeroDataBox', updateInterval: 300, layer: 'haneda-flights', free: false, status: 'online' },
   { id: 'drone-nofly', name: 'Drone No-Fly Zones', nameJa: 'ドローン飛行禁止区域', type: 'dataset', category: 'safety', url: 'https://www.mlit.go.jp/koku/', description: 'MLIT/JCAB drone no-fly zones - airports, DID, nuclear, military, imperial', updateInterval: 86400, layer: 'drone-nofly', free: true, status: 'online' },
   { id: 'jcg-patrol', name: 'JCG Patrol Bases', nameJa: '海上保安庁 巡視船基地', type: 'dataset', category: 'safety', url: 'https://www.kaiho.mlit.go.jp/', description: 'Japan Coast Guard - 11 regional headquarters and patrol vessel bases', updateInterval: 604800, layer: 'jcg-patrol', free: true, status: 'online' },
 
@@ -795,7 +674,6 @@ const sources = [
   { id: 'google-my-maps', name: 'Google My Maps', nameJa: 'グーグル マイマップ', type: 'api', category: 'tourism', url: 'https://www.google.com/maps/d/kml', description: 'Google My Maps public KML exports parsed to points (configure GOOGLE_MYMAPS_IDS env var with comma-separated mids)', updateInterval: 3600, layer: 'google-my-maps', free: true, status: 'online' },
 
   // ── Wave 12: Unified Camera Discovery ───────────────────────────────
-  { id: 'camera-discovery', name: 'Unified Camera Discovery', nameJa: '統合カメラディスカバリー', type: 'api', category: 'cyber', url: 'https://overpass-api.de/api/interpreter', description: 'Fused public-camera discovery across every channel: OSM surveillance, JMA volcano cams, MLIT river cams, Shutoko/Hanshin/NEXCO expressway CCTV, NHK/YouTube/municipal livecams, ski/beach/port webcams, Insecam, Windy/SkylineWebcams/EarthCam aggregators, DuckDuckGo camera dorks, and Shodan camera queries', updateInterval: 3600, layer: 'camera-discovery', free: true, status: 'online' },
 
   // ── Wave 13: Net-new live OSINT endpoints (2026 sweep) ──────────────
   // Seismic / Weather mirrors & EEW
@@ -817,7 +695,6 @@ const sources = [
 
   // Government / Legal / Statistics
   { id: 'egov-laws', name: 'e-Gov Law Search API', nameJa: 'e-Gov 法令検索 API', type: 'api', category: 'government', url: 'https://laws.e-gov.go.jp/api/1/lawlists/1', description: 'Japanese national laws, ordinances, ministerial regulations - full text XML/JSON. Anonymous', updateInterval: 86400, layer: 'edinet-filings', free: true, status: 'offline' },
-  { id: 'ndl-search', name: 'National Diet Library Search', nameJa: '国立国会図書館 サーチ', type: 'api', category: 'government', url: 'https://iss.ndl.go.jp/api/opensearch', description: 'NDL bibliographic OpenSearch API - books, articles, archives (RSS/Atom/JSON). Anonymous', updateInterval: 86400, layer: 'edinet-filings', free: true, status: 'offline' },
   { id: 'data-go-jp-ckan', name: 'data.go.jp CKAN catalog', nameJa: 'data.go.jp CKAN', type: 'api', category: 'government', url: 'https://www.data.go.jp/data/api/action/package_search', description: 'Federated Japan government open-data CKAN catalog (action/package_search, action/package_show)', updateInterval: 86400, layer: 'edinet-filings', free: true, status: 'offline' },
   { id: 'geospatial-jp-ckan', name: 'geospatial.jp CKAN catalog', nameJa: '地理空間情報 CKAN', type: 'api', category: 'geospatial', url: 'https://www.geospatial.jp/ckan/api/3/action/package_search', description: 'MLIT geospatial.jp open data catalog - PLATEAU, disaster hazard layers, transport GIS', updateInterval: 86400, layer: 'edinet-filings', free: true, status: 'offline' },
 
@@ -828,7 +705,6 @@ const sources = [
 
   // Cyber / Infra
   { id: 'jpcert-alerts-rss', name: 'JPCERT/CC Alerts RSS', nameJa: 'JPCERT/CC 注意喚起 RSS', type: 'api', category: 'cyber', url: 'https://www.jpcert.or.jp/rss/jpcert.rdf', description: 'JPCERT Coordination Center security advisories and alerts (RDF/RSS). Anonymous', updateInterval: 3600, layer: 'jpcert-alerts', free: true, status: 'offline' },
-  { id: 'ipa-vuln-rss', name: 'IPA Security Alerts RSS', nameJa: 'IPA 重要なセキュリティ情報 RSS', type: 'api', category: 'cyber', url: 'https://www.ipa.go.jp/security/announce/alert.rss', description: 'IPA (Information-technology Promotion Agency) critical security bulletins RSS', updateInterval: 3600, layer: 'jpcert-alerts', free: true, status: 'offline' },
   { id: 'nict-atlas', name: 'NICT Atlas / NICTER stats', nameJa: 'NICT Atlas / NICTER', type: 'api', category: 'cyber', url: 'https://www.nicter.jp/atlas/', description: 'NICT darknet sensor network (NICTER) attack traffic visualization and JSON stats endpoints', updateInterval: 3600, layer: 'nicter-darknet', free: true, status: 'offline' },
 
   // Geospatial / Reference
@@ -855,12 +731,7 @@ const sources = [
   // These feed the shared `cameras` layer via the camera-discovery fan-out;
   // the updateInterval here is informational only (the actual cadence is the
   // hourly cameraRunner cron).
-  { id: 'camscape-jp', name: 'Camscape (Japan search)', nameJa: 'Camscape 日本検索', type: 'scraped', category: 'cyber', url: 'https://www.camscape.com/?s=japan', description: 'Camscape search results for Japan cameras (6 pages, YouTube-backed feeds)', updateInterval: 3600, layer: 'cameras', free: true, status: 'offline' },
-  { id: 'webcamendirect-net', name: 'Webcamendirect (JP)', nameJa: 'webcamendirect 日本', type: 'scraped', category: 'cyber', url: 'https://webcamendirect.net/japon', description: 'webcamendirect.net /japon listing + 5 curated detail URLs', updateInterval: 3600, layer: 'cameras', free: true, status: 'offline' },
-  { id: 'tabi-cam-jp', name: 'tabi.cam (Japan)', nameJa: 'tabi.cam 日本', type: 'scraped', category: 'cyber', url: 'https://tabi.cam/japan/', description: 'tabi.cam Japan listing with JS "show more" expansion', updateInterval: 3600, layer: 'cameras', free: true, status: 'offline' },
-  { id: 'scs-com-ua', name: 'SCS Asia/Japan webcams', nameJa: 'SCS アジア日本 ウェブカメラ', type: 'scraped', category: 'cyber', url: 'https://webcam.scs.com.ua/en/asia/japan/', description: 'webcam.scs.com.ua /en/asia/japan paginated listing (5 pages)', updateInterval: 3600, layer: 'cameras', free: true, status: 'offline' },
   { id: 'windy-webcams', name: 'Windy Webcams API (JP)', nameJa: 'Windy ウェブカメラ API', type: 'api', category: 'cyber', url: 'https://api.windy.com/webcams/api/v3/webcams', description: 'Windy.com webcams filtered to country=JP. Includes real lat/lon + embed URLs. Requires WINDY_API_KEY (free signup)', updateInterval: 3600, layer: 'cameras', free: false, status: 'offline' },
-  { id: 'manual-ip-cams', name: 'Manual IP Cameras (seed)', nameJa: '手動追加 IPカメラ', type: 'dataset', category: 'cyber', url: 'internal://manual-ip-cams', description: 'Hand-curated MJPG-Streamer / Mobotix cameras discovered via Shodan-style scans', updateInterval: 86400, layer: 'cameras', free: true, status: 'offline' },
   { id: 'shodan-cameras-jp', name: 'Shodan Cameras (JP)', nameJa: 'Shodan カメラ 日本', type: 'api', category: 'cyber', url: 'https://api.shodan.io/', description: 'Shodan country:JP camera search (Hikvision/Dahua/Axis/webcamXP/Panasonic etc.). Requires SHODAN_API_KEY', updateInterval: 86400, layer: 'cameras', free: false, status: 'offline' },
 
   // ── Wave 14: Unified transport fans + 2026-05 OSINT additions ──────────
@@ -936,7 +807,6 @@ const sources = [
   { id: 'mofa-travel-advisory', name: 'MOFA Travel Advisory', nameJa: '外務省 海外安全情報', type: 'api', category: 'government', url: 'https://www.anzen.mofa.go.jp/', description: 'JP MOFA travel advisories — JP govt risk read on every country (RSS spotinfo + dangerinfo + info)', updateInterval: 3600, layer: 'mofa-advisory', free: true, status: 'offline' },
   { id: 'yahoo-crowd-map', name: 'Yahoo! Japan Crowd Radar', nameJa: 'Yahoo! 混雑レーダー', type: 'scraped', category: 'social', url: 'https://map.yahoo.co.jp/crowd', description: '250 m mesh real-time crowd density derived from Yahoo mobile app footprint', updateInterval: 600, layer: 'crowd-density', free: true, status: 'offline' },
   { id: 'docomo-mobaku', name: 'DOCOMO Mobaku (sample)', nameJa: 'モバイル空間統計 公開サンプル', type: 'scraped', category: 'social', url: 'https://mobaku.jp/sample/', description: 'DOCOMO Mobile Spatial Statistics — hourly Tokyo mesh population, public sample tier', updateInterval: 3600, layer: 'crowd-density', free: true, status: 'offline' },
-  { id: 'jr-east-delay', name: 'JR East delay certificates', nameJa: 'JR東日本 遅延証明書', type: 'scraped', category: 'transport', url: 'https://traininfo.jreast.co.jp/delay_certificate/', description: 'JR East line-level daily delay certificates with cause text — chokepoint pattern over time', updateInterval: 1800, layer: 'train-delays', free: true, status: 'offline' },
   { id: 'bike-share-gbfs', name: 'Bike-share GBFS (HelloCycling, DOCOMO Cycle)', nameJa: 'シェアサイクル GBFS', type: 'api', category: 'transport', url: 'https://api-public.odpt.org/api/v4/gbfs/', description: 'GBFS feeds for HelloCycling + DOCOMO Cycle Tokyo — station positions, real-time bike/dock counts (last-mile demand leading indicator)', updateInterval: 600, layer: 'bike-share', free: true, status: 'offline' },
   // surveillance-cameras-jp folded into camera-discovery (オービス +
   // highway=speed_camera nodes now part of OVERPASS_CAMERA_QUERIES).
@@ -960,10 +830,8 @@ const sources = [
   { id: 'whoisxml-reverse', name: 'WhoisXMLAPI reverse / bulk', nameJa: 'WhoisXMLAPI 逆引き', type: 'api', category: 'cyber', url: 'https://whois.whoisxmlapi.com/', description: 'Reverse-WHOIS by registrant (ministries / megacorps) + bulk WHOIS history. Requires WHOISXML_KEY', updateInterval: 86400, layer: 'whoisxml-reverse', free: false, status: 'offline' },
   { id: 'dnstwist-jp-targets', name: 'DNSTwist (JP-corp typosquats)', nameJa: 'DNSTwist 類似ドメイン', type: 'dataset', category: 'cyber', url: 'internal://dnstwist', description: 'Local dnstwist library generating typosquats for mufg.jp / ntt.co.jp / mhlw.go.jp etc., then DNS-resolving live. Bundle as worker script', updateInterval: 86400, layer: 'dnstwist-jp-targets', free: true, status: 'offline' },
   { id: 'gitlab-bitbucket-leaks', name: 'GitLab + Bitbucket leak hunt', nameJa: 'GitLab/Bitbucket 漏洩', type: 'api', category: 'cyber', url: 'https://gitlab.com/api/v4/search', description: 'Public code search across GitLab + Bitbucket for JP-domain creds / .env. Requires GITLAB_TOKEN + BITBUCKET_TOKEN', updateInterval: 21600, layer: 'gitlab-bitbucket-leaks', free: true, status: 'offline' },
-  { id: 'doxbin-mirrors', name: 'Doxbin / Doxagram mirrors', nameJa: 'Doxbin ミラー', type: 'scraped', category: 'cyber', url: 'internal://doxbin-mirrors', description: 'Archive.ph + tor-onion Doxbin mirrors — sensitive: implement only behind strict gating. Register-only', updateInterval: 86400, layer: 'doxbin-mirrors', free: true, status: 'offline' },
   { id: 'nitter-mirrors', name: 'Nitter mirror network', nameJa: 'Nitter ミラー', type: 'scraped', category: 'social', url: 'https://nitter.net/', description: 'X/Twitter RSS proxy via Nitter instances — keyless alternative to twitter-geo paid API', updateInterval: 1800, layer: 'nitter-mirrors', free: true, status: 'offline' },
   { id: 'snusbase-breach', name: 'Snusbase combolist', nameJa: 'Snusbase コンボリスト', type: 'api', category: 'cyber', url: 'https://snusbase.com/v3/search', description: 'Combolist/breach lookup by JP corp domain. Requires SNUSBASE_KEY (paid)', updateInterval: 86400, layer: 'snusbase-breach', free: false, status: 'offline' },
-  { id: 'russian-market-stealer', name: 'Stealer cloud mirrors (Russian Market)', nameJa: 'Stealer クラウド (RU市場)', type: 'scraped', category: 'cyber', url: 'internal://russian-market-stealer', description: 'Tor / proxy access to Russian-Market-style stealer dumps targeting JP banks / exchanges. Highly sensitive — register-only with manual gating', updateInterval: 86400, layer: 'russian-market-stealer', free: true, status: 'offline' },
 
   // Axe 2 — Social geo & personnes
   { id: 'instagram-locations', name: 'Instagram public location pages', nameJa: 'Instagram 公開ロケーション', type: 'scraped', category: 'social', url: 'https://www.instagram.com/explore/locations/', description: 'Top posts/reels by JP location ID. Requires session cookie; ToS-rate-limited', updateInterval: 86400, layer: 'instagram-locations', free: true, status: 'offline' },
@@ -978,7 +846,6 @@ const sources = [
   { id: 'vrchat-active-jp', name: 'VRChat — active JP worlds', nameJa: 'VRChat アクティブ JPワールド', type: 'api', category: 'social', url: 'https://vrchat.com/api/1/worlds/active', description: 'Active JP-tagged worlds + instance headcount. Requires VRC_AUTH cookie', updateInterval: 1800, layer: 'vrchat-active-jp', free: false, status: 'offline' },
   { id: 'reddit-jp-subs', name: 'Reddit r/japan + JP subs', nameJa: 'Reddit 日本サブレディット', type: 'api', category: 'social', url: 'https://www.reddit.com/r/japan/new.json', description: 'r/japan / r/japanlife / r/Tokyo / r/newsokur / r/JapanFinance — keyless JSON listings', updateInterval: 1800, layer: 'reddit-jp-subs', free: true, status: 'online' },
   { id: 'yahoo-chiebukuro', name: 'Yahoo! Chiebukuro Q&A', nameJa: 'Yahoo! 知恵袋', type: 'scraped', category: 'social', url: 'https://chiebukuro.yahoo.co.jp/', description: 'JP-locale Q&A platform — mentions of locations + proper names', updateInterval: 3600, layer: 'yahoo-chiebukuro', free: true, status: 'offline' },
-  { id: 'tinder-bumble-proximity', name: 'Tinder/Bumble proximity probe (Sybil)', nameJa: 'Tinder/Bumble 近接プローブ', type: 'scraped', category: 'social', url: 'internal://tinder-bumble', description: 'Sybil-account proximity probe at point X. Highly sensitive — register-only with strict legal gating', updateInterval: 86400, layer: 'tinder-bumble-proximity', free: true, status: 'offline' },
   { id: 'twitch-jp-streams', name: 'Twitch JP live streams', nameJa: 'Twitch JP ライブ', type: 'api', category: 'social', url: 'https://api.twitch.tv/helix/streams', description: 'language=ja live streams + viewer counts + game tags. Requires TWITCH_CLIENT_ID + TWITCH_CLIENT_SECRET', updateInterval: 600, layer: 'twitch-jp-streams', free: true, status: 'offline' },
   { id: 'note-com-profiles', name: 'note.com profile search', nameJa: 'note.com プロフィール検索', type: 'api', category: 'social', url: 'https://note.com/api/v2/searches?context=user', description: 'note.com author search by tag/location (extension of note-com-trending)', updateInterval: 3600, layer: 'note-com-profiles', free: true, status: 'offline' },
   { id: 'hatena-bookmark-extended', name: 'Hatena Bookmark (entry list)', nameJa: 'はてなブックマーク エントリ', type: 'api', category: 'social', url: 'https://b.hatena.ne.jp/entrylist.rss', description: 'Full entry-list RSS — bookmarked URL buzz proxy (extension of hatena-bookmark)', updateInterval: 1800, layer: 'hatena-bookmark-extended', free: true, status: 'offline' },

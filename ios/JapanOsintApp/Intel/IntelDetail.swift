@@ -6,7 +6,7 @@ struct IntelDetail: View {
     let uid: String
     let fallbackTitle: String
 
-    @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @Environment(\.theme) private var theme
 
     @State private var item: IntelItem?
@@ -41,6 +41,10 @@ struct IntelDetail: View {
                             Label("Open source", systemImage: "safari")
                         }
                         .buttonStyle(.borderedProminent)
+                    }
+                    if let prov = item.provenance {
+                        Text("Provenance").font(.headline).foregroundStyle(theme.text)
+                        provenanceCard(prov)
                     }
                     if let props = item.properties, !props.isEmpty {
                         Text("Properties").font(.headline).foregroundStyle(theme.text)
@@ -80,6 +84,60 @@ struct IntelDetail: View {
         }
     }
 
+    /// The "full info path" for this data point: which collector emitted it,
+    /// the upstream origin the collector pulls from, this datum's own link,
+    /// when it was fetched/published, and license/confidence when known.
+    @ViewBuilder
+    private func provenanceCard(_ p: Provenance) -> some View {
+        let rows: [(String, String?)] = [
+            ("Collector", provCollector(p)),
+            ("Method", p.collection_method),
+            ("Category", p.category),
+            ("Source origin", p.source_url),
+            ("Item link", p.item_url),
+            ("Channel", p.sub_source_id),
+            ("Fetched", relativeTime(p.fetched_at)),
+            ("Published", p.published_at.map { relativeTime($0) }),
+            ("License", p.license),
+            ("Confidence", p.confidence.map { String(format: "%.0f%%", $0 * 100) }),
+        ]
+        VStack(spacing: 1) {
+            ForEach(rows.indices, id: \.self) { i in
+                let (label, value) = rows[i]
+                if let value, !value.isEmpty, value != "—" {
+                    HStack(alignment: .top, spacing: 8) {
+                        Text(label)
+                            .font(.caption.bold())
+                            .foregroundStyle(theme.textMuted)
+                            .frame(width: 110, alignment: .leading)
+                        if (label == "Source origin" || label == "Item link"),
+                           let url = URL(string: value) {
+                            Link(value, destination: url)
+                                .font(.caption.monospaced())
+                                .foregroundStyle(theme.accentAlt)
+                                .lineLimit(2)
+                        } else {
+                            Text(value)
+                                .font(.caption.monospaced())
+                                .foregroundStyle(theme.text)
+                                .textSelection(.enabled)
+                        }
+                        Spacer(minLength: 0)
+                    }
+                    .padding(8)
+                    .background(theme.surfaceElevated)
+                }
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+
+    private func provCollector(_ p: Provenance) -> String {
+        let id = p.source_id ?? "?"
+        if let name = p.source_name, name != id { return "\(name)  ·  \(id)" }
+        return id
+    }
+
     private func propertiesGrid(_ properties: [String: AnyCodable]) -> some View {
         VStack(spacing: 1) {
             ForEach(properties.keys.sorted(), id: \.self) { key in
@@ -117,7 +175,7 @@ struct IntelDetail: View {
         loading = true
         defer { loading = false }
         do {
-            item = try await API(baseURL: settings.backendBaseURL).intelItem(uid: uid)
+            item = try await apiClient.api.intelItem(uid: uid)
             error = nil
         } catch let err {
             error = err.localizedDescription

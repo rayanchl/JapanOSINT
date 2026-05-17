@@ -19,6 +19,7 @@
     "node-cron": "^3.0.3",
     "playwright": "^1.49.0",
     "satellite.js": "^5.0.0",
+    "stripe": "^17.7.0",
     "ws": "^8.18.0"
   }
 }

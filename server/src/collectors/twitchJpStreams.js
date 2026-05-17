@@ -9,13 +9,14 @@
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
 import { fetchHead } from './_liveHelpers.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const SOURCE_ID = 'twitch-jp-streams';
 const KEY_ENV = 'TWITCH_CLIENT_ID';
 const PROBE_URL = 'https://www.twitch.tv/directory/all/ja';
 
 export default async function collectTwitchJpStreams() {
-  const hasKey = !!(process.env[KEY_ENV] && process.env.TWITCH_CLIENT_SECRET);
+  const hasKey = !!(envFor(KEY_ENV) && envFor('TWITCH_CLIENT_SECRET'));
   const live = await fetchHead(PROBE_URL).catch(() => false);
   return intelEnvelope({
     sourceId: SOURCE_ID,
@@ -29,7 +30,8 @@ export default async function collectTwitchJpStreams() {
       tags: ['twitch', 'live-stream', 'social', live ? 'reachable' : 'unreachable', hasKey ? 'key-present' : 'key-missing'],
       properties: { reachable: live, requires_key: true, has_key: hasKey },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'Twitch JP live streams (language=ja) via helix',
   });
 }

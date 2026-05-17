@@ -16,7 +16,7 @@
  */
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
-import { getEnv } from '../utils/credentials.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const SOURCE_ID = 'houjin-bangou';
 const BASE = 'https://api.houjin-bangou.nta.go.jp/4/diff';
@@ -27,7 +27,7 @@ function ymd(d) {
 }
 
 export default async function collectHoujinBangou() {
-  const id = getEnv(null, 'HOUJIN_BANGOU_KEY');
+  const id = envFor('HOUJIN_BANGOU_KEY');
   if (!id) {
     return intelEnvelope({
       sourceId: SOURCE_ID,
@@ -38,7 +38,9 @@ export default async function collectHoujinBangou() {
     });
   }
 
-  const days = parseInt(process.env.HOUJIN_BANGOU_DAYS || '7', 10);
+  // envFor (not process.env) so a tenant's BYOK / API-keys overlay can widen
+  // or narrow the diff window; falls back to 7 days for scheduler runs.
+  const days = parseInt(envFor('HOUJIN_BANGOU_DAYS') || '7', 10);
   const to = new Date();
   const from = new Date(Date.now() - days * 86400000);
   const params = new URLSearchParams({

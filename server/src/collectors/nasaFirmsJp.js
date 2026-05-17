@@ -9,15 +9,16 @@
  * Source: 'firms_active_fire' — geometry from per-row latitude/longitude.
  */
 
-import { getEnv } from '../utils/credentials.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const TIMEOUT_MS = 20000;
 
-const SENSOR = process.env.FIRMS_SENSOR || 'VIIRS_NOAA20_NRT';
-const DAYS = Math.min(Number(process.env.FIRMS_DAYS || 1), 10);
-
 export default async function collectNasaFirmsJp() {
-  const key = getEnv(null, 'NASA_FIRMS_MAP_KEY') || getEnv(null, 'FIRMS_MAP_KEY') || '';
+  const key = envFor('NASA_FIRMS_MAP_KEY') || envFor('FIRMS_MAP_KEY') || '';
+  // Read at call time so a tenant's BYOK / API-keys overlay can override
+  // sensor/window; falls back to platform defaults for scheduler runs.
+  const sensor = envFor('FIRMS_SENSOR') || 'VIIRS_NOAA20_NRT';
+  const days = Math.min(Number(envFor('FIRMS_DAYS') || 1), 10);
   if (!key) {
     return {
       type: 'FeatureCollection',
@@ -31,7 +32,7 @@ export default async function collectNasaFirmsJp() {
       },
     };
   }
-  const url = `https://firms.modaps.eosdis.nasa.gov/api/area/csv/${key}/${SENSOR}/JPN/${DAYS}`;
+  const url = `https://firms.modaps.eosdis.nasa.gov/api/area/csv/${key}/${sensor}/JPN/${days}`;
 
   let csv = '';
   try {
@@ -108,8 +109,8 @@ export default async function collectNasaFirmsJp() {
       source: 'firms_active_fire',
       fetchedAt: new Date().toISOString(),
       recordCount: features.length,
-      sensor: SENSOR,
-      window_days: DAYS,
+      sensor,
+      window_days: days,
       env_hint: 'FIRMS_SENSOR (default VIIRS_NOAA20_NRT); FIRMS_DAYS (1-10)',
       description: 'NASA FIRMS — active-fire pixels over JP last N days',
     },

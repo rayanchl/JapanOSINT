@@ -4,6 +4,7 @@
  */
 
 import { fetchJson } from './_liveHelpers.js';
+import { intelHashKey } from '../utils/intelHelpers.js';
 
 const PEERINGDB_IX_URL = 'https://www.peeringdb.com/api/ix?country=JP';
 const PEERINGDB_FAC_URL = 'https://www.peeringdb.com/api/fac?country=JP';
@@ -104,7 +105,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [x.lon, x.lat] },
     properties: {
-      ix_id: `IX_${String(i + 1).padStart(5, '0')}`,
+      ix_id: `IX_${intelHashKey(x.name, x.lat, x.lon)}`,
       name: x.name,
       operator: x.operator,
       members: x.members,

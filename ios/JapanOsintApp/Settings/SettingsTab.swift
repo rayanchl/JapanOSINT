@@ -2,8 +2,10 @@ import SwiftUI
 
 struct SettingsTab: View {
     @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var registry: LayerRegistry
     @EnvironmentObject var saved: SavedStore
+    @EnvironmentObject var auth: AuthSession
     @Environment(\.theme) private var theme
     @Environment(\.scenePhase) private var scenePhase
 
@@ -33,12 +35,10 @@ struct SettingsTab: View {
     @State private var authError: String?
     @State private var authInFlight: Bool = false
 
-    /// Server-restart UI state. Triggered from `serverControlSection` so the
-    /// user can force every collector to re-read API keys + other env vars
-    /// after editing them in the API Keys tab.
-    @State private var restarting: Bool = false
-    @State private var restartError: String?
-    @State private var confirmRestart: Bool = false
+    /// Disconnect confirmation. Tearing down the session sends the app back
+    /// to onboarding, so gate it behind a dialog like the other destructive
+    /// actions in this (already Face-ID walled) tab.
+    @State private var confirmDisconnect: Bool = false
 
     enum HealthPhase: Equatable {
         case idle
@@ -68,11 +68,10 @@ struct SettingsTab: View {
                     networkRefreshSection
                     listsLimitsSection
                     translationSection
-                    serverControlSection
                     dataAndCacheSection
                     tipsSection
+                    accountSection
                 }
-                .disabled(restarting)
             } else {
                 lockedView
             }
@@ -98,76 +97,6 @@ struct SettingsTab: View {
             // device returning from background re-prompts.
             if phase == .background { unlocked = false }
         }
-    }
-
-    // MARK: - Server control
-
-    /// Sits above `dataAndCacheSection` so it's reachable without a long
-    /// scroll. The Settings tab is already Face-ID gated, so no extra
-    /// biometric prompt — confirmation dialog is enough friction for a
-    /// destructive action.
-    private var serverControlSection: some View {
-        Section {
-            Button(role: .destructive) {
-                confirmRestart = true
-            } label: {
-                HStack {
-                    Image(systemName: "arrow.clockwise.circle.fill")
-                    Text(restarting ? "Restarting…" : "Restart server")
-                    Spacer()
-                    if restarting { ProgressView().controlSize(.small) }
-                }
-            }
-            .disabled(restarting)
-            // Dialog attached to the trigger Button, not the Section. Section-
-            // hosted .confirmationDialog renders the body buttons but swallows
-            // the `message:` text on iOS 17+; per-button hosting works.
-            .confirmationDialog("Restart server?",
-                                isPresented: $confirmRestart,
-                                titleVisibility: .visible) {
-                Button("Restart", role: .destructive) {
-                    Haptics.tap(.medium)
-                    Task { await doRestart() }
-                }
-                Button("Cancel", role: .cancel) {}
-            } message: {
-                Text("All in-flight requests will be dropped. The app reconnects automatically once the server is back.")
-            }
-            if let restartError {
-                Text(restartError)
-                    .font(.caption)
-                    .foregroundStyle(theme.warning)
-            }
-        } header: {
-            Text("Server")
-        } footer: {
-            Text("Forces every collector to re-read API keys and other env vars. The dev server uses node --watch and respawns automatically; takes 2–4 s to come back.")
-                .font(.caption2)
-        }
-    }
-
-    private func doRestart() async {
-        restartError = nil
-        restarting = true
-        defer { restarting = false }
-        do {
-            try await API(baseURL: settings.backendBaseURL).restartServer()
-        } catch {
-            // Connection-reset is expected — the server kills the socket as
-            // it tears down. Treat any post-POST failure as "probably
-            // restarting" and fall through to the health poll for liveness.
-        }
-        // Poll /api/health up to 30 s (1 s cadence) until the server is back.
-        let deadline = Date().addingTimeInterval(30)
-        while Date() < deadline {
-            try? await Task.sleep(for: .seconds(1))
-            if (try? await API(baseURL: settings.backendBaseURL).health()) != nil {
-                Haptics.success()
-                return
-            }
-        }
-        restartError = "Server didn't come back within 30 s. Check the host."
-        Haptics.error()
     }
 
     // MARK: - Locked screen
@@ -353,6 +282,59 @@ struct SettingsTab: View {
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 
+    // MARK: - Account
+
+    /// Signs out of the current Supabase session and clears the local
+    /// onboarding flag. `auth.signOut()` wipes the Keychain tokens + token
+    /// box and flips the gate to `.onboarding`, so the app returns to the
+    /// connect/login wizard immediately — no reinstall needed to point at a
+    /// different backend or account.
+    private var accountSection: some View {
+        Section {
+            if let email = auth.accountEmail {
+                LabeledContent("Signed in as") {
+                    Text(email)
+                        .font(.caption.monospaced())
+                        .foregroundStyle(theme.textMuted)
+                        .textSelection(.enabled)
+                }
+            }
+            if let tenant = auth.tenantName {
+                LabeledContent("Workspace") {
+                    Text(tenant)
+                        .font(.caption.monospaced())
+                        .foregroundStyle(theme.textMuted)
+                        .textSelection(.enabled)
+                }
+            }
+            Button(role: .destructive) {
+                confirmDisconnect = true
+            } label: {
+                HStack {
+                    Image(systemName: "rectangle.portrait.and.arrow.right")
+                    Text("Disconnect")
+                    Spacer()
+                }
+            }
+            .confirmationDialog("Disconnect?",
+                                isPresented: $confirmDisconnect,
+                                titleVisibility: .visible) {
+                Button("Disconnect", role: .destructive) {
+                    Haptics.tap(.medium)
+                    auth.signOut()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Signs you out and returns to the connect & sign-in screen. Saved items and cached layers on this device are kept.")
+            }
+        } header: {
+            Text("Account")
+        } footer: {
+            Text("Use this to switch backend, workspace, or account without reinstalling the app.")
+                .font(.caption2)
+        }
+    }
+
     // MARK: - Other sections
 
     private var appearanceSection: some View {
@@ -518,8 +500,8 @@ struct SettingsTab: View {
                               idleColor: theme.danger)
             }
             .disabled(clearLayerFeedback != .idle)
-            // Per-button host so the message: closure renders. See the
-            // serverControlSection note for the SwiftUI quirk this avoids.
+            // Per-button host so the message: closure renders — Section-
+            // hosted .confirmationDialog swallows the message: text on iOS 17+.
             .confirmationDialog("Clear cached layer catalogue?",
                                 isPresented: $confirmClearLayerCache,
                                 titleVisibility: .visible) {
@@ -674,7 +656,7 @@ struct SettingsTab: View {
         let started = ContinuousClock.now
         let minDuration: Duration = .seconds(1)
         do {
-            let data = try await API(baseURL: settings.backendBaseURL).health()
+            let data = try await apiClient.api.health()
             let info = parseHealth(data: data)
             let remaining = minDuration - (ContinuousClock.now - started)
             if remaining > .zero { try? await Task.sleep(for: remaining) }

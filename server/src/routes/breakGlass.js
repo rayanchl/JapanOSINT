@@ -7,9 +7,9 @@
  *   2. A valid TOTP code from ADMIN_TOTP_SECRET.
  *
  * On success: issues an HS256 JWT signed with BREAK_GLASS_JWT_SECRET that
- * names a synthetic admin user inside the `legacy` tenant. The audit log
- * gets a loud entry for every use — this is meant to surface in monitoring
- * the moment it's invoked.
+ * names a synthetic admin user in a `platform` scope. The audit log gets a
+ * loud entry for every use — this is meant to surface in monitoring the
+ * moment it's invoked.
  *
  * Mounting:
  *   app.use('/admin/break-glass', breakGlassRouter);
@@ -21,6 +21,9 @@
 import express from 'express';
 import { createHmac, randomUUID } from 'crypto';
 import { SignJWT } from 'jose';
+// TENANCY EXCEPTION (intentional): writes audit rows under the synthetic
+// 'platform' scope during a Supabase outage — no active tenant exists here.
+// Raw `db` by design, not tenantDb().
 import db from '../utils/database.js';
 
 const router = express.Router();
@@ -28,6 +31,15 @@ const router = express.Router();
 const ENABLED = process.env.BREAK_GLASS_ENABLED === '1';
 const TOTP_SECRET = process.env.ADMIN_TOTP_SECRET || '';
 const JWT_SECRET = process.env.BREAK_GLASS_JWT_SECRET || '';
+
+// Fail closed at boot: the break-glass JWT secret MUST be independent of the
+// Supabase secret. If they were equal, a break-glass token would be a valid
+// HS256 token under the normal auth path (secret reuse → privilege blur).
+if (ENABLED && JWT_SECRET && JWT_SECRET === (process.env.SUPABASE_JWT_SECRET || '')) {
+  throw new Error(
+    '[break-glass] BREAK_GLASS_JWT_SECRET must differ from SUPABASE_JWT_SECRET'
+  );
+}
 const TOTP_STEP_SECONDS = 30;
 const TOTP_WINDOW = 1; // accept current step ± 1 for clock skew
 
@@ -49,13 +61,13 @@ router.post('/login', async (req, res) => {
     return res.status(401).json({ error: 'Invalid TOTP' });
   }
 
-  // Synthesise a one-hour admin JWT scoped to the legacy tenant.
+  // Synthesise a one-hour admin JWT scoped to the platform admin scope.
   const jwtSecret = new TextEncoder().encode(JWT_SECRET);
   const token = await new SignJWT({
     sub: 'break-glass-admin',
     email: 'break-glass@local',
     role: 'service_role',
-    tenant_id: 'legacy',
+    tenant_id: 'platform',
     break_glass: true,
   })
     .setProtectedHeader({ alg: 'HS256' })
@@ -133,7 +145,7 @@ function insertAudit({ action, payload }) {
   try {
     db.prepare(`
       INSERT INTO audit_events (id, tenant_id, user_id, action, target, payload_json, ts, ip, ua)
-      VALUES (?, 'legacy', NULL, ?, NULL, ?, datetime('now'), ?, ?)
+      VALUES (?, 'platform', NULL, ?, NULL, ?, datetime('now'), ?, ?)
     `).run(
       randomUUID(),
       action,

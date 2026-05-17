@@ -14,13 +14,13 @@
 
 import { getOAuthToken } from '../utils/openskyAuth.js';
 import { classifyMilitary } from './_militaryIcao.js';
-import { getEnv } from '../utils/credentials.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 // Read at call time (not module load) so a tenant's BYOK key — or a value
 // set via the API-keys overlay after boot — flows through. Platform-only
 // today (tenantId=null); pass a real tenantId once the scheduler is
 // tenant-aware.
-const aeroDataboxKey = () => getEnv(null, 'AERODATABOX_KEY') || '';
+const aeroDataboxKey = () => envFor('AERODATABOX_KEY') || '';
 const AERODATABOX_AIRPORTS = [
   { icao: 'RJAA', iata: 'NRT', name: 'Narita', lat: 35.7720, lon: 140.3929 },
   { icao: 'RJTT', iata: 'HND', name: 'Haneda', lat: 35.5494, lon: 139.7798 },

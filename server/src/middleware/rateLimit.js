@@ -10,11 +10,7 @@
  * In-process state: a single-node deployment is the target for v1. When
  * the server scales out, swap `_buckets` for a Redis-backed implementation
  * with the same shape — every other piece of the middleware stays the same.
- *
- * Behind MULTI_TENANT_ENABLED.
  */
-
-import { MULTI_TENANT_ENABLED } from './auth.js';
 
 // Base capacity (tokens) + refill rate (tokens per second) per class.
 // Tokens-per-minute is more intuitive but we work in seconds so partial
@@ -36,7 +32,6 @@ const PLAN_MULTIPLIER = {
 const _buckets = new Map();
 
 export function rateLimit(req, res, next) {
-  if (!MULTI_TENANT_ENABLED) return next();
   if (!req.tenant) return next();
 
   const cls = classifyRequest(req);

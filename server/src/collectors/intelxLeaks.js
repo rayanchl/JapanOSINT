@@ -29,7 +29,8 @@ export default async function collectIntelxLeaks() {
       tags: ['breach', 'paste', 'intelx', live ? 'reachable' : 'unreachable', hasKey ? 'key-present' : 'key-missing'],
       properties: { reachable: live, requires_key: true, has_key: hasKey },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'IntelX paste / leak / darknet search (50 reqs/month free)',
   });
 }

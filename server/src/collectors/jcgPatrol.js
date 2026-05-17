@@ -4,6 +4,8 @@
  * Falls back to seed of major JCG patrol vessel base ports.
  */
 
+import { intelHashKey } from '../utils/intelHelpers.js';
+
 const JCG_URL = 'https://www.kaiho.mlit.go.jp/info/kouhou/index.html';
 
 const SEED_JCG_BASES = [
@@ -63,7 +65,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [b.lon, b.lat] },
     properties: {
-      base_id: `JCG_${String(i + 1).padStart(5, '0')}`,
+      base_id: `JCG_${intelHashKey(b.name, b.lat, b.lon)}`,
       name: b.name,
       region: b.region,
       vessels_count: b.vessels,

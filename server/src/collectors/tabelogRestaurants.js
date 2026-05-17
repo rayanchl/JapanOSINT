@@ -5,8 +5,11 @@
  */
 
 import { fetchOverpass } from './_liveHelpers.js';
+import { envFor } from '../utils/collectorEnv.js';
+import { intelHashKey } from '../utils/intelHelpers.js';
 
-const HOTPEPPER_KEY = process.env.HOTPEPPER_API_KEY || '';
+// Lazy read so tenant BYOK overrides land without a server restart.
+const hotpepperKey = () => envFor('HOTPEPPER_API_KEY') || '';
 const HOTPEPPER_URL = 'https://webservice.recruit.co.jp/hotpepper/gourmet/v1/';
 
 const SEED_RESTAURANTS = [
@@ -55,6 +58,7 @@ const SEED_RESTAURANTS = [
 ];
 
 async function tryHotpepper() {
+  const HOTPEPPER_KEY = hotpepperKey();
   if (!HOTPEPPER_KEY) return null;
   try {
     const ctrl = new AbortController();
@@ -65,11 +69,16 @@ async function tryHotpepper() {
     if (!res.ok) return null;
     const data = await res.json();
     const shops = data.results?.shop || [];
-    return shops.map((s, i) => ({
+    return shops.map((s) => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [parseFloat(s.lng), parseFloat(s.lat)] },
       properties: {
-        facility_id: `RESTO_${String(i + 1).padStart(5, '0')}`,
+        // Hotpepper returns a stable shop `id` (e.g. "J001234567"). Fall back
+        // to a fingerprint of name+coords so reruns coalesce instead of
+        // clobbering on positional index.
+        facility_id: s.id
+          ? `RESTO_HP_${s.id}`
+          : `RESTO_${intelHashKey(s.name, s.lat, s.lng)}`,
         name: s.name || 'Restaurant',
         genre: s.genre?.name || null,
         budget: s.budget?.name || null,
@@ -85,11 +94,13 @@ async function tryHotpepper() {
 
 function generateSeedData() {
   const now = new Date();
-  return SEED_RESTAURANTS.map((r, i) => ({
+  return SEED_RESTAURANTS.map((r) => ({
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [r.lon, r.lat] },
     properties: {
-      facility_id: `RESTO_${String(i + 1).padStart(5, '0')}`,
+      // Seed rows have no upstream id — key on name+coords so the same
+      // restaurant keeps a stable facility_id across runs.
+      facility_id: `RESTO_${intelHashKey(r.name, r.lat, r.lon)}`,
       name: r.name,
       genre: r.genre,
       rating: r.rating,

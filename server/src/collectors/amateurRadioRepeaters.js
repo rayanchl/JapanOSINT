@@ -4,6 +4,7 @@
  */
 
 import { fetchText } from './_liveHelpers.js';
+import { intelHashKey } from '../utils/intelHelpers.js';
 
 async function tryLive() {
   const text = await fetchText('https://www.repeaterbook.com/api/export.php?country=Japan');
@@ -22,7 +23,8 @@ async function tryLive() {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [lon, lat] },
       properties: {
-        repeater_id: `RPT_LIVE_${String(features.length + 1).padStart(5, '0')}`,
+        // Callsign+frequency is the stable natural key for a repeater.
+        repeater_id: `RPT_LIVE_${intelHashKey(call, freq, lat, lon)}`,
         callsign: call,
         name: `${call} ${parts[5] || ''}`.trim(),
         freq_mhz: freq,
@@ -76,11 +78,11 @@ const SEED_REPEATERS = [
 ];
 
 function generateSeedData() {
-  return SEED_REPEATERS.map((r, i) => ({
+  return SEED_REPEATERS.map((r) => ({
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [r.lon, r.lat] },
     properties: {
-      repeater_id: `RPT_${String(i + 1).padStart(5, '0')}`,
+      repeater_id: `RPT_${intelHashKey(r.call, r.freq_mhz, r.lat, r.lon)}`,
       callsign: r.call,
       name: r.name,
       freq_mhz: r.freq_mhz,

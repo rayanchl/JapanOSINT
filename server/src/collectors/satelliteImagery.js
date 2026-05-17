@@ -18,6 +18,8 @@ import {
   JAPAN_BBOX,
   IMAGERY_SEED_CENTROIDS,
 } from './_satelliteSeeds.js';
+import { envFor } from '../utils/collectorEnv.js';
+import { intelHashKey } from '../utils/intelHelpers.js';
 
 const NOW_ISO = () => new Date().toISOString();
 const TODAY_YMD = () => new Date().toISOString().slice(0, 10);
@@ -248,7 +250,7 @@ function alos2Seed() {
 // ── 7. CORONA + historical Landsat 1–5 via USGS EarthExplorer M2M ──────
 // Token-gated; returns null when USGS_M2M_TOKEN missing.
 async function tryUsgsHistorical() {
-  const token = process.env.USGS_M2M_TOKEN;
+  const token = envFor('USGS_M2M_TOKEN');
   if (!token) return null;
 
   const datasets = ['corona2', 'landsat_mss_c2_l1']; // CORONA + Landsat 1-5 MSS
@@ -308,8 +310,9 @@ async function tryUsgsHistorical() {
 // no auth) → Microsoft Planetary Computer STAC → Copernicus Data Space
 // OData. Emits a Feature per scene, centroid of scene footprint.
 
-const S2_CLIENT_ID = process.env.SENTINELHUB_CLIENT_ID || '';
-const S2_CLIENT_SECRET = process.env.SENTINELHUB_CLIENT_SECRET || '';
+// Lazy read so tenant BYOK overrides land without a server restart.
+const s2ClientId = () => envFor('SENTINELHUB_CLIENT_ID') || '';
+const s2ClientSecret = () => envFor('SENTINELHUB_CLIENT_SECRET') || '';
 const S2_CLOUD_MAX = 40;
 const S2_SCENE_LIMIT = 60;
 
@@ -361,6 +364,8 @@ function s2MapStacFeature(f, i, sourceTag) {
 }
 
 async function s2GetAccessToken() {
+  const S2_CLIENT_ID = s2ClientId();
+  const S2_CLIENT_SECRET = s2ClientSecret();
   if (!S2_CLIENT_ID || !S2_CLIENT_SECRET) return null;
   const body = new URLSearchParams({
     grant_type: 'client_credentials',
@@ -665,7 +670,7 @@ function generateSeed() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [t.lon, t.lat] },
     properties: {
-      id: `IMG_SEED_${String(i + 1).padStart(4, '0')}`,
+      id: `IMG_SEED_${intelHashKey(t.region, t.lon, t.lat)}`,
       platform: 'generic',
       sensor: 'generic',
       scene_id: t.region,

@@ -9,7 +9,7 @@ struct ProbeActionsView: View {
     let row: StatusRow
     var onUpdate: (StatusRow) -> Void
 
-    @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @Environment(\.theme) private var theme
 
     @State private var pinging = false
@@ -96,7 +96,7 @@ struct ProbeActionsView: View {
                 break
             }
             do {
-                let updated = try await API(baseURL: settings.backendBaseURL).probeSource(row.id)
+                let updated = try await apiClient.api.probeSource(row.id)
                 await MainActor.run { onUpdate(updated) }
             } catch {
                 await MainActor.run { actionError = error.localizedDescription }
@@ -121,7 +121,7 @@ struct ProbeActionsView: View {
                 break
             }
             do {
-                let updated = try await API(baseURL: settings.backendBaseURL)
+                let updated = try await apiClient.api
                     .setProbeConsent(row.id, allow: next)
                 await MainActor.run { onUpdate(updated) }
             } catch {

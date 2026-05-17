@@ -4,6 +4,8 @@
  * Falls back to a curated seed of major land transaction zones.
  */
 
+import { intelHashKey } from '../utils/intelHelpers.js';
+
 const MLIT_URL = 'https://www.land.mlit.go.jp/webland/api/TradeListSearch';
 
 const SEED_TRANSACTIONS = [
@@ -68,7 +70,7 @@ async function tryMlit() {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [139.6917, 35.6896] },
       properties: {
-        tx_id: `TX_${String(i + 1).padStart(5, '0')}`,
+        tx_id: `TX_${intelHashKey(tx.Type, tx.Municipality, tx.DistrictName, tx.TradePrice, tx.Area, tx.Period)}`,
         type: tx.Type || null,
         municipality: tx.Municipality || null,
         district: tx.DistrictName || null,
@@ -91,7 +93,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [tx.lon, tx.lat] },
     properties: {
-      tx_id: `TX_${String(i + 1).padStart(5, '0')}`,
+      tx_id: `TX_${intelHashKey(tx.area, tx.lat, tx.lon)}`,
       area: tx.area,
       avg_price_yen_per_m2: tx.avg_price_yen_per_m2,
       transactions_q: tx.transactions_q,

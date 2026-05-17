@@ -7,6 +7,8 @@
  * Set BGPTOOLS_USER_AGENT to a contact email per BGP.tools' policy.
  */
 
+import { envFor } from '../utils/collectorEnv.js';
+
 const URL_ASNS = 'https://bgp.tools/asns.csv';
 const URL_RIPESTAT_JP = 'https://stat.ripe.net/data/country-resource-list/data.json?resource=JP';
 const TIMEOUT_MS = 30000;
@@ -16,7 +18,7 @@ const TOKYO = [139.6917, 35.6895];
 async function fetchTextWithUA(url) {
   // BGP.tools requires a *real* contact email in the user agent or the
   // request is 403'd. We refuse to send placeholder/example.com defaults.
-  const ua = process.env.BGPTOOLS_USER_AGENT;
+  const ua = envFor('BGPTOOLS_USER_AGENT');
   if (!ua || /example\.com|@example/i.test(ua) || !/@/.test(ua)) {
     return { ua_required: true };
   }

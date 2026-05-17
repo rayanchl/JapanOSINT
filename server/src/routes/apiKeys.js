@@ -1,8 +1,15 @@
 import { Router } from 'express';
 import { getAllKnownVarNames } from '../utils/apiCredentials.js';
 import { setKey, getKeyValue, hasOverlay } from '../utils/apiKeysStore.js';
+import { requirePlatformAdmin } from '../middleware/keyAccess.js';
 
 const router = Router();
+
+// The overlay is the server-wide platform-default key store: anything set
+// here overrides process.env for every workspace's collectors. It is now an
+// operator-only surface — owner|admin of the active tenant. Regular members
+// manage their own keys via /api/tenant-keys instead.
+router.use(requirePlatformAdmin);
 
 /// Build the in-memory metadata view for one var. Reads the live state from
 /// process.env (which already reflects any overlay merged in at boot or via

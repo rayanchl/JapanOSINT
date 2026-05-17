@@ -1,12 +1,11 @@
 /**
- * Tenancy schema migration. Additive only — does not touch existing
- * user-data tables (intel_items, app_preferences, fetch_log, …) yet so the
- * legacy single-tenant app keeps working unchanged until routes are wired
- * to the new model.
+ * Tenancy schema migration. Additive only. Run unconditionally at boot,
+ * idempotent via `CREATE TABLE IF NOT EXISTS`.
  *
- * Run unconditionally at boot. Idempotent via `CREATE TABLE IF NOT EXISTS`.
- * Seeds a `legacy` tenant on first run so any future tenant_id columns can
- * default-backfill to it.
+ * The `tenant_id` column on user-data tables is nullable: rows are only
+ * attributed to a tenant when a caller supplies one. There is no shared
+ * fallback tenant — every real tenant is provisioned per Supabase user by
+ * the tenant-resolution middleware.
  *
  * See docs/PHASE1.md for the multi-tenant cutover plan.
  */
@@ -177,19 +176,56 @@ export function runTenancyMigration() {
       ON alert_events(rule_id, matched_at DESC);
   `);
 
-  // Seed the legacy tenant. Existing single-tenant data is owned by it.
-  db.prepare(`
-    INSERT OR IGNORE INTO tenants (id, slug, name, plan)
-    VALUES ('legacy', 'legacy', 'Legacy (pre-multi-tenant)', 'enterprise')
-  `).run();
-
   // ── Add tenant_id to user-data tables ───────────────────────────────────
-  // SQLite stores the literal default schema-only — adding the column does
-  // NOT rewrite existing rows. New inserts get 'legacy' until callers pass
-  // an explicit tenant_id. The wrapper in `utils/tenancy.js` enforces the
-  // predicate on new code paths.
+  // Nullable column: existing rows get NULL (unattributed) and new inserts
+  // must pass an explicit tenant_id. No shared fallback tenant exists.
   addTenantIdColumn('intel_items');
   addTenantIdColumn('app_preferences');
+
+  // ── Per-tenant API-key edit policy ──────────────────────────────────────
+  // Who, besides owner/admin (who can always edit), may set/clear this
+  // workspace's BYOK keys. The owner picks the policy; selected_member pins
+  // a single delegate via key_write_member_id.
+  addColumnIfMissing(
+    'tenants',
+    'key_write_policy',
+    `TEXT NOT NULL DEFAULT 'owner_only'
+       CHECK(key_write_policy IN ('owner_only','selected_member','all_members'))`
+  );
+  addColumnIfMissing('tenants', 'key_write_member_id', 'TEXT');
+
+  // ── Billing (Stripe) ────────────────────────────────────────────────────
+  // `plan` (base column) is flipped by the Stripe webhook via
+  // utils/billing.js#applySubscription. subscription_status mirrors the
+  // Stripe subscription lifecycle (active/trialing/past_due/canceled/…);
+  // plan_period_end is the current paid-through timestamp (ISO) for UI +
+  // grace decisions. stripe_customer_id already exists on the base table.
+  addColumnIfMissing('tenants', 'subscription_status', `TEXT NOT NULL DEFAULT 'none'`);
+  addColumnIfMissing('tenants', 'stripe_subscription_id', 'TEXT');
+  addColumnIfMissing('tenants', 'plan_period_end', 'TEXT');
+
+  // ── Tamper-evident audit chain ──────────────────────────────────────────
+  // Each audit row carries the hash of the previous row in the same
+  // tenant's chain (prev_hash) and its own hash over the canonical tuple
+  // (row_hash). Altering or deleting any historical row breaks every
+  // subsequent row_hash, so tampering is detectable without external
+  // infrastructure. Existing pre-migration rows keep NULL hashes — the
+  // chain has a documented genesis at the first row written after this
+  // migration (see utils/auditChain.js).
+  addColumnIfMissing('audit_events', 'prev_hash', 'TEXT');
+  addColumnIfMissing('audit_events', 'row_hash', 'TEXT');
+  // Monotonic per-tenant chain position. Ordering the chain by ts/id is
+  // unsafe — `id` is a random UUID (not insertion-ordered) and `ts` can
+  // collide at millisecond resolution, which would let verification
+  // re-order rows and report a false tamper. chain_seq is assigned in the
+  // same transaction as the insert (tip.seq + 1), so it is strictly
+  // increasing and gap-tolerant under the retention sweep.
+  addColumnIfMissing('audit_events', 'chain_seq', 'INTEGER');
+  db.exec(`
+    CREATE INDEX IF NOT EXISTS idx_audit_chain
+      ON audit_events(tenant_id, chain_seq)
+      WHERE row_hash IS NOT NULL;
+  `);
 
   // Indexes that pay off the moment routes start filtering by tenant_id.
   // `IF NOT EXISTS` so re-runs are no-ops.
@@ -217,8 +253,28 @@ function addTenantIdColumn(table) {
   }
   if (cols.length === 0) return;
   if (cols.some((c) => c.name === 'tenant_id')) return;
-  // ADD COLUMN with NOT NULL + DEFAULT 'legacy' is O(1) — SQLite stores the
-  // default value at the schema level until a row gets a different one.
-  db.exec(`ALTER TABLE ${table} ADD COLUMN tenant_id TEXT NOT NULL DEFAULT 'legacy'`);
+  // Nullable, no default: existing rows become NULL (unattributed). SQLite's
+  // limited ALTER can't add NOT NULL without a default, and we no longer
+  // want a shared sentinel tenant, so nullable is the correct shape.
+  db.exec(`ALTER TABLE ${table} ADD COLUMN tenant_id TEXT`);
   console.log(`[tenancy] added tenant_id column to ${table}`);
+}
+
+/**
+ * Generic additive ALTER TABLE ADD COLUMN, guarded by PRAGMA so re-runs are
+ * no-ops. `colDef` is the full SQLite column definition minus the name
+ * (e.g. "TEXT NOT NULL DEFAULT 'x'"). SQLite permits NOT NULL on ADD COLUMN
+ * only when a DEFAULT is supplied, which all callers here do.
+ */
+function addColumnIfMissing(table, colName, colDef) {
+  let cols;
+  try {
+    cols = db.prepare(`PRAGMA table_info(${table})`).all();
+  } catch {
+    return;
+  }
+  if (cols.length === 0) return;
+  if (cols.some((c) => c.name === colName)) return;
+  db.exec(`ALTER TABLE ${table} ADD COLUMN ${colName} ${colDef}`);
+  console.log(`[tenancy] added ${colName} column to ${table}`);
 }

@@ -354,9 +354,17 @@ export function defineFtsMirror({
     // Keyset pagination by uid. Released-lock between batches — collectors
     // writing to base aren't blocked for long.
     const uidExpr = baseUidColumn;
-    const baseSelectColumns = [...textColumns, ...(hasKeywords ? ['keywords'] : [])];
+    // Honor the configured keywordsColumn (aliased to `keywords` so segmentRows
+    // / keywordsTransform see it uniformly). Was previously hardcoded to a
+    // literal `keywords` column, which only worked for mirrors whose base
+    // table happens to have one (intel_items). `"keywords" AS keywords` is a
+    // no-op for those; other mirrors now resolve their real column.
+    const baseSelectSql = [
+      ...textColumns.map((c) => `"${c}"`),
+      ...(hasKeywords ? [`"${keywordsColumn}" AS keywords`] : []),
+    ].join(', ');
     const selectSql =
-      `SELECT ${uidExpr} AS uid, ${baseSelectColumns.map((c) => `"${c}"`).join(', ')} ` +
+      `SELECT ${uidExpr} AS uid, ${baseSelectSql} ` +
       `FROM ${baseTable} ` +
       `WHERE ${uidExpr} > @cursor ` +
       `ORDER BY ${uidExpr} ASC LIMIT @limit`;

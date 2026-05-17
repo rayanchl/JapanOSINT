@@ -1,3 +1,8 @@
+// TENANCY: these endpoints serve `intel_items`, a platform-GLOBAL shared
+// pool (public Japan OSINT collected on one platform-wide schedule — the
+// shared corpus is the product). Reads are intentionally not tenant-scoped;
+// see intelStore.js header. Raw cross-table access is operator-gated on
+// /api/db; per-tenant data lives in alerts/tenant-keys/saved.
 import { Router } from 'express';
 import { listSources, listItems, getItem } from '../utils/intelStore.js';
 import sources from '../utils/sourceRegistry.js';
@@ -117,7 +122,7 @@ router.post('/sources/:id/run', async (req, res) => {
   inFlight.add(id);
   try {
     const startedAt = Date.now();
-    const out = await withCollectorRun(id, () => collectorFn(), { trigger: 'manual' });
+    const out = await withCollectorRun(id, () => collectorFn(), { trigger: 'manual', tenantId: req.tenant?.id });
     // Every source flows through the polymorphic mirror — FC features and
     // intel envelopes both land in intel_items. Whitelist gate retired.
     const fetchedAt = out?.meta?.fetchedAt || out?._meta?.fetchedAt || new Date().toISOString();

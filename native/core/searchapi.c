@@ -1,0 +1,153 @@
+/* core/searchapi.c — see header. Port of routes/search.js (analyze/suggest/
+ * results). The SSE /stream lives in httpd.c (it owns the connection loop). */
+#include "searchapi.h"
+#include "pipeline.h"
+#include "progress.h"
+#include "llm.h"
+#include "httpclient.h"
+#include "../third_party/sqlite3.h"
+#include "../third_party/cJSON.h"
+#include <openssl/rand.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+static void gen_id(char *out33) {
+  unsigned char b[16];
+  if (RAND_bytes(b, 16) != 1) { for (int i = 0; i < 16; i++) b[i] = (unsigned char)rand(); }
+  for (int i = 0; i < 16; i++) sprintf(out33 + i * 2, "%02x", b[i]);
+  out33[32] = 0;
+}
+
+typedef struct {
+  db_handle *db;
+  char id[40];
+  char *query;
+  int max_rounds;
+} run_arg;
+
+/* The whole pipeline is gated by a single local llama-server that handles
+ * one request at a time. Running pipelines concurrently doesn't speed
+ * anything up — it just piles worker threads + per-client curl connection
+ * pools onto that one llama and onto g_lock, starving the single-threaded
+ * httpd event loop (observed: /api/health stops responding, /analyze times
+ * out -> app NSURLError -1001). Serialize: at most one pipeline runs at a
+ * time. A waiting run already shows phase "queued" (set by progress_create
+ * before this thread is spawned), so the SSE stream / UI shows an honest
+ * queue until it acquires the lock. Creating and freeing the http_client
+ * inside the lock also bounds the llama connection pool to a single client
+ * (concurrent runs were each holding their own keep-alive connections). */
+static pthread_mutex_t g_pipeline_lock = PTHREAD_MUTEX_INITIALIZER;
+
+static void *run_thread(void *vp) {
+  run_arg *a = vp;
+  pthread_mutex_lock(&g_pipeline_lock);
+  http_client *http = http_client_new();   /* own client (== scheduler) */
+  llm_client llm; llm_init(&llm, http);
+  osint_pipeline_run(a->db, &llm, a->id, a->query, a->max_rounds);
+  http_client_free(http);
+  pthread_mutex_unlock(&g_pipeline_lock);
+  free(a->query);
+  free(a);
+  return NULL;
+}
+
+char *searchapi_analyze(db_handle *db, const char *query, int max_rounds) {
+  if (!query) return NULL;
+  while (*query == ' ' || *query == '\t' || *query == '\n' || *query == '\r') query++;
+  if (!*query) return NULL;
+
+  char id[40];
+  gen_id(id);
+  if (!progress_create(id, query, max_rounds > 0 ? max_rounds : 5))
+    return NULL;
+
+  run_arg *a = calloc(1, sizeof *a);
+  a->db = db;
+  snprintf(a->id, sizeof a->id, "%s", id);
+  a->query = strdup(query);
+  a->max_rounds = max_rounds;
+  pthread_t t;
+  if (pthread_create(&t, NULL, run_thread, a) == 0) {
+    pthread_detach(t);
+  } else {
+    free(a->query); free(a);
+    return NULL;
+  }
+
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddStringToObject(o, "request_id", id);
+  cJSON_AddStringToObject(o, "status", "processing");
+  cJSON_AddStringToObject(o, "query", query);
+  char *s = cJSON_PrintUnformatted(o);
+  cJSON_Delete(o);
+  return s;
+}
+
+char *searchapi_suggest(const char *q) {
+  cJSON *o = cJSON_CreateObject();
+  if (!q || !*q) {
+    cJSON_AddItemToObject(o, "suggestions", cJSON_CreateArray());
+  } else {
+    http_client *http = http_client_new();
+    llm_client llm; llm_init(&llm, http);
+    char *arr = osint_suggest(&llm, q);          /* JSON array string */
+    http_client_free(http);
+    cJSON *a = arr ? cJSON_Parse(arr) : NULL;
+    free(arr);
+    cJSON_AddItemToObject(o, "suggestions",
+                          (a && cJSON_IsArray(a)) ? a : cJSON_CreateArray());
+    if (a && !cJSON_IsArray(a)) cJSON_Delete(a);
+  }
+  char *s = cJSON_PrintUnformatted(o);
+  cJSON_Delete(o);
+  return s ? s : strdup("{\"suggestions\":[]}");
+}
+
+char *searchapi_results(db_handle *db, const char *id) {
+  if (!id || !*id) return NULL;
+  osint_request *rp = progress_get(id);
+  if (rp) return progress_to_json(rp);
+
+  /* Server restarted: reconstruct from the persisted run row (== JS else). */
+  char uid[128];
+  snprintf(uid, sizeof uid, "osint-search|run:%s", id);
+  sqlite3_stmt *st = NULL;
+  char *out = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT title,summary,properties FROM intel_items WHERE uid=?1",
+        -1, &st, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(st, 1, uid, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(st) == SQLITE_ROW) {
+      const char *title = (const char *)sqlite3_column_text(st, 0);
+      const char *summary = (const char *)sqlite3_column_text(st, 1);
+      const char *pjs = (const char *)sqlite3_column_text(st, 2);
+      cJSON *p = pjs ? cJSON_Parse(pjs) : NULL;
+      cJSON *o = cJSON_CreateObject();
+      cJSON_AddStringToObject(o, "request_id", id);
+      cJSON *pq = p ? cJSON_GetObjectItem(p, "query") : NULL;
+      cJSON_AddStringToObject(o, "query",
+        (pq && cJSON_IsString(pq)) ? pq->valuestring : (title ? title : ""));
+      cJSON *pp = p ? cJSON_GetObjectItem(p, "phase") : NULL;
+      cJSON_AddStringToObject(o, "phase",
+        (pp && cJSON_IsString(pp)) ? pp->valuestring : "completed");
+      cJSON_AddNumberToObject(o, "progress_percent", 100);
+      cJSON *pe = p ? cJSON_GetObjectItem(p, "entities") : NULL;
+      cJSON_AddItemToObject(o, "entities",
+        pe ? cJSON_Duplicate(pe, 1) : cJSON_CreateArray());
+      cJSON *ps = p ? cJSON_GetObjectItem(p, "stats") : NULL;
+      cJSON_AddItemToObject(o, "stats",
+        ps ? cJSON_Duplicate(ps, 1) : cJSON_CreateObject());
+      cJSON *r = cJSON_CreateObject();
+      cJSON_AddStringToObject(r, "synthesis", summary ? summary : "");
+      cJSON_AddItemToObject(o, "results", r);
+      cJSON_AddBoolToObject(o, "from_store", 1);
+      out = cJSON_PrintUnformatted(o);
+      cJSON_Delete(o);
+      if (p) cJSON_Delete(p);
+    }
+  }
+  sqlite3_finalize(st);
+  return out;   /* NULL → caller 404 not_found */
+}

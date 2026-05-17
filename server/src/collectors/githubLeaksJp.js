@@ -49,11 +49,12 @@ async function searchOne(token, q) {
 }
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const SOURCE_ID = 'github-leaks-jp';
 
 export default async function collectGithubLeaksJp() {
-  const token = process.env.GITHUB_TOKEN;
+  const token = envFor('GITHUB_TOKEN');
   if (!token) {
     return intelEnvelope({
       sourceId: SOURCE_ID,

@@ -5,7 +5,7 @@ import Combine
 struct CameraDiscoveryView: View {
     let onShowOnMap: (CLLocationCoordinate2D, GeoFeature) -> Void
 
-    @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var ws: WebSocketClient
     @EnvironmentObject var saved: SavedStore
     @EnvironmentObject var registry: LayerRegistry
@@ -17,6 +17,7 @@ struct CameraDiscoveryView: View {
     @State private var loadingMore = false
     @State private var triggering = false
     @State private var triggerError: String?
+    @State private var loadMoreError: String?
     @State private var subscription: AnyCancellable?
     @State private var seeded = false
     @State private var selectedFeature: GeoFeature?
@@ -42,7 +43,7 @@ struct CameraDiscoveryView: View {
         var label: String { rawValue.capitalized }
     }
 
-    enum FeedAvailability: String, CaseIterable, Identifiable {
+    enum FeedAvailability: String, FilterChoice {
         case all, has, none
         var id: String { rawValue }
         var label: String {
@@ -77,14 +78,9 @@ struct CameraDiscoveryView: View {
         )
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
+                FilterToolbarButton(isActive: filtersAreActive) {
                     showFilters = true
-                } label: {
-                    Image(systemName: filtersAreActive
-                          ? "line.3.horizontal.decrease.circle.fill"
-                          : "line.3.horizontal.decrease.circle")
                 }
-                .accessibilityLabel("Filters")
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -225,6 +221,14 @@ struct CameraDiscoveryView: View {
             .controlSize(.small)
             .disabled(loadingMore)
             .padding(.top, 4)
+            if let loadMoreError {
+                Text(loadMoreError)
+                    .font(.caption2)
+                    .foregroundStyle(theme.danger)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
+                    .accessibilityLabel("Failed to load older cameras: \(loadMoreError)")
+            }
         }
     }
 
@@ -537,57 +541,25 @@ struct CameraDiscoveryView: View {
     // MARK: - Filters sheet
 
     private var filtersSheet: some View {
-        NavigationStack {
-            Form {
-                Section("Feed availability") {
-                    Picker("Feed availability", selection: $feedAvailability) {
-                        ForEach(FeedAvailability.allCases) { fa in
-                            Text(fa.label).tag(fa)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                }
-                Section("Camera source") {
-                    if availableChannels.isEmpty {
-                        Text("No sources yet")
-                            .foregroundStyle(theme.textMuted)
-                    } else {
-                        ForEach(availableChannels, id: \.channel) { entry in
-                            Button { toggleChannel(entry.channel) } label: {
-                                HStack {
-                                    Text(entry.channel)
-                                        .foregroundStyle(theme.text)
-                                    Spacer()
-                                    Text("\(entry.count)")
-                                        .font(.caption2.monospaced())
-                                        .foregroundStyle(theme.textMuted)
-                                    if selectedChannels.contains(entry.channel) {
-                                        Image(systemName: "checkmark")
-                                            .foregroundStyle(theme.accent)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                if filtersAreActive {
-                    Section {
-                        Button("Reset filters", role: .destructive) {
-                            selectedChannels.removeAll()
-                            feedAvailability = .all
-                        }
-                    }
-                }
-            }
-            .navigationTitle("Filters")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") { showFilters = false }
-                }
-            }
+        FilterSheet(
+            isActive: filtersAreActive,
+            onReset: {
+                selectedChannels.removeAll()
+                feedAvailability = .all
+            },
+            onDone: { showFilters = false }
+        ) {
+            FilterSegmentedSection(title: "Feed availability", selection: $feedAvailability)
+            FilterMultiSelectSection(
+                title: "Camera source",
+                items: availableChannels.map(\.channel),
+                emptyText: "No sources yet",
+                label: { $0 },
+                count: { ch in availableChannels.first { $0.channel == ch }?.count ?? 0 },
+                isSelected: { selectedChannels.contains($0) },
+                toggle: { toggleChannel($0) }
+            )
         }
-        .presentationDetents([.medium, .large])
     }
 
     // MARK: - Feature / saved bridges (unchanged)
@@ -673,7 +645,7 @@ struct CameraDiscoveryView: View {
         guard !seeded else { return }
         seeded = true
         do {
-            let result = try await API(baseURL: settings.backendBaseURL)
+            let result = try await apiClient.api
                 .cameraDiscoveryFeed(limit: 1000)
             await MainActor.run {
                 // Live events that landed before the seed finished take
@@ -695,7 +667,7 @@ struct CameraDiscoveryView: View {
         loadingMore = true
         defer { loadingMore = false }
         do {
-            let result = try await API(baseURL: settings.backendBaseURL)
+            let result = try await apiClient.api
                 .cameraDiscoveryFeed(limit: 1000, cursor: cursor)
             await MainActor.run {
                 let already = Set(events.map(\.id))
@@ -704,15 +676,21 @@ struct CameraDiscoveryView: View {
                 let trimmed = merged.suffix(2000)
                 events = Array(trimmed)
                 feedCursor = result.cursor
+                loadMoreError = nil
             }
-        } catch { /* keep cursor so user can retry */ }
+        } catch {
+            // Keep the cursor so the button stays tappable for a retry, but
+            // tell the user why the last page didn't load.
+            await MainActor.run { loadMoreError = error.localizedDescription }
+            Haptics.error()
+        }
     }
 
     private func trigger() async {
         triggering = true
         defer { triggering = false }
         do {
-            try await API(baseURL: settings.backendBaseURL).triggerCameraDiscovery()
+            try await apiClient.api.triggerCameraDiscovery()
             triggerError = nil
         } catch {
             triggerError = error.localizedDescription

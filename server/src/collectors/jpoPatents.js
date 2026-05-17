@@ -26,7 +26,8 @@ export default async function collectJpoPatents() {
       tags: ['patent', 'jpo', 'inpit', live ? 'reachable' : 'unreachable'],
       properties: { operator: 'INPIT', reachable: live },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'JPO J-PlatPat — patents / utility models / designs / trademarks',
   });
 }

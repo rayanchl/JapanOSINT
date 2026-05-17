@@ -5,8 +5,10 @@
  */
 
 import { fetchOverpass } from './_liveHelpers.js';
+import { envFor } from '../utils/collectorEnv.js';
 
-const RESAS_KEY = process.env.RESAS_API_KEY || '';
+// Lazy read so tenant BYOK overrides land without a server restart.
+const resasKey = () => envFor('RESAS_API_KEY') || '';
 const RESAS_URL = 'https://opendata.resas-portal.go.jp/api/v1/industry/power/forArea';
 
 const SEED_INDUSTRY = [
@@ -51,6 +53,7 @@ const SEED_INDUSTRY = [
 ];
 
 async function tryResas() {
+  const RESAS_KEY = resasKey();
   if (!RESAS_KEY) return null;
   try {
     const ctrl = new AbortController();

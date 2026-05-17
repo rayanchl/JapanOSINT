@@ -12,6 +12,7 @@
  */
 
 import { intelEnvelope, intelUid, intelHashKey } from '../utils/intelHelpers.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const SOURCE_ID = 'phishing-feeds-jp';
 const URL_OPENPHISH = 'https://openphish.com/feed.txt';
@@ -73,7 +74,7 @@ function parsePhishtankCsv(text) {
 }
 
 export default async function collectPhishingFeedsJp() {
-  const ptKey = process.env.PHISHTANK_APP_KEY || '';
+  const ptKey = envFor('PHISHTANK_APP_KEY') || '';
   const [opText, ptText] = await Promise.all([
     fetchText(URL_OPENPHISH, { 'user-agent': 'japanosint-collector' }),
     fetchText(`${URL_PHISHTANK}${ptKey ? `?app_key=${encodeURIComponent(ptKey)}` : ''}`, {

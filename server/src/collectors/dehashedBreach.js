@@ -8,13 +8,13 @@
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
 import { fetchHead } from './_liveHelpers.js';
-import { getEnv } from '../utils/credentials.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const SOURCE_ID = 'dehashed-breach';
 const PROBE_URL = 'https://api.dehashed.com/';
 
 export default async function collectDehashedBreach() {
-  const hasKey = !!(getEnv(null, 'DEHASHED_USER') && getEnv(null, 'DEHASHED_KEY'));
+  const hasKey = !!(envFor('DEHASHED_USER') && envFor('DEHASHED_KEY'));
   const live = await fetchHead(PROBE_URL).catch(() => false);
   return intelEnvelope({
     sourceId: SOURCE_ID,
@@ -28,7 +28,8 @@ export default async function collectDehashedBreach() {
       tags: ['breach', 'credential', 'dehashed', live ? 'reachable' : 'unreachable', hasKey ? 'key-present' : 'key-missing'],
       properties: { reachable: live, requires_key: true, has_key: hasKey },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'DeHashed credential breach lookup (paid)',
   });
 }

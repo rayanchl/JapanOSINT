@@ -7,6 +7,7 @@ import {
 } from './database.js';
 import { getFixtureMeta, loadFixture } from './collectorFixtures.js';
 import { chat as llmChat } from './llmClient.js';
+import { withLlmSlot } from './llmConcurrency.js';
 
 const TRIAGE_MODEL = process.env.LLM_TRIAGE_MODEL || undefined;
 const TRIAGE_TIMEOUT_MS = Number(process.env.LLM_TRIAGE_TIMEOUT_MS || 30_000);
@@ -166,12 +167,16 @@ export async function triageOne(anomalyId) {
     { role: 'user', content: JSON.stringify(bundle) },
   ];
 
-  const verdict = await llmChat({
-    messages,
-    jsonSchema: TRIAGE_SCHEMA,
-    timeoutMs: TRIAGE_TIMEOUT_MS,
-    model: TRIAGE_MODEL,
-  });
+  // Triage runs on the 12B classifier — share the 'mid' tier with the
+  // repair worker's fast path so the two can't thrash the box together.
+  const verdict = await withLlmSlot('mid', () =>
+    llmChat({
+      messages,
+      jsonSchema: TRIAGE_SCHEMA,
+      timeoutMs: TRIAGE_TIMEOUT_MS,
+      model: TRIAGE_MODEL,
+    }),
+  );
 
   if (!verdict) {
     console.warn(`[triage] LLM returned null for anomaly #${anomalyId} (source ${source.id})`);

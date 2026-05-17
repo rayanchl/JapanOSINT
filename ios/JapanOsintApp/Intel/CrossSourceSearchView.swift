@@ -11,7 +11,7 @@ import SwiftUI
 struct CrossSourceSearchView: View {
     let bilingual: BilingualQuery
 
-    @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @Environment(\.theme) private var theme
 
     @State private var items: [IntelItem] = []
@@ -130,7 +130,7 @@ struct CrossSourceSearchView: View {
         try? await Task.sleep(for: .milliseconds(250))    // debounce
         guard taskKey == lastKey else { return }
         do {
-            let env = try await API(baseURL: settings.backendBaseURL).intelItems(
+            let env = try await apiClient.api.intelItems(
                 q: trimmed,
                 qAlt: bilingual.translated,
                 limit: 100

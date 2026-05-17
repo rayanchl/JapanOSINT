@@ -8,6 +8,8 @@
  * API:  GET https://api.github.com/repos/nomi-sec/PoC-in-GitHub/contents/<year>
  */
 
+import { envFor } from '../utils/collectorEnv.js';
+
 const REPO_API = 'https://api.github.com/repos/nomi-sec/PoC-in-GitHub/contents';
 const RAW_BASE = 'https://raw.githubusercontent.com/nomi-sec/PoC-in-GitHub/master';
 const TIMEOUT_MS = 15000;
@@ -16,7 +18,7 @@ const TOKYO = [139.6917, 35.6895];
 const SAMPLE_LIMIT = Number(process.env.POC_IN_GITHUB_LIMIT || 60);
 
 async function ghJson(url) {
-  const token = process.env.GITHUB_TOKEN || '';
+  const token = envFor('GITHUB_TOKEN') || '';
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   const res = await fetch(url, {

@@ -4,6 +4,8 @@
  * Falls back to a curated seed of recent significant intensity events.
  */
 
+import { intelHashKey } from '../utils/intelHelpers.js';
+
 const JMA_QUAKE_LIST = 'https://www.jma.go.jp/bosai/quake/data/list.json';
 
 const SEED_INTENSITY = [
@@ -52,7 +54,7 @@ async function tryJma() {
         type: 'Feature',
         geometry: { type: 'Point', coordinates: [parseFloat(q.cod?.split('+')?.[1]) || 139.0, parseFloat(q.cod?.split('+')?.[0]) || 36.0] },
         properties: {
-          event_id: `JMA_INT_${String(i + 1).padStart(5, '0')}`,
+          event_id: `JMA_INT_${intelHashKey(q.anm, q.at, q.mag, q.cod)}`,
           name: q.anm || 'Unknown',
           magnitude: parseFloat(q.mag) || null,
           intensity: q.maxi || null,
@@ -74,7 +76,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [q.lon, q.lat] },
     properties: {
-      event_id: `JMA_INT_${String(i + 1).padStart(5, '0')}`,
+      event_id: `JMA_INT_${intelHashKey(q.name, q.date, q.lat, q.lon)}`,
       name: q.name,
       magnitude: q.magnitude,
       intensity: q.intensity,

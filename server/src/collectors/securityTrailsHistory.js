@@ -29,7 +29,8 @@ export default async function collectSecurityTrailsHistory() {
       tags: ['dns', 'history', 'securitytrails', live ? 'reachable' : 'unreachable', hasKey ? 'key-present' : 'key-missing'],
       properties: { reachable: live, requires_key: true, has_key: hasKey },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'SecurityTrails — historical DNS A/MX/TXT lookups',
   });
 }

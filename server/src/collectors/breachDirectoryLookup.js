@@ -28,7 +28,8 @@ export default async function collectBreachDirectory() {
       tags: ['breach', 'rapidapi', live ? 'reachable' : 'unreachable', hasKey ? 'key-present' : 'key-missing'],
       properties: { reachable: live, requires_key: true, has_key: hasKey },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'BreachDirectory.org email/username breach lookup',
   });
 }

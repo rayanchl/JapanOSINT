@@ -14,10 +14,10 @@ import { applyOverlayToEnv } from './utils/apiKeysStore.js';
 applyOverlayToEnv();
 
 // Tenancy schema migration — additive only, idempotent. Runs every boot.
-// Multi-tenant routing is gated by MULTI_TENANT_ENABLED so legacy
-// single-tenant deployments keep working unchanged.
 import { runTenancyMigration } from './utils/tenancyMigration.js';
 runTenancyMigration();
+import { runEntityMigration } from './utils/entityMigration.js';
+runEntityMigration();
 
 import sourcesRouter from './routes/sources.js';
 import layersRouter from './routes/layers.js';
@@ -30,15 +30,27 @@ import dbRouter from './routes/db.js';
 import plateauCatalogRouter from './routes/plateauCatalog.js';
 import intelRouter from './routes/intel.js';
 import apiKeysRouter from './routes/apiKeys.js';
+import tenantKeysRouter from './routes/tenantKeys.js';
 import adminRouter from './routes/admin.js';
 import alertsRouter from './routes/alerts.js';
+import auditRouter from './routes/audit.js';
+import meRouter from './routes/me.js';
 import breakGlassRouter from './routes/breakGlass.js';
-import { requireSupabaseAuth, MULTI_TENANT_ENABLED } from './middleware/auth.js';
+import searchRouter, { searchStreamHandler } from './routes/search.js';
+import entitiesRouter from './routes/entities.js';
+import billingRouter, { billingWebhookHandler } from './routes/billing.js';
+import { requireActiveSubscription } from './utils/billing.js';
+import { requireSupabaseAuth } from './middleware/auth.js';
 import { resolveTenant } from './middleware/tenant.js';
 import { auditWriter } from './middleware/audit.js';
 import { rateLimit } from './middleware/rateLimit.js';
+import { requirePlatformOperator } from './middleware/keyAccess.js';
+import db from './utils/database.js';
+import { runRetention } from './utils/retention.js';
 import { startScheduler } from './utils/scheduler.js';
 import { startTriageWorker } from './utils/collectorTriage.js';
+import { startRepairWorker, logMaintenancePodConfig } from './utils/collectorRepair.js';
+import { startDigestCron } from './utils/maintenanceReport.js';
 import { installFetchTap, setBroadcaster } from './utils/collectorTap.js';
 import { runBulkHydrate } from './utils/gtfsBulkHydrate.js';
 import { refreshFeedCatalogue, refreshRtFeedCatalogue } from './utils/gtfsStore.js';
@@ -73,7 +85,27 @@ app.use(cors({
     ? false
     : allowedOrigins.includes('*') ? '*' : allowedOrigins,
 }));
-app.use(compression());
+// compression() buffers responses, which silently breaks Server-Sent Events
+// (the stream never flushes). Exempt any text/event-stream response — both by
+// the response Content-Type (set by SSE handlers before first write) and by
+// the request Accept header as a belt-and-suspenders guard.
+const sseCompressionFilter = (req, res) => {
+  const ct = String(res.getHeader('Content-Type') || '');
+  if (ct.includes('text/event-stream')) return false;
+  if (String(req.headers.accept || '').includes('text/event-stream')) return false;
+  return compression.filter(req, res);
+};
+app.use(compression({ filter: sseCompressionFilter }));
+
+// Stripe webhook — registered BEFORE express.json() so req.body is the raw
+// Buffer Stripe's signature is computed over, and BEFORE the /api auth chain
+// because Stripe can't present a Supabase JWT (integrity = signed payload).
+app.post(
+  '/api/billing/webhook',
+  express.raw({ type: 'application/json' }),
+  billingWebhookHandler,
+);
+
 app.use(express.json());
 
 // ── Health check (BEFORE auth — must answer even during outages) ──────
@@ -81,17 +113,25 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// ── Auth + tenant + audit + rate-limit (MULTI_TENANT_ENABLED only) ────
+// (Phase-0 SSE self-test route removed — the real /api/search/stream is live
+// and the compression exemption below is the durable fix it validated.)
+
+// OSINT-search SSE — BEFORE the /api auth middleware because EventSource
+// cannot send the Authorization header. The request_id is an unguessable
+// UUID minted by POST /api/search/analyze (which IS authenticated), so it
+// acts as the capability for the read-only progress stream.
+app.get('/api/search/stream/:id', searchStreamHandler);
+
+// ── Auth + tenant + audit + rate-limit ───────────────────────────────────
 // Order matters: auth populates req.supabaseUser; tenant materialises
-// req.tenant; audit + rate-limit both need req.tenant. Each middleware
-// is itself flag-aware and no-ops when disabled, so this stack is safe
-// to leave wired even in legacy single-tenant mode.
-if (MULTI_TENANT_ENABLED) {
-  app.use('/api', requireSupabaseAuth, resolveTenant, rateLimit, auditWriter);
-  console.log('[boot] multi-tenant mode ON — Supabase auth + tenant resolution + rate-limit + audit active');
-} else {
-  console.log('[boot] multi-tenant mode OFF — running in legacy single-tenant mode');
-}
+// req.tenant; audit + rate-limit both need req.tenant. Always on — every
+// /api request must authenticate and resolve a tenant.
+// requireActiveSubscription gates paid plans on a live Stripe subscription
+// (free tier always passes; /api/billing + /api/me stay reachable so a lapsed
+// tenant can re-subscribe). It sits before rateLimit so a 402 short-circuits
+// before we spend a token bucket.
+app.use('/api', requireSupabaseAuth, resolveTenant, requireActiveSubscription, rateLimit, auditWriter);
+console.log('[boot] Supabase auth + tenant resolution + subscription gate + rate-limit + audit active');
 
 // ── API Routes ─────────────────────────────────────────────────────────
 app.use('/api/sources', sourcesRouter);
@@ -101,17 +141,34 @@ app.use('/api/geocode', geocodeRouter);
 app.use('/api/status', statusRouter);
 app.use('/api/follow', followRouter);
 app.use('/api/transit', transitRouter);
-app.use('/api/db', dbRouter);
+// Raw DB explorer exposes every table (incl. tenant_secrets, audit_events,
+// all tenants' intel/cameras) — platform-operator only.
+app.use('/api/db', requirePlatformOperator, dbRouter);
 app.use('/api/plateau', plateauCatalogRouter);
 app.use('/api/intel', intelRouter);
 app.use('/api/keys', apiKeysRouter);
-app.use('/api/admin', adminRouter);
+app.use('/api/tenant-keys', tenantKeysRouter);
+// Server restart + maintenance internals — platform-operator only (a tenant
+// `owner` is not a platform operator).
+app.use('/api/admin', requirePlatformOperator, adminRouter);
 app.use('/api/alerts', alertsRouter);
+app.use('/api/billing', billingRouter);
+app.use('/api/search', searchRouter);
+app.use('/api/entities', entitiesRouter);
+app.use('/api/audit', auditRouter);
+app.use('/api/me', meRouter);
 // Break-glass admin path. Off unless BREAK_GLASS_ENABLED=1; the router
 // itself 404s when disabled. Intentionally NOT under /api/admin so it
 // can be reached without auth middleware getting in the way during an
 // outage.
 app.use('/admin/break-glass', breakGlassRouter);
+
+// Unknown /api/* path → JSON 404. Registered after every /api router and
+// before the SPA fallback so a mistyped/removed endpoint returns a parseable
+// error instead of a 200 index.html (which silently breaks the client).
+app.use('/api', (req, res) => {
+  res.status(404).json({ error: 'not_found', path: req.originalUrl });
+});
 
 // ── Serve static files in production ───────────────────────────────────
 const clientDist = resolve(__dirname, '../../client/dist');
@@ -183,8 +240,17 @@ startShipPoller();
     return;
   }
   startScheduler(wss);
+  // Surface every maintenance-pod option on every boot — `npm start` takes
+  // no flags, so this banner is how an operator sees what they can set.
+  logMaintenancePodConfig();
   // Maintenance-pod triage worker (Phase 2). No-ops unless LLM_ENABLED=true.
   startTriageWorker();
+  // Maintenance-pod repair worker (Phase 3). No-ops unless LLM_ENABLED=true;
+  // dry by default (records verified patches, opens nothing) unless
+  // REPAIR_GIT/REPAIR_PR/REPAIR_AUTO_MERGE are explicitly set.
+  startRepairWorker();
+  // Phase 4 daily maintenance digest (read-only — runs even with LLM off).
+  startDigestCron();
   try {
     await rebuildAllAtBoot();
   } catch (err) {
@@ -247,6 +313,18 @@ const trainInfoTask = cron.schedule(
   { timezone: 'Asia/Tokyo' },
 );
 
+// Daily 04:10 JST: enforce data retention so the SQLite file doesn't grow
+// unbounded (intel_items / alert_events / audit_events). Auto-stopped by the
+// cron.getTasks() loop in shutdown().
+const retentionTask = cron.schedule(
+  '10 4 * * *',
+  () => {
+    try { runRetention(); }
+    catch (err) { console.error('[retention] run failed:', err?.message); }
+  },
+  { timezone: 'Asia/Tokyo' },
+);
+
 // ── 500 handler ────────────────────────────────────────────────────────
 // Last-resort catch for anything a route forwarded via next(err). Keeps the
 // response shape predictable and never leaks stack traces. Routes that hit
@@ -276,6 +354,7 @@ async function shutdown(signal) {
   clearInterval(heartbeat);
   try { weeklyHydrateTask.stop(); } catch { /* ignore */ }
   try { trainInfoTask.stop(); } catch { /* ignore */ }
+  try { retentionTask.stop(); } catch { /* ignore */ }
   try { stopPlanePoller(); } catch { /* ignore */ }
   try { stopShipPoller(); } catch { /* ignore */ }
   // node-cron exposes the active task list; stop everything we registered.
@@ -297,6 +376,14 @@ async function shutdown(signal) {
   force.unref();
   server.close(() => {
     clearTimeout(force);
+    // Checkpoint the WAL into the main DB and close the handle so the last
+    // in-flight writes are durable and not left in -wal/-shm.
+    try {
+      db.pragma('wal_checkpoint(TRUNCATE)');
+      db.close();
+    } catch (err) {
+      console.error('[server] DB close failed:', err?.message);
+    }
     process.exit(0);
   });
 }

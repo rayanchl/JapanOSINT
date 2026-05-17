@@ -7,25 +7,14 @@
  * the log entry includes the final status code without slowing the response
  * path. Write failures are swallowed: the audit log must never crash a
  * request.
- *
- * Behind MULTI_TENANT_ENABLED.
  */
 
 import { randomUUID } from 'crypto';
-import db from '../utils/database.js';
-import { MULTI_TENANT_ENABLED } from './auth.js';
+import { appendAuditEvent } from '../utils/auditChain.js';
 
 const READ_SAMPLE_RATE = 0.10;
 
-const insertStmt = db.prepare(`
-  INSERT INTO audit_events
-    (id, tenant_id, user_id, action, target, payload_json, ts, ip, ua)
-  VALUES
-    (?, ?, ?, ?, ?, ?, datetime('now'), ?, ?)
-`);
-
 export function auditWriter(req, res, next) {
-  if (!MULTI_TENANT_ENABLED) return next();
   // No tenant context yet (e.g. /api/health, auth failures) — skip; the
   // middleware before us already 401'd if a tenant was required.
   if (!req.tenant) return next();
@@ -49,16 +38,19 @@ export function auditWriter(req, res, next) {
 
   res.on('finish', () => {
     try {
-      insertStmt.run(
-        randomUUID(),
+      // appendAuditEvent links this row into the tenant's tamper-evident
+      // hash chain (prev_hash → row_hash) inside one SQLite transaction,
+      // so concurrent finishes serialise instead of forking the chain.
+      appendAuditEvent({
+        id: randomUUID(),
         tenantId,
         userId,
         action,
         target,
-        JSON.stringify({ ...body, status: res.statusCode }),
+        payloadJson: JSON.stringify({ ...body, status: res.statusCode }),
         ip,
         ua,
-      );
+      });
     } catch (err) {
       console.error('[audit] insert failed:', err.message);
     }

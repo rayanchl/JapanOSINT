@@ -15,7 +15,7 @@ import SwiftUI
 struct AlertEditor: View {
     let onSave: (AlertRule) -> Void
 
-    @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @Environment(\.theme) private var theme
     @Environment(\.dismiss) private var dismiss
 
@@ -161,11 +161,14 @@ struct AlertEditor: View {
                 Spacer()
             }
             TextField(
-                ch.type == .email ? "email@example.com" : "https://example.com/hook",
+                "",
                 text: Binding(
                     get: { channels[idx].target },
                     set: { channels[idx].target = $0 }
-                )
+                ),
+                prompt: Text(ch.type == .email ? "email@example.com"
+                                               : "https://example.com/hook")
+                    .foregroundColor(theme.accent)
             )
             .textInputAutocapitalization(.never)
             .autocorrectionDisabled()
@@ -174,10 +177,15 @@ struct AlertEditor: View {
             .fontDesign(.monospaced)
 
             if ch.type == .webhook {
-                SecureField("Signing secret (≥16 chars)", text: Binding(
-                    get: { channels[idx].secret ?? "" },
-                    set: { channels[idx].secret = $0 }
-                ))
+                SecureField(
+                    "",
+                    text: Binding(
+                        get: { channels[idx].secret ?? "" },
+                        set: { channels[idx].secret = $0 }
+                    ),
+                    prompt: Text("Signing secret (≥16 chars)")
+                        .foregroundColor(theme.accent)
+                )
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
                 .font(.system(.body, design: .monospaced))
@@ -229,7 +237,7 @@ struct AlertEditor: View {
         )
 
         do {
-            let api = API(baseURL: settings.backendBaseURL)
+            let api = apiClient.api
             let saved = isCreate ? try await api.alertCreate(rule) : try await api.alertUpdate(rule)
             onSave(saved)
             Haptics.success()

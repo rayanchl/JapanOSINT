@@ -29,7 +29,8 @@ export default async function collectWhoisXmlReverse() {
       tags: ['whois', 'reverse', 'whoisxml', live ? 'reachable' : 'unreachable', hasKey ? 'key-present' : 'key-missing'],
       properties: { reachable: live, requires_key: true, has_key: hasKey },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'WhoisXMLAPI bulk + reverse-WHOIS — registrant pivots for JP corps / ministries',
   });
 }

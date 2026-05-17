@@ -15,6 +15,7 @@
  */
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const SOURCE_ID = 'urlscan-jp';
 const BASE = 'https://urlscan.io/api/v1/search/';
@@ -28,7 +29,8 @@ const DEFAULT_QUERY = process.env.URLSCAN_QUERY || 'page.country:JP';
 export default async function collectUrlscanJp() {
   const params = new URLSearchParams({ q: DEFAULT_QUERY, size: '100' });
   const headers = { accept: 'application/json' };
-  if (process.env.URLSCAN_API_KEY) headers['API-Key'] = process.env.URLSCAN_API_KEY;
+  const urlscanKey = envFor('URLSCAN_API_KEY');
+  if (urlscanKey) headers['API-Key'] = urlscanKey;
 
   let items = [];
   let live = false;

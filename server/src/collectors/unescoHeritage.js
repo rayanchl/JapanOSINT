@@ -4,6 +4,7 @@
  */
 
 import { fetchText } from './_liveHelpers.js';
+import { intelHashKey } from '../utils/intelHelpers.js';
 
 async function tryLive() {
   const xml = await fetchText('https://whc.unesco.org/en/list/xml/');
@@ -23,7 +24,7 @@ async function tryLive() {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [lon, lat] },
       properties: {
-        whs_id: `WHS_LIVE_${String(features.length + 1).padStart(5, '0')}`,
+        whs_id: `WHS_LIVE_${intelHashKey(name, lat, lon)}`,
         name,
         name_en: name,
         kind: (category || '').toLowerCase() || 'cultural',
@@ -72,7 +73,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [s.lon, s.lat] },
     properties: {
-      whs_id: `WHS_${String(i + 1).padStart(5, '0')}`,
+      whs_id: `WHS_${intelHashKey(s.name, s.lon, s.lat)}`,
       name: s.name,
       name_en: s.name_en,
       kind: s.kind,

@@ -4,7 +4,10 @@
  * Returns an empty FeatureCollection when MLS_API_KEY is unset.
  */
 
-const MLS_API_KEY = process.env.MLS_API_KEY || '';
+import { envFor } from '../utils/collectorEnv.js';
+
+// Lazy read so tenant BYOK overrides land without a server restart.
+const mlsApiKey = () => envFor('MLS_API_KEY') || '';
 
 const COMMON_JP_BSSIDS = [
   { bssid: '00:1A:79:00:00:01', ssid: 'docomo Wi-Fi', channel: 1, lat: 35.6812, lon: 139.7671 },
@@ -30,6 +33,7 @@ const COMMON_JP_BSSIDS = [
 ];
 
 export default async function collectWifiNetworksMls() {
+  const MLS_API_KEY = mlsApiKey();
   if (!MLS_API_KEY) {
     return {
       type: 'FeatureCollection',

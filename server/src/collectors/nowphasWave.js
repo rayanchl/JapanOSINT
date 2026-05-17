@@ -4,6 +4,8 @@
  * Falls back to seed of major NOWPHAS observation buoys.
  */
 
+import { intelHashKey } from '../utils/intelHelpers.js';
+
 const NOWPHAS_URL = 'https://nowphas.mlit.go.jp/pastdata';
 
 const SEED_NOWPHAS_BUOYS = [
@@ -59,7 +61,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [b.lon, b.lat] },
     properties: {
-      buoy_id: `NPS_${String(i + 1).padStart(5, '0')}`,
+      buoy_id: `NPS_${intelHashKey(b.name, b.lat, b.lon)}`,
       name: b.name,
       wave_height_m: b.height_m,
       period_s: b.period_s,

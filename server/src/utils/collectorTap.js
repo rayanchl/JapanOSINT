@@ -31,6 +31,7 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 import crypto from 'node:crypto';
 import sources from './sourceRegistry.js';
+import { recordCollectorUsage } from './usage.js';
 
 const RING_CAPACITY = 5000;
 
@@ -133,7 +134,24 @@ function safeContentLength(headers) {
  * @param {object} [opts]
  * @param {string} [opts.trigger='on-demand']  'cron'|'on-demand'|'boot'
  */
-export async function withCollectorRun(key, fn, { trigger = 'on-demand' } = {}) {
+/**
+ * Flush per-tenant usage for a finished run. No-op unless the run carried a
+ * tenant id AND a credential was actually consumed (set by noteCredentialUse
+ * via collectorEnv.envFor). Idempotent — guarded by ctx._usage_flushed.
+ */
+function flushUsage(ctx) {
+  if (!ctx || ctx._usage_flushed) return;
+  ctx._usage_flushed = true;
+  if (!ctx.tenant_id) return;
+  recordCollectorUsage({
+    tenantId: ctx.tenant_id,
+    sourceId: ctx.source_id,
+    usedTenant: !!ctx.used_tenant_cred,
+    usedPlatform: !!ctx.used_platform_cred,
+  });
+}
+
+export async function withCollectorRun(key, fn, { trigger = 'on-demand', tenantId = null } = {}) {
   const run_id = crypto.randomUUID();
   const source = lookupSource(key);
   const ctx = {
@@ -145,6 +163,12 @@ export async function withCollectorRun(key, fn, { trigger = 'on-demand' } = {}) 
     hit_count: 0,
     last_hit: null,
     started_ms: Date.now(),
+    // Tenant context: set by request-scoped callers (on-demand routes) so
+    // collectorEnv.envFor resolves BYOK secrets and usage is attributed.
+    // null for scheduler / cron / boot runs → platform fallback, no metering.
+    tenant_id: tenantId || null,
+    used_tenant_cred: false,
+    used_platform_cred: false,
   };
 
   broadcast({
@@ -159,6 +183,7 @@ export async function withCollectorRun(key, fn, { trigger = 'on-demand' } = {}) 
 
   try {
     const result = await runStore.run(ctx, fn);
+    flushUsage(ctx);
     broadcast({
       type: 'collector_run_end',
       run_id,
@@ -169,6 +194,7 @@ export async function withCollectorRun(key, fn, { trigger = 'on-demand' } = {}) 
     });
     return result;
   } catch (err) {
+    flushUsage(ctx);
     broadcast({
       type: 'collector_run_end',
       run_id,
@@ -180,6 +206,77 @@ export async function withCollectorRun(key, fn, { trigger = 'on-demand' } = {}) 
     });
     throw err;
   }
+}
+
+/**
+ * Tenant scope for non-collector pipelines (the OSINT search tab). Runs `fn`
+ * inside an ALS scope carrying the tenant id so any `envFor()` deep in the
+ * pipeline / services resolves the tenant's BYOK key, and any consumed
+ * credential is metered into tenant_quotas under `label`.
+ *
+ * Differs from withCollectorRun: `tap_silent` suppresses the per-request
+ * Follow-log broadcasts (a search run is not a collector and should not
+ * masquerade as one), and it returns whatever `fn` returns synchronously so
+ * fire-and-forget pipelines work. Usage is flushed when the returned value
+ * settles: an EventEmitter on 'done'/'error', a promise on settle, otherwise
+ * immediately.
+ *
+ * @param {string|null} tenantId
+ * @param {string} label  source id used for usage attribution (e.g. 'osint-search')
+ * @param {() => any} fn
+ */
+export function withTenantScope(tenantId, label, fn) {
+  const ctx = {
+    run_id: crypto.randomUUID(),
+    collector_key: label,
+    source_id: label,
+    source_name: label,
+    seq: 0,
+    hit_count: 0,
+    last_hit: null,
+    started_ms: Date.now(),
+    tenant_id: tenantId || null,
+    tap_silent: true,
+    used_tenant_cred: false,
+    used_platform_cred: false,
+  };
+  const done = () => flushUsage(ctx);
+  const result = runStore.run(ctx, fn);
+  if (result && typeof result.once === 'function') {
+    result.once('done', done);
+    result.once('error', done);
+  } else if (result && typeof result.then === 'function') {
+    Promise.resolve(result).then(done, done);
+  } else {
+    done();
+  }
+  return result;
+}
+
+/**
+ * Record that a credential resolved during the in-flight run, tagged by its
+ * origin ('tenant' = BYOK, 'platform' = shared key). Called by
+ * collectorEnv.envFor on every successful resolve. Safe no-op outside a run.
+ */
+export function noteCredentialUse(source) {
+  const ctx = runStore.getStore();
+  if (!ctx) return;
+  if (source === 'tenant') ctx.used_tenant_cred = true;
+  else if (source === 'platform') ctx.used_platform_cred = true;
+}
+
+/**
+ * Return the tenant id for the in-flight collector run, or null when there
+ * is no run scope (scheduler / cron / platform-level invocations) or the
+ * run carries no tenant. Used by the tenant-aware credential resolver so
+ * BYOK secrets are honored for request-scoped collector runs.
+ *
+ * The run context `tenant_id` is set by withCollectorRun's caller (e.g. an
+ * on-demand request handler) via the ALS ctx; absence => platform fallback.
+ */
+export function currentTenant() {
+  const ctx = runStore.getStore();
+  return ctx?.tenant_id ?? null;
 }
 
 /**
@@ -210,8 +307,10 @@ export function installFetchTap() {
 
   globalThis.fetch = async function tappedFetch(input, init) {
     const ctx = runStore.getStore();
-    if (!ctx) {
-      // Outside a collector run — pass through silently.
+    if (!ctx || ctx.tap_silent) {
+      // Outside a collector run, or inside a tap-silent tenant scope (search
+      // pipeline) — pass through without Follow-log emission. The ALS context
+      // still resolves for currentTenant()/envFor.
       return realFetch(input, init);
     }
 

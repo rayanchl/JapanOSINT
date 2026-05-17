@@ -25,6 +25,7 @@
 import { fetchJson } from './_liveHelpers.js';
 import { JP_PREFECTURES, resolvePrefecture } from './_jpPrefectures.js';
 import { intelUid } from '../utils/intelHelpers.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const SOURCE_ID = 'estat-crime';
 const PORTAL_URL = 'https://www.e-stat.go.jp/stat-search/database?toukei=00130001';
@@ -37,7 +38,8 @@ const API_BASE = 'https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData';
 const DEFAULT_STATS_DATA_ID = '0003433388';
 
 function appId() {
-  return process.env.ESTAT_APP_ID || null;
+  // Read at call time so a tenant BYOK key flows through without a restart.
+  return envFor('ESTAT_APP_ID') || null;
 }
 
 function statsDataId() {

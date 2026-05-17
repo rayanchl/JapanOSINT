@@ -14,6 +14,7 @@
  */
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const SOURCE_ID = 'misskey-timeline';
 const MISSKEY_BASE = 'https://misskey.io';
@@ -24,7 +25,7 @@ export default async function collectMisskeyTimeline() {
     return intelEnvelope({ sourceId: SOURCE_ID, items: [], live: false, description: 'misskey.io timeline (disabled)' });
   }
 
-  const token = process.env.MISSKEY_TOKEN || null;
+  const token = envFor('MISSKEY_TOKEN') || null;
   const body = { limit: 30 };
   if (token) body.i = token;
 

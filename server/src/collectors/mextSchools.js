@@ -27,7 +27,8 @@ export default async function collectMextSchools() {
       tags: ['education', 'mext', 'school-registry', live ? 'reachable' : 'unreachable'],
       properties: { operator: '文部科学省', reachable: live },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'MEXT school basic survey — registry of all schools + universities',
   });
 }

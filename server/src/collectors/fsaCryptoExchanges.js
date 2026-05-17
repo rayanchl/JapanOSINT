@@ -26,7 +26,8 @@ export default async function collectFsaCryptoExchanges() {
       tags: ['crypto', 'fsa', 'exchange', live ? 'reachable' : 'unreachable'],
       properties: { operator: '金融庁', reachable: live },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'FSA registered crypto exchanges list',
   });
 }

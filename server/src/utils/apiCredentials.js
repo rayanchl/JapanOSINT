@@ -94,6 +94,45 @@ const CREDENTIALS = {
     required: ['WINDY_API_KEY'],
     probeHeaders: (env) => ({ 'x-windy-api-key': env.WINDY_API_KEY }),
   },
+
+  // ── Batch 1: SaaS/API OSINT sources ──────────────────────────────────
+  // Each collector fetches real data when keyed and returns honest empty
+  // otherwise; these entries make the missing-key state render the same
+  // "needs API key" badge in the Sources tab as shodan-iot/marine-traffic.
+  // (shodan-japan, shodan-cameras-jp, odpt-train/bus/station, windy-webcams
+  //  are already mapped above and intentionally not duplicated.)
+  'flickr-geo': { required: ['FLICKR_API_KEY'] },
+  'tiktok-geo': { required: ['TIKTOK_MS_TOKEN'] },
+  'eight-sansan': { required: ['EIGHT_SESSION'] },
+  'marinetraffic-jp': { required: ['MARINETRAFFIC_API_KEY'] },
+  'navitime-api': { required: ['NAVITIME_API_KEY'] },
+  'yahoo-map-api': { required: ['YAHOO_APP_ID'] },
+  'here-japan': { required: ['HERE_API_KEY'] },
+  'odpt-flight': { anyOf: ['ODPT_TOKEN', 'ODPT_CONSUMER_KEY', 'ODPT_CHALLENGE_TOKEN'] },
+
+  // ── Batch 2 keyed sources ────────────────────────────────────────
+  'windy-japan': {"required":["WINDY_API_KEY"]},
+  'estat-household': {"required":["ESTAT_APP_ID"]},
+  'estat-employment': {"required":["ESTAT_APP_ID"]},
+  'estat-industry': {"required":["ESTAT_APP_ID"]},
+  'estat-education': {"required":["ESTAT_APP_ID"]},
+  'estat-census': {"required":["ESTAT_APP_ID"]},
+  'jstat-map': {"required":["ESTAT_APP_ID"]},
+  'resas-population': {"required":["RESAS_API_KEY"]},
+  'reinfolib': {"required":["REINFOLIB_API_KEY"]},
+  'tellus-satellite': {"required":["TELLUS_TOKEN"]},
+  'docomo-population': {"required":["DOCOMO_POPULATION_API_KEY"]},
+  'docomo-insight': {"required":["DOCOMO_INSIGHT_API_KEY"]},
+  'agoop-flow': {"required":["AGOOP_API_KEY"]},
+  'softbank-crowd': {"required":["SOFTBANK_CROWD_API_KEY"]},
+  'mapfan-api': {"required":["MAPFAN_API_KEY"]},
+  'google-dorking': { anyOf: ['GOOGLE_CSE_KEY', 'SERPAPI_KEY'], optional: ['GOOGLE_CSE_CX'] },
+  'telegram-jp-channels': { anyOf: ['TGSTAT_API_KEY', 'TELEGRAM_API_ID'], optional: ['TELEGRAM_API_HASH'] },
+  'instagram-geo': {"required":["INSTAGRAM_SESSION_COOKIE"]},
+  'instagram-locations': {"required":["INSTAGRAM_SESSION_COOKIE"]},
+  'linkedin-jp-search': {"required":["LINKEDIN_COOKIE"]},
+  'psn-xbox-jp': {"anyOf":["PSN_NPSSO","XBOX_API_KEY"]},
+  'houmukyoku-commercial': {"required":["HOUMUKYOKU_API_KEY"]},
 };
 
 import { getEnv } from './credentials.js';

@@ -18,10 +18,8 @@
 
 import { randomUUID } from 'crypto';
 import db from '../utils/database.js';
-import { MULTI_TENANT_ENABLED } from './auth.js';
 
 export async function resolveTenant(req, res, next) {
-  if (!MULTI_TENANT_ENABLED) return next();
   if (!req.supabaseUser) {
     return res.status(401).json({ error: 'Auth required' });
   }
@@ -47,7 +45,9 @@ export async function resolveTenant(req, res, next) {
     if (!picked) picked = memberships[0];
 
     const tenant = db.prepare(
-      `SELECT id, slug, name, plan, require_sso FROM tenants WHERE id = ?`
+      `SELECT id, slug, name, plan, require_sso,
+              stripe_customer_id, subscription_status, plan_period_end
+         FROM tenants WHERE id = ?`
     ).get(picked.tenant_id);
     if (!tenant) {
       return res.status(500).json({ error: 'Tenant row vanished' });

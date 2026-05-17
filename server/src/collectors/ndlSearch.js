@@ -28,7 +28,8 @@ export default async function collectNdlSearch() {
       tags: ['library', 'ndl', 'opensearch', live ? 'reachable' : 'unreachable'],
       properties: { operator: '国立国会図書館', reachable: live },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'NDL OpenSearch — books, journals, photos, archives',
   });
 }

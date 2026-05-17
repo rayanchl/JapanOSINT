@@ -5,10 +5,10 @@
  * Without a key we fall back to seed port positions.
  */
 
-import { getEnv } from '../utils/credentials.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const TIMEOUT_MS = 10000;
-const umishiruKey = () => getEnv(null, 'UMISHIRU_API_KEY');
+const umishiruKey = () => envFor('UMISHIRU_API_KEY');
 
 const SEED_PORTS = [
   { name: '東京港', lat: 35.61, lon: 139.77 },

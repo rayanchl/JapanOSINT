@@ -5,6 +5,7 @@
  */
 
 import { fetchText } from './_liveHelpers.js';
+import { intelHashKey } from '../utils/intelHelpers.js';
 
 // NPA's shimeitehai (指名手配) page is HTML-only; there is no public JSON
 // API. We hit the real index and verify it's reachable. Without a proper
@@ -131,7 +132,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [h.lon, h.lat] },
     properties: {
-      case_id: `WANTED_${String(i + 1).padStart(4, '0')}`,
+      case_id: `WANTED_${intelHashKey(h.name, h.host, h.path)}`,
       name: h.name,
       city: h.city,
       open_cases: h.open_cases,

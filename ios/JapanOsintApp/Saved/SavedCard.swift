@@ -9,9 +9,11 @@ struct SavedCard: View {
     /// Image band height. Every card uses the same band whether or not it
     /// carries a thumbnail, so grids align cleanly across rows.
     private static let imageHeight: CGFloat = 110
-    /// Reserved text-section height: 2 lines title + 1 line subtitle + padding.
-    /// Picked so the card total height never changes when text wraps.
-    private static let textHeight: CGFloat = 56
+    /// Reserved text-section height: 2 lines title (~32pt, always reserved) +
+    /// 2pt spacing + 1 line subtitle (~14pt) + Space.sm padding top & bottom
+    /// (16pt), with a small margin for font-metric rounding. Picked so the card
+    /// total height never changes when text wraps and nothing clips.
+    private static let textHeight: CGFloat = 68
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -34,6 +36,12 @@ struct SavedCard: View {
         .frame(height: Self.imageHeight + Self.textHeight)
         .background(theme.surfaceElevated)
         .clipShape(RoundedRectangle(cornerRadius: Radius.md))
+        // VoiceOver reads the whole card as one element instead of an
+        // unlabelled "image" plus two stray text fragments.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(item.displayName)
+        .accessibilityValue("Saved \(LayerRegistry.displayName(forId: item.layerId))")
+        .accessibilityAddTraits(.isButton)
     }
 
     /// Image band — exactly `imageHeight` tall regardless of whether a remote
@@ -113,5 +121,9 @@ struct SavedListRow: View {
         }
         .padding(.vertical, 2)
         .contentShape(Rectangle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(item.displayName)
+        .accessibilityValue("Saved \(LayerRegistry.displayName(forId: item.layerId))")
+        .accessibilityAddTraits(.isButton)
     }
 }

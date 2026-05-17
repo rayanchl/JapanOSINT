@@ -380,6 +380,115 @@ import michiNoEki from './michiNoEki.js';
 import nhkRelayTowers from './nhkRelayTowers.js';
 import mextSchools from './mextSchools.js';
 import luupPorts from './luupPorts.js';
+// Batch 1: SaaS/API OSINT collectors (real fetch when keyed, honest empty
+// otherwise — never fabricated data). Keyed sources surface "needs API key"
+// via the apiCredentials map, identical to shodan-iot/marine-traffic.
+import flickrGeo from './flickrGeo.js';
+import tiktokGeo from './tiktokGeo.js';
+import noteComProfiles from './noteComProfiles.js';
+import eightSansan from './eightSansan.js';
+import shodanJapan from './shodanJapan.js';
+import shodanCamerasJp from './shodanCamerasJp.js';
+import windyWebcams from './windyWebcams.js';
+import marinetrafficJp from './marinetrafficJp.js';
+import flightradarJp from './flightradarJp.js';
+import navitimeApi from './navitimeApi.js';
+import yahooMapApi from './yahooMapApi.js';
+import hereJapan from './hereJapan.js';
+import {
+  collectOdptTrain,
+  collectOdptBus,
+  collectOdptFlight,
+  collectOdptStation,
+} from './odptRealtime.js';
+
+// ── Batch 2: government / OSINT data sources (real-or-empty) ─────────
+import jmaTsunami from './jmaTsunami.js';
+import jmaVolcano from './jmaVolcano.js';
+import jmaHimawari from './jmaHimawari.js';
+import jmaUv from './jmaUv.js';
+import jmaPollen from './jmaPollen.js';
+import pm25Japan from './pm25Japan.js';
+import windyJapan from './windyJapan.js';
+import tenkiJp from './tenkiJp.js';
+import jamstecArgo from './jamstecArgo.js';
+import jmaIce from './jmaIce.js';
+import vnet from './vnet.js';
+import bosaiVolcanoCam from './bosaiVolcanoCam.js';
+import xrainRadar from './xrainRadar.js';
+import mlitDam from './mlitDam.js';
+import tepcoPower from './tepcoPower.js';
+import kepcoPower from './kepcoPower.js';
+import chubuPower from './chubuPower.js';
+import tohokuPower from './tohokuPower.js';
+import kyushuPower from './kyushuPower.js';
+import hokkaidoPower from './hokkaidoPower.js';
+import shikokuPower from './shikokuPower.js';
+import hokurikuPower from './hokurikuPower.js';
+import chugokuPower from './chugokuPower.js';
+import okinawaPower from './okinawaPower.js';
+import nttFiber from './nttFiber.js';
+import mlitBridge from './mlitBridge.js';
+import manholeCovers from './manholeCovers.js';
+import jrWestDelay from './jrWestDelay.js';
+import jrCentralDelay from './jrCentralDelay.js';
+import shinkansenStatus from './shinkansenStatus.js';
+import cyclingPorts from './cyclingPorts.js';
+import mlitRoadTraffic from './mlitRoadTraffic.js';
+import vicsTraffic from './vicsTraffic.js';
+import estatHousehold from './estatHousehold.js';
+import estatEmployment from './estatEmployment.js';
+import estatIndustry from './estatIndustry.js';
+import estatEducation from './estatEducation.js';
+import estatCensus from './estatCensus.js';
+import jstatMap from './jstatMap.js';
+import resasPopulation from './resasPopulation.js';
+import resasMunicipality from './resasMunicipality.js';
+import covid19Japan from './covid19Japan.js';
+import mhlwHealth from './mhlwHealth.js';
+import ndbOpen from './ndbOpen.js';
+import influenzaSurveillance from './influenzaSurveillance.js';
+import foodPoisoning from './foodPoisoning.js';
+import reinfolib from './reinfolib.js';
+import tochiInfo from './tochiInfo.js';
+import suumo from './suumo.js';
+import homesCo from './homesCo.js';
+import lifullHomes from './lifullHomes.js';
+import japanReit from './japanReit.js';
+import openstreetmapJp from './openstreetmapJp.js';
+import chiriinPlace from './chiriinPlace.js';
+import jmaWarnings from './jmaWarnings.js';
+import saigaiInfo from './saigaiInfo.js';
+import policeIncidents from './policeIncidents.js';
+import fireDepartment from './fireDepartment.js';
+import gsiActiveFault from './gsiActiveFault.js';
+import nlniLanduse from './nlniLanduse.js';
+import bearEncounters from './bearEncounters.js';
+import birdFluOutbreaks from './birdFluOutbreaks.js';
+import sakuraFront from './sakuraFront.js';
+import tellusSatellite from './tellusSatellite.js';
+import sentinelJapan from './sentinelJapan.js';
+import alosPalsar from './alosPalsar.js';
+import himawariRealtime from './himawariRealtime.js';
+import jaxaEarth from './jaxaEarth.js';
+import landsatJp from './landsatJp.js';
+import gcomW from './gcomW.js';
+import docomoPopulation from './docomoPopulation.js';
+import docomoInsight from './docomoInsight.js';
+import agoopFlow from './agoopFlow.js';
+import softbankCrowd from './softbankCrowd.js';
+import mapfanApi from './mapfanApi.js';
+import atlasJp from './atlasJp.js';
+import googleDorking from './googleDorking.js';
+import telegramJpChannels from './telegramJpChannels.js';
+import discordJpServers from './discordJpServers.js';
+import dnstwistJpTargets from './dnstwistJpTargets.js';
+import instagramGeo from './instagramGeo.js';
+import instagramLocations from './instagramLocations.js';
+import linkedinJpSearch from './linkedinJpSearch.js';
+import psnXboxJp from './psnXboxJp.js';
+import hatenaBookmarkExtended from './hatenaBookmarkExtended.js';
+import houmukyokuCommercial from './houmukyokuCommercial.js';
 
 export const collectors = {
   'jma-earthquake': jmaEarthquake,
@@ -748,6 +857,112 @@ export const collectors = {
   'nhk-relay-towers': nhkRelayTowers,
   'mext-schools': mextSchools,
   'luup-private': luupPorts,
+
+  // ── Batch 1: SaaS/API OSINT sources ──────────────────────────────────
+  'flickr-geo': flickrGeo,
+  'tiktok-geo': tiktokGeo,
+  'note-com-profiles': noteComProfiles,
+  'eight-sansan': eightSansan,
+  'shodan-japan': shodanJapan,
+  'shodan-cameras-jp': shodanCamerasJp,
+  'windy-webcams': windyWebcams,
+  'marinetraffic-jp': marinetrafficJp,
+  'flightradar-jp': flightradarJp,
+  'navitime-api': navitimeApi,
+  'yahoo-map-api': yahooMapApi,
+  'here-japan': hereJapan,
+  'odpt-train': collectOdptTrain,
+  'odpt-bus': collectOdptBus,
+  'odpt-flight': collectOdptFlight,
+  'odpt-station': collectOdptStation,
+
+  // ── Batch 2 ───────────────────────────────────────────────────────
+  'jma-tsunami': jmaTsunami,
+  'jma-volcano': jmaVolcano,
+  'jma-himawari': jmaHimawari,
+  'jma-uv': jmaUv,
+  'jma-pollen': jmaPollen,
+  'pm25-japan': pm25Japan,
+  'windy-japan': windyJapan,
+  'tenki-jp': tenkiJp,
+  'jamstec-argo': jamstecArgo,
+  'jma-ice': jmaIce,
+  'vnet': vnet,
+  'bosai-volcano-cam': bosaiVolcanoCam,
+  'xrain-radar': xrainRadar,
+  'mlit-dam': mlitDam,
+  'tepco-power': tepcoPower,
+  'kepco-power': kepcoPower,
+  'chubu-power': chubuPower,
+  'tohoku-power': tohokuPower,
+  'kyushu-power': kyushuPower,
+  'hokkaido-power': hokkaidoPower,
+  'shikoku-power': shikokuPower,
+  'hokuriku-power': hokurikuPower,
+  'chugoku-power': chugokuPower,
+  'okinawa-power': okinawaPower,
+  'ntt-fiber': nttFiber,
+  'mlit-bridge': mlitBridge,
+  'manhole-covers': manholeCovers,
+  'jr-west-delay': jrWestDelay,
+  'jr-central-delay': jrCentralDelay,
+  'shinkansen-status': shinkansenStatus,
+  'cycling-ports': cyclingPorts,
+  'mlit-road-traffic': mlitRoadTraffic,
+  'vics-traffic': vicsTraffic,
+  'estat-household': estatHousehold,
+  'estat-employment': estatEmployment,
+  'estat-industry': estatIndustry,
+  'estat-education': estatEducation,
+  'estat-census': estatCensus,
+  'jstat-map': jstatMap,
+  'resas-population': resasPopulation,
+  'resas-municipality': resasMunicipality,
+  'covid19-japan': covid19Japan,
+  'mhlw-health': mhlwHealth,
+  'ndb-open': ndbOpen,
+  'influenza-surveillance': influenzaSurveillance,
+  'food-poisoning': foodPoisoning,
+  'reinfolib': reinfolib,
+  'tochi-info': tochiInfo,
+  'suumo': suumo,
+  'homes-co': homesCo,
+  'lifull-homes': lifullHomes,
+  'japan-reit': japanReit,
+  'openstreetmap-jp': openstreetmapJp,
+  'chiriin-place': chiriinPlace,
+  'jma-warnings': jmaWarnings,
+  'saigai-info': saigaiInfo,
+  'police-incidents': policeIncidents,
+  'fire-department': fireDepartment,
+  'gsi-active-fault': gsiActiveFault,
+  'nlni-landuse': nlniLanduse,
+  'bear-encounters': bearEncounters,
+  'bird-flu-outbreaks': birdFluOutbreaks,
+  'sakura-front': sakuraFront,
+  'tellus-satellite': tellusSatellite,
+  'sentinel-japan': sentinelJapan,
+  'alos-palsar': alosPalsar,
+  'himawari-realtime': himawariRealtime,
+  'jaxa-earth': jaxaEarth,
+  'landsat-jp': landsatJp,
+  'gcom-w': gcomW,
+  'docomo-population': docomoPopulation,
+  'docomo-insight': docomoInsight,
+  'agoop-flow': agoopFlow,
+  'softbank-crowd': softbankCrowd,
+  'mapfan-api': mapfanApi,
+  'atlas-jp': atlasJp,
+  'google-dorking': googleDorking,
+  'telegram-jp-channels': telegramJpChannels,
+  'discord-jp-servers': discordJpServers,
+  'dnstwist-jp-targets': dnstwistJpTargets,
+  'instagram-geo': instagramGeo,
+  'instagram-locations': instagramLocations,
+  'linkedin-jp-search': linkedinJpSearch,
+  'psn-xbox-jp': psnXboxJp,
+  'hatena-bookmark-extended': hatenaBookmarkExtended,
+  'houmukyoku-commercial': houmukyokuCommercial,
 };
 
 /**

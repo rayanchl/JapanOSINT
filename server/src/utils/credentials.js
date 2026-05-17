@@ -19,7 +19,7 @@
 import {
   createCipheriv, createDecipheriv, randomBytes, hkdfSync,
 } from 'crypto';
-import db from './database.js';
+import { tenantDb } from './tenancy.js';
 
 const ALGO = 'aes-256-gcm';
 const NONCE_LEN = 12;
@@ -88,9 +88,9 @@ function decrypt(tenantId, blob) {
  *   { value, source }  // source ∈ 'tenant' | 'platform'
  *   null               // gated — no key available
  *
- * Pass `tenantId = null` for legacy single-tenant callers; we fall straight
- * through to process.env so existing collectors keep working until they're
- * tenant-aware.
+ * Pass `tenantId = null` for platform-scoped callers (scheduler / cron /
+ * collectors with no request context); we fall straight through to
+ * process.env.
  */
 /**
  * Convenience for callers that only need the string value: returns the
@@ -99,8 +99,8 @@ function decrypt(tenantId, blob) {
  *
  *   process.env.SHODAN_API_KEY   →   getEnv(tenantId, 'SHODAN_API_KEY')
  *
- * Pass tenantId=null for platform-only resolution (legacy / scheduler / cron
- * paths that have no request context).
+ * Pass tenantId=null for platform-only resolution (scheduler / cron paths
+ * that have no request context).
  */
 export function getEnv(tenantId, varName) {
   const r = resolveCredential(tenantId, varName);
@@ -108,12 +108,12 @@ export function getEnv(tenantId, varName) {
 }
 
 export function resolveCredential(tenantId, varName) {
-  if (tenantId && tenantId !== 'legacy') {
-    const row = db.prepare(`
+  if (tenantId) {
+    const row = tenantDb(tenantId).prepare(`
       SELECT encrypted_value, fallback_to_platform
         FROM tenant_secrets
-       WHERE tenant_id = ? AND key_name = ?
-    `).get(tenantId, varName);
+       WHERE tenant_id = @tenant_id AND key_name = @key_name
+    `).get({ key_name: varName });
     if (row && row.encrypted_value) {
       try {
         const value = decrypt(tenantId, row.encrypted_value);
@@ -148,38 +148,64 @@ export function setTenantSecret(tenantId, varName, plaintext, opts = {}) {
   }
   const blob = encrypt(tenantId, plaintext);
   const fallback = opts.fallbackToPlatform === false ? 0 : 1;
-  db.prepare(`
+  tenantDb(tenantId).prepare(`
     INSERT INTO tenant_secrets (tenant_id, key_name, encrypted_value, fallback_to_platform, created_by)
-    VALUES (?, ?, ?, ?, ?)
+    VALUES (@tenant_id, @key_name, @encrypted_value, @fallback, @created_by)
     ON CONFLICT (tenant_id, key_name) DO UPDATE SET
       encrypted_value = excluded.encrypted_value,
       fallback_to_platform = excluded.fallback_to_platform,
       last_used_at = NULL
-  `).run(tenantId, varName, blob, fallback, opts.createdBy || null);
+  `).run({
+    key_name: varName,
+    encrypted_value: blob,
+    fallback,
+    created_by: opts.createdBy || null,
+  });
+}
+
+/**
+ * Decrypt and return ONLY this tenant's own stored secret (never the
+ * platform/.env fallback). Returns null when the tenant has no row for
+ * `varName`. Used by the BYOK reveal flow so a user can see the key they
+ * themselves entered without exposing the operator's platform key.
+ */
+export function getTenantSecret(tenantId, varName) {
+  if (!tenantId) return null;
+  const row = tenantDb(tenantId).prepare(`
+    SELECT encrypted_value FROM tenant_secrets
+     WHERE tenant_id = @tenant_id AND key_name = @key_name
+  `).get({ key_name: varName });
+  if (!row || !row.encrypted_value) return null;
+  try {
+    return decrypt(tenantId, row.encrypted_value);
+  } catch (err) {
+    console.error(`[credentials] reveal decrypt failed for ${tenantId}/${varName}:`, err.message);
+    return null;
+  }
 }
 
 export function deleteTenantSecret(tenantId, varName) {
-  db.prepare(`
-    DELETE FROM tenant_secrets WHERE tenant_id = ? AND key_name = ?
-  `).run(tenantId, varName);
+  tenantDb(tenantId).prepare(`
+    DELETE FROM tenant_secrets WHERE tenant_id = @tenant_id AND key_name = @key_name
+  `).run({ key_name: varName });
 }
 
 export function listTenantSecrets(tenantId) {
   // Never return plaintext. Just metadata for the Integrations UI.
-  return db.prepare(`
+  return tenantDb(tenantId).prepare(`
     SELECT key_name, fallback_to_platform, created_at, last_used_at
       FROM tenant_secrets
-     WHERE tenant_id = ?
+     WHERE tenant_id = @tenant_id
      ORDER BY key_name
-  `).all(tenantId);
+  `).all();
 }
 
 function touchLastUsed(tenantId, varName) {
   // Async-ish: fire-and-forget update on read path. Tiny write, low contention.
   try {
-    db.prepare(`
+    tenantDb(tenantId).prepare(`
       UPDATE tenant_secrets SET last_used_at = datetime('now')
-       WHERE tenant_id = ? AND key_name = ?
-    `).run(tenantId, varName);
+       WHERE tenant_id = @tenant_id AND key_name = @key_name
+    `).run({ key_name: varName });
   } catch { /* read path — never throw on metadata write */ }
 }

@@ -5,6 +5,7 @@
  */
 
 import { fetchOverpass } from './_liveHelpers.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const API_URL = 'https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData';
 const TIMEOUT_MS = 5000;
@@ -83,7 +84,7 @@ export default async function collectEstatPopulation() {
   let source = 'estat_live';
 
   try {
-    const apiKey = process.env.ESTAT_API_KEY;
+    const apiKey = envFor('ESTAT_API_KEY');
     if (!apiKey) throw new Error('No e-Stat API key configured');
 
     const params = new URLSearchParams({

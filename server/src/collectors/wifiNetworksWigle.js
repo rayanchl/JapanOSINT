@@ -10,10 +10,13 @@
  */
 
 import { fetchOverpass } from './_liveHelpers.js';
+import { envFor } from '../utils/collectorEnv.js';
 
-const WIGLE_API_KEY = process.env.WIGLE_API_KEY || '';
+// Lazy read so tenant BYOK overrides land without a server restart.
+const wigleApiKey = () => envFor('WIGLE_API_KEY') || '';
 
 async function tryWigleAPI() {
+  const WIGLE_API_KEY = wigleApiKey();
   if (!WIGLE_API_KEY) return null;
   try {
     const controller = new AbortController();

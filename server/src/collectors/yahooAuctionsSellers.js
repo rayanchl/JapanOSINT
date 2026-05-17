@@ -31,7 +31,8 @@ export default async function collectYahooAuctionsSellers() {
       tags: ['marketplace', 'yahoo', 'auctions', live ? 'reachable' : 'unreachable', 'tos-caveat'],
       properties: { operator: 'Yahoo! Japan', reachable: live, tos_caveat: true },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'Yahoo! Auctions — seller intel / listings (ToS-rate-limited)',
   });
 }

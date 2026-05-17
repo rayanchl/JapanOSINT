@@ -7,6 +7,7 @@
  */
 
 import { fetchText } from './_liveHelpers.js';
+import { intelHashKey } from '../utils/intelHelpers.js';
 
 const NPA_TOKUSHUSAGI_INDEX = 'https://www.npa.go.jp/bureau/criminal/souni/tokushusagi/';
 
@@ -158,7 +159,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [h.lon, h.lat] },
     properties: {
-      ward_id: `SCAM_${String(i + 1).padStart(4, '0')}`,
+      ward_id: `SCAM_${intelHashKey(h.name, h.host, h.path)}`,
       ward: h.ward,
       prefecture: h.prefecture,
       incidents_yr: h.incidents_yr,

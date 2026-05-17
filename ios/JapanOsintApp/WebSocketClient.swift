@@ -19,6 +19,10 @@ final class WebSocketClient: ObservableObject {
     private var session: URLSession = .shared
     private var reconnectAttempts = 0
     private var explicitlyDisconnected = false
+    /// Last URL we were asked to connect to, so an automatic reconnect can
+    /// re-establish the socket itself rather than waiting on an external
+    /// URL-change to call connect() again.
+    private var lastBaseURL: String?
 
     // Subject-based broadcast so multiple views can subscribe to the same feed.
     private let liveVehiclesSubject = PassthroughSubject<LiveVehicleEvent, Never>()
@@ -31,8 +35,16 @@ final class WebSocketClient: ObservableObject {
     var cameras:      AnyPublisher<CameraEvent, Never>      { cameraSubject.eraseToAnyPublisher() }
     var earthquakes:  AnyPublisher<EarthquakeEvent, Never>  { earthquakeSubject.eraseToAnyPublisher() }
 
+    /// Explicit/manual connect — resets the backoff counter so a user-driven
+    /// (re)connect always starts fast.
     func connect(baseURL: String) {
+        reconnectAttempts = 0
+        establish(baseURL: baseURL)
+    }
+
+    private func establish(baseURL: String) {
         explicitlyDisconnected = false
+        lastBaseURL = baseURL
         guard let url = wsURL(from: baseURL) else {
             lastError = "Bad backend URL"
             return
@@ -43,7 +55,6 @@ final class WebSocketClient: ObservableObject {
         t.resume()
         isConnected = true
         lastError = nil
-        reconnectAttempts = 0
         receiveLoop()
     }
 
@@ -92,14 +103,21 @@ final class WebSocketClient: ObservableObject {
     private func scheduleReconnect() {
         guard !explicitlyDisconnected else { return }
         reconnectAttempts += 1
-        let delay = min(30, pow(2.0, Double(reconnectAttempts)))
+        // Exponential backoff capped at 30s, plus 0–1s of jitter so a fleet
+        // of clients reconnecting after a server blip doesn't thundering-herd
+        // the backend on synchronised boundaries.
+        let backoff = min(30.0, pow(2.0, Double(reconnectAttempts)))
+        let delay = backoff + Double.random(in: 0...1)
+        isConnected = false
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
             guard !self.explicitlyDisconnected else { return }
-            // We don't have the baseURL stored; the app re-connects via onChange
-            // when the URL flips. As a passive fallback, mark not-connected so
-            // the UI surfaces it.
-            self.isConnected = false
+            guard let url = self.lastBaseURL else { return }
+            // Re-establish without resetting reconnectAttempts so backoff keeps
+            // growing while the endpoint stays unreachable; the counter is
+            // cleared again only once we get a confirmed healthy handshake
+            // (see `handle(data:)` "connected" case → reconnectAttempts = 0).
+            self.establish(baseURL: url)
         }
     }
 
@@ -109,7 +127,12 @@ final class WebSocketClient: ObservableObject {
               let type = obj["type"] as? String else { return }
         // Always honour the lifecycle "connected" handshake regardless of
         // gate state — we need to know the socket is healthy.
-        if type == "connected" { isConnected = true; return }
+        if type == "connected" {
+            isConnected = true
+            // Confirmed healthy: clear backoff so the next blip recovers fast.
+            reconnectAttempts = 0
+            return
+        }
         // Time-slider replay gate: drop data-bearing events but keep the
         // connection warm so it picks up live data the instant we return.
         if gateLiveEvents { return }

@@ -9,6 +9,7 @@
  */
 
 import { createThreatIntelCollector } from '../utils/threatIntelCollectorFactory.js';
+import { envFor } from '../utils/collectorEnv.js';
 import { TOKYO } from './_satelliteSeeds.js';
 
 const URL = 'https://api.github.com/advisories?per_page=100&sort=published&direction=desc';
@@ -18,7 +19,7 @@ export default createThreatIntelCollector({
   sourceId: 'github_ghsa_rest',
   description: 'GitHub Security Advisories — most recent 100 global entries',
   run: async () => {
-    const token = process.env.GITHUB_TOKEN || '';
+    const token = envFor('GITHUB_TOKEN') || '';
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
     const res = await fetch(URL, {

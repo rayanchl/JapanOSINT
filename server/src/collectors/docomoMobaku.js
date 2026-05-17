@@ -31,7 +31,8 @@ export default async function collectDocomoMobaku() {
   return intelEnvelope({
     sourceId: SOURCE_ID,
     items,
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'DOCOMO Mobaku public sample — hourly Tokyo mesh population',
   });
 }

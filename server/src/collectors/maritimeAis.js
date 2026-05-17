@@ -9,10 +9,10 @@
  */
 
 import { fetchOverpass, fetchJson } from './_liveHelpers.js';
-import { getEnv } from '../utils/credentials.js';
+import { envFor } from '../utils/collectorEnv.js';
 
-const marineTrafficKey = () => getEnv(null, 'MARINETRAFFIC_API_KEY') || '';
-const vesselFinderKey  = () => getEnv(null, 'VESSELFINDER_API_KEY')  || '';
+const marineTrafficKey = () => envFor('MARINETRAFFIC_API_KEY') || '';
+const vesselFinderKey  = () => envFor('VESSELFINDER_API_KEY')  || '';
 
 // MarineTraffic Exportvessels - returns array of vessels inside bbox with last position
 async function tryMarineTraffic() {

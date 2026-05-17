@@ -10,6 +10,7 @@
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
 import { fetchHead } from './_liveHelpers.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const SOURCE_ID = 'gitlab-bitbucket-leaks';
 const PROBES = [
@@ -18,8 +19,8 @@ const PROBES = [
 ];
 
 export default async function collectGitlabBitbucketLeaks() {
-  const hasGitlab = !!process.env.GITLAB_TOKEN;
-  const hasBitbucket = !!process.env.BITBUCKET_TOKEN;
+  const hasGitlab = !!envFor('GITLAB_TOKEN');
+  const hasBitbucket = !!envFor('BITBUCKET_TOKEN');
   const items = [];
   let anyLive = false;
   for (const [op, url] of PROBES) {

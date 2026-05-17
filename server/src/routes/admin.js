@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { utimes } from 'fs/promises';
+import { buildMaintenanceDigest } from '../utils/maintenanceReport.js';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 
@@ -37,6 +38,23 @@ router.post('/restart', (_req, res) => {
       console.error('[admin] restart failed:', err.message);
     }
   }, 200);
+});
+
+/**
+ * GET /api/admin/maintenance?hours=24
+ *
+ * Maintenance-pod digest for the iOS admin tab: fix-success per class /
+ * source, quarantined collectors, what's awaiting PR review, what got
+ * auto-fixed, and live LLM concurrency. Read-only.
+ */
+router.get('/maintenance', (req, res) => {
+  const hours = Math.min(Math.max(Number(req.query.hours) || 24, 1), 720);
+  try {
+    res.json(buildMaintenanceDigest({ hours }));
+  } catch (err) {
+    console.error('[admin] maintenance digest failed:', err.message);
+    res.status(500).json({ error: 'digest_failed' });
+  }
 });
 
 export default router;

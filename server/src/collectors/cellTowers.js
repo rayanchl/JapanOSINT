@@ -8,9 +8,9 @@
  */
 
 import { fetchOverpassTiled } from './_liveHelpers.js';
-import { getEnv } from '../utils/credentials.js';
+import { envFor } from '../utils/collectorEnv.js';
 
-const openCellIdKey = () => getEnv(null, 'OPENCELLID_KEY') || '';
+const openCellIdKey = () => envFor('OPENCELLID_KEY') || '';
 
 // Major urban cell tower density zones
 const TOWER_ZONES = [

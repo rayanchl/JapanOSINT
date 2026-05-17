@@ -27,7 +27,8 @@ export default async function collectMicElections() {
       tags: ['election', 'soumu', 'politics', live ? 'reachable' : 'unreachable'],
       properties: { operator: '総務省 自治行政局', reachable: live },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'MIC election results portal',
   });
 }

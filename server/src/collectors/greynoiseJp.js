@@ -15,19 +15,30 @@
 const BASE = 'https://api.greynoise.io/v3/community';
 const TIMEOUT_MS = 10000;
 
-// Override via env GREYNOISE_IPS=ip1,ip2,ip3 at deploy time.
-const DEFAULT_IPS = (process.env.GREYNOISE_IPS || [
+// Default IPs to classify when GREYNOISE_IPS is unset — a control pair plus
+// well-known JP university / ISP / cloud range samples. These are *query
+// inputs* (which IPs to ask GreyNoise about), not fabricated results.
+const DEFAULT_IPS = [
   '8.8.8.8', '1.1.1.1',        // Control / non-JP
   '133.71.100.50',              // University of Tokyo range sample
   '210.152.11.100',             // IIJ range sample
   '203.104.130.1',              // Sakura Internet sample
-].join(',')).split(',').map((s) => s.trim()).filter(Boolean);
+];
+
+// Resolve the lookup list at call time so a tenant's BYOK / API-keys overlay
+// (GREYNOISE_IPS=ip1,ip2,...) takes effect; platform/scheduler runs fall back
+// to DEFAULT_IPS.
+function resolveIps() {
+  const override = envFor('GREYNOISE_IPS');
+  if (!override) return DEFAULT_IPS;
+  return override.split(',').map((s) => s.trim()).filter(Boolean);
+}
 
 async function lookupOne(ip) {
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const key = getEnv(null, 'GREYNOISE_API_KEY');
+    const key = envFor('GREYNOISE_API_KEY');
     const res = await fetch(`${BASE}/${encodeURIComponent(ip)}`, {
       signal: controller.signal,
       headers: {
@@ -45,12 +56,13 @@ async function lookupOne(ip) {
 }
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
-import { getEnv } from '../utils/credentials.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const SOURCE_ID = 'greynoise-jp';
 
 export default async function collectGreynoiseJp() {
-  const results = await Promise.all(DEFAULT_IPS.map(lookupOne));
+  const ips = resolveIps();
+  const results = await Promise.all(ips.map(lookupOne));
 
   const items = results.map((r) => ({
     uid: intelUid(SOURCE_ID, r.ip),
@@ -76,7 +88,7 @@ export default async function collectGreynoiseJp() {
     items,
     description: 'GreyNoise community classification for a curated IP list',
     extraMeta: {
-      ips_polled: DEFAULT_IPS.length,
+      ips_polled: ips.length,
       env_hint: 'Set GREYNOISE_API_KEY for higher rate limits; GREYNOISE_IPS=ip1,ip2,... to customise the lookup list',
     },
   });

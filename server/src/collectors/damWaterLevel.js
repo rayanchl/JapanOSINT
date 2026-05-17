@@ -12,6 +12,8 @@
  * dams; production renders those.
  */
 
+import { intelHashKey } from '../utils/intelHelpers.js';
+
 const MLIT_DAM_URL = 'http://www1.river.go.jp/cgi-bin/DspDamData.exe';
 const BROWSER_HEADERS = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
@@ -97,7 +99,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [d.lon, d.lat] },
     properties: {
-      dam_id: `DAM_${String(i + 1).padStart(5, '0')}`,
+      dam_id: `DAM_${intelHashKey(d.name, d.lat, d.lon)}`,
       name: d.name,
       capacity_m3: d.capacity_m3,
       current_pct: d.current_pct,

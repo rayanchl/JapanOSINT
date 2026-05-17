@@ -9,9 +9,9 @@
  */
 
 import { fetchOverpass, fetchJson } from './_liveHelpers.js';
-import { getEnv } from '../utils/credentials.js';
+import { envFor } from '../utils/collectorEnv.js';
 
-const openChargeMapKey = () => getEnv(null, 'OPENCHARGEMAP_KEY') || '';
+const openChargeMapKey = () => envFor('OPENCHARGEMAP_KEY') || '';
 
 const CONNECTOR_TYPE_MAP = {
   2: 'CHAdeMO',

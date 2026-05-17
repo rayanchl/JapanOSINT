@@ -1,7 +1,6 @@
 /**
- * Alert rules CRUD. Behind /api so the auth + tenant middleware (when
- * MULTI_TENANT_ENABLED=1) populates req.tenant. In legacy mode falls back
- * to the 'legacy' tenant for back-compat.
+ * Alert rules CRUD. Behind /api so the auth + tenant middleware always
+ * populates req.tenant before these handlers run.
  *
  * Routes:
  *   GET    /api/alerts                 list rules for active tenant
@@ -16,7 +15,7 @@
 
 import express from 'express';
 import { randomUUID } from 'crypto';
-import db from '../utils/database.js';
+import { tenantDb } from '../utils/tenancy.js';
 import { evaluateForNewItem } from '../utils/alertEngine.js';
 
 const router = express.Router();
@@ -25,18 +24,18 @@ const router = express.Router();
 const CHANNEL_TYPES = new Set(['email', 'webhook']);
 
 function tenantId(req) {
-  return req.tenant?.id || 'legacy';
+  return req.tenant.id;
 }
 
 router.get('/', (req, res) => {
-  const rows = db.prepare(`
+  const rows = tenantDb(tenantId(req)).prepare(`
     SELECT id, name, enabled, predicate_json, channels_json,
            dedup_window_sec, storm_cap_per_hour, muted_until,
            created_at, updated_at
       FROM alert_rules
-     WHERE tenant_id = ?
+     WHERE tenant_id = @tenant_id
      ORDER BY created_at DESC
-  `).all(tenantId(req));
+  `).all();
   res.json({ data: rows.map(decodeRow) });
 });
 
@@ -45,37 +44,43 @@ router.post('/', (req, res) => {
   if (parsed.error) return res.status(400).json({ error: parsed.error });
 
   const id = randomUUID();
-  db.prepare(`
+  const tdb = tenantDb(tenantId(req));
+  tdb.prepare(`
     INSERT INTO alert_rules
       (id, tenant_id, name, enabled, predicate_json, channels_json,
        dedup_window_sec, storm_cap_per_hour, created_by)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(
-    id, tenantId(req), parsed.name, parsed.enabled ? 1 : 0,
-    JSON.stringify(parsed.predicate),
-    JSON.stringify(parsed.channels),
-    parsed.dedup_window_sec, parsed.storm_cap_per_hour,
-    req.user?.id || null,
-  );
+    VALUES (@id, @tenant_id, @name, @enabled, @predicate_json, @channels_json,
+            @dedup_window_sec, @storm_cap_per_hour, @created_by)
+  `).run({
+    id,
+    name: parsed.name,
+    enabled: parsed.enabled ? 1 : 0,
+    predicate_json: JSON.stringify(parsed.predicate),
+    channels_json: JSON.stringify(parsed.channels),
+    dedup_window_sec: parsed.dedup_window_sec,
+    storm_cap_per_hour: parsed.storm_cap_per_hour,
+    created_by: req.user?.id || null,
+  });
 
-  const row = db.prepare(
-    `SELECT * FROM alert_rules WHERE id = ? AND tenant_id = ?`,
-  ).get(id, tenantId(req));
+  const row = tdb.prepare(
+    `SELECT * FROM alert_rules WHERE id = @id AND tenant_id = @tenant_id`,
+  ).get({ id });
   res.status(201).json({ data: decodeRow(row) });
 });
 
 router.get('/:id', (req, res) => {
-  const row = db.prepare(
-    `SELECT * FROM alert_rules WHERE id = ? AND tenant_id = ?`,
-  ).get(req.params.id, tenantId(req));
+  const row = tenantDb(tenantId(req)).prepare(
+    `SELECT * FROM alert_rules WHERE id = @id AND tenant_id = @tenant_id`,
+  ).get({ id: req.params.id });
   if (!row) return res.status(404).json({ error: 'Not found' });
   res.json({ data: decodeRow(row) });
 });
 
 router.patch('/:id', (req, res) => {
-  const existing = db.prepare(
-    `SELECT * FROM alert_rules WHERE id = ? AND tenant_id = ?`,
-  ).get(req.params.id, tenantId(req));
+  const tdb = tenantDb(tenantId(req));
+  const existing = tdb.prepare(
+    `SELECT * FROM alert_rules WHERE id = @id AND tenant_id = @tenant_id`,
+  ).get({ id: req.params.id });
   if (!existing) return res.status(404).json({ error: 'Not found' });
 
   // Merge: caller can send any subset of fields.
@@ -90,34 +95,36 @@ router.patch('/:id', (req, res) => {
   const parsed = validateRule(merged);
   if (parsed.error) return res.status(400).json({ error: parsed.error });
 
-  db.prepare(`
+  tdb.prepare(`
     UPDATE alert_rules
-       SET name = ?, enabled = ?, predicate_json = ?, channels_json = ?,
-           dedup_window_sec = ?, storm_cap_per_hour = ?,
+       SET name = @name, enabled = @enabled, predicate_json = @predicate_json,
+           channels_json = @channels_json, dedup_window_sec = @dedup_window_sec,
+           storm_cap_per_hour = @storm_cap_per_hour,
            updated_at = datetime('now')
-     WHERE id = ? AND tenant_id = ?
-  `).run(
-    parsed.name, parsed.enabled ? 1 : 0,
-    JSON.stringify(parsed.predicate),
-    JSON.stringify(parsed.channels),
-    parsed.dedup_window_sec, parsed.storm_cap_per_hour,
-    req.params.id, tenantId(req),
-  );
-  const row = db.prepare(
-    `SELECT * FROM alert_rules WHERE id = ? AND tenant_id = ?`,
-  ).get(req.params.id, tenantId(req));
+     WHERE id = @id AND tenant_id = @tenant_id
+  `).run({
+    name: parsed.name,
+    enabled: parsed.enabled ? 1 : 0,
+    predicate_json: JSON.stringify(parsed.predicate),
+    channels_json: JSON.stringify(parsed.channels),
+    dedup_window_sec: parsed.dedup_window_sec,
+    storm_cap_per_hour: parsed.storm_cap_per_hour,
+    id: req.params.id,
+  });
+  const row = tdb.prepare(
+    `SELECT * FROM alert_rules WHERE id = @id AND tenant_id = @tenant_id`,
+  ).get({ id: req.params.id });
   res.json({ data: decodeRow(row) });
 });
 
 router.delete('/:id', (req, res) => {
-  // Cascade: remove the rule's event history too.
-  const tx = db.transaction(() => {
-    db.prepare(`DELETE FROM alert_events WHERE rule_id = ? AND tenant_id = ?`)
-      .run(req.params.id, tenantId(req));
-    db.prepare(`DELETE FROM alert_rules WHERE id = ? AND tenant_id = ?`)
-      .run(req.params.id, tenantId(req));
+  // Cascade: remove the rule's event history too. Atomic + tenant-scoped.
+  tenantDb(tenantId(req)).transaction((t) => {
+    t.prepare(`DELETE FROM alert_events WHERE rule_id = @id AND tenant_id = @tenant_id`)
+      .run({ id: req.params.id });
+    t.prepare(`DELETE FROM alert_rules WHERE id = @id AND tenant_id = @tenant_id`)
+      .run({ id: req.params.id });
   });
-  tx();
   res.status(204).end();
 });
 
@@ -135,36 +142,52 @@ router.post('/:id/mute', (req, res) => {
   // SQL injection safe — duration is integer-validated above and embedded
   // into the literal datetime expression. Better than binding because
   // SQLite's strftime args don't take parameter markers cleanly.
-  const result = db.prepare(`
+  const result = tenantDb(tenantId(req)).prepare(`
     UPDATE alert_rules SET muted_until = ${mutedUntil}, updated_at = datetime('now')
-     WHERE id = ? AND tenant_id = ?
-  `).run(req.params.id, tenantId(req));
+     WHERE id = @id AND tenant_id = @tenant_id
+  `).run({ id: req.params.id });
   if (result.changes === 0) return res.status(404).json({ error: 'Not found' });
   res.json({ ok: true });
 });
 
 router.post('/:id/unmute', (req, res) => {
-  const result = db.prepare(`
+  const result = tenantDb(tenantId(req)).prepare(`
     UPDATE alert_rules SET muted_until = NULL, updated_at = datetime('now')
-     WHERE id = ? AND tenant_id = ?
-  `).run(req.params.id, tenantId(req));
+     WHERE id = @id AND tenant_id = @tenant_id
+  `).run({ id: req.params.id });
   if (result.changes === 0) return res.status(404).json({ error: 'Not found' });
   res.json({ ok: true });
 });
 
 router.get('/:id/events', (req, res) => {
   const limit = Math.min(500, Math.max(1, Number(req.query.limit) || 100));
-  const rows = db.prepare(`
-    SELECT id, item_uid, matched_at, delivered_channels_json, suppressed, reason
-      FROM alert_events
-     WHERE rule_id = ? AND tenant_id = ?
-     ORDER BY matched_at DESC
-     LIMIT ?
-  `).all(req.params.id, tenantId(req), limit);
+  // LEFT JOIN intel_items so the client can render a meaningful row
+  // (title + source + link) instead of a bare uid. Additive — existing
+  // fields are unchanged; item_* are null when the matched row has since
+  // been pruned from intel_items.
+  const rows = tenantDb(tenantId(req)).prepare(`
+    SELECT e.id, e.item_uid, e.matched_at, e.delivered_channels_json,
+           e.suppressed, e.reason,
+           i.title     AS item_title,
+           i.source_id AS item_source_id,
+           i.link      AS item_link
+      FROM alert_events e
+      LEFT JOIN intel_items i ON i.uid = e.item_uid
+     WHERE e.rule_id = @rule_id AND e.tenant_id = @tenant_id
+     ORDER BY e.matched_at DESC
+     LIMIT @limit
+  `).all({ rule_id: req.params.id, limit });
   res.json({
     data: rows.map((r) => ({
-      ...r,
+      id: r.id,
+      item_uid: r.item_uid,
+      matched_at: r.matched_at,
+      suppressed: r.suppressed,
+      reason: r.reason,
       delivered_channels: safeJson(r.delivered_channels_json, []),
+      item_title: r.item_title ?? null,
+      item_source_id: r.item_source_id ?? null,
+      item_link: r.item_link ?? null,
     })),
   });
 });
@@ -176,9 +199,9 @@ router.get('/:id/events', (req, res) => {
  * intel_items.
  */
 router.post('/:id/test', (req, res) => {
-  const rule = db.prepare(
-    `SELECT * FROM alert_rules WHERE id = ? AND tenant_id = ?`,
-  ).get(req.params.id, tenantId(req));
+  const rule = tenantDb(tenantId(req)).prepare(
+    `SELECT * FROM alert_rules WHERE id = @id AND tenant_id = @tenant_id`,
+  ).get({ id: req.params.id });
   if (!rule) return res.status(404).json({ error: 'Not found' });
 
   const fakeItem = {

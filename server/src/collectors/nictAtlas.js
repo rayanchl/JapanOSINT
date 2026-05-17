@@ -24,7 +24,8 @@ export default async function collectNictAtlas() {
   return intelEnvelope({
     sourceId: SOURCE_ID,
     items,
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'NICT NICTER darknet sensor visualization',
   });
 }

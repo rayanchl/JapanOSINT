@@ -27,7 +27,8 @@ export default async function collectJpxQuotes() {
       tags: ['equity', 'jpx', 'tse', live ? 'reachable' : 'unreachable'],
       properties: { operator: 'Japan Exchange Group', reachable: live },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'JPX equity statistics portal',
   });
 }

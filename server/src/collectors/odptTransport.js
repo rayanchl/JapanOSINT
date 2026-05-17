@@ -12,15 +12,16 @@
  */
 
 import { fetchOverpass } from './_liveHelpers.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const API_BASE = 'https://api.odpt.org/api/v4/';
 const CHALLENGE_API_BASE = 'https://api-challenge.odpt.org/api/v4/';
 const TIMEOUT_MS = 30000;
 
 function getOdptToken() {
-  return process.env.ODPT_TOKEN
-    || process.env.ODPT_CONSUMER_KEY
-    || process.env.ODPT_CHALLENGE_TOKEN
+  return envFor('ODPT_TOKEN')
+    || envFor('ODPT_CONSUMER_KEY')
+    || envFor('ODPT_CHALLENGE_TOKEN')
     || null;
 }
 

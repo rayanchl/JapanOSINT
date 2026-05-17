@@ -17,7 +17,7 @@ struct BBox: Codable, Hashable, Sendable {
 
 // ── Layers (from /api/layers) ──────────────────────────────────────────────
 
-struct LayerSourceRef: Codable, Hashable, Identifiable, Sendable {
+nonisolated struct LayerSourceRef: Codable, Hashable, Identifiable, Sendable {
     let id: String
     let name: String?
     let type: String?
@@ -26,12 +26,12 @@ struct LayerSourceRef: Codable, Hashable, Identifiable, Sendable {
 
 /// Time-coded layer columns advertised by the server. Used by the iOS
 /// client only to flag features that fell back to `fetched_at` in replay.
-struct LayerTemporal: Codable, Hashable, Sendable {
+nonisolated struct LayerTemporal: Codable, Hashable, Sendable {
     let field: String
     let fallbackField: String?
 }
 
-struct LayerDef: Codable, Identifiable, Hashable, Sendable {
+nonisolated struct LayerDef: Codable, Identifiable, Hashable, Sendable {
     let id: String
     let name: String
     let category: String?
@@ -61,7 +61,7 @@ struct LayerDef: Codable, Identifiable, Hashable, Sendable {
 
 // ── GeoJSON ────────────────────────────────────────────────────────────────
 
-enum Geometry: @unchecked Sendable {
+nonisolated enum Geometry: @unchecked Sendable {
     case point(CLLocationCoordinate2D)
     case lineString([CLLocationCoordinate2D])
     case polygon([[CLLocationCoordinate2D]])      // outer ring + holes
@@ -101,7 +101,7 @@ enum Geometry: @unchecked Sendable {
     }
 }
 
-extension Geometry {
+nonisolated extension Geometry {
     init?(rawType: String, coords: Any) {
         func coord(_ a: Any) -> CLLocationCoordinate2D? {
             guard let arr = a as? [Any], arr.count >= 2,
@@ -140,7 +140,7 @@ extension Geometry {
 /// `Any?` is fundamentally non-Sendable, but instances are immutable after
 /// decoding and only ever cross actors as part of frozen FeatureCollection
 /// payloads, so `@unchecked` is safe in practice.
-struct AnyCodable: Codable, Hashable, @unchecked Sendable {
+nonisolated struct AnyCodable: Codable, Hashable, @unchecked Sendable {
     let value: Any?
 
     init(_ value: Any?) { self.value = value }
@@ -182,7 +182,7 @@ struct AnyCodable: Codable, Hashable, @unchecked Sendable {
     }
 }
 
-struct GeoFeature: Identifiable, Equatable, Sendable {
+nonisolated struct GeoFeature: Identifiable, Equatable, Sendable {
     let id: String
     let layerId: String
     let geometry: Geometry
@@ -214,7 +214,7 @@ struct GeoFeature: Identifiable, Equatable, Sendable {
     }
 }
 
-struct FeatureCollection: Decodable, Sendable {
+nonisolated struct FeatureCollection: Decodable, Sendable {
     let features: [GeoFeature]
     let meta: [String: AnyCodable]?
 
@@ -244,7 +244,7 @@ struct FeatureCollection: Decodable, Sendable {
     }
 }
 
-private struct RawFeature: Decodable {
+private nonisolated struct RawFeature: Decodable {
     let id: AnyCodable?
     let geometry: RawGeometry?
     let properties: [String: AnyCodable]?
@@ -263,7 +263,7 @@ private struct RawFeature: Decodable {
     }
 }
 
-private struct RawGeometry: Decodable {
+private nonisolated struct RawGeometry: Decodable {
     let type: String?
     let coordinates: AnyCodable?
 
@@ -383,6 +383,58 @@ struct ApiKeyValue: Decodable {
     let value: String?
 }
 
+// ── API keys (per-tenant BYOK) ─────────────────────────────────────────────
+
+/// One env-var's status for the active workspace. `byok` = the workspace has
+/// its own encrypted key. `source`: "tenant" (own key) | "platform" (operator
+/// default) | nil (gated — no key anywhere). `set` = resolvable either way.
+struct TenantKeyMeta: Decodable, Identifiable, Hashable {
+    let name: String
+    let role: String          // "required" | "anyOf" | "optional"
+    let byok: Bool
+    let set: Bool
+    let source: String?       // "tenant" | "platform" | nil
+    var id: String { name }
+}
+
+/// `GET /api/tenant-keys`. `canManage` reflects the owner-chosen edit policy
+/// resolved server-side for the caller; the client uses it to gate editing.
+struct TenantKeysEnvelope: Decodable {
+    let items: [TenantKeyMeta]
+    let canManage: Bool
+    let policy: String              // owner_only | selected_member | all_members
+    let policyMemberId: String?
+}
+
+/// `PUT /api/tenant-keys/:name` response — enough to refresh one row without
+/// a full reload.
+struct TenantKeyWrite: Decodable {
+    let name: String
+    let byok: Bool
+    let set: Bool
+    let source: String?
+}
+
+/// `PUT /api/tenant-keys/policy` response.
+struct KeyPolicyState: Decodable {
+    let policy: String
+    let memberId: String?
+}
+
+struct KeyPolicyMember: Decodable, Identifiable, Hashable {
+    let id: String
+    let email: String
+    let role: String
+}
+
+/// `GET /api/tenant-keys/policy`. `members` is the roster the owner picks a
+/// delegate from when policy = selected_member.
+struct KeyPolicyResponse: Decodable {
+    let policy: String
+    let memberId: String?
+    let members: [KeyPolicyMember]
+}
+
 // ── Geocoding ──────────────────────────────────────────────────────────────
 
 struct GeocodeHit: Codable, Identifiable, Hashable {
@@ -465,6 +517,11 @@ struct IntelItem: Codable, Identifiable, Hashable {
     let tags: [String]?
     let properties: [String: AnyCodable]?
     let _excerpt: String?
+    /// Per-data-point provenance assembled server-side (intelStore.rowToItem):
+    /// which collector, the upstream origin URL, this datum's own link,
+    /// fetch/publish times, and license/confidence when known. Always sent by
+    /// the server but optional here so older cached JSON still decodes.
+    let provenance: Provenance?
     /// True when this item was matched only by the auto-translated alt query
     /// (qAlt), not by the user's original q. The Intel tab renders a small
     /// "translated" badge on rows where this is true.
@@ -473,6 +530,24 @@ struct IntelItem: Codable, Identifiable, Hashable {
 
     static func == (lhs: IntelItem, rhs: IntelItem) -> Bool { lhs.uid == rhs.uid }
     func hash(into hasher: inout Hasher) { hasher.combine(uid) }
+}
+
+/// Mirror of the server `provenance` block (see intelStore.buildProvenance).
+/// Every field is optional/null-tolerant so a pruned source or a partial
+/// collector never breaks decoding.
+struct Provenance: Codable, Hashable {
+    let source_id: String?
+    let source_name: String?
+    let source_name_ja: String?
+    let category: String?
+    let collection_method: String?   // "api" | "scrape" | "rss" | "dataset" | …
+    let source_url: String?          // upstream origin the collector pulls from
+    let item_url: String?            // this datum's own upstream link
+    let sub_source_id: String?
+    let fetched_at: String?
+    let published_at: String?
+    let license: String?
+    let confidence: Double?
 }
 
 struct IntelItemsEnvelope: Decodable {
@@ -536,8 +611,34 @@ struct AlertEvent: Decodable, Identifiable, Hashable {
     let delivered_channels: [String]
     let suppressed: Int
     let reason: String?
+    /// Joined from intel_items server-side so the history row can show the
+    /// matched item instead of a bare uid. Null when the matched row has
+    /// since been pruned.
+    let item_title: String?
+    let item_source_id: String?
+    let item_link: String?
 }
 struct AlertEventsEnvelope: Decodable { let data: [AlertEvent] }
+
+// ── Identity / tenancy (GET /api/me) ───────────────────────────────────────
+
+struct MeResponse: Decodable {
+    let user: MeUser?
+    let tenant: MeTenant?
+    let memberships: [MeTenant]?
+}
+struct MeUser: Decodable, Hashable {
+    let id: String
+    let email: String?
+    let display_name: String?
+}
+struct MeTenant: Decodable, Hashable, Identifiable {
+    let id: String
+    let slug: String
+    let name: String
+    let plan: String?
+    let role: String?
+}
 
 // ── Database explorer ──────────────────────────────────────────────────────
 

@@ -12,6 +12,8 @@
  * fail (e.g. JMA reorganises the bosai pages again).
  */
 
+import { intelHashKey } from '../utils/intelHelpers.js';
+
 const POINTINFO_URL = 'https://www.jma.go.jp/bosai/wave/const/pointinfo.json';
 const PER_STATION_URL = (n) => `https://www.jma.go.jp/bosai/wave/data/swjp/${n}.json`;
 
@@ -78,7 +80,7 @@ function generateSeedData() {
     type: 'Feature',
     geometry: { type: 'Point', coordinates: [b.lon, b.lat] },
     properties: {
-      buoy_id: `WAV_${String(i + 1).padStart(5, '0')}`,
+      buoy_id: `WAV_${intelHashKey(b.name, b.lat, b.lon)}`,
       name: b.name,
       wave_height_m: b.height_m,
       period_s: b.period_s,

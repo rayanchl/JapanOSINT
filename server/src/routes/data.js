@@ -305,7 +305,7 @@ async function respondWithData(res, { sourceId, layerType, collectorKey }) {
       data = await withCollectorRun(
         collectorKey,
         () => collector(),
-        { trigger: 'on-demand' },
+        { trigger: 'on-demand', tenantId: req.tenant?.id },
       );
     } catch (err) {
       broadcastLayerWorkFinished({
@@ -491,12 +491,12 @@ router.get('/cameras/discovery-feed', (req, res) => {
 // POST /api/data/cameras/trigger — kick a camera-discovery run on demand
 // (e.g. when the user toggles the Cameras layer on). The runner already
 // dedupes via _inflightRun, so repeated calls during an active run are safe.
-router.post('/cameras/trigger', (_req, res) => {
+router.post('/cameras/trigger', (req, res) => {
   if (isRunInFlight()) {
     return res.json({ started: false, already_running: true });
   }
   const wsServer = getBroadcaster();
-  withCollectorRun('cameraDiscovery', () => runCameraDiscovery(wsServer), { trigger: 'manual' })
+  withCollectorRun('cameraDiscovery', () => runCameraDiscovery(wsServer), { trigger: 'manual', tenantId: req.tenant?.id })
     .catch((err) => {
       console.error('[data] manual camera run failed:', err?.message);
     });

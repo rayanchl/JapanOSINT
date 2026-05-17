@@ -27,7 +27,8 @@ export default async function collectSteamJpUsers() {
       tags: ['gaming', 'steam', 'profile-search', live ? 'reachable' : 'unreachable'],
       properties: { reachable: live },
     }],
-    live,
+    live: false, // probe-only: reachability ping emits no real data records
+    extraMeta: { probe: true, reachable: live },
     description: 'Steam Community JP profile search',
   });
 }

@@ -14,13 +14,15 @@
  * Empty FeatureCollection when key missing — no fallback.
  */
 
+import { envFor } from '../utils/collectorEnv.js';
+
 const BASE = 'https://quake.360.net/api/v3/search/quake_service';
 const TIMEOUT_MS = 20000;
 
-const DEFAULT_QUERY = process.env.QUAKE_QUERY || 'country: "Japan"';
-
 export default async function collectQuake360Jp() {
-  const key = process.env.QUAKE_API_KEY;
+  const key = envFor('QUAKE_API_KEY');
+  // Read at call time so a tenant's BYOK / API-keys overlay can override it.
+  const query = envFor('QUAKE_QUERY') || 'country: "Japan"';
   if (!key) {
     return {
       type: 'FeatureCollection',
@@ -36,7 +38,7 @@ export default async function collectQuake360Jp() {
   }
 
   const body = {
-    query: DEFAULT_QUERY,
+    query,
     start: 0,
     size: 100,
     include: [
@@ -104,7 +106,7 @@ export default async function collectQuake360Jp() {
         source: 'quake_live',
         fetchedAt: new Date().toISOString(),
         recordCount: features.length,
-        query: DEFAULT_QUERY,
+        query,
         description: 'Quake (360) internet asset search — Japan',
       },
     };

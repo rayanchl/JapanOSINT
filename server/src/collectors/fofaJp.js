@@ -17,10 +17,6 @@
 const BASE = 'https://fofa.info/api/v1/search/all';
 const TIMEOUT_MS = 20000;
 
-// Query FOFA filter expression — country=JP plus optional ICS/IoT focus.
-// Override at deploy time with FOFA_QUERY=...
-const DEFAULT_QUERY = process.env.FOFA_QUERY || 'country="JP"';
-
 // Fields returned (order matters — FOFA returns positional arrays, not objects)
 const FIELDS = [
   'ip', 'port', 'protocol', 'host', 'domain', 'title',
@@ -35,13 +31,13 @@ function decodeRow(arr) {
 }
 
 import { intelEnvelope, intelUid } from '../utils/intelHelpers.js';
-import { getEnv } from '../utils/credentials.js';
+import { envFor } from '../utils/collectorEnv.js';
 
 const SOURCE_ID = 'fofa-jp';
 
 export default async function collectFofaJp() {
-  const key = getEnv(null, 'FOFA_API_KEY');
-  const email = getEnv(null, 'FOFA_EMAIL') || '';
+  const key = envFor('FOFA_API_KEY');
+  const email = envFor('FOFA_EMAIL') || '';
   if (!key) {
     return intelEnvelope({
       sourceId: SOURCE_ID,
@@ -52,7 +48,10 @@ export default async function collectFofaJp() {
     });
   }
 
-  const qbase64 = Buffer.from(DEFAULT_QUERY).toString('base64');
+  // Read at call time so a tenant's BYOK / API-keys overlay can override the
+  // filter expression; falls back to country="JP" for platform/scheduler runs.
+  const query = envFor('FOFA_QUERY') || 'country="JP"';
+  const qbase64 = Buffer.from(query).toString('base64');
   const params = new URLSearchParams({
     email,
     key,
@@ -111,7 +110,7 @@ export default async function collectFofaJp() {
     items,
     live,
     description: 'FOFA internet asset search — country="JP"',
-    extraMeta: { query: DEFAULT_QUERY },
+    extraMeta: { query },
   });
 }
 

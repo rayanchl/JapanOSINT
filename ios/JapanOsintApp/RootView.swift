@@ -14,11 +14,40 @@ import SwiftUI
 /// admin surfaces are reachable in one tap instead of two.
 struct RootView: View {
     @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var auth: AuthSession
     @EnvironmentObject var mapNav: MapNavigation
     @Environment(\.theme) private var theme
     @Environment(\.horizontalSizeClass) private var hSize
 
     var body: some View {
+        Group {
+            switch auth.gate {
+            case .loading:
+                ZStack {
+                    theme.surface.ignoresSafeArea()
+                    ProgressView().tint(theme.accent)
+                }
+                .transition(.opacity)
+            case .onboarding:
+                OnboardingFlow()
+                    .transition(.opacity)
+            case .ready:
+                shell
+                    .transition(.opacity)
+            }
+        }
+        // Crossfade between gates so onboarding fades out cleanly into the
+        // app instead of hard-cutting.
+        .animation(.easeInOut(duration: 0.45), value: auth.gate)
+        // Guarantee a fresh post-onboarding session always lands on the Map
+        // (covers both the phone TabView and the iPad split view).
+        .onChange(of: auth.gate) { _, gate in
+            if gate == .ready { mapNav.selectedTab = AppTab.map.rawValue }
+        }
+    }
+
+    @ViewBuilder
+    private var shell: some View {
         Group {
             if hSize == .regular {
                 splitView
@@ -41,6 +70,10 @@ struct RootView: View {
                 .tabItem { Label("Intel", systemImage: "newspaper.fill") }
                 .tag(AppTab.intel.rawValue)
 
+            SearchTab()
+                .tabItem { Label("Search", systemImage: "magnifyingglass") }
+                .tag(AppTab.search.rawValue)
+
             SavedTab()
                 .tabItem { Label("Saved", systemImage: "star.fill") }
                 .tag(AppTab.saved.rawValue)
@@ -60,6 +93,8 @@ struct RootView: View {
     enum SidebarItem: Hashable {
         case workspace(AppTab)
         case console(ConsoleDestination)
+        case entities          // entity browser (iPad sidebar; phone reaches
+                               // it via push from entity chips)
     }
 
     @State private var sidebar: SidebarItem? = .workspace(.map)
@@ -70,6 +105,8 @@ struct RootView: View {
                 Section {
                     sidebarLabel(.workspace(.map),    icon: "map.fill",          title: "Map")
                     sidebarLabel(.workspace(.intel),  icon: "newspaper.fill",    title: "Intel")
+                    sidebarLabel(.workspace(.search), icon: "magnifyingglass",   title: "Search")
+                    sidebarLabel(.entities,           icon: "point.3.connected.trianglepath.dotted", title: "Entities")
                     sidebarLabel(.workspace(.saved),  icon: "star.fill",         title: "Saved")
                 } header: {
                     Text("Workspace")
@@ -77,15 +114,20 @@ struct RootView: View {
 
                 Section {
                     sidebarLabel(.console(.sources),   icon: "chart.pie.fill",               title: "Sources")
-                    sidebarLabel(.console(.database),  icon: "cylinder.split.1x2.fill",      title: "Database")
-                    sidebarLabel(.console(.scheduler), icon: "calendar.badge.clock",         title: "Scheduler")
-                    sidebarLabel(.console(.followLog), icon: "scroll",                       title: "Follow log")
                     sidebarLabel(.console(.cameras),   icon: "video.fill",                   title: "Camera discovery")
                     sidebarLabel(.console(.alerts),    icon: "bell.badge.fill",              title: "Alerts")
                     sidebarLabel(.console(.apiKeys),   icon: "key.fill",                     title: "API keys")
                     sidebarLabel(.console(.settings),  icon: "gearshape.fill",               title: "Settings")
                 } header: {
                     Text("Console")
+                }
+
+                if auth.isPlatformAdmin {
+                    Section {
+                        sidebarLabel(.console(.admin), icon: "lock.shield.fill", title: "Admin")
+                    } header: {
+                        Text("Admin")
+                    }
                 }
             }
             .navigationTitle("JapanOSINT")
@@ -99,7 +141,7 @@ struct RootView: View {
         .onChange(of: mapNav.selectedTab) { _, raw in
             guard let tab = AppTab(rawValue: raw) else { return }
             switch tab {
-            case .map, .intel, .saved: sidebar = .workspace(tab)
+            case .map, .intel, .saved, .search: sidebar = .workspace(tab)
             case .console:
                 if let dest = mapNav.consolePath.first {
                     sidebar = .console(dest)
@@ -118,6 +160,8 @@ struct RootView: View {
         switch sidebar {
         case .workspace(.map),  .none: MapTab()
         case .workspace(.intel):       IntelTab()
+        case .workspace(.search):      SearchTab()
+        case .entities:                EntitiesView()
         case .workspace(.saved):       SavedTab()
         case .workspace(.console):     ConsoleHub()
         case .console(let dest):
@@ -133,6 +177,8 @@ struct RootView: View {
                 case .apiKeys:    ApiKeysTab()
                 case .alerts:     AlertsTab()
                 case .settings:   SettingsTab()
+                case .workspace:  WorkspaceSettingsTab()
+                case .admin:      AdminPanel()
                 }
             }
         }

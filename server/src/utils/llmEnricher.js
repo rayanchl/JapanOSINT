@@ -1,6 +1,7 @@
 // server/src/utils/llmEnricher.js
 import db from './database.js';
 import { chat as defaultChat } from './llmClient.js';
+import { enrichEntities, resolveEntities } from './entityExtractor.js';
 import { gsiAddressSearch as defaultGsi } from './gsiAddressSearch.js';
 import { findUncertainStationPairs as defaultPairs } from './stationClusterer.js';
 import {
@@ -413,6 +414,8 @@ export async function runLlmEnricher() {
     ['cameras', enrichCameras],
     ['intelGeo', enrichIntelGeocode],
     ['intelKeywords', enrichIntelKeywords],
+    ['entities', enrichEntities],
+    ['entityResolve', resolveEntities],
   ]) {
     try {
       out[name] = await fn();

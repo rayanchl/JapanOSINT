@@ -109,12 +109,30 @@ final class AppPreferences {
     /// JSON-encoded `Set<String>`.
     var optedOutFollowersJSON: Data
 
+    // MARK: - Auth / onboarding
+    //
+    // New properties with inline defaults so SwiftData lightweight migration
+    // is non-destructive on existing stores. Secrets (access/refresh tokens)
+    // are NOT here — they live in the Keychain. The anon key is publishable,
+    // so it's fine in the local DB.
+
+    /// Set once the onboarding wizard finishes (or is satisfied because the
+    /// backend reports legacy single-tenant mode). Gates `RootView`.
+    var onboardingCompleted: Bool = false
+    /// Supabase project URL, e.g. https://abcd.supabase.co
+    var supabaseURL: String = ""
+    /// Supabase publishable anon key.
+    var supabaseAnonKey: String = ""
+    /// Tenant the user last selected; sent as `X-Tenant-Id`. Empty → let the
+    /// server pick the first membership.
+    var activeTenantId: String = ""
+
     static let singletonKey = "app.preferences.v1"
 
     init(key: String = AppPreferences.singletonKey) {
         self.key = key
-        self.backendBaseURL = "http://127.0.0.1:4000"
-        self.appThemeRaw = "cyberpunk"
+        self.backendBaseURL = BuildConfig.backendBaseURL
+        self.appThemeRaw = "system"
         self.liveCarriagesEnabled = false
         self.liveTrainsEnabled = false
         self.liveSubwaysEnabled = false
@@ -134,6 +152,10 @@ final class AppPreferences {
         self.activeLayerIdsJSON = Data()
         self.layerOpacityJSON = Data()
         self.optedOutFollowersJSON = Data()
+        self.onboardingCompleted = false
+        self.supabaseURL = BuildConfig.supabaseURL
+        self.supabaseAnonKey = BuildConfig.supabaseAnonKey
+        self.activeTenantId = ""
     }
 }
 

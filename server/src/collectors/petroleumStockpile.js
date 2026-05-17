@@ -13,6 +13,7 @@
  */
 
 import { fetchOverpass, fetchText } from './_liveHelpers.js';
+import { intelHashKey } from '../utils/intelHelpers.js';
 
 // 15 national bases (10 oil + 5 LPG). slug = JOGMEC URL slug under
 // /about/domestic-offices/{reserve-base|storage-base}/{slug}.html
@@ -162,7 +163,9 @@ export default async function collectPetroleumStockpile() {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [b.lon, b.lat] },
       properties: {
-        reserve_id: `STOCK_${String(i + 1).padStart(5, '0')}`,
+        // `slug` is the stable JOGMEC base identifier; key on it so reruns
+        // coalesce instead of clobbering on positional index.
+        reserve_id: `STOCK_${b.slug}`,
         name: b.name,
         kind: b.kind,
         capacity_kl:    live?.capacity_kl ?? b.capacity_kl ?? null,
@@ -179,12 +182,13 @@ export default async function collectPetroleumStockpile() {
     });
   });
 
-  COMMERCIAL_DEPOTS.forEach((d, i) => {
+  COMMERCIAL_DEPOTS.forEach((d) => {
     features.push({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [d.lon, d.lat] },
       properties: {
-        reserve_id: `STOCK_C_${String(i + 1).padStart(5, '0')}`,
+        // No upstream id for seeded depots — fingerprint name+coords.
+        reserve_id: `STOCK_C_${intelHashKey(d.name, d.lat, d.lon)}`,
         name: d.name,
         kind: 'commercial',
         capacity_kl: d.capacity_kl,

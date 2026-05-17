@@ -8,6 +8,8 @@
  * fetch raw markdown and extract PoC repo links.
  */
 
+import { envFor } from '../utils/collectorEnv.js';
+
 const REPO_API = 'https://api.github.com/repos/trickest/cve/contents';
 const RAW_BASE = 'https://raw.githubusercontent.com/trickest/cve/main';
 const TIMEOUT_MS = 15000;
@@ -16,7 +18,7 @@ const TOKYO = [139.6917, 35.6895];
 const SAMPLE_LIMIT = Number(process.env.TRICKEST_CVE_LIMIT || 50);
 
 async function ghJson(url) {
-  const token = process.env.GITHUB_TOKEN || '';
+  const token = envFor('GITHUB_TOKEN') || '';
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   const res = await fetch(url, {
