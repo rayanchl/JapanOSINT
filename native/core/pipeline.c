@@ -388,16 +388,15 @@ void osint_pipeline_run(db_handle *db, llm_client *llm,
 }
 
 char *osint_suggest(llm_client *llm, const char *query) {
+  /* Native /completion path (raw few-shot prompt + GBNF), NOT llm_chat:
+     prompt_suggestions() is a completion-style few-shot prompt. Routed
+     through the chat template, gpt-oss's harmony scaffolding primes channel
+     tokens that the suggestions grammar masks away, collapsing generation
+     into dot-spam. Raw /completion has no harmony wrapper, so the grammar
+     agrees with the model's natural continuation. */
   char *p = prompt_suggestions(query);
-  cJSON *msgs = cJSON_CreateArray();
-  cJSON *m = cJSON_CreateObject();
-  cJSON_AddStringToObject(m, "role", "user");
-  cJSON_AddStringToObject(m, "content", p);
-  cJSON_AddItemToArray(msgs, m);
-  char *mj = cJSON_PrintUnformatted(msgs);
-  cJSON_Delete(msgs); free(p);
-  char *out = llm_chat(llm, mj, grammar_load("suggestions"), 0.3, 20000);
-  free(mj);
+  char *out = llm_complete(llm, p, grammar_load("suggestions"), 1024, 0.3, 20000);
+  free(p);
   cJSON *arr = extract_json(out);            /* tolerant; may be [...] too */
   if (!arr && out) arr = cJSON_Parse(out);
   free(out);

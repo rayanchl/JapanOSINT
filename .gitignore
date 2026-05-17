@@ -18,8 +18,13 @@ DerivedData/
 *.xccheckout
 
 # Vendored LLM model + binary (large; not committed)
-server/models/*.gguf
+models/*.gguf
 native/llama/llama-server
 
 # C build artifacts
 native/obj/
+
+# relocated runtime data (moved out of server/)
+/models/
+/data/
+/scripts/llama-*.log

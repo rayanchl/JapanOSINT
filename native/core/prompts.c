@@ -527,7 +527,7 @@ const char *grammar_load(const char *name) {
   if (cached[idx]) return cached[idx];    /* cache hit (incl. cached "") */
 
   char path[1024];
-  snprintf(path, sizeof path, "%s/server/grammars/%s.gbnf",
+  snprintf(path, sizeof path, "%s/grammars/%s.gbnf",
            JO_REPO_ROOT, name);
 
   char *content = NULL;

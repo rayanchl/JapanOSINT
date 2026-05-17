@@ -29,7 +29,7 @@ static void iso_now(char *buf, size_t n) {
            tm.tm_hour, tm.tm_min, tm.tm_sec, (int)(tv.tv_usec / 1000));
 }
 /* The Node entrypoint runs applyOverlayToEnv() (apiKeysStore.js) BEFORE the
- * routes load: every non-empty string in server/data/api-keys.json (the iOS
+ * routes load: every non-empty string in data/api-keys.json (the iOS
  * API-keys tab store) is written into process.env, overriding .env/ambient.
  * getCredentialStatus then reads process.env. To match byte-for-byte we
  * resolve the same way: overlay non-empty string wins, else getenv. */
@@ -42,7 +42,7 @@ static void overlay_load(void) {
   if (g_overlay_done) return;
   g_overlay_done = 1;
   char path[1024];
-  snprintf(path, sizeof path, "%s/server/data/api-keys.json", JO_REPO_ROOT);
+  snprintf(path, sizeof path, "%s/data/api-keys.json", JO_REPO_ROOT);
   FILE *f = fopen(path, "rb");
   if (!f) return;
   fseek(f, 0, SEEK_END); long n = ftell(f); fseek(f, 0, SEEK_SET);

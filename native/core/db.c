@@ -29,7 +29,7 @@ int db_exec(db_handle *db, const char *sql, char **errmsg) {
 
 int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   const char *dbp = db_path ? db_path
-    : (getenv("JO_DB") ? getenv("JO_DB") : JO_REPO_ROOT "/server/data/japanmap.db");
+    : (getenv("JO_DB") ? getenv("JO_DB") : JO_REPO_ROOT "/data/japanmap.db");
   const char *scp = schema_path ? schema_path
     : (getenv("JO_SCHEMA") ? getenv("JO_SCHEMA") : JO_REPO_ROOT "/native/core/schema.sql");
 

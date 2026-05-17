@@ -50,7 +50,7 @@ static int b64_decode(const char *in, unsigned char *out, int outcap) {
 
 /* ── api-keys.json overlay (apiKeysStore.js) ──────────────────────────── */
 static void overlay_path(char *p, size_t n) {
-  snprintf(p, n, "%s/server/data/api-keys.json", JO_REPO_ROOT);
+  snprintf(p, n, "%s/data/api-keys.json", JO_REPO_ROOT);
 }
 static cJSON *overlay_read(void) {
   char p[1024]; overlay_path(p, sizeof p);
