@@ -24,14 +24,14 @@ struct AlertsTab: View {
                 list
             }
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle("Alerts")
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 Button { showCreate = true } label: { Image(systemName: "plus.circle.fill") }
                     .accessibilityLabel("New alert")
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 Button { Task { await reload() } } label: { Image(systemName: "arrow.clockwise") }
                     .disabled(loading)
             }
@@ -72,7 +72,7 @@ struct AlertsTab: View {
                 )
             }
         }
-        .listStyle(.insetGrouped)
+        .compatInsetGroupedListStyle()
         .scrollContentBackground(.hidden)
     }
 

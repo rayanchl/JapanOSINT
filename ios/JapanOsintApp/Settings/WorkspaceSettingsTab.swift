@@ -14,9 +14,31 @@ struct WorkspaceSettingsTab: View {
 
     private var role: String? { auth.me?.tenant?.role }
     private var isOwner: Bool { role == "owner" }
+    /// Owner and admins manage members, permissions, and workspace queries.
+    private var canManage: Bool { role == "owner" || role == "admin" }
 
     var body: some View {
         Form {
+            if canManage {
+                Section {
+                    NavigationLink {
+                        WorkspaceMembersView()
+                    } label: {
+                        Label("Members & permissions", systemImage: "person.2.fill")
+                    }
+                    NavigationLink {
+                        WorkspaceQueryView()
+                    } label: {
+                        Label("Queries", systemImage: "magnifyingglass.circle.fill")
+                    }
+                } header: {
+                    Text("Workspace")
+                } footer: {
+                    Text("Invite users by email and manage their roles, or build FTS / LLM-pipeline queries and save them as alerts.")
+                        .font(.caption2)
+                }
+            }
+
             if isOwner {
                 Section {
                     NavigationLink {
@@ -30,30 +52,19 @@ struct WorkspaceSettingsTab: View {
                     Text("Choose who, besides owner and admins, may edit this workspace's API keys.")
                         .font(.caption2)
                 }
-            } else {
+            }
+
+            if !canManage {
                 Section {
-                    Text("Workspace settings are managed by the workspace owner.")
+                    Text("Workspace settings are managed by the workspace owner or an admin.")
                         .font(.caption)
                         .foregroundStyle(theme.textMuted)
                 }
             }
-
-            Section {
-                NavigationLink {
-                    SourceScheduleSettingsView()
-                } label: {
-                    Label("Source scheduling", systemImage: "calendar.badge.clock")
-                }
-            } header: {
-                Text("Data collection")
-            } footer: {
-                Text("Pick, per source, whether it's cron-collected for the map or only grabbed live from Search. Both still feed Intel everywhere.")
-                    .font(.caption2)
-            }
         }
-        .scrollContentBackground(.hidden)
-        .background(theme.surface.ignoresSafeArea())
+        .compatGroupedForm()
+        .themedScreenBackground(theme)
         .navigationTitle("Workspace")
-        .navigationBarTitleDisplayMode(.inline)
+        .compatInlineTitle()
     }
 }

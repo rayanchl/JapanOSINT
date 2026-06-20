@@ -103,6 +103,46 @@ int tenant_resolve(db_handle *db, const auth_user *u,
   snprintf(out->display_name, sizeof out->display_name, "%s", dn ? dn : "");
   sqlite3_finalize(st);
 
+  /* Claim any pending invites addressed to this email: a freshly-invited
+   * user becomes a member of the inviting workspace on their first
+   * authenticated request, and the invite is consumed. */
+  if (out->email[0]) {
+    char itids[16][64], iroles[16][32]; int nv = 0;
+    if (sqlite3_prepare_v2(h,
+          "SELECT tenant_id,role FROM tenant_invites WHERE lower(email)=lower(?1)",
+          -1, &st, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(st, 1, out->email, -1, SQLITE_TRANSIENT);
+      while (sqlite3_step(st) == SQLITE_ROW && nv < 16) {
+        snprintf(itids[nv], sizeof itids[nv], "%s",
+                 (const char *)sqlite3_column_text(st, 0));
+        snprintf(iroles[nv], sizeof iroles[nv], "%s",
+                 (const char *)sqlite3_column_text(st, 1));
+        nv++;
+      }
+    }
+    sqlite3_finalize(st);
+    for (int i = 0; i < nv; i++) {
+      if (sqlite3_prepare_v2(h,
+            "INSERT OR IGNORE INTO memberships (user_id,tenant_id,role) "
+            "VALUES (?1,?2,?3)", -1, &st, NULL) == SQLITE_OK) {
+        sqlite3_bind_text(st, 1, out->user_id, -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(st, 2, itids[i], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(st, 3, iroles[i], -1, SQLITE_TRANSIENT);
+        sqlite3_step(st);
+      }
+      sqlite3_finalize(st);
+    }
+    if (nv > 0) {
+      if (sqlite3_prepare_v2(h,
+            "DELETE FROM tenant_invites WHERE lower(email)=lower(?1)",
+            -1, &st, NULL) == SQLITE_OK) {
+        sqlite3_bind_text(st, 1, out->email, -1, SQLITE_TRANSIENT);
+        sqlite3_step(st);
+      }
+      sqlite3_finalize(st);
+    }
+  }
+
   /* listMemberships; provision personal tenant on first sign-in */
   int has_membership = 0;
   if (sqlite3_prepare_v2(h,
@@ -368,4 +408,284 @@ char *tenantapi_audit_verify(db_handle *db, const char *tenant_id) {
   char *js = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
   return js;
+}
+
+/* ── /api/members — member roster + pending-invite management ───────────────
+ * Tenant-scoped; writes require owner/admin role in the active tenant (NOT
+ * the platform-operator gate). Routes (seg/act = path tail after
+ * /api/members/, parsed in httpd.c):
+ *   GET    (seg="")              → { members:[…], invites:[…] }
+ *   POST   invite                → invite by email (or add now if user exists)
+ *   PATCH  :userId/role          → change a member's role
+ *   DELETE :userId               → remove a member
+ *   DELETE invite/:id            → revoke a pending invite                  */
+
+static int member_can_manage(const tenant_ctx *t) {
+  return strcmp(t->role, "owner") == 0 || strcmp(t->role, "admin") == 0;
+}
+static int valid_role(const char *r) {
+  return r && (!strcmp(r,"owner") || !strcmp(r,"admin") ||
+               !strcmp(r,"analyst") || !strcmp(r,"viewer"));
+}
+static char *merr(int *status, int code, const char *msg) {
+  *status = code;
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddStringToObject(o, "error", msg);
+  char *js = cJSON_PrintUnformatted(o);
+  cJSON_Delete(o);
+  return js;
+}
+static char *mok(int *status, int code, cJSON *o) {
+  *status = code;
+  char *js = cJSON_PrintUnformatted(o);
+  cJSON_Delete(o);
+  return js;
+}
+/* Raw, unchained audit row (row_hash/chain_seq left NULL → excluded from
+ * audit_verify, like break-glass logins). */
+static void member_audit(sqlite3 *h, const tenant_ctx *t, const char *action,
+                         const char *target, const char *payload_json) {
+  char id[37]; uuid4(id);
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(h,
+        "INSERT INTO audit_events (id,tenant_id,user_id,action,target,"
+        "payload_json,ts) VALUES (?1,?2,?3,?4,?5,?6,datetime('now'))",
+        -1, &s, NULL) != SQLITE_OK) return;
+  sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 2, t->tenant_id, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 3, t->user_id, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 4, action, -1, SQLITE_TRANSIENT);
+  if (target) sqlite3_bind_text(s, 5, target, -1, SQLITE_TRANSIENT);
+  else        sqlite3_bind_null(s, 5);
+  sqlite3_bind_text(s, 6, payload_json ? payload_json : "{}", -1, SQLITE_TRANSIENT);
+  sqlite3_step(s);
+  sqlite3_finalize(s);
+}
+/* Count owners in the active tenant — used to block losing the last owner. */
+static int owner_count(sqlite3 *h, const char *tenant_id) {
+  sqlite3_stmt *s; int n = 0;
+  if (sqlite3_prepare_v2(h,
+        "SELECT COUNT(*) FROM memberships WHERE tenant_id=?1 AND role='owner'",
+        -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, tenant_id, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(s) == SQLITE_ROW) n = sqlite3_column_int(s, 0);
+  }
+  sqlite3_finalize(s);
+  return n;
+}
+/* Current role of a member, or NULL if not a member (buf must be ≥32). */
+static const char *member_role(sqlite3 *h, const char *tenant_id,
+                               const char *user_id, char *buf) {
+  sqlite3_stmt *s; const char *out = NULL;
+  if (sqlite3_prepare_v2(h,
+        "SELECT role FROM memberships WHERE tenant_id=?1 AND user_id=?2",
+        -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, tenant_id, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 2, user_id, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(s) == SQLITE_ROW) {
+      snprintf(buf, 32, "%s", (const char *)sqlite3_column_text(s, 0));
+      out = buf;
+    }
+  }
+  sqlite3_finalize(s);
+  return out;
+}
+
+char *tenantapi_members(db_handle *db, const tenant_ctx *t,
+                        const char *method, const char *seg,
+                        const char *act, const char *body, int *status) {
+  sqlite3 *h = db->h;
+
+  /* GET /api/members — roster + pending invites (any member may read) */
+  if (!seg[0] && strcmp(method, "GET") == 0) {
+    cJSON *members = cJSON_CreateArray();
+    sqlite3_stmt *s;
+    if (sqlite3_prepare_v2(h,
+          "SELECT u.id,u.email,m.role FROM memberships m JOIN users u "
+          "ON u.id=m.user_id WHERE m.tenant_id=?1 ORDER BY m.created_at ASC",
+          -1, &s, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(s, 1, t->tenant_id, -1, SQLITE_TRANSIENT);
+      while (sqlite3_step(s) == SQLITE_ROW) {
+        cJSON *r = cJSON_CreateObject();
+        cJSON_AddStringToObject(r, "user_id", (const char *)sqlite3_column_text(s,0));
+        cJSON_AddStringToObject(r, "email",   (const char *)sqlite3_column_text(s,1));
+        cJSON_AddStringToObject(r, "role",    (const char *)sqlite3_column_text(s,2));
+        cJSON_AddItemToArray(members, r);
+      }
+    }
+    sqlite3_finalize(s);
+    cJSON *invites = cJSON_CreateArray();
+    if (sqlite3_prepare_v2(h,
+          "SELECT id,email,role,created_at FROM tenant_invites "
+          "WHERE tenant_id=?1 ORDER BY created_at ASC", -1, &s, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(s, 1, t->tenant_id, -1, SQLITE_TRANSIENT);
+      while (sqlite3_step(s) == SQLITE_ROW) {
+        cJSON *r = cJSON_CreateObject();
+        cJSON_AddStringToObject(r, "id",         (const char *)sqlite3_column_text(s,0));
+        cJSON_AddStringToObject(r, "email",      (const char *)sqlite3_column_text(s,1));
+        cJSON_AddStringToObject(r, "role",       (const char *)sqlite3_column_text(s,2));
+        cJSON_AddStringToObject(r, "created_at", (const char *)sqlite3_column_text(s,3));
+        cJSON_AddItemToArray(invites, r);
+      }
+    }
+    sqlite3_finalize(s);
+    cJSON *o = cJSON_CreateObject();
+    cJSON_AddItemToObject(o, "members", members);
+    cJSON_AddItemToObject(o, "invites", invites);
+    return mok(status, 200, o);
+  }
+
+  /* All remaining routes mutate membership → owner/admin only. */
+  if (!member_can_manage(t))
+    return merr(status, 403, "Workspace owner or admin role required");
+
+  /* POST /api/members/invite { email, role } */
+  if (strcmp(seg, "invite") == 0 && !act[0] && strcmp(method, "POST") == 0) {
+    cJSON *jb = (body && *body) ? cJSON_Parse(body) : NULL;
+    cJSON *je = jb ? cJSON_GetObjectItem(jb, "email") : NULL;
+    cJSON *jr = jb ? cJSON_GetObjectItem(jb, "role") : NULL;
+    const char *em = (je && cJSON_IsString(je)) ? je->valuestring : NULL;
+    const char *role = (jr && cJSON_IsString(jr)) ? jr->valuestring : "analyst";
+    if (!em || !strchr(em, '@')) { if (jb) cJSON_Delete(jb);
+      return merr(status, 400, "valid email required"); }
+    if (!valid_role(role)) { if (jb) cJSON_Delete(jb);
+      return merr(status, 400, "invalid role"); }
+    char mail[256]; int mi = 0;
+    for (const char *p = em; *p && mi < 255; p++) mail[mi++] = (char)tolower((unsigned char)*p);
+    mail[mi] = 0;
+
+    /* Already a user? Add membership immediately rather than queue an invite. */
+    sqlite3_stmt *s; char existing_uid[64] = {0};
+    if (sqlite3_prepare_v2(h, "SELECT id FROM users WHERE lower(email)=?1",
+          -1, &s, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(s, 1, mail, -1, SQLITE_TRANSIENT);
+      if (sqlite3_step(s) == SQLITE_ROW)
+        snprintf(existing_uid, sizeof existing_uid, "%s",
+                 (const char *)sqlite3_column_text(s, 0));
+    }
+    sqlite3_finalize(s);
+
+    cJSON *o = cJSON_CreateObject();
+    if (existing_uid[0]) {
+      char rb[32];
+      if (member_role(h, t->tenant_id, existing_uid, rb)) {
+        if (jb) cJSON_Delete(jb);
+        cJSON_AddBoolToObject(o, "ok", 1);
+        cJSON_AddStringToObject(o, "status", "already_member");
+        return mok(status, 200, o);
+      }
+      if (sqlite3_prepare_v2(h,
+            "INSERT OR IGNORE INTO memberships (user_id,tenant_id,role) "
+            "VALUES (?1,?2,?3)", -1, &s, NULL) == SQLITE_OK) {
+        sqlite3_bind_text(s, 1, existing_uid, -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(s, 2, t->tenant_id, -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(s, 3, role, -1, SQLITE_TRANSIENT);
+        sqlite3_step(s);
+      }
+      sqlite3_finalize(s);
+      member_audit(h, t, "member.add", mail, NULL);
+      cJSON_AddBoolToObject(o, "ok", 1);
+      cJSON_AddStringToObject(o, "status", "added");
+      cJSON_AddStringToObject(o, "user_id", existing_uid);
+      cJSON_AddStringToObject(o, "role", role);
+      if (jb) cJSON_Delete(jb);
+      return mok(status, 200, o);
+    }
+
+    /* Otherwise queue / refresh a pending invite. */
+    char id[37]; uuid4(id);
+    if (sqlite3_prepare_v2(h,
+          "INSERT INTO tenant_invites (id,tenant_id,email,role,invited_by) "
+          "VALUES (?1,?2,?3,?4,?5) ON CONFLICT(tenant_id,email) "
+          "DO UPDATE SET role=excluded.role, invited_by=excluded.invited_by",
+          -1, &s, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 2, t->tenant_id, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 3, mail, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 4, role, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 5, t->user_id, -1, SQLITE_TRANSIENT);
+      sqlite3_step(s);
+    }
+    sqlite3_finalize(s);
+    member_audit(h, t, "invite.create", mail, NULL);
+    cJSON_AddBoolToObject(o, "ok", 1);
+    cJSON_AddStringToObject(o, "status", "invited");
+    cJSON_AddStringToObject(o, "email", mail);
+    cJSON_AddStringToObject(o, "role", role);
+    if (jb) cJSON_Delete(jb);
+    return mok(status, 200, o);
+  }
+
+  /* DELETE /api/members/invite/:id — revoke a pending invite */
+  if (strcmp(seg, "invite") == 0 && act[0] && strcmp(method, "DELETE") == 0) {
+    sqlite3_stmt *s;
+    if (sqlite3_prepare_v2(h,
+          "DELETE FROM tenant_invites WHERE id=?1 AND tenant_id=?2",
+          -1, &s, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(s, 1, act, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 2, t->tenant_id, -1, SQLITE_TRANSIENT);
+      sqlite3_step(s);
+    }
+    sqlite3_finalize(s);
+    member_audit(h, t, "invite.revoke", act, NULL);
+    cJSON *o = cJSON_CreateObject(); cJSON_AddBoolToObject(o, "ok", 1);
+    return mok(status, 200, o);
+  }
+
+  /* PATCH /api/members/:userId/role { role } */
+  if (seg[0] && strcmp(act, "role") == 0 && strcmp(method, "PATCH") == 0) {
+    cJSON *jb = (body && *body) ? cJSON_Parse(body) : NULL;
+    cJSON *jr = jb ? cJSON_GetObjectItem(jb, "role") : NULL;
+    const char *role = (jr && cJSON_IsString(jr)) ? jr->valuestring : NULL;
+    if (!valid_role(role)) { if (jb) cJSON_Delete(jb);
+      return merr(status, 400, "invalid role"); }
+    char cur[32];
+    if (!member_role(h, t->tenant_id, seg, cur)) { if (jb) cJSON_Delete(jb);
+      return merr(status, 404, "member not found"); }
+    if (strcmp(cur, "owner") == 0 && strcmp(role, "owner") != 0 &&
+        owner_count(h, t->tenant_id) <= 1) {
+      if (jb) cJSON_Delete(jb);
+      return merr(status, 400, "cannot demote the last owner");
+    }
+    sqlite3_stmt *s;
+    if (sqlite3_prepare_v2(h,
+          "UPDATE memberships SET role=?1 WHERE tenant_id=?2 AND user_id=?3",
+          -1, &s, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(s, 1, role, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 2, t->tenant_id, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 3, seg, -1, SQLITE_TRANSIENT);
+      sqlite3_step(s);
+    }
+    sqlite3_finalize(s);
+    member_audit(h, t, "member.role", seg, NULL);
+    cJSON *o = cJSON_CreateObject();
+    cJSON_AddBoolToObject(o, "ok", 1);
+    cJSON_AddStringToObject(o, "user_id", seg);
+    cJSON_AddStringToObject(o, "role", role);
+    if (jb) cJSON_Delete(jb);
+    return mok(status, 200, o);
+  }
+
+  /* DELETE /api/members/:userId — remove a member */
+  if (seg[0] && !act[0] && strcmp(method, "DELETE") == 0) {
+    char cur[32];
+    if (!member_role(h, t->tenant_id, seg, cur))
+      return merr(status, 404, "member not found");
+    if (strcmp(cur, "owner") == 0 && owner_count(h, t->tenant_id) <= 1)
+      return merr(status, 400, "cannot remove the last owner");
+    sqlite3_stmt *s;
+    if (sqlite3_prepare_v2(h,
+          "DELETE FROM memberships WHERE tenant_id=?1 AND user_id=?2",
+          -1, &s, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(s, 1, t->tenant_id, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 2, seg, -1, SQLITE_TRANSIENT);
+      sqlite3_step(s);
+    }
+    sqlite3_finalize(s);
+    member_audit(h, t, "member.remove", seg, NULL);
+    cJSON *o = cJSON_CreateObject(); cJSON_AddBoolToObject(o, "ok", 1);
+    return mok(status, 200, o);
+  }
+
+  return merr(status, 404, "not_found");
 }

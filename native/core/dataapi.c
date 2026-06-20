@@ -485,11 +485,17 @@ char *dataapi_layer(db_handle *db, const char *id) {
   memset(&ctx, 0, sizeof ctx);
   ctx.source_id = id;
   ctx.db = db;
-  /* http/llm/entity/tenant left NULL: a scheduled-style on-demand run, same
-   * as a non-pivot feed run. Sources needing HTTP/LLM that get NULL here
-   * degrade exactly as they would on a misconfigured scheduled run (rc<0 →
-   * empty, handled below) — no fabricated behaviour. */
+  /* Wire a real HTTP client so on-demand runs of HTTP-backed layers (Overpass,
+   * feeds, probes) fetch live data, matching the scheduled run. http_client_new
+   * may return NULL under allocation pressure; the http client and every
+   * collector path is NULL-tolerant (see httpclient.c do_once guard), so a NULL
+   * here degrades to empty rather than crashing.
+   * llm/entity/tenant remain NULL: an on-demand read, same as a non-pivot feed
+   * run. Collectors needing those degrade to rc<0 → empty (handled below) —
+   * no fabricated behaviour. */
+  ctx.http = http_client_new();
   int rc = def->run(&ctx, &cap);
+  if (ctx.http) http_client_free(ctx.http);
 
   /* allSettled semantics (lib/unified.c): a rejected run contributes nothing.
    * data.js's collector throw → 500; here the unified ABI returns rc<0 and

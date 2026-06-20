@@ -430,11 +430,14 @@ static const src_meta M[]={
 {"mext-schools","MEXT school registry","文科省 学校基本調査","government","api","https://www.mext.go.jp/b_menu/toukei/chousa01/","Every elementary / junior / HS / college / university — yearly CSV",NULL,"mext-schools",1,604800},
 };
 static const int N=sizeof(M)/sizeof(M[0]);
-/* ids are unique post-dedupe → a plain forward scan is unambiguous. */
-const src_meta *src_meta_get(const char *id){
+/* ids are unique post-dedupe → a plain forward scan is unambiguous.
+ * These are the GENERATED-table accessors; the public src_meta_get/at/count
+ * live in source_registry_dyn.c, which layers registry-synthesized metadata
+ * (for sources absent from this curated table) on top of gen_meta_get(). */
+const src_meta *gen_meta_get(const char *id){
   if(!id)return NULL;
   for(int i=0;i<N;i++) if(strcmp(M[i].id,id)==0) return &M[i];
   return NULL;
 }
-const src_meta *src_meta_at(int i){ return (i>=0&&i<N)?&M[i]:NULL; }
-int src_meta_count(void){return N;}
+const src_meta *gen_meta_at(int i){ return (i>=0&&i<N)?&M[i]:NULL; }
+int gen_meta_count(void){return N;}

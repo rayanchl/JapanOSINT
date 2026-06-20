@@ -3,6 +3,7 @@
  * llama-server health). The HTTP server / scheduler / sources arrive in
  * P3/P4. Usage: japanosint [--selftest] */
 #include "core/db.h"
+#include "core/url_override.h"
 #include "core/httpclient.h"
 #include "core/llm.h"
 #include "core/fts.h"
@@ -74,6 +75,7 @@ int main(int argc, char **argv) {
 
   db_handle db = {0};
   if (db_open(&db, NULL, NULL) != 0) return 1;
+  url_override_reload(&db);   /* apply any verified collector URL-swap repairs */
 
   /* P4: --run <source_id> [entity]  → run one source through the real sink. */
   for (int i = 1; i < argc; i++) {

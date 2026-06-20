@@ -33,6 +33,9 @@ struct OnboardingFlow: View {
                             stepContent
                         }
                         .padding(24)
+                        // Keep the onboarding card a readable width on the wide
+                        // Mac window (no-op on iOS, where it fills the screen).
+                        .compatReadableWidth(620)
                         .frame(maxWidth: .infinity, minHeight: geo.size.height,
                                 alignment: .top)
                     }
@@ -145,7 +148,7 @@ private struct ConnectStep: View {
                 showcasePanel(1) { AnimatedAlertsMock() }
                 showcasePanel(2) { AnimatedIntelMock() }
             }
-            .tabViewStyle(.page(indexDisplayMode: .always))
+            .compatPageTabViewStyle()
             .frame(height: 360)
             .onReceive(advanceTimer) { _ in
                 withAnimation(.easeInOut(duration: 0.5)) {
@@ -203,8 +206,8 @@ private struct AuthStep: View {
 
             TextField("Email", text: $email)
                 .textContentType(.emailAddress)
-                .keyboardType(.emailAddress)
-                .textInputAutocapitalization(.never)
+                .compatKeyboard(email: true)
+                .compatNoAutocap()
                 .autocorrectionDisabled()
                 .padding(10).background(theme.surfaceElevated)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -920,7 +923,7 @@ private struct FirstRunStep: View {
             HStack(spacing: 8) {
                 Image(systemName: "magnifyingglass").foregroundStyle(theme.textMuted)
                 TextField("Search layers", text: $query)
-                    .textInputAutocapitalization(.never)
+                    .compatNoAutocap()
                     .autocorrectionDisabled()
                 if !query.isEmpty {
                     Button { query = "" } label: {

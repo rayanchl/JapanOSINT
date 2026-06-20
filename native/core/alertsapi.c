@@ -121,6 +121,15 @@ static const char *validate_rule(cJSON *b, const char **name, int *enabled,
     if ((x=cJSON_GetObjectItem(pred,"bbox")) &&
         (!cJSON_IsArray(x) || cJSON_GetArraySize(x) != 4))
       return "predicate.bbox must be [w,s,e,n]";
+    /* Query authoring mode: "fts" (default) matches the FTS predicate.q;
+     * "llm" carries a natural-language query (nl_query) driving the agentic
+     * search pipeline. Both round-trip opaquely in predicate_json. */
+    if ((x=cJSON_GetObjectItem(pred,"mode")) && !cJSON_IsNull(x) &&
+        (!cJSON_IsString(x) ||
+         (strcmp(x->valuestring,"fts")!=0 && strcmp(x->valuestring,"llm")!=0)))
+      return "predicate.mode must be \"fts\" or \"llm\"";
+    if ((x=cJSON_GetObjectItem(pred,"nl_query")) && !cJSON_IsNull(x) && !cJSON_IsString(x))
+      return "predicate.nl_query must be string";
   }
   *predicate = pred ? cJSON_Duplicate(pred,1) : cJSON_CreateObject();
 

@@ -35,31 +35,44 @@ struct AdminPanel: View {
             }
         }
         .navigationTitle("Admin")
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
     }
 
+    private let operatorFooter =
+        "Platform keys are the server-wide defaults every workspace falls back to."
+    private let serverFooter =
+        "Restart forces every collector to re-read API keys and other env vars; the dev server respawns automatically in 2–4 s."
+
     private var panel: some View {
+        #if os(macOS)
+        // macOS: lay the sections out as separator-free `surfaceElevated`
+        // cards in a ScrollView. A grouped `List` on macOS draws hairline
+        // rules between every row under the inset style, and hiding them on
+        // the List itself isn't reliable — cards give the grouped look with
+        // zero system separators.
+        ScrollView {
+            VStack(alignment: .leading, spacing: Space.lg) {
+                card(header: "Operator tools", footer: operatorFooter) {
+                    operatorRows
+                }
+                card(header: "Server", footer: serverFooter) {
+                    serverRestartButton
+                }
+            }
+            .padding(Space.lg)
+            .frame(maxWidth: 680, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .top)
+        }
+        .themedScreenBackground(theme)
+        .disabled(restarting)
+        #else
         List {
             Section {
-                navRow(icon: "cylinder.split.1x2.fill",
-                       title: "Database",
-                       subtitle: "Browse collected tables") { DatabaseTab() }
-                navRow(icon: "calendar.badge.clock",
-                       title: "Scheduler",
-                       subtitle: "Collection cadence") { SchedulerTab() }
-                navRow(icon: "scroll",
-                       title: "Follow log",
-                       subtitle: "Live activity stream") { FollowLogTab() }
-                navRow(icon: "key.horizontal.fill",
-                       title: "Platform API keys",
-                       subtitle: "Server-wide default credentials") {
-                    ApiKeysView(scope: .platform)
-                }
+                operatorRows
             } header: {
                 sectionLabel("Operator tools")
             } footer: {
-                Text("Platform keys are the server-wide defaults every workspace falls back to.")
-                    .font(.caption2)
+                Text(operatorFooter).font(.caption2)
             }
 
             Section {
@@ -67,15 +80,63 @@ struct AdminPanel: View {
             } header: {
                 sectionLabel("Server")
             } footer: {
-                Text("Restart forces every collector to re-read API keys and other env vars; the dev server respawns automatically in 2–4 s.")
-                    .font(.caption2)
+                Text(serverFooter).font(.caption2)
             }
         }
-        .listStyle(.insetGrouped)
-        .scrollContentBackground(.hidden)
-        .background(theme.surface.ignoresSafeArea())
+        .compatInsetGroupedListStyle()
+        .themedScreenBackground(theme)
         .disabled(restarting)
+        #endif
     }
+
+    /// Operator-tool navigation rows, shared by the iOS `List` and macOS cards.
+    @ViewBuilder
+    private var operatorRows: some View {
+        navRow(icon: "cylinder.split.1x2.fill",
+               title: "Database",
+               subtitle: "Browse collected tables") { DatabaseTab() }
+        navRow(icon: "calendar.badge.clock",
+               title: "Scheduler",
+               subtitle: "Collection cadence") { SchedulerTab() }
+        navRow(icon: "slider.horizontal.3",
+               title: "Source scheduling",
+               subtitle: "Per-source map-cron vs search-only") { SourceScheduleSettingsView() }
+        navRow(icon: "scroll",
+               title: "Follow log",
+               subtitle: "Live activity stream") { FollowLogTab() }
+        navRow(icon: "wrench.and.screwdriver.fill",
+               title: "Repair worker",
+               subtitle: "Self-healing pipeline & fixes") { RepairWorkerView() }
+        navRow(icon: "key.horizontal.fill",
+               title: "Platform API keys",
+               subtitle: "Server-wide default credentials") {
+            ApiKeysView(scope: .platform)
+        }
+    }
+
+    #if os(macOS)
+    /// A titled, separator-free card used by the macOS panel layout.
+    @ViewBuilder
+    private func card<Content: View>(
+        header: String,
+        footer: String,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        VStack(alignment: .leading, spacing: Space.sm) {
+            sectionLabel(header)
+            VStack(alignment: .leading, spacing: Space.xs) {
+                content()
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(Space.sm)
+            .background(theme.surfaceElevated,
+                        in: RoundedRectangle(cornerRadius: Radius.md))
+            Text(footer)
+                .font(.caption2)
+                .foregroundStyle(theme.textMuted)
+        }
+    }
+    #endif
 
     // MARK: - Server control
 
@@ -83,36 +144,55 @@ struct AdminPanel: View {
     /// confirmation dialog is enough friction for this destructive action.
     @ViewBuilder
     private var serverRestartButton: some View {
-        Button(role: .destructive) {
-            confirmRestart = true
-        } label: {
-            HStack {
-                Image(systemName: "arrow.clockwise.circle.fill")
-                Text(restarting ? "Restarting…" : "Restart server")
-                Spacer()
-                if restarting { ProgressView().controlSize(.small) }
+        restartTrigger
+            // Dialog attached to the trigger, not the Section. Section-hosted
+            // .confirmationDialog renders the body buttons but swallows the
+            // `message:` text on iOS 17+; per-trigger hosting works.
+            .confirmationDialog("Restart server?",
+                                isPresented: $confirmRestart,
+                                titleVisibility: .visible) {
+                Button("Restart", role: .destructive) {
+                    Haptics.tap(.medium)
+                    Task { await doRestart() }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("All in-flight requests will be dropped. The app reconnects automatically once the server is back.")
             }
-        }
-        .disabled(restarting)
-        // Dialog attached to the trigger Button, not the Section. Section-
-        // hosted .confirmationDialog renders the body buttons but swallows
-        // the `message:` text on iOS 17+; per-button hosting works.
-        .confirmationDialog("Restart server?",
-                            isPresented: $confirmRestart,
-                            titleVisibility: .visible) {
-            Button("Restart", role: .destructive) {
-                Haptics.tap(.medium)
-                Task { await doRestart() }
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("All in-flight requests will be dropped. The app reconnects automatically once the server is back.")
-        }
         if let restartError {
             Text(restartError)
                 .font(.caption)
                 .foregroundStyle(theme.warning)
         }
+    }
+
+    /// The restart Button itself. iOS fills the grouped row edge-to-edge; macOS
+    /// renders an intrinsically-sized bordered button pinned to the leading edge
+    /// instead of a full-window-wide tap target.
+    @ViewBuilder
+    private var restartTrigger: some View {
+        let button = Button(role: .destructive) {
+            confirmRestart = true
+        } label: {
+            HStack(spacing: Space.sm) {
+                Image(systemName: "arrow.clockwise.circle.fill")
+                Text(restarting ? "Restarting…" : "Restart server")
+                #if os(iOS)
+                Spacer()
+                #endif
+                if restarting { ProgressView().controlSize(.small) }
+            }
+        }
+        .disabled(restarting)
+
+        #if os(macOS)
+        HStack {
+            button.buttonStyle(.bordered)
+            Spacer()
+        }
+        #else
+        button
+        #endif
     }
 
     private func doRestart() async {
@@ -147,7 +227,7 @@ struct AdminPanel: View {
         subtitle: String,
         @ViewBuilder destination: @escaping () -> Destination
     ) -> some View {
-        NavigationLink {
+        let link = NavigationLink {
             destination()
         } label: {
             HStack(spacing: Space.md) {
@@ -167,9 +247,29 @@ struct AdminPanel: View {
                         .font(.caption2)
                         .foregroundStyle(theme.textMuted)
                 }
+                #if os(macOS)
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.caption2)
+                    .foregroundStyle(theme.textMuted)
+                #endif
             }
             .padding(.vertical, 2)
         }
+
+        #if os(macOS)
+        // Outside a `List` the NavigationLink would render as blue link text;
+        // `.plain` restores the row look. Full-width tap target + hover fill.
+        return link
+            .buttonStyle(.plain)
+            .padding(.vertical, Space.xs)
+            .padding(.horizontal, Space.sm)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+            .compatHoverHighlight(cornerRadius: Radius.sm)
+        #else
+        return link
+        #endif
     }
 
     private func sectionLabel(_ text: String) -> some View {

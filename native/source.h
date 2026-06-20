@@ -60,6 +60,19 @@ typedef struct source_def {
   const char *name_ja;
   int  update_interval_sec;   /* >0 scheduled; 0 = on-demand (OSINT/explicit) */
   int  (*run)(const source_ctx *, intel_sink *);
+  /* Self-describing metadata. The 420 curated map collectors keep their rich
+   * rows in source_registry.gen.c; sources NOT in that table (OSINT services
+   * + a few map collectors) carry their metadata here, which src_meta_get()
+   * synthesizes into a src_meta. All fields optional (designated initializers
+   * leave them NULL/0). `layer` MUST stay NULL for entity-pivot services so
+   * they never appear in /api/layers. */
+  const char *category;       /* NULL → "investigation" when synthesized   */
+  const char *type;           /* api|dataset|scraped|web_request; NULL→"api" */
+  const char *url;            /* canonical/base or internal:// sentinel      */
+  const char *description;
+  const char *license;
+  const char *layer;          /* map layer id; NULL for services             */
+  int  free_tier;             /* 1 = free; 0 (default) = paid                */
 } source_def;
 
 /* registry.c */

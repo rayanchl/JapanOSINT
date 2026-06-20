@@ -31,6 +31,7 @@ struct CrossSourceSearchView: View {
             }
             content
         }
+        .themedScreenBackground(theme)
         .task(id: taskKey) { await search() }
     }
 
@@ -69,7 +70,7 @@ struct CrossSourceSearchView: View {
                     resultsCountHeader
                 }
             }
-            .listStyle(.insetGrouped)
+            .compatInsetGroupedListStyle()
             .navigationDestination(for: IntelItem.self) { item in
                 IntelDetail(uid: item.uid, fallbackTitle: item.title ?? item.uid)
             }

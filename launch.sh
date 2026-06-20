@@ -53,12 +53,18 @@ mkdir -p "$RUN"
 : "${LLAMA_PORT:=8080}"
 : "${LLAMA_CTX:=16384}"
 : "${LLAMA_HOST:=127.0.0.1}"
+# Suggest LLM pod — dedicated small/fast model for /api/search/suggest so it
+# never contends with the pipeline's 20B (falls back to LLM_BASE_URL in-binary)
+: "${LLM_SUGGEST_BASE_URL:=http://127.0.0.1:8081}"  # binary reads this for suggest
+: "${LLAMA_SUGGEST_MODEL:=$REPO/models/qwen2.5-1.5b-instruct-q4_k_m.gguf}"
+: "${LLAMA_SUGGEST_PORT:=8081}"
+: "${LLAMA_SUGGEST_CTX:=4096}"
 # Orchestrator behaviour
 : "${EXPECT_SOURCES:=476}"                          # warn if registry differs
 : "${LLAMA_WAIT:=240}"                              # s to wait for model load
 : "${SERVER_WAIT:=30}"                              # s to wait for httpd listen
 
-DO_BUILD=1 DO_SERVER=1 DO_LLAMA=1 DO_MAINT=0 REBUILD=0 FORCE=0
+DO_BUILD=1 DO_SERVER=1 DO_LLAMA=1 DO_SUGGEST_LLAMA=1 DO_MAINT=0 REBUILD=0 FORCE=0
 
 # ---- ui helpers ------------------------------------------------------------
 c(){ printf '\033[%sm' "$1"; }; NC=$(c 0); B=$(c '1;36'); G=$(c '1;32'); Y=$(c '1;33'); R=$(c '1;31')
@@ -73,6 +79,7 @@ while [ $# -gt 0 ]; do case "$1" in
   --no-build)  DO_BUILD=0 ;;
   --no-server) DO_SERVER=0 ;;
   --no-llama)  DO_LLAMA=0 ;;
+  --no-suggest-llama) DO_SUGGEST_LLAMA=0 ;;
   --maint)     DO_MAINT=1 ;;
   --rebuild)   REBUILD=1 ;;
   --force)     FORCE=1 ;;
@@ -99,7 +106,8 @@ envget(){ local k="$1" v="${!1:-}"
 # real env — an empty pass-through would shadow the .env value the binary
 # loads itself (main.c setenv(...,0) won't overwrite an already-set var).
 binenv(){ BINENV=( "PORT=$PORT" "JO_DB=$JO_DB" "JO_SCHEMA=$JO_SCHEMA"
-    "JO_ENV_FILE=$JO_ENV_FILE" "LLM_ENABLED=$LLM_ENABLED" "LLM_BASE_URL=$LLM_BASE_URL" )
+    "JO_ENV_FILE=$JO_ENV_FILE" "LLM_ENABLED=$LLM_ENABLED" "LLM_BASE_URL=$LLM_BASE_URL"
+    "LLM_SUGGEST_BASE_URL=$LLM_SUGGEST_BASE_URL" )
   [ -n "${JO_NO_SCHED:-}" ]        && BINENV+=( "JO_NO_SCHED=$JO_NO_SCHED" )
   [ -n "${SUPABASE_URL:-}" ]       && BINENV+=( "SUPABASE_URL=$SUPABASE_URL" )
   [ -n "${SUPABASE_JWT_SECRET:-}" ]&& BINENV+=( "SUPABASE_JWT_SECRET=$SUPABASE_JWT_SECRET" )
@@ -129,6 +137,7 @@ ${G}POD SELECTION (./launch.sh up ...)${NC}
   --no-build         skip make (use existing bin/japanosint)
   --no-server        don't start the http+scheduler pod
   --no-llama         don't start llama-server (server still boots; LLM degrades)
+  --no-suggest-llama don't start the suggest llama pod (suggest falls back to :8080)
   --maint            after server is up, run llm-enricher once (warm graph)
   --rebuild          make clean && make (full)        --force  skip make-guard
   --port N  --db PATH  --env-file PATH  --model PATH
@@ -176,13 +185,14 @@ EOF
 # ---- freeze: stop OUR stale procs; guard a concurrent make ----------------
 cmd_freeze(){
   say "freeze: stopping anything we previously launched"
-  for p in server llama; do
+  for p in server llama llama-suggest; do
     if alive "$p"; then kill "$(cat "$(pidfile "$p")")" 2>/dev/null && ok "stopped $p pod"; fi
     rm -f "$(pidfile "$p")"
   done
   # stragglers not tracked by a pidfile
-  pkill -f "$BIN --serve"               2>/dev/null && ok "killed stray japanosint --serve" || true
-  pkill -f "llama-server.*gpt-oss-20b"  2>/dev/null && ok "killed stray llama-server"        || true
+  pkill -f "$BIN --serve"                2>/dev/null && ok "killed stray japanosint --serve" || true
+  pkill -f "llama-server.*gpt-oss-20b"   2>/dev/null && ok "killed stray llama-server"        || true
+  pkill -f "llama-server.*qwen2.5-1.5b"  2>/dev/null && ok "killed stray suggest llama-server" || true
   # concurrent build guard (don't trample another editor/agent compiling native/)
   if pgrep -fl "make .*-j|cc1 .*native|clang .*native/" >/dev/null 2>&1; then
     if [ "$FORCE" = 1 ]; then warn "concurrent make detected — proceeding (--force)"
@@ -255,6 +265,28 @@ cmd_llama(){
   else tail -15 "$lg"; die "llama /health not ready in ${LLAMA_WAIT}s (see $lg)"; fi
 }
 
+# ---- suggest llama pod (small fast model, /api/search/suggest only) -------
+cmd_llama_suggest(){
+  alive llama-suggest && { warn "suggest-llama pod already running (pid $(cat "$(pidfile llama-suggest)"))"; return; }
+  [ -x "$LLAMA_BIN" ]            || die "llama-server missing/not executable: $LLAMA_BIN"
+  [ -f "$LLAMA_SUGGEST_MODEL" ]  || die "suggest model missing: $LLAMA_SUGGEST_MODEL (see plan: download qwen2.5-1.5b-instruct-q4_k_m.gguf into models/)"
+  local lg; lg="$(logfile llama-suggest)"; : >"$lg"
+  say "suggest-llama: $(basename "$LLAMA_BIN")  $(basename "$LLAMA_SUGGEST_MODEL")  :$LLAMA_SUGGEST_PORT (ctx $LLAMA_SUGGEST_CTX)"
+  # same exec-chain/dyld pattern as cmd_llama; --jinja for /v1/chat/completions
+  # chat template (osint_suggest uses llm_chat). No --reasoning-format: qwen is
+  # a plain instruct model, not a reasoning model.
+  local libdir; libdir="$(dirname "$LLAMA_BIN")"
+  ( cd "$libdir" && exec nohup env "DYLD_LIBRARY_PATH=$libdir:${DYLD_LIBRARY_PATH:-}" \
+      "$LLAMA_BIN" -m "$LLAMA_SUGGEST_MODEL" --port "$LLAMA_SUGGEST_PORT" --host "$LLAMA_HOST" \
+      --ctx-size "$LLAMA_SUGGEST_CTX" --jinja -fa auto \
+      >>"$lg" 2>&1 ) &
+  echo $! >"$(pidfile llama-suggest)"
+  say "suggest-llama: loading model — waiting up to ${LLAMA_WAIT}s for /health"
+  if wait_http "http://$LLAMA_HOST:$LLAMA_SUGGEST_PORT/health" "$LLAMA_WAIT"; then
+    ok "suggest-llama /health → 200 (ready @ http://$LLAMA_HOST:$LLAMA_SUGGEST_PORT)"
+  else tail -15 "$lg"; die "suggest-llama /health not ready in ${LLAMA_WAIT}s (see $lg)"; fi
+}
+
 # ---- maintenance / enrich pod (one-shot) ----------------------------------
 cmd_maint(){
   [ -x "$BIN" ] || die "no bin/japanosint — build first"
@@ -269,12 +301,13 @@ cmd_maint(){
 # ---- status / down / logs --------------------------------------------------
 cmd_status(){
   say "status"
-  for p in server llama; do
+  for p in server llama llama-suggest; do
     if alive "$p"; then ok "$p pod  RUNNING  pid=$(cat "$(pidfile "$p")")  log=$(logfile "$p")"
     else warn "$p pod  stopped"; fi
   done
-  curl -fsS -m3 "http://127.0.0.1:$PORT/api/health"          2>/dev/null && echo "  ← :$PORT /api/health" || warn "server :$PORT not answering /api/health"
-  curl -fsS -m3 "http://127.0.0.1:$LLAMA_PORT/health"        2>/dev/null && echo "  ← :$LLAMA_PORT llama /health" || warn "llama :$LLAMA_PORT not answering /health"
+  curl -fsS -m3 "http://127.0.0.1:$PORT/api/health"            2>/dev/null && echo "  ← :$PORT /api/health" || warn "server :$PORT not answering /api/health"
+  curl -fsS -m3 "http://127.0.0.1:$LLAMA_PORT/health"          2>/dev/null && echo "  ← :$LLAMA_PORT llama /health" || warn "llama :$LLAMA_PORT not answering /health"
+  curl -fsS -m3 "http://127.0.0.1:$LLAMA_SUGGEST_PORT/health"  2>/dev/null && echo "  ← :$LLAMA_SUGGEST_PORT suggest-llama /health" || warn "suggest-llama :$LLAMA_SUGGEST_PORT not answering /health"
 }
 cmd_down(){ cmd_freeze; }
 cmd_logs(){ local w="${1:-server}"; tail -n 60 -f "$(logfile "$w")"; }
@@ -285,9 +318,10 @@ cmd_up(){
   [ "$DO_BUILD"  = 1 ] && cmd_build  || say "build skipped (--no-build)"
   [ "$DO_SERVER" = 1 ] && cmd_serve  || say "server skipped (--no-server)"
   [ "$DO_LLAMA"  = 1 ] && cmd_llama  || say "llama skipped (--no-llama)"
+  [ "$DO_SUGGEST_LLAMA" = 1 ] && cmd_llama_suggest || say "suggest-llama skipped (--no-suggest-llama)"
   [ "$DO_MAINT"  = 1 ] && cmd_maint  || true
   cmd_status
-  say "up. logs: $RUN/{server,llama}.log   stop: ./launch.sh down   tags: ./launch.sh tags"
+  say "up. logs: $RUN/{server,llama,llama-suggest}.log   stop: ./launch.sh down   tags: ./launch.sh tags"
 }
 
 case "$CMD" in
@@ -295,6 +329,7 @@ case "$CMD" in
   build)        cmd_freeze; cmd_build ;;
   serve|server) cmd_serve ;;
   llama)        cmd_llama ;;
+  llama-suggest) cmd_llama_suggest ;;
   maint)        cmd_maint ;;
   status)       cmd_status ;;
   down|stop)    cmd_down ;;

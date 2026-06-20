@@ -46,9 +46,9 @@ struct SourceScheduleSettingsView: View {
                 form
             }
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle("Source scheduling")
-        .navigationBarTitleDisplayMode(.inline)
+        .compatInlineTitle()
         .task { await load() }
     }
 
@@ -66,6 +66,7 @@ struct SourceScheduleSettingsView: View {
                 }
             }
         }
+        .compatGroupedForm()
         .scrollContentBackground(.hidden)
     }
 

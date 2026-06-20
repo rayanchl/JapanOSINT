@@ -380,6 +380,42 @@ struct API: Sendable {
         _ = try await request(url, method: "POST", body: Data("{}".utf8), timeout: 10)
     }
 
+    // ── Repair worker / self-healing maintenance (operator only) ────────────
+    /// Host-wide detect→triage→repair digest over a trailing window (hours).
+    func maintenanceDigest(hours: Int = 24) async throws -> MaintenanceDigest {
+        try await get("/api/admin/maintenance",
+                      query: [URLQueryItem(name: "hours", value: String(hours))])
+    }
+
+    /// Full pipeline for one source: recent fetch runs, anomalies (with
+    /// triage), and repair attempts (with the proposed patch).
+    func maintenanceSourceDetail(_ id: String) async throws -> SourcePipeline {
+        try await get("/api/admin/maintenance/source/\(id)")
+    }
+
+    /// Apply a staged `verified` url_swap repair — writes the runtime override
+    /// and activates it live. Returns the merged result (incl. new_url).
+    @discardableResult
+    func approveRepair(_ id: Int) async throws -> OkResult {
+        try await post("/api/admin/repairs/\(id)/approve", timeout: 15)
+    }
+    /// Reject a staged repair and resolve its anomaly so the worker stops
+    /// re-deriving it.
+    @discardableResult
+    func rejectRepair(_ id: Int) async throws -> OkResult {
+        try await post("/api/admin/repairs/\(id)/reject", timeout: 15)
+    }
+    /// Lift a circuit-breaker quarantine so the source can be scheduled again.
+    @discardableResult
+    func unquarantineSource(_ id: String) async throws -> OkResult {
+        try await post("/api/admin/sources/\(id)/unquarantine", timeout: 15)
+    }
+    /// Reset an anomaly's triage so the triage worker re-picks it next cycle.
+    @discardableResult
+    func requeueAnomaly(_ id: Int) async throws -> OkResult {
+        try await post("/api/admin/anomalies/\(id)/requeue", timeout: 15)
+    }
+
     // ── Alerts ─────────────────────────────────────────────────────────────
     func alertsList() async throws -> [AlertRule] {
         let env: AlertRulesEnvelope = try await get("/api/alerts")
@@ -416,6 +452,31 @@ struct API: Sendable {
             query: [URLQueryItem(name: "limit", value: String(limit))]
         )
         return env.data
+    }
+
+    // ── Workspace members & invites ────────────────────────────────────────
+    func membersList() async throws -> WorkspaceMembersResponse {
+        try await get("/api/members")
+    }
+    /// Invite by email. Server adds the membership immediately if the user
+    /// already exists, otherwise queues a pending invite claimed on first
+    /// sign-in. Returns the raw status string ("invited" / "added" /
+    /// "already_member").
+    @discardableResult
+    func memberInvite(email: String, role: String) async throws -> String {
+        let body = try JSONSerialization.data(withJSONObject: ["email": email, "role": role])
+        let r: MemberActionResponse = try await post("/api/members/invite", body: body, timeout: API.userDefaultTimeout)
+        return r.status ?? "ok"
+    }
+    func memberSetRole(userId: String, role: String) async throws {
+        let body = try JSONSerialization.data(withJSONObject: ["role": role])
+        let _: MemberActionResponse = try await patch("/api/members/\(userId)/role", body: body)
+    }
+    func memberRemove(userId: String) async throws {
+        try await delete("/api/members/\(userId)")
+    }
+    func inviteRevoke(id: String) async throws {
+        try await delete("/api/members/invite/\(id)")
     }
 
     // ── OSINT search + entity graph ────────────────────────────────────────

@@ -35,7 +35,7 @@ struct GeocodeSearchBar: View {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
             TextField("Search Japan", text: $model.query)
-                .textInputAutocapitalization(.never)
+                .compatNoAutocap()
                 .autocorrectionDisabled()
                 .submitLabel(.search)
                 .onSubmit(onSubmit)

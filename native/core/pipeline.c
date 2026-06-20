@@ -33,6 +33,25 @@ static cJSON *extract_json(const char *raw) {
   return NULL;
 }
 
+/* Wrap a flat few-shot prompt as a one-message chat array for llm_chat. The
+ * analysis/phase-2 prompts run through /v1/chat/completions (not raw
+ * /completion) so the gpt-oss harmony template + --reasoning-format apply: the
+ * model's chain-of-thought lands in its own channel instead of being crammed
+ * into the grammar-masked JSON (the degenerate-reasoning bug). cJSON escapes
+ * the prompt body. Caller frees; NULL on OOM. */
+static char *prompt_to_messages(const char *prompt) {
+  cJSON *arr = cJSON_CreateArray();
+  if (!arr) return NULL;
+  cJSON *msg = cJSON_CreateObject();
+  if (!msg) { cJSON_Delete(arr); return NULL; }
+  cJSON_AddStringToObject(msg, "role", "user");
+  cJSON_AddStringToObject(msg, "content", prompt ? prompt : "");
+  cJSON_AddItemToArray(arr, msg);
+  char *s = cJSON_PrintUnformatted(arr);
+  cJSON_Delete(arr);
+  return s;
+}
+
 static char *lower_dup(const char *s) {
   if (!s) return strdup("");
   char *o = strdup(s);
@@ -131,6 +150,9 @@ static void run_tasks(osint_request *rp, db_handle *db, llm_client *llm,
     } else cJSON_AddItemToObject(sr, "data", cJSON_CreateNull());
     cJSON_AddItemToObject(sr, "error",
       r.error ? cJSON_CreateString(r.error) : cJSON_CreateNull());
+    /* underlying sources the service hit (provider/endpoint/corpus-source) */
+    cJSON *sj = r.sources_json ? cJSON_Parse(r.sources_json) : NULL;
+    cJSON_AddItemToObject(sr, "sources", sj ? sj : cJSON_CreateArray());
     cJSON_AddItemToArray(results, sr);
 
     if (!osint_is_implemented(t->service))
@@ -158,9 +180,16 @@ void osint_pipeline_run(db_handle *db, llm_client *llm,
   progress_set_phase(rp, "gpt_analyzing", 15);
   char *svcs = osint_services_list();
   char *p1 = prompt_analysis(query, svcs ? svcs : "");
-  char *araw = llm_complete(llm, p1, grammar_load("osint_analysis"),
-                            2048, 0.2, 60000);
+  char *m1 = prompt_to_messages(p1);
   free(p1);
+  /* Constrain routing to the LIVE registry: the schema's service enums are
+   * rebuilt from the registered services every run, so newly-added collectors
+   * are immediately recommendable and removed ones can't be hallucinated. */
+  char *dynschema = osint_analysis_schema_dynamic();
+  const char *aschema = dynschema ? dynschema : schema_load("osint_analysis");
+  char *araw = m1 ? llm_chat(llm, m1, aschema, 2048, 0.2, 60000) : NULL;
+  free(dynschema);
+  free(m1);
   cJSON *analysis = extract_json(araw);
   free(araw);
   cJSON *qents = analysis ? cJSON_GetObjectItem(analysis, "entities") : NULL;
@@ -232,8 +261,10 @@ void osint_pipeline_run(db_handle *db, llm_client *llm,
     cJSON_Delete(wrap);
     char *p2 = prompt_phase2(query, rj, svcs ? svcs : "");
     free(rj);
-    char *p2raw = llm_complete(llm, p2, NULL, 2048, 0.2, 60000);
+    char *m2 = prompt_to_messages(p2);
     free(p2);
+    char *p2raw = m2 ? llm_chat(llm, m2, NULL, 2048, 0.2, 60000) : NULL;
+    free(m2);
     cJSON *ph2 = extract_json(p2raw);
     free(p2raw);
     cJSON *chain = ph2 ? cJSON_GetObjectItem(ph2, "chain_services") : NULL;
@@ -290,16 +321,46 @@ void osint_pipeline_run(db_handle *db, llm_client *llm,
   cJSON_ArrayForEach(r, results)
     if (cJSON_IsTrue(cJSON_GetObjectItem(r, "success"))) ok++;
   int uniq = ne;                       /* query entities in scope (approx) */
-  char synth[512];
-  snprintf(synth, sizeof synth,
+  /* Counts template — kept only as a fallback so `synthesis` is never blank
+   * when the LLM call below is unavailable (offline) or returns nothing. */
+  char synth_fallback[512];
+  snprintf(synth_fallback, sizeof synth_fallback,
     "Investigated \"%s\". Ran %d service call(s) across %d round(s); "
     "%d returned data. %d unique entit%s in scope.",
     query, total, round + 1, ok, uniq, uniq == 1 ? "y" : "ies");
 
+  /* Final analysis: hand the full gathered results to the LLM and let it write
+   * a narrative conclusion that answers the query from the data actually
+   * collected (replaces the old static counts string). Plain prose, so no
+   * schema. Any failure falls back to the counts template. */
+  char *synth_llm = NULL;
+  {
+    cJSON *wrap = cJSON_CreateObject();
+    cJSON_AddItemToObject(wrap, "services", cJSON_Duplicate(results, 1));
+    char *rj = cJSON_PrintUnformatted(wrap);
+    cJSON_Delete(wrap);
+    char *ps = rj ? prompt_synthesis(query, rj) : NULL;
+    free(rj);
+    char *ms = ps ? prompt_to_messages(ps) : NULL;
+    free(ps);
+    char *raw = ms ? llm_chat(llm, ms, NULL, 1024, 0.3, 60000) : NULL;
+    free(ms);
+    if (raw) {                                   /* trim; keep if non-empty */
+      char *t = raw;
+      while (*t && isspace((unsigned char)*t)) t++;
+      size_t L = strlen(t);
+      while (L > 0 && isspace((unsigned char)t[L - 1])) t[--L] = '\0';
+      if (*t) synth_llm = strdup(t);
+      free(raw);
+    }
+  }
+  const char *synth = synth_llm ? synth_llm : synth_fallback;
+
   cJSON *res = cJSON_CreateObject();
   cJSON_AddStringToObject(res, "query", query);
   cJSON_AddItemToObject(res, "services", cJSON_Duplicate(results, 1));
-  cJSON_AddStringToObject(res, "synthesis", synth);
+  cJSON_AddStringToObject(res, "synthesis", synth);   /* cJSON copies it */
+  free(synth_llm);
   char *rjson = cJSON_PrintUnformatted(res);
   cJSON_Delete(res);
   progress_set_results(rp, rjson);

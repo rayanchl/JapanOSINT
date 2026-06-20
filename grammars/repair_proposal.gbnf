@@ -1,0 +1,15 @@
+# GBNF for repair URL-swap proposal — mirrors collectorRepair.js PROPOSAL_SCHEMA.
+# Output: { action, new_url, rationale, confidence }
+
+root ::= "{" ws "\"action\"" ws ":" ws action ws "," ws "\"new_url\"" ws ":" ws url-val ws "," ws "\"rationale\"" ws ":" ws string ws "," ws "\"confidence\"" ws ":" ws number ws "}"
+
+action ::= "\"url_swap\"" | "\"no_fix\""
+url-val ::= "null" | string
+
+string ::= "\"" char* "\""
+char ::= [^"\\] | "\\" (["\\/bfnrt] | "u" hex hex hex hex)
+hex ::= [0-9a-fA-F]
+number ::= "-"? int frac?
+int ::= "0" | [1-9] [0-9]*
+frac ::= "." [0-9]+
+ws ::= [ \t\n]*

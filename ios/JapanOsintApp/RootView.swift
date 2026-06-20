@@ -19,6 +19,12 @@ struct RootView: View {
     @Environment(\.theme) private var theme
     @Environment(\.horizontalSizeClass) private var hSize
 
+    /// Owner/admins reach the Workspace console surface (members, queries).
+    private var canManageWorkspace: Bool {
+        let role = auth.me?.tenant?.role
+        return role == "owner" || role == "admin"
+    }
+
     var body: some View {
         Group {
             switch auth.gate {
@@ -36,6 +42,12 @@ struct RootView: View {
                     .transition(.opacity)
             }
         }
+        #if os(macOS)
+        // Pin a usable minimum window size across every gate (loading,
+        // onboarding, ready) so the pre-auth window isn't tiny either. The
+        // scene sets the launch/default size.
+        .frame(minWidth: 1040, minHeight: 640)
+        #endif
         // Crossfade between gates so onboarding fades out cleanly into the
         // app instead of hard-cutting.
         .animation(.easeInOut(duration: 0.45), value: auth.gate)
@@ -49,11 +61,18 @@ struct RootView: View {
     @ViewBuilder
     private var shell: some View {
         Group {
+            #if os(macOS)
+            // macOS is always a sidebar app — the bottom TabView is an
+            // iPhone idiom. (The window minimum is pinned on the RootView
+            // body so it applies across every gate.)
+            splitView
+            #else
             if hSize == .regular {
                 splitView
             } else {
                 tabView
             }
+            #endif
         }
         .sensoryFeedback(.selection, trigger: mapNav.selectedTab)
     }
@@ -101,41 +120,16 @@ struct RootView: View {
 
     private var splitView: some View {
         NavigationSplitView {
-            List(selection: $sidebar) {
-                Section {
-                    sidebarLabel(.workspace(.map),    icon: "map.fill",          title: "Map")
-                    sidebarLabel(.workspace(.intel),  icon: "newspaper.fill",    title: "Intel")
-                    sidebarLabel(.workspace(.search), icon: "magnifyingglass",   title: "Search")
-                    sidebarLabel(.entities,           icon: "point.3.connected.trianglepath.dotted", title: "Entities")
-                    sidebarLabel(.workspace(.saved),  icon: "star.fill",         title: "Saved")
-                } header: {
-                    Text("Workspace")
-                }
-
-                Section {
-                    sidebarLabel(.console(.sources),   icon: "chart.pie.fill",               title: "Sources")
-                    sidebarLabel(.console(.cameras),   icon: "video.fill",                   title: "Camera discovery")
-                    sidebarLabel(.console(.alerts),    icon: "bell.badge.fill",              title: "Alerts")
-                    sidebarLabel(.console(.apiKeys),   icon: "key.fill",                     title: "API keys")
-                    sidebarLabel(.console(.settings),  icon: "gearshape.fill",               title: "Settings")
-                } header: {
-                    Text("Console")
-                }
-
-                if auth.isPlatformAdmin {
-                    Section {
-                        sidebarLabel(.console(.admin), icon: "lock.shield.fill", title: "Admin")
-                    } header: {
-                        Text("Admin")
-                    }
-                }
-            }
-            .navigationTitle("JapanOSINT")
-            .scrollContentBackground(.hidden)
-            .background(theme.surface.ignoresSafeArea())
+            sidebarList
+                #if os(macOS)
+                .navigationSplitViewColumnWidth(min: 220, ideal: 240, max: 300)
+                #endif
         } detail: {
             detailView
         }
+        #if os(macOS)
+        .navigationSplitViewStyle(.balanced)
+        #endif
         // Mirror cross-tab deep links into the sidebar selection on iPad.
         // Phone gets this for free via `selectedTab` driving the TabView.
         .onChange(of: mapNav.selectedTab) { _, raw in
@@ -153,6 +147,46 @@ struct RootView: View {
                 sidebar = .console(dest)
             }
         }
+    }
+
+    private var sidebarList: some View {
+        List(selection: $sidebar) {
+                Section {
+                    sidebarLabel(.workspace(.map),    icon: "map.fill",          title: "Map")
+                    sidebarLabel(.workspace(.intel),  icon: "newspaper.fill",    title: "Intel")
+                    sidebarLabel(.workspace(.search), icon: "magnifyingglass",   title: "Search")
+                    sidebarLabel(.entities,           icon: "point.3.connected.trianglepath.dotted", title: "Entities")
+                    sidebarLabel(.workspace(.saved),  icon: "star.fill",         title: "Saved")
+                } header: {
+                    Text("Workspace")
+                }
+
+                Section {
+                    sidebarLabel(.console(.sources),   icon: "chart.pie.fill",               title: "Sources")
+                    sidebarLabel(.console(.cameras),   icon: "video.fill",                   title: "Camera discovery")
+                    sidebarLabel(.console(.alerts),    icon: "bell.badge.fill",              title: "Alerts")
+                    sidebarLabel(.console(.apiKeys),   icon: "key.fill",                     title: "API keys")
+                    if canManageWorkspace {
+                        sidebarLabel(.console(.workspace), icon: "person.2.badge.key.fill",  title: "Workspace")
+                    }
+                    sidebarLabel(.console(.settings),  icon: "gearshape.fill",               title: "Settings")
+                } header: {
+                    Text("Console")
+                }
+
+                if auth.isPlatformAdmin {
+                    Section {
+                        sidebarLabel(.console(.admin), icon: "lock.shield.fill", title: "Admin")
+                    } header: {
+                        Text("Admin")
+                    }
+                }
+            }
+            .navigationTitle("JapanOSINT")
+            #if os(macOS)
+            .listStyle(.sidebar)
+            #endif
+            .themedScreenBackground(theme)
     }
 
     @ViewBuilder

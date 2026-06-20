@@ -217,6 +217,21 @@ static void *cam_trigger_thread(void *vp) {
   return NULL;
 }
 
+/* GET /api/search/suggest runs an LLM call. Doing it inline would block the
+ * single mongoose event loop (freezing the whole app per keystroke), so we
+ * compute it on a detached thread and deliver the result via mg_wakeup() —
+ * MG_EV_WAKEUP fires on the originating connection and sends the reply. The
+ * event loop stays free; suggestions appear when they're ready. */
+typedef struct { struct mg_mgr *mgr; unsigned long cid; char *q; } suggest_arg;
+static void *suggest_thread(void *vp) {
+  suggest_arg *a = vp;
+  char *body = searchapi_suggest(a->q);              /* blocks on suggest worker */
+  const char *out = body ? body : "{\"suggestions\":[]}";
+  mg_wakeup(a->mgr, a->cid, out, strlen(out));        /* copied; wakes the loop */
+  free(body); free(a->q); free(a);
+  return NULL;
+}
+
 /* Parse the /api/intel/items|search query string into intel_items_query and
  * run it. Locals outlive the call (SQLITE_TRANSIENT copies bound values, the
  * envelope is malloc'd). mg_http_get_var > 0 == present & non-empty → NULL
@@ -243,6 +258,13 @@ static char *intel_items_run(struct mg_http_message *hm) {
 static void fn(struct mg_connection *c, int ev, void *ev_data) {
   if (ev == MG_EV_POLL) { sse_probe_poll(c); search_stream_poll(c); return; }
   if (ev == MG_EV_CLOSE) { search_stream_close(c); return; }
+  if (ev == MG_EV_WAKEUP) {            /* deferred suggest reply (off-loop LLM) */
+    struct mg_str *d = (struct mg_str *) ev_data;
+    mg_http_reply(c, 200,
+      "Content-Type: application/json\r\nAccess-Control-Allow-Origin: *\r\n",
+      "%.*s", (int) d->len, d->buf);
+    return;
+  }
   if (ev != MG_EV_HTTP_MSG) return;
   struct mg_http_message *hm = ev_data;
   struct mg_str u = hm->uri;
@@ -311,8 +333,19 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     if (eq(u, "/api/search/suggest")) {
       char q[512] = {0};
       mg_http_get_var(&hm->query, "q", q, sizeof q);
+      suggest_arg *a = calloc(1, sizeof *a);
+      if (a) {
+        a->mgr = c->mgr; a->cid = c->id; a->q = strdup(q);
+        pthread_t th;
+        if (a->q && pthread_create(&th, NULL, suggest_thread, a) == 0) {
+          pthread_detach(th);
+          return;        /* reply deferred to MG_EV_WAKEUP — loop stays free */
+        }
+        free(a->q); free(a);
+      }
+      /* fallback: thread spawn failed (rare) → reply inline */
       char *body = searchapi_suggest(q);
-      reply_json(c, 200, body); free(body); return;
+      reply_json(c, 200, body ? body : "{\"suggestions\":[]}"); free(body); return;
     }
     { char rid[64];
       if (seg(u, "/api/search/results/", "", rid, sizeof rid)) {
@@ -332,10 +365,15 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       return;
     }
 
-    /* GET /api/layers — Node throws (a registry source has layer:null →
-     * null.replace) and returns 500; reproduce byte-for-byte. */
+    /* GET /api/layers — registry layers, STRIP-filtered, with each layer's
+     * sources + time-slider disposition. Node crashed here (a registry source
+     * had layer:null → null.replace → 500); miscapi_list_layers skips
+     * layerless sources instead so the Map layer picker actually loads. */
     if (eq(u, "/api/layers")) {
-      reply_json(c, 500, "{\"error\":\"Failed to list layers\"}");
+      char *body = miscapi_list_layers();
+      if (!body) { reply_json(c, 500, "{\"error\":\"Failed to list layers\"}"); return; }
+      reply_json(c, 200, body);
+      free(body);
       return;
     }
 
@@ -386,6 +424,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
 
     /* PUT /api/sources/:id/schedule  {"mode":"map_cron"|"search_only"} */
     if (seg(u, "/api/sources/", "/schedule", p, sizeof p)) {
+      /* Per-source schedule mode sets server-wide collection cadence (not a
+       * per-tenant setting), so it's a platform-operator decision — gate it
+       * like /api/admin and /api/db rather than leaving it plain-auth. */
+      int oc = opgate_check(&usr);
+      if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
+      if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
+      if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
       char b[256] = {0};
       if (hm->body.len && hm->body.len < sizeof b)
         memcpy(b, hm->body.buf, hm->body.len);
@@ -485,7 +530,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     }
 
     /* ---- /api/admin/* and /api/db/* — requirePlatformOperator ---- */
-    if (eq(u,"/api/admin/restart") || eq(u,"/api/admin/maintenance") ||
+    if (starts(u,"/api/admin/") ||
         eq(u,"/api/db/tables") || starts(u,"/api/db/tables/") ||
         eq(u,"/api/db/scheduler")) {
       int oc = opgate_check(&usr);
@@ -500,6 +545,40 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         char hv[16]={0}; int hh=mg_http_get_var(&hm->query,"hours",hv,sizeof hv);
         char *b=maintenance_digest(g_db, hh>0?atoi(hv):24);
         reply_json(c,200,b); free(b); return;
+      }
+      /* GET /api/admin/maintenance/source/:id — per-source pipeline detail */
+      {
+        char sid[128]={0};
+        if (seg(u,"/api/admin/maintenance/source/","",sid,sizeof sid)) {
+          char *b=maintenance_source_detail(g_db,sid);
+          if (!b){ reply_json(c,404,"{\"error\":\"source_not_found\"}"); return; }
+          reply_json(c,200,b); free(b); return;
+        }
+      }
+      /* POST repair/anomaly/source operator actions */
+      {
+        int is_post = (mg_strcmp(hm->method,mg_str("POST"))==0);
+        char idb[128]={0}; int st=200; char *b=NULL;
+        if (seg(u,"/api/admin/repairs/","/approve",idb,sizeof idb)) {
+          if (!is_post){ reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+          b=maintenance_repair_action(g_db,atol(idb),1,&st);
+          reply_json(c,st,b); free(b); return;
+        }
+        if (seg(u,"/api/admin/repairs/","/reject",idb,sizeof idb)) {
+          if (!is_post){ reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+          b=maintenance_repair_action(g_db,atol(idb),0,&st);
+          reply_json(c,st,b); free(b); return;
+        }
+        if (seg(u,"/api/admin/sources/","/unquarantine",idb,sizeof idb)) {
+          if (!is_post){ reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+          b=maintenance_unquarantine(g_db,idb,&st);
+          reply_json(c,st,b); free(b); return;
+        }
+        if (seg(u,"/api/admin/anomalies/","/requeue",idb,sizeof idb)) {
+          if (!is_post){ reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+          b=maintenance_requeue_anomaly(g_db,atol(idb),&st);
+          reply_json(c,st,b); free(b); return;
+        }
       }
       if (eq(u,"/api/db/tables")) {
         char *b=dbexplorer_tables(g_db); reply_json(c,200,b); free(b); return;
@@ -583,6 +662,38 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
                              aid, act, bdy, hl > 0 ? atoi(lv) : 0, &status);
       free(bdy);
       if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, status, body); free(body); return;
+    }
+
+    /* ---- /api/members[/*] — member roster + invites (tenant-scoped) ---- */
+    if (eq(u, "/api/members") || starts(u, "/api/members/")) {
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+
+      char seg[128] = {0}, act[128] = {0};
+      if (u.len > 13) {                          /* after "/api/members/" */
+        char rest[256] = {0};
+        size_t rl = u.len - 13; if (rl >= sizeof rest) rl = sizeof rest - 1;
+        memcpy(rest, u.buf + 13, rl);
+        char *sl = strchr(rest, '/');
+        if (sl) { *sl = 0; mg_url_decode(sl + 1, strlen(sl + 1), act, sizeof act, 0); }
+        mg_url_decode(rest, strlen(rest), seg, sizeof seg, 0);
+      }
+      char meth[12] = {0};
+      size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
+      memcpy(meth, hm->method.buf, ml);
+      char *bdy = NULL;
+      if (hm->body.len) { bdy = malloc(hm->body.len + 1);
+        memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
+      int status = 200;
+      char *body = tenantapi_members(g_db, &tc, meth, seg, act, bdy, &status);
+      free(bdy);
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, status, body); free(body); return;
     }
@@ -802,6 +913,7 @@ int httpd_serve(db_handle *db, int port) {
     mg_mgr_free(&mgr);
     return 1;
   }
+  mg_wakeup_init(&mgr);   /* enable off-loop replies (async suggest) */
   fprintf(stderr, "[httpd] listening on %s\n", url);
   for (;;) mg_mgr_poll(&mgr, 100);
 }

@@ -35,9 +35,9 @@ struct KeyPolicySettingsView: View {
                 form
             }
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle("Key-edit policy")
-        .navigationBarTitleDisplayMode(.inline)
+        .compatInlineTitle()
         .task { await load() }
     }
 
@@ -106,6 +106,7 @@ struct KeyPolicySettingsView: View {
                     .font(.caption2)
             }
         }
+        .compatGroupedForm()
     }
 
     private func load() async {

@@ -12,9 +12,13 @@ struct ConsoleHub: View {
     @EnvironmentObject var auth: AuthSession
     @Environment(\.theme) private var theme
 
-    /// The Workspace destination only hosts owner-only surfaces today, so hide
-    /// the row entirely for non-owners rather than show an empty screen.
-    private var isOwner: Bool { auth.me?.tenant?.role == "owner" }
+    /// The Workspace destination hosts owner/admin surfaces (members,
+    /// permissions, queries), so hide the row entirely for everyone else
+    /// rather than show an empty screen.
+    private var canManageWorkspace: Bool {
+        let role = auth.me?.tenant?.role
+        return role == "owner" || role == "admin"
+    }
 
     /// Disconnect confirmation — mirrors the gate in Settings › Account.
     @State private var confirmDisconnect = false
@@ -45,10 +49,10 @@ struct ConsoleHub: View {
                     row(.apiKeys,  icon: "key.fill",
                         title: "API keys",
                         subtitle: "Credentials & overlays")
-                    if isOwner {
+                    if canManageWorkspace {
                         row(.workspace, icon: "person.2.badge.key.fill",
                             title: "Workspace",
-                            subtitle: "Key-edit policy")
+                            subtitle: "Members, permissions, queries")
                     }
                     row(.settings, icon: "gearshape.fill",
                         title: "Settings",
@@ -69,9 +73,8 @@ struct ConsoleHub: View {
 
                 accountSection
             }
-            .listStyle(.insetGrouped)
-            .scrollContentBackground(.hidden)
-            .background(theme.surface.ignoresSafeArea())
+            .compatInsetGroupedListStyle()
+            .themedScreenBackground(theme)
             .navigationTitle("Console")
             .navigationDestination(for: ConsoleDestination.self) { dest in
                 destinationView(for: dest)

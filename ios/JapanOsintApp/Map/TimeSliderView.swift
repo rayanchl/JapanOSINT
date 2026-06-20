@@ -181,7 +181,7 @@ struct TimeSliderView: View {
             tint: theme.accent,
             onBegan: {
                 playback.isScrubbing = true
-                UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+                Haptics.tap(.soft)
             },
             onEnded: {
                 playback.isScrubbing = false

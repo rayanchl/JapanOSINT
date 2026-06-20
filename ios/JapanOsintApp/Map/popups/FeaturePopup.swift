@@ -57,18 +57,18 @@ struct FeaturePopup: View {
             }
             .padding()
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle(feature.displayName)
-        .navigationBarTitleDisplayMode(.inline)
+        .compatInlineTitle()
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+            ToolbarItem(placement: .compatLeading) {
                 Button { saved.toggle(feature) } label: {
                     Image(systemName: saved.contains(id: feature.id) ? "star.fill" : "star")
                         .foregroundStyle(saved.contains(id: feature.id) ? theme.warning : theme.textMuted)
                 }
                 .accessibilityLabel(saved.contains(id: feature.id) ? "Remove from saved" : "Save")
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 Button("Close") { dismiss() }
             }
         }

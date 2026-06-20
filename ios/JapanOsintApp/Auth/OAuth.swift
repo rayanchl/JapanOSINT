@@ -3,7 +3,11 @@ import CryptoKit
 import Foundation
 import Security
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// Supabase social sign-in (Google / X / Apple / GitHub) via the GoTrue
 /// `/authorize` endpoint and an in-app `ASWebAuthenticationSession`.
@@ -138,6 +142,7 @@ final class WebAuthRunner: NSObject, ASWebAuthenticationPresentationContextProvi
     }
 
     func presentationAnchor(for _: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        #if canImport(UIKit)
         let scenes = UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
         if let key = scenes.flatMap(\.windows).first(where: \.isKeyWindow) {
@@ -152,5 +157,14 @@ final class WebAuthRunner: NSObject, ASWebAuthenticationPresentationContextProvi
         // ASWebAuthenticationSession is being presented, so `scenes.first`
         // is non-nil here.
         return ASPresentationAnchor(windowScene: scenes.first!)
+        #else
+        // On macOS `ASPresentationAnchor` is an `NSWindow`. Prefer the key
+        // window, then the app's main window, falling back to a transient
+        // window so the auth sheet always has an anchor to attach to.
+        return NSApplication.shared.keyWindow
+            ?? NSApplication.shared.mainWindow
+            ?? NSApplication.shared.windows.first
+            ?? NSWindow()
+        #endif
     }
 }

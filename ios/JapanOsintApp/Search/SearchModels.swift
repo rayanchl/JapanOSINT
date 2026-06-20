@@ -23,7 +23,44 @@ struct ServiceProgress: Codable, Hashable, Sendable, Identifiable {
     let status: String
     let results_count: Int?
     let status_message: String?
+    /// The entity value this service was queried for (single string from the
+    /// snapshot, e.g. "45.54.4.45"). Used to cross-link entities ↔ services.
+    let entities: String?
+    /// True when this service ran in a follow-up round (current_round > 0).
+    let is_followup: Bool?
     var id: String { name }
+
+    /// User-facing label for the service queue. The internal `name`
+    /// (e.g. `JP_CORPUS_LOOKUP`) is the dispatch/dedup key and never changes;
+    /// this only affects what's shown. JP_CORPUS_LOOKUP is the always-on local
+    /// corpus + entity-graph search, surfaced to users as "DB SEARCH".
+    var displayName: String {
+        name == "JP_CORPUS_LOOKUP" ? "DB SEARCH" : name
+    }
+}
+
+/// One underlying source/provider a service hit (results.services[].sources[]).
+/// e.g. DB SEARCH → each matched corpus source; WEATHER_SERVICE → "open_meteo";
+/// IP_GEOLOCATION → "ip-api.com". `status` is "ok" | "error" | "empty".
+struct ServiceSource: Codable, Hashable, Sendable, Identifiable {
+    let name: String
+    let status: String?
+    let records: Int?
+    let detail: String?
+    var id: String { name }
+
+    enum CodingKeys: String, CodingKey { case name, status, records, detail }
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        name = (try? c.decode(String.self, forKey: .name)) ?? "?"
+        status = try? c.decode(String.self, forKey: .status)
+        records = try? c.decode(Int.self, forKey: .records)
+        detail = try? c.decode(String.self, forKey: .detail)
+    }
+    init(name: String, status: String?, records: Int?, detail: String?) {
+        self.name = name; self.status = status; self.records = records; self.detail = detail
+    }
+    var ok: Bool { (status ?? "ok") == "ok" }
 }
 
 struct ServiceResult: Codable, Hashable, Sendable, Identifiable {
@@ -37,10 +74,12 @@ struct ServiceResult: Codable, Hashable, Sendable, Identifiable {
     /// can never throw and drop the whole snapshot.
     let data: String?
     let error: String?
+    /// Underlying sources/providers this service call hit.
+    let sources: [ServiceSource]?
     var id: String { "\(name)|\(entity ?? "")" }
 
     enum CodingKeys: String, CodingKey {
-        case name, entity, success, confidence, data, error
+        case name, entity, success, confidence, data, error, sources
     }
 
     init(from decoder: Decoder) throws {
@@ -50,6 +89,7 @@ struct ServiceResult: Codable, Hashable, Sendable, Identifiable {
         success = try? c.decode(Bool.self, forKey: .success)
         confidence = try? c.decode(Double.self, forKey: .confidence)
         error = try? c.decode(String.self, forKey: .error)
+        sources = try? c.decode([ServiceSource].self, forKey: .sources)
         if let s = try? c.decode(String.self, forKey: .data) {
             data = s
         } else if let raw = try? c.decode(JSONValue.self, forKey: .data) {

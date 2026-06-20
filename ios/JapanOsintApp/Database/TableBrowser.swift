@@ -25,7 +25,7 @@ struct TableBrowser: View {
             content
         }
         .searchable(text: $search,
-                    placement: .navigationBarDrawer(displayMode: .always),
+                    placement: .compatDrawer,
                     prompt: "Search rows…")
         .onSubmit(of: .search) { offset = 0; Task { await loadRows() } }
         .onChange(of: search) { _, newValue in

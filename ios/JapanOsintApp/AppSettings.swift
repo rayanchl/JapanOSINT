@@ -197,6 +197,19 @@ final class AppSettings: ObservableObject {
         UserDefaults.standard.set(self.apiDefaultTimeoutSeconds, forKey: "apiDefaultTimeoutSeconds")
 
         Self.runOneShotMigrationIfNeeded(into: self)
+
+        // Backfill Supabase config for stores created before these fields
+        // existed: SwiftData lightweight migration filled them with the inline
+        // "" defaults, and AppPreferences.init()'s BuildConfig seeding only
+        // runs for a brand-new row. Assigning fires the didSet observers, which
+        // persist the values — idempotent (writes only when empty) and
+        // self-healing across every already-broken store, no migration flag.
+        if supabaseURL.trimmingCharacters(in: .whitespaces).isEmpty {
+            supabaseURL = BuildConfig.supabaseURL
+        }
+        if supabaseAnonKey.trimmingCharacters(in: .whitespaces).isEmpty {
+            supabaseAnonKey = BuildConfig.supabaseAnonKey
+        }
     }
 
     // MARK: - Layer helpers (unchanged public API)

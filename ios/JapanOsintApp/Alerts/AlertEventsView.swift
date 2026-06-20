@@ -31,14 +31,14 @@ struct AlertEventsView: View {
                     list
                 }
             }
-            .background(theme.surface.ignoresSafeArea())
+            .themedScreenBackground(theme)
             .navigationTitle("History · \(rule.name)")
-            .navigationBarTitleDisplayMode(.inline)
+            .compatInlineTitle()
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .compatLeading) {
                     Button("Done") { dismiss() }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .compatPrimary) {
                     Button { Task { await reload() } } label: {
                         Image(systemName: "arrow.clockwise")
                     }.disabled(loading)
@@ -48,6 +48,7 @@ struct AlertEventsView: View {
                 IntelDetail(uid: uid, fallbackTitle: "Matched item")
             }
         }
+        .compatSheetSizing(.large)
         .task { if events.isEmpty { await reload() } }
     }
 

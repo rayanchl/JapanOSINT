@@ -112,7 +112,7 @@ struct ApiKeyDetailView: View {
                                 .font(.system(.body, design: .monospaced))
                                 .disabled(true)
                             Button {
-                                UIPasteboard.general.string = revealed
+                                Clipboard.copy(revealed)
                             } label: {
                                 Label("Copy", systemImage: "doc.on.doc")
                             }
@@ -140,7 +140,7 @@ struct ApiKeyDetailView: View {
                         HStack(spacing: 8) {
                             SecureField("New value", text: $newValue)
                                 .font(.system(.body, design: .monospaced))
-                                .textInputAutocapitalization(.never)
+                                .compatNoAutocap()
                                 .autocorrectionDisabled(true)
                                 .submitLabel(.go)
                                 .onSubmit {
@@ -215,14 +215,16 @@ struct ApiKeyDetailView: View {
                 }
             }
             .navigationTitle(row.name)
-            .navigationBarTitleDisplayMode(.inline)
+            .compatGroupedForm()
+            .themedScreenBackground(theme)
+            .compatInlineTitle()
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .compatPrimary) {
                     Button("Done") { dismiss() }
                 }
             }
         }
-        .presentationDetents([.medium, .large])
+        .compatSheetSizing(.medium)
     }
 
     // MARK: - Used by

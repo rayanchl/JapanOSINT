@@ -17,6 +17,12 @@ char *miscapi_set_schedule(db_handle *db, const char *id, const char *body);
  * NULL when the source id is unknown (caller → 404). */
 char *miscapi_source_logs(db_handle *db, const char *id, int limit);
 
+/* GET /api/layers — registry layers (grouped by source.layer), STRIP-filtered,
+ * each carrying its contributing sources + time-slider disposition. Sources
+ * with no layer (e.g. osint-search) are skipped — Node crashed on them
+ * (null.replace). Always non-NULL; malloc'd JSON array. */
+char *miscapi_list_layers(void);
+
 /* GET /api/layers/:layerId/geojson — empty FC + _meta.sources for the
  * layer. NULL when no registry source maps to that layer (caller → 404). */
 char *miscapi_layer_geojson(const char *layer_id);

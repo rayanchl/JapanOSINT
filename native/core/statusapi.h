@@ -13,4 +13,9 @@ char *statusapi_build(db_handle *db);
  * no source has that id (caller → 404 {"error":"Source not found"}). */
 char *statusapi_one(db_handle *db, const char *id);
 
+/* layers.js STRIP_LAYER_IDS membership (static list + INTEL_SOURCE_IDS).
+ * 1 if `id` should be hidden from /api/layers and /api/status; 0 for NULL.
+ * Shared so /api/layers filters identically (Node imported the same set). */
+int statusapi_strip_has(const char *id);
+
 #endif

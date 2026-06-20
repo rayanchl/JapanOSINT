@@ -91,11 +91,12 @@ struct LayersTab: View {
                     }
                 }
             }
-            .listStyle(.insetGrouped)
+            .compatInsetGroupedListStyle()
+            .themedScreenBackground(theme)
             .searchable(text: $searchText, prompt: "Search layers")
             .navigationTitle("Layers (\(filteredLayers.count))")
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .compatPrimary) {
                     FilterToolbarButton(isActive: filtersAreActive) {
                         showFilters = true
                     }
@@ -392,7 +393,7 @@ struct LayerRow: View {
                             .font(.caption)
                     }
                 }
-                .toggleStyle(.checkbox)
+                .toggleStyle(.themedCheckbox)
             }
             switch layer.id {
             case "unified-trains":
@@ -437,7 +438,7 @@ struct LayerRow: View {
                 Text(title).font(.caption)
             }
         }
-        .toggleStyle(.checkbox)
+        .toggleStyle(.themedCheckbox)
     }
 
     private func sourcesSection(_ sources: [LayerSourceRef]) -> some View {

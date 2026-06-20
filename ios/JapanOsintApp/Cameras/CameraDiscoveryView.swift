@@ -65,24 +65,24 @@ struct CameraDiscoveryView: View {
                 contentView
             }
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         // Map mode reclaims the large-title space so the map gets the full
         // viewport — the title would otherwise overlap pins on first appear.
         // List/Grid keep the standard collapsing large title.
         .navigationTitle(mode == .map ? "" : "Cameras")
-        .navigationBarTitleDisplayMode(mode == .map ? .inline : .automatic)
+        .compatInlineTitle(mode == .map)
         .searchable(
             text: $searchText,
-            placement: .navigationBarDrawer(displayMode: .always),
+            placement: .compatDrawer,
             prompt: "Search cameras"
         )
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 FilterToolbarButton(isActive: filtersAreActive) {
                     showFilters = true
                 }
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 Button {
                     Task { await trigger() }
                 } label: {
@@ -96,7 +96,7 @@ struct CameraDiscoveryView: View {
                 .accessibilityLabel(triggering ? "Running discovery…" : "Re-run discovery")
             }
             if !events.isEmpty {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .compatPrimary) {
                     Button("Clear") { events.removeAll() }
                 }
             }
@@ -108,7 +108,7 @@ struct CameraDiscoveryView: View {
         .onDisappear { subscription?.cancel() }
         .sheet(item: $selectedFeature) { feat in
             NavigationStack { featurePopup(for: feat, showsMiniMap: true) }
-                .presentationDetents([.medium, .large])
+                .compatSheetSizing(.medium)
         }
         .sheet(isPresented: $showFilters) { filtersSheet }
     }
@@ -137,18 +137,18 @@ struct CameraDiscoveryView: View {
     }
 
     private var columnsPicker: some View {
-        HStack {
+        HStack(spacing: Space.sm) {
             Text("Columns")
                 .font(.caption)
                 .foregroundStyle(theme.textMuted)
-            Spacer()
             Picker("Columns", selection: $columns) {
                 Text("2").tag(2)
                 Text("3").tag(3)
             }
             .pickerStyle(.segmented)
-            .frame(maxWidth: 160)
+            .frame(maxWidth: 120)
         }
+        .frame(maxWidth: .infinity)   // centered under the mode picker
         .padding(.horizontal)
         .padding(.bottom, 8)
     }

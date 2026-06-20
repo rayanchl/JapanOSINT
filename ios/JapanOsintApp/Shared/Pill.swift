@@ -24,14 +24,18 @@ struct Pill: View {
     @Environment(\.theme) private var theme
 
     var body: some View {
-        HStack(spacing: 3) {
+        // Empty text → icon-only chip (no trailing gap). Used by the service
+        // queue's terminal status pills to save horizontal room.
+        HStack(spacing: text.isEmpty ? 0 : 3) {
             if let icon {
                 Image(systemName: icon).font(.caption2)
             }
-            Text(text)
-                .font(.caption2.bold())
-                .lineLimit(1)
-                .truncationMode(.tail)
+            if !text.isEmpty {
+                Text(text)
+                    .font(.caption2.bold())
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+            }
         }
         .padding(.horizontal, size == .sm ? Space.sm - 2 : Space.sm)
         .padding(.vertical, size == .sm ? 2 : 3)

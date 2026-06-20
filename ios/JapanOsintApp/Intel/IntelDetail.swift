@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreLocation
 
 /// Level-3 detail: full body + properties table for a single intel item.
 /// Lazy-loads via `/api/intel/items/:uid` so the row stays light.
@@ -7,6 +8,7 @@ struct IntelDetail: View {
     let fallbackTitle: String
 
     @EnvironmentObject var apiClient: APIClient
+    @EnvironmentObject var nav: MapNavigation
     @Environment(\.theme) private var theme
 
     @State private var item: IntelItem?
@@ -50,13 +52,24 @@ struct IntelDetail: View {
                         Text("Properties").font(.headline).foregroundStyle(theme.text)
                         propertiesGrid(props)
                     }
+                    if let coord = coordinate(from: item) {
+                        Text("Location").font(.headline).foregroundStyle(theme.text)
+                        CoordinateMiniMap(coordinate: coord)
+                        CoordinateAddressView(coordinate: coord)
+                        Button {
+                            nav.showOnMap(coord, feature: mapFeature(from: item, at: coord))
+                        } label: {
+                            Label("Show on map", systemImage: "map")
+                        }
+                        .buttonStyle(.bordered)
+                    }
                 }
             }
             .padding()
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle(item?.title ?? fallbackTitle)
-        .navigationBarTitleDisplayMode(.inline)
+        .compatInlineTitle()
         .task { await load() }
     }
 
@@ -157,6 +170,54 @@ struct IntelDetail: View {
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+
+    /// Pull a map-able coordinate for this datum. The geocoded point is served
+    /// top-level (`item.lat`/`item.lon`, from the `intel_items` columns); most
+    /// geolocated items — e.g. OSM points whose lat/lon live in `geometry`, not
+    /// `properties` — only have it there. We fall back to lat/lon embedded in
+    /// the free-form `properties` (collectors emit them under interchangeable
+    /// keys and as Int, Double, or String). Either way we reject out-of-range or
+    /// null-island (0,0) values so a missing coordinate never renders a bogus
+    /// pin in the ocean.
+    private func coordinate(from item: IntelItem) -> CLLocationCoordinate2D? {
+        var lat = item.lat
+        var lon = item.lon
+        if lat == nil || lon == nil, let props = item.properties {
+            lat = lat ?? firstDouble(props, ["latitude", "lat"])
+            lon = lon ?? firstDouble(props, ["longitude", "lon", "lng"])
+        }
+        guard let lat, let lon else { return nil }
+        guard (-90...90).contains(lat), (-180...180).contains(lon) else { return nil }
+        guard lat != 0 || lon != 0 else { return nil }
+        return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+    }
+
+    /// Synthesize a `GeoFeature` so "Show on map" can fly the main Map to this
+    /// datum and present its popup — even when no intel layer is toggled on
+    /// (MapNavigation presents `pendingPresent` regardless). The generic
+    /// `intel` layerId routes to the default `FeaturePopup`. We pass the item's
+    /// own `properties` through and surface title/link/source so the popup's
+    /// name, external link, and provenance render.
+    private func mapFeature(from item: IntelItem, at coord: CLLocationCoordinate2D) -> GeoFeature {
+        var props = item.properties ?? [:]
+        if props["title"] == nil, let t = item.title { props["title"] = AnyCodable(t) }
+        if props["link"] == nil, let l = item.link { props["link"] = AnyCodable(l) }
+        if props["source"] == nil { props["source"] = AnyCodable(item.source_id) }
+        return GeoFeature(id: "intel|\(item.uid)", layerId: "intel",
+                          geometry: .point(coord), properties: props)
+    }
+
+    private func firstDouble(_ props: [String: AnyCodable], _ keys: [String]) -> Double? {
+        for key in keys {
+            switch props[key]?.value {
+            case let v as Double: return v
+            case let v as Int:    return Double(v)
+            case let v as String: if let d = Double(v) { return d }
+            default:              continue
+            }
+        }
+        return nil
     }
 
     private func stringify(_ value: Any?) -> String {

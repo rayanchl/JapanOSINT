@@ -77,15 +77,15 @@ struct SourceDashboardTab: View {
                 .refreshable { await load() }
             }
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle("Sources")
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 FilterToolbarButton(isActive: filtersAreActive) {
                     showFilters = true
                 }
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 Button { Task { await load() } } label: {
                     Image(systemName: "arrow.clockwise")
                 }
@@ -113,7 +113,7 @@ struct SourceDashboardTab: View {
                     selected = updated
                 })
             }
-            .presentationDetents([.medium, .large])
+            .compatSheetSizing(.medium)
         }
     }
 
@@ -159,7 +159,7 @@ struct SourceDashboardTab: View {
                 Text(label).font(.caption2).foregroundStyle(theme.textMuted)
             }
             Text("\(value)")
-                .font(.title2.bold().monospacedDigit())
+                .font(.title3.bold().monospacedDigit())
                 .foregroundStyle(color)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -730,11 +730,11 @@ private struct SourceDetail: View {
             }
             .padding()
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle(row.name ?? row.id)
-        .navigationBarTitleDisplayMode(.inline)
+        .compatInlineTitle()
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 Button("Close") { dismiss() }
             }
         }

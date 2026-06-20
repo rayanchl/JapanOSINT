@@ -27,27 +27,23 @@ typedef struct {
   int max_rounds;
 } run_arg;
 
-/* The whole pipeline is gated by a single local llama-server that handles
- * one request at a time. Running pipelines concurrently doesn't speed
- * anything up — it just piles worker threads + per-client curl connection
- * pools onto that one llama and onto g_lock, starving the single-threaded
- * httpd event loop (observed: /api/health stops responding, /analyze times
- * out -> app NSURLError -1001). Serialize: at most one pipeline runs at a
- * time. A waiting run already shows phase "queued" (set by progress_create
- * before this thread is spawned), so the SSE stream / UI shows an honest
- * queue until it acquires the lock. Creating and freeing the http_client
- * inside the lock also bounds the llama connection pool to a single client
- * (concurrent runs were each holding their own keep-alive connections). */
-static pthread_mutex_t g_pipeline_lock = PTHREAD_MUTEX_INITIALIZER;
-
+/* The single-slot llama-server is the only real bottleneck, so serialization
+ * lives in the llm_client (it locks just around the generation HTTP call) —
+ * NOT around the whole pipeline. Gating the entire run was wrong: the slow
+ * collector phase (e.g. an unresponsive Overpass fetch with a 60s-per-endpoint
+ * budget) would hold the lock for minutes, so a queued search never reached
+ * its first llm_complete and sat in phase "queued" with the laptop idle.
+ * Now pipelines run concurrently; only their LLM calls queue, so a wedged
+ * collector in one run no longer stalls another run's analysis. Each thread
+ * keeps its own http_client (== scheduler) so a slow collector's connection
+ * pool stays isolated to that run. */
 static void *run_thread(void *vp) {
   run_arg *a = vp;
-  pthread_mutex_lock(&g_pipeline_lock);
   http_client *http = http_client_new();   /* own client (== scheduler) */
   llm_client llm; llm_init(&llm, http);
+  llm.interactive = 1;   /* live user search → high-priority LLM lane */
   osint_pipeline_run(a->db, &llm, a->id, a->query, a->max_rounds);
   http_client_free(http);
-  pthread_mutex_unlock(&g_pipeline_lock);
   free(a->query);
   free(a);
   return NULL;
@@ -91,7 +87,7 @@ char *searchapi_suggest(const char *q) {
     cJSON_AddItemToObject(o, "suggestions", cJSON_CreateArray());
   } else {
     http_client *http = http_client_new();
-    llm_client llm; llm_init(&llm, http);
+    llm_client llm; llm_init_suggest(&llm, http);  /* dedicated suggest LLM */
     char *arr = osint_suggest(&llm, q);          /* JSON array string */
     http_client_free(http);
     cJSON *a = arr ? cJSON_Parse(arr) : NULL;

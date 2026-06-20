@@ -71,6 +71,13 @@ CREATE TABLE IF NOT EXISTS collector_repair (
     pr_url      TEXT,
     created_at  TEXT NOT NULL DEFAULT (datetime('now'))
   , triage_class TEXT);
+CREATE TABLE IF NOT EXISTS collector_url_overrides (
+    source_id  TEXT PRIMARY KEY REFERENCES sources(id),
+    old_url    TEXT NOT NULL,
+    new_url    TEXT NOT NULL,
+    anomaly_id INTEGER,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
 CREATE TABLE IF NOT EXISTS collector_ttls (
     key        TEXT PRIMARY KEY,
     ttl_ms     INTEGER NOT NULL,
@@ -309,6 +316,18 @@ CREATE TABLE IF NOT EXISTS memberships (
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       PRIMARY KEY (user_id, tenant_id)
     );
+CREATE TABLE IF NOT EXISTS tenant_invites (
+      id         TEXT PRIMARY KEY,
+      tenant_id  TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+      email      TEXT NOT NULL,                       -- lowercased
+      role       TEXT NOT NULL DEFAULT 'analyst'
+                 CHECK(role IN ('owner','admin','analyst','viewer')),
+      invited_by TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      UNIQUE(tenant_id, email)
+    );
+CREATE INDEX IF NOT EXISTS idx_tenant_invites_email
+      ON tenant_invites(email);
 CREATE TABLE IF NOT EXISTS odpt_station_timetable (
     station_id      TEXT NOT NULL,
     line_id         TEXT,

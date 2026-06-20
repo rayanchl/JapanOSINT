@@ -52,22 +52,22 @@ struct IntelTab: View {
                     list
                 }
             }
-            .background(theme.surface.ignoresSafeArea())
+            .themedScreenBackground(theme)
             .navigationTitle("Intel")
             .searchable(
                 text: $searchText,
-                placement: .navigationBarDrawer(displayMode: .always),
+                placement: .compatDrawer,
                 prompt: "Search across all sources"
             )
             .modifier(BilingualSearchModifier(query: searchText, bilingual: $bilingual))
             .refreshable { await reload() }
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .compatPrimary) {
                     FilterToolbarButton(isActive: filtersAreActive) {
                         showFilters = true
                     }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .compatPrimary) {
                     Button {
                         Task { await runAll() }
                     } label: {
@@ -142,7 +142,7 @@ struct IntelTab: View {
                     }
                 }
             }
-            .listStyle(.insetGrouped)
+            .compatInsetGroupedListStyle()
             .navigationDestination(for: IntelSource.self) { src in
                 IntelSourceItemsView(source: src)
             }

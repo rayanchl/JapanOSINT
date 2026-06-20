@@ -28,6 +28,7 @@ struct FilterToolbarButton: View {
 /// auto-appended destructive "Reset filters" section shown whenever
 /// `isActive` is true. Callers supply only the filter-specific sections.
 struct FilterSheet<Content: View>: View {
+    @Environment(\.theme) private var theme
     let isActive: Bool
     let onReset: () -> Void
     let onDone: () -> Void
@@ -43,15 +44,17 @@ struct FilterSheet<Content: View>: View {
                     }
                 }
             }
+            .compatGroupedForm()
+            .themedScreenBackground(theme)
             .navigationTitle("Filters")
-            .navigationBarTitleDisplayMode(.inline)
+            .compatInlineTitle()
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .compatPrimary) {
                     Button("Done", action: onDone)
                 }
             }
         }
-        .presentationDetents([.medium, .large])
+        .compatSheetSizing(.medium)
     }
 }
 

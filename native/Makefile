@@ -28,6 +28,14 @@ MECAB_LIBS   := $(shell mecab-config --libs 2>/dev/null)
 
 CFLAGS  ?= -O2 -g -Wall -Wextra -Wno-unused-parameter -pthread
 CFLAGS  += -DJO_REPO_ROOT='"$(REPO_ROOT)"' $(PKG_CFLAGS) $(MECAB_CFLAGS) -Ithird_party
+# Auto-generate header dependency files (.d) next to each .o so editing a
+# header (e.g. source.h, which defines the ABI-critical source_def struct)
+# forces a recompile of every TU that includes it. Without this, a struct
+# layout change leaves stale objects linked against the old layout -> garbage
+# field reads / segfaults at runtime. -MP adds phony header targets so a
+# deleted header doesn't break the build.
+DEPFLAGS := -MMD -MP
+CFLAGS   += $(DEPFLAGS)
 LDLIBS  := $(PKG_LIBS) $(MECAB_LIBS) -lpthread -lm -ldl -liconv -lz
 
 OBJ := obj
@@ -35,7 +43,7 @@ BIN := bin/japanosint
 
 CORE_SRC := $(wildcard core/*.c)
 LIB_SRC  := $(wildcard lib/*.c)
-SRC_SRC  := $(wildcard collectors/*/sources/*.c)
+SRC_SRC  := $(wildcard collectors/sources/*.c)
 SRCS     := main.c registry.c $(CORE_SRC) $(LIB_SRC) $(SRC_SRC)
 OBJS     := $(patsubst %.c,$(OBJ)/%.o,$(SRCS)) \
             $(OBJ)/third_party/cJSON.o $(OBJ)/third_party/sqlite3.o \
@@ -46,7 +54,7 @@ all: $(BIN)
 
 $(OBJ)/third_party/sqlite3.o: third_party/sqlite3.c
 	@mkdir -p $(dir $@)
-	$(CC) -O2 -g $(SQLITE_DEFS) -c $< -o $@
+	$(CC) -O2 -g $(DEPFLAGS) $(SQLITE_DEFS) -c $< -o $@
 
 $(OBJ)/third_party/cJSON.o: third_party/cJSON.c
 	@mkdir -p $(dir $@)
@@ -54,7 +62,7 @@ $(OBJ)/third_party/cJSON.o: third_party/cJSON.c
 
 $(OBJ)/third_party/mongoose.o: third_party/mongoose.c
 	@mkdir -p $(dir $@)
-	$(CC) -O2 -g -Ithird_party -c $< -o $@
+	$(CC) -O2 -g $(DEPFLAGS) -Ithird_party -c $< -o $@
 
 $(OBJ)/%.o: %.c
 	@mkdir -p $(dir $@)
@@ -70,3 +78,7 @@ selftest: $(BIN)
 
 clean:
 	rm -rf $(OBJ) bin
+
+# Pull in the auto-generated header dependencies (one .d per .o). The leading
+# '-' silences the first-build case where they don't exist yet.
+-include $(OBJS:.o=.d)

@@ -94,20 +94,20 @@ struct ApiKeysView: View {
                 listView
             }
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle(title)
         .searchable(
             text: $searchText,
-            placement: .navigationBarDrawer(displayMode: .always),
+            placement: .compatDrawer,
             prompt: "Search keys"
         )
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 FilterToolbarButton(isActive: filtersAreActive) {
                     showFilters = true
                 }
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 Button { Task { await load() } } label: {
                     Image(systemName: "arrow.clockwise")
                 }
@@ -166,6 +166,11 @@ struct ApiKeysView: View {
                 }
             }
         }
+        // macOS: a bare `Form` defaults to a non-scrolling columnar layout, so
+        // long key lists get clipped with no way to reach the rest. The grouped
+        // style renders a proper scrollable, width-capped panel (matches the
+        // Settings forms); no-op on iOS where `Form` is already grouped.
+        .compatGroupedForm()
     }
 
     private func row(_ item: KeyRow) -> some View {

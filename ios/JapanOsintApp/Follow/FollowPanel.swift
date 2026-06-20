@@ -25,7 +25,7 @@ struct FollowPanel: View {
                 list
             }
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle("Follow log")
         .task { await primeFromBackend(); subscribe() }
         .onDisappear { subscription?.cancel() }

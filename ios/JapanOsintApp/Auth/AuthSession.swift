@@ -37,7 +37,11 @@ final class AuthSession: ObservableObject {
     var memberships: [MeTenant] { me?.memberships ?? [] }
 
     private var supabase: SupabaseAuth {
-        SupabaseAuth(projectURL: settings.supabaseURL, anonKey: settings.supabaseAnonKey)
+        // Point-of-use fallback so a future field rename can't silently empty
+        // the config. The init-time backfill in AppSettings is the primary fix.
+        SupabaseAuth(
+            projectURL: settings.supabaseURL.isEmpty ? BuildConfig.supabaseURL : settings.supabaseURL,
+            anonKey:    settings.supabaseAnonKey.isEmpty ? BuildConfig.supabaseAnonKey : settings.supabaseAnonKey)
     }
     private var api: API { API(baseURL: settings.backendBaseURL) }
 

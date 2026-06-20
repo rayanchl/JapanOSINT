@@ -42,11 +42,11 @@ struct IntelSourceItemsView: View {
                 list
             }
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle(source.name)
-        .navigationBarTitleDisplayMode(.inline)
+        .compatInlineTitle()
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 Button {
                     Task { await runNow() }
                 } label: {
@@ -56,7 +56,7 @@ struct IntelSourceItemsView: View {
                 .disabled(running)
                 .accessibilityLabel(running ? "Running…" : "Run \(source.name)")
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 FilterToolbarButton(isActive: filtersAreActive) {
                     showFilters = true
                 }
@@ -66,7 +66,7 @@ struct IntelSourceItemsView: View {
         // Hide the tab bar while a source is open — the top nav back button
         // is the only "go back" we want; the tab bar at the bottom doubles
         // as another navigation affordance and competes visually.
-        .toolbar(.hidden, for: .tabBar)
+        .compatHideTabBar()
         // Search lives in a bottom inset rather than the nav-bar drawer so
         // that pushing into this view doesn't have to animate the parent's
         // searchable away — the top bar stays clean and snappy.
@@ -148,7 +148,7 @@ struct IntelSourceItemsView: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .compatInsetGroupedListStyle()
         .navigationDestination(for: IntelItem.self) { item in
             IntelDetail(uid: item.uid, fallbackTitle: item.title ?? item.uid)
         }

@@ -31,4 +31,12 @@ char *tenantapi_audit_list(db_handle *db, const char *tenant_id,
 /* GET /api/audit/verify — re-walk the tenant's hash chain. malloc'd. */
 char *tenantapi_audit_verify(db_handle *db, const char *tenant_id);
 
+/* /api/members[...] — member roster + pending-invite management. seg/act are
+ * the two path segments after /api/members/ (parsed in httpd.c): GET ""
+ * lists; POST "invite"; PATCH ":userId"/"role"; DELETE ":userId"; DELETE
+ * "invite"/":id". Writes require owner/admin role. malloc'd; sets *status. */
+char *tenantapi_members(db_handle *db, const tenant_ctx *t,
+                        const char *method, const char *seg,
+                        const char *act, const char *body, int *status);
+
 #endif

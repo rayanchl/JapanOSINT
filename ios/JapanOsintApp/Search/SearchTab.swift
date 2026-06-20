@@ -10,6 +10,7 @@ struct SearchTab: View {
 
     @State private var query = ""
     @State private var suggestions: [String] = []
+    @State private var suggestTask: Task<Void, Never>?
 
     var body: some View {
         NavigationStack {
@@ -38,22 +39,28 @@ struct SearchTab: View {
                 }
                 .padding(16)
             }
-            .background(theme.surface.ignoresSafeArea())
+            .themedScreenBackground(theme)
             .navigationTitle("Search")
             .searchable(
                 text: $query,
-                placement: .navigationBarDrawer(displayMode: .always),
+                placement: .compatDrawer,
                 prompt: "email, IP, domain, name, vessel IMO…"
             )
             .autocorrectionDisabled()
             .onSubmit(of: .search) { Task { await run(query) } }
         }
         .onChange(of: query) { _, q in
-            Task {
-                guard q.trimmingCharacters(in: .whitespaces).count >= 3 else { suggestions = []; return }
-                try? await Task.sleep(nanoseconds: 350_000_000)
+            // Debounce: only ask the LLM to suggest once the entry has settled
+            // for 3s. Cancel any in-flight wait on each keystroke so a new one
+            // restarts the clock; short/empty queries clear immediately.
+            suggestTask?.cancel()
+            guard q.trimmingCharacters(in: .whitespaces).count >= 3 else { suggestions = []; return }
+            suggestTask = Task {
+                try? await Task.sleep(nanoseconds: 3_000_000_000)
                 if Task.isCancelled { return }
-                suggestions = (try? await apiClient.api.searchSuggest(q)) ?? []
+                let result = (try? await apiClient.api.searchSuggest(q)) ?? []
+                if Task.isCancelled { return }
+                suggestions = result
             }
         }
     }
@@ -86,15 +93,23 @@ private struct SearchRunCard: View {
     var body: some View {
         let s = run.snapshot
         let isError = s?.phase == "error"
+        // A run still in `active` (not finished, not errored) is doing live
+        // work — show a spinning indicator so progress reads as ongoing even
+        // while the determinate bar dwells on a stage.
+        let isWorking = !run.finished && !isError
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
+            HStack(spacing: 6) {
                 Text(s?.query ?? run.query).font(.subheadline).lineLimit(1)
                 Spacer()
+                if isWorking {
+                    ProgressView().controlSize(.small)
+                }
                 Text("\(Int(s?.progress_percent ?? 0))%")
-                    .font(.caption.monospaced()).foregroundColor(theme.accentAlt)
+                    .font(.caption).foregroundColor(isError ? theme.danger : theme.accent)
             }
             ProgressView(value: (s?.progress_percent ?? 0) / 100.0)
-                .tint(isError ? theme.danger : theme.accentAlt)
+                .tint(isError ? theme.danger : theme.accent)
+                .compatThinProgress()
             HStack {
                 Text(stageLabel(s) + roundSuffix(s))
                     .font(.caption2).foregroundColor(theme.textMuted)
@@ -161,6 +176,7 @@ struct FlowChips: View {
                         .background(Capsule().stroke(theme.textMuted.opacity(0.4)))
                         .foregroundColor(theme.textMuted)
                 }
+                .buttonStyle(.plain)   // avoid macOS default button chrome behind the chip
             }
         }
     }

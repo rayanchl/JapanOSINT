@@ -13,7 +13,18 @@ import Foundation
 // TODO: replace before release — production values supplied by the team.
 enum BuildConfig {
     /// Managed backend base URL, e.g. https://api.japanosint.app
-    static let backendBaseURL = "http://192.168.1.42:4072"
+    ///
+    /// Dev default differs by platform: the Mac app runs the `japanosint`
+    /// backend on the *same* machine, so it points at loopback; iOS devices
+    /// must reach the dev Mac across the LAN by IP. Both stay editable on the
+    /// onboarding "Connect" page / in Settings for self-host + real backends.
+    static let backendBaseURL: String = {
+        #if os(macOS)
+        return "http://127.0.0.1:4072"
+        #else
+        return "http://192.168.1.43:4072"
+        #endif
+    }()
 
     /// Supabase project URL, e.g. https://abcd.supabase.co
     static let supabaseURL = "https://cbdrdmmlgzqthvhcxnld.supabase.co"

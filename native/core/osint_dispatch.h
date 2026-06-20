@@ -20,6 +20,11 @@ typedef struct {
   int   confidence;      /* 0..100 (JS: success?70:0 unless service set it) */
   char *data;            /* malloc'd JSON string of the emitted result, or NULL */
   char *error;           /* malloc'd; "not_implemented" when no such source */
+  /* malloc'd JSON array of the underlying sources/providers the service hit,
+   * one entry per distinct attribution: [{ "name", "status", "records",
+   * ["detail"] }]. Derived from each emit's sub_source_id / body "source" /
+   * the service name. Surfaced as results.services[i].sources. */
+  char *sources_json;
 } osint_result;
 
 void osint_result_free(osint_result *r);
@@ -34,6 +39,13 @@ int  osint_is_implemented(const char *name);
  * eligible, fed verbatim into the analysis/phase2 prompts (== JS
  * getServicesList(), now the full registry). Caller frees. */
 char *osint_services_list(void);
+
+/* The osint_analysis JSON schema with its service-name enums (recommended_
+ * services + per-entity services) rebuilt from the LIVE registry, so the
+ * analysis LLM can recommend exactly the services that exist — no manual enum
+ * maintenance on registry changes. malloc'd; caller frees. NULL → fall back to
+ * the static schema_load("osint_analysis"). */
+char *osint_analysis_schema_dynamic(void);
 
 /* Handler-dedup key (== JS handlerKey). Unified model: the canonical id IS
  * the key (distinct source_def per service); alias-grouping is an additive

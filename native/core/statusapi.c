@@ -157,7 +157,7 @@ static const char *STRIP[] = {
   "jp-news-rss","nhk-news-rss","yahoo-news-jp-rss","ipa-alerts",
   "jpcert-alerts","phishing-feeds-jp","sans-isc-feeds","my-jvn",
 };
-static int strip_has(const char *id) {
+int statusapi_strip_has(const char *id) {
   if (!id) return 0;
   for (size_t i = 0; i < sizeof STRIP / sizeof *STRIP; i++)
     if (strcmp(STRIP[i], id) == 0) return 1;
@@ -302,8 +302,8 @@ char *statusapi_build(db_handle *db) {
   while (sqlite3_step(s) == SQLITE_ROW) {
     const char *id = ctext(s,0);
     const src_meta *m = src_meta_get(id);
-    if (strip_has(id)) continue;
-    if (m && strip_has(m->layer)) continue;
+    if (statusapi_strip_has(id)) continue;
+    if (m && statusapi_strip_has(m->layer)) continue;
 
     cJSON *o = status_row(s, A, na);
     cJSON_AddItemToArray(apis, o);

@@ -86,5 +86,12 @@ struct JapanOsintApp: App {
                     Task { await registry.bootstrap(baseURL: newURL) }
                 }
         }
+        #if os(macOS)
+        // Launch at a desktop-appropriate size; the shell pins the minimum.
+        // `.contentMinSize` lets the user shrink the window down to the shell's
+        // declared minimum frame but no further.
+        .defaultSize(width: 1280, height: 832)
+        .windowResizability(.contentMinSize)
+        #endif
     }
 }

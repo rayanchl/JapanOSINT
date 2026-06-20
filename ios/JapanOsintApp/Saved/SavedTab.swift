@@ -57,21 +57,21 @@ struct SavedTab: View {
                 case .map:  mapWithPicker
                 }
             }
-            .background(theme.surface.ignoresSafeArea())
+            .themedScreenBackground(theme)
             // Blank the large title in map mode and switch to inline so the
             // map gets the full viewport. The previous approach (.toolbar(.hidden)
             // + a floating chevron overlay) pulled SwiftUI into a toolbar-
             // transition cycle that blocked the body rebuild, so the mode
             // picker visually flipped segments without swapping the view.
             .navigationTitle(mode == .map ? "" : "Saved")
-            .navigationBarTitleDisplayMode(mode == .map ? .inline : .automatic)
+            .compatInlineTitle(mode == .map)
             .searchable(
                 text: $searchText,
-                placement: .navigationBarDrawer(displayMode: .always),
+                placement: .compatDrawer,
                 prompt: "Search saved"
             )
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .compatPrimary) {
                     FilterToolbarButton(isActive: filtersAreActive) {
                         showFilters = true
                     }
@@ -79,7 +79,7 @@ struct SavedTab: View {
             }
             .sheet(item: $selectedFeature) { feat in
                 NavigationStack { featurePopup(for: feat, showsMiniMap: true) }
-                    .presentationDetents([.medium, .large])
+                    .compatSheetSizing(.medium)
             }
             .sheet(isPresented: $showFilters) { filtersSheet }
         }

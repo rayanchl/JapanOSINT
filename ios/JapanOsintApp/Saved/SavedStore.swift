@@ -2,7 +2,6 @@ import Foundation
 import CoreLocation
 import Combine
 import SwiftData
-import UIKit   // Haptics.tap(.light) resolves UIImpactFeedbackGenerator.FeedbackStyle here
 
 /// Codable snapshot of a `GeoFeature`. Stores a single representative
 /// coordinate (the feature's anchor) since popups only read
@@ -78,7 +77,7 @@ final class SavedStore: ObservableObject {
     func toggle(_ feature: GeoFeature) -> Bool {
         if contains(id: feature.id) {
             remove(id: feature.id)
-            Haptics.tap(.light)
+            Haptics.tap()
             return false
         }
         if let item = SavedItem.from(feature) {

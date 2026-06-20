@@ -1,4 +1,6 @@
 #include "db.h"
+#include "source_registry.h"   /* src_meta_get (merged metadata)        */
+#include "../source.h"         /* registry_all / registry_count (sources) */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,6 +27,47 @@ static char *slurp(const char *path) {
 
 int db_exec(db_handle *db, const char *sql, char **errmsg) {
   return sqlite3_exec(db->h, sql, NULL, NULL, errmsg) == SQLITE_OK ? 0 : 1;
+}
+
+/* Seed the sources table from the runtime registry so EVERY registered source
+ * (Japan map collector and OSINT-SaaS service alike) has a row and therefore
+ * appears in /api/status, /api/sources, /api/keys with full metadata. Pulls
+ * type/category/url/name from the merged src_meta_get() (curated table, else
+ * synthesized from the source_def). Idempotent: ON CONFLICT(id) DO NOTHING
+ * preserves existing rows' status/probe/schedule columns untouched. Runs after
+ * the REGISTER_SOURCE constructors (which fire before main), so the registry
+ * is fully populated. */
+static void db_seed_sources(db_handle *db) {
+  const source_def **a = registry_all();
+  int n = registry_count();
+  static const char *SQL =
+    "INSERT INTO sources (id,name,type,category,url,status) "
+    "VALUES (?1,?2,?3,?4,?5,'pending') ON CONFLICT(id) DO NOTHING";
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h, SQL, -1, &s, NULL) != SQLITE_OK) return;
+  sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL);
+  int added = 0;
+  for (int i = 0; i < n; i++) {
+    const source_def *d = a[i];
+    const src_meta *m = src_meta_get(d->id);
+    const char *type = (m && m->type)     ? m->type     : "api";
+    const char *cat  = (m && m->category) ? m->category : "investigation";
+    const char *url  = (m && m->url)      ? m->url      : NULL;
+    const char *name = (m && m->name)     ? m->name
+                       : (d->name ? d->name : d->id);
+    sqlite3_bind_text(s, 1, d->id, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 2, name,  -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 3, type,  -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 4, cat,   -1, SQLITE_TRANSIENT);
+    if (url) sqlite3_bind_text(s, 5, url, -1, SQLITE_TRANSIENT);
+    else     sqlite3_bind_null(s, 5);
+    if (sqlite3_step(s) == SQLITE_DONE) added += sqlite3_changes(db->h);
+    sqlite3_reset(s);
+    sqlite3_clear_bindings(s);
+  }
+  sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL);
+  sqlite3_finalize(s);
+  fprintf(stderr, "[db] seeded sources from registry (%d new rows)\n", added);
 }
 
 int db_open(db_handle *db, const char *db_path, const char *schema_path) {
@@ -78,6 +121,9 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
         "CHECK(schedule_mode IN ('map_cron','search_only'))",
         NULL, NULL, NULL);
   }
+
+  /* Every registered source gets a sources-table row (idempotent). */
+  db_seed_sources(db);
 
   fprintf(stderr, "[db] opened %s, schema applied (%d objects)\n",
           dbp, db_object_count(db));

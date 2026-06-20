@@ -1,0 +1,16 @@
+# GBNF for collector anomaly triage — mirrors collectorTriage.js TRIAGE_SCHEMA.
+# Output: { class, confidence, evidence, suggested_fix? }
+
+root ::= "{" ws "\"class\"" ws ":" ws class ws "," ws "\"confidence\"" ws ":" ws number ws "," ws "\"evidence\"" ws ":" ws string (ws "," ws "\"suggested_fix\"" ws ":" ws suggested-fix)? ws "}"
+
+class ::= "\"transient\"" | "\"url_move\"" | "\"selector_drift\"" | "\"auth_break\"" | "\"rate_limit\"" | "\"site_dead\"" | "\"structural\"" | "\"unknown\""
+
+suggested-fix ::= "null" | "{" ws "\"kind\"" ws ":" ws string ws "," ws "\"details\"" ws ":" ws string ws "}"
+
+string ::= "\"" char* "\""
+char ::= [^"\\] | "\\" (["\\/bfnrt] | "u" hex hex hex hex)
+hex ::= [0-9a-fA-F]
+number ::= "-"? int frac?
+int ::= "0" | [1-9] [0-9]*
+frac ::= "." [0-9]+
+ws ::= [ \t\n]*

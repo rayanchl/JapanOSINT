@@ -26,7 +26,7 @@ struct EntitiesView: View {
             }
             .searchable(text: $q)
             .navigationTitle("Entities")
-            .background(theme.surface.ignoresSafeArea())
+            .themedScreenBackground(theme)
         }
         .onChange(of: q) { _, v in
             Task {
@@ -65,7 +65,7 @@ struct EntityDetailView: View {
                 ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle(profile?.value ?? "Entity")
         .task { await load() }
     }

@@ -1,5 +1,6 @@
 #include "miscapi.h"
 #include "source_registry.h"
+#include "statusapi.h"          /* statusapi_strip_has (shared STRIP set) */
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <stdio.h>
@@ -99,6 +100,143 @@ char *miscapi_source_logs(db_handle *db, const char *id, int limit) {
   sqlite3_finalize(s);
   char *js = cJSON_PrintUnformatted(arr);
   cJSON_Delete(arr);
+  return js;
+}
+
+/* ── GET /api/layers (port of routes/layers.js getLayerDefinitions) ──────── */
+
+/* layer.replace(/-/g,' ').replace(/\b\w/g, c=>c.toUpperCase()): kebab → Title
+ * Case. A word char (\w = [A-Za-z0-9_]) is upper-cased iff it opens a word
+ * (preceded by a non-word boundary); '-' becomes a space first. */
+static void titlecase_kebab(const char *in, char *out, size_t cap) {
+  size_t j = 0; int prev_word = 0;
+  for (size_t i = 0; in[i] && j + 1 < cap; i++) {
+    char c = in[i];
+    if (c == '-') c = ' ';
+    int is_word = c == '_' || (c >= '0' && c <= '9') ||
+                  (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
+    if (is_word && !prev_word && c >= 'a' && c <= 'z') c = (char)(c - 32);
+    out[j++] = c;
+    prev_word = is_word;
+  }
+  out[j] = 0;
+}
+
+/* describeTemporal(layerId): liveOnly → {liveOnly:true}; static → nothing;
+ * else → {temporal:{field:"published_at",fallbackField:"fetched_at"}}. */
+static const char *TEMPORAL_LIVE_ONLY[] = { "unified-flights" };
+static const char *TEMPORAL_STATIC[] = {
+  "unified-trains", "unified-subways", "unified-buses",
+  "unified-ais-ships", "unified-port-infra", "unified-stations",
+  "unified-airports", "unified-station-footprints",
+};
+static int in_list(const char **list, size_t n, const char *id) {
+  for (size_t i = 0; i < n; i++) if (strcmp(list[i], id) == 0) return 1;
+  return 0;
+}
+static void apply_temporal(cJSON *layer, const char *id) {
+  if (in_list(TEMPORAL_LIVE_ONLY, sizeof TEMPORAL_LIVE_ONLY / sizeof *TEMPORAL_LIVE_ONLY, id)) {
+    cJSON_AddBoolToObject(layer, "liveOnly", 1);
+    return;
+  }
+  if (in_list(TEMPORAL_STATIC, sizeof TEMPORAL_STATIC / sizeof *TEMPORAL_STATIC, id))
+    return;
+  cJSON *t = cJSON_CreateObject();
+  cJSON_AddStringToObject(t, "field", "published_at");
+  cJSON_AddStringToObject(t, "fallbackField", "fetched_at");
+  cJSON_AddItemToObject(layer, "temporal", t);
+}
+
+/* UNIFIED_LAYER_PROVIDERS: underlying providers folded into each unified
+ * layer's source list (dedup by id) so layer.sources.count reflects the real
+ * provider count. NULL-terminated provider lists. */
+static const struct { const char *layer; const char *providers[5]; } UNIFIED[] = {
+  { "unified-trains",     { "mlit-n02-stations", "osm-transport-trains", NULL } },
+  { "unified-subways",    { "mlit-n02-stations", "osm-transport-subways", NULL } },
+  { "unified-buses",      { "mlit-p11-bus-stops", "gtfs-jp", "bus-routes", "osm-transport-buses", NULL } },
+  { "unified-flights",    { "flight-adsb", NULL } },
+  { "unified-airports",   { "mlit-p02-airports", NULL } },
+  { "unified-highway",    { "highway-traffic", "jartic-traffic", NULL } },
+  { "unified-port-infra", { "mlit-c02-ports", "osm-transport-ports", NULL } },
+  { "unified-ais-ships",  { "maritime-ais", "marine-traffic", "vessel-finder", NULL } },
+};
+
+static cJSON *find_layer(cJSON *arr, const char *id) {
+  cJSON *it;
+  cJSON_ArrayForEach(it, arr) {
+    cJSON *iid = cJSON_GetObjectItem(it, "id");
+    if (iid && cJSON_IsString(iid) && strcmp(iid->valuestring, id) == 0) return it;
+  }
+  return NULL;
+}
+static int sources_has(cJSON *sources, const char *id) {
+  cJSON *it;
+  cJSON_ArrayForEach(it, sources) {
+    cJSON *sid = cJSON_GetObjectItem(it, "id");
+    if (sid && cJSON_IsString(sid) && strcmp(sid->valuestring, id) == 0) return 1;
+  }
+  return 0;
+}
+static void add_source_ref(cJSON *sources, const src_meta *m) {
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddStringToObject(o, "id", m->id);
+  cJSON_AddItemToObject(o, "name", m->name ? cJSON_CreateString(m->name) : cJSON_CreateNull());
+  cJSON_AddItemToObject(o, "type", m->type ? cJSON_CreateString(m->type) : cJSON_CreateNull());
+  cJSON_AddBoolToObject(o, "free", m->free);
+  cJSON_AddItemToArray(sources, o);
+}
+
+char *miscapi_list_layers(void) {
+  cJSON *layers = cJSON_CreateArray();
+
+  /* Group registry sources by their declared layer (registry order, first
+   * seen wins for name/category). Sources with no layer are skipped — this is
+   * the null-guard Node lacked (src.layer.replace on osint-search → 500). */
+  int n = src_meta_count();
+  for (int i = 0; i < n; i++) {
+    const src_meta *m = src_meta_at(i);
+    if (!m->layer || !m->layer[0]) continue;
+    cJSON *layer = find_layer(layers, m->layer);
+    if (!layer) {
+      layer = cJSON_CreateObject();
+      cJSON_AddStringToObject(layer, "id", m->layer);
+      char name[256]; titlecase_kebab(m->layer, name, sizeof name);
+      cJSON_AddStringToObject(layer, "name", name);
+      cJSON_AddItemToObject(layer, "category",
+        m->category ? cJSON_CreateString(m->category) : cJSON_CreateNull());
+      cJSON_AddItemToObject(layer, "sources", cJSON_CreateArray());
+      cJSON_AddItemToArray(layers, layer);
+    }
+    add_source_ref(cJSON_GetObjectItem(layer, "sources"), m);
+  }
+
+  /* Fold unified-* provider members into their parent layer (dedup by id). */
+  for (size_t u = 0; u < sizeof UNIFIED / sizeof *UNIFIED; u++) {
+    cJSON *bucket = find_layer(layers, UNIFIED[u].layer);
+    if (!bucket) continue;
+    cJSON *sources = cJSON_GetObjectItem(bucket, "sources");
+    for (int p = 0; UNIFIED[u].providers[p]; p++) {
+      const char *pid = UNIFIED[u].providers[p];
+      if (sources_has(sources, pid)) continue;
+      const src_meta *src = src_meta_get(pid);
+      if (src) add_source_ref(sources, src);
+    }
+  }
+
+  /* Drop STRIP_LAYER_IDS, attach temporal disposition, emit. */
+  cJSON *out = cJSON_CreateArray();
+  cJSON *layer;
+  cJSON_ArrayForEach(layer, layers) {
+    const char *id = cJSON_GetObjectItem(layer, "id")->valuestring;
+    if (statusapi_strip_has(id)) continue;
+    cJSON *dup = cJSON_Duplicate(layer, 1);
+    apply_temporal(dup, id);
+    cJSON_AddItemToArray(out, dup);
+  }
+  cJSON_Delete(layers);
+
+  char *js = cJSON_PrintUnformatted(out);
+  cJSON_Delete(out);
   return js;
 }
 

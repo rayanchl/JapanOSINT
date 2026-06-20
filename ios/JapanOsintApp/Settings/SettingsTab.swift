@@ -72,15 +72,17 @@ struct SettingsTab: View {
                     tipsSection
                     accountSection
                 }
+                .compatGroupedForm()
             } else {
                 lockedView
             }
         }
+        .themedScreenBackground(theme)
         .navigationTitle("Settings")
-        .navigationBarTitleDisplayMode(unlocked ? .automatic : .inline)
+        .compatInlineTitle(!unlocked)
         .toolbar {
             if unlocked {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .compatPrimary) {
                     Button {
                         unlocked = false
                         authError = nil
@@ -155,9 +157,9 @@ struct SettingsTab: View {
     private var backendSection: some View {
         Section("Backend") {
             TextField("URL", text: $settings.backendBaseURL)
-                .textInputAutocapitalization(.never)
+                .compatNoAutocap()
                 .autocorrectionDisabled()
-                .keyboardType(.URL)
+                .compatKeyboardURL()
                 .font(.system(.body, design: .monospaced))
                 // System theme applies `.fontDesign(.default)` at the root
                 // (see JapanOsintApp.swift) which overrides the design of the

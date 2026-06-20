@@ -41,6 +41,24 @@ static const cred_def CREDS[] = {
   {"edinet-filings",      {"EDINET_API_KEY"},{0},{0}},
   {"misskey-timeline",    {"MISSKEY_TOKEN"},{0},{0}},
   {"windy-webcams",       {"WINDY_API_KEY"},{0},{0}},
+  /* ── OSINTsaas-ported entity-pivot services (Batches 1–5) ── */
+  {"PHONE_LOOKUP",        {0},{0},{"NUMVERIFY_API_KEY"}},
+  {"CARRIER_LOOKUP",      {0},{0},{"NUMVERIFY_API_KEY"}},
+  {"PHONE_REPUTATION",    {0},{0},{"NUMVERIFY_API_KEY"}},
+  {"PERSON_SEARCH",       {0},{0},{"GITHUB_TOKEN","OPENSANCTIONS_API_KEY","COMPANIES_HOUSE_API_KEY"}},
+  {"COMPANY_SEARCH",      {0},{0},{"COMPANIES_HOUSE_API_KEY","OPENCORPORATES_API_KEY"}},
+  {"CREDENTIAL_LEAK_SEARCH",{0},{"GITHUB_TOKEN","GITHUB_API_TOKEN"},{0}},
+  {"PEP_CHECK",           {"OPENSANCTIONS_API_KEY"},{0},{0}},
+  {"WATCHLIST_CHECK_NEW", {"OPENSANCTIONS_API_KEY"},{0},{0}},
+  {"PATENT_SEARCH",       {"PATENTSVIEW_API_KEY"},{0},{0}},
+  {"DEFI_TRACKER",        {"ETHERSCAN_API_KEY"},{0},{0}},
+  {"EXCHANGE_FLOW",       {"ETHERSCAN_API_KEY"},{0},{0}},
+  {"SOCIAL_USERNAME",     {0},{0},{"GITHUB_TOKEN","TWITTER_BEARER_TOKEN","FACEBOOK_ACCESS_TOKEN"}},
+  {"SOCIAL_EMAIL",        {0},{0},{"HIBP_API_KEY","HUNTER_API_KEY"}},
+  {"LEGAL_SEARCH",        {0},{0},{"COURTLISTENER_API_KEY"}},
+  {"BANKRUPTCY_SEARCH",   {0},{0},{"COURTLISTENER_API_KEY"}},
+  {"CRIMINAL_RECORDS",    {0},{0},{"COURTLISTENER_API_KEY"}},
+  {"LICENSE_PLATE_LOOKUP",{0},{0},{"PLATE_LOOKUP_URL","PLATE_LOOKUP_API_KEY"}},
 };
 
 const cred_def *cred_get(const char *id) {
