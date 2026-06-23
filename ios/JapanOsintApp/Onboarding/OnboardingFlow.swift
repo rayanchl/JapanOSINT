@@ -189,6 +189,7 @@ private struct ConnectStep: View {
 
 private struct AuthStep: View {
     @EnvironmentObject private var auth: AuthSession
+    @EnvironmentObject private var settings: AppSettings
     @Environment(\.theme) private var theme
     let advance: () -> Void
 
@@ -197,6 +198,7 @@ private struct AuthStep: View {
     @State private var isSignUp = false
     @State private var busy = false
     @State private var error: String?
+    @State private var showServer = false
 
     var body: some View {
         Group {
@@ -281,6 +283,45 @@ private struct AuthStep: View {
                 .buttonStyle(.plain)
                 .disabled(busy)
                 .opacity(busy ? 0.6 : 1)
+            }
+
+            // Backend server field — reachable BEFORE sign-in, since auth's
+            // second hop (api.me()) needs the backend URL right and Settings is
+            // locked until you're in. Edits persist instantly (AppSettings
+            // didSet). Collapsed by default to keep the login clean.
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) { showServer.toggle() }
+            } label: {
+                HStack(spacing: 4) {
+                    Image(systemName: "server.rack").font(.caption2)
+                    Text("Server settings")
+                    Image(systemName: showServer ? "chevron.up" : "chevron.down")
+                        .font(.caption2)
+                }
+                .font(.footnote)
+                .foregroundStyle(theme.textMuted)
+                .frame(maxWidth: .infinity)
+                .padding(.top, 6)
+            }
+            .buttonStyle(.plain)
+
+            if showServer {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Backend URL").font(.caption2).foregroundStyle(theme.textMuted)
+                    TextField("http://host.local:4072", text: $settings.backendBaseURL)
+                        .textContentType(.URL)
+                        .compatKeyboardURL()
+                        .compatNoAutocap()
+                        .autocorrectionDisabled()
+                        .font(.system(.footnote, design: .monospaced))
+                        .fontDesign(.monospaced)
+                        .padding(10).background(theme.surfaceElevated)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                    Text("Point the app at your JapanOSINT backend (host or IP). Saves instantly — use this if sign-in fails to reach the server.")
+                        .font(.caption2)
+                        .foregroundStyle(theme.textMuted)
+                }
+                .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
     }

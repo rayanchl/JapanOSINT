@@ -16,13 +16,16 @@ enum BuildConfig {
     ///
     /// Dev default differs by platform: the Mac app runs the `japanosint`
     /// backend on the *same* machine, so it points at loopback; iOS devices
-    /// must reach the dev Mac across the LAN by IP. Both stay editable on the
-    /// onboarding "Connect" page / in Settings for self-host + real backends.
+    /// reach the dev Mac across the LAN. Use the Mac's Bonjour `.local`
+    /// hostname instead of a raw IP so it survives DHCP lease changes
+    /// (resolves on-LAN via mDNS; covered by Info.plist NSAllowsLocalNetworking).
+    /// Both stay editable on the onboarding "Connect" page / in Settings for
+    /// self-host + real backends.
     static let backendBaseURL: String = {
         #if os(macOS)
         return "http://127.0.0.1:4072"
         #else
-        return "http://192.168.1.43:4072"
+        return "http://Rayans-MacBook-Pro.local:4072"
         #endif
     }()
 
