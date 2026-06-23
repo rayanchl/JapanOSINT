@@ -29,11 +29,8 @@ struct RootView: View {
         Group {
             switch auth.gate {
             case .loading:
-                ZStack {
-                    theme.surface.ignoresSafeArea()
-                    ProgressView().tint(theme.accent)
-                }
-                .transition(.opacity)
+                LoadingGate()
+                    .transition(.opacity)
             case .onboarding:
                 OnboardingFlow()
                     .transition(.opacity)
@@ -222,5 +219,112 @@ struct RootView: View {
                               icon: String,
                               title: String) -> some View {
         Label(title, systemImage: icon).tag(item)
+    }
+}
+
+// MARK: - Loading gate (with backend-unreachable escape)
+
+/// The launch spinner. If bootstrap can't reach the backend (`connectionStalled`)
+/// — or it's just taking a while — it offers a "Server settings" escape so a
+/// returning user can fix the backend URL without being trapped on the spinner.
+private struct LoadingGate: View {
+    @EnvironmentObject private var auth: AuthSession
+    @Environment(\.theme) private var theme
+    @State private var showSettings = false
+    @State private var slow = false
+
+    var body: some View {
+        ZStack {
+            theme.surface.ignoresSafeArea()
+            VStack(spacing: 16) {
+                ProgressView().tint(theme.accent)
+                if auth.connectionStalled {
+                    VStack(spacing: 6) {
+                        Image(systemName: "wifi.exclamationmark")
+                            .font(.title2).foregroundStyle(theme.warning)
+                        Text("Can't reach the backend")
+                            .font(.headline).foregroundStyle(theme.text)
+                        Text("Check the server URL or that the backend is running on this network.")
+                            .font(.caption).foregroundStyle(theme.textMuted)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 32)
+                    }
+                    .transition(.opacity)
+                }
+                if auth.connectionStalled || slow {
+                    Button {
+                        showSettings = true
+                    } label: {
+                        Label("Server settings", systemImage: "server.rack")
+                    }
+                    .buttonStyle(.bordered)
+                    .transition(.opacity)
+                }
+            }
+            .animation(.easeInOut(duration: 0.25), value: auth.connectionStalled)
+            .animation(.easeInOut(duration: 0.25), value: slow)
+        }
+        .task {
+            // Surface the escape after a short wait even if not yet flagged
+            // stalled, so a long hang is never a dead end.
+            try? await Task.sleep(nanoseconds: 3_000_000_000)
+            slow = true
+        }
+        .sheet(isPresented: $showSettings) { ConnectionSettingsSheet() }
+    }
+}
+
+/// Minimal sheet to edit the backend URL and retry, reachable from the loading
+/// spinner — the one place a returning user can fix connectivity pre-login.
+private struct ConnectionSettingsSheet: View {
+    @EnvironmentObject private var settings: AppSettings
+    @EnvironmentObject private var auth: AuthSession
+    @Environment(\.theme) private var theme
+    @Environment(\.dismiss) private var dismiss
+    @State private var retrying = false
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    TextField("http://host.local:4072", text: $settings.backendBaseURL)
+                        .textContentType(.URL)
+                        .compatKeyboardURL()
+                        .compatNoAutocap()
+                        .autocorrectionDisabled()
+                        .font(.system(.body, design: .monospaced))
+                        .fontDesign(.monospaced)
+                } header: {
+                    Text("Backend URL")
+                } footer: {
+                    Text("Point the app at your JapanOSINT backend (host name or IP). Saves instantly.")
+                }
+
+                Section {
+                    Button {
+                        Task {
+                            retrying = true
+                            await auth.retryBootstrap()
+                            retrying = false
+                            dismiss()
+                        }
+                    } label: {
+                        HStack {
+                            if retrying { ProgressView().controlSize(.small) }
+                            Text(retrying ? "Connecting…" : "Retry connection")
+                        }
+                    }
+                    .disabled(retrying || settings.backendBaseURL.isEmpty)
+                }
+            }
+            .compatGroupedForm()
+            .navigationTitle("Connection")
+            .compatInlineTitle()
+            .toolbar {
+                ToolbarItem(placement: .compatLeading) {
+                    Button("Close") { dismiss() }
+                }
+            }
+        }
     }
 }

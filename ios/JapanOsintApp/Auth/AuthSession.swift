@@ -20,6 +20,11 @@ final class AuthSession: ObservableObject {
     @Published private(set) var gate: Gate = .loading
     @Published private(set) var me: MeResponse?
     @Published private(set) var lastError: String?
+    /// Set when launch bootstrap can't even *reach* the backend (wrong URL /
+    /// server down / off-LAN). The loading screen watches this to surface a
+    /// "Server settings" escape so a returning user isn't trapped on the
+    /// spinner with no way to fix the backend URL.
+    @Published var connectionStalled = false
 
     private unowned let settings: AppSettings
 
@@ -58,9 +63,12 @@ final class AuthSession: ObservableObject {
         // carry the bearer even before /api/me round-trips.
         let access = KeychainStore.get(KeychainStore.Account.accessToken)
         applyToken(access)
+        connectionStalled = false
 
         do {
-            let m = try await api.me()
+            // Bound the call so a wrong/dead backend URL can't hang the spinner
+            // for the full URLSession timeout — fail fast to the escape instead.
+            let m = try await meWithTimeout(6)
             adopt(m)
             gate = .ready
         } catch APIError.http(let code, _) where code == 401 {
@@ -73,11 +81,55 @@ final class AuthSession: ObservableObject {
             } else {
                 gate = .onboarding
             }
+        } catch let err where Self.isUnreachable(err) {
+            // Can't even reach the backend (wrong URL / server down / off-LAN).
+            // Don't silently drop into a broken shell and don't spin forever —
+            // stay on the loading gate and flag a stall so the UI can offer the
+            // "Server settings" escape + a retry.
+            connectionStalled = true
         } catch {
-            // Network/offline or server down: don't lock a returning user
-            // out. We already re-armed the cached token; proceed.
+            // Other errors (decoding, non-401 HTTP, etc.): the backend answered,
+            // so don't lock a returning user out — proceed with the cached token.
             gate = .ready
         }
+    }
+
+    /// `api.me()` raced against a timeout so launch can't hang on a dead URL.
+    private func meWithTimeout(_ seconds: Double) async throws -> MeResponse {
+        try await withThrowingTaskGroup(of: MeResponse.self) { group in
+            group.addTask { [api] in try await api.me() }
+            group.addTask {
+                try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+                throw URLError(.timedOut)
+            }
+            defer { group.cancelAll() }
+            guard let first = try await group.next() else { throw URLError(.timedOut) }
+            return first
+        }
+    }
+
+    /// True for errors that mean "couldn't reach the host" (vs. the server
+    /// answering with an error) — drives the connection-settings escape.
+    private static func isUnreachable(_ error: Error) -> Bool {
+        if let u = error as? URLError {
+            switch u.code {
+            case .cannotConnectToHost, .cannotFindHost, .timedOut,
+                 .networkConnectionLost, .notConnectedToInternet,
+                 .dnsLookupFailed, .secureConnectionFailed:
+                return true
+            default: return false
+            }
+        }
+        if case APIError.http(let code, _) = error, code < 0 { return true }
+        return false
+    }
+
+    /// Re-run launch bootstrap after the user edits the backend URL on the
+    /// connection-settings escape. Resets to the spinner first.
+    func retryBootstrap() async {
+        gate = .loading
+        connectionStalled = false
+        await bootstrap()
     }
 
     // MARK: - Sign in / up
