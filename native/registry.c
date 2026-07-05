@@ -6,7 +6,7 @@
  * Headroom well above the current source count (~551) so late-loading
  * collectors (alphabetically last, e.g. world_reg_*) can't be silently
  * dropped past the cap — that failure mode cost us the 8 regional registries. */
-#define MAX_SOURCES 1024
+#define MAX_SOURCES 4096
 static const source_def *g_srcs[MAX_SOURCES];
 static int g_n = 0;
 
