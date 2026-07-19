@@ -26,6 +26,15 @@ SQLITE_DEFS := -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_RTREE \
 MECAB_CFLAGS := $(shell mecab-config --cflags 2>/dev/null)
 MECAB_LIBS   := $(shell mecab-config --libs 2>/dev/null)
 
+# iconv lives in a standalone libiconv on macOS/BSD but is folded into glibc on
+# Linux, where there is no libiconv.so to link against. Only add -liconv off-Linux.
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+  ICONV_LIB :=
+else
+  ICONV_LIB := -liconv
+endif
+
 CFLAGS  ?= -O2 -g -Wall -Wextra -Wno-unused-parameter -pthread
 CFLAGS  += -DJO_REPO_ROOT='"$(REPO_ROOT)"' $(PKG_CFLAGS) $(MECAB_CFLAGS) -Ithird_party
 # Auto-generate header dependency files (.d) next to each .o so editing a
@@ -36,7 +45,7 @@ CFLAGS  += -DJO_REPO_ROOT='"$(REPO_ROOT)"' $(PKG_CFLAGS) $(MECAB_CFLAGS) -Ithird
 # deleted header doesn't break the build.
 DEPFLAGS := -MMD -MP
 CFLAGS   += $(DEPFLAGS)
-LDLIBS  := $(PKG_LIBS) $(MECAB_LIBS) -lpthread -lm -ldl -liconv -lz
+LDLIBS  := $(PKG_LIBS) $(MECAB_LIBS) -lpthread -lm -ldl $(ICONV_LIB) -lz
 
 OBJ := obj
 BIN := bin/japanosint
