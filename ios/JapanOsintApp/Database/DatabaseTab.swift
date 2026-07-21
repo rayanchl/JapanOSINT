@@ -8,7 +8,7 @@ struct DatabaseTab: View {
 
     var body: some View {
         TableBrowser()
-            .background(theme.surface.ignoresSafeArea())
+            .themedScreenBackground(theme)
             .navigationTitle("Database")
     }
 }

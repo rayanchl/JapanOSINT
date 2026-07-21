@@ -3,7 +3,7 @@ import Charts
 import Combine
 
 struct SourceDashboardTab: View {
-    @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var favs: CollectorFavorites
     @EnvironmentObject var nav: MapNavigation
     @Environment(\.theme) private var theme
@@ -17,6 +17,30 @@ struct SourceDashboardTab: View {
     @State private var expanded: Set<String> = []
     @State private var refreshing: Set<String> = []
     @State private var refreshError: [String: String] = [:]
+
+    @State private var showFilters = false
+    @State private var selectedTypes: Set<String> = []
+    @State private var selectedCategories: Set<String> = []
+    @State private var statusFilter: StatusChoice = .all
+    @State private var accessFilter: AccessChoice = .all
+
+    enum StatusChoice: String, FilterChoice {
+        case all, online, degraded, offline, gated
+        var id: String { rawValue }
+        var label: String { self == .all ? "All" : rawValue.capitalized }
+    }
+
+    enum AccessChoice: String, FilterChoice {
+        case all, free, key
+        var id: String { rawValue }
+        var label: String {
+            switch self {
+            case .all:  return "All"
+            case .free: return "Free"
+            case .key:  return "Needs key"
+            }
+        }
+    }
 
     var body: some View {
         Group {
@@ -53,10 +77,15 @@ struct SourceDashboardTab: View {
                 .refreshable { await load() }
             }
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle("Sources")
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
+                FilterToolbarButton(isActive: filtersAreActive) {
+                    showFilters = true
+                }
+            }
+            ToolbarItem(placement: .compatPrimary) {
                 Button { Task { await load() } } label: {
                     Image(systemName: "arrow.clockwise")
                 }
@@ -64,6 +93,7 @@ struct SourceDashboardTab: View {
             }
         }
         .searchable(text: $search, prompt: "Filter collectors")
+        .sheet(isPresented: $showFilters) { filtersSheet }
         .task {
             if apis.isEmpty { await load() }
             // Cross-tab deep link: when Console pushed us in response to a
@@ -83,7 +113,7 @@ struct SourceDashboardTab: View {
                     selected = updated
                 })
             }
-            .presentationDetents([.medium, .large])
+            .compatSheetSizing(.medium)
         }
     }
 
@@ -129,7 +159,7 @@ struct SourceDashboardTab: View {
                 Text(label).font(.caption2).foregroundStyle(theme.textMuted)
             }
             Text("\(value)")
-                .font(.title2.bold().monospacedDigit())
+                .font(.title3.bold().monospacedDigit())
                 .foregroundStyle(color)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -251,9 +281,91 @@ struct SourceDashboardTab: View {
         !search.trimmingCharacters(in: .whitespaces).isEmpty
     }
 
+    // MARK: - Filtering
+
+    private var filtersAreActive: Bool {
+        !selectedTypes.isEmpty || !selectedCategories.isEmpty
+            || statusFilter != .all || accessFilter != .all
+    }
+
+    /// Type / category / status / access filter applied before grouping into
+    /// collectors so the chips narrow the list the same way they read.
+    private var filteredApis: [StatusRow] {
+        apis.filter { row in
+            if !selectedTypes.isEmpty {
+                guard let t = row.type, selectedTypes.contains(t) else { return false }
+            }
+            if !selectedCategories.isEmpty {
+                guard let c = row.category, selectedCategories.contains(c) else { return false }
+            }
+            switch statusFilter {
+            case .all:      break
+            case .online:   if row.statusKind != .online   { return false }
+            case .degraded: if row.statusKind != .degraded { return false }
+            case .offline:  if row.statusKind != .offline  { return false }
+            case .gated:    if row.statusKind != .gated    { return false }
+            }
+            switch accessFilter {
+            case .all:  break
+            case .free: if row.free != true { return false }
+            case .key:  if row.requiresKey != true { return false }
+            }
+            return true
+        }
+    }
+
+    private func sortedUnique(_ values: [String?]) -> [String] {
+        var counts: [String: Int] = [:]
+        for v in values { if let v { counts[v, default: 0] += 1 } }
+        return counts.keys.sorted {
+            counts[$0]! == counts[$1]! ? $0 < $1 : counts[$0]! > counts[$1]!
+        }
+    }
+
+    private var availableTypes: [String] { sortedUnique(apis.map(\.type)) }
+    private var availableCategories: [String] { sortedUnique(apis.map(\.category)) }
+
+    private func toggle(_ set: inout Set<String>, _ v: String) {
+        if set.contains(v) { set.remove(v) } else { set.insert(v) }
+    }
+
+    private var filtersSheet: some View {
+        FilterSheet(
+            isActive: filtersAreActive,
+            onReset: {
+                selectedTypes.removeAll()
+                selectedCategories.removeAll()
+                statusFilter = .all
+                accessFilter = .all
+            },
+            onDone: { showFilters = false }
+        ) {
+            FilterSegmentedSection(title: "Status", selection: $statusFilter)
+            FilterSegmentedSection(title: "Access", selection: $accessFilter)
+            FilterMultiSelectSection(
+                title: "Type",
+                items: availableTypes,
+                emptyText: "No sources yet",
+                label: { $0.uppercased() },
+                count: { t in apis.filter { $0.type == t }.count },
+                isSelected: { selectedTypes.contains($0) },
+                toggle: { toggle(&selectedTypes, $0) }
+            )
+            FilterMultiSelectSection(
+                title: "Category",
+                items: availableCategories,
+                emptyText: "No sources yet",
+                label: { $0.capitalized },
+                count: { c in apis.filter { $0.category == c }.count },
+                isSelected: { selectedCategories.contains($0) },
+                toggle: { toggle(&selectedCategories, $0) }
+            )
+        }
+    }
+
     private var collectors: [Collector] {
         let s = search.trimmingCharacters(in: .whitespaces).lowercased()
-        let all = apis.groupedAsCollectors()
+        let all = filteredApis.groupedAsCollectors()
         let filtered = s.isEmpty ? all : all.filter { c in
             c.name.lowercased().contains(s)
                 || c.id.lowercased().contains(s)
@@ -327,7 +439,7 @@ struct SourceDashboardTab: View {
         defer { refreshing.remove(collectorId) }
         do {
             let layer = LayerDef(id: collectorId, name: collectorId, category: nil, sources: nil, temporal: nil, liveOnly: nil)
-            _ = try await API(baseURL: settings.backendBaseURL).data(for: layer)
+            _ = try await apiClient.api.data(for: layer)
             await load()
         } catch {
             refreshError[collectorId] = error.localizedDescription
@@ -337,7 +449,7 @@ struct SourceDashboardTab: View {
     // MARK: - Loading
 
     private func load() async {
-        let api = API(baseURL: settings.backendBaseURL)
+        let api = apiClient.api
         loading = true
         defer { loading = false }
         do {
@@ -618,11 +730,11 @@ private struct SourceDetail: View {
             }
             .padding()
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle(row.name ?? row.id)
-        .navigationBarTitleDisplayMode(.inline)
+        .compatInlineTitle()
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 Button("Close") { dismiss() }
             }
         }

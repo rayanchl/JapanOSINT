@@ -3,6 +3,9 @@ import { Routes, Route, NavLink } from 'react-router-dom';
 import MapPage from './components/map/MapPage';
 import SourceDashboard from './components/dashboard/SourceDashboard';
 import SourcesPanel from './components/panels/SourcesPanel';
+import SearchPage from './components/search/SearchPage';
+import EntitiesPage from './components/entities/EntitiesPage';
+import EntityProfile from './components/entities/EntityProfile';
 import useDataSources from './hooks/useDataSources';
 
 const THEME_STORAGE_KEY = 'osint:theme';
@@ -105,6 +108,30 @@ export default function App() {
             >
               Sources
             </NavLink>
+            <NavLink
+              to="/search"
+              className={({ isActive }) =>
+                `px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                  isActive
+                    ? 'bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/30'
+                    : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
+                }`
+              }
+            >
+              Search
+            </NavLink>
+            <NavLink
+              to="/entities"
+              className={({ isActive }) =>
+                `px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                  isActive
+                    ? 'bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/30'
+                    : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
+                }`
+              }
+            >
+              Entities
+            </NavLink>
           </div>
         </div>
 
@@ -165,6 +192,9 @@ export default function App() {
         <Routes>
           <Route path="/" element={<MapPage />} />
           <Route path="/sources" element={<SourceDashboard sources={sources} stats={stats} />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/entities" element={<EntitiesPage />} />
+          <Route path="/entities/:type/:id" element={<EntityProfile />} />
         </Routes>
 
         {showSources && (

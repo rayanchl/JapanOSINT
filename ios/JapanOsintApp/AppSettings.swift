@@ -110,8 +110,28 @@ final class AppSettings: ObservableObject {
         didSet { write(\.showRomaji, showRomaji) }
     }
 
+    // MARK: - Auth / onboarding
+
+    @Published var onboardingCompleted: Bool {
+        didSet { write(\.onboardingCompleted, onboardingCompleted) }
+    }
+    @Published var supabaseURL: String {
+        didSet { write(\.supabaseURL, supabaseURL) }
+    }
+    @Published var supabaseAnonKey: String {
+        didSet { write(\.supabaseAnonKey, supabaseAnonKey) }
+    }
+    @Published var activeTenantId: String {
+        didSet { write(\.activeTenantId, activeTenantId) }
+    }
+
+    /// Transient (NOT persisted): set true when onboarding finishes so the
+    /// Map tab plays its one-shot "zoom in from far away" intro. The Map
+    /// clears it after firing so it never replays on tab switches.
+    @Published var requestMapIntro: Bool = false
+
     var appTheme: AppTheme {
-        get { AppTheme(rawValue: appThemeRaw) ?? .cyberpunk }
+        get { AppTheme(rawValue: appThemeRaw) ?? .system }
         set { appThemeRaw = newValue.rawValue }
     }
 
@@ -163,6 +183,10 @@ final class AppSettings: ObservableObject {
         self.translateTargetLanguageRaw = row.translateTargetLanguageRaw
         self.autoTranslateSearch       = row.autoTranslateSearch
         self.showRomaji                = row.showRomaji
+        self.onboardingCompleted       = row.onboardingCompleted
+        self.supabaseURL               = row.supabaseURL
+        self.supabaseAnonKey           = row.supabaseAnonKey
+        self.activeTenantId            = row.activeTenantId
 
         self.activeLayerIds = Self.decode(row.activeLayerIdsJSON, default: Set<String>())
         self.layerOpacity   = Self.decode(row.layerOpacityJSON, default: [String: Double]())
@@ -173,6 +197,19 @@ final class AppSettings: ObservableObject {
         UserDefaults.standard.set(self.apiDefaultTimeoutSeconds, forKey: "apiDefaultTimeoutSeconds")
 
         Self.runOneShotMigrationIfNeeded(into: self)
+
+        // Backfill Supabase config for stores created before these fields
+        // existed: SwiftData lightweight migration filled them with the inline
+        // "" defaults, and AppPreferences.init()'s BuildConfig seeding only
+        // runs for a brand-new row. Assigning fires the didSet observers, which
+        // persist the values — idempotent (writes only when empty) and
+        // self-healing across every already-broken store, no migration flag.
+        if supabaseURL.trimmingCharacters(in: .whitespaces).isEmpty {
+            supabaseURL = BuildConfig.supabaseURL
+        }
+        if supabaseAnonKey.trimmingCharacters(in: .whitespaces).isEmpty {
+            supabaseAnonKey = BuildConfig.supabaseAnonKey
+        }
     }
 
     // MARK: - Layer helpers (unchanged public API)

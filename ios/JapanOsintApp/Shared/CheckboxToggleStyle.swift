@@ -2,7 +2,11 @@ import SwiftUI
 
 /// Compact checkbox-styled toggle for dense feature lists where `.switch`
 /// produces visual overlap (LayersTab FEATURES section). Theme-aware.
-struct CheckboxToggleStyle: ToggleStyle {
+///
+/// Named `Themed…` (and exposed as `.themedCheckbox`) to avoid colliding with
+/// SwiftUI's own `CheckboxToggleStyle` / `.checkbox`, which ships on macOS — we
+/// want this custom theme-aware look on both platforms for visual parity.
+struct ThemedCheckboxToggleStyle: ToggleStyle {
     @Environment(\.theme) private var theme
 
     func makeBody(configuration: Configuration) -> some View {
@@ -22,6 +26,6 @@ struct CheckboxToggleStyle: ToggleStyle {
     }
 }
 
-extension ToggleStyle where Self == CheckboxToggleStyle {
-    static var checkbox: CheckboxToggleStyle { .init() }
+extension ToggleStyle where Self == ThemedCheckboxToggleStyle {
+    static var themedCheckbox: ThemedCheckboxToggleStyle { .init() }
 }

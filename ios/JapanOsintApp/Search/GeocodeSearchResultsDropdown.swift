@@ -7,19 +7,21 @@ import MapKit
 /// without truncating to "の丸公園, 千代田区,…".
 struct GeocodeSearchResultsDropdown: View {
     @ObservedObject var model: GeocodeSearchModel
+    /// Hard cap on the panel's height, decided by the host: ~3 rows on iOS,
+    /// window-proportional on macOS. Rows beyond the cap scroll inside.
+    let maxHeight: CGFloat
     let onPick: (CLLocationCoordinate2D) -> Void
     let onPickFeature: (GeoFeature) -> Void
 
     @EnvironmentObject var registry: LayerRegistry
     @Environment(\.theme) private var theme
 
-    /// Cap on the dropdown's vertical extent. Keeps it from running off-screen
-    /// when both feature and place hits are present; rows scroll inside.
-    private static let dropdownMaxHeight: CGFloat = 320
-
-    /// Vertical offset from the top of the host (the search row). 36 = search
-    /// field height, 4 = breathing room.
-    private static let dropdownTopOffset: CGFloat = 36 + 4
+    /// Natural height of the rows, measured live. The panel renders at
+    /// `min(contentHeight, maxHeight)` so it hugs the rows when there are few
+    /// and clamps + scrolls when there are many — instead of collapsing to the
+    /// host's height (the old overlay-on-the-search-field bug that showed a
+    /// single row) or always padding out to the full cap.
+    @State private var contentHeight: CGFloat = 0
 
     var body: some View {
         resultsList
@@ -31,7 +33,6 @@ struct GeocodeSearchResultsDropdown: View {
                     .strokeBorder(Color.primary.opacity(0.08), lineWidth: 0.5)
             )
             .shadow(color: .black.opacity(0.18), radius: 12, y: 6)
-            .offset(y: Self.dropdownTopOffset)
             .transition(.opacity.combined(with: .move(edge: .top)))
     }
 
@@ -53,8 +54,18 @@ struct GeocodeSearchResultsDropdown: View {
                     }
                 }
             }
+            .background(
+                GeometryReader { proxy in
+                    Color.clear.preference(key: DropdownContentHeightKey.self,
+                                           value: proxy.size.height)
+                }
+            )
         }
-        .frame(maxHeight: Self.dropdownMaxHeight)
+        // Explicit height (not maxHeight) so the ScrollView can't inherit the
+        // tiny host proposal and shrink to one row. Falls back to the cap until
+        // the first measurement lands.
+        .frame(height: contentHeight > 0 ? min(contentHeight, maxHeight) : maxHeight)
+        .onPreferenceChange(DropdownContentHeightKey.self) { contentHeight = $0 }
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
@@ -144,5 +155,14 @@ struct GeocodeSearchResultsDropdown: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+    }
+}
+
+/// Carries the natural (unclamped) height of the dropdown's rows up to the
+/// panel so it can render at `min(content, cap)` and scroll past the cap.
+private struct DropdownContentHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
     }
 }

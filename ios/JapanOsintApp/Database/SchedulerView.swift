@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SchedulerView: View {
-    @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @Environment(\.theme) private var theme
 
     @State private var jobs: [SchedulerJob] = []
@@ -91,7 +91,7 @@ struct SchedulerView: View {
     }
 
     private func load() async {
-        let api = API(baseURL: settings.backendBaseURL)
+        let api = apiClient.api
         loading = true
         defer { loading = false }
         do {

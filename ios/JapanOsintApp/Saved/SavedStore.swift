@@ -56,6 +56,9 @@ struct SavedItem: Codable, Identifiable, Hashable {
 @MainActor
 final class SavedStore: ObservableObject {
     @Published private(set) var items: [SavedItem] = []
+    /// Set when a persistence write fails so the UI can surface that a
+    /// bookmark change didn't stick, rather than silently drifting from disk.
+    @Published var lastError: String?
 
     private let context: ModelContext
 
@@ -74,12 +77,15 @@ final class SavedStore: ObservableObject {
     func toggle(_ feature: GeoFeature) -> Bool {
         if contains(id: feature.id) {
             remove(id: feature.id)
+            Haptics.tap()
             return false
         }
         if let item = SavedItem.from(feature) {
             add(item)
+            Haptics.success()
             return true
         }
+        Haptics.warning()
         return false
     }
 
@@ -122,8 +128,15 @@ final class SavedStore: ObservableObject {
     }
 
     private func save() {
-        do { try context.save() }
-        catch { /* swallow — single-row failure shouldn't crash the UI */ }
+        do {
+            try context.save()
+            lastError = nil
+        } catch {
+            // Don't crash the UI on a single-row failure, but do surface it
+            // so the user knows the bookmark change didn't persist.
+            lastError = "Couldn’t save bookmark: \(error.localizedDescription)"
+            Haptics.error()
+        }
     }
 
     /// One-shot import of the legacy UserDefaults blob. The migration flag

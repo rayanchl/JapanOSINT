@@ -112,8 +112,11 @@ provider-agnostic columns, so no migration is needed when this resumes.
 
 ### Week 5 — Stripe + hardening
 
-* [ ] Stripe Billing: products + checkout + webhook. Plan drives
-  rate-limit + quota slice + `require_sso` for Enterprise.
+* [x] Stripe Billing: checkout + portal + webhook. Plan drives the
+  rate-limit slice (live). `utils/billing.js` + `routes/billing.js`;
+  schema cols on `tenants` (subscription_status, stripe_subscription_id,
+  plan_period_end). Subscription gate (402 on lapsed paid plans) wired
+  into the /api chain. Quota slice + Enterprise `require_sso` still TODO.
 * [ ] Secret rotation worker: re-wrap every `tenant_secrets.encrypted_value`
   against a new master every 90 days.
 * [ ] Data export endpoint: streams tenant's `intel_items` + `cameras` as

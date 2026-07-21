@@ -1,0 +1,24 @@
+# GBNF Grammar for LLaMA Page Analysis Output
+# Used to determine if a web page contains information about a query
+
+root ::= "{" ws "\"has_results\"" ws ":" ws boolean ws "," ws "\"confidence\"" ws ":" ws confidence ws "," ws "\"entities\"" ws ":" ws entities ws "," ws "\"summary\"" ws ":" ws string ws "}"
+
+boolean ::= "true" | "false"
+
+confidence ::= "\"high\"" | "\"medium\"" | "\"low\"" | "\"none\""
+
+entities ::= "[" ws "]" | "[" ws entity (ws "," ws entity)* ws "]"
+
+entity ::= "{" ws "\"type\"" ws ":" ws entity-type ws "," ws "\"value\"" ws ":" ws string ws "}"
+
+entity-type ::= "\"name\"" | "\"phone\"" | "\"address\"" | "\"email\"" | "\"age\"" | "\"relative\"" | "\"occupation\"" | "\"location\""
+
+string ::= "\"" characters "\""
+
+characters ::= "" | characters character
+
+character ::= [^"\\] | "\\" escape-char
+
+escape-char ::= "\"" | "\\" | "n" | "r" | "t"
+
+ws ::= " "?

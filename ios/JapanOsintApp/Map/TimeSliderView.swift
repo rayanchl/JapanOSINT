@@ -153,7 +153,7 @@ struct TimeSliderView: View {
         let dt = playback.at ?? Date()
         return VStack(alignment: .leading, spacing: 1) {
             Text(timeFormatter.string(from: dt))
-                .font(.caption.monospacedDigit())
+                .font(.caption.bold().monospacedDigit())
                 .foregroundStyle(playback.isReplaying ? .primary : .secondary)
                 .lineLimit(1)
                 .truncationMode(.tail)
@@ -181,7 +181,7 @@ struct TimeSliderView: View {
             tint: theme.accent,
             onBegan: {
                 playback.isScrubbing = true
-                UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+                Haptics.tap(.soft)
             },
             onEnded: {
                 playback.isScrubbing = false

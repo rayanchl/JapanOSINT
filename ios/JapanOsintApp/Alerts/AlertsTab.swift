@@ -4,12 +4,14 @@ import SwiftUI
 /// NavigationStack (RootView/ConsoleHub) so it doesn't own its own.
 struct AlertsTab: View {
     @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @Environment(\.theme) private var theme
 
     @State private var rules: [AlertRule] = []
     @State private var loading = false
     @State private var error: String?
     @State private var editorRule: AlertRule?
+    @State private var eventsRule: AlertRule?
     @State private var showCreate: Bool = false
 
     var body: some View {
@@ -22,14 +24,14 @@ struct AlertsTab: View {
                 list
             }
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle("Alerts")
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 Button { showCreate = true } label: { Image(systemName: "plus.circle.fill") }
                     .accessibilityLabel("New alert")
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 Button { Task { await reload() } } label: { Image(systemName: "arrow.clockwise") }
                     .disabled(loading)
             }
@@ -48,6 +50,9 @@ struct AlertsTab: View {
                 }
             })
         }
+        .sheet(item: $eventsRule) { rule in
+            AlertEventsView(rule: rule)
+        }
     }
 
     // MARK: - List
@@ -59,6 +64,7 @@ struct AlertsTab: View {
                     rule: rule,
                     onToggle: { Task { await toggle(rule) } },
                     onTap: { editorRule = rule },
+                    onHistory: { eventsRule = rule },
                     onMute: { Task { await mute(rule, durationSec: 3600) } },
                     onUnmute: { Task { await unmute(rule) } },
                     onTest: { Task { await test(rule) } },
@@ -66,7 +72,7 @@ struct AlertsTab: View {
                 )
             }
         }
-        .listStyle(.insetGrouped)
+        .compatInsetGroupedListStyle()
         .scrollContentBackground(.hidden)
     }
 
@@ -100,8 +106,7 @@ struct AlertsTab: View {
         loading = true
         defer { loading = false }
         do {
-            let api = API(baseURL: settings.backendBaseURL)
-            rules = try await api.alertsList()
+            rules = try await apiClient.api.alertsList()
             error = nil
         } catch let e {
             error = e.localizedDescription
@@ -109,40 +114,80 @@ struct AlertsTab: View {
     }
 
     private func toggle(_ rule: AlertRule) async {
+        guard let idx = rules.firstIndex(where: { $0.id == rule.id }) else { return }
+        let original = rules[idx]
+        // Optimistic: flip the switch immediately so the UI feels instant.
         var copy = rule
         copy.enabled.toggle()
+        rules[idx] = copy
+        Haptics.selection()
         do {
-            let updated = try await API(baseURL: settings.backendBaseURL).alertUpdate(copy)
+            let updated = try await apiClient.api.alertUpdate(copy)
             if let i = rules.firstIndex(where: { $0.id == updated.id }) { rules[i] = updated }
-        } catch let e { error = e.localizedDescription }
+        } catch let e {
+            // Roll back to the server-truth state.
+            if let i = rules.firstIndex(where: { $0.id == original.id }) { rules[i] = original }
+            error = e.localizedDescription
+            Haptics.error()
+        }
     }
 
     private func mute(_ rule: AlertRule, durationSec: Int?) async {
+        guard let idx = rules.firstIndex(where: { $0.id == rule.id }) else { return }
+        let original = rules[idx]
+        // Optimistic: flip the row to muted right away; reload replaces this
+        // placeholder with the server's authoritative muted_until.
+        rules[idx].muted_until = ISO8601DateFormatter().string(
+            from: Date().addingTimeInterval(Double(durationSec ?? 3600)))
+        Haptics.selection()
         do {
-            try await API(baseURL: settings.backendBaseURL).alertMute(rule.id, durationSec: durationSec)
+            try await apiClient.api.alertMute(rule.id, durationSec: durationSec)
             await reload()
-        } catch let e { error = e.localizedDescription }
+        } catch let e {
+            if let i = rules.firstIndex(where: { $0.id == original.id }) { rules[i] = original }
+            error = e.localizedDescription
+            Haptics.error()
+        }
     }
 
     private func unmute(_ rule: AlertRule) async {
+        guard let idx = rules.firstIndex(where: { $0.id == rule.id }) else { return }
+        let original = rules[idx]
+        rules[idx].muted_until = nil
+        Haptics.selection()
         do {
-            try await API(baseURL: settings.backendBaseURL).alertUnmute(rule.id)
+            try await apiClient.api.alertUnmute(rule.id)
             await reload()
-        } catch let e { error = e.localizedDescription }
+        } catch let e {
+            if let i = rules.firstIndex(where: { $0.id == original.id }) { rules[i] = original }
+            error = e.localizedDescription
+            Haptics.error()
+        }
     }
 
     private func test(_ rule: AlertRule) async {
         do {
-            try await API(baseURL: settings.backendBaseURL).alertTest(rule.id)
+            try await apiClient.api.alertTest(rule.id)
             Haptics.success()
-        } catch let e { error = e.localizedDescription }
+        } catch let e {
+            error = e.localizedDescription
+            Haptics.error()
+        }
     }
 
     private func delete(_ rule: AlertRule) async {
+        // Optimistic: drop the row immediately; restore it if the server
+        // rejects the delete.
+        let snapshot = rules
+        rules.removeAll { $0.id == rule.id }
+        Haptics.warning()
         do {
-            try await API(baseURL: settings.backendBaseURL).alertDelete(rule.id)
-            rules.removeAll { $0.id == rule.id }
-        } catch let e { error = e.localizedDescription }
+            try await apiClient.api.alertDelete(rule.id)
+        } catch let e {
+            rules = snapshot
+            error = e.localizedDescription
+            Haptics.error()
+        }
     }
 }
 
@@ -152,6 +197,7 @@ struct AlertRuleRow: View {
     let rule: AlertRule
     let onToggle: () -> Void
     let onTap: () -> Void
+    let onHistory: () -> Void
     let onMute: () -> Void
     let onUnmute: () -> Void
     let onTest: () -> Void
@@ -196,6 +242,8 @@ struct AlertRuleRow: View {
         }
         .buttonStyle(.plain)
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
+            Button(action: onHistory) { Label("History", systemImage: "clock.arrow.circlepath") }
+                .tint(theme.accent)
             Button(action: onTest) { Label("Test", systemImage: "play.fill") }.tint(theme.accentAlt)
             if isMuted {
                 Button(action: onUnmute) { Label("Unmute", systemImage: "bell") }.tint(theme.success)
@@ -207,6 +255,16 @@ struct AlertRuleRow: View {
             Button(role: .destructive, action: onDelete) {
                 Label("Delete", systemImage: "trash")
             }
+        }
+        .contextMenu {
+            Button { onHistory() } label: { Label("Firing history", systemImage: "clock.arrow.circlepath") }
+            Button { onTest() } label: { Label("Test fire", systemImage: "play.fill") }
+            if isMuted {
+                Button { onUnmute() } label: { Label("Unmute", systemImage: "bell") }
+            } else {
+                Button { onMute() } label: { Label("Mute 1h", systemImage: "bell.slash") }
+            }
+            Button(role: .destructive) { onDelete() } label: { Label("Delete", systemImage: "trash") }
         }
     }
 

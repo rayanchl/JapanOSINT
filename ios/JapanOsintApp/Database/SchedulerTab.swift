@@ -7,7 +7,7 @@ struct SchedulerTab: View {
 
     var body: some View {
         SchedulerView()
-            .background(theme.surface.ignoresSafeArea())
+            .themedScreenBackground(theme)
             .navigationTitle("Scheduler")
     }
 }

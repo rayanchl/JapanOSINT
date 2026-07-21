@@ -32,29 +32,30 @@ struct JapaneseAware: View {
 
     private var displayText: String { translatedText ?? text }
 
-    /// Inline romaji rendered as a `Text` concatenation so it joins the same
-    /// line as the field value (the user's "after for smaller text fields"
-    /// requirement). Empty when the toggle is off, the field is currently
-    /// translated, or no transcription is available.
-    private var romajiSuffix: Text {
+    /// Display value plus inline romaji as a single `AttributedString` so the
+    /// suffix joins the same line as the field value (the user's "after for
+    /// smaller text fields" requirement). The suffix carries its own run-level
+    /// styling, which overrides the view-level `.font`/`.foregroundStyle`.
+    /// `Text` `+` concatenation was deprecated in iOS 26.
+    private var attributedContent: AttributedString {
+        var content = AttributedString(displayText)
         guard settings.showRomaji,
               translatedText == nil,
               let r = Romaji.transcribe(text)
-        else { return Text("") }
-        return Text(" (\(r))")
-            .font(.caption2)
-            .italic()
-            .foregroundStyle(.secondary)
+        else { return content }
+        var suffix = AttributedString(" (\(r))")
+        suffix.font = .caption2
+        suffix.foregroundColor = .secondary
+        suffix.inlinePresentationIntent = .emphasized
+        content += suffix
+        return content
     }
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 6) {
-            (
-                Text(displayText)
-                    .font(font)
-                    .foregroundStyle(foregroundStyle)
-                + romajiSuffix
-            )
+            Text(attributedContent)
+                .font(font)
+                .foregroundStyle(foregroundStyle)
                 .textSelection(.enabled)
                 .frame(maxWidth: .infinity,
                        alignment: alignment == .leading ? .leading : .trailing)

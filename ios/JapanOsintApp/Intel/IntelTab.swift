@@ -6,7 +6,7 @@ import SwiftUI
 /// "Run all" action fires every source in parallel (capped). A search bar
 /// runs cross-source FTS via `/api/intel/items`.
 struct IntelTab: View {
-    @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var registry: LayerRegistry
     @EnvironmentObject var intelCache: IntelCache
     @Environment(\.theme) private var theme
@@ -21,6 +21,25 @@ struct IntelTab: View {
     @State private var runningAll = false
     @State private var runAllProgress: (done: Int, total: Int)?
 
+    @State private var showFilters = false
+    @State private var selectedCategories: Set<String> = []
+    @State private var itemPresence: ItemPresence = .all
+
+    /// "data feed or no" for non-spatial sources: a source can be catalogued
+    /// yet have ingested zero items, so filtering on presence is the intel
+    /// equivalent of the cameras tab's feed-availability toggle.
+    enum ItemPresence: String, FilterChoice {
+        case all, hasItems, empty
+        var id: String { rawValue }
+        var label: String {
+            switch self {
+            case .all:      return "All"
+            case .hasItems: return "Has items"
+            case .empty:    return "Empty"
+            }
+        }
+    }
+
     var body: some View {
         NavigationStack {
             Group {
@@ -33,17 +52,22 @@ struct IntelTab: View {
                     list
                 }
             }
-            .background(theme.surface.ignoresSafeArea())
+            .themedScreenBackground(theme)
             .navigationTitle("Intel")
             .searchable(
                 text: $searchText,
-                placement: .navigationBarDrawer(displayMode: .always),
+                placement: .compatDrawer,
                 prompt: "Search across all sources"
             )
             .modifier(BilingualSearchModifier(query: searchText, bilingual: $bilingual))
             .refreshable { await reload() }
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .compatPrimary) {
+                    FilterToolbarButton(isActive: filtersAreActive) {
+                        showFilters = true
+                    }
+                }
+                ToolbarItem(placement: .compatPrimary) {
                     Button {
                         Task { await runAll() }
                     } label: {
@@ -63,6 +87,7 @@ struct IntelTab: View {
                     .accessibilityLabel(runningAll ? "Running all sources…" : "Run all sources")
                 }
             }
+            .sheet(isPresented: $showFilters) { filtersSheet }
         }
         .task {
             if sources.isEmpty {
@@ -84,7 +109,13 @@ struct IntelTab: View {
             CrossSourceSearchView(bilingual: bilingual)
         } else {
             List {
-                if sources.allSatisfy({ $0.item_count == 0 }) {
+                if !sources.isEmpty && filteredSources.isEmpty {
+                    Section {
+                        Text("No sources match the current filters.")
+                            .font(.caption)
+                            .foregroundStyle(theme.textMuted)
+                    }
+                } else if filteredSources.allSatisfy({ $0.item_count == 0 }) {
                     Section {
                         VStack(alignment: .leading, spacing: 4) {
                             Label("No items collected yet", systemImage: "info.circle")
@@ -98,7 +129,7 @@ struct IntelTab: View {
                     }
                 }
                 Section {
-                    ForEach(sources) { src in
+                    ForEach(filteredSources) { src in
                         ZStack {
                             // Tap-to-drill: NavigationLink wraps the row (with no
                             // visible chevron via opacity 0) — separate hit-target
@@ -111,10 +142,76 @@ struct IntelTab: View {
                     }
                 }
             }
-            .listStyle(.insetGrouped)
+            .compatInsetGroupedListStyle()
             .navigationDestination(for: IntelSource.self) { src in
                 IntelSourceItemsView(source: src)
             }
+        }
+    }
+
+    // ── Filtering ───────────────────────────────────────────────────────────
+
+    private var filtersAreActive: Bool {
+        !selectedCategories.isEmpty || itemPresence != .all
+    }
+
+    /// Category + item-presence filter. Search is handled separately by the
+    /// cross-source FTS branch, so this only narrows the catalogue list.
+    private var filteredSources: [IntelSource] {
+        sources.filter { src in
+            if !selectedCategories.isEmpty {
+                guard let cat = src.category, selectedCategories.contains(cat) else { return false }
+            }
+            switch itemPresence {
+            case .all:      break
+            case .hasItems: if src.item_count == 0 { return false }
+            case .empty:    if src.item_count > 0  { return false }
+            }
+            return true
+        }
+    }
+
+    /// Categories present in the catalogue, by descending source count then
+    /// alphabetical — same ordering rule the Saved/Cameras chips use.
+    private var availableCategories: [String] {
+        var counts: [String: Int] = [:]
+        for s in sources {
+            guard let c = s.category else { continue }
+            counts[c, default: 0] += 1
+        }
+        return counts.keys.sorted {
+            counts[$0]! == counts[$1]! ? $0 < $1 : counts[$0]! > counts[$1]!
+        }
+    }
+
+    private func categoryCount(_ c: String) -> Int {
+        sources.filter { $0.category == c }.count
+    }
+
+    private func toggleCategory(_ c: String) {
+        if selectedCategories.contains(c) { selectedCategories.remove(c) }
+        else { selectedCategories.insert(c) }
+    }
+
+    private var filtersSheet: some View {
+        FilterSheet(
+            isActive: filtersAreActive,
+            onReset: {
+                selectedCategories.removeAll()
+                itemPresence = .all
+            },
+            onDone: { showFilters = false }
+        ) {
+            FilterSegmentedSection(title: "Data", selection: $itemPresence)
+            FilterMultiSelectSection(
+                title: "Category",
+                items: availableCategories,
+                emptyText: "No sources yet",
+                label: { $0.capitalized },
+                count: { categoryCount($0) },
+                isSelected: { selectedCategories.contains($0) },
+                toggle: { toggleCategory($0) }
+            )
         }
     }
 
@@ -124,7 +221,7 @@ struct IntelTab: View {
         loading = true
         defer { loading = false }
         do {
-            let env = try await API(baseURL: settings.backendBaseURL).intelSources()
+            let env = try await apiClient.api.intelSources()
             sources = env.data
             intelCache.cacheSources(env.data)
             error = nil
@@ -144,7 +241,7 @@ struct IntelTab: View {
             runningAll = false
             runAllProgress = nil
         }
-        let api = API(baseURL: settings.backendBaseURL)
+        let api = apiClient.api
         let cap = 4
         var index = 0
         let total = sources.count

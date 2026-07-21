@@ -30,6 +30,11 @@ struct FeaturePopup: View {
                     }
                 }
 
+                if !provenanceRows.isEmpty {
+                    PopupSectionHeader("Provenance", icon: "shippingbox")
+                    provenanceGrid
+                }
+
                 if !feature.properties.isEmpty {
                     PopupSectionHeader("Properties", icon: "list.bullet.rectangle")
                     propertiesGrid
@@ -52,18 +57,18 @@ struct FeaturePopup: View {
             }
             .padding()
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle(feature.displayName)
-        .navigationBarTitleDisplayMode(.inline)
+        .compatInlineTitle()
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+            ToolbarItem(placement: .compatLeading) {
                 Button { saved.toggle(feature) } label: {
                     Image(systemName: saved.contains(id: feature.id) ? "star.fill" : "star")
                         .foregroundStyle(saved.contains(id: feature.id) ? theme.warning : theme.textMuted)
                 }
                 .accessibilityLabel(saved.contains(id: feature.id) ? "Remove from saved" : "Save")
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 Button("Close") { dismiss() }
             }
         }
@@ -108,6 +113,70 @@ struct FeaturePopup: View {
         .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
     }
 
+    /// Best-effort "info path" for a map feature. Map layers flow through a
+    /// different pipeline than intel items (no server `provenance` block), so
+    /// we assemble it from the layer registry + whatever source/fetch keys
+    /// the collector left in `properties`. Only non-empty rows render.
+    private var provenanceRows: [(String, String)] {
+        func prop(_ keys: [String]) -> String? {
+            for k in keys {
+                if let v = feature.properties[k]?.value {
+                    let s = stringify(v)
+                    if !s.isEmpty, s != "—" { return s }
+                }
+            }
+            return nil
+        }
+        var rows: [(String, String)] = [
+            ("Layer", LayerRegistry.displayName(forId: feature.layerId)),
+        ]
+        if let s = prop(["source", "source_id", "collector", "provider", "operator"]) {
+            rows.append(("Source", s))
+        }
+        if let s = prop(["source_url", "feed_url", "api", "endpoint"]) ?? feature.externalLink {
+            rows.append(("Origin", s))
+        }
+        if let s = prop(["fetched_at", "fetchedAt", "retrieved_at", "ingested_at"]) {
+            rows.append(("Fetched", s))
+        }
+        if let s = prop(["published_at", "timestamp", "time", "datetime", "date"]) {
+            rows.append(("Reported", s))
+        }
+        if let s = prop(["license", "license_id", "license_name", "licence"]) {
+            rows.append(("License", s))
+        }
+        return rows
+    }
+
+    private var provenanceGrid: some View {
+        VStack(spacing: 1) {
+            ForEach(provenanceRows.indices, id: \.self) { i in
+                let (label, value) = provenanceRows[i]
+                HStack(alignment: .top, spacing: 8) {
+                    Text(label)
+                        .font(.caption.bold())
+                        .foregroundStyle(theme.textMuted)
+                        .frame(width: 90, alignment: .leading)
+                    if (label == "Origin"), let url = URL(string: value), url.scheme != nil {
+                        Link(value, destination: url)
+                            .font(.caption.monospaced())
+                            .foregroundStyle(theme.accentAlt)
+                            .lineLimit(2)
+                    } else {
+                        Text(value)
+                            .font(.caption.monospaced())
+                            .foregroundStyle(theme.text)
+                            .textSelection(.enabled)
+                    }
+                    Spacer(minLength: 0)
+                }
+                .padding(8)
+                .background(theme.surfaceElevated)
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+
     private var propertiesGrid: some View {
         VStack(spacing: 1) {
             ForEach(sortedKeys, id: \.self) { key in
@@ -143,7 +212,7 @@ struct FeaturePopup: View {
         case let v as Double:     return String(v)
         case let v as [Any]:      return "[\(v.count) items]"
         case let v as [String: Any]: return "{\(v.count) keys}"
-        default:                  return String(describing: value!)
+        default:                  return value.map { String(describing: $0) } ?? "—"
         }
     }
 }

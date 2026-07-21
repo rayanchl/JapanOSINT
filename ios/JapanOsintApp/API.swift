@@ -26,7 +26,21 @@ struct API: Sendable {
         return raw > 0 ? TimeInterval(raw) : 25
     }
 
-    private func makeURL(_ path: String, query: [URLQueryItem] = []) throws -> URL {
+    /// Dedicated session so we control the resource ceiling. `URLSession.shared`
+    /// defaults `timeoutIntervalForResource` to 7 days, so the `timeout: nil`
+    /// POST path (long collector runs) could otherwise hang effectively
+    /// forever if the server stalls without closing the connection. We bound
+    /// the whole request leg to 120s and give every request a 30s default
+    /// unless the call site overrides it explicitly.
+    nonisolated static let session: URLSession = {
+        let cfg = URLSessionConfiguration.default
+        cfg.timeoutIntervalForRequest = 30
+        cfg.timeoutIntervalForResource = 120
+        cfg.waitsForConnectivity = true
+        return URLSession(configuration: cfg)
+    }()
+
+    private nonisolated func makeURL(_ path: String, query: [URLQueryItem] = []) throws -> URL {
         let trimmed = baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
         guard var comps = URLComponents(string: trimmed + path) else {
             throw APIError.badURL
@@ -42,19 +56,49 @@ struct API: Sendable {
     /// (Wayback CDX, GitHub leaks, etc.) which can take 30–60 s legitimately.
     private func request(_ url: URL, method: String = "GET",
                          body: Data? = nil, timeout: TimeInterval? = API.userDefaultTimeout) async throws -> Data {
+        do {
+            return try await send(url, method: method, body: body, timeout: timeout)
+        } catch APIError.http(401, let detail) {
+            // Access token expired mid-session. Refresh once (against
+            // Supabase directly — not via API, so no recursion). All
+            // concurrent 401s coalesce onto ONE shared refresh task so we
+            // don't burn Supabase's single-use rotating refresh token.
+            let refreshed = await AuthTokenBox.shared.coalescedRefresh()
+            guard refreshed else { throw APIError.http(401, detail) }
+            // Only auto-replay idempotent reads. Replaying a POST/PUT/PATCH/
+            // DELETE could double-create a rule, double-trigger a collector,
+            // etc. — surface the auth error and let the caller decide.
+            guard method == "GET" else { throw APIError.http(401, detail) }
+            return try await send(url, method: method, body: body, timeout: timeout)
+        }
+    }
+
+    private func send(_ url: URL, method: String,
+                      body: Data?, timeout: TimeInterval?) async throws -> Data {
         var req = URLRequest(url: url)
         if let timeout {
             req.timeoutInterval = timeout
         } else {
-            // No client-side timeout: pick a large value that effectively
-            // never fires. URLSession honours timeoutIntervalForResource on
-            // its config (default 7 days) — this caps the request leg.
-            req.timeoutInterval = 24 * 60 * 60
+            // "No client-side timeout" really means "bounded by the slow
+            // collector ceiling". The session's 30s `timeoutIntervalForRequest`
+            // would kill a legitimately long collector run that hasn't sent
+            // bytes yet, so lift the per-request idle budget to the session's
+            // 120s resource ceiling — that is now the true hard cap (vs. the
+            // old 7-day URLSession.shared default that hung forever).
+            req.timeoutInterval = 120
         }
         req.httpMethod = method
         if body != nil { req.setValue("application/json", forHTTPHeaderField: "Content-Type") }
+        // Stamp Supabase bearer + active tenant when present. Absent in
+        // legacy single-tenant mode — the server ignores both there.
+        if let token = AuthTokenBox.shared.accessToken, !token.isEmpty {
+            req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        if let tid = AuthTokenBox.shared.tenantId, !tid.isEmpty {
+            req.setValue(tid, forHTTPHeaderField: "X-Tenant-Id")
+        }
         req.httpBody = body
-        let (data, resp) = try await URLSession.shared.data(for: req)
+        let (data, resp) = try await API.session.data(for: req)
         guard let http = resp as? HTTPURLResponse else { throw APIError.http(-1, "no response") }
         guard (200..<300).contains(http.statusCode) else {
             throw APIError.http(http.statusCode, String(data: data, encoding: .utf8) ?? "")
@@ -106,6 +150,12 @@ struct API: Sendable {
         _ = try await request(url, method: "DELETE")
     }
 
+    // ── Identity / tenancy ─────────────────────────────────────────────────
+    /// Resolved user + active tenant + memberships. Drives onboarding.
+    func me() async throws -> MeResponse {
+        try await get("/api/me")
+    }
+
     // ── Layers / Sources / Status ──────────────────────────────────────────
     func health() async throws -> Data {
         try await request(try makeURL("/api/health"))
@@ -115,6 +165,13 @@ struct API: Sendable {
     }
     func sources() async throws -> [DBRowAny] {
         try await get("/api/sources")
+    }
+    /// Set whether a source is cron-scheduled for the map (`map_cron`) or
+    /// only grabbed live from the search tab (`search_only`). Both modes
+    /// still write intel_items shown everywhere. Returns the updated row.
+    func setSourceSchedule(_ id: String, mode: String) async throws -> DBRowAny {
+        let body = try JSONSerialization.data(withJSONObject: ["mode": mode])
+        return try await put("/api/sources/\(id)/schedule", body: body)
     }
     func status() async throws -> StatusEnvelope {
         try await get("/api/status")
@@ -262,7 +319,9 @@ struct API: Sendable {
         _ = try await request(url, method: "POST", body: Data("{}".utf8), timeout: 15)
     }
 
-    // ── API keys overlay ───────────────────────────────────────────────────
+    // ── Platform API keys overlay (operator/admin only) ────────────────────
+    // Server-wide default keys. The route is gated to owner|admin; surfaced
+    // in Settings → Admin, not the user-facing API Keys tab.
     func apiKeys() async throws -> [ApiKeyMeta] {
         try await get("/api/keys")
     }
@@ -279,12 +338,82 @@ struct API: Sendable {
         return try await put("/api/keys/\(name)", body: body)
     }
 
+    // ── Per-tenant API keys (BYOK) ─────────────────────────────────────────
+    // The user-facing API Keys tab. Keys are encrypted per workspace; a
+    // workspace with no key of its own falls back to the platform key.
+    func tenantKeys() async throws -> TenantKeysEnvelope {
+        try await get("/api/tenant-keys")
+    }
+
+    /// Reveals THIS workspace's own key only (never the platform value).
+    func tenantKeyValue(name: String) async throws -> ApiKeyValue {
+        try await get("/api/tenant-keys/\(name)")
+    }
+
+    /// Empty string clears the workspace key — collectors then fall back to
+    /// the operator's platform key automatically.
+    @discardableResult
+    func tenantKeySet(name: String, value: String) async throws -> TenantKeyWrite {
+        let body = try JSONEncoder().encode(["value": value])
+        return try await put("/api/tenant-keys/\(name)", body: body)
+    }
+
+    /// Current key-edit policy + the member roster (for the owner picker).
+    func keyPolicy() async throws -> KeyPolicyResponse {
+        try await get("/api/tenant-keys/policy")
+    }
+
+    /// Owner-only. `memberId` required when `policy == "selected_member"`.
+    @discardableResult
+    func keyPolicySet(policy: String, memberId: String?) async throws -> KeyPolicyState {
+        var obj: [String: String] = ["policy": policy]
+        if let memberId { obj["memberId"] = memberId }
+        let body = try JSONSerialization.data(withJSONObject: obj)
+        return try await put("/api/tenant-keys/policy", body: body)
+    }
+
     /// Triggers `node --watch` to respawn the server. The HTTP request races
     /// the process teardown — caller should treat any post-POST connection
     /// reset as expected and switch to /api/health polling for liveness.
     func restartServer() async throws {
         let url = try makeURL("/api/admin/restart")
         _ = try await request(url, method: "POST", body: Data("{}".utf8), timeout: 10)
+    }
+
+    // ── Repair worker / self-healing maintenance (operator only) ────────────
+    /// Host-wide detect→triage→repair digest over a trailing window (hours).
+    func maintenanceDigest(hours: Int = 24) async throws -> MaintenanceDigest {
+        try await get("/api/admin/maintenance",
+                      query: [URLQueryItem(name: "hours", value: String(hours))])
+    }
+
+    /// Full pipeline for one source: recent fetch runs, anomalies (with
+    /// triage), and repair attempts (with the proposed patch).
+    func maintenanceSourceDetail(_ id: String) async throws -> SourcePipeline {
+        try await get("/api/admin/maintenance/source/\(id)")
+    }
+
+    /// Apply a staged `verified` url_swap repair — writes the runtime override
+    /// and activates it live. Returns the merged result (incl. new_url).
+    @discardableResult
+    func approveRepair(_ id: Int) async throws -> OkResult {
+        try await post("/api/admin/repairs/\(id)/approve", timeout: 15)
+    }
+    /// Reject a staged repair and resolve its anomaly so the worker stops
+    /// re-deriving it.
+    @discardableResult
+    func rejectRepair(_ id: Int) async throws -> OkResult {
+        try await post("/api/admin/repairs/\(id)/reject", timeout: 15)
+    }
+    /// Lift a circuit-breaker quarantine so the source can be scheduled again.
+    @discardableResult
+    func unquarantineSource(_ id: String) async throws -> OkResult {
+        try await post("/api/admin/sources/\(id)/unquarantine", timeout: 15)
+    }
+    /// Reset an anomaly's triage so the triage worker re-picks it next cycle.
+    @discardableResult
+    func requeueAnomaly(_ id: Int) async throws -> OkResult {
+        try await post("/api/admin/anomalies/\(id)/requeue", timeout: 15)
     }
 
     // ── Alerts ─────────────────────────────────────────────────────────────
@@ -323,5 +452,80 @@ struct API: Sendable {
             query: [URLQueryItem(name: "limit", value: String(limit))]
         )
         return env.data
+    }
+
+    // ── Workspace members & invites ────────────────────────────────────────
+    func membersList() async throws -> WorkspaceMembersResponse {
+        try await get("/api/members")
+    }
+    /// Invite by email. Server adds the membership immediately if the user
+    /// already exists, otherwise queues a pending invite claimed on first
+    /// sign-in. Returns the raw status string ("invited" / "added" /
+    /// "already_member").
+    @discardableResult
+    func memberInvite(email: String, role: String) async throws -> String {
+        let body = try JSONSerialization.data(withJSONObject: ["email": email, "role": role])
+        let r: MemberActionResponse = try await post("/api/members/invite", body: body, timeout: API.userDefaultTimeout)
+        return r.status ?? "ok"
+    }
+    func memberSetRole(userId: String, role: String) async throws {
+        let body = try JSONSerialization.data(withJSONObject: ["role": role])
+        let _: MemberActionResponse = try await patch("/api/members/\(userId)/role", body: body)
+    }
+    func memberRemove(userId: String) async throws {
+        try await delete("/api/members/\(userId)")
+    }
+    func inviteRevoke(id: String) async throws {
+        try await delete("/api/members/invite/\(id)")
+    }
+
+    // ── OSINT search + entity graph ────────────────────────────────────────
+    func searchAnalyze(_ query: String) async throws -> SearchStartResponse {
+        let body = try JSONSerialization.data(withJSONObject: ["query": query])
+        return try await post("/api/search/analyze", body: body, timeout: 20)
+    }
+    func searchSuggest(_ q: String) async throws -> [String] {
+        let env: SuggestEnvelope = try await get(
+            "/api/search/suggest", query: [URLQueryItem(name: "q", value: q)])
+        return env.suggestions
+    }
+    func searchResults(_ id: String) async throws -> SearchSnapshot {
+        try await get("/api/search/results/\(id)")
+    }
+    func entitySearch(_ q: String, type: String? = nil, limit: Int = 30) async throws -> [EntityHit] {
+        var qi = [URLQueryItem(name: "q", value: q), URLQueryItem(name: "limit", value: String(limit))]
+        if let type { qi.append(URLQueryItem(name: "type", value: type)) }
+        let env: EntitySearchEnvelope = try await get("/api/entities/search", query: qi)
+        return env.results
+    }
+    func entity(_ type: String, _ id: String) async throws -> EntityProfile {
+        try await get("/api/entities/\(type)/\(id)")
+    }
+    func entityGraph(_ type: String, _ id: String, depth: Int = 1) async throws -> EntityGraph {
+        try await get("/api/entities/\(type)/\(id)/graph",
+                      query: [URLQueryItem(name: "depth", value: String(depth))])
+    }
+    func entityMentions(_ type: String, _ id: String, limit: Int = 50) async throws -> [EntityMention] {
+        let env: MentionsEnvelope = try await get(
+            "/api/entities/\(type)/\(id)/mentions",
+            query: [URLQueryItem(name: "limit", value: String(limit))])
+        return env.mentions
+    }
+
+    /// SSE URL + auth headers for the progress stream (consumed by SearchSSE
+    /// via URLSession.bytes — which, unlike a browser EventSource, CAN send
+    /// the bearer header; the route is also pre-auth so either works).
+    func searchStreamRequest(_ requestId: String) -> URLRequest {
+        let base = baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        var req = URLRequest(url: URL(string: base + "/api/search/stream/\(requestId)")!)
+        req.timeoutInterval = 600
+        req.setValue("text/event-stream", forHTTPHeaderField: "Accept")
+        if let token = AuthTokenBox.shared.accessToken, !token.isEmpty {
+            req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        if let tid = AuthTokenBox.shared.tenantId, !tid.isEmpty {
+            req.setValue(tid, forHTTPHeaderField: "X-Tenant-Id")
+        }
+        return req
     }
 }

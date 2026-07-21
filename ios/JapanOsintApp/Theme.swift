@@ -37,10 +37,10 @@ struct ThemePalette: Equatable {
     static let system = ThemePalette(
         accent:           .accentColor,
         accentAlt:        .green,
-        surface:          Color(.systemBackground),
-        surfaceElevated:  Color(.secondarySystemBackground),
-        text:             Color(.label),
-        textMuted:        Color(.secondaryLabel),
+        surface:          .compatSurface,
+        surfaceElevated:  .compatSurfaceElevated,
+        text:             .compatLabel,
+        textMuted:        .compatSecondaryLabel,
         success:          .green,
         warning:          .orange,
         danger:           .red,
@@ -48,8 +48,23 @@ struct ThemePalette: Equatable {
     )
 }
 
+extension View {
+    /// Unified full-bleed screen background for every tab / detail / sheet.
+    ///
+    /// Paints `theme.surface` edge-to-edge AND hides the scroll content
+    /// background of any enclosed `Form`/`List`/`ScrollView` so they don't punch
+    /// through with the platform's own grouped backdrop (the mismatched grey
+    /// that made some tabs look different from the dark surface ones). Apply to a
+    /// screen's root view so every window reads the same.
+    func themedScreenBackground(_ theme: ThemePalette) -> some View {
+        self
+            .scrollContentBackground(.hidden)
+            .background(theme.surface.ignoresSafeArea())
+    }
+}
+
 private struct ThemeKey: EnvironmentKey {
-    static let defaultValue: ThemePalette = .cyberpunk
+    static let defaultValue: ThemePalette = .system
 }
 
 extension EnvironmentValues {

@@ -5,7 +5,7 @@ import SwiftUI
 /// the surrounding tab's palette. Used by Saved / Intel / Cameras /
 /// Scheduler / Follow / DB Tables.
 struct OfflineStateView: View {
-    enum Kind { case offline, empty }
+    enum Kind { case offline, empty, error }
 
     var kind: Kind = .offline
     var title: String? = nil
@@ -25,6 +25,10 @@ struct OfflineStateView: View {
             return ("No data yet",
                     "There's nothing to show here.",
                     "tray")
+        case .error:
+            return ("Something went wrong",
+                    "We couldn't load this. Pull to refresh or try again.",
+                    "exclamationmark.triangle")
         }
     }
 

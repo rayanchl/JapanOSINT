@@ -12,7 +12,7 @@ import CoreLocation
 struct CoordinateAddressView: View {
     let coordinate: CLLocationCoordinate2D
 
-    @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @Environment(\.theme) private var theme
 
     @State private var addressJa: String?
@@ -59,7 +59,7 @@ struct CoordinateAddressView: View {
         loading = true
         defer { loading = false }
         do {
-            let r = try await API(baseURL: settings.backendBaseURL)
+            let r = try await apiClient.api
                 .reverseGeocode(lat: coordinate.latitude, lon: coordinate.longitude)
             // JA: prefer the localised JA string; if the provider didn't
             // expose a language pair (Photon/GSI fallback) the canonical

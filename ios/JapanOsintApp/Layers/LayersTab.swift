@@ -8,6 +8,16 @@ struct LayersTab: View {
     @State private var searchText = ""
     @State private var collapsed: Set<String> = []
 
+    @State private var showFilters = false
+    @State private var selectedCategories: Set<String> = []
+    @State private var activity: ActivityChoice = .all
+
+    enum ActivityChoice: String, FilterChoice {
+        case all, active, inactive
+        var id: String { rawValue }
+        var label: String { rawValue.capitalized }
+    }
+
     var body: some View {
         NavigationStack {
             List {
@@ -81,12 +91,62 @@ struct LayersTab: View {
                     }
                 }
             }
-            .listStyle(.insetGrouped)
+            .compatInsetGroupedListStyle()
+            .themedScreenBackground(theme)
             .searchable(text: $searchText, prompt: "Search layers")
             .navigationTitle("Layers (\(filteredLayers.count))")
+            .toolbar {
+                ToolbarItem(placement: .compatPrimary) {
+                    FilterToolbarButton(isActive: filtersAreActive) {
+                        showFilters = true
+                    }
+                }
+            }
+            .sheet(isPresented: $showFilters) { filtersSheet }
             .refreshable {
                 await registry.reload(baseURL: settings.backendBaseURL)
             }
+        }
+    }
+
+    // MARK: - Filtering
+
+    private var filtersAreActive: Bool {
+        !selectedCategories.isEmpty || activity != .all
+    }
+
+    private var availableCategories: [String] {
+        var counts: [String: Int] = [:]
+        for l in registry.layers { counts[l.categoryLabel, default: 0] += 1 }
+        return counts.keys.sorted {
+            counts[$0]! == counts[$1]! ? $0 < $1 : counts[$0]! > counts[$1]!
+        }
+    }
+
+    private func toggleCategory(_ c: String) {
+        if selectedCategories.contains(c) { selectedCategories.remove(c) }
+        else { selectedCategories.insert(c) }
+    }
+
+    private var filtersSheet: some View {
+        FilterSheet(
+            isActive: filtersAreActive,
+            onReset: {
+                selectedCategories.removeAll()
+                activity = .all
+            },
+            onDone: { showFilters = false }
+        ) {
+            FilterSegmentedSection(title: "Activity", selection: $activity)
+            FilterMultiSelectSection(
+                title: "Category",
+                items: availableCategories,
+                emptyText: "No layers loaded",
+                label: { $0 },
+                count: { c in registry.layers.filter { $0.categoryLabel == c }.count },
+                isSelected: { selectedCategories.contains($0) },
+                toggle: { toggleCategory($0) }
+            )
         }
     }
 
@@ -94,13 +154,22 @@ struct LayersTab: View {
     /// `STRIP_LAYER_IDS` filter (routes/layers.js) already removed every
     /// ingredient, rollup, and UX-merge id, so iOS doesn't filter again.
     private var filteredLayers: [LayerDef] {
-        let base = registry.layers
         let q = searchText.trimmingCharacters(in: .whitespaces).lowercased()
-        guard !q.isEmpty else { return base }
-        return base.filter {
-            $0.name.lowercased().contains(q) ||
-            $0.id.lowercased().contains(q) ||
-            ($0.category ?? "").lowercased().contains(q)
+        return registry.layers.filter { layer in
+            if !selectedCategories.isEmpty,
+               !selectedCategories.contains(layer.categoryLabel) { return false }
+            switch activity {
+            case .all:      break
+            case .active:   if !settings.activeLayerIds.contains(layer.id) { return false }
+            case .inactive: if settings.activeLayerIds.contains(layer.id)  { return false }
+            }
+            if !q.isEmpty {
+                let hit = layer.name.lowercased().contains(q)
+                    || layer.id.lowercased().contains(q)
+                    || (layer.category ?? "").lowercased().contains(q)
+                if !hit { return false }
+            }
+            return true
         }
     }
 
@@ -160,6 +229,7 @@ struct LayersTab: View {
 struct LayerRow: View {
     let layer: LayerDef
     @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var registry: LayerRegistry
     @EnvironmentObject var nav: MapNavigation
     @EnvironmentObject var stats: FeatureStats
@@ -323,7 +393,7 @@ struct LayerRow: View {
                             .font(.caption)
                     }
                 }
-                .toggleStyle(.checkbox)
+                .toggleStyle(.themedCheckbox)
             }
             switch layer.id {
             case "unified-trains":
@@ -368,7 +438,7 @@ struct LayerRow: View {
                 Text(title).font(.caption)
             }
         }
-        .toggleStyle(.checkbox)
+        .toggleStyle(.themedCheckbox)
     }
 
     private func sourcesSection(_ sources: [LayerSourceRef]) -> some View {
@@ -472,7 +542,7 @@ struct LayerRow: View {
         triggerError = nil
         defer { triggering = false }
         do {
-            try await API(baseURL: settings.backendBaseURL).triggerCameraDiscovery()
+            try await apiClient.api.triggerCameraDiscovery()
             lastTriggered = Date()
         } catch {
             triggerError = error.localizedDescription

@@ -17,7 +17,7 @@ struct BBox: Codable, Hashable, Sendable {
 
 // ── Layers (from /api/layers) ──────────────────────────────────────────────
 
-struct LayerSourceRef: Codable, Hashable, Identifiable, Sendable {
+nonisolated struct LayerSourceRef: Codable, Hashable, Identifiable, Sendable {
     let id: String
     let name: String?
     let type: String?
@@ -26,12 +26,12 @@ struct LayerSourceRef: Codable, Hashable, Identifiable, Sendable {
 
 /// Time-coded layer columns advertised by the server. Used by the iOS
 /// client only to flag features that fell back to `fetched_at` in replay.
-struct LayerTemporal: Codable, Hashable, Sendable {
+nonisolated struct LayerTemporal: Codable, Hashable, Sendable {
     let field: String
     let fallbackField: String?
 }
 
-struct LayerDef: Codable, Identifiable, Hashable, Sendable {
+nonisolated struct LayerDef: Codable, Identifiable, Hashable, Sendable {
     let id: String
     let name: String
     let category: String?
@@ -61,7 +61,7 @@ struct LayerDef: Codable, Identifiable, Hashable, Sendable {
 
 // ── GeoJSON ────────────────────────────────────────────────────────────────
 
-enum Geometry: @unchecked Sendable {
+nonisolated enum Geometry: @unchecked Sendable {
     case point(CLLocationCoordinate2D)
     case lineString([CLLocationCoordinate2D])
     case polygon([[CLLocationCoordinate2D]])      // outer ring + holes
@@ -101,7 +101,7 @@ enum Geometry: @unchecked Sendable {
     }
 }
 
-extension Geometry {
+nonisolated extension Geometry {
     init?(rawType: String, coords: Any) {
         func coord(_ a: Any) -> CLLocationCoordinate2D? {
             guard let arr = a as? [Any], arr.count >= 2,
@@ -140,7 +140,7 @@ extension Geometry {
 /// `Any?` is fundamentally non-Sendable, but instances are immutable after
 /// decoding and only ever cross actors as part of frozen FeatureCollection
 /// payloads, so `@unchecked` is safe in practice.
-struct AnyCodable: Codable, Hashable, @unchecked Sendable {
+nonisolated struct AnyCodable: Codable, Hashable, @unchecked Sendable {
     let value: Any?
 
     init(_ value: Any?) { self.value = value }
@@ -182,7 +182,7 @@ struct AnyCodable: Codable, Hashable, @unchecked Sendable {
     }
 }
 
-struct GeoFeature: Identifiable, Equatable, Sendable {
+nonisolated struct GeoFeature: Identifiable, Equatable, Sendable {
     let id: String
     let layerId: String
     let geometry: Geometry
@@ -214,7 +214,7 @@ struct GeoFeature: Identifiable, Equatable, Sendable {
     }
 }
 
-struct FeatureCollection: Decodable, Sendable {
+nonisolated struct FeatureCollection: Decodable, Sendable {
     let features: [GeoFeature]
     let meta: [String: AnyCodable]?
 
@@ -244,7 +244,7 @@ struct FeatureCollection: Decodable, Sendable {
     }
 }
 
-private struct RawFeature: Decodable {
+private nonisolated struct RawFeature: Decodable {
     let id: AnyCodable?
     let geometry: RawGeometry?
     let properties: [String: AnyCodable]?
@@ -263,7 +263,7 @@ private struct RawFeature: Decodable {
     }
 }
 
-private struct RawGeometry: Decodable {
+private nonisolated struct RawGeometry: Decodable {
     let type: String?
     let coordinates: AnyCodable?
 
@@ -383,6 +383,58 @@ struct ApiKeyValue: Decodable {
     let value: String?
 }
 
+// ── API keys (per-tenant BYOK) ─────────────────────────────────────────────
+
+/// One env-var's status for the active workspace. `byok` = the workspace has
+/// its own encrypted key. `source`: "tenant" (own key) | "platform" (operator
+/// default) | nil (gated — no key anywhere). `set` = resolvable either way.
+struct TenantKeyMeta: Decodable, Identifiable, Hashable {
+    let name: String
+    let role: String          // "required" | "anyOf" | "optional"
+    let byok: Bool
+    let set: Bool
+    let source: String?       // "tenant" | "platform" | nil
+    var id: String { name }
+}
+
+/// `GET /api/tenant-keys`. `canManage` reflects the owner-chosen edit policy
+/// resolved server-side for the caller; the client uses it to gate editing.
+struct TenantKeysEnvelope: Decodable {
+    let items: [TenantKeyMeta]
+    let canManage: Bool
+    let policy: String              // owner_only | selected_member | all_members
+    let policyMemberId: String?
+}
+
+/// `PUT /api/tenant-keys/:name` response — enough to refresh one row without
+/// a full reload.
+struct TenantKeyWrite: Decodable {
+    let name: String
+    let byok: Bool
+    let set: Bool
+    let source: String?
+}
+
+/// `PUT /api/tenant-keys/policy` response.
+struct KeyPolicyState: Decodable {
+    let policy: String
+    let memberId: String?
+}
+
+struct KeyPolicyMember: Decodable, Identifiable, Hashable {
+    let id: String
+    let email: String
+    let role: String
+}
+
+/// `GET /api/tenant-keys/policy`. `members` is the roster the owner picks a
+/// delegate from when policy = selected_member.
+struct KeyPolicyResponse: Decodable {
+    let policy: String
+    let memberId: String?
+    let members: [KeyPolicyMember]
+}
+
 // ── Geocoding ──────────────────────────────────────────────────────────────
 
 struct GeocodeHit: Codable, Identifiable, Hashable {
@@ -464,7 +516,17 @@ struct IntelItem: Codable, Identifiable, Hashable {
     let fetched_at: String?
     let tags: [String]?
     let properties: [String: AnyCodable]?
+    /// Geocoded point, served top-level by the API (intelapi.c) from the
+    /// `intel_items.lat/lon` columns — not inside `properties`. Optional/null
+    /// for items that were never geocoded.
+    let lat: Double?
+    let lon: Double?
     let _excerpt: String?
+    /// Per-data-point provenance assembled server-side (intelStore.rowToItem):
+    /// which collector, the upstream origin URL, this datum's own link,
+    /// fetch/publish times, and license/confidence when known. Always sent by
+    /// the server but optional here so older cached JSON still decodes.
+    let provenance: Provenance?
     /// True when this item was matched only by the auto-translated alt query
     /// (qAlt), not by the user's original q. The Intel tab renders a small
     /// "translated" badge on rows where this is true.
@@ -473,6 +535,24 @@ struct IntelItem: Codable, Identifiable, Hashable {
 
     static func == (lhs: IntelItem, rhs: IntelItem) -> Bool { lhs.uid == rhs.uid }
     func hash(into hasher: inout Hasher) { hasher.combine(uid) }
+}
+
+/// Mirror of the server `provenance` block (see intelStore.buildProvenance).
+/// Every field is optional/null-tolerant so a pruned source or a partial
+/// collector never breaks decoding.
+struct Provenance: Codable, Hashable {
+    let source_id: String?
+    let source_name: String?
+    let source_name_ja: String?
+    let category: String?
+    let collection_method: String?   // "api" | "scrape" | "rss" | "dataset" | …
+    let source_url: String?          // upstream origin the collector pulls from
+    let item_url: String?            // this datum's own upstream link
+    let sub_source_id: String?
+    let fetched_at: String?
+    let published_at: String?
+    let license: String?
+    let confidence: Double?
 }
 
 struct IntelItemsEnvelope: Decodable {
@@ -511,6 +591,11 @@ struct AlertPredicate: Codable, Hashable {
     var tags_all: [String]?
     var bbox: [Double]?              // [w, s, e, n]
     var record_types: [String]?
+    /// Query authoring mode. `nil`/"fts" ⇒ the FTS predicate `q` matches new
+    /// items; "llm" ⇒ `nl_query` drives the agentic search pipeline (which
+    /// also produces an FTS `q` the user chose). Round-trips opaquely.
+    var mode: String?
+    var nl_query: String?
 }
 
 struct AlertRule: Codable, Identifiable, Hashable {
@@ -536,8 +621,71 @@ struct AlertEvent: Decodable, Identifiable, Hashable {
     let delivered_channels: [String]
     let suppressed: Int
     let reason: String?
+    /// Joined from intel_items server-side so the history row can show the
+    /// matched item instead of a bare uid. Null when the matched row has
+    /// since been pruned.
+    let item_title: String?
+    let item_source_id: String?
+    let item_link: String?
 }
 struct AlertEventsEnvelope: Decodable { let data: [AlertEvent] }
+
+// ── Identity / tenancy (GET /api/me) ───────────────────────────────────────
+
+struct MeResponse: Decodable {
+    let user: MeUser?
+    let tenant: MeTenant?
+    let memberships: [MeTenant]?
+}
+struct MeUser: Decodable, Hashable {
+    let id: String
+    let email: String?
+    let display_name: String?
+}
+struct MeTenant: Decodable, Hashable, Identifiable {
+    let id: String
+    let slug: String
+    let name: String
+    let plan: String?
+    let role: String?
+}
+
+// ── Workspace members & invites (GET /api/members) ──────────────────────────
+
+/// Assignable workspace roles, mirroring the server's CHECK constraint on
+/// `memberships.role`.
+enum WorkspaceRole: String, Codable, CaseIterable, Identifiable {
+    case owner, admin, analyst, viewer
+    var id: String { rawValue }
+    var label: String { rawValue.capitalized }
+}
+
+struct WorkspaceMember: Decodable, Identifiable, Hashable {
+    let user_id: String
+    let email: String
+    let role: String
+    var id: String { user_id }
+}
+
+struct WorkspaceInvite: Decodable, Identifiable, Hashable {
+    let id: String
+    let email: String
+    let role: String
+    let created_at: String?
+}
+
+struct WorkspaceMembersResponse: Decodable {
+    let members: [WorkspaceMember]
+    let invites: [WorkspaceInvite]
+}
+
+/// Shared shape for the member-mutation endpoints (invite / role / remove).
+struct MemberActionResponse: Decodable {
+    let ok: Bool?
+    let status: String?      // "invited" | "added" | "already_member"
+    let user_id: String?
+    let role: String?
+}
 
 // ── Database explorer ──────────────────────────────────────────────────────
 
@@ -738,5 +886,389 @@ extension CameraEvent {
             timestamp: str("last_seen_at") ?? str("timestamp"),
             properties: typedProps
         )
+    }
+}
+
+// MARK: - Repair worker / self-healing maintenance
+//
+// Mirrors the C backend's detect→triage→repair pipeline. The host-wide digest
+// (`GET /api/admin/maintenance`) and the per-source drill-down
+// (`GET /api/admin/maintenance/source/:id`) share the `RepairRow`/`AnomalyRow`
+// shapes. All lists are server-sourced — empty arrays mean "nothing to show",
+// never a placeholder.
+
+/// Host-wide repair digest over a trailing window.
+struct MaintenanceDigest: Decodable {
+    let generatedAt: String?
+    let windowHours: Int?
+    let totals: RepairTotals?
+    let successByClass: [RepairClassStat]
+    let worstSources: [RepairSourceStat]
+    let quarantined: [QuarantineRow]
+    let urlOverrides: [UrlOverrideRow]
+    let autoFixed: [RepairRow]
+    let awaitingReview: AwaitingReview?
+    let autoDismissed: [RepairRow]
+    let needsHuman: [RepairRow]
+    let concurrency: ConcurrencySnapshot?
+
+    private enum K: String, CodingKey {
+        case generatedAt = "generated_at", windowHours = "window_hours", totals
+        case successByClass = "success_by_class", worstSources = "worst_sources"
+        case quarantined, urlOverrides = "url_overrides", autoFixed = "auto_fixed"
+        case awaitingReview = "awaiting_review", autoDismissed = "auto_dismissed"
+        case needsHuman = "needs_human", concurrency
+    }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        generatedAt = try c.decodeIfPresent(String.self, forKey: .generatedAt)
+        windowHours = try c.decodeIfPresent(Int.self, forKey: .windowHours)
+        totals = try c.decodeIfPresent(RepairTotals.self, forKey: .totals)
+        successByClass = (try? c.decode([RepairClassStat].self, forKey: .successByClass)) ?? []
+        worstSources = (try? c.decode([RepairSourceStat].self, forKey: .worstSources)) ?? []
+        quarantined = (try? c.decode([QuarantineRow].self, forKey: .quarantined)) ?? []
+        urlOverrides = (try? c.decode([UrlOverrideRow].self, forKey: .urlOverrides)) ?? []
+        autoFixed = (try? c.decode([RepairRow].self, forKey: .autoFixed)) ?? []
+        awaitingReview = try c.decodeIfPresent(AwaitingReview.self, forKey: .awaitingReview)
+        autoDismissed = (try? c.decode([RepairRow].self, forKey: .autoDismissed)) ?? []
+        needsHuman = (try? c.decode([RepairRow].self, forKey: .needsHuman)) ?? []
+        concurrency = try c.decodeIfPresent(ConcurrencySnapshot.self, forKey: .concurrency)
+    }
+}
+
+struct RepairTotals: Decodable {
+    let verified: Int?
+    let merged: Int?
+    let rejected: Int?
+    let needsHuman: Int?
+    let error: Int?
+    private enum K: String, CodingKey {
+        case verified, merged, rejected, needsHuman = "needs_human", error
+    }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        verified = try c.decodeIfPresent(Int.self, forKey: .verified)
+        merged = try c.decodeIfPresent(Int.self, forKey: .merged)
+        rejected = try c.decodeIfPresent(Int.self, forKey: .rejected)
+        needsHuman = try c.decodeIfPresent(Int.self, forKey: .needsHuman)
+        error = try c.decodeIfPresent(Int.self, forKey: .error)
+    }
+}
+
+struct RepairClassStat: Decodable, Identifiable {
+    let klass: String
+    let success: Int?
+    let fail: Int?
+    let needsHuman: Int?
+    let successRate: Double?
+    var id: String { klass }
+    private enum K: String, CodingKey {
+        case klass = "class", success, fail, needsHuman = "needs_human", successRate = "success_rate"
+    }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        klass = (try? c.decode(String.self, forKey: .klass)) ?? "?"
+        success = try c.decodeIfPresent(Int.self, forKey: .success)
+        fail = try c.decodeIfPresent(Int.self, forKey: .fail)
+        needsHuman = try c.decodeIfPresent(Int.self, forKey: .needsHuman)
+        successRate = try c.decodeIfPresent(Double.self, forKey: .successRate)
+    }
+}
+
+struct RepairSourceStat: Decodable, Identifiable {
+    let sourceId: String
+    let success: Int?
+    let fail: Int?
+    let successRate: Double?
+    var id: String { sourceId }
+    private enum K: String, CodingKey {
+        case sourceId = "source_id", success, fail, successRate = "success_rate"
+    }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        sourceId = try c.decode(String.self, forKey: .sourceId)
+        success = try c.decodeIfPresent(Int.self, forKey: .success)
+        fail = try c.decodeIfPresent(Int.self, forKey: .fail)
+        successRate = try c.decodeIfPresent(Double.self, forKey: .successRate)
+    }
+}
+
+struct QuarantineRow: Decodable, Identifiable {
+    let sourceId: String
+    let name: String?
+    let category: String?
+    let since: String?
+    let until: String?
+    let active: Bool?
+    let reason: String?
+    var id: String { sourceId }
+    private enum K: String, CodingKey {
+        case sourceId = "source_id", name, category, since, until, active, reason
+    }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        sourceId = try c.decode(String.self, forKey: .sourceId)
+        name = try c.decodeIfPresent(String.self, forKey: .name)
+        category = try c.decodeIfPresent(String.self, forKey: .category)
+        since = try c.decodeIfPresent(String.self, forKey: .since)
+        until = try c.decodeIfPresent(String.self, forKey: .until)
+        active = try c.decodeIfPresent(Bool.self, forKey: .active)
+        reason = try c.decodeIfPresent(String.self, forKey: .reason)
+    }
+}
+
+struct UrlOverrideRow: Decodable, Identifiable {
+    let sourceId: String
+    let oldURL: String?
+    let newURL: String?
+    let anomalyId: Int?
+    let createdAt: String?
+    var id: String { sourceId + (createdAt ?? "") }
+    private enum K: String, CodingKey {
+        case sourceId = "source_id", oldURL = "old_url", newURL = "new_url"
+        case anomalyId = "anomaly_id", createdAt = "created_at"
+    }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        sourceId = try c.decode(String.self, forKey: .sourceId)
+        oldURL = try c.decodeIfPresent(String.self, forKey: .oldURL)
+        newURL = try c.decodeIfPresent(String.self, forKey: .newURL)
+        anomalyId = try c.decodeIfPresent(Int.self, forKey: .anomalyId)
+        createdAt = try c.decodeIfPresent(String.self, forKey: .createdAt)
+    }
+}
+
+struct AwaitingReview: Decodable {
+    let awaitingPr: [RepairRow]
+    let awaitingApply: [RepairRow]
+    private enum K: String, CodingKey { case awaitingPr = "awaiting_pr", awaitingApply = "awaiting_apply" }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        awaitingPr = (try? c.decode([RepairRow].self, forKey: .awaitingPr)) ?? []
+        awaitingApply = (try? c.decode([RepairRow].self, forKey: .awaitingApply)) ?? []
+    }
+    /// Everything that needs a human decision, regardless of PR-vs-apply split.
+    var all: [RepairRow] { awaitingApply + awaitingPr }
+}
+
+/// Configured LLM concurrency limits. The C runtime has no shared in-flight
+/// gauge, so `inflight`/`waiting` are always 0 — surface as "configured", not
+/// live counts.
+struct ConcurrencySnapshot: Decodable {
+    let heavy: ConcurrencyGauge?
+    let mid: ConcurrencyGauge?
+}
+struct ConcurrencyGauge: Decodable {
+    let limit: Int?
+    let inflight: Int?
+    let waiting: Int?
+}
+
+/// One repair attempt. The digest omits `patch`/`gate`/`model`; the per-source
+/// detail includes them. `patch` is a JSON string carrying the URL swap.
+struct RepairRow: Decodable, Identifiable {
+    let id: Int
+    let anomalyId: Int?
+    let sourceId: String
+    let status: String
+    let action: String?
+    let triageClass: String?
+    let prURL: String?
+    let createdAt: String?
+    let patch: String?
+    let gate: String?
+    let model: String?
+
+    private enum K: String, CodingKey {
+        case id, anomalyId = "anomaly_id", sourceId = "source_id", status, action
+        case triageClass = "triage_class", prURL = "pr_url", createdAt = "created_at"
+        case patch, gate, model
+    }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        id = try c.decode(Int.self, forKey: .id)
+        anomalyId = try c.decodeIfPresent(Int.self, forKey: .anomalyId)
+        sourceId = try c.decode(String.self, forKey: .sourceId)
+        status = (try? c.decode(String.self, forKey: .status)) ?? "?"
+        action = try c.decodeIfPresent(String.self, forKey: .action)
+        triageClass = try c.decodeIfPresent(String.self, forKey: .triageClass)
+        prURL = try c.decodeIfPresent(String.self, forKey: .prURL)
+        createdAt = try c.decodeIfPresent(String.self, forKey: .createdAt)
+        patch = try c.decodeIfPresent(String.self, forKey: .patch)
+        gate = try c.decodeIfPresent(String.self, forKey: .gate)
+        model = try c.decodeIfPresent(String.self, forKey: .model)
+    }
+
+    /// A `verified` `url_swap` is the one staged proposition an operator can
+    /// approve to apply live.
+    var isApprovable: Bool { status == "verified" && action == "url_swap" }
+
+    /// Parsed `patch` payload (old/new URL + whether a runtime override would
+    /// actually rewrite traffic).
+    var proposedSwap: RepairPatch? {
+        guard let patch, let data = patch.data(using: .utf8) else { return nil }
+        return try? JSONDecoder().decode(RepairPatch.self, from: data)
+    }
+}
+
+struct RepairPatch: Decodable {
+    let oldURL: String?
+    let newURL: String?
+    let runtimeOverride: Bool?
+    private enum K: String, CodingKey {
+        case oldURL = "old_url", newURL = "new_url", runtimeOverride = "runtime_override"
+    }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        oldURL = try c.decodeIfPresent(String.self, forKey: .oldURL)
+        newURL = try c.decodeIfPresent(String.self, forKey: .newURL)
+        runtimeOverride = try c.decodeIfPresent(Bool.self, forKey: .runtimeOverride)
+    }
+}
+
+// MARK: Per-source pipeline (`/api/admin/maintenance/source/:id`)
+
+struct SourcePipeline: Decodable {
+    let generatedAt: String?
+    let source: PipelineSource
+    let fetchLog: [FetchRun]
+    let anomalies: [AnomalyRow]
+    let repairs: [RepairRow]
+    private enum K: String, CodingKey {
+        case generatedAt = "generated_at", source, fetchLog = "fetch_log", anomalies, repairs
+    }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        generatedAt = try c.decodeIfPresent(String.self, forKey: .generatedAt)
+        source = try c.decode(PipelineSource.self, forKey: .source)
+        fetchLog = (try? c.decode([FetchRun].self, forKey: .fetchLog)) ?? []
+        anomalies = (try? c.decode([AnomalyRow].self, forKey: .anomalies)) ?? []
+        repairs = (try? c.decode([RepairRow].self, forKey: .repairs)) ?? []
+    }
+}
+
+struct PipelineSource: Decodable {
+    let id: String
+    let name: String?
+    let category: String?
+    let type: String?
+    let url: String?
+    let status: String?
+    let lastCheck: String?
+    let lastSuccess: String?
+    let responseTimeMs: Int?
+    let recordsCount: Int?
+    let errorMessage: String?
+    let quarantine: QuarantineState?
+    private enum K: String, CodingKey {
+        case id, name, category, type, url, status
+        case lastCheck = "last_check", lastSuccess = "last_success"
+        case responseTimeMs = "response_time_ms", recordsCount = "records_count"
+        case errorMessage = "error_message", quarantine
+    }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        id = try c.decode(String.self, forKey: .id)
+        name = try c.decodeIfPresent(String.self, forKey: .name)
+        category = try c.decodeIfPresent(String.self, forKey: .category)
+        type = try c.decodeIfPresent(String.self, forKey: .type)
+        url = try c.decodeIfPresent(String.self, forKey: .url)
+        status = try c.decodeIfPresent(String.self, forKey: .status)
+        lastCheck = try c.decodeIfPresent(String.self, forKey: .lastCheck)
+        lastSuccess = try c.decodeIfPresent(String.self, forKey: .lastSuccess)
+        responseTimeMs = try c.decodeIfPresent(Int.self, forKey: .responseTimeMs)
+        recordsCount = try c.decodeIfPresent(Int.self, forKey: .recordsCount)
+        errorMessage = try c.decodeIfPresent(String.self, forKey: .errorMessage)
+        quarantine = try c.decodeIfPresent(QuarantineState.self, forKey: .quarantine)
+    }
+}
+
+struct QuarantineState: Decodable {
+    let at: String?
+    let until: String?
+    let reason: String?
+    let active: Bool?
+}
+
+struct FetchRun: Decodable, Identifiable {
+    let id: Int?
+    let timestamp: String?
+    let status: String?
+    let recordsFetched: Int?
+    let durationMs: Int?
+    let error: String?
+    private enum K: String, CodingKey {
+        case id, timestamp, status, recordsFetched = "records_fetched", durationMs = "duration_ms", error
+    }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        id = try c.decodeIfPresent(Int.self, forKey: .id)
+        timestamp = try c.decodeIfPresent(String.self, forKey: .timestamp)
+        status = try c.decodeIfPresent(String.self, forKey: .status)
+        recordsFetched = try c.decodeIfPresent(Int.self, forKey: .recordsFetched)
+        durationMs = try c.decodeIfPresent(Int.self, forKey: .durationMs)
+        error = try c.decodeIfPresent(String.self, forKey: .error)
+    }
+    var ok: Bool { (status ?? "").lowercased() == "ok" }
+}
+
+struct AnomalyRow: Decodable, Identifiable {
+    let id: Int
+    let fetchLogId: Int?
+    let verdict: String?
+    let reason: String?
+    let evidence: String?
+    let escalationLevel: Int?
+    let createdAt: String?
+    let resolvedAt: String?
+    let resolution: String?
+    let triageClass: String?
+    let triageConfidence: Double?
+    let triageEvidence: String?
+    let triageSuggestedFix: String?
+    let triagedAt: String?
+    let triageModel: String?
+    private enum K: String, CodingKey {
+        case id, fetchLogId = "fetch_log_id", verdict, reason, evidence
+        case escalationLevel = "escalation_level", createdAt = "created_at"
+        case resolvedAt = "resolved_at", resolution
+        case triageClass = "triage_class", triageConfidence = "triage_confidence"
+        case triageEvidence = "triage_evidence", triageSuggestedFix = "triage_suggested_fix"
+        case triagedAt = "triaged_at", triageModel = "triage_model"
+    }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        id = try c.decode(Int.self, forKey: .id)
+        fetchLogId = try c.decodeIfPresent(Int.self, forKey: .fetchLogId)
+        verdict = try c.decodeIfPresent(String.self, forKey: .verdict)
+        reason = try c.decodeIfPresent(String.self, forKey: .reason)
+        evidence = try c.decodeIfPresent(String.self, forKey: .evidence)
+        escalationLevel = try c.decodeIfPresent(Int.self, forKey: .escalationLevel)
+        createdAt = try c.decodeIfPresent(String.self, forKey: .createdAt)
+        resolvedAt = try c.decodeIfPresent(String.self, forKey: .resolvedAt)
+        resolution = try c.decodeIfPresent(String.self, forKey: .resolution)
+        triageClass = try c.decodeIfPresent(String.self, forKey: .triageClass)
+        triageConfidence = try c.decodeIfPresent(Double.self, forKey: .triageConfidence)
+        triageEvidence = try c.decodeIfPresent(String.self, forKey: .triageEvidence)
+        triageSuggestedFix = try c.decodeIfPresent(String.self, forKey: .triageSuggestedFix)
+        triagedAt = try c.decodeIfPresent(String.self, forKey: .triagedAt)
+        triageModel = try c.decodeIfPresent(String.self, forKey: .triageModel)
+    }
+    var isOpen: Bool { (resolvedAt ?? "").isEmpty }
+    var isTriaged: Bool { !(triagedAt ?? "").isEmpty }
+}
+
+/// Generic `{ok:true,…}` action response. Extra keys (new_url, status, …) are
+/// surfaced when present and ignored otherwise.
+struct OkResult: Decodable {
+    let ok: Bool?
+    let status: String?
+    let newURL: String?
+    private enum K: String, CodingKey { case ok, status, newURL = "new_url" }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        ok = try c.decodeIfPresent(Bool.self, forKey: .ok)
+        status = try c.decodeIfPresent(String.self, forKey: .status)
+        newURL = try c.decodeIfPresent(String.self, forKey: .newURL)
     }
 }

@@ -44,18 +44,18 @@ struct CameraPopup: View {
             }
             .padding()
         }
-        .background(theme.surface.ignoresSafeArea())
+        .themedScreenBackground(theme)
         .navigationTitle("Camera")
-        .navigationBarTitleDisplayMode(.inline)
+        .compatInlineTitle()
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+            ToolbarItem(placement: .compatLeading) {
                 Button { saved.toggle(feature) } label: {
                     Image(systemName: saved.contains(id: feature.id) ? "star.fill" : "star")
                         .foregroundStyle(saved.contains(id: feature.id) ? theme.warning : theme.textMuted)
                 }
                 .accessibilityLabel(saved.contains(id: feature.id) ? "Remove from saved" : "Save")
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .compatPrimary) {
                 Button("Close") { dismiss() }
             }
         }
@@ -200,7 +200,7 @@ struct CameraPopup: View {
         case let n as Int:        return String(n)
         case let n as Double:     return String(n)
         case let n as NSNumber:   return n.stringValue
-        default:                  return String(describing: v!)
+        default:                  return v.map { String(describing: $0) } ?? "—"
         }
     }
 }

@@ -1,0 +1,11 @@
+# GBNF for post-repair payload sanity re-check — mirrors collectorRepair.js SANITY_SCHEMA.
+# Output: { looks_correct, reason }
+
+root ::= "{" ws "\"looks_correct\"" ws ":" ws bool ws "," ws "\"reason\"" ws ":" ws string ws "}"
+
+bool ::= "true" | "false"
+
+string ::= "\"" char* "\""
+char ::= [^"\\] | "\\" (["\\/bfnrt] | "u" hex hex hex hex)
+hex ::= [0-9a-fA-F]
+ws ::= [ \t\n]*

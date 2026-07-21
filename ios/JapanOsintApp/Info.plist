@@ -23,5 +23,16 @@
 	<string>Optional: center the map on your current location.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Authenticate to unlock Settings and to reveal or modify API keys.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>RCorp.JapanOsintApp.auth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>japanosint</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

@@ -157,16 +157,33 @@ struct CameraFeedView: View {
             case .empty:
                 placeholder(showing: ProgressView())
             case .success(let img):
-                img.resizable()
-                    .aspectRatio(contentMode: style == .full ? .fit : .fill)
-                    .frame(maxWidth: .infinity, maxHeight: style == .full ? .infinity : 180)
-                    .clipped()
-                    .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-                    .overlay(alignment: .topTrailing) {
-                        if !showsHeader {
-                            liveDot.padding(8)
-                        }
+                Group {
+                    if style == .full {
+                        img.resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .clipped()
+                    } else {
+                        // Pin the layout box to a fixed 16:9 band (matching the
+                        // iframe / video paths) first, then overlay and clip the
+                        // image. `.scaledToFill()` directly on the image inflates
+                        // its intrinsic layout size to the scaled bitmap, and
+                        // `.clipped()` only clips drawing — not layout — so a wide
+                        // thumbnail would push the card past its grid cell and
+                        // overlap the next column.
+                        Color.clear
+                            .aspectRatio(16.0 / 9.0, contentMode: .fit)
+                            .frame(maxWidth: .infinity)
+                            .overlay(img.resizable().scaledToFill())
+                            .clipped()
                     }
+                }
+                .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+                .overlay(alignment: .topTrailing) {
+                    if !showsHeader {
+                        liveDot.padding(8)
+                    }
+                }
             case .failure:
                 placeholder(showing: statusStack(icon: "video.slash", text: "Couldn't load"))
             @unknown default: EmptyView()
@@ -218,12 +235,24 @@ struct CameraFeedView: View {
             .accessibilityLabel("Live")
     }
 
+    @ViewBuilder
     private func placeholder<Content: View>(showing content: Content) -> some View {
-        Rectangle()
-            .fill(theme.surfaceElevated)
-            .frame(maxWidth: .infinity, minHeight: minHeight)
-            .overlay(content)
-            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+        if style == .full {
+            Rectangle()
+                .fill(theme.surfaceElevated)
+                .frame(maxWidth: .infinity, minHeight: minHeight)
+                .overlay(content)
+                .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+        } else {
+            // Match the compact image / iframe / video 16:9 band so every grid
+            // card is the same height regardless of feed state.
+            Rectangle()
+                .fill(theme.surfaceElevated)
+                .aspectRatio(16.0 / 9.0, contentMode: .fit)
+                .frame(maxWidth: .infinity)
+                .overlay(content)
+                .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+        }
     }
 
     // MARK: - URL builders

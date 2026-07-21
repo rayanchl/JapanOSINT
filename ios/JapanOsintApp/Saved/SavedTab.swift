@@ -31,7 +31,7 @@ struct SavedTab: View {
         var label: String { rawValue.capitalized }
     }
 
-    enum ImagePresence: String, CaseIterable, Identifiable {
+    enum ImagePresence: String, FilterChoice {
         case all, withImage, noImage
         var id: String { rawValue }
         var label: String {
@@ -57,34 +57,29 @@ struct SavedTab: View {
                 case .map:  mapWithPicker
                 }
             }
-            .background(theme.surface.ignoresSafeArea())
+            .themedScreenBackground(theme)
             // Blank the large title in map mode and switch to inline so the
             // map gets the full viewport. The previous approach (.toolbar(.hidden)
             // + a floating chevron overlay) pulled SwiftUI into a toolbar-
             // transition cycle that blocked the body rebuild, so the mode
             // picker visually flipped segments without swapping the view.
             .navigationTitle(mode == .map ? "" : "Saved")
-            .navigationBarTitleDisplayMode(mode == .map ? .inline : .automatic)
+            .compatInlineTitle(mode == .map)
             .searchable(
                 text: $searchText,
-                placement: .navigationBarDrawer(displayMode: .always),
+                placement: .compatDrawer,
                 prompt: "Search saved"
             )
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
+                ToolbarItem(placement: .compatPrimary) {
+                    FilterToolbarButton(isActive: filtersAreActive) {
                         showFilters = true
-                    } label: {
-                        Image(systemName: filtersAreActive
-                              ? "line.3.horizontal.decrease.circle.fill"
-                              : "line.3.horizontal.decrease.circle")
                     }
-                    .accessibilityLabel("Filters")
                 }
             }
             .sheet(item: $selectedFeature) { feat in
                 NavigationStack { featurePopup(for: feat, showsMiniMap: true) }
-                    .presentationDetents([.medium, .large])
+                    .compatSheetSizing(.medium)
             }
             .sheet(isPresented: $showFilters) { filtersSheet }
         }
@@ -248,8 +243,9 @@ struct SavedTab: View {
     }
 
     private func openInAppleMaps(_ item: SavedItem) {
-        let placemark = MKPlacemark(coordinate: item.coordinate)
-        let mapItem = MKMapItem(placemark: placemark)
+        let location = CLLocation(latitude: item.coordinate.latitude,
+                                  longitude: item.coordinate.longitude)
+        let mapItem = MKMapItem(location: location, address: nil)
         mapItem.name = item.displayName
         mapItem.openInMaps()
     }
@@ -387,60 +383,26 @@ struct SavedTab: View {
     // MARK: - Filters sheet
 
     private var filtersSheet: some View {
-        NavigationStack {
-            Form {
-                Section("Image") {
-                    Picker("Image", selection: $imagePresence) {
-                        ForEach(ImagePresence.allCases) { ip in
-                            Text(ip.label).tag(ip)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                }
-                Section("Layer") {
-                    if availableLayers.isEmpty {
-                        Text("No saved items yet")
-                            .foregroundStyle(theme.textMuted)
-                    } else {
-                        ForEach(availableLayers, id: \.layerId) { entry in
-                            Button { toggleLayer(entry.layerId) } label: {
-                                HStack(spacing: 8) {
-                                    Image(systemName: registry.symbol(for: entry.layerId))
-                                        .foregroundStyle(registry.color(for: entry.layerId))
-                                        .frame(width: 22)
-                                    Text(LayerRegistry.displayName(forId: entry.layerId))
-                                        .foregroundStyle(theme.text)
-                                    Spacer()
-                                    Text("\(entry.count)")
-                                        .font(.caption2.monospaced())
-                                        .foregroundStyle(theme.textMuted)
-                                    if selectedLayers.contains(entry.layerId) {
-                                        Image(systemName: "checkmark")
-                                            .foregroundStyle(theme.accent)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                if filtersAreActive {
-                    Section {
-                        Button("Reset filters", role: .destructive) {
-                            selectedLayers.removeAll()
-                            imagePresence = .all
-                        }
-                    }
-                }
-            }
-            .navigationTitle("Filters")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") { showFilters = false }
-                }
-            }
+        FilterSheet(
+            isActive: filtersAreActive,
+            onReset: {
+                selectedLayers.removeAll()
+                imagePresence = .all
+            },
+            onDone: { showFilters = false }
+        ) {
+            FilterSegmentedSection(title: "Image", selection: $imagePresence)
+            FilterMultiSelectSection(
+                title: "Layer",
+                items: availableLayers.map(\.layerId),
+                emptyText: "No saved items yet",
+                label: { LayerRegistry.displayName(forId: $0) },
+                symbol: { (registry.symbol(for: $0), registry.color(for: $0)) },
+                count: { id in availableLayers.first { $0.layerId == id }?.count ?? 0 },
+                isSelected: { selectedLayers.contains($0) },
+                toggle: { toggleLayer($0) }
+            )
         }
-        .presentationDetents([.medium, .large])
     }
 
     // MARK: - Empty state

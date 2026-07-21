@@ -5,13 +5,15 @@ import CoreLocation
 /// Tab indices for the top-level shell. Stored as Int on `selectedTab` so the
 /// existing `Int` binding stays — the enum is just there to keep references
 /// readable (no more `selectedTab = 9` magic-number lines).
-enum AppTab: Int { case map = 0, intel, saved, console }
+// `search` appended LAST so existing raw values (map=0…console=3) are
+// unchanged — no `selectedTab` int call-site shifts.
+enum AppTab: Int { case map = 0, intel, saved, console, search }
 
 /// Destinations inside the Console hub (the catch-all tab for everything that
 /// isn't Map / Intel / Saved). The hub uses a `NavigationStack(path:)` so
 /// cross-tab actions like "open this API key" can deep-link straight in.
 enum ConsoleDestination: Hashable {
-    case sources, database, scheduler, cameras, followLog, apiKeys, alerts, settings
+    case sources, database, scheduler, cameras, followLog, apiKeys, alerts, settings, workspace, admin
 }
 
 /// Cross-tab coordinator. Tabs other than Map (Camera Discovery, etc.) push

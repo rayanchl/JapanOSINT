@@ -15,12 +15,14 @@ import SwiftUI
 struct AlertEditor: View {
     let onSave: (AlertRule) -> Void
 
-    @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @Environment(\.theme) private var theme
     @Environment(\.dismiss) private var dismiss
 
     @State private var name: String
     @State private var enabled: Bool
+    @State private var mode: String         // "fts" | "llm"
+    @State private var nlQuery: String
     @State private var q: String
     @State private var sourcesCSV: String
     @State private var tagsCSV: String
@@ -29,6 +31,7 @@ struct AlertEditor: View {
     @State private var stormCap: Int
 
     @State private var saving = false
+    @State private var suggesting = false
     @State private var error: String?
 
     private let ruleId: String
@@ -40,6 +43,8 @@ struct AlertEditor: View {
         self.isCreate = rule.id.isEmpty
         _name = State(initialValue: rule.name)
         _enabled = State(initialValue: rule.enabled)
+        _mode = State(initialValue: rule.predicate.mode ?? "fts")
+        _nlQuery = State(initialValue: rule.predicate.nl_query ?? "")
         _q = State(initialValue: rule.predicate.q ?? "")
         _sourcesCSV = State(initialValue: (rule.predicate.source_ids ?? []).joined(separator: ", "))
         _tagsCSV = State(initialValue: (rule.predicate.tags_any ?? []).joined(separator: ", "))
@@ -53,30 +58,51 @@ struct AlertEditor: View {
             Form {
                 Section("Rule") {
                     TextField("Name", text: $name)
-                        .textInputAutocapitalization(.sentences)
                     if !isCreate {
                         Toggle("Enabled", isOn: $enabled)
                     }
                 }
 
                 Section {
+                    Picker("Query type", selection: $mode) {
+                        Text("FTS").tag("fts")
+                        Text("LLM pipeline").tag("llm")
+                    }
+                    .pickerStyle(.segmented)
+
+                    if mode == "llm" {
+                        TextField("Natural-language query (e.g. phishing targeting JP banks)",
+                                  text: $nlQuery)
+                            .compatNoAutocap()
+                        Button {
+                            Task { await suggestFTS() }
+                        } label: {
+                            Label(suggesting ? "Suggesting…" : "Suggest FTS query",
+                                  systemImage: "sparkles")
+                        }
+                        .disabled(suggesting ||
+                                  nlQuery.trimmingCharacters(in: .whitespaces).isEmpty)
+                    }
+
                     TextField("FTS query (e.g. phishing AND tld:.jp)", text: $q)
-                        .textInputAutocapitalization(.never)
+                        .compatNoAutocap()
                         .autocorrectionDisabled()
                         .font(.system(.body, design: .monospaced))
                         .fontDesign(.monospaced)
                     TextField("Source IDs (comma-separated)", text: $sourcesCSV)
-                        .textInputAutocapitalization(.never)
+                        .compatNoAutocap()
                         .autocorrectionDisabled()
                         .font(.system(.body, design: .monospaced))
                         .fontDesign(.monospaced)
                     TextField("Tags any-of (comma-separated)", text: $tagsCSV)
-                        .textInputAutocapitalization(.never)
+                        .compatNoAutocap()
                         .autocorrectionDisabled()
                 } header: {
                     Text("Match when…")
                 } footer: {
-                    Text("All filled fields combine with AND. Leave everything blank to match every new item (use a tight throttle if you do).")
+                    Text(mode == "llm"
+                         ? "LLM mode runs the agentic search pipeline on your natural-language query (ingesting new intel as usual) and fires on items matching the FTS query below. Tap “Suggest FTS query” to have the model draft it, then edit freely."
+                         : "All filled fields combine with AND. Leave everything blank to match every new item (use a tight throttle if you do).")
                         .font(.caption2)
                 }
 
@@ -129,12 +155,14 @@ struct AlertEditor: View {
                 }
             }
             .navigationTitle(isCreate ? "New alert" : "Edit alert")
-            .navigationBarTitleDisplayMode(.inline)
+            .compatGroupedForm()
+            .themedScreenBackground(theme)
+            .compatInlineTitle()
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .compatLeading) {
                     Button("Cancel") { dismiss() }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .compatPrimary) {
                     Button(isCreate ? "Create" : "Save") {
                         Task { await save() }
                     }
@@ -142,7 +170,7 @@ struct AlertEditor: View {
                 }
             }
         }
-        .presentationDetents([.large])
+        .compatSheetSizing(.large)
     }
 
     // MARK: - Channel row editor
@@ -161,24 +189,32 @@ struct AlertEditor: View {
                 Spacer()
             }
             TextField(
-                ch.type == .email ? "email@example.com" : "https://example.com/hook",
+                "",
                 text: Binding(
                     get: { channels[idx].target },
                     set: { channels[idx].target = $0 }
-                )
+                ),
+                prompt: Text(ch.type == .email ? "email@example.com"
+                                               : "https://example.com/hook")
+                    .foregroundColor(theme.accent)
             )
-            .textInputAutocapitalization(.never)
+            .compatNoAutocap()
             .autocorrectionDisabled()
-            .keyboardType(ch.type == .email ? .emailAddress : .URL)
+            .compatKeyboard(email: ch.type == .email)
             .font(.system(.body, design: .monospaced))
             .fontDesign(.monospaced)
 
             if ch.type == .webhook {
-                SecureField("Signing secret (≥16 chars)", text: Binding(
-                    get: { channels[idx].secret ?? "" },
-                    set: { channels[idx].secret = $0 }
-                ))
-                .textInputAutocapitalization(.never)
+                SecureField(
+                    "",
+                    text: Binding(
+                        get: { channels[idx].secret ?? "" },
+                        set: { channels[idx].secret = $0 }
+                    ),
+                    prompt: Text("Signing secret (≥16 chars)")
+                        .foregroundColor(theme.accent)
+                )
+                .compatNoAutocap()
                 .autocorrectionDisabled()
                 .font(.system(.body, design: .monospaced))
                 .fontDesign(.monospaced)
@@ -211,12 +247,17 @@ struct AlertEditor: View {
         }
 
         var predicate = AlertPredicate()
+        predicate.mode = mode
         let trimQ = q.trimmingCharacters(in: .whitespaces)
         if !trimQ.isEmpty { predicate.q = trimQ }
         let srcs = splitCSV(sourcesCSV)
         if !srcs.isEmpty { predicate.source_ids = srcs }
         let tags = splitCSV(tagsCSV)
         if !tags.isEmpty { predicate.tags_any = tags }
+        if mode == "llm" {
+            let nl = nlQuery.trimmingCharacters(in: .whitespaces)
+            if !nl.isEmpty { predicate.nl_query = nl }
+        }
 
         let rule = AlertRule(
             id: ruleId, name: trimmedName, enabled: enabled,
@@ -229,11 +270,34 @@ struct AlertEditor: View {
         )
 
         do {
-            let api = API(baseURL: settings.backendBaseURL)
+            let api = apiClient.api
             let saved = isCreate ? try await api.alertCreate(rule) : try await api.alertUpdate(rule)
             onSave(saved)
             Haptics.success()
             dismiss()
+        } catch let e {
+            error = e.localizedDescription
+            Haptics.error()
+        }
+    }
+
+    /// Ask the backend's LLM suggester to draft an FTS query from the
+    /// natural-language prompt; the user can then accept or edit it. This is
+    /// the "choose the FTS search done by the LLM" step.
+    private func suggestFTS() async {
+        let nl = nlQuery.trimmingCharacters(in: .whitespaces)
+        guard !nl.isEmpty else { return }
+        suggesting = true
+        defer { suggesting = false }
+        do {
+            let suggestions = try await apiClient.api.searchSuggest(nl)
+            if let first = suggestions.first(where: { !$0.trimmingCharacters(in: .whitespaces).isEmpty }) {
+                q = first
+                error = nil
+                Haptics.success()
+            } else {
+                error = "No FTS suggestion returned"
+            }
         } catch let e {
             error = e.localizedDescription
             Haptics.error()
