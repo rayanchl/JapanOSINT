@@ -17,6 +17,8 @@
 #include "dataapi.h"
 #include "transitapi.h"
 #include "camera_store.h"
+#include "breach_store.h"
+#include "breach_jobs.h"
 #include "../third_party/mongoose.h"
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
@@ -45,6 +47,12 @@ static void reply_json(struct mg_connection *c, int code, const char *body) {
     "%s", body);
 }
 
+/* String field of a cJSON object, or NULL. */
+static const char *jget_str(const cJSON *o, const char *k) {
+  const cJSON *v = o ? cJSON_GetObjectItem(o, k) : NULL;
+  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
+}
+
 /* GET /api/sources/stats — aggregate counts from the sources table. */
 static void route_sources_stats(struct mg_connection *c) {
   int total = 0, online = 0, offline = 0;
@@ -62,37 +70,6 @@ static void route_sources_stats(struct mg_connection *c) {
   snprintf(body, sizeof body,
            "{\"total\":%d,\"online\":%d,\"offline\":%d}", total, online, offline);
   reply_json(c, 200, body);
-}
-
-/* MG_EV_POLL drives the SSE probe (proves incremental streaming through the
- * C server). State packed in c->data: [0]=mode 'S', [1..4]=tick count,
- * [5..12]=next-due ms. */
-static void sse_probe_start(struct mg_connection *c) {
-  mg_printf(c,
-    "HTTP/1.1 200 OK\r\n"
-    "Content-Type: text/event-stream\r\n"
-    "Cache-Control: no-cache, no-transform\r\n"
-    "Connection: keep-alive\r\n"
-    "X-Accel-Buffering: no\r\n\r\n");
-  c->is_resp = 0;                 /* keep open for manual streaming */
-  c->data[0] = 'S';
-  *(int *)&c->data[1] = 0;
-  *(uint64_t *)&c->data[8] = mg_millis();
-}
-
-static void sse_probe_poll(struct mg_connection *c) {
-  if (c->data[0] != 'S') return;
-  uint64_t now = mg_millis();
-  if (now < *(uint64_t *)&c->data[8]) return;
-  int n = *(int *)&c->data[1] + 1;
-  *(int *)&c->data[1] = n;
-  *(uint64_t *)&c->data[8] = now + 400;
-  mg_printf(c, "event: tick\r\ndata: {\"n\":%d,\"ts\":%llu}\n\n",
-            n, (unsigned long long)now);
-  if (n >= 5) {
-    mg_printf(c, "event: close\r\ndata: {}\n\n");
-    c->is_draining = 1;
-  }
 }
 
 /* /api/search/stream/:id — pre-auth SSE (UUID = capability). Port of
@@ -256,7 +233,7 @@ static char *intel_items_run(struct mg_http_message *hm) {
 }
 
 static void fn(struct mg_connection *c, int ev, void *ev_data) {
-  if (ev == MG_EV_POLL) { sse_probe_poll(c); search_stream_poll(c); return; }
+  if (ev == MG_EV_POLL) { search_stream_poll(c); return; }
   if (ev == MG_EV_CLOSE) { search_stream_close(c); return; }
   if (ev == MG_EV_WAKEUP) {            /* deferred suggest reply (off-loop LLM) */
     struct mg_str *d = (struct mg_str *) ev_data;
@@ -277,8 +254,6 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     reply_json(c, 200, body);
     return;
   }
-  if (starts(u, "/api/_sse_probe")) { sse_probe_start(c); return; }
-
   /* SSE search stream is pre-auth: EventSource can't send Authorization;
    * the unguessable request_id is the capability (== routes/search.js). */
   { char sid[64];
@@ -526,7 +501,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       char lim[16] = {0};
       int hv = mg_http_get_var(&hm->query, "limit", lim, sizeof lim);
       char *body = miscapi_follow_recent(hv > 0 ? atoi(lim) : 500);
-      reply_json(c, 200, body); free(body); return;
+      reply_json(c, 501, body); free(body); return;
     }
 
     /* ---- /api/admin/* and /api/db/* — requirePlatformOperator ---- */
@@ -539,7 +514,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (oc != 0)    { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
 
       if (eq(u,"/api/admin/restart")) {
-        reply_json(c,200,"{\"ok\":true,\"restarting\":false}"); return;
+        reply_json(c,501,"{\"error\":\"not_implemented\",\"detail\":"
+          "\"restart is not supported by the native server\"}"); return;
       }
       if (eq(u,"/api/admin/maintenance")) {
         char hv[16]={0}; int hh=mg_http_get_var(&hm->query,"hours",hv,sizeof hv);
@@ -578,6 +554,37 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           if (!is_post){ reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
           b=maintenance_requeue_anomaly(g_db,atol(idb),&st);
           reply_json(c,st,b); free(b); return;
+        }
+      }
+      /* ---- /api/admin/breach/* — one-shot corpus fetch / ingest (async jobs)
+       * + job status. Ingest/fetch run on detached threads (own DB connection),
+       * so a multi-GB job never blocks the event loop. Operator-gated above. */
+      if (eq(u,"/api/admin/breach/ingest") || eq(u,"/api/admin/breach/fetch")) {
+        if (mg_strcmp(hm->method,mg_str("POST"))!=0) {
+          reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+        char *body=NULL;
+        if (hm->body.len) { body=malloc(hm->body.len+1);
+          if (body){ memcpy(body,hm->body.buf,hm->body.len); body[hm->body.len]=0; } }
+        cJSON *j = body ? cJSON_Parse(body) : NULL;
+        free(body);
+        int st=200; char *rb=NULL;
+        if (eq(u,"/api/admin/breach/ingest")) {
+          int mat = j && cJSON_IsTrue(cJSON_GetObjectItem(j,"materialize"));
+          int dry = j && cJSON_IsTrue(cJSON_GetObjectItem(j,"dry_run"));
+          rb = breach_job_ingest(jget_str(j,"source_id"), jget_str(j,"path"),
+                                 jget_str(j,"type"), mat, dry, &st);
+        } else {
+          rb = breach_job_fetch(jget_str(j,"source_id"), jget_str(j,"url"), &st);
+        }
+        if (j) cJSON_Delete(j);
+        reply_json(c,st,rb); free(rb); return;
+      }
+      if (eq(u,"/api/admin/breach/jobs")) {
+        char *b=breach_job_status(NULL); reply_json(c,200,b); free(b); return;
+      }
+      { char jid[32]={0};
+        if (seg(u,"/api/admin/breach/jobs/","",jid,sizeof jid)) {
+          char *b=breach_job_status(jid); reply_json(c,200,b); free(b); return;
         }
       }
       if (eq(u,"/api/db/tables")) {
@@ -628,6 +635,24 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       char lv[16]={0}; int hl=mg_http_get_var(&hm->query,"lod",lv,sizeof lv);
       int status=200; char *b=geoproxy_plateau_tilesets(hl>0?atoi(lv):1,&status);
       reply_json(c,status,b); free(b); return;
+    }
+
+    /* GET /api/breach/search?q=&type=&limit= — search materialized breach
+     * datapoints. Breach data is sensitive, so gate it like /api/admin (platform
+     * operator). Returns metadata only; leaked secrets never cross this path. */
+    if (eq(u,"/api/breach/search")) {
+      int oc = opgate_check(&usr);
+      if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
+      if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
+      if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+      char qv[256]={0}, tv[32]={0}, lv[16]={0};
+      int hq = mg_http_get_var(&hm->query,"q",qv,sizeof qv);
+      int ht = mg_http_get_var(&hm->query,"type",tv,sizeof tv);
+      int hl = mg_http_get_var(&hm->query,"limit",lv,sizeof lv);
+      if (hq<=0 && ht<=0) { reply_json(c,400,"{\"error\":\"q or type required\"}"); return; }
+      char *b = breach_search(g_db, hq>0?qv:NULL, ht>0?tv:NULL, hl>0?atoi(lv):0);
+      if (!b) { reply_json(c,400,"{\"error\":\"invalid breach query\"}"); return; }
+      reply_json(c,200,b); free(b); return;
     }
 
     /* ---- P7 Wave 3b: /api/alerts/* (tenant-scoped rule CRUD) ---- */
@@ -891,7 +916,12 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         memcpy(tq, hm->query.buf, ql); tq[ql] = 0;
       }
       char *body = transitapi(g_db, tp, tq);
-      if (body) { reply_json(c, 200, body); free(body); return; }
+      if (body) {
+        /* Unported transit routes (hydrate, station-boundaries) return a
+         * {"error":"not_implemented",...} body → send it as HTTP 501. */
+        int code = strstr(body, "\"error\":\"not_implemented\"") ? 501 : 200;
+        reply_json(c, code, body); free(body); return;
+      }
     }
 
 

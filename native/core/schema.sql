@@ -299,6 +299,29 @@ CREATE TABLE IF NOT EXISTS intel_items_fts_uid_map (
          uid   TEXT    NOT NULL PRIMARY KEY,
          rowid INTEGER NOT NULL
        ) WITHOUT ROWID;
+-- Breach corpus materialized as searchable intel. Dedicated lean table + its own
+-- FTS so billions of breach rows never dilute intel_items / operational search.
+-- Populated by core/breach_store.c (eager --materialize ingest). Passwords are
+-- hash-only (value IS NULL); plaintext secrets stay AES-GCM encrypted in the
+-- $JO_BREACH_DIR shard corpus and are reachable only via the reveal=1 path.
+CREATE TABLE IF NOT EXISTS breach_items (
+    id         INTEGER PRIMARY KEY,
+    keyid      TEXT NOT NULL UNIQUE,         -- "<type>:<sha1prefix>" (non-reversible)
+    type       TEXT NOT NULL,               -- email | username | phone | password
+    value      TEXT,                        -- cleartext identifier; NULL for passwords
+    source_id  TEXT NOT NULL,
+    hash       TEXT NOT NULL,               -- full SHA-1 hex (exact join to shard)
+    has_secret INTEGER NOT NULL DEFAULT 0,
+    count      INTEGER NOT NULL DEFAULT 1,
+    breaches   TEXT,
+    first_seen TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now'))
+  );
+CREATE INDEX IF NOT EXISTS breach_items_type_idx ON breach_items(type);
+CREATE VIRTUAL TABLE IF NOT EXISTS breach_fts USING fts5(
+    value,
+    content='breach_items', content_rowid='id',
+    tokenize='unicode61 remove_diacritics 1'
+  );
 CREATE TABLE IF NOT EXISTS llm_station_merges (
     uid_a       TEXT NOT NULL,
     uid_b       TEXT NOT NULL,

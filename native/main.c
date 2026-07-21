@@ -1,14 +1,20 @@
 /* JapanOSINT native backend — entry point.
- * P1: boot self-test (open DB, apply schema, integrity check, optional
- * llama-server health). The HTTP server / scheduler / sources arrive in
- * P3/P4. Usage: japanosint [--selftest] */
+ * Default (no flags): boot self-test (open DB, apply schema, integrity check,
+ * optional llama-server health) and exit. Real flags:
+ *   (default)             run the boot self-test and exit
+ *   --serve               run the HTTP server + background scheduler
+ *   --sched               run the scheduler loop in the foreground
+ *   --run <id> [entity]   run one registered source through the real sink
+ *   --list-sources        list the registered sources and exit
+ *   --ingest <id> <file> [--type email|username|phone|password|auto]
+ *                         offline breach-dump ingest (no DB, no network) */
 #include "core/db.h"
 #include "core/url_override.h"
 #include "core/httpclient.h"
 #include "core/llm.h"
-#include "core/fts.h"
 #include "core/httpd.h"
 #include "core/scheduler.h"
+#include "core/breach_index.h"
 #include "source.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -56,19 +62,54 @@ int main(int argc, char **argv) {
   for (int i = 1; i < argc; i++)
     if (!strcmp(argv[i], "--serve")) selftest = 0;
 
-  /* P2 parity harness: stdin lines -> segmented stdout (matches Node
-   * jpTokenizer.segmentForFts exactly). */
+  /* Offline breach-dump ingest (no DB, no network):
+   *   --ingest <source_id> <file> [--type email|username|phone|password|auto]
+   * Runs the streaming ingest pipeline (core/breach_index.c) into the sharded
+   * local index under $JO_BREACH_DIR. Password ingest expects Pwned Passwords
+   * "SHA1HEX:count" lines. See docs/breach-check-pipeline.md. */
   for (int i = 1; i < argc; i++) {
-    if (!strcmp(argv[i], "--wakati")) {
-      char *line = NULL; size_t cap = 0; ssize_t n;
-      while ((n = getline(&line, &cap, stdin)) != -1) {
-        if (n > 0 && line[n - 1] == '\n') line[n - 1] = '\0';
-        char *seg = fts_segment(line);
-        printf("%s\n", seg);
-        free(seg);
+    if (!strcmp(argv[i], "--ingest")) {
+      if (i + 2 >= argc) {
+        fprintf(stderr, "usage: --ingest <source_id> <file> "
+                        "[--type email|username|phone|password|auto] "
+                        "[--materialize] [--dry-run]\n");
+        return 2;
       }
-      free(line);
-      fts_shutdown();
+      const char *sid = argv[i + 1], *file = argv[i + 2];
+      breach_type t = BT_AUTO;
+      int materialize = 0, dry_run = 0;
+      for (int j = 1; j < argc; j++) {
+        if (!strcmp(argv[j], "--type") && j + 1 < argc) t = breach_type_parse(argv[j + 1]);
+        if (!strcmp(argv[j], "--materialize")) materialize = 1;
+        if (!strcmp(argv[j], "--dry-run")) dry_run = 1;
+      }
+      /* --materialize also indexes each datapoint as searchable intel in the
+       * breach_items table; without it, ingest stays offline/DB-free.
+       * --dry-run persists nothing and just projects the row/disk cost. */
+      db_handle mdb = {0};
+      db_handle *dbp = NULL;
+      if (materialize && !dry_run) {
+        if (db_open(&mdb, NULL, NULL) != 0) {
+          fprintf(stderr, "[ingest] cannot open database for --materialize\n");
+          return 1;
+        }
+        dbp = &mdb;
+      }
+      unsigned long long in = 0, nw = 0;
+      int rc = breach_index_ingest(sid, file, t, &in, &nw, dbp, materialize, dry_run);
+      if (dbp) db_close(&mdb);
+      if (rc != 0) { fprintf(stderr, "[ingest] cannot open %s\n", file); return 1; }
+      if (dry_run) {
+        /* rough breach_items footprint: ~150 B/row incl. the FTS index. */
+        double mb = (double)nw * 150.0 / (1024.0 * 1024.0);
+        printf("[ingest:dry-run] source=%s type=%s rows_in=%llu rows_new=%llu "
+               "est_breach_items=%llu est_disk=%.1f MB (nothing written)\n",
+               sid, breach_type_name(t), in, nw, nw, mb);
+      } else {
+        printf("[ingest] source=%s type=%s rows_in=%llu rows_new=%llu%s\n",
+               sid, breach_type_name(t), in, nw,
+               materialize ? " (materialized to breach_items)" : "");
+      }
       return 0;
     }
   }
