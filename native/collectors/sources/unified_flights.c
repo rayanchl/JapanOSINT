@@ -2,7 +2,7 @@
  * Port of server/src/collectors/unifiedFlights.js — a thin passthrough:
  * `return getSnapshot()` from planeAdsbPoller. The poller's OpenSky-live ⊕
  * adsb.lol fusion (mergeLiveByIcao + classifyMilitary) is reproduced by the
- * registered `plane-adsb` source; unified-flights just captures it and
+ * registered `flight-adsb` source; unified-flights just captures it and
  * re-emits under source_id `unified-flights` so /api/data/unified-flights +
  * the unified read-side work. Mirrors the concurrent session's bespoke
  * unified_ais_ships.c shape (lib/unified.h capture sink); no dedupe — the
@@ -16,7 +16,7 @@
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *raw = cJSON_CreateArray();
-  unified_capture(ctx, "plane-adsb", raw);   /* == planeAdsbPoller snapshot */
+  unified_capture(ctx, "flight-adsb", raw);   /* == flight-adsb snapshot */
   int n = geojson_emit_features(sink, "unified-flights", raw);
   cJSON_Delete(raw);
   fprintf(stderr, "[unified-flights] emitted %d\n", n);

@@ -144,7 +144,11 @@ static int pw_emit_github(intel_sink *sink, const char *q, const cJSON *u) {
   return e;
 }
 
-static int run_github(const source_ctx *ctx, intel_sink *sink, const char *q) {
+/* Exported (non-static) so PERSON_SEARCH (people_finder.c) can reuse this ONE
+ * richer implementation instead of a private lighter copy — the pivot then emits
+ * under the SAME remote_key scheme (GITHUB_USER|<login>) and the intel sink
+ * dedups by uid. Standalone GITHUB_USER behaviour is unchanged. */
+int pw_run_github(const source_ctx *ctx, intel_sink *sink, const char *q) {
   const char *hdrs[] = { "Accept: application/vnd.github+json",
                          "User-Agent: JapanOSINT/1.0", NULL };
   char *enc = jo_urlencode(q);
@@ -358,7 +362,10 @@ static int run_mastodon(const source_ctx *ctx, intel_sink *sink, const char *q) 
 }
 
 /* ---- Gravatar (email pivot only) ---------------------------------------- */
-static int run_gravatar(const source_ctx *ctx, intel_sink *sink, const char *q) {
+/* Exported (non-static) — shared with PERSON_SEARCH so gravatar intel converges
+ * on the GRAVATAR_GLOBAL|<hash> remote_key and dedups. Standalone
+ * GRAVATAR_GLOBAL behaviour is unchanged. */
+int pw_run_gravatar(const source_ctx *ctx, intel_sink *sink, const char *q) {
   /* Gravatar keys on md5(lowercased, trimmed email). Only an email pivot is
    * meaningful; a bare username → skip (honest empty). */
   if (!strchr(q, '@')) {
@@ -437,8 +444,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
   if (!q) return -1;
   const char *id = ctx->source_id;
-  if      (strcmp(id, "GRAVATAR_GLOBAL") == 0) run_gravatar(ctx, sink, q);
-  else if (strcmp(id, "GITHUB_USER")     == 0) run_github(ctx, sink, q);
+  if      (strcmp(id, "GRAVATAR_GLOBAL") == 0) pw_run_gravatar(ctx, sink, q);
+  else if (strcmp(id, "GITHUB_USER")     == 0) pw_run_github(ctx, sink, q);
   else if (strcmp(id, "GITLAB_USER")     == 0) run_gitlab(ctx, sink, q);
   else if (strcmp(id, "KEYBASE")         == 0) run_keybase(ctx, sink, q);
   else if (strcmp(id, "MASTODON_SEARCH") == 0) run_mastodon(ctx, sink, q);

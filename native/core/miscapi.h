@@ -28,7 +28,8 @@ char *miscapi_list_layers(void);
 char *miscapi_layer_geojson(const char *layer_id);
 
 /* GET /api/follow/recent — collector-tap history. The C scheduler keeps no
- * cross-process ring buffer yet, so this is an honest empty envelope. */
+ * cross-process ring buffer, so there is no backing store: returns a
+ * {"error":"not_implemented",...} body the caller sends with HTTP 501. */
 char *miscapi_follow_recent(int limit);
 
 #endif

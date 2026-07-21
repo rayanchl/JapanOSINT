@@ -209,11 +209,6 @@ static char *opensky_token(const source_ctx *ctx) {
   return tok;
 }
 
-static double arr_num(cJSON *a, int idx, double dflt) {
-  cJSON *v = cJSON_GetArrayItem(a, idx);
-  return is_num(v) ? v->valuedouble : dflt;
-}
-
 /* Returns cJSON array of Features, or NULL on failure (JS returns null). */
 static cJSON *try_opensky(const source_ctx *ctx) {
   char *tok = opensky_token(ctx);

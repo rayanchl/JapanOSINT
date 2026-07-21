@@ -32,7 +32,6 @@
 #include "../../source.h"
 #include "../../core/httpclient.h"
 #include "../../third_party/cJSON.h"
-#include <openssl/md5.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -106,35 +105,11 @@ static int ps_emit_data(intel_sink *sink, const char *service, const char *sourc
 
 /* ── real parsed-API providers (ported from OSINTsaas) ────────────────────── */
 
-static int ps_github(const source_ctx *ctx, intel_sink *sink, const char *name, const char *svc) {
-  char enc[256]; ps_urlenc(name, enc, sizeof enc);
-  char url[400];
-  snprintf(url, sizeof url, "https://api.github.com/search/users?q=%s&per_page=5", enc);
-  const char *tok = getenv("GITHUB_TOKEN");
-  char auth[300]; const char *hdr[3]; int hi = 0;
-  hdr[hi++] = "Accept: application/vnd.github+json";
-  if (tok && *tok) { snprintf(auth, sizeof auth, "Authorization: Bearer %s", tok); hdr[hi++] = auth; }
-  hdr[hi] = NULL;
-  cJSON *j = ps_get_json(ctx->http, url, hdr);
-  if (!j) return 0;
-  cJSON *items = cJSON_GetObjectItem(j, "items");
-  int emitted = 0, n = (items && cJSON_IsArray(items)) ? cJSON_GetArraySize(items) : 0;
-  for (int i = 0; i < n && i < 5; i++) {
-    cJSON *it = cJSON_GetArrayItem(items, i);
-    cJSON *login = cJSON_GetObjectItem(it, "login");
-    if (!login || !cJSON_IsString(login)) continue;
-    cJSON *hu = cJSON_GetObjectItem(it, "html_url");
-    cJSON *data = cJSON_CreateObject();
-    cJSON_AddStringToObject(data, "username", login->valuestring);
-    if (hu && cJSON_IsString(hu)) cJSON_AddStringToObject(data, "profile_url", hu->valuestring);
-    char rk[320], title[340];
-    snprintf(rk, sizeof rk, "person:%s:github:%s", name, login->valuestring);
-    snprintf(title, sizeof title, "%s — GitHub user", login->valuestring);
-    emitted += ps_emit_data(sink, svc, "GitHub", name, rk, title, login->valuestring, data);
-  }
-  cJSON_Delete(j);
-  return emitted;
-}
+/* GitHub and Gravatar are NOT reimplemented here — PERSON_SEARCH reuses the
+ * single richer implementation in people_world.c (pw_run_github /
+ * pw_run_gravatar, extern-declared below), which emits under the same
+ * GITHUB_USER|<login> / GRAVATAR_GLOBAL|<hash> remote_keys as the standalone
+ * GITHUB_USER / GRAVATAR_GLOBAL sources so the shared sink dedups by uid. */
 
 static int ps_wikipedia(const source_ctx *ctx, intel_sink *sink, const char *name, const char *svc) {
   char enc[256]; ps_urlenc(name, enc, sizeof enc);
@@ -177,41 +152,6 @@ static int ps_duckduckgo(const source_ctx *ctx, intel_sink *sink, const char *na
     snprintf(rk, sizeof rk, "person:%s:ddg", name);
     snprintf(title, sizeof title, "%s — DuckDuckGo", (hd && cJSON_IsString(hd)) ? hd->valuestring : name);
     emitted += ps_emit_data(sink, svc, "DuckDuckGo", name, rk, title, ab->valuestring, data);
-  }
-  cJSON_Delete(j);
-  return emitted;
-}
-
-static int ps_gravatar(const source_ctx *ctx, intel_sink *sink, const char *name, const char *svc) {
-  if (!strchr(name, '@')) return 0;                 /* email-only */
-  char low[256]; size_t li = 0;
-  for (const char *p = name; *p && li < sizeof low - 1; p++) low[li++] = (char)tolower((unsigned char)*p);
-  low[li] = 0;
-  unsigned char d[MD5_DIGEST_LENGTH];
-  MD5((const unsigned char *)low, strlen(low), d);
-  char hex[33];
-  for (int i = 0; i < MD5_DIGEST_LENGTH; i++) snprintf(hex + i * 2, 3, "%02x", d[i]);
-  char url[128];
-  snprintf(url, sizeof url, "https://en.gravatar.com/%s.json", hex);
-  const char *hdr[] = { "Accept: application/json", NULL };
-  cJSON *j = ps_get_json(ctx->http, url, hdr);
-  if (!j) return 0;
-  cJSON *entry = cJSON_GetObjectItem(j, "entry");
-  int emitted = 0;
-  if (entry && cJSON_IsArray(entry) && cJSON_GetArraySize(entry) > 0) {
-    cJSON *p = cJSON_GetArrayItem(entry, 0);
-    cJSON *dn = cJSON_GetObjectItem(p, "displayName");
-    cJSON *ab = cJSON_GetObjectItem(p, "aboutMe");
-    cJSON *loc = cJSON_GetObjectItem(p, "currentLocation");
-    cJSON *data = cJSON_CreateObject();
-    if (dn && cJSON_IsString(dn)) cJSON_AddStringToObject(data, "display_name", dn->valuestring);
-    if (ab && cJSON_IsString(ab)) cJSON_AddStringToObject(data, "about", ab->valuestring);
-    if (loc && cJSON_IsString(loc)) cJSON_AddStringToObject(data, "location", loc->valuestring);
-    char rk[320], title[340];
-    snprintf(rk, sizeof rk, "person:%s:gravatar", name);
-    snprintf(title, sizeof title, "%s — Gravatar profile", name);
-    emitted += ps_emit_data(sink, svc, "Gravatar", name, rk, title,
-                            (dn && cJSON_IsString(dn)) ? dn->valuestring : name, data);
   }
   cJSON_Delete(j);
   return emitted;
@@ -393,17 +333,23 @@ static int run_mansion(const source_ctx *ctx, intel_sink *sink);
 int jo_pep_run(const source_ctx *ctx, intel_sink *sink);
 int jo_watchlist_run(const source_ctx *ctx, intel_sink *sink);
 int jo_court_records_run(const source_ctx *ctx, intel_sink *sink);
+/* Shared GitHub/Gravatar implementations (people_world.c). Reused here so the
+ * pivot converges on the GITHUB_USER|<login> / GRAVATAR_GLOBAL|<hash> keys. */
+int pw_run_github(const source_ctx *ctx, intel_sink *sink, const char *q);
+int pw_run_gravatar(const source_ctx *ctx, intel_sink *sink, const char *q);
 
 /* ── PERSON_SEARCH: fused people finder ───────────────────────────────────── */
 static int person_run(const source_ctx *ctx, intel_sink *sink) {
   const char *name = ctx->entity;
   if (!name || !*name) return 0;
   int t = 0;
-  /* real parsed APIs */
-  t += ps_github(ctx, sink, name, "PERSON_SEARCH");
+  /* real parsed APIs — GitHub/Gravatar reuse the richer people_world.c code and
+   * emit under the GITHUB_USER|<login> / GRAVATAR_GLOBAL|<hash> keys so the sink
+   * dedups them against the standalone GITHUB_USER / GRAVATAR_GLOBAL sources. */
+  t += pw_run_github(ctx, sink, name);
   t += ps_wikipedia(ctx, sink, name, "PERSON_SEARCH");
   t += ps_duckduckgo(ctx, sink, name, "PERSON_SEARCH");
-  t += ps_gravatar(ctx, sink, name, "PERSON_SEARCH");
+  t += pw_run_gravatar(ctx, sink, name);
   t += ps_hackernews(ctx, sink, name, "PERSON_SEARCH");
   t += ps_stackoverflow(ctx, sink, name, "PERSON_SEARCH");
   t += ps_reddit(ctx, sink, name, "PERSON_SEARCH");

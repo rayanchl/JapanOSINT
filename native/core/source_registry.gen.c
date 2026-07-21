@@ -1,6 +1,7 @@
 /* GENERATED from server/src/utils/sourceRegistry.js — do not edit by hand.
    Deduplicated by id (registry had 427 rows, 7 duplicate
-   ids removed → 420 unique). For each colliding id the LAST
+   ids removed → 420 unique; 5 breach-probe stubs since removed → 415).
+   For each colliding id the LAST
    definition is kept (the canonical, more-specific one); single C
    backend, parity with the retired Node server no longer required.
    Fields: id,name,name_ja,category,type,url,description,license,
@@ -367,11 +368,7 @@ static const src_meta M[]={
 {"grid-usage-realtime","10-grid 5-min supply/demand CSVs","10エリア 5分電力CSV","infrastructure","api","https://www.tepco.co.jp/forecast/html/images/juyo-d-j.csv","Per-grid 5-minute supply/demand CSV feeds — TEPCO, KEPCO, Chuden, Tohoku, Kyuden, HEPCO, Yonden, Rikuden, Chugoku, Okiden",NULL,"grid-usage",1,300},
 {"telegeography-cables","TeleGeography Submarine Cables (JP-landing)","TeleGeography 海底ケーブル","infrastructure","api","https://www.submarinecablemap.com/api/v3/cable/cable-geo.json","TeleGeography canonical submarine cable + landing-point geojson, filtered to JP bbox. CC-BY",NULL,"submarine-cables",1,604800},
 {"intelx-leaks","IntelX leaks search","IntelX リーク検索","cyber","api","https://2.intelx.io/intelligent/search","IntelX paste / leak / darknet search filtered to JP TLDs / ASN / kanji corp names. Free tier ≈ 50 reqs/month. Requires INTELX_KEY",NULL,"intelx-leaks",1,21600},
-{"dehashed-breach","DeHashed (read-only)","DeHashed 漏洩検索","cyber","api","https://api.dehashed.com/search","Credential breach lookup by JP corp domain (mufg, ntt, gov.jp…). Requires DEHASHED_USER + DEHASHED_KEY (paid)",NULL,"dehashed-breach",0,86400},
-{"leakcheck-breach","LeakCheck.io","LeakCheck.io","cyber","api","https://leakcheck.io/api","Multi-breach lookup keyed by JP corp domains. Requires LEAKCHECK_KEY (paid)",NULL,"leakcheck-breach",0,86400},
-{"hibp-breach","HaveIBeenPwned (domain)","HaveIBeenPwned 漏洩","cyber","api","https://haveibeenpwned.com/api/v3/breaches","Public breach catalogue, JP-domain filter. Requires HIBP_KEY ($3.95/mo)",NULL,"hibp-breach",0,86400},
 {"psbdmp-pastes","PSBDMP / Pastebin mirror","PSBDMP / Pastebin","cyber","api","https://psbdmp.ws/","Pastebin mirror search for JP TLDs / ASN / kanji corp names. Anonymous",NULL,"psbdmp-pastes",1,3600},
-{"breach-directory","BreachDirectory.org (RapidAPI)","BreachDirectory (RapidAPI)","cyber","api","https://breachdirectory.org/","Email/username breach lookup via RapidAPI. Requires RAPIDAPI_KEY",NULL,"breach-directory",0,86400},
 {"telegram-jp-channels","Telegram public channels (JP)","Telegram 日本パブリックチャネル","cyber","scraped","https://tgstat.com/","Public Telegram channels (~30 JP-relevant) — leaks / doxbins / OPSEC chatter. Requires TG_API_ID + TG_API_HASH for MTProto pulls",NULL,"telegram-jp-channels",0,1800},
 {"discord-jp-servers","Discord public servers (JP)","Discord パブリックサーバー (日本)","cyber","scraped","https://disboard.org/","Disboard / top.gg JP-tagged servers — invite metadata, member counts. ToS-rate-limited",NULL,"discord-jp-servers",1,86400},
 {"securitytrails-history","SecurityTrails historical DNS","SecurityTrails DNS履歴","cyber","api","https://api.securitytrails.com/v1/history","A/AAAA/MX/TXT history per JP-high-value target. Requires SECURITYTRAILS_KEY",NULL,"securitytrails-history",0,86400},
@@ -380,7 +377,6 @@ static const src_meta M[]={
 {"gitlab-bitbucket-leaks","GitLab + Bitbucket leak hunt","GitLab/Bitbucket 漏洩","cyber","api","https://gitlab.com/api/v4/search","Public code search across GitLab + Bitbucket for JP-domain creds / .env. Requires GITLAB_TOKEN + BITBUCKET_TOKEN",NULL,"gitlab-bitbucket-leaks",1,21600},
 {"doxbin-mirrors","Doxbin / Doxagram mirrors","Doxbin ミラー","cyber","scraped","internal://doxbin-mirrors","Archive.ph + tor-onion Doxbin mirrors — sensitive: implement only behind strict gating. Register-only",NULL,"doxbin-mirrors",1,86400},
 {"nitter-mirrors","Nitter mirror network","Nitter ミラー","social","scraped","https://nitter.net/","X/Twitter RSS proxy via Nitter instances — keyless alternative to twitter-geo paid API",NULL,"nitter-mirrors",1,1800},
-{"snusbase-breach","Snusbase combolist","Snusbase コンボリスト","cyber","api","https://snusbase.com/v3/search","Combolist/breach lookup by JP corp domain. Requires SNUSBASE_KEY (paid)",NULL,"snusbase-breach",0,86400},
 {"russian-market-stealer","Stealer cloud mirrors (Russian Market)","Stealer クラウド (RU市場)","cyber","scraped","internal://russian-market-stealer","Tor / proxy access to Russian-Market-style stealer dumps targeting JP banks / exchanges. Highly sensitive — register-only with manual gating",NULL,"russian-market-stealer",1,86400},
 {"instagram-locations","Instagram public location pages","Instagram 公開ロケーション","social","scraped","https://www.instagram.com/explore/locations/","Top posts/reels by JP location ID. Requires session cookie; ToS-rate-limited",NULL,"instagram-locations",1,86400},
 {"tiktok-jp-discover","TikTok JP discover","TikTok 日本 ディスカバー","social","scraped","https://www.tiktok.com/discover","JP-locale trending hashtags + sounds + geo-tagged posts",NULL,"tiktok-jp-discover",1,1800},

@@ -30,6 +30,15 @@ static char *err_json(const char *msg) {        /* {"error":"<msg>"} */
   return dup_json(o);
 }
 
+/* {"error":"not_implemented","detail":"<detail>"} — the httpd transit
+ * dispatcher recognizes this body and sends it with HTTP 501. */
+static char *err_not_implemented(const char *detail) {
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddStringToObject(o, "error", "not_implemented");
+  cJSON_AddStringToObject(o, "detail", detail);
+  return dup_json(o);
+}
+
 /* hex 2-char → byte, or -1 */
 static int hexv(int c) {
   if (c >= '0' && c <= '9') return c - '0';
@@ -317,27 +326,15 @@ static char *route_routes(db_handle *db, const char *query) {
 }
 
 /* ===================================================================== */
-/* POST /gtfs/hydrate/:orgId  — graceful-empty (no upstream fetch in C)   */
+/* POST /gtfs/hydrate/:orgId  — not implemented (no upstream fetch in C)  */
 /* ===================================================================== */
 
 static char *route_hydrate(const char *orgId_raw) {
-  /* JS: orgId = raw.replace(/[^a-z0-9_-]/gi,''); empty → 400 bad orgId */
-  char clean[128];
-  size_t o = 0;
-  for (size_t i = 0; orgId_raw[i] && o + 1 < sizeof clean; i++) {
-    int c = (unsigned char)orgId_raw[i];
-    if (isalnum(c) || c == '_' || c == '-') clean[o++] = (char)c;
-  }
-  clean[o] = 0;
-  if (!clean[0]) return err_json("bad orgId");
-  /* hydrateOperator() pulls a remote GTFS-JP zip; no network collector in
-   * the C build. Same success envelope, zeroed/explicit skip. */
-  cJSON *r = cJSON_CreateObject();
-  cJSON_AddBoolToObject(r, "ok", 1);
-  cJSON_AddStringToObject(r, "orgId", clean);
-  cJSON_AddBoolToObject(r, "skipped", 1);
-  cJSON_AddStringToObject(r, "reason", "hydrate_not_ported");
-  return dup_json(r);
+  (void)orgId_raw;
+  /* hydrateOperator() pulls a remote GTFS-JP zip; there is no network
+   * collector in the C build, so there is nothing to hydrate. Report 501
+   * rather than a fake success envelope. */
+  return err_not_implemented("GTFS hydrate is not supported by the native server");
 }
 
 /* ===================================================================== */
@@ -1285,18 +1282,14 @@ static char *vehicle_info(db_handle *db, const char *tripIdRaw) {
 }
 
 /* ===================================================================== */
-/* GET /station-boundaries — graceful-empty (Overpass collector absent)   */
+/* GET /station-boundaries — not implemented (Overpass collector absent)  */
 /* ===================================================================== */
 
 static char *route_station_boundaries(const char *query) {
-  bbox_t bb; int bs = parse_bbox(query, &bb);
-  if (bs == -1) return err_json("bbox must be minLng,minLat,maxLng,maxLat");
-  /* osmTransportStationBoundaries collector (Overpass) not ported → same
-   * shape as an Overpass miss / empty cache. */
-  cJSON *o = cJSON_CreateObject();
-  cJSON_AddStringToObject(o, "type", "FeatureCollection");
-  cJSON_AddItemToObject(o, "features", cJSON_CreateArray());
-  return dup_json(o);
+  (void)query;
+  /* osmTransportStationBoundaries collector (Overpass) is not ported and
+   * there is no cache to read, so report 501 rather than a fake-empty FC. */
+  return err_not_implemented("station boundaries are not supported by the native server");
 }
 
 /* ===================================================================== */

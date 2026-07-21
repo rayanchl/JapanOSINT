@@ -9,14 +9,6 @@
 #include <time.h>
 #include <sys/time.h>
 
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-           tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-           tm.tm_hour, tm.tm_min, tm.tm_sec, (int)(tv.tv_usec / 1000));
-}
-
 /* one SELECT * row → cJSON object, sqlite type → JSON type (mirrors
  * better-sqlite3 row objects + JSON.stringify). */
 static cJSON *row_obj(sqlite3_stmt *s) {
@@ -270,11 +262,13 @@ char *miscapi_layer_geojson(const char *layer_id) {
 
 char *miscapi_follow_recent(int limit) {
   (void)limit;
-  char ts[40]; iso_now(ts, sizeof ts);
+  /* No cross-process collector-tap ring buffer exists in the C server, so
+   * there is no backing store to read. Return an honest 501 (caller sets the
+   * status) rather than a fake-empty 200 clients can't distinguish. */
   cJSON *o = cJSON_CreateObject();
-  cJSON_AddNumberToObject(o, "count", 0);
-  cJSON_AddItemToObject(o, "events", cJSON_CreateArray());
-  cJSON_AddStringToObject(o, "timestamp", ts);
+  cJSON_AddStringToObject(o, "error", "not_implemented");
+  cJSON_AddStringToObject(o, "detail",
+    "collector-tap history is not supported by the native server");
   char *js = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
   return js;

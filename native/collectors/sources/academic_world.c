@@ -560,3 +560,488 @@ static const source_def openlibrary_def = {
   .layer = NULL, .free_tier = 1,
 };
 REGISTER_SOURCE(openlibrary_def)
+
+/* ===========================================================================
+ * Merged from former academic2_world.c — additional scholarly / research
+ * pivots, all keyless & LIVE. On-demand entity pivot (ctx->entity).
+ * ac2_run() dispatches on ctx->source_id (kept separate from run() above).
+ *
+ *   ORCID_SEARCH   ORCID public expanded-search — researchers by name
+ *                  (pub.orcid.org/v3.0/expanded-search/?q=<entity>)
+ *   ROR_ORGS       Research Organization Registry — institutions
+ *                  (api.ror.org/organizations?query=<entity>)
+ *   DOAJ_ARTICLES  Directory of Open Access Journals — open-access articles
+ *                  (doaj.org/api/search/articles/<entity>)
+ *   OPENCITATIONS  OpenCitations index+meta — citations of a DOI. Only meaningful
+ *                  when the entity is a DOI; a plain name → honest empty.
+ * =========================================================================== */
+
+/* ---- ORCID expanded-search ---------------------------------------------- *
+ * { "expanded-result": [ { orcid-id, given-names, family-names, credit-name,
+ *   institution-name:[...] }, ... ] }  (public API, keyless, JSON via Accept). */
+static int ac_orcid(const source_ctx *ctx, intel_sink *sink, const char *q) {
+  char *enc = jo_urlencode(q);
+  if (!enc) return 0;
+  char url[1024];
+  snprintf(url, sizeof url,
+    "https://pub.orcid.org/v3.0/expanded-search/?q=%s&rows=25", enc);
+  free(enc);
+  const char *hdrs[] = { "Accept: application/json",
+                         "User-Agent: JapanOSINT/1.0 (osint@example.org)", NULL };
+  char *body = jo_get(ctx, url, hdrs, "ORCID_SEARCH");
+  if (!body) return 0;
+  cJSON *root = cJSON_Parse(body);
+  free(body);
+  if (!root) return 0;
+  cJSON *arr = cJSON_GetObjectItem(root, "expanded-result");
+  int emitted = 0;
+  if (cJSON_IsArray(arr)) {
+    cJSON *r;
+    cJSON_ArrayForEach(r, arr) {
+      const char *oid  = jo_sv(r, "orcid-id");
+      const char *giv  = jo_sv(r, "given-names");
+      const char *fam  = jo_sv(r, "family-names");
+      const char *cred = jo_sv(r, "credit-name");
+      if (!oid) continue;
+
+      char name[256] = {0};
+      if (cred) snprintf(name, sizeof name, "%s", cred);
+      else snprintf(name, sizeof name, "%s%s%s",
+                    giv ? giv : "", (giv && fam) ? " " : "", fam ? fam : "");
+      if (!name[0]) snprintf(name, sizeof name, "%s", oid);
+
+      /* first institution (if any) */
+      const char *inst = NULL;
+      cJSON *insts = cJSON_GetObjectItem(r, "institution-name");
+      if (cJSON_IsArray(insts)) {
+        cJSON *first = cJSON_GetArrayItem(insts, 0);
+        if (first && cJSON_IsString(first) && first->valuestring[0])
+          inst = first->valuestring;
+      }
+
+      char link[128];
+      snprintf(link, sizeof link, "https://orcid.org/%s", oid);
+
+      cJSON *data = cJSON_CreateObject();
+      cJSON_AddStringToObject(data, "name", name);
+      cJSON_AddStringToObject(data, "orcid", oid);
+      if (inst) cJSON_AddStringToObject(data, "institution", inst);
+      cJSON_AddStringToObject(data, "source", "ORCID");
+      char *bj = cJSON_PrintUnformatted(data);
+      cJSON_Delete(data);
+
+      cJSON *props = cJSON_CreateObject();
+      cJSON_AddStringToObject(props, "service", "ORCID_SEARCH");
+      cJSON_AddStringToObject(props, "orcid", oid);
+      if (inst) cJSON_AddStringToObject(props, "institution", inst);
+      cJSON_AddBoolToObject(props, "success", 1);
+      char *pj = cJSON_PrintUnformatted(props);
+      cJSON_Delete(props);
+
+      intel_item it = {0};
+      it.remote_key      = oid;
+      it.title           = name;
+      it.summary         = inst;
+      it.body            = bj;
+      it.lang            = "en";
+      it.link            = link;
+      it.record_type     = "orcid-researcher";
+      it.properties_json = pj;
+      it.tags_json       = "[\"osint-search\",\"ORCID_SEARCH\"]";
+      if (sink->emit(sink, &it) >= 0) emitted++;
+      free(bj); free(pj);
+    }
+  }
+  cJSON_Delete(root);
+  fprintf(stderr, "[ORCID_SEARCH] emitted %d\n", emitted);
+  return emitted;
+}
+
+/* ---- ROR organizations -------------------------------------------------- *
+ * { "items": [ { id, established, names:[{value,types,lang}],
+ *   locations:[{geonames_details:{country_name,lat,lng,name}}],
+ *   links:[{type,value}] }, ... ] }  keyless JSON. */
+static int ac_ror(const source_ctx *ctx, intel_sink *sink, const char *q) {
+  char *enc = jo_urlencode(q);
+  if (!enc) return 0;
+  char url[1024];
+  snprintf(url, sizeof url, "https://api.ror.org/organizations?query=%s", enc);
+  free(enc);
+  const char *hdrs[] = { "Accept: application/json",
+                         "User-Agent: JapanOSINT/1.0", NULL };
+  char *body = jo_get(ctx, url, hdrs, "ROR_ORGS");
+  if (!body) return 0;
+  cJSON *root = cJSON_Parse(body);
+  free(body);
+  if (!root) return 0;
+  cJSON *items = cJSON_GetObjectItem(root, "items");
+  int emitted = 0, n = 0;
+  if (cJSON_IsArray(items)) {
+    cJSON *r;
+    cJSON_ArrayForEach(r, items) {
+      if (n++ >= 25) break;
+      const char *id = jo_sv(r, "id");   /* full https://ror.org/... URL */
+      if (!id) continue;
+
+      /* display name = first names[] entry with type ror_display, else first. */
+      const char *name = NULL;
+      cJSON *names = cJSON_GetObjectItem(r, "names");
+      if (cJSON_IsArray(names)) {
+        cJSON *nm;
+        cJSON_ArrayForEach(nm, names) {
+          const char *v = jo_sv(nm, "value");
+          if (!v) continue;
+          if (!name) name = v;
+          cJSON *types = cJSON_GetObjectItem(nm, "types");
+          if (cJSON_IsArray(types)) {
+            cJSON *t;
+            cJSON_ArrayForEach(t, types)
+              if (cJSON_IsString(t) && strcmp(t->valuestring, "ror_display") == 0) {
+                name = v; break;
+              }
+          }
+        }
+      }
+      if (!name) name = jo_sv(r, "name");
+      if (!name) continue;
+
+      /* country + coordinates from first location */
+      const char *country = NULL, *city = NULL;
+      int has_geo = 0; double lat = 0, lon = 0;
+      cJSON *locs = cJSON_GetObjectItem(r, "locations");
+      if (cJSON_IsArray(locs)) {
+        cJSON *l0 = cJSON_GetArrayItem(locs, 0);
+        cJSON *gd = l0 ? cJSON_GetObjectItem(l0, "geonames_details") : NULL;
+        if (gd) {
+          country = jo_sv(gd, "country_name");
+          city    = jo_sv(gd, "name");
+          cJSON *la = cJSON_GetObjectItem(gd, "lat");
+          cJSON *lo = cJSON_GetObjectItem(gd, "lng");
+          if (cJSON_IsNumber(la) && cJSON_IsNumber(lo)) {
+            has_geo = 1; lat = la->valuedouble; lon = lo->valuedouble;
+          }
+        }
+      }
+      const cJSON *est = cJSON_GetObjectItem(r, "established");
+
+      /* website link if present */
+      const char *website = NULL;
+      cJSON *links = cJSON_GetObjectItem(r, "links");
+      if (cJSON_IsArray(links)) {
+        cJSON *lk;
+        cJSON_ArrayForEach(lk, links) {
+          const char *ty = jo_sv(lk, "type");
+          const char *va = jo_sv(lk, "value");
+          if (va && ty && strcmp(ty, "website") == 0) { website = va; break; }
+        }
+      }
+
+      char loc[256] = {0};
+      snprintf(loc, sizeof loc, "%s%s%s",
+               city ? city : "", (city && country) ? ", " : "",
+               country ? country : "");
+
+      cJSON *data = cJSON_CreateObject();
+      cJSON_AddStringToObject(data, "name", name);
+      cJSON_AddStringToObject(data, "ror_id", id);
+      if (loc[0])  cJSON_AddStringToObject(data, "location", loc);
+      if (est && cJSON_IsNumber(est))
+        cJSON_AddNumberToObject(data, "established", est->valuedouble);
+      if (website) cJSON_AddStringToObject(data, "website", website);
+      cJSON_AddStringToObject(data, "source", "ROR");
+      char *bj = cJSON_PrintUnformatted(data);
+      cJSON_Delete(data);
+
+      cJSON *props = cJSON_CreateObject();
+      cJSON_AddStringToObject(props, "service", "ROR_ORGS");
+      cJSON_AddStringToObject(props, "ror_id", id);
+      if (country) cJSON_AddStringToObject(props, "country", country);
+      cJSON_AddBoolToObject(props, "success", 1);
+      char *pj = cJSON_PrintUnformatted(props);
+      cJSON_Delete(props);
+
+      intel_item it = {0};
+      it.remote_key      = id;
+      it.title           = name;
+      it.summary         = loc[0] ? loc : NULL;
+      it.body            = bj;
+      it.lang            = "en";
+      it.link            = website ? website : id;
+      it.has_geo         = has_geo;
+      it.lat             = lat;
+      it.lon             = lon;
+      it.record_type     = "ror-institution";
+      it.properties_json = pj;
+      it.tags_json       = "[\"osint-search\",\"ROR_ORGS\"]";
+      if (sink->emit(sink, &it) >= 0) emitted++;
+      free(bj); free(pj);
+    }
+  }
+  cJSON_Delete(root);
+  fprintf(stderr, "[ROR_ORGS] emitted %d\n", emitted);
+  return emitted;
+}
+
+/* ---- DOAJ articles ------------------------------------------------------ *
+ * { "results": [ { bibjson: { title, year, journal:{title,publisher,language},
+ *   author:[{name,affiliation}], identifier:[{id,type}], link:[{url,type}] } } ] }
+ * keyless JSON. */
+static int ac_doaj(const source_ctx *ctx, intel_sink *sink, const char *q) {
+  char *enc = jo_urlencode(q);
+  if (!enc) return 0;
+  char url[1024];
+  snprintf(url, sizeof url,
+    "https://doaj.org/api/search/articles/%s?pageSize=25", enc);
+  free(enc);
+  const char *hdrs[] = { "Accept: application/json",
+                         "User-Agent: JapanOSINT/1.0", NULL };
+  char *body = jo_get(ctx, url, hdrs, "DOAJ_ARTICLES");
+  if (!body) return 0;
+  cJSON *root = cJSON_Parse(body);
+  free(body);
+  if (!root) return 0;
+  cJSON *results = cJSON_GetObjectItem(root, "results");
+  int emitted = 0;
+  if (cJSON_IsArray(results)) {
+    cJSON *r;
+    cJSON_ArrayForEach(r, results) {
+      const char *doaj_id = jo_sv(r, "id");
+      cJSON *bib = cJSON_GetObjectItem(r, "bibjson");
+      if (!bib) continue;
+      const char *title = jo_sv(bib, "title");
+      if (!title) continue;
+      const char *year = jo_sv(bib, "year");
+
+      cJSON *journal = cJSON_GetObjectItem(bib, "journal");
+      const char *jtitle = journal ? jo_sv(journal, "title") : NULL;
+      const char *jpub   = journal ? jo_sv(journal, "publisher") : NULL;
+
+      /* DOI + fulltext link */
+      const char *doi = NULL;
+      cJSON *ids = cJSON_GetObjectItem(bib, "identifier");
+      if (cJSON_IsArray(ids)) {
+        cJSON *id;
+        cJSON_ArrayForEach(id, ids) {
+          const char *ty = jo_sv(id, "type");
+          const char *va = jo_sv(id, "id");
+          if (va && ty && strcmp(ty, "doi") == 0) { doi = va; break; }
+        }
+      }
+      const char *fulltext = NULL;
+      cJSON *lnks = cJSON_GetObjectItem(bib, "link");
+      if (cJSON_IsArray(lnks)) {
+        cJSON *lk = cJSON_GetArrayItem(lnks, 0);
+        if (lk) fulltext = jo_sv(lk, "url");
+      }
+
+      /* author list */
+      char authors[512] = {0}; size_t aj = 0; int na = 0;
+      cJSON *auth = cJSON_GetObjectItem(bib, "author");
+      if (cJSON_IsArray(auth)) {
+        cJSON *a;
+        cJSON_ArrayForEach(a, auth) {
+          const char *nm = jo_sv(a, "name");
+          if (!nm) continue;
+          size_t need = aj + strlen(nm) + 2;
+          if (need >= sizeof authors) break;
+          if (na) { authors[aj++] = ','; authors[aj++] = ' '; }
+          strcpy(authors + aj, nm); aj += strlen(nm);
+          if (++na >= 20) break;
+        }
+      }
+
+      char doi_url[256] = {0};
+      if (doi) snprintf(doi_url, sizeof doi_url,
+                        strncmp(doi, "http", 4) == 0 ? "%s" : "https://doi.org/%s", doi);
+      char page_url[128] = {0};
+      if (doaj_id) snprintf(page_url, sizeof page_url,
+                            "https://doaj.org/article/%s", doaj_id);
+      const char *link = doi_url[0] ? doi_url : (fulltext ? fulltext : (page_url[0] ? page_url : NULL));
+
+      cJSON *data = cJSON_CreateObject();
+      cJSON_AddStringToObject(data, "title", title);
+      if (doi)     cJSON_AddStringToObject(data, "doi", doi);
+      if (year)    cJSON_AddStringToObject(data, "year", year);
+      if (jtitle)  cJSON_AddStringToObject(data, "journal", jtitle);
+      if (jpub)    cJSON_AddStringToObject(data, "publisher", jpub);
+      if (authors[0]) cJSON_AddStringToObject(data, "authors", authors);
+      cJSON_AddStringToObject(data, "source", "DOAJ");
+      char *bj = cJSON_PrintUnformatted(data);
+      cJSON_Delete(data);
+
+      cJSON *props = cJSON_CreateObject();
+      cJSON_AddStringToObject(props, "service", "DOAJ_ARTICLES");
+      if (doi)  cJSON_AddStringToObject(props, "doi", doi);
+      if (year) cJSON_AddStringToObject(props, "year", year);
+      cJSON_AddBoolToObject(props, "success", 1);
+      char *pj = cJSON_PrintUnformatted(props);
+      cJSON_Delete(props);
+
+      char rkey[256];
+      snprintf(rkey, sizeof rkey, "%s", doi ? doi : (doaj_id ? doaj_id : title));
+
+      intel_item it = {0};
+      it.remote_key      = rkey;
+      it.title           = title;
+      it.summary         = jtitle;
+      it.body            = bj;
+      it.author          = authors[0] ? authors : NULL;
+      it.lang            = "en";
+      it.published_at    = year;
+      it.link            = link;
+      it.record_type     = "doaj-article";
+      it.properties_json = pj;
+      it.tags_json       = "[\"osint-search\",\"DOAJ_ARTICLES\"]";
+      if (sink->emit(sink, &it) >= 0) emitted++;
+      free(bj); free(pj);
+    }
+  }
+  cJSON_Delete(root);
+  fprintf(stderr, "[DOAJ_ARTICLES] emitted %d\n", emitted);
+  return emitted;
+}
+
+/* ---- OpenCitations ------------------------------------------------------ *
+ * Meaningful only for a DOI pivot. We first pull OpenCitations Meta metadata for
+ * the DOI, then the incoming citations index — emitting one item per citing
+ * paper (real DOIs from the index). A non-DOI entity → honest empty. */
+static int ac_looks_like_doi(const char *s) {
+  const char *p = strstr(s, "10.");
+  return p && strchr(p, '/');
+}
+
+static int ac_opencitations(const source_ctx *ctx, intel_sink *sink, const char *q) {
+  if (!ac_looks_like_doi(q)) {
+    fprintf(stderr, "[OPENCITATIONS] entity is not a DOI, honest empty\n");
+    return 0;
+  }
+  /* normalize: strip a leading https://doi.org/ if present */
+  const char *doi = q;
+  const char *slash = strstr(q, "doi.org/");
+  if (slash) doi = slash + 8;
+  char *encd = jo_urlencode(doi);
+  if (!encd) return 0;
+
+  const char *hdrs[] = { "Accept: application/json",
+                         "User-Agent: JapanOSINT/1.0", NULL };
+
+  /* metadata for the cited paper (title/venue) — best-effort context. */
+  char murl[512];
+  snprintf(murl, sizeof murl,
+    "https://opencitations.net/meta/api/v1/metadata/doi:%s", encd);
+  char *mtitle = NULL, *mvenue = NULL;
+  char *mbody = jo_get(ctx, murl, hdrs, "OPENCITATIONS");
+  if (mbody) {
+    cJSON *mroot = cJSON_Parse(mbody);
+    free(mbody);
+    if (mroot && cJSON_IsArray(mroot)) {
+      cJSON *m0 = cJSON_GetArrayItem(mroot, 0);
+      if (m0) {
+        const char *t = jo_sv(m0, "title");
+        const char *v = jo_sv(m0, "venue");
+        if (t) mtitle = strdup(t);
+        if (v) mvenue = strdup(v);
+      }
+    }
+    if (mroot) cJSON_Delete(mroot);
+  }
+
+  char curl[512];
+  snprintf(curl, sizeof curl,
+    "https://opencitations.net/index/api/v1/citations/%s", encd);
+  free(encd);
+  char *body = jo_get(ctx, curl, hdrs, "OPENCITATIONS");
+  if (!body) { free(mtitle); free(mvenue); return 0; }
+  cJSON *root = cJSON_Parse(body);
+  free(body);
+  if (!root) { free(mtitle); free(mvenue); return 0; }
+
+  int emitted = 0, n = 0;
+  if (cJSON_IsArray(root)) {
+    cJSON *r;
+    cJSON_ArrayForEach(r, root) {
+      if (n++ >= 50) break;
+      const char *citing = jo_sv(r, "citing");
+      const char *oci    = jo_sv(r, "oci");
+      const char *crea   = jo_sv(r, "creation");
+      const char *tspan  = jo_sv(r, "timespan");
+      if (!citing) continue;
+
+      char link[256];
+      snprintf(link, sizeof link, "https://doi.org/%s", citing);
+      char title[320];
+      snprintf(title, sizeof title, "Citing DOI %s", citing);
+
+      cJSON *data = cJSON_CreateObject();
+      cJSON_AddStringToObject(data, "citing_doi", citing);
+      cJSON_AddStringToObject(data, "cited_doi", doi);
+      if (mtitle) cJSON_AddStringToObject(data, "cited_title", mtitle);
+      if (mvenue) cJSON_AddStringToObject(data, "cited_venue", mvenue);
+      if (crea)  cJSON_AddStringToObject(data, "citation_creation", crea);
+      if (tspan) cJSON_AddStringToObject(data, "timespan", tspan);
+      if (oci)   cJSON_AddStringToObject(data, "oci", oci);
+      cJSON_AddStringToObject(data, "source", "OpenCitations");
+      char *bj = cJSON_PrintUnformatted(data);
+      cJSON_Delete(data);
+
+      cJSON *props = cJSON_CreateObject();
+      cJSON_AddStringToObject(props, "service", "OPENCITATIONS");
+      cJSON_AddStringToObject(props, "cited_doi", doi);
+      cJSON_AddStringToObject(props, "citing_doi", citing);
+      cJSON_AddBoolToObject(props, "success", 1);
+      char *pj = cJSON_PrintUnformatted(props);
+      cJSON_Delete(props);
+
+      intel_item it = {0};
+      it.remote_key      = oci ? oci : citing;
+      it.title           = title;
+      it.summary         = mtitle;
+      it.body            = bj;
+      it.lang            = "en";
+      it.published_at    = crea;
+      it.link            = link;
+      it.record_type     = "opencitations-citation";
+      it.properties_json = pj;
+      it.tags_json       = "[\"osint-search\",\"OPENCITATIONS\"]";
+      if (sink->emit(sink, &it) >= 0) emitted++;
+      free(bj); free(pj);
+    }
+  }
+  cJSON_Delete(root);
+  free(mtitle); free(mvenue);
+  fprintf(stderr, "[OPENCITATIONS] emitted %d\n", emitted);
+  return emitted;
+}
+
+static int ac2_run(const source_ctx *ctx, intel_sink *sink) {
+  const char *q = ctx->entity;
+  if (!q || !*q) return -1;
+
+  if (strcmp(ctx->source_id, "ORCID_SEARCH") == 0)  ac_orcid(ctx, sink, q);
+  else if (strcmp(ctx->source_id, "ROR_ORGS") == 0) ac_ror(ctx, sink, q);
+  else if (strcmp(ctx->source_id, "DOAJ_ARTICLES") == 0) ac_doaj(ctx, sink, q);
+  else if (strcmp(ctx->source_id, "OPENCITATIONS") == 0) ac_opencitations(ctx, sink, q);
+  else return -1;
+
+  return 0;   /* honest empty is not an error */
+}
+
+#define AC2_DEF(SYM, ID, NAME, NAMEJA, URL, DESC) \
+  static const source_def SYM = { .id = ID, .collector = "osint", .name = NAME, \
+    .name_ja = NAMEJA, .update_interval_sec = 0, .run = ac2_run, \
+    .category = "government", .type = "api", .url = URL, .description = DESC, \
+    .layer = NULL, .free_tier = 1 }; \
+  REGISTER_SOURCE(SYM)
+
+AC2_DEF(ac_orcid_def, "ORCID_SEARCH", "ORCID Researcher Search", "ORCID 研究者検索",
+  "https://pub.orcid.org",
+  "ORCID public expanded-search — researchers by name (keyless): ORCID iD, name, institution");
+AC2_DEF(ac_ror_def, "ROR_ORGS", "ROR Institution Registry", "ROR 研究機関レジストリ",
+  "https://ror.org",
+  "Research Organization Registry — institutions by name (keyless): ROR id, location, website");
+AC2_DEF(ac_doaj_def, "DOAJ_ARTICLES", "DOAJ Open-Access Articles", "DOAJ オープンアクセス論文",
+  "https://doaj.org",
+  "Directory of Open Access Journals article search (keyless): title, DOI, year, journal, authors");
+AC2_DEF(ac_oc_def, "OPENCITATIONS", "OpenCitations Citations", "OpenCitations 引用索引",
+  "https://opencitations.net",
+  "OpenCitations index+meta — incoming citations of a DOI entity (keyless): citing DOIs, timespan");
