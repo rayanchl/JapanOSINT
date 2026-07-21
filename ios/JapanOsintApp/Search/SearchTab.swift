@@ -137,32 +137,6 @@ private struct SearchRunCard: View {
     }
 }
 
-/// Entity chips → NavigationLink to the profile; long-press / button pivots.
-struct FlowEntities: View {
-    let entities: [EntityRef]
-    let onPivot: (String) -> Void
-    @Environment(\.theme) private var theme
-    var body: some View {
-        FlowLayout(spacing: 6) {
-            ForEach(dedup(entities)) { e in
-                NavigationLink {
-                    EntityDetailView(type: e.type.lowercased(), lookup: e.value)
-                } label: {
-                    Text("\(e.type): \(e.value)")
-                        .font(.caption2).lineLimit(1)
-                        .padding(.horizontal, 8).padding(.vertical, 4)
-                        .background(Capsule().fill(theme.accentAlt.opacity(0.15)))
-                        .foregroundColor(theme.text)
-                }
-                .simultaneousGesture(LongPressGesture().onEnded { _ in onPivot(e.value) })
-            }
-        }
-    }
-    private func dedup(_ a: [EntityRef]) -> [EntityRef] {
-        var seen = Set<String>(); return a.filter { seen.insert($0.id).inserted }
-    }
-}
-
 struct FlowChips: View {
     let items: [String]
     let onTap: (String) -> Void

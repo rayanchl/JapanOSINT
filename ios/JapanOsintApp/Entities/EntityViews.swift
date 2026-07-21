@@ -53,6 +53,7 @@ struct EntityDetailView: View {
     @State private var tab = 0
     @State private var depth = 1
     @State private var notFound = false
+    @State private var pushedNode: EntityNode?
 
     var body: some View {
         Group {
@@ -81,7 +82,9 @@ struct EntityDetailView: View {
                     Picker("Depth", selection: $depth) {
                         ForEach(1...3, id: \.self) { Text("\($0)").tag($0) }
                     }.pickerStyle(.segmented).padding(.horizontal, 8)
-                    EntityGraphCanvas(graph: graph, rootId: p.entity_id)
+                    EntityGraphCanvas(graph: graph, rootId: p.entity_id) { node in
+                        pushedNode = node
+                    }
                 }
                 .onChange(of: depth) { _, _ in Task { await loadGraph(p) } }
             } else if tab == 1 {
@@ -101,6 +104,10 @@ struct EntityDetailView: View {
                     if let f = p.first_seen_at { LabeledContent("First seen", value: f) }
                 }
             }
+        }
+        // Tapping a relationship-graph node pushes that entity's own profile.
+        .navigationDestination(item: $pushedNode) { node in
+            EntityDetailView(type: node.type.lowercased(), entityId: node.id)
         }
     }
 
@@ -124,10 +131,12 @@ struct EntityDetailView: View {
 }
 
 /// Native force-directed graph (SwiftUI Canvas; no WebView). Fixed-iteration
-/// layout computed once; tap a node to pivot.
+/// layout computed once; tap a node to open that entity's profile.
 struct EntityGraphCanvas: View {
     let graph: EntityGraph
     let rootId: String
+    /// Called when a non-root node is tapped, so the host can push its profile.
+    var onSelectNode: (EntityNode) -> Void = { _ in }
     @Environment(\.theme) private var theme
     @State private var pos: [String: CGPoint] = [:]
 
@@ -149,11 +158,30 @@ struct EntityGraphCanvas: View {
                                 .foregroundColor(theme.text), at: CGPoint(x: p.x, y: p.y - 14))
                 }
             }
+            // Canvas can't host per-node gestures, so hit-test the tap location
+            // against the laid-out node positions and select the nearest one.
+            .onTapGesture(coordinateSpace: .local) { location in
+                guard let node = nearestNode(to: location), node.id != rootId else { return }
+                Haptics.selection()
+                onSelectNode(node)
+            }
             .onAppear { layout(in: geo.size) }
             .onChange(of: graph) { _, _ in layout(in: geo.size) }
         }
         .frame(height: 360)
         .background(RoundedRectangle(cornerRadius: 8).fill(theme.surfaceElevated))
+    }
+
+    /// Nearest node to a tap, within a generous 24pt tolerance of the 6–9pt discs.
+    private func nearestNode(to loc: CGPoint) -> EntityNode? {
+        var best: EntityNode?
+        var bestDist = CGFloat.greatestFiniteMagnitude
+        for n in graph.nodes {
+            guard let p = pos[n.id] else { continue }
+            let dist = hypot(p.x - loc.x, p.y - loc.y)
+            if dist < bestDist { bestDist = dist; best = n }
+        }
+        return bestDist <= 24 ? best : nil
     }
 
     private func layout(in size: CGSize) {
