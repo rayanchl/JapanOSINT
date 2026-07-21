@@ -61,6 +61,26 @@ extension View {
             .scrollContentBackground(.hidden)
             .background(theme.surface.ignoresSafeArea())
     }
+
+    /// Floating bar surface for the Map's top bar and time-select bar.
+    ///
+    /// Uses Apple's `.bar` material — the SAME material the system `TabView`
+    /// tab bar (Map / Intel / Search …) uses — so the map's bars read as the
+    /// same color and material as the tab bar. `.bar` composites its backdrop
+    /// exactly like the system bar does; no color tint is layered on top, and
+    /// the border is a neutral hairline (not a coloured stroke) so nothing
+    /// shifts the perceived colour away from the tab bar. One definition, so
+    /// both bars are provably identical.
+    func mapBarSurface(cornerRadius: CGFloat = 18) -> some View {
+        self
+            .background(.bar, in: RoundedRectangle(cornerRadius: cornerRadius,
+                                                   style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .strokeBorder(Color.primary.opacity(0.06), lineWidth: 0.5)
+            )
+            .shadow(color: .black.opacity(0.14), radius: 10, y: 3)
+    }
 }
 
 private struct ThemeKey: EnvironmentKey {

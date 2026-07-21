@@ -397,7 +397,10 @@ struct CameraDiscoveryView: View {
         .padding(10)
         .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: 12))
         .contentShape(RoundedRectangle(cornerRadius: 12))
-        .onTapGesture { selectedFeature = feature(from: ev) }
+        .onTapGesture {
+            Haptics.selection()
+            selectedFeature = feature(from: ev)
+        }
     }
 
     /// Compact thumbnail-first card for grid mode. Wraps `CameraFeedView` so
@@ -433,7 +436,10 @@ struct CameraDiscoveryView: View {
         }
         .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: 12))
         .contentShape(RoundedRectangle(cornerRadius: 12))
-        .onTapGesture { selectedFeature = feature(from: ev) }
+        .onTapGesture {
+            Haptics.selection()
+            selectedFeature = feature(from: ev)
+        }
     }
 
     private var emptyState: some View {
@@ -446,12 +452,16 @@ struct CameraDiscoveryView: View {
     }
 
     private var noMatchView: some View {
-        Text(searchText.isEmpty
-             ? "No cameras match the current filters."
-             : "No cameras match \"\(searchText)\"")
-            .font(.caption)
-            .foregroundStyle(theme.textMuted)
-            .padding()
+        // HIG-native "no results" state; themed to match the palette.
+        ContentUnavailableView {
+            Label("No matches", systemImage: "line.3.horizontal.decrease.circle")
+                .foregroundStyle(theme.text)
+        } description: {
+            Text(searchText.isEmpty
+                 ? "No cameras match the current filters."
+                 : "No cameras match \"\(searchText)\"")
+                .foregroundStyle(theme.textMuted)
+        }
     }
 
     private func iconButton(

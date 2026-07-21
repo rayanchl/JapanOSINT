@@ -283,7 +283,7 @@ struct MapTab: View {
                         opacity: 1,
                         scale: 1.5
                     )
-                    .onTapGesture { selectedFeature = spot }
+                    .onTapGesture { selectFeature(spot) }
                 }
             }
         }
@@ -308,6 +308,13 @@ struct MapTab: View {
                 }
             }
         }
+    }
+
+    /// Select a tapped map annotation with a light selection haptic, so a pin
+    /// tap confirms tactilely (HIG: give touch interactions physical feedback).
+    private func selectFeature(_ feature: GeoFeature) {
+        Haptics.selection()
+        selectedFeature = feature
     }
 
     private func clearIfAllOff() {
@@ -395,13 +402,13 @@ struct MapTab: View {
                     pin(symbol: symbol, color: color, opacity: opacity)
                         .rotationEffect(.degrees(heading - 90))
                         .animation(.linear(duration: 1), value: heading)
-                        .onTapGesture { selectedFeature = feat }
+                        .onTapGesture { selectFeature(feat) }
                 }
                 .tag(feat.id)
             } else {
                 Annotation(feat.displayName, coordinate: c, anchor: .bottom) {
                     pin(symbol: symbol, color: color, opacity: opacity)
-                        .onTapGesture { selectedFeature = feat }
+                        .onTapGesture { selectFeature(feat) }
                 }
                 .tag(feat.id)
             }
@@ -410,7 +417,7 @@ struct MapTab: View {
             ForEach(Array(coords.enumerated()), id: \.offset) { idx, c in
                 Annotation("\(feat.displayName) #\(idx + 1)", coordinate: c, anchor: .bottom) {
                     pin(symbol: symbol, color: color, opacity: opacity)
-                        .onTapGesture { selectedFeature = feat }
+                        .onTapGesture { selectFeature(feat) }
                 }
             }
 
@@ -467,15 +474,9 @@ struct MapTab: View {
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 10)
-        // Match the system tab bar's translucency exactly — `.bar` is Apple's
-        // material specifically tuned for bar surfaces (same as TabView).
-        .background(.bar,
-                    in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .strokeBorder(Color.primary.opacity(0.08), lineWidth: 0.5)
-        )
-        .shadow(color: .black.opacity(0.18), radius: 12, y: 4)
+        // Same color + material as the system tab bar (Map / Intel / Search …).
+        // See `mapBarSurface` in Theme.swift — shared with the time-select bar.
+        .mapBarSurface()
         .animation(.easeInOut(duration: 0.2), value: layerLoadState.keys.sorted())
         // Results hang BELOW the whole card (never overlapping it). The
         // `.bottom` alignment guide is remapped to the panel's top edge so the
@@ -622,6 +623,8 @@ struct MapTab: View {
                 .foregroundStyle(.tint)
                 .frame(width: 36, height: 36)
                 .background(.thinMaterial, in: Circle())
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Reverse-geocode center")
@@ -675,8 +678,12 @@ struct MapTab: View {
             .frame(height: 36)
             .padding(.horizontal, 12)
             .background(.thinMaterial, in: Capsule())
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityLabel("Layers")
+        .accessibilityValue("\(settings.activeLayerIds.count) active")
     }
 
     private var moreMenu: some View {
@@ -696,7 +703,10 @@ struct MapTab: View {
                 .foregroundStyle(.tint)
                 .frame(width: 36, height: 36)
                 .background(.thinMaterial, in: Circle())
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(Rectangle())
         }
+        .accessibilityLabel("More map options")
     }
 
     /// Compact status footer: WS dot + label, JST time, feature count.

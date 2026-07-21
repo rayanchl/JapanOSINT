@@ -181,7 +181,11 @@ struct SavedTab: View {
                     LazyVGrid(columns: gridColumns, spacing: 10) {
                         ForEach(filteredItems) { item in
                             SavedCard(item: item)
-                                .onTapGesture { selectedFeature = item.toFeature() }
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    Haptics.selection()
+                                    selectedFeature = item.toFeature()
+                                }
                                 .contextMenu { contextActions(for: item) }
                         }
                     }
@@ -417,11 +421,15 @@ struct SavedTab: View {
     }
 
     private var noMatchView: some View {
-        Text(searchText.isEmpty
-             ? "No saved items match the current filters."
-             : "No saved items match \"\(searchText)\"")
-            .font(.caption)
-            .foregroundStyle(theme.textMuted)
-            .padding()
+        // HIG-native "no results" state; themed to match the palette.
+        ContentUnavailableView {
+            Label("No matches", systemImage: "line.3.horizontal.decrease.circle")
+                .foregroundStyle(theme.text)
+        } description: {
+            Text(searchText.isEmpty
+                 ? "No saved items match the current filters."
+                 : "No saved items match \"\(searchText)\"")
+                .foregroundStyle(theme.textMuted)
+        }
     }
 }

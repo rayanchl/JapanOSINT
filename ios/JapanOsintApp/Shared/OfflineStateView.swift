@@ -33,32 +33,32 @@ struct OfflineStateView: View {
     }
 
     var body: some View {
-        VStack(spacing: 14) {
-            Image(systemName: systemImage ?? defaults.icon)
-                .font(.system(size: 48, weight: .light))
-                .foregroundStyle(theme.textMuted)
-            VStack(spacing: 4) {
+        // HIG-native empty/error state. `ContentUnavailableView` handles
+        // Dynamic Type, centering and safe-area layout for us; we keep the
+        // theme's own colors on the glyph/title/message so it still reads as
+        // part of the cyberpunk palette rather than plain system chrome.
+        ContentUnavailableView {
+            Label {
                 Text(title ?? defaults.title)
-                    .font(.title3.weight(.semibold))
                     .foregroundStyle(theme.text)
-                Text(message ?? defaults.message)
-                    .font(.callout)
+            } icon: {
+                Image(systemName: systemImage ?? defaults.icon)
                     .foregroundStyle(theme.textMuted)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 32)
             }
+        } description: {
+            Text(message ?? defaults.message)
+                .foregroundStyle(theme.textMuted)
+        } actions: {
             if let retry {
                 Button {
                     retry()
                 } label: {
                     Label("Retry", systemImage: "arrow.clockwise")
-                        .font(.callout.weight(.medium))
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.regular)
+                .tint(theme.accent)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding()
     }
 }

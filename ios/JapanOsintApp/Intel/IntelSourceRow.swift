@@ -65,6 +65,8 @@ struct IntelSourceRow: View {
                         .background(theme.accent.opacity(0.12), in: Circle())
                 }
             }
+            .frame(minWidth: 44, minHeight: 44)
+            .contentShape(Rectangle())
             .buttonStyle(.plain)
             .disabled(running)
             .accessibilityLabel(running ? "Running…" : "Run \(source.name)")

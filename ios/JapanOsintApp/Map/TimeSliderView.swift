@@ -36,19 +36,18 @@ struct TimeSliderView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
-        .background(.bar, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(
-            ZStack {
+        // Same color + material as the system tab bar (Map / Intel / Search …).
+        // Shared with the map's top bar — see `mapBarSurface` in Theme.swift.
+        .mapBarSurface()
+        // Accent ring only while replaying, layered on top of the shared surface.
+        .overlay {
+            if playback.isReplaying {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .strokeBorder(Color.primary.opacity(0.08), lineWidth: 0.5)
-                if playback.isReplaying {
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .strokeBorder(theme.accent.opacity(0.6), lineWidth: 1)
-                }
+                    .strokeBorder(theme.accent.opacity(0.6), lineWidth: 1)
             }
-        )
-        .shadow(color: .black.opacity(0.18), radius: 12, y: 4)
+        }
         .sensoryFeedback(.selection, trigger: playback.window)
+        .sensoryFeedback(.selection, trigger: expanded)
         .sensoryFeedback(.success, trigger: returnedToLive)
         .sensoryFeedback(.impact(weight: .light), trigger: snapTick)
         .animation(.spring(response: 0.36, dampingFraction: 0.82), value: expanded)
@@ -83,11 +82,17 @@ struct TimeSliderView: View {
                     expanded.toggle()
                 } label: {
                     Image(systemName: expanded ? "chevron.down" : "chevron.up")
-                        .font(.system(size: 13, weight: .semibold))
-                        .frame(width: 24, height: 24)
+                        .font(.footnote.weight(.semibold))
+                        .frame(width: 28, height: 28)
                         .background(.thinMaterial, in: Circle())
+                        // Visual circle stays 28pt; the transparent 44pt frame
+                        // gives it Apple's minimum tap target.
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(expanded ? "Collapse time controls"
+                                             : "Expand time controls")
             }
             HStack(spacing: 14) {
                 slider
