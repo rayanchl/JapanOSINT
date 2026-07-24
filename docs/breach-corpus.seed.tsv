@@ -1020,3 +1020,14 @@ Sony	37.1k	2013-12-04	2011-06
 Stratfor	859.8k	2013-12-04	2011-12
 Yahoo	453.4k	2013-12-04	2012-07
 Vodafone	56k	2013-11-30	2013-11
+# --- French breaches (frenchbreach integration) --------------------------------
+# Major French data-breach datasets from public reporting + @Frenchbreaches, not
+# already covered by the HIBP-derived rows above. Figures are as publicly reported.
+#   France Travail  43M  (2024 intrusion, ~43M jobseekers)          [CNIL/press]
+#   Viamedis & Almerys 33M (Feb 2024 health-insurer TPA breach)     [CNIL]
+#   SFR             1.4M (2024 telecom customer-data breach)        [press]
+#   France Titres (ANTS) 11.7M (Apr 2026 national ID agency breach) [press]
+France Travail	43M	2024-03-13	2024-03
+Viamedis & Almerys	33M	2024-02-01	2024-02
+SFR	1.4M	2024-07-12	2024-07
+France Titres (ANTS)	11.7M	2026-04-15	2026-04

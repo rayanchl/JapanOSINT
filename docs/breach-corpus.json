@@ -1,6 +1,6 @@
 {
   "origin": "seed",
-  "count": 1018,
+  "count": 1022,
   "breaches": [
     {
       "id": "fluke",
@@ -594,6 +594,19 @@
       "domain": null,
       "pwn_count": 13500000,
       "added_date": "2026-04-16",
+      "breach_date": "2026-04",
+      "data_classes": null,
+      "sensitive": false,
+      "verified": null,
+      "source_id": "hibp-corpus-seed"
+    },
+    {
+      "id": "france-titres-ants",
+      "name": "France Titres (ANTS)",
+      "title": "France Titres (ANTS)",
+      "domain": null,
+      "pwn_count": 11700000,
+      "added_date": "2026-04-15",
       "breach_date": "2026-04",
       "data_classes": null,
       "sensitive": false,
@@ -3019,6 +3032,19 @@
       "source_id": "hibp-corpus-seed"
     },
     {
+      "id": "sfr",
+      "name": "SFR",
+      "title": "SFR",
+      "domain": null,
+      "pwn_count": 1400000,
+      "added_date": "2024-07-12",
+      "breach_date": "2024-07",
+      "data_classes": null,
+      "sensitive": false,
+      "verified": null,
+      "source_id": "hibp-corpus-seed"
+    },
+    {
       "id": "mspy-2024",
       "name": "mSpy (2024)",
       "title": "mSpy (2024)",
@@ -3448,6 +3474,19 @@
       "source_id": "hibp-corpus-seed"
     },
     {
+      "id": "france-travail",
+      "name": "France Travail",
+      "title": "France Travail",
+      "domain": null,
+      "pwn_count": 43000000,
+      "added_date": "2024-03-13",
+      "breach_date": "2024-03",
+      "data_classes": null,
+      "sensitive": false,
+      "verified": null,
+      "source_id": "hibp-corpus-seed"
+    },
+    {
       "id": "misattributed-flipkart-data",
       "name": "Misattributed Flipkart Data",
       "title": "Misattributed Flipkart Data",
@@ -3572,6 +3611,19 @@
       "pwn_count": 207100,
       "added_date": "2024-02-05",
       "breach_date": "2024-01",
+      "data_classes": null,
+      "sensitive": false,
+      "verified": null,
+      "source_id": "hibp-corpus-seed"
+    },
+    {
+      "id": "viamedis-almerys",
+      "name": "Viamedis & Almerys",
+      "title": "Viamedis & Almerys",
+      "domain": null,
+      "pwn_count": 33000000,
+      "added_date": "2024-02-01",
+      "breach_date": "2024-02",
       "data_classes": null,
       "sensitive": false,
       "verified": null,
