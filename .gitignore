@@ -23,6 +23,9 @@ native/llama/llama-server
 
 # C build artifacts
 native/obj/
+native/bin/
+# Runtime PID/state files written by launch.sh
+native/.run/
 
 # relocated runtime data (moved out of server/)
 /models/
