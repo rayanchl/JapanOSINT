@@ -14,6 +14,21 @@ struct IntelDetail: View {
     @State private var item: IntelItem?
     @State private var loading = true
     @State private var error: String?
+    @State private var entities: [ItemEntity] = []
+    @State private var revealed: RevealResult?
+    @State private var revealing = false
+    @State private var revealError: String?
+
+    /// Breach records carry a "breach:" uid and (when a secret exists) an
+    /// operator-revealable credential. Detected off the uid + properties so we
+    /// don't need a dedicated record_type field on `IntelItem`.
+    private var isBreach: Bool { item?.uid.hasPrefix("breach:") ?? false }
+    private var hasSecret: Bool {
+        guard let v = item?.properties?["has_secret"]?.value else { return false }
+        if let b = v as? Bool { return b }
+        if let n = v as? NSNumber { return n.boolValue }
+        return false
+    }
 
     var body: some View {
         ScrollView {
@@ -44,6 +59,8 @@ struct IntelDetail: View {
                         }
                         .buttonStyle(.borderedProminent)
                     }
+                    if !entities.isEmpty { entityChips }
+                    if isBreach && hasSecret { revealSection }
                     if let prov = item.provenance {
                         Text("Provenance").font(.headline).foregroundStyle(theme.text)
                         provenanceCard(prov)
@@ -237,9 +254,97 @@ struct IntelDetail: View {
         defer { loading = false }
         do {
             item = try await apiClient.api.intelItem(uid: uid)
+            // Non-fatal: an item with no extracted entities simply shows no chips.
+            entities = (try? await apiClient.api.itemEntities(uid: uid)) ?? []
             error = nil
         } catch let err {
             error = err.localizedDescription
+        }
+    }
+
+    // MARK: - Entity chips (breach + normal items)
+
+    @ViewBuilder
+    private var entityChips: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Entities").font(.headline).foregroundStyle(theme.text)
+            FlowLayout(spacing: 6) {
+                ForEach(entities) { e in
+                    NavigationLink {
+                        EntityDetailView(type: e.type.lowercased(), entityId: e.entity_id)
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(e.type)
+                                .font(.caption2.weight(.semibold))
+                                .foregroundStyle(theme.textMuted)
+                            Text(e.label ?? e.value)
+                                .font(.caption2)
+                                .foregroundStyle(theme.text)
+                                .lineLimit(1)
+                        }
+                        .padding(.horizontal, 8).padding(.vertical, 4)
+                        .background(Capsule().fill(theme.accentAlt.opacity(0.15)))
+                        .overlay(Capsule().strokeBorder(theme.accentAlt.opacity(0.3), lineWidth: 0.5))
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+
+    // MARK: - Operator credential reveal (breach records)
+
+    @ViewBuilder
+    private var revealSection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if let r = revealed {
+                Text("Revealed credential").font(.headline).foregroundStyle(theme.text)
+                if let note = r.note {
+                    Text(note).font(.caption).foregroundStyle(theme.textMuted)
+                }
+                ForEach(r.breaches ?? []) { b in
+                    HStack {
+                        if let br = b.breach {
+                            Text(br).font(.caption).foregroundStyle(theme.textMuted)
+                        }
+                        Spacer()
+                        if let s = b.secret {
+                            Text(s)
+                                .font(.body.monospaced())
+                                .textSelection(.enabled)
+                                .foregroundStyle(theme.text)
+                        }
+                    }
+                    .padding(8)
+                    .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: 8))
+                }
+            } else {
+                Button {
+                    Task { await doReveal() }
+                } label: {
+                    if revealing {
+                        ProgressView().controlSize(.small)
+                    } else {
+                        Label("Reveal credential", systemImage: "eye")
+                    }
+                }
+                .buttonStyle(.bordered)
+                .disabled(revealing)
+                if let e = revealError {
+                    Text(e).font(.caption2).foregroundStyle(theme.danger)
+                }
+            }
+        }
+    }
+
+    private func doReveal() async {
+        revealing = true
+        revealError = nil
+        defer { revealing = false }
+        do {
+            revealed = try await apiClient.api.revealItem(uid: uid)
+        } catch {
+            revealError = "Reveal failed — operator access required."
         }
     }
 }

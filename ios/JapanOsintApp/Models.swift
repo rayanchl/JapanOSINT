@@ -311,6 +311,11 @@ struct StatusSummary: Decodable {
     let configured: Int?
     let missingKey: Int?
     let working: Int?
+    /// Breach catalog totals. The server emits these only for platform
+    /// operators (0 otherwise), so a non-zero `breachTotal` is what tells the
+    /// Sources screen that `apis` carries category-"breach" rows.
+    let breachTotal: Int?
+    let breachMaterialized: Int?
 }
 
 /// Backend may emit `envVars` as either `["VAR_NAME", ...]` (legacy) or
@@ -482,6 +487,11 @@ struct IntelSource: Codable, Identifiable, Hashable {
     let last_fetched: String?
     let last_published: String?
     let ttl_ms: Int?
+    /// Reliability scoring (roadmap 30), served by /api/status and
+    /// /api/intel/sources. `rated == false` means "no fetch history in the
+    /// window" — the UI must render that as unrated, never as a zero score.
+    /// Optional so cached JSON predating the field still decodes.
+    let trust: SourceTrust?
 }
 
 struct IntelRunResult: Decodable {
@@ -531,10 +541,148 @@ struct IntelItem: Codable, Identifiable, Hashable {
     /// (qAlt), not by the user's original q. The Intel tab renders a small
     /// "translated" badge on rows where this is true.
     let via_translation: Bool?
+
+    /// Near-duplicate corroboration, present only when the request asked for
+    /// `?collapse=1` (roadmap 25). Optional so every existing call site and
+    /// all cached JSON keep decoding unchanged.
+    let cluster: ClusterInfo?
+    /// Machine translation, present only when the request asked for
+    /// `?lang_view=` (roadmap 29). `machine == true` must be labelled as such
+    /// in the UI — it is never the source's own words.
+    let translation: TranslationInfo?
+
     var id: String { uid }
 
     static func == (lhs: IntelItem, rhs: IntelItem) -> Bool { lhs.uid == rhs.uid }
     func hash(into hasher: inout Hasher) { hasher.combine(uid) }
+}
+
+/// An entity mentioned in an intel item (from GET /api/intel/items/:uid/entities).
+/// Carries the exact `entity_id` so chips push straight into `EntityDetailView`
+/// without a re-lookup. Works for both breach records and normal intel items.
+struct ItemEntity: Codable, Identifiable, Hashable {
+    let entity_id: String
+    let type: String
+    let value: String
+    let label: String?
+    var id: String { entity_id }
+}
+struct ItemEntitiesEnvelope: Decodable { let data: [ItemEntity] }
+
+/// Operator-gated breach-secret reveal (GET /api/intel/items/:uid/reveal).
+/// Mirrors breach_index_lookup(reveal=1): per-breach decrypted secret(s), or a
+/// `note` for password (hash-only) records.
+struct RevealResult: Decodable {
+    let found: Bool?
+    let count: Int?
+    let type: String?
+    let note: String?
+    let breaches: [RevealBreach]?
+}
+struct RevealBreach: Decodable, Identifiable, Hashable {
+    let breach: String?
+    let secret: String?
+    var id: String { (breach ?? "") + "|" + (secret ?? "") }
+}
+
+// MARK: - Breach corpus (operator only)
+
+/// One async corpus job (`POST /api/admin/breach/{fetch,ingest}`).
+///
+/// The server keeps these in a fixed in-memory table that is wiped on restart,
+/// and single-flights one fetch and one ingest at a time — so this is a live
+/// progress view, never an audit trail.
+///
+/// `started`/`ended` are **unix epoch seconds**, not ISO-8601 strings like the
+/// rest of the API (see breach_jobs.c). Decoding them as `String` fails; using
+/// them as a `TimeInterval` since 1970 is correct.
+struct BreachJob: Decodable, Identifiable, Hashable {
+    let jobId: String
+    let kind: String            // "fetch" | "ingest"
+    let sourceId: String?
+    let state: String           // "started" | "running" | "done" | "error"
+    let message: String?
+    let rowsIn: Int?
+    let rowsNew: Int?
+    let started: Double?
+    let ended: Double?
+
+    var id: String { jobId }
+    var isRunning: Bool { state == "running" || state == "started" || state == "queued" }
+    var startedAt: Date? { started.map { Date(timeIntervalSince1970: $0) } }
+    var endedAt: Date? { ended.map { Date(timeIntervalSince1970: $0) } }
+
+    /// The staged file path, recoverable only by scraping the fetch job's
+    /// message ("staged <n> bytes -> <path> (status <code>)"). The server
+    /// truncates that path at 120 chars, so treat the result as a suggestion
+    /// and keep the field the operator edits writable.
+    var stagedPath: String? {
+        guard kind == "fetch", let m = message,
+              let r = m.range(of: " -> ") else { return nil }
+        let tail = String(m[r.upperBound...])
+        let path = (tail.components(separatedBy: " (status").first ?? tail)
+            .trimmingCharacters(in: .whitespaces)
+        return path.isEmpty ? nil : path
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case jobId = "job_id", kind, sourceId = "source_id", state, message
+        case rowsIn = "rows_in", rowsNew = "rows_new", started, ended
+    }
+}
+
+struct BreachJobsEnvelope: Decodable { let jobs: [BreachJob] }
+
+/// `GET /api/admin/breach/catalog/preview` — what the seed parser produced,
+/// without writing anything.
+struct BreachCatalogPreview: Decodable {
+    let path: String
+    let format: String
+    let rowsRead: Int
+    let rowsParsed: Int
+    let rowsSkipped: Int
+    let rowsNew: Int
+    let rowsExisting: Int
+    let sample: [BreachCatalogRow]
+
+    private enum CodingKeys: String, CodingKey {
+        case path, format, sample
+        case rowsRead = "rows_read", rowsParsed = "rows_parsed"
+        case rowsSkipped = "rows_skipped", rowsNew = "rows_new"
+        case rowsExisting = "rows_existing"
+    }
+}
+
+struct BreachCatalogRow: Decodable, Identifiable, Hashable {
+    let breachId: String
+    let name: String
+    let pwnCount: Int?
+    let addedDate: String?
+    let breachDate: String?
+
+    var id: String { breachId }
+
+    private enum CodingKeys: String, CodingKey {
+        case breachId = "breach_id", name
+        case pwnCount = "pwn_count", addedDate = "added_date", breachDate = "breach_date"
+    }
+}
+
+/// `POST /api/admin/breach/catalog/load`. Only `loaded` and `format` are sent
+/// for the JSON manifest path; the TSV path fills in the row counters too.
+struct BreachCatalogLoadResult: Decodable {
+    let loaded: Int
+    let format: String?
+    let rowsRead: Int?
+    let rowsSkipped: Int?
+    let rowsNew: Int?
+    let rowsExisting: Int?
+
+    private enum CodingKeys: String, CodingKey {
+        case loaded, format
+        case rowsRead = "rows_read", rowsSkipped = "rows_skipped"
+        case rowsNew = "rows_new", rowsExisting = "rows_existing"
+    }
 }
 
 /// Mirror of the server `provenance` block (see intelStore.buildProvenance).
@@ -590,12 +738,29 @@ struct AlertPredicate: Codable, Hashable {
     var tags_any: [String]?
     var tags_all: [String]?
     var bbox: [Double]?              // [w, s, e, n]
+    /// Spatial alternatives to `bbox` (roadmap 9). At most ONE spatial term
+    /// may be present — the server rejects two, because a second shape is an
+    /// authoring mistake rather than a conjunction.
+    var polygon: [[Double]]?         // ring of [lon, lat]
+    var circle: AlertCircle?
+    /// Reference to a saved `areas_of_interest` row, so one shape can back
+    /// several rules. Resolved tenant-scoped at match time.
+    var aoi_id: String?
+    /// Entity watchlist terms (roadmap 21).
+    var entity_ids: [String]?
+    var entity_types: [String]?
     var record_types: [String]?
     /// Query authoring mode. `nil`/"fts" ⇒ the FTS predicate `q` matches new
     /// items; "llm" ⇒ `nl_query` drives the agentic search pipeline (which
     /// also produces an FTS `q` the user chose). Round-trips opaquely.
     var mode: String?
     var nl_query: String?
+}
+
+struct AlertCircle: Codable, Hashable {
+    var lat: Double
+    var lon: Double
+    var radius_m: Double
 }
 
 struct AlertRule: Codable, Identifiable, Hashable {
@@ -629,6 +794,51 @@ struct AlertEvent: Decodable, Identifiable, Hashable {
     let item_link: String?
 }
 struct AlertEventsEnvelope: Decodable { let data: [AlertEvent] }
+
+// ── Test-fire (POST /api/alerts/:id/test) ──────────────────────────────────
+// The endpoint really delivers now, so the reply carries a per-channel
+// outcome. "The test succeeded" is not useful on its own — an operator is
+// testing precisely because they want to know WHICH channel is broken and
+// why, so `status`/`http_code`/`error` are surfaced rather than collapsed
+// into a single bool.
+struct AlertTestChannelResult: Decodable, Identifiable, Hashable {
+    let channel_idx: Int
+    let type: String
+    let target: String
+    let status: String          // ok | failed | dead | skipped
+    let http_code: Int?
+    let error: String?
+    var id: Int { channel_idx }
+    var ok: Bool { status == "ok" }
+}
+struct AlertTestData: Decodable, Hashable {
+    let rule_id: String
+    let rule_name: String?
+    let event_id: String
+    let results: [AlertTestChannelResult]
+}
+struct AlertTestResult: Decodable, Hashable {
+    let ok: Bool
+    let fired: Bool
+    let data: AlertTestData
+
+    /// One line an operator can act on, e.g.
+    /// "webhook https://… → 502" or "all 2 channels delivered".
+    var summary: String {
+        let bad = data.results.filter { !$0.ok }
+        if bad.isEmpty {
+            let n = data.results.count
+            return n == 1 ? "Channel delivered"
+                          : "All \(n) channels delivered"
+        }
+        return bad.map { r in
+            var s = "\(r.type) \(r.target) → \(r.status)"
+            if let c = r.http_code { s += " (HTTP \(c))" }
+            if let e = r.error, !e.isEmpty { s += ": \(e)" }
+            return s
+        }.joined(separator: "\n")
+    }
+}
 
 // ── Identity / tenancy (GET /api/me) ───────────────────────────────────────
 

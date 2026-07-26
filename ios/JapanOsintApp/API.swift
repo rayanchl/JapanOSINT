@@ -40,7 +40,7 @@ struct API: Sendable {
         return URLSession(configuration: cfg)
     }()
 
-    private nonisolated func makeURL(_ path: String, query: [URLQueryItem] = []) throws -> URL {
+    nonisolated func makeURL(_ path: String, query: [URLQueryItem] = []) throws -> URL {
         let trimmed = baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
         guard var comps = URLComponents(string: trimmed + path) else {
             throw APIError.badURL
@@ -54,7 +54,7 @@ struct API: Sendable {
     /// — only the server's internal collector timeouts will bound the wait.
     /// Used by `post()` for long-running endpoints like intel collector runs
     /// (Wayback CDX, GitHub leaks, etc.) which can take 30–60 s legitimately.
-    private func request(_ url: URL, method: String = "GET",
+    func request(_ url: URL, method: String = "GET",
                          body: Data? = nil, timeout: TimeInterval? = API.userDefaultTimeout) async throws -> Data {
         do {
             return try await send(url, method: method, body: body, timeout: timeout)
@@ -106,7 +106,7 @@ struct API: Sendable {
         return data
     }
 
-    private func get<T: Decodable>(_ path: String, query: [URLQueryItem] = []) async throws -> T {
+    func get<T: Decodable>(_ path: String, query: [URLQueryItem] = []) async throws -> T {
         let url = try makeURL(path, query: query)
         let data = try await request(url)
         do { return try JSONDecoder().decode(T.self, from: data) }
@@ -116,7 +116,7 @@ struct API: Sendable {
     /// POST helper. By default, no client-side timeout — the server's own
     /// per-collector AbortController bounds the wait. Pass `timeout:` to
     /// re-enable a client cap if needed.
-    private func post<T: Decodable>(_ path: String, query: [URLQueryItem] = [],
+    func post<T: Decodable>(_ path: String, query: [URLQueryItem] = [],
                                      body: Data? = nil, timeout: TimeInterval? = nil) async throws -> T {
         let url = try makeURL(path, query: query)
         let data = try await request(url, method: "POST", body: body ?? Data(), timeout: timeout)
@@ -127,7 +127,7 @@ struct API: Sendable {
     /// PUT helper. Mirrors `post()` but uses the user-default timeout since
     /// PUTs in this app go to lightweight metadata endpoints (api-keys store,
     /// future preferences) rather than long-running collector triggers.
-    private func put<T: Decodable>(_ path: String, body: Data,
+    func put<T: Decodable>(_ path: String, body: Data,
                                     timeout: TimeInterval? = API.userDefaultTimeout) async throws -> T {
         let url = try makeURL(path)
         let data = try await request(url, method: "PUT", body: body, timeout: timeout)
@@ -136,7 +136,7 @@ struct API: Sendable {
     }
 
     /// PATCH helper. Same shape as `put()` — used by alert-rule edits.
-    private func patch<T: Decodable>(_ path: String, body: Data,
+    func patch<T: Decodable>(_ path: String, body: Data,
                                       timeout: TimeInterval? = API.userDefaultTimeout) async throws -> T {
         let url = try makeURL(path)
         let data = try await request(url, method: "PATCH", body: body, timeout: timeout)
@@ -145,7 +145,7 @@ struct API: Sendable {
     }
 
     /// DELETE helper — body-less, no response expected (204).
-    private func delete(_ path: String) async throws {
+    func delete(_ path: String) async throws {
         let url = try makeURL(path)
         _ = try await request(url, method: "DELETE")
     }
@@ -263,6 +263,17 @@ struct API: Sendable {
     func intelItem(uid: String) async throws -> IntelItem {
         let env: IntelItemEnvelope = try await get("/api/intel/items/\(uid)")
         return env.data
+    }
+    /// Entities mentioned in an item (breach records + normal intel items).
+    /// Empty array when the item has no extracted mentions.
+    func itemEntities(uid: String) async throws -> [ItemEntity] {
+        let env: ItemEntitiesEnvelope = try await get("/api/intel/items/\(uid)/entities")
+        return env.data
+    }
+    /// Operator-gated: decrypt a breach record's leaked secret(s). Throws
+    /// `.http(403, …)` for non-operators; the caller surfaces that inline.
+    func revealItem(uid: String) async throws -> RevealResult {
+        try await get("/api/intel/items/\(uid)/reveal")
     }
     /// User-initiated trigger. Server runs the named intel collector and
     /// upserts items synchronously; the response carries the result count.
@@ -416,6 +427,79 @@ struct API: Sendable {
         try await post("/api/admin/anomalies/\(id)/requeue", timeout: 15)
     }
 
+    // ── Breach corpus (operator only) ───────────────────────────────────────
+    // The lifecycle the Breach corpus console drives: stage a record dataset by
+    // URL (fetch) → parse the catalog seed without writing (preview) → commit it
+    // (load) → ingest records → watch jobs. Everything here is behind
+    // `opgate_check`; see `breachErrorMessage(_:)` for the two failures worth
+    // naming rather than dumping the raw body.
+
+    /// Parse the seed catalog and report what came out — writes nothing.
+    func breachCatalogPreview(path: String? = nil, limit: Int = 50) async throws -> BreachCatalogPreview {
+        var q = [URLQueryItem(name: "limit", value: String(limit))]
+        if let path, !path.isEmpty { q.append(URLQueryItem(name: "path", value: path)) }
+        return try await get("/api/admin/breach/catalog/preview", query: q)
+    }
+
+    /// Commit the catalog into `breach_meta`. `format` is "tsv" | "json" |
+    /// "auto" (default). Long-running: no client timeout.
+    @discardableResult
+    func loadBreachCatalog(path: String? = nil, format: String? = nil) async throws -> BreachCatalogLoadResult {
+        var body: [String: Any] = [:]
+        if let path, !path.isEmpty { body["path"] = path }
+        if let format, !format.isEmpty { body["format"] = format }
+        return try await post("/api/admin/breach/catalog/load",
+                              body: try JSONSerialization.data(withJSONObject: body))
+    }
+
+    /// Stage a remote record dataset into the server's breach directory. 202 +
+    /// a job; poll `breachJobs()` for the outcome.
+    func startBreachFetch(sourceId: String, url: String) async throws -> BreachJob {
+        try await post("/api/admin/breach/fetch",
+                       body: try JSONSerialization.data(withJSONObject: [
+                           "source_id": sourceId, "url": url,
+                       ]))
+    }
+
+    /// Ingest a staged dataset into the hashed breach index. `type` is
+    /// email|username|phone|password, or "" to let the server auto-detect.
+    func startBreachIngest(sourceId: String, path: String, type: String,
+                           materialize: Bool, dryRun: Bool) async throws -> BreachJob {
+        var body: [String: Any] = [
+            "source_id": sourceId, "path": path,
+            "materialize": materialize, "dry_run": dryRun,
+        ]
+        if !type.isEmpty { body["type"] = type }
+        return try await post("/api/admin/breach/ingest",
+                              body: try JSONSerialization.data(withJSONObject: body))
+    }
+
+    func breachJobs() async throws -> [BreachJob] {
+        let env: BreachJobsEnvelope = try await get("/api/admin/breach/jobs")
+        return env.jobs
+    }
+
+    func breachJob(_ id: String) async throws -> BreachJob {
+        try await get("/api/admin/breach/jobs/\(id)")
+    }
+
+    /// Operator-surface errors worth naming. A 409 is the server's one-job-at-a-
+    /// time guard, not a failure; a 403 here almost always means
+    /// PLATFORM_OPERATOR_EMAILS is unset, which fails closed for everyone and is
+    /// otherwise a baffling thing to hit while signed in as the operator.
+    static func breachErrorMessage(_ error: Error) -> String {
+        guard case let APIError.http(code, body) = error else {
+            return error.localizedDescription
+        }
+        switch code {
+        case 409: return "A breach job is already running — wait for it to finish."
+        case 403 where body.contains("not configured"):
+            return "Operator access is not configured on the server (set PLATFORM_OPERATOR_EMAILS)."
+        case 403: return "Platform operator access required."
+        default:  return body.isEmpty ? "HTTP \(code)" : body
+        }
+    }
+
     // ── Alerts ─────────────────────────────────────────────────────────────
     func alertsList() async throws -> [AlertRule] {
         let env: AlertRulesEnvelope = try await get("/api/alerts")
@@ -443,8 +527,16 @@ struct API: Sendable {
     func alertUnmute(_ id: String) async throws {
         let _: [String: Bool] = try await post("/api/alerts/\(id)/unmute", timeout: 10)
     }
-    func alertTest(_ id: String) async throws {
-        let _: [String: Bool] = try await post("/api/alerts/\(id)/test", timeout: 10)
+    /// Test-fire a rule through its real channels.
+    ///
+    /// This used to decode `[String: Bool]` back when the server replied a
+    /// bare `{"ok":true,"fired":true}` stub. The endpoint now actually
+    /// delivers, and reports a per-channel outcome — so the old decode would
+    /// throw on a *successful* test. Returns the outcome so the UI can say
+    /// which channel failed instead of just "something went wrong".
+    @discardableResult
+    func alertTest(_ id: String) async throws -> AlertTestResult {
+        try await post("/api/alerts/\(id)/test", timeout: 20)
     }
     func alertEvents(_ id: String, limit: Int = 100) async throws -> [AlertEvent] {
         let env: AlertEventsEnvelope = try await get(

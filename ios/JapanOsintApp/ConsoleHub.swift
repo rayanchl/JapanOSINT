@@ -12,6 +12,11 @@ struct ConsoleHub: View {
     @EnvironmentObject var auth: AuthSession
     @Environment(\.theme) private var theme
 
+    /// The inbox list's own store. RootView owns a separate instance purely
+    /// for the tab badge; both read the same endpoint, and keeping them apart
+    /// avoids a list refresh being coupled to a badge poll.
+    @StateObject private var inbox = AlertInboxModel()
+
     /// The Workspace destination hosts owner/admin surfaces (members,
     /// permissions, queries), so hide the row entirely for everyone else
     /// rather than show an empty screen.
@@ -38,11 +43,36 @@ struct ConsoleHub: View {
                     row(.cameras, icon: "video.fill",
                         title: "Camera discovery",
                         subtitle: "Probe public webcams")
+                    row(.inbox, icon: "tray.full.fill",
+                        title: "Inbox",
+                        subtitle: "Everything your rules matched")
                     row(.alerts, icon: "bell.badge.fill",
                         title: "Alerts",
                         subtitle: "Rules, channels, history")
+                    row(.aoi, icon: "map.circle.fill",
+                        title: "Areas of interest",
+                        subtitle: "Saved geofences for alert rules")
+                    row(.watchlists, icon: "eye.fill",
+                        title: "Watchlists",
+                        subtitle: "Entities you are following")
+                    row(.breachMonitors, icon: "shield.lefthalf.filled",
+                        title: "Breach monitors",
+                        subtitle: "Watch an address or domain")
+                    row(.savedSearches, icon: "bookmark.fill",
+                        title: "Saved searches",
+                        subtitle: "Re-run and turn into alerts")
                 } header: {
                     sectionLabel("Discovery")
+                }
+
+                // Saved gave up its phone tab slot to Cases; it is still a
+                // first-class sidebar row on iPad, and reachable here.
+                Section {
+                    row(.saved, icon: "star.fill",
+                        title: "Saved",
+                        subtitle: "Bookmarked map features")
+                } header: {
+                    sectionLabel("Workspace")
                 }
 
                 Section {
@@ -95,6 +125,12 @@ struct ConsoleHub: View {
         case .settings:   SettingsTab()
         case .workspace:  WorkspaceSettingsTab()
         case .admin:      AdminPanel()
+        case .saved:      SavedTab()
+        case .inbox:      AlertInboxView(model: inbox)
+        case .aoi:        AOIListView()
+        case .watchlists: WatchlistsView()
+        case .breachMonitors: BreachMonitorsView()
+        case .savedSearches:  SavedSearchesView()
         }
     }
 

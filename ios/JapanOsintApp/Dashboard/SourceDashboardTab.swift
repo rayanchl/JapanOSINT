@@ -62,12 +62,14 @@ struct SourceDashboardTab: View {
                             if !apis.isEmpty {
                                 statusChart
                                 categoryChart
+                                if hasBreaches { breachStrip }
                             }
                         } else {
                             summaryCards
                             if !apis.isEmpty {
                                 statusChart
                                 categoryChart
+                                if hasBreaches { breachStrip }
                             }
                             collectorsList
                         }
@@ -128,7 +130,59 @@ struct SourceDashboardTab: View {
             statCard("Degraded", s?.degraded ?? 0,       color: theme.warning, icon: "exclamationmark.triangle.fill")
             statCard("Offline",  s?.offline ?? 0,        color: theme.danger,  icon: "xmark.octagon.fill")
             statCard("Gated",    s?.gated ?? 0,          color: theme.textMuted, icon: "lock.fill")
+            if hasBreaches {
+                statCard("Breaches", breachTotal, color: theme.danger,
+                         icon: "lock.trianglebadge.exclamationmark")
+            }
         }
+    }
+
+    // MARK: - Breach catalog
+    //
+    // The server inlines the breach catalog into /api/status for platform
+    // operators only, so these are 0 for everyone else and the whole section
+    // simply doesn't render. No client-side role check is needed — or wanted,
+    // since the server is the actual gate.
+
+    private var breachTotal: Int { summary?.breachTotal ?? 0 }
+    private var breachMaterialized: Int { summary?.breachMaterialized ?? 0 }
+    private var hasBreaches: Bool { breachTotal > 0 }
+
+    /// Breaches get their own compact strip rather than a bar in the category
+    /// chart: at ~1k entries against a few hundred real collectors, one Breach
+    /// bar would flatten every other category into invisibility.
+    private var breachStrip: some View {
+        let pending = max(0, breachTotal - breachMaterialized)
+        let frac = breachTotal > 0 ? Double(breachMaterialized) / Double(breachTotal) : 0
+        return VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 6) {
+                Image(systemName: "lock.trianglebadge.exclamationmark")
+                    .font(.caption).foregroundStyle(theme.danger)
+                Text("Breach corpus").font(.headline).foregroundStyle(theme.text)
+                Spacer()
+                Text("\(breachTotal)")
+                    .font(.caption.monospacedDigit()).foregroundStyle(theme.textMuted)
+            }
+            GeometryReader { geo in
+                HStack(spacing: 2) {
+                    if breachMaterialized > 0 {
+                        RoundedRectangle(cornerRadius: 2).fill(theme.danger)
+                            .frame(width: max(2, geo.size.width * frac))
+                    }
+                    RoundedRectangle(cornerRadius: 2).fill(theme.textMuted.opacity(0.25))
+                }
+            }
+            .frame(height: 8)
+            HStack(spacing: Space.sm) {
+                Pill(text: "\(breachMaterialized) with records", tone: .danger,
+                     icon: "tray.full.fill")
+                Pill(text: "\(pending) catalog only", tone: .neutral, icon: "clock")
+            }
+            Text("Catalog entries come from the local seed. Records arrive only after an operator ingest.")
+                .font(.caption2).foregroundStyle(theme.textMuted)
+        }
+        .padding(12)
+        .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: 12))
     }
 
     private var emptyState: some View {
@@ -170,7 +224,12 @@ struct SourceDashboardTab: View {
     // MARK: - Charts
 
     private var sourcesByStatus: [(OsintSource.StatusKind, [StatusRow], Color, String)] {
-        let groups = Dictionary(grouping: apis) { row -> OsintSource.StatusKind in
+        // Breaches are excluded for the same reason as in `categoryBuckets`:
+        // this chart draws one dot per source, and ~1k catalog entries would
+        // bury every real collector under a wall of pending dots. `breachStrip`
+        // reports them on their own scale.
+        let charted = apis.filter { $0.category != "breach" }
+        let groups = Dictionary(grouping: charted) { row -> OsintSource.StatusKind in
             let k = row.statusKind
             return (k == .unknown) ? .pending : k
         }
@@ -243,7 +302,9 @@ struct SourceDashboardTab: View {
     private var categoryBuckets: [(String, Int, Int)] {
         var totals: [String: Int] = [:]
         var favCounts: [String: Int] = [:]
-        for c in apis.groupedAsCollectors() {
+        // Breaches are excluded deliberately — see `breachStrip`, which shows
+        // them on their own scale instead of dwarfing every real category here.
+        for c in apis.groupedAsCollectors() where c.category != "breach" {
             let cat = c.category ?? "Other"
             totals[cat, default: 0] += 1
             if favs.contains(c.id) { favCounts[cat, default: 0] += 1 }
@@ -545,8 +606,11 @@ struct CollectorRow: View {
         }
     }
 
+    /// `LazyVStack`, not `VStack`: the breach collector groups the whole catalog
+    /// (~1k sources) under a single row, and eagerly materialising every child
+    /// on expand is a visible stall.
     private var expandedBody: some View {
-        VStack(spacing: 1) {
+        LazyVStack(spacing: 1) {
             ForEach(collector.sources) { src in
                 SourceRow(row: src) { selectSource(src) }
             }
@@ -602,11 +666,23 @@ struct SourceRow: View {
     let onTap: () -> Void
     @Environment(\.theme) private var theme
 
+    private var isBreach: Bool { row.category == "breach" }
+
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 8) {
-                Circle().fill(statusColor)
-                    .frame(width: 10, height: 10)
+                // Breach rows carry the same glyph + danger tint they get in the
+                // intel list (Intel/IntelSourceRow.swift), so a breach reads the
+                // same wherever it appears.
+                if isBreach {
+                    Image(systemName: "lock.trianglebadge.exclamationmark")
+                        .font(.caption2)
+                        .foregroundStyle(theme.danger)
+                        .frame(width: 10, height: 10)
+                } else {
+                    Circle().fill(statusColor)
+                        .frame(width: 10, height: 10)
+                }
                 VStack(alignment: .leading, spacing: 2) {
                     Text(row.name ?? row.id).font(.subheadline).lineLimit(1)
                         .foregroundStyle(theme.text)
@@ -695,6 +771,8 @@ private struct SourceDetail: View {
                     kv("Records",      row.recordsCount.map(String.init) ?? "—")
                 }
 
+                if isBreach { breachSection }
+
                 if row.requiresKey == true {
                     section("API key") {
                         if let env = row.envVars, !env.isEmpty {
@@ -738,6 +816,67 @@ private struct SourceDetail: View {
                 Button("Close") { dismiss() }
             }
         }
+    }
+
+    // MARK: - Breach detail
+    //
+    // There is nothing to probe and no credential to configure for a breach, so
+    // the "API key" section and ProbeActionsView stay hidden — they already are,
+    // because the server reports requiresKey:false for these rows.
+
+    private var isBreach: Bool { row.category == "breach" }
+
+    /// `recordsCount` is the ingested record count once records exist, and falls
+    /// back to the catalog's account figure before then. Only `status` tells the
+    /// two apart, so label the number for what it actually is rather than
+    /// implying a corpus that hasn't been ingested.
+    private var hasRecords: Bool { row.status == "online" }
+
+    private var breachSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            section("Breach") {
+                if hasRecords {
+                    kv("Records ingested", (row.recordsCount ?? 0).formatted())
+                } else {
+                    kv("Accounts (catalog)", (row.recordsCount ?? 0).formatted())
+                    kv("Records ingested", "none yet", valueColor: theme.textMuted)
+                }
+                kv("Last seen", prettyDate(row.lastSuccess))
+            }
+            if hasRecords {
+                NavigationLink {
+                    IntelSourceItemsView(source: breachAsIntelSource)
+                } label: {
+                    Label("View records", systemImage: "list.bullet.rectangle")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+            } else {
+                Text("Ingest a dataset for this breach from Admin → Breach corpus to make its records searchable.")
+                    .font(.caption2)
+                    .foregroundStyle(theme.textMuted)
+            }
+        }
+    }
+
+    /// Breach records serve through the ordinary intel item list
+    /// (`GET /api/intel/items?source=<slug>` → breach_adapter_list), so the
+    /// existing viewer works as-is once given a matching source descriptor.
+    private var breachAsIntelSource: IntelSource {
+        IntelSource(id: row.id,
+                    name: row.name ?? row.id,
+                    name_ja: row.nameJa,
+                    category: row.category,
+                    description: row.description,
+                    url: row.url,
+                    item_count: row.recordsCount ?? 0,
+                    last_fetched: row.lastSuccess,
+                    last_published: row.lastSuccess,
+                    ttl_ms: nil,
+                    // A breach corpus is a static dump, not a polled feed —
+                    // there is no fetch history to score, so it is correctly
+                    // unrated rather than given a fabricated grade.
+                    trust: nil)
     }
 
     private var probeActions: some View {

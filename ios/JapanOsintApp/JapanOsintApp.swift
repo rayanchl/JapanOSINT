@@ -22,13 +22,20 @@ struct JapanOsintApp: App {
     @StateObject private var featureStats = FeatureStats()
     @StateObject private var playback = PlaybackState()
 
+    @StateObject private var cases: CaseStore
+
     init() {
         let container = AppDataContainer.make()
         self.modelContainer = container
         let appSettings = AppSettings(container: container)
+        // CaseStore needs the SAME APIClient instance the rest of the app
+        // uses (it carries the auth/tenant headers), so build it into a local
+        // first rather than constructing a second client.
+        let client = APIClient(settings: appSettings)
         _settings   = StateObject(wrappedValue: appSettings)
         _auth       = StateObject(wrappedValue: AuthSession(settings: appSettings))
-        _apiClient  = StateObject(wrappedValue: APIClient(settings: appSettings))
+        _apiClient  = StateObject(wrappedValue: client)
+        _cases      = StateObject(wrappedValue: CaseStore(apiClient: client))
         _saved      = StateObject(wrappedValue: SavedStore(container: container))
         _intelCache = StateObject(wrappedValue: IntelCache(container: container))
     }
@@ -43,6 +50,7 @@ struct JapanOsintApp: App {
                 .environmentObject(registry)
                 .environmentObject(layerCache)
                 .environmentObject(saved)
+                .environmentObject(cases)
                 .environmentObject(intelCache)
                 .environmentObject(collectorFavs)
                 .environmentObject(mapNav)

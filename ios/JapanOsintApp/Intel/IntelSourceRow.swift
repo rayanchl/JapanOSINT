@@ -16,9 +16,15 @@ struct IntelSourceRow: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            Image(systemName: registry.symbol(for: source.id))
+            // Breach sources get a distinctive lock glyph + danger tint; every
+            // other source keeps its registry-hashed icon/color.
+            Image(systemName: source.category == "breach"
+                  ? "lock.trianglebadge.exclamationmark"
+                  : registry.symbol(for: source.id))
                 .font(.title3)
-                .foregroundStyle(registry.color(for: source.id))
+                .foregroundStyle(source.category == "breach"
+                                 ? theme.danger
+                                 : registry.color(for: source.id))
                 .frame(width: 28, height: 28)
 
             VStack(alignment: .leading, spacing: 2) {

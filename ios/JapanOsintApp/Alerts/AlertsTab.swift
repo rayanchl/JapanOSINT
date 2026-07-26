@@ -10,6 +10,9 @@ struct AlertsTab: View {
     @State private var rules: [AlertRule] = []
     @State private var loading = false
     @State private var error: String?
+    /// Successful test-fire outcome. Separate from `error` so a delivered
+    /// test reads as confirmation, not as a failure in the danger colour.
+    @State private var testResult: String?
     @State private var editorRule: AlertRule?
     @State private var eventsRule: AlertRule?
     @State private var showCreate: Bool = false
@@ -38,6 +41,23 @@ struct AlertsTab: View {
         }
         .task { if rules.isEmpty { await reload() } }
         .refreshable { await reload() }
+        // Test-fire now performs real delivery, so its outcome needs a modal:
+        // the inline `error` line only renders in the empty state, and a
+        // rule you just tested is by definition not the empty state.
+        .alert("Test delivery",
+               isPresented: Binding(get: { testResult != nil },
+                                    set: { if !$0 { testResult = nil } })) {
+            Button("OK", role: .cancel) { testResult = nil }
+        } message: {
+            Text(testResult ?? "")
+        }
+        .alert("Test failed",
+               isPresented: Binding(get: { error != nil && !rules.isEmpty },
+                                    set: { if !$0 { error = nil } })) {
+            Button("OK", role: .cancel) { error = nil }
+        } message: {
+            Text(error ?? "")
+        }
         .sheet(isPresented: $showCreate) {
             AlertEditor(rule: AlertRule.blank, onSave: { saved in
                 rules.insert(saved, at: 0)
@@ -167,8 +187,17 @@ struct AlertsTab: View {
 
     private func test(_ rule: AlertRule) async {
         do {
-            try await apiClient.api.alertTest(rule.id)
-            Haptics.success()
+            let result = try await apiClient.api.alertTest(rule.id)
+            // A 200 no longer means "delivered" — the request succeeded, but
+            // an individual channel can still have been refused. Report the
+            // channel outcome, since that is the only reason to press Test.
+            if result.ok {
+                testResult = result.summary
+                Haptics.success()
+            } else {
+                error = result.summary
+                Haptics.error()
+            }
         } catch let e {
             error = e.localizedDescription
             Haptics.error()

@@ -308,7 +308,7 @@ private struct AuthStep: View {
             if showServer {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Backend URL").font(.caption2).foregroundStyle(theme.textMuted)
-                    TextField("http://host.local:4072", text: $settings.backendBaseURL)
+                    TextField("http://host.local:4000", text: $settings.backendBaseURL)
                         .textContentType(.URL)
                         .compatKeyboardURL()
                         .compatNoAutocap()

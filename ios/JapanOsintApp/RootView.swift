@@ -16,8 +16,12 @@ struct RootView: View {
     @EnvironmentObject var settings: AppSettings
     @EnvironmentObject var auth: AuthSession
     @EnvironmentObject var mapNav: MapNavigation
+    @EnvironmentObject var apiClient: APIClient
     @Environment(\.theme) private var theme
     @Environment(\.horizontalSizeClass) private var hSize
+
+    /// Owned here so the tab badge and the inbox list read one counter.
+    @StateObject private var alertInbox = AlertInboxModel()
 
     /// Owner/admins reach the Workspace console surface (members, queries).
     private var canManageWorkspace: Bool {
@@ -90,15 +94,25 @@ struct RootView: View {
                 .tabItem { Label("Search", systemImage: "magnifyingglass") }
                 .tag(AppTab.search.rawValue)
 
-            SavedTab()
-                .tabItem { Label("Saved", systemImage: "star.fill") }
-                .tag(AppTab.saved.rawValue)
+            // Cases takes the slot Saved used to hold. iOS collapses a 6th
+            // phone tab into the generic "More" drawer — the exact styling
+            // loss this file's header warns about — and Cases supersedes the
+            // flat starred list anyway. Saved stays reachable from Console
+            // (and is a full sidebar row on iPad).
+            CasesTab()
+                .tabItem { Label("Cases", systemImage: "folder.fill") }
+                .tag(AppTab.cases.rawValue)
 
+            // Unread alerts badge rides on Console, because that is where the
+            // inbox lives on phone — badging Cases would point at the wrong
+            // screen.
             ConsoleHub()
                 .tabItem { Label("Console", systemImage: "slider.horizontal.3") }
                 .tag(AppTab.console.rawValue)
+                .badge(alertInbox.unreadCount)
         }
         .background(theme.surface)
+        .task { await alertInbox.refreshUnreadCount(api: apiClient.api) }
     }
 
     // MARK: - iPad (regular)
@@ -111,6 +125,7 @@ struct RootView: View {
         case console(ConsoleDestination)
         case entities          // entity browser (iPad sidebar; phone reaches
                                // it via push from entity chips)
+        case timeline          // unified temporal view (roadmap 18)
     }
 
     @State private var sidebar: SidebarItem? = .workspace(.map)
@@ -132,7 +147,7 @@ struct RootView: View {
         .onChange(of: mapNav.selectedTab) { _, raw in
             guard let tab = AppTab(rawValue: raw) else { return }
             switch tab {
-            case .map, .intel, .saved, .search: sidebar = .workspace(tab)
+            case .map, .intel, .saved, .search, .cases: sidebar = .workspace(tab)
             case .console:
                 if let dest = mapNav.consolePath.first {
                     sidebar = .console(dest)
@@ -152,8 +167,10 @@ struct RootView: View {
                     sidebarLabel(.workspace(.map),    icon: "map.fill",          title: "Map")
                     sidebarLabel(.workspace(.intel),  icon: "newspaper.fill",    title: "Intel")
                     sidebarLabel(.workspace(.search), icon: "magnifyingglass",   title: "Search")
+                    sidebarLabel(.workspace(.cases),  icon: "folder.fill",       title: "Cases")
                     sidebarLabel(.entities,           icon: "point.3.connected.trianglepath.dotted", title: "Entities")
                     sidebarLabel(.workspace(.saved),  icon: "star.fill",         title: "Saved")
+                    sidebarLabel(.timeline,           icon: "chart.bar.xaxis",   title: "Timeline")
                 } header: {
                     Text("Workspace")
                 }
@@ -192,7 +209,12 @@ struct RootView: View {
         case .workspace(.map),  .none: MapTab()
         case .workspace(.intel):       IntelTab()
         case .workspace(.search):      SearchTab()
+        case .workspace(.cases):       CasesTab()
         case .entities:                EntitiesView()
+        // `TimelineScreen`, NOT `TimelineView` — SwiftUI owns that name and
+        // MapTab/OnboardingFlow use it unqualified; a module-scope
+        // `TimelineView` would shadow it and break those files.
+        case .timeline:                NavigationStack { TimelineScreen() }
         case .workspace(.saved):       SavedTab()
         case .workspace(.console):     ConsoleHub()
         case .console(let dest):
@@ -287,7 +309,7 @@ private struct ConnectionSettingsSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("http://host.local:4072", text: $settings.backendBaseURL)
+                    TextField("http://host.local:4000", text: $settings.backendBaseURL)
                         .textContentType(.URL)
                         .compatKeyboardURL()
                         .compatNoAutocap()

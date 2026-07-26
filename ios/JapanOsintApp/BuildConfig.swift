@@ -23,9 +23,9 @@ enum BuildConfig {
     /// self-host + real backends.
     static let backendBaseURL: String = {
         #if os(macOS)
-        return "http://127.0.0.1:4072"
+        return "http://127.0.0.1:4000"
         #else
-        return "http://Rayans-MacBook-Pro.local:4072"
+        return "http://Rayans-MacBook-Pro.local:4000"
         #endif
     }()
 

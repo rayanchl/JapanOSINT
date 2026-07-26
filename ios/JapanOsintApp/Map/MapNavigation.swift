@@ -7,13 +7,20 @@ import CoreLocation
 /// readable (no more `selectedTab = 9` magic-number lines).
 // `search` appended LAST so existing raw values (map=0…console=3) are
 // unchanged — no `selectedTab` int call-site shifts.
-enum AppTab: Int { case map = 0, intel, saved, console, search }
+/// Raw values are persisted in `selectedTab`, so new cases are APPENDED —
+/// renumbering would silently reopen a returning user on a different tab.
+enum AppTab: Int { case map = 0, intel, saved, console, search, cases }
 
 /// Destinations inside the Console hub (the catch-all tab for everything that
 /// isn't Map / Intel / Saved). The hub uses a `NavigationStack(path:)` so
 /// cross-tab actions like "open this API key" can deep-link straight in.
 enum ConsoleDestination: Hashable {
     case sources, database, scheduler, cameras, followLog, apiKeys, alerts, settings, workspace, admin
+    /// Saved moved off the phone tab bar when Cases took its slot (a 6th tab
+    /// collapses the tail into iOS's generic "More" drawer, losing all
+    /// styling). It stays a first-class sidebar row on iPad.
+    case saved
+    case aoi, watchlists, breachMonitors, savedSearches, inbox
 }
 
 /// Cross-tab coordinator. Tabs other than Map (Camera Discovery, etc.) push

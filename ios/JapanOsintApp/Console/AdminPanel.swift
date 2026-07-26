@@ -107,6 +107,9 @@ struct AdminPanel: View {
         navRow(icon: "wrench.and.screwdriver.fill",
                title: "Repair worker",
                subtitle: "Self-healing pipeline & fixes") { RepairWorkerView() }
+        navRow(icon: "lock.trianglebadge.exclamationmark",
+               title: "Breach corpus",
+               subtitle: "Request, parse, ingest datasets") { BreachCorpusView() }
         navRow(icon: "key.horizontal.fill",
                title: "Platform API keys",
                subtitle: "Server-wide default credentials") {
