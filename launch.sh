@@ -35,7 +35,7 @@ mkdir -p "$RUN"
 
 # ---- launch tags (env wins → flags override → these prod defaults) ---------
 # Runtime / server pod
-: "${PORT:=4072}"                                   # httpd port (Node used 4000)
+: "${PORT:=4000}"                                   # httpd port
 : "${JO_DB:=$REPO/data/japanmap.db}"                # sqlite db
 : "${JO_SCHEMA:=$NATIVE/core/schema.sql}"           # schema (auto-applied)
 : "${JO_ENV_FILE:=$REPO/.env}"                      # binary self-loads this
@@ -143,7 +143,7 @@ ${G}POD SELECTION (./launch.sh up ...)${NC}
   --port N  --db PATH  --env-file PATH  --model PATH
 
 ${G}SERVER / RUNTIME POD  (read by bin/japanosint)${NC}
-  PORT=$PORT                 httpd port            (binary default 4072)
+  PORT=$PORT                 httpd port            (binary default 4000)
   JO_DB=$JO_DB
   JO_SCHEMA=...schema.sql      auto-applied on open
   JO_ENV_FILE=$JO_ENV_FILE   binary loads it itself
