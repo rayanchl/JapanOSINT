@@ -4,6 +4,8 @@
 #include "scheduler.h"
 #include "../source.h"
 #include "intel.h"
+#include "evidence.h"
+#include "content_change.h"
 #include "maint_detect.h"
 #include "../third_party/sqlite3.h"
 #include <stdio.h>
@@ -42,7 +44,16 @@ int scheduler_run_source(db_handle *db, const source_def *d,
 
   struct timespec t0, t1;
   clock_gettime(CLOCK_MONOTONIC, &t0);
+  /* Bind the evidence scope (roadmap 17) around the collector run. httpclient.c
+   * has no db_handle or source_id of its own, so its capture hook reads them
+   * from this thread-local scope — and fails closed when none is bound. */
+  evidence_scope_begin(db, d->id, NULL);
+  /* Same thread-local pattern for content-change detection (roadmap 26): the
+   * httpclient hook needs a db_handle and source_id it cannot otherwise see. */
+  content_change_scope_begin(db, d->id);
   int rc = d->run(&ctx, &sink);
+  content_change_scope_end();
+  evidence_scope_end();
   clock_gettime(CLOCK_MONOTONIC, &t1);
   long duration_ms = (t1.tv_sec - t0.tv_sec) * 1000L +
                      (t1.tv_nsec - t0.tv_nsec) / 1000000L;

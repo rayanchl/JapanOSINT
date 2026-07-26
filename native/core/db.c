@@ -1,4 +1,9 @@
 #include "db.h"
+#include "translate.h"         /* translate_migrate (owns its own index) */
+#include "simhash.h"           /* simhash_ensure_schema (owns its own index) */
+#include "content_change.h"    /* content_change_ensure_schema (same reason) */
+#include "media.h"             /* media_migrate (same reason) */
+#include "camera_stills.h"     /* camera_stills_migrate (same reason) */
 #include "source_registry.h"   /* src_meta_get (merged metadata)        */
 #include "../source.h"         /* registry_all / registry_count (sources) */
 #include <stdio.h>
@@ -27,6 +32,49 @@ static char *slurp(const char *path) {
 
 int db_exec(db_handle *db, const char *sql, char **errmsg) {
   return sqlite3_exec(db->h, sql, NULL, NULL, errmsg) == SQLITE_OK ? 0 : 1;
+}
+
+/* ADD COLUMN, but only when it is genuinely absent.
+ *
+ * SQLite has no "ALTER TABLE ... ADD COLUMN IF NOT EXISTS", and db_open()
+ * re-applies schema.sql on every boot, so an unguarded ALTER fails on the
+ * second start and would abort boot. Probing PRAGMA table_info first makes
+ * the migration idempotent and keeps every added column in one auditable
+ * place. `decl` is the type + constraints only (e.g. "TEXT",
+ * "INTEGER NOT NULL DEFAULT 0") — not the column name.
+ *
+ * NOTE the SQLite restriction this quietly respects: a column added with a
+ * NOT NULL constraint must carry a non-NULL DEFAULT, otherwise existing rows
+ * would violate it and the ALTER is rejected. */
+void ensure_column(db_handle *db, const char *table, const char *col,
+                   const char *decl) {
+  if (!db || !db->h || !table || !col || !decl) return;
+  char q[256];
+  snprintf(q, sizeof q, "PRAGMA table_info(%s)", table);
+  sqlite3_stmt *st;
+  int found = 0, any = 0;
+  if (sqlite3_prepare_v2(db->h, q, -1, &st, NULL) != SQLITE_OK) return;
+  while (sqlite3_step(st) == SQLITE_ROW) {
+    any = 1;
+    const unsigned char *n = sqlite3_column_text(st, 1);
+    if (n && strcmp((const char *)n, col) == 0) { found = 1; break; }
+  }
+  sqlite3_finalize(st);
+  /* No rows at all => the table does not exist yet. Adding a column to a
+   * missing table is not an error we should paper over, so skip silently and
+   * let whoever owns the CREATE handle it. */
+  if (!any || found) return;
+
+  char sql[512];
+  snprintf(sql, sizeof sql, "ALTER TABLE %s ADD COLUMN %s %s", table, col, decl);
+  char *err = NULL;
+  if (sqlite3_exec(db->h, sql, NULL, NULL, &err) != SQLITE_OK) {
+    fprintf(stderr, "[db] ensure_column %s.%s failed: %s\n",
+            table, col, err ? err : "?");
+    sqlite3_free(err);
+  } else {
+    fprintf(stderr, "[db] migrated: added %s.%s\n", table, col);
+  }
 }
 
 /* Seed the sources table from the runtime registry so EVERY registered source
@@ -103,24 +151,71 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   }
   /* Boot migrations (idempotent, same discipline as the tenancy ALTERs in
    * Node). schema.sql is generated from the live DB so new runtime-only
-   * columns are added here, not in the generated schema. */
-  {
-    sqlite3_stmt *st;
-    int has_sched = 0;
-    if (sqlite3_prepare_v2(db->h, "PRAGMA table_info(sources)", -1, &st, NULL)
-        == SQLITE_OK) {
-      while (sqlite3_step(st) == SQLITE_ROW)
-        if (strcmp((const char *)sqlite3_column_text(st, 1), "schedule_mode") == 0)
-          has_sched = 1;
-      sqlite3_finalize(st);
-    }
-    if (!has_sched)
-      sqlite3_exec(db->h,
-        "ALTER TABLE sources ADD COLUMN schedule_mode TEXT NOT NULL "
-        "DEFAULT 'map_cron' "
-        "CHECK(schedule_mode IN ('map_cron','search_only'))",
-        NULL, NULL, NULL);
-  }
+   * columns are added here, not in the generated schema.
+   *
+   * SQLite has no "ADD COLUMN IF NOT EXISTS", and schema.sql re-runs on every
+   * boot, so a bare ALTER would error on the second start. ensure_column()
+   * probes table_info first — this is THE way to add a column in this
+   * codebase; do not append it to the generated schema.sql instead, because
+   * CREATE TABLE IF NOT EXISTS silently skips an existing table and the
+   * column would never appear on any deployed database. */
+  ensure_column(db, "sources", "schedule_mode",
+    "TEXT NOT NULL DEFAULT 'map_cron' "
+    "CHECK(schedule_mode IN ('map_cron','search_only'))");
+
+  /* Notification inbox (roadmap item 11): read/unread state per event. */
+  ensure_column(db, "alert_events", "read_at", "TEXT");
+
+  /* Correlation scoring (roadmap item 22): significance over co-mention
+   * edges. NULL until the stats pod has run, and NULL for pairs below the
+   * support floor — a missing score is "not enough evidence", not zero. */
+  ensure_column(db, "entity_relationships", "pmi",      "REAL");
+  ensure_column(db, "entity_relationships", "lift",     "REAL");
+  ensure_column(db, "entity_relationships", "co_count", "INTEGER");
+  ensure_column(db, "entity_relationships", "stats_at", "TEXT");
+
+  /* Breach exposure monitoring (roadmap item 24): the email host, so a domain
+   * monitor is an index seek instead of an unindexable LIKE '%@host' scan over
+   * the whole corpus. The INDEX on this column is created by
+   * breach_monitor_migrate(), not schema.sql — schema.sql runs above this
+   * block, so it would reference a column that does not exist yet. */
+  ensure_column(db, "breach_items", "value_domain", "TEXT");
+
+  /* Evidence capture (roadmap 17) is per-source OPT-IN and defaults OFF. 415
+   * sources on schedules down to 60s would fill a disk in days otherwise, and
+   * the hot-path check fails closed if this column is missing. */
+  ensure_column(db, "sources", "capture_evidence", "INTEGER NOT NULL DEFAULT 0");
+
+  /* Translation (roadmap 29) owns its own migration: its pending-scan partial
+   * index references title_en/translated_at/translate_failed, which do not
+   * exist until its own ensure_column calls have run. Putting that index in
+   * schema.sql (which executes above this block) would fail with "no such
+   * column", abandon the rest of the script, and brick first boot. */
+  translate_migrate(db);
+
+  /* Near-duplicate clustering (roadmap 25) likewise owns its own migration:
+   * idx_intel_items_cluster and its partial backfill index both reference
+   * columns added below, so they cannot live in schema.sql either. */
+  simhash_ensure_schema(db);
+
+  /* Content change detection (roadmap 26). watch_content is tri-state:
+   * NULL = use the source type's default, 0 = never, 1 = always. Its index is
+   * created inside content_change_ensure_schema() for the same reason as
+   * above — the column does not exist when schema.sql runs. */
+  ensure_column(db, "sources", "watch_content", "INTEGER");
+  content_change_ensure_schema(db);
+
+  /* Media analysis (roadmap 27). media_migrate() owns the rest, including the
+   * one index that references the column added just above. */
+  ensure_column(db, "intel_items", "media_scanned_at", "TEXT");
+  media_migrate(db);
+
+  /* Camera stills (roadmap 28). Cameras are intel_items rows
+   * ("camera-discovery|<uid>") — there is no separate cameras table — so the
+   * opt-in flag lives there. camera_stills_migrate() owns the partial index
+   * over it, for the usual schema.sql-ordering reason. */
+  ensure_column(db, "intel_items", "capture_stills", "INTEGER NOT NULL DEFAULT 0");
+  camera_stills_migrate(db);
 
   /* Every registered source gets a sources-table row (idempotent). */
   db_seed_sources(db);

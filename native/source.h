@@ -28,7 +28,12 @@ typedef struct intel_item {
 
 typedef struct intel_sink {
   void *ctx;
-  /* returns 1 if a NEW row, 0 if updated, <0 on error */
+  /* returns 1 if a NEW row, 0 if updated, <0 on error.
+   * (This was aspirational until the alert engine landed: the upsert's
+   * sqlite3_changes() is 1 for an insert AND an update, so emit() always
+   * returned 1. core/intel.c now probes for the uid first, so the
+   * distinction is real — alert rules fire on new intel, not on every
+   * scheduled re-fetch of an unchanged row.) */
   int (*emit)(struct intel_sink *, const intel_item *);
 } intel_sink;
 

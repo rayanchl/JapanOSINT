@@ -15,6 +15,10 @@
 #include "core/httpd.h"
 #include "core/scheduler.h"
 #include "core/breach_index.h"
+#include "core/breach_meta.h"
+#include "core/alert_deliver.h"
+#include "core/alert_eval.h"
+#include "core/evidence.h"
 #include "source.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -141,12 +145,40 @@ int main(int argc, char **argv) {
 
   if (!selftest) {
     /* P3 serve path: no heavy preamble (integrity scan + 5s llm probe would
-     * delay the listener). PORT env (Node uses 4000); default 4072 so C runs
-     * side-by-side with Node during migration. */
+     * delay the listener). PORT env overrides; default 4000. */
     const char *pe = getenv("PORT");
-    int port = pe && *pe ? atoi(pe) : 4072;
+    int port = pe && *pe ? atoi(pe) : 4000;
+    /* Best-effort: load the breach catalog so breaches surface as intel sources.
+     * Idempotent upsert; a missing file just logs and continues. The committed
+     * seed TSV is the source of truth and needs no Node preprocessing step, so
+     * try it first and fall back to the generated JSON manifest only if it is
+     * unreadable (older checkouts that have the JSON but not the TSV). */
+    if (breach_meta_load_seed_tsv(&db, NULL, NULL) < 0)
+      breach_meta_load_manifest(&db, NULL);
+    /* Pre-warm the alert rule cache so the first ingested row of the process
+     * doesn't pay the load. Purely an optimisation — the cache is lazy and
+     * its mutex is statically initialised, so everything works without it. */
+    alert_eval_init(&db);
+    /* Entity-watchlist reconciling sweep (roadmap 21). Entity extraction runs
+     * asynchronously, long after emit() — so an entity-term rule evaluated
+     * only at ingest would match nothing and the feature would silently never
+     * fire. WITHOUT THIS LINE, WATCHLISTS DO NOT WORK. */
+    alert_eval_sweep_start(&db);
     scheduler_start_background(&db);   /* serve + refresh collectors (Node parity) */
+    /* Alert delivery worker (P0.2). Started after the scheduler so a matched
+     * event can be delivered as soon as ingest produces it; stopped BEFORE
+     * db_close() so the worker is never holding a statement on a closed
+     * handle. Set JO_NO_ALERT_DELIVER=1 to run a collector-only node. */
+    alert_deliver_start(&db);
+    /* Evidence reaper (roadmap 17). Keeps the content-addressed blob store
+     * under its byte budget; it unlinks blobs only, never evidence rows —
+     * deleting a row would break the hash chain and be indistinguishable
+     * from tampering. JO_NO_EVIDENCE_GC disables it. */
+    evidence_gc_start(&db);
     int rc = httpd_serve(&db, port);
+    evidence_gc_stop();
+    alert_eval_sweep_stop();
+    alert_deliver_stop();
     db_close(&db);
     return rc;
   }

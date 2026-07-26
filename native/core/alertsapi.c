@@ -1,4 +1,7 @@
 #include "alertsapi.h"
+#include "alert_deliver.h"
+#include "breach_adapter.h"
+#include "alert_eval.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <openssl/rand.h>
@@ -118,9 +121,47 @@ static const char *validate_rule(cJSON *b, const char **name, int *enabled,
       return "predicate.tags_any must be array";
     if ((x=cJSON_GetObjectItem(pred,"tags_all")) && !cJSON_IsArray(x))
       return "predicate.tags_all must be array";
-    if ((x=cJSON_GetObjectItem(pred,"bbox")) &&
-        (!cJSON_IsArray(x) || cJSON_GetArraySize(x) != 4))
+    /* ── item 9: at most one spatial term ──────────────────────────
+     * Two spatial terms in one predicate is an authoring mistake, not a
+     * conjunction — rejecting it here beats failing closed silently at
+     * evaluation time, when nobody is watching. */
+    cJSON *sb = cJSON_GetObjectItem(pred,"bbox");
+    cJSON *sp = cJSON_GetObjectItem(pred,"polygon");
+    cJSON *sc = cJSON_GetObjectItem(pred,"circle");
+    cJSON *sa = cJSON_GetObjectItem(pred,"aoi_id");
+    if (sb && cJSON_IsNull(sb)) sb = NULL;
+    if (sp && cJSON_IsNull(sp)) sp = NULL;
+    if (sc && cJSON_IsNull(sc)) sc = NULL;
+    if (sa && cJSON_IsNull(sa)) sa = NULL;
+    if ((!!sb + !!sp + !!sc + !!sa) > 1)
+      return "predicate may carry only one of bbox/polygon/circle/aoi_id";
+    if (sb && (!cJSON_IsArray(sb) || cJSON_GetArraySize(sb) != 4))
       return "predicate.bbox must be [w,s,e,n]";
+    if (sp) {
+      char *gj = cJSON_PrintUnformatted(sp);
+      const char *why = alert_eval_shape_check("polygon", gj, 0,0,0,0);
+      free(gj);
+      if (why) return why;          /* static string, safe to return */
+    }
+    if (sc) {
+      char *gj = cJSON_PrintUnformatted(sc);
+      const char *why = alert_eval_shape_check("circle", gj, 0,0,0,0);
+      free(gj);
+      if (why) return why;
+    }
+    if (sa && (!cJSON_IsString(sa) || !sa->valuestring[0]))
+      return "predicate.aoi_id must be a non-empty string";
+    /* aoi_id existence is deliberately NOT checked here: a 404-on-save would
+     * make a rule un-editable the moment its AOI is deleted. Existence is a
+     * matching question, and the evaluator fails closed on an unresolvable
+     * id; aoiapi.c refuses (409) to delete an AOI a rule still references. */
+    /* ── item 21: entity terms ─────────────────────────────────────── */
+    if ((x=cJSON_GetObjectItem(pred,"entity_ids")) && !cJSON_IsNull(x) &&
+        !cJSON_IsArray(x))
+      return "predicate.entity_ids must be array";
+    if ((x=cJSON_GetObjectItem(pred,"entity_types")) && !cJSON_IsNull(x) &&
+        !cJSON_IsArray(x))
+      return "predicate.entity_types must be array";
     /* Query authoring mode: "fts" (default) matches the FTS predicate.q;
      * "llm" carries a natural-language query (nl_query) driving the agentic
      * search pipeline. Both round-trip opaquely in predicate_json. */
@@ -402,21 +443,160 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
     if (jb) cJSON_Delete(jb); *st=200; return o;
   }
   if (is_post && strcmp(action,"test")==0) {
-    sqlite3_stmt *s;
-    sqlite3_prepare_v2(db->h,
-      "SELECT 1 FROM alert_rules WHERE id=?1 AND tenant_id=?2",-1,&s,NULL);
-    sqlite3_bind_text(s,1,id,-1,SQLITE_TRANSIENT);
-    sqlite3_bind_text(s,2,tid,-1,SQLITE_TRANSIENT);
-    int found = sqlite3_step(s)==SQLITE_ROW;
-    sqlite3_finalize(s);
     if (jb) cJSON_Delete(jb);
-    if (!found) return err(st,404,"Not found");
-    /* evaluateForNewItem (matcher + email/webhook dispatch) is part of the
-     * alertEngine subsystem ported with P5/P6. Contract response preserved;
-     * no dispatch occurs yet. */
-    *st=200; return strdup("{\"ok\":true,\"fired\":true}");
+    /* P0.3 — real dispatch. Synthesizes an event and pushes it through the
+     * rule's configured channels immediately, so an operator can verify a
+     * webhook BEFORE trusting it with real intel. Writes ledger rows under a
+     * synthetic event id but never an alert_events row, so a test can't
+     * pollute the inbox or be picked up again by the delivery worker.
+     * Returns 404 internally when the rule isn't this tenant's. */
+    return alert_deliver_test(db, tid, id, st);
   }
 
   if (jb) cJSON_Delete(jb);
+  return err(st,404,"not_found");
+}
+
+/* ── /api/alert-events — the cross-rule notification inbox (item 11) ────────
+ * /api/alerts/:id/events answers "what did THIS rule match"; an inbox has to
+ * answer "what is waiting for ME", which is tenant-wide, newest-first and
+ * stateful. Suppressed events are excluded by default: a storm-capped row
+ * exists so the storm is diagnosable, not so it can bury the inbox it was
+ * capping. read_at is added by db.c's ensure_column() boot migration. */
+char *alerteventsapi(db_handle *db, const char *tid, const char *uid,
+                     const char *method, const char *seg,
+                     const char *qs, int *st) {
+  int is_get = strcmp(method,"GET")==0, is_post = strcmp(method,"POST")==0;
+
+  /* tiny query-string reader: qs is "a=1&b=2" (already URL-decoded enough for
+   * our integer/flag params; no string values are read here). */
+  int qflag = 0, qlimit = 0;
+  if (qs && *qs) {
+    const char *p = strstr(qs, "unread=");
+    if (p) qflag = atoi(p + 7);
+    p = strstr(qs, "limit=");
+    if (p) qlimit = atoi(p + 6);
+  }
+
+  if (is_get && strcmp(seg, "unread-count") == 0) {
+    sqlite3_stmt *s; long n = 0;
+    if (sqlite3_prepare_v2(db->h,
+          "SELECT COUNT(*) FROM alert_events "
+          "WHERE tenant_id=?1 AND suppressed=0 AND read_at IS NULL",
+          -1,&s,NULL) == SQLITE_OK) {
+      sqlite3_bind_text(s,1,tid,-1,SQLITE_TRANSIENT);
+      if (sqlite3_step(s)==SQLITE_ROW) n = sqlite3_column_int64(s,0);
+    }
+    sqlite3_finalize(s);
+    char *o = malloc(64);
+    if (!o) return err(st,500,"server_error");
+    snprintf(o,64,"{\"unread\":%ld}",n);
+    *st=200; return o;
+  }
+
+  if (is_post && strcmp(seg, "read-all") == 0) {
+    sqlite3_stmt *s;
+    if (sqlite3_prepare_v2(db->h,
+          "UPDATE alert_events SET read_at=datetime('now') "
+          "WHERE tenant_id=?1 AND read_at IS NULL",-1,&s,NULL) != SQLITE_OK)
+      return err(st,500,"server_error");
+    sqlite3_bind_text(s,1,tid,-1,SQLITE_TRANSIENT);
+    sqlite3_step(s); int ch = sqlite3_changes(db->h); sqlite3_finalize(s);
+    char *o = malloc(64);
+    if (!o) return err(st,500,"server_error");
+    snprintf(o,64,"{\"ok\":true,\"marked\":%d}",ch);
+    *st=200; return o;
+  }
+
+  if (is_post && seg[0]) {           /* POST /api/alert-events/:id/read */
+    sqlite3_stmt *s;
+    if (sqlite3_prepare_v2(db->h,
+          "UPDATE alert_events SET read_at=datetime('now') "
+          "WHERE id=?1 AND tenant_id=?2",-1,&s,NULL) != SQLITE_OK)
+      return err(st,500,"server_error");
+    sqlite3_bind_text(s,1,seg,-1,SQLITE_TRANSIENT);
+    sqlite3_bind_text(s,2,tid,-1,SQLITE_TRANSIENT);
+    sqlite3_step(s); int ch = sqlite3_changes(db->h); sqlite3_finalize(s);
+    if (ch==0) return err(st,404,"Not found");
+    *st=200; return strdup("{\"ok\":true}");
+  }
+
+  if (is_get && !seg[0]) {
+    int lim = qlimit>0?qlimit:100; if(lim<1)lim=1; if(lim>500)lim=500;
+    const char *sql = qflag
+      ? "SELECT e.id,e.rule_id,r.name,e.item_uid,e.matched_at,e.read_at,"
+        "e.delivered_channels_json,i.title,i.source_id,i.link "
+        "FROM alert_events e "
+        "LEFT JOIN alert_rules r ON r.id=e.rule_id "
+        "LEFT JOIN intel_items i ON i.uid=e.item_uid "
+        "WHERE e.tenant_id=?1 AND e.suppressed=0 AND e.read_at IS NULL "
+        "ORDER BY e.matched_at DESC LIMIT ?2"
+      : "SELECT e.id,e.rule_id,r.name,e.item_uid,e.matched_at,e.read_at,"
+        "e.delivered_channels_json,i.title,i.source_id,i.link "
+        "FROM alert_events e "
+        "LEFT JOIN alert_rules r ON r.id=e.rule_id "
+        "LEFT JOIN intel_items i ON i.uid=e.item_uid "
+        "WHERE e.tenant_id=?1 AND e.suppressed=0 "
+        "ORDER BY e.matched_at DESC LIMIT ?2";
+    sqlite3_stmt *s;
+    if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK)
+      return err(st,500,"server_error");
+    sqlite3_bind_text(s,1,tid,-1,SQLITE_TRANSIENT);
+    sqlite3_bind_int(s,2,lim);
+    cJSON *arr = cJSON_CreateArray();
+    while (sqlite3_step(s)==SQLITE_ROW) {
+      cJSON *r = cJSON_CreateObject();
+      cJSON_AddStringToObject(r,"id",(const char*)sqlite3_column_text(s,0));
+      cJSON_AddStringToObject(r,"rule_id",(const char*)sqlite3_column_text(s,1));
+      const char *rn = ctext(s,2);
+      cJSON_AddItemToObject(r,"rule_name", rn?cJSON_CreateString(rn):cJSON_CreateNull());
+      cJSON_AddStringToObject(r,"item_uid",(const char*)sqlite3_column_text(s,3));
+      cJSON_AddStringToObject(r,"matched_at",(const char*)sqlite3_column_text(s,4));
+      const char *ra = ctext(s,5);
+      cJSON_AddItemToObject(r,"read_at", ra?cJSON_CreateString(ra):cJSON_CreateNull());
+      cJSON_AddBoolToObject(r,"unread", ra ? 0 : 1);
+      cJSON_AddItemToObject(r,"delivered_channels", safe_json(ctext(s,6),1));
+      const char *t=ctext(s,7),*sr=ctext(s,8),*lk=ctext(s,9);
+      const char *uid = (const char *)sqlite3_column_text(s,3);
+      /* Breach-monitor hits (roadmap 24) carry a synthetic "breach:<keyid>"
+       * uid that has no intel_items row, so the LEFT JOIN above yields NULL
+       * previews and the inbox would show a bare uid. Resolve those through
+       * the breach adapter, which is the same redacted path the delivered
+       * webhook payload uses — the inbox and the webhook must not disagree
+       * about what an alert was. Only breach uids take this per-row lookup;
+       * ordinary intel rows keep the single-query join. */
+      if (!t && uid && strncmp(uid, "breach:", 7) == 0) {
+        char *bj = breach_adapter_item_by_uid(db, uid);
+        if (bj) {
+          cJSON *bo = cJSON_Parse(bj);
+          cJSON *bd = bo ? cJSON_GetObjectItem(bo, "data") : NULL;
+          if (bd) {
+            cJSON *bt = cJSON_GetObjectItem(bd, "title");
+            cJSON *bs = cJSON_GetObjectItem(bd, "source_id");
+            cJSON *bl = cJSON_GetObjectItem(bd, "link");
+            cJSON_AddItemToObject(r,"item_title",
+              (bt && cJSON_IsString(bt)) ? cJSON_CreateString(bt->valuestring) : cJSON_CreateNull());
+            cJSON_AddItemToObject(r,"item_source_id",
+              (bs && cJSON_IsString(bs)) ? cJSON_CreateString(bs->valuestring) : cJSON_CreateNull());
+            cJSON_AddItemToObject(r,"item_link",
+              (bl && cJSON_IsString(bl)) ? cJSON_CreateString(bl->valuestring) : cJSON_CreateNull());
+          }
+          if (bo) cJSON_Delete(bo);
+          free(bj);
+        }
+      }
+      if (!cJSON_GetObjectItem(r,"item_title")) {
+        cJSON_AddItemToObject(r,"item_title", t?cJSON_CreateString(t):cJSON_CreateNull());
+        cJSON_AddItemToObject(r,"item_source_id", sr?cJSON_CreateString(sr):cJSON_CreateNull());
+        cJSON_AddItemToObject(r,"item_link", lk?cJSON_CreateString(lk):cJSON_CreateNull());
+      }
+      cJSON_AddItemToArray(arr,r);
+    }
+    sqlite3_finalize(s);
+    cJSON *w = cJSON_CreateObject(); cJSON_AddItemToObject(w,"data",arr);
+    char *o = cJSON_PrintUnformatted(w); cJSON_Delete(w);
+    *st=200; return o;
+  }
+
   return err(st,404,"not_found");
 }

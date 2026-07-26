@@ -144,9 +144,19 @@ static int parse_bbox(const char *query, bbox_t *b) {
   return 1;
 }
 
+/* Japanese timetables are JST (UTC+9, no DST). The server process may run in
+ * any zone — a dev box here reports Europe/Berlin — so every service-day and
+ * seconds-since-midnight calculation in this file derives wall-clock from
+ * UTC+9 explicitly. Using localtime_r would silently shift every departure
+ * board, and every interpolated vehicle position, by the host's offset. */
+#define JST_OFFSET_SEC (9 * 3600)
+static void jst_now(struct tm *out) {
+  time_t t = time(NULL) + JST_OFFSET_SEC;
+  gmtime_r(&t, out);
+}
+
 static int sec_since_midnight_local(void) {
-  time_t t = time(NULL);
-  struct tm lt; localtime_r(&t, &lt);
+  struct tm lt; jst_now(&lt);
   return lt.tm_hour * 3600 + lt.tm_min * 60 + lt.tm_sec;
 }
 
@@ -368,8 +378,7 @@ static char *route_stop_departures(db_handle *db, const char *stopId,
 
   /* lazyHydrateForStop is a no-op here (DEVIATIONS #3). */
 
-  time_t now = time(NULL);
-  struct tm lt; localtime_r(&now, &lt);
+  struct tm lt; jst_now(&lt);
   int dow = lt.tm_wday;                       /* 0=Sun, == Date.getDay() */
   char ymd[9];
   snprintf(ymd, sizeof ymd, "%04d%02d%02d",
@@ -532,19 +541,62 @@ static int interp_shape(const shp_pt *sh, int n, double distM,
   *olat = sh[n-1].lat; *olon = sh[n-1].lon; return 1;
 }
 
+/* Parse an ISO-8601 instant to epoch seconds. Accepts "YYYY-MM-DDTHH:MM:SS"
+ * with an optional fractional part and an optional zone suffix ("Z" or
+ * ±HH:MM); a bare timestamp is read as UTC, matching what the clients send.
+ * Returns 0 on success. */
+static int parse_iso_utc(const char *s, time_t *out) {
+  if (!s || !*s) return -1;
+  int Y, M, D, h = 0, m = 0, sec = 0;
+  int n = sscanf(s, "%4d-%2d-%2dT%2d:%2d:%2d", &Y, &M, &D, &h, &m, &sec);
+  if (n < 3) {
+    n = sscanf(s, "%4d-%2d-%2d %2d:%2d:%2d", &Y, &M, &D, &h, &m, &sec);
+    if (n < 3) return -1;
+  }
+  if (M < 1 || M > 12 || D < 1 || D > 31) return -1;
+  struct tm tm; memset(&tm, 0, sizeof tm);
+  tm.tm_year = Y - 1900; tm.tm_mon = M - 1; tm.tm_mday = D;
+  tm.tm_hour = h; tm.tm_min = m; tm.tm_sec = sec;
+  time_t base = timegm(&tm);
+  if (base == (time_t)-1) return -1;
+
+  /* explicit numeric offset -> normalise back to UTC */
+  const char *z = strpbrk(s + 10, "+-");
+  if (z) {
+    int oh = 0, om = 0;
+    if (sscanf(z + 1, "%2d:%2d", &oh, &om) >= 1) {
+      long off = (long)oh * 3600 + (long)om * 60;
+      base += (*z == '+') ? -off : off;
+    }
+  }
+  *out = base;
+  return 0;
+}
+
 static char *route_active_trips(db_handle *db, const char *query) {
   char tbuf[64];
   int has_t = qget(query, "t", tbuf, sizeof tbuf);
+  time_t at_utc = 0;
+  int have_at = 0;
   if (has_t && tbuf[0]) {
-    int oky = 0; for (const char *p = tbuf; *p; p++) if (isdigit((unsigned char)*p)) { oky = 1; break; }
-    if (!oky) return err_json("bad t (ISO date)");
+    if (parse_iso_utc(tbuf, &at_utc) != 0) return err_json("bad t (ISO date)");
+    have_at = 1;
   }
   bbox_t bb; int bs = parse_bbox(query, &bb);
   if (bs == -1) return err_json("bbox must be minLng,minLat,maxLng,maxLat");
   int limit = qint(query, "limit", 500, 1, 1000);
 
-  time_t now = time(NULL);
-  struct tm lt; localtime_r(&now, &lt);
+  /* `t` was previously validated and then discarded, so this endpoint could
+   * only ever answer for the current instant — which also left the client's
+   * time slider unable to scrub vehicle positions. Honour it: everything below
+   * keys off the JST wall-clock of the requested instant. */
+  struct tm lt;
+  if (have_at) {
+    time_t j = at_utc + JST_OFFSET_SEC;
+    gmtime_r(&j, &lt);
+  } else {
+    jst_now(&lt);
+  }
   const char *dowc = DOW_COLS[lt.tm_wday];
   char today[9];
   snprintf(today, sizeof today, "%04d%02d%02d",
@@ -963,7 +1015,7 @@ static char *cluster_summary(db_handle *db, const char *clusterUid) {
   /* lazyHydrateForStop per member: no-op (DEVIATIONS #3). */
 
   int nowSec = sec_since_midnight_local();
-  time_t now = time(NULL); struct tm lt; localtime_r(&now, &lt);
+  struct tm lt; jst_now(&lt);
   char hhmm[6]; snprintf(hhmm, sizeof hhmm, "%02d:%02d", lt.tm_hour, lt.tm_min);
 
   cJSON *allDep = cJSON_CreateArray();
@@ -1156,7 +1208,7 @@ static char *station_summary(db_handle *db, const char *stationUid) {
 
   cJSON *odptDep = cJSON_CreateArray();
   if (odptStationId) {
-    time_t now = time(NULL); struct tm lt; localtime_r(&now, &lt);
+    struct tm lt; jst_now(&lt);
     char hhmm[6]; snprintf(hhmm, sizeof hhmm, "%02d:%02d", lt.tm_hour, lt.tm_min);
     query_odpt(db, odptStationId, hhmm, 10, odptDep, NULL);
   }

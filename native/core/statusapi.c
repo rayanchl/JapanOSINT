@@ -1,5 +1,7 @@
 #include "statusapi.h"
 #include "source_registry.h"
+#include "source_trust.h"
+#include "breach_meta.h"
 #include "credtab.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
@@ -172,7 +174,8 @@ typedef struct {
 
 /* serializeRow(row,reg,creds,intelAgg) — `s` must be stepped to a row of the
  * 19-col sources query below; `A`/`na` the intel-aggregate table. */
-static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na) {
+static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
+                         const source_trust *TT, int nt) {
   const char *id = ctext(s,0);
   const src_meta *m = src_meta_get(id);
   const char *status = ctext(s,5);
@@ -223,6 +226,33 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na) {
   cJSON_AddItemToObject(o,"missingVars", cJSON_DetachItemFromObject(cred,"missingVars"));
   cJSON_Delete(cred);
 
+  /* Roadmap item 30 — reliability badge. `rated:false` (with null score and
+   * grade) means "no fetch history in the 30-day window", which is a distinct
+   * claim from a bad score; the client must render it as "unrated", never as
+   * zero. Components ride along so the UI can explain the number instead of
+   * asserting it. */
+  {
+    const source_trust *t = source_trust_find(TT, nt, id);
+    cJSON *tr = cJSON_CreateObject();
+    if (t && t->rated) {
+      cJSON_AddBoolToObject(tr,"rated", 1);
+      cJSON_AddNumberToObject(tr,"reliability", t->reliability);
+      cJSON_AddStringToObject(tr,"grade", t->grade);
+      cJSON_AddNumberToObject(tr,"successRate", t->success_rate);
+      cJSON_AddNumberToObject(tr,"freshness", t->freshness);
+      cJSON_AddNumberToObject(tr,"anomalyRate", t->anomaly_rate);
+      cJSON_AddNumberToObject(tr,"volumeStability", t->volume_stability);
+      cJSON_AddNumberToObject(tr,"runs30d", (double)t->runs_30d);
+      cJSON_AddNumberToObject(tr,"anomalies30d", (double)t->anomalies_30d);
+      cJSON_AddBoolToObject(tr,"quarantined", t->quarantined);
+    } else {
+      cJSON_AddBoolToObject(tr,"rated", 0);
+      cJSON_AddItemToObject(tr,"reliability", cJSON_CreateNull());
+      cJSON_AddItemToObject(tr,"grade", cJSON_CreateNull());
+    }
+    cJSON_AddItemToObject(o,"trust", tr);
+  }
+
   add_str_or_null(o,"probeRequestUrl", ctext(s,11));
   add_str_or_null(o,"probeRequestMethod", ctext(s,12));
   add_str_or_null(o,"probeRequestHeaders", ctext(s,13));
@@ -230,6 +260,74 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na) {
   add_str_or_null(o,"probeResponseHeaders", ctext(s,15));
   add_str_or_null(o,"probeResponseBody", ctext(s,16));
   add_str_or_null(o,"probeKind", ctext(s,17));
+  return o;
+}
+
+/* One breach_meta catalog row → a synthesized status row.
+ *
+ * Key order is identical to status_row() above so a client decodes both shapes
+ * with one model. A breach is a dataset you either have records for or don't:
+ * there is no endpoint to probe and no credential to configure, so probe*, the
+ * env-var table and layer/updateInterval are all null/empty, and trust is
+ * `rated:false` — never 0, which would read as "scored badly" rather than
+ * "not applicable". recordsCount falls back to the catalog's account count so
+ * the row is informative before any ingest has run. */
+static cJSON *breach_status_row(const breach_src_row *br) {
+  long long count = br->item_count > 0 ? br->item_count : br->pwn_count;
+  const char *fresh = br->last_seen[0]  ? br->last_seen
+                    : br->added_date[0] ? br->added_date : NULL;
+
+  char desc[192];
+  snprintf(desc, sizeof desc, "%lld accounts%s%s", br->pwn_count,
+           br->breach_date[0] ? " \xc2\xb7 breached " : "",
+           br->breach_date[0] ? br->breach_date : "");
+
+  cJSON *o = cJSON_CreateObject();
+  add_str_or_null(o, "id", br->breach_id);
+  add_str_or_null(o, "name", br->name[0] ? br->name : br->breach_id);
+  cJSON_AddBoolToObject(o, "probeConsent", 0);
+  cJSON_AddBoolToObject(o, "gated", 0);
+
+  cJSON_AddNumberToObject(o, "intelTotal",       (double)count);
+  cJSON_AddNumberToObject(o, "intelGeocoded",    0);
+  cJSON_AddNumberToObject(o, "intelUngeocoded",  0);
+  cJSON_AddNumberToObject(o, "intelAwaitingGeo", 0);
+  add_str_or_null(o, "intelLastFetched", fresh);
+
+  cJSON_AddNullToObject(o, "nameJa");
+  add_str_or_null(o, "type", "dataset");
+  add_str_or_null(o, "category", "breach");
+  add_str_or_null(o, "url", br->domain[0] ? br->domain : NULL);
+  add_str_or_null(o, "description", desc);
+  cJSON_AddBoolToObject(o, "free", 1);
+  cJSON_AddNullToObject(o, "layer");
+  cJSON_AddNullToObject(o, "updateInterval");
+
+  add_str_or_null(o, "status", br->item_count > 0 ? "online" : "pending");
+  cJSON_AddNullToObject(o, "lastCheck");
+  add_str_or_null(o, "lastSuccess", fresh);
+  cJSON_AddNullToObject(o, "responseTimeMs");
+  cJSON_AddNumberToObject(o, "recordsCount", (double)count);
+  cJSON_AddNullToObject(o, "errorMessage");
+
+  cJSON_AddBoolToObject(o, "requiresKey", 0);
+  cJSON_AddBoolToObject(o, "configured", 1);
+  cJSON_AddItemToObject(o, "envVars", cJSON_CreateArray());
+  cJSON_AddItemToObject(o, "missingVars", cJSON_CreateArray());
+
+  cJSON *tr = cJSON_CreateObject();
+  cJSON_AddBoolToObject(tr, "rated", 0);
+  cJSON_AddNullToObject(tr, "reliability");
+  cJSON_AddNullToObject(tr, "grade");
+  cJSON_AddItemToObject(o, "trust", tr);
+
+  cJSON_AddNullToObject(o, "probeRequestUrl");
+  cJSON_AddNullToObject(o, "probeRequestMethod");
+  cJSON_AddNullToObject(o, "probeRequestHeaders");
+  cJSON_AddNullToObject(o, "probeResponseStatus");
+  cJSON_AddNullToObject(o, "probeResponseHeaders");
+  cJSON_AddNullToObject(o, "probeResponseBody");
+  cJSON_AddNullToObject(o, "probeKind");
   return o;
 }
 
@@ -270,30 +368,33 @@ static agg_t *load_aggs(db_handle *db, int *out_n) {
 
 /* GET /api/status/:id — single serializeRow, or NULL if no such source. */
 char *statusapi_one(db_handle *db, const char *id) {
-  int na = 0;
+  int na = 0, nt = 0;
   agg_t *A = load_aggs(db, &na);
+  source_trust *TT = source_trust_load(db, &nt);
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h, STATUS_SRC_COLS " WHERE id=?1", -1, &s, NULL)
-      != SQLITE_OK) { free(A); return NULL; }
+      != SQLITE_OK) { free(A); free(TT); return NULL; }
   sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
   char *js = NULL;
   if (sqlite3_step(s) == SQLITE_ROW) {
-    cJSON *o = status_row(s, A, na);
+    cJSON *o = status_row(s, A, na, TT, nt);
     js = cJSON_PrintUnformatted(o);
     cJSON_Delete(o);
   }
   sqlite3_finalize(s);
   free(A);
+  free(TT);
   return js;
 }
 
-char *statusapi_build(db_handle *db) {
-  int na = 0;
+char *statusapi_build(db_handle *db, int include_breach) {
+  int na = 0, nt = 0;
   agg_t *A = load_aggs(db, &na);
+  source_trust *TT = source_trust_load(db, &nt);
   sqlite3_stmt *s;
   /* getAllSources(): SELECT * FROM sources ORDER BY category, name */
   if (sqlite3_prepare_v2(db->h, STATUS_SRC_COLS " ORDER BY category, name",
-                         -1, &s, NULL) != SQLITE_OK) { free(A); return NULL; }
+                         -1, &s, NULL) != SQLITE_OK) { free(A); free(TT); return NULL; }
 
   cJSON *apis = cJSON_CreateArray();
   int c_total=0,c_online=0,c_degraded=0,c_offline=0,c_pending=0,c_gated=0,
@@ -305,7 +406,7 @@ char *statusapi_build(db_handle *db) {
     if (statusapi_strip_has(id)) continue;
     if (m && statusapi_strip_has(m->layer)) continue;
 
-    cJSON *o = status_row(s, A, na);
+    cJSON *o = status_row(s, A, na, TT, nt);
     cJSON_AddItemToArray(apis, o);
 
     /* summary tallies (mirrors status.js filters) — read back from `o` */
@@ -330,6 +431,27 @@ char *statusapi_build(db_handle *db) {
   }
   sqlite3_finalize(s);
   free(A);
+  free(TT);
+
+  /* Breach catalog rows, appended for operators only. They tally into the
+   * ordinary status counters like any other row, plus their own two totals. */
+  int c_breach = 0, c_breach_mat = 0;
+  if (include_breach) {
+    int nb = 0;
+    breach_src_row *B = breach_meta_sources(db, &nb);
+    for (int k = 0; k < nb; k++) {
+      /* never shadow a real registry source that happens to share the slug —
+       * the same guard intelapi_intel_sources() applies. */
+      if (src_meta_get(B[k].breach_id)) continue;
+
+      cJSON_AddItemToArray(apis, breach_status_row(&B[k]));
+      c_total++;
+      c_breach++;
+      if (B[k].item_count > 0) { c_online++; c_working++; c_breach_mat++; }
+      else                       c_pending++;
+    }
+    free(B);
+  }
 
   cJSON *summary = cJSON_CreateObject();
   cJSON_AddNumberToObject(summary,"total", c_total);
@@ -342,6 +464,10 @@ char *statusapi_build(db_handle *db) {
   cJSON_AddNumberToObject(summary,"configured", c_configured);
   cJSON_AddNumberToObject(summary,"missingKey", c_missing);
   cJSON_AddNumberToObject(summary,"working", c_working);
+  /* Always emitted (0 when the caller isn't an operator) so clients can decode
+   * them without treating absence as a distinct case. */
+  cJSON_AddNumberToObject(summary,"breachTotal", c_breach);
+  cJSON_AddNumberToObject(summary,"breachMaterialized", c_breach_mat);
 
   char ts[40]; iso_now(ts, sizeof ts);
   cJSON *env = cJSON_CreateObject();

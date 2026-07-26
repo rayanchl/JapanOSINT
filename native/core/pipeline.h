@@ -8,8 +8,11 @@
  * per-service rows already persisted live during dispatch (improvement over
  * the JS ingest-at-done). Entities flow into the graph via the sink's
  * standard NER hooks; the explicit seed→discovered pivot_discovered edge
- * (searchIngest.js) needs an entity-WRITE api (entityapi.h is read-only) —
- * documented follow-up. */
+ * (searchIngest.js) IS written — see pipeline.c's es_add_relationship() call.
+ * (An older note here claimed this was a follow-up blocked on a missing
+ * entity-write API. That was wrong twice over: entitystore.h has always been
+ * the write surface, and only entityapi.h — the HTTP READ api — lacked one.
+ * Human curation of the graph is tracked separately as roadmap item 20.) */
 #ifndef JO_PIPELINE_H
 #define JO_PIPELINE_H
 #include "db.h"

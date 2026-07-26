@@ -1,6 +1,8 @@
 #include "intelapi.h"
 #include "source_registry.h"
 #include "fts.h"
+#include "breach_meta.h"
+#include "breach_adapter.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <stdio.h>
@@ -176,6 +178,9 @@ static cJSON *row_to_item(sqlite3_stmt *s, int full) {
 }
 
 char *intelapi_item_by_uid(db_handle *db, const char *uid) {
+  /* Breach records are served from breach_items via the adapter, not intel_items. */
+  if (uid && strncmp(uid, "breach:", 7) == 0)
+    return breach_adapter_item_by_uid(db, uid);
   static const char *Q =
     "SELECT " ITEM_COLS " FROM intel_items WHERE uid=?1";
   sqlite3_stmt *s;
@@ -199,6 +204,12 @@ char *intelapi_item_by_uid(db_handle *db, const char *uid) {
  * caller-composed extra WHERE). ORDER/limit/cursor/envelope unchanged, so a
  * query with only `limit` set is byte-identical to the prior contract. */
 char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
+  /* A source-filtered request for a breach source is served from breach_items
+   * via the adapter (keyset over row id). Unfiltered / non-breach requests stay
+   * on intel_items, so breach volume never enters the operational feed. */
+  if (Q && Q->source && *Q->source && breach_meta_is_source(db, Q->source))
+    return breach_adapter_list(db, Q->source, Q->q, Q->cursor, Q->limit);
+
   int safe = Q && Q->limit > 0 ? Q->limit : 50;
   if (safe < 1) safe = 1;
   if (safe > 200) safe = 200;
@@ -493,9 +504,15 @@ char *intelapi_intel_sources(db_handle *db) {
   }
   sqlite3_finalize(s);
 
+  /* 1b. breach catalog rows → intel sources (category "breach"). Their
+   * item_count comes from breach_items (materialized), NOT the intel_items
+   * aggregate above, so breach volume never touches operational counts. */
+  int nb = 0;
+  breach_src_row *B = breach_meta_sources(db, &nb);
+
   /* 2. ids = registry order, then orphan agg ids not in the registry */
   int nreg = src_meta_count();
-  int total = nreg + na;
+  int total = nreg + na + nb;
   sortrow *SR = malloc(total * sizeof *SR);
   int nout = 0;
 
@@ -561,6 +578,46 @@ char *intelapi_intel_sources(db_handle *db) {
     nout++;
   }
 
+  /* breach catalog sources. Each breach_meta row → one source with
+   * category "breach"; item_count is the materialized breach_items count,
+   * falling back to the catalog pwn_count for display before ingest. */
+  for (int k = 0; k < nb; k++) {
+    breach_src_row *br = &B[k];
+    const char *id = br->breach_id;
+    if (src_meta_get(id)) continue;   /* never shadow a real registry source */
+
+    long long count = br->item_count > 0 ? br->item_count : br->pwn_count;
+    const char *fresh = br->last_seen[0] ? br->last_seen
+                      : br->added_date[0] ? br->added_date : "";
+    char desc[192];
+    snprintf(desc, sizeof desc, "%lld accounts%s%s", br->pwn_count,
+             br->breach_date[0] ? " \xc2\xb7 breached " : "",
+             br->breach_date[0] ? br->breach_date : "");
+
+    cJSON *o = cJSON_CreateObject();
+    cJSON_AddStringToObject(o, "id", id);
+    cJSON_AddStringToObject(o, "name", br->name[0] ? br->name : id);
+    cJSON_AddNullToObject(o, "name_ja");
+    cJSON_AddStringToObject(o, "category", "breach");
+    cJSON_AddStringToObject(o, "description", desc);
+    add_str_or_null(o, "url", br->domain[0] ? br->domain : NULL);
+    cJSON_AddNumberToObject(o, "item_count",   (double)count);
+    cJSON_AddNumberToObject(o, "geocoded",     0);
+    cJSON_AddNumberToObject(o, "ungeocoded",   0);
+    cJSON_AddNumberToObject(o, "awaiting_geo", 0);
+    add_str_or_null(o, "last_fetched",   fresh[0] ? fresh : NULL);
+    add_str_or_null(o, "last_published", fresh[0] ? fresh : NULL);
+    cJSON_AddNumberToObject(o, "ttl_ms", get_ttl_ms(db->h, id));
+    cJSON_AddBoolToObject(o, "is_intel", 1);
+
+    sortrow *sr = &SR[nout];
+    sr->obj = o; sr->idx = nout;
+    sr->name = cJSON_GetObjectItem(o, "name")->valuestring;
+    cJSON *lf = cJSON_GetObjectItem(o, "last_fetched");
+    sr->fresh = cJSON_IsString(lf) ? lf->valuestring : "";
+    nout++;
+  }
+
   qsort(SR, nout, sizeof *SR, cmp_sr);
 
   cJSON *data = cJSON_CreateArray();
@@ -576,6 +633,6 @@ char *intelapi_intel_sources(db_handle *db) {
   cJSON_AddItemToObject(env, "meta", meta);
   char *js = cJSON_PrintUnformatted(env);
   cJSON_Delete(env);
-  free(A); free(SR);
+  free(A); free(SR); free(B);
   return js;
 }

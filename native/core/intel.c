@@ -1,5 +1,7 @@
 #include "intel.h"
 #include "fts.h"
+#include "alert_eval.h"
+#include "simhash.h"
 #include "../third_party/sqlite3.h"
 #include <stdlib.h>
 #include <string.h>
@@ -18,7 +20,16 @@ static void iso_now(char *b, size_t n) {
 }
 
 /* Exact Node upsert: INSERT … ON CONFLICT(uid) DO UPDATE, preserving
- * geom_source='llm' lat/lon/geom across re-runs. */
+ * DERIVED geometry across re-runs.
+ *
+ * 'exif' joined 'llm' here with roadmap 27. Both are coordinates this system
+ * worked out for itself — the LLM geocoder from the text, media.c from an
+ * image's EXIF GPS block — for items whose collector supplies no geometry of
+ * its own. Those collectors emit lat=NULL every run, so without this the very
+ * next scheduled refresh would fall through to `ELSE excluded.lat` and erase
+ * the coordinate, and the item would silently drop off the map again. A
+ * collector that DOES supply geometry still wins: excluded.lat is checked
+ * first, because a real upstream coordinate outranks an inferred one. */
 static const char *SQL_UPSERT =
  "INSERT INTO intel_items"
  " (uid,source_id,title,body,summary,link,author,language,published_at,"
@@ -31,16 +42,16 @@ static const char *SQL_UPSERT =
  "  published_at=excluded.published_at, fetched_at=excluded.fetched_at,"
  "  tags=excluded.tags, properties=excluded.properties,"
  "  lat=CASE WHEN excluded.lat IS NOT NULL THEN excluded.lat"
- "          WHEN intel_items.geom_source='llm' THEN intel_items.lat"
+ "          WHEN intel_items.geom_source IN ('llm','exif') THEN intel_items.lat"
  "          ELSE excluded.lat END,"
  "  lon=CASE WHEN excluded.lon IS NOT NULL THEN excluded.lon"
- "          WHEN intel_items.geom_source='llm' THEN intel_items.lon"
+ "          WHEN intel_items.geom_source IN ('llm','exif') THEN intel_items.lon"
  "          ELSE excluded.lon END,"
  "  geom_source=CASE WHEN excluded.geom_source IS NOT NULL THEN excluded.geom_source"
- "          WHEN intel_items.geom_source='llm' THEN intel_items.geom_source"
+ "          WHEN intel_items.geom_source IN ('llm','exif') THEN intel_items.geom_source"
  "          ELSE excluded.geom_source END,"
  "  geom_at=CASE WHEN excluded.geom_source IS NOT NULL THEN excluded.geom_at"
- "          WHEN intel_items.geom_source='llm' THEN intel_items.geom_at"
+ "          WHEN intel_items.geom_source IN ('llm','exif') THEN intel_items.geom_at"
  "          ELSE excluded.geom_at END,"
  "  geometry=COALESCE(excluded.geometry,intel_items.geometry),"
  "  record_type=COALESCE(excluded.record_type,intel_items.record_type),"
@@ -109,6 +120,28 @@ static int emit(struct intel_sink *self, const intel_item *it) {
   int has_geo = it->has_geo;
   const char *geom_src = has_geo ? "native" : NULL;
 
+  /* Is this genuinely a new row? source.h documents emit() as "1 if a NEW
+   * row, 0 if updated", but that was never true: after
+   * "INSERT ... ON CONFLICT(uid) DO UPDATE" sqlite3_changes() is 1 either
+   * way, so emit() always returned 1. One indexed PK probe makes the
+   * documented contract real.
+   *
+   * This matters now that alert_eval hangs off ingest: without it, a rule
+   * with dedup_window_sec=0 would re-fire on every scheduled refresh of an
+   * unchanged item — a collector on a 60s interval would emit an alert a
+   * minute, forever. No existing caller branches on the return value
+   * (checked across all 569 emit() call sites), so tightening it is safe. */
+  int is_new = 1;
+  {
+    sqlite3_stmt *ex;
+    if (sqlite3_prepare_v2(h, "SELECT 1 FROM intel_items WHERE uid=?1",
+                           -1, &ex, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(ex, 1, uid, -1, SQLITE_TRANSIENT);
+      if (sqlite3_step(ex) == SQLITE_ROW) is_new = 0;
+      sqlite3_finalize(ex);
+    }
+  }
+
   sqlite3_exec(h, "BEGIN", NULL, NULL, NULL);
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(h, SQL_UPSERT, -1, &s, NULL) != SQLITE_OK) {
@@ -141,7 +174,22 @@ static int emit(struct intel_sink *self, const intel_item *it) {
   int changes = sqlite3_changes(h); /* 1 insert, or update */
   fts_write(h, uid, it->title, it->body, it->summary);
   sqlite3_exec(h, "COMMIT", NULL, NULL, NULL);
-  return changes ? 1 : 0;
+
+  /* Alert matching (roadmap P0.1) — AFTER the commit, never inside it. An
+   * alert write must not be able to roll back the ingest that produced it,
+   * and a rule evaluation must see the row it is evaluating. Only new rows
+   * are evaluated; re-ingest of an unchanged item is not news. */
+  if (changes && is_new)
+    alert_eval_on_item(st->db, st->tenant_id[0] ? st->tenant_id : "legacy", uid);
+
+  /* Near-duplicate clustering (roadmap 25). Deliberately NOT gated on is_new:
+   * an UPDATE can change title/body, and a stale fingerprint would cluster the
+   * row by text it no longer has. */
+  if (changes)
+    simhash_on_item(st->db, st->tenant_id[0] ? st->tenant_id : "legacy",
+                    uid, it->title, it->body);
+
+  return (changes && is_new) ? 1 : 0;
 }
 
 intel_sink intel_sink_make(db_handle *db, const char *source_id,

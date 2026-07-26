@@ -269,6 +269,15 @@ CREATE TABLE IF NOT EXISTS gtfs_stop_times (
     shape_dist_traveled REAL,
     PRIMARY KEY (org_id, feed_id, trip_id, stop_sequence)
   );
+CREATE TABLE IF NOT EXISTS gtfs_stops (
+    org_id          TEXT NOT NULL,
+    feed_id         TEXT NOT NULL,
+    stop_id         TEXT NOT NULL,
+    name            TEXT,
+    lat             REAL,
+    lon             REAL,
+    PRIMARY KEY (org_id, feed_id, stop_id)
+  );
 CREATE TABLE IF NOT EXISTS gtfs_trips (
     org_id          TEXT NOT NULL,
     feed_id         TEXT NOT NULL,
@@ -317,10 +326,31 @@ CREATE TABLE IF NOT EXISTS breach_items (
     first_seen TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now'))
   );
 CREATE INDEX IF NOT EXISTS breach_items_type_idx ON breach_items(type);
+-- Per-breach source lookups (drill-down + COUNT(*) GROUP BY source_id) once the
+-- keyid is per-(identifier,breach). Backs the intel-source adapter (breach_adapter.c).
+CREATE INDEX IF NOT EXISTS breach_items_source_idx ON breach_items(source_id, id);
 CREATE VIRTUAL TABLE IF NOT EXISTS breach_fts USING fts5(
     value,
     content='breach_items', content_rowid='id',
     tokenize='unicode61 remove_diacritics 1'
+  );
+-- Breach catalog: one row per breach (e.g. "goose-creek"), surfaced as an intel
+-- SOURCE via /api/intel/sources (category 'breach'). Loaded from the 1,018-entry
+-- docs/breach-corpus.json manifest by core/breach_meta.c. breach_id == the slug
+-- used as source_id on every breach_items row and entity_mentions.source_id.
+CREATE TABLE IF NOT EXISTS breach_meta (
+    breach_id        TEXT PRIMARY KEY,          -- slug == intel source id
+    name             TEXT,
+    title            TEXT,
+    domain           TEXT,
+    breach_date      TEXT,
+    added_date       TEXT,
+    pwn_count        INTEGER,
+    data_classes_json TEXT,                     -- JSON array or NULL
+    verified         INTEGER,
+    sensitive        INTEGER,
+    source_id        TEXT,                      -- manifest origin (e.g. hibp-corpus-seed)
+    ingested_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now'))
   );
 CREATE TABLE IF NOT EXISTS llm_station_merges (
     uid_a       TEXT NOT NULL,
@@ -535,6 +565,9 @@ CREATE INDEX IF NOT EXISTS idx_gtfs_stop_times_stop
     ON gtfs_stop_times(stop_id);
 CREATE INDEX IF NOT EXISTS idx_gtfs_stop_times_trip_time
     ON gtfs_stop_times(org_id, feed_id, trip_id, departure_sec);
+/* active-trips resolves service_id -> trips per feed on every request. */
+CREATE INDEX IF NOT EXISTS idx_gtfs_trips_service
+    ON gtfs_trips(org_id, feed_id, service_id);
 CREATE INDEX IF NOT EXISTS idx_intel_items_fetched
     ON intel_items(fetched_at DESC);
 CREATE INDEX IF NOT EXISTS idx_intel_items_geom
@@ -570,3 +603,247 @@ CREATE INDEX IF NOT EXISTS idx_station_line_dots_cluster
 CREATE INDEX IF NOT EXISTS idx_station_line_dots_mode
     ON station_line_dots(line_mode);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Roadmap P0/P1/P2 additions. Everything below is IF NOT EXISTS, like the rest
+-- of this generated file. NOTE: added COLUMNS on pre-existing tables are NOT
+-- here — CREATE TABLE IF NOT EXISTS no-ops on an existing table, so a column
+-- appended to a CREATE would never reach a deployed DB. Those live in
+-- db.c's ensure_column() boot-migration block (alert_events.read_at,
+-- entity_relationships.pmi/lift/co_count/stats_at).
+-- ─────────────────────────────────────────────────────────────────────────────
+
+-- P0.2 delivery ledger. delivered_channels_json alone cannot express
+-- "tried 4 times, 502"; this table is what makes a failed alert diagnosable.
+-- The UNIQUE index is load-bearing, not an optimization: it makes enqueue
+-- idempotent so a crash or racing worker tick can never double-send.
+CREATE TABLE IF NOT EXISTS alert_deliveries (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  event_id TEXT NOT NULL, channel_idx INTEGER NOT NULL,
+  channel_type TEXT NOT NULL, target TEXT,
+  attempt INTEGER NOT NULL DEFAULT 0,
+  status TEXT NOT NULL,            -- pending|ok|failed|dead|skipped
+  http_code INTEGER, error TEXT,
+  next_attempt_at TEXT, attempted_at TEXT);
+CREATE INDEX IF NOT EXISTS idx_alert_deliveries_due
+  ON alert_deliveries(status, next_attempt_at);
+CREATE INDEX IF NOT EXISTS idx_alert_deliveries_event
+  ON alert_deliveries(event_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_alert_deliveries_uniq
+  ON alert_deliveries(event_id, channel_idx);
+
+-- Item 14 — cases: the investigation spine. case_items.snapshot_json holds a
+-- denormalized display copy on purpose: scraped intel gets re-fetched and
+-- breach corpora get re-ingested, and a pin that later renders as "deleted
+-- item" is worthless in a report.
+CREATE TABLE IF NOT EXISTS cases (
+  id TEXT PRIMARY KEY,
+  tenant_id TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  name TEXT NOT NULL, summary TEXT,
+  status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open','closed','archived')),
+  priority INTEGER NOT NULL DEFAULT 0,
+  created_by TEXT, created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')), closed_at TEXT);
+CREATE TABLE IF NOT EXISTS case_members (
+  case_id TEXT NOT NULL REFERENCES cases(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  role TEXT NOT NULL DEFAULT 'contributor' CHECK(role IN ('lead','contributor','viewer')),
+  PRIMARY KEY (case_id, user_id));
+CREATE TABLE IF NOT EXISTS case_items (
+  case_id TEXT NOT NULL REFERENCES cases(id) ON DELETE CASCADE,
+  ref_type TEXT NOT NULL, ref_id TEXT NOT NULL,
+  label TEXT, snapshot_json TEXT,
+  added_by TEXT, added_at TEXT NOT NULL DEFAULT (datetime('now')),
+  PRIMARY KEY (case_id, ref_type, ref_id));
+CREATE TABLE IF NOT EXISTS case_activity (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  case_id TEXT NOT NULL REFERENCES cases(id) ON DELETE CASCADE,
+  actor_id TEXT, kind TEXT NOT NULL,
+  body TEXT, target_ref TEXT, mentions_json TEXT NOT NULL DEFAULT '[]',
+  ts TEXT NOT NULL DEFAULT (datetime('now')));
+CREATE INDEX IF NOT EXISTS idx_cases_tenant_status
+  ON cases(tenant_id, status, updated_at DESC);
+CREATE INDEX IF NOT EXISTS idx_cases_tenant_updated
+  ON cases(tenant_id, updated_at DESC, id);
+CREATE INDEX IF NOT EXISTS idx_case_items_ref ON case_items(ref_type, ref_id);
+CREATE INDEX IF NOT EXISTS idx_case_items_case_added
+  ON case_items(case_id, added_at DESC);
+CREATE INDEX IF NOT EXISTS idx_case_members_user ON case_members(user_id);
+CREATE INDEX IF NOT EXISTS idx_case_activity_case ON case_activity(case_id, ts DESC);
+
+-- Item 15 — annotations. Soft-deleted only (deleted_at); analyst notes are
+-- evidence and a hard DELETE would undermine the chain-of-custody work.
+CREATE TABLE IF NOT EXISTS annotations (
+  id TEXT PRIMARY KEY,
+  tenant_id TEXT NOT NULL,
+  case_id TEXT REFERENCES cases(id) ON DELETE CASCADE,
+  ref_type TEXT NOT NULL, ref_id TEXT NOT NULL,
+  body_md TEXT NOT NULL, author_id TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT, deleted_at TEXT);
+CREATE INDEX IF NOT EXISTS idx_annotations_ref
+  ON annotations(ref_type, ref_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_annotations_tenant
+  ON annotations(tenant_id, created_at DESC);
+
+-- Item 38 — saved searches + history. History is PER-USER, not per-tenant:
+-- what an analyst is investigating is not something a tenant admin should be
+-- able to read. The user predicate is enforced in savedsearchapi.c.
+CREATE TABLE IF NOT EXISTS saved_searches (
+  id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, user_id TEXT NOT NULL,
+  name TEXT, kind TEXT NOT NULL CHECK(kind IN ('intel','osint','entity','breach','map')),
+  params_json TEXT NOT NULL, pinned INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  last_run_at TEXT, run_count INTEGER NOT NULL DEFAULT 0);
+CREATE INDEX IF NOT EXISTS idx_saved_searches_owner
+  ON saved_searches(tenant_id, user_id, pinned DESC, created_at DESC);
+CREATE TABLE IF NOT EXISTS search_history (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, tenant_id TEXT NOT NULL, user_id TEXT NOT NULL,
+  kind TEXT NOT NULL, params_json TEXT NOT NULL, result_count INTEGER,
+  ts TEXT NOT NULL DEFAULT (datetime('now')));
+CREATE INDEX IF NOT EXISTS idx_search_history_owner
+  ON search_history(tenant_id, user_id, ts DESC);
+
+-- Item 16 — optional per-tenant report branding (the paid-tier seam).
+-- reportapi.c probes for this table and each column independently, so its
+-- absence just yields an unbranded document.
+CREATE TABLE IF NOT EXISTS tenant_report_templates (
+  tenant_id TEXT PRIMARY KEY REFERENCES tenants(id) ON DELETE CASCADE,
+  classification TEXT, header_note TEXT, footer_md TEXT, logo_url TEXT,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')));
+
+-- Item 24 — breach exposure monitoring. value_hash is SHA-1 of the normalized
+-- identifier; the PLAINTEXT IS NEVER STORED, not here and not in audit rows —
+-- a monitor list of customer emails is itself a high-value breach target.
+CREATE TABLE IF NOT EXISTS breach_monitors (
+  id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL,
+  kind TEXT NOT NULL CHECK(kind IN ('email','domain','username','phone')),
+  value_hash TEXT NOT NULL,
+  value_domain TEXT,
+  label TEXT, rule_id TEXT, created_by TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')), last_checked_at TEXT);
+CREATE INDEX IF NOT EXISTS idx_breach_monitors_hash ON breach_monitors(value_hash);
+CREATE INDEX IF NOT EXISTS idx_breach_monitors_domain ON breach_monitors(value_domain);
+CREATE INDEX IF NOT EXISTS idx_breach_monitors_tenant ON breach_monitors(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_breach_monitors_tenant_created
+  ON breach_monitors(tenant_id, created_at DESC, id);
+-- NOT an optimization: breach_items had no index on `hash` at all (only type,
+-- (source_id,id) and UNIQUE(keyid)), so every monitor check was a full scan of
+-- a corpus measured in millions of rows.
+CREATE INDEX IF NOT EXISTS idx_breach_items_hash ON breach_items(hash);
+-- NOTE: the index over breach_items.value_domain is deliberately NOT here.
+-- schema.sql is exec'd BEFORE db.c's ensure_column() block, so indexing a
+-- column that does not exist yet would fail and abandon the rest of this
+-- script. breach_monitor_migrate() creates the column and its index together.
+
+-- Item 17 — evidence / chain of custody. Content-addressed blobs on disk,
+-- rows hash-chained with the SAME prev_hash/row_hash/chain_seq scheme as
+-- audit_events so /api/evidence/verify can re-walk them.
+--
+-- The reaper NEVER deletes rows: removing one breaks prev_hash for everything
+-- after it and is indistinguishable from tampering. It unlinks blobs only;
+-- the row survives as proof of what the hash was, and readers report a reaped
+-- blob as 410, not 404.
+--
+-- No tenant_id by design: this records what platform collectors fetched,
+-- which is server-wide. Raw reads are operator-gated (opgate_check), not
+-- tenant-role-gated. Per-tenant evidence would be a schema change plus a
+-- per-tenant chain, not a filter.
+CREATE TABLE IF NOT EXISTS evidence (
+  id TEXT PRIMARY KEY, item_uid TEXT NOT NULL, source_id TEXT NOT NULL,
+  captured_at TEXT NOT NULL DEFAULT (datetime('now')),
+  request_url TEXT, request_method TEXT, request_headers TEXT,
+  response_status INTEGER, response_headers TEXT,
+  content_sha256 TEXT NOT NULL, content_bytes INTEGER, content_type TEXT,
+  blob_path TEXT NOT NULL,
+  prev_hash TEXT, row_hash TEXT, chain_seq INTEGER);
+CREATE INDEX IF NOT EXISTS idx_evidence_item ON evidence(item_uid, captured_at DESC);
+-- Load-bearing: the insert is ON CONFLICT(content_sha256,item_uid) DO NOTHING.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_evidence_sha ON evidence(content_sha256, item_uid);
+
+-- Items 9/21 — geofence AOIs + entity watchlists.
+-- updated_at is load-bearing on both: alert_eval's rule cache keys its
+-- generation off it, so editing a shape invalidates every rule that
+-- geofences on it. Without it a cached rule keeps using the old geometry.
+CREATE TABLE IF NOT EXISTS areas_of_interest (
+  id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  name TEXT NOT NULL, kind TEXT NOT NULL CHECK(kind IN ('bbox','polygon','circle')),
+  geometry_json TEXT NOT NULL,
+  bbox_w REAL, bbox_s REAL, bbox_e REAL, bbox_n REAL,
+  created_by TEXT, created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')));
+CREATE INDEX IF NOT EXISTS idx_aoi_tenant ON areas_of_interest(tenant_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS watchlists (
+  id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, name TEXT NOT NULL,
+  entity_ids_json TEXT NOT NULL DEFAULT '[]', rule_id TEXT, created_by TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')));
+CREATE INDEX IF NOT EXISTS idx_watchlists_tenant ON watchlists(tenant_id, created_at DESC);
+
+-- Resumable watermark for the entity-mention reconciling sweep. Entity
+-- extraction runs asynchronously long after ingest, so a watchlist evaluated
+-- only at emit() time would never fire; the sweep re-evaluates items whose
+-- mentions were written since the last watermark.
+CREATE TABLE IF NOT EXISTS alert_eval_cursor (
+  k TEXT PRIMARY KEY, v TEXT NOT NULL,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')));
+
+-- Required by that sweep: idx_em_entity is (entity_id, created_at DESC) and
+-- cannot serve a bare range scan over created_at.
+CREATE INDEX IF NOT EXISTS idx_em_created ON entity_mentions(created_at);
+
+-- Item 26 — content change detection for scraped sources. Distinct from
+-- maint_detect.c, which detects collector FAILURE; this detects the page
+-- actually changing, which is often the intel itself.
+-- The hash is over NORMALIZED extracted text (timestamps, nonces, counters
+-- and cache-busters stripped) — without that every page "changes" on every
+-- fetch and the feature becomes a noise generator.
+CREATE TABLE IF NOT EXISTS content_snapshots (
+  source_id TEXT NOT NULL, ref_key TEXT NOT NULL,
+  content_sha256 TEXT NOT NULL, extract_text TEXT,
+  captured_at TEXT NOT NULL DEFAULT (datetime('now')),
+  PRIMARY KEY (source_id, ref_key, content_sha256));
+CREATE INDEX IF NOT EXISTS idx_content_snapshots_recent
+  ON content_snapshots(source_id, ref_key, captured_at DESC);
+
+-- Item 27 — media assets (EXIF / pHash / OCR). EXIF is the part that works
+-- with no dependencies: it is byte-level APP1/TIFF parsing, no pixel decode.
+-- EXIF GPS is genuine intel — it geolocates items that have no coordinates.
+-- pHash and OCR are optional external-tool seams and stay NULL when the tool
+-- is absent (there is no image decoder linked into this binary).
+CREATE TABLE IF NOT EXISTS media_assets (
+  id TEXT PRIMARY KEY, item_uid TEXT NOT NULL, url TEXT NOT NULL,
+  sha256 TEXT, bytes INTEGER, content_type TEXT,
+  phash INTEGER, exif_json TEXT, ocr_text TEXT, ocr_conf REAL,
+  width INTEGER, height INTEGER,
+  analyzed_at TEXT, analyze_failed INTEGER NOT NULL DEFAULT 0,
+  UNIQUE(item_uid, url));
+CREATE INDEX IF NOT EXISTS idx_media_assets_item ON media_assets(item_uid);
+CREATE INDEX IF NOT EXISTS idx_media_assets_sha ON media_assets(sha256);
+CREATE INDEX IF NOT EXISTS idx_media_assets_pending
+  ON media_assets(analyze_failed)
+  WHERE analyzed_at IS NULL AND analyze_failed < 3;
+CREATE INDEX IF NOT EXISTS idx_media_assets_exif
+  ON media_assets(item_uid) WHERE exif_json IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_media_assets_ocr
+  ON media_assets(item_uid) WHERE ocr_text IS NOT NULL;
+CREATE TABLE IF NOT EXISTS media_state (k TEXT PRIMARY KEY, v TEXT NOT NULL);
+
+-- Item 28 — scheduled camera stills. Turns a camera from a live-only view
+-- into a diffable time series. Per-camera opt-in, default OFF: one frame per
+-- camera per interval forever is the fastest way to fill a disk in this
+-- roadmap, so retention is enforced on write AND by a sweep pod.
+CREATE TABLE IF NOT EXISTS camera_stills (
+  id TEXT PRIMARY KEY, camera_id TEXT NOT NULL,
+  captured_at TEXT NOT NULL DEFAULT (datetime('now')),
+  sha256 TEXT NOT NULL, blob_path TEXT, bytes INTEGER,
+  phash INTEGER, ocr_text TEXT, width INTEGER, height INTEGER,
+  scene_changed INTEGER);
+CREATE INDEX IF NOT EXISTS idx_camera_stills_cam
+  ON camera_stills(camera_id, captured_at DESC);
+-- Per-camera failure/backoff state, so one dead camera cannot stall the rest.
+CREATE TABLE IF NOT EXISTS camera_stills_state (
+  camera_id TEXT PRIMARY KEY, fail_count INTEGER NOT NULL DEFAULT 0,
+  last_attempt_at TEXT, next_attempt_at TEXT, last_ok_at TEXT,
+  last_error TEXT, last_kind TEXT);

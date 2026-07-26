@@ -6,6 +6,21 @@
 #include "entityapi.h"
 #include "tenantapi.h"
 #include "alertsapi.h"
+#include "alert_eval.h"
+#include "casesapi.h"
+#include "annotationsapi.h"
+#include "timelineapi.h"
+#include "exportapi.h"
+#include "reportapi.h"
+#include "savedsearchapi.h"
+#include "breach_monitor.h"
+#include "evidence.h"
+#include "translate.h"
+#include "simhash.h"
+#include "aoiapi.h"
+#include "camera_stills.h"
+#include "media.h"
+#include "audit.h"
 #include "keysapi.h"
 #include "operatorgate.h"
 #include "dbexplorerapi.h"
@@ -19,6 +34,8 @@
 #include "camera_store.h"
 #include "breach_store.h"
 #include "breach_jobs.h"
+#include "breach_meta.h"
+#include "breach_adapter.h"
 #include "../third_party/mongoose.h"
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
@@ -45,6 +62,21 @@ static void reply_json(struct mg_connection *c, int code, const char *body) {
   mg_http_reply(c, code,
     "Content-Type: application/json\r\nAccess-Control-Allow-Origin: *\r\n",
     "%s", body);
+}
+
+/* export_write_fn over a mongoose connection: one Transfer-Encoding chunk per
+ * batch. Returning non-zero once the peer is gone is what makes export_run()
+ * abandon a 250k-row walk instead of formatting it into a socket nobody is
+ * reading. See exportapi.h on the remaining caveat: mg_http_write_chunk()
+ * appends to c->send, which only drains on the event loop, so the HTTP layer
+ * still buffers the whole response — bounded by the per-plan row cap, not by
+ * database size. True socket-paced backpressure needs the mg_wakeup() thread
+ * pattern used by suggest_thread() above. */
+static int export_mg_write(void *ctx, const char *buf, size_t len) {
+  struct mg_connection *c = (struct mg_connection *) ctx;
+  if (c->is_closing || c->is_draining) return 1;
+  mg_http_write_chunk(c, buf, len);
+  return 0;
 }
 
 /* String field of a cJSON object, or NULL. */
@@ -124,6 +156,11 @@ static int starts(struct mg_str s, const char *p) {
 }
 static int eq(struct mg_str s, const char *p) {
   return mg_strcmp(s, mg_str(p)) == 0;
+}
+static int ends_with(const char *s, const char *suf) {
+  if (!s || !suf) return 0;
+  size_t n = strlen(s), m = strlen(suf);
+  return m <= n && strcmp(s + n - m, suf) == 0;
 }
 
 /* Extract one URL-decoded path segment that sits between `pre` and `suf`
@@ -352,9 +389,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       return;
     }
 
-    /* GET /api/status — per-source health + credential configuration. */
+    /* GET /api/status — per-source health + credential configuration.
+     * Plain-auth, but operators additionally get the breach catalog inlined so
+     * the Sources screen can show breaches beside real collectors. Ordinary
+     * users get exactly the payload they always got (no 403, and none of the
+     * ~1k extra rows), so this is a silent widening rather than a new gate. */
     if (eq(u, "/api/status")) {
-      char *body = statusapi_build(g_db);
+      char *body = statusapi_build(g_db, opgate_check(&usr) == 0);
       if (!body) { reply_json(c, 500, "{\"error\":\"Failed to build API status\"}"); return; }
       reply_json(c, 200, body);
       free(body);
@@ -376,9 +417,66 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     if (eq(u, "/api/intel/items")) {
       char *body = intel_items_run(hm);
       if (!body) { reply_json(c, 500, "{\"error\":\"failed_to_list_intel_items\"}"); return; }
+      /* Post-passes over the envelope intelapi already built, so every filter,
+       * the FTS branch and the keyset cursor keep working untouched. Both
+       * return NULL for the default/no-op case, in which case the original
+       * bytes ship unchanged — existing clients see no difference. */
+      { char cv[8] = {0};
+        if (mg_http_get_var(&hm->query, "collapse", cv, sizeof cv) > 0 &&
+            cv[0] == '1') {                                  /* roadmap 25 */
+          char *col = simhash_collapse(g_db, "legacy", body);
+          if (col) { free(body); body = col; }
+        } }
+      { char lv[16] = {0};
+        if (mg_http_get_var(&hm->query, "lang_view", lv, sizeof lv) > 0) {
+          translate_view tv = translate_view_parse(lv);      /* roadmap 29 */
+          char *sh = translate_shape_items(g_db, body, tv);
+          if (sh) { free(body); body = sh; }
+        } }
       reply_json(c, 200, body);
       free(body);
       return;
+    }
+
+    /* Item sub-routes — must precede the /:uid catch-all so the suffix isn't
+     * swallowed into the uid. Own buffer since `p` is declared further down. */
+    {
+      char pe[600];   /* seg() URL-decodes the segment into pe — already decoded */
+      /* GET /api/intel/items/:uid/entities — entities mentioned in an item
+       * (works for both breach records and normal intel items). Plain-auth read. */
+      if (seg(u, "/api/intel/items/", "/entities", pe, sizeof pe)) {
+        char *body = entityapi_item_entities(g_db, pe);
+        if (!body) { reply_json(c, 500, "{\"error\":\"failed_to_list_item_entities\"}"); return; }
+        reply_json(c, 200, body); free(body); return;
+      }
+      /* GET /api/intel/items/:uid/media — EXIF / pHash / OCR for the item's
+       * images (roadmap 27). Plain-auth read; returns derived metadata only,
+       * never the image bytes (those live in the evidence blob store). */
+      if (seg(u, "/api/intel/items/", "/media", pe, sizeof pe)) {
+        char lv[16] = {0};
+        int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
+        char *body = media_list_for_item(g_db, pe, hl > 0 ? atoi(lv) : 0);
+        if (!body) { reply_json(c, 500, "{\"error\":\"failed_to_list_media\"}"); return; }
+        reply_json(c, 200, body); free(body); return;
+      }
+      /* GET /api/intel/items/:uid/evidence — chain of custody for the item
+       * (roadmap 17). Plain-auth read; raw bytes stay operator-gated. */
+      if (seg(u, "/api/intel/items/", "/evidence", pe, sizeof pe)) {
+        char *body = evidence_list_for_item(g_db, pe, 100);
+        if (!body) { reply_json(c, 500, "{\"error\":\"failed_to_list_evidence\"}"); return; }
+        reply_json(c, 200, body); free(body); return;
+      }
+      /* GET /api/intel/items/:uid/reveal — decrypt a breach record's leaked
+       * secret(s). Operator-gated like /api/breach/search; breach uids only. */
+      if (seg(u, "/api/intel/items/", "/reveal", pe, sizeof pe)) {
+        int oc = opgate_check(&usr);
+        if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
+        if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
+        if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+        char *body = breach_adapter_reveal_by_uid(g_db, pe);
+        if (!body) { reply_json(c, 404, "{\"error\":\"not_found\"}"); return; }
+        reply_json(c, 200, body); free(body); return;
+      }
     }
 
     /* GET /api/intel/items/:uid  (uid is URL-encoded; may contain '|',':') */
@@ -513,6 +611,30 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
       if (oc != 0)    { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
 
+      /* Roadmap 29 — corpus-wide JA→EN backfill. Deliberately behind the
+       * PLATFORM OPERATOR gate, not a tenant owner/admin check: translate_run
+       * has no tenant predicate (it is background maintenance over the whole
+       * intel_items table), so letting any one tenant's owner start a global
+       * job would be a privilege error. The 202 carries a request_id that
+       * streams over the existing pre-auth SSE route /api/search/stream/:id,
+       * since the job reports through core/progress.h. Never automatic. */
+      if (eq(u,"/api/admin/translate/backfill")) {
+        int status = 200; char *body = NULL;
+        if (hm->method.len == 3 && memcmp(hm->method.buf, "GET", 3) == 0) {
+          body = translate_backfill_status(g_db);
+        } else if (hm->method.len == 4 && memcmp(hm->method.buf, "POST", 4) == 0) {
+          char mv[16] = {0};
+          int hv = mg_http_get_var(&hm->query, "max_items", mv, sizeof mv);
+          body = translate_backfill_start(g_db, hv > 0 ? atoi(mv) : 0, &status);
+        } else if (hm->method.len == 6 && memcmp(hm->method.buf, "DELETE", 6) == 0) {
+          body = translate_backfill_cancel(&status);
+        } else {
+          reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return;
+        }
+        if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+        reply_json(c, status, body); free(body); return;
+      }
+
       if (eq(u,"/api/admin/restart")) {
         reply_json(c,501,"{\"error\":\"not_implemented\",\"detail\":"
           "\"restart is not supported by the native server\"}"); return;
@@ -550,6 +672,79 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           b=maintenance_unquarantine(g_db,idb,&st);
           reply_json(c,st,b); free(b); return;
         }
+        /* Roadmap 17 — the switch that makes evidence capture reachable.
+         * sources.capture_evidence defaults to 0 and the capture hook fails
+         * closed, so without this endpoint the whole chain-of-custody feature
+         * is unreachable by any operator: correct-but-inert. Operator-gated
+         * (we are inside the opgate block) and audited, because turning on
+         * capture starts writing third-party content to local disk.
+         *   POST   /api/admin/sources/:id/capture-evidence  → on
+         *   DELETE /api/admin/sources/:id/capture-evidence  → off */
+        if (seg(u,"/api/admin/sources/","/capture-evidence",idb,sizeof idb)) {
+          int on;
+          if (is_post) on = 1;
+          else if (hm->method.len == 6 &&
+                   memcmp(hm->method.buf, "DELETE", 6) == 0) on = 0;
+          else { reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+          sqlite3_stmt *cs;
+          if (sqlite3_prepare_v2(g_db->h,
+                "UPDATE sources SET capture_evidence=?1 WHERE id=?2",
+                -1,&cs,NULL) != SQLITE_OK) {
+            reply_json(c,500,"{\"error\":\"server_error\"}"); return; }
+          sqlite3_bind_int(cs,1,on);
+          sqlite3_bind_text(cs,2,idb,-1,SQLITE_TRANSIENT);
+          sqlite3_step(cs);
+          int ch = sqlite3_changes(g_db->h);
+          sqlite3_finalize(cs);
+          if (ch == 0) { reply_json(c,404,"{\"error\":\"not_found\"}"); return; }
+          char pj[160];
+          snprintf(pj,sizeof pj,"{\"source_id\":\"%.80s\",\"enabled\":%s}",
+                   idb, on ? "true" : "false");
+          audit_write(g_db, "platform", usr.id, "evidence.capture.toggle", idb, pj);
+          char ob[128];
+          snprintf(ob,sizeof ob,"{\"ok\":true,\"source_id\":\"%.80s\",\"capture_evidence\":%s}",
+                   idb, on ? "true" : "false");
+          reply_json(c,200,ob); return;
+        }
+        /* Roadmap 28 — the same reachability problem as capture-evidence:
+         * capture_stills defaults to 0, so without a switch the feature is
+         * inert. Cameras are intel_items rows with no tenant_id to authorize
+         * against, hence operator-gated rather than tenant-scoped.
+         *   POST   /api/admin/cameras/:uid/capture-stills  → on
+         *   DELETE /api/admin/cameras/:uid/capture-stills  → off */
+        if (seg(u,"/api/admin/cameras/","/capture-stills",idb,sizeof idb)) {
+          int on;
+          if (is_post) on = 1;
+          else if (hm->method.len == 6 &&
+                   memcmp(hm->method.buf, "DELETE", 6) == 0) on = 0;
+          else { reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+          sqlite3_stmt *cs;
+          if (sqlite3_prepare_v2(g_db->h,
+                "UPDATE intel_items SET capture_stills=?1 WHERE uid=?2",
+                -1,&cs,NULL) != SQLITE_OK) {
+            reply_json(c,500,"{\"error\":\"server_error\"}"); return; }
+          sqlite3_bind_int(cs,1,on);
+          sqlite3_bind_text(cs,2,idb,-1,SQLITE_TRANSIENT);
+          sqlite3_step(cs);
+          int ch = sqlite3_changes(g_db->h);
+          sqlite3_finalize(cs);
+          if (ch == 0) { reply_json(c,404,"{\"error\":\"not_found\"}"); return; }
+          char pj[200];
+          snprintf(pj,sizeof pj,"{\"camera_id\":\"%.80s\",\"enabled\":%s}",
+                   idb, on ? "true" : "false");
+          audit_write(g_db, "platform", usr.id, "camera.stills.toggle", idb, pj);
+          /* Frames are only PRESERVED if the camera-stills source is also
+           * opted into evidence capture — the module reuses that blob store
+           * rather than building a second one, so the byte budget still
+           * applies. Say so in the reply instead of leaving it to be
+           * discovered when blob_path comes back NULL. */
+          char ob[256];
+          snprintf(ob,sizeof ob,
+            "{\"ok\":true,\"camera_id\":\"%.80s\",\"capture_stills\":%s,"
+            "\"note\":\"raw frames also require capture_evidence on source "
+            "'camera-stills'\"}", idb, on ? "true" : "false");
+          reply_json(c,200,ob); return;
+        }
         if (seg(u,"/api/admin/anomalies/","/requeue",idb,sizeof idb)) {
           if (!is_post){ reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
           b=maintenance_requeue_anomaly(g_db,atol(idb),&st);
@@ -578,6 +773,94 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         }
         if (j) cJSON_Delete(j);
         reply_json(c,st,rb); free(rb); return;
+      }
+      /* GET /api/admin/breach/catalog/preview?path=&limit= — parse the seed and
+       * report what came out WITHOUT writing a single row. This is what lets the
+       * console show the operator the normalized result (and how many rows are
+       * new vs already catalogued) before they commit to a load. */
+      if (eq(u,"/api/admin/breach/catalog/preview")) {
+        if (mg_strcmp(hm->method,mg_str("GET"))!=0) {
+          reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+        char pv[512]={0}, lv[16]={0};
+        mg_http_get_var(&hm->query,"path",pv,sizeof pv);
+        int hl = mg_http_get_var(&hm->query,"limit",lv,sizeof lv);
+        int limit = hl>0 ? atoi(lv) : 50;
+        if (limit < 1)   limit = 1;
+        if (limit > 200) limit = 200;   /* the sample is for eyeballing, not export */
+
+        breach_seed_row *rows=NULL; int nr=0;
+        breach_seed_stats stt;
+        int parsed = breach_meta_parse_seed(g_db, pv[0]?pv:NULL, limit,
+                                            &rows, &nr, &stt);
+        if (parsed < 0) {
+          free(rows);
+          reply_json(c,400,"{\"error\":\"breach_seed_unreadable\"}"); return; }
+
+        cJSON *o = cJSON_CreateObject();
+        cJSON_AddStringToObject(o,"path", stt.path);
+        cJSON_AddStringToObject(o,"format", stt.format);
+        cJSON_AddNumberToObject(o,"rows_read", stt.rows_read);
+        cJSON_AddNumberToObject(o,"rows_parsed", stt.rows_parsed);
+        cJSON_AddNumberToObject(o,"rows_skipped", stt.rows_skipped);
+        cJSON_AddNumberToObject(o,"rows_new", stt.rows_new);
+        cJSON_AddNumberToObject(o,"rows_existing", stt.rows_existing);
+        cJSON *arr = cJSON_CreateArray();
+        for (int i=0;i<nr;i++) {
+          cJSON *r = cJSON_CreateObject();
+          cJSON_AddStringToObject(r,"breach_id", rows[i].breach_id);
+          cJSON_AddStringToObject(r,"name", rows[i].name);
+          if (rows[i].pwn_count >= 0)
+            cJSON_AddNumberToObject(r,"pwn_count",(double)rows[i].pwn_count);
+          else cJSON_AddNullToObject(r,"pwn_count");
+          cJSON_AddStringToObject(r,"added_date", rows[i].added_date);
+          cJSON_AddStringToObject(r,"breach_date", rows[i].breach_date);
+          cJSON_AddItemToArray(arr,r);
+        }
+        cJSON_AddItemToObject(o,"sample",arr);
+        free(rows);
+        char *rb = cJSON_PrintUnformatted(o);
+        cJSON_Delete(o);
+        if (!rb) { reply_json(c,500,"{\"error\":\"server_error\"}"); return; }
+        reply_json(c,200,rb); free(rb); return;
+      }
+      /* POST /api/admin/breach/catalog/load {path?,format?} — (re)load the breach
+       * catalog into breach_meta so breaches surface as intel sources. `format` is
+       * "tsv" | "json" | "auto" (default): auto reads the committed seed TSV unless
+       * an explicit non-.tsv path says otherwise. Also run best-effort at startup;
+       * this is the manual hook. */
+      if (eq(u,"/api/admin/breach/catalog/load")) {
+        if (mg_strcmp(hm->method,mg_str("POST"))!=0) {
+          reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+        char *body=NULL;
+        if (hm->body.len) { body=malloc(hm->body.len+1);
+          if (body){ memcpy(body,hm->body.buf,hm->body.len); body[hm->body.len]=0; } }
+        cJSON *j = body ? cJSON_Parse(body) : NULL;
+        free(body);
+        const char *path = jget_str(j,"path");
+        const char *fmt  = jget_str(j,"format");
+        if (path && !*path) path = NULL;
+
+        int use_tsv;
+        if      (fmt && strcmp(fmt,"tsv")  == 0) use_tsv = 1;
+        else if (fmt && strcmp(fmt,"json") == 0) use_tsv = 0;
+        else use_tsv = !path || ends_with(path, ".tsv");
+
+        breach_seed_stats stt;
+        memset(&stt, 0, sizeof stt);
+        int n = use_tsv ? breach_meta_load_seed_tsv(g_db, path, &stt)
+                        : breach_meta_load_manifest(g_db, path);
+        if (j) cJSON_Delete(j);
+        if (n < 0) { reply_json(c,500,"{\"error\":\"breach_catalog_load_failed\"}"); return; }
+
+        char rb[256];
+        if (use_tsv)
+          snprintf(rb,sizeof rb,
+            "{\"loaded\":%d,\"format\":\"tsv\",\"rows_read\":%d,\"rows_skipped\":%d,"
+            "\"rows_new\":%d,\"rows_existing\":%d}",
+            n, stt.rows_read, stt.rows_skipped, stt.rows_new, stt.rows_existing);
+        else
+          snprintf(rb,sizeof rb,"{\"loaded\":%d,\"format\":\"json\"}", n);
+        reply_json(c,200,rb); return;
       }
       if (eq(u,"/api/admin/breach/jobs")) {
         char *b=breach_job_status(NULL); reply_json(c,200,b); free(b); return;
@@ -655,6 +938,77 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c,200,b); free(b); return;
     }
 
+    /* ---- roadmap 10: POST /api/alerts/preview — backtest a predicate over
+     * history WITHOUT writing alert_events. Shares alert_eval.c's matcher
+     * with the live ingest path, so what you preview is what will fire.
+     * Must precede the /api/alerts/* block, which would otherwise treat
+     * "preview" as a rule id. ---- */
+    if (eq(u, "/api/alerts/preview")) {
+      if (mg_strcmp(hm->method, mg_str("POST")) != 0) {
+        reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return; }
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      /* Reads tenant intel, so viewer is not enough. */
+      if (strcmp(tc.role, "viewer") == 0) {
+        reply_json(c, 403, "{\"error\":\"forbidden\"}"); return; }
+      char *bdy = NULL;
+      if (hm->body.len) { bdy = malloc(hm->body.len + 1);
+        memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
+      cJSON *b = bdy ? cJSON_Parse(bdy) : NULL;
+      free(bdy);
+      cJSON *p = b ? cJSON_GetObjectItem(b, "predicate") : NULL;
+      cJSON *sn = b ? cJSON_GetObjectItem(b, "since") : NULL;
+      char *pj = p ? cJSON_PrintUnformatted(p) : NULL;
+      int status = 200;
+      char *body = alert_eval_preview(g_db, tc.tenant_id, pj,
+        (sn && cJSON_IsString(sn)) ? sn->valuestring : NULL, &status);
+      free(pj);
+      if (b) cJSON_Delete(b);
+      if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, status, body); free(body); return;
+    }
+    /* ---- /api/alert-events[...] — notification inbox (roadmap item 11).
+     * "/api/alert-events" does not share the "/api/alerts" prefix, but the
+     * two are kept adjacent so the ordering is obvious to the next reader. */
+    if (eq(u, "/api/alert-events") || starts(u, "/api/alert-events/")) {
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+
+      /* One segment after "/api/alert-events/" (18 chars). A trailing
+       * "/read" on an event id is stripped — POST :id/read and POST :id are
+       * the same operation, and accepting both keeps the client simple. */
+      char seg1[160] = {0};
+      if (u.len > 18) {
+        char rest[256] = {0};
+        size_t rl = u.len - 18; if (rl >= sizeof rest) rl = sizeof rest - 1;
+        memcpy(rest, u.buf + 18, rl);
+        char *sl = strchr(rest, '/');
+        if (sl) *sl = 0;                 /* drop "/read" */
+        mg_url_decode(rest, strlen(rest), seg1, sizeof seg1, 0);
+      }
+      char meth[12] = {0};
+      size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
+      memcpy(meth, hm->method.buf, ml);
+      char qsb[512] = {0};
+      if (hm->query.len && hm->query.len < sizeof qsb)
+        memcpy(qsb, hm->query.buf, hm->query.len);
+      int status = 200;
+      char *body = alerteventsapi(g_db, tc.tenant_id, tc.user_id, meth,
+                                  seg1, qsb, &status);
+      if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, status, body); free(body); return;
+    }
+
     /* ---- P7 Wave 3b: /api/alerts/* (tenant-scoped rule CRUD) ---- */
     if (eq(u, "/api/alerts") || starts(u, "/api/alerts/")) {
       struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
@@ -687,6 +1041,476 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
                              aid, act, bdy, hl > 0 ? atoi(lv) : 0, &status);
       free(bdy);
       if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, status, body); free(body); return;
+    }
+
+    /* ---- GET /api/export/:kind — streaming row export (roadmap item 7).
+     * Highest-risk egress path in the product: plan row caps, mandatory
+     * ?source= for breach, and an audit_events row per run all live inside
+     * exportapi.c. Headers must go out BEFORE the first chunk — after that
+     * there is no error status left to send. ---- */
+    if (starts(u, "/api/export/") && u.len > 12) {
+      if (hm->method.len != 3 || memcmp(hm->method.buf, "GET", 3) != 0) {
+        reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return;
+      }
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+
+      char kind[32] = {0};
+      { size_t kl = u.len - 12;
+        if (kl >= sizeof kind) kl = sizeof kind - 1;
+        memcpy(kind, u.buf + 12, kl); }
+      char fmt[16] = {0};
+      if (mg_http_get_var(&hm->query, "format", fmt, sizeof fmt) <= 0)
+        snprintf(fmt, sizeof fmt, "json");
+      char qs[2048] = {0};
+      { size_t ql = hm->query.len;
+        if (ql >= sizeof qs) ql = sizeof qs - 1;
+        memcpy(qs, hm->query.buf, ql); }
+
+      export_plan plan; int status = 200;
+      if (export_plan_request(g_db, &tc, kind, fmt, qs, &plan, &status) != 0) {
+        char eb[96];
+        snprintf(eb, sizeof eb, "{\"error\":\"%s\"}", plan.error);
+        reply_json(c, status, eb); return;
+      }
+      mg_printf(c,
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: %s\r\n"
+        "Content-Disposition: attachment; filename=\"%s\"\r\n"
+        "Transfer-Encoding: chunked\r\n"
+        "Cache-Control: no-store\r\n"
+        "X-Accel-Buffering: no\r\n"
+        "Access-Control-Allow-Origin: *\r\n\r\n",
+        plan.content_type, plan.filename);
+      c->is_resp = 0;                 /* we own the framing (== the SSE path) */
+      long rows = 0;
+      export_run(g_db, &tc, kind, fmt, qs, export_mg_write, c, &rows, &status);
+      mg_http_write_chunk(c, "", 0);  /* terminating zero-length chunk */
+      return;
+    }
+
+    /* ---- roadmap 18: GET /api/timeline (tenant-scoped unified timeline) ---- */
+    if (eq(u, "/api/timeline")) {
+      if (mg_strcmp(hm->method, mg_str("GET")) != 0) {
+        reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return; }
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      char qs[1024] = {0};
+      size_t ql = hm->query.len < sizeof qs - 1 ? hm->query.len : sizeof qs - 1;
+      memcpy(qs, hm->query.buf, ql);
+      int status = 200;
+      char *body = timelineapi_query(g_db, &tc, qs, &status);
+      if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, status, body); free(body); return;
+    }
+
+
+    /* ---- Roadmap 16: POST /api/cases/:id/report — streaming report.
+     * MUST precede the /api/cases block, which matches "/api/cases/" and
+     * would otherwise swallow this route and 404 on act="report". ---- */
+    if (starts(u, "/api/cases/") && u.len > 18 &&
+        memcmp(u.buf + u.len - 7, "/report", 7) == 0) {
+      if (hm->method.len != 4 || memcmp(hm->method.buf, "POST", 4) != 0) {
+        reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return;
+      }
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      char cid[128] = {0};
+      { char raw[256] = {0};
+        size_t rl = u.len - 11 - 7;      /* between "/api/cases/" and "/report" */
+        if (rl >= sizeof raw) rl = sizeof raw - 1;
+        memcpy(raw, u.buf + 11, rl);
+        mg_url_decode(raw, strlen(raw), cid, sizeof cid, 0); }
+      char *bdy = NULL;
+      if (hm->body.len) { bdy = malloc(hm->body.len + 1);
+        memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
+      report_plan plan; int status = 200;
+      if (report_plan_request(g_db, &tc, cid, bdy, &plan, &status) != 0) {
+        char eb[96];
+        snprintf(eb, sizeof eb, "{\"error\":\"%s\"}", plan.error);
+        free(bdy); reply_json(c, status, eb); return;
+      }
+      mg_printf(c,
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: %s\r\n"
+        "Content-Disposition: attachment; filename=\"%s\"\r\n"
+        "Transfer-Encoding: chunked\r\n"
+        "Cache-Control: no-store\r\n"
+        "X-Content-Type-Options: nosniff\r\n"
+        "X-Accel-Buffering: no\r\n"
+        "Access-Control-Allow-Origin: *\r\n\r\n",
+        plan.content_type, plan.filename);
+      c->is_resp = 0;
+      long rbytes = 0;
+      report_run(g_db, &tc, cid, bdy, export_mg_write, c, &rbytes, &status);
+      free(bdy);
+      mg_http_write_chunk(c, "", 0);
+      return;
+    }
+
+    /* ---- Roadmap 14: /api/cases subtree (tenant-scoped analyst workspace) ---- */
+    if (eq(u, "/api/cases") || starts(u, "/api/cases/")) {
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+
+      char cid[128] = {0}, act[32] = {0};
+      if (u.len > 11) {                          /* after "/api/cases/" */
+        char rest[256] = {0};
+        size_t rl = u.len - 11; if (rl >= sizeof rest) rl = sizeof rest - 1;
+        memcpy(rest, u.buf + 11, rl);
+        char *sl = strchr(rest, '/');
+        if (sl) { *sl = 0; snprintf(act, sizeof act, "%s", sl + 1); }
+        mg_url_decode(rest, strlen(rest), cid, sizeof cid, 0);
+      }
+      char meth[12] = {0};
+      size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
+      memcpy(meth, hm->method.buf, ml);
+      char *bdy = NULL;
+      if (hm->body.len) { bdy = malloc(hm->body.len + 1);
+        memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
+
+      char qst[32]={0}, qrt[32]={0}, qri[512]={0}, qcu[512]={0}, qli[16]={0};
+      mg_http_get_var(&hm->query, "status",   qst, sizeof qst);
+      mg_http_get_var(&hm->query, "ref_type", qrt, sizeof qrt);
+      mg_http_get_var(&hm->query, "ref_id",   qri, sizeof qri);
+      mg_http_get_var(&hm->query, "cursor",   qcu, sizeof qcu);
+      int hl = mg_http_get_var(&hm->query, "limit", qli, sizeof qli);
+      cases_query cq;
+      cq.status   = qst[0] ? qst : NULL;
+      cq.ref_type = qrt[0] ? qrt : NULL;
+      cq.ref_id   = qri[0] ? qri : NULL;
+      cq.cursor   = qcu[0] ? qcu : NULL;
+      cq.limit    = hl > 0 ? atoi(qli) : 0;
+
+      int status = 200;
+      char *body = casesapi(g_db, &tc, meth, cid, act, bdy, &cq, &status);
+      free(bdy);
+      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, status, body); free(body); return;
+    }
+
+    /* ---- Roadmap 15: /api/annotations subtree. Passes the raw query string
+     * through (six params, two free-text) rather than pre-extracting. ---- */
+    if (eq(u, "/api/annotations") || starts(u, "/api/annotations/")) {
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+
+      char aid[160] = {0};
+      if (u.len > 17) {                          /* after "/api/annotations/" */
+        char rest[256] = {0};
+        size_t rl = u.len - 17; if (rl >= sizeof rest) rl = sizeof rest - 1;
+        memcpy(rest, u.buf + 17, rl);
+        char *sl = strchr(rest, '/');
+        if (sl) *sl = 0;
+        mg_url_decode(rest, strlen(rest), aid, sizeof aid, 0);
+      }
+      char meth[12] = {0};
+      size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
+      memcpy(meth, hm->method.buf, ml);
+      char *bdy = NULL;
+      if (hm->body.len) { bdy = malloc(hm->body.len + 1);
+        memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
+      char qsb[768] = {0};
+      if (hm->query.len && hm->query.len < sizeof qsb)
+        memcpy(qsb, hm->query.buf, hm->query.len);
+
+      int status = 200;
+      char *body = annotationsapi(g_db, &tc, meth, aid, qsb, bdy, &status);
+      free(bdy);
+      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, status, body); free(body); return;
+    }
+
+    /* ---- Roadmap 17: chain of custody ----
+     * GET /api/intel/items/:uid/evidence  — custody records (plain auth)
+     * GET /api/evidence/verify            — re-walk the hash chain (operator)
+     * GET /api/evidence/:id/raw           — the captured bytes (operator)
+     * Raw evidence is whatever a source returned: untrusted bytes, served as
+     * octet-stream with nosniff so it can never execute as markup. */
+    if (eq(u, "/api/evidence/verify")) {
+      if (opgate_check(&usr) != 0) {
+        reply_json(c, 403, "{\"error\":\"forbidden\"}"); return; }
+      char *body = evidence_verify(g_db);
+      if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, 200, body); free(body); return;
+    }
+    { char eid[128] = {0};
+      if (seg(u, "/api/evidence/", "/raw", eid, sizeof eid)) {
+        unsigned char *bytes = NULL; size_t blen = 0;
+        char sha[72] = {0}; int status = 200;
+        char *errj = evidence_raw(g_db, &usr, eid, &bytes, &blen, sha, &status);
+        if (errj) { reply_json(c, status, errj); free(errj); return; }
+        mg_printf(c,
+          "HTTP/1.1 200 OK\r\n"
+          "Content-Type: application/octet-stream\r\n"
+          "Content-Length: %lu\r\n"
+          "X-JO-Evidence-SHA256: %s\r\n"
+          "Content-Disposition: attachment; filename=\"evidence-%s.bin\"\r\n"
+          "X-Content-Type-Options: nosniff\r\n"
+          "Cache-Control: no-store\r\n\r\n",
+          (unsigned long)blen, sha, eid);
+        mg_send(c, bytes, blen);
+        c->is_resp = 0;
+        free(bytes);
+        return;
+      } }
+
+    /* ---- Roadmap 28: camera stills. Raw frames are untrusted bytes from
+     * arbitrary internet cameras, so the raw route is operator-gated and
+     * served as octet-stream + nosniff, never inline. ---- */
+    { char cid2[192] = {0};
+      if (seg(u, "/api/cameras/", "/stills", cid2, sizeof cid2)) {
+        char lv[16] = {0}, cv2[512] = {0};
+        int hl2 = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
+        mg_http_get_var(&hm->query, "cursor", cv2, sizeof cv2);
+        char *body = camera_stills_list(g_db, cid2, hl2 > 0 ? atoi(lv) : 0,
+                                        cv2[0] ? cv2 : NULL);
+        if (!body) { reply_json(c, 404, "{\"error\":\"not_found\"}"); return; }
+        reply_json(c, 200, body); free(body); return;
+      } }
+    { char sid2[128] = {0};
+      if (seg(u, "/api/camera-stills/", "/raw", sid2, sizeof sid2)) {
+        unsigned char *bytes = NULL; size_t blen = 0;
+        char sha[72] = {0}; int status = 200;
+        char *errj = camera_stills_raw(g_db, &usr, sid2, &bytes, &blen, sha, &status);
+        if (errj) { reply_json(c, status, errj); free(errj); return; }
+        mg_printf(c,
+          "HTTP/1.1 200 OK\r\n"
+          "Content-Type: application/octet-stream\r\n"
+          "Content-Length: %lu\r\n"
+          "X-JO-Still-SHA256: %s\r\n"
+          "Content-Disposition: attachment; filename=\"still-%s.jpg\"\r\n"
+          "X-Content-Type-Options: nosniff\r\n"
+          "Cache-Control: no-store\r\n\r\n",
+          (unsigned long)blen, sha, sid2);
+        mg_send(c, bytes, blen);
+        c->is_resp = 0;
+        free(bytes);
+        return;
+      } }
+
+    /* ---- Roadmap 9: /api/aoi — named geofence shapes. One shape can back
+     * several rules and is resolved tenant-scoped at match time, so a rule
+     * can never geofence on another tenant's area. ---- */
+    if (eq(u, "/api/aoi") || starts(u, "/api/aoi/")) {
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      char aid[160] = {0};
+      if (u.len > 9) {                            /* after "/api/aoi/" */
+        char rest[256] = {0};
+        size_t rl = u.len - 9; if (rl >= sizeof rest) rl = sizeof rest - 1;
+        memcpy(rest, u.buf + 9, rl);
+        char *sl = strchr(rest, '/');
+        if (sl) *sl = 0;
+        mg_url_decode(rest, strlen(rest), aid, sizeof aid, 0);
+      }
+      char meth[12] = {0};
+      size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
+      memcpy(meth, hm->method.buf, ml);
+      char *bdy = NULL;
+      if (hm->body.len) { bdy = malloc(hm->body.len + 1);
+        memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
+      char qsb[512] = {0};
+      if (hm->query.len && hm->query.len < sizeof qsb)
+        memcpy(qsb, hm->query.buf, hm->query.len);
+      int status = 200;
+      char *body = aoiapi(g_db, &tc, meth, aid, qsb, bdy, &status);
+      free(bdy);
+      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, status, body); free(body); return;
+    }
+
+    /* ---- Roadmap 21: /api/watchlists — sugar over an alert rule carrying an
+     * entity predicate, so there is one engine, one delivery path, one inbox. */
+    if (eq(u, "/api/watchlists") || starts(u, "/api/watchlists/")) {
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      char wid[160] = {0};
+      if (u.len > 16) {                           /* after "/api/watchlists/" */
+        char rest[256] = {0};
+        size_t rl = u.len - 16; if (rl >= sizeof rest) rl = sizeof rest - 1;
+        memcpy(rest, u.buf + 16, rl);
+        char *sl = strchr(rest, '/');
+        if (sl) *sl = 0;
+        mg_url_decode(rest, strlen(rest), wid, sizeof wid, 0);
+      }
+      char meth[12] = {0};
+      size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
+      memcpy(meth, hm->method.buf, ml);
+      char *bdy = NULL;
+      if (hm->body.len) { bdy = malloc(hm->body.len + 1);
+        memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
+      char qsb[512] = {0};
+      if (hm->query.len && hm->query.len < sizeof qsb)
+        memcpy(qsb, hm->query.buf, hm->query.len);
+      int status = 200;
+      char *body = watchlistsapi(g_db, &tc, meth, wid, qsb, bdy, &status);
+      free(bdy);
+      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, status, body); free(body); return;
+    }
+
+    /* ---- Roadmap 24: /api/breach-monitors — standing breach exposure
+     * orders. Only the SHA-1 of the identifier is ever stored; nothing here
+     * echoes a plaintext address back, including audit payloads. ---- */
+    if (eq(u, "/api/breach-monitors") || starts(u, "/api/breach-monitors/")) {
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+
+      char mid[128] = {0}, act[32] = {0};
+      if (u.len > 21) {                        /* after "/api/breach-monitors/" */
+        char rest[256] = {0};
+        size_t rl = u.len - 21; if (rl >= sizeof rest) rl = sizeof rest - 1;
+        memcpy(rest, u.buf + 21, rl);
+        char *sl = strchr(rest, '/');
+        if (sl) { *sl = 0; snprintf(act, sizeof act, "%s", sl + 1); }
+        mg_url_decode(rest, strlen(rest), mid, sizeof mid, 0);
+      }
+      char meth[12] = {0};
+      size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
+      memcpy(meth, hm->method.buf, ml);
+      char *bdy = NULL;
+      if (hm->body.len) { bdy = malloc(hm->body.len + 1);
+        memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
+      char cv[512] = {0}, lv[16] = {0};
+      mg_http_get_var(&hm->query, "cursor", cv, sizeof cv);
+      int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
+      int status = 200;
+      char *body = breach_monitors_api(g_db, &tc, meth, mid, act, bdy,
+                                       cv[0] ? cv : NULL,
+                                       hl > 0 ? atoi(lv) : 0, &status);
+      free(bdy);
+      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, status, body); free(body); return;
+    }
+
+    /* ---- Roadmap 38: /api/saved-searches subtree ---- */
+    if (eq(u, "/api/saved-searches") || starts(u, "/api/saved-searches/")) {
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      char sid[160] = {0}, act[64] = {0};
+      if (u.len > 20) {                          /* after "/api/saved-searches/" */
+        char rest[256] = {0};
+        size_t rl = u.len - 20; if (rl >= sizeof rest) rl = sizeof rest - 1;
+        memcpy(rest, u.buf + 20, rl);
+        char *sl = strchr(rest, '/');
+        if (sl) { *sl = 0; snprintf(act, sizeof act, "%s", sl + 1); }
+        mg_url_decode(rest, strlen(rest), sid, sizeof sid, 0);
+      }
+      char meth[12] = {0};
+      size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
+      memcpy(meth, hm->method.buf, ml);
+      char *bdy = NULL;
+      if (hm->body.len) { bdy = malloc(hm->body.len + 1);
+        memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
+      char qsb[512] = {0};
+      if (hm->query.len && hm->query.len < sizeof qsb)
+        memcpy(qsb, hm->query.buf, hm->query.len);
+      int status = 200;
+      char *body = savedsearchapi(g_db, &tc, meth, sid, act, qsb, bdy, &status);
+      free(bdy);
+      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, status, body); free(body); return;
+    }
+
+    /* ---- Roadmap 38: /api/search-history (collection only). Per-USER, not
+     * per-tenant: an admin must not be able to read what a colleague is
+     * investigating. The user predicate is enforced inside the module. ---- */
+    if (eq(u, "/api/search-history")) {
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      char meth[12] = {0};
+      size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
+      memcpy(meth, hm->method.buf, ml);
+      char qsb[512] = {0};
+      if (hm->query.len && hm->query.len < sizeof qsb)
+        memcpy(qsb, hm->query.buf, hm->query.len);
+      int status = 200;
+      char *body = searchhistoryapi(g_db, &tc, meth, qsb, &status);
+      if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, status, body); free(body); return;
+    }
+
+    /* ---- Roadmap 38: /api/permalink — stateless view-state codec. No
+     * tenant_resolve: the token carries VIEW STATE ONLY and must never carry
+     * authorization. It stays inside the authenticated region anyway, so an
+     * anonymous scanner can't use it as a free JSON parser. ---- */
+    if (eq(u, "/api/permalink") || starts(u, "/api/permalink/")) {
+      static char tok[PL_TOKEN_MAX + 8];         /* 4 KB — too big for stack */
+      tok[0] = 0;
+      if (u.len > 15) {                          /* after "/api/permalink/" */
+        size_t rl = u.len - 15;
+        if (rl <= PL_TOKEN_MAX)
+          mg_url_decode(u.buf + 15, rl, tok, sizeof tok, 0);
+        else tok[0] = 0;                         /* over-long → 400 below */
+      }
+      char meth[12] = {0};
+      size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
+      memcpy(meth, hm->method.buf, ml);
+      char *bdy = NULL;
+      if (hm->body.len) { bdy = malloc(hm->body.len + 1);
+        memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
+      int status = 200;
+      char *body = permalinkapi(meth, tok, bdy, &status);
+      free(bdy);
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, status, body); free(body); return;
     }
@@ -830,15 +1654,30 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           body = entityapi_get(g_db, type, eid);
           notfound = !body;
         } else if (strcmp(tail, "graph") == 0) {
-          char dv[16] = {0};
+          char dv[16] = {0}, rtv[256] = {0}, xhv[16] = {0}, mnv[16] = {0};
           int hd = mg_http_get_var(&hm->query, "depth", dv, sizeof dv);
-          body = entityapi_graph(g_db, type, eid, hd > 0 ? atoi(dv) : 1);
+          int hr = mg_http_get_var(&hm->query, "rel_types", rtv, sizeof rtv);
+          int hx = mg_http_get_var(&hm->query, "exclude_hubs", xhv, sizeof xhv);
+          int hmn = mg_http_get_var(&hm->query, "max_nodes", mnv, sizeof mnv);
+          body = entityapi_graph(g_db, type, eid, hd > 0 ? atoi(dv) : 1,
+                                 hr > 0 ? rtv : NULL,
+                                 hx > 0 ? atoi(xhv) : 0,
+                                 hmn > 0 ? atoi(mnv) : 0);
           notfound = !body;
         } else if (strcmp(tail, "mentions") == 0) {
           char lv[16] = {0}, ov[16] = {0};
           int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
           int ho = mg_http_get_var(&hm->query, "offset", ov, sizeof ov);
           body = entityapi_mentions(g_db, type, eid, hl > 0 ? atoi(lv) : 0,
+                                    ho > 0 ? atoi(ov) : 0);
+          notfound = !body;
+        } else if (strcmp(tail, "breaches") == 0) {
+          /* roadmap item 23 — entity → its breaches (catalog metadata only;
+           * secrets stay behind breach_adapter's operator reveal path). */
+          char lv[16] = {0}, ov[16] = {0};
+          int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
+          int ho = mg_http_get_var(&hm->query, "offset", ov, sizeof ov);
+          body = entityapi_breaches(g_db, type, eid, hl > 0 ? atoi(lv) : 0,
                                     ho > 0 ? atoi(ov) : 0);
           notfound = !body;
         }

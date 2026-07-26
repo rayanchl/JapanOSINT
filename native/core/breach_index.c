@@ -1,5 +1,7 @@
 #include "breach_index.h"
 #include "breach_store.h"
+#include "entitystore.h"
+#include "breach_monitor.h"
 #include "../lib/bigfile.h"
 #include "../lib/bloom.h"
 #include "../third_party/cJSON.h"
@@ -294,15 +296,36 @@ int breach_index_ingest(const char *source_id, const char *path, breach_type typ
       if (f) { fprintf(f, "%s\t%s\t%s\n", hash, source_id ? source_id : "?", enc ? enc : "-"); rn++; }
     } else rn++;
     if (store) {
-      char keyid[32]; snprintf(keyid, sizeof keyid, "%s:%.10s", breach_type_name(ct), hash);
+      /* Per-(identifier, breach) keyid so each breach is a distinct source and
+       * `WHERE source_id=?` / COUNT(*) GROUP BY source_id are exact. (Passwords
+       * keep a global keyid above — their count is a cross-breach prevalence.) */
+      char keyid[128];
+      snprintf(keyid, sizeof keyid, "%s:%.10s|%.80s", breach_type_name(ct), hash,
+               source_id ? source_id : "?");
       breach_store_put(store, keyid, breach_type_name(ct), val, source_id, hash,
                        enc ? 1 : 0, 1);
+
+      /* Phase 3 — full entity materialization (deterministic, no LLM). Every
+       * identity record's identifier becomes an entity + a mention keyed on the
+       * synthetic item uid "breach:"+keyid, so breach items get entity chips and
+       * "entity → its breaches" works. Passwords are never entities. */
+      char uid[144];
+      snprintf(uid, sizeof uid, "breach:%s", keyid);
+      char *eid = es_upsert_entity(db, breach_type_name(ct), val);
+      if (eid) {
+        es_add_mention(db, eid, uid, source_id, val, "breach", 0.99, "breach-ingest");
+        free(eid);
+      }
     }
     free(val);
     free(enc);
   }
 
   if (store) breach_store_finish(store);
+  /* Roadmap 24 — raise alert_events for any standing breach monitor this
+   * ingest just satisfied. `if (store)` is the right guard: it already means
+   * db && materialize && !dry_run, so a dry run stays side-effect free. */
+  if (store) breach_monitor_scan_new(db, source_id, NULL);
   wc_closeall(&wc);
   for (int t = 0; t < 4; t++) {
     if (!dry_run && touched[t] && blooms[t]) {

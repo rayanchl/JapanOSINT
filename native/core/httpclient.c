@@ -1,5 +1,7 @@
 #include "httpclient.h"
 #include "url_override.h"
+#include "evidence.h"
+#include "content_change.h"
 #include <stdio.h>
 #include <curl/curl.h>
 #include <stdlib.h>
@@ -154,6 +156,18 @@ int http_request(http_client *c, const char *method, const char *url,
     if (!retryable || attempt >= retries) {
       *out = r;
       log_host(c, url, r.status, hard);   /* attribute to the real upstream host */
+      /* Chain of custody (roadmap 17). No-op unless the calling thread has an
+       * evidence scope bound AND the source opted in — this file has no
+       * db_handle or source_id of its own, so the scope is thread-local and
+       * fails closed. Never affects the fetch's result. Auth headers and
+       * URL query/userinfo are redacted inside the hook: evidence must not
+       * become a credential store. */
+      evidence_http_hook(method, url, headers, r.status, r.body, r.body_len);
+      /* Content change detection (roadmap 26). Also scope-gated and fails
+       * closed. Rejects non-GET and non-200 internally: a 404 page is not
+       * "content changed", and admitting it would fire on every outage AND
+       * again on every recovery. */
+      content_change_http_hook(method, url, r.status, r.body, r.body_len);
       return hard && attempt >= retries ? 1 : 0;
     }
     http_response_free(&r);

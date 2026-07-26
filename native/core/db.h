@@ -27,4 +27,16 @@ int  db_object_count(db_handle *db);
 /* exec a SQL script (multi-statement); returns 0 on success. */
 int  db_exec(db_handle *db, const char *sql, char **errmsg);
 
+/* Idempotent ADD COLUMN — probes PRAGMA table_info first, so it is safe to
+ * call on every boot. `decl` is type + constraints only ("TEXT", "REAL",
+ * "INTEGER NOT NULL DEFAULT 0"), not the column name.
+ *
+ * THIS is how a column is added in this codebase. schema.sql is generated
+ * from the live DB and every statement in it is CREATE ... IF NOT EXISTS,
+ * which silently no-ops on an existing table — a column appended to a CREATE
+ * there would never reach any deployed database. Call this from db_open()'s
+ * boot-migration block instead. */
+void ensure_column(db_handle *db, const char *table, const char *col,
+                   const char *decl);
+
 #endif

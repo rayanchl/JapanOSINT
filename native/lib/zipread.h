@@ -13,4 +13,20 @@
  * compression / inflate error. */
 char *zip_first_entry(const char *buf, size_t len, size_t *out_len);
 
+/* Named-entry lookup via the central directory. Returns the UNCOMPRESSED bytes
+ * of the entry called `name` (malloc'd, NUL-terminated; caller frees) and sets
+ * *out_len to the uncompressed length; NULL if absent/unsupported/corrupt.
+ *
+ * Matches `name` against each entry's full path AND its basename, so a feed
+ * zipped with a wrapping directory ("feed/stop_times.txt") still resolves for
+ * a lookup of "stop_times.txt".
+ *
+ * Unlike zip_first_entry this reads the compressed/uncompressed sizes from the
+ * central directory rather than the local file header: an archive written with
+ * a streaming data descriptor (general-purpose bit 3) leaves both sizes zero in
+ * the local header, and the CD is the only authoritative copy. GTFS-JP feeds
+ * from api.gtfs-data.jp are written this way. */
+char *zip_find_entry(const char *buf, size_t len, const char *name,
+                     size_t *out_len);
+
 #endif
