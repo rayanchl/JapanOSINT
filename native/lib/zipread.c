@@ -10,14 +10,38 @@ static unsigned long rd32(const unsigned char *p) {
          ((unsigned long)p[2] << 16) | ((unsigned long)p[3] << 24);
 }
 
+/* Hard ceiling on inflated output.
+ *
+ * `uncomp` comes from the ZIP central directory — a 32-bit field the FILE
+ * chooses, not something we measured. Trusting it meant a 300-byte archive
+ * claiming 4 GiB caused a 4 GiB malloc, and the growth path below doubled
+ * without any limit, so a deflate bomb could grow until the allocator gave
+ * up. That was tolerable while the only callers were known feeds (GDELT,
+ * GTFS-JP); it is not tolerable now that uploaded bytes can reach a ZIP
+ * parser. Override with JO_ZIP_MAX_OUT if a legitimate feed needs more. */
+#define ZIP_DEFAULT_MAX_OUT (256UL * 1024UL * 1024UL)
+static size_t zip_max_out(void) {
+  const char *e = getenv("JO_ZIP_MAX_OUT");
+  if (e && *e) {
+    long long v = atoll(e);
+    if (v >= 1024 && (unsigned long long)v <= 4096ULL * 1024 * 1024)
+      return (size_t)v;
+  }
+  return ZIP_DEFAULT_MAX_OUT;
+}
+
 /* Raw-inflate `comp` bytes at `data` into a fresh buffer. `uncomp` is the
- * expected output size when known (0 = unknown → grow geometrically). Returns
- * malloc'd NUL-terminated bytes, *out_len = produced length, NULL on error. */
+ * expected output size when known (0 = unknown → grow geometrically), and is
+ * CLAMPED — it is attacker-controlled. Returns malloc'd NUL-terminated bytes,
+ * *out_len = produced length, NULL on error or on exceeding the ceiling. */
 static char *inflate_raw(const unsigned char *data, size_t comp,
                          size_t uncomp, size_t *out_len) {
   z_stream s; memset(&s, 0, sizeof s);
   if (inflateInit2(&s, -15) != Z_OK) return NULL;
+  const size_t maxout = zip_max_out();
+  if (uncomp > maxout) uncomp = maxout;   /* declared size is not evidence */
   size_t capacity = uncomp ? uncomp + 1 : (comp ? comp * 4 + 64 : 1024);
+  if (capacity > maxout + 1) capacity = maxout + 1;
   char *o = malloc(capacity);
   if (!o) { inflateEnd(&s); return NULL; }
   s.next_in = (Bytef *)data;
@@ -30,7 +54,11 @@ static char *inflate_raw(const unsigned char *data, size_t comp,
     if (rc != Z_OK && rc != Z_BUF_ERROR) { free(o); inflateEnd(&s); return NULL; }
     if (s.avail_out == 0) {                              /* grow */
       size_t used = capacity - 1 - s.avail_out;
+      if (capacity - 1 >= maxout) {   /* deflate bomb — refuse, don't OOM */
+        free(o); inflateEnd(&s); return NULL;
+      }
       size_t ncap = capacity * 2;
+      if (ncap > maxout + 1) ncap = maxout + 1;
       char *no = realloc(o, ncap);
       if (!no) { free(o); inflateEnd(&s); return NULL; }
       o = no; capacity = ncap;

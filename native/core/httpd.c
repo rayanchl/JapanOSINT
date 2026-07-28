@@ -19,6 +19,8 @@
 #include "simhash.h"
 #include "aoiapi.h"
 #include "camera_stills.h"
+#include "uploadapi.h"
+#include "docmeta.h"
 #include "media.h"
 #include "audit.h"
 #include "keysapi.h"
@@ -236,13 +238,60 @@ static void *cam_trigger_thread(void *vp) {
  * compute it on a detached thread and deliver the result via mg_wakeup() —
  * MG_EV_WAKEUP fires on the originating connection and sends the reply. The
  * event loop stays free; suggestions appear when they're ready. */
+/* Wakeup payloads are "NNN <json>": the 3-digit HTTP status, a space, then the
+ * body. Deferred replies would otherwise all be forced to 200. */
+static void wakeup_reply(struct mg_mgr *mgr, unsigned long cid,
+                         int status, const char *json) {
+  size_t n = strlen(json) + 8;
+  char *buf = malloc(n);
+  if (!buf) return;
+  int len = snprintf(buf, n, "%03d %s", status, json);
+  if (len > 0) mg_wakeup(mgr, cid, buf, (size_t)len);   /* copied by mongoose */
+  free(buf);
+}
+
 typedef struct { struct mg_mgr *mgr; unsigned long cid; char *q; } suggest_arg;
 static void *suggest_thread(void *vp) {
   suggest_arg *a = vp;
   char *body = searchapi_suggest(a->q);              /* blocks on suggest worker */
-  const char *out = body ? body : "{\"suggestions\":[]}";
-  mg_wakeup(a->mgr, a->cid, out, strlen(out));        /* copied; wakes the loop */
+  wakeup_reply(a->mgr, a->cid, 200, body ? body : "{\"suggestions\":[]}");
   free(body); free(a->q); free(a);
+  return NULL;
+}
+
+/* POST /api/intel/sources/:id/run — the collector runs on a detached thread and
+ * the reply is delivered through MG_EV_WAKEUP, so the response contract is
+ * unchanged while the event loop stays free. Running it inline froze the entire
+ * server for the collector's duration (minutes, for a tiled Overpass source):
+ * no /api/health, and every open SSE stream stalled because MG_EV_POLL could
+ * not fire. */
+typedef struct {
+  struct mg_mgr *mgr; unsigned long cid;
+  db_handle *db; const source_def *d; char id[128];
+} srcrun_arg;
+
+static void *srcrun_thread(void *vp) {
+  srcrun_arg *a = vp;
+  uint64_t t0 = mg_millis();
+  long long before = si_count(a->db, a->id);
+  int rc = scheduler_run_source(a->db, a->d, NULL);
+  long long delta = si_count(a->db, a->id) - before;
+  if (delta < 0) delta = 0;
+  run_end(a->id);
+
+  char b[256];
+  if (rc < 0) {
+    snprintf(b, sizeof b,
+      "{\"ran\":false,\"source_id\":\"%.80s\",\"error\":\"collector_run_failed\"}", a->id);
+    wakeup_reply(a->mgr, a->cid, 500, b);
+  } else {
+    snprintf(b, sizeof b,
+      "{\"ran\":true,\"source_id\":\"%.80s\",\"ingested\":%lld,"
+      "\"duration_ms\":%llu,\"kind\":null,\"meta\":null}",
+      a->id, delta, (unsigned long long)(mg_millis() - t0));
+    wakeup_reply(a->mgr, a->cid, 200, b);
+  }
+  free(a);
   return NULL;
 }
 
@@ -272,11 +321,19 @@ static char *intel_items_run(struct mg_http_message *hm) {
 static void fn(struct mg_connection *c, int ev, void *ev_data) {
   if (ev == MG_EV_POLL) { search_stream_poll(c); return; }
   if (ev == MG_EV_CLOSE) { search_stream_close(c); return; }
-  if (ev == MG_EV_WAKEUP) {            /* deferred suggest reply (off-loop LLM) */
+  if (ev == MG_EV_WAKEUP) {            /* deferred reply from an off-loop thread */
     struct mg_str *d = (struct mg_str *) ev_data;
-    mg_http_reply(c, 200,
+    int status = 200;
+    const char *body = d->buf; int blen = (int) d->len;
+    if (d->len > 4 && d->buf[0] >= '0' && d->buf[0] <= '9' &&
+        d->buf[1] >= '0' && d->buf[1] <= '9' &&
+        d->buf[2] >= '0' && d->buf[2] <= '9' && d->buf[3] == ' ') {
+      status = (d->buf[0]-'0')*100 + (d->buf[1]-'0')*10 + (d->buf[2]-'0');
+      body = d->buf + 4; blen = (int) d->len - 4;
+    }
+    mg_http_reply(c, status,
       "Content-Type: application/json\r\nAccess-Control-Allow-Origin: *\r\n",
-      "%.*s", (int) d->len, d->buf);
+      "%.*s", blen, body);
     return;
   }
   if (ev != MG_EV_HTTP_MSG) return;
@@ -335,10 +392,16 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       cJSON *jb = bdy ? cJSON_Parse(bdy) : NULL; free(bdy);
       cJSON *qj = jb ? cJSON_GetObjectItem(jb, "query") : NULL;
       cJSON *mr = jb ? cJSON_GetObjectItem(jb, "max_rounds") : NULL;
+      int ast = 200;
       char *body = searchapi_analyze(g_db,
         (qj && cJSON_IsString(qj)) ? qj->valuestring : NULL,
-        (mr && cJSON_IsNumber(mr)) ? (int)mr->valuedouble : 0);
+        (mr && cJSON_IsNumber(mr)) ? (int)mr->valuedouble : 0, &ast);
       if (jb) cJSON_Delete(jb);
+      if (!body && ast == 429) {
+        reply_json(c, 429,
+          "{\"error\":\"too_many_searches\",\"detail\":\"concurrent search limit "
+          "reached; retry shortly\"}"); return;
+      }
       if (!body) { reply_json(c, 400, "{\"error\":\"query_required\"}"); return; }
       reply_json(c, 200, body); free(body); return;
     }
@@ -569,22 +632,37 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           "{\"error\":\"run_in_flight\",\"source_id\":\"%s\"}", p);
         reply_json(c, 409, b); return;
       }
-      uint64_t t0 = mg_millis();
-      long long before = si_count(g_db, p);
-      int rc = scheduler_run_source(g_db, d, NULL);
-      long long delta = si_count(g_db, p) - before;
-      if (delta < 0) delta = 0;
-      run_end(p);
-      if (rc < 0) {
-        snprintf(b, sizeof b,
-          "{\"ran\":false,\"source_id\":\"%s\",\"error\":\"collector_run_failed\"}", p);
-        reply_json(c, 500, b); return;
+      srcrun_arg *ra = calloc(1, sizeof *ra);
+      if (ra) {
+        ra->mgr = c->mgr; ra->cid = c->id; ra->db = g_db; ra->d = d;
+        snprintf(ra->id, sizeof ra->id, "%s", p);
+        pthread_t th;
+        if (pthread_create(&th, NULL, srcrun_thread, ra) == 0) {
+          pthread_detach(th);
+          return;      /* reply deferred to MG_EV_WAKEUP — loop stays free */
+        }
+        free(ra);
       }
-      snprintf(b, sizeof b,
-        "{\"ran\":true,\"source_id\":\"%s\",\"ingested\":%lld,"
-        "\"duration_ms\":%llu,\"kind\":null,\"meta\":null}",
-        p, delta, (unsigned long long)(mg_millis() - t0));
-      reply_json(c, 200, b);
+      /* Thread spawn failed (rare): fall back to running inline rather than
+       * dropping the request, and release the single-flight slot either way. */
+      {
+        uint64_t t0 = mg_millis();
+        long long before = si_count(g_db, p);
+        int rc = scheduler_run_source(g_db, d, NULL);
+        long long delta = si_count(g_db, p) - before;
+        if (delta < 0) delta = 0;
+        run_end(p);
+        if (rc < 0) {
+          snprintf(b, sizeof b,
+            "{\"ran\":false,\"source_id\":\"%s\",\"error\":\"collector_run_failed\"}", p);
+          reply_json(c, 500, b); return;
+        }
+        snprintf(b, sizeof b,
+          "{\"ran\":true,\"source_id\":\"%s\",\"ingested\":%lld,"
+          "\"duration_ms\":%llu,\"kind\":null,\"meta\":null}",
+          p, delta, (unsigned long long)(mg_millis() - t0));
+        reply_json(c, 200, b);
+      }
       return;
     }
 
@@ -876,7 +954,16 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (eq(u,"/api/db/scheduler")) {
         char *b=dbexplorer_scheduler(g_db); reply_json(c,200,b); free(b); return;
       }
-      /* /api/db/tables/:name */
+      /* /api/db/tables/:name
+       *
+       * This is the tail of the block, so anything that entered it and matched
+       * no route above lands here — including every unmatched /api/admin/*
+       * path. The offset arithmetic below is blind, so `GET /api/admin/xxxsources`
+       * used to slice out "sources" and dump that table. Only real
+       * /api/db/tables/ URIs may reach the explorer. */
+      if (!starts(u,"/api/db/tables/")) {
+        reply_json(c,404,"{\"error\":\"not_found\"}"); return;
+      }
       char tn[64]={0}, enc[128]={0};
       size_t off=strlen("/api/db/tables/");
       if (u.len>off){ size_t sl=u.len-off; if(sl<sizeof enc){
@@ -1386,6 +1473,45 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int status = 200;
       char *body = watchlistsapi(g_db, &tc, meth, wid, qsb, bdy, &status);
       free(bdy);
+      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, status, body); free(body); return;
+    }
+
+    /* ---- Chunked upload: begin / part / commit / status / abort.
+     *
+     * The ONE deviation from every neighbouring block: this passes
+     * hm->body.buf and hm->body.len straight through instead of the usual
+     * malloc(len+1) NUL-terminated copy. A part body is BINARY — it contains
+     * NUL bytes and is up to a megabyte — so treating it as a C string would
+     * silently truncate the file at the first zero byte. ---- */
+    if (eq(u, "/api/uploads") || starts(u, "/api/uploads/")) {
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+
+      char uid2[128] = {0}, act[32] = {0};
+      if (u.len > 13) {                          /* after "/api/uploads/" */
+        char rest[256] = {0};
+        size_t rl = u.len - 13; if (rl >= sizeof rest) rl = sizeof rest - 1;
+        memcpy(rest, u.buf + 13, rl);
+        char *sl = strchr(rest, '/');
+        if (sl) { *sl = 0; snprintf(act, sizeof act, "%s", sl + 1); }
+        mg_url_decode(rest, strlen(rest), uid2, sizeof uid2, 0);
+      }
+      char meth[12] = {0};
+      size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
+      memcpy(meth, hm->method.buf, ml);
+      char qsb[256] = {0};
+      if (hm->query.len && hm->query.len < sizeof qsb)
+        memcpy(qsb, hm->query.buf, hm->query.len);
+      int status = 200;
+      char *body = uploadapi(g_db, &tc, meth, uid2, act, qsb,
+                             hm->body.buf, hm->body.len, &status);
       if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, status, body); free(body); return;

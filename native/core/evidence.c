@@ -22,7 +22,19 @@
 #endif
 
 #define EV_DEFAULT_MAX_BYTES  2147483648LL   /* 2 GiB of blob bytes total   */
-#define EV_DEFAULT_MAX_BLOB   8388608LL      /* 8 MiB per captured response */
+/* 64 MiB per stored blob.
+ *
+ * This was 8 MiB, sized for the thing evidence originally captured: an HTTP
+ * response from a collector, where anything larger is almost certainly a
+ * mistake. It now also backs client-uploaded case attachments, whose ceiling
+ * is JO_UPLOAD_MAX_BYTES (64 MiB by default) — and a blob over the limit is
+ * SKIPPED, not rejected, so an 20 MB PDF used to commit successfully, return
+ * a sha256, write an audit row, and store no bytes at all. Silent, and only
+ * discovered when someone opened the attachment.
+ *
+ * Keep this >= JO_UPLOAD_MAX_BYTES. uploadapi_migrate() warns at boot if the
+ * two are configured inconsistently. */
+#define EV_DEFAULT_MAX_BLOB   67108864LL     /* 64 MiB */
 #define EV_GC_DEFAULT_SEC     3600
 #define EV_CACHE_SLOTS        128
 #define EV_CACHE_TTL          60             /* seconds an opt-in is cached */
@@ -873,15 +885,23 @@ char *evidence_gc(db_handle *db) {
   }
   sqlite3_finalize(s);
 
-  /* A blob is pinned when ANY custody row carrying it belongs to an intel item
-   * someone pinned into a case. If case_items does not exist in this database
-   * nothing can be pinned, so reaping proceeds unprotected — correct, not a
-   * degradation. */
+  /* A blob is pinned when ANY custody row carrying it is referenced by ANY
+   * case pin. If case_items does not exist in this database nothing can be
+   * pinned, so reaping proceeds unprotected — correct, not a degradation.
+   *
+   * This deliberately does NOT filter ref_type. It used to require
+   * 'intel_item', which was fine while intel was the only thing carrying
+   * evidence — but an uploaded attachment's custody row has item_uid
+   * "upload:<id>", so a file an analyst deliberately pinned into a case was
+   * still reapable. Protecting the bytes is the entire point of pinning, and
+   * the ref_type a row happens to carry is not what decides that. Matching on
+   * ref_id alone is also self-maintaining: a future ref_type that carries
+   * evidence is protected without anyone remembering to extend this list. */
   sqlite3_stmt *pin = NULL;
   if (have_cases &&
       sqlite3_prepare_v2(db->h,
         "SELECT 1 FROM evidence e JOIN case_items ci ON ci.ref_id=e.item_uid "
-        "AND ci.ref_type='intel_item' WHERE e.content_sha256=?1 LIMIT 1",
+        "WHERE e.content_sha256=?1 LIMIT 1",
         -1, &pin, NULL) != SQLITE_OK) pin = NULL;
 
   long long before = total, freed = 0;
@@ -934,19 +954,27 @@ static pthread_t    g_gc_thread;
 static volatile int g_gc_stop = 0;
 static int          g_gc_running = 0;
 
+/* Own connection — see db_attach(): a transaction belongs to a connection, not
+ * a thread, so the GC's deletes must not share a handle with the event loop. */
 static void *gc_thread(void *arg) {
-  db_handle *db = (db_handle *)arg;
+  (void)arg;
+  db_handle own = {0};
+  if (db_attach(&own, NULL) != 0) {
+    fprintf(stderr, "[evidence] cannot open its own DB connection; gc off\n");
+    return NULL;
+  }
   int interval = (int)env_ll("JO_EVIDENCE_GC_INTERVAL_SEC", EV_GC_DEFAULT_SEC, 60);
   if (interval > 86400) interval = 86400;
   /* One pass shortly after boot: it replaces the DB-derived byte estimate with
    * a stat()ed total, so capture is not throttled by a stale over-count. */
   for (int i = 0; i < 30 && !g_gc_stop; i++) sleep(1);
   while (!g_gc_stop) {
-    char *r = evidence_gc(db);
+    char *r = evidence_gc(&own);
     free(r);
     /* Chunked sleep so shutdown is bounded by 1s, not by the GC interval. */
     for (int i = 0; i < interval && !g_gc_stop; i++) sleep(1);
   }
+  db_close(&own);
   return NULL;
 }
 

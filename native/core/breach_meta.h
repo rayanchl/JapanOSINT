@@ -7,6 +7,7 @@
 #ifndef JO_BREACH_META_H
 #define JO_BREACH_META_H
 #include "db.h"
+#include <stddef.h>   /* size_t — breach_meta_display takes a buffer cap */
 
 /* Load the breach manifest into breach_meta (idempotent upsert).
  * `path` NULL → repo-relative docs/breach-corpus.json (env JO_BREACH_CORPUS
@@ -77,5 +78,17 @@ typedef struct {
  * catalog is empty. Joins breach_meta with a breach_items GROUP BY source_id
  * aggregate so item_count/last_seen are the real materialized figures. */
 breach_src_row *breach_meta_sources(db_handle *db, int *n);
+
+/* The three display values every surface derives from a catalog row, in ONE
+ * place. /api/status and /api/intel/sources both present breaches as sources
+ * and were each deriving these independently with identical code, which is
+ * exactly the kind of pair that drifts apart.
+ *   *count → materialized breach_items count, or the catalog account count
+ *            before any ingest has run
+ *   *fresh → last_seen, else added_date, else NULL
+ *   desc   → "<pwn_count> accounts · breached <YYYY-MM>"
+ * `fresh` points into `br`, so it lives exactly as long as the row does. */
+void breach_meta_display(const breach_src_row *br, long long *count,
+                         const char **fresh, char *desc, size_t desc_cap);
 
 #endif

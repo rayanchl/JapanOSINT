@@ -18,6 +18,7 @@
 #include "core/breach_meta.h"
 #include "core/alert_deliver.h"
 #include "core/alert_eval.h"
+#include "core/uploadapi.h"
 #include "core/evidence.h"
 #include "source.h"
 #include <stdio.h>
@@ -158,6 +159,7 @@ int main(int argc, char **argv) {
     /* Pre-warm the alert rule cache so the first ingested row of the process
      * doesn't pay the load. Purely an optimisation — the cache is lazy and
      * its mutex is statically initialised, so everything works without it. */
+    uploadapi_migrate(&db);
     alert_eval_init(&db);
     /* Entity-watchlist reconciling sweep (roadmap 21). Entity extraction runs
      * asynchronously, long after emit() — so an entity-term rule evaluated

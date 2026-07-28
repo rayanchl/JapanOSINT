@@ -9,6 +9,7 @@
  * `if (jb) cJSON_Delete(jb);` before every return does not survive that many
  * exits without leaking. */
 #include "casesapi.h"
+#include "annotationsapi.h"   /* the one ref_type vocabulary */
 #include "audit.h"
 #include "intelapi.h"
 #include "breach_adapter.h"
@@ -158,10 +159,11 @@ static char *paged(cJSON *data, char *next, int limit, int *st) {
 static int valid_status(const char *s) {
   return s && (!strcmp(s,"open") || !strcmp(s,"closed") || !strcmp(s,"archived"));
 }
+/* Single-sourced in annotationsapi.c. This used to be a private copy, and it
+ * had already drifted from that one — the way a type ends up pinnable but not
+ * annotatable with nothing to catch it. */
 static int valid_ref_type(const char *s) {
-  return s && (!strcmp(s,"intel_item") || !strcmp(s,"entity") ||
-               !strcmp(s,"breach_item") || !strcmp(s,"feature") ||
-               !strcmp(s,"camera") || !strcmp(s,"search_run"));
+  return annotations_ref_type_valid(s);
 }
 static int valid_case_role(const char *s) {
   return s && (!strcmp(s,"lead") || !strcmp(s,"contributor") || !strcmp(s,"viewer"));
@@ -446,10 +448,13 @@ static cJSON *member_array(db_handle *db, const char *case_id) {
 /* {"intel_item":3,"entity":1,...} plus a "total". Every ref_type in the
  * vocabulary is present with 0 so the UI can render a stable set of chips. */
 static cJSON *item_counts(db_handle *db, const char *case_id, long long *total_out) {
-  static const char *TYPES[] = { "intel_item","entity","breach_item",
-                                 "feature","camera","search_run" };
+  /* Enumerated from the shared vocabulary, not a local list: a new ref_type
+   * has to appear in these chips automatically, or the UI quietly stops
+   * showing a category that is being pinned. */
+  int ntypes = 0;
+  const char *const *TYPES = annotations_ref_types(&ntypes);
   cJSON *o = cJSON_CreateObject();
-  for (int i = 0; i < 6; i++) cJSON_AddNumberToObject(o, TYPES[i], 0);
+  for (int i = 0; i < ntypes; i++) cJSON_AddNumberToObject(o, TYPES[i], 0);
   long long total = 0;
   sqlite3_stmt *s = NULL;
   if (sqlite3_prepare_v2(db->h,

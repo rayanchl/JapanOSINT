@@ -209,10 +209,12 @@ CREATE TABLE IF NOT EXISTS gtfs_rt_alerts (
     PRIMARY KEY (org_id, alert_id)
   );
 CREATE VIRTUAL TABLE IF NOT EXISTS gtfs_rt_alerts_fts USING fts5(uid UNINDEXED, header_text, description_text, tokenize='unicode61 remove_diacritics 1');
+-- NOT IMPLEMENTED by the C server: nothing reads or writes this table.
 CREATE TABLE IF NOT EXISTS gtfs_rt_alerts_fts_uid_map (
          uid   TEXT    NOT NULL PRIMARY KEY,
          rowid INTEGER NOT NULL
        ) WITHOUT ROWID;
+-- NOT IMPLEMENTED by the C server: nothing reads or writes this table.
 CREATE TABLE IF NOT EXISTS gtfs_rt_feeds (
     feed_id           TEXT PRIMARY KEY,
     ag_id             TEXT NOT NULL,
@@ -224,6 +226,7 @@ CREATE TABLE IF NOT EXISTS gtfs_rt_feeds (
     last_status       TEXT,
     consecutive_fails INTEGER NOT NULL DEFAULT 0
   );
+-- NOT IMPLEMENTED by the C server: nothing reads or writes this table.
 CREATE TABLE IF NOT EXISTS gtfs_rt_positions (
     org_id       TEXT NOT NULL,
     trip_id      TEXT NOT NULL,
@@ -397,6 +400,7 @@ CREATE TABLE IF NOT EXISTS odpt_station_timetable (
     org_id          TEXT,
     PRIMARY KEY (station_id, line_id, calendar, direction, seq)
   );
+-- NOT IMPLEMENTED by the C server: nothing reads or writes this table.
 CREATE TABLE IF NOT EXISTS odpt_station_timetable_fetched (
     station_id   TEXT PRIMARY KEY,
     fetched_at   TEXT NOT NULL,
@@ -422,6 +426,7 @@ CREATE TABLE IF NOT EXISTS sources (
         probe_response_body   TEXT,
         probe_kind            TEXT
       , probe_consent INTEGER NOT NULL DEFAULT 0, quarantined_at TEXT, quarantined_until TEXT, quarantine_reason TEXT);
+-- NOT IMPLEMENTED by the C server: nothing reads or writes this table.
 CREATE TABLE IF NOT EXISTS sso_group_role_map (
       tenant_id   TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
       group_name  TEXT NOT NULL,
@@ -467,6 +472,7 @@ CREATE TABLE IF NOT EXISTS station_line_dots (
     lat          REAL NOT NULL,
     PRIMARY KEY (cluster_uid, way_uid)
   );
+-- NOT IMPLEMENTED by the C server: nothing reads or writes this table.
 CREATE TABLE IF NOT EXISTS tenant_api_keys (
       id           TEXT PRIMARY KEY,
       tenant_id    TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
@@ -478,6 +484,7 @@ CREATE TABLE IF NOT EXISTS tenant_api_keys (
       last_used_at TEXT,
       revoked_at   TEXT
     );
+-- NOT IMPLEMENTED by the C server: nothing reads or writes this table.
 CREATE TABLE IF NOT EXISTS tenant_idp_connections (
       tenant_id     TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
       kind          TEXT NOT NULL CHECK(kind IN ('saml','scim')),
@@ -487,6 +494,7 @@ CREATE TABLE IF NOT EXISTS tenant_idp_connections (
       created_at    TEXT NOT NULL DEFAULT (datetime('now')),
       PRIMARY KEY (tenant_id, kind)
     );
+-- NOT IMPLEMENTED by the C server: nothing reads or writes this table.
 CREATE TABLE IF NOT EXISTS tenant_quotas (
       tenant_id       TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
       source_id       TEXT NOT NULL,
@@ -535,6 +543,8 @@ CREATE INDEX IF NOT EXISTS idx_anomaly_unresolved
     ON collector_anomaly(created_at DESC) WHERE resolved_at IS NULL;
 CREATE INDEX IF NOT EXISTS idx_anomaly_untriaged
         ON collector_anomaly(created_at) WHERE resolved_at IS NULL AND triaged_at IS NULL;
+-- NOT IMPLEMENTED by the C server: nothing reads or writes this table.
+-- (index over the unused tenant_api_keys table)
 CREATE INDEX IF NOT EXISTS idx_apikeys_tenant ON tenant_api_keys(tenant_id);
 CREATE INDEX IF NOT EXISTS idx_audit_chain
       ON audit_events(tenant_id, chain_seq)
@@ -555,6 +565,8 @@ CREATE INDEX IF NOT EXISTS idx_er_src ON entity_relationships(src_entity_id, wei
 CREATE INDEX IF NOT EXISTS idx_gtfs_feeds_agency ON gtfs_feeds(ag_id);
 CREATE INDEX IF NOT EXISTS idx_gtfs_rt_alerts_reported
     ON gtfs_rt_alerts(reported_at);
+-- NOT IMPLEMENTED by the C server: nothing reads or writes this table.
+-- (index over the unused gtfs_rt_positions table)
 CREATE INDEX IF NOT EXISTS idx_gtfs_rt_positions_reported
     ON gtfs_rt_positions(reported_at);
 CREATE INDEX IF NOT EXISTS idx_gtfs_rt_trip_updates_reported
@@ -847,3 +859,32 @@ CREATE TABLE IF NOT EXISTS camera_stills_state (
   camera_id TEXT PRIMARY KEY, fail_count INTEGER NOT NULL DEFAULT 0,
   last_attempt_at TEXT, next_attempt_at TEXT, last_ok_at TEXT,
   last_error TEXT, last_kind TEXT);
+
+-- Chunked upload staging for case attachments. Parts land on disk under
+-- $JO_UPLOAD_DIR, never in SQLite: a 64 MiB blob in a row would wreck the
+-- page cache of a multi-GB database. This table is metadata only.
+--
+-- Why chunking at all: MG_MAX_RECV_SIZE is 3 MB and mongoose buffers a whole
+-- request body in the event loop, so a single-shot upload would either cap
+-- attachments at a few MB or raise the per-connection memory ceiling for
+-- EVERY connection in the server.
+CREATE TABLE IF NOT EXISTS uploads (
+  id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, user_id TEXT,
+  filename TEXT, content_type TEXT, total_bytes INTEGER,
+  received_bytes INTEGER NOT NULL DEFAULT 0,
+  part_count INTEGER NOT NULL DEFAULT 0,
+  sha256 TEXT, status TEXT NOT NULL DEFAULT 'open',   -- open|committed|aborted
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  committed_at TEXT);
+-- Carries no bytes: only (seq, size, arrival). It buys idempotent retries via
+-- ON CONFLICT and lets received_bytes be RECOMPUTED with SUM() after every
+-- part rather than incremented, so a re-sent part can never drift the total.
+CREATE TABLE IF NOT EXISTS upload_parts (
+  upload_id TEXT NOT NULL, seq INTEGER NOT NULL,
+  bytes INTEGER NOT NULL DEFAULT 0,
+  received_at TEXT NOT NULL DEFAULT (datetime('now')),
+  PRIMARY KEY (upload_id, seq));
+CREATE INDEX IF NOT EXISTS idx_uploads_tenant_status
+  ON uploads(tenant_id, status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_uploads_status_created ON uploads(status, created_at);
+CREATE INDEX IF NOT EXISTS idx_upload_parts_upload ON upload_parts(upload_id, seq);

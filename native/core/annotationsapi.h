@@ -63,6 +63,11 @@
  * search_run. Returns 1 if `s` is one of them, 0 otherwise (NULL → 0). */
 int annotations_ref_type_valid(const char *s);
 
+/* The vocabulary itself, so callers that need to enumerate it (case item
+ * counts, UI chip sets) do not hand-maintain a second copy that drifts.
+ * The returned array is static; *count receives its length. */
+const char *const *annotations_ref_types(int *count);
+
 /* One entrypoint for the whole /api/annotations subtree.
  *
  *   `t`            resolved tenant context (tenant_id / user_id / role).

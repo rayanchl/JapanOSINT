@@ -159,11 +159,28 @@ static int role_rank(const char *r) {
   return 0;
 }
 
+/* THE ref_type vocabulary for the whole codebase. casesapi.c calls this
+ * rather than keeping its own copy — the two had already drifted apart once,
+ * which is exactly how a type becomes pinnable but not annotatable (or the
+ * reverse) with nothing to catch it. Add new types HERE and nowhere else;
+ * ref_type_all() keeps the UI's chip set in step automatically. */
+static const char *REF_TYPES[] = {
+  "intel_item", "entity", "breach_item", "feature", "camera", "search_run",
+  /* roadmap: a file shared into the app and stored in the evidence blob
+   * store, so a case can carry the document itself, not just a link to one. */
+  "attachment",
+};
+
 int annotations_ref_type_valid(const char *s) {
   if (!s || !*s) return 0;
-  return !strcmp(s,"intel_item") || !strcmp(s,"entity") ||
-         !strcmp(s,"breach_item") || !strcmp(s,"feature") ||
-         !strcmp(s,"camera") || !strcmp(s,"search_run");
+  for (size_t i = 0; i < sizeof REF_TYPES / sizeof *REF_TYPES; i++)
+    if (!strcmp(s, REF_TYPES[i])) return 1;
+  return 0;
+}
+
+const char *const *annotations_ref_types(int *count) {
+  if (count) *count = (int)(sizeof REF_TYPES / sizeof *REF_TYPES);
+  return REF_TYPES;
 }
 
 /* ── text helpers ─────────────────────────────────────────────────────── */
