@@ -20,6 +20,7 @@
 #include "aoiapi.h"
 #include "camera_stills.h"
 #include "uploadapi.h"
+#include "ffmpeg.h"
 #include "docmeta.h"
 #include "media.h"
 #include "audit.h"
@@ -711,6 +712,15 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         }
         if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
         reply_json(c, status, body); free(body); return;
+      }
+
+      /* Which ffmpeg answered, and whether it ran at all. "available: true"
+       * is not much help when two are installed, and the honest answer to
+       * "why is RTSP capture failing" is usually here. */
+      if (eq(u,"/api/admin/ffmpeg/capabilities")) {
+        char *body = ffmpeg_capabilities();
+        if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+        reply_json(c, 200, body); free(body); return;
       }
 
       if (eq(u,"/api/admin/restart")) {

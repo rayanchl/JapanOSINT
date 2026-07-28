@@ -66,6 +66,7 @@
  * media.h.
  */
 #include "media.h"
+#include "ffmpeg.h"   /* the one decoder: pHash + video frames + probe */
 #include "evidence.h"
 #include "fts.h"
 #include "../source.h"
@@ -904,6 +905,30 @@ static void probe_phash(void) {
 
 int media_phash_file(const char *path, uint64_t *out) {
   if (!path || !out || !path_ok(path)) return 0;
+
+  /* ffmpeg first — it is the project's one video/image decoder, and
+   * ffmpeg_gray32() pins the scaler (`-sws_flags bilinear`, `scale=32:32`,
+   * `-pix_fmt gray`) so the fingerprint is a property of THIS codebase rather
+   * than of whichever build happens to be installed. Two deployments hashing
+   * the same file must agree, or cross-deployment dedup is meaningless.
+   *
+   * It also decodes video, so a shared clip gets a pHash from its first frame
+   * for free — which is what makes camera scene-change work once ffmpeg is
+   * present.
+   *
+   * Unlike the legacy path below this one has a HARD TIMEOUT. The old
+   * popen() had none: a wedged decoder blocked a scheduler thread forever. */
+  if (ffmpeg_available()) {
+    unsigned char px[1024];
+    char err[192] = {0};
+    if (ffmpeg_gray32(path, 20000, px, err, sizeof err) == FFMPEG_OK) {
+      uint64_t h = media_phash_gray32(px);
+      if (h) { *out = h; return 1; }
+    }
+    /* Fall through: a decode failure is not proof the legacy tool would also
+     * fail (ffmpeg refuses some formats ImageMagick reads). */
+  }
+
   pthread_mutex_lock(&g_tool_lock);
   probe_phash();
   int have = g_ph_have;
@@ -2059,91 +2084,6 @@ char *media_list_for_item(db_handle *db, const char *item_uid, int limit) {
   cJSON_AddNumberToObject(meta, "failed", bad);
   cJSON_AddNumberToObject(meta, "geotagged", geotagged);
 
-  cJSON *env = cJSON_CreateObject();
-  cJSON_AddItemToObject(env, "data", arr);
-  cJSON_AddItemToObject(env, "page", page);
-  cJSON_AddItemToObject(env, "meta", meta);
-  char *j = cJSON_PrintUnformatted(env);
-  cJSON_Delete(env);
-  return j;
-}
-
-char *media_find_similar(db_handle *db, uint64_t phash, int max_distance,
-                         int limit) {
-  if (!db || !db->h) return NULL;
-  media_migrate(db);
-  if (max_distance < 0) max_distance = 10;
-  if (max_distance > 64) max_distance = 64;
-  if (limit <= 0) limit = 50;
-  if (limit > 200) limit = 200;
-
-  /* A bounded linear scan, stated as such in media.h. Nothing here pretends to
-   * be an index; when there are enough hashed images for that to matter, the
-   * banded LSH scheme in core/simhash.h is the model to copy. */
-  const int scan_cap = 200000;
-  typedef struct { char *id, *uid, *url, *sha; sqlite3_int64 ph; int d; } hit;
-  hit *hits = calloc((size_t)limit, sizeof *hits);
-  if (!hits) return NULL;
-  int nh = 0, scanned = 0, worst = 65;
-
-  sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(db->h,
-      "SELECT id,item_uid,url,sha256,phash FROM media_assets"
-      " WHERE phash IS NOT NULL LIMIT ?1", -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_int(s, 1, scan_cap);
-    while (sqlite3_step(s) == SQLITE_ROW) {
-      scanned++;
-      sqlite3_int64 raw = sqlite3_column_int64(s, 4);
-      int d = media_phash_distance(phash, (uint64_t)raw);
-      if (d > max_distance) continue;
-      if (nh == limit && d >= worst) continue;
-      int slot = nh;
-      if (nh < limit) nh++;
-      else {
-        slot = 0;
-        for (int i = 1; i < nh; i++) if (hits[i].d > hits[slot].d) slot = i;
-        free(hits[slot].id); free(hits[slot].uid);
-        free(hits[slot].url); free(hits[slot].sha);
-      }
-      hits[slot].id  = dupcol(s, 0);
-      hits[slot].uid = dupcol(s, 1);
-      hits[slot].url = dupcol(s, 2);
-      hits[slot].sha = dupcol(s, 3);
-      hits[slot].ph  = raw;
-      hits[slot].d   = d;
-      worst = 0;
-      for (int i = 0; i < nh; i++) if (hits[i].d > worst) worst = hits[i].d;
-    }
-    sqlite3_finalize(s);
-  }
-
-  for (int i = 1; i < nh; i++) {          /* insertion sort, nearest first */
-    hit k = hits[i];
-    int j = i - 1;
-    while (j >= 0 && hits[j].d > k.d) { hits[j + 1] = hits[j]; j--; }
-    hits[j + 1] = k;
-  }
-
-  cJSON *arr = cJSON_CreateArray();
-  for (int i = 0; i < nh; i++) {
-    cJSON *o = cJSON_CreateObject();
-    if (hits[i].id)  cJSON_AddStringToObject(o, "id", hits[i].id);
-    if (hits[i].uid) cJSON_AddStringToObject(o, "item_uid", hits[i].uid);
-    if (hits[i].url) cJSON_AddStringToObject(o, "url", hits[i].url);
-    if (hits[i].sha) cJSON_AddStringToObject(o, "sha256", hits[i].sha);
-    put_hex64(o, "phash", hits[i].ph);
-    cJSON_AddNumberToObject(o, "distance", hits[i].d);
-    cJSON_AddItemToArray(arr, o);
-    free(hits[i].id); free(hits[i].uid); free(hits[i].url); free(hits[i].sha);
-  }
-  free(hits);
-
-  cJSON *page = cJSON_CreateObject();
-  cJSON_AddNumberToObject(page, "limit", limit);
-  cJSON_AddNumberToObject(page, "count", nh);
-  cJSON *meta = cJSON_CreateObject();
-  cJSON_AddNumberToObject(meta, "scanned", scanned);
-  cJSON_AddNumberToObject(meta, "max_distance", max_distance);
   cJSON *env = cJSON_CreateObject();
   cJSON_AddItemToObject(env, "data", arr);
   cJSON_AddItemToObject(env, "page", page);

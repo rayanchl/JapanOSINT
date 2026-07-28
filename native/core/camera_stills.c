@@ -70,6 +70,8 @@
 #include "camera_stills.h"
 #include "audit.h"
 #include "evidence.h"
+#include "ffmpeg.h"         /* THE video seam — this file no longer has one   */
+#include "httpclient.h"     /* http_client_global_init() — the one curl init */
 #include "media.h"
 #include "operatorgate.h"
 #include "../source.h"
@@ -79,17 +81,13 @@
 #include <openssl/rand.h>
 #include <openssl/sha.h>
 #include <ctype.h>
-#include <errno.h>
 #include <fcntl.h>
-#include <poll.h>
 #include <pthread.h>
-#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
 #include <sys/stat.h>
-#include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -434,11 +432,15 @@ int camera_stills_classify(const char *url) {
   return CAM_FEED_SNAPSHOT;
 }
 
-/* A URL safe to hand to execvp() as an argv element. The shell is never
- * involved (see the header), so this is not a quoting check — it exists to
- * stop control characters and whitespace, and to guarantee the string starts
- * with a scheme so ffmpeg can never read it as an OPTION rather than an
- * input. */
+/* THIS MODULE's admissible feed URL, checked before anything is handed to
+ * core/ffmpeg.h. The shell is never involved anywhere on that path, so this is
+ * not a quoting check; it is a POLICY check, and it is deliberately TIGHTER
+ * than ffmpeg_input_allowed(), which also permits file/rtmp/tcp/udp. Those are
+ * right for an analyst's uploaded video and wrong for a URL that came out of a
+ * third-party camera registry — a camera feed is rtsp/rtsps/http/https or it is
+ * not a camera feed. It also stops control characters and whitespace and
+ * guarantees a leading scheme, so ffmpeg can never read the string as an OPTION
+ * rather than an input. */
 static int url_exec_safe(const char *u) {
   if (!u || !*u) return 0;
   size_t n = strlen(u);
@@ -485,8 +487,7 @@ static char *normalize_camera_id(const char *id) {
  * http_request() provably cannot do this).
  * ══════════════════════════════════════════════════════════════════════════ */
 
-static pthread_once_t g_curl_once = PTHREAD_ONCE_INIT;
-static void curl_once(void) { curl_global_init(CURL_GLOBAL_DEFAULT); }
+/* The global libcurl init lives in httpclient.c behind a single pthread_once. */
 
 typedef struct {
   unsigned char *buf;
@@ -550,7 +551,7 @@ static int stream_grab(const char *url, int timeout_ms, size_t maxb,
                        int want_jpeg, unsigned char **out, size_t *outlen,
                        char *ct_out, size_t ct_cap, long *status_out) {
   if (!url || !out || !outlen) return 0;
-  pthread_once(&g_curl_once, curl_once);
+  http_client_global_init();
   CURL *e = curl_easy_init();
   if (!e) return 0;
 
@@ -592,151 +593,62 @@ static int stream_grab(const char *url, int timeout_ms, size_t maxb,
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
- * Fetch: the optional ffmpeg shell-out for RTSP / HLS.
+ * Fetch: RTSP / HLS — DELEGATED to core/ffmpeg.h.
  *
- * fork + execvp with an argv ARRAY. There is no /bin/sh anywhere on this path,
- * because the URL is third-party input and hand-quoting it for a shell is a
- * command-injection bug with a countdown on it.
+ * This module used to carry its own find_ffmpeg() plus a fork/execvp/poll/
+ * SIGKILL/waitpid loop. All of it is gone. core/ffmpeg.c is now the ONE place
+ * in the product that spawns a media tool, because duplicated process plumbing
+ * is the worst thing in this codebase to duplicate: the day one copy learns to
+ * reap its children or bound its output and the other does not, the bug shows
+ * up as a slow leak under load, in the file nobody was reading. Every security
+ * property this path relies on — argv array and never a shell, -nostdin, a hard
+ * SIGKILL deadline, bounded output, an explicit protocol allowlist — is stated
+ * and enforced there, once.
+ *
+ * What stays HERE is this module's own policy, which is deliberately TIGHTER
+ * than ffmpeg.h's: a camera feed URL must be rtsp/rtsps/http/https and nothing
+ * else (url_exec_safe, above). ffmpeg.h additionally permits file, rtmp, tcp
+ * and udp, which are perfectly legitimate for an uploaded video and are not
+ * legitimate for a URL a third-party camera registry handed us.
+ *
+ * The argv is unchanged in substance: ffmpeg.c derives -rtsp_transport tcp from
+ * the URL SCHEME, so an rtsp:// feed still gets it and an HLS feed still does
+ * not (passing it to a non-RTSP demuxer is an immediate "Option not found").
  * ══════════════════════════════════════════════════════════════════════════ */
 
-#define CAM_TOOLPATH_MAX 512
-
-static int find_ffmpeg(char *out, size_t cap) {
-  if (cap < CAM_TOOLPATH_MAX) return 0;
-  if (getenv("CAM_STILLS_NO_FFMPEG")) return 0;
-  const char *ov = getenv("CAM_STILLS_FFMPEG");
-  if (ov && *ov) {
-    if (strlen(ov) + 1 > CAM_TOOLPATH_MAX) return 0;
-    if (access(ov, X_OK) != 0) return 0;
-    memcpy(out, ov, strlen(ov) + 1);
-    return 1;
-  }
-  const char *path = getenv("PATH");
-  if (!path || !*path) return 0;
-  for (const char *p = path; *p; ) {
-    const char *e = strchr(p, ':');
-    size_t n = e ? (size_t)(e - p) : strlen(p);
-    /* A PATH element too long to hold the candidate is skipped rather than
-     * silently truncated into a different path that access() might accept. */
-    if (n > 0 && n + 8 <= CAM_TOOLPATH_MAX) {
-      char cand[CAM_TOOLPATH_MAX];
-      snprintf(cand, sizeof cand, "%.*s/ffmpeg", (int)n, p);
-      if (access(cand, X_OK) == 0) {
-        memcpy(out, cand, strlen(cand) + 1);
-        return 1;
-      }
-    }
-    if (!e) break;
-    p = e + 1;
-  }
-  return 0;
-}
-
-/* Run argv, capture stdout up to maxb, SIGKILL at the deadline. Returns 1 only
- * when the child exited 0 AND produced bytes. Between fork() and execvp() only
- * async-signal-safe calls are made — mandatory in a process with this many
- * threads. */
-static int run_argv(char *const argv[], int timeout_ms, size_t maxb,
-                    unsigned char **out, size_t *outlen) {
-  int fd[2];
-  if (pipe(fd) != 0) return 0;
-
-  pid_t pid = fork();
-  if (pid < 0) { close(fd[0]); close(fd[1]); return 0; }
-  if (pid == 0) {
-    close(fd[0]);
-    int devnull = open("/dev/null", O_RDWR);
-    if (devnull >= 0) { dup2(devnull, 0); dup2(devnull, 2); }
-    dup2(fd[1], 1);
-    if (fd[1] > 2) close(fd[1]);
-    if (devnull > 2) close(devnull);
-    execvp(argv[0], argv);
-    _exit(127);
-  }
-  close(fd[1]);
-
-  unsigned char *buf = NULL;
-  size_t len = 0, cap = 0;
-  long long deadline = now_ms() + timeout_ms;
-  int killed = 0;
-  for (;;) {
-    long long left = deadline - now_ms();
-    if (left <= 0) { kill(pid, SIGKILL); killed = 1; break; }
-    struct pollfd pf = { fd[0], POLLIN, 0 };
-    int pr = poll(&pf, 1, (int)(left > 1000 ? 1000 : left));
-    if (pr < 0) { if (errno == EINTR) continue; break; }
-    if (pr == 0) continue;
-    if (len + 65536 + 1 > cap) {
-      size_t nc = cap ? cap * 2 : 262144;
-      while (nc < len + 65536 + 1) nc *= 2;
-      if (nc > maxb + 65537) nc = maxb + 65537;
-      unsigned char *q = realloc(buf, nc);
-      if (!q) { kill(pid, SIGKILL); killed = 1; break; }
-      buf = q; cap = nc;
-    }
-    ssize_t r = read(fd[0], buf + len, 65536);
-    if (r < 0) { if (errno == EINTR) continue; break; }
-    if (r == 0) break;                       /* EOF: the child is done       */
-    len += (size_t)r;
-    if (len >= maxb) { kill(pid, SIGKILL); killed = 1; break; }
-  }
-  close(fd[0]);
-
-  int st = 0;
-  while (waitpid(pid, &st, 0) < 0 && errno == EINTR) { /* retry */ }
-  int ok = !killed && WIFEXITED(st) && WEXITSTATUS(st) == 0 && len > 0;
-  /* A killed child that nonetheless emitted a complete frame is still a
-   * success: `-frames:v 1` writes the whole image before it exits, and a
-   * demuxer that then hangs on the next packet is the camera's problem, not
-   * evidence that the frame is bad. */
-  if (!ok && killed && len > 0) ok = 1;
-  if (!ok) { free(buf); return 0; }
-  *out = buf;
-  *outlen = len;
-  return 1;
-}
-
-/* Grab one frame from an RTSP or HLS URL. Returns 1 on success. On this host
- * this ALWAYS returns 0 with reason "…_requires_ffmpeg", because there is no
- * ffmpeg — see the header. */
 static int ffmpeg_grab(const char *url, int kind, int timeout_ms, size_t maxb,
                        unsigned char **out, size_t *outlen,
                        const char **reason) {
   *reason = NULL;
   if (!url_exec_safe(url)) { *reason = "unsafe_feed_url"; return 0; }
-  if (getenv("CAM_STILLS_NO_FFMPEG")) {
+
+  char err[256] = {0};
+  int rc = ffmpeg_extract_frame_capped(url, -1.0 /* first decodable frame */,
+                                       0 /* native width */, timeout_ms, maxb,
+                                       out, outlen, err, sizeof err);
+  if (rc == FFMPEG_OK) return 1;
+  if (err[0]) fprintf(stderr, "[camera-stills] %s\n", err);
+
+  /* The reasons an operator can ACT on keep their historical spelling: they are
+   * what camera_stills.h documents, they are what is already sitting in
+   * camera_stills_state.last_error on every deployment, and on a host with no
+   * ffmpeg they are the only ones that ever occur. Everything else — a timeout,
+   * a 401 from the camera, an oversized frame — now carries ffmpeg.h's specific
+   * token instead of the single "ffmpeg_failed" this file used to store, which
+   * is the point of requirement 5: a caller must be able to say WHY.
+   * ffmpeg_strerror() returns static storage, so the pointer safely outlives
+   * this call and reaches state_write(). */
+  if (rc == FFMPEG_ERR_DISABLED)
     *reason = (kind == CAM_FEED_RTSP) ? "rtsp_disabled_no_ffmpeg"
                                       : "hls_disabled_no_ffmpeg";
-    return 0;
-  }
-  char tool[CAM_TOOLPATH_MAX];
-  if (!find_ffmpeg(tool, sizeof tool)) {
+  else if (rc == FFMPEG_ERR_NOT_INSTALLED)
     *reason = (kind == CAM_FEED_RTSP) ? "rtsp_requires_ffmpeg"
                                       : "hls_requires_ffmpeg";
-    return 0;
-  }
-
-  /* -rtsp_transport is a private option of the RTSP demuxer; passing it for an
-   * HLS input makes ffmpeg exit with "Option not found", so the two argv are
-   * built separately rather than sharing one array with a dead flag in it. */
-  char *argv_rtsp[] = {
-    tool, (char *)"-nostdin", (char *)"-loglevel", (char *)"quiet",
-    (char *)"-rtsp_transport", (char *)"tcp",
-    (char *)"-i", (char *)url,
-    (char *)"-frames:v", (char *)"1", (char *)"-f", (char *)"image2",
-    (char *)"-vcodec", (char *)"mjpeg", (char *)"-", NULL };
-  char *argv_hls[] = {
-    tool, (char *)"-nostdin", (char *)"-loglevel", (char *)"quiet",
-    (char *)"-i", (char *)url,
-    (char *)"-frames:v", (char *)"1", (char *)"-f", (char *)"image2",
-    (char *)"-vcodec", (char *)"mjpeg", (char *)"-", NULL };
-
-  if (!run_argv(kind == CAM_FEED_RTSP ? argv_rtsp : argv_hls,
-                timeout_ms, maxb, out, outlen)) {
-    *reason = "ffmpeg_failed";
-    return 0;
-  }
-  return 1;
+  else if (rc == FFMPEG_ERR_SCHEME || rc == FFMPEG_ERR_BAD_INPUT)
+    *reason = "unsafe_feed_url";
+  else
+    *reason = ffmpeg_strerror(rc);
+  return 0;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -1718,8 +1630,11 @@ char *camera_stills_capabilities(db_handle *db) {
     sqlite3_finalize(s);
   }
 
-  char tool[CAM_TOOLPATH_MAX];
-  int have_ff = find_ffmpeg(tool, sizeof tool);
+  /* Both from core/ffmpeg.h, which probes once per process and caches — so this
+   * ops route no longer walks PATH on every request, and it reports the SAME
+   * tool the capture path would actually use rather than a second opinion. */
+  int have_ff = ffmpeg_available();
+  const char *tool = ffmpeg_path();
   int have_ph = 0;
   media_tools(&have_ph, NULL);
   const char *ke = getenv("CAM_STILLS_ENABLED");
@@ -1743,8 +1658,8 @@ char *camera_stills_capabilities(db_handle *db) {
   for (int i = 0; i < 2; i++) {
     cJSON *o = cJSON_CreateObject();
     cJSON_AddBoolToObject(o, "available", have_ff);
-    if (have_ff) cJSON_AddStringToObject(o, "tool", tool);
-    else         cJSON_AddNullToObject(o, "tool");
+    if (have_ff && tool) cJSON_AddStringToObject(o, "tool", tool);
+    else                 cJSON_AddNullToObject(o, "tool");
     cJSON_AddItemToObject(d, i == 0 ? "rtsp" : "hls", o);
   }
   cJSON *sc = cJSON_CreateObject();

@@ -544,18 +544,6 @@ int media_phash_file(const char *path, uint64_t *out);
  * usual caveat that this is a threshold on a heuristic, not an equality test. */
 int media_phash_distance(uint64_t a, uint64_t b);
 
-/* Assets within `max_distance` of `phash`, nearest first:
- *   {"data":[{id,item_uid,url,sha256,phash,distance}],
- *    "page":{"limit":n,"count":n},"meta":{"scanned":n,"max_distance":d}}
- * Implemented as a BOUNDED LINEAR SCAN of media_assets.phash — stated plainly
- * because it is the honest shape of the thing: unlike simhash.c there is no
- * banded LSH index here, and building one is only worth it once the corpus
- * actually holds enough hashed images to matter (it currently holds none; see
- * "NOT EXERCISED"). `meta.scanned` reports how many rows were examined so a
- * caller can see when the bound is biting. NULL on bad args. Caller frees. */
-char *media_find_similar(db_handle *db, uint64_t phash, int max_distance,
-                         int limit);
-
 /* ── OCR ─────────────────────────────────────────────────────────────────── */
 
 /* OCR a file by shelling out. Returns 1 and sets *out_text (malloc'd, caller

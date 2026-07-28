@@ -30,14 +30,16 @@
  *     EOI. camera_stills_jpeg_frame() is that walk and it is the technical
  *     core of this file. See "MJPEG AND WHY http_request() CANNOT DO IT".
  *
- *   RTSP and HLS         → OPTIONAL EXTERNAL TOOL. Both require a demuxer and
- *     a decoder; there is no honest way to synthesize either in-process. They
- *     shell out to `ffmpeg` ONLY when it is on PATH, and when it is not the
- *     camera is marked with an explicit stored reason
- *     ("rtsp_requires_ffmpeg") and backed off — NOT silently retried forever
- *     and NOT reported as a fetch failure, which would be a lie about why it
- *     did not work. NOTHING in this file pretends RTSP works here. It does
- *     not, because it cannot. See "WHAT IS AND IS NOT EXERCISED".
+ *   RTSP and HLS         → OPTIONAL EXTERNAL TOOL, and NOT THIS MODULE'S
+ *     BUSINESS ANY MORE. Both require a demuxer and a decoder; there is no
+ *     honest way to synthesize either in-process. They are handed to
+ *     core/ffmpeg.h — the ONE ffmpeg seam in the product — which runs the tool
+ *     ONLY when it is on PATH. When it is not, the camera is marked with an
+ *     explicit stored reason ("rtsp_requires_ffmpeg") and backed off — NOT
+ *     silently retried forever and NOT reported as a fetch failure, which
+ *     would be a lie about why it did not work. NOTHING in this file pretends
+ *     RTSP works here. It does not, because it cannot. See "WHAT IS AND IS NOT
+ *     EXERCISED".
  *
  * ══ WHERE CAMERAS LIVE (read core/camera_store.h first) ═══════════════════
  *
@@ -200,23 +202,36 @@
  *   (`if (rc != CURLE_OK && (rc != CURLE_OPERATION_TIMEDOUT || !b.len))`), and
  *   add CURLOPT_MAXFILESIZE_LARGE — the same one-liner media.h asks for.
  *
- * ══ THE FFMPEG SHELL-OUT, AND COMMAND INJECTION ═══════════════════════════
+ * ══ THE FFMPEG SEAM — NOW OWNED BY core/ffmpeg.h ══════════════════════════
  *
- * media.c can whitelist the paths it hands to /bin/sh because the only things
- * it interpolates are content hashes and mkstemp() names. THIS module has to
- * hand ffmpeg a URL THAT CAME FROM A THIRD-PARTY CAMERA REGISTRY, i.e. hostile
- * input, so a whitelist is not available and quoting-by-hand would be a
- * command-injection bug waiting to happen. Therefore:
- *   - NO popen() and NO /bin/sh anywhere on this path. fork() + execvp() with
- *     an argv ARRAY, so a URL containing `;`, backticks or $( ) is one opaque
- *     argv element and there is no shell to interpret it.
- *   - The URL is still validated first (scheme must be rtsp/rtsps/http/https,
- *     no control characters, no whitespace, length-capped) so it can never
- *     start with '-' and be read as an ffmpeg OPTION rather than an input.
- *   - The child is killed with SIGKILL at a deadline; a hung ffmpeg cannot
- *     wedge the pod. Between fork() and execvp() only async-signal-safe calls
- *     are made (dup2/close/execvp/_exit), which is required in a process this
- *     threaded.
+ * This module used to carry its own find_ffmpeg() and its own fork/execvp/
+ * poll/SIGKILL/waitpid loop. It does not any more. core/ffmpeg.c is THE video
+ * abstraction and the only place in the product that spawns a media tool;
+ * duplicated process plumbing is the worst thing here to duplicate, because
+ * the day one copy learns to reap its children or bound its output and the
+ * other does not, the bug surfaces as a slow leak under load in whichever file
+ * nobody was reading. The properties this path depends on are stated and
+ * enforced THERE, once: argv array and never a shell, -nostdin, a hard SIGKILL
+ * deadline with the child always reaped, bounded output, and an explicit
+ * -protocol_whitelist whose network form deliberately excludes `file` so a
+ * hostile HLS playlist cannot name a local path as a segment.
+ *
+ * WHAT REMAINS THIS MODULE'S POLICY, and is deliberately TIGHTER than
+ * ffmpeg.h's: a camera feed URL must be rtsp/rtsps/http/https, printable ASCII
+ * only, length-capped, and cannot start with '-' (which ffmpeg would read as an
+ * OPTION rather than an input). ffmpeg.h additionally permits file, rtmp, tcp
+ * and udp — correct for an uploaded video, wrong for a URL that came out of a
+ * third-party camera registry, so url_exec_safe() stays and runs first.
+ *
+ * REASON STRINGS. "rtsp_requires_ffmpeg" / "hls_requires_ffmpeg" /
+ * "rtsp_disabled_no_ffmpeg" / "hls_disabled_no_ffmpeg" / "unsafe_feed_url" are
+ * unchanged — they are what a deployment already has in
+ * camera_stills_state.last_error and they are the only ones that occur on a
+ * host with no ffmpeg. What USED to be the single catch-all "ffmpeg_failed" is
+ * now ffmpeg.h's specific token instead: ffmpeg_timeout, ffmpeg_exit_nonzero,
+ * ffmpeg_output_too_large, ffmpeg_empty_output, ffmpeg_spawn_failed. That is
+ * strictly more information in the same column, and the tool's own stderr (a
+ * camera's 401, an "Invalid data found") is logged to stderr alongside it.
  *
  * ══ SCHEMA ════════════════════════════════════════════════════════════════
  *
@@ -342,8 +357,14 @@
  *   CAM_STILLS_PHASH_THRESHOLD   Hamming distance called "changed"       (6)
  *   CAM_STILLS_MAX_BACKOFF_SEC   backoff ceiling for a failing camera (21600)
  *   CAM_STILLS_FFMPEG            path override; unset → probe PATH
- *   CAM_STILLS_NO_FFMPEG         set → never shell out; RTSP/HLS recorded
+ *   CAM_STILLS_NO_FFMPEG         set → never spawn ffmpeg; RTSP/HLS recorded
  *                                as unsupported
+ *   (both are read by core/ffmpeg.c, which honours them as exact synonyms of
+ *    its own JO_FFMPEG / JO_NO_FFMPEG so an existing deployment's settings keep
+ *    working across this consolidation. JO_* wins where both are set. See
+ *    core/ffmpeg.h for JO_FFPROBE, JO_FFMPEG_MAX_BYTES and JO_FFMPEG_TIMEOUT_MS,
+ *    none of which this module sets — it passes its own CAM_STILLS_MAX_BYTES
+ *    and CAM_STILLS_TIMEOUT_MS per call.)
  *   (bytes additionally obey evidence.h: JO_EVIDENCE_DIR, JO_EVIDENCE_MAX_BYTES,
  *    JO_EVIDENCE_MAX_BLOB_BYTES, JO_NO_EVIDENCE.)
  *
@@ -368,12 +389,14 @@
  *     scene_changed is NULL for every frame pair that is not byte-identical.
  *     The comparator seam is written and syntax-checked; it has never once
  *     produced a `1`.
- *   - The ffmpeg RTSP/HLS path end to end. There is no ffmpeg here. The
- *     probe, the argv construction, the fork/execvp/poll/deadline machinery
- *     and the output handling are written and syntax-checked but have never
- *     run against a real ffmpeg. What DOES run on this host is the absence
- *     path: no tool → reason "rtsp_requires_ffmpeg", long backoff, no retry
- *     storm, honest capabilities output.
+ *   - The ffmpeg RTSP/HLS path end to end. There is no ffmpeg here. That
+ *     machinery now lives in core/ffmpeg.c and its PLUMBING has since been
+ *     driven for real against a stub ffmpeg on PATH (argv construction, the
+ *     SIGKILL deadline, child reaping, the byte cap, the absent-tool path — see
+ *     the test note there). What has still never happened, in this file or that
+ *     one, is a real ffmpeg decoding a real RTSP stream. What DOES run on this
+ *     host is the absence path: no tool → reason "rtsp_requires_ffmpeg", long
+ *     backoff, no retry storm, honest capabilities output.
  *   - Live cameras. No third-party camera was polled from this environment.
  *     The MJPEG grabber was driven against local multipart fixtures, not
  *     against a real streaming endpoint, so the write-callback abort has been
