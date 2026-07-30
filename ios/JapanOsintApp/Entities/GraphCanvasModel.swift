@@ -212,9 +212,6 @@ final class GraphCanvasModel: ObservableObject {
         let token = loadToken
         loading = true
         do {
-            // `entityEgoGraph`, not `entityGraph` — API.swift's `entityGraph`
-            // is the older, poorer `Search/SearchModels.EntityGraph` shape and
-            // carries no `meta`, which is the whole truncation story.
             let graph = try await api.entityEgoGraph(
                 type: rootType, id: rootId, depth: depth,
                 relTypes: relTypesParam,

@@ -244,23 +244,12 @@ struct CameraDiscoveryView: View {
     @ViewBuilder
     private var mapView: some View {
         Map(position: $cameraPosition) {
-            ForEach(filteredEvents) { ev in
-                if let lat = ev.lat, let lon = ev.lon {
-                    Annotation(
-                        ev.title ?? ev.id,
-                        coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon),
-                        anchor: .bottom
-                    ) {
-                        Button {
-                            selectedFeature = feature(from: ev)
-                        } label: {
-                            mapPinView(
-                                symbol: registry.symbol(for: "cameras"),
-                                color: registry.color(for: "cameras")
-                            )
-                        }
-                    }
-                }
+            // Pre-filtered to placeable events + a @MapContentBuilder helper so
+            // the content resolves unambiguously as `some MapContent` (mirrors
+            // MapTab). An inline `if let` here makes the content optional and
+            // collapses Map's initializer resolution onto its no-content overload.
+            ForEach(mappableEvents, id: \.id) { ev in
+                cameraAnnotation(ev)
             }
         }
         .mapStyle(.standard(elevation: .realistic))
@@ -485,6 +474,36 @@ struct CameraDiscoveryView: View {
 
     private var filtersAreActive: Bool {
         !selectedChannels.isEmpty || feedAvailability != .all
+    }
+
+    /// Filtered events that actually carry a coordinate — the only ones the map
+    /// can place. Keeps the map ForEach content unconditional (see `mapView`).
+    private var mappableEvents: [CameraEvent] {
+        filteredEvents.filter { $0.lat != nil && $0.lon != nil }
+    }
+
+    /// One camera pin. Extracted as `@MapContentBuilder` so its return type is
+    /// concretely `some MapContent` — the same shape MapTab uses.
+    @MapContentBuilder
+    private func cameraAnnotation(_ ev: CameraEvent) -> some MapContent {
+        // Fully qualified: the app defines its own `Annotation` (the analyst
+        // note DTO in Models+Roadmap), which shadows MapKit's here and makes the
+        // content fail to conform to MapContent.
+        MapKit.Annotation(
+            ev.title ?? ev.id,
+            coordinate: CLLocationCoordinate2D(latitude: ev.lat ?? 0,
+                                               longitude: ev.lon ?? 0),
+            anchor: .bottom
+        ) {
+            Button {
+                selectedFeature = feature(from: ev)
+            } label: {
+                mapPinView(
+                    symbol: registry.symbol(for: "cameras"),
+                    color: registry.color(for: "cameras")
+                )
+            }
+        }
     }
 
     /// Apply search + source-channel + feed-availability filters. Search hay

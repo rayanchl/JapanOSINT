@@ -26,7 +26,7 @@ struct CoordinateMiniMap: View {
 
     var body: some View {
         Map(position: $cameraPosition, interactionModes: [.pan, .zoom]) {
-            Annotation("", coordinate: coordinate) {
+            MapKit.Annotation("", coordinate: coordinate) {
                 Image(systemName: "mappin.circle.fill")
                     .font(.title2)
                     .foregroundStyle(.red)

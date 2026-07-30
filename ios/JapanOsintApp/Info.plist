@@ -34,5 +34,22 @@
 			</array>
 		</dict>
 	</array>
+	<!-- Live Activity (roadmap 35). Required on the APP target too, not just
+	     the widget extension, or Activity.request(...) throws at runtime. -->
+	<key>NSSupportsLiveActivities</key>
+	<true/>
+	<!-- Background refresh (roadmap 37). These identifiers must match the ones
+	     registered in BackgroundRefresh.swift verbatim, and the target needs the
+	     Background Modes capability (fetch + processing) enabled in Xcode. -->
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.rayanchl.japanosint.refresh</string>
+		<string>com.rayanchl.japanosint.sync</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>processing</string>
+	</array>
 </dict>
 </plist>

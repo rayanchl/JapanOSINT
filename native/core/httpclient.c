@@ -69,15 +69,15 @@ static size_t on_data(void *ptr, size_t sz, size_t nm, void *ud) {
   return n;
 }
 
-/* curl_global_init() is documented as not thread-safe and must run before any
- * other libcurl call. http_client_new() is reached from the scheduler thread,
- * every detached /api/search/analyze pipeline thread, the breach fetch/ingest
- * job threads, the LLM worker and the mongoose event loop — so the old
- * `static int inited` test-and-set was a genuine startup race. This is the
- * single global init; alert_deliver.c and camera_stills.c call it too. */
-static pthread_once_t g_curl_once = PTHREAD_ONCE_INIT;
 static void curl_boot(void) { curl_global_init(CURL_GLOBAL_DEFAULT); }
-void http_client_global_init(void) { pthread_once(&g_curl_once, curl_boot); }
+
+/* pthread_once rather than a plain static flag: clients are created from
+ * collector worker threads, and two of them hitting an unguarded flag can both
+ * run curl_global_init(), which is not re-entrant. */
+void http_client_global_init(void) {
+  static pthread_once_t once = PTHREAD_ONCE_INIT;
+  pthread_once(&once, curl_boot);
+}
 
 http_client *http_client_new(void) {
   http_client_global_init();

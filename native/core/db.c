@@ -165,6 +165,10 @@ static void db_apply_pragmas(sqlite3 *h) {
   sqlite3_exec(h, "PRAGMA synchronous=NORMAL;", NULL, NULL, NULL);
 }
 
+/* Secondary connection — see db_attach() in db.h. Deliberately does NOT apply
+ * schema.sql or the boot migrations: those ran on the primary handle at boot,
+ * and re-running them from a worker thread while the event loop is serving
+ * requests means concurrent DDL on a live WAL database for no gain. */
 int db_attach(db_handle *db, const char *db_path) {
   if (!db) return 1;
   const char *dbp = db_path ? db_path
@@ -172,10 +176,14 @@ int db_attach(db_handle *db, const char *db_path) {
   int rc = sqlite3_open_v2(dbp, &db->h, SQLITE_OPEN_READWRITE, NULL);
   if (rc != SQLITE_OK) {
     fprintf(stderr, "[db] attach failed: %s\n", sqlite3_errmsg(db->h));
-    if (db->h) { sqlite3_close(db->h); db->h = NULL; }
+    sqlite3_close(db->h);
+    db->h = NULL;
     return 1;
   }
-  db_apply_pragmas(db->h);
+  sqlite3_exec(db->h, "PRAGMA journal_mode=WAL;",  NULL, NULL, NULL);
+  sqlite3_exec(db->h, "PRAGMA foreign_keys=ON;",   NULL, NULL, NULL);
+  sqlite3_exec(db->h, "PRAGMA busy_timeout=5000;", NULL, NULL, NULL);
+  sqlite3_exec(db->h, "PRAGMA synchronous=NORMAL;", NULL, NULL, NULL);
   return 0;
 }
 

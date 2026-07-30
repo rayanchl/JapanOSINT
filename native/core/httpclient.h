@@ -14,12 +14,11 @@ typedef struct {
 
 typedef struct http_client http_client; /* opaque (shared curl share/handle) */
 
-/* The ONE curl_global_init, behind a pthread_once. curl_global_init is not
- * thread-safe and must precede every other libcurl call, and this process
- * creates clients from the scheduler thread, the search-pipeline threads, the
- * breach job threads and the mongoose loop. Anything that uses libcurl without
- * going through http_client_new() must call this first. Idempotent. */
-void http_client_global_init(void);
+/* The one curl_global_init() in the process. Idempotent and thread-safe, so
+ * callers that reach curl WITHOUT going through http_client_new() (e.g. the
+ * camera-stills grabber, which drives a raw easy handle) can call it directly
+ * instead of racing a second global init on a worker thread. */
+void         http_client_global_init(void);
 
 http_client *http_client_new(void);
 void         http_client_free(http_client *);

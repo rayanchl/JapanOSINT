@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Combine
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Cases (roadmap item 14) — the shared list store plus the vocabulary helpers
@@ -258,7 +259,10 @@ final class CaseStore: ObservableObject {
                     created_by: nil,
                     created_at: d.created_at,
                     updated_at: d.updated_at,
-                    closed_at: d.closed_at)
+                    closed_at: d.closed_at,
+                    // Detail carries per-ref-type counts; the summary shows the
+                    // total (nil stays nil so "unknown" isn't rendered as 0).
+                    item_count: d.item_counts?.values.reduce(0, +))
     }
 
     private static func sorted(_ rows: [CaseSummary]) -> [CaseSummary] {
@@ -283,7 +287,8 @@ extension CaseSummary {
                     created_by: created_by,
                     created_at: created_at,
                     updated_at: updated_at,
-                    closed_at: closed_at)
+                    closed_at: closed_at,
+                    item_count: item_count)
     }
 }
 

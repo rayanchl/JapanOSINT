@@ -29,7 +29,7 @@ struct LiveVehiclesContent: MapContent {
 
     var body: some MapContent {
         ForEach(Array(store.vehicles.values).filter { isEnabled($0.kind) }, id: \.id) { v in
-            Annotation(v.label ?? v.id,
+            MapKit.Annotation(v.label ?? v.id,
                        coordinate: CLLocationCoordinate2D(latitude: v.lat, longitude: v.lon),
                        anchor: .center) {
                 ZStack(alignment: .topTrailing) {

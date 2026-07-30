@@ -11,15 +11,16 @@
 #define JO_SEARCHAPI_H
 #include "db.h"
 
-/* query may be NULL/empty → returns NULL (caller: 400 query_required).
- * Otherwise spawns the run and returns {request_id,status,query}. Frees. */
-/* Starts a pipeline run on a detached thread. Concurrency is capped
- * (JO_SEARCH_MAX, default 4) because each run owns a thread, an http_client and
- * a DB connection; at capacity this returns NULL with *status = 429 so the
- * caller can say so rather than reporting a bad request. *status is 200 on
- * success and on the plain "no query" NULL. `status` may be NULL. */
+/* Spawns the run and returns {request_id,status,query} (caller frees).
+ *
+ * NULL means "no run started", and `*out_status` says why so the caller can
+ * pick the right HTTP code without guessing:
+ *   400  query was NULL/empty/whitespace, or the run could not be started
+ *   429  the concurrent-run cap is already reached (JO_MAX_CONCURRENT_SEARCHES,
+ *        default 4) — a retryable condition, unlike 400
+ * On success `*out_status` is 200. `out_status` may be NULL. */
 char *searchapi_analyze(db_handle *db, const char *query, int max_rounds,
-                        int *status);
+                        int *out_status);
 
 /* {"suggestions":[...]} (never NULL; "[]" on failure). Caller frees. */
 char *searchapi_suggest(const char *q);

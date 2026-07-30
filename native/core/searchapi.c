@@ -27,34 +27,6 @@ typedef struct {
   int max_rounds;
 } run_arg;
 
-/* Concurrent-pipeline cap. Each run holds a detached thread, its own
- * http_client and its own DB connection, and nothing upstream bounded them:
- * N POSTs to /api/search/analyze created N threads with no queue, no counter
- * and no 429. progress_create() dedupes by request_id but does not limit
- * distinct ids, so it is not a limiter. Override with JO_SEARCH_MAX. */
-#define PIPELINE_MAX_DEFAULT 4
-static pthread_mutex_t g_run_lock = PTHREAD_MUTEX_INITIALIZER;
-static int g_runs_active;
-
-static int pipeline_max(void) {
-  const char *e = getenv("JO_SEARCH_MAX");
-  int v = (e && *e) ? atoi(e) : 0;
-  return v > 0 ? v : PIPELINE_MAX_DEFAULT;
-}
-/* 1 = slot taken (caller must release), 0 = at capacity. */
-static int pipeline_slot_take(void) {
-  int ok = 0;
-  pthread_mutex_lock(&g_run_lock);
-  if (g_runs_active < pipeline_max()) { g_runs_active++; ok = 1; }
-  pthread_mutex_unlock(&g_run_lock);
-  return ok;
-}
-static void pipeline_slot_release(void) {
-  pthread_mutex_lock(&g_run_lock);
-  if (g_runs_active > 0) g_runs_active--;
-  pthread_mutex_unlock(&g_run_lock);
-}
-
 /* The single-slot llama-server is the only real bottleneck, so serialization
  * lives in the llm_client (it locks just around the generation HTTP call) —
  * NOT around the whole pipeline. Gating the entire run was wrong: the slow
@@ -65,61 +37,84 @@ static void pipeline_slot_release(void) {
  * collector in one run no longer stalls another run's analysis. Each thread
  * keeps its own http_client (== scheduler) so a slow collector's connection
  * pool stays isolated to that run. */
+/* Runs are detached threads, each holding a collector connection pool and a
+ * slot in the LLM queue, so an unbounded fan-out of them is how the box falls
+ * over: N pipelines all fetching while all but one block on the single-slot
+ * llama-server. Cap the number in flight and tell the client to retry (429)
+ * rather than accepting work we cannot start. */
+static pthread_mutex_t g_run_lock = PTHREAD_MUTEX_INITIALIZER;
+static int             g_runs_live = 0;
+
+static int max_concurrent_runs(void) {
+  const char *e = getenv("JO_MAX_CONCURRENT_SEARCHES");
+  if (e && *e) {
+    int n = atoi(e);
+    if (n > 0) return n;
+  }
+  return 4;
+}
+
+/* Returns 1 if a slot was taken. */
+static int run_slot_acquire(void) {
+  int ok = 0;
+  pthread_mutex_lock(&g_run_lock);
+  if (g_runs_live < max_concurrent_runs()) { g_runs_live++; ok = 1; }
+  pthread_mutex_unlock(&g_run_lock);
+  return ok;
+}
+
+static void run_slot_release(void) {
+  pthread_mutex_lock(&g_run_lock);
+  if (g_runs_live > 0) g_runs_live--;
+  pthread_mutex_unlock(&g_run_lock);
+}
+
 static void *run_thread(void *vp) {
   run_arg *a = vp;
   http_client *http = http_client_new();   /* own client (== scheduler) */
   llm_client llm; llm_init(&llm, http);
   llm.interactive = 1;   /* live user search → high-priority LLM lane */
-  /* Own DB connection too: the pipeline writes through intel.c's emit(), whose
-   * BEGIN/COMMIT would otherwise interleave with the event loop's and the
-   * scheduler's transactions on one shared handle. */
-  db_handle own = {0};
-  if (db_attach(&own, NULL) == 0) {
-    osint_pipeline_run(&own, &llm, a->id, a->query, a->max_rounds);
-    db_close(&own);
-  } else {
-    fprintf(stderr, "[search] cannot open a DB connection for run %s\n", a->id);
-  }
+  osint_pipeline_run(a->db, &llm, a->id, a->query, a->max_rounds);
   http_client_free(http);
   free(a->query);
   free(a);
-  pipeline_slot_release();
+  run_slot_release();
   return NULL;
 }
 
 char *searchapi_analyze(db_handle *db, const char *query, int max_rounds,
-                        int *status) {
-  if (status) *status = 200;
+                        int *out_status) {
+  if (out_status) *out_status = 400;
   if (!query) return NULL;
   while (*query == ' ' || *query == '\t' || *query == '\n' || *query == '\r') query++;
   if (!*query) return NULL;
 
-  if (!pipeline_slot_take()) {
-    if (status) *status = 429;
-    return NULL;                    /* caller replies 429, not 400 */
+  if (!run_slot_acquire()) {
+    if (out_status) *out_status = 429;
+    return NULL;
   }
 
   char id[40];
   gen_id(id);
   if (!progress_create(id, query, max_rounds > 0 ? max_rounds : 5)) {
-    pipeline_slot_release();
+    run_slot_release();
     return NULL;
   }
 
   run_arg *a = calloc(1, sizeof *a);
-  if (!a) { pipeline_slot_release(); return NULL; }
   a->db = db;
   snprintf(a->id, sizeof a->id, "%s", id);
   a->query = strdup(query);
   a->max_rounds = max_rounds;
   pthread_t t;
   if (pthread_create(&t, NULL, run_thread, a) == 0) {
-    pthread_detach(t);              /* run_thread releases the slot */
+    pthread_detach(t);
   } else {
     free(a->query); free(a);
-    pipeline_slot_release();
+    run_slot_release();
     return NULL;
   }
+  if (out_status) *out_status = 200;
 
   cJSON *o = cJSON_CreateObject();
   cJSON_AddStringToObject(o, "request_id", id);

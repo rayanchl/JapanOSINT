@@ -769,6 +769,23 @@ struct BreachHitRow: Identifiable {
         hasSecret = nil
     }
 
+    /// The DTO now models the real `/hits` payload (nested `breach{…}` + a
+    /// top-level uid/type/has_secret), so flatten that shape directly instead of
+    /// the old `EntityBreach` assumption the primary call used to make.
+    init(_ h: BreachMonitorHit) {
+        id = h.uid
+        uid = h.uid
+        breachId = h.breach_id
+        name = h.breach?.title ?? h.breach?.name
+        type = h.type
+        breachDate = h.breach?.breach_date
+        pwnCount = h.breach?.pwn_count
+        dataClasses = h.breach?.data_classes ?? []
+        verified = h.breach?.verified
+        sensitive = h.breach?.sensitive
+        hasSecret = h.has_secret
+    }
+
     init(id: String, uid: String?, breachId: String?, name: String?,
          type: String?, breachDate: String?, pwnCount: Int?,
          dataClasses: [String], verified: Bool?, sensitive: Bool?,
