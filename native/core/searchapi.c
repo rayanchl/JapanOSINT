@@ -37,6 +37,38 @@ typedef struct {
  * collector in one run no longer stalls another run's analysis. Each thread
  * keeps its own http_client (== scheduler) so a slow collector's connection
  * pool stays isolated to that run. */
+/* Runs are detached threads, each holding a collector connection pool and a
+ * slot in the LLM queue, so an unbounded fan-out of them is how the box falls
+ * over: N pipelines all fetching while all but one block on the single-slot
+ * llama-server. Cap the number in flight and tell the client to retry (429)
+ * rather than accepting work we cannot start. */
+static pthread_mutex_t g_run_lock = PTHREAD_MUTEX_INITIALIZER;
+static int             g_runs_live = 0;
+
+static int max_concurrent_runs(void) {
+  const char *e = getenv("JO_MAX_CONCURRENT_SEARCHES");
+  if (e && *e) {
+    int n = atoi(e);
+    if (n > 0) return n;
+  }
+  return 4;
+}
+
+/* Returns 1 if a slot was taken. */
+static int run_slot_acquire(void) {
+  int ok = 0;
+  pthread_mutex_lock(&g_run_lock);
+  if (g_runs_live < max_concurrent_runs()) { g_runs_live++; ok = 1; }
+  pthread_mutex_unlock(&g_run_lock);
+  return ok;
+}
+
+static void run_slot_release(void) {
+  pthread_mutex_lock(&g_run_lock);
+  if (g_runs_live > 0) g_runs_live--;
+  pthread_mutex_unlock(&g_run_lock);
+}
+
 static void *run_thread(void *vp) {
   run_arg *a = vp;
   http_client *http = http_client_new();   /* own client (== scheduler) */
@@ -46,18 +78,28 @@ static void *run_thread(void *vp) {
   http_client_free(http);
   free(a->query);
   free(a);
+  run_slot_release();
   return NULL;
 }
 
-char *searchapi_analyze(db_handle *db, const char *query, int max_rounds) {
+char *searchapi_analyze(db_handle *db, const char *query, int max_rounds,
+                        int *out_status) {
+  if (out_status) *out_status = 400;
   if (!query) return NULL;
   while (*query == ' ' || *query == '\t' || *query == '\n' || *query == '\r') query++;
   if (!*query) return NULL;
 
+  if (!run_slot_acquire()) {
+    if (out_status) *out_status = 429;
+    return NULL;
+  }
+
   char id[40];
   gen_id(id);
-  if (!progress_create(id, query, max_rounds > 0 ? max_rounds : 5))
+  if (!progress_create(id, query, max_rounds > 0 ? max_rounds : 5)) {
+    run_slot_release();
     return NULL;
+  }
 
   run_arg *a = calloc(1, sizeof *a);
   a->db = db;
@@ -69,8 +111,10 @@ char *searchapi_analyze(db_handle *db, const char *query, int max_rounds) {
     pthread_detach(t);
   } else {
     free(a->query); free(a);
+    run_slot_release();
     return NULL;
   }
+  if (out_status) *out_status = 200;
 
   cJSON *o = cJSON_CreateObject();
   cJSON_AddStringToObject(o, "request_id", id);

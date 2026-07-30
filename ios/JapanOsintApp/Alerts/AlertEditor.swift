@@ -148,6 +148,13 @@ struct AlertEditor: View {
                     }
                 }
 
+                // Roadmap 10 — live backtest: "would have matched N items in
+                // the last 7 days". Only once the draft has real criteria, so an
+                // empty new rule doesn't kick off a full-corpus scan.
+                if hasPreviewableCriteria {
+                    RulePreviewSection(predicate: previewPredicate)
+                }
+
                 if let error {
                     Section {
                         Text(error).font(.caption).foregroundStyle(theme.danger)
@@ -221,6 +228,35 @@ struct AlertEditor: View {
             }
         }
         .padding(.vertical, 2)
+    }
+
+    // MARK: - Backtest preview (roadmap 10)
+
+    /// The draft predicate as a plain dict, the same shape `alertPreview` and
+    /// the saved rule use. Mirrors the assembly in `save()` so the preview
+    /// matches exactly what would be persisted.
+    private var previewPredicate: [String: Any] {
+        var p: [String: Any] = ["mode": mode]
+        let trimQ = q.trimmingCharacters(in: .whitespaces)
+        if !trimQ.isEmpty { p["q"] = trimQ }
+        let srcs = splitCSV(sourcesCSV)
+        if !srcs.isEmpty { p["source_ids"] = srcs }
+        let tags = splitCSV(tagsCSV)
+        if !tags.isEmpty { p["tags_any"] = tags }
+        if mode == "llm" {
+            let nl = nlQuery.trimmingCharacters(in: .whitespaces)
+            if !nl.isEmpty { p["nl_query"] = nl }
+        }
+        return p
+    }
+
+    /// True once the draft has at least one real matching term — avoids firing a
+    /// full-corpus backtest for an empty new rule.
+    private var hasPreviewableCriteria: Bool {
+        !q.trimmingCharacters(in: .whitespaces).isEmpty
+            || !splitCSV(sourcesCSV).isEmpty
+            || !splitCSV(tagsCSV).isEmpty
+            || (mode == "llm" && !nlQuery.trimmingCharacters(in: .whitespaces).isEmpty)
     }
 
     // MARK: - Save

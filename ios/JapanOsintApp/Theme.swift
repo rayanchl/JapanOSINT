@@ -64,22 +64,22 @@ extension View {
 
     /// Floating bar surface for the Map's top bar and time-select bar.
     ///
-    /// Uses Apple's `.bar` material — the SAME material the system `TabView`
-    /// tab bar (Map / Intel / Search …) uses — so the map's bars read as the
-    /// same color and material as the tab bar. `.bar` composites its backdrop
-    /// exactly like the system bar does; no color tint is layered on top, and
-    /// the border is a neutral hairline (not a coloured stroke) so nothing
-    /// shifts the perceived colour away from the tab bar. One definition, so
-    /// both bars are provably identical.
+    /// Uses the real Liquid Glass material (`.glassEffect`) — the SAME material
+    /// the system `TabView` tab bar (Map / Intel / Search …) renders in at our
+    /// iOS 26 / macOS 26 deployment target. The old `.bar` blur was a flat
+    /// frosted material: it can't match the refractive, self-shadowing Liquid
+    /// Glass the OS draws for the tab bar no matter how it's tinted, which is
+    /// why the map's bars always read as a different colour/depth than the tab
+    /// bar. `.glassEffect` brings the tab bar's own edge highlight + shadow, so
+    /// we don't layer a manual stroke or shadow on top (they'd double up and
+    /// shift the look away from the system bar). One definition, so both bars
+    /// are provably identical to each other and to the tab bar.
     func mapBarSurface(cornerRadius: CGFloat = 18) -> some View {
         self
-            .background(.bar, in: RoundedRectangle(cornerRadius: cornerRadius,
-                                                   style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .strokeBorder(Color.primary.opacity(0.06), lineWidth: 0.5)
+            .glassEffect(
+                .regular,
+                in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
             )
-            .shadow(color: .black.opacity(0.14), radius: 10, y: 3)
     }
 }
 

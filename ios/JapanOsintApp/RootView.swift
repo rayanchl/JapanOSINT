@@ -215,7 +215,10 @@ struct RootView: View {
         // MapTab/OnboardingFlow use it unqualified; a module-scope
         // `TimelineView` would shadow it and break those files.
         case .timeline:                NavigationStack { TimelineScreen() }
-        case .workspace(.saved):       SavedTab()
+        // SavedTab brings no NavigationStack of its own (Console pushes it into
+        // one); the sidebar detail has to supply it or the title, search field
+        // and toolbar have nothing to attach to.
+        case .workspace(.saved):       NavigationStack { SavedTab() }
         case .workspace(.console):     ConsoleHub()
         case .console(let dest):
             // Console destinations need their own NavigationStack on iPad
@@ -232,6 +235,15 @@ struct RootView: View {
                 case .settings:   SettingsTab()
                 case .workspace:  WorkspaceSettingsTab()
                 case .admin:      AdminPanel()
+                // Newer console destinations — same views ConsoleHub presents,
+                // so an iPad deep-link (and the Spotlight "saved" route) resolves
+                // here too instead of tripping an exhaustiveness error.
+                case .saved:          SavedTab()
+                case .inbox:          AlertInboxView(model: alertInbox)
+                case .aoi:            AOIListView()
+                case .watchlists:     WatchlistsView()
+                case .breachMonitors: BreachMonitorsView()
+                case .savedSearches:  SavedSearchesView()
                 }
             }
         }

@@ -8,6 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <pthread.h>
 
 typedef struct { char *host; int requests; int ok; } host_log;
 
@@ -68,9 +69,18 @@ static size_t on_data(void *ptr, size_t sz, size_t nm, void *ud) {
   return n;
 }
 
+static void curl_boot(void) { curl_global_init(CURL_GLOBAL_DEFAULT); }
+
+/* pthread_once rather than a plain static flag: clients are created from
+ * collector worker threads, and two of them hitting an unguarded flag can both
+ * run curl_global_init(), which is not re-entrant. */
+void http_client_global_init(void) {
+  static pthread_once_t once = PTHREAD_ONCE_INIT;
+  pthread_once(&once, curl_boot);
+}
+
 http_client *http_client_new(void) {
-  static int inited = 0;
-  if (!inited) { curl_global_init(CURL_GLOBAL_DEFAULT); inited = 1; }
+  http_client_global_init();
   http_client *c = calloc(1, sizeof *c);
   if (!c) return NULL;
   c->share = curl_share_init();

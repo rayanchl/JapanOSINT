@@ -5,6 +5,7 @@ import SwiftUI
 /// profile; "pivot" starts a fresh investigation.
 struct SearchTab: View {
     @EnvironmentObject var apiClient: APIClient
+    @EnvironmentObject var nav: MapNavigation
     @Environment(\.theme) private var theme
     @StateObject private var store = SearchStore()
 
@@ -41,6 +42,24 @@ struct SearchTab: View {
             }
             .themedScreenBackground(theme)
             .navigationTitle("Search")
+            .toolbar {
+                // Roadmap 38 — reach the (server-synced) search history. Re-run
+                // a past query straight from the row.
+                ToolbarItem(placement: .compatPrimary) {
+                    NavigationLink {
+                        SearchHistoryView(onRerun: { entry in
+                            if let q = (entry.params?["q"]?.value as? String)
+                                    ?? (entry.params?["query"]?.value as? String),
+                               !q.isEmpty {
+                                Task { await run(q) }
+                            }
+                        })
+                    } label: {
+                        Image(systemName: "clock.arrow.circlepath")
+                    }
+                    .accessibilityLabel("Search history")
+                }
+            }
             .searchable(
                 text: $query,
                 placement: .compatDrawer,
@@ -63,6 +82,19 @@ struct SearchTab: View {
                 suggestions = result
             }
         }
+        // Query handed in by an App Intent / Siri / Shortcuts / the share-queue
+        // drain (via IntentRouter → MapNavigation). Consume on arrival and on
+        // any later hand-off while the tab is already showing.
+        .onChange(of: nav.pendingSearchQuery) { _, q in consumePendingSearch(q) }
+        .task { consumePendingSearch(nav.pendingSearchQuery) }
+    }
+
+    /// Kick off a handed-in query exactly once, clearing the hand-off slot so it
+    /// can't replay on the next view update.
+    private func consumePendingSearch(_ q: String?) {
+        guard let q, !q.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        nav.pendingSearchQuery = nil
+        Task { await run(q) }
     }
 
     private func sectionHeader(_ t: String) -> some View {

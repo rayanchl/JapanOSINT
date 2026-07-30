@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Combine
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Store for the cross-rule notification inbox (roadmap 11).

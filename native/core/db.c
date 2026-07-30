@@ -118,6 +118,28 @@ static void db_seed_sources(db_handle *db) {
   fprintf(stderr, "[db] seeded sources from registry (%d new rows)\n", added);
 }
 
+/* Secondary connection — see db_attach() in db.h. Deliberately does NOT apply
+ * schema.sql or the boot migrations: those ran on the primary handle at boot,
+ * and re-running them from a worker thread while the event loop is serving
+ * requests means concurrent DDL on a live WAL database for no gain. */
+int db_attach(db_handle *db, const char *db_path) {
+  if (!db) return 1;
+  const char *dbp = db_path ? db_path
+    : (getenv("JO_DB") ? getenv("JO_DB") : JO_REPO_ROOT "/data/japanmap.db");
+  int rc = sqlite3_open_v2(dbp, &db->h, SQLITE_OPEN_READWRITE, NULL);
+  if (rc != SQLITE_OK) {
+    fprintf(stderr, "[db] attach failed: %s\n", sqlite3_errmsg(db->h));
+    sqlite3_close(db->h);
+    db->h = NULL;
+    return 1;
+  }
+  sqlite3_exec(db->h, "PRAGMA journal_mode=WAL;",  NULL, NULL, NULL);
+  sqlite3_exec(db->h, "PRAGMA foreign_keys=ON;",   NULL, NULL, NULL);
+  sqlite3_exec(db->h, "PRAGMA busy_timeout=5000;", NULL, NULL, NULL);
+  sqlite3_exec(db->h, "PRAGMA synchronous=NORMAL;", NULL, NULL, NULL);
+  return 0;
+}
+
 int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   const char *dbp = db_path ? db_path
     : (getenv("JO_DB") ? getenv("JO_DB") : JO_REPO_ROOT "/data/japanmap.db");

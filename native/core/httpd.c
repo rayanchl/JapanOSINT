@@ -19,6 +19,7 @@
 #include "simhash.h"
 #include "aoiapi.h"
 #include "camera_stills.h"
+#include "cameraproxy.h"
 #include "uploadapi.h"
 #include "ffmpeg.h"
 #include "docmeta.h"
@@ -1837,6 +1838,33 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (!body) { reply_json(c, 500,
         "{\"error\":\"Failed to load discovery feed\"}"); return; }
       reply_json(c, 200, body); free(body); return;
+    }
+
+    /* GET /api/data/cameras/proxy?camera_uid= — port of data.js cameras/proxy.
+     * Serves the upstream camera image over our own origin so iOS doesn't need
+     * an ATS exception per discovered IP. Bytes are from an arbitrary internet
+     * camera, so: nosniff, and the content type is echoed only after it was
+     * checked to be image/*. Explicit route — the generic /api/data/ matcher
+     * below would treat "cameras/proxy" as a layer id. */
+    if (eq(u, "/api/data/cameras/proxy")) {
+      char cu[192] = {0};
+      mg_http_get_var(&hm->query, "camera_uid", cu, sizeof cu);
+      unsigned char *img = NULL; size_t ilen = 0;
+      char ictype[64] = {0}; int istatus = 400;
+      char *ej = camera_proxy_fetch(g_db, cu, &img, &ilen,
+                                    ictype, sizeof ictype, &istatus);
+      if (ej) { reply_json(c, istatus, ej); free(ej); return; }
+      mg_printf(c,
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: %s\r\n"
+        "Content-Length: %lu\r\n"
+        "X-Content-Type-Options: nosniff\r\n"
+        "Cache-Control: public, max-age=30\r\n\r\n",
+        ictype[0] ? ictype : "image/jpeg", (unsigned long)ilen);
+      mg_send(c, img, ilen);
+      c->is_resp = 0;
+      free(img);
+      return;
     }
 
     /* POST /api/data/cameras/trigger — port of data.js cameras/trigger:

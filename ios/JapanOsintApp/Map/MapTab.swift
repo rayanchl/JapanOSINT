@@ -268,7 +268,7 @@ struct MapTab: View {
                 LiveVehiclesContent(store: liveVehicles, theme: theme, settings: settings)
             }
             if let coord = probedCoordinate {
-                Annotation("Map center", coordinate: coord, anchor: .bottom) {
+                MapKit.Annotation("Map center", coordinate: coord, anchor: .bottom) {
                     pin(symbol: "mappin", color: theme.accent, opacity: 1)
                 }
             }
@@ -276,7 +276,7 @@ struct MapTab: View {
                 // Declared after `visibleFeatures`, so MapContent ordering
                 // already places this on top of the regular pins. Drawn at
                 // 1.5× so the flown-to pin clearly stands out.
-                Annotation(spot.displayName, coordinate: c, anchor: .bottom) {
+                MapKit.Annotation(spot.displayName, coordinate: c, anchor: .bottom) {
                     pin(
                         symbol: registry.symbol(for: spot.layerId),
                         color: registry.color(for: spot.layerId),
@@ -398,7 +398,7 @@ struct MapTab: View {
                 let heading = (feat.properties["heading"]?.value as? Double)
                     ?? (feat.properties["heading"]?.value as? Int).map(Double.init)
                     ?? 0
-                Annotation(feat.displayName, coordinate: c, anchor: .center) {
+                MapKit.Annotation(feat.displayName, coordinate: c, anchor: .center) {
                     pin(symbol: symbol, color: color, opacity: opacity)
                         .rotationEffect(.degrees(heading - 90))
                         .animation(.linear(duration: 1), value: heading)
@@ -406,7 +406,7 @@ struct MapTab: View {
                 }
                 .tag(feat.id)
             } else {
-                Annotation(feat.displayName, coordinate: c, anchor: .bottom) {
+                MapKit.Annotation(feat.displayName, coordinate: c, anchor: .bottom) {
                     pin(symbol: symbol, color: color, opacity: opacity)
                         .onTapGesture { selectFeature(feat) }
                 }
@@ -415,7 +415,7 @@ struct MapTab: View {
 
         case .multiPoint(let coords):
             ForEach(Array(coords.enumerated()), id: \.offset) { idx, c in
-                Annotation("\(feat.displayName) #\(idx + 1)", coordinate: c, anchor: .bottom) {
+                MapKit.Annotation("\(feat.displayName) #\(idx + 1)", coordinate: c, anchor: .bottom) {
                     pin(symbol: symbol, color: color, opacity: opacity)
                         .onTapGesture { selectFeature(feat) }
                 }

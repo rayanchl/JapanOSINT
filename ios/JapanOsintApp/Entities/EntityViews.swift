@@ -102,6 +102,12 @@ struct EntityDetailView: View {
                     if let a = p.aliases, !a.isEmpty { LabeledContent("Aliases", value: a.joined(separator: ", ")) }
                     LabeledContent("Mentions", value: "\(p.mention_count ?? 0)")
                     if let f = p.first_seen_at { LabeledContent("First seen", value: f) }
+
+                    // Roadmap 23 — breach exposure for this entity; self-fetches
+                    // and stays hidden when the entity has none.
+                    ExposureSection(entityType: type, entityId: p.entity_id)
+                    // Roadmap 15 — analyst notes pinned to this entity.
+                    AnnotationsSection(refType: "entity", refId: p.entity_id)
                 }
             }
         }

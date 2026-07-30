@@ -18,6 +18,16 @@ typedef struct { sqlite3 *h; } db_handle;
 int  db_open(db_handle *db, const char *db_path, const char *schema_path);
 void db_close(db_handle *db);
 
+/* Secondary connection to the SAME database: identical path resolution and
+ * pragmas as db_open(), but no schema apply and no boot migrations — those
+ * already ran on the primary handle.
+ *
+ * Use this for a background pod that owns its writes. A SQLite transaction
+ * belongs to a CONNECTION, not to a thread, so a worker that shares the event
+ * loop's handle can interleave its BEGIN/COMMIT with request handling on the
+ * same connection. Returns 0 on success. */
+int  db_attach(db_handle *db, const char *db_path);
+
 /* PRAGMA integrity_check — returns 1 if "ok", else 0 (msg via out). */
 int  db_integrity_ok(db_handle *db, char *out, int out_sz);
 
