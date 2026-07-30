@@ -90,7 +90,7 @@ selftest: $(BIN)
 # the hp_* engine rows are held strictly clean.
 .PHONY: audit-sources
 audit-sources:
-	@python3 tests/audit_source_exhaustiveness.py --strict 'collectors/sources/hp_*.c'
+	@python3 tests/audit_source_exhaustiveness.py --strict 'collectors/sources/hp*_*.c'
 
 # Offline unit test for the high-penetrancy record engine (lib/hpengine.c). Its
 # own http_request stub replaces libcurl, so it needs no network and no key —
