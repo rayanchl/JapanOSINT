@@ -14,10 +14,19 @@
 #include <string.h>
 #include <strings.h>
 
-#define HP_MAX_SOURCES   1024
-#define HP_MAX_PROPS      160   /* flattened keys per record                */
-#define HP_MAX_ARR         12   /* array members walked per field           */
+#define HP_MAX_SOURCES   1024   /* exhaustive-ok: registry table size */
+/* Bounds exist only to keep one pathological response from exhausting memory —
+ * they are NOT an editorial filter. Per the exhaustive-use rule
+ * (docs/SOURCE_EXHAUSTIVENESS.md) they are set well above any real record, and
+ * whenever one of them actually bites the record says so in-band
+ * (`_fields_dropped`, `_array_truncated`, `_records_truncated`) so a consumer
+ * can never mistake a truncated record for a complete one. */
+#define HP_MAX_PROPS     2048   /* exhaustive-ok: memory guard, stamped     */
+#define HP_MAX_ARR        256   /* exhaustive-ok: memory guard, stamped     */
+#define HP_MAX_DEPTH        8   /* exhaustive-ok: memory guard, stamped     */
 #define HP_HTTP_TIMEOUT 20000
+#define HP_PAGE_MAX_DEF    10   /* exhaustive-ok: runaway guard, stamped    */
+#define HP_DETAIL_MAX_DEF  25   /* exhaustive-ok: request budget, stamped   */
 
 static const hp_source *g_specs[HP_MAX_SOURCES];
 static int g_nspecs = 0;
@@ -322,18 +331,24 @@ static void hp_find_array(cJSON *node, int depth, cJSON **best, int *best_n) {
     if (cJSON_IsObject(ch) || cJSON_IsArray(ch)) hp_find_array(ch, depth + 1, best, best_n);
 }
 
-/* Flatten every scalar under `node` into `out` with dotted keys. Bounded in
- * breadth (HP_MAX_ARR), depth (4) and total keys (HP_MAX_PROPS). */
-static void hp_flatten(const cJSON *node, const char *prefix, cJSON *out, int depth) {
-  if (!node || depth > 4) return;
-  if (cJSON_GetArraySize(out) >= HP_MAX_PROPS) return;
+/* Flatten every scalar under `node` into `out` with dotted keys.
+ *
+ * "Every" is the point: a record is emitted whole, not reduced to the handful
+ * of fields a row happens to name. The three memory bounds below are set far
+ * above any real record, and hitting one is recorded in `*drops`/`*trunc` so the
+ * caller can stamp the record instead of shipping a quietly incomplete one. */
+static void hp_flatten_c(const cJSON *node, const char *prefix, cJSON *out,
+                         int depth, int *drops, int *trunc) {
+  if (!node) return;
+  if (depth > HP_MAX_DEPTH) { if (drops) (*drops)++; return; }
+  if (cJSON_GetArraySize(out) >= HP_MAX_PROPS) { if (drops) (*drops)++; return; }
   char key[256];
   const cJSON *ch;
   int idx = 0;
   cJSON_ArrayForEach(ch, node) {
-    if (cJSON_GetArraySize(out) >= HP_MAX_PROPS) return;
+    if (cJSON_GetArraySize(out) >= HP_MAX_PROPS) { if (drops) (*drops)++; return; }
     if (cJSON_IsArray(node)) {
-      if (idx >= HP_MAX_ARR) return;
+      if (idx >= HP_MAX_ARR) { if (trunc) (*trunc)++; return; }
       snprintf(key, sizeof key, "%s.%d", prefix, idx++);
     } else if (ch->string) {
       if (prefix && *prefix) snprintf(key, sizeof key, "%s.%s", prefix, ch->string);
@@ -348,8 +363,17 @@ static void hp_flatten(const cJSON *node, const char *prefix, cJSON *out, int de
     else if (cJSON_IsBool(ch))
       cJSON_AddBoolToObject(out, key, cJSON_IsTrue(ch));
     else if (cJSON_IsObject(ch) || cJSON_IsArray(ch))
-      hp_flatten(ch, key, out, depth + 1);
+      hp_flatten_c(ch, key, out, depth + 1, drops, trunc);
   }
+}
+
+/* Per-record accounting for the flatten bounds, so a truncated record is
+ * always labelled as one. Reset by hp_flatten() at each record. */
+static int g_flat_drops = 0, g_flat_trunc = 0;
+
+static void hp_flatten(const cJSON *node, const char *prefix, cJSON *out, int depth) {
+  if (depth == 0) { g_flat_drops = 0; g_flat_trunc = 0; }
+  hp_flatten_c(node, prefix, out, depth, &g_flat_drops, &g_flat_trunc);
 }
 
 /* Value for `name` in a flattened map: exact dotted key first, then any key
@@ -418,7 +442,30 @@ typedef struct {
   const hp_vars *vars;
   const char *url;
   int emitted;
+  /* Exhaustive-use accounting, stamped onto every record so a consumer can
+   * always tell a complete result from a bounded one. */
+  int   available;        /* records the upstream actually offered           */
+  int   truncated;        /* a declared cap or a cancel stopped the walk     */
+  int   page;             /* 1-based page currently being read               */
+  int   page_records;     /* records in the page just read (paging stop test) */
+  char *next_url;         /* next-page URL from the response, when declared  */
 } hp_run_state;
+
+/* 0 = no cap (every record). A row's non-zero max_items is its author's
+ * explicit choice; the engine never invents one. */
+static int hp_record_cap(const hp_source *s) {
+  return s->max_items > 0 ? s->max_items : 0;
+}
+
+/* How many second hops this run may make: the row's declared detail_max, else
+ * every record up to the operational ceiling $JO_HP_DETAIL_MAX. */
+static int hp_detail_budget(const hp_source *s) {
+  if (!s->detail_url) return 0;
+  if (s->detail_max > 0) return s->detail_max;
+  const char *e = getenv("JO_HP_DETAIL_MAX");
+  int v = (e && *e) ? atoi(e) : 0;
+  return v > 0 ? v : HP_DETAIL_MAX_DEF;
+}
 
 static double hp_num(const cJSON *flat, const char *key) {
   if (!key || !*key) return 0;
@@ -439,13 +486,17 @@ static int hp_icontains(const char *hay, const char *needle) {
 }
 
 /* Second hop: pull the full record behind a list hit and merge it in under
- * "detail.". Silently skipped when the id field is absent or the fetch fails —
- * the list-level fields still stand on their own. */
+ * "detail.". Never silent: a missing id, a failed fetch or an un-reached record
+ * is stamped on the record (`_detail_error`, `_detail_pending`) so an absent
+ * detail block is distinguishable from a detail block that came back empty. */
 static void hp_deepen(hp_run_state *st, cJSON *flat) {
   const hp_source *s = st->s;
   if (!s->detail_url || !s->detail_key) return;
   const cJSON *idv = hp_flat_get(flat, s->detail_key);
-  if (!idv) return;
+  if (!idv) {
+    cJSON_AddStringToObject(flat, "_detail_error", "list record carries no detail key");
+    return;
+  }
   char idbuf[256];
   if (cJSON_IsString(idv)) snprintf(idbuf, sizeof idbuf, "%s", idv->valuestring);
   else if (cJSON_IsNumber(idv)) snprintf(idbuf, sizeof idbuf, "%.0f", idv->valuedouble);
@@ -470,6 +521,10 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
     cJSON_AddStringToObject(flat, "detail_url", url);
   } else {
     fprintf(stderr, "[hp:%s] detail status=%ld %s\n", s->id, hr.status, url);
+    cJSON_AddStringToObject(flat, "_detail_error",
+                            rc != 0 ? "detail fetch transport failure"
+                                    : "detail fetch returned non-200");
+    cJSON_AddNumberToObject(flat, "_detail_status", (double)hr.status);
   }
   http_response_free(&hr);
   free(url);
@@ -487,6 +542,15 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
     if (!hit) return;
   }
   if (deepen) hp_deepen(st, flat);
+  else if (s->detail_url)
+    /* The row has a second hop but this record was past the per-run detail
+     * budget. Say so — an un-fetched detail is not an absent detail. */
+    cJSON_AddBoolToObject(flat, "_detail_pending", 1);
+
+  /* Flatten bounds are memory guards, not filters: if one bit, the record is
+   * labelled incomplete rather than shipped as if it were whole. */
+  if (g_flat_drops)  cJSON_AddNumberToObject(flat, "_fields_dropped", g_flat_drops);
+  if (g_flat_trunc)  cJSON_AddNumberToObject(flat, "_array_truncated", g_flat_trunc);
 
   const char *title = hp_pick(flat, s->title_keys, TITLE_FALLBACK);
   const char *rkey  = hp_pick(flat, s->id_keys,    ID_FALLBACK);
@@ -524,6 +588,7 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
   if (st->vars->raw) cJSON_AddStringToObject(flat, "query", st->vars->raw);
   cJSON_AddStringToObject(flat, "endpoint", st->url ? st->url : "");
   cJSON_AddBoolToObject(flat, "real_fetch", 1);
+  if (st->page > 1) cJSON_AddNumberToObject(flat, "_page", st->page);
 
   char *props = cJSON_PrintUnformatted(flat);
   char tags[256];
@@ -574,8 +639,8 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     int best_n = 0;
     hp_find_array(doc, 0, &arr, &best_n);
   }
-  int max = s->max_items > 0 ? s->max_items : 25;
-  int deep_left = s->detail_url ? (s->detail_max > 0 ? s->detail_max : 3) : 0;
+  int max = hp_record_cap(s);
+  int deep_left = hp_detail_budget(s);
 
   if (!arr) {                                          /* root IS the record */
     cJSON *flat = cJSON_CreateObject();
@@ -586,10 +651,11 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     return st->emitted;
   }
 
+  st->available += cJSON_GetArraySize(arr);
   cJSON *rec;
   cJSON_ArrayForEach(rec, arr) {
-    if (st->emitted >= max) break;
-    if (st->ctx->cancel && *st->ctx->cancel) break;
+    if (max && st->emitted >= max) { st->truncated = 1; break; }
+    if (st->ctx->cancel && *st->ctx->cancel) { st->truncated = 1; break; }
     cJSON *flat = cJSON_CreateObject();
     if (cJSON_IsObject(rec) || cJSON_IsArray(rec)) hp_flatten(rec, "", flat, 0);
     else if (cJSON_IsString(rec) && rec->valuestring[0])
@@ -599,6 +665,14 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     if (st->emitted > before && deep_left > 0) deep_left--;
     cJSON_Delete(flat);
   }
+  /* Hand the caller the next page URL when the row declared one, so the walk
+   * continues instead of stopping at page 1. */
+  if (s->next_path && !st->next_url) {
+    cJSON *nx = hp_path(doc, s->next_path);
+    if (nx && cJSON_IsString(nx) && nx->valuestring[0])
+      st->next_url = strdup(nx->valuestring);
+  }
+  st->page_records = arr ? cJSON_GetArraySize(arr) : 0;
   cJSON_Delete(doc);
   return st->emitted;
 }
@@ -611,11 +685,12 @@ static int hp_run_csv(hp_run_state *st, const char *body) {
    * honest about what is known, and nothing is dropped. */
   cJSON *rows = csv_parse(body, s->csv_no_header ? 0 : 1);
   if (!rows) return 0;
-  int max = s->max_items > 0 ? s->max_items : 25;
+  int max = hp_record_cap(s);
+  st->available += cJSON_GetArraySize(rows);
   cJSON *row;
   cJSON_ArrayForEach(row, rows) {
-    if (st->emitted >= max) break;
-    if (st->ctx->cancel && *st->ctx->cancel) break;
+    if (max && st->emitted >= max) { st->truncated = 1; break; }
+    if (st->ctx->cancel && *st->ctx->cancel) { st->truncated = 1; break; }
     cJSON *flat = cJSON_CreateObject();
     if (s->csv_no_header && cJSON_IsArray(row)) {
       int i = 0;
@@ -640,11 +715,14 @@ static int hp_run_csv(hp_run_state *st, const char *body) {
  * simply yield nothing. */
 static int hp_run_html(hp_run_state *st, const char *html) {
   const hp_source *s = st->s;
-  int max = s->max_items > 0 ? s->max_items : 25;
+  int max = hp_record_cap(s);
   const char *p = html;
-  char *seen[64];
-  int nseen = 0;
-  while (st->emitted < max && (p = strstr(p, "<a ")) != NULL) {
+  /* Grown, not a fixed 64-slot ring: a full dedupe table means every distinct
+   * anchor on the page is emitted exactly once, instead of the tail being
+   * re-emitted (or dropped) once the ring wrapped. */
+  char **seen = NULL;
+  int nseen = 0, seencap = 0;
+  while ((!max || st->emitted < max) && (p = strstr(p, "<a ")) != NULL) {
     const char *h = strstr(p, "href=\"");
     const char *tagend = strchr(p, '>');
     p += 3;
@@ -679,7 +757,12 @@ static int hp_run_html(hp_run_state *st, const char *html) {
     int dup = 0;
     for (int i = 0; i < nseen; i++) if (!strcmp(seen[i], href)) { dup = 1; break; }
     if (dup) continue;
-    if (nseen < 64) seen[nseen++] = strdup(href);
+    if (nseen == seencap) {
+      int nc = seencap ? seencap * 2 : 64;
+      char **np = realloc(seen, (size_t)nc * sizeof *np);
+      if (np) { seen = np; seencap = nc; }
+    }
+    if (nseen < seencap) seen[nseen++] = strdup(href);
 
     char link[800];
     if (!strncmp(href, "http", 4)) snprintf(link, sizeof link, "%s", href);
@@ -693,6 +776,7 @@ static int hp_run_html(hp_run_state *st, const char *html) {
     cJSON_Delete(flat);
   }
   for (int i = 0; i < nseen; i++) free(seen[i]);
+  free(seen);
   return st->emitted;
 }
 
@@ -749,30 +833,126 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     hdrs[nh++] = s->content_type ? s->content_type : "Content-Type: application/json";
   hdrs[nh] = NULL;
 
-  http_response hr = {0};
-  int rc = http_request(ctx->http, body ? "POST" : "GET", url, hdrs,
-                        body, body ? strlen(body) : 0, HP_HTTP_TIMEOUT, 1, &hr);
-
+  /* ── the page walk ──────────────────────────────────────────────────────
+   * A paged endpoint read once has silently discarded every page after the
+   * first, which is exactly what the exhaustive-use rule forbids. When a row
+   * declares next_path or page_param we keep going until the upstream stops
+   * producing records (or the page ceiling bites, which is stamped, not
+   * silent). Rows that declare no paging do exactly one request, as before. */
   int out = 0, hard_error = 0;
-  if (rc != 0) {
-    fprintf(stderr, "[hp:%s] transport failure %s\n", s->id, url);
-    hard_error = 1;
-  } else if (hr.status != 200 || !hr.body) {
-    fprintf(stderr, "[hp:%s] status=%ld %s\n", s->id, hr.status, url);
-    if (hr.status >= 500) hard_error = 1;    /* upstream broken → errored   */
-  } else {
-    hp_run_state st = { .s = s, .ctx = ctx, .sink = sink, .vars = &vars,
-                        .url = url, .emitted = 0 };
+  int page_max = s->page_max > 0 ? s->page_max : HP_PAGE_MAX_DEF;
+  int paged = (s->next_path || s->page_param) ? 1 : 0;
+  if (!paged) page_max = 1;
+
+  hp_run_state st = { .s = s, .ctx = ctx, .sink = sink, .vars = &vars,
+                      .url = url, .emitted = 0 };
+  int page_start = s->page_start;
+  if (!page_start && s->page_param && !strstr(s->page_param, "offset")) page_start = 1;
+
+  char *page_url = strdup(url);
+  for (int page = 0; page < page_max && page_url; page++) {
+    st.page = page + 1;
+    st.url  = page_url;
+    st.page_records = 0;
+
+    http_response hr = {0};
+    int rc = http_request(ctx->http, body ? "POST" : "GET", page_url, hdrs,
+                          body, body ? strlen(body) : 0, HP_HTTP_TIMEOUT, 1, &hr);
+    if (rc != 0) {
+      fprintf(stderr, "[hp:%s] transport failure %s\n", s->id, page_url);
+      if (page == 0) hard_error = 1;
+      http_response_free(&hr);
+      break;
+    }
+    if (hr.status != 200 || !hr.body) {
+      fprintf(stderr, "[hp:%s] status=%ld %s\n", s->id, hr.status, page_url);
+      if (hr.status >= 500 && page == 0) hard_error = 1;
+      http_response_free(&hr);
+      break;
+    }
     switch (s->mode) {
       case HP_HTML: out = hp_run_html(&st, hr.body); break;
       case HP_CSV:  out = hp_run_csv(&st, hr.body);  break;
       case HP_JSON:
       default:      out = hp_run_json(&st, hr.body); break;
     }
-    fprintf(stderr, "[hp:%s] emitted %d\n", s->id, out);
+    http_response_free(&hr);
+
+    if (!paged || st.truncated) break;
+    /* Stop when this page produced nothing new — that is the upstream telling
+     * us the collection is exhausted. */
+    if (st.page_records <= 0) break;
+
+    char *nextp = NULL;
+    if (st.next_url) {                       /* server-provided next link */
+      nextp = st.next_url;
+      st.next_url = NULL;
+    } else if (s->page_param) {              /* offset/page arithmetic */
+      /* Offset-style when the row declares page_size (or the param is named
+       * like an offset); page-number style otherwise. */
+      int step = s->page_size > 0 ? s->page_size : st.page_records;
+      int offset_style = (s->page_size > 0) || strstr(s->page_param, "offset") ||
+                         strstr(s->page_param, "start") || strstr(s->page_param, "skip");
+      long value = offset_style ? (long)(page_start + (page + 1) * step)
+                                : (long)(page_start + page + 1);
+      size_t n = strlen(url) + 64;
+      nextp = malloc(n);
+      if (nextp)
+        snprintf(nextp, n, "%s%c%s=%ld", url, strchr(url, '?') ? '&' : '?',
+                 s->page_param, value);
+    }
+    free(page_url);
+    page_url = nextp;
+    if (page + 1 >= page_max && page_url) st.truncated = 1;   /* ceiling bit */
+  }
+  free(page_url);
+  free(st.next_url);
+
+  if (out > 0 || st.available > 0)
+    fprintf(stderr, "[hp:%s] emitted %d of %d available across %d page(s)%s\n",
+            s->id, out, st.available, st.page, st.truncated ? " (TRUNCATED)" : "");
+
+  /* If anything WAS left on the table, say so in the data itself — a log line
+   * nobody reads is not a disclosure. One upsert-keyed notice row per
+   * (source, entity) records exactly what was not used and why, so a partial
+   * result can never be mistaken for a complete one downstream. */
+  /* Note the condition: a page-ceiling stop leaves an UNKNOWN remainder (we
+   * never fetched those pages), so `available == out` there. Disclose whenever
+   * the walk stopped early, not only when we can count what was missed. */
+  if (st.truncated) {
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "source_id", s->id);
+    cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
+    cJSON_AddNumberToObject(p, "records_used", out);
+    cJSON_AddNumberToObject(p, "records_available", st.available);
+    cJSON_AddNumberToObject(p, "pages_read", st.page);
+    cJSON_AddBoolToObject(p, "more_pages_pending", st.available <= out);
+    cJSON_AddNumberToObject(p, "declared_max_items", s->max_items);
+    cJSON_AddStringToObject(p, "reason",
+      (s->max_items > 0 && out >= s->max_items)
+        ? "the row declares max_items and the upstream offered more"
+        : "the page ceiling or a cancel stopped the walk");
+    cJSON_AddStringToObject(p, "remedy",
+      "raise max_items/page_max on this row (lib/hpengine.h) — see "
+      "docs/SOURCE_EXHAUSTIVENESS.md");
+    char *pj = cJSON_PrintUnformatted(p);
+    cJSON_Delete(p);
+    char key[320], title[256];
+    snprintf(key, sizeof key, "%.150s|truncation:%.120s", s->id,
+             vars.raw ? vars.raw : "");
+    snprintf(title, sizeof title, "%s used %d of %d available records",
+             s->id, out, st.available);
+    intel_item note = {0};
+    note.remote_key      = key;
+    note.title           = title;
+    note.lang            = "en";
+    note.record_type     = "collector-truncation-notice";
+    note.properties_json = pj ? pj : "{}";
+    note.tags_json       = "[\"osint-search\",\"truncation-notice\"]";
+    sink->emit(sink, &note);
+    free(pj);
   }
 
-  http_response_free(&hr);
   for (int i = 0; i < nh; i++) free(hdr_store[i]);
   free(url);
   free(body);

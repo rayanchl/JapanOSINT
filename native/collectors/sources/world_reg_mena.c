@@ -24,7 +24,7 @@
 #include "_jp_osint.inc"
 
 #define PER_REG   3
-#define TOTAL_MAX 40
+#define TOTAL_MAX 500   /* exhaustive-ok: runaway guard, logged */
 
 /* One registry row. `url_tmpl` has a single %s where the %-encoded query goes.
  * `base` is prepended to root-relative hrefs found on the results page. */

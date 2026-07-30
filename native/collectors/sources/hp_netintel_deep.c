@@ -31,7 +31,7 @@ static const hp_source HP_NETINTEL[] = {
     .portal = "https://stat.ripe.net", .record_type = "bgp-prefix",
     .tags = "\"bgp\",\"asn\"", .want = HP_ASN, .free_tier = 1,
     .url = RIPE("announced-prefixes"), .array_path = "data.prefixes",
-    .title_keys = "prefix", .id_keys = "prefix", .max_items = 60,
+    .title_keys = "prefix", .id_keys = "prefix",
     .description = "Every IP prefix an AS currently announces, with the timelines of "
       "each announcement — the actual address space an organisation controls, as "
       "opposed to what it is allocated" },
@@ -41,7 +41,7 @@ static const hp_source HP_NETINTEL[] = {
     .portal = "https://stat.ripe.net", .record_type = "bgp-neighbour",
     .tags = "\"bgp\",\"asn\",\"topology\"", .want = HP_ASN, .free_tier = 1,
     .url = RIPE("asn-neighbours"), .array_path = "data.neighbours",
-    .title_keys = "asn", .id_keys = "asn", .max_items = 60,
+    .title_keys = "asn", .id_keys = "asn",
     .description = "The ASes that peer with or transit for this AS, with left/right "
       "position and observation counts — the network's real business relationships, "
       "visible even when contracts are not" },
@@ -60,7 +60,7 @@ static const hp_source HP_NETINTEL[] = {
     .portal = "https://stat.ripe.net", .record_type = "bgp-update",
     .tags = "\"bgp\",\"history\"", .free_tier = 1, .url = RIPE("bgp-updates"),
     .array_path = "data.updates", .title_keys = "type,attrs.target_prefix",
-    .date_keys = "timestamp", .max_items = 60,
+    .date_keys = "timestamp",
     .description = "Recent BGP announcements and withdrawals touching a resource — "
       "hijacks, leaks, flapping and provider changes appear here before they appear "
       "anywhere else" },
@@ -77,7 +77,7 @@ static const hp_source HP_NETINTEL[] = {
     .name_ja = "RIPEstat — レジストリWHOIS", .category = "cyber",
     .portal = "https://stat.ripe.net", .record_type = "rir-whois",
     .tags = "\"whois\",\"rir\"", .free_tier = 1, .url = RIPE("whois"),
-    .array_path = "data.records", .max_items = 40,
+    .array_path = "data.records",
     .title_keys = "0.value,1.value",
     .description = "Raw RIR registry objects for an IP, prefix or AS — inetnum, "
       "organisation, admin/tech contacts, mnt-by and the irr route objects, straight "
@@ -98,7 +98,7 @@ static const hp_source HP_NETINTEL[] = {
     .portal = "https://stat.ripe.net", .record_type = "rir-allocation",
     .tags = "\"whois\",\"rir\"", .free_tier = 1,
     .url = RIPE("address-space-hierarchy"), .array_path = "data.exact",
-    .title_keys = "inetnum,netname", .max_items = 40,
+    .title_keys = "inetnum,netname",
     .description = "Exact, less-specific and more-specific registry allocations "
       "around a prefix — shows the upstream LIR above a customer assignment and any "
       "sub-delegations beneath it" },
@@ -107,7 +107,7 @@ static const hp_source HP_NETINTEL[] = {
     .name_ja = "RIPEstat — 逆引きDNS委任", .category = "cyber",
     .portal = "https://stat.ripe.net", .record_type = "dns-delegation",
     .tags = "\"dns\",\"rir\"", .free_tier = 1, .url = RIPE("reverse-dns"),
-    .array_path = "data.delegations", .max_items = 40,
+    .array_path = "data.delegations",
     .title_keys = "0.value,1.value",
     .description = "Reverse-DNS delegation records for an address block — which "
       "nameservers a network operator has authority over, a strong signal of real "
@@ -117,7 +117,7 @@ static const hp_source HP_NETINTEL[] = {
     .name_ja = "RIPEstat — WHOIS履歴", .category = "cyber",
     .portal = "https://stat.ripe.net", .record_type = "rir-whois-history",
     .tags = "\"whois\",\"history\"", .free_tier = 1,
-    .url = RIPE("historical-whois"), .array_path = "data.objects", .max_items = 40,
+    .url = RIPE("historical-whois"), .array_path = "data.objects",
     .title_keys = "type,key",
     .description = "Previous versions of registry objects for a resource — who held "
       "an AS or prefix before the current holder, and when it changed hands. The RIR "
@@ -127,7 +127,7 @@ static const hp_source HP_NETINTEL[] = {
     .name_ja = "RIPEstat — ブロックリスト履歴", .category = "cyber",
     .portal = "https://stat.ripe.net", .record_type = "blocklist-entry",
     .tags = "\"reputation\",\"abuse\"", .free_tier = 1, .url = RIPE("blocklist"),
-    .array_path = "data.sources", .max_items = 40, .title_keys = "0.prefix",
+    .array_path = "data.sources", .title_keys = "0.prefix",
     .description = "Which blocklists have carried a prefix or address, and over which "
       "time windows — a long blocklist history is the difference between a one-off "
       "incident and a bulletproof host" },
@@ -159,7 +159,7 @@ static const hp_source HP_NETINTEL[] = {
     .tags = "\"bgp\",\"asn\"", .want = HP_ASN, .free_tier = 1,
     .url = "https://api.bgpview.io/asn/{qd}/prefixes",
     .array_path = "data.ipv4_prefixes", .title_keys = "prefix,description",
-    .id_keys = "prefix", .max_items = 60,
+    .id_keys = "prefix",
     .description = "IPv4 and IPv6 prefixes under an AS with per-prefix names, "
       "descriptions and the parent allocation — the inventory an attack-surface sweep "
       "starts from" },
@@ -169,7 +169,7 @@ static const hp_source HP_NETINTEL[] = {
     .portal = "https://bgpview.io", .record_type = "bgp-neighbour",
     .tags = "\"bgp\",\"topology\"", .want = HP_ASN, .free_tier = 1,
     .url = "https://api.bgpview.io/asn/{qd}/peers", .array_path = "data.ipv4_peers",
-    .title_keys = "name,asn", .id_keys = "asn", .max_items = 60,
+    .title_keys = "name,asn", .id_keys = "asn",
     .description = "Peering relationships of an AS with each peer's name and country "
       "— maps an operator into its regional interconnection community" },
 
@@ -179,7 +179,6 @@ static const hp_source HP_NETINTEL[] = {
     .tags = "\"bgp\",\"topology\"", .want = HP_ASN, .free_tier = 1,
     .url = "https://api.bgpview.io/asn/{qd}/upstreams",
     .array_path = "data.ipv4_upstreams", .title_keys = "name,asn", .id_keys = "asn",
-    .max_items = 40,
     .description = "The transit providers an AS buys from, including the graph of "
       "upstream-of-upstream relationships — who to serve notice on when the operator "
       "itself does not answer" },
@@ -210,7 +209,7 @@ static const hp_source HP_NETINTEL[] = {
     .portal = "https://www.peeringdb.com", .record_type = "peeringdb-ixlan",
     .tags = "\"bgp\",\"peering\",\"ix\"", .want = HP_ASN, .free_tier = 1,
     .url = "https://www.peeringdb.com/api/netixlan?asn={qd}", .array_path = "data",
-    .title_keys = "name,ix_id", .id_keys = "id", .max_items = 60,
+    .title_keys = "name,ix_id", .id_keys = "id",
     .description = "Every internet exchange an AS is present on, with the peering "
       "IPv4/IPv6 addresses and port speeds — geographic footprint inferred from "
       "interconnection rather than from a marketing page" },
@@ -221,7 +220,7 @@ static const hp_source HP_NETINTEL[] = {
     .tags = "\"peering\",\"datacenter\"", .free_tier = 1,
     .url = "https://www.peeringdb.com/api/fac?name__contains={q}",
     .array_path = "data", .title_keys = "name", .id_keys = "id",
-    .lat_key = "latitude", .lon_key = "longitude", .max_items = 40,
+    .lat_key = "latitude", .lon_key = "longitude",
     .description = "Data-centre facilities matching a name or operator — street "
       "address, coordinates, campus and the networks present. Turns an AS number "
       "into a building" },
@@ -234,7 +233,7 @@ static const hp_source HP_NETINTEL[] = {
     .url = "https://api.certspotter.com/v1/issuances?domain={qh}"
            "&include_subdomains=true&expand=dns_names&expand=issuer&expand=cert_der",
     .title_keys = "issuer.name,dns_names.0", .id_keys = "id",
-    .date_keys = "not_before", .max_items = 50,
+    .date_keys = "not_before",
     .description = "Certificate-transparency issuances for a domain and all its "
       "subdomains — issuer, validity window, SHA-256 and the full SAN list, which is "
       "the cheapest complete subdomain inventory that exists" },
@@ -245,7 +244,7 @@ static const hp_source HP_NETINTEL[] = {
     .tags = "\"dns\",\"history\"", .free_tier = 1,
     .url = "https://api.mnemonic.no/pdns/v3/{q}?limit=100",
     .array_path = "data", .title_keys = "query,answer", .id_keys = "answer",
-    .date_keys = "lastSeenTimestamp", .max_items = 60,
+    .date_keys = "lastSeenTimestamp",
     .description = "Historical DNS resolutions for a domain or IP with first/last-"
       "seen timestamps — where a hostname used to point, and every other hostname "
       "that resolved to the same address" },
@@ -256,7 +255,7 @@ static const hp_source HP_NETINTEL[] = {
     .tags = "\"archive\",\"history\"", .want = HP_DOMAIN, .free_tier = 1,
     .url = "https://web.archive.org/cdx/search/cdx?url={qh}&matchType=domain"
            "&output=json&limit=200&collapse=urlkey&fl=timestamp,original,mimetype,statuscode,digest",
-    .csv_no_header = 0, .max_items = 60, .title_keys = "1", .id_keys = "4",
+    .csv_no_header = 0, .title_keys = "1", .id_keys = "4",
     .description = "Every distinct URL the Internet Archive holds for a whole domain, "
       "not just its front page — timestamps, MIME types, status codes and content "
       "digests, which is how deleted subpages and staging hosts are recovered" },
@@ -266,8 +265,7 @@ static const hp_source HP_NETINTEL[] = {
     .portal = "https://commoncrawl.org", .record_type = "web-crawl-record",
     .tags = "\"archive\",\"crawl\"", .want = HP_DOMAIN, .free_tier = 1,
     .url = "https://index.commoncrawl.org/CC-MAIN-2024-33-index?url=*.{qh}"
-           "&output=json&limit=100",
-    .max_items = 60, .title_keys = "url", .id_keys = "digest",
+           "&output=json&limit=100", .title_keys = "url", .id_keys = "digest",
     .description = "Common Crawl's captured URLs across all subdomains of a domain — "
       "an independent second archive when the Wayback Machine has been excluded by "
       "robots or a takedown" },
@@ -278,7 +276,7 @@ static const hp_source HP_NETINTEL[] = {
     .tags = "\"phishing\",\"web\"", .want = HP_DOMAIN, .free_tier = 1,
     .url = "https://urlscan.io/api/v1/search/?q=domain%3A{qh}&size=40",
     .array_path = "results", .title_keys = "task.url,page.domain", .id_keys = "_id",
-    .date_keys = "task.time", .max_items = 40,
+    .date_keys = "task.time",
     .description = "Every submitted scan of a domain — the resolved IP, ASN, server, "
       "page title, screenshot and DOM for each visit, which reconstructs what a site "
       "looked like on a given day" },
@@ -291,7 +289,7 @@ static const hp_source HP_NETINTEL[] = {
     .url = "https://otx.alienvault.com/api/v1/indicators/domain/{qh}/passive_dns",
     .headers = { "X-OTX-API-KEY: {key}", NULL },
     .array_path = "passive_dns", .title_keys = "hostname,address",
-    .id_keys = "address", .date_keys = "last", .max_items = 60,
+    .id_keys = "address", .date_keys = "last",
     .description = "OTX passive-DNS observations for a domain — historical hostname→"
       "address mappings with first/last seen and the ASN each address sat in" },
 };

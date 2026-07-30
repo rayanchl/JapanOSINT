@@ -15,7 +15,7 @@ static const hp_source HP_PROCUREMENT[] = {
     .url = "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search"
            "?keyword={q}&stages=award&size=40",
     .array_path = "results", .title_keys = "tender.title,awards.0.suppliers.0.name",
-    .id_keys = "ocid", .date_keys = "date", .max_items = 40,
+    .id_keys = "ocid", .date_keys = "date",
     .description = "UK central and local government contract awards in OCDS form — "
       "buyer, supplier, value, contract period and CPV classification for every "
       "notice naming an entity" },
@@ -31,7 +31,7 @@ static const hp_source HP_PROCUREMENT[] = {
                  "\"Sub-Award Date\",\"Awarding Agency\",\"Prime Recipient Name\"],"
                  "\"page\":1,\"limit\":40,\"sort\":\"Sub-Award Amount\",\"order\":\"desc\"}",
     .array_path = "results", .title_keys = "Sub-Awardee Name,Prime Recipient Name",
-    .id_keys = "Sub-Award ID", .date_keys = "Sub-Award Date", .max_items = 40,
+    .id_keys = "Sub-Award ID", .date_keys = "Sub-Award Date",
     .description = "The second tier of US federal contracting — who the prime "
       "contractor actually passes the work and money to. Subaward records expose "
       "supply-chain relationships that never appear in the prime award data" },
@@ -42,7 +42,7 @@ static const hp_source HP_PROCUREMENT[] = {
     .tags = "\"worldbank\",\"procurement\"", .free_tier = 1,
     .url = "https://search.worldbank.org/api/v2/procnotices?format=json&qterm={q}&rows=40",
     .array_path = "procnotices", .title_keys = "bid_description,project_name",
-    .id_keys = "id", .date_keys = "submission_date", .max_items = 40,
+    .id_keys = "id", .date_keys = "submission_date",
     .description = "World Bank-financed procurement notices and contract awards — "
       "borrower country, project, notice type, bid description and the awarded "
       "supplier where published" },
@@ -53,7 +53,7 @@ static const hp_source HP_PROCUREMENT[] = {
     .tags = "\"worldbank\",\"documents\"", .free_tier = 1,
     .url = "https://search.worldbank.org/api/v2/wds?format=json&qterm={q}&rows=40",
     .array_path = "documents", .title_keys = "docna,display_title", .id_keys = "id",
-    .date_keys = "docdt", .max_items = 40,
+    .date_keys = "docdt",
     .description = "The World Bank documents archive — appraisal documents, audits, "
       "investigation reports and implementation reviews naming an entity, with direct "
       "PDF/TXT links" },
@@ -65,7 +65,7 @@ static const hp_source HP_PROCUREMENT[] = {
     .url = "https://api.iatistandard.org/datastore/activity/select?q={q}&rows=40&wt=json",
     .headers = { "Ocp-Apim-Subscription-Key: {key}", NULL },
     .array_path = "response.docs", .title_keys = "title_narrative,iati_identifier",
-    .id_keys = "iati_identifier", .date_keys = "activity_date_iso_date", .max_items = 40,
+    .id_keys = "iati_identifier", .date_keys = "activity_date_iso_date",
     .description = "Aid activities published to the IATI standard by donors, NGOs and "
       "implementing partners — budgets, transactions, participating organisations and "
       "recipient countries for anything naming the entity" },
@@ -76,7 +76,6 @@ static const hp_source HP_PROCUREMENT[] = {
     .tags = "\"aid\",\"un\",\"funding\"", .free_tier = 1,
     .url = "https://api.hpc.tools/v1/public/organization",
     .array_path = "data", .filter_query = 1, .title_keys = "name", .id_keys = "id",
-    .max_items = 20,
     .description = "Organisations recognised in the UN humanitarian financial tracking "
       "system, filtered to the query — canonical name, abbreviation, type and country, "
       "which is the id needed to pull that organisation's funding flows" },
@@ -88,7 +87,7 @@ static const hp_source HP_PROCUREMENT[] = {
     .url = "https://api.sam.gov/prod/opportunities/v2/search?api_key={key}"
            "&title={q}&limit=40&postedFrom=01/01/2020&postedTo=12/31/2026",
     .array_path = "opportunitiesData", .title_keys = "title", .id_keys = "noticeId",
-    .date_keys = "postedDate", .max_items = 40,
+    .date_keys = "postedDate",
     .description = "US federal solicitations and awards matching a term — issuing "
       "office, NAICS/PSC classification, set-aside type, response deadline and the "
       "awardee once published" },
@@ -99,7 +98,7 @@ static const hp_source HP_PROCUREMENT[] = {
     .tags = "\"us\",\"aid\"", .free_tier = 1,
     .url = "https://data.usaid.gov/resource/azij-hu6e.json?$q={q}&$limit=40",
     .title_keys = "activity_name,implementing_partner_name",
-    .id_keys = "activity_id", .date_keys = "fiscal_year", .max_items = 40,
+    .id_keys = "activity_id", .date_keys = "fiscal_year",
     .description = "US foreign-assistance transactions — implementing partner, "
       "country, sector, funding agency and obligated/disbursed amounts by fiscal "
       "year; how a contractor's aid income is actually structured" },
@@ -112,7 +111,6 @@ static const hp_source HP_PROCUREMENT[] = {
            "%24filter=contains%28principalRecipientName%2C%27{Q}%27%29&%24top=40",
     .array_path = "value", .title_keys = "grantAgreementNumber,principalRecipientName",
     .id_keys = "grantAgreementNumber", .date_keys = "grantAgreementStartDate",
-    .max_items = 40,
     .description = "Global Fund grant agreements by principal recipient — country, "
       "component (HIV/TB/malaria), signed amount, disbursements and grant period. "
       "Recipients are often national agencies and large NGOs" },
@@ -123,7 +121,7 @@ static const hp_source HP_PROCUREMENT[] = {
     .tags = "\"ca\",\"procurement\",\"opendata\"", .free_tier = 1,
     .url = "https://open.canada.ca/data/api/3/action/package_search?q={q}&rows=25",
     .array_path = "result.results", .title_keys = "title", .id_keys = "name",
-    .date_keys = "metadata_modified", .max_items = 25,
+    .date_keys = "metadata_modified",
     .description = "Canadian federal datasets matching an entity or programme — "
       "proactive-disclosure contract lists, grants and contributions, lobbying "
       "registrations and departmental registries, with resource download URLs" },
@@ -134,7 +132,7 @@ static const hp_source HP_PROCUREMENT[] = {
     .portal = "https://www.ungm.org", .record_type = "un-tender",
     .tags = "\"un\",\"procurement\"", .free_tier = 1,
     .url = "https://www.ungm.org/Public/Notice?keywords={q}",
-    .href_must = "/Public/Notice/", .base = "https://www.ungm.org", .max_items = 25,
+    .href_must = "/Public/Notice/", .base = "https://www.ungm.org",
     .description = "United Nations Global Marketplace tender notices and awards "
       "matching a term — the procurement surface for UNDP, UNICEF, WFP, WHO and the "
       "agencies that publish only here" },
@@ -145,7 +143,7 @@ static const hp_source HP_PROCUREMENT[] = {
     .portal = "https://kohesio.ec.europa.eu", .record_type = "eu-beneficiary",
     .tags = "\"eu\",\"funding\",\"beneficiaries\"", .free_tier = 1,
     .url = "https://kohesio.ec.europa.eu/en/search?keywords={q}",
-    .base = "https://kohesio.ec.europa.eu", .filter_query = 1, .max_items = 25,
+    .base = "https://kohesio.ec.europa.eu", .filter_query = 1,
     .description = "Beneficiaries of EU cohesion and regional-development funding — "
       "the project, the money received and the region, for entities that received "
       "structural funds" },

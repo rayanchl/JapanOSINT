@@ -17,7 +17,7 @@ static const hp_source HP_APAC[] = {
     .url = "https://opendart.fss.or.kr/api/list.json?crtfc_key={key}&corp_code={qd}"
            "&bgn_de=20150101&page_count=50",
     .array_path = "list", .title_keys = "report_nm", .id_keys = "rcept_no",
-    .date_keys = "rcept_dt", .max_items = 50,
+    .date_keys = "rcept_dt",
     .link_tmpl = "https://dart.fss.or.kr/dsaf001/main.do?rcpNo={v}", .link_keys = "rcept_no",
     .description = "Every disclosure a Korean listed company has filed with the FSS "
       "— report name, receipt number, filer and date. The Korean equivalent of an "
@@ -40,7 +40,6 @@ static const hp_source HP_APAC[] = {
     .tags = "\"kr\",\"ownership\"", .key_env = "DART_API_KEY", .free_tier = 1,
     .url = "https://opendart.fss.or.kr/api/majorstock.json?crtfc_key={key}&corp_code={qd}",
     .array_path = "list", .title_keys = "repror,corp_name", .date_keys = "rcept_dt",
-    .max_items = 50,
     .description = "Large-shareholding reports filed for a Korean company — the "
       "reporting holder, their stake before and after, the reason for the change "
       "and the filing date; Korea's beneficial-ownership disclosure stream" },
@@ -53,7 +52,7 @@ static const hp_source HP_APAC[] = {
     .url = "https://data.gcis.nat.gov.tw/od/data/api/6BBA2268-1367-4B42-9CCA-BC17499EBE8C"
            "?$format=json&$filter=Company_Name%20like%20{q}&$skip=0&$top=40",
     .title_keys = "Company_Name", .id_keys = "Business_Accounting_NO",
-    .date_keys = "Company_Setup_Date", .max_items = 40,
+    .date_keys = "Company_Setup_Date",
     .description = "Taiwanese company registration — unified business number, "
       "capital, responsible person, registered address and setup/amendment dates, "
       "from the Ministry of Economic Affairs open API" },
@@ -64,7 +63,7 @@ static const hp_source HP_APAC[] = {
     .tags = "\"tw\",\"officers\"", .want = HP_NUMERIC, .free_tier = 1,
     .url = "https://data.gcis.nat.gov.tw/od/data/api/4E5F7653-1B91-4DD3-BCFB-8B0B7A275516"
            "?$format=json&$filter=Business_Accounting_NO%20eq%20{qd}",
-    .title_keys = "Director_Name,Company_Name", .max_items = 50,
+    .title_keys = "Director_Name,Company_Name",
     .description = "The board of a Taiwanese company — directors, supervisors, their "
       "titles, shareholdings and the corporate representative where a company holds "
       "the seat" },
@@ -76,7 +75,7 @@ static const hp_source HP_APAC[] = {
     .portal = "https://www.icris.cr.gov.hk", .record_type = "hk-company",
     .tags = "\"hk\",\"registry\"", .free_tier = 1,
     .url = "https://www.e-services.cr.gov.hk/ICRIS3EP/system/dispatch.do?searchName={q}",
-    .base = "https://www.e-services.cr.gov.hk", .filter_query = 1, .max_items = 20,
+    .base = "https://www.e-services.cr.gov.hk", .filter_query = 1,
     .description = "Hong Kong company-name search against the Companies Registry "
       "e-services portal. Server-rendered anchors only — HK gates most detail behind "
       "a paid document purchase, and this row never pretends otherwise" },
@@ -87,7 +86,7 @@ static const hp_source HP_APAC[] = {
     .tags = "\"hk\",\"licences\"", .free_tier = 1,
     .url = "https://data.gov.hk/en-data/api/3/action/package_search?q={q}&rows=25",
     .array_path = "result.results", .title_keys = "title", .id_keys = "name",
-    .date_keys = "metadata_modified", .max_items = 25,
+    .date_keys = "metadata_modified",
     .description = "Hong Kong government datasets and registers matching an entity "
       "or sector — licence lists, contractor registers and enforcement datasets, "
       "with their resource URLs for direct download" },
@@ -98,7 +97,7 @@ static const hp_source HP_APAC[] = {
     .portal = "https://beian.miit.gov.cn", .record_type = "cn-icp",
     .tags = "\"cn\",\"domains\"", .want = HP_DOMAIN, .free_tier = 1,
     .url = "https://www.beianx.cn/search/{qh}",
-    .base = "https://www.beianx.cn", .filter_query = 0, .max_items = 15,
+    .base = "https://www.beianx.cn", .filter_query = 0,
     .description = "Chinese ICP filing behind a domain — the licensed operator name, "
       "filing number and approval date. An ICP record ties a Chinese-hosted site to "
       "a registered legal entity, which WHOIS privacy usually hides" },
@@ -109,7 +108,7 @@ static const hp_source HP_APAC[] = {
     .portal = "https://data.gov.sg", .record_type = "sg-dataset",
     .tags = "\"sg\",\"opendata\"", .free_tier = 1,
     .url = "https://api-production.data.gov.sg/v2/public/api/search?query={q}",
-    .title_keys = "name,title", .id_keys = "datasetId,id", .max_items = 25,
+    .title_keys = "name,title", .id_keys = "datasetId,id",
     .description = "Singapore government datasets matching an entity or sector — "
       "ACRA-derived company lists, licensee registers and enforcement datasets, with "
       "the dataset ids needed to pull the rows themselves" },
@@ -120,7 +119,7 @@ static const hp_source HP_APAC[] = {
     .portal = "https://www.ssm-einfo.my", .record_type = "my-company",
     .tags = "\"my\",\"registry\"", .free_tier = 1,
     .url = "https://www.ssm-einfo.my/index.php/search/result?keyword={q}",
-    .base = "https://www.ssm-einfo.my", .filter_query = 1, .max_items = 20,
+    .base = "https://www.ssm-einfo.my", .filter_query = 1,
     .description = "Malaysian SSM e-Info company and business-name search hits — "
       "registration number and status per match; full extracts are pay-per-document, "
       "so only the real listing anchors are emitted" },
@@ -131,7 +130,7 @@ static const hp_source HP_APAC[] = {
     .portal = "https://ahu.go.id", .record_type = "id-company",
     .tags = "\"id\",\"registry\"", .free_tier = 1,
     .url = "https://ahu.go.id/pencarian/profil-pt?q={q}",
-    .base = "https://ahu.go.id", .filter_query = 1, .max_items = 20,
+    .base = "https://ahu.go.id", .filter_query = 1,
     .description = "Indonesian Ministry of Law legal-entity search — PT/CV names, "
       "SK decree numbers and domicile as published on the AHU profile pages" },
 
@@ -141,7 +140,7 @@ static const hp_source HP_APAC[] = {
     .portal = "https://datawarehouse.dbd.go.th", .record_type = "th-company",
     .tags = "\"th\",\"registry\"", .free_tier = 1,
     .url = "https://datawarehouse.dbd.go.th/searchJuristicInfo?jpNameTh={q}",
-    .base = "https://datawarehouse.dbd.go.th", .filter_query = 1, .max_items = 20,
+    .base = "https://datawarehouse.dbd.go.th", .filter_query = 1,
     .description = "Thai Department of Business Development registration hits — "
       "juristic person id, name, status and registered capital where the warehouse "
       "serves them without a session" },
@@ -152,7 +151,7 @@ static const hp_source HP_APAC[] = {
     .portal = "https://dangkykinhdoanh.gov.vn", .record_type = "vn-company",
     .tags = "\"vn\",\"registry\"", .free_tier = 1,
     .url = "https://dichvuthongtin.dkkd.gov.vn/inf/default.aspx?keyword={q}",
-    .base = "https://dichvuthongtin.dkkd.gov.vn", .filter_query = 1, .max_items = 20,
+    .base = "https://dichvuthongtin.dkkd.gov.vn", .filter_query = 1,
     .description = "Vietnamese national business-registration portal hits — company "
       "name, tax code and registered office per match, from the public information "
       "service pages" },
@@ -163,7 +162,7 @@ static const hp_source HP_APAC[] = {
     .portal = "https://secexpress.ph", .record_type = "ph-company",
     .tags = "\"ph\",\"registry\"", .free_tier = 1,
     .url = "https://secexpress.ph/search?q={q}",
-    .base = "https://secexpress.ph", .filter_query = 1, .max_items = 20,
+    .base = "https://secexpress.ph", .filter_query = 1,
     .description = "Philippine SEC company-name search results — registration "
       "number and status per matching corporation or partnership" },
 
@@ -173,7 +172,7 @@ static const hp_source HP_APAC[] = {
     .portal = "https://data.gov.in", .record_type = "in-dataset",
     .tags = "\"in\",\"opendata\"", .key_env = "INDIA_DATA_KEY", .free_tier = 1,
     .url = "https://api.data.gov.in/catalog?api-key={key}&format=json&filters%5Btitle%5D={q}&limit=25",
-    .title_keys = "title,desc", .id_keys = "index_name", .max_items = 25,
+    .title_keys = "title,desc", .id_keys = "index_name",
     .description = "Indian government data catalogue search — MCA company master "
       "data, GST registrations, licensee lists and court datasets, with the resource "
       "ids required to query the rows" },
@@ -184,7 +183,7 @@ static const hp_source HP_APAC[] = {
     .portal = "https://www.zaubacorp.com", .record_type = "in-company",
     .tags = "\"in\",\"registry\",\"officers\"", .free_tier = 1,
     .url = "https://www.zaubacorp.com/companysearchresults/{q}",
-    .href_must = "/company/", .base = "https://www.zaubacorp.com", .max_items = 25,
+    .href_must = "/company/", .base = "https://www.zaubacorp.com",
     .description = "Indian companies matching a name on the MCA-derived ZaubaCorp "
       "mirror — each hit links a company page carrying CIN, authorised capital, "
       "directors and charge history that MCA itself paywalls" },
@@ -195,7 +194,7 @@ static const hp_source HP_APAC[] = {
     .portal = "https://indiankanoon.org", .record_type = "in-judgment",
     .tags = "\"in\",\"courts\"", .free_tier = 1,
     .url = "https://indiankanoon.org/search/?formInput={q}",
-    .href_must = "/doc/", .base = "https://indiankanoon.org", .max_items = 25,
+    .href_must = "/doc/", .base = "https://indiankanoon.org",
     .description = "Indian Supreme Court, High Court and tribunal judgments naming "
       "an entity — the litigation history that Indian corporate records omit" },
 
@@ -206,7 +205,6 @@ static const hp_source HP_APAC[] = {
     .tags = "\"au\",\"registry\"", .key_env = "ABR_GUID", .free_tier = 1,
     .url = "https://abr.business.gov.au/json/MatchingNames.aspx?name={q}&guid={key}&maxResults=40",
     .array_path = "Names", .title_keys = "Name", .id_keys = "Abn",
-    .max_items = 40,
     .description = "Australian Business Register name matches — ABN, entity type, "
       "GST registration status, state and postcode, plus trading names recorded "
       "against the same ABN" },
@@ -217,7 +215,7 @@ static const hp_source HP_APAC[] = {
     .tags = "\"au\",\"registry\"", .free_tier = 1,
     .url = "https://data.gov.au/data/api/3/action/package_search?q={q}&rows=25",
     .array_path = "result.results", .title_keys = "title", .id_keys = "name",
-    .date_keys = "metadata_modified", .max_items = 25,
+    .date_keys = "metadata_modified",
     .description = "Australian open-data catalogue hits — ASIC company, banned-and-"
       "disqualified-persons and licensee registers, business names and insolvency "
       "notices, with direct resource URLs" },
@@ -229,7 +227,7 @@ static const hp_source HP_APAC[] = {
     .tags = "\"nz\",\"registry\",\"officers\"", .free_tier = 1,
     .url = "https://app.companiesoffice.govt.nz/companies/app/ui/pages/companies/search"
            "?q={q}&entityTypes=ALL&entityStatusGroups=ALL",
-    .href_must = "/companies/app/ui/pages/companies/", .max_items = 25,
+    .href_must = "/companies/app/ui/pages/companies/",
     .base = "https://app.companiesoffice.govt.nz",
     .description = "New Zealand Companies Office search hits. NZ publishes director "
       "names, addresses and shareholding structures free of charge, so each hit "
@@ -242,7 +240,7 @@ static const hp_source HP_APAC[] = {
     .url = "https://api.business.govt.nz/services/v4/nzbn/entities?search-term={q}&page-size=40",
     .headers = { "Authorization: Bearer {key}", NULL },
     .array_path = "items", .title_keys = "entityName", .id_keys = "nzbn",
-    .date_keys = "registrationDate", .max_items = 40,
+    .date_keys = "registrationDate",
     .description = "New Zealand Business Number register — entity name, NZBN, type, "
       "status, trading names, addresses and the roles held by people in the entity" },
 };

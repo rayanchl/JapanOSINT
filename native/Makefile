@@ -85,6 +85,13 @@ $(BIN): $(OBJS)
 selftest: $(BIN)
 	./$(BIN) --selftest
 
+# Exhaustive-use audit (docs/SOURCE_EXHAUSTIVENESS.md): scan every collector for
+# the patterns that mean fetched data was discarded. A report, not a gate — but
+# the hp_* engine rows are held strictly clean.
+.PHONY: audit-sources
+audit-sources:
+	@python3 tests/audit_source_exhaustiveness.py --strict 'collectors/sources/hp_*.c'
+
 # Offline unit test for the high-penetrancy record engine (lib/hpengine.c). Its
 # own http_request stub replaces libcurl, so it needs no network and no key —
 # see tests/hpengine_test.c.

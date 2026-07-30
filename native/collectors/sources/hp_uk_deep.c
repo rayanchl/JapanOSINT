@@ -38,8 +38,9 @@ static const hp_source HP_UK[] = {
     .want = HP_NUMERIC, .url = CH_BASE "/company/{qn}/officers?items_per_page=50",
     .headers = CH_AUTH, .key_env = CH_KEY, .free_tier = 1, .array_path = "items",
     .title_keys = "name", .id_keys = "links.officer.appointments",
-    .date_keys = "appointed_on", .max_items = 50,
+    .date_keys = "appointed_on",
     .link_tmpl = CH_WEB "/company/{qn}/officers",
+    .page_param = "start_index", .page_size = 50,
     .description = "Every appointed and resigned officer of a UK company — name, "
       "role, nationality, occupation, month/year of birth, country of residence, "
       "service address, appointment and resignation dates" },
@@ -50,8 +51,9 @@ static const hp_source HP_UK[] = {
     .want = HP_NUMERIC,
     .url = CH_BASE "/company/{qn}/persons-with-significant-control?items_per_page=50",
     .headers = CH_AUTH, .key_env = CH_KEY, .free_tier = 1, .array_path = "items",
-    .title_keys = "name", .date_keys = "notified_on", .max_items = 50,
+    .title_keys = "name", .date_keys = "notified_on",
     .link_tmpl = CH_WEB "/company/{qn}/persons-with-significant-control",
+    .page_param = "start_index", .page_size = 50,
     .description = "UK beneficial ownership: the declared PSCs of a company with "
       "their natures of control (ownership/voting bands), nationality, DOB "
       "month-year, address and any corporate/legal-person PSC entries" },
@@ -62,8 +64,9 @@ static const hp_source HP_UK[] = {
     .want = HP_NUMERIC, .url = CH_BASE "/company/{qn}/filing-history?items_per_page=50",
     .headers = CH_AUTH, .key_env = CH_KEY, .free_tier = 1, .array_path = "items",
     .title_keys = "description,type", .id_keys = "transaction_id",
-    .date_keys = "date", .max_items = 50,
+    .date_keys = "date",
     .link_tmpl = CH_WEB "/company/{qn}/filing-history",
+    .page_param = "start_index", .page_size = 50,
     .description = "Every document a UK company has filed — accounts, confirmation "
       "statements, officer appointments/terminations, mortgages, capital changes — "
       "with dates, categories and document metadata" },
@@ -74,8 +77,9 @@ static const hp_source HP_UK[] = {
     .want = HP_NUMERIC, .url = CH_BASE "/company/{qn}/charges?items_per_page=50",
     .headers = CH_AUTH, .key_env = CH_KEY, .free_tier = 1, .array_path = "items",
     .title_keys = "classification.description,particulars.description",
-    .id_keys = "charge_number", .date_keys = "created_on", .max_items = 50,
+    .id_keys = "charge_number", .date_keys = "created_on",
     .link_tmpl = CH_WEB "/company/{qn}/charges",
+    .page_param = "start_index", .page_size = 50,
     .description = "Registered charges over a UK company's assets — who lent, what "
       "was secured, when created/satisfied. The lender list is often the clearest "
       "map of a company's real financial counterparties" },
@@ -85,7 +89,7 @@ static const hp_source HP_UK[] = {
     .portal = CH_WEB, .record_type = "uk-insolvency", .tags = "\"uk\",\"insolvency\"",
     .want = HP_NUMERIC, .url = CH_BASE "/company/{qn}/insolvency",
     .headers = CH_AUTH, .key_env = CH_KEY, .free_tier = 1, .array_path = "cases",
-    .title_keys = "type,number", .id_keys = "number", .max_items = 25,
+    .title_keys = "type,number", .id_keys = "number",
     .link_tmpl = CH_WEB "/company/{qn}/insolvency",
     .description = "Insolvency cases against a UK company: case type (CVL, "
       "administration, receivership…), practitioners appointed, their firms and "
@@ -96,7 +100,8 @@ static const hp_source HP_UK[] = {
     .portal = CH_WEB, .record_type = "uk-establishment", .tags = "\"uk\",\"branches\"",
     .want = HP_NUMERIC, .url = CH_BASE "/company/{qn}/uk-establishments",
     .headers = CH_AUTH, .key_env = CH_KEY, .free_tier = 1, .array_path = "items",
-    .title_keys = "company_name", .id_keys = "company_number", .max_items = 50,
+    .title_keys = "company_name", .id_keys = "company_number",
+    .page_param = "start_index", .page_size = 50,
     .description = "UK branches/establishments registered by an overseas company — "
       "the local footprint of a foreign parent, each with its own company number" },
 
@@ -106,7 +111,7 @@ static const hp_source HP_UK[] = {
     .want = HP_ANY, .url = CH_BASE "/officers/{qn}/appointments?items_per_page=50",
     .headers = CH_AUTH, .key_env = CH_KEY, .free_tier = 1, .array_path = "items",
     .title_keys = "appointed_to.company_name,name", .date_keys = "appointed_on",
-    .max_items = 50,
+    .page_param = "start_index", .page_size = 50,
     .description = "Every company a given Companies House officer id is appointed "
       "to — the directorship network of one person, which is the pivot that turns "
       "a single company into a group" },
@@ -117,7 +122,7 @@ static const hp_source HP_UK[] = {
     .url = CH_BASE "/search/officers?q={q}&items_per_page=40",
     .headers = CH_AUTH, .key_env = CH_KEY, .free_tier = 1, .array_path = "items",
     .title_keys = "title,description", .date_keys = "date_of_birth.year",
-    .max_items = 40,
+    .page_param = "start_index", .page_size = 40,
     .description = "Search UK company officers by person name — returns each "
       "matching officer with their appointment count, DOB month/year and address "
       "snippet, plus the officer id needed for the appointments pivot" },
@@ -127,7 +132,8 @@ static const hp_source HP_UK[] = {
     .portal = CH_WEB, .record_type = "uk-disqualified", .tags = "\"uk\",\"enforcement\"",
     .url = CH_BASE "/search/disqualified-officers?q={q}&items_per_page=40",
     .headers = CH_AUTH, .key_env = CH_KEY, .free_tier = 1, .array_path = "items",
-    .title_keys = "title,description", .max_items = 40,
+    .title_keys = "title,description",
+    .page_param = "start_index", .page_size = 40,
     .description = "The UK disqualified-directors register — people banned from "
       "acting as a company director, with the disqualification period and the "
       "conduct that triggered it" },
@@ -138,7 +144,7 @@ static const hp_source HP_UK[] = {
     .url = CH_BASE "/advanced-search/companies?company_name_includes={q}&size=40",
     .headers = CH_AUTH, .key_env = CH_KEY, .free_tier = 1, .array_path = "items",
     .title_keys = "company_name", .id_keys = "company_number",
-    .date_keys = "date_of_creation", .max_items = 40,
+    .date_keys = "date_of_creation",
     .description = "Advanced Companies House search — name-contains matching with "
       "SIC code, status, type and incorporation-date facets returned per hit" },
 
@@ -148,7 +154,8 @@ static const hp_source HP_UK[] = {
     .url = CH_BASE "/dissolved-search/companies?q={q}&items_per_page=40",
     .headers = CH_AUTH, .key_env = CH_KEY, .free_tier = 1, .array_path = "items",
     .title_keys = "company_name", .id_keys = "company_number",
-    .date_keys = "date_of_cessation", .max_items = 40,
+    .date_keys = "date_of_cessation",
+    .page_param = "start_index", .page_size = 40,
     .description = "Dissolved UK companies — the history that name search hides. "
       "Previous names, incorporation and cessation dates, last registered office" },
 
@@ -159,7 +166,6 @@ static const hp_source HP_UK[] = {
     .tags = "\"uk\",\"insolvency\",\"gazette\"", .free_tier = 1,
     .url = "https://www.thegazette.co.uk/insolvency/notice/data.json?text={q}&results-page-size=40",
     .array_path = "entry", .title_keys = "title", .date_keys = "updated",
-    .max_items = 40,
     .description = "Statutory UK insolvency notices (winding-up petitions, "
       "administrations, creditor meetings, liquidator appointments) matching an "
       "entity — the legally required publication, searchable as data" },
@@ -170,7 +176,6 @@ static const hp_source HP_UK[] = {
     .tags = "\"uk\",\"gazette\"", .free_tier = 1,
     .url = "https://www.thegazette.co.uk/all-notices/notice/data.json?text={q}&results-page-size=40",
     .array_path = "entry", .title_keys = "title", .date_keys = "updated",
-    .max_items = 40,
     .description = "All London/Edinburgh/Belfast Gazette notices mentioning an "
       "entity — company, personal-insolvency, deceased-estate, planning, honours "
       "and state notices in one query" },
@@ -195,7 +200,8 @@ static const hp_source HP_UK[] = {
     .want = HP_NUMERIC, .key_env = "UK_CHARITY_KEY", .free_tier = 1,
     .url = "https://api.charitycommission.gov.uk/register/api/charitytrustee/{qd}/0",
     .headers = { "Ocp-Apim-Subscription-Key: {key}", NULL },
-    .title_keys = "trustee_name", .id_keys = "trustee_id", .max_items = 50,
+    .title_keys = "trustee_name", .id_keys = "trustee_id",
+    .page_param = "page", .page_start = 1,
     .description = "The trustee board of a registered charity — names and trustee "
       "ids, which link the same individual across every charity they sit on" },
 
@@ -207,7 +213,6 @@ static const hp_source HP_UK[] = {
     .url = "https://api.charitycommission.gov.uk/register/api/charityfinancialhistory/{qd}/0",
     .headers = { "Ocp-Apim-Subscription-Key: {key}", NULL },
     .title_keys = "financial_period_end_date", .date_keys = "financial_period_end_date",
-    .max_items = 25,
     .description = "Year-by-year income and expenditure of a registered charity — "
       "the series that shows when money started or stopped moving" },
 
@@ -218,9 +223,9 @@ static const hp_source HP_UK[] = {
     .tags = "\"uk\",\"pep\",\"parliament\"", .free_tier = 1,
     .url = "https://members-api.parliament.uk/api/Members/Search?Name={q}&take=20",
     .array_path = "items", .title_keys = "nameDisplayAs,nameFullTitle",
-    .id_keys = "id", .max_items = 20,
+    .id_keys = "id",
     .detail_url = "https://members-api.parliament.uk/api/Members/{v}/RegisteredInterests",
-    .detail_key = "id", .detail_max = 5,
+    .detail_key = "id",
     .description = "UK MPs and Lords by name, then a second hop into each member's "
       "Register of Financial Interests — donations, directorships, shareholdings "
       "and overseas visits declared by that member" },
@@ -230,7 +235,7 @@ static const hp_source HP_UK[] = {
     .portal = "https://hansard.parliament.uk", .record_type = "uk-hansard",
     .tags = "\"uk\",\"parliament\"", .free_tier = 1,
     .url = "https://hansard-api.parliament.uk/search.json?queryParameters.searchTerm={q}&queryParameters.take=25",
-    .title_keys = "Title,MemberName", .date_keys = "SittingDate", .max_items = 25,
+    .title_keys = "Title,MemberName", .date_keys = "SittingDate",
     .description = "Every mention of an entity in the UK parliamentary record — "
       "who said it, in which debate, on which sitting day" },
 
@@ -252,7 +257,7 @@ static const hp_source HP_UK[] = {
     .url = "https://landregistry.data.gov.uk/data/ppi/transaction-record.json"
            "?_pageSize=40&propertyAddress.postcode={qU}",
     .title_keys = "propertyAddress.paon,propertyAddress.street",
-    .date_keys = "transactionDate", .max_items = 40,
+    .date_keys = "transactionDate",
     .description = "Every recorded sale price at a UK postcode — address, price, "
       "date, property type, new-build and freehold/leasehold flags" },
 
@@ -262,9 +267,8 @@ static const hp_source HP_UK[] = {
     .tags = "\"uk\",\"health\"", .free_tier = 1,
     .url = "https://directory.spineservices.nhs.uk/ORD/2-0-0/organisations?Name={q}&Limit=40",
     .array_path = "Organisations", .title_keys = "Name", .id_keys = "OrgId",
-    .max_items = 40,
     .detail_url = "https://directory.spineservices.nhs.uk/ORD/2-0-0/organisations/{v}",
-    .detail_key = "OrgId", .detail_max = 5,
+    .detail_key = "OrgId",
     .description = "NHS ODS organisation codes — trusts, GP practices, pharmacies "
       "and suppliers — with a second hop into the full record: roles, addresses, "
       "operational dates and successor relationships" },

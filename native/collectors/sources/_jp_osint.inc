@@ -113,7 +113,14 @@ static inline const char *jo_next_entry(const char **cur) {
  * visible text or href contains the query bytes. Everything emitted (link text,
  * href) is REAL content extracted from the page; nothing is synthesized. Pages
  * that are JS-rendered or shaped differently simply yield 0 (honest empty).
- * Returns the number emitted. `base` is prepended to root-relative hrefs. */
+ * Returns the number emitted. `base` is prepended to root-relative hrefs.
+ *
+ * EXHAUSTIVE USE (docs/SOURCE_EXHAUSTIVENESS.md): `max <= 0` means EVERY
+ * matching anchor on the page — the caller does not get an implicit cap. When a
+ * caller does pass a positive max and the page had more, the shortfall is
+ * logged with both numbers so the discard is visible. The dedupe table grows
+ * instead of wrapping at a fixed 64, so a long listing cannot re-emit or drop
+ * its tail. */
 static inline int jo_emit_anchors(const source_ctx *ctx, intel_sink *sink,
                            const char *url, const char *href_must,
                            const char *service, const char *record_type,
@@ -121,11 +128,11 @@ static inline int jo_emit_anchors(const source_ctx *ctx, intel_sink *sink,
                            int max, const char *tag) {
   char *html = jo_get(ctx, url, NULL, tag);
   if (!html) return 0;
-  int emitted = 0;
+  int emitted = 0, matched = 0;
   const char *p = html;
-  /* small dedupe ring of hrefs already emitted */
-  char *seen[64]; int nseen = 0;
-  while (emitted < max && (p = strstr(p, "<a ")) != NULL) {
+  /* dedupe table of hrefs already emitted — grown, never wrapped */
+  char **seen = NULL; int nseen = 0, seencap = 0;
+  while ((p = strstr(p, "<a ")) != NULL) {
     const char *h = strstr(p, "href=\"");
     const char *tagend = strchr(p, '>');
     p += 3;
@@ -159,7 +166,14 @@ static inline int jo_emit_anchors(const source_ctx *ctx, intel_sink *sink,
     int dup = 0;
     for (int i = 0; i < nseen; i++) if (strcmp(seen[i], href) == 0) { dup = 1; break; }
     if (dup) continue;
-    if (nseen < 64) seen[nseen++] = strdup(href);
+    matched++;
+    if (max > 0 && emitted >= max) continue;   /* count what we are skipping */
+    if (nseen == seencap) {
+      int nc = seencap ? seencap * 2 : 64;
+      char **np = (char **)realloc(seen, (size_t)nc * sizeof *np);
+      if (np) { seen = np; seencap = nc; }
+    }
+    if (nseen < seencap) seen[nseen++] = strdup(href);
 
     char link[900];
     if (strncmp(href, "http", 4) == 0) snprintf(link, sizeof link, "%s", href);
@@ -185,8 +199,14 @@ static inline int jo_emit_anchors(const source_ctx *ctx, intel_sink *sink,
     free(pj);
   }
   for (int i = 0; i < nseen; i++) free(seen[i]);
+  free(seen);
   free(html);
-  fprintf(stderr, "[%s] emitted %d\n", tag, emitted);
+  if (max > 0 && matched > emitted)
+    fprintf(stderr, "[%s] emitted %d of %d matching anchors — %d DISCARDED by the "
+                    "caller's cap (docs/SOURCE_EXHAUSTIVENESS.md)\n",
+            tag, emitted, matched, matched - emitted);
+  else
+    fprintf(stderr, "[%s] emitted %d\n", tag, emitted);
   return emitted;
 }
 

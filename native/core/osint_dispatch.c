@@ -139,7 +139,10 @@ typedef struct { char *name; int records; } src_acc;
 typedef struct {
   intel_sink  base;          /* what the source sees */
   intel_sink *real;          /* the true intel_sink (may be NULL) */
-  char       *cap;           /* captured result JSON (last emitted) */
+  /* captured result JSON — EVERY emitted payload, in emit order. Keeping only
+   * the last one (what this did before) silently discarded N-1 of N fetched
+   * records at the dispatcher seam; see docs/SOURCE_EXHAUSTIVENESS.md. */
+  cJSON      *caps;          /* JSON array, created lazily */
   int         n_emit;
   int         any_new;
   /* per-emit source attribution, deduped by name (empty name = "the service
@@ -166,10 +169,18 @@ static void acc_add(dual_sink *d, const char *name) {
 static int dual_emit(struct intel_sink *s, const intel_item *it) {
   dual_sink *d = (dual_sink *)s->ctx;
   int rc = d->real ? d->real->emit(d->real, it) : 1;
-  /* capture the service's payload: body preferred, else properties */
+  /* capture the service's payload: body preferred, else properties. Every
+   * record is appended — parsed when it is JSON so downstream keeps the
+   * structure, otherwise kept verbatim as a string. */
   const char *payload = (it->body && *it->body) ? it->body
                        : (it->properties_json ? it->properties_json : NULL);
-  if (payload) { free(d->cap); d->cap = strdup(payload); }
+  if (payload) {
+    if (!d->caps) d->caps = cJSON_CreateArray();
+    if (d->caps) {
+      cJSON *p = cJSON_Parse(payload);
+      cJSON_AddItemToArray(d->caps, p ? p : cJSON_CreateString(payload));
+    }
+  }
   /* attribute this row to an underlying source: the collector's explicit
    * sub_source_id, else "" — finalize fills "" from the real HTTP host(s) the
    * collector contacted (automatic for every HTTP collector), or the service
@@ -217,8 +228,17 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
 
   out->success    = (rc >= 0 && ds.n_emit > 0) ? 1 : 0;
   out->confidence = out->success ? 70 : 0;     /* JS default */
-  out->data       = ds.cap;                    /* hand ownership to caller */
-  ds.cap = NULL;
+  /* Hand over EVERY captured record, with its own count so a consumer can
+   * bound its view without guessing how much it is not seeing. */
+  out->records = ds.caps ? cJSON_GetArraySize(ds.caps) : 0;
+  if (ds.caps) {
+    cJSON *wrap = cJSON_CreateObject();
+    cJSON_AddNumberToObject(wrap, "record_count", out->records);
+    cJSON_AddItemToObject(wrap, "records", ds.caps);   /* wrap takes ownership */
+    ds.caps = NULL;
+    out->data = cJSON_PrintUnformatted(wrap);
+    cJSON_Delete(wrap);
+  }
   if (!out->success && !out->error)
     out->error = strdup(rc < 0 ? "service_error" : "no_data");
 
@@ -269,6 +289,7 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
   cJSON_Delete(arr);
   for (int i = 0; i < ds.n_srcs; i++) free(ds.srcs[i].name);
   free(ds.srcs);
+  cJSON_Delete(ds.caps);        /* NULL unless the wrap above never ran */
 
   http_client_free(http);   /* after reading its host log */
 

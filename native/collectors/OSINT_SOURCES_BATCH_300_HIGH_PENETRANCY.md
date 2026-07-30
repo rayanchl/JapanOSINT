@@ -74,10 +74,17 @@ optionally the follow-up endpoint that turns a list hit into a full record.
   conventional key lists. An upstream that renames its envelope degrades to
   fewer resolved fields — never to invented ones.
 - **Full-record properties**: every scalar in the record is flattened into
-  `properties` with dotted keys (bounded: 160 keys, depth 4, 12 array members),
-  so the emitted item is the record, not a headline.
-- **Second hop**: `detail_url` + `detail_key` fetch the record behind a list hit
-  and merge it under `detail.*`, capped at `detail_max` per run.
+  `properties` with dotted keys, so the emitted item is the record, not a
+  headline. The remaining bounds (2048 keys, 256 array members, depth 8) are
+  memory guards, and hitting one stamps `_fields_dropped` / `_array_truncated`
+  on that record.
+- **Exhaustive by default** (docs/SOURCE_EXHAUSTIVENESS.md): every record of
+  every page is used. `max_items` defaults to *no cap*; `next_path` / `page_param`
+  walk pagination to the end (44 rows declare it); the second hop deepens **every**
+  list record up to `$JO_HP_DETAIL_MAX` (default 25) and stamps `_detail_pending`
+  / `_detail_error` otherwise. If anything is left unused the engine emits a
+  `collector-truncation-notice` record naming records_used vs records_available
+  and the remedy.
 
 ### Honesty properties (enforced, and tested)
 
@@ -103,8 +110,11 @@ values that reach the sink are bytes that came back over the wire in that run.
 - Fresh-DB boot: `[db] seeded sources from registry (2502 new rows)`,
   `[selftest] PASS`, integrity ok — all 300 carry name/type/category/description
   into the `sources` table and are dispatchable by id.
-- `make hptest` — 37 assertions over the real engine and one real shipped row
-  (`UK_CH_PSC`): token expansion, nested/array flattening, link templates,
+- `make audit-sources` — the exhaustive-use scan reports 0 findings across all
+  15 new files (strict set); the pre-existing collectors' backlog is enumerated.
+- `make hptest` — 48 assertions over the real engine and one real shipped row
+  (`UK_CH_PSC`): token expansion, pagination (next-link and offset), no-implicit-cap
+  emission, truncation disclosure, nested/array flattening, link templates,
   remote-key composition, array auto-discovery, detail-hop merge and call
   counting, headerless-CSV columns, HTML href filtering and dedupe, Basic-auth
   header construction, credential gating, shape gating, POST bodies, and the

@@ -125,6 +125,45 @@ static void assign_services(osint_request *rp, tasklist *tl) {
   free(names);
 }
 
+/* An LLM prompt is the ONE place in this pipeline that physically cannot take
+ * every record a service returned — context is finite. The exhaustive-use rule
+ * (docs/SOURCE_EXHAUSTIVENESS.md) therefore does not say "never bound"; it says
+ * a bound must be the consumer's, explicit, and visible. So: the stored result
+ * and /api/search/results keep every record, and the prompt gets a labelled
+ * view — `records` trimmed to JO_PROMPT_RECORDS_PER_SERVICE (default 8) with
+ * `records_shown`, `record_count` and `prompt_truncated` stated in-band, so the
+ * model knows what it is not being shown instead of assuming it saw it all. */
+static int prompt_records_per_service(void) {
+  const char *e = getenv("JO_PROMPT_RECORDS_PER_SERVICE");
+  int v = (e && *e) ? atoi(e) : 0;
+  return v > 0 ? v : 8;
+}
+
+static char *results_view_for_prompt(const cJSON *results) {
+  cJSON *wrap = cJSON_CreateObject();
+  cJSON *svcs = cJSON_Duplicate(results, 1);
+  int keep = prompt_records_per_service();
+  cJSON *svc;
+  cJSON_ArrayForEach(svc, svcs) {
+    cJSON *data = cJSON_GetObjectItem(svc, "data");
+    cJSON *recs = data ? cJSON_GetObjectItem(data, "records") : NULL;
+    if (!recs || !cJSON_IsArray(recs)) continue;
+    int total = cJSON_GetArraySize(recs);
+    cJSON_AddNumberToObject(data, "records_shown", total > keep ? keep : total);
+    if (total > keep) {
+      for (int i = total - 1; i >= keep; i--) cJSON_DeleteItemFromArray(recs, i);
+      cJSON_AddBoolToObject(data, "prompt_truncated", 1);
+      cJSON_AddStringToObject(data, "prompt_truncated_note",
+        "only the first records are shown here; ALL record_count records were "
+        "fetched, stored and are served by /api/search/results");
+    }
+  }
+  cJSON_AddItemToObject(wrap, "services", svcs);
+  char *out = cJSON_PrintUnformatted(wrap);
+  cJSON_Delete(wrap);
+  return out;
+}
+
 /* runTasks: dispatch each (persisting LIVE via `sink`), append to results,
  * update progress (== JS runTasks; sequential — faithful, dispatch is the
  * unit of work). */
@@ -148,6 +187,9 @@ static void run_tasks(osint_request *rp, db_handle *db, llm_client *llm,
       cJSON *d = cJSON_Parse(r.data);            /* keep structure if JSON */
       cJSON_AddItemToObject(sr, "data", d ? d : cJSON_CreateString(r.data));
     } else cJSON_AddItemToObject(sr, "data", cJSON_CreateNull());
+    /* Every record the service emitted is inside data.records; carry the count
+     * up here too so a client can see at a glance that nothing was dropped. */
+    cJSON_AddNumberToObject(sr, "record_count", r.records);
     cJSON_AddItemToObject(sr, "error",
       r.error ? cJSON_CreateString(r.error) : cJSON_CreateNull());
     /* underlying sources the service hit (provider/endpoint/corpus-source) */
@@ -255,10 +297,7 @@ void osint_pipeline_run(db_handle *db, llm_client *llm,
     int pct = 60 + round * 6; if (pct > 85) pct = 85;
     progress_set_phase(rp, "followup_analyzing", pct);
 
-    cJSON *wrap = cJSON_CreateObject();
-    cJSON_AddItemToObject(wrap, "services", cJSON_Duplicate(results, 1));
-    char *rj = cJSON_PrintUnformatted(wrap);
-    cJSON_Delete(wrap);
+    char *rj = results_view_for_prompt(results);   /* labelled, bounded view */
     char *p2 = prompt_phase2(query, rj, svcs ? svcs : "");
     free(rj);
     char *m2 = prompt_to_messages(p2);
@@ -335,10 +374,7 @@ void osint_pipeline_run(db_handle *db, llm_client *llm,
    * schema. Any failure falls back to the counts template. */
   char *synth_llm = NULL;
   {
-    cJSON *wrap = cJSON_CreateObject();
-    cJSON_AddItemToObject(wrap, "services", cJSON_Duplicate(results, 1));
-    char *rj = cJSON_PrintUnformatted(wrap);
-    cJSON_Delete(wrap);
+    char *rj = results_view_for_prompt(results);   /* labelled, bounded view */
     char *ps = rj ? prompt_synthesis(query, rj) : NULL;
     free(rj);
     char *ms = ps ? prompt_to_messages(ps) : NULL;

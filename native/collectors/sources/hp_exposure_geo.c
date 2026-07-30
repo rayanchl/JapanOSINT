@@ -21,8 +21,7 @@ static const hp_source HP_EXPOSURE_GEO[] = {
     .tags = "\"breach\",\"infostealer\"", .want = HP_EMAIL,
     .key_env = "HIBP_API_KEY", .free_tier = 0,
     .url = "https://haveibeenpwned.com/api/v3/stealerlogsbyemail/{q}",
-    .headers = { "hibp-api-key: {key}", "User-Agent: JapanOSINT", NULL },
-    .max_items = 60, .title_keys = "value",
+    .headers = { "hibp-api-key: {key}", "User-Agent: JapanOSINT", NULL }, .title_keys = "value",
     .description = "Domains where an email address appeared in infostealer malware "
       "logs — i.e. sites this person entered credentials into on an infected machine. "
       "A different and usually more current signal than a breach listing" },
@@ -35,7 +34,6 @@ static const hp_source HP_EXPOSURE_GEO[] = {
     .url = "https://haveibeenpwned.com/api/v3/pasteaccount/{q}",
     .headers = { "hibp-api-key: {key}", "User-Agent: JapanOSINT", NULL },
     .title_keys = "Title,Source", .id_keys = "Id", .date_keys = "Date",
-    .max_items = 40,
     .description = "Public pastes in which an address appears — source site, paste "
       "id, title, date and how many accounts the paste held. Pastes surface leaks "
       "that never get catalogued as named breaches" },
@@ -46,7 +44,7 @@ static const hp_source HP_EXPOSURE_GEO[] = {
     .tags = "\"breach\",\"catalog\"", .free_tier = 1,
     .url = "https://haveibeenpwned.com/api/v3/breaches",
     .headers = { "User-Agent: JapanOSINT", NULL },
-    .filter_query = 1, .max_items = 20, .title_keys = "Name,Title",
+    .filter_query = 1, .title_keys = "Name,Title",
     .id_keys = "Name", .date_keys = "BreachDate",
     .description = "The keyless HIBP breach catalogue filtered to the query — breach "
       "date, added date, record count, the exact data classes exposed and whether the "
@@ -88,7 +86,6 @@ static const hp_source HP_EXPOSURE_GEO[] = {
     .tags = "\"breach\"", .free_tier = 1,
     .url = "https://leakcheck.io/api/public?check={q}",
     .array_path = "sources", .title_keys = "name", .date_keys = "date",
-    .max_items = 40,
     .description = "Keyless breach lookup for an email, username or phone — which "
       "named sources contain the identifier and the breach date of each, without "
       "returning passwords" },
@@ -98,7 +95,8 @@ static const hp_source HP_EXPOSURE_GEO[] = {
     .portal = "https://www.proxynova.com/tools/comb", .record_type = "credential-exposure",
     .tags = "\"breach\",\"combolist\"", .free_tier = 1,
     .url = "https://api.proxynova.com/comb?query={q}&start=0&limit=40",
-    .array_path = "lines", .max_items = 40, .title_keys = "0",
+    .array_path = "lines", .title_keys = "0",
+    .page_param = "start", .page_size = 40, .page_start = 0,
     .description = "Search across the aggregated COMB credential compilation for an "
       "email, username or domain fragment — shows whether an identifier circulates in "
       "public combolists, which is the corpus credential-stuffing actually uses" },
@@ -109,7 +107,7 @@ static const hp_source HP_EXPOSURE_GEO[] = {
     .tags = "\"code\",\"leaks\"", .free_tier = 1,
     .url = "https://grep.app/api/search?q={q}&page_size=40",
     .array_path = "hits.hits", .title_keys = "repo.raw,path.raw",
-    .id_keys = "id", .max_items = 40,
+    .id_keys = "id",
     .description = "Literal search across hundreds of thousands of public "
       "repositories — internal hostnames, API endpoints, employee emails and keys "
       "committed by mistake, found by exact string rather than by repo name" },
@@ -121,7 +119,7 @@ static const hp_source HP_EXPOSURE_GEO[] = {
     .tags = "\"osm\",\"people\",\"timeline\"", .free_tier = 1,
     .url = "https://api.openstreetmap.org/api/0.6/changesets.json?display_name={qn}&limit=50",
     .array_path = "changesets", .title_keys = "tags.comment,id", .id_keys = "id",
-    .date_keys = "created_at", .max_items = 50,
+    .date_keys = "created_at",
     .description = "Every edit session by an OSM contributor — comment, editor "
       "software, bounding box and timestamp. Edit geography and edit hours localise a "
       "contributor as reliably as any social profile" },
@@ -134,7 +132,6 @@ static const hp_source HP_EXPOSURE_GEO[] = {
     .array_path = "features", .title_keys = "properties.comments.0.text",
     .id_keys = "properties.id", .date_keys = "properties.date_created",
     .lat_key = "geometry.coordinates.1", .lon_key = "geometry.coordinates.0",
-    .max_items = 50,
     .description = "Free-text notes left on the map mentioning a term — local "
       "observations about businesses, closures, access restrictions and construction, "
       "each geolocated and attributed to a contributor" },
@@ -147,7 +144,7 @@ static const hp_source HP_EXPOSURE_GEO[] = {
            "&addressdetails=1&extratags=1&namedetails=1&limit=25",
     .headers = { "User-Agent: JapanOSINT (research)", NULL },
     .title_keys = "display_name,name", .id_keys = "osm_id",
-    .lat_key = "lat", .lon_key = "lon", .max_items = 25,
+    .lat_key = "lat", .lon_key = "lon",
     .description = "Place search returning the extra OSM tags most geocoders drop — "
       "operator, brand, website, phone, opening hours and official reference numbers, "
       "which is what links a physical site to a corporate operator" },
@@ -159,7 +156,7 @@ static const hp_source HP_EXPOSURE_GEO[] = {
     .key_env = "GEONAMES_USER", .free_tier = 1,
     .url = "http://api.geonames.org/hierarchyJSON?geonameId={qd}&username={key}",
     .array_path = "geonames", .title_keys = "name,toponymName", .id_keys = "geonameId",
-    .lat_key = "lat", .lon_key = "lng", .max_items = 25,
+    .lat_key = "lat", .lon_key = "lng",
     .description = "The full administrative chain above a GeoNames place — continent, "
       "country, state, county, municipality — which resolves ambiguous place names "
       "into a single unambiguous jurisdiction" },
@@ -170,7 +167,7 @@ static const hp_source HP_EXPOSURE_GEO[] = {
     .tags = "\"satellite\",\"imagery\"", .free_tier = 1,
     .url = "https://cmr.earthdata.nasa.gov/search/granules.json?keyword={q}&page_size=40",
     .array_path = "feed.entry", .title_keys = "title,dataset_id", .id_keys = "id",
-    .date_keys = "time_start", .max_items = 40,
+    .date_keys = "time_start",
     .description = "NASA's common metadata repository — individual satellite data "
       "granules matching a place or instrument, with acquisition time, spatial extent "
       "and direct download links across every NASA DAAC" },

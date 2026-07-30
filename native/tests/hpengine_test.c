@@ -138,6 +138,24 @@ static const hp_source T[] = {
     .want = HP_ICAO24, .array_path = "ac", .title_keys = "r", .id_keys = "hex",
     .record_type = "t-icao", .free_tier = 1, .description = "d" },
 
+  { .id = "T_PAGE_NEXT", .name = "next-link pagination", .url = "https://x.test/pn?q={q}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .next_path = "next", .record_type = "t-page", .free_tier = 1, .description = "d" },
+
+  { .id = "T_PAGE_PARAM", .name = "offset pagination", .url = "https://x.test/po?q={q}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "offset", .page_size = 2,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+
+  { .id = "T_CAPPED", .name = "declared cap", .url = "https://x.test/cap?q={q}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id", .max_items = 2,
+    .record_type = "t-cap", .free_tier = 1, .description = "d" },
+
+  { .id = "T_DEEP_ALL", .name = "deepen every record", .url = "https://x.test/da?q={q}",
+    .array_path = "items", .title_keys = "name", .id_keys = "num",
+    .detail_url = "https://x.test/d2/{v}", .detail_key = "num",
+    .record_type = "t-deepall", .free_tier = 1, .description = "d" },
+
   { .id = "T_ERR", .name = "upstream error", .url = "https://x.test/err?q={q}",
     .record_type = "t-err", .free_tier = 1, .description = "d" },
 };
@@ -253,6 +271,76 @@ int main(void) {
   rc = run_source("T_ICAO", "Acme Airways");
   ok(g_ncalls == 1, "HP_ICAO24 rejects a name without fetching");
 
+  /* 9c. EXHAUSTIVE USE: no implicit cap — every record in the response is used */
+  fx_reset();
+  fx_add("/s?q=", 200,
+    "{\"results\":[{\"legalName\":\"A\",\"orgno\":\"1\"},{\"legalName\":\"B\",\"orgno\":\"2\"},"
+    "{\"legalName\":\"C\",\"orgno\":\"3\"},{\"legalName\":\"D\",\"orgno\":\"4\"},"
+    "{\"legalName\":\"E\",\"orgno\":\"5\"},{\"legalName\":\"F\",\"orgno\":\"6\"},"
+    "{\"legalName\":\"G\",\"orgno\":\"7\"},{\"legalName\":\"H\",\"orgno\":\"8\"},"
+    "{\"legalName\":\"I\",\"orgno\":\"9\"},{\"legalName\":\"J\",\"orgno\":\"10\"},"
+    "{\"legalName\":\"K\",\"orgno\":\"11\"},{\"legalName\":\"L\",\"orgno\":\"12\"},"
+    "{\"legalName\":\"M\",\"orgno\":\"13\"},{\"legalName\":\"N\",\"orgno\":\"14\"},"
+    "{\"legalName\":\"O\",\"orgno\":\"15\"},{\"legalName\":\"P\",\"orgno\":\"16\"},"
+    "{\"legalName\":\"Q\",\"orgno\":\"17\"},{\"legalName\":\"R\",\"orgno\":\"18\"},"
+    "{\"legalName\":\"S\",\"orgno\":\"19\"},{\"legalName\":\"T\",\"orgno\":\"20\"},"
+    "{\"legalName\":\"U\",\"orgno\":\"21\"},{\"legalName\":\"V\",\"orgno\":\"22\"},"
+    "{\"legalName\":\"W\",\"orgno\":\"23\"},{\"legalName\":\"X\",\"orgno\":\"24\"},"
+    "{\"legalName\":\"Y\",\"orgno\":\"25\"},{\"legalName\":\"Z\",\"orgno\":\"26\"},"
+    "{\"legalName\":\"AA\",\"orgno\":\"27\"},{\"legalName\":\"AB\",\"orgno\":\"28\"}]}");
+  rc = run_source("T_JSON", "many 1234");
+  ok(rc == 0 && g_ncap == 28, "no declared cap = all 28 records used (was 25)");
+
+  /* 9d. a declared cap is honoured AND disclosed as a truncation notice */
+  fx_reset();
+  fx_add("/cap?q=", 200,
+    "{\"items\":[{\"name\":\"A\",\"id\":\"1\"},{\"name\":\"B\",\"id\":\"2\"},"
+    "{\"name\":\"C\",\"id\":\"3\"},{\"name\":\"D\",\"id\":\"4\"}]}");
+  rc = run_source("T_CAPPED", "x");
+  ok(rc == 0 && g_ncap == 3, "declared cap emits 2 records + 1 truncation notice");
+  ok(!strcmp(g_cap[2].rtype, "collector-truncation-notice"),
+     "the shortfall is disclosed as a record, not just a log line");
+  ok(strstr(g_cap[2].props, "\"records_available\":4") != NULL &&
+     strstr(g_cap[2].props, "\"records_used\":2") != NULL,
+     "notice states records_used vs records_available");
+  ok(strstr(g_cap[2].props, "\"remedy\"") != NULL,
+     "notice names the remedy (raise the cap) rather than just complaining");
+
+  /* 9e. next-link pagination walks to the end */
+  fx_reset();
+  fx_add("/pn?q=", 200,
+    "{\"items\":[{\"name\":\"p1a\",\"id\":\"1\"},{\"name\":\"p1b\",\"id\":\"2\"}],"
+    "\"next\":\"https://x.test/pn2\"}");
+  fx_add("/pn2", 200,
+    "{\"items\":[{\"name\":\"p2a\",\"id\":\"3\"}],\"next\":null}");
+  rc = run_source("T_PAGE_NEXT", "x");
+  ok(rc == 0 && g_ncap == 3 && g_ncalls == 2,
+     "next_path pagination reads page 2 instead of discarding it");
+
+  /* 9f. offset pagination stops when a page comes back empty */
+  fx_reset();
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"q3\",\"id\":\"3\"}]}");
+  fx_add("offset=4", 200, "{\"items\":[]}");
+  fx_add("/po?q=", 200,
+    "{\"items\":[{\"name\":\"q1\",\"id\":\"1\"},{\"name\":\"q2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_PARAM", "x");
+  ok(rc == 0 && g_ncap == 3, "offset pagination collects every page");
+  ok(strstr(g_last_url, "offset=4") != NULL, "walk ends on the first empty page");
+
+  /* 9g. the second hop now deepens EVERY record, not the first three */
+  fx_reset();
+  fx_add("/da?q=", 200,
+    "{\"items\":[{\"name\":\"A\",\"num\":\"1\"},{\"name\":\"B\",\"num\":\"2\"},"
+    "{\"name\":\"C\",\"num\":\"3\"},{\"name\":\"D\",\"num\":\"4\"},"
+    "{\"name\":\"E\",\"num\":\"5\"}]}");
+  fx_add("/d2/", 200, "{\"role\":\"member\"}");
+  rc = run_source("T_DEEP_ALL", "x");
+  ok(rc == 0 && g_ncap == 5 && g_ncalls == 6, "every list record gets its detail hop");
+  int deep_all = 1;
+  for (int i = 0; i < 5; i++)
+    if (!strstr(g_cap[i].props, "\"detail.role\":\"member\"")) deep_all = 0;
+  ok(deep_all, "all five records carry their detail block");
+
   /* 10. a real shipped row: Companies House PSC (from hp_uk_deep.c) */
   fx_reset();
   setenv("COMPANIES_HOUSE_API_KEY", "chkey", 1);
@@ -260,7 +348,13 @@ int main(void) {
     "{\"items\":[{\"name\":\"J SMITH\",\"notified_on\":\"2019-04-01\","
     "\"natures_of_control\":[\"ownership-of-shares-75-to-100-percent\"]}]}");
   rc = run_source("UK_CH_PSC", "00445790");
-  ok(rc == 0 && g_ncap == 1, "UK_CH_PSC emitted from a real shipped row");
+  /* The row declares start_index paging, and this fixture answers every page,
+   * so the walk runs to the page ceiling and then DISCLOSES it — 10 records
+   * plus one truncation notice. Before the exhaustive-use work this row would
+   * have read page 1 only and reported nothing about the rest. */
+  ok(rc == 0 && g_ncap == 11, "UK_CH_PSC paginated and disclosed the page ceiling");
+  ok(!strcmp(g_cap[10].rtype, "collector-truncation-notice"),
+     "page-ceiling stop is disclosed as a record");
   ok(strstr(g_last_url, "/company/00445790/persons-with-significant-control") != NULL,
      "UK_CH_PSC built the documented CH path");
   ok(strstr(g_cap[0].props, "natures_of_control.0") != NULL,

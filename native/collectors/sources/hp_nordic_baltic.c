@@ -26,7 +26,7 @@ static const hp_source HP_NORDIC[] = {
     .portal = "https://data.brreg.no", .record_type = "no-officer",
     .tags = "\"no\",\"officers\"", .want = HP_NUMERIC, .free_tier = 1,
     .url = "https://data.brreg.no/enhetsregisteret/api/enheter/{qd}/roller",
-    .title_keys = "person.navn.fornavn,enhet.navn.0,type.beskrivelse", .max_items = 50,
+    .title_keys = "person.navn.fornavn,enhet.navn.0,type.beskrivelse",
     .description = "Every registered role in a Norwegian entity — chair, board "
       "members, CEO, auditor, accountant, contact person — with the natural person "
       "or company holding each role. Keyless, complete, and named" },
@@ -37,7 +37,8 @@ static const hp_source HP_NORDIC[] = {
     .tags = "\"no\",\"branches\"", .want = HP_NUMERIC, .free_tier = 1,
     .url = "https://data.brreg.no/enhetsregisteret/api/underenheter?overordnetEnhet={qd}&size=50",
     .array_path = "_embedded.underenheter", .title_keys = "navn",
-    .id_keys = "organisasjonsnummer", .max_items = 50,
+    .id_keys = "organisasjonsnummer",
+    .next_path = "_links.next.href",
     .description = "The operating sites of a Norwegian company — each sub-unit with "
       "its own org number, address, activity and employee count; where the parent "
       "record shows one entity, this shows the real footprint" },
@@ -48,9 +49,10 @@ static const hp_source HP_NORDIC[] = {
     .tags = "\"no\",\"registry\"", .free_tier = 1,
     .url = "https://data.brreg.no/enhetsregisteret/api/enheter?navn={q}&size=40",
     .array_path = "_embedded.enheter", .title_keys = "navn",
-    .id_keys = "organisasjonsnummer", .max_items = 40,
+    .id_keys = "organisasjonsnummer",
     .detail_url = "https://data.brreg.no/enhetsregisteret/api/enheter/{v}/roller",
-    .detail_key = "organisasjonsnummer", .detail_max = 3,
+    .detail_key = "organisasjonsnummer",
+    .next_path = "_links.next.href",
     .description = "Norwegian entities by name, each deepened with its role list — "
       "one query goes from a company name to the people on its board" },
 
@@ -70,7 +72,7 @@ static const hp_source HP_NORDIC[] = {
     .portal = "https://datacvr.virk.dk", .record_type = "dk-officer",
     .tags = "\"dk\",\"officers\"", .free_tier = 1,
     .url = "https://cvrapi.dk/api?search={q}&country=dk",
-    .array_path = "owners", .title_keys = "name", .max_items = 40,
+    .array_path = "owners", .title_keys = "name",
     .description = "The owner and management rows of a Danish company as published "
       "in CVR — real personal names attached to a registered company, which is what "
       "makes Denmark the most penetrable registry in Europe" },
@@ -82,7 +84,7 @@ static const hp_source HP_NORDIC[] = {
     .url = "https://api.dataforsyningen.dk/adresser?q={q}&per_side=25",
     .title_keys = "adressebetegnelse", .id_keys = "id",
     .lat_key = "adgangsadresse.adgangspunkt.koordinater.1",
-    .lon_key = "adgangsadresse.adgangspunkt.koordinater.0", .max_items = 25,
+    .lon_key = "adgangsadresse.adgangspunkt.koordinater.0",
     .description = "Authoritative Danish address lookup — official address id, "
       "municipality/parish codes and access-point coordinates for an address "
       "string; the key that joins CVR registrations to a physical place" },
@@ -95,7 +97,7 @@ static const hp_source HP_NORDIC[] = {
     .tags = "\"se\",\"registry\"", .free_tier = 1,
     .url = "https://www.allabolag.se/what/{q}",
     .href_must = "/foretag/", .base = "https://www.allabolag.se",
-    .filter_query = 0, .max_items = 25,
+    .filter_query = 0,
     .description = "Swedish companies matching a name, as served by the public "
       "allabolag listing — organisation links only, from real page anchors. "
       "Bolagsverket itself has no open API, so this is the honest substitute" },
@@ -106,7 +108,7 @@ static const hp_source HP_NORDIC[] = {
     .portal = "https://poit.bolagsverket.se", .record_type = "se-notice",
     .tags = "\"se\",\"gazette\"", .free_tier = 1,
     .url = "https://poit.bolagsverket.se/poit-app/sok?fritext={q}",
-    .base = "https://poit.bolagsverket.se", .filter_query = 1, .max_items = 25,
+    .base = "https://poit.bolagsverket.se", .filter_query = 1,
     .description = "Swedish statutory gazette notices (bankruptcies, mergers, "
       "creditor calls, company changes) naming an entity — the legally required "
       "publication that Bolagsverket's closed API does not expose" },
@@ -118,7 +120,7 @@ static const hp_source HP_NORDIC[] = {
     .tags = "\"fi\",\"registry\"", .free_tier = 1,
     .url = "https://avoindata.prh.fi/opendata-ytj-api/v3/companies?name={q}",
     .array_path = "companies", .title_keys = "names.0.name", .id_keys = "businessId.value",
-    .date_keys = "registrationDate", .max_items = 40,
+    .date_keys = "registrationDate",
     .description = "Finnish Business Information System records — business id, all "
       "registered and auxiliary names with validity dates, company form, main line "
       "of business, addresses and registered-entry history" },
@@ -139,7 +141,7 @@ static const hp_source HP_NORDIC[] = {
     .portal = "https://www.skatturinn.is", .record_type = "is-company",
     .tags = "\"is\",\"registry\"", .free_tier = 1,
     .url = "https://www.skatturinn.is/fyrirtaekjaskra/leit/?nafn={q}",
-    .base = "https://www.skatturinn.is", .filter_query = 1, .max_items = 20,
+    .base = "https://www.skatturinn.is", .filter_query = 1,
     .description = "Icelandic company register hits for a name or kennitala — real "
       "anchors from the tax authority's public search; nothing when the page is "
       "served as JS only" },
@@ -149,7 +151,7 @@ static const hp_source HP_NORDIC[] = {
     .portal = "https://ariregister.rik.ee", .record_type = "ee-company",
     .tags = "\"ee\",\"registry\"", .free_tier = 1,
     .url = "https://ariregister.rik.ee/est/api/autocomplete?q={q}&results=40",
-    .title_keys = "name,text", .id_keys = "reg_code,code", .max_items = 40,
+    .title_keys = "name,text", .id_keys = "reg_code,code",
     .link_tmpl = "https://ariregister.rik.ee/eng/company/{v}", .link_keys = "reg_code",
     .description = "Estonian business-register entities matching a name or registry "
       "code — Estonia's register is fully public, so the code returned here opens "
@@ -161,7 +163,7 @@ static const hp_source HP_NORDIC[] = {
     .portal = "https://www.ur.gov.lv", .record_type = "lv-company",
     .tags = "\"lv\",\"registry\"", .free_tier = 1,
     .url = "https://info.ur.gov.lv/?#/search?q={q}",
-    .base = "https://info.ur.gov.lv", .filter_query = 1, .max_items = 20,
+    .base = "https://info.ur.gov.lv", .filter_query = 1,
     .description = "Latvian Register of Enterprises hits for a company name or "
       "registration number. The portal is largely client-rendered, so this row is "
       "expected to be thin — it never invents a record to compensate" },
@@ -172,7 +174,7 @@ static const hp_source HP_NORDIC[] = {
     .portal = "https://rekvizitai.vz.lt", .record_type = "lt-company",
     .tags = "\"lt\",\"registry\"", .free_tier = 1,
     .url = "https://rekvizitai.vz.lt/en/search/?q={q}",
-    .href_must = "/en/company/", .base = "https://rekvizitai.vz.lt", .max_items = 25,
+    .href_must = "/en/company/", .base = "https://rekvizitai.vz.lt",
     .description = "Lithuanian companies by name — the public directory that mirrors "
       "Registrų centras data (code, VAT number, address, manager) with per-company "
       "pages behind each hit" },
@@ -184,7 +186,8 @@ static const hp_source HP_NORDIC[] = {
     .tags = "\"no\",\"insolvency\"", .free_tier = 1,
     .url = "https://data.brreg.no/enhetsregisteret/api/enheter?navn={q}&konkurs=true&size=40",
     .array_path = "_embedded.enheter", .title_keys = "navn",
-    .id_keys = "organisasjonsnummer", .max_items = 40,
+    .id_keys = "organisasjonsnummer",
+    .next_path = "_links.next.href",
     .description = "Norwegian entities matching a name that are flagged bankrupt, "
       "under compulsory liquidation or winding up — a direct solvency check that "
       "needs no credit-bureau subscription" },
@@ -195,7 +198,6 @@ static const hp_source HP_NORDIC[] = {
     .tags = "\"dk\",\"branches\"", .free_tier = 1,
     .url = "https://cvrapi.dk/api?search={q}&country=dk",
     .array_path = "productionunits", .title_keys = "name", .id_keys = "pno",
-    .max_items = 40,
     .description = "The production units (P-numbers) under a Danish CVR number — "
       "each physical site with its own identifier, address, industry code and "
       "employee band" },
@@ -207,7 +209,6 @@ static const hp_source HP_NORDIC[] = {
     .tags = "\"fi\",\"procurement\"", .free_tier = 1,
     .url = "https://www.hankintailmoitukset.fi/en/public/procurements?search={q}",
     .href_must = "/procurement/", .base = "https://www.hankintailmoitukset.fi",
-    .max_items = 25,
     .description = "Finnish public procurement notices naming an entity — the "
       "contracting authority, subject and award links for each notice" },
 };

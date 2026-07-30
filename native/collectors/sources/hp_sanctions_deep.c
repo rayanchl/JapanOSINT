@@ -36,7 +36,6 @@ static const hp_source HP_SANCTIONS[] = {
     .post_body = "{\"queries\":{\"q1\":{\"schema\":\"Thing\",\"properties\":"
                  "{\"name\":[\"{Q}\"]}}}}",
     .array_path = "responses.q1.results", .title_keys = "caption", .id_keys = "id",
-    .max_items = 25,
     .description = "Fuzzy screening with match scores rather than substring hits — "
       "each candidate carries its score, features and the datasets it comes from, "
       "so near-miss transliterations surface instead of silently failing" },
@@ -46,7 +45,7 @@ static const hp_source HP_SANCTIONS[] = {
     .portal = "https://www.opensanctions.org", .record_type = "pep",
     .tags = "\"pep\",\"ftm\"", .key_env = OS_KEY, .headers = OS_AUTH,
     .free_tier = 1, .url = OS_BASE "/search/peps?q={q}&limit=25",
-    .array_path = "results", .title_keys = "caption", .id_keys = "id", .max_items = 25,
+    .array_path = "results", .title_keys = "caption", .id_keys = "id",
     .description = "The structured PEP graph: office held, country, term dates and "
       "the family and business associates recorded alongside the official — the part "
       "a yes/no PEP flag throws away" },
@@ -56,7 +55,7 @@ static const hp_source HP_SANCTIONS[] = {
     .portal = "https://www.opensanctions.org", .record_type = "crime-record",
     .tags = "\"crime\",\"ftm\"", .key_env = OS_KEY, .headers = OS_AUTH,
     .free_tier = 1, .url = OS_BASE "/search/crime?q={q}&limit=25",
-    .array_path = "results", .title_keys = "caption", .id_keys = "id", .max_items = 25,
+    .array_path = "results", .title_keys = "caption", .id_keys = "id",
     .description = "Convictions, indictments, asset forfeitures and enforcement "
       "actions collected from national authorities — a category distinct from "
       "sanctions that ordinary screening never looks at" },
@@ -66,7 +65,7 @@ static const hp_source HP_SANCTIONS[] = {
     .portal = "https://www.opensanctions.org", .record_type = "debarment",
     .tags = "\"debarment\",\"procurement\"", .key_env = OS_KEY, .headers = OS_AUTH,
     .free_tier = 1, .url = OS_BASE "/search/debarment?q={q}&limit=25",
-    .array_path = "results", .title_keys = "caption", .id_keys = "id", .max_items = 25,
+    .array_path = "results", .title_keys = "caption", .id_keys = "id",
     .description = "Firms and individuals excluded from public contracting by the "
       "World Bank, ADB, AfDB, EBRD, IADB, EU EDES and national authorities — with "
       "the exclusion period and grounds" },
@@ -76,7 +75,7 @@ static const hp_source HP_SANCTIONS[] = {
     .portal = "https://www.opensanctions.org", .record_type = "wanted-person",
     .tags = "\"wanted\",\"law-enforcement\"", .key_env = OS_KEY, .headers = OS_AUTH,
     .free_tier = 1, .url = OS_BASE "/search/wanted?q={q}&limit=25",
-    .array_path = "results", .title_keys = "caption", .id_keys = "id", .max_items = 25,
+    .array_path = "results", .title_keys = "caption", .id_keys = "id",
     .description = "Wanted-person notices aggregated across Interpol, national "
       "police forces and prosecutors — charges, nationality, birth data and the "
       "issuing authority" },
@@ -86,7 +85,7 @@ static const hp_source HP_SANCTIONS[] = {
     .portal = "https://www.opensanctions.org", .record_type = "sanctions-entity",
     .tags = "\"sanctions\",\"ftm\"", .key_env = OS_KEY, .headers = OS_AUTH,
     .free_tier = 1, .url = OS_BASE "/search/sanctions?q={q}&limit=25",
-    .array_path = "results", .title_keys = "caption", .id_keys = "id", .max_items = 25,
+    .array_path = "results", .title_keys = "caption", .id_keys = "id",
     .description = "The consolidated sanctions collection alone (OFAC, EU, UK, UN, "
       "CH, CA, AU, UA and more) — programme, listing date, authority and all "
       "recorded identifiers per designation" },
@@ -97,7 +96,7 @@ static const hp_source HP_SANCTIONS[] = {
     .tags = "\"sanctions\",\"provenance\"", .key_env = OS_KEY, .headers = OS_AUTH,
     .free_tier = 1, .url = OS_BASE "/statements?canonical_id={q}&limit=100",
     .array_path = "results", .title_keys = "prop,value", .id_keys = "id",
-    .date_keys = "first_seen", .max_items = 60,
+    .date_keys = "first_seen",
     .description = "Provenance level: every individual assertion about an entity — "
       "which dataset said which property value, and when it was first and last "
       "seen. This is how you tell a stale designation from a live one" },
@@ -109,7 +108,8 @@ static const hp_source HP_SANCTIONS[] = {
     .tags = "\"wanted\",\"interpol\"", .free_tier = 1,
     .url = "https://ws-public.interpol.int/notices/v1/red?name={q}&resultPerPage=40",
     .array_path = "_embedded.notices", .title_keys = "name,forename",
-    .id_keys = "entity_id", .date_keys = "date_of_birth", .max_items = 40,
+    .id_keys = "entity_id", .date_keys = "date_of_birth",
+    .page_param = "page", .page_start = 1,
     .description = "Interpol red notices matching a name — forename/surname, "
       "nationality, date and place of birth, charges and the issuing country. "
       "Keyless and authoritative" },
@@ -120,7 +120,8 @@ static const hp_source HP_SANCTIONS[] = {
     .tags = "\"sanctions\",\"interpol\",\"un\"", .free_tier = 1,
     .url = "https://ws-public.interpol.int/notices/v1/un?name={q}&resultPerPage=40",
     .array_path = "_embedded.notices", .title_keys = "name,forename",
-    .id_keys = "entity_id", .max_items = 40,
+    .id_keys = "entity_id",
+    .page_param = "page", .page_start = 1,
     .description = "Interpol–UN Security Council special notices — individuals and "
       "entities under UN sanctions regimes, with the identifying detail Interpol "
       "publishes alongside the designation" },
@@ -131,7 +132,7 @@ static const hp_source HP_SANCTIONS[] = {
     .portal = "https://eumostwanted.eu", .record_type = "wanted-person",
     .tags = "\"wanted\",\"europol\"", .free_tier = 1,
     .url = "https://eumostwanted.eu/search?keyword={q}",
-    .base = "https://eumostwanted.eu", .filter_query = 1, .max_items = 20,
+    .base = "https://eumostwanted.eu", .filter_query = 1,
     .description = "Europol's EU most-wanted listings matching a name — the fugitive "
       "profiles member states have published Europe-wide, with the requesting "
       "country and offence" },
@@ -142,7 +143,7 @@ static const hp_source HP_SANCTIONS[] = {
     .portal = "https://www.opensanctions.org/datasets/", .record_type = "sanctions-dataset",
     .tags = "\"sanctions\",\"provenance\",\"coverage\"", .free_tier = 1,
     .url = "https://data.opensanctions.org/datasets/latest/index.json",
-    .array_path = "datasets", .filter_query = 1, .max_items = 20,
+    .array_path = "datasets", .filter_query = 1,
     .title_keys = "title,name", .id_keys = "name", .date_keys = "last_change",
     .description = "Which source lists the corpus actually contains, filtered to the "
       "queried authority or country — entity counts, coverage dates, publisher and "
@@ -156,7 +157,7 @@ static const hp_source HP_SANCTIONS[] = {
     .url = "https://data.trade.gov/consolidated_screening_list/v1/search?name={q}&size=40",
     .headers = { "subscription-key: {key}", NULL },
     .array_path = "results", .title_keys = "name", .id_keys = "id",
-    .date_keys = "start_date", .max_items = 40,
+    .date_keys = "start_date",
     .description = "All eleven US restricted-party lists in one query — OFAC SDN and "
       "non-SDN, BIS Entity/Denied Persons/Unverified, State Department debarments — "
       "with programmes, addresses, alternate names and federal-register citations" },
@@ -167,7 +168,7 @@ static const hp_source HP_SANCTIONS[] = {
     .portal = "https://sanctionslist.ofac.treas.gov", .record_type = "ofac-sdn",
     .tags = "\"sanctions\",\"us\",\"ofac\"", .free_tier = 1,
     .url = "https://www.treasury.gov/ofac/downloads/sdn.csv",
-    .filter_query = 1, .max_items = 20, .title_keys = "col1", .id_keys = "col0",
+    .filter_query = 1, .title_keys = "col1", .id_keys = "col0",
     .description = "The authoritative OFAC Specially Designated Nationals file, read "
       "directly and filtered to the query — SDN id, name, type, programmes, title, "
       "vessel detail and remarks exactly as Treasury publishes them" },
@@ -178,7 +179,7 @@ static const hp_source HP_SANCTIONS[] = {
     .portal = "https://sanctionslist.ofac.treas.gov", .record_type = "ofac-alias",
     .tags = "\"sanctions\",\"us\",\"aliases\"", .free_tier = 1,
     .url = "https://www.treasury.gov/ofac/downloads/alt.csv",
-    .filter_query = 1, .max_items = 25, .title_keys = "col3", .id_keys = "col1",
+    .filter_query = 1, .title_keys = "col3", .id_keys = "col1",
     .description = "Every alias, a.k.a. and transliteration OFAC records for a "
       "designated party. Sanctions evasion is mostly a spelling exercise, so the "
       "alias file catches what the primary name file misses" },
@@ -189,7 +190,7 @@ static const hp_source HP_SANCTIONS[] = {
     .portal = "https://sanctionslist.ofac.treas.gov", .record_type = "ofac-address",
     .tags = "\"sanctions\",\"us\",\"addresses\"", .free_tier = 1,
     .url = "https://www.treasury.gov/ofac/downloads/add.csv",
-    .filter_query = 1, .max_items = 25, .title_keys = "col2", .id_keys = "col0",
+    .filter_query = 1, .title_keys = "col2", .id_keys = "col0",
     .description = "The addresses attached to OFAC designations — the field that "
       "links a sanctioned party to a building, a registered agent or a shared "
       "corporate address used by other entities" },
@@ -201,7 +202,7 @@ static const hp_source HP_SANCTIONS[] = {
     .tags = "\"sanctions\",\"ca\"", .free_tier = 1,
     .url = "https://www.international.gc.ca/world-monde/international_relations-"
            "relations_internationales/sanctions/consolidated-consolide.aspx?lang=eng",
-    .filter_query = 1, .base = "https://www.international.gc.ca", .max_items = 20,
+    .filter_query = 1, .base = "https://www.international.gc.ca",
     .description = "Canada's consolidated SEMA/JVCFOA listings filtered to the "
       "query — Canada lists parties the US and EU sometimes do not, so it is a "
       "genuinely independent check" },
@@ -212,7 +213,7 @@ static const hp_source HP_SANCTIONS[] = {
     .portal = "https://sanctions.nazk.gov.ua", .record_type = "ua-sanction",
     .tags = "\"sanctions\",\"ua\"", .free_tier = 1,
     .url = "https://sanctions.nazk.gov.ua/en/search/?search={q}",
-    .base = "https://sanctions.nazk.gov.ua", .filter_query = 1, .max_items = 25,
+    .base = "https://sanctions.nazk.gov.ua", .filter_query = 1,
     .description = "Ukraine's war-and-sanctions register — international sponsors of "
       "war, sanctioned individuals, companies and vessels, with the evidence pages "
       "NAZK publishes per listing" },
@@ -224,7 +225,7 @@ static const hp_source HP_SANCTIONS[] = {
     .tags = "\"cyber\",\"ransomware\",\"exposure\"", .free_tier = 1,
     .url = "https://api.ransomware.live/v2/searchvictims/{q}",
     .title_keys = "victim,post_title", .id_keys = "post_url",
-    .date_keys = "published", .max_items = 40,
+    .date_keys = "published",
     .description = "Ransomware leak-site posts naming an organisation — which group "
       "claimed it, when it was published, the description and the leak-site URL. "
       "Often the first public evidence of a breach" },
@@ -235,7 +236,6 @@ static const hp_source HP_SANCTIONS[] = {
     .tags = "\"cyber\",\"ransomware\"", .free_tier = 1,
     .url = "https://www.ransomlook.io/api/search/{q}",
     .title_keys = "post_title,name,group_name", .date_keys = "discovered",
-    .max_items = 40,
     .description = "Second independent ransomware-leak index — victim posts, group "
       "profiles and mirrors. Two trackers matter because leak sites vanish and each "
       "tracker misses different windows" },

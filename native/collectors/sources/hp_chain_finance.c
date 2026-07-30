@@ -27,7 +27,6 @@ static const hp_source HP_CHAINFIN[] = {
     .tags = "\"crypto\",\"bitcoin\",\"flows\"", .want = HP_BTC, .free_tier = 1,
     .url = "https://mempool.space/api/address/{q}/txs",
     .title_keys = "txid", .id_keys = "txid", .date_keys = "status.block_time",
-    .max_items = 50,
     .description = "The transaction history of a Bitcoin address with full inputs and "
       "outputs — the counterparty addresses, amounts, fees and block times that make "
       "flow tracing possible" },
@@ -38,7 +37,6 @@ static const hp_source HP_CHAINFIN[] = {
     .tags = "\"crypto\",\"bitcoin\"", .want = HP_BTC, .free_tier = 1,
     .url = "https://mempool.space/api/address/{q}/utxo",
     .title_keys = "txid", .id_keys = "txid", .date_keys = "status.block_time",
-    .max_items = 50,
     .description = "Unspent outputs held by an address — the current holdings broken "
       "down per output, which shows whether funds sit in one consolidated UTXO or "
       "many small deposits" },
@@ -59,7 +57,6 @@ static const hp_source HP_CHAINFIN[] = {
     .tags = "\"crypto\",\"bitcoin\"", .want = HP_BTC, .free_tier = 1,
     .url = "https://api.blockchair.com/bitcoin/dashboards/address/{q}?limit=50",
     .array_path = "data", .title_keys = "address.type", .id_keys = "address.script_hex",
-    .max_items = 25,
     .description = "Blockchair's enriched address dashboard — first/last seen, "
       "received and spent totals, output type and the transaction id list, plus "
       "privacy-relevant metadata like address reuse" },
@@ -81,7 +78,7 @@ static const hp_source HP_CHAINFIN[] = {
     .tags = "\"crypto\",\"ethereum\",\"flows\"", .want = HP_ETH, .free_tier = 1,
     .url = "https://eth.blockscout.com/api/v2/addresses/{q}/transactions",
     .array_path = "items", .title_keys = "hash,method", .id_keys = "hash",
-    .date_keys = "timestamp", .max_items = 50,
+    .date_keys = "timestamp",
     .description = "Transactions to and from an address with decoded method names, "
       "counterparties, values, gas and status — decoded calls tell you what a wallet "
       "was doing, not just that it moved money" },
@@ -92,7 +89,7 @@ static const hp_source HP_CHAINFIN[] = {
     .tags = "\"crypto\",\"ethereum\",\"tokens\"", .want = HP_ETH, .free_tier = 1,
     .url = "https://eth.blockscout.com/api/v2/addresses/{q}/token-transfers",
     .array_path = "items", .title_keys = "token.name,token.symbol",
-    .id_keys = "tx_hash", .date_keys = "timestamp", .max_items = 50,
+    .id_keys = "tx_hash", .date_keys = "timestamp",
     .description = "ERC-20/721/1155 transfers involving an address — token contract, "
       "symbol, decimals, amount and counterparty. Stablecoin transfers are where most "
       "real value moves, and they are invisible in a native-balance check" },
@@ -103,7 +100,7 @@ static const hp_source HP_CHAINFIN[] = {
     .tags = "\"crypto\",\"ethereum\",\"flows\"", .want = HP_ETH, .free_tier = 1,
     .url = "https://eth.blockscout.com/api/v2/addresses/{q}/internal-transactions",
     .array_path = "items", .title_keys = "type,transaction_hash",
-    .id_keys = "transaction_hash", .date_keys = "timestamp", .max_items = 50,
+    .id_keys = "transaction_hash", .date_keys = "timestamp",
     .description = "Contract-internal calls touching an address — the value movements "
       "produced by contract execution, which never appear in the normal transaction "
       "list and are how mixers and routers actually deliver funds" },
@@ -127,7 +124,7 @@ static const hp_source HP_CHAINFIN[] = {
     .post_body = "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"getSignaturesForAddress\","
                  "\"params\":[\"{Q}\",{\"limit\":50}]}",
     .array_path = "result", .title_keys = "signature,memo", .id_keys = "signature",
-    .date_keys = "blockTime", .max_items = 50,
+    .date_keys = "blockTime",
     .description = "Recent transaction signatures for a Solana account with slot, "
       "block time, error status and memo — the entry point for tracing SPL token and "
       "NFT movement on a chain most tooling ignores" },
@@ -138,7 +135,6 @@ static const hp_source HP_CHAINFIN[] = {
     .tags = "\"crypto\",\"ransomware\"", .free_tier = 1,
     .url = "https://api.ransomwhe.re/export", .array_path = "result",
     .filter_query = 1, .title_keys = "family,address", .id_keys = "address",
-    .max_items = 20,
     .description = "Crowdsourced ransomware payment addresses with the family they "
       "belong to and total received, filtered to the queried address or family — the "
       "public attribution layer over ransom wallets" },
@@ -181,7 +177,8 @@ static const hp_source HP_CHAINFIN[] = {
     .tags = "\"lei\",\"ownership\"", .free_tier = 1,
     .url = "https://api.gleif.org/api/v1/lei-records/{qU}/direct-children?page%5Bsize%5D=50",
     .array_path = "data", .title_keys = "attributes.entity.legalName.name",
-    .id_keys = "id", .max_items = 50,
+    .id_keys = "id",
+    .next_path = "links.next",
     .description = "Subsidiaries that report this entity as their direct parent — the "
       "group structure read downward, which surfaces subsidiaries in jurisdictions "
       "you would not have thought to search" },
@@ -192,7 +189,7 @@ static const hp_source HP_CHAINFIN[] = {
     .tags = "\"lei\",\"securities\"", .free_tier = 1,
     .url = "https://api.gleif.org/api/v1/lei-records/{qU}/isins?page%5Bsize%5D=100",
     .array_path = "data", .title_keys = "attributes.isin", .id_keys = "id",
-    .max_items = 60,
+    .next_path = "links.next",
     .description = "Every ISIN issued by an entity — the bridge between a legal entity "
       "and its traded securities, which is what lets a holdings disclosure be matched "
       "back to a company" },
@@ -204,7 +201,7 @@ static const hp_source HP_CHAINFIN[] = {
     .url = "https://api.openfigi.com/v3/mapping",
     .post_body = "[{\"idType\":\"ID_ISIN\",\"idValue\":\"{Q}\"}]",
     .array_path = "0.data", .title_keys = "name,securityDescription",
-    .id_keys = "figi", .max_items = 25,
+    .id_keys = "figi",
     .description = "Maps an ISIN, ticker or other identifier to FIGIs with the "
       "instrument name, exchange code, security type and market sector — the "
       "cross-vendor key for securities data" },
@@ -216,7 +213,7 @@ static const hp_source HP_CHAINFIN[] = {
     .url = "https://api.stlouisfed.org/fred/series/search?search_text={q}"
            "&api_key={key}&file_type=json&limit=40",
     .array_path = "seriess", .title_keys = "title", .id_keys = "id",
-    .date_keys = "last_updated", .max_items = 40,
+    .date_keys = "last_updated",
     .description = "St. Louis Fed series matching a term — frequency, units, "
       "seasonal adjustment, observation range and popularity, so a claim about a "
       "macro figure can be pinned to a specific published series" },

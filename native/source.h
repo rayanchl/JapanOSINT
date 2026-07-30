@@ -26,6 +26,23 @@ typedef struct intel_item {
   const char *tags_json;      /* "[]" if NULL */
 } intel_item;
 
+/* ── HOUSE RULE: EXHAUSTIVE USE (docs/SOURCE_EXHAUSTIVENESS.md) ────────────
+ * A source that is called must be used exhaustively. If run() spends a request,
+ * it emits EVERY record the response contained, with EVERY field of each record
+ * in `properties`, follows pagination to the end, and follows the detail
+ * endpoint behind each list hit. No implicit "first N", no hand-picked three
+ * fields, no page-1-only read of a paged API.
+ *
+ * This is the twin of the no-fabrication rule: fabricating invents facts that
+ * were never fetched, discarding throws away facts that were. Both misrepresent
+ * what is known, and discarding is the more dangerous of the two because it
+ * looks like a clean result.
+ *
+ * If something genuinely cannot be taken (a bulk file too large to hold, an
+ * upstream hard cap), the shortfall is reported IN THE DATA — records_used vs
+ * records_available — not left to a log line. `make audit-sources` scans for
+ * the usual discard patterns. */
+
 typedef struct intel_sink {
   void *ctx;
   /* returns 1 if a NEW row, 0 if updated, <0 on error.

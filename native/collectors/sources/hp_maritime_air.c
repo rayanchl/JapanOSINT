@@ -47,7 +47,7 @@ static const hp_source HP_MARAIR[] = {
     .tags = "\"aviation\",\"adsb\"", .want = HP_ICAO24, .free_tier = 1,
     .url = "https://api.adsb.lol/v2/hex/{ql}", .array_path = "ac",
     .title_keys = "flight,r,t", .id_keys = "hex",
-    .lat_key = "lat", .lon_key = "lon", .max_items = 10,
+    .lat_key = "lat", .lon_key = "lon",
     .description = "Current state vector for one airframe — position, altitude, "
       "speed, track, squawk, registration, type and emergency flag, from the "
       "community ADS-B network with no key" },
@@ -58,7 +58,7 @@ static const hp_source HP_MARAIR[] = {
     .tags = "\"aviation\",\"adsb\"", .free_tier = 1,
     .url = "https://api.adsb.lol/v2/callsign/{qU}", .array_path = "ac",
     .title_keys = "flight,r,t", .id_keys = "hex",
-    .lat_key = "lat", .lon_key = "lon", .max_items = 10,
+    .lat_key = "lat", .lon_key = "lon",
     .description = "Aircraft currently transmitting a given callsign — resolves a "
       "flight number seen in a schedule, a NOTAM or a social post to a live airframe "
       "and position" },
@@ -69,7 +69,7 @@ static const hp_source HP_MARAIR[] = {
     .tags = "\"aviation\",\"adsb\"", .free_tier = 1,
     .url = "https://api.adsb.lol/v2/registration/{qU}", .array_path = "ac",
     .title_keys = "r,flight,t", .id_keys = "hex",
-    .lat_key = "lat", .lon_key = "lon", .max_items = 10,
+    .lat_key = "lat", .lon_key = "lon",
     .description = "Live state for a tail number — the direct route from a registry "
       "record or a corporate-jet report to whether that airframe is airborne right "
       "now, and where" },
@@ -80,7 +80,7 @@ static const hp_source HP_MARAIR[] = {
     .tags = "\"aviation\",\"adsb\",\"emergency\"", .want = HP_NUMERIC, .free_tier = 1,
     .url = "https://api.adsb.lol/v2/sqk/{qd}", .array_path = "ac",
     .title_keys = "flight,r,t", .id_keys = "hex",
-    .lat_key = "lat", .lon_key = "lon", .max_items = 40,
+    .lat_key = "lat", .lon_key = "lon",
     .description = "All aircraft currently transmitting a squawk code — 7500/7600/"
       "7700 for emergencies, or a discrete code assigned by a specific control "
       "centre, which is how state and military flights are grouped" },
@@ -91,7 +91,7 @@ static const hp_source HP_MARAIR[] = {
     .tags = "\"aviation\",\"adsb\"", .want = HP_ICAO24, .free_tier = 1,
     .url = "https://api.airplanes.live/v2/hex/{ql}", .array_path = "ac",
     .title_keys = "flight,r,t", .id_keys = "hex",
-    .lat_key = "lat", .lon_key = "lon", .max_items = 10,
+    .lat_key = "lat", .lon_key = "lon",
     .description = "Independent second ADS-B network for the same airframe — "
       "different receiver coverage, and it does not filter blocked registrations the "
       "same way, so gaps in one feed are often filled by the other" },
@@ -113,7 +113,6 @@ static const hp_source HP_MARAIR[] = {
     .tags = "\"aviation\",\"imagery\"", .free_tier = 1,
     .url = "https://api.planespotters.net/pub/photos/reg/{qU}",
     .array_path = "photos", .title_keys = "photographer,link", .id_keys = "id",
-    .max_items = 20,
     .description = "Photographs of a specific airframe with photographer, date and "
       "thumbnail links — livery changes over time are how re-registrations and quiet "
       "operator changes get caught" },
@@ -124,7 +123,7 @@ static const hp_source HP_MARAIR[] = {
     .portal = "https://wwwapps.tc.gc.ca", .record_type = "aircraft",
     .tags = "\"ca\",\"aviation\",\"ownership\"", .free_tier = 1,
     .url = "https://wwwapps.tc.gc.ca/saf-sec-sur/2/ccarcs-riacc/RchSimpRes.aspx?cn={q}",
-    .base = "https://wwwapps.tc.gc.ca", .filter_query = 1, .max_items = 20,
+    .base = "https://wwwapps.tc.gc.ca", .filter_query = 1,
     .description = "Canadian Civil Aircraft Register search by mark or owner name — "
       "registered owner, address, aircraft type and certificate status, published "
       "free of charge" },
@@ -135,7 +134,7 @@ static const hp_source HP_MARAIR[] = {
     .portal = "https://siteapps.caa.co.uk", .record_type = "aircraft",
     .tags = "\"uk\",\"aviation\",\"ownership\"", .free_tier = 1,
     .url = "https://siteapps.caa.co.uk/g-info/?regmark={qU}",
-    .base = "https://siteapps.caa.co.uk", .filter_query = 0, .max_items = 20,
+    .base = "https://siteapps.caa.co.uk", .filter_query = 0,
     .description = "UK aircraft register entries — registered owner or operator, "
       "address, aircraft type, certificate of airworthiness and previous "
       "registrations for a G- mark" },
@@ -146,7 +145,7 @@ static const hp_source HP_MARAIR[] = {
     .portal = "https://ourairports.com", .record_type = "airport",
     .tags = "\"aviation\",\"airports\"", .free_tier = 1,
     .url = "https://davidmegginson.github.io/ourairports-data/airports.csv",
-    .filter_query = 1, .max_items = 20, .title_keys = "name",
+    .filter_query = 1, .title_keys = "name",
     .id_keys = "ident", .lat_key = "latitude_deg", .lon_key = "longitude_deg",
     .description = "Every airport, airstrip and heliport on earth filtered to the "
       "query — ICAO/IATA/local codes, type, elevation, coordinates, region and "
@@ -160,7 +159,7 @@ static const hp_source HP_MARAIR[] = {
     .free_tier = 1,
     .url = "https://api.aviationstack.com/v1/flights?access_key={key}&flight_iata={qU}",
     .array_path = "data", .title_keys = "flight.iata,airline.name",
-    .id_keys = "flight.icao", .date_keys = "flight_date", .max_items = 25,
+    .id_keys = "flight.icao", .date_keys = "flight_date",
     .description = "Scheduled and actual times, gates, terminals, aircraft "
       "registration and codeshare parents for a flight number — the commercial layer "
       "that ADS-B alone cannot supply" },
@@ -172,7 +171,7 @@ static const hp_source HP_MARAIR[] = {
     .portal = "https://parismou.org", .record_type = "vessel-inspection",
     .tags = "\"maritime\",\"inspections\",\"compliance\"", .free_tier = 1,
     .url = "https://parismou.org/inspection-search/inspection-search?search={q}",
-    .base = "https://parismou.org", .filter_query = 1, .max_items = 20,
+    .base = "https://parismou.org", .filter_query = 1,
     .description = "European port-state control inspections of a vessel — deficiency "
       "counts, detentions, the inspecting authority and dates. A detention history is "
       "the hardest public evidence of a substandard operator" },
@@ -183,7 +182,7 @@ static const hp_source HP_MARAIR[] = {
     .tags = "\"maritime\",\"sanctions\"", .key_env = "OPENSANCTIONS_API_KEY",
     .headers = { "Authorization: ApiKey {key}", NULL }, .free_tier = 1,
     .url = "https://api.opensanctions.org/search/default?q={q}&schema=Vessel&limit=25",
-    .array_path = "results", .title_keys = "caption", .id_keys = "id", .max_items = 25,
+    .array_path = "results", .title_keys = "caption", .id_keys = "id",
     .description = "Vessel-schema entities in the sanctions corpus — matched by name, "
       "IMO or MMSI, with flag, tonnage, former names and the designating programme. "
       "Shadow-fleet tankers are renamed constantly, so the former-name list matters" },
@@ -194,7 +193,7 @@ static const hp_source HP_MARAIR[] = {
     .portal = "https://cgmix.uscg.mil", .record_type = "vessel",
     .tags = "\"maritime\",\"us\",\"ownership\"", .free_tier = 1,
     .url = "https://cgmix.uscg.mil/PSIX/PSIXSearch.aspx?VesselName={q}",
-    .base = "https://cgmix.uscg.mil", .filter_query = 1, .max_items = 20,
+    .base = "https://cgmix.uscg.mil", .filter_query = 1,
     .description = "US Coast Guard Port State Information Exchange — vessel "
       "documentation, owner/operator, dimensions, inspection deficiencies and "
       "casualty records for US-flag and US-calling vessels" },
@@ -208,7 +207,7 @@ static const hp_source HP_MARAIR[] = {
            "&datasets%5B0%5D=public-global-vessel-identity%3Alatest&limit=25",
     .headers = { "Authorization: Bearer {key}", NULL },
     .array_path = "entries", .title_keys = "selfReportedInfo.0.shipname,combinedSourcesInfo.0.shipname",
-    .id_keys = "selfReportedInfo.0.id", .max_items = 25,
+    .id_keys = "selfReportedInfo.0.id",
     .description = "Vessel identity across AIS self-reporting and public registries — "
       "name changes, flag changes, MMSI/IMO/call-sign history, owner and gear type. "
       "Flag-hopping is the standard evasion pattern and this is where it is visible" },

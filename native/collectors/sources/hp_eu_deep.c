@@ -20,7 +20,7 @@ static const hp_source HP_EU[] = {
     .url = "https://data.economie.gouv.fr/api/records/1.0/search/"
            "?dataset=decp-v3-marches-valides&q={q}&rows=40",
     .array_path = "records", .title_keys = "fields.objet,fields.titulaire_denominationsociale",
-    .id_keys = "recordid", .date_keys = "fields.datenotification", .max_items = 40,
+    .id_keys = "recordid", .date_keys = "fields.datenotification",
     .description = "French public contracts (DECP): who won which tender, for how "
       "much, from which buyer, on what date — the money trail between a company "
       "and the French state" },
@@ -30,7 +30,7 @@ static const hp_source HP_EU[] = {
     .portal = "https://www.hatvp.fr", .record_type = "fr-declaration",
     .tags = "\"fr\",\"pep\",\"declarations\"", .free_tier = 1,
     .url = "https://www.hatvp.fr/livraison/merge/declarations.json",
-    .filter_query = 1, .max_items = 15,
+    .filter_query = 1,
     .title_keys = "nom,prenom", .date_keys = "dateDepot",
     .description = "Declarations of interests and assets filed by French public "
       "officials with the HATVP — mandates, shareholdings, outside activities and "
@@ -42,7 +42,7 @@ static const hp_source HP_EU[] = {
     .tags = "\"fr\",\"nonprofit\"", .free_tier = 1,
     .url = "https://recherche-entreprises.api.gouv.fr/search?q={q}&est_association=true&per_page=25",
     .array_path = "results", .title_keys = "nom_complet", .id_keys = "siren",
-    .date_keys = "date_creation", .max_items = 25,
+    .date_keys = "date_creation",
     .description = "French associations (loi 1901) matched by name via the open "
       "company search — SIREN, RNA number, address, activity and leadership where "
       "declared; the nonprofit half of the French corporate graph" },
@@ -55,7 +55,7 @@ static const hp_source HP_EU[] = {
     .url = "https://db.offeneregister.de/openregister.json?sql="
            "select+*+from+company+where+name+like+%27%25{q}%25%27+limit+40&_shape=objects",
     .array_path = "rows", .title_keys = "name", .id_keys = "company_number",
-    .date_keys = "registered_office", .max_items = 40,
+    .date_keys = "registered_office",
     .description = "The open mirror of the German Handelsregister — company name, "
       "register court and number, legal form, registered office and status, "
       "queryable where the official register is not" },
@@ -65,9 +65,9 @@ static const hp_source HP_EU[] = {
     .portal = "https://www.abgeordnetenwatch.de", .record_type = "de-politician",
     .tags = "\"de\",\"pep\"", .free_tier = 1,
     .url = "https://www.abgeordnetenwatch.de/api/v2/politicians?politician%5Blabel%5D%5Bcn%5D={q}&range_end=25",
-    .array_path = "data", .title_keys = "label", .id_keys = "id", .max_items = 25,
+    .array_path = "data", .title_keys = "label", .id_keys = "id",
     .detail_url = "https://www.abgeordnetenwatch.de/api/v2/candidacies-mandates?politician={v}",
-    .detail_key = "id", .detail_max = 5,
+    .detail_key = "id",
     .description = "German federal and state politicians by name, then a second hop "
       "into every candidacy and mandate they have held — party, parliament, "
       "electoral district and term" },
@@ -94,7 +94,7 @@ static const hp_source HP_EU[] = {
     .url = "https://api.kvk.nl/api/v1/basisprofielen/{qd}/vestigingen",
     .headers = { "apikey: {key}", NULL },
     .array_path = "vestigingen", .title_keys = "handelsnaam,naam",
-    .id_keys = "vestigingsnummer", .max_items = 50,
+    .id_keys = "vestigingsnummer",
     .description = "Every establishment of a Dutch company — branch numbers, trade "
       "names, visiting addresses and per-site activity codes; the physical map "
       "behind one KvK registration" },
@@ -105,7 +105,6 @@ static const hp_source HP_EU[] = {
     .tags = "\"nl\",\"address\"", .free_tier = 1,
     .url = "https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?q={q}&rows=25",
     .array_path = "response.docs", .title_keys = "weergavenaam", .id_keys = "id",
-    .max_items = 25,
     .description = "Authoritative Dutch address, postcode, parcel and district "
       "resolution — BAG/BRK identifiers and coordinates for an address string" },
 
@@ -115,7 +114,7 @@ static const hp_source HP_EU[] = {
     .tags = "\"nl\",\"courts\"", .mode = HP_HTML, .free_tier = 1,
     .url = "https://uitspraken.rechtspraak.nl/results?searchMsg={q}",
     .href_must = "/details", .base = "https://uitspraken.rechtspraak.nl",
-    .filter_query = 0, .max_items = 25,
+    .filter_query = 0,
     .description = "Published Dutch court rulings mentioning an entity, by ECLI. "
       "Server-rendered hits only — a JS-only response yields nothing rather than "
       "a fabricated docket" },
@@ -130,7 +129,7 @@ static const hp_source HP_EU[] = {
                  "\"fields\":[\"publication-number\",\"notice-title\",\"buyer-name\","
                  "\"place-of-performance\",\"publication-date\",\"deadline-receipt-request\"]}",
     .array_path = "notices", .title_keys = "notice-title,publication-number",
-    .id_keys = "publication-number", .date_keys = "publication-date", .max_items = 40,
+    .id_keys = "publication-number", .date_keys = "publication-date",
     .description = "Full-text search of EU tender notices: buyer, subject, place of "
       "performance, deadlines and publication number for every notice naming the "
       "entity — supplier-side and buyer-side both" },
@@ -141,7 +140,7 @@ static const hp_source HP_EU[] = {
     .tags = "\"eu\",\"pep\",\"parliament\"", .free_tier = 1,
     .url = "https://data.europarl.europa.eu/api/v2/meps?parliamentary-term=10&format=application%2Fld%2Bjson&offset=0",
     .array_path = "data", .filter_query = 1, .title_keys = "label", .id_keys = "identifier",
-    .max_items = 15,
+    .page_param = "offset", .page_size = 50, .page_start = 0,
     .description = "Sitting Members of the European Parliament, filtered to the "
       "queried name — official identifier, label and the EP data URI that keys "
       "their declarations and votes" },
@@ -152,7 +151,7 @@ static const hp_source HP_EU[] = {
     .tags = "\"eu\",\"law\"", .mode = HP_HTML, .free_tier = 1,
     .url = "https://eur-lex.europa.eu/search.html?scope=EURLEX&text={q}&lang=en&type=quick",
     .href_must = "legal-content", .base = "https://eur-lex.europa.eu",
-    .filter_query = 0, .max_items = 25,
+    .filter_query = 0,
     .description = "EU legal acts, case law and preparatory documents naming an "
       "entity — the CELEX-keyed hits that show when a company or person is written "
       "into EU law (listings, designations, authorisations)" },
@@ -163,7 +162,7 @@ static const hp_source HP_EU[] = {
     .tags = "\"eu\",\"courts\"", .mode = HP_HTML, .free_tier = 1,
     .url = "https://curia.europa.eu/juris/liste.jsf?language=en&td=ALL&parties={q}",
     .href_must = "document", .base = "https://curia.europa.eu",
-    .filter_query = 0, .max_items = 25,
+    .filter_query = 0,
     .description = "Court of Justice and General Court cases where an entity is a "
       "named party — the EU-level litigation history behind a company, member "
       "state or institution, by case document link" },
@@ -175,9 +174,9 @@ static const hp_source HP_EU[] = {
     .tags = "\"ch\",\"registry\"", .free_tier = 1,
     .url = "https://www.zefix.admin.ch/ZefixPublicREST/api/v1/firm/search.json",
     .post_body = "{\"name\":\"{Q}\",\"languageKey\":\"en\",\"maxEntries\":40}",
-    .title_keys = "name", .id_keys = "uid", .date_keys = "shabDate", .max_items = 40,
+    .title_keys = "name", .id_keys = "uid", .date_keys = "shabDate",
     .detail_url = "https://www.zefix.admin.ch/ZefixPublicREST/api/v1/company/uid/{v}",
-    .detail_key = "uid", .detail_max = 3,
+    .detail_key = "uid",
     .description = "Swiss commercial register search, then the full company record "
       "behind each UID — legal seat, purpose, capital, register office and the "
       "SHAB gazette publications that record every change" },
@@ -189,7 +188,8 @@ static const hp_source HP_EU[] = {
     .url = "https://services.cro.ie/cws/companies?company_name={q}&skip=0&max=40&htmlEnc=1",
     .headers = { "Authorization: Basic {keyb64}", NULL },
     .title_keys = "company_name", .id_keys = "company_num",
-    .date_keys = "company_reg_date", .max_items = 40,
+    .date_keys = "company_reg_date",
+    .page_param = "skip", .page_size = 40, .page_start = 0,
     .description = "Irish CRO company records — number, status, type, registered "
       "address, registration and last-return dates; the CRO number then keys "
       "submissions and officer filings" },
@@ -200,7 +200,7 @@ static const hp_source HP_EU[] = {
     .tags = "\"cz\",\"officers\"", .want = HP_NUMERIC, .free_tier = 1,
     .url = "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty-vr/{qd}",
     .title_keys = "obchodniJmeno,zaznamy.0.obchodniJmeno.0.hodnota",
-    .id_keys = "ico", .max_items = 25,
+    .id_keys = "ico",
     .description = "The Czech public-register (VR) extract behind an IČO: statutory "
       "bodies and their members, supervisory board, shareholders and beneficial-"
       "owner-relevant entries with validity dates — not just the company header" },
@@ -232,7 +232,7 @@ static const hp_source HP_EU[] = {
     .tags = "\"gr\",\"transparency\"", .free_tier = 1,
     .url = "https://diavgeia.gov.gr/opendata/search?q={q}&size=40",
     .array_path = "decisions", .title_keys = "subject", .id_keys = "ada",
-    .date_keys = "issueDate", .max_items = 40,
+    .date_keys = "issueDate",
     .link_tmpl = "https://diavgeia.gov.gr/decision/view/{v}", .link_keys = "ada",
     .description = "Every Greek public-sector decision naming an entity — Greece "
       "publishes each act with a unique ADA number, so awards, appointments and "
@@ -245,7 +245,7 @@ static const hp_source HP_EU[] = {
     .tags = "\"ua\",\"pep\",\"declarations\"", .free_tier = 1,
     .url = "https://public-api.nazk.gov.ua/v2/documents/list?query={q}",
     .array_path = "items", .title_keys = "firstname,lastname,user_declarant_id",
-    .id_keys = "id", .date_keys = "created_date", .max_items = 40,
+    .id_keys = "id", .date_keys = "created_date",
     .description = "Asset and income declarations filed by Ukrainian public "
       "officials — declarant, position, agency and document id for each filing "
       "year; the primary corruption-investigation dataset for Ukraine" },
@@ -256,7 +256,7 @@ static const hp_source HP_EU[] = {
     .tags = "\"ua\",\"procurement\"", .free_tier = 1,
     .url = "https://prozorro.gov.ua/api/search/tenders?text={q}&order=desc",
     .array_path = "data", .title_keys = "title,tenderID", .id_keys = "tenderID",
-    .date_keys = "dateModified", .max_items = 40,
+    .date_keys = "dateModified",
     .link_tmpl = "https://prozorro.gov.ua/tender/{v}", .link_keys = "tenderID",
     .description = "Ukrainian public tenders naming an entity — procuring agency, "
       "value, status and tender id; Prozorro publishes the whole procurement cycle, "
@@ -269,7 +269,7 @@ static const hp_source HP_EU[] = {
     .portal = "https://rcbe.justica.gov.pt", .record_type = "pt-bo",
     .tags = "\"pt\",\"beneficial-ownership\"", .free_tier = 1,
     .url = "https://rcbe.justica.gov.pt/Home/Pesquisar?termo={q}",
-    .base = "https://rcbe.justica.gov.pt", .filter_query = 1, .max_items = 20,
+    .base = "https://rcbe.justica.gov.pt", .filter_query = 1,
     .description = "Portuguese central register of beneficial owners — server-"
       "rendered hits for an entity name or NIPC. Anti-bot or JS-only responses "
       "yield nothing rather than an invented ownership claim" },

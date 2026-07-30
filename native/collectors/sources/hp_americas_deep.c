@@ -44,7 +44,7 @@ static const hp_source HP_AMERICAS[] = {
                  "\"Description\"],\"page\":1,\"limit\":40,\"sort\":\"Award Amount\","
                  "\"order\":\"desc\"}",
     .array_path = "results", .title_keys = "Recipient Name,Description",
-    .id_keys = "Award ID", .date_keys = "Start Date", .max_items = 40,
+    .id_keys = "Award ID", .date_keys = "Start Date",
     .description = "Federal contracts awarded to an entity — award id, awarding "
       "agency, obligated amount, period of performance and description. The direct "
       "answer to 'what does this company get paid by the US government'" },
@@ -56,7 +56,7 @@ static const hp_source HP_AMERICAS[] = {
     .url = "https://api.usaspending.gov/api/v2/autocomplete/recipient/",
     .post_body = "{\"search_text\":\"{Q}\",\"limit\":25}",
     .array_path = "results", .title_keys = "recipient_name",
-    .id_keys = "recipient_id,duns,uei", .max_items = 25,
+    .id_keys = "recipient_id,duns,uei",
     .description = "Resolves a recipient name to USAspending's canonical recipient "
       "id, UEI and DUNS — the join key that turns a company name into its complete "
       "federal award history" },
@@ -68,7 +68,7 @@ static const hp_source HP_AMERICAS[] = {
     .url = "https://api.sam.gov/entity-information/v3/entities?api_key={key}"
            "&legalBusinessName={q}&includeSections=entityRegistration,coreData&page=0",
     .array_path = "entityData", .title_keys = "entityRegistration.legalBusinessName",
-    .id_keys = "entityRegistration.ueiSAM", .max_items = 25,
+    .id_keys = "entityRegistration.ueiSAM",
     .description = "SAM.gov registration behind a federal contractor — UEI, CAGE "
       "code, physical address, business types, registration status and expiry, plus "
       "any exclusion (debarment) records" },
@@ -81,7 +81,6 @@ static const hp_source HP_AMERICAS[] = {
            "&contributor_name={q}&per_page=40&sort=-contribution_receipt_date",
     .array_path = "results", .title_keys = "contributor_name,committee.name",
     .id_keys = "transaction_id", .date_keys = "contribution_receipt_date",
-    .max_items = 40,
     .description = "Itemised US federal campaign contributions by a named donor — "
       "amount, date, recipient committee, and the donor's stated employer and "
       "occupation, which is often the cleanest employment record available" },
@@ -92,7 +91,8 @@ static const hp_source HP_AMERICAS[] = {
     .tags = "\"us\",\"lobbying\"", .free_tier = 1,
     .url = "https://lda.senate.gov/api/v1/filings/?client_name={q}&page_size=25",
     .array_path = "results", .title_keys = "client.name,registrant.name",
-    .id_keys = "filing_uuid", .date_keys = "dt_posted", .max_items = 25,
+    .id_keys = "filing_uuid", .date_keys = "dt_posted",
+    .next_path = "next",
     .description = "Lobbying disclosure filings naming a client — the registrant "
       "firm, income/expenses reported, the lobbyists named and the specific issues "
       "and bills lobbied on" },
@@ -103,7 +103,7 @@ static const hp_source HP_AMERICAS[] = {
     .portal = "https://echo.epa.gov", .record_type = "us-epa-facility",
     .tags = "\"us\",\"environment\",\"enforcement\"", .free_tier = 1,
     .url = "https://echodata.epa.gov/echo/rest_services.get_facilities?output=JSON&p_fn={q}",
-    .title_keys = "FacName,SourceID", .id_keys = "RegistryID", .max_items = 40,
+    .title_keys = "FacName,SourceID", .id_keys = "RegistryID",
     .description = "US environmental regulatory record for facilities operated by a "
       "company — permits held, inspection and violation counts, formal enforcement "
       "actions and penalties assessed" },
@@ -114,7 +114,7 @@ static const hp_source HP_AMERICAS[] = {
     .tags = "\"us\",\"recalls\",\"enforcement\"", .free_tier = 1,
     .url = "https://api.fda.gov/drug/enforcement.json?search=recalling_firm:%22{q}%22&limit=40",
     .array_path = "results", .title_keys = "product_description,reason_for_recall",
-    .id_keys = "recall_number", .date_keys = "recall_initiation_date", .max_items = 40,
+    .id_keys = "recall_number", .date_keys = "recall_initiation_date",
     .description = "FDA recall and enforcement reports naming a firm — product, "
       "reason, classification, distribution pattern and quantity, with the recall "
       "number that keys the whole event" },
@@ -125,7 +125,7 @@ static const hp_source HP_AMERICAS[] = {
     .tags = "\"us\",\"spectrum\"", .free_tier = 1,
     .url = "https://data.fcc.gov/api/license-view/basicSearch/getLicenses?searchValue={q}&format=json",
     .array_path = "Licenses.License", .title_keys = "licName,serviceDesc",
-    .id_keys = "licenseID", .date_keys = "expiredDate", .max_items = 40,
+    .id_keys = "licenseID", .date_keys = "expiredDate",
     .description = "FCC licences held by an entity — call sign, radio service, "
       "status, grant and expiry dates; a licence list is a hard link between a "
       "corporate name and physical transmitting infrastructure" },
@@ -136,7 +136,7 @@ static const hp_source HP_AMERICAS[] = {
     .portal = "https://registry.faa.gov", .record_type = "us-aircraft",
     .tags = "\"us\",\"aviation\",\"ownership\"", .free_tier = 1,
     .url = "https://registry.faa.gov/AircraftInquiry/Search/NNumberResult?nNumberTxt={qn}",
-    .base = "https://registry.faa.gov", .filter_query = 0, .max_items = 20,
+    .base = "https://registry.faa.gov", .filter_query = 0,
     .description = "FAA aircraft registration for an N-number — registered owner, "
       "address, aircraft make/model/serial and certificate dates. Aircraft "
       "ownership is one of the few asset registries that is fully public" },
@@ -147,7 +147,7 @@ static const hp_source HP_AMERICAS[] = {
     .tags = "\"us\",\"health\",\"people\"", .free_tier = 1,
     .url = "https://npiregistry.cms.hhs.gov/api/?version=2.1&organization_name={q}&limit=40",
     .array_path = "results", .title_keys = "basic.organization_name,basic.name",
-    .id_keys = "number", .max_items = 40,
+    .id_keys = "number",
     .description = "US healthcare providers and organisations — NPI number, "
       "taxonomy/specialty, licence numbers by state, practice and mailing "
       "addresses, and authorised official for organisational providers" },
@@ -158,9 +158,9 @@ static const hp_source HP_AMERICAS[] = {
     .tags = "\"us\",\"nonprofit\",\"filings\"", .free_tier = 1,
     .url = "https://projects.propublica.org/nonprofits/api/v2/search.json?q={q}",
     .array_path = "organizations", .title_keys = "name", .id_keys = "ein",
-    .max_items = 25,
     .detail_url = "https://projects.propublica.org/nonprofits/api/v2/organizations/{v}.json",
-    .detail_key = "ein", .detail_max = 4,
+    .detail_key = "ein",
+    .page_param = "page", .page_start = 0,
     .description = "US nonprofits by name, then the full IRS Form 990 history behind "
       "each EIN — revenue, expenses, assets and the filing PDFs listing officers and "
       "their compensation" },
@@ -171,7 +171,7 @@ static const hp_source HP_AMERICAS[] = {
     .tags = "\"us\",\"registry\",\"new-york\"", .free_tier = 1,
     .url = "https://data.ny.gov/resource/n9v6-gdp6.json?$q={q}&$limit=40",
     .title_keys = "current_entity_name,initial_dos_filing_date",
-    .id_keys = "dos_id", .date_keys = "initial_dos_filing_date", .max_items = 40,
+    .id_keys = "dos_id", .date_keys = "initial_dos_filing_date",
     .description = "New York State corporate register — entity name, DOS id, "
       "jurisdiction, filing date, county and the registered agent/service address, "
       "which is frequently the only US address a foreign owner provides" },
@@ -185,7 +185,7 @@ static const hp_source HP_AMERICAS[] = {
                  "\"SEARCH_TYPE_ID\":\"1\",\"FILING_TYPE_ID\":\"\",\"STATUS_ID\":\"\","
                  "\"FILING_DATE\":{\"start\":null,\"end\":null},\"CORPORATION_BANKRUPTCY_YN\":false,"
                  "\"OFFICER_OWNER_NAMES\":[],\"NUMBER_OF_FILINGS\":null}",
-    .title_keys = "TITLE.0,TITLE", .id_keys = "ID", .max_items = 40,
+    .title_keys = "TITLE.0,TITLE", .id_keys = "ID",
     .description = "California business entities by name or agent — entity number, "
       "type, status, jurisdiction and filing date. California hosts a large share "
       "of US corporate shells, so its register is a routine pivot" },
@@ -198,7 +198,6 @@ static const hp_source HP_AMERICAS[] = {
     .url = "https://searchapi.mrasservice.ca/Search/api/v1/search?fq=keyword:%7B{q}%7D"
            "&lang=en&queryaction=fieldquery&sortfield=score&sortorder=desc",
     .array_path = "docs", .title_keys = "Company_Name", .id_keys = "Juri_ID",
-    .max_items = 40,
     .description = "Federated search across Canadian federal and provincial "
       "corporate registries — company name, jurisdiction, registry id and status "
       "in one query instead of thirteen separate portals" },
@@ -234,7 +233,8 @@ static const hp_source HP_AMERICAS[] = {
     .url = "https://api.portaldatransparencia.gov.br/api-de-dados/ceis?nomeSancionado={q}&pagina=1",
     .headers = { "chave-api-dados: {key}", NULL },
     .title_keys = "sancionado.nome,pessoa.nome", .id_keys = "id",
-    .date_keys = "dataInicioSancao", .max_items = 40,
+    .date_keys = "dataInicioSancao",
+    .page_param = "pagina", .page_start = 1,
     .description = "Brazilian register of companies barred from public contracting "
       "(CEIS) — sanctioned entity, sanctioning body, legal basis, and the start and "
       "end dates of the debarment" },
@@ -246,7 +246,7 @@ static const hp_source HP_AMERICAS[] = {
     .tags = "\"co\",\"procurement\"", .free_tier = 1,
     .url = "https://www.datos.gov.co/resource/jbjy-vk9h.json?$q={q}&$limit=40",
     .title_keys = "descripcion_del_proceso,proveedor_adjudicado",
-    .id_keys = "id_contrato", .date_keys = "fecha_de_firma", .max_items = 40,
+    .id_keys = "id_contrato", .date_keys = "fecha_de_firma",
     .description = "Colombian public contracts naming an entity — contracting "
       "entity, supplier, value, contract type and dates, from the open SECOP II "
       "dataset that covers the whole national procurement system" },
@@ -259,7 +259,7 @@ static const hp_source HP_AMERICAS[] = {
     .url = "https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json"
            "?ticket={key}&estado=adjudicada",
     .array_path = "Listado", .filter_query = 1, .title_keys = "Nombre",
-    .id_keys = "CodigoExterno", .date_keys = "FechaCierre", .max_items = 25,
+    .id_keys = "CodigoExterno", .date_keys = "FechaCierre",
     .description = "Awarded Chilean public tenders filtered to the queried entity — "
       "tender code, buying agency, title and closing date; the award records behind "
       "a Chilean supplier relationship" },
@@ -270,7 +270,7 @@ static const hp_source HP_AMERICAS[] = {
     .portal = "https://www.dof.gob.mx", .record_type = "mx-gazette",
     .tags = "\"mx\",\"gazette\"", .free_tier = 1,
     .url = "https://www.dof.gob.mx/busqueda_detalle.php?BUSCAR_EN=TITULO&TEXTO_BUSCAR={q}",
-    .base = "https://www.dof.gob.mx", .filter_query = 1, .max_items = 25,
+    .base = "https://www.dof.gob.mx", .filter_query = 1,
     .description = "Mexican Diario Oficial de la Federación entries naming an "
       "entity — concessions, sanctions, appointments and decrees, which is where "
       "Mexican state action against or in favour of a company is published" },

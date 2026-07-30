@@ -109,8 +109,8 @@ static const cis_reg REGS[] = {
 };
 static const int NREGS = (int)(sizeof(REGS) / sizeof(REGS[0]));
 
-#define CIS_TOTAL_CAP   40
-#define CIS_PER_REG_CAP 3
+#define CIS_TOTAL_CAP   500   /* exhaustive-ok: runaway guard, logged */
+#define CIS_PER_REG_CAP 0     /* 0 = every hit the page yielded */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;

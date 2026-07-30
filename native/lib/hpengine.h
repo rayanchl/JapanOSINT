@@ -99,15 +99,40 @@ typedef struct hp_source {
   const char *href_must;      /* anchor href must contain this (NULL = any) */
   const char *base;           /* prepended to root-relative hrefs           */
 
-  /* Second hop — the actual penetrancy. */
+  /* Second hop — the actual penetrancy. detail_max 0 (the default) deepens
+   * EVERY list record, bounded operationally by $JO_HP_DETAIL_MAX (default 25)
+   * so one pivot cannot fire thousands of requests. Records that were not
+   * deepened carry `_detail_pending: true` — an un-fetched detail is reported,
+   * not quietly treated as absent. */
   const char *detail_url;     /* template, {v} from detail_key              */
   const char *detail_key;     /* field in the list record holding the id    */
   const char *detail_path;    /* array_path for the detail doc (or NULL)    */
-  int         detail_max;     /* how many list hits to deepen (default 3)   */
+  int         detail_max;     /* 0 = every record (see JO_HP_DETAIL_MAX)    */
+
+  /* Pagination — part of the exhaustive-use rule
+   * (docs/SOURCE_EXHAUSTIVENESS.md): a paged endpoint that is read once has
+   * silently discarded every page after the first. Set ONE of these and the
+   * engine keeps fetching until the upstream stops producing records.
+   *   next_path   — dotted path to an absolute "next page" URL in the response
+   *   page_param  — query parameter to append/increment ("page", "offset", …)
+   * page_size is what one page returns (needed for offset-style paging), and
+   * page_max bounds the walk (default 10 pages) so a runaway feed cannot spin
+   * forever — when that bound bites it is stamped on every record, never
+   * silent. */
+  const char *next_path;
+  const char *page_param;
+  int         page_start;     /* first value of page_param (default 1, or 0
+                               * when the param name contains "offset")      */
+  int         page_size;      /* records per page, for offset-style paging    */
+  int         page_max;       /* max pages to walk (default 10)              */
 
   int csv_no_header;          /* CSV mode: file has no header row → col0..colN */
   int filter_query;           /* 1 = keep only records mentioning the query */
-  int max_items;              /* default 25                                 */
+  /* Cap on emitted records. 0 (the default) means EVERY record the upstream
+   * returned — the engine does not invent a limit the caller did not ask for.
+   * A non-zero value is the row author's explicit choice and is reported in
+   * each record's `_records_truncated` marker when it bites. */
+  int max_items;
   int free_tier;              /* 1 = usable without payment                 */
   int interval;               /* 0 = on-demand pivot (the norm here)        */
 } hp_source;

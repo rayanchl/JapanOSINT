@@ -19,7 +19,8 @@ static const hp_source HP_COURTS[] = {
     .tags = "\"us\",\"courts\",\"dockets\"", .key_env = CL_KEY, .headers = CL_AUTH,
     .free_tier = 1, .url = CL_BASE "/dockets/?case_name__icontains={q}&page_size=40",
     .array_path = "results", .title_keys = "case_name", .id_keys = "id",
-    .date_keys = "date_filed", .max_items = 40,
+    .date_keys = "date_filed",
+    .next_path = "next",
     .description = "US federal and state dockets whose case name contains the "
       "entity — court, docket number, nature of suit, cause, judge assigned and "
       "filing/termination dates" },
@@ -29,7 +30,8 @@ static const hp_source HP_COURTS[] = {
     .portal = "https://www.courtlistener.com", .record_type = "us-court-party",
     .tags = "\"us\",\"courts\",\"parties\"", .key_env = CL_KEY, .headers = CL_AUTH,
     .free_tier = 1, .url = CL_BASE "/parties/?name__icontains={q}&page_size=40",
-    .array_path = "results", .title_keys = "name", .id_keys = "id", .max_items = 40,
+    .array_path = "results", .title_keys = "name", .id_keys = "id",
+    .next_path = "next",
     .description = "Named parties in US litigation and the attorneys who appeared "
       "for them — the law-firm relationships around an entity, which are frequently "
       "more stable than its corporate filings" },
@@ -41,7 +43,8 @@ static const hp_source HP_COURTS[] = {
     .free_tier = 1,
     .url = CL_BASE "/search/?q={q}&type=r&order_by=dateFiled%20desc",
     .array_path = "results", .title_keys = "caseName,description",
-    .id_keys = "id", .date_keys = "dateFiled", .max_items = 40,
+    .id_keys = "id", .date_keys = "dateFiled",
+    .next_path = "next",
     .description = "Full-text search across PACER documents archived in RECAP — the "
       "actual complaints, motions and exhibits mentioning an entity, with docket "
       "entry numbers and document links" },
@@ -52,7 +55,8 @@ static const hp_source HP_COURTS[] = {
     .tags = "\"us\",\"courts\",\"opinions\"", .key_env = CL_KEY, .headers = CL_AUTH,
     .free_tier = 1, .url = CL_BASE "/search/?q={q}&type=o&order_by=dateFiled%20desc",
     .array_path = "results", .title_keys = "caseName", .id_keys = "id",
-    .date_keys = "dateFiled", .max_items = 40,
+    .date_keys = "dateFiled",
+    .next_path = "next",
     .description = "Published US opinions naming an entity — court, panel, citation "
       "and snippet. Opinions carry the findings of fact that other sources only "
       "allude to" },
@@ -64,7 +68,8 @@ static const hp_source HP_COURTS[] = {
     .free_tier = 1,
     .url = CL_BASE "/financial-disclosures/?person__name_last__icontains={q}&page_size=25",
     .array_path = "results", .title_keys = "person,filepath", .id_keys = "id",
-    .date_keys = "year", .max_items = 25,
+    .date_keys = "year",
+    .next_path = "next",
     .description = "US federal judges' annual financial disclosure filings — "
       "investments, gifts, reimbursements and outside income, which is what shows a "
       "judge's exposure to a party before them" },
@@ -75,7 +80,8 @@ static const hp_source HP_COURTS[] = {
     .tags = "\"us\",\"courts\",\"people\"", .key_env = CL_KEY, .headers = CL_AUTH,
     .free_tier = 1, .url = CL_BASE "/people/?name_last__icontains={q}&page_size=25",
     .array_path = "results", .title_keys = "name_full,name_last", .id_keys = "id",
-    .date_keys = "date_dob", .max_items = 25,
+    .date_keys = "date_dob",
+    .next_path = "next",
     .description = "Biographical records for US judges — appointments, confirmation "
       "dates, prior positions, education, political affiliations and ABA ratings" },
 
@@ -89,7 +95,8 @@ static const hp_source HP_COURTS[] = {
            "%22{q}%22&select=itemid,docname,doctype,appno,conclusion,judgementdate"
            "&sort=&start=0&length=40",
     .array_path = "results", .title_keys = "columns.docname", .id_keys = "columns.itemid",
-    .date_keys = "columns.judgementdate", .max_items = 40,
+    .date_keys = "columns.judgementdate",
+    .page_param = "start", .page_size = 40, .page_start = 0,
     .description = "European Court of Human Rights judgments and decisions naming an "
       "entity or applicant — application number, respondent state, conclusion and "
       "judgment date" },
@@ -99,7 +106,7 @@ static const hp_source HP_COURTS[] = {
     .portal = "https://www.canlii.org", .record_type = "ca-judgment",
     .tags = "\"ca\",\"courts\"", .type = "scraped", .mode = HP_HTML, .free_tier = 1,
     .url = "https://www.canlii.org/en/#search/text={q}",
-    .href_must = "/doc/", .base = "https://www.canlii.org", .max_items = 25,
+    .href_must = "/doc/", .base = "https://www.canlii.org",
     .description = "Canadian federal and provincial court and tribunal decisions "
       "naming an entity. CanLII's JSON API needs a key; the public search surface "
       "is used here and yields real document links or nothing" },
@@ -109,7 +116,7 @@ static const hp_source HP_COURTS[] = {
     .portal = "https://www.austlii.edu.au", .record_type = "au-judgment",
     .tags = "\"au\",\"courts\"", .type = "scraped", .mode = HP_HTML, .free_tier = 1,
     .url = "https://www.austlii.edu.au/cgi-bin/sinosrch.cgi?method=auto&query={q}",
-    .href_must = "/cases/", .base = "https://www.austlii.edu.au", .max_items = 25,
+    .href_must = "/cases/", .base = "https://www.austlii.edu.au",
     .description = "Australian judgments, tribunal decisions and legislation "
       "mentioning an entity — the full-text corpus behind ASIC's thin public "
       "company data" },
@@ -120,7 +127,7 @@ static const hp_source HP_COURTS[] = {
     .tags = "\"uk\",\"ie\",\"courts\"", .type = "scraped", .mode = HP_HTML,
     .free_tier = 1,
     .url = "https://www.bailii.org/cgi-bin/lucy_search_1.cgi?query={q}&method=boolean",
-    .href_must = "/cases/", .base = "https://www.bailii.org", .max_items = 25,
+    .href_must = "/cases/", .base = "https://www.bailii.org",
     .description = "UK and Irish judgments naming an entity — the litigation record "
       "behind a Companies House profile, including winding-up and fraud proceedings" },
 
@@ -131,7 +138,8 @@ static const hp_source HP_COURTS[] = {
     .url = "https://www.federalregister.gov/api/v1/documents.json"
            "?conditions%5Bterm%5D={q}&per_page=40&order=newest",
     .array_path = "results", .title_keys = "title", .id_keys = "document_number",
-    .date_keys = "publication_date", .max_items = 40,
+    .date_keys = "publication_date",
+    .page_param = "page", .page_start = 1,
     .description = "US Federal Register documents naming an entity — rules, notices, "
       "sanctions designations, licence grants and enforcement orders, with agency, "
       "docket and publication date" },
@@ -144,7 +152,7 @@ static const hp_source HP_COURTS[] = {
     .post_body = "{\"query\":\"{Q}\",\"pageSize\":40,\"offsetMark\":\"*\","
                  "\"sorts\":[{\"field\":\"publishdate\",\"sortOrder\":\"DESC\"}]}",
     .array_path = "results", .title_keys = "title", .id_keys = "packageId",
-    .date_keys = "dateIssued", .max_items = 40,
+    .date_keys = "dateIssued",
     .description = "Congressional hearings and reports, US Courts opinions, the "
       "Congressional Record, CFR and public laws mentioning an entity — one index "
       "over the whole federal publication corpus" },
@@ -155,7 +163,7 @@ static const hp_source HP_COURTS[] = {
     .tags = "\"domains\",\"disputes\"", .type = "scraped", .mode = HP_HTML,
     .free_tier = 1,
     .url = "https://www.wipo.int/amc/en/domains/search/legalindex-results.jsp?q={q}",
-    .base = "https://www.wipo.int", .filter_query = 1, .max_items = 25,
+    .base = "https://www.wipo.int", .filter_query = 1,
     .description = "WIPO domain-name panel decisions involving an entity or domain — "
       "complainant, respondent, the disputed domains and the outcome; a reliable way "
       "to attribute cybersquatting portfolios to a person" },
@@ -167,7 +175,8 @@ static const hp_source HP_COURTS[] = {
     .free_tier = 1,
     .url = CL_BASE "/search/?q={q}&type=r&order_by=entry_date_filed%20desc&page_size=25",
     .array_path = "results", .title_keys = "caseName,short_description",
-    .id_keys = "id", .date_keys = "entry_date_filed", .max_items = 25,
+    .id_keys = "id", .date_keys = "entry_date_filed",
+    .next_path = "next",
     .description = "Most recent docket activity mentioning an entity, newest first — "
       "the monitoring view: new complaints, new motions and new appearances as they "
       "enter RECAP" },
@@ -177,7 +186,7 @@ static const hp_source HP_COURTS[] = {
     .portal = "https://www.courts.ie", .record_type = "ie-judgment",
     .tags = "\"ie\",\"courts\"", .type = "scraped", .mode = HP_HTML, .free_tier = 1,
     .url = "https://www.courts.ie/search/judgments/%22{q}%22",
-    .href_must = "/acc/", .base = "https://www.courts.ie", .max_items = 25,
+    .href_must = "/acc/", .base = "https://www.courts.ie",
     .description = "Irish written judgments mentioning an entity — the counterpart to "
       "CRO filings for Irish holding companies and their directors" },
 
@@ -186,7 +195,7 @@ static const hp_source HP_COURTS[] = {
     .portal = "https://www.nzlii.org", .record_type = "nz-judgment",
     .tags = "\"nz\",\"courts\"", .type = "scraped", .mode = HP_HTML, .free_tier = 1,
     .url = "https://www.nzlii.org/cgi-bin/sinosrch.cgi?method=auto&query={q}",
-    .href_must = "/cases/", .base = "https://www.nzlii.org", .max_items = 25,
+    .href_must = "/cases/", .base = "https://www.nzlii.org",
     .description = "New Zealand court and tribunal decisions naming an entity — "
       "completes the NZ picture alongside the fully public Companies Office record" },
 };
