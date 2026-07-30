@@ -85,6 +85,16 @@ $(BIN): $(OBJS)
 selftest: $(BIN)
 	./$(BIN) --selftest
 
+# Offline unit test for the high-penetrancy record engine (lib/hpengine.c). Its
+# own http_request stub replaces libcurl, so it needs no network and no key —
+# see tests/hpengine_test.c.
+.PHONY: hptest
+hptest:
+	@mkdir -p bin
+	$(CC) $(CFLAGS) -o bin/hpengine_test tests/hpengine_test.c lib/hpengine.c \
+	  lib/csv.c collectors/sources/hp_uk_deep.c third_party/cJSON.c $(ICONV_LIB)
+	./bin/hpengine_test
+
 clean:
 	rm -rf $(OBJ) bin
 

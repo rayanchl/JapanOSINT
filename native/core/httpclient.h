@@ -14,6 +14,10 @@ typedef struct {
 
 typedef struct http_client http_client; /* opaque (shared curl share/handle) */
 
+/* Idempotent process-wide curl_global_init (http_client_new does this too).
+ * Call it before driving libcurl from a thread that never builds a client. */
+void         http_client_global_init(void);
+
 http_client *http_client_new(void);
 void         http_client_free(http_client *);
 

@@ -118,6 +118,28 @@ static void db_seed_sources(db_handle *db) {
   fprintf(stderr, "[db] seeded sources from registry (%d new rows)\n", added);
 }
 
+/* Second connection to an already-migrated database (no schema apply, no boot
+ * migrations, no source seeding) — for a background thread that owns its own
+ * transactions. A transaction belongs to a connection, not to a thread, so a
+ * worker sharing the event loop's handle would silently join whatever
+ * transaction is open there. Same file + same pragmas, that is all. */
+int db_attach(db_handle *db, const char *db_path) {
+  if (!db) return 1;
+  const char *dbp = db_path ? db_path
+    : (getenv("JO_DB") ? getenv("JO_DB") : JO_REPO_ROOT "/data/japanmap.db");
+  int rc = sqlite3_open_v2(dbp, &db->h, SQLITE_OPEN_READWRITE, NULL);
+  if (rc != SQLITE_OK) {
+    fprintf(stderr, "[db] attach failed: %s\n", sqlite3_errmsg(db->h));
+    sqlite3_close(db->h);
+    db->h = NULL;
+    return 1;
+  }
+  sqlite3_exec(db->h, "PRAGMA foreign_keys=ON;",   NULL, NULL, NULL);
+  sqlite3_exec(db->h, "PRAGMA busy_timeout=5000;", NULL, NULL, NULL);
+  sqlite3_exec(db->h, "PRAGMA synchronous=NORMAL;", NULL, NULL, NULL);
+  return 0;
+}
+
 int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   const char *dbp = db_path ? db_path
     : (getenv("JO_DB") ? getenv("JO_DB") : JO_REPO_ROOT "/data/japanmap.db");

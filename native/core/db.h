@@ -16,6 +16,14 @@ typedef struct { sqlite3 *h; } db_handle;
  * db_path / schema_path default to repo-relative when NULL (env JO_DB /
  * JO_SCHEMA override). Returns 0 on success. */
 int  db_open(db_handle *db, const char *db_path, const char *schema_path);
+
+/* Open a SECOND connection to an already-migrated database: same file, same
+ * pragmas, no schema apply / boot migration / registry seeding. A background
+ * worker that runs its own transactions must not share the caller's handle —
+ * a transaction belongs to a connection, not to a thread. Returns 0 on
+ * success; close with db_close() as usual. */
+int  db_attach(db_handle *db, const char *db_path);
+
 void db_close(db_handle *db);
 
 /* PRAGMA integrity_check — returns 1 if "ok", else 0 (msg via out). */

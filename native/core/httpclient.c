@@ -68,9 +68,17 @@ static size_t on_data(void *ptr, size_t sz, size_t nm, void *ud) {
   return n;
 }
 
-http_client *http_client_new(void) {
+/* One process-wide curl_global_init. http_client_new() calls it, but code that
+ * drives libcurl-adjacent machinery without ever building an http_client (the
+ * camera stills stream grabber) needs the same guarantee before its first
+ * transfer — curl_global_init is not thread-safe when raced. */
+void http_client_global_init(void) {
   static int inited = 0;
   if (!inited) { curl_global_init(CURL_GLOBAL_DEFAULT); inited = 1; }
+}
+
+http_client *http_client_new(void) {
+  http_client_global_init();
   http_client *c = calloc(1, sizeof *c);
   if (!c) return NULL;
   c->share = curl_share_init();
