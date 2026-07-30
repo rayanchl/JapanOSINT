@@ -90,7 +90,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (!data) continue;
 
       cJSON *pu = cJSON_GetObjectItem(data, "profileUsers");
-      cJSON *prof = (pu && cJSON_IsArray(pu)) ? cJSON_GetArrayItem(pu, 0) : NULL;
+      cJSON *prof = (pu && cJSON_IsArray(pu)) ? cJSON_GetArrayItem(pu, 0) : NULL;  /* exhaustive-ok: one gamertag queried */
       const char *gt = setting(prof, "Gamertag");
       if (!gt) gt = xbl[i];
       const char *bio = setting(prof, "Bio");

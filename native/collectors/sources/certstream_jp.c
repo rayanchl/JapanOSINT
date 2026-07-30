@@ -136,7 +136,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddItemToObject(props, "cn", cn ? cJSON_CreateString(cn) : cJSON_CreateNull());
     cJSON_AddItemToObject(props, "issuer", iss ? cJSON_CreateString(iss) : cJSON_CreateNull());
     cJSON_AddItemToObject(props, "jp_domains", cJSON_Duplicate(jp, 1));
-    const char *prim = njp > 0 ? cJSON_GetArrayItem(jp, 0)->valuestring : cn;
+    const char *prim = njp > 0 ? cJSON_GetArrayItem(jp, 0)->valuestring : cn;  /* exhaustive-ok: display pick; jp_domains carries all */
     cJSON_AddItemToObject(props, "primary_domain",
       prim ? cJSON_CreateString(prim) : cJSON_CreateNull());
     cJSON_AddNumberToObject(props, "all_domains_count",

@@ -183,7 +183,7 @@ static char *dw_rdap_org(const cJSON *root) {
       const cJSON *prop;
       cJSON_ArrayForEach(prop, props) {
         if (cJSON_IsArray(prop) && cJSON_GetArraySize(prop) >= 4) {
-          const cJSON *pname = cJSON_GetArrayItem(prop, 0);
+          const cJSON *pname = cJSON_GetArrayItem(prop, 0);  /* exhaustive-ok: jCard property is [name,params,type,value] */
           const cJSON *pval  = cJSON_GetArrayItem(prop, 3);
           if (pname && cJSON_IsString(pname) && pval && cJSON_IsString(pval) &&
               strcmp(pname->valuestring, "fn") == 0 && pval->valuestring[0]) {
@@ -234,7 +234,7 @@ static int dw_run_rdap(const source_ctx *ctx, intel_sink *sink) {
   char cidr[128] = {0};
   const cJSON *cidrs = cJSON_GetObjectItem(root, "cidr0_cidrs");
   if (cJSON_IsArray(cidrs) && cJSON_GetArraySize(cidrs) > 0) {
-    const cJSON *c0 = cJSON_GetArrayItem(cidrs, 0);
+    const cJSON *c0 = cJSON_GetArrayItem(cidrs, 0);  /* exhaustive-ok: display pick; cidrs_all carries every value */
     const char *v4 = jo_sv(c0, "v4prefix");
     const char *v6 = jo_sv(c0, "v6prefix");
     const cJSON *len = cJSON_GetObjectItem(c0, "length");
@@ -257,6 +257,10 @@ static int dw_run_rdap(const source_ctx *ctx, intel_sink *sink) {
 
   cJSON *data = cJSON_CreateObject();
   cJSON_AddStringToObject(data, "ip", ip);
+  /* An allocation can list several prefixes; `range` shows one, so keep the
+   * whole list too (docs/SOURCE_EXHAUSTIVENESS.md). */
+  if (cJSON_IsArray(cidrs) && cJSON_GetArraySize(cidrs) > 0)
+    cJSON_AddItemToObject(data, "cidrs_all", cJSON_Duplicate(cidrs, 1));
   if (range[0]) cJSON_AddStringToObject(data, "range", range);
   if (handle)   cJSON_AddStringToObject(data, "handle", handle);
   if (name)     cJSON_AddStringToObject(data, "netname", name);

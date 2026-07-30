@@ -80,6 +80,8 @@ cJSON_ArrayForEach(rec, arr) {
 | `native/core/osint_dispatch.c` | Captures **every** emitted record — `data = {"record_count":N,"records":[…]}`. (It previously kept only the last payload, so a 40-record service handed 1 record to Phase-2, the synthesis prompt and the API.) |
 | `native/core/pipeline.c` | Stores and serves all records; the LLM prompt gets a labelled view via `results_view_for_prompt()` — `records_shown`, `record_count`, `prompt_truncated` and a note that the rest are persisted. Bound size: `$JO_PROMPT_RECORDS_PER_SERVICE` (default 8) |
 | `native/core/intel.c` | Upserts every emitted item; `properties` is stored verbatim |
+| `native/lib/htmlparse.c` | `html_anchor_next()` + the growable `seen_set` are THE anchor scanner and dedupe for the whole tree (both `jo_emit_anchors` and the engine's HP_HTML rows). `jo_emit_anchors(max<=0)` means every matching anchor; a caller-imposed cap logs both numbers and emits a truncation notice |
+| `native/lib/seenset.c` | One growable "already seen" set. Fixed-size dedupe rings were a recurring violation: `char *seen[500]` stops collecting once full, so a domain with 600 certificates silently lost 100 |
 
 ## Checking your work
 
@@ -91,10 +93,23 @@ make hptest            # engine-level guarantees, offline
 
 `make audit-sources` reports, per file, the patterns that usually mean discarded
 data: hardcoded record caps, `break` in a record loop, first-element-only access,
-single-page fetches of paged APIs, and hand-picked field lists. It is a report,
-not a gate — the pre-existing collectors carry a known backlog (see the count it
-prints) and the rule applies as they are touched. New collectors are expected to
-come out clean.
+single-page fetches of paged APIs, and fixed dedupe rings.
+
+**The tree is currently at zero findings** across all 685 scanned files. It got
+there by fixing, not by silencing: arbitrary per-loop emit caps were deleted,
+paged endpoints (OpenPLZ, Etherscan, grep.app, arXiv, NZ Companies Office, UK
+Electoral Commission) now walk their pages, fixed dedupe rings became growable
+sets, and multi-valued fields that were cut to their first element now carry the
+whole array alongside the display pick (`titles_all`, `institutions_all`,
+`addresses_all`, `ciks_all`, `software_all`, `references_all`, …).
+
+Every deliberate exception carries an inline `/* exhaustive-ok: <reason> */`
+marker, so `grep -rn exhaustive-ok` lists all of them with their justification.
+Legitimate exceptions are: fixed-shape tuples (GeoJSON `[lon,lat]`, RDAP jCard
+`[name,params,type,value]`, an OpenSky state vector), CSV header rows,
+resolution steps that feed another call (name→coordinates, name→QID, ticker→CIK),
+1-element response envelopes, memory guards whose overrun is stamped on the
+record, and page-walk runaway guards.
 
 ## When you genuinely cannot take everything
 

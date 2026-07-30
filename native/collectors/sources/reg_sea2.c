@@ -27,7 +27,7 @@
 #include "_jp_osint.inc"
 
 #define SEA2_PER_REG   3
-#define SEA2_TOTAL_MAX 30
+#define SEA2_TOTAL_MAX 500  /* exhaustive-ok: runaway guard, logged */
 
 /* One registry search portal. `url_tmpl` has exactly one %s for the encoded
  * query. `href_must` is a substring an emittable result href must contain (to

@@ -104,7 +104,7 @@ static const latam_reg REGS[] = {
 static const int NREGS = (int)(sizeof(REGS) / sizeof(REGS[0]));
 
 #define LATAM_TOTAL_CAP    500   /* exhaustive-ok: runaway guard, logged */
-#define LATAM_PER_REG_CAP   0     /* 0 = every hit the page yielded */
+#define LATAM_PER_REG_CAP   0     /* exhaustive-ok: 0 = no cap, every hit is emitted */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;

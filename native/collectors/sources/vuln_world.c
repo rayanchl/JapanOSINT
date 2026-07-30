@@ -73,7 +73,7 @@ static double nvd_cvss(const cJSON *cve, const char **severity) {
   for (size_t i = 0; i < sizeof keys / sizeof keys[0]; i++) {
     const cJSON *arr = cJSON_GetObjectItem(metrics, keys[i]);
     if (!cJSON_IsArray(arr)) continue;
-    const cJSON *m = cJSON_GetArrayItem(arr, 0);
+    const cJSON *m = cJSON_GetArrayItem(arr, 0);  /* exhaustive-ok: primary CVSS metric per version key */
     if (!m) continue;
     const cJSON *cd = cJSON_GetObjectItem(m, "cvssData");
     const cJSON *bs = cd ? cJSON_GetObjectItem(cd, "baseScore") : NULL;
@@ -102,7 +102,7 @@ static int nvd_emit(intel_sink *sink, const cJSON *item) {
   const char *ref = NULL;
   const cJSON *refs = cJSON_GetObjectItem(cve, "references");
   if (cJSON_IsArray(refs)) {
-    const cJSON *r = cJSON_GetArrayItem(refs, 0);
+    const cJSON *r = cJSON_GetArrayItem(refs, 0);  /* exhaustive-ok: display pick; references_all carries every reference */
     if (r) ref = jo_sv(r, "url");
   }
   char nvdurl[128];
@@ -169,7 +169,8 @@ static int nvd_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
     const cJSON *v;
     cJSON_ArrayForEach(v, vulns) {
       emitted += nvd_emit(sink, v);
-      if (emitted >= 30) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -257,7 +258,8 @@ static int kev_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
     const cJSON *r;
     cJSON_ArrayForEach(r, vulns) {
       emitted += kev_emit(sink, r, q);
-      if (emitted >= 50) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);

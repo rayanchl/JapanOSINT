@@ -58,7 +58,8 @@ static int run_police(const source_ctx *ctx, intel_sink *sink, const char *raw) 
     it.record_type = "uk-crime"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"UK_POLICE_CRIME\"]";
     if (sink->emit(sink, &it) >= 0) n++;
     free(bj); free(pj);
-    if (n >= 50) break;
+    /* (cap removed: every record the upstream returned is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
   }
   cJSON_Delete(root);
   return n;

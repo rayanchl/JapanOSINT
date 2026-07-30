@@ -52,7 +52,8 @@ static int run_serpapi(const source_ctx *ctx, intel_sink *sink, const char *enc)
     const cJSON *r;
     cJSON_ArrayForEach(r, org) {
       n += emit_result(sink, "SERPAPI_SEARCH", jo_sv(r, "title"), jo_sv(r, "link"), jo_sv(r, "snippet"));
-      if (n >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -77,7 +78,8 @@ static int run_bing(const source_ctx *ctx, intel_sink *sink, const char *enc) {
     const cJSON *r;
     cJSON_ArrayForEach(r, values) {
       n += emit_result(sink, "BING_WEB_SEARCH", jo_sv(r, "name"), jo_sv(r, "url"), jo_sv(r, "snippet"));
-      if (n >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);

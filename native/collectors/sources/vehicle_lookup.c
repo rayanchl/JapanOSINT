@@ -105,7 +105,7 @@ static cJSON *decode_vin_nhtsa(http_client *http, const char *vin) {
   cJSON *vi = NULL;
   const cJSON *res = cJSON_GetObjectItem(j, "Results");
   if (res && cJSON_IsArray(res) && cJSON_GetArraySize(res) > 0) {
-    const cJSON *v = cJSON_GetArrayItem(res, 0);
+    const cJSON *v = cJSON_GetArrayItem(res, 0);  /* exhaustive-ok: vPIC returns one decode per VIN */
     if (v) {
       static const char *F[] = {
         "Make","Model","ModelYear","VehicleType","BodyClass","DriveType",

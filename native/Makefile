@@ -99,7 +99,8 @@ audit-sources:
 hptest:
 	@mkdir -p bin
 	$(CC) $(CFLAGS) -o bin/hpengine_test tests/hpengine_test.c lib/hpengine.c \
-	  lib/csv.c collectors/sources/hp_uk_deep.c third_party/cJSON.c $(ICONV_LIB)
+	  lib/csv.c lib/htmlparse.c lib/seenset.c collectors/sources/hp_uk_deep.c \
+	  third_party/cJSON.c $(ICONV_LIB)
 	./bin/hpengine_test
 
 clean:

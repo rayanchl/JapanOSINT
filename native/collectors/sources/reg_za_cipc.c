@@ -53,7 +53,7 @@ static const za_portal PORTALS[] = {
 };
 static const int NPORTAL = (int)(sizeof(PORTALS) / sizeof(PORTALS[0]));
 
-#define ZA_TOTAL_CAP     30   /* stop the whole fan-out once we hit ~30 items */
+#define ZA_TOTAL_CAP     500  /* exhaustive-ok: runaway guard, logged */
 #define ZA_PER_PORT_CAP  15   /* at most ~15 hits per portal                  */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

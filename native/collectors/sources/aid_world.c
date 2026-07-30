@@ -110,10 +110,12 @@ static int aid_reliefweb(const source_ctx *ctx, intel_sink *sink, const char *q)
       cJSON *src = cJSON_GetObjectItem(f, "source");
       const char *srcname = NULL;
       if (cJSON_IsArray(src) && cJSON_GetArraySize(src) > 0)
-        srcname = jo_sv(cJSON_GetArrayItem(src, 0), "name");
+        srcname = jo_sv(cJSON_GetArrayItem(src, 0), "name");   /* display pick */  /* exhaustive-ok: display pick; publishers_all carries every source */
       cJSON *pc = cJSON_GetObjectItem(f, "primary_country");
       const char *ctry = pc ? jo_sv(pc, "name") : NULL;
       cJSON *extra = cJSON_CreateObject();
+      if (cJSON_IsArray(src) && cJSON_GetArraySize(src) > 1)
+        cJSON_AddItemToObject(extra, "publishers_all", cJSON_Duplicate(src, 1));
       if (srcname) cJSON_AddStringToObject(extra, "publisher", srcname);
       if (ctry)    cJSON_AddStringToObject(extra, "country", ctry);
       emitted += aid_emit(sink, "RELIEFWEB", "aid-report", q,
@@ -203,7 +205,8 @@ static int aid_fts(const source_ctx *ctx, intel_sink *sink, const char *q) {
   if (cJSON_IsArray(arr)) {
     cJSON *r;
     cJSON_ArrayForEach(r, arr) {
-      if (emitted >= AID_MAX) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
       cJSON *pv = cJSON_GetObjectItem(r, "planVersion");
       const char *name = pv ? jo_sv(pv, "name") : jo_sv(r, "name");
       if (!name) continue;
@@ -211,7 +214,7 @@ static int aid_fts(const source_ctx *ctx, intel_sink *sink, const char *q) {
       const char *ctry = NULL;
       cJSON *locs = cJSON_GetObjectItem(r, "locations");
       if (cJSON_IsArray(locs) && cJSON_GetArraySize(locs) > 0)
-        ctry = jo_sv(cJSON_GetArrayItem(locs, 0), "name");
+        ctry = jo_sv(cJSON_GetArrayItem(locs, 0), "name");  /* exhaustive-ok: display pick; locations_all carries every country */
       if (!aid_stristr(name, q) && !(ctry && aid_stristr(ctry, q))) continue;
       const cJSON *idn = cJSON_GetObjectItem(r, "id");
       char idbuf[32] = {0}, link[128] = {0};
@@ -222,12 +225,16 @@ static int aid_fts(const source_ctx *ctx, intel_sink *sink, const char *q) {
       const char *year = NULL;
       cJSON *yrs = cJSON_GetObjectItem(r, "years");
       if (cJSON_IsArray(yrs) && cJSON_GetArraySize(yrs) > 0) {
-        cJSON *y0 = cJSON_GetArrayItem(yrs, 0);
+        cJSON *y0 = cJSON_GetArrayItem(yrs, 0);  /* exhaustive-ok: display pick; years_all carries every plan year */
         const cJSON *yv = cJSON_GetObjectItem(y0, "year");
         if (yv && cJSON_IsString(yv)) year = yv->valuestring;
       }
       cJSON *extra = cJSON_CreateObject();
+      if (cJSON_IsArray(locs) && cJSON_GetArraySize(locs) > 1)
+        cJSON_AddItemToObject(extra, "locations_all", cJSON_Duplicate(locs, 1));
       if (ctry) cJSON_AddStringToObject(extra, "country", ctry);
+      if (cJSON_IsArray(yrs) && cJSON_GetArraySize(yrs) > 1)
+        cJSON_AddItemToObject(extra, "years_all", cJSON_Duplicate(yrs, 1));
       if (year) cJSON_AddStringToObject(extra, "year", year);
       emitted += aid_emit(sink, "OCHA_FTS", "aid-funding-plan", q,
                           idbuf[0] ? idbuf : name, name, ctry,
@@ -263,7 +270,8 @@ static int aid_worldbank(const source_ctx *ctx, intel_sink *sink, const char *q)
   if (cJSON_IsObject(projs)) {
     cJSON *p;
     cJSON_ArrayForEach(p, projs) {
-      if (emitted >= AID_MAX) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
       if (!cJSON_IsObject(p)) continue;
       const char *title = jo_sv(p, "project_name");
       const char *id    = jo_sv(p, "id");

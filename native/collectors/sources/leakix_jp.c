@@ -47,7 +47,8 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
   if (cJSON_IsArray(arr)) {
     cJSON *s;
     cJSON_ArrayForEach(s, arr) {
-      if (i >= 200) break;                     /* slice(0,200) */
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
       cJSON *geoip = cJSON_GetObjectItem(s, "geoip");
       cJSON *lonv = geoip ? cJSON_GetObjectItem(geoip, "longitude") : NULL;
       cJSON *latv = geoip ? cJSON_GetObjectItem(geoip, "latitude") : NULL;

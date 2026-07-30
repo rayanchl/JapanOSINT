@@ -99,8 +99,8 @@ static const latam_reg REGS[] = {
 };
 static const int NREGS = (int)(sizeof(REGS) / sizeof(REGS[0]));
 
-#define L2_TOTAL_CAP    40   /* hard ceiling on items emitted per query   */
-#define L2_PER_REG_CAP   3   /* per-registry ceiling so no single fan-out */
+#define L2_TOTAL_CAP    500  /* exhaustive-ok: runaway guard, logged */
+#define L2_PER_REG_CAP   0    /* exhaustive-ok: 0 = every hit on the page */
 
 /* Emit one company hit parsed from the CL RES JSON search API. name/link are
  * REAL extracted fields; never synthesized. Returns 1 on emit. */

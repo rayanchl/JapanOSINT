@@ -157,10 +157,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (root) {
         cJSON *feats = cJSON_GetObjectItem(root, "features");
         if (cJSON_IsArray(feats)) {
-          cJSON *f; int n = 0;
+          cJSON *f;
           cJSON_ArrayForEach(f, feats) {
             emitted += emit_geo(sink, f);
-            if (++n >= 250) break;
+            /* (cap removed: every record of the fetched array is emitted —
+             * docs/SOURCE_EXHAUSTIVENESS.md) */
           }
         }
         cJSON_Delete(root);

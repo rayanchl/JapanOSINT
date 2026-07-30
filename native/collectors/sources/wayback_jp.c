@@ -47,7 +47,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (rows) cJSON_Delete(rows);
       continue;
     }
-    cJSON *header = cJSON_GetArrayItem(rows, 0);
+    cJSON *header = cJSON_GetArrayItem(rows, 0);  /* exhaustive-ok: CDX header row */
     /* resolve column indices from the header row */
     int iTs = -1, iOrig = -1, iStat = -1, iMime = -1, iDig = -1;
     int hc = cJSON_GetArraySize(header);

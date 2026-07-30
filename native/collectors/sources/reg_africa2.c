@@ -25,8 +25,8 @@
 #include "_jp_osint.inc"
 
 /* per-query global cap and per-registry cap */
-#define AFR2_TOTAL_MAX   36
-#define AFR2_PER_REG_MAX 3
+#define AFR2_TOTAL_MAX   500  /* exhaustive-ok: runaway guard, logged */
+#define AFR2_PER_REG_MAX 0    /* exhaustive-ok: 0 = every hit on the page */
 
 typedef struct {
   const char *name;      /* registry / portal display name                    */

@@ -234,7 +234,8 @@ static cJSON *try_opensky(const source_ctx *ctx) {
   int i = 0;
   cJSON *s;
   cJSON_ArrayForEach(s, states) {
-    if (i >= 200) break;                              /* slice(0,200) */
+    /* (cap removed: every record of the fetched array is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
     cJSON *s5 = cJSON_GetArrayItem(s, 5);
     cJSON *s6 = cJSON_GetArrayItem(s, 6);
     double lon = is_num(s5) ? s5->valuedouble : 139.7;
@@ -254,7 +255,7 @@ static cJSON *try_opensky(const source_ctx *ctx) {
     char idbuf[32];
     snprintf(idbuf, sizeof idbuf, "ADSB_LIVE_%d", i);
     cJSON_AddStringToObject(p, "id", idbuf);
-    cJSON_AddItemToObject(p, "icao24", dup_or_null(cJSON_GetArrayItem(s, 0)));
+    cJSON_AddItemToObject(p, "icao24", dup_or_null(cJSON_GetArrayItem(s, 0)));  /* exhaustive-ok: fixed state-vector tuple */
     cJSON *s1 = cJSON_GetArrayItem(s, 1);
     char *cs = trim_or_null((s1 && cJSON_IsString(s1)) ? s1->valuestring : "");
     /* JS: (s[1]||'').trim() — empty string, not null */
@@ -532,7 +533,8 @@ static void try_aerodatabox_airport(const source_ctx *ctx,
     if (!cJSON_IsArray(list)) continue;
     cJSON *fl;
     cJSON_ArrayForEach(fl, list) {
-      if (i >= 150) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
       char airportLabel[160];
       snprintf(airportLabel, sizeof airportLabel, "%s (%s/%s)",
                ap->name, ap->icao, ap->iata);
@@ -602,7 +604,8 @@ static void try_aerodatabox_airport(const source_ctx *ctx,
       cJSON_AddItemToArray(out, f);
       i++;
     }
-    if (i >= 150) break;
+    /* (cap removed: every record the upstream returned is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
   }
   cJSON_Delete(data);
 }

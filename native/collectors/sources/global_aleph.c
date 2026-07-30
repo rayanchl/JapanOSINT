@@ -23,7 +23,7 @@ static const char *aleph_prop1(const cJSON *props, const char *key) {
   if (!props) return NULL;
   const cJSON *arr = cJSON_GetObjectItem(props, key);
   if (cJSON_IsArray(arr)) {
-    const cJSON *v = cJSON_GetArrayItem(arr, 0);
+    const cJSON *v = cJSON_GetArrayItem(arr, 0);  /* exhaustive-ok: FtM property helper: the caller duplicates the whole properties object into the record */
     if (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
       return v->valuestring;
   } else if (cJSON_IsString(arr) && arr->valuestring && arr->valuestring[0]) {

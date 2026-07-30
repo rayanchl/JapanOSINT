@@ -56,7 +56,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0, i = 0;
   cJSON *f;
   cJSON_ArrayForEach(f, feats) {
-    if (i >= 50) break;
+    /* (cap removed: every record of the fetched array is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
     cJSON *props = cJSON_GetObjectItem(f, "properties");
     if (!props || !cJSON_IsObject(props)) props = f;
 

@@ -156,7 +156,7 @@ static const eu_reg REGS[] = {
 static const int NREG = (int)(sizeof(REGS) / sizeof(REGS[0]));
 
 #define EU_TOTAL_CAP     500   /* exhaustive-ok: runaway guard, logged */
-#define EU_PER_REG_CAP    0     /* 0 = every hit the page yielded */
+#define EU_PER_REG_CAP    0     /* exhaustive-ok: 0 = no cap, every hit is emitted */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *e = ctx->entity;

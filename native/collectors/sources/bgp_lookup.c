@@ -83,15 +83,29 @@ static int bgp_run(const source_ctx *ctx, intel_sink *sink) {
   if (asns) cJSON_AddItemToObject(out, "asns", cJSON_Duplicate(asns, 1));
   /* enrich with the first ASN's holder */
   if (asns && cJSON_IsArray(asns) && cJSON_GetArraySize(asns) > 0) {
-    cJSON *a0 = cJSON_GetArrayItem(asns, 0);
-    if (a0 && cJSON_IsString(a0)) {
-      char res[32]; snprintf(res, sizeof res, "AS%s", a0->valuestring);
+    /* A prefix can be announced by several ASNs (multi-origin, or a leak).
+     * Resolve the holder of EVERY one, not just the first
+     * (docs/SOURCE_EXHAUSTIVENESS.md). */
+    cJSON *holders = cJSON_CreateArray();
+    cJSON *an;
+    cJSON_ArrayForEach(an, asns) {
+      if (!cJSON_IsString(an)) continue;
+      char res[32]; snprintf(res, sizeof res, "AS%s", an->valuestring);
       cJSON *jo = ripestat(ctx->http, "as-overview", res);
       cJSON *dd = jo ? cJSON_GetObjectItem(jo, "data") : NULL;
       const char *holder = dd ? jstr(dd, "holder") : NULL;
-      if (holder) cJSON_AddStringToObject(out, "holder", holder);
+      if (holder) {
+        cJSON *h = cJSON_CreateObject();
+        cJSON_AddStringToObject(h, "asn", res);
+        cJSON_AddStringToObject(h, "holder", holder);
+        cJSON_AddItemToArray(holders, h);
+        if (!cJSON_GetObjectItem(out, "holder"))
+          cJSON_AddStringToObject(out, "holder", holder);   /* headline */
+      }
       if (jo) cJSON_Delete(jo);
     }
+    if (cJSON_GetArraySize(holders)) cJSON_AddItemToObject(out, "holders", holders);
+    else cJSON_Delete(holders);
   }
   int r = emit(sink, e, out);
   cJSON_Delete(out); cJSON_Delete(j);

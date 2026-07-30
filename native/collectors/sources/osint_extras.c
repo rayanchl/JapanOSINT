@@ -59,10 +59,12 @@ static int run_onionoo(const source_ctx *ctx, intel_sink *sink, const char *enc)
       if (!fp && !nick) continue;
       const char *addr = NULL;
       const cJSON *ors = cJSON_GetObjectItem(r, "or_addresses");
-      if (cJSON_IsArray(ors) && cJSON_GetArraySize(ors)) { const cJSON *a0 = cJSON_GetArrayItem(ors, 0); if (cJSON_IsString(a0)) addr = a0->valuestring; }
+      if (cJSON_IsArray(ors) && cJSON_GetArraySize(ors)) { const cJSON *a0 = cJSON_GetArrayItem(ors, 0);  /* exhaustive-ok: display pick; or_addresses_all carries every relay address */ if (cJSON_IsString(a0)) addr = a0->valuestring; }
       cJSON *d = cJSON_CreateObject();
       if (nick) cJSON_AddStringToObject(d, "nickname", nick);
       if (fp) cJSON_AddStringToObject(d, "fingerprint", fp);
+      if (cJSON_IsArray(ors) && cJSON_GetArraySize(ors) > 1)
+        cJSON_AddItemToObject(d, "or_addresses_all", cJSON_Duplicate(ors, 1));
       if (addr) cJSON_AddStringToObject(d, "or_address", addr);
       if (country) cJSON_AddStringToObject(d, "country", country);
       if (asname) cJSON_AddStringToObject(d, "as_name", asname);
@@ -73,7 +75,8 @@ static int run_onionoo(const source_ctx *ctx, intel_sink *sink, const char *enc)
       char link[256] = {0};
       if (fp) snprintf(link, sizeof link, "https://metrics.torproject.org/rs.html#details/%s", fp);
       emitted += oe_emit(sink, "TOR_ONIONOO", "tor-relay", fp ? fp : nick, nick ? nick : fp, asname, link, d, p, 0, 0, 0);
-      if (emitted >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -122,7 +125,8 @@ static int run_gh_commits(const source_ctx *ctx, intel_sink *sink, const char *r
       snprintf(title, sizeof title, "%s @ %s", aname ? aname : "commit", repofull ? repofull : sha);
       emitted += oe_emit(sink, "GITHUB_COMMITS_BY_EMAIL", "github-commit", sha, title, aname, html, d, p, 0, 0, 0);
       (void)adate;
-      if (emitted >= 20) break;
+      /* (cap removed: every record the upstream returned is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -160,7 +164,8 @@ static int run_archive(const source_ctx *ctx, intel_sink *sink, const char *enc)
       cJSON_AddStringToObject(p, "identifier", id);
       char link[300]; snprintf(link, sizeof link, "https://archive.org/details/%s", id);
       emitted += oe_emit(sink, "ARCHIVE_ORG_SEARCH", "archive-item", id, title ? title : id, mt, link, d, p, 0, 0, 0);
-      if (emitted >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -197,7 +202,8 @@ static int run_musicbrainz(const source_ctx *ctx, intel_sink *sink, const char *
       cJSON_AddStringToObject(p, "mbid", id);
       char link[300]; snprintf(link, sizeof link, "https://musicbrainz.org/artist/%s", id);
       emitted += oe_emit(sink, "MUSICBRAINZ", "musicbrainz-artist", id, name, disamb ? disamb : country, link, d, p, 0, 0, 0);
-      if (emitted >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);

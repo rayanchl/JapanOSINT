@@ -137,7 +137,7 @@ static cJSON *query_rdap(http_client *http, const char *domain) {
                 for (int k = 0; k < pn; k++) {
                   cJSON *prop = cJSON_GetArrayItem(props, k);
                   if (cJSON_IsArray(prop) && cJSON_GetArraySize(prop) > 0) {
-                    cJSON *type = cJSON_GetArrayItem(prop, 0);
+                    cJSON *type = cJSON_GetArrayItem(prop, 0);  /* exhaustive-ok: jCard property tuple */
                     if (cJSON_IsString(type) && strcmp(type->valuestring, "fn") == 0) {
                       cJSON *value = cJSON_GetArrayItem(prop, 3);
                       if (cJSON_IsString(value))

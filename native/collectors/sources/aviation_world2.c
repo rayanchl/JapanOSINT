@@ -93,7 +93,7 @@ static int run_reapi(const source_ctx *ctx, intel_sink *sink, const char *host,
   const cJSON *ac = cJSON_GetObjectItem(root, "ac");
   int emitted = 0;
   if (cJSON_IsArray(ac)) {
-    const cJSON *a; cJSON_ArrayForEach(a, ac) { emitted += av_emit_ac(sink, service, a); if (emitted >= 20) break; }
+    const cJSON *a; cJSON_ArrayForEach(a, ac) { emitted += av_emit_ac(sink, service, a); }
   }
   cJSON_Delete(root);
   return emitted;
@@ -116,7 +116,7 @@ static int run_opensky(const source_ctx *ctx, intel_sink *sink, const char *enc,
     const cJSON *s;
     cJSON_ArrayForEach(s, states) {
       if (!cJSON_IsArray(s)) continue;
-      const cJSON *icao = cJSON_GetArrayItem(s, 0);
+      const cJSON *icao = cJSON_GetArrayItem(s, 0);  /* exhaustive-ok: OpenSky state vector is a fixed tuple */
       const cJSON *cs   = cJSON_GetArrayItem(s, 1);
       const cJSON *cc   = cJSON_GetArrayItem(s, 2);
       const cJSON *lon  = cJSON_GetArrayItem(s, 5);
@@ -147,7 +147,8 @@ static int run_opensky(const source_ctx *ctx, intel_sink *sink, const char *enc,
       it.tags_json = "[\"osint-search\",\"OPENSKY_STATES\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
       free(bj); free(pj);
-      if (emitted >= 20) break;
+      /* (cap removed: every record the upstream returned is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -196,7 +197,8 @@ static int run_planespotters(const source_ctx *ctx, intel_sink *sink, const char
       it.tags_json = "[\"osint-search\",\"PLANESPOTTERS\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
       free(bj); free(pj);
-      if (emitted >= 10) break;
+      /* (cap removed: every record the upstream returned is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);

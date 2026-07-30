@@ -6,6 +6,7 @@
  * that cannot fetch emits zero items and logs why. */
 #include "hpengine.h"
 #include "csv.h"
+#include "htmlparse.h"   /* the one anchor scanner + dedupe set */
 #include "../core/httpclient.h"
 #include "../third_party/cJSON.h"
 #include <ctype.h>
@@ -716,67 +717,38 @@ static int hp_run_csv(hp_run_state *st, const char *body) {
 static int hp_run_html(hp_run_state *st, const char *html) {
   const hp_source *s = st->s;
   int max = hp_record_cap(s);
+  /* Scanning and dedupe come from lib/htmlparse (html_anchor_next /
+   * html_seen_*) — the SAME code jo_emit_anchors() uses in the registry
+   * sweeps. This function is now only the engine's policy: which anchors to
+   * accept, and emitting them through the engine's record path so they carry
+   * the endpoint / page / truncation provenance every hp row carries. */
+  html_seen seen = {0};
+  html_anchor a;
   const char *p = html;
-  /* Grown, not a fixed 64-slot ring: a full dedupe table means every distinct
-   * anchor on the page is emitted exactly once, instead of the tail being
-   * re-emitted (or dropped) once the ring wrapped. */
-  char **seen = NULL;
-  int nseen = 0, seencap = 0;
-  while ((!max || st->emitted < max) && (p = strstr(p, "<a ")) != NULL) {
-    const char *h = strstr(p, "href=\"");
-    const char *tagend = strchr(p, '>');
-    p += 3;
-    if (!h || !tagend || h > tagend) continue;
-    h += 6;
-    const char *he = strchr(h, '"');
-    if (!he) continue;
-    size_t hlen = (size_t)(he - h);
-    if (!hlen || hlen > 700) continue;
-    const char *atext = strchr(he, '>');
-    const char *aclose = atext ? strstr(atext, "</a>") : NULL;
-    if (!atext || !aclose) continue;
-    atext++;
-    char text[512];
-    size_t tj = 0;
-    int intag = 0;
-    for (const char *q = atext; q < aclose && tj < sizeof text - 1; q++) {
-      if (*q == '<') intag = 1;
-      else if (*q == '>') intag = 0;
-      else if (!intag && *q != '\n' && *q != '\t') text[tj++] = *q;
-    }
-    while (tj && text[tj - 1] == ' ') tj--;
-    text[tj] = 0;
-    char href[720];
-    snprintf(href, sizeof href, "%.*s", (int)hlen, h);
-    p = aclose + 4;
+  while ((!max || st->emitted < max) && (p = html_anchor_next(p, &a)) != NULL) {
+    char href[820];
+    snprintf(href, sizeof href, "%.*s", (int)a.href_len, a.href);
     if (s->href_must && !strstr(href, s->href_must)) continue;
-    if (tj < 3) continue;
+    if (a.text_len < 3) continue;
     if (s->filter_query && st->vars->raw &&
-        !hp_icontains(text, st->vars->raw) && !hp_icontains(href, st->vars->raw))
+        !hp_icontains(a.text, st->vars->raw) && !hp_icontains(href, st->vars->raw))
       continue;
-    int dup = 0;
-    for (int i = 0; i < nseen; i++) if (!strcmp(seen[i], href)) { dup = 1; break; }
-    if (dup) continue;
-    if (nseen == seencap) {
-      int nc = seencap ? seencap * 2 : 64;
-      char **np = realloc(seen, (size_t)nc * sizeof *np);
-      if (np) { seen = np; seencap = nc; }
-    }
-    if (nseen < seencap) seen[nseen++] = strdup(href);
+    st->available++;
+    if (!html_seen_add(&seen, href)) continue;      /* already emitted */
 
-    char link[800];
+    char link[900];
     if (!strncmp(href, "http", 4)) snprintf(link, sizeof link, "%s", href);
     else snprintf(link, sizeof link, "%s%s", s->base ? s->base : "", href);
 
     cJSON *flat = cJSON_CreateObject();
-    cJSON_AddStringToObject(flat, "title", text);
+    cJSON_AddStringToObject(flat, "title", a.text);
     cJSON_AddStringToObject(flat, "url", link);
     cJSON_AddStringToObject(flat, "id", link);
     hp_emit_record(st, flat, 0);
     cJSON_Delete(flat);
   }
-  for (int i = 0; i < nseen; i++) free(seen[i]);
-  free(seen);
+  if (max && st->emitted >= max) st->truncated = 1;
+  html_seen_free(&seen);
   return st->emitted;
 }
 

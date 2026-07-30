@@ -105,7 +105,8 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
   if (cJSON_IsArray(data)) {
     cJSON *d;
     cJSON_ArrayForEach(d, data) {
-      if (i >= 300) break;                     /* slice(0,300) */
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
       if (!jp_relevant(d)) continue;
       cJSON *clv = cJSON_GetObjectItem(d, "confidence_level");
       double cl = (clv && cJSON_IsNumber(clv)) ? clv->valuedouble : 0; /* ?? 0 */

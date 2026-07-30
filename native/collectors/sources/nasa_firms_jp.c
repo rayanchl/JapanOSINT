@@ -73,7 +73,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int nrows = cJSON_GetArraySize(rows);
   if (nrows < 2) { cJSON_Delete(rows); return 0; }
 
-  cJSON *hdr = cJSON_GetArrayItem(rows, 0);
+  cJSON *hdr = cJSON_GetArrayItem(rows, 0);  /* exhaustive-ok: CSV header row, not a record */
   int iLat = idx_of(hdr, "latitude"), iLon = idx_of(hdr, "longitude");
   int iBright = idx_of(hdr, "bright_ti4");
   if (iBright == -1) iBright = idx_of(hdr, "brightness");

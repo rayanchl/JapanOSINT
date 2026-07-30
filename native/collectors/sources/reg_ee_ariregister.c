@@ -97,7 +97,8 @@ static int walk(intel_sink *sink, const cJSON *node, int depth, int *count) {
   if (cJSON_IsArray(node)) {
     const cJSON *e;
     cJSON_ArrayForEach(e, node) {
-      if (*count >= 30) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
       if (cJSON_IsObject(e)) {
         int e1 = emit_company(sink, e);
         emitted += e1; *count += e1;
@@ -109,7 +110,8 @@ static int walk(intel_sink *sink, const cJSON *node, int depth, int *count) {
   } else if (cJSON_IsObject(node)) {
     const cJSON *ch;
     cJSON_ArrayForEach(ch, node) {
-      if (*count >= 30) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
       if (cJSON_IsArray(ch) || cJSON_IsObject(ch))
         emitted += walk(sink, ch, depth + 1, count);
     }

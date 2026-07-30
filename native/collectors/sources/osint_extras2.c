@@ -67,7 +67,8 @@ static int run_wikidata_ent(const source_ctx *ctx, intel_sink *sink, const char 
       cJSON *p = cJSON_CreateObject(); cJSON_AddStringToObject(p, "qid", id);
       char link[128]; snprintf(link, sizeof link, "https://www.wikidata.org/wiki/%s", id);
       n += oe2_emit(sink, "WIKIDATA_ENTITY_SEARCH", "wikidata-entity", id, label ? label : id, desc, link, d, p, 0, 0, 0);
-      if (n >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -94,9 +95,11 @@ static int run_sec_fulltext(const source_ctx *ctx, intel_sink *sink, const char 
       const char *fdate = src ? jo_sv(src, "file_date") : NULL;
       const char *disp = NULL;
       const cJSON *names = src ? cJSON_GetObjectItem(src, "display_names") : NULL;
-      if (cJSON_IsArray(names) && cJSON_GetArraySize(names)) { const cJSON *n0 = cJSON_GetArrayItem(names, 0); if (cJSON_IsString(n0)) disp = n0->valuestring; }
+      if (cJSON_IsArray(names) && cJSON_GetArraySize(names)) { const cJSON *n0 = cJSON_GetArrayItem(names, 0);  /* exhaustive-ok: display pick; filers_all carries every filer */ if (cJSON_IsString(n0)) disp = n0->valuestring; }
       if (!hid) continue;
       cJSON *d = cJSON_CreateObject();
+      if (cJSON_IsArray(names) && cJSON_GetArraySize(names) > 1)
+        cJSON_AddItemToObject(d, "filers_all", cJSON_Duplicate(names, 1));
       if (disp) cJSON_AddStringToObject(d, "filer", disp);
       if (form) cJSON_AddStringToObject(d, "form", form);
       if (fdate) cJSON_AddStringToObject(d, "file_date", fdate);
@@ -105,7 +108,8 @@ static int run_sec_fulltext(const source_ctx *ctx, intel_sink *sink, const char 
       cJSON *p = cJSON_CreateObject();
       char title[256]; snprintf(title, sizeof title, "%s%s%s", disp ? disp : "SEC filing", form ? " · " : "", form ? form : "");
       n += oe2_emit(sink, "SEC_FULLTEXT", "sec-filing", hid, title, fdate, "https://www.sec.gov/cgi-bin/srqsb", d, p, 0, 0, 0);
-      if (n >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -196,7 +200,8 @@ static int run_openverse(const source_ctx *ctx, intel_sink *sink, const char *en
       cJSON_AddStringToObject(d, "source", "Openverse");
       cJSON *p = cJSON_CreateObject();
       n += oe2_emit(sink, "OPENVERSE", "openverse-image", id, title ? title : id, creator, landing, d, p, 0, 0, 0);
-      if (n >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -229,7 +234,8 @@ static int run_stackexchange(const source_ctx *ctx, intel_sink *sink, const char
       cJSON_AddStringToObject(d, "source", "Stack Overflow");
       cJSON *p = cJSON_CreateObject();
       n += oe2_emit(sink, "STACKEXCHANGE_SEARCH", "stackexchange-question", link ? link : title, title, NULL, link, d, p, 0, 0, 0);
-      if (n >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);

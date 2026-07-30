@@ -42,7 +42,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     int i = 0;
     cJSON *m;
     cJSON_ArrayForEach(m, matches) {
-      if (i >= 50) break;                           /* slice(0,50) */
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
       cJSON *loc = cJSON_GetObjectItem(m, "location");
 
       cJSON *f = cJSON_CreateObject();

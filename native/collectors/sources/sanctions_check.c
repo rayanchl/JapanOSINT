@@ -50,7 +50,7 @@ static void copy_first_array_str(cJSON *dst, const char *dstkey,
                                  cJSON *props, const char *key) {
   cJSON *v = cJSON_GetObjectItem(props, key);
   if (v && cJSON_IsArray(v) && cJSON_GetArraySize(v) > 0) {
-    cJSON *first = cJSON_GetArrayItem(v, 0);
+    cJSON *first = cJSON_GetArrayItem(v, 0);  /* exhaustive-ok: headline pick; the full OpenSanctions properties object is copied into the record */
     if (first && first->valuestring)
       cJSON_AddStringToObject(dst, dstkey, first->valuestring);
   }

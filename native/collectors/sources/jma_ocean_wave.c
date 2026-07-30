@@ -59,7 +59,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     int geocoded = 0;
     double lat = 0, lon = 0;
     if (cJSON_IsArray(ll) && cJSON_GetArraySize(ll) >= 2) {
-      cJSON *la = cJSON_GetArrayItem(ll, 0);
+      cJSON *la = cJSON_GetArrayItem(ll, 0);  /* exhaustive-ok: [lat,lon] tuple */
       cJSON *lo = cJSON_GetArrayItem(ll, 1);
       if (la && cJSON_IsNumber(la) && lo && cJSON_IsNumber(lo) &&
           isfinite(la->valuedouble) && isfinite(lo->valuedouble)) {

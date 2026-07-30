@@ -77,23 +77,29 @@ static cJSON *search_psbdmp(http_client *http, const char *query) {
   return results;
 }
 
-/* grep.app/api/search?q=<q>&page=1 → hits.hits[]._source {repo,path} (limit 10) */
+/* grep.app/api/search → hits.hits[]._source {repo,path}, every page.
+ * Reading page 1 and then keeping only its first 10 hits meant a query that
+ * matched 400 repositories reported 10 (docs/SOURCE_EXHAUSTIVENESS.md). */
 static cJSON *search_grep_app(http_client *http, const char *query) {
   cJSON *results = cJSON_CreateArray();
   char *enc = url_encode_dup(query);
   if (!enc) return results;
-  char url[512];
-  snprintf(url, sizeof url, "https://grep.app/api/search?q=%s&page=1", enc);
-  free(enc);
 
+  for (int page = 1; page <= 20; page++) {
+  char url[512];
+  snprintf(url, sizeof url, "https://grep.app/api/search?q=%s&page=%d", enc, page);
+
+  int page_hits = 0;
   cJSON *json = feed_get_json(http, url, 30000);
-  if (json) {
+  if (!json) break;
+  {
     cJSON *hits = cJSON_GetObjectItem(json, "hits");
     if (hits && cJSON_IsObject(hits)) {
       cJSON *hits_array = cJSON_GetObjectItem(hits, "hits");
       if (hits_array && cJSON_IsArray(hits_array)) {
         int count = cJSON_GetArraySize(hits_array);
-        for (int i = 0; i < count && i < 10; i++) {
+        page_hits = count;
+        for (int i = 0; i < count; i++) {
           cJSON *hit = cJSON_GetArrayItem(hits_array, i);
           if (!hit) continue;
           cJSON *source = cJSON_GetObjectItem(hit, "_source");
@@ -113,6 +119,9 @@ static cJSON *search_grep_app(http_client *http, const char *query) {
     }
     cJSON_Delete(json);
   }
+  if (page_hits == 0) break;          /* upstream exhausted */
+  }
+  free(enc);
   return results;
 }
 

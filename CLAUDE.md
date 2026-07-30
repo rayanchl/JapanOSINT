@@ -30,9 +30,12 @@ If anything was left unused, it is reported as data (a
 Rule, examples of violations, and what the shared machinery guarantees:
 `docs/SOURCE_EXHAUSTIVENESS.md`.
 
+The tree is at **zero audit findings**; deliberate exceptions carry an inline
+`/* exhaustive-ok: <reason> */` marker (`grep -rn exhaustive-ok`).
+
 ```sh
 cd native
-make audit-sources   # scan every collector for discard patterns
+make audit-sources   # scan every collector for discard patterns (expect 0)
 make hptest          # offline check of the engine's guarantees
 make                 # full build (-Wall -Wextra)
 ```

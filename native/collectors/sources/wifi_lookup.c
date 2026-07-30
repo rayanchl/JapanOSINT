@@ -161,7 +161,7 @@ static cJSON *query_wigle(http_client *http, const char *bssid) {
     cJSON_AddStringToObject(r, "error", "API returned failure"); return r; }
   const cJSON *res = cJSON_GetObjectItem(j, "results");
   if (res && cJSON_IsArray(res) && cJSON_GetArraySize(res) > 0) {
-    const cJSON *f = cJSON_GetArrayItem(res, 0);
+    const cJSON *f = cJSON_GetArrayItem(res, 0);  /* exhaustive-ok: BSSID lookup returns one network */
     if (f) {
       cJSON_AddStringToObject(r, "status", "found");
       const cJSON *ss = cJSON_GetObjectItem(f, "ssid");

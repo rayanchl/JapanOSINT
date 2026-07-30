@@ -191,7 +191,7 @@ static cJSON *query_keybase(http_client *http, const char *username) {
   if (!status || !code || code->valueint != 0) { cJSON_Delete(json); return NULL; }
   cJSON *them = cJSON_GetObjectItem(json, "them");
   if (!them || !cJSON_IsArray(them) || cJSON_GetArraySize(them) == 0) { cJSON_Delete(json); return NULL; }
-  cJSON *user = cJSON_GetArrayItem(them, 0);
+  cJSON *user = cJSON_GetArrayItem(them, 0);  /* exhaustive-ok: Keybase lookup of ONE user */
   if (!user) { cJSON_Delete(json); return NULL; }
 
   cJSON *result = cJSON_CreateObject();

@@ -119,10 +119,11 @@ static int run_propublica(const source_ctx *ctx, intel_sink *sink) {
   cJSON *orgs = cJSON_GetObjectItem(root, "organizations");
   int emitted = 0;
   if (cJSON_IsArray(orgs)) {
-    cJSON *o; int n = 0;
+    cJSON *o;
     cJSON_ArrayForEach(o, orgs) {
       emitted += pp_emit_org(sink, o);
-      if (++n >= 25) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -218,10 +219,11 @@ static int run_uk(const source_ctx *ctx, intel_sink *sink) {
 
   int emitted = 0;
   if (cJSON_IsArray(root)) {
-    cJSON *c; int n = 0;
+    cJSON *c;
     cJSON_ArrayForEach(c, root) {
       emitted += uk_emit_charity(sink, c);
-      if (++n >= 25) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   } else if (cJSON_IsObject(root)) {
     emitted += uk_emit_charity(sink, root);

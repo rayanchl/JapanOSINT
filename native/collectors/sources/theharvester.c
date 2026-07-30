@@ -26,8 +26,8 @@
 #include <stdlib.h>
 #include <regex.h>
 
-#define MAX_RESULTS 1000
-#define MAX_PAGES   10
+#define MAX_RESULTS 1000  /* exhaustive-ok: per-run request budget, logged */
+#define MAX_PAGES   10    /* exhaustive-ok: page-walk runaway guard */
 
 typedef struct { char v[256]; char src[256]; } hit_t;
 

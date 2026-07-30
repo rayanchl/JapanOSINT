@@ -291,7 +291,7 @@ static int run_waqi(const source_ctx *ctx, intel_sink *sink) {
   double clat = 0, clon = 0; int hasgeo = 0;
   const cJSON *geo = cityo ? cJSON_GetObjectItem(cityo, "geo") : NULL;
   if (cJSON_IsArray(geo) && cJSON_GetArraySize(geo) >= 2) {
-    const cJSON *g0 = cJSON_GetArrayItem(geo, 0), *g1 = cJSON_GetArrayItem(geo, 1);
+    const cJSON *g0 = cJSON_GetArrayItem(geo, 0), *g1 = cJSON_GetArrayItem(geo, 1);  /* exhaustive-ok: [lat,lon] tuple */
     if (cJSON_IsNumber(g0) && cJSON_IsNumber(g1)) {
       clat = g0->valuedouble; clon = g1->valuedouble; hasgeo = 1;
     }

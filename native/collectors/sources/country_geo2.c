@@ -31,43 +31,50 @@ static int run_openplz(const source_ctx *ctx, intel_sink *sink, const char *serv
   for (const char *p = raw; *p && i < 15; p++) if (isdigit((unsigned char)*p)) code[i++] = *p;
   code[i] = 0;
   if (i < 4) { fprintf(stderr, "[%s] entity must be a postal code\n", service); return 0; }
-  char url[320];
-  snprintf(url, sizeof url, "https://openplzapi.org/%s/Localities?postalCode=%s&page=1&pageSize=20", cc, code);
-  const char *hdrs[] = { "Accept: application/json", CG_UA, NULL };
-  char *body = jo_get(ctx, url, hdrs, service);
-  if (!body) return 0;
-  cJSON *root = cJSON_Parse(body); free(body);
-  if (!cJSON_IsArray(root)) { if (root) cJSON_Delete(root); return 0; }
-  static const char *muni_keys[] = { "municipality", "commune", "district", NULL };
-  static const char *reg_keys[]  = { "federalState", "federalProvince", "canton", NULL };
   int n = 0;
-  const cJSON *loc;
-  cJSON_ArrayForEach(loc, root) {
-    const char *name = jo_sv(loc, "name");
-    const char *pc = jo_sv(loc, "postalCode");
-    const char *mun = nested_name(loc, muni_keys);
-    const char *reg = nested_name(loc, reg_keys);
-    if (!name) continue;
-    cJSON *d = cJSON_CreateObject();
-    cJSON_AddStringToObject(d, "locality", name);
-    if (pc) cJSON_AddStringToObject(d, "postal_code", pc);
-    if (mun) cJSON_AddStringToObject(d, "municipality", mun);
-    if (reg) cJSON_AddStringToObject(d, "region", reg);
-    cJSON_AddStringToObject(d, "source", "OpenPLZ");
-    char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
-    cJSON *p = cJSON_CreateObject();
-    cJSON_AddStringToObject(p, "service", service); cJSON_AddBoolToObject(p, "success", 1);
-    char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-    char rk[96]; snprintf(rk, sizeof rk, "%s:%s:%s", cc, pc ? pc : code, name);
-    char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", mun ? mun : "", reg ? ", " : "", reg ? reg : "");
-    char tags[64]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
-    intel_item it = {0};
-    it.remote_key = rk; it.title = name; it.summary = summ[0] ? summ : NULL; it.body = bj; it.lang = "de";
-    it.record_type = "locality"; it.properties_json = pj; it.tags_json = tags;
-    if (sink->emit(sink, &it) >= 0) n++;
-    free(bj); free(pj);
+  /* Page walk: OpenPLZ paginates, and reading page 1 only threw away
+   * every locality past the 20th (docs/SOURCE_EXHAUSTIVENESS.md). Stop
+   * on the first empty page. */
+  for (int page = 1; page <= 20; page++) {
+    char url[320];
+    snprintf(url, sizeof url, "https://openplzapi.org/%s/Localities?postalCode=%s&page=%d&pageSize=20", cc, code, page);
+    const char *hdrs[] = { "Accept: application/json", CG_UA, NULL };
+    char *body = jo_get(ctx, url, hdrs, service);
+    if (!body) break;
+    cJSON *root = cJSON_Parse(body); free(body);
+    if (!cJSON_IsArray(root)) { if (root) cJSON_Delete(root); break; }
+    static const char *muni_keys[] = { "municipality", "commune", "district", NULL };
+    static const char *reg_keys[]  = { "federalState", "federalProvince", "canton", NULL };
+    int page_n = 0;
+    const cJSON *loc;
+    cJSON_ArrayForEach(loc, root) {
+      const char *name = jo_sv(loc, "name");
+      const char *pc = jo_sv(loc, "postalCode");
+      const char *mun = nested_name(loc, muni_keys);
+      const char *reg = nested_name(loc, reg_keys);
+      if (!name) continue;
+      cJSON *d = cJSON_CreateObject();
+      cJSON_AddStringToObject(d, "locality", name);
+      if (pc) cJSON_AddStringToObject(d, "postal_code", pc);
+      if (mun) cJSON_AddStringToObject(d, "municipality", mun);
+      if (reg) cJSON_AddStringToObject(d, "region", reg);
+      cJSON_AddStringToObject(d, "source", "OpenPLZ");
+      char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
+      cJSON *p = cJSON_CreateObject();
+      cJSON_AddStringToObject(p, "service", service); cJSON_AddBoolToObject(p, "success", 1);
+      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      char rk[96]; snprintf(rk, sizeof rk, "%s:%s:%s", cc, pc ? pc : code, name);
+      char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", mun ? mun : "", reg ? ", " : "", reg ? reg : "");
+      char tags[64]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
+      intel_item it = {0};
+      it.remote_key = rk; it.title = name; it.summary = summ[0] ? summ : NULL; it.body = bj; it.lang = "de";
+      it.record_type = "locality"; it.properties_json = pj; it.tags_json = tags;
+      if (sink->emit(sink, &it) >= 0) { n++; page_n++; }
+      free(bj); free(pj);
+    }
+    cJSON_Delete(root);
+    if (page_n == 0) break;          /* upstream exhausted */
   }
-  cJSON_Delete(root);
   return n;
 }
 

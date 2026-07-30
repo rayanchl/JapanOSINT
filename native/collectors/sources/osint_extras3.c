@@ -52,7 +52,8 @@ static int run_se_site(const source_ctx *ctx, intel_sink *sink, const char *serv
       it.properties_json = pj; it.tags_json = tags;
       if (sink->emit(sink, &it) >= 0) n++;
       free(bj); free(pj);
-      if (n >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);

@@ -105,7 +105,7 @@ static cJSON *dedupe(cJSON *raw, const unified_keyfn *kf, int nk, int prec) {
     char cbuf[640];
     if (!key) {
       cJSON *co = g ? cJSON_GetObjectItem(g, "coordinates") : NULL;
-      cJSON *x = co ? cJSON_GetArrayItem(co, 0) : NULL;
+      cJSON *x = co ? cJSON_GetArrayItem(co, 0) : NULL;  /* exhaustive-ok: [lon,lat] tuple */
       cJSON *y = co ? cJSON_GetArrayItem(co, 1) : NULL;
       if (!x || !y || !cJSON_IsNumber(x) || !cJSON_IsNumber(y) ||
           !isfinite(x->valuedouble) || !isfinite(y->valuedouble)) continue;

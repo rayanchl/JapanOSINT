@@ -22,7 +22,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   /* gsiAddressSearch: need a non-empty array; first.geometry.coordinates
    * with >=2 finite numbers; else null → no live hit. */
   if (data && cJSON_IsArray(data) && cJSON_GetArraySize(data) > 0) {
-    cJSON *first = cJSON_GetArrayItem(data, 0);
+    cJSON *first = cJSON_GetArrayItem(data, 0);  /* exhaustive-ok: address->coordinate resolution step */
     cJSON *geom  = first ? cJSON_GetObjectItem(first, "geometry") : NULL;
     cJSON *coords= geom ? cJSON_GetObjectItem(geom, "coordinates") : NULL;
     if (cJSON_IsArray(coords) && cJSON_GetArraySize(coords) >= 2) {

@@ -60,8 +60,9 @@ static const char *fi_desc(const cJSON *arr) {
 static char *fi_address(const cJSON *c) {
   const cJSON *addrs = cJSON_GetObjectItem(c, "addresses");
   if (!cJSON_IsArray(addrs)) return NULL;
-  const cJSON *a = cJSON_GetArrayItem(addrs, 0);
+  const cJSON *a = cJSON_GetArrayItem(addrs, 0);  /* exhaustive-ok: display pick; addresses_all is attached to the record */
   if (!a) return NULL;
+  /* Renders the primary address; the caller attaches addresses_all. */
   const char *street = jo_sv(a, "street");
   const char *num    = jo_sv(a, "buildingNumber");
   const char *post   = jo_sv(a, "postCode");
@@ -108,7 +109,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   const cJSON *forms = cJSON_GetObjectItem(c, "companyForms");
   const char *form = NULL;
   if (cJSON_IsArray(forms)) {
-    const cJSON *f = cJSON_GetArrayItem(forms, 0);
+    const cJSON *f = cJSON_GetArrayItem(forms, 0);  /* exhaustive-ok: current form; company_forms_all carries the history */
     if (f) form = fi_desc(cJSON_GetObjectItem(f, "descriptions"));
   }
   const cJSON *website = cJSON_GetObjectItem(c, "website");
@@ -123,6 +124,16 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   if (form)     cJSON_AddStringToObject(data, "company_form", form);
   if (url)      cJSON_AddStringToObject(data, "website", url);
   if (reg)      cJSON_AddStringToObject(data, "registration_date", reg);
+  /* `address` and `company_form` above are display picks: PRH lists visiting AND
+   * postal addresses, and companyForms is a dated history. Carry both in full
+   * (docs/SOURCE_EXHAUSTIVENESS.md). */
+  {
+    const cJSON *all_addrs = cJSON_GetObjectItem(c, "addresses");
+    if (cJSON_IsArray(all_addrs) && cJSON_GetArraySize(all_addrs) > 0)
+      cJSON_AddItemToObject(data, "addresses_all", cJSON_Duplicate(all_addrs, 1));
+    if (cJSON_IsArray(forms) && cJSON_GetArraySize(forms) > 0)
+      cJSON_AddItemToObject(data, "company_forms_all", cJSON_Duplicate(forms, 1));
+  }
   cJSON_AddStringToObject(data, "source", "PRH (Finland)");
   char *bj = cJSON_PrintUnformatted(data);
   cJSON_Delete(data);

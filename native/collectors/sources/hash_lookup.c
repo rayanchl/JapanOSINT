@@ -143,7 +143,8 @@ static cJSON *query_virustotal(http_client *http, const char *hash) {
         cJSON_AddStringToObject(result, "threat_label", label->valuestring);
       cJSON *cat = cJSON_GetObjectItem(pop, "popular_threat_category");
       if (cat && cJSON_IsArray(cat) && cJSON_GetArraySize(cat) > 0) {
-        cJSON *first = cJSON_GetArrayItem(cat, 0);
+        cJSON *first = cJSON_GetArrayItem(cat, 0);  /* exhaustive-ok: display pick; threat_categories_all carries every category */
+        cJSON_AddItemToObject(result, "threat_categories_all", cJSON_Duplicate(cat, 1));
         cJSON *val = cJSON_GetObjectItem(first, "value");
         if (val && cJSON_IsString(val))
           cJSON_AddStringToObject(result, "threat_category", val->valuestring);
@@ -206,7 +207,7 @@ static cJSON *query_malwarebazaar(http_client *http, const char *hash) {
   }
   cJSON *data = cJSON_GetObjectItem(json, "data");
   if (data && cJSON_IsArray(data) && cJSON_GetArraySize(data) > 0) {
-    cJSON *first = cJSON_GetArrayItem(data, 0);
+    cJSON *first = cJSON_GetArrayItem(data, 0);  /* exhaustive-ok: hash lookup returns one sample object */
     if (first) {
       cJSON_AddStringToObject(result, "status", "found");
       cJSON *v;

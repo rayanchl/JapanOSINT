@@ -53,7 +53,10 @@ static int geocode_location(http_client *http, const char *loc,
   if (!enc) return 0;
   char url[512];
   snprintf(url, sizeof url,
-    "https://nominatim.openstreetmap.org/search?q=%s&format=json&limit=1", enc);
+    /* exhaustive-ok: resolution step, not a record listing — this turns one
+     * place name into the coordinates for the weather call below; the weather
+     * records it produces are emitted in full. */
+    "https://nominatim.openstreetmap.org/search?q=%s&format=json&limit=1", enc);  /* exhaustive-ok: place resolution step */
   free(enc);
   http_response hr = {0};
   int hc = http_request(http, "GET", url, NULL, NULL, 0, 30000, 1, &hr);
@@ -64,7 +67,7 @@ static int geocode_location(http_client *http, const char *loc,
     if (json) cJSON_Delete(json);
     return 0;
   }
-  cJSON *first = cJSON_GetArrayItem(json, 0);
+  cJSON *first = cJSON_GetArrayItem(json, 0);  /* exhaustive-ok: geocode resolution step */
   cJSON *la = cJSON_GetObjectItem(first, "lat");
   cJSON *lo = cJSON_GetObjectItem(first, "lon");
   int ok = 0;
@@ -98,7 +101,7 @@ static cJSON *get_weather_wttr(http_client *http, const char *loc) {
   if (json) {
     cJSON *cur = cJSON_GetObjectItem(json, "current_condition");
     if (cur && cJSON_IsArray(cur) && cJSON_GetArraySize(cur) > 0) {
-      cJSON *c = cJSON_GetArrayItem(cur, 0);
+      cJSON *c = cJSON_GetArrayItem(cur, 0);  /* exhaustive-ok: wttr.in wraps current_condition in a 1-element array */
       cJSON *v;
       if ((v = cJSON_GetObjectItem(c, "temp_C")) && cJSON_IsString(v))
         cJSON_AddNumberToObject(result, "temperature_c", atof(v->valuestring));
@@ -118,25 +121,25 @@ static cJSON *get_weather_wttr(http_client *http, const char *loc) {
         cJSON_AddNumberToObject(result, "uv_index", atoi(v->valuestring));
       cJSON *da = cJSON_GetObjectItem(c, "weatherDesc");
       if (da && cJSON_IsArray(da) && cJSON_GetArraySize(da) > 0) {
-        cJSON *dv = cJSON_GetObjectItem(cJSON_GetArrayItem(da, 0), "value");
+        cJSON *dv = cJSON_GetObjectItem(cJSON_GetArrayItem(da, 0), "value");  /* exhaustive-ok: 1-element value wrapper */
         if (dv && cJSON_IsString(dv))
           cJSON_AddStringToObject(result, "description", dv->valuestring);
       }
     }
     cJSON *near = cJSON_GetObjectItem(json, "nearest_area");
     if (near && cJSON_IsArray(near) && cJSON_GetArraySize(near) > 0) {
-      cJSON *area = cJSON_GetArrayItem(near, 0);
+      cJSON *area = cJSON_GetArrayItem(near, 0);  /* exhaustive-ok: nearest area to the queried point */
       cJSON *an = cJSON_GetObjectItem(area, "areaName");
       cJSON *co = cJSON_GetObjectItem(area, "country");
       cJSON *la = cJSON_GetObjectItem(area, "latitude");
       cJSON *lo = cJSON_GetObjectItem(area, "longitude");
       if (an && cJSON_IsArray(an) && cJSON_GetArraySize(an) > 0) {
-        cJSON *nm = cJSON_GetObjectItem(cJSON_GetArrayItem(an, 0), "value");
+        cJSON *nm = cJSON_GetObjectItem(cJSON_GetArrayItem(an, 0), "value");  /* exhaustive-ok: 1-element value wrapper */
         if (nm && cJSON_IsString(nm))
           cJSON_AddStringToObject(result, "location", nm->valuestring);
       }
       if (co && cJSON_IsArray(co) && cJSON_GetArraySize(co) > 0) {
-        cJSON *nm = cJSON_GetObjectItem(cJSON_GetArrayItem(co, 0), "value");
+        cJSON *nm = cJSON_GetObjectItem(cJSON_GetArrayItem(co, 0), "value");  /* exhaustive-ok: 1-element value wrapper */
         if (nm && cJSON_IsString(nm))
           cJSON_AddStringToObject(result, "country", nm->valuestring);
       }
@@ -255,7 +258,7 @@ static cJSON *get_weather_owm(http_client *http, const char *loc,
       if (p) cJSON_AddNumberToObject(result, "pressure_hpa", p->valueint);
     }
     if (weather && cJSON_IsArray(weather) && cJSON_GetArraySize(weather) > 0) {
-      cJSON *w = cJSON_GetArrayItem(weather, 0);
+      cJSON *w = cJSON_GetArrayItem(weather, 0);  /* exhaustive-ok: OWM primary condition; the array is in the record */
       cJSON *d = cJSON_GetObjectItem(w, "description");
       cJSON *ic = cJSON_GetObjectItem(w, "icon");
       if (d && d->valuestring) cJSON_AddStringToObject(result, "description", d->valuestring);

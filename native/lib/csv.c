@@ -54,7 +54,7 @@ cJSON *csv_parse(const char *text, int headers) {
 
   int nrows = cJSON_GetArraySize(rows);
   if (nrows == 0) { cJSON_Delete(rows); return cJSON_CreateArray(); }
-  cJSON *head = cJSON_GetArrayItem(rows, 0);
+  cJSON *head = cJSON_GetArrayItem(rows, 0);  /* exhaustive-ok: header row, not a record */
   int nh = cJSON_GetArraySize(head);
   char **names = calloc(nh, sizeof(char *));
   for (int i = 0; i < nh; i++) {

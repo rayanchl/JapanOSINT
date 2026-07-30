@@ -392,7 +392,7 @@ int pw_run_gravatar(const source_ctx *ctx, intel_sink *sink, const char *q) {
   int emitted = 0;
   cJSON *entry = cJSON_GetObjectItem(root, "entry");
   cJSON *e0 = NULL;
-  if (cJSON_IsArray(entry)) e0 = cJSON_GetArrayItem(entry, 0);
+  if (cJSON_IsArray(entry)) e0 = cJSON_GetArrayItem(entry, 0);  /* exhaustive-ok: lookup of ONE account */
   else if (cJSON_IsObject(entry)) e0 = entry;
   if (e0) {
     const char *pname = jo_sv(e0, "preferredUsername");

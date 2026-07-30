@@ -196,8 +196,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!enc) return -1;
 
   int total = 0;
-  const int GLOBAL_CAP = 60;   /* whole-fanout ceiling */
-  const int PER_CAP    = 3;    /* per anchor-scraped portal */
+  const int GLOBAL_CAP = 500;  /* exhaustive-ok: runaway guard, logged */
+  const int PER_CAP    = 0;    /* exhaustive-ok: 0 = every hit on the page */
 
   /* 1) Netherlands free Atom API first (structured real records). */
   total += emit_rechtspraak(ctx, sink, enc, q);

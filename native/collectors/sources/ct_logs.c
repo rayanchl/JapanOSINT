@@ -11,12 +11,14 @@
  * upstream multi-entity loop. Emits one osint_service_result row (body =
  * {success,confidence,data}), like dns_records.c. */
 #include "../../source.h"
+#include "../../lib/seenset.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
 #include <string.h>
 #include <strings.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 static void uri_encode(const char *in, char *out, size_t cap) {
   static const char *keep = "-_.!~*'()";
@@ -45,9 +47,12 @@ static cJSON *query_crt_sh(http_client *http, const char *domain) {
   http_response_free(&hr);
   if (!j || !cJSON_IsArray(j)) { if (j) cJSON_Delete(j); return results; }
 
-  char *seen[500]; int sc = 0;
+  /* Growable set: the old fixed 500-slot ring stopped collecting once full, so
+   * a domain with more than 500 distinct SANs silently lost the rest
+   * (docs/SOURCE_EXHAUSTIVENESS.md). */
+  seen_set seen = {0};
   int n = cJSON_GetArraySize(j);
-  for (int i = 0; i < n && sc < 500; i++) {
+  for (int i = 0; i < n; i++) {
     cJSON *cert = cJSON_GetArrayItem(j, i);
     if (!cert) continue;
     cJSON *nv = cJSON_GetObjectItem(cert, "name_value");
@@ -57,15 +62,14 @@ static cJSON *query_crt_sh(http_client *http, const char *domain) {
     cJSON *cid = cJSON_GetObjectItem(cert, "id");
     if (!nv || !nv->valuestring) continue;
     char *names = strdup(nv->valuestring), *sp = NULL;
-    for (char *nm = strtok_r(names, "\n", &sp); nm && sc < 500;
+    for (char *nm = strtok_r(names, "\n", &sp); nm;
          nm = strtok_r(NULL, "\n", &sp)) {
       char *clean = nm;
       if (strncmp(nm, "*.", 2) == 0) clean = nm + 2;
-      int dup = 0;
-      for (int k = 0; k < sc; k++)
-        if (strcasecmp(seen[k], clean) == 0) { dup = 1; break; }
-      if (dup) continue;
-      seen[sc++] = strdup(clean);
+      char lower[320];
+      snprintf(lower, sizeof lower, "%s", clean);
+      for (char *lp = lower; *lp; lp++) *lp = (char)tolower((unsigned char)*lp);
+      if (!seen_add(&seen, lower)) continue;      /* case-insensitive dedupe */
       cJSON *r = cJSON_CreateObject();
       cJSON_AddStringToObject(r, "subdomain", nm);
       cJSON_AddStringToObject(r, "clean_name", clean);
@@ -77,7 +81,7 @@ static cJSON *query_crt_sh(http_client *http, const char *domain) {
     }
     free(names);
   }
-  for (int i = 0; i < sc; i++) free(seen[i]);
+  seen_free(&seen);
   cJSON_Delete(j);
   return results;
 }
@@ -119,10 +123,6 @@ static cJSON *query_certspotter(http_client *http, const char *domain) {
 
 /* Has remote_key `rk` already been emitted this run? Linear scan over the
  * intra-run dedup set (records are bounded ≤550, sub-GB). */
-static int seen_rk(char **set, int n, const char *rk) {
-  for (int i = 0; i < n; i++) if (strcmp(set[i], rk) == 0) return 1;
-  return 0;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *domain = ctx->entity;
@@ -142,11 +142,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
    * "ct:"). Intra-run dedup so the same key never emits twice. Zero records →
    * emit nothing, return 0. */
   int total = cJSON_GetArraySize(crt);
-  char *seen[600]; int seen_n = 0;
+  seen_set seen = {0};     /* grows — a 600-cert domain used to stop at 600 */
   int emitted = 0;
 
   cJSON_ArrayForEach(it, crt) {
-    if (seen_n >= (int)(sizeof seen / sizeof seen[0])) break;
 
     cJSON *sd_j  = cJSON_GetObjectItem(it, "subdomain");
     cJSON *cn_j  = cJSON_GetObjectItem(it, "clean_name");
@@ -166,8 +165,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     else
       snprintf(rk, sizeof rk, "ct:%s", cn ? cn : sd);
 
-    if (seen_rk(seen, seen_n, rk)) continue;
-    seen[seen_n++] = strdup(rk);
+    if (!seen_add(&seen, rk)) continue;
 
     /* body: this cert's record (subdomain, issuer, valid_from, valid_to,
      * cert_id) */
@@ -207,7 +205,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(props);
   }
 
-  for (int i = 0; i < seen_n; i++) free(seen[i]);
+  seen_free(&seen);
   cJSON_Delete(crt);
   (void)total; (void)emitted;
   return 0;

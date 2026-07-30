@@ -82,7 +82,8 @@ static int run_coingecko(const source_ctx *ctx, intel_sink *sink, const char *en
                sym ? " (" : "", sym ? sym : "", sym ? ")" : "");
       emitted += cw_emit(sink, "COINGECKO_SEARCH", "crypto-asset",
                          id ? id : name, title, sym, link, d, p);
-      if (emitted >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -127,7 +128,8 @@ static int run_defillama(const source_ctx *ctx, intel_sink *sink, const char *ra
     if (name) cJSON_AddStringToObject(p, "protocol", name);
     emitted += cw_emit(sink, "DEFILLAMA_TVL", "defi-protocol",
                        name, name ? name : sym, cat, urlf, d, p);
-    if (emitted >= 20) break;
+    /* (cap removed: every record of the fetched array is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
   }
   cJSON_Delete(root);
   return emitted;

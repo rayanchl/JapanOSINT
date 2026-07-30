@@ -90,7 +90,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (cJSON_IsArray(corps)) {
     cJSON *c;
     cJSON_ArrayForEach(c, corps) {
-      if (i >= 500) break;                    /* slice(0,500) */
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
       i++;
       char cnbuf[40];
       const char *cn   = cn_of(c, cnbuf, sizeof cnbuf);

@@ -6,6 +6,7 @@
  * Features at TOKYO; sha1 hash-fallback uid; props in exact JS key order.
  * The seed/_meta envelope is dropped (live rows only). */
 #include "../../source.h"
+#include "../../lib/seenset.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
 #include "../../core/intel.h"
@@ -119,11 +120,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (cl > 3 && strcmp(cveId + cl - 3, ".md") == 0) cveId[cl - 3] = 0;
 
     /* parsePocRepos: /https:\/\/github\.com\/[^\s)<>"]+/g, dedupe, skip
-     * shields.io / cve.mitre.org, strip trailing [.,], max 6 */
-    const char *seen[6];
-    int sn = 0;
+     * shields.io / cve.mitre.org, strip trailing [.,].
+     *
+     * The old "max 6" was an arbitrary editorial cut: a CVE with 30 published
+     * proof-of-concept repositories reported 6 and dropped 24, which is exactly
+     * what the exhaustive-use rule forbids (docs/SOURCE_EXHAUSTIVENESS.md).
+     * Every distinct PoC repo in the advisory is now emitted. */
+    seen_set seen = {0};
     const char *p = md;
-    while (sn < 6) {
+    for (;;) {
       const char *hit = strstr(p, "https://github.com/");
       if (!hit) break;
       const char *e = hit;
@@ -137,16 +142,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       memcpy(url, hit, ulen);
       url[ulen] = 0;
       p = e;
-      int dup = 0;
-      for (int s = 0; s < sn; s++)
-        if (strcmp(seen[s], url) == 0) { dup = 1; break; }
-      if (dup) { free(url); continue; }
       if (contains(url, "img.shields.io") || contains(url, "cve.mitre.org")) {
         free(url);
         continue;
       }
-      seen[sn] = url; /* dedupe set persists for this CVE only */
-      sn++;
+      if (!seen_add(&seen, url)) { free(url); continue; }  /* per-CVE dedupe */
       const char *label = url + strlen("https://github.com/");
 
       cJSON *feat = cJSON_CreateObject();
@@ -167,8 +167,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddStringToObject(pr, "source", "trickest_cve");
       cJSON_AddItemToObject(feat, "properties", pr);
       cJSON_AddItemToArray(features, feat);
+      free(url);            /* the seen-set kept its own copy */
     }
-    for (int s = 0; s < sn; s++) free((void *)seen[s]);
+    seen_free(&seen);
     free(md);
   }
 

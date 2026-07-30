@@ -27,7 +27,12 @@ import sys
 CHECKS = [
     ("record-cap",
      "hardcoded record cap — the upstream, not us, decides how many records exist",
-     re.compile(r'#define\s+\w*(MAX|CAP|LIMIT)\w*\s+\d+|'
+     # Only names that bound RECORDS. Buffer sizes (MAX_LINE, URL_MAX, MAX_HOSTS)
+     # are allocation limits, not editorial ones, and are not discards.
+     re.compile(r'#define\s+\w*(?:ITEM|REC|RESULT|ROW|HIT|ENTR|FEATURE|EMIT|'
+                r'PER_REG|PER_SOURCE|TOTAL|PAGE|CAND|MATCH)\w*(?:MAX|CAP|LIMIT)\w*\s+\d+|'
+                r'#define\s+\w*(?:MAX|CAP|LIMIT)\w*(?:ITEM|REC|RESULT|ROW|HIT|ENTR|'
+                r'FEATURE|EMIT|PER_REG|TOTAL|PAGE|CAND|MATCH)\w*\s+\d+|'
                 r'\b(?:int|const int)\s+\w*(?:max|cap|limit)\w*\s*=\s*\d+\s*;',
                 re.I),
      "drop the cap, or make it the upstream's page size and paginate"),
@@ -61,6 +66,18 @@ CHECKS = [
      "grow the table instead of wrapping a fixed ring"),
 ]
 
+# A [0] that reads one component of a fixed-shape tuple is not a discard:
+# GeoJSON coordinates are [lon,lat], a Polygon's coordinates[0] is its outer
+# ring, a bbox is [minx,miny,maxx,maxy]. Recognise those by the identifier
+# being indexed and by a sibling [1] read nearby.
+GEOM_VAR = re.compile(r'cJSON_GetArrayItem\s*\(\s*(?:const\s+)?\**\s*'
+                      r'(coords?|co|c|pt|point|p|gc|ring|rings|poly|polys|polygon|'
+                      r'geom|geometry|bbox|box|xy|latlng|lonlat|pos|position|'
+                      r'coordinates)\s*,\s*0\s*\)', re.I)
+GEOM_CTX = re.compile(r'\b(lat|lon|lng|latitude|longitude|coord|geometry|ring|'
+                      r'polygon|bbox|point|linestring|multipolygon)\b', re.I)
+
+
 # Lines that are documentation/rationale rather than behaviour.
 SKIP_LINE = re.compile(r'^\s*(\*|//|/\*)')
 
@@ -90,6 +107,14 @@ def audit(path, verbose=False):
             # A page-1 URL is only a discard if nothing nearby continues the
             # walk. hpengine rows declare .page_param / .next_path a couple of
             # lines away, and bespoke collectors usually loop within ~15 lines.
+            if cid == 'first-only':
+                # tuple/geometry component read, or a paired [0]/[1] on one line
+                if GEOM_VAR.search(line) and (GEOM_CTX.search(line) or
+                                              ', 1)' in line or ',1)' in line):
+                    continue
+                ctx2 = '\n'.join(lines[max(0, n - 4):n + 4])
+                if GEOM_VAR.search(line) and GEOM_CTX.search(ctx2):
+                    continue
             if cid == 'single-page':
                 ctx = '\n'.join(lines[max(0, n - 16):n + 16])
                 if re.search(r'page_param|next_path|page\+\+|\+\+page|'

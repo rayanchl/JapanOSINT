@@ -22,7 +22,7 @@
 
 /* per-query global cap and per-registry cap */
 #define AFR_TOTAL_MAX   500  /* exhaustive-ok: runaway guard, logged */
-#define AFR_PER_REG_MAX 0    /* 0 = every hit the page yielded */
+#define AFR_PER_REG_MAX 0    /* exhaustive-ok: 0 = no cap, every hit is emitted */
 
 typedef struct {
   const char *name;      /* registry / portal display name              */

@@ -145,9 +145,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(url, sizeof url,
              "https://www.listafirme.ro/cauta.asp?cauta=%s", q);
     free(q);
-    int got = jo_emit_anchors(ctx, sink, url, "-cui-",
-                              "listafirme.ro", "ro-company",
-                              "https://www.listafirme.ro", NULL, 10, "reg_ro");
+    jo_emit_anchors(ctx, sink, url, "-cui-",
+                    "listafirme.ro", "ro-company",
+                    "https://www.listafirme.ro", NULL, 0, "reg_ro");
     return 0;   /* honest empty is not an error */
   }
 

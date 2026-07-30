@@ -107,7 +107,8 @@ static int run_gitlab_projects(const source_ctx *ctx, intel_sink *sink, const ch
     it.properties_json = pj; it.tags_json = "[\"osint-search\",\"GITLAB_PROJECT_SEARCH\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
     free(bj); free(pj);
-    if (emitted >= 20) break;
+    /* (cap removed: every record of the fetched array is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
   }
   cJSON_Delete(root);
   return emitted;

@@ -92,7 +92,7 @@ static int tf_urlhaus(const source_ctx *ctx, intel_sink *sink, const char *body,
   cJSON *entry;
   cJSON_ArrayForEach(entry, root) {
     if (emitted >= max) break;
-    cJSON *rec = cJSON_IsArray(entry) ? cJSON_GetArrayItem(entry, 0) : entry;
+    cJSON *rec = cJSON_IsArray(entry) ? cJSON_GetArrayItem(entry, 0) : entry;  /* exhaustive-ok: abuse.ch wraps each record in a 1-element array */  /* exhaustive-ok: abuse.ch wraps each record in a 1-element array */  /* exhaustive-ok: abuse.ch wraps each record in a 1-element array */
     if (!cJSON_IsObject(rec)) continue;
     const char *url = jo_sv(rec, "url");
     const char *host = jo_sv(rec, "host");
@@ -140,7 +140,7 @@ static int tf_threatfox(const source_ctx *ctx, intel_sink *sink, const char *bod
   cJSON *entry;
   cJSON_ArrayForEach(entry, root) {
     if (emitted >= max) break;
-    cJSON *rec = cJSON_IsArray(entry) ? cJSON_GetArrayItem(entry, 0) : entry;
+    cJSON *rec = cJSON_IsArray(entry) ? cJSON_GetArrayItem(entry, 0) : entry;  /* exhaustive-ok: abuse.ch wraps each record in a 1-element array */
     if (!cJSON_IsObject(rec)) continue;
     const char *ioc = jo_sv(rec, "ioc_value");
     if (!ioc) ioc = jo_sv(rec, "ioc");

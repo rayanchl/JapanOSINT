@@ -166,12 +166,14 @@ static int query_host(intel_sink *sink, http_client *http,
       if (tp && tp->valuestring) cJSON_AddStringToObject(so, "transport", tp->valuestring);
       cJSON *sw = cJSON_GetObjectItem(s, "software");
       if (sw && cJSON_IsArray(sw) && cJSON_GetArraySize(sw) > 0) {
-        cJSON *s0 = cJSON_GetArrayItem(sw, 0);
+        cJSON *s0 = cJSON_GetArrayItem(sw, 0);  /* exhaustive-ok: display pick; software_all carries every value */
         cJSON *pr = cJSON_GetObjectItem(s0, "product");
         cJSON *ve = cJSON_GetObjectItem(s0, "version");
         if (pr && pr->valuestring) cJSON_AddStringToObject(so, "software", pr->valuestring);
         if (ve && ve->valuestring) cJSON_AddStringToObject(so, "version", ve->valuestring);
       }
+      /* a port usually runs several detected products — keep every one */
+      cJSON_AddItemToObject(so, "software_all", cJSON_Duplicate(sw, 1));
       cJSON_AddItemToArray(sa, so);
     }
     cJSON_AddItemToObject(r, "open_ports", ports);
@@ -305,9 +307,10 @@ static int search_certs(intel_sink *sink, http_client *http,
       if (is) {
         cJSON *org = cJSON_GetObjectItem(is, "organization");
         if (org && cJSON_IsArray(org) && cJSON_GetArraySize(org) > 0) {
-          cJSON *o0 = cJSON_GetArrayItem(org, 0);
+          cJSON *o0 = cJSON_GetArrayItem(org, 0);  /* exhaustive-ok: display pick; issuer_org_all carries every value */
           if (o0 && o0->valuestring) cJSON_AddStringToObject(c, "issuer_org", o0->valuestring);
         }
+        cJSON_AddItemToObject(c, "issuer_org_all", cJSON_Duplicate(org, 1));
       }
       cJSON *va = cJSON_GetObjectItem(hit, "validity");
       if (va) {

@@ -32,7 +32,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const char *status = "unknown";
     cJSON *st = NULL;
     if (cJSON_IsArray(infocon)) {
-      cJSON *e0 = cJSON_GetArrayItem(infocon, 0);
+      cJSON *e0 = cJSON_GetArrayItem(infocon, 0);  /* exhaustive-ok: infocon is a single status object */
       if (e0) st = cJSON_GetObjectItem(e0, "status");
     }
     if (!st || !cJSON_IsString(st)) st = cJSON_GetObjectItem(infocon, "status");

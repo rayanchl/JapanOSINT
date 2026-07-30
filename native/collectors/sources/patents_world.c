@@ -149,12 +149,14 @@ static int lens_emit(intel_sink *sink, const cJSON *p) {
   const cJSON *inv = bib ? cJSON_GetObjectItem(bib, "invention_title") : NULL;
   const char *title = NULL;
   if (cJSON_IsArray(inv) && cJSON_GetArraySize(inv) > 0)
-    title = jo_sv(cJSON_GetArrayItem(inv, 0), "text");
+    title = jo_sv(cJSON_GetArrayItem(inv, 0), "text");  /* exhaustive-ok: display pick; titles_all carries every language variant */
   const char *date = jo_sv(p, "date_published");
   if (!lens_id && !title) return 0;
 
   cJSON *data = cJSON_CreateObject();
   if (lens_id) cJSON_AddStringToObject(data, "lens_id", lens_id);
+  if (cJSON_IsArray(inv) && cJSON_GetArraySize(inv) > 1)
+    cJSON_AddItemToObject(data, "titles_all", cJSON_Duplicate(inv, 1));
   if (title)   cJSON_AddStringToObject(data, "title", title);
   if (date)    cJSON_AddStringToObject(data, "date_published", date);
   cJSON_AddStringToObject(data, "source", "Lens.org");

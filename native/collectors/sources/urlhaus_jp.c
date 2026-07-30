@@ -92,7 +92,8 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
     cJSON *u;
     cJSON_ArrayForEach(u, urls) {
       if (!is_jp(u)) continue;
-      if (i >= 200) break;                     /* slice(0,200) of filtered */
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
 
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");

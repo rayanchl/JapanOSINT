@@ -71,12 +71,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int emitted = 0;
   const cJSON *data = cJSON_GetObjectItem(root, "data");
   if (cJSON_IsArray(data)) {
-    const cJSON *v; cJSON_ArrayForEach(v, data) { emitted += emit_vessel(sink, v); if (emitted >= 20) break; }
+    const cJSON *v; cJSON_ArrayForEach(v, data) { emitted += emit_vessel(sink, v); }
   } else if (cJSON_IsObject(data)) {
     /* some endpoints return a single vessel object, or {vessels:[...]} */
     const cJSON *vessels = cJSON_GetObjectItem(data, "vessels");
     if (cJSON_IsArray(vessels)) {
-      const cJSON *v; cJSON_ArrayForEach(v, vessels) { emitted += emit_vessel(sink, v); if (emitted >= 20) break; }
+      const cJSON *v; cJSON_ArrayForEach(v, vessels) { emitted += emit_vessel(sink, v); }
     } else {
       emitted += emit_vessel(sink, data);
     }

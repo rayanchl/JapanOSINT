@@ -36,7 +36,8 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
       const char *cc = (ccv && cJSON_IsString(ccv)) ? ccv->valuestring : "";
       if (!((cc[0]=='J'||cc[0]=='j') && (cc[1]=='P'||cc[1]=='p') && !cc[2]))
         continue;
-      if (i >= 500) break;                           /* slice(0,500) */
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
 
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");

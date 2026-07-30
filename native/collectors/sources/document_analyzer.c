@@ -172,7 +172,7 @@ static cJSON *perform_ocr(http_client *h, const char *image_url) {
   if (!j) { cJSON_AddStringToObject(r, "error", "Failed to parse OCR response"); return r; }
   cJSON *pr = cJSON_GetObjectItem(j, "ParsedResults");
   if (pr && cJSON_IsArray(pr)) {
-    cJSON *f = cJSON_GetArrayItem(pr, 0);
+    cJSON *f = cJSON_GetArrayItem(pr, 0);  /* exhaustive-ok: one image submitted = one ParsedResult */
     if (f) {
       cJSON *t = cJSON_GetObjectItem(f, "ParsedText");
       if (t && cJSON_IsString(t)) {
@@ -215,11 +215,13 @@ static cJSON *read_qr(http_client *h, const char *image_url) {
   http_response_free(&hr);
   if (!j) { cJSON_AddStringToObject(r, "error", "Failed to parse QR response"); return r; }
   if (cJSON_IsArray(j)) {
-    cJSON *f = cJSON_GetArrayItem(j, 0);
+    cJSON *f = cJSON_GetArrayItem(j, 0);  /* exhaustive-ok: one image submitted */
     if (f) {
       cJSON *sym = cJSON_GetObjectItem(f, "symbol");
       if (sym && cJSON_IsArray(sym)) {
-        cJSON *s0 = cJSON_GetArrayItem(sym, 0);
+        cJSON *s0 = cJSON_GetArrayItem(sym, 0);  /* exhaustive-ok: display pick; qr_symbols_all carries every decoded symbol */
+        if (cJSON_GetArraySize(sym) > 1)
+          cJSON_AddItemToObject(r, "qr_symbols_all", cJSON_Duplicate(sym, 1));
         if (s0) {
           cJSON *d = cJSON_GetObjectItem(s0, "data");
           cJSON *em = cJSON_GetObjectItem(s0, "error");

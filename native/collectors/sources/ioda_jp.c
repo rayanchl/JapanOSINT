@@ -96,7 +96,8 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
     int i = 0;
     cJSON *e;
     cJSON_ArrayForEach(e, evd) {
-      if (i >= 30) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");
       add_tokyo_geom(f);
