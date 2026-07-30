@@ -17,11 +17,17 @@ const src_meta *gen_meta_at(int i);
 int            gen_meta_count(void);
 
 /* Synthesize a src_meta from a registered source_def. Returned by pointer to
- * a single static row: safe because the server processes one request at a
- * time (mongoose is single-threaded) and no caller retains two synthesized
- * pointers at once. All string fields alias the source_def's static storage
- * (const literals that live for the program's lifetime) — no copying. */
-static src_meta g_syn;
+ * one scratch row per thread; no caller retains two synthesized pointers at
+ * once. All string fields alias the source_def's static storage (const literals
+ * that live for the program's lifetime) — no copying, so a per-thread row is
+ * sufficient and costs nothing.
+ *
+ * This used to be a single process-wide static, justified by "mongoose is
+ * single-threaded". That premise is false: anomaly-triage (60 s) and
+ * collector-repair (120 s) both call src_meta_get from the SCHEDULER thread, so
+ * a collector tick could overwrite the row mid-request and /api/status would
+ * serve one source's name/type/url under another's id. */
+static __thread src_meta g_syn;
 static const src_meta *synth_from_def(const source_def *d) {
   if (!d) return NULL;
   g_syn.id          = d->id;

@@ -16,6 +16,4 @@ int fts_has_japanese(const char *s);
  * input on passthrough / any MeCab failure (fail-open, like the JS path). */
 char *fts_segment(const char *text);
 
-void fts_shutdown(void); /* free the cached tokenizer (optional) */
-
 #endif

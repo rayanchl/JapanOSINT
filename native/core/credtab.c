@@ -40,7 +40,8 @@ static const cred_def CREDS[] = {
   {"mlit-n02-stations",   {0},{0},{"MLIT_N02_GEOJSON_URL"}},
   {"edinet-filings",      {"EDINET_API_KEY"},{0},{0}},
   {"misskey-timeline",    {"MISSKEY_TOKEN"},{0},{0}},
-  {"windy-webcams",       {"WINDY_API_KEY"},{0},{0}},
+  {"cam-windy_api",       {"WINDY_API_KEY"},{0},{0}},
+  {"cam-youtube_live",    {"YOUTUBE_API_KEY"},{0},{0}},
   /* ── OSINTsaas-ported entity-pivot services (Batches 1–5) ── */
   {"PHONE_LOOKUP",        {0},{0},{"NUMVERIFY_API_KEY"}},
   {"CARRIER_LOOKUP",      {0},{0},{"NUMVERIFY_API_KEY"}},

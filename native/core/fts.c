@@ -77,9 +77,3 @@ char *fts_segment(const char *text) {
     res[--n] = '\0';
   return res;
 }
-
-void fts_shutdown(void) {
-  pthread_mutex_lock(&g_lock);
-  if (g_mecab) { mecab_destroy(g_mecab); g_mecab = NULL; }
-  pthread_mutex_unlock(&g_lock);
-}

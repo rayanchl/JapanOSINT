@@ -1,6 +1,19 @@
-/* GENERATED from server/src/utils/sourceRegistry.js — do not edit by hand.
+/* Originally GENERATED from server/src/utils/sourceRegistry.js. That generator
+   is gone with the Node server, so THIS FILE IS NOW THE SOURCE OF TRUTH and is
+   edited by hand.
    Deduplicated by id (registry had 427 rows, 7 duplicate
    ids removed → 420 unique; 5 breach-probe stubs since removed → 415).
+
+   Camera rows reconciled with the C collectors (2026-07): the Node registry
+   named the camera channels camscape-jp / insecam-japan / scs-com-ua /
+   tabi-cam-jp / webcamendirect-net / windy-webcams, but the C port registers
+   them as cam-camscape / cam-insecam-scrape / cam-scs_com_ua / cam-tabi_cam /
+   cam-webcamendirect_list / cam-windy_api. The ids here now match the live
+   source_defs (with update_interval aligned to the defs' 21600s), so the
+   curated metadata actually attaches instead of describing sources that no
+   longer exist. traffic-cameras, public-webcams and manual-ip-cams were
+   dropped — no collector was ever ported for them, so they only inflated the
+   cameras layer with rows that could never report a status.
    For each colliding id the LAST
    definition is kept (the canonical, more-specific one); single C
    backend, parity with the retired Node server no longer required.
@@ -33,10 +46,8 @@ static const src_meta M[]={
 {"jma-warnings","JMA Weather Warnings","気象庁 気象警報","safety","api","https://www.jma.go.jp/bosai/warning/","Weather warnings and advisories by region",NULL,"warnings",1,300},
 {"mlit-river","MLIT River Water Levels","国交省 河川水位情報","infrastructure","api","https://www.river.go.jp/","Real-time river water level monitoring (10-min)",NULL,"river",1,600},
 {"xrain-radar","XRAIN Rain Radar","XRAIN 高解像度降雨レーダー","infrastructure","api","https://www.river.go.jp/x/","High-resolution rain radar imagery (1-min)",NULL,"radar",1,60},
-{"traffic-cameras","Road Traffic Cameras (JARTIC)","JARTIC 道路交通カメラ","infrastructure","web_request","https://www.jartic.or.jp/","Live road traffic camera feeds",NULL,"cameras",1,300},
-{"public-webcams","Public Webcams / Livecams","公開ウェブカメラ","infrastructure","scraped","https://livecam.asia/","Aggregated public webcam and livecam feeds across Japan",NULL,"cameras",1,3600},
 {"shodan-japan","Shodan Japan IoT Devices","Shodan 日本IoTデバイス","cyber","api","https://api.shodan.io/","Internet-connected devices in Japan via Shodan",NULL,"cyber",0,86400},
-{"insecam-japan","Insecam Public Cameras","Insecam 公開カメラ","cyber","scraped","http://www.insecam.org/en/bycountry/JP/","Publicly accessible IP cameras in Japan",NULL,"cameras",1,86400},
+{"cam-insecam-scrape","Insecam Public Cameras","Insecam 公開カメラ","cyber","scraped","http://www.insecam.org/en/bycountry/JP/","Publicly accessible IP cameras in Japan",NULL,"cameras",1,21600},
 {"flickr-geo","Flickr Geotagged Photos","Flickr ジオタグ写真","social","api","https://api.flickr.com/services/rest/","Geotagged photos from Flickr in Japan",NULL,"social",1,3600},
 {"tellus-satellite","Tellus Satellite Imagery","Tellus 衛星画像","satellite","api","https://www.tellusxdp.com/","Japanese satellite imagery platform",NULL,"satellite",1,86400},
 {"sentinel-japan","Sentinel Hub Japan","Sentinel Hub 日本","satellite","api","https://services.sentinel-hub.com/","Copernicus Sentinel satellite imagery over Japan",NULL,"satellite",1,86400},
@@ -299,12 +310,11 @@ static const src_meta M[]={
 {"note-com-trending","note.com Trending","note トレンド","social","api","https://note.com/","Trending hashtags/notes on note.com (unofficial endpoints)",NULL,"note-com-trending",1,1800},
 {"mercari-trending","Mercari Trending","メルカリ トレンド","classifieds","api","https://jp.mercari.com/","Mercari trending search keywords (consumer demand signal). ToS caveat",NULL,"mercari-trending",1,86400},
 {"greynoise-jp","GreyNoise (curated IPs)","GreyNoise (IPリスト)","cyber","api","https://api.greynoise.io/v3/community","GreyNoise classifier output for a curated IP list. Free community tier; GREYNOISE_API_KEY raises limits",NULL,"greynoise-jp",1,3600},
-{"camscape-jp","Camscape (Japan search)","Camscape 日本検索","cyber","scraped","https://www.camscape.com/?s=japan","Camscape search results for Japan cameras (6 pages, YouTube-backed feeds)",NULL,"cameras",1,3600},
-{"webcamendirect-net","Webcamendirect (JP)","webcamendirect 日本","cyber","scraped","https://webcamendirect.net/japon","webcamendirect.net /japon listing + 5 curated detail URLs",NULL,"cameras",1,3600},
-{"tabi-cam-jp","tabi.cam (Japan)","tabi.cam 日本","cyber","scraped","https://tabi.cam/japan/","tabi.cam Japan listing with JS \"show more\" expansion",NULL,"cameras",1,3600},
-{"scs-com-ua","SCS Asia/Japan webcams","SCS アジア日本 ウェブカメラ","cyber","scraped","https://webcam.scs.com.ua/en/asia/japan/","webcam.scs.com.ua /en/asia/japan paginated listing (5 pages)",NULL,"cameras",1,3600},
-{"windy-webcams","Windy Webcams API (JP)","Windy ウェブカメラ API","cyber","api","https://api.windy.com/webcams/api/v3/webcams","Windy.com webcams filtered to country=JP. Includes real lat/lon + embed URLs. Requires WINDY_API_KEY (free signup)",NULL,"cameras",0,3600},
-{"manual-ip-cams","Manual IP Cameras (seed)","手動追加 IPカメラ","cyber","dataset","internal://manual-ip-cams","Hand-curated MJPG-Streamer / Mobotix cameras discovered via Shodan-style scans",NULL,"cameras",1,86400},
+{"cam-camscape","Camscape (Japan search)","Camscape 日本検索","cyber","scraped","https://www.camscape.com/?s=japan","Camscape search results for Japan cameras (6 pages, YouTube-backed feeds)",NULL,"cameras",1,21600},
+{"cam-webcamendirect_list","Webcamendirect (JP)","webcamendirect 日本","cyber","scraped","https://webcamendirect.net/japon","webcamendirect.net /japon listing + 5 curated detail URLs",NULL,"cameras",1,21600},
+{"cam-tabi_cam","tabi.cam (Japan)","tabi.cam 日本","cyber","scraped","https://tabi.cam/japan/","tabi.cam Japan listing with JS \"show more\" expansion",NULL,"cameras",1,21600},
+{"cam-scs_com_ua","SCS Asia/Japan webcams","SCS アジア日本 ウェブカメラ","cyber","scraped","https://webcam.scs.com.ua/en/asia/japan/","webcam.scs.com.ua /en/asia/japan paginated listing (5 pages)",NULL,"cameras",1,21600},
+{"cam-windy_api","Windy Webcams API (JP)","Windy ウェブカメラ API","cyber","api","https://api.windy.com/webcams/api/v3/webcams","Windy.com webcams filtered to countries=JP, paged 50/req to offset 2000. Real lat/lon + player embed URLs. Requires WINDY_API_KEY (free signup)",NULL,"cameras",0,21600},
 {"shodan-cameras-jp","Shodan Cameras (JP)","Shodan カメラ 日本","cyber","api","https://api.shodan.io/","Shodan country:JP camera search (Hikvision/Dahua/Axis/webcamXP/Panasonic etc.). Requires SHODAN_API_KEY",NULL,"cameras",0,86400},
 {"unified-airports","Unified Airports (fused)","Unified Airports","transport","dataset","internal://unified-airports","Airport infrastructure - fuses MLIT P02 polygons + OSM aerodromes/runways/navaids/control towers",NULL,"unified-airports",1,86400},
 {"unified-flights","Unified Flights (fused)","Unified Flights","transport","dataset","internal://unified-flights","Live flights - merges flight-adsb (OpenSky ADS-B) + Narita/Haneda/Kansai schedule APIs + ODPT flight data + FlightRadar24 JP",NULL,"unified-flights",1,60},

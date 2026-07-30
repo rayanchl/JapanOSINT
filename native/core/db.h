@@ -18,6 +18,23 @@ typedef struct { sqlite3 *h; } db_handle;
 int  db_open(db_handle *db, const char *db_path, const char *schema_path);
 void db_close(db_handle *db);
 
+/* Open a SECOND connection to the same database for a worker thread: the same
+ * file and the same PRAGMAs as db_open(), but no schema apply, no migrations
+ * and no source seeding — the process that called db_open() has already done
+ * all of that. Returns 0 on success. Close with db_close().
+ *
+ * WHY THIS EXISTS. A sqlite3 transaction is per-CONNECTION, not per-thread, so
+ * two threads sharing one handle share one transaction: thread A's `BEGIN` can
+ * land inside thread B's open transaction (the nested BEGIN just fails, and
+ * nobody checks it), and thread A's `ROLLBACK` then discards B's work.
+ * SQLITE_THREADSAFE=1 does not help — it serialises individual API calls, not
+ * transactions. Every thread that writes must own its connection.
+ *
+ * Using db_open() for this instead is not free: it re-executes schema.sql, all
+ * the ensure_column migrations and a 674-row seed transaction against a live
+ * database, competing with the very writers it was meant to avoid. */
+int  db_attach(db_handle *db, const char *db_path);
+
 /* PRAGMA integrity_check — returns 1 if "ok", else 0 (msg via out). */
 int  db_integrity_ok(db_handle *db, char *out, int out_sz);
 

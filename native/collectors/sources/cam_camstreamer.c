@@ -460,8 +460,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_camstreamer_def = {
-  .id = "cam-camstreamer", .collector = "infrastructure",
+  .id = "cam-camstreamer", .collector = "camera-discovery",
   .name = "Camera Discovery: Camstreamer",
   .name_ja = "カメラ探索: Camstreamer",
+   .layer = "cameras",
    .update_interval_sec = 21600, .run = run };
 REGISTER_SOURCE(cam_camstreamer_def)

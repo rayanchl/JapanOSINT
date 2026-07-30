@@ -503,6 +503,18 @@ int breach_meta_is_source(db_handle *db, const char *id) {
   return found;
 }
 
+void breach_meta_display(const breach_src_row *br, long long *count,
+                         const char **fresh, char *desc, size_t desc_cap) {
+  if (!br) return;
+  if (count) *count = br->item_count > 0 ? br->item_count : br->pwn_count;
+  if (fresh) *fresh = br->last_seen[0]  ? br->last_seen
+                    : br->added_date[0] ? br->added_date : NULL;
+  if (desc && desc_cap)
+    snprintf(desc, desc_cap, "%lld accounts%s%s", br->pwn_count,
+             br->breach_date[0] ? " \xc2\xb7 breached " : "",
+             br->breach_date[0] ? br->breach_date : "");
+}
+
 breach_src_row *breach_meta_sources(db_handle *db, int *n) {
   if (n) *n = 0;
   if (!db || !db->h) return NULL;

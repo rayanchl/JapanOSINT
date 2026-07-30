@@ -339,8 +339,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_tabi_cam_def = {
-  .id = "cam-tabi_cam", .collector = "infrastructure",
+  .id = "cam-tabi_cam", .collector = "camera-discovery",
   .name = "Camera discovery — Tabi-cam",
   .name_ja = "カメラ探索 — Tabi-cam",
+   .layer = "cameras",
    .update_interval_sec = 21600, .run = run };
 REGISTER_SOURCE(cam_tabi_cam_def)

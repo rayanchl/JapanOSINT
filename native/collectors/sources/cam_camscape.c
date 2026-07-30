@@ -380,8 +380,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_camscape_def = {
-  .id = "cam-camscape", .collector = "infrastructure",
+  .id = "cam-camscape", .collector = "camera-discovery",
   .name = "Camera discovery — Camscape",
   .name_ja = "カメラ探索 — Camscape",
+   .layer = "cameras",
    .update_interval_sec = 21600, .run = run };
 REGISTER_SOURCE(cam_camscape_def)

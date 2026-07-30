@@ -20,7 +20,10 @@ struct RootView: View {
     @Environment(\.theme) private var theme
     @Environment(\.horizontalSizeClass) private var hSize
 
-    /// Owned here so the tab badge and the inbox list read one counter.
+    /// Owned here and injected into the environment so the tab badge and the
+    /// inbox list read ONE counter. A second instance inside `ConsoleHub` meant
+    /// reading the inbox never cleared the badge — a badge that disagrees with
+    /// the list is worse than no badge at all.
     @StateObject private var alertInbox = AlertInboxModel()
 
     /// Owner/admins reach the Workspace console surface (members, queries).
@@ -76,6 +79,9 @@ struct RootView: View {
             #endif
         }
         .sensoryFeedback(.selection, trigger: mapNav.selectedTab)
+        // One store for the badge and for every inbox surface below (phone
+        // Console row, iPad sidebar row).
+        .environmentObject(alertInbox)
     }
 
     // MARK: - Phone (compact)
@@ -232,6 +238,13 @@ struct RootView: View {
                 case .settings:   SettingsTab()
                 case .workspace:  WorkspaceSettingsTab()
                 case .admin:      AdminPanel()
+                case .saved:      SavedTab()
+                // The SAME store the tab badge reads — see `alertInbox`.
+                case .inbox:      AlertInboxView(model: alertInbox)
+                case .aoi:        AOIListView()
+                case .watchlists: WatchlistsView()
+                case .breachMonitors: BreachMonitorsView()
+                case .savedSearches:  SavedSearchesView()
                 }
             }
         }

@@ -360,6 +360,13 @@ struct StatusRow: Decodable, Identifiable, Hashable {
     let missingVars: [String]?
     let probeConsent: Bool?
     let gated: Bool?
+    /// Reliability scoring (roadmap 30). `/api/status` emits this object on
+    /// EVERY row (core/statusapi.c:229-254), including the synthesized breach
+    /// catalog rows. `rated == false` means "no fetch history in the 30-day
+    /// window", which is a different claim from a bad score — `TrustBadge`
+    /// renders it as "unrated", never as zero. Optional so cached JSON
+    /// predating the field still decodes.
+    let trust: SourceTrust?
 
     /// Gated rows take precedence over the underlying probe status — they
     /// haven't been probed and shouldn't be coloured as online/offline.
@@ -487,11 +494,10 @@ struct IntelSource: Codable, Identifiable, Hashable {
     let last_fetched: String?
     let last_published: String?
     let ttl_ms: Int?
-    /// Reliability scoring (roadmap 30), served by /api/status and
-    /// /api/intel/sources. `rated == false` means "no fetch history in the
-    /// window" — the UI must render that as unrated, never as a zero score.
-    /// Optional so cached JSON predating the field still decodes.
-    let trust: SourceTrust?
+    // No `trust` here on purpose: only `/api/status` emits a reliability
+    // object (core/statusapi.c). `/api/intel/sources` never has, so the field
+    // decoded to nil on every row and the doc comment claiming otherwise was
+    // actively misleading. Reliability is rendered from `StatusRow.trust`.
 }
 
 struct IntelRunResult: Decodable {

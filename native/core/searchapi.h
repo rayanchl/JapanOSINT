@@ -13,7 +13,13 @@
 
 /* query may be NULL/empty → returns NULL (caller: 400 query_required).
  * Otherwise spawns the run and returns {request_id,status,query}. Frees. */
-char *searchapi_analyze(db_handle *db, const char *query, int max_rounds);
+/* Starts a pipeline run on a detached thread. Concurrency is capped
+ * (JO_SEARCH_MAX, default 4) because each run owns a thread, an http_client and
+ * a DB connection; at capacity this returns NULL with *status = 429 so the
+ * caller can say so rather than reporting a bad request. *status is 200 on
+ * success and on the plain "no query" NULL. `status` may be NULL. */
+char *searchapi_analyze(db_handle *db, const char *query, int max_rounds,
+                        int *status);
 
 /* {"suggestions":[...]} (never NULL; "[]" on failure). Caller frees. */
 char *searchapi_suggest(const char *q);

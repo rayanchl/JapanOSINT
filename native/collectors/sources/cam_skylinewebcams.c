@@ -364,8 +364,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_skylinewebcams_def = {
-  .id = "cam-skylinewebcams", .collector = "infrastructure",
+  .id = "cam-skylinewebcams", .collector = "camera-discovery",
   .name = "Camera Discovery: SkylineWebcams",
   .name_ja = "カメラ探索: SkylineWebcams",
+   .layer = "cameras",
    .update_interval_sec = 21600, .run = run };
 REGISTER_SOURCE(cam_skylinewebcams_def)

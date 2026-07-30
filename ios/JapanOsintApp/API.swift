@@ -479,8 +479,14 @@ struct API: Sendable {
         return env.jobs
     }
 
-    func breachJob(_ id: String) async throws -> BreachJob {
-        try await get("/api/admin/breach/jobs/\(id)")
+    /// `GET /api/admin/breach/jobs/:id` returns the SAME envelope as the list
+    /// route — core/breach_jobs.c always wraps in `{"jobs":[…]}` and uses the id
+    /// only as a filter. Decoding a bare `BreachJob` threw `keyNotFound` on
+    /// every call (`BreachJob.jobId` is non-optional). Returns nil when the id
+    /// matches nothing rather than inventing a 404.
+    func breachJob(_ id: String) async throws -> BreachJob? {
+        let env: BreachJobsEnvelope = try await get("/api/admin/breach/jobs/\(id)")
+        return env.jobs.first
     }
 
     /// Operator-surface errors worth naming. A 409 is the server's one-job-at-a-

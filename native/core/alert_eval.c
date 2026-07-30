@@ -1009,15 +1009,24 @@ static pthread_t g_sweep_thread;
 static int       g_sweep_running;
 static volatile int g_sweep_stop;
 
+/* Own connection: a sqlite transaction belongs to a connection, not a thread,
+ * so sharing the server handle let this sweep's writes interleave with the
+ * event loop's and the scheduler's transactions. */
 static void *sweep_thread(void *arg) {
-  db_handle *db = (db_handle *)arg;
+  (void)arg;
+  db_handle own = {0};
+  if (db_attach(&own, NULL) != 0) {
+    fprintf(stderr, "[alert-sweep] cannot open its own DB connection; sweep off\n");
+    return NULL;
+  }
   int interval = SWEEP_DEFAULT_SEC;
   const char *e = getenv("JO_ALERT_SWEEP_SEC");
   if (e && *e) { int v = atoi(e); if (v > 0) interval = v; }
   while (!g_sweep_stop) {
-    alert_eval_sweep_entities(db);
+    alert_eval_sweep_entities(&own);
     for (int i = 0; i < interval && !g_sweep_stop; i++) sleep(1);
   }
+  db_close(&own);
   return NULL;
 }
 

@@ -19,11 +19,29 @@ static const char *cache_get(const char *k){
     if (CACHE[i].exp<now) return NULL; return CACHE[i].val; }
   return NULL;
 }
+/* Reuses expired slots and, once full, evicts the entry expiring soonest.
+ * Previously the table simply stopped accepting writes at 256 entries and never
+ * reclaimed expired ones, so after ~256 distinct lookups every request went
+ * upstream — straight into Nominatim's 1 req/s policy, on the event loop. */
 static void cache_put(const char *k,const char *v,int ttl_s){
-  for (int i=0;i<ncache;i++) if (!strcmp(CACHE[i].key,k)){
-    free(CACHE[i].val); CACHE[i].val=strdup(v); CACHE[i].exp=time(NULL)+ttl_s; return; }
-  if (ncache<256){ snprintf(CACHE[ncache].key,sizeof CACHE[ncache].key,"%s",k);
-    CACHE[ncache].val=strdup(v); CACHE[ncache].exp=time(NULL)+ttl_s; ncache++; }
+  time_t now=time(NULL);
+  int slot=-1;
+  for (int i=0;i<ncache;i++){
+    if (!strcmp(CACHE[i].key,k)){ slot=i; break; }
+    if (slot<0 && CACHE[i].exp<now) slot=i;          /* first expired slot */
+  }
+  if (slot<0){
+    if (ncache<256) slot=ncache++;
+    else {                                            /* evict soonest-expiring */
+      slot=0;
+      for (int i=1;i<ncache;i++) if (CACHE[i].exp<CACHE[slot].exp) slot=i;
+    }
+  }
+  char *nv=strdup(v);
+  if (!nv) return;                                    /* keep the old entry */
+  free(CACHE[slot].val);
+  snprintf(CACHE[slot].key,sizeof CACHE[slot].key,"%s",k);
+  CACHE[slot].val=nv; CACHE[slot].exp=now+ttl_s;
 }
 static void urlenc(const char *s,char *o,size_t n){
   size_t j=0; for (;*s&&j+4<n;s++){
@@ -124,41 +142,57 @@ static cJSON *fwd_gsi(const char *q){
   return out;
 }
 /* returns cJSON array (hits, owned) + sets *prov; uses 24h cache */
-static cJSON *fwd_one(const char *q,const char **prov){
+/* Copies the provider name into `prov` (size `pcap`) rather than handing back a
+ * pointer into the returned tree: the qAlt merge path below deletes both trees
+ * before it writes the "provider" field, so a borrowed pointer was read after
+ * free. `prov` is set to "" when no provider is known. */
+static cJSON *fwd_one(const char *q,char *prov,size_t pcap){
+  if (pcap) prov[0]=0;
   char ck[300]; snprintf(ck,sizeof ck,"fwd:%s",q);
   const char *c=cache_get(ck);
   if (c){ cJSON *h=cJSON_Parse(c);
+    if (!h) h=cJSON_CreateArray();
     cJSON *f=cJSON_GetArrayItem(h,0); cJSON *sp=f?cJSON_GetObjectItem(f,"source"):NULL;
-    *prov=(sp&&cJSON_IsString(sp))?sp->valuestring:NULL; return h; }
+    if (sp&&cJSON_IsString(sp)&&sp->valuestring) snprintf(prov,pcap,"%s",sp->valuestring);
+    return h; }
   cJSON *(*P[3])(const char*)={fwd_nominatim,fwd_photon,fwd_gsi};
   for (int i=0;i<3;i++){ cJSON *h=P[i](q);
     if (h&&cJSON_GetArraySize(h)>0){ char *t=cJSON_PrintUnformatted(h);
-      cache_put(ck,t,86400); free(t);
+      if (t){ cache_put(ck,t,86400); free(t); }
       cJSON *f=cJSON_GetArrayItem(h,0);
-      *prov=cJSON_GetObjectItem(f,"source")->valuestring; return h; }
+      cJSON *sp=f?cJSON_GetObjectItem(f,"source"):NULL;
+      if (sp&&cJSON_IsString(sp)&&sp->valuestring) snprintf(prov,pcap,"%s",sp->valuestring);
+      return h; }
     cJSON_Delete(h); }
-  *prov=NULL; return cJSON_CreateArray();
+  return cJSON_CreateArray();
+}
+
+/* "lat,lon" dedup key for one hit; 0 when the hit has no usable coordinates
+ * (a provider may omit them — the old code dereferenced the lookup blindly). */
+static int hit_key(const cJSON *it,char *out,size_t n){
+  const cJSON *la=cJSON_GetObjectItem(it,"lat"),*lo=cJSON_GetObjectItem(it,"lon");
+  if (!cJSON_IsNumber(la)||!cJSON_IsNumber(lo)) return 0;
+  snprintf(out,n,"%.5f,%.5f",la->valuedouble,lo->valuedouble);
+  return 1;
 }
 char *geoproxy_geocode_forward(const char *q,const char *qAlt){
-  const char *p1=NULL; cJSON *h1=fwd_one(q,&p1);
+  char p1[64]; cJSON *h1=fwd_one(q,p1,sizeof p1);
   cJSON *o=cJSON_CreateObject();
   if (!qAlt||!*qAlt||!strcmp(qAlt,q)){
     cJSON_AddItemToObject(o,"results",h1);
-    cJSON_AddItemToObject(o,"provider",p1?cJSON_CreateString(p1):cJSON_CreateNull());
+    cJSON_AddItemToObject(o,"provider",p1[0]?cJSON_CreateString(p1):cJSON_CreateNull());
   } else {
-    const char *p2=NULL; cJSON *h2=fwd_one(qAlt,&p2);
+    char p2[64]; cJSON *h2=fwd_one(qAlt,p2,sizeof p2);
     cJSON *merged=cJSON_CreateArray(); char seen[64][32]; int ns=0; cJSON *it;
     cJSON_ArrayForEach(it,h1){
-      char k[32]; snprintf(k,sizeof k,"%.5f,%.5f",
-        cJSON_GetObjectItem(it,"lat")->valuedouble,cJSON_GetObjectItem(it,"lon")->valuedouble);
+      char k[32]; if(!hit_key(it,k,sizeof k)) continue;
       int dup=0; for(int i=0;i<ns;i++) if(!strcmp(seen[i],k))dup=1;
       if(dup)continue; if(ns<64)snprintf(seen[ns++],32,"%s",k);
       cJSON *d=cJSON_Duplicate(it,1); cJSON_AddBoolToObject(d,"via_translation",0);
       cJSON_AddItemToArray(merged,d);
     }
     cJSON_ArrayForEach(it,h2){
-      char k[32]; snprintf(k,sizeof k,"%.5f,%.5f",
-        cJSON_GetObjectItem(it,"lat")->valuedouble,cJSON_GetObjectItem(it,"lon")->valuedouble);
+      char k[32]; if(!hit_key(it,k,sizeof k)) continue;
       int dup=0; for(int i=0;i<ns;i++) if(!strcmp(seen[i],k))dup=1;
       if(dup)continue; if(ns<64)snprintf(seen[ns++],32,"%s",k);
       cJSON *d=cJSON_Duplicate(it,1); cJSON_AddBoolToObject(d,"via_translation",1);
@@ -167,8 +201,9 @@ char *geoproxy_geocode_forward(const char *q,const char *qAlt){
     }
     cJSON_Delete(h1); cJSON_Delete(h2);
     cJSON_AddItemToObject(o,"results",merged);
-    cJSON_AddItemToObject(o,"provider",p1?cJSON_CreateString(p1):
-      p2?cJSON_CreateString(p2):cJSON_CreateNull());
+    /* p1/p2 are our own buffers, so this is safe after the deletes above. */
+    cJSON_AddItemToObject(o,"provider",p1[0]?cJSON_CreateString(p1):
+      p2[0]?cJSON_CreateString(p2):cJSON_CreateNull());
   }
   char *j=cJSON_PrintUnformatted(o); cJSON_Delete(o); return j;
 }

@@ -8,6 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <pthread.h>
 
 typedef struct { char *host; int requests; int ok; } host_log;
 
@@ -68,9 +69,18 @@ static size_t on_data(void *ptr, size_t sz, size_t nm, void *ud) {
   return n;
 }
 
+/* curl_global_init() is documented as not thread-safe and must run before any
+ * other libcurl call. http_client_new() is reached from the scheduler thread,
+ * every detached /api/search/analyze pipeline thread, the breach fetch/ingest
+ * job threads, the LLM worker and the mongoose event loop — so the old
+ * `static int inited` test-and-set was a genuine startup race. This is the
+ * single global init; alert_deliver.c and camera_stills.c call it too. */
+static pthread_once_t g_curl_once = PTHREAD_ONCE_INIT;
+static void curl_boot(void) { curl_global_init(CURL_GLOBAL_DEFAULT); }
+void http_client_global_init(void) { pthread_once(&g_curl_once, curl_boot); }
+
 http_client *http_client_new(void) {
-  static int inited = 0;
-  if (!inited) { curl_global_init(CURL_GLOBAL_DEFAULT); inited = 1; }
+  http_client_global_init();
   http_client *c = calloc(1, sizeof *c);
   if (!c) return NULL;
   c->share = curl_share_init();

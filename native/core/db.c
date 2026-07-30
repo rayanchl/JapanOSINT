@@ -22,7 +22,12 @@ static char *slurp(const char *path) {
   fseek(f, 0, SEEK_END);
   long n = ftell(f);
   fseek(f, 0, SEEK_SET);
-  char *buf = malloc(n + 1);
+  /* ftell returns -1 on a non-seekable stream (a FIFO, /dev/stdin, a process
+   * substitution — all of which fopen happily). Unchecked, that became
+   * malloc(0) followed by fread(buf, 1, SIZE_MAX, f): an unbounded heap
+   * overflow at boot, and a one-byte overwrite even when the read is empty. */
+  if (n < 0) { fclose(f); return NULL; }
+  char *buf = malloc((size_t)n + 1);
   if (!buf) { fclose(f); return NULL; }
   size_t rd = fread(buf, 1, (size_t)n, f);
   fclose(f);
@@ -81,20 +86,43 @@ void ensure_column(db_handle *db, const char *table, const char *col,
  * (Japan map collector and OSINT-SaaS service alike) has a row and therefore
  * appears in /api/status, /api/sources, /api/keys with full metadata. Pulls
  * type/category/url/name from the merged src_meta_get() (curated table, else
- * synthesized from the source_def). Idempotent: ON CONFLICT(id) DO NOTHING
- * preserves existing rows' status/probe/schedule columns untouched. Runs after
- * the REGISTER_SOURCE constructors (which fire before main), so the registry
- * is fully populated. */
+ * synthesized from the source_def). Runs after the REGISTER_SOURCE
+ * constructors (which fire before main), so the registry is fully populated.
+ *
+ * Idempotent, and on conflict it REFRESHES the four registry-derived columns
+ * (name/type/category/url) while leaving every operational column —
+ * status, last_check/last_success, probe_consent, schedule_mode — untouched.
+ * It used to be ON CONFLICT DO NOTHING, which meant a row seeded once was
+ * frozen forever: correcting a source's metadata in the curated table changed
+ * nothing on any existing install. That bit us with the camera collectors,
+ * whose rows had been seeded from synthesized defaults (category
+ * "investigation", url NULL) and stayed that way after the curated rows were
+ * re-pointed onto their real ids. Those four columns have exactly one author —
+ * this function — so refreshing them can't clobber user state. `url` is
+ * COALESCEd so a metadata row without a url never blanks a seeded one. */
 static void db_seed_sources(db_handle *db) {
   const source_def **a = registry_all();
   int n = registry_count();
   static const char *SQL =
     "INSERT INTO sources (id,name,type,category,url,status) "
-    "VALUES (?1,?2,?3,?4,?5,'pending') ON CONFLICT(id) DO NOTHING";
-  sqlite3_stmt *s;
+    "VALUES (?1,?2,?3,?4,?5,'pending') "
+    "ON CONFLICT(id) DO UPDATE SET "
+    "  name=excluded.name, type=excluded.type, category=excluded.category, "
+    "  url=COALESCE(excluded.url, sources.url) "
+    " WHERE sources.name     IS NOT excluded.name "
+    "    OR sources.type     IS NOT excluded.type "
+    "    OR sources.category IS NOT excluded.category "
+    "    OR sources.url      IS NOT COALESCE(excluded.url, sources.url)";
+  /* Counting inserts separately from refreshes: sqlite3_changes() reports 1
+   * for both, so ask the table whether the row existed before the step. */
+  static const char *EXISTS_SQL = "SELECT 1 FROM sources WHERE id=?1";
+  sqlite3_stmt *s, *ex;
   if (sqlite3_prepare_v2(db->h, SQL, -1, &s, NULL) != SQLITE_OK) return;
+  if (sqlite3_prepare_v2(db->h, EXISTS_SQL, -1, &ex, NULL) != SQLITE_OK) {
+    sqlite3_finalize(s); return;
+  }
   sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL);
-  int added = 0;
+  int added = 0, refreshed = 0;
   for (int i = 0; i < n; i++) {
     const source_def *d = a[i];
     const src_meta *m = src_meta_get(d->id);
@@ -103,19 +131,52 @@ static void db_seed_sources(db_handle *db) {
     const char *url  = (m && m->url)      ? m->url      : NULL;
     const char *name = (m && m->name)     ? m->name
                        : (d->name ? d->name : d->id);
+    sqlite3_reset(ex);
+    sqlite3_bind_text(ex, 1, d->id, -1, SQLITE_TRANSIENT);
+    int existed = sqlite3_step(ex) == SQLITE_ROW;
+    sqlite3_reset(ex);
+
     sqlite3_bind_text(s, 1, d->id, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 2, name,  -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 3, type,  -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 4, cat,   -1, SQLITE_TRANSIENT);
     if (url) sqlite3_bind_text(s, 5, url, -1, SQLITE_TRANSIENT);
     else     sqlite3_bind_null(s, 5);
-    if (sqlite3_step(s) == SQLITE_DONE) added += sqlite3_changes(db->h);
+    if (sqlite3_step(s) == SQLITE_DONE) {
+      int ch = sqlite3_changes(db->h);
+      if (ch) { if (existed) refreshed++; else added++; }
+    }
     sqlite3_reset(s);
     sqlite3_clear_bindings(s);
   }
   sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL);
   sqlite3_finalize(s);
-  fprintf(stderr, "[db] seeded sources from registry (%d new rows)\n", added);
+  sqlite3_finalize(ex);
+  fprintf(stderr,
+          "[db] seeded sources from registry (%d new, %d metadata-refreshed)\n",
+          added, refreshed);
+}
+
+/* The pragmas every connection to this database must carry. */
+static void db_apply_pragmas(sqlite3 *h) {
+  sqlite3_exec(h, "PRAGMA journal_mode=WAL;",  NULL, NULL, NULL);
+  sqlite3_exec(h, "PRAGMA foreign_keys=ON;",   NULL, NULL, NULL);
+  sqlite3_exec(h, "PRAGMA busy_timeout=5000;", NULL, NULL, NULL);
+  sqlite3_exec(h, "PRAGMA synchronous=NORMAL;", NULL, NULL, NULL);
+}
+
+int db_attach(db_handle *db, const char *db_path) {
+  if (!db) return 1;
+  const char *dbp = db_path ? db_path
+    : (getenv("JO_DB") ? getenv("JO_DB") : JO_REPO_ROOT "/data/japanmap.db");
+  int rc = sqlite3_open_v2(dbp, &db->h, SQLITE_OPEN_READWRITE, NULL);
+  if (rc != SQLITE_OK) {
+    fprintf(stderr, "[db] attach failed: %s\n", sqlite3_errmsg(db->h));
+    if (db->h) { sqlite3_close(db->h); db->h = NULL; }
+    return 1;
+  }
+  db_apply_pragmas(db->h);
+  return 0;
 }
 
 int db_open(db_handle *db, const char *db_path, const char *schema_path) {
@@ -131,10 +192,7 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
     return 1;
   }
   /* Mirror database.js: WAL + sane pragmas. */
-  sqlite3_exec(db->h, "PRAGMA journal_mode=WAL;", NULL, NULL, NULL);
-  sqlite3_exec(db->h, "PRAGMA foreign_keys=ON;", NULL, NULL, NULL);
-  sqlite3_exec(db->h, "PRAGMA busy_timeout=5000;", NULL, NULL, NULL);
-  sqlite3_exec(db->h, "PRAGMA synchronous=NORMAL;", NULL, NULL, NULL);
+  db_apply_pragmas(db->h);
 
   char *schema = slurp(scp);
   if (!schema) {

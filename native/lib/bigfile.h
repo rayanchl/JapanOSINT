@@ -16,10 +16,6 @@ bigfile *bigfile_open(const char *path);
  * the stripped length. Over-long lines are silently skipped and counted. */
 const char *bigfile_next(bigfile *bf, size_t *len);
 
-/* Progress counters. */
-void bigfile_stats(const bigfile *bf, unsigned long long *lines,
-                   unsigned long long *skipped);
-
 void bigfile_close(bigfile *bf);
 
 #endif

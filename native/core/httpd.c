@@ -222,14 +222,111 @@ static long long si_count(db_handle *db, const char *id) {
   return n;
 }
 
-/* POST /api/data/cameras/trigger — run the camera-discovery collector on a
- * detached thread (== Node withCollectorRun, not awaited), single-flighted
- * via run_begin/run_end keyed "camera-discovery". */
-typedef struct { db_handle *db; const source_def *d; } cam_trig_arg;
+/* ══ POST /api/data/cameras/trigger — camera-discovery fan-out ═════════════
+ *
+ * In Node this was ONE collector that internally walked ~20 channels. The C
+ * port split it into one registered source per channel, so "run the camera
+ * collector" is now a fan-out over every source whose `collector` field is
+ * "camera-discovery" — the same grouping idiom osint_dispatch.c uses for
+ * `collector == "osint"`. Membership is derived, never hardcoded: a new
+ * cam_*.c joins the fan-out by existing.
+ *
+ * SEQUENTIAL, deliberately. run_begin's table is 16 slots; 15 channels plus the
+ * outer key plus anything else in flight would overflow it, and 15 concurrent
+ * SQLite writers would fight over a busy_timeout=5000 lock for no wall-clock
+ * win against sites that are mostly latency-bound anyway. Running one at a time
+ * holds at most two keys.
+ *
+ * Single-flight is two-level. The outer key "camera-discovery" keeps the
+ * endpoint's {started, already_running} contract literally true for the fan-out
+ * as a whole. The inner per-source run_begin stops the fan-out from
+ * double-running a channel the scheduler or POST /api/intel/sources/:id/run
+ * already has going — those two paths key on the source id, so the guards
+ * interlock correctly. */
+
+#define CAM_COLLECTOR "camera-discovery"
+#define CAM_MAX_CHANNELS 64
+
+/* Live progress for GET /api/data/cameras/run-status. Written by the fan-out
+ * thread, read by the event loop, so every field moves under g_camlock. */
+static pthread_mutex_t g_camlock = PTHREAD_MUTEX_INITIALIZER;
+static struct {
+  int      running;
+  char     run_id[40];
+  char     started_at[40];      /* ISO-8601 UTC */
+  char     current[80];         /* channel in flight, "" when between */
+  int      channels_total, channels_done, channels_skipped;
+  long long ingested;
+  time_t   last_finished;       /* 0 = never; drives the cooldown */
+  long     last_duration_ms;
+  long long last_ingested;
+} g_cam;
+
+/* Minimum gap between fan-outs. MapPage.jsx fires this POST automatically every
+ * time the cameras layer is switched on, for any authenticated user — without a
+ * cooldown that is 15 scrapers hammering third-party sites on a UI toggle. */
+#define CAM_COOLDOWN_SEC 900
+
+/* Collect the fan-out membership. Returns #found (capped), filling `out`. */
+static int cam_channels(const source_def **out, int cap) {
+  const source_def **all = registry_all();
+  int n = registry_count(), k = 0;
+  for (int i = 0; i < n && k < cap; i++)
+    if (all[i]->collector && strcmp(all[i]->collector, CAM_COLLECTOR) == 0)
+      out[k++] = all[i];
+  return k;
+}
+
+typedef struct { db_handle *db; } cam_trig_arg;
+
 static void *cam_trigger_thread(void *vp) {
   cam_trig_arg *a = vp;
-  scheduler_run_source(a->db, a->d, NULL);
-  run_end("camera-discovery");
+  const source_def *ch[CAM_MAX_CHANNELS];
+  int n = cam_channels(ch, CAM_MAX_CHANNELS);
+  uint64_t t0 = mg_millis();
+  long long total = 0;
+
+  for (int i = 0; i < n; i++) {
+    const source_def *d = ch[i];
+    /* Already running via the scheduler or /api/intel/sources/:id/run → skip
+     * this channel rather than run it twice; the rest of the fan-out proceeds. */
+    if (!run_begin(d->id)) {
+      pthread_mutex_lock(&g_camlock);
+      g_cam.channels_skipped++;
+      g_cam.channels_done++;
+      pthread_mutex_unlock(&g_camlock);
+      continue;
+    }
+    pthread_mutex_lock(&g_camlock);
+    snprintf(g_cam.current, sizeof g_cam.current, "%s", d->id);
+    pthread_mutex_unlock(&g_camlock);
+
+    long long before = si_count(a->db, d->id);
+    scheduler_run_source(a->db, d, NULL);
+    long long delta = si_count(a->db, d->id) - before;
+    if (delta < 0) delta = 0;
+    total += delta;
+    run_end(d->id);
+
+    pthread_mutex_lock(&g_camlock);
+    g_cam.channels_done++;
+    g_cam.ingested += delta;
+    g_cam.current[0] = 0;
+    pthread_mutex_unlock(&g_camlock);
+  }
+
+  long dur = (long)(mg_millis() - t0);
+  pthread_mutex_lock(&g_camlock);
+  g_cam.running = 0;
+  g_cam.current[0] = 0;
+  g_cam.last_finished = time(NULL);
+  g_cam.last_duration_ms = dur;
+  g_cam.last_ingested = total;
+  pthread_mutex_unlock(&g_camlock);
+
+  fprintf(stderr, "[cameras] fan-out done: %d channels, %lld ingested, %ldms\n",
+          n, total, dur);
+  run_end(CAM_COLLECTOR);
   free(a);
   return NULL;
 }
@@ -1839,25 +1936,130 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 200, body); free(body); return;
     }
 
-    /* POST /api/data/cameras/trigger — port of data.js cameras/trigger:
-     * single-flight; already-running → {started:false,already_running:true},
-     * else kick the collector (detached) → {started:true,...}. */
+    /* GET /api/data/cameras/run-status — live fan-out progress. Plain-auth,
+     * beside discovery-feed. The clients' progress UI (useCameraDiscoveryStream
+     * / LayersTab's `triggering`) was written against WebSocket events the C
+     * backend has never emitted — there is no /ws server here at all — so this
+     * poll endpoint is what makes a running fan-out observable. */
+    if (eq(u, "/api/data/cameras/run-status")) {
+      pthread_mutex_lock(&g_camlock);
+      int running = g_cam.running, tot = g_cam.channels_total,
+          done = g_cam.channels_done, skip = g_cam.channels_skipped;
+      long long ing = g_cam.ingested, lastIng = g_cam.last_ingested;
+      long lastDur = g_cam.last_duration_ms;
+      time_t fin = g_cam.last_finished;
+      char rid[40], sat[40], cur[80];
+      snprintf(rid, sizeof rid, "%s", g_cam.run_id);
+      snprintf(sat, sizeof sat, "%s", g_cam.started_at);
+      snprintf(cur, sizeof cur, "%s", g_cam.current);
+      pthread_mutex_unlock(&g_camlock);
+
+      long cooldown = 0;
+      if (fin) {
+        long since = (long)(time(NULL) - fin);
+        cooldown = since >= CAM_COOLDOWN_SEC ? 0 : CAM_COOLDOWN_SEC - since;
+      }
+      cJSON *o = cJSON_CreateObject();
+      cJSON_AddBoolToObject(o, "running", running);
+      if (rid[0]) cJSON_AddStringToObject(o, "run_id", rid);
+      else        cJSON_AddNullToObject(o, "run_id");
+      if (sat[0]) cJSON_AddStringToObject(o, "started_at", sat);
+      else        cJSON_AddNullToObject(o, "started_at");
+      if (cur[0]) cJSON_AddStringToObject(o, "current_channel", cur);
+      else        cJSON_AddNullToObject(o, "current_channel");
+      cJSON_AddNumberToObject(o, "channels_total",   tot);
+      cJSON_AddNumberToObject(o, "channels_done",    done);
+      cJSON_AddNumberToObject(o, "channels_skipped", skip);
+      cJSON_AddNumberToObject(o, "cameras_ingested", (double)ing);
+      cJSON_AddNumberToObject(o, "cooldown_remaining_sec", (double)cooldown);
+      if (fin) {
+        cJSON_AddNumberToObject(o, "last_duration_ms", (double)lastDur);
+        cJSON_AddNumberToObject(o, "last_ingested",    (double)lastIng);
+      } else {
+        cJSON_AddNullToObject(o, "last_duration_ms");
+        cJSON_AddNullToObject(o, "last_ingested");
+      }
+      char *body = cJSON_PrintUnformatted(o);
+      cJSON_Delete(o);
+      if (!body) { reply_json(c, 500, "{\"error\":\"oom\"}"); return; }
+      reply_json(c, 200, body); free(body); return;
+    }
+
+    /* POST /api/data/cameras/trigger — fan out over every camera-discovery
+     * channel on a detached thread (== Node withCollectorRun, not awaited).
+     * Keeps the {started, already_running} contract both clients parse;
+     * run_id / channels_total / skipped are additive. */
     if (eq(u, "/api/data/cameras/trigger")) {
-      const source_def *cd = registry_get("camera-discovery");
-      if (!cd) { reply_json(c, 200,
-        "{\"started\":false,\"already_running\":false}"); return; }
-      if (!run_begin("camera-discovery")) {
+      const source_def *ch[CAM_MAX_CHANNELS];
+      int nch = cam_channels(ch, CAM_MAX_CHANNELS);
+      /* No channels registered is a real fault, not a quiet no-op — the old
+       * code returned started:false here and both clients read that as "fine",
+       * which is how a dead trigger went unnoticed. */
+      if (nch == 0) {
+        reply_json(c, 500,
+          "{\"started\":false,\"already_running\":false,"
+          "\"error\":\"no_camera_channels_registered\"}");
+        return;
+      }
+      /* Cooldown before the single-flight check: a caller inside the window
+       * gets told why, not just "not started". */
+      pthread_mutex_lock(&g_camlock);
+      time_t fin = g_cam.last_finished;
+      pthread_mutex_unlock(&g_camlock);
+      if (fin) {
+        long since = (long)(time(NULL) - fin);
+        if (since < CAM_COOLDOWN_SEC) {
+          char b[160];
+          snprintf(b, sizeof b,
+            "{\"started\":false,\"already_running\":false,"
+            "\"skipped\":\"cooldown\",\"retry_after_sec\":%ld}",
+            CAM_COOLDOWN_SEC - since);
+          reply_json(c, 200, b);
+          return;
+        }
+      }
+      if (!run_begin(CAM_COLLECTOR)) {
         reply_json(c, 200,
           "{\"started\":false,\"already_running\":true}"); return;
       }
       cam_trig_arg *ta = calloc(1, sizeof *ta);
-      ta->db = g_db; ta->d = cd;
+      if (!ta) {
+        run_end(CAM_COLLECTOR);
+        reply_json(c, 500,
+          "{\"started\":false,\"already_running\":false}"); return;
+      }
+      ta->db = g_db;
+
+      /* Arm the progress block BEFORE the thread exists, so a run-status poll
+       * that lands between the reply and the thread's first tick already sees
+       * running:true rather than a stale idle snapshot. */
+      pthread_mutex_lock(&g_camlock);
+      g_cam.running = 1;
+      g_cam.channels_total = nch;
+      g_cam.channels_done = 0;
+      g_cam.channels_skipped = 0;
+      g_cam.ingested = 0;
+      g_cam.current[0] = 0;
+      iso_now(g_cam.started_at, sizeof g_cam.started_at);
+      snprintf(g_cam.run_id, sizeof g_cam.run_id, "cam-%llu",
+               (unsigned long long)mg_millis());
+      char run_id[40];
+      snprintf(run_id, sizeof run_id, "%s", g_cam.run_id);
+      pthread_mutex_unlock(&g_camlock);
+
       pthread_t th;
       if (pthread_create(&th, NULL, cam_trigger_thread, ta) == 0) {
         pthread_detach(th);
-        reply_json(c, 200, "{\"started\":true,\"already_running\":false}");
+        char b[192];
+        snprintf(b, sizeof b,
+          "{\"started\":true,\"already_running\":false,"
+          "\"run_id\":\"%.38s\",\"channels_total\":%d}", run_id, nch);
+        reply_json(c, 200, b);
       } else {
-        run_end("camera-discovery"); free(ta);
+        pthread_mutex_lock(&g_camlock);
+        g_cam.running = 0;
+        pthread_mutex_unlock(&g_camlock);
+        run_end(CAM_COLLECTOR); free(ta);
         reply_json(c, 500,
           "{\"started\":false,\"already_running\":false}");
       }

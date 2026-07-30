@@ -8,7 +8,6 @@
  *                          `db.transaction` wrapper is just a perf envelope;
  *                          the camera runner / discovery source loops here)
  *   getAllCameras       -> camera_fc_json
- *   cameraStats         -> camera_stats_json
  *   getRecentCameras    -> camera_recent_json (kept internal-linkage-free for
  *                          the runner; same SELECT … ORDER BY fetched_at)
  * applyGeocodeOk/Fail, getCameraByUid, getDiscoveryFeed are LLM-enricher /
@@ -25,6 +24,22 @@
 #include <time.h>
 
 #define CAMERA_SOURCE_ID "camera-discovery"
+
+/* The uid keyspace camera_upsert owns: every camera row is keyed
+ * "camera-discovery|<camera_uid>" regardless of which collector emitted it.
+ *
+ * Reads MUST key off this, not off intel_items.source_id. The JS had a single
+ * `camera-discovery` collector, so sourceId and the uid prefix were the same
+ * string; the C port split that one collector into 14 registered sources
+ * (cam-camscape, cam-insecam-scrape, …) and intel.c binds source_id from the
+ * RUNNING source's id — so the rows land under source_id='cam-camscape' etc.
+ * while keeping the camera-discovery uid prefix. Filtering on
+ * source_id='camera-discovery' therefore matched zero rows and the map served
+ * an empty FeatureCollection while ~1k geocoded cameras sat in the table.
+ * record_type='camera' is written only by camera_upsert (below) and is indexed
+ * (idx_intel_items_type); the uid guard keeps us inside this store's keyspace
+ * if anything else ever adopts that record_type. */
+#define CAMERA_UID_LIKE CAMERA_SOURCE_ID "|%"
 
 /* Node `new Date().toISOString()` — YYYY-MM-DDTHH:MM:SS.mmmZ. */
 static void iso_now(char *b, size_t n) {
@@ -315,16 +330,17 @@ static cJSON *row_to_feature(sqlite3_stmt *s) {
 }
 
 char *camera_fc_json(db_handle *db) {
-  /* selectGeoFeatures default: where source_id=? AND lat IS NOT NULL. */
+  /* selectGeoFeatures, keyed on the camera keyspace rather than on source_id
+   * (see CAMERA_UID_LIKE) so every cam-* collector's output is served. */
   static const char *Q =
     "SELECT uid, source_id, sub_source_id, record_type, lat, lon, geometry,"
     "       title, summary, link, language, published_at, fetched_at,"
     "       properties, tags"
     "  FROM intel_items"
-    " WHERE source_id = ?1 AND lat IS NOT NULL";
+    " WHERE record_type = 'camera' AND uid LIKE ?1 AND lat IS NOT NULL";
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h, Q, -1, &s, NULL) != SQLITE_OK) return NULL;
-  sqlite3_bind_text(s, 1, CAMERA_SOURCE_ID, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 1, CAMERA_UID_LIKE, -1, SQLITE_STATIC);
 
   cJSON *features = cJSON_CreateArray();
   while (sqlite3_step(s) == SQLITE_ROW)
@@ -345,53 +361,6 @@ char *camera_fc_json(db_handle *db) {
 
   char *js = cJSON_PrintUnformatted(fc);
   cJSON_Delete(fc);
-  return js;
-}
-
-char *camera_stats_json(db_handle *db) {
-  /* total + new24h (fetched_at >= datetime('now','-24 hours')). */
-  long total = 0, new24h = 0;
-  sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(db->h,
-        "SELECT COUNT(*),"
-        " SUM(CASE WHEN fetched_at >= datetime('now','-24 hours')"
-        "          THEN 1 ELSE 0 END)"
-        " FROM intel_items WHERE source_id=?1", -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_text(s, 1, CAMERA_SOURCE_ID, -1, SQLITE_TRANSIENT);
-    if (sqlite3_step(s) == SQLITE_ROW) {
-      total  = (long)sqlite3_column_int64(s, 0);
-      new24h = (long)sqlite3_column_int64(s, 1);
-    }
-    sqlite3_finalize(s);
-  }
-
-  cJSON *by_type = cJSON_CreateArray();
-  if (sqlite3_prepare_v2(db->h,
-        "SELECT json_extract(properties,'$.camera_type') AS camera_type,"
-        "       COUNT(*) AS c"
-        "  FROM intel_items WHERE source_id=?1"
-        " GROUP BY json_extract(properties,'$.camera_type')",
-        -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_text(s, 1, CAMERA_SOURCE_ID, -1, SQLITE_TRANSIENT);
-    while (sqlite3_step(s) == SQLITE_ROW) {
-      cJSON *r = cJSON_CreateObject();
-      if (sqlite3_column_type(s, 0) == SQLITE_NULL)
-        cJSON_AddNullToObject(r, "camera_type");
-      else
-        cJSON_AddStringToObject(r, "camera_type",
-          (const char *)sqlite3_column_text(s, 0));
-      cJSON_AddNumberToObject(r, "c", (double)sqlite3_column_int64(s, 1));
-      cJSON_AddItemToArray(by_type, r);
-    }
-    sqlite3_finalize(s);
-  }
-
-  cJSON *o = cJSON_CreateObject();
-  cJSON_AddNumberToObject(o, "total", (double)total);
-  cJSON_AddNumberToObject(o, "new24h", (double)new24h);
-  cJSON_AddItemToObject(o, "byType", by_type);
-  char *js = cJSON_PrintUnformatted(o);
-  cJSON_Delete(o);
   return js;
 }
 
@@ -461,7 +430,7 @@ char *camera_discovery_feed(db_handle *db, int limit,
    * Reused ?N indices bind once; indices stay contiguous from ?1. */
   char w[1200]; size_t wl = 0;
   wl += snprintf(w + wl, sizeof w - wl,
-    "source_id=?1 AND record_type IN ('camera','camera-discovery') "
+    "record_type IN ('camera','camera-discovery') AND uid LIKE ?1 "
     "AND lat IS NOT NULL");
   int bi = 2, ch_i = 0, cts_i = 0, cuid_i = 0;
   if (channel && *channel) {
@@ -491,7 +460,7 @@ char *camera_discovery_feed(db_handle *db, int limit,
   if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) {
     free(cur_dec); return NULL;
   }
-  sqlite3_bind_text(s, 1, CAMERA_SOURCE_ID, -1, SQLITE_STATIC);
+  sqlite3_bind_text(s, 1, CAMERA_UID_LIKE, -1, SQLITE_STATIC);
   if (ch_i)  sqlite3_bind_text(s, ch_i, channel, -1, SQLITE_TRANSIENT);
   if (cts_i) {
     sqlite3_bind_text(s, cts_i,  cur_ts,  -1, SQLITE_TRANSIENT);

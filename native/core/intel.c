@@ -83,6 +83,12 @@ static void fts_write(sqlite3 *h, const char *uid, const char *title,
   char *st = fts_segment(title ? title : "");
   char *sb = fts_segment(body ? body : "");
   char *ss = fts_segment(summary ? summary : "");
+  /* The rowid must come from THIS insert. Reading last_insert_rowid()
+   * unconditionally meant that when the FTS insert failed or was never prepared,
+   * the map recorded whatever rowid the preceding intel_items upsert produced —
+   * and the delete at the top of the next write then removed a DIFFERENT item's
+   * search-index row, evicting it from /api/intel/search with no error. */
+  int inserted = 0;
   if (sqlite3_prepare_v2(h,
       "INSERT INTO intel_items_fts(uid,title,body,summary,keywords)"
       " VALUES(?1,?2,?3,?4,'')", -1, &s, NULL) == SQLITE_OK) {
@@ -90,10 +96,15 @@ static void fts_write(sqlite3 *h, const char *uid, const char *title,
     sqlite3_bind_text(s, 2, st, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 3, sb, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 4, ss, -1, SQLITE_TRANSIENT);
-    sqlite3_step(s); sqlite3_finalize(s);
+    inserted = (sqlite3_step(s) == SQLITE_DONE);
+    sqlite3_finalize(s);
+  }
+  free(st); free(sb); free(ss);
+  if (!inserted) {
+    fprintf(stderr, "[intel] fts insert failed for %s: %s\n", uid, sqlite3_errmsg(h));
+    return;                       /* leave the existing map row alone */
   }
   sqlite3_int64 rid = sqlite3_last_insert_rowid(h);
-  free(st); free(sb); free(ss);
   if (sqlite3_prepare_v2(h,
       "INSERT INTO intel_items_fts_uid_map(uid,rowid) VALUES(?1,?2)"
       " ON CONFLICT(uid) DO UPDATE SET rowid=excluded.rowid",

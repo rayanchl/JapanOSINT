@@ -241,10 +241,12 @@ struct AreaOfInterest: Codable, Identifiable, Hashable {
     let name: String
     let kind: String              // bbox | polygon | circle
     let geometry: AnyCodable?
-    let bbox_w: Double?
-    let bbox_s: Double?
-    let bbox_e: Double?
-    let bbox_n: Double?
+    /// `[w, s, e, n]` — the server emits the bounding box as a single ARRAY
+    /// under the key `bbox` (core/aoiapi.c:243-250), computed for EVERY kind,
+    /// not as four scalars. The four `bbox_w/s/e/n` members this replaced
+    /// therefore decoded to nil on every row. Null only if the stored columns
+    /// are.
+    let bbox: [Double]?
     let created_at: String
 
     /// Ring for a polygon AOI, in CLLocationCoordinate2D order.
@@ -341,9 +343,9 @@ struct GraphMeta: Codable, Hashable {
 }
 
 /// NOTE the name: `EntityGraph` is already taken by `Search/SearchModels.swift`
-/// (a different shape, built on `EntityNode`, used by the existing
-/// `EntityGraphCanvas`). Two same-named types in one module is a hard compile
-/// error, so the richer roadmap-19 payload is `EntityEgoGraph`.
+/// (a different, poorer shape built on `EntityNode` and carrying no `meta`).
+/// Two same-named types in one module is a hard compile error, so the richer
+/// roadmap-19 payload — the one `GraphCanvasView` renders — is `EntityEgoGraph`.
 struct EntityEgoGraph: Decodable {
     let nodes: [GraphNode]
     let edges: [GraphEdge]

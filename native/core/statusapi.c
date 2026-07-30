@@ -273,14 +273,10 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
  * "not applicable". recordsCount falls back to the catalog's account count so
  * the row is informative before any ingest has run. */
 static cJSON *breach_status_row(const breach_src_row *br) {
-  long long count = br->item_count > 0 ? br->item_count : br->pwn_count;
-  const char *fresh = br->last_seen[0]  ? br->last_seen
-                    : br->added_date[0] ? br->added_date : NULL;
-
+  long long count = 0;
+  const char *fresh = NULL;
   char desc[192];
-  snprintf(desc, sizeof desc, "%lld accounts%s%s", br->pwn_count,
-           br->breach_date[0] ? " \xc2\xb7 breached " : "",
-           br->breach_date[0] ? br->breach_date : "");
+  breach_meta_display(br, &count, &fresh, desc, sizeof desc);
 
   cJSON *o = cJSON_CreateObject();
   add_str_or_null(o, "id", br->breach_id);

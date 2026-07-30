@@ -375,8 +375,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_insecam_scrape_def = {
-  .id = "cam-insecam-scrape", .collector = "infrastructure",
+  .id = "cam-insecam-scrape", .collector = "camera-discovery",
   .name = "Camera Discovery: Insecam scrape",
   .name_ja = "カメラ探索: Insecam スクレイプ",
+   .layer = "cameras",
    .update_interval_sec = 21600, .run = run };
 REGISTER_SOURCE(cam_insecam_scrape_def)

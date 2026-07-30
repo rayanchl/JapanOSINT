@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import useWebSocket from './useWebSocket.js';
 import apiUrl from '../utils/apiUrl.js';
+import { normalizeSource, normalizeSources } from '../utils/normalizeSource.js';
 
 export default function useDataSources() {
   const [sources, setSources] = useState([]);
@@ -16,7 +17,8 @@ export default function useDataSources() {
 
       if (sourcesRes.ok) {
         const data = await sourcesRes.json();
-        setSources(Array.isArray(data) ? data : data.sources || []);
+        // /api/sources emits raw sqlite column names — normalise on entry.
+        setSources(normalizeSources(Array.isArray(data) ? data : data.sources || []));
       }
 
       if (statsRes.ok) {
@@ -37,7 +39,7 @@ export default function useDataSources() {
           const idx = prev.findIndex((s) => s.id === message.data?.id);
           if (idx >= 0) {
             const updated = [...prev];
-            updated[idx] = { ...updated[idx], ...message.data };
+            updated[idx] = { ...updated[idx], ...normalizeSource(message.data) };
             return updated;
           }
           return prev;
@@ -51,7 +53,7 @@ export default function useDataSources() {
 
       case 'sources_refresh':
         if (Array.isArray(message.data)) {
-          setSources(message.data);
+          setSources(normalizeSources(message.data));
         }
         setLastUpdate(new Date().toISOString());
         break;

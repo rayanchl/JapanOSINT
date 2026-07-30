@@ -453,8 +453,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_webcamendirect_list_def = {
-  .id = "cam-webcamendirect_list", .collector = "infrastructure",
+  .id = "cam-webcamendirect_list", .collector = "camera-discovery",
   .name = "Camera discovery — Webcam-en-direct list",
   .name_ja = "カメラ探索 — Webcam-en-direct list",
+   .layer = "cameras",
    .update_interval_sec = 21600, .run = run };
 REGISTER_SOURCE(cam_webcamendirect_list_def)

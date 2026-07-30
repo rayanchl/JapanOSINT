@@ -27,7 +27,7 @@ import wsUrl from '../utils/wsUrl.js';
  * @param {Array} [opts.deps=[]]              extra dependency array — when
  *        any value changes, the socket is closed and re-established
  *
- * @returns {{ connected: boolean, getSocket: () => WebSocket|null }}
+ * @returns {{ connected: boolean }}
  */
 export default function useWebSocket(path, {
   onMessage,
@@ -139,5 +139,5 @@ export default function useWebSocket(path, {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, enabled, backoffBaseMs, backoffMaxMs, respondToOnline, ...deps]);
 
-  return { connected, getSocket: () => wsRef.current };
+  return { connected };
 }

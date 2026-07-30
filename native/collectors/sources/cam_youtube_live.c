@@ -285,8 +285,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_youtube_live_def = {
-  .id = "cam-youtube_live", .collector = "infrastructure",
+  .id = "cam-youtube_live", .collector = "camera-discovery",
   .name = "Camera discovery — YouTube Live API",
   .name_ja = "カメラ探索 — YouTube Live API",
+   .layer = "cameras",
    .update_interval_sec = 21600, .run = run };
 REGISTER_SOURCE(cam_youtube_live_def)

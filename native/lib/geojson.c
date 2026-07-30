@@ -78,7 +78,23 @@ static void feature_uid(cJSON *feat, const char *sid, char *out, size_t n) {
   snprintf(out, n, "%s|h:%s", sid, h);
 }
 
-/* geometryCentroid → sets *lat,*lon; returns 1 if usable. */
+/* geometryCentroid → sets *lat,*lon; returns 1 if usable.
+ *
+ * The stored lat/lon is the ONLY coordinate the alerting/geofence read path
+ * sees (core/alert_eval.c facts_from_row selects lat/lon and never the
+ * geometry column), so the representative point must at least plausibly sit
+ * on the feature. The bbox CENTRE does not: for an L-shaped or otherwise
+ * concave polygon, and for a curved LineString, it can land well off the
+ * geometry. So:
+ *   - LineString / MultiLineString → midpoint of the MIDDLE SEGMENT, which is
+ *     always on the line (mirrors GEO_MIDPOINT in lib/mlit_ksj.c).
+ *   - Polygon / MultiPolygon → mean of the OUTER RING's vertices (mirrors
+ *     GEO_CENTROID in lib/mlit_ksj.c), clamped back onto a real vertex if the
+ *     mean somehow falls outside the ring's own bbox.
+ *   - everything else (MultiPoint, unknown types) keeps the old bbox centre.
+ * NOTE this is still a single representative point, not the full geometry:
+ * a polygon-vertex mean can itself sit outside a strongly concave ring, so
+ * true polygon-aware geofencing remains a follow-up on the read side. */
 static void visit(cJSON *node, double *mnx, double *mxx, double *mny,
                    double *mxy, int *cnt) {
   if (!cJSON_IsArray(node)) return;
@@ -94,12 +110,73 @@ static void visit(cJSON *node, double *mnx, double *mxx, double *mny,
   }
   cJSON *ch; cJSON_ArrayForEach(ch, node) visit(ch, mnx, mxx, mny, mxy, cnt);
 }
+
+/* One [x,y] position → finite doubles; 0 if the position is malformed. */
+static int coord_xy(cJSON *pt, double *x, double *y) {
+  cJSON *a = cJSON_GetArrayItem(pt, 0), *b = cJSON_GetArrayItem(pt, 1);
+  if (!a || !b || !cJSON_IsNumber(a) || !cJSON_IsNumber(b) ||
+      !isfinite(a->valuedouble) || !isfinite(b->valuedouble)) return 0;
+  *x = a->valuedouble; *y = b->valuedouble; return 1;
+}
+
+/* Midpoint of the middle segment of one line (array of positions). Always a
+ * point ON the line. A 1-vertex line degenerates to that vertex; a malformed
+ * middle segment falls back to the first usable vertex. */
+static int line_point(cJSON *line, double *lon, double *lat) {
+  if (!cJSON_IsArray(line)) return 0;
+  int n = cJSON_GetArraySize(line);
+  if (n <= 0) return 0;
+  if (n > 1) {
+    int m = (n - 1) / 2;                        /* segment [m, m+1] */
+    double x0, y0, x1, y1;
+    if (coord_xy(cJSON_GetArrayItem(line, m), &x0, &y0) &&
+        coord_xy(cJSON_GetArrayItem(line, m + 1), &x1, &y1)) {
+      *lon = (x0 + x1) / 2; *lat = (y0 + y1) / 2; return 1;
+    }
+  }
+  for (int i = 0; i < n; i++)
+    if (coord_xy(cJSON_GetArrayItem(line, i), lon, lat)) return 1;
+  return 0;
+}
+
+/* Mean of a ring's vertices, clamped back onto the first usable vertex if the
+ * mean lands outside the ring's own bbox (a guard against NaN/overflow —
+ * a vertex mean is otherwise inside the hull by construction). The closing
+ * vertex is included, matching GEO_CENTROID in lib/mlit_ksj.c. */
+static int ring_point(cJSON *ring, double *lon, double *lat) {
+  if (!cJSON_IsArray(ring)) return 0;
+  int n = cJSON_GetArraySize(ring);
+  if (n <= 0) return 0;
+  double sx = 0, sy = 0, fx = 0, fy = 0;
+  double mnx = 0, mxx = 0, mny = 0, mxy = 0;
+  int used = 0;
+  for (int i = 0; i < n; i++) {
+    double x, y;
+    if (!coord_xy(cJSON_GetArrayItem(ring, i), &x, &y)) continue;
+    if (used == 0) { mnx = mxx = fx = x; mny = mxy = fy = y; }
+    else {
+      if (x < mnx) mnx = x;
+      if (x > mxx) mxx = x;
+      if (y < mny) mny = y;
+      if (y > mxy) mxy = y;
+    }
+    sx += x; sy += y; used++;
+  }
+  if (used == 0) return 0;
+  double cx = sx / used, cy = sy / used;
+  if (!isfinite(cx) || !isfinite(cy) ||
+      cx < mnx || cx > mxx || cy < mny || cy > mxy) { cx = fx; cy = fy; }
+  *lon = cx; *lat = cy; return 1;
+}
+
 static int centroid(cJSON *geom, double *lat, double *lon) {
   if (!geom) return 0;
   cJSON *t = cJSON_GetObjectItem(geom, "type");
   cJSON *c = cJSON_GetObjectItem(geom, "coordinates");
   if (!t || !cJSON_IsString(t) || !c) return 0;
-  if (strcmp(t->valuestring, "Point") == 0) {
+  const char *ty = t->valuestring;
+
+  if (strcmp(ty, "Point") == 0) {
     cJSON *x = cJSON_GetArrayItem(c, 0), *y = cJSON_GetArrayItem(c, 1);
     if (x && y && cJSON_IsNumber(x) && cJSON_IsNumber(y) &&
         isfinite(x->valuedouble) && isfinite(y->valuedouble)) {
@@ -107,6 +184,25 @@ static int centroid(cJSON *geom, double *lat, double *lon) {
     }
     return 0;
   }
+
+  /* On-geometry representative points; each falls through to the bbox centre
+   * below only when the geometry is too malformed to yield one. */
+  if (strcmp(ty, "LineString") == 0) {
+    if (line_point(c, lon, lat)) return 1;
+  } else if (strcmp(ty, "MultiLineString") == 0) {
+    int nl = cJSON_IsArray(c) ? cJSON_GetArraySize(c) : 0;
+    for (int i = 0; i < nl; i++)
+      if (line_point(cJSON_GetArrayItem(c, i), lon, lat)) return 1;
+  } else if (strcmp(ty, "Polygon") == 0) {
+    if (ring_point(cJSON_GetArrayItem(c, 0), lon, lat)) return 1;
+  } else if (strcmp(ty, "MultiPolygon") == 0) {
+    int np = cJSON_IsArray(c) ? cJSON_GetArraySize(c) : 0;
+    for (int i = 0; i < np; i++) {
+      cJSON *poly = cJSON_GetArrayItem(c, i);
+      if (ring_point(cJSON_GetArrayItem(poly, 0), lon, lat)) return 1;
+    }
+  }
+
   double mnx=1e308,mxx=-1e308,mny=1e308,mxy=-1e308; int cnt=0;
   visit(c, &mnx,&mxx,&mny,&mxy,&cnt);
   if (cnt == 0) return 0;

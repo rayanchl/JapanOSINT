@@ -1,33 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import apiUrl from '../../utils/apiUrl.js';
-
-function relativeTime(iso) {
-  if (!iso) return 'never';
-  const ts = new Date(iso).getTime();
-  if (Number.isNaN(ts)) return 'never';
-  const now = Date.now();
-  const diff = Math.abs(now - ts);
-  const future = ts > now;
-  const s = Math.floor(diff / 1000);
-  const suffix = (v) => future ? `in ${v}` : `${v} ago`;
-  if (s < 60) return suffix(`${s}s`);
-  const m = Math.floor(s / 60);
-  if (m < 60) return suffix(`${m}m`);
-  const h = Math.floor(m / 60);
-  if (h < 24) return suffix(`${h}h`);
-  return suffix(`${Math.floor(h / 24)}d`);
-}
-
-function fmtAbs(iso) {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleString('en-GB', {
-      timeZone: 'Asia/Tokyo',
-      dateStyle: 'short',
-      timeStyle: 'medium',
-    });
-  } catch { return iso; }
-}
+import { relativeTime, fmtAbs } from '../../utils/time.js';
 
 const STATUS_FILTERS = [
   { id: 'all',      label: 'All' },

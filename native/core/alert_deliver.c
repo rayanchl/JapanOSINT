@@ -248,8 +248,8 @@ static int smtp_config(const char **url, const char **user,
   return (*url && **url && *from && **from);
 }
 
-static pthread_once_t g_curl_once = PTHREAD_ONCE_INIT;
-static void curl_boot(void) { curl_global_init(CURL_GLOBAL_DEFAULT); }
+/* The global libcurl init lives in httpclient.c behind a single pthread_once.
+ * A private flag here would let curl_global_init() run a second time. */
 
 static void deliver_email(const char *to, const char *rule_name,
                           const char *event_id, const char *matched_at,
@@ -261,7 +261,7 @@ static void deliver_email(const char *to, const char *rule_name,
     o->error = xdup("smtp_not_configured (set JO_SMTP_URL and JO_SMTP_FROM)");
     return;
   }
-  pthread_once(&g_curl_once, curl_boot);
+  http_client_global_init();
 
   char subj[640];
   encode_subject(rule_name, subj, sizeof subj);
@@ -651,8 +651,15 @@ static pthread_t   g_thread;
 static volatile int g_stop = 0;
 static int          g_running = 0;
 
+/* Own connection — see db_attach(): transactions are per-connection, so this
+ * worker's writes must not share a handle with the event loop. */
 static void *deliver_thread(void *arg) {
-  db_handle *db = (db_handle *)arg;
+  (void)arg;
+  db_handle own = {0};
+  if (db_attach(&own, NULL) != 0) {
+    fprintf(stderr, "[alert-deliver] cannot open its own DB connection; delivery off\n");
+    return NULL;
+  }
   int interval = 5;
   const char *iv = getenv("JO_ALERT_DELIVER_INTERVAL_SEC");
   if (iv && *iv) {
@@ -660,11 +667,12 @@ static void *deliver_thread(void *arg) {
     if (v >= 1 && v <= 300) interval = (int)v;
   }
   while (!g_stop) {
-    enqueue_pending(db);
-    drain_once(db);
+    enqueue_pending(&own);
+    drain_once(&own);
     /* Chunked sleep so shutdown is bounded by 1s, not by the poll interval. */
     for (int i = 0; i < interval && !g_stop; i++) sleep(1);
   }
+  db_close(&own);
   return NULL;
 }
 
@@ -675,7 +683,7 @@ void alert_deliver_start(db_handle *db) {
     return;
   }
   if (!db || !db->h) return;
-  pthread_once(&g_curl_once, curl_boot);
+  http_client_global_init();
   g_stop = 0;
   if (pthread_create(&g_thread, NULL, deliver_thread, db) == 0) {
     g_running = 1;

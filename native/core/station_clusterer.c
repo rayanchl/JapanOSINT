@@ -729,7 +729,12 @@ static int materialise(station_t *S, const int *grp, int gn, cluster_row_t *out)
     /* line union: iterate members in group order, each member's
      * line_colors[] in order; dedupe by color; per-color introducing mode;
      * name/ref only if the color is that member's primary line_color. */
-    int cap_c = 0;
+    /* Each of the four parallel arrays needs its OWN capacity and count.
+     * Deriving them from line_colors' cap_c/n_colors made arr_push believe the
+     * sibling arrays were already allocated (n=0 != cap=4), so it skipped the
+     * realloc and wrote through a NULL pointer on the very first line. */
+    int cap_c = 0, cap_m = 0, cap_n = 0, cap_r = 0;
+    int n_m = 0, n_n = 0, n_r = 0;      /* kept in lockstep with out->n_colors */
     char **seen = NULL; int seen_n = 0, seen_cap = 0;   /* dedupe set */
     for (int i = 0; i < gn; i++) {
         station_t *m = &S[grp[i]];
@@ -743,13 +748,11 @@ static int materialise(station_t *S, const int *grp, int gn, cluster_row_t *out)
             if (arr_push(&seen, &seen_n, &seen_cap, col) != 0) goto oom;
 
             if (arr_push(&out->line_colors, &out->n_colors, &cap_c, col) != 0) goto oom;
-            int tmp1 = out->n_colors - 1, c1 = cap_c, c2 = cap_c, c3 = cap_c;
-            int n2 = tmp1, n3 = tmp1, n4 = tmp1;
             int is_primary = (m->line_color && strcmp(m->line_color, col) == 0);
-            if (arr_push(&out->line_modes, &n4, &c3, m->mode ? m->mode : "") != 0) goto oom;
-            if (arr_push(&out->line_names, &n2, &c1,
+            if (arr_push(&out->line_modes, &n_m, &cap_m, m->mode ? m->mode : "") != 0) goto oom;
+            if (arr_push(&out->line_names, &n_n, &cap_n,
                          is_primary ? (m->line_name ? m->line_name : "") : "") != 0) goto oom;
-            if (arr_push(&out->line_refs, &n3, &c2,
+            if (arr_push(&out->line_refs, &n_r, &cap_r,
                          is_primary ? (m->line_ref ? m->line_ref : "") : "") != 0) goto oom;
         }
     }

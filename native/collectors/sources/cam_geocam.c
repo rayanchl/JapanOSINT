@@ -340,8 +340,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_geocam_def = {
-  .id = "cam-geocam", .collector = "infrastructure",
+  .id = "cam-geocam", .collector = "camera-discovery",
   .name = "Camera Discovery: Geocam",
   .name_ja = "カメラ探索: Geocam",
+   .layer = "cameras",
    .update_interval_sec = 21600, .run = run };
 REGISTER_SOURCE(cam_geocam_def)

@@ -1,7 +1,26 @@
 /* collectors/seismic/sources/bosai_volcano_cam.c
  * INTEL/probe source — port of server/src/collectors/bosaiVolcanoCam.js.
  * JMA volcano-camera imagery is viewer-only (no key-free listing); emit ONE
- * portal intel item + reachability probe (uid = bosai-volcano-cam|portal). */
+ * portal intel item + reachability probe (uid = bosai-volcano-cam|portal).
+ *
+ * DELIBERATELY emits no camera point features, and therefore no map pins. This
+ * is the same never-fabricate rule vnet.c follows: JMA serves the volcano
+ * cameras only through an interactive viewer, with no key-free machine-readable
+ * listing carrying per-camera coordinates. The volcano summit coordinates the
+ * jma-volcano source already has are NOT camera positions — observation cameras
+ * sit kilometres away — so deriving pins from them would invent a precision the
+ * upstream does not publish.
+ *
+ * It still shows under the Cameras collector in the source list, because its
+ * curated registry row carries layer="cameras". That is a source-list grouping,
+ * not a promise of pins.
+ *
+ * If a real listing is ever wired (a NIED V-net camera endpoint, or a scrape of
+ * the JMA viewer's backing data), emit each camera through
+ * camera_upsert(db, sink, cam_make_feature(...), "jma_volcano_cam") — the
+ * lib/camfeature.h constructor — so the rows land in the shared camera keyspace
+ * like every other channel. Do not emit them through geojson_emit_features:
+ * camera_fc_json cannot see those. */
 #include "../../source.h"
 #include "../../lib/probe.h"
 #include "../../third_party/cJSON.h"

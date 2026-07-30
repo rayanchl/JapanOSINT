@@ -1,5 +1,6 @@
 #include "intelapi.h"
 #include "source_registry.h"
+#include "../source.h"          /* registry_all/registry_count/registry_get */
 #include "fts.h"
 #include "breach_meta.h"
 #include "breach_adapter.h"
@@ -394,17 +395,24 @@ static int is_intel_id(const char *id) {
   return 0;
 }
 
-/* getTtlMs(key): collector_ttls row or DEFAULT (15min). */
-static double get_ttl_ms(sqlite3 *h, const char *id) {
-  sqlite3_stmt *s; double v = 15 * 60 * 1000.0;
-  if (sqlite3_prepare_v2(h, "SELECT ttl_ms FROM collector_ttls WHERE key=?1",
-                         -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
-    if (sqlite3_step(s) == SQLITE_ROW &&
-        sqlite3_column_type(s, 0) != SQLITE_NULL)
-      v = sqlite3_column_double(s, 0);
-    sqlite3_finalize(s);
-  }
+/* getTtlMs(key): collector_ttls row or DEFAULT (15min).
+ *
+ * Takes an ALREADY-PREPARED statement and resets it per lookup. It is called
+ * once per emitted source — the curated table, plus every orphan, plus every
+ * breach catalog row (~1,600 in total) — and used to compile and finalize a
+ * fresh statement each time, i.e. ~1,600 SQL compiles per request on the single
+ * event-loop thread. Pass NULL to get the default without touching the DB. */
+#define TTL_DEFAULT_MS (15 * 60 * 1000.0)
+
+static double get_ttl_ms(sqlite3_stmt *s, const char *id) {
+  double v = TTL_DEFAULT_MS;
+  if (!s || !id) return v;
+  sqlite3_reset(s);
+  sqlite3_clear_bindings(s);
+  sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  if (sqlite3_step(s) == SQLITE_ROW && sqlite3_column_type(s, 0) != SQLITE_NULL)
+    v = sqlite3_column_double(s, 0);
+  sqlite3_reset(s);
   return v;
 }
 
@@ -510,15 +518,36 @@ char *intelapi_intel_sources(db_handle *db) {
   int nb = 0;
   breach_src_row *B = breach_meta_sources(db, &nb);
 
-  /* 2. ids = registry order, then orphan agg ids not in the registry */
-  int nreg = src_meta_count();
-  int total = nreg + na + nb;
+  /* One prepared statement for every ttl lookup below (see get_ttl_ms). */
+  sqlite3_stmt *ttl_st = NULL;
+  if (sqlite3_prepare_v2(db->h, "SELECT ttl_ms FROM collector_ttls WHERE key=?1",
+                         -1, &ttl_st, NULL) != SQLITE_OK)
+    ttl_st = NULL;                       /* fall back to the default TTL */
+
+  /* 2. ids = every registered source, then any curated row with no registered
+   *    def, then orphan agg ids that resolve to neither.
+   *
+   * Enumerating only the curated table (src_meta_at, 415 rows) silently dropped
+   * every source that is registered but not curated — ~260 of them, including
+   * ones with real intel_items rows. The orphan pass below could not rescue
+   * them either, because it skips anything src_meta_get() can resolve, and
+   * src_meta_get DOES resolve them (it falls through to the runtime registry).
+   * So they appeared nowhere. */
+  int nregistry = registry_count();
+  const source_def **defs = registry_all();
+  int ncur = src_meta_count();
+  int total = nregistry + ncur + na + nb;
   sortrow *SR = malloc(total * sizeof *SR);
+  if (!SR) { free(A); free(B); if (ttl_st) sqlite3_finalize(ttl_st); return NULL; }
   int nout = 0;
 
-  for (int i = 0; i < nreg; i++) {
-    const char *id = src_meta_at(i)->id;     /* registry order, dups kept */
-    const src_meta *m = src_meta_get(id);    /* but meta = Map last-wins  */
+  for (int pass = 0; pass < 2; pass++) {
+    int npass = (pass == 0) ? nregistry : ncur;
+    for (int i = 0; i < npass; i++) {
+    const char *id = (pass == 0) ? defs[i]->id : src_meta_at(i)->id;
+    if (pass == 1 && registry_get(id)) continue;   /* emitted in pass 0 */
+    const src_meta *m = src_meta_get(id);          /* meta = Map last-wins */
+    if (!m) continue;
     agg_row *g = NULL;
     for (int k = 0; k < na; k++) if (strcmp(A[k].src, id) == 0) { g = &A[k]; break; }
 
@@ -535,7 +564,7 @@ char *intelapi_intel_sources(db_handle *db) {
     cJSON_AddNumberToObject(o, "awaiting_geo", g ? (double)g->awaiting_geo : 0);
     add_str_or_null(o, "last_fetched",   g && g->has_lf ? g->last_fetched   : NULL);
     add_str_or_null(o, "last_published", g && g->has_lp ? g->last_published : NULL);
-    cJSON_AddNumberToObject(o, "ttl_ms", get_ttl_ms(db->h, id));
+    cJSON_AddNumberToObject(o, "ttl_ms", get_ttl_ms(ttl_st, id));
     cJSON_AddBoolToObject(o, "is_intel", is_intel_id(id));
 
     sortrow *sr = &SR[nout];
@@ -546,6 +575,7 @@ char *intelapi_intel_sources(db_handle *db) {
     sr->fresh = cJSON_IsString(lf) ? lf->valuestring
               : cJSON_IsString(lp) ? lp->valuestring : "";
     nout++;
+    }
   }
   /* orphans: agg source_ids not present in the registry, agg query order */
   for (int k = 0; k < na; k++) {
@@ -565,7 +595,7 @@ char *intelapi_intel_sources(db_handle *db) {
     cJSON_AddNumberToObject(o, "awaiting_geo", (double)g->awaiting_geo);
     add_str_or_null(o, "last_fetched",   g->has_lf ? g->last_fetched   : NULL);
     add_str_or_null(o, "last_published", g->has_lp ? g->last_published : NULL);
-    cJSON_AddNumberToObject(o, "ttl_ms", get_ttl_ms(db->h, id));
+    cJSON_AddNumberToObject(o, "ttl_ms", get_ttl_ms(ttl_st, id));
     cJSON_AddBoolToObject(o, "is_intel", is_intel_id(id));
 
     sortrow *sr = &SR[nout];
@@ -586,13 +616,13 @@ char *intelapi_intel_sources(db_handle *db) {
     const char *id = br->breach_id;
     if (src_meta_get(id)) continue;   /* never shadow a real registry source */
 
-    long long count = br->item_count > 0 ? br->item_count : br->pwn_count;
-    const char *fresh = br->last_seen[0] ? br->last_seen
-                      : br->added_date[0] ? br->added_date : "";
+    /* Shared with statusapi.c's breach_status_row so the two source views can't
+     * drift; `fresh` is NULL (not "") when unknown, hence the guards below. */
+    long long count = 0;
+    const char *fresh = NULL;
     char desc[192];
-    snprintf(desc, sizeof desc, "%lld accounts%s%s", br->pwn_count,
-             br->breach_date[0] ? " \xc2\xb7 breached " : "",
-             br->breach_date[0] ? br->breach_date : "");
+    breach_meta_display(br, &count, &fresh, desc, sizeof desc);
+    if (!fresh) fresh = "";
 
     cJSON *o = cJSON_CreateObject();
     cJSON_AddStringToObject(o, "id", id);
@@ -607,7 +637,7 @@ char *intelapi_intel_sources(db_handle *db) {
     cJSON_AddNumberToObject(o, "awaiting_geo", 0);
     add_str_or_null(o, "last_fetched",   fresh[0] ? fresh : NULL);
     add_str_or_null(o, "last_published", fresh[0] ? fresh : NULL);
-    cJSON_AddNumberToObject(o, "ttl_ms", get_ttl_ms(db->h, id));
+    cJSON_AddNumberToObject(o, "ttl_ms", get_ttl_ms(ttl_st, id));
     cJSON_AddBoolToObject(o, "is_intel", 1);
 
     sortrow *sr = &SR[nout];
@@ -617,6 +647,8 @@ char *intelapi_intel_sources(db_handle *db) {
     sr->fresh = cJSON_IsString(lf) ? lf->valuestring : "";
     nout++;
   }
+
+  if (ttl_st) sqlite3_finalize(ttl_st);
 
   qsort(SR, nout, sizeof *SR, cmp_sr);
 

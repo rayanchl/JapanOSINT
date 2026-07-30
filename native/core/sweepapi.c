@@ -196,9 +196,31 @@ static char *cold_points_fc(db_handle *db, const char *id) {
   return out;
 }
 
-/* INSTANT read path: prebuilt FC from collector_cache, else bounded cold
- * FC. No stitch/smooth/full-scan ever happens here. */
+/* INSTANT read path: prebuilt FC from collector_cache, else the layer's own
+ * store, else a bounded cold FC from intel_items.
+ *
+ * This used to be an unconditional `return cold_points_fc(db, id)`, i.e. the
+ * collector_cache branch the header promises did not exist and the three
+ * store-backed layers were served by a query that cannot find their rows:
+ * cold_points_fc filters `intel_items WHERE source_id = <layer id>`, but
+ * "cameras", "unified-stations" and "unified-station-footprints" are LAYER ids
+ * whose records live in camera_store / the clusterer / the footprints table
+ * under different source ids. /api/data/cameras therefore always returned an
+ * empty FeatureCollection.
+ *
+ * Those three builders read purpose-built, already-bounded tables (not a
+ * nationwide intel_items scan), so serving them here is safe; the unified-*
+ * modes keep the bounded cold path, which is what their comment describes. */
 char *sweepapi_data(db_handle *db, const char *id) {
   if (!sweepapi_is_sweep(id)) return NULL;
+
+  long long age = 0;
+  char *cached = collcache_get(db, id, &age);
+  if (cached) return cached;
+
+  if (!strcmp(id, "cameras"))                    return camera_fc_json(db);
+  if (!strcmp(id, "unified-station-footprints")) return station_footprints_fc_json(db);
+  if (!strcmp(id, "unified-stations"))           return station_clusterer_linedots_fc_json(db);
+
   return cold_points_fc(db, id);
 }

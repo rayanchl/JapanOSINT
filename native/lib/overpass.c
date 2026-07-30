@@ -153,13 +153,16 @@ static int emit_points(const source_ctx *ctx, intel_sink *sink,
   return n;
 }
 
-int overpass_collect(const source_ctx *ctx, intel_sink *sink,
-                     const char *body, int query_timeout, int timeout_ms,
-                     overpass_map map, void *ud) {
+/* The fetch half of overpass_collect: build the nationwide query, try each
+ * endpoint until one returns point elements. Returns the elements array (caller
+ * frees) or NULL if every endpoint failed. Split out so overpass_collect and
+ * overpass_collect_via share one fetch path and can never drift. */
+static cJSON *collect_fetch(const source_ctx *ctx, const char *body,
+                            int query_timeout, int timeout_ms) {
   int qt = query_timeout > 0 ? query_timeout : 180;
   size_t qlen = strlen(body) + 160;
   char *query = malloc(qlen);
-  if (!query) return -1;
+  if (!query) return NULL;
   snprintf(query, qlen,
     "[out:json][timeout:%d];area[\"ISO3166-1\"=\"JP\"][admin_level=2]->.jp;(%s);out center;",
     qt, body);
@@ -173,11 +176,44 @@ int overpass_collect(const source_ctx *ctx, intel_sink *sink,
     if (els) cJSON_Delete(els);
   }
   free(query);
+  return elements;
+}
+
+int overpass_collect(const source_ctx *ctx, intel_sink *sink,
+                     const char *body, int query_timeout, int timeout_ms,
+                     overpass_map map, void *ud) {
+  cJSON *elements = collect_fetch(ctx, body, query_timeout, timeout_ms);
   if (!elements) {
     fprintf(stderr, "[overpass] %s no elements\n", ctx->source_id);
     return -1;
   }
   int n = emit_points(ctx, sink, elements, map, ud);
+  cJSON_Delete(elements);
+  fprintf(stderr, "[overpass] %s emitted %d\n", ctx->source_id, n);
+  return n;
+}
+
+int overpass_collect_via(const source_ctx *ctx, const char *body,
+                         int query_timeout, int timeout_ms,
+                         overpass_map map, void *ud,
+                         overpass_emit emit, void *eud) {
+  if (!emit) return -1;
+  cJSON *elements = collect_fetch(ctx, body, query_timeout, timeout_ms);
+  if (!elements) {
+    fprintf(stderr, "[overpass] %s no elements\n", ctx->source_id);
+    return -1;
+  }
+  int n = 0, i = 0;
+  cJSON *el;
+  cJSON_ArrayForEach(el, elements) {
+    double lo, la;
+    if (!el_coords(el, &lo, &la)) continue;
+    cJSON *f = map(el, i, lo, la, ud);
+    i++;
+    if (!f) continue;
+    if (emit(f, eud) >= 0) n++;
+    cJSON_Delete(f);            /* consumer borrows; toolkit owns the free */
+  }
   cJSON_Delete(elements);
   fprintf(stderr, "[overpass] %s emitted %d\n", ctx->source_id, n);
   return n;

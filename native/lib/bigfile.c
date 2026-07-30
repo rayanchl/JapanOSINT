@@ -40,12 +40,6 @@ const char *bigfile_next(bigfile *bf, size_t *len) {
   }
 }
 
-void bigfile_stats(const bigfile *bf, unsigned long long *lines,
-                   unsigned long long *skipped) {
-  if (lines) *lines = bf->lines;
-  if (skipped) *skipped = bf->skipped;
-}
-
 void bigfile_close(bigfile *bf) {
   if (!bf) return;
   if (bf->f) fclose(bf->f);

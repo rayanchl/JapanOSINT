@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import LineChip from './LineChip.jsx';
 import DeparturesBoard from './DeparturesBoard.jsx';
+import apiUrl from '../../../utils/apiUrl.js';
 
 export default function StationPopup({ properties }) {
   const stationUid = properties?.station_uid || properties?.stationUid;
@@ -12,7 +13,7 @@ export default function StationPopup({ properties }) {
     let cancelled = false;
     (async () => {
       try {
-        const r = await fetch(`/api/transit/station/${encodeURIComponent(stationUid)}/summary`);
+        const r = await fetch(apiUrl(`/api/transit/station/${encodeURIComponent(stationUid)}/summary`));
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         const body = await r.json();
         if (!cancelled) setData(body);

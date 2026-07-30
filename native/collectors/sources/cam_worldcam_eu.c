@@ -472,8 +472,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_worldcam_eu_def = {
-  .id = "cam-worldcam_eu", .collector = "infrastructure",
+  .id = "cam-worldcam_eu", .collector = "camera-discovery",
   .name = "Camera discovery — WorldCam.eu",
   .name_ja = "カメラ探索 — WorldCam.eu",
+   .layer = "cameras",
    .update_interval_sec = 21600, .run = run };
 REGISTER_SOURCE(cam_worldcam_eu_def)

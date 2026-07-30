@@ -134,8 +134,19 @@ void scheduler_loop(db_handle *db) {
   }
 }
 
+/* Runs on its OWN connection. A sqlite transaction belongs to a connection,
+ * not a thread, so sharing the server's handle meant this loop's BEGIN/COMMIT
+ * around every emit() interleaved with the HTTP thread's transactions — one
+ * side's ROLLBACK could discard the other's committed-looking work. */
 static void *sched_thread(void *arg) {
-  scheduler_loop((db_handle *)arg);   /* infinite; lives for process lifetime */
+  (void)arg;
+  db_handle own = {0};
+  if (db_attach(&own, NULL) != 0) {
+    fprintf(stderr, "[sched] cannot open its own DB connection; scheduler off\n");
+    return NULL;
+  }
+  scheduler_loop(&own);               /* infinite; lives for process lifetime */
+  db_close(&own);
   return NULL;
 }
 
