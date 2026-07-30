@@ -69,7 +69,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0, i = 0;
   cJSON *d;
   cJSON_ArrayForEach(d, list) {
-    if (i >= 200) break;
+    /* (cap removed: every record of the fetched array is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
     char idbuf[32];
     const char *id = sstr(d, "id");
     if (!id) id = sstr(d, "identifier");

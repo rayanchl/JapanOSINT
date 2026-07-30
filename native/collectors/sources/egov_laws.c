@@ -16,7 +16,8 @@
 #include <ctype.h>
 
 #define API_URL "https://laws.e-gov.go.jp/api/1/lawlists/1"
-#define MAX_ITEMS 200
+/* The e-Gov law list is a full catalogue; the old MAX_ITEMS=200 kept the
+ * first 200 laws and dropped the rest (docs/SOURCE_EXHAUSTIVENESS.md). */
 
 /* JS String.prototype.trim() — strip leading/trailing ASCII whitespace
  * in place. */
@@ -69,8 +70,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0, taken = 0;
   const char *cur = xml;
   const char *inner; int ilen;
-  while (taken < MAX_ITEMS &&
-         (cur = html_block(cur, "LawNameListInfo", &inner, &ilen)) != NULL) {
+  while ((cur = html_block(cur, "LawNameListInfo", &inner, &ilen)) != NULL) {
     char *b = strndup(inner, (size_t)ilen);
     if (!b) continue;
     taken++;

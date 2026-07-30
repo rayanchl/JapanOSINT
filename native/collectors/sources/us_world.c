@@ -37,11 +37,13 @@ static int run_fedreg(const source_ctx *ctx, intel_sink *sink, const char *enc) 
       const char *docnum = jo_sv(r, "document_number");
       const char *agency = NULL;
       const cJSON *ags = cJSON_GetObjectItem(r, "agencies");
-      if (cJSON_IsArray(ags) && cJSON_GetArraySize(ags)) { const cJSON *a0 = cJSON_GetArrayItem(ags, 0); if (a0) agency = jo_sv(a0, "name"); }
+      if (cJSON_IsArray(ags) && cJSON_GetArraySize(ags)) { const cJSON *a0 = cJSON_GetArrayItem(ags, 0);  /* exhaustive-ok: display pick; agencies_all carries every issuing agency */ if (a0) agency = jo_sv(a0, "name"); }
       if (!title) continue;
       cJSON *d = cJSON_CreateObject();
       cJSON_AddStringToObject(d, "title", title);
       if (type) cJSON_AddStringToObject(d, "type", type);
+      if (cJSON_IsArray(ags) && cJSON_GetArraySize(ags) > 1)
+        cJSON_AddItemToObject(d, "agencies_all", cJSON_Duplicate(ags, 1));
       if (agency) cJSON_AddStringToObject(d, "agency", agency);
       cJSON_AddStringToObject(d, "source", "Federal Register");
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
@@ -97,10 +99,12 @@ static int run_npi(const source_ctx *ctx, intel_sink *sink, const char *raw) {
       const char *org = basic ? jo_sv(basic, "organization_name") : NULL;
       const cJSON *addrs = cJSON_GetObjectItem(r, "addresses");
       const char *city = NULL, *state = NULL;
-      if (cJSON_IsArray(addrs) && cJSON_GetArraySize(addrs)) { const cJSON *a0 = cJSON_GetArrayItem(addrs, 0); city = jo_sv(a0, "city"); state = jo_sv(a0, "state"); }
+      if (cJSON_IsArray(addrs) && cJSON_GetArraySize(addrs)) { const cJSON *a0 = cJSON_GetArrayItem(addrs, 0);  /* exhaustive-ok: display pick; addresses_all carries every address */ city = jo_sv(a0, "city"); state = jo_sv(a0, "state"); }
       const cJSON *taxo = cJSON_GetObjectItem(r, "taxonomies");
       const char *desc = NULL;
-      if (cJSON_IsArray(taxo) && cJSON_GetArraySize(taxo)) { const cJSON *t0 = cJSON_GetArrayItem(taxo, 0); desc = jo_sv(t0, "desc"); }
+      if (cJSON_IsArray(taxo) && cJSON_GetArraySize(taxo)) { const cJSON *t0 = cJSON_GetArrayItem(taxo, 0);  /* exhaustive-ok: display pick; taxonomies_all carries every specialty */ desc = jo_sv(t0, "desc"); }
+      /* NPPES lists practice AND mailing addresses; both are carried below. */
+      /* a provider can hold several taxonomies (specialties). */
       char npi[32] = {0}; if (num && cJSON_IsNumber(num)) snprintf(npi, sizeof npi, "%.0f", num->valuedouble);
       char name[256];
       if (org) snprintf(name, sizeof name, "%s", org);
@@ -166,7 +170,8 @@ static int run_courtlistener(const source_ctx *ctx, intel_sink *sink, const char
       it.record_type = "us-court-opinion"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"COURTLISTENER\"]";
       if (sink->emit(sink, &it) >= 0) n++;
       free(bj); free(pj);
-      if (n >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);

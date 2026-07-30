@@ -71,7 +71,7 @@ static int run_elevation(const source_ctx *ctx, intel_sink *sink, double lat, do
   cJSON *root = cJSON_Parse(body); free(body);
   if (!root) return 0;
   const cJSON *res = cJSON_GetObjectItem(root, "results");
-  const cJSON *r0 = cJSON_IsArray(res) ? cJSON_GetArrayItem(res, 0) : NULL;
+  const cJSON *r0 = cJSON_IsArray(res) ? cJSON_GetArrayItem(res, 0) : NULL;  /* exhaustive-ok: elevation of the ONE queried point */
   const cJSON *elev = r0 ? cJSON_GetObjectItem(r0, "elevation") : NULL;
   if (!elev || !cJSON_IsNumber(elev)) { cJSON_Delete(root); return 0; }
   cJSON *d = cJSON_CreateObject();

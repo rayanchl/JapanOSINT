@@ -122,8 +122,8 @@ static const uk_reg REGS[] = {
 };
 
 #define UK_REG_COUNT ((int)(sizeof(REGS) / sizeof(REGS[0])))
-#define UK_TOTAL_CAP 40
-#define UK_PER_REG_CAP 3
+#define UK_TOTAL_CAP 500   /* exhaustive-ok: runaway guard, logged */
+#define UK_PER_REG_CAP 0     /* exhaustive-ok: 0 = no cap, every hit is emitted */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;

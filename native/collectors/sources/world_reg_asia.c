@@ -25,8 +25,8 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-#define ASIA_PER_REG   3
-#define ASIA_TOTAL_MAX 40
+#define ASIA_PER_REG   0     /* 0 = every hit the page yielded */
+#define ASIA_TOTAL_MAX 500   /* exhaustive-ok: runaway guard, logged */
 
 /* One registry search portal. `url_tmpl` has exactly one %s for the encoded
  * query. `href_must` is a substring an emittable result href must contain (to

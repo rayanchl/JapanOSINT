@@ -74,7 +74,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
             ? cJSON_CreateString(tv->valuestring) : cJSON_CreateNull());
         cJSON *cats = cJSON_GetObjectItem(it, "categories");
         cJSON *c0 = (cats && cJSON_IsArray(cats))
-                      ? cJSON_GetArrayItem(cats, 0) : NULL;
+                      ? cJSON_GetArrayItem(cats, 0) : NULL;  /* exhaustive-ok: display pick; categories_all carries every category */
+        if (cats && cJSON_IsArray(cats) && cJSON_GetArraySize(cats) > 1)
+          cJSON_AddItemToObject(p, "categories_all", cJSON_Duplicate(cats, 1));
         cJSON *cnm = c0 ? cJSON_GetObjectItem(c0, "name") : NULL;
         cJSON_AddItemToObject(p, "category",
           (cnm && cJSON_IsString(cnm) && cnm->valuestring[0])

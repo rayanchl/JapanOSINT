@@ -55,7 +55,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *envcopy = NULL;
   if (env && *env) {
     envcopy = strdup(env);
-    int cap = 8;
+    int cap = 8;   /* exhaustive-ok: array growth step, doubles below */
     pkgs = malloc(sizeof(char *) * (size_t)cap);
     char *p = envcopy;
     while (p) {

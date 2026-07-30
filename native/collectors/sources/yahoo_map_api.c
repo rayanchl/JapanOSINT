@@ -69,7 +69,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON *prop = cJSON_GetObjectItem(f, "Property");
         cJSON *genre = prop ? cJSON_GetObjectItem(prop, "Genre") : NULL;
         cJSON *g0 = (genre && cJSON_IsArray(genre))
-                      ? cJSON_GetArrayItem(genre, 0) : NULL;
+                      ? cJSON_GetArrayItem(genre, 0) : NULL;  /* exhaustive-ok: display pick; categories_all carries every genre */
+        if (genre && cJSON_IsArray(genre) && cJSON_GetArraySize(genre) > 1)
+          cJSON_AddItemToObject(p, "categories_all", cJSON_Duplicate(genre, 1));
         cJSON *gnm = g0 ? cJSON_GetObjectItem(g0, "Name") : NULL;
         cJSON_AddItemToObject(p, "category",
           (gnm && cJSON_IsString(gnm) && gnm->valuestring[0])

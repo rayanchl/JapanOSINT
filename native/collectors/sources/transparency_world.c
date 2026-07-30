@@ -215,34 +215,42 @@ static int run_uk_donations(const source_ctx *ctx, intel_sink *sink) {
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
 
-  /* Public donations search API. `query` matches donor / regulated entity. */
-  char url[1024];
-  snprintf(url, sizeof url,
-    "https://search.electoralcommission.org.uk/api/search/Donations"
-    "?query=%s&sort=AcceptedDate&order=desc&start=0&rows=25"
-    "&register=gb&register=ni&register=none"
-    "&isIrishSourceYes=true&isIrishSourceNo=true&includeOutsideSection75=true", enc);
-  free(enc);
+  /* Public donations search API. `query` matches donor / regulated entity.
+   * Paged: a prolific donor has far more than 25 reportable donations, and
+   * reading start=0 alone discarded the rest (docs/SOURCE_EXHAUSTIVENESS.md). */
+  int emitted_total = 0;
+  for (int start = 0; start < 25 * 20; start += 25) {
+    char url[1024];
+    snprintf(url, sizeof url,
+      "https://search.electoralcommission.org.uk/api/search/Donations"
+      "?query=%s&sort=AcceptedDate&order=desc&start=%d&rows=25"
+      "&register=gb&register=ni&register=none"
+      "&isIrishSourceYes=true&isIrishSourceNo=true&includeOutsideSection75=true",
+      enc, start);
 
-  const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
-  char *body = jo_get(ctx, url, hdrs, "uk_donations");
-  if (!body) return 0;
-  cJSON *root = cJSON_Parse(body);
-  free(body);
-  if (!root) return 0;
+    const char *hdrs[] = { "Accept: application/json",
+                           "User-Agent: JapanOSINT/1.0", NULL };
+    char *body = jo_get(ctx, url, hdrs, "uk_donations");
+    if (!body) break;
+    cJSON *root = cJSON_Parse(body);
+    free(body);
+    if (!root) break;
 
-  cJSON *arr = cJSON_GetObjectItem(root, "Result");
-  if (!cJSON_IsArray(arr)) arr = cJSON_GetObjectItem(root, "result");
-  if (!cJSON_IsArray(arr)) arr = cJSON_GetObjectItem(root, "results");
-  int emitted = 0;
-  if (cJSON_IsArray(arr)) {
-    cJSON *d; cJSON_ArrayForEach(d, arr) emitted += uk_emit_donation(sink, d);
-  } else if (cJSON_IsArray(root)) {
-    cJSON *d; cJSON_ArrayForEach(d, root) emitted += uk_emit_donation(sink, d);
+    cJSON *arr = cJSON_GetObjectItem(root, "Result");
+    if (!cJSON_IsArray(arr)) arr = cJSON_GetObjectItem(root, "result");
+    if (!cJSON_IsArray(arr)) arr = cJSON_GetObjectItem(root, "results");
+    int emitted = 0;
+    if (cJSON_IsArray(arr)) {
+      cJSON *d; cJSON_ArrayForEach(d, arr) emitted += uk_emit_donation(sink, d);
+    } else if (cJSON_IsArray(root)) {
+      cJSON *d; cJSON_ArrayForEach(d, root) emitted += uk_emit_donation(sink, d);
+    }
+    cJSON_Delete(root);
+    emitted_total += emitted;
+    if (emitted == 0) break;             /* upstream exhausted */
   }
-  cJSON_Delete(root);
-  fprintf(stderr, "[uk_donations] emitted %d\n", emitted);
+  free(enc);
+  fprintf(stderr, "[uk_donations] emitted %d\n", emitted_total);
   return 0;
 }
 

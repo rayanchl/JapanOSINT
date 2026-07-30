@@ -501,7 +501,7 @@ static void load_stops(feedctx *c, const char *zip, size_t zl,
   if (csv_open(&it, txt) != 0) return;
   int c_id = csv_col(&it, "stop_id"), c_nm = csv_col(&it, "stop_name"),
       c_la = csv_col(&it, "stop_lat"), c_lo = csv_col(&it, "stop_lon");
-  int cap = 0;
+  int cap = 0;    /* exhaustive-ok: dynamic array capacity, doubles on demand */
   while (csv_row(&it)) {
     const char *id = csv_at(&it, c_id);
     const char *la = csv_at(&it, c_la), *lo = csv_at(&it, c_lo);
@@ -565,7 +565,7 @@ static void load_shapes(feedctx *c, const char *zip, size_t zl) {
 
   shpt *pool = NULL; int npool = 0, poolcap = 0;
   int *pshape = NULL, *pseq = NULL;
-  int shcap = 0;
+  int shcap = 0;  /* exhaustive-ok: dynamic array capacity, doubles on demand */
   while (csv_row(&si)) {
     const char *id = csv_at(&si, k_id);
     const char *la = csv_at(&si, k_la), *lo = csv_at(&si, k_lo);
@@ -656,7 +656,7 @@ static void load_trips(feedctx *c, const char *zip, size_t zl) {
   int k_t = csv_col(&ti, "trip_id"), k_r = csv_col(&ti, "route_id"),
       k_s = csv_col(&ti, "service_id"), k_sh = csv_col(&ti, "shape_id"),
       k_h = csv_col(&ti, "trip_headsign"), k_d = csv_col(&ti, "direction_id");
-  int cap = 0;
+  int cap = 0;    /* exhaustive-ok: dynamic array capacity, doubles on demand */
   while (csv_row(&ti)) {
     const char *id = csv_at(&ti, k_t);
     if (!*id) continue;

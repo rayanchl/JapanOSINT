@@ -24,7 +24,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-#define BE_KBO_CAP 25   /* cap a single query's fan-out */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *e = ctx->entity;
@@ -42,13 +41,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* Enterprise detail pages carry ?ondernemingsnummer=… — filter on that so we
    * only keep real result rows, not page chrome. */
-  int emitted = jo_emit_anchors(
+  jo_emit_anchors(
       ctx, sink, url,
       "ondernemingsnummer",                 /* href_must */
       "KBO/BCE (BE)", "be-enterprise",
       "https://kbopub.economie.fgov.be",    /* base for root-relative hrefs */
       NULL,                                  /* accept any matching detail row */
-      BE_KBO_CAP, "be_kbo");
+      0, "be_kbo");   /* 0 = every matching row on the page */
 
   return 0;   /* honest empty is not an error */
 }

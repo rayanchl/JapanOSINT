@@ -12,6 +12,7 @@
  * Each row's body is {type,value}; title "<type>: <value>"; summary=type.
  * Nothing extracted → emits nothing, returns 0 (honest empty). */
 #include "../../source.h"
+#include "../../lib/seenset.h"
 #include "../../third_party/cJSON.h"
 #include <ctype.h>
 #include <regex.h>
@@ -19,7 +20,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_MATCHES 100
+/* Extraction is local (POSIX regex over the input text) — there is no upstream
+ * to be polite to, so every match is reported. The old MAX_MATCHES=100 dropped
+ * indicators 101+ of a large paste (docs/SOURCE_EXHAUSTIVENESS.md). */
 
 typedef struct { const char *name, *pattern; } xp_t;
 
@@ -73,23 +76,16 @@ static cJSON *extract_pattern(const char *text, const char *pat,
   regmatch_t m;
   const char *cur = text;
   int mc = 0;
-  char *seen[MAX_MATCHES]; int sc = 0;
-  while (mc < MAX_MATCHES && regexec(&re, cur, 1, &m, 0) == 0) {
+  seen_set seen = {0};
+  while (regexec(&re, cur, 1, &m, 0) == 0) {
     int len = (int)(m.rm_eo - m.rm_so);
     if (len > 0 && len < 256) {
       char *found = calloc(len + 1, 1);
       if (found) {
         memcpy(found, cur + m.rm_so, len);
         int valid = validator ? validator(found) : 1;
-        if (valid) {
-          int dup = 0;
-          for (int i = 0; i < sc; i++)
-            if (strcmp(seen[i], found) == 0) { dup = 1; break; }
-          if (!dup && sc < MAX_MATCHES) {
-            cJSON_AddItemToArray(matches, cJSON_CreateString(found));
-            seen[sc++] = strdup(found);
-          }
-        }
+        if (valid && seen_add(&seen, found))
+          cJSON_AddItemToArray(matches, cJSON_CreateString(found));
         free(found);
       }
     }
@@ -98,7 +94,7 @@ static cJSON *extract_pattern(const char *text, const char *pat,
     mc++;
   }
   regfree(&re);
-  for (int i = 0; i < sc; i++) free(seen[i]);
+  seen_free(&seen);
   return matches;
 }
 

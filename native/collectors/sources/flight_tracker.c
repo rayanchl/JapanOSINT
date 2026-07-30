@@ -39,7 +39,7 @@ static cJSON *query_opensky_aircraft(http_client *http, const char *icao24,
     cJSON_Delete(json);
     return NULL;   /* not currently active → nothing */
   }
-  cJSON *state = cJSON_GetArrayItem(states, 0);
+  cJSON *state = cJSON_GetArrayItem(states, 0);  /* exhaustive-ok: query is for ONE icao24, so states holds one vector */
   if (!state || !cJSON_IsArray(state)) { cJSON_Delete(json); return NULL; }
 
   cJSON *fi = cJSON_CreateObject();

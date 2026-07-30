@@ -48,7 +48,8 @@ static char *dblp_authors(const cJSON *info) {
       const char *t = jo_sv(e, "text"); if (!t) continue;
       size_t need = len + strlen(t) + 3; if (need > cap) { cap = need * 2; char *x = realloc(out, cap); if (!x) break; out = x; }
       if (n) { strcpy(out + len, ", "); len += 2; } strcpy(out + len, t); len += strlen(t);
-      if (++n >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   } else {
     const char *t = jo_sv(a, "text"); if (t) { strncpy(out, t, cap - 1); out[cap-1]=0; n = 1; }
@@ -91,7 +92,8 @@ static int run_dblp(const source_ctx *ctx, intel_sink *sink, const char *enc) {
       if (doi) cJSON_AddStringToObject(p, "doi", doi);
       emitted += mi_emit(sink, "DBLP_SEARCH", "dblp-publication", doi ? doi : title, title, authors ? authors : venue, url2, d, p);
       free(authors);
-      if (emitted >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -124,7 +126,8 @@ static int run_codeberg(const source_ctx *ctx, intel_sink *sink, const char *enc
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "repo", full);
       emitted += mi_emit(sink, "CODEBERG_SEARCH", "codeberg-repo", full, full, desc, html, d, p);
-      if (emitted >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -156,7 +159,7 @@ static int run_nationalize(const source_ctx *ctx, intel_sink *sink, const char *
   }
   cJSON_AddItemToObject(d, "predictions", preds);
   cJSON_AddStringToObject(d, "source", "Nationalize.io");
-  const cJSON *top = cJSON_GetArrayItem(country, 0);
+  const cJSON *top = cJSON_GetArrayItem(country, 0);  /* exhaustive-ok: headline pick; predictions carries all */
   const char *topc = top ? jo_sv(top, "country_id") : NULL;
   cJSON *p = cJSON_CreateObject();
   char title[160]; snprintf(title, sizeof title, "%s → likely %s", raw, topc ? topc : "?");

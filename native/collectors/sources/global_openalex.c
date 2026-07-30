@@ -38,7 +38,8 @@ static char *oa_author_list(const cJSON *work) {
     if (need > cap) { cap = need * 2; char *t = realloc(out, cap); if (!t) break; out = t; }
     if (n) { strcpy(out + len, ", "); len += 2; }
     strcpy(out + len, nm); len += strlen(nm);
-    if (++n >= 25) break;
+    /* (cap removed: every record of the fetched array is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
   }
   if (!n) { free(out); return NULL; }
   return out;

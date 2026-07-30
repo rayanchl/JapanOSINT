@@ -47,7 +47,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (cJSON_IsArray(list)) {
     cJSON *d;
     cJSON_ArrayForEach(d, list) {
-      if (i >= 200) break;                 /* slice(0,200) */
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
       const char *docID  = sv(d, "docID");
       const char *filer  = sv(d, "filerName");
       const char *ddesc  = sv(d, "docDescription");

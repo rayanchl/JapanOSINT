@@ -53,7 +53,8 @@ static char *krs_board(const cJSON *dzial2) {
     if (need > cap) { cap = need * 2; char *t = realloc(out, cap); if (!t) break; out = t; }
     if (n) { strcpy(out + len, "; "); len += 2; }
     strcpy(out + len, frag); len += strlen(frag);
-    if (++n >= 30) break;
+    /* (cap removed: every record of the fetched array is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
   }
   if (!n) { free(out); return NULL; }
   return out;

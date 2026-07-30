@@ -18,7 +18,7 @@
 
 #define WINDOW_DAYS 7
 #define PAGE_SIZE   100      /* speech API max per request */
-#define MAX_RECORDS 300      /* cap a busy window (idempotent upsert backfills) */
+#define MAX_PAGES   200      /* exhaustive-ok: runaway guard on the page walk */
 
 /* string-truthy field, else NULL (JSON null / empty → NULL). */
 static const char *sv(const cJSON *o, const char *k) {
@@ -38,8 +38,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(to_s,   sizeof to_s,   "%04d-%02d-%02d", gt.tm_year+1900, gt.tm_mon+1, gt.tm_mday);
   snprintf(from_s, sizeof from_s, "%04d-%02d-%02d", gf.tm_year+1900, gf.tm_mon+1, gf.tm_mday);
 
+  /* Walk every page of the window. The old MAX_RECORDS=300 stopped mid-window,
+   * so a busy sitting week lost its later speeches even though the API would
+   * have served them (docs/SOURCE_EXHAUSTIVENESS.md). */
   int emitted = 0, start = 1;
-  while (emitted < MAX_RECORDS) {
+  for (int page = 0; page < MAX_PAGES; page++) {
     char url[512];
     snprintf(url, sizeof url,
       "https://kokkai.ndl.go.jp/api/speech?from=%s&until=%s"
@@ -56,7 +59,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     cJSON *r;
     cJSON_ArrayForEach(r, recs) {
-      if (emitted >= MAX_RECORDS) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
       const char *sid = sv(r, "speechID");
       const char *speaker = sv(r, "speaker");
       if (!sid) continue;

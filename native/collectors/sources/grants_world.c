@@ -60,7 +60,8 @@ static int nih_emit(intel_sink *sink, const cJSON *p) {
       if (need > cap) { cap = need * 2; char *t = realloc(pis, cap); if (!t) break; pis = t; }
       if (n) { strcpy(pis + len, ", "); len += 2; }
       strcpy(pis + len, nm); len += strlen(nm);
-      if (++n >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
     if (!n && pis) { free(pis); pis = NULL; }
   }

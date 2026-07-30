@@ -88,7 +88,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     else if (imo) snprintf(kb, sizeof kb, "imo:%s", imo);
     else {
       cJSON *co = g ? cJSON_GetObjectItem(g, "coordinates") : NULL;
-      cJSON *x = co ? cJSON_GetArrayItem(co, 0) : NULL;
+      cJSON *x = co ? cJSON_GetArrayItem(co, 0) : NULL;  /* exhaustive-ok: [lon,lat] tuple */
       cJSON *y = co ? cJSON_GetArrayItem(co, 1) : NULL;
       if (!cJSON_IsNumber(x) || !cJSON_IsNumber(y)) continue;
       const char *nm = pstr(p, "vessel_name");

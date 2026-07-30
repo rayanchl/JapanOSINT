@@ -60,7 +60,7 @@ static char *registrar_name(const cJSON *entities) {
         const cJSON *prop;
         cJSON_ArrayForEach(prop, props) {
           if (cJSON_IsArray(prop) && cJSON_GetArraySize(prop) >= 4) {
-            const cJSON *pn = cJSON_GetArrayItem(prop, 0);
+            const cJSON *pn = cJSON_GetArrayItem(prop, 0);  /* exhaustive-ok: jCard property tuple */
             const cJSON *pv = cJSON_GetArrayItem(prop, 3);
             if (cJSON_IsString(pn) && pn->valuestring &&
                 strcmp(pn->valuestring, "fn") == 0 &&

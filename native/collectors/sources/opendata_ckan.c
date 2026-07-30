@@ -160,7 +160,8 @@ static int query_portal(const source_ctx *ctx, intel_sink *sink,
     if (cJSON_IsArray(results)) {
       const cJSON *r;
       cJSON_ArrayForEach(r, results) {
-        if (emitted >= CKAN_PER_PORTAL) break;
+        /* (cap removed: every record of the fetched array is emitted —
+         * docs/SOURCE_EXHAUSTIVENESS.md) */
         emitted += emit_dataset(sink, r, pt);
       }
     }

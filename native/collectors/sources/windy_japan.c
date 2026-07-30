@@ -31,7 +31,7 @@ static const struct grid_pt GRID[] = {
 static int arr0_num(cJSON *d, const char *key, double *out) {
   cJSON *a = cJSON_GetObjectItem(d, key);
   if (!a || !cJSON_IsArray(a) || cJSON_GetArraySize(a) == 0) return 0;
-  cJSON *v = cJSON_GetArrayItem(a, 0);
+  cJSON *v = cJSON_GetArrayItem(a, 0);  /* exhaustive-ok: point forecast: index 0 is the current step of the queried cell */
   if (!v || !cJSON_IsNumber(v)) return 0;
   *out = v->valuedouble;
   return 1;
@@ -75,7 +75,7 @@ static cJSON *fetch_point(http_client *http, const char *key,
   if (err || !ts || !cJSON_IsArray(ts) || cJSON_GetArraySize(ts) == 0) {
     cJSON_Delete(data); return NULL;
   }
-  cJSON *ts0 = cJSON_GetArrayItem(ts, 0);
+  cJSON *ts0 = cJSON_GetArrayItem(ts, 0);  /* exhaustive-ok: timestamp of the current step */
   double tsms = (ts0 && cJSON_IsNumber(ts0)) ? ts0->valuedouble : 0;
 
   double tK, u, v, press;

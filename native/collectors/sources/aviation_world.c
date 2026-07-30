@@ -272,7 +272,7 @@ static int adsbfi_resolve_hex(const source_ctx *ctx, const char *kind,
   int ok = 0;
   cJSON *ac = cJSON_GetObjectItem(root, "ac");
   if (cJSON_IsArray(ac) && cJSON_GetArraySize(ac) > 0) {
-    const char *h = jo_sv(cJSON_GetArrayItem(ac, 0), "hex");
+    const char *h = jo_sv(cJSON_GetArrayItem(ac, 0), "hex");  /* exhaustive-ok: registration->hex resolution step */
     if (h && is_hex6(h)) { snprintf(hexout, 7, "%s", h); ok = 1; }
   }
   cJSON_Delete(root);

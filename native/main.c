@@ -5,6 +5,8 @@
  *   --serve               run the HTTP server + background scheduler
  *   --sched               run the scheduler loop in the foreground
  *   --run <id> [entity]   run one registered source through the real sink
+ *   --dispatch <id> <entity>  run one source through the OSINT dispatcher and
+ *                         print the captured {record_count,records} JSON
  *   --list-sources        list the registered sources and exit
  *   --ingest <id> <file> [--type email|username|phone|password|auto]
  *                         offline breach-dump ingest (no DB, no network) */
@@ -14,6 +16,8 @@
 #include "core/llm.h"
 #include "core/httpd.h"
 #include "core/scheduler.h"
+#include "core/osint_dispatch.h"
+#include "core/intel.h"
 #include "core/breach_index.h"
 #include "core/breach_meta.h"
 #include "core/alert_deliver.h"
@@ -132,6 +136,25 @@ int main(int argc, char **argv) {
       int rc = scheduler_run_source(&db, d, ent);
       db_close(&db);
       return rc == 0 ? 0 : 1;
+    }
+    /* --dispatch <source_id> <entity> → run one source through the OSINT
+     * dispatcher (not the scheduler) and print the captured result JSON. This
+     * is the seam the exhaustive-use rule cares about: `record_count` must
+     * equal the number of records the source emitted, and `records` must carry
+     * all of them (docs/SOURCE_EXHAUSTIVENESS.md). */
+    if (!strcmp(argv[i], "--dispatch") && i + 2 < argc) {
+      http_client *hc = http_client_new();
+      llm_client lc; llm_init(&lc, hc);
+      intel_sink sink = intel_sink_make(&db, argv[i + 1], "legacy");
+      osint_result r;
+      osint_dispatch(&db, &lc, argv[i + 1], argv[i + 2], NULL, &sink, &r);
+      printf("service=%s success=%d records=%d\n%s\n", r.service, r.success,
+             r.records, r.data ? r.data : "(no data)");
+      if (r.error) printf("error=%s\n", r.error);
+      osint_result_free(&r);
+      http_client_free(hc);
+      db_close(&db);
+      return 0;
     }
     if (!strcmp(argv[i], "--list-sources")) {
       const source_def **a = registry_all();

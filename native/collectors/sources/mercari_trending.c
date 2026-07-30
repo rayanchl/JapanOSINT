@@ -44,7 +44,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (list) {
     cJSON *it;
     cJSON_ArrayForEach(it, list) {
-      if (i >= 50) break;                        /* slice(0,50) */
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
       int rank = i + 1;
       i++;
 

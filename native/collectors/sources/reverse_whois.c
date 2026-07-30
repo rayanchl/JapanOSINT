@@ -25,6 +25,7 @@
  * insensitively within the run. If no domains are found, emits nothing and
  * returns 0 (honest empty). */
 #include "../../source.h"
+#include "../../lib/seenset.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
@@ -32,6 +33,7 @@
 #include <strings.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 static char *url_encode_dup(const char *in) {
   size_t n = strlen(in);
@@ -229,21 +231,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* case-insensitive dedup by domain (upstream deduplicate_domains); emit one
    * intel_item per unique domain. */
-  const char *seen[1000];
-  int seen_count = 0, emitted = 0;
+  seen_set seen = {0};      /* grows: a registrant with >1000 domains used to
+                             * lose everything past the 1000th */
+  int emitted = 0;
   cJSON *item;
   cJSON_ArrayForEach(item, combined) {
     cJSON *d = cJSON_GetObjectItem(item, "domain");
     if (!d || !d->valuestring) continue;
-    int found = 0;
-    for (int i = 0; i < seen_count; i++)
-      if (strcasecmp(seen[i], d->valuestring) == 0) { found = 1; break; }
-    if (found || seen_count >= 1000) continue;
-    seen[seen_count++] = d->valuestring;
+    char lower[320];
+    snprintf(lower, sizeof lower, "%s", d->valuestring);
+    for (char *lp = lower; *lp; lp++) *lp = (char)tolower((unsigned char)*lp);
+    if (!seen_add(&seen, lower)) continue;
     cJSON *src = cJSON_GetObjectItem(item, "source");
     emitted += emit_domain(sink, d->valuestring,
                            (src && src->valuestring) ? src->valuestring : NULL);
   }
+  seen_free(&seen);
   cJSON_Delete(combined);
 
   (void)emitted;

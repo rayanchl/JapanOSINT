@@ -200,7 +200,8 @@ static cJSON *analyze_hash(http_client *http, const char *hash) {
   if (a) {
     const cJSON *nm = cJSON_GetObjectItem(a, "names");
     if (nm && cJSON_IsArray(nm) && cJSON_GetArraySize(nm) > 0) {
-      const cJSON *f = cJSON_GetArrayItem(nm, 0);
+      const cJSON *f = cJSON_GetArrayItem(nm, 0);  /* exhaustive-ok: display pick; file_names_all carries every observed filename */
+      cJSON_AddItemToObject(r, "file_names_all", cJSON_Duplicate(nm, 1));
       if (f && cJSON_IsString(f)) cJSON_AddStringToObject(r, "file_name", f->valuestring);
     }
     const cJSON *td = cJSON_GetObjectItem(a, "type_description");

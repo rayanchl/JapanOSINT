@@ -133,7 +133,7 @@ static int emit_release(intel_sink *sink, const cJSON *rel, const char *portal) 
   double amt = 0; const char *cur = NULL; int has_amt = 0;
   if (tender) has_amt = ocds_amount(cJSON_GetObjectItem(tender, "value"), &amt, &cur);
   if (!has_amt && cJSON_IsArray(awards)) {
-    const cJSON *a0 = cJSON_GetArrayItem(awards, 0);
+    const cJSON *a0 = cJSON_GetArrayItem(awards, 0);  /* exhaustive-ok: headline amount; every award is in the record */
     if (a0) has_amt = ocds_amount(cJSON_GetObjectItem(a0, "value"), &amt, &cur);
   }
 

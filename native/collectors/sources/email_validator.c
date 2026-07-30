@@ -293,7 +293,7 @@ int jo_email_validator_run(const source_ctx *ctx, intel_sink *sink) {
   const char *smtp_status = "not_checked";
   int deliverable = 0;
   if (mx_count > 0) {
-    cJSON *first = cJSON_GetArrayItem(mx, 0);
+    cJSON *first = cJSON_GetArrayItem(mx, 0);  /* exhaustive-ok: SMTP probe target; every MX is in the emitted record */
     cJSON *hn = cJSON_GetObjectItem(first, "hostname");
     if (hn && cJSON_IsString(hn)) {
       int sr = verify_smtp(email, hn->valuestring);

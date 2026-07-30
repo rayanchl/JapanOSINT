@@ -40,7 +40,9 @@ static int run_fbi(const source_ctx *ctx, intel_sink *sink, const char *enc) {
       if (desc)  cJSON_AddStringToObject(d, "description", desc);
       const char *subj = NULL;
       const cJSON *subs = cJSON_GetObjectItem(it0, "subjects");
-      if (cJSON_IsArray(subs)) { const cJSON *s0 = cJSON_GetArrayItem(subs, 0); if (cJSON_IsString(s0)) subj = s0->valuestring; }
+      if (cJSON_IsArray(subs)) { const cJSON *s0 = cJSON_GetArrayItem(subs, 0);  /* exhaustive-ok: display pick; subjects_all carries every subject */ if (cJSON_IsString(s0)) subj = s0->valuestring; }
+      if (cJSON_IsArray(subs) && cJSON_GetArraySize(subs) > 1)
+        cJSON_AddItemToObject(d, "subjects_all", cJSON_Duplicate(subs, 1));
       if (subj) cJSON_AddStringToObject(d, "category", subj);
       cJSON_AddStringToObject(d, "source", "FBI Wanted");
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);

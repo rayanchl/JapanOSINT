@@ -32,7 +32,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   cJSON *data = feed_get_json(ctx->http, url, 12000);
   cJSON *body = data ? cJSON_GetObjectItem(data, "body") : NULL;
-  cJSON *b0 = (body && cJSON_IsArray(body)) ? cJSON_GetArrayItem(body, 0) : NULL;
+  cJSON *b0 = (body && cJSON_IsArray(body)) ? cJSON_GetArrayItem(body, 0) : NULL;  /* exhaustive-ok: response envelope */
   cJSON *places = b0 ? cJSON_GetObjectItem(b0, "exploreList") : NULL;
 
   cJSON *features = cJSON_CreateArray();

@@ -51,7 +51,7 @@
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
   "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 #define WORLDCAM_EU_BASE "https://fr.worldcam.eu/webcams/asia/japan"
-#define WORLDCAM_EU_MAX_PAGES 6
+#define WORLDCAM_EU_MAX_PAGES 30  /* exhaustive-ok: page-walk runaway guard */
 
 /* ── makeFeature (verbatim from camera_discovery.c) ────────────────────────*/
 typedef struct { const char *k; const char *sv; int is_num; double nv;

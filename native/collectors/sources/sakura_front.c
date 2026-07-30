@@ -109,7 +109,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     int cn = cJSON_GetArraySize(cells);
     if (cn < 2) { cJSON_Delete(cells); free(row); continue; }
 
-    const char *name = cJSON_GetArrayItem(cells, 0)->valuestring;
+    const char *name = cJSON_GetArrayItem(cells, 0)->valuestring;  /* exhaustive-ok: name column; every cell is in properties */
     if (!name || !*name || !has_jp(name)) { cJSON_Delete(cells); free(row); continue; }
     const char *date = NULL;
     for (int i = 1; i < cn; i++) {
@@ -127,7 +127,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *gd = feed_get_json(ctx->http, url, 8000);
     double lon = 0, lat = 0; int ok = 0;
     if (gd && cJSON_IsArray(gd) && cJSON_GetArraySize(gd) > 0) {
-      cJSON *first = cJSON_GetArrayItem(gd, 0);
+      cJSON *first = cJSON_GetArrayItem(gd, 0);  /* exhaustive-ok: place->coordinate resolution step */
       cJSON *gg = first ? cJSON_GetObjectItem(first, "geometry") : NULL;
       cJSON *gc = gg ? cJSON_GetObjectItem(gg, "coordinates") : NULL;
       if (cJSON_IsArray(gc) && cJSON_GetArraySize(gc) >= 2) {

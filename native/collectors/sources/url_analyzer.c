@@ -69,7 +69,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (j) {
       const cJSON *res = cJSON_GetObjectItem(j, "results");
       if (res && cJSON_IsArray(res) && cJSON_GetArraySize(res) > 0) {
-        const cJSON *f = cJSON_GetArrayItem(res, 0);
+        const cJSON *f = cJSON_GetArrayItem(res, 0);  /* exhaustive-ok: most recent scan of the queried URL */
         const cJSON *u = f ? cJSON_GetObjectItem(f, "uuid") : NULL;
         if (u && cJSON_IsString(u)) { strncpy(uuid, u->valuestring, sizeof uuid - 1); }
       }

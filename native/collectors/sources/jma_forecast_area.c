@@ -27,11 +27,11 @@ static const struct area AREAS[] = {
 static const char *first_str(cJSON *first, const char *seriesKey) {
   if (!first) return NULL;
   cJSON *ts = cJSON_GetObjectItem(first, "timeSeries");
-  cJSON *ts0 = (ts && cJSON_IsArray(ts)) ? cJSON_GetArrayItem(ts, 0) : NULL;
+  cJSON *ts0 = (ts && cJSON_IsArray(ts)) ? cJSON_GetArrayItem(ts, 0) : NULL;  /* exhaustive-ok: current-period series */
   cJSON *as = ts0 ? cJSON_GetObjectItem(ts0, "areas") : NULL;
-  cJSON *a0 = (as && cJSON_IsArray(as)) ? cJSON_GetArrayItem(as, 0) : NULL;
+  cJSON *a0 = (as && cJSON_IsArray(as)) ? cJSON_GetArrayItem(as, 0) : NULL;  /* exhaustive-ok: this collector emits one row per area code */
   cJSON *arr = a0 ? cJSON_GetObjectItem(a0, seriesKey) : NULL;
-  cJSON *v = (arr && cJSON_IsArray(arr)) ? cJSON_GetArrayItem(arr, 0) : NULL;
+  cJSON *v = (arr && cJSON_IsArray(arr)) ? cJSON_GetArrayItem(arr, 0) : NULL;  /* exhaustive-ok: current-period value */
   return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
            ? v->valuestring : NULL;
 }
@@ -45,7 +45,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       "https://www.jma.go.jp/bosai/forecast/data/forecast/%s.json", a->code);
     cJSON *arr = feed_get_json(ctx->http, url, 8000);
     if (!arr) continue;                             /* !res.ok → null */
-    cJSON *first = (cJSON_IsArray(arr)) ? cJSON_GetArrayItem(arr, 0) : NULL;
+    cJSON *first = (cJSON_IsArray(arr)) ? cJSON_GetArrayItem(arr, 0) : NULL;  /* exhaustive-ok: forecast office block */
     const char *weather = first_str(first, "weathers");
     if (weather) {                                  /* if (r?.weather) */
       const char *wind = first_str(first, "winds");

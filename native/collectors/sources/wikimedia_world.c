@@ -40,7 +40,9 @@ static char *wd_resolve_qid(const source_ctx *ctx, const char *entity) {
   char url[1024];
   snprintf(url, sizeof url,
     "https://www.wikidata.org/w/api.php?action=wbsearchentities"
-    "&search=%s&language=en&format=json&limit=1", enc);
+    /* exhaustive-ok: resolution step — name → QID for the SPARQL/claims call
+     * that follows; those results are emitted in full. */
+    "&search=%s&language=en&format=json&limit=1", enc);  /* exhaustive-ok: name->QID resolution step */
   free(enc);
   const char *hdrs[] = { "Accept: application/json", WM_UA, NULL };
   char *body = jo_get(ctx, url, hdrs, "wikidata_sparql");
@@ -51,7 +53,7 @@ static char *wd_resolve_qid(const source_ctx *ctx, const char *entity) {
   char *qid = NULL;
   const cJSON *arr = cJSON_GetObjectItem(root, "search");
   if (cJSON_IsArray(arr)) {
-    const cJSON *first = cJSON_GetArrayItem(arr, 0);
+    const cJSON *first = cJSON_GetArrayItem(arr, 0);  /* exhaustive-ok: name->QID resolution step */
     const char *id = first ? jo_sv(first, "id") : NULL;
     if (id) qid = strdup(id);
   }

@@ -15,7 +15,7 @@
 
 #define CSV_URL "https://covid19.mhlw.go.jp/public/opendata/newly_confirmed_cases_daily.csv"
 #define MAX_COLS 96
-#define MAX_ROWS 4096
+#define ROWS_CHUNK 4096   /* exhaustive-ok: growth step, not a cap */
 
 static char *trim(char *s) {
   while (*s == ' ' || *s == '\r' || *s == '\t') s++;
@@ -45,14 +45,23 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   /* index line starts */
-  char **lines = calloc(MAX_ROWS, sizeof *lines);
+  size_t lines_cap = ROWS_CHUNK;
+  char **lines = calloc(lines_cap, sizeof *lines);
   if (!lines) { free(text); return -1; }
   int nl = 0;
   char *cur = text;
-  for (char *p = text; *p && nl < MAX_ROWS; p++) {
+  /* The daily CSV grows by one row a day; a fixed 4096-row array silently
+   * dropped everything past row 4096 (docs/SOURCE_EXHAUSTIVENESS.md). */
+  for (char *p = text; *p; p++) {
+    if ((size_t)nl + 2 >= lines_cap) {
+      size_t nc = lines_cap * 2;
+      char **np = realloc(lines, nc * sizeof *np);
+      if (!np) break;
+      lines = np; lines_cap = nc;
+    }
     if (*p == '\n') { *p = 0; lines[nl++] = cur; cur = p + 1; }
   }
-  if (nl < MAX_ROWS && *cur) lines[nl++] = cur;
+  if ((size_t)nl < lines_cap && *cur) lines[nl++] = cur;
 
   if (nl < 2) {
     free(lines); free(text);

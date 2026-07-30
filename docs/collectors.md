@@ -1,5 +1,11 @@
 # Collector Catalog
 
+> **House rules for every collector in this catalogue** — a collector must never
+> fabricate data (`native/collectors/SOURCE_REALITY_REPORT.md`) and must use the
+> sources it calls exhaustively: every record, every field, every page, and the
+> detail endpoint behind each list hit
+> (`docs/SOURCE_EXHAUSTIVENESS.md`; check with `cd native && make audit-sources`).
+
 Every collector in `server/src/collectors/` and the upstream source(s) it
 fetches from. Fusion collectors (prefixed `unified*`) merge other in-repo
 collectors rather than raw feeds.

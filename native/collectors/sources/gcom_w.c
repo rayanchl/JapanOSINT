@@ -36,7 +36,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0, i = 0;
   cJSON *g;
   cJSON_ArrayForEach(g, rows) {
-    if (i >= 50) break;
+    /* (cap removed: every record of the fetched array is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
     char sidbuf[32];
     const char *sid = sstr(g, "producer_granule_id");
     if (!sid) sid = sstr(g, "title");
@@ -51,7 +52,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const char *link0 = NULL;
     cJSON *links = cJSON_GetObjectItem(g, "links");
     if (links && cJSON_IsArray(links)) {
-      cJSON *l0 = cJSON_GetArrayItem(links, 0);
+      cJSON *l0 = cJSON_GetArrayItem(links, 0);  /* exhaustive-ok: display pick; links_all carries every granule link */
       link0 = sstr(l0, "href");
     }
 
@@ -83,6 +84,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(p, "scene_id", sid);
     if (dataset) cJSON_AddStringToObject(p, "dataset", dataset);
     else cJSON_AddNullToObject(p, "dataset");
+    /* Every distribution link the granule lists (data, browse, metadata), not
+     * just the first (docs/SOURCE_EXHAUSTIVENESS.md). */
+    if (links && cJSON_IsArray(links) && cJSON_GetArraySize(links) > 0)
+      cJSON_AddItemToObject(p, "links_all", cJSON_Duplicate(links, 1));
     char *pj = cJSON_PrintUnformatted(p);
 
     cJSON *tags = cJSON_CreateArray();

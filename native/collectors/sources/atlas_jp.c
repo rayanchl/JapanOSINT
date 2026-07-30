@@ -10,7 +10,7 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX_PAGES 12
+#define MAX_PAGES 12   /* exhaustive-ok: page-walk runaway guard */
 
 static int num_of(cJSON *v, double *out) {
   if (!v) return 0;

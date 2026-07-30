@@ -121,3 +121,43 @@ int html_attr(const char *s, const char *attr, char *out, size_t n) {
   }
   return 0;
 }
+
+/* ── anchors: the single implementation both anchor consumers share ─────── */
+
+const char *html_anchor_next(const char *from, html_anchor *out) {
+  if (!from || !out) return NULL;
+  const char *p = from;
+  while ((p = strstr(p, "<a ")) != NULL) {
+    const char *h = strstr(p, "href=\"");
+    const char *tagend = strchr(p, '>');
+    p += 3;
+    if (!h || !tagend || h > tagend) continue;      /* not this tag's href */
+    h += 6;
+    const char *he = strchr(h, '"');
+    if (!he) continue;
+    size_t hlen = (size_t)(he - h);
+    if (!hlen || hlen > 800) continue;
+    const char *atext = strchr(he, '>');
+    const char *aclose = atext ? strstr(atext, "</a>") : NULL;
+    if (!atext || !aclose) continue;
+    atext++;
+
+    size_t tj = 0;
+    int intag = 0;
+    for (const char *q = atext; q < aclose && tj < sizeof out->text - 1; q++) {
+      if (*q == '<') intag = 1;
+      else if (*q == '>') intag = 0;
+      else if (!intag && *q != '\n' && *q != '\t' && *q != '\r') out->text[tj++] = *q;
+    }
+    while (tj && out->text[tj - 1] == ' ') tj--;
+    size_t lead = 0;
+    while (lead < tj && out->text[lead] == ' ') lead++;
+    if (lead) { memmove(out->text, out->text + lead, tj - lead); tj -= lead; }
+    out->text[tj] = 0;
+    out->text_len = tj;
+    out->href     = h;
+    out->href_len = hlen;
+    return aclose + 4;
+  }
+  return NULL;
+}

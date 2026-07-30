@@ -102,14 +102,18 @@ static cJSON *search_company(http_client *http, const char *company_name) {
             cJSON *dn = cJSON_GetObjectItem(source, "display_names");
             cJSON *ciks = cJSON_GetObjectItem(source, "ciks");
             if (dn && cJSON_IsArray(dn) && cJSON_GetArraySize(dn) > 0) {
-              cJSON *first = cJSON_GetArrayItem(dn, 0);
+              cJSON *first = cJSON_GetArrayItem(dn, 0);  /* exhaustive-ok: display pick; names_all carries every filer */
+              if (cJSON_GetArraySize(dn) > 1)
+                cJSON_AddItemToObject(company, "names_all", cJSON_Duplicate(dn, 1));
               if (first && first->valuestring)
                 cJSON_AddStringToObject(company, "name", first->valuestring);
             }
             if (ciks && cJSON_IsArray(ciks) && cJSON_GetArraySize(ciks) > 0) {
-              cJSON *first = cJSON_GetArrayItem(ciks, 0);
+              cJSON *first = cJSON_GetArrayItem(ciks, 0);  /* exhaustive-ok: display pick; ciks_all carries every CIK */
               if (first && first->valuestring)
                 cJSON_AddStringToObject(company, "cik", first->valuestring);
+              if (cJSON_GetArraySize(ciks) > 1)
+                cJSON_AddItemToObject(company, "ciks_all", cJSON_Duplicate(ciks, 1));
             }
             cJSON_AddItemToArray(companies, company);
           }
@@ -279,7 +283,9 @@ static cJSON *search_filings(http_client *http, const char *company_name, const 
           if (form && cJSON_IsString(form)) cJSON_AddStringToObject(filing, "form_type", form->valuestring);
           if (fd && cJSON_IsString(fd)) cJSON_AddStringToObject(filing, "filing_date", fd->valuestring);
           if (dn && cJSON_IsArray(dn) && cJSON_GetArraySize(dn) > 0) {
-            cJSON *first = cJSON_GetArrayItem(dn, 0);
+            cJSON *first = cJSON_GetArrayItem(dn, 0);  /* exhaustive-ok: display pick; companies_all carries every filer */
+            if (cJSON_GetArraySize(dn) > 1)
+              cJSON_AddItemToObject(filing, "companies_all", cJSON_Duplicate(dn, 1));
             if (first && first->valuestring) cJSON_AddStringToObject(filing, "company", first->valuestring);
           }
           if (fn && cJSON_IsString(fn)) cJSON_AddStringToObject(filing, "file_number", fn->valuestring);
@@ -491,7 +497,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sr) {
       cJSON *companies = cJSON_GetObjectItem(sr, "companies");
       if (companies && cJSON_IsArray(companies) && cJSON_GetArraySize(companies) > 0) {
-        cJSON *first = cJSON_GetArrayItem(companies, 0);
+        cJSON *first = cJSON_GetArrayItem(companies, 0);  /* exhaustive-ok: ticker->CIK resolution step */
         const char *cik = cjson_str(first, "cik");
         if (cik) {
           snprintf(cik_buf, sizeof cik_buf, "%s", cik);

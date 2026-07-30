@@ -302,28 +302,35 @@ static int emit_addr_balance(intel_sink *sink, http_client *http, const char *ad
   return rc >= 0 ? 1 : 0;
 }
 
-/* Emit Etherscan recent txs for an ETH address. Returns count emitted. */
+/* Emit Etherscan transactions for an ETH address. Returns count emitted.
+ *
+ * This used to request offset=5 and then re-cap the loop at 5 — a whale wallet
+ * with thousands of transfers reported five of them. Full pages are requested
+ * and walked until the upstream runs short (docs/SOURCE_EXHAUSTIVENESS.md). */
 static int emit_eth_txs(intel_sink *sink, http_client *http, const char *addr) {
   const char *ek = getenv("ETHERSCAN_API_KEY");
-  char url[512];
-  if (ek && *ek)
-    snprintf(url, sizeof url,
-      "https://api.etherscan.io/api?module=account&action=txlist&address=%s&startblock=0&endblock=99999999&page=1&offset=5&sort=desc&apikey=%s",
-      addr, ek);
-  else
-    snprintf(url, sizeof url,
-      "https://api.etherscan.io/api?module=account&action=txlist&address=%s&startblock=0&endblock=99999999&page=1&offset=5&sort=desc",
-      addr);
-  cJSON *j = get_json(http, url);
-  if (!j) return 0;
   int emitted = 0;
-  const cJSON *txs = cJSON_GetObjectItem(j, "result");
-  if (txs && cJSON_IsArray(txs)) {
-    int n = cJSON_GetArraySize(txs);
-    for (int i = 0; i < n && i < 5; i++)
+  for (int page = 1; page <= 20; page++) {
+    char url[600];
+    if (ek && *ek)
+      snprintf(url, sizeof url,
+        "https://api.etherscan.io/api?module=account&action=txlist&address=%s"
+        "&startblock=0&endblock=99999999&page=%d&offset=100&sort=desc&apikey=%s",
+        addr, page, ek);
+    else
+      snprintf(url, sizeof url,
+        "https://api.etherscan.io/api?module=account&action=txlist&address=%s"
+        "&startblock=0&endblock=99999999&page=%d&offset=100&sort=desc",
+        addr, page);
+    cJSON *j = get_json(http, url);
+    if (!j) break;
+    const cJSON *txs = cJSON_GetObjectItem(j, "result");
+    int n = (txs && cJSON_IsArray(txs)) ? cJSON_GetArraySize(txs) : 0;
+    for (int i = 0; i < n; i++)
       emitted += emit_eth_tx(sink, addr, cJSON_GetArrayItem(txs, i));
+    cJSON_Delete(j);
+    if (n < 100) break;               /* short page = upstream exhausted */
   }
-  cJSON_Delete(j);
   return emitted;
 }
 

@@ -109,57 +109,63 @@ static cJSON *search_pubmed(http_client *h, const char *q, int limit) {
   return results;
 }
 
-/* arXiv Atom XML — same substring extraction as upstream. */
+/* arXiv Atom XML — same substring extraction as upstream, but paged: `limit`
+ * used to be both the page size AND the total, so a query matching 300 papers
+ * reported 10 (docs/SOURCE_EXHAUSTIVENESS.md). */
 static cJSON *search_arxiv(http_client *h, const char *q, int limit) {
   cJSON *results = cJSON_CreateArray();
   char enc[1024]; uri_encode(q, enc, sizeof enc);
-  char url[1100];
-  snprintf(url, sizeof url,
-    "http://export.arxiv.org/api/query?search_query=%s&start=0&max_results=%d",
-    enc, limit);
-  http_response hr = {0};
-  int hc = http_request(h, "GET", url, NULL, NULL, 0, 20000, 1, &hr);
-  if (hc != 0 || hr.status != 200 || !hr.body) { http_response_free(&hr); return results; }
-  char *body = hr.body, *entry = body;
-  while ((entry = strstr(entry, "<entry>")) != NULL) {
-    char *ee = strstr(entry, "</entry>");
-    if (!ee) break;
-    cJSON *it = cJSON_CreateObject();
-    cJSON_AddStringToObject(it, "source", "arxiv");
-    char *ts = strstr(entry, "<title>"), *te = strstr(entry, "</title>");
-    if (ts && te && ts < ee) {
-      ts += 7; size_t L = te - ts;
-      char *t = malloc(L + 1); memcpy(t, ts, L); t[L] = 0;
-      cJSON_AddStringToObject(it, "title", t); free(t);
+  int page_size = limit > 0 ? limit : 100;
+  for (int start = 0; start < page_size * 20; start += page_size) {
+    int before = cJSON_GetArraySize(results);
+    char url[1100];
+    snprintf(url, sizeof url,
+      "http://export.arxiv.org/api/query?search_query=%s&start=%d&max_results=%d",
+      enc, start, page_size);
+    http_response hr = {0};
+    int hc = http_request(h, "GET", url, NULL, NULL, 0, 20000, 1, &hr);
+    if (hc != 0 || hr.status != 200 || !hr.body) { http_response_free(&hr); break; }
+    char *body = hr.body, *entry = body;
+    while ((entry = strstr(entry, "<entry>")) != NULL) {
+      char *ee = strstr(entry, "</entry>");
+      if (!ee) break;
+      cJSON *it = cJSON_CreateObject();
+      cJSON_AddStringToObject(it, "source", "arxiv");
+      char *ts = strstr(entry, "<title>"), *te = strstr(entry, "</title>");
+      if (ts && te && ts < ee) {
+        ts += 7; size_t L = te - ts;
+        char *t = malloc(L + 1); memcpy(t, ts, L); t[L] = 0;
+        cJSON_AddStringToObject(it, "title", t); free(t);
+      }
+      char *is = strstr(entry, "<id>"), *ie = strstr(entry, "</id>");
+      if (is && ie && is < ee) {
+        is += 4; size_t L = ie - is;
+        char *id = malloc(L + 1); memcpy(id, is, L); id[L] = 0;
+        cJSON_AddStringToObject(it, "url", id);
+        char *ax = strstr(id, "abs/");
+        if (ax) cJSON_AddStringToObject(it, "arxiv_id", ax + 4);
+        free(id);
+      }
+      char *ps = strstr(entry, "<published>"), *pe = strstr(entry, "</published>");
+      if (ps && pe && ps < ee) {
+        ps += 11; size_t L = pe - ps;
+        char d[32]; size_t c = L > 10 ? 10 : L;
+        memcpy(d, ps, c); d[10] = 0;
+        cJSON_AddStringToObject(it, "date", d);
+      }
+      char *ss = strstr(entry, "<summary>"), *se = strstr(entry, "</summary>");
+      if (ss && se && ss < ee) {
+        ss += 9; size_t L = se - ss; if (L > 500) L = 500;
+        char *s = malloc(L + 4); memcpy(s, ss, L); s[L] = 0;
+        if (L == 500) strcat(s, "...");
+        cJSON_AddStringToObject(it, "abstract", s); free(s);
+      }
+      cJSON_AddItemToArray(results, it);
+      entry = ee + 1;
     }
-    char *is = strstr(entry, "<id>"), *ie = strstr(entry, "</id>");
-    if (is && ie && is < ee) {
-      is += 4; size_t L = ie - is;
-      char *id = malloc(L + 1); memcpy(id, is, L); id[L] = 0;
-      cJSON_AddStringToObject(it, "url", id);
-      char *ax = strstr(id, "abs/");
-      if (ax) cJSON_AddStringToObject(it, "arxiv_id", ax + 4);
-      free(id);
-    }
-    char *ps = strstr(entry, "<published>"), *pe = strstr(entry, "</published>");
-    if (ps && pe && ps < ee) {
-      ps += 11; size_t L = pe - ps;
-      char d[32]; size_t c = L > 10 ? 10 : L;
-      memcpy(d, ps, c); d[10] = 0;
-      cJSON_AddStringToObject(it, "date", d);
-    }
-    char *ss = strstr(entry, "<summary>"), *se = strstr(entry, "</summary>");
-    if (ss && se && ss < ee) {
-      ss += 9; size_t L = se - ss; if (L > 500) L = 500;
-      char *s = malloc(L + 4); memcpy(s, ss, L); s[L] = 0;
-      if (L == 500) strcat(s, "...");
-      cJSON_AddStringToObject(it, "abstract", s); free(s);
-    }
-    cJSON_AddItemToArray(results, it);
-    entry = ee + 1;
-    if (cJSON_GetArraySize(results) >= limit) break;
+    http_response_free(&hr);
+    if (cJSON_GetArraySize(results) - before < page_size) break;   /* exhausted */
   }
-  http_response_free(&hr);
   return results;
 }
 
@@ -188,9 +194,13 @@ static cJSON *search_crossref(http_client *h, const char *q, int limit) {
       }
       cJSON *ta = cJSON_GetObjectItem(w, "title");
       if (ta && cJSON_IsArray(ta) && cJSON_GetArraySize(ta) > 0) {
-        cJSON *t = cJSON_GetArrayItem(ta, 0);
+        cJSON *t = cJSON_GetArrayItem(ta, 0);  /* exhaustive-ok: display pick; titles_all carries every value */
         if (t && t->valuestring) cJSON_AddStringToObject(it, "title", t->valuestring);
       }
+      /* Crossref titles are multi-valued (subtitle, translations) — carry all,
+       * not just the display pick (docs/SOURCE_EXHAUSTIVENESS.md). */
+      if (ta && cJSON_IsArray(ta) && cJSON_GetArraySize(ta) > 1)
+        cJSON_AddItemToObject(it, "titles_all", cJSON_Duplicate(ta, 1));
       cJSON *pub = cJSON_GetObjectItem(w, "publisher");
       if (pub && pub->valuestring) cJSON_AddStringToObject(it, "publisher", pub->valuestring);
       cJSON *ty = cJSON_GetObjectItem(w, "type");

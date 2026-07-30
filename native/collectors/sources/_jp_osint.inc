@@ -15,6 +15,8 @@
 #ifndef JO_JP_OSINT_INC
 #define JO_JP_OSINT_INC
 
+#include "../../lib/htmlparse.h"   /* the one anchor scanner + dedupe set */
+
 /* cJSON string field, or NULL when absent/empty. */
 static inline const char *jo_sv(const cJSON *o, const char *k) {
   const cJSON *v = cJSON_GetObjectItem(o, k);
@@ -113,7 +115,14 @@ static inline const char *jo_next_entry(const char **cur) {
  * visible text or href contains the query bytes. Everything emitted (link text,
  * href) is REAL content extracted from the page; nothing is synthesized. Pages
  * that are JS-rendered or shaped differently simply yield 0 (honest empty).
- * Returns the number emitted. `base` is prepended to root-relative hrefs. */
+ * Returns the number emitted. `base` is prepended to root-relative hrefs.
+ *
+ * EXHAUSTIVE USE (docs/SOURCE_EXHAUSTIVENESS.md): `max <= 0` means EVERY
+ * matching anchor on the page — the caller does not get an implicit cap. When a
+ * caller does pass a positive max and the page had more, the shortfall is
+ * logged with both numbers so the discard is visible. The dedupe table grows
+ * instead of wrapping at a fixed 64, so a long listing cannot re-emit or drop
+ * its tail. */
 static inline int jo_emit_anchors(const source_ctx *ctx, intel_sink *sink,
                            const char *url, const char *href_must,
                            const char *service, const char *record_type,
@@ -121,45 +130,23 @@ static inline int jo_emit_anchors(const source_ctx *ctx, intel_sink *sink,
                            int max, const char *tag) {
   char *html = jo_get(ctx, url, NULL, tag);
   if (!html) return 0;
-  int emitted = 0;
+  int emitted = 0, matched = 0;
+  /* Scanning + dedupe come from lib/htmlparse — the SAME code lib/hpengine.c
+   * uses for its HP_HTML rows. There used to be two copies of this scanner and
+   * a fix (the fixed 64-slot dedupe ring that dropped a long listing's tail)
+   * had to be applied to both. */
+  html_seen seen = {0};
+  html_anchor a;
   const char *p = html;
-  /* small dedupe ring of hrefs already emitted */
-  char *seen[64]; int nseen = 0;
-  while (emitted < max && (p = strstr(p, "<a ")) != NULL) {
-    const char *h = strstr(p, "href=\"");
-    const char *tagend = strchr(p, '>');
-    p += 3;
-    if (!h || !tagend || h > tagend) continue;
-    h += 6;
-    const char *he = strchr(h, '"');
-    if (!he) continue;
-    size_t hlen = (size_t)(he - h);
-    if (hlen == 0 || hlen > 800) continue;
-    /* anchor text up to </a> */
-    const char *atext = strchr(he, '>');
-    const char *aclose = atext ? strstr(atext, "</a>") : NULL;
-    if (!atext || !aclose) continue;
-    atext += 1;
-    /* crude tag-strip of inner text */
-    char text[512]; size_t tj = 0; int intag = 0;
-    for (const char *q = atext; q < aclose && tj < sizeof text - 1; q++) {
-      if (*q == '<') intag = 1;
-      else if (*q == '>') intag = 0;
-      else if (!intag && (unsigned char)*q != '\n' && (unsigned char)*q != '\t') text[tj++] = *q;
-    }
-    while (tj && (text[tj-1] == ' ')) tj--;
-    text[tj] = 0;
+  while ((p = html_anchor_next(p, &a)) != NULL) {
     char href[820];
-    snprintf(href, sizeof href, "%.*s", (int)hlen, h);
-    p = aclose + 4;
+    snprintf(href, sizeof href, "%.*s", (int)a.href_len, a.href);
     if (href_must && !strstr(href, href_must)) continue;
-    if (tj < 3) continue;
-    if (query && *query && !strstr(text, query) && !strstr(href, query)) continue;
-    /* dedupe */
-    int dup = 0;
-    for (int i = 0; i < nseen; i++) if (strcmp(seen[i], href) == 0) { dup = 1; break; }
-    if (dup) continue;
-    if (nseen < 64) seen[nseen++] = strdup(href);
+    if (a.text_len < 3) continue;
+    if (query && *query && !strstr(a.text, query) && !strstr(href, query)) continue;
+    if (!html_seen_add(&seen, href)) continue;
+    matched++;
+    if (max > 0 && emitted >= max) continue;   /* count what we are skipping */
 
     char link[900];
     if (strncmp(href, "http", 4) == 0) snprintf(link, sizeof link, "%s", href);
@@ -169,13 +156,14 @@ static inline int jo_emit_anchors(const source_ctx *ctx, intel_sink *sink,
     cJSON_AddStringToObject(props, "service", service);
     if (query) cJSON_AddStringToObject(props, "query", query);
     cJSON_AddStringToObject(props, "href", link);
+    cJSON_AddStringToObject(props, "endpoint", url);
     cJSON_AddBoolToObject(props, "success", 1);
     char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
     intel_item it = {0};
     it.remote_key      = link;
-    it.title           = text;
+    it.title           = a.text;
     it.link            = link;
     it.lang            = "ja";
     it.record_type     = record_type;
@@ -184,9 +172,40 @@ static inline int jo_emit_anchors(const source_ctx *ctx, intel_sink *sink,
     if (sink->emit(sink, &it) >= 0) emitted++;
     free(pj);
   }
-  for (int i = 0; i < nseen; i++) free(seen[i]);
+  html_seen_free(&seen);
   free(html);
-  fprintf(stderr, "[%s] emitted %d\n", tag, emitted);
+  if (max > 0 && matched > emitted) {
+    /* The caller left real hits on the page. Say so with both numbers, and
+     * emit it as data too (docs/SOURCE_EXHAUSTIVENESS.md): a log line nobody
+     * reads is not a disclosure. */
+    fprintf(stderr, "[%s] emitted %d of %d matching anchors — %d DISCARDED by the "
+                    "caller's cap (docs/SOURCE_EXHAUSTIVENESS.md)\n",
+            tag, emitted, matched, matched - emitted);
+    cJSON *p2 = cJSON_CreateObject();
+    cJSON_AddStringToObject(p2, "service", service);
+    if (query) cJSON_AddStringToObject(p2, "query", query);
+    cJSON_AddStringToObject(p2, "endpoint", url);
+    cJSON_AddNumberToObject(p2, "records_used", emitted);
+    cJSON_AddNumberToObject(p2, "records_available", matched);
+    cJSON_AddStringToObject(p2, "reason", "caller-supplied per-page cap");
+    char *pj2 = cJSON_PrintUnformatted(p2);
+    cJSON_Delete(p2);
+    char key[320], title[256];
+    snprintf(key, sizeof key, "%.150s|truncation:%.120s", service, query ? query : "");
+    snprintf(title, sizeof title, "%s used %d of %d available anchors",
+             service, emitted, matched);
+    intel_item note = {0};
+    note.remote_key      = key;
+    note.title           = title;
+    note.lang            = "en";
+    note.record_type     = "collector-truncation-notice";
+    note.properties_json = pj2 ? pj2 : "{}";
+    note.tags_json       = "[\"osint-search\",\"truncation-notice\"]";
+    sink->emit(sink, &note);
+    free(pj2);
+  } else {
+    fprintf(stderr, "[%s] emitted %d\n", tag, emitted);
+  }
   return emitted;
 }
 

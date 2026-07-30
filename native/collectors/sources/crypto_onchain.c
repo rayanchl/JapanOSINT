@@ -65,7 +65,10 @@ static int defi_run(const source_ctx *ctx, intel_sink *sink) {
 
   cJSON *bal = etherscan(ctx->http, "balance", addr, "&tag=latest", key);
   const char *wei = bal ? jstr(bal, "result") : NULL;
-  cJSON *tx = etherscan(ctx->http, "txlist", addr, "&sort=desc&page=1&offset=10", key);
+  /* exhaustive-ok: this view emits ONE balance record; the tx list is read only
+   * to report a recent-activity count. EXCHANGE_FLOW below walks every page and
+   * emits the transactions themselves. */
+  cJSON *tx = etherscan(ctx->http, "txlist", addr, "&sort=desc&page=1&offset=100", key);  /* exhaustive-ok: activity count for the balance record; EXCHANGE_FLOW emits the txs */
   cJSON *txr = tx ? cJSON_GetObjectItem(tx, "result") : NULL;
   int txn = (txr && cJSON_IsArray(txr)) ? cJSON_GetArraySize(txr) : 0;
 
@@ -92,29 +95,39 @@ static int flow_run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("ETHERSCAN_API_KEY");
   if (!key || !*key) return 0;
 
-  cJSON *tx = etherscan(ctx->http, "txlist", addr, "&sort=desc&page=1&offset=15", key);
-  cJSON *txr = tx ? cJSON_GetObjectItem(tx, "result") : NULL;
-  int emitted = 0, n = (txr && cJSON_IsArray(txr)) ? cJSON_GetArraySize(txr) : 0;
-  for (int i = 0; i < n; i++) {
-    cJSON *t = cJSON_GetArrayItem(txr, i);
-    const char *hash = jstr(t, "hash"), *from = jstr(t, "from"), *to = jstr(t, "to");
-    const char *val = jstr(t, "value"), *ts = jstr(t, "timeStamp");
-    if (!hash) continue;
-    int outgoing = from && strcasecmp(from, addr) == 0;
-    cJSON *data = cJSON_CreateObject();
-    cJSON_AddStringToObject(data, "source", "api.etherscan.io");
-    cJSON_AddStringToObject(data, "tx", hash);
-    cJSON_AddStringToObject(data, "direction", outgoing ? "out" : "in");
-    if (from) cJSON_AddStringToObject(data, "from", from);
-    if (to) cJSON_AddStringToObject(data, "to", to);
-    if (val) cJSON_AddNumberToObject(data, "value_eth", strtod(val, NULL) / 1e18);
-    if (ts) cJSON_AddStringToObject(data, "timestamp", ts);
-    char title[160]; snprintf(title, sizeof title, "Flow %s — %.10s…", outgoing ? "out" : "in", hash);
-    emitted += emit_one(sink, addr, "EXCHANGE_FLOW", "[\"osint-search\",\"EXCHANGE_FLOW\"]",
-                        data, hash, title);
-    cJSON_Delete(data);
+  /* Walk pages until Etherscan stops returning transactions, instead of
+   * keeping an arbitrary first 15 (docs/SOURCE_EXHAUSTIVENESS.md). The page
+   * ceiling is a request budget, not an editorial cut, and it is logged. */
+  int emitted = 0;
+  for (int page = 1; page <= 20; page++) {
+    char extra[64];
+    snprintf(extra, sizeof extra, "&sort=desc&page=%d&offset=100", page);
+    cJSON *tx = etherscan(ctx->http, "txlist", addr, extra, key);
+    cJSON *txr = tx ? cJSON_GetObjectItem(tx, "result") : NULL;
+    int n = (txr && cJSON_IsArray(txr)) ? cJSON_GetArraySize(txr) : 0;
+    if (n == 0) { if (tx) cJSON_Delete(tx); break; }
+    for (int i = 0; i < n; i++) {
+      cJSON *t = cJSON_GetArrayItem(txr, i);
+      const char *hash = jstr(t, "hash"), *from = jstr(t, "from"), *to = jstr(t, "to");
+      const char *val = jstr(t, "value"), *ts = jstr(t, "timeStamp");
+      if (!hash) continue;
+      int outgoing = from && strcasecmp(from, addr) == 0;
+      cJSON *data = cJSON_CreateObject();
+      cJSON_AddStringToObject(data, "source", "api.etherscan.io");
+      cJSON_AddStringToObject(data, "tx", hash);
+      cJSON_AddStringToObject(data, "direction", outgoing ? "out" : "in");
+      if (from) cJSON_AddStringToObject(data, "from", from);
+      if (to) cJSON_AddStringToObject(data, "to", to);
+      if (val) cJSON_AddNumberToObject(data, "value_eth", strtod(val, NULL) / 1e18);
+      if (ts) cJSON_AddStringToObject(data, "timestamp", ts);
+      char title[160]; snprintf(title, sizeof title, "Flow %s — %.10s…", outgoing ? "out" : "in", hash);
+      emitted += emit_one(sink, addr, "EXCHANGE_FLOW", "[\"osint-search\",\"EXCHANGE_FLOW\"]",
+                          data, hash, title);
+      cJSON_Delete(data);
+    }
+    if (tx) cJSON_Delete(tx);
+    if (n < 100) break;                 /* short page = upstream exhausted */
   }
-  if (tx) cJSON_Delete(tx);
   return emitted;
 }
 

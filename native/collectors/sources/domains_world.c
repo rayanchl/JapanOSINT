@@ -49,7 +49,8 @@ static int cs_emit(intel_sink *sink, const char *domain, const cJSON *iss) {
       if (need > cap) { cap = need * 2; char *t = realloc(san, cap); if (!t) break; san = t; }
       if (n) { strcpy(san + len, ", "); len += 2; }
       strcpy(san + len, s); len += strlen(s);
-      if (++n >= 64) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   if (!id && !n) { free(san); return 0; }

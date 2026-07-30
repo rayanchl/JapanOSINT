@@ -18,7 +18,18 @@ typedef struct {
   char  service[64];     /* canonical (upper-cased) id */
   int   success;         /* 1 if the service emitted a usable result */
   int   confidence;      /* 0..100 (JS: success?70:0 unless service set it) */
-  char *data;            /* malloc'd JSON string of the emitted result, or NULL */
+  /* malloc'd JSON string of EVERY record the service emitted, or NULL:
+   *   {"record_count":N,"records":[<payload>, …]}
+   *
+   * EXHAUSTIVE-USE RULE (docs/SOURCE_EXHAUSTIVENESS.md): this used to keep
+   * only the LAST emitted payload, so a service that returned 40 records
+   * handed exactly one of them to Phase-2 chaining, the synthesis prompt and
+   * /api/search/results — 39 records were fetched, persisted, and then thrown
+   * away at the seam. The capture layer is never allowed to decide what is
+   * interesting; it keeps everything and lets the consumer bound its own view
+   * explicitly (see results_view_for_prompt in pipeline.c). */
+  char *data;
+  int   records;         /* how many records `data` carries                  */
   char *error;           /* malloc'd; "not_implemented" when no such source */
   /* malloc'd JSON array of the underlying sources/providers the service hit,
    * one entry per distinct attribution: [{ "name", "status", "records",

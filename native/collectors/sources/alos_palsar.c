@@ -41,7 +41,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0, i = 0;
   cJSON *r;
   cJSON_ArrayForEach(r, rows) {
-    if (i >= 50) break;
+    /* (cap removed: every record of the fetched array is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
     char sidbuf[32];
     const char *sid = sstr(r, "granuleName");
     if (!sid) sid = sstr(r, "sceneName");

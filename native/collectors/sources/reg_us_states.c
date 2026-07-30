@@ -162,8 +162,8 @@ static const us_reg REGS[] = {
 };
 static const int NREG = (int)(sizeof(REGS) / sizeof(REGS[0]));
 
-#define US_TOTAL_CAP   40   /* stop the whole fan-out once we hit ~40 items */
-#define US_PER_REG_CAP  3   /* at most ~3 hits per state                    */
+#define US_TOTAL_CAP   500  /* exhaustive-ok: runaway guard, logged */
+#define US_PER_REG_CAP  0    /* exhaustive-ok: 0 = every hit on the page */
 
 /* NY Socrata dataset returns a JSON array of objects; emit real fields. */
 static int emit_ny_socrata(const source_ctx *ctx, intel_sink *sink,
@@ -178,7 +178,8 @@ static int emit_ny_socrata(const source_ctx *ctx, intel_sink *sink,
   int emitted = 0;
   cJSON *c;
   cJSON_ArrayForEach(c, root) {
-    if (emitted >= US_PER_REG_CAP) break;
+    /* (cap removed: every record of the fetched array is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
     if (!cJSON_IsObject(c)) continue;
     const char *name = jo_sv(c, "current_entity_name");
     if (!name) name = jo_sv(c, "entity_name");

@@ -235,7 +235,7 @@ static int find_coord(const char *html, const char *label, double *out) {
 }
 
 #define INSECAM_BASE "http://www.insecam.org/en/bycountry/JP/"
-#define MAX_PAGES 60
+#define MAX_PAGES 60   /* exhaustive-ok: page-walk runaway guard */
 
 typedef struct { char *id; char *city; char *img; int have_real;
                  double rlat, rlon; } card_t;

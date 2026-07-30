@@ -28,7 +28,7 @@ static const char *AW_UA =
 /* Crossref work title/author arrays are arrays-of-strings / arrays-of-objects. */
 static char *aw_crossref_first_str(const cJSON *arr) {
   if (!cJSON_IsArray(arr)) return NULL;
-  const cJSON *e = cJSON_GetArrayItem(arr, 0);
+  const cJSON *e = cJSON_GetArrayItem(arr, 0);  /* exhaustive-ok: Crossref wraps single-valued fields in an array; callers duplicate the array into the record */
   if (e && cJSON_IsString(e) && e->valuestring && e->valuestring[0])
     return e->valuestring;
   return NULL;
@@ -51,7 +51,8 @@ static char *aw_crossref_authors(const cJSON *w) {
     if (need > cap) { cap = need * 2; char *t = realloc(out, cap); if (!t) break; out = t; }
     if (n) { strcpy(out + len, ", "); len += 2; }
     strcpy(out + len, buf); len += strlen(buf);
-    if (++n >= 20) break;
+    /* (cap removed: every record of the fetched array is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
   }
   if (!n) { free(out); return NULL; }
   return out;
@@ -136,7 +137,8 @@ static char *aw_s2_authors(const cJSON *p) {
     if (need > cap) { cap = need * 2; char *t = realloc(out, cap); if (!t) break; out = t; }
     if (n) { strcpy(out + len, ", "); len += 2; }
     strcpy(out + len, nm); len += strlen(nm);
-    if (++n >= 20) break;
+    /* (cap removed: every record of the fetched array is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
   }
   if (!n) { free(out); return NULL; }
   return out;
@@ -614,7 +616,7 @@ static int ac_orcid(const source_ctx *ctx, intel_sink *sink, const char *q) {
       const char *inst = NULL;
       cJSON *insts = cJSON_GetObjectItem(r, "institution-name");
       if (cJSON_IsArray(insts)) {
-        cJSON *first = cJSON_GetArrayItem(insts, 0);
+        cJSON *first = cJSON_GetArrayItem(insts, 0);  /* exhaustive-ok: display pick; institutions_all carries every affiliation */
         if (first && cJSON_IsString(first) && first->valuestring[0])
           inst = first->valuestring;
       }
@@ -626,6 +628,8 @@ static int ac_orcid(const source_ctx *ctx, intel_sink *sink, const char *q) {
       cJSON_AddStringToObject(data, "name", name);
       cJSON_AddStringToObject(data, "orcid", oid);
       if (inst) cJSON_AddStringToObject(data, "institution", inst);
+      if (cJSON_IsArray(insts) && cJSON_GetArraySize(insts) > 1)
+        cJSON_AddItemToObject(data, "institutions_all", cJSON_Duplicate(insts, 1));
       cJSON_AddStringToObject(data, "source", "ORCID");
       char *bj = cJSON_PrintUnformatted(data);
       cJSON_Delete(data);
@@ -710,7 +714,7 @@ static int ac_ror(const source_ctx *ctx, intel_sink *sink, const char *q) {
       int has_geo = 0; double lat = 0, lon = 0;
       cJSON *locs = cJSON_GetObjectItem(r, "locations");
       if (cJSON_IsArray(locs)) {
-        cJSON *l0 = cJSON_GetArrayItem(locs, 0);
+        cJSON *l0 = cJSON_GetArrayItem(locs, 0);  /* exhaustive-ok: display pick; locations_all carries every site */
         cJSON *gd = l0 ? cJSON_GetObjectItem(l0, "geonames_details") : NULL;
         if (gd) {
           country = jo_sv(gd, "country_name");
@@ -748,6 +752,13 @@ static int ac_ror(const source_ctx *ctx, intel_sink *sink, const char *q) {
       if (est && cJSON_IsNumber(est))
         cJSON_AddNumberToObject(data, "established", est->valuedouble);
       if (website) cJSON_AddStringToObject(data, "website", website);
+      /* An institution can have several sites and several links; `location`
+       * and `website` are display picks, so carry the full arrays as well
+       * (docs/SOURCE_EXHAUSTIVENESS.md). */
+      if (cJSON_IsArray(locs) && cJSON_GetArraySize(locs) > 0)
+        cJSON_AddItemToObject(data, "locations_all", cJSON_Duplicate(locs, 1));
+      if (cJSON_IsArray(links) && cJSON_GetArraySize(links) > 0)
+        cJSON_AddItemToObject(data, "links_all", cJSON_Duplicate(links, 1));
       cJSON_AddStringToObject(data, "source", "ROR");
       char *bj = cJSON_PrintUnformatted(data);
       cJSON_Delete(data);
@@ -830,7 +841,7 @@ static int ac_doaj(const source_ctx *ctx, intel_sink *sink, const char *q) {
       const char *fulltext = NULL;
       cJSON *lnks = cJSON_GetObjectItem(bib, "link");
       if (cJSON_IsArray(lnks)) {
-        cJSON *lk = cJSON_GetArrayItem(lnks, 0);
+        cJSON *lk = cJSON_GetArrayItem(lnks, 0);  /* exhaustive-ok: display pick; links_all carries every link */
         if (lk) fulltext = jo_sv(lk, "url");
       }
 
@@ -860,6 +871,9 @@ static int ac_doaj(const source_ctx *ctx, intel_sink *sink, const char *q) {
 
       cJSON *data = cJSON_CreateObject();
       cJSON_AddStringToObject(data, "title", title);
+      /* every full-text link the record listed, not just the first */
+      if (cJSON_IsArray(lnks) && cJSON_GetArraySize(lnks) > 0)
+        cJSON_AddItemToObject(data, "links_all", cJSON_Duplicate(lnks, 1));
       if (doi)     cJSON_AddStringToObject(data, "doi", doi);
       if (year)    cJSON_AddStringToObject(data, "year", year);
       if (jtitle)  cJSON_AddStringToObject(data, "journal", jtitle);
@@ -935,7 +949,7 @@ static int ac_opencitations(const source_ctx *ctx, intel_sink *sink, const char 
     cJSON *mroot = cJSON_Parse(mbody);
     free(mbody);
     if (mroot && cJSON_IsArray(mroot)) {
-      cJSON *m0 = cJSON_GetArrayItem(mroot, 0);
+      cJSON *m0 = cJSON_GetArrayItem(mroot, 0);  /* exhaustive-ok: title->paper resolution step */
       if (m0) {
         const char *t = jo_sv(m0, "title");
         const char *v = jo_sv(m0, "venue");

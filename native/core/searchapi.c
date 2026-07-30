@@ -37,6 +37,24 @@ typedef struct {
  * collector in one run no longer stalls another run's analysis. Each thread
  * keeps its own http_client (== scheduler) so a slow collector's connection
  * pool stays isolated to that run. */
+/* In-flight run accounting. Each analyze spawns a detached thread that holds a
+ * pipeline, an http_client and an LLM lane for minutes; without a cap, N
+ * unauthenticated-adjacent POSTs = N threads. Cap it and answer 429 instead. */
+static pthread_mutex_t g_inflight_mu = PTHREAD_MUTEX_INITIALIZER;
+static int g_inflight = 0;
+
+static int max_concurrent(void) {
+  const char *e = getenv("JO_SEARCH_MAX_CONCURRENT");
+  int v = (e && *e) ? atoi(e) : 0;
+  return v > 0 ? v : 4;
+}
+
+static void inflight_release(void) {
+  pthread_mutex_lock(&g_inflight_mu);
+  if (g_inflight > 0) g_inflight--;
+  pthread_mutex_unlock(&g_inflight_mu);
+}
+
 static void *run_thread(void *vp) {
   run_arg *a = vp;
   http_client *http = http_client_new();   /* own client (== scheduler) */
@@ -46,18 +64,32 @@ static void *run_thread(void *vp) {
   http_client_free(http);
   free(a->query);
   free(a);
+  inflight_release();
   return NULL;
 }
 
-char *searchapi_analyze(db_handle *db, const char *query, int max_rounds) {
+char *searchapi_analyze(db_handle *db, const char *query, int max_rounds,
+                        int *status_out) {
+  if (status_out) *status_out = 400;
   if (!query) return NULL;
   while (*query == ' ' || *query == '\t' || *query == '\n' || *query == '\r') query++;
   if (!*query) return NULL;
 
+  pthread_mutex_lock(&g_inflight_mu);
+  int full = g_inflight >= max_concurrent();
+  if (!full) g_inflight++;
+  pthread_mutex_unlock(&g_inflight_mu);
+  if (full) {
+    if (status_out) *status_out = 429;
+    return NULL;
+  }
+
   char id[40];
   gen_id(id);
-  if (!progress_create(id, query, max_rounds > 0 ? max_rounds : 5))
+  if (!progress_create(id, query, max_rounds > 0 ? max_rounds : 5)) {
+    inflight_release();
     return NULL;
+  }
 
   run_arg *a = calloc(1, sizeof *a);
   a->db = db;
@@ -69,9 +101,11 @@ char *searchapi_analyze(db_handle *db, const char *query, int max_rounds) {
     pthread_detach(t);
   } else {
     free(a->query); free(a);
+    inflight_release();
     return NULL;
   }
 
+  if (status_out) *status_out = 200;
   cJSON *o = cJSON_CreateObject();
   cJSON_AddStringToObject(o, "request_id", id);
   cJSON_AddStringToObject(o, "status", "processing");

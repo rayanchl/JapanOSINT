@@ -112,7 +112,7 @@ static const cn_reg REGS[] = {
 static const int N_REGS = (int)(sizeof(REGS) / sizeof(REGS[0]));
 
 #define CN_PER_REG   3    /* cap anchors emitted per registry            */
-#define CN_TOTAL_CAP 40   /* cap total anchors emitted for one pivot     */
+#define CN_TOTAL_CAP 500   /* exhaustive-ok: runaway guard, logged */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;

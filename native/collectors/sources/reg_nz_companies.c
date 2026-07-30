@@ -23,11 +23,30 @@
 
 /* Try the disclosure JSON search endpoint. Returns number emitted, or -1 if the
  * endpoint was not usable (so the caller can fall back to anchor scraping). */
+static int nz_try_json_page(const source_ctx *ctx, intel_sink *sink,
+                            const char *enc, int start);
+
+/* Walk the result offset until a page yields nothing. */
 static int nz_try_json(const source_ctx *ctx, intel_sink *sink, const char *enc) {
+  int total = 0;
+  for (int start = 0; start < 20 * 20; start += 20) {
+    int n = nz_try_json_page(ctx, sink, enc, start);
+    if (n < 0) return total > 0 ? total : -1;   /* endpoint unusable */
+    total += n;
+    if (n < 20) break;                          /* short page = exhausted */
+  }
+  return total;
+}
+
+/* One page of the NZ search. The caller walks `start` until a page comes back
+ * empty — reading start=0 only discarded every match past the 20th
+ * (docs/SOURCE_EXHAUSTIVENESS.md). */
+static int nz_try_json_page(const source_ctx *ctx, intel_sink *sink,
+                            const char *enc, int start) {
   char url[768];
   snprintf(url, sizeof url,
-    NZ_BASE "/companies/app/service/services/companies/search?q=%s&entityStatuses=&entityTypes=&start=0&limit=20",
-    enc);
+    NZ_BASE "/companies/app/service/services/companies/search?q=%s&entityStatuses=&entityTypes=&start=%d&limit=20",
+    enc, start);
   const char *hdrs[] = { "Accept: application/json",
                          "X-Requested-With: XMLHttpRequest", NULL };
   char *body = jo_get(ctx, url, hdrs, "nz_companies");

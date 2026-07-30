@@ -101,7 +101,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     feed_hash_key(hk, parts, 1);              /* intelHashKey(joined) */
 
     char title[256], summary[640];
-    cp_slice(cJSON_GetArrayItem(cells, 0)->valuestring, 120, title, sizeof title);
+    cp_slice(cJSON_GetArrayItem(cells, 0)->valuestring, 120, title, sizeof title);  /* exhaustive-ok: title column; all cells are in properties */
     cp_slice(joined, 280, summary, sizeof summary);
 
     cJSON *pj = cJSON_CreateObject();         /* { cells, agency } */

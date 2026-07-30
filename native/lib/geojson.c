@@ -82,7 +82,7 @@ static void feature_uid(cJSON *feat, const char *sid, char *out, size_t n) {
 static void visit(cJSON *node, double *mnx, double *mxx, double *mny,
                    double *mxy, int *cnt) {
   if (!cJSON_IsArray(node)) return;
-  cJSON *a = cJSON_GetArrayItem(node, 0);
+  cJSON *a = cJSON_GetArrayItem(node, 0);  /* exhaustive-ok: [x,y] tuple */
   cJSON *b = cJSON_GetArrayItem(node, 1);
   if (a && b && cJSON_IsNumber(a) && cJSON_IsNumber(b) &&
       isfinite(a->valuedouble) && isfinite(b->valuedouble)) {

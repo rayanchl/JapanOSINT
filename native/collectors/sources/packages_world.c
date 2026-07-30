@@ -70,7 +70,8 @@ static int run_npm(const source_ctx *ctx, intel_sink *sink, const char *enc) {
       cJSON_AddStringToObject(p, "package", name);
       char link[300]; snprintf(link, sizeof link, "https://www.npmjs.com/package/%s", name);
       emitted += pk_emit(sink, "NPM_REGISTRY", "npm-package", name, name, desc ? desc : author, link, d, p);
-      if (emitted >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -139,7 +140,8 @@ static int run_crates(const source_ctx *ctx, intel_sink *sink, const char *enc) 
       cJSON_AddStringToObject(p, "crate", id);
       char link[300]; snprintf(link, sizeof link, "https://crates.io/crates/%s", id);
       emitted += pk_emit(sink, "CRATES_IO", "rust-crate", id, id, desc, link, d, p);
-      if (emitted >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -173,7 +175,8 @@ static int run_rubygems(const source_ctx *ctx, intel_sink *sink, const char *enc
     if (proj) snprintf(link, sizeof link, "%s", proj);
     else snprintf(link, sizeof link, "https://rubygems.org/gems/%s", name);
     emitted += pk_emit(sink, "RUBYGEMS", "ruby-gem", name, name, info, link, d, p);
-    if (emitted >= 20) break;
+    /* (cap removed: every record of the fetched array is emitted —
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
   }
   cJSON_Delete(root);
   return emitted;
@@ -205,7 +208,8 @@ static int run_packagist(const source_ctx *ctx, intel_sink *sink, const char *en
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "package", name);
       emitted += pk_emit(sink, "PACKAGIST", "php-package", name, name, desc, urlf, d, p);
-      if (emitted >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -242,7 +246,8 @@ static int run_dockerhub(const source_ctx *ctx, intel_sink *sink, const char *en
       if (strchr(name, '/')) snprintf(link, sizeof link, "https://hub.docker.com/r/%s", name);
       else snprintf(link, sizeof link, "https://hub.docker.com/_/%s", name);
       emitted += pk_emit(sink, "DOCKERHUB", "docker-image", name, name, desc, link, d, p);
-      if (emitted >= 20) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);

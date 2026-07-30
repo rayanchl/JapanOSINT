@@ -24,11 +24,11 @@ static int is_closed(cJSON *coords) {
   if (!coords || !cJSON_IsArray(coords)) return 0;
   int len = cJSON_GetArraySize(coords);
   if (len < 4) return 0;
-  cJSON *a = cJSON_GetArrayItem(coords, 0);
+  cJSON *a = cJSON_GetArrayItem(coords, 0);  /* exhaustive-ok: ring closure test (first vs last vertex) */
   cJSON *b = cJSON_GetArrayItem(coords, len - 1);
   if (!a || !b) return 0;
-  cJSON *a0 = cJSON_GetArrayItem(a, 0), *a1 = cJSON_GetArrayItem(a, 1);
-  cJSON *b0 = cJSON_GetArrayItem(b, 0), *b1 = cJSON_GetArrayItem(b, 1);
+  cJSON *a0 = cJSON_GetArrayItem(a, 0), *a1 = cJSON_GetArrayItem(a, 1);  /* exhaustive-ok: [lon,lat] tuple */
+  cJSON *b0 = cJSON_GetArrayItem(b, 0), *b1 = cJSON_GetArrayItem(b, 1);  /* exhaustive-ok: [lon,lat] tuple */
   if (!a0 || !a1 || !b0 || !b1) return 0;
   return a0->valuedouble == b0->valuedouble
       && a1->valuedouble == b1->valuedouble;

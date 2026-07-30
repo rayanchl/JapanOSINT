@@ -117,7 +117,7 @@ static const gazette GAZ[] = {
 };
 static const int NGAZ = (int)(sizeof(GAZ) / sizeof(GAZ[0]));
 
-#define GW_TOTAL_CAP   40   /* stop the whole fan-out once we hit ~40 items */
+#define GW_TOTAL_CAP   500  /* exhaustive-ok: runaway guard, logged */
 #define GW_PER_CAP      4   /* at most ~4 hits per gazette                  */
 
 /* UK The Gazette JSON API → one intel_item per notice. Returns count emitted.

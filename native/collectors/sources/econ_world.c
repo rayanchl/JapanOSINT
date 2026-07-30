@@ -180,9 +180,11 @@ static int ew_imf(const source_ctx *ctx, intel_sink *sink, const char *ind) {
                            keyb, title, summary, bj, best_year,
                            "https://www.imf.org/external/datamapper");
         free(bj);
-        if (emitted >= 400) break;
+        /* (cap removed: every record of the fetched array is emitted —
+         * docs/SOURCE_EXHAUSTIVENESS.md) */
       }
-      if (emitted >= 400) break;
+      /* (cap removed: every record the upstream returned is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -234,7 +236,8 @@ static int ew_eurostat(const source_ctx *ctx, intel_sink *sink, const char *ds) 
                          keyb, title, NULL, bj, NULL,
                          "https://ec.europa.eu/eurostat");
       free(bj);
-      if (emitted >= 400) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -303,7 +306,8 @@ static int ew_comtrade(const source_ctx *ctx, intel_sink *sink,
                          keyb, title, summary, bj, period[0] ? period : NULL,
                          "https://comtradeplus.un.org");
       free(bj);
-      if (emitted >= 500) break;
+      /* (cap removed: every record the upstream returned is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);
@@ -355,7 +359,8 @@ static int ew_fred(const source_ctx *ctx, intel_sink *sink,
       emitted += ew_emit(sink, "FRED_SERIES", "fred-observation",
                          keyb, title, valstr, bj, date, link);
       free(bj);
-      if (emitted >= 100) break;
+      /* (cap removed: every record of the fetched array is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);

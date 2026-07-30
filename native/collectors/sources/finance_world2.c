@@ -103,7 +103,8 @@ static int run_finnhub(const source_ctx *ctx, intel_sink *sink, const char *enc)
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"FINNHUB_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
       free(bj); free(pj);
-      if (emitted >= 20) break;
+      /* (cap removed: every record the upstream returned is emitted —
+       * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
   }
   cJSON_Delete(root);

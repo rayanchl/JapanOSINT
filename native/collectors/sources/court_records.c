@@ -81,9 +81,11 @@ static cJSON *cl_opinions(http_client *h, const char *q) {
     if (df && cJSON_IsString(df)) cJSON_AddStringToObject(ce, "date_filed", df->valuestring);
     if (dn && cJSON_IsString(dn)) cJSON_AddStringToObject(ce, "docket_number", dn->valuestring);
     if (ci && cJSON_IsArray(ci) && cJSON_GetArraySize(ci) > 0) {
-      cJSON *c0 = cJSON_GetArrayItem(ci, 0);
+      cJSON *c0 = cJSON_GetArrayItem(ci, 0);  /* exhaustive-ok: display pick; citations_all carries every value */
       if (cJSON_IsString(c0)) cJSON_AddStringToObject(ce, "citation", c0->valuestring);
     }
+    /* an opinion carries several parallel citations — keep them all */
+    cJSON_AddItemToObject(ce, "citations_all", cJSON_Duplicate(ci, 1));
     if (sn && cJSON_IsString(sn)) {
       char clean[512]; char *src = sn->valuestring, *dst = clean;
       int tag = 0;

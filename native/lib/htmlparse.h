@@ -29,4 +29,32 @@ const char *html_block(const char *from, const char *tag,
  * (or anywhere in s). Copies value into out. Returns 1/0. */
 int html_attr(const char *s, const char *attr, char *out, size_t n);
 
+/* ── anchors ───────────────────────────────────────────────────────────────
+ * THE one `<a href="…">text</a>` scanner in the tree. It used to exist twice:
+ * jo_emit_anchors() in collectors/sources/_jp_osint.inc (the registry sweeps)
+ * and hp_run_html() in lib/hpengine.c (the HP_HTML rows) each had their own
+ * copy, so a fix — e.g. replacing the fixed 64-slot dedupe ring that silently
+ * dropped a long listing's tail — had to be made in both. Now both call this.
+ *
+ * Callers keep their own policy (which hrefs to accept, what to emit); this
+ * only finds anchors. */
+typedef struct {
+  const char *href;      /* into the caller's buffer, NOT NUL-terminated */
+  size_t      href_len;
+  char        text[512]; /* inner text, tags stripped, trimmed            */
+  size_t      text_len;
+} html_anchor;
+
+/* Next anchor at/after `from`. Returns where to resume, or NULL when done.
+ * Anchors whose markup is malformed (no closing quote / no </a>) are skipped,
+ * not silently ending the scan. */
+const char *html_anchor_next(const char *from, html_anchor *out);
+
+/* Dedupe of hrefs already emitted is just the generic growable seen-set
+ * (lib/seenset.h) — one implementation for the whole tree. */
+#include "seenset.h"
+typedef seen_set html_seen;
+#define html_seen_add(s, href) seen_add((s), (href))
+#define html_seen_free(s)      seen_free((s))
+
 #endif
