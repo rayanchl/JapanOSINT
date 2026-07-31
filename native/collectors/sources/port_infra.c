@@ -67,5 +67,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 static const source_def port_infra_def = {
   .id = "port-infra", .collector = "transport",
   .name = "Port Infrastructure", .name_ja = "港湾インフラ",
-   .update_interval_sec = 86400, .run = run };
+   .update_interval_sec = 86400, .run = run,
+  .category = "transport" };
 REGISTER_SOURCE(port_infra_def)

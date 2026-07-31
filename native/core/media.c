@@ -2137,5 +2137,6 @@ static const source_def media_def = {
   .id = "media-analyze", .collector = "_enrich",
   .name = "Media Analysis (EXIF / pHash / OCR)",
   .name_ja = "メディア解析（EXIF・知覚ハッシュ・OCR）",
-  .update_interval_sec = 900, .run = pod_run };
+  .update_interval_sec = 900, .run = pod_run,
+  .category = "enrichment" };
 REGISTER_SOURCE(media_def)

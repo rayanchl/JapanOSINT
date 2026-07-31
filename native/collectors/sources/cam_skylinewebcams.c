@@ -367,5 +367,6 @@ static const source_def cam_skylinewebcams_def = {
   .id = "cam-skylinewebcams", .collector = "infrastructure",
   .name = "Camera Discovery: SkylineWebcams",
   .name_ja = "カメラ探索: SkylineWebcams",
-   .update_interval_sec = 21600, .run = run };
+   .update_interval_sec = 21600, .run = run,
+  .category = "infrastructure" };
 REGISTER_SOURCE(cam_skylinewebcams_def)

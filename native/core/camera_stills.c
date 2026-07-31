@@ -1722,5 +1722,6 @@ static const source_def camera_stills_def = {
   .id = CAM_STILLS_SID, .collector = "_maint",
   .name = "Camera Stills (scheduled snapshots)",
   .name_ja = "カメラ静止画（定期取得）",
-  .update_interval_sec = 300, .run = pod_run };
+  .update_interval_sec = 300, .run = pod_run,
+  .category = "maintenance" };
 REGISTER_SOURCE(camera_stills_def)

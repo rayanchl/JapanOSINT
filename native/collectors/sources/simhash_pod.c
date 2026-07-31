@@ -23,5 +23,6 @@ static const source_def simhash_def = {
   .id = "simhash-backfill", .collector = "_maint",
   .name = "Near-Duplicate Fingerprint Backfill",
   .name_ja = "近似重複フィンガープリント補完",
-  .update_interval_sec = 300, .run = run };
+  .update_interval_sec = 300, .run = run,
+  .category = "maintenance" };
 REGISTER_SOURCE(simhash_def)

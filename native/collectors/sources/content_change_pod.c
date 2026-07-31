@@ -21,5 +21,6 @@ static const source_def content_change_def = {
   .id = "content-change-retention", .collector = "_maint",
   .name = "Content Snapshot Retention",
   .name_ja = "コンテンツ差分スナップショット保持",
-  .update_interval_sec = 900, .run = run };
+  .update_interval_sec = 900, .run = run,
+  .category = "maintenance" };
 REGISTER_SOURCE(content_change_def)

@@ -383,5 +383,6 @@ static const source_def cam_camscape_def = {
   .id = "cam-camscape", .collector = "infrastructure",
   .name = "Camera discovery — Camscape",
   .name_ja = "カメラ探索 — Camscape",
-   .update_interval_sec = 21600, .run = run };
+   .update_interval_sec = 21600, .run = run,
+  .category = "infrastructure" };
 REGISTER_SOURCE(cam_camscape_def)

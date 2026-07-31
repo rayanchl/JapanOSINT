@@ -234,5 +234,6 @@ static const source_def cam_windy_api_def = {
   .id = "cam-windy_api", .collector = "infrastructure",
   .name = "Camera discovery — Windy API",
   .name_ja = "カメラ探索 — Windy API",
-   .update_interval_sec = 21600, .run = run };
+   .update_interval_sec = 21600, .run = run,
+  .category = "infrastructure" };
 REGISTER_SOURCE(cam_windy_api_def)

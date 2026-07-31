@@ -88,7 +88,15 @@ typedef struct source_def {
    * synthesizes into a src_meta. All fields optional (designated initializers
    * leave them NULL/0). `layer` MUST stay NULL for entity-pivot services so
    * they never appear in /api/layers. */
-  const char *category;       /* NULL → "investigation" when synthesized   */
+  /* Category. NULL still degrades to "investigation" when synthesized, but
+   * that fallback is a safety net for new code, not a resting state: every
+   * source in the tree carries an explicit category (the curated table's for
+   * the rows that live there, this field for the rest), because an unset one
+   * silently mislabels the source as an investigation service in /api/sources,
+   * the dashboards and the iOS category filter. Internal pipeline pods use
+   * "maintenance" (collector "_maint"), "enrichment" ("_enrich") and "test"
+   * ("_test") so they stop masquerading as data sources. */
+  const char *category;
   const char *type;           /* api|dataset|scraped|web_request; NULL→"api" */
   const char *url;            /* canonical/base or internal:// sentinel      */
   const char *description;

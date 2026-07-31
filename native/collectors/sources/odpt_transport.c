@@ -64,5 +64,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 static const source_def odpt_transport_def = {
   .id = "odpt-transport", .collector = "transport",
   .name = "ODPT Transport", .name_ja = "ODPT 公共交通",
-   .update_interval_sec = 86400, .run = run };
+   .update_interval_sec = 86400, .run = run,
+  .category = "transport" };
 REGISTER_SOURCE(odpt_transport_def)

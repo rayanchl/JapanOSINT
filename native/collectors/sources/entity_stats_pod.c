@@ -25,5 +25,6 @@ static const source_def entity_stats_def = {
   .id = "entity-stats", .collector = "_maint",
   .name = "Entity Correlation Scoring",
   .name_ja = "エンティティ相関スコア",
-  .update_interval_sec = 900, .run = run };
+  .update_interval_sec = 900, .run = run,
+  .category = "maintenance" };
 REGISTER_SOURCE(entity_stats_def)

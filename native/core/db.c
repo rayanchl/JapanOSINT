@@ -81,20 +81,43 @@ void ensure_column(db_handle *db, const char *table, const char *col,
  * (Japan map collector and OSINT-SaaS service alike) has a row and therefore
  * appears in /api/status, /api/sources, /api/keys with full metadata. Pulls
  * type/category/url/name from the merged src_meta_get() (curated table, else
- * synthesized from the source_def). Idempotent: ON CONFLICT(id) DO NOTHING
- * preserves existing rows' status/probe/schedule columns untouched. Runs after
- * the REGISTER_SOURCE constructors (which fire before main), so the registry
- * is fully populated. */
+ * synthesized from the source_def). Idempotent: on conflict it refreshes ONLY
+ * the four registry-derived metadata columns and leaves every runtime column
+ * (status, probe_*, records_count, quarantine_*, schedule_mode, …) untouched.
+ *
+ * The refresh matters because nothing else ever writes those four columns: a
+ * source whose category/name/url is corrected in the registry would otherwise
+ * keep serving the value that was seeded the first time the DB was created,
+ * i.e. the API would report metadata the code no longer says. Runs after the
+ * REGISTER_SOURCE constructors (which fire before main), so the registry is
+ * fully populated. */
 static void db_seed_sources(db_handle *db) {
   const source_def **a = registry_all();
   int n = registry_count();
   static const char *SQL =
     "INSERT INTO sources (id,name,type,category,url,status) "
-    "VALUES (?1,?2,?3,?4,?5,'pending') ON CONFLICT(id) DO NOTHING";
-  sqlite3_stmt *s;
+    "VALUES (?1,?2,?3,?4,?5,'pending') ON CONFLICT(id) DO UPDATE SET "
+    "name=excluded.name, type=excluded.type, "
+    "category=excluded.category, url=excluded.url "
+    /* Only when something actually differs, so the tally below counts rows
+     * that changed rather than every row we looked at. */
+    "WHERE sources.name     IS NOT excluded.name "
+    "   OR sources.type     IS NOT excluded.type "
+    "   OR sources.category IS NOT excluded.category "
+    "   OR sources.url      IS NOT excluded.url";
+  /* Probe first so the tally below reports what actually happened: the upsert's
+   * sqlite3_changes() is 1 for an insert AND for a metadata refresh, so without
+   * this the two would be indistinguishable (the same trap core/intel.c's emit()
+   * had). Primary-key lookup inside the seed transaction — 1 extra step per
+   * source, no scan. */
+  static const char *PROBE = "SELECT 1 FROM sources WHERE id=?1";
+  sqlite3_stmt *s, *p;
   if (sqlite3_prepare_v2(db->h, SQL, -1, &s, NULL) != SQLITE_OK) return;
+  if (sqlite3_prepare_v2(db->h, PROBE, -1, &p, NULL) != SQLITE_OK) {
+    sqlite3_finalize(s); return;
+  }
   sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL);
-  int added = 0;
+  int added = 0, refreshed = 0;
   for (int i = 0; i < n; i++) {
     const source_def *d = a[i];
     const src_meta *m = src_meta_get(d->id);
@@ -103,19 +126,29 @@ static void db_seed_sources(db_handle *db) {
     const char *url  = (m && m->url)      ? m->url      : NULL;
     const char *name = (m && m->name)     ? m->name
                        : (d->name ? d->name : d->id);
+    sqlite3_bind_text(p, 1, d->id, -1, SQLITE_TRANSIENT);
+    int existed = sqlite3_step(p) == SQLITE_ROW;
+    sqlite3_reset(p);
+    sqlite3_clear_bindings(p);
     sqlite3_bind_text(s, 1, d->id, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 2, name,  -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 3, type,  -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 4, cat,   -1, SQLITE_TRANSIENT);
     if (url) sqlite3_bind_text(s, 5, url, -1, SQLITE_TRANSIENT);
     else     sqlite3_bind_null(s, 5);
-    if (sqlite3_step(s) == SQLITE_DONE) added += sqlite3_changes(db->h);
+    if (sqlite3_step(s) == SQLITE_DONE) {
+      if (existed) refreshed += sqlite3_changes(db->h);
+      else         added     += sqlite3_changes(db->h);
+    }
     sqlite3_reset(s);
     sqlite3_clear_bindings(s);
   }
   sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL);
   sqlite3_finalize(s);
-  fprintf(stderr, "[db] seeded sources from registry (%d new rows)\n", added);
+  sqlite3_finalize(p);
+  fprintf(stderr, "[db] seeded sources from registry (%d new rows, "
+                  "%d existing rows refreshed from registry metadata)\n",
+          added, refreshed);
 }
 
 /* Second connection to an already-migrated database (no schema apply, no boot
