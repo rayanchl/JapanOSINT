@@ -12,6 +12,9 @@ struct SearchTab: View {
     @State private var query = ""
     @State private var suggestions: [String] = []
     @State private var suggestTask: Task<Void, Never>?
+    /// True from the instant a query is submitted until the run is registered
+    /// in `store.active` — see `auraIntensity`.
+    @State private var launching = false
 
     var body: some View {
         NavigationStack {
@@ -40,7 +43,18 @@ struct SearchTab: View {
                 }
                 .padding(16)
             }
-            .themedScreenBackground(theme)
+            // The living background (see SearchAuraBackground). Not
+            // `themedScreenBackground`, which paints a flat surface: the aura
+            // needs that surface UNDER it (it composites onto it and its
+            // corners fall back to it), so the two are stacked here instead.
+            .scrollContentBackground(.hidden)
+            .background {
+                ZStack {
+                    theme.surface
+                    SearchAuraBackground(intensity: auraIntensity)
+                }
+                .ignoresSafeArea()
+            }
             .navigationTitle("Search")
             .toolbar {
                 // Roadmap 38 — reach the (server-synced) search history. Re-run
@@ -111,8 +125,21 @@ struct SearchTab: View {
         .buttonStyle(.plain)
     }
 
+    /// How lit the background is. A run in flight drives it to full; otherwise
+    /// it idles low but never off, so the tab still breathes.
+    ///
+    /// `launching` covers the gap between the user hitting return and the
+    /// server's first progress frame landing in `store.active` — a second or
+    /// two of network on a cold call. Without it the tab sits inert at exactly
+    /// the moment the user is waiting for a sign that anything happened.
+    private var auraIntensity: Double {
+        (launching || !store.active.isEmpty) ? 1.0 : 0.0
+    }
+
     private func run(_ q: String) async {
         suggestions = []
+        launching = true
+        defer { launching = false }
         await store.start(q, api: apiClient.api)
         query = ""
     }
