@@ -95,7 +95,7 @@ make hptest            # engine-level guarantees, offline
 data: hardcoded record caps, `break` in a record loop, first-element-only access,
 single-page fetches of paged APIs, and fixed dedupe rings.
 
-**The tree is currently at zero findings** across all 685 scanned files. It got
+**The tree is currently at zero findings** across all 715 scanned files. It got
 there by fixing, not by silencing: arbitrary per-loop emit caps were deleted,
 paged endpoints (OpenPLZ, Etherscan, grep.app, arXiv, NZ Companies Office, UK
 Electoral Commission) now walk their pages, fixed dedupe rings became growable

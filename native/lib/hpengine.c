@@ -15,7 +15,11 @@
 #include <string.h>
 #include <strings.h>
 
-#define HP_MAX_SOURCES   1024   /* exhaustive-ok: registry table size */
+/* Table size for the registered hp_source rows. This is an allocation bound,
+ * not an editorial one: overflow is loud (a stderr line naming the dropped id)
+ * and would drop a whole collector, so it is kept well clear of the real
+ * count — 1001 rows after the hp3_* government/public/surveillance batch. */
+#define HP_MAX_SOURCES   4096   /* exhaustive-ok: registry table size */
 /* Bounds exist only to keep one pathological response from exhausting memory —
  * they are NOT an editorial filter. Per the exhaustive-use rule
  * (docs/SOURCE_EXHAUSTIVENESS.md) they are set well above any real record, and
