@@ -342,5 +342,6 @@ static const source_def cam_tabi_cam_def = {
   .id = "cam-tabi_cam", .collector = "infrastructure",
   .name = "Camera discovery — Tabi-cam",
   .name_ja = "カメラ探索 — Tabi-cam",
-   .update_interval_sec = 21600, .run = run };
+   .update_interval_sec = 21600, .run = run,
+  .category = "infrastructure" };
 REGISTER_SOURCE(cam_tabi_cam_def)

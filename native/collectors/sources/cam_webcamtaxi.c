@@ -334,5 +334,6 @@ static const source_def cam_webcamtaxi_def = {
   .id = "cam-webcamtaxi", .collector = "infrastructure",
   .name = "Camera Discovery: WebcamTaxi",
   .name_ja = "カメラ探索: WebcamTaxi",
-   .update_interval_sec = 21600, .run = run };
+   .update_interval_sec = 21600, .run = run,
+  .category = "infrastructure" };
 REGISTER_SOURCE(cam_webcamtaxi_def)

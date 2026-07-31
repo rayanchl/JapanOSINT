@@ -378,5 +378,6 @@ static const source_def cam_insecam_scrape_def = {
   .id = "cam-insecam-scrape", .collector = "infrastructure",
   .name = "Camera Discovery: Insecam scrape",
   .name_ja = "カメラ探索: Insecam スクレイプ",
-   .update_interval_sec = 21600, .run = run };
+   .update_interval_sec = 21600, .run = run,
+  .category = "cyber" };
 REGISTER_SOURCE(cam_insecam_scrape_def)

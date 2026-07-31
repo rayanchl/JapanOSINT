@@ -15,5 +15,6 @@ static int run(const source_ctx *c, intel_sink *s) {
   return tot > 0 ? 0 : -1; }
 static const source_def ipa_alerts_def = {
   .id="ipa-alerts", .collector="cyber", .name="IPA advisories",
-  .name_ja="IPA 注意喚起",  .update_interval_sec=3600, .run=run };
+  .name_ja="IPA 注意喚起",  .update_interval_sec=3600, .run=run,
+  .category = "cyber" };
 REGISTER_SOURCE(ipa_alerts_def)

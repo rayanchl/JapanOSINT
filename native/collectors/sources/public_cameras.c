@@ -63,5 +63,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 static const source_def public_cameras_def = {
   .id = "public-cameras", .collector = "infrastructure",
   .name = "Public Cameras", .name_ja = "公開カメラ",
-   .update_interval_sec = 86400, .run = run };
+   .update_interval_sec = 86400, .run = run,
+  .category = "infrastructure" };
 REGISTER_SOURCE(public_cameras_def)

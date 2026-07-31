@@ -21,5 +21,6 @@ static const source_def upload_gc_def = {
   .id = "upload-gc", .collector = "_maint",
   .name = "Abandoned Upload Reaper",
   .name_ja = "未完了アップロード回収",
-  .update_interval_sec = 900, .run = run };
+  .update_interval_sec = 900, .run = run,
+  .category = "maintenance" };
 REGISTER_SOURCE(upload_gc_def)

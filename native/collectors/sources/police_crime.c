@@ -59,5 +59,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 static const source_def police_crime_def = {
   .id = "police-crime", .collector = "crime",
   .name = "Police Crime", .name_ja = "警察 犯罪統計",
-   .update_interval_sec = 86400, .run = run };
+   .update_interval_sec = 86400, .run = run,
+  .category = "crime" };
 REGISTER_SOURCE(police_crime_def)

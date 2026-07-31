@@ -341,5 +341,6 @@ static const source_def cam_worldcams_def = {
   .id = "cam-worldcams", .collector = "infrastructure",
   .name = "Camera Discovery: Worldcams",
   .name_ja = "カメラ探索: Worldcams",
-   .update_interval_sec = 21600, .run = run };
+   .update_interval_sec = 21600, .run = run,
+  .category = "infrastructure" };
 REGISTER_SOURCE(cam_worldcams_def)

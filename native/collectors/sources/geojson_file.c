@@ -14,5 +14,6 @@ static int run(const source_ctx *c, intel_sink *s) {
   return e>=0?0:-1; }
 static const source_def geojson_file_def = {
   .id="geojson-file", .collector="_test", .name="GeoJSON file test",
-  .name_ja="",  .update_interval_sec=0, .run=run };
+  .name_ja="",  .update_interval_sec=0, .run=run,
+  .category = "test" };
 REGISTER_SOURCE(geojson_file_def)

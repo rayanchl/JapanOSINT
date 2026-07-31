@@ -72,5 +72,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 static const source_def airport_infra_def = {
   .id = "airport-infra", .collector = "infrastructure",
   .name = "Airport Infrastructure", .name_ja = "空港インフラ",
-   .update_interval_sec = 86400, .run = run };
+   .update_interval_sec = 86400, .run = run,
+  .category = "transport" };
 REGISTER_SOURCE(airport_infra_def)

@@ -318,5 +318,6 @@ static const source_def cam_webcamera24_def = {
   .id = "cam-webcamera24", .collector = "infrastructure",
   .name = "Camera Discovery: Webcamera24",
   .name_ja = "カメラ探索: Webcamera24",
-   .update_interval_sec = 21600, .run = run };
+   .update_interval_sec = 21600, .run = run,
+  .category = "infrastructure" };
 REGISTER_SOURCE(cam_webcamera24_def)

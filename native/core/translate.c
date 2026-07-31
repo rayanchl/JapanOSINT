@@ -917,5 +917,6 @@ static int pod_run(const source_ctx *ctx, intel_sink *sink) {
 static const source_def translate_def = {
   .id = "translate", .collector = "_enrich",
   .name = "Machine Translation (JA to EN)", .name_ja = "機械翻訳",
-  .update_interval_sec = 600, .run = pod_run };
+  .update_interval_sec = 600, .run = pod_run,
+  .category = "enrichment" };
 REGISTER_SOURCE(translate_def)

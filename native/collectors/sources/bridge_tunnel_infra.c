@@ -80,5 +80,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 static const source_def bridge_tunnel_infra_def = {
   .id = "bridge-tunnel-infra", .collector = "infrastructure",
   .name = "Bridge & Tunnel Infrastructure", .name_ja = "橋梁・トンネルインフラ",
-   .update_interval_sec = 86400, .run = run };
+   .update_interval_sec = 86400, .run = run,
+  .category = "infrastructure" };
 REGISTER_SOURCE(bridge_tunnel_infra_def)

@@ -84,5 +84,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 static const source_def transport_cluster_runner_def = {
   .id = "transport-cluster-runner", .collector = "transport",
   .name = "Transport Station Clusterer", .name_ja = "駅クラスタリング",
-   .update_interval_sec = 3600, .run = run };
+   .update_interval_sec = 3600, .run = run,
+  .category = "transport" };
 REGISTER_SOURCE(transport_cluster_runner_def)
