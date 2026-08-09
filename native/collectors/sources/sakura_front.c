@@ -147,15 +147,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char oid[64];
     snprintf(oid, sizeof oid, "SAKURA_%s", hk);
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(lon, lat);
 
     cJSON *p = cJSON_CreateObject();          /* EXACT JS key order */
     cJSON_AddStringToObject(p, "station", name);
@@ -179,7 +171,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[sakura-front] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def sakura_front_def = {

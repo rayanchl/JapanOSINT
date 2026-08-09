@@ -1,0 +1,16 @@
+=== gnews-mon-il-gaza
+exit: 0
+sched: rc=0 records=101 889ms
+--- stderr ---
+[rss] gnews-mon-il-gaza emitted 101
+[sched] gnews-mon-il-gaza run rc=0 records=101 889ms
+--- persisted: 101 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=101
+sub_source_id: (null)=101
+Traceback (most recent call last):
+  File "/mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/verify_one.py", line 97, in <module>
+    main()
+  File "/mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/verify_one.py", line 82, in main
+    % ",".join(cols), (a.source_id, a.rows)).fetchall()
+                                             ^^^^^^^^^^
+sqlite3.OperationalError: Could not decode to UTF-8 column 'summary' with text '<a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE9iVE1ib29UUlYteXR2a1hzdkxIcjV2RWpKcFladlIzSUxTT3FBZG43N0J6UURpVDNfR1dzSlk5SnlZQ3JQMD

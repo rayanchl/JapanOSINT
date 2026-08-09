@@ -1,0 +1,29 @@
+=== BANKRUPTCY_SEARCH  entity=Toyota
+exit: 0
+sched: rc=0 records=15 17915ms
+--- stderr ---
+[sched] BANKRUPTCY_SEARCH run rc=0 records=15 17915ms
+[detect] anomaly opened: BANKRUPTCY_SEARCH verdict=duration_outlier — duration 17915ms exceeds 10000ms threshold
+--- persisted: 15 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=15
+sub_source_id: (null)=15
+
+--- row 1 ---
+  uid            BANKRUPTCY_SEARCH|legal:BANKRUPTCY_SEARCH:https://www.courtlistener.com/opinion/8339210/toyota-motor-credit-corp-v-dunn-in-re-dunn/
+  title          Toyota Motor Credit Corp. v. Dunn (In re Dunn) — District Court, E.D. Pennsylvania
+  body           {"source":"courtlistener.com","case_name":"Toyota Motor Credit Corp. v. Dunn (In re Dunn)","court":"District Court, E.D. Pennsylvania","date_filed":"2018-07-24","url":"https://www.courtlistener.com/opinion/8339210/toyota-motor-credit-corp-v-dunn-in-re-dunn/"}
+  summary        Toyota Motor Credit Corp. v. Dunn (In re Dunn)
+  link           https://www.courtlistener.com/opinion/8339210/toyota-motor-credit-corp-v-dunn-in-re-dunn/
+  record_type    osint_service_result
+  tags           ["osint-search","BANKRUPTCY_SEARCH"]
+  properties     {"service":"BANKRUPTCY_SEARCH","entity":"Toyota"}
+
+--- row 2 ---
+  uid            BANKRUPTCY_SEARCH|legal:BANKRUPTCY_SEARCH:https://www.courtlistener.com/opinion/4772465/melissa-mather-bobka-v-toyota-motor-credit-corp/
+  title          Melissa Mather Bobka v. Toyota Motor Credit Corp. — Court of Appeals for the Ninth Circuit
+  body           {"source":"courtlistener.com","case_name":"Melissa Mather Bobka v. Toyota Motor Credit Corp.","court":"Court of Appeals for the Ninth Circuit","date_filed":"2020-08-03","url":"https://www.courtlistener.com/opinion/4772465/melissa-mather-bobka-v-toyota-motor-credit-corp/"}
+  summary        Melissa Mather Bobka v. Toyota Motor Credit Corp.
+  link           https://www.courtlistener.com/opinion/4772465/melissa-mather-bobka-v-toyota-motor-credit-corp/
+  record_type    osint_service_result
+  tags           ["osint-search","BANKRUPTCY_SEARCH"]
+  properties     {"service":"BANKRUPTCY_SEARCH","entity":"Toyota"}

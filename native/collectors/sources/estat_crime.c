@@ -293,15 +293,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const cJSON *cle = cJSON_GetObjectItem(ind, "検挙件数");
     const cJSON *arr = cJSON_GetObjectItem(ind, "検挙人員");
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *gm = cJSON_CreateObject();
-    cJSON_AddStringToObject(gm, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(p->lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(p->lat));
-    cJSON_AddItemToObject(gm, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", gm);
+    cJSON *f = gj_point_feature(p->lon, p->lat);
 
     cJSON *pr = cJSON_CreateObject();
     char fid[48]; snprintf(fid, sizeof fid, "ESTAT_%s_%s", p->code, ym);

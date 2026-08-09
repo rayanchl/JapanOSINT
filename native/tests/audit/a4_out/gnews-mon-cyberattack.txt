@@ -1,0 +1,45 @@
+=== gnews-mon-cyberattack
+exit: 0
+sched: rc=0 records=102 750ms
+--- stderr ---
+[rss] gnews-mon-cyberattack emitted 102
+[sched] gnews-mon-cyberattack run rc=0 records=102 750ms
+--- persisted: 102 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=102
+sub_source_id: (null)=102
+
+--- row 1 ---
+  uid            gnews-mon-cyberattack|CBMixgFBVV95cUxOVEstdlBNZmdJUy16VDBsWEh4MG1WdVFRMnBRUW1EUkNmM0x4NGw4d3JWUEk1OFN6akh3REpqWkc5LWZBemtGTy12UnN2VktRc241QXV1eVdNNDREUFRXclhnamhOc3dhNmttaEo5My1ZSTFzUFZ4eXZ0dkdtZy1UQm9mUE5sNndhMUJyLWtpbHNBSThnc3pVTXp3dHBZNl9OdW9NQ0FkUkdWUXhlTWlyTzNSRjVZZTBQUTlYTndUN1FURk1lVFHSAcsBQVVfeXFMT2Qya011b2tLUmY5QmhzN2JxOEdPZ3E5TUVYc2NleWZlUm5mZEliY3hJSFNCNnZKS1FRT1BXSUFtTUY0NTZrQWZ5UjNPdjAwYjNFTVJ4NEMwTkZlc0haTDV3U1hNZjNhLXBRWF9ydGJxbUJpd0hBZW9qbzBYWkktNm5vWGx4OE1FYjFoUWt4cjRESVl2M3dnbGc0RUtxNEFaZ
+  title          Investigators believe Iranian hackers are likely behind cyberattack on Minnesota water systems: report - Fox News
+  body           <ol><li><a href="https://news.google.com/rss/articles/CBMixgFBVV95cUxOVEstdlBNZmdJUy16VDBsWEh4MG1WdVFRMnBRUW1EUkNmM0x4NGw4d3JWUEk1OFN6akh3REpqWkc5LWZBemtGTy12UnN2VktRc241QXV1eVdNNDREUFRXclhnamhOc3dhNmttaEo5My1ZSTFzUFZ4eXZ0dkdtZy1UQm9mUE5sNndhMUJyLWtpbHNBSThnc3pVTXp3dHBZNl9OdW9NQ0FkUkdWUXhlTWlyTzNSRjVZZTBQUTlYTndUN1FURk1lVFHSAcsBQVVfeXFMT2Qya011b2tLUmY5QmhzN2JxOEdPZ3E5TUVYc2NleWZlUm5mZEliY3hJSFNCNnZKS1FRT1BXSUFtTUY0NTZrQWZ5UjNPdjAwYjNFTVJ4NEMwTkZlc0haTDV3U1hNZjNhLXBRWF9ydGJxbUJpd0hBZW9qbzBYWkktNm5vWGx4OE1FYjFoUWt4cjRESVl2M3dnbGc0RUtxNEFaZy1hZE5KQWUwVkpOaXlIal84NnRsOUROMGo5NjVmc1dsWXdMS1VRSW9fSTg?oc=5" target="_blank">Investigators believe Iranian hackers are likely behind cyberattack on Minnesota water systems: report</a>&nbsp;&nbsp;<font color="#6f6f6f">Fox News</font></li><li><a href="https://news.google.com/rss/articles/CBMisgFBVV95cUxOTXVfc3ZpcVlQRlFEUkxxVFJsRUxTN3B5RTdEcGJGUFl6WC1OMV …<770 more chars>
+  summary        <ol><li><a href="https://news.google.com/rss/articles/CBMixgFBVV95cUxOVEstdlBNZmdJUy16VDBsWEh4MG1WdVFRMnBRUW1EUkNmM0x4NGw4d3JWUEk1OFN6akh3REpqWkc5LWZBemtGTy12UnN2VktRc241QXV1eVdNNDREUFRXclhnamhOc3dhNmttaEo5My1ZSTFzUFZ4eXZ0dkdtZy1UQm9mUE5sNn
+  link           https://news.google.com/rss/articles/CBMixgFBVV95cUxOVEstdlBNZmdJUy16VDBsWEh4MG1WdVFRMnBRUW1EUkNmM0x4NGw4d3JWUEk1OFN6akh3REpqWkc5LWZBemtGTy12UnN2VktRc241QXV1eVdNNDREUFRXclhnamhOc3dhNmttaEo5My1ZSTFzUFZ4eXZ0dkdtZy1UQm9mUE5sNndhMUJyLWtpbHNBSThnc3pVTXp3dHBZNl9OdW9NQ0FkUkdWUXhlTWlyTzNSRjVZZTBQUTlYTndUN1FURk1lVFHSAcsBQVVfeXFMT2Qya011b2tLUmY5QmhzN2JxOEdPZ3E5TUVYc2NleWZlUm5mZEliY3hJSFNCNnZKS1FRT1BXSUFtTUY0NTZrQWZ5UjNPdjAwYjNFTVJ4NEMwTkZlc0haTDV3U1hNZjNhLXBRWF9ydGJxbUJpd0hBZW9qbzBYWkktNm5vWGx4OE1FYjFoUWt4cjRESVl2M3dnbGc0RUtxNEFaZy1hZE5KQWUwVkpOaXlIal84NnRsOUROMGo5NjVmc1dsWXdMS1VRSW9fSTg?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 14:43:38 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","cyberattack"]
+  properties     {"guid":"CBMixgFBVV95cUxOVEstdlBNZmdJUy16VDBsWEh4MG1WdVFRMnBRUW1EUkNmM0x4NGw4d3JWUEk1OFN6akh3REpqWkc5LWZBemtGTy12UnN2VktRc241QXV1eVdNNDREUFRXclhnamhOc3dhNmttaEo5My1ZSTFzUFZ4eXZ0dkdtZy1UQm9mUE5sNndhMUJyLWtpbHNBSThnc3pVTXp3dHBZNl9OdW9NQ0FkUkdWUXhlTWlyTzNSRjVZZTBQUTlYTndUN1FURk1lVFHSAcsBQVVfeXFMT2Qya011b2tLUmY5QmhzN2JxOEdPZ3E5TUVYc2NleWZlUm5mZEliY3hJSFNCNnZKS1FRT1BXSUFtTUY0NTZrQWZ5UjNPdjAwYjNFTVJ4NEMwTkZlc0haTDV3U1hNZjNhLXBRWF9ydGJxbUJpd0hBZW9qbzBYWkktNm5vWGx4OE1FYjFoUWt4cjRESVl2M3dnbGc0RUtxNEFaZy1hZE5KQWUwVk
+
+--- row 2 ---
+  uid            gnews-mon-cyberattack|CBMiywFBVV95cUxQOWxOLW9VTjNZWmVXR2tpX0hsUmliY3o2VE42U2dSdlV6TTdzYndqVldVa21nX1owcjBrakxQTVdld0tlR2VJbjlJenhHQmVFcEpBTFZUU3RTUFVKa0QxdTEydFlCQVo1T2FleDJ4ZFFoVjdObDBvZC1aYy05Y0FIMVk1MHVpcXQxMXlEcUQwYmhrMmFmYzI1bjhoS3JzbHZtSGJVOEpJcFdsSEJ5dlNYV0JZTVFpTU5faEw5NlVhZzJXY1RpSlVIcGhDVQ
+  title          Five days inside a rogue AI agent’s stealthy cyberattack - The Washington Post
+  body           <a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxQOWxOLW9VTjNZWmVXR2tpX0hsUmliY3o2VE42U2dSdlV6TTdzYndqVldVa21nX1owcjBrakxQTVdld0tlR2VJbjlJenhHQmVFcEpBTFZUU3RTUFVKa0QxdTEydFlCQVo1T2FleDJ4ZFFoVjdObDBvZC1aYy05Y0FIMVk1MHVpcXQxMXlEcUQwYmhrMmFmYzI1bjhoS3JzbHZtSGJVOEpJcFdsSEJ5dlNYV0JZTVFpTU5faEw5NlVhZzJXY1RpSlVIcGhDVQ?oc=5" target="_blank">Five days inside a rogue AI agent’s stealthy cyberattack</a>&nbsp;&nbsp;<font color="#6f6f6f">The Washington Post</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxQOWxOLW9VTjNZWmVXR2tpX0hsUmliY3o2VE42U2dSdlV6TTdzYndqVldVa21nX1owcjBrakxQTVdld0tlR2VJbjlJenhHQmVFcEpBTFZUU3RTUFVKa0QxdTEydFlCQVo1T2FleDJ4ZFFoVjdObDBvZC1aYy05Y0FIMVk1MHVpcXQxMXlEcU
+  link           https://news.google.com/rss/articles/CBMiywFBVV95cUxQOWxOLW9VTjNZWmVXR2tpX0hsUmliY3o2VE42U2dSdlV6TTdzYndqVldVa21nX1owcjBrakxQTVdld0tlR2VJbjlJenhHQmVFcEpBTFZUU3RTUFVKa0QxdTEydFlCQVo1T2FleDJ4ZFFoVjdObDBvZC1aYy05Y0FIMVk1MHVpcXQxMXlEcUQwYmhrMmFmYzI1bjhoS3JzbHZtSGJVOEpJcFdsSEJ5dlNYV0JZTVFpTU5faEw5NlVhZzJXY1RpSlVIcGhDVQ?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 16:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","cyberattack"]
+  properties     {"guid":"CBMiywFBVV95cUxQOWxOLW9VTjNZWmVXR2tpX0hsUmliY3o2VE42U2dSdlV6TTdzYndqVldVa21nX1owcjBrakxQTVdld0tlR2VJbjlJenhHQmVFcEpBTFZUU3RTUFVKa0QxdTEydFlCQVo1T2FleDJ4ZFFoVjdObDBvZC1aYy05Y0FIMVk1MHVpcXQxMXlEcUQwYmhrMmFmYzI1bjhoS3JzbHZtSGJVOEpJcFdsSEJ5dlNYV0JZTVFpTU5faEw5NlVhZzJXY1RpSlVIcGhDVQ"}
+
+--- row 3 ---
+  uid            gnews-mon-cyberattack|CBMivgFBVV95cUxNTWJaZkNmNlFPbHhTeHYtMUNaX1FfRVozeEdyVExMakw3bVhSWm1CQzUtUHo0NUh0N2E4OFdQX2xlUFo5SFdzMnplajhJc3UwTU1nMDNmT1JJVThZbXJhZUNOaThFQi13Y1lpNS1Xb3dKTGFhbTZ0Z0tWbENIbjlNT3lSemhCdDFmNzR1OUJOR3NqSE1wcjlrUEZxSnNkX1k3TEJ5WHNGbVUzNEMzOFVQd0tKVGFwdl9fUGx0d3FR
+  title          How an OpenAI safety test became a real-world cyberattack on the Hugging Face platform - The Conversation
+  body           <a href="https://news.google.com/rss/articles/CBMivgFBVV95cUxNTWJaZkNmNlFPbHhTeHYtMUNaX1FfRVozeEdyVExMakw3bVhSWm1CQzUtUHo0NUh0N2E4OFdQX2xlUFo5SFdzMnplajhJc3UwTU1nMDNmT1JJVThZbXJhZUNOaThFQi13Y1lpNS1Xb3dKTGFhbTZ0Z0tWbENIbjlNT3lSemhCdDFmNzR1OUJOR3NqSE1wcjlrUEZxSnNkX1k3TEJ5WHNGbVUzNEMzOFVQd0tKVGFwdl9fUGx0d3FR?oc=5" target="_blank">How an OpenAI safety test became a real-world cyberattack on the Hugging Face platform</a>&nbsp;&nbsp;<font color="#6f6f6f">The Conversation</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMivgFBVV95cUxNTWJaZkNmNlFPbHhTeHYtMUNaX1FfRVozeEdyVExMakw3bVhSWm1CQzUtUHo0NUh0N2E4OFdQX2xlUFo5SFdzMnplajhJc3UwTU1nMDNmT1JJVThZbXJhZUNOaThFQi13Y1lpNS1Xb3dKTGFhbTZ0Z0tWbENIbjlNT3lSemhCdDFmNzR1OU
+  link           https://news.google.com/rss/articles/CBMivgFBVV95cUxNTWJaZkNmNlFPbHhTeHYtMUNaX1FfRVozeEdyVExMakw3bVhSWm1CQzUtUHo0NUh0N2E4OFdQX2xlUFo5SFdzMnplajhJc3UwTU1nMDNmT1JJVThZbXJhZUNOaThFQi13Y1lpNS1Xb3dKTGFhbTZ0Z0tWbENIbjlNT3lSemhCdDFmNzR1OUJOR3NqSE1wcjlrUEZxSnNkX1k3TEJ5WHNGbVUzNEMzOFVQd0tKVGFwdl9fUGx0d3FR?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 18:10:45 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","cyberattack"]
+  properties     {"guid":"CBMivgFBVV95cUxNTWJaZkNmNlFPbHhTeHYtMUNaX1FfRVozeEdyVExMakw3bVhSWm1CQzUtUHo0NUh0N2E4OFdQX2xlUFo5SFdzMnplajhJc3UwTU1nMDNmT1JJVThZbXJhZUNOaThFQi13Y1lpNS1Xb3dKTGFhbTZ0Z0tWbENIbjlNT3lSemhCdDFmNzR1OUJOR3NqSE1wcjlrUEZxSnNkX1k3TEJ5WHNGbVUzNEMzOFVQd0tKVGFwdl9fUGx0d3FR"}

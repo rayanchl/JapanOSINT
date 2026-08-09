@@ -1,0 +1,8 @@
+my-jvn
+jamstec-argo
+flight-adsb
+chaos-bugbounty-jp
+mastodon-jp-instances
+jma-warnings
+cert-fi
+small-wars

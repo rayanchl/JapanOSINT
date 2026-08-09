@@ -1,0 +1,45 @@
+=== oilprice-2
+exit: 0
+sched: rc=0 records=15 877ms
+--- stderr ---
+[rss] oilprice-2 emitted 15
+[sched] oilprice-2 run rc=0 records=15 877ms
+--- persisted: 15 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=15
+sub_source_id: (null)=15
+
+--- row 1 ---
+  uid            oilprice-2|oilprice-article-45081
+  title          What Kyrgyzstan Wants From the UN Security Council
+  body           Kyrgyzstan’s election to a two-year term on the United Nations Security Council came after a diligent campaign to gain support for its candidacy. It means a Central Asian state will have a seat on the UN’s most powerful body for the second time since the collapse of the Soviet Union. Attention now turns to what Kyrgyzstan wants to do — and what it will be able to do — on the Security Council. “This is a new test for us,” Kyrgyz President Sadyr Japarov said during a speech in late June. “We view membership…
+  summary        Kyrgyzstan’s election to a two-year term on the United Nations Security Council came after a diligent campaign to gain support for its candidacy. It means a Central Asian state will have a seat on the UN’s most powerful body for the sec
+  link           https://oilprice.com/Geopolitics/Asia/What-Kyrgyzstan-Wants-From-the-UN-Security-Council.html
+  language       en
+  published_at   Fri, 31 Jul 2026 13:00:00 -0500
+  record_type    article
+  tags           ["economy","energy","markets"]
+  properties     {"guid":"oilprice-article-45081"}
+
+--- row 2 ---
+  uid            oilprice-2|oilprice-article-45095
+  title          US Oil Drillers Turn Cautious as WTI Holds Near $85 per Barrel
+  body           The total number of active drilling rigs for oil and gas in the United States rose this week, according to new data that Baker Hughes published on Friday, bringing the total rig count in the US to 588, up 48 from this same time last year. The number of active oil rigs rose by 1, reaching 451 during the latest reporting period, according to the data. This is 41 above this same time last year. The number of gas rigs stayed the same at 127, which is 3 more than this time last year. Miscellaneous rigs stayed at 10. The latest EIA data showed that weekly…
+  summary        The total number of active drilling rigs for oil and gas in the United States rose this week, according to new data that Baker Hughes published on Friday, bringing the total rig count in the US to 588, up 48 from this same time last year. T
+  link           https://oilprice.com/Energy/Crude-Oil/US-Oil-Drillers-Turn-Cautious-as-WTI-Holds-Near-85-per-Barrel.html
+  language       en
+  published_at   Fri, 31 Jul 2026 12:20:31 -0500
+  record_type    article
+  tags           ["economy","energy","markets"]
+  properties     {"guid":"oilprice-article-45095"}
+
+--- row 3 ---
+  uid            oilprice-2|oilprice-news-45095
+  title          Ukraine Strikes Lukoil&#039;s Volgograd Refinery as Drone Attacks Resume
+  body           Ukraine has struck one of Russia’s biggest refineries, Lukoil’s Volgograd processing facility, the Ukrainian forces said on Friday as they resumed attacks on Russian refining capacity. The Volgograd refinery, which has the capacity to process 300,000 barrels per day (bpd) of crude, produces gasoline, diesel, and jet fuel. It was hit by Ukrainian forces, Ukraine’s Security Service said in a Telegram post on Friday. The hit was “successful,” Ukraine said, without offering details as to the extent of damage. Andrei Bocharov,…
+  summary        Ukraine has struck one of Russia’s biggest refineries, Lukoil’s Volgograd processing facility, the Ukrainian forces said on Friday as they resumed attacks on Russian refining capacity. The Volgograd refinery, which has the capacity to p
+  link           https://oilprice.com/Latest-Energy-News/World-News/Ukraine-Strikes-Lukoils-Volgograd-Refinery-as-Drone-Attacks-Resume.html
+  language       en
+  published_at   Fri, 31 Jul 2026 11:30:00 -0500
+  record_type    article
+  tags           ["economy","energy","markets"]
+  properties     {"guid":"oilprice-news-45095"}

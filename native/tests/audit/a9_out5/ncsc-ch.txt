@@ -1,0 +1,45 @@
+=== ncsc-ch
+exit: 0
+sched: rc=0 records=94 478ms
+--- stderr ---
+[rss] ncsc-ch emitted 94
+[sched] ncsc-ch run rc=0 records=94 478ms
+--- persisted: 94 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=94
+sub_source_id: (null)=94
+
+--- row 1 ---
+  uid            ncsc-ch|https://www.admin.ch/en/newnsb/NpjoeGQGVrnvbq6nD4L-D
+  title          Progress in strengthening cybersecurity
+  body           Switzerland is making progress in strengthening cybersecurity. The latest report on the implementation of the National Cyberstrategy (NCS) documents the status of work in 2025 and shows that projects are moving forward. The report also sets out the measures being taken in response to the growing importance of artificial intelligence (AI) in the field of cybersecurity. The Federal Council was informed of the report at its meeting on 20 May 2026.
+  summary        Switzerland is making progress in strengthening cybersecurity. The latest report on the implementation of the National Cyberstrategy (NCS) documents the status of work in 2025 and shows that projects are moving forward. The report also sets
+  link           https://www.admin.ch/en/newnsb/NpjoeGQGVrnvbq6nD4L-D
+  author         Der Schweizerische Bundesrat
+  language       en
+  published_at   2026-05-20
+  record_type    article
+  tags           ["cyber","cert","advisory","switzerland"]
+
+--- row 2 ---
+  uid            ncsc-ch|https://www.admin.ch/en/newnsb/jWqBzRHtFMXSoyHc39f_M
+  title          ‘Stay safe online and offline’ – Raising awareness at the 2026 BEA spring fair
+  body           The National Cyber Security Centre (NCSC) will be hosting an interactive exhibition at the BEA spring fair in Bern between 24 April and 3 May to raise public awareness of cybersecurity. Working alongside Swiss Crime Prevention (SCP), the Swiss Federal Railways (SBB), Swiss Post, the Lucerne University of Applied Sciences and Arts (eBanking – but secure! EBAS) and Netpathie, the NCSC will demonstrate the reality of digital threats and how simple measures can provide effective protection.
+  summary        The National Cyber Security Centre (NCSC) will be hosting an interactive exhibition at the BEA spring fair in Bern between 24 April and 3 May to raise public awareness of cybersecurity. Working alongside Swiss Crime Prevention (SCP), the Sw
+  link           https://www.admin.ch/en/newnsb/jWqBzRHtFMXSoyHc39f_M
+  author         Bundesamt für Cybersicherheit BACS
+  language       en
+  published_at   2026-04-23
+  record_type    article
+  tags           ["cyber","cert","advisory","switzerland"]
+
+--- row 3 ---
+  uid            ncsc-ch|https://www.admin.ch/en/newnsb/miRSZECg2KBSLd4PxGvOG
+  title          ‘SUPER, right?’ – launch of the 2026 national cybersecurity awareness campaign
+  body           Phishing and scam attempts are widespread, and many are identified early enough for people to take the necessary cybersecurity measures. But it is becoming increasingly difficult to tell fraudulent messages from genuine ones. Scammers are increasingly using AI to personalise their messages, making them appear more convincing than ever. This is precisely what the new cybersecurity awareness campaign highlights under the slogan ‘SUPER, right?’. From 13 April to 10 May, the National Cyber Security Centre (NCSC), Swiss Crime Prevention (SCP), the cantonal and city police forces, Swiss Federal Railways (SBB), Swiss Post and the Swiss Insurance Association (SIA) are launching another edition of the national S-U-P-E-R.ch campaign to raise awareness of the importance of cybersecurity.
+  summary        Phishing and scam attempts are widespread, and many are identified early enough for people to take the necessary cybersecurity measures. But it is becoming increasingly difficult to tell fraudulent messages from genuine ones. Scammers are i
+  link           https://www.admin.ch/en/newnsb/miRSZECg2KBSLd4PxGvOG
+  author         Bundesamt für Cybersicherheit BACS
+  language       en
+  published_at   2026-04-09
+  record_type    article
+  tags           ["cyber","cert","advisory","switzerland"]

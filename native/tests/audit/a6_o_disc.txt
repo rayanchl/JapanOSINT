@@ -1,0 +1,19 @@
+--- https://caucasuswatch.de/
+  http=0 size=59624
+--- https://www.caixinglobal.com/
+  http=0 size=95797
+href="https://feedly.com/i/subscription/feed%2Fhttps%3A%2F%2Fgateway.caixin.com%2Fapi%2Fdata%2Fglobal%2FfeedlyRss.xml"
+--- https://www.nzherald.co.nz/
+  http=0 size=2235890
+--- https://www.nationthailand.com/
+  http=0 size=166070
+--- https://www.brusselstimes.com/
+  http=0 size=68845
+--- https://www.fijitimes.com.fj/
+  http=0 size=112487
+href="https://www.fijitimes.com/feed/"
+--- https://www.swissinfo.ch/eng/
+  http=0 size=2212680
+--- https://tuoitrenews.vn/
+  http=60 size=2212680
+done

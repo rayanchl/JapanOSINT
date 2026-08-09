@@ -1,0 +1,45 @@
+=== gnews-mon-us-taiwan-strait
+exit: 0
+sched: rc=0 records=100 664ms
+--- stderr ---
+[rss] gnews-mon-us-taiwan-strait emitted 100
+[sched] gnews-mon-us-taiwan-strait run rc=0 records=100 664ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-us-taiwan-strait|CBMiwgFBVV95cUxPRXRyVUtFN0xEdjlWTUZnSlBOZHktcEJDWlhHQmlJaXl5Z0VfeFZEeUJpTF9yR2l2NDJ3eDVJOUo3aGtVaTB5UENPRS1JNWF6MF9OcG1rSWl1VlE0QTR4bjUtSEtST2RMdlhXaTlDNS1UVnI2dmlidzVDWDlWdWlaZnZSdUhIZmxseHhuWmQ1MHhhZ2x1cU5zdEdvRUNYYnF3MktsZEZhQi1UZElEdjNEblB4U05Sd29YLTZCTWVQODlYZ9IBwgFBVV95cUxPcS1VYXc3TDlIdGpTZDI3dnhvTG5vVldNc3JrT01weWNwUmxXZ3RxU3o4S1A1MDZvaVRfbEVndi1FandoY0JOZm9XVjA0RURFT0xLWVFBVHJKaTR2NjlrQk1OczdnVjlfVW4tOGwtTGl5VUhhWkFpenZHMUZHT25FekgyYjlOTjJxUjIwSkQ4LXk3OEh5bERXM0V5WVdDcVBx
+  title          What a helicopter’s flight in the Taiwan Strait says about Beijing’s war plans - South China Morning Post
+  body           <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxPRXRyVUtFN0xEdjlWTUZnSlBOZHktcEJDWlhHQmlJaXl5Z0VfeFZEeUJpTF9yR2l2NDJ3eDVJOUo3aGtVaTB5UENPRS1JNWF6MF9OcG1rSWl1VlE0QTR4bjUtSEtST2RMdlhXaTlDNS1UVnI2dmlidzVDWDlWdWlaZnZSdUhIZmxseHhuWmQ1MHhhZ2x1cU5zdEdvRUNYYnF3MktsZEZhQi1UZElEdjNEblB4U05Sd29YLTZCTWVQODlYZ9IBwgFBVV95cUxPcS1VYXc3TDlIdGpTZDI3dnhvTG5vVldNc3JrT01weWNwUmxXZ3RxU3o4S1A1MDZvaVRfbEVndi1FandoY0JOZm9XVjA0RURFT0xLWVFBVHJKaTR2NjlrQk1OczdnVjlfVW4tOGwtTGl5VUhhWkFpenZHMUZHT25FekgyYjlOTjJxUjIwSkQ4LXk3OEh5bERXM0V5WVdDcVBxLTJWVVVXYnZTSlc3Ym5OWFBpbGhDcWpSVkRjTEJRVi03UQ?oc=5" target="_blank">What a helicopter’s flight in the Taiwan Strait says about Beijing’s war plans</a>&nbsp;&nbsp;<font color="#6f6f6f">South China Morning Post</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxPRXRyVUtFN0xEdjlWTUZnSlBOZHktcEJDWlhHQmlJaXl5Z0VfeFZEeUJpTF9yR2l2NDJ3eDVJOUo3aGtVaTB5UENPRS1JNWF6MF9OcG1rSWl1VlE0QTR4bjUtSEtST2RMdlhXaTlDNS1UVnI2dmlidzVDWDlWdWlaZnZSdUhIZmxseHhuWm
+  link           https://news.google.com/rss/articles/CBMiwgFBVV95cUxPRXRyVUtFN0xEdjlWTUZnSlBOZHktcEJDWlhHQmlJaXl5Z0VfeFZEeUJpTF9yR2l2NDJ3eDVJOUo3aGtVaTB5UENPRS1JNWF6MF9OcG1rSWl1VlE0QTR4bjUtSEtST2RMdlhXaTlDNS1UVnI2dmlidzVDWDlWdWlaZnZSdUhIZmxseHhuWmQ1MHhhZ2x1cU5zdEdvRUNYYnF3MktsZEZhQi1UZElEdjNEblB4U05Sd29YLTZCTWVQODlYZ9IBwgFBVV95cUxPcS1VYXc3TDlIdGpTZDI3dnhvTG5vVldNc3JrT01weWNwUmxXZ3RxU3o4S1A1MDZvaVRfbEVndi1FandoY0JOZm9XVjA0RURFT0xLWVFBVHJKaTR2NjlrQk1OczdnVjlfVW4tOGwtTGl5VUhhWkFpenZHMUZHT25FekgyYjlOTjJxUjIwSkQ4LXk3OEh5bERXM0V5WVdDcVBxLTJWVVVXYnZTSlc3Ym5OWFBpbGhDcWpSVkRjTEJRVi03UQ?oc=5
+  language       en
+  published_at   Sat, 25 Jul 2026 10:00:13 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","us"]
+  properties     {"guid":"CBMiwgFBVV95cUxPRXRyVUtFN0xEdjlWTUZnSlBOZHktcEJDWlhHQmlJaXl5Z0VfeFZEeUJpTF9yR2l2NDJ3eDVJOUo3aGtVaTB5UENPRS1JNWF6MF9OcG1rSWl1VlE0QTR4bjUtSEtST2RMdlhXaTlDNS1UVnI2dmlidzVDWDlWdWlaZnZSdUhIZmxseHhuWmQ1MHhhZ2x1cU5zdEdvRUNYYnF3MktsZEZhQi1UZElEdjNEblB4U05Sd29YLTZCTWVQODlYZ9IBwgFBVV95cUxPcS1VYXc3TDlIdGpTZDI3dnhvTG5vVldNc3JrT01weWNwUmxXZ3RxU3o4S1A1MDZvaVRfbEVndi1FandoY0JOZm9XVjA0RURFT0xLWVFBVHJKaTR2NjlrQk1OczdnVjlfVW4tOGwtTGl5VUhhWkFpenZHMUZHT25FekgyYjlOTjJxUjIwSkQ4LXk3OEh5bERXM0V5WVdDcVBxLTJWVVVXYnZTSlc3Ym
+
+--- row 2 ---
+  uid            gnews-mon-us-taiwan-strait|CBMif0FVX3lxTFB6T1NTQV9UbU5oVDN2Ulpnd1kzaUZlaVUxMi1Na2NXSFZVVnlaRGlnd1FiTjItNUxFelQwSFZ5SVJTZmd6ZGNkQWhaT3dHaUhmbEplTzhMdElIUkVhV1BHTVR1Mzdmd1E4UndyeDdoelJBT1RmUUZXR05HeFgtQ2s
+  title          Beware the Red Wave of Chinese Military Activity - Daily Signal
+  body           <a href="https://news.google.com/rss/articles/CBMif0FVX3lxTFB6T1NTQV9UbU5oVDN2Ulpnd1kzaUZlaVUxMi1Na2NXSFZVVnlaRGlnd1FiTjItNUxFelQwSFZ5SVJTZmd6ZGNkQWhaT3dHaUhmbEplTzhMdElIUkVhV1BHTVR1Mzdmd1E4UndyeDdoelJBT1RmUUZXR05HeFgtQ2s?oc=5" target="_blank">Beware the Red Wave of Chinese Military Activity</a>&nbsp;&nbsp;<font color="#6f6f6f">Daily Signal</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMif0FVX3lxTFB6T1NTQV9UbU5oVDN2Ulpnd1kzaUZlaVUxMi1Na2NXSFZVVnlaRGlnd1FiTjItNUxFelQwSFZ5SVJTZmd6ZGNkQWhaT3dHaUhmbEplTzhMdElIUkVhV1BHTVR1Mzdmd1E4UndyeDdoelJBT1RmUUZXR05HeFgtQ2s?oc=5" target="_bla
+  link           https://news.google.com/rss/articles/CBMif0FVX3lxTFB6T1NTQV9UbU5oVDN2Ulpnd1kzaUZlaVUxMi1Na2NXSFZVVnlaRGlnd1FiTjItNUxFelQwSFZ5SVJTZmd6ZGNkQWhaT3dHaUhmbEplTzhMdElIUkVhV1BHTVR1Mzdmd1E4UndyeDdoelJBT1RmUUZXR05HeFgtQ2s?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 17:25:14 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","us"]
+  properties     {"guid":"CBMif0FVX3lxTFB6T1NTQV9UbU5oVDN2Ulpnd1kzaUZlaVUxMi1Na2NXSFZVVnlaRGlnd1FiTjItNUxFelQwSFZ5SVJTZmd6ZGNkQWhaT3dHaUhmbEplTzhMdElIUkVhV1BHTVR1Mzdmd1E4UndyeDdoelJBT1RmUUZXR05HeFgtQ2s"}
+
+--- row 3 ---
+  uid            gnews-mon-us-taiwan-strait|CBMipwFBVV95cUxNd2hLVGRiWk5UUG9fLWV6VWJJYzQ4dm9EZmJ1MXRHLWtfeVpGTXlaRW04cjlZcHFkOXVKcXpQcUR0Y2lWSUh0RGc0eGl2WVFDUlhJdUowRkpKTGhta0dIM1FPWXRSeVdfZ1BEa1pTNkRObDB3LTl4cjkyM05NYnhLWlFOZktpM29wN1RDS3VvcjBpVjFyUlRCVFV1NUcxYkRhTzJvU3dUZw
+  title          Are Japan Weapons Exports to Taiwan Conceivable in a Future Strait War? - Global Taiwan Institute
+  body           <a href="https://news.google.com/rss/articles/CBMipwFBVV95cUxNd2hLVGRiWk5UUG9fLWV6VWJJYzQ4dm9EZmJ1MXRHLWtfeVpGTXlaRW04cjlZcHFkOXVKcXpQcUR0Y2lWSUh0RGc0eGl2WVFDUlhJdUowRkpKTGhta0dIM1FPWXRSeVdfZ1BEa1pTNkRObDB3LTl4cjkyM05NYnhLWlFOZktpM29wN1RDS3VvcjBpVjFyUlRCVFV1NUcxYkRhTzJvU3dUZw?oc=5" target="_blank">Are Japan Weapons Exports to Taiwan Conceivable in a Future Strait War?</a>&nbsp;&nbsp;<font color="#6f6f6f">Global Taiwan Institute</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMipwFBVV95cUxNd2hLVGRiWk5UUG9fLWV6VWJJYzQ4dm9EZmJ1MXRHLWtfeVpGTXlaRW04cjlZcHFkOXVKcXpQcUR0Y2lWSUh0RGc0eGl2WVFDUlhJdUowRkpKTGhta0dIM1FPWXRSeVdfZ1BEa1pTNkRObDB3LTl4cjkyM05NYnhLWlFOZktpM29wN1RDS3
+  link           https://news.google.com/rss/articles/CBMipwFBVV95cUxNd2hLVGRiWk5UUG9fLWV6VWJJYzQ4dm9EZmJ1MXRHLWtfeVpGTXlaRW04cjlZcHFkOXVKcXpQcUR0Y2lWSUh0RGc0eGl2WVFDUlhJdUowRkpKTGhta0dIM1FPWXRSeVdfZ1BEa1pTNkRObDB3LTl4cjkyM05NYnhLWlFOZktpM29wN1RDS3VvcjBpVjFyUlRCVFV1NUcxYkRhTzJvU3dUZw?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 17:55:04 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","us"]
+  properties     {"guid":"CBMipwFBVV95cUxNd2hLVGRiWk5UUG9fLWV6VWJJYzQ4dm9EZmJ1MXRHLWtfeVpGTXlaRW04cjlZcHFkOXVKcXpQcUR0Y2lWSUh0RGc0eGl2WVFDUlhJdUowRkpKTGhta0dIM1FPWXRSeVdfZ1BEa1pTNkRObDB3LTl4cjkyM05NYnhLWlFOZktpM29wN1RDS3VvcjBpVjFyUlRCVFV1NUcxYkRhTzJvU3dUZw"}

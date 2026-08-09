@@ -1,0 +1,9 @@
+=== OPENAQ_GLOBAL  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 78ms
+--- stderr ---
+[OPENAQ_GLOBAL] no OPENAQ_KEY — trying keyless v2 fallback
+[OPENAQ_GLOBAL] http status=410
+[OPENAQ_GLOBAL] gated (no OPENAQ_KEY, v2 unreachable)
+[sched] OPENAQ_GLOBAL run rc=0 records=0 78ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

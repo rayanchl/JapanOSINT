@@ -1,0 +1,7 @@
+=== LICENSE_PLATE_LOOKUP  entity=品川300あ12-34
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[LICENSE_PLATE_LOOKUP] gated (no PLATE_LOOKUP_URL template configured; plate→owner has no lawful public API)
+[sched] LICENSE_PLATE_LOOKUP run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

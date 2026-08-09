@@ -1,0 +1,36 @@
+=== OPENPHISH
+exit: 0
+sched: rc=0 records=200 243ms
+--- stderr ---
+[OPENPHISH] emitted 200
+[sched] OPENPHISH run rc=0 records=200 243ms
+--- persisted: 200 rows, 0 with lat/lon, 0 with geometry ---
+record_type: phishing-url=200
+sub_source_id: (null)=200
+
+--- row 1 ---
+  uid            OPENPHISH|OPENPHISH|http://www.99nt.site/
+  title          http://www.99nt.site/
+  link           https://openphish.com/feed.txt
+  language       en
+  record_type    phishing-url
+  tags           ["threat-intel","phishing","openphish"]
+  properties     {"service":"OPENPHISH","feed":"OPENPHISH","success":true}
+
+--- row 2 ---
+  uid            OPENPHISH|OPENPHISH|https://451238.help/dpd/pl
+  title          https://451238.help/dpd/pl
+  link           https://openphish.com/feed.txt
+  language       en
+  record_type    phishing-url
+  tags           ["threat-intel","phishing","openphish"]
+  properties     {"service":"OPENPHISH","feed":"OPENPHISH","success":true}
+
+--- row 3 ---
+  uid            OPENPHISH|OPENPHISH|http://tcy6-1n0-emeco-qbv7ql-qmsr5f.pages.dev/
+  title          http://tcy6-1n0-emeco-qbv7ql-qmsr5f.pages.dev/
+  link           https://openphish.com/feed.txt
+  language       en
+  record_type    phishing-url
+  tags           ["threat-intel","phishing","openphish"]
+  properties     {"service":"OPENPHISH","feed":"OPENPHISH","success":true}

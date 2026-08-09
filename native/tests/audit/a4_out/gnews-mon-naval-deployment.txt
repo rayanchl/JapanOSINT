@@ -1,0 +1,45 @@
+=== gnews-mon-naval-deployment
+exit: 0
+sched: rc=0 records=100 714ms
+--- stderr ---
+[rss] gnews-mon-naval-deployment emitted 100
+[sched] gnews-mon-naval-deployment run rc=0 records=100 714ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-naval-deployment|CBMi6wFBVV95cUxOcmpKeVZQNTZCbWw4OWxQWDZ4UmJwX1JzeWNHOXE3MFhnMU9LX3M5akw4UEY3d1Mya3hMSFpMUjZMZG9KSS1oak55Z0hNNzd3MFRNdDViZ29VLVZObExQU1dDN09xRVVVX1E2TEdkNjNQWFIzZG5MeEw3aUFadHFyNG5MemFCME5NVlNUTGRrb3JuRmRmZ29NVFZHRlhWVXphaWVIOHRjclB1OGJrN2puWnZkeFFMUlpvUnFEVUlmQUZrdzgwV3ZyNFVmWTVyN19ZYXFMZWhYRXRPcUtTT2RtdmgxcVFsMGF0OUVZ
+  title          USS Truxtun Returns to Naval Station Norfolk from Deployment to U.S. 4th, 5th, and 6th Fle - navy.mil
+  body           <a href="https://news.google.com/rss/articles/CBMi6wFBVV95cUxOcmpKeVZQNTZCbWw4OWxQWDZ4UmJwX1JzeWNHOXE3MFhnMU9LX3M5akw4UEY3d1Mya3hMSFpMUjZMZG9KSS1oak55Z0hNNzd3MFRNdDViZ29VLVZObExQU1dDN09xRVVVX1E2TEdkNjNQWFIzZG5MeEw3aUFadHFyNG5MemFCME5NVlNUTGRrb3JuRmRmZ29NVFZHRlhWVXphaWVIOHRjclB1OGJrN2puWnZkeFFMUlpvUnFEVUlmQUZrdzgwV3ZyNFVmWTVyN19ZYXFMZWhYRXRPcUtTT2RtdmgxcVFsMGF0OUVZ?oc=5" target="_blank">USS Truxtun Returns to Naval Station Norfolk from Deployment to U.S. 4th, 5th, and 6th Fle</a>&nbsp;&nbsp;<font color="#6f6f6f">navy.mil</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi6wFBVV95cUxOcmpKeVZQNTZCbWw4OWxQWDZ4UmJwX1JzeWNHOXE3MFhnMU9LX3M5akw4UEY3d1Mya3hMSFpMUjZMZG9KSS1oak55Z0hNNzd3MFRNdDViZ29VLVZObExQU1dDN09xRVVVX1E2TEdkNjNQWFIzZG5MeEw3aUFadHFyNG5MemFCME5NVlNUTG
+  link           https://news.google.com/rss/articles/CBMi6wFBVV95cUxOcmpKeVZQNTZCbWw4OWxQWDZ4UmJwX1JzeWNHOXE3MFhnMU9LX3M5akw4UEY3d1Mya3hMSFpMUjZMZG9KSS1oak55Z0hNNzd3MFRNdDViZ29VLVZObExQU1dDN09xRVVVX1E2TEdkNjNQWFIzZG5MeEw3aUFadHFyNG5MemFCME5NVlNUTGRrb3JuRmRmZ29NVFZHRlhWVXphaWVIOHRjclB1OGJrN2puWnZkeFFMUlpvUnFEVUlmQUZrdzgwV3ZyNFVmWTVyN19ZYXFMZWhYRXRPcUtTT2RtdmgxcVFsMGF0OUVZ?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 16:57:02 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","naval"]
+  properties     {"guid":"CBMi6wFBVV95cUxOcmpKeVZQNTZCbWw4OWxQWDZ4UmJwX1JzeWNHOXE3MFhnMU9LX3M5akw4UEY3d1Mya3hMSFpMUjZMZG9KSS1oak55Z0hNNzd3MFRNdDViZ29VLVZObExQU1dDN09xRVVVX1E2TEdkNjNQWFIzZG5MeEw3aUFadHFyNG5MemFCME5NVlNUTGRrb3JuRmRmZ29NVFZHRlhWVXphaWVIOHRjclB1OGJrN2puWnZkeFFMUlpvUnFEVUlmQUZrdzgwV3ZyNFVmWTVyN19ZYXFMZWhYRXRPcUtTT2RtdmgxcVFsMGF0OUVZ"}
+
+--- row 2 ---
+  uid            gnews-mon-naval-deployment|CBMisAFBVV95cUxPRnNyMDNNQ0xpcFAzMUdmS3N4a3A3X2FtTFV1M1EwN0xmVUtXWldwOVNxclhXbEgwNTFOd3JmUFpvVmFVamUzcjJpWldpS3RDQnNmYWhqV21EdDdKc1ZDTEFBdmp0bVNqUWZFNHlRT0lMRjdubGlvcmgyVXdua2htVlVGOTNFenROdUNBV0R0NDR6czZMMTJaeUJxUWF1dWRkbGQ1YTRlTzZiSUY4Ui1Gcw
+  title          USS Minnesota Completes First Forward-Deployment - U.S. Department of War (.gov)
+  body           <a href="https://news.google.com/rss/articles/CBMisAFBVV95cUxPRnNyMDNNQ0xpcFAzMUdmS3N4a3A3X2FtTFV1M1EwN0xmVUtXWldwOVNxclhXbEgwNTFOd3JmUFpvVmFVamUzcjJpWldpS3RDQnNmYWhqV21EdDdKc1ZDTEFBdmp0bVNqUWZFNHlRT0lMRjdubGlvcmgyVXdua2htVlVGOTNFenROdUNBV0R0NDR6czZMMTJaeUJxUWF1dWRkbGQ1YTRlTzZiSUY4Ui1Gcw?oc=5" target="_blank">USS Minnesota Completes First Forward-Deployment</a>&nbsp;&nbsp;<font color="#6f6f6f">U.S. Department of War (.gov)</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMisAFBVV95cUxPRnNyMDNNQ0xpcFAzMUdmS3N4a3A3X2FtTFV1M1EwN0xmVUtXWldwOVNxclhXbEgwNTFOd3JmUFpvVmFVamUzcjJpWldpS3RDQnNmYWhqV21EdDdKc1ZDTEFBdmp0bVNqUWZFNHlRT0lMRjdubGlvcmgyVXdua2htVlVGOTNFenROdUNBV0
+  link           https://news.google.com/rss/articles/CBMisAFBVV95cUxPRnNyMDNNQ0xpcFAzMUdmS3N4a3A3X2FtTFV1M1EwN0xmVUtXWldwOVNxclhXbEgwNTFOd3JmUFpvVmFVamUzcjJpWldpS3RDQnNmYWhqV21EdDdKc1ZDTEFBdmp0bVNqUWZFNHlRT0lMRjdubGlvcmgyVXdua2htVlVGOTNFenROdUNBV0R0NDR6czZMMTJaeUJxUWF1dWRkbGQ1YTRlTzZiSUY4Ui1Gcw?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 16:49:51 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","naval"]
+  properties     {"guid":"CBMisAFBVV95cUxPRnNyMDNNQ0xpcFAzMUdmS3N4a3A3X2FtTFV1M1EwN0xmVUtXWldwOVNxclhXbEgwNTFOd3JmUFpvVmFVamUzcjJpWldpS3RDQnNmYWhqV21EdDdKc1ZDTEFBdmp0bVNqUWZFNHlRT0lMRjdubGlvcmgyVXdua2htVlVGOTNFenROdUNBV0R0NDR6czZMMTJaeUJxUWF1dWRkbGQ1YTRlTzZiSUY4Ui1Gcw"}
+
+--- row 3 ---
+  uid            gnews-mon-naval-deployment|CBMitgFBVV95cUxQNk0zeFNZc21nbGtnSUxSNXY4clQ0VGJkNDZoeUNxTUtrMUEzSTB5WGliNmJDM2VvR2xzdk9KRXphd2RfTmhvTFNmOXNQcnBmNl84dFkzZHVNTHFzVTFwcDVrV0VCUGJ1Qk1YRHE4bE9wSlF4MXdoMU5jckY5TEoza21wT29GWEJxVzZQd014NG5xejVWVW9JWXNJUzgzSHNVZS1ZZHVVdlgtODQwdXFIRW82anRQZw
+  title          USS Truxtun returns to Naval Station Norfolk after nearly six-month deployment - WAVY.com
+  body           <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxQNk0zeFNZc21nbGtnSUxSNXY4clQ0VGJkNDZoeUNxTUtrMUEzSTB5WGliNmJDM2VvR2xzdk9KRXphd2RfTmhvTFNmOXNQcnBmNl84dFkzZHVNTHFzVTFwcDVrV0VCUGJ1Qk1YRHE4bE9wSlF4MXdoMU5jckY5TEoza21wT29GWEJxVzZQd014NG5xejVWVW9JWXNJUzgzSHNVZS1ZZHVVdlgtODQwdXFIRW82anRQZw?oc=5" target="_blank">USS Truxtun returns to Naval Station Norfolk after nearly six-month deployment</a>&nbsp;&nbsp;<font color="#6f6f6f">WAVY.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxQNk0zeFNZc21nbGtnSUxSNXY4clQ0VGJkNDZoeUNxTUtrMUEzSTB5WGliNmJDM2VvR2xzdk9KRXphd2RfTmhvTFNmOXNQcnBmNl84dFkzZHVNTHFzVTFwcDVrV0VCUGJ1Qk1YRHE4bE9wSlF4MXdoMU5jckY5TEoza21wT29GWEJxVzZQd0
+  link           https://news.google.com/rss/articles/CBMitgFBVV95cUxQNk0zeFNZc21nbGtnSUxSNXY4clQ0VGJkNDZoeUNxTUtrMUEzSTB5WGliNmJDM2VvR2xzdk9KRXphd2RfTmhvTFNmOXNQcnBmNl84dFkzZHVNTHFzVTFwcDVrV0VCUGJ1Qk1YRHE4bE9wSlF4MXdoMU5jckY5TEoza21wT29GWEJxVzZQd014NG5xejVWVW9JWXNJUzgzSHNVZS1ZZHVVdlgtODQwdXFIRW82anRQZw?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 16:22:23 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","naval"]
+  properties     {"guid":"CBMitgFBVV95cUxQNk0zeFNZc21nbGtnSUxSNXY4clQ0VGJkNDZoeUNxTUtrMUEzSTB5WGliNmJDM2VvR2xzdk9KRXphd2RfTmhvTFNmOXNQcnBmNl84dFkzZHVNTHFzVTFwcDVrV0VCUGJ1Qk1YRHE4bE9wSlF4MXdoMU5jckY5TEoza21wT29GWEJxVzZQd014NG5xejVWVW9JWXNJUzgzSHNVZS1ZZHVVdlgtODQwdXFIRW82anRQZw"}

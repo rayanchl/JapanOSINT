@@ -1,0 +1,41 @@
+=== nitter-mirrors
+exit: 0
+sched: rc=0 records=3 9161ms
+--- stderr ---
+[nitter-mirrors] nitter.net reachable=1
+[nitter-mirrors] nitter.tiekoetter.com reachable=1
+[nitter-mirrors] nitter.privacydev.net reachable=0
+[sched] nitter-mirrors run rc=0 records=3 9161ms
+--- persisted: 3 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=3
+sub_source_id: (null)=3
+
+--- row 1 ---
+  uid            nitter-mirrors|https://nitter.net/
+  title          Nitter mirror nitter.net
+  summary        X/Twitter RSS proxy — no API key required
+  link           https://nitter.net/
+  language       en
+  published_at   2026-07-31T18:04:52.140Z
+  tags           ["twitter","nitter","mirror","reachable"]
+  properties     {"reachable":true,"host":"nitter.net"}
+
+--- row 2 ---
+  uid            nitter-mirrors|https://nitter.tiekoetter.com/
+  title          Nitter mirror nitter.tiekoetter.com
+  summary        X/Twitter RSS proxy — no API key required
+  link           https://nitter.tiekoetter.com/
+  language       en
+  published_at   2026-07-31T18:04:52.140Z
+  tags           ["twitter","nitter","mirror","reachable"]
+  properties     {"reachable":true,"host":"nitter.tiekoetter.com"}
+
+--- row 3 ---
+  uid            nitter-mirrors|https://nitter.privacydev.net/
+  title          Nitter mirror nitter.privacydev.net
+  summary        X/Twitter RSS proxy — no API key required
+  link           https://nitter.privacydev.net/
+  language       en
+  published_at   2026-07-31T18:04:52.140Z
+  tags           ["twitter","nitter","mirror","unreachable"]
+  properties     {"reachable":false,"host":"nitter.privacydev.net"}

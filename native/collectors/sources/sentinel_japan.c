@@ -4,6 +4,7 @@
  * → Sentinel Hub Catalog STAC search → one intel item per Sentinel-2 L2A
  * scene. Non-spatial scene catalog (has_geo=0). Gated on creds. Honest empty
  * on auth/fetch failure. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -23,15 +24,10 @@ static void iso_ago(char *out, size_t n, int days) {
   strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &g);
 }
 
-static const char *sstr(cJSON *o, const char *k) {
-  cJSON *v = o ? cJSON_GetObjectItem(o, k) : NULL;
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
-}
-
 /* centroid of first ring of Polygon / MultiPolygon */
 static int centroid(cJSON *geom, double *cx, double *cy) {
   if (!geom) return 0;
-  const char *t = sstr(geom, "type");
+  const char *t = jo_sv(geom, "type");
   cJSON *coords = cJSON_GetObjectItem(geom, "coordinates");
   cJSON *ring = NULL;
   if (t && !strcmp(t, "Polygon") && cJSON_IsArray(coords))
@@ -67,7 +63,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     "Content-Type: application/x-www-form-urlencoded", NULL };
   cJSON *tokresp = feed_post_json(ctx->http,
     "https://services.sentinel-hub.com/oauth/token", form, tok_hdr, 12000);
-  const char *token = tokresp ? sstr(tokresp, "access_token") : NULL;
+  const char *token = tokresp ? jo_sv(tokresp, "access_token") : NULL;
   if (!token) {
     if (tokresp) cJSON_Delete(tokresp);
     fprintf(stderr, "[sentinel-japan] unavailable (OAuth token failed)\n");
@@ -106,13 +102,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_ArrayForEach(f, feats) {
     cJSON *geom = cJSON_GetObjectItem(f, "geometry");
     cJSON *props = cJSON_GetObjectItem(f, "properties");
-    const char *acquired = sstr(props, "datetime");
+    const char *acquired = jo_sv(props, "datetime");
     cJSON *cc = props ? cJSON_GetObjectItem(props, "eo:cloud_cover") : NULL;
     int has_cloud = cc && cJSON_IsNumber(cc);
     double cloud = has_cloud ? cc->valuedouble : 0;
 
     char sidbuf[32];
-    const char *sid = sstr(f, "id");
+    const char *sid = jo_sv(f, "id");
     if (!sid) { snprintf(sidbuf, sizeof sidbuf, "scene-%d", i); sid = sidbuf; }
 
     char title[128], summary[256], bodytxt[512];
@@ -161,7 +157,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (has_cloud) cJSON_AddNumberToObject(p, "cloud_cover", cloud);
     else cJSON_AddNullToObject(p, "cloud_cover");
     cJSON_AddStringToObject(p, "sensor", "MSI");
-    const char *plat = sstr(props, "platform");
+    const char *plat = jo_sv(props, "platform");
     cJSON_AddStringToObject(p, "platform", plat ? plat : "sentinel-2");
     cJSON_AddStringToObject(p, "scene_id", sid);
     char *pj = cJSON_PrintUnformatted(p);
@@ -193,7 +189,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(data);
   fprintf(stderr, "[sentinel-japan] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def sentinel_japan_def = {

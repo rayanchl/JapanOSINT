@@ -55,15 +55,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         finite_num(cJSON_GetObjectItem(loc, "latitude"), &lat);
       if (!hasgeo) continue;            /* .filter(Number.isFinite...) */
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(lon, lat);
 
       cJSON *p = cJSON_CreateObject();             /* EXACT JS key order */
       char idb[32];

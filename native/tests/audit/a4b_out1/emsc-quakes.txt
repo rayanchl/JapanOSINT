@@ -1,0 +1,39 @@
+=== emsc-quakes
+exit: 0
+sched: rc=0 records=300 587ms
+--- stderr ---
+[emsc-quakes] emitted 300
+[sched] emsc-quakes run rc=0 records=300 587ms
+--- persisted: 300 rows, 300 with lat/lon, 300 with geometry ---
+record_type: earthquake=300
+sub_source_id: (null)=300
+
+--- row 1 ---
+  uid            emsc-quakes|20260731_0000262
+  title          M2.0 ml — WESTERN TEXAS
+  body           Earthquake magnitude 2.0 ml at 31.3020, -103.1860, depth 0.4 km, WESTERN TEXAS (catalog EMSC-RTS, contributed by TX, event 20260731_0000262).
+  summary        Earthquake magnitude 2.0 ml at 31.3020, -103.1860, depth 0.4 km, WESTERN TEXAS (catalog EMSC-RTS, contributed by TX, event 20260731_0000262).
+  link           https://www.seismicportal.eu/eventdetails.html?unid=20260731_0000262
+  language       en
+  published_at   2026-07-31T18:34:55.689028Z
+  lat            31.302
+  lon            -103.186
+  geometry       {"type":"Point","coordinates":[-103.186000,31.302000]}
+  record_type    earthquake
+  tags           ["hazard","seismic","alert"]
+  properties     {"event_id":"20260731_0000262","magnitude":2,"magnitude_type":"ml","depth_km":0.4,"lat":31.302,"lon":-103.186,"region":"WESTERN TEXAS","event_type":"ke","agency":"TX","catalog":"EMSC-RTS","last_update":"2026-07-31T18:38:00.997618Z","source":"seismicportal.eu"}
+
+--- row 2 ---
+  uid            emsc-quakes|20260731_0000259
+  title          M3.4 m — PAPUA, INDONESIA
+  body           Earthquake magnitude 3.4 m at -4.5500, 137.1900, depth 33.0 km, PAPUA, INDONESIA (catalog EMSC-RTS, contributed by BMKG, event 20260731_0000259).
+  summary        Earthquake magnitude 3.4 m at -4.5500, 137.1900, depth 33.0 km, PAPUA, INDONESIA (catalog EMSC-RTS, contributed by BMKG, event 20260731_0000259).
+  link           https://www.seismicportal.eu/eventdetails.html?unid=20260731_0000259
+  language       en
+  published_at   2026-07-31T18:19:33.0Z
+  lat            -4.55
+  lon            137.19
+  geometry       {"type":"Point","coordinates":[137.190000,-4.550000]}
+  record_type    earthquake
+  tags           ["hazard","seismic","alert"]
+  properties     {"event_id":"20260731_0000259","magnitude":3.4,"magnitude_type":"m","depth_km":33,"lat":-4.55,"lon":137.19,"region":"PAPUA, INDONESIA","event_type":"ke","agency":"BMKG","catalog":"EMSC-RTS","last_update":"2026-07-31T18:28:39.863302Z","source":"seismicportal.eu"}

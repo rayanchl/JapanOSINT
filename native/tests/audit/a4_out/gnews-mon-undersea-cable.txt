@@ -1,0 +1,45 @@
+=== gnews-mon-undersea-cable
+exit: 0
+sched: rc=0 records=100 599ms
+--- stderr ---
+[rss] gnews-mon-undersea-cable emitted 100
+[sched] gnews-mon-undersea-cable run rc=0 records=100 599ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-undersea-cable|CBMizgFBVV95cUxPRDhQZy1XM19tZjZhZ1ppOS1rTFRuUWVoUnNxcEhYVnY4TnZicjlPbmxvNFVuMlY2UkhEWjV0cHR4ZFhfRXFBY25vLWw3Q3Z5VkZpc2tSbWNZdEdFa0twRGxyOWtoXzZSSm5ha2xaVnJZWEdhenU0cWYyQ2ZXNFVTMXBDeE55M2E4SVRSbGtfOWE3YklqXzA1cDI0Y1lQWEhuWnpLZ045RHQ4UTEtaTMxTEdkSDNQX3NfNC1QZnRYSnBoZ2p1dkZRaEpTcldiQQ
+  title          How global AI boom is intensifying US-China undersea stand-off - South China Morning Post
+  body           <a href="https://news.google.com/rss/articles/CBMizgFBVV95cUxPRDhQZy1XM19tZjZhZ1ppOS1rTFRuUWVoUnNxcEhYVnY4TnZicjlPbmxvNFVuMlY2UkhEWjV0cHR4ZFhfRXFBY25vLWw3Q3Z5VkZpc2tSbWNZdEdFa0twRGxyOWtoXzZSSm5ha2xaVnJZWEdhenU0cWYyQ2ZXNFVTMXBDeE55M2E4SVRSbGtfOWE3YklqXzA1cDI0Y1lQWEhuWnpLZ045RHQ4UTEtaTMxTEdkSDNQX3NfNC1QZnRYSnBoZ2p1dkZRaEpTcldiQQ?oc=5" target="_blank">How global AI boom is intensifying US-China undersea stand-off</a>&nbsp;&nbsp;<font color="#6f6f6f">South China Morning Post</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMizgFBVV95cUxPRDhQZy1XM19tZjZhZ1ppOS1rTFRuUWVoUnNxcEhYVnY4TnZicjlPbmxvNFVuMlY2UkhEWjV0cHR4ZFhfRXFBY25vLWw3Q3Z5VkZpc2tSbWNZdEdFa0twRGxyOWtoXzZSSm5ha2xaVnJZWEdhenU0cWYyQ2ZXNFVTMXBDeE55M2E4SVRSbG
+  link           https://news.google.com/rss/articles/CBMizgFBVV95cUxPRDhQZy1XM19tZjZhZ1ppOS1rTFRuUWVoUnNxcEhYVnY4TnZicjlPbmxvNFVuMlY2UkhEWjV0cHR4ZFhfRXFBY25vLWw3Q3Z5VkZpc2tSbWNZdEdFa0twRGxyOWtoXzZSSm5ha2xaVnJZWEdhenU0cWYyQ2ZXNFVTMXBDeE55M2E4SVRSbGtfOWE3YklqXzA1cDI0Y1lQWEhuWnpLZ045RHQ4UTEtaTMxTEdkSDNQX3NfNC1QZnRYSnBoZ2p1dkZRaEpTcldiQQ?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 15:00:07 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","undersea"]
+  properties     {"guid":"CBMizgFBVV95cUxPRDhQZy1XM19tZjZhZ1ppOS1rTFRuUWVoUnNxcEhYVnY4TnZicjlPbmxvNFVuMlY2UkhEWjV0cHR4ZFhfRXFBY25vLWw3Q3Z5VkZpc2tSbWNZdEdFa0twRGxyOWtoXzZSSm5ha2xaVnJZWEdhenU0cWYyQ2ZXNFVTMXBDeE55M2E4SVRSbGtfOWE3YklqXzA1cDI0Y1lQWEhuWnpLZ045RHQ4UTEtaTMxTEdkSDNQX3NfNC1QZnRYSnBoZ2p1dkZRaEpTcldiQQ"}
+
+--- row 2 ---
+  uid            gnews-mon-undersea-cable|CBMieEFVX3lxTE0tdUxyMkJQc1JwcnBSOGNjMzhWR0ZVRF9sdVdXZVI3N0FiMjJ2LWhBeFBfTTNPUGxtbHMwc2pPdkZaUmtMTjdqSmMxUzd3dzJWZjhYc2pGYjc1WE43OUQ3THRjcnNJeWJaeGdjZl9JbnFncE4wY3ZWbg
+  title          Oregon Proposes New Fees for Undersea Cables - SubTel Forum
+  body           <a href="https://news.google.com/rss/articles/CBMieEFVX3lxTE0tdUxyMkJQc1JwcnBSOGNjMzhWR0ZVRF9sdVdXZVI3N0FiMjJ2LWhBeFBfTTNPUGxtbHMwc2pPdkZaUmtMTjdqSmMxUzd3dzJWZjhYc2pGYjc1WE43OUQ3THRjcnNJeWJaeGdjZl9JbnFncE4wY3ZWbg?oc=5" target="_blank">Oregon Proposes New Fees for Undersea Cables</a>&nbsp;&nbsp;<font color="#6f6f6f">SubTel Forum</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMieEFVX3lxTE0tdUxyMkJQc1JwcnBSOGNjMzhWR0ZVRF9sdVdXZVI3N0FiMjJ2LWhBeFBfTTNPUGxtbHMwc2pPdkZaUmtMTjdqSmMxUzd3dzJWZjhYc2pGYjc1WE43OUQ3THRjcnNJeWJaeGdjZl9JbnFncE4wY3ZWbg?oc=5" target="_blank">Orego
+  link           https://news.google.com/rss/articles/CBMieEFVX3lxTE0tdUxyMkJQc1JwcnBSOGNjMzhWR0ZVRF9sdVdXZVI3N0FiMjJ2LWhBeFBfTTNPUGxtbHMwc2pPdkZaUmtMTjdqSmMxUzd3dzJWZjhYc2pGYjc1WE43OUQ3THRjcnNJeWJaeGdjZl9JbnFncE4wY3ZWbg?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 15:11:12 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","undersea"]
+  properties     {"guid":"CBMieEFVX3lxTE0tdUxyMkJQc1JwcnBSOGNjMzhWR0ZVRF9sdVdXZVI3N0FiMjJ2LWhBeFBfTTNPUGxtbHMwc2pPdkZaUmtMTjdqSmMxUzd3dzJWZjhYc2pGYjc1WE43OUQ3THRjcnNJeWJaeGdjZl9JbnFncE4wY3ZWbg"}
+
+--- row 3 ---
+  uid            gnews-mon-undersea-cable|CBMiwgFBVV95cUxOQVRzUkNnTmVWRzNUVE4tMURtdHRxVGtEMFhpcklNTkdmckR6c1pDSEdHWFhGU0YtdVBaTEQyVDFHQm9WV2xIYVU4WHlURHNXUVhNTUd1UThrcy1HVzM3MmxwbU5CajlUc2JSeHFmb01LUVhMUldibzl0b1J0Yzk3QjYxUl9pNzN0Q3F4Y1hYenFnVE5kanJ2b3NONDRPM1U0WVNvWFNuQ0hYeDh3UWJCd1V4SU5wN0lCTFowS0RkakRuZw
+  title          Datagrid New Zealand Awards Tasman Ring Network Cable Contract to ASN and OMS Group - Ocean News & Technology
+  body           <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxOQVRzUkNnTmVWRzNUVE4tMURtdHRxVGtEMFhpcklNTkdmckR6c1pDSEdHWFhGU0YtdVBaTEQyVDFHQm9WV2xIYVU4WHlURHNXUVhNTUd1UThrcy1HVzM3MmxwbU5CajlUc2JSeHFmb01LUVhMUldibzl0b1J0Yzk3QjYxUl9pNzN0Q3F4Y1hYenFnVE5kanJ2b3NONDRPM1U0WVNvWFNuQ0hYeDh3UWJCd1V4SU5wN0lCTFowS0RkakRuZw?oc=5" target="_blank">Datagrid New Zealand Awards Tasman Ring Network Cable Contract to ASN and OMS Group</a>&nbsp;&nbsp;<font color="#6f6f6f">Ocean News & Technology</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxOQVRzUkNnTmVWRzNUVE4tMURtdHRxVGtEMFhpcklNTkdmckR6c1pDSEdHWFhGU0YtdVBaTEQyVDFHQm9WV2xIYVU4WHlURHNXUVhNTUd1UThrcy1HVzM3MmxwbU5CajlUc2JSeHFmb01LUVhMUldibzl0b1J0Yzk3QjYxUl9pNzN0Q3F4Y1
+  link           https://news.google.com/rss/articles/CBMiwgFBVV95cUxOQVRzUkNnTmVWRzNUVE4tMURtdHRxVGtEMFhpcklNTkdmckR6c1pDSEdHWFhGU0YtdVBaTEQyVDFHQm9WV2xIYVU4WHlURHNXUVhNTUd1UThrcy1HVzM3MmxwbU5CajlUc2JSeHFmb01LUVhMUldibzl0b1J0Yzk3QjYxUl9pNzN0Q3F4Y1hYenFnVE5kanJ2b3NONDRPM1U0WVNvWFNuQ0hYeDh3UWJCd1V4SU5wN0lCTFowS0RkakRuZw?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 14:30:46 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","undersea"]
+  properties     {"guid":"CBMiwgFBVV95cUxOQVRzUkNnTmVWRzNUVE4tMURtdHRxVGtEMFhpcklNTkdmckR6c1pDSEdHWFhGU0YtdVBaTEQyVDFHQm9WV2xIYVU4WHlURHNXUVhNTUd1UThrcy1HVzM3MmxwbU5CajlUc2JSeHFmb01LUVhMUldibzl0b1J0Yzk3QjYxUl9pNzN0Q3F4Y1hYenFnVE5kanJ2b3NONDRPM1U0WVNvWFNuQ0hYeDh3UWJCd1V4SU5wN0lCTFowS0RkakRuZw"}

@@ -1,0 +1,45 @@
+=== gnews-mon-hostage-crisis
+exit: 0
+sched: rc=0 records=100 778ms
+--- stderr ---
+[rss] gnews-mon-hostage-crisis emitted 100
+[sched] gnews-mon-hostage-crisis run rc=0 records=100 778ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-hostage-crisis|CBMimwFBVV95cUxOT21MN24wdnlyaXdGc0NkRkZYQ0FJVmFQSE9sbWlXSnAzVF9oUkhXamFmS241SE12SGNjNjd0YVBKSk1DbHl1bnkwLVlvZTV6OUFHdE9kNHBWRUc2N1NLbW5ENXJLRTJzNmtnMTVVVXNodW5zQ0JLd3lQVEdBT0JoRUpXYjVYVjNFbGh6TXVCbnBxSVE2MWR2WmJGSQ
+  title          Police shoot suspect after hostage situation at Meijer in Waukesha - Spectrum News
+  body           <a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxOT21MN24wdnlyaXdGc0NkRkZYQ0FJVmFQSE9sbWlXSnAzVF9oUkhXamFmS241SE12SGNjNjd0YVBKSk1DbHl1bnkwLVlvZTV6OUFHdE9kNHBWRUc2N1NLbW5ENXJLRTJzNmtnMTVVVXNodW5zQ0JLd3lQVEdBT0JoRUpXYjVYVjNFbGh6TXVCbnBxSVE2MWR2WmJGSQ?oc=5" target="_blank">Police shoot suspect after hostage situation at Meijer in Waukesha</a>&nbsp;&nbsp;<font color="#6f6f6f">Spectrum News</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxOT21MN24wdnlyaXdGc0NkRkZYQ0FJVmFQSE9sbWlXSnAzVF9oUkhXamFmS241SE12SGNjNjd0YVBKSk1DbHl1bnkwLVlvZTV6OUFHdE9kNHBWRUc2N1NLbW5ENXJLRTJzNmtnMTVVVXNodW5zQ0JLd3lQVEdBT0JoRUpXYjVYVjNFbGh6TX
+  link           https://news.google.com/rss/articles/CBMimwFBVV95cUxOT21MN24wdnlyaXdGc0NkRkZYQ0FJVmFQSE9sbWlXSnAzVF9oUkhXamFmS241SE12SGNjNjd0YVBKSk1DbHl1bnkwLVlvZTV6OUFHdE9kNHBWRUc2N1NLbW5ENXJLRTJzNmtnMTVVVXNodW5zQ0JLd3lQVEdBT0JoRUpXYjVYVjNFbGh6TXVCbnBxSVE2MWR2WmJGSQ?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 11:23:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","hostage"]
+  properties     {"guid":"CBMimwFBVV95cUxOT21MN24wdnlyaXdGc0NkRkZYQ0FJVmFQSE9sbWlXSnAzVF9oUkhXamFmS241SE12SGNjNjd0YVBKSk1DbHl1bnkwLVlvZTV6OUFHdE9kNHBWRUc2N1NLbW5ENXJLRTJzNmtnMTVVVXNodW5zQ0JLd3lQVEdBT0JoRUpXYjVYVjNFbGh6TXVCbnBxSVE2MWR2WmJGSQ"}
+
+--- row 2 ---
+  uid            gnews-mon-hostage-crisis|CBMikgJBVV95cUxOVHVQOTBhSl9FdkJkMERWRHdzQUdmNGVrdUtMOFV0cEYwYTRlY1M1aHFMU0JNdlExcUpXZ2JoWnU5c1R5VkxNRjlpcFI5cWs5bjVNUHRXTkhDM0tDNjdPaXFDbjMxZGtpcHJkT0ROZ2diMDZuYTh6VTVWRmtDd0x0SGlYOWlOLWx5NFJ2cWxKSXgxMXU1c3UydGMzemRhV2Q0UkdBTzlrajJvMmkyRUNaNldTbzJOa0x2TUlaUHhabGNtY0dMa1NwSHdOMk10aUJodlhHT1U0QngxazljYlljcEVLXzduU0w5X2IydzFua2tJa3FyYkwzQk8ycDUySm0wTWwycmk0V1VIN1dWeGh6LTBn
+  title          Father, son indicted after alleged hostage crisis involving US Forest Service employees in Siskiyou County - ABC10
+  body           <a href="https://news.google.com/rss/articles/CBMikgJBVV95cUxOVHVQOTBhSl9FdkJkMERWRHdzQUdmNGVrdUtMOFV0cEYwYTRlY1M1aHFMU0JNdlExcUpXZ2JoWnU5c1R5VkxNRjlpcFI5cWs5bjVNUHRXTkhDM0tDNjdPaXFDbjMxZGtpcHJkT0ROZ2diMDZuYTh6VTVWRmtDd0x0SGlYOWlOLWx5NFJ2cWxKSXgxMXU1c3UydGMzemRhV2Q0UkdBTzlrajJvMmkyRUNaNldTbzJOa0x2TUlaUHhabGNtY0dMa1NwSHdOMk10aUJodlhHT1U0QngxazljYlljcEVLXzduU0w5X2IydzFua2tJa3FyYkwzQk8ycDUySm0wTWwycmk0V1VIN1dWeGh6LTBn?oc=5" target="_blank">Father, son indicted after alleged hostage crisis involving US Forest Service employees in Siskiyou County</a>&nbsp;&nbsp;<font color="#6f6f6f">ABC10</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMikgJBVV95cUxOVHVQOTBhSl9FdkJkMERWRHdzQUdmNGVrdUtMOFV0cEYwYTRlY1M1aHFMU0JNdlExcUpXZ2JoWnU5c1R5VkxNRjlpcFI5cWs5bjVNUHRXTkhDM0tDNjdPaXFDbjMxZGtpcHJkT0ROZ2diMDZuYTh6VTVWRmtDd0x0SGlYOWlOLWx5NFJ2cW
+  link           https://news.google.com/rss/articles/CBMikgJBVV95cUxOVHVQOTBhSl9FdkJkMERWRHdzQUdmNGVrdUtMOFV0cEYwYTRlY1M1aHFMU0JNdlExcUpXZ2JoWnU5c1R5VkxNRjlpcFI5cWs5bjVNUHRXTkhDM0tDNjdPaXFDbjMxZGtpcHJkT0ROZ2diMDZuYTh6VTVWRmtDd0x0SGlYOWlOLWx5NFJ2cWxKSXgxMXU1c3UydGMzemRhV2Q0UkdBTzlrajJvMmkyRUNaNldTbzJOa0x2TUlaUHhabGNtY0dMa1NwSHdOMk10aUJodlhHT1U0QngxazljYlljcEVLXzduU0w5X2IydzFua2tJa3FyYkwzQk8ycDUySm0wTWwycmk0V1VIN1dWeGh6LTBn?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 23:45:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","hostage"]
+  properties     {"guid":"CBMikgJBVV95cUxOVHVQOTBhSl9FdkJkMERWRHdzQUdmNGVrdUtMOFV0cEYwYTRlY1M1aHFMU0JNdlExcUpXZ2JoWnU5c1R5VkxNRjlpcFI5cWs5bjVNUHRXTkhDM0tDNjdPaXFDbjMxZGtpcHJkT0ROZ2diMDZuYTh6VTVWRmtDd0x0SGlYOWlOLWx5NFJ2cWxKSXgxMXU1c3UydGMzemRhV2Q0UkdBTzlrajJvMmkyRUNaNldTbzJOa0x2TUlaUHhabGNtY0dMa1NwSHdOMk10aUJodlhHT1U0QngxazljYlljcEVLXzduU0w5X2IydzFua2tJa3FyYkwzQk8ycDUySm0wTWwycmk0V1VIN1dWeGh6LTBn"}
+
+--- row 3 ---
+  uid            gnews-mon-hostage-crisis|CBMiwgFBVV95cUxQSUVwRFE2RFdUYVhNVUV1d1NBckxMVU5jVXdUUUFRVXU5eFhsVXFfOVVQS3VxakdnbkJxblo2blFYRGFwN2VXUU5pUm9ZYUNsNTY1REpELXJHSklpUU1oaVVzeEljcUo1b1hVRzJuckxuNGdqaFRNanAzeTRKTnRXMVM2N284ZmJZcjhvdVhIZXZUeUM1Tl9HSGtPLXFLeWVvRm53cERMelZ4NWFBQkVHTnhBUzhzakt3b29JNGpVeE5ZUQ
+  title          What to know about the hostage situation at Waukesha Meijer - Milwaukee Journal Sentinel
+  body           <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxQSUVwRFE2RFdUYVhNVUV1d1NBckxMVU5jVXdUUUFRVXU5eFhsVXFfOVVQS3VxakdnbkJxblo2blFYRGFwN2VXUU5pUm9ZYUNsNTY1REpELXJHSklpUU1oaVVzeEljcUo1b1hVRzJuckxuNGdqaFRNanAzeTRKTnRXMVM2N284ZmJZcjhvdVhIZXZUeUM1Tl9HSGtPLXFLeWVvRm53cERMelZ4NWFBQkVHTnhBUzhzakt3b29JNGpVeE5ZUQ?oc=5" target="_blank">What to know about the hostage situation at Waukesha Meijer</a>&nbsp;&nbsp;<font color="#6f6f6f">Milwaukee Journal Sentinel</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxQSUVwRFE2RFdUYVhNVUV1d1NBckxMVU5jVXdUUUFRVXU5eFhsVXFfOVVQS3VxakdnbkJxblo2blFYRGFwN2VXUU5pUm9ZYUNsNTY1REpELXJHSklpUU1oaVVzeEljcUo1b1hVRzJuckxuNGdqaFRNanAzeTRKTnRXMVM2N284ZmJZcjhvdV
+  link           https://news.google.com/rss/articles/CBMiwgFBVV95cUxQSUVwRFE2RFdUYVhNVUV1d1NBckxMVU5jVXdUUUFRVXU5eFhsVXFfOVVQS3VxakdnbkJxblo2blFYRGFwN2VXUU5pUm9ZYUNsNTY1REpELXJHSklpUU1oaVVzeEljcUo1b1hVRzJuckxuNGdqaFRNanAzeTRKTnRXMVM2N284ZmJZcjhvdVhIZXZUeUM1Tl9HSGtPLXFLeWVvRm53cERMelZ4NWFBQkVHTnhBUzhzakt3b29JNGpVeE5ZUQ?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 14:58:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","hostage"]
+  properties     {"guid":"CBMiwgFBVV95cUxQSUVwRFE2RFdUYVhNVUV1d1NBckxMVU5jVXdUUUFRVXU5eFhsVXFfOVVQS3VxakdnbkJxblo2blFYRGFwN2VXUU5pUm9ZYUNsNTY1REpELXJHSklpUU1oaVVzeEljcUo1b1hVRzJuckxuNGdqaFRNanAzeTRKTnRXMVM2N284ZmJZcjhvdVhIZXZUeUM1Tl9HSGtPLXFLeWVvRm53cERMelZ4NWFBQkVHTnhBUzhzakt3b29JNGpVeE5ZUQ"}

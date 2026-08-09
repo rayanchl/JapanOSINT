@@ -3,6 +3,7 @@
  * NTA Houjin Bangou /4/diff (JSON type=12), rolling 7-day UTC window.
  * Gated on HOUJIN_BANGOU_KEY (JS: no key → empty → 0 rows).
  * uid = houjin-bangou|<cn || changeDate||updateDate>. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -11,16 +12,10 @@
 #include <string.h>
 #include <time.h>
 
-/* JS truthy string. */
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
-           ? v->valuestring : NULL;
-}
 /* a || b (string-truthy). */
 static const char *sor(const cJSON *o, const char *a, const char *b) {
-  const char *x = sv(o, a);
-  return x ? x : sv(o, b);
+  const char *x = jo_sv(o, a);
+  return x ? x : jo_sv(o, b);
 }
 
 /* corporateNumber may arrive as number or string → string-truthy form. */
@@ -94,14 +89,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       i++;
       char cnbuf[40];
       const char *cn   = cn_of(c, cnbuf, sizeof cnbuf);
-      const char *proc = sv(c, "process");    /* c.process || null */
+      const char *proc = jo_sv(c, "process");    /* c.process || null */
       const char *plab = proc_label(proc);
-      const char *cdate= sv(c, "changeDate");
-      const char *udate= sv(c, "updateDate");
+      const char *cdate= jo_sv(c, "changeDate");
+      const char *udate= jo_sv(c, "updateDate");
 
       const char *pref = sor(c, "prefectureName", "prefecture_name");
       const char *city = sor(c, "cityName", "city_name");
-      const char *name = sv(c, "name");
+      const char *name = jo_sv(c, "name");
 
       /* uid: intelUid(SOURCE_ID, cn, c.changeDate||c.updateDate) */
       const char *rk = cn ? cn : (cdate ? cdate : udate);
@@ -132,10 +127,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       const char *summ = wrote ? summary : NULL;
 
       /* published_at = updateDate||update_date||changeDate||change_date||null */
-      const char *pub = sv(c, "updateDate");
-      if (!pub) pub = sv(c, "update_date");
+      const char *pub = jo_sv(c, "updateDate");
+      if (!pub) pub = jo_sv(c, "update_date");
       if (!pub) pub = cdate;
-      if (!pub) pub = sv(c, "change_date");
+      if (!pub) pub = jo_sv(c, "change_date");
 
       /* tags = ['corporate-registry',
        *         proc ? `process:${PROC[proc]||proc}` : null].filter */
@@ -154,13 +149,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cn ? cJSON_CreateString(cn) : cJSON_CreateNull());
       cJSON_AddItemToObject(p, "process",
         proc ? cJSON_CreateString(proc) : cJSON_CreateNull());
-      const char *nkana = sv(c, "furigana");
+      const char *nkana = jo_sv(c, "furigana");
       cJSON_AddItemToObject(p, "name_kana",
         nkana ? cJSON_CreateString(nkana) : cJSON_CreateNull());
       const char *nen = sor(c, "nameEn", "name_en");
       cJSON_AddItemToObject(p, "name_en",
         nen ? cJSON_CreateString(nen) : cJSON_CreateNull());
-      const char *knd = sv(c, "kind");
+      const char *knd = jo_sv(c, "kind");
       cJSON_AddItemToObject(p, "kind",
         knd ? cJSON_CreateString(knd) : cJSON_CreateNull());
       cJSON_AddItemToObject(p, "prefecture_name",
@@ -202,7 +197,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(json);
   fprintf(stderr, "[houjin-bangou] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def houjin_bangou_def = {

@@ -1,0 +1,45 @@
+=== PHOTON_GEOCODE  entity=Tokyo
+exit: 0
+sched: rc=0 records=10 187ms
+--- stderr ---
+[PHOTON_GEOCODE] emitted 10
+[sched] PHOTON_GEOCODE run rc=0 records=10 187ms
+--- persisted: 9 rows, 9 with lat/lon, 0 with geometry ---
+record_type: geocode-result=9
+sub_source_id: (null)=9
+
+--- row 1 ---
+  uid            PHOTON_GEOCODE|photon:35.67686,139.76389
+  title          東京都
+  body           {"name":"東京都","country":"日本","lat":35.6768601,"lon":139.7638947,"source":"Photon (OSM)"}
+  summary        日本
+  language       en
+  lat            35.6768601
+  lon            139.7638947
+  record_type    geocode-result
+  tags           ["osint-search","PHOTON_GEOCODE"]
+  properties     {"service":"PHOTON_GEOCODE","success":true}
+
+--- row 2 ---
+  uid            PHOTON_GEOCODE|photon:35.68347,139.74347
+  title          TOKYO-FM
+  body           {"name":"TOKYO-FM","city":"千代田区","country":"日本","lat":35.6834679,"lon":139.7434717,"source":"Photon (OSM)"}
+  summary        千代田区, 日本
+  language       en
+  lat            35.6834679
+  lon            139.7434717
+  record_type    geocode-result
+  tags           ["osint-search","PHOTON_GEOCODE"]
+  properties     {"service":"PHOTON_GEOCODE","success":true}
+
+--- row 3 ---
+  uid            PHOTON_GEOCODE|photon:35.68125,139.76671
+  title          東京
+  body           {"name":"東京","city":"千代田区","country":"日本","lat":35.6812546,"lon":139.766706,"source":"Photon (OSM)"}
+  summary        千代田区, 日本
+  language       en
+  lat            35.6812546
+  lon            139.766706
+  record_type    geocode-result
+  tags           ["osint-search","PHOTON_GEOCODE"]
+  properties     {"service":"PHOTON_GEOCODE","success":true}

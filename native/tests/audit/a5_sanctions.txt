@@ -1,0 +1,9 @@
+AU_DFAT Vladimir Putin
+CA_SANCTIONS Vladimir Putin
+CH_SECO Vladimir Putin
+OFAC_SDN Vladimir Putin
+UN_SANCTIONS Kim Jong Un
+FBI_WANTED Ruja Ignatova
+OPENSANCTIONS Vladimir Putin
+UK_OFSI Vladimir Putin
+EU_SANCTIONS Vladimir Putin

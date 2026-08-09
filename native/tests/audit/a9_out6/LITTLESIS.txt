@@ -1,0 +1,40 @@
+=== LITTLESIS  entity=Musk
+exit: 0
+sched: rc=0 records=10 508ms
+--- stderr ---
+[littlesis] emitted 10
+[sched] LITTLESIS run rc=0 records=10 508ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: littlesis-entity=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            LITTLESIS|15108
+  title          Donald Trump
+  body           {"name":"Donald Trump","primary_ext":"Person","blurb":"\n        45th President of the United States; Former host of The Apprentice Reality show; Real estate developer","summary":"Donald J. Trump’s global business empire will create an unprecedented number of conflicts of interest for a United States president, experts in legal ethics say.","littlesis_id":"15108","source":"LittleSis"}
+  summary        
+        45th President of the United States; Former host of The Apprentice Reality show; Real estate developer
+  language       en
+  record_type    littlesis-entity
+  tags           ["osint-search","LITTLESIS"]
+  properties     {"service":"LITTLESIS","source":"LittleSis","primary_ext":"Person","littlesis_id":"15108","success":true}
+
+--- row 2 ---
+  uid            LITTLESIS|38805
+  title          Elon Musk
+  body           {"name":"Elon Musk","primary_ext":"Person","blurb":"Tesla, SpaceX CEO","summary":"Elon Musk (born June 28, 1971, Pretoria, South Africa) is a South African–born American entrepreneur who cofounded the electronic payment firm PayPal and formed SpaceX, maker of launch vehicles and spacecraft. He was also one of the first significant investors in, as well as chief executive officer of, the electric car manufacturer Tesla. In addition, Musk acquired Twitter (later X) in 2022. Musk led the Department of Government Efficiency (DOGE) in U.S. President Donald Trump’s second administration for four months before stepping down in May 2025. Musk is the world’s richest person, with a net worth of $393 billion, as of 2025.","littlesis_id":"38805","source":"LittleSis"}
+  summary        Tesla, SpaceX CEO
+  language       en
+  record_type    littlesis-entity
+  tags           ["osint-search","LITTLESIS"]
+  properties     {"service":"LITTLESIS","source":"LittleSis","primary_ext":"Person","littlesis_id":"38805","success":true}
+
+--- row 3 ---
+  uid            LITTLESIS|38824
+  title          Kimbal Musk
+  body           {"name":"Kimbal Musk","primary_ext":"Person","blurb":"Kimbal Musk is a chef and Co founder of The Kitchen; CEO of Medium, Inc, an internet software company based in Boulder, CO.","summary":"Kimbal Musk is the co-founder of The Kitchen.\n\nKimbal is on the board for Tesla Motors, SpaceX and Chipotle Mexican Grill. His personal mission is to get communities rapidly thriving by improving every part of the food culture. Kimbal is a co-founder of The Kitchen, a growing family of restaurants that sources directly from local farmers, stimulating the local farm economy to the tune of millions of dollars a year, and creating quality jobs. In 2011, Kimbal and Hugo Matheson co-founded The Kitchen Community, a complementary non-profit organization. The Kitchen Community builds Learning Gardens in schools around the U.S. reaching hundreds of thousands of students every school day, improving their veg …<86 more chars>
+  summary        Kimbal Musk is a chef and Co founder of The Kitchen; CEO of Medium, Inc, an internet software company based in Boulder, CO.
+  language       en
+  record_type    littlesis-entity
+  tags           ["osint-search","LITTLESIS"]
+  properties     {"service":"LITTLESIS","source":"LittleSis","primary_ext":"Person","littlesis_id":"38824","success":true}

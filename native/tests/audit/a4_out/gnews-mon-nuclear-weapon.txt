@@ -1,0 +1,45 @@
+=== gnews-mon-nuclear-weapon
+exit: 0
+sched: rc=0 records=100 663ms
+--- stderr ---
+[rss] gnews-mon-nuclear-weapon emitted 100
+[sched] gnews-mon-nuclear-weapon run rc=0 records=100 663ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-nuclear-weapon|CBMiowFBVV95cUxON2w1TXh2TWJYbFVOWjRDT01oSjZORzk1RVBDN3k0VmNmTDc2MGVZaVAxY2QtNXo4Y0JGb2FYTXRVNURON3poNnVXSUZtQmFiR19kdXVtUmF4cmM0Z1RNa0thTV9tUEtSUndlcWZhV3ptM0d3Mk5hTEIzR0NRbm9lMC14OWs1dWh2RDY0X0tSdVRJQ3k3UW5Kei0xZmc5WFJPZkhz
+  title          The Saudi Nuclear Deal Would Set a Dangerous New Proliferation Precedent - Council on Foreign Relations
+  body           <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxON2w1TXh2TWJYbFVOWjRDT01oSjZORzk1RVBDN3k0VmNmTDc2MGVZaVAxY2QtNXo4Y0JGb2FYTXRVNURON3poNnVXSUZtQmFiR19kdXVtUmF4cmM0Z1RNa0thTV9tUEtSUndlcWZhV3ptM0d3Mk5hTEIzR0NRbm9lMC14OWs1dWh2RDY0X0tSdVRJQ3k3UW5Kei0xZmc5WFJPZkhz?oc=5" target="_blank">The Saudi Nuclear Deal Would Set a Dangerous New Proliferation Precedent</a>&nbsp;&nbsp;<font color="#6f6f6f">Council on Foreign Relations</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxON2w1TXh2TWJYbFVOWjRDT01oSjZORzk1RVBDN3k0VmNmTDc2MGVZaVAxY2QtNXo4Y0JGb2FYTXRVNURON3poNnVXSUZtQmFiR19kdXVtUmF4cmM0Z1RNa0thTV9tUEtSUndlcWZhV3ptM0d3Mk5hTEIzR0NRbm9lMC14OWs1dWh2RDY0X0
+  link           https://news.google.com/rss/articles/CBMiowFBVV95cUxON2w1TXh2TWJYbFVOWjRDT01oSjZORzk1RVBDN3k0VmNmTDc2MGVZaVAxY2QtNXo4Y0JGb2FYTXRVNURON3poNnVXSUZtQmFiR19kdXVtUmF4cmM0Z1RNa0thTV9tUEtSUndlcWZhV3ptM0d3Mk5hTEIzR0NRbm9lMC14OWs1dWh2RDY0X0tSdVRJQ3k3UW5Kei0xZmc5WFJPZkhz?oc=5
+  language       en
+  published_at   Tue, 28 Jul 2026 15:42:06 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","nuclear"]
+  properties     {"guid":"CBMiowFBVV95cUxON2w1TXh2TWJYbFVOWjRDT01oSjZORzk1RVBDN3k0VmNmTDc2MGVZaVAxY2QtNXo4Y0JGb2FYTXRVNURON3poNnVXSUZtQmFiR19kdXVtUmF4cmM0Z1RNa0thTV9tUEtSUndlcWZhV3ptM0d3Mk5hTEIzR0NRbm9lMC14OWs1dWh2RDY0X0tSdVRJQ3k3UW5Kei0xZmc5WFJPZkhz"}
+
+--- row 2 ---
+  uid            gnews-mon-nuclear-weapon|CBMiswFBVV95cUxPQ2N4cXRvRi1RV3ZGVFdULWdlOGhac1RQaFBVSmlrLXFNbm9nQjg1d0VGUThIUXRMOWtDdUhzc1JRYlFHZzFBamVsdU9ZVUNLakVSaHdTQ21kWGRFVzE4SDZ5eTVYZ29PRFp6Tk1BV1ZrU2NVNEJ3RFk2aXk2clRrOHlsLVdsVGF4cV8yQngyMjNFTTMxbXVaTkFfWFBJT2RBSWlzMnd1d05xWG82bFF2Y2x6SQ
+  title          Trump is turning old federal nuclear weapon sites into land for data centers - the-independent.com
+  body           <a href="https://news.google.com/rss/articles/CBMiswFBVV95cUxPQ2N4cXRvRi1RV3ZGVFdULWdlOGhac1RQaFBVSmlrLXFNbm9nQjg1d0VGUThIUXRMOWtDdUhzc1JRYlFHZzFBamVsdU9ZVUNLakVSaHdTQ21kWGRFVzE4SDZ5eTVYZ29PRFp6Tk1BV1ZrU2NVNEJ3RFk2aXk2clRrOHlsLVdsVGF4cV8yQngyMjNFTTMxbXVaTkFfWFBJT2RBSWlzMnd1d05xWG82bFF2Y2x6SQ?oc=5" target="_blank">Trump is turning old federal nuclear weapon sites into land for data centers</a>&nbsp;&nbsp;<font color="#6f6f6f">the-independent.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiswFBVV95cUxPQ2N4cXRvRi1RV3ZGVFdULWdlOGhac1RQaFBVSmlrLXFNbm9nQjg1d0VGUThIUXRMOWtDdUhzc1JRYlFHZzFBamVsdU9ZVUNLakVSaHdTQ21kWGRFVzE4SDZ5eTVYZ29PRFp6Tk1BV1ZrU2NVNEJ3RFk2aXk2clRrOHlsLVdsVGF4cV8yQn
+  link           https://news.google.com/rss/articles/CBMiswFBVV95cUxPQ2N4cXRvRi1RV3ZGVFdULWdlOGhac1RQaFBVSmlrLXFNbm9nQjg1d0VGUThIUXRMOWtDdUhzc1JRYlFHZzFBamVsdU9ZVUNLakVSaHdTQ21kWGRFVzE4SDZ5eTVYZ29PRFp6Tk1BV1ZrU2NVNEJ3RFk2aXk2clRrOHlsLVdsVGF4cV8yQngyMjNFTTMxbXVaTkFfWFBJT2RBSWlzMnd1d05xWG82bFF2Y2x6SQ?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 00:22:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","nuclear"]
+  properties     {"guid":"CBMiswFBVV95cUxPQ2N4cXRvRi1RV3ZGVFdULWdlOGhac1RQaFBVSmlrLXFNbm9nQjg1d0VGUThIUXRMOWtDdUhzc1JRYlFHZzFBamVsdU9ZVUNLakVSaHdTQ21kWGRFVzE4SDZ5eTVYZ29PRFp6Tk1BV1ZrU2NVNEJ3RFk2aXk2clRrOHlsLVdsVGF4cV8yQngyMjNFTTMxbXVaTkFfWFBJT2RBSWlzMnd1d05xWG82bFF2Y2x6SQ"}
+
+--- row 3 ---
+  uid            gnews-mon-nuclear-weapon|CBMiwgFBVV95cUxNejQxSERtRTZpYmdOU0x5dVZ6a19wbl9oeGxHTWRQX0wwZDZnM3JSVDItNXE0VUplV3ZXSnpXOTVWWTVtSVdNbTNaOGRjRElaSTBsZ3k0dDFSeVl4d2VLTU85enRMdHJOQmdqa0Q5eU1TVGdJMTNIRWloOHJ5ZVpSRXBBbE1saUdEYnJhMDZBRDc3OVhjZV9EMi1qbE9qYkRNMVpOQVl1RGgwbkRnbEhsUzNpR0xWSk43Wmo0aVJlZzNrZw
+  title          The US-Saudi nuclear deal isn't dead—It's dragging Washington into nonproliferation quicksand - Bulletin of the Atomic Scientists
+  body           <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxNejQxSERtRTZpYmdOU0x5dVZ6a19wbl9oeGxHTWRQX0wwZDZnM3JSVDItNXE0VUplV3ZXSnpXOTVWWTVtSVdNbTNaOGRjRElaSTBsZ3k0dDFSeVl4d2VLTU85enRMdHJOQmdqa0Q5eU1TVGdJMTNIRWloOHJ5ZVpSRXBBbE1saUdEYnJhMDZBRDc3OVhjZV9EMi1qbE9qYkRNMVpOQVl1RGgwbkRnbEhsUzNpR0xWSk43Wmo0aVJlZzNrZw?oc=5" target="_blank">The US-Saudi nuclear deal isn't dead—It's dragging Washington into nonproliferation quicksand</a>&nbsp;&nbsp;<font color="#6f6f6f">Bulletin of the Atomic Scientists</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxNejQxSERtRTZpYmdOU0x5dVZ6a19wbl9oeGxHTWRQX0wwZDZnM3JSVDItNXE0VUplV3ZXSnpXOTVWWTVtSVdNbTNaOGRjRElaSTBsZ3k0dDFSeVl4d2VLTU85enRMdHJOQmdqa0Q5eU1TVGdJMTNIRWloOHJ5ZVpSRXBBbE1saUdEYnJhMD
+  link           https://news.google.com/rss/articles/CBMiwgFBVV95cUxNejQxSERtRTZpYmdOU0x5dVZ6a19wbl9oeGxHTWRQX0wwZDZnM3JSVDItNXE0VUplV3ZXSnpXOTVWWTVtSVdNbTNaOGRjRElaSTBsZ3k0dDFSeVl4d2VLTU85enRMdHJOQmdqa0Q5eU1TVGdJMTNIRWloOHJ5ZVpSRXBBbE1saUdEYnJhMDZBRDc3OVhjZV9EMi1qbE9qYkRNMVpOQVl1RGgwbkRnbEhsUzNpR0xWSk43Wmo0aVJlZzNrZw?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 11:32:24 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","nuclear"]
+  properties     {"guid":"CBMiwgFBVV95cUxNejQxSERtRTZpYmdOU0x5dVZ6a19wbl9oeGxHTWRQX0wwZDZnM3JSVDItNXE0VUplV3ZXSnpXOTVWWTVtSVdNbTNaOGRjRElaSTBsZ3k0dDFSeVl4d2VLTU85enRMdHJOQmdqa0Q5eU1TVGdJMTNIRWloOHJ5ZVpSRXBBbE1saUdEYnJhMDZBRDc3OVhjZV9EMi1qbE9qYkRNMVpOQVl1RGgwbkRnbEhsUzNpR0xWSk43Wmo0aVJlZzNrZw"}

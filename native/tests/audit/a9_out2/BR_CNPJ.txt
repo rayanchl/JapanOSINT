@@ -1,0 +1,21 @@
+=== BR_CNPJ  entity=00000000000191
+exit: 0
+sched: rc=0 records=1 582ms
+--- stderr ---
+[br_cnpj] emitted 1
+[sched] BR_CNPJ run rc=0 records=1 582ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: br-cnpj-company=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            BR_CNPJ|00000000000191
+  title          BANCO DO BRASIL SA
+  body           {"razao_social":"BANCO DO BRASIL SA","nome_fantasia":"DIRECAO GERAL","cnpj":"00000000000191","situacao":"ATIVA","atividade_principal":"Bancos múltiplos, com carteira comercial","endereco":"SAUN QUADRA 5 BLOCO B TORRE I, II, III, SN ANDAR T I SL S101 A S1602 T II SL C101 A C1602 TIII SL N101 A N1602 - ASA NORTE, BRASILIA - DF, CEP 70040912","telefone":"6134939002","data_inicio_atividade":"1966-08-01","socios":[{"nome":"ALAN CARLOS GUEDES DE OLIVEIRA","qualificacao":"Diretor","data_entrada":"2023-05-17"},{"nome":"ALBERTO MARTINHAGO VIEIRA","qualificacao":"Diretor","data_entrada":"2023-07-20"},{"nome":"ALEXANDRE BOCCHETTI NUNES","qualificacao":"Diretor","data_entrada":"2025-08-28"},{"nome":"ANA CRISTINA ROSA GARCIA","qualificacao":"Diretor","data_entrada":"2023-03-22"},{"nome":"ANELIZE LENZI RUAS DE ALMEIDA","qualificacao":"Conselheiro de Administração","data_entrada":"2023-05-16"},{"nome": …<3420 more chars>
+  summary        DIRECAO GERAL
+  link           https://brasilapi.com.br/api/cnpj/v1/00000000000191
+  language       pt
+  published_at   1966-08-01
+  record_type    br-cnpj-company
+  tags           ["osint-search","BR_CNPJ"]
+  properties     {"service":"BR_CNPJ","source":"BrasilAPI","cnpj":"00000000000191","situacao":"ATIVA","endereco":"SAUN QUADRA 5 BLOCO B TORRE I, II, III, SN ANDAR T I SL S101 A S1602 T II SL C101 A C1602 TIII SL N101 A N1602 - ASA NORTE, BRASILIA - DF, CEP 70040912","socios":[{"nome":"ALAN CARLOS GUEDES DE OLIVEIRA","qualificacao":"Diretor","data_entrada":"2023-05-17"},{"nome":"ALBERTO MARTINHAGO VIEIRA","qualificacao":"Diretor","data_entrada":"2023-07-20"},{"nome":"ALEXANDRE BOCCHETTI NUNES","qualificacao":"Diretor","data_entrada":"2025-08-28"},{"nome":"ANA CRISTINA ROSA GARCIA","qualificacao":"Diretor","data_entrada":"2023-03-22"},{"nome":"ANELIZE LENZI RUAS DE ALMEIDA","qualificacao":"Conselheiro de Administração","data_entrada":"2023-05-16"},{"nome":"ANTONIO CARLOS WAGNER CHIARELLO","qualificacao":"Diretor","data_entrada":"2020-09-24"},{"nome":"BARBARA DOS SANTOS LOPES FREITAS","qualificacao":"Direto …<3256 more chars>

@@ -1,0 +1,40 @@
+=== ncsc-ie
+exit: 0
+sched: rc=0 records=225 440ms
+--- stderr ---
+[rss] ncsc-ie emitted 225
+[sched] ncsc-ie run rc=0 records=225 440ms
+--- persisted: 223 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=223
+sub_source_id: (null)=223
+
+--- row 1 ---
+  uid            ncsc-ie|https://www.ncsc.gov.ie/pdfs/2607210267_CVE-2026-2701_CVE-2026-2699.pdf
+  title          Critical Vulnerbilities in Progress: ShareFile Storage Zones Controller
+            (CVE-2026-2701 and CVE-2026-2699)
+  link           https://www.ncsc.gov.ie/pdfs/2607210267_CVE-2026-2701_CVE-2026-2699.pdf
+  language       en
+  published_at   Wed, 22 Jul 2026 00:00:00 GMT
+  record_type    article
+  tags           ["cyber","cert","advisory","ireland"]
+  properties     {"guid":"https://www.ncsc.gov.ie/pdfs/2607210267_CVE-2026-2701_CVE-2026-2699.pdf"}
+
+--- row 2 ---
+  uid            ncsc-ie|https://www.ncsc.gov.ie/pdfs/2607200215_CVE-2026-53565_CVE-2026-53566.pdf
+  title          Vulnerabilites in Citrix Secure Access Client for Windows and Citrix Endpoint Analysis Client for Windows
+  link           https://www.ncsc.gov.ie/pdfs/2607200215_CVE-2026-53565_CVE-2026-53566.pdf
+  language       en
+  published_at   Mon, 20 Jul 2026 00:00:00 GMT
+  record_type    article
+  tags           ["cyber","cert","advisory","ireland"]
+  properties     {"guid":"https://www.ncsc.gov.ie/pdfs/2607200215_CVE-2026-53565_CVE-2026-53566.pdf"}
+
+--- row 3 ---
+  uid            ncsc-ie|https://www.ncsc.gov.ie/pdfs/2607200218_CVE-2026-63030_CVE-2026-60137.pdf
+  title          Multiple Vulnerabilities in WordPress Core (CVE-2026-63030_CVE-2026-60137)
+  link           https://www.ncsc.gov.ie/pdfs/2607200218_CVE-2026-63030_CVE-2026-60137.pdf
+  language       en
+  published_at   Mon, 20 Jul 2026 00:00:00 GMT
+  record_type    article
+  tags           ["cyber","cert","advisory","ireland"]
+  properties     {"guid":"https://www.ncsc.gov.ie/pdfs/2607200218_CVE-2026-63030_CVE-2026-60137.pdf"}

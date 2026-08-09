@@ -1,0 +1,42 @@
+=== SEC_FULLTEXT  entity=Toyota
+exit: 0
+sched: rc=0 records=20 423ms
+--- stderr ---
+[SEC_FULLTEXT] emitted 20
+[sched] SEC_FULLTEXT run rc=0 records=20 423ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: sec-filing=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            SEC_FULLTEXT|0001193125-11-187554:dex991.htm
+  title          Toyota Auto Body Co., Ltd.  (CIK 0001525116) · CB
+  body           {"filer":"Toyota Auto Body Co., Ltd.  (CIK 0001525116)","form":"CB","file_date":"2011-07-13","doc_id":"0001193125-11-187554:dex991.htm","source":"SEC EDGAR FTS"}
+  summary        2011-07-13
+  link           https://www.sec.gov/cgi-bin/srqsb
+  language       en
+  record_type    sec-filing
+  tags           ["osint-search","SEC_FULLTEXT"]
+  properties     {"service":"SEC_FULLTEXT","success":true}
+
+--- row 2 ---
+  uid            SEC_FULLTEXT|0001193125-26-003211:ck0001965052-ex10_7.htm
+  title          Marblegate Capital Corp  (MGTE, MGTEW)  (CIK 0001965052) · 8-K
+  body           {"filer":"Marblegate Capital Corp  (MGTE, MGTEW)  (CIK 0001965052)","form":"8-K","file_date":"2026-01-06","doc_id":"0001193125-26-003211:ck0001965052-ex10_7.htm","source":"SEC EDGAR FTS"}
+  summary        2026-01-06
+  link           https://www.sec.gov/cgi-bin/srqsb
+  language       en
+  record_type    sec-filing
+  tags           ["osint-search","SEC_FULLTEXT"]
+  properties     {"service":"SEC_FULLTEXT","success":true}
+
+--- row 3 ---
+  uid            SEC_FULLTEXT|0001193125-11-187338:dex994.htm
+  title          TOYOTA MOTOR CORP/  (TM, TOYOF)  (CIK 0001094517) · 6-K
+  body           {"filer":"TOYOTA MOTOR CORP/  (TM, TOYOF)  (CIK 0001094517)","form":"6-K","file_date":"2011-07-13","doc_id":"0001193125-11-187338:dex994.htm","source":"SEC EDGAR FTS"}
+  summary        2011-07-13
+  link           https://www.sec.gov/cgi-bin/srqsb
+  language       en
+  record_type    sec-filing
+  tags           ["osint-search","SEC_FULLTEXT"]
+  properties     {"service":"SEC_FULLTEXT","success":true}

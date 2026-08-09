@@ -5,6 +5,7 @@
  * uid = edinet-filings|<d.docID || idx_<i>> (intelUid first non-empty).
  * published_at mirrors d.submitDateTime (source string passthrough; JS does
  * new Date(x).toISOString() — server-tz-coupled, not in uid/props). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -12,13 +13,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-/* JS truthy string. */
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
-           ? v->valuestring : NULL;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("EDINET_API_KEY");
@@ -48,14 +42,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *d;
     cJSON_ArrayForEach(d, list) {
       if (i >= 200) break;                 /* slice(0,200) */
-      const char *docID  = sv(d, "docID");
-      const char *filer  = sv(d, "filerName");
-      const char *ddesc  = sv(d, "docDescription");
-      const char *fcode  = sv(d, "formCode");
-      const char *dtcode = sv(d, "docTypeCode");
-      const char *seccode= sv(d, "secCode");
-      const char *edcode = sv(d, "edinetCode");
-      const char *subdt  = sv(d, "submitDateTime");
+      const char *docID  = jo_sv(d, "docID");
+      const char *filer  = jo_sv(d, "filerName");
+      const char *ddesc  = jo_sv(d, "docDescription");
+      const char *fcode  = jo_sv(d, "formCode");
+      const char *dtcode = jo_sv(d, "docTypeCode");
+      const char *seccode= jo_sv(d, "secCode");
+      const char *edcode = jo_sv(d, "edinetCode");
+      const char *subdt  = jo_sv(d, "submitDateTime");
 
       /* uid: intelUid(SOURCE_ID, d.docID, 'idx_'+i) → first non-empty */
       char idxbuf[24];
@@ -131,7 +125,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(data);
   fprintf(stderr, "[edinet-filings] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def edinet_filings_def = {

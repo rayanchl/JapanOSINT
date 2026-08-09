@@ -1,0 +1,45 @@
+=== gnews-mon-military-coup
+exit: 0
+sched: rc=0 records=100 754ms
+--- stderr ---
+[rss] gnews-mon-military-coup emitted 100
+[sched] gnews-mon-military-coup run rc=0 records=100 754ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-military-coup|CBMilAFBVV95cUxQMDZLWEk3ekt6OXI5X19lMFFqdExFbWhXQWx5Rml4Wm1jWnlrYWJ1aXdNaGFYNUd3ZGh2TDYzeWdBZDZPMTJ3Nlo3bzBhTURnbW1IVUJvVVdEcTQtRVo5a0JDTzA1dWw3MnRWQnZhMlpDTEE1SkFpYkhyTUhLRElMZkxRaHlLczVYMjQ4WUJJTTQ2bHNh
+  title          Yes, Trump Will Attempt a Coup - prospect.org
+  body           <a href="https://news.google.com/rss/articles/CBMilAFBVV95cUxQMDZLWEk3ekt6OXI5X19lMFFqdExFbWhXQWx5Rml4Wm1jWnlrYWJ1aXdNaGFYNUd3ZGh2TDYzeWdBZDZPMTJ3Nlo3bzBhTURnbW1IVUJvVVdEcTQtRVo5a0JDTzA1dWw3MnRWQnZhMlpDTEE1SkFpYkhyTUhLRElMZkxRaHlLczVYMjQ4WUJJTTQ2bHNh?oc=5" target="_blank">Yes, Trump Will Attempt a Coup</a>&nbsp;&nbsp;<font color="#6f6f6f">prospect.org</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMilAFBVV95cUxQMDZLWEk3ekt6OXI5X19lMFFqdExFbWhXQWx5Rml4Wm1jWnlrYWJ1aXdNaGFYNUd3ZGh2TDYzeWdBZDZPMTJ3Nlo3bzBhTURnbW1IVUJvVVdEcTQtRVo5a0JDTzA1dWw3MnRWQnZhMlpDTEE1SkFpYkhyTUhLRElMZkxRaHlLczVYMjQ4WU
+  link           https://news.google.com/rss/articles/CBMilAFBVV95cUxQMDZLWEk3ekt6OXI5X19lMFFqdExFbWhXQWx5Rml4Wm1jWnlrYWJ1aXdNaGFYNUd3ZGh2TDYzeWdBZDZPMTJ3Nlo3bzBhTURnbW1IVUJvVVdEcTQtRVo5a0JDTzA1dWw3MnRWQnZhMlpDTEE1SkFpYkhyTUhLRElMZkxRaHlLczVYMjQ4WUJJTTQ2bHNh?oc=5
+  language       en
+  published_at   Tue, 28 Jul 2026 14:30:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","military"]
+  properties     {"guid":"CBMilAFBVV95cUxQMDZLWEk3ekt6OXI5X19lMFFqdExFbWhXQWx5Rml4Wm1jWnlrYWJ1aXdNaGFYNUd3ZGh2TDYzeWdBZDZPMTJ3Nlo3bzBhTURnbW1IVUJvVVdEcTQtRVo5a0JDTzA1dWw3MnRWQnZhMlpDTEE1SkFpYkhyTUhLRElMZkxRaHlLczVYMjQ4WUJJTTQ2bHNh"}
+
+--- row 2 ---
+  uid            gnews-mon-military-coup|CBMiqAFBVV95cUxQRHo5VmEySmlOc2puNkktR3FsZXZYQXhqZjRHTHpoZkRyYXJ5Q1h0MmdQbHpoSFNHWFhJM0MyY1FsZFNBM2tzSVhQdFR3ZVFrNE5RSlJ2NGNTNV92WVc2UHZNYS1rMUlTS1R0ZjRSRnp5UjBFaDdDc1dUUno3dUt5RndOd1JmR2ZDUEluaUtkRDRYcWFvU2NPdFgyOGVPeDh0VTFnSjlqNUQ
+  title          A racist massacre. A white-supremacist coup. A century of lies - The Economist
+  body           <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxQRHo5VmEySmlOc2puNkktR3FsZXZYQXhqZjRHTHpoZkRyYXJ5Q1h0MmdQbHpoSFNHWFhJM0MyY1FsZFNBM2tzSVhQdFR3ZVFrNE5RSlJ2NGNTNV92WVc2UHZNYS1rMUlTS1R0ZjRSRnp5UjBFaDdDc1dUUno3dUt5RndOd1JmR2ZDUEluaUtkRDRYcWFvU2NPdFgyOGVPeDh0VTFnSjlqNUQ?oc=5" target="_blank">A racist massacre. A white-supremacist coup. A century of lies</a>&nbsp;&nbsp;<font color="#6f6f6f">The Economist</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxQRHo5VmEySmlOc2puNkktR3FsZXZYQXhqZjRHTHpoZkRyYXJ5Q1h0MmdQbHpoSFNHWFhJM0MyY1FsZFNBM2tzSVhQdFR3ZVFrNE5RSlJ2NGNTNV92WVc2UHZNYS1rMUlTS1R0ZjRSRnp5UjBFaDdDc1dUUno3dUt5RndOd1JmR2ZDUEluaU
+  link           https://news.google.com/rss/articles/CBMiqAFBVV95cUxQRHo5VmEySmlOc2puNkktR3FsZXZYQXhqZjRHTHpoZkRyYXJ5Q1h0MmdQbHpoSFNHWFhJM0MyY1FsZFNBM2tzSVhQdFR3ZVFrNE5RSlJ2NGNTNV92WVc2UHZNYS1rMUlTS1R0ZjRSRnp5UjBFaDdDc1dUUno3dUt5RndOd1JmR2ZDUEluaUtkRDRYcWFvU2NPdFgyOGVPeDh0VTFnSjlqNUQ?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 13:02:21 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","military"]
+  properties     {"guid":"CBMiqAFBVV95cUxQRHo5VmEySmlOc2puNkktR3FsZXZYQXhqZjRHTHpoZkRyYXJ5Q1h0MmdQbHpoSFNHWFhJM0MyY1FsZFNBM2tzSVhQdFR3ZVFrNE5RSlJ2NGNTNV92WVc2UHZNYS1rMUlTS1R0ZjRSRnp5UjBFaDdDc1dUUno3dUt5RndOd1JmR2ZDUEluaUtkRDRYcWFvU2NPdFgyOGVPeDh0VTFnSjlqNUQ"}
+
+--- row 3 ---
+  uid            gnews-mon-military-coup|CBMirAFBVV95cUxPaDZwUHdHSjQ3TDhwQmEwam5tVjhSTE5SYVdON2s5MFpiWkZLa2l4VFlCajFWRmJqZWdfcEhwcnZ1RnN0em1Sb2hMaUp2VDltcG5GckI2bW9Lc1BuQUllQjJ6UEl0MUxqWTNEellXUUNYYU9raS00U3BZYTE0NExhcGhfbHoxODFsaDdyYWw0cmViSFNrQ0RUcm03WUNMejV3SlNqVGNxeklEZm920gGyAUFVX3lxTE5LdE1lcU43YkU5VXB3N1psenhvamhOTmZXUjVJWGlkaWdoYmRPV0lLbTNMMkI3S1NCQ01tQ0ZaWjh2aTlwSnNWYlNRb0M5Q3pkT3p1dXpBM1pzbnVPWXVVRFBzVnM3aVNXajB2Vk83VFJVZDBmRDJZQnVLQUlzb3BOTzJ6R3RaZDZkd3BvQ25vYWlpQVhheGt4YnpONTY3LXR4UHVzTHo3WFlhRU5DQWpGVUE
+  title          How the failed 2016 coup reshaped Turkiye’s civil-military relations - Al Jazeera
+  body           <a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxPaDZwUHdHSjQ3TDhwQmEwam5tVjhSTE5SYVdON2s5MFpiWkZLa2l4VFlCajFWRmJqZWdfcEhwcnZ1RnN0em1Sb2hMaUp2VDltcG5GckI2bW9Lc1BuQUllQjJ6UEl0MUxqWTNEellXUUNYYU9raS00U3BZYTE0NExhcGhfbHoxODFsaDdyYWw0cmViSFNrQ0RUcm03WUNMejV3SlNqVGNxeklEZm920gGyAUFVX3lxTE5LdE1lcU43YkU5VXB3N1psenhvamhOTmZXUjVJWGlkaWdoYmRPV0lLbTNMMkI3S1NCQ01tQ0ZaWjh2aTlwSnNWYlNRb0M5Q3pkT3p1dXpBM1pzbnVPWXVVRFBzVnM3aVNXajB2Vk83VFJVZDBmRDJZQnVLQUlzb3BOTzJ6R3RaZDZkd3BvQ25vYWlpQVhheGt4YnpONTY3LXR4UHVzTHo3WFlhRU5DQWpGVUE?oc=5" target="_blank">How the failed 2016 coup reshaped Turkiye’s civil-military relations</a>&nbsp;&nbsp;<font color="#6f6f6f">Al Jazeera</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxPaDZwUHdHSjQ3TDhwQmEwam5tVjhSTE5SYVdON2s5MFpiWkZLa2l4VFlCajFWRmJqZWdfcEhwcnZ1RnN0em1Sb2hMaUp2VDltcG5GckI2bW9Lc1BuQUllQjJ6UEl0MUxqWTNEellXUUNYYU9raS00U3BZYTE0NExhcGhfbHoxODFsaDdyYW
+  link           https://news.google.com/rss/articles/CBMirAFBVV95cUxPaDZwUHdHSjQ3TDhwQmEwam5tVjhSTE5SYVdON2s5MFpiWkZLa2l4VFlCajFWRmJqZWdfcEhwcnZ1RnN0em1Sb2hMaUp2VDltcG5GckI2bW9Lc1BuQUllQjJ6UEl0MUxqWTNEellXUUNYYU9raS00U3BZYTE0NExhcGhfbHoxODFsaDdyYWw0cmViSFNrQ0RUcm03WUNMejV3SlNqVGNxeklEZm920gGyAUFVX3lxTE5LdE1lcU43YkU5VXB3N1psenhvamhOTmZXUjVJWGlkaWdoYmRPV0lLbTNMMkI3S1NCQ01tQ0ZaWjh2aTlwSnNWYlNRb0M5Q3pkT3p1dXpBM1pzbnVPWXVVRFBzVnM3aVNXajB2Vk83VFJVZDBmRDJZQnVLQUlzb3BOTzJ6R3RaZDZkd3BvQ25vYWlpQVhheGt4YnpONTY3LXR4UHVzTHo3WFlhRU5DQWpGVUE?oc=5
+  language       en
+  published_at   Wed, 15 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","military"]
+  properties     {"guid":"CBMirAFBVV95cUxPaDZwUHdHSjQ3TDhwQmEwam5tVjhSTE5SYVdON2s5MFpiWkZLa2l4VFlCajFWRmJqZWdfcEhwcnZ1RnN0em1Sb2hMaUp2VDltcG5GckI2bW9Lc1BuQUllQjJ6UEl0MUxqWTNEellXUUNYYU9raS00U3BZYTE0NExhcGhfbHoxODFsaDdyYWw0cmViSFNrQ0RUcm03WUNMejV3SlNqVGNxeklEZm920gGyAUFVX3lxTE5LdE1lcU43YkU5VXB3N1psenhvamhOTmZXUjVJWGlkaWdoYmRPV0lLbTNMMkI3S1NCQ01tQ0ZaWjh2aTlwSnNWYlNRb0M5Q3pkT3p1dXpBM1pzbnVPWXVVRFBzVnM3aVNXajB2Vk83VFJVZDBmRDJZQnVLQUlzb3BOTzJ6R3RaZDZkd3BvQ25vYWlpQVhheGt4YnpONTY3LXR4UHVzTHo3WFlhRU5DQWpGVUE"}

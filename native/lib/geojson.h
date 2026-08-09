@@ -22,4 +22,14 @@ int geojson_emit_features(intel_sink *sink, const char *source_id,
 /* Convenience: parse a FeatureCollection / {features:[...]} / array and emit. */
 int geojson_emit_doc(intel_sink *sink, const char *source_id, cJSON *doc);
 
+/* One Point Feature, properties not yet attached:
+ *   {"type":"Feature","geometry":{"type":"Point","coordinates":[lon,lat]}}
+ * The caller adds "properties" (and anything else) afterwards.
+ *
+ * 240 collectors wrote these same nine cJSON calls by hand. Key insertion
+ * order here deliberately matches those copies byte for byte, because
+ * featureUid's hash fallback (geojson.c) fingerprints the PRINTED geometry —
+ * reordering the keys would re-uid every feature that has no natural id. */
+cJSON *gj_point_feature(double lon, double lat);
+
 #endif

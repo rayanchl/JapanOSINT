@@ -1,0 +1,19 @@
+=== comiket-events
+exit: 0
+sched: rc=0 records=1 1276ms
+--- stderr ---
+[comiket-events] probe reachable=0
+[sched] comiket-events run rc=0 records=1 1276ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            comiket-events|portal
+  title          Comiket — doujin event calendar
+  summary        Comiket + Comic City schedule — Tokyo Big Sight / Makuhari Messe occupancy spikes
+  link           https://www.comiket.co.jp/info-a/
+  language       ja
+  published_at   2026-07-31T18:20:01.650Z
+  tags           ["event","doujin","comiket","unreachable"]
+  properties     {"operator":"Comiket Preparatory Committee","reachable":false}

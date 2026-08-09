@@ -1,8 +1,12 @@
 /* collectors/satellite/sources/jaxa_earth.c
- * Port of server/src/collectors/jaxaEarth.js.
- * Keyless JAXA Earth API catalog index (first candidate endpoint that yields
- * a non-empty list wins) → one intel item per dataset/collection.
- * Non-spatial catalog (has_geo=0). Honest empty on failure. */
+ * Keyless JAXA Earth database catalog → one intel item per dataset/collection.
+ * Non-spatial catalog (has_geo=0; the bbox rides in properties).
+ *
+ * The three /api/collection|datasets endpoints this was ported from are all
+ * 404 today — JAXA moved the catalog to STAC, which is what their own
+ * en/datasets/ page reads (assets createList.js: catalog.json → rel=child
+ * collection.json). We walk the same graph. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -10,110 +14,113 @@
 #include <stdlib.h>
 #include <string.h>
 
-static const char *sstr(cJSON *o, const char *k) {
-  cJSON *v = o ? cJSON_GetObjectItem(o, k) : NULL;
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
+#define JAXA_STAC "https://data.earth.jaxa.jp/stac/cog/v1/catalog.json"
+
+/* ".../je-pds/cog/v1/<ID>/collection.json" → <ID>. Returns 0 if the href does
+ * not have that shape. */
+static int id_from_href(const char *href, char *out, size_t n) {
+  const char *tail = strstr(href, "/collection.json");
+  if (!tail) return 0;
+  const char *p = tail;
+  while (p > href && p[-1] != '/') p--;
+  size_t len = (size_t)(tail - p);
+  if (!len || len >= n) return 0;
+  memcpy(out, p, len); out[len] = 0;
+  return 1;
 }
 
-/* extractList: array | .collections | .datasets | .results | object values */
-static cJSON *extract_list(cJSON *data, cJSON **own) {
-  *own = NULL;
-  if (!data) return NULL;
-  if (cJSON_IsArray(data)) return data;
-  cJSON *l;
-  if ((l = cJSON_GetObjectItem(data, "collections")) && cJSON_IsArray(l))
-    return l;
-  if ((l = cJSON_GetObjectItem(data, "datasets")) && cJSON_IsArray(l))
-    return l;
-  if ((l = cJSON_GetObjectItem(data, "results")) && cJSON_IsArray(l))
-    return l;
-  if (cJSON_IsObject(data)) {
-    cJSON *vals = cJSON_CreateArray();
-    int ok = 1, any = 0;
-    cJSON *c;
-    cJSON_ArrayForEach(c, data) {
-      any = 1;
-      if (!cJSON_IsObject(c) && !cJSON_IsArray(c)) { ok = 0; break; }
-      cJSON_AddItemToArray(vals, cJSON_Duplicate(c, 1));
-    }
-    if (ok && any) { *own = vals; return vals; }
-    cJSON_Delete(vals);
-  }
+/* extent.temporal.interval[0][1] (dataset end) or [0][0] (start). */
+static const char *temporal_end(cJSON *ext) {
+  cJSON *t = ext ? cJSON_GetObjectItem(ext, "temporal") : NULL;
+  cJSON *iv = t ? cJSON_GetObjectItem(t, "interval") : NULL;
+  cJSON *first = iv ? cJSON_GetArrayItem(iv, 0) : NULL;
+  if (!first) return NULL;
+  cJSON *end = cJSON_GetArrayItem(first, 1);
+  if (end && cJSON_IsString(end) && end->valuestring[0]) return end->valuestring;
+  cJSON *start = cJSON_GetArrayItem(first, 0);
+  if (start && cJSON_IsString(start) && start->valuestring[0]) return start->valuestring;
   return NULL;
 }
 
+/* summaries.<k> is a STAC array of values; copy it through if present. */
+static void copy_summary(cJSON *p, cJSON *sum, const char *k) {
+  cJSON *v = sum ? cJSON_GetObjectItem(sum, k) : NULL;
+  if (v && !cJSON_IsNull(v)) cJSON_AddItemToObject(p, k, cJSON_Duplicate(v, 1));
+}
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *endpoints[] = {
-    "https://data.earth.jaxa.jp/api/collection/v1/all/",
-    "https://data.earth.jaxa.jp/api/collection/",
-    "https://data.earth.jaxa.jp/api/datasets/",
-  };
-  cJSON *data = NULL, *list = NULL, *own = NULL;
-  for (int k = 0; k < 3; k++) {
-    cJSON *d = feed_get_json(ctx->http, endpoints[k], 15000);
-    cJSON *o = NULL;
-    cJSON *l = extract_list(d, &o);
-    if (l && cJSON_GetArraySize(l) > 0) {
-      data = d; list = l; own = o; break;
-    }
-    if (o) cJSON_Delete(o);
-    if (d) cJSON_Delete(d);
-  }
-  if (!list || cJSON_GetArraySize(list) == 0) {
-    if (own) cJSON_Delete(own);
-    if (data) cJSON_Delete(data);
-    fprintf(stderr, "[jaxa-earth] unavailable (catalog empty)\n");
-    return -1;
+  cJSON *cat = feed_get_json(ctx->http, JAXA_STAC, 15000);
+  cJSON *links = cat ? cJSON_GetObjectItem(cat, "links") : NULL;
+  if (!links || !cJSON_IsArray(links)) {
+    if (cat) cJSON_Delete(cat);
+    fprintf(stderr, "[jaxa-earth] catalog unreachable (%s)\n", JAXA_STAC);
+    return -1;                       /* fetch really failed: an error */
   }
 
-  int n = 0, i = 0;
-  cJSON *d;
-  cJSON_ArrayForEach(d, list) {
+  int n = 0, i = 0, seen = 0;
+  cJSON *l;
+  cJSON_ArrayForEach(l, links) {
     if (i >= 200) break;
-    char idbuf[32];
-    const char *id = sstr(d, "id");
-    if (!id) id = sstr(d, "identifier");
-    if (!id) id = sstr(d, "collection_id");
-    if (!id) id = sstr(d, "name");
-    if (!id) { snprintf(idbuf, sizeof idbuf, "dataset-%d", i); id = idbuf; }
+    const char *rel = jo_sv(l, "rel");
+    const char *href = jo_sv(l, "href");
+    if (!rel || strcmp(rel, "child") != 0 || !href) continue;
+    seen++;
+    char id[192];
+    if (!id_from_href(href, id, sizeof id)) continue;
 
-    const char *tt = sstr(d, "title");
-    if (!tt) tt = sstr(d, "name");
-    if (!tt) tt = sstr(d, "id");
-    char ttbuf[32];
-    if (!tt) { snprintf(ttbuf, sizeof ttbuf, "JAXA Earth dataset %d", i); tt = ttbuf; }
+    /* Each child is a STAC Collection with the real metadata: title,
+     * description, keywords, spatial/temporal extent, license, providers and
+     * the band assets. The old code only ever saw a flat list and therefore
+     * dropped all of it. */
+    cJSON *d = feed_get_json(ctx->http, href, 15000);
+    if (!d) { fprintf(stderr, "[jaxa-earth] %s unreachable\n", id); continue; }
+    i++;
 
-    const char *desc = sstr(d, "description");
-    if (!desc) desc = sstr(d, "abstract");
+    const char *tt = jo_sv(d, "title");
+    if (!tt) tt = id;
+    const char *desc = jo_sv(d, "description");
 
-    char title[320], summary[300], bodytxt[640];
+    char title[320], summary[300], bodytxt[900];
     snprintf(title, sizeof title, "JAXA Earth: %s", tt);
     if (desc) {
       snprintf(summary, sizeof summary, "%.240s", desc);
       snprintf(bodytxt, sizeof bodytxt,
-        "JAXA Earth API catalog entry \"%s\" (%s). %s", tt, id, desc);
+        "JAXA Earth database collection \"%s\" (%s). %s", tt, id, desc);
     } else {
-      snprintf(summary, sizeof summary, "JAXA Earth API dataset %s.", id);
+      snprintf(summary, sizeof summary, "JAXA Earth dataset %s.", id);
       snprintf(bodytxt, sizeof bodytxt,
-        "JAXA Earth API catalog entry \"%s\" (%s).", tt, id);
+        "JAXA Earth database collection \"%s\" (%s).", tt, id);
     }
 
-    const char *updated = sstr(d, "updated");
-    if (!updated) updated = sstr(d, "modified");
+    cJSON *ext = cJSON_GetObjectItem(d, "extent");
+    const char *updated = temporal_end(ext);
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "dataset_id", id);
-    cJSON *bb = cJSON_GetObjectItem(d, "bbox");
-    if (!bb) bb = cJSON_GetObjectItem(d, "extent");
-    cJSON_AddItemToObject(p, "bbox",
-      bb ? cJSON_Duplicate(bb, 1) : cJSON_CreateNull());
-    cJSON *tmp = cJSON_GetObjectItem(d, "temporal");
-    if (!tmp) tmp = cJSON_GetObjectItem(d, "time_range");
-    cJSON_AddItemToObject(p, "temporal",
-      tmp ? cJSON_Duplicate(tmp, 1) : cJSON_CreateNull());
+    cJSON_AddStringToObject(p, "collection_url", href);
+    cJSON *sp = ext ? cJSON_GetObjectItem(ext, "spatial") : NULL;
+    cJSON *bb = sp ? cJSON_GetObjectItem(sp, "bbox") : NULL;
+    if (bb) cJSON_AddItemToObject(p, "bbox", cJSON_Duplicate(bb, 1));
+    cJSON *tm = ext ? cJSON_GetObjectItem(ext, "temporal") : NULL;
+    if (tm) cJSON_AddItemToObject(p, "temporal", cJSON_Duplicate(tm, 1));
     cJSON *kw = cJSON_GetObjectItem(d, "keywords");
-    cJSON_AddItemToObject(p, "keywords",
-      kw ? cJSON_Duplicate(kw, 1) : cJSON_CreateNull());
+    if (kw) cJSON_AddItemToObject(p, "keywords", cJSON_Duplicate(kw, 1));
+    const char *lic = jo_sv(d, "license");
+    if (lic) cJSON_AddStringToObject(p, "license", lic);
+    cJSON *pv = cJSON_GetObjectItem(d, "providers");
+    if (pv) cJSON_AddItemToObject(p, "providers", cJSON_Duplicate(pv, 1));
+    cJSON *sum = cJSON_GetObjectItem(d, "summaries");
+    copy_summary(p, sum, "platform");
+    copy_summary(p, sum, "instrument");
+    /* band list: assets keyed by band name, each with a human title */
+    cJSON *as = cJSON_GetObjectItem(d, "assets");
+    if (as && cJSON_IsObject(as)) {
+      cJSON *bands = cJSON_CreateArray();
+      cJSON *a;
+      cJSON_ArrayForEach(a, as)
+        if (a->string) cJSON_AddItemToArray(bands, cJSON_CreateString(a->string));
+      cJSON_AddItemToObject(p, "bands", bands);
+    }
     char *pj = cJSON_PrintUnformatted(p);
 
     cJSON *tags = cJSON_CreateArray();
@@ -124,27 +131,33 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddItemToArray(tags, cJSON_CreateString("raster"));
     char *tj = cJSON_PrintUnformatted(tags);
 
+    /* deep link into JAXA's own dataset browser (en/datasets/script.js routes
+     * on #/id/<dataset_id>) */
+    char link[320];
+    snprintf(link, sizeof link,
+             "https://data.earth.jaxa.jp/en/datasets/#/id/%s", id);
+
     intel_item it = {0};
     it.remote_key = id;              /* uid jaxa-earth|<id> */
     it.title = title;
     it.summary = summary;
     it.body = bodytxt;
-    it.link = "https://data.earth.jaxa.jp/";
+    it.link = link;
     it.published_at = updated;
     it.record_type = "jaxa-earth";
-    it.has_geo = 0;
+    it.has_geo = 0;                  /* catalog entry, not a place */
     it.properties_json = pj;
     it.tags_json = tj;
     if (sink->emit(sink, &it) >= 0) n++;
 
     free(pj); free(tj);
-    cJSON_Delete(p); cJSON_Delete(tags);
-    i++;
+    cJSON_Delete(p); cJSON_Delete(tags); cJSON_Delete(d);
   }
-  if (own) cJSON_Delete(own);
-  if (data) cJSON_Delete(data);
-  fprintf(stderr, "[jaxa-earth] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  cJSON_Delete(cat);
+  fprintf(stderr, "[jaxa-earth] emitted %d of %d catalog children\n", n, seen);
+  /* rc is a status: the catalog answered, so this is a successful run even if
+   * every child fetch happened to fail. */
+  return 0;
 }
 
 static const source_def jaxa_earth_def = {

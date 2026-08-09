@@ -81,15 +81,30 @@ static int aid_emit(intel_sink *sink, const char *service, const char *rectype,
 static int aid_reliefweb(const source_ctx *ctx, intel_sink *sink, const char *q) {
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
+  /* v1 was decommissioned (HTTP 410 "The API version 'v1' has been
+   * decommissioned. Please use version 'v2' instead."). v2 additionally
+   * rejects unregistered appnames with 403, so this stays empty until an
+   * appname is registered at apidoc.reliefweb.int/parameters#appname and
+   * exported as RELIEFWEB_APPNAME. No fallback that invents rows. */
+  const char *appname = getenv("RELIEFWEB_APPNAME");
+  if (!appname || !*appname) appname = "japanosint";
   char url[1024];
   snprintf(url, sizeof url,
-    "https://api.reliefweb.int/v1/reports?appname=japanosint&query[value]=%s"
+    "https://api.reliefweb.int/v2/reports?appname=%s&query[value]=%s"
     "&limit=%d&fields[include][]=title&fields[include][]=url"
     "&fields[include][]=date.created&fields[include][]=source.name"
     "&fields[include][]=primary_country.name",
-    enc, AID_MAX);
+    appname, enc, AID_MAX);
   free(enc);
-  const char *hdrs[] = { "Accept: application/json", NULL };
+  /* Same HDX bot filter as OCHA_FTS below: the client's default
+   * "JapanOSINT/1.0 (+native)" UA earns HTTP 406
+   * {"error":"Blocked due to bot activity."} before the request is even
+   * evaluated, which masks the real (and actionable) 403 "You are not using
+   * an approved appname". Verified by hand: identical request with a plain
+   * browser-shaped UA returns the 403. Send one so the failure is honest and
+   * so a registered RELIEFWEB_APPNAME actually works when supplied. */
+  const char *hdrs[] = { "Accept: application/json",
+    "User-Agent: Mozilla/5.0 (compatible; ReliefIntel/1.0)", NULL };
   char *body = jo_get(ctx, url, hdrs, "RELIEFWEB");
   if (!body) return 0;
   cJSON *root = cJSON_Parse(body);
@@ -131,12 +146,23 @@ static int aid_reliefweb(const source_ctx *ctx, intel_sink *sink, const char *q)
  * Response: { result: { results: [ { title, name, organization:{title},
  *             notes, metadata_modified } ] } }  (standard CKAN shape). */
 static int aid_iati(const source_ctx *ctx, intel_sink *sink, const char *q) {
-  char *enc = jo_urlencode(q);
+  /* CKAN organization names are lowercase slugs ("unicef", "dfid"). */
+  char slug[256];
+  { size_t j = 0;
+    for (const char *s = q; *s && j + 1 < sizeof slug; s++)
+      slug[j++] = (*s == ' ') ? '-' : (char)tolower((unsigned char)*s);
+    slug[j] = 0; }
+  char *enc = jo_urlencode(slug);
   if (!enc) return 0;
+  /* The registry's CKAN endpoint is now a compatibility layer that rejects
+   * free text with HTTP 400: "This compatibility layer only supports these
+   * field names within the q or fq parameter: organization, owner_org,
+   * publisher_iati_id, extras_filetype". So pivot on publisher organization,
+   * which is the field the entity (a company/agency name) actually maps to. */
   char url[1024];
   snprintf(url, sizeof url,
-    "https://iatiregistry.org/api/3/action/package_search?q=%s&rows=%d",
-    enc, AID_MAX);
+    "https://iatiregistry.org/api/3/action/package_search"
+    "?fq=organization:%s&rows=%d", enc, AID_MAX);
   free(enc);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "IATI_REGISTRY");
@@ -190,8 +216,14 @@ static int aid_stristr(const char *h, const char *n) {
   return 0;
 }
 static int aid_fts(const source_ctx *ctx, intel_sink *sink, const char *q) {
-  const char *url = "https://api.hpc.tools/v1/public/plan";
-  const char *hdrs[] = { "Accept: application/json", NULL };
+  /* /v1/public/plan now 404s ("ResourceNotFound"); the HPC public plan feed
+   * lives at /v2/public/plan and returns the same data[].planVersion shape. */
+  const char *url = "https://api.hpc.tools/v2/public/plan";
+  /* HPC bot-blocks the client's default "JapanOSINT/1.0 (+native)" UA with
+   * HTTP 406 {"error":"Blocked due to bot activity."} — verified: identical
+   * request minus that UA returns 200. Send a plain browser-shaped UA. */
+  const char *hdrs[] = { "Accept: application/json",
+    "User-Agent: Mozilla/5.0 (compatible; ReliefIntel/1.0)", NULL };
   char *body = jo_get(ctx, url, hdrs, "OCHA_FTS");
   if (!body) return 0;
   cJSON *root = cJSON_Parse(body);

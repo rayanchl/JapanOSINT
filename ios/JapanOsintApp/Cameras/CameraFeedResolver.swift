@@ -47,30 +47,31 @@ struct CameraFeedResolver {
     /// `/camera/`). Mirrors the web client's `isImageUrl()` regex.
     private static let imagePattern = #"\.(jpe?g|png|gif|bmp|webp)(\?.*)?$|mjpg|snapshot|image\.cgi|/camera/"#
 
-    private static let imageRegex: NSRegularExpression = {
-        // Pattern is a compile-time constant — unwrapping is safe.
-        try! NSRegularExpression(pattern: imagePattern, options: [.caseInsensitive])
-    }()
+    // The three patterns below are compile-time constants, so in practice they
+    // always compile — but `try!` turns "in practice" into a process abort, and
+    // these run against every camera record the collectors produce. Each is
+    // optional instead, and the helper that uses it degrades to "no match"
+    // (i.e. the camera falls through to a later branch, ultimately `.linkOnly`)
+    // rather than taking the app down. This restores the codebase's
+    // zero-`try!`/zero-`as!` property.
+    private static let imageRegex: NSRegularExpression? = try? NSRegularExpression(
+        pattern: CameraFeedResolver.imagePattern, options: [.caseInsensitive])
 
     /// YouTube ID extraction. Matches youtube.com/watch?v=, youtu.be/, /embed/, /shorts/.
     /// Negative lookahead for `live_stream` so we don't false-match the literal
     /// string "live_stream" in `embed/live_stream?channel=…` URLs as an 11-char
     /// video ID — those are channel-live embeds, handled by `youtubeChannelRegex`.
-    private static let youtubeRegex: NSRegularExpression = {
-        try! NSRegularExpression(
-            pattern: #"(?:youtube\.com/(?:watch\?v=|embed/(?!live_stream\b)|shorts/)|youtu\.be/)([A-Za-z0-9_-]{11})"#,
-            options: [.caseInsensitive])
-    }()
+    private static let youtubeRegex: NSRegularExpression? = try? NSRegularExpression(
+        pattern: #"(?:youtube\.com/(?:watch\?v=|embed/(?!live_stream\b)|shorts/)|youtu\.be/)([A-Za-z0-9_-]{11})"#,
+        options: [.caseInsensitive])
 
     /// YouTube channel-live extraction. Matches `embed/live_stream?channel=UC…`
     /// (24-char canonical channel ID). Used by aggregators like scs.com.ua that
     /// embed a channel rather than a static video ID — YouTube resolves the live
     /// broadcast at iframe-load time.
-    private static let youtubeChannelRegex: NSRegularExpression = {
-        try! NSRegularExpression(
-            pattern: #"youtube\.com/embed/live_stream\?[^\s'"]*?channel=(UC[A-Za-z0-9_-]{22})"#,
-            options: [.caseInsensitive])
-    }()
+    private static let youtubeChannelRegex: NSRegularExpression? = try? NSRegularExpression(
+        pattern: #"youtube\.com/embed/live_stream\?[^\s'"]*?channel=(UC[A-Za-z0-9_-]{22})"#,
+        options: [.caseInsensitive])
 
     /// Resolve the best `FeedMode` for a camera record.
     ///
@@ -161,24 +162,27 @@ struct CameraFeedResolver {
     // MARK: - Helpers
 
     static func extractYouTubeID(_ url: String) -> String? {
+        guard let rx = youtubeRegex else { return nil }
         let range = NSRange(url.startIndex..<url.endIndex, in: url)
-        guard let m = youtubeRegex.firstMatch(in: url, options: [], range: range),
+        guard let m = rx.firstMatch(in: url, options: [], range: range),
               m.numberOfRanges >= 2,
               let r = Range(m.range(at: 1), in: url) else { return nil }
         return String(url[r])
     }
 
     static func extractYouTubeChannel(_ url: String) -> String? {
+        guard let rx = youtubeChannelRegex else { return nil }
         let range = NSRange(url.startIndex..<url.endIndex, in: url)
-        guard let m = youtubeChannelRegex.firstMatch(in: url, options: [], range: range),
+        guard let m = rx.firstMatch(in: url, options: [], range: range),
               m.numberOfRanges >= 2,
               let r = Range(m.range(at: 1), in: url) else { return nil }
         return String(url[r])
     }
 
     static func looksLikeImage(_ url: String) -> Bool {
+        guard let rx = imageRegex else { return false }
         let range = NSRange(url.startIndex..<url.endIndex, in: url)
-        return imageRegex.firstMatch(in: url, options: [], range: range) != nil
+        return rx.firstMatch(in: url, options: [], range: range) != nil
     }
 
     static func isHLS(_ url: String) -> Bool {

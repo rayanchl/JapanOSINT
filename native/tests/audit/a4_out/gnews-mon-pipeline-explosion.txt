@@ -1,0 +1,45 @@
+=== gnews-mon-pipeline-explosion
+exit: 0
+sched: rc=0 records=100 649ms
+--- stderr ---
+[rss] gnews-mon-pipeline-explosion emitted 100
+[sched] gnews-mon-pipeline-explosion run rc=0 records=100 649ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-pipeline-explosion|CBMi4wFBVV95cUxQd09KWmRtMDhsN042Ty1KVmFmbVpVSWV5cnhyVHZWSE9uYW5jMGNJdjJFVnVoNElUZm1oS0p0OHdFU3cwd0JaTHhTX1A0TUo2ZEpCdzM4WlpjNllhdUc1NFFvLUVhbHpURlAwVUZNSDFjUFJiQnVLS0p1OWwzQlp6M3Axb0plMWJpeGRFZW5zb20zUUpMdTBPYmNSSW8zcEFXV284MGJnODBaYUMwbnVmaUo3Zk1oRGlZR1VtNV9LNm83MW5DNmxUTFlOOXk5ZTRQeWtPOWtwWWI1LW45eFBJVHZ5Yw
+  title          Initial reports find exploded pipeline showed signs of ‘misalignment’ - thegazette.com
+  body           <a href="https://news.google.com/rss/articles/CBMi4wFBVV95cUxQd09KWmRtMDhsN042Ty1KVmFmbVpVSWV5cnhyVHZWSE9uYW5jMGNJdjJFVnVoNElUZm1oS0p0OHdFU3cwd0JaTHhTX1A0TUo2ZEpCdzM4WlpjNllhdUc1NFFvLUVhbHpURlAwVUZNSDFjUFJiQnVLS0p1OWwzQlp6M3Axb0plMWJpeGRFZW5zb20zUUpMdTBPYmNSSW8zcEFXV284MGJnODBaYUMwbnVmaUo3Zk1oRGlZR1VtNV9LNm83MW5DNmxUTFlOOXk5ZTRQeWtPOWtwWWI1LW45eFBJVHZ5Yw?oc=5" target="_blank">Initial reports find exploded pipeline showed signs of ‘misalignment’</a>&nbsp;&nbsp;<font color="#6f6f6f">thegazette.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi4wFBVV95cUxQd09KWmRtMDhsN042Ty1KVmFmbVpVSWV5cnhyVHZWSE9uYW5jMGNJdjJFVnVoNElUZm1oS0p0OHdFU3cwd0JaTHhTX1A0TUo2ZEpCdzM4WlpjNllhdUc1NFFvLUVhbHpURlAwVUZNSDFjUFJiQnVLS0p1OWwzQlp6M3Axb0plMWJpeGRFZW
+  link           https://news.google.com/rss/articles/CBMi4wFBVV95cUxQd09KWmRtMDhsN042Ty1KVmFmbVpVSWV5cnhyVHZWSE9uYW5jMGNJdjJFVnVoNElUZm1oS0p0OHdFU3cwd0JaTHhTX1A0TUo2ZEpCdzM4WlpjNllhdUc1NFFvLUVhbHpURlAwVUZNSDFjUFJiQnVLS0p1OWwzQlp6M3Axb0plMWJpeGRFZW5zb20zUUpMdTBPYmNSSW8zcEFXV284MGJnODBaYUMwbnVmaUo3Zk1oRGlZR1VtNV9LNm83MW5DNmxUTFlOOXk5ZTRQeWtPOWtwWWI1LW45eFBJVHZ5Yw?oc=5
+  language       en
+  published_at   Tue, 28 Jul 2026 18:48:46 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","pipeline"]
+  properties     {"guid":"CBMi4wFBVV95cUxQd09KWmRtMDhsN042Ty1KVmFmbVpVSWV5cnhyVHZWSE9uYW5jMGNJdjJFVnVoNElUZm1oS0p0OHdFU3cwd0JaTHhTX1A0TUo2ZEpCdzM4WlpjNllhdUc1NFFvLUVhbHpURlAwVUZNSDFjUFJiQnVLS0p1OWwzQlp6M3Axb0plMWJpeGRFZW5zb20zUUpMdTBPYmNSSW8zcEFXV284MGJnODBaYUMwbnVmaUo3Zk1oRGlZR1VtNV9LNm83MW5DNmxUTFlOOXk5ZTRQeWtPOWtwWWI1LW45eFBJVHZ5Yw"}
+
+--- row 2 ---
+  uid            gnews-mon-pipeline-explosion|CBMicEFVX3lxTE5xQzBOZFRfeGJ0ek5ZcWtwQ3FaOUhtWk5zSVRvcmU3dmJpOXNfZVNnTERFQWx6QW91V3VTRkJvc0puZ0VTZnRjX0UwRVFUeWRoT0czWG5zblJVb0lJcUgyY2dSQ2NqdGtTdGtKNVlnNDA
+  title          2015 Lyndon Township Pipeline Rupture - Washtenaw County
+  body           <a href="https://news.google.com/rss/articles/CBMicEFVX3lxTE5xQzBOZFRfeGJ0ek5ZcWtwQ3FaOUhtWk5zSVRvcmU3dmJpOXNfZVNnTERFQWx6QW91V3VTRkJvc0puZ0VTZnRjX0UwRVFUeWRoT0czWG5zblJVb0lJcUgyY2dSQ2NqdGtTdGtKNVlnNDA?oc=5" target="_blank">2015 Lyndon Township Pipeline Rupture</a>&nbsp;&nbsp;<font color="#6f6f6f">Washtenaw County</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMicEFVX3lxTE5xQzBOZFRfeGJ0ek5ZcWtwQ3FaOUhtWk5zSVRvcmU3dmJpOXNfZVNnTERFQWx6QW91V3VTRkJvc0puZ0VTZnRjX0UwRVFUeWRoT0czWG5zblJVb0lJcUgyY2dSQ2NqdGtTdGtKNVlnNDA?oc=5" target="_blank">2015 Lyndon Town
+  link           https://news.google.com/rss/articles/CBMicEFVX3lxTE5xQzBOZFRfeGJ0ek5ZcWtwQ3FaOUhtWk5zSVRvcmU3dmJpOXNfZVNnTERFQWx6QW91V3VTRkJvc0puZ0VTZnRjX0UwRVFUeWRoT0czWG5zblJVb0lJcUgyY2dSQ2NqdGtTdGtKNVlnNDA?oc=5
+  language       en
+  published_at   Tue, 07 Jul 2026 04:20:06 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","pipeline"]
+  properties     {"guid":"CBMicEFVX3lxTE5xQzBOZFRfeGJ0ek5ZcWtwQ3FaOUhtWk5zSVRvcmU3dmJpOXNfZVNnTERFQWx6QW91V3VTRkJvc0puZ0VTZnRjX0UwRVFUeWRoT0czWG5zblJVb0lJcUgyY2dSQ2NqdGtTdGtKNVlnNDA"}
+
+--- row 3 ---
+  uid            gnews-mon-pipeline-explosion|CBMikAFBVV95cUxNdU1EM28xNUg4cTJCTV9fTGI4amZhWi16Q2JvM3YwRVRsSzdiaEVGQmxXX01FdUoyV3pYQWVYZnRQOU8yc2hJQVEzMTA3a2RXa1NGNnVnWDMwQzluMEZjODNtbERkYTdCT3c2N1U5ek02enBReUpXdFM1N2xWNThDRkYtSERGc1ZreUFlMjktT1PSAaQBQVVfeXFMTWRGWnJGV1NEODd5RXFXdy00QnRLSGFxSl9Qb3FEYnpRMlpURVVsZzlCeGpMNUhOY0pUdm5ReEc1bG41VGFNZElReE9XcUF6aEc4ZHZuMFN2ZDR6VW1KYkhUTDJBOW55X3IwdEhEdmZlV2Nha1ZNcm1WUTM2SHFoRnN5d0xkbThnbTdiU2htblpmUGt6THVDX0ZXZFNveDlVN1JtWW8
+  title          Jackson Parish Sheriff gives update on pipeline explosion - KNOE
+  body           <a href="https://news.google.com/rss/articles/CBMikAFBVV95cUxNdU1EM28xNUg4cTJCTV9fTGI4amZhWi16Q2JvM3YwRVRsSzdiaEVGQmxXX01FdUoyV3pYQWVYZnRQOU8yc2hJQVEzMTA3a2RXa1NGNnVnWDMwQzluMEZjODNtbERkYTdCT3c2N1U5ek02enBReUpXdFM1N2xWNThDRkYtSERGc1ZreUFlMjktT1PSAaQBQVVfeXFMTWRGWnJGV1NEODd5RXFXdy00QnRLSGFxSl9Qb3FEYnpRMlpURVVsZzlCeGpMNUhOY0pUdm5ReEc1bG41VGFNZElReE9XcUF6aEc4ZHZuMFN2ZDR6VW1KYkhUTDJBOW55X3IwdEhEdmZlV2Nha1ZNcm1WUTM2SHFoRnN5d0xkbThnbTdiU2htblpmUGt6THVDX0ZXZFNveDlVN1JtWW8?oc=5" target="_blank">Jackson Parish Sheriff gives update on pipeline explosion</a>&nbsp;&nbsp;<font color="#6f6f6f">KNOE</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMikAFBVV95cUxNdU1EM28xNUg4cTJCTV9fTGI4amZhWi16Q2JvM3YwRVRsSzdiaEVGQmxXX01FdUoyV3pYQWVYZnRQOU8yc2hJQVEzMTA3a2RXa1NGNnVnWDMwQzluMEZjODNtbERkYTdCT3c2N1U5ek02enBReUpXdFM1N2xWNThDRkYtSERGc1ZreUFlMj
+  link           https://news.google.com/rss/articles/CBMikAFBVV95cUxNdU1EM28xNUg4cTJCTV9fTGI4amZhWi16Q2JvM3YwRVRsSzdiaEVGQmxXX01FdUoyV3pYQWVYZnRQOU8yc2hJQVEzMTA3a2RXa1NGNnVnWDMwQzluMEZjODNtbERkYTdCT3c2N1U5ek02enBReUpXdFM1N2xWNThDRkYtSERGc1ZreUFlMjktT1PSAaQBQVVfeXFMTWRGWnJGV1NEODd5RXFXdy00QnRLSGFxSl9Qb3FEYnpRMlpURVVsZzlCeGpMNUhOY0pUdm5ReEc1bG41VGFNZElReE9XcUF6aEc4ZHZuMFN2ZDR6VW1KYkhUTDJBOW55X3IwdEhEdmZlV2Nha1ZNcm1WUTM2SHFoRnN5d0xkbThnbTdiU2htblpmUGt6THVDX0ZXZFNveDlVN1JtWW8?oc=5
+  language       en
+  published_at   Fri, 15 May 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","pipeline"]
+  properties     {"guid":"CBMikAFBVV95cUxNdU1EM28xNUg4cTJCTV9fTGI4amZhWi16Q2JvM3YwRVRsSzdiaEVGQmxXX01FdUoyV3pYQWVYZnRQOU8yc2hJQVEzMTA3a2RXa1NGNnVnWDMwQzluMEZjODNtbERkYTdCT3c2N1U5ek02enBReUpXdFM1N2xWNThDRkYtSERGc1ZreUFlMjktT1PSAaQBQVVfeXFMTWRGWnJGV1NEODd5RXFXdy00QnRLSGFxSl9Qb3FEYnpRMlpURVVsZzlCeGpMNUhOY0pUdm5ReEc1bG41VGFNZElReE9XcUF6aEc4ZHZuMFN2ZDR6VW1KYkhUTDJBOW55X3IwdEhEdmZlV2Nha1ZNcm1WUTM2SHFoRnN5d0xkbThnbTdiU2htblpmUGt6THVDX0ZXZFNveDlVN1JtWW8"}

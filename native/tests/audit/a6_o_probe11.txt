@@ -1,0 +1,71 @@
+### note.com search API
+--- https://note.com/api/v2/searches?context=user&q=OSINT&size=20 [404] 1368b
+<!DOCTYPE html>
+<html>
+<head>
+<title>note ご指定のページが見つかりません</title>
+<meta content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" name="viewport">
+<meta charset="utf-8">
+<meta content="noindex" name="robots">
+<base href="/">
+<link rel="stylesheet" href="https://d2l930y2yx77uc.cloudfront.net/assets/application-839578e1f7f98
+--- https://note.com/api/v3/searches?context=user&q=OSINT&size=20 [200] 15560b
+{"data":{"note_cursor":"initial","user_cursor":"20","magazine_cursor":"initial","hashtag_cursor":"initial","circle_cursor":"initial","note_for_sale_cursor":"initial","notes":{},"magazines":{},"users":{"is_last_page":null,"contents":[{"id":11929742,"urlname":"agile_duck9283","profile":"司法OSINT。6年間毎日地裁へ通っている。東京地裁全事件の7割を網羅する司法のビッ�
+--- https://note.com/api/v2/searches?context=note&q=OSINT&size=5 [404] 1368b
+<!DOCTYPE html>
+<html>
+<head>
+<title>note ご指定のページが見つかりません</title>
+<meta content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" name="viewport">
+<meta charset="utf-8">
+<meta content="noindex" name="robots">
+<base href="/">
+<link rel="stylesheet" href="https://d2l930y2yx77uc.cloudfront.net/assets/application-839578e1f7f98
+### jaxa endpoints
+--- https://data.earth.jaxa.jp/api/collection/v1/all/ [404] 220b
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>404 Not Found</title>
+</head><body>
+<h1>Not Found</h1>
+<p>The requested URL /api/collection/v1/all/ was not found on this server.</p>
+</body></html>
+
+--- https://data.earth.jaxa.jp/api/collection/ [404] 213b
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>404 Not Found</title>
+</head><body>
+<h1>Not Found</h1>
+<p>The requested URL /api/collection/ was not found on this server.</p>
+</body></html>
+
+--- https://data.earth.jaxa.jp/api/datasets/ [404] 211b
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>404 Not Found</title>
+</head><body>
+<h1>Not Found</h1>
+<p>The requested URL /api/datasets/ was not found on this server.</p>
+</body></html>
+
+--- https://data.earth.jaxa.jp/api/ [200] 535b
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<meta http-equiv="Expires" content="0">
+		<script>
+			if(navigator.language.split("-")[0].toLowerCase() == "ja"){
+				lo
+--- https://data.earth.jaxa.jp/stac/catalog.json [404] 215b
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>404 Not Found</title>
+</head><body>
+<h1>Not Found</h1>
+<p>The requested URL /stac/catalog.json was not found on this server.</p>
+</body></html>
+

@@ -9,15 +9,7 @@
 #define COLL     "cyber"
 #define INTERVAL 3600
 
-#define RSS(SYM, ID, NAME, NAMEJA, CAT, URL, LANG, TAGS, DESC)               \
-  static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
-    int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
-  static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
-    .update_interval_sec = INTERVAL, .run = run_##SYM,                       \
-    .category = CAT, .type = "web_request", .url = URL,                      \
-    .description = DESC, .layer = NULL, .free_tier = 1 };                    \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 RSS(vu_cvefeed, "cvefeed-latest", "CVEFeed Latest CVEs",
   "CVEフィード 最新CVE", "cyber",
@@ -75,7 +67,7 @@ RSS(vu_vuldb, "vuldb-recent", "VulDB Recent Entries",
 
 RSS(vu_tenable, "tenable-tra", "Tenable Research Advisories",
   "Tenable リサーチ勧告", "cyber",
-  "https://www.tenable.com/security/feeds/tra.rss", "en",
+  "https://www.tenable.com/security/research/feed", "en",
   "[\"cyber\",\"vuln\",\"advisory\"]",
   "Tenable Research advisories — vendor-coordinated vulnerability disclosures");
 
@@ -85,8 +77,11 @@ RSS(vu_wpscan, "wpscan-vulndb", "WPScan Vulnerability Feed",
   "[\"cyber\",\"wordpress\",\"vuln\"]",
   "WPScan — WordPress core, plugin and theme vulnerability reporting");
 
-RSS(vu_talos_disc, "talos-disclosures", "Talos Vulnerability Disclosures",
-  "Talos 脆弱性公開", "cyber",
-  "https://talosintelligence.com/feeds/vuln_reports.xml", "en",
+/* talosintelligence.com/feeds/vuln_reports.xml was retired (404 since at least
+ * 2026-07); Talos now publishes its coordinated-disclosure write-ups only
+ * through the research blog feed, so that is what we consume. */
+RSS(vu_talos_disc, "talos-disclosures", "Talos Intelligence Research",
+  "Talos リサーチ", "cyber",
+  "https://blog.talosintelligence.com/rss/", "en",
   "[\"cyber\",\"vuln\",\"advisory\",\"talos\"]",
-  "Cisco Talos coordinated vulnerability disclosure reports");
+  "Cisco Talos research blog — vulnerability disclosures and threat research");

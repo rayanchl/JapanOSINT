@@ -1,0 +1,19 @@
+=== jcg-navarea
+exit: 0
+sched: rc=0 records=1 8644ms
+--- stderr ---
+[jcg-navarea] probe reachable=0
+[sched] jcg-navarea run rc=0 records=1 8644ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            jcg-navarea|navarea-xi-portal
+  title          JCG NAVAREA XI navigation warnings
+  summary        Japan Coast Guard maritime safety information for the West Pacific NAVAREA XI region
+  link           https://www6.kaiho.mlit.go.jp/JAPANNAVAREA/
+  language       ja
+  published_at   2026-07-31T18:20:12.260Z
+  tags           ["maritime","msi","navarea-xi","unreachable"]
+  properties     {"coordinator":"Japan Coast Guard HQ","role":"NAVAREA XI coordinator","reachable":false}

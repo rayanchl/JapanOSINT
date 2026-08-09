@@ -54,6 +54,15 @@ static void num_or_null(cJSON *p, const char *k, cJSON *arr, int i) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { "Referer: https://www.flightradar24.com/", NULL };
   cJSON *data = feed_get_json_h(ctx->http, FEED_URL, hdrs, 12000);
+  /* AUDIT NOTE (slice a3, 2026-07-31): a failed fetch used to be silent, so a
+   * blocked endpoint and "no aircraft over Japan" logged identically — at a
+   * 60 s interval this source had been emitting nothing, unnoticed. Measured
+   * today: the zone feed answers 302 (Cloudflare) to every request, with the
+   * collector's UA and with a browser UA alike, i.e. FR24 has closed the
+   * key-free endpoint. Left as an honest empty (rc=0, no fabricated
+   * aircraft); the block is now visible in the log. */
+  if (!data)
+    fprintf(stderr, "[flightradar-jp] feed fetch failed/blocked: %s\n", FEED_URL);
 
   cJSON *features = cJSON_CreateArray();
   if (data && cJSON_IsObject(data)) {
@@ -66,15 +75,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       double lat, lon;
       if (!num_at(v, 1, &lat) || !num_at(v, 2, &lon)) continue;
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(lon, lat);
 
       cJSON *p = cJSON_CreateObject();             /* EXACT JS key order */
       cJSON_AddStringToObject(p, "flight_id", k);

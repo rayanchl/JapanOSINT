@@ -1,6 +1,20 @@
 /* collectors/cyber/sources/cisa_kev_jp.c
- * Port of server/src/collectors/cisaKevJp.js (createThreatIntelCollector).
- * Keyless. CISA KEV JSON → JP-vendor filter → vendor-HQ geo (or TOKYO). */
+ * Keyless. CISA KEV JSON → JP-vendor filter.
+ *
+ * AUDIT NOTE (slice a3): this used to pin every row. A CVE is not a place, and
+ * CISA publishes no coordinate, so the pin came from a static VENDOR_GEO table
+ * compiled into the binary: the vendor's head office, falling back to Tokyo
+ * Station for any vendor not in the table. That produced 46 "exploited
+ * vulnerability" markers sitting on ~10 Tokyo office buildings — a map that
+ * asserts the exploitation happened at Fujitsu HQ, which is not what KEV says.
+ * Both the table and the fallback were invented locations, so no geometry is
+ * emitted now; `vendor` carries the real (non-spatial) attribution.
+ *
+ * Also: the row uid was the sha1 hash fallback over {geometry, properties},
+ * and properties led with "idx" = the row's POSITION in the filtered list. Any
+ * KEV insertion re-numbered every later row and thus changed its uid, so
+ * re-runs inserted duplicates instead of updating. Keyed on cve_id now. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/threatintel.h"
 #include "../../lib/feedlib.h"
@@ -9,8 +23,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#define TOKYO_LON 139.6917
-#define TOKYO_LAT 35.6895
 #define KEV_URL "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
 
 static const char *JP_VENDORS[] = {
@@ -27,42 +39,6 @@ static const char *JP_VENDORS[] = {
   "movabletype", "sixapart",
   "a10 networks", "a10networks", NULL };
 
-/* VENDOR_GEO insertion order (Object.entries iteration order in JS) */
-static const struct { const char *k; double lon, lat; } VENDOR_GEO[] = {
-  {"toshiba",139.7595,35.6627}, {"fujitsu",139.7460,35.6810},
-  {"nec",139.7568,35.6594}, {"hitachi",139.7648,35.6824},
-  {"mitsubishi",139.7649,35.6810}, {"panasonic",135.5023,34.7250},
-  {"sony",139.7409,35.6310}, {"canon",139.6203,35.6713},
-  {"ricoh",139.7457,35.6328}, {"kyocera",135.7681,34.9850},
-  {"sharp",135.5161,34.6515}, {"yokogawa",139.5953,35.6796},
-  {"omron",135.7493,34.9926}, {"denso",137.0167,35.0467},
-  {"fanuc",138.7625,35.4700}, {"cybozu",139.6961,35.6907},
-  {"rakuten",139.6303,35.6360}, {"line",139.6993,35.6955},
-  {"softbank",139.7530,35.6606}, {"kddi",139.7367,35.6679},
-  {"ntt",139.7438,35.6831}, {"buffalo",136.9066,35.1815},
-  {"yamaha",137.7261,34.7034}, {"iodata",136.6256,36.5947},
-  {"elecom",135.5114,34.6863}, {"trendmicro",139.7517,35.6805},
-  {"justsystems",134.5538,34.0666}, {"movabletype",139.7129,35.6593},
-  {NULL,0,0} };
-
-/* lowercase, strip non [a-z0-9] */
-static void slug(const char *s, char *o, size_t n) {
-  size_t j = 0;
-  if (!s) { o[0] = '\0'; return; }
-  for (; *s && j + 1 < n; s++) {
-    unsigned char c = (unsigned char)tolower((unsigned char)*s);
-    if ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')) o[j++] = (char)c;
-  }
-  o[j] = '\0';
-}
-/* lowercase only (keep all chars) */
-static void lc(const char *s, char *o, size_t n) {
-  size_t j = 0;
-  if (!s) { o[0] = '\0'; return; }
-  for (; *s && j + 1 < n; s++) o[j++] = (char)tolower((unsigned char)*s);
-  o[j] = '\0';
-}
-
 static const char *S(cJSON *r, const char *k) {
   cJSON *v = cJSON_GetObjectItem(r, k);
   return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
@@ -71,23 +47,12 @@ static const char *S(cJSON *r, const char *k) {
 static int vendor_matches(const char *vendor, const char *product) {
   char blob[1024];
   char lv[512], lp[512];
-  lc(vendor, lv, sizeof lv);
-  lc(product, lp, sizeof lp);
+  jo_lower_buf(vendor, lv, sizeof lv);
+  jo_lower_buf(product, lp, sizeof lp);
   snprintf(blob, sizeof blob, "%s %s", lv, lp);
   for (int i = 0; JP_VENDORS[i]; i++)
     if (strstr(blob, JP_VENDORS[i])) return 1;
   return 0;
-}
-
-static void vendor_geo(const char *vendor, double *lon, double *lat) {
-  char v[256];
-  slug(vendor, v, sizeof v);
-  for (int i = 0; VENDOR_GEO[i].k; i++) {
-    if (strstr(v, VENDOR_GEO[i].k)) {
-      *lon = VENDOR_GEO[i].lon; *lat = VENDOR_GEO[i].lat; return;
-    }
-  }
-  *lon = TOKYO_LON; *lat = TOKYO_LAT;
 }
 
 /* v.k || null (string) */
@@ -105,7 +70,6 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
 
   cJSON *vulns = cJSON_GetObjectItem(json, "vulnerabilities");
   cJSON *features = cJSON_CreateArray();
-  int i = 0;
   if (cJSON_IsArray(vulns)) {
     cJSON *v;
     cJSON_ArrayForEach(v, vulns) {
@@ -113,41 +77,32 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
       const char *pd = S(v, "product");
       if (!vendor_matches(vp, pd)) continue;
 
-      double lon, lat;
-      vendor_geo(vp, &lon, &lat);
-
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      /* no "geometry" key at all: CISA publishes no coordinate for a KEV entry.
+       * NB do NOT use cJSON_CreateNull() here — lib/geojson.c:235 serialises
+       * whatever it finds under "geometry", so an explicit JSON null lands in
+       * the geometry column as the 4-byte string "null". */
 
-      cJSON *pr = cJSON_CreateObject();        /* EXACT JS key order */
-      cJSON_AddNumberToObject(pr, "idx", i);
+      cJSON *pr = cJSON_CreateObject();
+      const char *cve = S(v, "cveID");
+      cJSON_AddStringToObject(pr, "uid", (cve && cve[0]) ? cve : "");
       put_s(pr, "cve_id", v, "cveID");
       put_s(pr, "vendor", v, "vendorProject");
       put_s(pr, "product", v, "product");
       put_s(pr, "title", v, "vulnerabilityName");
       put_s(pr, "added", v, "dateAdded");
       put_s(pr, "due", v, "dueDate");
+      /* dateAdded is the only date KEV carries; without it every row landed on
+       * the timeline at the ingest time instead of when CISA catalogued it. */
+      put_s(pr, "published_at", v, "dateAdded");
       const char *kr = S(v, "knownRansomwareCampaignUse");
       cJSON_AddItemToObject(pr, "ransomware",
         cJSON_CreateBool(kr && strcmp(kr, "Known") == 0));
+      /* shortDescription used to be hard-cut at 400 bytes; KEV publishes the
+       * whole thing and the tail is the part that names the affected versions. */
       const char *sd = S(v, "shortDescription");
-      if (sd) {
-        char buf[401];
-        size_t len = strlen(sd);
-        if (len > 400) len = 400;
-        memcpy(buf, sd, len);
-        buf[len] = '\0';
-        cJSON_AddStringToObject(pr, "description", buf);
-      } else {
-        cJSON_AddStringToObject(pr, "description", "");
-      }
+      cJSON_AddStringToObject(pr, "description", sd ? sd : "");
       put_s(pr, "required_action", v, "requiredAction");
       cJSON *cwes = cJSON_GetObjectItem(v, "cwes");
       cJSON_AddItemToObject(pr, "cwes",
@@ -160,7 +115,6 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
       cJSON_AddStringToObject(pr, "source", "cisa_kev");
       cJSON_AddItemToObject(f, "properties", pr);
       cJSON_AddItemToArray(features, f);
-      i++;
     }
   }
   cJSON_Delete(json);

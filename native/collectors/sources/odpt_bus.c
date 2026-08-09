@@ -2,6 +2,7 @@
  * Port of server/src/collectors/odptRealtime.js::collectOdptBus.
  * Live ODPT v4 odpt:Bus pull when an ODPT token is set; honest empty
  * FeatureCollection without one. Token idiom mirrors odpt_transport.c. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -35,14 +36,6 @@ static cJSON *odpt_get(http_client *http, const char *rdf, const char *tok) {
   return NULL;
 }
 
-static void s_or_null(cJSON *p, const char *outk, cJSON *r, const char *ink) {
-  cJSON *v = cJSON_GetObjectItem(r, ink);
-  if (v && cJSON_IsString(v) && v->valuestring[0])
-    cJSON_AddStringToObject(p, outk, v->valuestring);
-  else
-    cJSON_AddItemToObject(p, outk, cJSON_CreateNull());
-}
-
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *tok = odpt_tok();
   if (!tok) {
@@ -63,15 +56,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       double lon = cJSON_IsNumber(lo) ? lo->valuedouble
                  : (cJSON_IsString(lo) ? strtod(lo->valuestring, NULL) : 0);
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *c = cJSON_CreateArray();
-      cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-      cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-      cJSON_AddItemToObject(g, "coordinates", c);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(lon, lat);
 
       cJSON *p = cJSON_CreateObject();           /* EXACT JS key order */
       cJSON *same = cJSON_GetObjectItem(r, "owl:sameAs");
@@ -82,8 +67,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON_AddStringToObject(p, "bus_uid", atid->valuestring);
       else
         cJSON_AddItemToObject(p, "bus_uid", cJSON_CreateNull());
-      s_or_null(p, "operator", r, "odpt:operator");
-      s_or_null(p, "route", r, "odpt:busroutePattern");
+      jo_put_str_or_null(p, "operator", r, "odpt:operator");
+      jo_put_str_or_null(p, "route", r, "odpt:busroutePattern");
       cJSON_AddStringToObject(p, "source", "odpt_api");
       cJSON_AddItemToObject(f, "properties", p);
       cJSON_AddItemToArray(features, f);

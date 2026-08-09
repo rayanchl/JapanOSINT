@@ -3,6 +3,7 @@
  * NTT Docomo Insight Data flow/visitor analytics — paid, contract-only, NO
  * public API. Gated honest-empty on DOCOMO_INSIGHT_API_KEY. With key:
  * attempt contract endpoint, build point features; honest empty on failure. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -32,14 +33,6 @@ static int coord(cJSON *r, double *lon, double *lat) {
     *lat = y->valuedouble;
   }
   return 1;
-}
-
-static cJSON *pick(cJSON *r, const char *a, const char *b) {
-  cJSON *v = cJSON_GetObjectItem(r, a);
-  if (v && !cJSON_IsNull(v)) return cJSON_Duplicate(v, 1);
-  v = cJSON_GetObjectItem(r, b);
-  if (v && !cJSON_IsNull(v)) return cJSON_Duplicate(v, 1);
-  return cJSON_CreateNull();
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -72,19 +65,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_ArrayForEach(r, rows) {
     double lon, lat;
     if (!coord(r, &lon, &lat)) continue;
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(lon, lat);
     cJSON *p = cJSON_CreateObject();
-    cJSON_AddItemToObject(p, "area_code", pick(r, "area_code", "areaCode"));
-    cJSON_AddItemToObject(p, "visitors", pick(r, "visitors", "value"));
-    cJSON_AddItemToObject(p, "datetime", pick(r, "datetime", "timestamp"));
+    cJSON_AddItemToObject(p, "area_code", jo_pick_dup(r, "area_code", "areaCode"));
+    cJSON_AddItemToObject(p, "visitors", jo_pick_dup(r, "visitors", "value"));
+    cJSON_AddItemToObject(p, "datetime", jo_pick_dup(r, "datetime", "timestamp"));
     cJSON_AddStringToObject(p, "source", "docomo_insight_api");
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);

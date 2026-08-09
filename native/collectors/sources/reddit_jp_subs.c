@@ -2,6 +2,7 @@
  * Port of server/src/collectors/redditJpSubs.js (intelEnvelope).
  * 5 fixed subs, one /new.json?limit=25 GET each, slice(0,25) → intel rows.
  * uid = reddit-jp-subs|<p.id> (intelUid first non-empty). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -13,12 +14,6 @@
 static const char *SUBS[] = { "japan", "japanlife", "Tokyo",
                               "newsokur", "JapanFinance" };
 #define NSUB ((int)(sizeof(SUBS) / sizeof(SUBS[0])))
-
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
-           ? v->valuestring : NULL;
-}
 
 /* new Date(sec*1000).toISOString() → YYYY-MM-DDTHH:MM:SS.mmmZ */
 static void epoch_iso(double sec, char *o, size_t n) {
@@ -51,10 +46,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON *p = cJSON_GetObjectItem(c, "data");
         if (!p) continue;
 
-        const char *pid = sv(p, "id");
+        const char *pid = jo_sv(p, "id");
         if (!pid) continue;                          /* intelUid → key */
 
-        const char *ptitle = sv(p, "title");
+        const char *ptitle = jo_sv(p, "title");
         char titbuf[64];
         const char *title = ptitle;
         if (!title) {
@@ -64,7 +59,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
         /* summary = (p.selftext||'').slice(0,240) || null */
         char *summary = NULL;
-        const char *st = sv(p, "selftext");
+        const char *st = jo_sv(p, "selftext");
         if (st) {
           size_t L = strlen(st);
           if (L > 240) L = 240;
@@ -76,7 +71,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
         /* link = p.url || `https://www.reddit.com${p.permalink}` */
         char *link = NULL;
-        const char *purl = sv(p, "url");
+        const char *purl = jo_sv(p, "url");
         if (purl) {
           link = strdup(purl);
         } else {

@@ -4,6 +4,7 @@
  * station, police, post office, railway station). Real OSM data only;
  * honest empty on Overpass failure (JS returns empty FeatureCollection).
  * Property key order mirrors the JS mapFn for featureUid hash parity. */
+#include "../../lib/geojson.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
@@ -15,15 +16,7 @@ static void add_str_or_null(cJSON *p, const char *k, const char *v) {
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)i; (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();                   /* EXACT JS key order */
   const cJSON *type = cJSON_GetObjectItem(el, "type");
@@ -60,7 +53,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     "node[\"amenity\"=\"police\"](area.jp);"
     "node[\"amenity\"=\"post_office\"](area.jp);"
     "node[\"railway\"=\"station\"](area.jp);",
-    240, 60000, map, NULL);
+    240, 260000, map, NULL);
   return n >= 0 ? 0 : -1;
 }
 

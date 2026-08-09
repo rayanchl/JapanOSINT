@@ -3,15 +3,7 @@
 #include "../../lib/rss_atom.h"
 
 /* SYM, id, name, name_ja, collector, category, url, lang, tags_json, interval, description */
-#define RSSX(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)  \
-  static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
-    int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
-  static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
-    .update_interval_sec = IVAL, .run = run_##SYM,                           \
-    .category = CAT, .type = "web_request", .url = URL,                      \
-    .description = DESC, .layer = NULL, .free_tier = 1 };                    \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 RSSX(cert_cert_fr, "cert-fr", "CERT-FR (ANSSI, France)", "CERT-FR (ANSSI, France)", "cyber", "cyber",
   "https://www.cert.ssi.gouv.fr/feed/", "fr", "[\"cyber\",\"cert\",\"advisory\",\"france\"]", 3600,
@@ -26,11 +18,14 @@ RSSX(cert_cert_be, "cert-be", "CERT.be (Belgium)", "CERT.be (Belgium)", "cyber",
   "CERT.be (Belgium) — national cyber-security advisory feed");
 
 RSSX(cert_cert_pl, "cert-pl", "CERT Polska", "CERT Polska", "cyber", "cyber",
-  "https://cert.pl/en/posts/index.xml", "en", "[\"cyber\",\"cert\",\"advisory\",\"poland\"]", 3600,
+  /* /en/posts/index.xml 404s after the site rebuild; /en/rss.xml is live */
+  "https://cert.pl/en/rss.xml", "en", "[\"cyber\",\"cert\",\"advisory\",\"poland\"]", 3600,
   "CERT Polska — national cyber-security advisory feed");
 
 RSSX(cert_ncsc_nl, "ncsc-nl", "NCSC-NL (Netherlands)", "NCSC-NL (Netherlands)", "cyber", "cyber",
-  "https://www.ncsc.nl/rss/actueel", "nl", "[\"cyber\",\"cert\",\"advisory\",\"netherlands\"]", 3600,
+  /* www.ncsc.nl became a Next.js SPA and /rss/actueel 404s; the machine-
+   * readable advisory feed lives on the advisories subdomain. */
+  "https://advisories.ncsc.nl/rss/advisories", "nl", "[\"cyber\",\"cert\",\"advisory\",\"netherlands\"]", 3600,
   "NCSC-NL (Netherlands) — national cyber-security advisory feed");
 
 RSSX(cert_cert_in, "cert-in", "CERT-In (India)", "CERT-In (India)", "cyber", "cyber",
@@ -54,7 +49,9 @@ RSSX(cert_cccs_ca, "cccs-ca", "Canadian Centre for Cyber Security", "Canadian Ce
   "Canadian Centre for Cyber Security — national cyber-security advisory feed");
 
 RSSX(cert_cert_at, "cert-at", "CERT.at (Austria)", "CERT.at (Austria)", "cyber", "cyber",
-  "https://www.cert.at/de/warnungen/warnungen.xml", "de", "[\"cyber\",\"cert\",\"advisory\",\"austria\"]", 3600,
+  /* /de/warnungen/warnungen.xml 404s; CERT.at's feed index (/de/services/feeds)
+   * lists cert-at.de.warnings.rss_2.0.xml as the live warnings feed. */
+  "https://www.cert.at/cert-at.de.warnings.rss_2.0.xml", "de", "[\"cyber\",\"cert\",\"advisory\",\"austria\"]", 3600,
   "CERT.at (Austria) — national cyber-security advisory feed");
 
 RSSX(cert_circl_lu, "circl-lu", "CIRCL (Luxembourg)", "CIRCL (Luxembourg)", "cyber", "cyber",
@@ -62,15 +59,19 @@ RSSX(cert_circl_lu, "circl-lu", "CIRCL (Luxembourg)", "CIRCL (Luxembourg)", "cyb
   "CIRCL (Luxembourg) — national cyber-security advisory feed");
 
 RSSX(cert_cert_ee, "cert-ee", "CERT-EE (Estonia)", "CERT-EE (Estonia)", "cyber", "cyber",
-  "https://www.ria.ee/en/rss.xml", "en", "[\"cyber\",\"cert\",\"advisory\",\"estonia\"]", 3600,
+  /* ria.ee moved its feeds under /rss-feeds/ ; /en/rss.xml now 404s */
+  "https://www.ria.ee/en/rss-feeds/rss.xml", "en", "[\"cyber\",\"cert\",\"advisory\",\"estonia\"]", 3600,
   "CERT-EE (Estonia) — national cyber-security advisory feed");
 
 RSSX(cert_ncsc_ch, "ncsc-ch", "NCSC Switzerland", "NCSC Switzerland", "cyber", "cyber",
-  "https://www.ncsc.admin.ch/ncsc/en/home.rss.html", "en", "[\"cyber\",\"cert\",\"advisory\",\"switzerland\"]", 3600,
+  /* the *.rss.html paths all serve HTML; the Confederation publishes NCSC/BACS
+   * (org-nr 1101) news through the central newsd.admin.ch RSS gateway. */
+  "https://www.newsd.admin.ch/newsd/feeds/rss?lang=en&org-nr=1101", "en", "[\"cyber\",\"cert\",\"advisory\",\"switzerland\"]", 3600,
   "NCSC Switzerland — national cyber-security advisory feed");
 
 RSSX(cert_cert_ee2, "cert-ee2", "RIA Estonia Advisories", "RIA Estonia Advisories", "cyber", "cyber",
-  "https://www.ria.ee/rss.xml", "et", "[\"cyber\",\"cert\",\"advisory\",\"estonia\"]", 3600,
+  /* Estonian-language variant of the same relocated feed index */
+  "https://www.ria.ee/rss-feeds/rss.xml", "et", "[\"cyber\",\"cert\",\"advisory\",\"estonia\"]", 3600,
   "RIA Estonia Advisories — national cyber-security advisory feed");
 
 RSSX(cert_cert_si, "cert-si", "SI-CERT (Slovenia)", "SI-CERT (Slovenia)", "cyber", "cyber",
@@ -78,7 +79,8 @@ RSSX(cert_cert_si, "cert-si", "SI-CERT (Slovenia)", "SI-CERT (Slovenia)", "cyber
   "SI-CERT (Slovenia) — national cyber-security advisory feed");
 
 RSSX(cert_cert_fi, "cert-fi", "NCSC-FI (Finland)", "NCSC-FI (Finland)", "cyber", "cyber",
-  "https://www.kyberturvallisuuskeskus.fi/en/rss.xml", "en", "[\"cyber\",\"cert\",\"advisory\",\"finland\"]", 3600,
+  /* /en/rss.xml 404s (the site moved to Next.js); the live feed is /feed/rss/en */
+  "https://www.kyberturvallisuuskeskus.fi/feed/rss/en", "en", "[\"cyber\",\"cert\",\"advisory\",\"finland\"]", 3600,
   "NCSC-FI (Finland) — national cyber-security advisory feed");
 
 RSSX(cert_cert_br, "cert-br", "CERT.br (Brazil)", "CERT.br (Brazil)", "cyber", "cyber",
@@ -94,11 +96,13 @@ RSSX(cert_cisa_ics, "cisa-ics", "CISA ICS Advisories", "CISA ICS Advisories", "c
   "CISA ICS Advisories — national cyber-security advisory feed");
 
 RSSX(cert_krcert, "krcert", "KrCERT/KISA (Korea)", "KrCERT/KISA (Korea)", "cyber", "cyber",
-  "https://www.krcert.or.kr/rss/security.do", "ko", "[\"cyber\",\"cert\",\"advisory\",\"korea\"]", 3600,
+  /* /rss/security.do 404s; the 보안공지 board feed is /kr/rss.do?bbsId=B0000133 */
+  "https://www.krcert.or.kr/kr/rss.do?bbsId=B0000133", "ko", "[\"cyber\",\"cert\",\"advisory\",\"korea\"]", 3600,
   "KrCERT/KISA (Korea) — national cyber-security advisory feed");
 
 RSSX(cert_ncsc_ie, "ncsc-ie", "NCSC Ireland", "NCSC Ireland", "cyber", "cyber",
-  "https://www.ncsc.gov.ie/feed/", "en", "[\"cyber\",\"cert\",\"advisory\",\"ireland\"]", 3600,
+  /* /feed/ 404s; the alerts & advisories feed is /news/alerts.rss */
+  "https://www.ncsc.gov.ie/news/alerts.rss", "en", "[\"cyber\",\"cert\",\"advisory\",\"ireland\"]", 3600,
   "NCSC Ireland — national cyber-security advisory feed");
 
 RSSX(cert_csa_sg, "csa-sg", "CSA SingCERT", "CSA SingCERT", "cyber", "cyber",
@@ -118,12 +122,15 @@ RSSX(cert_cert_pt, "cert-pt", "CERT.PT (Portugal)", "CERT.PT (Portugal)", "cyber
   "CERT.PT (Portugal) — national cyber-security advisory feed");
 
 RSSX(cert_cert_no, "cert-no", "NSM/NCSC Norway", "NSM/NCSC Norway", "cyber", "cyber",
-  "https://nsm.no/rss/", "no", "[\"cyber\",\"cert\",\"advisory\",\"norway\"]", 3600,
+  /* /rss/ serves the HTML feed index; the real feed is linked from it */
+  "https://nsm.no/rss/alle-oppdateringer-fra-nsm/", "no", "[\"cyber\",\"cert\",\"advisory\",\"norway\"]", 3600,
   "NSM/NCSC Norway — national cyber-security advisory feed");
 
-RSSX(cert_cert_dk, "cert-dk", "CFCS Denmark", "CFCS Denmark", "cyber", "cyber",
-  "https://www.cfcs.dk/da/rss/", "da", "[\"cyber\",\"cert\",\"advisory\",\"denmark\"]", 3600,
-  "CFCS Denmark — national cyber-security advisory feed");
+/* CFCS was folded into Styrelsen for Samfundssikkerhed; cfcs.dk 301s to
+ * samsik.dk, whose WordPress feed is the surviving publication channel. */
+RSSX(cert_cert_dk, "cert-dk", "CFCS Denmark (Samfundssikkerhed)", "CFCS Denmark (Samfundssikkerhed)", "cyber", "cyber",
+  "https://samsik.dk/feed/", "da", "[\"cyber\",\"cert\",\"advisory\",\"denmark\"]", 3600,
+  "CFCS Denmark — national cyber-security advisory feed (now Styrelsen for Samfundssikkerhed)");
 
 RSSX(cert_cert_lt, "cert-lt", "NKSC Lithuania", "NKSC Lithuania", "cyber", "cyber",
   "https://www.nksc.lt/rss.xml", "lt", "[\"cyber\",\"cert\",\"advisory\",\"lithuania\"]", 3600,

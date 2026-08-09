@@ -146,15 +146,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
          * place the listing at the REAL area/ward centroid (a true location of
          * the administrative area parsed from the address), flagged approximate
          * via coord_source/location_approximate — no invented precision. */
-        cJSON *f = cJSON_CreateObject();
-        cJSON_AddStringToObject(f, "type", "Feature");
-        cJSON *g = cJSON_CreateObject();
-        cJSON_AddStringToObject(g, "type", "Point");
-        cJSON *co = cJSON_CreateArray();
-        cJSON_AddItemToArray(co, cJSON_CreateNumber(a->lon));
-        cJSON_AddItemToArray(co, cJSON_CreateNumber(a->lat));
-        cJSON_AddItemToObject(g, "coordinates", co);
-        cJSON_AddItemToObject(f, "geometry", g);
+        cJSON *f = gj_point_feature(a->lon, a->lat);
 
         cJSON *p = cJSON_CreateObject();      /* EXACT JS key order */
         char id[32]; snprintf(id, sizeof id, "SUUMO_%d", idx);

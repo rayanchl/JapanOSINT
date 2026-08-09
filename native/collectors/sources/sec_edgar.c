@@ -22,6 +22,7 @@
  * body, summary, published_at (filingDate), and link (EDGAR doc URL). If
  * nothing is found, emits nothing and returns 0 (honest empty — no summary
  * blob, no seeded rows). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -40,25 +41,6 @@ static const char *const SEC_HEADERS[] = {
   NULL
 };
 
-static char *url_encode_dup(const char *in) {
-  size_t n = strlen(in);
-  char *out = malloc(n * 3 + 1);
-  if (!out) return NULL;
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' || c == '~') {
-      out[w++] = (char)c;
-    } else {
-      sprintf(out + w, "%%%02X", c);
-      w += 3;
-    }
-  }
-  out[w] = 0;
-  return out;
-}
-
 /* pad CIK to 10 digits, stripping leading zeros / non-digits (upstream pad_cik) */
 static char *pad_cik(const char *cik) {
   char *padded = malloc(11);
@@ -75,7 +57,7 @@ static char *pad_cik(const char *cik) {
 }
 
 static cJSON *search_company(http_client *http, const char *company_name) {
-  char *enc = url_encode_dup(company_name);
+  char *enc = jo_urlencode(company_name);
   if (!enc) return NULL;
   char url[1024];
   snprintf(url, sizeof url,
@@ -250,7 +232,7 @@ static cJSON *get_insider_trades(http_client *http, const char *cik) {
 }
 
 static cJSON *search_filings(http_client *http, const char *company_name, const char *form_type) {
-  char *enc = url_encode_dup(company_name);
+  char *enc = jo_urlencode(company_name);
   if (!enc) return NULL;
   char url[1024];
   snprintf(url, sizeof url,

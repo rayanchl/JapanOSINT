@@ -16,24 +16,13 @@
  * "gitlab:<path>", "leak:<repo>/<path>"); link = the result html_url; body =
  * that result's JSON. De-duplicated within the run by remote_key. Nothing
  * found → emits nothing, returns 0 (honest empty). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-static void uri_encode(const char *in, char *out, size_t cap) {
-  static const char *keep = "-_.!~*'()";
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p && w + 4 < cap; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(keep, c)) out[w++] = (char)c;
-    else { snprintf(out + w, cap - w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
-}
 
 /* GitHub requires a User-Agent. Upstream uses bare http_get (libcurl default
  * UA); we set a UA so the API doesn't 403 the request outright. */
@@ -49,7 +38,7 @@ static int http_get(http_client *h, const char *url, long *code, cJSON **out) {
 }
 
 static cJSON *github_code(http_client *h, const char *q, int have_tok) {
-  char enc[1024]; uri_encode(q, enc, sizeof enc);
+  char enc[1024]; jo_uri_encode_buf(q, enc, sizeof enc);
   char url[1100];
   snprintf(url, sizeof url,
     "https://api.github.com/search/code?q=%s&per_page=30", enc);
@@ -100,7 +89,7 @@ static cJSON *github_code(http_client *h, const char *q, int have_tok) {
 }
 
 static cJSON *github_repos(http_client *h, const char *q) {
-  char enc[1024]; uri_encode(q, enc, sizeof enc);
+  char enc[1024]; jo_uri_encode_buf(q, enc, sizeof enc);
   char url[1100];
   snprintf(url, sizeof url,
     "https://api.github.com/search/repositories?q=%s&per_page=30", enc);
@@ -149,7 +138,7 @@ static cJSON *github_repos(http_client *h, const char *q) {
 }
 
 static cJSON *gitlab(http_client *h, const char *q) {
-  char enc[1024]; uri_encode(q, enc, sizeof enc);
+  char enc[1024]; jo_uri_encode_buf(q, enc, sizeof enc);
   char url[1100];
   snprintf(url, sizeof url,
     "https://gitlab.com/api/v4/search?scope=projects&search=%s", enc);
@@ -196,7 +185,7 @@ static cJSON *credential_scan(http_client *h, const char *q) {
   for (int i = 0; lq[i] && i < 3; i++) {
     char sq[512];
     snprintf(sq, sizeof sq, "%s %s", q, lq[i]);
-    char enc[1024]; uri_encode(sq, enc, sizeof enc);
+    char enc[1024]; jo_uri_encode_buf(sq, enc, sizeof enc);
     char url[1100];
     snprintf(url, sizeof url,
       "https://api.github.com/search/code?q=%s&per_page=30", enc);

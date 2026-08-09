@@ -178,6 +178,35 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON_AddItemToObject(p, "observed_at",
           (estTime && cJSON_IsString(estTime) && estTime->valuestring[0])
             ? cJSON_CreateString(estTime->valuestring) : cJSON_CreateNull());
+        /* AUDIT: the measurement lived only inside properties, so every one of
+         * the ~166 rows persisted with a NULL summary AND a NULL link — a tide
+         * gauge whose reading you cannot read and whose page you cannot open.
+         * Both are derived from data already in hand; nothing is invented. */
+        {
+          const char *sname = "";
+          cJSON *nmp = cJSON_GetObjectItem(p, "name");
+          if (nmp && cJSON_IsString(nmp)) sname = nmp->valuestring;
+          char sb[400];
+          if (haveObs && hasAstro)
+            snprintf(sb, sizeof sb,
+                     "%s 潮位 %.0fcm（天文潮位 %.0fcm、偏差 %+.0fcm）%d時間前観測。",
+                     sname, levelCm, astroCm, levelCm - astroCm, hoursAgo);
+          else if (haveObs)
+            snprintf(sb, sizeof sb, "%s 潮位 %.0fcm（%d時間前観測、天文潮位なし）。",
+                     sname, levelCm, hoursAgo);
+          else
+            snprintf(sb, sizeof sb,
+                     "%s — 現在この観測点の潮位実況は配信されていません。", sname);
+          cJSON_AddStringToObject(p, "summary", sb);
+        }
+        {
+          /* JMA's tide app addresses a gauge by its class20 area code. */
+          char lb[160];
+          snprintf(lb, sizeof lb,
+                   "https://www.jma.go.jp/bosai/tide/#area_type=class20s&area_code=%s",
+                   class20Code ? class20Code : "");
+          cJSON_AddStringToObject(p, "url", lb);
+        }
         cJSON_AddStringToObject(p, "source", "jma_bosai_tidelevel");
         cJSON_AddItemToObject(feat, "properties", p);
         cJSON_AddItemToArray(features, feat);

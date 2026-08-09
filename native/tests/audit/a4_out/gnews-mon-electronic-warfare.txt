@@ -1,0 +1,45 @@
+=== gnews-mon-electronic-warfare
+exit: 0
+sched: rc=0 records=100 723ms
+--- stderr ---
+[rss] gnews-mon-electronic-warfare emitted 100
+[sched] gnews-mon-electronic-warfare run rc=0 records=100 723ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-electronic-warfare|CBMipwFBVV95cUxOZmU4ckNNajR1Qlk3dDgzb3U5dkJsUS1iZEVzWFZfbnRnR2M4S2FSRkpvVDVPMHFiWVVHaV90S2htM1l6dUtqNm1iNjVlSWpxZ2M0enhfRkpuOE1TcmJDQ19LelI4UWhIaElUSE9jVmtLWk5uY09xd0EtQnVkeVQ3UG9FUnJoQ3p2RjMzVlJPd1ZkQ0QzVXdEVWJsWjltWER1d3RSY0ZyNA
+  title          Army's Secret 'Hammer of the Gods' Test at Sea: What You Need to Know - Military.com
+  body           <a href="https://news.google.com/rss/articles/CBMipwFBVV95cUxOZmU4ckNNajR1Qlk3dDgzb3U5dkJsUS1iZEVzWFZfbnRnR2M4S2FSRkpvVDVPMHFiWVVHaV90S2htM1l6dUtqNm1iNjVlSWpxZ2M0enhfRkpuOE1TcmJDQ19LelI4UWhIaElUSE9jVmtLWk5uY09xd0EtQnVkeVQ3UG9FUnJoQ3p2RjMzVlJPd1ZkQ0QzVXdEVWJsWjltWER1d3RSY0ZyNA?oc=5" target="_blank">Army's Secret 'Hammer of the Gods' Test at Sea: What You Need to Know</a>&nbsp;&nbsp;<font color="#6f6f6f">Military.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMipwFBVV95cUxOZmU4ckNNajR1Qlk3dDgzb3U5dkJsUS1iZEVzWFZfbnRnR2M4S2FSRkpvVDVPMHFiWVVHaV90S2htM1l6dUtqNm1iNjVlSWpxZ2M0enhfRkpuOE1TcmJDQ19LelI4UWhIaElUSE9jVmtLWk5uY09xd0EtQnVkeVQ3UG9FUnJoQ3p2RjMzVl
+  link           https://news.google.com/rss/articles/CBMipwFBVV95cUxOZmU4ckNNajR1Qlk3dDgzb3U5dkJsUS1iZEVzWFZfbnRnR2M4S2FSRkpvVDVPMHFiWVVHaV90S2htM1l6dUtqNm1iNjVlSWpxZ2M0enhfRkpuOE1TcmJDQ19LelI4UWhIaElUSE9jVmtLWk5uY09xd0EtQnVkeVQ3UG9FUnJoQ3p2RjMzVlJPd1ZkQ0QzVXdEVWJsWjltWER1d3RSY0ZyNA?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 22:26:05 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","electronic"]
+  properties     {"guid":"CBMipwFBVV95cUxOZmU4ckNNajR1Qlk3dDgzb3U5dkJsUS1iZEVzWFZfbnRnR2M4S2FSRkpvVDVPMHFiWVVHaV90S2htM1l6dUtqNm1iNjVlSWpxZ2M0enhfRkpuOE1TcmJDQ19LelI4UWhIaElUSE9jVmtLWk5uY09xd0EtQnVkeVQ3UG9FUnJoQ3p2RjMzVlJPd1ZkQ0QzVXdEVWJsWjltWER1d3RSY0ZyNA"}
+
+--- row 2 ---
+  uid            gnews-mon-electronic-warfare|CBMitgFBVV95cUxQekU0RzFkQ01BbWxuQ0F2TnNrMWY5UFZ0aTVHOVdzQ3k5OVhVdmFmOTZveTBhVVg0Y0ZCOURoQlgzUThpN0NhaWdXa1g0d3ltN0ozQURQZlBpNk9WMldJWnhvWXJiVlhwVE9oWFhacDdOUElWWjh2Sl9OdUZIZlJPSmF3THJsUWl3OEhOeHlwMXg3QUlSbHdxenZxVUVpR3hfZklvSFVJaFdUQ1JjbklQNm9RMFlEUQ
+  title          A Ukrainian defense firm says electronic warfare demand is surging as Russia launches strike drones every minute - Business Insider
+  body           <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxQekU0RzFkQ01BbWxuQ0F2TnNrMWY5UFZ0aTVHOVdzQ3k5OVhVdmFmOTZveTBhVVg0Y0ZCOURoQlgzUThpN0NhaWdXa1g0d3ltN0ozQURQZlBpNk9WMldJWnhvWXJiVlhwVE9oWFhacDdOUElWWjh2Sl9OdUZIZlJPSmF3THJsUWl3OEhOeHlwMXg3QUlSbHdxenZxVUVpR3hfZklvSFVJaFdUQ1JjbklQNm9RMFlEUQ?oc=5" target="_blank">A Ukrainian defense firm says electronic warfare demand is surging as Russia launches strike drones every minute</a>&nbsp;&nbsp;<font color="#6f6f6f">Business Insider</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxQekU0RzFkQ01BbWxuQ0F2TnNrMWY5UFZ0aTVHOVdzQ3k5OVhVdmFmOTZveTBhVVg0Y0ZCOURoQlgzUThpN0NhaWdXa1g0d3ltN0ozQURQZlBpNk9WMldJWnhvWXJiVlhwVE9oWFhacDdOUElWWjh2Sl9OdUZIZlJPSmF3THJsUWl3OEhOeH
+  link           https://news.google.com/rss/articles/CBMitgFBVV95cUxQekU0RzFkQ01BbWxuQ0F2TnNrMWY5UFZ0aTVHOVdzQ3k5OVhVdmFmOTZveTBhVVg0Y0ZCOURoQlgzUThpN0NhaWdXa1g0d3ltN0ozQURQZlBpNk9WMldJWnhvWXJiVlhwVE9oWFhacDdOUElWWjh2Sl9OdUZIZlJPSmF3THJsUWl3OEhOeHlwMXg3QUlSbHdxenZxVUVpR3hfZklvSFVJaFdUQ1JjbklQNm9RMFlEUQ?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 12:40:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","electronic"]
+  properties     {"guid":"CBMitgFBVV95cUxQekU0RzFkQ01BbWxuQ0F2TnNrMWY5UFZ0aTVHOVdzQ3k5OVhVdmFmOTZveTBhVVg0Y0ZCOURoQlgzUThpN0NhaWdXa1g0d3ltN0ozQURQZlBpNk9WMldJWnhvWXJiVlhwVE9oWFhacDdOUElWWjh2Sl9OdUZIZlJPSmF3THJsUWl3OEhOeHlwMXg3QUlSbHdxenZxVUVpR3hfZklvSFVJaFdUQ1JjbklQNm9RMFlEUQ"}
+
+--- row 3 ---
+  uid            gnews-mon-electronic-warfare|CBMigAFBVV95cUxOZ3NRd0szQUJTSDlDZjhuYWJpZVJQWTZmZGxOVDY5WWs4YnhJSGl5YlU4b0o1b0xWbi1mOXh5S3VSeGtpMEdBYTdsOVNyRXB5UFRqandna1dNWTNWWl9pejNJak9zSVkzYVR3a2k2Rk9vUnBtSl9yTktPTlYwbV9kZg
+  title          Defense Intelligence of Ukraine Struck Russian Murmansk-BN Electronic Warfare Station in Crimea - Мілітарний
+  body           <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxOZ3NRd0szQUJTSDlDZjhuYWJpZVJQWTZmZGxOVDY5WWs4YnhJSGl5YlU4b0o1b0xWbi1mOXh5S3VSeGtpMEdBYTdsOVNyRXB5UFRqandna1dNWTNWWl9pejNJak9zSVkzYVR3a2k2Rk9vUnBtSl9yTktPTlYwbV9kZg?oc=5" target="_blank">Defense Intelligence of Ukraine Struck Russian Murmansk-BN Electronic Warfare Station in Crimea</a>&nbsp;&nbsp;<font color="#6f6f6f">Мілітарний</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxOZ3NRd0szQUJTSDlDZjhuYWJpZVJQWTZmZGxOVDY5WWs4YnhJSGl5YlU4b0o1b0xWbi1mOXh5S3VSeGtpMEdBYTdsOVNyRXB5UFRqandna1dNWTNWWl9pejNJak9zSVkzYVR3a2k2Rk9vUnBtSl9yTktPTlYwbV9kZg?oc=5" target="_
+  link           https://news.google.com/rss/articles/CBMigAFBVV95cUxOZ3NRd0szQUJTSDlDZjhuYWJpZVJQWTZmZGxOVDY5WWs4YnhJSGl5YlU4b0o1b0xWbi1mOXh5S3VSeGtpMEdBYTdsOVNyRXB5UFRqandna1dNWTNWWl9pejNJak9zSVkzYVR3a2k2Rk9vUnBtSl9yTktPTlYwbV9kZg?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 18:50:52 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","electronic"]
+  properties     {"guid":"CBMigAFBVV95cUxOZ3NRd0szQUJTSDlDZjhuYWJpZVJQWTZmZGxOVDY5WWs4YnhJSGl5YlU4b0o1b0xWbi1mOXh5S3VSeGtpMEdBYTdsOVNyRXB5UFRqandna1dNWTNWWl9pejNJak9zSVkzYVR3a2k2Rk9vUnBtSl9yTktPTlYwbV9kZg"}

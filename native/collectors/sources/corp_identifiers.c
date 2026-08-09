@@ -6,6 +6,7 @@
  *   VAT_VALIDATOR — EU VAT number → EU VIES validation (free)
  *
  * Both hit free public APIs (no key); honest-empty on no match / error. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/httpclient.h"
 #include "../../third_party/cJSON.h"
@@ -14,26 +15,11 @@
 #include <string.h>
 #include <ctype.h>
 
-static void urlenc(const char *s, char *out, size_t cap) {
-  size_t o = 0;
-  for (const char *p = s; *p && o + 4 < cap; p++) {
-    unsigned char c = (unsigned char)*p;
-    if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') out[o++] = (char)c;
-    else o += (size_t)snprintf(out + o, cap - o, "%%%02X", c);
-  }
-  out[o] = 0;
-}
-
-static const char *jstr(cJSON *o, const char *k) {
-  cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
-}
-
 /* ── LEI_SEARCH (GLEIF) ─────────────────────────────────────────────────── */
 static int lei_run(const source_ctx *ctx, intel_sink *sink) {
   const char *name = ctx->entity;
   if (!name || !*name) return 0;
-  char enc[256]; urlenc(name, enc, sizeof enc);
+  char enc[256]; jo_urlencode_buf(name, enc, sizeof enc);
   char url[512];
   snprintf(url, sizeof url,
     "https://api.gleif.org/api/v1/lei-records?filter[entity.legalName]=%s&page[size]=5", enc);
@@ -49,8 +35,8 @@ static int lei_run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *attr = cJSON_GetObjectItem(rec, "attributes");
     cJSON *ent = attr ? cJSON_GetObjectItem(attr, "entity") : NULL;
     cJSON *ln = ent ? cJSON_GetObjectItem(ent, "legalName") : NULL;
-    const char *lei = attr ? jstr(attr, "lei") : NULL;
-    const char *legal = ln ? jstr(ln, "name") : NULL;
+    const char *lei = attr ? jo_str(attr, "lei") : NULL;
+    const char *legal = ln ? jo_str(ln, "name") : NULL;
     if (!lei) continue;
 
     cJSON *out = cJSON_CreateObject();
@@ -59,12 +45,12 @@ static int lei_run(const source_ctx *ctx, intel_sink *sink) {
     if (legal) cJSON_AddStringToObject(out, "legal_name", legal);
     cJSON *addr = ent ? cJSON_GetObjectItem(ent, "legalAddress") : NULL;
     if (addr) {
-      const char *country = jstr(addr, "country"), *city = jstr(addr, "city");
+      const char *country = jo_str(addr, "country"), *city = jo_str(addr, "city");
       if (country) cJSON_AddStringToObject(out, "country", country);
       if (city) cJSON_AddStringToObject(out, "city", city);
     }
     cJSON *reg = attr ? cJSON_GetObjectItem(attr, "registration") : NULL;
-    const char *status = reg ? jstr(reg, "status") : NULL;
+    const char *status = reg ? jo_str(reg, "status") : NULL;
     if (status) cJSON_AddStringToObject(out, "registration_status", status);
     char *bj = cJSON_PrintUnformatted(out);
 
@@ -83,7 +69,13 @@ static int lei_run(const source_ctx *ctx, intel_sink *sink) {
     free(bj); free(pj); cJSON_Delete(out); cJSON_Delete(props);
   }
   cJSON_Delete(j);
-  return emitted;
+  /* The ABI is rc==0 on success, <0 on failure — core/scheduler.c logs any
+   * non-zero rc as status="error" and hands it to anomaly_detect(), which
+   * quarantines the source. Returning the emitted COUNT (as this did) meant a
+   * perfectly working LEI lookup reported rc=5 and got benched by the circuit
+   * breaker. The row count reaches the scheduler through the sink, not rc. */
+  (void)emitted;
+  return 0;
 }
 
 /* ── VAT_VALIDATOR (EU VIES) ────────────────────────────────────────────── */
@@ -115,7 +107,7 @@ static int vat_run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *valid = cJSON_GetObjectItem(j, "valid");
   int isvalid = valid && cJSON_IsBool(valid) && cJSON_IsTrue(valid);
   cJSON_AddBoolToObject(out, "valid", isvalid);
-  const char *nm = jstr(j, "name"), *ad = jstr(j, "address");
+  const char *nm = jo_str(j, "name"), *ad = jo_str(j, "address");
   if (nm && *nm) cJSON_AddStringToObject(out, "name", nm);
   if (ad && *ad) cJSON_AddStringToObject(out, "address", ad);
   cJSON_Delete(j);
@@ -134,7 +126,9 @@ static int vat_run(const source_ctx *ctx, intel_sink *sink) {
   it.tags_json = "[\"osint-search\",\"VAT_VALIDATOR\"]";
   int rc = sink->emit(sink, &it);
   free(bj); free(pj); cJSON_Delete(out); cJSON_Delete(props);
-  return rc >= 0 ? 1 : 0;
+  /* see the note in lei_run: rc is a status, not a count. Returning 1 made
+   * every successful VAT validation look like an error to the scheduler. */
+  return rc >= 0 ? 0 : -1;
 }
 
 static const source_def lei_def = {

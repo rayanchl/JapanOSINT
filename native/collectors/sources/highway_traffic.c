@@ -2,41 +2,37 @@
  * server/src/collectors/highwayTraffic.js (fetchOverpass single area.jp).
  * HIGHWAY_NODES offline fallback intentionally not ported (rule 8).
  * `updated_at` mirrors JS `new Date().toISOString()` (UTC, ms). */
+#include "../../lib/geojson.h"
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
 
-static void iso_now(char *o, size_t n) {
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  struct tm tm;
-  gmtime_r(&tv.tv_sec, &tm);
-  char base[32];
-  strftime(base, sizeof base, "%Y-%m-%dT%H:%M:%S", &tm);
-  snprintf(o, n, "%s.%03dZ", base, (int)(tv.tv_usec / 1000));
-}
-
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
+  cJSON *id = cJSON_GetObjectItem(el, "id");
+  long long oid = id && cJSON_IsNumber(id) ? (long long)id->valuedouble : 0;
+
+  /* STABLE uid. "node_id" is not one of lib/geojson.c's NATIVE_ID_KEYS, so
+   * feature_uid() fell through to sha1({geometry,properties}) — and the
+   * properties carry `updated_at`, regenerated every run. On a 600s interval
+   * that re-inserted every motorway junction in Japan as a NEW row every ten
+   * minutes: a live double-run measured 7,298 rows becoming 14,641.
+   * `station_id` IS a NATIVE_ID_KEY, and the OSM element id is stable across
+   * runs, so the uid is now "highway-traffic|OSM_<id>" and re-runs update in
+   * place. `updated_at` stays as payload; it no longer feeds the uid. */
+  char sid_buf[40];
+  snprintf(sid_buf, sizeof sid_buf, "OSM_%lld", oid);
+  cJSON_AddStringToObject(p, "station_id", sid_buf);
+
   char nb[32];
   snprintf(nb, sizeof nb, "HWY_LIVE_%04d", i + 1);
   cJSON_AddStringToObject(p, "node_id", nb);
-
-  cJSON *id = cJSON_GetObjectItem(el, "id");
-  long long oid = id && cJSON_IsNumber(id) ? (long long)id->valuedouble : 0;
   const char *nm = ov_tag(el, "name");
   const char *ref = ov_tag(el, "ref");
   if (nm) {
@@ -61,7 +57,7 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
 
   cJSON_AddStringToObject(p, "country", "JP");
   char ts[40];
-  iso_now(ts, sizeof ts);
+  jo_iso_now(ts, sizeof ts);
   cJSON_AddStringToObject(p, "updated_at", ts);
   cJSON_AddStringToObject(p, "source", "highway_traffic");
   cJSON_AddItemToObject(f, "properties", p);

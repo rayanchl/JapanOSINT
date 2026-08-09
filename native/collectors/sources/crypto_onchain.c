@@ -7,6 +7,7 @@
  *
  * Etherscan needs a key → gates on ETHERSCAN_API_KEY, honest-empty without it.
  * Real chain data only. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/httpclient.h"
 #include "../../third_party/cJSON.h"
@@ -19,10 +20,6 @@ static int is_eth_addr(const char *s) {
   if (!s || strncmp(s, "0x", 2) != 0 || strlen(s) != 42) return 0;
   for (const char *p = s + 2; *p; p++) if (!isxdigit((unsigned char)*p)) return 0;
   return 1;
-}
-static const char *jstr(cJSON *o, const char *k) {
-  cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
 }
 
 /* GET an Etherscan account action; returns parsed JSON or NULL. */
@@ -59,12 +56,20 @@ static int emit_one(intel_sink *sink, const char *addr, const char *service,
 
 static int defi_run(const source_ctx *ctx, intel_sink *sink) {
   const char *addr = ctx->entity;
-  if (!is_eth_addr(addr)) return 0;
+  if (!is_eth_addr(addr)) {
+    fprintf(stderr, "[DEFI_TRACKER] entity must be a 0x… Ethereum address\n");
+    return 0;
+  }
   const char *key = getenv("ETHERSCAN_API_KEY");
-  if (!key || !*key) return 0;
+  /* Say it out loud: a silent 0 rows is indistinguishable from "looked and
+   * found nothing", and every audit sweep misfiles this as EMPTY. */
+  if (!key || !*key) {
+    fprintf(stderr, "[DEFI_TRACKER] gated (no ETHERSCAN_API_KEY)\n");
+    return 0;
+  }
 
   cJSON *bal = etherscan(ctx->http, "balance", addr, "&tag=latest", key);
-  const char *wei = bal ? jstr(bal, "result") : NULL;
+  const char *wei = bal ? jo_str(bal, "result") : NULL;
   cJSON *tx = etherscan(ctx->http, "txlist", addr, "&sort=desc&page=1&offset=10", key);
   cJSON *txr = tx ? cJSON_GetObjectItem(tx, "result") : NULL;
   int txn = (txr && cJSON_IsArray(txr)) ? cJSON_GetArraySize(txr) : 0;
@@ -81,24 +86,35 @@ static int defi_run(const source_ctx *ctx, intel_sink *sink) {
   int e = emit_one(sink, addr, "DEFI_TRACKER", "[\"osint-search\",\"DEFI_TRACKER\"]",
                    data, "summary", title);
   cJSON_Delete(data);
+  int fetched = (bal != NULL) || (tx != NULL);
   if (bal) cJSON_Delete(bal);
   if (tx) cJSON_Delete(tx);
-  return e;
+  fprintf(stderr, "[DEFI_TRACKER] emitted %d\n", e);
+  /* run() is a STATUS code, not a row count (core/scheduler.c reads rc!=0 as
+   * an errored run). Returning the emit count marked a successful lookup as an
+   * error; only a dead Etherscan endpoint is one. */
+  return fetched ? 0 : -1;
 }
 
 static int flow_run(const source_ctx *ctx, intel_sink *sink) {
   const char *addr = ctx->entity;
-  if (!is_eth_addr(addr)) return 0;
+  if (!is_eth_addr(addr)) {
+    fprintf(stderr, "[EXCHANGE_FLOW] entity must be a 0x… Ethereum address\n");
+    return 0;
+  }
   const char *key = getenv("ETHERSCAN_API_KEY");
-  if (!key || !*key) return 0;
+  if (!key || !*key) {
+    fprintf(stderr, "[EXCHANGE_FLOW] gated (no ETHERSCAN_API_KEY)\n");
+    return 0;
+  }
 
   cJSON *tx = etherscan(ctx->http, "txlist", addr, "&sort=desc&page=1&offset=15", key);
   cJSON *txr = tx ? cJSON_GetObjectItem(tx, "result") : NULL;
   int emitted = 0, n = (txr && cJSON_IsArray(txr)) ? cJSON_GetArraySize(txr) : 0;
   for (int i = 0; i < n; i++) {
     cJSON *t = cJSON_GetArrayItem(txr, i);
-    const char *hash = jstr(t, "hash"), *from = jstr(t, "from"), *to = jstr(t, "to");
-    const char *val = jstr(t, "value"), *ts = jstr(t, "timeStamp");
+    const char *hash = jo_str(t, "hash"), *from = jo_str(t, "from"), *to = jo_str(t, "to");
+    const char *val = jo_str(t, "value"), *ts = jo_str(t, "timeStamp");
     if (!hash) continue;
     int outgoing = from && strcasecmp(from, addr) == 0;
     cJSON *data = cJSON_CreateObject();
@@ -114,8 +130,12 @@ static int flow_run(const source_ctx *ctx, intel_sink *sink) {
                         data, hash, title);
     cJSON_Delete(data);
   }
+  int fetched = tx != NULL;
   if (tx) cJSON_Delete(tx);
-  return emitted;
+  fprintf(stderr, "[EXCHANGE_FLOW] emitted %d\n", emitted);
+  /* STATUS code, not a row count: an address with no recent transfers is an
+   * honest empty. */
+  return fetched ? 0 : -1;
 }
 
 static const source_def defi_def = {

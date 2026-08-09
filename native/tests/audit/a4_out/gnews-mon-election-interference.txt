@@ -1,0 +1,45 @@
+=== gnews-mon-election-interference
+exit: 0
+sched: rc=0 records=100 629ms
+--- stderr ---
+[rss] gnews-mon-election-interference emitted 100
+[sched] gnews-mon-election-interference run rc=0 records=100 629ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-election-interference|CBMiugFBVV95cUxOS1IxODBCNWZNbXJOQmNTcXhDVk5hWjFMSGV3M3lMVHc1ampBVlN5OEczVmtNeHpNWlBKTXdET0lpMEpFc1IwR1h6bW1NTEpTZlJuRUF0THFYcGVjUmJQbEZnSTRwWlVld0FTMFJ6RW9xOGxBTzF2VDJDRnFvc0RHMVRKMUljTVZ4QmxFUWVDRkc2TjF0OEhZUDV3eXl3UmxPcVdRTGhaVmlUVUVteERlS1RRSTcxZTBndGc
+  title          Trump’s claims of election interference in doubt after release of declassified intelligence - The Washington Post
+  body           <a href="https://news.google.com/rss/articles/CBMiugFBVV95cUxOS1IxODBCNWZNbXJOQmNTcXhDVk5hWjFMSGV3M3lMVHc1ampBVlN5OEczVmtNeHpNWlBKTXdET0lpMEpFc1IwR1h6bW1NTEpTZlJuRUF0THFYcGVjUmJQbEZnSTRwWlVld0FTMFJ6RW9xOGxBTzF2VDJDRnFvc0RHMVRKMUljTVZ4QmxFUWVDRkc2TjF0OEhZUDV3eXl3UmxPcVdRTGhaVmlUVUVteERlS1RRSTcxZTBndGc?oc=5" target="_blank">Trump’s claims of election interference in doubt after release of declassified intelligence</a>&nbsp;&nbsp;<font color="#6f6f6f">The Washington Post</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiugFBVV95cUxOS1IxODBCNWZNbXJOQmNTcXhDVk5hWjFMSGV3M3lMVHc1ampBVlN5OEczVmtNeHpNWlBKTXdET0lpMEpFc1IwR1h6bW1NTEpTZlJuRUF0THFYcGVjUmJQbEZnSTRwWlVld0FTMFJ6RW9xOGxBTzF2VDJDRnFvc0RHMVRKMUljTVZ4QmxFUW
+  link           https://news.google.com/rss/articles/CBMiugFBVV95cUxOS1IxODBCNWZNbXJOQmNTcXhDVk5hWjFMSGV3M3lMVHc1ampBVlN5OEczVmtNeHpNWlBKTXdET0lpMEpFc1IwR1h6bW1NTEpTZlJuRUF0THFYcGVjUmJQbEZnSTRwWlVld0FTMFJ6RW9xOGxBTzF2VDJDRnFvc0RHMVRKMUljTVZ4QmxFUWVDRkc2TjF0OEhZUDV3eXl3UmxPcVdRTGhaVmlUVUVteERlS1RRSTcxZTBndGc?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 00:00:07 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","election"]
+  properties     {"guid":"CBMiugFBVV95cUxOS1IxODBCNWZNbXJOQmNTcXhDVk5hWjFMSGV3M3lMVHc1ampBVlN5OEczVmtNeHpNWlBKTXdET0lpMEpFc1IwR1h6bW1NTEpTZlJuRUF0THFYcGVjUmJQbEZnSTRwWlVld0FTMFJ6RW9xOGxBTzF2VDJDRnFvc0RHMVRKMUljTVZ4QmxFUWVDRkc2TjF0OEhZUDV3eXl3UmxPcVdRTGhaVmlUVUVteERlS1RRSTcxZTBndGc"}
+
+--- row 2 ---
+  uid            gnews-mon-election-interference|CBMiuwFBVV95cUxNT1dSa25xeXJyUkRuM1VScU9XYUhPTVVna1J3dTNhRG1oOV9NSGlqcm5nYXN3cVhTbVBmZnloMTFsNGI2WjRTRm5GZTQ3MDV6d2RCWGdPNkJTQnRLY1kyXzlva3pLaFcybVNkUnJOdDA4Q1BuSTdfU1I2WWdJX2NpZU9TUUotdFpKQnhGeHVqY09RSDRZZkdseUJKdjZ1aVRVRFd1MlZIV2lBLUxFT0Y5Um9vWTJfVzVSUHp3
+  title          Hundreds of ex-CIA officials question memo behind Trump’s Chinese election interference claims - The Independent
+  body           <a href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxNT1dSa25xeXJyUkRuM1VScU9XYUhPTVVna1J3dTNhRG1oOV9NSGlqcm5nYXN3cVhTbVBmZnloMTFsNGI2WjRTRm5GZTQ3MDV6d2RCWGdPNkJTQnRLY1kyXzlva3pLaFcybVNkUnJOdDA4Q1BuSTdfU1I2WWdJX2NpZU9TUUotdFpKQnhGeHVqY09RSDRZZkdseUJKdjZ1aVRVRFd1MlZIV2lBLUxFT0Y5Um9vWTJfVzVSUHp3?oc=5" target="_blank">Hundreds of ex-CIA officials question memo behind Trump’s Chinese election interference claims</a>&nbsp;&nbsp;<font color="#6f6f6f">The Independent</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxNT1dSa25xeXJyUkRuM1VScU9XYUhPTVVna1J3dTNhRG1oOV9NSGlqcm5nYXN3cVhTbVBmZnloMTFsNGI2WjRTRm5GZTQ3MDV6d2RCWGdPNkJTQnRLY1kyXzlva3pLaFcybVNkUnJOdDA4Q1BuSTdfU1I2WWdJX2NpZU9TUUotdFpKQnhGeH
+  link           https://news.google.com/rss/articles/CBMiuwFBVV95cUxNT1dSa25xeXJyUkRuM1VScU9XYUhPTVVna1J3dTNhRG1oOV9NSGlqcm5nYXN3cVhTbVBmZnloMTFsNGI2WjRTRm5GZTQ3MDV6d2RCWGdPNkJTQnRLY1kyXzlva3pLaFcybVNkUnJOdDA4Q1BuSTdfU1I2WWdJX2NpZU9TUUotdFpKQnhGeHVqY09RSDRZZkdseUJKdjZ1aVRVRFd1MlZIV2lBLUxFT0Y5Um9vWTJfVzVSUHp3?oc=5
+  language       en
+  published_at   Tue, 28 Jul 2026 21:27:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","election"]
+  properties     {"guid":"CBMiuwFBVV95cUxNT1dSa25xeXJyUkRuM1VScU9XYUhPTVVna1J3dTNhRG1oOV9NSGlqcm5nYXN3cVhTbVBmZnloMTFsNGI2WjRTRm5GZTQ3MDV6d2RCWGdPNkJTQnRLY1kyXzlva3pLaFcybVNkUnJOdDA4Q1BuSTdfU1I2WWdJX2NpZU9TUUotdFpKQnhGeHVqY09RSDRZZkdseUJKdjZ1aVRVRFd1MlZIV2lBLUxFT0Y5Um9vWTJfVzVSUHp3"}
+
+--- row 3 ---
+  uid            gnews-mon-election-interference|CBMiWkFVX3lxTE05UkZaWXNwVnNKNzdveXlMYjcyVkQwWElNQlBGOEtPZEdjSWMtenZfU05fajczaG1jeDVBNklULXRqYjV2ODZMX3pCY0tVcVB2Q19GcFRfdUJDUQ
+  title          Brazil's President Lula confirms rejection of visas for US officials - BBC
+  body           <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE05UkZaWXNwVnNKNzdveXlMYjcyVkQwWElNQlBGOEtPZEdjSWMtenZfU05fajczaG1jeDVBNklULXRqYjV2ODZMX3pCY0tVcVB2Q19GcFRfdUJDUQ?oc=5" target="_blank">Brazil's President Lula confirms rejection of visas for US officials</a>&nbsp;&nbsp;<font color="#6f6f6f">BBC</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE05UkZaWXNwVnNKNzdveXlMYjcyVkQwWElNQlBGOEtPZEdjSWMtenZfU05fajczaG1jeDVBNklULXRqYjV2ODZMX3pCY0tVcVB2Q19GcFRfdUJDUQ?oc=5" target="_blank">Brazil's President Lula confirms rejection of
+  link           https://news.google.com/rss/articles/CBMiWkFVX3lxTE05UkZaWXNwVnNKNzdveXlMYjcyVkQwWElNQlBGOEtPZEdjSWMtenZfU05fajczaG1jeDVBNklULXRqYjV2ODZMX3pCY0tVcVB2Q19GcFRfdUJDUQ?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 15:02:39 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","election"]
+  properties     {"guid":"CBMiWkFVX3lxTE05UkZaWXNwVnNKNzdveXlMYjcyVkQwWElNQlBGOEtPZEdjSWMtenZfU05fajczaG1jeDVBNklULXRqYjV2ODZMX3pCY0tVcVB2Q19GcFRfdUJDUQ"}

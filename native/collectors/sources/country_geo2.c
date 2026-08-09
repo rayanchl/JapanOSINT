@@ -38,7 +38,8 @@ static int run_openplz(const source_ctx *ctx, intel_sink *sink, const char *serv
   if (!body) return 0;
   cJSON *root = cJSON_Parse(body); free(body);
   if (!cJSON_IsArray(root)) { if (root) cJSON_Delete(root); return 0; }
-  static const char *muni_keys[] = { "municipality", "commune", "district", NULL };
+  static const char *muni_keys[] = { "municipality", "commune", NULL };
+  static const char *dist_keys[] = { "district", NULL };
   static const char *reg_keys[]  = { "federalState", "federalProvince", "canton", NULL };
   int n = 0;
   const cJSON *loc;
@@ -46,20 +47,33 @@ static int run_openplz(const source_ctx *ctx, intel_sink *sink, const char *serv
     const char *name = jo_sv(loc, "name");
     const char *pc = jo_sv(loc, "postalCode");
     const char *mun = nested_name(loc, muni_keys);
+    /* district was in the municipality fallback list, so it could only ever
+     * surface when there was no municipality/commune at all — for AT/CH there
+     * always is, so the district (Bezirk / Wiener Gemeindebezirk) was dropped
+     * from every row. It is also the ONLY thing that distinguishes the several
+     * records OpenPLZ returns for one postal code, so keying without it
+     * collapsed 4 fetched records into 1 persisted row. */
+    const char *dist = nested_name(loc, dist_keys);
     const char *reg = nested_name(loc, reg_keys);
     if (!name) continue;
     cJSON *d = cJSON_CreateObject();
     cJSON_AddStringToObject(d, "locality", name);
     if (pc) cJSON_AddStringToObject(d, "postal_code", pc);
     if (mun) cJSON_AddStringToObject(d, "municipality", mun);
+    if (dist) cJSON_AddStringToObject(d, "district", dist);
     if (reg) cJSON_AddStringToObject(d, "region", reg);
     cJSON_AddStringToObject(d, "source", "OpenPLZ");
     char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "service", service); cJSON_AddBoolToObject(p, "success", 1);
     char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-    char rk[96]; snprintf(rk, sizeof rk, "%s:%s:%s", cc, pc ? pc : code, name);
-    char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", mun ? mun : "", reg ? ", " : "", reg ? reg : "");
+    char rk[160];
+    snprintf(rk, sizeof rk, "%s:%s:%s%s%s", cc, pc ? pc : code, name,
+             dist ? ":" : "", dist ? dist : "");
+    char summ[320];
+    snprintf(summ, sizeof summ, "%s%s%s%s%s", mun ? mun : "",
+             dist ? " · " : "", dist ? dist : "",
+             reg ? ", " : "", reg ? reg : "");
     char tags[64]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
     intel_item it = {0};
     it.remote_key = rk; it.title = name; it.summary = summ[0] ? summ : NULL; it.body = bj; it.lang = "de";

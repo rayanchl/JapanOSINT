@@ -51,11 +51,7 @@ static int run_zenrin(const source_ctx *ctx, intel_sink *sink) {
   return 0;
 }
 
-#define DEFR(SYM, ID, NAME, NAMEJA, RUN, CAT, TYPE, URL, DESC, FREE) \
-  static const source_def SYM = { .id = ID, .collector = "osint", .name = NAME, \
-    .name_ja = NAMEJA, .update_interval_sec = 0, .run = RUN, .category = CAT, \
-    .type = TYPE, .url = URL, .description = DESC, .layer = NULL, .free_tier = FREE }; \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 DEFR(cadastral_def, "CADASTRAL_PARCELS", "Cadastral Parcels", "登記所備付地図データ", run_scrape,
      "geospatial", "dataset", "https://front.geospatial.jp/", "Nationwide cadastral parcel polygons (free MOJ release)", 1);

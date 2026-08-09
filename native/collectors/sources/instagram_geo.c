@@ -6,6 +6,7 @@
  * gated / on failure. uid = instagram-geo|<shortcode> (Node featureUid:
  * NATIVE_ID_KEYS has no shortcode, so feature has no .id -> here we mirror
  * the post identity by emitting per-media with remote_key = shortcode). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -21,12 +22,6 @@ static const char *LOCATION_IDS[] = {
   "105466816170557", "249193905",
 };
 #define NL ((int)(sizeof(LOCATION_IDS)/sizeof(LOCATION_IDS[0])))
-
-static const char *sv(const cJSON *o, const char *k) {
-  if (!o) return NULL;
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
-}
 
 /* loc?.lat ?? loc?.location?.lat (number or null). */
 static int loc_num(const cJSON *loc, const char *k, double *out) {
@@ -73,7 +68,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (!loc_num(loc, "lat", &lat) || !loc_num(loc, "lng", &lng)) {
       cJSON_Delete(data); continue;
     }
-    const char *locName = sv(loc, "name");
+    const char *locName = jo_sv(loc, "name");
 
     cJSON *recent = nld ? cJSON_GetObjectItem(nld, "recent") : NULL;
     cJSON *secs = recent ? cJSON_GetObjectItem(recent, "sections") : NULL;
@@ -92,8 +87,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON_ArrayForEach(mw, medias) {
           cJSON *media = cJSON_GetObjectItem(mw, "media");
           if (!media) media = mw;
-          const char *code = sv(media, "code");
-          if (!code) code = sv(media, "id");
+          const char *code = jo_sv(media, "code");
+          if (!code) code = jo_sv(media, "id");
           if (!code) continue;
 
           char uidb[128];
@@ -102,9 +97,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
           snprintf(link, sizeof link, "https://www.instagram.com/p/%s/", code);
 
           cJSON *cap = cJSON_GetObjectItem(media, "caption");
-          const char *capText = cap ? sv(cap, "text") : NULL;
+          const char *capText = cap ? jo_sv(cap, "text") : NULL;
           cJSON *usr = cJSON_GetObjectItem(media, "user");
-          const char *owner = usr ? sv(usr, "username") : NULL;
+          const char *owner = usr ? jo_sv(usr, "username") : NULL;
 
           char takenIso[32]; const char *taken = NULL;
           cJSON *ta = cJSON_GetObjectItem(media, "taken_at");
@@ -152,7 +147,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(data);
   }
   fprintf(stderr, "[instagram-geo] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  return 0;              /* audit-09: an empty result set is not a run error */
 }
 
 static const source_def instagram_geo_def = {

@@ -1,0 +1,45 @@
+=== my-jvn
+exit: 0
+sched: rc=0 records=50 4072ms
+--- stderr ---
+[my-jvn] emitted 50
+[sched] my-jvn run rc=0 records=50 4072ms
+--- persisted: 50 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=50
+sub_source_id: (null)=50
+
+--- row 1 ---
+  uid            my-jvn|JVNDB-2026-026231
+  title          GoogleのGoogle Chromeにおける権限管理に関する脆弱性
+  body           151.0.7922.72 未満の Mac 向け Google Chrome の Safe Browsing における不適切な実装により、リモートの攻撃者が悪意のあるファイルを利用して任意のコードを実行できる可能性がありました。（Chromium セキュリティ重大度は低です）
+  summary        151.0.7922.72 未満の Mac 向け Google Chrome の Safe Browsing における不適切な実装により、リモートの攻撃者が悪意のあるファイルを利用して任意のコードを実行できる可能性がありまし
+  link           https://jvndb.jvn.jp/ja/contents/2026/JVNDB-2026-026231.html
+  language       ja
+  published_at   2026-07-31T15:01:58+09:00
+  record_type    article
+  tags           ["advisory","jvn","cyber"]
+  properties     {"jvn_id":"JVNDB-2026-026231","modified":"2026-07-31T15:01:58+09:00"}
+
+--- row 2 ---
+  uid            my-jvn|JVNDB-2026-026230
+  title          GoogleのGoogle Chromeにおける権限管理に関する脆弱性
+  body           151.0.7922.72以前のGoogle ChromeのV8における不適切な実装により、攻撃者が悪意のある拡張機能のインストールをユーザーに促し、精巧に作成されたChrome拡張機能を介してサンドボックス内で任意のコードを実行できる可能性がありました。（Chromiumセキュリティの重大度は低いです）
+  summary        151.0.7922.72以前のGoogle ChromeのV8における不適切な実装により、攻撃者が悪意のある拡張機能のインストールをユーザーに促し、精巧に作成されたChrome拡張機能を介してサンドボッ
+  link           https://jvndb.jvn.jp/ja/contents/2026/JVNDB-2026-026230.html
+  language       ja
+  published_at   2026-07-31T15:01:55+09:00
+  record_type    article
+  tags           ["advisory","jvn","cyber"]
+  properties     {"jvn_id":"JVNDB-2026-026230","modified":"2026-07-31T15:01:55+09:00"}
+
+--- row 3 ---
+  uid            my-jvn|JVNDB-2026-026229
+  title          GoogleのGoogle Chromeにおける権限管理に関する脆弱性
+  body           151.0.7922.72より前のGoogle Chromeにおけるスケジューリングの不適切な実装により、リモートの攻撃者が細工されたHTMLページを介してサンドボックス内で任意のコードを実行できる可能性がありました。（Chromiumセキュリティの重大度は低いです）
+  summary        151.0.7922.72より前のGoogle Chromeにおけるスケジューリングの不適切な実装により、リモートの攻撃者が細工されたHTMLページを介してサンドボックス内で任意のコードを実行できる可
+  link           https://jvndb.jvn.jp/ja/contents/2026/JVNDB-2026-026229.html
+  language       ja
+  published_at   2026-07-31T15:01:52+09:00
+  record_type    article
+  tags           ["advisory","jvn","cyber"]
+  properties     {"jvn_id":"JVNDB-2026-026229","modified":"2026-07-31T15:01:52+09:00"}

@@ -1,0 +1,45 @@
+=== gnews-mon-weapons-smuggling
+exit: 0
+sched: rc=0 records=100 718ms
+--- stderr ---
+[rss] gnews-mon-weapons-smuggling emitted 100
+[sched] gnews-mon-weapons-smuggling run rc=0 records=100 718ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-weapons-smuggling|CBMimwFBVV95cUxOSUk4ZGVubGtPM3BYX0xHbkRHd0xFREdjU0hRNTRjX0xIOGQtZzg1UVpSUEZnc2R5aEFLSC12d2s4aE85N1N2UXYwRkFSUEhFVXpLUnZFOUtqYXo1LVMyM1pTSnFoV3JyM2pxWk1nMEtEbUY1enNINS0zb2xtQ0F6M1FBeXE2dEtBLTV2ME5fZFlEMzRTdHVVeUVJQQ
+  title          Arms smuggling: a key threat to South Sudan’s December elections - ISS Africa
+  body           <a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxOSUk4ZGVubGtPM3BYX0xHbkRHd0xFREdjU0hRNTRjX0xIOGQtZzg1UVpSUEZnc2R5aEFLSC12d2s4aE85N1N2UXYwRkFSUEhFVXpLUnZFOUtqYXo1LVMyM1pTSnFoV3JyM2pxWk1nMEtEbUY1enNINS0zb2xtQ0F6M1FBeXE2dEtBLTV2ME5fZFlEMzRTdHVVeUVJQQ?oc=5" target="_blank">Arms smuggling: a key threat to South Sudan’s December elections</a>&nbsp;&nbsp;<font color="#6f6f6f">ISS Africa</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxOSUk4ZGVubGtPM3BYX0xHbkRHd0xFREdjU0hRNTRjX0xIOGQtZzg1UVpSUEZnc2R5aEFLSC12d2s4aE85N1N2UXYwRkFSUEhFVXpLUnZFOUtqYXo1LVMyM1pTSnFoV3JyM2pxWk1nMEtEbUY1enNINS0zb2xtQ0F6M1FBeXE2dEtBLTV2ME
+  link           https://news.google.com/rss/articles/CBMimwFBVV95cUxOSUk4ZGVubGtPM3BYX0xHbkRHd0xFREdjU0hRNTRjX0xIOGQtZzg1UVpSUEZnc2R5aEFLSC12d2s4aE85N1N2UXYwRkFSUEhFVXpLUnZFOUtqYXo1LVMyM1pTSnFoV3JyM2pxWk1nMEtEbUY1enNINS0zb2xtQ0F6M1FBeXE2dEtBLTV2ME5fZFlEMzRTdHVVeUVJQQ?oc=5
+  language       en
+  published_at   Fri, 24 Jul 2026 12:45:28 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","weapons"]
+  properties     {"guid":"CBMimwFBVV95cUxOSUk4ZGVubGtPM3BYX0xHbkRHd0xFREdjU0hRNTRjX0xIOGQtZzg1UVpSUEZnc2R5aEFLSC12d2s4aE85N1N2UXYwRkFSUEhFVXpLUnZFOUtqYXo1LVMyM1pTSnFoV3JyM2pxWk1nMEtEbUY1enNINS0zb2xtQ0F6M1FBeXE2dEtBLTV2ME5fZFlEMzRTdHVVeUVJQQ"}
+
+--- row 2 ---
+  uid            gnews-mon-weapons-smuggling|CBMiuAFBVV95cUxNRWdJbVJ3ZGlTQnlGVDR6ZEYwaHBid0IweVptMWRmNVFremplZ21mQkwyUnB6UFM4Z3R2cDU3M214cFEydm1paEYxOGNQRnJhemg4cGV2djNNSUNDY0tmRTFJa3RNS3luV20yQk5kSk5VdVJ0VnU4ekhHZ3pUQmdoTkpVU0EzOXRQQmJUd1MyZmJnZXJoZ013SEcxZHJ0M1A5RkphTnlYbUFMM0V0V3FaalIyamhDY20w
+  title          Six Men Charged in One of the Largest Narcotics & Firearms Trafficking Busts in Nassau County History - DEA.gov
+  body           <a href="https://news.google.com/rss/articles/CBMiuAFBVV95cUxNRWdJbVJ3ZGlTQnlGVDR6ZEYwaHBid0IweVptMWRmNVFremplZ21mQkwyUnB6UFM4Z3R2cDU3M214cFEydm1paEYxOGNQRnJhemg4cGV2djNNSUNDY0tmRTFJa3RNS3luV20yQk5kSk5VdVJ0VnU4ekhHZ3pUQmdoTkpVU0EzOXRQQmJUd1MyZmJnZXJoZ013SEcxZHJ0M1A5RkphTnlYbUFMM0V0V3FaalIyamhDY20w?oc=5" target="_blank">Six Men Charged in One of the Largest Narcotics & Firearms Trafficking Busts in Nassau County History</a>&nbsp;&nbsp;<font color="#6f6f6f">DEA.gov</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiuAFBVV95cUxNRWdJbVJ3ZGlTQnlGVDR6ZEYwaHBid0IweVptMWRmNVFremplZ21mQkwyUnB6UFM4Z3R2cDU3M214cFEydm1paEYxOGNQRnJhemg4cGV2djNNSUNDY0tmRTFJa3RNS3luV20yQk5kSk5VdVJ0VnU4ekhHZ3pUQmdoTkpVU0EzOXRQQmJUd1
+  link           https://news.google.com/rss/articles/CBMiuAFBVV95cUxNRWdJbVJ3ZGlTQnlGVDR6ZEYwaHBid0IweVptMWRmNVFremplZ21mQkwyUnB6UFM4Z3R2cDU3M214cFEydm1paEYxOGNQRnJhemg4cGV2djNNSUNDY0tmRTFJa3RNS3luV20yQk5kSk5VdVJ0VnU4ekhHZ3pUQmdoTkpVU0EzOXRQQmJUd1MyZmJnZXJoZ013SEcxZHJ0M1A5RkphTnlYbUFMM0V0V3FaalIyamhDY20w?oc=5
+  language       en
+  published_at   Fri, 17 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","weapons"]
+  properties     {"guid":"CBMiuAFBVV95cUxNRWdJbVJ3ZGlTQnlGVDR6ZEYwaHBid0IweVptMWRmNVFremplZ21mQkwyUnB6UFM4Z3R2cDU3M214cFEydm1paEYxOGNQRnJhemg4cGV2djNNSUNDY0tmRTFJa3RNS3luV20yQk5kSk5VdVJ0VnU4ekhHZ3pUQmdoTkpVU0EzOXRQQmJUd1MyZmJnZXJoZ013SEcxZHJ0M1A5RkphTnlYbUFMM0V0V3FaalIyamhDY20w"}
+
+--- row 3 ---
+  uid            gnews-mon-weapons-smuggling|CBMiugFBVV95cUxNMEgtVWFIVzY2aDFzajBpMEFoQ0Vza3BBUzlBa3lhMGxIck55Y1ZxbGlQSVpiQk4zdjBHOHVWYzRaRzJsVk15VzF4RkhONDRJMVppdDdXc3pKNkpZMUZrbkdWaktkNS1VZEhDRTVfMHIzQ3lsbEpIVzhFVXdTRC1GSVB5QnJvSGJiR0pMVTY1UWhTMkRDVEs4OUJRM3B4cXZDLVdmLURzeWdOMnZ3dTBYQm5jWFRldFNWT0HSAb8BQVVfeXFMTWgzVjRCVFFJcGRYWXpOdVJKNmh4Y1RFbm9sc2pvNDlQa2p6bG5QeWJ5MlIzVkxEZjRqS1YyNEtnMVF0R0hPbHNFTEd4bVhmZmlLY2dibDlROXptanBZeUk2X2hwWVFZT2REUFFLbU1kMEl2dTJJUXNzbnphdmVzSjZVNk9VMkdSTTdOUUtQdlVSZnYzZEQ2eXVGZzduV2V2RENTbEZScHB
+  title          Nassau police seize 47 firearms, cocaine and heroin in major gun-trafficking case; 6 arrested - ABC7 New York
+  body           <a href="https://news.google.com/rss/articles/CBMiugFBVV95cUxNMEgtVWFIVzY2aDFzajBpMEFoQ0Vza3BBUzlBa3lhMGxIck55Y1ZxbGlQSVpiQk4zdjBHOHVWYzRaRzJsVk15VzF4RkhONDRJMVppdDdXc3pKNkpZMUZrbkdWaktkNS1VZEhDRTVfMHIzQ3lsbEpIVzhFVXdTRC1GSVB5QnJvSGJiR0pMVTY1UWhTMkRDVEs4OUJRM3B4cXZDLVdmLURzeWdOMnZ3dTBYQm5jWFRldFNWT0HSAb8BQVVfeXFMTWgzVjRCVFFJcGRYWXpOdVJKNmh4Y1RFbm9sc2pvNDlQa2p6bG5QeWJ5MlIzVkxEZjRqS1YyNEtnMVF0R0hPbHNFTEd4bVhmZmlLY2dibDlROXptanBZeUk2X2hwWVFZT2REUFFLbU1kMEl2dTJJUXNzbnphdmVzSjZVNk9VMkdSTTdOUUtQdlVSZnYzZEQ2eXVGZzduV2V2RENTbEZScHBhMnEyWXVNSGIxblk1RFotUXRudVAtTzA?oc=5" target="_blank">Nassau police seize 47 firearms, cocaine and heroin in major gun-trafficking case; 6 arrested</a>&nbsp;&nbsp;<font color="#6f6f6f">ABC7 New York</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiugFBVV95cUxNMEgtVWFIVzY2aDFzajBpMEFoQ0Vza3BBUzlBa3lhMGxIck55Y1ZxbGlQSVpiQk4zdjBHOHVWYzRaRzJsVk15VzF4RkhONDRJMVppdDdXc3pKNkpZMUZrbkdWaktkNS1VZEhDRTVfMHIzQ3lsbEpIVzhFVXdTRC1GSVB5QnJvSGJiR0pMVT
+  link           https://news.google.com/rss/articles/CBMiugFBVV95cUxNMEgtVWFIVzY2aDFzajBpMEFoQ0Vza3BBUzlBa3lhMGxIck55Y1ZxbGlQSVpiQk4zdjBHOHVWYzRaRzJsVk15VzF4RkhONDRJMVppdDdXc3pKNkpZMUZrbkdWaktkNS1VZEhDRTVfMHIzQ3lsbEpIVzhFVXdTRC1GSVB5QnJvSGJiR0pMVTY1UWhTMkRDVEs4OUJRM3B4cXZDLVdmLURzeWdOMnZ3dTBYQm5jWFRldFNWT0HSAb8BQVVfeXFMTWgzVjRCVFFJcGRYWXpOdVJKNmh4Y1RFbm9sc2pvNDlQa2p6bG5QeWJ5MlIzVkxEZjRqS1YyNEtnMVF0R0hPbHNFTEd4bVhmZmlLY2dibDlROXptanBZeUk2X2hwWVFZT2REUFFLbU1kMEl2dTJJUXNzbnphdmVzSjZVNk9VMkdSTTdOUUtQdlVSZnYzZEQ2eXVGZzduV2V2RENTbEZScHBhMnEyWXVNSGIxblk1RFotUXRudVAtTzA?oc=5
+  language       en
+  published_at   Fri, 17 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","weapons"]
+  properties     {"guid":"CBMiugFBVV95cUxNMEgtVWFIVzY2aDFzajBpMEFoQ0Vza3BBUzlBa3lhMGxIck55Y1ZxbGlQSVpiQk4zdjBHOHVWYzRaRzJsVk15VzF4RkhONDRJMVppdDdXc3pKNkpZMUZrbkdWaktkNS1VZEhDRTVfMHIzQ3lsbEpIVzhFVXdTRC1GSVB5QnJvSGJiR0pMVTY1UWhTMkRDVEs4OUJRM3B4cXZDLVdmLURzeWdOMnZ3dTBYQm5jWFRldFNWT0HSAb8BQVVfeXFMTWgzVjRCVFFJcGRYWXpOdVJKNmh4Y1RFbm9sc2pvNDlQa2p6bG5QeWJ5MlIzVkxEZjRqS1YyNEtnMVF0R0hPbHNFTEd4bVhmZmlLY2dibDlROXptanBZeUk2X2hwWVFZT2REUFFLbU1kMEl2dTJJUXNzbnphdmVzSjZVNk9VMkdSTTdOUUtQdlVSZnYzZEQ2eXVGZzduV2V2RENTbEZScHBhMnEyWXVNSGIxblk1RF

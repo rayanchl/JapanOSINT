@@ -1,0 +1,36 @@
+=== WIKINEWS  entity=Tokyo
+exit: 0
+sched: rc=0 records=17 154ms
+--- stderr ---
+[WIKINEWS] emitted 17
+[sched] WIKINEWS run rc=0 records=17 154ms
+--- persisted: 17 rows, 0 with lat/lon, 0 with geometry ---
+record_type: wikinews-article=17
+sub_source_id: (null)=17
+
+--- row 1 ---
+  uid            WIKINEWS|https://en.wikinews.org/wiki/Tokyo
+  title          Tokyo
+  link           https://en.wikinews.org/wiki/Tokyo
+  language       en
+  record_type    wikinews-article
+  tags           ["osint-search","WIKINEWS"]
+  properties     {"service":"WIKINEWS","query":"Tokyo","url":"https://en.wikinews.org/wiki/Tokyo","success":true}
+
+--- row 2 ---
+  uid            WIKINEWS|https://en.wikinews.org/wiki/Tokyo_Electric_Power_Company_releases_first_figures_on_the_extent_of_Fukushima_leakage
+  title          Tokyo Electric Power Company releases first figures on the extent of Fukushima leakage
+  link           https://en.wikinews.org/wiki/Tokyo_Electric_Power_Company_releases_first_figures_on_the_extent_of_Fukushima_leakage
+  language       en
+  record_type    wikinews-article
+  tags           ["osint-search","WIKINEWS"]
+  properties     {"service":"WIKINEWS","query":"Tokyo","url":"https://en.wikinews.org/wiki/Tokyo_Electric_Power_Company_releases_first_figures_on_the_extent_of_Fukushima_leakage","success":true}
+
+--- row 3 ---
+  uid            WIKINEWS|https://en.wikinews.org/wiki/Tokyo_shakes
+  title          Tokyo shakes
+  link           https://en.wikinews.org/wiki/Tokyo_shakes
+  language       en
+  record_type    wikinews-article
+  tags           ["osint-search","WIKINEWS"]
+  properties     {"service":"WIKINEWS","query":"Tokyo","url":"https://en.wikinews.org/wiki/Tokyo_shakes","success":true}

@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <limits.h>
 
 /* OVERPASS_ENDPOINTS, exact order. */
 static const char *ENDPOINTS[] = {
@@ -123,16 +125,76 @@ static cJSON *filter_way_elements(cJSON *doc) {
 static int el_key(cJSON *el, char *buf, size_t n) {
   cJSON *t = cJSON_GetObjectItem(el, "type");
   cJSON *id = cJSON_GetObjectItem(el, "id");
-  if (t && cJSON_IsString(t) && id && cJSON_IsNumber(id)) {
+  /* The range test guards the cast, which is undefined outside long long —
+   * an OSM id is far below 2^63, but this parses whatever the endpoint (or
+   * whatever is answering as the endpoint) returned. An id we cannot render
+   * is simply "not derivable", the existing meaning of returning 0: the
+   * element is kept rather than deduped against a bogus key. */
+  if (t && cJSON_IsString(t) && id && cJSON_IsNumber(id) &&
+      id->valuedouble >= (double)LLONG_MIN &&
+      id->valuedouble <  (double)LLONG_MAX) {
     snprintf(buf, n, "%s/%lld", t->valuestring, (long long)id->valuedouble);
     return 1;
   }
   return 0;
 }
 
-static int seen_has(char **seen, int n, const char *k) {
-  for (int i = 0; i < n; i++) if (strcmp(seen[i], k) == 0) return 1;
+/* Dedupe membership test. This was a linear scan over an array that tiled
+ * queries grow to ~200k entries, making dedupe O(n²) — a timeout cause with no
+ * network involved at all. An FNV-1a bloom-ish prefilter keeps the exact
+ * strcmp path (so it stays correct) but skips it for the overwhelming majority
+ * of non-matches. */
+static unsigned long seen_hash(const char *s) {
+  unsigned long h = 1469598103934665603UL;
+  for (const unsigned char *p = (const unsigned char *)s; *p; p++) {
+    h ^= *p; h *= 1099511628211UL;
+  }
+  return h;
+}
+
+#define SEEN_FILTER_BITS 20                 /* 1 Mbit = 128 KB, ~1M slots */
+#define SEEN_FILTER_MASK ((1UL << SEEN_FILTER_BITS) - 1)
+#define SEEN_FILTER_BYTES (1UL << (SEEN_FILTER_BITS - 3))
+
+/* PER-CALL, not file-scope. This filter used to be a `static unsigned char *`
+ * shared by the whole process, reset with a memset at the top of each tiled
+ * run. That was safe only while the scheduler ran one source at a time. Now
+ * that core/scheduler.c is a worker pool, ~90 Overpass collectors can be in
+ * flight together, and a global would break in two ways that both END IN
+ * DUPLICATE ROWS — the exact thing this dedupe exists to prevent:
+ *
+ *   1. One collector's start-of-run memset clears bits another collector is
+ *      relying on mid-run. A CLEARED bit is a false NEGATIVE: seen_has()
+ *      short-circuits to "not seen" without reaching the authoritative
+ *      strcmp, so the duplicate is appended.
+ *   2. `byte |= bit` is a non-atomic read-modify-write. Two threads setting
+ *      different bits in the same byte can lose one, with the same effect.
+ *
+ * (A stale or cross-contaminated bit in the OTHER direction is harmless — a
+ * false positive just falls through to the exact strcmp. Only lost bits hurt.)
+ *
+ * Making it per-call removes the global rather than locking it, which is both
+ * simpler and strictly better: no cross-source contamination, no lock on the
+ * hot path, and the filter is naturally fresh each run instead of relying on
+ * a reset that the non-tiled path never performed at all. */
+typedef struct {
+  char          **keys;      /* exact-match backing array (authoritative) */
+  int             n;
+  unsigned char  *filter;    /* NULL => prefilter disabled, still correct */
+} seen_set;
+
+static int seen_has(const seen_set *s, const char *k) {
+  unsigned long h = seen_hash(k) & SEEN_FILTER_MASK;
+  if (s->filter && !(s->filter[h >> 3] & (1u << (h & 7)))) return 0;
+  for (int i = 0; i < s->n; i++) if (strcmp(s->keys[i], k) == 0) return 1;
   return 0;
+}
+
+/* Call after appending k to the set so the prefilter knows about it. */
+static void seen_mark(seen_set *s, const char *k) {
+  if (!s->filter) return;
+  unsigned long h = seen_hash(k) & SEEN_FILTER_MASK;
+  s->filter[h >> 3] |= (unsigned char)(1u << (h & 7));
 }
 
 /* Map point elements via `map` into a features array; emit through geojson. */
@@ -158,7 +220,8 @@ static int emit_points(const source_ctx *ctx, intel_sink *sink,
  * frees) or NULL if every endpoint failed. Split out so overpass_collect and
  * overpass_collect_via share one fetch path and can never drift. */
 static cJSON *collect_fetch(const source_ctx *ctx, const char *body,
-                            int query_timeout, int timeout_ms) {
+                            int query_timeout, int timeout_ms, int *fetched_ok) {
+  if (fetched_ok) *fetched_ok = 0;
   int qt = query_timeout > 0 ? query_timeout : 180;
   size_t qlen = strlen(body) + 160;
   char *query = malloc(qlen);
@@ -167,9 +230,39 @@ static cJSON *collect_fetch(const source_ctx *ctx, const char *body,
     "[out:json][timeout:%d];area[\"ISO3166-1\"=\"JP\"][admin_level=2]->.jp;(%s);out center;",
     qt, body);
 
+  /* Overpass genuinely needs more than a minute for nationwide queries —
+   * measured 100-162 s for real results — so the old flat 60 s per attempt was
+   * read as "the mirror is down" when it was merely slow. But four endpoints ×
+   * a long per-attempt timeout is an unbounded serial walk, which is what blew
+   * whole scheduler slots. Keep a generous per-attempt timeout AND an overall
+   * budget across all endpoints. Both overridable for slow/fast hosts. */
+  const char *penv = getenv("JO_OVERPASS_ATTEMPT_MS");
+  const char *tenv = getenv("JO_OVERPASS_TOTAL_MS");
+  int attempt_ms = timeout_ms > 0 ? timeout_ms : (penv ? atoi(penv) : 180000);
+  int total_ms   = tenv ? atoi(tenv) : 300000;
+  if (attempt_ms <= 0) attempt_ms = 180000;
+  if (total_ms   <= 0) total_ms   = 300000;
+
+  struct timespec t0;
+  clock_gettime(CLOCK_MONOTONIC, &t0);
+
   cJSON *elements = NULL;
   for (int e = 0; e < N_ENDPOINTS; e++) {
-    cJSON *doc = overpass_post(ctx->http, ENDPOINTS[e], query, timeout_ms);
+    struct timespec tn;
+    clock_gettime(CLOCK_MONOTONIC, &tn);
+    long spent = (tn.tv_sec - t0.tv_sec) * 1000 + (tn.tv_nsec - t0.tv_nsec) / 1000000;
+    long left = total_ms - spent;
+    if (left < 10000) {                 /* not enough left to be worth a try */
+      fprintf(stderr, "[overpass] %s budget exhausted after %ld ms (%d/%d endpoints)\n",
+              ctx->source_id, spent, e, N_ENDPOINTS);
+      break;
+    }
+    int this_ms = attempt_ms < (int)left ? attempt_ms : (int)left;
+    cJSON *doc = overpass_post(ctx->http, ENDPOINTS[e], query, this_ms);
+    /* A parseable doc means the mirror answered. Zero elements after that is an
+     * HONEST EMPTY, not a failure — conflating the two made every quiet query
+     * return -1 and quarantine a working source. */
+    if (doc && fetched_ok) *fetched_ok = 1;
     cJSON *els = filter_point_elements(doc);
     if (doc) cJSON_Delete(doc);
     if (els && cJSON_GetArraySize(els) > 0) { elements = els; break; }
@@ -182,10 +275,16 @@ static cJSON *collect_fetch(const source_ctx *ctx, const char *body,
 int overpass_collect(const source_ctx *ctx, intel_sink *sink,
                      const char *body, int query_timeout, int timeout_ms,
                      overpass_map map, void *ud) {
-  cJSON *elements = collect_fetch(ctx, body, query_timeout, timeout_ms);
+  int fetched_ok = 0;
+  cJSON *elements = collect_fetch(ctx, body, query_timeout, timeout_ms, &fetched_ok);
   if (!elements) {
-    fprintf(stderr, "[overpass] %s no elements\n", ctx->source_id);
-    return -1;
+    /* rc is a STATUS, not a count: core/scheduler.c treats non-zero as
+     * status="error" and feeds anomaly_detect(). A query that ran fine and
+     * matched nothing must return 0, or the source is quarantined for being
+     * quiet. -1 is reserved for "no mirror answered at all". */
+    fprintf(stderr, "[overpass] %s %s\n", ctx->source_id,
+            fetched_ok ? "0 elements (honest empty)" : "no endpoint answered");
+    return fetched_ok ? 0 : -1;
   }
   int n = emit_points(ctx, sink, elements, map, ud);
   cJSON_Delete(elements);
@@ -198,10 +297,12 @@ int overpass_collect_via(const source_ctx *ctx, const char *body,
                          overpass_map map, void *ud,
                          overpass_emit emit, void *eud) {
   if (!emit) return -1;
-  cJSON *elements = collect_fetch(ctx, body, query_timeout, timeout_ms);
+  int fetched_ok = 0;
+  cJSON *elements = collect_fetch(ctx, body, query_timeout, timeout_ms, &fetched_ok);
   if (!elements) {
-    fprintf(stderr, "[overpass] %s no elements\n", ctx->source_id);
-    return -1;
+    fprintf(stderr, "[overpass] %s %s\n", ctx->source_id,
+            fetched_ok ? "0 elements (honest empty)" : "no endpoint answered");
+    return fetched_ok ? 0 : -1;
   }
   int n = 0, i = 0;
   cJSON *el;
@@ -222,11 +323,25 @@ int overpass_collect_via(const source_ctx *ctx, const char *body,
 /* Shared tile fanout for point (out center) and way (out geom) queries. */
 static cJSON *tiled_fetch(const source_ctx *ctx, overpass_bodyfn bodyfn,
                           int query_timeout, int timeout_ms, int ways,
-                          void *ud) {
+                          void *ud, int *fetched_ok) {
+  if (fetched_ok) *fetched_ok = 0;
   int qt = query_timeout > 0 ? query_timeout : 180;
+  /* Same budget as collect_fetch — and this path needs it more: 12 tiles x 4
+   * endpoints at 60-120 s each is 48-96 minutes inside one scheduler slot if
+   * every mirror is slow. The single-query path was given a deadline first;
+   * this one was missed, which left the worst case unbounded. */
+  const char *tenv = getenv("JO_OVERPASS_TOTAL_MS");
+  int total_ms = tenv ? atoi(tenv) : 300000;
+  if (total_ms <= 0) total_ms = 300000;
+  struct timespec t0;
+  clock_gettime(CLOCK_MONOTONIC, &t0);
   cJSON *all = cJSON_CreateArray();
-  char **seen = calloc(200000, sizeof(char *));
-  int nseen = 0;
+  /* Owned by this call: no other collector can see or clear it. A failed
+   * filter calloc is not fatal — seen_has falls back to the exact strcmp
+   * scan, which is slower but still correct. */
+  seen_set seen = { .keys = calloc(200000, sizeof(char *)), .n = 0,
+                    .filter = calloc(SEEN_FILTER_BYTES, 1) };
+  if (!seen.keys) { free(seen.filter); cJSON_Delete(all); return NULL; }
   for (int i = 0; i < 12; i++) {
     char bbox[96];
     snprintf(bbox, sizeof bbox, "%g,%g,%g,%g",
@@ -240,10 +355,24 @@ static cJSON *tiled_fetch(const source_ctx *ctx, overpass_bodyfn bodyfn,
              qt, tbody, ways ? "geom" : "center");
     cJSON *got = NULL;
     for (int ei = 0; ei < N_ENDPOINTS; ei++) {
+      struct timespec tn;
+      clock_gettime(CLOCK_MONOTONIC, &tn);
+      long spent = (tn.tv_sec - t0.tv_sec) * 1000 + (tn.tv_nsec - t0.tv_nsec) / 1000000;
+      long left = total_ms - spent;
+      if (left < 10000) {
+        fprintf(stderr, "[overpass] %s tiled budget exhausted after %ld ms "
+                        "(tile %d/12, endpoint %d/%d)\n",
+                ctx->source_id, spent, i + 1, ei, N_ENDPOINTS);
+        free(q);
+        goto done;                 /* keep whatever tiles already succeeded */
+      }
+      int want = timeout_ms > 0 ? timeout_ms : (ways ? 120000 : 60000);
+      int this_ms = want < (int)left ? want : (int)left;
       const char *ep = ENDPOINTS[(ei + i) % N_ENDPOINTS];
-      cJSON *doc = overpass_post(ctx->http, ep, q,
-                                 timeout_ms > 0 ? timeout_ms
-                                                : (ways ? 120000 : 60000));
+      cJSON *doc = overpass_post(ctx->http, ep, q, this_ms);
+      /* A parseable doc means a mirror answered; zero elements after that is an
+       * honest empty for this tile, not a failure. */
+      if (doc && fetched_ok) *fetched_ok = 1;
       got = ways ? filter_way_elements(doc) : filter_point_elements(doc);
       if (doc) cJSON_Delete(doc);
       if (got && cJSON_GetArraySize(got) > 0) break;
@@ -255,15 +384,17 @@ static cJSON *tiled_fetch(const source_ctx *ctx, overpass_bodyfn bodyfn,
     cJSON_ArrayForEach(el, got) {
       char k[64];
       if (el_key(el, k, sizeof k)) {
-        if (seen_has(seen, nseen, k)) continue;
-        if (nseen < 200000) seen[nseen++] = strdup(k);
+        if (seen_has(&seen, k)) continue;
+        if (seen.n < 200000) { seen.keys[seen.n++] = strdup(k); seen_mark(&seen, k); }
       }
       cJSON_AddItemToArray(all, cJSON_Duplicate(el, 1));
     }
     cJSON_Delete(got);
   }
-  for (int i = 0; i < nseen; i++) free(seen[i]);
-  free(seen);
+done:
+  for (int i = 0; i < seen.n; i++) free(seen.keys[i]);
+  free(seen.keys);
+  free(seen.filter);
   if (cJSON_GetArraySize(all) == 0) { cJSON_Delete(all); return NULL; }
   return all;
 }
@@ -271,8 +402,13 @@ static cJSON *tiled_fetch(const source_ctx *ctx, overpass_bodyfn bodyfn,
 int overpass_tiled_collect(const source_ctx *ctx, intel_sink *sink,
                            overpass_bodyfn bodyfn, int query_timeout,
                            int timeout_ms, overpass_map map, void *ud) {
-  cJSON *all = tiled_fetch(ctx, bodyfn, query_timeout, timeout_ms, 0, ud);
-  if (!all) { fprintf(stderr, "[overpass] %s no elements\n", ctx->source_id); return -1; }
+  int fetched_ok = 0;
+  cJSON *all = tiled_fetch(ctx, bodyfn, query_timeout, timeout_ms, 0, ud, &fetched_ok);
+  if (!all) {
+    fprintf(stderr, "[overpass] %s %s\n", ctx->source_id,
+            fetched_ok ? "0 elements (honest empty)" : "no endpoint answered");
+    return fetched_ok ? 0 : -1;
+  }
   int n = emit_points(ctx, sink, all, map, ud);
   cJSON_Delete(all);
   fprintf(stderr, "[overpass-tiled] %s emitted %d\n", ctx->source_id, n);
@@ -282,8 +418,13 @@ int overpass_tiled_collect(const source_ctx *ctx, intel_sink *sink,
 int overpass_ways_collect(const source_ctx *ctx, intel_sink *sink,
                           overpass_bodyfn bodyfn, int query_timeout,
                           int timeout_ms, overpass_way_map map, void *ud) {
-  cJSON *all = tiled_fetch(ctx, bodyfn, query_timeout, timeout_ms, 1, ud);
-  if (!all) { fprintf(stderr, "[overpass] %s no ways\n", ctx->source_id); return -1; }
+  int fetched_ok = 0;
+  cJSON *all = tiled_fetch(ctx, bodyfn, query_timeout, timeout_ms, 1, ud, &fetched_ok);
+  if (!all) {
+    fprintf(stderr, "[overpass] %s %s\n", ctx->source_id,
+            fetched_ok ? "0 ways (honest empty)" : "no endpoint answered");
+    return fetched_ok ? 0 : -1;
+  }
   cJSON *features = cJSON_CreateArray();
   int i = 0;
   cJSON *el;

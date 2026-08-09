@@ -5,6 +5,7 @@
  * empty without the key; per-pref fetch failures are skipped (Node:
  * result null → continue). One intel_item per city. uid key mirrors
  * JS intelUid(SOURCE_ID, `${pref}-${cityCode}`). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include <stdio.h>
@@ -12,10 +13,6 @@
 #include <string.h>
 
 #define BASE "https://opendata.resas-portal.go.jp/api/v1"
-
-static const char *s_or_null(cJSON *v) {
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("RESAS_API_KEY");
@@ -25,21 +22,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(authhdr, sizeof authhdr, "X-API-KEY: %s", key);
   const char *hdrs[] = { authhdr, NULL };
 
-  int n = 0;
+  int n = 0, fetched = 0;
   for (int pref = 1; pref <= 47; pref++) {
     char url[256];
     snprintf(url, sizeof url, "%s/cities?prefCode=%d", BASE, pref);
     cJSON *root = feed_get_json_h(ctx->http, url, hdrs, 12000);
     if (!root) continue;
+    fetched++;
     cJSON *result = cJSON_GetObjectItem(root, "result");
     if (!result || !cJSON_IsArray(result)) { cJSON_Delete(root); continue; }
 
     cJSON *c;
     cJSON_ArrayForEach(c, result) {
-      const char *cityCode = s_or_null(cJSON_GetObjectItem(c, "cityCode"));
-      const char *cityName = s_or_null(cJSON_GetObjectItem(c, "cityName"));
+      const char *cityCode = jo_vstr(cJSON_GetObjectItem(c, "cityCode"));
+      const char *cityName = jo_vstr(cJSON_GetObjectItem(c, "cityName"));
       cJSON *bigFlag = cJSON_GetObjectItem(c, "bigCityFlag");
-      const char *bigStr = s_or_null(bigFlag);
+      const char *bigStr = jo_vstr(bigFlag);
 
       char rk[64], title[160], summary[160], body[256];
       snprintf(rk, sizeof rk, "%d-%s", pref, cityCode ? cityCode : "null");
@@ -87,8 +85,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     cJSON_Delete(root);
   }
-  fprintf(stderr, "[resas-municipality] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  fprintf(stderr, "[resas-municipality] emitted %d (%d/47 prefectures fetched)\n",
+          n, fetched);
+  /* STATUS code, not a row count: a prefecture with no new cities is an honest
+   * empty. Only a total fetch failure is a real error. */
+  return fetched > 0 ? 0 : -1;
 }
 
 static const source_def resas_municipality_def = {

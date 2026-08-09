@@ -1,0 +1,7 @@
+=== jshis-seismic
+exit: 1
+sched: rc=-1 records=0 2363ms
+--- stderr ---
+[sched] jshis-seismic run rc=-1 records=0 2363ms
+[detect] anomaly opened: jshis-seismic verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

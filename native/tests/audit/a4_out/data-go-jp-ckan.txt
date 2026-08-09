@@ -1,0 +1,48 @@
+=== data-go-jp-ckan
+exit: 0
+sched: rc=0 records=10 799ms
+--- stderr ---
+[data-go-jp-ckan] emitted 10
+[sched] data-go-jp-ckan run rc=0 records=10 799ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: data-go-jp-ckan=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            data-go-jp-ckan|15e575f2-6a96-4a84-9928-a2d7c04ef1f6
+  title          科学技術関係予算_競争的研究費制度
+  body           科学技術関係予算_競争的研究費制度
+  summary        科学技術関係予算_競争的研究費制度
+  link           https://www.data.go.jp/data/dataset/cao_20140904_0777
+  author         内閣府
+  language       ja
+  published_at   2026-07-31T13:04:25.754175
+  record_type    data-go-jp-ckan
+  tags           ["open-data","tag:科学と研究"]
+  properties     {"ckan_id":"15e575f2-6a96-4a84-9928-a2d7c04ef1f6","ckan_name":"cao_20140904_0777","organization":"内閣府","license_id":null,"resources_count":10}
+
+--- row 2 ---
+  uid            data-go-jp-ckan|ec67f733-f561-4ffe-a6a8-30c28e8be85e
+  title          行政事業レビュー（平成28年度）_外務省
+  body           平成28年行政事業レビュー公開プロセスに係る評価結果及びコメント、対象事業のレビューシート、参考資料等を掲載。
+  summary        平成28年行政事業レビュー公開プロセスに係る評価結果及びコメント、対象事業のレビューシート、参考資料等を掲載。
+  link           https://www.data.go.jp/data/dataset/mofa_20170207_0028
+  author         外務省
+  language       ja
+  published_at   2026-07-30T13:06:25.244927
+  record_type    data-go-jp-ckan
+  tags           ["open-data","tag:予算_決算_調達関連情報","tag:支出","tag:政治","tag:行政事業レビュー","tag:財政"]
+  properties     {"ckan_id":"ec67f733-f561-4ffe-a6a8-30c28e8be85e","ckan_name":"mofa_20170207_0028","organization":"外務省","license_id":null,"resources_count":3}
+
+--- row 3 ---
+  uid            data-go-jp-ckan|d100ecda-2c3b-499d-9d83-5b1074ad6fd9
+  title          予算_平成28年度
+  body           予算関連資料
+  summary        予算関連資料
+  link           https://www.data.go.jp/data/dataset/mofa_20210608_0013
+  author         外務省
+  language       ja
+  published_at   2026-07-30T13:06:22.330530
+  record_type    data-go-jp-ckan
+  tags           ["open-data","tag:予算_決算_調達関連情報","tag:財政"]
+  properties     {"ckan_id":"d100ecda-2c3b-499d-9d83-5b1074ad6fd9","ckan_name":"mofa_20210608_0013","organization":"外務省","license_id":null,"resources_count":2}

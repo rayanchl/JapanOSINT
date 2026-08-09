@@ -30,6 +30,8 @@
  *
  * Each Feature → camera_upsert(...,"skylinewebcams").
  */
+#include "../../lib/geojson.h"
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/camera_store.h"
 #include "../../lib/feedlib.h"
@@ -43,17 +45,32 @@
 typedef struct { const char *k; const char *sv; int is_num; double nv;
                  int is_null; } kv;
 
-static double round4(double v) { return floor(v * 1e4 + 0.5) / 1e4; }
-
+/* camera_uid = "<lat>:<lon>:<tail>". The tail used to be a bare 60-char
+ * prefix of the URL — but every Skyline camera in a city shares far more than
+ * 60 characters of path
+ *   https://www.skylinewebcams.com/fr/webcam/japan/kanto/tokyo/kabukicho.html
+ *   https://www.skylinewebcams.com/fr/webcam/japan/kanto/tokyo/shinjuku-…
+ * so they all collapsed onto ".../tokyo/k" and ".../tokyo/s" and overwrote
+ * each other in the camera keyspace: 101 cameras scraped, 36 stored. Keep a
+ * readable prefix but append a hash of the FULL source string so distinct
+ * cameras stay distinct. (The same 60-char truncation is copy-pasted into 13
+ * other cam_*.c collectors — see the audit report.) */
 static void uid_tail(const char *url, const char *name, char *out,
                      size_t outsz) {
   const char *src = (url && *url) ? url : (name ? name : "");
+  /* FNV-1a over the whole source string — deterministic across runs. */
+  unsigned long long h = 1469598103934665603ULL;
+  for (const char *p = src; *p; p++) {
+    h ^= (unsigned char)*p;
+    h *= 1099511628211ULL;
+  }
   size_t i = 0;
-  for (; src[i] && i < 60 && i + 1 < outsz; i++) {
+  for (; src[i] && i < 44 && i + 18 < outsz; i++) {
     unsigned char c = (unsigned char)src[i];
     out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
   }
   out[i] = 0;
+  snprintf(out + i, outsz - i, "#%016llx", h);
 }
 
 static cJSON *make_feature(double lat, double lon, const char *name,
@@ -66,20 +83,12 @@ static cJSON *make_feature(double lat, double lon, const char *name,
       url = extra[i].sv; break;
     }
   char lats[32], lons[32], tail[80], uid[160];
-  snprintf(lats, sizeof lats, "%.4f", round4(lat));
-  snprintf(lons, sizeof lons, "%.4f", round4(lon));
+  snprintf(lats, sizeof lats, "%.4f", jo_round4(lat));
+  snprintf(lons, sizeof lons, "%.4f", jo_round4(lon));
   uid_tail(url, name, tail, sizeof tail);
   snprintf(uid, sizeof uid, "%s:%s:%s", lats, lons, tail);
 
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "camera_uid", uid);
@@ -139,15 +148,6 @@ static const centroid PREFECTURE_CENTROIDS[] = {
 };
 #define N_CENTROIDS (sizeof PREFECTURE_CENTROIDS / sizeof *PREFECTURE_CENTROIDS)
 
-static void to_lower_buf(const char *in, char *out, size_t n) {
-  size_t i = 0;
-  for (; in && in[i] && i + 1 < n; i++) {
-    unsigned char c = (unsigned char)in[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
-
 static int centroid_exact(const char *key, double *lat, double *lon,
                           const char **prec) {
   if (!key || !*key) return 0;
@@ -165,7 +165,7 @@ static int guess_centroid(const char *text, double *lat, double *lon,
                           const char **prec) {
   if (!text || !*text) return 0;
   char low[1024];
-  to_lower_buf(text, low, sizeof low);
+  jo_lower_buf(text, low, sizeof low);
   for (size_t i = 0; i < N_CENTROIDS; i++) {
     const char *k = PREFECTURE_CENTROIDS[i].key;
     char kb[64];
@@ -345,9 +345,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       ex[0].sv = fullurl; ex[0].nv = 0;
     ex[1].k = "city"; ex[1].is_num = 0; ex[1].is_null = 0;
       ex[1].sv = cs2; ex[1].nv = 0;
-    ex[2].k = "location_precision"; ex[2].is_num = 0; ex[2].is_null = 0;
+    ex[2].k = "geo_precision"; ex[2].is_num = 0; ex[2].is_null = 0;
       ex[2].sv = prec ? prec : "prefecture"; ex[2].nv = 0;
-    ex[3].k = "location_approximate"; ex[3].is_num = 1; ex[3].is_null = 0;
+    ex[3].k = "geo_uncertain"; ex[3].is_num = 1; ex[3].is_null = 0;
       ex[3].sv = NULL; ex[3].nv = 1;
     cJSON *f = make_feature(lat, lon, nm, "aggregator_skyline",
                             "skylinewebcams", ex, 4);
@@ -368,5 +368,5 @@ static const source_def cam_skylinewebcams_def = {
   .name = "Camera Discovery: SkylineWebcams",
   .name_ja = "カメラ探索: SkylineWebcams",
    .layer = "cameras",
-   .update_interval_sec = 21600, .run = run };
+   .update_interval_sec = 3600, .run = run };
 REGISTER_SOURCE(cam_skylinewebcams_def)

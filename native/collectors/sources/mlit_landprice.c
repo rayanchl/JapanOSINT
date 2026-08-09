@@ -159,14 +159,6 @@ static int parse_float(const char *s, double *out) {
   return 1;
 }
 
-/* deterministic stand-in for Math.random()-0.5 jitter (JS is non-
- * deterministic here too; the geojson uid hashes geometry+props so parity
- * is best-effort, exactly as for the JS run). */
-static double jit(unsigned *st) {
-  *st = *st * 1103515245u + 12345u;
-  return ((double)((*st >> 16) & 0x7fff) / 32767.0 - 0.5) * 0.02;
-}
-
 /* recentQuarters(6): walk back from current UTC quarter, then reverse, so
  * out[0] = oldest, out[5] = current. We only need from=out[0], to=out[5]. */
 static void recent_quarters(char *fromQ, char *toQ) {
@@ -189,7 +181,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   recent_quarters(fromQ, toQ);
 
   cJSON *features = cJSON_CreateArray();
-  unsigned rng = 0x9e3779b9u;
 
   for (int p = 1; p <= 47; p++) {
     char pref[4];
@@ -215,9 +206,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       const char *muniCode = jstr(t, "MunicipalityCode", mb, sizeof mb);
       const centroid_t *center = municipality_center(pref, muniCode);
       if (!center) continue;
-
-      double jitterLat = jit(&rng);
-      double jitterLon = jit(&rng);
+      /* municipality_center() falls back to the prefecture (i.e. the
+       * prefectural capital) when the municipality code is unknown; that is a
+       * far coarser answer than a city centroid and must not be presented as
+       * the same thing. */
+      const int city_level = centroid_by_code(muniCode) != NULL;
 
       /* point_id = MLIT_<pref>_<intelHashKey(MunicipalityCode, DistrictName,
        *   TradePrice, Area, Period, Type, Purpose)> */
@@ -246,8 +239,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON *g = cJSON_CreateObject();
       cJSON_AddStringToObject(g, "type", "Point");
       cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(center->lon + jitterLon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(center->lat + jitterLat));
+      /* The centroid is emitted unmoved. An LCG-driven +/-0.01 deg (~1.1 km)
+       * offset used to be added to both axes, which made every transaction
+       * look like a distinct surveyed point and moved the same transaction on
+       * a later run. MLIT publishes no coordinate for a transaction at all;
+       * the municipal (or prefectural) centroid is the real, coarse answer and
+       * geo_precision below says which one it is. */
+      cJSON_AddItemToArray(co, cJSON_CreateNumber(center->lon));
+      cJSON_AddItemToArray(co, cJSON_CreateNumber(center->lat));
       cJSON_AddItemToObject(g, "coordinates", co);
       cJSON_AddItemToObject(f, "geometry", g);
 
@@ -290,6 +289,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         (period && period[0]) ? cJSON_CreateString(period)
                               : cJSON_CreateNull());
       cJSON_AddStringToObject(pr, "source", "mlit_webland_live");
+      /* unified provenance vocabulary — never "exact": MLIT anonymises
+       * transaction locations to the municipality by design. */
+      cJSON_AddStringToObject(pr, "geo_provenance",
+        city_level ? "municipality-centroid" : "prefecture-capital");
+      cJSON_AddStringToObject(pr, "geo_precision",
+        city_level ? "city" : "prefecture");
+      cJSON_AddBoolToObject(pr, "geo_uncertain", 1);
       cJSON_AddItemToObject(f, "properties", pr);
       cJSON_AddItemToArray(features, f);
     }

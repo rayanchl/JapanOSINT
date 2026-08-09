@@ -62,21 +62,60 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(finite ? lon : 139.6917));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(finite ? lat : 35.6895));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      /* A changeset with no bbox has no location. The JS original fell back
+       * to Tokyo station, which invents a coordinate; emit no geometry
+       * instead so the row is honestly un-pinned. */
+      if (finite) {
+        cJSON *g = cJSON_CreateObject();
+        cJSON_AddStringToObject(g, "type", "Point");
+        cJSON *co = cJSON_CreateArray();
+        cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
+        cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
+        cJSON_AddItemToObject(g, "coordinates", co);
+        cJSON_AddItemToObject(f, "geometry", g);
+      }
+      /* else: no "geometry" key at all — lib/geojson.c turns a cJSON null
+       * into the literal string "null" in the geometry column. */
 
       cJSON *tags = cJSON_GetObjectItem(cs, "tags");
-      cJSON *p = cJSON_CreateObject();             /* EXACT JS key order */
+      cJSON *p = cJSON_CreateObject();
+      /* lib/geojson.c resolves the intel uid from NATIVE_ID_KEYS, which
+       * contains "uid" — and this feed put the OSM *user* id there, so every
+       * changeset by the same mapper collapsed onto one row (100 emitted →
+       * 28 persisted). The changeset id is the natural key; the user id is
+       * kept under user_id. */
+      cJSON *csid = cJSON_GetObjectItem(cs, "id");
+      if (csid && !cJSON_IsNull(csid)) {
+        char ub[64];
+        if (cJSON_IsNumber(csid))
+          snprintf(ub, sizeof ub, "%.0f", csid->valuedouble);
+        else
+          snprintf(ub, sizeof ub, "%s",
+                   cJSON_IsString(csid) ? csid->valuestring : "");
+        if (ub[0]) cJSON_AddStringToObject(p, "uid", ub);
+      }
+      /* pick_text(T_TITLE) needs one of title|name|name_ja|label or the row
+       * is unreadable in every UI (this source was the NO_TITLE case). */
+      {
+        cJSON *uv = cJSON_GetObjectItem(cs, "user");
+        cJSON *cv = cJSON_GetObjectItem(cs, "tags");
+        cJSON *cm = cv ? cJSON_GetObjectItem(cv, "comment") : NULL;
+        cJSON *nc = cJSON_GetObjectItem(cs, "changes_count");
+        char tb[400];
+        snprintf(tb, sizeof tb, "OSM changeset by %s — %d edit%s%s%s",
+                 (uv && cJSON_IsString(uv)) ? uv->valuestring : "anonymous",
+                 (nc && cJSON_IsNumber(nc)) ? (int)nc->valuedouble : 0,
+                 (nc && cJSON_IsNumber(nc) && (int)nc->valuedouble == 1) ? "" : "s",
+                 (cm && cJSON_IsString(cm) && cm->valuestring[0]) ? ": " : "",
+                 (cm && cJSON_IsString(cm) && cm->valuestring[0]) ? cm->valuestring : "");
+        cJSON_AddStringToObject(p, "title", tb);
+      }
       cJSON_AddNumberToObject(p, "idx", i);
       passthru(p, "cs_id", cs, "id");
       passthru(p, "user", cs, "user");
-      passthru(p, "uid", cs, "uid");
+      passthru(p, "user_id", cs, "uid");
       passthru(p, "created_at", cs, "created_at");
+      passthru(p, "published_at", cs, "closed_at");
       passthru(p, "closed_at", cs, "closed_at");
       tag_or_null(p, "comment", tags, "comment");
       tag_or_null(p, "created_by", tags, "created_by");

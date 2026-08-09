@@ -44,15 +44,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (!lonv && loc) lonv = cJSON_GetObjectItem(loc, "lon");
     if (!latv || !lonv || cJSON_IsNull(latv) || cJSON_IsNull(lonv)) continue;
 
-    cJSON *feat = cJSON_CreateObject();
-    cJSON_AddStringToObject(feat, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(num(lonv)));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(num(latv)));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(feat, "geometry", g);
+    cJSON *feat = gj_point_feature(num(lonv), num(latv));
 
     cJSON *p = cJSON_CreateObject();
     cJSON *kind = coalesce(a, "kind", "type");
@@ -73,7 +65,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[nerv-feed] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* "no active alerts nationwide" is the normal state for a 60s multi-hazard
+   * feed. Returning -1 for it made the anomaly detector quarantine the source
+   * on every quiet run. Fetch failure is still -1 (see the !data path above). */
+  return n >= 0 ? 0 : -1;
 }
 
 static const source_def nerv_feed_def = {

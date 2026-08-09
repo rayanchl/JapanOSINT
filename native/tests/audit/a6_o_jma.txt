@@ -1,0 +1,28 @@
+--- targetTc.json
+[{"tropicalCyclone":"TC2615","typhoonNumber":"2613","category":"TY","issue":"2026-08-01T03:45:00+09:00"}]
+[200] 105b
+--- https://nlftp.mlit.go.jp/ksj/gml/data/N05/N05-22/N05-22.geojson
+[404] 20594b
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta content="width=device-width" name="viewport">
+	<meta http-equiv="content-language
+--- https://nlftp.mlit.go.jp/ksj/gml/data/N05/N05-21/N05-21.geojson
+[404] 20594b
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta content="width=device-width" name="viewport">
+	<meta http-equiv="content-language
+--- https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N05-v1_3.html
+[200] 43908b
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta content="ja" http-equiv="content-language">
+	<meta content="width=device-width"

@@ -44,7 +44,16 @@ final class SearchStore: ObservableObject {
     }
 
     private func stream(id: String, api: API) async {
-        let req = api.searchStreamRequest(id)
+        // The backend base URL is user-editable in Settings, so it can be
+        // unparseable — in which case there is no stream to open. Surface it
+        // and reconcile once so the run can't wedge on the "Queued"
+        // placeholder. (This used to force-unwrap inside `API` and crash.)
+        guard let req = api.searchStreamRequest(id) else {
+            lastError = "Backend URL is not a valid URL — check Settings."
+            if let snap = try? await api.searchResults(id) { finish(id: id, snap: snap) }
+            tasks[id] = nil
+            return
+        }
         var sawTerminal = false
         do {
             let (bytes, _) = try await URLSession.shared.bytes(for: req)

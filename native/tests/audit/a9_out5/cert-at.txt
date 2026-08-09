@@ -1,0 +1,63 @@
+=== cert-at
+exit: 0
+sched: rc=0 records=50 1113ms
+--- stderr ---
+[rss] cert-at emitted 50
+[sched] cert-at run rc=0 records=50 1113ms
+--- persisted: 50 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=50
+sub_source_id: (null)=50
+
+--- row 1 ---
+  uid            cert-at|https://www.cert.at/de/warnungen/2026/7/kritische-sicherheitslucken-in-wordpress-updates-verfugbar
+  title          Kritische Sicherheitslücken in WordPress - Updates verfügbar
+  body           <p class="block">20. Juli 2026</p>&#13;
+<h2 class="block">Beschreibung</h2>&#13;
+<p class="block">In WordPress existieren zwei Sicherheitsl&uuml;cken. Eine SQL-Injection-Schwachstelle im Parameter &bdquo;author__not_in&ldquo; von &bdquo;WP_Query&ldquo; betrifft WordPress ab Version 6.8. Ab WordPress 6.9 l&auml;sst sich diese laut Advisory in Kombination mit einer Schwachstelle in der REST-API (Batch-Route-Confusion) zur Ausf&uuml;hrung von beliebigem Code (Remote Code Execution) ausnutzen. Laut Searchlight Cyber ist diese Angriffskette ohne vorherige Authentifizierung und ohne weitere Voraussetzungen in einer Standardinstallation ohne Plugins nutzbar.</p>&#13;
+<p class="block">Auf GitHub sind mittlerweile mehrere &ouml;ffentlich verf&uuml;gbare Proof-of-Concept-Exploits f&uuml;r CVE-2026-63030 ver&ouml;ffentlicht worden. Damit ist der Aufwand f&uuml;r eine Ausnutzung deutlich reduziert;  …<4108 more chars>
+  summary        <p class="block">20. Juli 2026</p>&#13;
+<h2 class="block">Beschreibung</h2>&#13;
+<p class="block">In WordPress existieren zwei Sicherheitsl&uuml;cken. Eine SQL-Injection-Schwachstelle im Parameter &bdquo;author__not_in&ldquo; von &bdquo;WP_
+  link           https://www.cert.at/de/warnungen/2026/7/kritische-sicherheitslucken-in-wordpress-updates-verfugbar
+  language       de
+  published_at   Mon, 20 Jul 2026 10:01:31 GMT+0100
+  record_type    article
+  tags           ["cyber","cert","advisory","austria"]
+  properties     {"guid":"https://www.cert.at/de/warnungen/2026/7/kritische-sicherheitslucken-in-wordpress-updates-verfugbar"}
+
+--- row 2 ---
+  uid            cert-at|https://www.cert.at/de/warnungen/2026/7/kritische-sicherheitslucken-in-sonicwall-sma1000-series-aktiv-ausgenutzt-updates-verfugbar
+  title          Kritische Sicherheitslücken in SonicWall SMA1000 Series - aktiv ausgenutzt - Updates verfügbar
+  body           <p class="block">15. Juli 2026</p>&#13;
+<h2 class="block">Beschreibung</h2>&#13;
+<p class="block">In den SonicWall SMA1000 Series Appliances existieren mehrere Sicherheitsl&uuml;cken. Die schwerwiegendere der beiden Schwachstellen erm&ouml;glicht es Angreifer:innen aus der Ferne und ohne Authentifizierung, die Appliance dazu zu bringen, serverseitig Anfragen an eigentlich nicht erreichbare interne Endpunkte zu senden (Server-Side Request Forgery). Laut SonicWall PSIRT werden die in diesem Advisory beschriebenen Schwachstellen bereits aktiv ausgenutzt.</p>&#13;
+<p class="block">CVE-Nummer(n):&nbsp;CVE-2026-15409, CVE-2026-15410</p>&#13;
+<p class="block">CVSS Base Score: 10.0</p>&#13;
+<h2 class="block">Auswirkungen</h2>&#13;
+<p class="block">CVE-2026-15409 ist eine Server-Side-Request-Forgery-Schwachstelle (SSRF) im Work-Place-Interface der SMA1000 Appliance. Ein:e entfernte:r, nicht authe …<3259 more chars>
+  summary        <p class="block">15. Juli 2026</p>&#13;
+<h2 class="block">Beschreibung</h2>&#13;
+<p class="block">In den SonicWall SMA1000 Series Appliances existieren mehrere Sicherheitsl&uuml;cken. Die schwerwiegendere der beiden Schwachstellen erm&ouml;
+  link           https://www.cert.at/de/warnungen/2026/7/kritische-sicherheitslucken-in-sonicwall-sma1000-series-aktiv-ausgenutzt-updates-verfugbar
+  language       de
+  published_at   Wed, 15 Jul 2026 11:11:21 GMT+0100
+  record_type    article
+  tags           ["cyber","cert","advisory","austria"]
+  properties     {"guid":"https://www.cert.at/de/warnungen/2026/7/kritische-sicherheitslucken-in-sonicwall-sma1000-series-aktiv-ausgenutzt-updates-verfugbar"}
+
+--- row 3 ---
+  uid            cert-at|https://www.cert.at/de/warnungen/2026/6/angriffswelle-gegen-fortigate-devices-fortibleed
+  title          Update #1: Angriffswelle gegen FortiGate Devices - "FortiBleed"
+  body           <p class="block">22. Juni 2026</p>&#13;
+<h2 class="block">Beschreibung</h2>&#13;
+<p class="block">Fortinet hat letzten Freitag, am 19.5.2026, nun auch ein offizielles Statement zu "FortiBleed" ver&ouml;ffentlicht. Wir hatten zuvor in einem <a title="Aktueller Stand rund um " href="https://www.cert.at/de/blog/2026/6/aktueller-stand-rund-um-fortibleed">Blog-Artikel</a> unseren aktuellen Wissensstand beschrieben. Bei dieser Angriffswelle handelt es sich nicht um die Ausnutzung einer neuen Schwachstelle. Die Angreifer:innen verwenden stattdessen Zugangsdaten, die bei fr&uuml;heren Sicherheitsvorf&auml;llen (u.&nbsp;a. im Zusammenhang mit CVE-2025-59718, CVE-2025-59719 und CVE-2026-24858) erlangt wurden, sowie Brute-Force-Methoden gegen Ger&auml;te mit schwacher Passworthygiene und ohne Multi-Faktor-Authentifizierung (MFA).</p>&#13;
+<p class="block">Externe Sicherheitsforscher:innen berichten …<7850 more chars>
+  summary        <p class="block">22. Juni 2026</p>&#13;
+<h2 class="block">Beschreibung</h2>&#13;
+<p class="block">Fortinet hat letzten Freitag, am 19.5.2026, nun auch ein offizielles Statement zu "FortiBleed" ver&ouml;ffentlicht. Wir hatten zuvor in einem 
+  link           https://www.cert.at/de/warnungen/2026/6/angriffswelle-gegen-fortigate-devices-fortibleed
+  language       de
+  published_at   Mon, 22 Jun 2026 08:55:34 GMT+0100
+  record_type    article
+  tags           ["cyber","cert","advisory","austria"]
+  properties     {"guid":"https://www.cert.at/de/warnungen/2026/6/angriffswelle-gegen-fortigate-devices-fortibleed"}

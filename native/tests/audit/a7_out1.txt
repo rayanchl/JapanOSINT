@@ -1,0 +1,402 @@
+=== ooni-jp
+exit: 0
+sched: rc=0 records=200 927ms
+--- stderr ---
+[threatintel] ooni-jp emitted 200
+[sched] ooni-jp run rc=0 records=200 927ms
+--- persisted: 200 rows, 0 with lat/lon, 0 with geometry ---
+record_type: ooni-jp=200
+sub_source_id: (null)=200
+
+--- row 1 ---
+  uid            ooni-jp|h:fcaacf637c72053e
+  link           https://api.ooni.io/api/v1/raw_measurement?measurement_uid=20260731174312.335945_JP_stunreachability_983b31f35e2cffd9
+  record_type    ooni-jp
+  properties     {"idx":0,"measurement_uid":"20260731174312.335945_JP_stunreachability_983b31f35e2cffd9","report_id":"20260731T174312Z_stunreachability_JP_18126_n4_MFEY7Tfn452xdAN2","test_name":"stunreachability","input":"stun://stun.mixvoip.com:3478","probe_cc":"JP","probe_asn":"AS18126","anomaly":false,"confirmed":false,"failure":false,"test_start_time":null,"url":"https://api.ooni.io/api/v1/raw_measurement?measurement_uid=20260731174312.335945_JP_stunreachability_983b31f35e2cffd9","source":"ooni"}
+
+--- row 2 ---
+  uid            ooni-jp|h:35ed9bfd8b992ec5
+  link           https://api.ooni.io/api/v1/raw_measurement?measurement_uid=20260731174308.134610_JP_stunreachability_96ab18fb5bf0713b
+  record_type    ooni-jp
+  properties     {"idx":1,"measurement_uid":"20260731174308.134610_JP_stunreachability_96ab18fb5bf0713b","report_id":"20260731T174307Z_stunreachability_JP_18126_n4_4x6JEvKXlEkD2hWr","test_name":"stunreachability","input":"stun://stun.voipgate.com:3478","probe_cc":"JP","probe_asn":"AS18126","anomaly":false,"confirmed":false,"failure":false,"test_start_time":null,"url":"https://api.ooni.io/api/v1/raw_measurement?measurement_uid=20260731174308.134610_JP_stunreachability_96ab18fb5bf0713b","source":"ooni"}
+#################################################
+=== gsi-active-fault
+exit: 1
+sched: rc=-1 records=0 778ms
+--- stderr ---
+[gsi-active-fault] unavailable (honest empty)
+[sched] gsi-active-fault run rc=-1 records=0 778ms
+[detect] anomaly opened: gsi-active-fault verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== discord-jp-servers
+exit: 1
+sched: rc=-1 records=0 70ms
+--- stderr ---
+[discord-jp-servers] unavailable
+[sched] discord-jp-servers run rc=-1 records=0 70ms
+[detect] anomaly opened: discord-jp-servers verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== nerv-feed
+exit: 1
+sched: rc=-1 records=0 1303ms
+--- stderr ---
+[sched] nerv-feed run rc=-1 records=0 1303ms
+[detect] anomaly opened: nerv-feed verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== nhk-world-rss
+exit: 1
+sched: rc=-1 records=0 407ms
+--- stderr ---
+[sched] nhk-world-rss run rc=-1 records=0 407ms
+[detect] anomaly opened: nhk-world-rss verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== note-com-trending
+exit: 1
+sched: rc=-1 records=0 591ms
+--- stderr ---
+[sched] note-com-trending run rc=-1 records=0 591ms
+[detect] anomaly opened: note-com-trending verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== CUSTOMS_TRADE  entity=Tokyo
+exit: 0
+sched: rc=0 records=30 1143ms
+--- stderr ---
+[customs] emitted 30
+[sched] CUSTOMS_TRADE run rc=0 records=30 1143ms
+--- persisted: 30 rows, 0 with lat/lon, 0 with geometry ---
+record_type: trade-statistics=30
+sub_source_id: (null)=30
+Traceback (most recent call last):
+  File "/mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/verify_one.py", line 97, in <module>
+    main()
+  File "/mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/verify_one.py", line 82, in main
+    % ",".join(cols), (a.source_id, a.rows)).fetchall()
+                                             ^^^^^^^^^^
+sqlite3.OperationalError: Could not decode to UTF-8 column 'title' with text '�����y�[�W���{����'
+#################################################
+usage: verify_one.py [-h] [--slot SLOT] [--rows ROWS] [--timeout TIMEOUT]
+                     [--stderr]
+                     source_id [entity]
+verify_one.py: error: unrecognized arguments: Abe
+#################################################
+=== mlit-n07-bus-routes
+exit: 0
+sched: rc=0 records=0 1239ms
+--- stderr ---
+[mlit-n07-bus-routes] emitted 0
+[sched] mlit-n07-bus-routes run rc=0 records=0 1239ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== transport-cluster-runner
+exit: 0
+sched: rc=0 records=0 1ms
+--- stderr ---
+[transport-cluster-runner] snap train=0 subway=0 clusters=0 footprints=0 linked=0
+[sched] transport-cluster-runner run rc=0 records=0 1ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== certstream-jp
+exit: 0
+sched: rc=0 records=0 2ms
+--- stderr ---
+[certstream-jp] emitted 0
+[sched] certstream-jp run rc=0 records=0 2ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== geospatial-jp-ckan
+exit: 0
+sched: rc=0 records=50 7013ms
+--- stderr ---
+[geospatial-jp-ckan] emitted 50
+[sched] geospatial-jp-ckan run rc=0 records=50 7013ms
+--- persisted: 50 rows, 0 with lat/lon, 0 with geometry ---
+record_type: geospatial-jp-ckan=50
+sub_source_id: (null)=50
+
+--- row 1 ---
+  uid            geospatial-jp-ckan|a9991076-c5c0-4221-93cf-1c1ae6c897c2
+  title          20260728_令和8年熊本地震
+  body           -
+  summary        -
+  link           https://www.geospatial.jp/ckan/dataset/000001791
+  author         統合災害情報システム（DiMAPS）
+  language       ja
+  published_at   2026-07-31T11:21:04.153972
+  record_type    geospatial-jp-ckan
+  tags           ["geospatial","mlit"]
+  properties     {"ckan_id":"a9991076-c5c0-4221-93cf-1c1ae6c897c2","ckan_name":"000001791","organization":"統合災害情報システム（DiMAPS）","license_id":"notspecified","resources_count":13}
+
+--- row 2 ---
+  uid            geospatial-jp-ckan|9019bd98-e705-4365-8545-827cc71942bf
+  title          相生市文化財一覧
+  body           相生市内の指定文化財、県指定文化財、国指定文化財に関する情報を示すデータです。
+  summary        相生市内の指定文化財、県指定文化財、国指定文化財に関する情報を示すデータです。
+  link           https://www.geospatial.jp/ckan/dataset/aioiculturalproperties
+  author         相生市
+  language       ja
+  published_at   2026-07-31T10:19:48.721817
+  record_type    geospatial-jp-ckan
+  tags           ["geospatial","mlit","tag:文化財一覧","tag:相生市"]
+  properties     {"ckan_id":"9019bd98-e705-4365-8545-827cc71942bf","ckan_name":"aioiculturalproperties","organization":"相生市","license_id":"public-data-license-v1.0","resources_count":2}
+#################################################
+=== jcab-notams
+exit: 0
+sched: rc=0 records=1 20ms
+--- stderr ---
+[jcab-notams] probe reachable=0
+[sched] jcab-notams run rc=0 records=1 20ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            jcab-notams|notam-portal
+  title          JCAB NOTAMs (notices to airmen)
+  summary        Japan Civil Aviation Bureau NOTAM portal — temporary flight restrictions, exercise areas, VIP transit corridors
+  link           https://aim-naviserv.mlit.go.jp/aimjp/web/notam.html
+  language       ja
+  published_at   2026-07-31T18:05:25.577Z
+  tags           ["aviation","notam","tfr","mlit","unreachable"]
+  properties     {"operator":"MLIT JCAB AIM Naviservice","reachable":false}
+#################################################
+=== jma-uv
+exit: 0
+sched: rc=0 records=1 70ms
+--- stderr ---
+[jma-uv] probe reachable=1
+[sched] jma-uv run rc=0 records=1 70ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            jma-uv|portal
+  title          JMA UV index (紫外線情報)
+  body           JMA publishes the UV index only as raster maps / an interactive viewer; no key-free machine-readable JSON endpoint is available, so no point features are emitted.
+  summary        Nationwide ultraviolet index forecast and analysis maps (JMA)
+  link           https://www.jma.go.jp/jp/uv/
+  author         気象庁 Japan Meteorological Agency
+  language       ja
+  published_at   2026-07-31T18:05:25.893Z
+  tags           ["uv","jma","health","reachable"]
+  properties     {"operator":"気象庁","reachable":true,"machine_readable":false}
+#################################################
+=== jr-west-delay
+exit: 0
+sched: rc=0 records=1 822ms
+--- stderr ---
+[jr-west-delay] probe reachable=0
+[sched] jr-west-delay run rc=0 records=1 822ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            jr-west-delay|jr-west-portal
+  title          JR West 列車運行情報 (train status)
+  body           トップページ：JR西日本列車運行情報 更新 列車走行位置 遅延証明書 列車走行位置 遅延証明書 関連リンク JRおでかけネット JR西日本ホームページ 安全・安定輸送に関する取り組
+  summary        トップページ：JR西日本列車運行情報 更新 列車走行位置 遅延証明書 列車走行位置 遅延証明書 関連リンク JRおでかけネット JR西日本ホームページ 安全・安定輸送に関する取り組
+  link           https://trafficinfo.westjr.co.jp/
+  language       ja
+  published_at   2026-07-31T18:05:26.697Z
+  tags           ["transit","rail","delay","jr-west","unreachable"]
+  properties     {"operator":"JR West","reachable":false}
+#################################################
+=== michi-no-eki
+exit: 0
+sched: rc=0 records=1 1253ms
+--- stderr ---
+[michi-no-eki] probe reachable=1
+[sched] michi-no-eki run rc=0 records=1 1253ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            michi-no-eki|portal
+  title          Michi-no-Eki — roadside station registry
+  summary        MLIT-designated 道の駅 — camping-car / secondary-route POIs
+  link           https://www.michi-no-eki.jp/
+  language       ja
+  published_at   2026-07-31T18:05:28.496Z
+  tags           ["poi","tourism","roadside","reachable"]
+  properties     {"operator":"全国「道の駅」連絡会","reachable":true}
+#################################################
+=== ntt-fiber
+exit: 0
+sched: rc=0 records=2 9444ms
+--- stderr ---
+[ntt-fiber] NTT East reachable=1
+[ntt-fiber] NTT West reachable=0
+[sched] ntt-fiber run rc=0 records=2 9444ms
+--- persisted: 2 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=2
+sub_source_id: (null)=2
+
+--- row 1 ---
+  uid            ntt-fiber|NTT East
+  title          NTT East FLET'S fault / service information
+  summary        FLET'S fiber service-area and fault information (interactive lookup; no public coverage/outage JSON API)
+  link           https://www.ntt-east.co.jp/info-st/
+  language       ja
+  published_at   2026-07-31T18:05:29.628Z
+  tags           ["telecom","fiber","ntt","ntt-east","reachable"]
+  properties     {"operator":"NTT East","reachable":true,"public_feed":false}
+
+--- row 2 ---
+  uid            ntt-fiber|NTT West
+  title          NTT West FLET'S fault / service information
+  summary        FLET'S fiber service-area and fault information (interactive lookup; no public coverage/outage JSON API)
+  link           https://www.ntt-west.co.jp/info_st/
+  language       ja
+  published_at   2026-07-31T18:05:38.219Z
+  tags           ["telecom","fiber","ntt","ntt-west","unreachable"]
+  properties     {"operator":"NTT West","reachable":false,"public_feed":false}
+#################################################
+=== wifi-hotspots-freespot
+exit: 0
+sched: rc=0 records=1 2539ms
+--- stderr ---
+[wifi-hotspots-freespot] emitted 1
+[sched] wifi-hotspots-freespot run rc=0 records=1 2539ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            wifi-hotspots-freespot||All rights reserved, Copyright &copy; FREESPOT 2014|
+  title          All rights reserved, Copyright &copy; FREESPOT 2014
+  body           Prefecture: unknown
+Area: All rights reserved, Copyright &copy; FREESPOT 2014
+Venue: unknown
+  summary        FREESPOT directory entry
+  link           https://www.freespot.com/users/map_e.html
+  author         FREESPOT
+  language       ja
+  tags           ["free-wifi","freespot","pref:unknown"]
+  properties     {"prefecture":"","area":"All rights reserved, Copyright &copy; FREESPOT 2014","venue":""}
+#################################################
+=== influenza-surveillance
+exit: 0
+sched: rc=0 records=1 7604ms
+--- stderr ---
+[influenza-surveillance] probe reachable=0
+[sched] influenza-surveillance run rc=0 records=1 7604ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: influenza-surveillance=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            influenza-surveillance|flu-map
+  title          NIID/JIHS influenza sentinel surveillance
+  body           NIID/JIHS influenza sentinel surveillance (IDWR). Weekly per-prefecture sentinel reports are published as Excel/CSV bulletins; no stable JSON API.
+  summary        インフルエンザ定点当たり報告数 (感染症発生動向調査)
+  link           https://www.niid.go.jp/niid/ja/flu-map.html
+  language       ja
+  published_at   2026-07-31T18:05:46.753Z
+  record_type    influenza-surveillance
+  tags           ["health","influenza","surveillance","unreachable"]
+  properties     {"org":"NIID / JIHS","dataset":"Influenza sentinel surveillance (IDWR)","reachable":false}
+#################################################
+=== saigai-info
+exit: 0
+sched: rc=0 records=362 1758ms
+--- stderr ---
+[rss] saigai-info emitted 362
+[saigai-info] emitted 362
+[sched] saigai-info run rc=0 records=362 1758ms
+--- persisted: 362 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=362
+sub_source_id: (null)=362
+
+--- row 1 ---
+  uid            saigai-info|https://www.data.jma.go.jp/developer/xml/data/20260731175203_0_VPWW54_060000.xml
+  title          気象警報・注意報（Ｈ２７）
+  body           【山形県気象警報・注意報】最上では、低い土地の浸水に警戒してください。
+  summary        【山形県気象警報・注意報】最上では、低い土地の浸水に警戒してください。
+  link           https://www.data.jma.go.jp/developer/xml/data/20260731175203_0_VPWW54_060000.xml
+  author         <name>山形地方気象台</name>
+  language       ja
+  published_at   2026-07-31T17:52:01Z
+  record_type    article
+  tags           ["disaster","jma","saigai"]
+  properties     {"guid":"https://www.data.jma.go.jp/developer/xml/data/20260731175203_0_VPWW54_060000.xml"}
+
+--- row 2 ---
+  uid            saigai-info|https://www.data.jma.go.jp/developer/xml/data/20260731175203_0_VPWW53_060000.xml
+  title          気象特別警報・警報・注意報
+  body           【山形県気象警報・注意報】最上では、低い土地の浸水に警戒してください。
+  summary        【山形県気象警報・注意報】最上では、低い土地の浸水に警戒してください。
+  link           https://www.data.jma.go.jp/developer/xml/data/20260731175203_0_VPWW53_060000.xml
+  author         <name>山形地方気象台</name>
+  language       ja
+  published_at   2026-07-31T17:52:01Z
+  record_type    article
+  tags           ["disaster","jma","saigai"]
+  properties     {"guid":"https://www.data.jma.go.jp/developer/xml/data/20260731175203_0_VPWW53_060000.xml"}
+#################################################
+=== steam-jp-users
+exit: 0
+sched: rc=0 records=1 232ms
+--- stderr ---
+[steam-jp-users] probe reachable=1
+[sched] steam-jp-users run rc=0 records=1 232ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            steam-jp-users|portal
+  title          Steam Community — JP profile search
+  summary        Country=JP profile enumeration via Steam Community search
+  link           https://steamcommunity.com/search/users/?country=JP
+  published_at   2026-07-31T18:05:49.206Z
+  tags           ["gaming","steam","profile-search","reachable"]
+  properties     {"reachable":true}
+#################################################
+=== yahoo-crowd-map
+exit: 0
+sched: rc=0 records=1 1096ms
+--- stderr ---
+[yahoo-crowd-map] probe reachable=0
+[sched] yahoo-crowd-map run rc=0 records=1 1096ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            yahoo-crowd-map|yahoo-crowd-portal
+  title          Yahoo! Japan Crowd Radar
+  summary        250 m mesh real-time crowd density derived from Yahoo mobile app footprint
+  link           https://map.yahoo.co.jp/crowd
+  language       ja
+  published_at   2026-07-31T18:05:50.528Z
+  tags           ["crowd","mobility","yahoo","unreachable"]
+  properties     {"operator":"Yahoo! Japan","mesh_size_m":250,"reachable":false}
+#################################################
+=== boj-stats
+exit: 0
+sched: rc=0 records=1 8583ms
+--- stderr ---
+[boj-stats] probe reachable=0
+[sched] boj-stats run rc=0 records=1 8583ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            boj-stats|portal
+  title          Bank of Japan statistics portal
+  summary        Monetary aggregates · rates · BOP indexes
+  link           https://www.stat-search.boj.or.jp/
+  language       ja
+  published_at   2026-07-31T18:05:59.333Z
+  tags           ["economy","statistics","unreachable"]
+  properties     {"org":"Bank of Japan","datasets":["Monetary aggregates","Interest rates","Balance of payments"],"reachable":false}
+#################################################
+DONE /mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/a7_list1.txt

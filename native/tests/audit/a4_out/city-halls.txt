@@ -1,0 +1,8 @@
+=== city-halls
+exit: 1
+sched: rc=-1 records=0 140845ms
+--- stderr ---
+[overpass] city-halls no elements
+[sched] city-halls run rc=-1 records=0 140845ms
+[detect] anomaly opened: city-halls verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

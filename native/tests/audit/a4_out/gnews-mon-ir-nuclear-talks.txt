@@ -1,0 +1,45 @@
+=== gnews-mon-ir-nuclear-talks
+exit: 0
+sched: rc=0 records=100 811ms
+--- stderr ---
+[rss] gnews-mon-ir-nuclear-talks emitted 100
+[sched] gnews-mon-ir-nuclear-talks run rc=0 records=100 811ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-ir-nuclear-talks|CBMiowFBVV95cUxON2w1TXh2TWJYbFVOWjRDT01oSjZORzk1RVBDN3k0VmNmTDc2MGVZaVAxY2QtNXo4Y0JGb2FYTXRVNURON3poNnVXSUZtQmFiR19kdXVtUmF4cmM0Z1RNa0thTV9tUEtSUndlcWZhV3ptM0d3Mk5hTEIzR0NRbm9lMC14OWs1dWh2RDY0X0tSdVRJQ3k3UW5Kei0xZmc5WFJPZkhz
+  title          The Saudi Nuclear Deal Would Set a Dangerous New Proliferation Precedent - Council on Foreign Relations
+  body           <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxON2w1TXh2TWJYbFVOWjRDT01oSjZORzk1RVBDN3k0VmNmTDc2MGVZaVAxY2QtNXo4Y0JGb2FYTXRVNURON3poNnVXSUZtQmFiR19kdXVtUmF4cmM0Z1RNa0thTV9tUEtSUndlcWZhV3ptM0d3Mk5hTEIzR0NRbm9lMC14OWs1dWh2RDY0X0tSdVRJQ3k3UW5Kei0xZmc5WFJPZkhz?oc=5" target="_blank">The Saudi Nuclear Deal Would Set a Dangerous New Proliferation Precedent</a>&nbsp;&nbsp;<font color="#6f6f6f">Council on Foreign Relations</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxON2w1TXh2TWJYbFVOWjRDT01oSjZORzk1RVBDN3k0VmNmTDc2MGVZaVAxY2QtNXo4Y0JGb2FYTXRVNURON3poNnVXSUZtQmFiR19kdXVtUmF4cmM0Z1RNa0thTV9tUEtSUndlcWZhV3ptM0d3Mk5hTEIzR0NRbm9lMC14OWs1dWh2RDY0X0
+  link           https://news.google.com/rss/articles/CBMiowFBVV95cUxON2w1TXh2TWJYbFVOWjRDT01oSjZORzk1RVBDN3k0VmNmTDc2MGVZaVAxY2QtNXo4Y0JGb2FYTXRVNURON3poNnVXSUZtQmFiR19kdXVtUmF4cmM0Z1RNa0thTV9tUEtSUndlcWZhV3ptM0d3Mk5hTEIzR0NRbm9lMC14OWs1dWh2RDY0X0tSdVRJQ3k3UW5Kei0xZmc5WFJPZkhz?oc=5
+  language       fa
+  published_at   Tue, 28 Jul 2026 15:42:06 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ir"]
+  properties     {"guid":"CBMiowFBVV95cUxON2w1TXh2TWJYbFVOWjRDT01oSjZORzk1RVBDN3k0VmNmTDc2MGVZaVAxY2QtNXo4Y0JGb2FYTXRVNURON3poNnVXSUZtQmFiR19kdXVtUmF4cmM0Z1RNa0thTV9tUEtSUndlcWZhV3ptM0d3Mk5hTEIzR0NRbm9lMC14OWs1dWh2RDY0X0tSdVRJQ3k3UW5Kei0xZmc5WFJPZkhz"}
+
+--- row 2 ---
+  uid            gnews-mon-ir-nuclear-talks|CBMipgFBVV95cUxQSjVackwyN0RfQTVTcjVseU56NFF2dGFPc1ltS3Vhakkza0w1QmFmQjgxME43b1J4T0xBUmNBYkQtUVNyQzJyalkzWVlsRzdRdURJakhlN2h5OVNGTktxc3E5NmdUdUlnSm83V0I2UXE3X2VHSHRvZEV1cWt4WVZfczJqZTJ4dlFvTURmRTlLNmtUZmZ1LU40bGlaMEF2QlFSckhyamd3
+  title          Still alive: why the US-Saudi nuclear agreement remains possible - Al Majalla
+  body           <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxQSjVackwyN0RfQTVTcjVseU56NFF2dGFPc1ltS3Vhakkza0w1QmFmQjgxME43b1J4T0xBUmNBYkQtUVNyQzJyalkzWVlsRzdRdURJakhlN2h5OVNGTktxc3E5NmdUdUlnSm83V0I2UXE3X2VHSHRvZEV1cWt4WVZfczJqZTJ4dlFvTURmRTlLNmtUZmZ1LU40bGlaMEF2QlFSckhyamd3?oc=5" target="_blank">Still alive: why the US-Saudi nuclear agreement remains possible</a>&nbsp;&nbsp;<font color="#6f6f6f">Al Majalla</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxQSjVackwyN0RfQTVTcjVseU56NFF2dGFPc1ltS3Vhakkza0w1QmFmQjgxME43b1J4T0xBUmNBYkQtUVNyQzJyalkzWVlsRzdRdURJakhlN2h5OVNGTktxc3E5NmdUdUlnSm83V0I2UXE3X2VHSHRvZEV1cWt4WVZfczJqZTJ4dlFvTURmRT
+  link           https://news.google.com/rss/articles/CBMipgFBVV95cUxQSjVackwyN0RfQTVTcjVseU56NFF2dGFPc1ltS3Vhakkza0w1QmFmQjgxME43b1J4T0xBUmNBYkQtUVNyQzJyalkzWVlsRzdRdURJakhlN2h5OVNGTktxc3E5NmdUdUlnSm83V0I2UXE3X2VHSHRvZEV1cWt4WVZfczJqZTJ4dlFvTURmRTlLNmtUZmZ1LU40bGlaMEF2QlFSckhyamd3?oc=5
+  language       fa
+  published_at   Fri, 31 Jul 2026 05:03:09 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ir"]
+  properties     {"guid":"CBMipgFBVV95cUxQSjVackwyN0RfQTVTcjVseU56NFF2dGFPc1ltS3Vhakkza0w1QmFmQjgxME43b1J4T0xBUmNBYkQtUVNyQzJyalkzWVlsRzdRdURJakhlN2h5OVNGTktxc3E5NmdUdUlnSm83V0I2UXE3X2VHSHRvZEV1cWt4WVZfczJqZTJ4dlFvTURmRTlLNmtUZmZ1LU40bGlaMEF2QlFSckhyamd3"}
+
+--- row 3 ---
+  uid            gnews-mon-ir-nuclear-talks|CBMiaEFVX3lxTE5YeS1kdmFULXdsTVJpRld5UkRMdGR1V0FSbjluLXBzc3pkVm5pS0o1aHk2MENKYm5oRGVjVjAwaDRtWjRlUk0wcWZmRU5RWmVPbDl6Tk4xOUdleFBmLVhYUEhTVmxfNHdr
+  title          Opinion | Trump’s Saudi nuclear deal is corrupt and dangerous. Just ask Marco Rubio. - MS NOW
+  body           <a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTE5YeS1kdmFULXdsTVJpRld5UkRMdGR1V0FSbjluLXBzc3pkVm5pS0o1aHk2MENKYm5oRGVjVjAwaDRtWjRlUk0wcWZmRU5RWmVPbDl6Tk4xOUdleFBmLVhYUEhTVmxfNHdr?oc=5" target="_blank">Opinion | Trump’s Saudi nuclear deal is corrupt and dangerous. Just ask Marco Rubio.</a>&nbsp;&nbsp;<font color="#6f6f6f">MS NOW</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTE5YeS1kdmFULXdsTVJpRld5UkRMdGR1V0FSbjluLXBzc3pkVm5pS0o1aHk2MENKYm5oRGVjVjAwaDRtWjRlUk0wcWZmRU5RWmVPbDl6Tk4xOUdleFBmLVhYUEhTVmxfNHdr?oc=5" target="_blank">Opinion | Trump’s Saudi n
+  link           https://news.google.com/rss/articles/CBMiaEFVX3lxTE5YeS1kdmFULXdsTVJpRld5UkRMdGR1V0FSbjluLXBzc3pkVm5pS0o1aHk2MENKYm5oRGVjVjAwaDRtWjRlUk0wcWZmRU5RWmVPbDl6Tk4xOUdleFBmLVhYUEhTVmxfNHdr?oc=5
+  language       fa
+  published_at   Fri, 31 Jul 2026 13:39:42 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ir"]
+  properties     {"guid":"CBMiaEFVX3lxTE5YeS1kdmFULXdsTVJpRld5UkRMdGR1V0FSbjluLXBzc3pkVm5pS0o1aHk2MENKYm5oRGVjVjAwaDRtWjRlUk0wcWZmRU5RWmVPbDl6Tk4xOUdleFBmLVhYUEhTVmxfNHdr"}

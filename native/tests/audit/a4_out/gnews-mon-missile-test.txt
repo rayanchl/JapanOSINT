@@ -1,0 +1,45 @@
+=== gnews-mon-missile-test
+exit: 0
+sched: rc=0 records=100 742ms
+--- stderr ---
+[rss] gnews-mon-missile-test emitted 100
+[sched] gnews-mon-missile-test run rc=0 records=100 742ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-missile-test|CBMijwFBVV95cUxPczFqSGh4NVFmZEpCUm9HcHJOQlRHc2d1eDNXb0pKTWEtMWdsVjBtUkREU056Y1kzZVoySjRIU0I3dGNzeEt2SmI1dl9tRXhpbmo0ZHNiLUZuRGZGemp5T3hxa3c4QnN1UlpVVUtSSjdlNUZrY2xyTWZDZG1iVnlzcUtNcVB5enFpYTZIYkk5QQ
+  title          What China’s Missile Test Says About the Pacific Order - Geopolitical Futures
+  body           <a href="https://news.google.com/rss/articles/CBMijwFBVV95cUxPczFqSGh4NVFmZEpCUm9HcHJOQlRHc2d1eDNXb0pKTWEtMWdsVjBtUkREU056Y1kzZVoySjRIU0I3dGNzeEt2SmI1dl9tRXhpbmo0ZHNiLUZuRGZGemp5T3hxa3c4QnN1UlpVVUtSSjdlNUZrY2xyTWZDZG1iVnlzcUtNcVB5enFpYTZIYkk5QQ?oc=5" target="_blank">What China’s Missile Test Says About the Pacific Order</a>&nbsp;&nbsp;<font color="#6f6f6f">Geopolitical Futures</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMijwFBVV95cUxPczFqSGh4NVFmZEpCUm9HcHJOQlRHc2d1eDNXb0pKTWEtMWdsVjBtUkREU056Y1kzZVoySjRIU0I3dGNzeEt2SmI1dl9tRXhpbmo0ZHNiLUZuRGZGemp5T3hxa3c4QnN1UlpVVUtSSjdlNUZrY2xyTWZDZG1iVnlzcUtNcVB5enFpYTZIYk
+  link           https://news.google.com/rss/articles/CBMijwFBVV95cUxPczFqSGh4NVFmZEpCUm9HcHJOQlRHc2d1eDNXb0pKTWEtMWdsVjBtUkREU056Y1kzZVoySjRIU0I3dGNzeEt2SmI1dl9tRXhpbmo0ZHNiLUZuRGZGemp5T3hxa3c4QnN1UlpVVUtSSjdlNUZrY2xyTWZDZG1iVnlzcUtNcVB5enFpYTZIYkk5QQ?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 09:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","missile"]
+  properties     {"guid":"CBMijwFBVV95cUxPczFqSGh4NVFmZEpCUm9HcHJOQlRHc2d1eDNXb0pKTWEtMWdsVjBtUkREU056Y1kzZVoySjRIU0I3dGNzeEt2SmI1dl9tRXhpbmo0ZHNiLUZuRGZGemp5T3hxa3c4QnN1UlpVVUtSSjdlNUZrY2xyTWZDZG1iVnlzcUtNcVB5enFpYTZIYkk5QQ"}
+
+--- row 2 ---
+  uid            gnews-mon-missile-test|CBMiqwFBVV95cUxPMFk3S01lMk16b0ZiRF94ZnEydDhsVTFHTEZJbENJS2xVNkkwVVpnZ2lWVHROUnRzVlVvWk9xbDRKNFZBTFhESEpPUDViUlJaWl92aE12VzEzeGNBc1dzZndaR18xMTFmbjFlYnlmSmROejBqdUtndUczRmQ5RHRlLVZCWEczUm5KdWxvblhOaWFGdVBFUjY1YlpoWGw3QW1vWlliM1NvZWdZWjQ
+  title          Japanese destroyer fires Tomahawk missile in ‘historic test launch’ - stripes.com
+  body           <a href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxPMFk3S01lMk16b0ZiRF94ZnEydDhsVTFHTEZJbENJS2xVNkkwVVpnZ2lWVHROUnRzVlVvWk9xbDRKNFZBTFhESEpPUDViUlJaWl92aE12VzEzeGNBc1dzZndaR18xMTFmbjFlYnlmSmROejBqdUtndUczRmQ5RHRlLVZCWEczUm5KdWxvblhOaWFGdVBFUjY1YlpoWGw3QW1vWlliM1NvZWdZWjQ?oc=5" target="_blank">Japanese destroyer fires Tomahawk missile in ‘historic test launch’</a>&nbsp;&nbsp;<font color="#6f6f6f">stripes.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxPMFk3S01lMk16b0ZiRF94ZnEydDhsVTFHTEZJbENJS2xVNkkwVVpnZ2lWVHROUnRzVlVvWk9xbDRKNFZBTFhESEpPUDViUlJaWl92aE12VzEzeGNBc1dzZndaR18xMTFmbjFlYnlmSmROejBqdUtndUczRmQ5RHRlLVZCWEczUm5KdWxvbl
+  link           https://news.google.com/rss/articles/CBMiqwFBVV95cUxPMFk3S01lMk16b0ZiRF94ZnEydDhsVTFHTEZJbENJS2xVNkkwVVpnZ2lWVHROUnRzVlVvWk9xbDRKNFZBTFhESEpPUDViUlJaWl92aE12VzEzeGNBc1dzZndaR18xMTFmbjFlYnlmSmROejBqdUtndUczRmQ5RHRlLVZCWEczUm5KdWxvblhOaWFGdVBFUjY1YlpoWGw3QW1vWlliM1NvZWdZWjQ?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 06:51:02 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","missile"]
+  properties     {"guid":"CBMiqwFBVV95cUxPMFk3S01lMk16b0ZiRF94ZnEydDhsVTFHTEZJbENJS2xVNkkwVVpnZ2lWVHROUnRzVlVvWk9xbDRKNFZBTFhESEpPUDViUlJaWl92aE12VzEzeGNBc1dzZndaR18xMTFmbjFlYnlmSmROejBqdUtndUczRmQ5RHRlLVZCWEczUm5KdWxvblhOaWFGdVBFUjY1YlpoWGw3QW1vWlliM1NvZWdZWjQ"}
+
+--- row 3 ---
+  uid            gnews-mon-missile-test|CBMiqAFBVV95cUxOR1BzcmZxLWJVc0hyeFpKSTRJX1pBVUpPaXlLRjhGZjluNkJLX1hZeXR2ZEh0aUFWMFgxVkVITm4tc3BaWEg4bldHMUdiMzdmRjYwcnFtU3pEc3JXV1YxVVlReDFIVTh4Y3ZRU2EwNGEtd3dEUUZfX3d1T1pqQVE3OFQzNlUxZENFeTFQd3hhMmo0UTYtQzlyMkJ6RWNiNGtJX212c3RyTW8
+  title          Japan Tests New Air-Launched Upgraded Type 12 Anti-Ship Missile with 1,000 km Range - navalnews.com
+  body           <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxOR1BzcmZxLWJVc0hyeFpKSTRJX1pBVUpPaXlLRjhGZjluNkJLX1hZeXR2ZEh0aUFWMFgxVkVITm4tc3BaWEg4bldHMUdiMzdmRjYwcnFtU3pEc3JXV1YxVVlReDFIVTh4Y3ZRU2EwNGEtd3dEUUZfX3d1T1pqQVE3OFQzNlUxZENFeTFQd3hhMmo0UTYtQzlyMkJ6RWNiNGtJX212c3RyTW8?oc=5" target="_blank">Japan Tests New Air-Launched Upgraded Type 12 Anti-Ship Missile with 1,000 km Range</a>&nbsp;&nbsp;<font color="#6f6f6f">navalnews.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxOR1BzcmZxLWJVc0hyeFpKSTRJX1pBVUpPaXlLRjhGZjluNkJLX1hZeXR2ZEh0aUFWMFgxVkVITm4tc3BaWEg4bldHMUdiMzdmRjYwcnFtU3pEc3JXV1YxVVlReDFIVTh4Y3ZRU2EwNGEtd3dEUUZfX3d1T1pqQVE3OFQzNlUxZENFeTFQd3
+  link           https://news.google.com/rss/articles/CBMiqAFBVV95cUxOR1BzcmZxLWJVc0hyeFpKSTRJX1pBVUpPaXlLRjhGZjluNkJLX1hZeXR2ZEh0aUFWMFgxVkVITm4tc3BaWEg4bldHMUdiMzdmRjYwcnFtU3pEc3JXV1YxVVlReDFIVTh4Y3ZRU2EwNGEtd3dEUUZfX3d1T1pqQVE3OFQzNlUxZENFeTFQd3hhMmo0UTYtQzlyMkJ6RWNiNGtJX212c3RyTW8?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 08:34:36 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","missile"]
+  properties     {"guid":"CBMiqAFBVV95cUxOR1BzcmZxLWJVc0hyeFpKSTRJX1pBVUpPaXlLRjhGZjluNkJLX1hZeXR2ZEh0aUFWMFgxVkVITm4tc3BaWEg4bldHMUdiMzdmRjYwcnFtU3pEc3JXV1YxVVlReDFIVTh4Y3ZRU2EwNGEtd3dEUUZfX3d1T1pqQVE3OFQzNlUxZENFeTFQd3hhMmo0UTYtQzlyMkJ6RWNiNGtJX212c3RyTW8"}

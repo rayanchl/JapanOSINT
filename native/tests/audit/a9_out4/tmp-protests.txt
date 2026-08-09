@@ -1,0 +1,19 @@
+=== tmp-protests
+exit: 0
+sched: rc=0 records=1 2607ms
+--- stderr ---
+[tmp-protests] probe reachable=0
+[sched] tmp-protests run rc=0 records=1 2607ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            tmp-protests|tmp-protest-portal
+  title          Tokyo Metropolitan Police — protest / parade applications
+  summary        道路使用許可・集団行進等 published in advance (predicts riot-police mobilizations)
+  link           https://www.keishicho.metro.tokyo.lg.jp/kotsu/jiko/koutsu_kisei/index.html
+  language       ja
+  published_at   2026-07-31T18:20:31.366Z
+  tags           ["protest","police","tokyo","tmp","unreachable"]
+  properties     {"operator":"警視庁 交通部","reachable":false}

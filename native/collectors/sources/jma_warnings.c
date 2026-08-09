@@ -93,16 +93,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (cJSON_GetArraySize(warns) == 0) { cJSON_Delete(warns); cJSON_Delete(doc); continue; }
 
     cJSON *rd = cJSON_GetObjectItem(doc, "reportDatetime");
+    cJSON *hl = cJSON_GetObjectItem(doc, "headlineText");
+    cJSON *po = cJSON_GetObjectItem(doc, "publishingOffice");
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *c = cJSON_CreateArray();
-    cJSON_AddItemToArray(c, cJSON_CreateNumber(AREAS[i].lon));
-    cJSON_AddItemToArray(c, cJSON_CreateNumber(AREAS[i].lat));
-    cJSON_AddItemToObject(g, "coordinates", c);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(AREAS[i].lon, AREAS[i].lat);
 
     cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
     cJSON_AddStringToObject(p, "area_code", AREAS[i].code);
@@ -112,6 +106,36 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (rd && cJSON_IsString(rd)) cJSON_AddStringToObject(p, "report_at", rd->valuestring);
     else                          cJSON_AddNullToObject(p, "report_at");
     cJSON_AddStringToObject(p, "source", "jma_warning");
+
+    /* --- fields the JS port dropped -------------------------------------
+     * `headlineText` is JMA's own plain-language summary of what is in force
+     * for this office ("伊豆諸島南部では、強風や高波に注意してください。"). It is
+     * the single most readable thing in the document and it was thrown away,
+     * leaving rows whose whole payload was numeric warning codes. lib/geojson
+     * also needs title/published_at/uid keys, none of which existed. */
+    if (hl && cJSON_IsString(hl) && hl->valuestring[0])
+      cJSON_AddStringToObject(p, "headline", hl->valuestring);
+    if (po && cJSON_IsString(po))
+      cJSON_AddStringToObject(p, "publishing_office", po->valuestring);
+    {
+      char title[256];
+      snprintf(title, sizeof title, "%s: %d件の警報・注意報",
+               AREAS[i].name, cJSON_GetArraySize(warns));
+      cJSON_AddStringToObject(p, "title", title);
+    }
+    if (hl && cJSON_IsString(hl) && hl->valuestring[0])
+      cJSON_AddStringToObject(p, "summary", hl->valuestring);
+    if (rd && cJSON_IsString(rd))
+      cJSON_AddStringToObject(p, "published_at", rd->valuestring);
+    cJSON_AddStringToObject(p, "uid", AREAS[i].code);  /* stable per office */
+    {
+      char link[160];
+      snprintf(link, sizeof link,
+               "https://www.jma.go.jp/bosai/warning/#area_type=offices&area_code=%s",
+               AREAS[i].code);
+      cJSON_AddStringToObject(p, "url", link);
+    }
+
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);
     cJSON_Delete(doc);

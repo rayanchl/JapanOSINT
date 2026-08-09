@@ -1,0 +1,42 @@
+=== WIKIDATA_SPARQL  entity=Tokyo
+exit: 0
+sched: rc=0 records=40 897ms
+--- stderr ---
+[wikidata_sparql] emitted 40
+[sched] WIKIDATA_SPARQL run rc=0 records=40 897ms
+--- persisted: 38 rows, 0 with lat/lon, 0 with geometry ---
+record_type: wikidata-relationship=38
+sub_source_id: (null)=38
+
+--- row 1 ---
+  uid            WIKIDATA_SPARQL|http://www.wikidata.org/entity/Q261703
+  title          head of government: Yuriko Koike
+  body           {"subject":"Q1490","property":"head of government","value":"Yuriko Koike","value_uri":"http://www.wikidata.org/entity/Q261703","source":"Wikidata SPARQL"}
+  summary        head of government
+  link           http://www.wikidata.org/entity/Q261703
+  language       en
+  record_type    wikidata-relationship
+  tags           ["osint-search","WIKIDATA_SPARQL"]
+  properties     {"service":"WIKIDATA_SPARQL","subject_qid":"Q1490","property":"head of government","success":true}
+
+--- row 2 ---
+  uid            WIKIDATA_SPARQL|http://commons.wikimedia.org/wiki/Special:FilePath/Shibuya%20Crossing.ogv
+  title          video: http://commons.wikimedia.org/wiki/Special:FilePath/Shibuya%20Crossing.ogv
+  body           {"subject":"Q1490","property":"video","value":"http://commons.wikimedia.org/wiki/Special:FilePath/Shibuya%20Crossing.ogv","value_uri":"http://commons.wikimedia.org/wiki/Special:FilePath/Shibuya%20Crossing.ogv","source":"Wikidata SPARQL"}
+  summary        video
+  link           http://commons.wikimedia.org/wiki/Special:FilePath/Shibuya%20Crossing.ogv
+  language       en
+  record_type    wikidata-relationship
+  tags           ["osint-search","WIKIDATA_SPARQL"]
+  properties     {"service":"WIKIDATA_SPARQL","subject_qid":"Q1490","property":"video","success":true}
+
+--- row 3 ---
+  uid            WIKIDATA_SPARQL|http://www.wikidata.org/entity/Q17
+  title          located in the administrative territorial entity: Japan
+  body           {"subject":"Q1490","property":"located in the administrative territorial entity","value":"Japan","value_uri":"http://www.wikidata.org/entity/Q17","source":"Wikidata SPARQL"}
+  summary        located in the administrative territorial entity
+  link           http://www.wikidata.org/entity/Q17
+  language       en
+  record_type    wikidata-relationship
+  tags           ["osint-search","WIKIDATA_SPARQL"]
+  properties     {"service":"WIKIDATA_SPARQL","subject_qid":"Q1490","property":"located in the administrative territorial entity","success":true}

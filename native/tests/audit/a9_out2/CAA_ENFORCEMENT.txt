@@ -1,0 +1,7 @@
+=== CAA_ENFORCEMENT  entity=東京
+exit: 0
+sched: rc=0 records=0 1775ms
+--- stderr ---
+[CAA_ENFORCEMENT] http status=403
+[sched] CAA_ENFORCEMENT run rc=0 records=0 1775ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

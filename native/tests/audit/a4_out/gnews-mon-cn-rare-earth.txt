@@ -1,0 +1,45 @@
+=== gnews-mon-cn-rare-earth
+exit: 0
+sched: rc=0 records=100 754ms
+--- stderr ---
+[rss] gnews-mon-cn-rare-earth emitted 100
+[sched] gnews-mon-cn-rare-earth run rc=0 records=100 754ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-cn-rare-earth|CBMiqAFBVV95cUxPNER6MVdFcnhrNXZ3RWpJTlRXZ0JCTlppTUJDcmcyZDRBaG8ycTk5SzJHRXpWR0R4RmJPREJwTXY4LW0tSVdoZ1ItZXctTUY3MW94WEx5T1c5VENVUTBQaDdid1I2Wjk5b1FESjJnTkJWWFRJbU1IcTBLWXRiUUtUVHNRX2l1T1J4cGY3ajJxaHktYWtJNkxaM0F5SzJXTU5HdWJXUUxmbjQ
+  title          热门板块速睇：美股盘中稀土概念走强，USA Rare Earth领涨 - Moomoo
+  body           <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxPNER6MVdFcnhrNXZ3RWpJTlRXZ0JCTlppTUJDcmcyZDRBaG8ycTk5SzJHRXpWR0R4RmJPREJwTXY4LW0tSVdoZ1ItZXctTUY3MW94WEx5T1c5VENVUTBQaDdid1I2Wjk5b1FESjJnTkJWWFRJbU1IcTBLWXRiUUtUVHNRX2l1T1J4cGY3ajJxaHktYWtJNkxaM0F5SzJXTU5HdWJXUUxmbjQ?oc=5" target="_blank">热门板块速睇：美股盘中稀土概念走强，USA Rare Earth领涨</a>&nbsp;&nbsp;<font color="#6f6f6f">Moomoo</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxPNER6MVdFcnhrNXZ3RWpJTlRXZ0JCTlppTUJDcmcyZDRBaG8ycTk5SzJHRXpWR0R4RmJPREJwTXY4LW0tSVdoZ1ItZXctTUY3MW94WEx5T1c5VENVUTBQaDdid1I2Wjk5b1FESjJnTkJWWFRJbU1IcTBLWXRiUUtUVHNRX2l1T1J4cGY3aj
+  link           https://news.google.com/rss/articles/CBMiqAFBVV95cUxPNER6MVdFcnhrNXZ3RWpJTlRXZ0JCTlppTUJDcmcyZDRBaG8ycTk5SzJHRXpWR0R4RmJPREJwTXY4LW0tSVdoZ1ItZXctTUY3MW94WEx5T1c5VENVUTBQaDdid1I2Wjk5b1FESjJnTkJWWFRJbU1IcTBLWXRiUUtUVHNRX2l1T1J4cGY3ajJxaHktYWtJNkxaM0F5SzJXTU5HdWJXUUxmbjQ?oc=5
+  language       zh
+  published_at   Thu, 30 Jul 2026 15:00:02 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","cn"]
+  properties     {"guid":"CBMiqAFBVV95cUxPNER6MVdFcnhrNXZ3RWpJTlRXZ0JCTlppTUJDcmcyZDRBaG8ycTk5SzJHRXpWR0R4RmJPREJwTXY4LW0tSVdoZ1ItZXctTUY3MW94WEx5T1c5VENVUTBQaDdid1I2Wjk5b1FESjJnTkJWWFRJbU1IcTBLWXRiUUtUVHNRX2l1T1J4cGY3ajJxaHktYWtJNkxaM0F5SzJXTU5HdWJXUUxmbjQ"}
+
+--- row 2 ---
+  uid            gnews-mon-cn-rare-earth|CBMiywFBVV95cUxOdFlSTzY5UENkUXBzbnVWOXF5QjhTbXU5VDFfMF9qOFg5NVV6czZvUUtiSDVJSW16eWN1WFhIekloeWdmVjI2TXMwVzBYSlBWQW9HRW5DVi1nV2ttR0NzZUpBdDZrem5XYTJ4WXEyRjNCako0ZDNsOWVpMGRZRW5IWFFFYnR0MVFRdDFSdEllQUpTUFcteDk2UmFpMmotMXlKdXJCY1ZIc1pTZk9tOGowaXR3c0k1SHNlNFpETWxLczRmV2ZvNVljTWtIVQ
+  title          China Northern Rare Earth to Build JV Plants for USD128 Million to Increase Alloy, Magnet Output - 一财全球Yicai Global
+  body           <a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxOdFlSTzY5UENkUXBzbnVWOXF5QjhTbXU5VDFfMF9qOFg5NVV6czZvUUtiSDVJSW16eWN1WFhIekloeWdmVjI2TXMwVzBYSlBWQW9HRW5DVi1nV2ttR0NzZUpBdDZrem5XYTJ4WXEyRjNCako0ZDNsOWVpMGRZRW5IWFFFYnR0MVFRdDFSdEllQUpTUFcteDk2UmFpMmotMXlKdXJCY1ZIc1pTZk9tOGowaXR3c0k1SHNlNFpETWxLczRmV2ZvNVljTWtIVQ?oc=5" target="_blank">China Northern Rare Earth to Build JV Plants for USD128 Million to Increase Alloy, Magnet Output</a>&nbsp;&nbsp;<font color="#6f6f6f">一财全球Yicai Global</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxOdFlSTzY5UENkUXBzbnVWOXF5QjhTbXU5VDFfMF9qOFg5NVV6czZvUUtiSDVJSW16eWN1WFhIekloeWdmVjI2TXMwVzBYSlBWQW9HRW5DVi1nV2ttR0NzZUpBdDZrem5XYTJ4WXEyRjNCako0ZDNsOWVpMGRZRW5IWFFFYnR0MVFRdDFSdE
+  link           https://news.google.com/rss/articles/CBMiywFBVV95cUxOdFlSTzY5UENkUXBzbnVWOXF5QjhTbXU5VDFfMF9qOFg5NVV6czZvUUtiSDVJSW16eWN1WFhIekloeWdmVjI2TXMwVzBYSlBWQW9HRW5DVi1nV2ttR0NzZUpBdDZrem5XYTJ4WXEyRjNCako0ZDNsOWVpMGRZRW5IWFFFYnR0MVFRdDFSdEllQUpTUFcteDk2UmFpMmotMXlKdXJCY1ZIc1pTZk9tOGowaXR3c0k1SHNlNFpETWxLczRmV2ZvNVljTWtIVQ?oc=5
+  language       zh
+  published_at   Mon, 16 Mar 2026 12:58:25 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","cn"]
+  properties     {"guid":"CBMiywFBVV95cUxOdFlSTzY5UENkUXBzbnVWOXF5QjhTbXU5VDFfMF9qOFg5NVV6czZvUUtiSDVJSW16eWN1WFhIekloeWdmVjI2TXMwVzBYSlBWQW9HRW5DVi1nV2ttR0NzZUpBdDZrem5XYTJ4WXEyRjNCako0ZDNsOWVpMGRZRW5IWFFFYnR0MVFRdDFSdEllQUpTUFcteDk2UmFpMmotMXlKdXJCY1ZIc1pTZk9tOGowaXR3c0k1SHNlNFpETWxLczRmV2ZvNVljTWtIVQ"}
+
+--- row 3 ---
+  uid            gnews-mon-cn-rare-earth|CBMinAFBVV95cUxOMElGUWMtUWpaX1RCenpQbzBOdkRFWWNPZXRrU0stNG9LSDFBeV9sOXZ3eGV6ZzRIX3lTM25zbjFQV3JobUEzQ01tcEQxaXZOZk1YajJsdHhyZDRpb3ltTDNleXVQRUZhVUYwOUwtTS0xUWJoWlR1cHZ6ZU5SeE9uMThTREk1Qm1SWFdmTllSYWdVMFF0S2JKQVhTMzM
+  title          热门板块速睇：美股盘中稀土概念走强，USA Rare Earth领涨 - 富途牛牛
+  body           <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxOMElGUWMtUWpaX1RCenpQbzBOdkRFWWNPZXRrU0stNG9LSDFBeV9sOXZ3eGV6ZzRIX3lTM25zbjFQV3JobUEzQ01tcEQxaXZOZk1YajJsdHhyZDRpb3ltTDNleXVQRUZhVUYwOUwtTS0xUWJoWlR1cHZ6ZU5SeE9uMThTREk1Qm1SWFdmTllSYWdVMFF0S2JKQVhTMzM?oc=5" target="_blank">热门板块速睇：美股盘中稀土概念走强，USA Rare Earth领涨</a>&nbsp;&nbsp;<font color="#6f6f6f">富途牛牛</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxOMElGUWMtUWpaX1RCenpQbzBOdkRFWWNPZXRrU0stNG9LSDFBeV9sOXZ3eGV6ZzRIX3lTM25zbjFQV3JobUEzQ01tcEQxaXZOZk1YajJsdHhyZDRpb3ltTDNleXVQRUZhVUYwOUwtTS0xUWJoWlR1cHZ6ZU5SeE9uMThTREk1Qm1SWFdmTl
+  link           https://news.google.com/rss/articles/CBMinAFBVV95cUxOMElGUWMtUWpaX1RCenpQbzBOdkRFWWNPZXRrU0stNG9LSDFBeV9sOXZ3eGV6ZzRIX3lTM25zbjFQV3JobUEzQ01tcEQxaXZOZk1YajJsdHhyZDRpb3ltTDNleXVQRUZhVUYwOUwtTS0xUWJoWlR1cHZ6ZU5SeE9uMThTREk1Qm1SWFdmTllSYWdVMFF0S2JKQVhTMzM?oc=5
+  language       zh
+  published_at   Thu, 30 Jul 2026 15:35:26 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","cn"]
+  properties     {"guid":"CBMinAFBVV95cUxOMElGUWMtUWpaX1RCenpQbzBOdkRFWWNPZXRrU0stNG9LSDFBeV9sOXZ3eGV6ZzRIX3lTM25zbjFQV3JobUEzQ01tcEQxaXZOZk1YajJsdHhyZDRpb3ltTDNleXVQRUZhVUYwOUwtTS0xUWJoWlR1cHZ6ZU5SeE9uMThTREk1Qm1SWFdmTllSYWdVMFF0S2JKQVhTMzM"}

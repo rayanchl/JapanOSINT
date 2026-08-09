@@ -1,0 +1,45 @@
+=== gnews-mon-civil-unrest
+exit: 0
+sched: rc=0 records=100 611ms
+--- stderr ---
+[rss] gnews-mon-civil-unrest emitted 100
+[sched] gnews-mon-civil-unrest run rc=0 records=100 611ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-civil-unrest|CBMifkFVX3lxTE93b3VSei1NWTdlTUVhWjNaVGpKU2J1WVNZdlFEdFJsUnEzNEpZbXJZVXFyZ1JXcW1OOTdFZTJSbW1SRGZEQXR0U3ZuUkJOUG5ER0lyUHFqY09JWFVBVjVJSXVMM0RvMFp2ZnktdmIzaUFVaGF3UDE0U0daSElwUQ
+  title          Civil War in Sudan | Global Conflict Tracker - Council on Foreign Relations
+  body           <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE93b3VSei1NWTdlTUVhWjNaVGpKU2J1WVNZdlFEdFJsUnEzNEpZbXJZVXFyZ1JXcW1OOTdFZTJSbW1SRGZEQXR0U3ZuUkJOUG5ER0lyUHFqY09JWFVBVjVJSXVMM0RvMFp2ZnktdmIzaUFVaGF3UDE0U0daSElwUQ?oc=5" target="_blank">Civil War in Sudan | Global Conflict Tracker</a>&nbsp;&nbsp;<font color="#6f6f6f">Council on Foreign Relations</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE93b3VSei1NWTdlTUVhWjNaVGpKU2J1WVNZdlFEdFJsUnEzNEpZbXJZVXFyZ1JXcW1OOTdFZTJSbW1SRGZEQXR0U3ZuUkJOUG5ER0lyUHFqY09JWFVBVjVJSXVMM0RvMFp2ZnktdmIzaUFVaGF3UDE0U0daSElwUQ?oc=5" target="_blan
+  link           https://news.google.com/rss/articles/CBMifkFVX3lxTE93b3VSei1NWTdlTUVhWjNaVGpKU2J1WVNZdlFEdFJsUnEzNEpZbXJZVXFyZ1JXcW1OOTdFZTJSbW1SRGZEQXR0U3ZuUkJOUG5ER0lyUHFqY09JWFVBVjVJSXVMM0RvMFp2ZnktdmIzaUFVaGF3UDE0U0daSElwUQ?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","civil"]
+  properties     {"guid":"CBMifkFVX3lxTE93b3VSei1NWTdlTUVhWjNaVGpKU2J1WVNZdlFEdFJsUnEzNEpZbXJZVXFyZ1JXcW1OOTdFZTJSbW1SRGZEQXR0U3ZuUkJOUG5ER0lyUHFqY09JWFVBVjVJSXVMM0RvMFp2ZnktdmIzaUFVaGF3UDE0U0daSElwUQ"}
+
+--- row 2 ---
+  uid            gnews-mon-civil-unrest|CBMi1AFBVV95cUxQMFVWX25HTHVMT2VNOUE4WkpXWGx3djJzWXE3MkZfTk9aaC1UZDRhRDRFWWFCNVNqRU0ta2xVd2tvUmNtQ2huQWNJLU0tQ1ozVDV0TndIZV9jOXFYejhDZFY3YVkyMGQtNnJaVWMyY1F6UE1IVlcxU0xsZ2hUVC10RGhjUXZRS1lFX0xyWnBVZ0psUFlMNk4xZmwwQ3VWc08yWWkwbkViV19BOFBpdFRXRFZqems4TFhJQkZkRVc4UU53U3R1V29SYkZ1UkFma3dXYmVsZg
+  title          Opinion: Teen Police Academy shapes and inspires youth - Appen Media
+  body           <a href="https://news.google.com/rss/articles/CBMi1AFBVV95cUxQMFVWX25HTHVMT2VNOUE4WkpXWGx3djJzWXE3MkZfTk9aaC1UZDRhRDRFWWFCNVNqRU0ta2xVd2tvUmNtQ2huQWNJLU0tQ1ozVDV0TndIZV9jOXFYejhDZFY3YVkyMGQtNnJaVWMyY1F6UE1IVlcxU0xsZ2hUVC10RGhjUXZRS1lFX0xyWnBVZ0psUFlMNk4xZmwwQ3VWc08yWWkwbkViV19BOFBpdFRXRFZqems4TFhJQkZkRVc4UU53U3R1V29SYkZ1UkFma3dXYmVsZg?oc=5" target="_blank">Opinion: Teen Police Academy shapes and inspires youth</a>&nbsp;&nbsp;<font color="#6f6f6f">Appen Media</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi1AFBVV95cUxQMFVWX25HTHVMT2VNOUE4WkpXWGx3djJzWXE3MkZfTk9aaC1UZDRhRDRFWWFCNVNqRU0ta2xVd2tvUmNtQ2huQWNJLU0tQ1ozVDV0TndIZV9jOXFYejhDZFY3YVkyMGQtNnJaVWMyY1F6UE1IVlcxU0xsZ2hUVC10RGhjUXZRS1lFX0xyWn
+  link           https://news.google.com/rss/articles/CBMi1AFBVV95cUxQMFVWX25HTHVMT2VNOUE4WkpXWGx3djJzWXE3MkZfTk9aaC1UZDRhRDRFWWFCNVNqRU0ta2xVd2tvUmNtQ2huQWNJLU0tQ1ozVDV0TndIZV9jOXFYejhDZFY3YVkyMGQtNnJaVWMyY1F6UE1IVlcxU0xsZ2hUVC10RGhjUXZRS1lFX0xyWnBVZ0psUFlMNk4xZmwwQ3VWc08yWWkwbkViV19BOFBpdFRXRFZqems4TFhJQkZkRVc4UU53U3R1V29SYkZ1UkFma3dXYmVsZg?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 16:44:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","civil"]
+  properties     {"guid":"CBMi1AFBVV95cUxQMFVWX25HTHVMT2VNOUE4WkpXWGx3djJzWXE3MkZfTk9aaC1UZDRhRDRFWWFCNVNqRU0ta2xVd2tvUmNtQ2huQWNJLU0tQ1ozVDV0TndIZV9jOXFYejhDZFY3YVkyMGQtNnJaVWMyY1F6UE1IVlcxU0xsZ2hUVC10RGhjUXZRS1lFX0xyWnBVZ0psUFlMNk4xZmwwQ3VWc08yWWkwbkViV19BOFBpdFRXRFZqems4TFhJQkZkRVc4UU53U3R1V29SYkZ1UkFma3dXYmVsZg"}
+
+--- row 3 ---
+  uid            gnews-mon-civil-unrest|CBMidEFVX3lxTE9ic0VOeXpQdXU2S05tcl9semtWT1Z2V0JXcEdGbHdrT1lDajdVOFBPNGo5b0Z0MGJ6R1NmWVVDZVVfOVNHUThXNW1NWU1TMU9uQUZUYjloSXBrY0NkNWhudkhYdVFRN1F0clZxMVIyUW8wVlho
+  title          Review of MELTING POT OR CIVIL WAR? A SON OF IMMIGRANTS MAKES THE CASE AGAINST OPEN BORDERS by Reihan Salam - alexnowrasteh.com
+  body           <a href="https://news.google.com/rss/articles/CBMidEFVX3lxTE9ic0VOeXpQdXU2S05tcl9semtWT1Z2V0JXcEdGbHdrT1lDajdVOFBPNGo5b0Z0MGJ6R1NmWVVDZVVfOVNHUThXNW1NWU1TMU9uQUZUYjloSXBrY0NkNWhudkhYdVFRN1F0clZxMVIyUW8wVlho?oc=5" target="_blank">Review of MELTING POT OR CIVIL WAR? A SON OF IMMIGRANTS MAKES THE CASE AGAINST OPEN BORDERS by Reihan Salam</a>&nbsp;&nbsp;<font color="#6f6f6f">alexnowrasteh.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMidEFVX3lxTE9ic0VOeXpQdXU2S05tcl9semtWT1Z2V0JXcEdGbHdrT1lDajdVOFBPNGo5b0Z0MGJ6R1NmWVVDZVVfOVNHUThXNW1NWU1TMU9uQUZUYjloSXBrY0NkNWhudkhYdVFRN1F0clZxMVIyUW8wVlho?oc=5" target="_blank">Review of M
+  link           https://news.google.com/rss/articles/CBMidEFVX3lxTE9ic0VOeXpQdXU2S05tcl9semtWT1Z2V0JXcEdGbHdrT1lDajdVOFBPNGo5b0Z0MGJ6R1NmWVVDZVVfOVNHUThXNW1NWU1TMU9uQUZUYjloSXBrY0NkNWhudkhYdVFRN1F0clZxMVIyUW8wVlho?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 11:03:14 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","civil"]
+  properties     {"guid":"CBMidEFVX3lxTE9ic0VOeXpQdXU2S05tcl9semtWT1Z2V0JXcEdGbHdrT1lDajdVOFBPNGo5b0Z0MGJ6R1NmWVVDZVVfOVNHUThXNW1NWU1TMU9uQUZUYjloSXBrY0NkNWhudkhYdVFRN1F0clZxMVIyUW8wVlho"}

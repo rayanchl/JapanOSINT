@@ -1,0 +1,202 @@
+=== agoop-flow
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[agoop-flow] gated (no AGOOP_API_KEY)
+[sched] agoop-flow run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== cam-windy_api
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[cam-windy_api] WINDY_API_KEY not set, skipping (0 cameras)
+[sched] cam-windy_api run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== CENSYS_SEARCH  entity=8.8.8.8
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[CENSYS_SEARCH] gated (no CENSYS_API_ID/SECRET)
+[sched] CENSYS_SEARCH run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== cloudflare-radar-jp
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[threatintel] cloudflare-radar-jp gated (no CLOUDFLARE_API_TOKEN)
+[sched] cloudflare-radar-jp run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== here-japan
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[here-japan] gated (no HERE_API_KEY)
+[sched] here-japan run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== marinetraffic-jp
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[marinetraffic-jp] gated (no MARINETRAFFIC_API_KEY)
+[sched] marinetraffic-jp run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== resas-municipality
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[resas-municipality] gated (RESAS_API_KEY)
+[sched] resas-municipality run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== SATELLITE_TRACKER  entity=25544
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[SATELLITE_TRACKER] gated (no N2YO_API_KEY)
+[sched] SATELLITE_TRACKER run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== telegram-jp-channels
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[telegram-jp-channels] gated (no TGSTAT_API_KEY)
+[sched] telegram-jp-channels run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== threatfox-jp
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[threatintel] threatfox-jp gated (no ABUSE_CH_AUTH_KEY)
+[sched] threatfox-jp run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== urlhaus-jp
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[threatintel] urlhaus-jp gated (no ABUSE_CH_AUTH_KEY)
+[sched] urlhaus-jp run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== GNEWS_SEARCH  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[GNEWS_SEARCH] no GNEWS_API_KEY
+[GNEWS_SEARCH] emitted 0
+[sched] GNEWS_SEARCH run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== MEDIASTACK_SEARCH  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[MEDIASTACK_SEARCH] no MEDIASTACK_KEY
+[MEDIASTACK_SEARCH] emitted 0
+[sched] MEDIASTACK_SEARCH run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== NEWSAPI_SEARCH  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[NEWSAPI_SEARCH] no NEWSAPI_KEY
+[NEWSAPI_SEARCH] emitted 0
+[sched] NEWSAPI_SEARCH run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== FRED_SERIES  entity=GDP
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[FRED_SERIES] gated (no FRED_KEY)
+[sched] FRED_SERIES run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== UN_COMTRADE  entity=392
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[UN_COMTRADE] gated (no COMTRADE_KEY)
+[sched] UN_COMTRADE run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== BING_WEB_SEARCH  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[BING_WEB_SEARCH] no BING_SEARCH_KEY
+[BING_WEB_SEARCH] emitted 0
+[sched] BING_WEB_SEARCH run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== SERPAPI_SEARCH  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[SERPAPI_SEARCH] no SERPAPI_KEY
+[SERPAPI_SEARCH] emitted 0
+[sched] SERPAPI_SEARCH run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== KR_DART  entity=Samsung
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[kr_dart] gated (no DART_API_KEY)
+[sched] KR_DART run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== FIRMS_GLOBAL
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[FIRMS_GLOBAL] gated (no FIRMS_MAP_KEY)
+[sched] FIRMS_GLOBAL run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== CORE_SEARCH  entity=osint
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[CORE_SEARCH] no CORE_API_KEY
+[CORE_SEARCH] emitted 0
+[sched] CORE_SEARCH run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== cam-geocam
+exit: 0
+sched: rc=0 records=3 653ms
+--- stderr ---
+[cam-geocam] emitted 3
+[sched] cam-geocam run rc=0 records=3 653ms
+--- persisted: 3 rows, 3 with lat/lon, 3 with geometry ---
+record_type: camera=3
+sub_source_id: (null)=3
+
+--- row 1 ---
+  uid            camera-discovery|39.7036:141.1527:https://www.geocam.ru/en/online/mount-iwate-webcam/
+  title          Mount Iwate
+  lat            39.7036
+  lon            141.1527
+  geometry       {"type":"Point","coordinates":[141.1527,39.7036]}
+  record_type    camera
+  properties     {"camera_uid":"39.7036:141.1527:https://www.geocam.ru/en/online/mount-iwate-webcam/","name":"Mount Iwate","camera_type":"aggregator_geocam","discovery_channel":"geocam","country":"JP","url":"https://www.geocam.ru/en/online/mount-iwate-webcam/","location_precision":"prefecture","location_approximate":true,"thumbnail_url":null,"operator":null,"discovery_channels":["geocam"],"first_seen_at":"2026-07-31T19:14:44.646Z","last_seen_at":"2026-07-31T19:14:44.646Z","seen_count":1}
+#################################################
+=== unified-ais-ships
+exit: TIMEOUT after 150s
+sched: (no [sched] line — the collector never returned)
+--- stderr ---
+[overpass] marine-traffic emitted 553
+[vessel-finder] gated (no VESSELFINDER_API_KEY)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+DONE /mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/a6_l6.txt

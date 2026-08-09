@@ -1,0 +1,7 @@
+=== FI_OPENDATA  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 480ms
+--- stderr ---
+[FI_OPENDATA] emitted 0
+[sched] FI_OPENDATA run rc=0 records=0 480ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

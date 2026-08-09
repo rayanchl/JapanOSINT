@@ -1,0 +1,508 @@
+=== ooni-jp
+exit: 0
+sched: rc=0 records=200 545ms
+--- stderr ---
+[threatintel] ooni-jp emitted 200
+[sched] ooni-jp run rc=0 records=200 545ms
+--- persisted: 200 rows, 0 with lat/lon, 0 with geometry ---
+record_type: ooni-jp=200
+sub_source_id: (null)=200
+
+--- row 1 ---
+  uid            ooni-jp|h:b6b9205d83988f4d
+  title          stunreachability · stun://stun.mixvoip.com:3478
+  summary        OONI stunreachability from JP / AS18126
+  link           https://api.ooni.io/api/v1/raw_measurement?measurement_uid=20260731174312.335945_JP_stunreachability_983b31f35e2cffd9
+  language       en
+  published_at   2026-07-31T17:42:53.000000Z
+  record_type    ooni-jp
+  properties     {"idx":0,"measurement_uid":"20260731174312.335945_JP_stunreachability_983b31f35e2cffd9","report_id":"20260731T174312Z_stunreachability_JP_18126_n4_MFEY7Tfn452xdAN2","test_name":"stunreachability","input":"stun://stun.mixvoip.com:3478","probe_cc":"JP","probe_asn":"AS18126","anomaly":false,"confirmed":false,"failure":false,"test_start_time":"2026-07-31T17:42:53.000000Z","published_at":"2026-07-31T17:42:53.000000Z","verification_status":"unverified","scores":{"blocking_general":0,"blocking_global":0,"blocking_country":0,"blocking_isp":0,"blocking_local":0,"extra":{"endpoint":"stun.mixvoip.com:3478"}},"url":"https://api.ooni.io/api/v1/raw_measurement?measurement_uid=20260731174312.335945_JP_stunreachability_983b31f35e2cffd9","source":"ooni","title":"stunreachability · stun://stun.mixvoip.com:3478","summary":"OONI stunreachability from JP / AS18126","language":"en"}
+
+--- row 2 ---
+  uid            ooni-jp|h:f05074bbbcefe18a
+  title          stunreachability · stun://stun.voipgate.com:3478
+  summary        OONI stunreachability from JP / AS18126
+  link           https://api.ooni.io/api/v1/raw_measurement?measurement_uid=20260731174308.134610_JP_stunreachability_96ab18fb5bf0713b
+  language       en
+  published_at   2026-07-31T17:42:52.000000Z
+  record_type    ooni-jp
+  properties     {"idx":1,"measurement_uid":"20260731174308.134610_JP_stunreachability_96ab18fb5bf0713b","report_id":"20260731T174307Z_stunreachability_JP_18126_n4_4x6JEvKXlEkD2hWr","test_name":"stunreachability","input":"stun://stun.voipgate.com:3478","probe_cc":"JP","probe_asn":"AS18126","anomaly":false,"confirmed":false,"failure":false,"test_start_time":"2026-07-31T17:42:52.000000Z","published_at":"2026-07-31T17:42:52.000000Z","verification_status":"unverified","scores":{"blocking_general":0,"blocking_global":0,"blocking_country":0,"blocking_isp":0,"blocking_local":0,"extra":{"endpoint":"stun.voipgate.com:3478"}},"url":"https://api.ooni.io/api/v1/raw_measurement?measurement_uid=20260731174308.134610_JP_stunreachability_96ab18fb5bf0713b","source":"ooni","title":"stunreachability · stun://stun.voipgate.com:3478","summary":"OONI stunreachability from JP / AS18126","language":"en"}
+#################################################
+=== wifi-hotspots-freespot
+exit: 0
+sched: rc=0 records=11904 73945ms
+--- stderr ---
+[wifi-hotspots-freespot] 47 prefecture files, emitted 11904
+[sched] wifi-hotspots-freespot run rc=0 records=11904 73945ms
+[detect] anomaly opened: wifi-hotspots-freespot verdict=duration_outlier — duration 73945ms exceeds 10000ms threshold
+--- persisted: 11904 rows, 11904 with lat/lon, 0 with geometry ---
+record_type: wifi-hotspot=11904
+sub_source_id: (null)=11904
+
+--- row 1 ---
+  uid            wifi-hotspots-freespot|FS27
+  title          Hotel Toyoko inn Sapporo-eki Minami-guchi
+  body           Venue: Hotel Toyoko inn Sapporo-eki Minami-guchi
+Address: Chuo-Ku,Sapporo-City,Hokkai-do
+Phone: 011-222-1045
+802.11: g
+  summary        Chuo-Ku,Sapporo-City,Hokkai-do
+  link           https://www.freespot.com/map/tenpo.php?n=27
+  author         FREESPOT
+  language       en
+  lat            43.06552
+  lon            141.35454
+  record_type    wifi-hotspot
+  tags           ["free-wifi","freespot","wifi-hotspot","pref:hokkaido"]
+  properties     {"freespot_id":"FS27","url_id":"27","venue":"Hotel Toyoko inn Sapporo-eki Minami-guchi","address":"Chuo-Ku,Sapporo-City,Hokkai-do","phone":"011-222-1045","area_code":"area11011","prefecture":"hokkaido","ieee_80211":"g","price_class":"1","power_outlet_class":"3","venue_url":"http://www.toyoko-inn.com/hotel/00059/index.html","source_xml":"01hokkaido-e.xml"}
+
+--- row 2 ---
+  uid            wifi-hotspots-freespot|FS28
+  title          ANA Hotel Sapporo
+  body           Venue: ANA Hotel Sapporo
+Address: Chuo-Ku,Sapporo-City,Hokkai-do
+Phone: 011-221-4411
+802.11: g
+  summary        Chuo-Ku,Sapporo-City,Hokkai-do
+  link           https://www.freespot.com/map/tenpo.php?n=28
+  author         FREESPOT
+  language       en
+  lat            43.06574
+  lon            141.35515
+  record_type    wifi-hotspot
+  tags           ["free-wifi","freespot","wifi-hotspot","pref:hokkaido"]
+  properties     {"freespot_id":"FS28","url_id":"28","venue":"ANA Hotel Sapporo","address":"Chuo-Ku,Sapporo-City,Hokkai-do","phone":"011-221-4411","area_code":"area11011","prefecture":"hokkaido","ieee_80211":"g","price_class":"1","power_outlet_class":"3","source_xml":"01hokkaido-e.xml"}
+#################################################
+=== CUSTOMS_TRADE  entity=Tokyo
+exit: 0
+sched: rc=0 records=30 1121ms
+--- stderr ---
+[customs] emitted 30 (sjis-decoded)
+[sched] CUSTOMS_TRADE run rc=0 records=30 1121ms
+--- persisted: 30 rows, 0 with lat/lon, 0 with geometry ---
+record_type: trade-statistics=30
+sub_source_id: (null)=30
+
+--- row 1 ---
+  uid            CUSTOMS_TRADE|https://www.customs.go.jp#contentsArea
+  title          このページの本文へ
+  link           https://www.customs.go.jp#contentsArea
+  language       ja
+  record_type    trade-statistics
+  tags           ["osint-search","gov-money"]
+  properties     {"service":"Customs Trade Statistics","href":"https://www.customs.go.jp#contentsArea","upstream_charset":"Shift_JIS","success":true}
+
+--- row 2 ---
+  uid            CUSTOMS_TRADE|https://www.customs.go.jp/toukei/srch/index.htm
+  title          貿易統計検索ページ
+  link           https://www.customs.go.jp/toukei/srch/index.htm
+  language       ja
+  record_type    trade-statistics
+  tags           ["osint-search","gov-money"]
+  properties     {"service":"Customs Trade Statistics","href":"https://www.customs.go.jp/toukei/srch/index.htm","upstream_charset":"Shift_JIS","success":true}
+#################################################
+=== gsi-active-fault
+exit: 1
+sched: rc=-1 records=0 824ms
+--- stderr ---
+[gsi-active-fault] no candidate endpoint answered
+[sched] gsi-active-fault run rc=-1 records=0 824ms
+[detect] anomaly opened: gsi-active-fault verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== nerv-feed
+exit: 1
+sched: rc=-1 records=0 2060ms
+--- stderr ---
+[sched] nerv-feed run rc=-1 records=0 2060ms
+[detect] anomaly opened: nerv-feed verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== us-doj-news
+exit: 0
+sched: rc=0 records=25 119ms
+--- stderr ---
+[rss] us-doj-news emitted 25
+[sched] us-doj-news run rc=0 records=25 119ms
+--- persisted: 25 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=25
+sub_source_id: (null)=25
+
+--- row 1 ---
+  uid            us-doj-news|https://www.justice.gov/usao-nm/pr/shiprock-man-sentenced-sexual-abuse-minor
+  title          Shiprock Man Sentenced for Sexual Abuse of Minor
+  body           <strong>Brian Begay</strong>&nbsp;was sentenced to 25 years in prison for abusing a minor over a four-year period.
+  summary        <strong>Brian Begay</strong>&nbsp;was sentenced to 25 years in prison for abusing a minor over a four-year period.
+  link           https://www.justice.gov/usao-nm/pr/shiprock-man-sentenced-sexual-abuse-minor
+  language       en
+  published_at   Fri, 31 Jul 2026 12:00:00 +0000
+  record_type    article
+  tags           ["government","official","usa"]
+  properties     {"guid":"https://www.justice.gov/usao-nm/pr/shiprock-man-sentenced-sexual-abuse-minor"}
+
+--- row 2 ---
+  uid            us-doj-news|https://www.justice.gov/usao-ma/pr/longmeadow-accountant-sentenced-prison-18-million-loan-fraud-conspiracy
+  title          Longmeadow Accountant Sentenced to Prison for $18 Million Loan Fraud Conspiracy
+  body           BOSTON – A Longmeadow woman was sentenced yesterday for defrauding commercial lenders out of almost $20 million dollars over a four-year period.
+  summary        BOSTON – A Longmeadow woman was sentenced yesterday for defrauding commercial lenders out of almost $20 million dollars over a four-year period.
+  link           https://www.justice.gov/usao-ma/pr/longmeadow-accountant-sentenced-prison-18-million-loan-fraud-conspiracy
+  language       en
+  published_at   Fri, 31 Jul 2026 12:00:00 +0000
+  record_type    article
+  tags           ["government","official","usa"]
+  properties     {"guid":"https://www.justice.gov/usao-ma/pr/longmeadow-accountant-sentenced-prison-18-million-loan-fraud-conspiracy"}
+#################################################
+=== iaea-topnews
+exit: 0
+sched: rc=0 records=15 117ms
+--- stderr ---
+[rss] iaea-topnews emitted 15
+[sched] iaea-topnews run rc=0 records=15 117ms
+--- persisted: 15 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=15
+sub_source_id: (null)=15
+
+--- row 1 ---
+  uid            iaea-topnews|289355
+  title          Update 360 – IAEA Director General Statement on Situation in Ukraine
+  link           http://www.iaea.org/newscenter/pressreleases/update-360-iaea-director-general-statement-on-situation-in-ukraine
+  language       en
+  published_at   26-07-30  12:15
+  record_type    article
+  tags           ["government","official","un"]
+  properties     {"guid":"289355"}
+
+--- row 2 ---
+  uid            iaea-topnews|289354
+  title          Tritium Level Far Below Japan’s Operational Limit in 22nd Batch of ALPS Treated Water, IAEA Confirms
+  link           http://www.iaea.org/newscenter/pressreleases/tritium-level-far-below-japans-operational-limit-in-22nd-batch-of-alps-treated-water-iaea-confirms
+  language       en
+  published_at   26-07-30  08:31
+  record_type    article
+  tags           ["government","official","un"]
+  properties     {"guid":"289354"}
+#################################################
+=== itu-news
+exit: 0
+sched: rc=0 records=12 380ms
+--- stderr ---
+[rss] itu-news emitted 12
+[sched] itu-news run rc=0 records=12 380ms
+--- persisted: 12 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=12
+sub_source_id: (null)=12
+
+--- row 1 ---
+  uid            itu-news|https://www.itu.int/hub/?p=73027
+  title          Beyond VVC: Call for proposals on future video coding
+  body           <p>The International Telecommunication Union (ITU), the International Organization for Standardization (ISO) and the International Electrotechnical Commission (IEC) are inviting proposals for the next generation of video-compression technology, seeking innovations that significantly surpass the capabilities of the current Versatile Video Coding (VVC) standard. The Call for Proposals from the Joint Video Experts Team – a partnership [&#8230;]</p>
+<p>The post <a href="https://www.itu.int/hub/2026/07/beyond-vvc-call-for-proposals-on-future-video-coding/">Beyond VVC: Call for proposals on future video coding</a> appeared first on <a href="https://www.itu.int/hub">ITU</a>.</p>
+  summary        <p>The International Telecommunication Union (ITU), the International Organization for Standardization (ISO) and the International Electrotechnical Commission (IEC) are inviting proposals for the next generation of video-compression technol
+  link           https://www.itu.int/hub/2026/07/beyond-vvc-call-for-proposals-on-future-video-coding/
+  language       en
+  published_at   Tue, 28 Jul 2026 11:55:08 +0000
+  record_type    article
+  tags           ["government","official","un"]
+  properties     {"guid":"https://www.itu.int/hub/?p=73027"}
+
+--- row 2 ---
+  uid            itu-news|https://www.itu.int/hub/?p=72090
+  title          Public Digital Learning: ITU reinforces UN Gateways initiative
+  body           <p>As countries strive to provide future-ready education, they need to establish firm digital foundations for learning at scale. The International Telecommunication Union (ITU) has joined the Gateways to Public Digital Learning Initiative as a core partner, strengthening a global effort by United Nations agencies to help governments build high-quality public digital learning platforms. United Nations [&#8230;]</p>
+<p>The post <a href="https://www.itu.int/hub/2026/07/public-digital-learning-itu-reinforces-un-gateways-initiative/">Public Digital Learning: ITU reinforces UN Gateways initiative</a> appeared first on <a href="https://www.itu.int/hub">ITU</a>.</p>
+  summary        <p>As countries strive to provide future-ready education, they need to establish firm digital foundations for learning at scale. The International Telecommunication Union (ITU) has joined the Gateways to Public Digital Learning Initiative a
+  link           https://www.itu.int/hub/2026/07/public-digital-learning-itu-reinforces-un-gateways-initiative/
+  language       en
+  published_at   Wed, 22 Jul 2026 07:25:28 +0000
+  record_type    article
+  tags           ["government","official","un"]
+  properties     {"guid":"https://www.itu.int/hub/?p=72090"}
+#################################################
+=== csis
+exit: 0
+sched: rc=0 records=10 112ms
+--- stderr ---
+[rss] csis emitted 10
+[sched] csis run rc=0 records=10 112ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            csis|35175 at https://www.csis.org
+  title          The Bio-Pharma Industry and Society
+  body           <span>The Bio-Pharma Industry and Society</span>
+
+  <div>
+    <div>Listing Summary</div>
+              <div><p>Please join the CSIS Global Health Policy Center on March 17, from 10:00am – 11:30am, for an exploration of how private bio-pharmaceutical firms can better support the critically important societal goals of improved affordability, access, quality, and innovation.</p>
+</div>
+          </div>
+<span><span>Drupal Admin</span></span>
+<span><time datetime="2016-03-03T15:36:33-05:00" title="Thursday, March 3, 2016 - 15:36">Thu, 03/03/2016 - 15:36</time>
+</span>
+
+  <div>
+    <div>Featured Image</div>
+              <div><figure>
+  
+  
+        
+  <div>
+    <div class="visually-hidden">Image</div>
+              <div>  <img loading="lazy" src="https://csis-website-prod.s3.amazonaws.com/s3fs-public/styles/large/s3/event/160317_Bio-Pharma_Industry.jpg?VersionId=O3Rb3Z19_dNpJprUpJUQ4Eijhlpki3K …<5073 more chars>
+  summary        <span>The Bio-Pharma Industry and Society</span>
+
+  <div>
+    <div>Listing Summary</div>
+              <div><p>Please join the CSIS Global Health Policy Center on March 17, from 10:00am – 11:30am, for an exploration of how private bio-pha
+  link           https://www.csis.org/events/bio-pharma-industry-and-society
+  language       en
+  published_at   Thu, 03 Mar 2016 20:36:33 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"35175 at https://www.csis.org"}
+
+--- row 2 ---
+  uid            csis|35158 at https://www.csis.org
+  title          The FY2017 Defense Budget and Strategic Outlook
+  body           <span>The FY2017 Defense Budget and Strategic Outlook</span>
+
+  <div>
+    <div>Listing Summary</div>
+              <div><p>Please join the CSIS International Security Program for a half-day Defense360 conference on the recently released FY2017 defense budget request and strategic priorities.</p>
+</div>
+          </div>
+<span><span>Drupal Admin</span></span>
+<span><time datetime="2016-02-29T13:48:29-05:00" title="Monday, February 29, 2016 - 13:48">Mon, 02/29/2016 - 13:48</time>
+</span>
+
+  <div>
+    <div>Featured Image</div>
+              <div><figure>
+  
+  
+        
+  <div>
+    <div class="visually-hidden">Image</div>
+              <div>  <img loading="lazy" src="https://csis-website-prod.s3.amazonaws.com/s3fs-public/styles/large/s3/event/160307_isp_budgetIMG_9090-3.jpg?VersionId=0NkWx2QpihCVjEfK7xvIunSOhKY27GPB&amp;itok=vuxroBZ0" width="480" height="270" alt>
+
+
+</div>
+          </div>
+
+
+ …<6766 more chars>
+  summary        <span>The FY2017 Defense Budget and Strategic Outlook</span>
+
+  <div>
+    <div>Listing Summary</div>
+              <div><p>Please join the CSIS International Security Program for a half-day Defense360 conference on the recently released FY2
+  link           https://www.csis.org/events/fy2017-defense-budget-and-strategic-outlook
+  language       en
+  published_at   Mon, 29 Feb 2016 18:48:29 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"35158 at https://www.csis.org"}
+#################################################
+=== merics
+exit: 0
+sched: rc=0 records=20 406ms
+--- stderr ---
+[rss] merics emitted 20
+[sched] merics run rc=0 records=20 406ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            merics|2943 at https://merics.org
+  title          China’s approach to economic security, with Antonia Hmaidi
+  body           <span class="field-wrapper field field--name-title field--type-string field--label-hidden node-title"><h1>China’s approach to economic security, with Antonia Hmaidi</h1>
+</span>
+<span class="field-wrapper"><span>H.Seidl</span></span>
+<span class="field-wrapper"><time datetime="2026-07-31T13:15:36+02:00" title="Friday, July 31, 2026 - 13:15">Fri, 07/31/2026 - 13:15</time>
+</span>
+  <div class="layout merics-2col-stacked-left merics-2col-stacked-left--75-25">
+
+          <div class="layout__region layout__region--left">
+                  <div class="layout__region--left-top">
+            <section class="block block-layout-builder block-field-blocknodemicrositefield-publication-type">
+  
+  
+    
+
+  
+          <div class="field-wrapper field field-node--field-publication-type field-name-field-publication-type field-type-entity-reference field-label-hidden">
+    <div class="field-items">
+      …<24879 more chars>
+  summary        <span class="field-wrapper field field--name-title field--type-string field--label-hidden node-title"><h1>China’s approach to economic security, with Antonia Hmaidi</h1>
+</span>
+<span class="field-wrapper"><span>H.Seidl</span></span>
+<spa
+  link           https://merics.org/en/video/chinas-approach-economic-security-antonia-hmaidi
+  language       en
+  published_at   Fri, 31 Jul 2026 11:15:36 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"2943 at https://merics.org"}
+
+--- row 2 ---
+  uid            merics|2936 at https://merics.org
+  title          Domestic obstacles, global opportunities: The road to implementing China’s  15th Five-Year Plan
+  body           <span class="field-wrapper field field--name-title field--type-string field--label-hidden node-title"><h1>Domestic obstacles, global opportunities: The road to implementing China’s  15th Five-Year Plan</h1>
+</span>
+<span class="field-wrapper"><span>H.Seidl</span></span>
+<span class="field-wrapper"><time datetime="2026-07-23T17:24:56+02:00" title="Thursday, July 23, 2026 - 17:24">Thu, 07/23/2026 - 17:24</time>
+</span>
+  <div class="layout layout--onecol">
+    <div class="layout__region layout__region--content">
+      <section class="block block-layout-builder block-field-blocknodemicrositefield-header-image">
+  
+  
+    
+
+  
+          <div class="field-wrapper field field-node--field-header-image field-name-field-header-image field-type-entity-reference field-label-hidden">
+    <div class="field-items">
+          <div class="field-item"><article class="media media--type-image media--view-m …<70351 more chars>
+  summary        <span class="field-wrapper field field--name-title field--type-string field--label-hidden node-title"><h1>Domestic obstacles, global opportunities: The road to implementing China’s  15th Five-Year Plan</h1>
+</span>
+<span class="field-wrap
+  link           https://merics.org/en/report/domestic-obstacles-global-opportunities
+  language       en
+  published_at   Thu, 23 Jul 2026 15:24:56 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"2936 at https://merics.org"}
+#################################################
+=== hudson
+exit: 0
+sched: rc=0 records=10 191ms
+--- stderr ---
+[rss] hudson emitted 10
+[sched] hudson run rc=0 records=10 191ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            hudson|52327 at https://www.hudson.org
+  title          US Retaliates Against Iran with Heavy Strikes Following Recent Attacks
+  body           <span>US Retaliates Against Iran with Heavy Strikes Following Recent Attacks</span>
+<span><span>acabral-sanche…</span></span>
+<span><time datetime="2026-07-30T12:17:25-04:00" title="Thursday, July 30, 2026 - 12:17">Thu, 07/30/2026 - 12:17</time>
+</span>
+              <div class="hud-layout__short-form-article-hero hero hero--article-short hero--half-image-right">
+    <div class="hero__inner">
+      <div class="hero__content">
+                  <div class="layout__region layout__region--content-top hero__content-top">
+            <div class="block block-layout-builder block-field-blocknodeshort-form-articlefield-content-type-tag">
+  
+    
+      
+
+
+            <div class="field field-content-type-tag"><div>
+  
+  
+  <div class="t-content-type__wrapper">
+    
+
+
+            <div class="field field-icon"><div class="media media--svg">
+  
+  
+
+
+  <div>
+    <div class="visually-hidden label">SVG< …<33271 more chars>
+  summary        <span>US Retaliates Against Iran with Heavy Strikes Following Recent Attacks</span>
+<span><span>acabral-sanche…</span></span>
+<span><time datetime="2026-07-30T12:17:25-04:00" title="Thursday, July 30, 2026 - 12:17">Thu, 07/30/2026 - 12:17
+  link           https://www.hudson.org/foreign-policy/us-retaliates-against-iran-heavy-strikes-following-recent-attacks-rebeccah-heinrichs
+  language       en
+  published_at   Thu, 30 Jul 2026 16:17:25 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"52327 at https://www.hudson.org"}
+
+--- row 2 ---
+  uid            hudson|52326 at https://www.hudson.org
+  title          China-Russia Patrol Tests Pacific
+  body           <span>China-Russia Patrol Tests Pacific</span>
+<span><span>acabral-sanche…</span></span>
+<span><time datetime="2026-07-30T11:52:56-04:00" title="Thursday, July 30, 2026 - 11:52">Thu, 07/30/2026 - 11:52</time>
+</span>
+              <div class="hud-layout__short-form-article-hero hero hero--article-short hero--half-image-right">
+    <div class="hero__inner">
+      <div class="hero__content">
+                  <div class="layout__region layout__region--content-top hero__content-top">
+            <div class="block block-layout-builder block-field-blocknodeshort-form-articlefield-content-type-tag">
+  
+    
+      
+
+
+            <div class="field field-content-type-tag"><div>
+  
+  
+  <div class="t-content-type__wrapper">
+    
+
+
+            <div class="field field-icon"><div class="media media--svg">
+  
+  
+
+
+  <div>
+    <div class="visually-hidden label">SVG</div>
+              <div class="field …<33540 more chars>
+  summary        <span>China-Russia Patrol Tests Pacific</span>
+<span><span>acabral-sanche…</span></span>
+<span><time datetime="2026-07-30T11:52:56-04:00" title="Thursday, July 30, 2026 - 11:52">Thu, 07/30/2026 - 11:52</time>
+</span>
+              <div cl
+  link           https://www.hudson.org/defense-strategy/china-russia-patrol-tests-pacific-riley-walters
+  language       en
+  published_at   Thu, 30 Jul 2026 15:52:56 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"52326 at https://www.hudson.org"}
+#################################################
+=== heritage
+exit: 0
+sched: rc=0 records=20 318ms
+--- stderr ---
+[rss] heritage emitted 20
+[sched] heritage run rc=0 records=20 318ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            heritage|https://www.heritage.org/defense/report/just-war-theory-changing-world-order
+  title          Just War Theory in a Changing World Order
+  body           <p>Thank you for inviting me to join you and share my thoughts on a question older than the modern state, older than the Westphalian settlement, older even than the constitutional architecture whose defense occupies so much of our professional life. It is the question whether war—terrible, convulsive, morally dangerous war—can ever be just. The question is not the property of theologians alone, nor of philosophers, nor of generals, nor of lawyers. It belongs to civilization itself. For as long as men have taken up arms, they have also felt the need to explain why they did so and to distinguish the soldier from the brigand, the magistrate from the murderer, the defense of justice from the intoxication of conquest.</p><p>Homer’s <em>Iliad</em>, among our earliest literary meditations on war, does not present combat as a mere arithmetic of power. Achilles is not simply strong; he is wrathfu …<30181 more chars>
+  summary        <p>Thank you for inviting me to join you and share my thoughts on a question older than the modern state, older than the Westphalian settlement, older even than the constitutional architecture whose defense occupies so much of our professio
+  link           https://www.heritage.org/defense/report/just-war-theory-changing-world-order
+  language       en
+  published_at   Fri, 31 Jul 2026 08:45:19 -0400
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://www.heritage.org/defense/report/just-war-theory-changing-world-order"}
+
+--- row 2 ---
+  uid            heritage|https://www.heritage.org/china/report/chinas-south-pacific-missile-test-strategic-signaling-and-regional-consequences
+  title          China’s South Pacific Missile Test: Strategic Signaling and Regional Consequences
+  body           <p>On July 6, 2026, the People’s Republic of China (PRC) tested an unarmed, nuclear-capable, intercontinental-range submarine-launched ballistic missile (SLBM) that landed in the South Pacific.<span class="annotation__highlight" data-annotation="&lt;p&gt;Thomas “Tommy” Pigott, “China Launches Nuclear Capable Ballistic Missile into Pacific Ocean,” U.S. Department of State, July 6, 2026, https://www.state.gov/releases/office-of-the-spokesperson/2026/07/china-launches-nuclear-capable-ballistic-missile-into-pacific-ocean/ (accessed July 15, 2026).&lt;/p&gt;"><span class="annotation-link">[REF]</span></span>&nbsp;This marked the first time the PRC tested its submarine-launched ballistic missile from a submarine, a notable and significant development in China’s operationalization of second-strike and long-range strategic capabilities.<span class="annotation__highlight" data-annotation="&lt;p&g …<30159 more chars>
+  summary        <p>On July 6, 2026, the People’s Republic of China (PRC) tested an unarmed, nuclear-capable, intercontinental-range submarine-launched ballistic missile (SLBM) that landed in the South Pacific.<span class="annotation__highlight" data-anno
+  link           https://www.heritage.org/china/report/chinas-south-pacific-missile-test-strategic-signaling-and-regional-consequences
+  language       en
+  published_at   Fri, 31 Jul 2026 07:56:34 -0400
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://www.heritage.org/china/report/chinas-south-pacific-missile-test-strategic-signaling-and-regional-consequences"}
+#################################################
+DONE /mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/a7_list2.txt

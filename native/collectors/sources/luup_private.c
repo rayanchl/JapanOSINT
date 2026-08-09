@@ -54,37 +54,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char now[32]; probe_iso_now(now, sizeof now);
 
   if (!has_key) {
-    /* portal-pointer item */
-    cJSON *tags = cJSON_CreateArray();
-    cJSON_AddItemToArray(tags, cJSON_CreateString("mobility"));
-    cJSON_AddItemToArray(tags, cJSON_CreateString("luup"));
-    cJSON_AddItemToArray(tags, cJSON_CreateString("scooter"));
-    cJSON_AddItemToArray(tags,
-      cJSON_CreateString(portal_live ? "reachable" : "unreachable"));
-    cJSON_AddItemToArray(tags, cJSON_CreateString("key-missing"));
-    char *tj = cJSON_PrintUnformatted(tags);
-
-    cJSON *p = cJSON_CreateObject();               /* EXACT JS key order */
-    cJSON_AddStringToObject(p, "operator", "Luup, Inc.");
-    cJSON_AddBoolToObject(p, "reachable", portal_live);
-    cJSON_AddBoolToObject(p, "requires_key", 1);
-    cJSON_AddBoolToObject(p, "has_key", 0);
-    char *pj = cJSON_PrintUnformatted(p);
-
-    intel_item it = {0};
-    it.remote_key     = "portal";                  /* uid luup-private|portal */
-    it.title          = "LUUP \xE2\x80\x94 e-scooter / e-bike share (token required)";
-    it.summary        = "Set LUUP_MOBILE_TOKEN (bearer from LUUP mobile sign-up) to enable per-port reads";
-    it.link           = HOMEPAGE;
-    it.lang           = "ja";
-    it.published_at   = now;
-    it.tags_json      = tj;
-    it.properties_json = pj;
-    int r = emit_row(sink, &it);
-    free(tj); free(pj);
-    cJSON_Delete(tags); cJSON_Delete(p);
-    fprintf(stderr, "[luup-private] portal-only reachable=%d\n", portal_live);
-    return r >= 0 ? 0 : -1;
+    /* Gated: log it and emit NOTHING. This used to publish a "portal-pointer"
+     * row whose entire content was a link plus "Set LUUP_MOBILE_TOKEN to
+     * enable" — a row that reads as a result in every list and carries no
+     * measurement. An honest empty is the correct output for a source that
+     * cannot run; 0 (not -1) so the scheduler doesn't quarantine it. */
+    (void)portal_live; (void)now;
+    fprintf(stderr, "[luup-private] gated (no LUUP_MOBILE_TOKEN) — "
+                    "per-port reads need a bearer from LUUP mobile sign-up\n");
+    return 0;
   }
 
   char authh[512];

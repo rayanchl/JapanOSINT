@@ -9,6 +9,7 @@
  *   - 404 (no breaches), 401/429 (key absent or rate-limited), or any other
  *     status: emit NOTHING (no note row). Without the key set, do not even
  *     issue the request — emit nothing. Never fabricate. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "social_fuse.h"
 #include "../../third_party/cJSON.h"
@@ -16,19 +17,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-/* encodeURIComponent-equivalent (HIBP path segment). */
-static void uri_encode(const char *in, char *out, size_t cap) {
-  static const char *keep = "-_.!~*'()";
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p && w + 4 < cap; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(keep, c)) out[w++] = (char)c;
-    else { snprintf(out + w, cap - w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
-}
 
 /* Emit one intel row for a single HIBP breach. Returns 1 if emitted. */
 static int emit_breach(intel_sink *sink, const char *account, cJSON *b) {
@@ -91,7 +79,7 @@ int jo_breach_checker_run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   char enc[256];
-  uri_encode(email, enc, sizeof enc);
+  jo_uri_encode_buf(email, enc, sizeof enc);
   char url[512];
   snprintf(url, sizeof url,
     "https://haveibeenpwned.com/api/v3/breachedaccount/%s?truncateResponse=false",

@@ -2,6 +2,7 @@
  * Port of server/src/collectors/ripestatJp.js (intelEnvelope, single item).
  * RIPEstat country-resource-list?resource=JP → 1 intel row, ASN/IPv4/IPv6
  * prefix counts. uid = ripestat-jp|jp-country-resources (fixed). No geometry. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -12,17 +13,6 @@
 #include <time.h>
 
 #define API_URL "https://stat.ripe.net/data/country-resource-list/data.json?resource=JP"
-
-/* new Date().toISOString() → YYYY-MM-DDTHH:MM:SS.mmmZ (UTC) */
-static void iso_now(char *o, size_t n) {
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  struct tm tm;
-  gmtime_r(&tv.tv_sec, &tm);
-  char base[32];
-  strftime(base, sizeof base, "%Y-%m-%dT%H:%M:%S", &tm);
-  snprintf(o, n, "%s.%03dZ", base, (int)(tv.tv_usec / 1000));
-}
 
 /* Number.prototype.toLocaleString() default (en-US): group integer by 3
  * with commas. n is a non-negative integer count. */
@@ -91,7 +81,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     live ? "reachable" : "unreachable");
 
   char pub[40];
-  iso_now(pub, sizeof pub);
+  jo_iso_now(pub, sizeof pub);
 
   intel_item it = {0};
   it.remote_key     = "jp-country-resources";

@@ -246,6 +246,16 @@ static int iw_ipapi(const source_ctx *ctx, intel_sink *sink, const char *ip) {
 }
 
 /* ---- BGPView (keyless) -------------------------------------------------- *
+ * DEAD UPSTREAM (audit 2026-07, slot a9). api.bgpview.io no longer exists:
+ * an authoritative lookup returns NXDOMAIN (Cloudflare DoH "Status":3, SOA
+ * from bgpview.io's own nameserver hope.ns.cloudflare.com) — the apex
+ * bgpview.io resolves but the api subdomain has been withdrawn. Every request
+ * below therefore fails at DNS with rc!=0 and jo_get logs "http status=0";
+ * the source is an honest permanent empty, NOT a transient outage.
+ * Equivalent keyless prefix/ASN data is already collected by
+ * RIPESTAT_GLOBAL in this same file, so nothing is lost by leaving this
+ * inert; it must not be silently repointed at another service under the
+ * BGPView name. Historic response shapes kept for reference:
  * /ip/<ip>     → data.prefixes[] {prefix, ip, cidr, asn:{asn,name,description}}
  * /asn/<n>     → data {asn, name, description_short, country_code, ...}
  * /search?q=   → data.asns[] {asn, name, description, country_code}

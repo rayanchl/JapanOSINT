@@ -179,7 +179,7 @@ struct MediaSection: View {
                 if let camera {
                     HStack(spacing: Space.xs) {
                         Image(systemName: "camera")
-                            .font(.system(size: 9))
+                            .font(.caption2)
                             .foregroundStyle(theme.textMuted)
                         Text(camera)
                             .font(.caption2)
@@ -190,7 +190,7 @@ struct MediaSection: View {
                 if let captured {
                     HStack(spacing: Space.xs) {
                         Image(systemName: "clock")
-                            .font(.system(size: 9))
+                            .font(.caption2)
                             .foregroundStyle(theme.textMuted)
                         Text(captured)
                             .font(.caption2.monospacedDigit())
@@ -201,7 +201,7 @@ struct MediaSection: View {
             }
         } else if a.exif == nil || a.exif?.isEmpty == true {
             Text("No EXIF metadata")
-                .font(.system(size: 10))
+                .font(.caption2)
                 .foregroundStyle(theme.textMuted)
         }
     }
@@ -272,7 +272,7 @@ struct MediaSection: View {
                     .textSelection(.enabled)
                     .fixedSize(horizontal: false, vertical: true)
                 Text("Text extracted from the image by OCR. It is a program's reading of pixels, not asserted content — check it against the image before quoting it.")
-                    .font(.system(size: 10))
+                    .font(.caption2)
                     .foregroundStyle(theme.textMuted)
                     .fixedSize(horizontal: false, vertical: true)
             }

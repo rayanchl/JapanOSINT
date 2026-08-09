@@ -26,13 +26,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-/* cJSON number field → 1 & *out set if present & numeric, else 0. */
-static int bio_num(const cJSON *o, const char *k, double *out) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  if (v && cJSON_IsNumber(v)) { *out = v->valuedouble; return 1; }
-  return 0;
-}
-
 /* Emit one occurrence hit. Coordinates only carried when really present. */
 static int bio_emit(intel_sink *sink, const char *service, const char *rectype,
                     const char *query, const char *key,
@@ -114,8 +107,8 @@ static int bio_gbif(const source_ctx *ctx, intel_sink *sink, const char *enc,
       const char *ds  = jo_sv(r, "datasetName");
       const char *dt  = jo_sv(r, "eventDate");
       double lat, lon;
-      int geo = bio_num(r, "decimalLatitude", &lat) &&
-                bio_num(r, "decimalLongitude", &lon);
+      int geo = jo_num(r, "decimalLatitude", &lat) &&
+                jo_num(r, "decimalLongitude", &lon);
       const cJSON *kv = cJSON_GetObjectItem(r, "key");
       char key[128], link[160];
       key[0] = 0; link[0] = 0;
@@ -218,8 +211,8 @@ static int bio_obis(const source_ctx *ctx, intel_sink *sink, const char *enc,
       const char *ds  = jo_sv(r, "datasetName");
       const char *dt  = jo_sv(r, "eventDate");
       double lat, lon;
-      int geo = bio_num(r, "decimalLatitude", &lat) &&
-                bio_num(r, "decimalLongitude", &lon);
+      int geo = jo_num(r, "decimalLatitude", &lat) &&
+                jo_num(r, "decimalLongitude", &lon);
       const char *id  = jo_sv(r, "id");
       char key[160];
       key[0] = 0;

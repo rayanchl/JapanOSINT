@@ -1,0 +1,21 @@
+=== vnet
+exit: 0
+sched: rc=0 records=1 7406ms
+--- stderr ---
+[vnet] probe reachable=1
+[sched] vnet run rc=0 records=1 7406ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            vnet|portal
+  title          NIED V-net (基盤的火山観測網)
+  body           V-net broadband seismic / tilt / GNSS volcano observation network operated by NIED. No key-free public station or data endpoint exists (data access requires NIED registration); portal reachability only.
+  summary        National Research Institute for Earth Science and Disaster Resilience fundamental volcano observation network
+  link           https://www.vnet.bosai.go.jp/
+  author         NIED 防災科学技術研究所
+  language       ja
+  published_at   2026-07-31T18:20:41.410Z
+  tags           ["volcano","nied","vnet","seismic","reachable"]
+  properties     {"operator":"NIED","reachable":true,"machine_readable":false}

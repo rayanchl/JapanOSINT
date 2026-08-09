@@ -1,0 +1,19 @@
+=== nict-atlas
+exit: 0
+sched: rc=0 records=1 8583ms
+--- stderr ---
+[nict-atlas] probe reachable=0
+[sched] nict-atlas run rc=0 records=1 8583ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            nict-atlas|nict-atlas-portal
+  title          NICT NICTER Atlas — darknet sensor
+  summary        NICTER project darknet visualisation portal (Koganei, Tokyo)
+  link           https://www.nicter.jp/atlas/
+  language       ja
+  published_at   2026-07-31T18:20:27.466Z
+  tags           ["cyber","darknet","nict","unreachable"]
+  properties     {"sensor_type":"darknet","operator":"NICT","reachable":false}

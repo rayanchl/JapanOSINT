@@ -1,0 +1,39 @@
+=== STACKEXCHANGE_SEARCH  entity=Tokyo
+exit: 0
+sched: rc=0 records=20 304ms
+--- stderr ---
+[STACKEXCHANGE_SEARCH] emitted 20
+[sched] STACKEXCHANGE_SEARCH run rc=0 records=20 304ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: stackexchange-question=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            STACKEXCHANGE_SEARCH|https://stackoverflow.com/questions/3736058/java-object-to-byte-and-byte-to-object-converter-for-tokyo-cabinet
+  title          Java: object to byte[] and byte[] to object converter (for Tokyo Cabinet)
+  body           {"title":"Java: object to byte[] and byte[] to object converter (for Tokyo Cabinet)","score":74,"is_answered":true,"source":"Stack Overflow"}
+  link           https://stackoverflow.com/questions/3736058/java-object-to-byte-and-byte-to-object-converter-for-tokyo-cabinet
+  language       en
+  record_type    stackexchange-question
+  tags           ["osint-search","STACKEXCHANGE_SEARCH"]
+  properties     {"service":"STACKEXCHANGE_SEARCH","success":true}
+
+--- row 2 ---
+  uid            STACKEXCHANGE_SEARCH|https://stackoverflow.com/questions/3225494/tokyo-python-install-issues
+  title          tokyo-python Install Issues
+  body           {"title":"tokyo-python Install Issues","score":0,"is_answered":false,"source":"Stack Overflow"}
+  link           https://stackoverflow.com/questions/3225494/tokyo-python-install-issues
+  language       en
+  record_type    stackexchange-question
+  tags           ["osint-search","STACKEXCHANGE_SEARCH"]
+  properties     {"service":"STACKEXCHANGE_SEARCH","success":true}
+
+--- row 3 ---
+  uid            STACKEXCHANGE_SEARCH|https://stackoverflow.com/questions/2942865/tokyo-cabinet-tyrant-tutorial
+  title          tokyo cabinet &amp; tyrant tutorial
+  body           {"title":"tokyo cabinet &amp; tyrant tutorial","score":4,"is_answered":true,"source":"Stack Overflow"}
+  link           https://stackoverflow.com/questions/2942865/tokyo-cabinet-tyrant-tutorial
+  language       en
+  record_type    stackexchange-question
+  tags           ["osint-search","STACKEXCHANGE_SEARCH"]
+  properties     {"service":"STACKEXCHANGE_SEARCH","success":true}

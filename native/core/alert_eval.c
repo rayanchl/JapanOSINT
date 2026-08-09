@@ -1007,7 +1007,10 @@ int alert_eval_sweep_entities(db_handle *db) {
 
 static pthread_t g_sweep_thread;
 static int       g_sweep_running;
-static volatile int g_sweep_stop;
+/* _Atomic, not volatile — see the note on g_gc_stop in core/evidence.c: TSan
+ * reports the stop/poll pair as a data race (core/alert_eval.c:1027 vs :1053)
+ * and volatile provides neither atomicity nor ordering. */
+static _Atomic int g_sweep_stop;
 
 /* Own connection: a sqlite transaction belongs to a connection, not a thread,
  * so sharing the server handle let this sweep's writes interleave with the

@@ -4,6 +4,7 @@
  * Computer STAC. Optional USGS_M2M_TOKEN (X-Auth-Token header on primary;
  * STAC is keyless). One intel item per scene. Non-spatial scene catalog
  * (has_geo=0). Honest empty on failure. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -23,14 +24,9 @@ static void iso_ago(char *out, size_t n, int days) {
   strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &g);
 }
 
-static const char *sstr(cJSON *o, const char *k) {
-  cJSON *v = o ? cJSON_GetObjectItem(o, k) : NULL;
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
-}
-
 static int centroid(cJSON *geom, double *cx, double *cy) {
   if (!geom) return 0;
-  const char *t = sstr(geom, "type");
+  const char *t = jo_sv(geom, "type");
   cJSON *coords = cJSON_GetObjectItem(geom, "coordinates");
   cJSON *ring = NULL;
   if (t && !strcmp(t, "Polygon") && cJSON_IsArray(coords))
@@ -99,23 +95,23 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_ArrayForEach(f, feats) {
     cJSON *geom = cJSON_GetObjectItem(f, "geometry");
     cJSON *props = cJSON_GetObjectItem(f, "properties");
-    const char *acquired = sstr(props, "datetime");
+    const char *acquired = jo_sv(props, "datetime");
     cJSON *cc = props ? cJSON_GetObjectItem(props, "eo:cloud_cover") : NULL;
     int has_cloud = cc && cJSON_IsNumber(cc);
     double cloud = has_cloud ? cc->valuedouble : 0;
 
     char sidbuf[32];
-    const char *sid = sstr(f, "id");
+    const char *sid = jo_sv(f, "id");
     if (!sid) { snprintf(sidbuf, sizeof sidbuf, "scene-%d", i); sid = sidbuf; }
 
     const char *thumb = NULL;
     cJSON *assets = cJSON_GetObjectItem(f, "assets");
     if (assets) {
       cJSON *rp = cJSON_GetObjectItem(assets, "rendered_preview");
-      thumb = sstr(rp, "href");
+      thumb = jo_sv(rp, "href");
       if (!thumb) {
         cJSON *tn = cJSON_GetObjectItem(assets, "thumbnail");
-        thumb = sstr(tn, "href");
+        thumb = jo_sv(tn, "href");
       }
     }
 
@@ -178,7 +174,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       }
       cJSON_AddStringToObject(p, "sensor", sbuf[0] ? sbuf : "OLI/TIRS");
     } else cJSON_AddStringToObject(p, "sensor", "OLI/TIRS");
-    const char *plat = sstr(props, "platform");
+    const char *plat = jo_sv(props, "platform");
     cJSON_AddStringToObject(p, "platform", plat ? plat : "landsat");
     cJSON_AddStringToObject(p, "scene_id", sid);
     if (thumb) cJSON_AddStringToObject(p, "preview_url", thumb);
@@ -193,6 +189,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddItemToArray(tags, cJSON_CreateString("raster"));
     char *tj = cJSON_PrintUnformatted(tags);
 
+    /* A scene IS a place: the STAC feature carries the acquisition footprint
+     * and we already compute its centroid for `properties.centroid`. Carrying
+     * both onto the row makes the 50 scenes mappable instead of a text list.
+     * Nothing is invented — the polygon is the upstream geometry verbatim. */
+    char *gj = geom ? cJSON_PrintUnformatted(geom) : NULL;
+
     intel_item it = {0};
     it.remote_key = sid;             /* uid landsat-jp|<sid> */
     it.title = title;
@@ -201,18 +203,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     it.link = "https://landsatlook.usgs.gov/";
     it.published_at = acquired;
     it.record_type = "landsat-jp";
-    it.has_geo = 0;
+    if (centroid(geom, &cx, &cy) && cy >= -90 && cy <= 90 &&
+        cx >= -180 && cx <= 180) {
+      it.has_geo = 1; it.lat = cy; it.lon = cx;
+    }
+    it.geometry_geojson = gj;
     it.properties_json = pj;
     it.tags_json = tj;
     if (sink->emit(sink, &it) >= 0) n++;
 
-    free(pj); free(tj);
+    free(gj); free(pj); free(tj);
     cJSON_Delete(p); cJSON_Delete(tags);
     i++;
   }
   cJSON_Delete(data);
   fprintf(stderr, "[landsat-jp] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  return 0;                 /* an empty upstream is an honest 0, not an error */
 }
 
 static const source_def landsat_jp_def = {

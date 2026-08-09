@@ -1,0 +1,45 @@
+=== gnews-mon-satellite-launch
+exit: 0
+sched: rc=0 records=102 671ms
+--- stderr ---
+[rss] gnews-mon-satellite-launch emitted 102
+[sched] gnews-mon-satellite-launch run rc=0 records=102 671ms
+--- persisted: 102 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=102
+sub_source_id: (null)=102
+
+--- row 1 ---
+  uid            gnews-mon-satellite-launch|CBMi0AFBVV95cUxQQlJlLWdWS2dDWll2QjJZZmt4YThUbjl2ZTRUWWtVclpqT2VwUHpEN0RvRzkwa1FIb2VzZlJST3NSRGV2RkVUdHBUWnlHYkp0LTllMzdGLWJacW1HYnpCS3d1QnhkU1JWUUpaeTF6UXd5cVVjSGpXSnlPcTlfWVF2UDFGX1dpbk10emxxSzZNMXU4cl9TRDllZkNneVJoOFQ5ckZyX1R6RjFQRzl2a2hfbXZKOE5rbHI3aVFvTHVkRnhEVVh4YzdVdEVsQ0VXMmZk
+  title          Space Force Awards Task Orders to Launch Space Based Sensing and Targeting Capabilities - ssc.spaceforce.mil
+  body           <a href="https://news.google.com/rss/articles/CBMi0AFBVV95cUxQQlJlLWdWS2dDWll2QjJZZmt4YThUbjl2ZTRUWWtVclpqT2VwUHpEN0RvRzkwa1FIb2VzZlJST3NSRGV2RkVUdHBUWnlHYkp0LTllMzdGLWJacW1HYnpCS3d1QnhkU1JWUUpaeTF6UXd5cVVjSGpXSnlPcTlfWVF2UDFGX1dpbk10emxxSzZNMXU4cl9TRDllZkNneVJoOFQ5ckZyX1R6RjFQRzl2a2hfbXZKOE5rbHI3aVFvTHVkRnhEVVh4YzdVdEVsQ0VXMmZk?oc=5" target="_blank">Space Force Awards Task Orders to Launch Space Based Sensing and Targeting Capabilities</a>&nbsp;&nbsp;<font color="#6f6f6f">ssc.spaceforce.mil</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi0AFBVV95cUxQQlJlLWdWS2dDWll2QjJZZmt4YThUbjl2ZTRUWWtVclpqT2VwUHpEN0RvRzkwa1FIb2VzZlJST3NSRGV2RkVUdHBUWnlHYkp0LTllMzdGLWJacW1HYnpCS3d1QnhkU1JWUUpaeTF6UXd5cVVjSGpXSnlPcTlfWVF2UDFGX1dpbk10emxxSz
+  link           https://news.google.com/rss/articles/CBMi0AFBVV95cUxQQlJlLWdWS2dDWll2QjJZZmt4YThUbjl2ZTRUWWtVclpqT2VwUHpEN0RvRzkwa1FIb2VzZlJST3NSRGV2RkVUdHBUWnlHYkp0LTllMzdGLWJacW1HYnpCS3d1QnhkU1JWUUpaeTF6UXd5cVVjSGpXSnlPcTlfWVF2UDFGX1dpbk10emxxSzZNMXU4cl9TRDllZkNneVJoOFQ5ckZyX1R6RjFQRzl2a2hfbXZKOE5rbHI3aVFvTHVkRnhEVVh4YzdVdEVsQ0VXMmZk?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 22:03:40 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","satellite"]
+  properties     {"guid":"CBMi0AFBVV95cUxQQlJlLWdWS2dDWll2QjJZZmt4YThUbjl2ZTRUWWtVclpqT2VwUHpEN0RvRzkwa1FIb2VzZlJST3NSRGV2RkVUdHBUWnlHYkp0LTllMzdGLWJacW1HYnpCS3d1QnhkU1JWUUpaeTF6UXd5cVVjSGpXSnlPcTlfWVF2UDFGX1dpbk10emxxSzZNMXU4cl9TRDllZkNneVJoOFQ5ckZyX1R6RjFQRzl2a2hfbXZKOE5rbHI3aVFvTHVkRnhEVVh4YzdVdEVsQ0VXMmZk"}
+
+--- row 2 ---
+  uid            gnews-mon-satellite-launch|CBMimwFBVV95cUxNbXF5dk5uc0dvXzBtTFJFaTRhcFM0ZnpzN29qOUZnNEsweUotVlV3aVNvSDBoT3hCc0hXWFZBSDRRZmRlMEw2U1dVUl8wMkpxRkQ4NkpXY0FUb3JFajZHRmFRVkFfUEZSeE4wbk5WdGFRWktFcC1jbzVDVVJBMUV4VXAwZUVyRW9BanpuSWJKbjNCc2RrVTNGeGhkcw
+  title          SpaceX wins $1.6 billion in launch orders for military satellite networks - SpaceNews
+  body           <a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxNbXF5dk5uc0dvXzBtTFJFaTRhcFM0ZnpzN29qOUZnNEsweUotVlV3aVNvSDBoT3hCc0hXWFZBSDRRZmRlMEw2U1dVUl8wMkpxRkQ4NkpXY0FUb3JFajZHRmFRVkFfUEZSeE4wbk5WdGFRWktFcC1jbzVDVVJBMUV4VXAwZUVyRW9BanpuSWJKbjNCc2RrVTNGeGhkcw?oc=5" target="_blank">SpaceX wins $1.6 billion in launch orders for military satellite networks</a>&nbsp;&nbsp;<font color="#6f6f6f">SpaceNews</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxNbXF5dk5uc0dvXzBtTFJFaTRhcFM0ZnpzN29qOUZnNEsweUotVlV3aVNvSDBoT3hCc0hXWFZBSDRRZmRlMEw2U1dVUl8wMkpxRkQ4NkpXY0FUb3JFajZHRmFRVkFfUEZSeE4wbk5WdGFRWktFcC1jbzVDVVJBMUV4VXAwZUVyRW9BanpuSW
+  link           https://news.google.com/rss/articles/CBMimwFBVV95cUxNbXF5dk5uc0dvXzBtTFJFaTRhcFM0ZnpzN29qOUZnNEsweUotVlV3aVNvSDBoT3hCc0hXWFZBSDRRZmRlMEw2U1dVUl8wMkpxRkQ4NkpXY0FUb3JFajZHRmFRVkFfUEZSeE4wbk5WdGFRWktFcC1jbzVDVVJBMUV4VXAwZUVyRW9BanpuSWJKbjNCc2RrVTNGeGhkcw?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 20:43:51 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","satellite"]
+  properties     {"guid":"CBMimwFBVV95cUxNbXF5dk5uc0dvXzBtTFJFaTRhcFM0ZnpzN29qOUZnNEsweUotVlV3aVNvSDBoT3hCc0hXWFZBSDRRZmRlMEw2U1dVUl8wMkpxRkQ4NkpXY0FUb3JFajZHRmFRVkFfUEZSeE4wbk5WdGFRWktFcC1jbzVDVVJBMUV4VXAwZUVyRW9BanpuSWJKbjNCc2RrVTNGeGhkcw"}
+
+--- row 3 ---
+  uid            gnews-mon-satellite-launch|CBMipAFBVV95cUxPN2l5dWROcks3dGdMaks0RWQ1SHhxNHZjd3BtVnM3aDBSSmhQbUZ5ZThSY1pTSDZIWUhOOVdlRVp5bWhuNnJNMmx4T09XVUdVdWlFYVpjRzg1SUpGTEVNd19qYXVfUDM5cmhtTUdGc25wZ1N1YmozbWd6OE5oODBMNk0wYy1vZGpOMURURHNJRlNnRk5OenhHNkc4bFZKdjB4S1NaYw
+  title          SpaceX wins $1.6B to launch Space Force ‘sensing and targeting’ sats - Breaking Defense
+  body           <a href="https://news.google.com/rss/articles/CBMipAFBVV95cUxPN2l5dWROcks3dGdMaks0RWQ1SHhxNHZjd3BtVnM3aDBSSmhQbUZ5ZThSY1pTSDZIWUhOOVdlRVp5bWhuNnJNMmx4T09XVUdVdWlFYVpjRzg1SUpGTEVNd19qYXVfUDM5cmhtTUdGc25wZ1N1YmozbWd6OE5oODBMNk0wYy1vZGpOMURURHNJRlNnRk5OenhHNkc4bFZKdjB4S1NaYw?oc=5" target="_blank">SpaceX wins $1.6B to launch Space Force ‘sensing and targeting’ sats</a>&nbsp;&nbsp;<font color="#6f6f6f">Breaking Defense</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMipAFBVV95cUxPN2l5dWROcks3dGdMaks0RWQ1SHhxNHZjd3BtVnM3aDBSSmhQbUZ5ZThSY1pTSDZIWUhOOVdlRVp5bWhuNnJNMmx4T09XVUdVdWlFYVpjRzg1SUpGTEVNd19qYXVfUDM5cmhtTUdGc25wZ1N1YmozbWd6OE5oODBMNk0wYy1vZGpOMURURH
+  link           https://news.google.com/rss/articles/CBMipAFBVV95cUxPN2l5dWROcks3dGdMaks0RWQ1SHhxNHZjd3BtVnM3aDBSSmhQbUZ5ZThSY1pTSDZIWUhOOVdlRVp5bWhuNnJNMmx4T09XVUdVdWlFYVpjRzg1SUpGTEVNd19qYXVfUDM5cmhtTUdGc25wZ1N1YmozbWd6OE5oODBMNk0wYy1vZGpOMURURHNJRlNnRk5OenhHNkc4bFZKdjB4S1NaYw?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 21:00:55 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","satellite"]
+  properties     {"guid":"CBMipAFBVV95cUxPN2l5dWROcks3dGdMaks0RWQ1SHhxNHZjd3BtVnM3aDBSSmhQbUZ5ZThSY1pTSDZIWUhOOVdlRVp5bWhuNnJNMmx4T09XVUdVdWlFYVpjRzg1SUpGTEVNd19qYXVfUDM5cmhtTUdGc25wZ1N1YmozbWd6OE5oODBMNk0wYy1vZGpOMURURHNJRlNnRk5OenhHNkc4bFZKdjB4S1NaYw"}

@@ -1,0 +1,45 @@
+=== gnews-mon-ru-wagner
+exit: 0
+sched: rc=0 records=100 532ms
+--- stderr ---
+[rss] gnews-mon-ru-wagner emitted 100
+[sched] gnews-mon-ru-wagner run rc=0 records=100 532ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-ru-wagner|CBMiwgFBVV95cUxOZ1o1MENYbWdIUnNKV3NDS0QyQmhHWlRJT0t6S3ZmSEdyNS1PVzBWTFRRTmh5Y0ZlMG1kbjZuU04wblFPYW54dmJMY055Zi1heXpZNnVWb09HaGs2MGlkUTNNZzMtV0pOc05iZ0ZoQ0U1Tk1wN2lhQ2lQd25wSE54dVFhdzFmdTNYYjVRZnZNQmpLdWlwQUJ2S1h0ak4yV1M4YVV2TDZiWW5McHJFYlg4aDcxMm02YjVJa1pGNExvTDlQUdIBxwFBVV95cUxOMEwyTWNxS2hCdVR0aGZOYnVYT2QtWEEyQi1SbWNzT0JLdzhpVk1YajF6SDYzMnhHaFBBM2tSUHFkaktoVHg3dHZlSzg5anFGeFJyR0FfbE5XWERZc21ab2FnN3dwa0lQRWd5bnhlVzNqZUV6MkFQUTFiemVQaEtrUWh5YXZfSFRMZk1sdkxqeC04UjNlVjVkZHExUGYzR2sxcWdRcXl
+  title          WSJ: Оставшиеся в ЦАР наемники ЧВК Вагнера создали наркоимперию по торговле трамадолом - Meduza
+  body           <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxOZ1o1MENYbWdIUnNKV3NDS0QyQmhHWlRJT0t6S3ZmSEdyNS1PVzBWTFRRTmh5Y0ZlMG1kbjZuU04wblFPYW54dmJMY055Zi1heXpZNnVWb09HaGs2MGlkUTNNZzMtV0pOc05iZ0ZoQ0U1Tk1wN2lhQ2lQd25wSE54dVFhdzFmdTNYYjVRZnZNQmpLdWlwQUJ2S1h0ak4yV1M4YVV2TDZiWW5McHJFYlg4aDcxMm02YjVJa1pGNExvTDlQUdIBxwFBVV95cUxOMEwyTWNxS2hCdVR0aGZOYnVYT2QtWEEyQi1SbWNzT0JLdzhpVk1YajF6SDYzMnhHaFBBM2tSUHFkaktoVHg3dHZlSzg5anFGeFJyR0FfbE5XWERZc21ab2FnN3dwa0lQRWd5bnhlVzNqZUV6MkFQUTFiemVQaEtrUWh5YXZfSFRMZk1sdkxqeC04UjNlVjVkZHExUGYzR2sxcWdRcXlSblktd2pBR1dOTHZDaHFIWFd6ejMwRnJXS3VpQ2pjZUJ3?oc=5" target="_blank">WSJ: Оставшиеся в ЦАР наемники ЧВК Вагнера создали наркоимперию по торговле трамадолом</a>&nbsp;&nbsp;<font color="#6f6f6f">Meduza</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxOZ1o1MENYbWdIUnNKV3NDS0QyQmhHWlRJT0t6S3ZmSEdyNS1PVzBWTFRRTmh5Y0ZlMG1kbjZuU04wblFPYW54dmJMY055Zi1heXpZNnVWb09HaGs2MGlkUTNNZzMtV0pOc05iZ0ZoQ0U1Tk1wN2lhQ2lQd25wSE54dVFhdzFmdTNYYjVRZn
+  link           https://news.google.com/rss/articles/CBMiwgFBVV95cUxOZ1o1MENYbWdIUnNKV3NDS0QyQmhHWlRJT0t6S3ZmSEdyNS1PVzBWTFRRTmh5Y0ZlMG1kbjZuU04wblFPYW54dmJMY055Zi1heXpZNnVWb09HaGs2MGlkUTNNZzMtV0pOc05iZ0ZoQ0U1Tk1wN2lhQ2lQd25wSE54dVFhdzFmdTNYYjVRZnZNQmpLdWlwQUJ2S1h0ak4yV1M4YVV2TDZiWW5McHJFYlg4aDcxMm02YjVJa1pGNExvTDlQUdIBxwFBVV95cUxOMEwyTWNxS2hCdVR0aGZOYnVYT2QtWEEyQi1SbWNzT0JLdzhpVk1YajF6SDYzMnhHaFBBM2tSUHFkaktoVHg3dHZlSzg5anFGeFJyR0FfbE5XWERZc21ab2FnN3dwa0lQRWd5bnhlVzNqZUV6MkFQUTFiemVQaEtrUWh5YXZfSFRMZk1sdkxqeC04UjNlVjVkZHExUGYzR2sxcWdRcXlSblktd2pBR1dOTHZDaHFIWFd6ejMwRnJXS3VpQ2pjZUJ3?oc=5
+  language       ru
+  published_at   Sun, 12 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ru"]
+  properties     {"guid":"CBMiwgFBVV95cUxOZ1o1MENYbWdIUnNKV3NDS0QyQmhHWlRJT0t6S3ZmSEdyNS1PVzBWTFRRTmh5Y0ZlMG1kbjZuU04wblFPYW54dmJMY055Zi1heXpZNnVWb09HaGs2MGlkUTNNZzMtV0pOc05iZ0ZoQ0U1Tk1wN2lhQ2lQd25wSE54dVFhdzFmdTNYYjVRZnZNQmpLdWlwQUJ2S1h0ak4yV1M4YVV2TDZiWW5McHJFYlg4aDcxMm02YjVJa1pGNExvTDlQUdIBxwFBVV95cUxOMEwyTWNxS2hCdVR0aGZOYnVYT2QtWEEyQi1SbWNzT0JLdzhpVk1YajF6SDYzMnhHaFBBM2tSUHFkaktoVHg3dHZlSzg5anFGeFJyR0FfbE5XWERZc21ab2FnN3dwa0lQRWd5bnhlVzNqZUV6MkFQUTFiemVQaEtrUWh5YXZfSFRMZk1sdkxqeC04UjNlVjVkZHExUGYzR2sxcWdRcXlSblktd2pBR1
+
+--- row 2 ---
+  uid            gnews-mon-ru-wagner|CBMikwFBVV95cUxQT01Nek9UUlh3OHRRYXIwVnliWnhubDlWUkN4dDlzaC12LTd0dkpzWWtzb29jVGw1WTVHcVpzNDhPTnVqLWhIaEEtdmxEZENPSDZwZlBreHJaejZDNUxteG5tRjFZTG9LRFpLWWZLdVdJcHcxd1gzR0xZUkl5V0VQdFQ4ZkpZY2FhdDBqRmNMNVpoZ2vSAZMBQVVfeXFMUDBweFlINTFzVFBrcC00ZFhvTzdDUVE5LVlKVkJHVlNkNDJVYkwzSFI1S2YwczdhcHo2X0QybXhkdWF3aV9iblBpd3FpUzFUTVVjR3FhOFlVN0h3UzZpV2xrTnluWGVUSVZ5QlZRcmN3akY4Q1FBOVY4UHRxdEJMS1F2ZURpNDJQN0FHSkVxUzFnWl9V
+  title          Почему в Байройте поставили любимую оперу Гитлера? - DW.com
+  body           <a href="https://news.google.com/rss/articles/CBMikwFBVV95cUxQT01Nek9UUlh3OHRRYXIwVnliWnhubDlWUkN4dDlzaC12LTd0dkpzWWtzb29jVGw1WTVHcVpzNDhPTnVqLWhIaEEtdmxEZENPSDZwZlBreHJaejZDNUxteG5tRjFZTG9LRFpLWWZLdVdJcHcxd1gzR0xZUkl5V0VQdFQ4ZkpZY2FhdDBqRmNMNVpoZ2vSAZMBQVVfeXFMUDBweFlINTFzVFBrcC00ZFhvTzdDUVE5LVlKVkJHVlNkNDJVYkwzSFI1S2YwczdhcHo2X0QybXhkdWF3aV9iblBpd3FpUzFUTVVjR3FhOFlVN0h3UzZpV2xrTnluWGVUSVZ5QlZRcmN3akY4Q1FBOVY4UHRxdEJMS1F2ZURpNDJQN0FHSkVxUzFnWl9V?oc=5" target="_blank">Почему в Байройте поставили любимую оперу Гитлера?</a>&nbsp;&nbsp;<font color="#6f6f6f">DW.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMikwFBVV95cUxQT01Nek9UUlh3OHRRYXIwVnliWnhubDlWUkN4dDlzaC12LTd0dkpzWWtzb29jVGw1WTVHcVpzNDhPTnVqLWhIaEEtdmxEZENPSDZwZlBreHJaejZDNUxteG5tRjFZTG9LRFpLWWZLdVdJcHcxd1gzR0xZUkl5V0VQdFQ4ZkpZY2FhdDBqRm
+  link           https://news.google.com/rss/articles/CBMikwFBVV95cUxQT01Nek9UUlh3OHRRYXIwVnliWnhubDlWUkN4dDlzaC12LTd0dkpzWWtzb29jVGw1WTVHcVpzNDhPTnVqLWhIaEEtdmxEZENPSDZwZlBreHJaejZDNUxteG5tRjFZTG9LRFpLWWZLdVdJcHcxd1gzR0xZUkl5V0VQdFQ4ZkpZY2FhdDBqRmNMNVpoZ2vSAZMBQVVfeXFMUDBweFlINTFzVFBrcC00ZFhvTzdDUVE5LVlKVkJHVlNkNDJVYkwzSFI1S2YwczdhcHo2X0QybXhkdWF3aV9iblBpd3FpUzFUTVVjR3FhOFlVN0h3UzZpV2xrTnluWGVUSVZ5QlZRcmN3akY4Q1FBOVY4UHRxdEJMS1F2ZURpNDJQN0FHSkVxUzFnWl9V?oc=5
+  language       ru
+  published_at   Wed, 29 Jul 2026 11:26:02 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ru"]
+  properties     {"guid":"CBMikwFBVV95cUxQT01Nek9UUlh3OHRRYXIwVnliWnhubDlWUkN4dDlzaC12LTd0dkpzWWtzb29jVGw1WTVHcVpzNDhPTnVqLWhIaEEtdmxEZENPSDZwZlBreHJaejZDNUxteG5tRjFZTG9LRFpLWWZLdVdJcHcxd1gzR0xZUkl5V0VQdFQ4ZkpZY2FhdDBqRmNMNVpoZ2vSAZMBQVVfeXFMUDBweFlINTFzVFBrcC00ZFhvTzdDUVE5LVlKVkJHVlNkNDJVYkwzSFI1S2YwczdhcHo2X0QybXhkdWF3aV9iblBpd3FpUzFUTVVjR3FhOFlVN0h3UzZpV2xrTnluWGVUSVZ5QlZRcmN3akY4Q1FBOVY4UHRxdEJMS1F2ZURpNDJQN0FHSkVxUzFnWl9V"}
+
+--- row 3 ---
+  uid            gnews-mon-ru-wagner|CBMiowFBVV95cUxNdlZ3aGFTMG9udmlqOFJYREgwcW1CS3JjTDZmVnBoQl9XUVR6ejRGTXZ5U2pKZnZPakw5cmQ0SjBoajJvcHloV0pNSUxHMV9RV0Qwb0ZkWmpXcHYxSnVmZ1haTzhTYWVzcVBzcjlEcjVZUUl3UThiYk9qVk1TRm5lRmhJU24xbkhxZ2FKVDFTQ0RpU0wwUFlrNlozeVhtYU9nNDJn0gGmAUFVX3lxTE9aVmFxMHdGSXpEM3duS2ZTX1B5bmxud210TjI0MS1tWHBpcHIzQW13a1FHLWFaUDlCS3BXanlTMDhJenNNQWpYVDNxOVpxQzZ6QWdaU2F0enYyYWlodng1cE1MOGpnTFc4Z0l6eHdLRGExbE14VHl4SlpVNnNPbHZ6NnhyLUMyenYzRlk4STBKOEkwbm9jS1dwTll1Z3RqclVpZG5lX0E
+  title          WSJ: "Вагнеровцы" и сын Пригожина создали наркоимперию в ЦАР - Радио Свобода
+  body           <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxNdlZ3aGFTMG9udmlqOFJYREgwcW1CS3JjTDZmVnBoQl9XUVR6ejRGTXZ5U2pKZnZPakw5cmQ0SjBoajJvcHloV0pNSUxHMV9RV0Qwb0ZkWmpXcHYxSnVmZ1haTzhTYWVzcVBzcjlEcjVZUUl3UThiYk9qVk1TRm5lRmhJU24xbkhxZ2FKVDFTQ0RpU0wwUFlrNlozeVhtYU9nNDJn0gGmAUFVX3lxTE9aVmFxMHdGSXpEM3duS2ZTX1B5bmxud210TjI0MS1tWHBpcHIzQW13a1FHLWFaUDlCS3BXanlTMDhJenNNQWpYVDNxOVpxQzZ6QWdaU2F0enYyYWlodng1cE1MOGpnTFc4Z0l6eHdLRGExbE14VHl4SlpVNnNPbHZ6NnhyLUMyenYzRlk4STBKOEkwbm9jS1dwTll1Z3RqclVpZG5lX0E?oc=5" target="_blank">WSJ: "Вагнеровцы" и сын Пригожина создали наркоимперию в ЦАР</a>&nbsp;&nbsp;<font color="#6f6f6f">Радио Свобода</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxNdlZ3aGFTMG9udmlqOFJYREgwcW1CS3JjTDZmVnBoQl9XUVR6ejRGTXZ5U2pKZnZPakw5cmQ0SjBoajJvcHloV0pNSUxHMV9RV0Qwb0ZkWmpXcHYxSnVmZ1haTzhTYWVzcVBzcjlEcjVZUUl3UThiYk9qVk1TRm5lRmhJU24xbkhxZ2FKVD
+  link           https://news.google.com/rss/articles/CBMiowFBVV95cUxNdlZ3aGFTMG9udmlqOFJYREgwcW1CS3JjTDZmVnBoQl9XUVR6ejRGTXZ5U2pKZnZPakw5cmQ0SjBoajJvcHloV0pNSUxHMV9RV0Qwb0ZkWmpXcHYxSnVmZ1haTzhTYWVzcVBzcjlEcjVZUUl3UThiYk9qVk1TRm5lRmhJU24xbkhxZ2FKVDFTQ0RpU0wwUFlrNlozeVhtYU9nNDJn0gGmAUFVX3lxTE9aVmFxMHdGSXpEM3duS2ZTX1B5bmxud210TjI0MS1tWHBpcHIzQW13a1FHLWFaUDlCS3BXanlTMDhJenNNQWpYVDNxOVpxQzZ6QWdaU2F0enYyYWlodng1cE1MOGpnTFc4Z0l6eHdLRGExbE14VHl4SlpVNnNPbHZ6NnhyLUMyenYzRlk4STBKOEkwbm9jS1dwTll1Z3RqclVpZG5lX0E?oc=5
+  language       ru
+  published_at   Sun, 12 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ru"]
+  properties     {"guid":"CBMiowFBVV95cUxNdlZ3aGFTMG9udmlqOFJYREgwcW1CS3JjTDZmVnBoQl9XUVR6ejRGTXZ5U2pKZnZPakw5cmQ0SjBoajJvcHloV0pNSUxHMV9RV0Qwb0ZkWmpXcHYxSnVmZ1haTzhTYWVzcVBzcjlEcjVZUUl3UThiYk9qVk1TRm5lRmhJU24xbkhxZ2FKVDFTQ0RpU0wwUFlrNlozeVhtYU9nNDJn0gGmAUFVX3lxTE9aVmFxMHdGSXpEM3duS2ZTX1B5bmxud210TjI0MS1tWHBpcHIzQW13a1FHLWFaUDlCS3BXanlTMDhJenNNQWpYVDNxOVpxQzZ6QWdaU2F0enYyYWlodng1cE1MOGpnTFc4Z0l6eHdLRGExbE14VHl4SlpVNnNPbHZ6NnhyLUMyenYzRlk4STBKOEkwbm9jS1dwTll1Z3RqclVpZG5lX0E"}

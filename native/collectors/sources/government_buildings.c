@@ -1,21 +1,14 @@
 /* collectors/government/sources/government_buildings.c — port of
  * server/src/collectors/governmentBuildings.js (fetchOverpass single
  * area.jp). SEED_GOV_BUILDINGS offline fallback not ported (rule 8). */
+#include "../../lib/geojson.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)i; (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON *id = cJSON_GetObjectItem(el, "id");
@@ -40,7 +33,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = overpass_collect(ctx, sink,
     "node[\"office\"=\"government\"](area.jp);"
     "way[\"office\"=\"government\"](area.jp);",
-    180, 60000, map, NULL);
+    180, 200000, map, NULL);
   return n >= 0 ? 0 : -1;
 }
 

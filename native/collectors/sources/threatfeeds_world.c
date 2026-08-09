@@ -27,20 +27,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-/* case-insensitive substring (haystack may be huge; needle short). */
-static const char *tf_stristr(const char *h, const char *n) {
-  if (!h || !n || !*n) return NULL;
-  size_t nl = strlen(n);
-  for (; *h; h++) {
-    if (tolower((unsigned char)*h) == tolower((unsigned char)*n)) {
-      size_t k = 1;
-      while (k < nl && h[k] && tolower((unsigned char)h[k]) == tolower((unsigned char)n[k])) k++;
-      if (k == nl) return h;
-    }
-  }
-  return NULL;
-}
-
 /* trim CR/LF/space/quotes at both ends, in place. */
 static void tf_trim(char *s) {
   if (!s) return;
@@ -97,7 +83,7 @@ static int tf_urlhaus(const source_ctx *ctx, intel_sink *sink, const char *body,
     const char *url = jo_sv(rec, "url");
     const char *host = jo_sv(rec, "host");
     if (!url && !host) continue;
-    if (q && !(url && tf_stristr(url, q)) && !(host && tf_stristr(host, q))) continue;
+    if (q && !(url && jo_stristr(url, q)) && !(host && jo_stristr(host, q))) continue;
     const char *id   = jo_sv(rec, "id");
     const char *stat = jo_sv(rec, "url_status");
     const char *thr  = jo_sv(rec, "threat");
@@ -145,7 +131,7 @@ static int tf_threatfox(const source_ctx *ctx, intel_sink *sink, const char *bod
     const char *ioc = jo_sv(rec, "ioc_value");
     if (!ioc) ioc = jo_sv(rec, "ioc");
     if (!ioc) continue;
-    if (q && !tf_stristr(ioc, q)) continue;
+    if (q && !jo_stristr(ioc, q)) continue;
     const char *ioctype = jo_sv(rec, "ioc_type");
     const char *thr  = jo_sv(rec, "threat_type");
     const char *mal  = jo_sv(rec, "malware");
@@ -185,10 +171,27 @@ static int tf_threatfox(const source_ctx *ctx, intel_sink *sink, const char *bod
  * lookup by filtering the recent list on the pivot value. */
 static int tf_malwarebazaar(const source_ctx *ctx, intel_sink *sink,
                             const char *q, int max) {
+  /* abuse.ch closed the anonymous MalwareBazaar API: an unauthenticated POST
+   * now answers HTTP 401 {"error": "Unauthorized"} (verified by hand against
+   * mb-api.abuse.ch). Every other abuse.ch feed used in this file (URLhaus,
+   * ThreatFox, Feodo, SSLBL) is a static download and is still keyless — only
+   * this one moved behind an Auth-Key you obtain from an abuse.ch account.
+   * Declare the gate honestly instead of emitting nothing and logging an
+   * opaque 401: no key → no fetch, no rows, clear log. */
+  const char *authkey = getenv("ABUSECH_AUTH_KEY");
+  if (!authkey || !*authkey) authkey = getenv("MALWAREBAZAAR_AUTH_KEY");
+  if (!authkey || !*authkey) {
+    fprintf(stderr, "[MALWAREBAZAAR] gated (no ABUSECH_AUTH_KEY) — abuse.ch "
+                    "retired anonymous API access, unauthenticated = HTTP 401\n");
+    return 0;
+  }
+  char authhdr[256];
+  snprintf(authhdr, sizeof authhdr, "Auth-Key: %s", authkey);
   const char *body_post = "query=get_recent&selector=time";
   const char *hdrs[] = {
     "Content-Type: application/x-www-form-urlencoded",
     "User-Agent: JapanOSINT/1.0 (threat-intel)",
+    authhdr,
     NULL };
   http_response hr = {0};
   int rc = http_request(ctx->http, "POST", "https://mb-api.abuse.ch/api/v1/",
@@ -214,9 +217,9 @@ static int tf_malwarebazaar(const source_ctx *ctx, intel_sink *sink,
       if (q) {
         const char *md5 = jo_sv(rec, "md5_hash");
         const char *sha1 = jo_sv(rec, "sha1_hash");
-        if (!tf_stristr(sha, q) && !(fn && tf_stristr(fn, q)) &&
-            !(sig && tf_stristr(sig, q)) && !(md5 && tf_stristr(md5, q)) &&
-            !(sha1 && tf_stristr(sha1, q))) continue;
+        if (!jo_stristr(sha, q) && !(fn && jo_stristr(fn, q)) &&
+            !(sig && jo_stristr(sig, q)) && !(md5 && jo_stristr(md5, q)) &&
+            !(sha1 && jo_stristr(sha1, q))) continue;
       }
       const char *ft  = jo_sv(rec, "file_type");
       const char *seen = jo_sv(rec, "first_seen");
@@ -261,7 +264,7 @@ static int tf_feodo(const source_ctx *ctx, intel_sink *sink, const char *body,
     const char *ip = jo_sv(rec, "ip_address");
     const char *hn = jo_sv(rec, "hostname");
     if (!ip) continue;
-    if (q && !tf_stristr(ip, q) && !(hn && tf_stristr(hn, q))) continue;
+    if (q && !jo_stristr(ip, q) && !(hn && jo_stristr(hn, q))) continue;
     const char *mal = jo_sv(rec, "malware");
     const char *stat = jo_sv(rec, "status");
     const char *ctry = jo_sv(rec, "country");
@@ -295,14 +298,45 @@ static int tf_feodo(const source_ctx *ctx, intel_sink *sink, const char *body,
   return emitted;
 }
 
+/* Copy comma-separated field `idx` (0-based) of `buf` into out. Returns 0 when
+ * that field does not exist or is empty. */
+static int tf_csv_field(const char *buf, int idx, char *out, size_t outsz) {
+  const char *p = buf;
+  for (int i = 0; i < idx; i++) {
+    p = strchr(p, ',');
+    if (!p) { out[0] = 0; return 0; }
+    p++;
+  }
+  size_t k = 0;
+  while (*p && *p != ',' && k + 1 < outsz) out[k++] = *p++;
+  while (k && (out[k-1] == ' ' || out[k-1] == '\r' || out[k-1] == '\t')) k--;
+  out[k] = 0;
+  return out[0] ? 1 : 0;
+}
+
 /* ---- Plain-text / CSV line feeds --------------------------------------- *
  * Generic: iterate lines, skip comments (# or ;) and blanks. For each data line
- * take the FIRST field (up to the first comma / whitespace) as the indicator,
- * keep the remainder as detail. When entity is set, only lines containing it are
- * emitted. Every emitted indicator is a real line from the live feed. */
+ * take the indicator field, keep the remainder as detail. When entity is set,
+ * only lines containing it are emitted. Every emitted indicator is a real line
+ * from the live feed.
+ *
+ * `ind_field` < 0  → legacy behaviour: the first token up to a comma, space or
+ *                    tab. Correct for one-indicator-per-line feeds (OpenPhish
+ *                    URLs, Spamhaus netblocks, Tor exit IPs).
+ * `ind_field` >= 0 → the Nth comma-separated column, for real CSV feeds where
+ *                    column 0 is NOT the indicator. `date_field` (or -1) names
+ *                    a column to carry as published_at.
+ *
+ * This distinction is a bug fix, not a refactor: SSLBL ships
+ * "Listingdate,SHA1,Listingreason", e.g.
+ *   2026-07-30 19:52:58,014d51d79c5a5c80042abedb35231581ff07c2e7,Vidar C&C
+ * and the legacy rule stopped at the SPACE inside the timestamp, so every row's
+ * indicator — and therefore its title AND its dedupe key — was the bare date
+ * "2026-07-30". 200 certificates collapsed onto ~27 date rows and 173 were
+ * silently overwritten (verified: recs=200 → 27 stored). */
 static int tf_lines(intel_sink *sink, const char *body, const char *q,
                     const char *service, const char *rectype, const char *link,
-                    const char *tags, int max) {
+                    const char *tags, int max, int ind_field, int date_field) {
   int emitted = 0;
   const char *line = body;
   while (line && *line && emitted < max) {
@@ -313,20 +347,27 @@ static int tf_lines(intel_sink *sink, const char *body, const char *q,
       size_t cp = llen < sizeof buf - 1 ? llen : sizeof buf - 1;
       memcpy(buf, line, cp); buf[cp] = 0;
       tf_trim(buf);
-      if (buf[0] && (!q || tf_stristr(buf, q))) {
-        /* indicator = first field up to comma/space/tab */
+      if (buf[0] && (!q || jo_stristr(buf, q))) {
         char ind[512];
-        size_t k = 0;
-        for (const char *p = buf; *p && p[0] != ',' && p[0] != ' ' && p[0] != '\t'
-                                    && k < sizeof ind - 1; p++)
-          ind[k++] = *p;
-        ind[k] = 0;
-        if (ind[0]) {
+        char pub[128]; pub[0] = 0;
+        int have = 0;
+        if (ind_field >= 0) {
+          have = tf_csv_field(buf, ind_field, ind, sizeof ind);
+          if (date_field >= 0) tf_csv_field(buf, date_field, pub, sizeof pub);
+        } else {
+          size_t k = 0;
+          for (const char *p = buf; *p && p[0] != ',' && p[0] != ' ' && p[0] != '\t'
+                                      && k < sizeof ind - 1; p++)
+            ind[k++] = *p;
+          ind[k] = 0;
+          have = ind[0] ? 1 : 0;
+        }
+        if (have) {
           const char *detail = (strlen(ind) < strlen(buf)) ? buf : NULL;
           char key[600];
           snprintf(key, sizeof key, "%s|%.512s", service, ind);
           emitted += tf_emit(sink, service, rectype, key, ind, detail,
-                             NULL, link, NULL, tags);
+                             NULL, link, pub[0] ? pub : NULL, tags);
         }
       }
     }
@@ -342,25 +383,28 @@ typedef enum { M_URLHAUS, M_THREATFOX, M_MALWAREBAZAAR, M_FEODO, M_TEXT } tf_mod
 typedef struct {
   const char *id, *url, *rectype, *tags;
   tf_mode mode;
+  int ind_field;      /* M_TEXT: CSV column of the indicator, -1 = first token */
+  int date_field;     /* M_TEXT: CSV column to carry as published_at, -1 = none */
 } tf_row;
 
 static const tf_row ROWS[] = {
   { "URLHAUS_GLOBAL",   "https://urlhaus.abuse.ch/downloads/json_recent/",
-    "malware-url", "[\"threat-intel\",\"malware-url\",\"urlhaus\"]", M_URLHAUS },
+    "malware-url", "[\"threat-intel\",\"malware-url\",\"urlhaus\"]", M_URLHAUS, -1, -1 },
   { "THREATFOX_GLOBAL", "https://threatfox.abuse.ch/export/json/recent/",
-    "threat-ioc", "[\"threat-intel\",\"ioc\",\"threatfox\"]", M_THREATFOX },
+    "threat-ioc", "[\"threat-intel\",\"ioc\",\"threatfox\"]", M_THREATFOX, -1, -1 },
   { "MALWAREBAZAAR",    "https://mb-api.abuse.ch/api/v1/",
-    "malware-sample", "[\"threat-intel\",\"malware-sample\"]", M_MALWAREBAZAAR },
+    "malware-sample", "[\"threat-intel\",\"malware-sample\"]", M_MALWAREBAZAAR, -1, -1 },
   { "FEODO_GLOBAL",     "https://feodotracker.abuse.ch/downloads/ipblocklist.json",
-    "botnet-c2", "[\"threat-intel\",\"botnet-c2\",\"feodo\"]", M_FEODO },
+    "botnet-c2", "[\"threat-intel\",\"botnet-c2\",\"feodo\"]", M_FEODO, -1, -1 },
+  /* CSV header: Listingdate,SHA1,Listingreason → indicator is column 1. */
   { "SSLBL_GLOBAL",     "https://sslbl.abuse.ch/blacklist/sslblacklist.csv",
-    "malicious-ssl-cert", "[\"threat-intel\",\"ssl-blacklist\",\"sslbl\"]", M_TEXT },
+    "malicious-ssl-cert", "[\"threat-intel\",\"ssl-blacklist\",\"sslbl\"]", M_TEXT, 1, 0 },
   { "OPENPHISH",        "https://openphish.com/feed.txt",
-    "phishing-url", "[\"threat-intel\",\"phishing\",\"openphish\"]", M_TEXT },
+    "phishing-url", "[\"threat-intel\",\"phishing\",\"openphish\"]", M_TEXT, -1, -1 },
   { "SPAMHAUS_DROP_GLOBAL", "https://www.spamhaus.org/drop/drop.txt",
-    "hijacked-netblock", "[\"threat-intel\",\"drop\",\"spamhaus\"]", M_TEXT },
+    "hijacked-netblock", "[\"threat-intel\",\"drop\",\"spamhaus\"]", M_TEXT, -1, -1 },
   { "TOR_EXITS_GLOBAL", "https://check.torproject.org/torbulkexitlist",
-    "tor-exit-node", "[\"threat-intel\",\"tor-exit\"]", M_TEXT },
+    "tor-exit-node", "[\"threat-intel\",\"tor-exit\"]", M_TEXT, -1, -1 },
 };
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -392,7 +436,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       case M_THREATFOX: tf_threatfox(ctx, sink, body, q, max); break;
       case M_FEODO:     tf_feodo(ctx, sink, body, q, max); break;
       case M_TEXT:
-      default:          tf_lines(sink, body, q, r->id, r->rectype, r->url, r->tags, max); break;
+      default:          tf_lines(sink, body, q, r->id, r->rectype, r->url, r->tags, max,
+                                 r->ind_field, r->date_field); break;
     }
     free(body);
     return 0;                                /* honest empty is not an error */

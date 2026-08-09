@@ -1,0 +1,7 @@
+=== PATENTSVIEW  entity=semiconductor
+exit: 0
+sched: rc=0 records=0 269ms
+--- stderr ---
+[patentsview] http status=0
+[sched] PATENTSVIEW run rc=0 records=0 269ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

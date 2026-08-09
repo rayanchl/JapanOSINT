@@ -1,0 +1,19 @@
+=== xrain-radar
+exit: 0
+sched: rc=0 records=1 315ms
+--- stderr ---
+[xrain-radar] probe reachable=0
+[sched] xrain-radar run rc=0 records=1 315ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            xrain-radar|portal
+  title          MLIT XRAIN X-band rainfall radar
+  summary        High-resolution (250 m / 1 min) MP-radar rainfall product, tile-served via the MLIT disaster-information portal
+  link           https://www.river.go.jp/x/krademapcommon/xrain/index.html
+  language       ja
+  published_at   2026-07-31T18:06:31.183Z
+  tags           ["weather","radar","rainfall","mlit","unreachable"]
+  properties     {"operator":"国土交通省","reachable":false}

@@ -12,6 +12,7 @@
  * (URLScan.io / Direct Analysis / Reputation) become an "items" array in the
  * envelope; confidence 90 if URLScan succeeded else 70. Emits ONE
  * osint_service_result row like dns_records.c. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
@@ -19,18 +20,6 @@
 #include <strings.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-static void uri_encode(const char *in, char *out, size_t cap) {
-  static const char *keep = "-_.!~*'()";
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p && w + 4 < cap; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(keep, c)) out[w++] = (char)c;
-    else { snprintf(out + w, cap - w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
-}
 
 /* "^(?:https?://)?(?:www\.)?([^:/\s]+)" — extract host. */
 static void extract_domain(const char *url, char *out, size_t cap) {
@@ -58,7 +47,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* --- submit_to_urlscan: search existing scans for a uuid --- */
   char enc[1024], surl[1200];
-  uri_encode(url, enc, sizeof enc);
+  jo_uri_encode_buf(url, enc, sizeof enc);
   snprintf(surl, sizeof surl, "https://urlscan.io/api/v1/search/?q=%s", enc);
   char uuid[128] = {0};
   {

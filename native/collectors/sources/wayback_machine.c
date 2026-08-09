@@ -12,25 +12,13 @@
  * status/size) and link = the playback wayback URL. Availability is probed for
  * the per-row link fallback. No snapshots / fetch failure → emits nothing
  * (honest empty — no fabricated additional-archive descriptors). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-/* encodeURIComponent-style (matches asn_lookup.c uri_encode). */
-static void uri_encode(const char *in, char *out, size_t cap) {
-  static const char *keep = "-_.!~*'()";
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p && w + 4 < cap; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(keep, c)) out[w++] = (char)c;
-    else { snprintf(out + w, cap - w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
-}
 
 static cJSON *get_json(http_client *http, const char *url) {
   http_response hr = {0};
@@ -106,7 +94,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (strchr(entity, '@')) return 0;   /* skip emails (honest empty) */
 
   char enc[1024], url[1200];
-  uri_encode(entity, enc, sizeof enc);
+  jo_uri_encode_buf(entity, enc, sizeof enc);
   snprintf(url, sizeof url,
            "https://web.archive.org/cdx/search/cdx?url=%s&output=json&limit=50",
            enc);

@@ -1,0 +1,45 @@
+=== LATAM_REGISTRY  entity=Toyota
+exit: 0
+sched: rc=0 records=1 39329ms
+--- stderr ---
+[latam_reg:BR Brasil.io Empresas] emitted 0
+[latam_reg:BR ReceitaWS (CNPJ)] http status=400
+[latam_reg:BR JusBrasil] http status=403
+[latam_reg:BR TSE DivulgaCand] emitted 0
+[latam_reg:BR Portal Transparencia] http status=405
+[latam_reg:BR CNJ Consulta Processual] http status=404
+[latam_reg:MX RPC (Reg. Publico Comercio)] emitted 0
+[latam_reg:MX SAT 69-B Listado] http status=403
+[latam_reg:MX INE / Consulta] emitted 0
+[latam_reg:MX DOF (Diario Oficial)] http status=0
+[latam_reg:AR CUIT Online] http status=403
+[latam_reg:AR BORA (Boletin Oficial)] emitted 0
+[latam_reg:AR IGJ / Datos Abiertos] emitted 1
+[latam_reg:AR PJN Consulta Causas] emitted 0
+[latam_reg:CL SII (Servicio Impuestos)] http status=404
+[latam_reg:CL Poder Judicial] http status=404
+[latam_reg:CL DiarioOficial] emitted 0
+[latam_reg:CL Datos Abiertos] http status=405
+[latam_reg:CO RUES] emitted 0
+[latam_reg:CO Rama Judicial] emitted 0
+[latam_reg:CO Datos Abiertos] emitted 0
+[latam_reg:CO SECOP] http status=403
+[latam_reg:PE SUNARP (SPRL)] http status=404
+[latam_reg:PE SUNAT RUC] emitted 0
+[latam_reg:PE Poder Judicial CEJ] emitted 0
+[latam_reg:PE Datos Abiertos] emitted 0
+[latam_registry] emitted 1 across 26 registries
+[sched] LATAM_REGISTRY run rc=0 records=1 39329ms
+[detect] anomaly opened: LATAM_REGISTRY verdict=duration_outlier — duration 39329ms exceeds 10000ms threshold
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: latam-company=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            LATAM_REGISTRY|https://datos.gob.ar/dataset/?q=Toyota
+  title          Limpiar
+  link           https://datos.gob.ar/dataset/?q=Toyota
+  language       ja
+  record_type    latam-company
+  tags           ["osint-search"]
+  properties     {"service":"AR IGJ / Datos Abiertos","query":"Toyota","href":"https://datos.gob.ar/dataset/?q=Toyota","success":true}

@@ -17,8 +17,34 @@
    For each colliding id the LAST
    definition is kept (the canonical, more-specific one); single C
    backend, parity with the retired Node server no longer required.
+
+   THIS TABLE IS AN OVERLAY, NOT THE REGISTRY. The registry is the set of
+   `source_def`s that self-register at load time (native/source.h); every field
+   here also exists inline on `source_def`, and source_registry_dyn.c layers
+   this table on top of the live registry. A NEW SOURCE MUST NOT BE ADDED HERE
+   — declare .category/.type/.url/.description/.license/.layer/.free_tier on
+   its source_def and the catalog, /api/layers and /api/status pick it up with
+   no generated file to edit. What still earns a row here is the ~320 curated
+   Node-era rows whose rich JA names and descriptions were never transcribed
+   back onto their defs.
+
+   2026-08-09: 66 rows removed — every row whose collector was deleted in the
+   66-source removal sweep (53 probe stubs + 8 key-gated + 5 scrapers). A row
+   with no registered source_def cannot ever report a status, and 48 of these
+   were the SOLE member of a layer, so /api/layers advertised 48 layers whose
+   GeoJSON is permanently an empty FeatureCollection. Verified against the
+   binary's own `--list-sources` (some ids are computed, not written as
+   literals, so grep is not authoritative). 387 → 321 rows.
+   `osint-search` deliberately stays: it has no source_def because it is the
+   pipeline's synthetic source_id for entity-pivot results (core/pipeline.c
+   binds intel rows to it), so real rows carry it and it must keep its name /
+   description in /api/intel/sources. Its layer is NULL, so it adds nothing to
+   /api/layers.
+
    Fields: id,name,name_ja,category,type,url,description,license,
-           layer,free(0|1),update_interval(<0 == null/absent). */
+           layer,free(0|1),update_interval(<0 == null/absent).
+
+   `category` vocabulary: see the canonical list in native/source.h. */
 #include "source_registry.h"
 #include <string.h>
 static const src_meta M[]={
@@ -33,9 +59,6 @@ static const src_meta M[]={
 {"odpt-train","ODPT Train Real-time","ODPT 鉄道リアルタイム","transport","api","https://api.odpt.org/api/v4/","Real-time train location and delay data in Tokyo metro area",NULL,"transport",1,30},
 {"odpt-bus","ODPT Bus Real-time","ODPT バスリアルタイム","transport","api","https://api.odpt.org/api/v4/","Real-time bus location data",NULL,"transport",1,30},
 {"odpt-station","ODPT Station Data","ODPT 駅データ","transport","api","https://api.odpt.org/api/v4/","Static station location and metadata",NULL,"transport",1,86400},
-{"navitime","Navitime Transit","ナビタイム 交通情報","transport","web_request","https://www.navitime.co.jp/","Transit and route information (placeholder)",NULL,"transport",0,300},
-{"gsi-tiles","GSI Map Tiles","国土地理院 地図タイル","geospatial","api","https://cyberjapandata.gsi.go.jp/","Geospatial Information Authority base map tiles",NULL,"basemap",1,86400},
-{"gsi-elevation","GSI Elevation","国土地理院 標高データ","geospatial","api","https://cyberjapandata.gsi.go.jp/","Digital elevation model tiles",NULL,"elevation",1,86400},
 {"nlni-landuse","National Land Numerical Info","国土数値情報 土地利用","geospatial","dataset","https://nlftp.mlit.go.jp/ksj/","Land use mesh data from MLIT",NULL,"landuse",1,604800},
 {"estat-population","e-Stat Population Mesh","e-Stat 人口メッシュ","statistics","api","https://api.e-stat.go.jp/","Grid-square population statistics",NULL,"population",1,86400},
 {"mlit-landprice","MLIT Land Price Survey","国交省 地価公示","economy","api","https://www.land.mlit.go.jp/webland/api/","Official land price survey data",NULL,"landprice",1,86400},
@@ -45,7 +68,6 @@ static const src_meta M[]={
 {"fire-department","Fire Department Dispatches","消防庁 出動情報","safety","web_request","https://www.fdma.go.jp/","Fire department emergency dispatch data",NULL,"emergency",1,300},
 {"jma-warnings","JMA Weather Warnings","気象庁 気象警報","safety","api","https://www.jma.go.jp/bosai/warning/","Weather warnings and advisories by region",NULL,"warnings",1,300},
 {"mlit-river","MLIT River Water Levels","国交省 河川水位情報","infrastructure","api","https://www.river.go.jp/","Real-time river water level monitoring (10-min)",NULL,"river",1,600},
-{"xrain-radar","XRAIN Rain Radar","XRAIN 高解像度降雨レーダー","infrastructure","api","https://www.river.go.jp/x/","High-resolution rain radar imagery (1-min)",NULL,"radar",1,60},
 {"shodan-japan","Shodan Japan IoT Devices","Shodan 日本IoTデバイス","cyber","api","https://api.shodan.io/","Internet-connected devices in Japan via Shodan",NULL,"cyber",0,86400},
 {"cam-insecam-scrape","Insecam Public Cameras","Insecam 公開カメラ","cyber","scraped","http://www.insecam.org/en/bycountry/JP/","Publicly accessible IP cameras in Japan",NULL,"cameras",1,21600},
 {"flickr-geo","Flickr Geotagged Photos","Flickr ジオタグ写真","social","api","https://api.flickr.com/services/rest/","Geotagged photos from Flickr in Japan",NULL,"social",1,3600},
@@ -53,28 +75,16 @@ static const src_meta M[]={
 {"sentinel-japan","Sentinel Hub Japan","Sentinel Hub 日本","satellite","api","https://services.sentinel-hub.com/","Copernicus Sentinel satellite imagery over Japan",NULL,"satellite",1,86400},
 {"docomo-population","NTT Docomo Population Stats","NTTドコモ モバイル空間統計","commercial","api","https://mobaku.jp/","Mobile spatial statistics from NTT Docomo (paid)",NULL,"population",0,3600},
 {"agoop-flow","Agoop People Flow","Agoop 人流データ","commercial","api","https://www.agoop.co.jp/","People flow analytics data (paid)",NULL,"population",0,3600},
-{"jma-amedas","JMA AMeDAS","アメダス","environment","api","https://www.jma.go.jp/bosai/amedas/","Automated Meteorological Data Acquisition System stations",NULL,"weather",1,600},
 {"jma-himawari","JMA Himawari Satellite","ひまわり衛星","environment","api","https://www.jma.go.jp/bosai/map.html","Himawari-9 geostationary satellite imagery",NULL,"satellite",1,600},
-{"jma-typhoon","JMA Typhoon Track","気象庁 台風情報","environment","api","https://www.jma.go.jp/bosai/map.html#contents=typhoon","Typhoon tracking and forecast paths",NULL,"weather",1,3600},
-{"jma-uv","JMA UV Index","気象庁 紫外線情報","environment","api","https://www.jma.go.jp/bosai/uv/","UV index forecast data",NULL,"weather",1,3600},
-{"jma-pollen","Pollen Forecast","環境省花粉情報","environment","api","https://kafun.env.go.jp/","Cedar and cypress pollen distribution forecast",NULL,"air-quality",1,3600},
 {"pm25-japan","PM2.5 Distribution","PM2.5分布予測","environment","api","https://pm25.jp/","PM2.5 real-time distribution map",NULL,"air-quality",1,3600},
 {"windy-japan","Windy Japan","Windy 日本","environment","web_request","https://www.windy.com/","Wind and weather visualization overlay",NULL,"weather",1,1800},
 {"tenki-jp","tenki.jp Weather","tenki.jp 天気","environment","scraped","https://tenki.jp/","Detailed Japanese weather forecasts",NULL,"weather",1,1800},
-{"vnet","V-net Volcano Observation","V-net 火山観測網","seismic","api","https://www.vnet.bosai.go.jp/","Fundamental Volcano Observation Network",NULL,"volcano",1,600},
-{"bosai-volcano-cam","NIED Volcano Cameras","防災科研 火山カメラ","seismic","web_request","https://www.vnet.bosai.go.jp/","Live volcano monitoring cameras",NULL,"cameras",1,300},
 {"jamstec-argo","JAMSTEC Argo Floats","JAMSTEC アルゴフロート","ocean","api","https://www.jamstec.go.jp/","Deep ocean profiling float data",NULL,"ocean",1,86400},
 {"jma-ice","JMA Sea Ice Okhotsk","気象庁 オホーツク海氷","ocean","api","https://www.jma.go.jp/bosai/ice/","Sea ice extent in Sea of Okhotsk",NULL,"ocean",1,86400},
 {"odpt-flight","ODPT Flight Data","ODPT 航空データ","transport","api","https://api.odpt.org/api/v4/","Flight arrival/departure data",NULL,"aviation",1,300},
 {"flightradar-jp","FlightRadar24 Japan","FlightRadar24 日本","transport","scraped","https://www.flightradar24.com/","Live aircraft positions over Japan",NULL,"aviation",1,60},
 {"marinetraffic-jp","MarineTraffic Japan","MarineTraffic 日本","transport","scraped","https://www.marinetraffic.com/","Live vessel positions around Japan",NULL,"maritime",1,300},
-{"jr-west-delay","JR West Delay Info","JR西日本 運行情報","transport","web_request","https://trafficinfo.westjr.co.jp/","JR West train service status",NULL,"transport",1,60},
-{"jr-central-delay","JR Central Delay Info","JR東海 運行情報","transport","web_request","https://traininfo.jr-central.co.jp/","JR Central / Shinkansen status",NULL,"transport",1,60},
-{"shinkansen-status","Shinkansen Line Status","新幹線 運行状況","transport","web_request","https://www.jreast.co.jp/shinkansen/","All Shinkansen lines operational status",NULL,"transport",1,60},
 {"cycling-ports","Bike Share Ports","シェアサイクル ポート","transport","api","https://docomo-cycle.jp/","Docomo bike sharing port locations and availability",NULL,"transport",1,3600},
-{"mlit-road-traffic","MLIT Road Traffic Census","国交省 道路交通センサス","transport","dataset","https://www.mlit.go.jp/road/","Road traffic volume census data",NULL,"transport",1,604800},
-{"gsi-photo","GSI Aerial Photography","国土地理院 空中写真","geospatial","api","https://cyberjapandata.gsi.go.jp/","Aerial photography tiles from GSI",NULL,"basemap",1,86400},
-{"gsi-hazard","GSI Hazard Maps","国土地理院 ハザードマップ","geospatial","api","https://disaportal.gsi.go.jp/","Flood/landslide/tsunami hazard map overlays",NULL,"hazard",1,86400},
 {"gsi-active-fault","GSI Active Fault Map","国土地理院 活断層図","geospatial","dataset","https://www.gsi.go.jp/bousaichiri/active_fault.html","Active fault line locations",NULL,"hazard",1,604800},
 {"openstreetmap-jp","OpenStreetMap Japan","OpenStreetMap 日本","geospatial","dataset","https://download.geofabrik.de/asia/japan.html","OpenStreetMap Japan data extract",NULL,"basemap",1,604800},
 {"parking-facilities","OSM Parking Facilities","OSM 駐車場","geospatial","api","https://overpass-api.de/","amenity=parking / parking_entrance via Overpass",NULL,"poi",1,86400},
@@ -87,8 +97,6 @@ static const src_meta M[]={
 {"estat-employment","e-Stat Employment","e-Stat 雇用統計","statistics","api","https://api.e-stat.go.jp/","Employment and labor statistics",NULL,"economy",1,86400},
 {"estat-industry","e-Stat Industry Data","e-Stat 産業統計","statistics","api","https://api.e-stat.go.jp/","Industrial production statistics by region",NULL,"economy",1,86400},
 {"jstat-map","jSTAT MAP Grid Stats","jSTAT MAP 統計地図","statistics","api","https://jstatmap.e-stat.go.jp/","Grid-square based statistical mapping",NULL,"population",1,86400},
-{"mhlw-health","MHLW Health Statistics","厚労省 保健統計","statistics","dataset","https://www.mhlw.go.jp/toukei/","Ministry of Health health statistics",NULL,"health",1,604800},
-{"mhlw-covid","MHLW COVID-19 Data","厚労省 COVID-19データ","statistics","api","https://www.mhlw.go.jp/stf/covid-19/","COVID-19 case and vaccination data",NULL,"health",1,3600},
 {"homes-co","Homes.co.jp Rentals","HOME'S 賃貸情報","economy","scraped","https://www.homes.co.jp/","Rental property listings and prices",NULL,"landprice",1,86400},
 {"saigai-info","Cabinet Office Disaster","内閣府 災害情報","safety","api","https://www.bousai.go.jp/","Cabinet Office disaster information system",NULL,"emergency",1,300},
 {"mlit-dam","MLIT Dam Data","国交省 ダム情報","infrastructure","api","https://www.river.go.jp/","Dam operational data and water storage",NULL,"river",1,600},
@@ -96,12 +104,7 @@ static const src_meta M[]={
 {"kepco-power","KEPCO Power Usage","関西電力 電力使用状況","infrastructure","api","https://www.kepco.co.jp/","Kansai Electric Power usage data",NULL,"energy",1,300},
 {"chubu-power","Chubu Electric Power","中部電力 電力使用状況","infrastructure","api","https://www.chuden.co.jp/","Chubu Electric Power usage",NULL,"energy",1,300},
 {"tohoku-power","Tohoku Electric Power","東北電力 電力使用状況","infrastructure","api","https://www.tohoku-epco.co.jp/","Tohoku Electric Power usage",NULL,"energy",1,300},
-{"cell-tower-jp","Cell Tower Locations","携帯基地局","infrastructure","dataset","https://www.tele.soumu.go.jp/","Cell tower and base station locations",NULL,"telecom",1,604800},
 {"ev-charging","EV Charging Stations","EV充電スタンド","infrastructure","api","https://ev.gogo.gs/","Electric vehicle charging station map",NULL,"poi",1,86400},
-{"wifi-hotspot","Free WiFi Hotspots","フリーWiFiスポット","infrastructure","dataset","https://flets.com/freewifi/","Free WiFi hotspot locations across Japan",NULL,"telecom",1,604800},
-{"nicter-darknet","NICTER Darknet Monitor","NICTER ダークネット観測","cyber","web_request","https://www.nicter.jp/","NICT darknet traffic monitoring",NULL,"cyber",1,3600},
-{"jpcert-alerts","JPCERT/CC Alerts","JPCERT/CC 注意喚起","cyber","api","https://www.jpcert.or.jp/","JPCERT Coordination Center security alerts",NULL,"cyber",1,3600},
-{"ipa-vuln","IPA Vulnerability DB","IPA 脆弱性対策情報","cyber","api","https://jvndb.jvn.jp/","IPA/JVN vulnerability database",NULL,"cyber",1,86400},
 {"atlas-jp","RIPE Atlas Japan Probes","RIPE Atlas 日本プローブ","cyber","api","https://atlas.ripe.net/","RIPE Atlas internet measurement probes in Japan",NULL,"cyber",1,3600},
 {"instagram-geo","Instagram Geotagged","Instagram ジオタグ","social","scraped","https://www.instagram.com/","Geotagged Instagram posts from Japan",NULL,"social",0,600},
 {"tiktok-geo","TikTok Geotagged","TikTok ジオタグ","social","scraped","https://www.tiktok.com/","Geotagged TikTok content from Japan",NULL,"social",0,600},
@@ -114,19 +117,13 @@ static const src_meta M[]={
 {"navitime-api","Navitime API","ナビタイム API","commercial","api","https://api-sdk.navitime.co.jp/","Navitime routing and transit API",NULL,"transport",0,300},
 {"here-japan","HERE Maps Japan","HERE Maps 日本","commercial","api","https://developer.here.com/","HERE location platform Japan",NULL,"basemap",0,86400},
 {"yahoo-map-api","Yahoo! Japan Map API","Yahoo!地図 API","commercial","api","https://map.yahoo.co.jp/","Yahoo! Japan Map and geocoding API",NULL,"basemap",1,86400},
-{"ndb-open","NDB Open Data","NDB オープンデータ","health","dataset","https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000177182.html","National Database of health insurance claims open data",NULL,"health",1,604800},
-{"influenza-surveillance","NIID Influenza Watch","国立感染研 インフルエンザ","health","api","https://www.niid.go.jp/niid/ja/flu-map.html","NIID influenza surveillance by prefecture",NULL,"health",1,604800},
-{"food-poisoning","Food Poisoning Reports","食中毒情報","health","api","https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/","MHLW food poisoning incident reports",NULL,"health",1,604800},
 {"kyushu-power","Kyushu Electric Power","九州電力 電力使用状況","infrastructure","api","https://www.kyuden.co.jp/","Kyushu Electric Power usage",NULL,"energy",1,300},
 {"hokkaido-power","Hokkaido Electric Power","北海道電力 電力使用状況","infrastructure","api","https://www.hepco.co.jp/","Hokkaido Electric Power grid usage",NULL,"energy",1,300},
 {"shikoku-power","Shikoku Electric Power","四国電力 電力使用状況","infrastructure","api","https://www.yonden.co.jp/","Shikoku Electric Power usage",NULL,"energy",1,300},
 {"hokuriku-power","Hokuriku Electric Power","北陸電力 電力使用状況","infrastructure","api","https://www.rikuden.co.jp/","Hokuriku Electric Power usage",NULL,"energy",1,300},
 {"chugoku-power","Chugoku Electric Power","中国電力 電力使用状況","infrastructure","api","https://www.energia.co.jp/","Chugoku Electric Power usage",NULL,"energy",1,300},
 {"okinawa-power","Okinawa Electric Power","沖縄電力 電力使用状況","infrastructure","api","https://www.okiden.co.jp/","Okinawa Electric Power usage",NULL,"energy",1,300},
-{"ntt-fiber","NTT Fiber Coverage","NTT光回線 エリア","infrastructure","web_request","https://flets.com/","NTT fiber optic coverage map",NULL,"telecom",1,604800},
 {"mlit-bridge","MLIT Bridge Inspection","国交省 橋梁点検","infrastructure","dataset","https://road-structures-map.mlit.go.jp/","Bridge condition inspection data",NULL,"infrastructure",1,604800},
-{"vics-traffic","VICS Traffic Info","VICS 道路交通情報","transport","web_request","https://www.vics.or.jp/","Vehicle Information Communication System traffic data",NULL,"transport",1,300},
-{"kansai-flights","Kansai Airport Flights","関西空港 フライト情報","transport","web_request","https://www.kansai-airport.or.jp/","Kansai International Airport flights",NULL,"aviation",1,300},
 {"estat-education","e-Stat Education Stats","e-Stat 教育統計","statistics","api","https://api.e-stat.go.jp/","School enrollment and education data by region",NULL,"population",1,86400},
 {"resas-municipality","RESAS Municipal Comparison","RESAS 自治体比較","statistics","api","https://opendata.resas-portal.go.jp/","Municipal-level economic/demographic comparison",NULL,"population",1,86400},
 {"covid19-japan","COVID-19 Japan Dashboard","COVID-19 ダッシュボード","statistics","api","https://covid19.mhlw.go.jp/","COVID-19 Japan open data dashboard",NULL,"health",1,3600},
@@ -135,7 +132,6 @@ static const src_meta M[]={
 {"tochi-info","Tochi.info Land Use","土地情報 土地利用","economy","api","https://tochi.mlit.go.jp/","Land use and zoning information",NULL,"landprice",1,86400},
 {"chiriin-place","GSI Place Names","地理院 地名情報","geospatial","api","https://www.gsi.go.jp/","Official geographic place name database",NULL,"basemap",1,86400},
 {"gcom-w","GCOM-W Water Cycle","GCOM-W 水循環","satellite","api","https://suzaku.eorc.jaxa.jp/GCOM_W/","GCOM-W satellite water cycle observation",NULL,"satellite",1,86400},
-{"bgp-japan","BGP Routing Japan","BGPルーティング 日本","cyber","api","https://stat.ripe.net/","BGP routing data for Japanese ASNs",NULL,"cyber",1,86400},
 {"mapfan-api","MapFan API","MapFan API","commercial","api","https://mapfan.com/","MapFan mapping and POI data",NULL,"basemap",0,86400},
 {"twitter-geo","Twitter/X Geo Posts","Twitter/X ジオ投稿","social","api","https://api.twitter.com/2/tweets/search/recent","Geocoded Twitter/X posts across Japan with engagement metrics",NULL,"twitter-geo",0,600},
 {"facebook-geo","Facebook Check-ins","Facebook チェックイン","social","api","https://graph.facebook.com/","Facebook check-ins and geotagged posts at landmarks across Japan",NULL,"facebook-geo",0,1800},
@@ -167,8 +163,6 @@ static const src_meta M[]={
 {"unified-buses","Unified Buses (fused)","Unified Buses","transport","dataset","internal://unified-buses","Deduplicated nationwide bus stops + terminals - fused MLIT P11 + GTFS-JP + OSM transport + curated highway terminals",NULL,"unified-buses",1,86400},
 {"unified-ais-ships","Unified AIS Ships (fused)","Unified AIS Ships","transport","dataset","internal://unified-ais-ships","Deduplicated AIS vessel positions - fuses MarineTraffic + VesselFinder + maritimeAis (dedup by MMSI/IMO, freshest position wins)",NULL,"unified-ais-ships",1,300},
 {"unified-port-infra","Unified Port Infrastructure (fused)","Unified Port Infra","transport","dataset","internal://unified-port-infra","Deduplicated Japan port infrastructure - fuses curated PortInfra + OSM transport ports + MLIT C02 designated ports",NULL,"unified-port-infra",1,86400},
-{"unified-stations","Unified Stations (cross-mode)","Unified Stations","transport","dataset","internal://unified-stations","Cross-mode canonical stations - one row per physical place, merged from train + subway + tram + monorail via wikidata + spatial/name match",NULL,"unified-stations",1,86400},
-{"unified-station-footprints","Station Footprints (nationwide)","Station Footprints","transport","dataset","internal://unified-station-footprints","Nationwide OSM station-building polygons - floor-plan fills for major interchanges",NULL,"unified-station-footprints",1,86400},
 {"bus-routes","Bus Terminals","バスターミナル","transport","dataset","https://www.bus.or.jp/","Highway bus terminals and city bus depots across Japan",NULL,"bus-routes",1,86400},
 {"ferry-routes","Ferry Terminals","フェリーターミナル","transport","dataset","https://www.jsanet.or.jp/","Ferry terminals (inter-island, Seto Inland, Okinawa, international)",NULL,"ferry-routes",1,86400},
 {"highway-traffic","Expressway IC/JCT/SA/PA","高速道路 IC/JCT/SA/PA","transport","web_request","https://www.driveplaza.com/","NEXCO expressway interchanges, junctions, service areas, parking areas, congestion",NULL,"highway-traffic",1,600},
@@ -203,8 +197,6 @@ static const src_meta M[]={
 {"nowphas-wave","NOWPHAS Wave Network","NOWPHAS 波浪観測網","environment","api","https://nowphas.mlit.go.jp/","PARI NOWPHAS GPS-buoys + ultrasonic wave gauges around Japan",NULL,"nowphas-wave",1,1800},
 {"lighthouse-map","Lighthouses","灯台マップ","transport","api","https://overpass-api.de/api/interpreter","JCG lighthouses across Japan via OSM Overpass + historic Meiji-era register",NULL,"lighthouse-map",1,604800},
 {"jartic-traffic","JARTIC Traffic","JARTIC 道路交通情報","transport","api","https://www.jartic.or.jp/","JARTIC traffic congestion - urban expressways and national highway hotspots",NULL,"jartic-traffic",1,300},
-{"narita-flights","Narita Airport Flights","成田空港 発着便","transport","api","https://aerodatabox.p.rapidapi.com/","Narita International Airport (RJAA/NRT) arrivals + departures via AeroDataBox",NULL,"narita-flights",0,300},
-{"haneda-flights","Haneda Airport Flights","羽田空港 発着便","transport","api","https://aerodatabox.p.rapidapi.com/","Tokyo Haneda Airport (RJTT/HND) arrivals + departures via AeroDataBox",NULL,"haneda-flights",0,300},
 {"drone-nofly","Drone No-Fly Zones","ドローン飛行禁止区域","safety","dataset","https://www.mlit.go.jp/koku/","MLIT/JCAB drone no-fly zones - airports, DID, nuclear, military, imperial",NULL,"drone-nofly",1,86400},
 {"jcg-patrol","JCG Patrol Bases","海上保安庁 巡視船基地","safety","dataset","https://www.kaiho.mlit.go.jp/","Japan Coast Guard - 11 regional headquarters and patrol vessel bases",NULL,"jcg-patrol",1,604800},
 {"government-buildings","Government Buildings","官公庁","government","api","https://overpass-api.de/api/interpreter","Cabinet, Diet, ministries, agencies and prefectural HQ via OSM Overpass",NULL,"government-buildings",1,604800},
@@ -275,7 +267,6 @@ static const src_meta M[]={
 {"marine-traffic","MarineTraffic AIS","マリントラフィック AIS","transport","api","https://services.marinetraffic.com/api/exportvessels/v:8/","MarineTraffic Exportvessels REST API - live AIS positions in Japan bbox (needs MARINETRAFFIC_API_KEY, freemium)",NULL,"marine-traffic",0,300},
 {"vessel-finder","VesselFinder AIS","ベッセルファインダー AIS","transport","api","https://api.vesselfinder.com/vesselslist","VesselFinder Master REST API - live AIS positions in Japan bbox (needs VESSELFINDER_API_KEY, freemium)",NULL,"vessel-finder",0,300},
 {"google-my-maps","Google My Maps","グーグル マイマップ","tourism","api","https://www.google.com/maps/d/kml","Google My Maps public KML exports parsed to points (configure GOOGLE_MYMAPS_IDS env var with comma-separated mids)",NULL,"google-my-maps",1,3600},
-{"camera-discovery","Unified Camera Discovery","統合カメラディスカバリー","cyber","api","https://overpass-api.de/api/interpreter","Fused public-camera discovery across every channel: OSM surveillance, JMA volcano cams, MLIT river cams, Shutoko/Hanshin/NEXCO expressway CCTV, NHK/YouTube/municipal livecams, ski/beach/port webcams, Insecam, Windy/SkylineWebcams/EarthCam aggregators, DuckDuckGo camera dorks, and Shodan camera queries",NULL,"camera-discovery",1,3600},
 {"p2pquake-jma","P2P Quake JMA mirror","P2P地震情報 (JMA)","environment","api","https://api.p2pquake.net/v2/history?codes=551&limit=50","Free community JMA earthquake mirror, JSON + WebSocket. 60 req/min anonymous. Also: wss://api.p2pquake.net/v2/ws",NULL,"earthquake",1,60},
 {"wolfx-eew","Wolfx JMA Earthquake Early Warning","Wolfx 緊急地震速報","environment","api","https://api.wolfx.jp/jma_eew.json","JMA EEW (Earthquake Early Warning) JSON + WebSocket (wss://ws-api.wolfx.jp/jma_eew). No API key required",NULL,"earthquake",1,10},
 {"wolfx-eqlist","Wolfx JMA Earthquake List","Wolfx 地震一覧","environment","api","https://api.wolfx.jp/jma_eqlist.json","Latest 50 JMA earthquake reports. JSON, anonymous",NULL,"earthquake",1,60},
@@ -284,9 +275,7 @@ static const src_meta M[]={
 {"openmeteo-jma","Open-Meteo JMA mirror","Open-Meteo JMA","environment","api","https://api.open-meteo.com/v1/jma","Open-Meteo free public JMA forecast API (no key, rate-limited for non-commercial use)",NULL,"weather",1,3600},
 {"nerv-feed","NERV Disaster Alerts","特務機関NERV","environment","api","https://unii-api.nerv.app/v1/lib/alerts.json","NERV Disaster Prevention multi-hazard alert aggregator (earthquakes, tsunami, volcano, weather)",NULL,"earthquake",1,60},
 {"msil-umishiru","MSIL Umishiru Public APIs","海しる 公開API","transport","api","https://portal.msil.go.jp/apis","Japan Coast Guard MDA \"Umishiru\" (海しる) public API catalog - maritime geo, weather, ports. Free key via portal; bbox JSON (≤1,000 rec)",NULL,"maritime-ais",1,900},
-{"jcg-navarea","JCG NAVAREA XI warnings","海上保安庁 航行警報","transport","scraped","https://www6.kaiho.mlit.go.jp/JAPANNAVAREA/","Japan Coast Guard NAVAREA XI navigation warnings and Maritime Safety Information (MSI)",NULL,"maritime-ais",1,3600},
 {"edinet-filings","FSA EDINET Corporate Filings","EDINET 有価証券報告書","government","api","https://api.edinet-fsa.go.jp/api/v2/documents.json","Japan FSA EDINET disclosures JSON API - every listed company, investment fund, REIT. Free Subscription-Key header; 3-5s throttle required",NULL,"edinet-filings",1,3600},
-{"boj-stats","Bank of Japan statistics","日本銀行 統計","government","api","https://www.stat-search.boj.or.jp/","BOJ statistics portal - monetary aggregates, interest rates, balance of payments, exchange rates (CSV/JSON)",NULL,"edinet-filings",1,21600},
 {"egov-laws","e-Gov Law Search API","e-Gov 法令検索 API","government","api","https://laws.e-gov.go.jp/api/1/lawlists/1","Japanese national laws, ordinances, ministerial regulations - full text XML/JSON. Anonymous",NULL,"edinet-filings",1,86400},
 {"data-go-jp-ckan","data.go.jp CKAN catalog","data.go.jp CKAN","government","api","https://www.data.go.jp/data/api/action/package_search","Federated Japan government open-data CKAN catalog (action/package_search, action/package_show)",NULL,"edinet-filings",1,86400},
 {"geospatial-jp-ckan","geospatial.jp CKAN catalog","地理空間情報 CKAN","geospatial","api","https://www.geospatial.jp/ckan/api/3/action/package_search","MLIT geospatial.jp open data catalog - PLATEAU, disaster hazard layers, transport GIS",NULL,"edinet-filings",1,86400},
@@ -294,8 +283,6 @@ static const src_meta M[]={
 {"nhk-world-rss","NHK World English RSS","NHK World EN RSS","government","api","https://www3.nhk.or.jp/nhkworld/en/news/feeds/","NHK World English news feed (Atom/RSS)",NULL,"news-feed",1,600},
 {"kyodo-rss","Kyodo News English RSS","共同通信 英字 RSS","government","api","https://english.kyodonews.net/rss/news.xml","Kyodo News English RSS feed - domestic and international news wire",NULL,"news-feed",1,600},
 {"jpcert-alerts-rss","JPCERT/CC Alerts RSS","JPCERT/CC 注意喚起 RSS","cyber","api","https://www.jpcert.or.jp/rss/jpcert.rdf","JPCERT Coordination Center security advisories and alerts (RDF/RSS). Anonymous",NULL,"jpcert-alerts",1,3600},
-{"ipa-vuln-rss","IPA Security Alerts RSS","IPA 重要なセキュリティ情報 RSS","cyber","api","https://www.ipa.go.jp/security/announce/alert.rss","IPA (Information-technology Promotion Agency) critical security bulletins RSS",NULL,"jpcert-alerts",1,3600},
-{"nict-atlas","NICT Atlas / NICTER stats","NICT Atlas / NICTER","cyber","api","https://www.nicter.jp/atlas/","NICT darknet sensor network (NICTER) attack traffic visualization and JSON stats endpoints",NULL,"nicter-darknet",1,3600},
 {"gsi-geocode","GSI Address Search","国土地理院 住所検索","geospatial","api","https://msearch.gsi.go.jp/address-search/AddressSearch","GSI (Geospatial Information Authority) address → lat/lon geocoder (JSON). Anonymous",NULL,"geocode",1,86400},
 {"japan-api-prefectures","Japan Prefectures REST API","都道府県 REST API","geospatial","api","https://japanapi.curtisbarnard.com/api/v1/prefectures","Community REST API for Japan prefectures, regions, demographics. Anonymous JSON",NULL,"admin-boundaries",1,604800},
 {"hatena-bookmark","Hatena Bookmark Trending","はてなブックマーク 人気エントリー","social","api","https://b.hatena.ne.jp/hotentry.rss","Japanese-language trending web articles (RDF/RSS). Anonymous",NULL,"hatena-bookmark",1,1800},
@@ -326,7 +313,6 @@ static const src_meta M[]={
 {"github-leaks-jp","GitHub Code Search (JP leaks)","GitHub コード検索 (JP漏洩)","cyber","api","https://api.github.com/search/code","GitHub code search for JP-domain credential / config leaks. Defensive recon. Requires GITHUB_TOKEN",NULL,"github-leaks-jp",1,21600},
 {"grayhat-buckets","GrayhatWarfare (JP buckets)","GrayhatWarfare (JPバケット)","cyber","api","https://buckets.grayhatwarfare.com/","Exposed S3/GCS/Azure buckets matching JP keywords. Requires GRAYHAT_API_KEY (paid)",NULL,"grayhat-buckets",0,21600},
 {"strava-heatmap-bases","Strava Heatmap Probes (Bases)","Strava ヒートマップ (基地)","cyber","api","https://heatmap-external-a.strava.com/","Sample Strava heatmap tiles around USFJ + JSDF installations — activity heuristic indicates base-layout leakage",NULL,"strava-heatmap-bases",1,86400},
-{"ipa-alerts-rss","IPA Security Advisories RSS","IPA セキュリティ情報 RSS","cyber","api","https://www.ipa.go.jp/security/announce/alert.rss","IPA (Information-technology Promotion Agency, Japan) security advisories — distinct cadence from JPCERT/CC",NULL,"ipa-alerts",1,3600},
 {"chan-5ch","5ch Threads","5ちゃんねる スレッド","social","api","https://5ch.net/","Trending threads from curated 5ch boards (subject.txt). Override CHAN5CH_BOARDS",NULL,"chan-5ch",1,1800},
 {"houjin-bangou","Houjin Bangou (corp registry)","法人番号 (国税庁)","government","api","https://www.houjin-bangou.nta.go.jp/webapi/","JP National Tax Agency corporate-number diffs (new/changed/closed). Requires HOUJIN_BANGOU_KEY (free)",NULL,"houjin-bangou",1,86400},
 {"my-jvn","JVN iPedia / MyJVN","JVN iPedia / MyJVN","cyber","api","https://jvndb.jvn.jp/myjvn","IPA/JPCERT Japan Vulnerability Notes — JP-canonical CVE/advisory database",NULL,"my-jvn",1,3600},
@@ -366,74 +352,23 @@ static const src_meta M[]={
 {"yahoo-news-jp-rss","Yahoo! Japan News RSS","Yahoo!ニュース RSS","social","api","https://news.yahoo.co.jp/","Yahoo! JAPAN News topic feeds (top, domestic, world, business, IT)",NULL,"yahoo-news-jp-rss",1,1800},
 {"jp-news-rss","JP news RSS bundle","日本ニュース RSS バンドル","social","api","https://asia.nikkei.com/rss/feed/nar","Aggregated JP news / government RSS (Nikkei, Japan Times, Reuters JP, NHK World, Kantei, NDL)",NULL,"jp-news-rss",1,1800},
 {"nasa-firms-jp","NASA FIRMS active fires (JP)","NASA FIRMS 活火災 日本","environment","api","https://firms.modaps.eosdis.nasa.gov/","NASA FIRMS VIIRS/MODIS active-fire pixels over Japan. Requires NASA_FIRMS_MAP_KEY (free)",NULL,"nasa-firms-jp",1,1800},
-{"jcab-notams","JCAB NOTAMs","JCAB NOTAM","transport","scraped","https://aim-naviserv.mlit.go.jp/aimjp/web/notam.html","Japan Civil Aviation Bureau notices to airmen — TFRs, exercise zones, VIP transit corridors",NULL,"jcab-notams",1,1800},
-{"jcg-msi","JCG Maritime Safety Info (e-Anshin)","海上保安庁 海洋安全情報","transport","scraped","https://www6.kaiho.mlit.go.jp/info/msi.html","JCG MSI broadcasts — exercises, missile-debris zones, sub-surface ops, channel closures (broader than NAVAREA)",NULL,"maritime-ais",1,1800},
 {"tdnet-disclosure","TDnet Timely Disclosure","TDnet 適時開示","government","scraped","https://www.release.tdnet.info/inbs/","TSE Timely Disclosure Network — material filings minutes after decision (M&A, breach, recalls, leadership changes). Distinct from EDINET (statutory archive)",NULL,"tdnet-disclosure",1,1800},
 {"mofa-travel-advisory","MOFA Travel Advisory","外務省 海外安全情報","government","api","https://www.anzen.mofa.go.jp/","JP MOFA travel advisories — JP govt risk read on every country (RSS spotinfo + dangerinfo + info)",NULL,"mofa-advisory",1,3600},
-{"yahoo-crowd-map","Yahoo! Japan Crowd Radar","Yahoo! 混雑レーダー","social","scraped","https://map.yahoo.co.jp/crowd","250 m mesh real-time crowd density derived from Yahoo mobile app footprint",NULL,"crowd-density",1,600},
-{"docomo-mobaku","DOCOMO Mobaku (sample)","モバイル空間統計 公開サンプル","social","scraped","https://mobaku.jp/sample/","DOCOMO Mobile Spatial Statistics — hourly Tokyo mesh population, public sample tier",NULL,"crowd-density",1,3600},
-{"jr-east-delay","JR East delay certificates","JR東日本 遅延証明書","transport","scraped","https://traininfo.jreast.co.jp/delay_certificate/","JR East line-level daily delay certificates with cause text — chokepoint pattern over time",NULL,"train-delays",1,1800},
 {"bike-share-gbfs","Bike-share GBFS (HelloCycling, DOCOMO Cycle)","シェアサイクル GBFS","transport","api","https://api-public.odpt.org/api/v4/gbfs/","GBFS feeds for HelloCycling + DOCOMO Cycle Tokyo — station positions, real-time bike/dock counts (last-mile demand leading indicator)",NULL,"bike-share",1,600},
-{"tmp-protests","Tokyo Metropolitan Police — protest applications","警視庁 道路使用許可・集団行進","government","scraped","https://www.keishicho.metro.tokyo.lg.jp/kotsu/jiko/koutsu_kisei/index.html","TMP 道路使用許可・集団行進等 listings — predictive riot-police deployment intel",NULL,"protest-applications",1,21600},
 {"grid-usage-realtime","10-grid 5-min supply/demand CSVs","10エリア 5分電力CSV","infrastructure","api","https://www.tepco.co.jp/forecast/html/images/juyo-d-j.csv","Per-grid 5-minute supply/demand CSV feeds — TEPCO, KEPCO, Chuden, Tohoku, Kyuden, HEPCO, Yonden, Rikuden, Chugoku, Okiden",NULL,"grid-usage",1,300},
 {"telegeography-cables","TeleGeography Submarine Cables (JP-landing)","TeleGeography 海底ケーブル","infrastructure","api","https://www.submarinecablemap.com/api/v3/cable/cable-geo.json","TeleGeography canonical submarine cable + landing-point geojson, filtered to JP bbox. CC-BY",NULL,"submarine-cables",1,604800},
-{"intelx-leaks","IntelX leaks search","IntelX リーク検索","cyber","api","https://2.intelx.io/intelligent/search","IntelX paste / leak / darknet search filtered to JP TLDs / ASN / kanji corp names. Free tier ≈ 50 reqs/month. Requires INTELX_KEY",NULL,"intelx-leaks",1,21600},
-{"psbdmp-pastes","PSBDMP / Pastebin mirror","PSBDMP / Pastebin","cyber","api","https://psbdmp.ws/","Pastebin mirror search for JP TLDs / ASN / kanji corp names. Anonymous",NULL,"psbdmp-pastes",1,3600},
 {"telegram-jp-channels","Telegram public channels (JP)","Telegram 日本パブリックチャネル","cyber","scraped","https://tgstat.com/","Public Telegram channels (~30 JP-relevant) — leaks / doxbins / OPSEC chatter. Requires TG_API_ID + TG_API_HASH for MTProto pulls",NULL,"telegram-jp-channels",0,1800},
 {"discord-jp-servers","Discord public servers (JP)","Discord パブリックサーバー (日本)","cyber","scraped","https://disboard.org/","Disboard / top.gg JP-tagged servers — invite metadata, member counts. ToS-rate-limited",NULL,"discord-jp-servers",1,86400},
-{"securitytrails-history","SecurityTrails historical DNS","SecurityTrails DNS履歴","cyber","api","https://api.securitytrails.com/v1/history","A/AAAA/MX/TXT history per JP-high-value target. Requires SECURITYTRAILS_KEY",NULL,"securitytrails-history",0,86400},
-{"whoisxml-reverse","WhoisXMLAPI reverse / bulk","WhoisXMLAPI 逆引き","cyber","api","https://whois.whoisxmlapi.com/","Reverse-WHOIS by registrant (ministries / megacorps) + bulk WHOIS history. Requires WHOISXML_KEY",NULL,"whoisxml-reverse",0,86400},
 {"dnstwist-jp-targets","DNSTwist (JP-corp typosquats)","DNSTwist 類似ドメイン","cyber","dataset","internal://dnstwist","Local dnstwist library generating typosquats for mufg.jp / ntt.co.jp / mhlw.go.jp etc., then DNS-resolving live. Bundle as worker script",NULL,"dnstwist-jp-targets",1,86400},
-{"gitlab-bitbucket-leaks","GitLab + Bitbucket leak hunt","GitLab/Bitbucket 漏洩","cyber","api","https://gitlab.com/api/v4/search","Public code search across GitLab + Bitbucket for JP-domain creds / .env. Requires GITLAB_TOKEN + BITBUCKET_TOKEN",NULL,"gitlab-bitbucket-leaks",1,21600},
-{"doxbin-mirrors","Doxbin / Doxagram mirrors","Doxbin ミラー","cyber","scraped","internal://doxbin-mirrors","Archive.ph + tor-onion Doxbin mirrors — sensitive: implement only behind strict gating. Register-only",NULL,"doxbin-mirrors",1,86400},
-{"nitter-mirrors","Nitter mirror network","Nitter ミラー","social","scraped","https://nitter.net/","X/Twitter RSS proxy via Nitter instances — keyless alternative to twitter-geo paid API",NULL,"nitter-mirrors",1,1800},
-{"russian-market-stealer","Stealer cloud mirrors (Russian Market)","Stealer クラウド (RU市場)","cyber","scraped","internal://russian-market-stealer","Tor / proxy access to Russian-Market-style stealer dumps targeting JP banks / exchanges. Highly sensitive — register-only with manual gating",NULL,"russian-market-stealer",1,86400},
 {"instagram-locations","Instagram public location pages","Instagram 公開ロケーション","social","scraped","https://www.instagram.com/explore/locations/","Top posts/reels by JP location ID. Requires session cookie; ToS-rate-limited",NULL,"instagram-locations",1,86400},
-{"tiktok-jp-discover","TikTok JP discover","TikTok 日本 ディスカバー","social","scraped","https://www.tiktok.com/discover","JP-locale trending hashtags + sounds + geo-tagged posts",NULL,"tiktok-jp-discover",1,1800},
-{"strava-segments-jp","Strava segments (JP bbox)","Strava セグメント 日本","cyber","api","https://www.strava.com/api/v3/segments","Strava named segment leaderboards JP-bbox — routine-inference around bases + sensitive sites. Requires STRAVA_TOKEN",NULL,"strava-segments-jp",0,86400},
-{"pogo-raids-jp","Pokemon GO raids / gyms","ポケモンGO レイド / ジム","social","scraped","https://gomap.eu/","Community trackers — raid + gym density (proxy for public outdoor POI density)",NULL,"pogo-raids-jp",1,3600},
-{"wantedly-bizreach","Wantedly + Bizreach profiles","Wantedly + Bizreach プロフィール","social","scraped","https://www.wantedly.com/","Public corporate-profile pages — employer history + skills. ToS-rate-limited",NULL,"wantedly-bizreach",1,86400},
 {"eight-sansan","Eight / Sansan public cards","Eight / Sansan 名刺","social","scraped","https://8card.net/","Public business cards — name, title, company. ToS-rate-limited",NULL,"eight-sansan",1,86400},
 {"linkedin-jp-search","LinkedIn JP search","LinkedIn 日本検索","social","scraped","https://www.linkedin.com/","Public-profile search by JP employer (gov, JSDF, METI…). Requires LI_COOKIE; ToS-heavy",NULL,"linkedin-jp-search",1,86400},
-{"steam-jp-users","Steam Community JP users","Steam JPユーザー検索","social","scraped","https://steamcommunity.com/search/users/?country=JP","Country=JP profile enumeration with recent activity timestamps",NULL,"steam-jp-users",1,86400},
 {"psn-xbox-jp","PSN / Xbox Live (JP gamertags)","PSN / Xbox Live (日本)","social","api","internal://psn-xbox","JP-located gamertags + online status. Requires PSN_API + XBOX_API third-party keys. Register-only",NULL,"psn-xbox-jp",0,86400},
-{"vrchat-active-jp","VRChat — active JP worlds","VRChat アクティブ JPワールド","social","api","https://vrchat.com/api/1/worlds/active","Active JP-tagged worlds + instance headcount. Requires VRC_AUTH cookie",NULL,"vrchat-active-jp",0,1800},
 {"reddit-jp-subs","Reddit r/japan + JP subs","Reddit 日本サブレディット","social","api","https://www.reddit.com/r/japan/new.json","r/japan / r/japanlife / r/Tokyo / r/newsokur / r/JapanFinance — keyless JSON listings",NULL,"reddit-jp-subs",1,1800},
-{"yahoo-chiebukuro","Yahoo! Chiebukuro Q&A","Yahoo! 知恵袋","social","scraped","https://chiebukuro.yahoo.co.jp/","JP-locale Q&A platform — mentions of locations + proper names",NULL,"yahoo-chiebukuro",1,3600},
-{"tinder-bumble-proximity","Tinder/Bumble proximity probe (Sybil)","Tinder/Bumble 近接プローブ","social","scraped","internal://tinder-bumble","Sybil-account proximity probe at point X. Highly sensitive — register-only with strict legal gating",NULL,"tinder-bumble-proximity",1,86400},
-{"twitch-jp-streams","Twitch JP live streams","Twitch JP ライブ","social","api","https://api.twitch.tv/helix/streams","language=ja live streams + viewer counts + game tags. Requires TWITCH_CLIENT_ID + TWITCH_CLIENT_SECRET",NULL,"twitch-jp-streams",1,600},
 {"note-com-profiles","note.com profile search","note.com プロフィール検索","social","api","https://note.com/api/v2/searches?context=user","note.com author search by tag/location (extension of note-com-trending)",NULL,"note-com-profiles",1,3600},
 {"hatena-bookmark-extended","Hatena Bookmark (entry list)","はてなブックマーク エントリ","social","api","https://b.hatena.ne.jp/entrylist.rss","Full entry-list RSS — bookmarked URL buzz proxy (extension of hatena-bookmark)",NULL,"hatena-bookmark-extended",1,1800},
-{"jpo-jplatpat","JPO J-PlatPat (patents)","JPO J-PlatPat 特許","government","api","https://www.j-platpat.inpit.go.jp/","Japan Patent Office — patents + utility + designs by IPC class + applicant",NULL,"jpo-jplatpat",1,86400},
-{"teikoku-failures","Teikoku Databank failures","帝国データバンク 倒産情報","government","scraped","https://www.tdb.co.jp/tosan/syosai/","Monthly corporate bankruptcy / liquidation summary",NULL,"teikoku-failures",1,86400},
-{"tsr-closures","Tokyo Shoko Research closures","東京商工リサーチ 倒産","government","scraped","https://www.tsr-net.co.jp/news/tsr_release/","TSR release feed — corporate closures / liquidations",NULL,"tsr-closures",1,86400},
-{"mic-elections","MIC election results","総務省 選挙結果","government","scraped","https://www.soumu.go.jp/senkyo/","Per-scrutin CSVs — national, prefecture, lower / upper house, local",NULL,"mic-elections",1,604800},
-{"jnto-arrivals","JNTO arrivals statistics","JNTO 訪日外国人","government","api","https://statistics.jnto.go.jp/","Monthly inbound visitors by nationality / mode / lodging prefecture",NULL,"jnto-arrivals",1,86400},
-{"jr-boarding-stats","JR / Tokyo Metro boarding stats","JR / 東京メトロ 乗降客数","transport","scraped","https://www.jreast.co.jp/passenger/","Annual per-station passenger boardings (乗降客数)",NULL,"jr-boarding-stats",1,604800},
-{"ndl-search","NDL OpenSearch","国立国会図書館 サーチ","government","api","https://iss.ndl.go.jp/api/opensearch","National Diet Library bibliographic OpenSearch — books / journals / photos",NULL,"ndl-search",1,86400},
-{"saibansyo-rulings","Saibansyo court rulings","裁判所 判例検索","government","scraped","https://www.courts.go.jp/app/hanrei_jp/list1","Public ruling index — Supreme Court + High / District / Family / Summary",NULL,"saibansyo-rulings",1,86400},
-{"jpo-trademarks","JPO trademarks","JPO 商標検索","government","api","https://www.j-platpat.inpit.go.jp/p1101","INPIT trademark search — class, applicant, status",NULL,"jpo-trademarks",1,86400},
-{"jftc-mergers","JFTC merger filings","公取委 届出","government","scraped","https://www.jftc.go.jp/dk/kiseido/todokeide/index.html","JFTC M&A notifications + concentration reviews",NULL,"jftc-mergers",1,86400},
-{"jpx-quotes","JPX equity statistics","JPX 株式統計","government","api","https://www.jpx.co.jp/markets/statistics-equities/","TSE daily equity stats — top movers + sector + Nikkei225 weights",NULL,"jpx-quotes",1,21600},
-{"fsa-crypto-exchanges","FSA registered crypto exchanges","金融庁 暗号資産業者","government","scraped","https://www.fsa.go.jp/policy/virtual_currency02/","FSA registered crypto-asset exchange service providers — diff for entrants / suspensions",NULL,"fsa-crypto-exchanges",1,604800},
 {"houmukyoku-commercial","Houmukyoku 商業登記 (officers)","法務局 商業登記","government","scraped","https://www1.touki.or.jp/","Officers / directors per company (extension of houjin-bangou). Paid record-fetch per pull",NULL,"houjin-bangou",0,604800},
-{"tepco-outage","TEPCO Kanto outage map","TEPCO 停電マップ","infrastructure","api","https://teideninfo.tepco.co.jp/","Per-municipality power-outage feed with customer-count granular",NULL,"tepco-outage",1,600},
-{"regional-grid-outages","9 regional outage portals","9地域 停電ポータル","infrastructure","api","https://www.kansai-td.co.jp/teiden/area_jishin/","KEPCO / Chubu / Tohoku / Kyuden / HEPCO / Rikuden / Chugoku / Yonden / Okiden outage portals",NULL,"regional-grid-outages",1,600},
-{"gas-outages","Gas operator outage portals","ガス事業者 停止ポータル","infrastructure","api","https://www.tokyo-gas.co.jp/saigai/","Tokyo / Osaka / Toho / Saibu Gas disaster info portals",NULL,"gas-outages",1,1800},
 {"luup-private","LUUP scooters / e-bikes (ports)","LUUP 電動キックボード/自転車","transport","api","https://api.luup.sc/v1/ports","LUUP e-scooter / e-bike share — per-port real-time vehicle counts across Tokyo / Osaka / Kyoto / Yokohama bboxes. Read-only. Requires LUUP_MOBILE_TOKEN (bearer from LUUP mobile sign-up)",NULL,"luup-private",0,600},
-{"blitzortung-lightning","Blitzortung lightning network","Blitzortung 雷検知","environment","api","https://www.blitzortung.org/en/live_lightning_maps.php","Citizen-network real-time lightning impacts (WSS feed)",NULL,"blitzortung-lightning",1,60},
-{"nexco-roadwork","NEXCO roadwork / closures","NEXCO 工事・閉鎖","transport","scraped","https://www.e-nexco.co.jp/traffic/","NEXCO East / Central / West roadwork + lane-closure outlook",NULL,"nexco-roadwork",1,21600},
-{"kafun-pollen","MOE pollen monitoring (はなこさん)","環境省 花粉観測","environment","api","https://kafun.env.go.jp/","Per-prefecture pollen concentration — cedar / cypress / grasses",NULL,"kafun-pollen",1,3600},
-{"earthquake-network-citizen","EQN citizen smartphones","EQN 市民スマホ検知","environment","api","https://www.earthquakenetwork.it/realtime/","Citizen smartphone-accelerometer quake detections — complements wolfx-eew",NULL,"earthquake-network-citizen",1,60},
-{"nied-mowlas","NIED MOWLAS (unified seismic)","NIED MOWLAS 統合地震","seismic","api","https://www.mowlas.bosai.go.jp/","K-NET + KiK-net + Hi-net + F-net + S-net + DONET — top-level merged portal",NULL,"nied-mowlas",1,3600},
-{"comiket-events","Comiket / Comic City calendar","コミケ / コミックシティ","social","scraped","https://www.comiket.co.jp/info-a/","Doujin event calendar — Big Sight / Makuhari occupancy spikes",NULL,"comiket-events",1,86400},
-{"sumo-tournaments","JSA sumo (本場所) data","日本相撲協会 本場所","social","scraped","https://www.sumo.or.jp/EnHonbashoMain/torikumi/","6 honbasho/year — bouts, results, injury reports",NULL,"sumo-tournaments",1,86400},
-{"mic-broadcast-towers","MIC broadcast tower registry","総務省 放送局検索","infrastructure","api","https://www.tele.soumu.go.jp/giga-search/","Every licensed AM/FM/TV/community-FM transmitter + amateur repeater",NULL,"mic-broadcast-towers",1,604800},
-{"yahoo-auctions","Yahoo! Auctions sellers","ヤフオク 出品者","classifieds","scraped","https://auctions.yahoo.co.jp/","Top JP marketplace — per-seller history search. ToS-rate-limited",NULL,"yahoo-auctions",1,21600},
-{"kakaku-prices","Kakaku.com price intel","価格.com 価格情報","classifieds","scraped","https://kakaku.com/","JP price tracker — electronics / cars / appliances / ISP / real-estate",NULL,"kakaku-prices",1,21600},
-{"michi-no-eki","Michi-no-Eki directory","道の駅 ディレクトリ","transport","scraped","https://www.michi-no-eki.jp/","MLIT 道の駅 roadside-station registry — camping-car / secondary-route POIs",NULL,"michi-no-eki",1,604800},
-{"nhk-relay-towers","NHK broadcast / relay towers","NHK 放送局・中継局","infrastructure","scraped","https://www.nhk.or.jp/corporateinfo/english/operations/","NHK studios + relay-transmitter network",NULL,"nhk-relay-towers",1,604800},
-{"mext-schools","MEXT school registry","文科省 学校基本調査","government","api","https://www.mext.go.jp/b_menu/toukei/chousa01/","Every elementary / junior / HS / college / university — yearly CSV",NULL,"mext-schools",1,604800},
 };
 static const int N=sizeof(M)/sizeof(M[0]);
 /* ids are unique post-dedupe → a plain forward scan is unambiguous.

@@ -1,0 +1,8 @@
+=== BIGDATACLOUD_REVERSE  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[BIGDATACLOUD_REVERSE] entity must be 'lat,lon'
+[BIGDATACLOUD_REVERSE] emitted 0
+[sched] BIGDATACLOUD_REVERSE run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

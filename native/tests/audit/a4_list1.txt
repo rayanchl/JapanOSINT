@@ -1,0 +1,15 @@
+bom-au-warnings
+copernicus-ems
+emsc-quakes
+iceland-quakes
+metoffice-warnings
+nhc-cpac
+pdc-disasters
+volcanodiscovery
+bird-makeup-jp
+kitco-news
+trading-econ
+gcom-w
+japan-reit
+mlit-transaction
+unesco-heritage

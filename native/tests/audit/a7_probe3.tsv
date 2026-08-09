@@ -1,0 +1,10 @@
+nerv-unii	https://unii-api.nerv.app/v1/lib/alerts.json
+nerv-unii2	https://unii-api.nerv.app/v1/lib/earthquakes.json
+nhkw1	https://www3.nhk.or.jp/nhkworld/en/news/rss/
+nhkw2	https://www3.nhk.or.jp/nhkworld/data/en/news/all.json
+nhkw3	https://www3.nhk.or.jp/nhkworld/en/news/feed/
+nhkw4	https://www3.nhk.or.jp/rss/news/cat0.xml
+nhkw5	https://www3.nhk.or.jp/nhkworld/en/news/rss.xml
+note1	https://note.com/api/v3/searches?context=hashtag&q=%E6%97%A5%E6%9C%AC
+note2	https://note.com/api/v2/hashtags/trending
+note3	https://note.com/api/v3/notes?q=&context=note&mode=hot

@@ -1,0 +1,20 @@
+=== TOR_ONIONOO  entity=Tokyo
+exit: 0
+sched: rc=0 records=1 493ms
+--- stderr ---
+[TOR_ONIONOO] emitted 1
+[sched] TOR_ONIONOO run rc=0 records=1 493ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: tor-relay=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            TOR_ONIONOO|FBC604D7A017D677ADDD6E1D884C5F49A127016D
+  title          Senftokyo
+  body           {"nickname":"Senftokyo","fingerprint":"FBC604D7A017D677ADDD6E1D884C5F49A127016D","or_address":"171.22.79.251:1194","country":"jp","as_name":"HostHatch, LLC","running":true,"source":"Tor Onionoo"}
+  summary        HostHatch, LLC
+  link           https://metrics.torproject.org/rs.html#details/FBC604D7A017D677ADDD6E1D884C5F49A127016D
+  language       en
+  record_type    tor-relay
+  tags           ["osint-search","TOR_ONIONOO"]
+  properties     {"fingerprint":"FBC604D7A017D677ADDD6E1D884C5F49A127016D","service":"TOR_ONIONOO","success":true}

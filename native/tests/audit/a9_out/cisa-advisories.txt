@@ -1,0 +1,7 @@
+=== cisa-advisories
+exit: 1
+sched: rc=-1 records=0 71ms
+--- stderr ---
+[sched] cisa-advisories run rc=-1 records=0 71ms
+[detect] anomaly opened: cisa-advisories verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

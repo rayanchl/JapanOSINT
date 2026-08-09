@@ -10,8 +10,6 @@
 #include <string.h>
 #include <time.h>
 
-#define TOKYO_LON 139.6917
-#define TOKYO_LAT 35.6895
 #define VT_BASE "https://www.virustotal.com/api/v3/domains/"
 
 static const char *const DEFAULT_DOMAINS[] = {
@@ -22,13 +20,13 @@ static const char *const DEFAULT_DOMAINS[] = {
 #define N_DEFAULT_DOMAINS (int)(sizeof DEFAULT_DOMAINS / sizeof DEFAULT_DOMAINS[0])
 
 static void add_tokyo_geom(cJSON *f) {
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *co = cJSON_CreateArray();
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LON));
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LAT));
-  cJSON_AddItemToObject(g, "coordinates", co);
-  cJSON_AddItemToObject(f, "geometry", g);
+  /* NO GEOMETRY. Every row here used to be emitted at Tokyo Station
+   * (35.6895, 139.6917). What this source reports has no location,
+   * and stacking every row on one pin is the fabrication the
+   * 2026-07-31 audit deleted from cisa-kev-jp, poc-in-github and
+   * peeringdb-jp. Confirmed live by tests/contract/source_contract.py.
+   * lib/geojson.c handles an absent geometry correctly — do NOT
+   * reintroduce a fallback coordinate. */
 }
 
 /* a.x — VT attribute or undefined; JS leaves the prop value `undefined`

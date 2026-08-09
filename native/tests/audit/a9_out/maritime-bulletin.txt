@@ -1,0 +1,7 @@
+=== maritime-bulletin
+exit: 1
+sched: rc=-1 records=0 133ms
+--- stderr ---
+[sched] maritime-bulletin run rc=-1 records=0 133ms
+[detect] anomaly opened: maritime-bulletin verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

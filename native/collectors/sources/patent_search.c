@@ -4,6 +4,7 @@
  * patents by title. PatentsView now requires an API key, so this gates on
  * PATENTSVIEW_API_KEY and is honest-empty without one. (Japan-specific patents
  * are already covered by the scheduled JPO collectors.) */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/httpclient.h"
 #include "../../third_party/cJSON.h"
@@ -12,29 +13,26 @@
 #include <string.h>
 #include <ctype.h>
 
-static void urlenc(const char *s, char *out, size_t cap) {
-  size_t o = 0;
-  for (const char *p = s; *p && o + 4 < cap; p++) {
-    unsigned char c = (unsigned char)*p;
-    if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') out[o++] = (char)c;
-    else o += (size_t)snprintf(out + o, cap - o, "%%%02X", c);
-  }
-  out[o] = 0;
-}
-static const char *jstr(cJSON *o, const char *k) {
-  cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
-}
-
 static int patent_run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!q || !*q) return 0;
   const char *key = getenv("PATENTSVIEW_API_KEY");
-  if (!key || !*key) return 0;                  /* honest empty without key */
+  if (!key || !*key) {                          /* honest empty without key */
+    fprintf(stderr, "[patent-search] gated (no PATENTSVIEW_API_KEY)\n");
+    return 0;
+  }
 
-  char qjson[400];
-  snprintf(qjson, sizeof qjson, "{\"_text_any\":{\"patent_title\":\"%s\"}}", q);
-  char qenc[800]; urlenc(qjson, qenc, sizeof qenc);
+  /* The entity is analyst-supplied and used to be pasted straight into a JSON
+   * literal, so a company name containing a `"` (or a Windows path with a `\`)
+   * produced a body PatentsView rejects. cJSON escapes it correctly. */
+  cJSON *qo = cJSON_CreateObject(), *qany = cJSON_CreateObject();
+  cJSON_AddStringToObject(qany, "patent_title", q);
+  cJSON_AddItemToObject(qo, "_text_any", qany);
+  char *qjson = cJSON_PrintUnformatted(qo);
+  cJSON_Delete(qo);
+  if (!qjson) return 0;
+  char qenc[800]; jo_urlencode_buf(qjson, qenc, sizeof qenc);
+  free(qjson);
   const char *fenc = "%5B%22patent_id%22%2C%22patent_title%22%2C%22patent_date%22%5D";
   char url[1100];
   snprintf(url, sizeof url,
@@ -52,9 +50,9 @@ static int patent_run(const source_ctx *ctx, intel_sink *sink) {
   int emitted = 0, n = (pats && cJSON_IsArray(pats)) ? cJSON_GetArraySize(pats) : 0;
   for (int i = 0; i < n; i++) {
     cJSON *p = cJSON_GetArrayItem(pats, i);
-    const char *pid = jstr(p, "patent_id");
-    const char *ptitle = jstr(p, "patent_title");
-    const char *pdate = jstr(p, "patent_date");
+    const char *pid = jo_str(p, "patent_id");
+    const char *ptitle = jo_str(p, "patent_title");
+    const char *pdate = jo_str(p, "patent_date");
     if (!pid) continue;
     cJSON *out = cJSON_CreateObject();
     cJSON_AddStringToObject(out, "source", "patentsview.org");
@@ -80,7 +78,10 @@ static int patent_run(const source_ctx *ctx, intel_sink *sink) {
     free(bj); free(pj); cJSON_Delete(out); cJSON_Delete(props);
   }
   cJSON_Delete(j);
-  return emitted;
+  fprintf(stderr, "[PATENT_SEARCH] emitted %d\n", emitted);
+  /* STATUS code, not a row count: the fetch and parse both succeeded above, so
+   * a query with no granted patents is an honest empty, not an errored run. */
+  return 0;
 }
 
 static const source_def patent_def = {

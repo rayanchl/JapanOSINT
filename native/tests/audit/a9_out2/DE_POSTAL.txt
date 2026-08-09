@@ -1,0 +1,19 @@
+=== DE_POSTAL  entity=10115
+exit: 0
+sched: rc=0 records=1 131ms
+--- stderr ---
+[DE_POSTAL] emitted 1
+[sched] DE_POSTAL run rc=0 records=1 131ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: de-locality=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            DE_POSTAL|deplz:10115:Berlin
+  title          Berlin
+  body           {"locality":"Berlin","postal_code":"10115","municipality":"Berlin, Stadt","federal_state":"Berlin","source":"OpenPLZ"}
+  summary        Berlin, Stadt, Berlin
+  language       de
+  record_type    de-locality
+  tags           ["osint-search","DE_POSTAL"]
+  properties     {"service":"DE_POSTAL","success":true}

@@ -10,6 +10,7 @@
  *
  * Real data only; honest-empty when a platform is auth-gated and no key/usable
  * response is available. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "social_fuse.h"
 #include "../../core/httpclient.h"
@@ -21,10 +22,6 @@
 
 static const char *handle(const char *e) {           /* strip a leading @ */
   return (e && e[0] == '@') ? e + 1 : e;
-}
-static const char *jstr(cJSON *o, const char *k) {
-  cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
 }
 
 static int emit(intel_sink *sink, const char *entity, const char *service,
@@ -62,13 +59,13 @@ static int reddit_run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(out, "source", "reddit.com");
   cJSON_AddStringToObject(out, "username", u);
   const char *keepS[] = {"name", "id", NULL};
-  for (int i = 0; keepS[i]; i++) { const char *v = jstr(d, keepS[i]); if (v) cJSON_AddStringToObject(out, keepS[i], v); }
+  for (int i = 0; keepS[i]; i++) { const char *v = jo_str(d, keepS[i]); if (v) cJSON_AddStringToObject(out, keepS[i], v); }
   cJSON *tk = cJSON_GetObjectItem(d, "total_karma");
   if (tk && cJSON_IsNumber(tk)) cJSON_AddNumberToObject(out, "total_karma", tk->valuedouble);
   cJSON *cu = cJSON_GetObjectItem(d, "created_utc");
   if (cu && cJSON_IsNumber(cu)) cJSON_AddNumberToObject(out, "created_utc", cu->valuedouble);
   cJSON *sr = cJSON_GetObjectItem(d, "subreddit");
-  if (sr) { const char *desc = jstr(sr, "public_description"); if (desc && *desc) cJSON_AddStringToObject(out, "bio", desc); }
+  if (sr) { const char *desc = jo_str(sr, "public_description"); if (desc && *desc) cJSON_AddStringToObject(out, "bio", desc); }
   char link[256]; snprintf(link, sizeof link, "https://www.reddit.com/user/%s", u);
   int r = emit(sink, ctx->entity, "REDDIT_LOOKUP", "[\"osint-search\",\"REDDIT_LOOKUP\"]",
                "reddit.com", out, link);
@@ -139,7 +136,7 @@ static int instagram_run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *out = cJSON_CreateObject();
   cJSON_AddStringToObject(out, "source", "instagram.com");
   cJSON_AddStringToObject(out, "username", u);
-  const char *full = jstr(user, "full_name"), *bio = jstr(user, "biography");
+  const char *full = jo_str(user, "full_name"), *bio = jo_str(user, "biography");
   if (full && *full) cJSON_AddStringToObject(out, "full_name", full);
   if (bio && *bio) cJSON_AddStringToObject(out, "bio", bio);
   cJSON *ec = cJSON_GetObjectItem(user, "edge_followed_by");

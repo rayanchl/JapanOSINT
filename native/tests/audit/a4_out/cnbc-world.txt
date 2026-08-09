@@ -1,0 +1,45 @@
+=== cnbc-world
+exit: 0
+sched: rc=0 records=30 212ms
+--- stderr ---
+[rss] cnbc-world emitted 30
+[sched] cnbc-world run rc=0 records=30 212ms
+--- persisted: 30 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=30
+sub_source_id: (null)=30
+
+--- row 1 ---
+  uid            cnbc-world|108342864
+  title          Dwindling cash and soaring memory costs: Tech's AI buildout has ballooning price tag
+  body           Amazon, Alphabet and Tesla all reported negative cash flow in the latest quarter, while Meta's cash generation plummeted by 91%.
+  summary        Amazon, Alphabet and Tesla all reported negative cash flow in the latest quarter, while Meta's cash generation plummeted by 91%.
+  link           https://www.cnbc.com/2026/07/31/tech-earnings-cash-memory-ai.html
+  language       en
+  published_at   Fri, 31 Jul 2026 13:26:59 GMT
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"108342864"}
+
+--- row 2 ---
+  uid            cnbc-world|108343090
+  title          How Leopold Aschenbrenner built a $45 billion AI hedge fund — and lost most of it in days
+  body           Leopold Aschenbrenner, a former OpenAI researcher-turned-hedge fund manager, saw a dramatic decline this week in his AI-focused fund, Situational Awareness.
+  summary        Leopold Aschenbrenner, a former OpenAI researcher-turned-hedge fund manager, saw a dramatic decline this week in his AI-focused fund, Situational Awareness.
+  link           https://www.cnbc.com/2026/07/31/leopold-aschenbrenner-situational-awareness-fund-fire-sale.html
+  language       en
+  published_at   Fri, 31 Jul 2026 17:57:53 GMT
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"108343090"}
+
+--- row 3 ---
+  uid            cnbc-world|108342831
+  title          Exxon and Chevron profits surge on rising oil prices due to Iran war
+  body           ExxonMobil and Chevron on Friday reported second-quarter profits that surged on rising oil prices due to the Iran war.
+  summary        ExxonMobil and Chevron on Friday reported second-quarter profits that surged on rising oil prices due to the Iran war.
+  link           https://www.cnbc.com/2026/07/31/exxon-xom-chevron-cvx-q2-earnings.html
+  language       en
+  published_at   Fri, 31 Jul 2026 15:52:20 GMT
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"108342831"}

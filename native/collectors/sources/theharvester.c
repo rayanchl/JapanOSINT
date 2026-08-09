@@ -89,6 +89,18 @@ static int emit_hit(intel_sink *sink, const char *domain, const char *value,
   return rc >= 0 ? 1 : 0;
 }
 
+/* POSIX ERE has no look-behind, so a match that starts in the middle of a
+ * longer token is accepted by regexec. On percent-encoded SERP links
+ * (…%2Fwww.example.com) that yielded junk "subdomains" like "2Fwww.example.com".
+ * Reject a match whose preceding byte could still be part of the host token. */
+static int boundary_ok(const char *text, const char *start) {
+  if (start <= text) return 1;
+  unsigned char c = (unsigned char)start[-1];
+  return !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+           (c >= '0' && c <= '9') || c == '.' || c == '-' || c == '_' ||
+           c == '%' || c == '@');
+}
+
 static void extract(const char *text, const char *pattern, hit_t *arr, int *n,
                     const char *src) {
   regex_t re;
@@ -96,10 +108,12 @@ static void extract(const char *text, const char *pattern, hit_t *arr, int *n,
   regmatch_t m[1];
   const char *cur = text;
   while (regexec(&re, cur, 1, m, 0) == 0 && *n < MAX_RESULTS) {
+    const char *start = cur + m[0].rm_so;
+    if (!boundary_ok(text, start)) { cur = start + 1; continue; }
     int len = (int)(m[0].rm_eo - m[0].rm_so);
     if (len >= 256) len = 255;
     char buf[256];
-    memcpy(buf, cur + m[0].rm_so, len);
+    memcpy(buf, start, len);
     buf[len] = 0;
     add_hit(arr, n, buf, src);
     cur += m[0].rm_eo;
@@ -124,10 +138,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!emails || !subs) { free(emails); free(subs); return -1; }
   int ne = 0, ns = 0;
 
+  /* The domain goes into an ERE, so its dots must be escaped — unescaped they
+   * are "any char" and matched hosts like "toyotaXcoYjp". */
+  char dre[256]; size_t dw = 0;
+  for (const char *d = domain; *d && dw + 2 < sizeof dre; d++) {
+    if (!((*d >= 'a' && *d <= 'z') || (*d >= 'A' && *d <= 'Z') ||
+          (*d >= '0' && *d <= '9') || *d == '-')) dre[dw++] = '\\';
+    dre[dw++] = *d;
+  }
+  dre[dw] = 0;
+
   char epat[512], spat[512];
-  snprintf(epat, sizeof epat, "[a-zA-Z0-9._%%+-]+@%s", domain);
+  snprintf(epat, sizeof epat, "[a-zA-Z0-9._%%+-]+@%s", dre);
   snprintf(spat, sizeof spat,
-           "([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\\.)+%s", domain);
+           "([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\\.)+%s", dre);
 
   /* search_google: 10 SERP pages */
   for (int page = 0; page < MAX_PAGES; page++) {

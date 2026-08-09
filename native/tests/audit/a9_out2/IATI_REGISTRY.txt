@@ -1,0 +1,7 @@
+=== IATI_REGISTRY  entity=Japan
+exit: 0
+sched: rc=0 records=0 84ms
+--- stderr ---
+[IATI_REGISTRY] http status=400
+[sched] IATI_REGISTRY run rc=0 records=0 84ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

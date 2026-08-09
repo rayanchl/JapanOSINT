@@ -207,7 +207,15 @@ char *intelapi_item_by_uid(db_handle *db, const char *uid) {
 char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
   /* A source-filtered request for a breach source is served from breach_items
    * via the adapter (keyset over row id). Unfiltered / non-breach requests stay
-   * on intel_items, so breach volume never enters the operational feed. */
+   * on intel_items, so breach volume never enters the operational feed.
+   *
+   * AUTHORIZATION for this branch lives in httpd.c's breach_gate(), applied to
+   * /api/intel/items, /api/intel/search and /api/intel/items/:uid before they
+   * reach this function. It cannot live here: this signature carries no caller
+   * identity, and the same adapter is legitimately called (redacted) from the
+   * alert inbox on behalf of the delivery worker, which has no auth_user at
+   * all. If you add a fourth entry point to breach_adapter_*, gate it there
+   * too — the whole finding was that one of four doors was locked. */
   if (Q && Q->source && *Q->source && breach_meta_is_source(db, Q->source))
     return breach_adapter_list(db, Q->source, Q->q, Q->cursor, Q->limit);
 
@@ -250,8 +258,37 @@ char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
                bnd[nb++] = cur_p; bnd[nb++] = cur_p; bnd[nb++] = cur_u; }
 #undef WPUSH
 
-  int has_q = Q && Q->q && *Q->q;
-  char *segq = has_q ? fts_segment(Q->q) : NULL;   /* malloc'd; passthrough-safe */
+  /* Build the MATCH expression. fts_query_expr() quotes every token, so no
+   * character the user types can reach the FTS5 expression parser as syntax
+   * (`cam-tabi` used to mean `cam NOT tabi`, and a lone `"` failed the
+   * prepare outright), and it prefix-matches the final token so a half-typed
+   * word still hits.
+   *
+   * qAlt is the client's translated counterpart of q (iOS sends both when
+   * auto-translate is on). It was parsed nowhere and silently dropped, which
+   * is why bilingual search never widened a single result set. The two are
+   * OR'd: "match the Japanese OR the English", each independently sanitized
+   * and parenthesized so neither can bleed operators into the other.
+   *
+   * A non-empty q that yields no usable token (";;;" and friends) leaves
+   * matchq NULL, i.e. the text filter is dropped rather than the request
+   * failing — the same shape as any other unparseable filter here. */
+  char *matchq = NULL;
+  if (Q && Q->q && *Q->q) {
+    char *ea = fts_query_expr(Q->q);
+    char *eb = (Q->q_alt && *Q->q_alt) ? fts_query_expr(Q->q_alt) : NULL;
+    if (ea && eb && strcmp(ea, eb) != 0) {
+      size_t n = strlen(ea) + strlen(eb) + 12;
+      matchq = malloc(n);
+      if (matchq) snprintf(matchq, n, "(%s) OR (%s)", ea, eb);
+      free(ea); free(eb);
+    } else {
+      matchq = ea ? ea : eb;
+      if (ea && eb) free(eb);          /* identical after sanitizing */
+    }
+  }
+  int has_q = matchq != NULL;
+  char *segq = matchq;
 
   char sql[5600];
   if (has_q) {
@@ -318,7 +355,7 @@ char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
    * meta.filters); all-NULL input → all null → byte-identical to old output */
   add_str_or_null(filters, "source",        Q ? Q->source : NULL);
   add_str_or_null(filters, "q",             Q ? Q->q : NULL);
-  add_str_or_null(filters, "q_alt",         NULL);   /* qAlt is a route concern */
+  add_str_or_null(filters, "q_alt",         Q ? Q->q_alt : NULL);
   add_str_or_null(filters, "lang",          Q ? Q->lang : NULL);
   add_str_or_null(filters, "record_type",   Q ? Q->record_type : NULL);
   add_str_or_null(filters, "sub_source_id", Q ? Q->sub_source_id : NULL);
@@ -377,19 +414,28 @@ char *api_sources_list(db_handle *db) {
   return js;
 }
 
-/* intelCatalog.js INTEL_SOURCE_SET — sources that emit kind:'intel'. */
+/* intelCatalog.js INTEL_SOURCE_SET — sources that emit kind:'intel'.
+ *
+ * THE one definition; statusapi.c reaches it through intelapi_is_intel_id()
+ * instead of keeping the verbatim copy it used to (see intelapi.h).
+ *
+ * boj-stats / jcg-navarea / nict-atlas were dropped here on 2026-08-09: their
+ * collectors were deleted in the 66-source removal sweep, so `is_intel:true`
+ * could only ever have been reported for an id that no longer resolves in
+ * either registry. Nothing else in the list changed. */
 static const char *INTEL_IDS[] = {
   "certstream-jp","bird-makeup-jp","chan-5ch","fofa-jp",
   "github-leaks-jp","grayhat-buckets","greynoise-jp","hatena-bookmark",
   "houjin-bangou","mercari-trending","misskey-timeline","note-com-trending",
   "urlscan-jp","wayback-jp",
-  "edinet-filings","boj-stats","data-go-jp-ckan","egov-laws",
-  "geospatial-jp-ckan","kyodo-rss","nhk-world-rss","jcg-navarea","nict-atlas",
+  "edinet-filings","data-go-jp-ckan","egov-laws",
+  "geospatial-jp-ckan","kyodo-rss","nhk-world-rss",
   "ripestat-jp","wifi-hotspots-jcfw","wifi-hotspots-freespot",
   "jp-news-rss","nhk-news-rss","yahoo-news-jp-rss","ipa-alerts",
   "jpcert-alerts","phishing-feeds-jp","sans-isc-feeds","my-jvn",
 };
-static int is_intel_id(const char *id) {
+int intelapi_is_intel_id(const char *id) {
+  if (!id) return 0;
   for (size_t i = 0; i < sizeof INTEL_IDS / sizeof *INTEL_IDS; i++)
     if (strcmp(INTEL_IDS[i], id) == 0) return 1;
   return 0;
@@ -466,6 +512,33 @@ static int locale_cmp(const char *a, const char *b) {
   return strcmp(a, b);
 }
 
+/* ── camera channel rollup ────────────────────────────────────────────────
+ *
+ * The JS backend had ONE camera collector, id `camera-discovery`. The C port
+ * split it into 14+ registered sources (cam-camscape, cam-tabi_cam,
+ * cam-scs_com_ua, cam-webcamendirect_list, shodan-cameras-jp, …) which all
+ * share `layer = "cameras"` in source_registry.gen.c. camera_store.c still
+ * keys every row `camera-discovery|<camera_uid>` while intel.c binds
+ * source_id from the RUNNING source — so the per-source_id aggregate above
+ * hands the parent ZERO items and scatters the real counts across the
+ * children. In the catalogue that reads as "Unified Camera Discovery, 0
+ * items" sitting next to fourteen sibling rows that are actually its own
+ * channels.
+ *
+ * Fix it at the API boundary, not in the registry: the children are genuine
+ * separate collectors with their own schedules, TTLs and Run buttons, so they
+ * must stay addressable. They just are not siblings. Their totals roll up into
+ * the parent and each one is stamped with parent_id so a client can nest them.
+ */
+#define CAMERA_PARENT_ID "camera-discovery"
+#define CAMERA_CHILD_LAYER "cameras"
+
+static int is_camera_child(const char *id) {
+  if (!id || strcmp(id, CAMERA_PARENT_ID) == 0) return 0;
+  const src_meta *m = src_meta_get(id);
+  return m && m->layer && strcmp(m->layer, CAMERA_CHILD_LAYER) == 0;
+}
+
 /* listSources() comparator: freshest first (descending localeCompare), then
  * never-collected alphabetical by display name. Decorated with the original
  * index for a stable total order (V8 Array.sort is stable). */
@@ -512,6 +585,67 @@ char *intelapi_intel_sources(db_handle *db) {
   }
   sqlite3_finalize(s);
 
+  /* 1a. Camera rollup (see is_camera_child): sum every layer="cameras"
+   * channel into the camera-discovery parent, whose own GROUP BY source_id
+   * aggregate is always zero because camera_store.c writes those rows under
+   * the child's source_id. Freshness is the newest across the channels — the
+   * parent is only as stale as its most recent channel run. */
+  {
+    agg_row roll; memset(&roll, 0, sizeof roll);
+    int any = 0;
+    for (int k = 0; k < na; k++) {
+      if (!is_camera_child(A[k].src)) continue;
+      any = 1;
+      roll.item_count   += A[k].item_count;
+      roll.geocoded     += A[k].geocoded;
+      roll.ungeocoded   += A[k].ungeocoded;
+      roll.awaiting_geo += A[k].awaiting_geo;
+      /* ISO-8601 with a fixed shape: byte order == chronological order. */
+      if (A[k].has_lf && (!roll.has_lf ||
+                          strcmp(A[k].last_fetched, roll.last_fetched) > 0)) {
+        roll.has_lf = 1;
+        snprintf(roll.last_fetched, sizeof roll.last_fetched, "%s", A[k].last_fetched);
+      }
+      if (A[k].has_lp && (!roll.has_lp ||
+                          strcmp(A[k].last_published, roll.last_published) > 0)) {
+        roll.has_lp = 1;
+        snprintf(roll.last_published, sizeof roll.last_published, "%s", A[k].last_published);
+      }
+    }
+    if (any) {
+      agg_row *p = NULL;
+      for (int k = 0; k < na; k++)
+        if (strcmp(A[k].src, CAMERA_PARENT_ID) == 0) { p = &A[k]; break; }
+      if (!p) {          /* the normal case: no row carries that source_id */
+        if (na == cap) {
+          agg_row *grown = realloc(A, (size_t)cap * 2 * sizeof *A);
+          if (grown) { A = grown; cap *= 2; }
+        }
+        if (na < cap) {
+          p = &A[na++];
+          memset(p, 0, sizeof *p);
+          snprintf(p->src, sizeof p->src, "%s", CAMERA_PARENT_ID);
+        }
+      }
+      if (p) {           /* += so a parent that DOES have rows keeps them */
+        p->item_count   += roll.item_count;
+        p->geocoded     += roll.geocoded;
+        p->ungeocoded   += roll.ungeocoded;
+        p->awaiting_geo += roll.awaiting_geo;
+        if (roll.has_lf && (!p->has_lf ||
+                            strcmp(roll.last_fetched, p->last_fetched) > 0)) {
+          p->has_lf = 1;
+          snprintf(p->last_fetched, sizeof p->last_fetched, "%s", roll.last_fetched);
+        }
+        if (roll.has_lp && (!p->has_lp ||
+                            strcmp(roll.last_published, p->last_published) > 0)) {
+          p->has_lp = 1;
+          snprintf(p->last_published, sizeof p->last_published, "%s", roll.last_published);
+        }
+      }
+    }
+  }
+
   /* 1b. breach catalog rows → intel sources (category "breach"). Their
    * item_count comes from breach_items (materialized), NOT the intel_items
    * aggregate above, so breach volume never touches operational counts. */
@@ -544,7 +678,9 @@ char *intelapi_intel_sources(db_handle *db) {
   for (int pass = 0; pass < 2; pass++) {
     int npass = (pass == 0) ? nregistry : ncur;
     for (int i = 0; i < npass; i++) {
-    const char *id = (pass == 0) ? defs[i]->id : src_meta_at(i)->id;
+    const src_meta *cm = (pass == 0) ? NULL : src_meta_at(i);
+    const char *id = (pass == 0) ? defs[i]->id : (cm ? cm->id : NULL);
+    if (!id) continue;
     if (pass == 1 && registry_get(id)) continue;   /* emitted in pass 0 */
     const src_meta *m = src_meta_get(id);          /* meta = Map last-wins */
     if (!m) continue;
@@ -565,7 +701,12 @@ char *intelapi_intel_sources(db_handle *db) {
     add_str_or_null(o, "last_fetched",   g && g->has_lf ? g->last_fetched   : NULL);
     add_str_or_null(o, "last_published", g && g->has_lp ? g->last_published : NULL);
     cJSON_AddNumberToObject(o, "ttl_ms", get_ttl_ms(ttl_st, id));
-    cJSON_AddBoolToObject(o, "is_intel", is_intel_id(id));
+    cJSON_AddBoolToObject(o, "is_intel", intelapi_is_intel_id(id));
+    /* Non-null only for the camera discovery channels. Clients that don't know
+     * the key keep the old flat list; ones that do nest these under the
+     * parent whose counts they were just rolled into. */
+    add_str_or_null(o, "parent_id",
+                    is_camera_child(id) ? CAMERA_PARENT_ID : NULL);
 
     sortrow *sr = &SR[nout];
     sr->obj = o; sr->idx = nout;
@@ -596,7 +737,11 @@ char *intelapi_intel_sources(db_handle *db) {
     add_str_or_null(o, "last_fetched",   g->has_lf ? g->last_fetched   : NULL);
     add_str_or_null(o, "last_published", g->has_lp ? g->last_published : NULL);
     cJSON_AddNumberToObject(o, "ttl_ms", get_ttl_ms(ttl_st, id));
-    cJSON_AddBoolToObject(o, "is_intel", is_intel_id(id));
+    cJSON_AddBoolToObject(o, "is_intel", intelapi_is_intel_id(id));
+    /* An orphan resolves to no registry metadata by definition, so it has no
+     * layer and can never be a camera child — but the key is emitted anyway
+     * so every row in `data` has the same shape. */
+    cJSON_AddNullToObject(o, "parent_id");
 
     sortrow *sr = &SR[nout];
     sr->obj = o; sr->idx = nout;
@@ -639,6 +784,7 @@ char *intelapi_intel_sources(db_handle *db) {
     add_str_or_null(o, "last_published", fresh[0] ? fresh : NULL);
     cJSON_AddNumberToObject(o, "ttl_ms", get_ttl_ms(ttl_st, id));
     cJSON_AddBoolToObject(o, "is_intel", 1);
+    cJSON_AddNullToObject(o, "parent_id");   /* breaches are never nested */
 
     sortrow *sr = &SR[nout];
     sr->obj = o; sr->idx = nout;

@@ -1,0 +1,8 @@
+=== yahoo-news-jp-rss
+exit: 1
+sched: rc=-1 records=0 4435ms
+--- stderr ---
+[yahoo-news-jp-rss] emitted 0
+[sched] yahoo-news-jp-rss run rc=-1 records=0 4435ms
+[detect] anomaly opened: yahoo-news-jp-rss verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

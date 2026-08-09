@@ -163,11 +163,12 @@ static int seen_has(char **a, int n, const char *s) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  char **seen = NULL; int sn = 0, scap = 0, n = 0;
+  char **seen = NULL; int sn = 0, scap = 0, n = 0, fetched = 0;
 
   for (int fi = 0; fi < NF; fi++) {
     char *xml = feed_get_text(ctx->http, FEEDS[fi].url, 15000);
     if (!xml) continue;
+    fetched++;
     const char *category = FEEDS[fi].cat;
 
     const char *p = xml;
@@ -249,8 +250,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   for (int i = 0; i < sn; i++) free(seen[i]);
   free(seen);
-  fprintf(stderr, "[hatena-bookmark-extended] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  fprintf(stderr, "[hatena-bookmark-extended] emitted %d (%d/%d feeds fetched)\n",
+          n, fetched, NF);
+  /* STATUS code, not a row count: a feed that loads but has nothing new is an
+   * honest empty. Only a total fetch failure is a real error. */
+  return fetched > 0 ? 0 : -1;
 }
 
 static const source_def hatena_bookmark_extended_def = {

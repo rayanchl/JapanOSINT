@@ -31,10 +31,26 @@ static const char *av_kind(const char *e) {
   return "callsign";
 }
 
+/* ADS-B `flight` is a fixed-width 8-char field, space-padded ("APJ877  "), so
+ * copying it straight into title/callsign left trailing blanks on every row.
+ * Copy the trimmed value into `buf`; returns buf, or NULL if empty. */
+static const char *av_trim(const char *s, char *buf, size_t n) {
+  if (!s) return NULL;
+  while (*s == ' ') s++;
+  size_t L = strlen(s);
+  while (L && s[L - 1] == ' ') L--;
+  if (!L) return NULL;
+  if (L >= n) L = n - 1;
+  memcpy(buf, s, L);
+  buf[L] = 0;
+  return buf;
+}
+
 /* Emit one aircraft record from a re-api (adsb.lol / airplanes.live) "ac" obj. */
 static int av_emit_ac(intel_sink *sink, const char *service, const cJSON *ac) {
   const char *hex = jo_sv(ac, "hex");
-  const char *flight = jo_sv(ac, "flight");
+  char flbuf[32];
+  const char *flight = av_trim(jo_sv(ac, "flight"), flbuf, sizeof flbuf);
   const char *reg = jo_sv(ac, "r");
   const char *type = jo_sv(ac, "t");
   const cJSON *lat = cJSON_GetObjectItem(ac, "lat");
@@ -123,9 +139,13 @@ static int run_opensky(const source_ctx *ctx, intel_sink *sink, const char *enc,
       const cJSON *lat  = cJSON_GetArrayItem(s, 6);
       const char *hex = cJSON_IsString(icao) ? icao->valuestring : NULL;
       if (!hex) continue;
+      /* OpenSky pads callsign to 8 chars too. */
+      char csbuf[32];
+      const char *csv = cJSON_IsString(cs)
+                      ? av_trim(cs->valuestring, csbuf, sizeof csbuf) : NULL;
       cJSON *d = cJSON_CreateObject();
       cJSON_AddStringToObject(d, "hex", hex);
-      if (cJSON_IsString(cs) && cs->valuestring[0]) cJSON_AddStringToObject(d, "callsign", cs->valuestring);
+      if (csv) cJSON_AddStringToObject(d, "callsign", csv);
       if (cJSON_IsString(cc)) cJSON_AddStringToObject(d, "origin_country", cc->valuestring);
       cJSON_AddStringToObject(d, "source", "OpenSky Network");
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
@@ -138,7 +158,7 @@ static int run_opensky(const source_ctx *ctx, intel_sink *sink, const char *enc,
       char link[128]; snprintf(link, sizeof link, "https://opensky-network.org/aircraft-profile?icao24=%s", hex);
       intel_item it = {0};
       it.remote_key = hex;
-      it.title = (cJSON_IsString(cs) && cs->valuestring[0]) ? cs->valuestring : hex;
+      it.title = csv ? csv : hex;
       it.summary = cJSON_IsString(cc) ? cc->valuestring : NULL;
       it.body = bj; it.link = link; it.lang = "en";
       it.has_geo = has_geo; it.lat = has_geo ? lat->valuedouble : 0; it.lon = has_geo ? lon->valuedouble : 0;

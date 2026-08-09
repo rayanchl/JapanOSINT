@@ -5,6 +5,7 @@
  * unverified AIST candidate endpoint. Honest empty when no usable geometry
  * (rule 8 — no fabricated fault geometry). Property key order
  * (fault_id, name, fault_type, activity, source) mirrors JS for parity. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -13,11 +14,6 @@
 #include <stdlib.h>
 
 #define CANDIDATE_URL "https://gbank.gsj.jp/activefault/cgi-bin/geojson.cgi"
-
-static const char *str_of(cJSON *o, const char *k) {
-  cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
-}
 
 static int normalize(cJSON *data, cJSON *out) {
   cJSON *src = data ? cJSON_GetObjectItem(data, "features") : NULL;
@@ -33,9 +29,9 @@ static int normalize(cJSON *data, cJSON *out) {
     cJSON *p = cJSON_GetObjectItem(f, "properties");
     if (!p) p = cJSON_CreateObject(); else p = cJSON_Duplicate(p, 1);
 
-    const char *fid = str_of(p, "id");
-    if (!fid) fid = str_of(p, "fault_id");
-    if (!fid) fid = str_of(p, "name");
+    const char *fid = jo_str(p, "id");
+    if (!fid) fid = jo_str(p, "fault_id");
+    if (!fid) fid = jo_str(p, "name");
     char hk[24]; char fidbuf[64];
     if (!fid) {
       char *gs = cJSON_PrintUnformatted(geom);
@@ -45,13 +41,13 @@ static int normalize(cJSON *data, cJSON *out) {
       fid = fidbuf;
       free(gs);
     }
-    const char *name = str_of(p, "name");
-    if (!name) name = str_of(p, "fault_name");
-    if (!name) name = str_of(p, "断層名");
-    const char *ftype = str_of(p, "type");
-    if (!ftype) ftype = str_of(p, "断層型");
-    const char *act = str_of(p, "activity");
-    if (!act) act = str_of(p, "活動度");
+    const char *name = jo_str(p, "name");
+    if (!name) name = jo_str(p, "fault_name");
+    if (!name) name = jo_str(p, "断層名");
+    const char *ftype = jo_str(p, "type");
+    if (!ftype) ftype = jo_str(p, "断層型");
+    const char *act = jo_str(p, "activity");
+    if (!act) act = jo_str(p, "活動度");
 
     cJSON *nf = cJSON_CreateObject();
     cJSON_AddStringToObject(nf, "type", "Feature");
@@ -77,9 +73,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   urls[nu++] = CANDIDATE_URL;
 
   cJSON *features = cJSON_CreateArray();
+  int fetched = 0;                    /* did ANY candidate URL answer at all? */
   for (int i = 0; i < nu; i++) {
     cJSON *data = feed_get_json(ctx->http, urls[i], 20000);
     if (!data) continue;
+    fetched = 1;
     int got = normalize(data, features);
     cJSON_Delete(data);
     if (got > 0) break;
@@ -90,13 +88,21 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   if (cJSON_GetArraySize(features) == 0) {
     cJSON_Delete(features);
-    fprintf(stderr, "[gsi-active-fault] unavailable (honest empty)\n");
-    return -1;
+    /* The old code logged "honest empty" and then returned -1, which is the
+     * opposite of honest: it quarantined the source via the anomaly detector.
+     * Separate the two cases — nothing answered is an error, an answer with no
+     * usable geometry is an empty. */
+    if (!fetched) {
+      fprintf(stderr, "[gsi-active-fault] no candidate endpoint answered\n");
+      return -1;
+    }
+    fprintf(stderr, "[gsi-active-fault] fetched, no usable fault geometry\n");
+    return 0;
   }
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[gsi-active-fault] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  return 0;
 }
 
 static const source_def gsi_active_fault_def = {

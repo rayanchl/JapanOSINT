@@ -1,0 +1,57 @@
+=== COURT_WORLD  entity=Toyota
+exit: 0
+sched: rc=0 records=25 9919ms
+--- stderr ---
+[court_world_nl] emitted 25
+[court_world_US] http status=403
+[court_world_CA] http status=403
+[court_world_FR] http status=403
+[court_world_DE] emitted 0
+[court_world_IE] emitted 0
+[court_world_NZ] http status=403
+[court_world_HK] emitted 0
+[court_world_SG] emitted 0
+[court_world_ZA] http status=403
+[court_world_IN] http status=403
+[court_world_PK] http status=0
+[court_world_KE] http status=403
+[court_world_UG] emitted 0
+[court_world_PH] http status=404
+[court_world_WW] http status=403
+[court_world_AS] http status=403
+[court_world_WW] http status=403
+[court_world] total emitted 25 across 18 portals
+[sched] COURT_WORLD run rc=0 records=25 9919ms
+--- persisted: 25 rows, 0 with lat/lon, 0 with geometry ---
+record_type: court-case=25
+sub_source_id: (null)=25
+
+--- row 1 ---
+  uid            COURT_WORLD|ECLI:NL:RBARN:1998:AA1005
+  title          ECLI:NL:RBARN:1998:AA1005, Rechtbank Arnhem, 07-12-1998, 98/2137 98/2138
+  summary        ECLI:NL:RBARN:1998:AA1005
+  link           https://uitspraken.rechtspraak.nl/details?id=ECLI:NL:RBARN:1998:AA1005
+  language       nl
+  record_type    court-case
+  tags           ["osint-search","COURT_WORLD"]
+  properties     {"service":"COURT_WORLD","portal":"Netherlands Rechtspraak (data.rechtspraak.nl)","jurisdiction":"NL","query":"Toyota","ecli":"ECLI:NL:RBARN:1998:AA1005","href":"https://uitspraken.rechtspraak.nl/details?id=ECLI:NL:RBARN:1998:AA1005","success":true}
+
+--- row 2 ---
+  uid            COURT_WORLD|ECLI:NL:RBLEE:1999:AA1049
+  title          ECLI:NL:RBLEE:1999:AA1049, Rechtbank Leeuwarden, 20-10-1999, 99-1491
+  summary        ECLI:NL:RBLEE:1999:AA1049
+  link           https://uitspraken.rechtspraak.nl/details?id=ECLI:NL:RBLEE:1999:AA1049
+  language       nl
+  record_type    court-case
+  tags           ["osint-search","COURT_WORLD"]
+  properties     {"service":"COURT_WORLD","portal":"Netherlands Rechtspraak (data.rechtspraak.nl)","jurisdiction":"NL","query":"Toyota","ecli":"ECLI:NL:RBLEE:1999:AA1049","href":"https://uitspraken.rechtspraak.nl/details?id=ECLI:NL:RBLEE:1999:AA1049","success":true}
+
+--- row 3 ---
+  uid            COURT_WORLD|ECLI:NL:RBLEE:1999:AA1052
+  title          ECLI:NL:RBLEE:1999:AA1052, Rechtbank Leeuwarden, 20-10-1999, 99-298
+  summary        ECLI:NL:RBLEE:1999:AA1052
+  link           https://uitspraken.rechtspraak.nl/details?id=ECLI:NL:RBLEE:1999:AA1052
+  language       nl
+  record_type    court-case
+  tags           ["osint-search","COURT_WORLD"]
+  properties     {"service":"COURT_WORLD","portal":"Netherlands Rechtspraak (data.rechtspraak.nl)","jurisdiction":"NL","query":"Toyota","ecli":"ECLI:NL:RBLEE:1999:AA1052","href":"https://uitspraken.rechtspraak.nl/details?id=ECLI:NL:RBLEE:1999:AA1052","success":true}

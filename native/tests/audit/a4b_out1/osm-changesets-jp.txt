@@ -1,0 +1,31 @@
+=== osm-changesets-jp
+exit: 0
+sched: rc=0 records=100 384ms
+--- stderr ---
+[osm-changesets-jp] emitted 100
+[sched] osm-changesets-jp run rc=0 records=100 384ms
+--- persisted: 100 rows, 100 with lat/lon, 100 with geometry ---
+record_type: osm-changesets-jp=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            osm-changesets-jp|186723559
+  title          OSM changeset by sangguk — 38 edits: 도로 수정, 정원 추가
+  link           https://www.openstreetmap.org/changeset/186723559
+  published_at   2026-07-31T18:40:30Z
+  lat            37.185066899999995
+  lon            128.4472513
+  geometry       {"type":"Point","coordinates":[128.4472513,37.1850669]}
+  record_type    osm-changesets-jp
+  properties     {"uid":"186723559","title":"OSM changeset by sangguk — 38 edits: 도로 수정, 정원 추가","idx":0,"cs_id":186723559,"user":"sangguk","user_id":10896485,"created_at":"2026-07-31T18:40:29Z","published_at":"2026-07-31T18:40:30Z","closed_at":"2026-07-31T18:40:30Z","comment":"도로 수정, 정원 추가","created_by":"iD 2.41.2","source_tag":null,"changes_count":38,"bbox":[128.4409463,37.1778718,128.4535563,37.192262],"url":"https://www.openstreetmap.org/changeset/186723559","source":"osm_changesets_jp"}
+
+--- row 2 ---
+  uid            osm-changesets-jp|186723402
+  title          OSM changeset by Yukura — 35 edits: 中央自動車道のインターチェンジの編集
+  link           https://www.openstreetmap.org/changeset/186723402
+  published_at   2026-07-31T18:36:39Z
+  lat            35.3963744
+  lon            137.1357752
+  geometry       {"type":"Point","coordinates":[137.1357752,35.3963744]}
+  record_type    osm-changesets-jp
+  properties     {"uid":"186723402","title":"OSM changeset by Yukura — 35 edits: 中央自動車道のインターチェンジの編集","idx":1,"cs_id":186723402,"user":"Yukura","user_id":15954139,"created_at":"2026-07-31T18:36:37Z","published_at":"2026-07-31T18:36:39Z","closed_at":"2026-07-31T18:36:39Z","comment":"中央自動車道のインターチェンジの編集","created_by":"iD 2.41.2","source_tag":null,"changes_count":35,"bbox":[137.0965245,35.3568465,137.1750259,35.4359023],"url":"https://www.openstreetmap.org/changeset/186723402","source":"osm_changesets_jp"}

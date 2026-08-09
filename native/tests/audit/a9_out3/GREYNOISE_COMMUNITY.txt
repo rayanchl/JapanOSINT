@@ -1,0 +1,19 @@
+=== GREYNOISE_COMMUNITY  entity=8.8.8.8
+exit: 0
+sched: rc=0 records=1 399ms
+--- stderr ---
+[GREYNOISE_COMMUNITY] emitted 1
+[sched] GREYNOISE_COMMUNITY run rc=0 records=1 399ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: ip-reputation=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            GREYNOISE_COMMUNITY|8.8.8.8
+  title          8.8.8.8 — not observed scanning (GreyNoise)
+  body           {"ip":"8.8.8.8","noise":false,"riot":false,"message":"IP not observed scanning the internet.","source":"GreyNoise Community"}
+  summary        IP not observed scanning the internet.
+  language       en
+  record_type    ip-reputation
+  tags           ["osint-search","GREYNOISE_COMMUNITY"]
+  properties     {"service":"GREYNOISE_COMMUNITY","ip":"8.8.8.8","success":true}

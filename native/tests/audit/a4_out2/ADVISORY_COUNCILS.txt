@@ -1,0 +1,7 @@
+=== ADVISORY_COUNCILS  entity=環境
+exit: 0
+sched: rc=0 records=0 2197ms
+--- stderr ---
+[ADVISORY_COUNCILS] http status=404
+[sched] ADVISORY_COUNCILS run rc=0 records=0 2197ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

@@ -121,14 +121,29 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              njp, njp != 1 ? "s" : "");
 
     /* body = `Issuer: ${ev.issuer}\nDomains: ${jp.join(', ')}` (JS ${null}
-     * → "null"). */
-    size_t blen = 64;
+     * → "null").
+     *
+     * The budget used to be a flat 64 bytes plus the domain list, which paid
+     * for the literal prefix but NOT for the issuer it interpolates. The
+     * prefix costs 18 + strlen(iss), and `iss` is an upstream-controlled
+     * leaf_cert.issuer.O — an ordinary DigiCert DN is ~78 bytes, so bo ran past
+     * blen, `body + bo` pointed outside the allocation and `blen - bo` wrapped
+     * to ~SIZE_MAX. That is a heap overflow on routine CT traffic, every 60 s.
+     * Budget the issuer too, check the malloc, and clamp the accumulator. */
+    const char *issS = iss ? iss : "null";
+    size_t blen = 64 + strlen(issS);
     cJSON *jd; cJSON_ArrayForEach(jd, jp) blen += strlen(jd->valuestring) + 2;
     char *body = malloc(blen);
-    int bo = snprintf(body, blen, "Issuer: %s\nDomains: ", iss ? iss : "null");
+    if (!body) { i++; continue; }
+    int bo = snprintf(body, blen, "Issuer: %s\nDomains: ", issS);
+    if (bo < 0 || (size_t)bo >= blen) bo = (int)blen - 1;
     int first = 1;
     cJSON_ArrayForEach(jd, jp) {
-      bo += snprintf(body + bo, blen - bo, "%s%s", first ? "" : ", ", jd->valuestring);
+      int w = snprintf(body + bo, blen - (size_t)bo, "%s%s",
+                       first ? "" : ", ", jd->valuestring);
+      if (w < 0) break;
+      if ((size_t)w >= blen - (size_t)bo) { bo = (int)blen - 1; break; }
+      bo += w;
       first = 0;
     }
 
@@ -150,14 +165,28 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(props, "seen_at", iso ? iso : "");
     char *pj = cJSON_PrintUnformatted(props);
 
-    char tags[160];
-    snprintf(tags, sizeof tags, "[\"ct-log\",\"issuer:%s\"]",
-             iss ? iss : "unknown");
+    /* The issuer DN is upstream text and routinely carries a `"` or a `\`
+     * (X.500 DNs quote and escape). Pasting it straight into a JSON literal
+     * produced tags_json that no parser accepts — and unlike a transient
+     * request that corruption is PERSISTED on the row. Let cJSON serialise. */
+    cJSON *tagsA = cJSON_CreateArray();
+    cJSON_AddItemToArray(tagsA, cJSON_CreateString("ct-log"));
+    {
+      char issTag[192];
+      snprintf(issTag, sizeof issTag, "issuer:%s", iss ? iss : "unknown");
+      cJSON_AddItemToArray(tagsA, cJSON_CreateString(issTag));
+    }
+    char *tags = cJSON_PrintUnformatted(tagsA);
 
     cJSON *cl = cJSON_GetObjectItem(ev, "cert_link");
     intel_item it = {0};
     it.remote_key = rkey;                          /* sink → certstream-jp|<rkey> */
-    it.title = cn;
+    /* A precertificate can carry no CN at all (SAN-only). `cn` was passed
+     * through as the title regardless, so the row went out with a NULL title;
+     * fall back to the first .jp SAN, which is what the row is actually about. */
+    it.title = cn ? cn : (njp > 0 ? cJSON_GetArrayItem(jp, 0)->valuestring : NULL);
+    if (!it.title) { free(body); cJSON_Delete(props); cJSON_Delete(tagsA);
+                     free(tags); free(pj); i++; continue; }
     it.summary = summary;
     it.body = body;
     it.link = (cJSON_IsString(cl) && cl->valuestring[0]) ? cl->valuestring : NULL;
@@ -167,8 +196,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     it.properties_json = pj;
     it.tags_json = tags;
     if (sink->emit(sink, &it) >= 0) n++;
-    free(pj); free(body);
-    cJSON_Delete(props);
+    free(pj); free(body); free(tags);
+    cJSON_Delete(props); cJSON_Delete(tagsA);
     i++;
   }
   cJSON_Delete(u.events);

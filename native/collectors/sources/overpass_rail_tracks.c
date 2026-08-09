@@ -59,7 +59,7 @@ static cJSON *map(cJSON *el, int i, cJSON *coords, void *ud) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = overpass_ways_collect(ctx, sink, body, 240, 180000, map, NULL);
+  int n = overpass_ways_collect(ctx, sink, body, 240, 260000, map, NULL);
   return n >= 0 ? 0 : -1;
 }
 

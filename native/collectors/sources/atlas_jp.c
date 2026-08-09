@@ -2,6 +2,7 @@
  * Port of server/src/collectors/atlasJp.js.
  * RIPE Atlas public API (key-free), connected probes in JP, paginated up to
  * MAX_PAGES → FeatureCollection. Honest empty on failure. No seed. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -11,16 +12,6 @@
 #include <time.h>
 
 #define MAX_PAGES 12
-
-static int num_of(cJSON *v, double *out) {
-  if (!v) return 0;
-  if (cJSON_IsNumber(v)) { *out = v->valuedouble; return 1; }
-  if (cJSON_IsString(v) && v->valuestring && v->valuestring[0]) {
-    char *e; double d = strtod(v->valuestring, &e);
-    if (e != v->valuestring) { *out = d; return 1; }
-  }
-  return 0;
-}
 
 /* p.<k> ?? null  (number or string passthrough) */
 static cJSON *nn(cJSON *p, const char *k) {
@@ -32,10 +23,16 @@ static cJSON *nn(cJSON *p, const char *k) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *features = cJSON_CreateArray();
   char url[768];
+  /* AUDIT 2026-07-31: the v2 probe schema has no `latitude`/`longitude` or
+   * `status_name` any more — coordinates live in `geometry` (GeoJSON Point,
+   * [lon,lat]) and the status is an object. The old field list asked for
+   * fields that no longer exist, the API silently omitted them, and the
+   * lat/lon guard below then skipped EVERY probe: 309 connected JP probes
+   * fetched, 0 emitted, "EMPTY" every hour. */
   snprintf(url, sizeof url,
     "https://atlas.ripe.net/api/v2/probes/?country_code=JP&status=1"
-    "&page_size=100&fields=id,address_v4,asn_v4,asn_v6,prefix_v4,latitude,"
-    "longitude,status_name,is_anchor,first_connected");
+    "&page_size=100&fields=id,address_v4,asn_v4,asn_v6,prefix_v4,geometry,"
+    "status,is_anchor,first_connected,description,country_code");
   int pages = 0, gotAny = 0;
   char nexturl[1024];
 
@@ -49,28 +46,58 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     gotAny = 1;
     cJSON *pr;
     cJSON_ArrayForEach(pr, results) {
-      double lat, lon;
-      if (!num_of(cJSON_GetObjectItem(pr, "latitude"), &lat)) continue;
-      if (!num_of(cJSON_GetObjectItem(pr, "longitude"), &lon)) continue;
+      double lat = 0, lon = 0;
+      int have_ll = jo_num_of(cJSON_GetObjectItem(pr, "latitude"), &lat) &&
+                    jo_num_of(cJSON_GetObjectItem(pr, "longitude"), &lon);
+      if (!have_ll) {                       /* current schema: GeoJSON point */
+        cJSON *gm = cJSON_GetObjectItem(pr, "geometry");
+        cJSON *gc = gm ? cJSON_GetObjectItem(gm, "coordinates") : NULL;
+        if (cJSON_IsArray(gc) && cJSON_GetArraySize(gc) >= 2 &&
+            jo_num_of(cJSON_GetArrayItem(gc, 0), &lon) &&
+            jo_num_of(cJSON_GetArrayItem(gc, 1), &lat))
+          have_ll = 1;
+      }
+      if (!have_ll) continue;
       if (lat == 0 && lon == 0) continue;
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(lon, lat);
 
       cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
+      /* Stable identity: with no "id" key the geojson toolkit falls back to
+       * sha1(geometry+properties), and status_since changes on every probe
+       * reconnect — so each poll would mint a new row instead of updating the
+       * probe's pin. */
+      {
+        cJSON *iv = cJSON_GetObjectItem(pr, "id");
+        char sid[64];
+        if (iv && cJSON_IsNumber(iv))
+          snprintf(sid, sizeof sid, "atlas-probe-%.0f", iv->valuedouble);
+        else if (iv && cJSON_IsString(iv))
+          snprintf(sid, sizeof sid, "atlas-probe-%.40s", iv->valuestring);
+        else sid[0] = 0;
+        if (sid[0]) cJSON_AddStringToObject(p, "id", sid);
+      }
       cJSON_AddItemToObject(p, "probe_id", nn(pr, "id"));
       cJSON_AddItemToObject(p, "asn_v4", nn(pr, "asn_v4"));
       cJSON_AddItemToObject(p, "asn_v6", nn(pr, "asn_v6"));
       cJSON_AddItemToObject(p, "prefix_v4", nn(pr, "prefix_v4"));
       cJSON_AddItemToObject(p, "address_v4", nn(pr, "address_v4"));
-      cJSON_AddItemToObject(p, "status", nn(pr, "status_name"));
+      /* status is now {id,name,since}; keep accepting the old flat key too */
+      {
+        cJSON *st = cJSON_GetObjectItem(pr, "status");
+        cJSON *sn = (st && cJSON_IsObject(st)) ? cJSON_GetObjectItem(st, "name")
+                                               : NULL;
+        if (sn && cJSON_IsString(sn))
+          cJSON_AddStringToObject(p, "status", sn->valuestring);
+        else
+          cJSON_AddItemToObject(p, "status", nn(pr, "status_name"));
+        cJSON *ss = (st && cJSON_IsObject(st)) ? cJSON_GetObjectItem(st, "since")
+                                               : NULL;
+        cJSON_AddItemToObject(p, "status_since",
+          (ss && cJSON_IsString(ss)) ? cJSON_Duplicate(ss, 1) : cJSON_CreateNull());
+      }
+      cJSON_AddItemToObject(p, "description", nn(pr, "description"));
+      cJSON_AddItemToObject(p, "country_code", nn(pr, "country_code"));
       cJSON *anch = cJSON_GetObjectItem(pr, "is_anchor");
       cJSON_AddBoolToObject(p, "is_anchor",
         anch ? cJSON_IsTrue(anch) : 0);
@@ -98,6 +125,30 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       else
         snprintf(link, sizeof link, "https://atlas.ripe.net/probes/undefined/");
       cJSON_AddStringToObject(p, "link", link);
+      /* geojson pickText needs title|name|name_ja|label; without one every
+       * probe row would land with a NULL title. Built from the probe's own
+       * id / operator description / ASN. */
+      {
+        cJSON *ds = cJSON_GetObjectItem(pr, "description");
+        cJSON *a4 = cJSON_GetObjectItem(pr, "asn_v4");
+        cJSON *a6 = cJSON_GetObjectItem(pr, "asn_v6");
+        cJSON *asn = (a4 && cJSON_IsNumber(a4)) ? a4
+                   : ((a6 && cJSON_IsNumber(a6)) ? a6 : NULL);
+        char t[256];
+        double pid = (idv && cJSON_IsNumber(idv)) ? idv->valuedouble : 0;
+        if (ds && cJSON_IsString(ds) && ds->valuestring[0] && asn)
+          snprintf(t, sizeof t, "RIPE Atlas probe #%.0f — %s (AS%.0f)",
+                   pid, ds->valuestring, asn->valuedouble);
+        else if (ds && cJSON_IsString(ds) && ds->valuestring[0])
+          snprintf(t, sizeof t, "RIPE Atlas probe #%.0f — %s",
+                   pid, ds->valuestring);
+        else if (asn)
+          snprintf(t, sizeof t, "RIPE Atlas probe #%.0f (AS%.0f)",
+                   pid, asn->valuedouble);
+        else
+          snprintf(t, sizeof t, "RIPE Atlas probe #%.0f", pid);
+        cJSON_AddStringToObject(p, "title", t);
+      }
       cJSON_AddStringToObject(p, "source", "ripe_atlas_api");
       cJSON_AddItemToObject(f, "properties", p);
       cJSON_AddItemToArray(features, f);

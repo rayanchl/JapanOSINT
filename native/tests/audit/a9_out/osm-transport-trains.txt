@@ -1,0 +1,6 @@
+=== osm-transport-trains
+exit: TIMEOUT after 420s
+sched: (no [sched] line — the collector never returned)
+--- stderr ---
+
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

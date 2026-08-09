@@ -69,6 +69,17 @@ static int pv_emit(intel_sink *sink, const cJSON *p) {
   return rc >= 0 ? 1 : 0;
 }
 
+/* DEAD UPSTREAM (audit 2026-07, slot a9). PatentsView has been retired and
+ * folded into USPTO's Open Data Portal:
+ *   - search.patentsview.org  → NXDOMAIN (Cloudflare DoH "Status":3, SOA from
+ *     patentsview.org's own nameserver). The apex still resolves.
+ *   - api.patentsview.org/... → HTTP 301 to
+ *     https://data.uspto.gov/support/transition-guide/patentsview
+ * so this collector's every request now fails at DNS and jo_get logs
+ * "http status=0". The successor (data.uspto.gov / api.uspto.gov) requires a
+ * registered API key, i.e. migrating this source turns it from keyless into
+ * key-gated and needs a credential this host does not have. Left as an
+ * honest permanent empty rather than repointed blind — see report_a9.md. */
 static int run_patentsview(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!q || !*q) return -1;

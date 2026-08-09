@@ -1,0 +1,7 @@
+=== RS_APR  entity=Beograd
+exit: 0
+sched: rc=0 records=0 443ms
+--- stderr ---
+[RS_APR] http status=0
+[sched] RS_APR run rc=0 records=0 443ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

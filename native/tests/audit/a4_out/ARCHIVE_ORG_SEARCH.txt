@@ -1,0 +1,42 @@
+=== ARCHIVE_ORG_SEARCH  entity=Tokyo
+exit: 0
+sched: rc=0 records=20 760ms
+--- stderr ---
+[ARCHIVE_ORG_SEARCH] emitted 20
+[sched] ARCHIVE_ORG_SEARCH run rc=0 records=20 760ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: archive-item=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            ARCHIVE_ORG_SEARCH|bibble_2022-07-09_1
+  title          Bibble | Gaming Bibble | GHOSTWIRE TOKYO
+  body           {"title":"Bibble | Gaming Bibble | GHOSTWIRE TOKYO","mediatype":"audio","creator":"Bibble","identifier":"bibble_2022-07-09_1","source":"Internet Archive"}
+  summary        audio
+  link           https://archive.org/details/bibble_2022-07-09_1
+  language       en
+  record_type    archive-item
+  tags           ["osint-search","ARCHIVE_ORG_SEARCH"]
+  properties     {"identifier":"bibble_2022-07-09_1","service":"ARCHIVE_ORG_SEARCH","success":true}
+
+--- row 2 ---
+  uid            ARCHIVE_ORG_SEARCH|tiktok-6880313443002502401
+  title          TikTok Video by sugoimart
+  body           {"title":"TikTok Video by sugoimart","mediatype":"data","creator":"sugoimart","identifier":"tiktok-6880313443002502401","source":"Internet Archive"}
+  summary        data
+  link           https://archive.org/details/tiktok-6880313443002502401
+  language       en
+  record_type    archive-item
+  tags           ["osint-search","ARCHIVE_ORG_SEARCH"]
+  properties     {"identifier":"tiktok-6880313443002502401","service":"ARCHIVE_ORG_SEARCH","success":true}
+
+--- row 3 ---
+  uid            ARCHIVE_ORG_SEARCH|azefiym0o0q8k0so2jpsygsr1ykoq3cxuvb5od3y
+  title          Best On Ground Weekday Kickoff, Wednesday 8 July 2020
+  body           {"title":"Best On Ground Weekday Kickoff, Wednesday 8 July 2020","mediatype":"audio","creator":"Best On Ground Weekday Kickoff","identifier":"azefiym0o0q8k0so2jpsygsr1ykoq3cxuvb5od3y","source":"Internet Archive"}
+  summary        audio
+  link           https://archive.org/details/azefiym0o0q8k0so2jpsygsr1ykoq3cxuvb5od3y
+  language       en
+  record_type    archive-item
+  tags           ["osint-search","ARCHIVE_ORG_SEARCH"]
+  properties     {"identifier":"azefiym0o0q8k0so2jpsygsr1ykoq3cxuvb5od3y","service":"ARCHIVE_ORG_SEARCH","success":true}

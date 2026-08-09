@@ -2,15 +2,7 @@
 #include "../../source.h"
 #include "../../lib/rss_atom.h"
 
-#define RSSX(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)  \
-  static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
-    int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
-  static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
-    .update_interval_sec = IVAL, .run = run_##SYM,                           \
-    .category = CAT, .type = "web_request", .url = URL,                      \
-    .description = DESC, .layer = NULL, .free_tier = 1 };                    \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 RSSX(ngo_insight_crime, "insight-crime", "InSight Crime", "InSight Crime", "osint", "news",
   "https://insightcrime.org/feed/", "en", "[\"osint\",\"ngo\",\"organized-crime\"]", 10800,

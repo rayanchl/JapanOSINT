@@ -1,0 +1,10 @@
+home size=1823
+--- app page
+app size=535
+--- guesses
+https://data.earth.jaxa.jp/api/collection/v1/all [404] 219b <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head><title>404 Not Found</titl
+https://data.earth.jaxa.jp/api/v1/collection/all/ [404] 220b <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head><title>404 Not Found</titl
+https://data.earth.jaxa.jp/api/catalog/v1/all/ [404] 217b <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head><title>404 Not Found</titl
+https://data.earth.jaxa.jp/api/search/v1/all/ [404] 216b <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head><title>404 Not Found</titl
+https://data.earth.jaxa.jp/en/datasets/ [200] 3486b <!DOCTYPE html><html lang="en"><head>	<meta charset="utf-8">	<meta name="viewpor
+https://s3.ap-northeast-1.wasabisys.com/je-pds/cog/v1/index.json [404] 385b <?xml version="1.0" encoding="UTF-8"?><Error><Code>NoSuchKey</Code><Message>The specified

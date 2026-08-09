@@ -1,0 +1,18 @@
+=== IOC_LOOKUP  entity=44d88612fea8a8f36de82e1278abb02f
+exit: 0
+sched: rc=0 records=1 89ms
+--- stderr ---
+[IOC_LOOKUP] circl-hashlookup emitted 1
+[sched] IOC_LOOKUP run rc=0 records=1 89ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            IOC_LOOKUP|ioc:circl-hashlookup:44d88612fea8a8f36de82e1278abb02f
+  title          IOC 44d88612fea8a8f36de82e1278abb02f — circl-hashlookup
+  body           {"CRC32":"6851CF3C","FileName":"eicar.com","FileSize":"68","KnownMalicious":"malshare.com","MD5":"44D88612FEA8A8F36DE82E1278ABB02F","OpSystemCode":{"MfgCode":"1006","OpSystemCode":"362","OpSystemName":"TBD","OpSystemVersion":"none"},"ProductCode":{"ApplicationType":"Desktop","Language":"English","MfgCode":"535","OpSystemCode":"51","ProductCode":"8175","ProductName":"Gentoo Linux 2005.0 Ubuntu 5.04","ProductVersion":"Iss 68 Jul 2005"},"RDS:package_id":"304063","SHA-1":"3395856CE81F2B7382DEE72602F798B642F14140","SHA-256":"275A021BBFB6489E54D471899F7DB9D1663FC695EC2FE2A2C4538AABF651FD0F","SHA-512":"CC805D5FAB1FD71A4AB352A9C533E65FB2D5B885518F4E565E68847223B8E6B85CB48F3AFAD842726D99239C9E36505C64B0DC9A061D9E507D833277ADA336AB","SSDEEP":"3:a+JraNvsgzsVqSwHq9:tJuOgzsko","SpecialCode":"","TLSH":"T141A022003B0EEE2BA20B00200032E8B00808020E2CE00A3820A020B8C83308803EC228","db":"nsrl_legacy","insert …<7734 more chars>
+  summary        ioc match
+  record_type    osint_service_result
+  tags           ["osint-search","IOC_LOOKUP"]
+  properties     {"service":"IOC_LOOKUP","entity":"44d88612fea8a8f36de82e1278abb02f"}

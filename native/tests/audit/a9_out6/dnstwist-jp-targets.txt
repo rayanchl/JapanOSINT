@@ -1,0 +1,43 @@
+=== dnstwist-jp-targets
+exit: 0
+sched: rc=0 records=50 47100ms
+--- stderr ---
+[dnstwist-jp-targets] probed=337 emitted=50
+[sched] dnstwist-jp-targets run rc=0 records=50 47100ms
+[detect] anomaly opened: dnstwist-jp-targets verdict=duration_outlier — duration 47100ms exceeds 10000ms threshold
+--- persisted: 50 rows, 0 with lat/lon, 0 with geometry ---
+record_type: dnstwist-jp-targets=50
+sub_source_id: (null)=50
+
+--- row 1 ---
+  uid            dnstwist-jp-targets|ufg.jp
+  title          ufg.jp (typosquat of mufg.jp)
+  body           Candidate phishing/typosquat domain "ufg.jp" resolves to A record(s): 182.16.229.135. Original target: mufg.jp.
+  summary        Resolving permutation of mufg.jp → 182.16.229.135
+  link           http://ufg.jp
+  language       en
+  record_type    dnstwist-jp-targets
+  tags           ["typosquat","phishing","dnstwist","target:mufg.jp"]
+  properties     {"candidate":"ufg.jp","target":"mufg.jp","a_records":["182.16.229.135"],"source":"doh_google"}
+
+--- row 2 ---
+  uid            dnstwist-jp-targets|mfg.jp
+  title          mfg.jp (typosquat of mufg.jp)
+  body           Candidate phishing/typosquat domain "mfg.jp" resolves to A record(s): 112.78.112.201. Original target: mufg.jp.
+  summary        Resolving permutation of mufg.jp → 112.78.112.201
+  link           http://mfg.jp
+  language       en
+  record_type    dnstwist-jp-targets
+  tags           ["typosquat","phishing","dnstwist","target:mufg.jp"]
+  properties     {"candidate":"mfg.jp","target":"mufg.jp","a_records":["112.78.112.201"],"source":"doh_google"}
+
+--- row 3 ---
+  uid            dnstwist-jp-targets|mug.jp
+  title          mug.jp (typosquat of mufg.jp)
+  body           Candidate phishing/typosquat domain "mug.jp" resolves to A record(s): 59.106.19.200. Original target: mufg.jp.
+  summary        Resolving permutation of mufg.jp → 59.106.19.200
+  link           http://mug.jp
+  language       en
+  record_type    dnstwist-jp-targets
+  tags           ["typosquat","phishing","dnstwist","target:mufg.jp"]
+  properties     {"candidate":"mug.jp","target":"mufg.jp","a_records":["59.106.19.200"],"source":"doh_google"}

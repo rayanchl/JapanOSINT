@@ -15,27 +15,32 @@
 
 #define LIST_URL "https://www.jma.go.jp/bosai/quake/data/list.json"
 
-/* "+38.7+141.9-50000/" : split on '+' → ["","38.7","141.9-50000/"].
- * JS: coords[0]=parseFloat(parts[1])||139.0, coords[1]=parseFloat(parts[0])||36.0 */
-static double split_plus(const char *cod, int idx, double dflt) {
-  if (!cod) return dflt;
-  const char *p = cod; int cur = 0;
-  const char *seg = p;
-  for (;; p++) {
-    if (*p == '+' || *p == '\0') {
-      if (cur == idx) {
-        if (seg == p) return dflt;          /* empty segment → NaN→dflt */
-        char buf[64]; size_t l = (size_t)(p - seg);
-        if (l >= sizeof buf) l = sizeof buf - 1;
-        memcpy(buf, seg, l); buf[l] = 0;
-        char *end; double v = strtod(buf, &end);
-        return end == buf ? dflt : v;
-      }
-      cur++; seg = p + 1;
-      if (*p == '\0') break;
+/* JMA `cod` is an ISO-6709 point: "+32.7+130.7-10000/" = lat +32.7, lon
+ * +130.7, depth -10000 m. Southern/western epicentres carry a leading '-'.
+ *
+ * audit-09 — THIS WAS PUTTING EVERY EPICENTRE IN THE WRONG PLACE. The old
+ * code split on '+' and took parts[1] as the LONGITUDE and parts[0] as the
+ * LATITUDE. Splitting "+32.7+130.7-10000/" on '+' yields ["", "32.7",
+ * "130.7-10000/"], so parts[1] is the LATITUDE (published as longitude) and
+ * parts[0] is the empty string before the leading '+', which fell through to
+ * the 36.0 default. Every one of the ~93 rows was emitted at lat 36.0 with a
+ * longitude of ~30–45 — a point in the eastern Mediterranean, not Japan. It
+ * also never split on '-', so a negative ordinate could not parse at all.
+ * Parse the signed ordinates in order instead. */
+static int parse_cod(const char *cod, double *lat, double *lon, double *dep_m) {
+  if (!cod) return 0;
+  double v[3]; int nv = 0;
+  for (const char *p = cod; *p && nv < 3; ) {
+    if (*p == '+' || *p == '-') {
+      char *end; double d = strtod(p, &end);
+      if (end != p) { v[nv++] = d; p = end; continue; }
     }
+    p++;
   }
-  return dflt;
+  if (nv < 2) return 0;
+  *lat = v[0]; *lon = v[1];
+  if (dep_m) *dep_m = (nv >= 3) ? v[2] : 0.0;
+  return 1;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -53,9 +58,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const cJSON *at  = cJSON_GetObjectItem(q, "at");
     const cJSON *cod = cJSON_GetObjectItem(q, "cod");
     const char *cods = (cod && cJSON_IsString(cod)) ? cod->valuestring : NULL;
+    const cJSON *eid_j = cJSON_GetObjectItem(q, "eid");
+    const cJSON *rdt   = cJSON_GetObjectItem(q, "rdt");
+    const cJSON *ttl   = cJSON_GetObjectItem(q, "ttl");
+    const cJSON *enanm = cJSON_GetObjectItem(q, "en_anm");
+    const cJSON *entt  = cJSON_GetObjectItem(q, "en_ttl");
+    const cJSON *acd   = cJSON_GetObjectItem(q, "acd");
+    const cJSON *jsonf = cJSON_GetObjectItem(q, "json");
 
-    double lon = split_plus(cods, 1, 139.0);
-    double lat = split_plus(cods, 0, 36.0);
+    double lat = 0, lon = 0, dep_m = 0;
+    int has_geo = parse_cod(cods, &lat, &lon, &dep_m);
+    if (!has_geo) continue;      /* no epicentre → no pin, and no fake one */
 
     const char *parts[4] = {
       anm && cJSON_IsString(anm) ? anm->valuestring : NULL,
@@ -65,25 +78,53 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char hk[21]; feed_hash_key(hk, parts, 4);
     char eid[40]; snprintf(eid, sizeof eid, "JMA_INT_%s", hk);
 
-    cJSON *feat = cJSON_CreateObject();
-    cJSON_AddStringToObject(feat, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(feat, "geometry", g);
+    cJSON *feat = gj_point_feature(lon, lat);
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "event_id", eid);
-    cJSON_AddStringToObject(p, "name",
-        anm && cJSON_IsString(anm) ? anm->valuestring : "Unknown");
-    cJSON_AddStringToObject(p, "intensity",
-        maxi && cJSON_IsString(maxi) ? maxi->valuestring : "");
+    /* audit-09: the upstream row carries a magnitude, a JMA event id, a report
+     * time, the English place name and the detail-file name; none of them were
+     * being carried into the intel row. A seismic-intensity pin without the
+     * magnitude is exactly the "labels, not data" shape. */
+    const char *nm = anm && cJSON_IsString(anm) ? anm->valuestring : "Unknown";
+    const char *mg = mag && cJSON_IsString(mag) ? mag->valuestring : NULL;
+    const char *mi = maxi && cJSON_IsString(maxi) ? maxi->valuestring : NULL;
+    char title[256];
+    snprintf(title, sizeof title, "%s%s%s%s%s%s", nm,
+             mg ? " M" : "", mg ? mg : "",
+             mi ? " 震度" : "", mi ? mi : "",
+             "");
+    cJSON_AddStringToObject(p, "title", title);
+    cJSON_AddStringToObject(p, "name", nm);
+    cJSON_AddStringToObject(p, "record_type", "earthquake");
+    if (mg) cJSON_AddNumberToObject(p, "magnitude", strtod(mg, NULL));
+    cJSON_AddStringToObject(p, "intensity", mi ? mi : "");
+    cJSON_AddNumberToObject(p, "depth_km", -dep_m / 1000.0);
     cJSON_AddStringToObject(p, "time",
         at && cJSON_IsString(at) ? at->valuestring : "");
+    if (rdt && cJSON_IsString(rdt))
+      cJSON_AddStringToObject(p, "reported_at", rdt->valuestring);
+    if (eid_j && cJSON_IsString(eid_j))
+      cJSON_AddStringToObject(p, "jma_event_id", eid_j->valuestring);
+    if (ttl && cJSON_IsString(ttl))
+      cJSON_AddStringToObject(p, "bulletin", ttl->valuestring);
+    if (entt && cJSON_IsString(entt))
+      cJSON_AddStringToObject(p, "bulletin_en", entt->valuestring);
+    if (enanm && cJSON_IsString(enanm))
+      cJSON_AddStringToObject(p, "name_en", enanm->valuestring);
+    if (acd && cJSON_IsString(acd))
+      cJSON_AddStringToObject(p, "area_code", acd->valuestring);
+    if (jsonf && cJSON_IsString(jsonf)) {
+      char link[256];
+      snprintf(link, sizeof link,
+               "https://www.jma.go.jp/bosai/quake/data/%s", jsonf->valuestring);
+      cJSON_AddStringToObject(p, "link", link);   /* verifiable provenance */
+    }
     cJSON_AddStringToObject(p, "country", "JP");
     cJSON_AddStringToObject(p, "source", "jma_bosai");
+    cJSON *tg = cJSON_CreateArray();
+    cJSON_AddItemToArray(tg, cJSON_CreateString("earthquake"));
+    cJSON_AddItemToArray(tg, cJSON_CreateString("jma"));
+    cJSON_AddItemToObject(p, "tags", tg);
     cJSON_AddItemToObject(feat, "properties", p);
     cJSON_AddItemToArray(features, feat);
   }
@@ -92,7 +133,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[jma-intensity] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  return 0;   /* audit-09: no felt quake in the window is an honest empty */
 }
 
 static const source_def jma_intensity_def = {

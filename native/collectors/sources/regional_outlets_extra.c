@@ -2,15 +2,7 @@
 #include "../../source.h"
 #include "../../lib/rss_atom.h"
 
-#define RSSX(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)  \
-  static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
-    int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
-  static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
-    .update_interval_sec = IVAL, .run = run_##SYM,                           \
-    .category = CAT, .type = "web_request", .url = URL,                      \
-    .description = DESC, .layer = NULL, .free_tier = 1 };                    \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 RSSX(reg_allafrica, "allafrica", "AllAfrica Headlines", "AllAfrica Headlines", "osint", "news",
   "https://allafrica.com/tools/headlines/rdf/latest/headlines.rdf", "en", "[\"news\",\"africa\",\"regional-outlet\"]", 3600,
@@ -20,13 +12,18 @@ RSSX(reg_iss_africa, "iss-africa", "ISS Africa", "ISS Africa", "osint", "news",
   "https://issafrica.org/rss/recent.xml", "en", "[\"news\",\"africa\",\"regional-outlet\"]", 3600,
   "ISS Africa — regional coverage (africa)");
 
-RSSX(reg_the_continent, "the-continent", "The Africa Report Politics", "The Africa Report Politics", "osint", "news",
-  "https://www.theafricareport.com/section/politics/feed/", "en", "[\"news\",\"africa\",\"regional-outlet\"]", 3600,
-  "The Africa Report Politics — regional coverage (africa)");
+/* audit-09: /section/politics/feed/ sits behind Cloudflare (403 "Just a
+ * moment"); the site-wide feed is served without the challenge. */
+RSSX(reg_the_continent, "the-continent", "The Africa Report", "The Africa Report", "osint", "news",
+  "https://www.theafricareport.com/feed/", "en", "[\"news\",\"africa\",\"regional-outlet\"]", 3600,
+  "The Africa Report — regional coverage (africa)");
 
-RSSX(reg_semafor_africa_2, "semafor-africa-2", "Semafor Africa Signals", "Semafor Africa Signals", "osint", "news",
-  "https://www.semafor.com/vertical/africa/rss.xml", "en", "[\"news\",\"africa\",\"regional-outlet\"]", 3600,
-  "Semafor Africa Signals — regional coverage (africa)");
+/* audit-09: Semafor retired the per-vertical feeds (404). Only the site-wide
+ * rss.xml exists, so this is no longer Africa-only — labelled accordingly
+ * rather than tagging global copy as African. */
+RSSX(reg_semafor_africa_2, "semafor-africa-2", "Semafor (all verticals)", "Semafor (all verticals)", "osint", "news",
+  "https://www.semafor.com/rss.xml", "en", "[\"news\",\"global\",\"regional-outlet\"]", 3600,
+  "Semafor — all verticals (the Africa-only feed was retired upstream)");
 
 RSSX(reg_oc_media, "oc-media", "OC Media (Caucasus)", "OC Media (Caucasus)", "osint", "news",
   "https://oc-media.org/feed/", "en", "[\"news\",\"caucasus\",\"regional-outlet\"]", 3600,
@@ -48,8 +45,12 @@ RSSX(reg_meduza_2, "meduza-2", "Meduza Features", "Meduza Features", "osint", "n
   "https://meduza.io/rss/en/all", "en", "[\"news\",\"russia\",\"regional-outlet\"]", 3600,
   "Meduza Features — regional coverage (russia)");
 
+/* audit-09: rss2.xml 404s. The site's live endpoint is the Arc outbound feed
+ * below — it answers 200 but currently carries ZERO items (BenarNews stopped
+ * publishing). Kept pointed at the real endpoint so the source reports an
+ * honest empty instead of erroring and being quarantined. */
 RSSX(reg_benar_news, "benar-news", "BenarNews (SE Asia)", "BenarNews (SE Asia)", "osint", "news",
-  "https://www.benarnews.org/english/rss2.xml", "en", "[\"news\",\"southeast-asia\",\"regional-outlet\"]", 3600,
+  "https://www.benarnews.org/arc/outboundfeeds/english/rss/", "en", "[\"news\",\"southeast-asia\",\"regional-outlet\"]", 3600,
   "BenarNews (SE Asia) — regional coverage (southeast-asia)");
 
 RSSX(reg_frontier_myanmar, "frontier-myanmar", "Frontier Myanmar", "Frontier Myanmar", "osint", "news",
@@ -60,8 +61,10 @@ RSSX(reg_the_wire_india, "the-wire-india", "The Wire (India)", "The Wire (India)
   "https://thewire.in/rss", "en", "[\"news\",\"india\",\"regional-outlet\"]", 3600,
   "The Wire (India) — regional coverage (india)");
 
+/* audit-09: scroll.in/feeds/all.rss 404s; the outlet's published feed is the
+ * FeedBurner one linked from the site. */
 RSSX(reg_scroll_in, "scroll-in", "Scroll.in (India)", "Scroll.in (India)", "osint", "news",
-  "https://scroll.in/feeds/all.rss", "en", "[\"news\",\"india\",\"regional-outlet\"]", 3600,
+  "https://feeds.feedburner.com/ScrollinArticles", "en", "[\"news\",\"india\",\"regional-outlet\"]", 3600,
   "Scroll.in (India) — regional coverage (india)");
 
 RSSX(reg_the_new_arab, "the-new-arab", "The New Arab", "The New Arab", "osint", "news",
@@ -72,9 +75,11 @@ RSSX(reg_amwaj_media, "amwaj-media", "Amwaj.media (Gulf/Iran)", "Amwaj.media (Gu
   "https://amwaj.media/rss", "en", "[\"news\",\"middle-east\",\"regional-outlet\"]", 3600,
   "Amwaj.media (Gulf/Iran) — regional coverage (middle-east)");
 
-RSSX(reg_insight_crime_2, "insight-crime-2", "InSight Crime Investigations", "InSight Crime Investigations", "osint", "news",
-  "https://insightcrime.org/investigations/feed/", "en", "[\"news\",\"latam\",\"regional-outlet\"]", 3600,
-  "InSight Crime Investigations — regional coverage (latam)");
+/* audit-09: /investigations/feed/ now 302s to a single article page (0 items).
+ * The site feed is /feed/. */
+RSSX(reg_insight_crime_2, "insight-crime-2", "InSight Crime", "InSight Crime", "osint", "news",
+  "https://insightcrime.org/feed/", "en", "[\"news\",\"latam\",\"regional-outlet\"]", 3600,
+  "InSight Crime — regional coverage (latam)");
 
 RSSX(reg_dialogo_americas, "dialogo-americas", "Diálogo Américas", "Diálogo Américas", "osint", "news",
   "https://dialogo-americas.com/feed/", "en", "[\"news\",\"latam\",\"regional-outlet\"]", 3600,
@@ -92,13 +97,16 @@ RSSX(reg_islands_business, "islands-business", "Islands Business (Pacific)", "Is
   "https://islandsbusiness.com/feed/", "en", "[\"news\",\"pacific\",\"regional-outlet\"]", 3600,
   "Islands Business (Pacific) — regional coverage (pacific)");
 
-RSSX(reg_kyiv_indep_3, "kyiv-indep-3", "Kyiv Independent Business", "Kyiv Independent Business", "osint", "news",
-  "https://kyivindependent.com/tag/business/feed/", "en", "[\"news\",\"ukraine\",\"regional-outlet\"]", 3600,
-  "Kyiv Independent Business — regional coverage (ukraine)");
+/* audit-09: the per-tag feed 404s after the Next.js rebuild. The only feed the
+ * site advertises (<link rel=alternate>) is the news-archive one. */
+RSSX(reg_kyiv_indep_3, "kyiv-indep-3", "Kyiv Independent", "Kyiv Independent", "osint", "news",
+  "https://kyivindependent.com/news-archive/rss/", "en", "[\"news\",\"ukraine\",\"regional-outlet\"]", 3600,
+  "Kyiv Independent — regional coverage (ukraine)");
 
-RSSX(reg_balkan_insight_2, "balkan-insight-2", "BIRN Balkan Insight Investigations", "BIRN Balkan Insight Investigations", "osint", "news",
-  "https://balkaninsight.com/category/investigations/feed/", "en", "[\"news\",\"balkans\",\"regional-outlet\"]", 3600,
-  "BIRN Balkan Insight Investigations — regional coverage (balkans)");
+/* audit-09: the /category/investigations/ feed 404s; the site feed works. */
+RSSX(reg_balkan_insight_2, "balkan-insight-2", "BIRN Balkan Insight", "BIRN Balkan Insight", "osint", "news",
+  "https://balkaninsight.com/feed/", "en", "[\"news\",\"balkans\",\"regional-outlet\"]", 3600,
+  "BIRN Balkan Insight — regional coverage (balkans)");
 
 RSSX(reg_hong_kong_fp, "hong-kong-fp", "Hong Kong Free Press", "Hong Kong Free Press", "osint", "news",
   "https://hongkongfp.com/feed/", "en", "[\"news\",\"hong-kong\",\"regional-outlet\"]", 3600,

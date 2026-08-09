@@ -86,9 +86,26 @@ static char *cap_after(const char *block, const char *needle) {
   while (*p && *p != '>') p++;
   if (*p != '>') return NULL;
   p++;
-  /* ([^<]+) */
+  /* AUDIT 2026-07-31: Jmty now nests the value one element deeper —
+   *   <div class='p-item-title …'>\n<a href=…>TITLE</a>
+   * so the first text node after the marker is just the newline, the capture
+   * came back empty and EVERY listing was dropped (source read 60 pages and
+   * emitted 0). Skip over empty text nodes / nested open tags until a real
+   * text run appears, bounded to a few hops so we cannot run into the next
+   * item's markup. */
   const char *s = p;
-  while (*p && *p != '<') p++;
+  for (int hop = 0; hop < 6; hop++) {
+    while (*p && *p != '<') p++;
+    int blank = 1;
+    for (const char *q = s; q < p; q++)
+      if ((unsigned char)*q > ' ') { blank = 0; break; }
+    if (!blank) break;
+    if (*p != '<') return NULL;
+    while (*p && *p != '>') p++;      /* skip the tag */
+    if (*p != '>') return NULL;
+    p++;
+    s = p;
+  }
   if (p == s) return NULL;
   size_t len = (size_t)(p - s);
   /* trim() */
@@ -181,6 +198,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         char *price  = cap_after(block, "p-item-most-important");
         char *areatx = cap_after(block, "p-item-area");
         if (!areatx) areatx = cap_after(block, "データから");
+        /* current markup: prefecture in p-item-secondary-important, the
+         * municipality in p-item-supplementary-info */
+        char *city = cap_after(block, "p-item-supplementary-info");
+        if (!areatx) areatx = cap_after(block, "p-item-secondary-important");
         char *href   = cap_href(block);
 
         if (title && title[0]) {
@@ -189,23 +210,30 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
           if (!area) area = find_area(slug);
           if (!area) area = area_by_pref(areatxt);
           if (area) {
-            double jLat = ((double)rand() / RAND_MAX - 0.5) * 0.03;
-            double jLon = ((double)rand() / RAND_MAX - 0.5) * 0.04;
+            /* The JS original scattered each ad by a random ±0.015°/±0.02°
+             * around the area centroid. That is an INVENTED coordinate: it
+             * renders a made-up street-level position for a listing whose
+             * only published location is a prefecture/municipality name, and
+             * it moves on every run. Pin the honest area centroid instead and
+             * declare the precision in properties. */
             idx++;
 
-            cJSON *f = cJSON_CreateObject();
-            cJSON_AddStringToObject(f, "type", "Feature");
-            cJSON *g = cJSON_CreateObject();
-            cJSON_AddStringToObject(g, "type", "Point");
-            cJSON *co = cJSON_CreateArray();
-            cJSON_AddItemToArray(co, cJSON_CreateNumber(area->lon + jLon));
-            cJSON_AddItemToArray(co, cJSON_CreateNumber(area->lat + jLat));
-            cJSON_AddItemToObject(g, "coordinates", co);
-            cJSON_AddItemToObject(f, "geometry", g);
+            cJSON *f = gj_point_feature(area->lon, area->lat);
 
             cJSON *p = cJSON_CreateObject();   /* EXACT JS key order */
-            char id[32];
-            snprintf(id, sizeof id, "JMTY_%d", idx);
+            /* Identity from the listing's own article slug where available —
+             * "JMTY_<running index>" changed meaning on every run, so the same
+             * ad was re-inserted under a new uid each poll. */
+            char id[96];
+            const char *art = href ? strstr(href, "article-") : NULL;
+            if (art) {
+              size_t k = 0;
+              const char *e = art;
+              while (e[k] && e[k] != '?' && e[k] != '"' && e[k] != '&' && k < 40) k++;
+              snprintf(id, sizeof id, "JMTY_%.*s", (int)k, art);
+            } else {
+              snprintf(id, sizeof id, "JMTY_%d", idx);
+            }
             cJSON_AddStringToObject(p, "id", id);
             cJSON_AddStringToObject(p, "platform", "jmty");
             cJSON_AddStringToObject(p, "title", title);
@@ -215,6 +243,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
               cJSON_AddItemToObject(p, "price_display", cJSON_CreateNull());
             cJSON_AddStringToObject(p, "area", area->area);
             cJSON_AddStringToObject(p, "prefecture", area->pref);
+            if (city && city[0]) cJSON_AddStringToObject(p, "municipality", city);
+            /* be explicit that the pin is an area centroid, not the listing */
+            cJSON_AddStringToObject(p, "geo_precision", "area-centroid");
             char *rurl = (href && href[0]) ? resolve_url(href) : NULL;
             if (rurl)
               cJSON_AddStringToObject(p, "url", rurl);
@@ -228,7 +259,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
           }
         }
 
-        free(title); free(price); free(areatx); free(href);
+        free(title); free(price); free(areatx); free(city); free(href);
         free(block);
         cur = next ? next + ml : NULL;
       }

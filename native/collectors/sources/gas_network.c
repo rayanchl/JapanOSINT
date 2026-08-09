@@ -2,33 +2,17 @@
  * server/src/collectors/gasNetwork.js (fetchOverpass single area.jp).
  * GAS_FACILITIES offline fallback intentionally not ported (rule 8).
  * `updated_at` mirrors JS `new Date().toISOString()` (UTC, ms precision). */
+#include "../../lib/geojson.h"
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
 
-static void iso_now(char *o, size_t n) {
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  struct tm tm;
-  gmtime_r(&tv.tv_sec, &tm);
-  char base[32];
-  strftime(base, sizeof base, "%Y-%m-%dT%H:%M:%S", &tm);
-  snprintf(o, n, "%s.%03dZ", base, (int)(tv.tv_usec / 1000));
-}
-
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   char fb[32];
@@ -56,7 +40,7 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
 
   cJSON_AddStringToObject(p, "country", "JP");
   char ts[40];
-  iso_now(ts, sizeof ts);
+  jo_iso_now(ts, sizeof ts);
   cJSON_AddStringToObject(p, "updated_at", ts);
   cJSON_AddStringToObject(p, "source", "gas_network");
   cJSON_AddItemToObject(f, "properties", p);

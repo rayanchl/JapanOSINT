@@ -1,0 +1,7 @@
+=== LT_REGISTRAI  entity=Vilnius
+exit: 0
+sched: rc=0 records=0 100ms
+--- stderr ---
+[LT_REGISTRAI] http status=404
+[sched] LT_REGISTRAI run rc=0 records=0 100ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

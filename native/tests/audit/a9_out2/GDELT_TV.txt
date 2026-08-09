@@ -1,0 +1,7 @@
+=== GDELT_TV  entity=Japan
+exit: 0
+sched: rc=0 records=0 11353ms
+--- stderr ---
+[sched] GDELT_TV run rc=0 records=0 11353ms
+[detect] anomaly opened: GDELT_TV verdict=duration_outlier — duration 11353ms exceeds 10000ms threshold
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

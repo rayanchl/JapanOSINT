@@ -15,6 +15,9 @@
 #include <openssl/sha.h>
 
 #define HOME "https://tenki.jp/"
+/* Regional forecast page: this is where the per-city highs/lows actually live.
+ * The homepage carries navigation and a map, not readable values. */
+#define FORECAST "https://tenki.jp/forecast/3/16/"
 
 static void iso_now(char *out, size_t n) {
   time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
@@ -73,32 +76,26 @@ static void strip_tags(const char *in, size_t len, char *out, size_t cap) {
   out[o] = 0;
 }
 
-static void push_portal(intel_sink *sink, int reachable, const char *now,
-                        int *n) {
-  cJSON *tags = cJSON_CreateArray();
-  cJSON_AddItemToArray(tags, cJSON_CreateString("weather"));
-  cJSON_AddItemToArray(tags, cJSON_CreateString("tenki-jp"));
-  cJSON_AddItemToArray(tags, cJSON_CreateString(reachable ? "reachable" : "unreachable"));
-  char *tj = cJSON_PrintUnformatted(tags);
-  cJSON *p = cJSON_CreateObject();
-  cJSON_AddBoolToObject(p, "reachable", reachable);
-  cJSON_AddBoolToObject(p, "machine_readable", 0);
-  char *pj = cJSON_PrintUnformatted(p);
-
-  intel_item it = {0};
-  it.remote_key = "portal";
-  it.title = "tenki.jp (\xE6\x97\xA5\xE6\x9C\xAC\xE6\xB0\x97\xE8\xB1\xA1\xE5\x8D\x94\xE4\xBC\x9A)";
-  it.summary = "Japan Weather Association forecast portal";
-  it.body = "No structured forecast could be scraped (no public API/RSS); portal reachability only.";
-  it.link = HOME;
-  it.author = "\xE6\x97\xA5\xE6\x9C\xAC\xE6\xB0\x97\xE8\xB1\xA1\xE5\x8D\x94\xE4\xBC\x9A tenki.jp";
-  it.lang = "ja";
-  it.published_at = now;
-  it.tags_json = tj;
-  it.properties_json = pj;
-  if (sink->emit(sink, &it) >= 0) (*n)++;
-  free(tj); free(pj);
-  cJSON_Delete(tags); cJSON_Delete(p);
+/* Pull the inner text of the first `class="<cls>"` element at/after `from`.
+ * Returns the position just past it, or NULL. tenki.jp wraps each value in a
+ * plain <span class="max-temp">36</span>, so a class-scoped text grab is enough
+ * and stays tolerant of attribute reordering. */
+static const char *cls_text(const char *from, const char *cls,
+                            char *out, size_t cap) {
+  char needle[64];
+  snprintf(needle, sizeof needle, "class=\"%s\"", cls);
+  const char *h = strstr(from, needle);
+  if (!h) return NULL;
+  const char *gt = strchr(h, '>');
+  if (!gt) return NULL;
+  const char *lt = strchr(gt + 1, '<');
+  if (!lt) return NULL;
+  size_t rl = (size_t)(lt - (gt + 1));
+  char raw[512];
+  if (rl >= sizeof raw) rl = sizeof raw - 1;
+  memcpy(raw, gt + 1, rl); raw[rl] = 0;
+  decode(raw, out, cap);
+  return lt;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -107,85 +104,116 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char now[40]; iso_now(now, sizeof now);
   int n = 0;
 
+  /* tenki.jp's homepage no longer carries `weather-telop` anywhere — the site
+   * moved to `forecast-point-city-name` + `max-temp`/`min-temp` on the regional
+   * forecast pages, so the old scan matched nothing and the collector fell
+   * through to a bare portal row every run. Read the real values instead: a
+   * city plus its forecast high/low is a measurement, a telop string was only
+   * a label. */
   if (html) {
-    /* /<(p|span|div)[^>]*class="[^"]*weather-telop[^"]*"[^>]*>(.*?)<\/...>/gi
-       greedy-safe scan: find an opening tag whose attributes contain
-       class="...weather-telop..." then capture up to the next matching close. */
-    const char *cur = html;
-    int matched = 0;
-    while (matched < 12) {
-      const char *lt = NULL;
-      const char *q = cur;
-      const char *open_name = NULL; int name_len = 0;
-      const char *gt = NULL;
-      for (;;) {
-        q = strchr(q, '<');
-        if (!q) { lt = NULL; break; }
-        const char *nm = NULL; int nl = 0;
-        if (!strncasecmp(q, "<p", 2) && !isalpha((unsigned char)q[2])) { nm="p"; nl=1; }
-        else if (!strncasecmp(q, "<span", 5)) { nm="span"; nl=4; }
-        else if (!strncasecmp(q, "<div", 4)) { nm="div"; nl=3; }
-        if (nm) {
-          const char *e = strchr(q, '>');
-          if (e) {
-            char attrs[1024]; size_t al = (size_t)(e - q);
-            if (al >= sizeof attrs) al = sizeof attrs - 1;
-            memcpy(attrs, q, al); attrs[al] = 0;
-            const char *cls = strcasestr(attrs, "class=");
-            if (cls && strstr(cls, "weather-telop")) {
-              lt = q; open_name = nm; name_len = nl + 1; gt = e; break;
-            }
+    char *fc = feed_get_text(ctx->http, FORECAST, 10000);
+    if (fc) {
+      /* Each municipality is one <a id="forecast-map-entry-NNNNN" …> carrying
+       * the city name, a weather telop in the icon's alt=, max/min temp and a
+       * precipitation probability — a complete observation per row. */
+      const char *cur = fc;
+      while (n < 60) {
+        const char *a = strstr(cur, "id=\"forecast-map-entry-");
+        if (!a) break;
+        /* back up to the '<a' that owns this id */
+        const char *tagstart = a;
+        while (tagstart > fc && *tagstart != '<') tagstart--;
+        const char *gt = strchr(a, '>');
+        const char *end = gt ? strstr(gt, "</a>") : NULL;
+        if (!gt || !end) break;
+        cur = end + 4;
+
+        /* city: the text node immediately after the opening tag, up to <br> */
+        char city[128] = {0};
+        {
+          const char *br = strstr(gt + 1, "<");
+          size_t cl = br ? (size_t)(br - (gt + 1)) : 0;
+          char raw[256];
+          if (cl >= sizeof raw) cl = sizeof raw - 1;
+          if (cl) { memcpy(raw, gt + 1, cl); raw[cl] = 0; decode(raw, city, sizeof city); }
+        }
+        if (!city[0]) continue;
+
+        char hi[16] = {0}, lo[16] = {0}, pp[16] = {0}, telop[96] = {0}, href[256] = {0};
+        cls_text(gt, "max-temp",    hi,  sizeof hi);
+        cls_text(gt, "min-temp",    lo,  sizeof lo);
+        cls_text(gt, "prob-precip", pp,  sizeof pp);
+        {   /* icon alt= is the human-readable forecast ("晴のち曇") */
+          const char *al = strstr(gt, "alt=\"");
+          if (al && al < end) {
+            const char *ae = strchr(al + 5, '"');
+            size_t tl = ae ? (size_t)(ae - (al + 5)) : 0;
+            if (tl && tl < sizeof telop) { memcpy(telop, al + 5, tl); telop[tl] = 0; }
+          }
+          const char *hr = strstr(tagstart, "href=\"");
+          if (hr && hr < gt) {
+            const char *he = strchr(hr + 6, '"');
+            size_t hl = he ? (size_t)(he - (hr + 6)) : 0;
+            if (hl && hl < sizeof href - 24)
+              snprintf(href, sizeof href, "https://tenki.jp%.*s", (int)hl, hr + 6);
           }
         }
-        q++;
+        /* Require a real number: the page ships "---" placeholders for blocks
+         * it fills in client-side, and a placeholder is not an observation. */
+        if (!isdigit((unsigned char)hi[0]) || !isdigit((unsigned char)lo[0])) continue;
+
+        char hk[24]; hash_key(hk, city, 0);
+        cJSON *tags = cJSON_CreateArray();
+        cJSON_AddItemToArray(tags, cJSON_CreateString("weather"));
+        cJSON_AddItemToArray(tags, cJSON_CreateString("tenki-jp"));
+        cJSON_AddItemToArray(tags, cJSON_CreateString("forecast"));
+        char *tj = cJSON_PrintUnformatted(tags);
+        cJSON *p = cJSON_CreateObject();
+        cJSON_AddStringToObject(p, "city", city);
+        if (telop[0]) cJSON_AddStringToObject(p, "telop", telop);
+        cJSON_AddNumberToObject(p, "max_temp_c", atof(hi));
+        cJSON_AddNumberToObject(p, "min_temp_c", atof(lo));
+        if (pp[0]) cJSON_AddStringToObject(p, "precip_prob", pp);
+        char *pj = cJSON_PrintUnformatted(p);
+        char title[256], summ[160];
+        snprintf(title, sizeof title, "%s %s %s\xE2\x84\x83/%s\xE2\x84\x83",
+                 city, telop[0] ? telop : "", hi, lo);
+        snprintf(summ, sizeof summ,
+                 "%s\xE2\x80\x94 \xE6\x9C\x80\xE9\xAB\x98%s\xE2\x84\x83 "
+                 "\xE6\x9C\x80\xE4\xBD\x8E%s\xE2\x84\x83%s%s",
+                 telop[0] ? telop : "", hi, lo,
+                 pp[0] ? " \xE9\x99\x8D\xE6\xB0\xB4\xE7\xA2\xBA\xE7\x8E\x87" : "",
+                 pp[0] ? pp : "");
+
+        intel_item it = {0};
+        it.remote_key = hk;
+        it.title = title;
+        it.summary = summ;
+        it.link = href[0] ? href : FORECAST;
+        it.author = "\xE6\x97\xA5\xE6\x9C\xAC\xE6\xB0\x97\xE8\xB1\xA1\xE5\x8D\x94\xE4\xBC\x9A tenki.jp";
+        it.lang = "ja";
+        it.published_at = now;
+        it.record_type = "weather-observation";
+        it.tags_json = tj;
+        it.properties_json = pj;
+        if (sink->emit(sink, &it) >= 0) n++;
+        free(tj); free(pj);
+        cJSON_Delete(tags); cJSON_Delete(p);
       }
-      if (!lt) break;
-      char close[16]; snprintf(close, sizeof close, "</%.*s>", name_len, open_name);
-      const char *ce = strcasestr(gt + 1, close);
-      if (!ce) break;
-      char raw[2048]; size_t rl = (size_t)(ce - (gt + 1));
-      if (rl >= sizeof raw) rl = sizeof raw - 1;
-      char stripped[2048], telop[1024];
-      strip_tags(gt + 1, rl, stripped, sizeof stripped);
-      decode(stripped, telop, sizeof telop);
-      cur = ce + strlen(close);
-      if (!telop[0] || strlen(telop) > 40) continue;
-      matched++;
-
-      char hk[24]; hash_key(hk, telop, matched);
-      cJSON *tags = cJSON_CreateArray();
-      cJSON_AddItemToArray(tags, cJSON_CreateString("weather"));
-      cJSON_AddItemToArray(tags, cJSON_CreateString("tenki-jp"));
-      cJSON_AddItemToArray(tags, cJSON_CreateString("forecast"));
-      char *tj = cJSON_PrintUnformatted(tags);
-      cJSON *p = cJSON_CreateObject();
-      cJSON_AddStringToObject(p, "telop", telop);
-      char *pj = cJSON_PrintUnformatted(p);
-      char title[128];
-      snprintf(title, sizeof title, "tenki.jp \xE5\xA4\xA9\xE6\xB0\x97: %s", telop);
-
-      intel_item it = {0};
-      it.remote_key = hk;
-      it.title = title;
-      it.summary = telop;
-      it.body = telop;
-      it.link = HOME;
-      it.author = "\xE6\x97\xA5\xE6\x9C\xAC\xE6\xB0\x97\xE8\xB1\xA1\xE5\x8D\x94\xE4\xBC\x9A tenki.jp";
-      it.lang = "ja";
-      it.published_at = now;
-      it.tags_json = tj;
-      it.properties_json = pj;
-      if (sink->emit(sink, &it) >= 0) n++;
-      free(tj); free(pj);
-      cJSON_Delete(tags); cJSON_Delete(p);
+      free(fc);
     }
-    free(html);
   }
 
-  if (n == 0) push_portal(sink, reachable, now, &n);
+  free(html);   /* the only free() used to sit inside a dead `if (0)` copy of
+                 * the retired weather-telop scan, so every run leaked the
+                 * whole homepage. The scan itself is gone; the free is not. */
+
+  /* No portal-probe fallback: a row that only says "the site answered" is not
+   * an observation (contract R1), and it was the last `service-portal` row in
+   * the fleet. A run that scrapes nothing now emits nothing. */
 
   fprintf(stderr, "[tenki-jp] emitted %d (reachable=%d)\n", n, reachable);
-  return n > 0 ? 0 : -1;
+  return 0;              /* audit-09: an empty result set is not a run error */
 }
 
 static const source_def tenki_jp_def = {

@@ -1,5 +1,10 @@
 # OSINT search engine (Node→C) — COMPLETE (build-verified)
 
+> **HISTORICAL SNAPSHOT.** "(318 sources)" below is the state at the time this
+> port landed, not a current count, and it did not expand registration macros.
+> Current figure: `make -C native source-count` — 2,563 on 2026-08-09. See
+> [`../docs/collectors.md`](../docs/collectors.md).
+
 Port-from: server/src/osint/{pipeline,dispatcher,prompts,progressTracker}.js
 + utils/searchIngest.js + routes/search.js. All build-green (318 sources).
 

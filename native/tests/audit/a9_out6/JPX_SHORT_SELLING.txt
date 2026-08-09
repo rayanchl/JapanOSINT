@@ -1,0 +1,36 @@
+=== JPX_SHORT_SELLING  entity=Tokyo
+exit: 0
+sched: rc=0 records=25 748ms
+--- stderr ---
+[jpx-short] emitted 25
+[sched] JPX_SHORT_SELLING run rc=0 records=25 748ms
+--- persisted: 25 rows, 0 with lat/lon, 0 with geometry ---
+record_type: short-selling-report=25
+sub_source_id: (null)=25
+
+--- row 1 ---
+  uid            JPX_SHORT_SELLING|https://www.jpx.co.jp/jscc/
+  title          日本証券クリアリング機構
+  link           https://www.jpx.co.jp/jscc/
+  language       ja
+  record_type    short-selling-report
+  tags           ["osint-search"]
+  properties     {"service":"JPX Short Selling","href":"https://www.jpx.co.jp/jscc/","success":true}
+
+--- row 2 ---
+  uid            JPX_SHORT_SELLING|https://www.jpx.co.jp/corporate/index.html
+  title          JPX企業情報
+  link           https://www.jpx.co.jp/corporate/index.html
+  language       ja
+  record_type    short-selling-report
+  tags           ["osint-search"]
+  properties     {"service":"JPX Short Selling","href":"https://www.jpx.co.jp/corporate/index.html","success":true}
+
+--- row 3 ---
+  uid            JPX_SHORT_SELLING|https://www.jpx.co.jp/
+  title                                                              
+  link           https://www.jpx.co.jp/
+  language       ja
+  record_type    short-selling-report
+  tags           ["osint-search"]
+  properties     {"service":"JPX Short Selling","href":"https://www.jpx.co.jp/","success":true}

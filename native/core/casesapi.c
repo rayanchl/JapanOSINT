@@ -602,8 +602,14 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
       cJSON *jpri = cJSON_GetObjectItem(jb, "priority");
       long long pri = 0;
       if (jpri && !cJSON_IsNull(jpri)) {
-        if (!cJSON_IsNumber(jpri) || jpri->valuedouble != (double)(long long)jpri->valuedouble ||
-            jpri->valuedouble < 0 || jpri->valuedouble > 5) {
+        /* Range FIRST, integrality second. (long long)d is undefined when d
+         * is outside long long's range, so testing integrality first made
+         * {"priority":1e308} — a body anyone authenticated can POST — UB
+         * before the 0..5 check could reject it. The positive form also
+         * rejects NaN, which fails every comparison. */
+        if (!cJSON_IsNumber(jpri) ||
+            !(jpri->valuedouble >= 0 && jpri->valuedouble <= 5) ||
+            jpri->valuedouble != (double)(long long)jpri->valuedouble) {
           out = err(st, 400, "priority must be an integer 0..5"); goto done;
         }
         pri = (long long)jpri->valuedouble;
@@ -728,8 +734,11 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
       }
       cJSON *jpri = cJSON_GetObjectItem(jb, "priority");
       if (jpri && !cJSON_IsNull(jpri)) {
-        if (!cJSON_IsNumber(jpri) || jpri->valuedouble != (double)(long long)jpri->valuedouble ||
-            jpri->valuedouble < 0 || jpri->valuedouble > 5) {
+        /* Same ordering fix as the POST path above: bound the value before
+         * the double->long long cast, which is UB outside that range. */
+        if (!cJSON_IsNumber(jpri) ||
+            !(jpri->valuedouble >= 0 && jpri->valuedouble <= 5) ||
+            jpri->valuedouble != (double)(long long)jpri->valuedouble) {
           out = err(st, 400, "priority must be an integer 0..5"); goto done;
         }
         new_pri = (long long)jpri->valuedouble;

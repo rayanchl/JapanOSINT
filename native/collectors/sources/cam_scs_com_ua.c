@@ -33,6 +33,8 @@
  * Every feature → camera_upsert(channel="scs_com_ua").  makeFeature parity
  * byte-identical to camera_discovery.c.
  */
+#include "../../lib/geojson.h"
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/camera_store.h"
 #include "../../core/httpclient.h"
@@ -51,17 +53,6 @@
 
 typedef struct { const char *k; const char *sv; int is_num; double nv;
                  int is_null; int is_bool; int bv; } kv;
-static double round4(double v) { return floor(v * 1e4 + 0.5) / 1e4; }
-static void uid_tail(const char *url, const char *name, char *out,
-                     size_t outsz) {
-  const char *src = (url && *url) ? url : (name ? name : "");
-  size_t i = 0;
-  for (; src[i] && i < 60 && i + 1 < outsz; i++) {
-    unsigned char c = (unsigned char)src[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
 static cJSON *make_feature(double lat, double lon, const char *name,
                            const char *camera_type,
                            const char *discovery_channel,
@@ -72,19 +63,11 @@ static cJSON *make_feature(double lat, double lon, const char *name,
       url = extra[i].sv; break;
     }
   char lats[32], lons[32], tail[80], uid[160];
-  snprintf(lats, sizeof lats, "%.4f", round4(lat));
-  snprintf(lons, sizeof lons, "%.4f", round4(lon));
-  uid_tail(url, name, tail, sizeof tail);
+  snprintf(lats, sizeof lats, "%.4f", jo_round4(lat));
+  snprintf(lons, sizeof lons, "%.4f", jo_round4(lon));
+  jo_uid_tail(url, name, tail, sizeof tail);
   snprintf(uid, sizeof uid, "%s:%s:%s", lats, lons, tail);
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "camera_uid", uid);
   cJSON_AddStringToObject(p, "name", (name && *name) ? name : "Unknown camera");
@@ -138,14 +121,13 @@ static const centroid PREF_CENTROIDS[] = {
   {"hakone",35.2323,139.1069,"city"},{"asakusa",35.7148,139.7967,"city"},
   {"shibuya",35.6580,139.7016,"city"},{"shinjuku",35.6938,139.7034,"city"},
 };
-static char lc(char c) { return (c>='A'&&c<='Z')?(char)(c+32):c; }
 static int guess_centroid(const char *text, double *olat, double *olon,
                           const char **oprec) {
   if (!text || !*text) return 0;
   size_t tl = strlen(text);
   char *low = malloc(tl + 1);
   if (!low) return 0;
-  for (size_t i = 0; i <= tl; i++) low[i] = lc(text[i]);
+  for (size_t i = 0; i <= tl; i++) low[i] = jo_lc(text[i]);
   for (size_t i = 0; i < sizeof PREF_CENTROIDS / sizeof *PREF_CENTROIDS; i++) {
     const char *k = PREF_CENTROIDS[i].key;
     char kb[32]; size_t kl = strlen(k);
@@ -302,7 +284,7 @@ static int has_sort_filter(const char *h) {
         return 1;
       /* case-insensitive: also check upper */
       char b[7]; int bl = 0;
-      for (; bl < 6 && r[bl]; bl++) b[bl] = lc(r[bl]);
+      for (; bl < 6 && r[bl]; bl++) b[bl] = jo_lc(r[bl]);
       b[bl] = 0;
       if ((strncmp(b,"sort",4)==0 &&
            !(isalnum((unsigned char)r[4])||r[4]=='_')) ||
@@ -398,8 +380,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       abs_url(hbuf, aurl, sizeof aurl);
       kv ex[3] = {0};
       ex[0].k="url"; ex[0].sv=aurl;
-      ex[1].k="location_precision"; ex[1].sv=prec;
-      ex[2].k="location_approximate"; ex[2].is_bool=1; ex[2].bv=1;
+      ex[1].k="geo_precision"; ex[1].sv=prec;
+      ex[2].k="geo_uncertain"; ex[2].is_bool=1; ex[2].bv=1;
       const char *nm = label[0] ? label : "scs webcam"; /* label||'scs webcam' */
       if (nf >= capf) {
         capf = capf ? capf * 2 : 64;
@@ -445,5 +427,5 @@ static const source_def cam_scs_com_ua_def = {
   .name = "Camera discovery — scs.com.ua",
   .name_ja = "カメラ探索 — scs.com.ua",
    .layer = "cameras",
-   .update_interval_sec = 21600, .run = run };
+   .update_interval_sec = 3600, .run = run };
 REGISTER_SOURCE(cam_scs_com_ua_def)

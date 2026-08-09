@@ -1,0 +1,42 @@
+=== FI_OPENDATA  entity=helsinki
+exit: 0
+sched: rc=0 records=20 494ms
+--- stderr ---
+[FI_OPENDATA] emitted 20
+[sched] FI_OPENDATA run rc=0 records=20 494ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: open-dataset=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            FI_OPENDATA|helsinkikanava-open-data
+  title          Helsinki-kanava Open Data
+  body           {"title":"Helsinki-kanava Open Data","organization":"Helsingin kaupunginkanslia","source":"FI_OPENDATA"}
+  summary        Helsingin kaupunginkanslia
+  link           https://www.avoindata.fi/data/en_GB/dataset/helsinkikanava-open-data
+  language       en
+  record_type    open-dataset
+  tags           ["osint-search","FI_OPENDATA"]
+  properties     {"service":"FI_OPENDATA","success":true}
+
+--- row 2 ---
+  uid            FI_OPENDATA|helsinki-s-2030-climate-technologies-city-performance-tool-2016
+  title          Helsinki’s 2030 Climate Technologies – City Performance Tool (2016)
+  body           {"title":"Helsinki’s 2030 Climate Technologies – City Performance Tool (2016)","organization":"Helsingin kaupunkiympäristön toimiala","source":"FI_OPENDATA"}
+  summary        Helsingin kaupunkiympäristön toimiala
+  link           https://www.avoindata.fi/data/en_GB/dataset/helsinki-s-2030-climate-technologies-city-performance-tool-2016
+  language       en
+  record_type    open-dataset
+  tags           ["osint-search","FI_OPENDATA"]
+  properties     {"service":"FI_OPENDATA","success":true}
+
+--- row 3 ---
+  uid            FI_OPENDATA|helsinki-turvattomuutta-kokevien-osuudet-peruspiireitt-2003-2006-ja-2009
+  title          Helsinki: Turvattomuutta kokevien osuudet peruspiireittäin 2003, 2006 ja 2009
+  body           {"title":"Helsinki: Turvattomuutta kokevien osuudet peruspiireittäin 2003, 2006 ja 2009","organization":"Helsingin kaupunginkanslia","source":"FI_OPENDATA"}
+  summary        Helsingin kaupunginkanslia
+  link           https://www.avoindata.fi/data/en_GB/dataset/helsinki-turvattomuutta-kokevien-osuudet-peruspiireitt-2003-2006-ja-2009
+  language       en
+  record_type    open-dataset
+  tags           ["osint-search","FI_OPENDATA"]
+  properties     {"service":"FI_OPENDATA","success":true}

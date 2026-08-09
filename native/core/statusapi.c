@@ -1,4 +1,5 @@
 #include "statusapi.h"
+#include "intelapi.h"           /* intelapi_is_intel_id — INTEL_SOURCE_IDS */
 #include "source_registry.h"
 #include "source_trust.h"
 #include "breach_meta.h"
@@ -133,7 +134,16 @@ static int add_cred_status(cJSON *o, const char *id) {
   return requiresKey;
 }
 
-/* ── layers.js STRIP_LAYER_IDS (static list + intelCatalog INTEL_SOURCE_IDS) */
+/* ── layers.js STRIP_LAYER_IDS.
+ *
+ * Node's set was STRIP_LAYER_IDS ∪ intelCatalog's INTEL_SOURCE_IDS, and the
+ * port inlined a verbatim copy of the second half here — 34 ids duplicated
+ * byte-for-byte with intelapi.c's INTEL_IDS. Two copies, two places to update,
+ * and both had drifted identically: boj-stats / jcg-navarea / nict-atlas name
+ * collectors deleted in the 66-source removal sweep. The copy is gone;
+ * statusapi_strip_has() below unions this list with intelapi_is_intel_id(), so
+ * the membership test is unchanged and there is now one definition of each
+ * half. */
 static const char *STRIP[] = {
   "osm-transport-trains","osm-transport-subways","osm-transport-buses",
   "osm-transport-ports","mlit-n02-stations","mlit-n07-bus-routes",
@@ -148,22 +158,12 @@ static const char *STRIP[] = {
   "emergency","warnings","classifieds",
   "unified-station-footprints","unified-stations","bus-routes",
   "highway-traffic","jartic-traffic",
-  /* ...INTEL_SOURCE_IDS */
-  "certstream-jp","bird-makeup-jp","chan-5ch","fofa-jp",
-  "github-leaks-jp","grayhat-buckets","greynoise-jp","hatena-bookmark",
-  "houjin-bangou","mercari-trending","misskey-timeline","note-com-trending",
-  "urlscan-jp","wayback-jp",
-  "edinet-filings","boj-stats","data-go-jp-ckan","egov-laws",
-  "geospatial-jp-ckan","kyodo-rss","nhk-world-rss","jcg-navarea","nict-atlas",
-  "ripestat-jp","wifi-hotspots-jcfw","wifi-hotspots-freespot",
-  "jp-news-rss","nhk-news-rss","yahoo-news-jp-rss","ipa-alerts",
-  "jpcert-alerts","phishing-feeds-jp","sans-isc-feeds","my-jvn",
 };
 int statusapi_strip_has(const char *id) {
   if (!id) return 0;
   for (size_t i = 0; i < sizeof STRIP / sizeof *STRIP; i++)
     if (strcmp(STRIP[i], id) == 0) return 1;
-  return 0;
+  return intelapi_is_intel_id(id);   /* ...∪ INTEL_SOURCE_IDS (intelapi.c) */
 }
 
 /* listSources() aggregates keyed by source_id (status uses item_count,

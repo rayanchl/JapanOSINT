@@ -36,6 +36,8 @@
  * Index fetch failure → return -1 (fetch fail).  0 categories / 0 cams = 0
  * rows, return 0 (faithful: JS `return []`).
  */
+#include "../../lib/geojson.h"
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/camera_store.h"
 #include "../../core/httpclient.h"
@@ -54,17 +56,6 @@
 /* ── makeFeature (verbatim from camera_discovery.c) ────────────────────────*/
 typedef struct { const char *k; const char *sv; int is_num; double nv;
                  int is_null; } kv;
-static double round4(double v) { return floor(v * 1e4 + 0.5) / 1e4; }
-static void uid_tail(const char *url, const char *name, char *out,
-                     size_t outsz) {
-  const char *src = (url && *url) ? url : (name ? name : "");
-  size_t i = 0;
-  for (; src[i] && i < 60 && i + 1 < outsz; i++) {
-    unsigned char c = (unsigned char)src[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
 static cJSON *make_feature(double lat, double lon, const char *name,
                            const char *camera_type,
                            const char *discovery_channel,
@@ -75,19 +66,11 @@ static cJSON *make_feature(double lat, double lon, const char *name,
       url = extra[i].sv; break;
     }
   char lats[32], lons[32], tail[80], uid[160];
-  snprintf(lats, sizeof lats, "%.4f", round4(lat));
-  snprintf(lons, sizeof lons, "%.4f", round4(lon));
-  uid_tail(url, name, tail, sizeof tail);
+  snprintf(lats, sizeof lats, "%.4f", jo_round4(lat));
+  snprintf(lons, sizeof lons, "%.4f", jo_round4(lon));
+  jo_uid_tail(url, name, tail, sizeof tail);
   snprintf(uid, sizeof uid, "%s:%s:%s", lats, lons, tail);
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "camera_uid", uid);
   cJSON_AddStringToObject(p, "name", (name && *name) ? name : "Unknown camera");
@@ -141,7 +124,6 @@ static const centroid PREF_CENTROIDS[] = {
   {"hakone",35.2323,139.1069},{"asakusa",35.7148,139.7967},
   {"shibuya",35.6580,139.7016},{"shinjuku",35.6938,139.7034},
 };
-static char lc(char c) { return (c>='A'&&c<='Z')?(char)(c+32):c; }
 
 /* Centroid keys that are city/locality anchors rather than whole prefectures.
  * Used only to honestly label the approximate point's precision. */
@@ -159,7 +141,7 @@ static int guess_centroid(const char *text, double *olat, double *olon,
   size_t tl = strlen(text);
   char *low = malloc(tl + 1);
   if (!low) return 0;
-  for (size_t i = 0; i <= tl; i++) low[i] = lc(text[i]);
+  for (size_t i = 0; i <= tl; i++) low[i] = jo_lc(text[i]);
   for (size_t i = 0; i < sizeof PREF_CENTROIDS / sizeof *PREF_CENTROIDS; i++) {
     const char *k = PREF_CENTROIDS[i].key;
     char kb[32]; size_t kl = strlen(k);
@@ -411,7 +393,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       kv ex[2];
       ex[0].k="url"; ex[0].is_num=0; ex[0].is_null=0; ex[0].sv=detail;
         ex[0].nv=0;
-      ex[1].k="location_precision"; ex[1].is_num=0; ex[1].is_null=0;
+      ex[1].k="geo_precision"; ex[1].is_num=0; ex[1].is_null=0;
         ex[1].sv=precision; ex[1].nv=0;
       if (nf >= capf) {
         capf = capf ? capf * 2 : 64;
@@ -424,7 +406,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                                  "webcamendirect_list", ex, 2);
       /* honest flag: centroid is an area anchor, not the camera's GPS */
       cJSON *fp = cJSON_GetObjectItem(feat, "properties");
-      if (fp) cJSON_AddBoolToObject(fp, "location_approximate", 1);
+      if (fp) cJSON_AddBoolToObject(fp, "geo_uncertain", 1);
       feats[nf++] = feat;
       p = altend;
       continue;
@@ -457,5 +439,5 @@ static const source_def cam_webcamendirect_list_def = {
   .name = "Camera discovery — Webcam-en-direct list",
   .name_ja = "カメラ探索 — Webcam-en-direct list",
    .layer = "cameras",
-   .update_interval_sec = 21600, .run = run };
+   .update_interval_sec = 3600, .run = run };
 REGISTER_SOURCE(cam_webcamendirect_list_def)

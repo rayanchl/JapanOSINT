@@ -1,0 +1,33 @@
+=== jma-earthquake
+exit: 0
+sched: rc=0 records=446 669ms
+--- stderr ---
+[jma-earthquake] emitted 446
+[sched] jma-earthquake run rc=0 records=446 669ms
+--- persisted: 446 rows, 439 with lat/lon, 0 with geometry ---
+record_type: jma-earthquake=446
+sub_source_id: (null)=446
+
+--- row 1 ---
+  uid            jma-earthquake|20260801014850
+  title          熊本県熊本地方 M2.3 最大震度1
+  summary        震源・震度情報 — 熊本県熊本地方 深さ10km
+  link           https://www.jma.go.jp/bosai/quake/data/20260801015119_20260801014850_VXSE5k_1.json
+  language       ja
+  published_at   2026-08-01T01:48:00+09:00
+  lat            32.7
+  lon            130.7
+  record_type    jma-earthquake
+  properties     {"earthquake_id":"20260801014850","magnitude":"2.3","place":"熊本県熊本地方","max_intensity":"1","depth_km":10,"report_kind":"発表","report_serial":"1","reported_at":"2026-08-01T01:51:00+09:00","area_code":"741","bulletin":"震源・震度情報","bulletin_en":"Earthquake and Seismic Intensity Information","place_en":"Kumamoto Region, Kumamoto Prefecture","intensity_areas":[{"code":"43","maxi":"1","city":[{"code":"4321100","maxi":"1"}]}],"source":"jma.go.jp"}
+
+--- row 2 ---
+  uid            jma-earthquake|20260801005729
+  title          熊本県熊本地方 M2.3 最大震度1
+  summary        震源・震度情報 — 熊本県熊本地方 深さ10km
+  link           https://www.jma.go.jp/bosai/quake/data/20260801010020_20260801005729_VXSE5k_1.json
+  language       ja
+  published_at   2026-08-01T00:57:00+09:00
+  lat            32.7
+  lon            130.7
+  record_type    jma-earthquake
+  properties     {"earthquake_id":"20260801005729","magnitude":"2.3","place":"熊本県熊本地方","max_intensity":"1","depth_km":10,"report_kind":"発表","report_serial":"1","reported_at":"2026-08-01T01:00:00+09:00","area_code":"741","bulletin":"震源・震度情報","bulletin_en":"Earthquake and Seismic Intensity Information","place_en":"Kumamoto Region, Kumamoto Prefecture","intensity_areas":[{"code":"43","maxi":"1","city":[{"code":"4321300","maxi":"1"},{"code":"4334800","maxi":"1"}]}],"source":"jma.go.jp"}

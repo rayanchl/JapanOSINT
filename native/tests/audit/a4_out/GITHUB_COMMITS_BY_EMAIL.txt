@@ -1,0 +1,42 @@
+=== GITHUB_COMMITS_BY_EMAIL  entity=test@example.com
+exit: 0
+sched: rc=0 records=20 712ms
+--- stderr ---
+[GITHUB_COMMITS_BY_EMAIL] emitted 20
+[sched] GITHUB_COMMITS_BY_EMAIL run rc=0 records=20 712ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: github-commit=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            GITHUB_COMMITS_BY_EMAIL|d83b8f8118b96c43e4a3bc0051c22ceb947ef67c
+  title          test @ brickfrog/choir
+  body           {"author_name":"test","queried_email":"test@example.com","repository":"brickfrog/choir","message":"chore: restore plain pre-commit hook","sha":"d83b8f8118b96c43e4a3bc0051c22ceb947ef67c","source":"GitHub Commits"}
+  summary        test
+  link           https://github.com/brickfrog/choir/commit/d83b8f8118b96c43e4a3bc0051c22ceb947ef67c
+  language       en
+  record_type    github-commit
+  tags           ["osint-search","GITHUB_COMMITS_BY_EMAIL"]
+  properties     {"author_name":"test","repository":"brickfrog/choir","service":"GITHUB_COMMITS_BY_EMAIL","success":true}
+
+--- row 2 ---
+  uid            GITHUB_COMMITS_BY_EMAIL|9a092f7fb827774d740eef6fcdffb7dff2a6bb6e
+  title          test @ brickfrog/choir
+  body           {"author_name":"test","queried_email":"test@example.com","repository":"brickfrog/choir","message":"chore: remove local verification hooks","sha":"9a092f7fb827774d740eef6fcdffb7dff2a6bb6e","source":"GitHub Commits"}
+  summary        test
+  link           https://github.com/brickfrog/choir/commit/9a092f7fb827774d740eef6fcdffb7dff2a6bb6e
+  language       en
+  record_type    github-commit
+  tags           ["osint-search","GITHUB_COMMITS_BY_EMAIL"]
+  properties     {"author_name":"test","repository":"brickfrog/choir","service":"GITHUB_COMMITS_BY_EMAIL","success":true}
+
+--- row 3 ---
+  uid            GITHUB_COMMITS_BY_EMAIL|3765678017e1803b5eadf892e651b2c342a45b63
+  title          test @ brickfrog/choir
+  body           {"author_name":"test","queried_email":"test@example.com","repository":"brickfrog/choir","message":"fix: restore parent fallback and leaf discipline","sha":"3765678017e1803b5eadf892e651b2c342a45b63","source":"GitHub Commits"}
+  summary        test
+  link           https://github.com/brickfrog/choir/commit/3765678017e1803b5eadf892e651b2c342a45b63
+  language       en
+  record_type    github-commit
+  tags           ["osint-search","GITHUB_COMMITS_BY_EMAIL"]
+  properties     {"author_name":"test","repository":"brickfrog/choir","service":"GITHUB_COMMITS_BY_EMAIL","success":true}

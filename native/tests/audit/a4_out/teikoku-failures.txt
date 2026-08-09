@@ -1,0 +1,19 @@
+=== teikoku-failures
+exit: 0
+sched: rc=0 records=1 360ms
+--- stderr ---
+[teikoku-failures] probe reachable=0
+[sched] teikoku-failures run rc=0 records=1 360ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            teikoku-failures|portal
+  title          Teikoku Databank — corporate failure listings
+  summary        Monthly TDB bankruptcy / liquidation summary
+  link           https://www.tdb.co.jp/tosan/syosai/
+  language       ja
+  published_at   2026-07-31T18:06:29.988Z
+  tags           ["bankruptcy","tdb","corporate","unreachable"]
+  properties     {"operator":"帝国データバンク","reachable":false}

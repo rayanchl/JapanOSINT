@@ -3,6 +3,7 @@
  * getStatsData (国勢調査), gated on ESTAT_APP_ID, limit=3000. Honest
  * empty without key / on failure / empty VALUE — no seed. uid key
  * mirrors JS `${area}-${cat}-${time}` (always non-empty → `|| i` dead). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include <stdio.h>
@@ -11,10 +12,6 @@
 
 #define API_BASE "https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData"
 #define DEFAULT_STATS_DATA_ID "0003448237"
-
-static const char *s_or_null(cJSON *v) {
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *appId = getenv("ESTAT_APP_ID");
@@ -42,10 +39,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *v;
   cJSON_ArrayForEach(v, values) {
     if (i++ >= 3000) break;
-    const char *area = s_or_null(cJSON_GetObjectItem(v, "@area"));
-    const char *cat  = s_or_null(cJSON_GetObjectItem(v, "@cat01"));
-    const char *time = s_or_null(cJSON_GetObjectItem(v, "@time"));
-    const char *val  = s_or_null(cJSON_GetObjectItem(v, "$"));
+    const char *area = jo_vstr(cJSON_GetObjectItem(v, "@area"));
+    const char *cat  = jo_vstr(cJSON_GetObjectItem(v, "@cat01"));
+    const char *time = jo_vstr(cJSON_GetObjectItem(v, "@time"));
+    const char *val  = jo_vstr(cJSON_GetObjectItem(v, "$"));
 
     char rk[160], title[160], summary[160], body[320];
     snprintf(rk, sizeof rk, "%s-%s-%s",
@@ -90,7 +87,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(root);
   fprintf(stderr, "[estat-census] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  return 0;              /* audit-09: an empty result set is not a run error */
 }
 
 static const source_def estat_census_def = {

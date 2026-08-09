@@ -1,0 +1,15 @@
+EARTHQUAKE_MONITOR	Tokyo
+strava-heatmap-bases
+FEODO_GLOBAL
+SSLBL_GLOBAL
+URLHAUS_GLOBAL
+THREATFOX_GLOBAL
+TOR_EXITS_GLOBAL
+OPENPHISH
+SPAMHAUS_DROP_GLOBAL
+MALWAREBAZAAR
+securitytrails-history
+phishing-feeds-jp
+himawari-realtime
+geothermal-springs
+dnstwist-jp-targets

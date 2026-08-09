@@ -10,6 +10,7 @@
  * success always true, confidence 95. Single-entity (pivot) form of the
  * upstream multi-entity loop. Emits one osint_service_result row (body =
  * {success,confidence,data}), like dns_records.c. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
@@ -18,23 +19,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static void uri_encode(const char *in, char *out, size_t cap) {
-  static const char *keep = "-_.!~*'()";
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p && w + 4 < cap; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(keep, c)) out[w++] = (char)c;
-    else { snprintf(out + w, cap - w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
-}
-
 /* crt.sh JSON → array of cert objects (dedup by clean_name, ≤500). */
 static cJSON *query_crt_sh(http_client *http, const char *domain) {
   cJSON *results = cJSON_CreateArray();
   char enc[256];
-  uri_encode(domain, enc, sizeof enc);
+  jo_uri_encode_buf(domain, enc, sizeof enc);
   char url[512];
   snprintf(url, sizeof url, "https://crt.sh/?q=%%25.%s&output=json", enc);
 

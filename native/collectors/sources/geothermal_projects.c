@@ -105,15 +105,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     free(html);
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(d->lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(d->lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(d->lon, d->lat);
 
     cJSON *p = cJSON_CreateObject();       /* EXACT JS key order */
     char pid[16];
@@ -124,8 +116,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(p, "district_type", d->district_type);
     cJSON_AddStringToObject(p, "prefecture", d->prefecture);
     cJSON_AddStringToObject(p, "town", d->town);
+    /* This number is NOT fetched. It is the sum of the nameplate ratings of
+     * the plants listed in `notable_plants` on this record (Hachimantai
+     * 23.5+80 = 103.5, Yuzawa 27.5+46.2 = 73.7, …). The JOGMEC district pages
+     * are narrative HTML and publish no capacity figure at all, so tagging the
+     * row `jogmec_geothermal_live` presented a static catalogue total as a
+     * live measurement. The figure is kept — it is real and citable — but it
+     * now carries its own provenance and the row says what it actually is. */
     cJSON_AddItemToObject(p, "installed_capacity_mw",
       d->has_cap ? cJSON_CreateNumber(d->cap_mw) : cJSON_CreateNull());
+    cJSON_AddStringToObject(p, "installed_capacity_provenance",
+      "static catalogue: sum of the plants in notable_plants; not published by "
+      "the fetched page");
     cJSON *np = cJSON_CreateArray();
     for (int k = 0; k < 3 && d->notable_plants[k]; k++)
       cJSON_AddItemToArray(np, cJSON_CreateString(d->notable_plants[k]));
@@ -134,7 +136,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddItemToObject(p, "page_title",
       has_title ? cJSON_CreateString(title) : cJSON_CreateNull());
     cJSON_AddStringToObject(p, "country", "JP");
-    cJSON_AddStringToObject(p, "source", "jogmec_geothermal_live");
+    /* was "jogmec_geothermal_live": only page_title and source_url come from
+     * the fetch; the district identity and capacity are a static catalogue. */
+    cJSON_AddStringToObject(p, "source", "jogmec_geothermal_page_probe");
     cJSON_AddStringToObject(p, "source_url", url);
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);

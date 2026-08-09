@@ -1,0 +1,45 @@
+=== gnews-mon-oil-tanker-seizure
+exit: 0
+sched: rc=0 records=100 797ms
+--- stderr ---
+[rss] gnews-mon-oil-tanker-seizure emitted 100
+[sched] gnews-mon-oil-tanker-seizure run rc=0 records=100 797ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-oil-tanker-seizure|CBMiUkFVX3lxTE8xbG84UEN5Vjk4V2VZRl9TcXVwblJieUNwVk1zaGJScnhPcDBGc2haYmV1WlNoSGJKSWRGZl91Y1VyVVJOa21fQWlhS3kyRHk1dVE
+  title          Trump shares AI-generated images depicting Iranian tanker seizure, Kharg strike - Iran International
+  body           <a href="https://news.google.com/rss/articles/CBMiUkFVX3lxTE8xbG84UEN5Vjk4V2VZRl9TcXVwblJieUNwVk1zaGJScnhPcDBGc2haYmV1WlNoSGJKSWRGZl91Y1VyVVJOa21fQWlhS3kyRHk1dVE?oc=5" target="_blank">Trump shares AI-generated images depicting Iranian tanker seizure, Kharg strike</a>&nbsp;&nbsp;<font color="#6f6f6f">Iran International</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiUkFVX3lxTE8xbG84UEN5Vjk4V2VZRl9TcXVwblJieUNwVk1zaGJScnhPcDBGc2haYmV1WlNoSGJKSWRGZl91Y1VyVVJOa21fQWlhS3kyRHk1dVE?oc=5" target="_blank">Trump shares AI-generated images depicting Iranian tanke
+  link           https://news.google.com/rss/articles/CBMiUkFVX3lxTE8xbG84UEN5Vjk4V2VZRl9TcXVwblJieUNwVk1zaGJScnhPcDBGc2haYmV1WlNoSGJKSWRGZl91Y1VyVVJOa21fQWlhS3kyRHk1dVE?oc=5
+  language       en
+  published_at   Sun, 26 Jul 2026 19:47:47 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","oil"]
+  properties     {"guid":"CBMiUkFVX3lxTE8xbG84UEN5Vjk4V2VZRl9TcXVwblJieUNwVk1zaGJScnhPcDBGc2haYmV1WlNoSGJKSWRGZl91Y1VyVVJOa21fQWlhS3kyRHk1dVE"}
+
+--- row 2 ---
+  uid            gnews-mon-oil-tanker-seizure|CBMivwFBVV95cUxOUXVRMDJJcDZIdk9xYXFVSlIweWdXeVh5U2ptcW84OF9lbEVzaXBfN3k3TW1rU2JTUXdJb3FDcmNPak9lRlBYcDhMMlNQaGtEX1pTVl9nT1NOQlZYS0lPcDFPZ1NMOXBndEh4NzR6QmFRNE4xNEQ4M0VVcU8xd1RFSHlOUjYyZHg1N3R4ako2alFLU0tnMmhHWmxLZlJ4TUpwcHMwVWNGZ1c3WlpidlBxLU1PU0ktdVhqbHZfNExJY9IBxgFBVV95cUxNZDFJUU1abUJDWFpKS2F4U2ZVdFJaSnB6T2p2VV9hSkw3WTdoV2cwQWItcEhnODliSjFMMUVYeHNqZzBINTZ6Z0lnLTU3dkRETXRmLWl6b2ZVeHBmaDQ2d0x3T2IxZURCN3F4a2d5eWVRVEhSUkZYSF85UnBMYzZYMVhmYkl0ZWk2c05rWWdHZXlxb1VlSVZqZGhPVDhmYzB5a3
+  title          ‘Guardians of world’: Trump posts AI images showing US seizing Iranian tanker, striking Kharg oil terminal - The Indian Express
+  body           <a href="https://news.google.com/rss/articles/CBMivwFBVV95cUxOUXVRMDJJcDZIdk9xYXFVSlIweWdXeVh5U2ptcW84OF9lbEVzaXBfN3k3TW1rU2JTUXdJb3FDcmNPak9lRlBYcDhMMlNQaGtEX1pTVl9nT1NOQlZYS0lPcDFPZ1NMOXBndEh4NzR6QmFRNE4xNEQ4M0VVcU8xd1RFSHlOUjYyZHg1N3R4ako2alFLU0tnMmhHWmxLZlJ4TUpwcHMwVWNGZ1c3WlpidlBxLU1PU0ktdVhqbHZfNExJY9IBxgFBVV95cUxNZDFJUU1abUJDWFpKS2F4U2ZVdFJaSnB6T2p2VV9hSkw3WTdoV2cwQWItcEhnODliSjFMMUVYeHNqZzBINTZ6Z0lnLTU3dkRETXRmLWl6b2ZVeHBmaDQ2d0x3T2IxZURCN3F4a2d5eWVRVEhSUkZYSF85UnBMYzZYMVhmYkl0ZWk2c05rWWdHZXlxb1VlSVZqZGhPVDhmYzB5a3hjOHZxeWZycU9TM0FhOGdvZVFzMkFocjJsN3RHUGpvblRiS1E?oc=5" target="_blank">‘Guardians of world’: Trump posts AI images showing US seizing Iranian tanker, striking Kharg oil terminal</a>&nbsp;&nbsp;<font color="#6f6f6f">The Indian Express</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMivwFBVV95cUxOUXVRMDJJcDZIdk9xYXFVSlIweWdXeVh5U2ptcW84OF9lbEVzaXBfN3k3TW1rU2JTUXdJb3FDcmNPak9lRlBYcDhMMlNQaGtEX1pTVl9nT1NOQlZYS0lPcDFPZ1NMOXBndEh4NzR6QmFRNE4xNEQ4M0VVcU8xd1RFSHlOUjYyZHg1N3R4ak
+  link           https://news.google.com/rss/articles/CBMivwFBVV95cUxOUXVRMDJJcDZIdk9xYXFVSlIweWdXeVh5U2ptcW84OF9lbEVzaXBfN3k3TW1rU2JTUXdJb3FDcmNPak9lRlBYcDhMMlNQaGtEX1pTVl9nT1NOQlZYS0lPcDFPZ1NMOXBndEh4NzR6QmFRNE4xNEQ4M0VVcU8xd1RFSHlOUjYyZHg1N3R4ako2alFLU0tnMmhHWmxLZlJ4TUpwcHMwVWNGZ1c3WlpidlBxLU1PU0ktdVhqbHZfNExJY9IBxgFBVV95cUxNZDFJUU1abUJDWFpKS2F4U2ZVdFJaSnB6T2p2VV9hSkw3WTdoV2cwQWItcEhnODliSjFMMUVYeHNqZzBINTZ6Z0lnLTU3dkRETXRmLWl6b2ZVeHBmaDQ2d0x3T2IxZURCN3F4a2d5eWVRVEhSUkZYSF85UnBMYzZYMVhmYkl0ZWk2c05rWWdHZXlxb1VlSVZqZGhPVDhmYzB5a3hjOHZxeWZycU9TM0FhOGdvZVFzMkFocjJsN3RHUGpvblRiS1E?oc=5
+  language       en
+  published_at   Sun, 26 Jul 2026 23:22:17 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","oil"]
+  properties     {"guid":"CBMivwFBVV95cUxOUXVRMDJJcDZIdk9xYXFVSlIweWdXeVh5U2ptcW84OF9lbEVzaXBfN3k3TW1rU2JTUXdJb3FDcmNPak9lRlBYcDhMMlNQaGtEX1pTVl9nT1NOQlZYS0lPcDFPZ1NMOXBndEh4NzR6QmFRNE4xNEQ4M0VVcU8xd1RFSHlOUjYyZHg1N3R4ako2alFLU0tnMmhHWmxLZlJ4TUpwcHMwVWNGZ1c3WlpidlBxLU1PU0ktdVhqbHZfNExJY9IBxgFBVV95cUxNZDFJUU1abUJDWFpKS2F4U2ZVdFJaSnB6T2p2VV9hSkw3WTdoV2cwQWItcEhnODliSjFMMUVYeHNqZzBINTZ6Z0lnLTU3dkRETXRmLWl6b2ZVeHBmaDQ2d0x3T2IxZURCN3F4a2d5eWVRVEhSUkZYSF85UnBMYzZYMVhmYkl0ZWk2c05rWWdHZXlxb1VlSVZqZGhPVDhmYzB5a3hjOHZxeWZycU9TM0FhOG
+
+--- row 3 ---
+  uid            gnews-mon-oil-tanker-seizure|CBMilgFBVV95cUxPV1Z0TjVmS2hNZzJtbXhER1lEZEVETGhtdU9rZGJhZU1RcDZzY21tOTB1bmtYb1J1SklMdmlQVVBTYXJTaW4xdnZVb2piaTlOMWVoYXA3Q2Y5V0lUVGNFSTZpR25ZS3ZTem1SMkpHb1JXTmZGVkZaX19QQUl6Vm81TFJWOVdDYXBFZ2F4Sm9STDV3R3lFQ1E
+  title          U.S. Claims Seizure and Inspection of Iranian Oil Tanker in Gulf of Oman - WANA News Agency
+  body           <a href="https://news.google.com/rss/articles/CBMilgFBVV95cUxPV1Z0TjVmS2hNZzJtbXhER1lEZEVETGhtdU9rZGJhZU1RcDZzY21tOTB1bmtYb1J1SklMdmlQVVBTYXJTaW4xdnZVb2piaTlOMWVoYXA3Q2Y5V0lUVGNFSTZpR25ZS3ZTem1SMkpHb1JXTmZGVkZaX19QQUl6Vm81TFJWOVdDYXBFZ2F4Sm9STDV3R3lFQ1E?oc=5" target="_blank">U.S. Claims Seizure and Inspection of Iranian Oil Tanker in Gulf of Oman</a>&nbsp;&nbsp;<font color="#6f6f6f">WANA News Agency</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMilgFBVV95cUxPV1Z0TjVmS2hNZzJtbXhER1lEZEVETGhtdU9rZGJhZU1RcDZzY21tOTB1bmtYb1J1SklMdmlQVVBTYXJTaW4xdnZVb2piaTlOMWVoYXA3Q2Y5V0lUVGNFSTZpR25ZS3ZTem1SMkpHb1JXTmZGVkZaX19QQUl6Vm81TFJWOVdDYXBFZ2F4Sm
+  link           https://news.google.com/rss/articles/CBMilgFBVV95cUxPV1Z0TjVmS2hNZzJtbXhER1lEZEVETGhtdU9rZGJhZU1RcDZzY21tOTB1bmtYb1J1SklMdmlQVVBTYXJTaW4xdnZVb2piaTlOMWVoYXA3Q2Y5V0lUVGNFSTZpR25ZS3ZTem1SMkpHb1JXTmZGVkZaX19QQUl6Vm81TFJWOVdDYXBFZ2F4Sm9STDV3R3lFQ1E?oc=5
+  language       en
+  published_at   Fri, 17 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","oil"]
+  properties     {"guid":"CBMilgFBVV95cUxPV1Z0TjVmS2hNZzJtbXhER1lEZEVETGhtdU9rZGJhZU1RcDZzY21tOTB1bmtYb1J1SklMdmlQVVBTYXJTaW4xdnZVb2piaTlOMWVoYXA3Q2Y5V0lUVGNFSTZpR25ZS3ZTem1SMkpHb1JXTmZGVkZaX19QQUl6Vm81TFJWOVdDYXBFZ2F4Sm9STDV3R3lFQ1E"}

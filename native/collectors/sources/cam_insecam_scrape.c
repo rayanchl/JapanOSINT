@@ -45,6 +45,8 @@
  *
  * Each Feature → camera_upsert(...,"insecam_scrape").
  */
+#include "../../lib/geojson.h"
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/camera_store.h"
 #include "../../lib/feedlib.h"
@@ -58,19 +60,6 @@
 typedef struct { const char *k; const char *sv; int is_num; double nv;
                  int is_null; int is_bool; int bv; } kv;
 
-static double round4(double v) { return floor(v * 1e4 + 0.5) / 1e4; }
-
-static void uid_tail(const char *url, const char *name, char *out,
-                     size_t outsz) {
-  const char *src = (url && *url) ? url : (name ? name : "");
-  size_t i = 0;
-  for (; src[i] && i < 60 && i + 1 < outsz; i++) {
-    unsigned char c = (unsigned char)src[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
-
 static cJSON *make_feature(double lat, double lon, const char *name,
                            const char *camera_type,
                            const char *discovery_channel,
@@ -81,20 +70,12 @@ static cJSON *make_feature(double lat, double lon, const char *name,
       url = extra[i].sv; break;
     }
   char lats[32], lons[32], tail[80], uid[160];
-  snprintf(lats, sizeof lats, "%.4f", round4(lat));
-  snprintf(lons, sizeof lons, "%.4f", round4(lon));
-  uid_tail(url, name, tail, sizeof tail);
+  snprintf(lats, sizeof lats, "%.4f", jo_round4(lat));
+  snprintf(lons, sizeof lons, "%.4f", jo_round4(lon));
+  jo_uid_tail(url, name, tail, sizeof tail);
   snprintf(uid, sizeof uid, "%s:%s:%s", lats, lons, tail);
 
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "camera_uid", uid);
@@ -352,10 +333,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       ex[n].sv=cd->img; ex[n].nv=0; ex[n].bv=0; n++;
     ex[n].k="city"; ex[n].is_num=0; ex[n].is_null=0; ex[n].is_bool=0;
       ex[n].sv=cd->city; ex[n].nv=0; ex[n].bv=0; n++;
-    ex[n].k="coord_source"; ex[n].is_num=0; ex[n].is_null=0; ex[n].is_bool=0;
+    ex[n].k="geo_provenance"; ex[n].is_num=0; ex[n].is_null=0; ex[n].is_bool=0;
       ex[n].sv="insecam_detail";
       ex[n].nv=0; ex[n].bv=0; n++;
-    ex[n].k="location_uncertain"; ex[n].is_num=1; ex[n].is_null=0;
+    ex[n].k="geo_uncertain"; ex[n].is_num=1; ex[n].is_null=0;
       ex[n].is_bool=0; ex[n].sv=NULL;
       ex[n].nv=0; ex[n].bv=0; n++;
     ex[n].k="auth_required"; ex[n].is_num=0; ex[n].is_null=0; ex[n].is_bool=1;
@@ -379,5 +360,5 @@ static const source_def cam_insecam_scrape_def = {
   .name = "Camera Discovery: Insecam scrape",
   .name_ja = "カメラ探索: Insecam スクレイプ",
    .layer = "cameras",
-   .update_interval_sec = 21600, .run = run };
+   .update_interval_sec = 3600, .run = run };
 REGISTER_SOURCE(cam_insecam_scrape_def)

@@ -1,0 +1,39 @@
+=== mastodon-jp-instances
+exit: 0
+sched: rc=0 records=51 2665ms
+--- stderr ---
+[mastodon-jp-instances] emitted 51
+[sched] mastodon-jp-instances run rc=0 records=51 2665ms
+--- persisted: 51 rows, 0 with lat/lon, 0 with geometry ---
+record_type: instance_error=1, mastodon-jp-instances=50
+sub_source_id: (null)=51
+
+--- row 1 ---
+  uid            mastodon-jp-instances|mstdn.jp:117015914733458481
+  title          2mの妹と180cmの兄の烏天狗 
+  summary         2mの妹と180cmの兄の烏天狗 
+  link           https://mstdn.jp/@danzenneed/117015914733458481
+  language       ja
+  published_at   2026-07-31T18:05:59.874Z
+  record_type    mastodon-jp-instances
+  properties     {"host":"mstdn.jp","id":"117015914733458481","uri":"https://mstdn.jp/users/danzenneed/statuses/117015914733458481","url":"https://mstdn.jp/@danzenneed/117015914733458481","created_at":"2026-07-31T18:05:59.874Z","content":" 2mの妹と180cmの兄の烏天狗 ","spoiler_text":null,"language":"ja","replies_count":0,"reblogs_count":0,"favourites_count":0,"author_acct":"danzenneed","author_url":"https://mstdn.jp/@danzenneed","author_followers":3,"source":"mastodon_mstdn.jp","uid":"mstdn.jp:117015914733458481","title":"2mの妹と180cmの兄の烏天狗 ","summary":" 2mの妹と180cmの兄の烏天狗 ","published_at":"2026-07-31T18:05:59.874Z"}
+
+--- row 2 ---
+  uid            mastodon-jp-instances|mstdn.jp:117015910850799304
+  title          2026-08-01 03:00 1+1 = 0 (feat. Jay Som) / Meaningful Stone # TokyoFM # TFM_OA_Unofficial 
+  summary         2026-08-01 03:00 1+1 = 0 (feat. Jay Som) / Meaningful Stone # TokyoFM # TFM_OA_Unofficial 
+  link           https://mstdn.jp/@TFM_OA_UNOFFICIAL_Bot/117015910850799304
+  language       ja
+  published_at   2026-07-31T18:05:00.630Z
+  record_type    mastodon-jp-instances
+  properties     {"host":"mstdn.jp","id":"117015910850799304","uri":"https://mstdn.jp/users/TFM_OA_UNOFFICIAL_Bot/statuses/117015910850799304","url":"https://mstdn.jp/@TFM_OA_UNOFFICIAL_Bot/117015910850799304","created_at":"2026-07-31T18:05:00.630Z","content":" 2026-08-01 03:00 1+1 = 0 (feat. Jay Som) / Meaningful Stone # TokyoFM # TFM_OA_Unofficial ","spoiler_text":null,"language":"ja","replies_count":0,"reblogs_count":0,"favourites_count":0,"author_acct":"TFM_OA_UNOFFICIAL_Bot","author_url":"https://mstdn.jp/@TFM_OA_UNOFFICIAL_Bot","author_followers":5,"source":"mastodon_mstdn.jp","uid":"mstdn.jp:117015910850799304","title":"2026-08-01 03:00 1+1 = 0 (feat. Jay Som) / Meaningful Stone # TokyoFM # TFM_OA_Unofficial ","summary":" 2026-08-01 03:00 1+1 = 0 (feat. Jay Som) / Meaningful Stone # TokyoFM # TFM_OA_Unofficial ","published_at":"2026-07-31T18:05:00.630Z"}
+
+--- row 3 ---
+  uid            mastodon-jp-instances|mstdn.jp:117015909431180779
+  title          両親の仲が良くしばしば一緒に風呂に入っているので、自分たちも一緒に入浴することに
+  summary         両親の仲が良くしばしば一緒に風呂に入っているので、自分たちも一緒に入浴することにためらいがない烏天狗兄妹 
+  link           https://mstdn.jp/@danzenneed/117015909431180779
+  language       ja
+  published_at   2026-07-31T18:04:38.967Z
+  record_type    mastodon-jp-instances
+  properties     {"host":"mstdn.jp","id":"117015909431180779","uri":"https://mstdn.jp/users/danzenneed/statuses/117015909431180779","url":"https://mstdn.jp/@danzenneed/117015909431180779","created_at":"2026-07-31T18:04:38.967Z","content":" 両親の仲が良くしばしば一緒に風呂に入っているので、自分たちも一緒に入浴することにためらいがない烏天狗兄妹 ","spoiler_text":null,"language":"ja","replies_count":0,"reblogs_count":0,"favourites_count":0,"author_acct":"danzenneed","author_url":"https://mstdn.jp/@danzenneed","author_followers":3,"source":"mastodon_mstdn.jp","uid":"mstdn.jp:117015909431180779","title":"両親の仲が良くしばしば一緒に風呂に入っているので、自分たちも一緒に入浴することに","summary":" 両親の仲が良くしばしば一緒に風呂に入っているので、自分たちも一緒に入浴することにためらいがない烏天狗兄妹 ","published_at":"2026-07-31T18:04:38.967Z"}

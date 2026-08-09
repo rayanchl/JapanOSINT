@@ -1,0 +1,45 @@
+=== gnews-mon-ke-horn-of-africa
+exit: 0
+sched: rc=0 records=100 711ms
+--- stderr ---
+[rss] gnews-mon-ke-horn-of-africa emitted 100
+[sched] gnews-mon-ke-horn-of-africa run rc=0 records=100 711ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-ke-horn-of-africa|CBMitgFBVV95cUxNSzZBcWtKdy1HUGhMREFCa2tkX0tKODV3SDFqaC1tZVpDRG16SXJjYVBPMXNxb041NXlXWUxuZk5HOW4wc3FUclpBcmx2UzBOVzh6TWphZjVoRXpNTklyTGgtdkVDcWpkQ0VmcjNiTGFObG9WaWpscFI4YlY4RUxGVDRMQnI5Tzh5b2hwWWstUkRSajkzdXl4dFRXNVg5WWpIQXFJcldhZ3A4MTlaSW5Ndnk2Zlp4QQ
+  title          US government map of Africa mislabels every country at global conference - Reuters
+  body           <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxNSzZBcWtKdy1HUGhMREFCa2tkX0tKODV3SDFqaC1tZVpDRG16SXJjYVBPMXNxb041NXlXWUxuZk5HOW4wc3FUclpBcmx2UzBOVzh6TWphZjVoRXpNTklyTGgtdkVDcWpkQ0VmcjNiTGFObG9WaWpscFI4YlY4RUxGVDRMQnI5Tzh5b2hwWWstUkRSajkzdXl4dFRXNVg5WWpIQXFJcldhZ3A4MTlaSW5Ndnk2Zlp4QQ?oc=5" target="_blank">US government map of Africa mislabels every country at global conference</a>&nbsp;&nbsp;<font color="#6f6f6f">Reuters</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxNSzZBcWtKdy1HUGhMREFCa2tkX0tKODV3SDFqaC1tZVpDRG16SXJjYVBPMXNxb041NXlXWUxuZk5HOW4wc3FUclpBcmx2UzBOVzh6TWphZjVoRXpNTklyTGgtdkVDcWpkQ0VmcjNiTGFObG9WaWpscFI4YlY4RUxGVDRMQnI5Tzh5b2hwWW
+  link           https://news.google.com/rss/articles/CBMitgFBVV95cUxNSzZBcWtKdy1HUGhMREFCa2tkX0tKODV3SDFqaC1tZVpDRG16SXJjYVBPMXNxb041NXlXWUxuZk5HOW4wc3FUclpBcmx2UzBOVzh6TWphZjVoRXpNTklyTGgtdkVDcWpkQ0VmcjNiTGFObG9WaWpscFI4YlY4RUxGVDRMQnI5Tzh5b2hwWWstUkRSajkzdXl4dFRXNVg5WWpIQXFJcldhZ3A4MTlaSW5Ndnk2Zlp4QQ?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 17:23:20 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ke"]
+  properties     {"guid":"CBMitgFBVV95cUxNSzZBcWtKdy1HUGhMREFCa2tkX0tKODV3SDFqaC1tZVpDRG16SXJjYVBPMXNxb041NXlXWUxuZk5HOW4wc3FUclpBcmx2UzBOVzh6TWphZjVoRXpNTklyTGgtdkVDcWpkQ0VmcjNiTGFObG9WaWpscFI4YlY4RUxGVDRMQnI5Tzh5b2hwWWstUkRSajkzdXl4dFRXNVg5WWpIQXFJcldhZ3A4MTlaSW5Ndnk2Zlp4QQ"}
+
+--- row 2 ---
+  uid            gnews-mon-ke-horn-of-africa|CBMisAFBVV95cUxNZ3FtNm44X1k3V2U4QjY1Z01oSjlrZVh6QnpVdWRwUURvSFNfSFFwa1VMXzZFV0ptaVZHMUpMbVlKS3VxaktVZTQ3bkxFMW1GN3JCakpER2JJRzhHOWFEa19IUTVWRGpqODFESG5lWEZkTGNmUDViRmk5OUh3MFNtRXFtVjNlZzFaMVNqN3cwZWhYekl6aklWaHdjN1VUZm0zaFMxeExvakdKSU9tTGdEOdIBtgFBVV95cUxQY2NINjhZVkJUVmpXSlpyS19oc3NBWEJBQzNMekJ2Z3k5WW5aWUpqcUxaampnSXdOaE5aVDhBMXN6MzNaZG40TjY1WjlpZjZfYTRRT2RLR1FGaWlmT0NPamoxTnB5c3c2WUVYQnF2MkhSVXl1S3Fua1RkN1VSQ1dGZF9zMFR2UzVPd0lVbW0xVk5YMVp0MkdkbkZ4b2xsY2xjRnNraWttXzIteWdZNWhJcDl
+  title          Who is driving diplomacy in the Horn of Africa and the Red Sea, and why? - Al Jazeera
+  body           <a href="https://news.google.com/rss/articles/CBMisAFBVV95cUxNZ3FtNm44X1k3V2U4QjY1Z01oSjlrZVh6QnpVdWRwUURvSFNfSFFwa1VMXzZFV0ptaVZHMUpMbVlKS3VxaktVZTQ3bkxFMW1GN3JCakpER2JJRzhHOWFEa19IUTVWRGpqODFESG5lWEZkTGNmUDViRmk5OUh3MFNtRXFtVjNlZzFaMVNqN3cwZWhYekl6aklWaHdjN1VUZm0zaFMxeExvakdKSU9tTGdEOdIBtgFBVV95cUxQY2NINjhZVkJUVmpXSlpyS19oc3NBWEJBQzNMekJ2Z3k5WW5aWUpqcUxaampnSXdOaE5aVDhBMXN6MzNaZG40TjY1WjlpZjZfYTRRT2RLR1FGaWlmT0NPamoxTnB5c3c2WUVYQnF2MkhSVXl1S3Fua1RkN1VSQ1dGZF9zMFR2UzVPd0lVbW0xVk5YMVp0MkdkbkZ4b2xsY2xjRnNraWttXzIteWdZNWhJcDlLMUJPZw?oc=5" target="_blank">Who is driving diplomacy in the Horn of Africa and the Red Sea, and why?</a>&nbsp;&nbsp;<font color="#6f6f6f">Al Jazeera</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMisAFBVV95cUxNZ3FtNm44X1k3V2U4QjY1Z01oSjlrZVh6QnpVdWRwUURvSFNfSFFwa1VMXzZFV0ptaVZHMUpMbVlKS3VxaktVZTQ3bkxFMW1GN3JCakpER2JJRzhHOWFEa19IUTVWRGpqODFESG5lWEZkTGNmUDViRmk5OUh3MFNtRXFtVjNlZzFaMVNqN3
+  link           https://news.google.com/rss/articles/CBMisAFBVV95cUxNZ3FtNm44X1k3V2U4QjY1Z01oSjlrZVh6QnpVdWRwUURvSFNfSFFwa1VMXzZFV0ptaVZHMUpMbVlKS3VxaktVZTQ3bkxFMW1GN3JCakpER2JJRzhHOWFEa19IUTVWRGpqODFESG5lWEZkTGNmUDViRmk5OUh3MFNtRXFtVjNlZzFaMVNqN3cwZWhYekl6aklWaHdjN1VUZm0zaFMxeExvakdKSU9tTGdEOdIBtgFBVV95cUxQY2NINjhZVkJUVmpXSlpyS19oc3NBWEJBQzNMekJ2Z3k5WW5aWUpqcUxaampnSXdOaE5aVDhBMXN6MzNaZG40TjY1WjlpZjZfYTRRT2RLR1FGaWlmT0NPamoxTnB5c3c2WUVYQnF2MkhSVXl1S3Fua1RkN1VSQ1dGZF9zMFR2UzVPd0lVbW0xVk5YMVp0MkdkbkZ4b2xsY2xjRnNraWttXzIteWdZNWhJcDlLMUJPZw?oc=5
+  language       en
+  published_at   Tue, 21 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ke"]
+  properties     {"guid":"CBMisAFBVV95cUxNZ3FtNm44X1k3V2U4QjY1Z01oSjlrZVh6QnpVdWRwUURvSFNfSFFwa1VMXzZFV0ptaVZHMUpMbVlKS3VxaktVZTQ3bkxFMW1GN3JCakpER2JJRzhHOWFEa19IUTVWRGpqODFESG5lWEZkTGNmUDViRmk5OUh3MFNtRXFtVjNlZzFaMVNqN3cwZWhYekl6aklWaHdjN1VUZm0zaFMxeExvakdKSU9tTGdEOdIBtgFBVV95cUxQY2NINjhZVkJUVmpXSlpyS19oc3NBWEJBQzNMekJ2Z3k5WW5aWUpqcUxaampnSXdOaE5aVDhBMXN6MzNaZG40TjY1WjlpZjZfYTRRT2RLR1FGaWlmT0NPamoxTnB5c3c2WUVYQnF2MkhSVXl1S3Fua1RkN1VSQ1dGZF9zMFR2UzVPd0lVbW0xVk5YMVp0MkdkbkZ4b2xsY2xjRnNraWttXzIteWdZNWhJcDlLMUJPZw"}
+
+--- row 3 ---
+  uid            gnews-mon-ke-horn-of-africa|CBMimwFBVV95cUxPVEJ4ckFYN3NZVng5T25ESVdqNFU5am1jSXBmcTFXWGhlWW1MQjJYZ3ZrV1hoWmpjSmJfSkliRUlnWHVLVWNmUG1jSl9tUGxaS28xZTZaNDVxSW5icWFnbDNueGs1eG1KSmhsVGJtLWNobEVFclZCOFhYNEdYOEZBV1FoMmpsWDJ2N0VlbFBCR0JsUkNYQmJFUWJ4dw
+  title          We’ll be with you, Museveni assures Somali president - The EastAfrican
+  body           <a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxPVEJ4ckFYN3NZVng5T25ESVdqNFU5am1jSXBmcTFXWGhlWW1MQjJYZ3ZrV1hoWmpjSmJfSkliRUlnWHVLVWNmUG1jSl9tUGxaS28xZTZaNDVxSW5icWFnbDNueGs1eG1KSmhsVGJtLWNobEVFclZCOFhYNEdYOEZBV1FoMmpsWDJ2N0VlbFBCR0JsUkNYQmJFUWJ4dw?oc=5" target="_blank">We’ll be with you, Museveni assures Somali president</a>&nbsp;&nbsp;<font color="#6f6f6f">The EastAfrican</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxPVEJ4ckFYN3NZVng5T25ESVdqNFU5am1jSXBmcTFXWGhlWW1MQjJYZ3ZrV1hoWmpjSmJfSkliRUlnWHVLVWNmUG1jSl9tUGxaS28xZTZaNDVxSW5icWFnbDNueGs1eG1KSmhsVGJtLWNobEVFclZCOFhYNEdYOEZBV1FoMmpsWDJ2N0VlbF
+  link           https://news.google.com/rss/articles/CBMimwFBVV95cUxPVEJ4ckFYN3NZVng5T25ESVdqNFU5am1jSXBmcTFXWGhlWW1MQjJYZ3ZrV1hoWmpjSmJfSkliRUlnWHVLVWNmUG1jSl9tUGxaS28xZTZaNDVxSW5icWFnbDNueGs1eG1KSmhsVGJtLWNobEVFclZCOFhYNEdYOEZBV1FoMmpsWDJ2N0VlbFBCR0JsUkNYQmJFUWJ4dw?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 14:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ke"]
+  properties     {"guid":"CBMimwFBVV95cUxPVEJ4ckFYN3NZVng5T25ESVdqNFU5am1jSXBmcTFXWGhlWW1MQjJYZ3ZrV1hoWmpjSmJfSkliRUlnWHVLVWNmUG1jSl9tUGxaS28xZTZaNDVxSW5icWFnbDNueGs1eG1KSmhsVGJtLWNobEVFclZCOFhYNEdYOEZBV1FoMmpsWDJ2N0VlbFBCR0JsUkNYQmJFUWJ4dw"}

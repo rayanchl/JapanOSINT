@@ -1,0 +1,42 @@
+=== jamstec-argo
+exit: 0
+sched: rc=0 records=84 950ms
+--- stderr ---
+[jamstec-argo] emitted 84
+[sched] jamstec-argo run rc=0 records=84 950ms
+--- persisted: 84 rows, 84 with lat/lon, 84 with geometry ---
+record_type: jamstec-argo=84
+sub_source_id: (null)=84
+
+--- row 1 ---
+  uid            jamstec-argo|h:499c1677877fb53d
+  title          Argo float 1902357 cycle 70
+  link           ftp://ftp.ifremer.fr/ifremer/argo/dac/jma/1902357/profiles/R1902357_070.nc
+  published_at   2026-07-30T23:42:40.000Z
+  lat            30.085
+  lon            134.738
+  geometry       {"type":"Point","coordinates":[134.738,30.085]}
+  record_type    jamstec-argo
+  properties     {"profile_id":"1902357_070","cycle_number":70,"observed_at":"2026-07-30T23:42:40.000Z","basin":2,"profile_direction":"A","data_sources":["argo_core"],"source":"argovis_argo","platform_number":"1902357","title":"Argo float 1902357 cycle 70","url":"ftp://ftp.ifremer.fr/ifremer/argo/dac/jma/1902357/profiles/R1902357_070.nc","dac_updated_at":"2026-07-31T06:42:38.000Z","argovis_updated_at":"2026-07-31T09:50:50.362Z","vertical_sampling_scheme":"Primary sampling: averaged [bin average for 0.5Hz CTD]","geolocation_qc":1,"timestamp_qc":1,"measured_variables":["pressure","pressure_argoqc","salinity","salinity_argoqc","temperature","temperature_argoqc"]}
+
+--- row 2 ---
+  uid            jamstec-argo|h:b367f03fbbf314fd
+  title          Argo float 1902352 cycle 120
+  link           ftp://ftp.ifremer.fr/ifremer/argo/dac/jma/1902352/profiles/R1902352_120.nc
+  published_at   2026-07-30T23:24:42.000Z
+  lat            25.832
+  lon            138.491
+  geometry       {"type":"Point","coordinates":[138.491,25.832]}
+  record_type    jamstec-argo
+  properties     {"profile_id":"1902352_120","cycle_number":120,"observed_at":"2026-07-30T23:24:42.000Z","basin":2,"profile_direction":"A","data_sources":["argo_core"],"source":"argovis_argo","platform_number":"1902352","title":"Argo float 1902352 cycle 120","url":"ftp://ftp.ifremer.fr/ifremer/argo/dac/jma/1902352/profiles/R1902352_120.nc","dac_updated_at":"2026-07-31T06:42:38.000Z","argovis_updated_at":"2026-07-31T09:50:49.071Z","vertical_sampling_scheme":"Primary sampling: averaged [bin average for 0.5Hz CTD]","geolocation_qc":1,"timestamp_qc":1,"measured_variables":["pressure","pressure_argoqc","salinity","salinity_argoqc","temperature","temperature_argoqc"]}
+
+--- row 3 ---
+  uid            jamstec-argo|h:f9101d2c734dd8dc
+  title          Argo float 7902289 cycle 5
+  link           ftp://ftp.ifremer.fr/ifremer/argo/dac/jma/7902289/profiles/R7902289_005.nc
+  published_at   2026-07-30T13:19:59.000Z
+  lat            31.15
+  lon            135.341
+  geometry       {"type":"Point","coordinates":[135.341,31.15]}
+  record_type    jamstec-argo
+  properties     {"profile_id":"7902289_005","cycle_number":5,"observed_at":"2026-07-30T13:19:59.000Z","basin":2,"profile_direction":"A","data_sources":["argo_core"],"source":"argovis_argo","platform_number":"7902289","title":"Argo float 7902289 cycle 5","url":"ftp://ftp.ifremer.fr/ifremer/argo/dac/jma/7902289/profiles/R7902289_005.nc","dac_updated_at":"2026-07-31T03:42:47.000Z","argovis_updated_at":"2026-07-31T09:51:10.356Z","vertical_sampling_scheme":"Primary sampling: averaged [bin average for 0.5Hz CTD]","geolocation_qc":1,"timestamp_qc":1,"measured_variables":["pressure","pressure_argoqc","salinity","salinity_argoqc","temperature","temperature_argoqc"]}

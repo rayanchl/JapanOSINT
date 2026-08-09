@@ -1,0 +1,9695 @@
+{
+ "no_layer": {
+  "emsc-quakes": 300,
+  "iceland-quakes": 300,
+  "USGS_QUAKES": 50,
+  "EMSC_QUAKES": 50,
+  "GVP_VOLCANOES": 22,
+  "GDACS_DISASTERS": 60,
+  "usgs-quake-significant": 3,
+  "usgs-quake-m25-day": 51,
+  "usgs-quake-m45-week": 141,
+  "nws-alerts-us": 16,
+  "police-crime": 9903,
+  "ROR_ORGS": 20,
+  "ADDRESS_RESOLVER": 1,
+  "OPENMETEO_AQ": 1,
+  "OURAIRPORTS": 15,
+  "GBIF_OCCURRENCE": 30,
+  "INATURALIST": 30,
+  "CH_ADDRESS": 10,
+  "EARTHQUAKE_MONITOR": 20,
+  "FR_ADDRESS_BAN": 6,
+  "GEOCODING": 1,
+  "NOMINATIM_GLOBAL": 1,
+  "IPAPI_GLOBAL": 1,
+  "IP_GEOLOCATION": 1,
+  "PHOTON_GEOCODE": 9,
+  "REVERSE_GEOCODING": 1,
+  "WEATHER_SERVICE": 8,
+  "OPENMETEO_GLOBAL": 7,
+  "NWS_US": 14
+ },
+ "curated": {
+  "osint-search": {
+   "category": "investigation",
+   "layer": null
+  },
+  "jma-earthquake": {
+   "category": "environment",
+   "layer": "earthquake"
+  },
+  "gdelt-events": {
+   "category": "intelligence",
+   "layer": "gdelt"
+  },
+  "jma-weather": {
+   "category": "environment",
+   "layer": "weather"
+  },
+  "jma-tsunami": {
+   "category": "environment",
+   "layer": "tsunami"
+  },
+  "jma-volcano": {
+   "category": "environment",
+   "layer": "volcano"
+  },
+  "soramame": {
+   "category": "environment",
+   "layer": "air-quality"
+  },
+  "nra-radiation": {
+   "category": "environment",
+   "layer": "radiation"
+  },
+  "odpt-train": {
+   "category": "transport",
+   "layer": "transport"
+  },
+  "odpt-bus": {
+   "category": "transport",
+   "layer": "transport"
+  },
+  "odpt-station": {
+   "category": "transport",
+   "layer": "transport"
+  },
+  "navitime": {
+   "category": "transport",
+   "layer": "transport"
+  },
+  "gsi-tiles": {
+   "category": "geospatial",
+   "layer": "basemap"
+  },
+  "gsi-elevation": {
+   "category": "geospatial",
+   "layer": "elevation"
+  },
+  "nlni-landuse": {
+   "category": "geospatial",
+   "layer": "landuse"
+  },
+  "estat-population": {
+   "category": "statistics",
+   "layer": "population"
+  },
+  "mlit-landprice": {
+   "category": "economy",
+   "layer": "landprice"
+  },
+  "reinfolib": {
+   "category": "economy",
+   "layer": "landprice"
+  },
+  "suumo": {
+   "category": "economy",
+   "layer": "landprice"
+  },
+  "police-incidents": {
+   "category": "safety",
+   "layer": "crime"
+  },
+  "fire-department": {
+   "category": "safety",
+   "layer": "emergency"
+  },
+  "jma-warnings": {
+   "category": "safety",
+   "layer": "warnings"
+  },
+  "mlit-river": {
+   "category": "infrastructure",
+   "layer": "river"
+  },
+  "xrain-radar": {
+   "category": "infrastructure",
+   "layer": "radar"
+  },
+  "shodan-japan": {
+   "category": "cyber",
+   "layer": "cyber"
+  },
+  "cam-insecam-scrape": {
+   "category": "cyber",
+   "layer": "cameras"
+  },
+  "flickr-geo": {
+   "category": "social",
+   "layer": "social"
+  },
+  "tellus-satellite": {
+   "category": "satellite",
+   "layer": "satellite"
+  },
+  "sentinel-japan": {
+   "category": "satellite",
+   "layer": "satellite"
+  },
+  "docomo-population": {
+   "category": "commercial",
+   "layer": "population"
+  },
+  "agoop-flow": {
+   "category": "commercial",
+   "layer": "population"
+  },
+  "jma-amedas": {
+   "category": "environment",
+   "layer": "weather"
+  },
+  "jma-himawari": {
+   "category": "environment",
+   "layer": "satellite"
+  },
+  "jma-typhoon": {
+   "category": "environment",
+   "layer": "weather"
+  },
+  "jma-uv": {
+   "category": "environment",
+   "layer": "weather"
+  },
+  "jma-pollen": {
+   "category": "environment",
+   "layer": "air-quality"
+  },
+  "pm25-japan": {
+   "category": "environment",
+   "layer": "air-quality"
+  },
+  "windy-japan": {
+   "category": "environment",
+   "layer": "weather"
+  },
+  "tenki-jp": {
+   "category": "environment",
+   "layer": "weather"
+  },
+  "vnet": {
+   "category": "seismic",
+   "layer": "volcano"
+  },
+  "bosai-volcano-cam": {
+   "category": "seismic",
+   "layer": "cameras"
+  },
+  "jamstec-argo": {
+   "category": "ocean",
+   "layer": "ocean"
+  },
+  "jma-ice": {
+   "category": "ocean",
+   "layer": "ocean"
+  },
+  "odpt-flight": {
+   "category": "transport",
+   "layer": "aviation"
+  },
+  "flightradar-jp": {
+   "category": "transport",
+   "layer": "aviation"
+  },
+  "marinetraffic-jp": {
+   "category": "transport",
+   "layer": "maritime"
+  },
+  "jr-west-delay": {
+   "category": "transport",
+   "layer": "transport"
+  },
+  "jr-central-delay": {
+   "category": "transport",
+   "layer": "transport"
+  },
+  "shinkansen-status": {
+   "category": "transport",
+   "layer": "transport"
+  },
+  "cycling-ports": {
+   "category": "transport",
+   "layer": "transport"
+  },
+  "mlit-road-traffic": {
+   "category": "transport",
+   "layer": "transport"
+  },
+  "gsi-photo": {
+   "category": "geospatial",
+   "layer": "basemap"
+  },
+  "gsi-hazard": {
+   "category": "geospatial",
+   "layer": "hazard"
+  },
+  "gsi-active-fault": {
+   "category": "geospatial",
+   "layer": "hazard"
+  },
+  "openstreetmap-jp": {
+   "category": "geospatial",
+   "layer": "basemap"
+  },
+  "parking-facilities": {
+   "category": "geospatial",
+   "layer": "poi"
+  },
+  "water-towers": {
+   "category": "infrastructure",
+   "layer": "infrastructure"
+  },
+  "famous-places": {
+   "category": "tourism",
+   "layer": "famous-places"
+  },
+  "transmission-towers": {
+   "category": "infrastructure",
+   "layer": "energy"
+  },
+  "utility-poles": {
+   "category": "infrastructure",
+   "layer": "telecom"
+  },
+  "admin-boundaries": {
+   "category": "geospatial",
+   "layer": "basemap"
+  },
+  "estat-household": {
+   "category": "statistics",
+   "layer": "population"
+  },
+  "estat-employment": {
+   "category": "statistics",
+   "layer": "economy"
+  },
+  "estat-industry": {
+   "category": "statistics",
+   "layer": "economy"
+  },
+  "jstat-map": {
+   "category": "statistics",
+   "layer": "population"
+  },
+  "mhlw-health": {
+   "category": "statistics",
+   "layer": "health"
+  },
+  "mhlw-covid": {
+   "category": "statistics",
+   "layer": "health"
+  },
+  "homes-co": {
+   "category": "economy",
+   "layer": "landprice"
+  },
+  "saigai-info": {
+   "category": "safety",
+   "layer": "emergency"
+  },
+  "mlit-dam": {
+   "category": "infrastructure",
+   "layer": "river"
+  },
+  "tepco-power": {
+   "category": "infrastructure",
+   "layer": "energy"
+  },
+  "kepco-power": {
+   "category": "infrastructure",
+   "layer": "energy"
+  },
+  "chubu-power": {
+   "category": "infrastructure",
+   "layer": "energy"
+  },
+  "tohoku-power": {
+   "category": "infrastructure",
+   "layer": "energy"
+  },
+  "cell-tower-jp": {
+   "category": "infrastructure",
+   "layer": "telecom"
+  },
+  "ev-charging": {
+   "category": "infrastructure",
+   "layer": "poi"
+  },
+  "wifi-hotspot": {
+   "category": "infrastructure",
+   "layer": "telecom"
+  },
+  "nicter-darknet": {
+   "category": "cyber",
+   "layer": "cyber"
+  },
+  "jpcert-alerts": {
+   "category": "cyber",
+   "layer": "cyber"
+  },
+  "ipa-vuln": {
+   "category": "cyber",
+   "layer": "cyber"
+  },
+  "atlas-jp": {
+   "category": "cyber",
+   "layer": "cyber"
+  },
+  "instagram-geo": {
+   "category": "social",
+   "layer": "social"
+  },
+  "tiktok-geo": {
+   "category": "social",
+   "layer": "social"
+  },
+  "alos-palsar": {
+   "category": "satellite",
+   "layer": "satellite"
+  },
+  "himawari-realtime": {
+   "category": "satellite",
+   "layer": "satellite"
+  },
+  "jaxa-earth": {
+   "category": "satellite",
+   "layer": "satellite"
+  },
+  "landsat-jp": {
+   "category": "satellite",
+   "layer": "satellite"
+  },
+  "docomo-insight": {
+   "category": "commercial",
+   "layer": "population"
+  },
+  "softbank-crowd": {
+   "category": "commercial",
+   "layer": "population"
+  },
+  "navitime-api": {
+   "category": "commercial",
+   "layer": "transport"
+  },
+  "here-japan": {
+   "category": "commercial",
+   "layer": "basemap"
+  },
+  "yahoo-map-api": {
+   "category": "commercial",
+   "layer": "basemap"
+  },
+  "ndb-open": {
+   "category": "health",
+   "layer": "health"
+  },
+  "influenza-surveillance": {
+   "category": "health",
+   "layer": "health"
+  },
+  "food-poisoning": {
+   "category": "health",
+   "layer": "health"
+  },
+  "kyushu-power": {
+   "category": "infrastructure",
+   "layer": "energy"
+  },
+  "hokkaido-power": {
+   "category": "infrastructure",
+   "layer": "energy"
+  },
+  "shikoku-power": {
+   "category": "infrastructure",
+   "layer": "energy"
+  },
+  "hokuriku-power": {
+   "category": "infrastructure",
+   "layer": "energy"
+  },
+  "chugoku-power": {
+   "category": "infrastructure",
+   "layer": "energy"
+  },
+  "okinawa-power": {
+   "category": "infrastructure",
+   "layer": "energy"
+  },
+  "ntt-fiber": {
+   "category": "infrastructure",
+   "layer": "telecom"
+  },
+  "mlit-bridge": {
+   "category": "infrastructure",
+   "layer": "infrastructure"
+  },
+  "vics-traffic": {
+   "category": "transport",
+   "layer": "transport"
+  },
+  "kansai-flights": {
+   "category": "transport",
+   "layer": "aviation"
+  },
+  "estat-education": {
+   "category": "statistics",
+   "layer": "population"
+  },
+  "resas-municipality": {
+   "category": "statistics",
+   "layer": "population"
+  },
+  "covid19-japan": {
+   "category": "statistics",
+   "layer": "health"
+  },
+  "lifull-homes": {
+   "category": "economy",
+   "layer": "landprice"
+  },
+  "japan-reit": {
+   "category": "economy",
+   "layer": "landprice"
+  },
+  "tochi-info": {
+   "category": "economy",
+   "layer": "landprice"
+  },
+  "chiriin-place": {
+   "category": "geospatial",
+   "layer": "basemap"
+  },
+  "gcom-w": {
+   "category": "satellite",
+   "layer": "satellite"
+  },
+  "bgp-japan": {
+   "category": "cyber",
+   "layer": "cyber"
+  },
+  "mapfan-api": {
+   "category": "commercial",
+   "layer": "basemap"
+  },
+  "twitter-geo": {
+   "category": "social",
+   "layer": "twitter-geo"
+  },
+  "facebook-geo": {
+   "category": "social",
+   "layer": "facebook-geo"
+  },
+  "classifieds": {
+   "category": "marketplace",
+   "layer": "classifieds"
+  },
+  "real-estate": {
+   "category": "marketplace",
+   "layer": "real-estate"
+  },
+  "job-boards": {
+   "category": "marketplace",
+   "layer": "job-boards"
+  },
+  "google-dorking": {
+   "category": "cyber",
+   "layer": "google-dorking"
+  },
+  "shodan-iot": {
+   "category": "cyber",
+   "layer": "shodan-iot"
+  },
+  "wifi-networks-wigle": {
+   "category": "cyber",
+   "layer": "wifi-networks"
+  },
+  "wifi-networks-shodan": {
+   "category": "cyber",
+   "layer": "wifi-networks"
+  },
+  "wifi-networks-mls": {
+   "category": "cyber",
+   "layer": "wifi-networks"
+  },
+  "wifi-hotspots-jcfw": {
+   "category": "infrastructure",
+   "layer": "wifi-hotspots"
+  },
+  "wifi-hotspots-freespot": {
+   "category": "infrastructure",
+   "layer": "wifi-hotspots"
+  },
+  "maritime-ais": {
+   "category": "transport",
+   "layer": "maritime-ais"
+  },
+  "flight-adsb": {
+   "category": "transport",
+   "layer": "flight-adsb"
+  },
+  "mlit-n02-stations": {
+   "category": "transport",
+   "layer": "mlit-n02-stations"
+  },
+  "mlit-n05-rail-history": {
+   "category": "transport",
+   "layer": "mlit-n05-rail-history"
+  },
+  "mlit-n07-bus-routes": {
+   "category": "transport",
+   "layer": "mlit-n07-bus-routes"
+  },
+  "mlit-p02-airports": {
+   "category": "transport",
+   "layer": "mlit-p02-airports"
+  },
+  "mlit-p11-bus-stops": {
+   "category": "transport",
+   "layer": "mlit-p11-bus-stops"
+  },
+  "mlit-c02-ports": {
+   "category": "transport",
+   "layer": "mlit-c02-ports"
+  },
+  "gtfs-jp": {
+   "category": "transport",
+   "layer": "gtfs-jp"
+  },
+  "osm-transport-trains": {
+   "category": "transport",
+   "layer": "osm-transport-trains"
+  },
+  "osm-transport-subways": {
+   "category": "transport",
+   "layer": "osm-transport-subways"
+  },
+  "osm-transport-buses": {
+   "category": "transport",
+   "layer": "osm-transport-buses"
+  },
+  "osm-transport-ports": {
+   "category": "transport",
+   "layer": "osm-transport-ports"
+  },
+  "unified-trains": {
+   "category": "transport",
+   "layer": "unified-trains"
+  },
+  "unified-subways": {
+   "category": "transport",
+   "layer": "unified-subways"
+  },
+  "unified-buses": {
+   "category": "transport",
+   "layer": "unified-buses"
+  },
+  "unified-ais-ships": {
+   "category": "transport",
+   "layer": "unified-ais-ships"
+  },
+  "unified-port-infra": {
+   "category": "transport",
+   "layer": "unified-port-infra"
+  },
+  "unified-stations": {
+   "category": "transport",
+   "layer": "unified-stations"
+  },
+  "unified-station-footprints": {
+   "category": "transport",
+   "layer": "unified-station-footprints"
+  },
+  "bus-routes": {
+   "category": "transport",
+   "layer": "bus-routes"
+  },
+  "ferry-routes": {
+   "category": "transport",
+   "layer": "ferry-routes"
+  },
+  "highway-traffic": {
+   "category": "transport",
+   "layer": "highway-traffic"
+  },
+  "electrical-grid": {
+   "category": "infrastructure",
+   "layer": "electrical-grid"
+  },
+  "gas-network": {
+   "category": "infrastructure",
+   "layer": "gas-network"
+  },
+  "water-infra": {
+   "category": "infrastructure",
+   "layer": "water-infra"
+  },
+  "cell-towers": {
+   "category": "infrastructure",
+   "layer": "cell-towers"
+  },
+  "nuclear-facilities": {
+   "category": "infrastructure",
+   "layer": "nuclear-facilities"
+  },
+  "hospital-map": {
+   "category": "health",
+   "layer": "hospital-map"
+  },
+  "aed-map": {
+   "category": "health",
+   "layer": "aed-map"
+  },
+  "koban-map": {
+   "category": "safety",
+   "layer": "koban-map"
+  },
+  "fire-station-map": {
+   "category": "safety",
+   "layer": "fire-station-map"
+  },
+  "bosai-shelter": {
+   "category": "safety",
+   "layer": "bosai-shelter"
+  },
+  "hazard-map-portal": {
+   "category": "safety",
+   "layer": "hazard-map-portal"
+  },
+  "jshis-seismic": {
+   "category": "safety",
+   "layer": "jshis-seismic"
+  },
+  "hi-net": {
+   "category": "environment",
+   "layer": "hi-net"
+  },
+  "k-net": {
+   "category": "environment",
+   "layer": "k-net"
+  },
+  "jma-intensity": {
+   "category": "environment",
+   "layer": "jma-intensity"
+  },
+  "pharmacy-map": {
+   "category": "health",
+   "layer": "pharmacy-map"
+  },
+  "convenience-stores": {
+   "category": "marketplace",
+   "layer": "convenience-stores"
+  },
+  "gas-stations": {
+   "category": "infrastructure",
+   "layer": "gas-stations"
+  },
+  "tabelog-restaurants": {
+   "category": "marketplace",
+   "layer": "tabelog-restaurants"
+  },
+  "estat-census": {
+   "category": "statistics",
+   "layer": "estat-census"
+  },
+  "resas-population": {
+   "category": "statistics",
+   "layer": "resas-population"
+  },
+  "resas-tourism": {
+   "category": "statistics",
+   "layer": "resas-tourism"
+  },
+  "resas-industry": {
+   "category": "statistics",
+   "layer": "resas-industry"
+  },
+  "mlit-transaction": {
+   "category": "economy",
+   "layer": "mlit-transaction"
+  },
+  "dam-water-level": {
+   "category": "infrastructure",
+   "layer": "dam-water-level"
+  },
+  "jma-ocean-wave": {
+   "category": "environment",
+   "layer": "jma-ocean-wave"
+  },
+  "jma-ocean-temp": {
+   "category": "environment",
+   "layer": "jma-ocean-temp"
+  },
+  "jma-tide": {
+   "category": "environment",
+   "layer": "jma-tide"
+  },
+  "nowphas-wave": {
+   "category": "environment",
+   "layer": "nowphas-wave"
+  },
+  "lighthouse-map": {
+   "category": "transport",
+   "layer": "lighthouse-map"
+  },
+  "jartic-traffic": {
+   "category": "transport",
+   "layer": "jartic-traffic"
+  },
+  "narita-flights": {
+   "category": "transport",
+   "layer": "narita-flights"
+  },
+  "haneda-flights": {
+   "category": "transport",
+   "layer": "haneda-flights"
+  },
+  "drone-nofly": {
+   "category": "safety",
+   "layer": "drone-nofly"
+  },
+  "jcg-patrol": {
+   "category": "safety",
+   "layer": "jcg-patrol"
+  },
+  "government-buildings": {
+   "category": "government",
+   "layer": "government-buildings"
+  },
+  "city-halls": {
+   "category": "government",
+   "layer": "city-halls"
+  },
+  "courts-prisons": {
+   "category": "government",
+   "layer": "courts-prisons"
+  },
+  "embassies": {
+   "category": "government",
+   "layer": "embassies"
+  },
+  "jsdf-bases": {
+   "category": "defense",
+   "layer": "jsdf-bases"
+  },
+  "usfj-bases": {
+   "category": "defense",
+   "layer": "usfj-bases"
+  },
+  "radar-sites": {
+   "category": "defense",
+   "layer": "radar-sites"
+  },
+  "coast-guard-stations": {
+   "category": "defense",
+   "layer": "coast-guard-stations"
+  },
+  "auto-plants": {
+   "category": "industry",
+   "layer": "auto-plants"
+  },
+  "steel-mills": {
+   "category": "industry",
+   "layer": "steel-mills"
+  },
+  "petrochemical": {
+   "category": "industry",
+   "layer": "petrochemical"
+  },
+  "refineries": {
+   "category": "industry",
+   "layer": "refineries"
+  },
+  "semiconductor-fabs": {
+   "category": "industry",
+   "layer": "semiconductor-fabs"
+  },
+  "shipyards": {
+   "category": "industry",
+   "layer": "shipyards"
+  },
+  "petroleum-stockpile": {
+   "category": "industry",
+   "layer": "petroleum-stockpile"
+  },
+  "ccs-projects": {
+   "category": "industry",
+   "layer": "ccs-projects"
+  },
+  "geothermal-springs": {
+   "category": "industry",
+   "layer": "geothermal-springs"
+  },
+  "geothermal-projects": {
+   "category": "industry",
+   "layer": "geothermal-projects"
+  },
+  "wind-turbines": {
+   "category": "industry",
+   "layer": "wind-turbines"
+  },
+  "data-centers": {
+   "category": "telecom",
+   "layer": "data-centers"
+  },
+  "internet-exchanges": {
+   "category": "telecom",
+   "layer": "internet-exchanges"
+  },
+  "submarine-cables": {
+   "category": "telecom",
+   "layer": "submarine-cables"
+  },
+  "tor-exit-nodes": {
+   "category": "telecom",
+   "layer": "tor-exit-nodes"
+  },
+  "5g-coverage": {
+   "category": "telecom",
+   "layer": "5g-coverage"
+  },
+  "satellite-ground-stations": {
+   "category": "telecom",
+   "layer": "satellite-ground-stations"
+  },
+  "satellite-imagery": {
+   "category": "satellite",
+   "layer": "satellite-imagery"
+  },
+  "satellite-tracking": {
+   "category": "satellite",
+   "layer": "satellite-tracking"
+  },
+  "amateur-radio-repeaters": {
+   "category": "telecom",
+   "layer": "amateur-radio-repeaters"
+  },
+  "national-parks": {
+   "category": "tourism",
+   "layer": "national-parks"
+  },
+  "unesco-heritage": {
+   "category": "tourism",
+   "layer": "unesco-heritage"
+  },
+  "castles": {
+   "category": "tourism",
+   "layer": "castles"
+  },
+  "museums": {
+   "category": "tourism",
+   "layer": "museums"
+  },
+  "stadiums": {
+   "category": "tourism",
+   "layer": "stadiums"
+  },
+  "racetracks": {
+   "category": "tourism",
+   "layer": "racetracks"
+  },
+  "shrine-temple": {
+   "category": "culture",
+   "layer": "shrine-temple"
+  },
+  "onsen-map": {
+   "category": "culture",
+   "layer": "onsen-map"
+  },
+  "ski-resorts": {
+   "category": "tourism",
+   "layer": "ski-resorts"
+  },
+  "anime-pilgrimage": {
+   "category": "culture",
+   "layer": "anime-pilgrimage"
+  },
+  "red-light-zones": {
+   "category": "crime",
+   "layer": "red-light-zones"
+  },
+  "pachinko-density": {
+   "category": "crime",
+   "layer": "pachinko-density"
+  },
+  "bear-encounters": {
+   "category": "wildlife",
+   "layer": "bear-encounters"
+  },
+  "bird-flu-outbreaks": {
+   "category": "wildlife",
+   "layer": "bird-flu-outbreaks"
+  },
+  "sakura-front": {
+   "category": "wildlife",
+   "layer": "sakura-front"
+  },
+  "wanted-persons": {
+   "category": "crime",
+   "layer": "wanted-persons"
+  },
+  "phone-scam-hotspots": {
+   "category": "crime",
+   "layer": "phone-scam-hotspots"
+  },
+  "pref-police-crime": {
+   "category": "crime",
+   "layer": "pref-police-crime"
+  },
+  "npa-missing-persons": {
+   "category": "safety",
+   "layer": "npa-missing-persons"
+  },
+  "npa-traffic-accidents": {
+   "category": "safety",
+   "layer": "npa-traffic-accidents"
+  },
+  "npa-important-wanted": {
+   "category": "crime",
+   "layer": "npa-important-wanted"
+  },
+  "npa-special-fraud": {
+   "category": "crime",
+   "layer": "npa-special-fraud"
+  },
+  "npa-cyber-threat-obs": {
+   "category": "cyber",
+   "layer": "npa-cyber-threat-obs"
+  },
+  "estat-crime": {
+   "category": "crime",
+   "layer": "estatCrime"
+  },
+  "moj-crime-whitepaper": {
+   "category": "crime",
+   "layer": "mojCrimeWhitepaper"
+  },
+  "sake-breweries": {
+   "category": "food",
+   "layer": "sake-breweries"
+  },
+  "wineries-craftbeer": {
+   "category": "food",
+   "layer": "wineries-craftbeer"
+  },
+  "fish-markets": {
+   "category": "food",
+   "layer": "fish-markets"
+  },
+  "wagyu-ranches": {
+   "category": "food",
+   "layer": "wagyu-ranches"
+  },
+  "tea-zones": {
+   "category": "agriculture",
+   "layer": "tea-zones"
+  },
+  "rice-paddies": {
+   "category": "agriculture",
+   "layer": "rice-paddies"
+  },
+  "vending-machines": {
+   "category": "culture",
+   "layer": "vending-machines"
+  },
+  "karaoke-chains": {
+   "category": "culture",
+   "layer": "karaoke-chains"
+  },
+  "manga-net-cafes": {
+   "category": "culture",
+   "layer": "manga-net-cafes"
+  },
+  "sento-public-baths": {
+   "category": "culture",
+   "layer": "sento-public-baths"
+  },
+  "manhole-covers": {
+   "category": "infrastructure",
+   "layer": "manhole-covers"
+  },
+  "themed-cafes": {
+   "category": "culture",
+   "layer": "themed-cafes"
+  },
+  "marine-traffic": {
+   "category": "transport",
+   "layer": "marine-traffic"
+  },
+  "vessel-finder": {
+   "category": "transport",
+   "layer": "vessel-finder"
+  },
+  "google-my-maps": {
+   "category": "tourism",
+   "layer": "google-my-maps"
+  },
+  "camera-discovery": {
+   "category": "cyber",
+   "layer": "camera-discovery"
+  },
+  "p2pquake-jma": {
+   "category": "environment",
+   "layer": "earthquake"
+  },
+  "wolfx-eew": {
+   "category": "environment",
+   "layer": "earthquake"
+  },
+  "wolfx-eqlist": {
+   "category": "environment",
+   "layer": "earthquake"
+  },
+  "jma-forecast-area": {
+   "category": "environment",
+   "layer": "weather"
+  },
+  "jma-typhoon-json": {
+   "category": "environment",
+   "layer": "weather"
+  },
+  "openmeteo-jma": {
+   "category": "environment",
+   "layer": "weather"
+  },
+  "nerv-feed": {
+   "category": "environment",
+   "layer": "earthquake"
+  },
+  "msil-umishiru": {
+   "category": "transport",
+   "layer": "maritime-ais"
+  },
+  "jcg-navarea": {
+   "category": "transport",
+   "layer": "maritime-ais"
+  },
+  "edinet-filings": {
+   "category": "government",
+   "layer": "edinet-filings"
+  },
+  "boj-stats": {
+   "category": "government",
+   "layer": "edinet-filings"
+  },
+  "egov-laws": {
+   "category": "government",
+   "layer": "edinet-filings"
+  },
+  "data-go-jp-ckan": {
+   "category": "government",
+   "layer": "edinet-filings"
+  },
+  "geospatial-jp-ckan": {
+   "category": "geospatial",
+   "layer": "edinet-filings"
+  },
+  "nhk-news-rss": {
+   "category": "government",
+   "layer": "news-feed"
+  },
+  "nhk-world-rss": {
+   "category": "government",
+   "layer": "news-feed"
+  },
+  "kyodo-rss": {
+   "category": "government",
+   "layer": "news-feed"
+  },
+  "jpcert-alerts-rss": {
+   "category": "cyber",
+   "layer": "jpcert-alerts"
+  },
+  "ipa-vuln-rss": {
+   "category": "cyber",
+   "layer": "jpcert-alerts"
+  },
+  "nict-atlas": {
+   "category": "cyber",
+   "layer": "nicter-darknet"
+  },
+  "gsi-geocode": {
+   "category": "geospatial",
+   "layer": "geocode"
+  },
+  "japan-api-prefectures": {
+   "category": "geospatial",
+   "layer": "admin-boundaries"
+  },
+  "hatena-bookmark": {
+   "category": "social",
+   "layer": "hatena-bookmark"
+  },
+  "certstream-jp": {
+   "category": "cyber",
+   "layer": "certstream-jp"
+  },
+  "japan-post-offices": {
+   "category": "infrastructure",
+   "layer": "japan-post-offices"
+  },
+  "wdcgg-co2": {
+   "category": "environment",
+   "layer": "wdcgg-co2"
+  },
+  "censys-japan": {
+   "category": "cyber",
+   "layer": "censys-japan"
+  },
+  "nicter-stats": {
+   "category": "cyber",
+   "layer": "nicter-stats"
+  },
+  "misskey-timeline": {
+   "category": "social",
+   "layer": "misskey-timeline"
+  },
+  "bird-makeup-jp": {
+   "category": "social",
+   "layer": "bird-makeup-jp"
+  },
+  "suumo-rental-density": {
+   "category": "classifieds",
+   "layer": "suumo-rental-density"
+  },
+  "note-com-trending": {
+   "category": "social",
+   "layer": "note-com-trending"
+  },
+  "mercari-trending": {
+   "category": "classifieds",
+   "layer": "mercari-trending"
+  },
+  "greynoise-jp": {
+   "category": "cyber",
+   "layer": "greynoise-jp"
+  },
+  "cam-camscape": {
+   "category": "cyber",
+   "layer": "cameras"
+  },
+  "cam-webcamendirect_list": {
+   "category": "cyber",
+   "layer": "cameras"
+  },
+  "cam-tabi_cam": {
+   "category": "cyber",
+   "layer": "cameras"
+  },
+  "cam-scs_com_ua": {
+   "category": "cyber",
+   "layer": "cameras"
+  },
+  "cam-windy_api": {
+   "category": "cyber",
+   "layer": "cameras"
+  },
+  "shodan-cameras-jp": {
+   "category": "cyber",
+   "layer": "cameras"
+  },
+  "unified-airports": {
+   "category": "transport",
+   "layer": "unified-airports"
+  },
+  "unified-flights": {
+   "category": "transport",
+   "layer": "unified-flights"
+  },
+  "unified-highway": {
+   "category": "transport",
+   "layer": "unified-highway"
+  },
+  "fofa-jp": {
+   "category": "cyber",
+   "layer": "fofa-jp"
+  },
+  "quake360-jp": {
+   "category": "cyber",
+   "layer": "quake360-jp"
+  },
+  "urlscan-jp": {
+   "category": "cyber",
+   "layer": "urlscan-jp"
+  },
+  "wayback-jp": {
+   "category": "cyber",
+   "layer": "wayback-jp"
+  },
+  "github-leaks-jp": {
+   "category": "cyber",
+   "layer": "github-leaks-jp"
+  },
+  "grayhat-buckets": {
+   "category": "cyber",
+   "layer": "grayhat-buckets"
+  },
+  "strava-heatmap-bases": {
+   "category": "cyber",
+   "layer": "strava-heatmap-bases"
+  },
+  "ipa-alerts-rss": {
+   "category": "cyber",
+   "layer": "ipa-alerts"
+  },
+  "chan-5ch": {
+   "category": "social",
+   "layer": "chan-5ch"
+  },
+  "houjin-bangou": {
+   "category": "government",
+   "layer": "houjin-bangou"
+  },
+  "my-jvn": {
+   "category": "cyber",
+   "layer": "my-jvn"
+  },
+  "cisa-kev-jp": {
+   "category": "cyber",
+   "layer": "cisa-kev-jp"
+  },
+  "osv-dev": {
+   "category": "cyber",
+   "layer": "osv-dev"
+  },
+  "ghsa-advisories": {
+   "category": "cyber",
+   "layer": "ghsa-advisories"
+  },
+  "poc-in-github": {
+   "category": "cyber",
+   "layer": "poc-in-github"
+  },
+  "trickest-cve": {
+   "category": "cyber",
+   "layer": "trickest-cve"
+  },
+  "shadowserver-jp": {
+   "category": "cyber",
+   "layer": "shadowserver-jp"
+  },
+  "urlhaus-jp": {
+   "category": "cyber",
+   "layer": "urlhaus-jp"
+  },
+  "threatfox-jp": {
+   "category": "cyber",
+   "layer": "threatfox-jp"
+  },
+  "feodo-tracker-jp": {
+   "category": "cyber",
+   "layer": "feodo-tracker-jp"
+  },
+  "sslbl-jp": {
+   "category": "cyber",
+   "layer": "sslbl-jp"
+  },
+  "spamhaus-drop": {
+   "category": "cyber",
+   "layer": "spamhaus-drop"
+  },
+  "abuseipdb-jp": {
+   "category": "cyber",
+   "layer": "abuseipdb-jp"
+  },
+  "alienvault-otx-jp": {
+   "category": "cyber",
+   "layer": "alienvault-otx-jp"
+  },
+  "phishing-feeds-jp": {
+   "category": "cyber",
+   "layer": "phishing-feeds-jp"
+  },
+  "sans-isc": {
+   "category": "cyber",
+   "layer": "sans-isc"
+  },
+  "leakix-jp": {
+   "category": "cyber",
+   "layer": "leakix-jp"
+  },
+  "netlas-jp": {
+   "category": "cyber",
+   "layer": "netlas-jp"
+  },
+  "hudson-rock-jp": {
+   "category": "cyber",
+   "layer": "hudson-rock-jp"
+  },
+  "virustotal-jp": {
+   "category": "cyber",
+   "layer": "virustotal-jp"
+  },
+  "chaos-bugbounty-jp": {
+   "category": "cyber",
+   "layer": "chaos-bugbounty-jp"
+  },
+  "peeringdb-jp": {
+   "category": "telecom",
+   "layer": "peeringdb-jp"
+  },
+  "bgp-tools-jp": {
+   "category": "telecom",
+   "layer": "bgp-tools-jp"
+  },
+  "crtsh-historical": {
+   "category": "cyber",
+   "layer": "crtsh-historical"
+  },
+  "cloudflare-radar-jp": {
+   "category": "cyber",
+   "layer": "cloudflare-radar-jp"
+  },
+  "ooni-jp": {
+   "category": "cyber",
+   "layer": "ooni-jp"
+  },
+  "ioda-jp": {
+   "category": "cyber",
+   "layer": "ioda-jp"
+  },
+  "ripestat-jp": {
+   "category": "telecom",
+   "layer": "ripestat-jp"
+  },
+  "yahoo-realtime": {
+   "category": "social",
+   "layer": "yahoo-realtime"
+  },
+  "mastodon-jp-instances": {
+   "category": "social",
+   "layer": "mastodon-jp-instances"
+  },
+  "bluesky-jetstream-jp": {
+   "category": "social",
+   "layer": "bluesky-jetstream-jp"
+  },
+  "niconico-ranking": {
+   "category": "social",
+   "layer": "niconico-ranking"
+  },
+  "wikipedia-ja-recent": {
+   "category": "social",
+   "layer": "wikipedia-ja-recent"
+  },
+  "osm-changesets-jp": {
+   "category": "social",
+   "layer": "osm-changesets-jp"
+  },
+  "yahoo-news-jp-rss": {
+   "category": "social",
+   "layer": "yahoo-news-jp-rss"
+  },
+  "jp-news-rss": {
+   "category": "social",
+   "layer": "jp-news-rss"
+  },
+  "nasa-firms-jp": {
+   "category": "environment",
+   "layer": "nasa-firms-jp"
+  },
+  "jcab-notams": {
+   "category": "transport",
+   "layer": "jcab-notams"
+  },
+  "jcg-msi": {
+   "category": "transport",
+   "layer": "maritime-ais"
+  },
+  "tdnet-disclosure": {
+   "category": "government",
+   "layer": "tdnet-disclosure"
+  },
+  "mofa-travel-advisory": {
+   "category": "government",
+   "layer": "mofa-advisory"
+  },
+  "yahoo-crowd-map": {
+   "category": "social",
+   "layer": "crowd-density"
+  },
+  "docomo-mobaku": {
+   "category": "social",
+   "layer": "crowd-density"
+  },
+  "jr-east-delay": {
+   "category": "transport",
+   "layer": "train-delays"
+  },
+  "bike-share-gbfs": {
+   "category": "transport",
+   "layer": "bike-share"
+  },
+  "tmp-protests": {
+   "category": "government",
+   "layer": "protest-applications"
+  },
+  "grid-usage-realtime": {
+   "category": "infrastructure",
+   "layer": "grid-usage"
+  },
+  "telegeography-cables": {
+   "category": "infrastructure",
+   "layer": "submarine-cables"
+  },
+  "intelx-leaks": {
+   "category": "cyber",
+   "layer": "intelx-leaks"
+  },
+  "psbdmp-pastes": {
+   "category": "cyber",
+   "layer": "psbdmp-pastes"
+  },
+  "telegram-jp-channels": {
+   "category": "cyber",
+   "layer": "telegram-jp-channels"
+  },
+  "discord-jp-servers": {
+   "category": "cyber",
+   "layer": "discord-jp-servers"
+  },
+  "securitytrails-history": {
+   "category": "cyber",
+   "layer": "securitytrails-history"
+  },
+  "whoisxml-reverse": {
+   "category": "cyber",
+   "layer": "whoisxml-reverse"
+  },
+  "dnstwist-jp-targets": {
+   "category": "cyber",
+   "layer": "dnstwist-jp-targets"
+  },
+  "gitlab-bitbucket-leaks": {
+   "category": "cyber",
+   "layer": "gitlab-bitbucket-leaks"
+  },
+  "doxbin-mirrors": {
+   "category": "cyber",
+   "layer": "doxbin-mirrors"
+  },
+  "nitter-mirrors": {
+   "category": "social",
+   "layer": "nitter-mirrors"
+  },
+  "russian-market-stealer": {
+   "category": "cyber",
+   "layer": "russian-market-stealer"
+  },
+  "instagram-locations": {
+   "category": "social",
+   "layer": "instagram-locations"
+  },
+  "tiktok-jp-discover": {
+   "category": "social",
+   "layer": "tiktok-jp-discover"
+  },
+  "strava-segments-jp": {
+   "category": "cyber",
+   "layer": "strava-segments-jp"
+  },
+  "pogo-raids-jp": {
+   "category": "social",
+   "layer": "pogo-raids-jp"
+  },
+  "wantedly-bizreach": {
+   "category": "social",
+   "layer": "wantedly-bizreach"
+  },
+  "eight-sansan": {
+   "category": "social",
+   "layer": "eight-sansan"
+  },
+  "linkedin-jp-search": {
+   "category": "social",
+   "layer": "linkedin-jp-search"
+  },
+  "steam-jp-users": {
+   "category": "social",
+   "layer": "steam-jp-users"
+  },
+  "psn-xbox-jp": {
+   "category": "social",
+   "layer": "psn-xbox-jp"
+  },
+  "vrchat-active-jp": {
+   "category": "social",
+   "layer": "vrchat-active-jp"
+  },
+  "reddit-jp-subs": {
+   "category": "social",
+   "layer": "reddit-jp-subs"
+  },
+  "yahoo-chiebukuro": {
+   "category": "social",
+   "layer": "yahoo-chiebukuro"
+  },
+  "tinder-bumble-proximity": {
+   "category": "social",
+   "layer": "tinder-bumble-proximity"
+  },
+  "twitch-jp-streams": {
+   "category": "social",
+   "layer": "twitch-jp-streams"
+  },
+  "note-com-profiles": {
+   "category": "social",
+   "layer": "note-com-profiles"
+  },
+  "hatena-bookmark-extended": {
+   "category": "social",
+   "layer": "hatena-bookmark-extended"
+  },
+  "jpo-jplatpat": {
+   "category": "government",
+   "layer": "jpo-jplatpat"
+  },
+  "teikoku-failures": {
+   "category": "government",
+   "layer": "teikoku-failures"
+  },
+  "tsr-closures": {
+   "category": "government",
+   "layer": "tsr-closures"
+  },
+  "mic-elections": {
+   "category": "government",
+   "layer": "mic-elections"
+  },
+  "jnto-arrivals": {
+   "category": "government",
+   "layer": "jnto-arrivals"
+  },
+  "jr-boarding-stats": {
+   "category": "transport",
+   "layer": "jr-boarding-stats"
+  },
+  "ndl-search": {
+   "category": "government",
+   "layer": "ndl-search"
+  },
+  "saibansyo-rulings": {
+   "category": "government",
+   "layer": "saibansyo-rulings"
+  },
+  "jpo-trademarks": {
+   "category": "government",
+   "layer": "jpo-trademarks"
+  },
+  "jftc-mergers": {
+   "category": "government",
+   "layer": "jftc-mergers"
+  },
+  "jpx-quotes": {
+   "category": "government",
+   "layer": "jpx-quotes"
+  },
+  "fsa-crypto-exchanges": {
+   "category": "government",
+   "layer": "fsa-crypto-exchanges"
+  },
+  "houmukyoku-commercial": {
+   "category": "government",
+   "layer": "houjin-bangou"
+  },
+  "tepco-outage": {
+   "category": "infrastructure",
+   "layer": "tepco-outage"
+  },
+  "regional-grid-outages": {
+   "category": "infrastructure",
+   "layer": "regional-grid-outages"
+  },
+  "gas-outages": {
+   "category": "infrastructure",
+   "layer": "gas-outages"
+  },
+  "luup-private": {
+   "category": "transport",
+   "layer": "luup-private"
+  },
+  "blitzortung-lightning": {
+   "category": "environment",
+   "layer": "blitzortung-lightning"
+  },
+  "nexco-roadwork": {
+   "category": "transport",
+   "layer": "nexco-roadwork"
+  },
+  "kafun-pollen": {
+   "category": "environment",
+   "layer": "kafun-pollen"
+  },
+  "earthquake-network-citizen": {
+   "category": "environment",
+   "layer": "earthquake-network-citizen"
+  },
+  "nied-mowlas": {
+   "category": "seismic",
+   "layer": "nied-mowlas"
+  },
+  "comiket-events": {
+   "category": "social",
+   "layer": "comiket-events"
+  },
+  "sumo-tournaments": {
+   "category": "social",
+   "layer": "sumo-tournaments"
+  },
+  "mic-broadcast-towers": {
+   "category": "infrastructure",
+   "layer": "mic-broadcast-towers"
+  },
+  "yahoo-auctions": {
+   "category": "classifieds",
+   "layer": "yahoo-auctions"
+  },
+  "kakaku-prices": {
+   "category": "classifieds",
+   "layer": "kakaku-prices"
+  },
+  "michi-no-eki": {
+   "category": "transport",
+   "layer": "michi-no-eki"
+  },
+  "nhk-relay-towers": {
+   "category": "infrastructure",
+   "layer": "nhk-relay-towers"
+  },
+  "mext-schools": {
+   "category": "government",
+   "layer": "mext-schools"
+  }
+ },
+ "inline": {
+  "cam-camscape": "cameras",
+  "cam-camstreamer": "cameras",
+  "cam-curated-jp": "cameras",
+  "cam-geocam": "cameras",
+  "cam-insecam-scrape": "cameras",
+  "cam-scs_com_ua": "cameras",
+  "cam-skylinewebcams": "cameras",
+  "cam-tabi_cam": "cameras",
+  "cam-webcamendirect_list": "cameras",
+  "cam-webcamera24": "cameras",
+  "cam-webcamtaxi": "cameras",
+  "cam-windy_api": "cameras",
+  "cam-worldcam_eu": "cameras",
+  "cam-worldcams": "cameras",
+  "cam-youtube_live": "cameras",
+  "public-cameras": "cameras"
+ },
+ "live": {
+  "camera-stills": {
+   "collector": "_maint",
+   "interval": 300
+  },
+  "media-analyze": {
+   "collector": "_enrich",
+   "interval": 900
+  },
+  "translate": {
+   "collector": "_enrich",
+   "interval": 600
+  },
+  "5g-coverage": {
+   "collector": "telecom",
+   "interval": 86400
+  },
+  "abuseipdb-jp": {
+   "collector": "cyber",
+   "interval": 21600
+  },
+  "ACADEMIC_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CROSSREF": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SEMANTIC_SCHOLAR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ARXIV": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PUBMED": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENLIBRARY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ORCID_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ROR_ORGS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "DOAJ_ARTICLES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENCITATIONS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ADDRESS_RESOLVER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "admin-boundaries": {
+   "collector": "geospatial",
+   "interval": 604800
+  },
+  "aed-map": {
+   "collector": "health",
+   "interval": 86400
+  },
+  "agoop-flow": {
+   "collector": "telecom",
+   "interval": 3600
+  },
+  "RELIEFWEB": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "IATI_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OCHA_FTS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "WORLDBANK_PROJECTS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "airport-infra": {
+   "collector": "infrastructure",
+   "interval": 86400
+  },
+  "OPENAQ_GLOBAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "WAQI_GLOBAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENMETEO_AQ": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "alienvault-otx-jp": {
+   "collector": "cyber",
+   "interval": 7200
+  },
+  "alos-palsar": {
+   "collector": "satellite",
+   "interval": 604800
+  },
+  "amateur-radio-repeaters": {
+   "collector": "telecom",
+   "interval": 2592000
+  },
+  "anime-pilgrimage": {
+   "collector": "culture",
+   "interval": 2592000
+  },
+  "anomaly-triage": {
+   "collector": "_maint",
+   "interval": 60
+  },
+  "arxiv-cs-cr": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-ai": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-lg": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-cl": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-cv": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-ni": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-cy": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-dc": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-se": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-ro": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-db": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-ir": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-gt": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-ma": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-os": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-pl": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-ar": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-ne": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-si": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-et": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-ds": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cs-hc": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-eess-sp": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-eess-sy": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-stat-ml": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-quant-ph": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-physics-soc-ph": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-math-oc": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-econ-gn": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-q-fin-gn": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-astro-ph-ep": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-astro-ph-im": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-physics-geo-ph": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-physics-space-ph": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-physics-ao-ph": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-physics-med-ph": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-q-bio-pe": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-nucl-ex": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-cond-mat-mtrl-sci": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "arxiv-physics-optics": {
+   "collector": "osint",
+   "interval": 21600
+  },
+  "ASN_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "atlas-jp": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "ONYPHE_SUMMARY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BINARYEDGE_IP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "FULLHUNT_DOMAIN": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CRIMINALIP_IP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "auto-plants": {
+   "collector": "industry",
+   "interval": 604800
+  },
+  "OURAIRPORTS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "HEXDB_AIRCRAFT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ADSB_FI": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ADSB_LOL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "AIRPLANES_LIVE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENSKY_STATES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PLANESPOTTERS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "bear-encounters": {
+   "collector": "agriculture",
+   "interval": 86400
+  },
+  "BGP_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "bgp-tools-jp": {
+   "collector": "telecom",
+   "interval": 86400
+  },
+  "bike-share-gbfs": {
+   "collector": "transport",
+   "interval": 600
+  },
+  "GBIF_OCCURRENCE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "INATURALIST": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OBIS_MARINE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "bird-flu-outbreaks": {
+   "collector": "agriculture",
+   "interval": 86400
+  },
+  "bird-makeup-jp": {
+   "collector": "social",
+   "interval": 900
+  },
+  "bluesky-jetstream-jp": {
+   "collector": "social",
+   "interval": 600
+  },
+  "GLEIF_LEI": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GLEIF_RELATIONS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENOWNERSHIP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "bosai-shelter": {
+   "collector": "safety",
+   "interval": 86400
+  },
+  "breach-corpus": {
+   "collector": "_breach",
+   "interval": 86400
+  },
+  "BREACH_INDEX_EMAIL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BREACH_INDEX_USERNAME": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BREACH_INDEX_PHONE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BREACH_INDEX_PASSWORD": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "bridge-tunnel-infra": {
+   "collector": "infrastructure",
+   "interval": 86400
+  },
+  "bus-routes": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "cam-camscape": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "cam-camstreamer": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "cam-curated-jp": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "cam-geocam": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "cam-insecam-scrape": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "cam-scs_com_ua": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "cam-skylinewebcams": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "cam-tabi_cam": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "cam-webcamendirect_list": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "cam-webcamera24": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "cam-webcamtaxi": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "cam-windy_api": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "cam-worldcam_eu": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "cam-worldcams": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "cam-youtube_live": {
+   "collector": "camera-discovery",
+   "interval": 21600
+  },
+  "castles": {
+   "collector": "tourism",
+   "interval": 2592000
+  },
+  "ccs-projects": {
+   "collector": "industry",
+   "interval": 2592000
+  },
+  "cell-towers": {
+   "collector": "infrastructure",
+   "interval": 86400
+  },
+  "censys-japan": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "CENSYS_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "fed-press": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "ecb-press": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "boe-news": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "boj-news": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "rba-media": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "boc-press": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "bis-press": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "rbi-press": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "snb-press": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "riksbank": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "norgesbank": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "bcb-brazil": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "banxico": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "cbr-russia": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "readme-imf": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "ecb-blog": {
+   "collector": "economy",
+   "interval": 7200
+  },
+  "certstream-jp": {
+   "collector": "cyber",
+   "interval": 60
+  },
+  "chan-5ch": {
+   "collector": "social",
+   "interval": 1800
+  },
+  "chaos-bugbounty-jp": {
+   "collector": "cyber",
+   "interval": 86400
+  },
+  "chiriin-place": {
+   "collector": "geospatial",
+   "interval": 86400
+  },
+  "chubu-power": {
+   "collector": "infrastructure",
+   "interval": 300
+  },
+  "chugoku-power": {
+   "collector": "infrastructure",
+   "interval": 300
+  },
+  "cisa-kev-jp": {
+   "collector": "cyber",
+   "interval": 21600
+  },
+  "city-halls": {
+   "collector": "government",
+   "interval": 604800
+  },
+  "classifieds": {
+   "collector": "marketplace",
+   "interval": 1800
+  },
+  "cloudflare-radar-jp": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "coast-guard-stations": {
+   "collector": "defense",
+   "interval": 604800
+  },
+  "GITHUB_CODE_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GITHUB_REPO_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GITLAB_PROJECT_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GITHUB_GISTS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "collector-repair": {
+   "collector": "_maint",
+   "interval": 120
+  },
+  "COMPANY_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "EMAILREP_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "NUMVERIFY_PHONE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "content-change-retention": {
+   "collector": "_maint",
+   "interval": 900
+  },
+  "convenience-stores": {
+   "collector": "marketplace",
+   "interval": 604800
+  },
+  "UFOCATCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BUFFETT_CODE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SHIKIHO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "LEI_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "VAT_VALIDATOR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PRTIMES": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "JPX_SHORT_SELLING": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "FSA_FINBIZ_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ITOWNPAGE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "INVOICE_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CONSTRUCTION_LICENSE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "MINPAKU_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "NPO_PORTAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENWORK": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "EN_LIGHTHOUSE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "TENSHOKU_KAIGI": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENCORPORATES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "DE_POSTAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "NL_ADDRESS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CA_PARLIAMENT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "AT_POSTAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CH_POSTAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CH_ADDRESS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "NO_ADDRESS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "UK_PARLIAMENT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "DE_GOVDATA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CA_OPENDATA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "AU_OPENDATA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "NL_OPENDATA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "IT_OPENDATA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "IE_OPENDATA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CH_OPENDATA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "FI_OPENDATA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "UK_DATAGOV": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "DK_ADDRESS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "COURT_RECORDS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "courts-prisons": {
+   "collector": "government",
+   "interval": 604800
+  },
+  "COURT_WORLD": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "covid19-japan": {
+   "collector": "statistics",
+   "interval": 3600
+  },
+  "CREDENTIAL_LEAK_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "crtsh-historical": {
+   "collector": "cyber",
+   "interval": 21600
+  },
+  "DEFI_TRACKER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "EXCHANGE_FLOW": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CRYPTO_TRACKER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BTC_MEMPOOL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BLOCKCHAIR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OFAC_CRYPTO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ETH_BLOCKSCOUT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "TRON_SCAN": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SOLANA_RPC": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ENS_RESOLVE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "COINGECKO_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "DEFILLAMA_TVL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BLOCKCYPHER_ADDR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BLOCKCHAIN_INFO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ETHPLORER_ADDR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "MEMPOOL_ADDR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ETHERSCAN_BALANCE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BSCSCAN_BALANCE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "POLYGONSCAN_BALANCE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ARBISCAN_BALANCE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPTIMISM_BALANCE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BASE_BALANCE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GNOSIS_BALANCE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CERTIFICATE_TRANSPARENCY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "cycling-ports": {
+   "collector": "transport",
+   "interval": 3600
+  },
+  "dam-water-level": {
+   "collector": "infrastructure",
+   "interval": 600
+  },
+  "DARK_WEB_MONITOR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "data-centers": {
+   "collector": "telecom",
+   "interval": 604800
+  },
+  "DATA_EXTRACTOR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "data-go-jp-ckan": {
+   "collector": "government",
+   "interval": 86400
+  },
+  "DEHASHED_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "diet-records": {
+   "collector": "government",
+   "interval": 86400
+  },
+  "discord-jp-servers": {
+   "collector": "cyber",
+   "interval": 86400
+  },
+  "DNS_RECORDS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "DOH_RESOLVE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "RDAP_IP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "dnstwist-jp-targets": {
+   "collector": "cyber",
+   "interval": 86400
+  },
+  "docomo-insight": {
+   "collector": "telecom",
+   "interval": 3600
+  },
+  "docomo-population": {
+   "collector": "telecom",
+   "interval": 3600
+  },
+  "DOCUMENT_ANALYZER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "DOMAIN_AGE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "DOMAIN_HISTORY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "HOST_IO_FULL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "WHOISFREAKS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "IPINFO_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CERTSPOTTER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "URLSCAN_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CIRCL_PDNS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "HACKERTARGET": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "drone-nofly": {
+   "collector": "safety",
+   "interval": 86400
+  },
+  "EARTHQUAKE_MONITOR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "WORLDBANK_INDICATORS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "IMF_DATA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "EUROSTAT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "UN_COMTRADE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "FRED_SERIES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "STOOQ_QUOTES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "edinet-filings": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "egov-laws": {
+   "collector": "government",
+   "interval": 86400
+  },
+  "eight-sansan": {
+   "collector": "social",
+   "interval": 86400
+  },
+  "electrical-grid": {
+   "collector": "infrastructure",
+   "interval": 86400
+  },
+  "embassies": {
+   "collector": "government",
+   "interval": 604800
+  },
+  "entity-stats": {
+   "collector": "_maint",
+   "interval": 900
+  },
+  "estat-census": {
+   "collector": "statistics",
+   "interval": 86400
+  },
+  "estat-crime": {
+   "collector": "crime",
+   "interval": 604800
+  },
+  "estat-education": {
+   "collector": "statistics",
+   "interval": 86400
+  },
+  "estat-employment": {
+   "collector": "statistics",
+   "interval": 86400
+  },
+  "estat-household": {
+   "collector": "statistics",
+   "interval": 86400
+  },
+  "estat-industry": {
+   "collector": "statistics",
+   "interval": 86400
+  },
+  "estat-population": {
+   "collector": "statistics",
+   "interval": 86400
+  },
+  "ev-charging": {
+   "collector": "infrastructure",
+   "interval": 86400
+  },
+  "EXIF_EXTRACTOR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "facebook-geo": {
+   "collector": "social",
+   "interval": 1800
+  },
+  "famous-places": {
+   "collector": "tourism",
+   "interval": 604800
+  },
+  "feodo-tracker-jp": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "ferry-routes": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "coindesk": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "cointelegraph": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "the-block": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "decrypt": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "bitcoin-mag": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "cnbc-top": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "cnbc-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "cnbc-finance": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "investing-news": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "zerohedge": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "ft-home": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "seeking-alpha": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "marketwatch-top": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "kitco-news": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "oilprice-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "trading-econ": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "ALPHAVANTAGE_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "FINNHUB_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "fire-department": {
+   "collector": "safety",
+   "interval": 300
+  },
+  "fire-station-map": {
+   "collector": "safety",
+   "interval": 86400
+  },
+  "fish-markets": {
+   "collector": "food",
+   "interval": 604800
+  },
+  "flickr-geo": {
+   "collector": "social",
+   "interval": 3600
+  },
+  "flight-adsb": {
+   "collector": "transport",
+   "interval": 60
+  },
+  "FLIGHT_TRACKER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "flightradar-jp": {
+   "collector": "transport",
+   "interval": 60
+  },
+  "fofa-jp": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "FR_ADDRESS_BAN": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "FR_BODACC": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "FR_DATAGOUV": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "gas-network": {
+   "collector": "infrastructure",
+   "interval": 86400
+  },
+  "gas-stations": {
+   "collector": "infrastructure",
+   "interval": 86400
+  },
+  "GAZETTE_WORLD": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GBIZINFO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "gcom-w": {
+   "collector": "satellite",
+   "interval": 86400
+  },
+  "gdelt-events": {
+   "collector": "intelligence",
+   "interval": 900
+  },
+  "GDELT_DOC": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GDELT_GEO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CADASTRAL_PARCELS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CHIKAMAP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ROSENKA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GSI_HISTORICAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "REALPROPERTY_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ZENRIN_JUTAKU": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SUN_TIMES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ELEVATION_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GEOCODING": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OVERPASS_GLOBAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "NOMINATIM_GLOBAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "WIKIMAPIA_GLOBAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "emsc-quakes": {
+   "collector": "environment",
+   "interval": 900
+  },
+  "iceland-quakes": {
+   "collector": "environment",
+   "interval": 900
+  },
+  "nhc-cpac": {
+   "collector": "environment",
+   "interval": 900
+  },
+  "volcanodiscovery": {
+   "collector": "environment",
+   "interval": 900
+  },
+  "metoffice-warnings": {
+   "collector": "environment",
+   "interval": 900
+  },
+  "copernicus-ems": {
+   "collector": "environment",
+   "interval": 900
+  },
+  "pdc-disasters": {
+   "collector": "environment",
+   "interval": 900
+  },
+  "geojson-file": {
+   "collector": "_test",
+   "interval": 0
+  },
+  "WHAT3WORDS_CONVERT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENCAGE_GEOCODE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "geospatial-jp-ckan": {
+   "collector": "geospatial",
+   "interval": 86400
+  },
+  "geothermal-projects": {
+   "collector": "industry",
+   "interval": 2592000
+  },
+  "geothermal-springs": {
+   "collector": "industry",
+   "interval": 86400
+  },
+  "ghsa-advisories": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "github-leaks-jp": {
+   "collector": "cyber",
+   "interval": 21600
+  },
+  "ADSB_GLOBAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ALEPH_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GEONAMES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ICIJ_OFFSHORE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "LITTLESIS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "MEDIACLOUD": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENALEX": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "RADIO_BROWSER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "RANSOMLOOK": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "RDAP_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "WHATSMYNAME": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "WIKIDATA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "gnews-mon-cyberattack": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-data-breach": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-ransomware": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-zero-day-exploit": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-critical-infrastructure-attack": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-power-grid-failure": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-undersea-cable": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-gps-jamming": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-electronic-warfare": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-military-exercise": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-missile-test": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-nuclear-weapon": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-troop-movement": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-border-clash": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-drone-strike": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-airspace-violation": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-naval-deployment": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-military-coup": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-civil-unrest": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-economic-sanctions": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-arms-shipment": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-weapons-smuggling": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-money-laundering": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-oil-tanker-seizure": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-shadow-fleet": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-port-disruption": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-supply-chain-disruption": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-semiconductor-export-controls": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-espionage-arrest": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-assassination": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-terror-attack": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-hostage-crisis": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-drug-cartel": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-human-trafficking": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-wildfire": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-major-earthquake": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-catastrophic-flood": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-volcano-eruption": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-chemical-spill": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-nuclear-plant-incident": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-pipeline-explosion": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-aviation-incident": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-cargo-ship-collision": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-disease-outbreak": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-election-interference": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-disinformation-campaign": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-state-sponsored-hacking": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-satellite-launch": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-hypersonic-missile": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-cyber-espionage": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-ua-front-line": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-il-gaza": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-tw-pla-incursion": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-ph-south-china-sea": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-fr-sahel-militants": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-ae-red-sea-shipping": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-kr-north-korea-missile": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-us-taiwan-strait": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-ru-wagner": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-in-kashmir": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-mx-cartel-violence": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-br-amazon-deforestation": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-us-strait-of-hormuz": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-lt-baltic-security": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-no-arctic-militarization": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-ke-horn-of-africa": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-cn-cross-strait": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-ir-nuclear-talks": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-fr-coup-attempt": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-mon-cn-rare-earth": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "gnews-top-us": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-gb": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-fr": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-de": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-it": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-es": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-jp": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-kr": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-cn": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-tw": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-hk": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-in": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ru": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ua": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-br": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-mx": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ar": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ca": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-au": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-nz": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-tr": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-il": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-sa": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ae": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-eg": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ir": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-pk": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-id": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-th": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-vn": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ph": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-sg": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-my": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-nl": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-be": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ch": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-at": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-se": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-no": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-dk": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-fi": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-pl": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-cz": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-gr": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-pt": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ie": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-za": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ng": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ke": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-co": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-cl": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-pe": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ro": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-hu": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-bg": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-rs": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-hr": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-sk": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-si": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-lt": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-lv": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ee": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-is": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-bd": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-lk": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-np": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-mm": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-kh": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-qa": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-kw": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-iq": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-jo": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-lb": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ma": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-dz": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-tn": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ve": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ec": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-bo": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-py": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-uy": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-cr": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-pa": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-gt": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-cu": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-do": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-kz": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-uz": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-az": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-am": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ge": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-by": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-md": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-mn": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-gh": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-et": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-tz": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ug": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-zw": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-zm": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-sn": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ci": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-cm": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-cd": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ao": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-mz": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-rw": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-bw": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-na": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-mw": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-sd": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-so": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ly": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ye": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-om": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-bh": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-sy": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-af": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-kg": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-tj": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-tm": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-la": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-bn": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-mv": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-bt": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-mo": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-fj": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-pg": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-hn": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ni": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-sv": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-jm": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-tt": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-bs": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-lu": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-mt": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-cy": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-al": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-mk": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-ba": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-me": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-top-xk": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-us-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-us-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-us-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-gb-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-gb-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-gb-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-fr-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-fr-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-fr-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-de-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-de-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-de-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-it-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-it-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-it-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-es-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-es-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-es-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-jp-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-jp-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-jp-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-kr-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-kr-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-kr-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cn-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cn-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cn-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-tw-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-tw-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-tw-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-hk-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-hk-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-hk-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-in-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-in-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-in-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ru-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ru-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ru-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ua-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ua-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ua-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-br-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-br-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-br-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-mx-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-mx-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-mx-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ar-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ar-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ar-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ca-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ca-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ca-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-au-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-au-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-au-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-nz-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-nz-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-nz-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-tr-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-tr-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-tr-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-il-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-il-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-il-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sa-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sa-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sa-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ae-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ae-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ae-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-eg-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-eg-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-eg-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ir-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pk-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pk-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pk-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-id-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-id-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-id-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-th-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-th-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-th-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-vn-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-vn-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-vn-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ph-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ph-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ph-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sg-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sg-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sg-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-my-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-my-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-my-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-nl-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-nl-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-nl-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-be-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-be-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-be-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ch-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ch-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ch-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-at-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-at-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-at-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-se-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-se-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-se-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-no-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-no-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-no-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-dk-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-fi-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-fi-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-fi-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pl-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pl-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pl-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cz-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cz-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cz-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-gr-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-gr-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-gr-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pt-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pt-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pt-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ie-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ie-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ie-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-za-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-za-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-za-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ng-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ng-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ng-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ke-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ke-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ke-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-co-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-co-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-co-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cl-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cl-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cl-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pe-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pe-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pe-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ro-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ro-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ro-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-hu-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-hu-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-hu-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-bg-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-bg-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-bg-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-rs-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-rs-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-rs-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-hr-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sk-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sk-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sk-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-si-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-si-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-si-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lt-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lt-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lt-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lv-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lv-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lv-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ee-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ee-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ee-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-is-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-bd-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-bd-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-bd-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lk-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-np-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-mm-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-kh-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-qa-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-kw-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-iq-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-jo-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lb-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lb-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lb-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ma-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-dz-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-tn-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ve-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ve-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ve-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ec-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-es419-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-bo-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-es419-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-py-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-uy-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cr-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pa-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-gt-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cu-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cu-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cu-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-do-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-kz-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-uz-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-az-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-am-nation": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-us-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-us-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-us-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-gb-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-gb-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-gb-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-fr-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-fr-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-fr-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-de-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-de-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-de-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-it-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-it-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-it-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-es-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-es-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-es-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-jp-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-jp-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-jp-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-kr-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-kr-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-kr-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cn-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cn-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cn-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-tw-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-tw-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-tw-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-hk-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-hk-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-hk-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-in-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-in-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-in-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ru-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ru-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ru-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ua-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ua-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ua-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-br-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-br-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-br-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-mx-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-mx-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-mx-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ar-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ar-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ar-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ca-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ca-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ca-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-au-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-au-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-au-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-nz-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-nz-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-tr-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-tr-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-tr-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-il-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-il-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-il-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sa-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sa-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ae-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ae-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ae-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-eg-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-eg-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-eg-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pk-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pk-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-id-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-id-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-id-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-th-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-th-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-th-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-vn-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-vn-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-vn-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ph-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ph-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sg-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sg-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sg-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-my-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-my-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-nl-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-nl-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-nl-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-be-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-be-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-be-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ch-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ch-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ch-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-at-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-at-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-at-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-se-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-se-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-se-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-no-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-no-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-no-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-fi-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-fi-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-fi-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pl-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pl-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pl-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cz-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cz-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cz-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-gr-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-gr-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-gr-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pt-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pt-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pt-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ie-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ie-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ie-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-za-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-za-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-za-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ng-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ng-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ke-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ke-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ke-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-co-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-co-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-co-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cl-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cl-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cl-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pe-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pe-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-pe-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ro-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ro-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ro-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-hu-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-hu-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-hu-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-bg-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-bg-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-bg-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-rs-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-rs-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-rs-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sk-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sk-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-sk-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-si-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-si-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-si-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lt-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lt-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lt-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lv-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lv-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lv-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ee-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ee-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ee-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-bd-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-bd-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-bd-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lb-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-lb-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ve-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ve-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-ve-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-es419-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-es419-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-es419-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cu-technology": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cu-science": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gnews-cu-health": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "google-dorking": {
+   "collector": "cyber",
+   "interval": 7200
+  },
+  "google-my-maps": {
+   "collector": "tourism",
+   "interval": 3600
+  },
+  "EGOV_PUBLIC_COMMENT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ADVISORY_COUNCILS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BUSINESS_LICENSES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "WASTE_HAULERS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "us-state-press": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "us-dod-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "us-dhs-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "us-doj-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "us-sec-press": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "us-ftc-press": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "us-gao-reports": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "us-treasury-press": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "us-nhc-atlantic": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "us-nhc-epac": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "uk-gov-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "uk-fcdo-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "uk-mod-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "ec-presscorner": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "eeas-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "enisa-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "ema-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "frontex-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "europarl-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "osce-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "iaea-topnews": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "un-news-2": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "who-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "unhcr-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "wfp-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "iom-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "unodc-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "itu-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "opcw-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "worldbank-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "imf-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "interpol-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "ru-mid": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "cn-mofa": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "in-pib": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "au-dfat": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "ca-gov-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "nato-opinions": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "cisa-blog": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "fema-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "epa-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "faa-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "ntsb-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "noaa-swpc": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "PMDA_APPROVALS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "MHLW_LABOR_VIOLATIONS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "MLIT_NEGATIVE_INFO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CAA_ENFORCEMENT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "FSA_ENFORCEMENT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "JFTC_ENFORCEMENT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "JGRANTS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "POLITICAL_FUNDS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ASSET_DISCLOSURE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GEPS_PROCUREMENT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "LOCAL_TENDERS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CUSTOMS_TRADE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "government-buildings": {
+   "collector": "government",
+   "interval": 604800
+  },
+  "NIH_REPORTER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "NSF_AWARDS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "UKRI_GRANTS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "grayhat-buckets": {
+   "collector": "cyber",
+   "interval": 21600
+  },
+  "greynoise-jp": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "grid-usage-realtime": {
+   "collector": "infrastructure",
+   "interval": 300
+  },
+  "gsi-active-fault": {
+   "collector": "geospatial",
+   "interval": 604800
+  },
+  "gsi-geocode": {
+   "collector": "geospatial",
+   "interval": 86400
+  },
+  "gtfs-jp": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "HASH_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "hatena-bookmark": {
+   "collector": "social",
+   "interval": 1800
+  },
+  "hatena-bookmark-extended": {
+   "collector": "social",
+   "interval": 1800
+  },
+  "hazard-map-portal": {
+   "collector": "safety",
+   "interval": 86400
+  },
+  "USGS_QUAKES": {
+   "collector": "environment",
+   "interval": 300
+  },
+  "EMSC_QUAKES": {
+   "collector": "environment",
+   "interval": 300
+  },
+  "GVP_VOLCANOES": {
+   "collector": "environment",
+   "interval": 86400
+  },
+  "GDACS_DISASTERS": {
+   "collector": "environment",
+   "interval": 1800
+  },
+  "FIRMS_GLOBAL": {
+   "collector": "environment",
+   "interval": 3600
+  },
+  "here-japan": {
+   "collector": "geospatial",
+   "interval": 86400
+  },
+  "hi-net": {
+   "collector": "environment",
+   "interval": 86400
+  },
+  "highway-traffic": {
+   "collector": "transport",
+   "interval": 600
+  },
+  "himawari-realtime": {
+   "collector": "satellite",
+   "interval": 600
+  },
+  "hokkaido-power": {
+   "collector": "infrastructure",
+   "interval": 300
+  },
+  "hokuriku-power": {
+   "collector": "infrastructure",
+   "interval": 300
+  },
+  "homes-co": {
+   "collector": "economy",
+   "interval": 86400
+  },
+  "hospital-map": {
+   "collector": "health",
+   "interval": 86400
+  },
+  "houjin-bangou": {
+   "collector": "government",
+   "interval": 86400
+  },
+  "houmukyoku-commercial": {
+   "collector": "government",
+   "interval": 604800
+  },
+  "hudson-rock-jp": {
+   "collector": "cyber",
+   "interval": 86400
+  },
+  "ZOOMEYE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "HUNTER_IO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "RADIO_STATIONS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "DRONE_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "HAZMAT_FACILITIES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SHODAN_INTERNETDB": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BGPVIEW": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PEERINGDB_GLOBAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "IPAPI_GLOBAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "RIPESTAT_GLOBAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "instagram-geo": {
+   "collector": "social",
+   "interval": 600
+  },
+  "instagram-locations": {
+   "collector": "social",
+   "interval": 86400
+  },
+  "bellingcat": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "isw": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "long-war-journal": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "occrp": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "icij": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "cfr": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "war-on-the-rocks": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "cipher-brief": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "the-diplomat": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "defense-news": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "breaking-defense": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "the-war-zone": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "naval-news": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "meduza-en": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "kyiv-independent": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "moscow-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "rferl": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "scmp-china": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "38north": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "maritime-executive": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "usgs-quake-significant": {
+   "collector": "government",
+   "interval": 900
+  },
+  "usgs-quake-m25-day": {
+   "collector": "government",
+   "interval": 600
+  },
+  "usgs-quake-m45-week": {
+   "collector": "government",
+   "interval": 1800
+  },
+  "gdacs": {
+   "collector": "government",
+   "interval": 900
+  },
+  "gvp-volcano-activity": {
+   "collector": "government",
+   "interval": 21600
+  },
+  "nws-alerts-us": {
+   "collector": "government",
+   "interval": 900
+  },
+  "reliefweb": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "us-state-travel": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "uk-fcdo-travel": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "fbi-press": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "europol-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "ofac-recent-actions": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "un-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "nato-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "who-outbreak-news": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "cdc-newsroom": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "ecdc-threats": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "nasa-firms-blog": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "cisa-advisories": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cisa-news": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "ncsc-uk": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-eu": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "hacker-news-sec": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "bleepingcomputer": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "krebs-on-security": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "dark-reading": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "securityweek": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "schneier": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cisco-talos": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "unit42": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "msrc-blog": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "project-zero": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "google-security-blog": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "dfir-report": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "malwarebytes-labs": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "securelist": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "welivesecurity": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "checkpoint-research": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "rapid7-blog": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "sophos-news": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "recorded-future": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "the-record": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cybersecurity-dive": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "graham-cluley": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "troy-hunt": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "intel471": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cvefeed-latest": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cvefeed-newsroom": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "exploit-db": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "packetstorm": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "full-disclosure": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "oss-security": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "zdi-published": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "zdi-upcoming": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "vuldb-recent": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "tenable-tra": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "wpscan-vulndb": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "talos-disclosures": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "bbc-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "guardian-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "aljazeera": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "deutsche-welle": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "france24": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "npr-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "cnn-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "nyt-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "ap-topnews": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "scmp-topnews": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "times-of-india": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "the-hindu-intl": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "straits-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "korea-herald": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "jerusalem-post": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "times-of-israel": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "africanews": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "mail-guardian-africa": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "mercopress": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "buenos-aires-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "rio-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "nikkei-asia": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "internet-exchanges": {
+   "collector": "telecom",
+   "interval": 86400
+  },
+  "IOC_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ioda-jp": {
+   "collector": "cyber",
+   "interval": 1800
+  },
+  "IP_GEOLOCATION": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "IP_REPUTATION": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ipa-alerts": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "ABUSEIPDB_CHECK": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "IPQUALITYSCORE_IP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PULSEDIVE_INDICATOR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "jamstec-argo": {
+   "collector": "environment",
+   "interval": 86400
+  },
+  "japan-api-prefectures": {
+   "collector": "geospatial",
+   "interval": 604800
+  },
+  "japan-post-offices": {
+   "collector": "infrastructure",
+   "interval": 86400
+  },
+  "japan-reit": {
+   "collector": "economy",
+   "interval": 86400
+  },
+  "jartic-traffic": {
+   "collector": "transport",
+   "interval": 300
+  },
+  "jaxa-earth": {
+   "collector": "satellite",
+   "interval": 86400
+  },
+  "jcg-patrol": {
+   "collector": "safety",
+   "interval": 604800
+  },
+  "jma-earthquake": {
+   "collector": "environment",
+   "interval": 60
+  },
+  "jma-forecast-area": {
+   "collector": "environment",
+   "interval": 3600
+  },
+  "jma-himawari": {
+   "collector": "environment",
+   "interval": 600
+  },
+  "jma-ice": {
+   "collector": "environment",
+   "interval": 86400
+  },
+  "jma-intensity": {
+   "collector": "environment",
+   "interval": 60
+  },
+  "jma-ocean-temp": {
+   "collector": "environment",
+   "interval": 86400
+  },
+  "jma-ocean-wave": {
+   "collector": "environment",
+   "interval": 3600
+  },
+  "jma-tide": {
+   "collector": "environment",
+   "interval": 600
+  },
+  "jma-tsunami": {
+   "collector": "environment",
+   "interval": 60
+  },
+  "jma-typhoon-json": {
+   "collector": "environment",
+   "interval": 900
+  },
+  "jma-volcano": {
+   "collector": "environment",
+   "interval": 3600
+  },
+  "jma-warnings": {
+   "collector": "safety",
+   "interval": 300
+  },
+  "jma-weather": {
+   "collector": "environment",
+   "interval": 3600
+  },
+  "job-boards": {
+   "collector": "marketplace",
+   "interval": 3600
+  },
+  "JP_CORPUS_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "jp-news-rss": {
+   "collector": "social",
+   "interval": 1800
+  },
+  "JP_POSTAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "jpcert-alerts-rss": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "jsdf-bases": {
+   "collector": "defense",
+   "interval": 604800
+  },
+  "jshis-seismic": {
+   "collector": "safety",
+   "interval": 86400
+  },
+  "jstat-map": {
+   "collector": "statistics",
+   "interval": 86400
+  },
+  "k-net": {
+   "collector": "environment",
+   "interval": 86400
+  },
+  "kanpo-gazette": {
+   "collector": "government",
+   "interval": 86400
+  },
+  "karaoke-chains": {
+   "collector": "culture",
+   "interval": 2592000
+  },
+  "kepco-power": {
+   "collector": "infrastructure",
+   "interval": 300
+  },
+  "koban-map": {
+   "collector": "safety",
+   "interval": 86400
+  },
+  "kyodo-rss": {
+   "collector": "news",
+   "interval": 1800
+  },
+  "kyushu-power": {
+   "collector": "infrastructure",
+   "interval": 300
+  },
+  "landsat-jp": {
+   "collector": "satellite",
+   "interval": 604800
+  },
+  "leakix-jp": {
+   "collector": "cyber",
+   "interval": 7200
+  },
+  "LEGAL_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BANKRUPTCY_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CRIMINAL_RECORDS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "LICENSE_PLATE_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "lifull-homes": {
+   "collector": "economy",
+   "interval": 86400
+  },
+  "lighthouse-map": {
+   "collector": "transport",
+   "interval": 604800
+  },
+  "linkedin-jp-search": {
+   "collector": "social",
+   "interval": 86400
+  },
+  "llm-enricher": {
+   "collector": "_enrich",
+   "interval": 300
+  },
+  "luup-private": {
+   "collector": "transport",
+   "interval": 600
+  },
+  "MAC_VENDOR_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "VIRUSTOTAL_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "HYBRIDANALYSIS_HASH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "manga-net-cafes": {
+   "collector": "culture",
+   "interval": 2592000
+  },
+  "manhole-covers": {
+   "collector": "infrastructure",
+   "interval": 2592000
+  },
+  "mapfan-api": {
+   "collector": "telecom",
+   "interval": 86400
+  },
+  "marine-traffic": {
+   "collector": "transport",
+   "interval": 300
+  },
+  "marinetraffic-jp": {
+   "collector": "transport",
+   "interval": 300
+  },
+  "maritime-ais": {
+   "collector": "transport",
+   "interval": 300
+  },
+  "AISSTREAM": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "EQUASIS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "IMO_GISIS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "DATALASTIC_VESSEL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "mastodon-jp-instances": {
+   "collector": "social",
+   "interval": 600
+  },
+  "WIKINEWS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GDELT_TV": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "COMMONCRAWL_CDX": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GOOGLE_BOOKS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "mercari-trending": {
+   "collector": "classifieds",
+   "interval": 86400
+  },
+  "DBLP_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CODEBERG_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "NATIONALIZE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GENDERIZE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "FRANKFURTER_FX": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "misskey-timeline": {
+   "collector": "social",
+   "interval": 600
+  },
+  "mlit-bridge": {
+   "collector": "infrastructure",
+   "interval": 604800
+  },
+  "mlit-c02-ports": {
+   "collector": "transport",
+   "interval": 2592000
+  },
+  "mlit-dam": {
+   "collector": "infrastructure",
+   "interval": 604800
+  },
+  "mlit-landprice": {
+   "collector": "economy",
+   "interval": 86400
+  },
+  "mlit-n02-stations": {
+   "collector": "transport",
+   "interval": 2592000
+  },
+  "mlit-n05-rail-history": {
+   "collector": "transport",
+   "interval": 2592000
+  },
+  "mlit-n07-bus-routes": {
+   "collector": "transport",
+   "interval": 2592000
+  },
+  "mlit-p02-airports": {
+   "collector": "transport",
+   "interval": 2592000
+  },
+  "mlit-p11-bus-stops": {
+   "collector": "transport",
+   "interval": 2592000
+  },
+  "mlit-river": {
+   "collector": "infrastructure",
+   "interval": 600
+  },
+  "mlit-transaction": {
+   "collector": "economy",
+   "interval": 86400
+  },
+  "mofa-travel-advisory": {
+   "collector": "government",
+   "interval": 3600
+  },
+  "moj-crime-whitepaper": {
+   "collector": "crime",
+   "interval": 604800
+  },
+  "msil-umishiru": {
+   "collector": "transport",
+   "interval": 900
+  },
+  "museums": {
+   "collector": "tourism",
+   "interval": 604800
+  },
+  "my-jvn": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "nasa-firms-jp": {
+   "collector": "environment",
+   "interval": 1800
+  },
+  "national-parks": {
+   "collector": "tourism",
+   "interval": 2592000
+  },
+  "navitime-api": {
+   "collector": "transport",
+   "interval": 300
+  },
+  "nerv-feed": {
+   "collector": "environment",
+   "interval": 60
+  },
+  "GREYNOISE_COMMUNITY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "REDHAT_CVE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "netlas-jp": {
+   "collector": "cyber",
+   "interval": 7200
+  },
+  "NEWS_AGGREGATOR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "NEWS_ARCHIVE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "WORLD_NEWS_RSS": {
+   "collector": "osint",
+   "interval": 1800
+  },
+  "NEWSAPI_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GNEWS_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "MEDIASTACK_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "insight-crime": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "citizen-lab": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "eff-deeplinks": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "cpj": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "rsf": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "global-witness": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "transparency-intl": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "access-now": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "article19": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "forbidden-stories": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "freedom-house": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "bellingcat-3": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "privacy-intl": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "nhk-news-rss": {
+   "collector": "news",
+   "interval": 900
+  },
+  "nhk-world-rss": {
+   "collector": "news",
+   "interval": 1800
+  },
+  "niconico-ranking": {
+   "collector": "social",
+   "interval": 1800
+  },
+  "nicter-stats": {
+   "collector": "cyber",
+   "interval": 86400
+  },
+  "nlni-landuse": {
+   "collector": "geospatial",
+   "interval": 604800
+  },
+  "PROPUBLICA_NONPROFIT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "UK_CHARITIES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CANADA_CHARITIES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "note-com-profiles": {
+   "collector": "social",
+   "interval": 3600
+  },
+  "note-com-trending": {
+   "collector": "social",
+   "interval": 1800
+  },
+  "nowphas-wave": {
+   "collector": "environment",
+   "interval": 1800
+  },
+  "npa-cyber-threat-obs": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "npa-important-wanted": {
+   "collector": "crime",
+   "interval": 86400
+  },
+  "npa-missing-persons": {
+   "collector": "safety",
+   "interval": 604800
+  },
+  "npa-special-fraud": {
+   "collector": "crime",
+   "interval": 86400
+  },
+  "npa-traffic-accidents": {
+   "collector": "safety",
+   "interval": 86400
+  },
+  "nra-radiation": {
+   "collector": "environment",
+   "interval": 600
+  },
+  "nuclear-facilities": {
+   "collector": "infrastructure",
+   "interval": 86400
+  },
+  "odpt-bus": {
+   "collector": "transport",
+   "interval": 30
+  },
+  "odpt-flight": {
+   "collector": "transport",
+   "interval": 300
+  },
+  "odpt-station": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "odpt-train": {
+   "collector": "transport",
+   "interval": 30
+  },
+  "odpt-transport": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "okinawa-power": {
+   "collector": "infrastructure",
+   "interval": 300
+  },
+  "onsen-map": {
+   "collector": "culture",
+   "interval": 604800
+  },
+  "ooni-jp": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "OPENDATA_CKAN": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENDATA_SOCRATA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "openmeteo-jma": {
+   "collector": "environment",
+   "interval": 3600
+  },
+  "openstreetmap-jp": {
+   "collector": "geospatial",
+   "interval": 604800
+  },
+  "TOR_ONIONOO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GITHUB_COMMITS_BY_EMAIL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ARCHIVE_ORG_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "MUSICBRAINZ": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PHOTON_GEOCODE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "WIKIDATA_ENTITY_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SEC_FULLTEXT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BIGDATACLOUD_REVERSE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "HN_USER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENVERSE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "STACKEXCHANGE_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SECURITY_SE_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SUPERUSER_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SERVERFAULT_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "gcaptain": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "maritime-bulletin": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "splash247": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "avherald": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "flightglobal": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "spacenews": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "nasaspaceflight": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "oilprice": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "rigzone": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "argus-energy": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "statnews": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "cidrap": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "hrw-news": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "amnesty": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "crisis-group": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "acled-blog": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "small-wars": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "bellingcat-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "intelnews": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "lawfare": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "osm-changesets-jp": {
+   "collector": "social",
+   "interval": 1800
+  },
+  "osm-transport-buses": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "osm-transport-ports": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "osm-transport-station-boundaries": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "osm-transport-subways": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "osm-transport-trains": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "osv-dev": {
+   "collector": "cyber",
+   "interval": 21600
+  },
+  "overpass-rail-tracks": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "overpass-subway-tracks": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "p2pquake-jma": {
+   "collector": "environment",
+   "interval": 60
+  },
+  "pachinko-density": {
+   "collector": "crime",
+   "interval": 604800
+  },
+  "NPM_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PYPI_PROJECT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CRATES_IO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "RUBYGEMS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PACKAGIST": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "DOCKERHUB": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "parking-facilities": {
+   "collector": "geospatial",
+   "interval": 86400
+  },
+  "PASSWORD_CHECKER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PASTE_SITE_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PATENT_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PATENTSVIEW": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "EPO_OPS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "LENS_PATENTS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PDF_ANALYZER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "peeringdb-jp": {
+   "collector": "telecom",
+   "interval": 86400
+  },
+  "PERSON_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "COMPANY_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "KAKEN": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CINII": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "RESEARCHMAP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "MANSION_COMMUNITY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "TDB_TSR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GOOGLE_PLACES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GRAVATAR_GLOBAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GITHUB_USER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GITLAB_USER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "KEYBASE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "MASTODON_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PEP_CHECK": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "WATCHLIST_CHECK_NEW": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "petrochemical": {
+   "collector": "industry",
+   "interval": 604800
+  },
+  "petroleum-stockpile": {
+   "collector": "industry",
+   "interval": 2592000
+  },
+  "pharmacy-map": {
+   "collector": "health",
+   "interval": 604800
+  },
+  "phishing-feeds-jp": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "PHONE_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CARRIER_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PHONE_REPUTATION": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "phone-scam-hotspots": {
+   "collector": "crime",
+   "interval": 86400
+  },
+  "pm25-japan": {
+   "collector": "environment",
+   "interval": 3600
+  },
+  "poc-in-github": {
+   "collector": "cyber",
+   "interval": 21600
+  },
+  "police-crime": {
+   "collector": "crime",
+   "interval": 86400
+  },
+  "police-incidents": {
+   "collector": "safety",
+   "interval": 86400
+  },
+  "port-infra": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "PORT_SCANNER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "pref-police-crime": {
+   "collector": "crime",
+   "interval": 86400
+  },
+  "PROCUREMENT_OCDS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "psn-xbox-jp": {
+   "collector": "social",
+   "interval": 86400
+  },
+  "public-cameras": {
+   "collector": "camera-discovery",
+   "interval": 86400
+  },
+  "quake360-jp": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "racetracks": {
+   "collector": "tourism",
+   "interval": 604800
+  },
+  "radar-sites": {
+   "collector": "defense",
+   "interval": 604800
+  },
+  "real-estate": {
+   "collector": "marketplace",
+   "interval": 3600
+  },
+  "red-light-zones": {
+   "collector": "crime",
+   "interval": 2592000
+  },
+  "reddit-jp-subs": {
+   "collector": "social",
+   "interval": 1800
+  },
+  "reddit-worldnews": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-news": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-geopolitics": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-anime-titties": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-osint": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-credibledefense": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-lesscredibledefence": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-warcollege": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-combatfootage": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-ukrainewarvideoreport": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-syriancivilwar": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-europe": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-middleeastnews": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-africa": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-asia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-southasia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-latinamerica": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-neutralnews": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-qualitynews": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-intelligence": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-natsecpol": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-geopolitics2": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-yemenicrisis": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-israelpalestine": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-china-debate": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-aviation": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-navy": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-military": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-tankporn": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-hackernews": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-cybersecurity": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-netsec": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-malware": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-blackhat": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-unitedkingdom": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-ukpolitics": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-france": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-germany": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-italy": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-spain": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-portugal": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-netherlands": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-belgium": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-ireland": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-sweden": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-norway": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-denmark": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-finland": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-iceland": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-poland": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-czech": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-slovakia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-hungary": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-romania": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-bulgaria": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-greece": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-croatia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-serbia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-austria": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-switzerland": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-russia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-ukraina": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-belarus": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-lithuania": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-latvia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-eesti": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-india": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-indiaspeaks": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-china": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-china-irl": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-japan": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-korea": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-taiwan": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-hongkong": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-indonesia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-thailand": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-vietnam": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-philippines": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-malaysia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-singapore": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-pakistan": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-bangladesh": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-nepal": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-srilanka": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-myanmar": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-australia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-newzealand": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-canada": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-mexico": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-brasil": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-argentina": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-chile": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-colombia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-peru": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-vzla": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-ecuador": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-bolivia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-uruguay": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-southafrica": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-nigeria": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-kenya": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-egypt": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-morocco": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-ethiopia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-ghana": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-turkey": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-iran": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-israel": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-saudiarabia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-dubai": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-qatar": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-lebanon": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-iraq": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-jordan": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-syria": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-afghanistan": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-kazakhstan": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-uzbekistan": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-azerbaijan": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-armenia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-sakartvelo": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-mongolia": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-london": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-paris": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-tokyo": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-berlin": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-moscow": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-nyc": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-losangeles": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-toronto": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-sydney": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-melbourne": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-delhi": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-mumbai": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-shanghai": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-beijing": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-istanbul": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-bangkok": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-jakarta": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-seoul": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-hongkong-2": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "reddit-kyiv": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "refineries": {
+   "collector": "industry",
+   "interval": 604800
+  },
+  "AFRICA2_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "AU_ABR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BE_KBO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BR_CNPJ": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CA_CORPORATIONS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "COURT_BAILII": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "COURT_CANLII": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "COURT_AUSTLII": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "COURT_CJEU": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CZ_ARES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "DK_CVR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "EE_ARIREGISTER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ES_BORME": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "NL_KVK": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PT_RCBE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "HU_COMPANIES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "HR_SUDREG": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "RS_APR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "LT_REGISTRAI": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "LU_LBR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "FI_PRH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "FR_ENTREPRISES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GR_GEMI": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "GULF_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "IE_CRO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "IL_COMPANIES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "IN_MCA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "KR_DART": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "LATAM2_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "NO_BRREG": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "NZ_COMPANIES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PL_KRS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "RO_COMPANIES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SEA2_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SG_ACRA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SK_RPO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "UA_PROZORRO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "UK_COMPANIES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "US_STATES_SOS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ZA_CIPC": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "allafrica": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "iss-africa": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "the-continent": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "semafor-africa-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "oc-media": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "bne-intellinews": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "emerging-europe": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "novaya-europe": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "meduza-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "benar-news": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "frontier-myanmar": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "the-wire-india": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "scroll-in": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "the-new-arab": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "amwaj-media": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "insight-crime-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "dialogo-americas": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "caribbean-news": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "rnz-pacific": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "islands-business": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "kyiv-indep-3": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "balkan-insight-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "hong-kong-fp": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "the-print-india": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "reinfolib": {
+   "collector": "economy",
+   "interval": 86400
+  },
+  "resas-industry": {
+   "collector": "statistics",
+   "interval": 86400
+  },
+  "resas-municipality": {
+   "collector": "statistics",
+   "interval": 86400
+  },
+  "resas-population": {
+   "collector": "statistics",
+   "interval": 86400
+  },
+  "resas-tourism": {
+   "collector": "statistics",
+   "interval": 86400
+  },
+  "WIKIPEDIA_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "HACKERNEWS_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "REDDIT_PULLPUSH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CORE_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "REVERSE_DNS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "REVERSE_GEOCODING": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "HISTORICAL_WHOIS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "rice-paddies": {
+   "collector": "agriculture",
+   "interval": 2592000
+  },
+  "ripestat-jp": {
+   "collector": "telecom",
+   "interval": 86400
+  },
+  "saigai-info": {
+   "collector": "safety",
+   "interval": 300
+  },
+  "sake-breweries": {
+   "collector": "food",
+   "interval": 2592000
+  },
+  "sakura-front": {
+   "collector": "agriculture",
+   "interval": 3600
+  },
+  "SANCTIONS_CHECK": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OFAC_SDN": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "EU_SANCTIONS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "UN_SANCTIONS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "UK_OFSI": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "WORLDBANK_DEBARRED": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CA_SANCTIONS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "AU_DFAT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CH_SECO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "FBI_WANTED": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENSANCTIONS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "sans-isc": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "satellite-ground-stations": {
+   "collector": "telecom",
+   "interval": 2592000
+  },
+  "satellite-imagery": {
+   "collector": "satellite",
+   "interval": 1800
+  },
+  "SATELLITE_TRACKER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "satellite-tracking": {
+   "collector": "satellite",
+   "interval": 60
+  },
+  "esa-topnews": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "nature-news": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "science-aaas": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "mit-tech-review": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "ieee-spectrum": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "ars-technica": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "wired": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "the-register": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "phys-org": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "sciencedaily": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "space-com": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "defense-one": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "mit-news": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "quanta": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "hn-frontpage": {
+   "collector": "osint",
+   "interval": 7200
+  },
+  "SERPAPI_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "BING_WEB_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SEC_EDGAR_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "semiconductor-fabs": {
+   "collector": "industry",
+   "interval": 604800
+  },
+  "sentinel-japan": {
+   "collector": "satellite",
+   "interval": 86400
+  },
+  "sento-public-baths": {
+   "collector": "culture",
+   "interval": 604800
+  },
+  "shadowserver-jp": {
+   "collector": "cyber",
+   "interval": 21600
+  },
+  "shikoku-power": {
+   "collector": "infrastructure",
+   "interval": 300
+  },
+  "shipyards": {
+   "collector": "industry",
+   "interval": 604800
+  },
+  "shodan-cameras-jp": {
+   "collector": "cyber",
+   "interval": 86400
+  },
+  "shodan-iot": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "shodan-japan": {
+   "collector": "cyber",
+   "interval": 86400
+  },
+  "SHODAN_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "shrine-temple": {
+   "collector": "culture",
+   "interval": 2592000
+  },
+  "simhash-backfill": {
+   "collector": "_maint",
+   "interval": 300
+  },
+  "ski-resorts": {
+   "collector": "tourism",
+   "interval": 2592000
+  },
+  "SOCIAL_EMAIL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SOCIAL_USERNAME": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "YOUTUBE_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "softbank-crowd": {
+   "collector": "telecom",
+   "interval": 3600
+  },
+  "soramame": {
+   "collector": "environment",
+   "interval": 3600
+  },
+  "CELESTRAK_TLE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SATNOGS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "SPACETRACK": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "N2YO": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "spamhaus-drop": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "SSL_ANALYZER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "sslbl-jp": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "stadiums": {
+   "collector": "tourism",
+   "interval": 604800
+  },
+  "steel-mills": {
+   "collector": "industry",
+   "interval": 604800
+  },
+  "strava-heatmap-bases": {
+   "collector": "cyber",
+   "interval": 86400
+  },
+  "SUBDOMAIN_FINDER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "submarine-cables": {
+   "collector": "telecom",
+   "interval": 2592000
+  },
+  "suumo": {
+   "collector": "economy",
+   "interval": 86400
+  },
+  "suumo-rental-density": {
+   "collector": "classifieds",
+   "interval": 86400
+  },
+  "tabelog-restaurants": {
+   "collector": "marketplace",
+   "interval": 86400
+  },
+  "tdnet-disclosure": {
+   "collector": "government",
+   "interval": 1800
+  },
+  "tea-zones": {
+   "collector": "agriculture",
+   "interval": 2592000
+  },
+  "TECH_STACK_DETECTION": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "telegeography-cables": {
+   "collector": "infrastructure",
+   "interval": 86400
+  },
+  "telegram-jp-channels": {
+   "collector": "cyber",
+   "interval": 1800
+  },
+  "tellus-satellite": {
+   "collector": "satellite",
+   "interval": 86400
+  },
+  "tenki-jp": {
+   "collector": "environment",
+   "interval": 1800
+  },
+  "tepco-power": {
+   "collector": "infrastructure",
+   "interval": 300
+  },
+  "EMAIL_HARVESTER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "themed-cafes": {
+   "collector": "culture",
+   "interval": 2592000
+  },
+  "csis": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "brookings": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "atlantic-council": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "carnegie-endow": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "chatham-house": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "rusi": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "iiss": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "sipri": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "fpri": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "wilson-center": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "cnas": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "ecfr": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "merics": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "lowy-interpreter": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "stimson": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "jamestown": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "cepa": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "hudson": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "heritage": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "rand-pubs": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "csis-china": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "mei": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "carnegie-china": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "gmfus": {
+   "collector": "osint",
+   "interval": 10800
+  },
+  "THREAT_FEED_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "THREAT_INTEL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "URLHAUS_GLOBAL": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "THREATFOX_GLOBAL": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "MALWAREBAZAAR": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "FEODO_GLOBAL": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "SSLBL_GLOBAL": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "OPENPHISH": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "SPAMHAUS_DROP_GLOBAL": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "TOR_EXITS_GLOBAL": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "threatfox-jp": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "tiktok-geo": {
+   "collector": "social",
+   "interval": 600
+  },
+  "tochi-info": {
+   "collector": "economy",
+   "interval": 86400
+  },
+  "tohoku-power": {
+   "collector": "infrastructure",
+   "interval": 300
+  },
+  "TOR_EXIT_CHECK": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "tor-exit-nodes": {
+   "collector": "telecom",
+   "interval": 3600
+  },
+  "TRADEMARK_SEARCH": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "transmission-towers": {
+   "collector": "infrastructure",
+   "interval": 604800
+  },
+  "EU_TRANSPARENCY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "UK_DONATIONS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENSECRETS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "transport-cluster-runner": {
+   "collector": "transport",
+   "interval": 3600
+  },
+  "trickest-cve": {
+   "collector": "cyber",
+   "interval": 21600
+  },
+  "twitter-geo": {
+   "collector": "social",
+   "interval": 600
+  },
+  "UK_POLICE_CRIME": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "UK_POSTCODES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "UK_FSA_RATINGS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "unesco-heritage": {
+   "collector": "tourism",
+   "interval": 86400
+  },
+  "unified-airports": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "unified-ais-ships": {
+   "collector": "transport",
+   "interval": 300
+  },
+  "unified-buses": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "unified-flights": {
+   "collector": "transport",
+   "interval": 60
+  },
+  "unified-highway": {
+   "collector": "transport",
+   "interval": 600
+  },
+  "unified-port-infra": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "unified-subways": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "unified-trains": {
+   "collector": "transport",
+   "interval": 86400
+  },
+  "upload-gc": {
+   "collector": "_maint",
+   "interval": 900
+  },
+  "URL_ANALYZER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "urlhaus-jp": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "urlscan-jp": {
+   "collector": "cyber",
+   "interval": 1800
+  },
+  "FEDERAL_REGISTER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "US_NPI_PROVIDER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "COURTLISTENER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "usfj-bases": {
+   "collector": "defense",
+   "interval": 604800
+  },
+  "utility-poles": {
+   "collector": "infrastructure",
+   "interval": 604800
+  },
+  "VEHICLE_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "NHTSA_VIN": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "FAA_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "PARIS_MOU_PSC": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "TOKYO_MOU_PSC": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "USCG_PSIX": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "vending-machines": {
+   "collector": "culture",
+   "interval": 2592000
+  },
+  "vessel-finder": {
+   "collector": "transport",
+   "interval": 300
+  },
+  "VESSEL_TRACKER": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "MALWARE_ANALYSIS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "virustotal-jp": {
+   "collector": "cyber",
+   "interval": 21600
+  },
+  "NVD_CVE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CISA_KEV_GLOBAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "EXPLOITDB": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "EPSS_SCORES": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "wagyu-ranches": {
+   "collector": "food",
+   "interval": 2592000
+  },
+  "wanted-persons": {
+   "collector": "crime",
+   "interval": 86400
+  },
+  "water-infra": {
+   "collector": "infrastructure",
+   "interval": 86400
+  },
+  "water-towers": {
+   "collector": "infrastructure",
+   "interval": 604800
+  },
+  "wayback-jp": {
+   "collector": "cyber",
+   "interval": 86400
+  },
+  "WAYBACK_MACHINE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "wdcgg-co2": {
+   "collector": "environment",
+   "interval": 604800
+  },
+  "WEATHER_SERVICE": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENMETEO_GLOBAL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "NWS_US": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "AVIATION_METAR": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "WHALE_ALERT": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "DOMAIN_WHOIS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "wifi-hotspots-freespot": {
+   "collector": "infrastructure",
+   "interval": 86400
+  },
+  "wifi-hotspots-jcfw": {
+   "collector": "infrastructure",
+   "interval": 86400
+  },
+  "WIFI_LOOKUP": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "wifi-networks": {
+   "collector": "cyber",
+   "interval": 86400
+  },
+  "wifi-networks-mls": {
+   "collector": "cyber",
+   "interval": 86400
+  },
+  "wifi-networks-shodan": {
+   "collector": "cyber",
+   "interval": 86400
+  },
+  "wifi-networks-wigle": {
+   "collector": "cyber",
+   "interval": 86400
+  },
+  "WIKIDATA_SPARQL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "DBPEDIA": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "WIKIMEDIA_COMMONS": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "wikipedia-ja-recent": {
+   "collector": "social",
+   "interval": 600
+  },
+  "wind-turbines": {
+   "collector": "industry",
+   "interval": 604800
+  },
+  "windy-japan": {
+   "collector": "environment",
+   "interval": 1800
+  },
+  "wineries-craftbeer": {
+   "collector": "food",
+   "interval": 2592000
+  },
+  "APRS_FI_LOC": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "OPENCELLID_CELL": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "wolfx-eew": {
+   "collector": "environment",
+   "interval": 10
+  },
+  "wolfx-eqlist": {
+   "collector": "environment",
+   "interval": 60
+  },
+  "cert-fr": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-se": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-be": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-pl": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "ncsc-nl": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-in": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "jpcert-en": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-nz": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "acsc-au": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cccs-ca": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-at": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "circl-lu": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-ee": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "ncsc-ch": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-ee2": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-si": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-fi": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-br": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-gov-uk": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cisa-ics": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "krcert": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "ncsc-ie": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "csa-sg": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-es": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-it": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-pt": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-no": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-dk": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-lt": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "cert-ua": {
+   "collector": "cyber",
+   "interval": 3600
+  },
+  "tass": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "rt-news": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "global-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "china-daily": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "scmp-china2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "abc-au": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "cbc-top": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "cbc-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "lemonde-une": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "lefigaro": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "rfi-fr": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "spiegel-intl": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "dw-top": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "elpais-port": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "elmundo": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "ansa-it": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "repubblica": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "dawn-pk": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "kyiv-post": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "pravda-ua": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "anadolu": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "hurriyet-en": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "bangkok-post": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "jakarta-post": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "straits-top": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "cna-sg": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "manila-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "hindustan-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "the-hindu-nat": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "ndtv": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "dhaka-tribune": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "korea-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "japan-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "mainichi-en": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "taipei-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "folha-br": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "g1-globo": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "clarin-ar": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "infobae": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "eluniversal-mx": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "milenio": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "eltiempo-co": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "emol-cl": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "news24-za": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "punch-ng": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "premium-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "nation-ke": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "ahram-eg": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "arab-news": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "gulf-news": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "the-national-ae": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "al-jazeera-ar": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "times-israel-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "haaretz-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "tehran-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "presstv": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "moscow-times-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "kommersant": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "interfax": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "belta-by": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "astana-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "rappler-ph": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "vnexpress": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "tuoitre": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "nzherald": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "guardian-au": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "smh-au": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "irish-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "thelocal-eu": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "euractiv": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "politico-eu": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "balkan-insight": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "kyiv-independent-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "notes-poland": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "baltic-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "swissinfo": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "dutch-news": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "brussels-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "local-se": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "ice-news": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "greek-reporter": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "daily-sabah": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "caucasus-watch": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "eurasianet": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "the-diplomat-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "nikkei-asia-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "scmp-china3": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "caixin": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "indian-express": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "dawn-world": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "al-monitor": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "middle-east-eye": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "mees": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "africa-report": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "mg-africa-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "addis-standard": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "the-east-african": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "mail-guardian-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "semafor-africa": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "americas-quarterly": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "mercopress-2": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "caracas-chronicles": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "tico-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "jamaica-gleaner": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "thecable-ng": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "nation-thailand": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "khmer-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "myanmar-now": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "irrawaddy": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "kathmandu-post": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "daily-mirror-lk": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "fiji-times": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "pina-pacific": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "buenosaires-h": {
+   "collector": "osint",
+   "interval": 3600
+  },
+  "AFRICA_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "ASIA_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CHINA_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "CIS_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "EUROPE_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "LATAM_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "MENA_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "UK_REGISTRY": {
+   "collector": "osint",
+   "interval": 0
+  },
+  "yahoo-map-api": {
+   "collector": "geospatial",
+   "interval": 86400
+  },
+  "yahoo-news-jp-rss": {
+   "collector": "social",
+   "interval": 1800
+  },
+  "yahoo-realtime": {
+   "collector": "social",
+   "interval": 600
+  }
+ }
+}

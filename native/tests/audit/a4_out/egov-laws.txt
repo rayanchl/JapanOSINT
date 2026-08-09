@@ -1,0 +1,39 @@
+=== egov-laws
+exit: 0
+sched: rc=0 records=200 2900ms
+--- stderr ---
+[egov-laws] emitted 200
+[sched] egov-laws run rc=0 records=200 2900ms
+--- persisted: 200 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=200
+sub_source_id: (null)=200
+
+--- row 1 ---
+  uid            egov-laws|321CONSTITUTION
+  title          日本国憲法
+  summary        昭和二十一年憲法
+  link           https://laws.e-gov.go.jp/law/321CONSTITUTION
+  language       ja
+  published_at   1946-11-03T00:00:00Z
+  tags           ["law","e-gov"]
+  properties     {"law_id":"321CONSTITUTION","law_no":"昭和二十一年憲法"}
+
+--- row 2 ---
+  uid            egov-laws|106DF0000000065
+  title          明治六年太政官布告第六十五号（絞罪器械図式）
+  summary        明治六年太政官布告第六十五号
+  link           https://laws.e-gov.go.jp/law/106DF0000000065
+  language       ja
+  published_at   1873-02-20T00:00:00Z
+  tags           ["law","e-gov"]
+  properties     {"law_id":"106DF0000000065","law_no":"明治六年太政官布告第六十五号"}
+
+--- row 3 ---
+  uid            egov-laws|117DF1000000032
+  title          明治十七年太政官布告第三十二号（爆発物取締罰則）
+  summary        明治十七年太政官布告第三十二号
+  link           https://laws.e-gov.go.jp/law/117DF1000000032
+  language       ja
+  published_at   1884-12-27T00:00:00Z
+  tags           ["law","e-gov"]
+  properties     {"law_id":"117DF1000000032","law_no":"明治十七年太政官布告第三十二号"}

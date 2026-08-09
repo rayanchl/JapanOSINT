@@ -27,6 +27,8 @@
  * Every feature → camera_upsert(channel="tabi_cam").  makeFeature parity
  * byte-identical to camera_discovery.c.
  */
+#include "../../lib/geojson.h"
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/camera_store.h"
 #include "../../core/httpclient.h"
@@ -44,17 +46,6 @@
 
 typedef struct { const char *k; const char *sv; int is_num; double nv;
                  int is_null; int is_bool; int bv; } kv;
-static double round4(double v) { return floor(v * 1e4 + 0.5) / 1e4; }
-static void uid_tail(const char *url, const char *name, char *out,
-                     size_t outsz) {
-  const char *src = (url && *url) ? url : (name ? name : "");
-  size_t i = 0;
-  for (; src[i] && i < 60 && i + 1 < outsz; i++) {
-    unsigned char c = (unsigned char)src[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
 static cJSON *make_feature(double lat, double lon, const char *name,
                            const char *camera_type,
                            const char *discovery_channel,
@@ -65,19 +56,11 @@ static cJSON *make_feature(double lat, double lon, const char *name,
       url = extra[i].sv; break;
     }
   char lats[32], lons[32], tail[80], uid[160];
-  snprintf(lats, sizeof lats, "%.4f", round4(lat));
-  snprintf(lons, sizeof lons, "%.4f", round4(lon));
-  uid_tail(url, name, tail, sizeof tail);
+  snprintf(lats, sizeof lats, "%.4f", jo_round4(lat));
+  snprintf(lons, sizeof lons, "%.4f", jo_round4(lon));
+  jo_uid_tail(url, name, tail, sizeof tail);
   snprintf(uid, sizeof uid, "%s:%s:%s", lats, lons, tail);
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "camera_uid", uid);
   cJSON_AddStringToObject(p, "name", (name && *name) ? name : "Unknown camera");
@@ -131,7 +114,6 @@ static const centroid PREF_CENTROIDS[] = {
   {"hakone",35.2323,139.1069},{"asakusa",35.7148,139.7967},
   {"shibuya",35.6580,139.7016},{"shinjuku",35.6938,139.7034},
 };
-static char lc(char c) { return (c>='A'&&c<='Z')?(char)(c+32):c; }
 /* Index of the first city/area entry in PREF_CENTROIDS (everything before it
  * is a prefecture). Used to label matches as "prefecture" vs "city". */
 #define FIRST_CITY_IDX 47  /* "sapporo" — entries [0..46] are prefectures */
@@ -141,7 +123,7 @@ static int guess_centroid(const char *text, double *olat, double *olon,
   size_t tl = strlen(text);
   char *low = malloc(tl + 1);
   if (!low) return 0;
-  for (size_t i = 0; i <= tl; i++) low[i] = lc(text[i]);
+  for (size_t i = 0; i <= tl; i++) low[i] = jo_lc(text[i]);
   for (size_t i = 0; i < sizeof PREF_CENTROIDS / sizeof *PREF_CENTROIDS; i++) {
     const char *k = PREF_CENTROIDS[i].key;
     char kb[32]; size_t kl = strlen(k);
@@ -302,8 +284,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     /* Emit centroid coords EXACTLY (no jitter) and flag as area-approximate. */
     kv ex[3] = {0};
     ex[0].k="url"; ex[0].sv=aurl;
-    ex[1].k="location_precision"; ex[1].sv=precision;
-    ex[2].k="location_approximate"; ex[2].is_bool=1; ex[2].bv=1;
+    ex[1].k="geo_precision"; ex[1].sv=precision;
+    ex[2].k="geo_uncertain"; ex[2].is_bool=1; ex[2].bv=1;
     if (nf >= capf) {
       capf = capf ? capf * 2 : 64;
       void *nfp = realloc(feats, (size_t)capf * sizeof *feats);
@@ -343,5 +325,5 @@ static const source_def cam_tabi_cam_def = {
   .name = "Camera discovery — Tabi-cam",
   .name_ja = "カメラ探索 — Tabi-cam",
    .layer = "cameras",
-   .update_interval_sec = 21600, .run = run };
+   .update_interval_sec = 3600, .run = run };
 REGISTER_SOURCE(cam_tabi_cam_def)

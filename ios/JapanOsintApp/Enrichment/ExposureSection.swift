@@ -226,7 +226,7 @@ struct ExposureSection: View {
                 Spacer(minLength: 0)
                 if b.item_uid == nil, onOpenBreachItem != nil {
                     Text("no linked record")
-                        .font(.system(size: 9))
+                        .font(.caption2)
                         .foregroundStyle(theme.textMuted)
                 } else if onOpenBreachItem != nil {
                     Image(systemName: "chevron.right")

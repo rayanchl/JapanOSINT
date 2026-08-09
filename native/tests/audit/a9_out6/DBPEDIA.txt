@@ -1,0 +1,42 @@
+=== DBPEDIA  entity=Tokyo
+exit: 0
+sched: rc=0 records=15 1611ms
+--- stderr ---
+[dbpedia] emitted 15
+[sched] DBPEDIA run rc=0 records=15 1611ms
+--- persisted: 15 rows, 0 with lat/lon, 0 with geometry ---
+record_type: dbpedia-resource=15
+sub_source_id: (null)=15
+
+--- row 1 ---
+  uid            DBPEDIA|http://dbpedia.org/resource/Tokyo
+  title          Tokyo
+  body           {"label":"Tokyo","resource":"http://dbpedia.org/resource/Tokyo","type":"http://dbpedia.org/ontology/Settlement","category":"http://dbpedia.org/resource/Category:1457_establishments_in_Asia","description":"Tokyo (東京, Tōkyō, English: , Japanese: [toːkʲoː] ()), officially Tokyo Metropolis (東京都, Tōkyō-to","source":"DBpedia"}
+  summary        Tokyo (東京, Tōkyō, English: , Japanese: [toːkʲoː] ()), officially Tokyo Metropolis (東京都, Tōkyō-to
+  link           http://dbpedia.org/resource/Tokyo
+  language       en
+  record_type    dbpedia-resource
+  tags           ["osint-search","DBPEDIA"]
+  properties     {"service":"DBPEDIA","resource":"http://dbpedia.org/resource/Tokyo","type":"http://dbpedia.org/ontology/Settlement","success":true}
+
+--- row 2 ---
+  uid            DBPEDIA|http://dbpedia.org/resource/Tokyo_Verdy
+  title          Tokyo Verdy
+  body           {"label":"Tokyo Verdy","resource":"http://dbpedia.org/resource/Tokyo_Verdy","type":"http://dbpedia.org/ontology/Organisation","category":"http://dbpedia.org/resource/Category:1969_establishments_in_Japan","description":"Tokyo Verdy (東京ヴェルディ, Tōkyō Verudi) is a Japanese professional football club, based in Tokyo, Japan","source":"DBpedia"}
+  summary        Tokyo Verdy (東京ヴェルディ, Tōkyō Verudi) is a Japanese professional football club, based in Tokyo, Japan
+  link           http://dbpedia.org/resource/Tokyo_Verdy
+  language       en
+  record_type    dbpedia-resource
+  tags           ["osint-search","DBPEDIA"]
+  properties     {"service":"DBPEDIA","resource":"http://dbpedia.org/resource/Tokyo_Verdy","type":"http://dbpedia.org/ontology/Organisation","success":true}
+
+--- row 3 ---
+  uid            DBPEDIA|http://dbpedia.org/resource/TV_Tokyo
+  title          TV Tokyo
+  body           {"label":"TV Tokyo","resource":"http://dbpedia.org/resource/TV_Tokyo","category":"http://dbpedia.org/resource/Category:1951_establishments_in_Japan","description":"TV Tokyo Corporation (or TX) (株式会社テレビ東京, Kabushiki-gaisha Terebi Tōkyō) TYO: 9413 is a television","source":"DBpedia"}
+  summary        TV Tokyo Corporation (or TX) (株式会社テレビ東京, Kabushiki-gaisha Terebi Tōkyō) TYO: 9413 is a television
+  link           http://dbpedia.org/resource/TV_Tokyo
+  language       en
+  record_type    dbpedia-resource
+  tags           ["osint-search","DBPEDIA"]
+  properties     {"service":"DBPEDIA","resource":"http://dbpedia.org/resource/TV_Tokyo","success":true}

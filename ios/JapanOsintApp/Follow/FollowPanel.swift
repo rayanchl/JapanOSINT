@@ -19,7 +19,11 @@ struct FollowPanel: View {
         VStack(spacing: 0) {
             controls
             Divider()
-            if events.isEmpty && primeFailed && !ws.isConnected && !loading {
+            // `primeFailed` is the REST prime failing — that alone is the
+            // offline signal. The realtime socket being down is not: it is an
+            // enhancement over the same data, and gating on it made this claim
+            // the backend was unreachable whenever /ws wasn't serving.
+            if events.isEmpty && primeFailed && !loading {
                 OfflineStateView(retry: { Task { await primeFromBackend() } })
             } else {
                 list
@@ -37,13 +41,16 @@ struct FollowPanel: View {
             Toggle("Pause", isOn: $paused)
                 .toggleStyle(.switch)
                 .labelsHidden()
+                .accessibilityLabel("Pause the live follow log")
             Text("Pause").font(.caption2).foregroundStyle(theme.textMuted)
+                .accessibilityHidden(true)
             Button("Clear") { events.removeAll() }
                 .buttonStyle(.bordered)
             Button {
                 Task { await primeFromBackend() }
             } label: { Image(systemName: "arrow.clockwise") }
                 .disabled(loading)
+                .accessibilityLabel("Reload follow log")
         }
         .padding(8)
     }

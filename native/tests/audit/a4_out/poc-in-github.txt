@@ -1,0 +1,36 @@
+=== poc-in-github
+exit: 0
+sched: rc=0 records=94 11622ms
+--- stderr ---
+[poc-in-github] emitted 94
+[sched] poc-in-github run rc=0 records=94 11622ms
+[detect] anomaly opened: poc-in-github verdict=duration_outlier — duration 11622ms exceeds 10000ms threshold
+--- persisted: 94 rows, 94 with lat/lon, 94 with geometry ---
+record_type: poc-in-github=94
+sub_source_id: (null)=94
+
+--- row 1 ---
+  uid            poc-in-github|h:ac87249ee89d27eb
+  summary        A critical Server-Side Template Injection (SSTI) vulnerability exists in the X-Trading Portal v1.4.2 dashboard metadata   rendering engine. The flaw is due to improper sanitization of user-controlled input in the username and widget_label fields before   they are processed by the internal Smarty template parser.
+  lat            35.6895
+  lon            139.6917
+  geometry       {"type":"Point","coordinates":[139.6917,35.6895]}
+  record_type    poc-in-github
+  properties     {"idx":0,"cve_id":"CVE-2026-999999","repo_name":"24520597-blip/CVE-2026-999999","repo_url":"https://github.com/24520597-blip/CVE-2026-999999","stars":0,"created":"2026-05-27T09:09:25Z","updated":"2026-05-27T10:48:02Z","description":"A critical Server-Side Template Injection (SSTI) vulnerability exists in the X-Trading Portal v1.4.2 dashboard metadata   rendering engine. The flaw is due to improper sanitization of user-controlled input in the username and widget_label fields before   they are processed by the internal Smarty template parser.","source":"poc_in_github"}
+
+--- row 2 ---
+  uid            poc-in-github|h:af12442cc4513d6a
+  lat            35.6895
+  lon            139.6917
+  geometry       {"type":"Point","coordinates":[139.6917,35.6895]}
+  record_type    poc-in-github
+  properties     {"idx":1,"cve_id":"CVE-2026-9973","repo_name":"jaf0rk/CVE-2026-9973-exploit","repo_url":"https://github.com/jaf0rk/CVE-2026-9973-exploit","stars":6,"created":"2026-07-21T11:57:43Z","updated":"2026-07-22T11:40:10Z","description":"","source":"poc_in_github"}
+
+--- row 3 ---
+  uid            poc-in-github|h:bd297de4840fc1ad
+  summary        The bookingpress-appointment-booking-pro WordPress plugin before 5.7.3 does not correctly invoke its REST permission callback, leaving every route in one of its API namespaces reachable without authentication and allowing unauthenticated attackers to read customer booking data and modify other users' bookings.
+  lat            35.6895
+  lon            139.6917
+  geometry       {"type":"Point","coordinates":[139.6917,35.6895]}
+  record_type    poc-in-github
+  properties     {"idx":2,"cve_id":"CVE-2026-9830","repo_name":"ChPratik/CVE-2026-9830","repo_url":"https://github.com/ChPratik/CVE-2026-9830","stars":0,"created":"2026-07-27T11:24:13Z","updated":"2026-07-27T16:42:49Z","description":"The bookingpress-appointment-booking-pro WordPress plugin before 5.7.3 does not correctly invoke its REST permission callback, leaving every route in one of its API namespaces reachable without authentication and allowing unauthenticated attackers to read customer booking data and modify other users' bookings.","source":"poc_in_github"}

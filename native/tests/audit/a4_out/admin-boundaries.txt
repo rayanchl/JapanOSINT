@@ -1,0 +1,8 @@
+=== admin-boundaries
+exit: 1
+sched: rc=-1 records=0 75173ms
+--- stderr ---
+[overpass] admin-boundaries no elements
+[sched] admin-boundaries run rc=-1 records=0 75173ms
+[detect] anomaly opened: admin-boundaries verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

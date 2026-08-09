@@ -3,6 +3,7 @@
  * GrayhatWarfare /api/v2/buckets?keywords=...&limit=100, Bearer key.
  * Gated on GRAYHAT_API_KEY (JS: no key → empty → 0 rows).
  * uid = grayhat-buckets|<b.id || b.bucket||b.name || idx_<i>>. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -14,16 +15,10 @@
   "co.jp,go.jp,japan,tokyo,rakuten,mizuho,mufg,smbc," \
   "softbank,docomo,kddi,ntt"
 
-/* JS truthy string (non-empty). */
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
-           ? v->valuestring : NULL;
-}
 /* a || b (string-truthy). */
 static const char *sor(const cJSON *o, const char *a, const char *b) {
-  const char *x = sv(o, a);
-  return x ? x : sv(o, b);
+  const char *x = jo_sv(o, a);
+  return x ? x : jo_sv(o, b);
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -53,9 +48,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *b;
     cJSON_ArrayForEach(b, buckets) {
       const char *bucket = sor(b, "bucket", "name");  /* b.bucket || b.name */
-      const char *btype  = sv(b, "type");
-      const char *region = sv(b, "region");
-      const char *provider = sv(b, "provider");
+      const char *btype  = jo_sv(b, "type");
+      const char *region = jo_sv(b, "region");
+      const char *provider = jo_sv(b, "provider");
       const char *lupd   = sor(b, "lastUpdated", "last_updated");
 
       /* files_count: b.filesCount ?? b.files_count ?? null (nullish, 0 ok) */
@@ -145,7 +140,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(json);
   fprintf(stderr, "[grayhat-buckets] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def grayhat_buckets_def = {

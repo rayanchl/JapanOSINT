@@ -648,7 +648,10 @@ static void drain_once(db_handle *db) {
 /* ── worker thread ─────────────────────────────────────────────────────── */
 
 static pthread_t   g_thread;
-static volatile int g_stop = 0;
+/* _Atomic, not volatile — see the note on g_gc_stop in core/evidence.c: TSan
+ * reports the stop/poll pair as a data race (core/alert_deliver.c:673 vs :698)
+ * and volatile provides neither atomicity nor ordering. */
+static _Atomic int g_stop = 0;
 static int          g_running = 0;
 
 /* Own connection — see db_attach(): transactions are per-connection, so this

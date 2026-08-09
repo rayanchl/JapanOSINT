@@ -129,10 +129,27 @@ cJSON *linegeom_stitch_smooth(cJSON *in, const char *mode) {
     cJSON *c = g ? cJSON_GetObjectItem(g, "coordinates") : NULL;
     int n = (c && cJSON_IsArray(c)) ? cJSON_GetArraySize(c) : 0;
     if (t && cJSON_IsString(t) && !strcmp(t->valuestring,"LineString") && n>=2) {
-      fr[nfrag].xy = malloc(sizeof(double)*2*n);
-      for (int i=0;i<n;i++){ cJSON *pt=cJSON_GetArrayItem(c,i);
-        fr[nfrag].xy[i*2]   = cJSON_GetArrayItem(pt,0)->valuedouble;
-        fr[nfrag].xy[i*2+1] = cJSON_GetArrayItem(pt,1)->valuedouble; }
+      /* Only the OUTER array length was checked. A stored OSM geometry of the
+       * shape [[1,2],[3]] makes cJSON_GetArrayItem(pt,1) NULL and reading its
+       * ->valuedouble a crash — on data already sitting in the database. Each
+       * position is validated as a 2-number array; a fragment containing a
+       * malformed one is passed through untouched rather than stitched from
+       * whatever the missing ordinate would have been. */
+      double *xy = malloc(sizeof(double)*2*n);
+      int ok = (xy != NULL);
+      for (int i=0; ok && i<n; i++){
+        cJSON *pt = cJSON_GetArrayItem(c,i);
+        cJSON *px = (pt && cJSON_IsArray(pt)) ? cJSON_GetArrayItem(pt,0) : NULL;
+        cJSON *py = px ? cJSON_GetArrayItem(pt,1) : NULL;
+        if (!cJSON_IsNumber(px) || !cJSON_IsNumber(py)) { ok = 0; break; }
+        xy[i*2] = px->valuedouble; xy[i*2+1] = py->valuedouble;
+      }
+      if (!ok) {
+        free(xy);
+        cJSON_AddItemToArray(out, cJSON_Duplicate(f,1));  /* passthrough */
+        continue;
+      }
+      fr[nfrag].xy = xy;
       fr[nfrag].n = n;
       fr[nfrag].props = cJSON_GetObjectItem(f,"properties");
       nfrag++;

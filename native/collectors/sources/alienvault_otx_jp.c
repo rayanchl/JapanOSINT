@@ -1,20 +1,14 @@
 /* collectors/cyber/sources/alienvault_otx_jp.c
  * Port of server/src/collectors/alienvaultOtxJp.js (createThreatIntelCollector).
  * env OTX_API_KEY → OTX pulse search q=japan, 50 recent, TOKYO points. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/threatintel.h"
 #include "../../lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-#define TOKYO_LON 139.6917
-#define TOKYO_LAT 35.6895
 #define OTX_URL "https://otx.alienvault.com/api/v1/search/pulses?q=japan&limit=50&sort=-modified"
-
-static void put(cJSON *p, const char *k, cJSON *r, const char *ik) {
-  cJSON *v = cJSON_GetObjectItem(r, ik);
-  cJSON_AddItemToObject(p, k, v ? cJSON_Duplicate(v, 1) : cJSON_CreateNull());
-}
 
 static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
   (void)ud;
@@ -32,30 +26,30 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
     cJSON_ArrayForEach(p, results) {
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LON));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LAT));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      /* NO GEOMETRY. Every row here used to be emitted at Tokyo Station
+       * (35.6895, 139.6917). What this source reports has no location,
+       * and stacking every row on one pin is the fabrication the
+       * 2026-07-31 audit deleted from cisa-kev-jp, poc-in-github and
+       * peeringdb-jp. Confirmed live by tests/contract/source_contract.py.
+       * lib/geojson.c handles an absent geometry correctly — do NOT
+       * reintroduce a fallback coordinate. */
 
       cJSON *pr = cJSON_CreateObject();        /* EXACT JS key order */
       cJSON_AddNumberToObject(pr, "idx", i);
-      put(pr, "pulse_id", p, "id");
-      put(pr, "title", p, "name");
+      jo_put_or_null(pr, "pulse_id", p, "id");
+      jo_put_or_null(pr, "title", p, "name");
       cJSON *auth = cJSON_GetObjectItem(p, "author");
       cJSON *au = auth ? cJSON_GetObjectItem(auth, "username") : NULL;
       cJSON_AddItemToObject(pr, "author",
         au ? cJSON_Duplicate(au, 1) : cJSON_CreateNull());
-      put(pr, "modified", p, "modified");
-      put(pr, "created", p, "created");
-      put(pr, "tlp", p, "tlp");
-      put(pr, "adversary", p, "adversary");
-      put(pr, "industries", p, "industries");
-      put(pr, "targeted_countries", p, "targeted_countries");
-      put(pr, "indicator_count", p, "indicator_count");
-      put(pr, "tags", p, "tags");
+      jo_put_or_null(pr, "modified", p, "modified");
+      jo_put_or_null(pr, "created", p, "created");
+      jo_put_or_null(pr, "tlp", p, "tlp");
+      jo_put_or_null(pr, "adversary", p, "adversary");
+      jo_put_or_null(pr, "industries", p, "industries");
+      jo_put_or_null(pr, "targeted_countries", p, "targeted_countries");
+      jo_put_or_null(pr, "indicator_count", p, "indicator_count");
+      jo_put_or_null(pr, "tags", p, "tags");
       cJSON *idv = cJSON_GetObjectItem(p, "id");
       if (idv && cJSON_IsString(idv) && idv->valuestring[0]) {
         char url[256];

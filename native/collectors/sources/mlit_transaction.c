@@ -2,6 +2,7 @@
  * Port of server/src/collectors/mlitTransaction.js (tryMlit live path).
  * Single MLIT webland TradeListSearch call (Tokyo Q4 2023, area=13),
  * slice(0,200), pinned at Tokyo. SEED branch dropped (rule 8). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -11,6 +12,11 @@
 
 #define API_URL "https://www.land.mlit.go.jp/webland/api/TradeListSearch?from=20234&to=20234&area=13"
 
+/* The query is hardwired to area=13 (Tokyo-to), so every transaction really is
+ * somewhere in Tokyo prefecture — but MLIT anonymises transaction locations and
+ * publishes no coordinate, so this point is the prefecture, not the property.
+ * It is emitted with geo_precision:"prefecture" rather than bare, which is what
+ * made it read as an exact address on the map. */
 #define PIN_LON 139.6917
 #define PIN_LAT 35.6896
 
@@ -34,11 +40,6 @@ static cJSON *str_or_null(cJSON *v) {
   if (cJSON_IsBool(v) && !cJSON_IsTrue(v)) return cJSON_CreateNull();
   if (cJSON_IsNumber(v) && cJSON_GetNumberValue(v) == 0) return cJSON_CreateNull();
   return cJSON_Duplicate(v, 1);
-}
-
-/* String(part) for intelHashKey; NULL/undefined parts are skipped by JS. */
-static const char *sv(cJSON *v) {
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -65,19 +66,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *pur = cJSON_GetObjectItem(tx, "Purpose");
     cJSON *up  = cJSON_GetObjectItem(tx, "UnitPrice");
 
-    const char *parts[6] = { sv(typ), sv(mun), sv(dis), sv(tp), sv(ar), sv(per) };
+    const char *parts[6] = { jo_vstr(typ), jo_vstr(mun), jo_vstr(dis), jo_vstr(tp), jo_vstr(ar), jo_vstr(per) };
     char hk[21]; feed_hash_key(hk, parts, 6);
     char tid[40]; snprintf(tid, sizeof tid, "TX_%s", hk);
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(PIN_LON));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(PIN_LAT));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(PIN_LON, PIN_LAT);
 
     cJSON *p = cJSON_CreateObject();             /* EXACT JS key order */
     cJSON_AddStringToObject(p, "tx_id", tid);
@@ -104,6 +97,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddItemToObject(p, "purpose", str_or_null(pur));
     cJSON_AddStringToObject(p, "country", "JP");
     cJSON_AddStringToObject(p, "source", "mlit_api");
+    /* unified provenance vocabulary — never "exact": MLIT anonymises the
+     * location of a transaction by design. */
+    cJSON_AddStringToObject(p, "geo_provenance", "query-prefecture-tokyo");
+    cJSON_AddStringToObject(p, "geo_precision", "prefecture");
+    cJSON_AddBoolToObject(p, "geo_uncertain", 1);
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);
   }

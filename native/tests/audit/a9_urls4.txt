@@ -1,0 +1,13 @@
+cert-at	https://www.cert.at/cert-at.de.warnings.rss_2.0.xml
+cert-ee	https://www.ria.ee/en/rss-feeds/rss.xml
+cert-ee2-a	https://www.ria.ee/rss-feeds/rss.xml
+cert-ee2-b	https://www.ria.ee/et/rss-feeds/rss.xml
+cert-pl	https://cert.pl/en/rss.xml
+ncsc-ie	https://www.ncsc.gov.ie/news/alerts.rss
+ncsc-nl	https://advisories.ncsc.nl/rss/advisories
+krcert	https://www.krcert.or.kr/kr/rss.do?bbsId=B0000133
+cert-no	https://nsm.no/rss/alle-oppdateringer-fra-nsm/
+ncsc-ch	https://www.newsd.admin.ch/newsd/feeds/rss?lang=en&org-nr=1101
+cert-dk	https://samsik.dk/feed/
+msrc-blog	https://api.msrc.microsoft.com/update-guide/rss
+sophos-news	https://www.sophos.com/blog/feed

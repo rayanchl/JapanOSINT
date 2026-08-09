@@ -1,6 +1,7 @@
 /* collectors/tourism/sources/national_parks.c — port of
  * server/src/collectors/nationalParks.js (fetchOverpass single area.jp).
  * SEED_PARKS offline fallback intentionally not ported (rule 8). */
+#include "../../lib/geojson.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
@@ -8,23 +9,20 @@
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)i; (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
-  char pb[32];
-  snprintf(pb, sizeof pb, "PARK_LIVE_%05d", i + 1);
-  cJSON_AddStringToObject(p, "park_id", pb);
-
   cJSON *id = cJSON_GetObjectItem(el, "id");
   long long oid = id && cJSON_IsNumber(id) ? (long long)id->valuedouble : 0;
+
+  /* AUDIT NOTE (slice a3): park_id used to be "PARK_LIVE_<i+1>" — the row's
+   * POSITION in the Overpass reply. geojson.c derives the uid from park_id
+   * (NATIVE_ID_KEYS), so adding or removing one park upstream renumbered and
+   * therefore re-identified every park after it. Keyed on the stable OSM
+   * relation id instead. */
+  char pb[48];
+  snprintf(pb, sizeof pb, "PARK_OSM_%lld", oid);
+  cJSON_AddStringToObject(p, "park_id", pb);
   const char *nm = ov_tag(el, "name");
   if (!nm) nm = ov_tag(el, "name:en");
   if (nm) {
@@ -56,7 +54,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     "relation[\"boundary\"=\"national_park\"](area.jp);"
     "relation[\"boundary\"=\"protected_area\"]"
     "[\"protect_class\"=\"2\"](area.jp);",
-    180, 60000, map, NULL);
+    180, 200000, map, NULL);
   return n >= 0 ? 0 : -1;
 }
 

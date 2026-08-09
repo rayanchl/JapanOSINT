@@ -1,0 +1,35 @@
+### NRA radiation feeds
+--- https://radioactivity.nra.go.jp/cont/json/dose_today.json [403] 111b
+<?xml version="1.0" encoding="UTF-8"?>
+<Error><Code>AccessDenied</Code><Message>Access Denied</Message></Error>
+--- https://radioactivity.nra.go.jp/cont/json/MP/MP_today.json [403] 111b
+<?xml version="1.0" encoding="UTF-8"?>
+<Error><Code>AccessDenied</Code><Message>Access Denied</Message></Error>
+--- https://www.kankyo-hoshano.go.jp/api/now_value.json [000] 111b
+<?xml version="1.0" encoding="UTF-8"?>
+<Error><Code>AccessDenied</Code><Message>Access Denied</Message></Error>
+--- https://emdb.jaea.go.jp/emdb/api/v1/monitoring_post/latest.json [500] 145b
+
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Server Error (500)</title>
+</head>
+<body>
+  <h1>Server Error (500)</h1><p></p>
+</body>
+</html>
+
+### radioactivity.nra.go.jp root
+root [200] 171780b
+### bluesky jetstream handshake
+ws [400]
+HTTP/2 400 
+content-type: text/plain; charset=utf-8
+sec-websocket-version: 13
+vary: Origin
+x-content-type-options: nosniff
+date: Fri, 31 Jul 2026 18:59:39 GMT
+content-length: 12
+
+Bad Request

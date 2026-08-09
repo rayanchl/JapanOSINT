@@ -1,0 +1,45 @@
+=== gnews-mon-ua-front-line
+exit: 0
+sched: rc=0 records=84 649ms
+--- stderr ---
+[rss] gnews-mon-ua-front-line emitted 84
+[sched] gnews-mon-ua-front-line run rc=0 records=84 649ms
+--- persisted: 84 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=84
+sub_source_id: (null)=84
+
+--- row 1 ---
+  uid            gnews-mon-ua-front-line|CBMi0wFBVV95cUxOSGo1M1VRRTByWkd6My1YRmh4Ul94TW5mc0JIVmliaHh0blZoeHMyOFExVzU1SXpwRzhPRkhGMVFVLXgxbV9uMDQ4ZVdwZ1lyU2dlOVNmcGFHUE54M2h2eEZoNHBRZDF2MFhvNzJ5anV4UGxscFNDNXYwdHNZSklpV1pfWlVXUy1WWnBkSEMtZGJKS29fYU5UcmNUOGNpU2JsVlI4NFBvWmpTdFYwUUl2YjJ4SmNYX2JJazBSMVJMZ0R2SkdRckUwbElrTl81MnRyTnpZ0gHOAUFVX3lxTE1PUkNzRnl2WDFpQVE2NmFmNWgzRWxGbFBhbWktamd2bFV3QWpsMzFGYUNISURkWHRBd1VHdWc4YWJfTWxvLTFYd2N0TkhfSlNudG13X2ttZVkxUmxFbkpXZXF6eC1WTkVTSVljMzZ0bDVlZG5acUgyZFRjMjNTOF9pTXpmeld0MHdLQXdZSzM5NTl
+  title          Допомагають з житлом і переїздом. Українська оборонна компанія Frontline Robotics запустила програму релокації інженерів — кого шукають - NV Бизнес
+  body           <a href="https://news.google.com/rss/articles/CBMi0wFBVV95cUxOSGo1M1VRRTByWkd6My1YRmh4Ul94TW5mc0JIVmliaHh0blZoeHMyOFExVzU1SXpwRzhPRkhGMVFVLXgxbV9uMDQ4ZVdwZ1lyU2dlOVNmcGFHUE54M2h2eEZoNHBRZDF2MFhvNzJ5anV4UGxscFNDNXYwdHNZSklpV1pfWlVXUy1WWnBkSEMtZGJKS29fYU5UcmNUOGNpU2JsVlI4NFBvWmpTdFYwUUl2YjJ4SmNYX2JJazBSMVJMZ0R2SkdRckUwbElrTl81MnRyTnpZ0gHOAUFVX3lxTE1PUkNzRnl2WDFpQVE2NmFmNWgzRWxGbFBhbWktamd2bFV3QWpsMzFGYUNISURkWHRBd1VHdWc4YWJfTWxvLTFYd2N0TkhfSlNudG13X2ttZVkxUmxFbkpXZXF6eC1WTkVTSVljMzZ0bDVlZG5acUgyZFRjMjNTOF9pTXpmeld0MHdLQXdZSzM5NTlXRk14TnNoLTk3THBBcEw5UVJtbGFDZm9jLWlWeWN1ZjNRVXhqSkFhd1FpVUF0SEJEcV8wWVU0Q21zdkRn?oc=5" target="_blank">Допомагають з житлом і переїздом. Українська оборонна компанія Frontline Robotics запустила програму релокації інженерів — кого шукають</a>&nbsp;&nbsp;<font color="#6f6f6f">NV Бизнес</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi0wFBVV95cUxOSGo1M1VRRTByWkd6My1YRmh4Ul94TW5mc0JIVmliaHh0blZoeHMyOFExVzU1SXpwRzhPRkhGMVFVLXgxbV9uMDQ4ZVdwZ1lyU2dlOVNmcGFHUE54M2h2eEZoNHBRZDF2MFhvNzJ5anV4UGxscFNDNXYwdHNZSklpV1pfWlVXUy1WWnBkSE
+  link           https://news.google.com/rss/articles/CBMi0wFBVV95cUxOSGo1M1VRRTByWkd6My1YRmh4Ul94TW5mc0JIVmliaHh0blZoeHMyOFExVzU1SXpwRzhPRkhGMVFVLXgxbV9uMDQ4ZVdwZ1lyU2dlOVNmcGFHUE54M2h2eEZoNHBRZDF2MFhvNzJ5anV4UGxscFNDNXYwdHNZSklpV1pfWlVXUy1WWnBkSEMtZGJKS29fYU5UcmNUOGNpU2JsVlI4NFBvWmpTdFYwUUl2YjJ4SmNYX2JJazBSMVJMZ0R2SkdRckUwbElrTl81MnRyTnpZ0gHOAUFVX3lxTE1PUkNzRnl2WDFpQVE2NmFmNWgzRWxGbFBhbWktamd2bFV3QWpsMzFGYUNISURkWHRBd1VHdWc4YWJfTWxvLTFYd2N0TkhfSlNudG13X2ttZVkxUmxFbkpXZXF6eC1WTkVTSVljMzZ0bDVlZG5acUgyZFRjMjNTOF9pTXpmeld0MHdLQXdZSzM5NTlXRk14TnNoLTk3THBBcEw5UVJtbGFDZm9jLWlWeWN1ZjNRVXhqSkFhd1FpVUF0SEJEcV8wWVU0Q21zdkRn?oc=5
+  language       uk
+  published_at   Thu, 30 Jul 2026 06:58:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ua"]
+  properties     {"guid":"CBMi0wFBVV95cUxOSGo1M1VRRTByWkd6My1YRmh4Ul94TW5mc0JIVmliaHh0blZoeHMyOFExVzU1SXpwRzhPRkhGMVFVLXgxbV9uMDQ4ZVdwZ1lyU2dlOVNmcGFHUE54M2h2eEZoNHBRZDF2MFhvNzJ5anV4UGxscFNDNXYwdHNZSklpV1pfWlVXUy1WWnBkSEMtZGJKS29fYU5UcmNUOGNpU2JsVlI4NFBvWmpTdFYwUUl2YjJ4SmNYX2JJazBSMVJMZ0R2SkdRckUwbElrTl81MnRyTnpZ0gHOAUFVX3lxTE1PUkNzRnl2WDFpQVE2NmFmNWgzRWxGbFBhbWktamd2bFV3QWpsMzFGYUNISURkWHRBd1VHdWc4YWJfTWxvLTFYd2N0TkhfSlNudG13X2ttZVkxUmxFbkpXZXF6eC1WTkVTSVljMzZ0bDVlZG5acUgyZFRjMjNTOF9pTXpmeld0MHdLQXdZSzM5NTlXRk14TnNoLTk3TH
+
+--- row 2 ---
+  uid            gnews-mon-ua-front-line|CBMiaEFVX3lxTE9ucUdjX1JYRV9ja0M1YXBDenlJMGg4Tm9GZTdQcXdNTWVKWmZrMHozWlhiQy1LVkNqVzJZQ1hqT2xBMlV0VFJ4b08tVWRPTlJ5eGlrZG02c0tyMUxRdnJrNk96OXZzQ1lw
+  title          Виробник безпілотників Frontline Robotics релокуватиме інженерів із Харкова, Дніпра та Запоріжжя — навіщо це компанії - Спільнота програмістів
+  body           <a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTE9ucUdjX1JYRV9ja0M1YXBDenlJMGg4Tm9GZTdQcXdNTWVKWmZrMHozWlhiQy1LVkNqVzJZQ1hqT2xBMlV0VFJ4b08tVWRPTlJ5eGlrZG02c0tyMUxRdnJrNk96OXZzQ1lw?oc=5" target="_blank">Виробник безпілотників Frontline Robotics релокуватиме інженерів із Харкова, Дніпра та Запоріжжя — навіщо це компанії</a>&nbsp;&nbsp;<font color="#6f6f6f">Спільнота програмістів</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTE9ucUdjX1JYRV9ja0M1YXBDenlJMGg4Tm9GZTdQcXdNTWVKWmZrMHozWlhiQy1LVkNqVzJZQ1hqT2xBMlV0VFJ4b08tVWRPTlJ5eGlrZG02c0tyMUxRdnJrNk96OXZzQ1lw?oc=5" target="_blank">Виробник безпі
+  link           https://news.google.com/rss/articles/CBMiaEFVX3lxTE9ucUdjX1JYRV9ja0M1YXBDenlJMGg4Tm9GZTdQcXdNTWVKWmZrMHozWlhiQy1LVkNqVzJZQ1hqT2xBMlV0VFJ4b08tVWRPTlJ5eGlrZG02c0tyMUxRdnJrNk96OXZzQ1lw?oc=5
+  language       uk
+  published_at   Wed, 29 Jul 2026 13:59:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ua"]
+  properties     {"guid":"CBMiaEFVX3lxTE9ucUdjX1JYRV9ja0M1YXBDenlJMGg4Tm9GZTdQcXdNTWVKWmZrMHozWlhiQy1LVkNqVzJZQ1hqT2xBMlV0VFJ4b08tVWRPTlJ5eGlrZG02c0tyMUxRdnJrNk96OXZzQ1lw"}
+
+--- row 3 ---
+  uid            gnews-mon-ua-front-line|CBMi4wFBVV95cUxORWRsTTlUajF6dW5vc2FzcmlLQmRWblpySlJZRERSNmh3bEc2TGFFbzBmQmNaMVM4ODBfaDh6QzlZcWVJbmZpTkM4X1pCTkh3N1ktd3M3ZldPbndIcnVhTU02UXp6aWl6UTZHWFVOR09YNUNaZTFUNWtSMW44NF9aODJjRXJwajR5dm1lR1BjOUJCQnJVZlN2YUY4M1RObE1IMGVqbzd1WlJ5bGtrcFJfS2dSSHFxbWMxVlM4NklxLUw5ZHIzaTktVVlta3pTajFNZjY2WG1qaXBjZlpuUE82ZnhnVQ
+  title          Frontline Robotics запускає програму релокації для інженерів з Харкова, Дніпра та Запоріжжя. Які умови переїзду - dev.ua
+  body           <a href="https://news.google.com/rss/articles/CBMi4wFBVV95cUxORWRsTTlUajF6dW5vc2FzcmlLQmRWblpySlJZRERSNmh3bEc2TGFFbzBmQmNaMVM4ODBfaDh6QzlZcWVJbmZpTkM4X1pCTkh3N1ktd3M3ZldPbndIcnVhTU02UXp6aWl6UTZHWFVOR09YNUNaZTFUNWtSMW44NF9aODJjRXJwajR5dm1lR1BjOUJCQnJVZlN2YUY4M1RObE1IMGVqbzd1WlJ5bGtrcFJfS2dSSHFxbWMxVlM4NklxLUw5ZHIzaTktVVlta3pTajFNZjY2WG1qaXBjZlpuUE82ZnhnVQ?oc=5" target="_blank">Frontline Robotics запускає програму релокації для інженерів з Харкова, Дніпра та Запоріжжя. Які умови переїзду</a>&nbsp;&nbsp;<font color="#6f6f6f">dev.ua</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi4wFBVV95cUxORWRsTTlUajF6dW5vc2FzcmlLQmRWblpySlJZRERSNmh3bEc2TGFFbzBmQmNaMVM4ODBfaDh6QzlZcWVJbmZpTkM4X1pCTkh3N1ktd3M3ZldPbndIcnVhTU02UXp6aWl6UTZHWFVOR09YNUNaZTFUNWtSMW44NF9aODJjRXJwajR5dm1lR1
+  link           https://news.google.com/rss/articles/CBMi4wFBVV95cUxORWRsTTlUajF6dW5vc2FzcmlLQmRWblpySlJZRERSNmh3bEc2TGFFbzBmQmNaMVM4ODBfaDh6QzlZcWVJbmZpTkM4X1pCTkh3N1ktd3M3ZldPbndIcnVhTU02UXp6aWl6UTZHWFVOR09YNUNaZTFUNWtSMW44NF9aODJjRXJwajR5dm1lR1BjOUJCQnJVZlN2YUY4M1RObE1IMGVqbzd1WlJ5bGtrcFJfS2dSSHFxbWMxVlM4NklxLUw5ZHIzaTktVVlta3pTajFNZjY2WG1qaXBjZlpuUE82ZnhnVQ?oc=5
+  language       uk
+  published_at   Wed, 29 Jul 2026 14:22:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ua"]
+  properties     {"guid":"CBMi4wFBVV95cUxORWRsTTlUajF6dW5vc2FzcmlLQmRWblpySlJZRERSNmh3bEc2TGFFbzBmQmNaMVM4ODBfaDh6QzlZcWVJbmZpTkM4X1pCTkh3N1ktd3M3ZldPbndIcnVhTU02UXp6aWl6UTZHWFVOR09YNUNaZTFUNWtSMW44NF9aODJjRXJwajR5dm1lR1BjOUJCQnJVZlN2YUY4M1RObE1IMGVqbzd1WlJ5bGtrcFJfS2dSSHFxbWMxVlM4NklxLUw5ZHIzaTktVVlta3pTajFNZjY2WG1qaXBjZlpuUE82ZnhnVQ"}

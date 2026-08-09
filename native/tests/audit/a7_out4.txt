@@ -1,0 +1,195 @@
+=== POLITICAL_FUNDS
+exit: 0
+sched: rc=0 records=30 1176ms
+--- stderr ---
+[polifunds] transcoded Shift_JIS -> UTF-8
+[polifunds] emitted 30
+[sched] POLITICAL_FUNDS run rc=0 records=30 1176ms
+--- persisted: 30 rows, 0 with lat/lon, 0 with geometry ---
+record_type: political-funds-report=30
+sub_source_id: (null)=30
+
+--- row 1 ---
+  uid            POLITICAL_FUNDS|https://www.soumu.go.jp/form/common/opinions.html
+  title          ご意見・ご提案
+  link           https://www.soumu.go.jp/form/common/opinions.html
+  language       ja
+  record_type    political-funds-report
+  tags           ["osint-search","gov-money"]
+  properties     {"service":"Political Funds","href":"https://www.soumu.go.jp/form/common/opinions.html","success":true}
+
+--- row 2 ---
+  uid            POLITICAL_FUNDS|https://www.soumu.go.jp/english/index.html
+  title          ENGLISH(TOP)
+  link           https://www.soumu.go.jp/english/index.html
+  language       ja
+  record_type    political-funds-report
+  tags           ["osint-search","gov-money"]
+  properties     {"service":"Political Funds","href":"https://www.soumu.go.jp/english/index.html","success":true}
+#################################################
+=== CUSTOMS_TRADE
+exit: 0
+sched: rc=0 records=30 1200ms
+--- stderr ---
+[customs] transcoded Shift_JIS -> UTF-8
+[customs] emitted 30
+[sched] CUSTOMS_TRADE run rc=0 records=30 1200ms
+--- persisted: 30 rows, 0 with lat/lon, 0 with geometry ---
+record_type: trade-statistics=30
+sub_source_id: (null)=30
+
+--- row 1 ---
+  uid            CUSTOMS_TRADE|https://www.customs.go.jp/toukei/srch/index.htm
+  title          貿易統計検索ページ
+  link           https://www.customs.go.jp/toukei/srch/index.htm
+  language       ja
+  record_type    trade-statistics
+  tags           ["osint-search","gov-money"]
+  properties     {"service":"Customs Trade Statistics","href":"https://www.customs.go.jp/toukei/srch/index.htm","success":true}
+
+--- row 2 ---
+  uid            CUSTOMS_TRADE|https://www.customs.go.jp/toukei/info/tsdl.htm
+  title          統計表一覧
+  link           https://www.customs.go.jp/toukei/info/tsdl.htm
+  language       ja
+  record_type    trade-statistics
+  tags           ["osint-search","gov-money"]
+  properties     {"service":"Customs Trade Statistics","href":"https://www.customs.go.jp/toukei/info/tsdl.htm","success":true}
+#################################################
+=== GEPS_PROCUREMENT
+exit: 0
+sched: rc=0 records=30 1579ms
+--- stderr ---
+[geps] emitted 30
+[sched] GEPS_PROCUREMENT run rc=0 records=30 1579ms
+--- persisted: 30 rows, 0 with lat/lon, 0 with geometry ---
+record_type: gov-tender=30
+sub_source_id: (null)=30
+
+--- row 1 ---
+  uid            GEPS_PROCUREMENT|https://www.p-portal.go.jp/pps-web-biz/UZA01/OZA0101
+  title          ポータルトップへ
+  link           https://www.p-portal.go.jp/pps-web-biz/UZA01/OZA0101
+  language       ja
+  record_type    gov-tender
+  tags           ["osint-search","gov-money"]
+  properties     {"service":"GEPS Procurement","href":"https://www.p-portal.go.jp/pps-web-biz/UZA01/OZA0101","success":true}
+
+--- row 2 ---
+  uid            GEPS_PROCUREMENT|https://www.p-portal.go.jp/pps-web-biz/resources/app/html/manuals.html
+  title          操作マニュアル
+  link           https://www.p-portal.go.jp/pps-web-biz/resources/app/html/manuals.html
+  language       ja
+  record_type    gov-tender
+  tags           ["osint-search","gov-money"]
+  properties     {"service":"GEPS Procurement","href":"https://www.p-portal.go.jp/pps-web-biz/resources/app/html/manuals.html","success":true}
+#################################################
+=== LOCAL_TENDERS
+exit: 0
+sched: rc=0 records=1 2017ms
+--- stderr ---
+[tenders] emitted 1
+[sched] LOCAL_TENDERS run rc=0 records=1 2017ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: local-tender=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            LOCAL_TENDERS|https://www.p-portal.go.jp/pps-web-biz/
+  title          調達ポータル
+  link           https://www.p-portal.go.jp/pps-web-biz/
+  language       ja
+  record_type    local-tender
+  tags           ["osint-search","gov-money"]
+  properties     {"service":"Local Tenders","href":"https://www.p-portal.go.jp/pps-web-biz/","success":true}
+#################################################
+=== ASSET_DISCLOSURE
+exit: 0
+sched: rc=0 records=0 970ms
+--- stderr ---
+[assets] http status=404
+[sched] ASSET_DISCLOSURE run rc=0 records=0 970ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== suumo-rental-density
+exit: 0
+sched: rc=0 records=47 88895ms
+--- stderr ---
+[suumo-rental-density] emitted 47
+[sched] suumo-rental-density run rc=0 records=47 88895ms
+[detect] anomaly opened: suumo-rental-density verdict=duration_outlier — duration 88895ms exceeds 10000ms threshold
+--- persisted: 47 rows, 47 with lat/lon, 47 with geometry ---
+record_type: suumo-rental-density=47
+sub_source_id: (null)=47
+
+--- row 1 ---
+  uid            suumo-rental-density|SUUMO_hokkaido
+  title          北海道 — SUUMO listing count unavailable
+  summary        SUUMO 賃貸物件数 — count not parseable from the prefecture page
+  link           https://suumo.jp/chintai/hokkaido/
+  language       ja
+  lat            43.0642
+  lon            141.3469
+  geometry       {"type":"Point","coordinates":[141.3469,43.0642]}
+  record_type    suumo-rental-density
+  properties     {"id":"SUUMO_hokkaido","prefecture_ja":"北海道","prefecture_slug":"hokkaido","rental_listings":null,"source":"suumo_unavailable","title":"北海道 — SUUMO listing count unavailable","name_ja":"北海道","summary":"SUUMO 賃貸物件数 — count not parseable from the prefecture page","link":"https://suumo.jp/chintai/hokkaido/","language":"ja"}
+
+--- row 2 ---
+  uid            suumo-rental-density|SUUMO_aomori
+  title          青森県 — 7954 rental listings (SUUMO)
+  summary        SUUMO 賃貸物件数 (prefecture total)
+  link           https://suumo.jp/chintai/aomori/
+  language       ja
+  lat            40.8243
+  lon            140.74
+  geometry       {"type":"Point","coordinates":[140.74,40.8243]}
+  record_type    suumo-rental-density
+  properties     {"id":"SUUMO_aomori","prefecture_ja":"青森県","prefecture_slug":"aomori","rental_listings":7954,"source":"suumo_live","title":"青森県 — 7954 rental listings (SUUMO)","name_ja":"青森県","summary":"SUUMO 賃貸物件数 (prefecture total)","link":"https://suumo.jp/chintai/aomori/","language":"ja"}
+#################################################
+=== ADSB_LOL  entity=84b86d
+exit: 0
+sched: rc=0 records=1 158ms
+--- stderr ---
+[ADSB_LOL] emitted 1
+[sched] ADSB_LOL run rc=0 records=1 158ms
+--- persisted: 1 rows, 1 with lat/lon, 0 with geometry ---
+record_type: aircraft-position=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            ADSB_LOL|84b86d
+  title          APJ877 · A20N
+  body           {"hex":"84b86d","callsign":"APJ877","registration":"JA219P","type":"A20N","alt_baro_ft":24200,"source":"ADSB_LOL"}
+  summary        JA219P
+  link           https://globe.adsbexchange.com/?icao=84b86d
+  language       en
+  lat            35.011139
+  lon            139.121723
+  record_type    aircraft-position
+  tags           ["osint-search","ADSB_LOL"]
+  properties     {"service":"ADSB_LOL","hex":"84b86d","success":true}
+#################################################
+=== OPENSKY_STATES  entity=84b86d
+exit: 0
+sched: rc=0 records=1 135ms
+--- stderr ---
+[OPENSKY_STATES] emitted 1
+[sched] OPENSKY_STATES run rc=0 records=1 135ms
+--- persisted: 1 rows, 1 with lat/lon, 0 with geometry ---
+record_type: aircraft-position=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            OPENSKY_STATES|84b86d
+  title          APJ877
+  body           {"hex":"84b86d","callsign":"APJ877","origin_country":"Japan","source":"OpenSky Network"}
+  summary        Japan
+  link           https://opensky-network.org/aircraft-profile?icao24=84b86d
+  language       en
+  lat            35.0148
+  lon            139.1439
+  record_type    aircraft-position
+  tags           ["osint-search","OPENSKY_STATES"]
+  properties     {"service":"OPENSKY_STATES","hex":"84b86d","success":true}
+#################################################
+DONE /mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/a7_list4.txt

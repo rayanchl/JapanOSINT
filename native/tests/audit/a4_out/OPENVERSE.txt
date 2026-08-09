@@ -1,0 +1,42 @@
+=== OPENVERSE  entity=Tokyo
+exit: 0
+sched: rc=0 records=20 144ms
+--- stderr ---
+[OPENVERSE] emitted 20
+[sched] OPENVERSE run rc=0 records=20 144ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: openverse-image=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            OPENVERSE|5b1b78d3-8c5e-4913-871f-67681001590a
+  title          Tokyo
+  body           {"title":"Tokyo","creator":"luca.sartoni","license":"by-sa","source":"Openverse"}
+  summary        luca.sartoni
+  link           https://www.flickr.com/photos/21925196@N08/44684386924
+  language       en
+  record_type    openverse-image
+  tags           ["osint-search","OPENVERSE"]
+  properties     {"service":"OPENVERSE","success":true}
+
+--- row 2 ---
+  uid            OPENVERSE|02c23f67-0805-4a96-8740-7c45e19441db
+  title          Shinjuku, Tokyo
+  body           {"title":"Shinjuku, Tokyo","creator":"kevin dooley","license":"by","source":"Openverse"}
+  summary        kevin dooley
+  link           https://www.flickr.com/photos/12836528@N00/8542087062
+  language       en
+  record_type    openverse-image
+  tags           ["osint-search","OPENVERSE"]
+  properties     {"service":"OPENVERSE","success":true}
+
+--- row 3 ---
+  uid            OPENVERSE|6855c2ba-1566-4db2-b31f-36d82e48601e
+  title          Tokyo
+  body           {"title":"Tokyo","creator":"luca.sartoni","license":"by-sa","source":"Openverse"}
+  summary        luca.sartoni
+  link           https://www.flickr.com/photos/21925196@N08/44592014464
+  language       en
+  record_type    openverse-image
+  tags           ["osint-search","OPENVERSE"]
+  properties     {"service":"OPENVERSE","success":true}

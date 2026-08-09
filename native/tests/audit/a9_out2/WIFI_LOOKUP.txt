@@ -1,0 +1,6 @@
+=== WIFI_LOOKUP  entity=00:1A:2B:3C:4D:5E
+exit: 0
+sched: rc=0 records=0 459ms
+--- stderr ---
+[sched] WIFI_LOOKUP run rc=0 records=0 459ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

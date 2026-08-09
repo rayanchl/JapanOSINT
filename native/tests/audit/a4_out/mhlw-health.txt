@@ -1,0 +1,21 @@
+=== mhlw-health
+exit: 0
+sched: rc=0 records=1 8875ms
+--- stderr ---
+[mhlw-health] probe reachable=0
+[sched] mhlw-health run rc=0 records=1 8875ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: mhlw-health=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            mhlw-health|portal
+  title          MHLW Health Statistics portal
+  body           Ministry of Health, Labour and Welfare statistics portal. Datasets are published as Excel/PDF; no stable machine API to parse.
+  summary        人口動態統計・患者調査・国民健康・栄養調査ほか
+  link           https://www.mhlw.go.jp/toukei/
+  language       ja
+  published_at   2026-07-31T18:04:51.934Z
+  record_type    mhlw-health
+  tags           ["health","statistics","unreachable"]
+  properties     {"org":"MHLW","datasets":["Vital statistics","Patient survey","National Health & Nutrition Survey"],"reachable":false}

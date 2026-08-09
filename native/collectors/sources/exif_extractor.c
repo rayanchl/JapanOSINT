@@ -14,7 +14,14 @@
 #include <stdint.h>
 
 /* endian-aware readers over the TIFF block */
-static int g_le;
+/* Per-thread: the TIFF byte order of the image THIS thread is parsing.
+ * As a plain global, two concurrent EXIF parses of images with opposite
+ * endianness (the "II"/"MM" magic at r16/r32) would read each other's flag
+ * and decode every value byte-swapped — including the GPS IFD, i.e. a
+ * fabricated coordinate, which is the one class of defect this codebase has
+ * already paid to remove once. The scheduler pool and the parallel OSINT
+ * dispatch both make that reachable. */
+static __thread int g_le;
 static uint16_t r16(const uint8_t *p) { return g_le ? (uint16_t)(p[0] | p[1] << 8) : (uint16_t)(p[1] | p[0] << 8); }
 static uint32_t r32(const uint8_t *p) {
   return g_le ? ((uint32_t)p[0] | p[1] << 8 | p[2] << 16 | (uint32_t)p[3] << 24)
@@ -108,10 +115,19 @@ static int parse_exif(const uint8_t *buf, size_t len, cJSON *out,
 
 static int exif_run(const source_ctx *ctx, intel_sink *sink) {
   const char *url = ctx->entity;
-  if (!url || strncmp(url, "http", 4) != 0) return 0;
+  if (!url || strncmp(url, "http", 4) != 0) {
+    fprintf(stderr, "[EXIF_EXTRACTOR] entity is not an image URL: %s\n",
+            url ? url : "(none)");
+    return 0;
+  }
   http_response hr = {0};
   if (http_request(ctx->http, "GET", url, NULL, NULL, 0, 15000, 1, &hr) != 0 ||
-      hr.status != 200 || !hr.body || hr.body_len < 4) { http_response_free(&hr); return 0; }
+      hr.status != 200 || !hr.body || hr.body_len < 4) {
+    fprintf(stderr, "[EXIF_EXTRACTOR] fetch failed status=%ld len=%zu %s\n",
+            hr.status, hr.body_len, url);
+    http_response_free(&hr);
+    return 0;
+  }
 
   cJSON *data = cJSON_CreateObject();
   cJSON_AddStringToObject(data, "source", "image-exif");
@@ -120,7 +136,12 @@ static int exif_run(const source_ctx *ctx, intel_sink *sink) {
   int ok = parse_exif((const uint8_t *)hr.body, hr.body_len, data, &has_geo, &lat, &lon);
   http_response_free(&hr);
   /* nothing useful (no make/model/datetime/gps) → honest empty */
-  if (!ok || cJSON_GetArraySize(data) <= 2) { cJSON_Delete(data); return 0; }
+  if (!ok || cJSON_GetArraySize(data) <= 2) {
+    fprintf(stderr, "[EXIF_EXTRACTOR] no EXIF payload (jpeg=%d fields=%d) %s\n",
+            ok, cJSON_GetArraySize(data) - 2, url);
+    cJSON_Delete(data);
+    return 0;
+  }
 
   char *bj = cJSON_PrintUnformatted(data);
   cJSON *props = cJSON_CreateObject();
@@ -137,7 +158,11 @@ static int exif_run(const source_ctx *ctx, intel_sink *sink) {
   it.tags_json = "[\"osint-search\",\"EXIF_EXTRACTOR\"]";
   int rc = sink->emit(sink, &it);
   free(bj); free(pj); cJSON_Delete(data); cJSON_Delete(props);
-  return rc >= 0 ? 1 : 0;
+  fprintf(stderr, "[EXIF_EXTRACTOR] emitted 1 (geo=%d) %s\n", has_geo, url);
+  /* audit-09: this used to `return 1` on SUCCESS. core/scheduler.c treats any
+   * non-zero rc as status="error" and hands it to anomaly_detect, so every
+   * successful extraction quarantined the source. run() returns 0 or -1. */
+  return rc >= 0 ? 0 : -1;
 }
 
 static const source_def exif_def = {

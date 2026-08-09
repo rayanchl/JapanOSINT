@@ -1,0 +1,97 @@
+=== COURT_RECORDS  entity=Toyota
+exit: 0
+sched: rc=0 records=10 1868ms
+--- stderr ---
+[sched] COURT_RECORDS run rc=0 records=10 1868ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            COURT_RECORDS|case:Toyota:0
+  title          Bicchetti v. Atlantic Toyota (Appellate Division of the Supreme Court of the State of New York)
+  body           {"case_name":"Bicchetti v. Atlantic Toyota","court":"Appellate Division of the Supreme Court of the State of New York","date_filed":"2023-06-14","docket_number":"Index No. 605138/16","citation":"217 A.D.3d 743","url":"https://www.courtlistener.com/opinion/9406525/bicchetti-v-atlantic-toyota/"}
+  summary        Appellate Division of the Supreme Court of the State of New York — 2023-06-14
+  link           https://www.courtlistener.com/opinion/9406525/bicchetti-v-atlantic-toyota/
+  published_at   2023-06-14
+  record_type    osint_service_result
+  tags           ["osint-search","COURT_RECORDS"]
+  properties     {"service":"COURT_RECORDS","entity":"Toyota","court":"Appellate Division of the Supreme Court of the State of New York"}
+
+--- row 2 ---
+  uid            COURT_RECORDS|case:Toyota:1
+  title          Stein v. Toyota (Superior Court of Pennsylvania)
+  body           {"case_name":"Stein v. Toyota","court":"Superior Court of Pennsylvania","date_filed":"2017-08-09","docket_number":"1085 WDA 2016","citation":"175 A.3d 1062","url":"https://www.courtlistener.com/opinion/5172352/stein-v-toyota/"}
+  summary        Superior Court of Pennsylvania — 2017-08-09
+  link           https://www.courtlistener.com/opinion/5172352/stein-v-toyota/
+  published_at   2017-08-09
+  record_type    osint_service_result
+  tags           ["osint-search","COURT_RECORDS"]
+  properties     {"service":"COURT_RECORDS","entity":"Toyota","court":"Superior Court of Pennsylvania"}
+#################################################
+=== suumo-rental-density
+exit: 0
+sched: rc=0 records=47 95398ms
+--- stderr ---
+[suumo-rental-density] emitted 47
+[sched] suumo-rental-density run rc=0 records=47 95398ms
+[detect] anomaly opened: suumo-rental-density verdict=duration_outlier — duration 95398ms exceeds 10000ms threshold
+--- persisted: 47 rows, 47 with lat/lon, 47 with geometry ---
+record_type: suumo-rental-density=47
+sub_source_id: (null)=47
+
+--- row 1 ---
+  uid            suumo-rental-density|SUUMO_hokkaido
+  title          北海道 — SUUMO listing count unavailable
+  summary        SUUMO 賃貸物件数 — count not parseable from the prefecture page
+  link           https://suumo.jp/chintai/hokkaido/
+  language       ja
+  lat            43.0642
+  lon            141.3469
+  geometry       {"type":"Point","coordinates":[141.3469,43.0642]}
+  record_type    suumo-rental-density
+  properties     {"id":"SUUMO_hokkaido","prefecture_ja":"北海道","prefecture_slug":"hokkaido","rental_listings":null,"source":"suumo_unavailable","title":"北海道 — SUUMO listing count unavailable","name_ja":"北海道","summary":"SUUMO 賃貸物件数 — count not parseable from the prefecture page","link":"https://suumo.jp/chintai/hokkaido/","language":"ja"}
+
+--- row 2 ---
+  uid            suumo-rental-density|SUUMO_aomori
+  title          青森県 — SUUMO listing count unavailable
+  summary        SUUMO 賃貸物件数 — count not parseable from the prefecture page
+  link           https://suumo.jp/chintai/aomori/
+  language       ja
+  lat            40.8243
+  lon            140.74
+  geometry       {"type":"Point","coordinates":[140.74,40.8243]}
+  record_type    suumo-rental-density
+  properties     {"id":"SUUMO_aomori","prefecture_ja":"青森県","prefecture_slug":"aomori","rental_listings":null,"source":"suumo_unavailable","title":"青森県 — SUUMO listing count unavailable","name_ja":"青森県","summary":"SUUMO 賃貸物件数 — count not parseable from the prefecture page","link":"https://suumo.jp/chintai/aomori/","language":"ja"}
+#################################################
+Traceback (most recent call last):
+  File "/mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/verify_one.py", line 97, in <module>
+    main()
+  File "/mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/verify_one.py", line 39, in main
+    p = subprocess.run(argv, capture_output=True, timeout=a.timeout, env=env, cwd=NATIVE)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OSError: [Errno 26] Text file busy: '/mnt/c/Users/rayan/sources/repos/OSINTsaas/native/bin/japanosint-a7'
+#################################################
+Traceback (most recent call last):
+  File "/mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/verify_one.py", line 97, in <module>
+    main()
+  File "/mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/verify_one.py", line 39, in main
+    p = subprocess.run(argv, capture_output=True, timeout=a.timeout, env=env, cwd=NATIVE)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OSError: [Errno 26] Text file busy: '/mnt/c/Users/rayan/sources/repos/OSINTsaas/native/bin/japanosint-a7'
+#################################################
+DONE /mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/a7_list5.txt

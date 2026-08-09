@@ -1,0 +1,45 @@
+=== cert-pl
+exit: 0
+sched: rc=0 records=100 348ms
+--- stderr ---
+[rss] cert-pl emitted 100
+[sched] cert-pl run rc=0 records=100 348ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            cert-pl|tag:cert.pl,2026-07-31:/en/posts/2026/07/CVE-2025-67649/
+  title          Vulnerabilities in PHP Jabbers scripts
+  body           CERT Polska has received a report about 5 vulnerabilities (from CVE-2025-67649 to CVE-2025-67651 and from CVE-2026-46593 to CVE-2026-46594) found in PHP Jabbers scripts.
+  summary        CERT Polska has received a report about 5 vulnerabilities (from CVE-2025-67649 to CVE-2025-67651 and from CVE-2026-46593 to CVE-2026-46594) found in PHP Jabbers scripts.
+  link           https://cert.pl/en/posts/2026/07/CVE-2025-67649/
+  language       en
+  published_at   Fri, 31 Jul 2026 13:55:00 +0100
+  record_type    article
+  tags           ["cyber","cert","advisory","poland"]
+  properties     {"guid":"tag:cert.pl,2026-07-31:/en/posts/2026/07/CVE-2025-67649/"}
+
+--- row 2 ---
+  uid            cert-pl|tag:cert.pl,2026-07-29:/en/posts/2026/07/CVE-2026-66723/
+  title          Vulnerabilities in MWDB Core software
+  body           Two vulnerabilities (CVE-2026-66723 and CVE-2026-66724) were found in CERT.PL MWDB Core software.
+  summary        Two vulnerabilities (CVE-2026-66723 and CVE-2026-66724) were found in CERT.PL MWDB Core software.
+  link           https://cert.pl/en/posts/2026/07/CVE-2026-66723/
+  language       en
+  published_at   Wed, 29 Jul 2026 15:55:00 +0100
+  record_type    article
+  tags           ["cyber","cert","advisory","poland"]
+  properties     {"guid":"tag:cert.pl,2026-07-29:/en/posts/2026/07/CVE-2026-66723/"}
+
+--- row 3 ---
+  uid            cert-pl|tag:cert.pl,2026-07-29:/en/posts/2026/07/CVE-2026-50641/
+  title          Vulnerability in Streamsoft Business Intelligence software
+  body           Plaintext Storage of a Password vulnerability (CVE-2026-50641) has been found in Streamsoft Business Intelligence software.
+  summary        Plaintext Storage of a Password vulnerability (CVE-2026-50641) has been found in Streamsoft Business Intelligence software.
+  link           https://cert.pl/en/posts/2026/07/CVE-2026-50641/
+  language       en
+  published_at   Wed, 29 Jul 2026 14:55:00 +0100
+  record_type    article
+  tags           ["cyber","cert","advisory","poland"]
+  properties     {"guid":"tag:cert.pl,2026-07-29:/en/posts/2026/07/CVE-2026-50641/"}

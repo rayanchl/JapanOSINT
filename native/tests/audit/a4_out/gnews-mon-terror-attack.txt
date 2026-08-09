@@ -1,0 +1,45 @@
+=== gnews-mon-terror-attack
+exit: 0
+sched: rc=0 records=100 737ms
+--- stderr ---
+[rss] gnews-mon-terror-attack emitted 100
+[sched] gnews-mon-terror-attack run rc=0 records=100 737ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-terror-attack|CBMipgFBVV95cUxNdUJOcmJLZ0x1bUhZekxsVUIyRnVYYTN0dTZLS3JBc2trby1GVGp4YzcxNWt1SVFqV1RPdmxYR3FFdW56RGtXN21IUEhCVlFDd09heVlaUXRhNEo3VHpfdnJvZERTZ2VVUTZ6NnM2TWRqVmd5aTc3QjFfT0VNQS1qZ3doSXpIbjc3SHVyTXZQVE9MdVJQUGZNZUJPRGVWa25ua0RrN1lB
+  title          Old Dominion shooting was ‘terror attack’ by student with ISIS ties: report - The College Fix
+  body           <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxNdUJOcmJLZ0x1bUhZekxsVUIyRnVYYTN0dTZLS3JBc2trby1GVGp4YzcxNWt1SVFqV1RPdmxYR3FFdW56RGtXN21IUEhCVlFDd09heVlaUXRhNEo3VHpfdnJvZERTZ2VVUTZ6NnM2TWRqVmd5aTc3QjFfT0VNQS1qZ3doSXpIbjc3SHVyTXZQVE9MdVJQUGZNZUJPRGVWa25ua0RrN1lB?oc=5" target="_blank">Old Dominion shooting was ‘terror attack’ by student with ISIS ties: report</a>&nbsp;&nbsp;<font color="#6f6f6f">The College Fix</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxNdUJOcmJLZ0x1bUhZekxsVUIyRnVYYTN0dTZLS3JBc2trby1GVGp4YzcxNWt1SVFqV1RPdmxYR3FFdW56RGtXN21IUEhCVlFDd09heVlaUXRhNEo3VHpfdnJvZERTZ2VVUTZ6NnM2TWRqVmd5aTc3QjFfT0VNQS1qZ3doSXpIbjc3SHVyTX
+  link           https://news.google.com/rss/articles/CBMipgFBVV95cUxNdUJOcmJLZ0x1bUhZekxsVUIyRnVYYTN0dTZLS3JBc2trby1GVGp4YzcxNWt1SVFqV1RPdmxYR3FFdW56RGtXN21IUEhCVlFDd09heVlaUXRhNEo3VHpfdnJvZERTZ2VVUTZ6NnM2TWRqVmd5aTc3QjFfT0VNQS1qZ3doSXpIbjc3SHVyTXZQVE9MdVJQUGZNZUJPRGVWa25ua0RrN1lB?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 16:13:14 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","terror"]
+  properties     {"guid":"CBMipgFBVV95cUxNdUJOcmJLZ0x1bUhZekxsVUIyRnVYYTN0dTZLS3JBc2trby1GVGp4YzcxNWt1SVFqV1RPdmxYR3FFdW56RGtXN21IUEhCVlFDd09heVlaUXRhNEo3VHpfdnJvZERTZ2VVUTZ6NnM2TWRqVmd5aTc3QjFfT0VNQS1qZ3doSXpIbjc3SHVyTXZQVE9MdVJQUGZNZUJPRGVWa25ua0RrN1lB"}
+
+--- row 2 ---
+  uid            gnews-mon-terror-attack|CBMipgFBVV95cUxPSnVoeEhWSF9GdUliSEx4aG0tN19Lc2VoSUNYR3FUWE1NUGgzYzhucWlEQnlucGlTYzIyY2Y0UExyaldJRlZCeDlsckVHRHFZZnU1c0VicjZJc1lOOGlXTUpwRWItRjNzaTlxRkM5aXlkbVlieXFSQlR4OTBRWDN0VG9NNmVSM3dtMEQ4OXR3dHdubWtmV1k0cEVVTzk0UXdwQVpVMENR
+  title          The Berlin terror attack exposes deep failings in the state - The Economist
+  body           <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPSnVoeEhWSF9GdUliSEx4aG0tN19Lc2VoSUNYR3FUWE1NUGgzYzhucWlEQnlucGlTYzIyY2Y0UExyaldJRlZCeDlsckVHRHFZZnU1c0VicjZJc1lOOGlXTUpwRWItRjNzaTlxRkM5aXlkbVlieXFSQlR4OTBRWDN0VG9NNmVSM3dtMEQ4OXR3dHdubWtmV1k0cEVVTzk0UXdwQVpVMENR?oc=5" target="_blank">The Berlin terror attack exposes deep failings in the state</a>&nbsp;&nbsp;<font color="#6f6f6f">The Economist</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPSnVoeEhWSF9GdUliSEx4aG0tN19Lc2VoSUNYR3FUWE1NUGgzYzhucWlEQnlucGlTYzIyY2Y0UExyaldJRlZCeDlsckVHRHFZZnU1c0VicjZJc1lOOGlXTUpwRWItRjNzaTlxRkM5aXlkbVlieXFSQlR4OTBRWDN0VG9NNmVSM3dtMEQ4OX
+  link           https://news.google.com/rss/articles/CBMipgFBVV95cUxPSnVoeEhWSF9GdUliSEx4aG0tN19Lc2VoSUNYR3FUWE1NUGgzYzhucWlEQnlucGlTYzIyY2Y0UExyaldJRlZCeDlsckVHRHFZZnU1c0VicjZJc1lOOGlXTUpwRWItRjNzaTlxRkM5aXlkbVlieXFSQlR4OTBRWDN0VG9NNmVSM3dtMEQ4OXR3dHdubWtmV1k0cEVVTzk0UXdwQVpVMENR?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 13:02:21 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","terror"]
+  properties     {"guid":"CBMipgFBVV95cUxPSnVoeEhWSF9GdUliSEx4aG0tN19Lc2VoSUNYR3FUWE1NUGgzYzhucWlEQnlucGlTYzIyY2Y0UExyaldJRlZCeDlsckVHRHFZZnU1c0VicjZJc1lOOGlXTUpwRWItRjNzaTlxRkM5aXlkbVlieXFSQlR4OTBRWDN0VG9NNmVSM3dtMEQ4OXR3dHdubWtmV1k0cEVVTzk0UXdwQVpVMENR"}
+
+--- row 3 ---
+  uid            gnews-mon-terror-attack|CBMi5gFBVV95cUxQRm8zengzS2M5X19vaWlNX2lLRllZemxkR25mNEppTG5VbS1PX2NuZDZsS0o4N0h3NG94b3RTY0R0WWxsbzhQTGtBOU15RzUwc3l1Ry02X3NEZlhxUUhiamFTWmNqeGxCb1FjallRT1dMWWRWWGhOMTVMU0UwZVBwMkVnZ0dUUk94M3lPNFFiQWNGSnZpNTk0eEtLdGlVcnZJd3I3eXNsTDBaX2c5Wml5Vm9Mek9QYThfcGpoMURqakdiZllocmtfeF9UQ1RSZUpwM1BGd2x2Y0NPazBGTTV5aDRyVVdhQQ
+  title          Archibald prize 2026: portrait of Jewish leader after Bondi terror attack wins people’s choice award - The Guardian
+  body           <a href="https://news.google.com/rss/articles/CBMi5gFBVV95cUxQRm8zengzS2M5X19vaWlNX2lLRllZemxkR25mNEppTG5VbS1PX2NuZDZsS0o4N0h3NG94b3RTY0R0WWxsbzhQTGtBOU15RzUwc3l1Ry02X3NEZlhxUUhiamFTWmNqeGxCb1FjallRT1dMWWRWWGhOMTVMU0UwZVBwMkVnZ0dUUk94M3lPNFFiQWNGSnZpNTk0eEtLdGlVcnZJd3I3eXNsTDBaX2c5Wml5Vm9Mek9QYThfcGpoMURqakdiZllocmtfeF9UQ1RSZUpwM1BGd2x2Y0NPazBGTTV5aDRyVVdhQQ?oc=5" target="_blank">Archibald prize 2026: portrait of Jewish leader after Bondi terror attack wins people’s choice award</a>&nbsp;&nbsp;<font color="#6f6f6f">The Guardian</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi5gFBVV95cUxQRm8zengzS2M5X19vaWlNX2lLRllZemxkR25mNEppTG5VbS1PX2NuZDZsS0o4N0h3NG94b3RTY0R0WWxsbzhQTGtBOU15RzUwc3l1Ry02X3NEZlhxUUhiamFTWmNqeGxCb1FjallRT1dMWWRWWGhOMTVMU0UwZVBwMkVnZ0dUUk94M3lPNF
+  link           https://news.google.com/rss/articles/CBMi5gFBVV95cUxQRm8zengzS2M5X19vaWlNX2lLRllZemxkR25mNEppTG5VbS1PX2NuZDZsS0o4N0h3NG94b3RTY0R0WWxsbzhQTGtBOU15RzUwc3l1Ry02X3NEZlhxUUhiamFTWmNqeGxCb1FjallRT1dMWWRWWGhOMTVMU0UwZVBwMkVnZ0dUUk94M3lPNFFiQWNGSnZpNTk0eEtLdGlVcnZJd3I3eXNsTDBaX2c5Wml5Vm9Mek9QYThfcGpoMURqakdiZllocmtfeF9UQ1RSZUpwM1BGd2x2Y0NPazBGTTV5aDRyVVdhQQ?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 06:24:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","terror"]
+  properties     {"guid":"CBMi5gFBVV95cUxQRm8zengzS2M5X19vaWlNX2lLRllZemxkR25mNEppTG5VbS1PX2NuZDZsS0o4N0h3NG94b3RTY0R0WWxsbzhQTGtBOU15RzUwc3l1Ry02X3NEZlhxUUhiamFTWmNqeGxCb1FjallRT1dMWWRWWGhOMTVMU0UwZVBwMkVnZ0dUUk94M3lPNFFiQWNGSnZpNTk0eEtLdGlVcnZJd3I3eXNsTDBaX2c5Wml5Vm9Mek9QYThfcGpoMURqakdiZllocmtfeF9UQ1RSZUpwM1BGd2x2Y0NPazBGTTV5aDRyVVdhQQ"}

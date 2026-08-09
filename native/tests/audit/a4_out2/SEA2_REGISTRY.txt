@@ -1,0 +1,19 @@
+=== SEA2_REGISTRY  entity=Singapore
+exit: 0
+sched: rc=0 records=0 73005ms
+--- stderr ---
+[sea2_reg[MY]] emitted 0
+[sea2_reg[TH]] http status=404
+[sea2_reg[PH]] http status=404
+[sea2_reg[VN]] http status=0
+[sea2_reg[ID]] http status=0
+[sea2_reg[ID]] http status=404
+[sea2_reg[PK]] http status=0
+[sea2_reg[BD]] http status=0
+[sea2_reg[LK]] emitted 0
+[sea2_reg[KH]] http status=403
+[sea2_reg[MM]] emitted 0
+[sea2_registry] emitted 0 across 11 portals
+[sched] SEA2_REGISTRY run rc=0 records=0 73005ms
+[detect] anomaly opened: SEA2_REGISTRY verdict=duration_outlier — duration 73005ms exceeds 10000ms threshold
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

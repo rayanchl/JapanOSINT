@@ -1,0 +1,33 @@
+=== npa-special-fraud
+exit: 0
+sched: rc=0 records=26 153ms
+--- stderr ---
+[npa-special-fraud] emitted 25 features + 1 index
+[sched] npa-special-fraud run rc=0 records=26 153ms
+--- persisted: 26 rows, 25 with lat/lon, 25 with geometry ---
+record_type: (null)=1, npa-special-fraud=25
+sub_source_id: (null)=26
+
+--- row 1 ---
+  uid            npa-special-fraud|FRAUD_2020-01_0
+  lat            35.6749
+  lon            139.7531
+  geometry       {"type":"Point","coordinates":[139.7531,35.6749]}
+  record_type    npa-special-fraud
+  properties     {"id":"FRAUD_2020-01_0","year_month":"2020-01","year":2020,"month":1,"recognised":2431,"damage_jpy":3058074459,"arrests":124,"arrested_persons":29,"source":"npa-special-fraud"}
+
+--- row 2 ---
+  uid            npa-special-fraud|FRAUD_2020-02_1
+  lat            35.6749
+  lon            139.7531
+  geometry       {"type":"Point","coordinates":[139.7531,35.6749]}
+  record_type    npa-special-fraud
+  properties     {"id":"FRAUD_2020-02_1","year_month":"2020-02","year":2020,"month":2,"recognised":2363,"damage_jpy":2889621574,"arrests":137,"arrested_persons":18,"source":"npa-special-fraud"}
+
+--- row 3 ---
+  uid            npa-special-fraud|FRAUD_2020-03_2
+  lat            35.6749
+  lon            139.7531
+  geometry       {"type":"Point","coordinates":[139.7531,35.6749]}
+  record_type    npa-special-fraud
+  properties     {"id":"FRAUD_2020-03_2","year_month":"2020-03","year":2020,"month":3,"recognised":2754,"damage_jpy":3846364500,"arrests":356,"arrested_persons":127,"source":"npa-special-fraud"}

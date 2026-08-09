@@ -1,0 +1,24 @@
+--- ofac-sdn [404] 10b
+Not found
+--- ofac-sdn-alt [200] 125744456b
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Sanctions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3" xsi:schemaLocation="https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview
+--- tronscan [401] 176b
+<html><head><title>401 Authorization Required</title></head><body><center><h1>401 Authorization Required</h1></center><hr><center>openresty</center></body></html>
+--- blockchair [430] 672b
+{"data":null,"context":{"code":430,"error":"Your IP address is temporary blacklisted due to exceeding usage of API resources. Please apply for an API key by contacting us at info@blockchair.com","market_price_usd":63046,
+--- stooq [404] 271b
+<meta charset=utf-8><title>Stooq</title><center style=font-family:arial;margin-top:50px><p><a href=/><img src=//static.stooq.com/stooq.svg height=68></a><p style=font-size:x-large>The page you requested does not exist<br
+--- stooq2 [404] 279b
+<meta charset=utf-8><title>Stooq</title><center style=font-family:arial;margin-top:50px><p><a href=/><img src=//static.stooq.pl/stooq.svg height=68></a><p style=font-size:x-large>Wybrana lokalizacja nie istnieje<br>lub z
+--- worldbank [200] 102b
+[{"message":[{"id":"120","key":"Invalid value","value":"The provided parameter value is not valid"}]}]
+--- worldbank2 [200] 11281b
+[{"page":1,"pages":6,"per_page":50,"total":265,"sourceid":"2","lastupdated":"2026-07-13"},[{"indicator":{"id":"NY.GDP.MKTP.CD","value":"GDP (current US$)"},"country":{"id":"ZH","value":"Africa Eastern and Southern"},"cou
+--- gitlab-user [200] 2b
+[]
+--- github-gists [200] 2b
+[]
+--- aleph [401] 75b
+{  "message": "You are not authorized to do this.",  "status": "error"}
+--- borme [404] 12243b
+<!DOCTYPE html><html lang="es">  <head>    <meta charset="utf-8" />    <meta http-equiv="X-UA-Compatible" content="IE=edge" />    <meta name="format-detection" content="telephone=no">    <meta name="robots" c

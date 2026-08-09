@@ -1,0 +1,10 @@
+jshis-a	https://www.j-shis.bosai.go.jp/map/api/pshm/Y2020/AVR/TTL_MTTL/meshinfo.geojson?position=139.7,35.7
+jshis-b	https://www.j-shis.bosai.go.jp/map/api/pshm/Y2020/AVR/TTL_MTTL/meshinfo.geojson?meshcode=53393599
+jshis-c	https://www.j-shis.bosai.go.jp/map/api/pshm/Y2020/PT01/T30_I50_PS/meshinfo.geojson?meshcode=53393599
+kyodo-a	https://english.kyodonews.net/rss/all.xml
+kyodo-b	https://english.kyodonews.net/rss/news
+kyodo-c	https://english.kyodonews.net/feed
+mlit-p11-10	https://nlftp.mlit.go.jp/ksj/gml/data/P11/P11-10/P11-10.geojson
+jma-sst2	https://www.data.jma.go.jp/kaiyou/data/db/kaikyo/daily/sst_HQ.json
+sakura-a	https://www.data.jma.go.jp/sakura/data/sakura003_00.html
+sakura-b	https://www.data.jma.go.jp/sakura/data/sakura_3monthmean.htm

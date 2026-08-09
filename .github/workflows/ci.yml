@@ -1,0 +1,61 @@
+# The first CI this repository has ever had.
+#
+# Until now the entire safety net for 438k lines of C was a --selftest flag and
+# a couple of scripts nobody could run, on a repo with a live GitHub remote.
+# This is deliberately small and deliberately honest: every step here is one
+# that passes today on a clean Ubuntu box. Nothing aspirational is wired in —
+# a red build that is red for an unrelated reason gets ignored, and an ignored
+# CI is the same as no CI.
+#
+# What it does NOT do, on purpose:
+#   * no network-touching collector runs (they hit real third-party APIs)
+#   * no llama-server (11 GB model); --selftest reports it "down" and passes
+#   * no contract-parity suite (its fixtures need a DB with real intel rows)
+name: ci
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      # Keep the selftest's SQLite work in the runner's temp dir instead of the
+      # checkout, so the schema-applied DB is never mistaken for tracked data.
+      JO_DB: ${{ runner.temp }}/ci.db
+      JO_SCHEMA: ${{ github.workspace }}/native/core/schema.sql
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libcurl4-openssl-dev libssl-dev libmecab-dev mecab zlib1g-dev \
+            mecab-ipadic-utf8
+        # mecab-ipadic-utf8 is the dictionary MeCab needs at runtime. core/fts.c
+        # degrades gracefully without it (g_init_failed, Latin passthrough), but
+        # then the Japanese FTS path is never exercised at all, which is the
+        # half most likely to break.
+
+      - name: Build
+        working-directory: native
+        run: make -j"$(nproc)"
+
+      - name: Selftest
+        working-directory: native
+        run: make selftest
+
+      - name: Unit tests
+        working-directory: native
+        run: make unit
+
+      - name: Lint collector sources
+        working-directory: native
+        run: make lint-sources

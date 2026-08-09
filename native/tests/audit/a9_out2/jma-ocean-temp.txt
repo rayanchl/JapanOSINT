@@ -1,0 +1,7 @@
+=== jma-ocean-temp
+exit: 0
+sched: rc=0 records=0 1034ms
+--- stderr ---
+[jma-ocean-temp] emitted 0
+[sched] jma-ocean-temp run rc=0 records=0 1034ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

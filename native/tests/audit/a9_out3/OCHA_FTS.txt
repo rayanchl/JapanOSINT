@@ -1,0 +1,43 @@
+=== OCHA_FTS  entity=Afghanistan
+exit: 0
+sched: rc=0 records=25 18373ms
+--- stderr ---
+[OCHA_FTS] emitted 25
+[sched] OCHA_FTS run rc=0 records=25 18373ms
+[detect] anomaly opened: OCHA_FTS verdict=duration_outlier — duration 18373ms exceeds 10000ms threshold
+--- persisted: 25 rows, 0 with lat/lon, 0 with geometry ---
+record_type: aid-funding-plan=25
+sub_source_id: (null)=25
+
+--- row 1 ---
+  uid            OCHA_FTS|OCHA_FTS|92
+  title          Afghanistan 2002 (ITAP for the Afghan People)
+  body           {"title":"Afghanistan 2002 (ITAP for the Afghan People)","summary":"Afghanistan","link":"https://fts.unocha.org/plans/92/summary","source":"OCHA_FTS","country":"Afghanistan","year":"2002"}
+  summary        Afghanistan
+  link           https://fts.unocha.org/plans/92/summary
+  language       en
+  record_type    aid-funding-plan
+  tags           ["osint-search","aid","humanitarian"]
+  properties     {"service":"OCHA_FTS","source":"OCHA_FTS","query":"Afghanistan","href":"https://fts.unocha.org/plans/92/summary","success":true}
+
+--- row 2 ---
+  uid            OCHA_FTS|OCHA_FTS|121
+  title          Afghanistan TAPA 2003
+  body           {"title":"Afghanistan TAPA 2003","summary":"Afghanistan","link":"https://fts.unocha.org/plans/121/summary","source":"OCHA_FTS","country":"Afghanistan","year":"2003"}
+  summary        Afghanistan
+  link           https://fts.unocha.org/plans/121/summary
+  language       en
+  record_type    aid-funding-plan
+  tags           ["osint-search","aid","humanitarian"]
+  properties     {"service":"OCHA_FTS","source":"OCHA_FTS","query":"Afghanistan","href":"https://fts.unocha.org/plans/121/summary","success":true}
+
+--- row 3 ---
+  uid            OCHA_FTS|OCHA_FTS|283
+  title          Afghanistan Joint Emergency Appeal 2008: High Food Price and Drought Crisis (July 2008 - June 2009)
+  body           {"title":"Afghanistan Joint Emergency Appeal 2008: High Food Price and Drought Crisis (July 2008 - June 2009)","summary":"Afghanistan","link":"https://fts.unocha.org/plans/283/summary","source":"OCHA_FTS","country":"Afghanistan","year":"2008"}
+  summary        Afghanistan
+  link           https://fts.unocha.org/plans/283/summary
+  language       en
+  record_type    aid-funding-plan
+  tags           ["osint-search","aid","humanitarian"]
+  properties     {"service":"OCHA_FTS","source":"OCHA_FTS","query":"Afghanistan","href":"https://fts.unocha.org/plans/283/summary","success":true}

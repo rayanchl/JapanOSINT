@@ -1,0 +1,20 @@
+=== himawari-realtime
+exit: 0
+sched: rc=0 records=1 1380ms
+--- stderr ---
+[himawari-realtime] emitted 1
+[sched] himawari-realtime run rc=0 records=1 1380ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: himawari-realtime=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            himawari-realtime|2026-07-31 18:00:00
+  title          Himawari-9 full-disk frame 2026-07-31 18:00:00 UTC
+  body           Himawari-9 (AHI sensor) geostationary full-disk frame published by NICT real-time web. Latest frame timestamp 2026-07-31 18:00:00 UTC. Covers Japan and the western Pacific at 10-minute cadence.
+  summary        Latest NICT Himawari-9 AHI full-disk true-color frame covering Japan, acquired 2026-07-31 18:00:00 UTC.
+  link           https://himawari.asia/
+  published_at   2026-07-31T18:00:00Z
+  record_type    himawari-realtime
+  tags           ["satellite","himawari","nict","geostationary","real-time","raster"]
+  properties     {"bbox":[85,-60,205,60],"acquired":"2026-07-31T18:00:00Z","sensor":"AHI","platform":"Himawari-9","scene_id":"2026-07-31 18:00:00","preview_url":"https://himawari.asia/img/D531106/8d/2026/07/31/180000_3_3.png","tile_url":"https://himawari.asia/img/D531106/8d/2026/07/31/180000_{x}_{y}.png","cadence_minutes":10}

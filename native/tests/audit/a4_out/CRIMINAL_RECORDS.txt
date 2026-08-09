@@ -1,0 +1,39 @@
+=== CRIMINAL_RECORDS  entity=Tokyo
+exit: 1
+sched: rc=15 records=15 748ms
+--- stderr ---
+[sched] CRIMINAL_RECORDS run rc=15 records=15 748ms
+[detect] anomaly opened: CRIMINAL_RECORDS verdict=status_bad — run errored (status=error)
+--- persisted: 15 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=15
+sub_source_id: (null)=15
+
+--- row 1 ---
+  uid            CRIMINAL_RECORDS|legal:CRIMINAL_RECORDS:https://www.courtlistener.com/opinion/2781208/tokyo-company/
+  title          Tokyo Company — Armed Services Board of Contract Appeals
+  body           {"source":"courtlistener.com","case_name":"Tokyo Company","court":"Armed Services Board of Contract Appeals","date_filed":"2015-02-12","url":"https://www.courtlistener.com/opinion/2781208/tokyo-company/"}
+  summary        Tokyo Company
+  link           https://www.courtlistener.com/opinion/2781208/tokyo-company/
+  record_type    osint_service_result
+  tags           ["osint-search","CRIMINAL_RECORDS"]
+  properties     {"service":"CRIMINAL_RECORDS","entity":"Tokyo"}
+
+--- row 2 ---
+  uid            CRIMINAL_RECORDS|legal:CRIMINAL_RECORDS:https://www.courtlistener.com/opinion/3209782/tokyo-company/
+  title          Tokyo Company — Armed Services Board of Contract Appeals
+  body           {"source":"courtlistener.com","case_name":"Tokyo Company","court":"Armed Services Board of Contract Appeals","date_filed":"2016-05-24","url":"https://www.courtlistener.com/opinion/3209782/tokyo-company/"}
+  summary        Tokyo Company
+  link           https://www.courtlistener.com/opinion/3209782/tokyo-company/
+  record_type    osint_service_result
+  tags           ["osint-search","CRIMINAL_RECORDS"]
+  properties     {"service":"CRIMINAL_RECORDS","entity":"Tokyo"}
+
+--- row 3 ---
+  uid            CRIMINAL_RECORDS|legal:CRIMINAL_RECORDS:https://www.courtlistener.com/opinion/4866974/stone-v-us-embassy-tokyo/
+  title          Stone v. U.S. Embassy Tokyo — District Court, District of Columbia
+  body           {"source":"courtlistener.com","case_name":"Stone v. U.S. Embassy Tokyo","court":"District Court, District of Columbia","date_filed":"2021-03-23","url":"https://www.courtlistener.com/opinion/4866974/stone-v-us-embassy-tokyo/"}
+  summary        Stone v. U.S. Embassy Tokyo
+  link           https://www.courtlistener.com/opinion/4866974/stone-v-us-embassy-tokyo/
+  record_type    osint_service_result
+  tags           ["osint-search","CRIMINAL_RECORDS"]
+  properties     {"service":"CRIMINAL_RECORDS","entity":"Tokyo"}

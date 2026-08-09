@@ -37,15 +37,7 @@ static const char *nested_name(cJSON *o, const char *k) {
 
 static cJSON *osm_map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
   cJSON *id = cJSON_GetObjectItem(el, "id");
@@ -102,15 +94,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         char latb[32], lngb[32];
         const char *lats = jstr(s, "lat", latb, sizeof latb);
         const char *lngs = jstr(s, "lng", lngb, sizeof lngb);
-        cJSON *f = cJSON_CreateObject();
-        cJSON_AddStringToObject(f, "type", "Feature");
-        cJSON *g = cJSON_CreateObject();
-        cJSON_AddStringToObject(g, "type", "Point");
-        cJSON *co = cJSON_CreateArray();
-        cJSON_AddItemToArray(co, cJSON_CreateNumber(lngs[0] ? strtod(lngs, NULL) : 0));
-        cJSON_AddItemToArray(co, cJSON_CreateNumber(lats[0] ? strtod(lats, NULL) : 0));
-        cJSON_AddItemToObject(g, "coordinates", co);
-        cJSON_AddItemToObject(f, "geometry", g);
+        cJSON *f = gj_point_feature(lngs[0] ? strtod(lngs, NULL) : 0, lats[0] ? strtod(lats, NULL) : 0);
 
         cJSON *p = cJSON_CreateObject();
         cJSON *idv = cJSON_GetObjectItem(s, "id");

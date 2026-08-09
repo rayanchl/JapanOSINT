@@ -1,0 +1,45 @@
+=== gnews-mon-aviation-incident
+exit: 0
+sched: rc=0 records=100 636ms
+--- stderr ---
+[rss] gnews-mon-aviation-incident emitted 100
+[sched] gnews-mon-aviation-incident run rc=0 records=100 636ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-aviation-incident|CBMi4wFBVV95cUxNY1JfUmZ5X3l2UElYeXJjY0dWbVBiVnUweTBQX0sxb3ltTFdmUENOOGt0QVhVY0xONWtjQmdLSlBHWnBfcXJoUkFvSElMVE56cFlSZlA0R1dyUXRsT0RaalFneUxuZG9VZmJQcVlNS054QkNLek5HbTkzNUg0M0tuVkVQQVdhOG5kUzEwV2o0TE9CVlpxT1g0ZjRJTW1mTnp2RzdwdzhfWFBxQ29IUGtQTVMyWFlwRGJuVC16dTAwcFVPQ2dZMEZYMV83cHNSWG1QcVFXbE9vWmxCeVZwTEp3WG02bw
+  title          NTSB: Pilot’s management of overweight plane in icy weather led to Bering Air crash that killed 10 - Anchorage Daily News
+  body           <a href="https://news.google.com/rss/articles/CBMi4wFBVV95cUxNY1JfUmZ5X3l2UElYeXJjY0dWbVBiVnUweTBQX0sxb3ltTFdmUENOOGt0QVhVY0xONWtjQmdLSlBHWnBfcXJoUkFvSElMVE56cFlSZlA0R1dyUXRsT0RaalFneUxuZG9VZmJQcVlNS054QkNLek5HbTkzNUg0M0tuVkVQQVdhOG5kUzEwV2o0TE9CVlpxT1g0ZjRJTW1mTnp2RzdwdzhfWFBxQ29IUGtQTVMyWFlwRGJuVC16dTAwcFVPQ2dZMEZYMV83cHNSWG1QcVFXbE9vWmxCeVZwTEp3WG02bw?oc=5" target="_blank">NTSB: Pilot’s management of overweight plane in icy weather led to Bering Air crash that killed 10</a>&nbsp;&nbsp;<font color="#6f6f6f">Anchorage Daily News</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi4wFBVV95cUxNY1JfUmZ5X3l2UElYeXJjY0dWbVBiVnUweTBQX0sxb3ltTFdmUENOOGt0QVhVY0xONWtjQmdLSlBHWnBfcXJoUkFvSElMVE56cFlSZlA0R1dyUXRsT0RaalFneUxuZG9VZmJQcVlNS054QkNLek5HbTkzNUg0M0tuVkVQQVdhOG5kUzEwV2
+  link           https://news.google.com/rss/articles/CBMi4wFBVV95cUxNY1JfUmZ5X3l2UElYeXJjY0dWbVBiVnUweTBQX0sxb3ltTFdmUENOOGt0QVhVY0xONWtjQmdLSlBHWnBfcXJoUkFvSElMVE56cFlSZlA0R1dyUXRsT0RaalFneUxuZG9VZmJQcVlNS054QkNLek5HbTkzNUg0M0tuVkVQQVdhOG5kUzEwV2o0TE9CVlpxT1g0ZjRJTW1mTnp2RzdwdzhfWFBxQ29IUGtQTVMyWFlwRGJuVC16dTAwcFVPQ2dZMEZYMV83cHNSWG1QcVFXbE9vWmxCeVZwTEp3WG02bw?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 16:31:52 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","aviation"]
+  properties     {"guid":"CBMi4wFBVV95cUxNY1JfUmZ5X3l2UElYeXJjY0dWbVBiVnUweTBQX0sxb3ltTFdmUENOOGt0QVhVY0xONWtjQmdLSlBHWnBfcXJoUkFvSElMVE56cFlSZlA0R1dyUXRsT0RaalFneUxuZG9VZmJQcVlNS054QkNLek5HbTkzNUg0M0tuVkVQQVdhOG5kUzEwV2o0TE9CVlpxT1g0ZjRJTW1mTnp2RzdwdzhfWFBxQ29IUGtQTVMyWFlwRGJuVC16dTAwcFVPQ2dZMEZYMV83cHNSWG1QcVFXbE9vWmxCeVZwTEp3WG02bw"}
+
+--- row 2 ---
+  uid            gnews-mon-aviation-incident|CBMib0FVX3lxTE5BUlJGQ1dONmtUckN0M0RSMExfYWFIendENkcxNV9kSDlPRnNOenBicTdBRzJtVDh6NEtyTUotek1MMU8tM2lyN1Z1MW8wS2ZHQlhhMkdnMGZtVFRjZUZsQjAxVHcwTTlWekdac3JjMA
+  title          Bering Air Crash Attributed to Excess Aircraft Weight and Improper Airspeed Management in Icing Conditions - NTSB (.gov)
+  body           <a href="https://news.google.com/rss/articles/CBMib0FVX3lxTE5BUlJGQ1dONmtUckN0M0RSMExfYWFIendENkcxNV9kSDlPRnNOenBicTdBRzJtVDh6NEtyTUotek1MMU8tM2lyN1Z1MW8wS2ZHQlhhMkdnMGZtVFRjZUZsQjAxVHcwTTlWekdac3JjMA?oc=5" target="_blank">Bering Air Crash Attributed to Excess Aircraft Weight and Improper Airspeed Management in Icing Conditions</a>&nbsp;&nbsp;<font color="#6f6f6f">NTSB (.gov)</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMib0FVX3lxTE5BUlJGQ1dONmtUckN0M0RSMExfYWFIendENkcxNV9kSDlPRnNOenBicTdBRzJtVDh6NEtyTUotek1MMU8tM2lyN1Z1MW8wS2ZHQlhhMkdnMGZtVFRjZUZsQjAxVHcwTTlWekdac3JjMA?oc=5" target="_blank">Bering Air Crash 
+  link           https://news.google.com/rss/articles/CBMib0FVX3lxTE5BUlJGQ1dONmtUckN0M0RSMExfYWFIendENkcxNV9kSDlPRnNOenBicTdBRzJtVDh6NEtyTUotek1MMU8tM2lyN1Z1MW8wS2ZHQlhhMkdnMGZtVFRjZUZsQjAxVHcwTTlWekdac3JjMA?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 18:25:03 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","aviation"]
+  properties     {"guid":"CBMib0FVX3lxTE5BUlJGQ1dONmtUckN0M0RSMExfYWFIendENkcxNV9kSDlPRnNOenBicTdBRzJtVDh6NEtyTUotek1MMU8tM2lyN1Z1MW8wS2ZHQlhhMkdnMGZtVFRjZUZsQjAxVHcwTTlWekdac3JjMA"}
+
+--- row 3 ---
+  uid            gnews-mon-aviation-incident|CBMi0AFBVV95cUxOZ3hab3gzdE1rMGxFMmpnMEEzOGxjWHVqUGphNHlkS3FGVHhWRTFDYjFwdGVwVmY0NWhIRkZXTmFLdnR1alZHbjVYOUpzV3lsZjVQaGtvNUxHZzVEVUhJNWd4Y3NGb204cG5jNWhsRlRsbV9LdHBHN0M1TDlhMkUtYVk2SmZfa0hnMEJqSlVBb19lSWl2aU0tR3F4Mm9kX2NQYjQwcVRsRUViaUdmcDBudDM4MWxtRjU4b2Y5Q3pUNENhNFBqZlZFWktOb19JYWhS
+  title          GKN Aerospace owner Melrose warns of cost hit from plant incident, pauses buyback - Reuters
+  body           <a href="https://news.google.com/rss/articles/CBMi0AFBVV95cUxOZ3hab3gzdE1rMGxFMmpnMEEzOGxjWHVqUGphNHlkS3FGVHhWRTFDYjFwdGVwVmY0NWhIRkZXTmFLdnR1alZHbjVYOUpzV3lsZjVQaGtvNUxHZzVEVUhJNWd4Y3NGb204cG5jNWhsRlRsbV9LdHBHN0M1TDlhMkUtYVk2SmZfa0hnMEJqSlVBb19lSWl2aU0tR3F4Mm9kX2NQYjQwcVRsRUViaUdmcDBudDM4MWxtRjU4b2Y5Q3pUNENhNFBqZlZFWktOb19JYWhS?oc=5" target="_blank">GKN Aerospace owner Melrose warns of cost hit from plant incident, pauses buyback</a>&nbsp;&nbsp;<font color="#6f6f6f">Reuters</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi0AFBVV95cUxOZ3hab3gzdE1rMGxFMmpnMEEzOGxjWHVqUGphNHlkS3FGVHhWRTFDYjFwdGVwVmY0NWhIRkZXTmFLdnR1alZHbjVYOUpzV3lsZjVQaGtvNUxHZzVEVUhJNWd4Y3NGb204cG5jNWhsRlRsbV9LdHBHN0M1TDlhMkUtYVk2SmZfa0hnMEJqSl
+  link           https://news.google.com/rss/articles/CBMi0AFBVV95cUxOZ3hab3gzdE1rMGxFMmpnMEEzOGxjWHVqUGphNHlkS3FGVHhWRTFDYjFwdGVwVmY0NWhIRkZXTmFLdnR1alZHbjVYOUpzV3lsZjVQaGtvNUxHZzVEVUhJNWd4Y3NGb204cG5jNWhsRlRsbV9LdHBHN0M1TDlhMkUtYVk2SmZfa0hnMEJqSlVBb19lSWl2aU0tR3F4Mm9kX2NQYjQwcVRsRUViaUdmcDBudDM4MWxtRjU4b2Y5Q3pUNENhNFBqZlZFWktOb19JYWhS?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 07:01:45 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","aviation"]
+  properties     {"guid":"CBMi0AFBVV95cUxOZ3hab3gzdE1rMGxFMmpnMEEzOGxjWHVqUGphNHlkS3FGVHhWRTFDYjFwdGVwVmY0NWhIRkZXTmFLdnR1alZHbjVYOUpzV3lsZjVQaGtvNUxHZzVEVUhJNWd4Y3NGb204cG5jNWhsRlRsbV9LdHBHN0M1TDlhMkUtYVk2SmZfa0hnMEJqSlVBb19lSWl2aU0tR3F4Mm9kX2NQYjQwcVRsRUViaUdmcDBudDM4MWxtRjU4b2Y5Q3pUNENhNFBqZlZFWktOb19JYWhS"}

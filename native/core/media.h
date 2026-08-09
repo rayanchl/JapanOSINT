@@ -144,7 +144,11 @@
  *
  * ══ THE FTS COLLISION WITH translate.c — READ THIS ════════════════════════
  *
- * intel_items_fts is fts5(uid UNINDEXED, title, body, summary, keywords).
+ * intel_items_fts is fts5(uid UNINDEXED, title, body, summary, keywords,
+ * link, author, tags, props) — core/fts_schema.h owns that column set and the
+ * rebuild that widened it. NONE of that changes what is written below: the
+ * new columns are all ingest-derived, `keywords` is still the only column not
+ * written by intel.c's fts_write(), and it is still shared with translate.c.
  * FTS5 has no ALTER TABLE ADD COLUMN, and roadmap 29 (core/translate.c)
  * already established the only workable answer: additional searchable text is
  * appended into the existing, otherwise-unused `keywords` column, because it

@@ -1,0 +1,45 @@
+=== gnews-mon-drug-cartel
+exit: 0
+sched: rc=0 records=100 1009ms
+--- stderr ---
+[rss] gnews-mon-drug-cartel emitted 100
+[sched] gnews-mon-drug-cartel run rc=0 records=100 1009ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-drug-cartel|CBMiWkFVX3lxTE5mS1EyVjdRREoteVdYSlprN3hkclFJMHR6TUdtcVJGUXI1VjZqTEtxV2hEb1lpY2pRTE1RTFdnd0RXcm9SRTZhSkFZb2tRUzhkSVUySnhvbDYzdw
+  title          How Mexican drug cartels have outsourced meth labs to Nigeria - BBC
+  body           <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE5mS1EyVjdRREoteVdYSlprN3hkclFJMHR6TUdtcVJGUXI1VjZqTEtxV2hEb1lpY2pRTE1RTFdnd0RXcm9SRTZhSkFZb2tRUzhkSVUySnhvbDYzdw?oc=5" target="_blank">How Mexican drug cartels have outsourced meth labs to Nigeria</a>&nbsp;&nbsp;<font color="#6f6f6f">BBC</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE5mS1EyVjdRREoteVdYSlprN3hkclFJMHR6TUdtcVJGUXI1VjZqTEtxV2hEb1lpY2pRTE1RTFdnd0RXcm9SRTZhSkFZb2tRUzhkSVUySnhvbDYzdw?oc=5" target="_blank">How Mexican drug cartels have outsourced meth
+  link           https://news.google.com/rss/articles/CBMiWkFVX3lxTE5mS1EyVjdRREoteVdYSlprN3hkclFJMHR6TUdtcVJGUXI1VjZqTEtxV2hEb1lpY2pRTE1RTFdnd0RXcm9SRTZhSkFZb2tRUzhkSVUySnhvbDYzdw?oc=5
+  language       en
+  published_at   Tue, 28 Jul 2026 23:25:53 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","drug"]
+  properties     {"guid":"CBMiWkFVX3lxTE5mS1EyVjdRREoteVdYSlprN3hkclFJMHR6TUdtcVJGUXI1VjZqTEtxV2hEb1lpY2pRTE1RTFdnd0RXcm9SRTZhSkFZb2tRUzhkSVUySnhvbDYzdw"}
+
+--- row 2 ---
+  uid            gnews-mon-drug-cartel|CBMitgFBVV95cUxOZm9TbkVjT2hqWkp1UHRhNkRpdHgxdUFqb2MtUW5DaGN0a3hnY2xnVER4TlA5eXdtTTZlTC1uQXE0ZFItWUQ2V3dWemR5eUdXYWtkLVNuZnUwZU5fWXZMckV2X3c4VDRlT1llSnJkaG1zeURfS01VbG1RRXZYRUIyRWxCRTExWUQ4TXBibG80RjV2cEg5ZjlJY202UnNIeEp2alhFTXNDREQ3c0JQZG1ZZnNfcENtdw
+  title          Cartel Leader’s Ex-Wife Used Drug Money for Child’s Elite School - Bloomberg.com
+  body           <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxOZm9TbkVjT2hqWkp1UHRhNkRpdHgxdUFqb2MtUW5DaGN0a3hnY2xnVER4TlA5eXdtTTZlTC1uQXE0ZFItWUQ2V3dWemR5eUdXYWtkLVNuZnUwZU5fWXZMckV2X3c4VDRlT1llSnJkaG1zeURfS01VbG1RRXZYRUIyRWxCRTExWUQ4TXBibG80RjV2cEg5ZjlJY202UnNIeEp2alhFTXNDREQ3c0JQZG1ZZnNfcENtdw?oc=5" target="_blank">Cartel Leader’s Ex-Wife Used Drug Money for Child’s Elite School</a>&nbsp;&nbsp;<font color="#6f6f6f">Bloomberg.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxOZm9TbkVjT2hqWkp1UHRhNkRpdHgxdUFqb2MtUW5DaGN0a3hnY2xnVER4TlA5eXdtTTZlTC1uQXE0ZFItWUQ2V3dWemR5eUdXYWtkLVNuZnUwZU5fWXZMckV2X3c4VDRlT1llSnJkaG1zeURfS01VbG1RRXZYRUIyRWxCRTExWUQ4TXBibG
+  link           https://news.google.com/rss/articles/CBMitgFBVV95cUxOZm9TbkVjT2hqWkp1UHRhNkRpdHgxdUFqb2MtUW5DaGN0a3hnY2xnVER4TlA5eXdtTTZlTC1uQXE0ZFItWUQ2V3dWemR5eUdXYWtkLVNuZnUwZU5fWXZMckV2X3c4VDRlT1llSnJkaG1zeURfS01VbG1RRXZYRUIyRWxCRTExWUQ4TXBibG80RjV2cEg5ZjlJY202UnNIeEp2alhFTXNDREQ3c0JQZG1ZZnNfcENtdw?oc=5
+  language       en
+  published_at   Tue, 28 Jul 2026 19:55:50 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","drug"]
+  properties     {"guid":"CBMitgFBVV95cUxOZm9TbkVjT2hqWkp1UHRhNkRpdHgxdUFqb2MtUW5DaGN0a3hnY2xnVER4TlA5eXdtTTZlTC1uQXE0ZFItWUQ2V3dWemR5eUdXYWtkLVNuZnUwZU5fWXZMckV2X3c4VDRlT1llSnJkaG1zeURfS01VbG1RRXZYRUIyRWxCRTExWUQ4TXBibG80RjV2cEg5ZjlJY202UnNIeEp2alhFTXNDREQ3c0JQZG1ZZnNfcENtdw"}
+
+--- row 3 ---
+  uid            gnews-mon-drug-cartel|CBMiuwFBVV95cUxOT0ppT2F2MzZ4Q2Y3cDlaMUJfcU91eXVjQnJSVk1NR1p3N1k4cTJSUDZfcHFIMWFiY1JwdmJvdnhzQXAxemYwR2Q1U1ZLdlAtQ2s2OEczZ3pnYTNQU3hEM3QtUWY3T2Y2b3ZiQ3FqV0tjS0NBckJna0lsQ1FmVVJsNDVQZG1PRzFNaFUtdmFuZVAyNm16NnJEbk9kbHBST21iZGN0WDlNZkRfbGVHUXpFeXE3QU4ydkhTNDVr0gHPAUFVX3lxTE5ud011TUUtdHBZM0NFQnc2VkhSWjJIMlRybXJvMHdnTEJUU25LX1RsUHk5dlBVRzAzVUdCUVNLaW1wWGtIa1ZEVGplaWp3Uzc3d1dfLTJNOEZXOTNraWVCZjNMV0lyNFoxbzFJTmZWVlNHMFpSMVI1dDFWMldrdE53RkhNclRuTmhIWWRkZUFUMUk0RUhMUEgyN2tOajU4V2YzUmRRMlJRdWdRR
+  title          Suspects tied to Mexican cartel after major bust yields 220+ pounds of drugs in Union County - WBTV
+  body           <a href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxOT0ppT2F2MzZ4Q2Y3cDlaMUJfcU91eXVjQnJSVk1NR1p3N1k4cTJSUDZfcHFIMWFiY1JwdmJvdnhzQXAxemYwR2Q1U1ZLdlAtQ2s2OEczZ3pnYTNQU3hEM3QtUWY3T2Y2b3ZiQ3FqV0tjS0NBckJna0lsQ1FmVVJsNDVQZG1PRzFNaFUtdmFuZVAyNm16NnJEbk9kbHBST21iZGN0WDlNZkRfbGVHUXpFeXE3QU4ydkhTNDVr0gHPAUFVX3lxTE5ud011TUUtdHBZM0NFQnc2VkhSWjJIMlRybXJvMHdnTEJUU25LX1RsUHk5dlBVRzAzVUdCUVNLaW1wWGtIa1ZEVGplaWp3Uzc3d1dfLTJNOEZXOTNraWVCZjNMV0lyNFoxbzFJTmZWVlNHMFpSMVI1dDFWMldrdE53RkhNclRuTmhIWWRkZUFUMUk0RUhMUEgyN2tOajU4V2YzUmRRMlJRdWdRR2czWUdFbklrSVNra1BsWU9IMzBfV2lVRF9yQ2tteENyZVNLVQ?oc=5" target="_blank">Suspects tied to Mexican cartel after major bust yields 220+ pounds of drugs in Union County</a>&nbsp;&nbsp;<font color="#6f6f6f">WBTV</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxOT0ppT2F2MzZ4Q2Y3cDlaMUJfcU91eXVjQnJSVk1NR1p3N1k4cTJSUDZfcHFIMWFiY1JwdmJvdnhzQXAxemYwR2Q1U1ZLdlAtQ2s2OEczZ3pnYTNQU3hEM3QtUWY3T2Y2b3ZiQ3FqV0tjS0NBckJna0lsQ1FmVVJsNDVQZG1PRzFNaFUtdm
+  link           https://news.google.com/rss/articles/CBMiuwFBVV95cUxOT0ppT2F2MzZ4Q2Y3cDlaMUJfcU91eXVjQnJSVk1NR1p3N1k4cTJSUDZfcHFIMWFiY1JwdmJvdnhzQXAxemYwR2Q1U1ZLdlAtQ2s2OEczZ3pnYTNQU3hEM3QtUWY3T2Y2b3ZiQ3FqV0tjS0NBckJna0lsQ1FmVVJsNDVQZG1PRzFNaFUtdmFuZVAyNm16NnJEbk9kbHBST21iZGN0WDlNZkRfbGVHUXpFeXE3QU4ydkhTNDVr0gHPAUFVX3lxTE5ud011TUUtdHBZM0NFQnc2VkhSWjJIMlRybXJvMHdnTEJUU25LX1RsUHk5dlBVRzAzVUdCUVNLaW1wWGtIa1ZEVGplaWp3Uzc3d1dfLTJNOEZXOTNraWVCZjNMV0lyNFoxbzFJTmZWVlNHMFpSMVI1dDFWMldrdE53RkhNclRuTmhIWWRkZUFUMUk0RUhMUEgyN2tOajU4V2YzUmRRMlJRdWdRR2czWUdFbklrSVNra1BsWU9IMzBfV2lVRF9yQ2tteENyZVNLVQ?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 12:37:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","drug"]
+  properties     {"guid":"CBMiuwFBVV95cUxOT0ppT2F2MzZ4Q2Y3cDlaMUJfcU91eXVjQnJSVk1NR1p3N1k4cTJSUDZfcHFIMWFiY1JwdmJvdnhzQXAxemYwR2Q1U1ZLdlAtQ2s2OEczZ3pnYTNQU3hEM3QtUWY3T2Y2b3ZiQ3FqV0tjS0NBckJna0lsQ1FmVVJsNDVQZG1PRzFNaFUtdmFuZVAyNm16NnJEbk9kbHBST21iZGN0WDlNZkRfbGVHUXpFeXE3QU4ydkhTNDVr0gHPAUFVX3lxTE5ud011TUUtdHBZM0NFQnc2VkhSWjJIMlRybXJvMHdnTEJUU25LX1RsUHk5dlBVRzAzVUdCUVNLaW1wWGtIa1ZEVGplaWp3Uzc3d1dfLTJNOEZXOTNraWVCZjNMV0lyNFoxbzFJTmZWVlNHMFpSMVI1dDFWMldrdE53RkhNclRuTmhIWWRkZUFUMUk0RUhMUEgyN2tOajU4V2YzUmRRMlJRdWdRR2czWUdFbklrSV

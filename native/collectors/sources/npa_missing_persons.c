@@ -194,18 +194,32 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     int y = years[k];
     cJSON *f = cJSON_CreateObject();
     cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(NPA_LON));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(NPA_LAT));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    /* AUDIT NOTE (slice a3): these rows are NATIONWIDE ANNUAL TOTALS. They used
+     * to be pinned at the NPA headquarters in Kasumigaseki, which put five
+     * "missing persons" markers on one office building. A national aggregate
+     * has no location, so no geometry is emitted — the key is OMITTED rather
+     * than set to JSON null, because lib/geojson.c:235 serialises whatever it
+     * finds under "geometry" and an explicit null persists as the literal
+     * string "null". */
     cJSON *p = cJSON_CreateObject();            /* EXACT JS key order */
     char idb[32]; snprintf(idb, sizeof idb, "MISSING_%d", y);
     cJSON_AddStringToObject(p, "id", idb);
+    char tb[96];
+    snprintf(tb, sizeof tb,
+             "\xE8\xA1\x8C\xE6\x96\xB9\xE4\xB8\x8D\xE6\x98\x8E\xE8\x80\x85 %d — %ld \x28national total\x29",
+             y, byYear[k][K_TOTAL]);
+    cJSON_AddStringToObject(p, "title", tb);
+    cJSON_AddStringToObject(p, "record_type", "missing-persons-annual");
+    cJSON_AddStringToObject(p, "link", INDEX_URL);
+    cJSON_AddStringToObject(p, "scope", "national");
     char ym[16]; snprintf(ym, sizeof ym, "%d-12", y);
     cJSON_AddStringToObject(p, "year_month", ym);
+    /* Without a published_at every one of these rows landed on the timeline at
+     * ingest time, so five different years all stacked on "today". The NPA
+     * reporting period is the calendar year, so the row is dated at its close;
+     * `year`/`year_month` remain the authoritative period fields. */
+    char pub[24]; snprintf(pub, sizeof pub, "%d-12-31T00:00:00Z", y);
+    cJSON_AddStringToObject(p, "published_at", pub);
     cJSON_AddNumberToObject(p, "year", y);
     cJSON_AddItemToObject(p, "total",
       hasYear[k][K_TOTAL] ? cJSON_CreateNumber((double)byYear[k][K_TOTAL]) : cJSON_CreateNull());

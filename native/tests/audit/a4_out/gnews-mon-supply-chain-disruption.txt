@@ -1,0 +1,45 @@
+=== gnews-mon-supply-chain-disruption
+exit: 0
+sched: rc=0 records=100 681ms
+--- stderr ---
+[rss] gnews-mon-supply-chain-disruption emitted 100
+[sched] gnews-mon-supply-chain-disruption run rc=0 records=100 681ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-supply-chain-disruption|CBMihwJBVV95cUxNSkI0bGd6MXhHMXZaQ1JNTEtLN1dUbVRCSTU0X2ZORU1jWUVwQ1FGMG00bTJjZTBqTmJUUnVFcV8zMDNoQXIyc04wUWU2eWFuQ3dfb0t5TUxzTmM1UnFXYzdxa05BbDY5MGoyU2J6MUdxUDhjS2s2RXFpWl9xRDFqSi1tSE1ZcjFWUjY4WmNxYUE3RHhVN1BGSXFJY0ZOWUx4aDZDVTcwT2IxUGVKRWpKSnc1LVhLZGlTOGwzT1dLdmRTZGlaNVM1NWVuNXdSX3I5eEc3Y0dCUlFlR21xV1RyWjN6S1ctUmxfX0VMYm5NSlFvTm54Yi1IeFZFZ2RuX0xXcEpWZmlocw
+  title          ISM® and Amazon Business research finds most organizations unprepared for supply chain disruption despite strategic shift - PR Newswire
+  body           <a href="https://news.google.com/rss/articles/CBMihwJBVV95cUxNSkI0bGd6MXhHMXZaQ1JNTEtLN1dUbVRCSTU0X2ZORU1jWUVwQ1FGMG00bTJjZTBqTmJUUnVFcV8zMDNoQXIyc04wUWU2eWFuQ3dfb0t5TUxzTmM1UnFXYzdxa05BbDY5MGoyU2J6MUdxUDhjS2s2RXFpWl9xRDFqSi1tSE1ZcjFWUjY4WmNxYUE3RHhVN1BGSXFJY0ZOWUx4aDZDVTcwT2IxUGVKRWpKSnc1LVhLZGlTOGwzT1dLdmRTZGlaNVM1NWVuNXdSX3I5eEc3Y0dCUlFlR21xV1RyWjN6S1ctUmxfX0VMYm5NSlFvTm54Yi1IeFZFZ2RuX0xXcEpWZmlocw?oc=5" target="_blank">ISM® and Amazon Business research finds most organizations unprepared for supply chain disruption despite strategic shift</a>&nbsp;&nbsp;<font color="#6f6f6f">PR Newswire</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMihwJBVV95cUxNSkI0bGd6MXhHMXZaQ1JNTEtLN1dUbVRCSTU0X2ZORU1jWUVwQ1FGMG00bTJjZTBqTmJUUnVFcV8zMDNoQXIyc04wUWU2eWFuQ3dfb0t5TUxzTmM1UnFXYzdxa05BbDY5MGoyU2J6MUdxUDhjS2s2RXFpWl9xRDFqSi1tSE1ZcjFWUjY4Wm
+  link           https://news.google.com/rss/articles/CBMihwJBVV95cUxNSkI0bGd6MXhHMXZaQ1JNTEtLN1dUbVRCSTU0X2ZORU1jWUVwQ1FGMG00bTJjZTBqTmJUUnVFcV8zMDNoQXIyc04wUWU2eWFuQ3dfb0t5TUxzTmM1UnFXYzdxa05BbDY5MGoyU2J6MUdxUDhjS2s2RXFpWl9xRDFqSi1tSE1ZcjFWUjY4WmNxYUE3RHhVN1BGSXFJY0ZOWUx4aDZDVTcwT2IxUGVKRWpKSnc1LVhLZGlTOGwzT1dLdmRTZGlaNVM1NWVuNXdSX3I5eEc3Y0dCUlFlR21xV1RyWjN6S1ctUmxfX0VMYm5NSlFvTm54Yi1IeFZFZ2RuX0xXcEpWZmlocw?oc=5
+  language       en
+  published_at   Tue, 14 Jul 2026 19:19:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","supply"]
+  properties     {"guid":"CBMihwJBVV95cUxNSkI0bGd6MXhHMXZaQ1JNTEtLN1dUbVRCSTU0X2ZORU1jWUVwQ1FGMG00bTJjZTBqTmJUUnVFcV8zMDNoQXIyc04wUWU2eWFuQ3dfb0t5TUxzTmM1UnFXYzdxa05BbDY5MGoyU2J6MUdxUDhjS2s2RXFpWl9xRDFqSi1tSE1ZcjFWUjY4WmNxYUE3RHhVN1BGSXFJY0ZOWUx4aDZDVTcwT2IxUGVKRWpKSnc1LVhLZGlTOGwzT1dLdmRTZGlaNVM1NWVuNXdSX3I5eEc3Y0dCUlFlR21xV1RyWjN6S1ctUmxfX0VMYm5NSlFvTm54Yi1IeFZFZ2RuX0xXcEpWZmlocw"}
+
+--- row 2 ---
+  uid            gnews-mon-supply-chain-disruption|CBMiqwFBVV95cUxQczZPXzdDZTRVb0JEcVhDWTVqenh5U20tYmRkb0lfQkkzU0RzQUNNanY2UGZTcmdzTHBGb1pDeVBWRXJTMDc3cDRYcEpjRnhPNlFlODJLSHN4NTNKMk5rbExWSUg4b3gxYzloX1FCWkQ1U0pqcXVQdTNtQ3h3M0xrbmJCd2RuTllKMjVManZpTnRuZlBkWTdmVWVCNEx6eHkyR0h6NGlqMEhtSTg
+  title          Reshoring Low Priority, So Supply Chains Diversify - mhlnews.com
+  body           <a href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxQczZPXzdDZTRVb0JEcVhDWTVqenh5U20tYmRkb0lfQkkzU0RzQUNNanY2UGZTcmdzTHBGb1pDeVBWRXJTMDc3cDRYcEpjRnhPNlFlODJLSHN4NTNKMk5rbExWSUg4b3gxYzloX1FCWkQ1U0pqcXVQdTNtQ3h3M0xrbmJCd2RuTllKMjVManZpTnRuZlBkWTdmVWVCNEx6eHkyR0h6NGlqMEhtSTg?oc=5" target="_blank">Reshoring Low Priority, So Supply Chains Diversify</a>&nbsp;&nbsp;<font color="#6f6f6f">mhlnews.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxQczZPXzdDZTRVb0JEcVhDWTVqenh5U20tYmRkb0lfQkkzU0RzQUNNanY2UGZTcmdzTHBGb1pDeVBWRXJTMDc3cDRYcEpjRnhPNlFlODJLSHN4NTNKMk5rbExWSUg4b3gxYzloX1FCWkQ1U0pqcXVQdTNtQ3h3M0xrbmJCd2RuTllKMjVMan
+  link           https://news.google.com/rss/articles/CBMiqwFBVV95cUxQczZPXzdDZTRVb0JEcVhDWTVqenh5U20tYmRkb0lfQkkzU0RzQUNNanY2UGZTcmdzTHBGb1pDeVBWRXJTMDc3cDRYcEpjRnhPNlFlODJLSHN4NTNKMk5rbExWSUg4b3gxYzloX1FCWkQ1U0pqcXVQdTNtQ3h3M0xrbmJCd2RuTllKMjVManZpTnRuZlBkWTdmVWVCNEx6eHkyR0h6NGlqMEhtSTg?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 04:07:37 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","supply"]
+  properties     {"guid":"CBMiqwFBVV95cUxQczZPXzdDZTRVb0JEcVhDWTVqenh5U20tYmRkb0lfQkkzU0RzQUNNanY2UGZTcmdzTHBGb1pDeVBWRXJTMDc3cDRYcEpjRnhPNlFlODJLSHN4NTNKMk5rbExWSUg4b3gxYzloX1FCWkQ1U0pqcXVQdTNtQ3h3M0xrbmJCd2RuTllKMjVManZpTnRuZlBkWTdmVWVCNEx6eHkyR0h6NGlqMEhtSTg"}
+
+--- row 3 ---
+  uid            gnews-mon-supply-chain-disruption|CBMiogFBVV95cUxPNVVOaWNwZ1dTSGhiN1d3RV9ZaHV6MW1BUnoxZ3NHV0R4eVJObExza1N6a19MYmdSU3Y0QVV2MUwzQjA4elJlaVRSZ0FlUzBUNlBXSVNZQXlVSWZtckNhYlBYVl9vS19obXg2LTJsbURLaFM5NGtPZU9ZaHVfN1BkeGpJRlFIcEc2SkdnMjA3b1hkU3NOSEQxUU84Y3ZuWUxPSmc
+  title          Why supply chain leaders should learn to stand back and 'see the wave' - The World Economic Forum
+  body           <a href="https://news.google.com/rss/articles/CBMiogFBVV95cUxPNVVOaWNwZ1dTSGhiN1d3RV9ZaHV6MW1BUnoxZ3NHV0R4eVJObExza1N6a19MYmdSU3Y0QVV2MUwzQjA4elJlaVRSZ0FlUzBUNlBXSVNZQXlVSWZtckNhYlBYVl9vS19obXg2LTJsbURLaFM5NGtPZU9ZaHVfN1BkeGpJRlFIcEc2SkdnMjA3b1hkU3NOSEQxUU84Y3ZuWUxPSmc?oc=5" target="_blank">Why supply chain leaders should learn to stand back and 'see the wave'</a>&nbsp;&nbsp;<font color="#6f6f6f">The World Economic Forum</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiogFBVV95cUxPNVVOaWNwZ1dTSGhiN1d3RV9ZaHV6MW1BUnoxZ3NHV0R4eVJObExza1N6a19MYmdSU3Y0QVV2MUwzQjA4elJlaVRSZ0FlUzBUNlBXSVNZQXlVSWZtckNhYlBYVl9vS19obXg2LTJsbURLaFM5NGtPZU9ZaHVfN1BkeGpJRlFIcEc2SkdnMj
+  link           https://news.google.com/rss/articles/CBMiogFBVV95cUxPNVVOaWNwZ1dTSGhiN1d3RV9ZaHV6MW1BUnoxZ3NHV0R4eVJObExza1N6a19MYmdSU3Y0QVV2MUwzQjA4elJlaVRSZ0FlUzBUNlBXSVNZQXlVSWZtckNhYlBYVl9vS19obXg2LTJsbURLaFM5NGtPZU9ZaHVfN1BkeGpJRlFIcEc2SkdnMjA3b1hkU3NOSEQxUU84Y3ZuWUxPSmc?oc=5
+  language       en
+  published_at   Tue, 07 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","supply"]
+  properties     {"guid":"CBMiogFBVV95cUxPNVVOaWNwZ1dTSGhiN1d3RV9ZaHV6MW1BUnoxZ3NHV0R4eVJObExza1N6a19MYmdSU3Y0QVV2MUwzQjA4elJlaVRSZ0FlUzBUNlBXSVNZQXlVSWZtckNhYlBYVl9vS19obXg2LTJsbURLaFM5NGtPZU9ZaHVfN1BkeGpJRlFIcEc2SkdnMjA3b1hkU3NOSEQxUU84Y3ZuWUxPSmc"}

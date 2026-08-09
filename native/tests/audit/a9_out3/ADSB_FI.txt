@@ -1,0 +1,21 @@
+=== ADSB_FI  entity=c0103a
+exit: 0
+sched: rc=0 records=2 1001ms
+--- stderr ---
+[adsb_fi] emitted 2
+[sched] ADSB_FI run rc=0 records=2 1001ms
+--- persisted: 1 rows, 1 with lat/lon, 0 with geometry ---
+record_type: aircraft-live=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            ADSB_FI|c0103a
+  title          ACA7     · B789
+  body           {"hex":"c0103a","callsign":"ACA7","registration":"C-FGDT","type":"B789","lat":32.96741,"lon":133.84509,"alt_baro":"40000","ground_speed":521.6,"track":253.86,"source":"adsb.lol"}
+  summary        C-FGDT
+  language       en
+  lat            32.96741
+  lon            133.84509
+  record_type    aircraft-live
+  tags           ["osint-search","ADSB_FI"]
+  properties     {"service":"ADSB_FI","source":"adsb.lol","hex":"c0103a","registration":"C-FGDT","success":true}

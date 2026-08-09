@@ -1,0 +1,19 @@
+=== tsr-closures
+exit: 0
+sched: rc=0 records=1 2269ms
+--- stderr ---
+[tsr-closures] probe reachable=0
+[sched] tsr-closures run rc=0 records=1 2269ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            tsr-closures|portal
+  title          Tokyo Shoko Research — corporate closures
+  summary        TSR release feed — closures, liquidations, restructurings
+  link           https://www.tsr-net.co.jp/news/tsr_release/
+  language       ja
+  published_at   2026-07-31T18:20:33.819Z
+  tags           ["bankruptcy","tsr","corporate","unreachable"]
+  properties     {"operator":"東京商工リサーチ","reachable":false}

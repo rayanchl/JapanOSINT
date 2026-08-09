@@ -1,0 +1,39 @@
+=== SPAMHAUS_DROP_GLOBAL
+exit: 0
+sched: rc=0 records=200 183ms
+--- stderr ---
+[SPAMHAUS_DROP_GLOBAL] emitted 200
+[sched] SPAMHAUS_DROP_GLOBAL run rc=0 records=200 183ms
+--- persisted: 200 rows, 0 with lat/lon, 0 with geometry ---
+record_type: hijacked-netblock=200
+sub_source_id: (null)=200
+
+--- row 1 ---
+  uid            SPAMHAUS_DROP_GLOBAL|SPAMHAUS_DROP_GLOBAL|1.10.16.0/20
+  title          1.10.16.0/20
+  summary        1.10.16.0/20 ; SBL256894
+  link           https://www.spamhaus.org/drop/drop.txt
+  language       en
+  record_type    hijacked-netblock
+  tags           ["threat-intel","drop","spamhaus"]
+  properties     {"service":"SPAMHAUS_DROP_GLOBAL","feed":"SPAMHAUS_DROP_GLOBAL","success":true}
+
+--- row 2 ---
+  uid            SPAMHAUS_DROP_GLOBAL|SPAMHAUS_DROP_GLOBAL|1.19.0.0/16
+  title          1.19.0.0/16
+  summary        1.19.0.0/16 ; SBL434604
+  link           https://www.spamhaus.org/drop/drop.txt
+  language       en
+  record_type    hijacked-netblock
+  tags           ["threat-intel","drop","spamhaus"]
+  properties     {"service":"SPAMHAUS_DROP_GLOBAL","feed":"SPAMHAUS_DROP_GLOBAL","success":true}
+
+--- row 3 ---
+  uid            SPAMHAUS_DROP_GLOBAL|SPAMHAUS_DROP_GLOBAL|1.32.128.0/18
+  title          1.32.128.0/18
+  summary        1.32.128.0/18 ; SBL286275
+  link           https://www.spamhaus.org/drop/drop.txt
+  language       en
+  record_type    hijacked-netblock
+  tags           ["threat-intel","drop","spamhaus"]
+  properties     {"service":"SPAMHAUS_DROP_GLOBAL","feed":"SPAMHAUS_DROP_GLOBAL","success":true}

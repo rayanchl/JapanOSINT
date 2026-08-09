@@ -20,6 +20,8 @@
  *
  * Each Feature → camera_upsert(...,"webcamera24").
  */
+#include "../../lib/geojson.h"
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/camera_store.h"
 #include "../../lib/feedlib.h"
@@ -33,19 +35,6 @@
 typedef struct { const char *k; const char *sv; int is_num; double nv;
                  int is_null; int is_bool; int bv; } kv;
 
-static double round4(double v) { return floor(v * 1e4 + 0.5) / 1e4; }
-
-static void uid_tail(const char *url, const char *name, char *out,
-                     size_t outsz) {
-  const char *src = (url && *url) ? url : (name ? name : "");
-  size_t i = 0;
-  for (; src[i] && i < 60 && i + 1 < outsz; i++) {
-    unsigned char c = (unsigned char)src[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
-
 static cJSON *make_feature(double lat, double lon, const char *name,
                            const char *camera_type,
                            const char *discovery_channel,
@@ -56,20 +45,12 @@ static cJSON *make_feature(double lat, double lon, const char *name,
       url = extra[i].sv; break;
     }
   char lats[32], lons[32], tail[80], uid[160];
-  snprintf(lats, sizeof lats, "%.4f", round4(lat));
-  snprintf(lons, sizeof lons, "%.4f", round4(lon));
-  uid_tail(url, name, tail, sizeof tail);
+  snprintf(lats, sizeof lats, "%.4f", jo_round4(lat));
+  snprintf(lons, sizeof lons, "%.4f", jo_round4(lon));
+  jo_uid_tail(url, name, tail, sizeof tail);
   snprintf(uid, sizeof uid, "%s:%s:%s", lats, lons, tail);
 
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "camera_uid", uid);
@@ -127,15 +108,6 @@ static const centroid PREFECTURE_CENTROIDS[] = {
 };
 #define N_CENTROIDS (sizeof PREFECTURE_CENTROIDS / sizeof *PREFECTURE_CENTROIDS)
 
-static void to_lower_buf(const char *in, char *out, size_t n) {
-  size_t i = 0;
-  for (; in && in[i] && i + 1 < n; i++) {
-    unsigned char c = (unsigned char)in[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
-
 /* The first 47 entries are prefectures; the rest are city/locality anchors. */
 #define N_PREFECTURES 47
 
@@ -146,7 +118,7 @@ static int guess_centroid(const char *text, double *lat, double *lon,
                           const char **precision) {
   if (!text || !*text) return 0;
   char low[1024];
-  to_lower_buf(text, low, sizeof low);
+  jo_lower_buf(text, low, sizeof low);
   for (size_t i = 0; i < N_CENTROIDS; i++) {
     const char *k = PREFECTURE_CENTROIDS[i].key;
     char kb[64];
@@ -163,22 +135,6 @@ static int guess_centroid(const char *text, double *lat, double *lon,
     }
   }
   return 0;
-}
-
-static void abs_url(const char *href, const char *base, char *out, size_t n) {
-  if (href && (strncmp(href, "http://", 7) == 0 ||
-                strncmp(href, "https://", 8) == 0)) {
-    snprintf(out, n, "%s", href);
-    return;
-  }
-  const char *p = base;
-  int slashes = 0;
-  while (*p) { if (*p == '/') { slashes++; if (slashes == 3) break; } p++; }
-  size_t hostlen = (size_t)(p - base);
-  if (href && href[0] == '/')
-    snprintf(out, n, "%.*s%s", (int)hostlen, base, href);
-  else
-    snprintf(out, n, "%.*s/%s", (int)hostlen, base, href ? href : "");
 }
 
 static const char *next_anchor(const char *from, char *href, size_t hn,
@@ -293,13 +249,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
 
     char fullurl[640];
-    abs_url(href, WC24_BASE, fullurl, sizeof fullurl);
+    jo_abs_url(href, WC24_BASE, fullurl, sizeof fullurl);
 
     const char *nm = (label && label[0]) ? label : "Webcamera24 feed";
     kv ex[3] = {0};
     ex[0].k = "url"; ex[0].sv = fullurl;
-    ex[1].k = "location_precision"; ex[1].sv = precision;
-    ex[2].k = "location_approximate"; ex[2].is_bool = 1; ex[2].bv = 1;
+    ex[1].k = "geo_precision"; ex[1].sv = precision;
+    ex[2].k = "geo_uncertain"; ex[2].is_bool = 1; ex[2].bv = 1;
     cJSON *f = make_feature(lat, lon, nm, "aggregator_webcamera24",
                             "webcamera24", ex, 3);
     if (camera_upsert(ctx->db, sink, f, "webcamera24") >= 0) count++;
@@ -319,5 +275,5 @@ static const source_def cam_webcamera24_def = {
   .name = "Camera Discovery: Webcamera24",
   .name_ja = "カメラ探索: Webcamera24",
    .layer = "cameras",
-   .update_interval_sec = 21600, .run = run };
+   .update_interval_sec = 3600, .run = run };
 REGISTER_SOURCE(cam_webcamera24_def)

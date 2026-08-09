@@ -75,6 +75,20 @@ static char *grab(const char *block, size_t blen, const char *tag) {
   return NULL;
 }
 
+/* Cut `s` to at most `max` BYTES without splitting a UTF-8 sequence.
+ * JS .slice() counts UTF-16 units and never produces invalid text; a raw
+ * byte cut here does, and core/intel.c then persists bytes that SQLite/the
+ * API cannot decode ("Could not decode to UTF-8"). Back up over any
+ * continuation bytes (10xxxxxx) so the cut lands on a character boundary. */
+static void utf8_trunc(char *s, size_t max) {
+  if (!s) return;
+  size_t L = strlen(s);
+  if (L <= max) return;
+  size_t c = max;
+  while (c > 0 && ((unsigned char)s[c] & 0xC0) == 0x80) c--;
+  s[c] = 0;
+}
+
 /* JS `(x || y) ?? '' ` then `.trim()` already applied: pick first non-NULL */
 static char *grab2(const char *b, size_t bl, const char *t1, const char *t2) {
   char *a = grab(b, bl, t1);
@@ -111,8 +125,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char *mod   = grab(blk, blen, "dcterms:modified");
     char *desc  = grab(blk, blen, "description");
 
-    /* description.slice(0,500) */
-    if (desc && strlen(desc) > 500) desc[500] = 0;
+    /* description.slice(0,500) — on a character boundary, not a byte one */
+    utf8_trunc(desc, 500);
 
     /* uid = intelUid(SOURCE_ID, it.id, it.link) → first non-empty */
     char uidbuf[768];
@@ -121,7 +135,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     /* summary = (desc||'').slice(0,240) || null */
     char summ[256] = {0};
-    if (desc && desc[0]) { strncpy(summ, desc, 240); summ[240] = 0; }
+    if (desc && desc[0]) {
+      snprintf(summ, sizeof summ, "%s", desc);
+      utf8_trunc(summ, 240);
+    }
 
     cJSON *props = cJSON_CreateObject();   /* EXACT JS key order */
     if (id && id[0]) cJSON_AddStringToObject(props, "jvn_id", id);
@@ -151,7 +168,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   free(xml);
   fprintf(stderr, "[my-jvn] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  return 0;      /* an empty advisory feed is honest, not an error (rc=-1
+                  * would trip the anomaly detector and quarantine us) */
 }
 
 static const source_def my_jvn_def = {

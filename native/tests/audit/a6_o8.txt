@@ -1,0 +1,54 @@
+=== rappler-ph
+exit: 0
+sched: rc=0 records=10 166ms
+--- stderr ---
+[rss] rappler-ph emitted 10
+[sched] rappler-ph run rc=0 records=10 166ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            rappler-ph|https://www.rappler.com/philippines/metro-manila/las-pinas-national-high-school-stabbing-july-31-2026/
+  title          Grade 9 boy stabbed dead by fellow student in Las Piñas school
+  body           The Schools Division Office of Las Piñas City says it is 'working closely with local authorities, barangay officials, and the Philippine National Police' as they investigate the incident
+  summary        The Schools Division Office of Las Piñas City says it is 'working closely with local authorities, barangay officials, and the Philippine National Police' as they investigate the incident
+  link           https://www.rappler.com/philippines/metro-manila/las-pinas-national-high-school-stabbing-july-31-2026/
+  language       en
+  published_at   Sat, 01 Aug 2026 01:06:31 +0800
+  record_type    article
+  tags           ["news","philippines","national-outlet"]
+#################################################
+=== 38north
+exit: 1
+sched: rc=-1 records=0 59ms
+--- stderr ---
+[sched] 38north run rc=-1 records=0 59ms
+[detect] anomaly opened: 38north verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== isw
+exit: 1
+sched: rc=-1 records=0 69ms
+--- stderr ---
+[sched] isw run rc=-1 records=0 69ms
+[detect] anomaly opened: isw verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== mlit-n05-rail-history
+exit: 0
+sched: rc=0 records=0 1683ms
+--- stderr ---
+[mlit-n05-rail-history] emitted 0
+[sched] mlit-n05-rail-history run rc=0 records=0 1683ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== jma-typhoon-json
+exit: 0
+sched: rc=0 records=0 56ms
+--- stderr ---
+[jma-typhoon-json] emitted 0
+[sched] jma-typhoon-json run rc=0 records=0 56ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+DONE /mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/a6_l8.txt

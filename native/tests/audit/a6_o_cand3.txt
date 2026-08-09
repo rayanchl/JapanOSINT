@@ -1,0 +1,29 @@
+--- https://gateway.caixin.com/api/data/global/feedlyRss.xml  [406] items=0 entries=0
+--- https://api.brusselstimes.com/rss  [200] items=10 entries=0
+<title>The Brussels Times
+<title>The Brussels Times
+<title>Ukraine’s displaced face post-war voting dilemmas as election planning
+--- https://www.nzherald.co.nz/arc/outboundfeeds/rss/curated/78/?outputType=xml  [200] items=10 entries=0
+--- https://www.irishtimes.com/arc/outboundfeeds/rss/?outputType=xml  [200] items=100 entries=0
+--- https://mg.co.za/rss/  [200] items=50 entries=0
+<title>The Mail &amp; Guardian | Africa's Better Future
+<title>The Mail &amp; Guardian | Africa's Better Future
+--- https://kyivindependent.com/feed/rss/  [200] items=100 entries=0
+<title>The Kyiv Independent - News from Ukraine, Eastern Europe
+--- https://maritime-executive.com/articles.rss  [200] items=0 entries=85
+--- https://www.rferl.org/api/zbqiml-vomx-tpeqkmy  [200] items=20 entries=0
+<title>News - Radio Free Europe / Radio Liberty
+<title>News - Radio Free Europe / Radio Liberty
+<title>Ukraine Hits Russian Logistics Hubs As Trump Weighs Patriot Missile Li
+--- https://www.cfr.org/feed  [200] items=24 entries=0
+<title>Council on Foreign Relations
+<title>Will Iran Turn Into a Forever War?
+<title>India’s Cockroach Party Protests Have a Powerful Precedent—and It Isn’
+--- tuoitrenews www cert
+curl: (60) SSL: no alternative certificate subject name matches target host name 'www.tuoitrenews.vn'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+www 000

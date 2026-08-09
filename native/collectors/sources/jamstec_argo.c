@@ -54,15 +54,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                : (c1 && cJSON_IsString(c1) ? strtod(c1->valuestring, NULL) : NAN);
     if (!isfinite(lon) || !isfinite(lat)) continue;
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(lon, lat);
 
     cJSON *pr = cJSON_CreateObject();            /* EXACT JS key order */
     cJSON *id = cJSON_GetObjectItem(p, "_id");
@@ -96,6 +88,60 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     cJSON_AddItemToObject(pr, "data_sources", ds);
     cJSON_AddStringToObject(pr, "source", "argovis_argo");
+
+    /* --- fields the JS port dropped -------------------------------------
+     * lib/geojson.c derives title/link/published_at from property keys, so
+     * without these every Argo row landed in the UI with no title at all and
+     * no way to reach the underlying profile. All values below come from the
+     * Argovis response; nothing is synthesised except the display string. */
+    const char *pid = (id && cJSON_IsString(id)) ? id->valuestring : NULL;
+    /* _id is "<platform>_<cycle>"; the platform part is the WMO float number */
+    if (pid) {
+      char plat[64] = {0};
+      const char *us = strchr(pid, '_');
+      size_t pl = us ? (size_t)(us - pid) : strlen(pid);
+      if (pl >= sizeof plat) pl = sizeof plat - 1;
+      memcpy(plat, pid, pl);
+      cJSON_AddStringToObject(pr, "platform_number", plat);
+      /* profile_id is not a NATIVE_ID_KEY, so the uid was a hash of the
+       * whole property bag and churned on every schema tweak. */
+      cJSON_AddStringToObject(pr, "uid", pid);
+      char title[160];
+      if (cyc && cJSON_IsNumber(cyc))
+        snprintf(title, sizeof title, "Argo float %s cycle %d", plat,
+                 (int)cyc->valuedouble);
+      else
+        snprintf(title, sizeof title, "Argo float %s", plat);
+      cJSON_AddStringToObject(pr, "title", title);
+    }
+    /* source[0].url is the DAC NetCDF profile — the provenance link */
+    if (src && cJSON_IsArray(src) && cJSON_GetArraySize(src) > 0) {
+      cJSON *s0 = cJSON_GetArrayItem(src, 0);
+      cJSON *u = s0 ? cJSON_GetObjectItem(s0, "url") : NULL;
+      if (u && cJSON_IsString(u) && u->valuestring[0])
+        cJSON_AddStringToObject(pr, "url", u->valuestring);
+      cJSON *du = s0 ? cJSON_GetObjectItem(s0, "date_updated") : NULL;
+      if (du && cJSON_IsString(du))
+        cJSON_AddStringToObject(pr, "dac_updated_at", du->valuestring);
+    }
+    cJSON *dua = cJSON_GetObjectItem(p, "date_updated_argovis");
+    if (dua && cJSON_IsString(dua))
+      cJSON_AddStringToObject(pr, "argovis_updated_at", dua->valuestring);
+    cJSON *vss = cJSON_GetObjectItem(p, "vertical_sampling_scheme");
+    if (vss && cJSON_IsString(vss))
+      cJSON_AddStringToObject(pr, "vertical_sampling_scheme", vss->valuestring);
+    cJSON *gqc = cJSON_GetObjectItem(p, "geolocation_argoqc");
+    if (gqc) cJSON_AddItemToObject(pr, "geolocation_qc", cJSON_Duplicate(gqc, 1));
+    cJSON *tqc = cJSON_GetObjectItem(p, "timestamp_argoqc");
+    if (tqc) cJSON_AddItemToObject(pr, "timestamp_qc", cJSON_Duplicate(tqc, 1));
+    /* data_info[0] is the list of variables this profile actually measured */
+    cJSON *di = cJSON_GetObjectItem(p, "data_info");
+    if (di && cJSON_IsArray(di) && cJSON_GetArraySize(di) > 0) {
+      cJSON *vars = cJSON_GetArrayItem(di, 0);
+      if (cJSON_IsArray(vars))
+        cJSON_AddItemToObject(pr, "measured_variables", cJSON_Duplicate(vars, 1));
+    }
+
     cJSON_AddItemToObject(f, "properties", pr);
     cJSON_AddItemToArray(features, f);
   }
@@ -104,7 +150,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[jamstec-argo] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  return 0;      /* no floats surfaced in the window is an honest empty; the
+                  * fetch failure above is the only real error (rc=-1) */
 }
 
 static const source_def jamstec_argo_def = {

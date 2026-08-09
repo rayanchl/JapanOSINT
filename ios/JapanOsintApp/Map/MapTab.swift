@@ -622,7 +622,7 @@ struct MapTab: View {
                 .font(.body.weight(.semibold))
                 .foregroundStyle(.tint)
                 .frame(width: 36, height: 36)
-                .background(.thinMaterial, in: Circle())
+                .mapBarSurface(in: Circle())
                 .frame(minWidth: 44, minHeight: 44)
                 .contentShape(Rectangle())
         }
@@ -677,7 +677,7 @@ struct MapTab: View {
             .foregroundStyle(.tint)
             .frame(height: 36)
             .padding(.horizontal, 12)
-            .background(.thinMaterial, in: Capsule())
+            .mapBarSurface(in: Capsule())
             .frame(minHeight: 44)
             .contentShape(Rectangle())
         }
@@ -702,7 +702,7 @@ struct MapTab: View {
                 .font(.body.weight(.semibold))
                 .foregroundStyle(.tint)
                 .frame(width: 36, height: 36)
-                .background(.thinMaterial, in: Circle())
+                .mapBarSurface(in: Circle())
                 .frame(minWidth: 44, minHeight: 44)
                 .contentShape(Rectangle())
         }
@@ -713,15 +713,23 @@ struct MapTab: View {
     /// Uses Apple's secondary text styling so it reads as supporting info.
     private var statusRow: some View {
         HStack(spacing: 10) {
+            // This reports the realtime PUSH channel only. It is not an
+            // app-connectivity indicator: every layer on this map is fetched
+            // over REST and keeps working with the socket down, so the
+            // non-live state is muted, not red, and never says "OFFLINE".
             HStack(spacing: 4) {
                 Circle()
-                    .fill(ws.isConnected ? theme.success : theme.danger)
+                    .fill(ws.isConnected ? theme.success : theme.textMuted)
                     .frame(width: 6, height: 6)
-                Text(ws.isConnected ? "LIVE" : "OFFLINE")
+                Text(ws.isConnected ? "LIVE" : "SNAPSHOT")
                     .font(.caption2.weight(.semibold))
                     .tracking(0.6)
-                    .foregroundStyle(ws.isConnected ? theme.success : theme.danger)
+                    .foregroundStyle(ws.isConnected ? theme.success : theme.textMuted)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(ws.isConnected
+                                ? "Live realtime feed"
+                                : "No realtime feed; showing fetched data")
 
             Text("·").font(.caption2).foregroundStyle(.tertiary)
 
@@ -754,7 +762,7 @@ struct MapTab: View {
             .buttonStyle(.plain)
         }
         .padding(8)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .mapBarSurface(in: RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 
     private func jstFormatted(_ date: Date) -> String {

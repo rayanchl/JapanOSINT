@@ -1,0 +1,45 @@
+=== gnews-mon-fr-sahel-militants
+exit: 0
+sched: rc=0 records=62 491ms
+--- stderr ---
+[rss] gnews-mon-fr-sahel-militants emitted 62
+[sched] gnews-mon-fr-sahel-militants run rc=0 records=62 491ms
+--- persisted: 62 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=62
+sub_source_id: (null)=62
+
+--- row 1 ---
+  uid            gnews-mon-fr-sahel-militants|CBMihAFBVV95cUxORTAzVFhQODdRaWthUUUtWU40TURtY2RMZW43RVNZOGJuOGU4YkJQQlZqRFZvcXJEbFlGUlAyeEVTM2RDeXROQXZhbzVtdEo2OWFjeWtWMTBhcmlpb1RzQjdCTVpKRzBGUHROaExaRWFiQ05vbjdRMENNRVhiSm15TjNZcXI
+  title          Rencontrez trois journalistes du Sahel central, muselés par les autorités militaires : « nous sommes dans un grand trou noir » - Amnesty International
+  body           <a href="https://news.google.com/rss/articles/CBMihAFBVV95cUxORTAzVFhQODdRaWthUUUtWU40TURtY2RMZW43RVNZOGJuOGU4YkJQQlZqRFZvcXJEbFlGUlAyeEVTM2RDeXROQXZhbzVtdEo2OWFjeWtWMTBhcmlpb1RzQjdCTVpKRzBGUHROaExaRWFiQ05vbjdRMENNRVhiSm15TjNZcXI?oc=5" target="_blank">Rencontrez trois journalistes du Sahel central, muselés par les autorités militaires : « nous sommes dans un grand trou noir »</a>&nbsp;&nbsp;<font color="#6f6f6f">Amnesty International</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMihAFBVV95cUxORTAzVFhQODdRaWthUUUtWU40TURtY2RMZW43RVNZOGJuOGU4YkJQQlZqRFZvcXJEbFlGUlAyeEVTM2RDeXROQXZhbzVtdEo2OWFjeWtWMTBhcmlpb1RzQjdCTVpKRzBGUHROaExaRWFiQ05vbjdRMENNRVhiSm15TjNZcXI?oc=5" targ
+  link           https://news.google.com/rss/articles/CBMihAFBVV95cUxORTAzVFhQODdRaWthUUUtWU40TURtY2RMZW43RVNZOGJuOGU4YkJQQlZqRFZvcXJEbFlGUlAyeEVTM2RDeXROQXZhbzVtdEo2OWFjeWtWMTBhcmlpb1RzQjdCTVpKRzBGUHROaExaRWFiQ05vbjdRMENNRVhiSm15TjNZcXI?oc=5
+  language       fr
+  published_at   Thu, 30 Apr 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","fr"]
+  properties     {"guid":"CBMihAFBVV95cUxORTAzVFhQODdRaWthUUUtWU40TURtY2RMZW43RVNZOGJuOGU4YkJQQlZqRFZvcXJEbFlGUlAyeEVTM2RDeXROQXZhbzVtdEo2OWFjeWtWMTBhcmlpb1RzQjdCTVpKRzBGUHROaExaRWFiQ05vbjdRMENNRVhiSm15TjNZcXI"}
+
+--- row 2 ---
+  uid            gnews-mon-fr-sahel-militants|CBMihgFBVV95cUxNUk5yTEJleEYwS2tFZmI0N0NZeXV4QVdxSjBpdW0tUTI2MWxrVUxKYUt6dk84QnlYcWtKNTFFTTQzNV9lTXg2ZDg0blg3aTItaDNHR2NjZUQ5Z3VKQkZGM2Vpek13QnJsWjBudWM4SWZLWFlUdGkzRGpHcHdEcmpIUmR1aTFMUQ
+  title          Au Sahel, journalistes, militants et ONG dans le viseur des agents russes de la « Compagnie - Forbidden Stories
+  body           <a href="https://news.google.com/rss/articles/CBMihgFBVV95cUxNUk5yTEJleEYwS2tFZmI0N0NZeXV4QVdxSjBpdW0tUTI2MWxrVUxKYUt6dk84QnlYcWtKNTFFTTQzNV9lTXg2ZDg0blg3aTItaDNHR2NjZUQ5Z3VKQkZGM2Vpek13QnJsWjBudWM4SWZLWFlUdGkzRGpHcHdEcmpIUmR1aTFMUQ?oc=5" target="_blank">Au Sahel, journalistes, militants et ONG dans le viseur des agents russes de la « Compagnie</a>&nbsp;&nbsp;<font color="#6f6f6f">Forbidden Stories</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMihgFBVV95cUxNUk5yTEJleEYwS2tFZmI0N0NZeXV4QVdxSjBpdW0tUTI2MWxrVUxKYUt6dk84QnlYcWtKNTFFTTQzNV9lTXg2ZDg0blg3aTItaDNHR2NjZUQ5Z3VKQkZGM2Vpek13QnJsWjBudWM4SWZLWFlUdGkzRGpHcHdEcmpIUmR1aTFMUQ?oc=5" t
+  link           https://news.google.com/rss/articles/CBMihgFBVV95cUxNUk5yTEJleEYwS2tFZmI0N0NZeXV4QVdxSjBpdW0tUTI2MWxrVUxKYUt6dk84QnlYcWtKNTFFTTQzNV9lTXg2ZDg0blg3aTItaDNHR2NjZUQ5Z3VKQkZGM2Vpek13QnJsWjBudWM4SWZLWFlUdGkzRGpHcHdEcmpIUmR1aTFMUQ?oc=5
+  language       fr
+  published_at   Fri, 27 Mar 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","fr"]
+  properties     {"guid":"CBMihgFBVV95cUxNUk5yTEJleEYwS2tFZmI0N0NZeXV4QVdxSjBpdW0tUTI2MWxrVUxKYUt6dk84QnlYcWtKNTFFTTQzNV9lTXg2ZDg0blg3aTItaDNHR2NjZUQ5Z3VKQkZGM2Vpek13QnJsWjBudWM4SWZLWFlUdGkzRGpHcHdEcmpIUmR1aTFMUQ"}
+
+--- row 3 ---
+  uid            gnews-mon-fr-sahel-militants|CBMirAFBVV95cUxOQ2hCbVBHVW14TmhCRlYwcS1vSnlXU1FHMFFLS3VWX2FxODh0RXNDYlZpQW5EV0F1eDUzeUlEbzUyVEpsNWkxRFltYko5TzRwOE8zYk55YjlVXzNldlhQVF9peUhocE5GazEwWDVZektQeDFIdXZId01yZ0xxQmExbGlrZVk3cWdDQ3dQQUFMX0JvRFZOMEZBdlFkRmI1Nkl4Ny1JTUMtTktLRXRV
+  title          Au Sahel, l'alliance des juntes militaires fragilisée par la situation au Mali - Radio France
+  body           <a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxOQ2hCbVBHVW14TmhCRlYwcS1vSnlXU1FHMFFLS3VWX2FxODh0RXNDYlZpQW5EV0F1eDUzeUlEbzUyVEpsNWkxRFltYko5TzRwOE8zYk55YjlVXzNldlhQVF9peUhocE5GazEwWDVZektQeDFIdXZId01yZ0xxQmExbGlrZVk3cWdDQ3dQQUFMX0JvRFZOMEZBdlFkRmI1Nkl4Ny1JTUMtTktLRXRV?oc=5" target="_blank">Au Sahel, l'alliance des juntes militaires fragilisée par la situation au Mali</a>&nbsp;&nbsp;<font color="#6f6f6f">Radio France</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxOQ2hCbVBHVW14TmhCRlYwcS1vSnlXU1FHMFFLS3VWX2FxODh0RXNDYlZpQW5EV0F1eDUzeUlEbzUyVEpsNWkxRFltYko5TzRwOE8zYk55YjlVXzNldlhQVF9peUhocE5GazEwWDVZektQeDFIdXZId01yZ0xxQmExbGlrZVk3cWdDQ3dQQU
+  link           https://news.google.com/rss/articles/CBMirAFBVV95cUxOQ2hCbVBHVW14TmhCRlYwcS1vSnlXU1FHMFFLS3VWX2FxODh0RXNDYlZpQW5EV0F1eDUzeUlEbzUyVEpsNWkxRFltYko5TzRwOE8zYk55YjlVXzNldlhQVF9peUhocE5GazEwWDVZektQeDFIdXZId01yZ0xxQmExbGlrZVk3cWdDQ3dQQUFMX0JvRFZOMEZBdlFkRmI1Nkl4Ny1JTUMtTktLRXRV?oc=5
+  language       fr
+  published_at   Sat, 02 May 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","fr"]
+  properties     {"guid":"CBMirAFBVV95cUxOQ2hCbVBHVW14TmhCRlYwcS1vSnlXU1FHMFFLS3VWX2FxODh0RXNDYlZpQW5EV0F1eDUzeUlEbzUyVEpsNWkxRFltYko5TzRwOE8zYk55YjlVXzNldlhQVF9peUhocE5GazEwWDVZektQeDFIdXZId01yZ0xxQmExbGlrZVk3cWdDQ3dQQUFMX0JvRFZOMEZBdlFkRmI1Nkl4Ny1JTUMtTktLRXRV"}

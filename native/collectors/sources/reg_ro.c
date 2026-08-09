@@ -29,15 +29,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-/* First non-empty of a list of candidate string keys, else NULL. */
-static const char *ro_first(const cJSON *o, const char *const *keys) {
-  for (int i = 0; keys[i]; i++) {
-    const char *v = jo_sv(o, keys[i]);
-    if (v) return v;
-  }
-  return NULL;
-}
-
 /* one company JSON object → one intel_item. Returns 1 if emitted. */
 static int ro_emit_company(intel_sink *sink, const cJSON *c) {
   if (!c || !cJSON_IsObject(c)) return 0;
@@ -51,8 +42,8 @@ static int ro_emit_company(intel_sink *sink, const cJSON *c) {
   static const char *K_POST[] = { "cod_postal", "postal_code", NULL };
   static const char *K_REG[]  = { "numar_reg_com", "reg_com", NULL };
 
-  const char *name = ro_first(c, K_NAME);
-  const char *cui  = ro_first(c, K_CUI);
+  const char *name = jo_first_sv(c, K_NAME);
+  const char *cui  = jo_first_sv(c, K_CUI);
   /* openapi.ro sometimes returns cui as a number */
   char cuibuf[32] = {0};
   if (!cui) {
@@ -61,12 +52,12 @@ static int ro_emit_company(intel_sink *sink, const cJSON *c) {
   }
   if (!name && !cui) return 0;
 
-  const char *addr  = ro_first(c, K_ADDR);
-  const char *city  = ro_first(c, K_CITY);
-  const char *jud   = ro_first(c, K_JUD);
-  const char *state = ro_first(c, K_STATE);
-  const char *post  = ro_first(c, K_POST);
-  const char *regc  = ro_first(c, K_REG);
+  const char *addr  = jo_first_sv(c, K_ADDR);
+  const char *city  = jo_first_sv(c, K_CITY);
+  const char *jud   = jo_first_sv(c, K_JUD);
+  const char *state = jo_first_sv(c, K_STATE);
+  const char *post  = jo_first_sv(c, K_POST);
+  const char *regc  = jo_first_sv(c, K_REG);
 
   cJSON *data = cJSON_CreateObject();
   if (name)  cJSON_AddStringToObject(data, "name", name);

@@ -10,6 +10,7 @@
  * UniCourt — not ported (would be bare links / paywalled). Honest-empty on no
  * match. CourtListener is US case law; results are court cases referencing the
  * query, surfaced verbatim — never fabricated. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/httpclient.h"
 #include "../../third_party/cJSON.h"
@@ -18,24 +19,10 @@
 #include <string.h>
 #include <ctype.h>
 
-static void urlenc(const char *s, char *out, size_t cap) {
-  size_t o = 0;
-  for (const char *p = s; *p && o + 4 < cap; p++) {
-    unsigned char c = (unsigned char)*p;
-    if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') out[o++] = (char)c;
-    else o += (size_t)snprintf(out + o, cap - o, "%%%02X", c);
-  }
-  out[o] = 0;
-}
-static const char *jstr(cJSON *o, const char *k) {
-  cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
-}
-
 static int courtlistener(const source_ctx *ctx, intel_sink *sink,
                          const char *entity, const char *q, const char *service,
                          const char *tags) {
-  char enc[512]; urlenc(q, enc, sizeof enc);
+  char enc[512]; jo_urlencode_buf(q, enc, sizeof enc);
   char url[640];
   snprintf(url, sizeof url,
     "https://www.courtlistener.com/api/rest/v4/search/?q=%s&type=o", enc);
@@ -54,10 +41,10 @@ static int courtlistener(const source_ctx *ctx, intel_sink *sink,
   int emitted = 0, n = (res && cJSON_IsArray(res)) ? cJSON_GetArraySize(res) : 0;
   for (int i = 0; i < n && i < 15; i++) {
     cJSON *r = cJSON_GetArrayItem(res, i);
-    const char *cn = jstr(r, "caseName");
-    const char *court = jstr(r, "court");
-    const char *date = jstr(r, "dateFiled");
-    const char *rel = jstr(r, "absolute_url");
+    const char *cn = jo_str(r, "caseName");
+    const char *court = jo_str(r, "court");
+    const char *date = jo_str(r, "dateFiled");
+    const char *rel = jo_str(r, "absolute_url");
     if (!cn) continue;
     char link[512] = {0};
     if (rel) snprintf(link, sizeof link, "https://www.courtlistener.com%s", rel);
@@ -87,21 +74,27 @@ static int courtlistener(const source_ctx *ctx, intel_sink *sink,
   return emitted;
 }
 
+/* run() is a STATUS code, not a row count: core/scheduler.c does
+ * `status = rc == 0 ? "ok" : "error"`, so returning the emitted count marked
+ * every successful search as an errored run and fed the anomaly detector. */
 static int run_legal(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return 0;
-  return courtlistener(ctx, sink, ctx->entity, ctx->entity, "LEGAL_SEARCH",
-                       "[\"osint-search\",\"LEGAL_SEARCH\"]");
+  courtlistener(ctx, sink, ctx->entity, ctx->entity, "LEGAL_SEARCH",
+                "[\"osint-search\",\"LEGAL_SEARCH\"]");
+  return 0;
 }
 static int run_bankruptcy(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return 0;
   char q[300]; snprintf(q, sizeof q, "%s bankruptcy", ctx->entity);
-  return courtlistener(ctx, sink, ctx->entity, q, "BANKRUPTCY_SEARCH",
-                       "[\"osint-search\",\"BANKRUPTCY_SEARCH\"]");
+  courtlistener(ctx, sink, ctx->entity, q, "BANKRUPTCY_SEARCH",
+                "[\"osint-search\",\"BANKRUPTCY_SEARCH\"]");
+  return 0;
 }
 static int run_criminal(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return 0;
-  return courtlistener(ctx, sink, ctx->entity, ctx->entity, "CRIMINAL_RECORDS",
-                       "[\"osint-search\",\"CRIMINAL_RECORDS\"]");
+  courtlistener(ctx, sink, ctx->entity, ctx->entity, "CRIMINAL_RECORDS",
+                "[\"osint-search\",\"CRIMINAL_RECORDS\"]");
+  return 0;
 }
 
 static const source_def legal_def = {

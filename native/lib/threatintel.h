@@ -25,4 +25,33 @@ int threatintel_collect(const source_ctx *ctx, intel_sink *sink,
                          const char *env_key, const char *const *fallbacks,
                          ti_run run, void *ud);
 
+/* ── abuse.ch auth ────────────────────────────────────────────────────────
+ * abuse.ch moved every `*-api.abuse.ch` endpoint behind a (free) Auth-Key.
+ * Measured 2026-08-01:
+ *     401  urlhaus-api.abuse.ch/v1/urls/recent/
+ *     401  threatfox-api.abuse.ch/api/v1/
+ *     401  mb-api.abuse.ch/api/v1/          (MalwareBazaar)
+ *     200  urlhaus.abuse.ch/downloads/json_recent/
+ *     200  threatfox.abuse.ch/export/json/recent/
+ *     200  feodotracker.abuse.ch/downloads/ipblocklist.json
+ *     200  sslbl.abuse.ch/blacklist/ (both .csv blocklists)
+ * So six collectors (urlhaus-jp, threatfox-jp, threat-feed, threatfeeds-world,
+ * IOC_LOOKUP, HASH_LOOKUP) have been silently returning nothing — and because
+ * they signalled that as a failure, the circuit breaker quarantined them.
+ *
+ * urlhaus-jp, threatfox-jp, threatfeeds-world and HASH_LOOKUP already resolve
+ * this credential correctly and gate honestly without it. THREAT_FEED and
+ * IOC_LOOKUP did not, and simply got a 401 they reported as a fetch failure.
+ * This exists so they stop hand-rolling a fourth copy of the header.
+ *
+ * Returns an "Auth-Key: …" header string (owned by the callee, valid for the
+ * process lifetime) when ABUSE_CH_AUTH_KEY (or THREATFOX_AUTH_KEY) is set,
+ * else NULL. A NULL return is NOT an error: fall back to the keyless bulk
+ * export where one exists, otherwise gate honestly (log once, return 0) per
+ * contract R6 — never report "needs a key" as a data row or a failed fetch. */
+const char *abusech_auth_header(void);
+
+/* 1 if an abuse.ch credential is configured. */
+int abusech_have_key(void);
+
 #endif

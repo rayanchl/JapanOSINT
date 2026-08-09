@@ -1,0 +1,45 @@
+=== gnews-mon-in-kashmir
+exit: 0
+sched: rc=0 records=103 840ms
+--- stderr ---
+[rss] gnews-mon-in-kashmir emitted 103
+[sched] gnews-mon-in-kashmir run rc=0 records=103 840ms
+--- persisted: 103 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=103
+sub_source_id: (null)=103
+
+--- row 1 ---
+  uid            gnews-mon-in-kashmir|CBMiwAFBVV95cUxPQXY5bEtjRDNZMHVNZk5udkdEY254OHplOEJkWTNybFNzVF9KYXBtZHpDU3FGX3BfYk4wZHdPOTJsSjFfRHlfN0xKQUxOTUhMbE9rRDJ3bDZaU2w1RlJaQTBQTklTdWZHZkMtdXRMZ2tIeWp4ekttTG44cEhBY0h0aVZhanRKTHJiSmNiMlhVNzVKTTA5b1E5alFCRVZHQW5MbV9HUmRHTmkzdzhmRjMtLU9kUzlhMmJVVjVrdzBRSELSAccBQVVfeXFMT1o3MnVMUzNrLWlmVzRwME0xU3BuZUVYeDk1Y0N3TWl2TTIwQ2hDUGNNaDRoZ2RTZ05sLXp4aE9XOVpjbW1BcXc0U3JpRmkyVUN3aS1vT0VqRlhoUEc3SFZuLWlTX3RvUEdKaDRwblhyZ053VTZuUHVucmR5NnZoVFg3TWVjQzRxbkxmTW9vVVgtLXB4MHNROUdkV2VoVC1ac0NLdjhjaj
+  title          At least one non-local labourer killed, another injured in terrorist shooting in J&K’s Kulgam - The Hindu
+  body           <a href="https://news.google.com/rss/articles/CBMiwAFBVV95cUxPQXY5bEtjRDNZMHVNZk5udkdEY254OHplOEJkWTNybFNzVF9KYXBtZHpDU3FGX3BfYk4wZHdPOTJsSjFfRHlfN0xKQUxOTUhMbE9rRDJ3bDZaU2w1RlJaQTBQTklTdWZHZkMtdXRMZ2tIeWp4ekttTG44cEhBY0h0aVZhanRKTHJiSmNiMlhVNzVKTTA5b1E5alFCRVZHQW5MbV9HUmRHTmkzdzhmRjMtLU9kUzlhMmJVVjVrdzBRSELSAccBQVVfeXFMT1o3MnVMUzNrLWlmVzRwME0xU3BuZUVYeDk1Y0N3TWl2TTIwQ2hDUGNNaDRoZ2RTZ05sLXp4aE9XOVpjbW1BcXc0U3JpRmkyVUN3aS1vT0VqRlhoUEc3SFZuLWlTX3RvUEdKaDRwblhyZ053VTZuUHVucmR5NnZoVFg3TWVjQzRxbkxmTW9vVVgtLXB4MHNROUdkV2VoVC1ac0NLdjhjajZsUDZySkdTSlR4TDdDVi1TNHlBUTJNUXRRcXBoTzVzZw?oc=5" target="_blank">At least one non-local labourer killed, another injured in terrorist shooting in J&K’s Kulgam</a>&nbsp;&nbsp;<font color="#6f6f6f">The Hindu</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiwAFBVV95cUxPQXY5bEtjRDNZMHVNZk5udkdEY254OHplOEJkWTNybFNzVF9KYXBtZHpDU3FGX3BfYk4wZHdPOTJsSjFfRHlfN0xKQUxOTUhMbE9rRDJ3bDZaU2w1RlJaQTBQTklTdWZHZkMtdXRMZ2tIeWp4ekttTG44cEhBY0h0aVZhanRKTHJiSmNiMl
+  link           https://news.google.com/rss/articles/CBMiwAFBVV95cUxPQXY5bEtjRDNZMHVNZk5udkdEY254OHplOEJkWTNybFNzVF9KYXBtZHpDU3FGX3BfYk4wZHdPOTJsSjFfRHlfN0xKQUxOTUhMbE9rRDJ3bDZaU2w1RlJaQTBQTklTdWZHZkMtdXRMZ2tIeWp4ekttTG44cEhBY0h0aVZhanRKTHJiSmNiMlhVNzVKTTA5b1E5alFCRVZHQW5MbV9HUmRHTmkzdzhmRjMtLU9kUzlhMmJVVjVrdzBRSELSAccBQVVfeXFMT1o3MnVMUzNrLWlmVzRwME0xU3BuZUVYeDk1Y0N3TWl2TTIwQ2hDUGNNaDRoZ2RTZ05sLXp4aE9XOVpjbW1BcXc0U3JpRmkyVUN3aS1vT0VqRlhoUEc3SFZuLWlTX3RvUEdKaDRwblhyZ053VTZuUHVucmR5NnZoVFg3TWVjQzRxbkxmTW9vVVgtLXB4MHNROUdkV2VoVC1ac0NLdjhjajZsUDZySkdTSlR4TDdDVi1TNHlBUTJNUXRRcXBoTzVzZw?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 16:07:01 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","in"]
+  properties     {"guid":"CBMiwAFBVV95cUxPQXY5bEtjRDNZMHVNZk5udkdEY254OHplOEJkWTNybFNzVF9KYXBtZHpDU3FGX3BfYk4wZHdPOTJsSjFfRHlfN0xKQUxOTUhMbE9rRDJ3bDZaU2w1RlJaQTBQTklTdWZHZkMtdXRMZ2tIeWp4ekttTG44cEhBY0h0aVZhanRKTHJiSmNiMlhVNzVKTTA5b1E5alFCRVZHQW5MbV9HUmRHTmkzdzhmRjMtLU9kUzlhMmJVVjVrdzBRSELSAccBQVVfeXFMT1o3MnVMUzNrLWlmVzRwME0xU3BuZUVYeDk1Y0N3TWl2TTIwQ2hDUGNNaDRoZ2RTZ05sLXp4aE9XOVpjbW1BcXc0U3JpRmkyVUN3aS1vT0VqRlhoUEc3SFZuLWlTX3RvUEdKaDRwblhyZ053VTZuUHVucmR5NnZoVFg3TWVjQzRxbkxmTW9vVVgtLXB4MHNROUdkV2VoVC1ac0NLdjhjajZsUDZySkdTSl
+
+--- row 2 ---
+  uid            gnews-mon-in-kashmir|CBMiogFBVV95cUxNOEp2T3gxTVhtaDhtdndXNGUyUWtaUkVHaGI3RnRnaGxkUV9nN29aTGtJMWhMTFlSbkZuWTNQVTBkWnZFMGxydnBBZ29nRklTZjg5Qmk3cXpqUDFGQ2ZuS01taXZrMFo1SXViV01uanFyQkNReVVhek80MERSZ0RmaWU5V0tWaFR3ZEwzR2RHb2VtWmJBOUJsaGpOLWZqQVMwZmfSAagBQVVfeXFMUDg5OVV5RUcxenh1QzRsR1cwS3oxeHFudk4zUzJGT0otNnZ4WGNydGNXc1I3SWY2cm9Hem9SYWhocWtMQXpQQXhxb1JPRzNkb0Z2Vnd4ZWZzN3ZPQlZ5Y2NSRkgxcVNZV1FlZEVPRDNmYjB1VWRraEV5eS1tUWQ5Q1otaThmaHQtU2Z4TU5SZGlIeDA1eTJwbG9Zd3I2Zm5mdE9vcEdFMy1B
+  title          Migrant worker killed in south Kashmir terror attack, another injured - The Indian Express
+  body           <a href="https://news.google.com/rss/articles/CBMiogFBVV95cUxNOEp2T3gxTVhtaDhtdndXNGUyUWtaUkVHaGI3RnRnaGxkUV9nN29aTGtJMWhMTFlSbkZuWTNQVTBkWnZFMGxydnBBZ29nRklTZjg5Qmk3cXpqUDFGQ2ZuS01taXZrMFo1SXViV01uanFyQkNReVVhek80MERSZ0RmaWU5V0tWaFR3ZEwzR2RHb2VtWmJBOUJsaGpOLWZqQVMwZmfSAagBQVVfeXFMUDg5OVV5RUcxenh1QzRsR1cwS3oxeHFudk4zUzJGT0otNnZ4WGNydGNXc1I3SWY2cm9Hem9SYWhocWtMQXpQQXhxb1JPRzNkb0Z2Vnd4ZWZzN3ZPQlZ5Y2NSRkgxcVNZV1FlZEVPRDNmYjB1VWRraEV5eS1tUWQ5Q1otaThmaHQtU2Z4TU5SZGlIeDA1eTJwbG9Zd3I2Zm5mdE9vcEdFMy1B?oc=5" target="_blank">Migrant worker killed in south Kashmir terror attack, another injured</a>&nbsp;&nbsp;<font color="#6f6f6f">The Indian Express</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiogFBVV95cUxNOEp2T3gxTVhtaDhtdndXNGUyUWtaUkVHaGI3RnRnaGxkUV9nN29aTGtJMWhMTFlSbkZuWTNQVTBkWnZFMGxydnBBZ29nRklTZjg5Qmk3cXpqUDFGQ2ZuS01taXZrMFo1SXViV01uanFyQkNReVVhek80MERSZ0RmaWU5V0tWaFR3ZEwzR2
+  link           https://news.google.com/rss/articles/CBMiogFBVV95cUxNOEp2T3gxTVhtaDhtdndXNGUyUWtaUkVHaGI3RnRnaGxkUV9nN29aTGtJMWhMTFlSbkZuWTNQVTBkWnZFMGxydnBBZ29nRklTZjg5Qmk3cXpqUDFGQ2ZuS01taXZrMFo1SXViV01uanFyQkNReVVhek80MERSZ0RmaWU5V0tWaFR3ZEwzR2RHb2VtWmJBOUJsaGpOLWZqQVMwZmfSAagBQVVfeXFMUDg5OVV5RUcxenh1QzRsR1cwS3oxeHFudk4zUzJGT0otNnZ4WGNydGNXc1I3SWY2cm9Hem9SYWhocWtMQXpQQXhxb1JPRzNkb0Z2Vnd4ZWZzN3ZPQlZ5Y2NSRkgxcVNZV1FlZEVPRDNmYjB1VWRraEV5eS1tUWQ5Q1otaThmaHQtU2Z4TU5SZGlIeDA1eTJwbG9Zd3I2Zm5mdE9vcEdFMy1B?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 15:54:55 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","in"]
+  properties     {"guid":"CBMiogFBVV95cUxNOEp2T3gxTVhtaDhtdndXNGUyUWtaUkVHaGI3RnRnaGxkUV9nN29aTGtJMWhMTFlSbkZuWTNQVTBkWnZFMGxydnBBZ29nRklTZjg5Qmk3cXpqUDFGQ2ZuS01taXZrMFo1SXViV01uanFyQkNReVVhek80MERSZ0RmaWU5V0tWaFR3ZEwzR2RHb2VtWmJBOUJsaGpOLWZqQVMwZmfSAagBQVVfeXFMUDg5OVV5RUcxenh1QzRsR1cwS3oxeHFudk4zUzJGT0otNnZ4WGNydGNXc1I3SWY2cm9Hem9SYWhocWtMQXpQQXhxb1JPRzNkb0Z2Vnd4ZWZzN3ZPQlZ5Y2NSRkgxcVNZV1FlZEVPRDNmYjB1VWRraEV5eS1tUWQ5Q1otaThmaHQtU2Z4TU5SZGlIeDA1eTJwbG9Zd3I2Zm5mdE9vcEdFMy1B"}
+
+--- row 3 ---
+  uid            gnews-mon-in-kashmir|CBMisAFBVV95cUxOZzNLSlNEUGhfdlVSRm9mRXNkX1dPMHN6TE1mb2JkeDhCWkRiTE1Db05FbHZ2eU1VREY3aDhhdnJwdm05TFVUZG5RcmJaRWczTTdrNjRDRzljbFZDQUNZam1MY3c3ZnBxSEFmeHBhR1RUTldUMnlOb3FiZ19wU2xjOWM5QnNHWEI5cW5CUkVmTVh1RUNpYkh5aUVJR0FBdVpIVVJOWk0zekdRVjhSdDJpVw
+  title          LG Sinha Condemns Kulgam Attack, Directs Security Forces to Intensify Operations - Kashmir Life
+  body           <a href="https://news.google.com/rss/articles/CBMisAFBVV95cUxOZzNLSlNEUGhfdlVSRm9mRXNkX1dPMHN6TE1mb2JkeDhCWkRiTE1Db05FbHZ2eU1VREY3aDhhdnJwdm05TFVUZG5RcmJaRWczTTdrNjRDRzljbFZDQUNZam1MY3c3ZnBxSEFmeHBhR1RUTldUMnlOb3FiZ19wU2xjOWM5QnNHWEI5cW5CUkVmTVh1RUNpYkh5aUVJR0FBdVpIVVJOWk0zekdRVjhSdDJpVw?oc=5" target="_blank">LG Sinha Condemns Kulgam Attack, Directs Security Forces to Intensify Operations</a>&nbsp;&nbsp;<font color="#6f6f6f">Kashmir Life</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMisAFBVV95cUxOZzNLSlNEUGhfdlVSRm9mRXNkX1dPMHN6TE1mb2JkeDhCWkRiTE1Db05FbHZ2eU1VREY3aDhhdnJwdm05TFVUZG5RcmJaRWczTTdrNjRDRzljbFZDQUNZam1MY3c3ZnBxSEFmeHBhR1RUTldUMnlOb3FiZ19wU2xjOWM5QnNHWEI5cW5CUk
+  link           https://news.google.com/rss/articles/CBMisAFBVV95cUxOZzNLSlNEUGhfdlVSRm9mRXNkX1dPMHN6TE1mb2JkeDhCWkRiTE1Db05FbHZ2eU1VREY3aDhhdnJwdm05TFVUZG5RcmJaRWczTTdrNjRDRzljbFZDQUNZam1MY3c3ZnBxSEFmeHBhR1RUTldUMnlOb3FiZ19wU2xjOWM5QnNHWEI5cW5CUkVmTVh1RUNpYkh5aUVJR0FBdVpIVVJOWk0zekdRVjhSdDJpVw?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 16:43:39 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","in"]
+  properties     {"guid":"CBMisAFBVV95cUxOZzNLSlNEUGhfdlVSRm9mRXNkX1dPMHN6TE1mb2JkeDhCWkRiTE1Db05FbHZ2eU1VREY3aDhhdnJwdm05TFVUZG5RcmJaRWczTTdrNjRDRzljbFZDQUNZam1MY3c3ZnBxSEFmeHBhR1RUTldUMnlOb3FiZ19wU2xjOWM5QnNHWEI5cW5CUkVmTVh1RUNpYkh5aUVJR0FBdVpIVVJOWk0zekdRVjhSdDJpVw"}

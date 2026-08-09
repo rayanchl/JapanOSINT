@@ -7,6 +7,7 @@
 #include "fts.h"
 #include "progress.h"
 #include "prompts.h"
+#include "../lib/utf8.h"
 #include "../source.h"
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
@@ -85,17 +86,9 @@ static cJSON *extract_json(const char *raw) {
 
 /* ── UTF-8 + language detection ─────────────────────────────────────────── */
 
-/* Minimal decoder, mirroring core/fts.c's (well-formed input assumed). */
-static unsigned utf8_next(const unsigned char *s, int *adv) {
-  if (s[0] < 0x80) { *adv = 1; return s[0]; }
-  if ((s[0] & 0xE0) == 0xC0) { *adv = 2; return ((s[0] & 0x1Fu) << 6) | (s[1] & 0x3Fu); }
-  if ((s[0] & 0xF0) == 0xE0) { *adv = 3;
-    return ((s[0] & 0x0Fu) << 12) | ((s[1] & 0x3Fu) << 6) | (s[2] & 0x3Fu); }
-  if ((s[0] & 0xF8) == 0xF0) { *adv = 4;
-    return ((s[0] & 0x07u) << 18) | ((s[1] & 0x3Fu) << 12) |
-           ((s[2] & 0x3Fu) << 6) | (s[3] & 0x3Fu); }
-  *adv = 1; return s[0];
-}
+/* The decoder is lib/utf8.h's — the copy that used to live here assumed
+ * well-formed input and read up to three bytes past the allocation on a
+ * truncated tail. */
 
 /* Identical range set to core/fts.c fts_has_japanese (jpTokenizer.js JP_RE).
  * fts.h only exposes a boolean; the detector needs a count, hence the copy. */
@@ -113,7 +106,7 @@ static void cp_counts(const char *s, long *cjk, long *latin) {
   const unsigned char *p = (const unsigned char *)s;
   while (*p) {
     int adv;
-    unsigned cp = utf8_next(p, &adv);
+    unsigned cp = utf8_decode(p, &adv);
     if (cp_is_jp(cp)) (*cjk)++;
     else if ((cp >= 'A' && cp <= 'Z') || (cp >= 'a' && cp <= 'z')) (*latin)++;
     p += adv;
@@ -611,19 +604,28 @@ static long pending_count(sqlite3 *h) {
 typedef struct { db_handle *db; char rid[40]; int max_items; } bf_arg;
 
 /* Own http_client + llm_client, like searchapi.c's run_thread — a background
- * sweep must not share a connection pool with anything user-facing. The
- * db_handle IS shared: unlike breach_jobs.c (long bulk transactions, bulk
- * pragmas) every write here is a single-row transaction taken and released
- * between LLM calls that dominate wall clock, so the event loop never waits
- * meaningfully. SQLITE_THREADSAFE=1 makes the shared handle legal. */
+ * sweep must not share a connection pool with anything user-facing. Own
+ * db_handle for the same reason every other off-loop pod has one.
+ *
+ * THE OLD JUSTIFICATION FOR SHARING WAS WRONG, and worth spelling out because
+ * it is a plausible-sounding mistake. It read: "every write here is a
+ * single-row transaction taken and released between LLM calls that dominate
+ * wall clock, so the event loop never waits meaningfully. SQLITE_THREADSAFE=1
+ * makes the shared handle legal." SQLITE_THREADSAFE=1 serializes individual
+ * API CALLS on a connection; it does not scope TRANSACTIONS to a thread. A
+ * transaction belongs to the connection, so this thread's BEGIN and a
+ * concurrent handler's ROLLBACK on the same handle are the same transaction —
+ * short writes make the window narrow, not absent. */
 static void *bf_thread(void *vp) {
   bf_arg *a = vp;
   osint_request *rp = progress_get(a->rid);
   http_client *http = http_client_new();
   llm_client llm;
   llm_init(&llm, http);              /* background lane (interactive = 0) */
+  db_handle own;
+  db_handle *db = db_worker_open(&own, a->db);
 
-  long total = pending_count(a->db->h);
+  long total = pending_count(db->h);
   if (a->max_items > 0 && total > a->max_items) total = a->max_items;
   if (total < 1) total = 1;
 
@@ -645,12 +647,12 @@ static void *bf_thread(void *vp) {
       final_phase = "error";
       break;
     }
-    int n = translate_run(a->db, &llm, want, &g_bf_cancel);
+    int n = translate_run(db, &llm, want, &g_bf_cancel);
     /* translate_run returns only SUCCESSES; a batch that was entirely
      * non-Japanese or entirely failing also returns 0. Re-checking the
      * pending count distinguishes "drained" from "stuck" so the loop cannot
      * spin on a batch it can never translate. */
-    long left = pending_count(a->db->h);
+    long left = pending_count(db->h);
     if (n <= 0 && left <= 0) break;
     if (n <= 0 && left > 0) {
       /* No progress but work remains → every row in that window was skipped
@@ -678,6 +680,7 @@ static void *bf_thread(void *vp) {
   progress_finish(rp, final_phase);
 
   http_client_free(http);
+  db_worker_close(&own);        /* no-op if we fell back to the shared handle */
   pthread_mutex_lock(&g_bf_lock);
   g_bf_running = 0;
   pthread_mutex_unlock(&g_bf_lock);

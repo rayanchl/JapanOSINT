@@ -452,23 +452,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       entry_t *e = &all[idxs[gi]];
       const pref_t *pr = e->pref;
       if (pr) {
-        double lon, lat;
-        if (gc <= 1) { lon = pr->lon; lat = pr->lat; }
-        else {
-          double ang = ((double)gi / gc) * 2.0 * M_PI;
-          double rr = 0.04 + (gi % 3) * 0.015;
-          lon = pr->lon + cos(ang) * rr;
-          lat = pr->lat + sin(ang) * rr;
-        }
-        cJSON *f = cJSON_CreateObject();
-        cJSON_AddStringToObject(f, "type", "Feature");
-        cJSON *g = cJSON_CreateObject();
-        cJSON_AddStringToObject(g, "type", "Point");
-        cJSON *co = cJSON_CreateArray();
-        cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-        cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-        cJSON_AddItemToObject(g, "coordinates", co);
-        cJSON_AddItemToObject(f, "geometry", g);
+        /* Entries in the same prefecture used to be spread around an
+         * index-derived ring of 0.04–0.07 deg (≈4.4–7.8 km) about the
+         * prefectural point, which the map presented as each individual's
+         * position. The NPA publication carries no location for any of them.
+         * Emit the one real point — the prefectural handling force — and say
+         * so in the properties; do not synthesise a per-person offset. */
+        double lon = pr->lon, lat = pr->lat;
+        cJSON *f = gj_point_feature(lon, lat);
         cJSON *p = cJSON_CreateObject();       /* EXACT JS key order */
         char idb[64];
         snprintf(idb, sizeof idb, "JYUYO_%s_%d", pr->code, gi + 1);
@@ -487,6 +478,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON_AddStringToObject(p, "prefecture_code", pr->code);
         cJSON_AddStringToObject(p, "prefecture_ja", pr->ja);
         cJSON_AddBoolToObject(p, "sensitive", 1);
+        /* Unified provenance vocabulary: the point is the handling prefectural
+         * force, not the individual. Never "exact" — this is a named person. */
+        cJSON_AddStringToObject(p, "geo_provenance", "handling-force-prefecture");
+        cJSON_AddStringToObject(p, "geo_precision", "prefecture");
+        cJSON_AddBoolToObject(p, "geo_uncertain", 1);
+        cJSON_AddStringToObject(p, "geo_note",
+          "point is the handling prefectural police force; the NPA notice "
+          "publishes no location for the individual");
         cJSON_AddStringToObject(p, "source", ctx->source_id);
         cJSON_AddItemToObject(f, "properties", p);
         cJSON_AddItemToArray(features, f);

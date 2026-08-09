@@ -8,6 +8,7 @@
  *
  * uid = diet-records|<speechID>. The masthead pseudo-record (speaker
  * "会議録情報", speechOrder 0) is skipped — it carries no speaker. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -19,13 +20,6 @@
 #define WINDOW_DAYS 7
 #define PAGE_SIZE   100      /* speech API max per request */
 #define MAX_RECORDS 300      /* cap a busy window (idempotent upsert backfills) */
-
-/* string-truthy field, else NULL (JSON null / empty → NULL). */
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
-           ? v->valuestring : NULL;
-}
 
 static void add_str(cJSON *o, const char *k, const char *v) {
   cJSON_AddItemToObject(o, k, v ? cJSON_CreateString(v) : cJSON_CreateNull());
@@ -57,18 +51,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *r;
     cJSON_ArrayForEach(r, recs) {
       if (emitted >= MAX_RECORDS) break;
-      const char *sid = sv(r, "speechID");
-      const char *speaker = sv(r, "speaker");
+      const char *sid = jo_sv(r, "speechID");
+      const char *speaker = jo_sv(r, "speaker");
       if (!sid) continue;
       if (speaker && strcmp(speaker, "会議録情報") == 0) continue; /* masthead */
 
-      const char *house   = sv(r, "nameOfHouse");
-      const char *meeting = sv(r, "nameOfMeeting");
-      const char *issue   = sv(r, "issue");
-      const char *date    = sv(r, "date");
-      const char *speech  = sv(r, "speech");
-      const char *surl    = sv(r, "speechURL");
-      const char *murl    = sv(r, "meetingURL");
+      const char *house   = jo_sv(r, "nameOfHouse");
+      const char *meeting = jo_sv(r, "nameOfMeeting");
+      const char *issue   = jo_sv(r, "issue");
+      const char *date    = jo_sv(r, "date");
+      const char *speech  = jo_sv(r, "speech");
+      const char *surl    = jo_sv(r, "speechURL");
+      const char *murl    = jo_sv(r, "meetingURL");
 
       /* title = speaker (the actor); summary = house · meeting · issue (date) */
       char summary[256]; summary[0] = 0; int w = 0;
@@ -91,10 +85,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       add_str(p, "meeting", meeting);
       add_str(p, "issue", issue);
       add_str(p, "speaker", speaker);
-      add_str(p, "speaker_yomi", sv(r, "speakerYomi"));
-      add_str(p, "speaker_group", sv(r, "speakerGroup"));
-      add_str(p, "speaker_position", sv(r, "speakerPosition"));
-      add_str(p, "issue_id", sv(r, "issueID"));
+      add_str(p, "speaker_yomi", jo_sv(r, "speakerYomi"));
+      add_str(p, "speaker_group", jo_sv(r, "speakerGroup"));
+      add_str(p, "speaker_position", jo_sv(r, "speakerPosition"));
+      add_str(p, "issue_id", jo_sv(r, "issueID"));
       add_str(p, "meeting_url", murl);
       char *pj = cJSON_PrintUnformatted(p);
       cJSON_Delete(p);
@@ -136,7 +130,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   fprintf(stderr, "[diet-records] emitted %d\n", emitted);
-  return emitted > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def diet_records_def = {

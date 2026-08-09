@@ -8,19 +8,42 @@
 
 static double round4(double v) { return floor(v * 1e4 + 0.5) / 1e4; }
 
-/* JS: (url || name || '').slice(0,60).toLowerCase(). ASCII-only lowering, which
- * is what the JS does for these strings in practice — a multi-byte UTF-8 name
- * passes through untouched, and the 60-char bound is on bytes, exactly as the
- * ported helpers already bound it. */
+/* Node was `(url || name || '').slice(0,60).toLowerCase()`, and the ported
+ * helpers copied the 60-byte bound. That bound is a data-loss bug, not a
+ * fidelity requirement: aggregator URLs share long path prefixes, so cameras in
+ * one city collapse onto the same key and overwrite each other in the camera
+ * keyspace. cam_skylinewebcams.c measured it directly — "101 cameras scraped,
+ * 36 stored" — and fixed it locally with a shortened prefix plus a hash of the
+ * WHOLE source string. That fix belongs here, in the canonical constructor, not
+ * in one of fifteen copies.
+ *
+ * Shared-prefix exposure at 60 bytes, measured against the live collectors:
+ *   worldcam_eu   46 chars shared   webcamera24  40   scs_com_ua  40
+ *
+ * 44-char readable prefix + '#' + FNV-1a-64 of the full string. Still stable
+ * across runs (no randomness, no time), still human-inspectable, and now
+ * collision-free for any two distinct sources. The prefix is cut on a UTF-8
+ * boundary so a Japanese name can never be split mid-codepoint.
+ *
+ * This re-keys existing camera rows once, on the next run of each channel.
+ * That is the intended trade: the old keys were merging distinct cameras. */
 static void uid_tail(const char *url, const char *name, char *out,
                      size_t outsz) {
   const char *src = (url && *url) ? url : (name ? name : "");
+  unsigned long long h = 1469598103934665603ULL;
+  for (const char *p = src; *p; p++) {
+    h ^= (unsigned char)*p;
+    h *= 1099511628211ULL;
+  }
   size_t i = 0;
-  for (; src[i] && i < 60 && i + 1 < outsz; i++) {
+  for (; src[i] && i < 44 && i + 18 < outsz; i++) {
     unsigned char c = (unsigned char)src[i];
     out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
   }
+  /* never split a multi-byte sequence */
+  while (i > 0 && ((unsigned char)out[i - 1] & 0xC0) == 0x80) i--;
   out[i] = 0;
+  snprintf(out + i, outsz - i, "#%016llx", h);
 }
 
 cJSON *cam_make_feature(double lat, double lon, const char *name,

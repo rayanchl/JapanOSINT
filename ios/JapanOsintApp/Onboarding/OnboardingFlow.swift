@@ -596,8 +596,17 @@ private struct IntroLayersStep: View {
     private let showcase = [
         "unified-flights", "unified-ais-ships", "unified-trains", "cameras",
         "earthquake", "wifi-networks", "satellite-imagery", "phishing-feeds-jp",
-        "poc-in-github", "onsen-map", "real-estate", "population-density",
-        "twitter-geo", "vending-machines", "tabelog-restaurants", "twitch-jp-streams",
+        // `population-density` was the same defect as `twitch-jp-streams`
+        // below, one step further along: no source, no curated row, and no
+        // layer of that id anywhere in the engine — the tile named a layer
+        // /api/layers has never returned. The real layer id is `population`
+        // (estat-population).
+        "poc-in-github", "onsen-map", "real-estate", "population",
+        // `twitch-jp-streams` used to sit here; it has no collector in
+        // `native/collectors/sources/`, so the tile advertised a source the
+        // product cannot deliver. Repointed at bluesky-jetstream-jp, which is
+        // implemented (`bluesky_jetstream_jp.c`) and catalogued.
+        "twitter-geo", "vending-machines", "tabelog-restaurants", "bluesky-jetstream-jp",
     ]
 
     @State private var highlight = 0
@@ -624,7 +633,7 @@ private struct IntroLayersStep: View {
                             .scaleEffect(on ? 1.14 : 1)
                             .shadow(color: on ? tint.opacity(0.6) : .clear, radius: 8)
                         Text(LayerRegistry.displayName(forId: id))
-                            .font(.system(size: 9))
+                            .font(.caption2)
                             .foregroundStyle(theme.textMuted)
                             .lineLimit(1)
                     }
@@ -1031,7 +1040,7 @@ private struct FirstRunStep: View {
                     .background(on ? tint : theme.surfaceElevated)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 Text(LayerRegistry.displayName(forId: id))
-                    .font(.system(size: 10))
+                    .font(.caption2)
                     .foregroundStyle(on ? theme.text : theme.textMuted)
                     .lineLimit(1)
             }

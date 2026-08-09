@@ -1,0 +1,7 @@
+=== rsf
+exit: 1
+sched: rc=-1 records=0 213ms
+--- stderr ---
+[sched] rsf run rc=-1 records=0 213ms
+[detect] anomaly opened: rsf verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

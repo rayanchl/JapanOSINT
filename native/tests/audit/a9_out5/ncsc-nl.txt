@@ -1,0 +1,56 @@
+=== ncsc-nl
+exit: 0
+sched: rc=0 records=25 212ms
+--- stderr ---
+[rss] ncsc-nl emitted 25
+[sched] ncsc-nl run rc=0 records=25 212ms
+--- persisted: 25 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=25
+sub_source_id: (null)=25
+
+--- row 1 ---
+  uid            ncsc-nl|NCSC-2026-0274 [1.00]
+  title          NCSC-2026-0274 [1.00] [M/H] Kwetsbaarheid verholpen in SolarWinds Web Help Desk
+  body           SolarWinds heeft een kwetsbaarheid verholpen in SolarWinds Web Help Desk. De kwetsbaarheid betreft een authenticatiebypass in de SAML 2.0 authenticatie van SolarWinds Web Help Desk. Deze kwetsbaarheid treedt op in systemen waarbij SAML-authenticatie is ingeschakeld. Een aanvaller kan de authenticatie omzeilen door misbruik te maken van de wijze waarop SAML-asserties worden verwerkt, waardoor ongeautoriseerde toegang verkregen kan worden tot het systeem. Dit beïnvloedt de integriteit van het authenticatiemechanisme en kan leiden tot toegang tot gevoelige administratieve functies.
+  summary        SolarWinds heeft een kwetsbaarheid verholpen in SolarWinds Web Help Desk. De kwetsbaarheid betreft een authenticatiebypass in de SAML 2.0 authenticatie van SolarWinds Web Help Desk. Deze kwetsbaarheid treedt op in systemen waarbij SAML-auth
+  link           https://advisories.ncsc.nl/advisory?id=NCSC-2026-0274
+  language       nl
+  published_at   Fri, 31 Jul 2026 11:55:16 +0000
+  record_type    article
+  tags           ["cyber","cert","advisory","netherlands"]
+  properties     {"guid":"NCSC-2026-0274 [1.00]"}
+
+--- row 2 ---
+  uid            ncsc-nl|NCSC-2026-0273 [1.00]
+  title          NCSC-2026-0273 [1.00] [M/H] Kwetsbaarheden verholpen in Adobe Campaign Classic
+  body           Adobe heeft kwetsbaarheden verholpen in Adobe Campaign Classic (ACC). De eerste kwetsbaarheid betreft een Incorrect Authorization in de core authorization mechanismen van ACC, waardoor een aanvaller arbitrary code kan uitvoeren zonder enige gebruikersinteractie. Dit betekent dat de aanvaller acties kan uitvoeren buiten de bedoelde permissies. De tweede kwetsbaarheid is een SQL-injectie die het mogelijk maakt voor aanvallers om ongeautoriseerde queries uit te voeren, bestanden van het systeem te lezen en gevoelige geheugeninformatie te benaderen. Ook deze kwetsbaarheid kan worden misbruikt zonder gebruikersinteractie.
+
+Adobe geeft aan dat de kwetsbaarheden in de cloud-versie van Campaign Classic inmiddels zijn verholpen. Dus de kwetsbaarheidsinformatie is met name relevant voor organisaties die Campaign Classic in volledige on-premise configuraties draaien, of een hybride oplossing gebrui …<4 more chars>
+  summary        Adobe heeft kwetsbaarheden verholpen in Adobe Campaign Classic (ACC). De eerste kwetsbaarheid betreft een Incorrect Authorization in de core authorization mechanismen van ACC, waardoor een aanvaller arbitrary code kan uitvoeren zonder enige
+  link           https://advisories.ncsc.nl/advisory?id=NCSC-2026-0273
+  language       nl
+  published_at   Fri, 31 Jul 2026 09:11:51 +0000
+  record_type    article
+  tags           ["cyber","cert","advisory","netherlands"]
+  properties     {"guid":"NCSC-2026-0273 [1.00]"}
+
+--- row 3 ---
+  uid            ncsc-nl|NCSC-2026-0272 [1.00]
+  title          NCSC-2026-0272 [1.00] [M/H] Kwetsbaarheden verholpen in JFrog Artifactory
+  body           JFrog heeft meerdere kwetsbaarheden verholpen in JFrog Artifactory De kwetsbaarheden betreffen verschillende onderdelen van JFrog Artifactory.
+
+- Er is een privilege-escalatie mogelijk doordat het systeem de scope van tokens niet controleert, waardoor een aanvaller zijn rechten kan verhogen.
+- Daarnaast kunnen gebruikers met beperkte rechten toegang krijgen tot geprivilegieerde autorisatiematerialen en kunnen zij via een zwakke refresh token validatie een administrator token verkrijgen.
+- Verder is er een deserialisatieprobleem in de package handling, wat kan leiden tot ongeautoriseerde code-uitvoering of datamanipulatie.
+- Onjuiste URL-validatie maakt het mogelijk om ongeautoriseerde verzoeken te maken en interne services of gecachte data te benaderen.
+- Een path traversal kwetsbaarheid kan leiden tot het schrijven van bestanden buiten de bedoelde directory.
+- Er is ook een autorisatiez …<1062 more chars>
+  summary        JFrog heeft meerdere kwetsbaarheden verholpen in JFrog Artifactory De kwetsbaarheden betreffen verschillende onderdelen van JFrog Artifactory.
+
+- Er is een privilege-escalatie mogelijk doordat het systeem de scope van tokens niet controleer
+  link           https://advisories.ncsc.nl/advisory?id=NCSC-2026-0272
+  language       nl
+  published_at   Fri, 31 Jul 2026 08:51:36 +0000
+  record_type    article
+  tags           ["cyber","cert","advisory","netherlands"]
+  properties     {"guid":"NCSC-2026-0272 [1.00]"}

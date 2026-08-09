@@ -1,0 +1,429 @@
+=== AT_POSTAL  entity=1010
+exit: 0
+sched: rc=0 records=4 157ms
+--- stderr ---
+[AT_POSTAL] emitted 4
+[sched] AT_POSTAL run rc=0 records=4 157ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: locality=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            AT_POSTAL|at:1010:Wien, Innere Stadt
+  title          Wien, Innere Stadt
+  body           {"locality":"Wien, Innere Stadt","postal_code":"1010","municipality":"Wien","region":"Wien","source":"OpenPLZ"}
+  summary        Wien, Wien
+  language       de
+  record_type    locality
+  tags           ["osint-search","AT_POSTAL"]
+  properties     {"service":"AT_POSTAL","success":true}
+#################################################
+=== CH_POSTAL  entity=8001
+exit: 0
+sched: rc=0 records=1 130ms
+--- stderr ---
+[CH_POSTAL] emitted 1
+[sched] CH_POSTAL run rc=0 records=1 130ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: locality=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            CH_POSTAL|ch:8001:Zürich
+  title          Zürich
+  body           {"locality":"Zürich","postal_code":"8001","municipality":"Zürich","region":"Zürich","source":"OpenPLZ"}
+  summary        Zürich, Zürich
+  language       de
+  record_type    locality
+  tags           ["osint-search","CH_POSTAL"]
+  properties     {"service":"CH_POSTAL","success":true}
+#################################################
+usage: verify_one.py [-h] [--slot SLOT] [--rows ROWS] [--timeout TIMEOUT]
+                     [--stderr]
+                     source_id [entity]
+verify_one.py: error: unrecognized arguments: Johans gate
+#################################################
+=== DK_ADDRESS  entity=Vesterbrogade
+exit: 0
+sched: rc=0 records=10 279ms
+--- stderr ---
+[DK_ADDRESS] emitted 10
+[sched] DK_ADDRESS run rc=0 records=10 279ms
+--- persisted: 10 rows, 10 with lat/lon, 0 with geometry ---
+record_type: dk-address=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            DK_ADDRESS|0a3f50af-d4e6-32b8-e044-0003ba298018
+  title          Vesterbrogade 3, 4930 Maribo
+  body           {"address":"Vesterbrogade 3, 4930 Maribo","postal_code":"4930","post_town":"Maribo","source":"DAWA (Denmark)"}
+  summary        Maribo
+  language       da
+  lat            54.77532835
+  lon            11.49322695
+  record_type    dk-address
+  tags           ["osint-search","DK_ADDRESS"]
+  properties     {"service":"DK_ADDRESS","success":true}
+#################################################
+=== SUN_TIMES  entity=35.6895,139.6917
+exit: 0
+sched: rc=0 records=1 151ms
+--- stderr ---
+[SUN_TIMES] emitted 1
+[sched] SUN_TIMES run rc=0 records=1 151ms
+--- persisted: 1 rows, 1 with lat/lon, 0 with geometry ---
+record_type: sun-times=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            SUN_TIMES|sun:35.6895,139.6917
+  title          Sun times @ 35.6895,139.6917
+  body           {"lat":35.6895,"lon":139.6917,"sunrise_utc":"2026-07-30T19:46:54+00:00","sunset_utc":"2026-07-31T09:48:26+00:00","solar_noon_utc":"2026-07-31T02:47:40+00:00","source":"sunrise-sunset.org"}
+  summary        2026-07-30T19:46:54+00:00
+  language       en
+  lat            35.6895
+  lon            139.6917
+  record_type    sun-times
+  tags           ["osint-search","SUN_TIMES"]
+  properties     {"service":"SUN_TIMES","success":true}
+#################################################
+=== ELEVATION_LOOKUP  entity=35.6895,139.6917
+exit: 0
+sched: rc=0 records=1 321ms
+--- stderr ---
+[ELEVATION_LOOKUP] emitted 1
+[sched] ELEVATION_LOOKUP run rc=0 records=1 321ms
+--- persisted: 1 rows, 1 with lat/lon, 0 with geometry ---
+record_type: elevation=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            ELEVATION_LOOKUP|elev:35.6895,139.6917
+  title          Elevation 42 m @ 35.6895,139.6917
+  body           {"lat":35.6895,"lon":139.6917,"elevation_m":42,"source":"Open-Elevation"}
+  language       en
+  lat            35.6895
+  lon            139.6917
+  record_type    elevation
+  tags           ["osint-search","ELEVATION_LOOKUP"]
+  properties     {"service":"ELEVATION_LOOKUP","success":true}
+#################################################
+=== UK_POLICE_CRIME  entity=51.5074,-0.1278
+exit: 0
+sched: rc=0 records=50 442ms
+--- stderr ---
+[UK_POLICE_CRIME] emitted 50
+[sched] UK_POLICE_CRIME run rc=0 records=50 442ms
+--- persisted: 35 rows, 35 with lat/lon, 0 with geometry ---
+record_type: uk-crime=35
+sub_source_id: (null)=35
+
+--- row 1 ---
+  uid            UK_POLICE_CRIME|ukcrime:anti-social-behaviour · On or near Winnett Street
+  title          anti-social-behaviour · On or near Winnett Street
+  body           {"category":"anti-social-behaviour","month":"2026-06","street":"On or near Winnett Street","source":"data.police.uk"}
+  summary        2026-06
+  language       en
+  lat            51.512013
+  lon            -0.133502
+  record_type    uk-crime
+  tags           ["osint-search","UK_POLICE_CRIME"]
+  properties     {"service":"UK_POLICE_CRIME","category":"anti-social-behaviour","success":true}
+#################################################
+=== UK_POSTCODES  entity=SW1A1AA
+exit: 0
+sched: rc=0 records=1 64ms
+--- stderr ---
+[UK_POSTCODES] emitted 1
+[sched] UK_POSTCODES run rc=0 records=1 64ms
+--- persisted: 1 rows, 1 with lat/lon, 0 with geometry ---
+record_type: uk-postcode=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            UK_POSTCODES|SW1A 1AA
+  title          SW1A 1AA
+  body           {"postcode":"SW1A 1AA","admin_district":"Westminster","region":"London","constituency":"Cities of London and Westminster","source":"postcodes.io"}
+  summary        Westminster, London
+  language       en
+  lat            51.50101
+  lon            -0.141563
+  record_type    uk-postcode
+  tags           ["osint-search","UK_POSTCODES"]
+  properties     {"service":"UK_POSTCODES","success":true}
+#################################################
+=== BLOCKCHAIR  entity=1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+exit: 0
+sched: rc=0 records=0 133ms
+--- stderr ---
+[blockchair] http status=430
+[sched] BLOCKCHAIR run rc=0 records=0 133ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== BTC_MEMPOOL  entity=1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+exit: 0
+sched: rc=0 records=1 70ms
+--- stderr ---
+[btc_mempool] emitted 1
+[sched] BTC_MEMPOOL run rc=0 records=1 70ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: crypto-address=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            BTC_MEMPOOL|1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+  title          BTC 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+  body           {"address":"1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa","chain":"bitcoin","funded_sat":"5732400058","spent_sat":"0","balance_sat":5732400058,"chain_tx_count":"64409","mempool_tx_count":"0","source":"mempool.space"}
+  summary        on-chain address stats
+  link           https://mempool.space/address/1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+  language       en
+  record_type    crypto-address
+  tags           ["osint-search","BTC_MEMPOOL"]
+  properties     {"service":"BTC_MEMPOOL","chain":"bitcoin","address":"1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa","balance_sat":5732400058,"success":true}
+#################################################
+=== ENS_RESOLVE  entity=vitalik.eth
+exit: 0
+sched: rc=0 records=1 130ms
+--- stderr ---
+[ENS_RESOLVE] emitted 1
+[sched] ENS_RESOLVE run rc=0 records=1 130ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: ens-resolution=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            ENS_RESOLVE|0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+  title          vitalik.eth
+  body           {"address":"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045","ens_name":"vitalik.eth","display_name":"vitalik.eth","avatar":"https://metadata.ens.domains/mainnet/avatar/vitalik.eth","query":"vitalik.eth","source":"ENS (ensideas)"}
+  summary        0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+  link           https://app.ens.domains/vitalik.eth
+  language       en
+  record_type    ens-resolution
+  tags           ["osint-search","crypto","ens","ethereum"]
+  properties     {"service":"ENS_RESOLVE","chain":"ethereum","address":"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045","ens_name":"vitalik.eth","query":"vitalik.eth","success":true}
+#################################################
+=== ETH_BLOCKSCOUT  entity=0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+exit: 0
+sched: rc=0 records=1 388ms
+--- stderr ---
+[ETH_BLOCKSCOUT] emitted 1
+[sched] ETH_BLOCKSCOUT run rc=0 records=1 388ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: eth-address=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            ETH_BLOCKSCOUT|0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+  title          0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+  body           {"address":"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045","chain":"ethereum","coin_balance_wei":"6632230430120324825","is_contract":true,"source":"Blockscout"}
+  summary        Ethereum contract
+  link           https://eth.blockscout.com/address/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+  language       en
+  record_type    eth-address
+  tags           ["osint-search","crypto","ethereum"]
+  properties     {"service":"ETH_BLOCKSCOUT","chain":"ethereum","address":"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045","is_contract":true,"success":true}
+#################################################
+=== OFAC_CRYPTO  entity=1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+exit: 0
+sched: rc=0 records=0 559ms
+--- stderr ---
+[ofac_crypto] http status=404
+[sched] OFAC_CRYPTO run rc=0 records=0 559ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== SOLANA_RPC  entity=9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM
+exit: 0
+sched: rc=0 records=1 67ms
+--- stderr ---
+[SOLANA_RPC] emitted 1
+[sched] SOLANA_RPC run rc=0 records=1 67ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: solana-address=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            SOLANA_RPC|9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM
+  title          9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM
+  body           {"address":"9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM","chain":"solana","lamports":10755443986402344,"owner":"11111111111111111111111111111111","executable":false,"rent_epoch":1.8446744073709552e+19,"slot":436412708,"source":"Solana JSON-RPC"}
+  summary        Solana account
+  link           https://explorer.solana.com/address/9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM
+  language       en
+  record_type    solana-address
+  tags           ["osint-search","crypto","solana"]
+  properties     {"service":"SOLANA_RPC","chain":"solana","address":"9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM","owner":"11111111111111111111111111111111","executable":false,"success":true}
+#################################################
+=== TRON_SCAN  entity=TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t
+exit: 0
+sched: rc=0 records=0 305ms
+--- stderr ---
+[TRON_SCAN] http status=401
+[sched] TRON_SCAN run rc=0 records=0 305ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== DEFI_TRACKER  entity=0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[sched] DEFI_TRACKER run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== EXCHANGE_FLOW  entity=0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[sched] EXCHANGE_FLOW run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== GITLAB_USER  entity=torvalds
+exit: 0
+sched: rc=0 records=0 253ms
+--- stderr ---
+[GITLAB_USER] emitted 0
+[sched] GITLAB_USER run rc=0 records=0 253ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== GRAVATAR_GLOBAL  entity=torvalds@linux-foundation.org
+exit: 0
+sched: rc=0 records=1 409ms
+--- stderr ---
+[GRAVATAR_GLOBAL] emitted 1
+[sched] GRAVATAR_GLOBAL run rc=0 records=1 409ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: gravatar-profile=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            GRAVATAR_GLOBAL|GRAVATAR_GLOBAL|fb47627bc8c0bcdb36321edfbf02e916
+  title          reallylinustorvalds
+  body           {"email_hash":"fb47627bc8c0bcdb36321edfbf02e916","username":"reallylinustorvalds","display_name":"reallylinustorvalds","avatar":"https://0.gravatar.com/avatar/fb47627bc8c0bcdb36321edfbf02e916","source":"Gravatar"}
+  link           https://gravatar.com/reallylinustorvalds
+  language       en
+  record_type    gravatar-profile
+  tags           ["osint-search","identity"]
+  properties     {"service":"GRAVATAR_GLOBAL","query":"torvalds@linux-foundation.org","url":"https://gravatar.com/reallylinustorvalds","success":true}
+#################################################
+=== KEYBASE  entity=torvalds
+exit: 0
+sched: rc=0 records=1 317ms
+--- stderr ---
+[KEYBASE] emitted 1
+[sched] KEYBASE run rc=0 records=1 317ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: keybase-user=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            KEYBASE|KEYBASE|torvalds
+  title          torvalds
+  body           {"username":"torvalds","proofs":[],"source":"Keybase"}
+  link           https://keybase.io/torvalds
+  language       en
+  record_type    keybase-user
+  tags           ["osint-search","identity"]
+  properties     {"service":"KEYBASE","query":"torvalds","url":"https://keybase.io/torvalds","success":true}
+#################################################
+=== GITHUB_GISTS  entity=tokyo
+exit: 0
+sched: rc=0 records=0 237ms
+--- stderr ---
+[GITHUB_GISTS] emitted 0
+[sched] GITHUB_GISTS run rc=0 records=0 237ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== ALEPH_SEARCH  entity=Gazprom
+exit: 0
+sched: rc=0 records=0 193ms
+--- stderr ---
+[aleph] http status=401
+[sched] ALEPH_SEARCH run rc=0 records=0 193ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== FR_DATAGOUV  entity=transport
+exit: 0
+sched: rc=0 records=20 456ms
+--- stderr ---
+[FR_DATAGOUV] emitted 20
+[sched] FR_DATAGOUV run rc=0 records=20 456ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: fr-dataset=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            FR_DATAGOUV|53ba5b91a3a729219b7beae9
+  title          Transport 
+  body           {"title":"Transport ","organization":"Mairie de Monacia d'Aullène","source":"data.gouv.fr"}
+  summary        Mairie de Monacia d'Aullène
+  link           https://www.data.gouv.fr/datasets/transport
+  language       fr
+  record_type    fr-dataset
+  tags           ["osint-search","FR_DATAGOUV"]
+  properties     {"service":"FR_DATAGOUV","success":true}
+#################################################
+=== ES_BORME  entity=Telefonica
+exit: 0
+sched: rc=0 records=0 124ms
+--- stderr ---
+[es_borme] http status=404
+[es_borme] emitted 0
+[sched] ES_BORME run rc=0 records=0 124ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== EUROSTAT  entity=nama_10_gdp
+exit: 0
+sched: rc=0 records=400 5615ms
+--- stderr ---
+[EUROSTAT] emitted 400
+[sched] EUROSTAT run rc=0 records=400 5615ms
+--- persisted: 400 rows, 0 with lat/lon, 0 with geometry ---
+record_type: eurostat-observation=400
+sub_source_id: (null)=400
+
+--- row 1 ---
+  uid            EUROSTAT|ESTAT|nama_10_gdp|1191533
+  title          nama_10_gdp [1191533]: 3422.5
+  body           {"dataset":"nama_10_gdp","position":"1191533","value":3422.5,"source":"Eurostat"}
+  link           https://ec.europa.eu/eurostat
+  language       en
+  record_type    eurostat-observation
+  tags           ["osint-search","economy"]
+  properties     {"service":"EUROSTAT","success":true}
+#################################################
+=== IMF_DATA  entity=NGDP_RPCH
+exit: 0
+sched: rc=0 records=229 4608ms
+--- stderr ---
+[IMF_DATA] emitted 229
+[sched] IMF_DATA run rc=0 records=229 4608ms
+--- persisted: 229 rows, 0 with lat/lon, 0 with geometry ---
+record_type: imf-indicator=229
+sub_source_id: (null)=229
+
+--- row 1 ---
+  uid            IMF_DATA|IMF|NGDP_RPCH|SDN|2031
+  title          SDN — NGDP_RPCH: 4.5 (2031)
+  body           {"indicator":"NGDP_RPCH","iso3":"SDN","year":"2031","value":4.5,"source":"IMF DataMapper"}
+  summary        NGDP_RPCH = 4.5
+  link           https://www.imf.org/external/datamapper
+  language       en
+  published_at   2031
+  record_type    imf-indicator
+  tags           ["osint-search","economy"]
+  properties     {"service":"IMF_DATA","period":"2031","success":true}
+#################################################
+=== STOOQ_QUOTES  entity=AAPL.US
+exit: 0
+sched: rc=0 records=0 107ms
+--- stderr ---
+[STOOQ_QUOTES] http status=404
+[sched] STOOQ_QUOTES run rc=0 records=0 107ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== WORLDBANK_INDICATORS  entity=JP
+exit: 0
+sched: rc=0 records=0 390ms
+--- stderr ---
+[WORLDBANK_INDICATORS] emitted 0
+[sched] WORLDBANK_INDICATORS run rc=0 records=0 390ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+DONE /mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/a6_l3.txt

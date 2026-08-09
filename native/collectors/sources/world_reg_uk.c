@@ -125,6 +125,28 @@ static const uk_reg REGS[] = {
 #define UK_TOTAL_CAP 40
 #define UK_PER_REG_CAP 3
 
+/* Substitute the single "%s" placeholder in a search-URL template.
+ * The templates are NOT printf format strings: several carry percent-encoded
+ * octets (e.g. Land Registry's "et%5B%5D=lrcommon%3Afreehold"), and feeding
+ * those to snprintf() is an undefined conversion ("%5B") that reads a garbage
+ * vararg — that segfaulted the whole collector at REGS[10]. Copy literally and
+ * only expand "%s". */
+static void uk_build_url(char *out, size_t cap, const char *tmpl,
+                         const char *q) {
+  size_t o = 0;
+  int done = 0;
+  for (size_t i = 0; tmpl[i] && o + 1 < cap; i++) {
+    if (!done && tmpl[i] == '%' && tmpl[i + 1] == 's') {
+      for (size_t k = 0; q[k] && o + 1 < cap; k++) out[o++] = q[k];
+      i++;                        /* skip the 's' */
+      done = 1;
+      continue;
+    }
+    out[o++] = tmpl[i];
+  }
+  out[o] = 0;
+}
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!q || !*q) {
@@ -138,7 +160,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   for (int i = 0; i < UK_REG_COUNT && total < UK_TOTAL_CAP; i++) {
     const uk_reg *r = &REGS[i];
     char url[1200];
-    snprintf(url, sizeof url, r->tmpl, enc);
+    uk_build_url(url, sizeof url, r->tmpl, enc);
 
     char rt[64];
     snprintf(rt, sizeof rt, "uk-registry-%s", r->cat);

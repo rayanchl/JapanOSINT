@@ -3,15 +3,7 @@
 #include "../../lib/rss_atom.h"
 
 /* SYM, id, name, name_ja, collector, category, url, lang, tags_json, interval, description */
-#define RSSX(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)  \
-  static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
-    int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
-  static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
-    .update_interval_sec = IVAL, .run = run_##SYM,                           \
-    .category = CAT, .type = "web_request", .url = URL,                      \
-    .description = DESC, .layer = NULL, .free_tier = 1 };                    \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 RSSX(out_tass, "tass", "TASS (Russia)", "TASS (Russia)", "osint", "news",
   "https://tass.com/rss/v2.xml", "en", "[\"news\",\"russia\",\"national-outlet\"]", 3600,
@@ -90,7 +82,9 @@ RSSX(out_kyiv_post, "kyiv-post", "Kyiv Post (Ukraine)", "Kyiv Post (Ukraine)", "
   "Kyiv Post (Ukraine) — national/regional press feed (ukraine)");
 
 RSSX(out_pravda_ua, "pravda-ua", "Ukrainska Pravda", "Ukrainska Pravda", "osint", "news",
-  "https://www.pravda.com.ua/rss/", "uk", "[\"news\",\"ukraine\",\"national-outlet\"]", 3600,
+  /* the Ukrainian-language /rss/ endpoint 403s for non-browser clients; the
+   * English edition's feed is served without the WAF challenge. */
+  "https://www.pravda.com.ua/eng/rss/", "en", "[\"news\",\"ukraine\",\"national-outlet\"]", 3600,
   "Ukrainska Pravda — national/regional press feed (ukraine)");
 
 RSSX(out_anadolu, "anadolu", "Anadolu Agency (Turkey)", "Anadolu Agency (Turkey)", "osint", "news",
@@ -98,7 +92,8 @@ RSSX(out_anadolu, "anadolu", "Anadolu Agency (Turkey)", "Anadolu Agency (Turkey)
   "Anadolu Agency (Turkey) — national/regional press feed (turkey)");
 
 RSSX(out_hurriyet_en, "hurriyet-en", "Hürriyet Daily News", "Hürriyet Daily News", "osint", "news",
-  "https://www.hurriyetdailynews.com/rss", "en", "[\"news\",\"turkey\",\"national-outlet\"]", 3600,
+  /* /rss is only an index stub (710 bytes, no <item>); /rss/news is the feed */
+  "https://www.hurriyetdailynews.com/rss/news", "en", "[\"news\",\"turkey\",\"national-outlet\"]", 3600,
   "Hürriyet Daily News — national/regional press feed (turkey)");
 
 RSSX(out_bangkok_post, "bangkok-post", "Bangkok Post", "Bangkok Post", "osint", "news",
@@ -118,7 +113,7 @@ RSSX(out_cna_sg, "cna-sg", "Channel NewsAsia", "Channel NewsAsia", "osint", "new
   "Channel NewsAsia — national/regional press feed (singapore)");
 
 RSSX(out_manila_times, "manila-times", "Manila Times", "Manila Times", "osint", "news",
-  "https://www.manilatimes.net/feed", "en", "[\"news\",\"philippines\",\"national-outlet\"]", 3600,
+  "https://www.manilatimes.net/news/feed", "en", "[\"news\",\"philippines\",\"national-outlet\"]", 3600,
   "Manila Times — national/regional press feed (philippines)");
 
 RSSX(out_hindustan_times, "hindustan-times", "Hindustan Times (India)", "Hindustan Times (India)", "osint", "news",
@@ -134,7 +129,7 @@ RSSX(out_ndtv, "ndtv", "NDTV (India)", "NDTV (India)", "osint", "news",
   "NDTV (India) — national/regional press feed (india)");
 
 RSSX(out_dhaka_tribune, "dhaka-tribune", "Dhaka Tribune", "Dhaka Tribune", "osint", "news",
-  "https://www.dhakatribune.com/feed", "en", "[\"news\",\"bangladesh\",\"national-outlet\"]", 3600,
+  "https://www.dhakatribune.com/feed/", "en", "[\"news\",\"bangladesh\",\"national-outlet\"]", 3600,
   "Dhaka Tribune — national/regional press feed (bangladesh)");
 
 RSSX(out_korea_times, "korea-times", "Korea Times", "Korea Times", "osint", "news",
@@ -166,11 +161,11 @@ RSSX(out_clarin_ar, "clarin-ar", "Clarín (Argentina)", "Clarín (Argentina)", "
   "Clarín (Argentina) — national/regional press feed (argentina)");
 
 RSSX(out_infobae, "infobae", "Infobae (Argentina)", "Infobae (Argentina)", "osint", "news",
-  "https://www.infobae.com/feeds/rss/", "es", "[\"news\",\"argentina\",\"national-outlet\"]", 3600,
+  "https://www.infobae.com/arc/outboundfeeds/rss/?outputType=xml", "es", "[\"news\",\"argentina\",\"national-outlet\"]", 3600,
   "Infobae (Argentina) — national/regional press feed (argentina)");
 
 RSSX(out_eluniversal_mx, "eluniversal-mx", "El Universal (Mexico)", "El Universal (Mexico)", "osint", "news",
-  "https://www.eluniversal.com.mx/rss.xml", "es", "[\"news\",\"mexico\",\"national-outlet\"]", 3600,
+  "https://www.eluniversal.com.mx/arc/outboundfeeds/rss/?outputType=xml", "es", "[\"news\",\"mexico\",\"national-outlet\"]", 3600,
   "El Universal (Mexico) — national/regional press feed (mexico)");
 
 RSSX(out_milenio, "milenio", "Milenio (Mexico)", "Milenio (Mexico)", "osint", "news",
@@ -186,7 +181,7 @@ RSSX(out_emol_cl, "emol-cl", "Emol (Chile)", "Emol (Chile)", "osint", "news",
   "Emol (Chile) — national/regional press feed (chile)");
 
 RSSX(out_news24_za, "news24-za", "News24 (South Africa)", "News24 (South Africa)", "osint", "news",
-  "https://feeds.24.com/articles/news24/TopStories/rss", "en", "[\"news\",\"south-africa\",\"national-outlet\"]", 3600,
+  "https://feeds.capi24.com/v1/Search/articles/news24/TopStories/rss", "en", "[\"news\",\"south-africa\",\"national-outlet\"]", 3600,
   "News24 (South Africa) — national/regional press feed (south-africa)");
 
 RSSX(out_punch_ng, "punch-ng", "The Punch (Nigeria)", "The Punch (Nigeria)", "osint", "news",
@@ -197,8 +192,9 @@ RSSX(out_premium_times, "premium-times", "Premium Times (Nigeria)", "Premium Tim
   "https://www.premiumtimesng.com/feed", "en", "[\"news\",\"nigeria\",\"national-outlet\"]", 3600,
   "Premium Times (Nigeria) — national/regional press feed (nigeria)");
 
+/* /kenya/rss answers 403 (WAF); the published feed file is rss.xml. */
 RSSX(out_nation_ke, "nation-ke", "Nation (Kenya)", "Nation (Kenya)", "osint", "news",
-  "https://nation.africa/kenya/rss", "en", "[\"news\",\"kenya\",\"national-outlet\"]", 3600,
+  "https://nation.africa/kenya/rss.xml", "en", "[\"news\",\"kenya\",\"national-outlet\"]", 3600,
   "Nation (Kenya) — national/regional press feed (kenya)");
 
 RSSX(out_ahram_eg, "ahram-eg", "Al-Ahram (Egypt)", "Al-Ahram (Egypt)", "osint", "news",
@@ -214,7 +210,7 @@ RSSX(out_gulf_news, "gulf-news", "Gulf News (UAE)", "Gulf News (UAE)", "osint", 
   "Gulf News (UAE) — national/regional press feed (uae)");
 
 RSSX(out_the_national_ae, "the-national-ae", "The National (UAE)", "The National (UAE)", "osint", "news",
-  "https://www.thenationalnews.com/arc/outboundfeeds/rss/", "en", "[\"news\",\"uae\",\"national-outlet\"]", 3600,
+  "https://www.thenationalnews.com/arc/outboundfeeds/rss/?outputType=xml", "en", "[\"news\",\"uae\",\"national-outlet\"]", 3600,
   "The National (UAE) — national/regional press feed (uae)");
 
 RSSX(out_al_jazeera_ar, "al-jazeera-ar", "Al Jazeera Arabic", "Al Jazeera Arabic", "osint", "news",
@@ -226,7 +222,8 @@ RSSX(out_times_israel_2, "times-israel-2", "Times of Israel Ops", "Times of Isra
   "Times of Israel Ops — national/regional press feed (israel)");
 
 RSSX(out_haaretz_2, "haaretz-2", "Haaretz Headlines", "Haaretz Headlines", "osint", "news",
-  "https://www.haaretz.com/srv/htz---all-articles", "en", "[\"news\",\"israel\",\"national-outlet\"]", 3600,
+  /* /srv/htz---all-articles is gone (404); the published RSS is the cmlink id */
+  "https://www.haaretz.com/cmlink/1.4605102", "en", "[\"news\",\"israel\",\"national-outlet\"]", 3600,
   "Haaretz Headlines — national/regional press feed (israel)");
 
 RSSX(out_tehran_times, "tehran-times", "Tehran Times (Iran)", "Tehran Times (Iran)", "osint", "news",

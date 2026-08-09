@@ -1,0 +1,7 @@
+=== EGOV_PUBLIC_COMMENT  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 1083ms
+--- stderr ---
+[EGOV_PUBLIC_COMMENT] http status=404
+[sched] EGOV_PUBLIC_COMMENT run rc=0 records=0 1083ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

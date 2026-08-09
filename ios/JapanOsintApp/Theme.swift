@@ -81,6 +81,18 @@ extension View {
                 in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
             )
     }
+
+    /// Same surface, arbitrary shape — for the controls that sit ON those bars
+    /// (LIVE pill, window chips, the expand chevron, the step buttons, the
+    /// scrub bubble, the map's layer/geocode/more buttons).
+    ///
+    /// Those all reached for `.thinMaterial` / `.thickMaterial`, which is a
+    /// *different* material from the bar underneath them and from the system
+    /// tab bar — the exact mismatch `mapBarSurface` exists to eliminate. One
+    /// definition, so every map chrome element is provably the same material.
+    func mapBarSurface<S: Shape>(in shape: S) -> some View {
+        self.glassEffect(.regular, in: shape)
+    }
 }
 
 private struct ThemeKey: EnvironmentKey {
@@ -131,14 +143,48 @@ enum Stroke {
 /// `monospaceAll = true` and the root applies `.fontDesign(.monospaced)`
 /// globally — individual call sites don't need to do anything.
 enum Typography {
+    /// Apple's smallest legible size. `.caption2` is 11 pt at the default
+    /// Dynamic Type setting, so anything the call sites ask for below that is
+    /// raised rather than rendered at a size the HIG says is unreadable.
+    static let minimumSize: CGFloat = 11
+
+    /// Map a requested point size onto the Dynamic Type ramp.
+    ///
+    /// SwiftUI has no `Font.system(size:relativeTo:)` — the only system-font
+    /// constructor that participates in Dynamic Type is the text-style one
+    /// (`Font.system(_:design:)`). So every token resolves to the text style
+    /// whose *default* size is nearest the requested size, which both gives us
+    /// scaling for free and snaps the app onto Apple's ramp instead of a
+    /// hand-rolled one. Default sizes, for reference:
+    ///
+    ///   caption2 11 · caption 12 · footnote 13 · subheadline 15 · callout 16
+    ///   body 17 · title3 20 · title2 22 · title 28 · largeTitle 34
+    ///
+    /// Sizes below `minimumSize` land on `.caption2` by construction, which is
+    /// what enforces the 11 pt floor for every `Typography` call site at once.
+    static func textStyle(for size: CGFloat) -> Font.TextStyle {
+        switch size {
+        case ..<11.5: return .caption2      // ≤ 11
+        case ..<12.5: return .caption       // 12
+        case ..<14:   return .footnote      // 13
+        case ..<15.5: return .subheadline   // 14–15
+        case ..<16.5: return .callout       // 16
+        case ..<18.5: return .body          // 17–18
+        case ..<21:   return .title3        // 19–20
+        case ..<25:   return .title2        // 21–24
+        case ..<31:   return .title         // 25–30
+        default:      return .largeTitle    // 31+
+        }
+    }
+
     /// Monospaced display — for headers, counts, timestamps, IDs.
     static func display(_ size: CGFloat, weight: Font.Weight = .semibold) -> Font {
-        .system(size: size, weight: weight, design: .monospaced)
+        Font.system(textStyle(for: size), design: .monospaced).weight(weight)
     }
 
     /// Body / sans — for prose, labels, descriptions.
     static func body(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        .system(size: size, weight: weight, design: .default)
+        Font.system(textStyle(for: size), design: .default).weight(weight)
     }
 
     // Semantic display ramp.

@@ -1,0 +1,45 @@
+=== gnews-mon-assassination
+exit: 0
+sched: rc=0 records=100 833ms
+--- stderr ---
+[rss] gnews-mon-assassination emitted 100
+[sched] gnews-mon-assassination run rc=0 records=100 833ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-assassination|CBMiqwFBVV95cUxOZ1VQRHJ5aXlHX21mTHZGbEFGSG9TZllxMXI2eGY5cXlVRHN0SVZxVnd1M1lvZ01VTXJNbFdEV3ByUHRfc0Z2QmdxZVhmbmhzQVN5SEMwTGxEVWFrd3FiaHEtZDkwZVhCeUJfOERub3paeTAxTFgtV1lYNElFemlja25wNGxYdEc0UlA5eXZtcU5lUVJnRk9zWXliTUtpeERWaThudGphbjd3Z1nSAbABQVVfeXFMTVVwTEN2d2ZPZFhHTHpNc2cyOE1wSHpoMENUVVluSE04MHppNzdVUmRoVVZSUXgtUENlY3F1d0hIa2loeFRZZWxkdEJCQnhqS20ybFNIZWlYQVFFNGhLU01Zb253QV9zNEk3SFlIbVNTTDJib2pVSV9ydldscmN4ZEhUYk8zZHJVVHV5QlEwRG0zcmQ0ZUhTUHlrMi1MMUQ4MTduUkNRYkNxSXdsSEtHc18
+  title          Head of Russian drone company reportedly shot in assassination attempt - Meduza
+  body           <a href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxOZ1VQRHJ5aXlHX21mTHZGbEFGSG9TZllxMXI2eGY5cXlVRHN0SVZxVnd1M1lvZ01VTXJNbFdEV3ByUHRfc0Z2QmdxZVhmbmhzQVN5SEMwTGxEVWFrd3FiaHEtZDkwZVhCeUJfOERub3paeTAxTFgtV1lYNElFemlja25wNGxYdEc0UlA5eXZtcU5lUVJnRk9zWXliTUtpeERWaThudGphbjd3Z1nSAbABQVVfeXFMTVVwTEN2d2ZPZFhHTHpNc2cyOE1wSHpoMENUVVluSE04MHppNzdVUmRoVVZSUXgtUENlY3F1d0hIa2loeFRZZWxkdEJCQnhqS20ybFNIZWlYQVFFNGhLU01Zb253QV9zNEk3SFlIbVNTTDJib2pVSV9ydldscmN4ZEhUYk8zZHJVVHV5QlEwRG0zcmQ0ZUhTUHlrMi1MMUQ4MTduUkNRYkNxSXdsSEtHc18?oc=5" target="_blank">Head of Russian drone company reportedly shot in assassination attempt</a>&nbsp;&nbsp;<font color="#6f6f6f">Meduza</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxOZ1VQRHJ5aXlHX21mTHZGbEFGSG9TZllxMXI2eGY5cXlVRHN0SVZxVnd1M1lvZ01VTXJNbFdEV3ByUHRfc0Z2QmdxZVhmbmhzQVN5SEMwTGxEVWFrd3FiaHEtZDkwZVhCeUJfOERub3paeTAxTFgtV1lYNElFemlja25wNGxYdEc0UlA5eX
+  link           https://news.google.com/rss/articles/CBMiqwFBVV95cUxOZ1VQRHJ5aXlHX21mTHZGbEFGSG9TZllxMXI2eGY5cXlVRHN0SVZxVnd1M1lvZ01VTXJNbFdEV3ByUHRfc0Z2QmdxZVhmbmhzQVN5SEMwTGxEVWFrd3FiaHEtZDkwZVhCeUJfOERub3paeTAxTFgtV1lYNElFemlja25wNGxYdEc0UlA5eXZtcU5lUVJnRk9zWXliTUtpeERWaThudGphbjd3Z1nSAbABQVVfeXFMTVVwTEN2d2ZPZFhHTHpNc2cyOE1wSHpoMENUVVluSE04MHppNzdVUmRoVVZSUXgtUENlY3F1d0hIa2loeFRZZWxkdEJCQnhqS20ybFNIZWlYQVFFNGhLU01Zb253QV9zNEk3SFlIbVNTTDJib2pVSV9ydldscmN4ZEhUYk8zZHJVVHV5QlEwRG0zcmQ0ZUhTUHlrMi1MMUQ4MTduUkNRYkNxSXdsSEtHc18?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 13:02:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","assassination"]
+  properties     {"guid":"CBMiqwFBVV95cUxOZ1VQRHJ5aXlHX21mTHZGbEFGSG9TZllxMXI2eGY5cXlVRHN0SVZxVnd1M1lvZ01VTXJNbFdEV3ByUHRfc0Z2QmdxZVhmbmhzQVN5SEMwTGxEVWFrd3FiaHEtZDkwZVhCeUJfOERub3paeTAxTFgtV1lYNElFemlja25wNGxYdEc0UlA5eXZtcU5lUVJnRk9zWXliTUtpeERWaThudGphbjd3Z1nSAbABQVVfeXFMTVVwTEN2d2ZPZFhHTHpNc2cyOE1wSHpoMENUVVluSE04MHppNzdVUmRoVVZSUXgtUENlY3F1d0hIa2loeFRZZWxkdEJCQnhqS20ybFNIZWlYQVFFNGhLU01Zb253QV9zNEk3SFlIbVNTTDJib2pVSV9ydldscmN4ZEhUYk8zZHJVVHV5QlEwRG0zcmQ0ZUhTUHlrMi1MMUQ4MTduUkNRYkNxSXdsSEtHc18"}
+
+--- row 2 ---
+  uid            gnews-mon-assassination|CBMiZEFVX3lxTE0ybUZLWElJWU1KTzI0UDlVMlplWHZ4ZUhiNXJEemM2ZDlaeDdwMzFobWhBSWd5Q2VlaGVEeFN5WDZpdVNtMmRTV0RWRWxyNjEwOHpiTHhsNW41LXlpVTlJeHNkMETSAXBBVV95cUxQSFZxU3pPVU94LXhYOW1Wa3REenhnb0EzcFlVOXJqRVRFSUtrZmFDaVc2TWs2YjhNdW9uMngwVWZwV2tubDhOVzFCeXlQc2F1Rk1TbUdHbGRaUFdTMEw2UnItUFRibnhlOC1kYVpBU1E3
+  title          Ukraine's Khartiia commander survives assassination attempt, Zelenskyy promises response - Українська правда
+  body           <a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE0ybUZLWElJWU1KTzI0UDlVMlplWHZ4ZUhiNXJEemM2ZDlaeDdwMzFobWhBSWd5Q2VlaGVEeFN5WDZpdVNtMmRTV0RWRWxyNjEwOHpiTHhsNW41LXlpVTlJeHNkMETSAXBBVV95cUxQSFZxU3pPVU94LXhYOW1Wa3REenhnb0EzcFlVOXJqRVRFSUtrZmFDaVc2TWs2YjhNdW9uMngwVWZwV2tubDhOVzFCeXlQc2F1Rk1TbUdHbGRaUFdTMEw2UnItUFRibnhlOC1kYVpBU1E3?oc=5" target="_blank">Ukraine's Khartiia commander survives assassination attempt, Zelenskyy promises response</a>&nbsp;&nbsp;<font color="#6f6f6f">Українська правда</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE0ybUZLWElJWU1KTzI0UDlVMlplWHZ4ZUhiNXJEemM2ZDlaeDdwMzFobWhBSWd5Q2VlaGVEeFN5WDZpdVNtMmRTV0RWRWxyNjEwOHpiTHhsNW41LXlpVTlJeHNkMETSAXBBVV95cUxQSFZxU3pPVU94LXhYOW1Wa3REenhnb0EzcFlVOXJqRV
+  link           https://news.google.com/rss/articles/CBMiZEFVX3lxTE0ybUZLWElJWU1KTzI0UDlVMlplWHZ4ZUhiNXJEemM2ZDlaeDdwMzFobWhBSWd5Q2VlaGVEeFN5WDZpdVNtMmRTV0RWRWxyNjEwOHpiTHhsNW41LXlpVTlJeHNkMETSAXBBVV95cUxQSFZxU3pPVU94LXhYOW1Wa3REenhnb0EzcFlVOXJqRVRFSUtrZmFDaVc2TWs2YjhNdW9uMngwVWZwV2tubDhOVzFCeXlQc2F1Rk1TbUdHbGRaUFdTMEw2UnItUFRibnhlOC1kYVpBU1E3?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 12:03:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","assassination"]
+  properties     {"guid":"CBMiZEFVX3lxTE0ybUZLWElJWU1KTzI0UDlVMlplWHZ4ZUhiNXJEemM2ZDlaeDdwMzFobWhBSWd5Q2VlaGVEeFN5WDZpdVNtMmRTV0RWRWxyNjEwOHpiTHhsNW41LXlpVTlJeHNkMETSAXBBVV95cUxQSFZxU3pPVU94LXhYOW1Wa3REenhnb0EzcFlVOXJqRVRFSUtrZmFDaVc2TWs2YjhNdW9uMngwVWZwV2tubDhOVzFCeXlQc2F1Rk1TbUdHbGRaUFdTMEw2UnItUFRibnhlOC1kYVpBU1E3"}
+
+--- row 3 ---
+  uid            gnews-mon-assassination|CBMi5AFBVV95cUxQOUNRaFBzMGJNMklZcGp4SXZoYndIV2VJMDlZOU44NXhDMUdjQV9JNU5RREhIQTUwVjNibUs4UXdYNTJpcUlVSDFGNWcxV1ItV2JZS3lrTlZxM056NWgxSlJ1a3RibFdmeElmS2RuTlRBNXRLOUNqX09IQzBVeFVlZ2xqdG5wNmlYQ3lxOGRDOTJvQjdxWEtlREptZThKbjNPT2RMQ1ZuLThpSzg4WWtrQUU3UGk2QkM4dTNXNXFhRTlVaEZ1RUlBTFY5YWR3WGJVUTFFX3dfTndQR3N1OWx3YzNlZWPSAeoBQVVfeXFMTUlBaDczR2N2WFVWN2libkxseHZHWHlGem9qSFVXbUlkNWhMNllZc244NzlDYkpXYVJsRDRxZ1hDNm0yLW9nc1NFUV9iY2RRSVMzV3pOQ3FaV0FXSXd1VjFjQk1OZnA1dU9hRDFza2FaSEduS2h3LWp2MjZSNm15Y3l
+  title          Pennsylvania Secretary of Corrections targeted in assassination threat by inmate who targeted Governor Shapiro - ABC27
+  body           <a href="https://news.google.com/rss/articles/CBMi5AFBVV95cUxQOUNRaFBzMGJNMklZcGp4SXZoYndIV2VJMDlZOU44NXhDMUdjQV9JNU5RREhIQTUwVjNibUs4UXdYNTJpcUlVSDFGNWcxV1ItV2JZS3lrTlZxM056NWgxSlJ1a3RibFdmeElmS2RuTlRBNXRLOUNqX09IQzBVeFVlZ2xqdG5wNmlYQ3lxOGRDOTJvQjdxWEtlREptZThKbjNPT2RMQ1ZuLThpSzg4WWtrQUU3UGk2QkM4dTNXNXFhRTlVaEZ1RUlBTFY5YWR3WGJVUTFFX3dfTndQR3N1OWx3YzNlZWPSAeoBQVVfeXFMTUlBaDczR2N2WFVWN2libkxseHZHWHlGem9qSFVXbUlkNWhMNllZc244NzlDYkpXYVJsRDRxZ1hDNm0yLW9nc1NFUV9iY2RRSVMzV3pOQ3FaV0FXSXd1VjFjQk1OZnA1dU9hRDFza2FaSEduS2h3LWp2MjZSNm15Y3l3N3Z3U0QxU1ZpWkFvVjBWVmFmWWpoZjFWci1DM0tmN0Q1MUxlSUlpQlVxSG1EazNkd2VHRFhqV0EwZWI1OUx5clVmNFIxSHgyTmNlcWRuV0FNOTRaS202WGE5NlJTZWJwdUk4YXpaM2t3?oc=5" target="_blank">Pennsylvania Secretary of Corrections targeted in assassination threat by inmate who targeted Governor Shapiro</a>&nbsp;&nbsp;<font color="#6f6f6f">ABC27</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi5AFBVV95cUxQOUNRaFBzMGJNMklZcGp4SXZoYndIV2VJMDlZOU44NXhDMUdjQV9JNU5RREhIQTUwVjNibUs4UXdYNTJpcUlVSDFGNWcxV1ItV2JZS3lrTlZxM056NWgxSlJ1a3RibFdmeElmS2RuTlRBNXRLOUNqX09IQzBVeFVlZ2xqdG5wNmlYQ3lxOG
+  link           https://news.google.com/rss/articles/CBMi5AFBVV95cUxQOUNRaFBzMGJNMklZcGp4SXZoYndIV2VJMDlZOU44NXhDMUdjQV9JNU5RREhIQTUwVjNibUs4UXdYNTJpcUlVSDFGNWcxV1ItV2JZS3lrTlZxM056NWgxSlJ1a3RibFdmeElmS2RuTlRBNXRLOUNqX09IQzBVeFVlZ2xqdG5wNmlYQ3lxOGRDOTJvQjdxWEtlREptZThKbjNPT2RMQ1ZuLThpSzg4WWtrQUU3UGk2QkM4dTNXNXFhRTlVaEZ1RUlBTFY5YWR3WGJVUTFFX3dfTndQR3N1OWx3YzNlZWPSAeoBQVVfeXFMTUlBaDczR2N2WFVWN2libkxseHZHWHlGem9qSFVXbUlkNWhMNllZc244NzlDYkpXYVJsRDRxZ1hDNm0yLW9nc1NFUV9iY2RRSVMzV3pOQ3FaV0FXSXd1VjFjQk1OZnA1dU9hRDFza2FaSEduS2h3LWp2MjZSNm15Y3l3N3Z3U0QxU1ZpWkFvVjBWVmFmWWpoZjFWci1DM0tmN0Q1MUxlSUlpQlVxSG1EazNkd2VHRFhqV0EwZWI1OUx5clVmNFIxSHgyTmNlcWRuV0FNOTRaS202WGE5NlJTZWJwdUk4YXpaM2t3?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 17:48:32 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","assassination"]
+  properties     {"guid":"CBMi5AFBVV95cUxQOUNRaFBzMGJNMklZcGp4SXZoYndIV2VJMDlZOU44NXhDMUdjQV9JNU5RREhIQTUwVjNibUs4UXdYNTJpcUlVSDFGNWcxV1ItV2JZS3lrTlZxM056NWgxSlJ1a3RibFdmeElmS2RuTlRBNXRLOUNqX09IQzBVeFVlZ2xqdG5wNmlYQ3lxOGRDOTJvQjdxWEtlREptZThKbjNPT2RMQ1ZuLThpSzg4WWtrQUU3UGk2QkM4dTNXNXFhRTlVaEZ1RUlBTFY5YWR3WGJVUTFFX3dfTndQR3N1OWx3YzNlZWPSAeoBQVVfeXFMTUlBaDczR2N2WFVWN2libkxseHZHWHlGem9qSFVXbUlkNWhMNllZc244NzlDYkpXYVJsRDRxZ1hDNm0yLW9nc1NFUV9iY2RRSVMzV3pOQ3FaV0FXSXd1VjFjQk1OZnA1dU9hRDFza2FaSEduS2h3LWp2MjZSNm15Y3l3N3Z3U0QxU1ZpWk

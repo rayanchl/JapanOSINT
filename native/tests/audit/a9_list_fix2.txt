@@ -1,0 +1,12 @@
+cert-at
+cert-ee
+cert-ee2
+cert-pl
+ncsc-ie
+ncsc-nl
+krcert
+cert-no
+ncsc-ch
+cert-dk
+msrc-blog
+alos-palsar

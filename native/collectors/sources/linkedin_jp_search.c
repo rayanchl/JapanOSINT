@@ -4,6 +4,7 @@
  * quoted JSESSIONID value doubles as the Csrf-Token. Voyager blended search
  * for JP-relevant terms -> non-spatial intel. Dedup by id across queries.
  * honest empty when gated / no csrf / on failure. uid = linkedin-jp-search|<id>. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -19,16 +20,11 @@ static const char *QUERY_RAW[]  = { "security Japan", "OSINT Tokyo",
                                     "CISO 日本" };
 #define NQ ((int)(sizeof(QUERIES)/sizeof(QUERIES[0])))
 
-static const char *sv(const cJSON *o, const char *k) {
-  if (!o) return NULL;
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
-}
 /* el.title?.text style: object .text */
 static const char *txt(const cJSON *o, const char *k) {
   if (!o) return NULL;
   const cJSON *v = cJSON_GetObjectItem(o, k);
-  return v ? sv(v, "text") : NULL;
+  return v ? jo_sv(v, "text") : NULL;
 }
 
 /* /JSESSIONID="?([^";]+)"?/ */
@@ -70,7 +66,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     NULL,
   };
 
-  char **seen = NULL; int sn = 0, scap = 0, n = 0;
+  char **seen = NULL; int sn = 0, scap = 0, n = 0, fetched = 0;
 
   for (int qi = 0; qi < NQ; qi++) {
     char url[256];
@@ -79,6 +75,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       "?keywords=%s&origin=GLOBAL_SEARCH_HEADER&count=20", QUERIES[qi]);
     cJSON *data = feed_get_json_h(ctx->http, url, hdrs, 15000);
     if (!data) continue;
+    fetched++;
 
     cJSON *d = cJSON_GetObjectItem(data, "data");
     cJSON *elements = d ? cJSON_GetObjectItem(d, "elements") : NULL;
@@ -100,11 +97,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                  if (!el) break; }
           idx++;
 
-          const char *urn = sv(el, "targetUrn");
-          if (!urn) urn = sv(el, "trackingUrn");
-          if (!urn) urn = sv(el, "objectUrn");
-          const char *pub = sv(el, "publicIdentifier");
-          if (!pub) pub = sv(el, "navigationUrl");
+          const char *urn = jo_sv(el, "targetUrn");
+          if (!urn) urn = jo_sv(el, "trackingUrn");
+          if (!urn) urn = jo_sv(el, "objectUrn");
+          const char *pub = jo_sv(el, "publicIdentifier");
+          if (!pub) pub = jo_sv(el, "navigationUrl");
           const char *id = pub ? pub : urn;
           if (!id || !id[0]) continue;
           if (seen_has(seen, sn, id)) continue;
@@ -121,8 +118,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
           char uidb[256];
           snprintf(uidb, sizeof uidb, "%s|%s", SOURCE_ID, id);
-          const char *nav = sv(el, "navigationUrl");
-          const char *pubId = sv(el, "publicIdentifier");
+          const char *nav = jo_sv(el, "navigationUrl");
+          const char *pubId = jo_sv(el, "publicIdentifier");
           char linkb[256]; const char *link = NULL;
           if (nav) link = nav;
           else if (pubId) {
@@ -167,8 +164,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   for (int i = 0; i < sn; i++) free(seen[i]);
   free(seen);
-  fprintf(stderr, "[linkedin-jp-search] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  fprintf(stderr, "[linkedin-jp-search] emitted %d (%d/%d queries fetched)\n",
+          n, fetched, NQ);
+  /* STATUS code, not a row count: a query that returns no profiles is an honest
+   * empty. Only a total fetch failure is a real error. */
+  return fetched > 0 ? 0 : -1;
 }
 
 static const source_def linkedin_jp_search_def = {

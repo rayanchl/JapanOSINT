@@ -1,0 +1,45 @@
+=== hatena-bookmark-extended
+exit: 0
+sched: rc=0 records=200 6496ms
+--- stderr ---
+[hatena-bookmark-extended] emitted 200
+[sched] hatena-bookmark-extended run rc=0 records=200 6496ms
+--- persisted: 200 rows, 0 with lat/lon, 0 with geometry ---
+record_type: hatena-bookmark-extended=200
+sub_source_id: (null)=200
+
+--- row 1 ---
+  uid            hatena-bookmark-extended|https://www.47news.jp/14716957.html
+  title          【速報】死亡の武石さん、辺野古行きから変更希望
+  body           辺野古沖の船転覆事故で亡くなった同志社国際高の武石知華さんが研修旅行前、抗議船に乗るコースからの変更希望を提出していたことが第三者委員会の報告書で分かった。変更希望は計51人に上り、武石さんは抽選に外れ認められなかった。
+  summary        546 bookmarks · 世の中
+  link           https://www.47news.jp/14716957.html
+  language       ja
+  published_at   2026-07-31T07:53:57.000Z
+  record_type    hatena-bookmark-extended
+  tags           ["hatena","trending","feed:general","cat:世の中"]
+  properties     {"bookmarks":546,"subject":"世の中","feed_category":"general","source":"hatena_rss"}
+
+--- row 2 ---
+  uid            hatena-bookmark-extended|https://numagasablog.com/entry/2026/07/31/182507
+  title          心がふたつある？『映画ちいかわ 人魚の島のひみつ』感想 - 沼の見える街
+  body           『映画ちいかわ 人魚の島のひみつ』を観てきた。「ちいかわ」シリーズ原作はTwitterのオタクが日夜騒いでいた（言い方）姿を遠巻きから眺めていたくらい。時々、SNSで流れてくる漫画を読んでみたが、１ページだけだとハイコンテクスト（←先に言っておくとこの記事の重要ワードとなる）でよくわからんな…いつかまとめて読...
+  summary        101 bookmarks · エンタメ
+  link           https://numagasablog.com/entry/2026/07/31/182507
+  language       ja
+  published_at   2026-07-31T10:30:11.000Z
+  record_type    hatena-bookmark-extended
+  tags           ["hatena","trending","feed:general","cat:エンタメ"]
+  properties     {"bookmarks":101,"subject":"エンタメ","feed_category":"general","source":"hatena_rss"}
+
+--- row 3 ---
+  uid            hatena-bookmark-extended|https://nazology.kusuguru.co.jp/archives/198168
+  title          論破したがりが使う「ストローマン論法」、議論上手が使う「スティールマン論法」とは - ナゾロジー
+  body           近年、SNSやテレビの討論では、相手の矛盾を突き、鋭い一言で黙らせる場面が「議論に勝った瞬間」として注目されがちです。 しかし「相手を言い負かすこと（論破）」と「実りある議論をすること（対話）」は、同じではありません。 相手の本当の主張を理解しないまま批判しても、新しい知識や考え方が得られるわけではな...
+  summary        146 bookmarks · 学び
+  link           https://nazology.kusuguru.co.jp/archives/198168
+  language       ja
+  published_at   2026-07-31T04:16:22.000Z
+  record_type    hatena-bookmark-extended
+  tags           ["hatena","trending","feed:general","cat:学び"]
+  properties     {"bookmarks":146,"subject":"学び","feed_category":"general","source":"hatena_rss"}

@@ -4,8 +4,10 @@
 #include "content_change.h"    /* content_change_ensure_schema (same reason) */
 #include "media.h"             /* media_migrate (same reason) */
 #include "camera_stills.h"     /* camera_stills_migrate (same reason) */
+#include "fts_schema.h"        /* fts_schema_migrate (widens intel_items_fts) */
 #include "source_registry.h"   /* src_meta_get (merged metadata)        */
 #include "../source.h"         /* registry_all / registry_count (sources) */
+#include "../third_party/cJSON.h" /* live-id array for the stale-source prune */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -152,17 +154,90 @@ static void db_seed_sources(db_handle *db) {
   sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL);
   sqlite3_finalize(s);
   sqlite3_finalize(ex);
+
+  /* Prune rows for sources that no longer exist.
+   *
+   * This only ever inserted and refreshed, so a database seeded before a
+   * collector was retired keeps that collector's row forever. Once the
+   * curated metadata row goes too, the API serves it with a null nameJa /
+   * description / free / layer — a source that cannot be run, cannot be
+   * explained, and is indistinguishable from a live one in the dashboard.
+   *
+   * Deletion is guarded rather than unconditional. `foreign_keys=ON` and four
+   * tables reference sources(id) with no ON DELETE clause, so a row with
+   * history would abort the statement; more importantly that history is worth
+   * keeping — a retired source's fetch_log is still the record of what it did.
+   * So: drop only the rows nothing refers to, and report the rest rather than
+   * failing silently. */
+  static const char *PRUNE_SQL =
+    "DELETE FROM sources WHERE id NOT IN (SELECT value FROM json_each(?1)) "
+    "  AND NOT EXISTS (SELECT 1 FROM fetch_log            f WHERE f.source_id = sources.id) "
+    "  AND NOT EXISTS (SELECT 1 FROM collector_anomaly    c WHERE c.source_id = sources.id) "
+    "  AND NOT EXISTS (SELECT 1 FROM collector_repair     r WHERE r.source_id = sources.id) "
+    "  AND NOT EXISTS (SELECT 1 FROM collector_url_overrides o WHERE o.source_id = sources.id)";
+  static const char *KEPT_SQL =
+    "SELECT COUNT(*) FROM sources WHERE id NOT IN (SELECT value FROM json_each(?1))";
+
+  /* An empty registry is never evidence that every source was retired — it is
+   * evidence that this BINARY does not link the collectors (a unit-test or
+   * sanitiser build, which resolves JO_DB to the same default path as the
+   * server). With n == 0 the live-id array is `[]` and the DELETE below matches
+   * every history-free row, i.e. it would silently empty `sources` on a freshly
+   * seeded install. Prune only when we actually know what is live. */
+  if (n <= 0) return;
+
+  cJSON *ids = cJSON_CreateArray();
+  for (int i = 0; i < n; i++)
+    cJSON_AddItemToArray(ids, cJSON_CreateString(a[i]->id));
+  char *ids_json = cJSON_PrintUnformatted(ids);
+  cJSON_Delete(ids);
+  if (!ids_json) return;
+
+  int pruned = 0, kept = 0;
+  sqlite3_stmt *p = NULL;
+  if (sqlite3_prepare_v2(db->h, PRUNE_SQL, -1, &p, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(p, 1, ids_json, -1, SQLITE_STATIC);
+    if (sqlite3_step(p) == SQLITE_DONE) pruned = sqlite3_changes(db->h);
+    sqlite3_finalize(p);
+  }
+  if (sqlite3_prepare_v2(db->h, KEPT_SQL, -1, &p, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(p, 1, ids_json, -1, SQLITE_STATIC);
+    if (sqlite3_step(p) == SQLITE_ROW) kept = sqlite3_column_int(p, 0);
+    sqlite3_finalize(p);
+  }
+  free(ids_json);
+
   fprintf(stderr,
-          "[db] seeded sources from registry (%d new, %d metadata-refreshed)\n",
+          "[db] seeded sources from registry (%d new, %d metadata-refreshed",
           added, refreshed);
+  if (pruned || kept)
+    fprintf(stderr, ", %d stale pruned, %d stale kept for their history",
+            pruned, kept);
+  fprintf(stderr, ")\n");
 }
 
-/* The pragmas every connection to this database must carry. */
+/* The pragmas every connection to this database must carry.
+ *
+ * cache_size/mmap_size are here and not only on the primary handle because
+ * they are per-CONNECTION, and the connections that do the heavy reading are
+ * the attached ones (scheduler workers, dispatch pool, the background pods).
+ * The measured effect on /api/intel/items was 35.1 s -> 0.002 s together with
+ * idx_intel_items_pub (schema.sql): the index removes the sort, these remove
+ * the page churn underneath it.
+ *
+ *   cache_size=-65536  → 64 MiB of page cache (negative = KiB, not pages, so
+ *                        it does not change meaning with the page size).
+ *   mmap_size=256MiB   → read the DB through the page cache instead of
+ *                        copying every page via pread. Advisory: SQLite
+ *                        silently ignores it where mmap is unavailable.
+ * Both are ceilings, not reservations. */
 static void db_apply_pragmas(sqlite3 *h) {
   sqlite3_exec(h, "PRAGMA journal_mode=WAL;",  NULL, NULL, NULL);
   sqlite3_exec(h, "PRAGMA foreign_keys=ON;",   NULL, NULL, NULL);
   sqlite3_exec(h, "PRAGMA busy_timeout=5000;", NULL, NULL, NULL);
   sqlite3_exec(h, "PRAGMA synchronous=NORMAL;", NULL, NULL, NULL);
+  sqlite3_exec(h, "PRAGMA cache_size=-65536;", NULL, NULL, NULL);
+  sqlite3_exec(h, "PRAGMA mmap_size=268435456;", NULL, NULL, NULL);
 }
 
 /* Secondary connection — see db_attach() in db.h. Deliberately does NOT apply
@@ -180,11 +255,27 @@ int db_attach(db_handle *db, const char *db_path) {
     db->h = NULL;
     return 1;
   }
-  sqlite3_exec(db->h, "PRAGMA journal_mode=WAL;",  NULL, NULL, NULL);
-  sqlite3_exec(db->h, "PRAGMA foreign_keys=ON;",   NULL, NULL, NULL);
-  sqlite3_exec(db->h, "PRAGMA busy_timeout=5000;", NULL, NULL, NULL);
-  sqlite3_exec(db->h, "PRAGMA synchronous=NORMAL;", NULL, NULL, NULL);
+  /* The same set as the primary handle — these are per-connection, and this
+   * is the connection kind that does the bulk of the reading. */
+  db_apply_pragmas(db->h);
   return 0;
+}
+
+/* See db.h. Deliberately falls back rather than failing: an off-loop pod that
+ * cannot get its own connection should run slightly unsafely and log it, not
+ * silently do nothing (which is what a hard failure would look like from the
+ * outside — an investigation that "found nothing"). */
+db_handle *db_worker_open(db_handle *own, db_handle *fallback) {
+  if (!own) return fallback;
+  own->h = NULL;
+  if (db_attach(own, NULL) == 0) return own;
+  fprintf(stderr, "[db] worker connection failed; falling back to the shared "
+                  "handle (its transactions can now interleave)\n");
+  return fallback;
+}
+
+void db_worker_close(db_handle *own) {
+  if (own && own->h) db_close(own);
 }
 
 int db_open(db_handle *db, const char *db_path, const char *schema_path) {
@@ -283,8 +374,24 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   ensure_column(db, "intel_items", "capture_stills", "INTEGER NOT NULL DEFAULT 0");
   camera_stills_migrate(db);
 
+  /* Widen intel_items_fts to also index link/author/tags/properties. No-op
+   * unless the live index is still the old column set. Deliberately LAST of
+   * the migrations: it rewinds translate.c's FTS watermark (so translate_state
+   * must already exist) and recreates the uid_map rowid index that
+   * translate_migrate() created. It is also the only migration here that can
+   * take minutes on a large corpus — everything cheap has already run, so a
+   * JO_FTS_REBUILD=0 boot skips only this. */
+  fts_schema_migrate(db);
+
   /* Every registered source gets a sources-table row (idempotent). */
   db_seed_sources(db);
+
+  /* Give the planner statistics to choose between the intel_items indexes.
+   * PRAGMA optimize, not a bare ANALYZE: it re-analyses only tables whose
+   * stats are actually stale, and analysis_limit caps the scan per index so
+   * boot cost stays bounded on a large corpus instead of growing with it. */
+  sqlite3_exec(db->h, "PRAGMA analysis_limit=1000;", NULL, NULL, NULL);
+  sqlite3_exec(db->h, "PRAGMA optimize;", NULL, NULL, NULL);
 
   fprintf(stderr, "[db] opened %s, schema applied (%d objects)\n",
           dbp, db_object_count(db));

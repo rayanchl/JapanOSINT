@@ -1,0 +1,36 @@
+=== TOR_EXITS_GLOBAL
+exit: 0
+sched: rc=0 records=200 503ms
+--- stderr ---
+[TOR_EXITS_GLOBAL] emitted 200
+[sched] TOR_EXITS_GLOBAL run rc=0 records=200 503ms
+--- persisted: 200 rows, 0 with lat/lon, 0 with geometry ---
+record_type: tor-exit-node=200
+sub_source_id: (null)=200
+
+--- row 1 ---
+  uid            TOR_EXITS_GLOBAL|TOR_EXITS_GLOBAL|171.25.193.25
+  title          171.25.193.25
+  link           https://check.torproject.org/torbulkexitlist
+  language       en
+  record_type    tor-exit-node
+  tags           ["threat-intel","tor-exit"]
+  properties     {"service":"TOR_EXITS_GLOBAL","feed":"TOR_EXITS_GLOBAL","success":true}
+
+--- row 2 ---
+  uid            TOR_EXITS_GLOBAL|TOR_EXITS_GLOBAL|80.67.167.81
+  title          80.67.167.81
+  link           https://check.torproject.org/torbulkexitlist
+  language       en
+  record_type    tor-exit-node
+  tags           ["threat-intel","tor-exit"]
+  properties     {"service":"TOR_EXITS_GLOBAL","feed":"TOR_EXITS_GLOBAL","success":true}
+
+--- row 3 ---
+  uid            TOR_EXITS_GLOBAL|TOR_EXITS_GLOBAL|198.98.51.189
+  title          198.98.51.189
+  link           https://check.torproject.org/torbulkexitlist
+  language       en
+  record_type    tor-exit-node
+  tags           ["threat-intel","tor-exit"]
+  properties     {"service":"TOR_EXITS_GLOBAL","feed":"TOR_EXITS_GLOBAL","success":true}

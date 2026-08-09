@@ -306,7 +306,15 @@ CREATE TABLE IF NOT EXISTS intel_items (
     tags         TEXT,
     properties   TEXT NOT NULL DEFAULT '{}'
   , keywords TEXT, keywords_at TEXT, keywords_failed INTEGER DEFAULT 0, lat REAL, lon REAL, geom_source TEXT, geom_at TEXT, record_type TEXT, sub_source_id TEXT, geometry TEXT, geom_failed INTEGER DEFAULT 0, tenant_id TEXT NOT NULL DEFAULT 'legacy');
-CREATE VIRTUAL TABLE IF NOT EXISTS intel_items_fts USING fts5(uid UNINDEXED, title, body, summary, keywords, tokenize='unicode61 remove_diacritics 1');
+-- Search index over intel_items. The column set is ALSO encoded in
+-- core/fts_schema.h (FTS_SCHEMA_COLUMNS / FTS_SCHEMA_VERSION); the two must
+-- agree. This CREATE only ever runs on a fresh database — CREATE ... IF NOT
+-- EXISTS silently skips an existing table, so widening the column set on a
+-- deployed DB is fts_schema_migrate()'s job, not this line's.
+-- link/author/tags/props were added in v2: title/body/summary alone meant a
+-- camera row (camera_store.c writes ONLY title, everything else lands in
+-- properties) was searchable by name and nothing else.
+CREATE VIRTUAL TABLE IF NOT EXISTS intel_items_fts USING fts5(uid UNINDEXED, title, body, summary, keywords, link, author, tags, props, tokenize='unicode61 remove_diacritics 1');
 CREATE TABLE IF NOT EXISTS intel_items_fts_uid_map (
          uid   TEXT    NOT NULL PRIMARY KEY,
          rowid INTEGER NOT NULL
@@ -586,6 +594,15 @@ CREATE INDEX IF NOT EXISTS idx_intel_items_geom
         ON intel_items(lat, lon) WHERE lat IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_intel_items_geom_pending
         ON intel_items(source_id) WHERE lat IS NULL AND geom_source IS NULL;
+/* The listing order of /api/intel/items:
+ *   ORDER BY COALESCE(published_at, fetched_at) DESC, uid ASC
+ * An expression index is required — no column index can serve a COALESCE of
+ * two columns, so every page of that endpoint sorted the whole table. Measured
+ * at 35.1 s before and 0.002 s after (with the cache_size/mmap_size pragmas in
+ * db.c and an ANALYZE). uid is the tiebreaker the query names, so it belongs
+ * in the index or the sort comes back for the ties. */
+CREATE INDEX IF NOT EXISTS idx_intel_items_pub
+    ON intel_items(COALESCE(published_at, fetched_at) DESC, uid ASC);
 CREATE INDEX IF NOT EXISTS idx_intel_items_source
     ON intel_items(source_id, published_at DESC);
 CREATE INDEX IF NOT EXISTS idx_intel_items_subsrc

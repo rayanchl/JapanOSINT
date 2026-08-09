@@ -1,0 +1,53 @@
+=== tail of datasets page ===
+r></je-header>
+
+	<main>
+		<div class="mv">
+			List of Datasets
+		</div>
+
+		<section class="show">
+			<div class="container">
+				<p>
+					The datasets include JAXA's public Earth observation datasets and other agencies' public datasets converted to COG (Cloud Optimized GeoTIFF). More than 100 datasets are available.
+				</p>
+
+				<div id="content">
+					<!-- <je-datasets-card
+						img="https://data.earth.jaxa.jp/app/common/thumbs/JAXA.EORC_ALOS.PRISM_AW3D30.v4.1_global.png"
+						title="ALOS World 3D - 30m (AW3D30) (Released in April 2024 / Version 4.1)"
+						text="JAXA released 'ALOS World 3D-30m' (AW3D30) dataset is a global digital surface model (DSM) with horizontal resolution of approximately 30 meters (basically 1 arcsecond) by the Panchromatic Remote-sensing Instrument for Stereo Mapping (PRISM), ..."
+						id="JAXA.EORC_ALOS.PRISM_AW3D30.v4.1_global"
+						band="DSM,MSK"
+					></je-datasets-card>
+	
+					<je-datasets-card
+						img="https://data.earth.jaxa.jp/app/common/thumbs/JAXA.G-Portal_GCOM-C.SGLI_standard.L3-CHLA.daytime.v3_global_monthly.png"
+						title="Chlorophyll-a concentration (Daytime/Monthly)"
+						text="Chlorophyll-a concentration product in GCOM-C SGLI Level-3 Standard product Version 3."
+						id="JAXA.G-Portal_GCOM-C.SGLI_standard.L3-CHLA.daytime.v3_global_monthly"
+						band="CHLA"
+					></je-datasets-card> -->
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<je-footer></je-footer>
+
+	<script src="../../assets/script.js" type="module"></script>
+	<script src="script.js" type="module"></script>
+</body>
+
+</html>
+=== url-ish strings ===
+../../assets/CopyText.js
+../../assets/DatasetsCard.js
+../../assets/Footer.js
+../../assets/Header.js
+../../assets/script.js
+../../assets/visualViewportCover.js
+script.js
+https://data.earth.jaxa.jp/assets/datasets.json [404] 218b <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head><title>404 Not F
+https://data.earth.jaxa.jp/en/datasets/datasets.json [404] 223b <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head><title>404 Not F
+https://data.earth.jaxa.jp/api/collection/v1/all/index.json [404] 230b <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head><title>404 Not F

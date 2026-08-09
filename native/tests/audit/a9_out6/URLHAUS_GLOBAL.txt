@@ -1,0 +1,42 @@
+=== URLHAUS_GLOBAL
+exit: 0
+sched: rc=0 records=200 275ms
+--- stderr ---
+[URLHAUS_GLOBAL] emitted 200
+[sched] URLHAUS_GLOBAL run rc=0 records=200 275ms
+--- persisted: 200 rows, 0 with lat/lon, 0 with geometry ---
+record_type: malware-url=200
+sub_source_id: (null)=200
+
+--- row 1 ---
+  uid            URLHAUS_GLOBAL|urlhaus|http://1.70.76.156:57573/bin.sh
+  title          http://1.70.76.156:57573/bin.sh
+  body           {"url":"http://1.70.76.156:57573/bin.sh","url_status":"online","threat":"malware_download","feed":"URLhaus"}
+  summary        malware_download
+  link           http://1.70.76.156:57573/bin.sh
+  language       en
+  record_type    malware-url
+  tags           ["threat-intel","malware-url","urlhaus"]
+  properties     {"service":"URLHAUS_GLOBAL","feed":"URLHAUS_GLOBAL","success":true}
+
+--- row 2 ---
+  uid            URLHAUS_GLOBAL|urlhaus|http://123.12.40.26:33591/bin.sh
+  title          http://123.12.40.26:33591/bin.sh
+  body           {"url":"http://123.12.40.26:33591/bin.sh","url_status":"online","threat":"malware_download","feed":"URLhaus"}
+  summary        malware_download
+  link           http://123.12.40.26:33591/bin.sh
+  language       en
+  record_type    malware-url
+  tags           ["threat-intel","malware-url","urlhaus"]
+  properties     {"service":"URLHAUS_GLOBAL","feed":"URLHAUS_GLOBAL","success":true}
+
+--- row 3 ---
+  uid            URLHAUS_GLOBAL|urlhaus|http://178.75.21.83:36619/bin.sh
+  title          http://178.75.21.83:36619/bin.sh
+  body           {"url":"http://178.75.21.83:36619/bin.sh","url_status":"online","threat":"malware_download","feed":"URLhaus"}
+  summary        malware_download
+  link           http://178.75.21.83:36619/bin.sh
+  language       en
+  record_type    malware-url
+  tags           ["threat-intel","malware-url","urlhaus"]
+  properties     {"service":"URLHAUS_GLOBAL","feed":"URLHAUS_GLOBAL","success":true}

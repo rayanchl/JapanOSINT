@@ -1,0 +1,33 @@
+=== copernicus-ems
+exit: 0
+sched: rc=0 records=10 2010ms
+--- stderr ---
+[rss] copernicus-ems emitted 10
+[sched] copernicus-ems run rc=0 records=10 2010ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            copernicus-ems|http://mapping.emergency.copernicus.eu/news/wildfires-in-viotia-greece-emsr909/
+  title          Wildfires in Viotia, Greece
+  body           Activation EMSR909. Two wildfires started in Viotia Regional Unit (Sterea Ellada Prefecture), 55 km northwest of Athens, on 31 July 2026 at 06:35 and 08:04, and the fires expanded rapidly due to strong northerly winds. Residents of Aliki, Agios Nikolaos and Agios Vasilios had to be evacuated, and a 112 cell broadcast message was issued for this purpose. Ground forces (63 vehicles with 116 firefighters) and aerial means (12 helicopters and 6 airplanes) were used for fire suppression, assisted by municipality vehicles, machinery and volunteer organizations. Copernicus EMS Rapid Mapping is requested to provide initial rough estimation, fire extent and damage assessment emergency mapping.
+  summary        Activation EMSR909. Two wildfires started in Viotia Regional Unit (Sterea Ellada Prefecture), 55 km northwest of Athens, on 31 July 2026 at 06:35 and 08:04, and the fires expanded rapidly due to strong northerly winds. Residents of Aliki, A
+  link           http://mapping.emergency.copernicus.eu/news/wildfires-in-viotia-greece-emsr909/
+  language       en
+  published_at   Fri, 31 Jul 2026 00:00:00 +0000
+  record_type    article
+  tags           ["hazard","disaster","alert"]
+  properties     {"guid":"http://mapping.emergency.copernicus.eu/news/wildfires-in-viotia-greece-emsr909/"}
+
+--- row 2 ---
+  uid            copernicus-ems|http://mapping.emergency.copernicus.eu/news/wildfires-in-crete-island-greece-emsr907/
+  title          Wildfires in Crete Island, Greece
+  body           Activation EMSR907. 29/07/2025 at approximately 13:24 (CEST), a wildfire started near the village of Kria Vrisi, 35 Km southeast from Rethimno city, in Crete Island (South Greece). The fire expanded rapidly due to high northerly winds. Residents of Sahtoura, Melambes, Orne, Agia Galini and many other villages had to be evacuated, and a 112 cell-broadcasting message was sent for this purpose. Ground forces (104 vehicles with 313 firefighters) and aerial means (3 helicopters and 4 airplanes) were used for fire suppression, assisted by municipality vehicles/machinery and volunteer organizations. Copernicus EMS Rapid Mapping is requested to provide initial rough estimation, fire extent and damage assessment emergency mapping.
+  summary        Activation EMSR907. 29/07/2025 at approximately 13:24 (CEST), a wildfire started near the village of Kria Vrisi, 35 Km southeast from Rethimno city, in Crete Island (South Greece). The fire expanded rapidly due to high northerly winds. Resi
+  link           http://mapping.emergency.copernicus.eu/news/wildfires-in-crete-island-greece-emsr907/
+  language       en
+  published_at   Thu, 30 Jul 2026 00:00:00 +0000
+  record_type    article
+  tags           ["hazard","disaster","alert"]
+  properties     {"guid":"http://mapping.emergency.copernicus.eu/news/wildfires-in-crete-island-greece-emsr907/"}

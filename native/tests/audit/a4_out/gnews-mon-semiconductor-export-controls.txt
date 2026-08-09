@@ -1,0 +1,45 @@
+=== gnews-mon-semiconductor-export-controls
+exit: 0
+sched: rc=0 records=100 809ms
+--- stderr ---
+[rss] gnews-mon-semiconductor-export-controls emitted 100
+[sched] gnews-mon-semiconductor-export-controls run rc=0 records=100 809ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-semiconductor-export-controls|CBMiwgFBVV95cUxNaTFPeU5qQmdzVS1BX0RtM3AzejlOYWtmTXBFRTJOazdFY2N5QTA5RzBQbFY3bGVDVzRuTGdYZzJUWFJUazVJaElpSUlhdU92dVpnelYtbHhmbzktemdYUGNFd1FDRGpPNDA0V09QUnBNWUZGNERpMEx4bkRQR2NjVEtmWGhzVjJSUkxJQnRzMHR0cDZMeHV1OWVXRldDUk5GLTB1SXM3S2NMUzlyUExDX3E0WXphX3NqZnpTUlJJdTQ0Zw
+  title          Mike McCalister: Brian Mast has the tools to close China’s semiconductor backdoor - Florida Politics
+  body           <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxNaTFPeU5qQmdzVS1BX0RtM3AzejlOYWtmTXBFRTJOazdFY2N5QTA5RzBQbFY3bGVDVzRuTGdYZzJUWFJUazVJaElpSUlhdU92dVpnelYtbHhmbzktemdYUGNFd1FDRGpPNDA0V09QUnBNWUZGNERpMEx4bkRQR2NjVEtmWGhzVjJSUkxJQnRzMHR0cDZMeHV1OWVXRldDUk5GLTB1SXM3S2NMUzlyUExDX3E0WXphX3NqZnpTUlJJdTQ0Zw?oc=5" target="_blank">Mike McCalister: Brian Mast has the tools to close China’s semiconductor backdoor</a>&nbsp;&nbsp;<font color="#6f6f6f">Florida Politics</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxNaTFPeU5qQmdzVS1BX0RtM3AzejlOYWtmTXBFRTJOazdFY2N5QTA5RzBQbFY3bGVDVzRuTGdYZzJUWFJUazVJaElpSUlhdU92dVpnelYtbHhmbzktemdYUGNFd1FDRGpPNDA0V09QUnBNWUZGNERpMEx4bkRQR2NjVEtmWGhzVjJSUkxJQn
+  link           https://news.google.com/rss/articles/CBMiwgFBVV95cUxNaTFPeU5qQmdzVS1BX0RtM3AzejlOYWtmTXBFRTJOazdFY2N5QTA5RzBQbFY3bGVDVzRuTGdYZzJUWFJUazVJaElpSUlhdU92dVpnelYtbHhmbzktemdYUGNFd1FDRGpPNDA0V09QUnBNWUZGNERpMEx4bkRQR2NjVEtmWGhzVjJSUkxJQnRzMHR0cDZMeHV1OWVXRldDUk5GLTB1SXM3S2NMUzlyUExDX3E0WXphX3NqZnpTUlJJdTQ0Zw?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 23:15:24 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","semiconductor"]
+  properties     {"guid":"CBMiwgFBVV95cUxNaTFPeU5qQmdzVS1BX0RtM3AzejlOYWtmTXBFRTJOazdFY2N5QTA5RzBQbFY3bGVDVzRuTGdYZzJUWFJUazVJaElpSUlhdU92dVpnelYtbHhmbzktemdYUGNFd1FDRGpPNDA0V09QUnBNWUZGNERpMEx4bkRQR2NjVEtmWGhzVjJSUkxJQnRzMHR0cDZMeHV1OWVXRldDUk5GLTB1SXM3S2NMUzlyUExDX3E0WXphX3NqZnpTUlJJdTQ0Zw"}
+
+--- row 2 ---
+  uid            gnews-mon-semiconductor-export-controls|CBMijwFBVV95cUxQOHFVbGJtSUZfMnZzTDV2cmVYV1lFcmh3dGZ2S1haOGFhc0JKNGxmSXUzRklRVG53cVFrU3h4T2RLVDg4Mm1mQUktS01Xc3hGTzlGQ0toY2dZSVhvcVVBb1RrQWlJaFRhcTh0d2N2UG5GNzJZWjZUNlZ0U0FPRENnU1RvNFllcUNmQmVBZ3Bybw
+  title          It Takes More Than Two to Tango: Creating Effective Export Controls on Semiconductor Manufacturing Equipment - Just Security
+  body           <a href="https://news.google.com/rss/articles/CBMijwFBVV95cUxQOHFVbGJtSUZfMnZzTDV2cmVYV1lFcmh3dGZ2S1haOGFhc0JKNGxmSXUzRklRVG53cVFrU3h4T2RLVDg4Mm1mQUktS01Xc3hGTzlGQ0toY2dZSVhvcVVBb1RrQWlJaFRhcTh0d2N2UG5GNzJZWjZUNlZ0U0FPRENnU1RvNFllcUNmQmVBZ3Bybw?oc=5" target="_blank">It Takes More Than Two to Tango: Creating Effective Export Controls on Semiconductor Manufacturing Equipment</a>&nbsp;&nbsp;<font color="#6f6f6f">Just Security</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMijwFBVV95cUxQOHFVbGJtSUZfMnZzTDV2cmVYV1lFcmh3dGZ2S1haOGFhc0JKNGxmSXUzRklRVG53cVFrU3h4T2RLVDg4Mm1mQUktS01Xc3hGTzlGQ0toY2dZSVhvcVVBb1RrQWlJaFRhcTh0d2N2UG5GNzJZWjZUNlZ0U0FPRENnU1RvNFllcUNmQmVBZ3
+  link           https://news.google.com/rss/articles/CBMijwFBVV95cUxQOHFVbGJtSUZfMnZzTDV2cmVYV1lFcmh3dGZ2S1haOGFhc0JKNGxmSXUzRklRVG53cVFrU3h4T2RLVDg4Mm1mQUktS01Xc3hGTzlGQ0toY2dZSVhvcVVBb1RrQWlJaFRhcTh0d2N2UG5GNzJZWjZUNlZ0U0FPRENnU1RvNFllcUNmQmVBZ3Bybw?oc=5
+  language       en
+  published_at   Thu, 09 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","semiconductor"]
+  properties     {"guid":"CBMijwFBVV95cUxQOHFVbGJtSUZfMnZzTDV2cmVYV1lFcmh3dGZ2S1haOGFhc0JKNGxmSXUzRklRVG53cVFrU3h4T2RLVDg4Mm1mQUktS01Xc3hGTzlGQ0toY2dZSVhvcVVBb1RrQWlJaFRhcTh0d2N2UG5GNzJZWjZUNlZ0U0FPRENnU1RvNFllcUNmQmVBZ3Bybw"}
+
+--- row 3 ---
+  uid            gnews-mon-semiconductor-export-controls|CBMivgFBVV95cUxQMnQtRVFFNl9xQzJhYWtqMjlrVEx5NW9FYmp4UzM3QlNHdjYwaDhfT3BTdkdaX0QwUHF2X0Z3a3pEMnl0b0RqN0VVMFZ2NndBT1YtWDhjbE85dGZKT2lpWmtFYTJaY1E5UHljUmVvcXhvV0FTTUFyck5GZHBYRU1Nc1hTNDg4aUxoeFFNZmhKOVVKcDNLQVo3SFBYcnZ0VFFhVlBhNndHOWtuMVZpaDhmVE9JY051NmVzQUx4QUln
+  title          China considers tighter export controls on AI models and chips, FT reports - Reuters
+  body           <a href="https://news.google.com/rss/articles/CBMivgFBVV95cUxQMnQtRVFFNl9xQzJhYWtqMjlrVEx5NW9FYmp4UzM3QlNHdjYwaDhfT3BTdkdaX0QwUHF2X0Z3a3pEMnl0b0RqN0VVMFZ2NndBT1YtWDhjbE85dGZKT2lpWmtFYTJaY1E5UHljUmVvcXhvV0FTTUFyck5GZHBYRU1Nc1hTNDg4aUxoeFFNZmhKOVVKcDNLQVo3SFBYcnZ0VFFhVlBhNndHOWtuMVZpaDhmVE9JY051NmVzQUx4QUln?oc=5" target="_blank">China considers tighter export controls on AI models and chips, FT reports</a>&nbsp;&nbsp;<font color="#6f6f6f">Reuters</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMivgFBVV95cUxQMnQtRVFFNl9xQzJhYWtqMjlrVEx5NW9FYmp4UzM3QlNHdjYwaDhfT3BTdkdaX0QwUHF2X0Z3a3pEMnl0b0RqN0VVMFZ2NndBT1YtWDhjbE85dGZKT2lpWmtFYTJaY1E5UHljUmVvcXhvV0FTTUFyck5GZHBYRU1Nc1hTNDg4aUxoeFFNZm
+  link           https://news.google.com/rss/articles/CBMivgFBVV95cUxQMnQtRVFFNl9xQzJhYWtqMjlrVEx5NW9FYmp4UzM3QlNHdjYwaDhfT3BTdkdaX0QwUHF2X0Z3a3pEMnl0b0RqN0VVMFZ2NndBT1YtWDhjbE85dGZKT2lpWmtFYTJaY1E5UHljUmVvcXhvV0FTTUFyck5GZHBYRU1Nc1hTNDg4aUxoeFFNZmhKOVVKcDNLQVo3SFBYcnZ0VFFhVlBhNndHOWtuMVZpaDhmVE9JY051NmVzQUx4QUln?oc=5
+  language       en
+  published_at   Mon, 20 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","semiconductor"]
+  properties     {"guid":"CBMivgFBVV95cUxQMnQtRVFFNl9xQzJhYWtqMjlrVEx5NW9FYmp4UzM3QlNHdjYwaDhfT3BTdkdaX0QwUHF2X0Z3a3pEMnl0b0RqN0VVMFZ2NndBT1YtWDhjbE85dGZKT2lpWmtFYTJaY1E5UHljUmVvcXhvV0FTTUFyck5GZHBYRU1Nc1hTNDg4aUxoeFFNZmhKOVVKcDNLQVo3SFBYcnZ0VFFhVlBhNndHOWtuMVZpaDhmVE9JY051NmVzQUx4QUln"}

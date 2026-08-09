@@ -1,0 +1,45 @@
+=== FEODO_GLOBAL
+exit: 0
+sched: rc=0 records=5 70ms
+--- stderr ---
+[FEODO_GLOBAL] emitted 5
+[sched] FEODO_GLOBAL run rc=0 records=5 70ms
+--- persisted: 5 rows, 0 with lat/lon, 0 with geometry ---
+record_type: botnet-c2=5
+sub_source_id: (null)=5
+
+--- row 1 ---
+  uid            FEODO_GLOBAL|feodo|162.243.103.246
+  title          162.243.103.246
+  body           {"ip_address":"162.243.103.246","port":8080,"malware":"Emotet","status":"offline","country":"US","as_name":"DIGITALOCEAN-ASN","first_seen":"2022-06-04 21:24:53","feed":"Feodo Tracker"}
+  summary        Emotet
+  link           https://feodotracker.abuse.ch/browse/
+  language       en
+  published_at   2022-06-04 21:24:53
+  record_type    botnet-c2
+  tags           ["threat-intel","botnet-c2","feodo"]
+  properties     {"service":"FEODO_GLOBAL","feed":"FEODO_GLOBAL","success":true}
+
+--- row 2 ---
+  uid            FEODO_GLOBAL|feodo|50.16.16.211
+  title          50.16.16.211
+  body           {"ip_address":"50.16.16.211","port":443,"hostname":"ec2-50-16-16-211.compute-1.amazonaws.com","malware":"QakBot","status":"online","country":"US","as_name":"AMAZON-AES","first_seen":"2025-12-30 13:56:31","feed":"Feodo Tracker"}
+  summary        QakBot
+  link           https://feodotracker.abuse.ch/browse/
+  language       en
+  published_at   2025-12-30 13:56:31
+  record_type    botnet-c2
+  tags           ["threat-intel","botnet-c2","feodo"]
+  properties     {"service":"FEODO_GLOBAL","feed":"FEODO_GLOBAL","success":true}
+
+--- row 3 ---
+  uid            FEODO_GLOBAL|feodo|34.204.119.63
+  title          34.204.119.63
+  body           {"ip_address":"34.204.119.63","port":443,"hostname":"ec2-34-204-119-63.compute-1.amazonaws.com","malware":"QakBot","status":"offline","country":"US","as_name":"AMAZON-AES","first_seen":"2026-01-13 21:41:15","feed":"Feodo Tracker"}
+  summary        QakBot
+  link           https://feodotracker.abuse.ch/browse/
+  language       en
+  published_at   2026-01-13 21:41:15
+  record_type    botnet-c2
+  tags           ["threat-intel","botnet-c2","feodo"]
+  properties     {"service":"FEODO_GLOBAL","feed":"FEODO_GLOBAL","success":true}

@@ -1,0 +1,32 @@
+=== volcanodiscovery
+exit: 0
+sched: rc=0 records=20 12458ms
+--- stderr ---
+[rss] volcanodiscovery emitted 20
+[sched] volcanodiscovery run rc=0 records=20 12458ms
+[detect] anomaly opened: volcanodiscovery verdict=duration_outlier — duration 12458ms exceeds 10000ms threshold
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            volcanodiscovery|https://www.volcanodiscovery.com/volcanoes/today.html
+  title          Volcanoes Today, 31 Jul 2026: Etna volcano, Stromboli, Santiaguito, Fuego, Krakatau, Merapi, Semeru, Sheveluch
+  link           https://www.volcanodiscovery.com/volcanoes/today.html
+  language       en
+  published_at   Fri, 31 Jul 2026 18:00:05 +0000
+  record_type    article
+  tags           ["hazard","volcano","alert"]
+  properties     {"guid":"https://www.volcanodiscovery.com/volcanoes/today.html"}
+
+--- row 2 ---
+  uid            volcanodiscovery|https://www.volcanodiscovery.com/fuego/news/322429/vaac-advisory-2026-887.html
+  title          Fuego Volcano Volcanic Ash Advisory: FQT SMALL VA EM
+  body           <div style="text-align: center"><img class="articleImg" src="https://www.volcanodiscovery.de/maps/volcanomap-8-26.jpg" /><div class="imagecaption" style="font-size: smaller"></div></div><p>Volcanic Ash Advisory Center Washington (VAAC) issued the following report:<br /><br />FVXX20 at 17:34 UTC, 31/07/26 from KNES<br />VA ADVISORY<br />DTG: 20260731/1731Z<br /><br />VAAC: WASHINGTON<br /><br />VOLCANO: FUEGO 342090<br />PSN: N1428 W09052<br /><br />AREA: GUATEMALA<br /><br />SOURCE ELEV: 12346 FT AMSL<br /><br />ADVISORY NR: 2026/887<br /><br />INFO SOURCE: GOES-19. WEBCAM. NWP MODELS. <br /><br />ERUPTION DETAILS: FQT SMALL VA EM <br /><br />EST VA DTG: 31/1700Z<br /><br />EST VA CLD: SFC/FL140 N1428 W09053 - N1427 W09052<br />- N1420 W09116 - N1428 W09117 - N1428 W09053 MOV<br />W 25KT <br /><br />FCST VA CLD +6HR: 31/2300Z SFC/FL140 N1428 W09052<br />- N1427 W09052 - N1418 W09121 - N1 …<560 more chars>
+  summary        <div style="text-align: center"><img class="articleImg" src="https://www.volcanodiscovery.de/maps/volcanomap-8-26.jpg" /><div class="imagecaption" style="font-size: smaller"></div></div><p>Volcanic Ash Advisory Center Washington (VAAC) issu
+  link           https://www.volcanodiscovery.com/fuego/news/322429/vaac-advisory-2026-887.html
+  language       en
+  published_at   Fri, 31 Jul 2026 17:45:04 +0000
+  record_type    article
+  tags           ["hazard","volcano","alert"]
+  properties     {"guid":"https://www.volcanodiscovery.com/fuego/news/322429/vaac-advisory-2026-887.html"}

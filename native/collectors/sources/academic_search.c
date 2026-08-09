@@ -12,24 +12,13 @@
  * found across all sources, emits nothing (honest empty — no seeded rows). The
  * former J-STAGE / KAKEN / researchmap lookup-URL stubs (which emitted only a
  * label + URL with no fetched data) have been removed. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-static void uri_encode(const char *in, char *out, size_t cap) {
-  static const char *keep = "-_.!~*'()";
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p && w + 4 < cap; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(keep, c)) out[w++] = (char)c;
-    else { snprintf(out + w, cap - w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
-}
 
 static cJSON *http_json(http_client *h, const char *url) {
   http_response hr = {0};
@@ -41,7 +30,7 @@ static cJSON *http_json(http_client *h, const char *url) {
 
 static cJSON *search_pubmed(http_client *h, const char *q, int limit) {
   cJSON *results = cJSON_CreateArray();
-  char enc[1024]; uri_encode(q, enc, sizeof enc);
+  char enc[1024]; jo_uri_encode_buf(q, enc, sizeof enc);
   char url[1100];
   snprintf(url, sizeof url,
     "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=%d&term=%s",
@@ -112,7 +101,7 @@ static cJSON *search_pubmed(http_client *h, const char *q, int limit) {
 /* arXiv Atom XML — same substring extraction as upstream. */
 static cJSON *search_arxiv(http_client *h, const char *q, int limit) {
   cJSON *results = cJSON_CreateArray();
-  char enc[1024]; uri_encode(q, enc, sizeof enc);
+  char enc[1024]; jo_uri_encode_buf(q, enc, sizeof enc);
   char url[1100];
   snprintf(url, sizeof url,
     "http://export.arxiv.org/api/query?search_query=%s&start=0&max_results=%d",
@@ -144,8 +133,11 @@ static cJSON *search_arxiv(http_client *h, const char *q, int limit) {
     char *ps = strstr(entry, "<published>"), *pe = strstr(entry, "</published>");
     if (ps && pe && ps < ee) {
       ps += 11; size_t L = pe - ps;
+      /* Terminating at d[10] regardless of how much was copied published up to
+       * 10 bytes of uninitialised stack as the record's date whenever the
+       * <published> element was shorter than YYYY-MM-DD. Terminate at c. */
       char d[32]; size_t c = L > 10 ? 10 : L;
-      memcpy(d, ps, c); d[10] = 0;
+      memcpy(d, ps, c); d[c] = 0;
       cJSON_AddStringToObject(it, "date", d);
     }
     char *ss = strstr(entry, "<summary>"), *se = strstr(entry, "</summary>");
@@ -165,7 +157,7 @@ static cJSON *search_arxiv(http_client *h, const char *q, int limit) {
 
 static cJSON *search_crossref(http_client *h, const char *q, int limit) {
   cJSON *results = cJSON_CreateArray();
-  char enc[1024]; uri_encode(q, enc, sizeof enc);
+  char enc[1024]; jo_uri_encode_buf(q, enc, sizeof enc);
   char url[1100];
   snprintf(url, sizeof url, "https://api.crossref.org/works?query=%s&rows=%d", enc, limit);
   cJSON *j = http_json(h, url);
@@ -206,7 +198,7 @@ static cJSON *search_crossref(http_client *h, const char *q, int limit) {
 
 static cJSON *search_semantic(http_client *h, const char *q, int limit) {
   cJSON *results = cJSON_CreateArray();
-  char enc[1024]; uri_encode(q, enc, sizeof enc);
+  char enc[1024]; jo_uri_encode_buf(q, enc, sizeof enc);
   char url[1100];
   snprintf(url, sizeof url,
     "https://api.semanticscholar.org/graph/v1/paper/search?query=%s&limit=%d", enc, limit);
@@ -238,7 +230,7 @@ static cJSON *search_semantic(http_client *h, const char *q, int limit) {
 
 static cJSON *search_orcid(http_client *h, const char *q, int limit) {
   cJSON *results = cJSON_CreateArray();
-  char enc[1024]; uri_encode(q, enc, sizeof enc);
+  char enc[1024]; jo_uri_encode_buf(q, enc, sizeof enc);
   char url[1100];
   snprintf(url, sizeof url, "https://pub.orcid.org/v3.0/search/?q=%s&rows=%d", enc, limit);
   cJSON *j = http_json(h, url);
@@ -266,7 +258,7 @@ static cJSON *search_orcid(http_client *h, const char *q, int limit) {
 
 static cJSON *search_cinii(http_client *h, const char *q, int limit) {
   cJSON *results = cJSON_CreateArray();
-  char enc[1024]; uri_encode(q, enc, sizeof enc);
+  char enc[1024]; jo_uri_encode_buf(q, enc, sizeof enc);
   char url[1100];
   snprintf(url, sizeof url,
     "https://cir.nii.ac.jp/all?q=%s&count=%d&format=json", enc, limit);
@@ -339,8 +331,15 @@ static int emit_paper(intel_sink *sink, const char *q, cJSON *paper) {
       cJSON *a = cJSON_GetArrayItem(auth, k);
       const char *an = (a && a->valuestring) ? a->valuestring : NULL;
       if (!an) continue;
-      if (sw) sw += (size_t)snprintf(summary + sw, sizeof summary - sw, ", ");
-      sw += (size_t)snprintf(summary + sw, sizeof summary - sw, "%s", an);
+      /* `an` is an upstream author name of unbounded length; snprintf reports
+       * the length it WOULD have written, so sw could end up past the buffer.
+       * Clamp to the terminator (the appends below are already sw-guarded). */
+      if (sw) { int w = snprintf(summary + sw, sizeof summary - sw, ", ");
+                if (w > 0) sw += (size_t)w;
+                if (sw >= sizeof summary) sw = sizeof summary - 1; }
+      { int w = snprintf(summary + sw, sizeof summary - sw, "%s", an);
+        if (w > 0) sw += (size_t)w;
+        if (sw >= sizeof summary) sw = sizeof summary - 1; }
     }
     if (ac > 3 && sw + 8 < sizeof summary)
       sw += (size_t)snprintf(summary + sw, sizeof summary - sw, " et al.");

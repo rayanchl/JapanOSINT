@@ -1,0 +1,28 @@
+=== gitlab-bitbucket-leaks
+exit: 0
+sched: rc=0 records=2 435ms
+--- stderr ---
+[gitlab-bitbucket-leaks] gitlab reachable=1 has_key=0
+[gitlab-bitbucket-leaks] bitbucket reachable=1 has_key=0
+[sched] gitlab-bitbucket-leaks run rc=0 records=2 435ms
+--- persisted: 2 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=2
+sub_source_id: (null)=2
+
+--- row 1 ---
+  uid            gitlab-bitbucket-leaks|gitlab
+  title          gitlab public code search
+  summary        Set GITLAB_TOKEN to enable code search
+  link           https://gitlab.com/
+  published_at   2026-07-31T18:02:52.313Z
+  tags           ["leak","code-search","gitlab","reachable"]
+  properties     {"reachable":true,"requires_key":true,"has_key":false}
+
+--- row 2 ---
+  uid            gitlab-bitbucket-leaks|bitbucket
+  title          bitbucket public code search
+  summary        Set BITBUCKET_TOKEN to enable code search
+  link           https://bitbucket.org/
+  published_at   2026-07-31T18:02:52.313Z
+  tags           ["leak","code-search","bitbucket","reachable"]
+  properties     {"reachable":true,"requires_key":true,"has_key":false}

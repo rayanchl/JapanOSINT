@@ -1,0 +1,18 @@
+=== PHONE_REPUTATION  entity=+81312345678
+exit: 1
+sched: rc=1 records=1 0ms
+--- stderr ---
+[sched] PHONE_REPUTATION run rc=1 records=1 0ms
+[detect] anomaly opened: PHONE_REPUTATION verdict=status_bad — run errored (status=error)
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            PHONE_REPUTATION|phone:PHONE_REPUTATION:+81312345678
+  title          PHONE_REPUTATION — +81312345678
+  body           {"service":"PHONE_REPUTATION","entity":"+81312345678","risk":"high (invalid/unallocated number)","valid":false,"validation":{"normalized":"+81312345678","country_code":"81","country":"Japan","region":"Asia","valid":false,"likely_type":"landline"}}
+  summary        PHONE_REPUTATION
+  record_type    osint_service_result
+  tags           ["osint-search","PHONE_REPUTATION"]
+  properties     {"service":"PHONE_REPUTATION","entity":"+81312345678"}

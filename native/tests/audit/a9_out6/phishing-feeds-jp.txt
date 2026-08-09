@@ -1,0 +1,36 @@
+=== phishing-feeds-jp
+exit: 0
+sched: rc=0 records=271 2055ms
+--- stderr ---
+[phishing-feeds-jp] emitted 271
+[sched] phishing-feeds-jp run rc=0 records=271 2055ms
+--- persisted: 271 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=271
+sub_source_id: (null)=271
+
+--- row 1 ---
+  uid            phishing-feeds-jp|10ac0e8bb5ed302a7024
+  title          login.my.gov.au-taxstatement26.de5.net
+  summary        OpenPhish feed match
+  link           http://login.my.gov.au-taxstatement26.de5.net/confirmtax/otp.html
+  language       en
+  tags           ["phishing","openphish","host:login.my.gov.au-taxstatement26.de5.net"]
+  properties     {"feed":"openphish","host":"login.my.gov.au-taxstatement26.de5.net","full_url":"http://login.my.gov.au-taxstatement26.de5.net/confirmtax/otp.html"}
+
+--- row 2 ---
+  uid            phishing-feeds-jp|eb7bbcb085a30d11c342
+  title          9000-firebase-authenticate-1781494318542.cluster-c72u3gwiofapkvxrcwjq5zllcu.cloudworkstations.dev
+  summary        OpenPhish feed match
+  link           https://9000-firebase-authenticate-1781494318542.cluster-c72u3gwiofapkvxrcwjq5zllcu.cloudworkstations.dev/?monospaceUid=605643
+  language       en
+  tags           ["phishing","openphish","host:9000-firebase-authenticate-1781494318542.cluster-c72u3gwiofapkvxrcwjq5zllcu.cloudworkstations.dev"]
+  properties     {"feed":"openphish","host":"9000-firebase-authenticate-1781494318542.cluster-c72u3gwiofapkvxrcwjq5zllcu.cloudworkstations.dev","full_url":"https://9000-firebase-authenticate-1781494318542.cluster-c72u3gwiofapkvxrcwjq5zllcu.cloudworkstations.dev/?monospaceUid=605643"}
+
+--- row 3 ---
+  uid            phishing-feeds-jp|f0b4afdec99a949797e2
+  title          www.solicitudyaumentoagrupoamigo360.vercel.app
+  summary        OpenPhish feed match
+  link           http://www.solicitudyaumentoagrupoamigo360.vercel.app/
+  language       en
+  tags           ["phishing","openphish","host:www.solicitudyaumentoagrupoamigo360.vercel.app"]
+  properties     {"feed":"openphish","host":"www.solicitudyaumentoagrupoamigo360.vercel.app","full_url":"http://www.solicitudyaumentoagrupoamigo360.vercel.app/"}

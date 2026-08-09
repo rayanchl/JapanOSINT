@@ -9,11 +9,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* JS x || fallback for a coordinate: number !=0 → number, else fallback. */
-static double coord_or(cJSON *loc, const char *k, double fb) {
+/* Real coordinate or nothing. The JS this was ported from used
+ * `loc.latitude || 35.6812` / `loc.longitude || 139.7671`, i.e. every Shodan
+ * match whose GeoIP had no position was pinned to Tokyo Station — the exact
+ * stacking the 2026-07-31 purge removed elsewhere and one of the residual
+ * add_tokyo_geom() sites. A host with no location is a host with no location. */
+static int coord_of(cJSON *loc, const char *k, double *out) {
   cJSON *v = loc ? cJSON_GetObjectItem(loc, k) : NULL;
-  if (v && cJSON_IsNumber(v) && v->valuedouble != 0.0) return v->valuedouble;
-  return fb;
+  if (v && cJSON_IsNumber(v) && v->valuedouble != 0.0) { *out = v->valuedouble; return 1; }
+  return 0;
 }
 
 /* passthrough (== JS m.x; absent → JSON null, abuse-style faithful) */
@@ -45,15 +49,23 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (i >= 50) break;                           /* slice(0,50) */
       cJSON *loc = cJSON_GetObjectItem(m, "location");
 
+      double glat = 0, glon = 0;
+      int has_geo = coord_of(loc, "longitude", &glon) &
+                    coord_of(loc, "latitude", &glat);
+
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(coord_or(loc, "longitude", 139.7671)));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(coord_or(loc, "latitude", 35.6812)));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      if (has_geo) {
+        cJSON *g = cJSON_CreateObject();
+        cJSON_AddStringToObject(g, "type", "Point");
+        cJSON *co = cJSON_CreateArray();
+        cJSON_AddItemToArray(co, cJSON_CreateNumber(glon));
+        cJSON_AddItemToArray(co, cJSON_CreateNumber(glat));
+        cJSON_AddItemToObject(g, "coordinates", co);
+        cJSON_AddItemToObject(f, "geometry", g);
+      } else {
+        cJSON_AddNullToObject(f, "geometry");   /* Shodan gave no position */
+      }
 
       cJSON *p = cJSON_CreateObject();             /* EXACT JS key order */
       char idb[32];
@@ -68,6 +80,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddItemToObject(p, "city",
         cityv ? cJSON_Duplicate(cityv, 1) : cJSON_CreateNull());
       cJSON_AddStringToObject(p, "source", "shodan_wifi");
+      if (has_geo) {
+        /* unified provenance vocabulary — Shodan's position is GeoIP, which
+         * resolves to a city/ISP area, never to the device. */
+        cJSON_AddStringToObject(p, "geo_provenance", "shodan-geoip");
+        cJSON_AddStringToObject(p, "geo_precision", "city");
+        cJSON_AddBoolToObject(p, "geo_uncertain", 1);
+      }
       cJSON_AddItemToObject(f, "properties", p);
       cJSON_AddItemToArray(features, f);
       i++;

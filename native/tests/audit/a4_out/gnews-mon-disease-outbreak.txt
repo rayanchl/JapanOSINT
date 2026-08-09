@@ -1,0 +1,45 @@
+=== gnews-mon-disease-outbreak
+exit: 0
+sched: rc=0 records=99 651ms
+--- stderr ---
+[rss] gnews-mon-disease-outbreak emitted 99
+[sched] gnews-mon-disease-outbreak run rc=0 records=99 651ms
+--- persisted: 99 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=99
+sub_source_id: (null)=99
+
+--- row 1 ---
+  uid            gnews-mon-disease-outbreak|CBMixwFBVV95cUxQNzRJREpZS2tpQ1ladm1EcG93c0dEZGJfTko5Z2ZvSDBnMnhJZFMwVjltbW5nM1VJYU5MRnMwQlB1ZDZLcDY4SWMtWGhqN3ViZUgyWGktM1Jrell0dndUOUxGa1UwandLNV95QWg0cmdlbHhhWEt2N0o1Sk1xMjV4Z2xsVE8wTTFiUWxfczZ1cC1lbFJRSU9ZWUZndjdQREJ5Y21IR2NOdWdTNkpyT0laRUEyQXdHSnlMSUljSVNFTHBhLUNFbU9F
+  title          Ebola outbreak in DRC the fastest growing in the history of the virus - The Guardian
+  body           <ol><li><a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxQNzRJREpZS2tpQ1ladm1EcG93c0dEZGJfTko5Z2ZvSDBnMnhJZFMwVjltbW5nM1VJYU5MRnMwQlB1ZDZLcDY4SWMtWGhqN3ViZUgyWGktM1Jrell0dndUOUxGa1UwandLNV95QWg0cmdlbHhhWEt2N0o1Sk1xMjV4Z2xsVE8wTTFiUWxfczZ1cC1lbFJRSU9ZWUZndjdQREJ5Y21IR2NOdWdTNkpyT0laRUEyQXdHSnlMSUljSVNFTHBhLUNFbU9F?oc=5" target="_blank">Ebola outbreak in DRC the fastest growing in the history of the virus</a>&nbsp;&nbsp;<font color="#6f6f6f">The Guardian</font></li><li><a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxNVTRLaEtTaDI5ZGwyZGF1WkQzNnZ6dVRBZW5WRHJiYW1uM2U2NzZxVmlFZGVrblM2c05jdGNPVW5wTFFJa2hUMGxkWFVjaVdqN2czMGw1dTBENzNkNTVDeDJvcHk0RmMwZzZYMDMwc19VNmtpQWs1YWFaVXZQeTNZME9YTXpLQ3RFaHpVenBrV2VuWTFxMmlGR1VrejBKVzZwS21RX0ZB0gGrAUFVX3lxTE03bV8tazhKZmswVHYxR2h2SjJPeGZnUG1IT0ZQQkREMm5jaDRlNThBT1ZialFLNWRHQTVmWFNVTDZ4SXVQWjctMzlFVEFkdnEySmVXdmRJcUp3alI3YUdaTWJyNjNaeT …<585 more chars>
+  summary        <ol><li><a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxQNzRJREpZS2tpQ1ladm1EcG93c0dEZGJfTko5Z2ZvSDBnMnhJZFMwVjltbW5nM1VJYU5MRnMwQlB1ZDZLcDY4SWMtWGhqN3ViZUgyWGktM1Jrell0dndUOUxGa1UwandLNV95QWg0cmdlbHhhWEt2N0o1Sk1xMjV4Z2xsVE8wTT
+  link           https://news.google.com/rss/articles/CBMixwFBVV95cUxQNzRJREpZS2tpQ1ladm1EcG93c0dEZGJfTko5Z2ZvSDBnMnhJZFMwVjltbW5nM1VJYU5MRnMwQlB1ZDZLcDY4SWMtWGhqN3ViZUgyWGktM1Jrell0dndUOUxGa1UwandLNV95QWg0cmdlbHhhWEt2N0o1Sk1xMjV4Z2xsVE8wTTFiUWxfczZ1cC1lbFJRSU9ZWUZndjdQREJ5Y21IR2NOdWdTNkpyT0laRUEyQXdHSnlMSUljSVNFTHBhLUNFbU9F?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 08:01:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","disease"]
+  properties     {"guid":"CBMixwFBVV95cUxQNzRJREpZS2tpQ1ladm1EcG93c0dEZGJfTko5Z2ZvSDBnMnhJZFMwVjltbW5nM1VJYU5MRnMwQlB1ZDZLcDY4SWMtWGhqN3ViZUgyWGktM1Jrell0dndUOUxGa1UwandLNV95QWg0cmdlbHhhWEt2N0o1Sk1xMjV4Z2xsVE8wTTFiUWxfczZ1cC1lbFJRSU9ZWUZndjdQREJ5Y21IR2NOdWdTNkpyT0laRUEyQXdHSnlMSUljSVNFTHBhLUNFbU9F"}
+
+--- row 2 ---
+  uid            gnews-mon-disease-outbreak|CBMirwFBVV95cUxPUHFudzZkQXBpRDl3aTEyWUJjQ0o4MlBBNGxvTGstOEhjbl9LNks4UUlxWmRIX3Jwdnl0WktfQmh3aS1leEliY1NDUVRTOFQ3YVFuelhnUDlQNDJheHlpMVNCM2REaVY5bExEYkxReUFBS1hqak9yVk5ZZVE2TlhjakwyZ1d1UnlBLXlMMzVibnpIR2R1bGdFTzQwcWZ6elh4S0VsaEFnYnNCaWYwcWJj
+  title          Explosive diarrhea parasite cases rise by thousands, now in 45 states - USA Today
+  body           <ol><li><a href="https://news.google.com/rss/articles/CBMirwFBVV95cUxPUHFudzZkQXBpRDl3aTEyWUJjQ0o4MlBBNGxvTGstOEhjbl9LNks4UUlxWmRIX3Jwdnl0WktfQmh3aS1leEliY1NDUVRTOFQ3YVFuelhnUDlQNDJheHlpMVNCM2REaVY5bExEYkxReUFBS1hqak9yVk5ZZVE2TlhjakwyZ1d1UnlBLXlMMzVibnpIR2R1bGdFTzQwcWZ6elh4S0VsaEFnYnNCaWYwcWJj?oc=5" target="_blank">Explosive diarrhea parasite cases rise by thousands, now in 45 states</a>&nbsp;&nbsp;<font color="#6f6f6f">USA Today</font></li><li><a href="https://news.google.com/rss/articles/CBMizwFBVV95cUxOQzFtVDlOUnFmajhxY3dWWk5qclFrZkVnWjVMdExlMmNLM0E4MVVpQUZxdHBHVGZYdVVmZUJDOFpNS2FlUkc3eWRGaTlURkNJakNfT2dIbVRpUzNvd2tLYWdPOUVaa2xob2RvRFdSUkNkMU1fd1NTc0xZTmhEazE0NWJHNFZETmk4SDgyUC1MMW5BcVdTSlRjUmU5dEsyb2NVRXNwVnVSZUtrZ29VOXNnREVMV3FBUk1xUnlTRXZCR3JPOE5uVkpwR2NpdGZKUUk?oc=5" target="_blank">Can you eat lettuce safely during the cyclospora outbreak? Advice from an infectious disease expert …<442 more chars>
+  summary        <ol><li><a href="https://news.google.com/rss/articles/CBMirwFBVV95cUxPUHFudzZkQXBpRDl3aTEyWUJjQ0o4MlBBNGxvTGstOEhjbl9LNks4UUlxWmRIX3Jwdnl0WktfQmh3aS1leEliY1NDUVRTOFQ3YVFuelhnUDlQNDJheHlpMVNCM2REaVY5bExEYkxReUFBS1hqak9yVk5ZZVE2TlhjakwyZ1d1Un
+  link           https://news.google.com/rss/articles/CBMirwFBVV95cUxPUHFudzZkQXBpRDl3aTEyWUJjQ0o4MlBBNGxvTGstOEhjbl9LNks4UUlxWmRIX3Jwdnl0WktfQmh3aS1leEliY1NDUVRTOFQ3YVFuelhnUDlQNDJheHlpMVNCM2REaVY5bExEYkxReUFBS1hqak9yVk5ZZVE2TlhjakwyZ1d1UnlBLXlMMzVibnpIR2R1bGdFTzQwcWZ6elh4S0VsaEFnYnNCaWYwcWJj?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 11:48:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","disease"]
+  properties     {"guid":"CBMirwFBVV95cUxPUHFudzZkQXBpRDl3aTEyWUJjQ0o4MlBBNGxvTGstOEhjbl9LNks4UUlxWmRIX3Jwdnl0WktfQmh3aS1leEliY1NDUVRTOFQ3YVFuelhnUDlQNDJheHlpMVNCM2REaVY5bExEYkxReUFBS1hqak9yVk5ZZVE2TlhjakwyZ1d1UnlBLXlMMzVibnpIR2R1bGdFTzQwcWZ6elh4S0VsaEFnYnNCaWYwcWJj"}
+
+--- row 3 ---
+  uid            gnews-mon-disease-outbreak|CBMinwFBVV95cUxQek1vSGFNdUVxNXpTWE16UGs4dGxGZFdfYk1tMnlnX3A0WVRpLXVOS3p1dFVkdkRkMlgxTUhDakloWm4tVm4wMXgxWmJ0bXptRlVfek1pNkdoYjNWbXVWWXZ3cTVrUE01OGJfZk5xNzNsOXJpNjY2OE5aYm9FckxudHNRSkZHUFZWTjUtRlFuSE9PVDB1Zi1KUnhkb2VTV3fSAacBQVVfeXFMUG8xQnh5bV91YjFReHdEeUlucFRNSW5lU2syaXY3MXNwWURZSG9yU2R5Tm1QOTN3SkRRYk4wMGNTb2tGVnpSWWk3TVdYSEVIUERBd0JvZHkwSXZBbEtYWmtnQnFYZUlTOHRWaHk3MzVRYkNQYjEyLW95OU1fS0xwYkxlT3gwUW9BUW9jaE5XTEtmVGtSRlNCdG55alZqMWUzWEpQbGxuOTQ
+  title          7th death confirmed in Manhattan Legionnaires' outbreak, matching total from 2025 outbreak - NBC New York
+  body           <ol><li><a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxQek1vSGFNdUVxNXpTWE16UGs4dGxGZFdfYk1tMnlnX3A0WVRpLXVOS3p1dFVkdkRkMlgxTUhDakloWm4tVm4wMXgxWmJ0bXptRlVfek1pNkdoYjNWbXVWWXZ3cTVrUE01OGJfZk5xNzNsOXJpNjY2OE5aYm9FckxudHNRSkZHUFZWTjUtRlFuSE9PVDB1Zi1KUnhkb2VTV3fSAacBQVVfeXFMUG8xQnh5bV91YjFReHdEeUlucFRNSW5lU2syaXY3MXNwWURZSG9yU2R5Tm1QOTN3SkRRYk4wMGNTb2tGVnpSWWk3TVdYSEVIUERBd0JvZHkwSXZBbEtYWmtnQnFYZUlTOHRWaHk3MzVRYkNQYjEyLW95OU1fS0xwYkxlT3gwUW9BUW9jaE5XTEtmVGtSRlNCdG55alZqMWUzWEpQbGxuOTQ?oc=5" target="_blank">7th death confirmed in Manhattan Legionnaires' outbreak, matching total from 2025 outbreak</a>&nbsp;&nbsp;<font color="#6f6f6f">NBC New York</font></li><li><a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxOZkZyU2U0SzlWNVMtVGo0S0tyRDFTUjJQUDZBR3Y0SF95WmJ0MUlQWGl0S3pVY284aGZlclY5b3NHNzl2c0FxcTlrRURCSkQ3VDF5ZHE2LUhNT1ZFalNuOHZCMDNiVHdNZlZ4S3VrUE1MVWxCY1FfUENSeUtmWG …<682 more chars>
+  summary        <ol><li><a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxQek1vSGFNdUVxNXpTWE16UGs4dGxGZFdfYk1tMnlnX3A0WVRpLXVOS3p1dFVkdkRkMlgxTUhDakloWm4tVm4wMXgxWmJ0bXptRlVfek1pNkdoYjNWbXVWWXZ3cTVrUE01OGJfZk5xNzNsOXJpNjY2OE5aYm9FckxudHNRSkZHUF
+  link           https://news.google.com/rss/articles/CBMinwFBVV95cUxQek1vSGFNdUVxNXpTWE16UGs4dGxGZFdfYk1tMnlnX3A0WVRpLXVOS3p1dFVkdkRkMlgxTUhDakloWm4tVm4wMXgxWmJ0bXptRlVfek1pNkdoYjNWbXVWWXZ3cTVrUE01OGJfZk5xNzNsOXJpNjY2OE5aYm9FckxudHNRSkZHUFZWTjUtRlFuSE9PVDB1Zi1KUnhkb2VTV3fSAacBQVVfeXFMUG8xQnh5bV91YjFReHdEeUlucFRNSW5lU2syaXY3MXNwWURZSG9yU2R5Tm1QOTN3SkRRYk4wMGNTb2tGVnpSWWk3TVdYSEVIUERBd0JvZHkwSXZBbEtYWmtnQnFYZUlTOHRWaHk3MzVRYkNQYjEyLW95OU1fS0xwYkxlT3gwUW9BUW9jaE5XTEtmVGtSRlNCdG55alZqMWUzWEpQbGxuOTQ?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 22:05:01 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","disease"]
+  properties     {"guid":"CBMinwFBVV95cUxQek1vSGFNdUVxNXpTWE16UGs4dGxGZFdfYk1tMnlnX3A0WVRpLXVOS3p1dFVkdkRkMlgxTUhDakloWm4tVm4wMXgxWmJ0bXptRlVfek1pNkdoYjNWbXVWWXZ3cTVrUE01OGJfZk5xNzNsOXJpNjY2OE5aYm9FckxudHNRSkZHUFZWTjUtRlFuSE9PVDB1Zi1KUnhkb2VTV3fSAacBQVVfeXFMUG8xQnh5bV91YjFReHdEeUlucFRNSW5lU2syaXY3MXNwWURZSG9yU2R5Tm1QOTN3SkRRYk4wMGNTb2tGVnpSWWk3TVdYSEVIUERBd0JvZHkwSXZBbEtYWmtnQnFYZUlTOHRWaHk3MzVRYkNQYjEyLW95OU1fS0xwYkxlT3gwUW9BUW9jaE5XTEtmVGtSRlNCdG55alZqMWUzWEpQbGxuOTQ"}

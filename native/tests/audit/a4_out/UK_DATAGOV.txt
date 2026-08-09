@@ -1,0 +1,42 @@
+=== UK_DATAGOV  entity=Tokyo
+exit: 0
+sched: rc=0 records=10 462ms
+--- stderr ---
+[UK_DATAGOV] emitted 10
+[sched] UK_DATAGOV run rc=0 records=10 462ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: open-dataset=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            UK_DATAGOV|yield-constraint-score-ycs-for-the-effect-of-five-crop-stresses-on-global-production-of-four-st
+  title          Yield Constraint Score (YCS) for the effect of five crop stresses on global production of four staple food crops
+  body           {"title":"Yield Constraint Score (YCS) for the effect of five crop stresses on global production of four staple food crops","organization":"Environmental Information Data Centre","source":"UK_DATAGOV"}
+  summary        Environmental Information Data Centre
+  link           https://data.gov.uk/dataset/yield-constraint-score-ycs-for-the-effect-of-five-crop-stresses-on-global-production-of-four-st
+  language       en
+  record_type    open-dataset
+  tags           ["osint-search","UK_DATAGOV"]
+  properties     {"service":"UK_DATAGOV","success":true}
+
+--- row 2 ---
+  uid            UK_DATAGOV|modelled-annual-average-production-loss-due-to-ozone-damage-for-four-global-staple-cr-2010-2012
+  title          Modelled annual average production loss due to ozone damage for four global staple crops 2010-2012
+  body           {"title":"Modelled annual average production loss due to ozone damage for four global staple crops 2010-2012","organization":"Environmental Information Data Centre","source":"UK_DATAGOV"}
+  summary        Environmental Information Data Centre
+  link           https://data.gov.uk/dataset/modelled-annual-average-production-loss-due-to-ozone-damage-for-four-global-staple-cr-2010-2012
+  language       en
+  record_type    open-dataset
+  tags           ["osint-search","UK_DATAGOV"]
+  properties     {"service":"UK_DATAGOV","success":true}
+
+--- row 3 ---
+  uid            UK_DATAGOV|modelled-annual-average-percentage-yield-loss-due-to-ozone-damage-for-four-global-staple-crops-
+  title          Modelled annual average percentage yield loss due to ozone damage for four global staple crops, 2010-2012 version 2
+  body           {"title":"Modelled annual average percentage yield loss due to ozone damage for four global staple crops, 2010-2012 version 2","organization":"Environmental Information Data Centre","source":"UK_DATAGOV"}
+  summary        Environmental Information Data Centre
+  link           https://data.gov.uk/dataset/modelled-annual-average-percentage-yield-loss-due-to-ozone-damage-for-four-global-staple-crops-
+  language       en
+  record_type    open-dataset
+  tags           ["osint-search","UK_DATAGOV"]
+  properties     {"service":"UK_DATAGOV","success":true}

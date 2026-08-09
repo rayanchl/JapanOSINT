@@ -1,0 +1,47 @@
+=== PRTIMES
+exit: 0
+sched: rc=0 records=30 1199ms
+--- stderr ---
+[prtimes] emitted 30
+[sched] PRTIMES run rc=0 records=30 1199ms
+--- persisted: 30 rows, 0 with lat/lon, 0 with geometry ---
+record_type: press-release=30
+sub_source_id: (null)=30
+
+--- row 1 ---
+  uid            PRTIMES|https://prtimes.jp/main/html/rd/p/000000011.000165121.html
+  title          香川・高松に、“懐かしい熱狂”　昭和・平成の記憶が甦る、香川県最大級の屋内レトロイベント「第五回 四国レトロ商店街蚤の市」2026年8月15日（土）・16日（日）開催会場：サンメッセ香川 小展示場
+  summary        [四国レトロ商店街蚤の市]
+本イベントは、昭和・平成のレトロカルチャーをテーマにした、香川県最大級の屋内レトロイベントです。
+
+[画像1: https://prcdn.freetls.fastly.net/release_image/165121/11/165121-11-55932d982d80d6477b183e52...
+  link           https://prtimes.jp/main/html/rd/p/000000011.000165121.html
+  language       ja
+  published_at   2026-07-31T23:10:02+09:00
+  record_type    press-release
+  tags           ["osint-search","press"]
+  properties     {"service":"PR TIMES","success":true}
+
+--- row 2 ---
+  uid            PRTIMES|https://prtimes.jp/main/html/rd/p/000002566.000005179.html
+  title          採用だけじゃない。飲食店の“ファンづくり”にも繋がる。「TOKKスキマ」が先着10社限定トライアルキャンペーンを開始
+  summary        [阪急阪神ホールディングス株式会社]
+阪急阪神マーケティングソリューションズ株式会社（本社：大阪市北区、代表取締役社長：上田 均、以下「hhms:」）は、Forking株式会社（本社：大阪市中央区、代表取締役：大原 稔晴、以下「Forking」）が運営する...
+  link           https://prtimes.jp/main/html/rd/p/000002566.000005179.html
+  language       ja
+  published_at   2026-08-01T03:10:03+09:00
+  record_type    press-release
+  tags           ["osint-search","press"]
+  properties     {"service":"PR TIMES","success":true}
+
+--- row 3 ---
+  uid            PRTIMES|https://prtimes.jp/main/html/rd/p/000001509.000009786.html
+  title          【MARGARET HOWELL】EDWINとのコラボレーションによる新作デニムが登場
+  summary        [株式会社TSIホールディングス]
+[画像1: https://prcdn.freetls.fastly.net/release_image/9786/1509/9786-1509-00e23d49d22e5f6ca73d682289da38db-1080x1350.jpg?width=536&amp;amp;quality=85%2C75&amp;amp;format=jpeg&amp;amp;auto=webp&amp;amp;fit=bounds&amp;...
+  link           https://prtimes.jp/main/html/rd/p/000001509.000009786.html
+  language       ja
+  published_at   2026-08-01T03:10:03+09:00
+  record_type    press-release
+  tags           ["osint-search","press"]
+  properties     {"service":"PR TIMES","success":true}

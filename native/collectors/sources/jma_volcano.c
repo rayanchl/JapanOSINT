@@ -166,7 +166,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   free(xml);
   fprintf(stderr, "[jma-volcano] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* audit-09: was `n > 0 ? 0 : -1`. The JMA eqvol feed legitimately carries no
+   * volcano bulletin for long stretches; that is an honest empty, and -1 marks
+   * the run as errored and quarantines the source. */
+  return 0;
 }
 
 static const source_def jma_volcano_def = {

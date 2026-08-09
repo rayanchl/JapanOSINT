@@ -1,0 +1,20 @@
+=== DK_CVR  entity=Toyota
+exit: 0
+sched: rc=0 records=1 385ms
+--- stderr ---
+[dk_cvr] emitted 1
+[sched] DK_CVR run rc=0 records=1 385ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: cvr-company=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            DK_CVR|48456316
+  title          TOYOTA DANMARK A/S
+  body           {"name":"TOYOTA DANMARK A/S","vat":"48456316","address":"Dynamovej 10, 2860 Søborg","industry":"Engroshandel med motorkøretøjer","company_type":"Aktieselskab","employees":"72","phone":"44850400","started":"19/12 - 1973","country":"DK","source":"cvrapi.dk / CVR"}
+  summary        Dynamovej 10, 2860 Søborg
+  language       da
+  published_at   19/12 - 1973
+  record_type    cvr-company
+  tags           ["osint-search","DK_CVR"]
+  properties     {"service":"DK_CVR","source":"CVR (Denmark)","vat":"48456316","industry":"Engroshandel med motorkøretøjer","employees":"72","success":true}

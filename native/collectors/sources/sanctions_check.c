@@ -19,6 +19,7 @@
  * entity's full record JSON (name, score, datasets, nationality, topics, …).
  * No synthetic risk-overview row is emitted. If zero matches, emits nothing
  * and returns 0 (honest empty — no seeded rows). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -26,25 +27,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-static char *url_encode_dup(const char *in) {
-  size_t n = strlen(in);
-  char *out = malloc(n * 3 + 1);
-  if (!out) return NULL;
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' || c == '~') {
-      out[w++] = (char)c;
-    } else {
-      sprintf(out + w, "%%%02X", c);
-      w += 3;
-    }
-  }
-  out[w] = 0;
-  return out;
-}
 
 static void copy_first_array_str(cJSON *dst, const char *dstkey,
                                  cJSON *props, const char *key) {
@@ -57,7 +39,7 @@ static void copy_first_array_str(cJSON *dst, const char *dstkey,
 }
 
 static cJSON *query_opensanctions(http_client *http, const char *name) {
-  char *enc = url_encode_dup(name);
+  char *enc = jo_urlencode(name);
   if (!enc) return NULL;
   char url[1024];
   snprintf(url, sizeof url,
@@ -65,7 +47,15 @@ static cJSON *query_opensanctions(http_client *http, const char *name) {
   free(enc);
 
   cJSON *json = feed_get_json(http, url, 30000);
-  if (!json) return NULL;
+  if (!json) {
+    /* 2026-07: api.opensanctions.org answers 401 {"detail":"No API key
+     * provided."} — the search API is no longer open, so this service is
+     * effectively key-gated. Make that visible instead of returning a silent
+     * empty that reads as "no sanctions match". */
+    fprintf(stderr, "[sanctions-check] OpenSanctions search returned nothing "
+                    "(api.opensanctions.org now requires an API key)\n");
+    return NULL;
+  }
 
   cJSON *result = cJSON_CreateObject();
   cJSON_AddStringToObject(result, "source", "OpenSanctions");
@@ -115,7 +105,7 @@ static cJSON *query_opensanctions(http_client *http, const char *name) {
 }
 
 static cJSON *check_pep(http_client *http, const char *name) {
-  char *enc = url_encode_dup(name);
+  char *enc = jo_urlencode(name);
   if (!enc) return NULL;
   char url[1024];
   snprintf(url, sizeof url,

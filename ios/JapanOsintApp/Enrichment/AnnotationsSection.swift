@@ -178,7 +178,7 @@ struct AnnotationsSection: View {
                     .foregroundStyle(theme.textMuted)
                 if a.updated_at != nil, a.updated_at != a.created_at, !a.isDeleted {
                     Text("(edited)")
-                        .font(.system(size: 9))
+                        .font(.caption2)
                         .foregroundStyle(theme.textMuted)
                 }
                 Spacer(minLength: 0)
@@ -203,7 +203,7 @@ struct AnnotationsSection: View {
                     .fixedSize(horizontal: false, vertical: true)
                 if !canEdit(a) {
                     Text("Only the author can edit or delete this note.")
-                        .font(.system(size: 10))
+                        .font(.caption2)
                         .foregroundStyle(theme.textMuted)
                 }
             }

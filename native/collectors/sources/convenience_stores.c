@@ -2,6 +2,7 @@
  * Port of server/src/collectors/convenienceStores.js (fetchOverpassTiled).
  * Curated SEED_KONBINI offline fallback intentionally NOT ported —
  * correctness-neutral (JS does `if (!live) features = []` anyway). */
+#include "../../lib/geojson.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
@@ -14,15 +15,7 @@ static void body(const char *bbox, char *o, size_t n, void *ud) {
 }
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON *id = cJSON_GetObjectItem(el, "id");
@@ -36,8 +29,12 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   const char *brand = ov_tag(el, "brand");
   cJSON_AddItemToObject(p, "brand",
                         brand ? cJSON_CreateString(brand) : cJSON_CreateNull());
+  /* AUDIT NOTE (slice a3): an untagged store used to be published as
+   * opening_hours "24/7". OSM not carrying the tag is not evidence that the
+   * shop never closes — that was an invented fact. Absent tag → null. */
   const char *oh = ov_tag(el, "opening_hours");
-  cJSON_AddStringToObject(p, "opening_hours", oh ? oh : "24/7");
+  cJSON_AddItemToObject(p, "opening_hours",
+                        oh ? cJSON_CreateString(oh) : cJSON_CreateNull());
   const char *op = ov_tag(el, "operator");
   cJSON_AddItemToObject(p, "operator",
                         op ? cJSON_CreateString(op) : cJSON_CreateNull());
@@ -48,7 +45,7 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = overpass_tiled_collect(ctx, sink, body, 180, 90000, map, NULL);
+  int n = overpass_tiled_collect(ctx, sink, body, 180, 200000, map, NULL);
   return n >= 0 ? 0 : -1;
 }
 

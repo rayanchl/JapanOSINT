@@ -11,6 +11,7 @@
  * real geo (lat/lon) so individual matches surface as distinct search/map
  * items. If the query yields zero results (or HTTP fails), emits nothing and
  * returns 0 (honest empty — no seeded rows). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
@@ -18,27 +19,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static char *url_encode(const char *s) {
-  static const char *unres = "-_.~";
-  size_t n = strlen(s);
-  char *out = malloc(n * 3 + 1);
-  if (!out) return NULL;
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)s; *p; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(unres, c))
-      out[w++] = (char)c;
-    else { sprintf(out + w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
-  return out;
-}
-
 /* Fetch the raw Nominatim results array, or NULL on any failure
  * (encode/http/parse/non-array). Caller owns the returned cJSON. */
 static cJSON *geo_geocode_fetch(http_client *http, const char *address) {
-  char *enc = url_encode(address);
+  char *enc = jo_urlencode(address);
   if (!enc) return NULL;
   char url[2560];
   snprintf(url, sizeof url,

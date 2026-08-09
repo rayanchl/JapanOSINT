@@ -31,7 +31,13 @@ static void urlenc(const char *s, char *o, size_t n) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { "User-Agent: JapanOSINT/1.0", NULL };
   cJSON *data = feed_get_json_h(ctx->http, TRENDS_URL, hdrs, 12000);
-  if (!data) return -1;
+  if (!data) {
+    /* 2026-07: the endpoint answers HTTP 404 with the SPA shell (~500 KB of
+     * HTML), so there is no JSON to parse. Make the failure visible. */
+    fprintf(stderr, "[mercari-trending] no JSON from %s "
+                    "(endpoint returns 404 + HTML shell)\n", TRENDS_URL);
+    return -1;
+  }
 
   /* list = Array.isArray(data?.trends) ? data.trends
    *      : Array.isArray(data) ? data : [] */

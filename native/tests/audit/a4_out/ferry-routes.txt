@@ -1,0 +1,8 @@
+=== ferry-routes
+exit: 1
+sched: rc=-1 records=0 141112ms
+--- stderr ---
+[overpass] ferry-routes no elements
+[sched] ferry-routes run rc=-1 records=0 141112ms
+[detect] anomaly opened: ferry-routes verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

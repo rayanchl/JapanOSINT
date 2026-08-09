@@ -2,6 +2,7 @@
  * JapanOSINT source ABI. Resolves an IP or ASN to its BGP origin (prefix,
  * announcing ASN(s), holder) via RIPEstat — free, no key. Honest-empty on no
  * data. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/httpclient.h"
 #include "../../third_party/cJSON.h"
@@ -9,11 +10,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
-static const char *jstr(cJSON *o, const char *k) {
-  cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
-}
 
 static cJSON *ripestat(http_client *http, const char *endpoint, const char *resource) {
   char url[400];
@@ -61,13 +57,13 @@ static int bgp_run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *out = cJSON_CreateObject();
     cJSON_AddStringToObject(out, "source", "stat.ripe.net");
     cJSON_AddStringToObject(out, "asn", res);
-    const char *holder = jstr(d, "holder");
+    const char *holder = jo_str(d, "holder");
     if (holder) cJSON_AddStringToObject(out, "holder", holder);
     cJSON *ann = cJSON_GetObjectItem(d, "announced");
     if (ann) cJSON_AddItemToObject(out, "announced", cJSON_Duplicate(ann, 1));
-    int r = emit(sink, e, out);
+    emit(sink, e, out);
     cJSON_Delete(out); cJSON_Delete(j);
-    return r;
+    return 0;
   }
 
   /* IP form → network-info (prefix + asns). */
@@ -77,7 +73,7 @@ static int bgp_run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *out = cJSON_CreateObject();
   cJSON_AddStringToObject(out, "source", "stat.ripe.net");
   cJSON_AddStringToObject(out, "ip", e);
-  const char *prefix = jstr(d, "prefix");
+  const char *prefix = jo_str(d, "prefix");
   if (prefix) cJSON_AddStringToObject(out, "prefix", prefix);
   cJSON *asns = cJSON_GetObjectItem(d, "asns");
   if (asns) cJSON_AddItemToObject(out, "asns", cJSON_Duplicate(asns, 1));
@@ -88,14 +84,18 @@ static int bgp_run(const source_ctx *ctx, intel_sink *sink) {
       char res[32]; snprintf(res, sizeof res, "AS%s", a0->valuestring);
       cJSON *jo = ripestat(ctx->http, "as-overview", res);
       cJSON *dd = jo ? cJSON_GetObjectItem(jo, "data") : NULL;
-      const char *holder = dd ? jstr(dd, "holder") : NULL;
+      const char *holder = dd ? jo_str(dd, "holder") : NULL;
       if (holder) cJSON_AddStringToObject(out, "holder", holder);
       if (jo) cJSON_Delete(jo);
     }
   }
-  int r = emit(sink, e, out);
+  /* audit-09: this used to `return r` (the record count). scheduler.c treats
+   * any non-zero rc as status="error" and feeds it to anomaly_detect, so a
+   * SUCCESSFUL lookup quarantined the source. run() returns 0 or -1, never a
+   * count. */
+  emit(sink, e, out);
   cJSON_Delete(out); cJSON_Delete(j);
-  return r;
+  return 0;
 }
 
 static const source_def bgp_def = {

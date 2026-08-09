@@ -1,0 +1,33 @@
+=== gnews-mon-no-arctic-militarization
+exit: 0
+sched: rc=0 records=81 526ms
+--- stderr ---
+[rss] gnews-mon-no-arctic-militarization emitted 81
+[sched] gnews-mon-no-arctic-militarization run rc=0 records=81 526ms
+--- persisted: 81 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=81
+sub_source_id: (null)=81
+
+--- row 1 ---
+  uid            gnews-mon-no-arctic-militarization|CBMikAFBVV95cUxNaDhwZXFxaVlWYXpMdU1KQUIyX1hBdklxR28yc3JfZnlFb1l1anhvMGluRXlmQ2hUSW01LTlIRmI5Y3BsNzRvX3dteVBoLVZuNmJJOEZabE0xSnVveFFoUENmWHFkNWE5bk1WQnFRVGViaG1SZF9vWU1mUFBacXBqeEZfTXZtMWl3LWlVUE9HYVU
+  title          Security and Military Power in the Arctic - Forsvaret
+  body           <a href="https://news.google.com/rss/articles/CBMikAFBVV95cUxNaDhwZXFxaVlWYXpMdU1KQUIyX1hBdklxR28yc3JfZnlFb1l1anhvMGluRXlmQ2hUSW01LTlIRmI5Y3BsNzRvX3dteVBoLVZuNmJJOEZabE0xSnVveFFoUENmWHFkNWE5bk1WQnFRVGViaG1SZF9vWU1mUFBacXBqeEZfTXZtMWl3LWlVUE9HYVU?oc=5" target="_blank">Security and Military Power in the Arctic</a>&nbsp;&nbsp;<font color="#6f6f6f">Forsvaret</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMikAFBVV95cUxNaDhwZXFxaVlWYXpMdU1KQUIyX1hBdklxR28yc3JfZnlFb1l1anhvMGluRXlmQ2hUSW01LTlIRmI5Y3BsNzRvX3dteVBoLVZuNmJJOEZabE0xSnVveFFoUENmWHFkNWE5bk1WQnFRVGViaG1SZF9vWU1mUFBacXBqeEZfTXZtMWl3LWlVUE
+  link           https://news.google.com/rss/articles/CBMikAFBVV95cUxNaDhwZXFxaVlWYXpMdU1KQUIyX1hBdklxR28yc3JfZnlFb1l1anhvMGluRXlmQ2hUSW01LTlIRmI5Y3BsNzRvX3dteVBoLVZuNmJJOEZabE0xSnVveFFoUENmWHFkNWE5bk1WQnFRVGViaG1SZF9vWU1mUFBacXBqeEZfTXZtMWl3LWlVUE9HYVU?oc=5
+  language       no
+  published_at   Tue, 07 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","no"]
+  properties     {"guid":"CBMikAFBVV95cUxNaDhwZXFxaVlWYXpMdU1KQUIyX1hBdklxR28yc3JfZnlFb1l1anhvMGluRXlmQ2hUSW01LTlIRmI5Y3BsNzRvX3dteVBoLVZuNmJJOEZabE0xSnVveFFoUENmWHFkNWE5bk1WQnFRVGViaG1SZF9vWU1mUFBacXBqeEZfTXZtMWl3LWlVUE9HYVU"}
+
+--- row 2 ---
+  uid            gnews-mon-no-arctic-militarization|CBMitAFBVV95cUxNRlJpQnBzV2o2eTFwUmRvNXhZOFNyVHNSRkdQczdBUUNRVF9JRl8wZ2I2QXN5d3RuYnRMTU9xUVdZMXhxX3IyS3lzOFRrOWZwRlFCb1NEaTN1SzVyakUyUFliYjNpYmlhZWFZY0hBaVdKX3F1WEM0ak9GWTNWZzZTLVlEc0pxaVZITFY5WWlxaENSUmY1VDlTeU43WDNhNVNQYjVud0l5TGVkX0RMbDNaM0EybE4
+  title          Nordisk-canadisk samarbeid: Styrker forsvaret av Arktis - forsvaretsforum
+  body           <a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxNRlJpQnBzV2o2eTFwUmRvNXhZOFNyVHNSRkdQczdBUUNRVF9JRl8wZ2I2QXN5d3RuYnRMTU9xUVdZMXhxX3IyS3lzOFRrOWZwRlFCb1NEaTN1SzVyakUyUFliYjNpYmlhZWFZY0hBaVdKX3F1WEM0ak9GWTNWZzZTLVlEc0pxaVZITFY5WWlxaENSUmY1VDlTeU43WDNhNVNQYjVud0l5TGVkX0RMbDNaM0EybE4?oc=5" target="_blank">Nordisk-canadisk samarbeid: Styrker forsvaret av Arktis</a>&nbsp;&nbsp;<font color="#6f6f6f">forsvaretsforum</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxNRlJpQnBzV2o2eTFwUmRvNXhZOFNyVHNSRkdQczdBUUNRVF9JRl8wZ2I2QXN5d3RuYnRMTU9xUVdZMXhxX3IyS3lzOFRrOWZwRlFCb1NEaTN1SzVyakUyUFliYjNpYmlhZWFZY0hBaVdKX3F1WEM0ak9GWTNWZzZTLVlEc0pxaVZITFY5WW
+  link           https://news.google.com/rss/articles/CBMitAFBVV95cUxNRlJpQnBzV2o2eTFwUmRvNXhZOFNyVHNSRkdQczdBUUNRVF9JRl8wZ2I2QXN5d3RuYnRMTU9xUVdZMXhxX3IyS3lzOFRrOWZwRlFCb1NEaTN1SzVyakUyUFliYjNpYmlhZWFZY0hBaVdKX3F1WEM0ak9GWTNWZzZTLVlEc0pxaVZITFY5WWlxaENSUmY1VDlTeU43WDNhNVNQYjVud0l5TGVkX0RMbDNaM0EybE4?oc=5
+  language       no
+  published_at   Mon, 16 Mar 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","no"]
+  properties     {"guid":"CBMitAFBVV95cUxNRlJpQnBzV2o2eTFwUmRvNXhZOFNyVHNSRkdQczdBUUNRVF9JRl8wZ2I2QXN5d3RuYnRMTU9xUVdZMXhxX3IyS3lzOFRrOWZwRlFCb1NEaTN1SzVyakUyUFliYjNpYmlhZWFZY0hBaVdKX3F1WEM0ak9GWTNWZzZTLVlEc0pxaVZITFY5WWlxaENSUmY1VDlTeU43WDNhNVNQYjVud0l5TGVkX0RMbDNaM0EybE4"}

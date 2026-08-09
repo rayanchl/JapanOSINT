@@ -1,0 +1,45 @@
+=== gnews-mon-money-laundering
+exit: 0
+sched: rc=0 records=100 774ms
+--- stderr ---
+[rss] gnews-mon-money-laundering emitted 100
+[sched] gnews-mon-money-laundering run rc=0 records=100 774ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-money-laundering|CBMi0wFBVV95cUxPNTkzSTVJSnF0RUhOMUxEVjg5REx2TG13dWYwRWphZUlscTdORHd4UHhfOVJPUE41LTdabEN6TGRLVEREMzNESUZLb2d4Q2EtWGg3Q1BZODZ6S2xRNUlPYmE0aWRDTlNKY0QtTHhMajV1LXJqamszUFhkYzFmUjF0ZF82cWlyTk9yNTlETEo3TDI5SU5IX0NwSEFsVWRDcWlrLUktYjU3eHd3WFZGdnlhdFVnTlg1Q0dvNmNoUVkzdEhKd20tcm9VZ1lxYmJhVXpXSjhN
+  title          8 people indicted for sex trafficking, money laundering out of Dallas adult bookstore - KERA News
+  body           <a href="https://news.google.com/rss/articles/CBMi0wFBVV95cUxPNTkzSTVJSnF0RUhOMUxEVjg5REx2TG13dWYwRWphZUlscTdORHd4UHhfOVJPUE41LTdabEN6TGRLVEREMzNESUZLb2d4Q2EtWGg3Q1BZODZ6S2xRNUlPYmE0aWRDTlNKY0QtTHhMajV1LXJqamszUFhkYzFmUjF0ZF82cWlyTk9yNTlETEo3TDI5SU5IX0NwSEFsVWRDcWlrLUktYjU3eHd3WFZGdnlhdFVnTlg1Q0dvNmNoUVkzdEhKd20tcm9VZ1lxYmJhVXpXSjhN?oc=5" target="_blank">8 people indicted for sex trafficking, money laundering out of Dallas adult bookstore</a>&nbsp;&nbsp;<font color="#6f6f6f">KERA News</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi0wFBVV95cUxPNTkzSTVJSnF0RUhOMUxEVjg5REx2TG13dWYwRWphZUlscTdORHd4UHhfOVJPUE41LTdabEN6TGRLVEREMzNESUZLb2d4Q2EtWGg3Q1BZODZ6S2xRNUlPYmE0aWRDTlNKY0QtTHhMajV1LXJqamszUFhkYzFmUjF0ZF82cWlyTk9yNTlETE
+  link           https://news.google.com/rss/articles/CBMi0wFBVV95cUxPNTkzSTVJSnF0RUhOMUxEVjg5REx2TG13dWYwRWphZUlscTdORHd4UHhfOVJPUE41LTdabEN6TGRLVEREMzNESUZLb2d4Q2EtWGg3Q1BZODZ6S2xRNUlPYmE0aWRDTlNKY0QtTHhMajV1LXJqamszUFhkYzFmUjF0ZF82cWlyTk9yNTlETEo3TDI5SU5IX0NwSEFsVWRDcWlrLUktYjU3eHd3WFZGdnlhdFVnTlg1Q0dvNmNoUVkzdEhKd20tcm9VZ1lxYmJhVXpXSjhN?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 13:29:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","money"]
+  properties     {"guid":"CBMi0wFBVV95cUxPNTkzSTVJSnF0RUhOMUxEVjg5REx2TG13dWYwRWphZUlscTdORHd4UHhfOVJPUE41LTdabEN6TGRLVEREMzNESUZLb2d4Q2EtWGg3Q1BZODZ6S2xRNUlPYmE0aWRDTlNKY0QtTHhMajV1LXJqamszUFhkYzFmUjF0ZF82cWlyTk9yNTlETEo3TDI5SU5IX0NwSEFsVWRDcWlrLUktYjU3eHd3WFZGdnlhdFVnTlg1Q0dvNmNoUVkzdEhKd20tcm9VZ1lxYmJhVXpXSjhN"}
+
+--- row 2 ---
+  uid            gnews-mon-money-laundering|CBMiywFBVV95cUxQaFZ1MkR2QWhFUjdZOGtVZmVQUWtXNTY1M0ZqLVFwZUhaa08xSVFVUl9SLWZHWmhaLWhZMjJ5dTA0WmRoSWVZUW9RQnpRZjRSbDZ3RmNjNWk2dUUzcHJhdmlGSy1HY0RaZ1lkX05ibll4eVZtSUxQOXFBNlFWaGQ1MHhad3RRc3NwSzMwSFJWTlROREhScEZCdngzcFZabEFOeTlKWjZTS1lQdmY4SEVDdXROUmt5UDhFeGYtMFRtZndSaFh1WUtucW15dw
+  title          Former Marine from RI Aubin Pleads Guilty to Fraud and Money Laundering — Victims Weigh In - Go Local Prov
+  body           <a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxQaFZ1MkR2QWhFUjdZOGtVZmVQUWtXNTY1M0ZqLVFwZUhaa08xSVFVUl9SLWZHWmhaLWhZMjJ5dTA0WmRoSWVZUW9RQnpRZjRSbDZ3RmNjNWk2dUUzcHJhdmlGSy1HY0RaZ1lkX05ibll4eVZtSUxQOXFBNlFWaGQ1MHhad3RRc3NwSzMwSFJWTlROREhScEZCdngzcFZabEFOeTlKWjZTS1lQdmY4SEVDdXROUmt5UDhFeGYtMFRtZndSaFh1WUtucW15dw?oc=5" target="_blank">Former Marine from RI Aubin Pleads Guilty to Fraud and Money Laundering — Victims Weigh In</a>&nbsp;&nbsp;<font color="#6f6f6f">Go Local Prov</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxQaFZ1MkR2QWhFUjdZOGtVZmVQUWtXNTY1M0ZqLVFwZUhaa08xSVFVUl9SLWZHWmhaLWhZMjJ5dTA0WmRoSWVZUW9RQnpRZjRSbDZ3RmNjNWk2dUUzcHJhdmlGSy1HY0RaZ1lkX05ibll4eVZtSUxQOXFBNlFWaGQ1MHhad3RRc3NwSzMwSF
+  link           https://news.google.com/rss/articles/CBMiywFBVV95cUxQaFZ1MkR2QWhFUjdZOGtVZmVQUWtXNTY1M0ZqLVFwZUhaa08xSVFVUl9SLWZHWmhaLWhZMjJ5dTA0WmRoSWVZUW9RQnpRZjRSbDZ3RmNjNWk2dUUzcHJhdmlGSy1HY0RaZ1lkX05ibll4eVZtSUxQOXFBNlFWaGQ1MHhad3RRc3NwSzMwSFJWTlROREhScEZCdngzcFZabEFOeTlKWjZTS1lQdmY4SEVDdXROUmt5UDhFeGYtMFRtZndSaFh1WUtucW15dw?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 23:14:37 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","money"]
+  properties     {"guid":"CBMiywFBVV95cUxQaFZ1MkR2QWhFUjdZOGtVZmVQUWtXNTY1M0ZqLVFwZUhaa08xSVFVUl9SLWZHWmhaLWhZMjJ5dTA0WmRoSWVZUW9RQnpRZjRSbDZ3RmNjNWk2dUUzcHJhdmlGSy1HY0RaZ1lkX05ibll4eVZtSUxQOXFBNlFWaGQ1MHhad3RRc3NwSzMwSFJWTlROREhScEZCdngzcFZabEFOeTlKWjZTS1lQdmY4SEVDdXROUmt5UDhFeGYtMFRtZndSaFh1WUtucW15dw"}
+
+--- row 3 ---
+  uid            gnews-mon-money-laundering|CBMitgFBVV95cUxPYVVkNXRhZWtFQ3VBUnlIYkNMM29udHQ2aE5peENkdHN3eTRFV2E2T000UzlDVTJSbTUxZUZ2UTVKM2xxLU01WGw1NWlmcXdhdm53NHRxS2FfeXlhMEx1dkkwenlBUHFldWszendEUHFUYlNkNXRlVHJCZzhuaFA5RlpuN0VEMU4xZ0FKRndBYTVFbEhOb25kNS1CWVZCTkc2Z2pndTRjRDJWcEk3V2dVM3cxV0taZw
+  title          Man in $3.7M scam involving gold gets federal prison sentence - Milwaukee Journal Sentinel
+  body           <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxPYVVkNXRhZWtFQ3VBUnlIYkNMM29udHQ2aE5peENkdHN3eTRFV2E2T000UzlDVTJSbTUxZUZ2UTVKM2xxLU01WGw1NWlmcXdhdm53NHRxS2FfeXlhMEx1dkkwenlBUHFldWszendEUHFUYlNkNXRlVHJCZzhuaFA5RlpuN0VEMU4xZ0FKRndBYTVFbEhOb25kNS1CWVZCTkc2Z2pndTRjRDJWcEk3V2dVM3cxV0taZw?oc=5" target="_blank">Man in $3.7M scam involving gold gets federal prison sentence</a>&nbsp;&nbsp;<font color="#6f6f6f">Milwaukee Journal Sentinel</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxPYVVkNXRhZWtFQ3VBUnlIYkNMM29udHQ2aE5peENkdHN3eTRFV2E2T000UzlDVTJSbTUxZUZ2UTVKM2xxLU01WGw1NWlmcXdhdm53NHRxS2FfeXlhMEx1dkkwenlBUHFldWszendEUHFUYlNkNXRlVHJCZzhuaFA5RlpuN0VEMU4xZ0FKRn
+  link           https://news.google.com/rss/articles/CBMitgFBVV95cUxPYVVkNXRhZWtFQ3VBUnlIYkNMM29udHQ2aE5peENkdHN3eTRFV2E2T000UzlDVTJSbTUxZUZ2UTVKM2xxLU01WGw1NWlmcXdhdm53NHRxS2FfeXlhMEx1dkkwenlBUHFldWszendEUHFUYlNkNXRlVHJCZzhuaFA5RlpuN0VEMU4xZ0FKRndBYTVFbEhOb25kNS1CWVZCTkc2Z2pndTRjRDJWcEk3V2dVM3cxV0taZw?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 22:37:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","money"]
+  properties     {"guid":"CBMitgFBVV95cUxPYVVkNXRhZWtFQ3VBUnlIYkNMM29udHQ2aE5peENkdHN3eTRFV2E2T000UzlDVTJSbTUxZUZ2UTVKM2xxLU01WGw1NWlmcXdhdm53NHRxS2FfeXlhMEx1dkkwenlBUHFldWszendEUHFUYlNkNXRlVHJCZzhuaFA5RlpuN0VEMU4xZ0FKRndBYTVFbEhOb25kNS1CWVZCTkc2Z2pndTRjRDJWcEk3V2dVM3cxV0taZw"}

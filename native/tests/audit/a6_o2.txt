@@ -1,0 +1,444 @@
+=== hudson-rock-jp
+exit: 0
+sched: rc=0 records=34 813ms
+--- stderr ---
+[threatintel] hudson-rock-jp emitted 34
+[sched] hudson-rock-jp run rc=0 records=34 813ms
+--- persisted: 34 rows, 34 with lat/lon, 34 with geometry ---
+record_type: hudson-rock-jp=34
+sub_source_id: (null)=34
+
+--- row 1 ---
+  uid            hudson-rock-jp|mufg.jp
+  title          mufg.jp — 21025 compromised credentials (13 employee, 20979 user)
+  link           https://cavalier.hudsonrock.com/api/json/v2/osint-tools/search-by-domain?domain=mufg.jp
+  published_at   2026-07-30T12:57:57.984Z
+  lat            35.6895
+  lon            139.6917
+  geometry       {"type":"Point","coordinates":[139.6917,35.6895]}
+  record_type    hudson-rock-jp
+  properties     {"idx":0,"domain":"mufg.jp","uid":"mufg.jp","title":"mufg.jp — 21025 compromised credentials (13 employee, 20979 user)","link":"https://cavalier.hudsonrock.com/api/json/v2/osint-tools/search-by-domain?domain=mufg.jp","total":21025,"totalStealers":36055424,"employees":13,"users":20979,"third_parties":33,"totalUrls":564,"is_shopify":false,"last_employee_compromised":"2026-07-28T14:45:36.878Z","last_user_compromised":"2026-07-30T12:57:57.984Z","stats":{"totalEmployees":6,"totalUsers":100,"employees_urls":["https://btmu-ra.us.mufg.jp/vpn/index.html","https://www.am.mufg.jp/tool/fresult/Customer/register/mail","https://btmu-rad.us.mufg.jp/vpn/index.html","https://www.am.mufg.jp/tool/fresult/mail/login","https://flex-charge.bk.mufg.jp/fc/member_sp/mail_change/Mail.aspx","https://flex-charge.bk.mufg.jp/fc/member/mail_change/Mail.aspx"],"clients_urls":["https://direct.bk.mufg.jp","https://entry1 …<2712 more chars>
+
+--- row 2 ---
+  uid            hudson-rock-jp|smbc.co.jp
+  title          smbc.co.jp — 6649 compromised credentials (0 employee, 6637 user)
+  link           https://cavalier.hudsonrock.com/api/json/v2/osint-tools/search-by-domain?domain=smbc.co.jp
+  published_at   2026-07-30T12:58:41.323Z
+  lat            35.6895
+  lon            139.6917
+  geometry       {"type":"Point","coordinates":[139.6917,35.6895]}
+  record_type    hudson-rock-jp
+  properties     {"idx":1,"domain":"smbc.co.jp","uid":"smbc.co.jp","title":"smbc.co.jp — 6649 compromised credentials (0 employee, 6637 user)","link":"https://cavalier.hudsonrock.com/api/json/v2/osint-tools/search-by-domain?domain=smbc.co.jp","total":6649,"totalStealers":36055424,"employees":0,"users":6637,"third_parties":12,"totalUrls":243,"is_shopify":false,"last_employee_compromised":"1970-01-01T00:00:00.000Z","last_user_compromised":"2026-07-30T12:58:41.323Z","stats":{"totalEmployees":0,"totalUsers":100,"employees_urls":[],"clients_urls":["https://direct.smbc.co.jp/aib/aibgsjsw5001.jsp","https://direct3.smbc.co.jp","https://direct.smbc.co.jp","https://direct3.smbc.co.jp/servlet/com.smbc.SUPRedirectServlet","https://direct3.smbc.co.jp/servlet/com.smbc.KFPRedirectServlet","https://houjinekyc.smbc.co.jp/hk_kc","https://direct.smbc.co.jp/aib/aibgsjsw1001.jsp","https://valuedoor.smbc.co.jp/login","https:/ …<1455 more chars>
+#################################################
+=== note-com-profiles
+exit: 0
+sched: rc=0 records=100 3036ms
+--- stderr ---
+[note-com-profiles] emitted 100 (5/5 queries fetched)
+[sched] note-com-profiles run rc=0 records=100 3036ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: note-com-profiles=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            note-com-profiles|tokyo_tocho
+  title          東京都庁
+  body           東京都戦略広報課が管理する東京都公式noteアカウントです。
+  summary        東京都戦略広報課が管理する東京都公式noteアカウントです。
+  link           https://note.com/tokyo_tocho
+  author         東京都庁
+  language       ja
+  record_type    note-com-profiles
+  tags           ["note.com","profile","q:東京"]
+  properties     {"urlname":"tokyo_tocho","followers":null,"notes":null,"matched_query":"東京","source":"note_api"}
+
+--- row 2 ---
+  uid            note-com-profiles|tokyo_r
+  title          東京R不動産
+  body           『東京R不動産』は、物件のセレクトショップ。「倉庫っぽい」「レトロな味わい」など、自分にとってグッとくるかの基準で物件を探せるウェブサイトです。「ただ綺麗、何だか普通、そんな部屋では"何か"が違う...」そんな感性を持つ方に、ちょっとクセのある愛すべき空間を揃えています。
+  summary        『東京R不動産』は、物件のセレクトショップ。「倉庫っぽい」「レトロな味わい」など、自分にとってグッとくるかの基準で物件を探せるウェブサイトです。「ただ綺麗、何だか普通、そんな部屋では"何か"が違う...」そんな感性を持つ方に、ちょっとクセのある愛すべき空間を揃えています。
+  link           https://note.com/tokyo_r
+  author         東京R不動産
+  language       ja
+  record_type    note-com-profiles
+  tags           ["note.com","profile","q:東京"]
+  properties     {"urlname":"tokyo_r","followers":null,"notes":null,"matched_query":"東京","source":"note_api"}
+#################################################
+=== jaxa-earth
+exit: 0
+sched: rc=0 records=119 47099ms
+--- stderr ---
+[jaxa-earth] emitted 119 of 119 catalog children
+[sched] jaxa-earth run rc=0 records=119 47099ms
+[detect] anomaly opened: jaxa-earth verdict=duration_outlier — duration 47099ms exceeds 10000ms threshold
+--- persisted: 119 rows, 0 with lat/lon, 0 with geometry ---
+record_type: jaxa-earth=119
+sub_source_id: (null)=119
+
+--- row 1 ---
+  uid            jaxa-earth|Copernicus.C3S_PROBA-V_LCCS_global_yearly
+  title          JAXA Earth: Land Cover Class (Yearly)
+  body           JAXA Earth database collection "Land Cover Class (Yearly)" (Copernicus.C3S_PROBA-V_LCCS_global_yearly). The 300m CCI-LC Maps (22 LCCS classes) were obtained from the processing of the full archives of 300m MERIS, 1km SPOT-VEGETATION, 1km PROBA-V and 1km AVHRR.
+  summary        The 300m CCI-LC Maps (22 LCCS classes) were obtained from the processing of the full archives of 300m MERIS, 1km SPOT-VEGETATION, 1km PROBA-V and 1km AVHRR.
+  link           https://data.earth.jaxa.jp/en/datasets/#/id/Copernicus.C3S_PROBA-V_LCCS_global_yearly
+  published_at   2019-12-31T23:59:59Z
+  record_type    jaxa-earth
+  tags           ["satellite","jaxa","earth-observation","catalog","raster"]
+  properties     {"dataset_id":"Copernicus.C3S_PROBA-V_LCCS_global_yearly","collection_url":"https://s3.ap-northeast-1.wasabisys.com/je-pds/cog/v1/Copernicus.C3S_PROBA-V_LCCS_global_yearly/collection.json","bbox":[[-180,-90,180,90]],"temporal":{"interval":[["2019-01-01T00:00:00Z","2019-12-31T23:59:59Z"]]},"keywords":["Landcover","VGT-P","PROBA-V","ESA"],"license":"proprietary","providers":[{"name":"Copernicus","roles":["licensor"],"url":"https://www.copernicus.eu/en"},{"name":"JAXA EORC","roles":["processor","host"],"url":"https://earth.jaxa.jp/"},{"name":"Copernicus","roles":["producer"],"url":"https://www.copernicus.eu/en"}],"platform":["PROBA-V"],"instrument":["VGT-P"],"bands":["LCCS"]}
+
+--- row 2 ---
+  uid            jaxa-earth|JAXA.EORC_ALOS.PRISM_AW3D30.v3.2_global
+  title          JAXA Earth: Digital Surface Model
+  body           JAXA Earth database collection "Digital Surface Model" (JAXA.EORC_ALOS.PRISM_AW3D30.v3.2_global). JAXA released 'ALOS World 3D-30m' (AW3D30) dataset, the global digital surface model (DSM) dataset with a horizontal resolution of approximately 30-meter mesh (1 arcsec. latitude and longitude) generated from 5m resolution DSM,free of charge in May 20164). Void height values in cloud and show pixels between 60-degree North and 60-degree South are filled with existing DEMs using the Delta Surface Fill*2 method in the update in March 2017. This dataset is highly expected to be used in scientific research and geospatial information application services.
+  summary        JAXA released 'ALOS World 3D-30m' (AW3D30) dataset, the global digital surface model (DSM) dataset with a horizontal resolution of approximately 30-meter mesh (1 arcsec. latitude and longitude) generated from 5m resolution DSM,free of charg
+  link           https://data.earth.jaxa.jp/en/datasets/#/id/JAXA.EORC_ALOS.PRISM_AW3D30.v3.2_global
+  published_at   2021-02-28T23:59:59Z
+  record_type    jaxa-earth
+  tags           ["satellite","jaxa","earth-observation","catalog","raster"]
+  properties     {"dataset_id":"JAXA.EORC_ALOS.PRISM_AW3D30.v3.2_global","collection_url":"https://s3.ap-northeast-1.wasabisys.com/je-pds/cog/v1/JAXA.EORC_ALOS.PRISM_AW3D30.v3.2_global/collection.json","bbox":[[-180,-90,180,90]],"temporal":{"interval":[["2021-02-01T00:00:00Z","2021-02-28T23:59:59Z"]]},"keywords":["Elevation","ALOS","JAXA"],"license":"proprietary","providers":[{"name":"JAXA","roles":["licensor"],"url":"https://global.jaxa.jp/"},{"name":"JAXA EORC","roles":["processor","host"],"url":"https://earth.jaxa.jp/"},{"name":"JAXA EORC ALOS Group","roles":["producer"],"url":"https://www.eorc.jaxa.jp/ALOS/en/dataset/aw3d30/aw3d30_e.htm"}],"platform":["ALOS"],"instrument":["PRISM"],"bands":["DSM","MSK"]}
+#################################################
+=== cfr
+exit: 0
+sched: rc=0 records=24 278ms
+--- stderr ---
+[rss] cfr emitted 24
+[sched] cfr run rc=0 records=24 278ms
+--- persisted: 24 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=24
+sub_source_id: (null)=24
+
+--- row 1 ---
+  uid            cfr|https://www.cfr.org/articles/will-iran-turn-into-a-forever-war-2
+  title          Will Iran Turn Into a Forever War?
+  body           Like Lyndon Johnson in Vietnam, Trump risks entering a war whose end may be impossible to control.
+  summary        Like Lyndon Johnson in Vietnam, Trump risks entering a war whose end may be impossible to control.
+  link           https://www.cfr.org/articles/will-iran-turn-into-a-forever-war-2
+  language       en
+  published_at   Fri, 31 Jul 2026 17:10:52 GMT
+  record_type    article
+  tags           ["osint","geopolitics","analysis"]
+  properties     {"guid":"https://www.cfr.org/articles/will-iran-turn-into-a-forever-war-2"}
+
+--- row 2 ---
+  uid            cfr|https://www.cfr.org/articles/indias-cockroach-party-protests-have-a-powerful-precedent-and-it-isnt-the-arab-spring
+  title          India’s Cockroach Party Protests Have a Powerful Precedent—and It Isn’t the Arab Spring
+  body           Global media have likened India&#8217;s Cockroach Janta Party movement to the Arab Spring and to the uprisings that toppled governments in Nepal, Bangladesh and Sri Lanka. A more instructive comparison is India&#8217;s own protest wave of the mid-1970s—and the political reckoning it produced for former Prime Minister Indira Gandhi.
+  summary        Global media have likened India&#8217;s Cockroach Janta Party movement to the Arab Spring and to the uprisings that toppled governments in Nepal, Bangladesh and Sri Lanka. A more instructive comparison is India&#8217;s own protest wave of t
+  link           https://www.cfr.org/articles/indias-cockroach-party-protests-have-a-powerful-precedent-and-it-isnt-the-arab-spring
+  language       en
+  published_at   Fri, 31 Jul 2026 15:27:34 GMT
+  record_type    article
+  tags           ["osint","geopolitics","analysis"]
+  properties     {"guid":"https://www.cfr.org/articles/indias-cockroach-party-protests-have-a-powerful-precedent-and-it-isnt-the-arab-spring"}
+#################################################
+=== kyiv-independent
+exit: 0
+sched: rc=0 records=100 411ms
+--- stderr ---
+[rss] kyiv-independent emitted 100
+[sched] kyiv-independent run rc=0 records=100 411ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            kyiv-independent|https://kyivindependent.com/ukraine-war-latest-russian-military-deaths-14-times-higher-than-ukraines-zelensky-says/
+  title          Ukraine war latest: Zelensky cites new Ukrainian, Russian casualty figures
+  body           <![CDATA[ Key developments on July 31:
+
+ * Russian military deaths 14 times higher than Ukraine’s, Zelensky says
+ * 5 special forces soldiers missing, 3 injured after ammunition detonation at training ground in Western Ukraine
+ * Khartiia brigade commander Obolienskyi targeted in assassination attempt, Zelensky says
+ * Ukraine's assault regiments ordered to halt recruitment amid allegations of misconduct, media reports
+ * Ukrainian forces strike oil refinery in Russia's Volgograd Oblast, aircraft factory  ]]>
+  summary        <![CDATA[ Key developments on July 31:
+
+ * Russian military deaths 14 times higher than Ukraine’s, Zelensky says
+ * 5 special forces soldiers missing, 3 injured after ammunition detonation at training ground in Western Ukraine
+ * Khartiia
+  link           https://kyivindependent.com/ukraine-war-latest-russian-military-deaths-14-times-higher-than-ukraines-zelensky-says/
+  author         Tania Myronyshena
+  language       en
+  published_at   Fri, 31 Jul 2026 21:26:12 +0300
+  record_type    article
+  tags           ["osint","ukraine","conflict"]
+  properties     {"guid":"https://kyivindependent.com/ukraine-war-latest-russian-military-deaths-14-times-higher-than-ukraines-zelensky-says/"}
+
+--- row 2 ---
+  uid            kyiv-independent|https://kyivindependent.com/polands-main-conservative-party-splits-as-debate-over-ukraine-intensifies/
+  title          Poland's main conservative party splits as debate over Ukraine intensifies
+  body           <![CDATA[ For days, Poland's Law and Justice (PiS) party has been consumed by a crisis of its own making. The party, which governed Poland from 2015 to 2023, has now split into two ahead of next year's parliamentary elections.
+
+After months of internal tensions, the more moderate faction led by former Prime Minister  was forced out by Przemysław Czarnek, the party's newly nominated prime ministerial candidate and leader of its more radical wing.
+
+The split weakens an opposition that had hoped to challenge ]]>
+  summary        <![CDATA[ For days, Poland's Law and Justice (PiS) party has been consumed by a crisis of its own making. The party, which governed Poland from 2015 to 2023, has now split into two ahead of next year's parliamentary elections.
+
+After months
+  link           https://kyivindependent.com/polands-main-conservative-party-splits-as-debate-over-ukraine-intensifies/
+  author         Karol Luczka
+  language       en
+  published_at   Fri, 31 Jul 2026 21:11:09 +0300
+  record_type    article
+  tags           ["osint","ukraine","conflict"]
+  properties     {"guid":"https://kyivindependent.com/polands-main-conservative-party-splits-as-debate-over-ukraine-intensifies/"}
+#################################################
+=== maritime-executive
+exit: 0
+sched: rc=0 records=85 277ms
+--- stderr ---
+[rss] maritime-executive emitted 85
+[sched] maritime-executive run rc=0 records=85 277ms
+--- persisted: 85 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=85
+sub_source_id: (null)=85
+
+--- row 1 ---
+  uid            maritime-executive|https://maritime-executive.com/article/iceland-seizes-paul-watson-foundation-s-boat-as-it-tracks-whale-hunt
+  title          Iceland Seizes Paul Watson Foundation’s Boat as it Tracks Whale Hunt
+  body           <![CDATA[The Icelandic Coast Guard and a team of special forces from the police boarded the vessel Bandero operated by the Captain Paul Watson Foundation on Ju...]]>
+  summary        <![CDATA[The Icelandic Coast Guard and a team of special forces from the police boarded the vessel Bandero operated by the Captain Paul Watson Foundation on Ju...]]>
+  link           https://maritime-executive.com/article/iceland-seizes-paul-watson-foundation-s-boat-as-it-tracks-whale-hunt
+  author         <name><![CDATA[The Maritime Executive]]></name>
+  language       en
+  published_at   2026-07-31T12:53:24-04:00
+  record_type    article
+  tags           ["osint","maritime","shipping"]
+  properties     {"guid":"https://maritime-executive.com/article/iceland-seizes-paul-watson-foundation-s-boat-as-it-tracks-whale-hunt"}
+
+--- row 2 ---
+  uid            maritime-executive|https://maritime-executive.com/article/saudi-arabia-builds-maritime-coalition-to-keep-red-sea-shipping-moving
+  title          Saudi Arabia Builds Maritime Coalition to Keep Red Sea Shipping Moving
+  body           <![CDATA[Saudi Arabia convened an inaugural meeting in Riyadh on July 30 of nations interested in joining a maritime defense coalition to “enhance maritime sec...]]>
+  summary        <![CDATA[Saudi Arabia convened an inaugural meeting in Riyadh on July 30 of nations interested in joining a maritime defense coalition to “enhance maritime sec...]]>
+  link           https://maritime-executive.com/article/saudi-arabia-builds-maritime-coalition-to-keep-red-sea-shipping-moving
+  author         <name><![CDATA[The Maritime Executive]]></name>
+  language       en
+  published_at   2026-07-31T11:46:48-04:00
+  record_type    article
+  tags           ["osint","maritime","shipping"]
+  properties     {"guid":"https://maritime-executive.com/article/saudi-arabia-builds-maritime-coalition-to-keep-red-sea-shipping-moving"}
+#################################################
+=== rferl
+exit: 0
+sched: rc=0 records=20 439ms
+--- stderr ---
+[rss] rferl emitted 20
+[sched] rferl run rc=0 records=20 439ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            rferl|https://www.rferl.org/a/ukraine-russia-drone-attack-wildberries-patriot-missile-license/33819054.html
+  title          Trump Says US Should Be 'Careful' About Granting Kyiv Patriot Production License
+  body           President Donald Trump said the United States should be "very careful" about granting Kyiv a license to produce Patriot missiles as Ukraine seeks greater air defense capabilities to protect itself against Russia's daily air attacks.
+  summary        President Donald Trump said the United States should be "very careful" about granting Kyiv a license to produce Patriot missiles as Ukraine seeks greater air defense capabilities to protect itself against Russia's daily air attacks.
+  link           https://www.rferl.org/a/ukraine-russia-drone-attack-wildberries-patriot-missile-license/33819054.html
+  language       en
+  published_at   Fri, 31 Jul 2026 12:07:03 +0200
+  record_type    article
+  tags           ["osint","eurasia","news"]
+  properties     {"guid":"https://www.rferl.org/a/ukraine-russia-drone-attack-wildberries-patriot-missile-license/33819054.html"}
+
+--- row 2 ---
+  uid            rferl|https://www.rferl.org/a/russia-telegram-durov-terrorist-extremist-internet-crackdown/33818974.html
+  title          Russia Designates Telegram Founder Pavel Durov As A 'Terrorist'
+  body           Russia said it had designated Telegram founder Pavel Durov a “terrorist” and “extremist,” further tightening the screws on the popular messenger app ahead of parliamentary elections in September.
+  summary        Russia said it had designated Telegram founder Pavel Durov a “terrorist” and “extremist,” further tightening the screws on the popular messenger app ahead of parliamentary elections in September.
+  link           https://www.rferl.org/a/russia-telegram-durov-terrorist-extremist-internet-crackdown/33818974.html
+  language       en
+  published_at   Fri, 31 Jul 2026 11:45:17 +0200
+  record_type    article
+  tags           ["osint","eurasia","news"]
+  properties     {"guid":"https://www.rferl.org/a/russia-telegram-durov-terrorist-extremist-internet-crackdown/33818974.html"}
+#################################################
+=== irish-times
+exit: 0
+sched: rc=0 records=100 378ms
+--- stderr ---
+[rss] irish-times emitted 100
+[sched] irish-times run rc=0 records=100 378ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            irish-times|https://www.irishtimes.com/sport/racing/2026/07/31/thread-of-gold-bags-another-big-prize-at-galway/
+  title          Thread Of Gold bags another big prize at Galway
+  body           Willie Mullins saddles his seventh winner of the meeting
+  summary        Willie Mullins saddles his seventh winner of the meeting
+  link           https://www.irishtimes.com/sport/racing/2026/07/31/thread-of-gold-bags-another-big-prize-at-galway/
+  language       en
+  published_at   Fri, 31 Jul 2026 18:50:36 +0000
+  record_type    article
+  tags           ["news","ireland","national-outlet"]
+  properties     {"guid":"https://www.irishtimes.com/sport/racing/2026/07/31/thread-of-gold-bags-another-big-prize-at-galway/"}
+
+--- row 2 ---
+  uid            irish-times|https://www.irishtimes.com/crime-law/2026/07/31/criminal-cases-face-further-disruption-after-solicitors-extend-withdrawal-of-services/
+  title          Criminal cases face further disruption after solicitors extend withdrawal of services
+  body           Lawyers reject Minister’s amended proposals on criminal legal aid payments
+  summary        Lawyers reject Minister’s amended proposals on criminal legal aid payments
+  link           https://www.irishtimes.com/crime-law/2026/07/31/criminal-cases-face-further-disruption-after-solicitors-extend-withdrawal-of-services/
+  language       en
+  published_at   Fri, 31 Jul 2026 18:37:22 +0000
+  record_type    article
+  tags           ["news","ireland","national-outlet"]
+  properties     {"guid":"https://www.irishtimes.com/crime-law/2026/07/31/criminal-cases-face-further-disruption-after-solicitors-extend-withdrawal-of-services/"}
+#################################################
+=== mail-guardian-2
+exit: 0
+sched: rc=0 records=50 213ms
+--- stderr ---
+[rss] mail-guardian-2 emitted 50
+[sched] mail-guardian-2 run rc=0 records=50 213ms
+--- persisted: 50 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=50
+sub_source_id: (null)=50
+
+--- row 1 ---
+  uid            mail-guardian-2|https://mg.co.za/friday/2026-07-31-high-court-reinstates-national-arts-council-suspends-mckenzie-s-dissolution/
+  title          High Court reinstates National Arts Council, suspends McKenzie's dissolution
+  body           The Gauteng Division of the High Court in Pretoria has reinstated the National Arts Council's governing council, suspending Arts, Sport and Culture Minister Gayton McKenzie’s decision to dissolve it. The eleven members are ordered back pending a full review of the Minister's action.
+  summary        The Gauteng Division of the High Court in Pretoria has reinstated the National Arts Council's governing council, suspending Arts, Sport and Culture Minister Gayton McKenzie’s decision to dissolve it. The eleven members are ordered back pe
+  link           https://mg.co.za/friday/2026-07-31-high-court-reinstates-national-arts-council-suspends-mckenzie-s-dissolution/
+  language       en
+  published_at   Fri, 31 Jul 2026 17:46:13 GMT
+  record_type    article
+  tags           ["news","south-africa","national-outlet"]
+  properties     {"guid":"https://mg.co.za/friday/2026-07-31-high-court-reinstates-national-arts-council-suspends-mckenzie-s-dissolution/"}
+
+--- row 2 ---
+  uid            mail-guardian-2|https://mg.co.za/thought-leader/2026-07-31-the-genocost-and-the-drc-s-war-against-rwanda/
+  title          The “GENOCOST” and the DRC’s War “Against Rwanda”
+  body           "GENOCOST" is a politically constructed conspiracy theory masquerading as historical and legal truth. The term is being promoted by the current Congolese government and amplified by activists despite lacking recognition as an established historical or legal concept. In 2022, amid heightened tensions between the Democratic Republic of the Congo (DRC) and Rwanda, the Congolese government launched commemoration of “GENOCOST,” to be observed on the 2nd August each year.
+  summary        "GENOCOST" is a politically constructed conspiracy theory masquerading as historical and legal truth. The term is being promoted by the current Congolese government and amplified by activists despite lacking recognition as an established hi
+  link           https://mg.co.za/thought-leader/2026-07-31-the-genocost-and-the-drc-s-war-against-rwanda/
+  language       en
+  published_at   Fri, 31 Jul 2026 12:11:31 GMT
+  record_type    article
+  tags           ["news","south-africa","national-outlet"]
+  properties     {"guid":"https://mg.co.za/thought-leader/2026-07-31-the-genocost-and-the-drc-s-war-against-rwanda/"}
+#################################################
+=== kyiv-independent-2
+exit: 0
+sched: rc=0 records=100 435ms
+--- stderr ---
+[rss] kyiv-independent-2 emitted 100
+[sched] kyiv-independent-2 run rc=0 records=100 435ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            kyiv-independent-2|https://kyivindependent.com/ukraine-war-latest-russian-military-deaths-14-times-higher-than-ukraines-zelensky-says/
+  title          Ukraine war latest: Zelensky cites new Ukrainian, Russian casualty figures
+  body           <![CDATA[ Key developments on July 31:
+
+ * Russian military deaths 14 times higher than Ukraine’s, Zelensky says
+ * 5 special forces soldiers missing, 3 injured after ammunition detonation at training ground in Western Ukraine
+ * Khartiia brigade commander Obolienskyi targeted in assassination attempt, Zelensky says
+ * Ukraine's assault regiments ordered to halt recruitment amid allegations of misconduct, media reports
+ * Ukrainian forces strike oil refinery in Russia's Volgograd Oblast, aircraft factory  ]]>
+  summary        <![CDATA[ Key developments on July 31:
+
+ * Russian military deaths 14 times higher than Ukraine’s, Zelensky says
+ * 5 special forces soldiers missing, 3 injured after ammunition detonation at training ground in Western Ukraine
+ * Khartiia
+  link           https://kyivindependent.com/ukraine-war-latest-russian-military-deaths-14-times-higher-than-ukraines-zelensky-says/
+  author         Tania Myronyshena
+  language       en
+  published_at   Fri, 31 Jul 2026 21:26:12 +0300
+  record_type    article
+  tags           ["news","ukraine","national-outlet"]
+  properties     {"guid":"https://kyivindependent.com/ukraine-war-latest-russian-military-deaths-14-times-higher-than-ukraines-zelensky-says/"}
+
+--- row 2 ---
+  uid            kyiv-independent-2|https://kyivindependent.com/polands-main-conservative-party-splits-as-debate-over-ukraine-intensifies/
+  title          Poland's main conservative party splits as debate over Ukraine intensifies
+  body           <![CDATA[ For days, Poland's Law and Justice (PiS) party has been consumed by a crisis of its own making. The party, which governed Poland from 2015 to 2023, has now split into two ahead of next year's parliamentary elections.
+
+After months of internal tensions, the more moderate faction led by former Prime Minister  was forced out by Przemysław Czarnek, the party's newly nominated prime ministerial candidate and leader of its more radical wing.
+
+The split weakens an opposition that had hoped to challenge ]]>
+  summary        <![CDATA[ For days, Poland's Law and Justice (PiS) party has been consumed by a crisis of its own making. The party, which governed Poland from 2015 to 2023, has now split into two ahead of next year's parliamentary elections.
+
+After months
+  link           https://kyivindependent.com/polands-main-conservative-party-splits-as-debate-over-ukraine-intensifies/
+  author         Karol Luczka
+  language       en
+  published_at   Fri, 31 Jul 2026 21:11:09 +0300
+  record_type    article
+  tags           ["news","ukraine","national-outlet"]
+  properties     {"guid":"https://kyivindependent.com/polands-main-conservative-party-splits-as-debate-over-ukraine-intensifies/"}
+#################################################
+=== nzherald
+exit: 0
+sched: rc=0 records=10 997ms
+--- stderr ---
+[rss] nzherald emitted 10
+[sched] nzherald run rc=0 records=10 997ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            nzherald|https://www.nzherald.co.nz/nz/silverdale-mall-crash-ben-pope-loses-leg-teen-driver-oscar-ruffer-sentenced/2RAM4TDHEBCWNMMD6WU5UNRRV4/
+  title          Silverdale Mall crash: Ben Pope loses leg, teen driver Oscar Ruffer sentenced
+  body           Teen driving alone on learner licence had smoked cannabis the night before, court told.
+  summary        Teen driving alone on learner licence had smoked cannabis the night before, court told.
+  link           https://www.nzherald.co.nz/nz/silverdale-mall-crash-ben-pope-loses-leg-teen-driver-oscar-ruffer-sentenced/2RAM4TDHEBCWNMMD6WU5UNRRV4/
+  language       en
+  published_at   Fri, 31 Jul 2026 17:00:00 +0000
+  record_type    article
+  tags           ["news","new-zealand","national-outlet"]
+  properties     {"guid":"https://www.nzherald.co.nz/nz/silverdale-mall-crash-ben-pope-loses-leg-teen-driver-oscar-ruffer-sentenced/2RAM4TDHEBCWNMMD6WU5UNRRV4/"}
+
+--- row 2 ---
+  uid            nzherald|https://www.nzherald.co.nz/sport/commonwealth-games/commonwealth-games-live-updates-new-zealand-chase-medals-in-cycling-pole-vault/GFJ7VP7JFFDGNKJKJYGWXFS4SQ/
+  title          Commonwealth Games live updates: New Zealand chase medals in cycling, pole vault
+  body           Live updates of the Commonwealth Games in Glasgow.
+  summary        Live updates of the Commonwealth Games in Glasgow.
+  link           https://www.nzherald.co.nz/sport/commonwealth-games/commonwealth-games-live-updates-new-zealand-chase-medals-in-cycling-pole-vault/GFJ7VP7JFFDGNKJKJYGWXFS4SQ/
+  language       en
+  published_at   Fri, 31 Jul 2026 16:51:38 +0000
+  record_type    article
+  tags           ["news","new-zealand","national-outlet"]
+  properties     {"guid":"https://www.nzherald.co.nz/sport/commonwealth-games/commonwealth-games-live-updates-new-zealand-chase-medals-in-cycling-pole-vault/GFJ7VP7JFFDGNKJKJYGWXFS4SQ/"}
+#################################################
+=== brussels-times
+exit: 0
+sched: rc=0 records=10 3350ms
+--- stderr ---
+[rss] brussels-times emitted 10
+[sched] brussels-times run rc=0 records=10 3350ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            brussels-times|https://api.brusselstimes.com/?p=2254018
+  title          Ukraine’s displaced face post-war voting dilemmas as election planning begins
+  body           More than 150 representatives from Ukrainian institutions, European electoral authorities, international organisations, civil society, academia and Ukrainian communities abroad met in Kyiv and online on 28 July to discuss how displaced Ukrainians could vote in the country’s first post-war elections. The conference focused on “out-of-country voting” — arrangements that allow citizens to cast ballots from [&#8230;]
+  summary        More than 150 representatives from Ukrainian institutions, European electoral authorities, international organisations, civil society, academia and Ukrainian communities abroad met in Kyiv and online on 28 July to discuss how displaced Ukra
+  link           https://www.brusselstimes.com/eu-affairs/2254018/ukraines-displaced-face-post-war-voting-dilemmas-as-election-planning-begins/
+  language       en
+  published_at   Fri, 31 Jul 2026 17:42:59 +0000
+  record_type    article
+  tags           ["news","belgium","national-outlet"]
+  properties     {"guid":"https://api.brusselstimes.com/?p=2254018"}
+
+--- row 2 ---
+  uid            brussels-times|https://api.brusselstimes.com/?p=2254014
+  title          EU pledges €10m for resilient schools after Cyclone Lola in Vanuatu
+  body           The EU’s Ambassador to the Pacific, Barbara Plinkert, has completed a five-day official visit to Vanuatu during the country’s 46th anniversary of independence. The visit ran from 27 to 31 July and was Plinkert’s fourth official trip to Vanuatu since she took up her post in September 2023, the Delegation of the European Union to [&#8230;]
+  summary        The EU’s Ambassador to the Pacific, Barbara Plinkert, has completed a five-day official visit to Vanuatu during the country’s 46th anniversary of independence. The visit ran from 27 to 31 July and was Plinkert’s fourth official trip t
+  link           https://www.brusselstimes.com/eu-affairs/2254014/eu-pledges-e10m-for-resilient-schools-after-cyclone-lola-in-vanuatu/
+  language       en
+  published_at   Fri, 31 Jul 2026 17:40:59 +0000
+  record_type    article
+  tags           ["news","belgium","national-outlet"]
+  properties     {"guid":"https://api.brusselstimes.com/?p=2254014"}
+#################################################
+DONE /mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/a6_l2.txt

@@ -1,0 +1,8 @@
+=== job-boards
+exit: 1
+sched: rc=-1 records=0 141378ms
+--- stderr ---
+[overpass] job-boards no elements
+[sched] job-boards run rc=-1 records=0 141378ms
+[detect] anomaly opened: job-boards verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

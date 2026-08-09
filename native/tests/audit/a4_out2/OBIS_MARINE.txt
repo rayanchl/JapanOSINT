@@ -1,0 +1,7 @@
+=== OBIS_MARINE  entity=tuna
+exit: 0
+sched: rc=0 records=0 203ms
+--- stderr ---
+[OBIS_MARINE] emitted 0
+[sched] OBIS_MARINE run rc=0 records=0 203ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

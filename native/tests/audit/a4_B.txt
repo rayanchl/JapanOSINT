@@ -1,0 +1,10 @@
+cell-towers
+city-halls
+crtsh-historical
+ferry-routes
+overpass-subway-tracks
+rice-paddies
+sento-public-baths
+shrine-temple
+submarine-cables
+unified-trains

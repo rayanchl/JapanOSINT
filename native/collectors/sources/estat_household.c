@@ -6,6 +6,7 @@
  * one intel_item per statistical VALUE. uid key mirrors the JS
  * `${area}-${cat}-${time}` template (always a non-empty string, so the
  * JS `|| i` index fallback is dead code and is not ported). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include <stdio.h>
@@ -14,10 +15,6 @@
 
 #define API_BASE "https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData"
 #define DEFAULT_STATS_DATA_ID "0003448237"
-
-static const char *s_or_null(cJSON *v) {
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   (void)ctx;
@@ -47,10 +44,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *v;
   cJSON_ArrayForEach(v, values) {
     if (i++ >= 2000) break;
-    const char *area = s_or_null(cJSON_GetObjectItem(v, "@area"));
-    const char *cat  = s_or_null(cJSON_GetObjectItem(v, "@cat01"));
-    const char *time = s_or_null(cJSON_GetObjectItem(v, "@time"));
-    const char *val  = s_or_null(cJSON_GetObjectItem(v, "$"));
+    const char *area = jo_vstr(cJSON_GetObjectItem(v, "@area"));
+    const char *cat  = jo_vstr(cJSON_GetObjectItem(v, "@cat01"));
+    const char *time = jo_vstr(cJSON_GetObjectItem(v, "@time"));
+    const char *val  = jo_vstr(cJSON_GetObjectItem(v, "$"));
 
     char rk[160], title[160], summary[160], body[320];
     snprintf(rk, sizeof rk, "%s-%s-%s",
@@ -95,7 +92,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(root);
   fprintf(stderr, "[estat-household] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def estat_household_def = {

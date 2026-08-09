@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>JAXA Earth API</title>
+
+	<link href="../../assets/style.css" rel="stylesheet">
+
+	<style>
+		input {
+			width: calc(100% - 40px);
+			font-size: 1.2em;
+			padding: 5px;
+			border-radius: 0px;
+			border: 1px solid #ccc;
+		}
+
+		input:focus {
+			border: 1px solid #004ea2cc;
+			outline: none;
+		}
+		
+		.keywords {
+			margin: 0px 0px;
+			padding: 3px 0px;
+		}
+
+		.keywords span {
+			color: white;
+			background-color: #888;
+			border-radius: 16px;
+			padding: 1px 10px;
+			margin: 6px 10px;
+			display: inline-block;
+			position: relative;
+		}
+		
+		.keywords span.reset {
+			background-color: #c66;
+		}
+
+		.keywords span span.size {
+			background-color: #2286c9;
+			position: absolute;
+			top: -10px;
+			right: -15px;
+
+			width: 20px;
+			height: 20px;
+
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			border-radius: 50%;
+			border: 2px solid #fff;
+
+			margin: 0;
+			padding: 0;
+
+			color: #fff;
+			font-size: 0.8em;
+			line-height: 1;
+		}
+
+		h2 {
+			margin: 18px 0;
+		}
+		
+		blockquote {
+			word-break: break-all;
+			font-style: italic;
+			margin: 0;
+		}
+	</style>
+
+	<script type="module">
+		import Header from "../../assets/Header.js";
+		customElements.define("je-header", Header);
+
+		import DatasetsCard from "../../assets/DatasetsCard.js";
+		customElements.define("je-datasets-card", DatasetsCard);
+		
+		import CopyText from "../../assets/CopyText.js";
+		customElements.define("je-copy-text", CopyText);
+		
+		import Footer from "../../assets/Footer.js";
+		customElements.define("je-footer", Footer);
+		
+		import createCover from "../../assets/visualViewportCover.js";
+		createCover();
+	</script>
+</head>
+
+<body>
+	<je-header></je-header>
+
+	<main>
+		<div class="mv">
+			List of Datasets
+		</div>
+
+		<section class="show">
+			<div class="container">
+				<p>
+					The datasets include JAXA's public Earth observation datasets and other agencies' public datasets converted to COG (Cloud Optimized GeoTIFF). More than 100 datasets are available.
+				</p>
+
+				<div id="content">
+					<!-- <je-datasets-card
+						img="https://data.earth.jaxa.jp/app/common/thumbs/JAXA.EORC_ALOS.PRISM_AW3D30.v4.1_global.png"
+						title="ALOS World 3D - 30m (AW3D30) (Released in April 2024 / Version 4.1)"
+						text="JAXA released 'ALOS World 3D-30m' (AW3D30) dataset is a global digital surface model (DSM) with horizontal resolution of approximately 30 meters (basically 1 arcsecond) by the Panchromatic Remote-sensing Instrument for Stereo Mapping (PRISM), ..."
+						id="JAXA.EORC_ALOS.PRISM_AW3D30.v4.1_global"
+						band="DSM,MSK"
+					></je-datasets-card>
+	
+					<je-datasets-card
+						img="https://data.earth.jaxa.jp/app/common/thumbs/JAXA.G-Portal_GCOM-C.SGLI_standard.L3-CHLA.daytime.v3_global_monthly.png"
+						title="Chlorophyll-a concentration (Daytime/Monthly)"
+						text="Chlorophyll-a concentration product in GCOM-C SGLI Level-3 Standard product Version 3."
+						id="JAXA.G-Portal_GCOM-C.SGLI_standard.L3-CHLA.daytime.v3_global_monthly"
+						band="CHLA"
+					></je-datasets-card> -->
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<je-footer></je-footer>
+
+	<script src="../../assets/script.js" type="module"></script>
+	<script src="script.js" type="module"></script>
+</body>
+
+</html>=== home ===
+<!doctype html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+		<meta name="description" content="COG/STAC based effective satellite image data provision service | COG/STACに準拠した衛星データ提供サービス">
+		<meta property="og:title" content="JAXA Earth API">
+		<meta property="og:site_name" content="JAXA Earth API">
+		<meta property="og:description" content="COG/STAC based effective satellite image data provision service | COG/STACに準拠した衛星データ提供サービス">
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="https://data.earth.jaxa.jp/">
+		<meta property="og:image" content="https://data.earth.jaxa.jp/thumb.png">
+		<meta property="og:locale" content="ja_JP">
+		<meta name="twitter:card" content="summary">
+		<meta name="twitter:title" content="JAXA Earth API">
+		<meta name="twitter:description" content="COG/STAC based effective satellite image data provision service | COG/STACに準拠した衛星データ提供サービス">
+		<meta name="twitter:url" content="https://data.earth.jaxa.jp/">
+		<meta name="twitter:image" content="https://data.earth.jaxa.jp/thumb.png">
+
+		<title>JAXA Earth API</title>
+		<script>
+			if(navigator.language.split("-")[0].toLowerCase() == "ja"){
+				location.href = "./ja/";
+			}else{
+				location.href = "./en/";
+			}
+		</script>
+		<meta http-equiv="refresh" content="0;url=./ja/">
+	</head>
+	<body>
+		<div style="text-align:center;font-size:30px;margin-top:100px">
+			<a href="./ja/">日本語</a><br><br>
+			<a href="./en/">English</a>
+		</div>
+	</body>
+</html>
+
+=== more guesses ===
+https://data.earth.jaxa.jp/stac/ [200] 401b
+https://data.earth.jaxa.jp/api/collection/ [404] 213b
+https://data.earth.jaxa.jp/en/api/ [404] 205b
+https://data.earth.jaxa.jp/api/collection/v2/all/ [404] 220b
+https://data.earth.jaxa.jp/api/collections/ [404] 214b
+https://data.earth.jaxa.jp/dataset/ [404] 206b

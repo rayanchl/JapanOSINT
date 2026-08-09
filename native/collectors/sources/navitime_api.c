@@ -3,6 +3,7 @@
  * Navitime RapidAPI transport_node search around 5 major metros, gated on
  * NAVITIME_API_KEY (RapidAPI key, sent via X-RapidAPI-* headers). No key-free
  * fallback — honest empty FeatureCollection without the key or on failure. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -18,14 +19,6 @@ static const char *METROS[] = {
   "%E7%A6%8F%E5%B2%A1",                 /* 福岡 */
   "%E6%9C%AD%E5%B9%8C",                 /* 札幌 */
 };
-
-static void s_or_null(cJSON *p, const char *outk, cJSON *r, const char *ink) {
-  cJSON *v = cJSON_GetObjectItem(r, ink);
-  if (v && cJSON_IsString(v) && v->valuestring[0])
-    cJSON_AddStringToObject(p, outk, v->valuestring);
-  else
-    cJSON_AddItemToObject(p, outk, cJSON_CreateNull());
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("NAVITIME_API_KEY");
@@ -62,20 +55,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         double lat = cJSON_IsNumber(latv) ? latv->valuedouble
                    : (cJSON_IsString(latv) ? strtod(latv->valuestring, 0) : 0);
 
-        cJSON *f = cJSON_CreateObject();
-        cJSON_AddStringToObject(f, "type", "Feature");
-        cJSON *g = cJSON_CreateObject();
-        cJSON_AddStringToObject(g, "type", "Point");
-        cJSON *co = cJSON_CreateArray();
-        cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-        cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-        cJSON_AddItemToObject(g, "coordinates", co);
-        cJSON_AddItemToObject(f, "geometry", g);
+        cJSON *f = gj_point_feature(lon, lat);
 
         cJSON *p = cJSON_CreateObject();         /* EXACT JS key order */
-        s_or_null(p, "node_id", it, "id");
-        s_or_null(p, "name", it, "name");
-        s_or_null(p, "ruby", it, "ruby");
+        jo_put_str_or_null(p, "node_id", it, "id");
+        jo_put_str_or_null(p, "name", it, "name");
+        jo_put_str_or_null(p, "ruby", it, "ruby");
         cJSON *types = cJSON_GetObjectItem(it, "types");
         cJSON_AddItemToObject(p, "types",
           types ? cJSON_Duplicate(types, 1) : cJSON_CreateNull());

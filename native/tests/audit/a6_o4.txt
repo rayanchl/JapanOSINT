@@ -1,0 +1,348 @@
+=== fsa-crypto-exchanges
+exit: 0
+sched: rc=0 records=1 65ms
+--- stderr ---
+[fsa-crypto-exchanges] probe reachable=1
+[sched] fsa-crypto-exchanges run rc=0 records=1 65ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            fsa-crypto-exchanges|portal
+  title          FSA registered crypto exchange list
+  summary        Financial Services Agency — registered crypto-asset exchange service providers
+  link           https://www.fsa.go.jp/policy/virtual_currency02/
+  language       ja
+  published_at   2026-07-31T19:10:35.033Z
+  tags           ["crypto","fsa","exchange","reachable"]
+  properties     {"operator":"金融庁","reachable":true}
+#################################################
+=== mic-elections
+exit: 0
+sched: rc=0 records=1 8664ms
+--- stderr ---
+[mic-elections] probe reachable=0
+[sched] mic-elections run rc=0 records=1 8664ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            mic-elections|portal
+  title          MIC election results portal
+  summary        Per-scrutin CSVs — national, prefecture, lower / upper house, local
+  link           https://www.soumu.go.jp/senkyo/
+  language       ja
+  published_at   2026-07-31T19:10:43.865Z
+  tags           ["election","soumu","politics","unreachable"]
+  properties     {"operator":"総務省 自治行政局","reachable":false}
+#################################################
+=== ndl-search
+exit: 0
+sched: rc=0 records=1 5364ms
+--- stderr ---
+[ndl-search] probe reachable=0
+[sched] ndl-search run rc=0 records=1 5364ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            ndl-search|portal
+  title          NDL OpenSearch catalogue
+  summary        National Diet Library OpenSearch — bibliographic API
+  link           https://iss.ndl.go.jp/api/opensearch?title=%E6%97%A5%E6%9C%AC
+  language       ja
+  published_at   2026-07-31T19:10:49.408Z
+  tags           ["library","ndl","opensearch","unreachable"]
+  properties     {"operator":"国立国会図書館","reachable":false}
+#################################################
+=== saibansyo-rulings
+exit: 0
+sched: rc=0 records=1 944ms
+--- stderr ---
+[saibansyo-rulings] probe reachable=0
+[sched] saibansyo-rulings run rc=0 records=1 944ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            saibansyo-rulings|portal
+  title          Saibansyo (Courts of Japan) ruling search
+  summary        Public ruling index — Supreme Court + High / District / Family / Summary courts
+  link           https://www.courts.go.jp/app/hanrei_jp/list1
+  language       ja
+  published_at   2026-07-31T19:10:48.187Z
+  tags           ["legal","courts","jurisprudence","unreachable"]
+  properties     {"operator":"裁判所","reachable":false}
+#################################################
+=== whoisxml-reverse
+exit: 0
+sched: rc=0 records=1 910ms
+--- stderr ---
+[whoisxml-reverse] probe reachable=1 has_key=0
+[sched] whoisxml-reverse run rc=0 records=1 910ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            whoisxml-reverse|portal
+  title          WhoisXMLAPI — bulk / reverse WHOIS
+  summary        Set WHOISXML_KEY to enable reverse-WHOIS queries
+  link           https://whois.whoisxmlapi.com/
+  published_at   2026-07-31T19:10:49.284Z
+  tags           ["whois","reverse","whoisxml","reachable","key-missing"]
+  properties     {"reachable":true,"requires_key":true,"has_key":false}
+#################################################
+=== yahoo-chiebukuro
+exit: 0
+sched: rc=0 records=1 8565ms
+--- stderr ---
+[yahoo-chiebukuro] probe reachable=0
+[sched] yahoo-chiebukuro run rc=0 records=1 8565ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            yahoo-chiebukuro|portal
+  title          Yahoo! Chiebukuro — JP Q&A
+  summary        High-volume JP-locale Q&A — frequent mentions of locations + proper names
+  link           https://chiebukuro.yahoo.co.jp/
+  language       ja
+  published_at   2026-07-31T19:10:58.035Z
+  tags           ["social","qa","yahoo","unreachable"]
+  properties     {"operator":"Yahoo! Japan","reachable":false}
+#################################################
+=== nhk-relay-towers
+exit: 0
+sched: rc=0 records=1 525ms
+--- stderr ---
+[nhk-relay-towers] probe reachable=0
+[sched] nhk-relay-towers run rc=0 records=1 525ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            nhk-relay-towers|portal
+  title          NHK broadcast / relay facility registry
+  summary        NHK studios + relay-transmitter network
+  link           https://www.nhk.or.jp/corporateinfo/english/operations/
+  language       en
+  published_at   2026-07-31T19:10:58.743Z
+  tags           ["broadcast","nhk","relay","unreachable"]
+  properties     {"operator":"NHK","reachable":false}
+#################################################
+=== jr-east-delay
+exit: 0
+sched: rc=0 records=1 851ms
+--- stderr ---
+[jr-east-delay] probe reachable=0
+[sched] jr-east-delay run rc=0 records=1 851ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            jr-east-delay|jr-east-portal
+  title          JR East delay certificates (遅延証明書)
+  summary        遅延証明書：JR東日本 (function(w,d,s,l,i){w[l]=w[l]|| [];w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= '//ww
+  link           https://traininfo.jreast.co.jp/delay_certificate/
+  language       ja
+  published_at   2026-07-31T19:10:59.401Z
+  tags           ["transit","rail","delay","jr-east","unreachable"]
+  properties     {"operator":"JR East","reachable":false}
+#################################################
+=== vics-traffic
+exit: 0
+sched: rc=0 records=1 8654ms
+--- stderr ---
+[vics-traffic] probe reachable=0
+[sched] vics-traffic run rc=0 records=1 8654ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            vics-traffic|portal
+  title          VICS road traffic information center
+  summary        VICS congestion/travel-time data is licensed (FM multiplex / ITS spot) with no free public JSON feed; portal status only
+  link           https://www.vics.or.jp/
+  language       ja
+  published_at   2026-07-31T19:11:08.604Z
+  tags           ["transport","road","traffic","vics","unreachable"]
+  properties     {"operator":"VICSセンター","reachable":false,"public_feed":false}
+#################################################
+=== shinkansen-status
+exit: 0
+sched: rc=0 records=5 3988ms
+--- stderr ---
+[shinkansen-status] emitted 5
+[sched] shinkansen-status run rc=0 records=5 3988ms
+--- persisted: 5 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=5
+sub_source_id: (null)=5
+
+--- row 1 ---
+  uid            shinkansen-status|JR East
+  title          Tohoku/Joetsu/Hokuriku Shinkansen status (JR East)
+  summary        JR East Tohoku/Joetsu/Hokuriku Shinkansen operating-status portal
+  link           https://traininfo.jreast.co.jp/shinkansen/
+  language       ja
+  published_at   2026-07-31T19:11:09.009Z
+  tags           ["transit","shinkansen","rail","jr-east","unreachable"]
+  properties     {"operator":"JR East","line":"Tohoku/Joetsu/Hokuriku Shinkansen","reachable":false}
+
+--- row 2 ---
+  uid            shinkansen-status|JR Central
+  title          Tokaido Shinkansen status (JR Central)
+  summary        JR Central Tokaido Shinkansen operating-status portal
+  link           https://global.jr-central.co.jp/en/info/status/
+  language       ja
+  published_at   2026-07-31T19:11:09.636Z
+  tags           ["transit","shinkansen","rail","jr-central","unreachable"]
+  properties     {"operator":"JR Central","line":"Tokaido Shinkansen","reachable":false}
+
+--- row 3 ---
+  uid            shinkansen-status|JR West
+  title          Sanyo/Hokuriku Shinkansen status (JR West)
+  summary        JR West Sanyo/Hokuriku Shinkansen operating-status portal
+  link           https://www.westjr.co.jp/global/en/traffic/
+  language       ja
+  published_at   2026-07-31T19:11:10.578Z
+  tags           ["transit","shinkansen","rail","jr-west","unreachable"]
+  properties     {"operator":"JR West","line":"Sanyo/Hokuriku Shinkansen","reachable":false}
+#################################################
+=== grid-usage-realtime
+exit: 0
+sched: rc=0 records=10 12009ms
+--- stderr ---
+[grid-usage-realtime] emitted 10
+[sched] grid-usage-realtime run rc=0 records=10 12009ms
+[detect] anomaly opened: grid-usage-realtime verdict=duration_outlier — duration 12009ms exceeds 10000ms threshold
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            grid-usage-realtime|tepco
+  title          TEPCO 5-min supply/demand
+  summary        unreachable
+  link           https://www.tepco.co.jp/forecast/html/images/juyo-d-j.csv
+  language       ja
+  published_at   2026-07-31T19:11:13.026Z
+  tags           ["power","grid","demand","tepco"]
+  properties     {"grid":"tepco","lat":35.6762,"lon":139.6503,"load_mw":null,"reachable":false}
+
+--- row 2 ---
+  uid            grid-usage-realtime|kepco
+  title          KEPCO 5-min supply/demand
+  summary        latest load ≈ 63 (raw: 2025/12/25,13:25,1870,63)
+  link           https://www.kansai-td.co.jp/yamasou/juyo1_kansai.csv
+  language       ja
+  published_at   2026-07-31T19:11:13.026Z
+  tags           ["power","grid","demand","kepco"]
+  properties     {"grid":"kepco","lat":34.6937,"lon":135.5023,"load_mw":63,"reachable":true}
+
+--- row 3 ---
+  uid            grid-usage-realtime|chuden
+  title          CHUDEN 5-min supply/demand
+  summary        unreachable
+  link           https://denki-yoho.chuden.jp/denki_yoho_content_data/juyo_cepco003.csv
+  language       ja
+  published_at   2026-07-31T19:11:13.026Z
+  tags           ["power","grid","demand","chuden"]
+  properties     {"grid":"chuden","lat":35.1815,"lon":136.9066,"load_mw":null,"reachable":false}
+#################################################
+=== moj-crime-whitepaper
+exit: 0
+sched: rc=0 records=3 10245ms
+--- stderr ---
+[moj-crime-whitepaper] edition=72 year=2023 en=1 emitted 3
+[sched] moj-crime-whitepaper run rc=0 records=3 10245ms
+[detect] anomaly opened: moj-crime-whitepaper verdict=duration_outlier — duration 10245ms exceeds 10000ms threshold
+--- persisted: 3 rows, 1 with lat/lon, 1 with geometry ---
+record_type: (null)=2, moj-crime-whitepaper=1
+sub_source_id: (null)=3
+
+--- row 1 ---
+  uid            moj-crime-whitepaper|MOJ_WP_2023
+  title          MOJ White Paper on Crime (2023)
+  lat            35.6735
+  lon            139.7531
+  geometry       {"type":"Point","coordinates":[139.7531,35.6735]}
+  record_type    moj-crime-whitepaper
+  properties     {"id":"MOJ_WP_2023","name":"MOJ White Paper on Crime (2023)","year":2023,"edition":72,"ja_url":"https://hakusyo1.moj.go.jp/jp/72/nfm/mokuji.html","en_url":"https://hakusyo1.moj.go.jp/en/72/nfm/mokuji.html","year_month":"2023-12","source":"moj-crime-whitepaper"}
+
+--- row 2 ---
+  uid            moj-crime-whitepaper|ja_72
+  title          犯罪白書 2023年版 (Edition 72) — 日本語
+  summary        MOJ annual crime white paper — prosecution rates, sentencing, recidivism, juvenile justice, prison population.
+  link           https://hakusyo1.moj.go.jp/jp/72/nfm/mokuji.html
+  language       ja
+  published_at   2026-07-31T19:11:22.000Z
+  tags           ["crime","justice","white-paper","moj","national"]
+  properties     {"publisher":"Ministry of Justice (法務省)","edition":72,"year":2023,"landing":"https://hakusyo1.moj.go.jp/jp/72/nfm/mokuji.html"}
+
+--- row 3 ---
+  uid            moj-crime-whitepaper|en_72
+  title          White Paper on Crime 2023 (English Edition 72)
+  summary        English edition of MOJ annual crime white paper.
+  link           https://hakusyo1.moj.go.jp/en/72/nfm/mokuji.html
+  language       en
+  published_at   2026-07-31T19:11:22.000Z
+  tags           ["crime","justice","white-paper","moj","national","english"]
+  properties     {"publisher":"Ministry of Justice (法務省)","edition":72,"year":2023,"landing":"https://hakusyo1.moj.go.jp/en/72/nfm/mokuji.html"}
+#################################################
+=== GVP_VOLCANOES
+exit: 0
+sched: rc=0 records=22 426ms
+--- stderr ---
+[GVP_VOLCANOES] emitted 22
+[sched] GVP_VOLCANOES run rc=0 records=22 426ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: gvp-volcano=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            GVP_VOLCANOES|https://volcano.si.edu/reports_weekly.cfm
+  title          Taal (Philippines) - Report for 16 July-22 July 2026 - Continuing Eruptive Activity
+  body           
+&lt;p&gt;The Philippine Institute of Volcanology and Seismology (PHIVOLCS) reported eruptive activity at Taal during 16-22 July. The seismic network recorded 0-10 daily volcanic earthquakes during 16-21 July, including daily periods of volcanic tremor that lasted as short as one minute to as long as eight hours. Daily gas-and-steam emissions generally rose as high as 900 m above the crater rim and drifted NE and E. Minor phreatomagmatic eruptions lasted for 2.5 minutes on 16 July and one minute on 17 July. Sulfur dioxide emissions averaged 129 tonnes per day (t/d) on 20 July. Two minor phreatomagmatic eruptions occurred on 21 July. One of them, recorded during 2009-2013, ejected jets of ash and steam-rich plumes that rose 2.8 km above the crater rim and drifted SE. On 22 July there were 61 volcanic earthquakes and three periods of volcanic tremor lasting 1-31 minutes. Sulfur dioxide emi …<514 more chars>
+  summary        
+&lt;p&gt;The Philippine Institute of Volcanology and Seismology (PHIVOLCS) reported eruptive activity at Taal during 16-22 July. The seismic network recorded 0-10 daily volcanic earthquakes during 16-21 July, including daily periods of volcanic tremor that lasted as short as one minute to as long as eight hours. Daily gas-and-steam emissions generally rose as high as 900 m above the crater rim and drifted NE and E. Minor phreatomagmatic eruptions lasted for 2.5 minutes on 16 July and one minute on 17 July. Sulfur dioxide emissions averaged 129 tonnes per day (t/d) on 20 July. Two minor phreatomagmatic eruptions occurred on 21 July. One of them, recorded during 2009-2013, ejected jets of ash and steam-rich plumes that rose 2.8 km above the crater rim and drifted SE. On 22 July there were 61 volcanic earthquakes and three periods of volcanic tremor lasting 1-31 minutes. Sulfur dioxide emi …<514 more chars>
+  link           https://volcano.si.edu/reports_weekly.cfm
+  language       en
+  published_at   Thu, 23 Jul 2026 04:50:00 -0400
+  record_type    gvp-volcano
+  tags           ["hazard","volcano","GVP"]
+  properties     {"service":"GVP_VOLCANOES","hazard":"volcano","success":true}
+#################################################
+=== jma-himawari
+exit: 0
+sched: rc=0 records=1 821ms
+--- stderr ---
+[jma-himawari] emitted 1
+[sched] jma-himawari run rc=0 records=1 821ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            jma-himawari|20260731190000
+  title          Himawari-9 full-disk imagery — 2026-07-31T10:00:00.000Z
+  body           Latest Himawari-9 full-disk frame basetime=20260731190000 validtime=20260731190000. Imagery is raster tiles served by JMA bosai; open the interactive viewer for the live mosaic.
+  summary        Latest available JMA Himawari-9 geostationary satellite full-disk frame
+  link           https://www.jma.go.jp/bosai/map.html#5/34.5/137/&elem=satellite&contents=himawari
+  author         気象庁 Japan Meteorological Agency
+  language       ja
+  published_at   2026-07-31T10:00:00.000Z
+  record_type    article
+  tags           ["satellite","himawari","jma","imagery"]
+  properties     {"basetime":"20260731190000","validtime":"20260731190000","observed_at":"2026-07-31T10:00:00.000Z","tile_template":"https://www.jma.go.jp/bosai/himawari/data/satimg/20260731190000/fd/20260731190000/B13/TBB/{z}/{x}/{y}.jpg","frames_available":211}
+#################################################
+DONE /mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/a6_l4.txt

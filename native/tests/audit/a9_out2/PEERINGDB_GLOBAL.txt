@@ -1,0 +1,42 @@
+=== PEERINGDB_GLOBAL  entity=Google
+exit: 0
+sched: rc=0 records=15 794ms
+--- stderr ---
+[PEERINGDB_GLOBAL] emitted 15
+[sched] PEERINGDB_GLOBAL run rc=0 records=15 794ms
+--- persisted: 15 rows, 0 with lat/lon, 0 with geometry ---
+record_type: infra-network=15
+sub_source_id: (null)=15
+
+--- row 1 ---
+  uid            PEERINGDB_GLOBAL|peeringdb|net|19
+  title          GFiber | Webpass (AS19165)
+  body           {"name":"GFiber | Webpass","asn":"19165","info_type":"Cable/DSL/ISP","policy_general":"Open","irr_as_set":"AS-WEBPASS","website":"https://gfiber.com/","source":"PeeringDB"}
+  summary        Cable/DSL/ISP | policy: Open
+  link           https://www.peeringdb.com/net/19
+  language       en
+  record_type    infra-network
+  tags           ["osint-search","infrastructure"]
+  properties     {"asn":"19165","info_type":"Cable/DSL/ISP","service":"PEERINGDB_GLOBAL","success":true}
+
+--- row 2 ---
+  uid            PEERINGDB_GLOBAL|peeringdb|net|433
+  title          Google LLC (AS15169)
+  body           {"name":"Google LLC","asn":"15169","info_type":"Content","policy_general":"Selective","irr_as_set":"RADB::AS-GOOGLE","website":"https://about.google/intl/en/","source":"PeeringDB"}
+  summary        Content | policy: Selective
+  link           https://www.peeringdb.com/net/433
+  language       en
+  record_type    infra-network
+  tags           ["osint-search","infrastructure"]
+  properties     {"asn":"15169","info_type":"Content","service":"PEERINGDB_GLOBAL","success":true}
+
+--- row 3 ---
+  uid            PEERINGDB_GLOBAL|peeringdb|net|660
+  title          CESNET (AS2852)
+  body           {"name":"CESNET","asn":"2852","info_type":"Educational/Research","policy_general":"Selective","irr_as_set":"AS2852:AS-CESNET-GOOGLE","website":"https://www.cesnet.cz","source":"PeeringDB"}
+  summary        Educational/Research | policy: Selective
+  link           https://www.peeringdb.com/net/660
+  language       en
+  record_type    infra-network
+  tags           ["osint-search","infrastructure"]
+  properties     {"asn":"2852","info_type":"Educational/Research","service":"PEERINGDB_GLOBAL","success":true}

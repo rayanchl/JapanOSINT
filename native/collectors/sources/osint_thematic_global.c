@@ -3,15 +3,7 @@
 #include "../../lib/rss_atom.h"
 
 /* SYM, id, name, name_ja, collector, category, url, lang, tags_json, interval, description */
-#define RSSX(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)  \
-  static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
-    int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
-  static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
-    .update_interval_sec = IVAL, .run = run_##SYM,                           \
-    .category = CAT, .type = "web_request", .url = URL,                      \
-    .description = DESC, .layer = NULL, .free_tier = 1 };                    \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 RSSX(them_gcaptain, "gcaptain", "gCaptain (Maritime)", "gCaptain (Maritime)", "osint", "news",
   "https://gcaptain.com/feed/", "en", "[\"osint\",\"maritime\",\"thematic\",\"global\"]", 3600,
@@ -78,7 +70,8 @@ RSSX(them_acled_blog, "acled-blog", "ACLED Analysis", "ACLED Analysis", "osint",
   "Armed conflict and political violence analysis");
 
 RSSX(them_small_wars, "small-wars", "Small Wars Journal", "Small Wars Journal", "osint", "news",
-  "https://smallwarsjournal.com/rss.xml", "en", "[\"osint\",\"conflict\",\"thematic\",\"global\"]", 3600,
+  /* /rss.xml 404s since the WordPress migration; /feed/ is the live feed */
+  "https://smallwarsjournal.com/feed/", "en", "[\"osint\",\"conflict\",\"thematic\",\"global\"]", 3600,
   "Irregular warfare and counterinsurgency analysis");
 
 RSSX(them_bellingcat_2, "bellingcat-2", "Bellingcat Investigations", "Bellingcat Investigations", "osint", "news",

@@ -1,0 +1,11 @@
+403 39276b 1.140470s  https://www.soumu.go.jp/senkyo/
+200 430253b 10.389927s  https://iss.ndl.go.jp/api/opensearch?title=%E6%97%A5%E6%9C%AC
+404 63980b 1.481396s  https://www.courts.go.jp/app/hanrei_jp/list1
+403 10052b 0.969125s  https://chiebukuro.yahoo.co.jp/
+404 42055b 0.495940s  https://www.nhk.or.jp/corporateinfo/english/operations/
+200 23411b 0.097370s  https://traininfo.jreast.co.jp/delay_certificate/
+200 28843b 2.143350s  https://www.vics.or.jp/
+404 4054b 0.574724s  https://global.jr-central.co.jp/en/info/status/
+200 83180b 1.167342s  https://www.fsa.go.jp/policy/virtual_currency02/
+=== ndl opensearch items ===
+size=0 items=0

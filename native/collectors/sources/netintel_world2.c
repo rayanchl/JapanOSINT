@@ -16,11 +16,30 @@
 
 static const char *NI_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
+/* GreyNoise Community answers a CLEAN ip with HTTP 404 and a fully-formed
+ * JSON body: {"ip":…,"noise":false,"riot":false,"message":"IP not observed
+ * scanning the internet."}. That 404 is the ANSWER, not an error — jo_get()
+ * only accepts 200, so every quiet IP (the common case) silently produced
+ * zero rows and the source looked dead. Do the request here so 404 is kept. */
+static char *gn_get(const source_ctx *ctx, const char *url) {
+  const char *hdrs[] = { "Accept: application/json", NI_UA, NULL };
+  http_response hr = {0};
+  int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 20000, 1, &hr);
+  if (rc != 0 || !hr.body || (hr.status != 200 && hr.status != 404)) {
+    fprintf(stderr, "[GREYNOISE_COMMUNITY] http status=%ld\n", hr.status);
+    http_response_free(&hr);
+    return NULL;
+  }
+  char *body = hr.body;
+  hr.body = NULL;
+  http_response_free(&hr);
+  return body;
+}
+
 static int run_greynoise(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://api.greynoise.io/v3/community/%s", enc);
-  const char *hdrs[] = { "Accept: application/json", NI_UA, NULL };
-  char *body = jo_get(ctx, url, hdrs, "GREYNOISE_COMMUNITY");
+  char *body = gn_get(ctx, url);
   if (!body) return 0;
   cJSON *root = cJSON_Parse(body); free(body);
   if (!root) return 0;
@@ -32,6 +51,7 @@ static int run_greynoise(const source_ctx *ctx, intel_sink *sink, const char *en
   const char *name = jo_sv(root, "name");
   const char *last = jo_sv(root, "last_seen");
   const char *link = jo_sv(root, "link");
+  const char *msg = jo_sv(root, "message");
   cJSON *d = cJSON_CreateObject();
   cJSON_AddStringToObject(d, "ip", ip);
   if (cJSON_IsBool(noise)) cJSON_AddBoolToObject(d, "noise", cJSON_IsTrue(noise));
@@ -39,6 +59,7 @@ static int run_greynoise(const source_ctx *ctx, intel_sink *sink, const char *en
   if (classification) cJSON_AddStringToObject(d, "classification", classification);
   if (name) cJSON_AddStringToObject(d, "name", name);
   if (last) cJSON_AddStringToObject(d, "last_seen", last);
+  if (msg) cJSON_AddStringToObject(d, "message", msg);
   cJSON_AddStringToObject(d, "source", "GreyNoise Community");
   char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
   cJSON *p = cJSON_CreateObject();
@@ -47,10 +68,16 @@ static int run_greynoise(const source_ctx *ctx, intel_sink *sink, const char *en
   cJSON_AddBoolToObject(p, "success", 1);
   char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char title[256];
-  snprintf(title, sizeof title, "%s — %s%s%s", ip, classification ? classification : "unknown",
-           name ? " · " : "", name ? name : "");
+  if (classification)
+    snprintf(title, sizeof title, "%s — %s%s%s", ip, classification,
+             name ? " · " : "", name ? name : "");
+  else if (cJSON_IsBool(noise) && !cJSON_IsTrue(noise))
+    snprintf(title, sizeof title, "%s — not observed scanning (GreyNoise)", ip);
+  else
+    snprintf(title, sizeof title, "%s — unknown", ip);
   intel_item it = {0};
-  it.remote_key = ip; it.title = title; it.summary = classification;
+  it.remote_key = ip; it.title = title;
+  it.summary = classification ? classification : msg;
   it.body = bj; it.link = link; it.lang = "en";
   it.record_type = "ip-reputation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"GREYNOISE_COMMUNITY\"]";

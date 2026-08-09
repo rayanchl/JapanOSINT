@@ -158,7 +158,7 @@ struct BilingualBadge: View {
         case .full:
             HStack(spacing: 4) {
                 Image(systemName: "globe")
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(.caption2.weight(.semibold))
                 Text("Apple Translated")
                     .font(.caption2.weight(.semibold))
             }
@@ -170,7 +170,7 @@ struct BilingualBadge: View {
         case .compact:
             HStack(spacing: 3) {
                 Image(systemName: "globe")
-                    .font(.system(size: 9, weight: .semibold))
+                    .font(.caption2.weight(.semibold))
                 Text("translated")
                     .font(.caption2)
             }

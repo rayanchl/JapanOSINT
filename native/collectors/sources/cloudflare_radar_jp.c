@@ -8,8 +8,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TOKYO_LON 139.6917
-#define TOKYO_LAT 35.6895
 #define CF_BASE "https://api.cloudflare.com/client/v4/radar"
 
 /* radar(path,token): GET, on !ok return {err:"HTTP <status>"}; here a NULL
@@ -24,13 +22,13 @@ static cJSON *radar(const source_ctx *ctx, const char *path, const char *auth) {
 static void push_kind(cJSON *features, const char *kind, cJSON *json) {
   cJSON *f = cJSON_CreateObject();
   cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *co = cJSON_CreateArray();
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LON));
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LAT));
-  cJSON_AddItemToObject(g, "coordinates", co);
-  cJSON_AddItemToObject(f, "geometry", g);
+  /* NO GEOMETRY. Every row here used to be emitted at Tokyo Station
+   * (35.6895, 139.6917). What this source reports has no location,
+   * and stacking every row on one pin is the fabrication the
+   * 2026-07-31 audit deleted from cisa-kev-jp, poc-in-github and
+   * peeringdb-jp. Confirmed live by tests/contract/source_contract.py.
+   * lib/geojson.c handles an absent geometry correctly — do NOT
+   * reintroduce a fallback coordinate. */
 
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "kind", kind);

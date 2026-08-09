@@ -461,13 +461,23 @@ long long breach_monitor_scan_new(db_handle *db, const char *source_id,
 
 /* ── public: full rescan ───────────────────────────────────────────────── */
 
-int breach_monitor_rescan_all(db_handle *db, const char *tenant_id,
+int breach_monitor_rescan_all(db_handle *shared_db, const char *tenant_id,
                               const char *monitor_id, volatile int *cancel,
                               long long *out_monitors, long long *out_hits) {
   if (out_monitors) *out_monitors = 0;
   if (out_hits) *out_hits = 0;
-  if (!db || !db->h) return -1;
-  breach_monitor_migrate(db);
+  if (!shared_db || !shared_db->h) return -1;
+  breach_monitor_migrate(shared_db);          /* DDL stays on the primary */
+
+  /* Own connection for the scan itself. Unlike the ingest hook — which is
+   * already reached on breach_jobs.c's private handle — this entry point is
+   * driven straight from the HTTP surface below on the caller's shared
+   * handle, and it is not one transaction but a BEGIN/COMMIT per monitor over
+   * an unbounded corpus walk (scan_monitor). Interleaved with a detached
+   * thread's transaction on that same handle, one side's ROLLBACK discards
+   * the other's rows. */
+  db_handle own;
+  db_handle *db = db_worker_open(&own, shared_db);
 
   if (any_domain_monitor(db)) backfill_all(db, cancel);
 
@@ -506,6 +516,7 @@ int breach_monitor_rescan_all(db_handle *db, const char *tenant_id,
   }
   if (out_monitors) *out_monitors = seen;
   if (out_hits) *out_hits = hits;
+  db_worker_close(&own);       /* no-op if we fell back to the shared handle */
   return 0;
 }
 

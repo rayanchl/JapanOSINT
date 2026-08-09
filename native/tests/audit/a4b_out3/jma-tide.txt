@@ -1,0 +1,21 @@
+=== jma-tide
+exit: 0
+sched: rc=0 records=166 1745ms
+--- stderr ---
+[jma-tide] emitted 166
+[sched] jma-tide run rc=0 records=166 1745ms
+--- persisted: 166 rows, 166 with lat/lon, 166 with geometry ---
+record_type: jma-tide=166
+sub_source_id: (null)=166
+
+--- row 1 ---
+  uid            jma-tide|JMA_TIDE_102331
+  title          函館
+  summary        函館 潮位 53cm（天文潮位 -12cm、偏差 +65cm）0時間前観測。
+  link           https://www.jma.go.jp/bosai/tide/#area_type=class20s&area_code=0120200
+  published_at   2026-08-01T01:00:00+09:00
+  lat            41.78167
+  lon            140.72472
+  geometry       {"type":"Point","coordinates":[140.72472,41.78167]}
+  record_type    jma-tide
+  properties     {"station_id":"JMA_TIDE_102331","name":"函館","level_cm":53,"astro_cm":-12,"anomaly_cm":65,"hours_ago":0,"class20_name":"函館市","address":"北海道 函館市 海岸町","reference":"TP（東京湾平均海面）","operator_type":"気象庁","country":"JP","observed_at":"2026-08-01T01:00:00+09:00","summary":"函館 潮位 53cm（天文潮位 -12cm、偏差 +65cm）0時間前観測。","url":"https://www.jma.go.jp/bosai/tide/#area_type=class20s&area_code=0120200","source":"jma_bosai_tidelevel"}

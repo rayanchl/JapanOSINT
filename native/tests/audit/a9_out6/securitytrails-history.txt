@@ -1,0 +1,19 @@
+=== securitytrails-history
+exit: 0
+sched: rc=0 records=1 61ms
+--- stderr ---
+[securitytrails-history] probe reachable=0 has_key=0
+[sched] securitytrails-history run rc=0 records=1 61ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            securitytrails-history|portal
+  title          SecurityTrails historical DNS
+  summary        Set SECURITYTRAILS_KEY to enable history lookups
+  link           https://securitytrails.com/
+  language       en
+  published_at   2026-07-31T18:30:10.551Z
+  tags           ["dns","history","securitytrails","unreachable","key-missing"]
+  properties     {"reachable":false,"requires_key":true,"has_key":false}

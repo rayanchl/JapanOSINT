@@ -1,0 +1,8 @@
+=== ALPHAVANTAGE_SEARCH  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[ALPHAVANTAGE_SEARCH] no ALPHAVANTAGE_KEY
+[ALPHAVANTAGE_SEARCH] emitted 0
+[sched] ALPHAVANTAGE_SEARCH run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

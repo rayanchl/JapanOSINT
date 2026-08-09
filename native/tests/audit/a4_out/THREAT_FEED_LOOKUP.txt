@@ -1,0 +1,6 @@
+=== THREAT_FEED_LOOKUP  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 329ms
+--- stderr ---
+[sched] THREAT_FEED_LOOKUP run rc=0 records=0 329ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

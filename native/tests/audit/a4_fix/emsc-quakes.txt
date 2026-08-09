@@ -1,0 +1,39 @@
+=== emsc-quakes
+exit: 0
+sched: rc=0 records=300 613ms
+--- stderr ---
+[emsc-quakes] emitted 300
+[sched] emsc-quakes run rc=0 records=300 613ms
+--- persisted: 300 rows, 300 with lat/lon, 300 with geometry ---
+record_type: earthquake=300
+sub_source_id: (null)=300
+
+--- row 1 ---
+  uid            emsc-quakes|20260731_0000256
+  title          M2.6 m — JAVA, INDONESIA
+  body           Earthquake magnitude 2.6 m at -7.5600, 106.0000, depth 14.0 km, JAVA, INDONESIA (catalog EMSC-RTS, contributed by BMKG, event 20260731_0000256).
+  summary        Earthquake magnitude 2.6 m at -7.5600, 106.0000, depth 14.0 km, JAVA, INDONESIA (catalog EMSC-RTS, contributed by BMKG, event 20260731_0000256).
+  link           https://www.seismicportal.eu/eventdetails.html?unid=20260731_0000256
+  language       en
+  published_at   2026-07-31T18:15:07.0Z
+  lat            -7.56
+  lon            106.0
+  geometry       {"type":"Point","coordinates":[106.000000,-7.560000]}
+  record_type    earthquake
+  tags           ["hazard","seismic","alert"]
+  properties     {"event_id":"20260731_0000256","magnitude":2.6,"magnitude_type":"m","depth_km":14,"lat":-7.56,"lon":106,"region":"JAVA, INDONESIA","event_type":"ke","agency":"BMKG","catalog":"EMSC-RTS","last_update":"2026-07-31T18:21:32.603588Z","source":"seismicportal.eu"}
+
+--- row 2 ---
+  uid            emsc-quakes|20260731_0000257
+  title          M2.5 m — MOLUCCA SEA
+  body           Earthquake magnitude 2.5 m at 1.0600, 125.4600, depth 22.0 km, MOLUCCA SEA (catalog EMSC-RTS, contributed by BMKG, event 20260731_0000257).
+  summary        Earthquake magnitude 2.5 m at 1.0600, 125.4600, depth 22.0 km, MOLUCCA SEA (catalog EMSC-RTS, contributed by BMKG, event 20260731_0000257).
+  link           https://www.seismicportal.eu/eventdetails.html?unid=20260731_0000257
+  language       en
+  published_at   2026-07-31T18:13:28.0Z
+  lat            1.06
+  lon            125.46
+  geometry       {"type":"Point","coordinates":[125.460000,1.060000]}
+  record_type    earthquake
+  tags           ["hazard","seismic","alert"]
+  properties     {"event_id":"20260731_0000257","magnitude":2.5,"magnitude_type":"m","depth_km":22,"lat":1.06,"lon":125.46,"region":"MOLUCCA SEA","event_type":"ke","agency":"BMKG","catalog":"EMSC-RTS","last_update":"2026-07-31T18:21:32.613512Z","source":"seismicportal.eu"}

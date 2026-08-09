@@ -20,6 +20,9 @@ struct CameraDiscoveryView: View {
     @State private var loadMoreError: String?
     @State private var subscription: AnyCancellable?
     @State private var seeded = false
+    /// The REST backfill threw. This — not the WebSocket — is what "offline"
+    /// means on this tab.
+    @State private var seedFailed = false
     @State private var selectedFeature: GeoFeature?
     @State private var searchText = ""
 
@@ -57,10 +60,12 @@ struct CameraDiscoveryView: View {
 
     var body: some View {
         Group {
-            // WS down + no events → unified offline state. WS up + no events
-            // is just a pre-discovery state (instructive empty), keep custom.
-            if events.isEmpty && !ws.isConnected {
-                OfflineStateView(retry: { Task { await trigger() } })
+            // Offline means the REST backfill FAILED — not "the push socket
+            // isn't up". The discovery feed is seeded and paged over REST, so
+            // a down/disabled WebSocket is irrelevant here; keying off it made
+            // the tab claim the backend was unreachable while it was answering.
+            if events.isEmpty && seedFailed {
+                OfflineStateView(retry: { Task { await reseed() } })
             } else {
                 contentView
             }
@@ -684,10 +689,19 @@ struct CameraDiscoveryView: View {
                 let trimmed = merged.suffix(2000)
                 events = Array(trimmed)
                 feedCursor = result.cursor
+                seedFailed = false
             }
         } catch {
             seeded = false
+            seedFailed = true
         }
+    }
+
+    /// Retry entry point for `OfflineStateView` — re-runs the REST backfill
+    /// that failed, rather than kicking off a discovery run.
+    private func reseed() async {
+        seeded = false
+        await seed()
     }
 
     /// Page older history when the user scrolls past the seeded window.

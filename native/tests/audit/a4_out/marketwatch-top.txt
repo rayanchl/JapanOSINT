@@ -1,0 +1,45 @@
+=== marketwatch-top
+exit: 0
+sched: rc=0 records=10 259ms
+--- stderr ---
+[rss] marketwatch-top emitted 10
+[sched] marketwatch-top run rc=0 records=10 259ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            marketwatch-top|WP-MKTW-0005157224
+  title          Warsh&#x2019;s Fed is failing to stick to its own principles for good monetary policy
+  body           Bond investors don&#x2019;t understand how Fed Chair Kevin Warsh&#x2019;s pledge to restore stable prices squares with inaction on interest rates.
+  summary        Bond investors don&#x2019;t understand how Fed Chair Kevin Warsh&#x2019;s pledge to restore stable prices squares with inaction on interest rates.
+  link           https://www.marketwatch.com/story/warshs-fed-is-failing-to-stick-to-its-own-principles-for-good-monetary-policy-0d4e45ef?mod=mw_rss_topstories
+  language       en
+  published_at   Fri, 31 Jul 2026 17:38:00 GMT
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"WP-MKTW-0005157224"}
+
+--- row 2 ---
+  uid            marketwatch-top|WP-MKTW-0005153246
+  title          &#x2018;Don&#x2019;t get suckered like I did&#x2019;: I paid $185 to the wrong passport website. Can I get my money back?
+  body           &#x201c;I will file a complaint with the Better Business Bureau.&#x201d;
+  summary        &#x201c;I will file a complaint with the Better Business Bureau.&#x201d;
+  link           https://www.marketwatch.com/story/dont-get-suckered-like-i-did-i-paid-185-to-the-wrong-passport-website-can-i-get-my-money-back-3a781412?mod=mw_rss_topstories
+  language       en
+  published_at   Fri, 31 Jul 2026 17:30:00 GMT
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"WP-MKTW-0005153246"}
+
+--- row 3 ---
+  uid            marketwatch-top|WP-MKTW-0005156326
+  title          HSAs can be a great retirement tool &#x2013; if you&#x2019;re healthy or wealthy
+  body           Health savings accounts can offset healthcare costs in your old age. But most people can&#x2019;t afford to wait.
+  summary        Health savings accounts can offset healthcare costs in your old age. But most people can&#x2019;t afford to wait.
+  link           https://www.marketwatch.com/story/hsas-can-be-a-great-retirement-tool-if-youre-healthy-or-wealthy-5a3e2991?mod=mw_rss_topstories
+  language       en
+  published_at   Fri, 31 Jul 2026 17:20:00 GMT
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"WP-MKTW-0005156326"}

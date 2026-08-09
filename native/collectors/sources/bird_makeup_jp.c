@@ -73,7 +73,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     NULL
   };
 
-  int n = 0;
+  int n = 0, fetched = 0, tried = 0;
   char *save = list, *handle;
   while ((handle = strsep(&save, ",")) != NULL) {
     while (*handle==' '||*handle=='\t') handle++;
@@ -83,8 +83,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     char url[512];
     snprintf(url, sizeof url, "%s/users/%s/outbox?page=true", BIRD_BASE, handle);
+    tried++;
     cJSON *outbox = feed_get_json_h(ctx->http, url, accept_hdr, 12000);
     if (!outbox) continue;
+    fetched++;
 
     const cJSON *items = cJSON_GetObjectItem(outbox, "orderedItems");
     if (cJSON_IsArray(items)) {
@@ -153,8 +155,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     cJSON_Delete(outbox);
   }
-  fprintf(stderr, "[bird-makeup-jp] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* An outbox that fetches fine but carries no orderedItems is an HONEST
+   * EMPTY (bird.makeup currently serves bare `{"type":"Collection"}` for
+   * every handle since the upstream X bridge stopped populating). Returning
+   * -1 there marks the run "error" in core/scheduler.c and quarantines the
+   * source; only a total fetch failure is a real error. */
+  fprintf(stderr, "[bird-makeup-jp] emitted %d (handles %d, fetched %d)\n",
+          n, tried, fetched);
+  if (n > 0) return 0;
+  return fetched > 0 ? 0 : -1;
 }
 
 static const source_def bird_makeup_jp_def = {

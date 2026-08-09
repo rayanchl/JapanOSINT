@@ -1,0 +1,7 @@
+=== LU_LBR  entity=Toyota
+exit: 0
+sched: rc=0 records=0 517ms
+--- stderr ---
+[LU_LBR] http status=429
+[sched] LU_LBR run rc=0 records=0 517ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

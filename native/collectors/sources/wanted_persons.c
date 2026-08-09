@@ -255,12 +255,22 @@ static int first_digits(const char *s, char *out, size_t n) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   /* Reachability check: NPA index must contain 指名手配 or shimeitehai. */
   char *idx_html = feed_get_text(ctx->http, NPA_WANTED_HTML, 8000);
-  if (!idx_html) return 0;
+  if (!idx_html) {
+    /* both of these bailed silently, so an operator could not tell an
+     * unreachable NPA index from "no wanted persons published" */
+    fprintf(stderr, "[wanted-persons] NPA index unreachable (%s)\n",
+            NPA_WANTED_HTML);
+    return 0;
+  }
   int ok = strstr(idx_html, "shimeitehai") != NULL ||
            strstr(idx_html,
              "\xe6\x8c\x87\xe5\x90\x8d\xe6\x89\x8b\xe9\x85\x8d") != NULL;
   free(idx_html);
-  if (!ok) return 0;
+  if (!ok) {
+    fprintf(stderr, "[wanted-persons] NPA index fetched but carries no "
+                    "shimeitehai marker — page layout changed\n");
+    return 0;
+  }
 
   cJSON *features = cJSON_CreateArray();
   int idx = 0;
@@ -304,26 +314,26 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       snprintf(crimes[cn++], 256, "%s", mbuf);
     }
 
+    /* caseCount used to be max(names, ages, crimes) — three INDEPENDENT regex
+     * passes over the page with no positional relationship to each other. That
+     * invented cases (a page with 4 names and 9 age strings produced 9 wanted
+     * persons, 5 of them nameless) and it cross-wired attributes (case i took
+     * ages[i] regardless of whether that age belonged to names[i]). A case is a
+     * named individual: count names, and attach age/crime only when the passes
+     * are aligned 1:1, which is the only condition under which the pairing is
+     * defensible. */
     int caseCount = nn;
-    if (an > caseCount) caseCount = an;
-    if (cn > caseCount) caseCount = cn;
+    int age_aligned = (an == nn), crime_aligned = (cn == nn);
 
     for (int i = 0; i < caseCount; i++) {
       idx++;
-      double angle = ((double)i / caseCount) * 2.0 * M_PI;
-      double r = 0.005 + (i % 3) * 0.003;
-      double lon = pp->lon + cos(angle) * r;
-      double lat = pp->lat + sin(angle) * r;
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      /* No geometry is invented. The previous code placed each case on an
+       * index-derived ring 0.005–0.011 deg (≈0.5–1.2 km) around the issuing
+       * force's HQ, which the map presented as the person's location. The HQ
+       * point is real, so it is kept — but flagged as what it is, and never as
+       * an exact position. */
+      cJSON *f = gj_point_feature(pp->lon, pp->lat);
 
       cJSON *pr = cJSON_CreateObject();      /* EXACT JS key order */
       char cid[64];
@@ -338,16 +348,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         else cJSON_AddNullToObject(pr, "name");
       } else cJSON_AddNullToObject(pr, "name");
 
-      /* age: ageMatches[i]?.match(/\d+/)?.[0] || null */
-      if (i < an) {
+      /* age: ageMatches[i]?.match(/\d+/)?.[0] || null — only when the age pass
+       * produced exactly one match per name, otherwise the index is meaningless */
+      if (age_aligned && i < an) {
         char ag[32];
         if (first_digits(ages[i], ag, sizeof ag))
           cJSON_AddStringToObject(pr, "age", ag);
         else cJSON_AddNullToObject(pr, "age");
       } else cJSON_AddNullToObject(pr, "age");
 
-      /* crime: crimeMatches[i] ? strip : null */
-      if (i < cn) {
+      /* crime: crimeMatches[i] ? strip : null — same alignment condition */
+      if (crime_aligned && i < cn) {
         char cm[256]; strip_crime(crimes[i], cm, sizeof cm);
         if (cm[0]) cJSON_AddStringToObject(pr, "crime", cm);
         else cJSON_AddNullToObject(pr, "crime");
@@ -357,6 +368,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddStringToObject(pr, "source_url", url);
       cJSON_AddStringToObject(pr, "country", "JP");
       cJSON_AddStringToObject(pr, "source", "npa_pref_police_html");
+      /* Unified provenance vocabulary: this point is the issuing force's
+       * headquarters, NOT the wanted person's whereabouts. */
+      cJSON_AddStringToObject(pr, "geo_provenance", "issuing-force-hq");
+      cJSON_AddStringToObject(pr, "geo_precision", "publisher-hq");
+      cJSON_AddBoolToObject(pr, "geo_uncertain", 1);
+      cJSON_AddStringToObject(pr, "geo_note",
+        "point is the issuing prefectural police headquarters; the publication "
+        "carries no location for the individual");
       cJSON_AddItemToObject(f, "properties", pr);
       cJSON_AddItemToArray(features, f);
     }

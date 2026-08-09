@@ -1,6 +1,7 @@
 /* collectors/infrastructure/sources/japan_post_offices.c
  * Port of server/src/collectors/japanPostOffices.js (fetchOverpassTiled).
  * Single nationwide tiled Overpass sweep of amenity=post_office. */
+#include "../../lib/geojson.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
@@ -13,15 +14,7 @@ static void body(const char *bbox, char *o, size_t n, void *ud) {
 }
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON *id = cJSON_GetObjectItem(el, "id");
@@ -61,7 +54,7 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = overpass_tiled_collect(ctx, sink, body, 180, 90000, map, NULL);
+  int n = overpass_tiled_collect(ctx, sink, body, 180, 200000, map, NULL);
   return n >= 0 ? 0 : -1;
 }
 

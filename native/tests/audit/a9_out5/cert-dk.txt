@@ -1,0 +1,45 @@
+=== cert-dk
+exit: 0
+sched: rc=0 records=10 577ms
+--- stderr ---
+[rss] cert-dk emitted 10
+[sched] cert-dk run rc=0 records=10 577ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            cert-dk|https://samsik.dk/?p=10273
+  title          Styrelsen for Samfundssikkerhed anker spørgsmål om ekspropriation i sag om TDC NETs kritiske teleinfrastruktur
+  body           Østre Landsret afsagde den 24. juni 2026 dom i en sag mod Styrelsen for Samfundssikkerhed, hvori TDC NET bl.a. havde nedlagt påstand om, at styrelsens afgørelse om forbud mod at opretholde en konkret aftale mellem TDC NET og Huawei og anvendelse af udstyr leveret under aftalen var ulovlig. TDC NET havde samtidig krævet erstatning. Landsretten [&#8230;]
+  summary        Østre Landsret afsagde den 24. juni 2026 dom i en sag mod Styrelsen for Samfundssikkerhed, hvori TDC NET bl.a. havde nedlagt påstand om, at styrelsens afgørelse om forbud mod at opretholde en konkret aftale mellem TDC NET og Huawei og an
+  link           https://samsik.dk/artikler/2026/07/styrelsen-for/
+  language       da
+  published_at   Wed, 08 Jul 2026 11:05:10 +0000
+  record_type    article
+  tags           ["cyber","cert","advisory","denmark"]
+  properties     {"guid":"https://samsik.dk/?p=10273"}
+
+--- row 2 ---
+  uid            cert-dk|https://samsik.dk/?p=9864
+  title          Skærpet trussel fra destruktive cyberangreb
+  body           Styrelsen for Samfundssikkerhed vurderer, at truslen fra destruktive cyberangreb begået af russiske statslige hackere er skærpet. Styrelsen opfordrer alle, som arbejder med samfundets vigtige funktioner, til at fokusere endnu mere på cybersikkerheden.
+  summary        Styrelsen for Samfundssikkerhed vurderer, at truslen fra destruktive cyberangreb begået af russiske statslige hackere er skærpet. Styrelsen opfordrer alle, som arbejder med samfundets vigtige funktioner, til at fokusere endnu mere på cyb
+  link           https://samsik.dk/artikler/2026/06/skaerpet-trussel-fra-destruktive-cyberangreb/
+  language       da
+  published_at   Tue, 30 Jun 2026 12:58:59 +0000
+  record_type    article
+  tags           ["cyber","cert","advisory","denmark"]
+  properties     {"guid":"https://samsik.dk/?p=9864"}
+
+--- row 3 ---
+  uid            cert-dk|https://samsik.dk/?p=9466
+  title          Dom i sag om TDC NET’s kritiske teleinfrastruktur
+  body           Østre Landsret har i dag afsagt dom i en sag mod Styrelsen for Samfundssikkerhed, hvori TDC NET bl.a. havde nedlagt påstand om, at styrelsens afgørelse om forbud mod at opretholde en konkret aftale mellem TDC NET og Huawei og anvendelse af udstyr leveret under aftalen var ulovlig. TDC NET havde samtidig krævet erstatning. Afgørelsen blev [&#8230;]
+  summary        Østre Landsret har i dag afsagt dom i en sag mod Styrelsen for Samfundssikkerhed, hvori TDC NET bl.a. havde nedlagt påstand om, at styrelsens afgørelse om forbud mod at opretholde en konkret aftale mellem TDC NET og Huawei og anvendelse 
+  link           https://samsik.dk/artikler/2026/06/dom-i-sag-om-tdc-nets-kritiske-teleinfrastruktur/
+  language       da
+  published_at   Wed, 24 Jun 2026 09:32:19 +0000
+  record_type    article
+  tags           ["cyber","cert","advisory","denmark"]
+  properties     {"guid":"https://samsik.dk/?p=9466"}

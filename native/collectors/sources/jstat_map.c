@@ -4,6 +4,7 @@
  * population table), gated on ESTAT_APP_ID, limit=3000. Honest empty
  * without key / on failure / empty VALUE — no seed. uid key mirrors JS
  * `${mesh}-${cat}-${time}` (always non-empty → JS `|| i` is dead). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include <stdio.h>
@@ -12,10 +13,6 @@
 
 #define API_BASE "https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData"
 #define DEFAULT_STATS_DATA_ID "0003445078"
-
-static const char *s_or_null(cJSON *v) {
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *appId = getenv("ESTAT_APP_ID");
@@ -43,10 +40,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *v;
   cJSON_ArrayForEach(v, values) {
     if (i++ >= 3000) break;
-    const char *mesh = s_or_null(cJSON_GetObjectItem(v, "@area"));
-    const char *cat  = s_or_null(cJSON_GetObjectItem(v, "@cat01"));
-    const char *time = s_or_null(cJSON_GetObjectItem(v, "@time"));
-    const char *val  = s_or_null(cJSON_GetObjectItem(v, "$"));
+    const char *mesh = jo_vstr(cJSON_GetObjectItem(v, "@area"));
+    const char *cat  = jo_vstr(cJSON_GetObjectItem(v, "@cat01"));
+    const char *time = jo_vstr(cJSON_GetObjectItem(v, "@time"));
+    const char *val  = jo_vstr(cJSON_GetObjectItem(v, "$"));
 
     char rk[160], title[160], summary[160], body[320];
     snprintf(rk, sizeof rk, "%s-%s-%s",
@@ -91,7 +88,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(root);
   fprintf(stderr, "[jstat-map] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def jstat_map_def = {

@@ -1,0 +1,11 @@
+nhk-world	https://www3.nhk.or.jp/nhkworld/en/news/feeds/
+nhk-world-alt	https://www3.nhk.or.jp/nhkworld/en/news/rss/all.xml
+nhk-world-alt2	https://www3.nhk.or.jp/rss/news/cat0.xml
+note-v3	https://note.com/api/v3/hashtags/trending
+note-v2	https://note.com/api/v2/categories/trending
+note-v2b	https://note.com/api/v2/notes?kind=trend
+gsj-fault	https://gbank.gsj.jp/activefault/cgi-bin/geojson.cgi
+gsj-fault2	https://gbank.gsj.jp/activefault/index_e_gmap.html
+nerv	https://api.nerv.app/v1/timeline
+nerv2	https://api.nerv.app/v1/earthquakes
+discord	https://discord.com/api/v9/discovery/search?query=japan

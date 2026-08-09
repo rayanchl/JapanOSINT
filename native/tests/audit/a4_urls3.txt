@@ -1,0 +1,7 @@
+https://www.kitco.com/rss/KitcoNews.xml
+https://tradingeconomics.com/rss/news.aspx
+https://whc.unesco.org/en/list/xml/
+https://www.kitco.com/rss/
+https://www.kitco.com/news/rss
+https://tradingeconomics.com/rss/news
+https://tradingeconomics.com/ws/stream.ashx?start=0&size=20

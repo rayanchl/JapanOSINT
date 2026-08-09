@@ -883,7 +883,8 @@ private struct SourceDetail: View {
                     item_count: row.recordsCount ?? 0,
                     last_fetched: row.lastSuccess,
                     last_published: row.lastSuccess,
-                    ttl_ms: nil)
+                    ttl_ms: nil,
+                    parent_id: nil)
     }
 
     private var probeActions: some View {

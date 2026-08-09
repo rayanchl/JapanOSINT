@@ -1,0 +1,45 @@
+=== gnews-mon-critical-infrastructure-attack
+exit: 0
+sched: rc=0 records=100 633ms
+--- stderr ---
+[rss] gnews-mon-critical-infrastructure-attack emitted 100
+[sched] gnews-mon-critical-infrastructure-attack run rc=0 records=100 633ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-critical-infrastructure-attack|CBMi2gFBVV95cUxOWkE4Y3VXeGpTVnJZN01KLU1oUHhWT0dmdE1sbHdwTmNfbVMwV0tUS2RTN2RaRnVUamJueUhjN2pmSE4zRzBaeTJnbjNfaHdqSENrN1MySXFrd21rdkxVOGxjMEoyMldHbDRGbTlINWMtVndLYVd2WGNxbzNhRENKcHlvZnBfWkhCREpaQ05EdHJfZmpSQVN6Z0hoRHN0ZkUzclFjSkc1c2kyM0tISzdGVUI1YmZlNHFZUnd4UnVEeEl5bm5hRjVXdWtaSjZPdWpuSVQ1cFlGVGNwUQ
+  title          Foreign robotic systems could expose US critical infrastructure to cyberattacks, espionage, remote manipulation - Industrial Cyber
+  body           <a href="https://news.google.com/rss/articles/CBMi2gFBVV95cUxOWkE4Y3VXeGpTVnJZN01KLU1oUHhWT0dmdE1sbHdwTmNfbVMwV0tUS2RTN2RaRnVUamJueUhjN2pmSE4zRzBaeTJnbjNfaHdqSENrN1MySXFrd21rdkxVOGxjMEoyMldHbDRGbTlINWMtVndLYVd2WGNxbzNhRENKcHlvZnBfWkhCREpaQ05EdHJfZmpSQVN6Z0hoRHN0ZkUzclFjSkc1c2kyM0tISzdGVUI1YmZlNHFZUnd4UnVEeEl5bm5hRjVXdWtaSjZPdWpuSVQ1cFlGVGNwUQ?oc=5" target="_blank">Foreign robotic systems could expose US critical infrastructure to cyberattacks, espionage, remote manipulation</a>&nbsp;&nbsp;<font color="#6f6f6f">Industrial Cyber</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi2gFBVV95cUxOWkE4Y3VXeGpTVnJZN01KLU1oUHhWT0dmdE1sbHdwTmNfbVMwV0tUS2RTN2RaRnVUamJueUhjN2pmSE4zRzBaeTJnbjNfaHdqSENrN1MySXFrd21rdkxVOGxjMEoyMldHbDRGbTlINWMtVndLYVd2WGNxbzNhRENKcHlvZnBfWkhCREpaQ0
+  link           https://news.google.com/rss/articles/CBMi2gFBVV95cUxOWkE4Y3VXeGpTVnJZN01KLU1oUHhWT0dmdE1sbHdwTmNfbVMwV0tUS2RTN2RaRnVUamJueUhjN2pmSE4zRzBaeTJnbjNfaHdqSENrN1MySXFrd21rdkxVOGxjMEoyMldHbDRGbTlINWMtVndLYVd2WGNxbzNhRENKcHlvZnBfWkhCREpaQ05EdHJfZmpSQVN6Z0hoRHN0ZkUzclFjSkc1c2kyM0tISzdGVUI1YmZlNHFZUnd4UnVEeEl5bm5hRjVXdWtaSjZPdWpuSVQ1cFlGVGNwUQ?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 08:08:51 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","critical"]
+  properties     {"guid":"CBMi2gFBVV95cUxOWkE4Y3VXeGpTVnJZN01KLU1oUHhWT0dmdE1sbHdwTmNfbVMwV0tUS2RTN2RaRnVUamJueUhjN2pmSE4zRzBaeTJnbjNfaHdqSENrN1MySXFrd21rdkxVOGxjMEoyMldHbDRGbTlINWMtVndLYVd2WGNxbzNhRENKcHlvZnBfWkhCREpaQ05EdHJfZmpSQVN6Z0hoRHN0ZkUzclFjSkc1c2kyM0tISzdGVUI1YmZlNHFZUnd4UnVEeEl5bm5hRjVXdWtaSjZPdWpuSVQ1cFlGVGNwUQ"}
+
+--- row 2 ---
+  uid            gnews-mon-critical-infrastructure-attack|CBMi2wFBVV95cUxPNUhYUEMyR05BYUdtRUstU1dMZDhLOUIySTVhWS1GOGhRdjF4NGNZdFU3WGFCdU1IZFNvWWRxdDlGWkxTT3hNaTYyam1teWwxWkhrVjV1c3ZtUEhkRFVaNXBSMDRmeXhrQlM4NGY0N2ktU2tzeEYyZ0FUR0ZON3Bfc3R3NmhVMmdEekMtWFZsLUtPb0N1Tks0aWZxVEpJOElzZVZuVzFjTElUekxqLXFScnF0VWJ6WGQyLWhlcDlicUZiODJ5ZHJxUUkwQjZGWUsxRV9RTllXMC1sTXPSAeABQVVfeXFMTTd6Y2FzMDh5dEU2X0lnNTZrS0ZzNUIwVURrNzd0S3czMGoyS0pRZ2RVOG01Uzc0N0FWVFRoaDBnUmJMZUYwdWpPMGFDcHR5RG9tVVlUdVEwUFBFaEpxZEpQeVEzNGVtUnRUTlJJdzZrWUNuR3llZ2RLbDM5Sm
+  title          Iran-Linked Cyberattack? FBI Probes Minnesota Water System Hack |US Critical Infrastructure Targeted - WION
+  body           <a href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxPNUhYUEMyR05BYUdtRUstU1dMZDhLOUIySTVhWS1GOGhRdjF4NGNZdFU3WGFCdU1IZFNvWWRxdDlGWkxTT3hNaTYyam1teWwxWkhrVjV1c3ZtUEhkRFVaNXBSMDRmeXhrQlM4NGY0N2ktU2tzeEYyZ0FUR0ZON3Bfc3R3NmhVMmdEekMtWFZsLUtPb0N1Tks0aWZxVEpJOElzZVZuVzFjTElUekxqLXFScnF0VWJ6WGQyLWhlcDlicUZiODJ5ZHJxUUkwQjZGWUsxRV9RTllXMC1sTXPSAeABQVVfeXFMTTd6Y2FzMDh5dEU2X0lnNTZrS0ZzNUIwVURrNzd0S3czMGoyS0pRZ2RVOG01Uzc0N0FWVFRoaDBnUmJMZUYwdWpPMGFDcHR5RG9tVVlUdVEwUFBFaEpxZEpQeVEzNGVtUnRUTlJJdzZrWUNuR3llZ2RLbDM5SmQzOEotdU9IM2FUaTU5bkdUZkNZdERXa2RiU2g5Z3RUd2liMnlVU2lpNnFXOHZBS3RGZ0JCS0dmV2Fiazlwa2ZVbEdOUFRER1JhdU85XzJUXy1CbjloOWgzNmt6dXJRZG1DbWQ?oc=5" target="_blank">Iran-Linked Cyberattack? FBI Probes Minnesota Water System Hack |US Critical Infrastructure Targeted</a>&nbsp;&nbsp;<font color="#6f6f6f">WION</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxPNUhYUEMyR05BYUdtRUstU1dMZDhLOUIySTVhWS1GOGhRdjF4NGNZdFU3WGFCdU1IZFNvWWRxdDlGWkxTT3hNaTYyam1teWwxWkhrVjV1c3ZtUEhkRFVaNXBSMDRmeXhrQlM4NGY0N2ktU2tzeEYyZ0FUR0ZON3Bfc3R3NmhVMmdEekMtWF
+  link           https://news.google.com/rss/articles/CBMi2wFBVV95cUxPNUhYUEMyR05BYUdtRUstU1dMZDhLOUIySTVhWS1GOGhRdjF4NGNZdFU3WGFCdU1IZFNvWWRxdDlGWkxTT3hNaTYyam1teWwxWkhrVjV1c3ZtUEhkRFVaNXBSMDRmeXhrQlM4NGY0N2ktU2tzeEYyZ0FUR0ZON3Bfc3R3NmhVMmdEekMtWFZsLUtPb0N1Tks0aWZxVEpJOElzZVZuVzFjTElUekxqLXFScnF0VWJ6WGQyLWhlcDlicUZiODJ5ZHJxUUkwQjZGWUsxRV9RTllXMC1sTXPSAeABQVVfeXFMTTd6Y2FzMDh5dEU2X0lnNTZrS0ZzNUIwVURrNzd0S3czMGoyS0pRZ2RVOG01Uzc0N0FWVFRoaDBnUmJMZUYwdWpPMGFDcHR5RG9tVVlUdVEwUFBFaEpxZEpQeVEzNGVtUnRUTlJJdzZrWUNuR3llZ2RLbDM5SmQzOEotdU9IM2FUaTU5bkdUZkNZdERXa2RiU2g5Z3RUd2liMnlVU2lpNnFXOHZBS3RGZ0JCS0dmV2Fiazlwa2ZVbEdOUFRER1JhdU85XzJUXy1CbjloOWgzNmt6dXJRZG1DbWQ?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 17:13:01 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","critical"]
+  properties     {"guid":"CBMi2wFBVV95cUxPNUhYUEMyR05BYUdtRUstU1dMZDhLOUIySTVhWS1GOGhRdjF4NGNZdFU3WGFCdU1IZFNvWWRxdDlGWkxTT3hNaTYyam1teWwxWkhrVjV1c3ZtUEhkRFVaNXBSMDRmeXhrQlM4NGY0N2ktU2tzeEYyZ0FUR0ZON3Bfc3R3NmhVMmdEekMtWFZsLUtPb0N1Tks0aWZxVEpJOElzZVZuVzFjTElUekxqLXFScnF0VWJ6WGQyLWhlcDlicUZiODJ5ZHJxUUkwQjZGWUsxRV9RTllXMC1sTXPSAeABQVVfeXFMTTd6Y2FzMDh5dEU2X0lnNTZrS0ZzNUIwVURrNzd0S3czMGoyS0pRZ2RVOG01Uzc0N0FWVFRoaDBnUmJMZUYwdWpPMGFDcHR5RG9tVVlUdVEwUFBFaEpxZEpQeVEzNGVtUnRUTlJJdzZrWUNuR3llZ2RLbDM5SmQzOEotdU9IM2FUaTU5bkdUZkNZdERXa2
+
+--- row 3 ---
+  uid            gnews-mon-critical-infrastructure-attack|CBMi8gFBVV95cUxNRmV2XzZQdEJ2enFMUjRoM2I4bGtWaHpqUmRjbmVaTUNhM01PM0ZPcnlwMjFsQ1I4TzVpVWRTMC1WRmtHVklkYmtldDNPUm5xZG9MaUJBdFVGSVZfUW5EUUo2VGRLODEyMlBETUJFa2FNX1hXa0hfNm1UcUhoazZsYlZEZURtLUZSSFYxWncxTG1nRExxbmYyQmZ6TDNpaWNSbHdPQlRoNEgtMTh5WkpqVGwyenV0RGI4bUNtQWV1NjBtMi1wLWVFNGxES2ZjY3g2eEtPbWVucnhYVmFqeHpTb3lCQjZUNl9lN0k2c2ZwRkFpdw
+  title          A coordinated attack hit 30+ Minnesota water systems. Who did it, and what does a Rockwell notice add to the picture? - csoonline.com
+  body           <a href="https://news.google.com/rss/articles/CBMi8gFBVV95cUxNRmV2XzZQdEJ2enFMUjRoM2I4bGtWaHpqUmRjbmVaTUNhM01PM0ZPcnlwMjFsQ1I4TzVpVWRTMC1WRmtHVklkYmtldDNPUm5xZG9MaUJBdFVGSVZfUW5EUUo2VGRLODEyMlBETUJFa2FNX1hXa0hfNm1UcUhoazZsYlZEZURtLUZSSFYxWncxTG1nRExxbmYyQmZ6TDNpaWNSbHdPQlRoNEgtMTh5WkpqVGwyenV0RGI4bUNtQWV1NjBtMi1wLWVFNGxES2ZjY3g2eEtPbWVucnhYVmFqeHpTb3lCQjZUNl9lN0k2c2ZwRkFpdw?oc=5" target="_blank">A coordinated attack hit 30+ Minnesota water systems. Who did it, and what does a Rockwell notice add to the picture?</a>&nbsp;&nbsp;<font color="#6f6f6f">csoonline.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi8gFBVV95cUxNRmV2XzZQdEJ2enFMUjRoM2I4bGtWaHpqUmRjbmVaTUNhM01PM0ZPcnlwMjFsQ1I4TzVpVWRTMC1WRmtHVklkYmtldDNPUm5xZG9MaUJBdFVGSVZfUW5EUUo2VGRLODEyMlBETUJFa2FNX1hXa0hfNm1UcUhoazZsYlZEZURtLUZSSFYxWn
+  link           https://news.google.com/rss/articles/CBMi8gFBVV95cUxNRmV2XzZQdEJ2enFMUjRoM2I4bGtWaHpqUmRjbmVaTUNhM01PM0ZPcnlwMjFsQ1I4TzVpVWRTMC1WRmtHVklkYmtldDNPUm5xZG9MaUJBdFVGSVZfUW5EUUo2VGRLODEyMlBETUJFa2FNX1hXa0hfNm1UcUhoazZsYlZEZURtLUZSSFYxWncxTG1nRExxbmYyQmZ6TDNpaWNSbHdPQlRoNEgtMTh5WkpqVGwyenV0RGI4bUNtQWV1NjBtMi1wLWVFNGxES2ZjY3g2eEtPbWVucnhYVmFqeHpTb3lCQjZUNl9lN0k2c2ZwRkFpdw?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 21:54:04 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","critical"]
+  properties     {"guid":"CBMi8gFBVV95cUxNRmV2XzZQdEJ2enFMUjRoM2I4bGtWaHpqUmRjbmVaTUNhM01PM0ZPcnlwMjFsQ1I4TzVpVWRTMC1WRmtHVklkYmtldDNPUm5xZG9MaUJBdFVGSVZfUW5EUUo2VGRLODEyMlBETUJFa2FNX1hXa0hfNm1UcUhoazZsYlZEZURtLUZSSFYxWncxTG1nRExxbmYyQmZ6TDNpaWNSbHdPQlRoNEgtMTh5WkpqVGwyenV0RGI4bUNtQWV1NjBtMi1wLWVFNGxES2ZjY3g2eEtPbWVucnhYVmFqeHpTb3lCQjZUNl9lN0k2c2ZwRkFpdw"}

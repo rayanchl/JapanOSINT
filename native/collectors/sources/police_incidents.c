@@ -41,8 +41,10 @@ static const char *pick_str(cJSON *row, const char *const *keys, int nk) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *url = getenv("POLICE_INCIDENTS_CSV_URL");
   if (!url || !*url) {
-    fprintf(stderr, "[police-incidents] no source (POLICE_INCIDENTS_CSV_URL unset)\n");
-    return -1;
+    /* Gated, not failed: -1 logs fetch_log status='error' and opens a
+     * collector_anomaly every tick for a source that was never configured. */
+    fprintf(stderr, "[police-incidents] gated (no POLICE_INCIDENTS_CSV_URL)\n");
+    return 0;
   }
   char *text = feed_get_text(ctx->http, url, 20000);
   if (!text || !*text) { free(text); fprintf(stderr, "[police-incidents] unavailable\n"); return -1; }
@@ -72,15 +74,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const char *dat = pick_str(r, DAT_K, 4);
     const char *plc = pick_str(r, PLC_K, 4);
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *c = cJSON_CreateArray();
-    cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", c);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(lon, lat);
 
     cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
     if (typ) cJSON_AddStringToObject(p, "incident_type", typ); else cJSON_AddNullToObject(p, "incident_type");
@@ -100,7 +94,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[police-incidents] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def police_incidents_def = {

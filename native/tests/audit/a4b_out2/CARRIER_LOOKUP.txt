@@ -1,0 +1,17 @@
+=== CARRIER_LOOKUP  entity=+81312345678
+exit: 0
+sched: rc=0 records=1 1ms
+--- stderr ---
+[sched] CARRIER_LOOKUP run rc=0 records=1 1ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            CARRIER_LOOKUP|phone:CARRIER_LOOKUP:+81312345678
+  title          CARRIER_LOOKUP — +81312345678
+  body           {"service":"CARRIER_LOOKUP","entity":"+81312345678","line_type":"landline","validation":{"normalized":"+81312345678","country_code":"81","country":"Japan","region":"Asia","valid":false,"likely_type":"landline"}}
+  summary        CARRIER_LOOKUP
+  record_type    osint_service_result
+  tags           ["osint-search","CARRIER_LOOKUP"]
+  properties     {"service":"CARRIER_LOOKUP","entity":"+81312345678"}

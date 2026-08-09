@@ -1,0 +1,8 @@
+=== sakura-front
+exit: 1
+sched: rc=-1 records=0 1115ms
+--- stderr ---
+[sakura-front] unavailable
+[sched] sakura-front run rc=-1 records=0 1115ms
+[detect] anomaly opened: sakura-front verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

@@ -1,0 +1,35 @@
+=== trading-econ
+exit: 0
+sched: rc=0 records=100 718ms
+--- stderr ---
+[trading-econ] emitted 100
+[sched] trading-econ run rc=0 records=100 718ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            trading-econ|571846
+  title          Metals Commodities Updates: Titanium Drops by 2.20%
+  body           Top commodity losers are Titanium (-2.20%), Silver (-2.07%), Lithium Carbonate (-2.05%) and Gold (-1.30%). Gains are led by Copper (0.58%).
+  summary        Top commodity losers are Titanium (-2.20%), Silver (-2.07%), Lithium Carbonate (-2.05%) and Gold (-1.30%). Gains are led by Copper (0.58%).
+  link           https://tradingeconomics.com/commodities
+  author         CALCULATOR
+  language       en
+  published_at   2026-07-31T18:20:01.073
+  record_type    article
+  tags           ["economy","markets"]
+  properties     {"te_id":571846,"country":"Commodity","category":"Commodity","importance":1,"source":"tradingeconomics.com"}
+
+--- row 2 ---
+  uid            trading-econ|571845
+  title          Energy Commodities Updates: Germany Natural Gas THE Rises by 2.32%
+  body           Top commodity gainers are Germany Natural Gas THE (2.32%), Brent Crude Oil (1.41%) and Crude Oil WTI (1.35%). Biggest losers are Propane (-1.42%), Heating Oil (-1.24%) and Methanol (-1.11%).
+  summary        Top commodity gainers are Germany Natural Gas THE (2.32%), Brent Crude Oil (1.41%) and Crude Oil WTI (1.35%). Biggest losers are Propane (-1.42%), Heating Oil (-1.24%) and Methanol (-1.11%).
+  link           https://tradingeconomics.com/commodities
+  author         CALCULATOR
+  language       en
+  published_at   2026-07-31T18:15:02.163
+  record_type    article
+  tags           ["economy","markets"]
+  properties     {"te_id":571845,"country":"Commodity","category":"Commodity","importance":1,"source":"tradingeconomics.com"}

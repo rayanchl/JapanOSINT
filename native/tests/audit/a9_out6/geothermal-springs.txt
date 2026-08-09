@@ -1,0 +1,37 @@
+=== geothermal-springs
+exit: 0
+sched: rc=0 records=6867 11138ms
+--- stderr ---
+[geothermal-springs] emitted 6867
+[sched] geothermal-springs run rc=0 records=6867 11138ms
+[detect] anomaly opened: geothermal-springs verdict=duration_outlier — duration 11138ms exceeds 10000ms threshold
+--- persisted: 6867 rows, 6867 with lat/lon, 6867 with geometry ---
+record_type: geothermal-springs=6867
+sub_source_id: (null)=6867
+
+--- row 1 ---
+  uid            geothermal-springs|SPRING_00001
+  title          池の湯
+  lat            43.605435
+  lon            144.35859
+  geometry       {"type":"Point","coordinates":[144.35859,43.605435]}
+  record_type    geothermal-springs
+  properties     {"spring_id":"SPRING_00001","name_ja":"池の湯","source_name_ja":"イナセランド2号泉","prefecture":"北海道","municipality":"川上郡弟子屈町","depth_m":84,"temperature_c":5.3,"flow_l_min":300,"ph":7.9,"tds_mg_kg":1112,"sample_date":"1977.5","country":"JP","source":"gsj_gres_db_onsen_2020"}
+
+--- row 2 ---
+  uid            geothermal-springs|SPRING_00002
+  title          斜里川ニノ沢鉱泉
+  lat            43.680257
+  lon            144.700435
+  geometry       {"type":"Point","coordinates":[144.700435,43.680257]}
+  record_type    geothermal-springs
+  properties     {"spring_id":"SPRING_00002","name_ja":"斜里川ニノ沢鉱泉","source_name_ja":null,"prefecture":"北海道","municipality":"斜里郡清里町","depth_m":0,"temperature_c":8,"flow_l_min":120,"ph":3.8,"tds_mg_kg":120,"sample_date":"1993.9","country":"JP","source":"gsj_gres_db_onsen_2020"}
+
+--- row 3 ---
+  uid            geothermal-springs|SPRING_00003
+  title          崎無異川鉱泉
+  lat            43.843695
+  lon            144.947226
+  geometry       {"type":"Point","coordinates":[144.947226,43.843695]}
+  record_type    geothermal-springs
+  properties     {"spring_id":"SPRING_00003","name_ja":"崎無異川鉱泉","source_name_ja":null,"prefecture":"北海道","municipality":"標津郡標津町","depth_m":0,"temperature_c":9.2,"flow_l_min":0.5,"ph":5.4,"tds_mg_kg":3980,"sample_date":"1998.10.30","country":"JP","source":"gsj_gres_db_onsen_2020"}

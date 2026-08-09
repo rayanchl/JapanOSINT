@@ -1,0 +1,7 @@
+=== wanted-persons
+exit: 0
+sched: rc=0 records=0 343ms
+--- stderr ---
+[wanted-persons] NPA index unreachable (https://www.npa.go.jp/sousa/shimeitehai/index.html)
+[sched] wanted-persons run rc=0 records=0 343ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

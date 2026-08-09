@@ -1,0 +1,8 @@
+=== HN_USER  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 724ms
+--- stderr ---
+[HN_USER] http status=500
+[HN_USER] emitted 0
+[sched] HN_USER run rc=0 records=0 724ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

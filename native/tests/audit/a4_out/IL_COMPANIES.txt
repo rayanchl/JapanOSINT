@@ -1,0 +1,29 @@
+=== IL_COMPANIES  entity=Toyota
+exit: 0
+sched: rc=0 records=2 447ms
+--- stderr ---
+[il_companies] emitted 2
+[sched] IL_COMPANIES run rc=0 records=2 447ms
+--- persisted: 2 rows, 0 with lat/lon, 0 with geometry ---
+record_type: il-company=2
+sub_source_id: (null)=2
+
+--- row 1 ---
+  uid            IL_COMPANIES|560036907
+  title          טיוטה תסושו קורפוריישן
+  body           {"name":"טיוטה תסושו קורפוריישן","company_number":"560036907","status":"פעילה","source":"data.gov.il","country":"IL"}
+  summary        פעילה
+  language       he
+  record_type    il-company
+  tags           ["osint-search","IL_COMPANIES"]
+  properties     {"service":"IL_COMPANIES","source":"data.gov.il","country":"IL","company_number":"560036907","status":"פעילה","success":true}
+
+--- row 2 ---
+  uid            IL_COMPANIES|514552447
+  title          מגדלי טויוטה - ניהול בע~מ
+  body           {"name":"מגדלי טויוטה - ניהול בע~מ","company_number":"514552447","status":"פעילה","source":"data.gov.il","country":"IL"}
+  summary        פעילה
+  language       he
+  record_type    il-company
+  tags           ["osint-search","IL_COMPANIES"]
+  properties     {"service":"IL_COMPANIES","source":"data.gov.il","country":"IL","company_number":"514552447","status":"פעילה","success":true}

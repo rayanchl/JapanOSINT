@@ -127,7 +127,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(authhdr, sizeof authhdr, "Authorization: ApiKey %s", key);
     hdrs = hdrs_key;
   } else {
-    hdrs = hdrs_pub;   /* public collections searchable without a key */
+    /* Aleph closed anonymous API access: /api/2/entities now answers
+     * 401 {"message":"You are not authorized to do this."} without a key, so
+     * this is a gated source, not an empty one. Say so — otherwise it reads as
+     * "searched and found nothing". */
+    fprintf(stderr, "[aleph] gated (no ALEPH_API_KEY)\n");
+    hdrs = hdrs_pub;
   }
 
   char *body = jo_get(ctx, url, hdrs, "aleph");

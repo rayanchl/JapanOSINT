@@ -24,6 +24,7 @@
  * (remote_key="domain:<domain>"), body {domain,source}, deduped case-
  * insensitively within the run. If no domains are found, emits nothing and
  * returns 0 (honest empty). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -33,28 +34,49 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static char *url_encode_dup(const char *in) {
-  size_t n = strlen(in);
-  char *out = malloc(n * 3 + 1);
-  if (!out) return NULL;
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' || c == '~') {
-      out[w++] = (char)c;
-    } else {
-      sprintf(out + w, "%%%02X", c);
-      w += 3;
+/* Next <td ...> cell at or after *pos: copy its text into out, advance *pos
+ * past the closing </td>. Returns 0 when no further cell exists in this row. */
+static int next_cell(char **pos, const char *row_end, char *out, size_t cap) {
+  char *td = strstr(*pos, "<td");
+  if (!td || (row_end && td >= row_end)) return 0;
+  char *gt = strchr(td, '>');                    /* skip the attribute list */
+  if (!gt) return 0;
+  char *s = gt + 1;
+  char *e = strstr(s, "</td>");
+  if (!e) return 0;
+  size_t o = 0;
+  for (char *c = s; c < e && o + 1 < cap; c++) {
+    if (*c == '<') {                             /* drop any nested markup */
+      char *ct = strchr(c, '>');
+      if (!ct || ct >= e) break;
+      c = ct; continue;
     }
+    if ((unsigned char)*c <= ' ' && o == 0) continue;   /* left-trim */
+    out[o++] = *c;
   }
-  out[w] = 0;
-  return out;
+  while (o && (unsigned char)out[o - 1] <= ' ') o--;    /* right-trim */
+  out[o] = '\0';
+  *pos = e + 5;
+  return 1;
 }
 
-/* ViewDNS: scrape <td>…domain…</td> from each <tr> inside the first <table> */
+/* ViewDNS reverse-whois result table.
+ *
+ * AUDIT NOTE (slice a3, 2026-07-31): this is the ONLY key-free path of
+ * HISTORICAL_WHOIS, and it had silently stopped matching. The old scraper
+ * looked for the literal strings "<tr>" and "<td>"; ViewDNS has since moved to
+ * Tailwind markup where every cell is
+ *   <td class="px-6 py-4 whitespace-nowrap …">example.com</td>
+ * so strstr(pos,"<td>") never hit and the source reported an honest-looking
+ * empty on every lookup. Verified against the live page today: the result
+ * table carries 125 rows for q=github.com. Cells are matched on "<td" plus the
+ * attribute list now.
+ *
+ * The table has THREE columns — domain, registration date, registrar — and the
+ * old code carried only the first. All three are kept now; the registration
+ * date is what makes the row a *historical* whois result at all. */
 static void query_viewdns_reverse(http_client *http, const char *query, cJSON *combined) {
-  char *enc = url_encode_dup(query);
+  char *enc = jo_urlencode(query);
   if (!enc) return;
   char url[512];
   snprintf(url, sizeof url, "https://viewdns.info/reversewhois/?q=%s", enc);
@@ -64,31 +86,36 @@ static void query_viewdns_reverse(http_client *http, const char *query, cJSON *c
   if (!body) return;
 
   char *table_start = strstr(body, "<table");
+  int found = 0;
   if (table_start) {
     char *pos = table_start;
-    while ((pos = strstr(pos, "<tr>")) != NULL) {
-      char *td = strstr(pos, "<td>");
-      if (td && td < pos + 500) {
-        td += 4;
-        char *td_end = strstr(td, "</td>");
-        if (td_end) {
-          size_t len = (size_t)(td_end - td);
-          if (len > 0 && len < 256) {
-            char domain[256];
-            memcpy(domain, td, len);
-            domain[len] = '\0';
-            if (strchr(domain, '.') && !strchr(domain, '<')) {
-              cJSON *item = cJSON_CreateObject();
-              cJSON_AddStringToObject(item, "domain", domain);
-              cJSON_AddStringToObject(item, "source", "viewdns");
-              cJSON_AddItemToArray(combined, item);
-            }
-          }
-        }
-      }
+    while ((pos = strstr(pos, "<tr")) != NULL) {
+      char *row_end = strstr(pos, "</tr>");
+      pos = strchr(pos, '>');
+      if (!pos) break;
       pos++;
+
+      char domain[256] = {0}, regdate[128] = {0}, registrar[256] = {0};
+      char *cur = pos;
+      if (!next_cell(&cur, row_end, domain, sizeof domain)) { pos = row_end ? row_end + 5 : pos; continue; }
+      next_cell(&cur, row_end, regdate, sizeof regdate);
+      next_cell(&cur, row_end, registrar, sizeof registrar);
+
+      /* header row and any junk cell are rejected by requiring a dotted label */
+      if (domain[0] && strchr(domain, '.') && !strchr(domain, ' ')) {
+        cJSON *item = cJSON_CreateObject();
+        cJSON_AddStringToObject(item, "domain", domain);
+        if (regdate[0])   cJSON_AddStringToObject(item, "registered", regdate);
+        if (registrar[0]) cJSON_AddStringToObject(item, "registrar", registrar);
+        cJSON_AddStringToObject(item, "source", "viewdns");
+        cJSON_AddItemToArray(combined, item);
+        found++;
+      }
+      pos = row_end ? row_end + 5 : cur;
     }
   }
+  if (!found)
+    fprintf(stderr, "[HISTORICAL_WHOIS] viewdns: no result rows parsed from %s\n", url);
   free(body);
 }
 
@@ -151,7 +178,7 @@ static void query_securitytrails_reverse(http_client *http, const char *query,
     ? "/v1/domains/list?include_ips=false&whois_email=%s"
     : "/v1/domains/list?include_ips=false&whois_organization=%s";
 
-  char *enc = url_encode_dup(query);
+  char *enc = jo_urlencode(query);
   if (!enc) return;
   char tmpl[512];
   snprintf(tmpl, sizeof tmpl, "https://api.securitytrails.com%s", endpoint);
@@ -181,28 +208,42 @@ static void query_securitytrails_reverse(http_client *http, const char *query,
   }
 }
 
-/* Emit ONE intel_item for a single associated domain. Returns 1 if emitted. */
-static int emit_domain(intel_sink *sink, const char *domain, const char *source) {
+/* Emit ONE intel_item for a single associated domain. Returns 1 if emitted.
+ * `registered` / `registrar` come from the ViewDNS result table and are NULL
+ * for the key-gated providers, which do not publish them. */
+static int emit_domain(intel_sink *sink, const char *domain, const char *source,
+                       const char *registered, const char *registrar) {
   cJSON *data = cJSON_CreateObject();
   cJSON_AddStringToObject(data, "domain", domain);
+  if (registered) cJSON_AddStringToObject(data, "registered", registered);
+  if (registrar)  cJSON_AddStringToObject(data, "registrar", registrar);
   cJSON_AddStringToObject(data, "source", source ? source : "viewdns");
   char *bj = cJSON_PrintUnformatted(data);
 
   cJSON *props = cJSON_CreateObject();
   cJSON_AddStringToObject(props, "service", "HISTORICAL_WHOIS");
   cJSON_AddStringToObject(props, "source", source ? source : "viewdns");
+  if (registered) cJSON_AddStringToObject(props, "registered", registered);
+  if (registrar)  cJSON_AddStringToObject(props, "registrar", registrar);
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddNumberToObject(props, "confidence", 80);
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[320];
   snprintf(rk, sizeof rk, "domain:%s", domain);
+  char summ[320];
+  if (registrar && *registrar)
+    snprintf(summ, sizeof summ, "%s — %s", source ? source : "viewdns", registrar);
+  else
+    snprintf(summ, sizeof summ, "%s", source ? source : "viewdns");
 
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = domain;
   it.body            = bj;
-  it.summary         = source ? source : "viewdns";
+  it.summary         = summ;
+  it.link            = NULL;
+  it.published_at    = (registered && *registered) ? registered : NULL;
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"HISTORICAL_WHOIS\"]";
@@ -240,13 +281,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (strcasecmp(seen[i], d->valuestring) == 0) { found = 1; break; }
     if (found || seen_count >= 1000) continue;
     seen[seen_count++] = d->valuestring;
-    cJSON *src = cJSON_GetObjectItem(item, "source");
+    cJSON *src  = cJSON_GetObjectItem(item, "source");
+    cJSON *reg  = cJSON_GetObjectItem(item, "registered");
+    cJSON *rar  = cJSON_GetObjectItem(item, "registrar");
     emitted += emit_domain(sink, d->valuestring,
-                           (src && src->valuestring) ? src->valuestring : NULL);
+                           (src && src->valuestring) ? src->valuestring : NULL,
+                           (reg && reg->valuestring) ? reg->valuestring : NULL,
+                           (rar && rar->valuestring) ? rar->valuestring : NULL);
   }
   cJSON_Delete(combined);
 
-  (void)emitted;
+  fprintf(stderr, "[HISTORICAL_WHOIS] emitted %d domain(s) for %s\n",
+          emitted, entity);
   return 0;                  /* no domains → honest empty, not an error */
 }
 

@@ -85,15 +85,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     long count = 0; int have = 0;
     if (html) { have = parse_count(html, &count); free(html); }
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(PREFS[i].lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(PREFS[i].lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(PREFS[i].lon, PREFS[i].lat);
 
     cJSON *p = cJSON_CreateObject();   /* EXACT JS key order */
     char id[64]; snprintf(id, sizeof id, "SUUMO_%s", PREFS[i].slug);
@@ -104,6 +96,26 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       have ? cJSON_CreateNumber((double)count) : cJSON_CreateNull());
     cJSON_AddStringToObject(p, "source",
       have ? "suumo_live" : "suumo_unavailable");
+    /* All 47 rows landed title-less: geojson_emit_features picks title from
+     * title/name/name_ja/label and this feature set had none, so the whole
+     * source was unreadable in every UI. Build one from the real fields, and
+     * say plainly when the count is missing rather than showing a bare pin. */
+    char title[192];
+    if (have)
+      snprintf(title, sizeof title, "%s — %ld rental listings (SUUMO)",
+               PREFS[i].ja, count);
+    else
+      snprintf(title, sizeof title, "%s — SUUMO listing count unavailable",
+               PREFS[i].ja);
+    cJSON_AddStringToObject(p, "title", title);
+    cJSON_AddStringToObject(p, "name_ja", PREFS[i].ja);
+    cJSON_AddStringToObject(p, "summary",
+      have ? "SUUMO 賃貸物件数 (prefecture total)"
+           : "SUUMO 賃貸物件数 — count not parseable from the prefecture page");
+    char link[128];
+    snprintf(link, sizeof link, "https://suumo.jp/chintai/%s/", PREFS[i].slug);
+    cJSON_AddStringToObject(p, "link", link);
+    cJSON_AddStringToObject(p, "language", "ja");
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);
   }

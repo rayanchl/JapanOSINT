@@ -201,12 +201,19 @@ static FILE *wc_get(wcache *c, const char *path) {
     if (c->e[i].f && strcmp(c->e[i].path, path) == 0) {
       c->e[i].lru = ++c->clock; return c->e[i].f;
     }
-  int slot;
-  if (c->n < WC_MAX) { slot = c->n; }
-  else {
+  int slot = -1;
+  /* A slot vacated by an earlier FAILED fopen is reused before anything is
+   * evicted. Without this the table stayed full of one empty entry whose lru
+   * was still the smallest, so the next call re-picked that same slot and ran
+   * fclose(NULL) on it — deterministic the moment a disk fills mid-ingest.
+   * (Bumping lru on the vacated slot would hide the crash but leak the free
+   * slot; reusing it is the actual repair.) */
+  for (int i = 0; i < c->n; i++) if (!c->e[i].f) { slot = i; break; }
+  if (slot < 0 && c->n < WC_MAX) slot = c->n;
+  if (slot < 0) {
     slot = 0;
     for (int i = 1; i < c->n; i++) if (c->e[i].lru < c->e[slot].lru) slot = i;
-    fclose(c->e[slot].f);
+    fclose(c->e[slot].f);                 /* non-NULL: every slot is occupied */
     c->e[slot].f = NULL;                  /* vacate before we risk failing */
     c->e[slot].path[0] = 0;
   }

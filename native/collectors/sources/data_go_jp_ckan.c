@@ -3,6 +3,7 @@
  * data.go.jp CKAN action/package_search?rows=50 → one intel row/package.
  * uid = data-go-jp-ckan|<p.id||p.name> (intelUid first non-empty). The
  * curated _meta/portal-summary envelope is dropped (live rows only). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -11,13 +12,6 @@
 #include <string.h>
 
 #define API_URL "https://www.data.go.jp/data/api/action/package_search?rows=50"
-
-/* JS truthy string: non-NULL cJSON string with length>0. */
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
-           ? v->valuestring : NULL;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *data = feed_get_json(ctx->http, API_URL, 10000);
@@ -29,15 +23,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (cJSON_IsArray(results)) {
     cJSON *p;
     cJSON_ArrayForEach(p, results) {
-      const char *pid   = sv(p, "id");
-      const char *pname = sv(p, "name");
-      const char *ptitle= sv(p, "title");
-      const char *pnotes= sv(p, "notes");
+      const char *pid   = jo_sv(p, "id");
+      const char *pname = jo_sv(p, "name");
+      const char *ptitle= jo_sv(p, "title");
+      const char *pnotes= jo_sv(p, "notes");
       const cJSON *org  = cJSON_GetObjectItem(p, "organization");
-      const char *orgt  = (org && cJSON_IsObject(org)) ? sv(org, "title") : NULL;
-      const char *plic  = sv(p, "license_id");
-      const char *pmod  = sv(p, "metadata_modified");
-      const char *pcre  = sv(p, "metadata_created");
+      const char *orgt  = (org && cJSON_IsObject(org)) ? jo_sv(org, "title") : NULL;
+      const char *plic  = jo_sv(p, "license_id");
+      const char *pmod  = jo_sv(p, "metadata_modified");
+      const char *pcre  = jo_sv(p, "metadata_created");
 
       /* uid: intelUid(SOURCE_ID, p.id, p.name) → first non-empty. */
       const char *rk = pid ? pid : pname;
@@ -123,7 +117,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(data);
   fprintf(stderr, "[data-go-jp-ckan] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def data_go_jp_ckan_def = {

@@ -2,6 +2,7 @@
  * server/src/collectors/osmTransportTrains.js
  * (createOsmTransportCollector, geometry:'point' → fetchOverpassTiled).
  * Always-on nationwide mainline train stations. No SEED / _meta envelope. */
+#include "../../lib/geojson.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include "../../lib/linecolor.h"
@@ -20,15 +21,7 @@ static void body(const char *bbox, char *o, size_t n, void *ud) {
 /* properties built in EXACT JS key order. */
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)i; (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON *idv = cJSON_GetObjectItem(el, "id");

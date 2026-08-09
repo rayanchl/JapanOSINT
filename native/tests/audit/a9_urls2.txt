@@ -1,0 +1,15 @@
+cisa-advisories	https://www.cisa.gov/cybersecurity-advisories/all.xml
+cisa-news	https://www.cisa.gov/news.xml
+cisa-ics	https://www.cisa.gov/cybersecurity-advisories/ics-advisories.xml
+sophos-news	https://news.sophos.com/en-us/feed/
+global-witness	https://www.globalwitness.org/en/rss/
+rsf	https://rsf.org/en/rss.xml
+transparency-intl	https://www.transparency.org/en/rss
+lawfare	https://www.lawfaremedia.org/feed/rss.xml
+maritime-bulletin	https://maritimebulletin.net/feed/
+cert-es	https://www.ccn-cert.cni.es/component/obrss/rss-ultimas-vulnerabilidades.feed
+cert-it	https://www.csirt.gov.it/rss
+cert-lt	https://www.nksc.lt/rss.xml
+acsc-au	https://www.cyber.gov.au/rss/advisories
+cert-nz-new	https://www.ncsc.govt.nz/individuals/rss/
+csa-sg-new	https://www.csa.gov.sg/rss/alerts-advisories/

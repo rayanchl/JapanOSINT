@@ -1,0 +1,29 @@
+=== npa-cyber-threat-obs
+exit: 0
+sched: rc=0 records=2 561ms
+--- stderr ---
+[npa-cyber-threat-obs] graphs=4 emitted 2
+[sched] npa-cyber-threat-obs run rc=0 records=2 561ms
+--- persisted: 2 rows, 1 with lat/lon, 1 with geometry ---
+record_type: (null)=1, npa-cyber-threat-obs=1
+sub_source_id: (null)=2
+
+--- row 1 ---
+  uid            npa-cyber-threat-obs|CYBER_OBS_NPA
+  title          NPA Cyber Threat Observation
+  summary        当サイトではJavaScriptを使用しております。ご利用のブラウザ環境によっては、機能が一部限定される場合があります。 ブラウザの設定でJavaScriptを有効にしていただくことにより、より快適にご利用いただけます。
+  lat            35.6749
+  lon            139.7531
+  geometry       {"type":"Point","coordinates":[139.7531,35.6749]}
+  record_type    npa-cyber-threat-obs
+  properties     {"id":"CYBER_OBS_NPA","name":"NPA Cyber Threat Observation","summary":"当サイトではJavaScriptを使用しております。ご利用のブラウザ環境によっては、機能が一部限定される場合があります。 ブラウザの設定でJavaScriptを有効にしていただくことにより、より快適にご利用いただけます。","dashboard_url":"https://www.npa.go.jp/bureau/cyber/koho/observation.html","graph_count":4,"source":"npa-cyber-threat-obs"}
+
+--- row 2 ---
+  uid            npa-cyber-threat-obs|dashboard
+  title          NPA Cyber Threat Observation Dashboard
+  summary        当サイトではJavaScriptを使用しております。ご利用のブラウザ環境によっては、機能が一部限定される場合があります。 ブラウザの設定でJavaScriptを有効にしていただくことにより、より快適にご利用いただけます。
+  link           https://www.npa.go.jp/bureau/cyber/koho/observation.html
+  language       ja
+  published_at   2026-07-31T18:20:41.000Z
+  tags           ["cyber","observation","npa","live"]
+  properties     {"dashboard_url":"https://www.npa.go.jp/bureau/cyber/koho/observation.html","graph_urls":["https://www.npa.go.jp/cyberpolice/detect/obs/ids.png","https://www.npa.go.jp/cyberpolice/detect/obs/dport.png","https://www.npa.go.jp/cyberpolice/detect/obs/country.png","https://www.npa.go.jp/cyberpolice/detect/obs/jport.png"]}

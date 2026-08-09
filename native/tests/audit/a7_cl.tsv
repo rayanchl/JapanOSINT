@@ -1,0 +1,6 @@
+cl-v3-search	https://www.courtlistener.com/api/rest/v3/search/?q=Toyota&type=o
+cl-v4-search	https://www.courtlistener.com/api/rest/v4/search/?q=Toyota&type=o
+cl-v3-dockets	https://www.courtlistener.com/api/rest/v3/dockets/?case_name__icontains=Toyota
+cl-v4-dockets	https://www.courtlistener.com/api/rest/v4/dockets/?case_name__icontains=Toyota
+cl-v3-recap	https://www.courtlistener.com/api/rest/v3/recap-query/?q=Toyota
+cl-v4-recap	https://www.courtlistener.com/api/rest/v4/search/?q=Toyota&type=r

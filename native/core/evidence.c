@@ -49,7 +49,19 @@ static long long       g_bytes = -1;         /* -1 = not yet computed       */
 
 /* ── environment ──────────────────────────────────────────────────────────
  * Read once and cached: these sit on the per-fetch hot path and getenv() is
- * not free. The races on lazy init are benign (same value, either order). */
+ * not free.
+ *
+ * Behind a pthread_once, not the `static v = -1; if (v < 0) v = ...` idiom
+ * this used to carry with the note "the races on lazy init are benign (same
+ * value, either order)". They are not benign and ThreadSanitizer prints both
+ * of them: evidence_http_hook() hangs off EVERY http_request(), so with eight
+ * scheduler workers fetching at once these are eight threads writing the same
+ * unsynchronised globals (real reports, core/evidence.c:71 in max_blob and
+ * :76 in ev_disabled). "Same value either order" also assumes the reader sees
+ * the completed store — a reader that sees a torn/stale `v` gets a blob
+ * ceiling of 0 or a disabled flag of -1 (non-zero => "disabled"), i.e.
+ * evidence capture silently switching itself off mid-run, which is exactly
+ * the kind of unexplainable gap a custody trail must not have. */
 
 static const char *root_dir(void) {
   const char *e = getenv("JO_EVIDENCE_DIR");
@@ -61,20 +73,27 @@ static long long env_ll(const char *name, long long dflt, long long lo) {
   long long v = strtoll(e, NULL, 10);
   return v >= lo ? v : dflt;
 }
+
+static long long g_max_bytes, g_max_blob;
+static int       g_ev_disabled;
+static pthread_once_t g_env_once = PTHREAD_ONCE_INIT;
+
+static void ev_env_probe(void) {
+  g_max_bytes   = env_ll("JO_EVIDENCE_MAX_BYTES", EV_DEFAULT_MAX_BYTES, 1024 * 1024);
+  g_max_blob    = env_ll("JO_EVIDENCE_MAX_BLOB_BYTES", EV_DEFAULT_MAX_BLOB, 1024);
+  g_ev_disabled = getenv("JO_NO_EVIDENCE") ? 1 : 0;
+}
 static long long max_bytes(void) {
-  static long long v = -1;
-  if (v < 0) v = env_ll("JO_EVIDENCE_MAX_BYTES", EV_DEFAULT_MAX_BYTES, 1024 * 1024);
-  return v;
+  pthread_once(&g_env_once, ev_env_probe);
+  return g_max_bytes;
 }
 static long long max_blob(void) {
-  static long long v = -1;
-  if (v < 0) v = env_ll("JO_EVIDENCE_MAX_BLOB_BYTES", EV_DEFAULT_MAX_BLOB, 1024);
-  return v;
+  pthread_once(&g_env_once, ev_env_probe);
+  return g_max_blob;
 }
 static int ev_disabled(void) {
-  static int v = -1;
-  if (v < 0) v = getenv("JO_NO_EVIDENCE") ? 1 : 0;
-  return v;
+  pthread_once(&g_env_once, ev_env_probe);
+  return g_ev_disabled;
 }
 
 /* ── small shared helpers (same shapes as alertsapi.c) ────────────────────── */
@@ -951,7 +970,13 @@ char *evidence_gc(db_handle *db) {
 /* ── reaper pod ───────────────────────────────────────────────────────────── */
 
 static pthread_t    g_gc_thread;
-static volatile int g_gc_stop = 0;
+/* _Atomic, not `volatile int`. volatile orders nothing and is not an atomic:
+ * the stopper's store and the reaper's poll are a data race the C memory model
+ * gives no meaning to, and ThreadSanitizer reports it (core/evidence.c:970 vs
+ * :1001). A plain relaxed atomic is the same single instruction on every
+ * target this ships to, and it is the difference between "works today" and
+ * "is defined". Same change in alert_eval.c and alert_deliver.c. */
+static _Atomic int  g_gc_stop = 0;
 static int          g_gc_running = 0;
 
 /* Own connection — see db_attach(): a transaction belongs to a connection, not

@@ -1,0 +1,21 @@
+=== bosai-volcano-cam
+exit: 0
+sched: rc=0 records=1 1594ms
+--- stderr ---
+[bosai-volcano-cam] probe reachable=0
+[sched] bosai-volcano-cam run rc=0 records=1 1594ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            bosai-volcano-cam|portal
+  title          JMA volcano monitoring cameras (火山監視カメラ)
+  body           JMA serves volcano monitoring-camera imagery only via an interactive viewer; no key-free machine-readable camera listing/geo-feed is available, so no camera point features are emitted.
+  summary        Live monitoring-camera imagery for active Japanese volcanoes (JMA)
+  link           https://www.data.jma.go.jp/vois/data/tokyo/volcano.html
+  author         気象庁 Japan Meteorological Agency
+  language       ja
+  published_at   2026-07-31T18:20:00.189Z
+  tags           ["volcano","camera","jma","monitoring","unreachable"]
+  properties     {"operator":"気象庁","reachable":false,"machine_readable":false}

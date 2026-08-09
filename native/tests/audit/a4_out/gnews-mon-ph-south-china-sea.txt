@@ -1,0 +1,45 @@
+=== gnews-mon-ph-south-china-sea
+exit: 0
+sched: rc=0 records=100 735ms
+--- stderr ---
+[rss] gnews-mon-ph-south-china-sea emitted 100
+[sched] gnews-mon-ph-south-china-sea run rc=0 records=100 735ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-ph-south-china-sea|CBMie0FVX3lxTFBBanRxenJoN0pNQngwaXROTUl0VHUtVk9kMm94UjNmNkdNMVRHRTB6UXNBV280dk1NT3NRUTNwa0hqd3g0Ul80X1o0empzZ1RkSUc0bk0tbEJFYmpMNGJoVERNbWpoTXNkX1ZBaWtmY0FuNUVXcjRkTmVNcw
+  title          Beijing’s Next Play for the South China Sea - Foreign Affairs
+  body           <a href="https://news.google.com/rss/articles/CBMie0FVX3lxTFBBanRxenJoN0pNQngwaXROTUl0VHUtVk9kMm94UjNmNkdNMVRHRTB6UXNBV280dk1NT3NRUTNwa0hqd3g0Ul80X1o0empzZ1RkSUc0bk0tbEJFYmpMNGJoVERNbWpoTXNkX1ZBaWtmY0FuNUVXcjRkTmVNcw?oc=5" target="_blank">Beijing’s Next Play for the South China Sea</a>&nbsp;&nbsp;<font color="#6f6f6f">Foreign Affairs</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMie0FVX3lxTFBBanRxenJoN0pNQngwaXROTUl0VHUtVk9kMm94UjNmNkdNMVRHRTB6UXNBV280dk1NT3NRUTNwa0hqd3g0Ul80X1o0empzZ1RkSUc0bk0tbEJFYmpMNGJoVERNbWpoTXNkX1ZBaWtmY0FuNUVXcjRkTmVNcw?oc=5" target="_blank">B
+  link           https://news.google.com/rss/articles/CBMie0FVX3lxTFBBanRxenJoN0pNQngwaXROTUl0VHUtVk9kMm94UjNmNkdNMVRHRTB6UXNBV280dk1NT3NRUTNwa0hqd3g0Ul80X1o0empzZ1RkSUc0bk0tbEJFYmpMNGJoVERNbWpoTXNkX1ZBaWtmY0FuNUVXcjRkTmVNcw?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 04:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ph"]
+  properties     {"guid":"CBMie0FVX3lxTFBBanRxenJoN0pNQngwaXROTUl0VHUtVk9kMm94UjNmNkdNMVRHRTB6UXNBV280dk1NT3NRUTNwa0hqd3g0Ul80X1o0empzZ1RkSUc0bk0tbEJFYmpMNGJoVERNbWpoTXNkX1ZBaWtmY0FuNUVXcjRkTmVNcw"}
+
+--- row 2 ---
+  uid            gnews-mon-ph-south-china-sea|CBMipgFBVV95cUxPZHVSaHlWY1c2Q3pkQmd2dWhSeFNEMG8tVHMwMjVXRlpONDIzVEtCUHpXT3JMMFBCTWNyLUZOMm5vZkE0OThKZzBWaEZTQTdRdmdvUHRsZUNvb0xwX3BMY2RZU0lNZEJHNVFLdWlpenM3NE14ckJPUlRyLXVBamNwQVRDcTk0VC1RX2xXcWo1S2E4NmNXN2RoTGhPdG1vNUExd2g1MWJ3
+  title          U.S. to Fund Philippine Coast Guard Base Expansion Near South China Sea - USNI News
+  body           <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPZHVSaHlWY1c2Q3pkQmd2dWhSeFNEMG8tVHMwMjVXRlpONDIzVEtCUHpXT3JMMFBCTWNyLUZOMm5vZkE0OThKZzBWaEZTQTdRdmdvUHRsZUNvb0xwX3BMY2RZU0lNZEJHNVFLdWlpenM3NE14ckJPUlRyLXVBamNwQVRDcTk0VC1RX2xXcWo1S2E4NmNXN2RoTGhPdG1vNUExd2g1MWJ3?oc=5" target="_blank">U.S. to Fund Philippine Coast Guard Base Expansion Near South China Sea</a>&nbsp;&nbsp;<font color="#6f6f6f">USNI News</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPZHVSaHlWY1c2Q3pkQmd2dWhSeFNEMG8tVHMwMjVXRlpONDIzVEtCUHpXT3JMMFBCTWNyLUZOMm5vZkE0OThKZzBWaEZTQTdRdmdvUHRsZUNvb0xwX3BMY2RZU0lNZEJHNVFLdWlpenM3NE14ckJPUlRyLXVBamNwQVRDcTk0VC1RX2xXcW
+  link           https://news.google.com/rss/articles/CBMipgFBVV95cUxPZHVSaHlWY1c2Q3pkQmd2dWhSeFNEMG8tVHMwMjVXRlpONDIzVEtCUHpXT3JMMFBCTWNyLUZOMm5vZkE0OThKZzBWaEZTQTdRdmdvUHRsZUNvb0xwX3BMY2RZU0lNZEJHNVFLdWlpenM3NE14ckJPUlRyLXVBamNwQVRDcTk0VC1RX2xXcWo1S2E4NmNXN2RoTGhPdG1vNUExd2g1MWJ3?oc=5
+  language       en
+  published_at   Tue, 28 Jul 2026 18:28:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ph"]
+  properties     {"guid":"CBMipgFBVV95cUxPZHVSaHlWY1c2Q3pkQmd2dWhSeFNEMG8tVHMwMjVXRlpONDIzVEtCUHpXT3JMMFBCTWNyLUZOMm5vZkE0OThKZzBWaEZTQTdRdmdvUHRsZUNvb0xwX3BMY2RZU0lNZEJHNVFLdWlpenM3NE14ckJPUlRyLXVBamNwQVRDcTk0VC1RX2xXcWo1S2E4NmNXN2RoTGhPdG1vNUExd2g1MWJ3"}
+
+--- row 3 ---
+  uid            gnews-mon-ph-south-china-sea|CBMixwFBVV95cUxNeDhvYU9ENGxGYndqeFh0TzIwOVJYVThPcXhZaUtYank1OVIwUmt2YVltYTl5eFp2Z3FEYWo1X0hna3BQazZkUWtwclF6djZ3UG5scnVPSkV0RzlHNllycEpIWEFrZ2lHbzBiZFdzM0NiWU0tY0RQSFlSOFdfbmo1NEE4T210QVMyWGhGSnNsUUJoNERPWThOMDVfSTdvTXlyYWJDTUdoa3ROZjJDRGpJelBUb0Z5Q01PQVk1QTVzeG9XR1Z1TmRB0gHHAUFVX3lxTE44Rk40dVVDWF9QaUZRVmhQd3UzaHYzdDZmZ2prTzZxbzNmUk9qalRlTU9LV3pVaFFybXhmRGtQMW9rUTA5UjFjN0w5QTBQd05uTWZ4YURBWkZGRnhQWDQtTmdEbXhSM0VER25DcGpYcmVZV0w4Mk9PUzNmM0xFNmdfSFJUODdaQUQ0Znd1UEpHc1hwNDI2alF0d1
+  title          Beijing accuses Manila of ‘flagrantly infringing’ on sovereignty in seabed claim - South China Morning Post
+  body           <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxNeDhvYU9ENGxGYndqeFh0TzIwOVJYVThPcXhZaUtYank1OVIwUmt2YVltYTl5eFp2Z3FEYWo1X0hna3BQazZkUWtwclF6djZ3UG5scnVPSkV0RzlHNllycEpIWEFrZ2lHbzBiZFdzM0NiWU0tY0RQSFlSOFdfbmo1NEE4T210QVMyWGhGSnNsUUJoNERPWThOMDVfSTdvTXlyYWJDTUdoa3ROZjJDRGpJelBUb0Z5Q01PQVk1QTVzeG9XR1Z1TmRB0gHHAUFVX3lxTE44Rk40dVVDWF9QaUZRVmhQd3UzaHYzdDZmZ2prTzZxbzNmUk9qalRlTU9LV3pVaFFybXhmRGtQMW9rUTA5UjFjN0w5QTBQd05uTWZ4YURBWkZGRnhQWDQtTmdEbXhSM0VER25DcGpYcmVZV0w4Mk9PUzNmM0xFNmdfSFJUODdaQUQ0Znd1UEpHc1hwNDI2alF0d1htYTVaVGx3QlpHakY4dE1MU01yYUtCRFQxNXN4Y0h2OW9MYzZMZFFfWjlYUFk?oc=5" target="_blank">Beijing accuses Manila of ‘flagrantly infringing’ on sovereignty in seabed claim</a>&nbsp;&nbsp;<font color="#6f6f6f">South China Morning Post</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxNeDhvYU9ENGxGYndqeFh0TzIwOVJYVThPcXhZaUtYank1OVIwUmt2YVltYTl5eFp2Z3FEYWo1X0hna3BQazZkUWtwclF6djZ3UG5scnVPSkV0RzlHNllycEpIWEFrZ2lHbzBiZFdzM0NiWU0tY0RQSFlSOFdfbmo1NEE4T210QVMyWGhGSn
+  link           https://news.google.com/rss/articles/CBMixwFBVV95cUxNeDhvYU9ENGxGYndqeFh0TzIwOVJYVThPcXhZaUtYank1OVIwUmt2YVltYTl5eFp2Z3FEYWo1X0hna3BQazZkUWtwclF6djZ3UG5scnVPSkV0RzlHNllycEpIWEFrZ2lHbzBiZFdzM0NiWU0tY0RQSFlSOFdfbmo1NEE4T210QVMyWGhGSnNsUUJoNERPWThOMDVfSTdvTXlyYWJDTUdoa3ROZjJDRGpJelBUb0Z5Q01PQVk1QTVzeG9XR1Z1TmRB0gHHAUFVX3lxTE44Rk40dVVDWF9QaUZRVmhQd3UzaHYzdDZmZ2prTzZxbzNmUk9qalRlTU9LV3pVaFFybXhmRGtQMW9rUTA5UjFjN0w5QTBQd05uTWZ4YURBWkZGRnhQWDQtTmdEbXhSM0VER25DcGpYcmVZV0w4Mk9PUzNmM0xFNmdfSFJUODdaQUQ0Znd1UEpHc1hwNDI2alF0d1htYTVaVGx3QlpHakY4dE1MU01yYUtCRFQxNXN4Y0h2OW9MYzZMZFFfWjlYUFk?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 10:28:06 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ph"]
+  properties     {"guid":"CBMixwFBVV95cUxNeDhvYU9ENGxGYndqeFh0TzIwOVJYVThPcXhZaUtYank1OVIwUmt2YVltYTl5eFp2Z3FEYWo1X0hna3BQazZkUWtwclF6djZ3UG5scnVPSkV0RzlHNllycEpIWEFrZ2lHbzBiZFdzM0NiWU0tY0RQSFlSOFdfbmo1NEE4T210QVMyWGhGSnNsUUJoNERPWThOMDVfSTdvTXlyYWJDTUdoa3ROZjJDRGpJelBUb0Z5Q01PQVk1QTVzeG9XR1Z1TmRB0gHHAUFVX3lxTE44Rk40dVVDWF9QaUZRVmhQd3UzaHYzdDZmZ2prTzZxbzNmUk9qalRlTU9LV3pVaFFybXhmRGtQMW9rUTA5UjFjN0w5QTBQd05uTWZ4YURBWkZGRnhQWDQtTmdEbXhSM0VER25DcGpYcmVZV0w4Mk9PUzNmM0xFNmdfSFJUODdaQUQ0Znd1UEpHc1hwNDI2alF0d1htYTVaVGx3QlpHakY4dE

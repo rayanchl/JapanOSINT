@@ -50,7 +50,10 @@ static cJSON *cl_opinions(http_client *h, const char *q) {
   char enc[768]; encode_query(q, enc, sizeof enc);
   char url[900];
   snprintf(url, sizeof url,
-    "https://www.courtlistener.com/api/rest/v3/search/?q=%s&type=o", enc);
+    /* REST v3 was retired — it now answers 403 for search and 401 for the
+     * rest, so this collector emitted nothing on every run. v4 search is
+     * still keyless and is what us_world.c's COURTLISTENER already uses. */
+    "https://www.courtlistener.com/api/rest/v4/search/?q=%s&type=o", enc);
   cJSON *j = http_json(h, url);
   if (!j) return NULL;
   cJSON *res = cJSON_GetObjectItem(j, "results");
@@ -111,7 +114,10 @@ static cJSON *cl_dockets(http_client *h, const char *q) {
   char enc[768]; encode_query(q, enc, sizeof enc);
   char url[900];
   snprintf(url, sizeof url,
-    "https://www.courtlistener.com/api/rest/v3/dockets/?q=%s", enc);
+    /* /dockets/ requires an auth token on both v3 and v4 (401 keyless), so
+     * this leg stays empty without COURTLISTENER_API_KEY. Docket-shaped hits
+     * are still reachable keylessly through v4 search type=r (see recap). */
+    "https://www.courtlistener.com/api/rest/v4/dockets/?q=%s", enc);
   cJSON *j = http_json(h, url);
   if (!j) return NULL;
   cJSON *res = cJSON_GetObjectItem(j, "results");
@@ -156,7 +162,8 @@ static cJSON *cl_recap(http_client *h, const char *q) {
   char enc[768]; encode_query(q, enc, sizeof enc);
   char url[900];
   snprintf(url, sizeof url,
-    "https://www.courtlistener.com/api/rest/v3/recap/?q=%s", enc);
+    /* v3 /recap/ is 401; the keyless equivalent is v4 search with type=r. */
+    "https://www.courtlistener.com/api/rest/v4/search/?q=%s&type=r", enc);
   cJSON *j = http_json(h, url);
   if (!j) return NULL;
   cJSON *res = cJSON_GetObjectItem(j, "results");

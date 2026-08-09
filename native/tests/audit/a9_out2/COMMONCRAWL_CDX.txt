@@ -1,0 +1,43 @@
+=== COMMONCRAWL_CDX  entity=github.com
+exit: 0
+sched: rc=0 records=50 14774ms
+--- stderr ---
+[COMMONCRAWL_CDX] emitted 50
+[sched] COMMONCRAWL_CDX run rc=0 records=50 14774ms
+[detect] anomaly opened: COMMONCRAWL_CDX verdict=duration_outlier — duration 14774ms exceeds 10000ms threshold
+--- persisted: 48 rows, 0 with lat/lon, 0 with geometry ---
+record_type: commoncrawl-record=48
+sub_source_id: (null)=48
+
+--- row 1 ---
+  uid            COMMONCRAWL_CDX|20241202143951|3I42H3S6NNFQ2MSVX7XZKYAYSCX5QBYJ
+  title          http://github.com/
+  summary        unk
+  link           http://github.com/
+  language       en
+  published_at   20241202143951
+  record_type    commoncrawl-record
+  tags           ["osint-search","COMMONCRAWL_CDX"]
+  properties     {"service":"COMMONCRAWL_CDX","query":"github.com","mime":"unk","status":"301","timestamp":"20241202143951","success":true}
+
+--- row 2 ---
+  uid            COMMONCRAWL_CDX|20241202143951|3DLWHBPEYLZMC4LLUQJAAFNZPSMXMUDF
+  title          https://github.com/
+  summary        text/html
+  link           https://github.com/
+  language       en
+  published_at   20241202143951
+  record_type    commoncrawl-record
+  tags           ["osint-search","COMMONCRAWL_CDX"]
+  properties     {"service":"COMMONCRAWL_CDX","query":"github.com","mime":"text/html","status":"200","timestamp":"20241202143951","success":true}
+
+--- row 3 ---
+  uid            COMMONCRAWL_CDX|20241202171440|TS642DPAFTTEYBDIGVHXPP3JYM5J5UDF
+  title          https://github.com
+  summary        text/html
+  link           https://github.com
+  language       en
+  published_at   20241202171440
+  record_type    commoncrawl-record
+  tags           ["osint-search","COMMONCRAWL_CDX"]
+  properties     {"service":"COMMONCRAWL_CDX","query":"github.com","mime":"text/html","status":"200","timestamp":"20241202171440","success":true}

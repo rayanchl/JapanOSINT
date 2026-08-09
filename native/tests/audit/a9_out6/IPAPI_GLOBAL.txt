@@ -1,0 +1,21 @@
+=== IPAPI_GLOBAL  entity=8.8.8.8
+exit: 0
+sched: rc=0 records=1 44ms
+--- stderr ---
+[IPAPI_GLOBAL] emitted 1
+[sched] IPAPI_GLOBAL run rc=0 records=1 44ms
+--- persisted: 1 rows, 1 with lat/lon, 0 with geometry ---
+record_type: infra-ip-geo=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            IPAPI_GLOBAL|ip-api|8.8.8.8
+  title          8.8.8.8
+  body           {"ip":"8.8.8.8","country":"United States","region":"Virginia","city":"Ashburn","isp":"Google LLC","org":"Google Public DNS","as":"AS15169 Google LLC","asname":"GOOGLE","reverse_dns":"dns.google","source":"ip-api.com"}
+  summary        Ashburn, United States (AS15169 Google LLC GOOGLE
+  language       en
+  lat            39.03
+  lon            -77.5
+  record_type    infra-ip-geo
+  tags           ["osint-search","infrastructure"]
+  properties     {"ip":"8.8.8.8","as":"AS15169 Google LLC","country":"United States","service":"IPAPI_GLOBAL","success":true}

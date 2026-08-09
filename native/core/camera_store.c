@@ -230,6 +230,12 @@ int camera_upsert(db_handle *db, intel_sink *sink, cJSON *feature,
   intel_item it = {0};
   it.uid = master_uid;
   it.title = m_name;
+  /* The camera page URL is right here (and goes into properties.url below), but
+   * it was never put on the item — so every camera row in the product was a
+   * camera you could not open. published_at is first-seen, not now: last-seen
+   * would re-date the row on every poll and churn the timeline. */
+  it.link = m_url;
+  it.published_at = m_first;
   it.has_geo = 1;
   it.lat = lat;
   it.lon = lon;

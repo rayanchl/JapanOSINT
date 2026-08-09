@@ -9,15 +9,7 @@
 #define COLL     "osint"
 #define INTERVAL 3600
 
-#define RSS(SYM, ID, NAME, NAMEJA, CAT, URL, LANG, TAGS, DESC)               \
-  static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
-    int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
-  static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
-    .update_interval_sec = INTERVAL, .run = run_##SYM,                       \
-    .category = CAT, .type = "web_request", .url = URL,                      \
-    .description = DESC, .layer = NULL, .free_tier = 1 };                    \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 RSS(gc_bellingcat, "bellingcat", "Bellingcat",
   "ベリングキャット", "news",
@@ -51,7 +43,9 @@ RSS(gc_icij, "icij", "ICIJ",
 
 RSS(gc_cfr, "cfr", "Council on Foreign Relations",
   "外交問題評議会 (CFR)", "news",
-  "https://www.cfr.org/rss.xml", "en",
+  /* www.cfr.org/rss.xml has been 404 since the site rebuild (it now returns the
+   * HTML 404 page, 269 KB of it); the live site feed is /feed. */
+  "https://www.cfr.org/feed", "en",
   "[\"osint\",\"geopolitics\",\"analysis\"]",
   "Council on Foreign Relations — geopolitical analysis and expert briefs");
 
@@ -105,7 +99,8 @@ RSS(gc_meduza, "meduza-en", "Meduza (English)",
 
 RSS(gc_kyivindep, "kyiv-independent", "The Kyiv Independent",
   "キーウ・インディペンデント", "news",
-  "https://kyivindependent.com/feed/", "en",
+  /* /feed/ 404s; the Ghost feed lives at /feed/rss/. */
+  "https://kyivindependent.com/feed/rss/", "en",
   "[\"osint\",\"ukraine\",\"conflict\"]",
   "The Kyiv Independent — Ukraine war and regional reporting");
 
@@ -117,7 +112,10 @@ RSS(gc_moscowtimes, "moscow-times", "The Moscow Times",
 
 RSS(gc_rferl, "rferl", "Radio Free Europe / Radio Liberty",
   "RFE/RL", "news",
-  "https://www.rferl.org/api/zrqiteuuir", "en",
+  /* the old api/zrqiteuuir feed still 200s but its channel has been empty for
+   * some time; api/zbqiml-vomx-tpeqkmy is the English "News" feed off
+   * rferl.org/rssfeeds and carries 20 items. */
+  "https://www.rferl.org/api/zbqiml-vomx-tpeqkmy", "en",
   "[\"osint\",\"eurasia\",\"news\"]",
   "RFE/RL — reporting across Eastern Europe, Caucasus and Central Asia");
 
@@ -135,6 +133,8 @@ RSS(gc_38north, "38north", "38 North (Korea)",
 
 RSS(gc_maritime_exec, "maritime-executive", "The Maritime Executive",
   "The Maritime Executive", "news",
-  "https://www.maritime-executive.com/rss", "en",
+  /* /rss 301s to a 404; the site's declared feed is the Atom /articles.rss on
+   * the apex host (www 301s again). */
+  "https://maritime-executive.com/articles.rss", "en",
   "[\"osint\",\"maritime\",\"shipping\"]",
   "The Maritime Executive — shipping, ports, and maritime-security incidents");

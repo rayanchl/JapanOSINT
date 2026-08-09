@@ -13,10 +13,13 @@
 #include <strings.h>
 #include <time.h>
 #include <ctype.h>
+#include <stdio.h>
+#include "ratelimit.h"
 
 static const char *g_secret = NULL;   /* SUPABASE_JWT_SECRET */
 static const char *g_url    = NULL;   /* SUPABASE_URL (JWKS present) */
 static const char *g_aud    = "authenticated"; /* Node AUDIENCE default */
+static char        g_iss[512];        /* expected `iss`; empty = unchecked */
 
 void auth_init(void) {
   const char *s = getenv("SUPABASE_JWT_SECRET");
@@ -25,6 +28,25 @@ void auth_init(void) {
   g_url    = (u && *u) ? u : NULL;
   const char *a = getenv("SUPABASE_AUD");
   if (a && *a) g_aud = a;
+
+  /* Expected issuer. JO_JWT_ISS wins when set (self-hosted GoTrue, or a
+   * migration where the issuer is not SUPABASE_URL-derived); otherwise it is
+   * Supabase's "<project-url>/auth/v1". Deliberately NOT hard-failing when
+   * neither is derivable: an existing deployment that only ever set
+   * SUPABASE_JWT_SECRET would lose every session on upgrade, which is a worse
+   * outage than the check is worth. Logged once so the gap is visible. */
+  const char *iss = getenv("JO_JWT_ISS");
+  g_iss[0] = 0;
+  if (iss && *iss) {
+    snprintf(g_iss, sizeof g_iss, "%s", iss);
+  } else if (g_url) {
+    size_t n = strlen(g_url);
+    while (n && g_url[n - 1] == '/') n--;          /* tolerate a trailing / */
+    snprintf(g_iss, sizeof g_iss, "%.*s/auth/v1", (int)n, g_url);
+  } else {
+    fprintf(stderr, "[auth] neither JO_JWT_ISS nor SUPABASE_URL is set: "
+                    "token issuer will NOT be validated\n");
+  }
 }
 
 /* base64url -> bytes. Returns malloc'd buffer, sets *out_len. NULL on error. */
@@ -36,11 +58,17 @@ static unsigned char *b64url_decode(const char *in, size_t in_len, size_t *out_l
   size_t cap = (in_len / 4 + 1) * 3 + 3;
   unsigned char *out = malloc(cap);
   if (!out) return NULL;
-  size_t o = 0; int val = 0, bits = -8;
+  /* `val` is UNSIGNED and masked to the 16 bits the loop can still need.
+   * As a signed int it overflowed on the third accumulated sextet — UBSan:
+   * "left shift of 805815650 by 6 places cannot be represented in type
+   * 'int'" — and this runs on the Authorization header of every request,
+   * before any authentication, so the input is fully attacker-chosen. It
+   * wraps benignly today; signed overflow is UB and need not. */
+  size_t o = 0; unsigned val = 0; int bits = -8;
   for (size_t i = 0; i < in_len; i++) {
     int c = rev[(unsigned char)in[i]];
     if (c < 0) continue;
-    val = (val << 6) | c; bits += 6;
+    val = ((val << 6) | (unsigned)c) & 0xFFFFu; bits += 6;
     if (bits >= 0) { out[o++] = (unsigned char)((val >> bits) & 0xFF); bits -= 8; }
   }
   *out_len = o; return out;
@@ -203,6 +231,39 @@ static int jwt_header(const char *tok, const char *d1, char *alg, size_t an,
   return alg[0] != 0;
 }
 
+/* ── unknown-kid negative cache ────────────────────────────────────────────
+ * The refetch-once-on-unknown-kid rule below is jose's semantics and is right
+ * for a real key rotation. It is also an amplifier: an UNAUTHENTICATED request
+ * carrying a made-up kid costs us one outbound HTTPS round-trip to the IdP,
+ * and the same kid replayed costs one each time. Remembering the kids we have
+ * already looked up and failed to find turns a replay into a memcmp, and
+ * ratelimit.c caps the rate at which genuinely-new unknown kids can force a
+ * fetch. Both are needed: the cache alone is defeated by varying the kid, the
+ * limiter alone would delay a real rotation. */
+#define KIDNEG_SLOTS 64
+#define KIDNEG_TTL   300                     /* < JWKS_TTL, so a rotation that
+                                              * lands mid-window still recovers
+                                              * within one refresh cycle */
+static struct { char kid[256]; time_t at; } g_kidneg[KIDNEG_SLOTS];
+static int g_kidneg_next;                    /* round-robin victim */
+
+/* Caller holds g_jwks_lock. */
+static int kid_known_bad(const char *kid, time_t now) {
+  for (int i = 0; i < KIDNEG_SLOTS; i++)
+    if (g_kidneg[i].kid[0] && strcmp(g_kidneg[i].kid, kid) == 0)
+      return (now - g_kidneg[i].at) < KIDNEG_TTL;
+  return 0;
+}
+static void kid_mark_bad(const char *kid, time_t now) {
+  for (int i = 0; i < KIDNEG_SLOTS; i++)
+    if (g_kidneg[i].kid[0] && strcmp(g_kidneg[i].kid, kid) == 0) {
+      g_kidneg[i].at = now; return;
+    }
+  int v = g_kidneg_next++ % KIDNEG_SLOTS;
+  snprintf(g_kidneg[v].kid, sizeof g_kidneg[v].kid, "%s", kid);
+  g_kidneg[v].at = now;
+}
+
 /* Try RS256/ES256 over the JWKS (refetch once on unknown kid). */
 static int verify_jwks(const char *tok, const char *d1, const char *si,
                        size_t si_len, const char *sig, size_t sig_len) {
@@ -210,11 +271,27 @@ static int verify_jwks(const char *tok, const char *d1, const char *si,
   char alg[16], kid[256];
   if (!jwt_header(tok, d1, alg, sizeof alg, kid, sizeof kid)) return 0;
   if (strcmp(alg, "RS256") != 0 && strcmp(alg, "ES256") != 0) return 0;
-  int ok = 0;
+
+  if (kid[0]) {
+    time_t now = time(NULL);
+    pthread_mutex_lock(&g_jwks_lock);
+    int bad = kid_known_bad(kid, now);
+    pthread_mutex_unlock(&g_jwks_lock);
+    if (bad) return 0;                       /* already looked up, not there */
+  }
+
+  int ok = 0, seen = 0;
   for (int attempt = 0; attempt < 2 && !ok; attempt++) {
+    /* Only the FORCED refetch is throttled — attempt 0 is served from the
+     * 10-minute cache and costs nothing. Keyed on the kid so one abusive kid
+     * cannot starve a genuine rotation of a different one. */
+    if (attempt == 1 &&
+        !ratelimit_allow(RL_JWKS, kid[0] ? kid : "-", 3, 60, NULL))
+      break;
     cJSON *doc = jwks_doc(attempt);          /* attempt 1 forces refetch */
     cJSON *jwk = find_jwk(doc, kid[0] ? kid : NULL);
     if (jwk) {
+      seen = 1;
       EVP_PKEY *pk = jwk_to_pkey(jwk);
       if (pk) { ok = verify_asym(si, si_len, sig, sig_len, pk, alg);
                 EVP_PKEY_free(pk); }
@@ -222,10 +299,50 @@ static int verify_jwks(const char *tok, const char *d1, const char *si,
     if (doc) cJSON_Delete(doc);
     if (jwk) break;                          /* kid found: don't refetch */
   }
+  if (!seen && kid[0]) {
+    time_t now = time(NULL);
+    pthread_mutex_lock(&g_jwks_lock);
+    kid_mark_bad(kid, now);
+    pthread_mutex_unlock(&g_jwks_lock);
+  }
   return ok;
 }
 
+/* ── verified-email signal ─────────────────────────────────────────────────
+ * tenantapi.c claims pending invites on the token's `email` claim, which turns
+ * "I can sign up as alice@corp.example" into "I am a member of corp's
+ * workspace" whenever the IdP hands out a token before the address is
+ * confirmed. It needs to know whether the address was actually verified.
+ *
+ * Thread-local rather than a field on auth_user: auth.h is a published header
+ * with other consumers, and auth_check() → tenant_resolve() run back-to-back
+ * on the same request thread, so the value is never read across a boundary
+ * where a struct field would have been safer. Reset on every auth_check so a
+ * failed verification can never leave a stale `true` behind. */
+static __thread int g_email_verified = 0;
+
+/* Supabase puts email_verified at the top level on newer projects and under
+ * user_metadata on older ones; GoTrue also emits `email_confirmed_at`. Accept
+ * any of them, treat anything else as unverified. */
+static int email_verified_claim(cJSON *j) {
+  cJSON *v = cJSON_GetObjectItem(j, "email_verified");
+  if (v && cJSON_IsBool(v))   return cJSON_IsTrue(v) ? 1 : 0;
+  if (v && cJSON_IsString(v)) return strcmp(v->valuestring, "true") == 0;
+  cJSON *ca = cJSON_GetObjectItem(j, "email_confirmed_at");
+  if (ca && cJSON_IsString(ca) && ca->valuestring[0]) return 1;
+  cJSON *um = cJSON_GetObjectItem(j, "user_metadata");
+  if (um && cJSON_IsObject(um)) {
+    cJSON *uv = cJSON_GetObjectItem(um, "email_verified");
+    if (uv && cJSON_IsBool(uv))   return cJSON_IsTrue(uv) ? 1 : 0;
+    if (uv && cJSON_IsString(uv)) return strcmp(uv->valuestring, "true") == 0;
+  }
+  return 0;
+}
+
+int auth_email_verified(void) { return g_email_verified; }
+
 auth_result auth_check(const char *hdr, auth_user *out) {
+  g_email_verified = 0;
   if (!g_secret && !g_url) return AUTH_503_UNCONFIG;
 
   if (!hdr) return AUTH_401_MISSING;
@@ -259,17 +376,42 @@ auth_result auth_check(const char *hdr, auth_user *out) {
   cJSON *j = cJSON_Parse(pjson); free(pjson);
   if (!j) return AUTH_401_INVALID;
 
+  /* `exp` is MANDATORY and must be a number. The old form ("check it if it is
+   * present and numeric") meant a token with no exp — or with exp as the
+   * string "9999999999" — never expired: forever-valid credentials, issued by
+   * anyone who can mint one token. jose treats a malformed exp as a failure,
+   * and so must we. */
   cJSON *exp = cJSON_GetObjectItem(j, "exp");
-  if (exp && cJSON_IsNumber(exp) && (double)time(NULL) >= exp->valuedouble) {
+  if (!exp || !cJSON_IsNumber(exp)) { cJSON_Delete(j); return AUTH_401_INVALID; }
+  if ((double)time(NULL) >= exp->valuedouble) {
     cJSON_Delete(j); return AUTH_401_INVALID;
   }
   cJSON *nbf = cJSON_GetObjectItem(j, "nbf");   /* jose enforces nbf too */
   if (nbf && cJSON_IsNumber(nbf) && (double)time(NULL) < nbf->valuedouble) {
     cJSON_Delete(j); return AUTH_401_INVALID;
   }
+  /* RFC 7519 §4.1.3: `aud` is a string OR an array of strings. Skipping the
+   * array case (as this did) meant an array-audience token was accepted with
+   * NO audience check at all — exactly the shape a token minted for a
+   * different service has. Present-but-neither-form is a reject, not a skip. */
   cJSON *aud = cJSON_GetObjectItem(j, "aud");
-  if (g_aud && aud && cJSON_IsString(aud) && strcmp(aud->valuestring, g_aud) != 0) {
-    cJSON_Delete(j); return AUTH_401_INVALID;
+  if (g_aud && aud && !cJSON_IsNull(aud)) {
+    int match = 0;
+    if (cJSON_IsString(aud)) {
+      match = strcmp(aud->valuestring, g_aud) == 0;
+    } else if (cJSON_IsArray(aud)) {
+      cJSON *a;
+      cJSON_ArrayForEach(a, aud)
+        if (cJSON_IsString(a) && strcmp(a->valuestring, g_aud) == 0) { match = 1; break; }
+    }
+    if (!match) { cJSON_Delete(j); return AUTH_401_INVALID; }
+  }
+  /* Issuer. Only enforced when we know what to expect (see auth_init). */
+  if (g_iss[0]) {
+    cJSON *iss = cJSON_GetObjectItem(j, "iss");
+    if (!iss || !cJSON_IsString(iss) || strcmp(iss->valuestring, g_iss) != 0) {
+      cJSON_Delete(j); return AUTH_401_INVALID;
+    }
   }
   cJSON *sub = cJSON_GetObjectItem(j, "sub");
   if (!sub || !cJSON_IsString(sub) || !sub->valuestring[0]) {
@@ -284,6 +426,7 @@ auth_result auth_check(const char *hdr, auth_user *out) {
     snprintf(out->role, sizeof out->role, "%s",
              (ro && cJSON_IsString(ro)) ? ro->valuestring : "authenticated");
   }
+  g_email_verified = email_verified_claim(j);
   cJSON_Delete(j);
   return AUTH_ALLOW;
 }

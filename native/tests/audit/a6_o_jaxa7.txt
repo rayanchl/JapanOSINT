@@ -1,0 +1,30 @@
+size=25804
+keys: ['id', 'type', 'stac_version', 'title', 'description', 'links']
+  id = "cog"
+  type = "Catalog"
+  stac_version = "1.0.0"
+  title = "STAC for JAXA Earth database (COG)"
+  description = "The JAXA Earth database is public datasets created by Japan Aerospace eXploration Agency (JAXA) Earth Observation Research Center (EORC). The datasets includes JAXAs public datasets and other agencys
+links: 122
+Counter({'child': 119, 'self': 1, 'root': 1, 'parent': 1})
+   {"rel": "self", "href": "https://data.earth.jaxa.jp/stac/cog/v1/catalog.json", "type": "application/json"}
+   {"rel": "root", "href": "https://data.earth.jaxa.jp/stac/cog/catalog.json", "type": "application/json"}
+   {"rel": "parent", "href": "https://data.earth.jaxa.jp/stac/cog/catalog.json", "type": "application/json"}
+   {"rel": "child", "href": "https://s3.ap-northeast-1.wasabisys.com/je-pds/cog/v1/Copernicus.C3S_PROBA-V_LCCS_global_yearly/collection.json", "type": "application/json"}
+   {"rel": "child", "href": "https://s3.ap-northeast-1.wasabisys.com/je-pds/cog/v1/JAXA.EORC_ALOS.PRISM_AW3D30.v3.2_global/collection.json", "type": "application/json"}
+   {"rel": "child", "href": "https://s3.ap-northeast-1.wasabisys.com/je-pds/cog/v1/JAXA.EORC_ALOS-2.PALSAR-2_FNF.v2.1.0_global_yearly/collection.json", "type": "application/json"}
+=== first child: https://s3.ap-northeast-1.wasabisys.com/je-pds/cog/v1/Copernicus.C3S_PROBA-V_LCCS_global_yearly/collection.json
+  type = "Collection"
+  id = "Copernicus.C3S_PROBA-V_LCCS_global_yearly"
+  stac_version = "1.0.0"
+  description = "The 300m CCI-LC Maps (22 LCCS classes) were obtained from the processing of the full archives of 300m MERIS, 1km SPOT-VEGETATION, 1km PROBA-V and 1km AVHRR."
+  links = [{"rel": "root", "href": "./collection.json", "type": "application/json", "title": "Land Cover Class (Yearly)"}, {"rel": "license", "href": "http://maps.elie.ucl.ac.be/CCI/viewer/download.php", "type": "text/html"}, {"rel": "child", "href": "./2019/catalog.jso
+  stac_extensions = ["https://stac-extensions.github.io/scientific/v1.0.0/schema.json"]
+  sci:publications = [{"doi": null, "citation": "ESA. Land Cover CCI Product User Guide Version 2. Tech. Rep. (2017). Available at: maps.elie.ucl.ac.be/CCI/viewer/download/ESACCI-LC-Ph2-PUGv2_2.0.pdf"}]
+  title = "Land Cover Class (Yearly)"
+  extent = {"spatial": {"bbox": [[-180, -90, 180, 90]]}, "temporal": {"interval": [["2019-01-01T00:00:00Z", "2019-12-31T23:59:59Z"]]}}
+  license = "proprietary"
+  keywords = ["Landcover", "VGT-P", "PROBA-V", "ESA"]
+  providers = [{"name": "Copernicus", "roles": ["licensor"], "url": "https://www.copernicus.eu/en"}, {"name": "JAXA EORC", "roles": ["processor", "host"], "url": "https://earth.jaxa.jp/"}, {"name": "Copernicus", "roles": ["producer"], "url": "https://www.copernicus.eu/en"}]
+  summaries = {"platform": ["PROBA-V"], "instrument": ["VGT-P"], "je:epsg": [4326], "je:stac_date_format": ["YYYY"], "je:cog_level_max": [2], "je:ppu_max": [360], "je:stac_version": ["v1.2"]}
+  assets = {"LCCS": {"href": "N/A", "type": "image/tiff; application=geotiff; profile=cloud-optimized", "title": "Land Cover Class", "roles": ["data"]}}

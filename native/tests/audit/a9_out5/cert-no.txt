@@ -1,0 +1,42 @@
+=== cert-no
+exit: 0
+sched: rc=0 records=10 285ms
+--- stderr ---
+[rss] cert-no emitted 10
+[sched] cert-no run rc=0 records=10 285ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            cert-no|https://nsm.no/fagomrader/digital-sikkerhet/nasjonalt-cybersikkerhetssenter/varsler-fra-nsm/microsoft-patchetirsdag-juli-2026
+  title          Microsoft patchetirsdag juli 2026
+  body           <p>NSM har ingen bemerkninger til Microsofts sikkerhetsoppdateringer for juli 2026. &nbsp;</p>
+  summary        <p>NSM har ingen bemerkninger til Microsofts sikkerhetsoppdateringer for juli 2026. &nbsp;</p>
+  link           https://nsm.no/fagomrader/digital-sikkerhet/nasjonalt-cybersikkerhetssenter/varsler-fra-nsm/microsoft-patchetirsdag-juli-2026
+  language       no
+  published_at   Tue, 14 Jul 2026 23:11:10 +0200
+  record_type    article
+  tags           ["cyber","cert","advisory","norway"]
+
+--- row 2 ---
+  uid            cert-no|https://nsm.no/fagomrader/digital-sikkerhet/nasjonalt-cybersikkerhetssenter/varsler-fra-nsm/microsoft-patchetirsdag-juni
+  title          Microsoft patchetirsdag juni
+  body           <p><span style="font-size:11.0pt"><span style="font-family:&quot;Calibri&quot;,sans-serif">Microsoft har offentliggjort sine månedlige <a href="https://urldefense.com/v3/__https://portal.msrc.microsoft.com/en-us/security-guidance__;!!Nq5e9Ls!kSJMMNoWSEfPI09uB23N0B55WlQ4rPCYOD9w5cj7b-W7_AAj_Vy2GiwaQn2BYuIr5k9kwkMuzOTx-X23mEU$">sikkerhetsoppdateringer</a>.</span></span></p>
+  summary        <p><span style="font-size:11.0pt"><span style="font-family:&quot;Calibri&quot;,sans-serif">Microsoft har offentliggjort sine månedlige <a href="https://urldefense.com/v3/__https://portal.msrc.microsoft.com/en-us/security-guidance__;!!Nq5e9
+  link           https://nsm.no/fagomrader/digital-sikkerhet/nasjonalt-cybersikkerhetssenter/varsler-fra-nsm/microsoft-patchetirsdag-juni
+  language       no
+  published_at   Tue, 09 Jun 2026 20:19:46 +0200
+  record_type    article
+  tags           ["cyber","cert","advisory","norway"]
+
+--- row 3 ---
+  uid            cert-no|https://nsm.no/aktuelt/posisjonsnotat-om-kvantenokkeldistribusjon
+  title          Posisjonsnotat om kvantenøkkeldistribusjon
+  body           <p>Kvantedatamaskiner kan innen relativt kort tid utgjøre en trussel mot eksisterende kryptografiske løsninger. Det er avgjørende å bytte til nye kryptografiske løsninger som kan motstå denne trusselen.&nbsp;</p>
+  summary        <p>Kvantedatamaskiner kan innen relativt kort tid utgjøre en trussel mot eksisterende kryptografiske løsninger. Det er avgjørende å bytte til nye kryptografiske løsninger som kan motstå denne trusselen.&nbsp;</p>
+  link           https://nsm.no/aktuelt/posisjonsnotat-om-kvantenokkeldistribusjon
+  language       no
+  published_at   Sun, 07 Jun 2026 11:51:12 +0200
+  record_type    article
+  tags           ["cyber","cert","advisory","norway"]

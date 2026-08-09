@@ -9,15 +9,7 @@
 #define COLL     "osint"
 #define INTERVAL 3600
 
-#define RSS(SYM, ID, NAME, NAMEJA, CAT, URL, LANG, TAGS, DESC)               \
-  static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
-    int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
-  static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
-    .update_interval_sec = INTERVAL, .run = run_##SYM,                       \
-    .category = CAT, .type = "web_request", .url = URL,                      \
-    .description = DESC, .layer = NULL, .free_tier = 1 };                    \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 RSS(wn_bbc, "bbc-world", "BBC News (World)",
   "BBC ワールド", "news",
@@ -69,7 +61,10 @@ RSS(wn_nyt, "nyt-world", "New York Times (World)",
 
 RSS(wn_ap_top, "ap-topnews", "AP News (Top)",
   "AP通信", "news",
-  "https://rsshub.app/apnews/topics/apf-topnews", "en",
+  /* rsshub.app itself now 403s every datacentre IP (Cloudflare); AP publishes
+   * no first-party RSS any more, so this uses another public RSSHub instance
+   * running the same apnews route (verified: 136 <item>s). */
+  "https://rsshub.rssforever.com/apnews/topics/apf-topnews", "en",
   "[\"news\",\"world\",\"wire\"]",
   "Associated Press top news (via RSSHub aggregation)");
 
@@ -123,7 +118,7 @@ RSS(wn_africanews, "africanews", "Africanews",
 
 RSS(wn_mgafrica, "mail-guardian-africa", "The Mail & Guardian (Africa)",
   "メール&ガーディアン", "news",
-  "https://mg.co.za/feed/", "en",
+  "https://mg.co.za/rss/", "en",
   "[\"news\",\"africa\",\"south-africa\"]",
   "Mail & Guardian — South African investigative and continental news");
 

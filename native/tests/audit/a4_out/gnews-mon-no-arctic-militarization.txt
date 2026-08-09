@@ -1,0 +1,7 @@
+=== gnews-mon-no-arctic-militarization
+exit: 0
+sched: rc=0 records=0 189ms
+--- stderr ---
+[rss] gnews-mon-no-arctic-militarization emitted 0
+[sched] gnews-mon-no-arctic-militarization run rc=0 records=0 189ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

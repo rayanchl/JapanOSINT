@@ -1,0 +1,46 @@
+=== cointelegraph
+exit: 0
+sched: rc=0 records=30 108ms
+--- stderr ---
+[rss] cointelegraph emitted 30
+[sched] cointelegraph run rc=0 records=30 108ms
+--- persisted: 30 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=30
+sub_source_id: (null)=30
+
+--- row 1 ---
+  uid            cointelegraph|https://cointelegraph.com/news/ftx-users-funds-released-fifth-distribution-round
+  title          Ex-FTX users report funds being released in $900M distribution round
+  body           <p style="float:right; margin:0 0 10px 15px; width:240px;"><img src="https://s3-images.ctmedia.io/media/article-covers/hi-funds-using-cryptocurrencies-ftx.png" alt="Ex-FTX users report funds being released in $900M distribution round" class="type:primaryImage"></p><p>Several users of the long-defunct crypto exchange reported that distribution agents had begun releasing funds to reimburse creditors for some of their 2022 losses.</p>
+  summary        <p style="float:right; margin:0 0 10px 15px; width:240px;"><img src="https://s3-images.ctmedia.io/media/article-covers/hi-funds-using-cryptocurrencies-ftx.png" alt="Ex-FTX users report funds being released in $900M distribution round" class
+  link           https://cointelegraph.com/news/ftx-users-funds-released-fifth-distribution-round?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound
+  language       en
+  published_at   Fri, 31 Jul 2026 16:56:31 +0000
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"https://cointelegraph.com/news/ftx-users-funds-released-fifth-distribution-round"}
+
+--- row 2 ---
+  uid            cointelegraph|https://cointelegraph.com/news/tether-q2-profit-us-treasury-holdings-usdt-supply
+  title          Tether earns $1.5B in Q2 as US Treasury holdings fuel profits
+  body           <p style="float:right; margin:0 0 10px 15px; width:240px;"><img src="https://s3-images.ctmedia.io/media/article-covers/papertether-dollar.jpg" alt="Tether earns $1.5B in Q2 as US Treasury holdings fuel profits" class="type:primaryImage"></p><p>Tether’s reserve surplus grew to $4.11 billion in the second quarter as USDT supply rose despite a weaker stablecoin market and continued pressure across the crypto sector.</p>
+  summary        <p style="float:right; margin:0 0 10px 15px; width:240px;"><img src="https://s3-images.ctmedia.io/media/article-covers/papertether-dollar.jpg" alt="Tether earns $1.5B in Q2 as US Treasury holdings fuel profits" class="type:primaryImage"></p
+  link           https://cointelegraph.com/news/tether-q2-profit-us-treasury-holdings-usdt-supply?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound
+  language       en
+  published_at   Fri, 31 Jul 2026 16:25:47 +0000
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"https://cointelegraph.com/news/tether-q2-profit-us-treasury-holdings-usdt-supply"}
+
+--- row 3 ---
+  uid            cointelegraph|https://cointelegraph.com/news/bybit-tokenized-stocks-collateral-margin-loans
+  title          Bybit adds tokenized Nvidia, Apple, Tesla stocks as loan collateral
+  body           <p style="float:right; margin:0 0 10px 15px; width:240px;"><img src="https://s3-images.ctmedia.io/media/article-covers/hi-how-binance-plans-to-bring-tokenized-us-stocks.png" alt="Bybit adds tokenized Nvidia, Apple, Tesla stocks as loan collateral" class="type:primaryImage"></p><p>Eligible retail and institutional users can use tokenized shares of Nvidia, Apple, Tesla and three other US companies across Bybit’s trading and lending products.
+</p>
+  summary        <p style="float:right; margin:0 0 10px 15px; width:240px;"><img src="https://s3-images.ctmedia.io/media/article-covers/hi-how-binance-plans-to-bring-tokenized-us-stocks.png" alt="Bybit adds tokenized Nvidia, Apple, Tesla stocks as loan coll
+  link           https://cointelegraph.com/news/bybit-tokenized-stocks-collateral-margin-loans?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound
+  language       en
+  published_at   Fri, 31 Jul 2026 16:23:21 +0000
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"https://cointelegraph.com/news/bybit-tokenized-stocks-collateral-margin-loans"}

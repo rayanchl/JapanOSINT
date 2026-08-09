@@ -1,0 +1,8 @@
+jshis	https://www.j-shis.bosai.go.jp/map/api/pshm/Y2020/PT01/T30_I50_PS.geojson
+kyodo	https://english.kyodonews.net/rss/news.xml
+sakura	https://www.data.jma.go.jp/sakura/data/sakura_3monthmean.html
+yahoo	https://news.yahoo.co.jp/rss/topics/top-picks.xml
+bgptools	https://bgp.tools/asns.csv
+ripestat-jp	https://stat.ripe.net/data/country-resource-list/data.json?resource=JP
+jma-sst	https://www.data.jma.go.jp/gmd/kaiyou/data/db/kaikyo/daily/sst_HQ.json
+mlit-p11	https://nlftp.mlit.go.jp/ksj/gml/data/P11/P11-22/P11-22.geojson

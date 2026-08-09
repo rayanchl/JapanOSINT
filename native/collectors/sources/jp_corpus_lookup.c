@@ -30,6 +30,7 @@
  * link = the hit's link. The entity-graph neighbourhood is still computed via
  * ctx->db but no longer surfaced as a row. If nothing matches, emits nothing
  * and returns 0 (honest empty). */
+#include "../../core/dbutil.h"
 #include "../../source.h"
 #include "../../core/fts.h"
 #include "../../third_party/cJSON.h"
@@ -40,10 +41,6 @@
 
 #define CORPUS_LIMIT  15
 
-static const char *ctext(sqlite3_stmt *s, int i) {
-  return (sqlite3_column_type(s, i) == SQLITE_NULL)
-           ? NULL : (const char *)sqlite3_column_text(s, i);
-}
 static void add_str_or_null(cJSON *o, const char *k, const char *v) {
   if (v) cJSON_AddStringToObject(o, k, v);
   else   cJSON_AddNullToObject(o, k);
@@ -71,14 +68,14 @@ static cJSON *corpus_items(sqlite3 *db, const char *segq) {
   int rc;
   while ((rc = sqlite3_step(s)) == SQLITE_ROW) {
     cJSON *r = cJSON_CreateObject();
-    add_str_or_null(r, "uid",          ctext(s, 0));
-    add_str_or_null(r, "source_id",    ctext(s, 1));
-    add_str_or_null(r, "title",        ctext(s, 2));
-    add_str_or_null(r, "summary",      ctext(s, 3));
-    add_str_or_null(r, "link",         ctext(s, 4));
-    add_str_or_null(r, "published_at", ctext(s, 5));
-    add_str_or_null(r, "record_type",  ctext(s, 6));
-    add_str_or_null(r, "excerpt",      ctext(s, 7));   /* r._excerpt */
+    add_str_or_null(r, "uid",          db_ctext(s, 0));
+    add_str_or_null(r, "source_id",    db_ctext(s, 1));
+    add_str_or_null(r, "title",        db_ctext(s, 2));
+    add_str_or_null(r, "summary",      db_ctext(s, 3));
+    add_str_or_null(r, "link",         db_ctext(s, 4));
+    add_str_or_null(r, "published_at", db_ctext(s, 5));
+    add_str_or_null(r, "record_type",  db_ctext(s, 6));
+    add_str_or_null(r, "excerpt",      db_ctext(s, 7));   /* r._excerpt */
     cJSON_AddItemToArray(items, r);
   }
   int failed = (rc != SQLITE_DONE);

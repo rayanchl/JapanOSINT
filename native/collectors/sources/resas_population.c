@@ -6,6 +6,7 @@
  * failures skipped (Node: result null / data not array → continue).
  * One intel_item per series. uid key mirrors JS
  * intelUid(SOURCE_ID, `${pref}-${label}`). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include <stdio.h>
@@ -13,10 +14,6 @@
 #include <string.h>
 
 #define RESAS_URL "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear"
-
-static const char *s_or_null(cJSON *v) {
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("RESAS_API_KEY");
@@ -26,12 +23,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(authhdr, sizeof authhdr, "X-API-KEY: %s", key);
   const char *hdrs[] = { authhdr, NULL };
 
-  int n = 0;
+  int n = 0, fetched = 0;
   for (int pref = 1; pref <= 47; pref++) {
     char url[256];
     snprintf(url, sizeof url, "%s?prefCode=%d&cityCode=-", RESAS_URL, pref);
     cJSON *root = feed_get_json_h(ctx->http, url, hdrs, 12000);
     if (!root) continue;
+    fetched++;
     cJSON *result = cJSON_GetObjectItem(root, "result");
     cJSON *data = result ? cJSON_GetObjectItem(result, "data") : NULL;
     if (!data || !cJSON_IsArray(data)) { cJSON_Delete(root); continue; }
@@ -39,7 +37,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     cJSON *series;
     cJSON_ArrayForEach(series, data) {
-      const char *label = s_or_null(cJSON_GetObjectItem(series, "label"));
+      const char *label = jo_vstr(cJSON_GetObjectItem(series, "label"));
       if (!label) label = "population";
       cJSON *sdata = cJSON_GetObjectItem(series, "data");
       cJSON *latest = NULL;
@@ -55,9 +53,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON *vl = cJSON_GetObjectItem(latest, "value");
         char yrbuf[32] = "?", vlbuf[32] = "?";
         if (yr && cJSON_IsNumber(yr)) snprintf(yrbuf, sizeof yrbuf, "%g", yr->valuedouble);
-        else if (s_or_null(yr)) snprintf(yrbuf, sizeof yrbuf, "%s", yr->valuestring);
+        else if (jo_vstr(yr)) snprintf(yrbuf, sizeof yrbuf, "%s", yr->valuestring);
         if (vl && cJSON_IsNumber(vl)) snprintf(vlbuf, sizeof vlbuf, "%g", vl->valuedouble);
-        else if (s_or_null(vl)) snprintf(vlbuf, sizeof vlbuf, "%s", vl->valuestring);
+        else if (jo_vstr(vl)) snprintf(vlbuf, sizeof vlbuf, "%s", vl->valuestring);
         snprintf(summary, sizeof summary, "%s %s: %s", label, yrbuf, vlbuf);
       } else {
         snprintf(summary, sizeof summary, "%s", label);
@@ -65,7 +63,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       char bybuf[32] = "?";
       if (boundary && cJSON_IsNumber(boundary))
         snprintf(bybuf, sizeof bybuf, "%g", boundary->valuedouble);
-      else if (s_or_null(boundary))
+      else if (jo_vstr(boundary))
         snprintf(bybuf, sizeof bybuf, "%s", boundary->valuestring);
       snprintf(body, sizeof body,
                "RESAS population composition perYear, prefCode=%d, series=%s, boundaryYear=%s",
@@ -105,8 +103,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     cJSON_Delete(root);
   }
-  fprintf(stderr, "[resas-population] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  fprintf(stderr, "[resas-population] emitted %d (%d/47 prefectures fetched)\n",
+          n, fetched);
+  /* STATUS code, not a row count: a prefecture that returns no series is an
+   * honest empty. Only a total fetch failure is a real error. */
+  return fetched > 0 ? 0 : -1;
 }
 
 static const source_def resas_population_def = {

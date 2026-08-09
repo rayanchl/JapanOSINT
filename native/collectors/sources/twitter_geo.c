@@ -13,6 +13,7 @@
  * dropped here exactly like other ancillary stores in this port (it does not
  * influence the FeatureCollection the source returns). _meta is also dropped.
  */
+#include "../../core/dbutil.h"
 #include "../../source.h"
 #include "../../core/db.h"
 #include "../../lib/geojson.h"
@@ -45,10 +46,6 @@ static const char *SQL =
   "  ORDER BY fetched_at DESC\n"
   "  LIMIT 5000";
 
-static const char *ctext(sqlite3_stmt *s, int i) {
-  return sqlite3_column_type(s, i) == SQLITE_NULL
-           ? NULL : (const char *)sqlite3_column_text(s, i);
-}
 
 /* JS String.prototype.slice(0,280): keep <=280 leading characters. The uid is
  * derived from properties.id (NATIVE_ID_KEYS) so this truncation never affects
@@ -73,26 +70,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *features = cJSON_CreateArray();
   int rc;
   while ((rc = sqlite3_step(s)) == SQLITE_ROW) {
-    const char *post_uid   = ctext(s, 0);
-    const char *platform   = ctext(s, 1);
-    const char *author     = ctext(s, 2);
-    const char *text       = ctext(s, 3);
-    const char *url        = ctext(s, 4);
+    const char *post_uid   = db_ctext(s, 0);
+    const char *platform   = db_ctext(s, 1);
+    const char *author     = db_ctext(s, 2);
+    const char *text       = db_ctext(s, 3);
+    const char *url        = db_ctext(s, 4);
     double lat = sqlite3_column_double(s, 5);
     double lon = sqlite3_column_double(s, 6);
-    const char *geo_source = ctext(s, 7);
-    const char *llm_place  = ctext(s, 8);
-    const char *fetched_at = ctext(s, 9);
+    const char *geo_source = db_ctext(s, 7);
+    const char *llm_place  = db_ctext(s, 8);
+    const char *fetched_at = db_ctext(s, 9);
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *coords = cJSON_CreateArray();
-    cJSON_AddItemToArray(coords, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(coords, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", coords);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(lon, lat);
 
     /* properties key order (twitterGeo.js rowToFeature):
      * id, platform, username, text, url, timestamp, area, source */

@@ -3,6 +3,7 @@
  * SEED_JSDF offline fallback intentionally not ported (rule 8).
  * mapFn skips elements whose operator is set but matches none of
  * /自衛|jsdf|jasdf|jgsdf|jmsdf/ (case-insensitive, plain substrings). */
+#include "../../lib/geojson.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
@@ -31,15 +32,7 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
       return NULL;
   }
 
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON *id = cJSON_GetObjectItem(el, "id");

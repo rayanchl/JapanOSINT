@@ -5,20 +5,13 @@
  * Overpass harbour-node proxy (tryOsmPorts, single area.jp query) which is
  * the faithful keyless live path. The curated SEED_PORTS / _meta envelope is
  * intentionally not ported (JS does `features = []` when nothing live). */
+#include "../../lib/geojson.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();                   /* EXACT JS key order */
   cJSON *id = cJSON_GetObjectItem(el, "id");
@@ -30,7 +23,17 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   char nbuf[64];
   if (!name) { snprintf(nbuf, sizeof nbuf, "Harbour %d", i + 1); name = nbuf; }
   cJSON_AddStringToObject(p, "vessel_name", name);
+  /* geojson pickText wants title|name|name_ja|label; "vessel_name" is none of
+   * them, so all 577 harbour rows persisted with a NULL title. Mirror the
+   * OSM-derived name into "name" — same value, readable row. */
+  cJSON_AddStringToObject(p, "name", name);
   cJSON_AddStringToObject(p, "vessel_type", "harbour");
+  if (id && cJSON_IsNumber(id)) {
+    char lk[96];
+    snprintf(lk, sizeof lk, "https://www.openstreetmap.org/node/%lld",
+             (long long)id->valuedouble);
+    cJSON_AddStringToObject(p, "link", lk);
+  }
   cJSON_AddStringToObject(p, "country", "JP");
   cJSON_AddStringToObject(p, "source", "osm_overpass_port");
   cJSON_AddItemToObject(f, "properties", p);
@@ -41,7 +44,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = overpass_collect(ctx, sink,
     "node[\"seamark:type\"=\"harbour\"](area.jp);"
     "node[\"harbour\"=\"yes\"](area.jp);",
-    180, 60000, map, NULL);
+    /* 60s per endpoint could never succeed: ENDPOINTS[0] (overpass-api.de) is
+     * unreachable and the first LIVE mirror answers a nationwide area.jp query
+     * in ~100s. Budget must exceed that or the source is a guaranteed
+     * timeout. */
+    180, 150000, map, NULL);
   return n >= 0 ? 0 : -1;
 }
 

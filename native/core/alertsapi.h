@@ -13,7 +13,19 @@
  * parsed path params ("" when absent), `body` the raw request body (may be
  * NULL), `method` the HTTP verb. Sets *status; returns a malloc'd JSON body
  * or NULL (NULL + status 204 = empty success; NULL + other = caller emits a
- * generic error of that status). */
+ * generic error of that status).
+ *
+ * AUTHORIZATION is enforced INSIDE, not by the caller: (tenant_id,user_id) is
+ * looked up in `memberships` and a read needs any role, while create / edit /
+ * delete / mute / unmute / test need analyst or better — the savedsearchapi.c
+ * rule. A non-member gets 403. The role is derived rather than passed because
+ * savedsearchapi.c's /to-alert re-enters this same entrypoint and the
+ * signature is a published contract.
+ *
+ * Webhook channel targets are validated with hostgate_url_check_strict(), so a
+ * rule cannot aim this server's outbound connection at loopback, RFC1918 or
+ * the 169.254.169.254 metadata address. Rule create/update/delete/test write
+ * audit_events rows. */
 char *alertsapi(db_handle *db, const char *tenant_id, const char *user_id,
                 const char *method, const char *id, const char *action,
                 const char *body, int ev_limit, int *status);

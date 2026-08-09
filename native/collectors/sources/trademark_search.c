@@ -12,24 +12,13 @@
  * real fetched fields (mark/holder/status/applicant/application_number). APIs
  * 403/unavailable or no hits → emits nothing (honest empty — no USPTO
  * manual-search block, no Nice-classification reference block). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-static void uri_encode(const char *in, char *out, size_t cap) {
-  static const char *keep = "-_.!~*'()";
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p && w + 4 < cap; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(keep, c)) out[w++] = (char)c;
-    else { snprintf(out + w, cap - w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
-}
 
 /* Emit one intel row for a single trademark hit. Returns 1 if emitted.
  * id_field/holder_field names differ per office. */
@@ -115,7 +104,7 @@ static int search_wipo(http_client *http, const char *mark, intel_sink *sink) {
 /* EUIPO eSearch+ — GET. Returns number of marks emitted. */
 static int search_euipo(http_client *http, const char *mark, intel_sink *sink) {
   char enc[512], url[1100];
-  uri_encode(mark, enc, sizeof enc);
+  jo_uri_encode_buf(mark, enc, sizeof enc);
   snprintf(url, sizeof url,
     "https://euipo.europa.eu/eSearchCLW/api/basic-search?text=%s&page=0&size=20", enc);
 

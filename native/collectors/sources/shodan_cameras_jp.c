@@ -21,6 +21,7 @@
  * several rows over time. cam_make_feature() derives the uid, so the ip:port
  * key is carried as a `shodan_endpoint` extra and the row is additionally
  * addressable by it. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/camera_store.h"
 #include "../../lib/camfeature.h"
@@ -34,33 +35,6 @@
   "country:JP (webcamXP OR \"Server: yawcam\" OR product:\"Hipcam RealServer\" " \
   "OR title:\"Network Camera\" OR product:\"Hikvision\" OR product:\"Dahua\")"
 
-/* encodeURIComponent: keep A-Za-z0-9 - _ . ! ~ * ' ( ) */
-static void uric(const char *s, char *out, size_t n) {
-  size_t o = 0;
-  for (; *s && o + 4 < n; s++) {
-    unsigned char c = (unsigned char)*s;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' ||
-        c == '!' || c == '~' || c == '*' || c == '\'' || c == '(' || c == ')') {
-      out[o++] = (char)c;
-    } else {
-      snprintf(out + o, n - o, "%%%02X", c);
-      o += 3;
-    }
-  }
-  out[o] = '\0';
-}
-
-static int num_of(cJSON *v, double *out) {
-  if (!v) return 0;
-  if (cJSON_IsNumber(v)) { *out = v->valuedouble; return 1; }
-  if (cJSON_IsString(v) && v->valuestring && v->valuestring[0]) {
-    char *e; double d = strtod(v->valuestring, &e);
-    if (e != v->valuestring) { *out = d; return 1; }
-  }
-  return 0;
-}
-
 /* JS: m.product || m._shodan?.module || null. Borrowed from `m`. */
 static const char *product_of(cJSON *m) {
   cJSON *v = cJSON_GetObjectItem(m, "product");
@@ -73,12 +47,6 @@ static const char *product_of(cJSON *m) {
   return NULL;
 }
 
-/* m.<k> as a non-empty string, else NULL (=== the JS `|| null` chains). */
-static const char *str_of(cJSON *o, const char *k) {
-  cJSON *v = o ? cJSON_GetObjectItem(o, k) : NULL;
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
-}
-
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *k = getenv("SHODAN_API_KEY");
   if (!k || !*k) {
@@ -86,7 +54,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return 0;
   }
   char qenc[1024];
-  uric(QUERY, qenc, sizeof qenc);
+  jo_uri_encode_buf(QUERY, qenc, sizeof qenc);
   char url[1280];
   snprintf(url, sizeof url,
     "https://api.shodan.io/shodan/host/search?key=%s&query=%s", k, qenc);
@@ -100,8 +68,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON *loc = cJSON_GetObjectItem(m, "location");
       double lon, lat;
       if (!(loc &&
-            num_of(cJSON_GetObjectItem(loc, "longitude"), &lon) &&
-            num_of(cJSON_GetObjectItem(loc, "latitude"), &lat)))
+            jo_num_of(cJSON_GetObjectItem(loc, "longitude"), &lon) &&
+            jo_num_of(cJSON_GetObjectItem(loc, "latitude"), &lat)))
         continue;
 
       cJSON *ipv  = cJSON_GetObjectItem(m, "ip_str");
@@ -138,8 +106,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         { .k = "shodan_endpoint", .sv = idb                           },
         { .k = "ip",              .sv = ipstr[0] ? ipstr : NULL       },
         { .k = "vendor",          .sv = vendor                        },
-        { .k = "city",            .sv = str_of(loc, "city")           },
-        { .k = "org",             .sv = str_of(m, "org")              },
+        { .k = "city",            .sv = jo_sv(loc, "city")           },
+        { .k = "org",             .sv = jo_sv(m, "org")              },
       };
       cJSON *f = cam_make_feature(lat, lon, namebuf, "shodan_host",
                                   "shodan_api", ex, 7);

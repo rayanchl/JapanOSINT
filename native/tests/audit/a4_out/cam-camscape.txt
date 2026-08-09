@@ -1,0 +1,36 @@
+=== cam-camscape
+exit: 0
+sched: rc=0 records=32 1407ms
+--- stderr ---
+[cam-camscape] 32 cams upserted (WAF may yield 0)
+[sched] cam-camscape run rc=0 records=32 1407ms
+--- persisted: 32 rows, 32 with lat/lon, 32 with geometry ---
+record_type: camera=32
+sub_source_id: (null)=32
+
+--- row 1 ---
+  uid            camera-discovery|26.3344:127.8056:https://www.camscape.com/webcam/naha-city-webcam-in-okinawa/
+  title          Naha City Webcam In Okinawa
+  lat            26.3344
+  lon            127.8056
+  geometry       {"type":"Point","coordinates":[127.8056,26.3344]}
+  record_type    camera
+  properties     {"camera_uid":"26.3344:127.8056:https://www.camscape.com/webcam/naha-city-webcam-in-okinawa/","name":"Naha City Webcam In Okinawa","camera_type":"aggregator_camscape","discovery_channel":"camscape","country":"JP","url":"https://www.camscape.com/webcam/naha-city-webcam-in-okinawa/","location_precision":"prefecture","location_approximate":true,"thumbnail_url":null,"operator":null,"discovery_channels":["camscape"],"first_seen_at":"2026-07-31T18:03:54.161Z","last_seen_at":"2026-07-31T18:03:54.161Z","seen_count":1}
+
+--- row 2 ---
+  uid            camera-discovery|34.1859:131.4706:https://www.camscape.com/webcam/yamaguchi-ube-airport-webcam
+  title          Yamaguchi Ube Airport Webcam
+  lat            34.1859
+  lon            131.4706
+  geometry       {"type":"Point","coordinates":[131.4706,34.1859]}
+  record_type    camera
+  properties     {"camera_uid":"34.1859:131.4706:https://www.camscape.com/webcam/yamaguchi-ube-airport-webcam","name":"Yamaguchi Ube Airport Webcam","camera_type":"aggregator_camscape","discovery_channel":"camscape","country":"JP","url":"https://www.camscape.com/webcam/yamaguchi-ube-airport-webcam/","location_precision":"prefecture","location_approximate":true,"thumbnail_url":null,"operator":null,"discovery_channels":["camscape"],"first_seen_at":"2026-07-31T18:03:54.161Z","last_seen_at":"2026-07-31T18:03:54.161Z","seen_count":1}
+
+--- row 3 ---
+  uid            camera-discovery|31.5602:130.5581:https://www.camscape.com/webcam/kagoshima-airport-webcam/
+  title          Kagoshima Airport Webcam
+  lat            31.5602
+  lon            130.5581
+  geometry       {"type":"Point","coordinates":[130.5581,31.5602]}
+  record_type    camera
+  properties     {"camera_uid":"31.5602:130.5581:https://www.camscape.com/webcam/kagoshima-airport-webcam/","name":"Kagoshima Airport Webcam","camera_type":"aggregator_camscape","discovery_channel":"camscape","country":"JP","url":"https://www.camscape.com/webcam/kagoshima-airport-webcam/","location_precision":"prefecture","location_approximate":true,"thumbnail_url":null,"operator":null,"discovery_channels":["camscape"],"first_seen_at":"2026-07-31T18:03:54.162Z","last_seen_at":"2026-07-31T18:03:54.162Z","seen_count":1}

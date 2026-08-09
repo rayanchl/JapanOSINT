@@ -22,20 +22,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-/* case-insensitive substring (haystack may be large; needle short). */
-static const char *vw_stristr(const char *h, const char *n) {
-  if (!h || !n || !*n) return NULL;
-  size_t nl = strlen(n);
-  for (; *h; h++) {
-    if (tolower((unsigned char)*h) == tolower((unsigned char)*n)) {
-      size_t k = 1;
-      while (k < nl && h[k] && tolower((unsigned char)h[k]) == tolower((unsigned char)n[k])) k++;
-      if (k == nl) return h;
-    }
-  }
-  return NULL;
-}
-
 /* True when q looks like a CVE id (CVE-YYYY-NNNN…). */
 static int vw_is_cve(const char *q) {
   return q && (strncasecmp(q, "CVE-", 4) == 0);
@@ -195,8 +181,8 @@ static int kev_emit(intel_sink *sink, const cJSON *r, const char *q) {
 
   /* honest filter — only emit genuine matches on real fields */
   int match = (!q || !*q)
-              || vw_stristr(cve, q) || vw_stristr(vend, q) || vw_stristr(prod, q)
-              || vw_stristr(name, q) || vw_stristr(desc, q);
+              || jo_stristr(cve, q) || jo_stristr(vend, q) || jo_stristr(prod, q)
+              || jo_stristr(name, q) || jo_stristr(desc, q);
   if (!match) return 0;
 
   cJSON *data = cJSON_CreateObject();
@@ -288,7 +274,7 @@ static int edb_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
       char buf[4096];
       size_t cp = llen < sizeof buf - 1 ? llen : sizeof buf - 1;
       memcpy(buf, line, cp); buf[cp] = 0;
-      if (vw_stristr(buf, q)) {
+      if (jo_stristr(buf, q)) {
         /* quote-aware split of the first 7 fields */
         char *fields[7] = {0}; int nf = 0;
         char *w = buf, *fs = buf; int inq = 0;
@@ -320,7 +306,7 @@ static int edb_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
         if (desc) { snprintf(dsc, sizeof dsc, "%s", desc); vw_clean(dsc); }
         /* require the query to match description or id, not just an author
          * hash etc.; keeps hits meaningful and honest */
-        if (idc[0] && (vw_stristr(dsc, q) || vw_stristr(idc, q))) {
+        if (idc[0] && (jo_stristr(dsc, q) || jo_stristr(idc, q))) {
           cJSON *data = cJSON_CreateObject();
           cJSON_AddStringToObject(data, "edb_id", idc);
           if (dsc[0]) cJSON_AddStringToObject(data, "description", dsc);

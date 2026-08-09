@@ -1,0 +1,6 @@
+=== IOC_LOOKUP  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 84ms
+--- stderr ---
+[sched] IOC_LOOKUP run rc=0 records=0 84ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

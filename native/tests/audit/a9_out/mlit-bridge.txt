@@ -1,0 +1,8 @@
+=== mlit-bridge
+exit: 1
+sched: rc=-1 records=0 143274ms
+--- stderr ---
+[overpass] mlit-bridge no elements
+[sched] mlit-bridge run rc=-1 records=0 143274ms
+[detect] anomaly opened: mlit-bridge verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

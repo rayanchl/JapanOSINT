@@ -1,0 +1,45 @@
+=== NL_ADDRESS  entity=Amsterdam
+exit: 0
+sched: rc=0 records=10 183ms
+--- stderr ---
+[NL_ADDRESS] emitted 10
+[sched] NL_ADDRESS run rc=0 records=10 183ms
+--- persisted: 10 rows, 10 with lat/lon, 0 with geometry ---
+record_type: nl-address=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            NL_ADDRESS|gem-0b2a8b92856b27f86fbd67ab35808ebf
+  title          Gemeente Amsterdam
+  body           {"name":"Gemeente Amsterdam","type":"gemeente","lat":52.36648685,"lon":4.91978668,"source":"PDOK Locatieserver"}
+  summary        gemeente
+  language       nl
+  lat            52.36648685
+  lon            4.91978668
+  record_type    nl-address
+  tags           ["osint-search","NL_ADDRESS"]
+  properties     {"service":"NL_ADDRESS","success":true}
+
+--- row 2 ---
+  uid            NL_ADDRESS|wpl-62fe60a4eea50b7c33ba3d9c39a21e6a
+  title          Amsterdam, Amsterdam, Noord-Holland
+  body           {"name":"Amsterdam, Amsterdam, Noord-Holland","type":"woonplaats","place":"Amsterdam","lat":52.37344272,"lon":4.90454379,"source":"PDOK Locatieserver"}
+  summary        woonplaats
+  language       nl
+  lat            52.37344272
+  lon            4.90454379
+  record_type    nl-address
+  tags           ["osint-search","NL_ADDRESS"]
+  properties     {"service":"NL_ADDRESS","success":true}
+
+--- row 3 ---
+  uid            NL_ADDRESS|wpl-9a65d4bf46fc74b90b7a3b4eea2cf32d
+  title          Weesp, Amsterdam, Noord-Holland
+  body           {"name":"Weesp, Amsterdam, Noord-Holland","type":"woonplaats","place":"Weesp","lat":52.30320518,"lon":5.05804338,"source":"PDOK Locatieserver"}
+  summary        woonplaats
+  language       nl
+  lat            52.30320518
+  lon            5.05804338
+  record_type    nl-address
+  tags           ["osint-search","NL_ADDRESS"]
+  properties     {"service":"NL_ADDRESS","success":true}

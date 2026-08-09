@@ -81,15 +81,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       double vmag = sqrt(vel[0]*vel[0] + vel[1]*vel[1] + vel[2]*vel[2]);
       double inc_deg = r.inclo * 180.0 / 3.14159265358979323846;
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(lon, lat);
 
       cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
       char idb[24]; snprintf(idb, sizeof idb, "SAT_%ld", norad);

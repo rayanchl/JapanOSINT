@@ -104,6 +104,7 @@ int jo_email_reputation_run(const source_ctx *ctx, intel_sink *sink) {
   int disposable = (dom[0]) ? is_disposable_email(dom) : 0;
   int mx_exists = (dom[0]) ? check_mx_records(dom) : 0;
   int deliverable = 0, suspicious = 0;
+  int have_deliverable = 0;                /* upstream actually said so */
   int reputation_score = 0;
   char reputation_status[32] = {0};
   cJSON *details = NULL;
@@ -130,7 +131,8 @@ int jo_email_reputation_run(const source_ctx *ctx, intel_sink *sink) {
         else reputation_score = 10;
       }
       if (susp && cJSON_IsBool(susp)) suspicious = cJSON_IsTrue(susp);
-      if (deliv && cJSON_IsBool(deliv)) deliverable = cJSON_IsTrue(deliv);
+      if (deliv && cJSON_IsBool(deliv)) { deliverable = cJSON_IsTrue(deliv);
+                                          have_deliverable = 1; }
       if (disp && cJSON_IsBool(disp)) disposable = cJSON_IsTrue(disp);
       if (det) details = cJSON_Duplicate(det, 1);
       api_success = 1;
@@ -139,18 +141,15 @@ int jo_email_reputation_run(const source_ctx *ctx, intel_sink *sink) {
   }
   http_response_free(&hr);
 
-  /* Fallback scoring when API gave no reputation. */
-  if (reputation_score == 0) {
-    reputation_score = 50;
-    if (!valid_format) reputation_score -= 40;
-    if (disposable) reputation_score -= 30;
-    if (!mx_exists) reputation_score -= 20;
-    if (suspicious) reputation_score -= 25;
-    if (reputation_score < 0) reputation_score = 0;
-    if (reputation_score >= 70) strcpy(reputation_status, "high");
-    else if (reputation_score >= 40) strcpy(reputation_status, "medium");
-    else strcpy(reputation_status, "low");
-  }
+  /* There is no fallback score any more. This used to start from a bare 50 —
+   * a number nothing measured — subtract penalties from it, and publish the
+   * result as `reputation_score` alongside a "high"/"medium"/"low" status,
+   * indistinguishable in the emitted row from a real emailrep.io reputation.
+   * When the API gave us nothing, the honest answer is that the reputation is
+   * unknown; the locally computed facts (format, MX, disposable) still ship. */
+  int have_score = (reputation_score != 0);
+  if (!have_score) snprintf(reputation_status, sizeof reputation_status,
+                            "unknown");
 
   cJSON *data = cJSON_CreateObject();
   cJSON_AddStringToObject(data, "email", email);
@@ -159,8 +158,13 @@ int jo_email_reputation_run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddBoolToObject(data, "valid_format", valid_format);
   cJSON_AddBoolToObject(data, "disposable", disposable);
   cJSON_AddBoolToObject(data, "mx_exists", mx_exists);
-  cJSON_AddBoolToObject(data, "deliverable", deliverable);
-  cJSON_AddNumberToObject(data, "reputation_score", reputation_score);
+  /* deliverable / reputation_score are upstream facts or nothing — a false and
+   * a 0 read as measurements, and "not deliverable" is a damaging claim to
+   * invent about an address. */
+  cJSON_AddItemToObject(data, "deliverable",
+    have_deliverable ? cJSON_CreateBool(deliverable) : cJSON_CreateNull());
+  cJSON_AddItemToObject(data, "reputation_score",
+    have_score ? cJSON_CreateNumber(reputation_score) : cJSON_CreateNull());
   cJSON_AddStringToObject(data, "reputation_status", reputation_status);
   cJSON_AddBoolToObject(data, "suspicious", suspicious);
   cJSON_AddBoolToObject(data, "api_lookup", api_success);

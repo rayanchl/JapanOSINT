@@ -1,0 +1,21 @@
+=== gtfs-jp
+exit: TIMEOUT after 420s
+sched: (no [sched] line — the collector never returned)
+--- stderr ---
+[gtfs-jp] 25 feeds: 4187 stops, 3131 trips, 91360 stop_times
+[gtfs-jp] 50 feeds: 9228 stops, 4692 trips, 142041 stop_times
+[gtfs-jp] 75 feeds: 15806 stops, 8217 trips, 248299 stop_times
+[gtfs-jp] 100 feeds: 20127 stops, 10542 trips, 316012 stop_times
+[gtfs-jp] 125 feeds: 22747 stops, 13043 trips, 367017 stop_times
+[gtfs-jp] 150 feeds: 27003 stops, 17302 trips, 469265 stop_times
+[gtfs-jp] 175 feeds: 29889 stops, 18931 trips, 510691 stop_times
+[gtfs-jp] 200 feeds: 34230 stops, 21157 trips, 579921 stop_times
+[gtfs-jp] 225 feeds: 39171 stops, 23512 trips, 641116 stop_times
+[gtfs-jp] 250 feeds: 45179 stops, 27068 trips, 727449 stop_times
+[gtfs-jp] 275 feeds: 48677 stops, 29536 trips, 781995 stop_times
+[gtfs-jp] 300 feeds: 53123 stops, 33224 trips, 877382 stop_times
+[gtfs-jp] 325 feeds: 59158 stops, 41189 trips, 1088646 stop_times
+[gtfs-jp] 350 feeds: 63372 stops, 43465 trips, 1144103 stop_times
+[gtfs-jp] 375 feeds: 66972 stops, 45427 trips, 1188516 stop_times
+[gtfs-jp] 400 feeds: 71683 stops, 47177 trips, 1234768 stop_times
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

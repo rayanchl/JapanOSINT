@@ -1,0 +1,49 @@
+=== OPENDATA_SOCRATA  entity=crime
+exit: 0
+sched: rc=0 records=65 3266ms
+--- stderr ---
+[opendata-socrata] http status=404
+[opendata-socrata] http status=404
+[opendata-socrata] http status=404
+[opendata-socrata] http status=404
+[opendata-socrata] emitted 65
+[sched] OPENDATA_SOCRATA run rc=0 records=65 3266ms
+--- persisted: 65 rows, 0 with lat/lon, 0 with geometry ---
+record_type: socrata-dataset=65
+sub_source_id: (null)=65
+
+--- row 1 ---
+  uid            OPENDATA_SOCRATA|c5dk-m6ea
+  title          Citywide Crime Statistics
+  body           {"name":"Citywide Crime Statistics","domain":"data.cityofnewyork.us","description":"Statistical breakdown by citywide, borough, and precinct.","dataset_id":"c5dk-m6ea","resource_type":"href","link":"https://data.cityofnewyork.us/d/c5dk-m6ea","source":"Socrata Open Data"}
+  summary        data.cityofnewyork.us
+  link           https://data.cityofnewyork.us/d/c5dk-m6ea
+  language       en
+  published_at   2024-10-30T14:28:39.000Z
+  record_type    socrata-dataset
+  tags           ["osint-search","OPENDATA_SOCRATA"]
+  properties     {"service":"OPENDATA_SOCRATA","source":"Socrata Open Data","domain":"data.cityofnewyork.us","dataset_id":"c5dk-m6ea","link":"https://data.cityofnewyork.us/d/c5dk-m6ea","success":true}
+
+--- row 2 ---
+  uid            OPENDATA_SOCRATA|bqiq-cu78
+  title          NYPD Hate Crimes
+  body           {"name":"NYPD Hate Crimes","domain":"data.cityofnewyork.us","description":"Dataset containing confirmed hate crime incidents in NYC","dataset_id":"bqiq-cu78","resource_type":"dataset","link":"https://data.cityofnewyork.us/d/bqiq-cu78","source":"Socrata Open Data"}
+  summary        data.cityofnewyork.us
+  link           https://data.cityofnewyork.us/d/bqiq-cu78
+  language       en
+  published_at   2026-07-27T15:18:06.000Z
+  record_type    socrata-dataset
+  tags           ["osint-search","OPENDATA_SOCRATA"]
+  properties     {"service":"OPENDATA_SOCRATA","source":"Socrata Open Data","domain":"data.cityofnewyork.us","dataset_id":"bqiq-cu78","link":"https://data.cityofnewyork.us/d/bqiq-cu78","success":true}
+
+--- row 3 ---
+  uid            OPENDATA_SOCRATA|qk6i-zcht
+  title          Crime Enforcement Activity
+  body           {"name":"Crime Enforcement Activity","domain":"data.cityofnewyork.us","description":"Crime and enforcement activity broken down by the race/ethnicity of victims, suspects, and arrestees","dataset_id":"qk6i-zcht","resource_type":"href","link":"https://data.cityofnewyork.us/d/qk6i-zcht","source":"Socrata Open Data"}
+  summary        data.cityofnewyork.us
+  link           https://data.cityofnewyork.us/d/qk6i-zcht
+  language       en
+  published_at   2024-10-30T14:27:56.000Z
+  record_type    socrata-dataset
+  tags           ["osint-search","OPENDATA_SOCRATA"]
+  properties     {"service":"OPENDATA_SOCRATA","source":"Socrata Open Data","domain":"data.cityofnewyork.us","dataset_id":"qk6i-zcht","link":"https://data.cityofnewyork.us/d/qk6i-zcht","success":true}

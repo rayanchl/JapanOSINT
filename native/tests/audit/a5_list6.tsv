@@ -1,0 +1,6 @@
+ps-http	http://rss.packetstormsecurity.com/files/
+ps-news-rss	https://packetstorm.news/rss
+ps-news-files	https://packetstorm.news/files/feed/
+talos-vulnrss	https://talosintelligence.com/feeds/vuln_reports.rss
+talos-blog	https://blog.talosintelligence.com/rss/
+haaretz-rss	https://www.haaretz.com/srv/haaretz---all-articles

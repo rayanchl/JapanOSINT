@@ -146,12 +146,42 @@ static int tokyo_mou(const source_ctx *ctx, intel_sink *sink, const char *q) {
   return e;
 }
 
-/* FAA civil aircraft registry — N-number inquiry result page. The registry
- * exposes a per-tail-number result page; we scrape its anchors/links. */
+/* FAA civil aircraft registry — N-number inquiry result page.
+ *
+ * audit-09: this used jo_emit_anchors(href_must=NULL, query=NULL), i.e. it
+ * emitted EVERY <a> on the page. The FAA result page has no per-aircraft
+ * anchors at all, so what actually got stored were 27 site-navigation links
+ * ("United States Department of Transportation", "/AircraftInquiry/…") —
+ * chrome, not registrations — and it did that for any entity, including
+ * "Toyota", which is not a tail number.
+ *
+ * The registration itself lives in <td data-label="Field">value</td> pairs.
+ * Parse those into ONE aircraft-registration row, and refuse a non-N-number
+ * entity with an honest empty. */
+
+/* trim leading/trailing whitespace in place */
+static char *faa_trim(char *s) {
+  while (*s == ' ' || *s == '\t' || *s == '\r' || *s == '\n') s++;
+  size_t n = strlen(s);
+  while (n && (s[n-1]==' '||s[n-1]=='\t'||s[n-1]=='\r'||s[n-1]=='\n')) s[--n]=0;
+  return s;
+}
+
+/* N-number: 'N' + 1..5 alphanumerics (the entity may omit the N). */
+static int faa_nnumber_ok(const char *q) {
+  const char *p = q;
+  if (*p == 'N' || *p == 'n') p++;
+  size_t n = strlen(p);
+  if (n < 1 || n > 5) return 0;
+  for (; *p; p++) if (!isalnum((unsigned char)*p)) return 0;
+  return 1;
+}
+
 static int faa_registry(const source_ctx *ctx, intel_sink *sink, const char *q) {
-  /* normalize: registry expects the N-number without a leading 'N' in the path
-   * segment used by the modern site; keep the raw query but strip a leading N
-   * for the classic NNumSQL path fallback. */
+  if (!faa_nnumber_ok(q)) {
+    fprintf(stderr, "[FAA_REGISTRY] entity is not an N-number: %s\n", q);
+    return 0;                                   /* honest empty */
+  }
   const char *nn = q;
   if ((*nn == 'N' || *nn == 'n')) nn++;
   char *enc = jo_urlencode(nn);
@@ -160,9 +190,70 @@ static int faa_registry(const source_ctx *ctx, intel_sink *sink, const char *q) 
   snprintf(url, sizeof url,
     "https://registry.faa.gov/AircraftInquiry/Search/NNumberResult?NNumbertxt=%s", enc);
   free(enc);
-  int e = jo_emit_anchors(ctx, sink, url, NULL, "FAA_REGISTRY",
-                          "aircraft-registration", "https://registry.faa.gov", NULL,
-                          40, "FAA_REGISTRY");
+
+  char *html = jo_get(ctx, url, NULL, "FAA_REGISTRY");
+  if (!html) return 0;
+
+  cJSON *props = cJSON_CreateObject();
+  cJSON_AddStringToObject(props, "service", "FAA_REGISTRY");
+  char nbuf[16]; snprintf(nbuf, sizeof nbuf, "N%s", nn);
+  cJSON_AddStringToObject(props, "n_number", nbuf);
+  int fields = 0;
+  char mfr[128] = {0}, model[128] = {0}, status[64] = {0};
+  for (const char *p = html; (p = strstr(p, "data-label=\"")) != NULL; ) {
+    p += 12;
+    const char *le = strchr(p, '"');
+    if (!le) break;
+    size_t llen = (size_t)(le - p);
+    if (llen == 0 || llen > 63) { p = le + 1; continue; }   /* label-less cell */
+    char label[64]; snprintf(label, sizeof label, "%.*s", (int)llen, p);
+    const char *gt = strchr(le, '>');
+    const char *end = gt ? strstr(gt, "</td>") : NULL;
+    if (!gt || !end) { p = le + 1; continue; }
+    size_t vlen = (size_t)(end - (gt + 1));
+    if (vlen > 500) vlen = 500;
+    char value[512]; snprintf(value, sizeof value, "%.*s", (int)vlen, gt + 1);
+    char *v = faa_trim(value);
+    p = end + 5;
+    if (!*v || strchr(v, '<')) continue;         /* nested markup → not a value */
+    if (cJSON_GetObjectItem(props, label)) continue;
+    cJSON_AddStringToObject(props, label, v);
+    fields++;
+    if (!strcmp(label, "Manufacturer Name")) snprintf(mfr, sizeof mfr, "%s", v);
+    else if (!strcmp(label, "Model"))        snprintf(model, sizeof model, "%s", v);
+    else if (!strcmp(label, "Status"))       snprintf(status, sizeof status, "%s", v);
+  }
+  free(html);
+  if (fields == 0) {                             /* no such registration */
+    cJSON_Delete(props);
+    fprintf(stderr, "[FAA_REGISTRY] no registration fields for %s\n", nbuf);
+    return 0;
+  }
+  cJSON_AddBoolToObject(props, "success", 1);
+  char *pj = cJSON_PrintUnformatted(props);
+
+  char title[400];
+  snprintf(title, sizeof title, "%s — %s %s%s%s%s", nbuf,
+           mfr[0] ? mfr : "aircraft", model,
+           status[0] ? " (" : "", status[0] ? status : "",
+           status[0] ? ")" : "");
+  char body[256];
+  snprintf(body, sizeof body,
+           "FAA civil aircraft registry record for %s (%d fields)", nbuf, fields);
+
+  intel_item it = {0};
+  it.remote_key   = nbuf;
+  it.title        = title;
+  it.body         = body;
+  it.summary      = body;
+  it.link         = url;
+  it.lang         = "en";
+  it.record_type  = "aircraft-registration";
+  it.properties_json = pj ? pj : "{}";
+  it.tags_json    = "[\"osint-search\",\"aircraft\",\"FAA_REGISTRY\"]";
+  int e = (sink->emit(sink, &it) >= 0) ? 1 : 0;
+  free(pj); cJSON_Delete(props);
+  fprintf(stderr, "[FAA_REGISTRY] emitted %d (%d fields)\n", e, fields);
   return e;
 }
 
@@ -183,7 +274,7 @@ static int uscg_psix(const source_ctx *ctx, intel_sink *sink, const char *q) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
-  if (!q) return -1;
+  if (!q) return 0;   /* audit-09: no pivot is an honest empty, not an error */
 
   const char *id = ctx->source_id;
   if      (!strcmp(id, "NHTSA_VIN"))     nhtsa_vin(ctx, sink, q);

@@ -1,0 +1,8 @@
+=== ITOWNPAGE  entity=ラーメン
+exit: 0
+sched: rc=0 records=0 43930ms
+--- stderr ---
+[itownpage] http status=0
+[sched] ITOWNPAGE run rc=0 records=0 43930ms
+[detect] anomaly opened: ITOWNPAGE verdict=duration_outlier — duration 43930ms exceeds 10000ms threshold
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

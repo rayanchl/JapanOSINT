@@ -37,10 +37,31 @@ struct AlertEditor: View {
     private let ruleId: String
     private let isCreate: Bool
 
+    /// What the server substitutes for a stored webhook secret on reads
+    /// (`core/alertsapi.c`, `one_rule`). Four U+2022 bullets — 12 UTF-8 bytes,
+    /// which is *below* the server's 16-byte minimum, so echoing it back on a
+    /// PATCH is an unconditional 400 and renaming a webhook rule was
+    /// impossible.
+    ///
+    /// Dropping the `secret` key alone does NOT fix that: `validate_rule`
+    /// requires a real ≥16-char secret on every webhook channel in whatever
+    /// `channels` array the PATCH ends up merging, so an absent secret is
+    /// rejected exactly like a short one. The merge is top-level, which means
+    /// the only way to keep a stored secret is to omit `channels` entirely —
+    /// see `API.alertUpdate(_:omittingChannels:)` and `channelsWereEdited`.
+    private static let maskedSecret = "••••"
+
+    /// The channel list as it arrived from the server, so `save()` can tell
+    /// "the user left the channels alone" (safe to omit from the PATCH and let
+    /// the stored secrets stand) from "the user edited them" (the whole array
+    /// is replaced server-side, so every webhook in it needs a real secret).
+    private let loadedChannels: [AlertChannel]
+
     init(rule: AlertRule, onSave: @escaping (AlertRule) -> Void) {
         self.onSave = onSave
         self.ruleId = rule.id
         self.isCreate = rule.id.isEmpty
+        self.loadedChannels = rule.channels
         _name = State(initialValue: rule.name)
         _enabled = State(initialValue: rule.enabled)
         _mode = State(initialValue: rule.predicate.mode ?? "fts")
@@ -123,7 +144,9 @@ struct AlertEditor: View {
                 } header: {
                     Text("Deliver to")
                 } footer: {
-                    Text("Webhook receivers can verify each call's HMAC-SHA256 signature using the secret you paste below. Min 16 characters.")
+                    Text(isCreate
+                         ? "Webhook receivers can verify each call's HMAC-SHA256 signature using the secret you paste below. Min 16 characters."
+                         : "Webhook receivers can verify each call's HMAC-SHA256 signature. Min 16 characters. Leave the channels untouched to keep the stored secret; if you change any channel you must re-enter the secret, because the server replaces the whole channel list.")
                         .font(.caption2)
                 }
 
@@ -268,19 +291,39 @@ struct AlertEditor: View {
         let trimmedName = name.trimmingCharacters(in: .whitespaces)
         if trimmedName.isEmpty { error = "Name is required"; return }
         if channels.isEmpty { error = "Add at least one channel"; return }
+        // "Untouched" = still carrying the server's mask (or blank). Only an
+        // *edit* can leave that state behind, so on create it is always a
+        // validation failure.
+        let channelsWereEdited = isCreate || channels != loadedChannels
+        var anyUntouchedWebhook = false
         for (i, ch) in channels.enumerated() {
             if ch.target.trimmingCharacters(in: .whitespaces).isEmpty {
                 error = "Channel \(i + 1) is missing a target"; return
             }
             if ch.type == .webhook {
                 let secret = (ch.secret ?? "").trimmingCharacters(in: .whitespaces)
-                // Server preserves "••••" placeholder when updating without
-                // re-entering the secret. Accept that as "unchanged".
-                if secret.count < 16 && secret != "••••" {
+                let untouched = !isCreate
+                    && (secret == Self.maskedSecret || secret.isEmpty)
+                if untouched {
+                    anyUntouchedWebhook = true
+                    // The whole array is replaced when `channels` is sent, and
+                    // the server cannot merge a stored secret into it. Say so
+                    // here rather than shipping a request that can only 400.
+                    if channelsWereEdited {
+                        error = "Re-enter the webhook secret for channel \(i + 1) — "
+                              + "editing the channel list replaces the stored secret."
+                        return
+                    }
+                } else if secret.count < 16 {
                     error = "Webhook secret must be at least 16 characters"; return
                 }
             }
         }
+
+        // Nothing about the channels changed and at least one webhook is still
+        // on its mask ⇒ omit `channels` from the PATCH so the stored secrets
+        // survive. Anything else sends the array as authored.
+        let omitChannels = !isCreate && !channelsWereEdited && anyUntouchedWebhook
 
         var predicate = AlertPredicate()
         predicate.mode = mode
@@ -307,7 +350,9 @@ struct AlertEditor: View {
 
         do {
             let api = apiClient.api
-            let saved = isCreate ? try await api.alertCreate(rule) : try await api.alertUpdate(rule)
+            let saved = isCreate
+                ? try await api.alertCreate(rule)
+                : try await api.alertUpdate(rule, omittingChannels: omitChannels)
             onSave(saved)
             Haptics.success()
             dismiss()

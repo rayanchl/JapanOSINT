@@ -87,6 +87,12 @@
  * whether the protocol whitelists are wide enough for real streams. Those need
  * an ffmpeg, and there is not one here.
  */
+/* pipe2() is a GNU extension; glibc only declares it under _GNU_SOURCE. The
+ * call itself is #ifdef'd to Linux and falls back to pipe()+FD_CLOEXEC, so
+ * this only affects which declaration is visible, not which code runs. */
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
 #include "ffmpeg.h"
 #include "../third_party/cJSON.h"
 #include <ctype.h>
@@ -353,6 +359,39 @@ typedef struct {
   char err[FFMPEG_ERRBUF_MAX];   /* first bytes of the child's stderr        */
 } ff_result;
 
+/* pipe() with O_CLOEXEC on both ends.
+ *
+ * WHY THIS IS NOT PEDANTRY. The plain pipe() this replaces leaked its write
+ * ends into every process forked by any other thread in the window between the
+ * pipe and this function's own fork — in particular media.c's popen(), which
+ * runs on a different worker. That child holds the write end open, so this
+ * function never sees EOF, waits out its deadline and SIGKILLs a perfectly
+ * healthy ffmpeg. Lose that race once inside probe_tools() and the tool is
+ * recorded as absent (see ensure_probed for the second half of the fix).
+ *
+ * The dup2()s in the child intentionally clear O_CLOEXEC on the descriptor
+ * they produce, so the child's own stdout/stderr still cross the exec.
+ *
+ * pipe2 is Linux; the fcntl pair is the portable fallback. It is not fully
+ * race-free (another thread can fork between the pipe and the fcntl) but the
+ * window is two syscalls instead of the whole spawn, and macOS has no
+ * atomic equivalent. */
+static int ff_pipe_cloexec(int fd[2]) {
+#if defined(__linux__) && defined(O_CLOEXEC)
+  if (pipe2(fd, O_CLOEXEC) == 0) return 0;
+  if (errno != ENOSYS) return -1;      /* a real failure, not "no pipe2 here" */
+#endif
+  if (pipe(fd) != 0) return -1;
+  for (int i = 0; i < 2; i++) {
+    int fl = fcntl(fd[i], F_GETFD);
+    if (fl < 0 || fcntl(fd[i], F_SETFD, fl | FD_CLOEXEC) < 0) {
+      close(fd[0]); close(fd[1]);
+      return -1;
+    }
+  }
+  return 0;
+}
+
 static int ff_spawn(const char *const argv[], int timeout_ms, size_t max_bytes,
                     ff_result *r) {
   memset(r, 0, sizeof *r);
@@ -361,8 +400,8 @@ static int ff_spawn(const char *const argv[], int timeout_ms, size_t max_bytes,
   if (timeout_ms <= 0) timeout_ms = cfg_timeout_ms();
 
   int op[2], ep[2];
-  if (pipe(op) != 0) return FFMPEG_ERR_SPAWN;
-  if (pipe(ep) != 0) { close(op[0]); close(op[1]); return FFMPEG_ERR_SPAWN; }
+  if (ff_pipe_cloexec(op) != 0) return FFMPEG_ERR_SPAWN;
+  if (ff_pipe_cloexec(ep) != 0) { close(op[0]); close(op[1]); return FFMPEG_ERR_SPAWN; }
 
   pid_t pid = fork();
   if (pid < 0) {
@@ -522,7 +561,6 @@ int ffmpeg_run(const char *const argv[], int timeout_ms, size_t max_bytes,
  * tracking.
  * ══════════════════════════════════════════════════════════════════════════ */
 
-static pthread_once_t g_probe_once = PTHREAD_ONCE_INIT;
 static char g_ff_path[FF_PATH_MAX], g_fp_path[FF_PATH_MAX];
 static char g_ff_ver[256], g_fp_ver[256];
 static int  g_ff_ok, g_fp_ok;
@@ -580,6 +618,9 @@ static int tool_version(const char *tool, int is_ffmpeg, char *ver, size_t cap) 
 
 static void probe_tools(void) {
   if (ff_disabled()) return;
+  /* Re-entrant: a retry must not inherit the previous attempt's answers. */
+  g_ff_ok = g_fp_ok = 0;
+  g_ff_path[0] = g_fp_path[0] = '\0';
 
   const char *ov = env_nonempty("JO_FFMPEG");
   if (!ov) ov = env_nonempty("CAM_STILLS_FFMPEG");
@@ -617,14 +658,61 @@ static void probe_tools(void) {
     g_fp_path[0] = '\0';
 }
 
-static void ensure_probed(void) { pthread_once(&g_probe_once, probe_tools); }
+/* A FAILED probe is retried; a successful one is still probed exactly once.
+ *
+ * This was a pthread_once, which made "ffmpeg is not installed" permanent for
+ * the process lifetime. The probe forks ffmpeg -version, so it can fail for
+ * reasons that have nothing to do with whether ffmpeg exists — a transient
+ * fork failure, or (before ff_pipe_cloexec above) another thread's popen()
+ * holding the read pipe open until the 5 s deadline killed the child. Losing
+ * that race once meant every camera reported rtsp_requires_ffmpeg forever,
+ * and only a restart could clear it. Now a negative answer expires.
+ *
+ * The retry is rate-limited because a genuinely absent ffmpeg is the common
+ * case and a PATH walk plus two forks per frame is a real cost when a pod is
+ * iterating cameras — which is exactly why the once existed. */
+#define FF_PROBE_RETRY_MS 60000
 
-int ffmpeg_available(void)  { ensure_probed(); return g_ff_ok; }
-int ffprobe_available(void) { ensure_probed(); return g_fp_ok; }
-const char *ffmpeg_version(void)  { ensure_probed(); return g_ff_ok ? g_ff_ver : NULL; }
-const char *ffprobe_version(void) { ensure_probed(); return g_fp_ok ? g_fp_ver : NULL; }
-const char *ffmpeg_path(void)  { ensure_probed(); return g_ff_ok ? g_ff_path : NULL; }
-const char *ffprobe_path(void) { ensure_probed(); return g_fp_ok ? g_fp_path : NULL; }
+static pthread_mutex_t g_probe_mu = PTHREAD_MUTEX_INITIALIZER;
+static int             g_probed;          /* a probe has completed at least once */
+static long long       g_probed_at;
+
+/* Probe if due, then hand back a SNAPSHOT of the two flags taken while the
+ * lock is still held.
+ *
+ * The accessors below used to call ensure_probed() and then read g_ff_ok /
+ * g_fp_ok after it had unlocked. That was safe when this was a pthread_once —
+ * once() gives every later caller a happens-before edge to the single write,
+ * and there was never a second write. It stopped being safe the moment a
+ * negative probe became retryable: probe_tools() now rewrites both flags
+ * (line 622) on any thread, at any 60s boundary, so an unlocked read of them
+ * is a plain data race against a concurrent retry. Two pods reach here —
+ * core/media.c:921 and core/camera_stills.c:1636 — on separate threads.
+ *
+ * The g_ff_path / g_ff_ver BUFFERS are still handed out unlocked, and that is
+ * deliberate rather than an oversight: probe_tools() only rewrites them while
+ * the retry condition holds, which requires BOTH flags to be 0 — and with
+ * both flags 0 every accessor below returns NULL instead of the buffer. So no
+ * caller can hold a pointer into a buffer that is about to be rewritten. */
+static void probe_snapshot(int *ff_ok, int *fp_ok) {
+  pthread_mutex_lock(&g_probe_mu);
+  if (!g_probed ||
+      (!g_ff_ok && !g_fp_ok && ff_now_ms() - g_probed_at >= FF_PROBE_RETRY_MS)) {
+    probe_tools();
+    g_probed = 1;
+    g_probed_at = ff_now_ms();
+  }
+  if (ff_ok) *ff_ok = g_ff_ok;
+  if (fp_ok) *fp_ok = g_fp_ok;
+  pthread_mutex_unlock(&g_probe_mu);
+}
+
+int ffmpeg_available(void)  { int a; probe_snapshot(&a, NULL); return a; }
+int ffprobe_available(void) { int b; probe_snapshot(NULL, &b); return b; }
+const char *ffmpeg_version(void)  { int a; probe_snapshot(&a, NULL); return a ? g_ff_ver : NULL; }
+const char *ffprobe_version(void) { int b; probe_snapshot(NULL, &b); return b ? g_fp_ver : NULL; }
+const char *ffmpeg_path(void)  { int a; probe_snapshot(&a, NULL); return a ? g_ff_path : NULL; }
+const char *ffprobe_path(void) { int b; probe_snapshot(NULL, &b); return b ? g_fp_path : NULL; }
 
 /* The gate every entry point opens with. Distinguishing DISABLED from
  * NOT_INSTALLED is not pedantry: one is a configuration an operator chose and
@@ -635,8 +723,9 @@ static int gate(int need_probe, char *err, size_t errcap) {
     ff_seterr(err, errcap, FFMPEG_ERR_DISABLED, NULL);
     return FFMPEG_ERR_DISABLED;
   }
-  ensure_probed();
-  if (need_probe ? !g_fp_ok : !g_ff_ok) {
+  int ff_ok, fp_ok;
+  probe_snapshot(&ff_ok, &fp_ok);
+  if (need_probe ? !fp_ok : !ff_ok) {
     ff_seterr(err, errcap, FFMPEG_ERR_NOT_INSTALLED,
               need_probe ? "ffprobe" : "ffmpeg");
     return FFMPEG_ERR_NOT_INSTALLED;
@@ -1257,7 +1346,7 @@ static void add_tool(cJSON *d, const char *key, int ok, const char *path,
 
 char *ffmpeg_capabilities(void) {
   int dis = ff_disabled();
-  if (!dis) ensure_probed();
+  if (!dis) probe_snapshot(NULL, NULL);   /* probe if due; flags read below */
 
   cJSON *d = cJSON_CreateObject();
   if (!d) return NULL;

@@ -2,23 +2,13 @@
  * Port of server/src/collectors/shodanJapan.js.
  * Shodan host/search?query=country:JP (key in querystring) → FeatureCollection.
  * Gated on SHODAN_API_KEY. No seed. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-/* JS x != null (here: number or string present). longitude/latitude → +x. */
-static int num_of(cJSON *v, double *out) {
-  if (!v) return 0;
-  if (cJSON_IsNumber(v)) { *out = v->valuedouble; return 1; }
-  if (cJSON_IsString(v) && v->valuestring && v->valuestring[0]) {
-    char *e; double d = strtod(v->valuestring, &e);
-    if (e != v->valuestring) { *out = d; return 1; }
-  }
-  return 0;
-}
 
 /* m.<k> as string, or null. */
 static cJSON *str_or_null(cJSON *m, const char *k) {
@@ -61,19 +51,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON *loc = cJSON_GetObjectItem(m, "location");
       double lon, lat;
       if (!(loc &&
-            num_of(cJSON_GetObjectItem(loc, "longitude"), &lon) &&
-            num_of(cJSON_GetObjectItem(loc, "latitude"), &lat)))
+            jo_num_of(cJSON_GetObjectItem(loc, "longitude"), &lon) &&
+            jo_num_of(cJSON_GetObjectItem(loc, "latitude"), &lat)))
         continue;
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(lon, lat);
 
       cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
       cJSON *ipv = cJSON_GetObjectItem(m, "ip_str");

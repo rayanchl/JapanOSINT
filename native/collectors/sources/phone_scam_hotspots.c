@@ -84,10 +84,19 @@ static int match_after_label(const char *html, const char *label,
   return 0;
 }
 
+/* NPA gate page. The old /bureau/criminal/souni/tokushusagi/ path 404s (and
+ * the tokusyusagi spelling 403s) since the NPA site restructure, so the gate
+ * fetch returned NULL and the source returned -1 on every run without ever
+ * reaching the prefectural pages. SOS47 is the live 特殊詐欺 landing page. */
+#define NPA_GATE_URL "https://www.npa.go.jp/bureau/safetylife/sos47/"
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  char *idx_html = feed_get_text(ctx->http,
-    "https://www.npa.go.jp/bureau/criminal/souni/tokushusagi/", 8000);
-  if (!idx_html) return -1;
+  char *idx_html = feed_get_text(ctx->http, NPA_GATE_URL, 8000);
+  if (!idx_html) {
+    fprintf(stderr, "[phone-scam-hotspots] NPA gate fetch failed: %s\n",
+            NPA_GATE_URL);
+    return -1;
+  }
   if (!strstr(idx_html, "特殊詐欺") && !strstr(idx_html, "tokushusagi")
       && !strstr(idx_html, "振り込め")) { free(idx_html); return 0; }
   free(idx_html);
@@ -98,9 +107,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char url[256];
     snprintf(url, sizeof url, "https://%s%s", PAGES[i].host, PAGES[i].path);
     char *html = feed_get_text(ctx->http, url, 10000);
-    if (!html) continue;
+    if (!html) { fprintf(stderr, "[phone-scam-hotspots] unreachable: %s\n", url);
+                 continue; }
     if (!strstr(html, "特殊詐欺") && !strstr(html, "被害")
-        && !strstr(html, "認知件数")) { free(html); continue; }
+        && !strstr(html, "認知件数")) {
+      fprintf(stderr, "[phone-scam-hotspots] no scam content: %s\n", url);
+      free(html); continue;
+    }
 
     /* incidents: /認知件数[^<>]{0,40}?([0-9,]+)\s*件/ */
     long incidents = -1; int iu = 0;
@@ -125,15 +138,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (!has_inc && !has_dmg) { free(html); continue; }
     idx++;
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(PAGES[i].lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(PAGES[i].lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(PAGES[i].lon, PAGES[i].lat);
 
     cJSON *p = cJSON_CreateObject();   /* EXACT JS key order */
     char wid[32]; snprintf(wid, sizeof wid, "LIVE_SCAM_%d", idx);

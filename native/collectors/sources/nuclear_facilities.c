@@ -2,41 +2,34 @@
  * server/src/collectors/nuclearFacilities.js (fetchOverpass single
  * area.jp). NUCLEAR_FACILITIES offline fallback not ported (rule 8).
  * `updated_at` mirrors JS `new Date().toISOString()` (UTC, ms). */
+#include "../../lib/geojson.h"
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
 
-static void iso_now(char *o, size_t n) {
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  struct tm tm;
-  gmtime_r(&tv.tv_sec, &tm);
-  char base[32];
-  strftime(base, sizeof base, "%Y-%m-%dT%H:%M:%S", &tm);
-  snprintf(o, n, "%s.%03dZ", base, (int)(tv.tv_usec / 1000));
-}
-
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)i; (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
+  cJSON *id = cJSON_GetObjectItem(el, "id");
+  long long oid = id && cJSON_IsNumber(id) ? (long long)id->valuedouble : 0;
+
+  /* STABLE uid — "facility_id" is not a NATIVE_ID_KEY (lib/geojson.c:9-12), so
+   * feature_uid() hashed {geometry,properties}, and `updated_at` below moves
+   * every run. Measured live: 21 facilities became 42 on a second run.
+   * `station_id` is a NATIVE_ID_KEY; the OSM id is stable, so re-runs now
+   * update in place. Index-derived facility_id kept as display payload. */
+  char sid_buf[40];
+  snprintf(sid_buf, sizeof sid_buf, "OSM_%lld", oid);
+  cJSON_AddStringToObject(p, "station_id", sid_buf);
+
   char fb[32];
   snprintf(fb, sizeof fb, "NUC_LIVE_%04d", i + 1);
   cJSON_AddStringToObject(p, "facility_id", fb);
-
-  cJSON *id = cJSON_GetObjectItem(el, "id");
-  long long oid = id && cJSON_IsNumber(id) ? (long long)id->valuedouble : 0;
   const char *nm = ov_tag(el, "name");
   if (!nm) nm = ov_tag(el, "name:en");
   if (nm) {
@@ -56,7 +49,7 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
 
   cJSON_AddStringToObject(p, "country", "JP");
   char ts[40];
-  iso_now(ts, sizeof ts);
+  jo_iso_now(ts, sizeof ts);
   cJSON_AddStringToObject(p, "updated_at", ts);
   cJSON_AddStringToObject(p, "source", "nuclear_facilities");
   cJSON_AddItemToObject(f, "properties", p);

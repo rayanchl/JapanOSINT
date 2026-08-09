@@ -2,21 +2,14 @@
  * server/src/collectors/vendingMachines.js. fetchOverpass (single query,
  * tryLive — bbox-sampled, body verbatim). SEED_ZONES offline fallback
  * intentionally not ported (JS does `if (!live) features = []`). */
+#include "../../lib/geojson.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
 #include <string.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();                   /* EXACT JS key order */
   cJSON *id = cJSON_GetObjectItem(el, "id");
@@ -24,23 +17,27 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   snprintf(vid, sizeof vid, "OSM_%lld",
            id && cJSON_IsNumber(id) ? (long long)id->valuedouble : 0);
   cJSON_AddStringToObject(p, "vm_id", vid);
+  /* AUDIT NOTE (slice a3): an untagged machine used to be published as
+   * vending="drinks" and payment="coin". OSM not carrying those tags is not
+   * evidence of what the machine sells or takes — both were invented facts.
+   * Absent tag → null. */
   const char *vending = ov_tag(el, "vending");
-  cJSON_AddStringToObject(p, "vending", vending ? vending : "drinks");
+  cJSON_AddItemToObject(p, "vending",
+                        vending ? cJSON_CreateString(vending) : cJSON_CreateNull());
   const char *operator_ = ov_tag(el, "operator");
   if (operator_) cJSON_AddStringToObject(p, "operator", operator_);
   else cJSON_AddItemToObject(p, "operator", cJSON_CreateNull());
   const char *brand = ov_tag(el, "brand");
   if (brand) cJSON_AddStringToObject(p, "brand", brand);
   else cJSON_AddItemToObject(p, "brand", cJSON_CreateNull());
-  /* el.tags['payment:coins']==='yes' ? 'coin'
-   *   : (el.tags['payment:cards']==='yes' ? 'card' : 'coin') */
   const char *coins = ov_tag(el, "payment:coins");
   const char *cards = ov_tag(el, "payment:cards");
   const char *payment = (coins && strcmp(coins, "yes") == 0)
                           ? "coin"
                           : ((cards && strcmp(cards, "yes") == 0) ? "card"
-                                                                  : "coin");
-  cJSON_AddStringToObject(p, "payment", payment);
+                                                                  : NULL);
+  cJSON_AddItemToObject(p, "payment",
+                        payment ? cJSON_CreateString(payment) : cJSON_CreateNull());
   const char *indoor = ov_tag(el, "indoor");
   cJSON_AddBoolToObject(p, "indoor", indoor && strcmp(indoor, "yes") == 0);
   cJSON_AddStringToObject(p, "source", "osm_overpass");
@@ -53,7 +50,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     "node[\"amenity\"=\"vending_machine\"](35.6,139.6,35.8,139.85);"
     "node[\"amenity\"=\"vending_machine\"](34.6,135.4,34.75,135.6);"
     "node[\"amenity\"=\"vending_machine\"](35.1,136.8,35.25,137.0);",
-    180, 60000, map, NULL);
+    180, 200000, map, NULL);
   return n >= 0 ? 0 : -1;
 }
 
