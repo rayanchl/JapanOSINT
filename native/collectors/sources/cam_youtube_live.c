@@ -44,6 +44,8 @@
  * faithful to the JS `if (!apiKey) return []`.  A hard fetch failure of the
  * search call → return -1 (fetch fail); empty result sets → 0 rows, return 0.
  */
+#include "../../lib/geojson.h"
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/camera_store.h"
 #include "../../lib/feedlib.h"
@@ -55,17 +57,6 @@
 
 typedef struct { const char *k; const char *sv; int is_num; double nv;
                  int is_null; } kv;
-static double round4(double v) { return floor(v * 1e4 + 0.5) / 1e4; }
-static void uid_tail(const char *url, const char *name, char *out,
-                     size_t outsz) {
-  const char *src = (url && *url) ? url : (name ? name : "");
-  size_t i = 0;
-  for (; src[i] && i < 60 && i + 1 < outsz; i++) {
-    unsigned char c = (unsigned char)src[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
 static cJSON *make_feature(double lat, double lon, const char *name,
                            const char *camera_type,
                            const char *discovery_channel,
@@ -76,19 +67,11 @@ static cJSON *make_feature(double lat, double lon, const char *name,
       url = extra[i].sv; break;
     }
   char lats[32], lons[32], tail[80], uid[160];
-  snprintf(lats, sizeof lats, "%.4f", round4(lat));
-  snprintf(lons, sizeof lons, "%.4f", round4(lon));
-  uid_tail(url, name, tail, sizeof tail);
+  snprintf(lats, sizeof lats, "%.4f", jo_round4(lat));
+  snprintf(lons, sizeof lons, "%.4f", jo_round4(lon));
+  jo_uid_tail(url, name, tail, sizeof tail);
   snprintf(uid, sizeof uid, "%s:%s:%s", lats, lons, tail);
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "camera_uid", uid);
   cJSON_AddStringToObject(p, "name", (name && *name) ? name : "Unknown camera");
@@ -135,10 +118,6 @@ static const char *thumb_url(cJSON *sn, const char *which) {
   cJSON *w = t ? cJSON_GetObjectItem(t, which) : NULL;
   cJSON *u = w ? cJSON_GetObjectItem(w, "url") : NULL;
   return (u && cJSON_IsString(u) && u->valuestring[0]) ? u->valuestring : NULL;
-}
-static const char *str_or_null(cJSON *o, const char *k) {
-  cJSON *v = o ? cJSON_GetObjectItem(o, k) : NULL;
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -219,7 +198,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       const char *vidid = (idv && cJSON_IsString(idv)) ? idv->valuestring : "";
 
       char name[256];
-      const char *title = str_or_null(sn, "title");
+      const char *title = jo_sv(sn, "title");
       if (title) snprintf(name, sizeof name, "%s", title);
       else snprintf(name, sizeof name, "YouTube live %s", vidid);
 
@@ -229,10 +208,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
       const char *thumb = thumb_url(sn, "high");
       if (!thumb) thumb = thumb_url(sn, "default");
-      const char *chTitle = str_or_null(sn, "channelTitle");
-      const char *chId = str_or_null(sn, "channelId");
-      const char *startT = str_or_null(ls, "actualStartTime");
-      const char *locDesc = rd ? str_or_null(rd, "locationDescription") : NULL;
+      const char *chTitle = jo_sv(sn, "channelTitle");
+      const char *chId = jo_sv(sn, "channelId");
+      const char *startT = jo_sv(ls, "actualStartTime");
+      const char *locDesc = rd ? jo_sv(rd, "locationDescription") : NULL;
 
       /* concurrent_viewers: ls.concurrentViewers != null ? Number(it) : null
        * (the API returns it as a STRING; Number() → numeric). */
@@ -285,8 +264,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_youtube_live_def = {
-  .id = "cam-youtube_live", .collector = "infrastructure",
+  .id = "cam-youtube_live", .collector = "camera-discovery",
   .name = "Camera discovery — YouTube Live API",
   .name_ja = "カメラ探索 — YouTube Live API",
-   .update_interval_sec = 21600, .run = run };
+   .layer = "cameras",
+   .update_interval_sec = 3600, .run = run };
 REGISTER_SOURCE(cam_youtube_live_def)

@@ -187,7 +187,7 @@ char *miscapi_list_layers(void) {
   int n = src_meta_count();
   for (int i = 0; i < n; i++) {
     const src_meta *m = src_meta_at(i);
-    if (!m->layer || !m->layer[0]) continue;
+    if (!m || !m->layer || !m->layer[0]) continue;
     cJSON *layer = find_layer(layers, m->layer);
     if (!layer) {
       layer = cJSON_CreateObject();
@@ -240,7 +240,7 @@ char *miscapi_layer_geojson(const char *layer_id) {
   int n = src_meta_count();
   for (int i = 0; i < n; i++) {
     const src_meta *m = src_meta_at(i);
-    if (m->layer && strcmp(m->layer, layer_id) == 0)
+    if (m && m->layer && strcmp(m->layer, layer_id) == 0)
       cJSON_AddItemToArray(srcs, cJSON_CreateString(m->id));
   }
   if (cJSON_GetArraySize(srcs) == 0) { cJSON_Delete(srcs); return NULL; }

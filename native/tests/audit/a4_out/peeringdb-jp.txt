@@ -1,0 +1,39 @@
+=== peeringdb-jp
+exit: 0
+sched: rc=0 records=1139 3304ms
+--- stderr ---
+[peeringdb-jp] emitted 1139
+[sched] peeringdb-jp run rc=0 records=1139 3304ms
+--- persisted: 1139 rows, 1139 with lat/lon, 1139 with geometry ---
+record_type: fac=112, ixp=27, net=1000
+sub_source_id: (null)=1139
+
+--- row 1 ---
+  uid            peeringdb-jp|h:4a81efa93df8d5cc
+  title          JPIX TOKYO
+  link           https://www.peeringdb.com/ix/30
+  lat            35.6895
+  lon            139.6917
+  geometry       {"type":"Point","coordinates":[139.6917,35.6895]}
+  record_type    ixp
+  properties     {"idx":0,"kind":"ixp","pdb_id":30,"name":"JPIX TOKYO","name_long":"","media":"Ethernet","country":"JP","city":"Tokyo","net_count":269,"proto_unicast":true,"proto_multicast":false,"proto_ipv6":true,"url":"https://www.peeringdb.com/ix/30","source":"peeringdb_ix"}
+
+--- row 2 ---
+  uid            peeringdb-jp|h:5ac87653e573ad98
+  title          DIX-IE
+  link           https://www.peeringdb.com/ix/92
+  lat            35.6895
+  lon            139.6917
+  geometry       {"type":"Point","coordinates":[139.6917,35.6895]}
+  record_type    ixp
+  properties     {"idx":1,"kind":"ixp","pdb_id":92,"name":"DIX-IE","name_long":"Distributed IX in EDO (former NSPIXP2)","media":"Ethernet","country":"JP","city":"Tokyo","net_count":23,"proto_unicast":true,"proto_multicast":false,"proto_ipv6":true,"url":"https://www.peeringdb.com/ix/92","source":"peeringdb_ix"}
+
+--- row 3 ---
+  uid            peeringdb-jp|h:203652a713a2d377
+  title          JPNAP Tokyo
+  link           https://www.peeringdb.com/ix/95
+  lat            35.6895
+  lon            139.6917
+  geometry       {"type":"Point","coordinates":[139.6917,35.6895]}
+  record_type    ixp
+  properties     {"idx":2,"kind":"ixp","pdb_id":95,"name":"JPNAP Tokyo","name_long":"JPNAP Tokyo","media":"Ethernet","country":"JP","city":"Tokyo","net_count":251,"proto_unicast":true,"proto_multicast":false,"proto_ipv6":true,"url":"https://www.peeringdb.com/ix/95","source":"peeringdb_ix"}

@@ -1,0 +1,45 @@
+=== gnews-mon-cyber-espionage
+exit: 0
+sched: rc=0 records=100 636ms
+--- stderr ---
+[rss] gnews-mon-cyber-espionage emitted 100
+[sched] gnews-mon-cyber-espionage run rc=0 records=100 636ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-cyber-espionage|CBMinAFBVV95cUxQanhZYW5FZHhvaDM4MGJuWENqU0cxM0ViTk9uUkthVmRzaktLUUNtN1YwalN3bGRFOHFIQWFHU3NvZ3ByZnRubGZfang1TW1VdnExSTdQTERqVlRrcmJjRzZLZzcxWUtPaGt1X1JPcFg2cExUemVoWWlXaGpSWURkZTRUMlVib0JOV2RKbGhLY0pIaFo2UjVjYkZBU3U
+  title          Frontier AI and Cyber Warfare: How Nation States Are Weaponizing AI - cyfirma
+  body           <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxQanhZYW5FZHhvaDM4MGJuWENqU0cxM0ViTk9uUkthVmRzaktLUUNtN1YwalN3bGRFOHFIQWFHU3NvZ3ByZnRubGZfang1TW1VdnExSTdQTERqVlRrcmJjRzZLZzcxWUtPaGt1X1JPcFg2cExUemVoWWlXaGpSWURkZTRUMlVib0JOV2RKbGhLY0pIaFo2UjVjYkZBU3U?oc=5" target="_blank">Frontier AI and Cyber Warfare: How Nation States Are Weaponizing AI</a>&nbsp;&nbsp;<font color="#6f6f6f">cyfirma</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxQanhZYW5FZHhvaDM4MGJuWENqU0cxM0ViTk9uUkthVmRzaktLUUNtN1YwalN3bGRFOHFIQWFHU3NvZ3ByZnRubGZfang1TW1VdnExSTdQTERqVlRrcmJjRzZLZzcxWUtPaGt1X1JPcFg2cExUemVoWWlXaGpSWURkZTRUMlVib0JOV2RKbG
+  link           https://news.google.com/rss/articles/CBMinAFBVV95cUxQanhZYW5FZHhvaDM4MGJuWENqU0cxM0ViTk9uUkthVmRzaktLUUNtN1YwalN3bGRFOHFIQWFHU3NvZ3ByZnRubGZfang1TW1VdnExSTdQTERqVlRrcmJjRzZLZzcxWUtPaGt1X1JPcFg2cExUemVoWWlXaGpSWURkZTRUMlVib0JOV2RKbGhLY0pIaFo2UjVjYkZBU3U?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 06:34:44 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","cyber"]
+  properties     {"guid":"CBMinAFBVV95cUxQanhZYW5FZHhvaDM4MGJuWENqU0cxM0ViTk9uUkthVmRzaktLUUNtN1YwalN3bGRFOHFIQWFHU3NvZ3ByZnRubGZfang1TW1VdnExSTdQTERqVlRrcmJjRzZLZzcxWUtPaGt1X1JPcFg2cExUemVoWWlXaGpSWURkZTRUMlVib0JOV2RKbGhLY0pIaFo2UjVjYkZBU3U"}
+
+--- row 2 ---
+  uid            gnews-mon-cyber-espionage|CBMitgFBVV95cUxQN2o0NzN6RDhJUU9oU2d2VVJZbGdqT0l0aXd5bzVVUlpocVVyY0tQNDI0LThMM2cxZmhqLU9Id3dqcW5FclZPSTJoSEtVc2l2QWdRUVB0SloxZ2F0aGFYd0czbno3UmRweXoydktpYU51NU42VnBLc2E4M3FWUzlCeXlBUXBBTXZ2WnF1NmY3TWxzb1JWS1poZ1BzeHMxQ1BxcHJEcUpTbmxjSUZTV2p3d3FTeUVPdw
+  title          Kaspersky uncovers new Mirage Kitten malware used in cyber-espionage campaign - IT News Africa
+  body           <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxQN2o0NzN6RDhJUU9oU2d2VVJZbGdqT0l0aXd5bzVVUlpocVVyY0tQNDI0LThMM2cxZmhqLU9Id3dqcW5FclZPSTJoSEtVc2l2QWdRUVB0SloxZ2F0aGFYd0czbno3UmRweXoydktpYU51NU42VnBLc2E4M3FWUzlCeXlBUXBBTXZ2WnF1NmY3TWxzb1JWS1poZ1BzeHMxQ1BxcHJEcUpTbmxjSUZTV2p3d3FTeUVPdw?oc=5" target="_blank">Kaspersky uncovers new Mirage Kitten malware used in cyber-espionage campaign</a>&nbsp;&nbsp;<font color="#6f6f6f">IT News Africa</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxQN2o0NzN6RDhJUU9oU2d2VVJZbGdqT0l0aXd5bzVVUlpocVVyY0tQNDI0LThMM2cxZmhqLU9Id3dqcW5FclZPSTJoSEtVc2l2QWdRUVB0SloxZ2F0aGFYd0czbno3UmRweXoydktpYU51NU42VnBLc2E4M3FWUzlCeXlBUXBBTXZ2WnF1Nm
+  link           https://news.google.com/rss/articles/CBMitgFBVV95cUxQN2o0NzN6RDhJUU9oU2d2VVJZbGdqT0l0aXd5bzVVUlpocVVyY0tQNDI0LThMM2cxZmhqLU9Id3dqcW5FclZPSTJoSEtVc2l2QWdRUVB0SloxZ2F0aGFYd0czbno3UmRweXoydktpYU51NU42VnBLc2E4M3FWUzlCeXlBUXBBTXZ2WnF1NmY3TWxzb1JWS1poZ1BzeHMxQ1BxcHJEcUpTbmxjSUZTV2p3d3FTeUVPdw?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 08:16:22 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","cyber"]
+  properties     {"guid":"CBMitgFBVV95cUxQN2o0NzN6RDhJUU9oU2d2VVJZbGdqT0l0aXd5bzVVUlpocVVyY0tQNDI0LThMM2cxZmhqLU9Id3dqcW5FclZPSTJoSEtVc2l2QWdRUVB0SloxZ2F0aGFYd0czbno3UmRweXoydktpYU51NU42VnBLc2E4M3FWUzlCeXlBUXBBTXZ2WnF1NmY3TWxzb1JWS1poZ1BzeHMxQ1BxcHJEcUpTbmxjSUZTV2p3d3FTeUVPdw"}
+
+--- row 3 ---
+  uid            gnews-mon-cyber-espionage|CBMibEFVX3lxTFBnekszUjVPVEswaHlVVDJOcEVKNEx2dmViUmctUW54d2hGbkxnVXA2TnBDMFZlQWM3MFNyR1FYM0JScGJ6T3dBSUo0bkxKbjl1X2w5ZE1rU0xDYVVwb0ctRUlVYTMwanNCSkRvZg
+  title          Hackers used autonomous AI agent to spy on Thailand's finance ministry - The Record from Recorded Future News
+  body           <a href="https://news.google.com/rss/articles/CBMibEFVX3lxTFBnekszUjVPVEswaHlVVDJOcEVKNEx2dmViUmctUW54d2hGbkxnVXA2TnBDMFZlQWM3MFNyR1FYM0JScGJ6T3dBSUo0bkxKbjl1X2w5ZE1rU0xDYVVwb0ctRUlVYTMwanNCSkRvZg?oc=5" target="_blank">Hackers used autonomous AI agent to spy on Thailand's finance ministry</a>&nbsp;&nbsp;<font color="#6f6f6f">The Record from Recorded Future News</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMibEFVX3lxTFBnekszUjVPVEswaHlVVDJOcEVKNEx2dmViUmctUW54d2hGbkxnVXA2TnBDMFZlQWM3MFNyR1FYM0JScGJ6T3dBSUo0bkxKbjl1X2w5ZE1rU0xDYVVwb0ctRUlVYTMwanNCSkRvZg?oc=5" target="_blank">Hackers used autonomo
+  link           https://news.google.com/rss/articles/CBMibEFVX3lxTFBnekszUjVPVEswaHlVVDJOcEVKNEx2dmViUmctUW54d2hGbkxnVXA2TnBDMFZlQWM3MFNyR1FYM0JScGJ6T3dBSUo0bkxKbjl1X2w5ZE1rU0xDYVVwb0ctRUlVYTMwanNCSkRvZg?oc=5
+  language       en
+  published_at   Mon, 27 Jul 2026 12:12:33 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","cyber"]
+  properties     {"guid":"CBMibEFVX3lxTFBnekszUjVPVEswaHlVVDJOcEVKNEx2dmViUmctUW54d2hGbkxnVXA2TnBDMFZlQWM3MFNyR1FYM0JScGJ6T3dBSUo0bkxKbjl1X2w5ZE1rU0xDYVVwb0ctRUlVYTMwanNCSkRvZg"}

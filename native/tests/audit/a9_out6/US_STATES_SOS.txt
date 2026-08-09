@@ -1,0 +1,66 @@
+=== US_STATES_SOS  entity=Toyota
+exit: 0
+sched: rc=0 records=3 44658ms
+--- stderr ---
+[us_states_sos.NY] socrata emitted 3
+[New York DOS — Corporation & Business Entity Search] http status=0
+[California SoS — bizfileOnline] emitted 0
+[Washington SoS — CCFS Advanced Business Search] emitted 0
+[Texas Comptroller — Taxable Entity Search] emitted 0
+[Florida SoS — Sunbiz Entity Name Search] http status=403
+[Delaware Division of Corporations — Entity Search] emitted 0
+[Illinois SoS — Corporation/LLC Search] http status=403
+[Ohio SoS — Business Search] http status=403
+[Georgia SoS — eCorp Business Search] http status=403
+[North Carolina SoS — Business Registration Search] http status=403
+[Massachusetts SoC — Corporations Search] emitted 0
+[Colorado SoS — Business Database Search] http status=403
+[New Jersey — Business Name Search] emitted 0
+[Virginia SCC — Business Entity Search] http status=0
+[Michigan LARA — Business Entity Search] http status=0
+[Pennsylvania DoS — Business Entity Search] http status=403
+[Arizona Corp. Commission — eCorp Search] http status=0
+[Connecticut SoS — Business Records Search] emitted 0
+[Minnesota SoS — Business Filings Search] emitted 0
+[Nevada SoS — Business Entity Search] emitted 0
+[Wisconsin DFI — Corporate Records Search] http status=0
+[Oregon SoS — Business Name Search] emitted 0
+[us_states_sos] total emitted 3 across 23 state portals
+[sched] US_STATES_SOS run rc=0 records=3 44658ms
+[detect] anomaly opened: US_STATES_SOS verdict=duration_outlier — duration 44658ms exceeds 10000ms threshold
+--- persisted: 3 rows, 0 with lat/lon, 0 with geometry ---
+record_type: us-company=3
+sub_source_id: (null)=3
+
+--- row 1 ---
+  uid            US_STATES_SOS|2928853
+  title          206 MAIN STREET, LLC
+  body           {"name":"206 MAIN STREET, LLC","dos_id":"2928853","entity_type":"DOMESTIC LIMITED LIABILITY COMPANY","county":"Westchester","process_city":"NEW ROCHELLE","state":"NY","source":"NY DOS Open Data"}
+  summary        Westchester
+  language       en
+  published_at   2003-07-10T00:00:00.000
+  record_type    us-company
+  tags           ["osint-search","US_STATES_SOS"]
+  properties     {"service":"US_STATES_SOS","state":"NY","dos_id":"2928853","success":true}
+
+--- row 2 ---
+  uid            US_STATES_SOS|2721112
+  title          6179 S. TRANSIT LLC
+  body           {"name":"6179 S. TRANSIT LLC","dos_id":"2721112","entity_type":"DOMESTIC LIMITED LIABILITY COMPANY","county":"Niagara","process_city":"LOCKPORT","state":"NY","source":"NY DOS Open Data"}
+  summary        Niagara
+  language       en
+  published_at   2002-01-18T00:00:00.000
+  record_type    us-company
+  tags           ["osint-search","US_STATES_SOS"]
+  properties     {"service":"US_STATES_SOS","state":"NY","dos_id":"2721112","success":true}
+
+--- row 3 ---
+  uid            US_STATES_SOS|5052258
+  title          ADVANTAGE TOYOTA, INC.
+  body           {"name":"ADVANTAGE TOYOTA, INC.","dos_id":"5052258","entity_type":"DOMESTIC BUSINESS CORPORATION","county":"Nassau","process_city":"BRONX","state":"NY","source":"NY DOS Open Data"}
+  summary        Nassau
+  language       en
+  published_at   2016-12-13T00:00:00.000
+  record_type    us-company
+  tags           ["osint-search","US_STATES_SOS"]
+  properties     {"service":"US_STATES_SOS","state":"NY","dos_id":"5052258","success":true}

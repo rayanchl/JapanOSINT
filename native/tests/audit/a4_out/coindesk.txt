@@ -1,0 +1,45 @@
+=== coindesk
+exit: 0
+sched: rc=0 records=25 123ms
+--- stderr ---
+[rss] coindesk emitted 25
+[sched] coindesk run rc=0 records=25 123ms
+--- persisted: 25 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=25
+sub_source_id: (null)=25
+
+--- row 1 ---
+  uid            coindesk|6726d0c4-197e-40d0-ae5f-817e99329756
+  title          The good and the bad of perps, according to crypto traders
+  body           Both retail and institutional traders worry about the funding rate.
+  summary        Both retail and institutional traders worry about the funding rate.
+  link           https://www.coindesk.com/business/2026/07/31/the-good-and-the-bad-of-perps-according-to-crypto-traders
+  language       en
+  published_at   Fri, 31 Jul 2026 17:53:59 +0000
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"6726d0c4-197e-40d0-ae5f-817e99329756"}
+
+--- row 2 ---
+  uid            coindesk|ae5b3a88-fc01-4083-9121-37391ef54edf
+  title          Coldcard's $38 million (so far) exploit shakes faith in self-custody, may push investors to ETFs
+  body           A software bug in popular hardware wallet Coldcard that led to the theft to this point of nearly 600 bitcoin worth roughly $38 million is prompting questions about security and whether managing private keys has become too risky for everyday investors.
+  summary        A software bug in popular hardware wallet Coldcard that led to the theft to this point of nearly 600 bitcoin worth roughly $38 million is prompting questions about security and whether managing private keys has become too risky for everyday
+  link           https://www.coindesk.com/business/2026/07/31/coldcard-s-usd38-million-so-far-exploit-shakes-faith-in-self-custody-may-push-investors-to-etfs
+  language       en
+  published_at   Fri, 31 Jul 2026 17:07:30 +0000
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"ae5b3a88-fc01-4083-9121-37391ef54edf"}
+
+--- row 3 ---
+  uid            coindesk|237d05b6-9849-4ae4-9e67-102c3da5beeb
+  title          Quantum computing nears commercial breakthrough, IBM CEO says
+  body           Arvind Krishna said quantum computing will begin generating meaningful revenue before the decade ends as investment in the sector accelerates, in an interview on CNBC.
+  summary        Arvind Krishna said quantum computing will begin generating meaningful revenue before the decade ends as investment in the sector accelerates, in an interview on CNBC.
+  link           https://www.coindesk.com/markets/2026/07/31/quantum-computing-nears-commercial-breakthrough-ibm-ceo-says
+  language       en
+  published_at   Fri, 31 Jul 2026 15:39:30 +0000
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"237d05b6-9849-4ae4-9e67-102c3da5beeb"}

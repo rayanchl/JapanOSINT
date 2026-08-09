@@ -3,15 +3,7 @@
 #include "../../lib/rss_atom.h"
 
 /* SYM, id, name, name_ja, collector, category, url, lang, tags_json, interval, description */
-#define RSSX(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)  \
-  static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
-    int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
-  static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
-    .update_interval_sec = IVAL, .run = run_##SYM,                           \
-    .category = CAT, .type = "web_request", .url = URL,                      \
-    .description = DESC, .layer = NULL, .free_tier = 1 };                    \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 RSSX(out_kommersant, "kommersant", "Kommersant (Russia)", "Kommersant (Russia)", "osint", "news",
   "https://www.kommersant.ru/RSS/news.xml", "ru", "[\"news\",\"russia\",\"national-outlet\"]", 3600,
@@ -42,7 +34,10 @@ RSSX(out_tuoitre, "tuoitre", "Tuoi Tre News (Vietnam)", "Tuoi Tre News (Vietnam)
   "Tuoi Tre News (Vietnam) — national/regional press feed (vietnam)");
 
 RSSX(out_nzherald, "nzherald", "NZ Herald", "NZ Herald", "osint", "news",
-  "https://www.nzherald.co.nz/arc/outboundfeeds/rss/curated/78/", "en", "[\"news\",\"new-zealand\",\"national-outlet\"]", 3600,
+  /* without ?outputType=xml the Arc endpoint renders the HTML article shell
+   * (200, 128 KB of Fusion markup, zero items) — the query param is what
+   * selects the RSS renderer. */
+  "https://www.nzherald.co.nz/arc/outboundfeeds/rss/curated/78/?outputType=xml", "en", "[\"news\",\"new-zealand\",\"national-outlet\"]", 3600,
   "NZ Herald — national/regional press feed (new-zealand)");
 
 RSSX(out_guardian_au, "guardian-au", "Guardian Australia", "Guardian Australia", "osint", "news",
@@ -54,7 +49,9 @@ RSSX(out_smh_au, "smh-au", "Sydney Morning Herald", "Sydney Morning Herald", "os
   "Sydney Morning Herald — national/regional press feed (australia)");
 
 RSSX(out_irish_times, "irish-times", "The Irish Times", "The Irish Times", "osint", "news",
-  "https://www.irishtimes.com/arc/outboundfeeds/feeds/newsdesk/?outputType=xml", "en", "[\"news\",\"ireland\",\"national-outlet\"]", 3600,
+  /* the newsdesk feed is gone (404 "Not Found", 9 bytes); the site-wide Arc
+   * RSS still serves ~100 items. */
+  "https://www.irishtimes.com/arc/outboundfeeds/rss/?outputType=xml", "en", "[\"news\",\"ireland\",\"national-outlet\"]", 3600,
   "The Irish Times — national/regional press feed (ireland)");
 
 RSSX(out_thelocal_eu, "thelocal-eu", "The Local (Europe)", "The Local (Europe)", "osint", "news",
@@ -74,7 +71,8 @@ RSSX(out_balkan_insight, "balkan-insight", "Balkan Insight", "Balkan Insight", "
   "Balkan Insight — national/regional press feed (balkans)");
 
 RSSX(out_kyiv_independent_2, "kyiv-independent-2", "Kyiv Independent War", "Kyiv Independent War", "osint", "news",
-  "https://kyivindependent.com/feed/", "en", "[\"news\",\"ukraine\",\"national-outlet\"]", 3600,
+  /* /feed/ 404s; the Ghost feed lives at /feed/rss/. */
+  "https://kyivindependent.com/feed/rss/", "en", "[\"news\",\"ukraine\",\"national-outlet\"]", 3600,
   "Kyiv Independent War — national/regional press feed (ukraine)");
 
 RSSX(out_notes_poland, "notes-poland", "Notes from Poland", "Notes from Poland", "osint", "news",
@@ -94,7 +92,9 @@ RSSX(out_dutch_news, "dutch-news", "DutchNews.nl", "DutchNews.nl", "osint", "new
   "DutchNews.nl — national/regional press feed (netherlands)");
 
 RSSX(out_brussels_times, "brussels-times", "The Brussels Times", "The Brussels Times", "osint", "news",
-  "https://www.brusselstimes.com/feed", "en", "[\"news\",\"belgium\",\"national-outlet\"]", 3600,
+  /* www.brusselstimes.com/feed returns the Angular app shell (200 HTML, no
+   * items); the actual RSS is served by the API host. */
+  "https://api.brusselstimes.com/rss", "en", "[\"news\",\"belgium\",\"national-outlet\"]", 3600,
   "The Brussels Times — national/regional press feed (belgium)");
 
 RSSX(out_local_se, "local-se", "The Local Sweden", "The Local Sweden", "osint", "news",
@@ -174,7 +174,8 @@ RSSX(out_the_east_african, "the-east-african", "The East African", "The East Afr
   "The East African — national/regional press feed (east-africa)");
 
 RSSX(out_mail_guardian_2, "mail-guardian-2", "Mail & Guardian Africa", "Mail & Guardian Africa", "osint", "news",
-  "https://mg.co.za/feed/", "en", "[\"news\",\"south-africa\",\"national-outlet\"]", 3600,
+  /* /feed/ 404s since the site rebuild; /rss/ carries 50 items. */
+  "https://mg.co.za/rss/", "en", "[\"news\",\"south-africa\",\"national-outlet\"]", 3600,
   "Mail & Guardian Africa — national/regional press feed (south-africa)");
 
 RSSX(out_semafor_africa, "semafor-africa", "Semafor Africa", "Semafor Africa", "osint", "news",

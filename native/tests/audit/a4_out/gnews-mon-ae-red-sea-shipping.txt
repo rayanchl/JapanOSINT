@@ -1,0 +1,45 @@
+=== gnews-mon-ae-red-sea-shipping
+exit: 0
+sched: rc=0 records=66 486ms
+--- stderr ---
+[rss] gnews-mon-ae-red-sea-shipping emitted 66
+[sched] gnews-mon-ae-red-sea-shipping run rc=0 records=66 486ms
+--- persisted: 66 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=66
+sub_source_id: (null)=66
+
+--- row 1 ---
+  uid            gnews-mon-ae-red-sea-shipping|CBMickFVX3lxTE1TY2dseTdJaHRwOHNsQTBTM0VmYzlMcEtHd3R0UkdOVnlsUHBmYVVWUHZRYUxFUjN3azlsQ2d1NXBSVGx1QzZhYXlzQ2R3a0F3N1I2VTgxak9kcUtJOHlRUF8wbThTYXlacldRWkVLSmVhZw
+  title          The Red Sea Threat to Global Shipping - Middle East Institute
+  body           <a href="https://news.google.com/rss/articles/CBMickFVX3lxTE1TY2dseTdJaHRwOHNsQTBTM0VmYzlMcEtHd3R0UkdOVnlsUHBmYVVWUHZRYUxFUjN3azlsQ2d1NXBSVGx1QzZhYXlzQ2R3a0F3N1I2VTgxak9kcUtJOHlRUF8wbThTYXlacldRWkVLSmVhZw?oc=5" target="_blank">The Red Sea Threat to Global Shipping</a>&nbsp;&nbsp;<font color="#6f6f6f">Middle East Institute</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMickFVX3lxTE1TY2dseTdJaHRwOHNsQTBTM0VmYzlMcEtHd3R0UkdOVnlsUHBmYVVWUHZRYUxFUjN3azlsQ2d1NXBSVGx1QzZhYXlzQ2R3a0F3N1I2VTgxak9kcUtJOHlRUF8wbThTYXlacldRWkVLSmVhZw?oc=5" target="_blank">The Red Sea T
+  link           https://news.google.com/rss/articles/CBMickFVX3lxTE1TY2dseTdJaHRwOHNsQTBTM0VmYzlMcEtHd3R0UkdOVnlsUHBmYVVWUHZRYUxFUjN3azlsQ2d1NXBSVGx1QzZhYXlzQ2R3a0F3N1I2VTgxak9kcUtJOHlRUF8wbThTYXlacldRWkVLSmVhZw?oc=5
+  language       ar
+  published_at   Wed, 22 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ae"]
+  properties     {"guid":"CBMickFVX3lxTE1TY2dseTdJaHRwOHNsQTBTM0VmYzlMcEtHd3R0UkdOVnlsUHBmYVVWUHZRYUxFUjN3azlsQ2d1NXBSVGx1QzZhYXlzQ2R3a0F3N1I2VTgxak9kcUtJOHlRUF8wbThTYXlacldRWkVLSmVhZw"}
+
+--- row 2 ---
+  uid            gnews-mon-ae-red-sea-shipping|CBMitAFBVV95cUxOVGc2Y1ktVm0zblYwSVRMbGJBWU9lRDdhMmlMMGg0UzI1blpLOVBfNUhKMFJjR2VYdm5WTnVLaHVBNW9MZE9DOGJ1SXZPdlJrMmU2cVhtUFdGQVFBbjNiV0J2TEJxT016RzFQbFcwQjMzU3duSWNVYWUtQ2IwRUh0akQ4UFJpdWYtcERILWFfUXk3b2JLeFF1OXdVQWg3THdVQ21fNzF3dWphdUxRUkk1WXFQMnE
+  title          الصين تتوصل إلى اتفاق مع الحوثيين، وتستعد لحرب أمريكية طويلة مع إيران - Al-Monitor
+  body           <a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxOVGc2Y1ktVm0zblYwSVRMbGJBWU9lRDdhMmlMMGg0UzI1blpLOVBfNUhKMFJjR2VYdm5WTnVLaHVBNW9MZE9DOGJ1SXZPdlJrMmU2cVhtUFdGQVFBbjNiV0J2TEJxT016RzFQbFcwQjMzU3duSWNVYWUtQ2IwRUh0akQ4UFJpdWYtcERILWFfUXk3b2JLeFF1OXdVQWg3THdVQ21fNzF3dWphdUxRUkk1WXFQMnE?oc=5" target="_blank">الصين تتوصل إلى اتفاق مع الحوثيين، وتستعد لحرب أمريكية طويلة مع إيران</a>&nbsp;&nbsp;<font color="#6f6f6f">Al-Monitor</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxOVGc2Y1ktVm0zblYwSVRMbGJBWU9lRDdhMmlMMGg0UzI1blpLOVBfNUhKMFJjR2VYdm5WTnVLaHVBNW9MZE9DOGJ1SXZPdlJrMmU2cVhtUFdGQVFBbjNiV0J2TEJxT016RzFQbFcwQjMzU3duSWNVYWUtQ2IwRUh0akQ4UFJpdWYtcERILW
+  link           https://news.google.com/rss/articles/CBMitAFBVV95cUxOVGc2Y1ktVm0zblYwSVRMbGJBWU9lRDdhMmlMMGg0UzI1blpLOVBfNUhKMFJjR2VYdm5WTnVLaHVBNW9MZE9DOGJ1SXZPdlJrMmU2cVhtUFdGQVFBbjNiV0J2TEJxT016RzFQbFcwQjMzU3duSWNVYWUtQ2IwRUh0akQ4UFJpdWYtcERILWFfUXk3b2JLeFF1OXdVQWg3THdVQ21fNzF3dWphdUxRUkk1WXFQMnE?oc=5
+  language       ar
+  published_at   Thu, 30 Jul 2026 14:51:54 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ae"]
+  properties     {"guid":"CBMitAFBVV95cUxOVGc2Y1ktVm0zblYwSVRMbGJBWU9lRDdhMmlMMGg0UzI1blpLOVBfNUhKMFJjR2VYdm5WTnVLaHVBNW9MZE9DOGJ1SXZPdlJrMmU2cVhtUFdGQVFBbjNiV0J2TEJxT016RzFQbFcwQjMzU3duSWNVYWUtQ2IwRUh0akQ4UFJpdWYtcERILWFfUXk3b2JLeFF1OXdVQWg3THdVQ21fNzF3dWphdUxRUkk1WXFQMnE"}
+
+--- row 3 ---
+  uid            gnews-mon-ae-red-sea-shipping|CBMiUEFVX3lxTE5aVlE5ak9kMVFlZEJaOFpkc25BNlBxUFhjQTJYb0h5QmJOMWF2TE52Q1NNa1hVeWFVNVgybkVGS1l3Ml9hVnFZTUNacjA2RlBn
+  title          African Union Condemns Houthi Attacks on Red Sea Shipping, Warns of Serious Risks to Africa - www.sabanew.net
+  body           <a href="https://news.google.com/rss/articles/CBMiUEFVX3lxTE5aVlE5ak9kMVFlZEJaOFpkc25BNlBxUFhjQTJYb0h5QmJOMWF2TE52Q1NNa1hVeWFVNVgybkVGS1l3Ml9hVnFZTUNacjA2RlBn?oc=5" target="_blank">African Union Condemns Houthi Attacks on Red Sea Shipping, Warns of Serious Risks to Africa</a>&nbsp;&nbsp;<font color="#6f6f6f">www.sabanew.net</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiUEFVX3lxTE5aVlE5ak9kMVFlZEJaOFpkc25BNlBxUFhjQTJYb0h5QmJOMWF2TE52Q1NNa1hVeWFVNVgybkVGS1l3Ml9hVnFZTUNacjA2RlBn?oc=5" target="_blank">African Union Condemns Houthi Attacks on Red Sea Shipping, 
+  link           https://news.google.com/rss/articles/CBMiUEFVX3lxTE5aVlE5ak9kMVFlZEJaOFpkc25BNlBxUFhjQTJYb0h5QmJOMWF2TE52Q1NNa1hVeWFVNVgybkVGS1l3Ml9hVnFZTUNacjA2RlBn?oc=5
+  language       ar
+  published_at   Fri, 24 Jul 2026 10:49:10 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","ae"]
+  properties     {"guid":"CBMiUEFVX3lxTE5aVlE5ak9kMVFlZEJaOFpkc25BNlBxUFhjQTJYb0h5QmJOMWF2TE52Q1NNa1hVeWFVNVgybkVGS1l3Ml9hVnFZTUNacjA2RlBn"}

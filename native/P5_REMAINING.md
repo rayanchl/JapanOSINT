@@ -1,5 +1,14 @@
 # P5 — Remaining Collector Ports (handoff)
 
+> **HISTORICAL SNAPSHOT — do not cite the counts below as current.** The "313
+> sources" figure is the state on **2026-05-17** and has been quoted since as
+> if it were live. Three tracked documents recorded three different numbers for
+> the same tree (313 here, 286 in `P6_SWEEP_STATUS.md`, 318 in
+> `OSINT_ENGINE_STATUS.md`), and none of them counted registration macros, so
+> all three were undercounts even on their own date. For the current figure run
+> `make -C native source-count` — 2,563 on 2026-08-09. See
+> [`../docs/collectors.md`](../docs/collectors.md).
+
 State after wave 11 (primitive build-out: zip/ws/SGP4, 2026-05-17):
 **313 unique collector ids ported & registered** (build green; no real
 duplicate .id; binary self-reports `[sched] 313 sources registered`).

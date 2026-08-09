@@ -1,0 +1,17 @@
+=== REVERSE_DNS  entity=8.8.8.8
+exit: 0
+sched: rc=0 records=1 57ms
+--- stderr ---
+[sched] REVERSE_DNS run rc=0 records=1 57ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            REVERSE_DNS|ptr:8.8.8.8:dns.google
+  title          8.8.8.8 -> dns.google
+  body           {"ip":"8.8.8.8","hostname":"dns.google"}
+  summary        dns.google
+  record_type    osint_service_result
+  tags           ["osint-search","REVERSE_DNS"]
+  properties     {"service":"REVERSE_DNS","entity":"8.8.8.8","hostname":"dns.google"}

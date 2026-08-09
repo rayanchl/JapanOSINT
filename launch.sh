@@ -60,7 +60,12 @@ mkdir -p "$RUN"
 : "${LLAMA_SUGGEST_PORT:=8081}"
 : "${LLAMA_SUGGEST_CTX:=4096}"
 # Orchestrator behaviour
-: "${EXPECT_SOURCES:=476}"                          # warn if registry differs
+# Expected `--list-sources` count. Empty => derive it from the source tree via
+# native/tools/lint_sources.py --count. It used to be hardcoded to 476, which
+# was one of SIX different wrong source counts committed across this repo; any
+# number typed in here is stale the next time a collector lands. Set it
+# explicitly only to pin an expectation for a release check.
+: "${EXPECT_SOURCES:=}"                             # warn if registry differs
 : "${LLAMA_WAIT:=240}"                              # s to wait for model load
 : "${SERVER_WAIT:=30}"                              # s to wait for httpd listen
 
@@ -208,16 +213,47 @@ cmd_build(){
   elif make -C "$NATIVE" -q >/dev/null 2>&1 && [ -x "$BIN" ]; then
     ok "build: up-to-date, skipping (bin/japanosint current)"; cmd_build_verify; return
   else say "build: incremental make (sources changed)"; fi
-  if ! make -C "$NATIVE" -j8 2>&1 | tee "$(logfile build)" \
-       | grep -iE 'error:|undefined reference|fatal' \
-       | grep -viE 'deprecated|SHA1|MD5|RSA_|EC_KEY|ECDSA_|EVP_PKEY_assign'; then :; fi
-  [ -x "$BIN" ] || die "build failed — no bin/japanosint (see $(logfile build))"
+  # make's exit status is the ONLY honest signal here. This used to put make
+  # first in a pipeline AND wrap the whole thing in `if ! …; then :; fi`, which
+  # threw the status away twice (the second form defeats `pipefail` too),
+  # leaving `[ -x "$BIN" ]` as the only check — and a STALE binary is still
+  # executable, so a broken compile booted the previous build while printing
+  # "build green". tests/audit/report_01.md:132-135 records an entire audit run
+  # against a 40-minute-stale binary because of exactly this. Same fix as
+  # tests/audit/agent_build.sh:14-18, carried back at last.
+  local log; log="$(logfile build)"
+  if ! make -C "$NATIVE" -j8 >"$log" 2>&1; then
+    grep -iE 'error:|undefined reference|fatal' "$log" \
+      | grep -viE 'deprecated|SHA1|MD5|RSA_|EC_KEY|ECDSA_|EVP_PKEY_assign' \
+      | tail -25 || true
+    die "build FAILED — $BIN was NOT updated; do not trust a run against it (full log: $log)"
+  fi
+  grep -E 'warning: .*(uninitial|overflow|format)' "$log" | head -10 || true
+  [ -x "$BIN" ] || die "build failed — make succeeded but $BIN is missing (see $log)"
   cmd_build_verify
 }
 cmd_build_verify(){
-  local n; n=$("$BIN" --list-sources 2>/dev/null | wc -l | tr -d ' ')
-  if [ "$n" = "$EXPECT_SOURCES" ]; then ok "build green — $n sources registered"
-  else warn "build green but $n sources registered (expected $EXPECT_SOURCES — may be OK if registry changed)"; fi
+  # Print the binary's mtime so staleness is visible at a glance rather than
+  # inferred from a green line.
+  local n exp mt
+  n=$("$BIN" --list-sources 2>/dev/null | wc -l | tr -d ' ')
+  # GNU and BSD stat disagree; `date -r` means "epoch seconds" on macOS, so it
+  # is not a portable mtime reader. Try both stats, then give up honestly.
+  mt=$(stat -c '%y' "$BIN" 2>/dev/null | cut -d. -f1) \
+    || mt=$(stat -f '%Sm' -t '%Y-%m-%d %H:%M:%S' "$BIN" 2>/dev/null) || mt='?'
+  [ -n "$mt" ] || mt='?'
+  exp="$EXPECT_SOURCES"
+  # Derive the expectation from the source tree instead of a hardcoded number.
+  if [ -z "$exp" ] && command -v python3 >/dev/null 2>&1 \
+     && [ -f "$NATIVE/tools/lint_sources.py" ]; then
+    exp=$(python3 "$NATIVE/tools/lint_sources.py" --count 2>/dev/null \
+          | sed -nE 's/^registered source_defs: ([0-9]+).*/\1/p')
+  fi
+  if [ -z "$exp" ] || [ "$n" = "$exp" ]; then
+    ok "build green — $n sources registered (binary built $mt)"
+  else
+    warn "build green but $n sources registered; the source tree defines $exp (binary built $mt)"
+  fi
 }
 
 # ---- server pod ------------------------------------------------------------

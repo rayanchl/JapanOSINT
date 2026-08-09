@@ -1,0 +1,45 @@
+=== cert-ee2
+exit: 0
+sched: rc=0 records=100 282ms
+--- stderr ---
+[rss] cert-ee2 emitted 100
+[sched] cert-ee2 run rc=0 records=100 282ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            cert-ee2|4209 at https://ria.ee/
+  title          Juuni küberruumis: tähelepanu pälvisid teenusetõrked ja andmeleke
+  body           Riigi Infosüsteemi Amet (RIA) registreeris juunis Eesti küberruumis 1232 mõjuga intsidenti, mis on viimase poole aasta keskmisest veidi kõrgem näitaja. Kuu jooksul esines tõrkeid mitme olulise avaliku teenuse töös, toimusid mõjuga teenusetõkestusründed ning Lõuna-Eestis tegutseva ettevõtte broneerimissüsteemist lekkisid klientide isikuandmed.
+  summary        Riigi Infosüsteemi Amet (RIA) registreeris juunis Eesti küberruumis 1232 mõjuga intsidenti, mis on viimase poole aasta keskmisest veidi kõrgem näitaja. Kuu jooksul esines tõrkeid mitme olulise avaliku teenuse töös, toimusid mõjuga 
+  link           https://ria.ee/uudised/juuni-kuberruumis-tahelepanu-palvisid-teenusetorked-ja-andmeleke
+  language       et
+  published_at   Fri, 03 Jul 2026 12:52:03 +0300
+  record_type    article
+  tags           ["cyber","cert","advisory","estonia"]
+  properties     {"guid":"4209 at https://ria.ee/"}
+
+--- row 2 ---
+  uid            cert-ee2|4193 at https://ria.ee/
+  title          RIA soovitab X-tee liikmetel kasutada andmevahetuse tõrkekindluse tagamiseks mitut ajatempliteenust
+  body           Riigi Infosüsteemi Amet (RIA) soovitab X-tee liikmetel kasutada turvaserverites lisaks RIA ajatempliteenusele ka alternatiivset ajatempliteenust. Mitme ajatempliteenuse kasutamine aitab tagada andmevahetuse töökindluse olukorras, kus ühe teenuse kasutamine võib tõrke tõttu ajutiselt katkeda. Tänahommikune häire RIA X-tee ajatempliteenuses näitas sellise lahenduse praktilist vajadust.
+  summary        Riigi Infosüsteemi Amet (RIA) soovitab X-tee liikmetel kasutada turvaserverites lisaks RIA ajatempliteenusele ka alternatiivset ajatempliteenust. Mitme ajatempliteenuse kasutamine aitab tagada andmevahetuse töökindluse olukorras, kus üh
+  link           https://ria.ee/uudised/ria-soovitab-x-tee-liikmetel-kasutada-mitut-ajatempliteenust
+  language       et
+  published_at   Mon, 22 Jun 2026 16:24:59 +0300
+  record_type    article
+  tags           ["cyber","cert","advisory","estonia"]
+  properties     {"guid":"4193 at https://ria.ee/"}
+
+--- row 3 ---
+  uid            cert-ee2|4173 at https://ria.ee/
+  title          Eesti elektrisektori eksperdid harjutavad koos ukrainlastega küberrünnakutele reageerimist
+  body           Käesoleval nädalal korraldab Riigi Infosüsteemi Amet (RIA) Eestis rahvusvahelise koolituse, kus elektri- ja küberturvalisuse eksperdid harjutavad koos kriitilise taristu kaitsmist küberohtude eest.
+  summary        Käesoleval nädalal korraldab Riigi Infosüsteemi Amet (RIA) Eestis rahvusvahelise koolituse, kus elektri- ja küberturvalisuse eksperdid harjutavad koos kriitilise taristu kaitsmist küberohtude eest.
+  link           https://ria.ee/uudised/eesti-elektrisektori-eksperdid-harjutavad-koos-ukrainlastega-kuberrunnakutele-reageerimist
+  language       et
+  published_at   Tue, 09 Jun 2026 21:43:05 +0300
+  record_type    article
+  tags           ["cyber","cert","advisory","estonia"]
+  properties     {"guid":"4173 at https://ria.ee/"}

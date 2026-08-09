@@ -1,0 +1,45 @@
+=== gnews-mon-kr-north-korea-missile
+exit: 0
+sched: rc=0 records=100 722ms
+--- stderr ---
+[rss] gnews-mon-kr-north-korea-missile emitted 100
+[sched] gnews-mon-kr-north-korea-missile run rc=0 records=100 722ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-kr-north-korea-missile|CBMia0FVX3lxTE1SU0o4TGFRck0wWFVud0Z1M09JVHllX01tLXlZMFZudnlqSkZNRW9USTVJZGZuSndvU1lMYUVDQUx3YWRnOHBoNmE2azI1aHdIbTU5NnA2NHpvYjFrcklqTmJ1aFc2ZGduSzdV0gFvQVVfeXFMTlVGNE1KOVNXTDk0cDJ3Z1RXZV8yT1B3Z09hNkhnci1OUzZNM2JXaHZOZllKVVV5WGtvUnhJemxpRGJodGNXZksxTmE2TkpPQzY1MU5vWTdqY3cxM3RrTVRiTDhDQ21WVVdXWHpaOU9R
+  title          젤렌스키 “러시아, 최근 공습에서 北 탄도미사일 동원” - 펜앤마이크
+  body           <a href="https://news.google.com/rss/articles/CBMia0FVX3lxTE1SU0o4TGFRck0wWFVud0Z1M09JVHllX01tLXlZMFZudnlqSkZNRW9USTVJZGZuSndvU1lMYUVDQUx3YWRnOHBoNmE2azI1aHdIbTU5NnA2NHpvYjFrcklqTmJ1aFc2ZGduSzdV0gFvQVVfeXFMTlVGNE1KOVNXTDk0cDJ3Z1RXZV8yT1B3Z09hNkhnci1OUzZNM2JXaHZOZllKVVV5WGtvUnhJemxpRGJodGNXZksxTmE2TkpPQzY1MU5vWTdqY3cxM3RrTVRiTDhDQ21WVVdXWHpaOU9R?oc=5" target="_blank">젤렌스키 “러시아, 최근 공습에서 北 탄도미사일 동원”</a>&nbsp;&nbsp;<font color="#6f6f6f">펜앤마이크</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMia0FVX3lxTE1SU0o4TGFRck0wWFVud0Z1M09JVHllX01tLXlZMFZudnlqSkZNRW9USTVJZGZuSndvU1lMYUVDQUx3YWRnOHBoNmE2azI1aHdIbTU5NnA2NHpvYjFrcklqTmJ1aFc2ZGduSzdV0gFvQVVfeXFMTlVGNE1KOVNXTDk0cDJ3Z1RXZV8yT1B3Z0
+  link           https://news.google.com/rss/articles/CBMia0FVX3lxTE1SU0o4TGFRck0wWFVud0Z1M09JVHllX01tLXlZMFZudnlqSkZNRW9USTVJZGZuSndvU1lMYUVDQUx3YWRnOHBoNmE2azI1aHdIbTU5NnA2NHpvYjFrcklqTmJ1aFc2ZGduSzdV0gFvQVVfeXFMTlVGNE1KOVNXTDk0cDJ3Z1RXZV8yT1B3Z09hNkhnci1OUzZNM2JXaHZOZllKVVV5WGtvUnhJemxpRGJodGNXZksxTmE2TkpPQzY1MU5vWTdqY3cxM3RrTVRiTDhDQ21WVVdXWHpaOU9R?oc=5
+  language       ko
+  published_at   Fri, 31 Jul 2026 03:26:50 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","kr"]
+  properties     {"guid":"CBMia0FVX3lxTE1SU0o4TGFRck0wWFVud0Z1M09JVHllX01tLXlZMFZudnlqSkZNRW9USTVJZGZuSndvU1lMYUVDQUx3YWRnOHBoNmE2azI1aHdIbTU5NnA2NHpvYjFrcklqTmJ1aFc2ZGduSzdV0gFvQVVfeXFMTlVGNE1KOVNXTDk0cDJ3Z1RXZV8yT1B3Z09hNkhnci1OUzZNM2JXaHZOZllKVVV5WGtvUnhJemxpRGJodGNXZksxTmE2TkpPQzY1MU5vWTdqY3cxM3RrTVRiTDhDQ21WVVdXWHpaOU9R"}
+
+--- row 2 ---
+  uid            gnews-mon-kr-north-korea-missile|CBMiXkFVX3lxTE12eHRLelV3eW1JVWZJQXJoYnhGRTRVa1dnZVlEcXYwc1NZOFZtT2JQVG5ZbXo2LUtrRzRSRUs2TnU3d0I4WDA3MHNMc3FVZGcwNU1Yd3AzOGRCVDA0Unc
+  title          North Korea fires several short-range ballistic missiles into the West Sea - 경향신문
+  body           <a href="https://news.google.com/rss/articles/CBMiXkFVX3lxTE12eHRLelV3eW1JVWZJQXJoYnhGRTRVa1dnZVlEcXYwc1NZOFZtT2JQVG5ZbXo2LUtrRzRSRUs2TnU3d0I4WDA3MHNMc3FVZGcwNU1Yd3AzOGRCVDA0Unc?oc=5" target="_blank">North Korea fires several short-range ballistic missiles into the West Sea</a>&nbsp;&nbsp;<font color="#6f6f6f">경향신문</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiXkFVX3lxTE12eHRLelV3eW1JVWZJQXJoYnhGRTRVa1dnZVlEcXYwc1NZOFZtT2JQVG5ZbXo2LUtrRzRSRUs2TnU3d0I4WDA3MHNMc3FVZGcwNU1Yd3AzOGRCVDA0Unc?oc=5" target="_blank">North Korea fires several short-range ba
+  link           https://news.google.com/rss/articles/CBMiXkFVX3lxTE12eHRLelV3eW1JVWZJQXJoYnhGRTRVa1dnZVlEcXYwc1NZOFZtT2JQVG5ZbXo2LUtrRzRSRUs2TnU3d0I4WDA3MHNMc3FVZGcwNU1Yd3AzOGRCVDA0Unc?oc=5
+  language       ko
+  published_at   Tue, 26 May 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","kr"]
+  properties     {"guid":"CBMiXkFVX3lxTE12eHRLelV3eW1JVWZJQXJoYnhGRTRVa1dnZVlEcXYwc1NZOFZtT2JQVG5ZbXo2LUtrRzRSRUs2TnU3d0I4WDA3MHNMc3FVZGcwNU1Yd3AzOGRCVDA0Unc"}
+
+--- row 3 ---
+  uid            gnews-mon-kr-north-korea-missile|CBMiW0FVX3lxTFBPYjlqLW1qR2NYN3FlXy1MRGVzWFY2UThPV0Y0RGJoQ01CRV9zeUZRd0N5MjhnWElYUmNvQUIzdWlQSVRJd3JjRDVjNlp2U3lIT3BiazU0TGFZLW8
+  title          NK tests ship-based missile - KBS 뉴스
+  body           <a href="https://news.google.com/rss/articles/CBMiW0FVX3lxTFBPYjlqLW1qR2NYN3FlXy1MRGVzWFY2UThPV0Y0RGJoQ01CRV9zeUZRd0N5MjhnWElYUmNvQUIzdWlQSVRJd3JjRDVjNlp2U3lIT3BiazU0TGFZLW8?oc=5" target="_blank">NK tests ship-based missile</a>&nbsp;&nbsp;<font color="#6f6f6f">KBS 뉴스</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiW0FVX3lxTFBPYjlqLW1qR2NYN3FlXy1MRGVzWFY2UThPV0Y0RGJoQ01CRV9zeUZRd0N5MjhnWElYUmNvQUIzdWlQSVRJd3JjRDVjNlp2U3lIT3BiazU0TGFZLW8?oc=5" target="_blank">NK tests ship-based missile</a>&nbsp;&nbsp;<
+  link           https://news.google.com/rss/articles/CBMiW0FVX3lxTFBPYjlqLW1qR2NYN3FlXy1MRGVzWFY2UThPV0Y0RGJoQ01CRV9zeUZRd0N5MjhnWElYUmNvQUIzdWlQSVRJd3JjRDVjNlp2U3lIT3BiazU0TGFZLW8?oc=5
+  language       ko
+  published_at   Wed, 15 Apr 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","kr"]
+  properties     {"guid":"CBMiW0FVX3lxTFBPYjlqLW1qR2NYN3FlXy1MRGVzWFY2UThPV0Y0RGJoQ01CRV9zeUZRd0N5MjhnWElYUmNvQUIzdWlQSVRJd3JjRDVjNlp2U3lIT3BiazU0TGFZLW8"}

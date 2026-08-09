@@ -55,11 +55,7 @@ static int run_places(const source_ctx *ctx, intel_sink *sink) {
   return 0;
 }
 
-#define DEFR(SYM, ID, NAME, NAMEJA, RUN, CAT, TYPE, URL, DESC, FREE) \
-  static const source_def SYM = { .id = ID, .collector = "osint", .name = NAME, \
-    .name_ja = NAMEJA, .update_interval_sec = 0, .run = RUN, .category = CAT, \
-    .type = TYPE, .url = URL, .description = DESC, .layer = NULL, .free_tier = FREE }; \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 DEFR(gplaces_def, "GOOGLE_PLACES", "Google Places", "Google マップ クチコミ", run_places,
      "commercial", "api", "https://maps.googleapis.com/", "Business reviews, hours, geo & ratings (needs GOOGLE_PLACES_API_KEY)", 0);

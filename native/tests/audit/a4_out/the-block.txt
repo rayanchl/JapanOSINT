@@ -1,0 +1,45 @@
+=== the-block
+exit: 0
+sched: rc=0 records=20 112ms
+--- stderr ---
+[rss] the-block emitted 20
+[sched] the-block run rc=0 records=20 112ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            the-block|https://www.theblock.co/post/410305
+  title          Tether’s excess reserves fall by more than $4 billion amid weaker Q2 financial results
+  body           <p>Tether swung from $4.9 billion in net profit for Q2 2025 to $1.5 in net operating profit during the second quarter of this year.</p>
+  summary        <p>Tether swung from $4.9 billion in net profit for Q2 2025 to $1.5 in net operating profit during the second quarter of this year.</p>
+  link           https://www.theblock.co/post/410305/tethers-excess-reserves-fall-by-more-than-4-billion-amid-weaker-q2-financial-results?utm_source=rss&utm_medium=rss
+  language       en
+  published_at   Fri, 31 Jul 2026 13:58:47 -0400
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"https://www.theblock.co/post/410305"}
+
+--- row 2 ---
+  uid            the-block|https://www.theblock.co/post/410297
+  title          Analysts back Strategy&#8217;s cash buildup as Saylor shifts from &#8216;100% bitcoin&#8217; approach
+  body           <p>TD Cowen and Benchmark reiterated buy on Strategy after an $8.2 billion Q2 loss and a corporate STRC-to-par push.</p>
+  summary        <p>TD Cowen and Benchmark reiterated buy on Strategy after an $8.2 billion Q2 loss and a corporate STRC-to-par push.</p>
+  link           https://www.theblock.co/post/410297/strategy-cash-buildup-saylor-shifts-from-100-bitcoin-approach?utm_source=rss&utm_medium=rss
+  language       en
+  published_at   Fri, 31 Jul 2026 13:40:13 -0400
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"https://www.theblock.co/post/410297"}
+
+--- row 3 ---
+  uid            the-block|https://www.theblock.co/post/410295
+  title          World Cup 2026 prediction markets topped $20 billion, with Ronaldo tears among the biggest wagers
+  body           <p>World Cup betting activity peaked around major knockout matches, with markets ranging from match outcomes to player-specific outcomes.</p>
+  summary        <p>World Cup betting activity peaked around major knockout matches, with markets ranging from match outcomes to player-specific outcomes.</p>
+  link           https://www.theblock.co/post/410295/world-cup-2026-prediction-markets-topped-20-billion-ronaldo-tears-biggest-wagers?utm_source=rss&utm_medium=rss
+  language       en
+  published_at   Fri, 31 Jul 2026 12:48:36 -0400
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"https://www.theblock.co/post/410295"}

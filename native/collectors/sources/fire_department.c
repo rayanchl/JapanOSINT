@@ -47,7 +47,11 @@ static int has_digit(const char *s) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char *html = feed_get_text(ctx->http, TFD_URL, 15000);
-  const char *src = html ? html : "";
+  if (!html) {                       /* genuine fetch failure — that IS an error */
+    fprintf(stderr, "[fire-department] fetch failed: %s\n", TFD_URL);
+    return -1;
+  }
+  const char *src = html;
 
   int n = 0;
   const char *cur = src;
@@ -127,7 +131,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(html);
 
   fprintf(stderr, "[fire-department] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* An empty dispatch board is the NORMAL state for most of the day, not an
+   * error. `n > 0 ? 0 : -1` made every quiet poll return rc=-1, which
+   * core/scheduler.c logs as status="error" and feeds to anomaly_detect() —
+   * i.e. the circuit breaker quarantined the source for being calm. The fetch
+   * failure above is the only real error condition. */
+  return 0;
 }
 
 static const source_def fire_department_def = {

@@ -1,0 +1,45 @@
+=== gnews-mon-border-clash
+exit: 0
+sched: rc=0 records=100 707ms
+--- stderr ---
+[rss] gnews-mon-border-clash emitted 100
+[sched] gnews-mon-border-clash run rc=0 records=100 707ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-border-clash|CBMiwwFBVV95cUxQNjdXb01JeTBtSm82SDd1VkgwV3BJMnVkYzBzeHE2ODhLQUkxMEJHRzJzREtPT0N4Y2ZQQ19WMTY0RVI3MnZIeEx4V1lxV0dwckJNWlpYTmVMbnZ2YlZyYUFhZHotU0w5WTVVcjFkN2pld1JkSGdOYTdMYzVkYUNzRjcwR0E4dUV3SWlMQTNuRWg0VUx1VlU4UU85Y1VmNWlWQnZuNXgxOWtTQVFLOWFHTjJPand3SkNqeEkyTVJaWEc3aVE
+  title          Over 20,000 Cambodians remain displaced in border clash with Thailand: UN expert - Anadolu Ajansı
+  body           <a href="https://news.google.com/rss/articles/CBMiwwFBVV95cUxQNjdXb01JeTBtSm82SDd1VkgwV3BJMnVkYzBzeHE2ODhLQUkxMEJHRzJzREtPT0N4Y2ZQQ19WMTY0RVI3MnZIeEx4V1lxV0dwckJNWlpYTmVMbnZ2YlZyYUFhZHotU0w5WTVVcjFkN2pld1JkSGdOYTdMYzVkYUNzRjcwR0E4dUV3SWlMQTNuRWg0VUx1VlU4UU85Y1VmNWlWQnZuNXgxOWtTQVFLOWFHTjJPand3SkNqeEkyTVJaWEc3aVE?oc=5" target="_blank">Over 20,000 Cambodians remain displaced in border clash with Thailand: UN expert</a>&nbsp;&nbsp;<font color="#6f6f6f">Anadolu Ajansı</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiwwFBVV95cUxQNjdXb01JeTBtSm82SDd1VkgwV3BJMnVkYzBzeHE2ODhLQUkxMEJHRzJzREtPT0N4Y2ZQQ19WMTY0RVI3MnZIeEx4V1lxV0dwckJNWlpYTmVMbnZ2YlZyYUFhZHotU0w5WTVVcjFkN2pld1JkSGdOYTdMYzVkYUNzRjcwR0E4dUV3SWlMQT
+  link           https://news.google.com/rss/articles/CBMiwwFBVV95cUxQNjdXb01JeTBtSm82SDd1VkgwV3BJMnVkYzBzeHE2ODhLQUkxMEJHRzJzREtPT0N4Y2ZQQ19WMTY0RVI3MnZIeEx4V1lxV0dwckJNWlpYTmVMbnZ2YlZyYUFhZHotU0w5WTVVcjFkN2pld1JkSGdOYTdMYzVkYUNzRjcwR0E4dUV3SWlMQTNuRWg0VUx1VlU4UU85Y1VmNWlWQnZuNXgxOWtTQVFLOWFHTjJPand3SkNqeEkyTVJaWEc3aVE?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 11:56:15 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","border"]
+  properties     {"guid":"CBMiwwFBVV95cUxQNjdXb01JeTBtSm82SDd1VkgwV3BJMnVkYzBzeHE2ODhLQUkxMEJHRzJzREtPT0N4Y2ZQQ19WMTY0RVI3MnZIeEx4V1lxV0dwckJNWlpYTmVMbnZ2YlZyYUFhZHotU0w5WTVVcjFkN2pld1JkSGdOYTdMYzVkYUNzRjcwR0E4dUV3SWlMQTNuRWg0VUx1VlU4UU85Y1VmNWlWQnZuNXgxOWtTQVFLOWFHTjJPand3SkNqeEkyTVJaWEc3aVE"}
+
+--- row 2 ---
+  uid            gnews-mon-border-clash|CBMirwFBVV95cUxPeVdmd0xhandpbWhjMDhGZ3Q4eUFtaVQ4Z1RmSGhJRnJUaG56cGVzNnZubkZiWUVqZnl4YmhFcVo5OHN5YTZWbGNXT2NJSU5mZWxhdEYwem1oVmJQUDRJSGNhLThxMU5UVVRmekVERTBwTVFWN21ZR3VQSDdpR1h2cGU0cU9veGZRY181N0xxeGI0TkNRYmRvQV9OZDd6U0s2LUg1YW1XOXFFd19nM3lJ0gG0AUFVX3lxTE5hOVZYRU5FRHR1ZWo5NFpsNFdXZjV1d0NIMjlkbE9fbE1WdURlTWlrMWFZcGlSS1MzYlBtZ1NrT2VYWnJ4SmNmMURqd3NRQVVpV2VUZ1AxalRDY0xxRUk5S3Rveks2UFgxS2lIbEU1VVZieDJ1Ylo4aHJoTS13Vm9OUTNNTmJlcEtvbEpDWG5TWVcycFUyOS0wNnRGdjJEVWhKLVlhY3RlWGFPVXYxQUxOZTRuTw
+  title          Nepal’s PM urges calm as three people killed after Hindu-Muslim unrest - Al Jazeera
+  body           <a href="https://news.google.com/rss/articles/CBMirwFBVV95cUxPeVdmd0xhandpbWhjMDhGZ3Q4eUFtaVQ4Z1RmSGhJRnJUaG56cGVzNnZubkZiWUVqZnl4YmhFcVo5OHN5YTZWbGNXT2NJSU5mZWxhdEYwem1oVmJQUDRJSGNhLThxMU5UVVRmekVERTBwTVFWN21ZR3VQSDdpR1h2cGU0cU9veGZRY181N0xxeGI0TkNRYmRvQV9OZDd6U0s2LUg1YW1XOXFFd19nM3lJ0gG0AUFVX3lxTE5hOVZYRU5FRHR1ZWo5NFpsNFdXZjV1d0NIMjlkbE9fbE1WdURlTWlrMWFZcGlSS1MzYlBtZ1NrT2VYWnJ4SmNmMURqd3NRQVVpV2VUZ1AxalRDY0xxRUk5S3Rveks2UFgxS2lIbEU1VVZieDJ1Ylo4aHJoTS13Vm9OUTNNTmJlcEtvbEpDWG5TWVcycFUyOS0wNnRGdjJEVWhKLVlhY3RlWGFPVXYxQUxOZTRuTw?oc=5" target="_blank">Nepal’s PM urges calm as three people killed after Hindu-Muslim unrest</a>&nbsp;&nbsp;<font color="#6f6f6f">Al Jazeera</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMirwFBVV95cUxPeVdmd0xhandpbWhjMDhGZ3Q4eUFtaVQ4Z1RmSGhJRnJUaG56cGVzNnZubkZiWUVqZnl4YmhFcVo5OHN5YTZWbGNXT2NJSU5mZWxhdEYwem1oVmJQUDRJSGNhLThxMU5UVVRmekVERTBwTVFWN21ZR3VQSDdpR1h2cGU0cU9veGZRY181N0
+  link           https://news.google.com/rss/articles/CBMirwFBVV95cUxPeVdmd0xhandpbWhjMDhGZ3Q4eUFtaVQ4Z1RmSGhJRnJUaG56cGVzNnZubkZiWUVqZnl4YmhFcVo5OHN5YTZWbGNXT2NJSU5mZWxhdEYwem1oVmJQUDRJSGNhLThxMU5UVVRmekVERTBwTVFWN21ZR3VQSDdpR1h2cGU0cU9veGZRY181N0xxeGI0TkNRYmRvQV9OZDd6U0s2LUg1YW1XOXFFd19nM3lJ0gG0AUFVX3lxTE5hOVZYRU5FRHR1ZWo5NFpsNFdXZjV1d0NIMjlkbE9fbE1WdURlTWlrMWFZcGlSS1MzYlBtZ1NrT2VYWnJ4SmNmMURqd3NRQVVpV2VUZ1AxalRDY0xxRUk5S3Rveks2UFgxS2lIbEU1VVZieDJ1Ylo4aHJoTS13Vm9OUTNNTmJlcEtvbEpDWG5TWVcycFUyOS0wNnRGdjJEVWhKLVlhY3RlWGFPVXYxQUxOZTRuTw?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 01:18:46 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","border"]
+  properties     {"guid":"CBMirwFBVV95cUxPeVdmd0xhandpbWhjMDhGZ3Q4eUFtaVQ4Z1RmSGhJRnJUaG56cGVzNnZubkZiWUVqZnl4YmhFcVo5OHN5YTZWbGNXT2NJSU5mZWxhdEYwem1oVmJQUDRJSGNhLThxMU5UVVRmekVERTBwTVFWN21ZR3VQSDdpR1h2cGU0cU9veGZRY181N0xxeGI0TkNRYmRvQV9OZDd6U0s2LUg1YW1XOXFFd19nM3lJ0gG0AUFVX3lxTE5hOVZYRU5FRHR1ZWo5NFpsNFdXZjV1d0NIMjlkbE9fbE1WdURlTWlrMWFZcGlSS1MzYlBtZ1NrT2VYWnJ4SmNmMURqd3NRQVVpV2VUZ1AxalRDY0xxRUk5S3Rveks2UFgxS2lIbEU1VVZieDJ1Ylo4aHJoTS13Vm9OUTNNTmJlcEtvbEpDWG5TWVcycFUyOS0wNnRGdjJEVWhKLVlhY3RlWGFPVXYxQUxOZTRuTw"}
+
+--- row 3 ---
+  uid            gnews-mon-border-clash|CBMiwAFBVV95cUxQSWF4QmZ0MnlMRWNCZm9jOHVkOVpCTzUtS3Y0ODhhMGdfc3FEcXIxYUw0Tk16OC1GYUpZbTY3VnpmMFJSTWRtaThvOWlmU3JJVG9xaGdlWnktUmdDSWVjQmRCN1dNbE1zSE1tZnMyaDRFSnVkZzJ3ekFtODctR2NtRkdoZHg5a3ByenNoU1RWdVpXUnJRaWNLVjNGbG4xUDhvQXJuRXJYTHFPMktONWFsVFN3bFg1RGR0NERCX2xVM2vSAbwBQVVfeXFMUGFwVGtaWWJNaFJrbTdkai1XbTJoMHpZRl9DdDFHQmk1TG15MnZrODFHMzdUSXZodGxOdXlNYkdqYW1nVG1DQzZ1eU5BSERBWWVsdF9jMGs5Um1wNWhuZ2VEM281eXJNNVpqWUZXSGdQZUVveFNXUjlwU2VVY2hUVmp6SnZ1TGN3TENYazJuelNmNjNNUTJFSEhTODVhX1owWHZFLVJ2
+  title          18 Moroccan migrants dead as thousands attempt to breach Spanish border - The New Voice of Ukraine
+  body           <a href="https://news.google.com/rss/articles/CBMiwAFBVV95cUxQSWF4QmZ0MnlMRWNCZm9jOHVkOVpCTzUtS3Y0ODhhMGdfc3FEcXIxYUw0Tk16OC1GYUpZbTY3VnpmMFJSTWRtaThvOWlmU3JJVG9xaGdlWnktUmdDSWVjQmRCN1dNbE1zSE1tZnMyaDRFSnVkZzJ3ekFtODctR2NtRkdoZHg5a3ByenNoU1RWdVpXUnJRaWNLVjNGbG4xUDhvQXJuRXJYTHFPMktONWFsVFN3bFg1RGR0NERCX2xVM2vSAbwBQVVfeXFMUGFwVGtaWWJNaFJrbTdkai1XbTJoMHpZRl9DdDFHQmk1TG15MnZrODFHMzdUSXZodGxOdXlNYkdqYW1nVG1DQzZ1eU5BSERBWWVsdF9jMGs5Um1wNWhuZ2VEM281eXJNNVpqWUZXSGdQZUVveFNXUjlwU2VVY2hUVmp6SnZ1TGN3TENYazJuelNmNjNNUTJFSEhTODVhX1owWHZFLVJ2SmtMWWY4LTdpUkkxNlRUXzdOLWhnU1U?oc=5" target="_blank">18 Moroccan migrants dead as thousands attempt to breach Spanish border</a>&nbsp;&nbsp;<font color="#6f6f6f">The New Voice of Ukraine</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiwAFBVV95cUxQSWF4QmZ0MnlMRWNCZm9jOHVkOVpCTzUtS3Y0ODhhMGdfc3FEcXIxYUw0Tk16OC1GYUpZbTY3VnpmMFJSTWRtaThvOWlmU3JJVG9xaGdlWnktUmdDSWVjQmRCN1dNbE1zSE1tZnMyaDRFSnVkZzJ3ekFtODctR2NtRkdoZHg5a3ByenNoU1
+  link           https://news.google.com/rss/articles/CBMiwAFBVV95cUxQSWF4QmZ0MnlMRWNCZm9jOHVkOVpCTzUtS3Y0ODhhMGdfc3FEcXIxYUw0Tk16OC1GYUpZbTY3VnpmMFJSTWRtaThvOWlmU3JJVG9xaGdlWnktUmdDSWVjQmRCN1dNbE1zSE1tZnMyaDRFSnVkZzJ3ekFtODctR2NtRkdoZHg5a3ByenNoU1RWdVpXUnJRaWNLVjNGbG4xUDhvQXJuRXJYTHFPMktONWFsVFN3bFg1RGR0NERCX2xVM2vSAbwBQVVfeXFMUGFwVGtaWWJNaFJrbTdkai1XbTJoMHpZRl9DdDFHQmk1TG15MnZrODFHMzdUSXZodGxOdXlNYkdqYW1nVG1DQzZ1eU5BSERBWWVsdF9jMGs5Um1wNWhuZ2VEM281eXJNNVpqWUZXSGdQZUVveFNXUjlwU2VVY2hUVmp6SnZ1TGN3TENYazJuelNmNjNNUTJFSEhTODVhX1owWHZFLVJ2SmtMWWY4LTdpUkkxNlRUXzdOLWhnU1U?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 11:33:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","border"]
+  properties     {"guid":"CBMiwAFBVV95cUxQSWF4QmZ0MnlMRWNCZm9jOHVkOVpCTzUtS3Y0ODhhMGdfc3FEcXIxYUw0Tk16OC1GYUpZbTY3VnpmMFJSTWRtaThvOWlmU3JJVG9xaGdlWnktUmdDSWVjQmRCN1dNbE1zSE1tZnMyaDRFSnVkZzJ3ekFtODctR2NtRkdoZHg5a3ByenNoU1RWdVpXUnJRaWNLVjNGbG4xUDhvQXJuRXJYTHFPMktONWFsVFN3bFg1RGR0NERCX2xVM2vSAbwBQVVfeXFMUGFwVGtaWWJNaFJrbTdkai1XbTJoMHpZRl9DdDFHQmk1TG15MnZrODFHMzdUSXZodGxOdXlNYkdqYW1nVG1DQzZ1eU5BSERBWWVsdF9jMGs5Um1wNWhuZ2VEM281eXJNNVpqWUZXSGdQZUVveFNXUjlwU2VVY2hUVmp6SnZ1TGN3TENYazJuelNmNjNNUTJFSEhTODVhX1owWHZFLVJ2SmtMWWY4LTdpUk

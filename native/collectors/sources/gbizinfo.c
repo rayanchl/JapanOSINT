@@ -9,6 +9,7 @@
  *
  * NOTE: field mapping follows the public gBizINFO v1 spec ("hojin-infos" array);
  * verify against a live response once a token is configured. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
@@ -17,26 +18,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
-           ? v->valuestring : NULL;
-}
-
 /* one company → one intel_item. Returns 1 if emitted. */
 static int emit_company(intel_sink *sink, const cJSON *c) {
   if (!c) return 0;
-  const char *cn   = sv(c, "corporate_number");
-  const char *name = sv(c, "name");
-  const char *loc  = sv(c, "location");
+  const char *cn   = jo_sv(c, "corporate_number");
+  const char *name = jo_sv(c, "name");
+  const char *loc  = jo_sv(c, "location");
   if (!name && !cn) return 0;
 
-  const char *kana = sv(c, "kana");
-  const char *biz  = sv(c, "business_summary");
-  const char *url  = sv(c, "company_url");
-  const char *est  = sv(c, "date_of_establishment");
-  const char *upd  = sv(c, "update_date");
-  const char *post = sv(c, "postal_code");
+  const char *kana = jo_sv(c, "kana");
+  const char *biz  = jo_sv(c, "business_summary");
+  const char *url  = jo_sv(c, "company_url");
+  const char *est  = jo_sv(c, "date_of_establishment");
+  const char *upd  = jo_sv(c, "update_date");
+  const char *post = jo_sv(c, "postal_code");
 
   cJSON *data = cJSON_CreateObject();
   if (name) cJSON_AddStringToObject(data, "name", name);

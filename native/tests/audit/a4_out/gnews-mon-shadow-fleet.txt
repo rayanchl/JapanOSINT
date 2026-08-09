@@ -1,0 +1,45 @@
+=== gnews-mon-shadow-fleet
+exit: 0
+sched: rc=0 records=100 751ms
+--- stderr ---
+[rss] gnews-mon-shadow-fleet emitted 100
+[sched] gnews-mon-shadow-fleet run rc=0 records=100 751ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-shadow-fleet|CBMivwFBVV95cUxPZ3BSd3VjOGx3d05pWm1uMWRielhwT1E1TVVsWVZIaEJtbWlWRldkWmdhQkFULXVLdHVMX1M0TjVQVTV5b0phSTdFR1VKS2FvTll1WEEtaWZ1VFNNSUN0V0dqaUlUaEhWS1lsOUZvUjk4bFdHLVZreE1sRGpjbGY2ZXJzYzZFOUhSNVNfT1pScGJ2Rml6TnhPWG92ZXdMc21QUDhlVzBueTkxRFM5UzBUUXJUWU4yUzJIZDBkaFlISQ
+  title          Oil spill from shadow fleet tanker spreading off Oman, satellite images show - Reuters
+  body           <a href="https://news.google.com/rss/articles/CBMivwFBVV95cUxPZ3BSd3VjOGx3d05pWm1uMWRielhwT1E1TVVsWVZIaEJtbWlWRldkWmdhQkFULXVLdHVMX1M0TjVQVTV5b0phSTdFR1VKS2FvTll1WEEtaWZ1VFNNSUN0V0dqaUlUaEhWS1lsOUZvUjk4bFdHLVZreE1sRGpjbGY2ZXJzYzZFOUhSNVNfT1pScGJ2Rml6TnhPWG92ZXdMc21QUDhlVzBueTkxRFM5UzBUUXJUWU4yUzJIZDBkaFlISQ?oc=5" target="_blank">Oil spill from shadow fleet tanker spreading off Oman, satellite images show</a>&nbsp;&nbsp;<font color="#6f6f6f">Reuters</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMivwFBVV95cUxPZ3BSd3VjOGx3d05pWm1uMWRielhwT1E1TVVsWVZIaEJtbWlWRldkWmdhQkFULXVLdHVMX1M0TjVQVTV5b0phSTdFR1VKS2FvTll1WEEtaWZ1VFNNSUN0V0dqaUlUaEhWS1lsOUZvUjk4bFdHLVZreE1sRGpjbGY2ZXJzYzZFOUhSNVNfT1
+  link           https://news.google.com/rss/articles/CBMivwFBVV95cUxPZ3BSd3VjOGx3d05pWm1uMWRielhwT1E1TVVsWVZIaEJtbWlWRldkWmdhQkFULXVLdHVMX1M0TjVQVTV5b0phSTdFR1VKS2FvTll1WEEtaWZ1VFNNSUN0V0dqaUlUaEhWS1lsOUZvUjk4bFdHLVZreE1sRGpjbGY2ZXJzYzZFOUhSNVNfT1pScGJ2Rml6TnhPWG92ZXdMc21QUDhlVzBueTkxRFM5UzBUUXJUWU4yUzJIZDBkaFlISQ?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 14:15:43 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","shadow"]
+  properties     {"guid":"CBMivwFBVV95cUxPZ3BSd3VjOGx3d05pWm1uMWRielhwT1E1TVVsWVZIaEJtbWlWRldkWmdhQkFULXVLdHVMX1M0TjVQVTV5b0phSTdFR1VKS2FvTll1WEEtaWZ1VFNNSUN0V0dqaUlUaEhWS1lsOUZvUjk4bFdHLVZreE1sRGpjbGY2ZXJzYzZFOUhSNVNfT1pScGJ2Rml6TnhPWG92ZXdMc21QUDhlVzBueTkxRFM5UzBUUXJUWU4yUzJIZDBkaFlISQ"}
+
+--- row 2 ---
+  uid            gnews-mon-shadow-fleet|CBMi1wFBVV95cUxPZDVXeEp4cEhrZ25QenlEX0Uza2dLMGlxQkJrSWtDbzZtbjViMnZJbUtVUkgzckxQQXZVaVF0YUlnUHNiT0tTZThvNWVHTUlkVVB0NjBLNzVQSDVnWDFqUFhLRjFzWm03SVFFc19UMkFwcmpjMFJ0QUl5RldNVW9KNTROMzhVazRaSjVIalhEczNDeUxDWkpONVN4bF9CbkUtRnk0ODdMLTB0eDNyRUxud2toZTRxYklkS0p5MWg1bVEwd0VENzg3YXc0YjhiQXZaVDFZeHNxNA
+  title          Unmanned Systems Forces strike four vessels of Russian shadow fleet and USV base in Crimea - Ukrinform
+  body           <a href="https://news.google.com/rss/articles/CBMi1wFBVV95cUxPZDVXeEp4cEhrZ25QenlEX0Uza2dLMGlxQkJrSWtDbzZtbjViMnZJbUtVUkgzckxQQXZVaVF0YUlnUHNiT0tTZThvNWVHTUlkVVB0NjBLNzVQSDVnWDFqUFhLRjFzWm03SVFFc19UMkFwcmpjMFJ0QUl5RldNVW9KNTROMzhVazRaSjVIalhEczNDeUxDWkpONVN4bF9CbkUtRnk0ODdMLTB0eDNyRUxud2toZTRxYklkS0p5MWg1bVEwd0VENzg3YXc0YjhiQXZaVDFZeHNxNA?oc=5" target="_blank">Unmanned Systems Forces strike four vessels of Russian shadow fleet and USV base in Crimea</a>&nbsp;&nbsp;<font color="#6f6f6f">Ukrinform</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi1wFBVV95cUxPZDVXeEp4cEhrZ25QenlEX0Uza2dLMGlxQkJrSWtDbzZtbjViMnZJbUtVUkgzckxQQXZVaVF0YUlnUHNiT0tTZThvNWVHTUlkVVB0NjBLNzVQSDVnWDFqUFhLRjFzWm03SVFFc19UMkFwcmpjMFJ0QUl5RldNVW9KNTROMzhVazRaSjVIal
+  link           https://news.google.com/rss/articles/CBMi1wFBVV95cUxPZDVXeEp4cEhrZ25QenlEX0Uza2dLMGlxQkJrSWtDbzZtbjViMnZJbUtVUkgzckxQQXZVaVF0YUlnUHNiT0tTZThvNWVHTUlkVVB0NjBLNzVQSDVnWDFqUFhLRjFzWm03SVFFc19UMkFwcmpjMFJ0QUl5RldNVW9KNTROMzhVazRaSjVIalhEczNDeUxDWkpONVN4bF9CbkUtRnk0ODdMLTB0eDNyRUxud2toZTRxYklkS0p5MWg1bVEwd0VENzg3YXc0YjhiQXZaVDFZeHNxNA?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 10:20:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","shadow"]
+  properties     {"guid":"CBMi1wFBVV95cUxPZDVXeEp4cEhrZ25QenlEX0Uza2dLMGlxQkJrSWtDbzZtbjViMnZJbUtVUkgzckxQQXZVaVF0YUlnUHNiT0tTZThvNWVHTUlkVVB0NjBLNzVQSDVnWDFqUFhLRjFzWm03SVFFc19UMkFwcmpjMFJ0QUl5RldNVW9KNTROMzhVazRaSjVIalhEczNDeUxDWkpONVN4bF9CbkUtRnk0ODdMLTB0eDNyRUxud2toZTRxYklkS0p5MWg1bVEwd0VENzg3YXc0YjhiQXZaVDFZeHNxNA"}
+
+--- row 3 ---
+  uid            gnews-mon-shadow-fleet|CBMioAFBVV95cUxNMWNhaWpPNmQxSWJfWm16Nmx6Q2IyYnU3cl9kLTJfbVJnRVVnR1g1WnlnYnFSVG9FRHJyb2xIaGF4LXNiWG43N0xldXFkS0hsU2cwNU1PNzgyY2QxTFgxaUpiQXNmTDJNUGphYkE5WGY1WFhJZmdpSno3ekxDRXp0S1BfOVB5bGxwRXg1WnlBUmEyUV9IV0lZTVJRdGNvTzhh
+  title          Abandoned Russian shadow-fleet tanker leaks oil off Oman - Semafor
+  body           <a href="https://news.google.com/rss/articles/CBMioAFBVV95cUxNMWNhaWpPNmQxSWJfWm16Nmx6Q2IyYnU3cl9kLTJfbVJnRVVnR1g1WnlnYnFSVG9FRHJyb2xIaGF4LXNiWG43N0xldXFkS0hsU2cwNU1PNzgyY2QxTFgxaUpiQXNmTDJNUGphYkE5WGY1WFhJZmdpSno3ekxDRXp0S1BfOVB5bGxwRXg1WnlBUmEyUV9IV0lZTVJRdGNvTzhh?oc=5" target="_blank">Abandoned Russian shadow-fleet tanker leaks oil off Oman</a>&nbsp;&nbsp;<font color="#6f6f6f">Semafor</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMioAFBVV95cUxNMWNhaWpPNmQxSWJfWm16Nmx6Q2IyYnU3cl9kLTJfbVJnRVVnR1g1WnlnYnFSVG9FRHJyb2xIaGF4LXNiWG43N0xldXFkS0hsU2cwNU1PNzgyY2QxTFgxaUpiQXNmTDJNUGphYkE5WGY1WFhJZmdpSno3ekxDRXp0S1BfOVB5bGxwRXg1Wn
+  link           https://news.google.com/rss/articles/CBMioAFBVV95cUxNMWNhaWpPNmQxSWJfWm16Nmx6Q2IyYnU3cl9kLTJfbVJnRVVnR1g1WnlnYnFSVG9FRHJyb2xIaGF4LXNiWG43N0xldXFkS0hsU2cwNU1PNzgyY2QxTFgxaUpiQXNmTDJNUGphYkE5WGY1WFhJZmdpSno3ekxDRXp0S1BfOVB5bGxwRXg1WnlBUmEyUV9IV0lZTVJRdGNvTzhh?oc=5
+  language       en
+  published_at   Tue, 28 Jul 2026 11:18:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","shadow"]
+  properties     {"guid":"CBMioAFBVV95cUxNMWNhaWpPNmQxSWJfWm16Nmx6Q2IyYnU3cl9kLTJfbVJnRVVnR1g1WnlnYnFSVG9FRHJyb2xIaGF4LXNiWG43N0xldXFkS0hsU2cwNU1PNzgyY2QxTFgxaUpiQXNmTDJNUGphYkE5WGY1WFhJZmdpSno3ekxDRXp0S1BfOVB5bGxwRXg1WnlBUmEyUV9IV0lZTVJRdGNvTzhh"}

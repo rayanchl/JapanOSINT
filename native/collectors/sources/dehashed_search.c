@@ -12,6 +12,7 @@
  *   total_breaches_found,compromised,recommendation|note,disclaimer}
  * success=true, confidence 90 if total_found>0 else 70. Emits one
  * osint_service_result row (body = {success,confidence,data}). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
@@ -20,18 +21,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
-static void uri_encode(const char *in, char *out, size_t cap) {
-  static const char *keep = "-_.!~*'()";
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p && w + 4 < cap; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(keep, c)) out[w++] = (char)c;
-    else { snprintf(out + w, cap - w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
-}
 
 typedef enum { D_EMAIL, D_USERNAME, D_IP, D_PHONE, D_PASSWORD,
                D_HASH, D_NAME, D_DOMAIN } dtype_t;
@@ -112,7 +101,7 @@ static cJSON *query_dehashed(http_client *http, const char *q, dtype_t t) {
   if (!email || !key || !*email || !*key) return NULL;   /* skip silently */
 
   char enc[512];
-  uri_encode(q, enc, sizeof enc);
+  jo_uri_encode_buf(q, enc, sizeof enc);
   char url[1024];
   snprintf(url, sizeof url, "https://api.dehashed.com/search?query=%s:%s",
            field_name(t), enc);
@@ -143,7 +132,7 @@ static cJSON *query_dehashed(http_client *http, const char *q, dtype_t t) {
  * positive hit (caller owns the duplicate), else NULL (failure / no breach). */
 static cJSON *query_leakcheck(http_client *http, const char *q) {
   char enc[512];
-  uri_encode(q, enc, sizeof enc);
+  jo_uri_encode_buf(q, enc, sizeof enc);
   char url[640];
   snprintf(url, sizeof url, "https://leakcheck.io/api/public?check=%s", enc);
   http_response hr = {0};

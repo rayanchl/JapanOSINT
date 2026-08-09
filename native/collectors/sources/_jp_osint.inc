@@ -16,54 +16,13 @@
 #define JO_JP_OSINT_INC
 
 #include "../../lib/htmlparse.h"   /* the one anchor scanner + dedupe set */
-
-/* cJSON string field, or NULL when absent/empty. */
-static inline const char *jo_sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
-           ? v->valuestring : NULL;
-}
-
-/* Non-empty env var value, or NULL. */
-static inline const char *jo_env(const char *name) {
-  const char *v = getenv(name);
-  return (v && *v) ? v : NULL;
-}
-
-/* RFC-3986 %-encode (UTF-8 safe). malloc'd; caller frees. */
-static inline char *jo_urlencode(const char *s) {
-  if (!s) s = "";
-  size_t n = strlen(s);
-  char *out = (char *)malloc(n * 3 + 1);
-  if (!out) return NULL;
-  static const char hx[] = "0123456789ABCDEF";
-  size_t j = 0;
-  for (size_t i = 0; i < n; i++) {
-    unsigned char c = (unsigned char)s[i];
-    if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~')
-      out[j++] = (char)c;
-    else { out[j++] = '%'; out[j++] = hx[c >> 4]; out[j++] = hx[c & 15]; }
-  }
-  out[j] = 0;
-  return out;
-}
-
-/* GET → malloc'd NUL-terminated body on HTTP 200 (caller frees), else NULL.
- * Logs the status under [tag]. headers may be NULL. */
-static inline char *jo_get(const source_ctx *ctx, const char *url,
-                    const char *const *headers, const char *tag) {
-  http_response hr = {0};
-  int rc = http_request(ctx->http, "GET", url, headers, NULL, 0, 20000, 1, &hr);
-  if (rc != 0 || hr.status != 200 || !hr.body) {
-    fprintf(stderr, "[%s] http status=%ld\n", tag, hr.status);
-    http_response_free(&hr);
-    return NULL;
-  }
-  char *body = hr.body;
-  hr.body = NULL;                 /* steal; prevent free below */
-  http_response_free(&hr);
-  return body;
-}
+/* Shared small helpers (jo_sv / jo_env / jo_urlencode / jo_get / jo_num / …)
+ * live in jocore.h — the same four this file used to define inline were
+ * extracted there, so include it rather than duplicate them (guarded, so a
+ * collector that also includes jocore.h directly is fine). The anchor-scanner
+ * helpers below (jo_tag_inner / jo_next_entry / jo_emit_anchors) are unique to
+ * this include and stay. */
+#include "../../lib/jocore.h"
 
 /* Extract inner text of the FIRST <tag>…</tag> at/after *cur within [buf..end).
  * Advances *cur past the close tag. Returns a malloc'd, CDATA-stripped string

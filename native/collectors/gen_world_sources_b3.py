@@ -252,7 +252,8 @@ GEO = [
  ("emsc-quakes","EMSC Latest Earthquakes","https://www.emsc-csem.org/service/rss/rss.php?typ=emsc","seismic"),
  ("nhc-cpac","NOAA NHC Central Pacific","https://www.nhc.noaa.gov/index-cp.xml","cyclone"),
  ("volcanodiscovery","VolcanoDiscovery","https://www.volcanodiscovery.com/rss.xml","volcano"),
- ("bom-au-warnings","Australia BoM Warnings","http://www.bom.gov.au/rss/1.xml","weather"),
+ # bom-au-warnings removed: feed 404s and the only live replacement API's own
+ # response says "You must not use, copy or share it". See geohazard_extra.c.
  ("metoffice-warnings","UK Met Office Warnings","https://www.metoffice.gov.uk/public/data/PWSCache/WarningsRSS/Region/UK","weather"),
  ("iceland-quakes","Iceland Met Office Quakes","https://en.vedur.is/earthquakes-and-volcanism/earthquakes/rss/","seismic"),
  ("copernicus-ems","Copernicus Emergency Mgmt","https://emergency.copernicus.eu/mapping/activations-rapid/rss.xml","disaster"),

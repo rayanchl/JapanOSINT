@@ -1,0 +1,45 @@
+=== gnews-mon-major-earthquake
+exit: 0
+sched: rc=0 records=100 714ms
+--- stderr ---
+[rss] gnews-mon-major-earthquake emitted 100
+[sched] gnews-mon-major-earthquake run rc=0 records=100 714ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-major-earthquake|CBMitgFBVV95cUxQREx4N194TTNIVm1ocmk3TEpxZ3hPSVpKQ2dwdEpuOTZNVXNsWVNjX1pjSGhkTHh6M01iWFZQeENTQ09KTHNQSzl0TzdwWGJqN2lrMmV2Vng4Z19ISUZWM1l3NXU1U2ptMENYZVRqSzd5Y0pLelAtOHJHZ19jbm5IdXhmYjhuekNDLW9aV1BvQUtUTTlLOWZhemRNSF81MS1LSXYybms2UGliMzhHaW14SW52V2ZOZw
+  title          Japan quake kills at least two after blast at Kumamoto mall, one in building collapse - Reuters
+  body           <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxQREx4N194TTNIVm1ocmk3TEpxZ3hPSVpKQ2dwdEpuOTZNVXNsWVNjX1pjSGhkTHh6M01iWFZQeENTQ09KTHNQSzl0TzdwWGJqN2lrMmV2Vng4Z19ISUZWM1l3NXU1U2ptMENYZVRqSzd5Y0pLelAtOHJHZ19jbm5IdXhmYjhuekNDLW9aV1BvQUtUTTlLOWZhemRNSF81MS1LSXYybms2UGliMzhHaW14SW52V2ZOZw?oc=5" target="_blank">Japan quake kills at least two after blast at Kumamoto mall, one in building collapse</a>&nbsp;&nbsp;<font color="#6f6f6f">Reuters</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxQREx4N194TTNIVm1ocmk3TEpxZ3hPSVpKQ2dwdEpuOTZNVXNsWVNjX1pjSGhkTHh6M01iWFZQeENTQ09KTHNQSzl0TzdwWGJqN2lrMmV2Vng4Z19ISUZWM1l3NXU1U2ptMENYZVRqSzd5Y0pLelAtOHJHZ19jbm5IdXhmYjhuekNDLW9aV1
+  link           https://news.google.com/rss/articles/CBMitgFBVV95cUxQREx4N194TTNIVm1ocmk3TEpxZ3hPSVpKQ2dwdEpuOTZNVXNsWVNjX1pjSGhkTHh6M01iWFZQeENTQ09KTHNQSzl0TzdwWGJqN2lrMmV2Vng4Z19ISUZWM1l3NXU1U2ptMENYZVRqSzd5Y0pLelAtOHJHZ19jbm5IdXhmYjhuekNDLW9aV1BvQUtUTTlLOWZhemRNSF81MS1LSXYybms2UGliMzhHaW14SW52V2ZOZw?oc=5
+  language       en
+  published_at   Tue, 28 Jul 2026 22:30:27 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","major"]
+  properties     {"guid":"CBMitgFBVV95cUxQREx4N194TTNIVm1ocmk3TEpxZ3hPSVpKQ2dwdEpuOTZNVXNsWVNjX1pjSGhkTHh6M01iWFZQeENTQ09KTHNQSzl0TzdwWGJqN2lrMmV2Vng4Z19ISUZWM1l3NXU1U2ptMENYZVRqSzd5Y0pLelAtOHJHZ19jbm5IdXhmYjhuekNDLW9aV1BvQUtUTTlLOWZhemRNSF81MS1LSXYybms2UGliMzhHaW14SW52V2ZOZw"}
+
+--- row 2 ---
+  uid            gnews-mon-major-earthquake|CBMiWkFVX3lxTE8tM05BYy1OeVI5OVpLcFJjYzYzZlRTZ2o5eGozVDUwa3hRV2tqMDA0c1p3V0M2ajNoaXpWRHR2VWhRX2JpNl9ORHBmQTNvTEdSM2xoR2NCQTdrdw
+  title          Japan Kumamoto earthquake: What we know so far - BBC
+  body           <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE8tM05BYy1OeVI5OVpLcFJjYzYzZlRTZ2o5eGozVDUwa3hRV2tqMDA0c1p3V0M2ajNoaXpWRHR2VWhRX2JpNl9ORHBmQTNvTEdSM2xoR2NCQTdrdw?oc=5" target="_blank">Japan Kumamoto earthquake: What we know so far</a>&nbsp;&nbsp;<font color="#6f6f6f">BBC</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE8tM05BYy1OeVI5OVpLcFJjYzYzZlRTZ2o5eGozVDUwa3hRV2tqMDA0c1p3V0M2ajNoaXpWRHR2VWhRX2JpNl9ORHBmQTNvTEdSM2xoR2NCQTdrdw?oc=5" target="_blank">Japan Kumamoto earthquake: What we know so fa
+  link           https://news.google.com/rss/articles/CBMiWkFVX3lxTE8tM05BYy1OeVI5OVpLcFJjYzYzZlRTZ2o5eGozVDUwa3hRV2tqMDA0c1p3V0M2ajNoaXpWRHR2VWhRX2JpNl9ORHBmQTNvTEdSM2xoR2NCQTdrdw?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 12:22:50 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","major"]
+  properties     {"guid":"CBMiWkFVX3lxTE8tM05BYy1OeVI5OVpLcFJjYzYzZlRTZ2o5eGozVDUwa3hRV2tqMDA0c1p3V0M2ajNoaXpWRHR2VWhRX2JpNl9ORHBmQTNvTEdSM2xoR2NCQTdrdw"}
+
+--- row 3 ---
+  uid            gnews-mon-major-earthquake|CBMirwFBVV95cUxOWlA0SGZ6WkUzXzdkYi1QdzNiT1pVak1obHU2MW1UNUtVTUk0NjRaazBMeXRjaXZ3TXhaWUlsNlY3NjY5T0d1S042NzZzWTM2Ti0ya3FRVGlIVmJaTXBnV1NUY1g5YllocnN1RVhKSUF6aElfMWZ1a2RaVldVMmpVaTVwZWdBdnBuYnE1NEFJWUhoRXJlRzVXeVQxTDNXVk9EX3VNcDYzRVR1NXpnVlpj
+  title          Japan earthquake kills at least 13 as rescuers search for people trapped in damaged mall and factory - CBS News
+  body           <a href="https://news.google.com/rss/articles/CBMirwFBVV95cUxOWlA0SGZ6WkUzXzdkYi1QdzNiT1pVak1obHU2MW1UNUtVTUk0NjRaazBMeXRjaXZ3TXhaWUlsNlY3NjY5T0d1S042NzZzWTM2Ti0ya3FRVGlIVmJaTXBnV1NUY1g5YllocnN1RVhKSUF6aElfMWZ1a2RaVldVMmpVaTVwZWdBdnBuYnE1NEFJWUhoRXJlRzVXeVQxTDNXVk9EX3VNcDYzRVR1NXpnVlpj?oc=5" target="_blank">Japan earthquake kills at least 13 as rescuers search for people trapped in damaged mall and factory</a>&nbsp;&nbsp;<font color="#6f6f6f">CBS News</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMirwFBVV95cUxOWlA0SGZ6WkUzXzdkYi1QdzNiT1pVak1obHU2MW1UNUtVTUk0NjRaazBMeXRjaXZ3TXhaWUlsNlY3NjY5T0d1S042NzZzWTM2Ti0ya3FRVGlIVmJaTXBnV1NUY1g5YllocnN1RVhKSUF6aElfMWZ1a2RaVldVMmpVaTVwZWdBdnBuYnE1NE
+  link           https://news.google.com/rss/articles/CBMirwFBVV95cUxOWlA0SGZ6WkUzXzdkYi1QdzNiT1pVak1obHU2MW1UNUtVTUk0NjRaazBMeXRjaXZ3TXhaWUlsNlY3NjY5T0d1S042NzZzWTM2Ti0ya3FRVGlIVmJaTXBnV1NUY1g5YllocnN1RVhKSUF6aElfMWZ1a2RaVldVMmpVaTVwZWdBdnBuYnE1NEFJWUhoRXJlRzVXeVQxTDNXVk9EX3VNcDYzRVR1NXpnVlpj?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 07:25:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","major"]
+  properties     {"guid":"CBMirwFBVV95cUxOWlA0SGZ6WkUzXzdkYi1QdzNiT1pVak1obHU2MW1UNUtVTUk0NjRaazBMeXRjaXZ3TXhaWUlsNlY3NjY5T0d1S042NzZzWTM2Ti0ya3FRVGlIVmJaTXBnV1NUY1g5YllocnN1RVhKSUF6aElfMWZ1a2RaVldVMmpVaTVwZWdBdnBuYnE1NEFJWUhoRXJlRzVXeVQxTDNXVk9EX3VNcDYzRVR1NXpnVlpj"}

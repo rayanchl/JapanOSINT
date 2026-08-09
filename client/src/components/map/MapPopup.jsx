@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { getLayerIcon } from '../../utils/layerIcons';
+import apiUrl from '../../utils/apiUrl.js';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 import StationPopup from './popups/StationPopup.jsx';
 import VehiclePopup from './popups/VehiclePopup.jsx';
@@ -26,7 +27,7 @@ function ReverseGeocodeLabel({ feature }) {
 
     (async () => {
       try {
-        const res = await fetch(`/api/geocode/reverse?lat=${lat}&lon=${lon}`);
+        const res = await fetch(apiUrl(`/api/geocode/reverse?lat=${lat}&lon=${lon}`));
         if (!res.ok) return;
         const data = await res.json();
         if (!cancelled && data?.display_name) {
@@ -69,7 +70,7 @@ function DamLiveLevel({ feature, layerType }) {
 
     (async () => {
       try {
-        const res = await fetch(`/api/data/dam/${encodeURIComponent(damId)}/live`);
+        const res = await fetch(apiUrl(`/api/data/dam/${encodeURIComponent(damId)}/live`));
         if (!res.ok) return;
         const data = await res.json();
         if (cancelled) return;
@@ -636,7 +637,7 @@ function FlightDetail({ properties }) {
     if (!needsEnrich) return;
     let cancelled = false;
     setEnriching(true);
-    fetch(`/api/data/flight-adsb/enrich?icao24=${encodeURIComponent(properties.icao24)}`)
+    fetch(apiUrl(`/api/data/flight-adsb/enrich?icao24=${encodeURIComponent(properties.icao24)}`))
       .then((r) => (r.ok ? r.json() : {}))
       .then((data) => { if (!cancelled) setEnriched(data || {}); })
       .catch(() => { if (!cancelled) setEnriched({}); })
@@ -1016,9 +1017,9 @@ function BusStopDetail({ properties }) {
     (async () => {
       try {
         // POST is idempotent on the server; cached after first success.
-        await fetch(`/api/transit/gtfs/hydrate/${encodeURIComponent(orgId)}`, { method: 'POST' });
+        await fetch(apiUrl(`/api/transit/gtfs/hydrate/${encodeURIComponent(orgId)}`), { method: 'POST' });
         const res = await fetch(
-          `/api/transit/gtfs/stop/${encodeURIComponent(stopId)}/departures?limit=5`,
+          apiUrl(`/api/transit/gtfs/stop/${encodeURIComponent(stopId)}/departures?limit=5`),
         );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();

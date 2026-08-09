@@ -1,0 +1,206 @@
+admin-boundaries
+OPENAQ_GLOBAL Tokyo
+OPENMETEO_AQ Tokyo
+WAQI_GLOBAL Tokyo
+ASN_LOOKUP 8.8.8.8
+GBIF_OCCURRENCE Tokyo
+INATURALIST Tokyo
+OBIS_MARINE 9074729
+bird-makeup-jp
+BREACH_INDEX_EMAIL test@example.com
+BREACH_INDEX_PASSWORD test@example.com
+BREACH_INDEX_PHONE +81312345678
+BREACH_INDEX_USERNAME test@example.com
+cam-camscape
+cam-webcamera24
+cell-towers
+city-halls
+EMAILREP_LOOKUP test@example.com
+NUMVERIFY_PHONE +81312345678
+OPENCORPORATES Toyota
+CH_OPENDATA Tokyo
+FI_OPENDATA Tokyo
+UK_DATAGOV Tokyo
+crtsh-historical
+data-go-jp-ckan
+docomo-population
+egov-laws
+estat-household
+ferry-routes
+bitcoin-mag
+cnbc-finance
+cnbc-top
+cnbc-world
+coindesk
+cointelegraph
+decrypt
+ft-home
+investing-news
+kitco-news
+marketwatch-top
+oilprice-2
+seeking-alpha
+the-block
+trading-econ
+zerohedge
+ALPHAVANTAGE_SEARCH Tokyo
+FINNHUB_SEARCH Tokyo
+fofa-jp
+gcom-w
+bom-au-warnings
+copernicus-ems
+emsc-quakes
+iceland-quakes
+metoffice-warnings
+nhc-cpac
+pdc-disasters
+volcanodiscovery
+gitlab-bitbucket-leaks
+RADIO_BROWSER Tokyo
+gnews-mon-ae-red-sea-shipping
+gnews-mon-airspace-violation
+gnews-mon-arms-shipment
+gnews-mon-assassination
+gnews-mon-aviation-incident
+gnews-mon-border-clash
+gnews-mon-br-amazon-deforestation
+gnews-mon-cargo-ship-collision
+gnews-mon-catastrophic-flood
+gnews-mon-chemical-spill
+gnews-mon-civil-unrest
+gnews-mon-cn-cross-strait
+gnews-mon-cn-rare-earth
+gnews-mon-critical-infrastructure-attack
+gnews-mon-cyber-espionage
+gnews-mon-cyberattack
+gnews-mon-data-breach
+gnews-mon-disease-outbreak
+gnews-mon-disinformation-campaign
+gnews-mon-drone-strike
+gnews-mon-drug-cartel
+gnews-mon-economic-sanctions
+gnews-mon-election-interference
+gnews-mon-electronic-warfare
+gnews-mon-espionage-arrest
+gnews-mon-fr-coup-attempt
+gnews-mon-fr-sahel-militants
+gnews-mon-gps-jamming
+gnews-mon-hostage-crisis
+gnews-mon-human-trafficking
+gnews-mon-hypersonic-missile
+gnews-mon-il-gaza
+gnews-mon-in-kashmir
+gnews-mon-ir-nuclear-talks
+gnews-mon-ke-horn-of-africa
+gnews-mon-kr-north-korea-missile
+gnews-mon-lt-baltic-security
+gnews-mon-major-earthquake
+gnews-mon-military-coup
+gnews-mon-military-exercise
+gnews-mon-missile-test
+gnews-mon-money-laundering
+gnews-mon-mx-cartel-violence
+gnews-mon-naval-deployment
+gnews-mon-no-arctic-militarization
+gnews-mon-nuclear-plant-incident
+gnews-mon-nuclear-weapon
+gnews-mon-oil-tanker-seizure
+gnews-mon-ph-south-china-sea
+gnews-mon-pipeline-explosion
+gnews-mon-port-disruption
+gnews-mon-power-grid-failure
+gnews-mon-ransomware
+gnews-mon-ru-wagner
+gnews-mon-satellite-launch
+gnews-mon-semiconductor-export-controls
+gnews-mon-shadow-fleet
+gnews-mon-state-sponsored-hacking
+gnews-mon-supply-chain-disruption
+gnews-mon-terror-attack
+gnews-mon-troop-movement
+gnews-mon-tw-pla-incursion
+gnews-mon-ua-front-line
+gnews-mon-undersea-cable
+gnews-mon-us-strait-of-hormuz
+gnews-mon-us-taiwan-strait
+gnews-mon-volcano-eruption
+gnews-mon-weapons-smuggling
+gnews-mon-wildfire
+gnews-mon-zero-day-exploit
+ADVISORY_COUNCILS CVE-2021-44228
+BUSINESS_LICENSES Toyota
+EGOV_PUBLIC_COMMENT Tokyo
+WASTE_HAULERS Tokyo
+grayhat-buckets
+hatena-bookmark-extended
+houjin-bangou
+IOC_LOOKUP Tokyo
+japan-reit
+jma-earthquake
+jma-tide
+job-boards
+jr-boarding-stats
+kafun-pollen
+BANKRUPTCY_SEARCH Tokyo
+CRIMINAL_RECORDS Tokyo
+LEGAL_SEARCH Tokyo
+LICENSE_PLATE_LOOKUP Tokyo
+mapfan-api
+mhlw-health
+mlit-landprice
+mlit-transaction
+navitime-api
+nexco-roadwork
+nitter-mirrors
+npa-special-fraud
+odpt-train
+ARCHIVE_ORG_SEARCH Tokyo
+GITHUB_COMMITS_BY_EMAIL test@example.com
+MUSICBRAINZ Tokyo
+PHOTON_GEOCODE Tokyo
+TOR_ONIONOO Tokyo
+BIGDATACLOUD_REVERSE Tokyo
+HN_USER Tokyo
+OPENVERSE Tokyo
+SEC_FULLTEXT Toyota
+STACKEXCHANGE_SEARCH Tokyo
+WIKIDATA_ENTITY_SEARCH Tokyo
+osm-changesets-jp
+overpass-subway-tracks
+peeringdb-jp
+PEP_CHECK Shinzo Abe
+WATCHLIST_CHECK_NEW Shinzo Abe
+CARRIER_LOOKUP Tokyo
+PHONE_LOOKUP +81312345678
+PHONE_REPUTATION +81312345678
+poc-in-github
+psbdmp-pastes
+reddit-jp-subs
+DK_CVR Toyota
+HR_SUDREG Toyota
+HU_COMPANIES Toyota
+LT_REGISTRAI Tokyo
+LU_LBR Toyota
+NL_KVK Toyota
+PT_RCBE Toyota
+RS_APR Toyota
+IL_COMPANIES Toyota
+SEA2_REGISTRY Toyota
+reinfolib
+rice-paddies
+satellite-ground-stations
+sento-public-baths
+shrine-temple
+SSL_ANALYZER github.com
+submarine-cables
+teikoku-failures
+THREAT_FEED_LOOKUP Tokyo
+tor-exit-nodes
+unesco-heritage
+unified-trains
+vessel-finder
+wanted-persons
+WHALE_ALERT 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+wifi-networks-shodan
+AFRICA_REGISTRY Toyota
+xrain-radar

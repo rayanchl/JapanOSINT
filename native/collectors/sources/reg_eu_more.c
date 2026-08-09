@@ -146,10 +146,6 @@ static const char *sw_ci(const char *h, const char *n) {
     }
   return NULL;
 }
-static const char *hr_first(const cJSON *o, const char *const *keys) {
-  for (int i = 0; keys[i]; i++) { const char *v = jo_sv(o, keys[i]); if (v) return v; }
-  return NULL;
-}
 static int hr_walk(intel_sink *sink, const cJSON *arr, const char *q) {
   static const char *KN[] = { "tvrtka_naziv", "ime", "naziv", "tvrtka", NULL };
   static const char *KO[] = { "oib", "OIB", NULL };
@@ -159,10 +155,10 @@ static int hr_walk(intel_sink *sink, const cJSON *arr, const char *q) {
   const cJSON *r;
   cJSON_ArrayForEach(r, arr) {
     if (!cJSON_IsObject(r)) continue;
-    const char *name = hr_first(r, KN);
-    const char *oib  = hr_first(r, KO);
-    const char *mbs  = hr_first(r, KM);
-    const char *addr = hr_first(r, KA);
+    const char *name = jo_first_sv(r, KN);
+    const char *oib  = jo_first_sv(r, KO);
+    const char *mbs  = jo_first_sv(r, KM);
+    const char *addr = jo_first_sv(r, KA);
     /* honest filter: keep only records whose name really matches the query */
     if (name && q && *q && !sw_ci(name, q)) continue;
     const char *regno = mbs ? mbs : oib;
@@ -202,7 +198,7 @@ static int hr_sudreg(const source_ctx *ctx, intel_sink *sink, const char *q) {
       static const char *KN[] = { "tvrtka_naziv", "ime", "naziv", "tvrtka", NULL };
       static const char *KO[] = { "oib", "OIB", NULL };
       emitted += em_emit(sink, "HR_SUDREG", "HR", "sudreg-subject", "hr",
-                         hr_first(root, KO), hr_first(root, KN),
+                         jo_first_sv(root, KO), jo_first_sv(root, KN),
                          NULL, NULL, NULL);
     }
   }

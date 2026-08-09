@@ -1,0 +1,21 @@
+--- stooq-browser [404] 271b
+<meta charset=utf-8><title>Stooq</title><center style=font-family:arial;margin-top:50px><p><a href=/><img src=//static.stooq.com/stooq.svg height=68></a><p style=font-size:x-large>The page you request
+--- stooq-nohdr [404] 271b
+<meta charset=utf-8><title>Stooq</title><center style=font-family:arial;margin-top:50px><p><a href=/><img src=//static.stooq.com/stooq.svg height=68></a><p style=font-size:x-large>The page you request
+--- trongrid [200] 48301b
+{"data":[{"free_asset_net_usageV2":[{"value":0,"key":"1002963"},{"value":0,"key":"1002721"},{"value":0,"key":"1004108"},{"value":0,"key":"1002962"},{"value":0,"key":"1003812"},{"value":0,"key":"100410
+--- gitlab-u1 [200] 244b
+[{"id":1786152,"username":"gitlab-bot","public_email":"","name":"🤖 GitLab Bot 🤖","state":"active","locked":false,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/1786152/avatar.png"
+--- gitlab-u2 [200] 2b
+[]
+--- gists-defunkt [200] 9411b
+[{"url":"https://api.github.com/gists/dea58d75d3faa091593046b2cc18dd47","forks_url":"https://api.github.com/gists/dea58d75d3faa091593046b2cc18dd47/forks","commits_url":"https://api.github.com/gists/de
+--- borme-1 [200] 47482b
+<!DOCTYPE html><html lang="es">  <head>    <meta charset="utf-8" />    <meta http-equiv="X-UA-Compatible" content="IE=edge" />    <meta name="format-detection" content="telephone=no">    <
+--- borme-2 [404] 12243b
+<!DOCTYPE html><html lang="es">  <head>    <meta charset="utf-8" />    <meta http-equiv="X-UA-Compatible" content="IE=edge" />    <meta name="format-detection" content="telephone=no">    <
+--- borme-3 [404] 12243b
+<!DOCTYPE html><html lang="es">  <head>    <meta charset="utf-8" />    <meta http-equiv="X-UA-Compatible" content="IE=edge" />    <meta name="format-detection" content="telephone=no">    <
+--- SDN.XML head
+SDN.XML [302] 0b
+0

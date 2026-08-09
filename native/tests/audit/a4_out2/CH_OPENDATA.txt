@@ -1,0 +1,39 @@
+=== CH_OPENDATA  entity=energie
+exit: 0
+sched: rc=0 records=20 430ms
+--- stderr ---
+[CH_OPENDATA] emitted 20
+[sched] CH_OPENDATA run rc=0 records=20 430ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: open-dataset=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            CH_OPENDATA|energie1
+  title          energie1
+  body           {"source":"CH_OPENDATA"}
+  link           https://opendata.swiss/en/dataset/energie1
+  language       en
+  record_type    open-dataset
+  tags           ["osint-search","CH_OPENDATA"]
+  properties     {"service":"CH_OPENDATA","success":true}
+
+--- row 2 ---
+  uid            CH_OPENDATA|energie
+  title          energie
+  body           {"source":"CH_OPENDATA"}
+  link           https://opendata.swiss/en/dataset/energie
+  language       en
+  record_type    open-dataset
+  tags           ["osint-search","CH_OPENDATA"]
+  properties     {"service":"CH_OPENDATA","success":true}
+
+--- row 3 ---
+  uid            CH_OPENDATA|gemeindeberatungsregionen-energie
+  title          gemeindeberatungsregionen-energie
+  body           {"source":"CH_OPENDATA"}
+  link           https://opendata.swiss/en/dataset/gemeindeberatungsregionen-energie
+  language       en
+  record_type    open-dataset
+  tags           ["osint-search","CH_OPENDATA"]
+  properties     {"service":"CH_OPENDATA","success":true}

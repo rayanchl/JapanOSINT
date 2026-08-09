@@ -586,18 +586,6 @@ static char *pl_token(cJSON *canon, int *too_big) {
   return tok;
 }
 
-char *permalink_encode(const char *state_json) {
-  if (!state_json || !*state_json) return NULL;
-  cJSON *in = cJSON_Parse(state_json);
-  cJSON *canon = pl_normalize(in);
-  if (in) cJSON_Delete(in);
-  if (!canon) return NULL;
-  int tb = 0;
-  char *tok = pl_token(canon, &tb);
-  cJSON_Delete(canon);
-  return tok;
-}
-
 char *permalink_decode(const char *token) {
   if (!token || !*token) return NULL;
   size_t tl = strlen(token);

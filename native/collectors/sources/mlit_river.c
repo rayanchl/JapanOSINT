@@ -5,20 +5,13 @@
  * water-monitoring proxy (single area.jp query, timeoutMs 60000 /
  * queryTimeout 120). The curated RIVER_STATIONS seed / _meta envelope is
  * intentionally not ported (JS does `features = []` when nothing live). */
+#include "../../lib/geojson.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();                   /* EXACT JS key order */
   cJSON *id = cJSON_GetObjectItem(el, "id");
@@ -36,6 +29,17 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   if (ref) cJSON_AddStringToObject(p, "ref", ref);
   else cJSON_AddItemToObject(p, "ref", cJSON_CreateNull());
   cJSON_AddStringToObject(p, "source", "osm_overpass");
+  /* geojson_emit_features picks the row title from title/name/name_ja/label —
+   * `station_name` is not in that list, so every row landed title-less. Mirror
+   * it into `name` (same fetched OSM value) and link back to the OSM object.
+   * `station_id` is a NATIVE_ID key, so the uid is unaffected. */
+  cJSON_AddStringToObject(p, "name", name ? name : "River gauge");
+  if (id && cJSON_IsNumber(id)) {
+    char link[96];
+    snprintf(link, sizeof link, "https://www.openstreetmap.org/node/%lld",
+             (long long)id->valuedouble);
+    cJSON_AddStringToObject(p, "link", link);
+  }
   cJSON_AddItemToObject(f, "properties", p);
   return f;
 }

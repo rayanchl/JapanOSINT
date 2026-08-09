@@ -1,0 +1,45 @@
+=== WORLDBANK_PROJECTS  entity=Japan
+exit: 0
+sched: rc=0 records=25 545ms
+--- stderr ---
+[WORLDBANK_PROJECTS] emitted 25
+[sched] WORLDBANK_PROJECTS run rc=0 records=25 545ms
+--- persisted: 25 rows, 0 with lat/lon, 0 with geometry ---
+record_type: aid-project=25
+sub_source_id: (null)=25
+
+--- row 1 ---
+  uid            WORLDBANK_PROJECTS|WORLDBANK_PROJECTS|P037429
+  title          Kansai Power Project (02)
+  body           {"title":"Kansai Power Project (02)","summary":"Japan","link":"https://projects.worldbank.org/en/projects-operations/project-detail/P037429","date":"1958-06-12T00:00:00Z","source":"WORLDBANK_PROJECTS","country":"Japan","status":"Closed","project_id":"P037429"}
+  summary        Japan
+  link           https://projects.worldbank.org/en/projects-operations/project-detail/P037429
+  language       en
+  published_at   1958-06-12T00:00:00Z
+  record_type    aid-project
+  tags           ["osint-search","aid","humanitarian"]
+  properties     {"service":"WORLDBANK_PROJECTS","source":"WORLDBANK_PROJECTS","query":"Japan","href":"https://projects.worldbank.org/en/projects-operations/project-detail/P037429","success":true}
+
+--- row 2 ---
+  uid            WORLDBANK_PROJECTS|WORLDBANK_PROJECTS|P037425
+  title          Industry Project
+  body           {"title":"Industry Project","summary":"Japan","link":"https://projects.worldbank.org/en/projects-operations/project-detail/P037425","date":"1956-02-21T00:00:00Z","source":"WORLDBANK_PROJECTS","country":"Japan","status":"Closed","project_id":"P037425"}
+  summary        Japan
+  link           https://projects.worldbank.org/en/projects-operations/project-detail/P037425
+  language       en
+  published_at   1956-02-21T00:00:00Z
+  record_type    aid-project
+  tags           ["osint-search","aid","humanitarian"]
+  properties     {"service":"WORLDBANK_PROJECTS","source":"WORLDBANK_PROJECTS","query":"Japan","href":"https://projects.worldbank.org/en/projects-operations/project-detail/P037425","success":true}
+
+--- row 3 ---
+  uid            WORLDBANK_PROJECTS|WORLDBANK_PROJECTS|P037421
+  title          Kansai Power Project
+  body           {"title":"Kansai Power Project","summary":"Japan","link":"https://projects.worldbank.org/en/projects-operations/project-detail/P037421","date":"1953-10-15T00:00:00Z","source":"WORLDBANK_PROJECTS","country":"Japan","status":"Closed","project_id":"P037421"}
+  summary        Japan
+  link           https://projects.worldbank.org/en/projects-operations/project-detail/P037421
+  language       en
+  published_at   1953-10-15T00:00:00Z
+  record_type    aid-project
+  tags           ["osint-search","aid","humanitarian"]
+  properties     {"service":"WORLDBANK_PROJECTS","source":"WORLDBANK_PROJECTS","query":"Japan","href":"https://projects.worldbank.org/en/projects-operations/project-detail/P037421","success":true}

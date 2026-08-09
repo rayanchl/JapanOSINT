@@ -1,0 +1,11 @@
+size=5626755 lines=19181
+=== first record with a digital currency address ===
+77:4632,"BANK MARKAZI JOMHOURI ISLAMI IRAN",-0- ,"IRAN] [SDGT] [IRGC] [IFSR",-0- ,-0- ,-0- ,-0- ,-0- ,-0- ,-0- ,"Additional Sanctions Information - Subject to Secondary Sanctions; Secondary sanctions risk: section 1(b) of Executive Order 13224, as amended by Executive Order 13886; Digital Currency Address - TRX TNiq9AXBp9EjUqhDhrwrfvAA8U3GUQZH81; alt. Digital Currency Address - TRX TTiDLWE6fZK8okMJv6ijg42yrH6W2pjSr9; alt. Digital Currency Address - TRX TAhwhFv3JpK39Nc2m8W5LPCcoTisutiRfp; alt. Digital Currency Address - TRX TJdgB1k6ot3f2nLuZug6D8eD3HavTmzmSK; alt. Digital Currency Address - TRX TXGHxdYbGy574z5hBu4LNzq9NzjZQ9bhUf; alt. Digital Currency Address - TRX TFQbqaNbmq2xsVor2NbufLkYZvxFC9wC7k; Linked To: ISLAMIC REVOLUTIONARY GUARD CORPS (IRGC)-QODS FORCE; Linked To: HIZBALLAH."
+
+=== a known XBT address record ===
+Digital Currency Address - XBT 12QtD5BFwRsdNsAZY76UVE1xyCGNTojH9h
+Digital Currency Address - XBT 1Kuf2Rd8mDyAViwBozGTNYnvWL8uYFrkVo
+Digital Currency Address - XBT 13f59kUM5FU8MfTG7DCEugYarDhSD7XCoC
+Digital Currency Address - XBT 1P3ZfGFLezzYGg9k5SVzQmnjyh7nrUmF2y
+Digital Currency Address - XBT 1EpMiZkQVekM5ij12nMiEwttFPcDK9XhX6
+Digital Currency Address - XBT 1JREJdZupiFhE7ZzQPtASuMCvvpXC7wRsC

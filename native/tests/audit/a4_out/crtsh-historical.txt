@@ -1,0 +1,6 @@
+=== crtsh-historical
+exit: TIMEOUT after 280s
+sched: (no [sched] line — the collector never returned)
+--- stderr ---
+
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

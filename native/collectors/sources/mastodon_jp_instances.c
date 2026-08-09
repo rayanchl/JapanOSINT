@@ -1,9 +1,15 @@
 /* collectors/social/sources/mastodon_jp_instances.c
  * Port of server/src/collectors/mastodonJpInstances.js.
  * Polls /api/v1/timelines/public?local=true&limit=25 on 4 fixed JP Mastodon
- * instances, merges into a FeatureCollection (all pinned at Tokyo). On a
- * per-host error an instance_error feature is emitted (live upstream state,
- * not curated SEED). _meta dropped. MASTODON_JP_* env overrides not ported. */
+ * instances. On a per-host error an instance_error feature is emitted (live
+ * upstream state, not curated SEED). _meta dropped. MASTODON_JP_* env
+ * overrides not ported.
+ *
+ * NO geometry. The JS port pinned every toot at Tokyo Station
+ * (139.6917, 35.6895); a public-timeline post carries no location, so that
+ * was an invented coordinate that stacked hundreds of false pins on one
+ * point. Mastodon's status object has no lat/lon field at all. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -17,16 +23,6 @@ static const char *INSTANCES[] = {
 };
 #define NI ((int)(sizeof(INSTANCES) / sizeof(INSTANCES[0])))
 
-#define TOKYO_LON 139.6917
-#define TOKYO_LAT 35.6895
-
-/* JS truthy string: non-NULL cJSON string, length>0. */
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
-           ? v->valuestring : NULL;
-}
-
 /* p?.x ?? null  for a numeric field → real number or cJSON null */
 static cJSON *num_or_null(const cJSON *o, const char *k) {
   const cJSON *v = cJSON_GetObjectItem(o, k);
@@ -36,18 +32,18 @@ static cJSON *num_or_null(const cJSON *o, const char *k) {
 
 /* x || null  for a string field */
 static cJSON *str_or_null(const cJSON *o, const char *k) {
-  const char *s = sv(o, k);
+  const char *s = jo_sv(o, k);
   return s ? cJSON_CreateString(s) : cJSON_CreateNull();
 }
 
-static cJSON *mk_geom(void) {
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(TOKYO_LON));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(TOKYO_LAT));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  return g;
+/* Cut `s` to at most `max` BYTES on a UTF-8 character boundary. */
+static void utf8_trunc(char *s, size_t max) {
+  if (!s) return;
+  size_t L = strlen(s);
+  if (L <= max) return;
+  size_t c = max;
+  while (c > 0 && ((unsigned char)s[c] & 0xC0) == 0x80) c--;
+  s[c] = 0;
 }
 
 /* String(p.content||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').slice(0,400)
@@ -104,12 +100,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       /* r.err branch — emit instance_error feature */
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON_AddItemToObject(f, "geometry", mk_geom());
+      /* NO geometry — see the file header. */
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "kind", "instance_error");
       cJSON_AddStringToObject(p, "host", host);
       cJSON_AddStringToObject(p, "err", "fetch_failed");
       cJSON_AddStringToObject(p, "source", "mastodon_jp");
+      char eb[160];
+      snprintf(eb, sizeof eb, "%s unreachable", host);
+      cJSON_AddStringToObject(p, "title", eb);
+      snprintf(eb, sizeof eb, "instance_error:%s", host);
+      cJSON_AddStringToObject(p, "uid", eb);   /* one stable row per host */
       cJSON_AddItemToObject(f, "properties", p);
       cJSON_AddItemToArray(features, f);
       if (arr) cJSON_Delete(arr);
@@ -120,13 +121,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_ArrayForEach(post, arr) {
       char srcbuf[96];
       snprintf(srcbuf, sizeof srcbuf, "mastodon_%s", host);
-      char *content = clean_content(sv(post, "content"));
+      char *content = clean_content(jo_sv(post, "content"));
 
       cJSON *acct = cJSON_GetObjectItem(post, "account");
 
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON_AddItemToObject(f, "geometry", mk_geom());
+      /* NO geometry — see the file header. */
       cJSON *p = cJSON_CreateObject();          /* EXACT JS key order */
       cJSON_AddStringToObject(p, "host", host);
       cJSON_AddItemToObject(p, "id", str_or_null(post, "id"));
@@ -150,6 +151,37 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         (acct && cJSON_IsObject(acct)) ? num_or_null(acct, "followers_count")
                                        : cJSON_CreateNull());
       cJSON_AddStringToObject(p, "source", srcbuf);
+
+      /* lib/geojson.c derives title/summary/published_at/uid from the
+       * properties bag. The JS port set none of them, so every toot landed
+       * with no title and no timestamp, and the uid was the bare status id —
+       * which is only unique WITHIN one instance, so two instances handing
+       * out the same numeric id collided into one row. */
+      const char *sid = jo_sv(post, "id");
+      if (sid) {
+        char uidb[192];
+        snprintf(uidb, sizeof uidb, "%s:%s", host, sid);
+        cJSON_AddStringToObject(p, "uid", uidb);
+      }
+      const char *spoil = jo_sv(post, "spoiler_text");
+      char title[256];
+      if (spoil) snprintf(title, sizeof title, "%s", spoil);
+      else       snprintf(title, sizeof title, "%s", content);
+      /* strip the leading space clean_content() leaves behind */
+      char *tp = title; while (*tp == ' ') tp++;
+      utf8_trunc(tp, 120);
+      if (*tp) cJSON_AddStringToObject(p, "title", tp);
+      else {
+        char fb[192];
+        snprintf(fb, sizeof fb, "%s post by @%s", host,
+                 (acct && cJSON_IsObject(acct) && jo_sv(acct, "acct"))
+                   ? jo_sv(acct, "acct") : "unknown");
+        cJSON_AddStringToObject(p, "title", fb);
+      }
+      cJSON_AddStringToObject(p, "summary", content);
+      const char *cat = jo_sv(post, "created_at");
+      if (cat) cJSON_AddStringToObject(p, "published_at", cat);
+
       cJSON_AddItemToObject(f, "properties", p);
       cJSON_AddItemToArray(features, f);
       free(content);

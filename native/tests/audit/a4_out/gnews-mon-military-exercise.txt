@@ -1,0 +1,45 @@
+=== gnews-mon-military-exercise
+exit: 0
+sched: rc=0 records=100 806ms
+--- stderr ---
+[rss] gnews-mon-military-exercise emitted 100
+[sched] gnews-mon-military-exercise run rc=0 records=100 806ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-military-exercise|CBMixwFBVV95cUxNVjFQNUYzUFVVXzRxcFpNdWNvTjhjYlAtUmNFZVdiQ1ZPSk9LTlBENGRPRFk3akhjRFZCWmJLY0JUNjg3TnB6ZmtvRGs3c3NfaVZpcHh6UXhsamVXR3o4emppNFlEdDlZd1FMcGh0WGM5UVRDcUR2LVE5X3dUQVpXU01GUGNUbW5CSk9Qbm8zNmV2aEp4MVVqeDdKRUFwTmRNZ3hhWWNBV1dPZUVnd0liUFgzMTFvLXBrOUQzaDhDQTJLejYwbmlV0gHbAUFVX3lxTE5LdWJaZVZkQkQtZmpBaEtaTVpGWUxwNk4tMUlyaGhCYVpyYXNMS2lOWWFCb2xXcXBieWZuelA4Nm1ER2tDbkdtSDJBdS1XRFVXTExieXdRZHhGMUZtbTNvXzZ0RkIyQXNvMVAxckt0MUFTV0ZXczFaTkhkWXd0WlBiaGV0d0h0UUNzYnN0VDVUWnRFbTNnQXpZbGR
+  title          Environmental groups push Adirondack Park Agency to intervene as new military exercise planned for Friday - WCAX
+  body           <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxNVjFQNUYzUFVVXzRxcFpNdWNvTjhjYlAtUmNFZVdiQ1ZPSk9LTlBENGRPRFk3akhjRFZCWmJLY0JUNjg3TnB6ZmtvRGs3c3NfaVZpcHh6UXhsamVXR3o4emppNFlEdDlZd1FMcGh0WGM5UVRDcUR2LVE5X3dUQVpXU01GUGNUbW5CSk9Qbm8zNmV2aEp4MVVqeDdKRUFwTmRNZ3hhWWNBV1dPZUVnd0liUFgzMTFvLXBrOUQzaDhDQTJLejYwbmlV0gHbAUFVX3lxTE5LdWJaZVZkQkQtZmpBaEtaTVpGWUxwNk4tMUlyaGhCYVpyYXNMS2lOWWFCb2xXcXBieWZuelA4Nm1ER2tDbkdtSDJBdS1XRFVXTExieXdRZHhGMUZtbTNvXzZ0RkIyQXNvMVAxckt0MUFTV0ZXczFaTkhkWXd0WlBiaGV0d0h0UUNzYnN0VDVUWnRFbTNnQXpZbGRUMllBdklrXzJ4WGdwbHVYbFhhNnVUSURwU2REc1pXRFVGckpfN2FHemJxQ3J4RDE5eTYzeVl5LUdmSjRWYUFjTQ?oc=5" target="_blank">Environmental groups push Adirondack Park Agency to intervene as new military exercise planned for Friday</a>&nbsp;&nbsp;<font color="#6f6f6f">WCAX</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxNVjFQNUYzUFVVXzRxcFpNdWNvTjhjYlAtUmNFZVdiQ1ZPSk9LTlBENGRPRFk3akhjRFZCWmJLY0JUNjg3TnB6ZmtvRGs3c3NfaVZpcHh6UXhsamVXR3o4emppNFlEdDlZd1FMcGh0WGM5UVRDcUR2LVE5X3dUQVpXU01GUGNUbW5CSk9Qbm
+  link           https://news.google.com/rss/articles/CBMixwFBVV95cUxNVjFQNUYzUFVVXzRxcFpNdWNvTjhjYlAtUmNFZVdiQ1ZPSk9LTlBENGRPRFk3akhjRFZCWmJLY0JUNjg3TnB6ZmtvRGs3c3NfaVZpcHh6UXhsamVXR3o4emppNFlEdDlZd1FMcGh0WGM5UVRDcUR2LVE5X3dUQVpXU01GUGNUbW5CSk9Qbm8zNmV2aEp4MVVqeDdKRUFwTmRNZ3hhWWNBV1dPZUVnd0liUFgzMTFvLXBrOUQzaDhDQTJLejYwbmlV0gHbAUFVX3lxTE5LdWJaZVZkQkQtZmpBaEtaTVpGWUxwNk4tMUlyaGhCYVpyYXNMS2lOWWFCb2xXcXBieWZuelA4Nm1ER2tDbkdtSDJBdS1XRFVXTExieXdRZHhGMUZtbTNvXzZ0RkIyQXNvMVAxckt0MUFTV0ZXczFaTkhkWXd0WlBiaGV0d0h0UUNzYnN0VDVUWnRFbTNnQXpZbGRUMllBdklrXzJ4WGdwbHVYbFhhNnVUSURwU2REc1pXRFVGckpfN2FHemJxQ3J4RDE5eTYzeVl5LUdmSjRWYUFjTQ?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 21:43:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","military"]
+  properties     {"guid":"CBMixwFBVV95cUxNVjFQNUYzUFVVXzRxcFpNdWNvTjhjYlAtUmNFZVdiQ1ZPSk9LTlBENGRPRFk3akhjRFZCWmJLY0JUNjg3TnB6ZmtvRGs3c3NfaVZpcHh6UXhsamVXR3o4emppNFlEdDlZd1FMcGh0WGM5UVRDcUR2LVE5X3dUQVpXU01GUGNUbW5CSk9Qbm8zNmV2aEp4MVVqeDdKRUFwTmRNZ3hhWWNBV1dPZUVnd0liUFgzMTFvLXBrOUQzaDhDQTJLejYwbmlV0gHbAUFVX3lxTE5LdWJaZVZkQkQtZmpBaEtaTVpGWUxwNk4tMUlyaGhCYVpyYXNMS2lOWWFCb2xXcXBieWZuelA4Nm1ER2tDbkdtSDJBdS1XRFVXTExieXdRZHhGMUZtbTNvXzZ0RkIyQXNvMVAxckt0MUFTV0ZXczFaTkhkWXd0WlBiaGV0d0h0UUNzYnN0VDVUWnRFbTNnQXpZbGRUMllBdklrXzJ4WGdwbH
+
+--- row 2 ---
+  uid            gnews-mon-military-exercise|CBMiswFBVV95cUxPQkpTRkUzVDB4dlVQMEV6am52YWJqcVJKU0VybjJPeUhtaG9MdHhNRkNpVnpsV3FSX3V2QVJtVklHdjhaZW9LVFJKZEsxRFBBUWF1RGYweDhrdDlKVFN3d01kRnpsVG93UjFsYWxqRC1GcnB3SGMtU2hzZmdxR1RaSnUzaHpCV2hLZWQ4bC1WdDFOcWtqUHVRV0hFWS1JVzFjTzVBWmlRZFhyZWRfU3QyaVZYZw
+  title          Russia unfolds large-scale naval exercise near Norwegian border - The Barents Observer
+  body           <a href="https://news.google.com/rss/articles/CBMiswFBVV95cUxPQkpTRkUzVDB4dlVQMEV6am52YWJqcVJKU0VybjJPeUhtaG9MdHhNRkNpVnpsV3FSX3V2QVJtVklHdjhaZW9LVFJKZEsxRFBBUWF1RGYweDhrdDlKVFN3d01kRnpsVG93UjFsYWxqRC1GcnB3SGMtU2hzZmdxR1RaSnUzaHpCV2hLZWQ4bC1WdDFOcWtqUHVRV0hFWS1JVzFjTzVBWmlRZFhyZWRfU3QyaVZYZw?oc=5" target="_blank">Russia unfolds large-scale naval exercise near Norwegian border</a>&nbsp;&nbsp;<font color="#6f6f6f">The Barents Observer</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiswFBVV95cUxPQkpTRkUzVDB4dlVQMEV6am52YWJqcVJKU0VybjJPeUhtaG9MdHhNRkNpVnpsV3FSX3V2QVJtVklHdjhaZW9LVFJKZEsxRFBBUWF1RGYweDhrdDlKVFN3d01kRnpsVG93UjFsYWxqRC1GcnB3SGMtU2hzZmdxR1RaSnUzaHpCV2hLZWQ4bC
+  link           https://news.google.com/rss/articles/CBMiswFBVV95cUxPQkpTRkUzVDB4dlVQMEV6am52YWJqcVJKU0VybjJPeUhtaG9MdHhNRkNpVnpsV3FSX3V2QVJtVklHdjhaZW9LVFJKZEsxRFBBUWF1RGYweDhrdDlKVFN3d01kRnpsVG93UjFsYWxqRC1GcnB3SGMtU2hzZmdxR1RaSnUzaHpCV2hLZWQ4bC1WdDFOcWtqUHVRV0hFWS1JVzFjTzVBWmlRZFhyZWRfU3QyaVZYZw?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 14:38:37 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","military"]
+  properties     {"guid":"CBMiswFBVV95cUxPQkpTRkUzVDB4dlVQMEV6am52YWJqcVJKU0VybjJPeUhtaG9MdHhNRkNpVnpsV3FSX3V2QVJtVklHdjhaZW9LVFJKZEsxRFBBUWF1RGYweDhrdDlKVFN3d01kRnpsVG93UjFsYWxqRC1GcnB3SGMtU2hzZmdxR1RaSnUzaHpCV2hLZWQ4bC1WdDFOcWtqUHVRV0hFWS1JVzFjTzVBWmlRZFhyZWRfU3QyaVZYZw"}
+
+--- row 3 ---
+  uid            gnews-mon-military-exercise|CBMiiAFBVV95cUxNZ21OaGZMVFFEdnpzcVNNV2tjYk1TZU9MM013RGNHUE1MYlJfdnU1cENEajZQMlRENzRqM3QtNGpabU9XaWExZ1lrekdGRm0wbWRsaFVobTVheTRtS3o0OHh5TE5JNzA3NVc4NzZ1b0ZnUjdFb3pIOTJKU1N2Q2dDSGFqZkJPWDY1
+  title          Exclusive: South Korean Military Unaware of Training, Nearly Shoots Down U.S. Drone - 조선일보
+  body           <a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxNZ21OaGZMVFFEdnpzcVNNV2tjYk1TZU9MM013RGNHUE1MYlJfdnU1cENEajZQMlRENzRqM3QtNGpabU9XaWExZ1lrekdGRm0wbWRsaFVobTVheTRtS3o0OHh5TE5JNzA3NVc4NzZ1b0ZnUjdFb3pIOTJKU1N2Q2dDSGFqZkJPWDY1?oc=5" target="_blank">Exclusive: South Korean Military Unaware of Training, Nearly Shoots Down U.S. Drone</a>&nbsp;&nbsp;<font color="#6f6f6f">조선일보</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxNZ21OaGZMVFFEdnpzcVNNV2tjYk1TZU9MM013RGNHUE1MYlJfdnU1cENEajZQMlRENzRqM3QtNGpabU9XaWExZ1lrekdGRm0wbWRsaFVobTVheTRtS3o0OHh5TE5JNzA3NVc4NzZ1b0ZnUjdFb3pIOTJKU1N2Q2dDSGFqZkJPWDY1?oc=5"
+  link           https://news.google.com/rss/articles/CBMiiAFBVV95cUxNZ21OaGZMVFFEdnpzcVNNV2tjYk1TZU9MM013RGNHUE1MYlJfdnU1cENEajZQMlRENzRqM3QtNGpabU9XaWExZ1lrekdGRm0wbWRsaFVobTVheTRtS3o0OHh5TE5JNzA3NVc4NzZ1b0ZnUjdFb3pIOTJKU1N2Q2dDSGFqZkJPWDY1?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 05:02:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","military"]
+  properties     {"guid":"CBMiiAFBVV95cUxNZ21OaGZMVFFEdnpzcVNNV2tjYk1TZU9MM013RGNHUE1MYlJfdnU1cENEajZQMlRENzRqM3QtNGpabU9XaWExZ1lrekdGRm0wbWRsaFVobTVheTRtS3o0OHh5TE5JNzA3NVc4NzZ1b0ZnUjdFb3pIOTJKU1N2Q2dDSGFqZkJPWDY1"}

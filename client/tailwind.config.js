@@ -28,6 +28,7 @@ export default {
           online: '#00ff88',
           degraded: '#ffb74d',
           offline: '#ff4444',
+          pending: '#9ca3af',
         },
       },
       fontFamily: {

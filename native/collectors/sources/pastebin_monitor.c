@@ -21,6 +21,7 @@
  * (remote_key="archive:<url>"). Body = that finding's JSON; link set when
  * available. No aggregate/note row. If nothing is found, emits nothing and
  * returns 0 (honest empty). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -29,30 +30,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* url_encode: OSINTsaas keeps unreserved A-Za-z0-9 -_.~ and %-encodes rest. */
-static char *url_encode_dup(const char *in) {
-  size_t n = strlen(in);
-  char *out = malloc(n * 3 + 1);
-  if (!out) return NULL;
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' || c == '~') {
-      out[w++] = (char)c;
-    } else {
-      sprintf(out + w, "%%%02X", c);
-      w += 3;
-    }
-  }
-  out[w] = 0;
-  return out;
-}
-
 /* psbdmp.ws/api/v3/search/<q> → JSON array of paste IDs (limit 10) */
 static cJSON *search_psbdmp(http_client *http, const char *query) {
   cJSON *results = cJSON_CreateArray();
-  char *enc = url_encode_dup(query);
+  char *enc = jo_urlencode(query);
   if (!enc) return results;
   char url[512];
   snprintf(url, sizeof url, "https://psbdmp.ws/api/v3/search/%s", enc);
@@ -82,7 +63,7 @@ static cJSON *search_psbdmp(http_client *http, const char *query) {
  * matched 400 repositories reported 10 (docs/SOURCE_EXHAUSTIVENESS.md). */
 static cJSON *search_grep_app(http_client *http, const char *query) {
   cJSON *results = cJSON_CreateArray();
-  char *enc = url_encode_dup(query);
+  char *enc = jo_urlencode(query);
   if (!enc) return results;
 
   for (int page = 1; page <= 20; page++) {
@@ -128,7 +109,7 @@ static cJSON *search_grep_app(http_client *http, const char *query) {
 /* web.archive.org CDX: rows of [urlkey,timestamp,original,...]; skip header */
 static cJSON *search_breach_compilations(http_client *http, const char *query) {
   cJSON *results = cJSON_CreateArray();
-  char *enc = url_encode_dup(query);
+  char *enc = jo_urlencode(query);
   if (!enc) return results;
   char url[1024];
   snprintf(url, sizeof url,

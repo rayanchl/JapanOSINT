@@ -5,12 +5,16 @@ import SwiftUI
 /// profile; "pivot" starts a fresh investigation.
 struct SearchTab: View {
     @EnvironmentObject var apiClient: APIClient
+    @EnvironmentObject var nav: MapNavigation
     @Environment(\.theme) private var theme
     @StateObject private var store = SearchStore()
 
     @State private var query = ""
     @State private var suggestions: [String] = []
     @State private var suggestTask: Task<Void, Never>?
+    /// True from the instant a query is submitted until the run is registered
+    /// in `store.active` — see `auraIntensity`.
+    @State private var launching = false
 
     var body: some View {
         NavigationStack {
@@ -39,8 +43,37 @@ struct SearchTab: View {
                 }
                 .padding(16)
             }
-            .themedScreenBackground(theme)
+            // The living background (see SearchAuraBackground). Not
+            // `themedScreenBackground`, which paints a flat surface: the aura
+            // needs that surface UNDER it (it composites onto it and its
+            // corners fall back to it), so the two are stacked here instead.
+            .scrollContentBackground(.hidden)
+            .background {
+                ZStack {
+                    theme.surface
+                    SearchAuraBackground(intensity: auraIntensity)
+                }
+                .ignoresSafeArea()
+            }
             .navigationTitle("Search")
+            .toolbar {
+                // Roadmap 38 — reach the (server-synced) search history. Re-run
+                // a past query straight from the row.
+                ToolbarItem(placement: .compatPrimary) {
+                    NavigationLink {
+                        SearchHistoryView(onRerun: { entry in
+                            if let q = (entry.params?["q"]?.value as? String)
+                                    ?? (entry.params?["query"]?.value as? String),
+                               !q.isEmpty {
+                                Task { await run(q) }
+                            }
+                        })
+                    } label: {
+                        Image(systemName: "clock.arrow.circlepath")
+                    }
+                    .accessibilityLabel("Search history")
+                }
+            }
             .searchable(
                 text: $query,
                 placement: .compatDrawer,
@@ -63,6 +96,19 @@ struct SearchTab: View {
                 suggestions = result
             }
         }
+        // Query handed in by an App Intent / Siri / Shortcuts / the share-queue
+        // drain (via IntentRouter → MapNavigation). Consume on arrival and on
+        // any later hand-off while the tab is already showing.
+        .onChange(of: nav.pendingSearchQuery) { _, q in consumePendingSearch(q) }
+        .task { consumePendingSearch(nav.pendingSearchQuery) }
+    }
+
+    /// Kick off a handed-in query exactly once, clearing the hand-off slot so it
+    /// can't replay on the next view update.
+    private func consumePendingSearch(_ q: String?) {
+        guard let q, !q.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        nav.pendingSearchQuery = nil
+        Task { await run(q) }
     }
 
     private func sectionHeader(_ t: String) -> some View {
@@ -79,8 +125,21 @@ struct SearchTab: View {
         .buttonStyle(.plain)
     }
 
+    /// How lit the background is. A run in flight drives it to full; otherwise
+    /// it idles low but never off, so the tab still breathes.
+    ///
+    /// `launching` covers the gap between the user hitting return and the
+    /// server's first progress frame landing in `store.active` — a second or
+    /// two of network on a cold call. Without it the tab sits inert at exactly
+    /// the moment the user is waiting for a sign that anything happened.
+    private var auraIntensity: Double {
+        (launching || !store.active.isEmpty) ? 1.0 : 0.0
+    }
+
     private func run(_ q: String) async {
         suggestions = []
+        launching = true
+        defer { launching = false }
         await store.start(q, api: apiClient.api)
         query = ""
     }
@@ -110,6 +169,9 @@ private struct SearchRunCard: View {
             ProgressView(value: (s?.progress_percent ?? 0) / 100.0)
                 .tint(isError ? theme.danger : theme.accent)
                 .compatThinProgress()
+                // Ease the fill between backend percentage jumps instead of
+                // snapping — the bar glides to each new stage.
+                .animation(.easeInOut(duration: 0.6), value: s?.progress_percent ?? 0)
             HStack {
                 Text(stageLabel(s) + roundSuffix(s))
                     .font(.caption2).foregroundColor(theme.textMuted)

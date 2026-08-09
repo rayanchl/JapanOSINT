@@ -142,7 +142,11 @@ struct AlertsTab: View {
         rules[idx] = copy
         Haptics.selection()
         do {
-            let updated = try await apiClient.api.alertUpdate(copy)
+            // Channels are deliberately omitted: this toggle only flips
+            // `enabled`, and re-sending `channels` would ship the server's own
+            // "••••" secret mask back at it — which `validate_rule` rejects
+            // with a 400, so flipping the switch on any webhook rule failed.
+            let updated = try await apiClient.api.alertUpdate(copy, omittingChannels: true)
             if let i = rules.firstIndex(where: { $0.id == updated.id }) { rules[i] = updated }
         } catch let e {
             // Roll back to the server-truth state.

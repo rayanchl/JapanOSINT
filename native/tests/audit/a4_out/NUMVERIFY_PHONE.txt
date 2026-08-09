@@ -1,0 +1,8 @@
+=== NUMVERIFY_PHONE  entity=+81312345678
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[NUMVERIFY_PHONE] no NUMVERIFY_KEY
+[NUMVERIFY_PHONE] emitted 0
+[sched] NUMVERIFY_PHONE run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

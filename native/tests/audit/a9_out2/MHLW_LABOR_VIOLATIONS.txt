@@ -1,0 +1,7 @@
+=== MHLW_LABOR_VIOLATIONS  entity=東京
+exit: 0
+sched: rc=0 records=0 752ms
+--- stderr ---
+[MHLW_LABOR_VIOLATIONS] emitted 0
+[sched] MHLW_LABOR_VIOLATIONS run rc=0 records=0 752ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

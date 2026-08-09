@@ -65,15 +65,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                title ? title : "null", lon, lat);
       if (seen_has_add(seen, &seen_cnt, key)) continue;
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *gc = cJSON_CreateArray();
-      cJSON_AddItemToArray(gc, cJSON_CreateNumber(lon));
-      cJSON_AddItemToArray(gc, cJSON_CreateNumber(lat));
-      cJSON_AddItemToObject(g, "coordinates", gc);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(lon, lat);
 
       cJSON *p = cJSON_CreateObject();          /* EXACT JS key order */
       if (title) cJSON_AddStringToObject(p, "title", title);
@@ -92,7 +84,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[chiriin-place] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def chiriin_place_def = {

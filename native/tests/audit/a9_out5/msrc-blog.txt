@@ -1,0 +1,46 @@
+=== msrc-blog
+exit: 0
+sched: rc=0 records=4995 10152ms
+--- stderr ---
+[rss] msrc-blog emitted 4995
+[sched] msrc-blog run rc=0 records=4995 10152ms
+[detect] anomaly opened: msrc-blog verdict=duration_outlier — duration 10152ms exceeds 10000ms threshold
+--- persisted: 3539 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=3539
+sub_source_id: (null)=3539
+
+--- row 1 ---
+  uid            msrc-blog|CVE-2026-54128
+  title          CVE-2026-54128 Windows DHCP Client Remote Code Execution Vulnerability
+  body           Use after free in Windows DHCP Client allows an unauthorized attacker to execute code locally.
+  summary        Use after free in Windows DHCP Client allows an unauthorized attacker to execute code locally.
+  link           https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-54128
+  language       en
+  published_at   Tue, 14 Jul 2026 07:00:00 -0700
+  record_type    article
+  tags           ["cyber","microsoft","advisory"]
+  properties     {"guid":"CVE-2026-54128"}
+
+--- row 2 ---
+  uid            msrc-blog|CVE-2026-55129
+  title          CVE-2026-55129 Microsoft Office Remote Code Execution Vulnerability
+  body           Heap-based buffer overflow in Microsoft Office allows an unauthorized attacker to execute code locally.
+  summary        Heap-based buffer overflow in Microsoft Office allows an unauthorized attacker to execute code locally.
+  link           https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-55129
+  language       en
+  published_at   Tue, 14 Jul 2026 07:00:00 -0700
+  record_type    article
+  tags           ["cyber","microsoft","advisory"]
+  properties     {"guid":"CVE-2026-55129"}
+
+--- row 3 ---
+  uid            msrc-blog|CVE-2026-56197
+  title          CVE-2026-56197 Windows Admin Center (WAC) Remote Code Execution Vulnerability
+  body           Improper neutralization of special elements used in a command ('command injection') in Windows Admin Center allows an authorized attacker to execute code over a network.
+  summary        Improper neutralization of special elements used in a command ('command injection') in Windows Admin Center allows an authorized attacker to execute code over a network.
+  link           https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-56197
+  language       en
+  published_at   Tue, 14 Jul 2026 07:00:00 -0700
+  record_type    article
+  tags           ["cyber","microsoft","advisory"]
+  properties     {"guid":"CVE-2026-56197"}

@@ -1,0 +1,70 @@
+=== zerohedge
+exit: 0
+sched: rc=0 records=25 364ms
+--- stderr ---
+[rss] zerohedge emitted 25
+[sched] zerohedge run rc=0 records=25 364ms
+--- persisted: 25 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=25
+sub_source_id: (null)=25
+
+--- row 1 ---
+  uid            zerohedge|1119956 at https://www.zerohedge.com
+  title          Trump Eschews Talks With 'Dishonest' Iran, Says Will Keep 'Hitting Them Very Hard' 
+  body           <span property="schema:name" class="field field--name-title field--type-string field--label-hidden">Trump Eschews Talks With 'Dishonest' Iran, Says Will Keep 'Hitting Them Very Hard' </span>
+
+            <div property="schema:text" class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><h2>Summary</h2>
+
+<ul><li><strong>Trump proclaims US strikes on Iran are succeeding</strong> and will continue.</li>
+	<li><strong>US adds sanctions, Bessent says Tehran can't pay troops</strong>, as Iran faces growing pressure.</li>
+	<li><strong>Most Americans say the Iran war isn't worth fighting</strong>: AP poll.</li>
+	<li><strong>Iran claims drone strike on US base in Kuwait</strong> - after no new US strikes overnight.</li>
+	<li><strong>Oil rises as fears of wider conflict grow </strong>and lack of talks.</li>
+</ul><script type="application …<13370 more chars>
+  summary        <span property="schema:name" class="field field--name-title field--type-string field--label-hidden">Trump Eschews Talks With 'Dishonest' Iran, Says Will Keep 'Hitting Them Very Hard' </span>
+
+            <div property="schema:text" class="
+  link           https://www.zerohedge.com/geopolitical/iran-claims-kuwait-airbase-attack-strikes-pair-tankers-hormuz-despite-no-new-us
+  language       en
+  published_at   Fri, 31 Jul 2026 16:39:00 +0000
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"1119956 at https://www.zerohedge.com"}
+
+--- row 2 ---
+  uid            zerohedge|1119959 at https://www.zerohedge.com
+  title          Immigrant Business Owners Prepare Lawsuit Against Mamdani Over City-Run Grocery Stores
+  body           <span property="schema:name" class="field field--name-title field--type-string field--label-hidden">Immigrant Business Owners Prepare Lawsuit Against Mamdani Over City-Run Grocery Stores</span>
+
+            <div property="schema:text" class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><p><a href="https://amgreatness.com/2026/07/31/immigrant-business-owners-prepare-lawsuit-against-mamdani-over-city-run-grocery-stores/"><em>Via American Greatness,</em></a></p>
+
+<p><em><strong>Several immigrant business owners <a href="https://www.foxnews.com/media/new-york-city-immigrant-business-owners-planning-sue-mamdani-over-taxpayer-funded-supermarkets">are preparing to sue</a> New York City Mayor Zohran Mamdani over his plan for city-owned grocery stores, Fox News Digital confirmed Wednesday.</strong></em></p>
+
+<p><a data-image-externa …<4316 more chars>
+  summary        <span property="schema:name" class="field field--name-title field--type-string field--label-hidden">Immigrant Business Owners Prepare Lawsuit Against Mamdani Over City-Run Grocery Stores</span>
+
+            <div property="schema:text" class
+  link           https://www.zerohedge.com/political/immigrant-business-owners-prepare-lawsuit-against-mamdani-over-city-run-grocery-stores
+  language       en
+  published_at   Fri, 31 Jul 2026 16:25:00 +0000
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"1119959 at https://www.zerohedge.com"}
+
+--- row 3 ---
+  uid            zerohedge|1119991 at https://www.zerohedge.com
+  title          Claude Hacked Three Real Organizations During Botched Test
+  body           <span property="schema:name" class="field field--name-title field--type-string field--label-hidden">Claude Hacked Three Real Organizations During Botched Test</span>
+
+            <div property="schema:text" class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><article><p>Anthropic's efforts to test Claude's offensive cybersecurity skills produced an unintended real-world result: Its AI models <strong>gained unauthorized access to three outside organizations</strong>.</p>
+
+<p><a data-image-external-href="" data-image-href="/s3/files/inline-images/claude%20logo.jpg?itok=0poYUAth" data-link-option="0" href="https://cms.zerohedge.com/s3/files/inline-images/claude%20logo.jpg?itok=0poYUAth"><picture><img data-entity-type="file" data-entity-uuid="620690a1-79a9-46c6-9bd2-5ce5f1316661" data-responsive-image-style="inline_images" heig …<6114 more chars>
+  summary        <span property="schema:name" class="field field--name-title field--type-string field--label-hidden">Claude Hacked Three Real Organizations During Botched Test</span>
+
+            <div property="schema:text" class="clearfix text-formatted fi
+  link           https://www.zerohedge.com/ai/claude-hacked-three-real-organizations-during-botched-test
+  language       en
+  published_at   Fri, 31 Jul 2026 16:05:00 +0000
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"1119991 at https://www.zerohedge.com"}

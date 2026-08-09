@@ -1,5 +1,6 @@
 #include "keysapi.h"
 #include "credtab.h"
+#include "audit.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <openssl/evp.h>
@@ -355,6 +356,14 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
       else sqlite3_bind_null(s,2);
       sqlite3_bind_text(s,3,t->tenant_id,-1,SQLITE_TRANSIENT);
       sqlite3_step(s); sqlite3_finalize(s);
+      /* Who may touch this workspace's credentials is itself a security
+       * decision, so the change is on the record. */
+      { cJSON *ap=cJSON_CreateObject();
+        cJSON_AddStringToObject(ap,"policy",pol);
+        if (mid[0]) cJSON_AddStringToObject(ap,"memberId",mid);
+        char *apj=cJSON_PrintUnformatted(ap); cJSON_Delete(ap);
+        audit_write(db,t->tenant_id,t->user_id,"tenant_key.policy",NULL,apj);
+        free(apj); }
       cJSON *o=cJSON_CreateObject();
       cJSON_AddStringToObject(o,"policy",pol);
       cJSON_AddItemToObject(o,"memberId",mid[0]?cJSON_CreateString(mid):cJSON_CreateNull());
@@ -369,7 +378,16 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
   if (strcmp(method,"GET")==0) {
     cJSON_Delete(ov);
     if (!known) return jerr(st,404,"Unknown key");
-    if (!can_manage(db,t)) return jerr(st,403,"Not permitted to view this workspace's keys");
+    /* Plaintext reveal is NOT the same permission as "may manage keys".
+     * can_manage() is true for EVERY member under the all_members policy, so
+     * this route handed a viewer every third-party credential the workspace
+     * stores — the write policy was being reused as a read policy. Reveal now
+     * needs owner/admin (the collection listing above still shows every member
+     * which keys are set, which is what the settings screen actually needs),
+     * and httpd.c additionally puts the platform-operator gate in front of
+     * this exact route, mirroring the breach-reveal path. */
+    if (!is_admin_role(t->role))
+      return jerr(st,403,"Only a workspace owner or admin can reveal a key");
     char *val=NULL;
     sqlite3_stmt *s;
     if (sqlite3_prepare_v2(db->h,
@@ -384,6 +402,14 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
       }
     }
     sqlite3_finalize(s);
+    /* Audited whether or not a value came back: an attempt to read a secret is
+     * the interesting event, and this file previously wrote no audit rows at
+     * all. The key NAME is recorded; the value obviously is not. */
+    { cJSON *ap=cJSON_CreateObject();
+      cJSON_AddBoolToObject(ap,"revealed",val?1:0);
+      char *apj=cJSON_PrintUnformatted(ap); cJSON_Delete(ap);
+      audit_write(db,t->tenant_id,t->user_id,"tenant_key.reveal",seg,apj);
+      free(apj); }
     cJSON *o=cJSON_CreateObject();
     cJSON_AddStringToObject(o,"name",seg);
     cJSON_AddItemToObject(o,"value",val?cJSON_CreateString(val):cJSON_CreateNull());
@@ -424,6 +450,8 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
     }
     int byok = val[0]!=0;
     int platform = env_set_trim(ov,seg);
+    audit_write(db,t->tenant_id,t->user_id,
+                byok ? "tenant_key.set" : "tenant_key.clear", seg, NULL);
     cJSON *o=cJSON_CreateObject();
     cJSON_AddStringToObject(o,"name",seg);
     cJSON_AddBoolToObject(o,"byok",byok);

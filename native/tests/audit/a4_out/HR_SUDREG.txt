@@ -1,0 +1,7 @@
+=== HR_SUDREG  entity=Toyota
+exit: 0
+sched: rc=0 records=0 225ms
+--- stderr ---
+[HR_SUDREG] http status=404
+[sched] HR_SUDREG run rc=0 records=0 225ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

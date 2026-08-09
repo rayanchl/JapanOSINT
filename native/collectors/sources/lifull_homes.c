@@ -55,14 +55,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   { time_t t = time(NULL); struct tm tm; gmtime_r(&t, &tm);
     strftime(now, sizeof now, "%Y-%m-%dT%H:%M:%S.000Z", &tm); }
 
-  int n = 0;
+  int n = 0, fetched = 0;
   for (int i = 0; i < NPREF; i++) {
     char url[160];
     snprintf(url, sizeof url,
       "https://www.homes.co.jp/mansion/chuko/%s/", PREFS[i].slug);
     char *html = feed_get_text(ctx->http, url, 15000);
     long count = 0; int have = 0;
-    if (html) { have = parse_count(html, &count); free(html); }
+    if (html) {
+      if (*html) fetched++;              /* body actually came back */
+      have = parse_count(html, &count);
+      free(html);
+    }
     if (!have) continue;                 /* omit pref — honest empty */
 
     char title[192];
@@ -106,8 +110,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(p); cJSON_Delete(tags);
   }
 
-  fprintf(stderr, "[lifull-homes] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  fprintf(stderr, "[lifull-homes] emitted %d (pages fetched %d/%d)\n",
+          n, fetched, NPREF);
+  /* `n > 0 ? 0 : -1` conflated "no listings parsed" with "the site refused
+   * us". Only a total fetch failure is an error; a page that came back but
+   * carried no NN件 total is an honest empty and must return 0, or the
+   * scheduler's anomaly detector quarantines the source. */
+  if (fetched == 0) {
+    fprintf(stderr, "[lifull-homes] no page body returned for any prefecture\n");
+    return -1;
+  }
+  return 0;
 }
 
 static const source_def lifull_homes_def = {

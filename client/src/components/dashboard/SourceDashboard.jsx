@@ -6,15 +6,21 @@ import {
 } from 'recharts';
 import StatusBadge from '../ui/StatusBadge';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import { normalizeSources, typeLabel } from '../../utils/normalizeSource.js';
 
-const COLORS = {
+// Keyed on the wire values (schema.sql constrains both columns to lowercase).
+const STATUS_COLORS = {
   online: '#00ff88',
   degraded: '#ffb74d',
   offline: '#ff4444',
-  API: '#00f0ff',
-  Dataset: '#3b82f6',
-  Scraped: '#ff8c00',
-  'Web Request': '#a855f7',
+  pending: '#9ca3af',
+};
+
+const TYPE_COLORS = {
+  api: '#00f0ff',
+  dataset: '#3b82f6',
+  scraped: '#ff8c00',
+  web_request: '#a855f7',
 };
 
 const CATEGORY_COLORS = [
@@ -48,9 +54,8 @@ function DarkTooltip({ active, payload, label }) {
   );
 }
 
-export default function SourceDashboard({ sources: propSources, stats: propStats }) {
+export default function SourceDashboard({ sources: propSources }) {
   const [sources, setSources] = useState(propSources || []);
-  const [stats, setStats] = useState(propStats || null);
   const [loading, setLoading] = useState(!propSources?.length);
   const [sortField, setSortField] = useState('name');
   const [sortDir, setSortDir] = useState('asc');
@@ -59,19 +64,16 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
   const [filterCategory, setFilterCategory] = useState('');
   const [expandedRow, setExpandedRow] = useState(null);
 
-  // Fetch sources if not provided via props
+  // Fetch sources only when mounted without them — App.jsx's useDataSources
+  // already polls /api/sources and passes the rows down as props.
+  const selfFetch = !propSources?.length;
+
   const fetchData = useCallback(async () => {
     try {
-      const [srcRes, stRes] = await Promise.all([
-        fetch(apiUrl('/api/sources')),
-        fetch(apiUrl('/api/sources/stats')),
-      ]);
-      if (srcRes.ok) {
-        const data = await srcRes.json();
-        setSources(Array.isArray(data) ? data : data.sources || []);
-      }
-      if (stRes.ok) {
-        setStats(await stRes.json());
+      const res = await fetch(apiUrl('/api/sources'));
+      if (res.ok) {
+        const data = await res.json();
+        setSources(normalizeSources(Array.isArray(data) ? data : data.sources || []));
       }
     } catch (err) {
       console.warn('[SourceDashboard] fetch error:', err.message);
@@ -81,27 +83,21 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
   }, []);
 
   useEffect(() => {
+    if (!selfFetch) return undefined;
     fetchData();
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
-  }, [fetchData]);
+  }, [selfFetch, fetchData]);
 
   useEffect(() => {
     if (propSources?.length) setSources(propSources);
   }, [propSources]);
 
-  useEffect(() => {
-    if (propStats) setStats(propStats);
-  }, [propStats]);
-
-  // Derived data
+  // Derived data. `pending` is the schema default for a freshly-seeded source,
+  // so it has to be in the seed or those rows vanish from the cards + pie.
   const statusCounts = useMemo(() => {
-    const counts = { online: 0, degraded: 0, offline: 0, gated: 0 };
+    const counts = { online: 0, degraded: 0, offline: 0, pending: 0 };
     sources.forEach((s) => {
-      if (s.gated) {
-        counts.gated++;
-        return;
-      }
       const st = (s.status || 'offline').toLowerCase();
       if (counts[st] !== undefined) counts[st]++;
     });
@@ -111,10 +107,14 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
   const typeCounts = useMemo(() => {
     const map = {};
     sources.forEach((s) => {
-      const t = s.type || 'Unknown';
+      const t = s.type || 'unknown';
       map[t] = (map[t] || 0) + 1;
     });
-    return Object.entries(map).map(([name, value]) => ({ name, value }));
+    return Object.entries(map).map(([type, value]) => ({
+      type,
+      name: typeLabel(type) || 'Unknown',
+      value,
+    }));
   }, [sources]);
 
   const statusChartData = useMemo(() => {
@@ -125,7 +125,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
     const map = {};
     sources.forEach((s) => {
       const cat = s.category || 'Other';
-      map[cat] = (map[cat] || 0) + (s.records || s.recordCount || 0);
+      map[cat] = (map[cat] || 0) + (s.records || 0);
     });
     return Object.entries(map)
       .map(([name, records]) => ({ name, records }))
@@ -163,7 +163,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
 
   const uniqueTypes = useMemo(() => [...new Set(sources.map((s) => s.type).filter(Boolean))], [sources]);
   const uniqueCategories = useMemo(() => [...new Set(sources.map((s) => s.category).filter(Boolean))], [sources]);
-  const totalRecords = useMemo(() => sources.reduce((sum, s) => sum + (s.records || s.recordCount || 0), 0), [sources]);
+  const totalRecords = useMemo(() => sources.reduce((sum, s) => sum + (s.records || 0), 0), [sources]);
 
   const sortIcon = (field) => {
     if (sortField !== field) return '';
@@ -198,7 +198,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
           <StatCard label="Online" value={statusCounts.online} color="#00ff88" />
           <StatCard label="Degraded" value={statusCounts.degraded} color="#ffb74d" />
           <StatCard label="Offline" value={statusCounts.offline} color="#ff4444" />
-          <StatCard label="Gated" value={statusCounts.gated} color="#9ca3af" />
+          <StatCard label="Pending" value={statusCounts.pending} color="#9ca3af" />
           <StatCard label="Total Records" value={totalRecords.toLocaleString()} color="#a855f7" />
           <StatCard
             label="Last Update"
@@ -226,7 +226,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
                   strokeWidth={2}
                 >
                   {typeCounts.map((entry, i) => (
-                    <Cell key={i} fill={COLORS[entry.name] || CATEGORY_COLORS[i % CATEGORY_COLORS.length]} />
+                    <Cell key={i} fill={TYPE_COLORS[entry.type] || CATEGORY_COLORS[i % CATEGORY_COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip content={<DarkTooltip />} />
@@ -253,7 +253,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
                   strokeWidth={2}
                 >
                   {statusChartData.map((entry, i) => (
-                    <Cell key={i} fill={COLORS[entry.name] || '#666'} />
+                    <Cell key={i} fill={STATUS_COLORS[entry.name] || '#666'} />
                   ))}
                 </Pie>
                 <Tooltip content={<DarkTooltip />} />
@@ -317,6 +317,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
             <option value="online">Online</option>
             <option value="degraded">Degraded</option>
             <option value="offline">Offline</option>
+            <option value="pending">Pending</option>
           </select>
 
           <select
@@ -326,7 +327,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
           >
             <option value="">All Types</option>
             {uniqueTypes.map((t) => (
-              <option key={t} value={t}>{t}</option>
+              <option key={t} value={t}>{typeLabel(t)}</option>
             ))}
           </select>
 
@@ -373,11 +374,15 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
                 </tr>
               </thead>
               <tbody>
-                {filteredSources.map((src, i) => (
-                  <React.Fragment key={src.id || i}>
+                {filteredSources.map((src, i) => {
+                  // Key on the source id, not the array index — filteredSources
+                  // is re-sorted/re-filtered and replaced wholesale on refresh.
+                  const rowKey = src.id ?? i;
+                  return (
+                  <React.Fragment key={rowKey}>
                     <tr
                       className="border-b border-osint-border/50 hover:bg-neon-cyan/5 transition-colors cursor-pointer"
-                      onClick={() => setExpandedRow(expandedRow === i ? null : i)}
+                      onClick={() => setExpandedRow(expandedRow === rowKey ? null : rowKey)}
                     >
                       <td className="px-3 py-2.5">
                         <StatusBadge type="status" value={src.status || 'offline'} />
@@ -388,7 +393,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
                       </td>
                       <td className="px-3 py-2.5 text-gray-400">{src.category}</td>
                       <td className="px-3 py-2.5 font-mono text-neon-green">
-                        {(src.records || src.recordCount || 0).toLocaleString()}
+                        {(src.records || 0).toLocaleString()}
                       </td>
                       <td className="px-3 py-2.5 font-mono text-gray-400">
                         {src.responseTime ? `${src.responseTime}ms` : '-'}
@@ -406,7 +411,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
                     </tr>
 
                     {/* Expanded row - fetch logs */}
-                    {expandedRow === i && (
+                    {expandedRow === rowKey && (
                       <tr>
                         <td colSpan={8} className="px-4 py-3 bg-osint-bg/50">
                           <div className="text-[10px] text-gray-500 space-y-1">
@@ -441,7 +446,8 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
                       </tr>
                     )}
                   </React.Fragment>
-                ))}
+                  );
+                })}
 
                 {filteredSources.length === 0 && (
                   <tr>

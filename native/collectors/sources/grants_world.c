@@ -23,13 +23,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-/* cJSON number field as double with presence flag. */
-static int jo_num(const cJSON *o, const char *k, double *out) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  if (v && cJSON_IsNumber(v)) { if (out) *out = v->valuedouble; return 1; }
-  return 0;
-}
-
 /* ---- NIH RePORTER --------------------------------------------------------- */
 /* one project → one intel_item. Returns 1 if emitted. */
 static int nih_emit(intel_sink *sink, const cJSON *p) {

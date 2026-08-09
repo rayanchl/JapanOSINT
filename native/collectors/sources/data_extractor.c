@@ -31,7 +31,13 @@ static const xp_t PATTERNS[] = {
   {"email",       "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"},
   {"ipv4",        "[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}"},
   {"url",         "https?://[a-zA-Z0-9./?=_&%-]+"},
-  {"domain",      "[a-zA-Z0-9][a-zA-Z0-9-]*\\.[a-zA-Z]{2,}"},
+  /* AUDIT NOTE (slice a3): this was "[a-zA-Z0-9][a-zA-Z0-9-]*\\.[a-zA-Z]{2,}",
+   * which matches exactly ONE label plus a TLD. Every multi-label domain came
+   * out truncated: "ir@toyota.co.jp" yielded the indicator "toyota.co" — a
+   * different, real, unrelated domain. An IOC that is silently wrong is worse
+   * than a missing one. Allow interior labels so the match is leftmost-longest
+   * over the whole name. */
+  {"domain",      "[a-zA-Z0-9][a-zA-Z0-9-]*(\\.[a-zA-Z0-9][a-zA-Z0-9-]*)*\\.[a-zA-Z]{2,}"},
   {"md5",         "[a-fA-F0-9]{32}"},
   {"sha1",        "[a-fA-F0-9]{40}"},
   {"sha256",      "[a-fA-F0-9]{64}"},

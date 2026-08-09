@@ -1,0 +1,20 @@
+=== SHODAN_INTERNETDB  entity=8.8.8.8
+exit: 0
+sched: rc=0 records=1 51ms
+--- stderr ---
+[SHODAN_INTERNETDB] emitted 1
+[sched] SHODAN_INTERNETDB run rc=0 records=1 51ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: infra-host=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            SHODAN_INTERNETDB|internetdb|8.8.8.8
+  title          8.8.8.8
+  body           {"ip":"8.8.8.8","ports":"53, 443","hostnames":"dns.google, accountsessionanalytics-na1.emarketer.com","source":"Shodan InternetDB"}
+  summary        ports: 53, 443
+  link           https://www.shodan.io/host/8.8.8.8
+  language       en
+  record_type    infra-host
+  tags           ["osint-search","infrastructure"]
+  properties     {"ip":"8.8.8.8","ports":"53, 443","service":"SHODAN_INTERNETDB","success":true}

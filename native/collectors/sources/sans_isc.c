@@ -28,6 +28,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* infocon: { status } or [ { status } ] || 'unknown' */
   cJSON *infocon = feed_get_json(ctx->http, URL_INFOCON, TIMEOUT_MS);
+  int infocon_ok = infocon != NULL;
   if (infocon) {
     const char *status = "unknown";
     cJSON *st = NULL;
@@ -72,7 +73,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   fprintf(stderr, "[sans-isc] emitted %d\n", total);
-  return total > 0 ? 0 : -1;
+  /* STATUS code, not a row count. A quiet diary feed with the infocon endpoint
+   * up is an honest empty (0); only losing BOTH fetches is a real error. */
+  return (rss_n >= 0 || infocon_ok) ? 0 : -1;
 }
 
 static const source_def sans_isc_def = {

@@ -268,7 +268,7 @@ struct MapTab: View {
                 LiveVehiclesContent(store: liveVehicles, theme: theme, settings: settings)
             }
             if let coord = probedCoordinate {
-                Annotation("Map center", coordinate: coord, anchor: .bottom) {
+                MapKit.Annotation("Map center", coordinate: coord, anchor: .bottom) {
                     pin(symbol: "mappin", color: theme.accent, opacity: 1)
                 }
             }
@@ -276,7 +276,7 @@ struct MapTab: View {
                 // Declared after `visibleFeatures`, so MapContent ordering
                 // already places this on top of the regular pins. Drawn at
                 // 1.5× so the flown-to pin clearly stands out.
-                Annotation(spot.displayName, coordinate: c, anchor: .bottom) {
+                MapKit.Annotation(spot.displayName, coordinate: c, anchor: .bottom) {
                     pin(
                         symbol: registry.symbol(for: spot.layerId),
                         color: registry.color(for: spot.layerId),
@@ -398,7 +398,7 @@ struct MapTab: View {
                 let heading = (feat.properties["heading"]?.value as? Double)
                     ?? (feat.properties["heading"]?.value as? Int).map(Double.init)
                     ?? 0
-                Annotation(feat.displayName, coordinate: c, anchor: .center) {
+                MapKit.Annotation(feat.displayName, coordinate: c, anchor: .center) {
                     pin(symbol: symbol, color: color, opacity: opacity)
                         .rotationEffect(.degrees(heading - 90))
                         .animation(.linear(duration: 1), value: heading)
@@ -406,7 +406,7 @@ struct MapTab: View {
                 }
                 .tag(feat.id)
             } else {
-                Annotation(feat.displayName, coordinate: c, anchor: .bottom) {
+                MapKit.Annotation(feat.displayName, coordinate: c, anchor: .bottom) {
                     pin(symbol: symbol, color: color, opacity: opacity)
                         .onTapGesture { selectFeature(feat) }
                 }
@@ -415,7 +415,7 @@ struct MapTab: View {
 
         case .multiPoint(let coords):
             ForEach(Array(coords.enumerated()), id: \.offset) { idx, c in
-                Annotation("\(feat.displayName) #\(idx + 1)", coordinate: c, anchor: .bottom) {
+                MapKit.Annotation("\(feat.displayName) #\(idx + 1)", coordinate: c, anchor: .bottom) {
                     pin(symbol: symbol, color: color, opacity: opacity)
                         .onTapGesture { selectFeature(feat) }
                 }
@@ -622,7 +622,7 @@ struct MapTab: View {
                 .font(.body.weight(.semibold))
                 .foregroundStyle(.tint)
                 .frame(width: 36, height: 36)
-                .background(.thinMaterial, in: Circle())
+                .mapBarSurface(in: Circle())
                 .frame(minWidth: 44, minHeight: 44)
                 .contentShape(Rectangle())
         }
@@ -677,7 +677,7 @@ struct MapTab: View {
             .foregroundStyle(.tint)
             .frame(height: 36)
             .padding(.horizontal, 12)
-            .background(.thinMaterial, in: Capsule())
+            .mapBarSurface(in: Capsule())
             .frame(minHeight: 44)
             .contentShape(Rectangle())
         }
@@ -702,7 +702,7 @@ struct MapTab: View {
                 .font(.body.weight(.semibold))
                 .foregroundStyle(.tint)
                 .frame(width: 36, height: 36)
-                .background(.thinMaterial, in: Circle())
+                .mapBarSurface(in: Circle())
                 .frame(minWidth: 44, minHeight: 44)
                 .contentShape(Rectangle())
         }
@@ -713,15 +713,23 @@ struct MapTab: View {
     /// Uses Apple's secondary text styling so it reads as supporting info.
     private var statusRow: some View {
         HStack(spacing: 10) {
+            // This reports the realtime PUSH channel only. It is not an
+            // app-connectivity indicator: every layer on this map is fetched
+            // over REST and keeps working with the socket down, so the
+            // non-live state is muted, not red, and never says "OFFLINE".
             HStack(spacing: 4) {
                 Circle()
-                    .fill(ws.isConnected ? theme.success : theme.danger)
+                    .fill(ws.isConnected ? theme.success : theme.textMuted)
                     .frame(width: 6, height: 6)
-                Text(ws.isConnected ? "LIVE" : "OFFLINE")
+                Text(ws.isConnected ? "LIVE" : "SNAPSHOT")
                     .font(.caption2.weight(.semibold))
                     .tracking(0.6)
-                    .foregroundStyle(ws.isConnected ? theme.success : theme.danger)
+                    .foregroundStyle(ws.isConnected ? theme.success : theme.textMuted)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(ws.isConnected
+                                ? "Live realtime feed"
+                                : "No realtime feed; showing fetched data")
 
             Text("·").font(.caption2).foregroundStyle(.tertiary)
 
@@ -754,7 +762,7 @@ struct MapTab: View {
             .buttonStyle(.plain)
         }
         .padding(8)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .mapBarSurface(in: RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 
     private func jstFormatted(_ date: Date) -> String {

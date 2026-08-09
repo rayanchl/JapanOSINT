@@ -1,0 +1,41 @@
+=== ADDRESS_RESOLVER  entity=Tokyo Station
+exit: 0
+sched: rc=0 records=3 281ms
+--- stderr ---
+[sched] ADDRESS_RESOLVER run rc=0 records=3 281ms
+--- persisted: 3 rows, 3 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=3
+sub_source_id: (null)=3
+
+--- row 1 ---
+  uid            ADDRESS_RESOLVER|geo:263251837
+  title          東京駅(改札外), 丸の内一丁目, 丸の内, 千代田区, 東京都, 100-0005, 日本
+  body           {"latitude":35.6818017,"longitude":139.764981,"display_name":"東京駅(改札外), 丸の内一丁目, 丸の内, 千代田区, 東京都, 100-0005, 日本","type":"footway","importance":0.0400859349965667,"address_details":{"city":"千代田区","country":"日本","postcode":"100-0005"}}
+  summary        35.681802, 139.764981
+  lat            35.6818017
+  lon            139.764981
+  record_type    osint_service_result
+  tags           ["osint-search","ADDRESS_RESOLVER"]
+  properties     {"service":"ADDRESS_RESOLVER","entity":"Tokyo Station","success":true}
+
+--- row 2 ---
+  uid            ADDRESS_RESOLVER|geo:267792942
+  title          東京駅(改札外), 丸の内二丁目, 丸の内, 千代田区, 東京都, 100-0005, 日本
+  body           {"latitude":35.6808422,"longitude":139.7644756,"display_name":"東京駅(改札外), 丸の内二丁目, 丸の内, 千代田区, 東京都, 100-0005, 日本","type":"footway","importance":0.0400859349965667,"address_details":{"city":"千代田区","country":"日本","postcode":"100-0005"}}
+  summary        35.680842, 139.764476
+  lat            35.6808422
+  lon            139.7644756
+  record_type    osint_service_result
+  tags           ["osint-search","ADDRESS_RESOLVER"]
+  properties     {"service":"ADDRESS_RESOLVER","entity":"Tokyo Station","success":true}
+
+--- row 3 ---
+  uid            ADDRESS_RESOLVER|geo:266694557
+  title          東京駅;M8出入口, 丸の内一丁目, 丸の内, 千代田区, 東京都, 100-0005, 日本
+  body           {"latitude":35.6825588,"longitude":139.76526,"display_name":"東京駅;M8出入口, 丸の内一丁目, 丸の内, 千代田区, 東京都, 100-0005, 日本","type":"steps","importance":0.0400859349965667,"address_details":{"city":"千代田区","country":"日本","postcode":"100-0005"}}
+  summary        35.682559, 139.765260
+  lat            35.6825588
+  lon            139.76526
+  record_type    osint_service_result
+  tags           ["osint-search","ADDRESS_RESOLVER"]
+  properties     {"service":"ADDRESS_RESOLVER","entity":"Tokyo Station","success":true}

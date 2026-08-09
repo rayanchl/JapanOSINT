@@ -1,0 +1,46 @@
+=== OURAIRPORTS  entity=Narita
+exit: 0
+sched: rc=0 records=3 4612ms
+--- stderr ---
+[ourairports] emitted 3
+[sched] OURAIRPORTS run rc=0 records=3 4612ms
+--- persisted: 3 rows, 3 with lat/lon, 0 with geometry ---
+record_type: airport=3
+sub_source_id: (null)=3
+
+--- row 1 ---
+  uid            OURAIRPORTS|JP-1547
+  title          Japan Red Cross Narita Hospital Heliport
+  body           {"name":"Japan Red Cross Narita Hospital Heliport","ident":"JP-1547","type":"heliport","municipality":"Narita","iso_country":"JP","lat":35.76496,"lon":140.30259,"source":"OurAirports"}
+  summary        heliport · Narita, JP
+  language       en
+  lat            35.76496
+  lon            140.30259
+  record_type    airport
+  tags           ["osint-search","OURAIRPORTS"]
+  properties     {"service":"OURAIRPORTS","source":"OurAirports","iso_country":"JP","success":true}
+
+--- row 2 ---
+  uid            OURAIRPORTS|JP-3057
+  title          IJHW Narita Hospital Heliport
+  body           {"name":"IJHW Narita Hospital Heliport","ident":"JP-3057","type":"heliport","municipality":"Narita","iso_country":"JP","lat":35.75924,"lon":140.35046,"source":"OurAirports"}
+  summary        heliport · Narita, JP
+  language       en
+  lat            35.75924
+  lon            140.35046
+  record_type    airport
+  tags           ["osint-search","OURAIRPORTS"]
+  properties     {"service":"OURAIRPORTS","source":"OurAirports","iso_country":"JP","success":true}
+
+--- row 3 ---
+  uid            OURAIRPORTS|RJAA
+  title          Narita International Airport
+  body           {"name":"Narita International Airport","ident":"RJAA","icao_code":"RJAA","iata_code":"NRT","type":"large_airport","municipality":"Narita","iso_country":"JP","lat":35.76858,"lon":140.388714,"source":"OurAirports"}
+  summary        large_airport · Narita, JP
+  link           https://en.wikipedia.org/wiki/Narita_International_Airport
+  language       en
+  lat            35.76858
+  lon            140.388714
+  record_type    airport
+  tags           ["osint-search","OURAIRPORTS"]
+  properties     {"service":"OURAIRPORTS","source":"OurAirports","icao_code":"RJAA","iata_code":"NRT","iso_country":"JP","success":true}

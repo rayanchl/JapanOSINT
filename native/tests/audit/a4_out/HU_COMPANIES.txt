@@ -1,0 +1,7 @@
+=== HU_COMPANIES  entity=Toyota
+exit: 0
+sched: rc=0 records=0 1255ms
+--- stderr ---
+[HU_COMPANIES] emitted 0
+[sched] HU_COMPANIES run rc=0 records=0 1255ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

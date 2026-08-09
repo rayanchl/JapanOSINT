@@ -1,0 +1,117 @@
+=== NO_ADDRESS  entity=Oslo
+exit: 0
+sched: rc=0 records=10 284ms
+--- stderr ---
+[NO_ADDRESS] emitted 10
+[sched] NO_ADDRESS run rc=0 records=10 284ms
+--- persisted: 10 rows, 10 with lat/lon, 0 with geometry ---
+record_type: no-address=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            NO_ADDRESS|Oslo gate 12
+  title          Oslo gate 12
+  body           {"address":"Oslo gate 12","post_place":"OSLO","postal_code":"0192","municipality":"OSLO","source":"Kartverket"}
+  summary        OSLO · OSLO
+  language       no
+  lat            59.905626809667176
+  lon            10.767769807215407
+  record_type    no-address
+  tags           ["osint-search","NO_ADDRESS"]
+  properties     {"service":"NO_ADDRESS","success":true}
+#################################################
+=== GITHUB_GISTS  entity=defunkt
+exit: 0
+sched: rc=0 records=20 708ms
+--- stderr ---
+[GITHUB_GISTS] emitted 20
+[sched] GITHUB_GISTS run rc=0 records=20 708ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: github-gist=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            GITHUB_GISTS|dea58d75d3faa091593046b2cc18dd47
+  title          gist dea58d75d3faa091593046b2cc18dd47githubber.rb
+  body           {"id":"dea58d75d3faa091593046b2cc18dd47","first_file":"githubber.rb","source":"GitHub Gist"}
+  summary        githubber.rb
+  link           https://gist.github.com/defunkt/dea58d75d3faa091593046b2cc18dd47
+  language       en
+  published_at   2023-10-31T18:16:31Z
+  record_type    github-gist
+  tags           ["osint-search","GITHUB_GISTS"]
+  properties     {"service":"GITHUB_GISTS","gist_id":"dea58d75d3faa091593046b2cc18dd47","success":true}
+#################################################
+=== GITLAB_USER  entity=gitlab-bot
+exit: 0
+sched: rc=0 records=1 290ms
+--- stderr ---
+[GITLAB_USER] emitted 1
+[sched] GITLAB_USER run rc=0 records=1 290ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: gitlab-user=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            GITLAB_USER|GITLAB_USER|gitlab-bot
+  title          🤖 GitLab Bot 🤖
+  body           {"username":"gitlab-bot","name":"🤖 GitLab Bot 🤖","state":"active","avatar":"https://gitlab.com/uploads/-/system/user/avatar/1786152/avatar.png","gitlab_id":1786152,"source":"GitLab"}
+  summary        gitlab-bot
+  link           https://gitlab.com/gitlab-bot
+  language       en
+  record_type    gitlab-user
+  tags           ["osint-search","identity"]
+  properties     {"service":"GITLAB_USER","query":"gitlab-bot","url":"https://gitlab.com/gitlab-bot","success":true}
+#################################################
+=== WORLDBANK_INDICATORS  entity=NY.GDP.MKTP.CD
+exit: 0
+sched: rc=0 records=261 588ms
+--- stderr ---
+[WORLDBANK_INDICATORS] emitted 261
+[sched] WORLDBANK_INDICATORS run rc=0 records=261 588ms
+--- persisted: 261 rows, 0 with lat/lon, 0 with geometry ---
+record_type: worldbank-indicator=261
+sub_source_id: (null)=261
+
+--- row 1 ---
+  uid            WORLDBANK_INDICATORS|WB|NY.GDP.MKTP.CD|AFE|2025
+  title          Africa Eastern and Southern — GDP (current US$): 1.35869e+12
+  body           {"indicator":"NY.GDP.MKTP.CD","indicator_name":"GDP (current US$)","country":"Africa Eastern and Southern","iso3":"AFE","value":1358694050872.54,"date":"2025","source":"World Bank"}
+  summary        GDP (current US$) = 1.35869e+12 (2025)
+  link           https://data.worldbank.org/indicator
+  language       en
+  published_at   2025
+  record_type    worldbank-indicator
+  tags           ["osint-search","economy"]
+  properties     {"service":"WORLDBANK_INDICATORS","period":"2025","success":true}
+#################################################
+=== TRON_SCAN  entity=TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t
+exit: 0
+sched: rc=0 records=1 543ms
+--- stderr ---
+[TRON_SCAN] emitted 1
+[sched] TRON_SCAN run rc=0 records=1 543ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: tron-address=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            TRON_SCAN|TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t
+  title          Tron TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t — 1082580.390442 TRX, 485 TRC-20 tokens
+  body           {"address":"TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t","address_hex":"41a614f803b6fd780986a42c78ec9c7f77e6ded13c","chain":"tron","balance_sun":"1082580390442","balance_trx":1082580.390442,"account_type":"Contract","trc20_token_count":485,"trc10_asset_count":330,"trc20":[{"TS6dcmkzuthz48t3HsWEmGxKGtv19icco1":"999666888000000000000000001"},{"TKj8VFCycvvEoqQgnXZeKQKReAZvtZzss1":"1000000000"},{"TRJBaa45MDFySvqkGZj1yNat7PiXbsawv1":"10000000000000000000"},{"TEuffRtZGe3p8a4KTRyeN4xnpku4HWDyJ2":"1205903671756"},{"TSCnk5Nmszzb9kDBafYZaYkZPNgiAKwpX2":"5000000000000000000"},{"TNdutJ3omJ3xpxkxrtuHPau9uThxkbLJY2":"10000000"},{"TRzq8rRXjN5aF8NX61L81HQ5G7ZEAAJCg2":"10887000000000000000000"},{"TCfkMrDhTDJKQtzBu4KszLA76B7Fpkm6s2":"3998000000000000000000000"},{"TBbLWduhSP7sx7ANjTp1HqTBf4sWQJNuw2":"22858000000000000000000"},{"TK21i8dnPHjxom9QW9KwYLwngqZt9SLPz2":"10"},{"TNTsQstXg6JyxZyNTJedJ1SbCirc1v9bz2":"9988888 …<2240 more chars>
+  summary        Tron account
+  link           https://tronscan.org/#/address/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t
+  language       en
+  record_type    tron-address
+  tags           ["osint-search","crypto","tron"]
+  properties     {"service":"TRON_SCAN","chain":"tron","address":"TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t","balance_sun":"1082580390442","account_type":"Contract","trc20_token_count":485,"success":true}
+#################################################
+=== STOOQ_QUOTES  entity=aapl.us
+exit: 0
+sched: rc=0 records=0 91ms
+--- stderr ---
+[STOOQ_QUOTES] http status=404
+[sched] STOOQ_QUOTES run rc=0 records=0 91ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+DONE /mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/a6_l7.txt

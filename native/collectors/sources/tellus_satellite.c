@@ -3,17 +3,13 @@
  * Tellus Traveler data-search API (POST, Bearer TELLUS_TOKEN) → one intel
  * item per scene. Non-spatial scene catalog (has_geo=0). Gated on
  * TELLUS_TOKEN (no key-free path). Honest empty on fetch failure. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-static const char *sstr(cJSON *o, const char *k) {
-  cJSON *v = o ? cJSON_GetObjectItem(o, k) : NULL;
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *token = getenv("TELLUS_TOKEN");
@@ -62,16 +58,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (!props || !cJSON_IsObject(props)) props = f;
 
     char sidbuf[32];
-    const char *sid = sstr(f, "id");
-    if (!sid) sid = sstr(props, "scene_id");
-    if (!sid) sid = sstr(props, "id");
+    const char *sid = jo_sv(f, "id");
+    if (!sid) sid = jo_sv(props, "scene_id");
+    if (!sid) sid = jo_sv(props, "id");
     if (!sid) { snprintf(sidbuf, sizeof sidbuf, "scene-%d", i); sid = sidbuf; }
 
-    const char *acquired = sstr(props, "start_datetime");
-    if (!acquired) acquired = sstr(props, "datetime");
-    if (!acquired) acquired = sstr(props, "acquired");
-    const char *sensor = sstr(props, "sensor");
-    const char *platform = sstr(props, "platform");
+    const char *acquired = jo_sv(props, "start_datetime");
+    if (!acquired) acquired = jo_sv(props, "datetime");
+    if (!acquired) acquired = jo_sv(props, "acquired");
+    const char *sensor = jo_sv(props, "sensor");
+    const char *platform = jo_sv(props, "platform");
 
     char title[128], summary[256], bodytxt[512];
     snprintf(title, sizeof title, "Tellus scene %s", sid);
@@ -133,7 +129,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(data);
   fprintf(stderr, "[tellus-satellite] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def tellus_satellite_def = {

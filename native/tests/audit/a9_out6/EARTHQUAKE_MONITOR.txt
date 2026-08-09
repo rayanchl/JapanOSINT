@@ -1,0 +1,44 @@
+=== EARTHQUAKE_MONITOR  entity=Tokyo
+exit: 0
+sched: rc=0 records=20 1362ms
+--- stderr ---
+[sched] EARTHQUAKE_MONITOR run rc=0 records=20 1362ms
+--- persisted: 20 rows, 20 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            EARTHQUAKE_MONITOR|quake:nc75409212
+  title          M1.0 — 6 km W of Cobb, CA
+  body           {"magnitude":1.02,"location":"6 km W of Cobb, CA","time":"2026-07-31T18:25:57Z","details_url":"https://earthquake.usgs.gov/earthquakes/eventpage/nc75409212","tsunami_warning":false,"longitude":-122.789329528809,"latitude":38.8288345336914,"depth_km":1.62999999523163}
+  summary        6 km W of Cobb, CA
+  published_at   2026-07-31T18:25:57Z
+  lat            38.8288345336914
+  lon            -122.789329528809
+  record_type    osint_service_result
+  tags           ["osint-search","EARTHQUAKE_MONITOR"]
+  properties     {"service":"EARTHQUAKE_MONITOR","magnitude":1.02,"success":true}
+
+--- row 2 ---
+  uid            EARTHQUAKE_MONITOR|quake:aka2026pbdmve
+  title          M2.2 — 137 km E of Chignik, Alaska
+  body           {"magnitude":2.2,"location":"137 km E of Chignik, Alaska","time":"2026-07-31T18:25:55Z","details_url":"https://earthquake.usgs.gov/earthquakes/eventpage/aka2026pbdmve","tsunami_warning":false,"longitude":-156.201,"latitude":56.175,"depth_km":2.9}
+  summary        137 km E of Chignik, Alaska
+  published_at   2026-07-31T18:25:55Z
+  lat            56.175
+  lon            -156.201
+  record_type    osint_service_result
+  tags           ["osint-search","EARTHQUAKE_MONITOR"]
+  properties     {"service":"EARTHQUAKE_MONITOR","magnitude":2.2,"success":true}
+
+--- row 3 ---
+  uid            EARTHQUAKE_MONITOR|quake:hv75011102
+  title          M1.7 — 12 km ENE of Pāhala, Hawaii
+  body           {"magnitude":1.7,"location":"12 km ENE of Pāhala, Hawaii","time":"2026-07-31T18:09:41Z","details_url":"https://earthquake.usgs.gov/earthquakes/eventpage/hv75011102","tsunami_warning":false,"longitude":-155.360504150391,"latitude":19.2285003662109,"depth_km":31.5599994659424}
+  summary        12 km ENE of Pāhala, Hawaii
+  published_at   2026-07-31T18:09:41Z
+  lat            19.2285003662109
+  lon            -155.360504150391
+  record_type    osint_service_result
+  tags           ["osint-search","EARTHQUAKE_MONITOR"]
+  properties     {"service":"EARTHQUAKE_MONITOR","magnitude":1.7,"success":true}

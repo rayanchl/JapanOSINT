@@ -1,0 +1,7 @@
+=== reddit-jp-subs
+exit: 0
+sched: rc=0 records=0 689ms
+--- stderr ---
+[reddit-jp-subs] emitted 0
+[sched] reddit-jp-subs run rc=0 records=0 689ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

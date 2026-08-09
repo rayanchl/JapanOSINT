@@ -1,0 +1,39 @@
+=== seeking-alpha
+exit: 0
+sched: rc=0 records=7 71ms
+--- stderr ---
+[rss] seeking-alpha emitted 7
+[sched] seeking-alpha run rc=0 records=7 71ms
+--- persisted: 7 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=7
+sub_source_id: (null)=7
+
+--- row 1 ---
+  uid            seeking-alpha|https://seekingalpha.com/news/4622923-wisdomtree-outlines-15-etf-launches-over-next-18-months-as-it-guides-152mminus-155m-diluted?utm_source=feed_news_all&utm_medium=referral&feed_item_type=news
+  title          WisdomTree outlines ~15 ETF launches over next 18 months as it guides 152M-155M diluted shares for H2
+  link           https://seekingalpha.com/news/4622923-wisdomtree-outlines-15-etf-launches-over-next-18-months-as-it-guides-152mminus-155m-diluted?utm_source=feed_news_all&utm_medium=referral&feed_item_type=news
+  language       en
+  published_at   Fri, 31 Jul 2026 13:55:48 -0400
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"https://seekingalpha.com/news/4622923-wisdomtree-outlines-15-etf-launches-over-next-18-months-as-it-guides-152mminus-155m-diluted?utm_source=feed_news_all&utm_medium=referral&feed_item_type=news"}
+
+--- row 2 ---
+  uid            seeking-alpha|https://seekingalpha.com/news/4622911-warner-bros-gains-on-report-newsom-concered-about-ag-suit-over-paramount-deal?utm_source=feed_news_all&utm_medium=referral&feed_item_type=news
+  title          Warner Bros. gains on report Newsom concerned about AG suit over Paramount deal
+  link           https://seekingalpha.com/news/4622911-warner-bros-gains-on-report-newsom-concered-about-ag-suit-over-paramount-deal?utm_source=feed_news_all&utm_medium=referral&feed_item_type=news
+  language       en
+  published_at   Fri, 31 Jul 2026 13:54:58 -0400
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"https://seekingalpha.com/news/4622911-warner-bros-gains-on-report-newsom-concered-about-ag-suit-over-paramount-deal?utm_source=feed_news_all&utm_medium=referral&feed_item_type=news"}
+
+--- row 3 ---
+  uid            seeking-alpha|https://seekingalpha.com/news/4622917-sonys-spider-man-brand-new-day-tracks-toward-huge-box-office-weekend?utm_source=feed_news_all&utm_medium=referral&feed_item_type=news
+  title          Sony's Spider-Man: Brand New Day tracks toward a huge box office weekend
+  link           https://seekingalpha.com/news/4622917-sonys-spider-man-brand-new-day-tracks-toward-huge-box-office-weekend?utm_source=feed_news_all&utm_medium=referral&feed_item_type=news
+  language       en
+  published_at   Fri, 31 Jul 2026 13:54:55 -0400
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"https://seekingalpha.com/news/4622917-sonys-spider-man-brand-new-day-tracks-toward-huge-box-office-weekend?utm_source=feed_news_all&utm_medium=referral&feed_item_type=news"}

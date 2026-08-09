@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import LineChip from './LineChip.jsx';
+import apiUrl from '../../../utils/apiUrl.js';
 
 export default function VehiclePopup({ properties }) {
   const tripId = properties?.trip_id;
@@ -11,7 +12,7 @@ export default function VehiclePopup({ properties }) {
     let cancelled = false;
     (async () => {
       try {
-        const r = await fetch(`/api/transit/vehicle/${encodeURIComponent(tripId)}/info`);
+        const r = await fetch(apiUrl(`/api/transit/vehicle/${encodeURIComponent(tripId)}/info`));
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         const body = await r.json();
         if (!cancelled) setData(body);

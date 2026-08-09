@@ -2,8 +2,12 @@
  * Port of server/src/collectors/pocInGithub.js.
  * GitHub contents API listing for current UTC year (fallback prev year),
  * filter CVE-YYYY-N.json files, sort by name desc, slice 60, fetch each raw
- * JSON (array of repos), take first 5 repos per CVE → one Tokyo-pinned
- * feature each. _meta dropped; SAMPLE_LIMIT env override not ported. */
+ * JSON (array of repos), take first 5 repos per CVE → one feature each.
+ * _meta dropped; SAMPLE_LIMIT env override not ported.
+ * NOTE: the JS original pinned every row at Tokyo station. A GitHub repo is
+ * not a place; those coordinates were invented and put 94 fake pins on the
+ * map every run. Rows are now emitted geometry-less (has_geo=0). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -16,8 +20,6 @@
 #define REPO_API "https://api.github.com/repos/nomi-sec/PoC-in-GitHub/contents"
 #define RAW_BASE "https://raw.githubusercontent.com/nomi-sec/PoC-in-GitHub/master"
 #define SAMPLE_LIMIT 60
-#define TOKYO_LON 139.6917
-#define TOKYO_LAT 35.6895
 
 /* /^CVE-\d{4}-\d+\.json$/ */
 static int is_cve_json(const char *s) {
@@ -40,12 +42,6 @@ static int cmp_desc(const void *a, const void *b) {
   return strcmp(*(const char *const *)b, *(const char *const *)a);
 }
 
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
-           ? v->valuestring : NULL;
-}
-
 /* repo.X ?? null  numeric */
 static cJSON *num_or_null(const cJSON *o, const char *k) {
   const cJSON *v = cJSON_GetObjectItem(o, k);
@@ -55,7 +51,7 @@ static cJSON *num_or_null(const cJSON *o, const char *k) {
 
 /* repo.X || null  string */
 static cJSON *str_or_null(const cJSON *o, const char *k) {
-  const char *s = sv(o, k);
+  const char *s = jo_sv(o, k);
   return s ? cJSON_CreateString(s) : cJSON_CreateNull();
 }
 
@@ -108,8 +104,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int nn = 0;
   cJSON *e;
   cJSON_ArrayForEach(e, listing) {
-    const char *type = sv(e, "type");
-    const char *name = sv(e, "name");
+    const char *type = jo_sv(e, "type");
+    const char *name = jo_sv(e, "name");
     if (type && !strcmp(type, "file") && is_cve_json(name))
       names[nn++] = strdup(name);
   }
@@ -145,30 +141,42 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_ArrayForEach(repo, arr) {
       if (ri++ >= 5) break;                    /* slice(0,5) */
       /* description: (repo.description||'').slice(0,400) — always string */
-      const char *desc = sv(repo, "description");
+      const char *desc = jo_sv(repo, "description");
       char dbuf[420];
       if (desc) snprintf(dbuf, sizeof dbuf, "%.400s", desc);
       else dbuf[0] = 0;
 
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LON));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LAT));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      /* No "geometry" key at all: lib/geojson.c serialises a cJSON null into
+       * the literal 4-char string "null" in the geometry column, which is not
+       * the same as having no geometry. Omitting the key leaves it SQL NULL. */
 
-      cJSON *p = cJSON_CreateObject();          /* EXACT JS key order */
+      /* repo.full_name || repo.name || null */
+      const char *rn = jo_sv(repo, "full_name");
+      if (!rn) rn = jo_sv(repo, "name");
+
+      cJSON *p = cJSON_CreateObject();
+      /* stable natural id: <cve>|<repo>. geojson.c picks props.uid for the
+       * intel uid, so this is what makes the row dedupe correctly across
+       * runs instead of hashing the whole (order-dependent) feature. */
+      char uidbuf[200];
+      snprintf(uidbuf, sizeof uidbuf, "%s|%s", cveId, rn ? rn : "unknown");
+      cJSON_AddStringToObject(p, "uid", uidbuf);
+      char titlebuf[300];
+      snprintf(titlebuf, sizeof titlebuf, "%s — PoC: %s", cveId,
+               rn ? rn : "(unnamed repository)");
+      cJSON_AddStringToObject(p, "title", titlebuf);
       cJSON_AddNumberToObject(p, "idx", cJSON_GetArraySize(features));
       cJSON_AddStringToObject(p, "cve_id", cveId);
-      /* repo.full_name || repo.name || null */
-      const char *rn = sv(repo, "full_name");
-      if (!rn) rn = sv(repo, "name");
       cJSON_AddItemToObject(p, "repo_name",
         rn ? cJSON_CreateString(rn) : cJSON_CreateNull());
       cJSON_AddItemToObject(p, "repo_url", str_or_null(repo, "html_url"));
+      /* lib/geojson.c picks link from link|url|href and the timestamp from
+       * published_at|observed_at|time|timestamp — repo_url/created were
+       * invisible to both, so every row landed with a NULL link and date. */
+      cJSON_AddItemToObject(p, "link", str_or_null(repo, "html_url"));
+      cJSON_AddItemToObject(p, "published_at", str_or_null(repo, "created_at"));
       cJSON_AddItemToObject(p, "stars", num_or_null(repo, "stargazers_count"));
       cJSON_AddItemToObject(p, "created", str_or_null(repo, "created_at"));
       cJSON_AddItemToObject(p, "updated", str_or_null(repo, "updated_at"));

@@ -45,7 +45,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   { time_t t = time(NULL); struct tm tm; gmtime_r(&t, &tm);
     strftime(now, sizeof now, "%Y-%m-%dT%H:%M:%S.000Z", &tm); }
 
-  int n = 0;
+  int n = 0, nofetch = 0;
   for (int pref = 1; pref <= 47; pref++) {
     char area[3]; snprintf(area, sizeof area, "%02d", pref);
     char url[256];
@@ -53,7 +53,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(url, sizeof url, "%s?from=%d%d&to=%d%d&area=%s",
              API_URL, year, quarter, year, quarter, area);
     cJSON *data = feed_get_json(ctx->http, url, 15000);
-    if (!data) continue;
+    if (!data) { nofetch++; continue; }
     cJSON *status = cJSON_GetObjectItem(data, "status");
     cJSON *rows   = cJSON_GetObjectItem(data, "data");
     int ok = status && cJSON_IsString(status) &&
@@ -126,8 +126,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(data);
   }
 
-  fprintf(stderr, "[tochi-info] emitted %d (year=%d q=%d)\n", n, year, quarter);
-  return n > 0 ? 0 : -1;
+  fprintf(stderr, "[tochi-info] emitted %d (year=%d q=%d) — %d/47 prefecture "
+                  "fetches failed\n", n, year, quarter, nofetch);
+  if (nofetch == 47)
+    fprintf(stderr, "[tochi-info] every fetch failed: %s is unreachable "
+                    "(www.land.mlit.go.jp no longer resolves; MLIT moved the "
+                    "trade data to reinfolib.mlit.go.jp, which needs a key)\n",
+            API_URL);
+  /* An upstream that answered and simply had no trades for the quarter is an
+   * honest empty, not an error — only a total fetch failure is a real fault. */
+  return nofetch == 47 ? -1 : 0;
 }
 
 static const source_def tochi_info_def = {

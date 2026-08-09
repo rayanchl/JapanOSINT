@@ -3,6 +3,7 @@
  * query). MLIT CGI has no public JSON feed; OSM Overpass waterway=dam is
  * the real, policy-clean source. Honest empty on failure (RULE 8).
  * REFERENCE embassies.c (lib/overpass.h). */
+#include "../../lib/geojson.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
@@ -16,15 +17,7 @@ static void add_str_or_null(cJSON *p, const char *k, const char *v) {
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)i; (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();                   /* EXACT JS key order */
   cJSON *type = cJSON_GetObjectItem(el, "type");
@@ -61,12 +54,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     "way[\"waterway\"=\"dam\"](area.jp);"
     "relation[\"waterway\"=\"dam\"](area.jp);"
     "node[\"waterway\"=\"dam\"](area.jp);",
-    180, 60000, map, NULL);
+    180, 200000, map, NULL);
   return n >= 0 ? 0 : -1;
 }
 
+/* AUDIT NOTE (slice a3): update_interval_sec was 600 (10 minutes) — a leftover
+ * from the intended MLIT realtime reservoir-level feed. What this collector
+ * actually fetches is STATIC OSM dam geometry, which changes on the order of
+ * once a year. At 10-minute cadence, with a nationwide Overpass query that
+ * takes ~80 s to answer, this source alone would keep an Overpass request in
+ * flight almost continuously and get the deployment's IP throttled off the
+ * public endpoints. Weekly, matching the other OSM-backed sources. */
 static const source_def mlit_dam_def = {
   .id = "mlit-dam", .collector = "infrastructure",
   .name = "MLIT Dam Data", .name_ja = "国交省 ダム情報",
-  .update_interval_sec = 600, .run = run };
+  .update_interval_sec = 604800, .run = run };
 REGISTER_SOURCE(mlit_dam_def)

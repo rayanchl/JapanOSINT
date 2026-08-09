@@ -1,0 +1,19 @@
+=== estat-crime
+exit: 0
+sched: rc=0 records=1 2ms
+--- stderr ---
+[estat-crime] no ESTAT_APP_ID; directory only
+[sched] estat-crime run rc=0 records=1 2ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            estat-crime|portal
+  title          e-Stat 犯罪統計 (Crime Statistics)
+  summary        Government Statistics portal — per-prefecture annual crime totals from NPA. Requires free ESTAT_APP_ID.
+  link           https://www.e-stat.go.jp/stat-search/database?toukei=00130001
+  language       ja
+  published_at   2026-07-31T18:20:01.000Z
+  tags           ["crime","statistics","estat","national"]
+  properties     {"portal_url":"https://www.e-stat.go.jp/stat-search/database?toukei=00130001","register_url":"https://www.e-stat.go.jp/api/","stats_code":"00130001","configured":false,"env_hint":"Set ESTAT_APP_ID and (optionally) ESTAT_CRIME_STATS_DATA_ID to populate map features."}

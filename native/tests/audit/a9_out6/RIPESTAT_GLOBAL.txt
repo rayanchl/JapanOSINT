@@ -1,0 +1,20 @@
+=== RIPESTAT_GLOBAL  entity=8.8.8.8
+exit: 0
+sched: rc=0 records=1 91ms
+--- stderr ---
+[RIPESTAT_GLOBAL/ip] emitted 1
+[sched] RIPESTAT_GLOBAL run rc=0 records=1 91ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: infra-prefix=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            RIPESTAT_GLOBAL|ripestat|netinfo|8.8.8.8
+  title          8.8.8.8 in 8.8.8.0/24
+  body           {"ip":"8.8.8.8","prefix":"8.8.8.0/24","asns":"15169","source":"RIPEstat"}
+  summary        AS 15169
+  link           https://stat.ripe.net/app/launchpad/S1_A1_ADHOC/8.8.8.8
+  language       en
+  record_type    infra-prefix
+  tags           ["osint-search","infrastructure"]
+  properties     {"prefix":"8.8.8.0/24","asns":"15169","service":"RIPESTAT_GLOBAL","success":true}

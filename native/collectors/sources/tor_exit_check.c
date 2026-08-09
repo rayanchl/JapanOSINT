@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <pthread.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -31,12 +32,27 @@ static int is_valid_ip(const char *ip) {
          inet_pton(AF_INET6, ip, &a6) == 1;
 }
 
-/* ---- Tor exit list (1h static cache, mirrors upstream globals) ---- */
+/* ---- Tor exit list (1h static cache, mirrors upstream globals) ----
+ *
+ * The cache is process-wide, so it must be locked now that the scheduler
+ * (core/scheduler.c) is a worker pool and the OSINT pipeline fans its
+ * dispatch out across threads. The hazard here is not a benign data race:
+ * a refresh FREES tor_exit_nodes[] and nulls the pointer while another
+ * thread may be midway through the strcmp scan in check_tor_exit() — a
+ * use-after-free, i.e. a crash, not a wrong answer.
+ *
+ * One mutex held across both the refresh and the scan is the right trade:
+ * the scan is a few thousand strcmps on memory, and the only contention is
+ * between concurrent TOR_EXIT_CHECK dispatches, which is rare. Callers read
+ * the count through the same lock so the "did the download work?" test in
+ * run_tor() can't observe a half-built list either. */
 static char **tor_exit_nodes = NULL;
 static int tor_exit_count = 0;
 static time_t tor_list_loaded = 0;
+static pthread_mutex_t tor_mu = PTHREAD_MUTEX_INITIALIZER;
 #define TOR_LIST_CACHE_HOURS 1
 
+/* Caller must hold tor_mu. */
 static void load_tor_exit_list(http_client *http) {
   time_t now = time(NULL);
   if (tor_exit_nodes && (now - tor_list_loaded) < (TOR_LIST_CACHE_HOURS * 3600))
@@ -69,12 +85,19 @@ static void load_tor_exit_list(http_client *http) {
   http_response_free(&hr);
 }
 
-static int check_tor_exit(http_client *http, const char *ip) {
+/* Returns the verdict; *out_count receives the list size the verdict was made
+ * against (0 = no usable list, so the caller must emit nothing rather than a
+ * confident "not a Tor exit" derived from an empty database). Both are read
+ * under the same lock as the refresh — see the note on tor_mu. */
+static int check_tor_exit(http_client *http, const char *ip, int *out_count) {
+  int verdict = 0;
+  pthread_mutex_lock(&tor_mu);
   load_tor_exit_list(http);
-  if (!tor_exit_nodes || tor_exit_count == 0) return 0;
   for (int i = 0; i < tor_exit_count; i++)
-    if (strcmp(tor_exit_nodes[i], ip) == 0) return 1;
-  return 0;
+    if (strcmp(tor_exit_nodes[i], ip) == 0) { verdict = 1; break; }
+  if (out_count) *out_count = tor_exit_nodes ? tor_exit_count : 0;
+  pthread_mutex_unlock(&tor_mu);
+  return verdict;
 }
 
 /* handle_tor_exit_check: skip non-IPs (is_valid_ip). The boolean verdict from
@@ -86,14 +109,17 @@ static int run_tor(const source_ctx *ctx, intel_sink *sink) {
   if (!ip || !*ip) return 0;
   if (!is_valid_ip(ip)) return 0;
 
-  int is_tor = check_tor_exit(ctx->http, ip);
-  /* Download fail → no exit list cached → no real verdict; emit nothing. */
-  if (!tor_exit_nodes || tor_exit_count == 0) return 0;
+  int list_size = 0;
+  int is_tor = check_tor_exit(ctx->http, ip, &list_size);
+  /* Download fail → no exit list cached → no real verdict; emit nothing.
+   * list_size comes back from inside the lock, so this cannot race with a
+   * concurrent refresh that has freed the array but not yet rebuilt it. */
+  if (list_size == 0) return 0;
 
   cJSON *data = cJSON_CreateObject();
   cJSON_AddStringToObject(data, "ip", ip);
   cJSON_AddBoolToObject(data, "is_tor_exit", is_tor);
-  cJSON_AddNumberToObject(data, "exit_nodes_in_database", tor_exit_count);
+  cJSON_AddNumberToObject(data, "exit_nodes_in_database", list_size);
   cJSON_AddStringToObject(data, "risk_level", is_tor ? "high" : "normal");
   char *bj = cJSON_PrintUnformatted(data);
   cJSON_Delete(data);

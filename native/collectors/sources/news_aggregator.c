@@ -12,6 +12,7 @@
  * (honest empty — no seeded rows). The former hardcoded osint_tips array and
  * the synthetic source/country/sentiment tally summary row have been
  * removed. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
@@ -20,29 +21,10 @@
 #include <stdlib.h>
 #include <time.h>
 
-/* url_encode (== OSINTsaas common.c url_encode: %-encode all but
- * unreserved A-Za-z0-9 -_.~). caller frees. */
-static char *url_encode(const char *s) {
-  static const char *unres = "-_.~";
-  size_t n = strlen(s);
-  char *out = malloc(n * 3 + 1);
-  if (!out) return NULL;
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)s; *p; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(unres, c))
-      out[w++] = (char)c;
-    else { sprintf(out + w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
-  return out;
-}
-
 static cJSON *query_gdelt(http_client *http, const char *query) {
   cJSON *result = cJSON_CreateObject();
   cJSON_AddStringToObject(result, "source", "GDELT Project");
-  char *enc = url_encode(query);
+  char *enc = jo_urlencode(query);
   if (!enc) { cJSON_AddStringToObject(result, "error", "Query encoding failed"); return result; }
   char url[1024];
   snprintf(url, sizeof url,
@@ -105,7 +87,7 @@ static cJSON *query_newsapi(http_client *http, const char *query) {
 
   cJSON *result = cJSON_CreateObject();
   cJSON_AddStringToObject(result, "source", "NewsAPI.org");
-  char *enc = url_encode(query);
+  char *enc = jo_urlencode(query);
   if (!enc) { cJSON_AddStringToObject(result, "error", "Query encoding failed"); return result; }
   char url[1024];
   snprintf(url, sizeof url,

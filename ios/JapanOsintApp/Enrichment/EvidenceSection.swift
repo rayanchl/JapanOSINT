@@ -104,7 +104,7 @@ struct EvidenceSection: View {
                          icon: "exclamationmark.triangle.fill", maxWidth: 170)
                 }
                 Text(chainDetail(v))
-                    .font(.system(size: 9).monospacedDigit())
+                    .font(.caption2.monospacedDigit())
                     .foregroundStyle(v.ok ? theme.textMuted : theme.danger)
                     .lineLimit(2)
                     .multilineTextAlignment(.trailing)
@@ -182,7 +182,7 @@ struct EvidenceSection: View {
     private func hashRow(_ r: EvidenceRecord) -> some View {
         HStack(spacing: Space.sm) {
             Text("sha256")
-                .font(.system(size: 9).monospaced())
+                .font(.caption2.monospaced())
                 .foregroundStyle(theme.textMuted)
             Text(evidenceShortHash(r.content_sha256))
                 .font(.caption2.monospaced())
@@ -215,7 +215,7 @@ struct EvidenceSection: View {
                 Pill(text: "EVICTED", tone: .warning, icon: "clock.arrow.circlepath",
                      maxWidth: 110)
                 Text("Stored bytes were evicted by retention. The record and its hash remain, so the chain is still intact and still verifiable — this is not missing evidence.")
-                    .font(.system(size: 10))
+                    .font(.caption2)
                     .foregroundStyle(theme.textMuted)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -236,7 +236,7 @@ struct EvidenceSection: View {
                 .controlSize(.small)
                 .disabled(downloadingId != nil)
                 Text("Untrusted bytes — saved as a file, never rendered in the app.")
-                    .font(.system(size: 10))
+                    .font(.caption2)
                     .foregroundStyle(theme.textMuted)
                     .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 0)

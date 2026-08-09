@@ -617,7 +617,7 @@ struct TimelineScreen: View {
 
 /// Stacked bars — intel at the bottom, then entity mentions, then alert
 /// firings — drawn into a `Canvas` rather than a chart library so each bar can
-/// be hit-tested by x position (the same trick `EntityGraphCanvas` uses for
+/// be hit-tested by x position (the same trick `GraphCanvasView` uses for
 /// node taps). Scrolls horizontally as soon as the bars would be too thin to
 /// aim at, so an hourly view over 30 days stays tappable instead of becoming
 /// 720 half-point slivers.

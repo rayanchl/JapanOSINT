@@ -14,8 +14,6 @@
 #define API_URL "https://api.osv.dev/v1/querybatch"
 #define TIMEOUT_MS 15000
 
-#define TOKYO_LON 139.6917
-#define TOKYO_LAT 35.6895
 
 /* DEFAULT_PACKAGES (env OSV_PACKAGES overrides, ';'-joined). */
 static const char *const SEED_PACKAGES[] = {
@@ -114,13 +112,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
           if (vi >= 6) break;                    /* slice(0,6) */
           cJSON *f = cJSON_CreateObject();
           cJSON_AddStringToObject(f, "type", "Feature");
-          cJSON *g = cJSON_CreateObject();
-          cJSON_AddStringToObject(g, "type", "Point");
-          cJSON *co = cJSON_CreateArray();
-          cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LON));
-          cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LAT));
-          cJSON_AddItemToObject(g, "coordinates", co);
-          cJSON_AddItemToObject(f, "geometry", g);
+          /* NO GEOMETRY. Every row here used to be emitted at Tokyo Station
+           * (35.6895, 139.6917). What this source reports has no location,
+           * and stacking every row on one pin is the fabrication the
+           * 2026-07-31 audit deleted from cisa-kev-jp, poc-in-github and
+           * peeringdb-jp. Confirmed live by tests/contract/source_contract.py.
+           * lib/geojson.c handles an absent geometry correctly — do NOT
+           * reintroduce a fallback coordinate. */
 
           cJSON *p = cJSON_CreateObject();       /* EXACT JS key order */
           cJSON_AddNumberToObject(p, "idx", cJSON_GetArraySize(features));
@@ -135,6 +133,27 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
           cJSON_AddItemToObject(p, "package",
             pkg ? cJSON_CreateString(pkg) : cJSON_CreateNull());
           cJSON_AddStringToObject(p, "source", "osv_querybatch");
+          /* Readable identity + provenance. geojson_emit_features maps
+           * properties.title/link/published_at onto the row; without them the
+           * advisory has no heading and no way back to osv.dev. Built purely
+           * from the querybatch response. */
+          {
+            const char *osvid = (id && cJSON_IsString(id) && id->valuestring[0])
+                              ? id->valuestring : NULL;
+            char title[256];
+            if (osvid && pkg) snprintf(title, sizeof title, "%s — %s", osvid, pkg);
+            else if (osvid)   snprintf(title, sizeof title, "%s", osvid);
+            else if (pkg)     snprintf(title, sizeof title, "OSV advisory — %s", pkg);
+            else              snprintf(title, sizeof title, "OSV advisory");
+            cJSON_AddStringToObject(p, "title", title);
+            if (osvid) {
+              char link[256];
+              snprintf(link, sizeof link, "https://osv.dev/vulnerability/%s", osvid);
+              cJSON_AddStringToObject(p, "link", link);
+            }
+            if (mod && cJSON_IsString(mod) && mod->valuestring[0])
+              cJSON_AddStringToObject(p, "published_at", mod->valuestring);
+          }
           cJSON_AddItemToObject(f, "properties", p);
           cJSON_AddItemToArray(features, f);
           vi++;

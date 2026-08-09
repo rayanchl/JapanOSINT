@@ -1,5 +1,6 @@
 #include "intel.h"
 #include "fts.h"
+#include "fts_schema.h"
 #include "alert_eval.h"
 #include "simhash.h"
 #include "../third_party/sqlite3.h"
@@ -63,9 +64,22 @@ static void bind_txt(sqlite3_stmt *s, int i, const char *v) {
 }
 
 /* ftsMirror.writeOne: DELETE old fts row via uid_map, INSERT segmented,
- * upsert uid_map(uid,rowid). keywords stays '' (enricher fills later). */
+ * upsert uid_map(uid,rowid).
+ *
+ * keywords stays '' here — it is NOT an ingest field. translate.c and media.c
+ * UPDATE it later with machine English and OCR text, and translate.c's resync
+ * watermark exists precisely because this function re-inserts the row (with a
+ * fresh rowid) on every collector run and wipes their write. Do not "fix" that
+ * by carrying keywords over here without reading translate.h first.
+ *
+ * link/author/tags/props are v2 columns (see fts_schema.h): before them a
+ * camera row — camera_store.c writes ONLY title, everything else is properties
+ * — was findable by name and by nothing else. Flattening is shared with the
+ * rebuild migration so the write path and the backfill cannot drift. */
 static void fts_write(sqlite3 *h, const char *uid, const char *title,
-                      const char *body, const char *summary) {
+                      const char *body, const char *summary,
+                      const char *link, const char *author,
+                      const char *tags_json, const char *props_json) {
   sqlite3_stmt *s;
   sqlite3_int64 old = -1;
   if (sqlite3_prepare_v2(h, "SELECT rowid FROM intel_items_fts_uid_map WHERE uid=?1",
@@ -74,26 +88,72 @@ static void fts_write(sqlite3 *h, const char *uid, const char *title,
     if (sqlite3_step(s) == SQLITE_ROW) old = sqlite3_column_int64(s, 0);
     sqlite3_finalize(s);
   }
-  if (old >= 0) {
-    if (sqlite3_prepare_v2(h, "DELETE FROM intel_items_fts WHERE rowid=?1",
-                           -1, &s, NULL) == SQLITE_OK) {
-      sqlite3_bind_int64(s, 1, old); sqlite3_step(s); sqlite3_finalize(s);
-    }
-  }
   char *st = fts_segment(title ? title : "");
   char *sb = fts_segment(body ? body : "");
   char *ss = fts_segment(summary ? summary : "");
-  if (sqlite3_prepare_v2(h,
-      "INSERT INTO intel_items_fts(uid,title,body,summary,keywords)"
-      " VALUES(?1,?2,?3,?4,'')", -1, &s, NULL) == SQLITE_OK) {
+  /* Latin passes fts_segment straight through, so segmenting the URL/author
+   * costs nothing on the common case and still tokenizes a Japanese byline. */
+  char *sl = fts_segment(link ? link : "");
+  char *sa = fts_segment(author ? author : "");
+  char *ftags = fts_flatten_json(tags_json);
+  char *fprops = fts_flatten_json(props_json);
+  char *sg = fts_segment(ftags);
+  char *sp = fts_segment(fprops);
+  free(ftags); free(fprops);
+  /* The rowid must come from THIS insert. Reading last_insert_rowid()
+   * unconditionally meant that when the FTS insert failed or was never prepared,
+   * the map recorded whatever rowid the preceding intel_items upsert produced —
+   * and the delete at the top of the next write then removed a DIFFERENT item's
+   * search-index row, evicting it from /api/intel/search with no error. */
+  int inserted = 0;
+  /* THE DELETE HAPPENS ONLY IF THE INSERT PREPARED. This function used to
+   * DELETE the item's existing FTS row first and only then prepare an INSERT
+   * naming nine columns. Against a v1 five-column intel_items_fts that
+   * prepare_v2 fails, `inserted` stays 0, and the early return below leaves a
+   * committed delete with nothing put back. Scheduled collectors re-emit
+   * continuously, so every write was a net delete and the index bled rows with
+   * no error reaching any API — the single worst defect in the audit.
+   *
+   * Two independent guards, because either alone still loses data:
+   *   1. fts_insert_sql() adapts to the columns the LIVE index actually has,
+   *      so a v1 database indexes what it can instead of nothing;
+   *   2. the DELETE is ordered after a SUCCESSFUL prepare, so any future
+   *      schema drift degrades to a stale row rather than a missing one. A
+   *      stale hit is findable and self-heals on the next successful write; a
+   *      deleted row is invisible until a full rebuild. */
+  if (sqlite3_prepare_v2(h, fts_insert_sql(h), -1, &s, NULL) == SQLITE_OK) {
+    if (old >= 0) {
+      sqlite3_stmt *d;
+      if (sqlite3_prepare_v2(h, "DELETE FROM intel_items_fts WHERE rowid=?1",
+                             -1, &d, NULL) == SQLITE_OK) {
+        sqlite3_bind_int64(d, 1, old); sqlite3_step(d); sqlite3_finalize(d);
+      }
+    }
     sqlite3_bind_text(s, 1, uid, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 2, st, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 3, sb, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 4, ss, -1, SQLITE_TRANSIENT);
-    sqlite3_step(s); sqlite3_finalize(s);
+    /* ?5..?8 exist only in the v2 statement; binding an unused index on the
+     * v1 one is a no-op range error, not a failure, but skip it anyway. */
+    if (fts_index_is_v2(h)) {
+      sqlite3_bind_text(s, 5, sl, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 6, sa, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 7, sg, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 8, sp, -1, SQLITE_TRANSIENT);
+    }
+    inserted = (sqlite3_step(s) == SQLITE_DONE);
+    sqlite3_finalize(s);
+  } else {
+    fprintf(stderr, "[intel] fts insert not preparable for %s (%s) — the "
+                    "existing index row is left in place\n",
+            uid, sqlite3_errmsg(h));
+  }
+  free(st); free(sb); free(ss); free(sl); free(sa); free(sg); free(sp);
+  if (!inserted) {
+    fprintf(stderr, "[intel] fts insert failed for %s: %s\n", uid, sqlite3_errmsg(h));
+    return;                       /* leave the existing map row alone */
   }
   sqlite3_int64 rid = sqlite3_last_insert_rowid(h);
-  free(st); free(sb); free(ss);
   if (sqlite3_prepare_v2(h,
       "INSERT INTO intel_items_fts_uid_map(uid,rowid) VALUES(?1,?2)"
       " ON CONFLICT(uid) DO UPDATE SET rowid=excluded.rowid",
@@ -102,6 +162,37 @@ static void fts_write(sqlite3 *h, const char *uid, const char *title,
     sqlite3_bind_int64(s, 2, rid);
     sqlite3_step(s); sqlite3_finalize(s);
   }
+}
+
+/* See intel.h. Deliberately routed through the same fts_write() the ingest
+ * path uses rather than a second, subtly different mirror. */
+int intel_fts_remirror(db_handle *db, const char *uid) {
+  if (!db || !db->h || !uid || !*uid) return -1;
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT title,body,summary,link,author,tags,properties"
+        "  FROM intel_items WHERE uid=?1", -1, &s, NULL) != SQLITE_OK)
+    return -1;
+  sqlite3_bind_text(s, 1, uid, -1, SQLITE_TRANSIENT);
+  int rc = -1;
+  if (sqlite3_step(s) == SQLITE_ROW) {
+    /* Copied before fts_write() runs any statement of its own: the column
+     * pointers belong to `s` and are invalidated by the next step/finalize. */
+    const char *c;
+    char *v[7];
+    for (int i = 0; i < 7; i++) {
+      c = (const char *)sqlite3_column_text(s, i);
+      v[i] = c ? strdup(c) : NULL;
+    }
+    sqlite3_finalize(s);
+    fts_write(db->h, uid, v[0], v[1], v[2], v[3], v[4],
+              v[5] ? v[5] : "[]", v[6] ? v[6] : "{}");
+    for (int i = 0; i < 7; i++) free(v[i]);
+    rc = 0;
+  } else {
+    sqlite3_finalize(s);
+  }
+  return rc;
 }
 
 static int emit(struct intel_sink *self, const intel_item *it) {
@@ -172,7 +263,9 @@ static int emit(struct intel_sink *self, const intel_item *it) {
   if (rc != SQLITE_DONE) { sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL); return -1; }
 
   int changes = sqlite3_changes(h); /* 1 insert, or update */
-  fts_write(h, uid, it->title, it->body, it->summary);
+  fts_write(h, uid, it->title, it->body, it->summary, it->link, it->author,
+            it->tags_json ? it->tags_json : "[]",
+            it->properties_json ? it->properties_json : "{}");
   sqlite3_exec(h, "COMMIT", NULL, NULL, NULL);
 
   /* Alert matching (roadmap P0.1) — AFTER the commit, never inside it. An
@@ -200,4 +293,13 @@ intel_sink intel_sink_make(db_handle *db, const char *source_id,
   if (tenant_id) snprintf(st->tenant_id, sizeof st->tenant_id, "%s", tenant_id);
   intel_sink k; k.ctx = st; k.emit = emit;
   return k;
+}
+
+/* sink_state is flat (a db_handle* it does not own, plus two char arrays), so
+ * one free is the whole teardown. */
+void intel_sink_free(intel_sink *k) {
+  if (!k || !k->ctx) return;
+  free(k->ctx);
+  k->ctx = NULL;
+  k->emit = NULL;
 }

@@ -1,0 +1,35 @@
+=== OBIS_MARINE  entity=Thunnus
+exit: 0
+sched: rc=0 records=30 2117ms
+--- stderr ---
+[OBIS_MARINE] emitted 30
+[sched] OBIS_MARINE run rc=0 records=30 2117ms
+--- persisted: 30 rows, 30 with lat/lon, 0 with geometry ---
+record_type: obis-occurrence=30
+sub_source_id: (null)=30
+
+--- row 1 ---
+  uid            OBIS_MARINE|OBIS|00000d3e-1ac8-417b-8a65-7af94c50747d
+  title          Thunnus albacares
+  body           {"species":"Thunnus albacares","scientific_name":"Thunnus albacares","locality":"North Sand Bluff","observed":"2000-07-12T12:00:00Z","lat":-31.0387992859,"lon":30.2322998047,"source":"OBIS_MARINE"}
+  summary        North Sand Bluff
+  language       en
+  published_at   2000-07-12T12:00:00Z
+  lat            -31.0387992859
+  lon            30.2322998047
+  record_type    obis-occurrence
+  tags           ["osint-search","biodiversity"]
+  properties     {"service":"OBIS_MARINE","source":"OBIS_MARINE","scientific_name":"Thunnus albacares","query":"Thunnus","lat":-31.0387992859,"lon":30.2322998047,"success":true}
+
+--- row 2 ---
+  uid            OBIS_MARINE|OBIS|000031b4-81c9-4565-b690-277699e7eb27
+  title          Thunnus albacares
+  body           {"species":"Thunnus albacares","scientific_name":"Thunnus albacares","locality":"Gulf of Mexico","observed":"1995-02-15","lat":27.33,"lon":-89.28,"source":"OBIS_MARINE"}
+  summary        Gulf of Mexico
+  language       en
+  published_at   1995-02-15
+  lat            27.33
+  lon            -89.28
+  record_type    obis-occurrence
+  tags           ["osint-search","biodiversity"]
+  properties     {"service":"OBIS_MARINE","source":"OBIS_MARINE","scientific_name":"Thunnus albacares","query":"Thunnus","lat":27.33,"lon":-89.28,"success":true}

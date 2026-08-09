@@ -1,0 +1,45 @@
+=== gnews-mon-human-trafficking
+exit: 0
+sched: rc=0 records=102 828ms
+--- stderr ---
+[rss] gnews-mon-human-trafficking emitted 102
+[sched] gnews-mon-human-trafficking run rc=0 records=102 828ms
+--- persisted: 102 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=102
+sub_source_id: (null)=102
+
+--- row 1 ---
+  uid            gnews-mon-human-trafficking|CBMixwFBVV95cUxNd2hEMnMxTDktMkRISktxNmFlSU50MW15ZzFPR1pQWlozQnpTeHVHNWZEalB0emU4cmlDQnJHeXc3aEpKUFJqQld1bGtYN1ViRU9HbERhYlBUaVNodlBfN3pHQklTXzRfOXNjZ0Z6V1RhT29DYk9yWkFrTnctQlBHbzJlVWVqaGs1XzJaNFFTd3p4Q2NPUk1tZUx6RmpmNnN4SWdkNWU1cG1yYjZpTjRmbnNSWVV1Zk5LUGJBVGlxdGtqVjJtRzhN0gHPAUFVX3lxTFBlUFpZeWFiQS1QTFlwVk12bG41TG41V2RxNmFLX3VGYnI0TF9kNmEwUHprMEt5Qm1DUFlieExJMmNiWENWZ0V3WUkyS2tDNlJaTnFWWmlMWGpKXzFnSXR3WHJZREN6dXgyaFU1NjFzV2VfcHAxamxld3hyYmFJbllGSlpmNHIweTMwb05iZDYwTlhieEVMMGdMVUo
+  title          Comic-Con weekend sting nets 27 alleged sex buyers, recovers 9 trafficking victims - NBC 7 San Diego
+  body           <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxNd2hEMnMxTDktMkRISktxNmFlSU50MW15ZzFPR1pQWlozQnpTeHVHNWZEalB0emU4cmlDQnJHeXc3aEpKUFJqQld1bGtYN1ViRU9HbERhYlBUaVNodlBfN3pHQklTXzRfOXNjZ0Z6V1RhT29DYk9yWkFrTnctQlBHbzJlVWVqaGs1XzJaNFFTd3p4Q2NPUk1tZUx6RmpmNnN4SWdkNWU1cG1yYjZpTjRmbnNSWVV1Zk5LUGJBVGlxdGtqVjJtRzhN0gHPAUFVX3lxTFBlUFpZeWFiQS1QTFlwVk12bG41TG41V2RxNmFLX3VGYnI0TF9kNmEwUHprMEt5Qm1DUFlieExJMmNiWENWZ0V3WUkyS2tDNlJaTnFWWmlMWGpKXzFnSXR3WHJZREN6dXgyaFU1NjFzV2VfcHAxamxld3hyYmFJbllGSlpmNHIweTMwb05iZDYwTlhieEVMMGdMVUowWXFsd0NDeVRQekhna1dQM2VGNXJGZEJlb0xEd1BOUjNaR2hFNnBqZnBNRHYtNFFHMVhTcw?oc=5" target="_blank">Comic-Con weekend sting nets 27 alleged sex buyers, recovers 9 trafficking victims</a>&nbsp;&nbsp;<font color="#6f6f6f">NBC 7 San Diego</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxNd2hEMnMxTDktMkRISktxNmFlSU50MW15ZzFPR1pQWlozQnpTeHVHNWZEalB0emU4cmlDQnJHeXc3aEpKUFJqQld1bGtYN1ViRU9HbERhYlBUaVNodlBfN3pHQklTXzRfOXNjZ0Z6V1RhT29DYk9yWkFrTnctQlBHbzJlVWVqaGs1XzJaNF
+  link           https://news.google.com/rss/articles/CBMixwFBVV95cUxNd2hEMnMxTDktMkRISktxNmFlSU50MW15ZzFPR1pQWlozQnpTeHVHNWZEalB0emU4cmlDQnJHeXc3aEpKUFJqQld1bGtYN1ViRU9HbERhYlBUaVNodlBfN3pHQklTXzRfOXNjZ0Z6V1RhT29DYk9yWkFrTnctQlBHbzJlVWVqaGs1XzJaNFFTd3p4Q2NPUk1tZUx6RmpmNnN4SWdkNWU1cG1yYjZpTjRmbnNSWVV1Zk5LUGJBVGlxdGtqVjJtRzhN0gHPAUFVX3lxTFBlUFpZeWFiQS1QTFlwVk12bG41TG41V2RxNmFLX3VGYnI0TF9kNmEwUHprMEt5Qm1DUFlieExJMmNiWENWZ0V3WUkyS2tDNlJaTnFWWmlMWGpKXzFnSXR3WHJZREN6dXgyaFU1NjFzV2VfcHAxamxld3hyYmFJbllGSlpmNHIweTMwb05iZDYwTlhieEVMMGdMVUowWXFsd0NDeVRQekhna1dQM2VGNXJGZEJlb0xEd1BOUjNaR2hFNnBqZnBNRHYtNFFHMVhTcw?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 05:33:13 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","human"]
+  properties     {"guid":"CBMixwFBVV95cUxNd2hEMnMxTDktMkRISktxNmFlSU50MW15ZzFPR1pQWlozQnpTeHVHNWZEalB0emU4cmlDQnJHeXc3aEpKUFJqQld1bGtYN1ViRU9HbERhYlBUaVNodlBfN3pHQklTXzRfOXNjZ0Z6V1RhT29DYk9yWkFrTnctQlBHbzJlVWVqaGs1XzJaNFFTd3p4Q2NPUk1tZUx6RmpmNnN4SWdkNWU1cG1yYjZpTjRmbnNSWVV1Zk5LUGJBVGlxdGtqVjJtRzhN0gHPAUFVX3lxTFBlUFpZeWFiQS1QTFlwVk12bG41TG41V2RxNmFLX3VGYnI0TF9kNmEwUHprMEt5Qm1DUFlieExJMmNiWENWZ0V3WUkyS2tDNlJaTnFWWmlMWGpKXzFnSXR3WHJZREN6dXgyaFU1NjFzV2VfcHAxamxld3hyYmFJbllGSlpmNHIweTMwb05iZDYwTlhieEVMMGdMVUowWXFsd0NDeVRQekhna1
+
+--- row 2 ---
+  uid            gnews-mon-human-trafficking|CBMiowFBVV95cUxOamRFWWJTZ29aRGFxOFhEczk5c1p4Z2hsSTE5cWs4LU1lTUFzU2VBU0ZpWnJJVy1UWlUyZDFnNTZ1X21vS1piV3NscVE4aWV6SjI3N0Njd1JmUHB0bmpRZEVuQVo2UW9nU2N0N1VYZHgwTmVGYzBYVmtwOFk1SGlEU1U3NEsxbjNqUVZ2UFFQdGJ4emhEYkFqQ0xIRjRZTXd3cUlj0gGoAUFVX3lxTE1RUDA3bkF6NlVNNFJxWUN5RlRfdFdrOW1EeGpvcXI3QVBTZC1iamJnZFlhMHpPX1JoSUIzRk1IOEtoU00wM2RQQ1gzakRDM3g0ZlFjbnFjanFfYzNJOWd1Q3pHSzlCYVE3M1Z3VXlBQ0NqMTcxaFM5dU9iZkc4MmRmeTFMVFh0R19YVFhSUFNGOHpEZHQzUnYwclZQMDd1Yk4xZjVzazU5YQ
+  title          8 arrested in Sandy human trafficking sting: What to know - KOIN.com
+  body           <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxOamRFWWJTZ29aRGFxOFhEczk5c1p4Z2hsSTE5cWs4LU1lTUFzU2VBU0ZpWnJJVy1UWlUyZDFnNTZ1X21vS1piV3NscVE4aWV6SjI3N0Njd1JmUHB0bmpRZEVuQVo2UW9nU2N0N1VYZHgwTmVGYzBYVmtwOFk1SGlEU1U3NEsxbjNqUVZ2UFFQdGJ4emhEYkFqQ0xIRjRZTXd3cUlj0gGoAUFVX3lxTE1RUDA3bkF6NlVNNFJxWUN5RlRfdFdrOW1EeGpvcXI3QVBTZC1iamJnZFlhMHpPX1JoSUIzRk1IOEtoU00wM2RQQ1gzakRDM3g0ZlFjbnFjanFfYzNJOWd1Q3pHSzlCYVE3M1Z3VXlBQ0NqMTcxaFM5dU9iZkc4MmRmeTFMVFh0R19YVFhSUFNGOHpEZHQzUnYwclZQMDd1Yk4xZjVzazU5YQ?oc=5" target="_blank">8 arrested in Sandy human trafficking sting: What to know</a>&nbsp;&nbsp;<font color="#6f6f6f">KOIN.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxOamRFWWJTZ29aRGFxOFhEczk5c1p4Z2hsSTE5cWs4LU1lTUFzU2VBU0ZpWnJJVy1UWlUyZDFnNTZ1X21vS1piV3NscVE4aWV6SjI3N0Njd1JmUHB0bmpRZEVuQVo2UW9nU2N0N1VYZHgwTmVGYzBYVmtwOFk1SGlEU1U3NEsxbjNqUVZ2UF
+  link           https://news.google.com/rss/articles/CBMiowFBVV95cUxOamRFWWJTZ29aRGFxOFhEczk5c1p4Z2hsSTE5cWs4LU1lTUFzU2VBU0ZpWnJJVy1UWlUyZDFnNTZ1X21vS1piV3NscVE4aWV6SjI3N0Njd1JmUHB0bmpRZEVuQVo2UW9nU2N0N1VYZHgwTmVGYzBYVmtwOFk1SGlEU1U3NEsxbjNqUVZ2UFFQdGJ4emhEYkFqQ0xIRjRZTXd3cUlj0gGoAUFVX3lxTE1RUDA3bkF6NlVNNFJxWUN5RlRfdFdrOW1EeGpvcXI3QVBTZC1iamJnZFlhMHpPX1JoSUIzRk1IOEtoU00wM2RQQ1gzakRDM3g0ZlFjbnFjanFfYzNJOWd1Q3pHSzlCYVE3M1Z3VXlBQ0NqMTcxaFM5dU9iZkc4MmRmeTFMVFh0R19YVFhSUFNGOHpEZHQzUnYwclZQMDd1Yk4xZjVzazU5YQ?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 05:16:40 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","human"]
+  properties     {"guid":"CBMiowFBVV95cUxOamRFWWJTZ29aRGFxOFhEczk5c1p4Z2hsSTE5cWs4LU1lTUFzU2VBU0ZpWnJJVy1UWlUyZDFnNTZ1X21vS1piV3NscVE4aWV6SjI3N0Njd1JmUHB0bmpRZEVuQVo2UW9nU2N0N1VYZHgwTmVGYzBYVmtwOFk1SGlEU1U3NEsxbjNqUVZ2UFFQdGJ4emhEYkFqQ0xIRjRZTXd3cUlj0gGoAUFVX3lxTE1RUDA3bkF6NlVNNFJxWUN5RlRfdFdrOW1EeGpvcXI3QVBTZC1iamJnZFlhMHpPX1JoSUIzRk1IOEtoU00wM2RQQ1gzakRDM3g0ZlFjbnFjanFfYzNJOWd1Q3pHSzlCYVE3M1Z3VXlBQ0NqMTcxaFM5dU9iZkc4MmRmeTFMVFh0R19YVFhSUFNGOHpEZHQzUnYwclZQMDd1Yk4xZjVzazU5YQ"}
+
+--- row 3 ---
+  uid            gnews-mon-human-trafficking|CBMieEFVX3lxTFBINXlidGRlb2dRNTZ3V0lzcDVoU01BTUJiaTRjUlFLMXhXT1JhdE1tSkxfMXZzNHI1Y05pMHpfV1JMV3pMellFTFRNekhzWVNONzB0Z2I1bUtTUzJDTk80eVRGVGZ4OWlMZlNWYVZXUURRMGtySXRHU9IBfkFVX3lxTE95Vko2OWoteG5WUXNCcXE3OGJ1RXcwd2Z2TXRXRnREZXZYYnpfeFIzUnZTOURUOUQzTFBkaTJDa3dMelkzSkUwZkJHM2VmYkl0TXl1T3Z3RDVoa3lJQlNJVjhUbmRIZE9zVlYxSGY5MVdNbXlXS0doakFaSmhRQQ
+  title          27 arrested in human trafficking sting during week of San Diego Comic-Con - fox5sandiego.com
+  body           <a href="https://news.google.com/rss/articles/CBMieEFVX3lxTFBINXlidGRlb2dRNTZ3V0lzcDVoU01BTUJiaTRjUlFLMXhXT1JhdE1tSkxfMXZzNHI1Y05pMHpfV1JMV3pMellFTFRNekhzWVNONzB0Z2I1bUtTUzJDTk80eVRGVGZ4OWlMZlNWYVZXUURRMGtySXRHU9IBfkFVX3lxTE95Vko2OWoteG5WUXNCcXE3OGJ1RXcwd2Z2TXRXRnREZXZYYnpfeFIzUnZTOURUOUQzTFBkaTJDa3dMelkzSkUwZkJHM2VmYkl0TXl1T3Z3RDVoa3lJQlNJVjhUbmRIZE9zVlYxSGY5MVdNbXlXS0doakFaSmhRQQ?oc=5" target="_blank">27 arrested in human trafficking sting during week of San Diego Comic-Con</a>&nbsp;&nbsp;<font color="#6f6f6f">fox5sandiego.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMieEFVX3lxTFBINXlidGRlb2dRNTZ3V0lzcDVoU01BTUJiaTRjUlFLMXhXT1JhdE1tSkxfMXZzNHI1Y05pMHpfV1JMV3pMellFTFRNekhzWVNONzB0Z2I1bUtTUzJDTk80eVRGVGZ4OWlMZlNWYVZXUURRMGtySXRHU9IBfkFVX3lxTE95Vko2OWoteG5WUX
+  link           https://news.google.com/rss/articles/CBMieEFVX3lxTFBINXlidGRlb2dRNTZ3V0lzcDVoU01BTUJiaTRjUlFLMXhXT1JhdE1tSkxfMXZzNHI1Y05pMHpfV1JMV3pMellFTFRNekhzWVNONzB0Z2I1bUtTUzJDTk80eVRGVGZ4OWlMZlNWYVZXUURRMGtySXRHU9IBfkFVX3lxTE95Vko2OWoteG5WUXNCcXE3OGJ1RXcwd2Z2TXRXRnREZXZYYnpfeFIzUnZTOURUOUQzTFBkaTJDa3dMelkzSkUwZkJHM2VmYkl0TXl1T3Z3RDVoa3lJQlNJVjhUbmRIZE9zVlYxSGY5MVdNbXlXS0doakFaSmhRQQ?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 04:17:08 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","human"]
+  properties     {"guid":"CBMieEFVX3lxTFBINXlidGRlb2dRNTZ3V0lzcDVoU01BTUJiaTRjUlFLMXhXT1JhdE1tSkxfMXZzNHI1Y05pMHpfV1JMV3pMellFTFRNekhzWVNONzB0Z2I1bUtTUzJDTk80eVRGVGZ4OWlMZlNWYVZXUURRMGtySXRHU9IBfkFVX3lxTE95Vko2OWoteG5WUXNCcXE3OGJ1RXcwd2Z2TXRXRnREZXZYYnpfeFIzUnZTOURUOUQzTFBkaTJDa3dMelkzSkUwZkJHM2VmYkl0TXl1T3Z3RDVoa3lJQlNJVjhUbmRIZE9zVlYxSGY5MVdNbXlXS0doakFaSmhRQQ"}

@@ -57,6 +57,28 @@ static int records_baseline(sqlite3 *h, const char *source_id, double *out) {
   return have;
 }
 
+/* Mean duration over recent healthy runs of THIS source. A flat threshold
+ * treats "slow" as a defect, but slowness is a property of the source: a
+ * collector that walks 47 prefectures or 40 open-data portals is legitimately
+ * 60-280 s every single run, and flagging it hourly is noise that buries the
+ * sources that really did change. Returns 1 and sets *out when a baseline
+ * exists (>=3 ok rows, so one cold start can't set it). */
+static int duration_baseline(sqlite3 *h, const char *source_id, double *out) {
+  sqlite3_stmt *s; int have = 0;
+  if (sqlite3_prepare_v2(h,
+        "SELECT AVG(duration_ms), COUNT(*) FROM (SELECT duration_ms FROM fetch_log"
+        " WHERE source_id=?1 AND status='ok' AND duration_ms>0"
+        " ORDER BY id DESC LIMIT 20)", -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, source_id, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(s) == SQLITE_ROW && sqlite3_column_type(s,0) != SQLITE_NULL) {
+      *out = sqlite3_column_double(s, 0);
+      have = (*out > 0.0 && sqlite3_column_int(s, 1) >= 3);
+    }
+    sqlite3_finalize(s);
+  }
+  return have;
+}
+
 static int has_open_anomaly(sqlite3 *h, const char *source_id) {
   sqlite3_stmt *s; int open = 0;
   if (sqlite3_prepare_v2(h,
@@ -120,13 +142,30 @@ void anomaly_detect(db_handle *db, const char *source_id, long fetch_log_id,
       snprintf(evidence_buf, sizeof evidence_buf,
                "{\"records\":%d,\"baseline_mean\":%.2f,\"drop_frac\":%.2f}",
                records, mean, drop_frac);
-    } else if (duration_ms > dur_outlier) {
-      verdict = "duration_outlier";
-      snprintf(reason_buf, sizeof reason_buf,
-               "duration %ldms exceeds %ldms threshold", duration_ms, dur_outlier);
-      reason = reason_buf;
-      snprintf(evidence_buf, sizeof evidence_buf,
-               "{\"duration_ms\":%ld,\"threshold_ms\":%ld}", duration_ms, dur_outlier);
+    } else {
+      /* Prefer the source's OWN history: flag a run that is far slower than
+       * this collector normally is. Only fall back to the flat threshold while
+       * no baseline exists yet. */
+      double dmean = 0.0;
+      double factor = env_double("DETECT_DURATION_FACTOR", 3.0);
+      int have_dur = duration_baseline(h, source_id, &dmean);
+      long limit = have_dur ? (long)(dmean * factor) : dur_outlier;
+      if (have_dur && limit < dur_outlier) limit = dur_outlier;
+      if (duration_ms > limit) {
+        verdict = "duration_outlier";
+        if (have_dur)
+          snprintf(reason_buf, sizeof reason_buf,
+                   "duration %ldms exceeds %.1fx its own %.0fms baseline",
+                   duration_ms, factor, dmean);
+        else
+          snprintf(reason_buf, sizeof reason_buf,
+                   "duration %ldms exceeds %ldms threshold (no baseline yet)",
+                   duration_ms, limit);
+        reason = reason_buf;
+        snprintf(evidence_buf, sizeof evidence_buf,
+                 "{\"duration_ms\":%ld,\"limit_ms\":%ld,\"baseline_ms\":%.1f}",
+                 duration_ms, limit, dmean);
+      }
     }
   }
 

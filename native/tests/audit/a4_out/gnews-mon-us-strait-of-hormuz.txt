@@ -1,0 +1,45 @@
+=== gnews-mon-us-strait-of-hormuz
+exit: 0
+sched: rc=0 records=107 957ms
+--- stderr ---
+[rss] gnews-mon-us-strait-of-hormuz emitted 107
+[sched] gnews-mon-us-strait-of-hormuz run rc=0 records=107 957ms
+--- persisted: 107 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=107
+sub_source_id: (null)=107
+
+--- row 1 ---
+  uid            gnews-mon-us-strait-of-hormuz|CBMimwFBVV95cUxPTExVbGpfeGpwRzZoYzd1SlBvaWhnZVJoUXc3ekdDWWZ6alQ2ckh2dzhSV3B5VWVJLWZlSkp4bDltM3pQaXN1MHJBUWQ2NnV1UnFQeG05SWQ3akZJczRxd0lmaDVvd2R4R2VXQWZ2T2pLWXQydGowVDMtUWhYUTBNMzd0emxJUldOcHJ3SVF6UjcxUU5Tdm9SdDNkUQ
+  title          Live Updates: U.S. doing "amazing job" in Iran, Trump says, adding Iran doing "very, very poorly" - CBS News
+  body           <a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxPTExVbGpfeGpwRzZoYzd1SlBvaWhnZVJoUXc3ekdDWWZ6alQ2ckh2dzhSV3B5VWVJLWZlSkp4bDltM3pQaXN1MHJBUWQ2NnV1UnFQeG05SWQ3akZJczRxd0lmaDVvd2R4R2VXQWZ2T2pLWXQydGowVDMtUWhYUTBNMzd0emxJUldOcHJ3SVF6UjcxUU5Tdm9SdDNkUQ?oc=5" target="_blank">Live Updates: U.S. doing "amazing job" in Iran, Trump says, adding Iran doing "very, very poorly"</a>&nbsp;&nbsp;<font color="#6f6f6f">CBS News</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxPTExVbGpfeGpwRzZoYzd1SlBvaWhnZVJoUXc3ekdDWWZ6alQ2ckh2dzhSV3B5VWVJLWZlSkp4bDltM3pQaXN1MHJBUWQ2NnV1UnFQeG05SWQ3akZJczRxd0lmaDVvd2R4R2VXQWZ2T2pLWXQydGowVDMtUWhYUTBNMzd0emxJUldOcHJ3SV
+  link           https://news.google.com/rss/articles/CBMimwFBVV95cUxPTExVbGpfeGpwRzZoYzd1SlBvaWhnZVJoUXc3ekdDWWZ6alQ2ckh2dzhSV3B5VWVJLWZlSkp4bDltM3pQaXN1MHJBUWQ2NnV1UnFQeG05SWQ3akZJczRxd0lmaDVvd2R4R2VXQWZ2T2pLWXQydGowVDMtUWhYUTBNMzd0emxJUldOcHJ3SVF6UjcxUU5Tdm9SdDNkUQ?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 17:12:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","us"]
+  properties     {"guid":"CBMimwFBVV95cUxPTExVbGpfeGpwRzZoYzd1SlBvaWhnZVJoUXc3ekdDWWZ6alQ2ckh2dzhSV3B5VWVJLWZlSkp4bDltM3pQaXN1MHJBUWQ2NnV1UnFQeG05SWQ3akZJczRxd0lmaDVvd2R4R2VXQWZ2T2pLWXQydGowVDMtUWhYUTBNMzd0emxJUldOcHJ3SVF6UjcxUU5Tdm9SdDNkUQ"}
+
+--- row 2 ---
+  uid            gnews-mon-us-strait-of-hormuz|CBMisgFBVV95cUxQa0Nlc3FFeTZIM0dHUG8wYm9yaXhpOFBRSzJNQ09nZW9aUHlCWU5hU1ZZOE1XVXdhcXVmZnJiZzgtaGdSbkU2Y2FsZXlWOXp1LXdGT2t3MHhGZGlwS095dURvODFaSUlSRER3aHl1Z3ZMbVlPWThNUExqTnZuZ2ZwZmxOUmJ2bXo4d1RwX3VILXpiLW1fTEgxMm5NQ0RrZjQ3cUlGZG5DY2FGRmQwdHkwcjJn
+  title          Iran strikes tankers under US escort in Hormuz strait as Trump gathers cabinet to discuss war - The Guardian
+  body           <a href="https://news.google.com/rss/articles/CBMisgFBVV95cUxQa0Nlc3FFeTZIM0dHUG8wYm9yaXhpOFBRSzJNQ09nZW9aUHlCWU5hU1ZZOE1XVXdhcXVmZnJiZzgtaGdSbkU2Y2FsZXlWOXp1LXdGT2t3MHhGZGlwS095dURvODFaSUlSRER3aHl1Z3ZMbVlPWThNUExqTnZuZ2ZwZmxOUmJ2bXo4d1RwX3VILXpiLW1fTEgxMm5NQ0RrZjQ3cUlGZG5DY2FGRmQwdHkwcjJn?oc=5" target="_blank">Iran strikes tankers under US escort in Hormuz strait as Trump gathers cabinet to discuss war</a>&nbsp;&nbsp;<font color="#6f6f6f">The Guardian</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMisgFBVV95cUxQa0Nlc3FFeTZIM0dHUG8wYm9yaXhpOFBRSzJNQ09nZW9aUHlCWU5hU1ZZOE1XVXdhcXVmZnJiZzgtaGdSbkU2Y2FsZXlWOXp1LXdGT2t3MHhGZGlwS095dURvODFaSUlSRER3aHl1Z3ZMbVlPWThNUExqTnZuZ2ZwZmxOUmJ2bXo4d1RwX3
+  link           https://news.google.com/rss/articles/CBMisgFBVV95cUxQa0Nlc3FFeTZIM0dHUG8wYm9yaXhpOFBRSzJNQ09nZW9aUHlCWU5hU1ZZOE1XVXdhcXVmZnJiZzgtaGdSbkU2Y2FsZXlWOXp1LXdGT2t3MHhGZGlwS095dURvODFaSUlSRER3aHl1Z3ZMbVlPWThNUExqTnZuZ2ZwZmxOUmJ2bXo4d1RwX3VILXpiLW1fTEgxMm5NQ0RrZjQ3cUlGZG5DY2FGRmQwdHkwcjJn?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 14:11:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","us"]
+  properties     {"guid":"CBMisgFBVV95cUxQa0Nlc3FFeTZIM0dHUG8wYm9yaXhpOFBRSzJNQ09nZW9aUHlCWU5hU1ZZOE1XVXdhcXVmZnJiZzgtaGdSbkU2Y2FsZXlWOXp1LXdGT2t3MHhGZGlwS095dURvODFaSUlSRER3aHl1Z3ZMbVlPWThNUExqTnZuZ2ZwZmxOUmJ2bXo4d1RwX3VILXpiLW1fTEgxMm5NQ0RrZjQ3cUlGZG5DY2FGRmQwdHkwcjJn"}
+
+--- row 3 ---
+  uid            gnews-mon-us-strait-of-hormuz|CBMi5wFBVV95cUxNNGUwMHFKX0ZrQVBRWDNUa1kzVGdIT3J5T0lWWXJENmsyWkpWNlpqeGdkWHJnUTVMNjJSTkJRcU1iOFhESlNCeEUxZ1lmZnlZLTZUTG8tMmxocmJPdkN6X1oxT0ZCclZKWVF6Ykx4aTltTEFtdkxpajZfZXM3NHY0YXB4VXZmZmZYYWxmWC1uTHF4VGktRG9WQXZrR2dFZWFoLXp3b2d3bFRZOUszN3RPNEE0bHpKQVBTanFJdUNhMVlwQjU0bXpwZ1RLelRYOGZOakVpcnZsOEpLM1hldlRCclJxRXYtZWvSAe4BQVVfeXFMT3RVWU80LVBEeUt2M2Z3c1N1ejJTNW1BZjFzektrZmlTMTJMeVkzaGJkaW02Y3pfN2Y0eVZycC1EU2x0WnJUc3NjcnRMelo0NXNTWk1sd3gtX2NYQnJiMmFaLXNLTi1ERFlPWGMyVWFnZW9jT0FzV3BRM
+  title          Jaishankar calls Araghchi, as maritime risks persist in the Strait of Hormuz and the Black Sea - The Hindu
+  body           <a href="https://news.google.com/rss/articles/CBMi5wFBVV95cUxNNGUwMHFKX0ZrQVBRWDNUa1kzVGdIT3J5T0lWWXJENmsyWkpWNlpqeGdkWHJnUTVMNjJSTkJRcU1iOFhESlNCeEUxZ1lmZnlZLTZUTG8tMmxocmJPdkN6X1oxT0ZCclZKWVF6Ykx4aTltTEFtdkxpajZfZXM3NHY0YXB4VXZmZmZYYWxmWC1uTHF4VGktRG9WQXZrR2dFZWFoLXp3b2d3bFRZOUszN3RPNEE0bHpKQVBTanFJdUNhMVlwQjU0bXpwZ1RLelRYOGZOakVpcnZsOEpLM1hldlRCclJxRXYtZWvSAe4BQVVfeXFMT3RVWU80LVBEeUt2M2Z3c1N1ejJTNW1BZjFzektrZmlTMTJMeVkzaGJkaW02Y3pfN2Y0eVZycC1EU2x0WnJUc3NjcnRMelo0NXNTWk1sd3gtX2NYQnJiMmFaLXNLTi1ERFlPWGMyVWFnZW9jT0FzV3BRM2ZjVlVWbTFYbnJFVFgyNnVOMlMzazFWQmhhcDlzeFhCcXBHUHFiS2EyOEx1RlFQMWpYWm5kQm5HOUNaVjk3UDhRc1RWYlBBRTBPNV94Ulk0cmtrdGwyWkR6ODVOYzRjUS1aZktMaHdnY1R6LVc4UDdzQjdwUQ?oc=5" target="_blank">Jaishankar calls Araghchi, as maritime risks persist in the Strait of Hormuz and the Black Sea</a>&nbsp;&nbsp;<font color="#6f6f6f">The Hindu</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi5wFBVV95cUxNNGUwMHFKX0ZrQVBRWDNUa1kzVGdIT3J5T0lWWXJENmsyWkpWNlpqeGdkWHJnUTVMNjJSTkJRcU1iOFhESlNCeEUxZ1lmZnlZLTZUTG8tMmxocmJPdkN6X1oxT0ZCclZKWVF6Ykx4aTltTEFtdkxpajZfZXM3NHY0YXB4VXZmZmZYYWxmWC
+  link           https://news.google.com/rss/articles/CBMi5wFBVV95cUxNNGUwMHFKX0ZrQVBRWDNUa1kzVGdIT3J5T0lWWXJENmsyWkpWNlpqeGdkWHJnUTVMNjJSTkJRcU1iOFhESlNCeEUxZ1lmZnlZLTZUTG8tMmxocmJPdkN6X1oxT0ZCclZKWVF6Ykx4aTltTEFtdkxpajZfZXM3NHY0YXB4VXZmZmZYYWxmWC1uTHF4VGktRG9WQXZrR2dFZWFoLXp3b2d3bFRZOUszN3RPNEE0bHpKQVBTanFJdUNhMVlwQjU0bXpwZ1RLelRYOGZOakVpcnZsOEpLM1hldlRCclJxRXYtZWvSAe4BQVVfeXFMT3RVWU80LVBEeUt2M2Z3c1N1ejJTNW1BZjFzektrZmlTMTJMeVkzaGJkaW02Y3pfN2Y0eVZycC1EU2x0WnJUc3NjcnRMelo0NXNTWk1sd3gtX2NYQnJiMmFaLXNLTi1ERFlPWGMyVWFnZW9jT0FzV3BRM2ZjVlVWbTFYbnJFVFgyNnVOMlMzazFWQmhhcDlzeFhCcXBHUHFiS2EyOEx1RlFQMWpYWm5kQm5HOUNaVjk3UDhRc1RWYlBBRTBPNV94Ulk0cmtrdGwyWkR6ODVOYzRjUS1aZktMaHdnY1R6LVc4UDdzQjdwUQ?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 17:28:42 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","us"]
+  properties     {"guid":"CBMi5wFBVV95cUxNNGUwMHFKX0ZrQVBRWDNUa1kzVGdIT3J5T0lWWXJENmsyWkpWNlpqeGdkWHJnUTVMNjJSTkJRcU1iOFhESlNCeEUxZ1lmZnlZLTZUTG8tMmxocmJPdkN6X1oxT0ZCclZKWVF6Ykx4aTltTEFtdkxpajZfZXM3NHY0YXB4VXZmZmZYYWxmWC1uTHF4VGktRG9WQXZrR2dFZWFoLXp3b2d3bFRZOUszN3RPNEE0bHpKQVBTanFJdUNhMVlwQjU0bXpwZ1RLelRYOGZOakVpcnZsOEpLM1hldlRCclJxRXYtZWvSAe4BQVVfeXFMT3RVWU80LVBEeUt2M2Z3c1N1ejJTNW1BZjFzektrZmlTMTJMeVkzaGJkaW02Y3pfN2Y0eVZycC1EU2x0WnJUc3NjcnRMelo0NXNTWk1sd3gtX2NYQnJiMmFaLXNLTi1ERFlPWGMyVWFnZW9jT0FzV3BRM2ZjVlVWbTFYbnJFVFgyNn

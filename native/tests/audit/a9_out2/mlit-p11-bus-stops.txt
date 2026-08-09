@@ -1,0 +1,7 @@
+=== mlit-p11-bus-stops
+exit: 0
+sched: rc=0 records=0 1875ms
+--- stderr ---
+[mlit-p11-bus-stops] emitted 0
+[sched] mlit-p11-bus-stops run rc=0 records=0 1875ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

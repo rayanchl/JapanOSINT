@@ -5,6 +5,7 @@
  * with headers=true → {year_month,count} rows → one map Feature each, and
  * ALWAYS one directory intel item (uid pref-police-crime|<code>).
  * SEED/_meta dropped (rule 7); 0 features when no adapter env vars set. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/csv.h"
 #include "../../lib/feedlib.h"
@@ -79,11 +80,6 @@ static const char *adapter_env(const char *code) {
   return NULL;
 }
 
-static const char *objstr(cJSON *o, const char *k) {
-  cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
-}
-
 /* {year_month,count} adapter. code 13 also accepts r.month/r.total; all four
  * accept year_month|年月 + count|件数 (13 also total). parseInt(count,10);
  * needs ym truthy AND finite count. ym sliced to first 7 chars. */
@@ -98,12 +94,12 @@ static crow_t *parse_adapter(const char *code, const char *text, size_t *out_n) 
   int isTokyo = !strcmp(code, "13");
   cJSON *r;
   cJSON_ArrayForEach(r, rows) {
-    const char *ym = objstr(r, "year_month");
-    if (!ym || !*ym) ym = objstr(r, "年月");
-    if ((!ym || !*ym) && isTokyo) ym = objstr(r, "month");
-    const char *cs = objstr(r, "count");
-    if (!cs || !*cs) cs = objstr(r, "件数");
-    if ((!cs || !*cs) && isTokyo) cs = objstr(r, "total");
+    const char *ym = jo_str(r, "year_month");
+    if (!ym || !*ym) ym = jo_str(r, "年月");
+    if ((!ym || !*ym) && isTokyo) ym = jo_str(r, "month");
+    const char *cs = jo_str(r, "count");
+    if (!cs || !*cs) cs = jo_str(r, "件数");
+    if ((!cs || !*cs) && isTokyo) cs = jo_str(r, "total");
     if (!ym || !*ym) continue;
     if (!cs || !*cs) continue;
     char *e; long cnt = strtol(cs, &e, 10);
@@ -148,15 +144,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
 
     for (size_t k = 0; k < rn; k++) {
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(p->lon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(p->lat));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(p->lon, p->lat);
       cJSON *pr = cJSON_CreateObject();         /* EXACT JS key order */
       char idb[48];
       snprintf(idb, sizeof idb, "PREFCRIME_%s_%s", p->code, rws[k].ym);

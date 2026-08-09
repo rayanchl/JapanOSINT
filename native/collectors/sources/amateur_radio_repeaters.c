@@ -39,7 +39,18 @@ static char *trim(char *s) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char *text = feed_get_text(ctx->http, API_URL, 15000);
-  if (!text || strlen(text) < 40) { free(text); return -1; }
+  if (!text || strlen(text) < 40) {
+    fprintf(stderr, "[amateur-radio-repeaters] no CSV from %s\n", API_URL);
+    free(text); return -1;
+  }
+  /* RepeaterBook closed its export API in 2025: it now answers
+   * {"ok":false,"error_code":"auth_missing",...} with HTTP 401 for every
+   * request. Say so instead of silently failing the CSV parse. */
+  if (strstr(text, "\"auth_missing\"") || strstr(text, "Authorization required")) {
+    fprintf(stderr, "[amateur-radio-repeaters] upstream now requires "
+                    "authorization (RepeaterBook export API closed) — 0 rows\n");
+    free(text); return -1;
+  }
 
   cJSON *features = cJSON_CreateArray();
   char *save = text;
@@ -90,15 +101,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(nm, sizeof nm, "%s %s", call, p5);
     char *name = trim(nm);
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(lon, lat);
 
     cJSON *pr = cJSON_CreateObject();          /* EXACT JS key order */
     cJSON_AddStringToObject(pr, "repeater_id", rid);

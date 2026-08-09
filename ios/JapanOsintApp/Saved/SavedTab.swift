@@ -43,46 +43,48 @@ struct SavedTab: View {
         }
     }
 
+    /// NOTE: this view does NOT own a `NavigationStack`, exactly like
+    /// `CameraDiscoveryView`. Saved is no longer a phone tab — it is pushed
+    /// from Console (`ConsoleHub`'s `navigationDestination`) and is a sidebar
+    /// detail on iPad, so both of those already supply a stack. Adding another
+    /// one here nests a NavigationStack inside a `navigationDestination`, which
+    /// SwiftUI does not support: the title/search chrome binds to the inner
+    /// stack while the outer stack still owns the path, and the two fight over
+    /// the same update. Callers that have no stack of their own (the iPad
+    /// sidebar detail) wrap it — see `RootView.detailView`.
     var body: some View {
-        // Mirror `CameraDiscoveryTab`: own a NavigationStack so the large
-        // title, .searchable drawer, and toolbar attach to OUR nav chrome
-        // instead of whatever the system More-tab wrapper provides. Without
-        // this wrapper the .navigationTitle modifier collapses to inline-
-        // only and the search bar drops off entirely on iOS overflow tabs.
-        NavigationStack {
-            Group {
-                switch mode {
-                case .list: listView
-                case .grid: gridView
-                case .map:  mapWithPicker
-                }
+        Group {
+            switch mode {
+            case .list: listView
+            case .grid: gridView
+            case .map:  mapWithPicker
             }
-            .themedScreenBackground(theme)
-            // Blank the large title in map mode and switch to inline so the
-            // map gets the full viewport. The previous approach (.toolbar(.hidden)
-            // + a floating chevron overlay) pulled SwiftUI into a toolbar-
-            // transition cycle that blocked the body rebuild, so the mode
-            // picker visually flipped segments without swapping the view.
-            .navigationTitle(mode == .map ? "" : "Saved")
-            .compatInlineTitle(mode == .map)
-            .searchable(
-                text: $searchText,
-                placement: .compatDrawer,
-                prompt: "Search saved"
-            )
-            .toolbar {
-                ToolbarItem(placement: .compatPrimary) {
-                    FilterToolbarButton(isActive: filtersAreActive) {
-                        showFilters = true
-                    }
-                }
-            }
-            .sheet(item: $selectedFeature) { feat in
-                NavigationStack { featurePopup(for: feat, showsMiniMap: true) }
-                    .compatSheetSizing(.medium)
-            }
-            .sheet(isPresented: $showFilters) { filtersSheet }
         }
+        .themedScreenBackground(theme)
+        // Blank the large title in map mode and switch to inline so the
+        // map gets the full viewport. The previous approach (.toolbar(.hidden)
+        // + a floating chevron overlay) pulled SwiftUI into a toolbar-
+        // transition cycle that blocked the body rebuild, so the mode
+        // picker visually flipped segments without swapping the view.
+        .navigationTitle(mode == .map ? "" : "Saved")
+        .compatInlineTitle(mode == .map)
+        .searchable(
+            text: $searchText,
+            placement: .compatDrawer,
+            prompt: "Search saved"
+        )
+        .toolbar {
+            ToolbarItem(placement: .compatPrimary) {
+                FilterToolbarButton(isActive: filtersAreActive) {
+                    showFilters = true
+                }
+            }
+        }
+        .sheet(item: $selectedFeature) { feat in
+            NavigationStack { featurePopup(for: feat, showsMiniMap: true) }
+                .compatSheetSizing(.medium)
+        }
+        .sheet(isPresented: $showFilters) { filtersSheet }
     }
 
     // MARK: - Pickers
@@ -260,7 +262,7 @@ struct SavedTab: View {
     private var mapView: some View {
         Map(position: $cameraPosition) {
             ForEach(filteredItems) { item in
-                Annotation(item.displayName, coordinate: item.coordinate, anchor: .bottom) {
+                MapKit.Annotation(item.displayName, coordinate: item.coordinate, anchor: .bottom) {
                     Button {
                         selectedFeature = item.toFeature()
                     } label: {

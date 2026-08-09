@@ -20,6 +20,8 @@
  */
 
 #include "station_clusterer.h"
+#include "intel.h"            /* intel_fts_remirror: properties is indexed */
+#include "../lib/utf8.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <openssl/sha.h>
@@ -61,37 +63,14 @@
 
 /* Decode one UTF-8 codepoint at s[*i]; advance *i past it. Returns the
  * codepoint, or the raw byte on a malformed sequence (best-effort, never
- * loops). */
+ * loops). The decode itself is lib/utf8.h's: the version open-coded here read
+ * s[*i+1..3] before proving those bytes existed, so a string ending in a
+ * truncated sequence was read past its allocation. */
 static unsigned cp_next(const char *s, size_t *i) {
-    unsigned char c = (unsigned char)s[*i];
-    if (c < 0x80) { (*i)++; return c; }
-    if ((c & 0xE0) == 0xC0) {
-        unsigned char c1 = (unsigned char)s[*i + 1];
-        if ((c1 & 0xC0) == 0x80) {
-            *i += 2;
-            return ((c & 0x1F) << 6) | (c1 & 0x3F);
-        }
-        (*i)++; return c;
-    }
-    if ((c & 0xF0) == 0xE0) {
-        unsigned char c1 = (unsigned char)s[*i + 1], c2 = (unsigned char)s[*i + 2];
-        if ((c1 & 0xC0) == 0x80 && (c2 & 0xC0) == 0x80) {
-            *i += 3;
-            return ((c & 0x0F) << 12) | ((c1 & 0x3F) << 6) | (c2 & 0x3F);
-        }
-        (*i)++; return c;
-    }
-    if ((c & 0xF8) == 0xF0) {
-        unsigned char c1 = (unsigned char)s[*i + 1], c2 = (unsigned char)s[*i + 2],
-                      c3 = (unsigned char)s[*i + 3];
-        if ((c1 & 0xC0) == 0x80 && (c2 & 0xC0) == 0x80 && (c3 & 0xC0) == 0x80) {
-            *i += 4;
-            return ((c & 0x07) << 18) | ((c1 & 0x3F) << 12)
-                 | ((c2 & 0x3F) << 6) | (c3 & 0x3F);
-        }
-        (*i)++; return c;
-    }
-    (*i)++; return c;
+    int adv;
+    unsigned cp = utf8_decode((const unsigned char *)s + *i, &adv);
+    *i += (size_t)adv;
+    return cp;
 }
 
 /* Append codepoint cp to out (UTF-8). Caller guarantees >=4 bytes free. */
@@ -729,7 +708,12 @@ static int materialise(station_t *S, const int *grp, int gn, cluster_row_t *out)
     /* line union: iterate members in group order, each member's
      * line_colors[] in order; dedupe by color; per-color introducing mode;
      * name/ref only if the color is that member's primary line_color. */
-    int cap_c = 0;
+    /* Each of the four parallel arrays needs its OWN capacity and count.
+     * Deriving them from line_colors' cap_c/n_colors made arr_push believe the
+     * sibling arrays were already allocated (n=0 != cap=4), so it skipped the
+     * realloc and wrote through a NULL pointer on the very first line. */
+    int cap_c = 0, cap_m = 0, cap_n = 0, cap_r = 0;
+    int n_m = 0, n_n = 0, n_r = 0;      /* kept in lockstep with out->n_colors */
     char **seen = NULL; int seen_n = 0, seen_cap = 0;   /* dedupe set */
     for (int i = 0; i < gn; i++) {
         station_t *m = &S[grp[i]];
@@ -743,13 +727,11 @@ static int materialise(station_t *S, const int *grp, int gn, cluster_row_t *out)
             if (arr_push(&seen, &seen_n, &seen_cap, col) != 0) goto oom;
 
             if (arr_push(&out->line_colors, &out->n_colors, &cap_c, col) != 0) goto oom;
-            int tmp1 = out->n_colors - 1, c1 = cap_c, c2 = cap_c, c3 = cap_c;
-            int n2 = tmp1, n3 = tmp1, n4 = tmp1;
             int is_primary = (m->line_color && strcmp(m->line_color, col) == 0);
-            if (arr_push(&out->line_modes, &n4, &c3, m->mode ? m->mode : "") != 0) goto oom;
-            if (arr_push(&out->line_names, &n2, &c1,
+            if (arr_push(&out->line_modes, &n_m, &cap_m, m->mode ? m->mode : "") != 0) goto oom;
+            if (arr_push(&out->line_names, &n_n, &cap_n,
                          is_primary ? (m->line_name ? m->line_name : "") : "") != 0) goto oom;
-            if (arr_push(&out->line_refs, &n3, &c2,
+            if (arr_push(&out->line_refs, &n_r, &cap_r,
                          is_primary ? (m->line_ref ? m->line_ref : "") : "") != 0) goto oom;
         }
     }
@@ -799,9 +781,17 @@ typedef struct {
     char  *way_uid;   /* borrowed; may be NULL */
 } seg_t;
 
+/* Cells hold POOL INDICES, not seg_t pointers.
+ *
+ * They used to hold `seg_t *` taken as &ix->pool[ix->pn++] — interior pointers
+ * into a realloc-grown array. At segment #1024 the pool doubles and moves, and
+ * every pointer already stamped into a cell dangles; the snap passes then read
+ * ax/ay/color out of freed memory and strcmp() a freed char*. Any rail network
+ * with more than 1024 coordinate pairs hits this, which is all of them. An
+ * index survives the realloc by construction. */
 typedef struct seg_cell_s {
     long cx, cy;
-    seg_t **segs; int n, cap;
+    int *segs; int n, cap;
     struct seg_cell_s *next;
 } seg_cell_t;
 
@@ -826,7 +816,7 @@ static char *seg_intern(seg_index_t *ix, const char *s) {
     return d;
 }
 
-static int seg_cell_push(seg_index_t *ix, long cx, long cy, seg_t *sg) {
+static int seg_cell_push(seg_index_t *ix, long cx, long cy, int si) {
     unsigned h = cell_hash(cx, cy);
     seg_cell_t *c;
     for (c = ix->b[h]; c; c = c->next)
@@ -838,11 +828,11 @@ static int seg_cell_push(seg_index_t *ix, long cx, long cy, seg_t *sg) {
     }
     if (c->n == c->cap) {
         int nc = c->cap ? c->cap * 2 : 8;
-        seg_t **ns = realloc(c->segs, (size_t)nc * sizeof(seg_t *));
+        int *ns = realloc(c->segs, (size_t)nc * sizeof(int));
         if (!ns) return -1;
         c->segs = ns; c->cap = nc;
     }
-    c->segs[c->n++] = sg;
+    c->segs[c->n++] = si;
     return 0;
 }
 
@@ -895,7 +885,8 @@ static int build_segment_index(seg_index_t *ix, cJSON *lines) {
                 if (!np) return -1;
                 ix->pool = np; ix->pcap = nc;
             }
-            seg_t *sg = &ix->pool[ix->pn++];
+            int si = ix->pn++;
+            seg_t *sg = &ix->pool[si];
             sg->ax = ax; sg->ay = ay; sg->bx = bx; sg->by = by;
             sg->color = color; sg->way_uid = wuid;
 
@@ -903,9 +894,9 @@ static int build_segment_index(seg_index_t *ix, cJSON *lines) {
             long kAy = cell_of(ay, SNAP_CELL_SIZE_DEG);
             long kBx = cell_of(bx, SNAP_CELL_SIZE_DEG);
             long kBy = cell_of(by, SNAP_CELL_SIZE_DEG);
-            if (seg_cell_push(ix, kAx, kAy, sg) != 0) return -1;
+            if (seg_cell_push(ix, kAx, kAy, si) != 0) return -1;
             if (!(kBx == kAx && kBy == kAy))
-                if (seg_cell_push(ix, kBx, kBy, sg) != 0) return -1;
+                if (seg_cell_push(ix, kBx, kBy, si) != 0) return -1;
         }
     }
     return 0;
@@ -981,7 +972,7 @@ static int snap_all_ways_at(seg_index_t *ix, double lon, double lat,
             if (c->cx == qx && c->cy == qy) break;
         if (!c) continue;
         for (int s = 0; s < c->n; s++) {
-            seg_t *sg = c->segs[s];
+            seg_t *sg = &ix->pool[c->segs[s]];
             double sl, sa;
             double dsq = closest_point_on_segment(lon, lat, sg->ax, sg->ay,
                                                   sg->bx, sg->by, &sl, &sa);
@@ -1571,8 +1562,15 @@ static int update_one_station_color(db_handle *db, const char *station_uid,
               -1, &u, NULL) == SQLITE_OK) {
             sqlite3_bind_text(u, 1, np, -1, SQLITE_TRANSIENT);
             sqlite3_bind_text(u, 2, uid, -1, SQLITE_TRANSIENT);
-            if (sqlite3_step(u) == SQLITE_DONE && sqlite3_changes(db->h) > 0)
+            if (sqlite3_step(u) == SQLITE_DONE && sqlite3_changes(db->h) > 0) {
                 changed = 1;
+                /* properties is an INDEXED column (intel_items_fts.props), and
+                 * this UPDATE bypasses intel.c's emit(). Without the re-mirror
+                 * the line colour written here is visible in the detail pane
+                 * and invisible to search until the next collector run
+                 * happens to re-emit the row. */
+                intel_fts_remirror(db, uid);
+            }
             sqlite3_finalize(u);
         }
         free(np);
@@ -1622,7 +1620,7 @@ int station_snap_stations(db_handle *db, const char *mode) {
                 if (c->cx == qx && c->cy == qy) break;
             if (!c) continue;
             for (int t = 0; t < c->n; t++) {
-                seg_t *sg = c->segs[t];
+                seg_t *sg = &ix.pool[c->segs[t]];
                 double dsq = segment_dist_sq_m(lon, lat, sg->ax, sg->ay,
                                                sg->bx, sg->by);
                 if (dsq < bestDsq) { bestDsq = dsq; bestColor = sg->color; }

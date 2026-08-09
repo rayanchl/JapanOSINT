@@ -1,0 +1,7 @@
+=== sophos-news
+exit: 1
+sched: rc=-1 records=0 1200ms
+--- stderr ---
+[sched] sophos-news run rc=-1 records=0 1200ms
+[detect] anomaly opened: sophos-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

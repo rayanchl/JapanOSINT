@@ -1,0 +1,18 @@
+=== peeringdb-jp
+exit: 0
+sched: rc=0 records=27 2923ms
+--- stderr ---
+[peeringdb-jp] emitted 27
+[sched] peeringdb-jp run rc=0 records=27 2923ms
+--- persisted: 27 rows, 0 with lat/lon, 0 with geometry ---
+record_type: ixp=27
+sub_source_id: (null)=27
+
+--- row 1 ---
+  uid            peeringdb-jp|peeringdb:ix:30
+  title          JPIX TOKYO
+  summary        Internet exchange point in Tokyo, JP — 269 connected networks across 11 facilities, media Ethernet, IPv6.
+  link           https://www.peeringdb.com/ix/30
+  published_at   2025-03-28T00:11:27Z
+  record_type    ixp
+  properties     {"uid":"peeringdb:ix:30","idx":0,"kind":"ixp","pdb_id":30,"name":"JPIX TOKYO","name_long":"","media":"Ethernet","country":"JP","city":"Tokyo","net_count":269,"proto_unicast":true,"proto_multicast":false,"proto_ipv6":true,"fac_count":11,"website":"https://www.jpix.ad.jp/en/","tech_email":"support@jpix.ad.jp","policy_email":"sales@jpix.ad.jp","url_stats":"https://www.jpix.ad.jp/en/technical_traffic.php","service_level":"Not Disclosed","region_continent":"Asia Pacific","created":"2010-07-29T00:00:00Z","published_at":"2025-03-28T00:11:27Z","summary":"Internet exchange point in Tokyo, JP — 269 connected networks across 11 facilities, media Ethernet, IPv6.","url":"https://www.peeringdb.com/ix/30","source":"peeringdb_ix"}

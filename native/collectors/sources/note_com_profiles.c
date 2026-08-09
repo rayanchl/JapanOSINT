@@ -3,6 +3,7 @@
  * Key-free public note.com v2 search API; queries a fixed JP-relevant term
  * set, emits author profiles as non-spatial intel. Dedup by urlname across
  * queries. honest empty on failure. uid = note-com-profiles|<urlname>. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -24,11 +25,6 @@ static const char *QUERY_RAW[] = {
 };
 #define NQ ((int)(sizeof(QUERIES)/sizeof(QUERIES[0])))
 
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
-}
-
 /* seen-set: simple dynamic string array. */
 static int seen_has(char **arr, int n, const char *s) {
   for (int i = 0; i < n; i++) if (strcmp(arr[i], s) == 0) return 1;
@@ -43,15 +39,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   };
   char **seen = NULL;
   int sn = 0, scap = 0;
-  int n = 0;
+  int n = 0, fetched = 0;
 
   for (int qi = 0; qi < NQ; qi++) {
     char url[256];
+    /* v2/searches has been retired — it returns note.com's HTML 404 page, so
+     * every query parsed to nothing and the source emitted 0 forever. v3 is
+     * live and keeps the same data.users.contents[] shape. */
     snprintf(url, sizeof url,
-      "https://note.com/api/v2/searches?context=user&q=%s&size=20",
+      "https://note.com/api/v3/searches?context=user&q=%s&size=20",
       QUERIES[qi]);
     cJSON *data = feed_get_json_h(ctx->http, url, hdrs, 12000);
     if (!data) continue;
+    fetched++;
 
     cJSON *d = cJSON_GetObjectItem(data, "data");
     cJSON *users = NULL;
@@ -64,8 +64,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (cJSON_IsArray(users)) {
       cJSON *u;
       cJSON_ArrayForEach(u, users) {
-        const char *urlname = sv(u, "urlname");
-        if (!urlname) urlname = sv(u, "id");
+        const char *urlname = jo_sv(u, "urlname");
+        if (!urlname) urlname = jo_sv(u, "id");
         if (!urlname) {
           const cJSON *idv = cJSON_GetObjectItem(u, "id");
           if (idv && cJSON_IsNumber(idv)) {
@@ -82,10 +82,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         }
         seen[sn++] = strdup(urlname);
 
-        const char *nick = sv(u, "nickname");
-        const char *name = sv(u, "name");
-        const char *prof = sv(u, "profile");
-        const char *created = sv(u, "created_at");
+        const char *nick = jo_sv(u, "nickname");
+        const char *name = jo_sv(u, "name");
+        const char *prof = jo_sv(u, "profile");
+        const char *created = jo_sv(u, "created_at");
 
         char uidb[256];
         snprintf(uidb, sizeof uidb, "%s|%s", SOURCE_ID, urlname);
@@ -102,14 +102,23 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
         cJSON *props = cJSON_CreateObject();
         cJSON_AddStringToObject(props, "urlname", urlname);
-        cJSON *fc = cJSON_GetObjectItem(u, "followerCount");
+        /* v3 names these follower_count/following_count (the camelCase
+         * followerCount/noteCount of the old v2 shape never existed here, so
+         * both numbers persisted as JSON null); there is no note count in the
+         * v3 user object, so we do not invent one. */
+        cJSON *fc = cJSON_GetObjectItem(u, "follower_count");
         if (fc && cJSON_IsNumber(fc))
           cJSON_AddNumberToObject(props, "followers", fc->valuedouble);
-        else cJSON_AddNullToObject(props, "followers");
-        cJSON *nc = cJSON_GetObjectItem(u, "noteCount");
-        if (nc && cJSON_IsNumber(nc))
-          cJSON_AddNumberToObject(props, "notes", nc->valuedouble);
-        else cJSON_AddNullToObject(props, "notes");
+        cJSON *gc = cJSON_GetObjectItem(u, "following_count");
+        if (gc && cJSON_IsNumber(gc))
+          cJSON_AddNumberToObject(props, "following", gc->valuedouble);
+        cJSON *off = cJSON_GetObjectItem(u, "is_official");
+        if (off && cJSON_IsBool(off))
+          cJSON_AddBoolToObject(props, "is_official", cJSON_IsTrue(off));
+        const char *img = jo_sv(u, "profile_image_url");
+        if (img) cJSON_AddStringToObject(props, "profile_image_url", img);
+        const char *cd = jo_sv(u, "custom_domain");
+        if (cd) cJSON_AddStringToObject(props, "custom_domain", cd);
         cJSON_AddStringToObject(props, "matched_query", QUERY_RAW[qi]);
         cJSON_AddStringToObject(props, "source", "note_api");
         char *pj = cJSON_PrintUnformatted(props);
@@ -137,8 +146,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   for (int i = 0; i < sn; i++) free(seen[i]);
   free(seen);
-  fprintf(stderr, "[note-com-profiles] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  fprintf(stderr, "[note-com-profiles] emitted %d (%d/%d queries fetched)\n",
+          n, fetched, NQ);
+  /* rc is a STATUS, not a count. A search that legitimately matches no
+   * profiles must not be reported as an errored run — core/scheduler.c feeds
+   * any non-zero rc to anomaly_detect() and quarantines the source. Only a
+   * total fetch failure (no query returned JSON at all) is an error. */
+  return fetched > 0 ? 0 : -1;
 }
 
 static const source_def note_com_profiles_def = {

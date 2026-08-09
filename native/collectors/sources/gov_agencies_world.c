@@ -2,15 +2,7 @@
 #include "../../source.h"
 #include "../../lib/rss_atom.h"
 
-#define RSSX(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)  \
-  static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
-    int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
-  static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
-    .update_interval_sec = IVAL, .run = run_##SYM,                           \
-    .category = CAT, .type = "web_request", .url = URL,                      \
-    .description = DESC, .layer = NULL, .free_tier = 1 };                    \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 RSSX(gov_us_state_press, "us-state-press", "US State Dept Press Releases", "US State Dept Press Releases", "government", "government",
   "https://www.state.gov/rss-feed/press-releases/feed/", "en", "[\"government\",\"official\",\"usa\"]", 3600,
@@ -25,7 +17,7 @@ RSSX(gov_us_dhs_news, "us-dhs-news", "US DHS News Releases", "US DHS News Releas
   "US DHS News Releases — official government/agency feed (usa)");
 
 RSSX(gov_us_doj_news, "us-doj-news", "US Dept of Justice News", "US Dept of Justice News", "government", "government",
-  "https://www.justice.gov/feeds/opa/justice-news.xml", "en", "[\"government\",\"official\",\"usa\"]", 3600,
+  "https://www.justice.gov/news/rss?type=press_release", "en", "[\"government\",\"official\",\"usa\"]", 3600,
   "US Dept of Justice News — official government/agency feed (usa)");
 
 RSSX(gov_us_sec_press, "us-sec-press", "US SEC Press Releases", "US SEC Press Releases", "government", "government",
@@ -93,7 +85,7 @@ RSSX(gov_osce_news, "osce-news", "OSCE News", "OSCE News", "government", "govern
   "OSCE News — official government/agency feed (europe)");
 
 RSSX(gov_iaea_topnews, "iaea-topnews", "IAEA Top News", "IAEA Top News", "government", "government",
-  "https://www.iaea.org/feeds/topnews.rss", "en", "[\"government\",\"official\",\"un\"]", 3600,
+  "https://www.iaea.org/feeds/topnews", "en", "[\"government\",\"official\",\"un\"]", 3600,
   "IAEA Top News — official government/agency feed (un)");
 
 RSSX(gov_un_news_2, "un-news-2", "UN News Global Perspective", "UN News Global Perspective", "government", "government",
@@ -121,7 +113,7 @@ RSSX(gov_unodc_news, "unodc-news", "UNODC News", "UNODC News", "government", "go
   "UNODC News — official government/agency feed (un)");
 
 RSSX(gov_itu_news, "itu-news", "ITU News", "ITU News", "government", "government",
-  "https://www.itu.int/en/rss/Pages/default.aspx", "en", "[\"government\",\"official\",\"un\"]", 3600,
+  "https://www.itu.int/hub/feed/", "en", "[\"government\",\"official\",\"un\"]", 3600,
   "ITU News — official government/agency feed (un)");
 
 RSSX(gov_opcw_news, "opcw-news", "OPCW News", "OPCW News", "government", "government",

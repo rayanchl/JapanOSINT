@@ -245,15 +245,19 @@ struct AOIListView: View {
         }
     }
 
+    /// Every coordinate here is LABELLED with its axis. Unlabelled, the circle
+    /// row read "lat, lon" while the bbox row underneath read `[w, s, e, n]`
+    /// — i.e. lon, lat — two opposite axis orders in adjacent rows, which is
+    /// exactly how a reader mis-reads a location and doesn't notice.
     private func geometryDetail(_ aoi: AreaOfInterest) -> String {
         if let ring = aoi.polygonRing, !ring.isEmpty {
             return "\(ring.count) vertices"
         }
         if let c = aoi.circle {
-            return "r \(DrawnAOI.formatRadius(c.radius)) · \(fmt(c.center.latitude)), \(fmt(c.center.longitude))"
+            return "r \(DrawnAOI.formatRadius(c.radius)) · lat \(fmt(c.center.latitude)), lon \(fmt(c.center.longitude))"
         }
         if let box = AOIShapePreview.bbox(from: aoi) {
-            return "\(fmt(box[0])), \(fmt(box[1])) → \(fmt(box[2])), \(fmt(box[3]))"
+            return "S \(fmt(box[1])), W \(fmt(box[0])) → N \(fmt(box[3])), E \(fmt(box[2]))"
         }
         return "geometry unavailable"
     }
@@ -322,11 +326,13 @@ struct AOIShapePreview: View {
         }
     }
 
-    /// `[w, s, e, n]` from a `bbox`-kind AOI's geometry array.
+    /// `[w, s, e, n]`, taken from the server's own `bbox` field rather than
+    /// re-derived from the geometry array. Callers reach this only after the
+    /// polygon and circle branches have been ruled out, so the box a polygon
+    /// also carries is never what gets drawn.
     static func bbox(from aoi: AreaOfInterest) -> [Double]? {
-        guard let raw = aoi.geometry?.value as? [Any], raw.count >= 4 else { return nil }
-        let nums = raw.prefix(4).compactMap { ($0 as? NSNumber)?.doubleValue }
-        return nums.count == 4 ? Array(nums) : nil
+        guard let bb = aoi.bbox, bb.count >= 4 else { return nil }
+        return Array(bb.prefix(4))
     }
 
     /// Uniform-scale the ring into `rect`, flipping latitude so north is up.

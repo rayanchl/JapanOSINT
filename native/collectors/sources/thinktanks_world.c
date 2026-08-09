@@ -2,18 +2,10 @@
 #include "../../source.h"
 #include "../../lib/rss_atom.h"
 
-#define RSSX(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)  \
-  static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
-    int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
-  static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
-    .update_interval_sec = IVAL, .run = run_##SYM,                           \
-    .category = CAT, .type = "web_request", .url = URL,                      \
-    .description = DESC, .layer = NULL, .free_tier = 1 };                    \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 RSSX(tank_csis, "csis", "CSIS Analysis", "CSIS Analysis", "osint", "news",
-  "https://www.csis.org/analysis/feed", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
+  "https://www.csis.org/rss.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "CSIS Analysis — geopolitical/security research and analysis");
 
 RSSX(tank_brookings, "brookings", "Brookings Institution", "Brookings Institution", "osint", "news",
@@ -61,7 +53,7 @@ RSSX(tank_ecfr, "ecfr", "European Council on Foreign Relations", "European Counc
   "European Council on Foreign Relations — geopolitical/security research and analysis");
 
 RSSX(tank_merics, "merics", "MERICS (China)", "MERICS (China)", "osint", "news",
-  "https://merics.org/en/rss.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
+  "https://merics.org/en/rss", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "MERICS (China) — geopolitical/security research and analysis");
 
 RSSX(tank_lowy_interpreter, "lowy-interpreter", "Lowy Institute Interpreter", "Lowy Institute Interpreter", "osint", "news",
@@ -81,11 +73,11 @@ RSSX(tank_cepa, "cepa", "Center for European Policy Analysis", "Center for Europ
   "Center for European Policy Analysis — geopolitical/security research and analysis");
 
 RSSX(tank_hudson, "hudson", "Hudson Institute", "Hudson Institute", "osint", "news",
-  "https://www.hudson.org/rss", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
+  "https://www.hudson.org/rss.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Hudson Institute — geopolitical/security research and analysis");
 
 RSSX(tank_heritage, "heritage", "Heritage Foundation", "Heritage Foundation", "osint", "news",
-  "https://www.heritage.org/rss.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
+  "https://www.heritage.org/rss", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Heritage Foundation — geopolitical/security research and analysis");
 
 RSSX(tank_rand_pubs, "rand-pubs", "RAND Corporation", "RAND Corporation", "osint", "news",

@@ -2,6 +2,7 @@
  * Port of server/src/collectors/hereJapan.js.
  * HERE Browse API over metro centroids → FeatureCollection.
  * Gated on HERE_API_KEY. No seed. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -16,16 +17,6 @@ static const struct { double lat, lon; } SCAN[] = {
   { 33.5897, 130.4207 },  /* Fukuoka */
   { 43.0687, 141.3508 },  /* Sapporo */
 };
-
-static int num_of(cJSON *v, double *out) {
-  if (!v) return 0;
-  if (cJSON_IsNumber(v)) { *out = v->valuedouble; return 1; }
-  if (cJSON_IsString(v) && v->valuestring && v->valuestring[0]) {
-    char *e; double d = strtod(v->valuestring, &e);
-    if (e != v->valuestring) { *out = d; return 1; }
-  }
-  return 0;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("HERE_API_KEY");
@@ -49,19 +40,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON *pos = cJSON_GetObjectItem(it, "position");
         double lon, lat;
         if (!(pos &&
-              num_of(cJSON_GetObjectItem(pos, "lng"), &lon) &&
-              num_of(cJSON_GetObjectItem(pos, "lat"), &lat)))
+              jo_num_of(cJSON_GetObjectItem(pos, "lng"), &lon) &&
+              jo_num_of(cJSON_GetObjectItem(pos, "lat"), &lat)))
           continue;
 
-        cJSON *of = cJSON_CreateObject();
-        cJSON_AddStringToObject(of, "type", "Feature");
-        cJSON *g = cJSON_CreateObject();
-        cJSON_AddStringToObject(g, "type", "Point");
-        cJSON *co = cJSON_CreateArray();
-        cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-        cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-        cJSON_AddItemToObject(g, "coordinates", co);
-        cJSON_AddItemToObject(of, "geometry", g);
+        cJSON *of = gj_point_feature(lon, lat);
 
         cJSON *p = cJSON_CreateObject();           /* EXACT JS key order */
         cJSON *idv = cJSON_GetObjectItem(it, "id");

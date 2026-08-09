@@ -16,7 +16,12 @@ static void passthru(cJSON *p, const char *outk, cJSON *r, const char *ink) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("WIGLE_API_KEY");
-  if (!key || !*key) { fprintf(stderr, "[wifi-networks-wigle] no API key\n"); return -1; }
+  /* Gated, not failed: -1 would log fetch_log status='error' and open a
+   * collector_anomaly on every tick for a source that simply has no key. */
+  if (!key || !*key) {
+    fprintf(stderr, "[wifi-networks-wigle] gated (no WIGLE_API_KEY)\n");
+    return 0;
+  }
 
   char auth[256];
   snprintf(auth, sizeof auth, "Authorization: Basic %s", key);
@@ -65,7 +70,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[wifi-networks-wigle] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def wifi_networks_wigle_def = {

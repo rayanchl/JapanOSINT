@@ -3,6 +3,7 @@
  * Gated on HOUMUKYOKU_API_KEY (paid contracted API). Optional
  * HOUMUKYOKU_API_BASE override + HOUMUKYOKU_WATCHLIST (comma list). No key
  * or empty watchlist → 0 rows. uid = houmukyoku-commercial|<id>. No seed. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -10,27 +11,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
-static void uric(const char *s, char *out, size_t n) {
-  size_t o = 0;
-  for (; *s && o + 4 < n; s++) {
-    unsigned char c = (unsigned char)*s;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' ||
-        c == '!' || c == '~' || c == '*' || c == '\'' || c == '(' || c == ')') {
-      out[o++] = (char)c;
-    } else {
-      snprintf(out + o, n - o, "%%%02X", c);
-      o += 3;
-    }
-  }
-  out[o] = '\0';
-}
-
-static const char *sv(cJSON *o, const char *k) {
-  cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
-}
 
 /* r.<k> ?? null (string/number passthrough) */
 static cJSON *nn(cJSON *o, const char *k) {
@@ -41,21 +21,21 @@ static cJSON *nn(cJSON *o, const char *k) {
 
 /* Emit one record `r` for watchlist entry `target`. Returns emit rc. */
 static int emit_record(intel_sink *sink, cJSON *r, const char *target) {
-  const char *id = sv(r, "corporateNumber");
-  if (!id) id = sv(r, "registrationNumber");
-  if (!id) id = sv(r, "id");
+  const char *id = jo_sv(r, "corporateNumber");
+  if (!id) id = jo_sv(r, "registrationNumber");
+  if (!id) id = jo_sv(r, "id");
   if (!id) id = target;
 
-  const char *title = sv(r, "companyName");
-  if (!title) title = sv(r, "name");
+  const char *title = jo_sv(r, "companyName");
+  if (!title) title = jo_sv(r, "name");
   if (!title) title = id;
-  const char *summ = sv(r, "address");
-  if (!summ) summ = sv(r, "headOfficeAddress");
+  const char *summ = jo_sv(r, "address");
+  if (!summ) summ = jo_sv(r, "headOfficeAddress");
 
   char body[2048]; body[0] = '\0'; int bw = 0;
   const char *bparts[4] = {
-    sv(r, "companyName"), sv(r, "address"),
-    sv(r, "representative"), sv(r, "businessPurpose")
+    jo_sv(r, "companyName"), jo_sv(r, "address"),
+    jo_sv(r, "representative"), jo_sv(r, "businessPurpose")
   };
   for (int k = 0; k < 4; k++) {
     if (bparts[k]) {
@@ -65,9 +45,9 @@ static int emit_record(intel_sink *sink, cJSON *r, const char *target) {
     }
   }
   const char *bodyp = bw ? body : NULL;
-  const char *link = sv(r, "detailUrl");
-  const char *pub = sv(r, "registrationDate");
-  if (!pub) pub = sv(r, "lastUpdated");
+  const char *link = jo_sv(r, "detailUrl");
+  const char *pub = jo_sv(r, "registrationDate");
+  if (!pub) pub = jo_sv(r, "lastUpdated");
 
   cJSON *tags = cJSON_CreateArray();
   cJSON_AddItemToArray(tags, cJSON_CreateString("houmukyoku"));
@@ -114,8 +94,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *wl = getenv("HOUMUKYOKU_WATCHLIST");
   if (!wl || !*wl) {
-    fprintf(stderr, "[houmukyoku-commercial] no watchlist — unavailable\n");
-    return -1;
+    /* Gated, not failed: an unset watchlist is a configuration state, and -1
+     * would log fetch_log status='error' plus a collector_anomaly every tick.
+     * The genuine failures further down keep returning -1. */
+    fprintf(stderr, "[houmukyoku-commercial] gated (no HOUMUKYOKU_WATCHLIST)\n");
+    return 0;
   }
   char *wlcopy = strdup(wl);
   int n = 0, gotAny = 0;
@@ -130,7 +113,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const char *target = tok;
 
     char tenc[256];
-    uric(target, tenc, sizeof tenc);
+    jo_uri_encode_buf(target, tenc, sizeof tenc);
     char url[768];
     snprintf(url, sizeof url, "%s/registration?key=%s&query=%s",
              base, apiKey, tenc);

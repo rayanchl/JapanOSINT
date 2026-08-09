@@ -84,14 +84,30 @@ static int mw_wikinews(const source_ctx *ctx, intel_sink *sink, const char *q) {
 static int mw_gdelt_tv(const source_ctx *ctx, intel_sink *sink, const char *q) {
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
+  /* The TV 2.0 API refuses any query without a station/market scope — it
+   * answers 200 with the plain-text body "Your query must contain at least
+   * one station.", which is not JSON, so the parse failed silently and the
+   * service looked empty for every entity. market:"National" is the API's
+   * own group for the national networks. */
   char url[1024];
   snprintf(url, sizeof url,
-    "https://api.gdeltproject.org/api/v2/tv/tv?query=%s&mode=clipgallery"
+    "https://api.gdeltproject.org/api/v2/tv/tv"
+    "?query=%s%%20market%%3A%%22National%%22&mode=clipgallery"
     "&format=json&maxrecords=25", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
                          "User-Agent: JapanOSINT/1.0 (osint@example.org)", NULL };
-  char *body = jo_get(ctx, url, hdrs, "GDELT_TV");
+  /* GDELT scans the whole Internet Archive TV corpus for a clipgallery and
+   * reliably takes 14-18s; jo_get()'s shared 20s budget was losing the race
+   * (status=0, transport timeout) so the service always looked empty. Do the
+   * request here with a budget that fits the real upstream latency. */
+  char *body = NULL;
+  { http_response hr = {0};
+    int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 45000, 0, &hr);
+    if (rc != 0 || hr.status != 200 || !hr.body) {
+      fprintf(stderr, "[GDELT_TV] http status=%ld\n", hr.status);
+      http_response_free(&hr);
+    } else { body = hr.body; hr.body = NULL; http_response_free(&hr); } }
   if (!body) return 0;
   cJSON *root = cJSON_Parse(body);
   free(body);

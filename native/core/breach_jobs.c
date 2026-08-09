@@ -94,10 +94,15 @@ static void *ingest_thread(void *vp) {
 
   /* Own WAL connection — never the server's shared handle (its bulk transaction
    * + pragmas would otherwise engulf the event loop's writes). DB only needed
-   * for a real (non-dry) materialize. */
+   * for a real (non-dry) materialize.
+   *
+   * db_attach, not db_open: db_open re-executes schema.sql, every ensure_column
+   * migration and a 674-row seed transaction against a live database, so this
+   * job used to fight the very writers the separate connection exists to avoid.
+   * The server process already applied all of that at boot. */
   db_handle db = {0}; db_handle *dbp = NULL; int opened = 0;
   if (a->materialize && !a->dry_run) {
-    if (db_open(&db, NULL, NULL) == 0) { dbp = &db; opened = 1; }
+    if (db_attach(&db, NULL) == 0) { dbp = &db; opened = 1; }
     else finish(a->slot, "error", "db open failed", 0, 0);
   }
   if (!(a->materialize && !a->dry_run) || opened) {

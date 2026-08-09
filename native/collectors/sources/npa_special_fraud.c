@@ -215,19 +215,34 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int fi = 0;
   for (size_t k = 0; k < mn; k++) {
     if (!months[k].has[0]) continue;           /* m.recognised != null */
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(NPA_LON));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(NPA_LAT));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
-    cJSON *p = cJSON_CreateObject();           /* EXACT JS key order */
+    cJSON *f = gj_point_feature(NPA_LON, NPA_LAT);
+    cJSON *p = cJSON_CreateObject();
     char idb[32];
-    snprintf(idb, sizeof idb, "FRAUD_%s_%d", months[k].ym, fi);
+    /* the trailing running index made the uid depend on how many earlier
+     * months happened to parse; the year-month alone is the natural key */
+    snprintf(idb, sizeof idb, "FRAUD_%s", months[k].ym);
     cJSON_AddStringToObject(p, "id", idb);
+    /* lib/geojson.c needs title|name|name_ja|label, otherwise every monthly
+     * row lands with a NULL title and is unreadable in the UI. */
+    {
+      char tb[200];
+      if (months[k].has[1])
+        snprintf(tb, sizeof tb,
+                 "特殊詐欺 %s — 認知%ld件 / 被害額%.1f億円",
+                 months[k].ym, months[k].m[0], (double)months[k].m[1] / 1e8);
+      else
+        snprintf(tb, sizeof tb, "特殊詐欺 %s — 認知%ld件",
+                 months[k].ym, months[k].m[0]);
+      cJSON_AddStringToObject(p, "title", tb);
+    }
+    {
+      char pb[32];
+      snprintf(pb, sizeof pb, "%04d-%02d-01T00:00:00Z",
+               months[k].year, months[k].month);
+      cJSON_AddStringToObject(p, "published_at", pb);
+    }
+    cJSON_AddStringToObject(p, "url", INDEX_URL);
+    cJSON_AddStringToObject(p, "record_type", "npa-special-fraud");
     cJSON_AddStringToObject(p, "year_month", months[k].ym);
     cJSON_AddNumberToObject(p, "year", months[k].year);
     cJSON_AddNumberToObject(p, "month", months[k].month);

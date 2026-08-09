@@ -124,15 +124,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* ---- feature (geojson sink derives uid/title) ---- */
   cJSON *features = cJSON_CreateArray();
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *co = cJSON_CreateArray();
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(NPA_HQ_LON));
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(NPA_HQ_LAT));
-  cJSON_AddItemToObject(g, "coordinates", co);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(NPA_HQ_LON, NPA_HQ_LAT);
   cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
   cJSON_AddStringToObject(p, "id", "CYBER_OBS_NPA");
   cJSON_AddStringToObject(p, "name", "NPA Cyber Threat Observation");

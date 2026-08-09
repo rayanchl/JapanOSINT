@@ -1,0 +1,45 @@
+=== gnews-mon-fr-coup-attempt
+exit: 0
+sched: rc=0 records=100 809ms
+--- stderr ---
+[rss] gnews-mon-fr-coup-attempt emitted 100
+[sched] gnews-mon-fr-coup-attempt run rc=0 records=100 809ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-fr-coup-attempt|CBMigwFBVV95cUxNZl9OY0w2cFVvYmpsWGJTWGNvckZyQzRwUlFsOXVWOFE1dEVWek44RFRpaU1RQm1WUm5zbUMyZ2QtNUxEYUpOQWV6UEFwWnZMOHVvbV9heUVWUEpTV2kzQzN3WGFnOWdnSUdpSFY0N3VOTW5fNWx1ZWEyRmRSTjFGalVNSQ
+  title          Comment éviter un putsch militaire (analyse) - Yahoo Actualités
+  body           <a href="https://news.google.com/rss/articles/CBMigwFBVV95cUxNZl9OY0w2cFVvYmpsWGJTWGNvckZyQzRwUlFsOXVWOFE1dEVWek44RFRpaU1RQm1WUm5zbUMyZ2QtNUxEYUpOQWV6UEFwWnZMOHVvbV9heUVWUEpTV2kzQzN3WGFnOWdnSUdpSFY0N3VOTW5fNWx1ZWEyRmRSTjFGalVNSQ?oc=5" target="_blank">Comment éviter un putsch militaire (analyse)</a>&nbsp;&nbsp;<font color="#6f6f6f">Yahoo Actualités</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMigwFBVV95cUxNZl9OY0w2cFVvYmpsWGJTWGNvckZyQzRwUlFsOXVWOFE1dEVWek44RFRpaU1RQm1WUm5zbUMyZ2QtNUxEYUpOQWV6UEFwWnZMOHVvbV9heUVWUEpTV2kzQzN3WGFnOWdnSUdpSFY0N3VOTW5fNWx1ZWEyRmRSTjFGalVNSQ?oc=5" targe
+  link           https://news.google.com/rss/articles/CBMigwFBVV95cUxNZl9OY0w2cFVvYmpsWGJTWGNvckZyQzRwUlFsOXVWOFE1dEVWek44RFRpaU1RQm1WUm5zbUMyZ2QtNUxEYUpOQWV6UEFwWnZMOHVvbV9heUVWUEpTV2kzQzN3WGFnOWdnSUdpSFY0N3VOTW5fNWx1ZWEyRmRSTjFGalVNSQ?oc=5
+  language       fr
+  published_at   Tue, 28 Jul 2026 08:44:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","fr"]
+  properties     {"guid":"CBMigwFBVV95cUxNZl9OY0w2cFVvYmpsWGJTWGNvckZyQzRwUlFsOXVWOFE1dEVWek44RFRpaU1RQm1WUm5zbUMyZ2QtNUxEYUpOQWV6UEFwWnZMOHVvbV9heUVWUEpTV2kzQzN3WGFnOWdnSUdpSFY0N3VOTW5fNWx1ZWEyRmRSTjFGalVNSQ"}
+
+--- row 2 ---
+  uid            gnews-mon-fr-coup-attempt|CBMi4wFBVV95cUxPQnAtR0xGaF9JMUUtSFIxU3NTNWIyUVpYQ0tzWTI4QXE4ZWRCWU10WG5fanlBT2VoYmMtMWVWQTdQZlQzMDB0ZmR5cjRPaHF6U0ZOT3dCUV84MlRWUDFiZzdwYjEzUVI3WGJha3FhNWVWd0N4Wmg1ZUNJbHlCbXJPenJTWFBRaHpfUDg1bFg4WXdaQzgxMGRzNko4bDZYRTBjNU43ejA0SHVGLWszSU5rV1VkY2FPNnlWVVVXcEJpcGZNRDFaWTlhZ0ZOZ1ZGVTk2cGg5aVMwUThWNFlSLVh0azF4QQ
+  title          "Il avait compris qu'un coup d'Etat se préparait" : il y a 85 ans, l'assassinat de Marx Dormoy - La Montagne
+  body           <a href="https://news.google.com/rss/articles/CBMi4wFBVV95cUxPQnAtR0xGaF9JMUUtSFIxU3NTNWIyUVpYQ0tzWTI4QXE4ZWRCWU10WG5fanlBT2VoYmMtMWVWQTdQZlQzMDB0ZmR5cjRPaHF6U0ZOT3dCUV84MlRWUDFiZzdwYjEzUVI3WGJha3FhNWVWd0N4Wmg1ZUNJbHlCbXJPenJTWFBRaHpfUDg1bFg4WXdaQzgxMGRzNko4bDZYRTBjNU43ejA0SHVGLWszSU5rV1VkY2FPNnlWVVVXcEJpcGZNRDFaWTlhZ0ZOZ1ZGVTk2cGg5aVMwUThWNFlSLVh0azF4QQ?oc=5" target="_blank">"Il avait compris qu'un coup d'Etat se préparait" : il y a 85 ans, l'assassinat de Marx Dormoy</a>&nbsp;&nbsp;<font color="#6f6f6f">La Montagne</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi4wFBVV95cUxPQnAtR0xGaF9JMUUtSFIxU3NTNWIyUVpYQ0tzWTI4QXE4ZWRCWU10WG5fanlBT2VoYmMtMWVWQTdQZlQzMDB0ZmR5cjRPaHF6U0ZOT3dCUV84MlRWUDFiZzdwYjEzUVI3WGJha3FhNWVWd0N4Wmg1ZUNJbHlCbXJPenJTWFBRaHpfUDg1bF
+  link           https://news.google.com/rss/articles/CBMi4wFBVV95cUxPQnAtR0xGaF9JMUUtSFIxU3NTNWIyUVpYQ0tzWTI4QXE4ZWRCWU10WG5fanlBT2VoYmMtMWVWQTdQZlQzMDB0ZmR5cjRPaHF6U0ZOT3dCUV84MlRWUDFiZzdwYjEzUVI3WGJha3FhNWVWd0N4Wmg1ZUNJbHlCbXJPenJTWFBRaHpfUDg1bFg4WXdaQzgxMGRzNko4bDZYRTBjNU43ejA0SHVGLWszSU5rV1VkY2FPNnlWVVVXcEJpcGZNRDFaWTlhZ0ZOZ1ZGVTk2cGg5aVMwUThWNFlSLVh0azF4QQ?oc=5
+  language       fr
+  published_at   Sun, 26 Jul 2026 06:08:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","fr"]
+  properties     {"guid":"CBMi4wFBVV95cUxPQnAtR0xGaF9JMUUtSFIxU3NTNWIyUVpYQ0tzWTI4QXE4ZWRCWU10WG5fanlBT2VoYmMtMWVWQTdQZlQzMDB0ZmR5cjRPaHF6U0ZOT3dCUV84MlRWUDFiZzdwYjEzUVI3WGJha3FhNWVWd0N4Wmg1ZUNJbHlCbXJPenJTWFBRaHpfUDg1bFg4WXdaQzgxMGRzNko4bDZYRTBjNU43ejA0SHVGLWszSU5rV1VkY2FPNnlWVVVXcEJpcGZNRDFaWTlhZ0ZOZ1ZGVTk2cGg5aVMwUThWNFlSLVh0azF4QQ"}
+
+--- row 3 ---
+  uid            gnews-mon-fr-coup-attempt|CBMiswFBVV95cUxQTm5wcUFMLWxucHRKbVJWM3lpcGJhYjJrRGltaVBzbUYzUzVWZ2h3WTZVSlNTQzRiYUtlZG5uRVBiUUg3WFFQWEZCWVY1UjNmZFlsc0xkOElJVUFoUTEyQno1RjlNU3BSZXpHSTFGQ0VaNnlUUFNIQmx6QmRXV01lZEE0ZFpnZEs3Mk1qRkM1TXdZVU14YkZLWXNGMzRrWGkzVWxzWVB5ck50emtsdUJJdkwtUQ
+  title          90 ans du coup d’Etat de Franco : pourquoi la France a refusé d’intervenir - equinoxmagazine.fr
+  body           <a href="https://news.google.com/rss/articles/CBMiswFBVV95cUxQTm5wcUFMLWxucHRKbVJWM3lpcGJhYjJrRGltaVBzbUYzUzVWZ2h3WTZVSlNTQzRiYUtlZG5uRVBiUUg3WFFQWEZCWVY1UjNmZFlsc0xkOElJVUFoUTEyQno1RjlNU3BSZXpHSTFGQ0VaNnlUUFNIQmx6QmRXV01lZEE0ZFpnZEs3Mk1qRkM1TXdZVU14YkZLWXNGMzRrWGkzVWxzWVB5ck50emtsdUJJdkwtUQ?oc=5" target="_blank">90 ans du coup d’Etat de Franco : pourquoi la France a refusé d’intervenir</a>&nbsp;&nbsp;<font color="#6f6f6f">equinoxmagazine.fr</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiswFBVV95cUxQTm5wcUFMLWxucHRKbVJWM3lpcGJhYjJrRGltaVBzbUYzUzVWZ2h3WTZVSlNTQzRiYUtlZG5uRVBiUUg3WFFQWEZCWVY1UjNmZFlsc0xkOElJVUFoUTEyQno1RjlNU3BSZXpHSTFGQ0VaNnlUUFNIQmx6QmRXV01lZEE0ZFpnZEs3Mk1qRk
+  link           https://news.google.com/rss/articles/CBMiswFBVV95cUxQTm5wcUFMLWxucHRKbVJWM3lpcGJhYjJrRGltaVBzbUYzUzVWZ2h3WTZVSlNTQzRiYUtlZG5uRVBiUUg3WFFQWEZCWVY1UjNmZFlsc0xkOElJVUFoUTEyQno1RjlNU3BSZXpHSTFGQ0VaNnlUUFNIQmx6QmRXV01lZEE0ZFpnZEs3Mk1qRkM1TXdZVU14YkZLWXNGMzRrWGkzVWxzWVB5ck50emtsdUJJdkwtUQ?oc=5
+  language       fr
+  published_at   Sat, 18 Jul 2026 01:59:12 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","fr"]
+  properties     {"guid":"CBMiswFBVV95cUxQTm5wcUFMLWxucHRKbVJWM3lpcGJhYjJrRGltaVBzbUYzUzVWZ2h3WTZVSlNTQzRiYUtlZG5uRVBiUUg3WFFQWEZCWVY1UjNmZFlsc0xkOElJVUFoUTEyQno1RjlNU3BSZXpHSTFGQ0VaNnlUUFNIQmx6QmRXV01lZEE0ZFpnZEs3Mk1qRkM1TXdZVU14YkZLWXNGMzRrWGkzVWxzWVB5ck50emtsdUJJdkwtUQ"}

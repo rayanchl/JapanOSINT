@@ -116,11 +116,7 @@ static int run_scrape(const source_ctx *ctx, intel_sink *sink) {
   return -1;
 }
 
-#define DEFR(SYM, ID, NAME, NAMEJA, RUN, CAT, TYPE, URL, DESC, FREE) \
-  static const source_def SYM = { .id = ID, .collector = "osint", .name = NAME, \
-    .name_ja = NAMEJA, .update_interval_sec = 0, .run = RUN, .category = CAT, \
-    .type = TYPE, .url = URL, .description = DESC, .layer = NULL, .free_tier = FREE }; \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 DEFR(zoomeye_def, "ZOOMEYE", "ZoomEye Host Search", "ZoomEye ホスト検索", run_zoomeye,
      "cyber", "api", "https://www.zoomeye.org/", "Internet-wide device/banner scan engine for JP (needs ZOOMEYE_API_KEY)", 0);

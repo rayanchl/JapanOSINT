@@ -13,6 +13,7 @@
  * recallsByVehicle) and emits ONE intel_item per recall campaign. VIN decode
  * failure → emits nothing. License-plate branch: no real fetch is available →
  * emits nothing (honest empty — no static source-link descriptors). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
@@ -34,18 +35,6 @@ static int vin_val(char c) {
   if (c == 'R') return 9;
   if (c >= 'S' && c <= 'Z') return c - 'S' + 2;
   return -1;
-}
-
-static void uri_encode(const char *in, char *out, size_t cap) {
-  static const char *keep = "-_.!~*'()";
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p && w + 4 < cap; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(keep, c)) out[w++] = (char)c;
-    else { snprintf(out + w, cap - w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
 }
 
 /* Local VIN validation → object added into the decoded-VIN body. NULL if the
@@ -129,8 +118,8 @@ static cJSON *decode_vin_nhtsa(http_client *http, const char *vin) {
 static int emit_recalls(intel_sink *sink, http_client *http, const char *vin,
                         const char *mk, const char *md, const char *yr) {
   char em[256], emd[256], url[640];
-  uri_encode(mk, em, sizeof em);
-  uri_encode(md, emd, sizeof emd);
+  jo_uri_encode_buf(mk, em, sizeof em);
+  jo_uri_encode_buf(md, emd, sizeof emd);
   snprintf(url, sizeof url,
     "https://api.nhtsa.gov/recalls/recallsByVehicle?make=%s&model=%s&modelYear=%s",
     em, emd, yr);

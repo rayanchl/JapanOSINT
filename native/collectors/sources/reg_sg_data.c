@@ -23,15 +23,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-/* First non-empty string among the candidate keys. */
-static const char *pick(const cJSON *o, const char *const *keys) {
-  for (int i = 0; keys[i]; i++) {
-    const char *v = jo_sv(o, keys[i]);
-    if (v) return v;
-  }
-  return NULL;
-}
-
 /* one CKAN record → one intel_item. Returns 1 if emitted. */
 static int emit_record(intel_sink *sink, const cJSON *r) {
   if (!cJSON_IsObject(r)) return 0;
@@ -40,9 +31,9 @@ static int emit_record(intel_sink *sink, const cJSON *r) {
   static const char *stat_keys[] = { "uen_status_desc",
                                      "entity_status_description",
                                      "entity_status", "status", NULL };
-  const char *uen  = pick(r, uen_keys);
-  const char *name = pick(r, name_keys);
-  const char *stat = pick(r, stat_keys);
+  const char *uen  = jo_first_sv(r, uen_keys);
+  const char *name = jo_first_sv(r, name_keys);
+  const char *stat = jo_first_sv(r, stat_keys);
   if (!uen && !name) return 0;
 
   static const char *type_keys[] = { "entity_type_desc",
@@ -50,9 +41,9 @@ static int emit_record(intel_sink *sink, const cJSON *r) {
   static const char *reg_keys[]  = { "uen_issue_date",
                                      "registration_incorporation_date", NULL };
   static const char *street_keys[] = { "reg_street_name", NULL };
-  const char *type   = pick(r, type_keys);
-  const char *reg    = pick(r, reg_keys);
-  const char *street = pick(r, street_keys);
+  const char *type   = jo_first_sv(r, type_keys);
+  const char *reg    = jo_first_sv(r, reg_keys);
+  const char *street = jo_first_sv(r, street_keys);
 
   cJSON *data = cJSON_CreateObject();
   if (name)   cJSON_AddStringToObject(data, "entity_name", name);

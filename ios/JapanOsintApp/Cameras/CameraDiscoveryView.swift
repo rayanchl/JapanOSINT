@@ -20,6 +20,9 @@ struct CameraDiscoveryView: View {
     @State private var loadMoreError: String?
     @State private var subscription: AnyCancellable?
     @State private var seeded = false
+    /// The REST backfill threw. This — not the WebSocket — is what "offline"
+    /// means on this tab.
+    @State private var seedFailed = false
     @State private var selectedFeature: GeoFeature?
     @State private var searchText = ""
 
@@ -57,10 +60,12 @@ struct CameraDiscoveryView: View {
 
     var body: some View {
         Group {
-            // WS down + no events → unified offline state. WS up + no events
-            // is just a pre-discovery state (instructive empty), keep custom.
-            if events.isEmpty && !ws.isConnected {
-                OfflineStateView(retry: { Task { await trigger() } })
+            // Offline means the REST backfill FAILED — not "the push socket
+            // isn't up". The discovery feed is seeded and paged over REST, so
+            // a down/disabled WebSocket is irrelevant here; keying off it made
+            // the tab claim the backend was unreachable while it was answering.
+            if events.isEmpty && seedFailed {
+                OfflineStateView(retry: { Task { await reseed() } })
             } else {
                 contentView
             }
@@ -244,23 +249,12 @@ struct CameraDiscoveryView: View {
     @ViewBuilder
     private var mapView: some View {
         Map(position: $cameraPosition) {
-            ForEach(filteredEvents) { ev in
-                if let lat = ev.lat, let lon = ev.lon {
-                    Annotation(
-                        ev.title ?? ev.id,
-                        coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon),
-                        anchor: .bottom
-                    ) {
-                        Button {
-                            selectedFeature = feature(from: ev)
-                        } label: {
-                            mapPinView(
-                                symbol: registry.symbol(for: "cameras"),
-                                color: registry.color(for: "cameras")
-                            )
-                        }
-                    }
-                }
+            // Pre-filtered to placeable events + a @MapContentBuilder helper so
+            // the content resolves unambiguously as `some MapContent` (mirrors
+            // MapTab). An inline `if let` here makes the content optional and
+            // collapses Map's initializer resolution onto its no-content overload.
+            ForEach(mappableEvents, id: \.id) { ev in
+                cameraAnnotation(ev)
             }
         }
         .mapStyle(.standard(elevation: .realistic))
@@ -487,6 +481,36 @@ struct CameraDiscoveryView: View {
         !selectedChannels.isEmpty || feedAvailability != .all
     }
 
+    /// Filtered events that actually carry a coordinate — the only ones the map
+    /// can place. Keeps the map ForEach content unconditional (see `mapView`).
+    private var mappableEvents: [CameraEvent] {
+        filteredEvents.filter { $0.lat != nil && $0.lon != nil }
+    }
+
+    /// One camera pin. Extracted as `@MapContentBuilder` so its return type is
+    /// concretely `some MapContent` — the same shape MapTab uses.
+    @MapContentBuilder
+    private func cameraAnnotation(_ ev: CameraEvent) -> some MapContent {
+        // Fully qualified: the app defines its own `Annotation` (the analyst
+        // note DTO in Models+Roadmap), which shadows MapKit's here and makes the
+        // content fail to conform to MapContent.
+        MapKit.Annotation(
+            ev.title ?? ev.id,
+            coordinate: CLLocationCoordinate2D(latitude: ev.lat ?? 0,
+                                               longitude: ev.lon ?? 0),
+            anchor: .bottom
+        ) {
+            Button {
+                selectedFeature = feature(from: ev)
+            } label: {
+                mapPinView(
+                    symbol: registry.symbol(for: "cameras"),
+                    color: registry.color(for: "cameras")
+                )
+            }
+        }
+    }
+
     /// Apply search + source-channel + feed-availability filters. Search hay
     /// includes channel + title + URL so users can pivot from the filter
     /// chips back to a free-text query without losing matches.
@@ -665,10 +689,19 @@ struct CameraDiscoveryView: View {
                 let trimmed = merged.suffix(2000)
                 events = Array(trimmed)
                 feedCursor = result.cursor
+                seedFailed = false
             }
         } catch {
             seeded = false
+            seedFailed = true
         }
+    }
+
+    /// Retry entry point for `OfflineStateView` — re-runs the REST backfill
+    /// that failed, rather than kicking off a discovery run.
+    private func reseed() async {
+        seeded = false
+        await seed()
     }
 
     /// Page older history when the user scrolls past the seeded window.

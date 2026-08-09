@@ -206,7 +206,10 @@ static int phone_run(const source_ctx *ctx, intel_sink *sink,
 
   free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
-  return rc >= 0 ? 1 : 0;
+  /* run() is a STATUS code, not a row count: core/scheduler.c does
+   * `status = rc == 0 ? "ok" : "error"`. Returning 1 here marked every
+   * successful lookup as an errored run. */
+  return rc >= 0 ? 0 : -1;
 }
 
 static int run_lookup(const source_ctx *ctx, intel_sink *sink) {

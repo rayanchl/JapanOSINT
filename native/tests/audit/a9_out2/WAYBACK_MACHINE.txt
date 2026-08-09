@@ -1,0 +1,41 @@
+=== WAYBACK_MACHINE  entity=github.com
+exit: 0
+sched: rc=0 records=50 3387ms
+--- stderr ---
+[sched] WAYBACK_MACHINE run rc=0 records=50 3387ms
+--- persisted: 39 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=39
+sub_source_id: (null)=39
+
+--- row 1 ---
+  uid            WAYBACK_MACHINE|snapshot:20080514210148:http://github.com/
+  title          2008-05-14 21:01:48 — http://github.com/
+  body           {"timestamp":"20080514210148","date":"2008-05-14 21:01:48","original_url":"http://github.com/","mimetype":"text/html","status_code":"200","size_bytes":"3531","url":"https://web.archive.org/web/20080514210148/http://github.com/"}
+  summary        http://github.com/
+  link           https://web.archive.org/web/20080514210148/http://github.com/
+  published_at   2008-05-14 21:01:48
+  record_type    osint_service_result
+  tags           ["osint-search","WAYBACK_MACHINE"]
+  properties     {"service":"WAYBACK_MACHINE","timestamp":"20080514210148","mimetype":"text/html","success":true}
+
+--- row 2 ---
+  uid            WAYBACK_MACHINE|snapshot:20080618201317:http://github.com:80/?
+  title          2008-06-18 20:13:17 — http://github.com:80/?
+  body           {"timestamp":"20080618201317","date":"2008-06-18 20:13:17","original_url":"http://github.com:80/?","mimetype":"text/html","status_code":"200","size_bytes":"3474","url":"https://web.archive.org/web/20080618201317/http://github.com:80/?"}
+  summary        http://github.com:80/?
+  link           https://web.archive.org/web/20080618201317/http://github.com:80/?
+  published_at   2008-06-18 20:13:17
+  record_type    osint_service_result
+  tags           ["osint-search","WAYBACK_MACHINE"]
+  properties     {"service":"WAYBACK_MACHINE","timestamp":"20080618201317","mimetype":"text/html","success":true}
+
+--- row 3 ---
+  uid            WAYBACK_MACHINE|snapshot:20080705211438:http://github.com:80/?
+  title          2008-07-05 21:14:38 — http://github.com:80/?
+  body           {"timestamp":"20080705211438","date":"2008-07-05 21:14:38","original_url":"http://github.com:80/?","mimetype":"text/html","status_code":"200","size_bytes":"4199","url":"https://web.archive.org/web/20080705211438/http://github.com:80/?"}
+  summary        http://github.com:80/?
+  link           https://web.archive.org/web/20080705211438/http://github.com:80/?
+  published_at   2008-07-05 21:14:38
+  record_type    osint_service_result
+  tags           ["osint-search","WAYBACK_MACHINE"]
+  properties     {"service":"WAYBACK_MACHINE","timestamp":"20080705211438","mimetype":"text/html","success":true}

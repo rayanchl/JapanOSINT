@@ -479,8 +479,14 @@ struct API: Sendable {
         return env.jobs
     }
 
-    func breachJob(_ id: String) async throws -> BreachJob {
-        try await get("/api/admin/breach/jobs/\(id)")
+    /// `GET /api/admin/breach/jobs/:id` returns the SAME envelope as the list
+    /// route — core/breach_jobs.c always wraps in `{"jobs":[…]}` and uses the id
+    /// only as a filter. Decoding a bare `BreachJob` threw `keyNotFound` on
+    /// every call (`BreachJob.jobId` is non-optional). Returns nil when the id
+    /// matches nothing rather than inventing a 404.
+    func breachJob(_ id: String) async throws -> BreachJob? {
+        let env: BreachJobsEnvelope = try await get("/api/admin/breach/jobs/\(id)")
+        return env.jobs.first
     }
 
     /// Operator-surface errors worth naming. A 409 is the server's one-job-at-a-
@@ -510,8 +516,29 @@ struct API: Sendable {
         let env: AlertRuleEnvelope = try await post("/api/alerts", body: body, timeout: API.userDefaultTimeout)
         return env.data
     }
-    func alertUpdate(_ rule: AlertRule) async throws -> AlertRule {
-        let body = try JSONEncoder().encode(rule)
+    /// PATCH /api/alerts/:id.
+    ///
+    /// The server merges at the TOP LEVEL only (`core/alertsapi.c`, the
+    /// `is_patch` branch): every key present in the body replaces the stored
+    /// value wholesale, and every key absent keeps it. It then re-runs
+    /// `validate_rule` on the merged object, which demands a real ≥16-character
+    /// `secret` on every webhook channel in whatever array it ends up with —
+    /// there is NO per-channel secret merge. Reads mask stored secrets as
+    /// "••••" (12 bytes), so echoing the rule straight back is an unconditional
+    /// 400 for any rule with a webhook channel.
+    ///
+    /// `omittingChannels` drops the `channels` key entirely, which is the only
+    /// way to keep a stored webhook secret. Pass it whenever the caller did not
+    /// intend to change the channel list (enable/disable toggle, renaming a
+    /// rule whose channels were left untouched).
+    func alertUpdate(_ rule: AlertRule,
+                     omittingChannels: Bool = false) async throws -> AlertRule {
+        var body = try JSONEncoder().encode(rule)
+        if omittingChannels,
+           var obj = try JSONSerialization.jsonObject(with: body) as? [String: Any] {
+            obj.removeValue(forKey: "channels")
+            body = try JSONSerialization.data(withJSONObject: obj)
+        }
         let env: AlertRuleEnvelope = try await patch("/api/alerts/\(rule.id)", body: body)
         return env.data
     }
@@ -607,9 +634,16 @@ struct API: Sendable {
     /// SSE URL + auth headers for the progress stream (consumed by SearchSSE
     /// via URLSession.bytes — which, unlike a browser EventSource, CAN send
     /// the bearer header; the route is also pre-auth so either works).
-    func searchStreamRequest(_ requestId: String) -> URLRequest {
+    ///
+    /// Returns nil when `baseURL` — which the user types into Settings — is not
+    /// a parseable URL. This used to force-unwrap, so a typo'd backend URL
+    /// crashed the app the moment a search was started.
+    func searchStreamRequest(_ requestId: String) -> URLRequest? {
         let base = baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-        var req = URLRequest(url: URL(string: base + "/api/search/stream/\(requestId)")!)
+        guard let url = URL(string: base + "/api/search/stream/\(requestId)") else {
+            return nil
+        }
+        var req = URLRequest(url: url)
         req.timeoutInterval = 600
         req.setValue("text/event-stream", forHTTPHeaderField: "Accept")
         if let token = AuthTokenBox.shared.accessToken, !token.isEmpty {

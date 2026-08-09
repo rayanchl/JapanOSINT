@@ -1,0 +1,33 @@
+=== gnews-mon-tw-pla-incursion
+exit: 0
+sched: rc=0 records=100 880ms
+--- stderr ---
+[rss] gnews-mon-tw-pla-incursion emitted 100
+[sched] gnews-mon-tw-pla-incursion run rc=0 records=100 880ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-tw-pla-incursion|CBMiZ0FVX3lxTE9rWXZaUnZWN09KMklxZ0o5N201MUdIdlFERHJOYnFOeGRaVFJUVEY5elBDTzZpbTVoWTRhRGt0X0c3MEJkenNnU294OFZMUUxoako0OEJpWEtCSFFrSEpfa0trTnlnZkHSAWdBVV95cUxPa1l2WlJ2VjdPSjJJcWdKOTdtNTFHSHZRRERyTmJxTnhkWlRSVFRGOXpQQ082aW01aFk0YURrdF9HNzBCZHpzZ1NveDhWTFFMaGpKNDhCaVhLQkhRa0hKX2tLa055Z2ZB
+  title          解放軍機擾台減半因美中關係改善？中國國防部不鬆口 - 世界新聞網
+  body           <a href="https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9rWXZaUnZWN09KMklxZ0o5N201MUdIdlFERHJOYnFOeGRaVFJUVEY5elBDTzZpbTVoWTRhRGt0X0c3MEJkenNnU294OFZMUUxoako0OEJpWEtCSFFrSEpfa0trTnlnZkHSAWdBVV95cUxPa1l2WlJ2VjdPSjJJcWdKOTdtNTFHSHZRRERyTmJxTnhkWlRSVFRGOXpQQ082aW01aFk0YURrdF9HNzBCZHpzZ1NveDhWTFFMaGpKNDhCaVhLQkhRa0hKX2tLa055Z2ZB?oc=5" target="_blank">解放軍機擾台減半因美中關係改善？中國國防部不鬆口</a>&nbsp;&nbsp;<font color="#6f6f6f">世界新聞網</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9rWXZaUnZWN09KMklxZ0o5N201MUdIdlFERHJOYnFOeGRaVFJUVEY5elBDTzZpbTVoWTRhRGt0X0c3MEJkenNnU294OFZMUUxoako0OEJpWEtCSFFrSEpfa0trTnlnZkHSAWdBVV95cUxPa1l2WlJ2VjdPSjJJcWdKOTdtNTFHSHZRRERyTm
+  link           https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9rWXZaUnZWN09KMklxZ0o5N201MUdIdlFERHJOYnFOeGRaVFJUVEY5elBDTzZpbTVoWTRhRGt0X0c3MEJkenNnU294OFZMUUxoako0OEJpWEtCSFFrSEpfa0trTnlnZkHSAWdBVV95cUxPa1l2WlJ2VjdPSjJJcWdKOTdtNTFHSHZRRERyTmJxTnhkWlRSVFRGOXpQQ082aW01aFk0YURrdF9HNzBCZHpzZ1NveDhWTFFMaGpKNDhCaVhLQkhRa0hKX2tLa055Z2ZB?oc=5
+  language       zh
+  published_at   Thu, 30 Jul 2026 15:10:26 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","tw"]
+  properties     {"guid":"CBMiZ0FVX3lxTE9rWXZaUnZWN09KMklxZ0o5N201MUdIdlFERHJOYnFOeGRaVFJUVEY5elBDTzZpbTVoWTRhRGt0X0c3MEJkenNnU294OFZMUUxoako0OEJpWEtCSFFrSEpfa0trTnlnZkHSAWdBVV95cUxPa1l2WlJ2VjdPSjJJcWdKOTdtNTFHSHZRRERyTmJxTnhkWlRSVFRGOXpQQ082aW01aFk0YURrdF9HNzBCZHpzZ1NveDhWTFFMaGpKNDhCaVhLQkhRa0hKX2tLa055Z2ZB"}
+
+--- row 2 ---
+  uid            gnews-mon-tw-pla-incursion|CBMivgJBVV95cUxNZmVzSld6UlluUGFvUjJSOTdUX3hmQkl2eVY3WFlYVkJyVFlsQUtQRk44YjlUTkpxdWFkaTBsMFlUaUprbVhQclhfbHdzSkdyR2djei1YUmd4YnFVRGJweEJhUVd1UVpsbnBzZmMtcVF6dG9HVTNHRV9LS0U1QU8tQS1Cc2t4V0lJU0x5Y2xGRTFYNzhLcHNHNEFaOW9ydEYzYnp0V0NyTEJzVFdsSGNzM0dXcUVBODhHc1ZDOHVISTJVdklDbXNPV1J0dWh6UmRqbnF1Z1I0UlltSFdzSE5UZERLYkNCOHNPbzdkbEM5QmI0OWp6aGllbWxKcWNEYldmMmp0ZktuTTltRWl0RDBnOU1VUjFraXg3YkNySEN5RjlUN25LRjhzTEp0bHMxMWhNWE9MeGZnWVAwMWFCRWc
+  title          中共解放軍40機艦擾台 17架次共機逾越台海中線 - Yahoo新聞
+  body           <a href="https://news.google.com/rss/articles/CBMivgJBVV95cUxNZmVzSld6UlluUGFvUjJSOTdUX3hmQkl2eVY3WFlYVkJyVFlsQUtQRk44YjlUTkpxdWFkaTBsMFlUaUprbVhQclhfbHdzSkdyR2djei1YUmd4YnFVRGJweEJhUVd1UVpsbnBzZmMtcVF6dG9HVTNHRV9LS0U1QU8tQS1Cc2t4V0lJU0x5Y2xGRTFYNzhLcHNHNEFaOW9ydEYzYnp0V0NyTEJzVFdsSGNzM0dXcUVBODhHc1ZDOHVISTJVdklDbXNPV1J0dWh6UmRqbnF1Z1I0UlltSFdzSE5UZERLYkNCOHNPbzdkbEM5QmI0OWp6aGllbWxKcWNEYldmMmp0ZktuTTltRWl0RDBnOU1VUjFraXg3YkNySEN5RjlUN25LRjhzTEp0bHMxMWhNWE9MeGZnWVAwMWFCRWc?oc=5" target="_blank">中共解放軍40機艦擾台 17架次共機逾越台海中線</a>&nbsp;&nbsp;<font color="#6f6f6f">Yahoo新聞</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMivgJBVV95cUxNZmVzSld6UlluUGFvUjJSOTdUX3hmQkl2eVY3WFlYVkJyVFlsQUtQRk44YjlUTkpxdWFkaTBsMFlUaUprbVhQclhfbHdzSkdyR2djei1YUmd4YnFVRGJweEJhUVd1UVpsbnBzZmMtcVF6dG9HVTNHRV9LS0U1QU8tQS1Cc2t4V0lJU0x5Y2
+  link           https://news.google.com/rss/articles/CBMivgJBVV95cUxNZmVzSld6UlluUGFvUjJSOTdUX3hmQkl2eVY3WFlYVkJyVFlsQUtQRk44YjlUTkpxdWFkaTBsMFlUaUprbVhQclhfbHdzSkdyR2djei1YUmd4YnFVRGJweEJhUVd1UVpsbnBzZmMtcVF6dG9HVTNHRV9LS0U1QU8tQS1Cc2t4V0lJU0x5Y2xGRTFYNzhLcHNHNEFaOW9ydEYzYnp0V0NyTEJzVFdsSGNzM0dXcUVBODhHc1ZDOHVISTJVdklDbXNPV1J0dWh6UmRqbnF1Z1I0UlltSFdzSE5UZERLYkNCOHNPbzdkbEM5QmI0OWp6aGllbWxKcWNEYldmMmp0ZktuTTltRWl0RDBnOU1VUjFraXg3YkNySEN5RjlUN25LRjhzTEp0bHMxMWhNWE9MeGZnWVAwMWFCRWc?oc=5
+  language       zh
+  published_at   Sat, 25 Jul 2026 02:34:53 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","tw"]
+  properties     {"guid":"CBMivgJBVV95cUxNZmVzSld6UlluUGFvUjJSOTdUX3hmQkl2eVY3WFlYVkJyVFlsQUtQRk44YjlUTkpxdWFkaTBsMFlUaUprbVhQclhfbHdzSkdyR2djei1YUmd4YnFVRGJweEJhUVd1UVpsbnBzZmMtcVF6dG9HVTNHRV9LS0U1QU8tQS1Cc2t4V0lJU0x5Y2xGRTFYNzhLcHNHNEFaOW9ydEYzYnp0V0NyTEJzVFdsSGNzM0dXcUVBODhHc1ZDOHVISTJVdklDbXNPV1J0dWh6UmRqbnF1Z1I0UlltSFdzSE5UZERLYkNCOHNPbzdkbEM5QmI0OWp6aGllbWxKcWNEYldmMmp0ZktuTTltRWl0RDBnOU1VUjFraXg3YkNySEN5RjlUN25LRjhzTEp0bHMxMWhNWE9MeGZnWVAwMWFCRWc"}

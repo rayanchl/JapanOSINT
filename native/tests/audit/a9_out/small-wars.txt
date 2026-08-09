@@ -1,0 +1,48 @@
+=== small-wars
+exit: 0
+sched: rc=0 records=10 674ms
+--- stderr ---
+[rss] small-wars emitted 10
+[sched] small-wars run rc=0 records=10 674ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            small-wars|https://smallwarsjournal.com/?p=151011
+  title          Climate Migration Into Yemen: A Regional Security Threat
+  body           <p>Abstract While often overshadowed by its civil war, Yemen faces another destabilizing threat from climate-induced migration from the Horn of Africa. Between one to two hundred thousand people enter Yemen each year. Climate migration creates a vicious climate-violence cycle, where climate migrants move to new locations that presumably offer better economic opportunities. Unfortunately for those who seek to enter Yemen &#8230;<br /> <a class="postReadMore" href="https://smallwarsjournal.com/2026/07/31/climate-migration-into-yemen-a-regional-security-threat/">Read more<i class="fa fa-angle-double-right"></i></a></p>
+<p>The post <a href="https://smallwarsjournal.com/2026/07/31/climate-migration-into-yemen-a-regional-security-threat/">Climate Migration Into Yemen: A Regional Security Threat</a> appeared first on <a href="https://smallwarsjournal.com">Small Wars Journal by Arizona State Uni …<16 more chars>
+  summary        <p>Abstract While often overshadowed by its civil war, Yemen faces another destabilizing threat from climate-induced migration from the Horn of Africa. Between one to two hundred thousand people enter Yemen each year. Climate migration crea
+  link           https://smallwarsjournal.com/2026/07/31/climate-migration-into-yemen-a-regional-security-threat/
+  language       en
+  published_at   Fri, 31 Jul 2026 06:00:57 +0000
+  record_type    article
+  tags           ["osint","conflict","thematic","global"]
+  properties     {"guid":"https://smallwarsjournal.com/?p=151011"}
+
+--- row 2 ---
+  uid            small-wars|https://smallwarsjournal.com/?p=152524
+  title          The Importance of Revisiting Deterrence in the Space Domain
+  body           <p>This essay is from the Security &#38; Defence PLuS Emerging Voices Series, which highlights the next generation of scholars and practitioners shaping thinking on strategy, security, and defense. The series brings together perspectives from PhD candidates and early career researchers, grounded in the complex geopolitical realities of the 21st century. The collection explores a “Latticework of Resilience” that connects often-overlooked sectors, such &#8230;<br /> <a class="postReadMore" href="https://smallwarsjournal.com/2026/07/31/the-importance-of-revisiting-deterrence-in-the-space-domain/">Read more<i class="fa fa-angle-double-right"></i></a></p>
+<p>The post <a href="https://smallwarsjournal.com/2026/07/31/the-importance-of-revisiting-deterrence-in-the-space-domain/">The Importance of Revisiting Deterrence in the Space Domain</a> appeared first on <a href="https://smallwarsjournal.co …<58 more chars>
+  summary        <p>This essay is from the Security &#38; Defence PLuS Emerging Voices Series, which highlights the next generation of scholars and practitioners shaping thinking on strategy, security, and defense. The series brings together perspectives 
+  link           https://smallwarsjournal.com/2026/07/31/the-importance-of-revisiting-deterrence-in-the-space-domain/
+  language       en
+  published_at   Fri, 31 Jul 2026 06:00:47 +0000
+  record_type    article
+  tags           ["osint","conflict","thematic","global"]
+  properties     {"guid":"https://smallwarsjournal.com/?p=152524"}
+
+--- row 3 ---
+  uid            small-wars|https://smallwarsjournal.com/?p=152307
+  title          Staff Processes in Large-Scale Combat Operations Part IV: Targeting as Part of Combined Arms
+  body           <p>ADP 3-0 defines combined arms as “the synchronized and simultaneous application of arms to achieve an effect greater than if each element was used separately or sequentially.” Unfortunately, units struggle to actually conduct combined arms and specifically integrate fire and maneuver at the division and above echelons. This is in part the consequence of a focus on targeting to synchronize &#8230;<br /> <a class="postReadMore" href="https://smallwarsjournal.com/2026/07/31/staff-processes-in-large-scale-combat-operations-part-iv-targeting-as-part-of-combined-arms/">Read more<i class="fa fa-angle-double-right"></i></a></p>
+<p>The post <a href="https://smallwarsjournal.com/2026/07/31/staff-processes-in-large-scale-combat-operations-part-iv-targeting-as-part-of-combined-arms/">Staff Processes in Large-Scale Combat Operations Part IV: Targeting as Part of Combined Arms</a> appeared first on …<95 more chars>
+  summary        <p>ADP 3-0 defines combined arms as “the synchronized and simultaneous application of arms to achieve an effect greater than if each element was used separately or sequentially.” Unfortunately, units struggle to actually conduct combine
+  link           https://smallwarsjournal.com/2026/07/31/staff-processes-in-large-scale-combat-operations-part-iv-targeting-as-part-of-combined-arms/
+  language       en
+  published_at   Fri, 31 Jul 2026 06:00:40 +0000
+  record_type    article
+  tags           ["osint","conflict","thematic","global"]
+  properties     {"guid":"https://smallwarsjournal.com/?p=152307"}

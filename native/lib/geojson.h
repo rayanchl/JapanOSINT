@@ -1,7 +1,13 @@
 /* lib/geojson.h — GeoJSON Feature → intel, port of
  * collectorMirror.featureToMasterItem + featureUid + geometryCentroid +
  * pickText + inferRecordType. One toolkit for the whole FeatureCollection
- * family; each such collector becomes a tiny fetch+emit source.c. */
+ * family; each such collector becomes a tiny fetch+emit source.c.
+ *
+ * DEVIATION from JS geometryCentroid: the representative lat/lon written to
+ * intel_items is the middle-segment midpoint for lines and the outer-ring
+ * vertex mean for polygons, NOT the bbox centre, which for a concave shape
+ * can land off the geometry entirely and is what the alert/geofence read path
+ * tests. See the comment on centroid() in geojson.c. */
 #ifndef JO_GEOJSON_H
 #define JO_GEOJSON_H
 #include "../source.h"
@@ -15,5 +21,15 @@ int geojson_emit_features(intel_sink *sink, const char *source_id,
 
 /* Convenience: parse a FeatureCollection / {features:[...]} / array and emit. */
 int geojson_emit_doc(intel_sink *sink, const char *source_id, cJSON *doc);
+
+/* One Point Feature, properties not yet attached:
+ *   {"type":"Feature","geometry":{"type":"Point","coordinates":[lon,lat]}}
+ * The caller adds "properties" (and anything else) afterwards.
+ *
+ * 240 collectors wrote these same nine cJSON calls by hand. Key insertion
+ * order here deliberately matches those copies byte for byte, because
+ * featureUid's hash fallback (geojson.c) fingerprints the PRINTED geometry —
+ * reordering the keys would re-uid every feature that has no natural id. */
+cJSON *gj_point_feature(double lon, double lat);
 
 #endif

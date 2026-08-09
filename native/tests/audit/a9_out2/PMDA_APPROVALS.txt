@@ -1,0 +1,7 @@
+=== PMDA_APPROVALS  entity=抗体
+exit: 0
+sched: rc=0 records=0 2096ms
+--- stderr ---
+[PMDA_APPROVALS] emitted 0
+[sched] PMDA_APPROVALS run rc=0 records=0 2096ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

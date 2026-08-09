@@ -1,0 +1,45 @@
+=== gnews-mon-gps-jamming
+exit: 0
+sched: rc=0 records=100 760ms
+--- stderr ---
+[rss] gnews-mon-gps-jamming emitted 100
+[sched] gnews-mon-gps-jamming run rc=0 records=100 760ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-gps-jamming|CBMiwAFBVV95cUxQQnNoaEpJX0RhT1B5QVJiQUhtbXNPYzdnYk1BOW5vWVNwZW9wODZPNlRTb1NDYjFRa2x4WTl3blVMS2NLMVFFRTJaVlFjRkRPekJOMUJnWVBzUUxIUTdXSTlXSEJydE5vMF9weks4STJ2aXdzanRPRFNBX0d4MmgyYnhETlU4Uk5xVVFQai1SSGU3ZS1DUC13OGk4dUJvYUVYUDdpODFFMF9zMlpiSnB5NEtqblJaT0pTejdpQ0MxTXg
+  title          Ukraine Hits Major Lukoil Refinery and Knocks Out Russian Pole-21 GPS Jammer - UNITED24 Media
+  body           <a href="https://news.google.com/rss/articles/CBMiwAFBVV95cUxQQnNoaEpJX0RhT1B5QVJiQUhtbXNPYzdnYk1BOW5vWVNwZW9wODZPNlRTb1NDYjFRa2x4WTl3blVMS2NLMVFFRTJaVlFjRkRPekJOMUJnWVBzUUxIUTdXSTlXSEJydE5vMF9weks4STJ2aXdzanRPRFNBX0d4MmgyYnhETlU4Uk5xVVFQai1SSGU3ZS1DUC13OGk4dUJvYUVYUDdpODFFMF9zMlpiSnB5NEtqblJaT0pTejdpQ0MxTXg?oc=5" target="_blank">Ukraine Hits Major Lukoil Refinery and Knocks Out Russian Pole-21 GPS Jammer</a>&nbsp;&nbsp;<font color="#6f6f6f">UNITED24 Media</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiwAFBVV95cUxQQnNoaEpJX0RhT1B5QVJiQUhtbXNPYzdnYk1BOW5vWVNwZW9wODZPNlRTb1NDYjFRa2x4WTl3blVMS2NLMVFFRTJaVlFjRkRPekJOMUJnWVBzUUxIUTdXSTlXSEJydE5vMF9weks4STJ2aXdzanRPRFNBX0d4MmgyYnhETlU4Uk5xVVFQai
+  link           https://news.google.com/rss/articles/CBMiwAFBVV95cUxQQnNoaEpJX0RhT1B5QVJiQUhtbXNPYzdnYk1BOW5vWVNwZW9wODZPNlRTb1NDYjFRa2x4WTl3blVMS2NLMVFFRTJaVlFjRkRPekJOMUJnWVBzUUxIUTdXSTlXSEJydE5vMF9weks4STJ2aXdzanRPRFNBX0d4MmgyYnhETlU4Uk5xVVFQai1SSGU3ZS1DUC13OGk4dUJvYUVYUDdpODFFMF9zMlpiSnB5NEtqblJaT0pTejdpQ0MxTXg?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 10:37:23 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","gps"]
+  properties     {"guid":"CBMiwAFBVV95cUxQQnNoaEpJX0RhT1B5QVJiQUhtbXNPYzdnYk1BOW5vWVNwZW9wODZPNlRTb1NDYjFRa2x4WTl3blVMS2NLMVFFRTJaVlFjRkRPekJOMUJnWVBzUUxIUTdXSTlXSEJydE5vMF9weks4STJ2aXdzanRPRFNBX0d4MmgyYnhETlU4Uk5xVVFQai1SSGU3ZS1DUC13OGk4dUJvYUVYUDdpODFFMF9zMlpiSnB5NEtqblJaT0pTejdpQ0MxTXg"}
+
+--- row 2 ---
+  uid            gnews-mon-gps-jamming|CBMiowFBVV95cUxOU2Fzc19tZTNzeHpCVldUS0JjQXF2T1V2WllZQkoxU3htRzFNRHc2WUsxUGNDa2dqUGU0bXVoZ0pjU3d0VEhTWmxLMDUtWHppLUlibkpuRmVzTng3MzNhellGd21lNEFfVld3M0VGU3Mwd2F3a1N3dlE3LS13cmFNT1kxU2hSLXlxLVVvcExES1hJWFNhUVU4dXFfV3c0dkZGSXFZ
+  title          A Civilian Plane Crashed in New Mexico. Was Military GPS Jamming To Blame? - Gadget Review
+  body           <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxOU2Fzc19tZTNzeHpCVldUS0JjQXF2T1V2WllZQkoxU3htRzFNRHc2WUsxUGNDa2dqUGU0bXVoZ0pjU3d0VEhTWmxLMDUtWHppLUlibkpuRmVzTng3MzNhellGd21lNEFfVld3M0VGU3Mwd2F3a1N3dlE3LS13cmFNT1kxU2hSLXlxLVVvcExES1hJWFNhUVU4dXFfV3c0dkZGSXFZ?oc=5" target="_blank">A Civilian Plane Crashed in New Mexico. Was Military GPS Jamming To Blame?</a>&nbsp;&nbsp;<font color="#6f6f6f">Gadget Review</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxOU2Fzc19tZTNzeHpCVldUS0JjQXF2T1V2WllZQkoxU3htRzFNRHc2WUsxUGNDa2dqUGU0bXVoZ0pjU3d0VEhTWmxLMDUtWHppLUlibkpuRmVzTng3MzNhellGd21lNEFfVld3M0VGU3Mwd2F3a1N3dlE3LS13cmFNT1kxU2hSLXlxLVVvcE
+  link           https://news.google.com/rss/articles/CBMiowFBVV95cUxOU2Fzc19tZTNzeHpCVldUS0JjQXF2T1V2WllZQkoxU3htRzFNRHc2WUsxUGNDa2dqUGU0bXVoZ0pjU3d0VEhTWmxLMDUtWHppLUlibkpuRmVzTng3MzNhellGd21lNEFfVld3M0VGU3Mwd2F3a1N3dlE3LS13cmFNT1kxU2hSLXlxLVVvcExES1hJWFNhUVU4dXFfV3c0dkZGSXFZ?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 16:38:55 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","gps"]
+  properties     {"guid":"CBMiowFBVV95cUxOU2Fzc19tZTNzeHpCVldUS0JjQXF2T1V2WllZQkoxU3htRzFNRHc2WUsxUGNDa2dqUGU0bXVoZ0pjU3d0VEhTWmxLMDUtWHppLUlibkpuRmVzTng3MzNhellGd21lNEFfVld3M0VGU3Mwd2F3a1N3dlE3LS13cmFNT1kxU2hSLXlxLVVvcExES1hJWFNhUVU4dXFfV3c0dkZGSXFZ"}
+
+--- row 3 ---
+  uid            gnews-mon-gps-jamming|CBMiqgFBVV95cUxPb1U4TGgyTEk2ejk3aFpEQXM1Snl3cEcxSE5XYnBRbjlmOVRnYUtQQnpmOE1KRkZVclU2ay1vaVRrTWVJc1M2R3FpZU1MeFQwcHFLMzQxSTZUSEJzckkxYWJzbFVDYUxFSnZCck5DUElNWEo1M2xhNHJTdS1rSWZVZFFWQkVvWGtCR25rbFNvTmVwZU9xLWg5NU9oazJkdV9lVlltbERjeWVJZw
+  title          Tests suggest Russian satellites can jam GPS on a continental scale - Ars Technica
+  body           <a href="https://news.google.com/rss/articles/CBMiqgFBVV95cUxPb1U4TGgyTEk2ejk3aFpEQXM1Snl3cEcxSE5XYnBRbjlmOVRnYUtQQnpmOE1KRkZVclU2ay1vaVRrTWVJc1M2R3FpZU1MeFQwcHFLMzQxSTZUSEJzckkxYWJzbFVDYUxFSnZCck5DUElNWEo1M2xhNHJTdS1rSWZVZFFWQkVvWGtCR25rbFNvTmVwZU9xLWg5NU9oazJkdV9lVlltbERjeWVJZw?oc=5" target="_blank">Tests suggest Russian satellites can jam GPS on a continental scale</a>&nbsp;&nbsp;<font color="#6f6f6f">Ars Technica</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiqgFBVV95cUxPb1U4TGgyTEk2ejk3aFpEQXM1Snl3cEcxSE5XYnBRbjlmOVRnYUtQQnpmOE1KRkZVclU2ay1vaVRrTWVJc1M2R3FpZU1MeFQwcHFLMzQxSTZUSEJzckkxYWJzbFVDYUxFSnZCck5DUElNWEo1M2xhNHJTdS1rSWZVZFFWQkVvWGtCR25rbF
+  link           https://news.google.com/rss/articles/CBMiqgFBVV95cUxPb1U4TGgyTEk2ejk3aFpEQXM1Snl3cEcxSE5XYnBRbjlmOVRnYUtQQnpmOE1KRkZVclU2ay1vaVRrTWVJc1M2R3FpZU1MeFQwcHFLMzQxSTZUSEJzckkxYWJzbFVDYUxFSnZCck5DUElNWEo1M2xhNHJTdS1rSWZVZFFWQkVvWGtCR25rbFNvTmVwZU9xLWg5NU9oazJkdV9lVlltbERjeWVJZw?oc=5
+  language       en
+  published_at   Mon, 08 Jun 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","gps"]
+  properties     {"guid":"CBMiqgFBVV95cUxPb1U4TGgyTEk2ejk3aFpEQXM1Snl3cEcxSE5XYnBRbjlmOVRnYUtQQnpmOE1KRkZVclU2ay1vaVRrTWVJc1M2R3FpZU1MeFQwcHFLMzQxSTZUSEJzckkxYWJzbFVDYUxFSnZCck5DUElNWEo1M2xhNHJTdS1rSWZVZFFWQkVvWGtCR25rbFNvTmVwZU9xLWg5NU9oazJkdV9lVlltbERjeWVJZw"}

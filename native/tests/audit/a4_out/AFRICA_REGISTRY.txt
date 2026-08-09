@@ -1,0 +1,44 @@
+=== AFRICA_REGISTRY  entity=Toyota
+exit: 0
+sched: rc=0 records=1 15267ms
+--- stderr ---
+[africa_reg:ZA] http status=404
+[africa_reg:ZA] http status=403
+[africa_reg:ZA] http status=0
+[africa_reg:ZA] http status=404
+[africa_reg:NG] http status=403
+[africa_reg:NG] emitted 0
+[africa_reg:KE] http status=403
+[africa_reg:KE] http status=403
+[africa_reg:GH] http status=404
+[africa_reg:GH] emitted 0
+[africa_reg:EG] emitted 1
+[africa_reg:MA] emitted 0
+[africa_reg:RW] http status=404
+[africa_reg:RW] emitted 0
+[africa_reg:TZ] emitted 0
+[africa_reg:UG] emitted 0
+[africa_reg:ZM] emitted 0
+[africa_reg:ZW] emitted 0
+[africa_reg:MW] emitted 0
+[africa_reg:SL] emitted 0
+[africa_reg:SC] http status=404
+[africa_reg:NA] emitted 0
+[africa_reg:LS] emitted 0
+[africa_reg:BW] http status=0
+[africa_reg:XX] http status=403
+[africa_reg] total emitted 1 across 25 registries
+[sched] AFRICA_REGISTRY run rc=0 records=1 15267ms
+[detect] anomaly opened: AFRICA_REGISTRY verdict=duration_outlier — duration 15267ms exceeds 10000ms threshold
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: africa-registry-company=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            AFRICA_REGISTRY|https://www.gafi.gov.eg/English/_layouts/15/spcontnt.aspx?&amp;url=%2fEnglish%2fPages%2fSearchResults.aspx%3fk%3dToyota
+  title          Web Parts Maintenance Page
+  link           https://www.gafi.gov.eg/English/_layouts/15/spcontnt.aspx?&amp;url=%2fEnglish%2fPages%2fSearchResults.aspx%3fk%3dToyota
+  language       ja
+  record_type    africa-registry-company
+  tags           ["osint-search"]
+  properties     {"service":"EG GAFI — investor/company services","query":"Toyota","href":"https://www.gafi.gov.eg/English/_layouts/15/spcontnt.aspx?&amp;url=%2fEnglish%2fPages%2fSearchResults.aspx%3fk%3dToyota","success":true}

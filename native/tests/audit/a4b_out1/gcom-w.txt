@@ -1,0 +1,31 @@
+=== gcom-w
+exit: 0
+sched: rc=0 records=50 8794ms
+--- stderr ---
+[gcom-w] emitted 50
+[sched] gcom-w run rc=0 records=50 8794ms
+--- persisted: 50 rows, 0 with lat/lon, 0 with geometry ---
+record_type: gcom-w=50
+sub_source_id: (null)=50
+
+--- row 1 ---
+  uid            gcom-w|AMSR_U2_L2_Land_B02_202508311733_D.he5
+  title          GCOM-W AMSR2 granule AMSR_U2_L2_Land_B02_202508311733_D.he5
+  body           GCOM-W "SHIZUKU" AMSR2 microwave radiometer granule AMSR_U2_L2_Land_B02_202508311733_D.he5 (NASA CMR mirror) intersecting the Japan AOI. Acquired 2025-08-31T17:33:48.544Z.
+  summary        JAXA GCOM-W AMSR2 microwave granule acquired 2025-08-31T17:33:48.544Z over Japan.
+  link           https://data.nsidc.earthdatacloud.nasa.gov/nsidc-cumulus-prod-protected/AMSA/AU_Land/1/2025/08/31/AMSR_U2_L2_Land_B02_202508311733_D.he5
+  published_at   2025-08-31T17:33:48.544Z
+  record_type    gcom-w
+  tags           ["satellite","gcom-w","amsr2","microwave","jaxa","raster"]
+  properties     {"bbox":[122,24,146,46],"bbox_is_granule_footprint":false,"acquired":"2025-08-31T17:33:48.544Z","time_end":"2025-08-31T18:23:10.760Z","sensor":"AMSR2","platform":"GCOM-W","scene_id":"AMSR_U2_L2_Land_B02_202508311733_D.he5","dataset":"AMSR-E/AMSR2 Unified L2B Half-Orbit 25 km EASE-Grid Surface Soil Moisture V001"}
+
+--- row 2 ---
+  uid            gcom-w|AMSR_U2_L2_Land_B02_202508311554_D.he5
+  title          GCOM-W AMSR2 granule AMSR_U2_L2_Land_B02_202508311554_D.he5
+  body           GCOM-W "SHIZUKU" AMSR2 microwave radiometer granule AMSR_U2_L2_Land_B02_202508311554_D.he5 (NASA CMR mirror) intersecting the Japan AOI. Acquired 2025-08-31T15:54:55.112Z.
+  summary        JAXA GCOM-W AMSR2 microwave granule acquired 2025-08-31T15:54:55.112Z over Japan.
+  link           https://data.nsidc.earthdatacloud.nasa.gov/nsidc-cumulus-prod-protected/AMSA/AU_Land/1/2025/08/31/AMSR_U2_L2_Land_B02_202508311554_D.he5
+  published_at   2025-08-31T15:54:55.112Z
+  record_type    gcom-w
+  tags           ["satellite","gcom-w","amsr2","microwave","jaxa","raster"]
+  properties     {"bbox":[122,24,146,46],"bbox_is_granule_footprint":false,"acquired":"2025-08-31T15:54:55.112Z","time_end":"2025-08-31T16:44:15.830Z","sensor":"AMSR2","platform":"GCOM-W","scene_id":"AMSR_U2_L2_Land_B02_202508311554_D.he5","dataset":"AMSR-E/AMSR2 Unified L2B Half-Orbit 25 km EASE-Grid Surface Soil Moisture V001"}

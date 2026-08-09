@@ -1,0 +1,68 @@
+{
+ "gnews-am-business": {
+  "own": "am",
+  "served": "ru",
+  "lang": "ru",
+  "title": "\u0411\u0438\u0437\u043d\u0435\u0441 - \u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 - Google \u041d\u043e\u0432\u043e\u0441\u0442\u0438"
+ },
+ "gnews-am-science": {
+  "own": "am",
+  "served": "ru",
+  "lang": "ru",
+  "title": "\u041d\u0430\u0443\u043a\u0430 - \u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 - Google \u041d\u043e\u0432\u043e\u0441\u0442\u0438"
+ },
+ "gnews-am-technology": {
+  "own": "am",
+  "served": "ru",
+  "lang": "ru",
+  "title": "\u0422\u0435\u0445\u043d\u043e\u043b\u043e\u0433\u0438\u0438 - \u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 - Google \u041d\u043e\u0432\u043e\u0441\u0442\u0438"
+ },
+ "gnews-am-world": {
+  "own": "am",
+  "served": "ru",
+  "lang": "ru",
+  "title": "\u0412 \u043c\u0438\u0440\u0435 - \u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 - Google \u041d\u043e\u0432\u043e\u0441\u0442\u0438"
+ },
+ "gnews-bo-business": {
+  "own": "bo",
+  "served": "us",
+  "lang": "es-419",
+  "title": "Negocios - Reciente - Google\u00a0Noticias"
+ },
+ "gnews-bo-health": {
+  "own": "bo",
+  "served": "us",
+  "lang": "es-419",
+  "title": "Salud - Reciente - Google\u00a0Noticias"
+ },
+ "gnews-bo-technology": {
+  "own": "bo",
+  "served": "us",
+  "lang": "es-419",
+  "title": "Tecnolog\u00eda - Reciente - Google\u00a0Noticias"
+ },
+ "gnews-bo-world": {
+  "own": "bo",
+  "served": "us",
+  "lang": "es-419",
+  "title": "Internacional - Reciente - Google\u00a0Noticias"
+ },
+ "gnews-cr-science": {
+  "own": "cr",
+  "served": "us",
+  "lang": "es-419",
+  "title": "Ciencia - Reciente - Google\u00a0Noticias"
+ },
+ "gnews-hr-health": {
+  "own": "hr",
+  "served": "us",
+  "lang": "en-US",
+  "title": "Health - Latest - Google News"
+ },
+ "gnews-hr-world": {
+  "own": "hr",
+  "served": "us",
+  "lang": "en-US",
+  "title": "World - Latest - Google News"
+ }
+}

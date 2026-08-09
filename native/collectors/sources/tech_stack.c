@@ -124,6 +124,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         regfree(&re);
       }
     }
+    /* AUDIT NOTE (slice a3): this matches "<Header>:.*<pattern>" against the
+     * response BODY, because core/httpclient.h's http_response carries only
+     * {status, body, body_len} — the client never surfaces response headers.
+     * So the 16 header-based signatures below (nginx / Apache / Cloudflare /
+     * HSTS / CSP / PHP / ASP.NET / …) can only fire when the literal header
+     * text happens to appear in the page source, i.e. almost never. Fixing
+     * this needs a headers field on http_response in core/ — reported, not
+     * patched here (core/ is shared and read-only for this audit). */
     if (!found && sig->header && sig->header_pattern) {
       char hs[256];
       snprintf(hs, sizeof hs, "%s:.*%s", sig->header, sig->header_pattern);

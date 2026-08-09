@@ -80,17 +80,21 @@ static const char *next_anchor(const char *cur, char code[5],
             const char *after = d + 4;
             if (*after == '/') after++;
             if (*after == '"') {
-              /* INNER between gt+1 and matching </a>, must be [^<]{2,} */
+              /* INNER between gt+1 and the first '<', must be [^<]{2,}. The
+               * anchors on japan-reit.com carry a trailing HTML comment
+               * (<a ...>名前<!--短縮名--></a>), so requiring the very next tag
+               * to be </a> matched only 3 of the 61 issues on the page; take
+               * the text run and then skip to the real </a>. */
               const char *is = gt + 1;
               const char *ie = strchr(is, '<');
               if (ie && (ie - is) >= 2) {
-                /* require the next tag is </a> (JS [^<]* then </a>) */
-                if ((ie[1]=='/') && (ie[2]=='a'||ie[2]=='A') &&
-                    (ie[3]=='>'||js_ws((unsigned char)ie[3])||ie[3]=='/')) {
+                const char *close = strstr(is, "</a>");
+                if (!close) close = strstr(is, "</A>");
+                const char *nexta = strstr(is, "<a ");
+                if (close && (!nexta || close < nexta)) {
                   memcpy(code, d, 4); code[4] = '\0';
                   *inner = is; *inner_len = (int)(ie - is);
-                  const char *end = strchr(ie, '>');
-                  return end ? end + 1 : ie + 3;
+                  return close + 4;
                 }
               }
             }
@@ -105,8 +109,20 @@ static const char *next_anchor(const char *cur, char code[5],
   return NULL;
 }
 
+/* japan-reit.com retired the /meigara/ directory index (it now 404s, which is
+ * what made this collector return -1 on every run). The issue anchors are
+ * still published on the yield table (/list/rimawari/) and on the site root,
+ * so scrape those instead — same markup, same /meigara/<code>/ hrefs. */
+static const char *PAGES[] = {
+  "https://www.japan-reit.com/list/rimawari/",
+  "https://www.japan-reit.com/",
+  NULL
+};
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  char *html = feed_get_text(ctx->http, "https://www.japan-reit.com/meigara/", 15000);
+  char *html = NULL;
+  for (int i = 0; PAGES[i] && !html; i++)
+    html = feed_get_text(ctx->http, PAGES[i], 15000);
   if (!html) { fprintf(stderr, "[japan-reit] unreachable\n"); return -1; }
 
   char now[32];
@@ -172,7 +188,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(html);
 
   fprintf(stderr, "[japan-reit] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def japan_reit_def = {

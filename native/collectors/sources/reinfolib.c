@@ -56,13 +56,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   { time_t t = time(NULL); struct tm tm; gmtime_r(&t, &tm);
     strftime(now, sizeof now, "%Y-%m-%dT%H:%M:%S.000Z", &tm); }
 
-  int n = 0;
+  int n = 0, fetched = 0;
   for (int pref = 1; pref <= 47; pref++) {
     char area[3]; snprintf(area, sizeof area, "%02d", pref);
     char url[256];
     snprintf(url, sizeof url, "%s?year=%d&quarter=%d&area=%s",
              API_URL, year, quarter, area);
     cJSON *data = feed_get_json_h(ctx->http, url, headers, 15000);
+    if (data) fetched++;
     cJSON *rows = data ? cJSON_GetObjectItem(data, "data") : NULL;
     if (!rows || !cJSON_IsArray(rows)) { if (data) cJSON_Delete(data); continue; }
 
@@ -128,8 +129,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(data);
   }
 
-  fprintf(stderr, "[reinfolib] emitted %d (year=%d q=%d)\n", n, year, quarter);
-  return n > 0 ? 0 : -1;
+  fprintf(stderr, "[reinfolib] emitted %d (year=%d q=%d, %d/47 areas fetched)\n",
+          n, year, quarter, fetched);
+  /* STATUS code, not a row count: an area with no transactions in the quarter is
+   * an honest empty. Only a total fetch failure is a real error. */
+  return fetched > 0 ? 0 : -1;
 }
 
 static const source_def reinfolib_def = {

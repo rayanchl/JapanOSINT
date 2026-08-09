@@ -1,0 +1,292 @@
+=== suumo-rental-density
+exit: 0
+sched: rc=0 records=47 87245ms
+--- stderr ---
+[suumo-rental-density] emitted 47
+[sched] suumo-rental-density run rc=0 records=47 87245ms
+[detect] anomaly opened: suumo-rental-density verdict=duration_outlier — duration 87245ms exceeds 10000ms threshold
+--- persisted: 47 rows, 47 with lat/lon, 47 with geometry ---
+record_type: suumo-rental-density=47
+sub_source_id: (null)=47
+
+--- row 1 ---
+  uid            suumo-rental-density|SUUMO_hokkaido
+  title          北海道 — SUUMO listing count unavailable
+  summary        SUUMO 賃貸物件数 — count not parseable from the prefecture page
+  link           https://suumo.jp/chintai/hokkaido/
+  language       ja
+  lat            43.0642
+  lon            141.3469
+  geometry       {"type":"Point","coordinates":[141.3469,43.0642]}
+  record_type    suumo-rental-density
+  properties     {"id":"SUUMO_hokkaido","prefecture_ja":"北海道","prefecture_slug":"hokkaido","rental_listings":null,"source":"suumo_unavailable","title":"北海道 — SUUMO listing count unavailable","name_ja":"北海道","summary":"SUUMO 賃貸物件数 — count not parseable from the prefecture page","link":"https://suumo.jp/chintai/hokkaido/","language":"ja"}
+
+--- row 2 ---
+  uid            suumo-rental-density|SUUMO_aomori
+  title          青森県 — SUUMO listing count unavailable
+  summary        SUUMO 賃貸物件数 — count not parseable from the prefecture page
+  link           https://suumo.jp/chintai/aomori/
+  language       ja
+  lat            40.8243
+  lon            140.74
+  geometry       {"type":"Point","coordinates":[140.74,40.8243]}
+  record_type    suumo-rental-density
+  properties     {"id":"SUUMO_aomori","prefecture_ja":"青森県","prefecture_slug":"aomori","rental_listings":null,"source":"suumo_unavailable","title":"青森県 — SUUMO listing count unavailable","name_ja":"青森県","summary":"SUUMO 賃貸物件数 — count not parseable from the prefecture page","link":"https://suumo.jp/chintai/aomori/","language":"ja"}
+#################################################
+=== ADSB_LOL  entity=84b86d
+exit: 0
+sched: rc=0 records=1 205ms
+--- stderr ---
+[ADSB_LOL] emitted 1
+[sched] ADSB_LOL run rc=0 records=1 205ms
+--- persisted: 1 rows, 1 with lat/lon, 0 with geometry ---
+record_type: aircraft-position=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            ADSB_LOL|84b86d
+  title          APJ877 · A20N
+  body           {"hex":"84b86d","callsign":"APJ877","registration":"JA219P","type":"A20N","alt_baro_ft":27725,"source":"ADSB_LOL"}
+  summary        JA219P
+  link           https://globe.adsbexchange.com/?icao=84b86d
+  language       en
+  lat            34.970993
+  lon            138.662091
+  record_type    aircraft-position
+  tags           ["osint-search","ADSB_LOL"]
+  properties     {"service":"ADSB_LOL","hex":"84b86d","success":true}
+#################################################
+=== OPENSKY_STATES  entity=84b86d
+exit: 0
+sched: rc=0 records=1 1737ms
+--- stderr ---
+[OPENSKY_STATES] emitted 1
+[sched] OPENSKY_STATES run rc=0 records=1 1737ms
+--- persisted: 1 rows, 1 with lat/lon, 0 with geometry ---
+record_type: aircraft-position=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            OPENSKY_STATES|84b86d
+  title          APJ877
+  body           {"hex":"84b86d","callsign":"APJ877","origin_country":"Japan","source":"OpenSky Network"}
+  summary        Japan
+  link           https://opensky-network.org/aircraft-profile?icao24=84b86d
+  language       en
+  lat            34.9714
+  lon            138.6702
+  record_type    aircraft-position
+  tags           ["osint-search","OPENSKY_STATES"]
+  properties     {"service":"OPENSKY_STATES","hex":"84b86d","success":true}
+#################################################
+=== SOCIAL_USERNAME  entity=torvalds
+exit: 0
+sched: rc=0 records=104 76861ms
+--- stderr ---
+[sched] SOCIAL_USERNAME run rc=0 records=104 76861ms
+[detect] anomaly opened: SOCIAL_USERNAME verdict=duration_outlier — duration 76861ms exceeds 10000ms threshold
+--- persisted: 91 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=91
+sub_source_id: (null)=91
+
+--- row 1 ---
+  uid            SOCIAL_USERNAME|profile:github:torvalds
+  title          github: @torvalds
+  body           {"username":"torvalds","display_name":"Linus Torvalds","company":"Linux Foundation","location":"Portland, OR","avatar_url":"https://avatars.githubusercontent.com/u/1024025?v=4","account_created":"2011-09-03T15:26:22Z","stats":{"followers":314058,"following":0,"public_repos":12},"profile_url":"https://github.com/torvalds"}
+  summary        github profile found for torvalds
+  link           https://github.com/torvalds
+  record_type    osint_service_result
+  tags           ["osint-search","SOCIAL_INTEL"]
+  properties     {"service":"SOCIAL_INTEL","entity":"torvalds","platform":"github","found":true,"success":true}
+
+--- row 2 ---
+  uid            SOCIAL_USERNAME|profile:keybase:torvalds
+  title          keybase: @torvalds
+  body           {"username":"torvalds","profile_url":"https://keybase.io/torvalds"}
+  summary        keybase profile found for torvalds
+  link           https://keybase.io/torvalds
+  record_type    osint_service_result
+  tags           ["osint-search","SOCIAL_INTEL"]
+  properties     {"service":"SOCIAL_INTEL","entity":"torvalds","platform":"keybase","found":true,"success":true}
+#################################################
+=== PERSON_SEARCH  entity=torvalds
+exit: 0
+sched: rc=0 records=67 11089ms
+--- stderr ---
+[GITHUB_USER] emitted 10
+[GRAVATAR_GLOBAL] entity is not an email, skipping
+[kaken] http status=403
+[cinii] emitted 16
+[researchmap] emitted 0
+[mansion] emitted 25
+[sched] PERSON_SEARCH run rc=0 records=67 11089ms
+[detect] anomaly opened: PERSON_SEARCH verdict=duration_outlier — duration 11089ms exceeds 10000ms threshold
+--- persisted: 67 rows, 0 with lat/lon, 0 with geometry ---
+record_type: github-user=10, osint_service_result=16, research-paper=16, resident-forum=25
+sub_source_id: (null)=61, Stack Overflow=5, Wikipedia=1
+
+--- row 1 ---
+  uid            PERSON_SEARCH|GITHUB_USER|torvalds
+  title          Linus Torvalds
+  body           {"login":"torvalds","name":"Linus Torvalds","company":"Linux Foundation","location":"Portland, OR","avatar":"https://avatars.githubusercontent.com/u/1024025?v=4","public_repos":12,"followers":314058,"source":"GitHub"}
+  summary        Portland, OR
+  link           https://github.com/torvalds
+  language       en
+  record_type    github-user
+  tags           ["osint-search","identity"]
+  properties     {"service":"GITHUB_USER","query":"torvalds","url":"https://github.com/torvalds","success":true}
+
+--- row 2 ---
+  uid            PERSON_SEARCH|GITHUB_USER|pmt
+  title          pmt
+  body           {"login":"pmt","avatar":"https://avatars.githubusercontent.com/u/4122993?v=4","source":"GitHub"}
+  link           https://github.com/pmt
+  language       en
+  record_type    github-user
+  tags           ["osint-search","identity"]
+  properties     {"service":"GITHUB_USER","query":"torvalds","url":"https://github.com/pmt","success":true}
+#################################################
+=== COMPANY_SEARCH  entity=Toyota
+exit: 0
+sched: rc=0 records=0 68ms
+--- stderr ---
+[sched] COMPANY_SEARCH run rc=0 records=0 68ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== certstream-jp
+exit: 0
+sched: rc=0 records=0 1ms
+--- stderr ---
+[certstream-jp] emitted 0
+[sched] certstream-jp run rc=0 records=0 1ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== mlit-n07-bus-routes
+exit: 0
+sched: rc=0 records=0 1295ms
+--- stderr ---
+[mlit-n07-bus-routes] emitted 0
+[sched] mlit-n07-bus-routes run rc=0 records=0 1295ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== boj-stats
+exit: 0
+sched: rc=0 records=1 8636ms
+--- stderr ---
+[boj-stats] probe reachable=0
+[sched] boj-stats run rc=0 records=1 8636ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            boj-stats|portal
+  title          Bank of Japan statistics portal
+  summary        Monetary aggregates · rates · BOP indexes
+  link           https://www.stat-search.boj.or.jp/
+  language       ja
+  published_at   2026-07-31T18:27:09.258Z
+  tags           ["economy","statistics","unreachable"]
+  properties     {"org":"Bank of Japan","datasets":["Monetary aggregates","Interest rates","Balance of payments"],"reachable":false}
+#################################################
+=== cycling-ports
+exit: 0
+sched: rc=0 records=1879 7568ms
+--- stderr ---
+[cycling-ports] emitted 1879
+[sched] cycling-ports run rc=0 records=1879 7568ms
+--- persisted: 1879 rows, 1879 with lat/lon, 1879 with geometry ---
+record_type: cycling-ports=1879
+sub_source_id: (null)=1879
+
+--- row 1 ---
+  uid            cycling-ports|00010001
+  title          A1-01.千代田区役所
+  lat            35.693624
+  lon            139.753758
+  geometry       {"type":"Point","coordinates":[139.753758,35.693624]}
+  record_type    cycling-ports
+  properties     {"network":"docomo-cycle-tokyo","station_id":"00010001","name":"A1-01.千代田区役所","capacity":8,"address":null,"country":"JP","source":"docomo_bikeshare_gbfs"}
+
+--- row 2 ---
+  uid            cycling-ports|00010003
+  title          A1-03.東京区政会館（メトロA5出口）
+  lat            35.701073
+  lon            139.747525
+  geometry       {"type":"Point","coordinates":[139.747525,35.701073]}
+  record_type    cycling-ports
+  properties     {"network":"docomo-cycle-tokyo","station_id":"00010003","name":"A1-03.東京区政会館（メトロA5出口）","capacity":14,"address":null,"country":"JP","source":"docomo_bikeshare_gbfs"}
+#################################################
+=== embassies
+exit: 1
+sched: rc=-1 records=0 145550ms
+--- stderr ---
+[overpass] embassies no elements
+[sched] embassies run rc=-1 records=0 145550ms
+[detect] anomaly opened: embassies verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== satellite-tracking
+exit: 0
+sched: rc=0 records=0 1738ms
+--- stderr ---
+[satellite-tracking] emitted 0
+[sched] satellite-tracking run rc=0 records=0 1738ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== urlscan-jp
+exit: 0
+sched: rc=0 records=100 648ms
+--- stderr ---
+[urlscan-jp] emitted 100
+[sched] urlscan-jp run rc=0 records=100 648ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: urlscan-jp=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            urlscan-jp|019fb96f-b83e-7098-aa88-106b1da1499c
+  title          https://drug.insurance.dungheap.com/
+  summary        drug.insurance.dungheap.com · JP · GCORE G-Core Labs S.A., LU
+  link           https://urlscan.io/api/v1/result/019fb96f-b83e-7098-aa88-106b1da1499c/
+  language       en
+  published_at   2026-07-31T18:29:02.364Z
+  record_type    urlscan-jp
+  tags           ["urlscan"]
+  properties     {"uuid":"019fb96f-b83e-7098-aa88-106b1da1499c","url":"https://drug.insurance.dungheap.com/","domain":"drug.insurance.dungheap.com","ip":"31.223.184.59","asn":"AS199524","asn_name":"GCORE G-Core Labs S.A., LU","country":"JP","city":null,"screenshot":"https://urlscan.io/screenshots/019fb96f-b83e-7098-aa88-106b1da1499c.png","verdicts_malicious":null,"verdicts_score":null}
+
+--- row 2 ---
+  uid            urlscan-jp|019fb96f-a5e4-7089-bb7a-00c487b49a5a
+  title          https://insurance.intecpools.com/
+  summary        insurance.intecpools.com · JP · GCORE G-Core Labs S.A., LU
+  link           https://urlscan.io/api/v1/result/019fb96f-a5e4-7089-bb7a-00c487b49a5a/
+  language       en
+  published_at   2026-07-31T18:28:57.405Z
+  record_type    urlscan-jp
+  tags           ["urlscan"]
+  properties     {"uuid":"019fb96f-a5e4-7089-bb7a-00c487b49a5a","url":"https://insurance.intecpools.com/","domain":"insurance.intecpools.com","ip":"31.223.184.59","asn":"AS199524","asn_name":"GCORE G-Core Labs S.A., LU","country":"JP","city":null,"screenshot":"https://urlscan.io/screenshots/019fb96f-a5e4-7089-bb7a-00c487b49a5a.png","verdicts_malicious":null,"verdicts_score":null}
+#################################################
+=== jma-ice
+exit: 0
+sched: rc=0 records=1 314ms
+--- stderr ---
+[jma-ice] emitted 1 (latest=2024-25)
+[sched] jma-ice run rc=0 records=1 314ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            jma-ice|2024-25
+  title          Sea of Okhotsk max sea-ice extent 2024-25: 87.75 ×10⁴ km²
+  body           Annual maximum Sea of Okhotsk sea-ice extent (×10⁴ km²). Latest: 2024-25 = 87.75. Recent seasons: 2015-16:119.27, 2016-17:96.04, 2017-18:115.19, 2018-19:122.52, 2019-20:108.39, 2020-21:117.63, 2021-22:80.68, 2022-23:107.26, 2023-24:120.68, 2024-25:87.75.
+  summary        JMA: maximum sea-ice extent for the 2024-25 winter season was 87.75 ×10⁴ km².
+  link           https://www.data.jma.go.jp/kaiyou/shindan/a_1/series_okhotsk/series_okhotsk.html
+  author         気象庁 Japan Meteorological Agency
+  language       ja
+  published_at   2026-07-31T18:29:34.000Z
+  record_type    article
+  tags           ["sea-ice","okhotsk","jma","climate"]
+  properties     {"latest_season":"2024-25","latest_max_extent_1e4_km2":87.75,"recent_seasons":[{"season":"2015-16","max_extent_1e4_km2":119.27},{"season":"2016-17","max_extent_1e4_km2":96.04},{"season":"2017-18","max_extent_1e4_km2":115.19},{"season":"2018-19","max_extent_1e4_km2":122.52},{"season":"2019-20","max_extent_1e4_km2":108.39},{"season":"2020-21","max_extent_1e4_km2":117.63},{"season":"2021-22","max_extent_1e4_km2":80.68},{"season":"2022-23","max_extent_1e4_km2":107.26},{"season":"2023-24","max_extent_1e4_km2":120.68},{"season":"2024-25","max_extent_1e4_km2":87.75}],"total_seasons":55}
+#################################################
+DONE /mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/a7_list6.txt

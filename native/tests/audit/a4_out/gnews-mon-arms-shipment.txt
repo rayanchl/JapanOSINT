@@ -1,0 +1,45 @@
+=== gnews-mon-arms-shipment
+exit: 0
+sched: rc=0 records=100 781ms
+--- stderr ---
+[rss] gnews-mon-arms-shipment emitted 100
+[sched] gnews-mon-arms-shipment run rc=0 records=100 781ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-arms-shipment|CBMinAFBVV95cUxQZ1VUOF9zTGEyM3VTQ1U2TFp3T3Zmbl9RMEMta2ZOMWloMEFlUHlISG5WeGhGZkl1MWxzYkp1Y3BwWXBHeEctS2UyNmMybGZ2Wk9EZXJEM053d1hsVU8zRktpUGpuT1A0U29RT0RSa0hUYWNNWmZnTk9taGRNRmk5ZTd0TWMzWEd5ZV9XSWZabzVudi1mQXUwX2o5XzQ
+  title          Made in India: The Supply of Weapons and Ammunition to Israel - Amnesty International USA
+  body           <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxQZ1VUOF9zTGEyM3VTQ1U2TFp3T3Zmbl9RMEMta2ZOMWloMEFlUHlISG5WeGhGZkl1MWxzYkp1Y3BwWXBHeEctS2UyNmMybGZ2Wk9EZXJEM053d1hsVU8zRktpUGpuT1A0U29RT0RSa0hUYWNNWmZnTk9taGRNRmk5ZTd0TWMzWEd5ZV9XSWZabzVudi1mQXUwX2o5XzQ?oc=5" target="_blank">Made in India: The Supply of Weapons and Ammunition to Israel</a>&nbsp;&nbsp;<font color="#6f6f6f">Amnesty International USA</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxQZ1VUOF9zTGEyM3VTQ1U2TFp3T3Zmbl9RMEMta2ZOMWloMEFlUHlISG5WeGhGZkl1MWxzYkp1Y3BwWXBHeEctS2UyNmMybGZ2Wk9EZXJEM053d1hsVU8zRktpUGpuT1A0U29RT0RSa0hUYWNNWmZnTk9taGRNRmk5ZTd0TWMzWEd5ZV9XSW
+  link           https://news.google.com/rss/articles/CBMinAFBVV95cUxQZ1VUOF9zTGEyM3VTQ1U2TFp3T3Zmbl9RMEMta2ZOMWloMEFlUHlISG5WeGhGZkl1MWxzYkp1Y3BwWXBHeEctS2UyNmMybGZ2Wk9EZXJEM053d1hsVU8zRktpUGpuT1A0U29RT0RSa0hUYWNNWmZnTk9taGRNRmk5ZTd0TWMzWEd5ZV9XSWZabzVudi1mQXUwX2o5XzQ?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 23:00:34 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","arms"]
+  properties     {"guid":"CBMinAFBVV95cUxQZ1VUOF9zTGEyM3VTQ1U2TFp3T3Zmbl9RMEMta2ZOMWloMEFlUHlISG5WeGhGZkl1MWxzYkp1Y3BwWXBHeEctS2UyNmMybGZ2Wk9EZXJEM053d1hsVU8zRktpUGpuT1A0U29RT0RSa0hUYWNNWmZnTk9taGRNRmk5ZTd0TWMzWEd5ZV9XSWZabzVudi1mQXUwX2o5XzQ"}
+
+--- row 2 ---
+  uid            gnews-mon-arms-shipment|CBMi7wFBVV95cUxNZDUyUWNPMVRMam05VVBLSEM3TVgyRlVyTl9UTXByLThnWWluOTFaZnZ5WkFpUHVOTWV6Uy1XdkllamNlUFo5Njh3UjZLcGV6Z2hWVVZhS1VhbUFEWVc3THR6clJRVC1lLTNVNEpNbFZLc3RjdTcyYjRMX2pWcW1OVXdJV0hzS0ZfUlNKVXlRTlFaa1JXcVpQZjdxMURLSHI2RnZaWk0ycHdmUEVLcG9zWTl3WENYUDhkV2hjeGNyYjVlZmozZnd4M005WW9CbHRhMnlIOUF2akVJVm9GUVMtdkwzb3hVLWhGWGNXaU5XSQ
+  title          India: Continuing weapons exports to Israel could risk complicity in ongoing genocide in Gaza – new investigation - Amnesty International
+  body           <a href="https://news.google.com/rss/articles/CBMi7wFBVV95cUxNZDUyUWNPMVRMam05VVBLSEM3TVgyRlVyTl9UTXByLThnWWluOTFaZnZ5WkFpUHVOTWV6Uy1XdkllamNlUFo5Njh3UjZLcGV6Z2hWVVZhS1VhbUFEWVc3THR6clJRVC1lLTNVNEpNbFZLc3RjdTcyYjRMX2pWcW1OVXdJV0hzS0ZfUlNKVXlRTlFaa1JXcVpQZjdxMURLSHI2RnZaWk0ycHdmUEVLcG9zWTl3WENYUDhkV2hjeGNyYjVlZmozZnd4M005WW9CbHRhMnlIOUF2akVJVm9GUVMtdkwzb3hVLWhGWGNXaU5XSQ?oc=5" target="_blank">India: Continuing weapons exports to Israel could risk complicity in ongoing genocide in Gaza – new investigation</a>&nbsp;&nbsp;<font color="#6f6f6f">Amnesty International</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi7wFBVV95cUxNZDUyUWNPMVRMam05VVBLSEM3TVgyRlVyTl9UTXByLThnWWluOTFaZnZ5WkFpUHVOTWV6Uy1XdkllamNlUFo5Njh3UjZLcGV6Z2hWVVZhS1VhbUFEWVc3THR6clJRVC1lLTNVNEpNbFZLc3RjdTcyYjRMX2pWcW1OVXdJV0hzS0ZfUlNKVX
+  link           https://news.google.com/rss/articles/CBMi7wFBVV95cUxNZDUyUWNPMVRMam05VVBLSEM3TVgyRlVyTl9UTXByLThnWWluOTFaZnZ5WkFpUHVOTWV6Uy1XdkllamNlUFo5Njh3UjZLcGV6Z2hWVVZhS1VhbUFEWVc3THR6clJRVC1lLTNVNEpNbFZLc3RjdTcyYjRMX2pWcW1OVXdJV0hzS0ZfUlNKVXlRTlFaa1JXcVpQZjdxMURLSHI2RnZaWk0ycHdmUEVLcG9zWTl3WENYUDhkV2hjeGNyYjVlZmozZnd4M005WW9CbHRhMnlIOUF2akVJVm9GUVMtdkwzb3hVLWhGWGNXaU5XSQ?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 23:01:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","arms"]
+  properties     {"guid":"CBMi7wFBVV95cUxNZDUyUWNPMVRMam05VVBLSEM3TVgyRlVyTl9UTXByLThnWWluOTFaZnZ5WkFpUHVOTWV6Uy1XdkllamNlUFo5Njh3UjZLcGV6Z2hWVVZhS1VhbUFEWVc3THR6clJRVC1lLTNVNEpNbFZLc3RjdTcyYjRMX2pWcW1OVXdJV0hzS0ZfUlNKVXlRTlFaa1JXcVpQZjdxMURLSHI2RnZaWk0ycHdmUEVLcG9zWTl3WENYUDhkV2hjeGNyYjVlZmozZnd4M005WW9CbHRhMnlIOUF2akVJVm9GUVMtdkwzb3hVLWhGWGNXaU5XSQ"}
+
+--- row 3 ---
+  uid            gnews-mon-arms-shipment|CBMitAFBVV95cUxQRXFFMzBQM3ZGaWs4R2pTUFF0a2FhLUluaTVDdHR0X1EyR0x3OGRkYnpxR2NXbHdMTnhLcWVYM1RtMkRMNElGRmdKTmgzdnduWmxuTElRUlhZOTRtZklYN28td2g2dnFtT1NObF85SW5nNTEtdEVNYkFsc0hpS1FjWEU4aVV6QUlsRV9ISk9Qd2o3cElHMzExMUszUXF5QkgyMGxVUElRdGNMQUY0bzdHekxhSUXSAboBQVVfeXFMTTF0WmZCSjMtUVJKcjNXNmFETFNXSTlEUHh6aXV6b1ppek1ScFVGd094OGI5a1JCUTlyMFo2eExNX3l4RklOVC14OVNmc1F6VzFHQzRKTC01eTFhS1hnNWtzWDVUUV9TR3JiLWJpT1lNb0JCWXJWYjB0cjdzdUZRekJTLTNDYUFobHppOTFWLTc0NWhDVGY2TmtDSjZjS19QUENkVkJpWmRSSDBtQ2Nla0U
+  title          India’s arms sale to Israel risks complicity in Gaza genocide, Amnesty says - Al Jazeera
+  body           <a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxQRXFFMzBQM3ZGaWs4R2pTUFF0a2FhLUluaTVDdHR0X1EyR0x3OGRkYnpxR2NXbHdMTnhLcWVYM1RtMkRMNElGRmdKTmgzdnduWmxuTElRUlhZOTRtZklYN28td2g2dnFtT1NObF85SW5nNTEtdEVNYkFsc0hpS1FjWEU4aVV6QUlsRV9ISk9Qd2o3cElHMzExMUszUXF5QkgyMGxVUElRdGNMQUY0bzdHekxhSUXSAboBQVVfeXFMTTF0WmZCSjMtUVJKcjNXNmFETFNXSTlEUHh6aXV6b1ppek1ScFVGd094OGI5a1JCUTlyMFo2eExNX3l4RklOVC14OVNmc1F6VzFHQzRKTC01eTFhS1hnNWtzWDVUUV9TR3JiLWJpT1lNb0JCWXJWYjB0cjdzdUZRekJTLTNDYUFobHppOTFWLTc0NWhDVGY2TmtDSjZjS19QUENkVkJpWmRSSDBtQ2Nla0U4SUw2eXJYaUxR?oc=5" target="_blank">India’s arms sale to Israel risks complicity in Gaza genocide, Amnesty says</a>&nbsp;&nbsp;<font color="#6f6f6f">Al Jazeera</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxQRXFFMzBQM3ZGaWs4R2pTUFF0a2FhLUluaTVDdHR0X1EyR0x3OGRkYnpxR2NXbHdMTnhLcWVYM1RtMkRMNElGRmdKTmgzdnduWmxuTElRUlhZOTRtZklYN28td2g2dnFtT1NObF85SW5nNTEtdEVNYkFsc0hpS1FjWEU4aVV6QUlsRV9ISk
+  link           https://news.google.com/rss/articles/CBMitAFBVV95cUxQRXFFMzBQM3ZGaWs4R2pTUFF0a2FhLUluaTVDdHR0X1EyR0x3OGRkYnpxR2NXbHdMTnhLcWVYM1RtMkRMNElGRmdKTmgzdnduWmxuTElRUlhZOTRtZklYN28td2g2dnFtT1NObF85SW5nNTEtdEVNYkFsc0hpS1FjWEU4aVV6QUlsRV9ISk9Qd2o3cElHMzExMUszUXF5QkgyMGxVUElRdGNMQUY0bzdHekxhSUXSAboBQVVfeXFMTTF0WmZCSjMtUVJKcjNXNmFETFNXSTlEUHh6aXV6b1ppek1ScFVGd094OGI5a1JCUTlyMFo2eExNX3l4RklOVC14OVNmc1F6VzFHQzRKTC01eTFhS1hnNWtzWDVUUV9TR3JiLWJpT1lNb0JCWXJWYjB0cjdzdUZRekJTLTNDYUFobHppOTFWLTc0NWhDVGY2TmtDSjZjS19QUENkVkJpWmRSSDBtQ2Nla0U4SUw2eXJYaUxR?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 07:27:46 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","arms"]
+  properties     {"guid":"CBMitAFBVV95cUxQRXFFMzBQM3ZGaWs4R2pTUFF0a2FhLUluaTVDdHR0X1EyR0x3OGRkYnpxR2NXbHdMTnhLcWVYM1RtMkRMNElGRmdKTmgzdnduWmxuTElRUlhZOTRtZklYN28td2g2dnFtT1NObF85SW5nNTEtdEVNYkFsc0hpS1FjWEU4aVV6QUlsRV9ISk9Qd2o3cElHMzExMUszUXF5QkgyMGxVUElRdGNMQUY0bzdHekxhSUXSAboBQVVfeXFMTTF0WmZCSjMtUVJKcjNXNmFETFNXSTlEUHh6aXV6b1ppek1ScFVGd094OGI5a1JCUTlyMFo2eExNX3l4RklOVC14OVNmc1F6VzFHQzRKTC01eTFhS1hnNWtzWDVUUV9TR3JiLWJpT1lNb0JCWXJWYjB0cjdzdUZRekJTLTNDYUFobHppOTFWLTc0NWhDVGY2TmtDSjZjS19QUENkVkJpWmRSSDBtQ2Nla0U4SUw2eXJYaUxR"}

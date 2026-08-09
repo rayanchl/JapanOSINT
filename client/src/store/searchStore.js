@@ -34,13 +34,27 @@ function finishActive(requestId, snapshot) {
   if (es) { es.close(); streams.delete(requestId); }
 }
 
+// A dead stream must be torn down after a bounded number of failures. The
+// server's not_found path writes `event: error` and then drains *without* a
+// `close` frame, and per spec the browser silently reconnects a closed 200
+// text/event-stream — so without this the request id reconnect-loops every
+// ~3s forever and its entry in `streams` permanently blocks a re-subscribe.
+const MAX_STREAM_ERRORS = 3;
+
+function dropStream(requestId) {
+  const es = streams.get(requestId);
+  if (es) { es.close(); streams.delete(requestId); }
+}
+
 function connectStream(requestId) {
   if (streams.has(requestId)) return;
   const es = new EventSource(apiUrl(`/api/search/stream/${requestId}`));
   streams.set(requestId, es);
+  let errorCount = 0;
   es.addEventListener('progress', (ev) => {
     try {
       const snap = JSON.parse(ev.data);
+      errorCount = 0; // a good frame means the stream is alive again
       if (snap.done || snap.phase === 'completed' || snap.phase === 'error') {
         finishActive(requestId, snap);
       } else {
@@ -49,10 +63,19 @@ function connectStream(requestId) {
     } catch { /* ignore malformed frame */ }
   });
   es.addEventListener('error', () => {
-    // Network blip: browser auto-reconnects EventSource. If the server sent
-    // an explicit error frame the close event ends it.
+    errorCount += 1;
+    // CLOSED = the browser gave up; otherwise it is silently reconnecting,
+    // so cap the retries ourselves.
+    if (es.readyState === EventSource.CLOSED || errorCount >= MAX_STREAM_ERRORS) {
+      dropStream(requestId);
+      // Only mark an entry that is still active — a finished run has already
+      // been moved to `completed` and must not be resurrected.
+      if (state.active.some((s) => s.request_id === requestId)) {
+        upsertActive(requestId, { status: 'error' });
+      }
+    }
   });
-  es.addEventListener('close', () => { es.close(); streams.delete(requestId); });
+  es.addEventListener('close', () => { dropStream(requestId); });
 }
 
 export async function startSearch(query) {

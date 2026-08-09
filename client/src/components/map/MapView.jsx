@@ -9,6 +9,7 @@ import { Matrix4 } from '@math.gl/core';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 import useLiveVehicles from '../../hooks/useLiveVehicles';
 import { getLayerIcon } from '../../utils/layerIcons';
+import apiUrl from '../../utils/apiUrl.js';
 import { rasterizeIcon } from '../../utils/iconRaster';
 import { createRailwayLineTags } from '../../utils/railwayLineTags';
 import { useSatelliteTracks } from '../../hooks/useSatelliteTracks.js';
@@ -403,7 +404,7 @@ const MAP_STYLES = {
 let _plateauTilesetsPromise = null;
 function loadPlateauTilesets() {
   if (!_plateauTilesetsPromise) {
-    _plateauTilesetsPromise = fetch('/api/plateau/tilesets')
+    _plateauTilesetsPromise = fetch(apiUrl('/api/plateau/tilesets'))
       .then((r) => {
         if (!r.ok) throw new Error(`tilesets HTTP ${r.status}`);
         return r.json();
@@ -534,9 +535,10 @@ function pickAnchor(geom) {
   if (geom.type === 'Point') return geom.coordinates;
   if (geom.type === 'LineString' || geom.type === 'MultiPoint') return geom.coordinates[0];
   if (geom.type === 'Polygon') return geom.coordinates[0]?.[0];
-  if (geom.type === 'MultiLineString' || geom.type === 'MultiPolygon') {
-    return geom.coordinates[0]?.[0]?.[0] ?? geom.coordinates[0]?.[0];
-  }
+  // Split: MultiLineString nests one level less than MultiPolygon, so a
+  // shared `[0][0][0]` would yield a bare longitude number for the former.
+  if (geom.type === 'MultiLineString') return geom.coordinates[0]?.[0];
+  if (geom.type === 'MultiPolygon') return geom.coordinates[0]?.[0]?.[0];
   return null;
 }
 
@@ -4499,7 +4501,7 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
     (async () => {
       try {
         const bbox = `${viewport.minLng},${viewport.minLat},${viewport.maxLng},${viewport.maxLat}`;
-        const res = await fetch(`/api/transit/station-boundaries?bbox=${encodeURIComponent(bbox)}`);
+        const res = await fetch(apiUrl(`/api/transit/station-boundaries?bbox=${encodeURIComponent(bbox)}`));
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const fc = await res.json();
         if (cancelled) return;

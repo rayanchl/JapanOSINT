@@ -1,0 +1,45 @@
+=== gnews-mon-cn-cross-strait
+exit: 0
+sched: rc=0 records=100 1006ms
+--- stderr ---
+[rss] gnews-mon-cn-cross-strait emitted 100
+[sched] gnews-mon-cn-cross-strait run rc=0 records=100 1006ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-cn-cross-strait|CBMiXkFVX3lxTFA3dXBKWW01TzljX0liQnJibmNYZmVJUGNqak96dnEycUVuX3p3aEVNNHpjZEo1eVFmc0h0bjdBa0xPbTV5RFJRY09UMXVSV250TGhuemgzOHhrXzd3cGc
+  title          2026 Cross-Strait University Basketball Tournament Opens in Putian, Fujian, China_泰国_新闻 - 华人头条
+  body           <a href="https://news.google.com/rss/articles/CBMiXkFVX3lxTFA3dXBKWW01TzljX0liQnJibmNYZmVJUGNqak96dnEycUVuX3p3aEVNNHpjZEo1eVFmc0h0bjdBa0xPbTV5RFJRY09UMXVSV250TGhuemgzOHhrXzd3cGc?oc=5" target="_blank">2026 Cross-Strait University Basketball Tournament Opens in Putian, Fujian, China_泰国_新闻</a>&nbsp;&nbsp;<font color="#6f6f6f">华人头条</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiXkFVX3lxTFA3dXBKWW01TzljX0liQnJibmNYZmVJUGNqak96dnEycUVuX3p3aEVNNHpjZEo1eVFmc0h0bjdBa0xPbTV5RFJRY09UMXVSV250TGhuemgzOHhrXzd3cGc?oc=5" target="_blank">2026 Cross-Strait University Basketball 
+  link           https://news.google.com/rss/articles/CBMiXkFVX3lxTFA3dXBKWW01TzljX0liQnJibmNYZmVJUGNqak96dnEycUVuX3p3aEVNNHpjZEo1eVFmc0h0bjdBa0xPbTV5RFJRY09UMXVSV250TGhuemgzOHhrXzd3cGc?oc=5
+  language       zh
+  published_at   Thu, 23 Jul 2026 07:12:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","cn"]
+  properties     {"guid":"CBMiXkFVX3lxTFA3dXBKWW01TzljX0liQnJibmNYZmVJUGNqak96dnEycUVuX3p3aEVNNHpjZEo1eVFmc0h0bjdBa0xPbTV5RFJRY09UMXVSV250TGhuemgzOHhrXzd3cGc"}
+
+--- row 2 ---
+  uid            gnews-mon-cn-cross-strait|CBMiYEFVX3lxTE5FT0kweXNaVDZKRXhVdkwxUFhfSHU1bTdpSld6TUFEYi14TjJxakgxMFdqMmFzTTAxOG4tRHJHX2dBT2pRSHpJc3BGZldnSVEwSVlUNWN3MWlDWW1aZzlSeA
+  title          Cross-Strait Financial Center High-Quality Development Promotion Conference held in Beijing - 投资厦门
+  body           <a href="https://news.google.com/rss/articles/CBMiYEFVX3lxTE5FT0kweXNaVDZKRXhVdkwxUFhfSHU1bTdpSld6TUFEYi14TjJxakgxMFdqMmFzTTAxOG4tRHJHX2dBT2pRSHpJc3BGZldnSVEwSVlUNWN3MWlDWW1aZzlSeA?oc=5" target="_blank">Cross-Strait Financial Center High-Quality Development Promotion Conference held in Beijing</a>&nbsp;&nbsp;<font color="#6f6f6f">投资厦门</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiYEFVX3lxTE5FT0kweXNaVDZKRXhVdkwxUFhfSHU1bTdpSld6TUFEYi14TjJxakgxMFdqMmFzTTAxOG4tRHJHX2dBT2pRSHpJc3BGZldnSVEwSVlUNWN3MWlDWW1aZzlSeA?oc=5" target="_blank">Cross-Strait Financial Center High-Qu
+  link           https://news.google.com/rss/articles/CBMiYEFVX3lxTE5FT0kweXNaVDZKRXhVdkwxUFhfSHU1bTdpSld6TUFEYi14TjJxakgxMFdqMmFzTTAxOG4tRHJHX2dBT2pRSHpJc3BGZldnSVEwSVlUNWN3MWlDWW1aZzlSeA?oc=5
+  language       zh
+  published_at   Mon, 13 Apr 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","cn"]
+  properties     {"guid":"CBMiYEFVX3lxTE5FT0kweXNaVDZKRXhVdkwxUFhfSHU1bTdpSld6TUFEYi14TjJxakgxMFdqMmFzTTAxOG4tRHJHX2dBT2pRSHpJc3BGZldnSVEwSVlUNWN3MWlDWW1aZzlSeA"}
+
+--- row 3 ---
+  uid            gnews-mon-cn-cross-strait|CBMiYEFVX3lxTE9KaEl5aV92V0lyWUdvekpyemhMeDJEZFZsdllmb3F5SnJkQzFuUTNDbzYwSEVFME5IclJiOTNBMlM3dVF6dlFtUUxUelAyR24wdzVzc1dzVTAwcHpFQzNFYg
+  title          Cross-Strait ferry routes see thousands of Taiwan compatriots return to ancestral homes - 西部网
+  body           <a href="https://news.google.com/rss/articles/CBMiYEFVX3lxTE9KaEl5aV92V0lyWUdvekpyemhMeDJEZFZsdllmb3F5SnJkQzFuUTNDbzYwSEVFME5IclJiOTNBMlM3dVF6dlFtUUxUelAyR24wdzVzc1dzVTAwcHpFQzNFYg?oc=5" target="_blank">Cross-Strait ferry routes see thousands of Taiwan compatriots return to ancestral homes</a>&nbsp;&nbsp;<font color="#6f6f6f">西部网</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiYEFVX3lxTE9KaEl5aV92V0lyWUdvekpyemhMeDJEZFZsdllmb3F5SnJkQzFuUTNDbzYwSEVFME5IclJiOTNBMlM3dVF6dlFtUUxUelAyR24wdzVzc1dzVTAwcHpFQzNFYg?oc=5" target="_blank">Cross-Strait ferry routes see thousan
+  link           https://news.google.com/rss/articles/CBMiYEFVX3lxTE9KaEl5aV92V0lyWUdvekpyemhMeDJEZFZsdllmb3F5SnJkQzFuUTNDbzYwSEVFME5IclJiOTNBMlM3dVF6dlFtUUxUelAyR24wdzVzc1dzVTAwcHpFQzNFYg?oc=5
+  language       zh
+  published_at   Mon, 06 Apr 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","cn"]
+  properties     {"guid":"CBMiYEFVX3lxTE9KaEl5aV92V0lyWUdvekpyemhMeDJEZFZsdllmb3F5SnJkQzFuUTNDbzYwSEVFME5IclJiOTNBMlM3dVF6dlFtUUxUelAyR24wdzVzc1dzVTAwcHpFQzNFYg"}

@@ -20,15 +20,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *features = cJSON_CreateArray();
 
   if (fc) {
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LON));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LAT));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(TOKYO_LON, TOKYO_LAT);
 
     cJSON *p = cJSON_CreateObject();             /* EXACT JS key order */
     cJSON_AddStringToObject(p, "prefecture_code", "130000");
@@ -43,6 +35,24 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(p, "target_area",
       (ta && cJSON_IsString(ta)) ? ta->valuestring : "");
     cJSON_AddStringToObject(p, "source", "jma_live");
+    /* Readable identity for the UI: geojson_emit_features maps
+     * properties.title/summary/link/published_at onto the intel_item, and
+     * without them the row renders blank everywhere. All four are built from
+     * the fetched payload — nothing invented. */
+    {
+      const char *area = (ta && cJSON_IsString(ta) && ta->valuestring[0])
+                       ? ta->valuestring : "\xe6\x9d\xb1\xe4\xba\xac\xe9\x83\xbd";
+      char title[256];
+      snprintf(title, sizeof title,
+               "%s \xe3\x81\xae\xe5\xa4\xa9\xe6\xb0\x97\xe6\xa6\x82\xe6\xb3\x81", area); /* …の天気概況 */
+      cJSON_AddStringToObject(p, "title", title);
+      if (txt && cJSON_IsString(txt) && txt->valuestring[0])
+        cJSON_AddStringToObject(p, "summary", txt->valuestring);
+      cJSON_AddStringToObject(p, "link",
+        "https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=130000");
+      if (rd && cJSON_IsString(rd) && rd->valuestring[0])
+        cJSON_AddStringToObject(p, "published_at", rd->valuestring);
+    }
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);
     cJSON_Delete(fc);

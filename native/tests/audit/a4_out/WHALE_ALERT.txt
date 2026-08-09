@@ -1,0 +1,17 @@
+=== WHALE_ALERT  entity=1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+exit: 0
+sched: rc=0 records=1 159ms
+--- stderr ---
+[sched] WHALE_ALERT run rc=0 records=1 159ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            WHALE_ALERT|btcnet:stats
+  title          Bitcoin network stats
+  body           {"price_usd":62777.71,"24h_volume_usd":230731939.7798,"24h_transactions":630836,"24h_btc_sent":1042315.82737153,"hash_rate":966350347236.516}
+  summary        exchange flows / network
+  record_type    osint_service_result
+  tags           ["osint-search","WHALE_ALERT","network"]
+  properties     {"service":"WHALE_ALERT","record":"btc_network","success":true,"confidence":80}

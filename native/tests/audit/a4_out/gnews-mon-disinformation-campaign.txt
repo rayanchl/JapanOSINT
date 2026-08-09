@@ -1,0 +1,45 @@
+=== gnews-mon-disinformation-campaign
+exit: 0
+sched: rc=0 records=100 604ms
+--- stderr ---
+[rss] gnews-mon-disinformation-campaign emitted 100
+[sched] gnews-mon-disinformation-campaign run rc=0 records=100 604ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-disinformation-campaign|CBMitwFBVV95cUxNS0VwRzc1QU5pa2Q5SC14ZVFXMzl1cDdHVk1WVUprSUoxNmU0ZEVLNmR6dE44NFFKa19RYTgtakVLZlV1UjByLU9XR3NmUnZ1N1hXTm45NmJNY0dfeHgtVHZNTlJ4bTV0aHJGYUR4VVVuQnZ1ME1ab2g0Uy0xTEFOWVh5TTYwZFpocEZSVzVGYXl2TnFhMkJHanpKbUhXbHNsWGFDZGlJaHFKMDJqZmk5Y2JDYzdWTDjSAbYBQVVfeXFMTzJEbFN1dl9FRHFsalBFekRtcU4zbmxqWDRPdFFfR2F0WVExdFZSQ2xRd2g3cDc1SVRxR05HUXJhX0Fmc1NXYjJfcUhtRWVLR25IOFYxTnRIdUs0YnRaUUpoeTJwOGpFc3RiY0hBa2dpT1hxRkVPZzJ2cUpzX1VVcllRWnQ5VnRBajNTRnNoXzdzd2dwTVhrNFpIZEs0dU0tWUtLTjdPU
+  title          Sybiha calls for banning Russian propaganda resources in Europe after disinformation campaign - Українські Національні Новини (УНН)
+  body           <a href="https://news.google.com/rss/articles/CBMitwFBVV95cUxNS0VwRzc1QU5pa2Q5SC14ZVFXMzl1cDdHVk1WVUprSUoxNmU0ZEVLNmR6dE44NFFKa19RYTgtakVLZlV1UjByLU9XR3NmUnZ1N1hXTm45NmJNY0dfeHgtVHZNTlJ4bTV0aHJGYUR4VVVuQnZ1ME1ab2g0Uy0xTEFOWVh5TTYwZFpocEZSVzVGYXl2TnFhMkJHanpKbUhXbHNsWGFDZGlJaHFKMDJqZmk5Y2JDYzdWTDjSAbYBQVVfeXFMTzJEbFN1dl9FRHFsalBFekRtcU4zbmxqWDRPdFFfR2F0WVExdFZSQ2xRd2g3cDc1SVRxR05HUXJhX0Fmc1NXYjJfcUhtRWVLR25IOFYxTnRIdUs0YnRaUUpoeTJwOGpFc3RiY0hBa2dpT1hxRkVPZzJ2cUpzX1VVcllRWnQ5VnRBajNTRnNoXzdzd2dwTVhrNFpIZEs0dU0tWUtLTjdPU3AwaE0wTk52OWg4RkZmbGc?oc=5" target="_blank">Sybiha calls for banning Russian propaganda resources in Europe after disinformation campaign</a>&nbsp;&nbsp;<font color="#6f6f6f">Українські Національні Новини (УНН)</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMitwFBVV95cUxNS0VwRzc1QU5pa2Q5SC14ZVFXMzl1cDdHVk1WVUprSUoxNmU0ZEVLNmR6dE44NFFKa19RYTgtakVLZlV1UjByLU9XR3NmUnZ1N1hXTm45NmJNY0dfeHgtVHZNTlJ4bTV0aHJGYUR4VVVuQnZ1ME1ab2g0Uy0xTEFOWVh5TTYwZFpocEZSVz
+  link           https://news.google.com/rss/articles/CBMitwFBVV95cUxNS0VwRzc1QU5pa2Q5SC14ZVFXMzl1cDdHVk1WVUprSUoxNmU0ZEVLNmR6dE44NFFKa19RYTgtakVLZlV1UjByLU9XR3NmUnZ1N1hXTm45NmJNY0dfeHgtVHZNTlJ4bTV0aHJGYUR4VVVuQnZ1ME1ab2g0Uy0xTEFOWVh5TTYwZFpocEZSVzVGYXl2TnFhMkJHanpKbUhXbHNsWGFDZGlJaHFKMDJqZmk5Y2JDYzdWTDjSAbYBQVVfeXFMTzJEbFN1dl9FRHFsalBFekRtcU4zbmxqWDRPdFFfR2F0WVExdFZSQ2xRd2g3cDc1SVRxR05HUXJhX0Fmc1NXYjJfcUhtRWVLR25IOFYxTnRIdUs0YnRaUUpoeTJwOGpFc3RiY0hBa2dpT1hxRkVPZzJ2cUpzX1VVcllRWnQ5VnRBajNTRnNoXzdzd2dwTVhrNFpIZEs0dU0tWUtLTjdPU3AwaE0wTk52OWg4RkZmbGc?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 16:34:50 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","disinformation"]
+  properties     {"guid":"CBMitwFBVV95cUxNS0VwRzc1QU5pa2Q5SC14ZVFXMzl1cDdHVk1WVUprSUoxNmU0ZEVLNmR6dE44NFFKa19RYTgtakVLZlV1UjByLU9XR3NmUnZ1N1hXTm45NmJNY0dfeHgtVHZNTlJ4bTV0aHJGYUR4VVVuQnZ1ME1ab2g0Uy0xTEFOWVh5TTYwZFpocEZSVzVGYXl2TnFhMkJHanpKbUhXbHNsWGFDZGlJaHFKMDJqZmk5Y2JDYzdWTDjSAbYBQVVfeXFMTzJEbFN1dl9FRHFsalBFekRtcU4zbmxqWDRPdFFfR2F0WVExdFZSQ2xRd2g3cDc1SVRxR05HUXJhX0Fmc1NXYjJfcUhtRWVLR25IOFYxTnRIdUs0YnRaUUpoeTJwOGpFc3RiY0hBa2dpT1hxRkVPZzJ2cUpzX1VVcllRWnQ5VnRBajNTRnNoXzdzd2dwTVhrNFpIZEs0dU0tWUtLTjdPU3AwaE0wTk52OWg4RkZmbGc"}
+
+--- row 2 ---
+  uid            gnews-mon-disinformation-campaign|CBMiigFBVV95cUxNY1psS0NpUkJMNkRXSGN5NTliNVZpdEY2b28wSTFQNk4yclFrLVF1M0d6b0xablZwd0xzODl4VUUzZW1VbEhla2hsZ0tBQm5kZEVOZnFCNWRFOGxieFlCTjdGclNLZTg1NTJVWVBodm9JTDlSdnlwc3RkWlJoM3d5UmF1MjVFQzlnTWc
+  title          Ukraine has exposed a new Russian disinformation campaign in Europe - UA.NEWS
+  body           <a href="https://news.google.com/rss/articles/CBMiigFBVV95cUxNY1psS0NpUkJMNkRXSGN5NTliNVZpdEY2b28wSTFQNk4yclFrLVF1M0d6b0xablZwd0xzODl4VUUzZW1VbEhla2hsZ0tBQm5kZEVOZnFCNWRFOGxieFlCTjdGclNLZTg1NTJVWVBodm9JTDlSdnlwc3RkWlJoM3d5UmF1MjVFQzlnTWc?oc=5" target="_blank">Ukraine has exposed a new Russian disinformation campaign in Europe</a>&nbsp;&nbsp;<font color="#6f6f6f">UA.NEWS</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiigFBVV95cUxNY1psS0NpUkJMNkRXSGN5NTliNVZpdEY2b28wSTFQNk4yclFrLVF1M0d6b0xablZwd0xzODl4VUUzZW1VbEhla2hsZ0tBQm5kZEVOZnFCNWRFOGxieFlCTjdGclNLZTg1NTJVWVBodm9JTDlSdnlwc3RkWlJoM3d5UmF1MjVFQzlnTWc?oc
+  link           https://news.google.com/rss/articles/CBMiigFBVV95cUxNY1psS0NpUkJMNkRXSGN5NTliNVZpdEY2b28wSTFQNk4yclFrLVF1M0d6b0xablZwd0xzODl4VUUzZW1VbEhla2hsZ0tBQm5kZEVOZnFCNWRFOGxieFlCTjdGclNLZTg1NTJVWVBodm9JTDlSdnlwc3RkWlJoM3d5UmF1MjVFQzlnTWc?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 17:28:30 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","disinformation"]
+  properties     {"guid":"CBMiigFBVV95cUxNY1psS0NpUkJMNkRXSGN5NTliNVZpdEY2b28wSTFQNk4yclFrLVF1M0d6b0xablZwd0xzODl4VUUzZW1VbEhla2hsZ0tBQm5kZEVOZnFCNWRFOGxieFlCTjdGclNLZTg1NTJVWVBodm9JTDlSdnlwc3RkWlJoM3d5UmF1MjVFQzlnTWc"}
+
+--- row 3 ---
+  uid            gnews-mon-disinformation-campaign|CBMivAFBVV95cUxPVUZZTTA1NFVhaFpBRUZCVmxIZm9ONkkwVEwwTmlvX3pYeWFhS1A4TlpBaklaeXZiN2Rmd191dWVOYkpoVTJKcjVxTUJGaTdwV244cXNIU1J6NVhnMWhmSTM5ZC1zV3VqZHlsRXdKMmVTT3d4Z2h2NXhGVGVoR0xIWk9hYzd3MjRfMUhNd3k4RzlUTEV4THpZV21oaWFrSG01ampLZTRCUWJDZUZ2YlU0YTc1S3ozZHVLaEp5Ng
+  title          Vote for Turtle: a fun game for spotting disinformation - European Parliament
+  body           <a href="https://news.google.com/rss/articles/CBMivAFBVV95cUxPVUZZTTA1NFVhaFpBRUZCVmxIZm9ONkkwVEwwTmlvX3pYeWFhS1A4TlpBaklaeXZiN2Rmd191dWVOYkpoVTJKcjVxTUJGaTdwV244cXNIU1J6NVhnMWhmSTM5ZC1zV3VqZHlsRXdKMmVTT3d4Z2h2NXhGVGVoR0xIWk9hYzd3MjRfMUhNd3k4RzlUTEV4THpZV21oaWFrSG01ampLZTRCUWJDZUZ2YlU0YTc1S3ozZHVLaEp5Ng?oc=5" target="_blank">Vote for Turtle: a fun game for spotting disinformation</a>&nbsp;&nbsp;<font color="#6f6f6f">European Parliament</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMivAFBVV95cUxPVUZZTTA1NFVhaFpBRUZCVmxIZm9ONkkwVEwwTmlvX3pYeWFhS1A4TlpBaklaeXZiN2Rmd191dWVOYkpoVTJKcjVxTUJGaTdwV244cXNIU1J6NVhnMWhmSTM5ZC1zV3VqZHlsRXdKMmVTT3d4Z2h2NXhGVGVoR0xIWk9hYzd3MjRfMUhNd3
+  link           https://news.google.com/rss/articles/CBMivAFBVV95cUxPVUZZTTA1NFVhaFpBRUZCVmxIZm9ONkkwVEwwTmlvX3pYeWFhS1A4TlpBaklaeXZiN2Rmd191dWVOYkpoVTJKcjVxTUJGaTdwV244cXNIU1J6NVhnMWhmSTM5ZC1zV3VqZHlsRXdKMmVTT3d4Z2h2NXhGVGVoR0xIWk9hYzd3MjRfMUhNd3k4RzlUTEV4THpZV21oaWFrSG01ampLZTRCUWJDZUZ2YlU0YTc1S3ozZHVLaEp5Ng?oc=5
+  language       en
+  published_at   Fri, 17 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","disinformation"]
+  properties     {"guid":"CBMivAFBVV95cUxPVUZZTTA1NFVhaFpBRUZCVmxIZm9ONkkwVEwwTmlvX3pYeWFhS1A4TlpBaklaeXZiN2Rmd191dWVOYkpoVTJKcjVxTUJGaTdwV244cXNIU1J6NVhnMWhmSTM5ZC1zV3VqZHlsRXdKMmVTT3d4Z2h2NXhGVGVoR0xIWk9hYzd3MjRfMUhNd3k4RzlUTEV4THpZV21oaWFrSG01ampLZTRCUWJDZUZ2YlU0YTc1S3ozZHVLaEp5Ng"}

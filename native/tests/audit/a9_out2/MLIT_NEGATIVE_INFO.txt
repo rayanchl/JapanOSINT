@@ -1,0 +1,7 @@
+=== MLIT_NEGATIVE_INFO  entity=東京
+exit: 0
+sched: rc=0 records=0 885ms
+--- stderr ---
+[MLIT_NEGATIVE_INFO] emitted 0
+[sched] MLIT_NEGATIVE_INFO run rc=0 records=0 885ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

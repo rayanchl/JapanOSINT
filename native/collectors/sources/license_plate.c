@@ -7,6 +7,7 @@
  * nothing unless a private plate-lookup endpoint is wired via env
  * (PLATE_LOOKUP_URL, a "%s" template + optional PLATE_LOOKUP_API_KEY bearer).
  * Registered for OSINTsaas parity; honest-empty by default. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/httpclient.h"
 #include "../../third_party/cJSON.h"
@@ -15,23 +16,17 @@
 #include <string.h>
 #include <ctype.h>
 
-static void urlenc(const char *s, char *out, size_t cap) {
-  size_t o = 0;
-  for (const char *p = s; *p && o + 4 < cap; p++) {
-    unsigned char c = (unsigned char)*p;
-    if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') out[o++] = (char)c;
-    else o += (size_t)snprintf(out + o, cap - o, "%%%02X", c);
-  }
-  out[o] = 0;
-}
-
 static int plate_run(const source_ctx *ctx, intel_sink *sink) {
   const char *plate = ctx->entity;
   if (!plate || !*plate) return 0;
   const char *tmpl = getenv("PLATE_LOOKUP_URL");   /* "%s" = url-encoded plate */
-  if (!tmpl || !strstr(tmpl, "%s")) return 0;       /* honest empty — no lawful public source */
+  if (!tmpl || !strstr(tmpl, "%s")) {              /* honest empty — no lawful public source */
+    fprintf(stderr, "[LICENSE_PLATE_LOOKUP] gated (no PLATE_LOOKUP_URL "
+                    "template configured; plate→owner has no lawful public API)\n");
+    return 0;
+  }
 
-  char enc[128]; urlenc(plate, enc, sizeof enc);
+  char enc[128]; jo_urlencode_buf(plate, enc, sizeof enc);
   char url[600]; snprintf(url, sizeof url, tmpl, enc);
   const char *key = getenv("PLATE_LOOKUP_API_KEY");
   char auth[256] = {0}; const char *headers[2] = { NULL, NULL };
@@ -61,7 +56,9 @@ static int plate_run(const source_ctx *ctx, intel_sink *sink) {
   it.tags_json = "[\"osint-search\",\"LICENSE_PLATE_LOOKUP\"]";
   int rc = sink->emit(sink, &it);
   free(bj); free(pj); cJSON_Delete(data); cJSON_Delete(props);
-  return rc >= 0 ? 1 : 0;
+  /* run() is a STATUS code (core/scheduler.c: rc==0 ? "ok" : "error"), not a
+   * row count — returning 1 marked a successful lookup as an errored run. */
+  return rc >= 0 ? 0 : -1;
 }
 
 static const source_def plate_def = {

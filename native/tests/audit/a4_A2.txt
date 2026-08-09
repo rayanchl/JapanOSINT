@@ -1,0 +1,45 @@
+OPENMETEO_AQ Tokyo
+INATURALIST Tokyo
+BREACH_INDEX_PHONE +81312345678
+EMAILREP_LOOKUP test@example.com
+FI_OPENDATA Tokyo
+egov-laws
+cnbc-top
+decrypt
+oilprice-2
+ALPHAVANTAGE_SEARCH Tokyo
+RADIO_BROWSER Tokyo
+gnews-mon-assassination
+gnews-mon-cargo-ship-collision
+gnews-mon-cn-cross-strait
+gnews-mon-cyberattack
+gnews-mon-drone-strike
+gnews-mon-electronic-warfare
+gnews-mon-gps-jamming
+gnews-mon-il-gaza
+gnews-mon-kr-north-korea-missile
+gnews-mon-military-exercise
+gnews-mon-naval-deployment
+gnews-mon-oil-tanker-seizure
+gnews-mon-power-grid-failure
+gnews-mon-semiconductor-export-controls
+gnews-mon-terror-attack
+gnews-mon-undersea-cable
+gnews-mon-weapons-smuggling
+BUSINESS_LICENSES Toyota
+hatena-bookmark-extended
+jma-tide
+BANKRUPTCY_SEARCH Tokyo
+mapfan-api
+nexco-roadwork
+ARCHIVE_ORG_SEARCH Tokyo
+TOR_ONIONOO Tokyo
+SEC_FULLTEXT Toyota
+peeringdb-jp
+PHONE_LOOKUP +81312345678
+reddit-jp-subs
+LT_REGISTRAI Tokyo
+RS_APR Toyota
+satellite-ground-stations
+tor-exit-nodes
+wifi-networks-shodan

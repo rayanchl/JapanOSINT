@@ -1,0 +1,36 @@
+=== flight-adsb
+exit: 0
+sched: rc=0 records=76 3949ms
+--- stderr ---
+[flight-adsb] emitted 76
+[sched] flight-adsb run rc=0 records=76 3949ms
+--- persisted: 76 rows, 76 with lat/lon, 76 with geometry ---
+record_type: flight-adsb=76
+sub_source_id: (null)=76
+
+--- row 1 ---
+  uid            flight-adsb|ADSBLOL_c0103a
+  title          ACA7 (C-FGDT, B789)
+  lat            33.577617
+  lon            135.251484
+  geometry       {"type":"Point","coordinates":[135.251484,33.577617]}
+  record_type    flight-adsb
+  properties     {"id":"ADSBLOL_c0103a","icao24":"c0103a","callsign":"ACA7","origin_country":"Canada","time_position":1785521155,"last_contact":1785521155,"baro_altitude_m":12184.38,"altitude_ft":40000,"on_ground":false,"velocity_mps":265.61,"ground_speed_knots":516,"heading":231,"true_track":231,"vertical_rate_fpm":128,"geo_altitude_m":13037.82,"geo_altitude_ft":42800,"squawk":"3262","spi":false,"position_source":"ADS-B","category":"A5","registration":"C-FGDT","aircraft_type":"B789","true_airspeed_knots":490,"indicated_airspeed_knots":259,"mach":0.852,"magnetic_heading":240,"emergency":"none","last_seen_s":0,"rssi":-13.2,"source":"opensky_api+adsblol_api","is_military":true,"military_reason":"icao_range","title":"ACA7 (C-FGDT, B789)"}
+
+--- row 2 ---
+  uid            flight-adsb|ADSBLOL_ac7e18
+  title          KYE9724 (N904AR, B744)
+  lat            34.835999
+  lon            132.000228
+  geometry       {"type":"Point","coordinates":[132.000228,34.835999]}
+  record_type    flight-adsb
+  properties     {"id":"ADSBLOL_ac7e18","icao24":"ac7e18","callsign":"KYE9724","origin_country":"United States","time_position":1785521156,"last_contact":1785521156,"baro_altitude_m":9448.8,"altitude_ft":31000,"on_ground":false,"velocity_mps":252.43,"ground_speed_knots":491,"heading":53,"true_track":53,"vertical_rate_fpm":0,"geo_altitude_m":10088.88,"geo_altitude_ft":33100,"squawk":"4413","spi":false,"position_source":"ADS-B","category":"A5","registration":"N904AR","aircraft_type":"B744","true_airspeed_knots":506,"indicated_airspeed_knots":310,"mach":0.832,"magnetic_heading":60,"emergency":"none","last_seen_s":0,"rssi":-15.5,"source":"opensky_api+adsblol_api","is_military":false,"military_reason":null,"title":"KYE9724 (N904AR, B744)"}
+
+--- row 3 ---
+  uid            flight-adsb|ADSBLOL_a57362
+  title          GTI812 (N450PA, B744)
+  lat            37.7146
+  lon            139.834043
+  geometry       {"type":"Point","coordinates":[139.834043,37.7146]}
+  record_type    flight-adsb
+  properties     {"id":"ADSBLOL_a57362","icao24":"a57362","callsign":"GTI812","origin_country":"United States","time_position":1785521156,"last_contact":1785521156,"baro_altitude_m":9448.8,"altitude_ft":31000,"on_ground":false,"velocity_mps":277.15,"ground_speed_knots":538,"heading":87,"true_track":87,"vertical_rate_fpm":-64,"geo_altitude_m":10066.02,"geo_altitude_ft":33025,"squawk":"4404","spi":false,"position_source":"ADS-B","category":"A5","registration":"N450PA","aircraft_type":"B744","true_airspeed_knots":520,"indicated_airspeed_knots":320,"mach":0.856,"magnetic_heading":92,"emergency":"none","last_seen_s":0,"rssi":-9.1,"source":"opensky_api+adsblol_api","is_military":false,"military_reason":null,"title":"GTI812 (N450PA, B744)"}

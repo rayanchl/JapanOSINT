@@ -1,0 +1,29 @@
+{
+ "gnews-ae-health": [
+  "gnews-lb-health"
+ ],
+ "gnews-ae-science": [
+  "gnews-sa-science"
+ ],
+ "gnews-es419-science": [
+  "gnews-bo-science"
+ ],
+ "gnews-no-business": [
+  "gnews-dk-business"
+ ],
+ "gnews-no-technology": [
+  "gnews-dk-technology"
+ ],
+ "gnews-ie-science": [
+  "gnews-nz-science",
+  "gnews-ph-science",
+  "gnews-pk-science"
+ ],
+ "gnews-ke-science": [
+  "gnews-my-science",
+  "gnews-ng-science"
+ ],
+ "gnews-ru-science": [
+  "gnews-kz-science"
+ ]
+}

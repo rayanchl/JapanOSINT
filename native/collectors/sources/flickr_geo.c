@@ -3,6 +3,7 @@
  * Flickr REST flickr.photos.search, JP bbox, has_geo=1. Keyed on
  * FLICKR_API_KEY (no key-free fallback) -> honest empty when absent.
  * Emits a Point Feature per geotagged photo via geojson toolkit. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -23,11 +24,6 @@ static int num_nz(const cJSON *v, double *out) {
   if (d == 0) return 0;
   *out = d;
   return 1;
-}
-
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -57,28 +53,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (!num_nz(cJSON_GetObjectItem(p, "longitude"), &lon)) continue;
       if (!num_nz(cJSON_GetObjectItem(p, "latitude"), &lat)) continue;
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(lon, lat);
 
       cJSON *pr = cJSON_CreateObject();
-      const char *id = sv(p, "id");
-      const char *owner = sv(p, "owner");
+      const char *id = jo_sv(p, "id");
+      const char *owner = jo_sv(p, "owner");
       cJSON_AddStringToObject(pr, "photo_id", id ? id : "");
-      const char *title = sv(p, "title");
+      const char *title = jo_sv(p, "title");
       if (title) cJSON_AddStringToObject(pr, "title", title);
       else cJSON_AddNullToObject(pr, "title");
-      const char *own = sv(p, "ownername");
+      const char *own = jo_sv(p, "ownername");
       if (!own) own = owner;
       if (own) cJSON_AddStringToObject(pr, "owner", own);
       else cJSON_AddNullToObject(pr, "owner");
-      const char *us = sv(p, "url_s");
+      const char *us = jo_sv(p, "url_s");
       if (us) cJSON_AddStringToObject(pr, "url", us);
       else {
         char ub[256];
@@ -86,7 +74,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                  owner ? owner : "", id ? id : "");
         cJSON_AddStringToObject(pr, "url", ub);
       }
-      const char *dt = sv(p, "datetaken");
+      const char *dt = jo_sv(p, "datetaken");
       if (dt) cJSON_AddStringToObject(pr, "taken", dt);
       else cJSON_AddNullToObject(pr, "taken");
       cJSON_AddStringToObject(pr, "source", "flickr_api");

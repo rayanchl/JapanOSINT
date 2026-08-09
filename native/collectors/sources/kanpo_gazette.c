@@ -140,7 +140,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int total = 0;
   for (int i = 0; i < nd; i++) total += scrape_date(ctx, sink, dates[i]);
   fprintf(stderr, "[kanpo] emitted %d (dates=%d)\n", total, nd);
-  return total > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def kanpo_gazette_def = {

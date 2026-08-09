@@ -1,0 +1,45 @@
+=== cnbc-finance
+exit: 0
+sched: rc=0 records=30 222ms
+--- stderr ---
+[rss] cnbc-finance emitted 30
+[sched] cnbc-finance run rc=0 records=30 222ms
+--- persisted: 30 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=30
+sub_source_id: (null)=30
+
+--- row 1 ---
+  uid            cnbc-finance|108342649
+  title          Why Situational Awareness hedge fund imploded, even in a tame stock market
+  body           Leopold Aschenbrenner's $45 billion hedge fund was forced to slash public stock positions after a historic momentum reversal triggered margin calls.
+  summary        Leopold Aschenbrenner's $45 billion hedge fund was forced to slash public stock positions after a historic momentum reversal triggered margin calls.
+  link           https://www.cnbc.com/2026/07/31/why-leopold-aschenbrenner-situational-awareness-hedge-fund-imploded.html
+  language       en
+  published_at   Fri, 31 Jul 2026 16:14:54 GMT
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"108342649"}
+
+--- row 2 ---
+  uid            cnbc-finance|108343090
+  title          How Leopold Aschenbrenner built a $45 billion AI hedge fund — and lost most of it in days
+  body           Leopold Aschenbrenner, a former OpenAI researcher-turned-hedge fund manager, saw a dramatic decline this week in his AI-focused fund, Situational Awareness.
+  summary        Leopold Aschenbrenner, a former OpenAI researcher-turned-hedge fund manager, saw a dramatic decline this week in his AI-focused fund, Situational Awareness.
+  link           https://www.cnbc.com/2026/07/31/leopold-aschenbrenner-situational-awareness-fund-fire-sale.html
+  language       en
+  published_at   Fri, 31 Jul 2026 17:57:53 GMT
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"108343090"}
+
+--- row 3 ---
+  uid            cnbc-finance|108343110
+  title          New York sues Kalshi, says prediction market is running 'illegal gambling operation'
+  body           It comes after a federal judge earlier this month denied Kalshi's attempts to intervene against the state's Gaming Commission.
+  summary        It comes after a federal judge earlier this month denied Kalshi's attempts to intervene against the state's Gaming Commission.
+  link           https://www.cnbc.com/2026/07/31/new-york-sues-kalshi-claims-it-is-illegal-gambling-operation.html
+  language       en
+  published_at   Fri, 31 Jul 2026 15:31:24 GMT
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"108343110"}

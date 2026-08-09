@@ -3,6 +3,7 @@
  * SoftBank crowd/movement analytics — paid, contract-only, NO public API.
  * Gated honest-empty on SOFTBANK_CROWD_API_KEY. With key: attempt contract
  * endpoint, build point features; honest empty on failure. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -45,14 +46,6 @@ static cJSON *pick3(cJSON *r, const char *a, const char *b, const char *c) {
   return cJSON_CreateNull();
 }
 
-static cJSON *pick(cJSON *r, const char *a, const char *b) {
-  cJSON *v = cJSON_GetObjectItem(r, a);
-  if (v && !cJSON_IsNull(v)) return cJSON_Duplicate(v, 1);
-  v = cJSON_GetObjectItem(r, b);
-  if (v && !cJSON_IsNull(v)) return cJSON_Duplicate(v, 1);
-  return cJSON_CreateNull();
-}
-
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("SOFTBANK_CROWD_API_KEY");
   if (!key || !*key) {
@@ -82,19 +75,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_ArrayForEach(r, rows) {
     double lon, lat;
     if (!coord(r, &lon, &lat)) continue;
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(lon, lat);
     cJSON *p = cJSON_CreateObject();
-    cJSON_AddItemToObject(p, "mesh_code", pick(r, "mesh_code", "meshCode"));
+    cJSON_AddItemToObject(p, "mesh_code", jo_pick_dup(r, "mesh_code", "meshCode"));
     cJSON_AddItemToObject(p, "crowd", pick3(r, "crowd", "population", "value"));
-    cJSON_AddItemToObject(p, "datetime", pick(r, "datetime", "timestamp"));
+    cJSON_AddItemToObject(p, "datetime", jo_pick_dup(r, "datetime", "timestamp"));
     cJSON_AddStringToObject(p, "source", "softbank_crowd_api");
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);

@@ -1,0 +1,33 @@
+=== japan-reit
+exit: 0
+sched: rc=0 records=57 2813ms
+--- stderr ---
+[japan-reit] emitted 57
+[sched] japan-reit run rc=0 records=57 2813ms
+--- persisted: 57 rows, 0 with lat/lon, 0 with geometry ---
+record_type: japan-reit=57
+sub_source_id: (null)=57
+
+--- row 1 ---
+  uid            japan-reit|8951
+  title          日本ビルファンド投資法人 (8951)
+  body           japan-reit.com listed J-REIT issue: code=8951, name=日本ビルファンド投資法人
+  summary        J-REIT listed issue 8951
+  link           https://www.japan-reit.com/meigara/8951/
+  language       ja
+  published_at   2026-07-31T18:25:16.000Z
+  record_type    japan-reit
+  tags           ["economy","real-estate","reit","finance"]
+  properties     {"ticker_code":"8951","name":"日本ビルファンド投資法人"}
+
+--- row 2 ---
+  uid            japan-reit|8952
+  title          ジャパンリアルエステイト投資法人 (8952)
+  body           japan-reit.com listed J-REIT issue: code=8952, name=ジャパンリアルエステイト投資法人
+  summary        J-REIT listed issue 8952
+  link           https://www.japan-reit.com/meigara/8952/
+  language       ja
+  published_at   2026-07-31T18:25:16.000Z
+  record_type    japan-reit
+  tags           ["economy","real-estate","reit","finance"]
+  properties     {"ticker_code":"8952","name":"ジャパンリアルエステイト投資法人"}

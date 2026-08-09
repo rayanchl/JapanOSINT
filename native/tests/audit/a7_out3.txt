@@ -1,0 +1,455 @@
+=== ADSB_LOL  entity=84b86d
+exit: 0
+sched: rc=0 records=1 107ms
+--- stderr ---
+[ADSB_LOL] emitted 1
+[sched] ADSB_LOL run rc=0 records=1 107ms
+--- persisted: 1 rows, 1 with lat/lon, 0 with geometry ---
+record_type: aircraft-position=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            ADSB_LOL|84b86d
+  title          APJ877   · A20N
+  body           {"hex":"84b86d","callsign":"APJ877  ","registration":"JA219P","type":"A20N","alt_baro_ft":12875,"source":"ADSB_LOL"}
+  summary        JA219P
+  link           https://globe.adsbexchange.com/?icao=84b86d
+  language       en
+  lat            35.415034
+  lon            139.780864
+  record_type    aircraft-position
+  tags           ["osint-search","ADSB_LOL"]
+  properties     {"service":"ADSB_LOL","hex":"84b86d","success":true}
+#################################################
+=== AIRPLANES_LIVE  entity=84b86d
+exit: 0
+sched: rc=0 records=1 132ms
+--- stderr ---
+[AIRPLANES_LIVE] emitted 1
+[sched] AIRPLANES_LIVE run rc=0 records=1 132ms
+--- persisted: 1 rows, 1 with lat/lon, 0 with geometry ---
+record_type: aircraft-position=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            AIRPLANES_LIVE|84b86d
+  title          APJ877   · A20N
+  body           {"hex":"84b86d","callsign":"APJ877  ","registration":"JA219P","type":"A20N","alt_baro_ft":12900,"source":"AIRPLANES_LIVE"}
+  summary        JA219P
+  link           https://globe.adsbexchange.com/?icao=84b86d
+  language       en
+  lat            35.414243
+  lon            139.780105
+  record_type    aircraft-position
+  tags           ["osint-search","AIRPLANES_LIVE"]
+  properties     {"service":"AIRPLANES_LIVE","hex":"84b86d","success":true}
+#################################################
+=== OPENSKY_STATES  entity=84b86d
+exit: 0
+sched: rc=0 records=1 110ms
+--- stderr ---
+[OPENSKY_STATES] emitted 1
+[sched] OPENSKY_STATES run rc=0 records=1 110ms
+--- persisted: 1 rows, 1 with lat/lon, 0 with geometry ---
+record_type: aircraft-position=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            OPENSKY_STATES|84b86d
+  title          APJ877  
+  body           {"hex":"84b86d","callsign":"APJ877  ","origin_country":"Japan","source":"OpenSky Network"}
+  summary        Japan
+  link           https://opensky-network.org/aircraft-profile?icao24=84b86d
+  language       en
+  lat            35.4229
+  lon            139.7891
+  record_type    aircraft-position
+  tags           ["osint-search","OPENSKY_STATES"]
+  properties     {"service":"OPENSKY_STATES","hex":"84b86d","success":true}
+#################################################
+=== PLANESPOTTERS  entity=JA219P
+exit: 0
+sched: rc=0 records=0 223ms
+--- stderr ---
+[PLANESPOTTERS] emitted 0
+[sched] PLANESPOTTERS run rc=0 records=0 223ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== COINGECKO_SEARCH  entity=bitcoin
+exit: 0
+sched: rc=0 records=20 201ms
+--- stderr ---
+[COINGECKO_SEARCH] emitted 20
+[sched] COINGECKO_SEARCH run rc=0 records=20 201ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: crypto-asset=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            COINGECKO_SEARCH|bitcoin
+  title          Bitcoin (BTC)
+  body           {"name":"Bitcoin","symbol":"BTC","coingecko_id":"bitcoin","market_cap_rank":1,"source":"CoinGecko"}
+  summary        BTC
+  link           https://www.coingecko.com/en/coins/bitcoin
+  language       en
+  record_type    crypto-asset
+  tags           ["osint-search","COINGECKO_SEARCH"]
+  properties     {"coingecko_id":"bitcoin","service":"COINGECKO_SEARCH","success":true}
+
+--- row 2 ---
+  uid            COINGECKO_SEARCH|bitcoin-cash
+  title          Bitcoin Cash (BCH)
+  body           {"name":"Bitcoin Cash","symbol":"BCH","coingecko_id":"bitcoin-cash","market_cap_rank":23,"source":"CoinGecko"}
+  summary        BCH
+  link           https://www.coingecko.com/en/coins/bitcoin-cash
+  language       en
+  record_type    crypto-asset
+  tags           ["osint-search","COINGECKO_SEARCH"]
+  properties     {"coingecko_id":"bitcoin-cash","service":"COINGECKO_SEARCH","success":true}
+#################################################
+=== DEFILLAMA_TVL  entity=aave
+exit: 0
+sched: rc=0 records=12 480ms
+--- stderr ---
+[DEFILLAMA_TVL] emitted 12
+[sched] DEFILLAMA_TVL run rc=0 records=12 480ms
+--- persisted: 12 rows, 0 with lat/lon, 0 with geometry ---
+record_type: defi-protocol=12
+sub_source_id: (null)=12
+
+--- row 1 ---
+  uid            DEFILLAMA_TVL|Aave V3
+  title          Aave V3
+  body           {"name":"Aave V3","symbol":"AAVE","category":"Lending","chain":"Multi-Chain","tvl_usd":13639016070.397717,"source":"DefiLlama"}
+  summary        Lending
+  link           https://aave.com
+  language       en
+  record_type    defi-protocol
+  tags           ["osint-search","DEFILLAMA_TVL"]
+  properties     {"protocol":"Aave V3","service":"DEFILLAMA_TVL","success":true}
+
+--- row 2 ---
+  uid            DEFILLAMA_TVL|Aave Horizon RWA
+  title          Aave Horizon RWA
+  body           {"name":"Aave Horizon RWA","symbol":"AAVE","category":"RWA Lending","chain":"Ethereum","tvl_usd":257313556.17333859,"source":"DefiLlama"}
+  summary        RWA Lending
+  link           https://app.aave.com/markets/?marketName=proto_horizon_v3
+  language       en
+  record_type    defi-protocol
+  tags           ["osint-search","DEFILLAMA_TVL"]
+  properties     {"protocol":"Aave Horizon RWA","service":"DEFILLAMA_TVL","success":true}
+#################################################
+=== ETHPLORER_ADDR  entity=0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+exit: 0
+sched: rc=0 records=1 1111ms
+--- stderr ---
+[ETHPLORER_ADDR] emitted 1
+[sched] ETHPLORER_ADDR run rc=0 records=1 1111ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: crypto-address=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            ETHPLORER_ADDR|eth:0xd8da6bf26964af9d7eed9e03e53415d37aa96045
+  title          ETH 0xd8da6bf26964af9d7eed9e03e53415d37aa96045 (6.632230 ETH, 6452 tokens)
+  body           {"address":"0xd8da6bf26964af9d7eed9e03e53415d37aa96045","eth_balance":6.632230430120325,"token_count":6452,"tokens":["OMG","UET","CNX","KNCL","MNTP","KGT","ANON","WRC","ATM"],"source":"Ethplorer"}
+  summary        ETH address
+  link           https://etherscan.io/address/0xd8da6bf26964af9d7eed9e03e53415d37aa96045
+  language       en
+  record_type    crypto-address
+  tags           ["osint-search","ETHPLORER_ADDR"]
+  properties     {"service":"ETHPLORER_ADDR","chain":"eth","address":"0xd8da6bf26964af9d7eed9e03e53415d37aa96045","success":true}
+#################################################
+=== IP_REPUTATION  entity=8.8.8.8
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[sched] IP_REPUTATION run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== JP_POSTAL  entity=1000001
+exit: 0
+sched: rc=0 records=1 211ms
+--- stderr ---
+[JP_POSTAL] emitted 1
+[sched] JP_POSTAL run rc=0 records=1 211ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: jp-postal-address=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            JP_POSTAL|1000001
+  title          東京都千代田区千代田
+  body           {"zipcode":"1000001","prefecture":"東京都","city":"千代田区","town":"千代田","prefecture_kana":"ﾄｳｷｮｳﾄ","source":"zipcloud"}
+  summary        東京都
+  language       ja
+  record_type    jp-postal-address
+  tags           ["osint-search","JP_POSTAL"]
+  properties     {"service":"JP_POSTAL","zipcode":"1000001","success":true}
+#################################################
+=== FRANKFURTER_FX  entity=USD
+exit: 0
+sched: rc=0 records=1 136ms
+--- stderr ---
+[FRANKFURTER_FX] emitted 1
+[sched] FRANKFURTER_FX run rc=0 records=1 136ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: fx-rates=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            FRANKFURTER_FX|USD
+  title          FX rates for USD (2026-07-31)
+  body           {"base":"USD","date":"2026-07-31","rates":{"AUD":1.4249,"BRL":5.0583,"CAD":1.4041,"CHF":0.8101,"CNY":6.7513,"CZK":21.081,"DKK":6.5087,"EUR":0.8707,"GBP":0.74508,"HKD":7.8432,"HUF":317.15,"IDR":18052,"ILS":3.0574,"INR":95.39,"ISK":124.16,"JPY":160.24,"KRW":1443.61,"MXN":17.3715,"MYR":4.0865,"NOK":9.5272,"NZD":1.7056,"PHP":61.269,"PLN":3.7558,"RON":4.5683,"SEK":9.5651,"SGD":1.2849,"THB":33.465,"TRY":47.525,"ZAR":16.575},"source":"Frankfurter (ECB)"}
+  summary        2026-07-31
+  language       en
+  record_type    fx-rates
+  tags           ["osint-search","FRANKFURTER_FX"]
+  properties     {"service":"FRANKFURTER_FX","success":true}
+#################################################
+=== CELESTRAK_TLE  entity=ISS
+exit: 0
+sched: rc=0 records=14 3300ms
+--- stderr ---
+[CELESTRAK_TLE] emitted 14
+[sched] CELESTRAK_TLE run rc=0 records=14 3300ms
+--- persisted: 14 rows, 0 with lat/lon, 0 with geometry ---
+record_type: satellite-tle=14
+sub_source_id: (null)=14
+
+--- row 1 ---
+  uid            CELESTRAK_TLE|25544
+  title          ISS (ZARYA)
+  body           {"object_name":"ISS (ZARYA)","intl_designator":"1998-067A","norad_cat_id":"25544","epoch":"2026-07-31T02:52:26.076000","inclination":"51.6317","eccentricity":"0.0007117","mean_motion":"15.4928","source":"CelesTrak"}
+  summary        1998-067A
+  link           https://celestrak.org/satcat/table-satcat.php?CATNR=25544
+  language       en
+  published_at   2026-07-31T02:52:26.076000
+  record_type    satellite-tle
+  tags           ["osint-search","satellite","CELESTRAK"]
+  properties     {"service":"CELESTRAK_TLE","source":"CelesTrak","norad_cat_id":"25544","intl_designator":"1998-067A","success":true}
+
+--- row 2 ---
+  uid            CELESTRAK_TLE|25575
+  title          ISS (UNITY)
+  body           {"object_name":"ISS (UNITY)","intl_designator":"1998-069F","norad_cat_id":"25575","epoch":"2026-07-31T02:52:26.076000","inclination":"51.6317","eccentricity":"0.0007117","mean_motion":"15.4928","source":"CelesTrak"}
+  summary        1998-069F
+  link           https://celestrak.org/satcat/table-satcat.php?CATNR=25575
+  language       en
+  published_at   2026-07-31T02:52:26.076000
+  record_type    satellite-tle
+  tags           ["osint-search","satellite","CELESTRAK"]
+  properties     {"service":"CELESTRAK_TLE","source":"CelesTrak","norad_cat_id":"25575","intl_designator":"1998-069F","success":true}
+#################################################
+=== SATNOGS  entity=ISS
+exit: 0
+sched: rc=0 records=14 615ms
+--- stderr ---
+[SATNOGS] emitted 14
+[sched] SATNOGS run rc=0 records=14 615ms
+--- persisted: 14 rows, 0 with lat/lon, 0 with geometry ---
+record_type: satellite-catalog=14
+sub_source_id: (null)=14
+
+--- row 1 ---
+  uid            SATNOGS|XSKZ-5603-1870-9019-3066
+  title          ISS
+  body           {"name":"ISS","sat_id":"XSKZ-5603-1870-9019-3066","norad_cat_id":"25544","status":"alive","launched":"1998-11-20T00:00:00Z","countries":"RU,US","source":"SatNOGS"}
+  summary        alive
+  link           https://db.satnogs.org/satellite/XSKZ-5603-1870-9019-3066
+  language       en
+  record_type    satellite-catalog
+  tags           ["osint-search","satellite","SATNOGS"]
+  properties     {"service":"SATNOGS","source":"SatNOGS","norad_cat_id":"25544","sat_id":"XSKZ-5603-1870-9019-3066","status":"alive","success":true}
+
+--- row 2 ---
+  uid            SATNOGS|BTIX-5441-6034-5221-2014
+  title          SWISSCUBE
+  body           {"name":"SWISSCUBE","sat_id":"BTIX-5441-6034-5221-2014","norad_cat_id":"35932","status":"alive","launched":"2009-09-23T06:21:00Z","countries":"CH","source":"SatNOGS"}
+  summary        alive
+  link           https://db.satnogs.org/satellite/BTIX-5441-6034-5221-2014
+  language       en
+  record_type    satellite-catalog
+  tags           ["osint-search","satellite","SATNOGS"]
+  properties     {"service":"SATNOGS","source":"SatNOGS","norad_cat_id":"35932","sat_id":"BTIX-5441-6034-5221-2014","status":"alive","success":true}
+#################################################
+=== MALWARE_ANALYSIS  entity=44d88612fea8a8f36de82e1278abb02f
+exit: 0
+sched: rc=0 records=0 179ms
+--- stderr ---
+[sched] MALWARE_ANALYSIS run rc=0 records=0 179ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== COURT_RECORDS  entity=東京
+exit: 0
+sched: rc=0 records=0 844ms
+--- stderr ---
+[sched] COURT_RECORDS run rc=0 records=0 844ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== COMPANY_SEARCH  entity=トヨタ
+exit: 0
+sched: rc=0 records=0 137ms
+--- stderr ---
+[sched] COMPANY_SEARCH run rc=0 records=0 137ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== RESEARCHMAP  entity=山中
+exit: 0
+sched: rc=0 records=0 2050ms
+--- stderr ---
+[researchmap] emitted 0
+[sched] RESEARCHMAP run rc=0 records=0 2050ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== UFOCATCH  entity=7203
+exit: 0
+sched: rc=0 records=0 1688ms
+--- stderr ---
+[ufocatch] http status=404
+[sched] UFOCATCH run rc=0 records=0 1688ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== ASSET_DISCLOSURE
+exit: 0
+sched: rc=0 records=0 1086ms
+--- stderr ---
+[assets] http status=404
+[sched] ASSET_DISCLOSURE run rc=0 records=0 1086ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== GEPS_PROCUREMENT
+exit: 0
+sched: rc=0 records=30 1569ms
+--- stderr ---
+[geps] emitted 30
+[sched] GEPS_PROCUREMENT run rc=0 records=30 1569ms
+--- persisted: 30 rows, 0 with lat/lon, 0 with geometry ---
+record_type: gov-tender=30
+sub_source_id: (null)=30
+
+--- row 1 ---
+  uid            GEPS_PROCUREMENT|https://www.p-portal.go.jp#main-content
+  title          本文へ移動する
+  link           https://www.p-portal.go.jp#main-content
+  language       ja
+  record_type    gov-tender
+  tags           ["osint-search"]
+  properties     {"service":"GEPS Procurement","href":"https://www.p-portal.go.jp#main-content","success":true}
+
+--- row 2 ---
+  uid            GEPS_PROCUREMENT|https://www.p-portal.go.jp/pps-web-biz/UZA01/OZA0101
+  title          ポータルトップへ
+  link           https://www.p-portal.go.jp/pps-web-biz/UZA01/OZA0101
+  language       ja
+  record_type    gov-tender
+  tags           ["osint-search"]
+  properties     {"service":"GEPS Procurement","href":"https://www.p-portal.go.jp/pps-web-biz/UZA01/OZA0101","success":true}
+#################################################
+=== LOCAL_TENDERS
+exit: 0
+sched: rc=0 records=3 1095ms
+--- stderr ---
+[tenders] emitted 3
+[sched] LOCAL_TENDERS run rc=0 records=3 1095ms
+--- persisted: 3 rows, 0 with lat/lon, 0 with geometry ---
+record_type: local-tender=3
+sub_source_id: (null)=3
+
+--- row 1 ---
+  uid            LOCAL_TENDERS|https://www.geps.go.jp#main-content
+  title          メインコンテンツに移動
+  link           https://www.geps.go.jp#main-content
+  language       ja
+  record_type    local-tender
+  tags           ["osint-search"]
+  properties     {"service":"Local Tenders","href":"https://www.geps.go.jp#main-content","success":true}
+
+--- row 2 ---
+  uid            LOCAL_TENDERS|https://www.p-portal.go.jp/pps-web-biz/
+  title          調達ポータル
+  link           https://www.p-portal.go.jp/pps-web-biz/
+  language       ja
+  record_type    local-tender
+  tags           ["osint-search"]
+  properties     {"service":"Local Tenders","href":"https://www.p-portal.go.jp/pps-web-biz/","success":true}
+#################################################
+=== POLITICAL_FUNDS
+exit: 0
+sched: rc=0 records=30 926ms
+--- stderr ---
+[polifunds] emitted 30
+[sched] POLITICAL_FUNDS run rc=0 records=30 926ms
+--- persisted: 30 rows, 0 with lat/lon, 0 with geometry ---
+record_type: political-funds-report=30
+sub_source_id: (null)=30
+Traceback (most recent call last):
+  File "/mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/verify_one.py", line 97, in <module>
+    main()
+  File "/mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/verify_one.py", line 82, in main
+    % ",".join(cols), (a.source_id, a.rows)).fetchall()
+                                             ^^^^^^^^^^
+sqlite3.OperationalError: Could not decode to UTF-8 column 'title' with text '���C���R���e���c���W�����v'
+#################################################
+=== PUBMED  entity=cancer
+exit: 0
+sched: rc=0 records=15 1138ms
+--- stderr ---
+[PUBMED] emitted 15
+[sched] PUBMED run rc=0 records=15 1138ms
+--- persisted: 15 rows, 0 with lat/lon, 0 with geometry ---
+record_type: pubmed-article=15
+sub_source_id: (null)=15
+
+--- row 1 ---
+  uid            PUBMED|42536399
+  title          Glowing evidence: radiation shines in early NLPHL.
+  body           {"title":"Glowing evidence: radiation shines in early NLPHL.","authors":"Molin D","journal":"Blood Adv","pubdate":"2026 Aug 11","pmid":"42536399","source":"PubMed"}
+  summary        Molin D
+  link           https://pubmed.ncbi.nlm.nih.gov/42536399/
+  author         Molin D
+  language       en
+  published_at   2026 Aug 11
+  record_type    pubmed-article
+  tags           ["osint-search","PUBMED"]
+  properties     {"service":"PUBMED","source":"PubMed","pmid":"42536399","success":true}
+
+--- row 2 ---
+  uid            PUBMED|42536376
+  title          When Families Are Not the Barrier to Clinical Trial Enrollment.
+  body           {"title":"When Families Are Not the Barrier to Clinical Trial Enrollment.","authors":"Hall AG","journal":"JAMA Netw Open","pubdate":"2026 Jul 1","pmid":"42536376","source":"PubMed"}
+  summary        Hall AG
+  link           https://pubmed.ncbi.nlm.nih.gov/42536376/
+  author         Hall AG
+  language       en
+  published_at   2026 Jul 1
+  record_type    pubmed-article
+  tags           ["osint-search","PUBMED"]
+  properties     {"service":"PUBMED","source":"PubMed","pmid":"42536376","success":true}
+#################################################
+=== SEMANTIC_SCHOLAR  entity=cancer
+exit: 0
+sched: rc=0 records=0 664ms
+--- stderr ---
+[semantic_scholar] http status=429
+[SEMANTIC_SCHOLAR] emitted 0
+[sched] SEMANTIC_SCHOLAR run rc=0 records=0 664ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== KAKEN  entity=地震
+exit: 0
+sched: rc=0 records=0 1693ms
+--- stderr ---
+[kaken] http status=403
+[sched] KAKEN run rc=0 records=0 1693ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== OVERPASS_GLOBAL  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 3475ms
+--- stderr ---
+[overpass_global] http status=0
+[sched] OVERPASS_GLOBAL run rc=0 records=0 3475ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+DONE /mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/a7_list3.txt

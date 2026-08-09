@@ -1,0 +1,37 @@
+=== SSL_ANALYZER  entity=github.com
+exit: 0
+sched: rc=0 records=101 9642ms
+--- stderr ---
+[sched] SSL_ANALYZER run rc=0 records=101 9642ms
+--- persisted: 101 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=101
+sub_source_id: (null)=101
+
+--- row 1 ---
+  uid            SSL_ANALYZER|cert:github.com
+  title          TLS certificate — github.com
+  body           {"host":"github.com","port":443,"protocol":"TLSv1.3","cipher":"TLS_AES_128_GCM_SHA256","cipher_bits":128,"subject":"CN = github.com","issuer":"C = GB, O = Sectigo Limited, CN = Sectigo Public Server Authentication CA DV E36","trusted_ca":true,"serial_number":"72010E03F4A067FE4E796266430718F6","valid_from":"Jul  3 00:00:00 2026 GMT","valid_until":"Sep 30 23:59:59 2026 GMT","days_until_expiry":61,"status":"VALID","subject_alt_names":["github.com","www.github.com"],"san_count":2,"signature_algorithm":"ecdsa-with-SHA256","public_key_type":"EC","public_key_bits":256,"weak_key":false}
+  summary        C = GB, O = Sectigo Limited, CN = Sectigo Public Server Authentication CA DV E36
+  record_type    osint_service_result
+  tags           ["osint-search","SSL_ANALYZER"]
+  properties     {"service":"SSL_ANALYZER","host":"github.com","status":"VALID","success":true}
+
+--- row 2 ---
+  uid            SSL_ANALYZER|ctcert:github.com:28325072437
+  title          CT cert — classroom.github.com
+  body           {"host":"github.com","ct_log_id":28325072437,"common_name":"classroom.github.com","name_value":"classroom.github.com","issuer":"C=US, O=Let's Encrypt, CN=YR2","serial_number":"057c343f8900a64b81d01c05b3b29f995baa","valid_from":"2026-07-28T15:21:18","valid_until":"2026-10-26T15:21:17"}
+  summary        C=US, O=Let's Encrypt, CN=YR2
+  published_at   2026-07-28T15:21:18
+  record_type    osint_service_result
+  tags           ["osint-search","SSL_ANALYZER"]
+  properties     {"service":"SSL_ANALYZER","host":"github.com","kind":"ct_log","success":true}
+
+--- row 3 ---
+  uid            SSL_ANALYZER|ctcert:github.com:28325064198
+  title          CT cert — classroom.github.com
+  body           {"host":"github.com","ct_log_id":28325064198,"common_name":"classroom.github.com","name_value":"classroom.github.com","issuer":"C=US, O=Let's Encrypt, CN=YR2","serial_number":"057c343f8900a64b81d01c05b3b29f995baa","valid_from":"2026-07-28T15:21:18","valid_until":"2026-10-26T15:21:17"}
+  summary        C=US, O=Let's Encrypt, CN=YR2
+  published_at   2026-07-28T15:21:18
+  record_type    osint_service_result
+  tags           ["osint-search","SSL_ANALYZER"]
+  properties     {"service":"SSL_ANALYZER","host":"github.com","kind":"ct_log","success":true}

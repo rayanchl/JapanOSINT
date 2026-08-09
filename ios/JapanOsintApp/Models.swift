@@ -360,6 +360,13 @@ struct StatusRow: Decodable, Identifiable, Hashable {
     let missingVars: [String]?
     let probeConsent: Bool?
     let gated: Bool?
+    /// Reliability scoring (roadmap 30). `/api/status` emits this object on
+    /// EVERY row (core/statusapi.c:229-254), including the synthesized breach
+    /// catalog rows. `rated == false` means "no fetch history in the 30-day
+    /// window", which is a different claim from a bad score — `TrustBadge`
+    /// renders it as "unrated", never as zero. Optional so cached JSON
+    /// predating the field still decodes.
+    let trust: SourceTrust?
 
     /// Gated rows take precedence over the underlying probe status — they
     /// haven't been probed and shouldn't be coloured as online/offline.
@@ -487,11 +494,17 @@ struct IntelSource: Codable, Identifiable, Hashable {
     let last_fetched: String?
     let last_published: String?
     let ttl_ms: Int?
-    /// Reliability scoring (roadmap 30), served by /api/status and
-    /// /api/intel/sources. `rated == false` means "no fetch history in the
-    /// window" — the UI must render that as unrated, never as a zero score.
-    /// Optional so cached JSON predating the field still decodes.
-    let trust: SourceTrust?
+    /// Set only on the camera discovery channels (`cam-*`, `shodan-cameras-jp`,
+    /// …), whose counts the API rolls up into the `camera-discovery` row. They
+    /// are real collectors with their own schedules and Run buttons, so they
+    /// stay in `data`; they are just not siblings of their own parent.
+    /// Optional so a cached payload written before this key existed still
+    /// decodes (it comes back nil = top-level, which is what it was).
+    let parent_id: String?
+    // No `trust` here on purpose: only `/api/status` emits a reliability
+    // object (core/statusapi.c). `/api/intel/sources` never has, so the field
+    // decoded to nil on every row and the doc comment claiming otherwise was
+    // actively misleading. Reliability is rendered from `StatusRow.trust`.
 }
 
 struct IntelRunResult: Decodable {
@@ -749,6 +762,12 @@ struct AlertPredicate: Codable, Hashable {
     /// Entity watchlist terms (roadmap 21).
     var entity_ids: [String]?
     var entity_types: [String]?
+    /// **Not enforced by the server.** `grep record_types native/` returns
+    /// nothing: the C matcher never reads this key, so a rule carrying it
+    /// matches exactly as if it were absent. It is kept only so a predicate
+    /// authored elsewhere round-trips through an edit unchanged — do NOT
+    /// surface it as a filter control until the engine honours it, because a
+    /// filter that silently does nothing is worse than a missing one.
     var record_types: [String]?
     /// Query authoring mode. `nil`/"fts" ⇒ the FTS predicate `q` matches new
     /// items; "llm" ⇒ `nl_query` drives the agentic search pipeline (which

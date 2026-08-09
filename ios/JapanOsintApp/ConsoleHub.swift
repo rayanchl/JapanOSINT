@@ -12,10 +12,10 @@ struct ConsoleHub: View {
     @EnvironmentObject var auth: AuthSession
     @Environment(\.theme) private var theme
 
-    /// The inbox list's own store. RootView owns a separate instance purely
-    /// for the tab badge; both read the same endpoint, and keeping them apart
-    /// avoids a list refresh being coupled to a badge poll.
-    @StateObject private var inbox = AlertInboxModel()
+    /// The ONE inbox store, owned by `RootView` and injected. It used to be a
+    /// private `@StateObject` here, which meant the list and the tab badge were
+    /// two independent counters — reading the inbox never cleared the badge.
+    @EnvironmentObject var inbox: AlertInboxModel
 
     /// The Workspace destination hosts owner/admin surfaces (members,
     /// permissions, queries), so hide the row entirely for everyone else

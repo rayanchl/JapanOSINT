@@ -1,0 +1,46 @@
+=== jma-warnings
+exit: 0
+sched: rc=0 records=16 33903ms
+--- stderr ---
+[jma-warnings] emitted 16
+[sched] jma-warnings run rc=0 records=16 33903ms
+[detect] anomaly opened: jma-warnings verdict=duration_outlier — duration 33903ms exceeds 10000ms threshold
+--- persisted: 16 rows, 16 with lat/lon, 16 with geometry ---
+record_type: jma-warnings=16
+sub_source_id: (null)=16
+
+--- row 1 ---
+  uid            jma-warnings|016000
+  title          北海道（石狩・空知・後志）: 2件の警報・注意報
+  summary        石狩、空知、後志地方では、急な強い雨や落雷、濃霧による視程障害に注意してください。
+  link           https://www.jma.go.jp/bosai/warning/#area_type=offices&area_code=016000
+  published_at   2026-05-28T04:03:00+09:00
+  lat            43.06
+  lon            141.35
+  geometry       {"type":"Point","coordinates":[141.35,43.06]}
+  record_type    jma-warnings
+  properties     {"area_code":"016000","area_name":"北海道（石狩・空知・後志）","warnings":["14","20"],"warning_count":2,"report_at":"2026-05-28T04:03:00+09:00","source":"jma_warning","headline":"石狩、空知、後志地方では、急な強い雨や落雷、濃霧による視程障害に注意してください。","publishing_office":"札幌管区気象台","title":"北海道（石狩・空知・後志）: 2件の警報・注意報","summary":"石狩、空知、後志地方では、急な強い雨や落雷、濃霧による視程障害に注意してください。","published_at":"2026-05-28T04:03:00+09:00","uid":"016000","url":"https://www.jma.go.jp/bosai/warning/#area_type=offices&area_code=016000"}
+
+--- row 2 ---
+  uid            jma-warnings|020000
+  title          青森県: 2件の警報・注意報
+  summary        青森県では、急な強い雨や落雷、濃霧による視程障害に注意してください。
+  link           https://www.jma.go.jp/bosai/warning/#area_type=offices&area_code=020000
+  published_at   2026-05-28T06:10:00+09:00
+  lat            40.82
+  lon            140.74
+  geometry       {"type":"Point","coordinates":[140.74,40.82]}
+  record_type    jma-warnings
+  properties     {"area_code":"020000","area_name":"青森県","warnings":["14","20"],"warning_count":2,"report_at":"2026-05-28T06:10:00+09:00","source":"jma_warning","headline":"青森県では、急な強い雨や落雷、濃霧による視程障害に注意してください。","publishing_office":"青森地方気象台","title":"青森県: 2件の警報・注意報","summary":"青森県では、急な強い雨や落雷、濃霧による視程障害に注意してください。","published_at":"2026-05-28T06:10:00+09:00","uid":"020000","url":"https://www.jma.go.jp/bosai/warning/#area_type=offices&area_code=020000"}
+
+--- row 3 ---
+  uid            jma-warnings|030000
+  title          岩手県: 2件の警報・注意報
+  summary        岩手県では、急な強い雨や落雷、濃霧による視程障害に注意してください。
+  link           https://www.jma.go.jp/bosai/warning/#area_type=offices&area_code=030000
+  published_at   2026-05-28T06:10:00+09:00
+  lat            39.7
+  lon            141.15
+  geometry       {"type":"Point","coordinates":[141.15,39.7]}
+  record_type    jma-warnings
+  properties     {"area_code":"030000","area_name":"岩手県","warnings":["14","20"],"warning_count":2,"report_at":"2026-05-28T06:10:00+09:00","source":"jma_warning","headline":"岩手県では、急な強い雨や落雷、濃霧による視程障害に注意してください。","publishing_office":"盛岡地方気象台","title":"岩手県: 2件の警報・注意報","summary":"岩手県では、急な強い雨や落雷、濃霧による視程障害に注意してください。","published_at":"2026-05-28T06:10:00+09:00","uid":"030000","url":"https://www.jma.go.jp/bosai/warning/#area_type=offices&area_code=030000"}

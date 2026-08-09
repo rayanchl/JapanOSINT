@@ -1,0 +1,45 @@
+=== gnews-mon-espionage-arrest
+exit: 0
+sched: rc=0 records=100 823ms
+--- stderr ---
+[rss] gnews-mon-espionage-arrest emitted 100
+[sched] gnews-mon-espionage-arrest run rc=0 records=100 823ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-espionage-arrest|CBMirwFBVV95cUxPZk9OMXhscmpJY2tFN0FGUFJRU003VWtabXN0UlVVREZWRVZlWE5nMWdncFJjR1AxYi13Y0tKVGlIOTdzckU3WjI0YVpTZF9mLW9Xc2NaSk1YOXhsX3BwVnota2VTQVhSOVVLQm5qSi0zX1B4NmRVMi1UQ01jME8xU01jNktTRFA1b1dVM1VlcURrVWpKc3MxdkRDSWg5SDYxNVVyNHhCSFl6YTF5bHpn
+  title          British man arrested, accused of spying on military base for Iran - USA Today
+  body           <a href="https://news.google.com/rss/articles/CBMirwFBVV95cUxPZk9OMXhscmpJY2tFN0FGUFJRU003VWtabXN0UlVVREZWRVZlWE5nMWdncFJjR1AxYi13Y0tKVGlIOTdzckU3WjI0YVpTZF9mLW9Xc2NaSk1YOXhsX3BwVnota2VTQVhSOVVLQm5qSi0zX1B4NmRVMi1UQ01jME8xU01jNktTRFA1b1dVM1VlcURrVWpKc3MxdkRDSWg5SDYxNVVyNHhCSFl6YTF5bHpn?oc=5" target="_blank">British man arrested, accused of spying on military base for Iran</a>&nbsp;&nbsp;<font color="#6f6f6f">USA Today</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMirwFBVV95cUxPZk9OMXhscmpJY2tFN0FGUFJRU003VWtabXN0UlVVREZWRVZlWE5nMWdncFJjR1AxYi13Y0tKVGlIOTdzckU3WjI0YVpTZF9mLW9Xc2NaSk1YOXhsX3BwVnota2VTQVhSOVVLQm5qSi0zX1B4NmRVMi1UQ01jME8xU01jNktTRFA1b1dVM1
+  link           https://news.google.com/rss/articles/CBMirwFBVV95cUxPZk9OMXhscmpJY2tFN0FGUFJRU003VWtabXN0UlVVREZWRVZlWE5nMWdncFJjR1AxYi13Y0tKVGlIOTdzckU3WjI0YVpTZF9mLW9Xc2NaSk1YOXhsX3BwVnota2VTQVhSOVVLQm5qSi0zX1B4NmRVMi1UQ01jME8xU01jNktTRFA1b1dVM1VlcURrVWpKc3MxdkRDSWg5SDYxNVVyNHhCSFl6YTF5bHpn?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 17:12:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","espionage"]
+  properties     {"guid":"CBMirwFBVV95cUxPZk9OMXhscmpJY2tFN0FGUFJRU003VWtabXN0UlVVREZWRVZlWE5nMWdncFJjR1AxYi13Y0tKVGlIOTdzckU3WjI0YVpTZF9mLW9Xc2NaSk1YOXhsX3BwVnota2VTQVhSOVVLQm5qSi0zX1B4NmRVMi1UQ01jME8xU01jNktTRFA1b1dVM1VlcURrVWpKc3MxdkRDSWg5SDYxNVVyNHhCSFl6YTF5bHpn"}
+
+--- row 2 ---
+  uid            gnews-mon-espionage-arrest|CBMilAFBVV95cUxPdGJ3dWRkWElvSnZCMFVmc1JYdEZaMGs0NVR0VElRVmtxa29kaDVxcVRPbEl4V3BEbFFhZ1B3Rk1PRHZxemNEUDE1d2lDb1RmVkdxd3lORjV2b1FCYnNqQm9KalpHMHNRQlU0b1JtdWxGMlVob3RHTU12M2ZwUnhSTGhWcWRfM1ZxdUotMmRZRkpNYi1Z
+  title          What we know about Canadian NATO intern arrested in Belgium on espionage charges | CBC News - CBC
+  body           <a href="https://news.google.com/rss/articles/CBMilAFBVV95cUxPdGJ3dWRkWElvSnZCMFVmc1JYdEZaMGs0NVR0VElRVmtxa29kaDVxcVRPbEl4V3BEbFFhZ1B3Rk1PRHZxemNEUDE1d2lDb1RmVkdxd3lORjV2b1FCYnNqQm9KalpHMHNRQlU0b1JtdWxGMlVob3RHTU12M2ZwUnhSTGhWcWRfM1ZxdUotMmRZRkpNYi1Z?oc=5" target="_blank">What we know about Canadian NATO intern arrested in Belgium on espionage charges | CBC News</a>&nbsp;&nbsp;<font color="#6f6f6f">CBC</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMilAFBVV95cUxPdGJ3dWRkWElvSnZCMFVmc1JYdEZaMGs0NVR0VElRVmtxa29kaDVxcVRPbEl4V3BEbFFhZ1B3Rk1PRHZxemNEUDE1d2lDb1RmVkdxd3lORjV2b1FCYnNqQm9KalpHMHNRQlU0b1JtdWxGMlVob3RHTU12M2ZwUnhSTGhWcWRfM1ZxdUotMm
+  link           https://news.google.com/rss/articles/CBMilAFBVV95cUxPdGJ3dWRkWElvSnZCMFVmc1JYdEZaMGs0NVR0VElRVmtxa29kaDVxcVRPbEl4V3BEbFFhZ1B3Rk1PRHZxemNEUDE1d2lDb1RmVkdxd3lORjV2b1FCYnNqQm9KalpHMHNRQlU0b1JtdWxGMlVob3RHTU12M2ZwUnhSTGhWcWRfM1ZxdUotMmRZRkpNYi1Z?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 01:55:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","espionage"]
+  properties     {"guid":"CBMilAFBVV95cUxPdGJ3dWRkWElvSnZCMFVmc1JYdEZaMGs0NVR0VElRVmtxa29kaDVxcVRPbEl4V3BEbFFhZ1B3Rk1PRHZxemNEUDE1d2lDb1RmVkdxd3lORjV2b1FCYnNqQm9KalpHMHNRQlU0b1JtdWxGMlVob3RHTU12M2ZwUnhSTGhWcWRfM1ZxdUotMmRZRkpNYi1Z"}
+
+--- row 3 ---
+  uid            gnews-mon-espionage-arrest|CBMirAFBVV95cUxOSldndGIzeWNvdjM3WU9sUnVTWmNleS1NOTJVMkUwQWNCcldLQWVOWUFBT2Q4YXMxaGVzZVR4M3Q5bEJ5Sl9GUFpTcUZGSklqZF9jZldHZFozVVhzY3NxT0FwRXVPcGRjcjNwSlJrdE9sMWIzaC01T3RaSEtVaG5lZkNpOTdQdW56a19iOFFOeHBKMVNjVktLb2gtQWI5QU9HY0FWODNybjNza01y0gGyAUFVX3lxTE9nOTZDUEZDT2hWUEpvZm41SXBmQ0ZKejFQd0FOaHdlWk9EZkRlenZnN3dTWHA3V2NZMTVkQUJXcENkUmNXRnlKMHlBWkdpeXJyeXdLZlB3SDhpWGh1RlFnREZhWEM0Tk44Nm9UY1JyWmpuZ2EyMDZ2b1c4S3YzVE9aWXVlTXhLSnM0VTdfcWwtVm5ma3JpQ2FJcmZiaG10N2dJb1M3c2R1UXpNV0t6Q3BkS2c
+  title          ‘I know a lot’: Veteran of secret IDF unit charged with spying for Iran - The Times of Israel
+  body           <a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxOSldndGIzeWNvdjM3WU9sUnVTWmNleS1NOTJVMkUwQWNCcldLQWVOWUFBT2Q4YXMxaGVzZVR4M3Q5bEJ5Sl9GUFpTcUZGSklqZF9jZldHZFozVVhzY3NxT0FwRXVPcGRjcjNwSlJrdE9sMWIzaC01T3RaSEtVaG5lZkNpOTdQdW56a19iOFFOeHBKMVNjVktLb2gtQWI5QU9HY0FWODNybjNza01y0gGyAUFVX3lxTE9nOTZDUEZDT2hWUEpvZm41SXBmQ0ZKejFQd0FOaHdlWk9EZkRlenZnN3dTWHA3V2NZMTVkQUJXcENkUmNXRnlKMHlBWkdpeXJyeXdLZlB3SDhpWGh1RlFnREZhWEM0Tk44Nm9UY1JyWmpuZ2EyMDZ2b1c4S3YzVE9aWXVlTXhLSnM0VTdfcWwtVm5ma3JpQ2FJcmZiaG10N2dJb1M3c2R1UXpNV0t6Q3BkS2c?oc=5" target="_blank">‘I know a lot’: Veteran of secret IDF unit charged with spying for Iran</a>&nbsp;&nbsp;<font color="#6f6f6f">The Times of Israel</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxOSldndGIzeWNvdjM3WU9sUnVTWmNleS1NOTJVMkUwQWNCcldLQWVOWUFBT2Q4YXMxaGVzZVR4M3Q5bEJ5Sl9GUFpTcUZGSklqZF9jZldHZFozVVhzY3NxT0FwRXVPcGRjcjNwSlJrdE9sMWIzaC01T3RaSEtVaG5lZkNpOTdQdW56a19iOF
+  link           https://news.google.com/rss/articles/CBMirAFBVV95cUxOSldndGIzeWNvdjM3WU9sUnVTWmNleS1NOTJVMkUwQWNCcldLQWVOWUFBT2Q4YXMxaGVzZVR4M3Q5bEJ5Sl9GUFpTcUZGSklqZF9jZldHZFozVVhzY3NxT0FwRXVPcGRjcjNwSlJrdE9sMWIzaC01T3RaSEtVaG5lZkNpOTdQdW56a19iOFFOeHBKMVNjVktLb2gtQWI5QU9HY0FWODNybjNza01y0gGyAUFVX3lxTE9nOTZDUEZDT2hWUEpvZm41SXBmQ0ZKejFQd0FOaHdlWk9EZkRlenZnN3dTWHA3V2NZMTVkQUJXcENkUmNXRnlKMHlBWkdpeXJyeXdLZlB3SDhpWGh1RlFnREZhWEM0Tk44Nm9UY1JyWmpuZ2EyMDZ2b1c4S3YzVE9aWXVlTXhLSnM0VTdfcWwtVm5ma3JpQ2FJcmZiaG10N2dJb1M3c2R1UXpNV0t6Q3BkS2c?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 13:57:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","espionage"]
+  properties     {"guid":"CBMirAFBVV95cUxOSldndGIzeWNvdjM3WU9sUnVTWmNleS1NOTJVMkUwQWNCcldLQWVOWUFBT2Q4YXMxaGVzZVR4M3Q5bEJ5Sl9GUFpTcUZGSklqZF9jZldHZFozVVhzY3NxT0FwRXVPcGRjcjNwSlJrdE9sMWIzaC01T3RaSEtVaG5lZkNpOTdQdW56a19iOFFOeHBKMVNjVktLb2gtQWI5QU9HY0FWODNybjNza01y0gGyAUFVX3lxTE9nOTZDUEZDT2hWUEpvZm41SXBmQ0ZKejFQd0FOaHdlWk9EZkRlenZnN3dTWHA3V2NZMTVkQUJXcENkUmNXRnlKMHlBWkdpeXJyeXdLZlB3SDhpWGh1RlFnREZhWEM0Tk44Nm9UY1JyWmpuZ2EyMDZ2b1c4S3YzVE9aWXVlTXhLSnM0VTdfcWwtVm5ma3JpQ2FJcmZiaG10N2dJb1M3c2R1UXpNV0t6Q3BkS2c"}

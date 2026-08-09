@@ -1,0 +1,45 @@
+=== gnews-mon-port-disruption
+exit: 0
+sched: rc=0 records=100 685ms
+--- stderr ---
+[rss] gnews-mon-port-disruption emitted 100
+[sched] gnews-mon-port-disruption run rc=0 records=100 685ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-port-disruption|CBMiuwFBVV95cUxNbGVQY0ROWkFzTXd5YkxqdkdjMDBpMy1RdWJZd3NCS3lwd0pPSUlsOXYwbE9mQ2xZcXdKRWpXVmhCakFPR3NUZW1IclFsNEQ5Ml9fUjU1SDZ6YUd1ZHM5SmYxZy0tR2JKbjVNREpmS1REai1ZaEJudVhpVUF2VUlzcEpLVVN1bmxVcVE3VF83S043NUNDdWx0bFNIbUpsR3E5T19LUnJlZk1QUUF6bHBMV0ZaaHRscmVzOGRF
+  title          Shippers, carriers face fresh weather-related disruption following South China storm - Journal of Commerce
+  body           <a href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxNbGVQY0ROWkFzTXd5YkxqdkdjMDBpMy1RdWJZd3NCS3lwd0pPSUlsOXYwbE9mQ2xZcXdKRWpXVmhCakFPR3NUZW1IclFsNEQ5Ml9fUjU1SDZ6YUd1ZHM5SmYxZy0tR2JKbjVNREpmS1REai1ZaEJudVhpVUF2VUlzcEpLVVN1bmxVcVE3VF83S043NUNDdWx0bFNIbUpsR3E5T19LUnJlZk1QUUF6bHBMV0ZaaHRscmVzOGRF?oc=5" target="_blank">Shippers, carriers face fresh weather-related disruption following South China storm</a>&nbsp;&nbsp;<font color="#6f6f6f">Journal of Commerce</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxNbGVQY0ROWkFzTXd5YkxqdkdjMDBpMy1RdWJZd3NCS3lwd0pPSUlsOXYwbE9mQ2xZcXdKRWpXVmhCakFPR3NUZW1IclFsNEQ5Ml9fUjU1SDZ6YUd1ZHM5SmYxZy0tR2JKbjVNREpmS1REai1ZaEJudVhpVUF2VUlzcEpLVVN1bmxVcVE3VF
+  link           https://news.google.com/rss/articles/CBMiuwFBVV95cUxNbGVQY0ROWkFzTXd5YkxqdkdjMDBpMy1RdWJZd3NCS3lwd0pPSUlsOXYwbE9mQ2xZcXdKRWpXVmhCakFPR3NUZW1IclFsNEQ5Ml9fUjU1SDZ6YUd1ZHM5SmYxZy0tR2JKbjVNREpmS1REai1ZaEJudVhpVUF2VUlzcEpLVVN1bmxVcVE3VF83S043NUNDdWx0bFNIbUpsR3E5T19LUnJlZk1QUUF6bHBMV0ZaaHRscmVzOGRF?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 17:38:25 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","port"]
+  properties     {"guid":"CBMiuwFBVV95cUxNbGVQY0ROWkFzTXd5YkxqdkdjMDBpMy1RdWJZd3NCS3lwd0pPSUlsOXYwbE9mQ2xZcXdKRWpXVmhCakFPR3NUZW1IclFsNEQ5Ml9fUjU1SDZ6YUd1ZHM5SmYxZy0tR2JKbjVNREpmS1REai1ZaEJudVhpVUF2VUlzcEpLVVN1bmxVcVE3VF83S043NUNDdWx0bFNIbUpsR3E5T19LUnJlZk1QUUF6bHBMV0ZaaHRscmVzOGRF"}
+
+--- row 2 ---
+  uid            gnews-mon-port-disruption|CBMifkFVX3lxTFBuWm5Tdzk0Q245RHFyeWlsRjI0MGt2YWRyeWI0WTRJRHZGR0EzVDM4ZzJFVWYxaFZyY1NLdzYwS0FQU3I0a25LMFJuSENaUHNtbm5qY0ZfOUY1R09qY3UySVNrU3hiMG1KS2kwQjFIcUUtdTk0amY3dmhBejBYdw
+  title          BHP faces 48-hour Port Hedland shipping disruption - Splash247
+  body           <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTFBuWm5Tdzk0Q245RHFyeWlsRjI0MGt2YWRyeWI0WTRJRHZGR0EzVDM4ZzJFVWYxaFZyY1NLdzYwS0FQU3I0a25LMFJuSENaUHNtbm5qY0ZfOUY1R09qY3UySVNrU3hiMG1KS2kwQjFIcUUtdTk0amY3dmhBejBYdw?oc=5" target="_blank">BHP faces 48-hour Port Hedland shipping disruption</a>&nbsp;&nbsp;<font color="#6f6f6f">Splash247</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTFBuWm5Tdzk0Q245RHFyeWlsRjI0MGt2YWRyeWI0WTRJRHZGR0EzVDM4ZzJFVWYxaFZyY1NLdzYwS0FQU3I0a25LMFJuSENaUHNtbm5qY0ZfOUY1R09qY3UySVNrU3hiMG1KS2kwQjFIcUUtdTk0amY3dmhBejBYdw?oc=5" target="_blan
+  link           https://news.google.com/rss/articles/CBMifkFVX3lxTFBuWm5Tdzk0Q245RHFyeWlsRjI0MGt2YWRyeWI0WTRJRHZGR0EzVDM4ZzJFVWYxaFZyY1NLdzYwS0FQU3I0a25LMFJuSENaUHNtbm5qY0ZfOUY1R09qY3UySVNrU3hiMG1KS2kwQjFIcUUtdTk0amY3dmhBejBYdw?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 02:36:16 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","port"]
+  properties     {"guid":"CBMifkFVX3lxTFBuWm5Tdzk0Q245RHFyeWlsRjI0MGt2YWRyeWI0WTRJRHZGR0EzVDM4ZzJFVWYxaFZyY1NLdzYwS0FQU3I0a25LMFJuSENaUHNtbm5qY0ZfOUY1R09qY3UySVNrU3hiMG1KS2kwQjFIcUUtdTk0amY3dmhBejBYdw"}
+
+--- row 3 ---
+  uid            gnews-mon-port-disruption|CBMiVkFVX3lxTE16eDhydmJNNl9EWF83bTV0eWZVdXhJeGEtX1JzNS12M0V3NTFTanM2YnMwemZYaTUzMFJQYVAxRVFsb2haWnlXa1lZM1VTd1pRNzcyZ2Z3
+  title          Egypt drone strike was warning of worse disruption, Iranian officials say - Ynetnews
+  body           <a href="https://news.google.com/rss/articles/CBMiVkFVX3lxTE16eDhydmJNNl9EWF83bTV0eWZVdXhJeGEtX1JzNS12M0V3NTFTanM2YnMwemZYaTUzMFJQYVAxRVFsb2haWnlXa1lZM1VTd1pRNzcyZ2Z3?oc=5" target="_blank">Egypt drone strike was warning of worse disruption, Iranian officials say</a>&nbsp;&nbsp;<font color="#6f6f6f">Ynetnews</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiVkFVX3lxTE16eDhydmJNNl9EWF83bTV0eWZVdXhJeGEtX1JzNS12M0V3NTFTanM2YnMwemZYaTUzMFJQYVAxRVFsb2haWnlXa1lZM1VTd1pRNzcyZ2Z3?oc=5" target="_blank">Egypt drone strike was warning of worse disruption,
+  link           https://news.google.com/rss/articles/CBMiVkFVX3lxTE16eDhydmJNNl9EWF83bTV0eWZVdXhJeGEtX1JzNS12M0V3NTFTanM2YnMwemZYaTUzMFJQYVAxRVFsb2haWnlXa1lZM1VTd1pRNzcyZ2Z3?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 06:19:18 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","port"]
+  properties     {"guid":"CBMiVkFVX3lxTE16eDhydmJNNl9EWF83bTV0eWZVdXhJeGEtX1JzNS12M0V3NTFTanM2YnMwemZYaTUzMFJQYVAxRVFsb2haWnlXa1lZM1VTd1pRNzcyZ2Z3"}

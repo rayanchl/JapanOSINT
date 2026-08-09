@@ -1,0 +1,45 @@
+=== cert-fi
+exit: 0
+sched: rc=0 records=286 991ms
+--- stderr ---
+[rss] cert-fi emitted 286
+[sched] cert-fi run rc=0 records=286 991ms
+--- persisted: 286 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=286
+sub_source_id: (null)=286
+
+--- row 1 ---
+  uid            cert-fi|17499
+  title          Cyber Weather for June 2026
+  body           The global FortiBleed attack campaign brought dark clouds to the Cyber Weather in June, but Finland has so far avoided the storm. The month also saw the return of scams that are typical of the summer holiday season.
+  summary        The global FortiBleed attack campaign brought dark clouds to the Cyber Weather in June, but Finland has so far avoided the storm. The month also saw the return of scams that are typical of the summer holiday season.
+  link           https://www.kyberturvallisuuskeskus.fi/en/news/cyber-weather-june-2026?mtm_campaign=rss&mtm_source=rss&mtm_medium=rss
+  language       en
+  published_at   Thu, 23 Jul 2026 08:15:10 GMT
+  record_type    article
+  tags           ["cyber","cert","advisory","finland"]
+  properties     {"guid":"17499"}
+
+--- row 2 ---
+  uid            cert-fi|17441
+  title          Cyber weather for May 2026
+  body           May’s cyber weather was mixed and at times unsettled. During the month, recurring and wide-ranging scam campaigns were observed, with criminals impersonating, among others, children, authorities, banks and service providers.
+  summary        May’s cyber weather was mixed and at times unsettled. During the month, recurring and wide-ranging scam campaigns were observed, with criminals impersonating, among others, children, authorities, banks and service providers.
+  link           https://www.kyberturvallisuuskeskus.fi/en/news/cyber-weather-may-2026?mtm_campaign=rss&mtm_source=rss&mtm_medium=rss
+  language       en
+  published_at   Thu, 02 Jul 2026 10:21:10 GMT
+  record_type    article
+  tags           ["cyber","cert","advisory","finland"]
+  properties     {"guid":"17441"}
+
+--- row 3 ---
+  uid            cert-fi|17163
+  title          Cyber Weather 2026
+  body           The volume and severity of cyber threats remained at a typical level in March. As a result, the cyber weather continues to be rainy. The March cyber weather report provides a more extensive overview of cybersecurity phenomena and threats than usual.
+  summary        The volume and severity of cyber threats remained at a typical level in March. As a result, the cyber weather continues to be rainy. The March cyber weather report provides a more extensive overview of cybersecurity phenomena and threats th
+  link           https://www.kyberturvallisuuskeskus.fi/en/news/cyber-weather-2026?mtm_campaign=rss&mtm_source=rss&mtm_medium=rss
+  language       en
+  published_at   Thu, 04 Jun 2026 09:43:43 GMT
+  record_type    article
+  tags           ["cyber","cert","advisory","finland"]
+  properties     {"guid":"17163"}

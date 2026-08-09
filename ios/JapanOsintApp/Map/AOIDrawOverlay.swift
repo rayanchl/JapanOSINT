@@ -262,7 +262,7 @@ struct AOIDrawOverlay: View {
                     .stroke(theme.accent, lineWidth: 2)
             }
             ForEach(Array(points.enumerated()), id: \.offset) { idx, coord in
-                Annotation("Vertex \(idx + 1)", coordinate: coord, anchor: .center) {
+                MapKit.Annotation("Vertex \(idx + 1)", coordinate: coord, anchor: .center) {
                     vertexHandle(index: idx)
                 }
             }
@@ -271,7 +271,7 @@ struct AOIDrawOverlay: View {
                 MapCircle(center: centre, radius: max(circleRadius, 1))
                     .foregroundStyle(theme.accent.opacity(0.22))
                     .stroke(theme.accent, lineWidth: 2)
-                Annotation("Centre", coordinate: centre, anchor: .center) {
+                MapKit.Annotation("Centre", coordinate: centre, anchor: .center) {
                     centreHandle
                 }
             }

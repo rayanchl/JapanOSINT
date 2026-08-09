@@ -1,0 +1,45 @@
+=== gnews-mon-catastrophic-flood
+exit: 0
+sched: rc=0 records=100 691ms
+--- stderr ---
+[rss] gnews-mon-catastrophic-flood emitted 100
+[sched] gnews-mon-catastrophic-flood run rc=0 records=100 691ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-catastrophic-flood|CBMihgJBVV95cUxNTEtUaF9melcxVjV3Y0ZvT3BlTWRFRExkWWJmYjBTdlRvdkwyUE5oZ0VnRWVEWC1iREhRWlhPQUV6LWQteGxrQ3Nsa25DVFR2b25FWkNZemo5aHJISkVYVUQzZnVsMFFoRHpfSC1paWd4bm1vMll0Q3lIdmFyTVZtZkw4Uml0bExxLUhNRndNdGFYR1hWN3FmUjNqY2czQy1vRDNzTGloQ3JIWWhtSy1wQk9MZ1BRVFRhckVobjdaWnZFbGJSTHZrSFlLOG5ySVZtVWEtdkl5a2w5aE0zeGVmaEUyVl9pTFhzekh2RzRaTkE2TExqTGdVWXM3U2NyR3IwRGZtcTZ3
+  title          A decade after devastating floods, historic Ellicott City stands resilient and rebuilt - WUSA9
+  body           <a href="https://news.google.com/rss/articles/CBMihgJBVV95cUxNTEtUaF9melcxVjV3Y0ZvT3BlTWRFRExkWWJmYjBTdlRvdkwyUE5oZ0VnRWVEWC1iREhRWlhPQUV6LWQteGxrQ3Nsa25DVFR2b25FWkNZemo5aHJISkVYVUQzZnVsMFFoRHpfSC1paWd4bm1vMll0Q3lIdmFyTVZtZkw4Uml0bExxLUhNRndNdGFYR1hWN3FmUjNqY2czQy1vRDNzTGloQ3JIWWhtSy1wQk9MZ1BRVFRhckVobjdaWnZFbGJSTHZrSFlLOG5ySVZtVWEtdkl5a2w5aE0zeGVmaEUyVl9pTFhzekh2RzRaTkE2TExqTGdVWXM3U2NyR3IwRGZtcTZ3?oc=5" target="_blank">A decade after devastating floods, historic Ellicott City stands resilient and rebuilt</a>&nbsp;&nbsp;<font color="#6f6f6f">WUSA9</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMihgJBVV95cUxNTEtUaF9melcxVjV3Y0ZvT3BlTWRFRExkWWJmYjBTdlRvdkwyUE5oZ0VnRWVEWC1iREhRWlhPQUV6LWQteGxrQ3Nsa25DVFR2b25FWkNZemo5aHJISkVYVUQzZnVsMFFoRHpfSC1paWd4bm1vMll0Q3lIdmFyTVZtZkw4Uml0bExxLUhNRn
+  link           https://news.google.com/rss/articles/CBMihgJBVV95cUxNTEtUaF9melcxVjV3Y0ZvT3BlTWRFRExkWWJmYjBTdlRvdkwyUE5oZ0VnRWVEWC1iREhRWlhPQUV6LWQteGxrQ3Nsa25DVFR2b25FWkNZemo5aHJISkVYVUQzZnVsMFFoRHpfSC1paWd4bm1vMll0Q3lIdmFyTVZtZkw4Uml0bExxLUhNRndNdGFYR1hWN3FmUjNqY2czQy1vRDNzTGloQ3JIWWhtSy1wQk9MZ1BRVFRhckVobjdaWnZFbGJSTHZrSFlLOG5ySVZtVWEtdkl5a2w5aE0zeGVmaEUyVl9pTFhzekh2RzRaTkE2TExqTGdVWXM3U2NyR3IwRGZtcTZ3?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 22:50:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","catastrophic"]
+  properties     {"guid":"CBMihgJBVV95cUxNTEtUaF9melcxVjV3Y0ZvT3BlTWRFRExkWWJmYjBTdlRvdkwyUE5oZ0VnRWVEWC1iREhRWlhPQUV6LWQteGxrQ3Nsa25DVFR2b25FWkNZemo5aHJISkVYVUQzZnVsMFFoRHpfSC1paWd4bm1vMll0Q3lIdmFyTVZtZkw4Uml0bExxLUhNRndNdGFYR1hWN3FmUjNqY2czQy1vRDNzTGloQ3JIWWhtSy1wQk9MZ1BRVFRhckVobjdaWnZFbGJSTHZrSFlLOG5ySVZtVWEtdkl5a2w5aE0zeGVmaEUyVl9pTFhzekh2RzRaTkE2TExqTGdVWXM3U2NyR3IwRGZtcTZ3"}
+
+--- row 2 ---
+  uid            gnews-mon-catastrophic-flood|CBMikwFBVV95cUxPeWktRXk3V01NNnJDemVCMVhkLVFqejNJNVplWTN2X1hIc3VqZnowXzBNQVlTTUhOMDR4R3FsdjNvMmtJeUQ5c3h0NXFvUjZyMEJvQWdrV002VWRvSktycVp2ZTFwT0V6azViQW5YNlIweFFFVi0zNEdrSUt1S0RGZ1pfazlWRWtYYXBMSVdULTZ3OWc
+  title          The Hill Country, the Science, and the Next Flood - AMS Headlines
+  body           <a href="https://news.google.com/rss/articles/CBMikwFBVV95cUxPeWktRXk3V01NNnJDemVCMVhkLVFqejNJNVplWTN2X1hIc3VqZnowXzBNQVlTTUhOMDR4R3FsdjNvMmtJeUQ5c3h0NXFvUjZyMEJvQWdrV002VWRvSktycVp2ZTFwT0V6azViQW5YNlIweFFFVi0zNEdrSUt1S0RGZ1pfazlWRWtYYXBMSVdULTZ3OWc?oc=5" target="_blank">The Hill Country, the Science, and the Next Flood</a>&nbsp;&nbsp;<font color="#6f6f6f">AMS Headlines</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMikwFBVV95cUxPeWktRXk3V01NNnJDemVCMVhkLVFqejNJNVplWTN2X1hIc3VqZnowXzBNQVlTTUhOMDR4R3FsdjNvMmtJeUQ5c3h0NXFvUjZyMEJvQWdrV002VWRvSktycVp2ZTFwT0V6azViQW5YNlIweFFFVi0zNEdrSUt1S0RGZ1pfazlWRWtYYXBMSV
+  link           https://news.google.com/rss/articles/CBMikwFBVV95cUxPeWktRXk3V01NNnJDemVCMVhkLVFqejNJNVplWTN2X1hIc3VqZnowXzBNQVlTTUhOMDR4R3FsdjNvMmtJeUQ5c3h0NXFvUjZyMEJvQWdrV002VWRvSktycVp2ZTFwT0V6azViQW5YNlIweFFFVi0zNEdrSUt1S0RGZ1pfazlWRWtYYXBMSVdULTZ3OWc?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 19:50:02 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","catastrophic"]
+  properties     {"guid":"CBMikwFBVV95cUxPeWktRXk3V01NNnJDemVCMVhkLVFqejNJNVplWTN2X1hIc3VqZnowXzBNQVlTTUhOMDR4R3FsdjNvMmtJeUQ5c3h0NXFvUjZyMEJvQWdrV002VWRvSktycVp2ZTFwT0V6azViQW5YNlIweFFFVi0zNEdrSUt1S0RGZ1pfazlWRWtYYXBMSVdULTZ3OWc"}
+
+--- row 3 ---
+  uid            gnews-mon-catastrophic-flood|CBMijgFBVV95cUxQb3VZY3VQOVZ6WWxmdE9XdFY5WnA2bHMwRjVhYWl0Xzdycm8wS0pOeldvT0NRbExVYzNqcXhTQlFmNkh2LXY2V1JXU1NhN193OGN6STJIZ1BGLTVTd08xQTlQdDUxVG9KZnA2YWhxZkhzYzFvSU1iZ1RyY0FKazFXVmhGOU1JdC1lVlNxWXVB
+  title          'It's a part of history now': 10 years later, Ellicott City remembers historic 2016 flash flooding - WBAL-TV
+  body           <a href="https://news.google.com/rss/articles/CBMijgFBVV95cUxQb3VZY3VQOVZ6WWxmdE9XdFY5WnA2bHMwRjVhYWl0Xzdycm8wS0pOeldvT0NRbExVYzNqcXhTQlFmNkh2LXY2V1JXU1NhN193OGN6STJIZ1BGLTVTd08xQTlQdDUxVG9KZnA2YWhxZkhzYzFvSU1iZ1RyY0FKazFXVmhGOU1JdC1lVlNxWXVB?oc=5" target="_blank">'It's a part of history now': 10 years later, Ellicott City remembers historic 2016 flash flooding</a>&nbsp;&nbsp;<font color="#6f6f6f">WBAL-TV</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMijgFBVV95cUxQb3VZY3VQOVZ6WWxmdE9XdFY5WnA2bHMwRjVhYWl0Xzdycm8wS0pOeldvT0NRbExVYzNqcXhTQlFmNkh2LXY2V1JXU1NhN193OGN6STJIZ1BGLTVTd08xQTlQdDUxVG9KZnA2YWhxZkhzYzFvSU1iZ1RyY0FKazFXVmhGOU1JdC1lVlNxWX
+  link           https://news.google.com/rss/articles/CBMijgFBVV95cUxQb3VZY3VQOVZ6WWxmdE9XdFY5WnA2bHMwRjVhYWl0Xzdycm8wS0pOeldvT0NRbExVYzNqcXhTQlFmNkh2LXY2V1JXU1NhN193OGN6STJIZ1BGLTVTd08xQTlQdDUxVG9KZnA2YWhxZkhzYzFvSU1iZ1RyY0FKazFXVmhGOU1JdC1lVlNxWXVB?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 19:11:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","catastrophic"]
+  properties     {"guid":"CBMijgFBVV95cUxQb3VZY3VQOVZ6WWxmdE9XdFY5WnA2bHMwRjVhYWl0Xzdycm8wS0pOeldvT0NRbExVYzNqcXhTQlFmNkh2LXY2V1JXU1NhN193OGN6STJIZ1BGLTVTd08xQTlQdDUxVG9KZnA2YWhxZkhzYzFvSU1iZ1RyY0FKazFXVmhGOU1JdC1lVlNxWXVB"}

@@ -1,0 +1,23 @@
+=== tor-exit-nodes
+exit: 0
+sched: rc=0 records=5 534ms
+--- stderr ---
+[tor-exit-nodes] emitted 5
+[sched] tor-exit-nodes run rc=0 records=5 534ms
+--- persisted: 5 rows, 0 with lat/lon, 0 with geometry ---
+record_type: tor-exit-nodes=5
+sub_source_id: (null)=5
+
+--- row 1 ---
+  uid            tor-exit-nodes|354847B893F1B4709E3AC3272F36A6A1B5AD7C05
+  title          Tor exit relay MyDebian13Exit — xTom Japan Corporation
+  published_at   2026-07-31 17:00:00
+  record_type    tor-exit-nodes
+  properties     {"uid":"354847B893F1B4709E3AC3272F36A6A1B5AD7C05","relay_id":"354847B893F1B4709E3AC3272F36A6A1B5AD7C05","nickname":"MyDebian13Exit","title":"Tor exit relay MyDebian13Exit — xTom Japan Corporation","published_at":"2026-07-31 17:00:00","first_seen":"2026-07-31 02:00:00","or_addresses":["45.129.8.100:9001","[2a12:a304:4:424::a]:9001"],"exit_addresses":["45.129.8.100"],"as":"AS3258","platform":"Tor 0.4.9.11 on Linux","version":"0.4.9.11","country":"JP","city":null,"as_name":"xTom Japan Corporation","bandwidth_kbs":0,"running":true,"flags":"Exit,Running,V2Dir,Valid","source":"onionoo"}
+
+--- row 2 ---
+  uid            tor-exit-nodes|64CE119D87F0A28F31D74280FB9675D880CA4BFA
+  title          Tor exit relay ShinobiKenshin — Akamai Technologies, Inc.
+  published_at   2026-07-31 17:00:00
+  record_type    tor-exit-nodes
+  properties     {"uid":"64CE119D87F0A28F31D74280FB9675D880CA4BFA","relay_id":"64CE119D87F0A28F31D74280FB9675D880CA4BFA","nickname":"ShinobiKenshin","title":"Tor exit relay ShinobiKenshin — Akamai Technologies, Inc.","published_at":"2026-07-31 17:00:00","first_seen":"2025-12-09 21:00:00","or_addresses":["172.234.92.148:1984","[2400:8905:e001:10f::1337:c0de]:1984"],"exit_addresses":["172.234.92.148"],"as":"AS63949","platform":"Tor 0.4.9.11 on Linux","version":"0.4.9.11","country":"JP","city":null,"as_name":"Akamai Technologies, Inc.","bandwidth_kbs":3541,"running":true,"flags":"Exit,Fast,Running,Stable,V2Dir,Valid","source":"onionoo"}

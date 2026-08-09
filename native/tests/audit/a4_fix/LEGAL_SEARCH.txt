@@ -1,0 +1,28 @@
+=== LEGAL_SEARCH  entity=Tokyo
+exit: 0
+sched: rc=0 records=15 1200ms
+--- stderr ---
+[sched] LEGAL_SEARCH run rc=0 records=15 1200ms
+--- persisted: 15 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=15
+sub_source_id: (null)=15
+
+--- row 1 ---
+  uid            LEGAL_SEARCH|legal:LEGAL_SEARCH:https://www.courtlistener.com/opinion/2781208/tokyo-company/
+  title          Tokyo Company — Armed Services Board of Contract Appeals
+  body           {"source":"courtlistener.com","case_name":"Tokyo Company","court":"Armed Services Board of Contract Appeals","date_filed":"2015-02-12","url":"https://www.courtlistener.com/opinion/2781208/tokyo-company/"}
+  summary        Tokyo Company
+  link           https://www.courtlistener.com/opinion/2781208/tokyo-company/
+  record_type    osint_service_result
+  tags           ["osint-search","LEGAL_SEARCH"]
+  properties     {"service":"LEGAL_SEARCH","entity":"Tokyo"}
+
+--- row 2 ---
+  uid            LEGAL_SEARCH|legal:LEGAL_SEARCH:https://www.courtlistener.com/opinion/3209782/tokyo-company/
+  title          Tokyo Company — Armed Services Board of Contract Appeals
+  body           {"source":"courtlistener.com","case_name":"Tokyo Company","court":"Armed Services Board of Contract Appeals","date_filed":"2016-05-24","url":"https://www.courtlistener.com/opinion/3209782/tokyo-company/"}
+  summary        Tokyo Company
+  link           https://www.courtlistener.com/opinion/3209782/tokyo-company/
+  record_type    osint_service_result
+  tags           ["osint-search","LEGAL_SEARCH"]
+  properties     {"service":"LEGAL_SEARCH","entity":"Tokyo"}

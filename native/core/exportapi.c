@@ -212,10 +212,24 @@ static const char *fmt_ctype(efmt f) {
 }
 
 /* Row cap by plan. Unknown / empty plan is treated as `free`: the cap exists
- * to bound egress, so an unrecognised value must fail closed. -1 = unlimited. */
+ * to bound egress, so an unrecognised value must fail closed.
+ *
+ * `enterprise` used to be -1, i.e. unlimited, which is not a cap at all: one
+ * request walked the entire database into a socket, and the mongoose write
+ * path buffers the whole response in c->send (see the note on export_mg_write
+ * in httpd.c), so "unlimited" was also an unbounded server-side allocation.
+ * A ceiling that no legitimate export reaches is still a ceiling, and it is
+ * the difference between a slow export and an OOM. JO_EXPORT_MAX_ROWS raises
+ * it for a deployment that genuinely needs more. */
+#define EXPORT_ENTERPRISE_CAP 2000000L
+
 static long plan_row_cap(const char *plan) {
   if (!plan || !*plan)              return 1000;
-  if (!strcmp(plan, "enterprise"))  return -1;
+  if (!strcmp(plan, "enterprise")) {
+    const char *e = getenv("JO_EXPORT_MAX_ROWS");
+    long v = (e && *e) ? atol(e) : 0;
+    return v > 0 ? v : EXPORT_ENTERPRISE_CAP;
+  }
   if (!strcmp(plan, "team"))        return 250000;
   if (!strcmp(plan, "pro"))         return 50000;
   return 1000;                                       /* free + unknown */
@@ -370,7 +384,9 @@ static void parse_params(ekind k, const char *qs, const tenant_ctx *t,
         }
       }
     }
-    if (p->iq.q && *p->iq.q) p->segq = fts_segment(p->iq.q);
+    /* Same user-typed q as /api/intel/items, so it must be built the same way
+     * — otherwise a query that lists fine fails the prepare on export. */
+    if (p->iq.q && *p->iq.q) p->segq = fts_query_expr(p->iq.q);
     return;
   }
 
@@ -382,7 +398,7 @@ static void parse_params(ekind k, const char *qs, const tenant_ctx *t,
     }
     if (qs_var(qs, "since", p->since, sizeof p->since) > 0) ep_filter(p, "since", p->since);
     if (qs_var(qs, "until", p->until, sizeof p->until) > 0) ep_filter(p, "until", p->until);
-    if (p->q[0]) p->segq = fts_segment(p->q);
+    if (p->q[0]) p->segq = fts_query_expr(p->q);
     return;
   }
 

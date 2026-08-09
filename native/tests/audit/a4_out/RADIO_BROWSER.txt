@@ -1,0 +1,39 @@
+=== RADIO_BROWSER  entity=Tokyo
+exit: 0
+sched: rc=0 records=11 1920ms
+--- stderr ---
+[radio_browser] emitted 11
+[sched] RADIO_BROWSER run rc=0 records=11 1920ms
+--- persisted: 11 rows, 0 with lat/lon, 0 with geometry ---
+record_type: radio-station=11
+sub_source_id: (null)=11
+
+--- row 1 ---
+  uid            RADIO_BROWSER|f10bb488-9f8d-40da-9f7d-f4fa63191c68
+  title          AFN GO TOKYO
+  body           {"name":"AFN GO TOKYO","country":"Japan","url":"http://22963.live.streamtheworld.com/AFNP_TKO_SC","codec":"MP3","bitrate":96,"language":"english","tags":"military","homepage":"https://afngo.net/afnpacific/Tokyo","stationuuid":"f10bb488-9f8d-40da-9f7d-f4fa63191c68","source":"radio-browser.info"}
+  summary        Japan
+  link           https://afngo.net/afnpacific/Tokyo
+  record_type    radio-station
+  tags           ["osint-search","RADIO_BROWSER"]
+  properties     {"service":"RADIO_BROWSER","source":"radio-browser.info","country":"Japan","codec":"MP3","bitrate":96,"stream_url":"http://22963.live.streamtheworld.com/AFNP_TKO_SC","success":true}
+
+--- row 2 ---
+  uid            RADIO_BROWSER|54732c01-db87-4aa2-b313-22fd5fa7eee9
+  title          Free FM 80 Tokyo
+  body           {"name":"Free FM 80 Tokyo","country":"Japan","url":"https://freefm80.radioca.st/","codec":"MP3","bitrate":320,"language":"#english,#japan,español internacional,ingles español","tags":"#80s,#freefm,#freefm80s","homepage":"http://www.freefmworld.com/","stationuuid":"54732c01-db87-4aa2-b313-22fd5fa7eee9","source":"radio-browser.info"}
+  summary        Japan
+  link           http://www.freefmworld.com/
+  record_type    radio-station
+  tags           ["osint-search","RADIO_BROWSER"]
+  properties     {"service":"RADIO_BROWSER","source":"radio-browser.info","country":"Japan","codec":"MP3","bitrate":320,"stream_url":"https://freefm80.radioca.st/","success":true}
+
+--- row 3 ---
+  uid            RADIO_BROWSER|b641d7ab-4548-426f-92ba-c0b65bff204d
+  title          Free FM Tokyo
+  body           {"name":"Free FM Tokyo","country":"Japan","url":"https://rocafmadrid.radioca.st/stream","codec":"MP3","bitrate":320,"language":"american english,japanese,spanish","tags":"1980s,2000s,80's,80s rock,90's,rock","homepage":"http://freefmradio.net/","stationuuid":"b641d7ab-4548-426f-92ba-c0b65bff204d","source":"radio-browser.info"}
+  summary        Japan
+  link           http://freefmradio.net/
+  record_type    radio-station
+  tags           ["osint-search","RADIO_BROWSER"]
+  properties     {"service":"RADIO_BROWSER","source":"radio-browser.info","country":"Japan","codec":"MP3","bitrate":320,"stream_url":"https://rocafmadrid.radioca.st/stream","success":true}

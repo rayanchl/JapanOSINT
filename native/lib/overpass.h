@@ -36,6 +36,24 @@ typedef void (*overpass_bodyfn)(const char *bbox, char *out, size_t n,
  * Use `ov_tag(el,"name") ? ... : "Hospital"` to mirror `tags?.name || 'X'`. */
 const char *ov_tag(cJSON *el, const char *k);
 
+/* Per-feature consumer for overpass_collect_via(). Called once per mapped
+ * Feature, in element order. OWNERSHIP: `f` is borrowed — the toolkit frees it
+ * after the call, exactly as it would after geojson_emit_features(). Return >=0
+ * to count the feature, <0 to skip it (mirrors camera_upsert's contract). */
+typedef int (*overpass_emit)(cJSON *f, void *ud);
+
+/* overpass_collect() with the emit step replaced: same fetch, same endpoint
+ * failover, same `map` callback, but each Feature goes to `emit` instead of
+ * geojson_emit_features(). For collectors that own a different keyspace —
+ * public_cameras routes through camera_upsert so its rows land in the camera
+ * keyspace (record_type='camera', uid 'camera-discovery|…') and show on the
+ * cameras layer, which the default geojson path cannot do.
+ * Returns #features accepted by `emit`, or -1 if every endpoint failed. */
+int overpass_collect_via(const source_ctx *ctx, const char *body,
+                         int query_timeout, int timeout_ms,
+                         overpass_map map, void *ud,
+                         overpass_emit emit, void *eud);
+
 /* Single nationwide query. `body` = inner clause(s) referring to area.jp,
  * e.g. "node[\"amenity\"=\"hospital\"](area.jp);way[...](area.jp);". Toolkit
  * wraps it as [out:json][timeout:QT];area["ISO3166-1"="JP"][admin_level=2]

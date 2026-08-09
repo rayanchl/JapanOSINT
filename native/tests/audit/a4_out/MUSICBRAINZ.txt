@@ -1,0 +1,42 @@
+=== MUSICBRAINZ  entity=Tokyo
+exit: 0
+sched: rc=0 records=20 323ms
+--- stderr ---
+[MUSICBRAINZ] emitted 20
+[sched] MUSICBRAINZ run rc=0 records=20 323ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: musicbrainz-artist=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            MUSICBRAINZ|67336e44-a2ff-42ab-a472-2fded6b56d1b
+  title          Tokyo Blade
+  body           {"name":"Tokyo Blade","type":"Group","country":"GB","mbid":"67336e44-a2ff-42ab-a472-2fded6b56d1b","source":"MusicBrainz"}
+  summary        GB
+  link           https://musicbrainz.org/artist/67336e44-a2ff-42ab-a472-2fded6b56d1b
+  language       en
+  record_type    musicbrainz-artist
+  tags           ["osint-search","MUSICBRAINZ"]
+  properties     {"mbid":"67336e44-a2ff-42ab-a472-2fded6b56d1b","service":"MUSICBRAINZ","success":true}
+
+--- row 2 ---
+  uid            MUSICBRAINZ|6a8babc7-096a-41d9-a3b5-648fd3391ea1
+  title          Tokyo
+  body           {"name":"Tokyo","type":"Group","country":"DE","disambiguation":"band from Germany","mbid":"6a8babc7-096a-41d9-a3b5-648fd3391ea1","source":"MusicBrainz"}
+  summary        band from Germany
+  link           https://musicbrainz.org/artist/6a8babc7-096a-41d9-a3b5-648fd3391ea1
+  language       en
+  record_type    musicbrainz-artist
+  tags           ["osint-search","MUSICBRAINZ"]
+  properties     {"mbid":"6a8babc7-096a-41d9-a3b5-648fd3391ea1","service":"MUSICBRAINZ","success":true}
+
+--- row 3 ---
+  uid            MUSICBRAINZ|9c4ec9a6-fbbe-46d8-b900-c1d90897c835
+  title          TOKYO ROSE
+  body           {"name":"TOKYO ROSE","type":"Person","country":"US","disambiguation":"synthwave/retrowave","mbid":"9c4ec9a6-fbbe-46d8-b900-c1d90897c835","source":"MusicBrainz"}
+  summary        synthwave/retrowave
+  link           https://musicbrainz.org/artist/9c4ec9a6-fbbe-46d8-b900-c1d90897c835
+  language       en
+  record_type    musicbrainz-artist
+  tags           ["osint-search","MUSICBRAINZ"]
+  properties     {"mbid":"9c4ec9a6-fbbe-46d8-b900-c1d90897c835","service":"MUSICBRAINZ","success":true}

@@ -1,0 +1,31 @@
+=== osm-changesets-jp
+exit: 0
+sched: rc=0 records=100 464ms
+--- stderr ---
+[osm-changesets-jp] emitted 100
+[sched] osm-changesets-jp run rc=0 records=100 464ms
+--- persisted: 100 rows, 100 with lat/lon, 100 with geometry ---
+record_type: osm-changesets-jp=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            osm-changesets-jp|186722818
+  title          OSM changeset by Myo Hlaing — 3 edits: #hotosm-project-19113 #hotosm-project-18262 Adding Farmland polygons in Yoron Island, Japan.  #YouthMappersAGU #YouthMappersReitaku #IHM2025 #FuruhashiLab #PoliMappers #Yoron #DRONEBIRD #Amanto #古橋研究室
+  link           https://www.openstreetmap.org/changeset/186722818
+  published_at   2026-07-31T18:24:26Z
+  lat            27.040214
+  lon            128.45055689999998
+  geometry       {"type":"Point","coordinates":[128.4505569,27.040214]}
+  record_type    osm-changesets-jp
+  properties     {"uid":"186722818","title":"OSM changeset by Myo Hlaing — 3 edits: #hotosm-project-19113 #hotosm-project-18262 Adding Farmland polygons in Yoron Island, Japan.  #YouthMappersAGU #YouthMappersReitaku #IHM2025 #FuruhashiLab #PoliMappers #Yoron #DRONEBIRD #Amanto #古橋研究室","idx":0,"cs_id":186722818,"user":"Myo Hlaing","user_id":18531916,"created_at":"2026-07-31T18:24:24Z","published_at":"2026-07-31T18:24:26Z","closed_at":"2026-07-31T18:24:26Z","comment":"#hotosm-project-19113 #hotosm-project-18262 Adding Farmland polygons in Yoron Island, Japan.  #YouthMappersAGU #YouthMappersReitaku #IHM2025 #FuruhashiLab #PoliMappers #Yoron #DRONEBIRD #Amanto #古橋研究室","created_by":"iD 2.41.2","source_tag":null,"changes_count":3,"bbox":[128.4493196,27.039816,128.4517942,27.040612],"url":"https://www.openstreetmap.org/changeset/186722818","source":"osm_changesets_jp"}
+
+--- row 2 ---
+  uid            osm-changesets-jp|186722784
+  title          OSM changeset by Myo Hlaing — 1 edit: #hotosm-project-19113 #hotosm-project-18262 Adding Farmland polygons in Yoron Island, Japan.  #YouthMappersAGU #YouthMappersReitaku #IHM2025 #FuruhashiLab #PoliMappers #Yoron #DRONEBIRD #Amanto #古橋研究室
+  link           https://www.openstreetmap.org/changeset/186722784
+  published_at   2026-07-31T18:23:26Z
+  lat            27.0404061
+  lon            128.4484831
+  geometry       {"type":"Point","coordinates":[128.4484831,27.0404061]}
+  record_type    osm-changesets-jp
+  properties     {"uid":"186722784","title":"OSM changeset by Myo Hlaing — 1 edit: #hotosm-project-19113 #hotosm-project-18262 Adding Farmland polygons in Yoron Island, Japan.  #YouthMappersAGU #YouthMappersReitaku #IHM2025 #FuruhashiLab #PoliMappers #Yoron #DRONEBIRD #Amanto #古橋研究室","idx":1,"cs_id":186722784,"user":"Myo Hlaing","user_id":18531916,"created_at":"2026-07-31T18:23:25Z","published_at":"2026-07-31T18:23:26Z","closed_at":"2026-07-31T18:23:26Z","comment":"#hotosm-project-19113 #hotosm-project-18262 Adding Farmland polygons in Yoron Island, Japan.  #YouthMappersAGU #YouthMappersReitaku #IHM2025 #FuruhashiLab #PoliMappers #Yoron #DRONEBIRD #Amanto #古橋研究室","created_by":"iD 2.41.2","source_tag":null,"changes_count":1,"bbox":[128.4484831,27.0404025,128.4484831,27.0404097],"url":"https://www.openstreetmap.org/changeset/186722784","source":"osm_changesets_jp"}

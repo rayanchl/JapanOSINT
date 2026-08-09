@@ -5,6 +5,7 @@
  * (Node: envFor → native: getenv). Without it (or on failure / no usable
  * geometry) → honest empty (rule 8 — no fabricated land-use polygons).
  * Property key order (mesh_id, landuse_code, landuse, source) mirrors JS. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -27,16 +28,13 @@ static const char *landuse_label(const char *code) {
   return NULL;
 }
 
-static const char *str_of(cJSON *o, const char *k) {
-  cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
-}
-
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *url = getenv("MLIT_L03B_GEOJSON_URL");
   if (!url || !*url) {
-    fprintf(stderr, "[nlni-landuse] no source (MLIT_L03B_GEOJSON_URL unset)\n");
-    return -1;
+    /* Gated, not failed: -1 logs fetch_log status='error' and opens a
+     * collector_anomaly every tick for a source that was never configured. */
+    fprintf(stderr, "[nlni-landuse] gated (no MLIT_L03B_GEOJSON_URL)\n");
+    return 0;
   }
 
   cJSON *data = feed_get_json(ctx->http, url, 30000);
@@ -59,10 +57,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     const char *code = NULL;
     if (p) {
-      code = str_of(p, "landuse");
-      if (!code) code = str_of(p, "L03b_002");
-      if (!code) code = str_of(p, "L03b_001");
-      if (!code) code = str_of(p, "code");
+      code = jo_str(p, "landuse");
+      if (!code) code = jo_str(p, "L03b_002");
+      if (!code) code = jo_str(p, "L03b_001");
+      if (!code) code = jo_str(p, "code");
     }
     char codebuf[32] = {0};
     if (code) {
@@ -73,9 +71,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       while (L && codebuf[L-1] == ' ') codebuf[--L] = 0;
     }
 
-    const char *mesh = p ? str_of(p, "mesh") : NULL;
-    if (!mesh && p) mesh = str_of(p, "L03b_001");
-    if (!mesh && p) mesh = str_of(p, "id");
+    const char *mesh = p ? jo_str(p, "mesh") : NULL;
+    if (!mesh && p) mesh = jo_str(p, "L03b_001");
+    if (!mesh && p) mesh = jo_str(p, "id");
     char meshbuf[64];
     if (!mesh) {
       char *gs = cJSON_PrintUnformatted(geom);
@@ -88,7 +86,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
 
     const char *label = landuse_label(codebuf[0] ? codebuf : NULL);
-    if (!label && p) label = str_of(p, "landuse_name");
+    if (!label && p) label = jo_str(p, "landuse_name");
 
     cJSON *nf = cJSON_CreateObject();
     cJSON_AddStringToObject(nf, "type", "Feature");
@@ -113,7 +111,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[nlni-landuse] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def nlni_landuse_def = {

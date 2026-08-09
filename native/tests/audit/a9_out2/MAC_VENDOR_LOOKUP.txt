@@ -1,0 +1,17 @@
+=== MAC_VENDOR_LOOKUP  entity=00:1A:2B:3C:4D:5E
+exit: 0
+sched: rc=0 records=1 156ms
+--- stderr ---
+[sched] MAC_VENDOR_LOOKUP run rc=0 records=1 156ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            MAC_VENDOR_LOOKUP|mac:001A2B
+  title          Ayecom Technology Co., Ltd.
+  body           {"mac_address":"00:1A:2B:3C:4D:5E","vendor":"Ayecom Technology Co., Ltd.","country":"TW","address":"No. 25, R&D Road 2, Science-Based Industrial Park, Hsinchu  300, TW"}
+  summary        TW
+  record_type    osint_service_result
+  tags           ["osint-search","MAC_VENDOR_LOOKUP"]
+  properties     {"service":"MAC_VENDOR_LOOKUP","entity":"00:1A:2B:3C:4D:5E","vendor":"Ayecom Technology Co., Ltd."}

@@ -1405,7 +1405,11 @@ export default function useMapLayers() {
   });
 
   const [layerData, setLayerData] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  // Latest-value mirror of `layers` so the toggle helpers can decide what to
+  // fetch *before* calling setLayers — React state updaters must stay pure
+  // (StrictMode double-invokes them, which would double every fetch).
+  const layersRef = useRef(layers);
+  useEffect(() => { layersRef.current = layers; }, [layers]);
   // Seed cacheRef from sessionStorage so a hard reload restores cached
   // FCs without round-tripping to the server. See persistToSession() for
   // the write-through in doFetch().
@@ -1516,22 +1520,25 @@ export default function useMapLayers() {
         if (typeof window !== 'undefined') window.localStorage?.setItem('japanosint.sensitive_acknowledged', '1');
       } catch { /* fail open in non-browser envs */ }
     }
-    setLayers((prev) => {
-      const current = prev[layerId];
-      if (!current) return prev;
-      const newVisible = !current.visible;
+    const current = layersRef.current[layerId];
+    if (!current) return;
+    const newVisible = !current.visible;
 
-      if (newVisible) {
-        // Always call fetchLayerData — it decides whether to render cached,
-        // background-refresh, or foreground-fetch based on cache state.
-        fetchLayerData(layerId);
-      }
+    // Mirror into the ref immediately so two toggles in the same tick don't
+    // both read the pre-toggle value.
+    layersRef.current = {
+      ...layersRef.current,
+      [layerId]: { ...current, visible: newVisible },
+    };
+    setLayers((prev) => (prev[layerId]
+      ? { ...prev, [layerId]: { ...prev[layerId], visible: newVisible } }
+      : prev));
 
-      return {
-        ...prev,
-        [layerId]: { ...current, visible: newVisible },
-      };
-    });
+    if (newVisible) {
+      // Always call fetchLayerData — it decides whether to render cached,
+      // background-refresh, or foreground-fetch based on cache state.
+      fetchLayerData(layerId);
+    }
   }, [fetchLayerData]);
 
   const setLayerOpacity = useCallback((layerId, opacity) => {
@@ -1558,25 +1565,20 @@ export default function useMapLayers() {
   }, []);
 
   const setAllLayers = useCallback((visible) => {
+    const keys = Object.keys(layersRef.current);
+    const mirrored = {};
+    for (const key of keys) mirrored[key] = { ...layersRef.current[key], visible };
+    layersRef.current = mirrored;
+
     setLayers((prev) => {
       const updated = {};
-      for (const key of Object.keys(prev)) {
-        updated[key] = { ...prev[key], visible };
-        // fetchLayerData handles its own cache / staleness decision
-        if (visible) fetchLayerData(key);
-      }
+      for (const key of Object.keys(prev)) updated[key] = { ...prev[key], visible };
       return updated;
     });
-  }, [fetchLayerData]);
 
-  const refreshLayer = useCallback((layerId) => {
-    delete cacheRef.current[layerId];
-    try {
-      if (typeof window !== 'undefined' && window.sessionStorage) {
-        sessionStorage.removeItem(SS_PREFIX + layerId);
-      }
-    } catch { /* ignore */ }
-    fetchLayerData(layerId);
+    // fetchLayerData handles its own cache / staleness decision. Kept out of
+    // the updater so StrictMode's double-invoke can't double every request.
+    if (visible) for (const key of keys) fetchLayerData(key);
   }, [fetchLayerData]);
 
   // Auto-follow: unifiedSubways visibility mirrors unifiedTrains (subways
@@ -1635,14 +1637,11 @@ export default function useMapLayers() {
 
   return {
     layers: mergedLayers,
-    layerDefinitions: LAYER_DEFINITIONS,
     toggleLayer,
     setLayerOpacity,
     setLayerTemporalWindow,
     setAllLayers,
-    refreshLayer,
     layerData,
-    isLoading,
     activeCount,
   };
 }

@@ -1,0 +1,45 @@
+=== gnews-mon-nuclear-plant-incident
+exit: 0
+sched: rc=0 records=100 633ms
+--- stderr ---
+[rss] gnews-mon-nuclear-plant-incident emitted 100
+[sched] gnews-mon-nuclear-plant-incident run rc=0 records=100 633ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-nuclear-plant-incident|CBMirgFBVV95cUxNWmxWSXRqbDRKOUNoNmpLa01seGU4OG1xRFlDX09POFZxOG9hWFVkU3VZdEFHNHpjbFl5OW94ZldrWFEtdWhzbmZMZk1GWS1vRWxtS01wVERVVjNPc1plVy10OVpwOGtVWHNfeEw5MlpGX2xZaGsyS1l6ekY1SnJ4dU9SVkctMHJYMzdzek90Z0kwTFcyeVMwT1FScnNPZC02WnZubHZFaTVtMXhjMGfSAcIBQVVfeXFMTXJuV2FqVXdTQlV1eWxTOExqdFBkeF9SbkFGOWl3QlZHVzRmWE1ZTkdGTnpjaUI1clA5RllhY3hTd1czYkkxREJtYzlzRTdfVzVndzNySmlMM2I2Tk5IRlhOWEx5clNmTC13M3ZiODFEVEFjbDFVeFA1VUsxcXhCb3BaSW0wTTFqaURrTWpGemJ1X3diX3o5cmxDdEY2Z2wtbE1XeExnejBNR0dqRWV3aG
+  title          Simulated nuclear incident exercises to take place at Prairie Island Nuclear Plant - KTTC | Rochester, MN
+  body           <a href="https://news.google.com/rss/articles/CBMirgFBVV95cUxNWmxWSXRqbDRKOUNoNmpLa01seGU4OG1xRFlDX09POFZxOG9hWFVkU3VZdEFHNHpjbFl5OW94ZldrWFEtdWhzbmZMZk1GWS1vRWxtS01wVERVVjNPc1plVy10OVpwOGtVWHNfeEw5MlpGX2xZaGsyS1l6ekY1SnJ4dU9SVkctMHJYMzdzek90Z0kwTFcyeVMwT1FScnNPZC02WnZubHZFaTVtMXhjMGfSAcIBQVVfeXFMTXJuV2FqVXdTQlV1eWxTOExqdFBkeF9SbkFGOWl3QlZHVzRmWE1ZTkdGTnpjaUI1clA5RllhY3hTd1czYkkxREJtYzlzRTdfVzVndzNySmlMM2I2Tk5IRlhOWEx5clNmTC13M3ZiODFEVEFjbDFVeFA1VUsxcXhCb3BaSW0wTTFqaURrTWpGemJ1X3diX3o5cmxDdEY2Z2wtbE1XeExnejBNR0dqRWV3aGZ0YW9WMmN2VE5QQ1UycHduLWc?oc=5" target="_blank">Simulated nuclear incident exercises to take place at Prairie Island Nuclear Plant</a>&nbsp;&nbsp;<font color="#6f6f6f">KTTC | Rochester, MN</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMirgFBVV95cUxNWmxWSXRqbDRKOUNoNmpLa01seGU4OG1xRFlDX09POFZxOG9hWFVkU3VZdEFHNHpjbFl5OW94ZldrWFEtdWhzbmZMZk1GWS1vRWxtS01wVERVVjNPc1plVy10OVpwOGtVWHNfeEw5MlpGX2xZaGsyS1l6ekY1SnJ4dU9SVkctMHJYMzdzek
+  link           https://news.google.com/rss/articles/CBMirgFBVV95cUxNWmxWSXRqbDRKOUNoNmpLa01seGU4OG1xRFlDX09POFZxOG9hWFVkU3VZdEFHNHpjbFl5OW94ZldrWFEtdWhzbmZMZk1GWS1vRWxtS01wVERVVjNPc1plVy10OVpwOGtVWHNfeEw5MlpGX2xZaGsyS1l6ekY1SnJ4dU9SVkctMHJYMzdzek90Z0kwTFcyeVMwT1FScnNPZC02WnZubHZFaTVtMXhjMGfSAcIBQVVfeXFMTXJuV2FqVXdTQlV1eWxTOExqdFBkeF9SbkFGOWl3QlZHVzRmWE1ZTkdGTnpjaUI1clA5RllhY3hTd1czYkkxREJtYzlzRTdfVzVndzNySmlMM2I2Tk5IRlhOWEx5clNmTC13M3ZiODFEVEFjbDFVeFA1VUsxcXhCb3BaSW0wTTFqaURrTWpGemJ1X3diX3o5cmxDdEY2Z2wtbE1XeExnejBNR0dqRWV3aGZ0YW9WMmN2VE5QQ1UycHduLWc?oc=5
+  language       en
+  published_at   Tue, 28 Jul 2026 10:51:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","nuclear"]
+  properties     {"guid":"CBMirgFBVV95cUxNWmxWSXRqbDRKOUNoNmpLa01seGU4OG1xRFlDX09POFZxOG9hWFVkU3VZdEFHNHpjbFl5OW94ZldrWFEtdWhzbmZMZk1GWS1vRWxtS01wVERVVjNPc1plVy10OVpwOGtVWHNfeEw5MlpGX2xZaGsyS1l6ekY1SnJ4dU9SVkctMHJYMzdzek90Z0kwTFcyeVMwT1FScnNPZC02WnZubHZFaTVtMXhjMGfSAcIBQVVfeXFMTXJuV2FqVXdTQlV1eWxTOExqdFBkeF9SbkFGOWl3QlZHVzRmWE1ZTkdGTnpjaUI1clA5RllhY3hTd1czYkkxREJtYzlzRTdfVzVndzNySmlMM2I2Tk5IRlhOWEx5clNmTC13M3ZiODFEVEFjbDFVeFA1VUsxcXhCb3BaSW0wTTFqaURrTWpGemJ1X3diX3o5cmxDdEY2Z2wtbE1XeExnejBNR0dqRWV3aGZ0YW9WMmN2VE5QQ1UycHduLW
+
+--- row 2 ---
+  uid            gnews-mon-nuclear-plant-incident|CBMisgFBVV95cUxPZ2JKaVJGRy05RllPX1NFN1VfSHVrN0lrMFdpa2lCYnBLeGJNcm85VjE3ODFhODlsYWZVV2hLLXpBcERJYjMxS1dDQ2NSZWpzdE5XbEk4TXZWdDJTU1QxZ0FaYXJqZXMtc010M0hOajEyVzAyNkw4TVB1R1F5ckNBa25OVkE3UklDSktwR182WV96RGF1Vk9RQVU0WE1ieDItSWd6MzkxWGxhQVozSzh3OWt3
+  title          New PM, restarts, ongoing cleanup on 15th anniversary of Fukushima accident - American Nuclear Society -- ANS
+  body           <a href="https://news.google.com/rss/articles/CBMisgFBVV95cUxPZ2JKaVJGRy05RllPX1NFN1VfSHVrN0lrMFdpa2lCYnBLeGJNcm85VjE3ODFhODlsYWZVV2hLLXpBcERJYjMxS1dDQ2NSZWpzdE5XbEk4TXZWdDJTU1QxZ0FaYXJqZXMtc010M0hOajEyVzAyNkw4TVB1R1F5ckNBa25OVkE3UklDSktwR182WV96RGF1Vk9RQVU0WE1ieDItSWd6MzkxWGxhQVozSzh3OWt3?oc=5" target="_blank">New PM, restarts, ongoing cleanup on 15th anniversary of Fukushima accident</a>&nbsp;&nbsp;<font color="#6f6f6f">American Nuclear Society -- ANS</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMisgFBVV95cUxPZ2JKaVJGRy05RllPX1NFN1VfSHVrN0lrMFdpa2lCYnBLeGJNcm85VjE3ODFhODlsYWZVV2hLLXpBcERJYjMxS1dDQ2NSZWpzdE5XbEk4TXZWdDJTU1QxZ0FaYXJqZXMtc010M0hOajEyVzAyNkw4TVB1R1F5ckNBa25OVkE3UklDSktwR1
+  link           https://news.google.com/rss/articles/CBMisgFBVV95cUxPZ2JKaVJGRy05RllPX1NFN1VfSHVrN0lrMFdpa2lCYnBLeGJNcm85VjE3ODFhODlsYWZVV2hLLXpBcERJYjMxS1dDQ2NSZWpzdE5XbEk4TXZWdDJTU1QxZ0FaYXJqZXMtc010M0hOajEyVzAyNkw4TVB1R1F5ckNBa25OVkE3UklDSktwR182WV96RGF1Vk9RQVU0WE1ieDItSWd6MzkxWGxhQVozSzh3OWt3?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 21:44:30 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","nuclear"]
+  properties     {"guid":"CBMisgFBVV95cUxPZ2JKaVJGRy05RllPX1NFN1VfSHVrN0lrMFdpa2lCYnBLeGJNcm85VjE3ODFhODlsYWZVV2hLLXpBcERJYjMxS1dDQ2NSZWpzdE5XbEk4TXZWdDJTU1QxZ0FaYXJqZXMtc010M0hOajEyVzAyNkw4TVB1R1F5ckNBa25OVkE3UklDSktwR182WV96RGF1Vk9RQVU0WE1ieDItSWd6MzkxWGxhQVozSzh3OWt3"}
+
+--- row 3 ---
+  uid            gnews-mon-nuclear-plant-incident|CBMisAFBVV95cUxQYjV6YnhqR1N1OTJXSlhTRUEwRFNjcW9sVkpCekp6MkhtS21aRGJfQXlHOWpoUHZOaWdmekVNMFlzUHhEYjZYNWl3MjBsSUNZaUVYYm5qVWlTYjlNb05rX3FwRklyX1JxV09DUk8xZ2Z4ZDFjMFZXOHhIZVZvZ3A1V3lNLTZJeFdWeFRMcWgwR3U4c1hFN0Y4cGJnaEhPRWh1Z05yZU1JZ2hwb2NVTEw1Sg
+  title          Simulated emergency exercise scheduled at Prairie Island Nuclear Plant in Red Wing - kaaltv.com
+  body           <a href="https://news.google.com/rss/articles/CBMisAFBVV95cUxQYjV6YnhqR1N1OTJXSlhTRUEwRFNjcW9sVkpCekp6MkhtS21aRGJfQXlHOWpoUHZOaWdmekVNMFlzUHhEYjZYNWl3MjBsSUNZaUVYYm5qVWlTYjlNb05rX3FwRklyX1JxV09DUk8xZ2Z4ZDFjMFZXOHhIZVZvZ3A1V3lNLTZJeFdWeFRMcWgwR3U4c1hFN0Y4cGJnaEhPRWh1Z05yZU1JZ2hwb2NVTEw1Sg?oc=5" target="_blank">Simulated emergency exercise scheduled at Prairie Island Nuclear Plant in Red Wing</a>&nbsp;&nbsp;<font color="#6f6f6f">kaaltv.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMisAFBVV95cUxQYjV6YnhqR1N1OTJXSlhTRUEwRFNjcW9sVkpCekp6MkhtS21aRGJfQXlHOWpoUHZOaWdmekVNMFlzUHhEYjZYNWl3MjBsSUNZaUVYYm5qVWlTYjlNb05rX3FwRklyX1JxV09DUk8xZ2Z4ZDFjMFZXOHhIZVZvZ3A1V3lNLTZJeFdWeFRMcW
+  link           https://news.google.com/rss/articles/CBMisAFBVV95cUxQYjV6YnhqR1N1OTJXSlhTRUEwRFNjcW9sVkpCekp6MkhtS21aRGJfQXlHOWpoUHZOaWdmekVNMFlzUHhEYjZYNWl3MjBsSUNZaUVYYm5qVWlTYjlNb05rX3FwRklyX1JxV09DUk8xZ2Z4ZDFjMFZXOHhIZVZvZ3A1V3lNLTZJeFdWeFRMcWgwR3U4c1hFN0Y4cGJnaEhPRWh1Z05yZU1JZ2hwb2NVTEw1Sg?oc=5
+  language       en
+  published_at   Mon, 27 Jul 2026 15:12:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","nuclear"]
+  properties     {"guid":"CBMisAFBVV95cUxQYjV6YnhqR1N1OTJXSlhTRUEwRFNjcW9sVkpCekp6MkhtS21aRGJfQXlHOWpoUHZOaWdmekVNMFlzUHhEYjZYNWl3MjBsSUNZaUVYYm5qVWlTYjlNb05rX3FwRklyX1JxV09DUk8xZ2Z4ZDFjMFZXOHhIZVZvZ3A1V3lNLTZJeFdWeFRMcWgwR3U4c1hFN0Y4cGJnaEhPRWh1Z05yZU1JZ2hwb2NVTEw1Sg"}

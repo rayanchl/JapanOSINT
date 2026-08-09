@@ -1,0 +1,45 @@
+WAQI_GLOBAL Tokyo
+OBIS_MARINE 9074729
+BREACH_INDEX_USERNAME test@example.com
+NUMVERIFY_PHONE +81312345678
+UK_DATAGOV Tokyo
+estat-household
+cnbc-world
+ft-home
+seeking-alpha
+FINNHUB_SEARCH Tokyo
+gnews-mon-ae-red-sea-shipping
+gnews-mon-aviation-incident
+gnews-mon-catastrophic-flood
+gnews-mon-cn-rare-earth
+gnews-mon-data-breach
+gnews-mon-drug-cartel
+gnews-mon-espionage-arrest
+gnews-mon-hostage-crisis
+gnews-mon-in-kashmir
+gnews-mon-lt-baltic-security
+gnews-mon-missile-test
+gnews-mon-no-arctic-militarization
+gnews-mon-ph-south-china-sea
+gnews-mon-ransomware
+gnews-mon-shadow-fleet
+gnews-mon-troop-movement
+gnews-mon-us-strait-of-hormuz
+gnews-mon-wildfire
+EGOV_PUBLIC_COMMENT Tokyo
+houjin-bangou
+job-boards
+CRIMINAL_RECORDS Tokyo
+mhlw-health
+nitter-mirrors
+GITHUB_COMMITS_BY_EMAIL test@example.com
+BIGDATACLOUD_REVERSE Tokyo
+STACKEXCHANGE_SEARCH Tokyo
+PEP_CHECK Shinzo Abe
+PHONE_REPUTATION +81312345678
+DK_CVR Toyota
+LU_LBR Toyota
+IL_COMPANIES Toyota
+SSL_ANALYZER github.com
+vessel-finder
+AFRICA_REGISTRY Toyota

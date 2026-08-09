@@ -1,0 +1,45 @@
+=== gnews-mon-volcano-eruption
+exit: 0
+sched: rc=0 records=100 676ms
+--- stderr ---
+[rss] gnews-mon-volcano-eruption emitted 100
+[sched] gnews-mon-volcano-eruption run rc=0 records=100 676ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-volcano-eruption|CBMimAFBVV95cUxQa1BndGUxVlRsRVpVLTNSUldwemRITVFtT0JpVVpNakJleEkyUEV1amJ5QTNkMW1nRkpyaTNKQTNjUjU2Y1RLYWtGaDR3ZXlkWmJHUk1aUG1IdGZuaG9XQnRaUnozeDBxWHVPdkd3N2lmbDQwQVhQQ1VnNmVWei10M3hwdW5MV3phaXN1Rjd3LXVzaFkxQTRMR9IBngFBVV95cUxNQ05rVEJwLU5ldDgwQlJYNjBQLU1iazhRaWFIX1JuUEFXMF9VbHZhNzRxMmM2M0ZYOGZ1cEdkMmplVkwxcXNRMG0xYWt6X1FvTlp5dkZFUFVNVEJfWUpMc3pzNHBvRllTUG5JRHdSVndRTkNfdUdoaG13ejFobTVpVEw0V2h4UTBPSFlfM0gyODdUY1VxNUZLUmFHZG9xQQ
+  title          Latest Kilauea volcano eruption sends lava 500 feet into the air, USGS says - ABC News - Breaking News, Latest News and Videos
+  body           <ol><li><a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxQa1BndGUxVlRsRVpVLTNSUldwemRITVFtT0JpVVpNakJleEkyUEV1amJ5QTNkMW1nRkpyaTNKQTNjUjU2Y1RLYWtGaDR3ZXlkWmJHUk1aUG1IdGZuaG9XQnRaUnozeDBxWHVPdkd3N2lmbDQwQVhQQ1VnNmVWei10M3hwdW5MV3phaXN1Rjd3LXVzaFkxQTRMR9IBngFBVV95cUxNQ05rVEJwLU5ldDgwQlJYNjBQLU1iazhRaWFIX1JuUEFXMF9VbHZhNzRxMmM2M0ZYOGZ1cEdkMmplVkwxcXNRMG0xYWt6X1FvTlp5dkZFUFVNVEJfWUpMc3pzNHBvRllTUG5JRHdSVndRTkNfdUdoaG13ejFobTVpVEw0V2h4UTBPSFlfM0gyODdUY1VxNUZLUmFHZG9xQQ?oc=5" target="_blank">Latest Kilauea volcano eruption sends lava 500 feet into the air, USGS says</a>&nbsp;&nbsp;<font color="#6f6f6f">ABC News - Breaking News, Latest News and Videos</font></li><li><a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxQcW5JWW1ZaGdSUDZsc1VCWDRad3Q0d1dPSFdSYjdDS0gyTXEwMjNjNHdyZWZ2V0hVRTIwMnpxNVYteE5uUzgtM3FIZW9sWVp3Rjd5dEhJVHQybjU4eEpWbU5JN3FseXFCbkc1LVFQWFJWSWp4ejZwUmRKLXdqVk …<811 more chars>
+  summary        <ol><li><a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxQa1BndGUxVlRsRVpVLTNSUldwemRITVFtT0JpVVpNakJleEkyUEV1amJ5QTNkMW1nRkpyaTNKQTNjUjU2Y1RLYWtGaDR3ZXlkWmJHUk1aUG1IdGZuaG9XQnRaUnozeDBxWHVPdkd3N2lmbDQwQVhQQ1VnNmVWei10M3hwdW5MV3
+  link           https://news.google.com/rss/articles/CBMimAFBVV95cUxQa1BndGUxVlRsRVpVLTNSUldwemRITVFtT0JpVVpNakJleEkyUEV1amJ5QTNkMW1nRkpyaTNKQTNjUjU2Y1RLYWtGaDR3ZXlkWmJHUk1aUG1IdGZuaG9XQnRaUnozeDBxWHVPdkd3N2lmbDQwQVhQQ1VnNmVWei10M3hwdW5MV3phaXN1Rjd3LXVzaFkxQTRMR9IBngFBVV95cUxNQ05rVEJwLU5ldDgwQlJYNjBQLU1iazhRaWFIX1JuUEFXMF9VbHZhNzRxMmM2M0ZYOGZ1cEdkMmplVkwxcXNRMG0xYWt6X1FvTlp5dkZFUFVNVEJfWUpMc3pzNHBvRllTUG5JRHdSVndRTkNfdUdoaG13ejFobTVpVEw0V2h4UTBPSFlfM0gyODdUY1VxNUZLUmFHZG9xQQ?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 19:29:12 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","volcano"]
+  properties     {"guid":"CBMimAFBVV95cUxQa1BndGUxVlRsRVpVLTNSUldwemRITVFtT0JpVVpNakJleEkyUEV1amJ5QTNkMW1nRkpyaTNKQTNjUjU2Y1RLYWtGaDR3ZXlkWmJHUk1aUG1IdGZuaG9XQnRaUnozeDBxWHVPdkd3N2lmbDQwQVhQQ1VnNmVWei10M3hwdW5MV3phaXN1Rjd3LXVzaFkxQTRMR9IBngFBVV95cUxNQ05rVEJwLU5ldDgwQlJYNjBQLU1iazhRaWFIX1JuUEFXMF9VbHZhNzRxMmM2M0ZYOGZ1cEdkMmplVkwxcXNRMG0xYWt6X1FvTlp5dkZFUFVNVEJfWUpMc3pzNHBvRllTUG5JRHdSVndRTkNfdUdoaG13ejFobTVpVEw0V2h4UTBPSFlfM0gyODdUY1VxNUZLUmFHZG9xQQ"}
+
+--- row 2 ---
+  uid            gnews-mon-volcano-eruption|CBMib0FVX3lxTE5PYTE3Y2NBZ3NybUxQMUxWZ29Hdko1M1ZTV21LV0toNDNwZ1pRc1NOb1ZIM0NDZ1dOWXFfTWhjWHN3TnFUcTVYMDN4Y0l1R1dlalhGRmpMMnlLNlFLcjNGQVQ4VnUyM1F6RG1KU29zSQ
+  title          One of Earth’s most explosive supervolcanoes is recharging with fresh magma - ScienceDaily
+  body           <a href="https://news.google.com/rss/articles/CBMib0FVX3lxTE5PYTE3Y2NBZ3NybUxQMUxWZ29Hdko1M1ZTV21LV0toNDNwZ1pRc1NOb1ZIM0NDZ1dOWXFfTWhjWHN3TnFUcTVYMDN4Y0l1R1dlalhGRmpMMnlLNlFLcjNGQVQ4VnUyM1F6RG1KU29zSQ?oc=5" target="_blank">One of Earth’s most explosive supervolcanoes is recharging with fresh magma</a>&nbsp;&nbsp;<font color="#6f6f6f">ScienceDaily</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMib0FVX3lxTE5PYTE3Y2NBZ3NybUxQMUxWZ29Hdko1M1ZTV21LV0toNDNwZ1pRc1NOb1ZIM0NDZ1dOWXFfTWhjWHN3TnFUcTVYMDN4Y0l1R1dlalhGRmpMMnlLNlFLcjNGQVQ4VnUyM1F6RG1KU29zSQ?oc=5" target="_blank">One of Earth’s 
+  link           https://news.google.com/rss/articles/CBMib0FVX3lxTE5PYTE3Y2NBZ3NybUxQMUxWZ29Hdko1M1ZTV21LV0toNDNwZ1pRc1NOb1ZIM0NDZ1dOWXFfTWhjWHN3TnFUcTVYMDN4Y0l1R1dlalhGRmpMMnlLNlFLcjNGQVQ4VnUyM1F6RG1KU29zSQ?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 01:06:54 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","volcano"]
+  properties     {"guid":"CBMib0FVX3lxTE5PYTE3Y2NBZ3NybUxQMUxWZ29Hdko1M1ZTV21LV0toNDNwZ1pRc1NOb1ZIM0NDZ1dOWXFfTWhjWHN3TnFUcTVYMDN4Y0l1R1dlalhGRmpMMnlLNlFLcjNGQVQ4VnUyM1F6RG1KU29zSQ"}
+
+--- row 3 ---
+  uid            gnews-mon-volcano-eruption|CBMimAFBVV95cUxNNUpjNnNrV2NweTN3QjVXOGFhUnp1LURVTDIwZVhqVlhPWFV6b1pSakhDZ3RLNkNoT19CSWRpeGFob2dtTGhtUXZpN0JpTEtkb3ljR2tnYkJ1ZGJfVG9MY3ZST2JWTXEtODdaemNMaHl6TC1XbW00ZVlwVm5zOTVCQWUwZEVsN3ByZF9fU2pldDdvR1FYXzhQLQ
+  title          Etna eruption intensifies, Aviation Color Code raised to Red - The Watchers - Watching the world evolve and transform
+  body           <a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxNNUpjNnNrV2NweTN3QjVXOGFhUnp1LURVTDIwZVhqVlhPWFV6b1pSakhDZ3RLNkNoT19CSWRpeGFob2dtTGhtUXZpN0JpTEtkb3ljR2tnYkJ1ZGJfVG9MY3ZST2JWTXEtODdaemNMaHl6TC1XbW00ZVlwVm5zOTVCQWUwZEVsN3ByZF9fU2pldDdvR1FYXzhQLQ?oc=5" target="_blank">Etna eruption intensifies, Aviation Color Code raised to Red</a>&nbsp;&nbsp;<font color="#6f6f6f">The Watchers - Watching the world evolve and transform</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxNNUpjNnNrV2NweTN3QjVXOGFhUnp1LURVTDIwZVhqVlhPWFV6b1pSakhDZ3RLNkNoT19CSWRpeGFob2dtTGhtUXZpN0JpTEtkb3ljR2tnYkJ1ZGJfVG9MY3ZST2JWTXEtODdaemNMaHl6TC1XbW00ZVlwVm5zOTVCQWUwZEVsN3ByZF9fU2
+  link           https://news.google.com/rss/articles/CBMimAFBVV95cUxNNUpjNnNrV2NweTN3QjVXOGFhUnp1LURVTDIwZVhqVlhPWFV6b1pSakhDZ3RLNkNoT19CSWRpeGFob2dtTGhtUXZpN0JpTEtkb3ljR2tnYkJ1ZGJfVG9MY3ZST2JWTXEtODdaemNMaHl6TC1XbW00ZVlwVm5zOTVCQWUwZEVsN3ByZF9fU2pldDdvR1FYXzhQLQ?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 07:35:54 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","volcano"]
+  properties     {"guid":"CBMimAFBVV95cUxNNUpjNnNrV2NweTN3QjVXOGFhUnp1LURVTDIwZVhqVlhPWFV6b1pSakhDZ3RLNkNoT19CSWRpeGFob2dtTGhtUXZpN0JpTEtkb3ljR2tnYkJ1ZGJfVG9MY3ZST2JWTXEtODdaemNMaHl6TC1XbW00ZVlwVm5zOTVCQWUwZEVsN3ByZF9fU2pldDdvR1FYXzhQLQ"}

@@ -12,6 +12,7 @@
  * target,monitor_type,tor_search,paste_search,intelx?,total_mentions,
  * risk_score,risk_level>, disclaimer}. success=true conf 70. Emits one
  * osint_service_result row (body = {success,confidence,data}). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
@@ -20,18 +21,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
-static void uri_encode(const char *in, char *out, size_t cap) {
-  static const char *keep = "-_.!~*'()";
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p && w + 4 < cap; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(keep, c)) out[w++] = (char)c;
-    else { snprintf(out + w, cap - w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
-}
 
 /* Extract unique <addr>.onion strings from text. */
 static cJSON *extract_onions(const char *text) {
@@ -67,7 +56,7 @@ static cJSON *extract_onions(const char *text) {
 /* search_ahmia: real onion-search scrape → array of discovered .onion URLs.
  * Returns the (possibly empty) array; caller owns it. */
 static cJSON *search_ahmia(http_client *h, const char *q) {
-  char enc[1024]; uri_encode(q, enc, sizeof enc);
+  char enc[1024]; jo_uri_encode_buf(q, enc, sizeof enc);
   char url[1100];
   snprintf(url, sizeof url, "https://ahmia.fi/search/?q=%s", enc);
   http_response hr = {0};
@@ -84,7 +73,7 @@ static cJSON *search_ahmia(http_client *h, const char *q) {
 /* search_pastebin_count: real Pastebin search → count of /raw/ links found.
  * Returns the count (0 on failure/no hits). */
 static int search_pastebin_count(http_client *h, const char *q) {
-  char enc[1024]; uri_encode(q, enc, sizeof enc);
+  char enc[1024]; jo_uri_encode_buf(q, enc, sizeof enc);
   char url[1100];
   snprintf(url, sizeof url, "https://pastebin.com/search?q=%s", enc);
   http_response hr = {0};

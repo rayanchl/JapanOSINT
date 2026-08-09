@@ -1,0 +1,134 @@
+=== hudson-rock-jp
+exit: 0
+sched: rc=0 records=34 904ms
+--- stderr ---
+[threatintel] hudson-rock-jp emitted 34
+[sched] hudson-rock-jp run rc=0 records=34 904ms
+--- persisted: 34 rows, 34 with lat/lon, 34 with geometry ---
+record_type: hudson-rock-jp=34
+sub_source_id: (null)=34
+
+--- row 1 ---
+  uid            hudson-rock-jp|h:3b83f65e5ef1d441
+  lat            35.6895
+  lon            139.6917
+  geometry       {"type":"Point","coordinates":[139.6917,35.6895]}
+  record_type    hudson-rock-jp
+  properties     {"idx":0,"domain":"mufg.jp","total_employees":null,"total_users":null,"employees":13,"users":20979,"third_parties":33,"stealers":null,"total_external_domains":null,"external_domains":null,"message":null,"err":null,"source":"hudsonrock_osint"}
+
+--- row 2 ---
+  uid            hudson-rock-jp|h:e3c0eb55e504d13e
+  lat            35.6895
+  lon            139.6917
+  geometry       {"type":"Point","coordinates":[139.6917,35.6895]}
+  record_type    hudson-rock-jp
+  properties     {"idx":1,"domain":"smbc.co.jp","total_employees":null,"total_users":null,"employees":0,"users":6637,"third_parties":12,"stealers":null,"total_external_domains":null,"external_domains":null,"message":null,"err":null,"source":"hudsonrock_osint"}
+
+--- row 3 ---
+  uid            hudson-rock-jp|h:19e334b546f4e565
+  lat            35.6895
+  lon            139.6917
+  geometry       {"type":"Point","coordinates":[139.6917,35.6895]}
+  record_type    hudson-rock-jp
+  properties     {"idx":2,"domain":"mizuho-fg.co.jp","total_employees":null,"total_users":null,"employees":0,"users":15,"third_parties":0,"stealers":null,"total_external_domains":null,"external_domains":null,"message":null,"err":null,"source":"hudsonrock_osint"}
+#################################################
+=== jaxa-earth
+exit: 1
+sched: rc=-1 records=0 3195ms
+--- stderr ---
+[jaxa-earth] unavailable (catalog empty)
+[sched] jaxa-earth run rc=-1 records=0 3195ms
+[detect] anomaly opened: jaxa-earth verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== note-com-profiles
+exit: 1
+sched: rc=-1 records=0 1331ms
+--- stderr ---
+[note-com-profiles] emitted 0
+[sched] note-com-profiles run rc=-1 records=0 1331ms
+[detect] anomaly opened: note-com-profiles verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== nra-radiation
+exit: 1
+sched: rc=-1 records=0 9887ms
+--- stderr ---
+[nra-radiation] no live feed
+[sched] nra-radiation run rc=-1 records=0 9887ms
+[detect] anomaly opened: nra-radiation verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== 38north
+exit: 1
+sched: rc=-1 records=0 67ms
+--- stderr ---
+[sched] 38north run rc=-1 records=0 67ms
+[detect] anomaly opened: 38north verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== cfr
+exit: 1
+sched: rc=-1 records=0 142ms
+--- stderr ---
+[sched] cfr run rc=-1 records=0 142ms
+[detect] anomaly opened: cfr verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== isw
+exit: 1
+sched: rc=-1 records=0 58ms
+--- stderr ---
+[sched] isw run rc=-1 records=0 58ms
+[detect] anomaly opened: isw verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== kyiv-independent
+exit: 1
+sched: rc=-1 records=0 258ms
+--- stderr ---
+[sched] kyiv-independent run rc=-1 records=0 258ms
+[detect] anomaly opened: kyiv-independent verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== maritime-executive
+exit: 1
+sched: rc=-1 records=0 945ms
+--- stderr ---
+[sched] maritime-executive run rc=-1 records=0 945ms
+[detect] anomaly opened: maritime-executive verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== rferl
+exit: 0
+sched: rc=0 records=0 229ms
+--- stderr ---
+[rss] rferl emitted 0
+[sched] rferl run rc=0 records=0 229ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== jma-typhoon-json
+exit: 0
+sched: rc=0 records=0 798ms
+--- stderr ---
+[jma-typhoon-json] emitted 0
+[sched] jma-typhoon-json run rc=0 records=0 798ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== mlit-n05-rail-history
+exit: 0
+sched: rc=0 records=0 2614ms
+--- stderr ---
+[mlit-n05-rail-history] emitted 0
+[sched] mlit-n05-rail-history run rc=0 records=0 2614ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== bluesky-jetstream-jp
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[bluesky-jetstream-jp] emitted 0
+[sched] bluesky-jetstream-jp run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+DONE /mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/a6_l1.txt

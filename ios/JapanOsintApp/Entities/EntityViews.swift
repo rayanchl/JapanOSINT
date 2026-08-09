@@ -7,6 +7,12 @@ struct EntitiesView: View {
     @Environment(\.theme) private var theme
     @State private var q = ""
     @State private var hits: [EntityHit] = []
+    /// The in-flight debounce+fetch. Held so the NEXT keystroke can cancel it —
+    /// an unstructured `Task {}` whose handle is discarded is never cancelled,
+    /// which turns `Task.isCancelled` into a constant `false` and the sleep into
+    /// a fixed delay rather than a debounce, letting a slow earlier request land
+    /// on top of newer results.
+    @State private var searchTask: Task<Void, Never>?
 
     var body: some View {
         NavigationStack {
@@ -29,13 +35,20 @@ struct EntitiesView: View {
             .themedScreenBackground(theme)
         }
         .onChange(of: q) { _, v in
-            Task {
-                guard v.trimmingCharacters(in: .whitespaces).count >= 2 else { hits = []; return }
+            searchTask?.cancel()
+            let query = v.trimmingCharacters(in: .whitespaces)
+            guard query.count >= 2 else { hits = []; return }
+            searchTask = Task {
                 try? await Task.sleep(nanoseconds: 250_000_000)
                 if Task.isCancelled { return }
-                hits = (try? await apiClient.api.entitySearch(v)) ?? []
+                let found = (try? await apiClient.api.entitySearch(query)) ?? []
+                // Re-check after the await: a keystroke during the request must
+                // not have its newer results overwritten by this older one.
+                if Task.isCancelled { return }
+                hits = found
             }
         }
+        .onDisappear { searchTask?.cancel() }
     }
 }
 
@@ -48,12 +61,10 @@ struct EntityDetailView: View {
     @Environment(\.theme) private var theme
     @State private var resolvedId: String?
     @State private var profile: EntityProfile?
-    @State private var graph = EntityGraph(nodes: [], edges: [])
     @State private var mentions: [EntityMention] = []
     @State private var tab = 0
-    @State private var depth = 1
     @State private var notFound = false
-    @State private var pushedNode: EntityNode?
+    @State private var pushedNode: GraphNode?
 
     var body: some View {
         Group {
@@ -78,15 +89,17 @@ struct EntityDetailView: View {
             }.pickerStyle(.segmented).padding(8)
 
             if tab == 0 {
-                VStack {
-                    Picker("Depth", selection: $depth) {
-                        ForEach(1...3, id: \.self) { Text("\($0)").tag($0) }
-                    }.pickerStyle(.segmented).padding(.horizontal, 8)
-                    EntityGraphCanvas(graph: graph, rootId: p.entity_id) { node in
-                        pushedNode = node
-                    }
-                }
-                .onChange(of: depth) { _, _ in Task { await loadGraph(p) } }
+                // `GraphCanvasView` owns its own depth / relationship-type /
+                // hub-collapse controls and its own fetch. It replaced the crude
+                // canvas that used to live here because it REPORTS what the
+                // server truncated instead of rendering a blank frame the moment
+                // the graph outgrew a hard-coded node ceiling.
+                // Labelled, not a trailing closure: the init's last parameter is
+                // `onAddVisibleToCase`, and spelling the label out means the
+                // handler can never be matched to the wrong seam.
+                GraphCanvasView(entityType: type,
+                                entityId: p.entity_id,
+                                onOpenEntity: { node in pushedNode = node })
             } else if tab == 1 {
                 List(mentions) { m in
                     VStack(alignment: .leading, spacing: 2) {
@@ -102,12 +115,21 @@ struct EntityDetailView: View {
                     if let a = p.aliases, !a.isEmpty { LabeledContent("Aliases", value: a.joined(separator: ", ")) }
                     LabeledContent("Mentions", value: "\(p.mention_count ?? 0)")
                     if let f = p.first_seen_at { LabeledContent("First seen", value: f) }
+
+                    // Roadmap 23 — breach exposure for this entity; self-fetches
+                    // and stays hidden when the entity has none.
+                    ExposureSection(entityType: type, entityId: p.entity_id)
+                    // Roadmap 15 — analyst notes pinned to this entity.
+                    AnnotationsSection(refType: "entity", refId: p.entity_id)
                 }
             }
         }
         // Tapping a relationship-graph node pushes that entity's own profile.
+        // `node.type` is passed VERBATIM: it came straight out of the server's
+        // own `entities.type` column and the graph route matches it with
+        // `strcmp`, so lower-casing it here could turn a valid id into a 404.
         .navigationDestination(item: $pushedNode) { node in
-            EntityDetailView(type: node.type.lowercased(), entityId: node.id)
+            EntityDetailView(type: node.type, entityId: node.id)
         }
     }
 
@@ -121,109 +143,8 @@ struct EntityDetailView: View {
         resolvedId = eid
         profile = try? await apiClient.api.entity(type, eid)
         if profile == nil { notFound = true; return }
-        await loadGraph(profile!)
+        // The relationship graph fetches itself — `GraphCanvasView` owns its
+        // own depth/filters and its own request lifecycle.
         mentions = (try? await apiClient.api.entityMentions(type, eid)) ?? []
-    }
-    private func loadGraph(_ p: EntityProfile) async {
-        graph = (try? await apiClient.api.entityGraph(type, p.entity_id, depth: depth))
-            ?? EntityGraph(nodes: [], edges: [])
-    }
-}
-
-/// Native force-directed graph (SwiftUI Canvas; no WebView). Fixed-iteration
-/// layout computed once; tap a node to open that entity's profile.
-struct EntityGraphCanvas: View {
-    let graph: EntityGraph
-    let rootId: String
-    /// Called when a non-root node is tapped, so the host can push its profile.
-    var onSelectNode: (EntityNode) -> Void = { _ in }
-    @Environment(\.theme) private var theme
-    @State private var pos: [String: CGPoint] = [:]
-
-    var body: some View {
-        GeometryReader { geo in
-            Canvas { ctx, size in
-                for e in graph.edges {
-                    guard let a = pos[e.source], let b = pos[e.target] else { continue }
-                    var path = Path(); path.move(to: a); path.addLine(to: b)
-                    ctx.stroke(path, with: .color(theme.textMuted.opacity(0.4)), lineWidth: 1)
-                }
-                for n in graph.nodes {
-                    guard let p = pos[n.id] else { continue }
-                    let isRoot = n.id == rootId
-                    let r: CGFloat = isRoot ? 9 : 6
-                    ctx.fill(Path(ellipseIn: CGRect(x: p.x - r, y: p.y - r, width: 2*r, height: 2*r)),
-                             with: .color(isRoot ? theme.accentAlt : theme.accent))
-                    ctx.draw(Text(String((n.label ?? n.value).prefix(18))).font(.system(size: 9))
-                                .foregroundColor(theme.text), at: CGPoint(x: p.x, y: p.y - 14))
-                }
-            }
-            // Canvas can't host per-node gestures, so hit-test the tap location
-            // against the laid-out node positions and select the nearest one.
-            .onTapGesture(coordinateSpace: .local) { location in
-                guard let node = nearestNode(to: location), node.id != rootId else { return }
-                Haptics.selection()
-                onSelectNode(node)
-            }
-            .onAppear { layout(in: geo.size) }
-            .onChange(of: graph) { _, _ in layout(in: geo.size) }
-        }
-        .frame(height: 360)
-        .background(RoundedRectangle(cornerRadius: 8).fill(theme.surfaceElevated))
-    }
-
-    /// Nearest node to a tap, within a generous 24pt tolerance of the 6–9pt discs.
-    private func nearestNode(to loc: CGPoint) -> EntityNode? {
-        var best: EntityNode?
-        var bestDist = CGFloat.greatestFiniteMagnitude
-        for n in graph.nodes {
-            guard let p = pos[n.id] else { continue }
-            let dist = hypot(p.x - loc.x, p.y - loc.y)
-            if dist < bestDist { bestDist = dist; best = n }
-        }
-        return bestDist <= 24 ? best : nil
-    }
-
-    private func layout(in size: CGSize) {
-        guard !graph.nodes.isEmpty, graph.nodes.count <= 120 else { return }
-        let W = size.width, H = size.height
-        var P: [String: CGPoint] = [:]
-        var V: [String: CGVector] = [:]
-        for (i, n) in graph.nodes.enumerated() {
-            if n.id == rootId { P[n.id] = CGPoint(x: W/2, y: H/2) }
-            else {
-                let a = Double(i) / Double(graph.nodes.count) * 2 * .pi
-                P[n.id] = CGPoint(x: W/2 + cos(a)*130, y: H/2 + sin(a)*120)
-            }
-            V[n.id] = .zero
-        }
-        for _ in 0..<140 {
-            let ids = Array(P.keys)
-            for i in 0..<ids.count {
-                for j in (i+1)..<ids.count {
-                    let a = P[ids[i]]!, b = P[ids[j]]!
-                    var dx = a.x - b.x, dy = a.y - b.y
-                    let d2 = max(dx*dx + dy*dy, 0.01), d = sqrt(d2)
-                    let f = 3200 / d2; dx /= d; dy /= d
-                    V[ids[i]]!.dx += dx*f; V[ids[i]]!.dy += dy*f
-                    V[ids[j]]!.dx -= dx*f; V[ids[j]]!.dy -= dy*f
-                }
-            }
-            for e in graph.edges {
-                guard let a = P[e.source], let b = P[e.target] else { continue }
-                let dx = b.x - a.x, dy = b.y - a.y
-                let d = max(sqrt(dx*dx + dy*dy), 0.01)
-                let f = (d - 110) * 0.02
-                V[e.source]!.dx += dx/d*f; V[e.source]!.dy += dy/d*f
-                V[e.target]!.dx -= dx/d*f; V[e.target]!.dy -= dy/d*f
-            }
-            for id in ids {
-                if id == rootId { P[id] = CGPoint(x: W/2, y: H/2); V[id] = .zero; continue }
-                V[id]!.dx *= 0.82; V[id]!.dy *= 0.82
-                P[id]!.x = min(max(20, P[id]!.x + V[id]!.dx), W - 20)
-                P[id]!.y = min(max(20, P[id]!.y + V[id]!.dy), H - 20)
-            }
-        }
-        pos = P
     }
 }

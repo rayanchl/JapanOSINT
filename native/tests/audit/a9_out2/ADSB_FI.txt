@@ -1,0 +1,7 @@
+=== ADSB_FI  entity=ANA1
+exit: 0
+sched: rc=0 records=0 261ms
+--- stderr ---
+[adsb_fi] emitted 0
+[sched] ADSB_FI run rc=0 records=0 261ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

@@ -34,4 +34,18 @@ enum BuildConfig {
 
     /// Supabase publishable anon key (client-safe, not a secret).
     static let supabaseAnonKey = "sb_publishable_nzjWkrp7sMNxrU0jyuUbMQ_Q9lAVFL_"
+
+    /// Realtime push channel (`WebSocketClient`, ws(s)://<backend>/ws).
+    ///
+    /// **Off by default because the server route does not exist yet** —
+    /// `native/core/httpd.c` says so verbatim. With it on, every client ran a
+    /// permanent connect→fail→backoff loop for the entire lifetime of the
+    /// process, and several panels rendered "offline" because of it even
+    /// though the REST API was answering normally.
+    ///
+    /// Flip to `true` the same day `/ws` ships; the client is complete and
+    /// unchanged apart from this gate. Nothing else in the app depends on the
+    /// socket being up — live vehicles, the follow log and camera discovery
+    /// all seed and page over REST.
+    static let realtimeWebSocketEnabled = false
 }

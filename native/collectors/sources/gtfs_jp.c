@@ -44,6 +44,7 @@
  * pointers, so peak memory is one decompressed member.
  *
  *   props order (map layer): stop_id, name, operator, feed_id, source */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -529,15 +530,7 @@ static void load_stops(feedctx *c, const char *zip, size_t zl,
     c->fs->stops++;
 
     if (features && *budget > 0) {
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(c->slon[c->ns]));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(c->slat[c->ns]));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(c->slon[c->ns], c->slat[c->ns]);
       cJSON *pr = cJSON_CreateObject();
       cJSON_AddStringToObject(pr, "stop_id", id);
       const char *nm = csv_at(&it, c_nm);
@@ -853,11 +846,6 @@ static char *http_bytes(http_client *hc, const char *url, size_t *len) {
   return out;
 }
 
-static const char *jstr(cJSON *o, const char *k) {
-  cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
-}
-
 static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->db || !ctx->db->h) {
     fprintf(stderr, "[gtfs-jp] no db handle\n");
@@ -911,12 +899,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (feed_limit > 0 && done >= feed_limit) break;
     if (ctx->cancel && *ctx->cancel) break;
 
-    const char *org = jstr(row, "organization_id");
-    const char *feed = jstr(row, "feed_id");
-    const char *url = jstr(row, "file_url");
+    const char *org = jo_sv(row, "organization_id");
+    const char *feed = jo_sv(row, "feed_id");
+    const char *url = jo_sv(row, "file_url");
     if (!org || !feed || !url) continue;
-    const char *org_name = jstr(row, "organization_name");
-    const char *feed_name = jstr(row, "feed_name");
+    const char *org_name = jo_sv(row, "organization_name");
+    const char *feed_name = jo_sv(row, "feed_name");
 
     size_t zl = 0;
     char *zip = http_bytes(ctx->http, url, &zl);
@@ -970,9 +958,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       } else sqlite3_bind_null(sfeed, 4);
       bind_txt(sfeed, 5, feed_name);
       bind_txt(sfeed, 6, url);
-      bind_txt(sfeed, 7, jstr(row, "feed_license_id"));
-      bind_txt(sfeed, 8, jstr(row, "feed_license_url"));
-      bind_txt(sfeed, 9, jstr(row, "file_to_date"));
+      bind_txt(sfeed, 7, jo_sv(row, "feed_license_id"));
+      bind_txt(sfeed, 8, jo_sv(row, "feed_license_url"));
+      bind_txt(sfeed, 9, jo_sv(row, "file_to_date"));
       sqlite3_step(sfeed);
     }
     if (sop) {

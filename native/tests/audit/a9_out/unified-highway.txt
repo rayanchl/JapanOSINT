@@ -1,0 +1,10 @@
+=== unified-highway
+exit: 0
+sched: rc=0 records=0 142170ms
+--- stderr ---
+[overpass] highway-traffic no elements
+[jartic-traffic] emitted 0
+[unified-highway] emitted 0
+[sched] unified-highway run rc=0 records=0 142170ms
+[detect] anomaly opened: unified-highway verdict=duration_outlier — duration 142170ms exceeds 10000ms threshold
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

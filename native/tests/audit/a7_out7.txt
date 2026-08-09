@@ -1,0 +1,676 @@
+=== riksbank
+exit: 1
+sched: rc=-1 records=0 1036ms
+--- stderr ---
+[sched] riksbank run rc=-1 records=0 1036ms
+[detect] anomaly opened: riksbank verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== bcb-brazil
+exit: 0
+sched: rc=0 records=0 947ms
+--- stderr ---
+[rss] bcb-brazil emitted 0
+[sched] bcb-brazil run rc=0 records=0 947ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== rbi-press
+exit: 0
+sched: rc=0 records=0 713ms
+--- stderr ---
+[rss] rbi-press emitted 0
+[sched] rbi-press run rc=0 records=0 713ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== bis-press
+exit: 0
+sched: rc=0 records=0 193ms
+--- stderr ---
+[rss] bis-press emitted 0
+[sched] bis-press run rc=0 records=0 193ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== banxico
+exit: 1
+sched: rc=-1 records=0 1357ms
+--- stderr ---
+[sched] banxico run rc=-1 records=0 1357ms
+[detect] anomaly opened: banxico verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== norgesbank
+exit: 1
+sched: rc=-1 records=0 197ms
+--- stderr ---
+[sched] norgesbank run rc=-1 records=0 197ms
+[detect] anomaly opened: norgesbank verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== rba-media
+exit: 1
+sched: rc=-1 records=0 460ms
+--- stderr ---
+[sched] rba-media run rc=-1 records=0 460ms
+[detect] anomaly opened: rba-media verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== readme-imf
+exit: 1
+sched: rc=-1 records=0 63ms
+--- stderr ---
+[sched] readme-imf run rc=-1 records=0 63ms
+[detect] anomaly opened: readme-imf verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== brookings
+exit: 0
+sched: rc=0 records=0 81ms
+--- stderr ---
+[rss] brookings emitted 0
+[sched] brookings run rc=0 records=0 81ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== carnegie-endow
+exit: 0
+sched: rc=0 records=0 248ms
+--- stderr ---
+[rss] carnegie-endow emitted 0
+[sched] carnegie-endow run rc=0 records=0 248ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== carnegie-china
+exit: 0
+sched: rc=0 records=0 238ms
+--- stderr ---
+[rss] carnegie-china emitted 0
+[sched] carnegie-china run rc=0 records=0 238ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== sipri
+exit: 1
+sched: rc=-1 records=0 338ms
+--- stderr ---
+[sched] sipri run rc=-1 records=0 338ms
+[detect] anomaly opened: sipri verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== cnas
+exit: 1
+sched: rc=-1 records=0 748ms
+--- stderr ---
+[sched] cnas run rc=-1 records=0 748ms
+[detect] anomaly opened: cnas verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== wilson-center
+exit: 1
+sched: rc=-1 records=0 76ms
+--- stderr ---
+[sched] wilson-center run rc=-1 records=0 76ms
+[detect] anomaly opened: wilson-center verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== chatham-house
+exit: 1
+sched: rc=-1 records=0 82ms
+--- stderr ---
+[sched] chatham-house run rc=-1 records=0 82ms
+[detect] anomaly opened: chatham-house verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== iiss
+exit: 1
+sched: rc=-1 records=0 68ms
+--- stderr ---
+[sched] iiss run rc=-1 records=0 68ms
+[detect] anomaly opened: iiss verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== fpri
+exit: 1
+sched: rc=-1 records=0 64ms
+--- stderr ---
+[sched] fpri run rc=-1 records=0 64ms
+[detect] anomaly opened: fpri verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== stimson
+exit: 1
+sched: rc=-1 records=0 66ms
+--- stderr ---
+[sched] stimson run rc=-1 records=0 66ms
+[detect] anomaly opened: stimson verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== mei
+exit: 1
+sched: rc=-1 records=0 61ms
+--- stderr ---
+[sched] mei run rc=-1 records=0 61ms
+[detect] anomaly opened: mei verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== rusi
+exit: 1
+sched: rc=-1 records=0 1132ms
+--- stderr ---
+[sched] rusi run rc=-1 records=0 1132ms
+[detect] anomaly opened: rusi verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== csis-china
+exit: 0
+sched: rc=0 records=10 1066ms
+--- stderr ---
+[rss] csis-china emitted 10
+[sched] csis-china run rc=0 records=10 1066ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            csis-china|https://chinapower.csis.org/?p=11604
+  title          Analyzing Trade Chokepoints in the South China Sea
+  body           <p>This digital dashboard and companion CSIS brief offer groundbreaking insights into trade flows through critical chokepoints in the South China Sea.</p>
+<p>The post <a href="https://scstradedashboard.csis.org/#new_tab">Analyzing Trade Chokepoints in the South China Sea</a> appeared first on <a href="https://chinapower.csis.org">ChinaPower Project</a>.</p>
+  summary        <p>This digital dashboard and companion CSIS brief offer groundbreaking insights into trade flows through critical chokepoints in the South China Sea.</p>
+<p>The post <a href="https://scstradedashboard.csis.org/#new_tab">Analyzing Trade Cho
+  link           https://scstradedashboard.csis.org/#new_tab
+  language       en
+  published_at   Mon, 06 Jul 2026 14:28:41 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://chinapower.csis.org/?p=11604"}
+
+--- row 2 ---
+  uid            csis-china|https://chinapower.csis.org/?p=11603
+  title          Troubled Straits: Analyzing Trade Chokepoints in the South China Sea
+  body           <p>This CSIS brief offers groundbreaking insight into the value and types of goods flowing through eight different South China Sea chokepoints.</p>
+<p>The post <a href="https://www.csis.org/analysis/south-china-sea-trade-chokepoints#new_tab">Troubled Straits: Analyzing Trade Chokepoints in the South China Sea</a> appeared first on <a href="https://chinapower.csis.org">ChinaPower Project</a>.</p>
+  summary        <p>This CSIS brief offers groundbreaking insight into the value and types of goods flowing through eight different South China Sea chokepoints.</p>
+<p>The post <a href="https://www.csis.org/analysis/south-china-sea-trade-chokepoints#new_tab
+  link           https://www.csis.org/analysis/south-china-sea-trade-chokepoints#new_tab
+  language       en
+  published_at   Mon, 06 Jul 2026 14:28:35 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://chinapower.csis.org/?p=11603"}
+#################################################
+=== cepa
+exit: 0
+sched: rc=0 records=10 450ms
+--- stderr ---
+[rss] cepa emitted 10
+[sched] cepa run rc=0 records=10 450ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            cepa|https://cepa.org/?p=52588
+  title          The West Must Confront China’s Biotech Offensive
+  body           <p>Western engagement with Chinese biotech is accelerating. It’s dangerous.</p>
+<p>The post <a href="https://cepa.org/article/the-west-must-confront-chinas-biotech-offensive/">The West Must Confront China’s Biotech Offensive</a> appeared first on <a href="https://cepa.org">CEPA</a>.</p>
+  summary        <p>Western engagement with Chinese biotech is accelerating. It’s dangerous.</p>
+<p>The post <a href="https://cepa.org/article/the-west-must-confront-chinas-biotech-offensive/">The West Must Confront China’s Biotech Offensive</a> appeare
+  link           https://cepa.org/article/the-west-must-confront-chinas-biotech-offensive/
+  language       en
+  published_at   Fri, 31 Jul 2026 15:23:02 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://cepa.org/?p=52588"}
+
+--- row 2 ---
+  uid            cepa|https://cepa.org/?p=52251
+  title          We Need More Than a Ceasefire in Ukraine
+  body           <p>As news from the front makes Vladimir Putin’s demands for peace with Kyiv look more absurd, Ukraine and its allies must push for justice.</p>
+<p>The post <a href="https://cepa.org/article/we-need-more-than-a-ceasefire-in-ukraine/">We Need More Than a Ceasefire in Ukraine</a> appeared first on <a href="https://cepa.org">CEPA</a>.</p>
+  summary        <p>As news from the front makes Vladimir Putin’s demands for peace with Kyiv look more absurd, Ukraine and its allies must push for justice.</p>
+<p>The post <a href="https://cepa.org/article/we-need-more-than-a-ceasefire-in-ukraine/">We N
+  link           https://cepa.org/article/we-need-more-than-a-ceasefire-in-ukraine/
+  language       en
+  published_at   Thu, 30 Jul 2026 14:04:07 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://cepa.org/?p=52251"}
+#################################################
+=== gmfus
+exit: 0
+sched: rc=0 records=10 717ms
+--- stderr ---
+[rss] gmfus emitted 10
+[sched] gmfus run rc=0 records=10 717ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            gmfus|22242 at https://www.gmfus.org
+  title          Toward a Marshall Plan for Ukraine
+  body           <span class="field field--name-title field--type-string field--label-hidden">Toward a Marshall Plan for Ukraine</span>
+<span class="field field--name-uid field--type-entity-reference field--label-hidden"><span>AAugustin@gmfus.org</span></span>
+<span class="field field--name-created field--type-created field--label-hidden"><time datetime="2023-05-16T14:47:02-04:00" title="Tuesday, May 16, 2023 - 14:47" class="datetime">Tue, 05/16/2023 - 14:47</time>
+</span>
+3 min read
+  summary        <span class="field field--name-title field--type-string field--label-hidden">Toward a Marshall Plan for Ukraine</span>
+<span class="field field--name-uid field--type-entity-reference field--label-hidden"><span>AAugustin@gmfus.org</span></sp
+  link           https://www.gmfus.org/news/toward-marshall-plan-ukraine-0
+  language       en
+  published_at   Tue, 16 May 2023 18:47:02 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"22242 at https://www.gmfus.org"}
+
+--- row 2 ---
+  uid            gmfus|25430 at https://www.gmfus.org
+  title          Hostage of Deterrence
+  body           <span class="field field--name-title field--type-string field--label-hidden">Hostage of Deterrence</span>
+<span class="field field--name-uid field--type-entity-reference field--label-hidden"><span>agorski@gmfus.org</span></span>
+<span class="field field--name-created field--type-created field--label-hidden"><time datetime="2026-07-31T14:15:14-04:00" title="Friday, July 31, 2026 - 14:15" class="datetime">Fri, 07/31/2026 - 14:15</time>
+</span>
+2 min read
+  summary        <span class="field field--name-title field--type-string field--label-hidden">Hostage of Deterrence</span>
+<span class="field field--name-uid field--type-entity-reference field--label-hidden"><span>agorski@gmfus.org</span></span>
+<span class
+  link           https://www.gmfus.org/news/hostage-deterrence
+  language       en
+  published_at   Fri, 31 Jul 2026 18:15:14 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"25430 at https://www.gmfus.org"}
+#################################################
+=== ecfr
+exit: 0
+sched: rc=0 records=25 1047ms
+--- stderr ---
+[rss] ecfr emitted 25
+[sched] ecfr run rc=0 records=25 1047ms
+--- persisted: 25 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=25
+sub_source_id: (null)=25
+
+--- row 1 ---
+  uid            ecfr|https://ecfr.eu/article/alone-at-the-border-ceuta-and-europes-solidarity-failure/
+  title          Alone at the border: Ceuta and Europe&#8217;s solidarity failure
+  body           By failing to show solidarity with a member state under pressure, the EU is encouraging Morocco and others to keep using migration as a tool of coercion.
+  summary        By failing to show solidarity with a member state under pressure, the EU is encouraging Morocco and others to keep using migration as a tool of coercion.
+  link           https://ecfr.eu/article/alone-at-the-border-ceuta-and-europes-solidarity-failure/
+  language       en
+  published_at   Fri, 31 Jul 2026 17:07:34 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://ecfr.eu/article/alone-at-the-border-ceuta-and-europes-solidarity-failure/"}
+
+--- row 2 ---
+  uid            ecfr|https://ecfr.eu/article/how-the-split-on-polands-right-may-threaten-its-pro-european-camp/
+  title          How splits on the right may threaten Poland&#8217;s pro-European camp
+  body           More than 40 MPs have walked out of Law and Justice, Poland’s largest opposition party, and will court centre-right voters who put Donald Tusk in power in 2023. To win them back, Tusk should make the European argument he has spent years avoiding
+  summary        More than 40 MPs have walked out of Law and Justice, Poland’s largest opposition party, and will court centre-right voters who put Donald Tusk in power in 2023. To win them back, Tusk should make the European argument he has spent years a
+  link           https://ecfr.eu/article/how-the-split-on-polands-right-may-threaten-its-pro-european-camp/
+  language       en
+  published_at   Fri, 31 Jul 2026 09:32:21 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://ecfr.eu/article/how-the-split-on-polands-right-may-threaten-its-pro-european-camp/"}
+#################################################
+=== jamestown
+exit: 0
+sched: rc=0 records=10 318ms
+--- stderr ---
+[rss] jamestown emitted 10
+[sched] jamestown run rc=0 records=10 318ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            jamestown|https://jamestown.org/?p=885478
+  title          Chinese Research Details Distillation for Military Use
+  body           <p>Executive Summary: In July 2026, Chinese artificial intelligence (AI) firm Moonshot AI (月之暗面) released Kimi K3, a model it claims is on par with leading Western models such as Anthropic’s Claude Fable&#160;5. Instantly, Moonshot AI drew accusations that it had reached the frontier by distilling Western models (The Hill, July 22). The charge has an [&#8230;]</p>
+<p>The post <a href="https://jamestown.org/chinese-research-details-distillation-for-military-use/">Chinese Research Details Distillation for Military Use</a> appeared first on <a href="https://jamestown.org">Jamestown</a>.</p>
+  summary        <p>Executive Summary: In July 2026, Chinese artificial intelligence (AI) firm Moonshot AI (月之暗面) released Kimi K3, a model it claims is on par with leading Western models such as Anthropic’s Claude Fable&#160;5. Instantly, Moonsho
+  link           https://jamestown.org/chinese-research-details-distillation-for-military-use/
+  language       en
+  published_at   Fri, 31 Jul 2026 02:52:30 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://jamestown.org/?p=885478"}
+
+--- row 2 ---
+  uid            jamestown|https://jamestown.org/?p=885454
+  title          Vučić Uses Brezhnevian Playbook on Politics of Conditional Sovereignty
+  body           <p>Executive Summary: Serbian President Aleksandar Vučić’s late-June announcement that he would resign the Serbian presidency while preparing, most likely, to return as prime minister is not a meaningful break in policy or a serious strategic turn (Radio Slobodna Evropa, June 29). In the Balkans, office changes have often served to preserve power rather than surrender [&#8230;]</p>
+<p>The post <a href="https://jamestown.org/vucic-uses-brezhnevian-playbook-on-politics-of-conditional-sovereignty/">Vučić Uses Brezhnevian Playbook on Politics of Conditional Sovereignty</a> appeared first on <a href="https://jamestown.org">Jamestown</a>.</p>
+  summary        <p>Executive Summary: Serbian President Aleksandar Vučić’s late-June announcement that he would resign the Serbian presidency while preparing, most likely, to return as prime minister is not a meaningful break in policy or a serious str
+  link           https://jamestown.org/vucic-uses-brezhnevian-playbook-on-politics-of-conditional-sovereignty/
+  language       en
+  published_at   Thu, 30 Jul 2026 20:15:10 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://jamestown.org/?p=885454"}
+#################################################
+=== lowy-interpreter
+exit: 0
+sched: rc=0 records=50 209ms
+--- stderr ---
+[rss] lowy-interpreter emitted 50
+[sched] lowy-interpreter run rc=0 records=50 209ms
+--- persisted: 50 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=50
+sub_source_id: (null)=50
+
+--- row 1 ---
+  uid            lowy-interpreter|https://www.lowyinstitute.org/the-interpreter/the-toll-of-australia-s-fossil-fuels-set-for-international-scrutiny
+  title          The toll of Australia’s fossil fuels set for international scrutiny
+  body           The government may have to defend its approach to coal and gas exports in response to a highly personal case put before the Human Rights Committee.
+  summary        The government may have to defend its approach to coal and gas exports in response to a highly personal case put before the Human Rights Committee.
+  link           https://www.lowyinstitute.org/the-interpreter/the-toll-of-australia-s-fossil-fuels-set-for-international-scrutiny
+  language       en
+  published_at   Fri, 31 Jul 2026 00:00:00 +1000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://www.lowyinstitute.org/the-interpreter/the-toll-of-australia-s-fossil-fuels-set-for-international-scrutiny"}
+
+--- row 2 ---
+  uid            lowy-interpreter|https://www.lowyinstitute.org/the-interpreter/the-end-of-cheap-peace-in-east-asia
+  title          The end of cheap peace in East Asia
+  body           Markets still price the Western Pacific as either at peace or at war. The real cost lies in between – and firms and governments are already paying it.
+  summary        Markets still price the Western Pacific as either at peace or at war. The real cost lies in between – and firms and governments are already paying it.
+  link           https://www.lowyinstitute.org/the-interpreter/the-end-of-cheap-peace-in-east-asia
+  language       en
+  published_at   Fri, 31 Jul 2026 00:00:00 +1000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://www.lowyinstitute.org/the-interpreter/the-end-of-cheap-peace-in-east-asia"}
+#################################################
+=== rand-pubs
+exit: 0
+sched: rc=0 records=20 286ms
+--- stderr ---
+[rss] rand-pubs emitted 20
+[sched] rand-pubs run rc=0 records=20 286ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            rand-pubs|https://www.rand.org/pubs/research_reports/RRA4335-1.html
+  title          A U.S. Strategy to Prevent the Creation of Mirror Life
+  body           The authors of this report describe a strategy for the United States to prevent the creation of mirror life by anyone, anywhere.
+  summary        The authors of this report describe a strategy for the United States to prevent the creation of mirror life by anyone, anywhere.
+  link           https://www.rand.org/pubs/research_reports/RRA4335-1.html
+  author         <name>Nidhi Kalra</name>
+  language       en
+  published_at   2026-07-31T08:15:00Z
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://www.rand.org/pubs/research_reports/RRA4335-1.html"}
+
+--- row 2 ---
+  uid            rand-pubs|https://www.rand.org/pubs/perspectives/PEA4619-1.html
+  title          Principles for Communicating the Risks of Mirror Life
+  body           This paper presents principles for communicating to the public and specific audiences about the risks of mirror life&#8212;a hypothetical life form, such as a mirror bacterium, that could pose catastrophic danger to humans, animals, and plants.
+  summary        This paper presents principles for communicating to the public and specific audiences about the risks of mirror life&#8212;a hypothetical life form, such as a mirror bacterium, that could pose catastrophic danger to humans, animals, and pla
+  link           https://www.rand.org/pubs/perspectives/PEA4619-1.html
+  author         <name>Andrew M. Parker</name>
+  language       en
+  published_at   2026-07-31T08:15:00Z
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://www.rand.org/pubs/perspectives/PEA4619-1.html"}
+#################################################
+=== atlantic-council
+exit: 0
+sched: rc=0 records=100 995ms
+--- stderr ---
+[rss] atlantic-council emitted 100
+[sched] atlantic-council run rc=0 records=100 995ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            atlantic-council|https://www.atlanticcouncil.org/?p=937948
+  title          Nepal and Bangladesh are delaying LDC graduation. Now comes the hard part. 
+  body           <p>Both countries would need to use any delay in exiting “least developed country” status to advance structural changes to their economies.</p>
+<p>The post <a href="https://www.atlanticcouncil.org/dispatches/nepal-and-bangladesh-are-delaying-ldc-graduation-now-comes-the-hard-part/">Nepal and Bangladesh are delaying LDC graduation. Now comes the hard part. </a> appeared first on <a href="https://www.atlanticcouncil.org">Atlantic Council</a>.</p>
+  summary        <p>Both countries would need to use any delay in exiting “least developed country” status to advance structural changes to their economies.</p>
+<p>The post <a href="https://www.atlanticcouncil.org/dispatches/nepal-and-bangladesh-are-del
+  link           https://www.atlanticcouncil.org/dispatches/nepal-and-bangladesh-are-delaying-ldc-graduation-now-comes-the-hard-part/
+  language       en
+  published_at   Fri, 31 Jul 2026 16:42:13 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://www.atlanticcouncil.org/?p=937948"}
+
+--- row 2 ---
+  uid            atlantic-council|https://www.atlanticcouncil.org/?p=938222
+  title          10 questions (and expert answers) about the deal to disarm Hamas
+  body           <p>The US-led Board of Peace has announced an agreement that could lead to the disarmament of the Gaza-based terrorist group. </p>
+<p>The post <a href="https://www.atlanticcouncil.org/dispatches/questions-and-expert-answers-about-the-deal-to-disarm-hamas/">10 questions (and expert answers) about the deal to disarm Hamas</a> appeared first on <a href="https://www.atlanticcouncil.org">Atlantic Council</a>.</p>
+  summary        <p>The US-led Board of Peace has announced an agreement that could lead to the disarmament of the Gaza-based terrorist group. </p>
+<p>The post <a href="https://www.atlanticcouncil.org/dispatches/questions-and-expert-answers-about-the-deal-t
+  link           https://www.atlanticcouncil.org/dispatches/questions-and-expert-answers-about-the-deal-to-disarm-hamas/
+  language       en
+  published_at   Fri, 31 Jul 2026 16:02:50 +0000
+  record_type    article
+  tags           ["osint","think-tank","analysis"]
+  properties     {"guid":"https://www.atlanticcouncil.org/?p=938222"}
+#################################################
+=== us-state-press
+exit: 0
+sched: rc=0 records=0 822ms
+--- stderr ---
+[rss] us-state-press emitted 0
+[sched] us-state-press run rc=0 records=0 822ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== ntsb-news
+exit: 0
+sched: rc=0 records=0 345ms
+--- stderr ---
+[rss] ntsb-news emitted 0
+[sched] ntsb-news run rc=0 records=0 345ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== ru-mid
+exit: 0
+sched: rc=0 records=0 454ms
+--- stderr ---
+[rss] ru-mid emitted 0
+[sched] ru-mid run rc=0 records=0 454ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== europarl-news
+exit: 0
+sched: rc=0 records=0 132ms
+--- stderr ---
+[rss] europarl-news emitted 0
+[sched] europarl-news run rc=0 records=0 132ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== ca-gov-news
+exit: 0
+sched: rc=0 records=0 449ms
+--- stderr ---
+[rss] ca-gov-news emitted 0
+[sched] ca-gov-news run rc=0 records=0 449ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== cn-mofa
+exit: 0
+sched: rc=0 records=0 1634ms
+--- stderr ---
+[rss] cn-mofa emitted 0
+[sched] cn-mofa run rc=0 records=0 1634ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== interpol-news
+exit: 1
+sched: rc=-1 records=0 1055ms
+--- stderr ---
+[sched] interpol-news run rc=-1 records=0 1055ms
+[detect] anomaly opened: interpol-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== us-dhs-news
+exit: 1
+sched: rc=-1 records=0 212ms
+--- stderr ---
+[sched] us-dhs-news run rc=-1 records=0 212ms
+[detect] anomaly opened: us-dhs-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== cisa-blog
+exit: 1
+sched: rc=-1 records=0 223ms
+--- stderr ---
+[sched] cisa-blog run rc=-1 records=0 223ms
+[detect] anomaly opened: cisa-blog verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== fema-news
+exit: 1
+sched: rc=-1 records=0 120ms
+--- stderr ---
+[sched] fema-news run rc=-1 records=0 120ms
+[detect] anomaly opened: fema-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== epa-news
+exit: 1
+sched: rc=-1 records=0 111ms
+--- stderr ---
+[sched] epa-news run rc=-1 records=0 111ms
+[detect] anomaly opened: epa-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== faa-news
+exit: 1
+sched: rc=-1 records=0 981ms
+--- stderr ---
+[sched] faa-news run rc=-1 records=0 981ms
+[detect] anomaly opened: faa-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== nato-opinions
+exit: 1
+sched: rc=-1 records=0 247ms
+--- stderr ---
+[sched] nato-opinions run rc=-1 records=0 247ms
+[detect] anomaly opened: nato-opinions verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== worldbank-news
+exit: 1
+sched: rc=-1 records=0 146ms
+--- stderr ---
+[sched] worldbank-news run rc=-1 records=0 146ms
+[detect] anomaly opened: worldbank-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== unhcr-news
+exit: 1
+sched: rc=-1 records=0 118ms
+--- stderr ---
+[sched] unhcr-news run rc=-1 records=0 118ms
+[detect] anomaly opened: unhcr-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== iom-news
+exit: 1
+sched: rc=-1 records=0 189ms
+--- stderr ---
+[sched] iom-news run rc=-1 records=0 189ms
+[detect] anomaly opened: iom-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== imf-news
+exit: 1
+sched: rc=-1 records=0 137ms
+--- stderr ---
+[sched] imf-news run rc=-1 records=0 137ms
+[detect] anomaly opened: imf-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== unodc-news
+exit: 1
+sched: rc=-1 records=0 262ms
+--- stderr ---
+[sched] unodc-news run rc=-1 records=0 262ms
+[detect] anomaly opened: unodc-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== wfp-news
+exit: 1
+sched: rc=-1 records=0 1641ms
+--- stderr ---
+[sched] wfp-news run rc=-1 records=0 1641ms
+[detect] anomaly opened: wfp-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== osce-news
+exit: 1
+sched: rc=-1 records=0 631ms
+--- stderr ---
+[sched] osce-news run rc=-1 records=0 631ms
+[detect] anomaly opened: osce-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== eeas-news
+exit: 1
+sched: rc=-1 records=0 1233ms
+--- stderr ---
+[sched] eeas-news run rc=-1 records=0 1233ms
+[detect] anomaly opened: eeas-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== enisa-news
+exit: 1
+sched: rc=-1 records=0 240ms
+--- stderr ---
+[sched] enisa-news run rc=-1 records=0 240ms
+[detect] anomaly opened: enisa-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== ema-news
+exit: 1
+sched: rc=-1 records=0 388ms
+--- stderr ---
+[sched] ema-news run rc=-1 records=0 388ms
+[detect] anomaly opened: ema-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== frontex-news
+exit: 1
+sched: rc=-1 records=0 646ms
+--- stderr ---
+[sched] frontex-news run rc=-1 records=0 646ms
+[detect] anomaly opened: frontex-news verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== au-dfat
+exit: 1
+sched: rc=-1 records=0 993ms
+--- stderr ---
+[sched] au-dfat run rc=-1 records=0 993ms
+[detect] anomaly opened: au-dfat verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== us-treasury-press
+exit: 1
+sched: rc=-1 records=0 1784ms
+--- stderr ---
+[sched] us-treasury-press run rc=-1 records=0 1784ms
+[detect] anomaly opened: us-treasury-press verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+=== noaa-swpc
+exit: 1
+sched: rc=-1 records=0 1393ms
+--- stderr ---
+[sched] noaa-swpc run rc=-1 records=0 1393ms
+[detect] anomaly opened: noaa-swpc verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---
+#################################################
+DONE /mnt/c/Users/rayan/sources/repos/OSINTsaas/native/tests/audit/a7_list7.txt

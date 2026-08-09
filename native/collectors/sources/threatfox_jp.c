@@ -2,6 +2,7 @@
  * Port of server/src/collectors/threatfoxJp.js (createThreatIntelCollector).
  * env ABUSE_CH_AUTH_KEY (fallback THREATFOX_AUTH_KEY) → POST get_iocs days=N,
  * JP-relevant + confidence filter, slice 300, TOKYO points. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/threatintel.h"
 #include "../../core/httpclient.h"
@@ -11,8 +12,8 @@
 #include <string.h>
 #include <ctype.h>
 
-#define TOKYO_LON 139.6917
-#define TOKYO_LAT 35.6895
+/* TOKYO_LON/TOKYO_LAT deliberately removed — see the note at the feature
+ * builder. Do not reintroduce a fallback coordinate for indicators. */
 #define TF_URL "https://threatfox-api.abuse.ch/api/v1/"
 
 static int is_word(unsigned char c) {
@@ -41,17 +42,10 @@ static int has_word(const char *s, const char *w) {
   return 0;
 }
 
-static void lc(const char *s, char *o, size_t n) {
-  size_t j = 0;
-  if (!s) { o[0] = '\0'; return; }
-  for (; *s && j + 1 < n; s++) o[j++] = (char)tolower((unsigned char)*s);
-  o[j] = '\0';
-}
-
 static int jp_relevant(cJSON *ioc) {
   cJSON *iv = cJSON_GetObjectItem(ioc, "ioc_value");
   char v[1024];
-  lc((iv && cJSON_IsString(iv)) ? iv->valuestring : "", v, sizeof v);
+  jo_lower_buf((iv && cJSON_IsString(iv)) ? iv->valuestring : "", v, sizeof v);
   if (has_dot_jp(v)) return 1;
   cJSON *tags = cJSON_GetObjectItem(ioc, "tags");
   char joined[2048]; joined[0] = '\0';
@@ -65,14 +59,9 @@ static int jp_relevant(cJSON *ioc) {
     }
   }
   char tl[2048];
-  lc(joined, tl, sizeof tl);
+  jo_lower_buf(joined, tl, sizeof tl);
   if (has_word(tl, "japan") || has_word(tl, "jp")) return 1;
   return 0;
-}
-
-static void put(cJSON *p, const char *k, cJSON *r, const char *ik) {
-  cJSON *v = cJSON_GetObjectItem(r, ik);
-  cJSON_AddItemToObject(p, k, v ? cJSON_Duplicate(v, 1) : cJSON_CreateNull());
 }
 
 static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
@@ -114,28 +103,33 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
 
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LON));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LAT));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      /* NO GEOMETRY. Every row used to be pinned at Tokyo Station
+       * (139.6917, 35.6895) — an indicator of compromise is a hash, a URL or
+       * an IP; it does not have a location, and stacking 300 of them on one
+       * point is the exact fabrication the 2026-07-31 audit deleted from
+       * cisa-kev-jp, poc-in-github and mastodon-jp-instances.
+       *
+       * It survived that sweep only because this source was already broken:
+       * abuse.ch had moved threatfox-api behind an Auth-Key, so the collector
+       * returned 401 and emitted zero rows, and a row-count audit cannot see
+       * the geometry of rows that never arrive. Restoring the fetch without
+       * removing this would have ADDED 300 fake Tokyo pins to the map.
+       * lib/geojson.c treats an absent geometry correctly (no "null" string). */
 
       cJSON *pr = cJSON_CreateObject();        /* EXACT JS key order */
       cJSON_AddNumberToObject(pr, "idx", i);
-      put(pr, "ioc_id", d, "id");
-      put(pr, "ioc_value", d, "ioc_value");
-      put(pr, "ioc_type", d, "ioc_type");
-      put(pr, "threat_type", d, "threat_type");
-      put(pr, "malware", d, "malware");
-      put(pr, "malware_alias", d, "malware_alias");
-      put(pr, "first_seen", d, "first_seen");
-      put(pr, "last_seen", d, "last_seen");
-      put(pr, "confidence_level", d, "confidence_level");
-      put(pr, "reporter", d, "reporter");
-      put(pr, "reference", d, "reference");
-      put(pr, "tags", d, "tags");
+      jo_put_or_null(pr, "ioc_id", d, "id");
+      jo_put_or_null(pr, "ioc_value", d, "ioc_value");
+      jo_put_or_null(pr, "ioc_type", d, "ioc_type");
+      jo_put_or_null(pr, "threat_type", d, "threat_type");
+      jo_put_or_null(pr, "malware", d, "malware");
+      jo_put_or_null(pr, "malware_alias", d, "malware_alias");
+      jo_put_or_null(pr, "first_seen", d, "first_seen");
+      jo_put_or_null(pr, "last_seen", d, "last_seen");
+      jo_put_or_null(pr, "confidence_level", d, "confidence_level");
+      jo_put_or_null(pr, "reporter", d, "reporter");
+      jo_put_or_null(pr, "reference", d, "reference");
+      jo_put_or_null(pr, "tags", d, "tags");
       cJSON_AddStringToObject(pr, "source", "threatfox");
       cJSON_AddItemToObject(f, "properties", pr);
       cJSON_AddItemToArray(features, f);

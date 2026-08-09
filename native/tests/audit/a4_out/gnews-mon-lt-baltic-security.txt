@@ -1,0 +1,45 @@
+=== gnews-mon-lt-baltic-security
+exit: 0
+sched: rc=0 records=45 398ms
+--- stderr ---
+[rss] gnews-mon-lt-baltic-security emitted 45
+[sched] gnews-mon-lt-baltic-security run rc=0 records=45 398ms
+--- persisted: 45 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=45
+sub_source_id: (null)=45
+
+--- row 1 ---
+  uid            gnews-mon-lt-baltic-security|CBMivgFBVV95cUxNazhPSjBHYk10Q0o0ZUU5SjFncFU3eWozRmVTeDNoaXpaZ2xMY05WZ0RqbTdqbVlDY1AzbVMyVHZHVWlfazJDN1ZwLWxWR2hOQXY5MFNWQ3llVm1VZmFjdTVSbFVxNU9UdHNndVhFSzZlLVV0WVdxckhNTDVWUF9IS28yX1VhTmRaZlpFVXRzamw1dUpNVl9wRldEaTQyMms2WFF6bWM4VGpNa2lqMXZtWE9BQ2dpTDNaQ1Yyd1Jn
+  title          Shared Values, Shared Security: The Nordic–Baltic Partnership at 35 and the Path Forward - lrt.lt
+  body           <a href="https://news.google.com/rss/articles/CBMivgFBVV95cUxNazhPSjBHYk10Q0o0ZUU5SjFncFU3eWozRmVTeDNoaXpaZ2xMY05WZ0RqbTdqbVlDY1AzbVMyVHZHVWlfazJDN1ZwLWxWR2hOQXY5MFNWQ3llVm1VZmFjdTVSbFVxNU9UdHNndVhFSzZlLVV0WVdxckhNTDVWUF9IS28yX1VhTmRaZlpFVXRzamw1dUpNVl9wRldEaTQyMms2WFF6bWM4VGpNa2lqMXZtWE9BQ2dpTDNaQ1Yyd1Jn?oc=5" target="_blank">Shared Values, Shared Security: The Nordic–Baltic Partnership at 35 and the Path Forward</a>&nbsp;&nbsp;<font color="#6f6f6f">lrt.lt</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMivgFBVV95cUxNazhPSjBHYk10Q0o0ZUU5SjFncFU3eWozRmVTeDNoaXpaZ2xMY05WZ0RqbTdqbVlDY1AzbVMyVHZHVWlfazJDN1ZwLWxWR2hOQXY5MFNWQ3llVm1VZmFjdTVSbFVxNU9UdHNndVhFSzZlLVV0WVdxckhNTDVWUF9IS28yX1VhTmRaZlpFVX
+  link           https://news.google.com/rss/articles/CBMivgFBVV95cUxNazhPSjBHYk10Q0o0ZUU5SjFncFU3eWozRmVTeDNoaXpaZ2xMY05WZ0RqbTdqbVlDY1AzbVMyVHZHVWlfazJDN1ZwLWxWR2hOQXY5MFNWQ3llVm1VZmFjdTVSbFVxNU9UdHNndVhFSzZlLVV0WVdxckhNTDVWUF9IS28yX1VhTmRaZlpFVXRzamw1dUpNVl9wRldEaTQyMms2WFF6bWM4VGpNa2lqMXZtWE9BQ2dpTDNaQ1Yyd1Jn?oc=5
+  language       lt
+  published_at   Thu, 09 Apr 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","lt"]
+  properties     {"guid":"CBMivgFBVV95cUxNazhPSjBHYk10Q0o0ZUU5SjFncFU3eWozRmVTeDNoaXpaZ2xMY05WZ0RqbTdqbVlDY1AzbVMyVHZHVWlfazJDN1ZwLWxWR2hOQXY5MFNWQ3llVm1VZmFjdTVSbFVxNU9UdHNndVhFSzZlLVV0WVdxckhNTDVWUF9IS28yX1VhTmRaZlpFVXRzamw1dUpNVl9wRldEaTQyMms2WFF6bWM4VGpNa2lqMXZtWE9BQ2dpTDNaQ1Yyd1Jn"}
+
+--- row 2 ---
+  uid            gnews-mon-lt-baltic-security|CBMitwFBVV95cUxQSTBUdkpKNW1sOENOVXYycGJQN29nNWlIendwWmdRVS0yZTlsbVh1dlNMeWR1RXUydC1DZFJGUnUyZWt0TkVDcjFkZjhCTnhYSU1iVmZPSDhZcFh5Ry00Vjl6YUVnV3ZCQ1FPWmJNcC1EeEZERzY0N0lXSFBLVEphY2ZUY2d2WndfV3pRTzRZOUMwY3ZsczUyY05UUE1BUWx0VjhIQzh4VWxhUW5wWGZHMEhqZVBMbUk
+  title          Responsibility for security of the Baltic skies transferred to the French and Romanian Air Forces - Krašto apsaugos ministerija
+  body           <a href="https://news.google.com/rss/articles/CBMitwFBVV95cUxQSTBUdkpKNW1sOENOVXYycGJQN29nNWlIendwWmdRVS0yZTlsbVh1dlNMeWR1RXUydC1DZFJGUnUyZWt0TkVDcjFkZjhCTnhYSU1iVmZPSDhZcFh5Ry00Vjl6YUVnV3ZCQ1FPWmJNcC1EeEZERzY0N0lXSFBLVEphY2ZUY2d2WndfV3pRTzRZOUMwY3ZsczUyY05UUE1BUWx0VjhIQzh4VWxhUW5wWGZHMEhqZVBMbUk?oc=5" target="_blank">Responsibility for security of the Baltic skies transferred to the French and Romanian Air Forces</a>&nbsp;&nbsp;<font color="#6f6f6f">Krašto apsaugos ministerija</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMitwFBVV95cUxQSTBUdkpKNW1sOENOVXYycGJQN29nNWlIendwWmdRVS0yZTlsbVh1dlNMeWR1RXUydC1DZFJGUnUyZWt0TkVDcjFkZjhCTnhYSU1iVmZPSDhZcFh5Ry00Vjl6YUVnV3ZCQ1FPWmJNcC1EeEZERzY0N0lXSFBLVEphY2ZUY2d2WndfV3pRTz
+  link           https://news.google.com/rss/articles/CBMitwFBVV95cUxQSTBUdkpKNW1sOENOVXYycGJQN29nNWlIendwWmdRVS0yZTlsbVh1dlNMeWR1RXUydC1DZFJGUnUyZWt0TkVDcjFkZjhCTnhYSU1iVmZPSDhZcFh5Ry00Vjl6YUVnV3ZCQ1FPWmJNcC1EeEZERzY0N0lXSFBLVEphY2ZUY2d2WndfV3pRTzRZOUMwY3ZsczUyY05UUE1BUWx0VjhIQzh4VWxhUW5wWGZHMEhqZVBMbUk?oc=5
+  language       lt
+  published_at   Tue, 31 Mar 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","lt"]
+  properties     {"guid":"CBMitwFBVV95cUxQSTBUdkpKNW1sOENOVXYycGJQN29nNWlIendwWmdRVS0yZTlsbVh1dlNMeWR1RXUydC1DZFJGUnUyZWt0TkVDcjFkZjhCTnhYSU1iVmZPSDhZcFh5Ry00Vjl6YUVnV3ZCQ1FPWmJNcC1EeEZERzY0N0lXSFBLVEphY2ZUY2d2WndfV3pRTzRZOUMwY3ZsczUyY05UUE1BUWx0VjhIQzh4VWxhUW5wWGZHMEhqZVBMbUk"}
+
+--- row 3 ---
+  uid            gnews-mon-lt-baltic-security|CBMi-gFBVV95cUxNSmhyMVVaZTk4NHdCMWdJSmRmNnFxdzV0MzJYTmdDenJoY1VSZzN5R3hNV3I2LVlmaGNxNUVhZHktMG5ydXp1eGxQazBfZEJhS09aUU03QWdoMzFsTFUtMkxzYVdpOUt4dUhnRW9uZkk0bVhINEY1elAwTkxsSmJaNk5hSzhHaEIzcGl4UXNabUs0Y3lnZUIydlJoWWZiVWNmU3RFLWlUMVkxNFpQWlpLTlVCZXdHb2dEQ0lZeGljYU52Q2VZN2laaGdUUXQybzVQUk1nM1NIdEpTUlVucmFJYU00cGN0eV9aZks1bTVjbTFmbDFNM2NLM3RR
+  title          Darbotvarkė - Užsienio reikalų ministerija
+  body           <a href="https://news.google.com/rss/articles/CBMi-gFBVV95cUxNSmhyMVVaZTk4NHdCMWdJSmRmNnFxdzV0MzJYTmdDenJoY1VSZzN5R3hNV3I2LVlmaGNxNUVhZHktMG5ydXp1eGxQazBfZEJhS09aUU03QWdoMzFsTFUtMkxzYVdpOUt4dUhnRW9uZkk0bVhINEY1elAwTkxsSmJaNk5hSzhHaEIzcGl4UXNabUs0Y3lnZUIydlJoWWZiVWNmU3RFLWlUMVkxNFpQWlpLTlVCZXdHb2dEQ0lZeGljYU52Q2VZN2laaGdUUXQybzVQUk1nM1NIdEpTUlVucmFJYU00cGN0eV9aZks1bTVjbTFmbDFNM2NLM3RR?oc=5" target="_blank">Darbotvarkė</a>&nbsp;&nbsp;<font color="#6f6f6f">Užsienio reikalų ministerija</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi-gFBVV95cUxNSmhyMVVaZTk4NHdCMWdJSmRmNnFxdzV0MzJYTmdDenJoY1VSZzN5R3hNV3I2LVlmaGNxNUVhZHktMG5ydXp1eGxQazBfZEJhS09aUU03QWdoMzFsTFUtMkxzYVdpOUt4dUhnRW9uZkk0bVhINEY1elAwTkxsSmJaNk5hSzhHaEIzcGl4UX
+  link           https://news.google.com/rss/articles/CBMi-gFBVV95cUxNSmhyMVVaZTk4NHdCMWdJSmRmNnFxdzV0MzJYTmdDenJoY1VSZzN5R3hNV3I2LVlmaGNxNUVhZHktMG5ydXp1eGxQazBfZEJhS09aUU03QWdoMzFsTFUtMkxzYVdpOUt4dUhnRW9uZkk0bVhINEY1elAwTkxsSmJaNk5hSzhHaEIzcGl4UXNabUs0Y3lnZUIydlJoWWZiVWNmU3RFLWlUMVkxNFpQWlpLTlVCZXdHb2dEQ0lZeGljYU52Q2VZN2laaGdUUXQybzVQUk1nM1NIdEpTUlVucmFJYU00cGN0eV9aZks1bTVjbTFmbDFNM2NLM3RR?oc=5
+  language       lt
+  published_at   Thu, 09 Apr 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","lt"]
+  properties     {"guid":"CBMi-gFBVV95cUxNSmhyMVVaZTk4NHdCMWdJSmRmNnFxdzV0MzJYTmdDenJoY1VSZzN5R3hNV3I2LVlmaGNxNUVhZHktMG5ydXp1eGxQazBfZEJhS09aUU03QWdoMzFsTFUtMkxzYVdpOUt4dUhnRW9uZkk0bVhINEY1elAwTkxsSmJaNk5hSzhHaEIzcGl4UXNabUs0Y3lnZUIydlJoWWZiVWNmU3RFLWlUMVkxNFpQWlpLTlVCZXdHb2dEQ0lZeGljYU52Q2VZN2laaGdUUXQybzVQUk1nM1NIdEpTUlVucmFJYU00cGN0eV9aZks1bTVjbTFmbDFNM2NLM3RR"}

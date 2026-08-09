@@ -1,0 +1,8 @@
+=== mlit-landprice
+exit: 0
+sched: rc=0 records=0 38832ms
+--- stderr ---
+[mlit-landprice] emitted 0
+[sched] mlit-landprice run rc=0 records=0 38832ms
+[detect] anomaly opened: mlit-landprice verdict=duration_outlier — duration 38832ms exceeds 10000ms threshold
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

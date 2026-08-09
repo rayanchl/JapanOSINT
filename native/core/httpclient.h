@@ -4,6 +4,20 @@
 #ifndef JO_HTTPCLIENT_H
 #define JO_HTTPCLIENT_H
 
+/* THE User-Agent for every outbound fetch. One string, defined once.
+ *
+ * There were three: httpclient's "JapanOSINT/1.0 (+native)", feedlib's
+ * "JapanOSINT/1.0 (+https://github.com)" (a placeholder URL that resolves to
+ * nothing), and rss_atom's descriptive one. Only the last identifies the
+ * client and offers a contact route, which is what the audit's defect #14 was
+ * about: ReliefWeb blocklists a bare "japanosint" UA, and the documented
+ * remedy is a descriptive UA with a contact address — NOT browser spoofing.
+ * That fix reached rss_atom.c only, so every JSON and text fetch in the fleet
+ * still went out with an anonymous UA. */
+#define JO_USER_AGENT \
+  "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; " \
+  "feed collector; contact via repo issues)"
+
 #include <stddef.h>
 
 typedef struct {
@@ -14,8 +28,10 @@ typedef struct {
 
 typedef struct http_client http_client; /* opaque (shared curl share/handle) */
 
-/* Idempotent process-wide curl_global_init (http_client_new does this too).
- * Call it before driving libcurl from a thread that never builds a client. */
+/* The one curl_global_init() in the process. Idempotent and thread-safe, so
+ * callers that reach curl WITHOUT going through http_client_new() (e.g. the
+ * camera-stills grabber, which drives a raw easy handle) can call it directly
+ * instead of racing a second global init on a worker thread. */
 void         http_client_global_init(void);
 
 http_client *http_client_new(void);

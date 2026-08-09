@@ -8,6 +8,7 @@
  * Backed by OpenSanctions (api.opensanctions.org), which requires an API key —
  * gates on OPENSANCTIONS_API_KEY and is honest-empty without it. Results are
  * the real matched entities (caption / schema / datasets / topics). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/httpclient.h"
 #include "../../third_party/cJSON.h"
@@ -16,21 +17,17 @@
 #include <string.h>
 #include <ctype.h>
 
-static void urlenc(const char *s, char *out, size_t cap) {
-  size_t o = 0;
-  for (const char *p = s; *p && o + 4 < cap; p++) {
-    unsigned char c = (unsigned char)*p;
-    if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') out[o++] = (char)c;
-    else o += (size_t)snprintf(out + o, cap - o, "%%%02X", c);
-  }
-  out[o] = 0;
-}
-
 static int opensanctions(const source_ctx *ctx, intel_sink *sink, const char *entity,
                          const char *service, const char *tags, int pep_only) {
   const char *key = getenv("OPENSANCTIONS_API_KEY");
-  if (!key || !*key) return 0;                  /* honest empty without key */
-  char enc[512]; urlenc(entity, enc, sizeof enc);
+  if (!key || !*key) {
+    /* honest empty without a key — but SAY so, otherwise a gated run is
+     * indistinguishable from "screened and clean", which is the one wrong
+     * conclusion a sanctions check must never invite. */
+    fprintf(stderr, "[%s] gated (no OPENSANCTIONS_API_KEY)\n", service);
+    return 0;
+  }
+  char enc[512]; jo_urlencode_buf(entity, enc, sizeof enc);
   char url[700];
   if (pep_only)
     snprintf(url, sizeof url,
@@ -79,15 +76,24 @@ static int opensanctions(const source_ctx *ctx, intel_sink *sink, const char *en
   return emitted;
 }
 
+/* AUDIT 2026-07-31: these used to return opensanctions()'s emitted-row count.
+ * core/scheduler.c does `status = rc == 0 ? "ok" : "error"` and feeds any
+ * non-zero rc to anomaly_detect(), so a screening run that actually MATCHED a
+ * PEP was recorded as an errored run — the exact opposite of the truth.
+ * run() is a status code, not a count. */
 static int run_pep(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return 0;
-  return opensanctions(ctx, sink, ctx->entity, "PEP_CHECK",
-                       "[\"osint-search\",\"PEP_CHECK\"]", 1);
+  int n = opensanctions(ctx, sink, ctx->entity, "PEP_CHECK",
+                        "[\"osint-search\",\"PEP_CHECK\"]", 1);
+  fprintf(stderr, "[PEP_CHECK] emitted %d\n", n);
+  return 0;
 }
 static int run_watchlist(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return 0;
-  return opensanctions(ctx, sink, ctx->entity, "WATCHLIST_CHECK_NEW",
-                       "[\"osint-search\",\"WATCHLIST_CHECK_NEW\"]", 0);
+  int n = opensanctions(ctx, sink, ctx->entity, "WATCHLIST_CHECK_NEW",
+                        "[\"osint-search\",\"WATCHLIST_CHECK_NEW\"]", 0);
+  fprintf(stderr, "[WATCHLIST_CHECK_NEW] emitted %d\n", n);
+  return 0;
 }
 
 static const source_def pep_def = {

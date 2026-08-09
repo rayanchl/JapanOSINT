@@ -3,6 +3,7 @@
  * Keyed on INSTAGRAM_SESSION_COOKIE. Resolves web_info metadata for a fixed
  * set of JP location pages -> non-spatial intel (a location directory).
  * honest empty when gated / on failure. uid = instagram-locations|<locId>. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -18,12 +19,6 @@ static const char *LOCATION_IDS[] = {
   "213820592", "214058107", "213038402",
 };
 #define NL ((int)(sizeof(LOCATION_IDS)/sizeof(LOCATION_IDS[0])))
-
-static const char *sv(const cJSON *o, const char *k) {
-  if (!o) return NULL;
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *cookie = getenv("INSTAGRAM_SESSION_COOKIE");
@@ -41,7 +36,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     NULL,
   };
 
-  int n = 0;
+  int n = 0, fetched = 0;
   for (int li = 0; li < NL; li++) {
     char url[256];
     snprintf(url, sizeof url,
@@ -49,6 +44,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       "?location_id=%s&show_nearby=false", LOCATION_IDS[li]);
     cJSON *data = feed_get_json_h(ctx->http, url, hdrs, 15000);
     if (!data) continue;
+    fetched++;
 
     cJSON *nld = cJSON_GetObjectItem(data, "native_location_data");
     cJSON *loc = nld ? cJSON_GetObjectItem(nld, "location_info") : NULL;
@@ -56,15 +52,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (!loc) loc = nld;
     if (!loc) { cJSON_Delete(data); continue; }
 
-    const char *name = sv(loc, "name");
+    const char *name = jo_sv(loc, "name");
     char nameBuf[64];
     if (!name) {
       snprintf(nameBuf, sizeof nameBuf, "Location %s", LOCATION_IDS[li]);
       name = nameBuf;
     }
-    const char *addr = sv(loc, "address");
-    const char *city = sv(loc, "city");
-    const char *country = sv(loc, "country");
+    const char *addr = jo_sv(loc, "address");
+    const char *city = jo_sv(loc, "city");
+    const char *country = jo_sv(loc, "country");
 
     /* summary: loc.address || loc.city || null */
     const char *summary = addr ? addr : city;
@@ -128,8 +124,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(tags); cJSON_Delete(props);
     cJSON_Delete(data);
   }
-  fprintf(stderr, "[instagram-locations] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  fprintf(stderr, "[instagram-locations] emitted %d (%d/%d locations fetched)\n",
+          n, fetched, NL);
+  /* STATUS code, not a row count: a location page with nothing new is an honest
+   * empty. Only a total fetch failure is a real error. */
+  return fetched > 0 ? 0 : -1;
 }
 
 static const source_def instagram_locations_def = {

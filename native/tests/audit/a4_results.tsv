@@ -1,0 +1,219 @@
+ADVISORY_COUNCILS	sched: rc=0 records=0 2197ms	0 rows, 0 with lat/lon, 0 with geometry	
+ADVISORY_COUNCILS	sched: rc=0 records=0 2897ms	0 rows, 0 with lat/lon, 0 with geometry	
+AFRICA_REGISTRY	sched: rc=0 records=1 15267ms	1 rows, 0 with lat/lon, 0 with geometry	africa-registry-company=1
+ALPHAVANTAGE_SEARCH	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+ARCHIVE_ORG_SEARCH	sched: rc=0 records=20 760ms	20 rows, 0 with lat/lon, 0 with geometry	archive-item=20
+ASN_LOOKUP	sched: rc=0 records=1 47ms	1 rows, 0 with lat/lon, 0 with geometry	osint_service_result=1
+BANKRUPTCY_SEARCH	sched: rc=0 records=0 32438ms	0 rows, 0 with lat/lon, 0 with geometry	
+BIGDATACLOUD_REVERSE	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+BIGDATACLOUD_REVERSE	sched: rc=0 records=1 200ms	1 rows, 1 with lat/lon, 0 with geometry	reverse-geocode=1
+BREACH_INDEX_EMAIL	sched: rc=0 records=1 1ms	1 rows, 0 with lat/lon, 0 with geometry	osint_service_result=1
+BREACH_INDEX_PASSWORD	sched: rc=0 records=1 1ms	1 rows, 0 with lat/lon, 0 with geometry	osint_service_result=1
+BREACH_INDEX_PHONE	sched: rc=0 records=1 1ms	1 rows, 0 with lat/lon, 0 with geometry	osint_service_result=1
+BREACH_INDEX_USERNAME	sched: rc=0 records=1 0ms	1 rows, 0 with lat/lon, 0 with geometry	osint_service_result=1
+BUSINESS_LICENSES	sched: rc=0 records=0 276ms	0 rows, 0 with lat/lon, 0 with geometry	
+BUSINESS_LICENSES	sched: rc=0 records=0 286ms	0 rows, 0 with lat/lon, 0 with geometry	
+CARRIER_LOOKUP	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+CARRIER_LOOKUP	sched: rc=1 records=1 0ms	1 rows, 0 with lat/lon, 0 with geometry	osint_service_result=1
+CH_OPENDATA	sched: rc=0 records=0 168ms	0 rows, 0 with lat/lon, 0 with geometry	
+CH_OPENDATA	sched: rc=0 records=20 430ms	20 rows, 0 with lat/lon, 0 with geometry	open-dataset=20
+CRIMINAL_RECORDS	sched: rc=15 records=15 748ms	15 rows, 0 with lat/lon, 0 with geometry	osint_service_result=15
+DK_CVR	sched: rc=0 records=1 385ms	1 rows, 0 with lat/lon, 0 with geometry	cvr-company=1
+EGOV_PUBLIC_COMMENT	sched: rc=0 records=0 1083ms	0 rows, 0 with lat/lon, 0 with geometry	
+EGOV_PUBLIC_COMMENT	sched: rc=0 records=0 1470ms	0 rows, 0 with lat/lon, 0 with geometry	
+EMAILREP_LOOKUP	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+FINNHUB_SEARCH	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+FI_OPENDATA	sched: rc=0 records=0 480ms	0 rows, 0 with lat/lon, 0 with geometry	
+FI_OPENDATA	sched: rc=0 records=20 494ms	20 rows, 0 with lat/lon, 0 with geometry	open-dataset=20
+GBIF_OCCURRENCE	sched: rc=0 records=30 484ms	30 rows, 30 with lat/lon, 0 with geometry	gbif-occurrence=30
+GITHUB_COMMITS_BY_EMAIL	sched: rc=0 records=20 712ms	20 rows, 0 with lat/lon, 0 with geometry	github-commit=20
+HN_USER	sched: rc=0 records=0 724ms	0 rows, 0 with lat/lon, 0 with geometry	
+HN_USER	sched: rc=0 records=1 210ms	1 rows, 0 with lat/lon, 0 with geometry	hackernews-user=1
+HR_SUDREG	sched: rc=0 records=0 188ms	0 rows, 0 with lat/lon, 0 with geometry	
+HR_SUDREG	sched: rc=0 records=0 225ms	0 rows, 0 with lat/lon, 0 with geometry	
+HU_COMPANIES	sched: rc=0 records=0 1255ms	0 rows, 0 with lat/lon, 0 with geometry	
+HU_COMPANIES	sched: rc=0 records=0 170ms	0 rows, 0 with lat/lon, 0 with geometry	
+IL_COMPANIES	sched: rc=0 records=2 447ms	2 rows, 0 with lat/lon, 0 with geometry	il-company=2
+INATURALIST	sched: rc=0 records=30 1725ms	30 rows, 30 with lat/lon, 0 with geometry	inaturalist-observation=30
+IOC_LOOKUP	sched: rc=0 records=0 72ms	0 rows, 0 with lat/lon, 0 with geometry	
+IOC_LOOKUP	sched: rc=0 records=0 84ms	0 rows, 0 with lat/lon, 0 with geometry	
+LEGAL_SEARCH	sched: rc=15 records=15 14078ms	15 rows, 0 with lat/lon, 0 with geometry	osint_service_result=15
+LICENSE_PLATE_LOOKUP	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+LT_REGISTRAI	sched: rc=0 records=0 100ms	0 rows, 0 with lat/lon, 0 with geometry	
+LT_REGISTRAI	sched: rc=0 records=0 113ms	0 rows, 0 with lat/lon, 0 with geometry	
+LU_LBR	sched: rc=0 records=0 508ms	0 rows, 0 with lat/lon, 0 with geometry	
+LU_LBR	sched: rc=0 records=0 517ms	0 rows, 0 with lat/lon, 0 with geometry	
+MUSICBRAINZ	sched: rc=0 records=20 323ms	20 rows, 0 with lat/lon, 0 with geometry	musicbrainz-artist=20
+NL_KVK	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+NUMVERIFY_PHONE	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+OBIS_MARINE	sched: rc=0 records=0 147ms	0 rows, 0 with lat/lon, 0 with geometry	
+OBIS_MARINE	sched: rc=0 records=0 203ms	0 rows, 0 with lat/lon, 0 with geometry	
+OPENAQ_GLOBAL	sched: rc=0 records=0 69ms	0 rows, 0 with lat/lon, 0 with geometry	
+OPENAQ_GLOBAL	sched: rc=0 records=0 78ms	0 rows, 0 with lat/lon, 0 with geometry	
+OPENCORPORATES	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+OPENMETEO_AQ	sched: rc=0 records=1 90ms	1 rows, 1 with lat/lon, 0 with geometry	air-quality-measurement=1
+OPENVERSE	sched: rc=0 records=20 144ms	20 rows, 0 with lat/lon, 0 with geometry	openverse-image=20
+PEP_CHECK	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+PHONE_LOOKUP	sched: rc=1 records=1 0ms	1 rows, 0 with lat/lon, 0 with geometry	osint_service_result=1
+PHONE_REPUTATION	sched: rc=1 records=1 0ms	1 rows, 0 with lat/lon, 0 with geometry	osint_service_result=1
+PHOTON_GEOCODE	sched: rc=0 records=10 187ms	9 rows, 9 with lat/lon, 0 with geometry	geocode-result=9
+PT_RCBE	sched: rc=0 records=0 327ms	0 rows, 0 with lat/lon, 0 with geometry	
+PT_RCBE	sched: rc=0 records=0 370ms	0 rows, 0 with lat/lon, 0 with geometry	
+RADIO_BROWSER	sched: rc=0 records=11 1920ms	11 rows, 0 with lat/lon, 0 with geometry	radio-station=11
+RS_APR	sched: rc=0 records=0 1551ms	0 rows, 0 with lat/lon, 0 with geometry	
+RS_APR	sched: rc=0 records=0 443ms	0 rows, 0 with lat/lon, 0 with geometry	
+SEA2_REGISTRY	sched: rc=0 records=0 72758ms	0 rows, 0 with lat/lon, 0 with geometry	
+SEA2_REGISTRY	sched: rc=0 records=0 73005ms	0 rows, 0 with lat/lon, 0 with geometry	
+SEC_FULLTEXT	sched: rc=0 records=20 423ms	20 rows, 0 with lat/lon, 0 with geometry	sec-filing=20
+SSL_ANALYZER	sched: rc=0 records=101 9642ms	101 rows, 0 with lat/lon, 0 with geometry	osint_service_result=101
+STACKEXCHANGE_SEARCH	sched: rc=0 records=20 304ms	20 rows, 0 with lat/lon, 0 with geometry	stackexchange-question=20
+THREAT_FEED_LOOKUP	sched: rc=0 records=0 1201ms	0 rows, 0 with lat/lon, 0 with geometry	
+THREAT_FEED_LOOKUP	sched: rc=0 records=0 329ms	0 rows, 0 with lat/lon, 0 with geometry	
+TOR_ONIONOO	sched: rc=0 records=1 493ms	1 rows, 0 with lat/lon, 0 with geometry	tor-relay=1
+UK_DATAGOV	sched: rc=0 records=10 462ms	10 rows, 0 with lat/lon, 0 with geometry	open-dataset=10
+WAQI_GLOBAL	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+WASTE_HAULERS	sched: rc=0 records=0 784ms	0 rows, 0 with lat/lon, 0 with geometry	
+WASTE_HAULERS	sched: rc=0 records=0 824ms	0 rows, 0 with lat/lon, 0 with geometry	
+WATCHLIST_CHECK_NEW	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+WHALE_ALERT	sched: rc=0 records=1 159ms	1 rows, 0 with lat/lon, 0 with geometry	osint_service_result=1
+WIKIDATA_ENTITY_SEARCH	sched: rc=0 records=20 313ms	20 rows, 0 with lat/lon, 0 with geometry	wikidata-entity=20
+admin-boundaries	sched: rc=-1 records=0 75173ms	0 rows, 0 with lat/lon, 0 with geometry	
+bird-makeup-jp	sched: rc=-1 records=0 909ms	0 rows, 0 with lat/lon, 0 with geometry	
+bitcoin-mag	sched: rc=0 records=10 218ms	10 rows, 0 with lat/lon, 0 with geometry	article=10
+bom-au-warnings	sched: rc=-1 records=0 374ms	0 rows, 0 with lat/lon, 0 with geometry	
+cam-camscape	sched: rc=0 records=32 1407ms	32 rows, 32 with lat/lon, 32 with geometry	camera=32
+cam-webcamera24	sched: rc=0 records=160 1510ms	160 rows, 160 with lat/lon, 160 with geometry	camera=160
+cell-towers	sched: (no [sched] line — the collector never returned)	0 rows, 0 with lat/lon, 0 with geometry	
+city-halls	sched: rc=-1 records=0 140845ms	0 rows, 0 with lat/lon, 0 with geometry	
+cnbc-finance	sched: rc=0 records=30 222ms	30 rows, 0 with lat/lon, 0 with geometry	article=30
+cnbc-top	sched: rc=0 records=30 240ms	30 rows, 0 with lat/lon, 0 with geometry	article=30
+cnbc-world	sched: rc=0 records=30 212ms	30 rows, 0 with lat/lon, 0 with geometry	article=30
+coindesk	sched: rc=0 records=25 123ms	25 rows, 0 with lat/lon, 0 with geometry	article=25
+cointelegraph	sched: rc=0 records=30 108ms	30 rows, 0 with lat/lon, 0 with geometry	article=30
+copernicus-ems	sched: rc=-1 records=0 236ms	0 rows, 0 with lat/lon, 0 with geometry	
+crtsh-historical			
+data-go-jp-ckan	sched: rc=0 records=10 799ms	10 rows, 0 with lat/lon, 0 with geometry	data-go-jp-ckan=10
+decrypt	sched: rc=0 records=38 111ms	38 rows, 0 with lat/lon, 0 with geometry	article=38
+docomo-population	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+egov-laws	sched: rc=0 records=200 2900ms	200 rows, 0 with lat/lon, 0 with geometry	(null)=200
+emsc-quakes	sched: rc=-1 records=0 122ms	0 rows, 0 with lat/lon, 0 with geometry	
+estat-household	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+fofa-jp	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+ft-home	sched: rc=0 records=10 401ms	10 rows, 0 with lat/lon, 0 with geometry	article=10
+gcom-w	sched: rc=-1 records=0 197ms	0 rows, 0 with lat/lon, 0 with geometry	
+gitlab-bitbucket-leaks	sched: rc=0 records=2 435ms	2 rows, 0 with lat/lon, 0 with geometry	(null)=2
+gnews-mon-ae-red-sea-shipping	sched: rc=0 records=66 486ms	66 rows, 0 with lat/lon, 0 with geometry	article=66
+gnews-mon-airspace-violation	sched: rc=0 records=100 574ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-arms-shipment	sched: rc=0 records=100 781ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-assassination	sched: rc=0 records=100 833ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-aviation-incident	sched: rc=0 records=100 636ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-border-clash	sched: rc=0 records=100 707ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-br-amazon-deforestation	sched: rc=0 records=67 532ms	67 rows, 0 with lat/lon, 0 with geometry	article=67
+gnews-mon-cargo-ship-collision	sched: rc=0 records=100 744ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-catastrophic-flood	sched: rc=0 records=100 691ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-chemical-spill	sched: rc=0 records=100 594ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-civil-unrest	sched: rc=0 records=100 611ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-cn-cross-strait	sched: rc=0 records=100 1006ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-cn-rare-earth	sched: rc=0 records=100 754ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-critical-infrastructure-attack	sched: rc=0 records=100 633ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-cyber-espionage	sched: rc=0 records=100 636ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-cyberattack	sched: rc=0 records=102 750ms	102 rows, 0 with lat/lon, 0 with geometry	article=102
+gnews-mon-data-breach	sched: rc=0 records=100 806ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-disease-outbreak	sched: rc=0 records=99 651ms	99 rows, 0 with lat/lon, 0 with geometry	article=99
+gnews-mon-disinformation-campaign	sched: rc=0 records=100 604ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-drone-strike	sched: rc=0 records=100 688ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-drug-cartel	sched: rc=0 records=100 1009ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-economic-sanctions	sched: rc=0 records=100 814ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-election-interference	sched: rc=0 records=100 629ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-electronic-warfare	sched: rc=0 records=100 723ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-espionage-arrest	sched: rc=0 records=100 823ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-fr-coup-attempt	sched: rc=0 records=100 809ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-fr-sahel-militants	sched: rc=0 records=62 491ms	62 rows, 0 with lat/lon, 0 with geometry	article=62
+gnews-mon-gps-jamming	sched: rc=0 records=100 760ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-hostage-crisis	sched: rc=0 records=100 778ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-human-trafficking	sched: rc=0 records=102 828ms	102 rows, 0 with lat/lon, 0 with geometry	article=102
+gnews-mon-hypersonic-missile	sched: rc=0 records=92 609ms	92 rows, 0 with lat/lon, 0 with geometry	article=92
+gnews-mon-il-gaza	sched: rc=0 records=101 889ms	101 rows, 0 with lat/lon, 0 with geometry	article=101
+gnews-mon-in-kashmir	sched: rc=0 records=103 840ms	103 rows, 0 with lat/lon, 0 with geometry	article=103
+gnews-mon-ir-nuclear-talks	sched: rc=0 records=100 811ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-ke-horn-of-africa	sched: rc=0 records=100 711ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-kr-north-korea-missile	sched: rc=0 records=100 722ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-lt-baltic-security	sched: rc=0 records=45 398ms	45 rows, 0 with lat/lon, 0 with geometry	article=45
+gnews-mon-major-earthquake	sched: rc=0 records=100 714ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-military-coup	sched: rc=0 records=100 754ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-military-exercise	sched: rc=0 records=100 806ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-missile-test	sched: rc=0 records=100 742ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-money-laundering	sched: rc=0 records=100 774ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-mx-cartel-violence	sched: rc=0 records=73 596ms	73 rows, 0 with lat/lon, 0 with geometry	article=73
+gnews-mon-naval-deployment	sched: rc=0 records=100 714ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-no-arctic-militarization	sched: rc=0 records=0 189ms	0 rows, 0 with lat/lon, 0 with geometry	
+gnews-mon-nuclear-plant-incident	sched: rc=0 records=100 633ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-nuclear-weapon	sched: rc=0 records=100 663ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-oil-tanker-seizure	sched: rc=0 records=100 797ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-ph-south-china-sea	sched: rc=0 records=100 735ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-pipeline-explosion	sched: rc=0 records=100 649ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-port-disruption	sched: rc=0 records=100 685ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-power-grid-failure	sched: rc=0 records=100 784ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-ransomware	sched: rc=0 records=102 745ms	102 rows, 0 with lat/lon, 0 with geometry	article=102
+gnews-mon-ru-wagner	sched: rc=0 records=100 532ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-satellite-launch	sched: rc=0 records=102 671ms	102 rows, 0 with lat/lon, 0 with geometry	article=102
+gnews-mon-semiconductor-export-controls	sched: rc=0 records=100 809ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-shadow-fleet	sched: rc=0 records=100 751ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-state-sponsored-hacking	sched: rc=0 records=100 612ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-supply-chain-disruption	sched: rc=0 records=100 681ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-terror-attack	sched: rc=0 records=100 737ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-troop-movement	sched: rc=0 records=100 762ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-tw-pla-incursion	sched: rc=0 records=0 205ms	0 rows, 0 with lat/lon, 0 with geometry	
+gnews-mon-ua-front-line	sched: rc=0 records=84 649ms	84 rows, 0 with lat/lon, 0 with geometry	article=84
+gnews-mon-undersea-cable	sched: rc=0 records=100 599ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-us-strait-of-hormuz	sched: rc=0 records=107 957ms	107 rows, 0 with lat/lon, 0 with geometry	article=107
+gnews-mon-us-taiwan-strait	sched: rc=0 records=100 664ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-volcano-eruption	sched: rc=0 records=100 676ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-weapons-smuggling	sched: rc=0 records=100 718ms	100 rows, 0 with lat/lon, 0 with geometry	article=100
+gnews-mon-wildfire	sched: rc=0 records=110 832ms	110 rows, 0 with lat/lon, 0 with geometry	article=110
+gnews-mon-zero-day-exploit	sched: rc=0 records=102 6716ms	102 rows, 0 with lat/lon, 0 with geometry	article=102
+grayhat-buckets	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+hatena-bookmark-extended	sched: rc=0 records=200 6496ms	200 rows, 0 with lat/lon, 0 with geometry	hatena-bookmark-extended=200
+houjin-bangou	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+iceland-quakes	sched: rc=-1 records=0 376ms	0 rows, 0 with lat/lon, 0 with geometry	
+investing-news	sched: rc=0 records=10 145ms	10 rows, 0 with lat/lon, 0 with geometry	article=10
+japan-reit	sched: rc=-1 records=0 1448ms	0 rows, 0 with lat/lon, 0 with geometry	
+jma-earthquake	sched: rc=0 records=545 728ms	446 rows, 398 with lat/lon, 0 with geometry	jma-earthquake=446
+jma-tide	sched: rc=0 records=166 1737ms	166 rows, 166 with lat/lon, 166 with geometry	jma-tide=166
+job-boards	sched: (no [sched] line — the collector never returned)	0 rows, 0 with lat/lon, 0 with geometry	
+jr-boarding-stats	sched: rc=0 records=2 366ms	2 rows, 0 with lat/lon, 0 with geometry	(null)=2
+kafun-pollen	sched: rc=0 records=1 16ms	1 rows, 0 with lat/lon, 0 with geometry	(null)=1
+kitco-news	sched: rc=-1 records=0 160ms	0 rows, 0 with lat/lon, 0 with geometry	
+mapfan-api	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+marketwatch-top	sched: rc=0 records=10 259ms	10 rows, 0 with lat/lon, 0 with geometry	article=10
+metoffice-warnings	sched: rc=0 records=0 74ms	0 rows, 0 with lat/lon, 0 with geometry	
+mhlw-health	sched: rc=0 records=1 8875ms	1 rows, 0 with lat/lon, 0 with geometry	mhlw-health=1
+mlit-landprice	sched: rc=0 records=0 38832ms	0 rows, 0 with lat/lon, 0 with geometry	
+mlit-transaction	sched: rc=-1 records=0 838ms	0 rows, 0 with lat/lon, 0 with geometry	
+navitime-api	sched: rc=0 records=0 2ms	0 rows, 0 with lat/lon, 0 with geometry	
+nexco-roadwork	sched: rc=0 records=3 11464ms	3 rows, 0 with lat/lon, 0 with geometry	(null)=3
+nhc-cpac	sched: rc=0 records=2 612ms	2 rows, 0 with lat/lon, 0 with geometry	article=2
+nitter-mirrors	sched: rc=0 records=3 9161ms	3 rows, 0 with lat/lon, 0 with geometry	(null)=3
+npa-special-fraud	sched: rc=0 records=26 153ms	26 rows, 25 with lat/lon, 25 with geometry	(null)=1, npa-special-fraud=25
+odpt-train	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+oilprice-2	sched: rc=0 records=15 877ms	15 rows, 0 with lat/lon, 0 with geometry	article=15
+osm-changesets-jp	sched: rc=0 records=100 362ms	28 rows, 28 with lat/lon, 28 with geometry	osm-changesets-jp=28
+pdc-disasters	sched: rc=-1 records=0 132ms	0 rows, 0 with lat/lon, 0 with geometry	
+peeringdb-jp	sched: rc=0 records=1139 3304ms	1139 rows, 1139 with lat/lon, 1139 with geometry	fac=112, ixp=27, net=1000
+poc-in-github	sched: rc=0 records=94 11622ms	94 rows, 94 with lat/lon, 94 with geometry	poc-in-github=94
+psbdmp-pastes	sched: rc=0 records=1 14ms	1 rows, 0 with lat/lon, 0 with geometry	(null)=1
+reddit-jp-subs	sched: rc=0 records=0 658ms	0 rows, 0 with lat/lon, 0 with geometry	
+reinfolib	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+satellite-ground-stations	sched: (no [sched] line — the collector never returned)	0 rows, 0 with lat/lon, 0 with geometry	
+seeking-alpha	sched: rc=0 records=7 71ms	7 rows, 0 with lat/lon, 0 with geometry	article=7
+teikoku-failures	sched: rc=0 records=1 360ms	1 rows, 0 with lat/lon, 0 with geometry	(null)=1
+the-block	sched: rc=0 records=20 112ms	20 rows, 0 with lat/lon, 0 with geometry	article=20
+tor-exit-nodes	sched: rc=0 records=0 507ms	0 rows, 0 with lat/lon, 0 with geometry	
+trading-econ	sched: rc=-1 records=0 89ms	0 rows, 0 with lat/lon, 0 with geometry	
+unesco-heritage	sched: rc=-1 records=0 58ms	0 rows, 0 with lat/lon, 0 with geometry	
+vessel-finder	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+volcanodiscovery	sched: rc=-1 records=0 87ms	0 rows, 0 with lat/lon, 0 with geometry	
+wanted-persons	sched: rc=0 records=0 571ms	0 rows, 0 with lat/lon, 0 with geometry	
+wifi-networks-shodan	sched: rc=0 records=0 0ms	0 rows, 0 with lat/lon, 0 with geometry	
+xrain-radar	sched: rc=0 records=1 315ms	1 rows, 0 with lat/lon, 0 with geometry	(null)=1
+zerohedge	sched: rc=0 records=25 364ms	25 rows, 0 with lat/lon, 0 with geometry	article=25

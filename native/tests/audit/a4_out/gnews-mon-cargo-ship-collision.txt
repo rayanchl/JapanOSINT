@@ -1,0 +1,45 @@
+=== gnews-mon-cargo-ship-collision
+exit: 0
+sched: rc=0 records=100 744ms
+--- stderr ---
+[rss] gnews-mon-cargo-ship-collision emitted 100
+[sched] gnews-mon-cargo-ship-collision run rc=0 records=100 744ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-cargo-ship-collision|CBMi0ANBVV95cUxPQWpiMWJ4aG1qMFEtUVhtRXdBQ3VWTzF3UmpBX2FjcFdXMndFb0d0Q3hJa2YzMlhuV2pSQ3BYT0ZCanRudDF5bGFjQm9fUHZ4OFNFVXVVZlJFT01WUWpNZDNCMFZJdUFINko4NHJFWDBpdEhwTWFteENNTjFwb0poQ1RTMnhTZ1d4b1FPcVZ2N1ZsbWNkYWZVcjdQQWVIUTIzaktNb3NpV1JVNUNmblQwZ1JlMXVfWXpvT2VKaGh4TTd2VmZDMkxjLTFGM2NycTFKaV83aWpzV1JtcFRaenJQQWpCRnJKdmh0bFVlVW0xR1RUbGJycjVzRS1PMDZyZGotcm9VeFlXSXhwRnB2dXNCcjlNclF4Q2hSS0I1NTMyeGhSb3ltTk14VGhuOWZfVll4akRyLTFEblVQaUZka3c2a0VWd0NlUEwwV1J3WjdIOVRveEd2dTk1aWV3YkhrQnRYazgw
+  title          Ship captain arrested after bodies of woman and child found off Swedish coast - The Local Europe
+  body           <a href="https://news.google.com/rss/articles/CBMi0ANBVV95cUxPQWpiMWJ4aG1qMFEtUVhtRXdBQ3VWTzF3UmpBX2FjcFdXMndFb0d0Q3hJa2YzMlhuV2pSQ3BYT0ZCanRudDF5bGFjQm9fUHZ4OFNFVXVVZlJFT01WUWpNZDNCMFZJdUFINko4NHJFWDBpdEhwTWFteENNTjFwb0poQ1RTMnhTZ1d4b1FPcVZ2N1ZsbWNkYWZVcjdQQWVIUTIzaktNb3NpV1JVNUNmblQwZ1JlMXVfWXpvT2VKaGh4TTd2VmZDMkxjLTFGM2NycTFKaV83aWpzV1JtcFRaenJQQWpCRnJKdmh0bFVlVW0xR1RUbGJycjVzRS1PMDZyZGotcm9VeFlXSXhwRnB2dXNCcjlNclF4Q2hSS0I1NTMyeGhSb3ltTk14VGhuOWZfVll4akRyLTFEblVQaUZka3c2a0VWd0NlUEwwV1J3WjdIOVRveEd2dTk1aWV3YkhrQnRYazgwdHZaWnlCV09YYlZ5aHlTRGlncVhDVW5PRzVwR0s3T0o5dG9jX0dKX2o3b21jaDdhMzIzSTBGWThGcEszYmtiVTBGOVRLWE1vaXZnbXRuaUNobmMtS3lJbVBDWWtJMEpHZDhXVEJJbk1tY2FyaQ?oc=5" target="_blank">Ship captain arrested after bodies of woman and child found off Swedish coast</a>&nbsp;&nbsp;<font color="#6f6f6f">The Local Europe</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi0ANBVV95cUxPQWpiMWJ4aG1qMFEtUVhtRXdBQ3VWTzF3UmpBX2FjcFdXMndFb0d0Q3hJa2YzMlhuV2pSQ3BYT0ZCanRudDF5bGFjQm9fUHZ4OFNFVXVVZlJFT01WUWpNZDNCMFZJdUFINko4NHJFWDBpdEhwTWFteENNTjFwb0poQ1RTMnhTZ1d4b1FPcV
+  link           https://news.google.com/rss/articles/CBMi0ANBVV95cUxPQWpiMWJ4aG1qMFEtUVhtRXdBQ3VWTzF3UmpBX2FjcFdXMndFb0d0Q3hJa2YzMlhuV2pSQ3BYT0ZCanRudDF5bGFjQm9fUHZ4OFNFVXVVZlJFT01WUWpNZDNCMFZJdUFINko4NHJFWDBpdEhwTWFteENNTjFwb0poQ1RTMnhTZ1d4b1FPcVZ2N1ZsbWNkYWZVcjdQQWVIUTIzaktNb3NpV1JVNUNmblQwZ1JlMXVfWXpvT2VKaGh4TTd2VmZDMkxjLTFGM2NycTFKaV83aWpzV1JtcFRaenJQQWpCRnJKdmh0bFVlVW0xR1RUbGJycjVzRS1PMDZyZGotcm9VeFlXSXhwRnB2dXNCcjlNclF4Q2hSS0I1NTMyeGhSb3ltTk14VGhuOWZfVll4akRyLTFEblVQaUZka3c2a0VWd0NlUEwwV1J3WjdIOVRveEd2dTk1aWV3YkhrQnRYazgwdHZaWnlCV09YYlZ5aHlTRGlncVhDVW5PRzVwR0s3T0o5dG9jX0dKX2o3b21jaDdhMzIzSTBGWThGcEszYmtiVTBGOVRLWE1vaXZnbXRuaUNobmMtS3lJbVBDWWtJMEpHZDhXVEJJbk1tY2FyaQ?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 07:42:15 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","cargo"]
+  properties     {"guid":"CBMi0ANBVV95cUxPQWpiMWJ4aG1qMFEtUVhtRXdBQ3VWTzF3UmpBX2FjcFdXMndFb0d0Q3hJa2YzMlhuV2pSQ3BYT0ZCanRudDF5bGFjQm9fUHZ4OFNFVXVVZlJFT01WUWpNZDNCMFZJdUFINko4NHJFWDBpdEhwTWFteENNTjFwb0poQ1RTMnhTZ1d4b1FPcVZ2N1ZsbWNkYWZVcjdQQWVIUTIzaktNb3NpV1JVNUNmblQwZ1JlMXVfWXpvT2VKaGh4TTd2VmZDMkxjLTFGM2NycTFKaV83aWpzV1JtcFRaenJQQWpCRnJKdmh0bFVlVW0xR1RUbGJycjVzRS1PMDZyZGotcm9VeFlXSXhwRnB2dXNCcjlNclF4Q2hSS0I1NTMyeGhSb3ltTk14VGhuOWZfVll4akRyLTFEblVQaUZka3c2a0VWd0NlUEwwV1J3WjdIOVRveEd2dTk1aWV3YkhrQnRYazgwdHZaWnlCV09YYlZ5aHlTRG
+
+--- row 2 ---
+  uid            gnews-mon-cargo-ship-collision|CBMirAFBVV95cUxNanY0c0Y4XzVHd1FLWXFiM243cFFMRVF6V2FMRjIwaUVWX1k1X2h2clRaTFhhcVE1eERJODZNQ3BsckVMV05ub3ltRzdOeXlqbGhyWXNOQTJEX2VVZXljQXFBams3bFB6dFM3OU5ab3dDR2MyV1dmNVI2UldGY0NXV19KYWJyeVpjSXdvTGpaSDQxNVp6WjVqX2ZBRVgyeTY0QjRMM1dJVVZfWklD
+  title          Video: Greek Ferry and RoRo Cargo Ship Collide at Chania Port in Crete - The Maritime Executive
+  body           <a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxNanY0c0Y4XzVHd1FLWXFiM243cFFMRVF6V2FMRjIwaUVWX1k1X2h2clRaTFhhcVE1eERJODZNQ3BsckVMV05ub3ltRzdOeXlqbGhyWXNOQTJEX2VVZXljQXFBams3bFB6dFM3OU5ab3dDR2MyV1dmNVI2UldGY0NXV19KYWJyeVpjSXdvTGpaSDQxNVp6WjVqX2ZBRVgyeTY0QjRMM1dJVVZfWklD?oc=5" target="_blank">Video: Greek Ferry and RoRo Cargo Ship Collide at Chania Port in Crete</a>&nbsp;&nbsp;<font color="#6f6f6f">The Maritime Executive</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxNanY0c0Y4XzVHd1FLWXFiM243cFFMRVF6V2FMRjIwaUVWX1k1X2h2clRaTFhhcVE1eERJODZNQ3BsckVMV05ub3ltRzdOeXlqbGhyWXNOQTJEX2VVZXljQXFBams3bFB6dFM3OU5ab3dDR2MyV1dmNVI2UldGY0NXV19KYWJyeVpjSXdvTG
+  link           https://news.google.com/rss/articles/CBMirAFBVV95cUxNanY0c0Y4XzVHd1FLWXFiM243cFFMRVF6V2FMRjIwaUVWX1k1X2h2clRaTFhhcVE1eERJODZNQ3BsckVMV05ub3ltRzdOeXlqbGhyWXNOQTJEX2VVZXljQXFBams3bFB6dFM3OU5ab3dDR2MyV1dmNVI2UldGY0NXV19KYWJyeVpjSXdvTGpaSDQxNVp6WjVqX2ZBRVgyeTY0QjRMM1dJVVZfWklD?oc=5
+  language       en
+  published_at   Tue, 21 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","cargo"]
+  properties     {"guid":"CBMirAFBVV95cUxNanY0c0Y4XzVHd1FLWXFiM243cFFMRVF6V2FMRjIwaUVWX1k1X2h2clRaTFhhcVE1eERJODZNQ3BsckVMV05ub3ltRzdOeXlqbGhyWXNOQTJEX2VVZXljQXFBams3bFB6dFM3OU5ab3dDR2MyV1dmNVI2UldGY0NXV19KYWJyeVpjSXdvTGpaSDQxNVp6WjVqX2ZBRVgyeTY0QjRMM1dJVVZfWklD"}
+
+--- row 3 ---
+  uid            gnews-mon-cargo-ship-collision|CBMi1AFBVV95cUxQcHhnT3VRbWhKX3pKb1FaWGM1eFJRZUdrY19MV2ptMlEzSWROZHBKd0l2YTJ1SzlVTmxYazJQVHJpSk1mOE5WenVIdFRxTmE2OTlTSUEwWHh1bDlTUDdSR3lPY2ZqUFl4ZXlCUzM2NVgzWElIc0pCRGxlSWhUVkVtX3JZU3hRa1JaSU5JY3ZiZVdsRTlTYTRwbmplYW5qaUdlYzBsNnN6dHJqcmFuekh6T0xhYlNhWUs3eDAwR3RJZldudTVUMk1xLXIwUFZQTThFcFpKag
+  title          Cameroon restores operations at Central Africa’s busiest trade gateway after cargo ship collision - Business Insider Africa
+  body           <a href="https://news.google.com/rss/articles/CBMi1AFBVV95cUxQcHhnT3VRbWhKX3pKb1FaWGM1eFJRZUdrY19MV2ptMlEzSWROZHBKd0l2YTJ1SzlVTmxYazJQVHJpSk1mOE5WenVIdFRxTmE2OTlTSUEwWHh1bDlTUDdSR3lPY2ZqUFl4ZXlCUzM2NVgzWElIc0pCRGxlSWhUVkVtX3JZU3hRa1JaSU5JY3ZiZVdsRTlTYTRwbmplYW5qaUdlYzBsNnN6dHJqcmFuekh6T0xhYlNhWUs3eDAwR3RJZldudTVUMk1xLXIwUFZQTThFcFpKag?oc=5" target="_blank">Cameroon restores operations at Central Africa’s busiest trade gateway after cargo ship collision</a>&nbsp;&nbsp;<font color="#6f6f6f">Business Insider Africa</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi1AFBVV95cUxQcHhnT3VRbWhKX3pKb1FaWGM1eFJRZUdrY19MV2ptMlEzSWROZHBKd0l2YTJ1SzlVTmxYazJQVHJpSk1mOE5WenVIdFRxTmE2OTlTSUEwWHh1bDlTUDdSR3lPY2ZqUFl4ZXlCUzM2NVgzWElIc0pCRGxlSWhUVkVtX3JZU3hRa1JaSU5JY3
+  link           https://news.google.com/rss/articles/CBMi1AFBVV95cUxQcHhnT3VRbWhKX3pKb1FaWGM1eFJRZUdrY19MV2ptMlEzSWROZHBKd0l2YTJ1SzlVTmxYazJQVHJpSk1mOE5WenVIdFRxTmE2OTlTSUEwWHh1bDlTUDdSR3lPY2ZqUFl4ZXlCUzM2NVgzWElIc0pCRGxlSWhUVkVtX3JZU3hRa1JaSU5JY3ZiZVdsRTlTYTRwbmplYW5qaUdlYzBsNnN6dHJqcmFuekh6T0xhYlNhWUs3eDAwR3RJZldudTVUMk1xLXIwUFZQTThFcFpKag?oc=5
+  language       en
+  published_at   Wed, 15 Jul 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","cargo"]
+  properties     {"guid":"CBMi1AFBVV95cUxQcHhnT3VRbWhKX3pKb1FaWGM1eFJRZUdrY19MV2ptMlEzSWROZHBKd0l2YTJ1SzlVTmxYazJQVHJpSk1mOE5WenVIdFRxTmE2OTlTSUEwWHh1bDlTUDdSR3lPY2ZqUFl4ZXlCUzM2NVgzWElIc0pCRGxlSWhUVkVtX3JZU3hRa1JaSU5JY3ZiZVdsRTlTYTRwbmplYW5qaUdlYzBsNnN6dHJqcmFuekh6T0xhYlNhWUs3eDAwR3RJZldudTVUMk1xLXIwUFZQTThFcFpKag"}

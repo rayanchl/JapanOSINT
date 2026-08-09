@@ -4,6 +4,7 @@
  * fallback (always available, ported faithfully): every OSM rail station
  * across Japan via a single area.jp Overpass query. Token idiom mirrors
  * odpt_transport.c. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -52,26 +53,10 @@ static void title_pick(cJSON *p, const char *outk, cJSON *r,
     cJSON_AddItemToObject(p, outk, cJSON_CreateNull());
 }
 
-static void s_or_null(cJSON *p, const char *outk, cJSON *r, const char *ink) {
-  cJSON *v = cJSON_GetObjectItem(r, ink);
-  if (v && cJSON_IsString(v) && v->valuestring[0])
-    cJSON_AddStringToObject(p, outk, v->valuestring);
-  else
-    cJSON_AddItemToObject(p, outk, cJSON_CreateNull());
-}
-
 /* OSM fallback map — EXACT JS property key order. */
 static cJSON *osm_map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)i; (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON *id = cJSON_GetObjectItem(el, "id");
@@ -113,15 +98,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         double lon = cJSON_IsNumber(lo) ? lo->valuedouble
                    : (cJSON_IsString(lo) ? strtod(lo->valuestring, NULL) : 0);
 
-        cJSON *f = cJSON_CreateObject();
-        cJSON_AddStringToObject(f, "type", "Feature");
-        cJSON *g = cJSON_CreateObject();
-        cJSON_AddStringToObject(g, "type", "Point");
-        cJSON *c = cJSON_CreateArray();
-        cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-        cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-        cJSON_AddItemToObject(g, "coordinates", c);
-        cJSON_AddItemToObject(f, "geometry", g);
+        cJSON *f = gj_point_feature(lon, lat);
 
         cJSON *p = cJSON_CreateObject();         /* EXACT JS key order */
         cJSON *same = cJSON_GetObjectItem(r, "owl:sameAs");
@@ -134,8 +111,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
           cJSON_AddItemToObject(p, "station_uid", cJSON_CreateNull());
         title_pick(p, "station_name", r, "en");
         title_pick(p, "station_name_ja", r, "ja");
-        s_or_null(p, "railway", r, "odpt:railway");
-        s_or_null(p, "operator", r, "odpt:operator");
+        jo_put_str_or_null(p, "railway", r, "odpt:railway");
+        jo_put_str_or_null(p, "operator", r, "odpt:operator");
         cJSON_AddStringToObject(p, "source", "odpt_api");
         cJSON_AddItemToObject(f, "properties", p);
         cJSON_AddItemToArray(features, f);
@@ -156,7 +133,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = overpass_collect(ctx, sink,
     "node[\"railway\"=\"station\"](area.jp);"
     "node[\"railway\"=\"halt\"](area.jp);",
-    180, 60000, osm_map, NULL);
+    180, 200000, osm_map, NULL);
   fprintf(stderr, "[odpt-station] emitted %d (osm_overpass)\n", n);
   return n >= 0 ? 0 : -1;
 }

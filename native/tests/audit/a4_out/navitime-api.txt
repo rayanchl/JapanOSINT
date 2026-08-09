@@ -1,0 +1,7 @@
+=== navitime-api
+exit: 0
+sched: rc=0 records=0 2ms
+--- stderr ---
+[navitime-api] gated (no NAVITIME_API_KEY)
+[sched] navitime-api run rc=0 records=0 2ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

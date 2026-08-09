@@ -6,6 +6,7 @@
  * The curated MIC_STATIONS / RAKUTEN_TOWERS / generateSeedData() synthetic
  * arrays are NOT ported (HARD RULE 7 — offline seed). Properties built in
  * EXACT JS key order (featureUid parity). */
+#include "../../lib/geojson.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
@@ -26,15 +27,7 @@ static void body(const char *b, char *o, size_t n, void *ud) {
 }
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON *etype = cJSON_GetObjectItem(el, "type");

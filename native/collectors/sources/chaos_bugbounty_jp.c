@@ -1,8 +1,11 @@
 /* collectors/cyber/sources/chaos_bugbounty_jp.c
  * Port of server/src/collectors/chaosBugbountyJp.js (createThreatIntelCollector).
  * Keyless. Chaos index.json (array) → JP-program substring filter → program
- * Features at TOKYO. The CHAOS_DOWNLOAD_FULL subdomain-expansion path defaults
- * OFF (env-gated, multi-fetch) — we emit the default (program-only) output. */
+ * Features. The CHAOS_DOWNLOAD_FULL subdomain-expansion path defaults
+ * OFF (env-gated, multi-fetch) — we emit the default (program-only) output.
+ * These rows carry NO geometry: Chaos publishes no coordinates and a bug
+ * bounty program is not a place (see the note in run_fetch). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/threatintel.h"
 #include "../../lib/feedlib.h"
@@ -11,8 +14,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#define TOKYO_LON 139.6917
-#define TOKYO_LAT 35.6895
 #define INDEX_URL "https://chaos-data.projectdiscovery.io/index.json"
 
 static const char *JP_PROGRAMS[] = {
@@ -22,16 +23,9 @@ static const char *JP_PROGRAMS[] = {
   "sony", "nintendo", "sega", "square enix", "capcom", "bandai", "konami",
   "nikkei", "asahi", "mainichi", "yomiuri", NULL };
 
-static void lc(const char *s, char *o, size_t n) {
-  size_t j = 0;
-  if (!s) { o[0] = '\0'; return; }
-  for (; *s && j + 1 < n; s++) o[j++] = (char)tolower((unsigned char)*s);
-  o[j] = '\0';
-}
-
 static int is_jp_program(const char *name) {
   char n[512];
-  lc(name, n, sizeof n);
+  jo_lower_buf(name, n, sizeof n);
   for (int i = 0; JP_PROGRAMS[i]; i++)
     if (strstr(n, JP_PROGRAMS[i])) return 1;
   return 0;
@@ -78,13 +72,12 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
 
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LON));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LAT));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      /* NO geometry. The JS port pinned every program at Tokyo Station
+       * (139.6917, 35.6895). A bug-bounty program is not a physical place,
+       * and stacking N invented pins on Tokyo Station is worse than no pin:
+       * it is a coordinate the upstream never supplied. Chaos publishes no
+       * location, so this source honestly has none. The key is omitted
+       * entirely (a JSON null would persist the string "null" as geometry). */
 
       cJSON *pr = cJSON_CreateObject();        /* EXACT JS key order */
       cJSON_AddNumberToObject(pr, "idx", i);
@@ -104,6 +97,34 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
       cJSON_AddItemToObject(pr, "domains",
         cJSON_IsArray(dom) ? cJSON_Duplicate(dom, 1) : cJSON_CreateArray());
       cJSON_AddStringToObject(pr, "source", "chaos_index");
+
+      /* lib/geojson.c reads title/link/uid off the properties bag. Without
+       * them the row had no title, no provenance link, and a uid that was a
+       * hash of the whole bag (so it churned whenever `change` or
+       * `last_updated` moved). All three come from the fetched record. */
+      const char *pname = (pn && cJSON_IsString(pn)) ? pn->valuestring : NULL;
+      if (pname) {
+        cJSON_AddStringToObject(pr, "uid", pname);   /* stable dedupe key */
+        cJSON *bo = cJSON_GetObjectItem(p, "bounty");
+        cJSON *pf = cJSON_GetObjectItem(p, "platform");
+        const char *plat = (pf && cJSON_IsString(pf) && pf->valuestring[0])
+                             ? pf->valuestring : NULL;
+        char title[320];
+        if (plat)
+          snprintf(title, sizeof title, "%s bug bounty (%s%s)", pname, plat,
+                   cJSON_IsTrue(bo) ? ", paid" : "");
+        else
+          snprintf(title, sizeof title, "%s bug bounty%s", pname,
+                   cJSON_IsTrue(bo) ? " (paid)" : "");
+        cJSON_AddStringToObject(pr, "title", title);
+      }
+      cJSON *pu = cJSON_GetObjectItem(p, "URL");
+      if (pu && cJSON_IsString(pu) && pu->valuestring[0])
+        cJSON_AddStringToObject(pr, "url", pu->valuestring);
+      cJSON *lu = cJSON_GetObjectItem(p, "last_updated");
+      if (lu && cJSON_IsString(lu) && lu->valuestring[0])
+        cJSON_AddStringToObject(pr, "published_at", lu->valuestring);
+
       cJSON_AddItemToObject(f, "properties", pr);
       cJSON_AddItemToArray(features, f);
       i++;

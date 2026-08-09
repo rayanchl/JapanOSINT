@@ -1,0 +1,16 @@
+msrc-blog
+small-wars
+cert-pl
+ncsc-nl
+cert-at
+cert-ee
+ncsc-ch
+cert-ee2
+cert-fi
+krcert
+ncsc-ie
+cert-no
+cert-dk
+cam-skylinewebcams
+chaos-bugbounty-jp
+my-jvn

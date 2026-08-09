@@ -1,0 +1,8 @@
+=== NZ_COMPANIES  entity=Air New Zealand
+exit: 0
+sched: rc=0 records=0 2743ms
+--- stderr ---
+[nz_companies] http status=404
+[nz_companies] emitted 0
+[sched] NZ_COMPANIES run rc=0 records=0 2743ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

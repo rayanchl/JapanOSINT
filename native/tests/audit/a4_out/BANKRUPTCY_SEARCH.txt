@@ -1,0 +1,7 @@
+=== BANKRUPTCY_SEARCH  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 32438ms
+--- stderr ---
+[sched] BANKRUPTCY_SEARCH run rc=0 records=0 32438ms
+[detect] anomaly opened: BANKRUPTCY_SEARCH verdict=duration_outlier — duration 32438ms exceeds 10000ms threshold
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

@@ -237,6 +237,83 @@ static int param_dropped(const char *name, size_t n) {
   }
   return 0;
 }
+/* Does this query-parameter name look like a credential? Same list evidence.c
+ * uses in its redact_url(); the two paths see the SAME urls and must not
+ * disagree about which of them carries a secret. */
+static int cc_name_is_secret(const char *name, size_t len) {
+  char b[128];
+  size_t n = len < sizeof b - 1 ? len : sizeof b - 1;
+  for (size_t i = 0; i < n; i++) b[i] = (char)tolower((unsigned char)name[i]);
+  b[n] = 0;
+  return (strstr(b, "auth") || strstr(b, "key") || strstr(b, "token") ||
+          strstr(b, "secret") || strstr(b, "password") || strstr(b, "passwd") ||
+          strstr(b, "cookie") || strstr(b, "session") ||
+          strstr(b, "credential") || strstr(b, "signature")) ? 1 : 0;
+}
+
+/* Strips userinfo and replaces credential-looking query values with
+ * "[redacted]". Malloc'd, caller frees; NULL only on OOM.
+ *
+ * WHY. ref_key is derived from the URL and lands in content_snapshots plus
+ * intel_items.properties.ref_key/url, both readable through the API — so every
+ * Japanese open-data source that passes its key in the query string was
+ * storing that key in cleartext where any authenticated caller could read it
+ * back. The adjacent evidence path already redacted; this one did not. Same
+ * transformation, applied at the one place the URL enters this module. */
+static char *cc_redact_url(const char *url) {
+  if (!url) return NULL;
+  size_t ul = strlen(url);
+  /* Sizing. A redacted parameter is rewritten as `name=[redacted]`, i.e. it
+   * GROWS by 10 bytes whenever its value is shorter than "[redacted]" — and
+   * the shortest parameter that can be redacted at all is `key=` (4 bytes,
+   * plus one `&`). So the worst case is `?key=&key=&…`, where every 5 input
+   * bytes become 15: growth is 3x, not 2x. At 2x the ninth such parameter
+   * wrote past the end of this allocation (verified: a 59-byte URL with ten
+   * empty `key=` params needs 160 bytes and was given 150). 4x + slack is
+   * comfortably above the 3x bound. */
+  char *out = malloc(ul * 4 + 32);
+  if (!out) return NULL;
+  size_t o = 0;
+
+  const char *p = url;
+  const char *scheme = strstr(url, "://");
+  if (scheme) {
+    const char *hstart = scheme + 3;
+    const char *slash = strchr(hstart, '/');
+    const char *at = strchr(hstart, '@');
+    if (at && (!slash || at < slash)) {
+      size_t pre = (size_t)(hstart - url);
+      memcpy(out + o, url, pre); o += pre;
+      memcpy(out + o, "[redacted]@", 11); o += 11;
+      p = at + 1;
+    }
+  }
+  const char *q = strchr(p, '?');
+  size_t head = q ? (size_t)(q - p) : strlen(p);
+  memcpy(out + o, p, head); o += head;
+  if (q) {
+    out[o++] = '?';
+    const char *k = q + 1;
+    while (*k) {
+      const char *amp = strchr(k, '&');
+      size_t plen = amp ? (size_t)(amp - k) : strlen(k);
+      const char *eq = memchr(k, '=', plen);
+      size_t nlen = eq ? (size_t)(eq - k) : plen;
+      if (eq && cc_name_is_secret(k, nlen)) {
+        memcpy(out + o, k, nlen); o += nlen;
+        memcpy(out + o, "=[redacted]", 11); o += 11;
+      } else {
+        memcpy(out + o, k, plen); o += plen;
+      }
+      if (!amp) break;
+      out[o++] = '&';
+      k = amp + 1;
+    }
+  }
+  out[o] = 0;
+  return out;
+}
+
 /* Drops the fragment and the cache-buster/analytics parameters and keeps every
  * other parameter in its original order. Returns malloc'd, caller frees. */
 static char *canon_url(const char *url, size_t ulen) {
@@ -1211,17 +1288,24 @@ static int capture_inner(db_handle *db, const char *source_id,
                          const char *content_type) {
   content_change_ensure_schema(db);
 
+  /* Redact ONCE, here, and use the redacted form for everything this module
+   * stores or emits. The raw `url` is still what evidence_capture() is given
+   * further down — it does its own redaction and needs the original to dedup
+   * against what evidence_http_hook() already stored. */
+  char *safe_url = cc_redact_url(url);
+
   char key[CC_REFKEY_MAX];
   if (ref_key && *ref_key) ccopy(key, sizeof key, ref_key);
   else {
-    char *cu = canon_url(url ? url : "", url ? strlen(url) : 0);
+    char *cu = canon_url(safe_url ? safe_url : "",
+                         safe_url ? strlen(safe_url) : 0);
     ccopy(key, sizeof key, cu);
     free(cu);
   }
-  if (!key[0]) return CC_SKIP_EMPTY;
+  if (!key[0]) { free(safe_url); return CC_SKIP_EMPTY; }
 
   char *text = content_change_normalize(body, body_len, content_type);
-  if (!text || !*text) { free(text); return CC_SKIP_EMPTY; }
+  if (!text || !*text) { free(text); free(safe_url); return CC_SKIP_EMPTY; }
   size_t tlen = strlen(text);
 
   char sha[65];
@@ -1237,7 +1321,7 @@ static int capture_inner(db_handle *db, const char *source_id,
         "ORDER BY captured_at DESC, rowid DESC LIMIT 1", -1, &s, NULL)
       != SQLITE_OK) {
     fprintf(stderr, "[cchange] select: %s\n", sqlite3_errmsg(db->h));
-    free(text);
+    free(text); free(safe_url);
     return CC_ERR;
   }
   sqlite3_bind_text(s, 1, source_id, -1, SQLITE_TRANSIENT);
@@ -1266,14 +1350,14 @@ static int capture_inner(db_handle *db, const char *source_id,
     /* A first sighting is not a change: it establishes the baseline silently. */
     snapshot_store(db, source_id, key, sha, stored, ts);
     snapshot_prune(db, source_id, key);
-    free(stored); free(prev_text); free(text);
+    free(stored); free(prev_text); free(text); free(safe_url);
     return CC_BASELINE;
   }
   if (strcmp(prev_sha, sha) == 0) {
     /* Deliberately NO write: touching captured_at every tick would put one
      * SQLite write per watched fetch on the collector thread, and this row is
      * already the most recent one for the key. */
-    free(stored); free(prev_text); free(text);
+    free(stored); free(prev_text); free(text); free(safe_url);
     return CC_UNCHANGED;
   }
 
@@ -1304,10 +1388,10 @@ static int capture_inner(db_handle *db, const char *source_id,
   snapshot_store(db, source_id, key, sha, stored, ts);
   snapshot_prune(db, source_id, key);
 
-  emit_change(db, source_id, key, url, prev_sha, sha, raw_sha, prev_ts, ts,
+  emit_change(db, source_id, key, safe_url, prev_sha, sha, raw_sha, prev_ts, ts,
               diff, added, removed, dtrunc, reason, ev_uid, tlen);
 
-  free(diff); free(stored); free(prev_text); free(text);
+  free(diff); free(stored); free(prev_text); free(text); free(safe_url);
   return CC_CHANGED;
 }
 

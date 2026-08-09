@@ -1,5 +1,10 @@
 # P6 Sweep-Ingest — status (accurate, 2026-05-17)
 
+> **HISTORICAL SNAPSHOT.** "286 sources registered" is the state on
+> **2026-05-17** and was already an undercount then (it did not expand
+> registration macros). Current figure: `make -C native source-count` — 2,563
+> on 2026-08-09. See [`../docs/collectors.md`](../docs/collectors.md).
+
 Two sessions worked native/ in parallel. Canonical P5 collector-port handoff =
 `native/P5_REMAINING.md` + memory (other session). This file = the sweep
 (transport/camera producer + clusterer + read) status. Spec:

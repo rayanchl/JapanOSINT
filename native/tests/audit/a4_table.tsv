@@ -1,0 +1,205 @@
+id	rc	rows	geo	geom	ms	record_type	stderr
+admin-boundaries	-1	0	0	0	75173		[overpass] admin-boundaries no elements | [detect] anomaly opened: admin-boundaries verdict=status_bad — run errored (status=error)
+OPENAQ_GLOBAL	0	0	0	0	69		[OPENAQ_GLOBAL] no OPENAQ_KEY — trying keyless v2 fallback | [OPENAQ_GLOBAL] http status=410 | [OPENAQ_GLOBAL] gated (no OPENAQ_KEY, v2 unreachable)
+OPENMETEO_AQ	0	1	1	0	90	air-quality-measurement=1	[OPENMETEO_AQ] emitted 1
+WAQI_GLOBAL	0	0	0	0	0		[WAQI_GLOBAL] gated (no AQICN_TOKEN)
+ASN_LOOKUP	0	1	0	0	47	osint_service_result=1	
+GBIF_OCCURRENCE	0	30	30	0	484	gbif-occurrence=30	[GBIF_OCCURRENCE] emitted 30
+INATURALIST	0	30	30	0	1725	inaturalist-observation=30	[INATURALIST] emitted 30
+OBIS_MARINE	0	0	0	0	203		[OBIS_MARINE] emitted 0
+bird-makeup-jp	0	0	0	0	1469		[bird-makeup-jp] emitted 0 (handles 6, fetched 6)
+BREACH_INDEX_EMAIL	0	1	0	0	1	osint_service_result=1	
+BREACH_INDEX_PASSWORD	0	1	0	0	1	osint_service_result=1	
+BREACH_INDEX_PHONE	0	1	0	0	1	osint_service_result=1	
+BREACH_INDEX_USERNAME	0	1	0	0	0	osint_service_result=1	
+cam-camscape	0	32	32	32	1407	camera=32	[cam-camscape] 32 cams upserted (WAF may yield 0)
+cam-webcamera24	0	160	160	160	1510	camera=160	[cam-webcamera24] emitted 160
+cell-towers	TIMEOUT	0	0	0	None		
+city-halls	-1	0	0	0	140845		[overpass] city-halls no elements | [detect] anomaly opened: city-halls verdict=status_bad — run errored (status=error)
+EMAILREP_LOOKUP	0	0	0	0	0		[EMAILREP_LOOKUP] no EMAILREP_KEY | [EMAILREP_LOOKUP] emitted 0
+NUMVERIFY_PHONE	0	0	0	0	0		[NUMVERIFY_PHONE] no NUMVERIFY_KEY | [NUMVERIFY_PHONE] emitted 0
+OPENCORPORATES	0	0	0	0	0		[OPENCORPORATES] no OPENCORPORATES_API_KEY
+CH_OPENDATA	0	20	0	0	430	open-dataset=20	[CH_OPENDATA] emitted 20
+FI_OPENDATA	0	20	0	0	494	open-dataset=20	[FI_OPENDATA] emitted 20
+UK_DATAGOV	0	10	0	0	462	open-dataset=10	[UK_DATAGOV] emitted 10
+crtsh-historical	TIMEOUT	0	0	0	None		
+data-go-jp-ckan	0	10	0	0	799	data-go-jp-ckan=10	[data-go-jp-ckan] emitted 10
+docomo-population	0	0	0	0	0		[docomo-population] gated (no DOCOMO_POPULATION_API_KEY)
+egov-laws	0	200	0	0	2900	(null)=200	[egov-laws] emitted 200
+estat-household	0	0	0	0	0		[estat-household] gated (ESTAT_APP_ID)
+ferry-routes	-1	0	0	0	141112		[overpass] ferry-routes no elements | [detect] anomaly opened: ferry-routes verdict=status_bad — run errored (status=error)
+bitcoin-mag	0	10	0	0	218	article=10	[rss] bitcoin-mag emitted 10
+cnbc-finance	0	30	0	0	222	article=30	[rss] cnbc-finance emitted 30
+cnbc-top	0	30	0	0	240	article=30	[rss] cnbc-top emitted 30
+cnbc-world	0	30	0	0	212	article=30	[rss] cnbc-world emitted 30
+coindesk	0	25	0	0	123	article=25	[rss] coindesk emitted 25
+cointelegraph	0	30	0	0	108	article=30	[rss] cointelegraph emitted 30
+decrypt	0	38	0	0	111	article=38	[rss] decrypt emitted 38
+ft-home	0	10	0	0	401	article=10	[rss] ft-home emitted 10
+investing-news	0	10	0	0	145	article=10	[rss] investing-news emitted 10
+kitco-news	-1	0	0	0	160		[detect] anomaly opened: kitco-news verdict=status_bad — run errored (status=error)
+marketwatch-top	0	10	0	0	259	article=10	[rss] marketwatch-top emitted 10
+oilprice-2	0	15	0	0	877	article=15	[rss] oilprice-2 emitted 15
+seeking-alpha	0	7	0	0	71	article=7	[rss] seeking-alpha emitted 7
+the-block	0	20	0	0	112	article=20	[rss] the-block emitted 20
+trading-econ	0	100	0	0	718	article=100	[trading-econ] emitted 100
+zerohedge	0	25	0	0	364	article=25	[rss] zerohedge emitted 25
+ALPHAVANTAGE_SEARCH	0	0	0	0	0		[ALPHAVANTAGE_SEARCH] no ALPHAVANTAGE_KEY | [ALPHAVANTAGE_SEARCH] emitted 0
+FINNHUB_SEARCH	0	0	0	0	0		[FINNHUB_SEARCH] no FINNHUB_KEY | [FINNHUB_SEARCH] emitted 0
+fofa-jp	0	0	0	0	0		[fofa-jp] gated (no FOFA_API_KEY)
+gcom-w	0	50	0	0	497	gcom-w=50	[gcom-w] emitted 50
+bom-au-warnings	-1	0	0	0	374		[detect] anomaly opened: bom-au-warnings verdict=status_bad — run errored (status=error)
+copernicus-ems	0	10	0	0	2010	article=10	[rss] copernicus-ems emitted 10
+emsc-quakes	0	300	300	300	613	earthquake=300	[emsc-quakes] emitted 300
+iceland-quakes	0	300	300	300	966	earthquake=300	[iceland-quakes] emitted 300
+metoffice-warnings	0	0	0	0	74		[rss] metoffice-warnings emitted 0
+nhc-cpac	0	2	0	0	612	article=2	[rss] nhc-cpac emitted 2
+pdc-disasters	-1	0	0	0	132		[detect] anomaly opened: pdc-disasters verdict=status_bad — run errored (status=error)
+volcanodiscovery	0	20	0	0	12458	article=20	[rss] volcanodiscovery emitted 20 | [detect] anomaly opened: volcanodiscovery verdict=duration_outlier — duration 12458ms exceeds 10000ms threshold
+gitlab-bitbucket-leaks	0	2	0	0	435	(null)=2	[gitlab-bitbucket-leaks] gitlab reachable=1 has_key=0 | [gitlab-bitbucket-leaks] bitbucket reachable=1 has_key=0
+RADIO_BROWSER	0	11	0	0	1920	radio-station=11	[radio_browser] emitted 11
+gnews-mon-ae-red-sea-shipping	0	66	0	0	486	article=66	[rss] gnews-mon-ae-red-sea-shipping emitted 66
+gnews-mon-airspace-violation	0	100	0	0	574	article=100	[rss] gnews-mon-airspace-violation emitted 100
+gnews-mon-arms-shipment	0	100	0	0	781	article=100	[rss] gnews-mon-arms-shipment emitted 100
+gnews-mon-assassination	0	100	0	0	833	article=100	[rss] gnews-mon-assassination emitted 100
+gnews-mon-aviation-incident	0	100	0	0	636	article=100	[rss] gnews-mon-aviation-incident emitted 100
+gnews-mon-border-clash	0	100	0	0	707	article=100	[rss] gnews-mon-border-clash emitted 100
+gnews-mon-br-amazon-deforestation	0	67	0	0	532	article=67	[rss] gnews-mon-br-amazon-deforestation emitted 67
+gnews-mon-cargo-ship-collision	0	100	0	0	744	article=100	[rss] gnews-mon-cargo-ship-collision emitted 100
+gnews-mon-catastrophic-flood	0	100	0	0	691	article=100	[rss] gnews-mon-catastrophic-flood emitted 100
+gnews-mon-chemical-spill	0	100	0	0	594	article=100	[rss] gnews-mon-chemical-spill emitted 100
+gnews-mon-civil-unrest	0	100	0	0	611	article=100	[rss] gnews-mon-civil-unrest emitted 100
+gnews-mon-cn-cross-strait	0	100	0	0	1006	article=100	[rss] gnews-mon-cn-cross-strait emitted 100
+gnews-mon-cn-rare-earth	0	100	0	0	754	article=100	[rss] gnews-mon-cn-rare-earth emitted 100
+gnews-mon-critical-infrastructure-attack	0	100	0	0	633	article=100	[rss] gnews-mon-critical-infrastructure-attack emitted 100
+gnews-mon-cyber-espionage	0	100	0	0	636	article=100	[rss] gnews-mon-cyber-espionage emitted 100
+gnews-mon-cyberattack	0	102	0	0	750	article=102	[rss] gnews-mon-cyberattack emitted 102
+gnews-mon-data-breach	0	100	0	0	806	article=100	[rss] gnews-mon-data-breach emitted 100
+gnews-mon-disease-outbreak	0	99	0	0	651	article=99	[rss] gnews-mon-disease-outbreak emitted 99
+gnews-mon-disinformation-campaign	0	100	0	0	604	article=100	[rss] gnews-mon-disinformation-campaign emitted 100
+gnews-mon-drone-strike	0	100	0	0	688	article=100	[rss] gnews-mon-drone-strike emitted 100
+gnews-mon-drug-cartel	0	100	0	0	1009	article=100	[rss] gnews-mon-drug-cartel emitted 100
+gnews-mon-economic-sanctions	0	100	0	0	814	article=100	[rss] gnews-mon-economic-sanctions emitted 100
+gnews-mon-election-interference	0	100	0	0	629	article=100	[rss] gnews-mon-election-interference emitted 100
+gnews-mon-electronic-warfare	0	100	0	0	723	article=100	[rss] gnews-mon-electronic-warfare emitted 100
+gnews-mon-espionage-arrest	0	100	0	0	823	article=100	[rss] gnews-mon-espionage-arrest emitted 100
+gnews-mon-fr-coup-attempt	0	100	0	0	809	article=100	[rss] gnews-mon-fr-coup-attempt emitted 100
+gnews-mon-fr-sahel-militants	0	62	0	0	491	article=62	[rss] gnews-mon-fr-sahel-militants emitted 62
+gnews-mon-gps-jamming	0	100	0	0	760	article=100	[rss] gnews-mon-gps-jamming emitted 100
+gnews-mon-hostage-crisis	0	100	0	0	778	article=100	[rss] gnews-mon-hostage-crisis emitted 100
+gnews-mon-human-trafficking	0	102	0	0	828	article=102	[rss] gnews-mon-human-trafficking emitted 102
+gnews-mon-hypersonic-missile	0	92	0	0	609	article=92	[rss] gnews-mon-hypersonic-missile emitted 92
+gnews-mon-il-gaza	0	101	0	0	889	article=101	[rss] gnews-mon-il-gaza emitted 101
+gnews-mon-in-kashmir	0	103	0	0	840	article=103	[rss] gnews-mon-in-kashmir emitted 103
+gnews-mon-ir-nuclear-talks	0	100	0	0	811	article=100	[rss] gnews-mon-ir-nuclear-talks emitted 100
+gnews-mon-ke-horn-of-africa	0	100	0	0	711	article=100	[rss] gnews-mon-ke-horn-of-africa emitted 100
+gnews-mon-kr-north-korea-missile	0	100	0	0	722	article=100	[rss] gnews-mon-kr-north-korea-missile emitted 100
+gnews-mon-lt-baltic-security	0	45	0	0	398	article=45	[rss] gnews-mon-lt-baltic-security emitted 45
+gnews-mon-major-earthquake	0	100	0	0	714	article=100	[rss] gnews-mon-major-earthquake emitted 100
+gnews-mon-military-coup	0	100	0	0	754	article=100	[rss] gnews-mon-military-coup emitted 100
+gnews-mon-military-exercise	0	100	0	0	806	article=100	[rss] gnews-mon-military-exercise emitted 100
+gnews-mon-missile-test	0	100	0	0	742	article=100	[rss] gnews-mon-missile-test emitted 100
+gnews-mon-money-laundering	0	100	0	0	774	article=100	[rss] gnews-mon-money-laundering emitted 100
+gnews-mon-mx-cartel-violence	0	73	0	0	596	article=73	[rss] gnews-mon-mx-cartel-violence emitted 73
+gnews-mon-naval-deployment	0	100	0	0	714	article=100	[rss] gnews-mon-naval-deployment emitted 100
+gnews-mon-no-arctic-militarization	0	81	0	0	526	article=81	[rss] gnews-mon-no-arctic-militarization emitted 81
+gnews-mon-nuclear-plant-incident	0	100	0	0	633	article=100	[rss] gnews-mon-nuclear-plant-incident emitted 100
+gnews-mon-nuclear-weapon	0	100	0	0	663	article=100	[rss] gnews-mon-nuclear-weapon emitted 100
+gnews-mon-oil-tanker-seizure	0	100	0	0	797	article=100	[rss] gnews-mon-oil-tanker-seizure emitted 100
+gnews-mon-ph-south-china-sea	0	100	0	0	735	article=100	[rss] gnews-mon-ph-south-china-sea emitted 100
+gnews-mon-pipeline-explosion	0	100	0	0	649	article=100	[rss] gnews-mon-pipeline-explosion emitted 100
+gnews-mon-port-disruption	0	100	0	0	685	article=100	[rss] gnews-mon-port-disruption emitted 100
+gnews-mon-power-grid-failure	0	100	0	0	784	article=100	[rss] gnews-mon-power-grid-failure emitted 100
+gnews-mon-ransomware	0	102	0	0	745	article=102	[rss] gnews-mon-ransomware emitted 102
+gnews-mon-ru-wagner	0	100	0	0	532	article=100	[rss] gnews-mon-ru-wagner emitted 100
+gnews-mon-satellite-launch	0	102	0	0	671	article=102	[rss] gnews-mon-satellite-launch emitted 102
+gnews-mon-semiconductor-export-controls	0	100	0	0	809	article=100	[rss] gnews-mon-semiconductor-export-controls emitted 100
+gnews-mon-shadow-fleet	0	100	0	0	751	article=100	[rss] gnews-mon-shadow-fleet emitted 100
+gnews-mon-state-sponsored-hacking	0	100	0	0	612	article=100	[rss] gnews-mon-state-sponsored-hacking emitted 100
+gnews-mon-supply-chain-disruption	0	100	0	0	681	article=100	[rss] gnews-mon-supply-chain-disruption emitted 100
+gnews-mon-terror-attack	0	100	0	0	737	article=100	[rss] gnews-mon-terror-attack emitted 100
+gnews-mon-troop-movement	0	100	0	0	762	article=100	[rss] gnews-mon-troop-movement emitted 100
+gnews-mon-tw-pla-incursion	0	100	0	0	880	article=100	[rss] gnews-mon-tw-pla-incursion emitted 100
+gnews-mon-ua-front-line	0	84	0	0	649	article=84	[rss] gnews-mon-ua-front-line emitted 84
+gnews-mon-undersea-cable	0	100	0	0	599	article=100	[rss] gnews-mon-undersea-cable emitted 100
+gnews-mon-us-strait-of-hormuz	0	107	0	0	957	article=107	[rss] gnews-mon-us-strait-of-hormuz emitted 107
+gnews-mon-us-taiwan-strait	0	100	0	0	664	article=100	[rss] gnews-mon-us-taiwan-strait emitted 100
+gnews-mon-volcano-eruption	0	100	0	0	676	article=100	[rss] gnews-mon-volcano-eruption emitted 100
+gnews-mon-weapons-smuggling	0	100	0	0	718	article=100	[rss] gnews-mon-weapons-smuggling emitted 100
+gnews-mon-wildfire	0	110	0	0	832	article=110	[rss] gnews-mon-wildfire emitted 110
+gnews-mon-zero-day-exploit	0	102	0	0	6716	article=102	[rss] gnews-mon-zero-day-exploit emitted 102
+ADVISORY_COUNCILS	0	0	0	0	2197		[ADVISORY_COUNCILS] http status=404
+BUSINESS_LICENSES	0	0	0	0	276		[BUSINESS_LICENSES] http status=0
+EGOV_PUBLIC_COMMENT	0	0	0	0	1470		[EGOV_PUBLIC_COMMENT] http status=404
+WASTE_HAULERS	0	0	0	0	824		[WASTE_HAULERS] http status=403
+grayhat-buckets	0	0	0	0	0		[grayhat-buckets] gated (no GRAYHAT_API_KEY)
+hatena-bookmark-extended	0	200	0	0	6496	hatena-bookmark-extended=200	[hatena-bookmark-extended] emitted 200
+houjin-bangou	0	0	0	0	0		[houjin-bangou] gated (no HOUJIN_BANGOU_KEY)
+IOC_LOOKUP	0	0	0	0	72		
+japan-reit	0	57	0	0	2813	japan-reit=57	[japan-reit] emitted 57
+jma-earthquake	0	446	439	0	597	jma-earthquake=446	[jma-earthquake] emitted 446
+jma-tide	0	166	166	166	1737	jma-tide=166	[jma-tide] emitted 166
+job-boards	TIMEOUT	0	0	0	None		
+jr-boarding-stats	0	2	0	0	366	(null)=2	[jr-boarding-stats] JR-East reachable=0 | [jr-boarding-stats] Tokyo-Metro reachable=0
+kafun-pollen	0	1	0	0	16	(null)=1	[kafun-pollen] probe reachable=0
+BANKRUPTCY_SEARCH	0	0	0	0	32438		[detect] anomaly opened: BANKRUPTCY_SEARCH verdict=duration_outlier — duration 32438ms exceeds 10000ms threshold
+CRIMINAL_RECORDS	15	15	0	0	748	osint_service_result=15	[detect] anomaly opened: CRIMINAL_RECORDS verdict=status_bad — run errored (status=error)
+LEGAL_SEARCH	0	15	0	0	1200	osint_service_result=15	
+LICENSE_PLATE_LOOKUP	0	0	0	0	0		
+mapfan-api	0	0	0	0	0		[mapfan-api] gated (no MAPFAN_API_KEY)
+mhlw-health	0	1	0	0	8875	mhlw-health=1	[mhlw-health] probe reachable=0
+mlit-landprice	0	0	0	0	38832		[mlit-landprice] emitted 0 | [detect] anomaly opened: mlit-landprice verdict=duration_outlier — duration 38832ms exceeds 10000ms threshold
+mlit-transaction	-1	0	0	0	838		[detect] anomaly opened: mlit-transaction verdict=status_bad — run errored (status=error)
+navitime-api	0	0	0	0	2		[navitime-api] gated (no NAVITIME_API_KEY)
+nexco-roadwork	0	3	0	0	11464	(null)=3	[nexco-roadwork] NEXCO-East reachable=0 | [nexco-roadwork] NEXCO-Central reachable=0 | [nexco-roadwork] NEXCO-West reachable=1 | [detect] anomaly opened: nexco-roadwork verdict=dur
+nitter-mirrors	0	3	0	0	9161	(null)=3	[nitter-mirrors] nitter.net reachable=1 | [nitter-mirrors] nitter.tiekoetter.com reachable=1 | [nitter-mirrors] nitter.privacydev.net reachable=0
+npa-special-fraud	0	26	25	25	414	(null)=1, npa-special-fraud=25	[npa-special-fraud] emitted 25 features + 1 index
+odpt-train	0	0	0	0	0		[odpt-train] gated (no ODPT token)
+ARCHIVE_ORG_SEARCH	0	20	0	0	760	archive-item=20	[ARCHIVE_ORG_SEARCH] emitted 20
+GITHUB_COMMITS_BY_EMAIL	0	20	0	0	712	github-commit=20	[GITHUB_COMMITS_BY_EMAIL] emitted 20
+MUSICBRAINZ	0	20	0	0	323	musicbrainz-artist=20	[MUSICBRAINZ] emitted 20
+PHOTON_GEOCODE	0	9	9	0	187	geocode-result=9	[PHOTON_GEOCODE] emitted 10
+TOR_ONIONOO	0	1	0	0	493	tor-relay=1	[TOR_ONIONOO] emitted 1
+BIGDATACLOUD_REVERSE	0	1	1	0	200	reverse-geocode=1	[BIGDATACLOUD_REVERSE] emitted 1
+HN_USER	0	1	0	0	210	hackernews-user=1	[HN_USER] emitted 1
+OPENVERSE	0	20	0	0	144	openverse-image=20	[OPENVERSE] emitted 20
+SEC_FULLTEXT	0	20	0	0	423	sec-filing=20	[SEC_FULLTEXT] emitted 20
+STACKEXCHANGE_SEARCH	0	20	0	0	304	stackexchange-question=20	[STACKEXCHANGE_SEARCH] emitted 20
+WIKIDATA_ENTITY_SEARCH	0	20	0	0	313	wikidata-entity=20	[WIKIDATA_ENTITY_SEARCH] emitted 20
+osm-changesets-jp	0	100	100	100	464	osm-changesets-jp=100	[osm-changesets-jp] emitted 100
+overpass-subway-tracks	TIMEOUT	0	0	0	None		
+peeringdb-jp	0	1139	1139	1139	3304	fac=112, ixp=27, net=1000	[peeringdb-jp] emitted 1139
+PEP_CHECK	0	0	0	0	0		
+WATCHLIST_CHECK_NEW	0	0	0	0	0		
+CARRIER_LOOKUP	0	1	0	0	1	osint_service_result=1	
+PHONE_LOOKUP	0	1	0	0	1	osint_service_result=1	
+PHONE_REPUTATION	0	1	0	0	1	osint_service_result=1	
+poc-in-github	0	94	0	0	1643	poc-in-github=94	[poc-in-github] emitted 94
+psbdmp-pastes	0	1	0	0	14	(null)=1	[psbdmp-pastes] probe reachable=0
+reddit-jp-subs	0	0	0	0	658		[reddit-jp-subs] emitted 0
+DK_CVR	0	1	0	0	385	cvr-company=1	[dk_cvr] emitted 1
+HR_SUDREG	0	0	0	0	188		[HR_SUDREG] http status=404
+HU_COMPANIES	0	0	0	0	170		[HU_COMPANIES] emitted 0
+LT_REGISTRAI	0	0	0	0	100		[LT_REGISTRAI] http status=404
+LU_LBR	0	0	0	0	508		[LU_LBR] http status=429
+NL_KVK	0	0	0	0	0		[NL_KVK] gated (no KVK_API_KEY)
+PT_RCBE	0	0	0	0	327		[PT_RCBE] http status=404
+RS_APR	0	0	0	0	443		[RS_APR] http status=0
+IL_COMPANIES	0	2	0	0	447	il-company=2	[il_companies] emitted 2
+SEA2_REGISTRY	0	0	0	0	73005		[sea2_reg[MY]] emitted 0 | [sea2_reg[TH]] http status=404 | [sea2_reg[PH]] http status=404 | [sea2_reg[VN]] http status=0 | [sea2_reg[ID]] http status=0 | [sea2_reg[ID]] http statu
+reinfolib	0	0	0	0	0		[reinfolib] gated
+rice-paddies	None	0	0	0	None		
+satellite-ground-stations	TIMEOUT	0	0	0	None		
+SSL_ANALYZER	0	101	0	0	9642	osint_service_result=101	
+teikoku-failures	0	1	0	0	360	(null)=1	[teikoku-failures] probe reachable=0
+THREAT_FEED_LOOKUP	0	0	0	0	1201		
+tor-exit-nodes	0	5	0	0	511	tor-exit-nodes=5	[tor-exit-nodes] emitted 5
+unesco-heritage	-1	0	0	0	58		[detect] anomaly opened: unesco-heritage verdict=status_bad — run errored (status=error)
+unified-trains	None	0	0	0	None		
+vessel-finder	0	0	0	0	0		[vessel-finder] gated (no VESSELFINDER_API_KEY)
+wanted-persons	0	0	0	0	571		
+WHALE_ALERT	0	1	0	0	159	osint_service_result=1	
+wifi-networks-shodan	0	0	0	0	0		[wifi-networks-shodan] gated (no SHODAN_API_KEY)
+AFRICA_REGISTRY	0	1	0	0	15267	africa-registry-company=1	[africa_reg:ZA] http status=404 | [africa_reg:ZA] http status=403 | [africa_reg:ZA] http status=0 | [africa_reg:ZA] http status=404 | [africa_reg:NG] http status=403 | [africa_reg:
+xrain-radar	0	1	0	0	315	(null)=1	[xrain-radar] probe reachable=0
+# MISSING: sento-public-baths, shrine-temple, submarine-cables

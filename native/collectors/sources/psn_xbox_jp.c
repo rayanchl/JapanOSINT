@@ -11,6 +11,7 @@
  * Xbox/OpenXBL branch (plain GET + X-Authorization header) is ported fully.
  * honest empty when gated / no watchlist / on failure.
  * uid = psn-xbox-jp|xbl:<gamertag>. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -20,12 +21,6 @@
 
 #define SOURCE_ID "psn-xbox-jp"
 
-static const char *sv(const cJSON *o, const char *k) {
-  if (!o) return NULL;
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
-}
-
 /* settings[]: {id,value} → value of given id (string). */
 static const char *setting(const cJSON *prof, const char *id) {
   if (!prof) return NULL;
@@ -33,8 +28,8 @@ static const char *setting(const cJSON *prof, const char *id) {
   if (!cJSON_IsArray(s)) return NULL;
   cJSON *e;
   cJSON_ArrayForEach(e, s) {
-    const char *sid = sv(e, "id");
-    if (sid && strcmp(sid, id) == 0) return sv(e, "value");
+    const char *sid = jo_sv(e, "id");
+    if (sid && strcmp(sid, id) == 0) return jo_sv(e, "value");
   }
   return NULL;
 }
@@ -73,10 +68,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (psnCount == 0 && xn == 0) {
     fprintf(stderr, "[psn-xbox-jp] no watchlist -> honest empty\n");
     free(xbl);
-    return -1;  /* JS: unavailable, no fabricated IDs */
+    return 0;   /* not configured is gating, not an error (R6) */
   }
 
-  int n = 0;
+  int n = 0, fetched = 0;
 
   /* ---- Xbox (OpenXBL) — keyed GET, fully portable via feedlib ---- */
   if (xblKey && *xblKey && xn > 0) {
@@ -88,6 +83,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       snprintf(url, sizeof url, "https://xbl.io/api/v2/account/%s", xbl[i]);
       cJSON *data = feed_get_json_h(ctx->http, url, hdrs, 15000);
       if (!data) continue;
+      fetched++;
 
       cJSON *pu = cJSON_GetObjectItem(data, "profileUsers");
       cJSON *prof = (pu && cJSON_IsArray(pu)) ? cJSON_GetArrayItem(pu, 0) : NULL;  /* exhaustive-ok: one gamertag queried */
@@ -111,7 +107,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON *props = cJSON_CreateObject();
       cJSON_AddStringToObject(props, "network", "xbox");
       cJSON_AddStringToObject(props, "gamertag", gt);
-      const char *xid = prof ? sv(prof, "id") : NULL;
+      const char *xid = prof ? jo_sv(prof, "id") : NULL;
       if (xid) cJSON_AddStringToObject(props, "xuid", xid);
       else cJSON_AddNullToObject(props, "xuid");
       if (gs) cJSON_AddStringToObject(props, "gamerscore", gs);
@@ -139,8 +135,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   for (int i = 0; i < xn; i++) free(xbl[i]);
   free(xbl);
-  fprintf(stderr, "[psn-xbox-jp] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  int wanted = (xblKey && *xblKey) ? xn : 0;
+  fprintf(stderr, "[psn-xbox-jp] emitted %d (%d/%d gamertags fetched)\n",
+          n, fetched, wanted);
+  /* STATUS code, not a row count: a watchlist whose profiles are all private is
+   * an honest empty. Only a total fetch failure of a keyed run is an error. */
+  return (wanted == 0 || fetched > 0) ? 0 : -1;
 }
 
 static const source_def psn_xbox_jp_def = {

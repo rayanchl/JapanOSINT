@@ -1,0 +1,7 @@
+=== GOOGLE_BOOKS  entity=Tokyo
+exit: 0
+sched: rc=0 records=0 533ms
+--- stderr ---
+[GOOGLE_BOOKS] http status=429
+[sched] GOOGLE_BOOKS run rc=0 records=0 533ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

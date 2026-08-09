@@ -2,6 +2,8 @@
 #include "alert_deliver.h"
 #include "breach_adapter.h"
 #include "alert_eval.h"
+#include "audit.h"
+#include "hostgate.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <openssl/rand.h>
@@ -9,6 +11,51 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
+/* ── authorization ─────────────────────────────────────────────────────────
+ * This file had NONE. Every route ran at the caller's mere authenticated-ness,
+ * so a `viewer` could point a webhook rule at a server they control and drain
+ * the tenant's whole intel stream, delete a colleague's rules, or use
+ * POST /:id/test — which returns the upstream response body — as an SSRF
+ * probe. savedsearchapi.c:726 already gates the equivalent action, so this was
+ * an oversight rather than a design choice, and the fix is that same idiom.
+ *
+ * The role is looked up from `memberships` rather than taken as a parameter:
+ * the public alertsapi()/alerteventsapi() signatures are re-entered by
+ * savedsearchapi.c's /to-alert, and widening them would change a contract this
+ * pass does not own. (tid,uid) is already a membership — httpd.c only reaches
+ * here through tenant_resolve, which picks the tenant FROM the caller's
+ * memberships — so this lookup always resolves for a legitimate caller and
+ * returns "" (rank 0, deny) for anything else. */
+static int role_rank(const char *r) {
+  if (!r) return 0;
+  if (!strcmp(r, "owner"))   return 4;
+  if (!strcmp(r, "admin"))   return 3;
+  if (!strcmp(r, "analyst")) return 2;
+  if (!strcmp(r, "viewer"))  return 1;
+  return 0;                          /* unknown role fails closed */
+}
+
+static int member_rank(db_handle *db, const char *tid, const char *uid) {
+  if (!db || !db->h || !tid || !*tid || !uid || !*uid) return 0;
+  sqlite3_stmt *s;
+  int rank = 0;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT role FROM memberships WHERE tenant_id=?1 AND user_id=?2",
+        -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, tid, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 2, uid, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(s) == SQLITE_ROW)
+      rank = role_rank((const char *)sqlite3_column_text(s, 0));
+  }
+  sqlite3_finalize(s);
+  return rank;
+}
+
+/* Writing a rule (create/edit/delete/mute/test) needs analyst or better;
+ * reading one needs any membership. */
+#define RANK_READ  1
+#define RANK_WRITE 2
 
 static void uuid4(char out[37]) {
   unsigned char b[16]; RAND_bytes(b, 16);
@@ -208,8 +255,19 @@ static const char *validate_rule(cJSON *b, const char **name, int *enabled,
       }
     } else { /* webhook */
       const char *t = tg->valuestring;
-      if (strncmp(t,"http://",7)!=0 && strncmp(t,"https://",8)!=0) {
-        cJSON_Delete(*predicate); return "webhook target must be http(s) URL";
+      /* A webhook target is a caller-supplied URL that this server will fetch
+       * with its own outbound connection, so "starts with http" was never
+       * enough: http://169.254.169.254/… reads the cloud instance role, and
+       * http://127.0.0.1:11434/… reaches llama-server. Strict hostgate check
+       * — scheme, literal address AND every resolved address — refused here at
+       * save time, where there is still a 400 to return. */
+      int gr = hostgate_url_check_strict(t);
+      if (gr != HG_URL_OK) {
+        cJSON_Delete(*predicate);
+        static char gb[128];
+        snprintf(gb, sizeof gb, "webhook target rejected: %s",
+                 hostgate_url_reason(gr));
+        return gb;
       }
       cJSON *se = cJSON_GetObjectItem(ch,"secret");
       if (!se || !cJSON_IsString(se) || strlen(se->valuestring) < 16) {
@@ -241,6 +299,15 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
                 const char *body, int ev_limit, int *st) {
   int is_get = strcmp(method,"GET")==0, is_post = strcmp(method,"POST")==0,
       is_patch = strcmp(method,"PATCH")==0, is_del = strcmp(method,"DELETE")==0;
+
+  /* One gate for the whole subtree, evaluated before the body is even parsed:
+   * a read needs membership, anything that mutates a rule or fires a channel
+   * needs analyst or better. */
+  { int rank = member_rank(db, tid, uid);
+    int need = is_get ? RANK_READ : RANK_WRITE;
+    if (rank < need) { *st = 403;
+      return strdup("{\"error\":\"forbidden\"}"); } }
+
   cJSON *jb = (body && *body) ? cJSON_Parse(body) : NULL;
 
   /* collection: GET list / POST create */
@@ -286,6 +353,15 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
       free(pj); free(cj);
       if (jb) cJSON_Delete(jb);
       if (rc != SQLITE_DONE) return err(st,500,"server_error");
+      /* Audited: a rule is a standing instruction to ship matching intel to an
+       * address of the author's choosing. The payload records the rule name
+       * only — channel targets and secrets stay out of audit_events, which is
+       * read by a wider audience than the rule row itself. */
+      { cJSON *ap = cJSON_CreateObject();
+        cJSON_AddStringToObject(ap, "name", nm);
+        char *apj = cJSON_PrintUnformatted(ap); cJSON_Delete(ap);
+        audit_write(db, tid, uid, "alert_rule.create", nid, apj);
+        free(apj); }
       return one_rule(db,tid,nid,201,st);
     }
     if (jb) cJSON_Delete(jb);
@@ -303,9 +379,18 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
       sqlite3_step(s); sqlite3_finalize(s);
       sqlite3_prepare_v2(db->h,"DELETE FROM alert_rules WHERE id=?1 AND tenant_id=?2",-1,&s,NULL);
       sqlite3_bind_text(s,1,id,-1,SQLITE_TRANSIENT); sqlite3_bind_text(s,2,tid,-1,SQLITE_TRANSIENT);
-      sqlite3_step(s); sqlite3_finalize(s);
+      sqlite3_step(s);
+      int gone = sqlite3_changes(db->h);   /* 0 == nothing matched this tenant */
+      sqlite3_finalize(s);
       sqlite3_exec(db->h,"COMMIT",0,0,0);
       if (jb) cJSON_Delete(jb);
+      /* Only a delete that removed a row is a delete. This wrote the audit
+       * entry unconditionally, so a DELETE naming another tenant's rule id —
+       * which correctly removes nothing — still recorded "alert_rule.delete"
+       * against that id in the caller's hash-chained audit log. The 204 is
+       * kept either way: delete is idempotent and both clients treat a repeat
+       * delete as success. */
+      if (gone) audit_write(db, tid, uid, "alert_rule.delete", id, NULL);
       *st = 204; return NULL;
     }
     if (is_patch) {
@@ -356,6 +441,7 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
       sqlite3_bind_text(s,8,tid,-1,SQLITE_TRANSIENT);
       sqlite3_step(s); sqlite3_finalize(s); free(pj); free(cj);
       if (jb) cJSON_Delete(jb);
+      audit_write(db, tid, uid, "alert_rule.update", id, NULL);
       return one_rule(db,tid,id,200,st);
     }
     if (jb) cJSON_Delete(jb);
@@ -450,7 +536,15 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
      * synthetic event id but never an alert_events row, so a test can't
      * pollute the inbox or be picked up again by the delivery worker.
      * Returns 404 internally when the rule isn't this tenant's. */
-    return alert_deliver_test(db, tid, id, st);
+    char *tr = alert_deliver_test(db, tid, id, st);
+    /* Audited only once the test actually fired. Stamping the row first meant
+     * every 404 — including one tenant probing another tenant's rule id — left
+     * an "alert_rule.test" entry in audit_events claiming a delivery that
+     * never happened. audit_events is a hash-chained evidentiary log; an entry
+     * for an action the server refused is a fabricated record. */
+    if (*st >= 200 && *st < 300)
+      audit_write(db, tid, uid, "alert_rule.test", id, NULL);
+    return tr;
   }
 
   if (jb) cJSON_Delete(jb);
@@ -467,6 +561,13 @@ char *alerteventsapi(db_handle *db, const char *tid, const char *uid,
                      const char *method, const char *seg,
                      const char *qs, int *st) {
   int is_get = strcmp(method,"GET")==0, is_post = strcmp(method,"POST")==0;
+
+  /* The inbox is tenant-wide intel previews and tenant-wide read state, so it
+   * needs a membership. Read and mark-read are both viewer-legal: marking a
+   * notification read is not a privileged act. */
+  if (member_rank(db, tid, uid) < RANK_READ) {
+    *st = 403; return strdup("{\"error\":\"forbidden\"}");
+  }
 
   /* tiny query-string reader: qs is "a=1&b=2" (already URL-decoded enough for
    * our integer/flag params; no string values are read here). */

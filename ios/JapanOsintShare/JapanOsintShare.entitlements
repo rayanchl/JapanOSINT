@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Same App Group as the app; the share extension writes queued items into
+	     share-queue/ here. Wire via the share target's Signing & Capabilities
+	     → App Groups. -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.rayanchl.japanosint</string>
+	</array>
+</dict>
+</plist>

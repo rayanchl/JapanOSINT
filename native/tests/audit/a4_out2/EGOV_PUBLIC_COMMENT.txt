@@ -1,0 +1,7 @@
+=== EGOV_PUBLIC_COMMENT  entity=環境
+exit: 0
+sched: rc=0 records=0 1470ms
+--- stderr ---
+[EGOV_PUBLIC_COMMENT] http status=404
+[sched] EGOV_PUBLIC_COMMENT run rc=0 records=0 1470ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

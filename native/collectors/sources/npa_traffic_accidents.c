@@ -245,15 +245,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *features = cJSON_CreateArray();
   for (int i = 0; i < nb; i++) {
     bucket_t *b = &bk[i];
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(b->lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(b->lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(b->lon, b->lat);
     cJSON *p = cJSON_CreateObject();             /* EXACT JS key order */
     char la[24], lo[24];
     numstr(b->lat, la, sizeof la); numstr(b->lon, lo, sizeof lo);
@@ -265,6 +257,34 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddNumberToObject(p, "fatalities", (double)b->fatalities);
     cJSON_AddNumberToObject(p, "severity_max", (double)b->severity_max);
     cJSON_AddStringToObject(p, "source", ctx->source_id);
+    /* The geojson toolkit derives the row title from title|name|name_ja|label.
+     * None of the keys above is one of those, so ALL ~38k accident-grid rows
+     * persisted with a NULL title and were unreadable in every UI. Compose it
+     * from the aggregates we actually computed. */
+    {
+      char t[192];
+      if (b->fatalities > 0)
+        snprintf(t, sizeof t,
+                 "\xe4\xba\xa4\xe9\x80\x9a\xe4\xba\x8b\xe6\x95\x85 %ld\xe4\xbb\xb6"
+                 "\xef\xbc\x88\xe6\xad\xbb\xe8\x80\x85%ld\xef\xbc\x89 %s / %s,%s",
+                 (long)b->count, (long)b->fatalities, b->ym, la, lo);
+      else
+        snprintf(t, sizeof t,
+                 "\xe4\xba\xa4\xe9\x80\x9a\xe4\xba\x8b\xe6\x95\x85 %ld\xe4\xbb\xb6 %s / %s,%s",
+                 (long)b->count, b->ym, la, lo);
+      cJSON_AddStringToObject(p, "title", t);
+    }
+    /* provenance: the exact NPA open-data CSV these counts were aggregated
+     * from (rows carried no link at all before). */
+    if (csv_url[0]) cJSON_AddStringToObject(p, "link", csv_url);
+    /* timeline placement: the bucket IS a calendar month of the source year,
+     * and geojson's T_PUB looks for published_at (not "year_month"), so every
+     * row landed with an empty timestamp. */
+    {
+      char pub[32];
+      snprintf(pub, sizeof pub, "%s-01T00:00:00Z", b->ym);
+      cJSON_AddStringToObject(p, "published_at", pub);
+    }
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);
   }

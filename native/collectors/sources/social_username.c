@@ -16,7 +16,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   t += jo_social_platforms_run(ctx, sink);  /* Reddit/Twitter/FB/IG/LinkedIn deep */
   t += jo_sherlock_run(ctx, sink);          /* 511-site presence (soft-404 aware) */
   t += jo_maigret_run(ctx, sink);           /* Maigret site DB presence */
-  return t;
+  /* run() must return 0 for success — core/scheduler.c does
+   *   status = rc == 0 ? "ok" : "error"
+   * and feeds that to anomaly_detect(). Returning the emitted count made every
+   * successful run (91 real profile rows for `torvalds`) log as an error and
+   * walk the source toward quarantine. Only a negative is a failure. */
+  return t >= 0 ? 0 : -1;
 }
 
 static const source_def social_username_def = {

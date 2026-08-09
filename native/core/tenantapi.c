@@ -105,8 +105,23 @@ int tenant_resolve(db_handle *db, const auth_user *u,
 
   /* Claim any pending invites addressed to this email: a freshly-invited
    * user becomes a member of the inviting workspace on their first
-   * authenticated request, and the invite is consumed. */
-  if (out->email[0]) {
+   * authenticated request, and the invite is consumed.
+   *
+   * GATED ON A VERIFIED ADDRESS. The `email` claim proves only that the token
+   * is well-signed, not that its bearer controls the mailbox: with email
+   * confirmation off (or with a provider that mints a session before
+   * confirmation), signing up as alice@corp.example is enough to walk into
+   * corp's workspace with whatever role the invite carried. That is a
+   * cross-tenant crossing, so the claim must ALSO be backed by the token's
+   * verified-email assertion. Unverified users are not rejected — they simply
+   * do not consume the invite, which stays pending until they confirm and
+   * come back. Nothing is deleted on this path, so a retry is lossless.
+   *
+   * auth_email_verified() is declared here rather than in auth.h because
+   * auth.h is shared with consumers this pass does not own; it reads the
+   * thread-local auth.c set while verifying THIS request's token. */
+  extern int auth_email_verified(void);
+  if (out->email[0] && auth_email_verified()) {
     char itids[16][64], iroles[16][32]; int nv = 0;
     if (sqlite3_prepare_v2(h,
           "SELECT tenant_id,role FROM tenant_invites WHERE lower(email)=lower(?1)",

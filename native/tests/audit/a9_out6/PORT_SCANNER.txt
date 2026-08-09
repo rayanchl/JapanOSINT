@@ -1,0 +1,27 @@
+=== PORT_SCANNER  entity=8.8.8.8
+exit: 0
+sched: rc=0 records=2 20115ms
+--- stderr ---
+[sched] PORT_SCANNER run rc=0 records=2 20115ms
+[detect] anomaly opened: PORT_SCANNER verdict=duration_outlier — duration 20115ms exceeds 10000ms threshold
+--- persisted: 2 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=2
+sub_source_id: (null)=2
+
+--- row 1 ---
+  uid            PORT_SCANNER|port:8.8.8.8:53
+  title          8.8.8.8:53 (DNS) open
+  body           {"host":"8.8.8.8","port":53,"service":"DNS","state":"open"}
+  summary        DNS
+  record_type    osint_service_result
+  tags           ["osint-search","PORT_SCANNER"]
+  properties     {"service":"PORT_SCANNER","host":"8.8.8.8","port":53,"success":true}
+
+--- row 2 ---
+  uid            PORT_SCANNER|port:8.8.8.8:443
+  title          8.8.8.8:443 (HTTPS) open
+  body           {"host":"8.8.8.8","port":443,"service":"HTTPS","state":"open"}
+  summary        HTTPS
+  record_type    osint_service_result
+  tags           ["osint-search","PORT_SCANNER"]
+  properties     {"service":"PORT_SCANNER","host":"8.8.8.8","port":443,"success":true}

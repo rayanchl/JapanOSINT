@@ -89,19 +89,33 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (cJSON_IsArray(ixData)) {
     cJSON *ix;
     cJSON_ArrayForEach(ix, ixData) {
+      /* AUDIT NOTE (slice a3, 2026-07-31): this used to `continue` whenever an
+       * IX record had no latitude/longitude — and PeeringDB's /api/ix objects
+       * NEVER carry coordinates (they expose city/country/region only; the
+       * coordinates live on /api/fac). So the entire second half of this
+       * collector silently discarded every record it fetched, and all the rows
+       * the source has ever produced came from the facilities endpoint alone.
+       * With /api/fac rate-limited (429 from this host today) the source
+       * returns nothing at all. An IX with a name, operator and city is real,
+       * useful inventory; it is emitted now with NO geometry rather than
+       * dropped — and no coordinate is invented for it.
+       * NB the "geometry" key is omitted, not set to JSON null: lib/geojson.c
+       * :235 serialises whatever is under it, so a null persists as "null". */
       cJSON *lat = cJSON_GetObjectItem(ix, "latitude");
       cJSON *lon = cJSON_GetObjectItem(ix, "longitude");
-      if (!(lat && !cJSON_IsNull(lat) && lon && !cJSON_IsNull(lon))) continue;
+      int has_pt = (lat && !cJSON_IsNull(lat) && lon && !cJSON_IsNull(lon));
 
       cJSON *feat = cJSON_CreateObject();
       cJSON_AddStringToObject(feat, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_Duplicate(lon, 1));
-      cJSON_AddItemToArray(co, cJSON_Duplicate(lat, 1));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(feat, "geometry", g);
+      if (has_pt) {
+        cJSON *g = cJSON_CreateObject();
+        cJSON_AddStringToObject(g, "type", "Point");
+        cJSON *co = cJSON_CreateArray();
+        cJSON_AddItemToArray(co, cJSON_Duplicate(lon, 1));
+        cJSON_AddItemToArray(co, cJSON_Duplicate(lat, 1));
+        cJSON_AddItemToObject(g, "coordinates", co);
+        cJSON_AddItemToObject(feat, "geometry", g);
+      }
 
       cJSON *p = cJSON_CreateObject();           /* EXACT JS key order */
       cJSON *idv = cJSON_GetObjectItem(ix, "id");
@@ -112,6 +126,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         snprintf(idb, sizeof idb, "PDB_IX_%s", idv->valuestring);
       else
         snprintf(idb, sizeof idb, "PDB_IX_");
+      /* ix_id is not in lib/geojson.c NATIVE_ID_KEYS, so without a "uid" the row
+       * fell back to a sha1 over {geometry, properties} and re-identified itself
+       * whenever any field changed. PeeringDB's numeric id is the stable key. */
+      cJSON_AddStringToObject(p, "uid", idb);
       cJSON_AddStringToObject(p, "ix_id", idb);
       cJSON *nm = cJSON_GetObjectItem(ix, "name");
       cJSON_AddItemToObject(p, "name",

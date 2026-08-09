@@ -28,13 +28,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-/* number field → double, with presence flag. */
-static int aq_num(const cJSON *o, const char *k, double *out) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  if (v && cJSON_IsNumber(v)) { *out = v->valuedouble; return 1; }
-  return 0;
-}
-
 /* Parse "lat,lon" (optionally with spaces) out of s. Returns 1 on success. */
 static int aq_parse_latlon(const char *s, double *lat, double *lon) {
   if (!s) return 0;
@@ -66,7 +59,7 @@ static int aq_emit_openaq_v3(intel_sink *sink, const cJSON *loc) {
 
   const cJSON *coord = cJSON_GetObjectItem(loc, "coordinates");
   double lat = 0, lon = 0; int hasgeo = 0;
-  if (coord) hasgeo = aq_num(coord, "latitude", &lat) & aq_num(coord, "longitude", &lon);
+  if (coord) hasgeo = jo_num(coord, "latitude", &lat) & jo_num(coord, "longitude", &lon);
 
   const cJSON *country = cJSON_GetObjectItem(loc, "country");
   const char *cc = country ? jo_sv(country, "code") : NULL;
@@ -121,7 +114,7 @@ static int aq_emit_openaq_v3(intel_sink *sink, const cJSON *loc) {
 
 static int aq_emit_openaq_v2(intel_sink *sink, const cJSON *m, int idx) {
   const char *param = jo_sv(m, "parameter");
-  double val = 0; int hasval = aq_num(m, "value", &val);
+  double val = 0; int hasval = jo_num(m, "value", &val);
   if (!param || !hasval) return 0;
   const char *unit = jo_sv(m, "unit");
   const char *locn = jo_sv(m, "location");
@@ -131,7 +124,7 @@ static int aq_emit_openaq_v2(intel_sink *sink, const cJSON *m, int idx) {
   const char *utc = date ? jo_sv(date, "utc") : NULL;
   const cJSON *coord = cJSON_GetObjectItem(m, "coordinates");
   double lat = 0, lon = 0; int hasgeo = 0;
-  if (coord) hasgeo = aq_num(coord, "latitude", &lat) & aq_num(coord, "longitude", &lon);
+  if (coord) hasgeo = jo_num(coord, "latitude", &lat) & jo_num(coord, "longitude", &lon);
 
   cJSON *data = cJSON_CreateObject();
   if (locn) cJSON_AddStringToObject(data, "location", locn);
@@ -284,7 +277,7 @@ static int run_waqi(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(root); return 0;
   }
 
-  double aqi = 0; int hasaqi = aq_num(d, "aqi", &aqi);
+  double aqi = 0; int hasaqi = jo_num(d, "aqi", &aqi);
   const cJSON *cityo = cJSON_GetObjectItem(d, "city");
   const char *cname = cityo ? jo_sv(cityo, "name") : NULL;
   const char *curl  = cityo ? jo_sv(cityo, "url") : NULL;
@@ -310,7 +303,7 @@ static int run_waqi(const source_ctx *ctx, intel_sink *sink) {
     cJSON *pols = cJSON_CreateObject();
     const cJSON *p;
     cJSON_ArrayForEach(p, iaqi) {
-      double v; if (p->string && aq_num(p, "v", &v)) cJSON_AddNumberToObject(pols, p->string, v);
+      double v; if (p->string && jo_num(p, "v", &v)) cJSON_AddNumberToObject(pols, p->string, v);
     }
     cJSON_AddItemToObject(data, "pollutants", pols);
   }
@@ -362,10 +355,20 @@ static int run_waqi(const source_ctx *ctx, intel_sink *sink) {
  * european_aqi,us_aqi returns { latitude, longitude, current:{ time, pm10,
  * pm2_5, ..., european_aqi, us_aqi }, current_units:{...} }. */
 static int run_openmeteo(const source_ctx *ctx, intel_sink *sink) {
+  /* This used to default to 35.6785,139.6823 (Tokyo) for ANY pivot that was not
+   * already a coordinate — so a query for, say, Osaka or a bare place name came
+   * back as a Tokyo measurement, emitted with has_geo=1 and the row titled by
+   * the returned coordinate. The service is on-demand (interval 0), so the
+   * pivot is always supplied; if it is not a coordinate we cannot answer, and
+   * saying so is better than answering about somewhere else. */
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
-  double lat = 35.6785, lon = 139.6823;  /* default: Tokyo */
-  int defaulted = 1;
-  if (q && aq_parse_latlon(q, &lat, &lon)) defaulted = 0;
+  double lat = 0, lon = 0;
+  if (!q || !aq_parse_latlon(q, &lat, &lon)) {
+    fprintf(stderr, "[OPENMETEO_AQ] pivot %s is not a coordinate; the API is "
+                    "coordinate-only, so nothing is emitted (no Tokyo "
+                    "default)\n", q ? q : "(none)");
+    return 0;
+  }
 
   char url[512];
   snprintf(url, sizeof url,
@@ -383,7 +386,7 @@ static int run_openmeteo(const source_ctx *ctx, intel_sink *sink) {
   cJSON *cur = cJSON_GetObjectItem(root, "current");
   if (!cJSON_IsObject(cur)) { cJSON_Delete(root); fprintf(stderr, "[OPENMETEO_AQ] no current block\n"); return 0; }
   double rlat = lat, rlon = lon;
-  aq_num(root, "latitude", &rlat); aq_num(root, "longitude", &rlon);
+  jo_num(root, "latitude", &rlat); jo_num(root, "longitude", &rlon);
   const char *ctime = jo_sv(cur, "time");
 
   static const char *FIELDS[] = { "pm2_5","pm10","carbon_monoxide","nitrogen_dioxide",
@@ -394,15 +397,15 @@ static int run_openmeteo(const source_ctx *ctx, intel_sink *sink) {
   if (ctime) cJSON_AddStringToObject(data, "measured_at", ctime);
   int any = 0;
   for (int i = 0; FIELDS[i]; i++) {
-    double v; if (aq_num(cur, FIELDS[i], &v)) { cJSON_AddNumberToObject(data, FIELDS[i], v); any = 1; }
+    double v; if (jo_num(cur, FIELDS[i], &v)) { cJSON_AddNumberToObject(data, FIELDS[i], v); any = 1; }
   }
   if (!any) { cJSON_Delete(data); cJSON_Delete(root); fprintf(stderr, "[OPENMETEO_AQ] empty current\n"); return 0; }
   cJSON_AddStringToObject(data, "source", "Open-Meteo");
   char *bj = cJSON_PrintUnformatted(data);
   cJSON_Delete(data);
 
-  double eaqi = 0; int haseaqi = aq_num(cur, "european_aqi", &eaqi);
-  double usaqi = 0; int hasusaqi = aq_num(cur, "us_aqi", &usaqi);
+  double eaqi = 0; int haseaqi = jo_num(cur, "european_aqi", &eaqi);
+  double usaqi = 0; int hasusaqi = jo_num(cur, "us_aqi", &usaqi);
 
   cJSON *props = cJSON_CreateObject();
   cJSON_AddStringToObject(props, "service", "OPENMETEO_AQ");
@@ -424,7 +427,7 @@ static int run_openmeteo(const source_ctx *ctx, intel_sink *sink) {
   intel_item it = {0};
   it.remote_key      = key;
   it.title           = title;
-  it.summary         = defaulted ? "Tokyo (default)" : NULL;
+  it.summary         = NULL;
   it.body            = bj;
   it.lang            = "en";
   it.published_at    = ctime;

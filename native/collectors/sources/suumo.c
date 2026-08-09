@@ -66,11 +66,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   { time_t t = time(NULL); struct tm tm; gmtime_r(&t, &tm);
     strftime(now, sizeof now, "%Y-%m-%dT%H:%M:%S.000Z", &tm); }
 
-  int n = 0;
+  int n = 0, fetched = 0;
   for (int i = 0; i < NPREF; i++) {
     char url[128];
     snprintf(url, sizeof url, "https://suumo.jp/chintai/%s/", PREFS[i].slug);
     char *html = feed_get_text(ctx->http, url, 15000);
+    if (html) fetched++;
     long count = 0; int have = 0;
     if (html) { have = parse_count(html, &count); free(html); }
     if (!have) continue;                 /* omit pref — honest empty */
@@ -113,8 +114,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(p); cJSON_Delete(tags);
   }
 
-  fprintf(stderr, "[suumo] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  fprintf(stderr, "[suumo] emitted %d (%d/%d prefecture pages fetched)\n",
+          n, fetched, NPREF);
+  /* STATUS code, not a row count: a page that loads without a listing count is
+   * an honest empty. Only a total fetch failure is a real error. */
+  return fetched > 0 ? 0 : -1;
 }
 
 static const source_def suumo_def = {

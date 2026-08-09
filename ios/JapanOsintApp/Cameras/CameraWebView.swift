@@ -60,6 +60,21 @@ struct CameraWebView {
         }
     }
 
+    /// Stop a web view we are about to drop.
+    ///
+    /// A `WKWebView` that leaves the view hierarchy keeps its content process
+    /// alive — a YouTube/Windy embed carries on decoding video and pulling
+    /// bytes off screen. The camera grid instantiates one of these per visible
+    /// card, so without a teardown a few minutes of scrolling leaves a stack of
+    /// live players running. Blanking the page tears down the media session;
+    /// clearing the delegate stops a late failure callback from re-entering a
+    /// view that no longer exists.
+    fileprivate static func teardown(_ view: WKWebView) {
+        view.stopLoading()
+        view.navigationDelegate = nil
+        _ = view.loadHTMLString("", baseURL: nil)
+    }
+
     final class Coordinator: NSObject, WKNavigationDelegate {
         var onLoadFailure: (() -> Void)?
 
@@ -102,6 +117,11 @@ extension CameraWebView: UIViewRepresentable {
     func updateUIView(_ view: WKWebView, context: Context) {
         refresh(view, coordinator: context.coordinator)
     }
+
+    static func dismantleUIView(_ view: WKWebView, coordinator: Coordinator) {
+        coordinator.onLoadFailure = nil
+        CameraWebView.teardown(view)
+    }
 }
 #elseif canImport(AppKit)
 extension CameraWebView: NSViewRepresentable {
@@ -111,6 +131,11 @@ extension CameraWebView: NSViewRepresentable {
 
     func updateNSView(_ view: WKWebView, context: Context) {
         refresh(view, coordinator: context.coordinator)
+    }
+
+    static func dismantleNSView(_ view: WKWebView, coordinator: Coordinator) {
+        coordinator.onLoadFailure = nil
+        CameraWebView.teardown(view)
     }
 }
 #endif

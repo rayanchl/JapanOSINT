@@ -9,10 +9,11 @@
  *                  tier, keyless). Chain inferred from the address shape (btc /
  *                  bitcoin-cash / litecoin / dogecoin / ethereum). Emits the
  *                  address dashboard summary (balance, received, spent, tx count).
- *   OFAC_CRYPTO  — U.S. Treasury OFAC SDN "advanced" XML. We fetch the published
- *                  sdn_advanced.xml and scan its <Feature> "Digital Currency
- *                  Address" values for an exact match of the queried address; on
- *                  a hit we emit the sanctioned listing. No match → honest empty.
+ *   OFAC_CRYPTO  — U.S. Treasury OFAC SDN list (SDN.CSV from the current
+ *                  sanctionslistservice host). We scan the "Digital Currency
+ *                  Address - <CHAIN> <addr>" remarks for an exact match of the
+ *                  queried address; on a hit we emit the sanctioned party from
+ *                  that record. No match → honest empty.
  *
  * HONESTY: every run() REAL-fetches and emits only parsed real data, else
  * honest-empty (return 0). Nothing is fabricated; no constructed-URL cards. */
@@ -206,92 +207,128 @@ static int run_blockchair(const source_ctx *ctx, intel_sink *sink) {
 }
 
 /* -------------------------------------------------------------- OFAC_CRYPTO */
-/* Scan the OFAC SDN advanced XML for a Digital Currency Address feature whose
- * value exactly equals the queried address. On a hit, emit the sanctioned entry
- * (the enclosing <sanctionsEntry>/<distinctParty> is too deep to reconstruct
- * robustly with a light scanner, so we anchor on the matched address value and
- * the nearest preceding party identity name). No match → honest empty. */
+/* www.treasury.gov/ofac/downloads/sdn_advanced.xml is retired (404). OFAC now
+ * publishes through sanctionslistservice.ofac.treas.gov; of the exports there,
+ * SDN.CSV is the one to use — 5.6 MB against 125 MB for SDN_ADVANCED.XML, and
+ * it is one record per line, so the sanctioned party's NAME is simply field 2
+ * of the line the address sits on. That replaces the old "nearest preceding
+ * <NamePartValue>" heuristic, which could attribute an address to the wrong
+ * party. Crypto addresses live in the remarks field as
+ *   "... Digital Currency Address - XBT 12QtD5BF...; alt. Digital Currency ..."
+ * No match → honest empty. */
+#define OFAC_SDN_CSV \
+  "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.CSV"
+
+/* Copy one CSV field starting at *pp (quoted or bare) into out; advances *pp
+ * past the following comma. Returns out. */
+static char *csv_field(const char **pp, char *out, size_t n) {
+  const char *p = *pp;
+  size_t i = 0;
+  if (*p == '"') {
+    p++;
+    while (*p && !(*p == '"' && p[1] != '"')) {
+      if (*p == '"' && p[1] == '"') p++;          /* "" → " */
+      if (i + 1 < n) out[i++] = *p;
+      p++;
+    }
+    if (*p == '"') p++;
+  } else {
+    while (*p && *p != ',' && *p != '\n' && *p != '\r') {
+      if (i + 1 < n) out[i++] = *p;
+      p++;
+    }
+  }
+  out[i] = 0;
+  while (*p && *p != ',' && *p != '\n') p++;
+  if (*p == ',') p++;
+  *pp = p;
+  return out;
+}
+
 static int run_ofac(const source_ctx *ctx, intel_sink *sink) {
   const char *addr = ctx->entity;
-  if (!addr || !*addr) return -1;
-  /* The advanced XML tags crypto addresses as Feature values; the canonical,
-   * human-readable SDN list also carries "Digital Currency Address - XBT ..."
-   * text. We fetch the advanced XML (authoritative) and look for the literal
-   * address bytes preceded by a VersionDetail/value marker. */
-  char *xml = jo_get(ctx,
-    "https://www.treasury.gov/ofac/downloads/sdn_advanced.xml", NULL, "ofac_crypto");
-  if (!xml) return 0;
+  if (!addr || !*addr) return 0;
+  char *csv = jo_get(ctx, OFAC_SDN_CSV, NULL, "ofac_crypto");
+  if (!csv) return 0;
 
   int emitted = 0;
-  const char *hit = strstr(xml, addr);
-  /* Require the address to appear as a Digital Currency feature value, not an
-   * incidental substring: OFAC wraps crypto addresses in <VersionDetail ...>ADDR
-   * </VersionDetail> under a "Digital Currency Address" feature type. Accept a
-   * match only when the surrounding bytes look like a value delimiter. */
-  while (hit) {
-    char before = (hit > xml) ? hit[-1] : '>';
-    char after  = hit[strlen(addr)];
-    int delim_ok = (before == '>' || before == '"' || before == ' ') &&
-                   (after == '<' || after == '"' || after == ' ' || after == 0);
-    if (delim_ok) {
-      /* nearest preceding readable identity: OFAC identity names appear in
-       * <Alias><DocumentedName>...<NamePartValue>NAME</NamePartValue> blocks.
-       * Grab the closest preceding NamePartValue as a best-effort label. */
-      const char *name = NULL; size_t namelen = 0;
-      const char *scan = xml, *lastnpv = NULL;
-      while ((scan = strstr(scan, "<NamePartValue")) && scan < hit) {
-        lastnpv = scan; scan += 14;
-      }
-      if (lastnpv) {
-        const char *gt = strchr(lastnpv, '>');
-        const char *end = gt ? strstr(gt, "</NamePartValue>") : NULL;
-        if (gt && end) { name = gt + 1; namelen = (size_t)(end - name); }
-      }
-      char label[256];
-      if (name && namelen && namelen < sizeof label) {
-        memcpy(label, name, namelen); label[namelen] = 0;
-      } else {
-        snprintf(label, sizeof label, "OFAC SDN entry");
-      }
+  size_t alen = strlen(addr);
+  for (const char *hit = strstr(csv, addr); hit; hit = strstr(hit + 1, addr)) {
+    /* the address must be a whole token in the remarks, not a substring */
+    char before = (hit > csv) ? hit[-1] : ' ';
+    char after  = hit[alen];
+    if (!(before == ' ' || before == ',' || before == '"') ||
+        !(after == ';' || after == ',' || after == '"' || after == ' ' ||
+          after == '\r' || after == '\n' || after == '.' || after == 0))
+      continue;
 
-      cJSON *data = cJSON_CreateObject();
-      cJSON_AddStringToObject(data, "address", addr);
-      cJSON_AddStringToObject(data, "list", "OFAC SDN");
-      cJSON_AddStringToObject(data, "sanctioned_party", label);
-      cJSON_AddBoolToObject(data, "sanctioned", 1);
-      cJSON_AddStringToObject(data, "source", "US Treasury OFAC");
-      char *bj = cJSON_PrintUnformatted(data);
-      cJSON_Delete(data);
+    /* which chain: scan back to the "Digital Currency Address - XXX " marker
+     * that introduces this address (bounded to the same record) */
+    const char *rec = hit;
+    while (rec > csv && rec[-1] != '\n') rec--;
+    char chain[16] = {0};
+    const char *m = NULL;
+    for (const char *s = strstr(rec, "Digital Currency Address - ");
+         s && s < hit; s = strstr(s + 1, "Digital Currency Address - "))
+      m = s;
+    if (!m) continue;                 /* address matched some other column */
+    const char *code = m + 27;
+    int ci = 0;
+    while (code[ci] && code[ci] != ' ' && ci < 15) { chain[ci] = code[ci]; ci++; }
+    chain[ci] = 0;
 
-      cJSON *props = cJSON_CreateObject();
-      cJSON_AddStringToObject(props, "service", "OFAC_CRYPTO");
-      cJSON_AddStringToObject(props, "address", addr);
-      cJSON_AddStringToObject(props, "list", "OFAC SDN");
-      cJSON_AddBoolToObject(props, "sanctioned", 1);
-      cJSON_AddBoolToObject(props, "success", 1);
-      char *pj = cJSON_PrintUnformatted(props);
-      cJSON_Delete(props);
+    const char *p = rec;
+    char entnum[32], name[256], sdntype[64], programs[256];
+    csv_field(&p, entnum, sizeof entnum);
+    csv_field(&p, name, sizeof name);
+    csv_field(&p, sdntype, sizeof sdntype);
+    csv_field(&p, programs, sizeof programs);
+    if (!name[0]) snprintf(name, sizeof name, "OFAC SDN entry");
 
-      char title[320];
-      snprintf(title, sizeof title, "OFAC-sanctioned: %s", label);
+    cJSON *data = cJSON_CreateObject();
+    cJSON_AddStringToObject(data, "address", addr);
+    cJSON_AddStringToObject(data, "list", "OFAC SDN");
+    cJSON_AddStringToObject(data, "sanctioned_party", name);
+    if (chain[0]) cJSON_AddStringToObject(data, "chain", chain);
+    if (entnum[0]) cJSON_AddStringToObject(data, "sdn_ent_num", entnum);
+    if (sdntype[0] && strcmp(sdntype, "-0-")) cJSON_AddStringToObject(data, "sdn_type", sdntype);
+    if (programs[0] && strcmp(programs, "-0-")) cJSON_AddStringToObject(data, "programs", programs);
+    cJSON_AddBoolToObject(data, "sanctioned", 1);
+    cJSON_AddStringToObject(data, "source", "US Treasury OFAC");
+    char *bj = cJSON_PrintUnformatted(data);
+    cJSON_Delete(data);
 
-      intel_item it = {0};
-      it.remote_key      = addr;
-      it.title           = title;
-      it.summary         = "Address on OFAC SDN sanctions list";
-      it.body            = bj;
-      it.lang            = "en";
-      it.link            = "https://sanctionssearch.ofac.treas.gov/";
-      it.record_type     = "crypto-sanction";
-      it.properties_json = pj;
-      it.tags_json       = "[\"osint-search\",\"OFAC_CRYPTO\",\"sanctions\"]";
-      if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
-      break;   /* one authoritative hit is enough */
-    }
-    hit = strstr(hit + 1, addr);
+    cJSON *props = cJSON_CreateObject();
+    cJSON_AddStringToObject(props, "service", "OFAC_CRYPTO");
+    cJSON_AddStringToObject(props, "address", addr);
+    cJSON_AddStringToObject(props, "list", "OFAC SDN");
+    if (chain[0]) cJSON_AddStringToObject(props, "chain", chain);
+    if (entnum[0]) cJSON_AddStringToObject(props, "sdn_ent_num", entnum);
+    if (programs[0] && strcmp(programs, "-0-")) cJSON_AddStringToObject(props, "programs", programs);
+    cJSON_AddBoolToObject(props, "sanctioned", 1);
+    cJSON_AddBoolToObject(props, "success", 1);
+    char *pj = cJSON_PrintUnformatted(props);
+    cJSON_Delete(props);
+
+    char title[420];
+    snprintf(title, sizeof title, "OFAC-sanctioned %s address — %s",
+             chain[0] ? chain : "crypto", name);
+
+    intel_item it = {0};
+    it.remote_key      = addr;
+    it.title           = title;
+    it.summary         = "Address on OFAC SDN sanctions list";
+    it.body            = bj;
+    it.lang            = "en";
+    it.link            = "https://sanctionssearch.ofac.treas.gov/";
+    it.record_type     = "crypto-sanction";
+    it.properties_json = pj;
+    it.tags_json       = "[\"osint-search\",\"OFAC_CRYPTO\",\"sanctions\"]";
+    if (sink->emit(sink, &it) >= 0) emitted++;
+    free(bj); free(pj);
+    break;   /* one authoritative hit is enough */
   }
-  free(xml);
+  free(csv);
   fprintf(stderr, "[ofac_crypto] emitted %d\n", emitted);
   return 0;
 }
@@ -332,8 +369,8 @@ static const source_def ofac_crypto_def = {
   .name = "OFAC Crypto SDN Check", .name_ja = "OFAC 暗号資産制裁リスト照合",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "dataset",
-  .url = "https://www.treasury.gov/ofac/downloads/sdn_advanced.xml",
-  .description = "US Treasury OFAC SDN advanced XML — checks a crypto address against the sanctions list",
+  .url = OFAC_SDN_CSV,
+  .description = "US Treasury OFAC SDN list — checks a crypto address against the sanctions list",
   .layer = NULL, .free_tier = 1,
 };
 REGISTER_SOURCE(ofac_crypto_def)
@@ -353,13 +390,6 @@ REGISTER_SOURCE(ofac_crypto_def)
  *   ENS_RESOLVE     ENS name → resolved address + avatar/display via ensideas
  *                   (api.ensideas.com/ens/resolve, keyless LIVE).
  * =========================================================================== */
-
-/* cJSON number field as double, with presence flag. */
-static int c2_num(const cJSON *o, const char *k, double *out) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  if (v && cJSON_IsNumber(v)) { *out = v->valuedouble; return 1; }
-  return 0;
-}
 
 /* Number-or-string field → copy into buf (Blockscout returns big balances as
  * decimal strings; TronScan uses real numbers). Returns 1 if present. */
@@ -440,15 +470,17 @@ static int c2_blockscout(const source_ctx *ctx, intel_sink *sink, const char *ad
 }
 
 /* ---- TRON_SCAN ---------------------------------------------------------- *
- * GET https://apilist.tronscanapi.com/api/accountv2?address=<addr>
- *   { address, balance (sun), totalTransactionCount, name, ... }. Keyless.
- * A missing account returns balance/counts of 0 but still has "address". */
+ * apilist.tronscanapi.com now answers 401 Authorization Required to keyless
+ * callers, so this pivots on TronGrid's public node API instead:
+ *   GET https://api.trongrid.io/v1/accounts/<addr>
+ *   → { success, data:[ { address (hex41), balance (sun), account_name (hex),
+ *                         type, assetV2[], trc20[], account_resource } ] }
+ * An unknown address returns success with an empty data[] → honest empty. */
 static int c2_tronscan(const source_ctx *ctx, intel_sink *sink, const char *addr) {
   char *enc = jo_urlencode(addr);
   if (!enc) return 0;
   char url[512];
-  snprintf(url, sizeof url,
-           "https://apilist.tronscanapi.com/api/accountv2?address=%s", enc);
+  snprintf(url, sizeof url, "https://api.trongrid.io/v1/accounts/%s", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
                          "User-Agent: JapanOSINT/1.0 (crypto)", NULL };
@@ -458,37 +490,71 @@ static int c2_tronscan(const source_ctx *ctx, intel_sink *sink, const char *addr
   free(body);
   if (!root) return 0;
 
-  const char *acct = jo_sv(root, "address");
-  if (!acct) { cJSON_Delete(root); fprintf(stderr, "[TRON_SCAN] no account\n"); return 0; }
-  char bal[96] = {0}; int have_bal = c2_numstr(root, "balance", bal, sizeof bal);
-  double txc = 0; int have_tx = c2_num(root, "totalTransactionCount", &txc);
-  const char *name = jo_sv(root, "name");
+  cJSON *arr = cJSON_GetObjectItem(root, "data");
+  cJSON *acc = (arr && cJSON_IsArray(arr)) ? cJSON_GetArrayItem(arr, 0) : NULL;
+  if (!acc) {
+    cJSON_Delete(root);
+    fprintf(stderr, "[TRON_SCAN] no account\n");
+    return 0;
+  }
+  const char *hexaddr = jo_sv(acc, "address");
+  char bal[96] = {0}; int have_bal = c2_numstr(acc, "balance", bal, sizeof bal);
+  const char *type = jo_sv(acc, "type");
+  cJSON *trc20 = cJSON_GetObjectItem(acc, "trc20");
+  int ntok = (trc20 && cJSON_IsArray(trc20)) ? cJSON_GetArraySize(trc20) : 0;
+  cJSON *assets = cJSON_GetObjectItem(acc, "assetV2");
+  int nass = (assets && cJSON_IsArray(assets)) ? cJSON_GetArraySize(assets) : 0;
+  double created = 0; int have_created = jo_num(acc, "create_time", &created);
 
   cJSON *data = cJSON_CreateObject();
-  cJSON_AddStringToObject(data, "address", acct);
+  cJSON_AddStringToObject(data, "address", addr);
+  if (hexaddr) cJSON_AddStringToObject(data, "address_hex", hexaddr);
   cJSON_AddStringToObject(data, "chain", "tron");
-  if (have_bal) cJSON_AddStringToObject(data, "balance_sun", bal);
-  if (have_tx)  cJSON_AddNumberToObject(data, "tx_count", txc);
-  if (name)     cJSON_AddStringToObject(data, "name", name);
-  cJSON_AddStringToObject(data, "source", "TronScan");
+  if (have_bal) {
+    cJSON_AddStringToObject(data, "balance_sun", bal);
+    cJSON_AddNumberToObject(data, "balance_trx", strtod(bal, NULL) / 1e6);
+  }
+  if (type) cJSON_AddStringToObject(data, "account_type", type);
+  if (have_created) cJSON_AddNumberToObject(data, "create_time_ms", created);
+  cJSON_AddNumberToObject(data, "trc20_token_count", ntok);
+  cJSON_AddNumberToObject(data, "trc10_asset_count", nass);
+  /* Carry the token holdings, but cap the list: a busy contract holds hundreds
+   * of TRC-20 balances and the whole array (26 KB of base58 for USDT's
+   * contract) would go straight into the FTS index. trc20_token_count above is
+   * the true total. */
+  if (trc20 && ntok) {
+    cJSON *cap = cJSON_CreateArray();
+    for (int i = 0; i < ntok && i < 50; i++)
+      cJSON_AddItemToArray(cap, cJSON_Duplicate(cJSON_GetArrayItem(trc20, i), 1));
+    cJSON_AddItemToObject(data, "trc20", cap);
+    if (ntok > 50) cJSON_AddBoolToObject(data, "trc20_truncated", 1);
+  }
+  cJSON_AddStringToObject(data, "source", "TronGrid");
   char *bj = cJSON_PrintUnformatted(data);
   cJSON_Delete(data);
 
   cJSON *props = cJSON_CreateObject();
   cJSON_AddStringToObject(props, "service", "TRON_SCAN");
   cJSON_AddStringToObject(props, "chain", "tron");
-  cJSON_AddStringToObject(props, "address", acct);
-  if (have_tx) cJSON_AddNumberToObject(props, "tx_count", txc);
+  cJSON_AddStringToObject(props, "address", addr);
+  if (have_bal) cJSON_AddStringToObject(props, "balance_sun", bal);
+  if (type) cJSON_AddStringToObject(props, "account_type", type);
+  cJSON_AddNumberToObject(props, "trc20_token_count", ntok);
   cJSON_AddBoolToObject(props, "success", 1);
   char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char link[256];
-  snprintf(link, sizeof link, "https://tronscan.org/#/address/%s", acct);
+  char link[256], title[192];
+  snprintf(link, sizeof link, "https://tronscan.org/#/address/%s", addr);
+  if (have_bal)
+    snprintf(title, sizeof title, "Tron %s — %.6f TRX, %d TRC-20 tokens",
+             addr, strtod(bal, NULL) / 1e6, ntok);
+  else
+    snprintf(title, sizeof title, "Tron account %s", addr);
 
   intel_item it = {0};
-  it.remote_key      = acct;
-  it.title           = name ? name : acct;
+  it.remote_key      = addr;
+  it.title           = title;
   it.summary         = "Tron account";
   it.body            = bj;
   it.lang            = "en";
@@ -550,12 +616,12 @@ static int c2_solana(const source_ctx *ctx, intel_sink *sink, const char *addr) 
     return 0;   /* honest empty — account doesn't exist */
   }
 
-  double lamports = 0; int have_lam = c2_num(value, "lamports", &lamports);
+  double lamports = 0; int have_lam = jo_num(value, "lamports", &lamports);
   const char *owner = jo_sv(value, "owner");
   const cJSON *ex = cJSON_GetObjectItem(value, "executable");
   int executable = (ex && cJSON_IsBool(ex)) ? cJSON_IsTrue(ex) : 0;
-  double rent = 0; int have_rent = c2_num(value, "rentEpoch", &rent);
-  double slot = 0; int have_slot = result ? c2_num(cJSON_GetObjectItem(result, "context"), "slot", &slot) : 0;
+  double rent = 0; int have_rent = jo_num(value, "rentEpoch", &rent);
+  double slot = 0; int have_slot = result ? jo_num(cJSON_GetObjectItem(result, "context"), "slot", &slot) : 0;
 
   cJSON *data = cJSON_CreateObject();
   cJSON_AddStringToObject(data, "address", addr);

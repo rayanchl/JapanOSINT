@@ -4,6 +4,7 @@
  * NO public API. Gated honest-empty on DOCOMO_POPULATION_API_KEY (emit
  * nothing without it). With key: attempt contract endpoint, build point
  * features, emit; honest empty on failure. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -36,14 +37,6 @@ static int coord(cJSON *r, double *lon, double *lat) {
   return 1;
 }
 
-static cJSON *pick(cJSON *r, const char *a, const char *b) {
-  cJSON *v = cJSON_GetObjectItem(r, a);
-  if (v && !cJSON_IsNull(v)) return cJSON_Duplicate(v, 1);
-  v = cJSON_GetObjectItem(r, b);
-  if (v && !cJSON_IsNull(v)) return cJSON_Duplicate(v, 1);
-  return cJSON_CreateNull();
-}
-
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("DOCOMO_POPULATION_API_KEY");
   if (!key || !*key) {
@@ -74,19 +67,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_ArrayForEach(r, rows) {
     double lon, lat;
     if (!coord(r, &lon, &lat)) continue;
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(lon, lat);
     cJSON *p = cJSON_CreateObject();
-    cJSON_AddItemToObject(p, "mesh_code", pick(r, "mesh_code", "meshCode"));
-    cJSON_AddItemToObject(p, "population", pick(r, "population", "value"));
-    cJSON_AddItemToObject(p, "datetime", pick(r, "datetime", "timestamp"));
+    cJSON_AddItemToObject(p, "mesh_code", jo_pick_dup(r, "mesh_code", "meshCode"));
+    cJSON_AddItemToObject(p, "population", jo_pick_dup(r, "population", "value"));
+    cJSON_AddItemToObject(p, "datetime", jo_pick_dup(r, "datetime", "timestamp"));
     cJSON_AddStringToObject(p, "source", "docomo_population_api");
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);

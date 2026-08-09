@@ -2,6 +2,7 @@
  * write surface. See header. SQL is verbatim from entityStore.js. */
 #include "entitystore.h"
 #include "fts.h"
+#include "../lib/utf8.h"
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
 #include <openssl/rand.h>
@@ -35,20 +36,14 @@ static char *dup_norm(const char *v) {
   return b;
 }
 
-/* entityStore CJK set: /[぀-ヿ㐀-䶿一-鿿豈-﫿]/ over UTF-8. */
+/* entityStore CJK set: /[぀-ヿ㐀-䶿一-鿿豈-﫿]/ over UTF-8. The bounded decode
+ * that used to be open-coded here is now lib/utf8.h — this file had the only
+ * correct copy of the four, so it became the shared one. */
 static int has_cjk(const char *s) {
   if (!s) return 0;
   for (const unsigned char *p = (const unsigned char *)s; *p; ) {
-    unsigned cp, len;
-    if (*p < 0x80) { cp = *p; len = 1; }
-    else if ((*p >> 5) == 0x6) { cp = *p & 0x1F; len = 2; }
-    else if ((*p >> 4) == 0xE) { cp = *p & 0x0F; len = 3; }
-    else if ((*p >> 3) == 0x1E) { cp = *p & 0x07; len = 4; }
-    else { p++; continue; }
-    for (unsigned i = 1; i < len; i++) {
-      if ((p[i] & 0xC0) != 0x80) { len = i; break; }
-      cp = (cp << 6) | (p[i] & 0x3F);
-    }
+    int len;
+    unsigned cp = utf8_decode(p, &len);
     if ((cp >= 0x3040 && cp <= 0x30FF) || (cp >= 0x3400 && cp <= 0x4DBF) ||
         (cp >= 0x4E00 && cp <= 0x9FFF) || (cp >= 0xF900 && cp <= 0xFAFF))
       return 1;
@@ -97,27 +92,48 @@ static void write_entity_fts(sqlite3 *h, const char *uid, const char *canonical,
     if (sqlite3_step(s) == SQLITE_ROW) old = sqlite3_column_int64(s, 0);
     sqlite3_finalize(s);
   }
-  if (old >= 0 && sqlite3_prepare_v2(h, "DELETE FROM entities_fts WHERE rowid=?1",
-                                     -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_int64(s, 1, old); sqlite3_step(s); sqlite3_finalize(s);
-  }
   char *jk = join_aliases(aliases_json);
   char *sc = fts_segment(canonical ? canonical : "");
   char *sj = fts_segment(name_ja ? name_ja : "");
   char *sr = fts_segment(name_romaji ? name_romaji : "");
   char *sk = fts_segment(jk);
+  /* The rowid must come from THIS insert — the unfixed twin of the bug
+   * core/intel.c:fts_write documents. Reading last_insert_rowid()
+   * unconditionally meant that when this INSERT failed or was never prepared,
+   * the map recorded whatever rowid the PRECEDING statement produced (the
+   * entities upsert, or another entity's fts insert). The delete at the top of
+   * the next write for THAT uid then removed a DIFFERENT entity's index row,
+   * evicting it from entity search with no error anywhere. */
+  int inserted = 0;
   if (sqlite3_prepare_v2(h,
       "INSERT INTO entities_fts(uid,canonical,name_ja,name_romaji,keywords)"
       " VALUES(?1,?2,?3,?4,?5)", -1, &s, NULL) == SQLITE_OK) {
+    /* Delete the old row only once the replacement is known to be preparable
+     * — same ordering rule as core/intel.c, for the same reason: a committed
+     * delete with no insert behind it is an eviction from search that nothing
+     * reports and nothing repairs short of a full rebuild. */
+    if (old >= 0) {
+      sqlite3_stmt *d;
+      if (sqlite3_prepare_v2(h, "DELETE FROM entities_fts WHERE rowid=?1",
+                             -1, &d, NULL) == SQLITE_OK) {
+        sqlite3_bind_int64(d, 1, old); sqlite3_step(d); sqlite3_finalize(d);
+      }
+    }
     sqlite3_bind_text(s, 1, uid, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 2, sc, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 3, sj, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 4, sr, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 5, sk, -1, SQLITE_TRANSIENT);
-    sqlite3_step(s); sqlite3_finalize(s);
+    inserted = (sqlite3_step(s) == SQLITE_DONE);
+    sqlite3_finalize(s);
+  }
+  free(jk); free(sc); free(sj); free(sr); free(sk);
+  if (!inserted) {
+    fprintf(stderr, "[entitystore] entities_fts insert failed for %s: %s\n",
+            uid, sqlite3_errmsg(h));
+    return;                       /* leave the existing map row alone */
   }
   sqlite3_int64 rid = sqlite3_last_insert_rowid(h);
-  free(jk); free(sc); free(sj); free(sr); free(sk);
   if (sqlite3_prepare_v2(h,
       "INSERT INTO entities_fts_uid_map(uid,rowid) VALUES(?1,?2)"
       " ON CONFLICT(uid) DO UPDATE SET rowid=excluded.rowid",

@@ -57,16 +57,6 @@ static char *ps_b64(const char *in) {
   return out;
 }
 
-static void ps_urlenc(const char *s, char *out, size_t cap) {
-  size_t o = 0;
-  for (const char *p = s; *p && o + 4 < cap; p++) {
-    unsigned char c = (unsigned char)*p;
-    if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') out[o++] = (char)c;
-    else o += (size_t)snprintf(out + o, cap - o, "%%%02X", c);
-  }
-  out[o] = 0;
-}
-
 static cJSON *ps_get_json(http_client *http, const char *url, const char **hdrs) {
   http_response hr = {0};
   if (http_request(http, "GET", url, hdrs, NULL, 0, 15000, 1, &hr) != 0 ||
@@ -101,7 +91,9 @@ static int ps_emit_data(intel_sink *sink, const char *service, const char *sourc
 /* NOTE: the OSINTsaas directory of ~119 people/company "lookup-link" cards was
  * removed — it emitted constructed search URLs (per-source) marked success:true
  * without ever fetching them (no-fabrication rule). Only the genuinely-fetched
- * parsed-API providers below emit records. _person_links.inc is left unused. */
+ * parsed-API providers below emit records. The 118-row table that fed those
+ * cards, _person_links.inc, had been left in the tree unreferenced by anything
+ * for the same reason; it is now deleted, so nobody re-wires it by accident. */
 
 /* ── real parsed-API providers (ported from OSINTsaas) ────────────────────── */
 
@@ -112,7 +104,7 @@ static int ps_emit_data(intel_sink *sink, const char *service, const char *sourc
  * GITHUB_USER / GRAVATAR_GLOBAL sources so the shared sink dedups by uid. */
 
 static int ps_wikipedia(const source_ctx *ctx, intel_sink *sink, const char *name, const char *svc) {
-  char enc[256]; ps_urlenc(name, enc, sizeof enc);
+  char enc[256]; jo_urlencode_buf(name, enc, sizeof enc);
   char url[400];
   snprintf(url, sizeof url, "https://en.wikipedia.org/api/rest_v1/page/summary/%s", enc);
   cJSON *j = ps_get_json(ctx->http, url, NULL);
@@ -134,7 +126,7 @@ static int ps_wikipedia(const source_ctx *ctx, intel_sink *sink, const char *nam
 }
 
 static int ps_duckduckgo(const source_ctx *ctx, intel_sink *sink, const char *name, const char *svc) {
-  char enc[256]; ps_urlenc(name, enc, sizeof enc);
+  char enc[256]; jo_urlencode_buf(name, enc, sizeof enc);
   char url[400];
   snprintf(url, sizeof url, "https://api.duckduckgo.com/?q=%s&format=json&no_html=1", enc);
   cJSON *j = ps_get_json(ctx->http, url, NULL);
@@ -159,7 +151,7 @@ static int ps_duckduckgo(const source_ctx *ctx, intel_sink *sink, const char *na
 
 static int ps_hackernews(const source_ctx *ctx, intel_sink *sink, const char *name, const char *svc) {
   if (strchr(name, ' ')) return 0;                  /* username-only */
-  char enc[128]; ps_urlenc(name, enc, sizeof enc);
+  char enc[128]; jo_urlencode_buf(name, enc, sizeof enc);
   char url[256];
   snprintf(url, sizeof url, "https://hacker-news.firebaseio.com/v0/user/%s.json", enc);
   cJSON *j = ps_get_json(ctx->http, url, NULL);
@@ -185,7 +177,7 @@ static int ps_hackernews(const source_ctx *ctx, intel_sink *sink, const char *na
 }
 
 static int ps_stackoverflow(const source_ctx *ctx, intel_sink *sink, const char *name, const char *svc) {
-  char enc[256]; ps_urlenc(name, enc, sizeof enc);
+  char enc[256]; jo_urlencode_buf(name, enc, sizeof enc);
   char url[400];
   snprintf(url, sizeof url,
     "https://api.stackexchange.com/2.3/users?order=desc&sort=reputation&inname=%s&site=stackoverflow&pagesize=5", enc);
@@ -216,7 +208,7 @@ static int ps_stackoverflow(const source_ctx *ctx, intel_sink *sink, const char 
 
 static int ps_reddit(const source_ctx *ctx, intel_sink *sink, const char *name, const char *svc) {
   if (strchr(name, ' ')) return 0;                  /* username-only */
-  char enc[128]; ps_urlenc(name, enc, sizeof enc);
+  char enc[128]; jo_urlencode_buf(name, enc, sizeof enc);
   char url[256];
   snprintf(url, sizeof url, "https://www.reddit.com/user/%s/about.json", enc);
   cJSON *j = ps_get_json(ctx->http, url, NULL);
@@ -251,7 +243,7 @@ static int ps_reddit(const source_ctx *ctx, intel_sink *sink, const char *name, 
 static int ps_uk_companies(const source_ctx *ctx, intel_sink *sink, const char *name, const char *svc) {
   const char *key = getenv("COMPANIES_HOUSE_API_KEY");
   if (!key || !*key) return 0;
-  char enc[256]; ps_urlenc(name, enc, sizeof enc);
+  char enc[256]; jo_urlencode_buf(name, enc, sizeof enc);
   char url[500];
   snprintf(url, sizeof url,
     "https://api.company-information.service.gov.uk/search/officers?q=%s&items_per_page=5", enc);
@@ -285,7 +277,7 @@ static int ps_uk_companies(const source_ctx *ctx, intel_sink *sink, const char *
 
 /* OpenCorporates officer search (keyless public tier; honest-empty on limit). */
 static int ps_opencorporates(const source_ctx *ctx, intel_sink *sink, const char *name, const char *svc) {
-  char enc[256]; ps_urlenc(name, enc, sizeof enc);
+  char enc[256]; jo_urlencode_buf(name, enc, sizeof enc);
   char url[400];
   snprintf(url, sizeof url,
     "https://api.opencorporates.com/v0.4/officers/search?q=%s&per_page=5", enc);
@@ -367,7 +359,10 @@ static int person_run(const source_ctx *ctx, intel_sink *sink) {
   t += run_mansion(ctx, sink);
   /* No fabrication: directory lookup-link cards (constructed search URLs, never
    * fetched) were removed — only genuinely-fetched providers above emit. */
-  return t;
+  /* run() must return 0 on success: core/scheduler.c does
+   * `status = rc == 0 ? "ok" : "error"` and feeds it to anomaly_detect(), so
+   * returning the row count marked every good run (50 rows) as a failure. */
+  return t >= 0 ? 0 : -1;
 }
 
 /* ── COMPANY_SEARCH: all-business/company pivot ───────────────────────────── */
@@ -379,7 +374,7 @@ static int company_run(const source_ctx *ctx, intel_sink *sink) {
   t += ps_opencorporates(ctx, sink, name, "COMPANY_SEARCH");
   /* No fabrication: business-registry lookup-link cards removed (constructed
    * URLs were never fetched); only real officer-API results above emit. */
-  return t;
+  return t >= 0 ? 0 : -1;          /* see person_run(): 0 == ok, <0 == error */
 }
 
 static const source_def person_search_def = {
@@ -500,11 +495,7 @@ static int run_tdb_tsr(const source_ctx *ctx, intel_sink *sink) {
   return 0;
 }
 
-#define DEFR(SYM, ID, NAME, NAMEJA, RUN, CAT, TYPE, URL, DESC, FREE) \
-  static const source_def SYM = { .id = ID, .collector = "osint", .name = NAME, \
-    .name_ja = NAMEJA, .update_interval_sec = 0, .run = RUN, .category = CAT, \
-    .type = TYPE, .url = URL, .description = DESC, .layer = NULL, .free_tier = FREE }; \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 DEFR(kaken_def, "KAKEN", "KAKEN Grants", "KAKEN 科研費", run_kaken,
      "government", "api", "https://kaken.nii.ac.jp/", "Research grants: who got which 科研費 (LIVE OpenSearch)", 1);

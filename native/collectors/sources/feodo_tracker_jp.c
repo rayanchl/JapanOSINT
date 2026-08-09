@@ -1,9 +1,15 @@
 /* collectors/cyber/sources/feodo_tracker_jp.c
- * Port of server/src/collectors/feodoTrackerJp.js. abuse.ch Feodo C2 IP
- * blocklist JSON → JP-filtered Features at TOKYO. No natural id → uid is the
- * sha1 hash fallback over JSON.stringify({g,p}); properties are built in the
- * EXACT JS key order so the cJSON serialization (hence the hash) matches
- * Node byte-for-byte (geojson featureUid parity proven earlier). */
+ * abuse.ch Feodo C2 IP blocklist JSON → JP-filtered intel rows.
+ *
+ * AUDIT NOTE (slice a3): the original port placed EVERY row at the Tokyo
+ * Station coordinate (139.6917, 35.6895) because the JS it was ported from
+ * did. abuse.ch publishes no coordinate for a C2 host, so that pin was an
+ * invented location: hundreds of rows stacked on one point that is not where
+ * anything is. Geometry is now null — the row still carries ip/asn/country,
+ * which is the real geolocation signal, and the map no longer lies.
+ * uid is now the stable natural key <ip>:<port> instead of a sha1 over
+ * {geometry, properties} that included a positional "idx" (so every row's uid
+ * churned whenever abuse.ch inserted or removed an entry). */
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -37,18 +43,29 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
           (cc->valuestring[1]=='P'||cc->valuestring[1]=='p') &&
           cc->valuestring[2]=='\0')) continue;
 
+    cJSON *ipv  = cJSON_GetObjectItem(r, "ip_address");
+    if (!ipv || !cJSON_IsString(ipv) || !ipv->valuestring[0]) continue;
+    cJSON *portv = cJSON_GetObjectItem(r, "port");
+    cJSON *malv  = cJSON_GetObjectItem(r, "malware");
+    long long port = (portv && cJSON_IsNumber(portv)) ? (long long)portv->valuedouble : 0;
+
     cJSON *feat = cJSON_CreateObject();
     cJSON_AddStringToObject(feat, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(139.6917)); /* TOKYO */
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(35.6895));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(feat, "geometry", g);
+    /* abuse.ch gives no coordinate for a C2 host — emit no geometry rather
+     * than an invented one (see AUDIT NOTE above). The key is OMITTED, not set
+     * to JSON null: lib/geojson.c:235 serialises whatever it finds under
+     * "geometry", so an explicit null persists as the literal string "null". */
 
-    cJSON *p = cJSON_CreateObject();          /* EXACT JS key order */
-    cJSON_AddNumberToObject(p, "idx", i);
+    cJSON *p = cJSON_CreateObject();
+    char uid[96], title[192];
+    if (port) snprintf(uid, sizeof uid, "%s:%lld", ipv->valuestring, port);
+    else      snprintf(uid, sizeof uid, "%s", ipv->valuestring);
+    snprintf(title, sizeof title, "Feodo C2 %s — %s", uid,
+             (malv && cJSON_IsString(malv) && malv->valuestring[0])
+               ? malv->valuestring : "unknown family");
+    cJSON_AddStringToObject(p, "uid", uid);      /* stable natural key */
+    cJSON_AddStringToObject(p, "title", title);
+    cJSON_AddStringToObject(p, "record_type", "c2-host");
     copy_field(p, "ip", r, "ip_address");
     copy_field(p, "port", r, "port");
     copy_field(p, "malware", r, "malware");
@@ -59,6 +76,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     copy_field(p, "first_seen", r, "first_seen");
     copy_field(p, "last_online", r, "last_online");
     copy_field(p, "status", r, "status");
+    cJSON_AddStringToObject(p, "link", "https://feodotracker.abuse.ch/browse/");
     cJSON_AddStringToObject(p, "source", "feodo_tracker");
     cJSON_AddItemToObject(feat, "properties", p);
     cJSON_AddItemToArray(features, feat);
@@ -69,7 +87,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[feodo-tracker-jp] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  return 0;                       /* an empty JP slice is honest, not an error */
 }
 
 static const source_def feodo_tracker_jp_def = {

@@ -1,0 +1,45 @@
+=== gnews-mon-ransomware
+exit: 0
+sched: rc=0 records=102 745ms
+--- stderr ---
+[rss] gnews-mon-ransomware emitted 102
+[sched] gnews-mon-ransomware run rc=0 records=102 745ms
+--- persisted: 102 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=102
+sub_source_id: (null)=102
+
+--- row 1 ---
+  uid            gnews-mon-ransomware|CBMilwFBVV95cUxNTW5tUDQ1LWk5Nlg4V1dsUzUzNnVhYndoUVpBUm5xc2pIRkVEMHpZVU1ZeGczNkRxellaME5kX0ExVEExeUJRakpWU3hENWdSb1ZxSUpfcHJlTG5tYksyakZNXzl3M0g5ZVBJbnltZWVyZ3FQTlpwMnVTTWdBZFJMTkZqV0lnWHAyRkYzOXVYc2dKYlZldFpZ
+  title          Hackers abuse Microsoft Teams in ransomware campaign through fake IT support - Cybersecurity Dive
+  body           <a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxNTW5tUDQ1LWk5Nlg4V1dsUzUzNnVhYndoUVpBUm5xc2pIRkVEMHpZVU1ZeGczNkRxellaME5kX0ExVEExeUJRakpWU3hENWdSb1ZxSUpfcHJlTG5tYksyakZNXzl3M0g5ZVBJbnltZWVyZ3FQTlpwMnVTTWdBZFJMTkZqV0lnWHAyRkYzOXVYc2dKYlZldFpZ?oc=5" target="_blank">Hackers abuse Microsoft Teams in ransomware campaign through fake IT support</a>&nbsp;&nbsp;<font color="#6f6f6f">Cybersecurity Dive</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxNTW5tUDQ1LWk5Nlg4V1dsUzUzNnVhYndoUVpBUm5xc2pIRkVEMHpZVU1ZeGczNkRxellaME5kX0ExVEExeUJRakpWU3hENWdSb1ZxSUpfcHJlTG5tYksyakZNXzl3M0g5ZVBJbnltZWVyZ3FQTlpwMnVTTWdBZFJMTkZqV0lnWHAyRkYzOX
+  link           https://news.google.com/rss/articles/CBMilwFBVV95cUxNTW5tUDQ1LWk5Nlg4V1dsUzUzNnVhYndoUVpBUm5xc2pIRkVEMHpZVU1ZeGczNkRxellaME5kX0ExVEExeUJRakpWU3hENWdSb1ZxSUpfcHJlTG5tYksyakZNXzl3M0g5ZVBJbnltZWVyZ3FQTlpwMnVTTWdBZFJMTkZqV0lnWHAyRkYzOXVYc2dKYlZldFpZ?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 16:02:16 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","ransomware"]
+  properties     {"guid":"CBMilwFBVV95cUxNTW5tUDQ1LWk5Nlg4V1dsUzUzNnVhYndoUVpBUm5xc2pIRkVEMHpZVU1ZeGczNkRxellaME5kX0ExVEExeUJRakpWU3hENWdSb1ZxSUpfcHJlTG5tYksyakZNXzl3M0g5ZVBJbnltZWVyZ3FQTlpwMnVTTWdBZFJMTkZqV0lnWHAyRkYzOXVYc2dKYlZldFpZ"}
+
+--- row 2 ---
+  uid            gnews-mon-ransomware|CBMisgFBVV95cUxPS0NZcXJ1NE1VLUNMX0RETHFpc2FZN3JyaGFRQXJJN3J5QS1qS3JPa2RaWXVhMlpvN2Q3aUpGZWVtdEN1ci12T2JEU2VPTDZNdjBXdWJ2d3ZvUW9BMm0zckJkc0lzcTRhdVI3M1RzaXpmU1U1NmIzWG1SeWJRbzlyZkxRVEtlTUJHdjRzNWJEc3kySU5nSjNHMTJmZjF6dktLRF9xRHlJZjRRMjVkaV95ZHlB0gG3AUFVX3lxTE15UV9KUl8zbkJEZk80S3NmZ2ZUczd5cVQzeTVpQ3VnRjdzSkx6MVd6MHFaTkxLNEtNYUhqNmNJcDIySlNwMW9KMGdVTVowWkk4NDVCMk9ZOEtKSjhPakpYRmRUNG5Lc25ZQkJFckF3Y0Z1R19NY1RHZE1GVkw0akdFT3VtUlpwbFFOaVRXaGNCVjAwX1g2YzQ1OWR1WUJIS045Nk8xdFhzaWc0NG82RlR6Q3hEeH
+  title          Microsoft Teams vishing attacks lead to Chaos ransomware attacks - BleepingComputer
+  body           <a href="https://news.google.com/rss/articles/CBMisgFBVV95cUxPS0NZcXJ1NE1VLUNMX0RETHFpc2FZN3JyaGFRQXJJN3J5QS1qS3JPa2RaWXVhMlpvN2Q3aUpGZWVtdEN1ci12T2JEU2VPTDZNdjBXdWJ2d3ZvUW9BMm0zckJkc0lzcTRhdVI3M1RzaXpmU1U1NmIzWG1SeWJRbzlyZkxRVEtlTUJHdjRzNWJEc3kySU5nSjNHMTJmZjF6dktLRF9xRHlJZjRRMjVkaV95ZHlB0gG3AUFVX3lxTE15UV9KUl8zbkJEZk80S3NmZ2ZUczd5cVQzeTVpQ3VnRjdzSkx6MVd6MHFaTkxLNEtNYUhqNmNJcDIySlNwMW9KMGdVTVowWkk4NDVCMk9ZOEtKSjhPakpYRmRUNG5Lc25ZQkJFckF3Y0Z1R19NY1RHZE1GVkw0akdFT3VtUlpwbFFOaVRXaGNCVjAwX1g2YzQ1OWR1WUJIS045Nk8xdFhzaWc0NG82RlR6Q3hEeHhLbw?oc=5" target="_blank">Microsoft Teams vishing attacks lead to Chaos ransomware attacks</a>&nbsp;&nbsp;<font color="#6f6f6f">BleepingComputer</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMisgFBVV95cUxPS0NZcXJ1NE1VLUNMX0RETHFpc2FZN3JyaGFRQXJJN3J5QS1qS3JPa2RaWXVhMlpvN2Q3aUpGZWVtdEN1ci12T2JEU2VPTDZNdjBXdWJ2d3ZvUW9BMm0zckJkc0lzcTRhdVI3M1RzaXpmU1U1NmIzWG1SeWJRbzlyZkxRVEtlTUJHdjRzNW
+  link           https://news.google.com/rss/articles/CBMisgFBVV95cUxPS0NZcXJ1NE1VLUNMX0RETHFpc2FZN3JyaGFRQXJJN3J5QS1qS3JPa2RaWXVhMlpvN2Q3aUpGZWVtdEN1ci12T2JEU2VPTDZNdjBXdWJ2d3ZvUW9BMm0zckJkc0lzcTRhdVI3M1RzaXpmU1U1NmIzWG1SeWJRbzlyZkxRVEtlTUJHdjRzNWJEc3kySU5nSjNHMTJmZjF6dktLRF9xRHlJZjRRMjVkaV95ZHlB0gG3AUFVX3lxTE15UV9KUl8zbkJEZk80S3NmZ2ZUczd5cVQzeTVpQ3VnRjdzSkx6MVd6MHFaTkxLNEtNYUhqNmNJcDIySlNwMW9KMGdVTVowWkk4NDVCMk9ZOEtKSjhPakpYRmRUNG5Lc25ZQkJFckF3Y0Z1R19NY1RHZE1GVkw0akdFT3VtUlpwbFFOaVRXaGNCVjAwX1g2YzQ1OWR1WUJIS045Nk8xdFhzaWc0NG82RlR6Q3hEeHhLbw?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 15:56:33 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","ransomware"]
+  properties     {"guid":"CBMisgFBVV95cUxPS0NZcXJ1NE1VLUNMX0RETHFpc2FZN3JyaGFRQXJJN3J5QS1qS3JPa2RaWXVhMlpvN2Q3aUpGZWVtdEN1ci12T2JEU2VPTDZNdjBXdWJ2d3ZvUW9BMm0zckJkc0lzcTRhdVI3M1RzaXpmU1U1NmIzWG1SeWJRbzlyZkxRVEtlTUJHdjRzNWJEc3kySU5nSjNHMTJmZjF6dktLRF9xRHlJZjRRMjVkaV95ZHlB0gG3AUFVX3lxTE15UV9KUl8zbkJEZk80S3NmZ2ZUczd5cVQzeTVpQ3VnRjdzSkx6MVd6MHFaTkxLNEtNYUhqNmNJcDIySlNwMW9KMGdVTVowWkk4NDVCMk9ZOEtKSjhPakpYRmRUNG5Lc25ZQkJFckF3Y0Z1R19NY1RHZE1GVkw0akdFT3VtUlpwbFFOaVRXaGNCVjAwX1g2YzQ1OWR1WUJIS045Nk8xdFhzaWc0NG82RlR6Q3hEeHhLbw"}
+
+--- row 3 ---
+  uid            gnews-mon-ransomware|CBMickFVX3lxTFBobnBhNkM0cTVqX0FDNVFwaElsN1RfeE9kcDViTVkyZ0FLQlA0VEVCa0RhMUthT3RuOUdVMXJPeFAzeFE0RjBVTTNkUEdPaEdzRlBQRWZ1TTFPUFRoaHY5dWptVG5nZGdITkZDQTQ4QldiUdIBd0FVX3lxTE9LOHFXTEFtWXlPM2dLNUFRNlVWTEhqdjkxY1VhTnBkWWFsZGVkTjVVS0tUVG45d241UzVQN3U5ZnNYU2hUUWxKSDQ2T2lFLUtGT3ZhekdNbnV0ZE9PMnN3ZDJkc2tJTGp5MVlaRDExX2lYVEljajFr
+  title          A Two-Minute Microsoft Teams Call Could End With Your Network Encrypted With Ransomware - CyberSecurityNews
+  body           <a href="https://news.google.com/rss/articles/CBMickFVX3lxTFBobnBhNkM0cTVqX0FDNVFwaElsN1RfeE9kcDViTVkyZ0FLQlA0VEVCa0RhMUthT3RuOUdVMXJPeFAzeFE0RjBVTTNkUEdPaEdzRlBQRWZ1TTFPUFRoaHY5dWptVG5nZGdITkZDQTQ4QldiUdIBd0FVX3lxTE9LOHFXTEFtWXlPM2dLNUFRNlVWTEhqdjkxY1VhTnBkWWFsZGVkTjVVS0tUVG45d241UzVQN3U5ZnNYU2hUUWxKSDQ2T2lFLUtGT3ZhekdNbnV0ZE9PMnN3ZDJkc2tJTGp5MVlaRDExX2lYVEljajFr?oc=5" target="_blank">A Two-Minute Microsoft Teams Call Could End With Your Network Encrypted With Ransomware</a>&nbsp;&nbsp;<font color="#6f6f6f">CyberSecurityNews</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMickFVX3lxTFBobnBhNkM0cTVqX0FDNVFwaElsN1RfeE9kcDViTVkyZ0FLQlA0VEVCa0RhMUthT3RuOUdVMXJPeFAzeFE0RjBVTTNkUEdPaEdzRlBQRWZ1TTFPUFRoaHY5dWptVG5nZGdITkZDQTQ4QldiUdIBd0FVX3lxTE9LOHFXTEFtWXlPM2dLNUFRNl
+  link           https://news.google.com/rss/articles/CBMickFVX3lxTFBobnBhNkM0cTVqX0FDNVFwaElsN1RfeE9kcDViTVkyZ0FLQlA0VEVCa0RhMUthT3RuOUdVMXJPeFAzeFE0RjBVTTNkUEdPaEdzRlBQRWZ1TTFPUFRoaHY5dWptVG5nZGdITkZDQTQ4QldiUdIBd0FVX3lxTE9LOHFXTEFtWXlPM2dLNUFRNlVWTEhqdjkxY1VhTnBkWWFsZGVkTjVVS0tUVG45d241UzVQN3U5ZnNYU2hUUWxKSDQ2T2lFLUtGT3ZhekdNbnV0ZE9PMnN3ZDJkc2tJTGp5MVlaRDExX2lYVEljajFr?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 08:56:05 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","ransomware"]
+  properties     {"guid":"CBMickFVX3lxTFBobnBhNkM0cTVqX0FDNVFwaElsN1RfeE9kcDViTVkyZ0FLQlA0VEVCa0RhMUthT3RuOUdVMXJPeFAzeFE0RjBVTTNkUEdPaEdzRlBQRWZ1TTFPUFRoaHY5dWptVG5nZGdITkZDQTQ4QldiUdIBd0FVX3lxTE9LOHFXTEFtWXlPM2dLNUFRNlVWTEhqdjkxY1VhTnBkWWFsZGVkTjVVS0tUVG45d241UzVQN3U5ZnNYU2hUUWxKSDQ2T2lFLUtGT3ZhekdNbnV0ZE9PMnN3ZDJkc2tJTGp5MVlaRDExX2lYVEljajFr"}

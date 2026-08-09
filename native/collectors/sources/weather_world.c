@@ -28,13 +28,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-/* number field → double, or NAN-ish sentinel via out param. Returns 1 if set. */
-static int ww_num(const cJSON *o, const char *k, double *out) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  if (v && cJSON_IsNumber(v)) { *out = v->valuedouble; return 1; }
-  return 0;
-}
-
 /* Geocode an entity via the Open-Meteo geocoding API. On success writes lat/lon
  * and (optionally) a resolved place label into name[namesz]. Returns 1 on hit,
  * 0 otherwise. country_filter (e.g. "US") restricts to a country_code when set. */
@@ -65,7 +58,7 @@ static int ww_geocode(const source_ctx *ctx, const char *entity, const char *tag
         if (!cc || strcasecmp(cc, country_filter) != 0) continue;
       }
       double la, lo;
-      if (ww_num(r, "latitude", &la) && ww_num(r, "longitude", &lo)) {
+      if (jo_num(r, "latitude", &la) && jo_num(r, "longitude", &lo)) {
         *lat = la; *lon = lo;
         const char *nm = jo_sv(r, "name");
         const char *ctry = jo_sv(r, "country");
@@ -223,7 +216,7 @@ static int ww_nws(const source_ctx *ctx, intel_sink *sink, const char *q) {
       const char *shortf = jo_sv(p, "shortForecast");
       const char *tunit = jo_sv(p, "temperatureUnit");
       const char *wind  = jo_sv(p, "windSpeed");
-      double temp = 0; int htemp = ww_num(p, "temperature", &temp);
+      double temp = 0; int htemp = jo_num(p, "temperature", &temp);
       if (!pname) continue;
 
       char title[384];
@@ -302,11 +295,11 @@ static int ww_metar(const source_ctx *ctx, intel_sink *sink, const char *q) {
       const char *rt   = jo_sv(o, "reportTime");
       const char *nm   = jo_sv(o, "name");
       double temp = 0, dewp = 0, wspd = 0, wdir = 0, lat = 0, lon = 0;
-      int htemp = ww_num(o, "temp", &temp);
-      int hdewp = ww_num(o, "dewp", &dewp);
-      int hwspd = ww_num(o, "wspd", &wspd);
-      int hwdir = ww_num(o, "wdir", &wdir);
-      int hgeo  = ww_num(o, "lat", &lat) && ww_num(o, "lon", &lon);
+      int htemp = jo_num(o, "temp", &temp);
+      int hdewp = jo_num(o, "dewp", &dewp);
+      int hwspd = jo_num(o, "wspd", &wspd);
+      int hwdir = jo_num(o, "wdir", &wdir);
+      int hgeo  = jo_num(o, "lat", &lat) && jo_num(o, "lon", &lon);
       if (!icao && !raw) continue;
 
       char title[384];

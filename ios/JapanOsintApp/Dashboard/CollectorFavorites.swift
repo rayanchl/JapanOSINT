@@ -31,18 +31,25 @@ final class CollectorFavorites: ObservableObject {
 }
 
 /// View-model wrapping a layer with all the sources reporting under it.
+///
+/// The five status counts are STORED, not computed. They used to be `filter`
+/// properties — five O(n) passes recomputed on every access — and
+/// `aggregateStatus` plus `healthChips` read them roughly fifteen times per row
+/// per body pass. For the "(no layer)" collector, which groups the whole ~1,168
+/// row breach catalog for operators, that is ~17k row scans on every keystroke
+/// in the search field. `groupedAsCollectors()` now counts each bucket once.
 struct Collector: Identifiable, Hashable {
     let id: String                 // = layer id
     let name: String
     let category: String?
     let sources: [StatusRow]
+    let onlineCount: Int
+    let degradedCount: Int
+    let offlineCount: Int
+    let pendingCount: Int
+    let gatedCount: Int
 
     var sourceCount: Int { sources.count }
-    var onlineCount: Int { sources.filter { $0.statusKind == .online }.count }
-    var degradedCount: Int { sources.filter { $0.statusKind == .degraded }.count }
-    var offlineCount: Int { sources.filter { $0.statusKind == .offline }.count }
-    var pendingCount: Int { sources.filter { $0.statusKind == .pending }.count }
-    var gatedCount: Int { sources.filter { $0.statusKind == .gated }.count }
 
     /// Aggregate health: worst-of any non-gated source dominates. A collector
     /// whose every source is gated reports `.gated` so it isn't mis-coloured
@@ -73,7 +80,22 @@ extension Array where Element == StatusRow {
                     .map { $0.prefix(1).uppercased() + $0.dropFirst() }
                     .joined(separator: " ")
             let category = rows.compactMap(\.category).first
-            return Collector(id: layerId, name: name, category: category, sources: rows)
+            // One pass for all five tallies.
+            var online = 0, degraded = 0, offline = 0, pending = 0, gated = 0
+            for row in rows {
+                switch row.statusKind {
+                case .online:   online   += 1
+                case .degraded: degraded += 1
+                case .offline:  offline  += 1
+                case .pending:  pending  += 1
+                case .gated:    gated    += 1
+                default:        break
+                }
+            }
+            return Collector(id: layerId, name: name, category: category, sources: rows,
+                             onlineCount: online, degradedCount: degraded,
+                             offlineCount: offline, pendingCount: pending,
+                             gatedCount: gated)
         }
     }
 }

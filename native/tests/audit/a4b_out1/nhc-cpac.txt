@@ -1,0 +1,35 @@
+=== nhc-cpac
+exit: 0
+sched: rc=0 records=2 506ms
+--- stderr ---
+[rss] nhc-cpac emitted 2
+[sched] nhc-cpac run rc=0 records=2 506ms
+--- persisted: 2 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=2
+sub_source_id: (null)=2
+
+--- row 1 ---
+  uid            nhc-cpac|https://www.nhc.noaa.gov/gtwo.php?basin=cpac&202607311702
+  title          Central North Pacific Tropical Weather Outlook
+  body           <![CDATA[000<br />ACPN50 PHFO 311702<br />TWOCP <br /><br />Tropical Weather Outlook<br />NWS Central Pacific Hurricane Center Honolulu HI<br />Issued by NWS National Hurricane Center Miami FL<br />800 AM HST Fri Jul 31 2026<br /><br />For the central North Pacific...between 140W and 180W:<br /><br />Active Systems:<br />The National Hurricane Center is issuing advisories on Tropical<br />Storm Genevieve, located well west of the southern tip of the Baja<br />California Peninsula.<br /><br />Tropical cyclone formation is not expected during the next 7 days.<br /><br />$$<br />Forecaster Beven<br />NNNN]]>
+  summary        <![CDATA[000<br />ACPN50 PHFO 311702<br />TWOCP <br /><br />Tropical Weather Outlook<br />NWS Central Pacific Hurricane Center Honolulu HI<br />Issued by NWS National Hurricane Center Miami FL<br />800 AM HST Fri Jul 31 2026<br /><br />For 
+  link           https://www.nhc.noaa.gov/gtwo.php?basin=cpac
+  author         nhcwebmaster@noaa.gov (NHC Webmaster)
+  language       en
+  published_at   Fri, 31 Jul 2026 17:02:52 GMT
+  record_type    article
+  tags           ["hazard","cyclone","alert"]
+  properties     {"guid":"https://www.nhc.noaa.gov/gtwo.php?basin=cpac&202607311702"}
+
+--- row 2 ---
+  uid            nhc-cpac|https://www.nhc.noaa.gov/
+  title          There are no tropical cyclones at this time.
+  body           No tropical cyclones as of Fri, 31 Jul 2026 18:39:23 GMT
+  summary        No tropical cyclones as of Fri, 31 Jul 2026 18:39:23 GMT
+  link           https://www.nhc.noaa.gov/
+  author         nhcwebmaster@noaa.gov (NHC Webmaster)
+  language       en
+  published_at   Sun, 02 Aug 2026 05:02:52 GMT
+  record_type    article
+  tags           ["hazard","cyclone","alert"]
+  properties     {"guid":"https://www.nhc.noaa.gov/"}

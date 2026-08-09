@@ -1,0 +1,6 @@
+38north https://www.38north.org/feed/
+cfr https://www.cfr.org/rss.xml
+isw https://www.understandingwar.org/backgrounder/feed
+kyiv-independent https://kyivindependent.com/feed/
+maritime-executive https://www.maritime-executive.com/rss
+rferl https://www.rferl.org/api/zrqiteuuir

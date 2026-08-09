@@ -28,16 +28,24 @@ export default function MapPage() {
       cameraTriggerFiredRef.current = false;
       return;
     }
-    if (cameraTriggerFiredRef.current) return;
+    if (cameraTriggerFiredRef.current) return undefined;
     cameraTriggerFiredRef.current = true;
     const ctrl = new AbortController();
+    let settled = false;
     fetch(apiUrl('/api/data/cameras/trigger'), { method: 'POST', signal: ctrl.signal })
       .catch((err) => {
         if (err?.name !== 'AbortError') {
           console.warn('[MapPage] camera trigger failed:', err?.message);
         }
-      });
-    return () => ctrl.abort();
+      })
+      .finally(() => { settled = true; });
+    return () => {
+      ctrl.abort();
+      // Refs survive StrictMode's mount/cleanup/remount, so an aborted
+      // in-flight POST must un-latch the guard or the remount suppresses
+      // the trigger permanently in dev.
+      if (!settled) cameraTriggerFiredRef.current = false;
+    };
   }, [camerasVisible]);
 
   // Camera Discovery panel's "View on map" with no filters active asks the
@@ -78,7 +86,7 @@ export default function MapPage() {
     try {
       // Backend chains Nominatim -> Photon -> GSI, with caching.
       const res = await fetch(
-        `/api/geocode?q=${encodeURIComponent(searchQuery)}`
+        apiUrl(`/api/geocode?q=${encodeURIComponent(searchQuery)}`)
       );
       if (res.ok) {
         const { results } = await res.json();
@@ -151,6 +159,15 @@ export default function MapPage() {
                 onClick={() => {
                   setSearchResults([]);
                   setSearchQuery(r.display_name.split(',')[0]);
+                  // MapView listens for `japanosint:flyto` — same channel the
+                  // Camera Discovery panel uses to recenter the map.
+                  const lat = parseFloat(r.lat);
+                  const lon = parseFloat(r.lon);
+                  if (Number.isFinite(lat) && Number.isFinite(lon)) {
+                    window.dispatchEvent(new CustomEvent('japanosint:flyto', {
+                      detail: { lat, lon, zoom: 13 },
+                    }));
+                  }
                 }}
               >
                 <div className="truncate">{r.display_name}</div>

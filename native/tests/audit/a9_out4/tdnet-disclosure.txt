@@ -1,0 +1,39 @@
+=== tdnet-disclosure
+exit: 0
+sched: rc=0 records=100 507ms
+--- stderr ---
+[tdnet-disclosure] emitted 100
+[sched] tdnet-disclosure run rc=0 records=100 507ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            tdnet-disclosure|https://www.release.tdnet.info/inbs/140120260731505921.pdf
+  title          主要株主である筆頭株主の異動に関するお知らせ
+  summary        19:30 · 48130 · ＡＣＣＥＳＳ · 主要株主である筆頭株主の異動に関するお知らせ ·  · 東 · 　　　　　
+  link           https://www.release.tdnet.info/inbs/140120260731505921.pdf
+  language       ja
+  published_at   2026-07-31T18:20:42.000Z
+  tags           ["disclosure","tdnet","tse","corporate"]
+  properties     {"date":"20260731","cells":["19:30","48130","ＡＣＣＥＳＳ","主要株主である筆頭株主の異動に関するお知らせ","","東","　　　　　"]}
+
+--- row 2 ---
+  uid            tdnet-disclosure|https://www.release.tdnet.info/inbs/140120260731505893.pdf
+  title          「ＭＡＸＩＳ ＪＡＰＡＮ 設備・人材積極投資企業２００上場投信」の基準価額と市場価格の重要な乖離に関するお知らせ
+  summary        19:00 · 14850 · ＭＸＳ　Ｊ積極投資 · 「ＭＡＸＩＳ ＪＡＰＡＮ 設備・人材積極投資企業２００上場投信」の基準価額と市場価格の重要な乖離に関するお知らせ ·  · 東 · 　　　　　
+  link           https://www.release.tdnet.info/inbs/140120260731505893.pdf
+  language       ja
+  published_at   2026-07-31T18:20:42.000Z
+  tags           ["disclosure","tdnet","tse","corporate"]
+  properties     {"date":"20260731","cells":["19:00","14850","ＭＸＳ　Ｊ積極投資","「ＭＡＸＩＳ ＪＡＰＡＮ 設備・人材積極投資企業２００上場投信」の基準価額と市場価格の重要な乖離に関するお知らせ","","東","　　　　　"]}
+
+--- row 3 ---
+  uid            tdnet-disclosure|https://www.release.tdnet.info/inbs/140120260731505366.pdf
+  title          連結子会社の異動（株式譲渡）に関するお知らせ
+  summary        19:00 · 21340 · キタハマキャピタル · 連結子会社の異動（株式譲渡）に関するお知らせ ·  · 東 · 　　　　　
+  link           https://www.release.tdnet.info/inbs/140120260731505366.pdf
+  language       ja
+  published_at   2026-07-31T18:20:42.000Z
+  tags           ["disclosure","tdnet","tse","corporate"]
+  properties     {"date":"20260731","cells":["19:00","21340","キタハマキャピタル","連結子会社の異動（株式譲渡）に関するお知らせ","","東","　　　　　"]}

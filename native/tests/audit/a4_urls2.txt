@@ -1,0 +1,13 @@
+https://www.emsc-csem.org/Earthquake/?view=rss
+https://www.emsc.eu/service/rss/rss.php?typ=emsc
+https://www.seismicportal.eu/standing_order/rss.xml
+https://www.volcanodiscovery.com/volcano-news.rss
+https://www.volcanodiscovery.com/rss/news.xml
+https://www.volcanodiscovery.com/feed.xml
+http://www.bom.gov.au/fwo/IDZ00059.warnings_national.xml
+http://www.bom.gov.au/rss/
+https://en.vedur.is/rss/earthquakes/
+https://apis.is/earthquake/is
+https://emergency.copernicus.eu/mapping/rss.xml
+https://rapidmapping.emergency.copernicus.eu/feed
+https://www.pdc.org/feed

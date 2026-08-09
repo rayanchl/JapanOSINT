@@ -129,7 +129,10 @@ static int query_domain(const source_ctx *ctx, intel_sink *sink,
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
-  if (!q || !*q) return -1;
+  /* Contract R3: no entity is a NO-OP, not a failure — see the same note in
+   * opendata_ckan.c. -1 here would make scheduler.c quarantine the source on
+   * its first run if it were ever given an interval. */
+  if (!q || !*q) return 0;
 
   char *enc = jo_urlencode(q);
   if (!enc) return 0;

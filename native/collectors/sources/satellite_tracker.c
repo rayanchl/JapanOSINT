@@ -1,6 +1,7 @@
 /* collectors/osint/sources/satellite_tracker.c
- * OSINT service — SATELLITE_TRACKER. On-demand (interval 0); entity ignored
- * (N2YO satellites overhead a fixed observer). Key-gated: N2YO_API_KEY.
+ * OSINT service — SATELLITE_TRACKER. On-demand (interval 0). The entity is the
+ * observer: pass "lat,lon" (or set SATELLITE_OBSERVER); with neither the run
+ * emits nothing. Key-gated: N2YO_API_KEY.
  *
  * PER-RECORD EMIT (only with N2YO_API_KEY): emit ONE item per satellite above
  * (remote_key="sat:<norad_id>", body=real norad_id/name/intl_designator/
@@ -76,7 +77,30 @@ static int run_satellite(const source_ctx *ctx, intel_sink *sink) {
     return 0;                              /* key-gated: emit nothing */
   }
 
-  double lat = 40.7128, lon = -74.0060;    /* NYC, == upstream observer */
+  /* The observer used to be hardcoded to 40.7128,-74.0060 (New York) while
+   * ctx->entity — the coordinate the analyst actually pivoted on — was never
+   * read. Every row then carried observer_lat/observer_lon for a city nobody
+   * asked about, and "above" meant above New York. Read the pivot; fall back
+   * to an explicitly configured observer; otherwise emit nothing rather than
+   * answer a different question than the one asked. */
+  double lat, lon;
+  int have_obs = 0;
+  if (ctx->entity && *ctx->entity &&
+      sscanf(ctx->entity, "%lf , %lf", &lat, &lon) == 2 &&
+      lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180)
+    have_obs = 1;
+  if (!have_obs) {
+    const char *o = getenv("SATELLITE_OBSERVER");   /* "lat,lon" */
+    if (o && sscanf(o, "%lf , %lf", &lat, &lon) == 2 &&
+        lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180)
+      have_obs = 1;
+  }
+  if (!have_obs) {
+    fprintf(stderr, "[SATELLITE_TRACKER] no observer: pass the pivot as "
+                    "\"lat,lon\" or set SATELLITE_OBSERVER; emitting nothing "
+                    "rather than reporting satellites above a made-up point\n");
+    return 0;
+  }
   char url[512];
   snprintf(url, sizeof url,
     "https://api.n2yo.com/rest/v1/satellite/above/%f/%f/0/90/18&apiKey=%s",

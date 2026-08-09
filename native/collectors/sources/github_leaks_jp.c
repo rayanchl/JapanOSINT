@@ -3,6 +3,7 @@
  * env GITHUB_TOKEN → GitHub code search over DEFAULT_QUERIES → one intel row
  * per hit. The intel envelope IS the product. No token → 0 rows (JS returns
  * an empty live=false envelope; the curated _meta is dropped). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -20,13 +21,6 @@ static const char *QUERIES[] = {
   "extension:env \".jp\"",
   "extension:yml \".co.jp\" password",
 };
-
-/* JS truthy string accessor. */
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
-           ? v->valuestring : NULL;
-}
 
 /* Minimal percent-encoder for the `q` query value (URLSearchParams). */
 static void urlenc(const char *s, char *out, size_t n) {
@@ -54,8 +48,11 @@ static long env_int(const char *k, long def) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *token = getenv("GITHUB_TOKEN");
   if (!token || !*token) {
-    fprintf(stderr, "[github-leaks-jp] no GITHUB_TOKEN, emitted 0\n");
-    return -1;                                     /* live=false, 0 rows */
+    /* The comment below already said what this should be — "0 rows", not a
+     * failure — but -1 makes the scheduler log status='error' and open a
+     * collector_anomaly every tick. Gated is its own state (credtab.c). */
+    fprintf(stderr, "[github-leaks-jp] gated (no GITHUB_TOKEN)\n");
+    return 0;                                      /* live=false, 0 rows */
   }
   long per = env_int("GITHUB_LEAK_PER_QUERY", 20);
 
@@ -83,15 +80,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (cJSON_IsArray(items)) {
       cJSON *it;
       cJSON_ArrayForEach(it, items) {
-        const char *sha  = sv(it, "sha");
-        const char *path = sv(it, "path");
+        const char *sha  = jo_sv(it, "sha");
+        const char *path = jo_sv(it, "path");
         const cJSON *repo = cJSON_GetObjectItem(it, "repository");
-        const char *full = (repo && cJSON_IsObject(repo)) ? sv(repo, "full_name") : NULL;
+        const char *full = (repo && cJSON_IsObject(repo)) ? jo_sv(repo, "full_name") : NULL;
         const cJSON *owner = (repo && cJSON_IsObject(repo))
                                ? cJSON_GetObjectItem(repo, "owner") : NULL;
-        const char *login = (owner && cJSON_IsObject(owner)) ? sv(owner, "login") : NULL;
-        const char *html = sv(it, "html_url");
-        const char *vis  = (repo && cJSON_IsObject(repo)) ? sv(repo, "visibility") : NULL;
+        const char *login = (owner && cJSON_IsObject(owner)) ? jo_sv(owner, "login") : NULL;
+        const char *html = jo_sv(it, "html_url");
+        const char *vis  = (repo && cJSON_IsObject(repo)) ? jo_sv(repo, "visibility") : NULL;
 
         /* uid = intelUid(SOURCE_ID, it.sha, `${full}_${path}`) */
         char repopath[512];

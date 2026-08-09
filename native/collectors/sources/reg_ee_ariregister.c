@@ -17,15 +17,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-/* First non-empty string among several candidate keys, or NULL. */
-static const char *ee_first(const cJSON *o, const char *const *keys) {
-  for (int i = 0; keys[i]; i++) {
-    const char *v = jo_sv(o, keys[i]);
-    if (v) return v;
-  }
-  return NULL;
-}
-
 /* one company object → one intel_item. Returns 1 if emitted. */
 static int emit_company(intel_sink *sink, const cJSON *c) {
   if (!cJSON_IsObject(c)) return 0;
@@ -34,9 +25,9 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   static const char *code_keys[] = { "registrikood", "reg_code", "code", "ariregistrikood", NULL };
   static const char *stat_keys[] = { "staatus", "status", "oiguslik_seisund", "seisund", NULL };
 
-  const char *name = ee_first(c, name_keys);
-  const char *code = ee_first(c, code_keys);
-  const char *stat = ee_first(c, stat_keys);
+  const char *name = jo_first_sv(c, name_keys);
+  const char *code = jo_first_sv(c, code_keys);
+  const char *stat = jo_first_sv(c, stat_keys);
   if (!name && !code) return 0;
 
   /* registry code may arrive as a JSON number */

@@ -5,8 +5,10 @@
  * rows — JS .map always yields an item). GREYNOISE_API_KEY optional (sent as
  * `key:` header when present); endpoint also tolerates anonymous. Curated
  * _meta dropped. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
+#include "../../core/httpclient.h"
 #include "../../third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,12 +23,6 @@ static const char *IPS[] = {
   "210.152.11.100",
   "203.104.130.1",
 };
-
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
-           ? v->valuestring : NULL;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("GREYNOISE_API_KEY");
@@ -49,29 +45,50 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const char *ip = IPS[i];
     char url[256];
     snprintf(url, sizeof url, "%s/%s", BASE, ip);
-    cJSON *r = feed_get_json_h(ctx->http, url, hdrs, 10000);
+    /* The community endpoint answers **404 with a real JSON body** for the
+     * commonest verdict ("IP not observed scanning the internet"), and
+     * feed_get_json_h() throws away every non-2xx body. Every poll therefore
+     * produced 5 rows titled "<ip> — unknown" / summary "Quiet" that were
+     * indistinguishable from a genuine quiet verdict. Take the body ourselves
+     * and keep the status. */
+    http_response resp = {0};
+    cJSON *r = NULL;
+    int status = 0;
+    if (http_request(ctx->http, "GET", url, hdrs, NULL, 0, 10000, 1, &resp) == 0) {
+      status = (int)resp.status;
+      if (resp.body && (status == 200 || status == 404)) r = cJSON_Parse(resp.body);
+      if (r && !cJSON_GetObjectItem(r, "ip")) { cJSON_Delete(r); r = NULL; }
+    }
+    http_response_free(&resp);
 
-    /* r is the GreyNoise body, or — on HTTP error / 429 — JS synthesises a
-     * tiny object. We model: success → use body; failure → null fields with
-     * a generic error marker. rate_limited only when we'd see a 429, which
-     * feed_get_json_h cannot distinguish (returns NULL), so treat as error. */
-    const char *classification = r ? sv(r, "classification") : NULL;
-    const char *name = r ? sv(r, "name") : NULL;
-    const char *last_seen = r ? sv(r, "last_seen") : NULL;
-    const char *first_seen = r ? sv(r, "first_seen") : NULL;
+    if (!r) {   /* transport error, 401/429, or an unparseable body: say
+                 * nothing rather than persist a fabricated "Quiet" row. */
+      fprintf(stderr, "[greynoise-jp] %s: no usable answer (http %d)\n",
+              ip, status);
+      continue;
+    }
+    /* GreyNoise's own wording for the 404 case, carried through verbatim. */
+    const char *message = jo_sv(r, "message");
+    const char *classification = r ? jo_sv(r, "classification") : NULL;
+    const char *name = r ? jo_sv(r, "name") : NULL;
+    const char *last_seen = r ? jo_sv(r, "last_seen") : NULL;
+    const char *first_seen = r ? jo_sv(r, "first_seen") : NULL;
     const cJSON *noisev = r ? cJSON_GetObjectItem(r, "noise") : NULL;
     int has_noise = noisev && (cJSON_IsBool(noisev));
     int noise = has_noise && cJSON_IsTrue(noisev);
-    const char *err = r ? NULL : "fetch failed";
+    const char *err = NULL;
 
-    /* title = `${ip} — ${classification||'unknown'}` */
-    char title[128];
-    snprintf(title, sizeof title, "%s \xE2\x80\x94 %s",
-             ip, classification ? classification : "unknown");
+    /* title = `${ip} — ${classification || message-derived state}` */
+    char title[192];
+    snprintf(title, sizeof title, "%s \xE2\x80\x94 %s", ip,
+             classification ? classification
+                            : (status == 404 ? "not observed scanning"
+                                             : "no classification"));
 
-    /* summary = name || (noise ? 'Noise (background scanner)' : 'Quiet') */
+    /* summary = name || upstream message || noise state */
     const char *summary = name ? name
-                          : (noise ? "Noise (background scanner)" : "Quiet");
+                          : (message ? message
+                             : (noise ? "Noise (background scanner)" : "Quiet"));
 
     /* tags = ['ip-classifier', class? `class:<c>`:null, noise?'noise':null] */
     cJSON *tags = cJSON_CreateArray();
@@ -100,12 +117,25 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddBoolToObject(p, "rate_limited", 0);
     cJSON_AddItemToObject(p, "error",
       err ? cJSON_CreateString(err) : cJSON_CreateNull());
+    /* keep the upstream verdict text + the status it came with, so a reader
+     * can tell "observed and quiet" from "never seen" */
+    cJSON_AddItemToObject(p, "message",
+      message ? cJSON_CreateString(message) : cJSON_CreateNull());
+    cJSON_AddNumberToObject(p, "http_status", status);
+    cJSON_AddItemToObject(p, "riot", cJSON_GetObjectItem(r, "riot")
+      ? cJSON_Duplicate(cJSON_GetObjectItem(r, "riot"), 1) : cJSON_CreateNull());
     char *pj = cJSON_PrintUnformatted(p);
+
+    /* provenance: rows carried no link at all — GreyNoise's public viz page
+     * for the very IP we queried is the natural one. */
+    char vlink[96];
+    snprintf(vlink, sizeof vlink, "https://viz.greynoise.io/ip/%s", ip);
 
     intel_item row = {0};
     row.remote_key     = ip;                   /* uid greynoise-jp|<ip> */
     row.title          = title;
     row.summary        = summary;
+    row.link           = vlink;
     row.lang           = "en";
     row.published_at   = last_seen;            /* r.last_seen || null */
     row.properties_json = pj;

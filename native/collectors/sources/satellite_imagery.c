@@ -56,15 +56,7 @@ static const char *sv(const cJSON *o, const char *k) {
 }
 
 static cJSON *mk_feat(double lon, double lat) {
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
   return f;
 }
 
@@ -623,6 +615,51 @@ done:;
   cJSON_Delete(tmp);
 }
 
+/* Every provider above builds properties but none set a title/link, so the
+ * geojson toolkit (pickText over title|name|name_ja|label) wrote NULL and the
+ * rows were unreadable in every UI. It also kept the true scene FOOTPRINT in
+ * properties.bbox_geom while emitting a bare Point as the feature geometry, so
+ * the polygon never reached intel_items.geometry. Both are fixed here, once,
+ * from fields the providers genuinely fetched — nothing is invented. */
+static void decorate(cJSON *features) {
+  cJSON *fe;
+  cJSON_ArrayForEach(fe, features) {
+    cJSON *p = cJSON_GetObjectItem(fe, "properties");
+    if (!p) continue;
+
+    if (!cJSON_GetObjectItem(p, "title")) {
+      const char *plat  = sv(p, "platform");
+      const char *scene = sv(p, "scene_id");
+      const char *when  = sv(p, "datetime");
+      cJSON *cc = cJSON_GetObjectItem(p, "cloud_cover");
+      char t[256];
+      if (plat && when && cc && cJSON_IsNumber(cc))
+        snprintf(t, sizeof t, "%s %.19s — %s (%.0f%% cloud)",
+                 plat, when, scene ? scene : "scene", cc->valuedouble);
+      else if (plat && when)
+        snprintf(t, sizeof t, "%s %.19s — %s",
+                 plat, when, scene ? scene : "scene");
+      else if (plat)
+        snprintf(t, sizeof t, "%s — %s", plat, scene ? scene : "scene");
+      else continue;
+      cJSON_AddStringToObject(p, "title", t);
+    }
+
+    /* provenance: the preview PNG is the only per-scene URL upstream gives */
+    if (!cJSON_GetObjectItem(p, "link")) {
+      const char *pv = sv(p, "preview_url");
+      if (pv) cJSON_AddStringToObject(p, "link", pv);
+    }
+
+    /* promote the fetched footprint polygon to the feature geometry */
+    cJSON *bb = cJSON_GetObjectItem(p, "bbox_geom");
+    if (bb && cJSON_IsObject(bb) && cJSON_GetObjectItem(bb, "coordinates")) {
+      cJSON_DeleteItemFromObject(fe, "geometry");
+      cJSON_AddItemToObject(fe, "geometry", cJSON_Duplicate(bb, 1));
+    }
+  }
+}
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *features = cJSON_CreateArray();
   char day[16]; today_ymd(day, sizeof day);
@@ -640,6 +677,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   prov_s1(ctx->http, features);                                    /* 9 */
   (void)day;
 
+  decorate(features);
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[satellite-imagery] emitted %d\n", n);

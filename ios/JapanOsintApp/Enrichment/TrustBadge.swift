@@ -218,7 +218,7 @@ struct TrustBreakdownCard: View {
             bar(value, higherIsBetter: higherIsBetter)
             if !higherIsBetter, value != nil {
                 Text("lower is better")
-                    .font(.system(size: 9))
+                    .font(.caption2)
                     .foregroundStyle(theme.textMuted)
             }
         }
@@ -252,7 +252,7 @@ struct TrustBreakdownCard: View {
                 .font(.caption.monospacedDigit().weight(.semibold))
                 .foregroundStyle(theme.text)
             Text(label)
-                .font(.system(size: 9))
+                .font(.caption2)
                 .foregroundStyle(theme.textMuted)
         }
     }

@@ -76,15 +76,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* ---- feature pin (geojson sink derives uid/title) ---- */
   cJSON *features = cJSON_CreateArray();
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *co = cJSON_CreateArray();
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(MOJ_HQ_LON));
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(MOJ_HQ_LAT));
-  cJSON_AddItemToObject(g, "coordinates", co);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(MOJ_HQ_LON, MOJ_HQ_LAT);
   cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
   char idbuf[32], namebuf[64], ym[16];
   snprintf(idbuf, sizeof idbuf, "MOJ_WP_%d", year);

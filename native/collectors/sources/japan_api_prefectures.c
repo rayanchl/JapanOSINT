@@ -18,7 +18,13 @@ static cJSON *coalesce2(cJSON *a, cJSON *b) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *data = feed_get_json(ctx->http, API_URL, 10000);
-  if (!data) return -1;
+  if (!data) {
+    /* 2026-07: japanapi.curtisbarnard.com no longer resolves (NXDOMAIN); the
+     * community API is gone. Log it rather than failing silently. */
+    fprintf(stderr, "[japan-api-prefectures] no JSON from %s "
+                    "(host does not resolve — upstream retired)\n", API_URL);
+    return -1;
+  }
 
   /* list = Array.isArray(data) ? data : (data?.data ?? data?.prefectures ?? []) */
   cJSON *list = NULL;
@@ -42,15 +48,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (!lon || cJSON_IsNull(lon)) lon = cJSON_GetObjectItem(p, "lon");
       if (!lat || cJSON_IsNull(lat) || !lon || cJSON_IsNull(lon)) continue;
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(cJSON_GetNumberValue(lon)));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(cJSON_GetNumberValue(lat)));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(cJSON_GetNumberValue(lon), cJSON_GetNumberValue(lat));
 
       cJSON *pr = cJSON_CreateObject();          /* EXACT JS key order */
       cJSON_AddItemToObject(pr, "name",

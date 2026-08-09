@@ -1,0 +1,35 @@
+=== trading-econ
+exit: 0
+sched: rc=0 records=100 409ms
+--- stderr ---
+[trading-econ] emitted 100
+[sched] trading-econ run rc=0 records=100 409ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            trading-econ|571848
+  title          Crypto Updates: Bitcoin  Depreciates by 2.66%
+  body           Top crypto losers are Bitcoin (-2.66%) and Ether (-2.58%).
+  summary        Top crypto losers are Bitcoin (-2.66%) and Ether (-2.58%).
+  link           https://tradingeconomics.com/crypto
+  author         CALCULATOR
+  language       en
+  published_at   2026-07-31T18:30:01.98
+  record_type    article
+  tags           ["economy","markets"]
+  properties     {"te_id":571848,"country":"Crypto","category":"Crypto","importance":1,"source":"tradingeconomics.com"}
+
+--- row 2 ---
+  uid            trading-econ|571847
+  title          Agricultural Commodities Updates: Cocoa Rallies by 5.58%
+  body           Top commodity gainers are Cocoa (5.58%) and Coffee (2.62%). Biggest losers are Wheat (-3.76%), Rapeseed (-2.84%) and Lumber (-1.68%).
+  summary        Top commodity gainers are Cocoa (5.58%) and Coffee (2.62%). Biggest losers are Wheat (-3.76%), Rapeseed (-2.84%) and Lumber (-1.68%).
+  link           https://tradingeconomics.com/commodities
+  author         CALCULATOR
+  language       en
+  published_at   2026-07-31T18:25:00.943
+  record_type    article
+  tags           ["economy","markets"]
+  properties     {"te_id":571847,"country":"Commodity","category":"Commodity","importance":1,"source":"tradingeconomics.com"}

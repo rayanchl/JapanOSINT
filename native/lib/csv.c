@@ -82,6 +82,24 @@ cJSON *csv_parse(const char *text, int headers) {
   return out;
 }
 
+int csv_is_utf8(const char *s, size_t n) {
+  const unsigned char *p = (const unsigned char *)s;
+  for (size_t i = 0; i < n; ) {
+    unsigned char c = p[i];
+    size_t need;
+    if (c < 0x80) { i++; continue; }
+    else if ((c & 0xE0) == 0xC0) need = 1;
+    else if ((c & 0xF0) == 0xE0) need = 2;
+    else if ((c & 0xF8) == 0xF0) need = 3;
+    else return 0;
+    if (i + need >= n) return 0;          /* truncated sequence */
+    for (size_t k = 1; k <= need; k++)
+      if ((p[i + k] & 0xC0) != 0x80) return 0;
+    i += need + 1;
+  }
+  return 1;
+}
+
 char *csv_decode_sjis(const char *buf, size_t len) {
   if (!buf) return NULL;
   iconv_t cd = iconv_open("UTF-8", "SHIFT_JIS");

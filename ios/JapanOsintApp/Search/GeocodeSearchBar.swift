@@ -53,8 +53,12 @@ struct GeocodeSearchBar: View {
         }
         .padding(.horizontal, 10)
         .frame(height: 36)
-        .background(Color(.tertiarySystemFill),
-                    in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        // Liquid Glass, not a grey vibrancy fill — otherwise this field (the
+        // widest element in the map's top bar) paints an opaque grey patch over
+        // the bar's glass and the whole bar reads a different colour than the
+        // system tab bar. `.interactive()` gives the tap-press glass response.
+        .glassEffect(.regular.interactive(),
+                     in: RoundedRectangle(cornerRadius: 10, style: .continuous))
         .animation(.easeOut(duration: 0.15), value: model.showResults)
     }
 
@@ -72,8 +76,8 @@ struct GeocodeSearchBar: View {
         .padding(.horizontal, 10)
         .padding(.vertical, 3)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.tertiarySystemFill).opacity(0.6),
-                    in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .glassEffect(.regular,
+                     in: RoundedRectangle(cornerRadius: 8, style: .continuous))
         .transition(.opacity.combined(with: .move(edge: .top)))
     }
 }

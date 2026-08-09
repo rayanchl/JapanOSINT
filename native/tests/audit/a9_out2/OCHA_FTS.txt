@@ -1,0 +1,7 @@
+=== OCHA_FTS  entity=Afghanistan
+exit: 0
+sched: rc=0 records=0 453ms
+--- stderr ---
+[OCHA_FTS] http status=406
+[sched] OCHA_FTS run rc=0 records=0 453ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

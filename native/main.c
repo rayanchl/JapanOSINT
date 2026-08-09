@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>            /* _exit — see the serve-path shutdown below */
 
 /* Load JO_REPO_ROOT/.env (KEY=VALUE lines) into the environment, mirroring
  * the Node entrypoint's `node --env-file=../.env`. Existing env wins; quotes
@@ -201,11 +202,32 @@ int main(int argc, char **argv) {
      * from tampering. JO_NO_EVIDENCE_GC disables it. */
     evidence_gc_start(&db);
     int rc = httpd_serve(&db, port);
+    /* Order matters. Drain the collector pool FIRST: its workers are the ones
+     * inside libcurl/OpenSSL, and the pods below are quick to stop. */
+    scheduler_stop_background(3000);
     evidence_gc_stop();
     alert_eval_sweep_stop();
     alert_deliver_stop();
     db_close(&db);
-    return rc;
+
+    /* _exit, not return.
+     *
+     * The scheduler's workers are detached and unjoinable, so after the drain
+     * above there may still be one parked in a multi-second network call.
+     * Returning from main runs atexit, and OPENSSL_cleanup then frees the
+     * CRYPTO lock objects out from under that worker. ThreadSanitizer caught
+     * exactly this: four heap-use-after-frees in CRYPTO_THREAD_read_lock with
+     * the freeing thread (main, via OPENSSL_cleanup) and the reading thread
+     * (a scheduler worker inside curl_easy_perform) both named, terminating in
+     * a SEGV in CRYPTO_THREAD_write_lock. A clean shutdown exited by signal.
+     *
+     * There is nothing to reclaim by hand here — the process is ending and the
+     * kernel takes the rest — so skipping the teardown is strictly safer than
+     * racing it. stdio is flushed explicitly since _exit does not. Any
+     * interrupted SQLite transaction rolls back on next open; that guarantee
+     * comes from the WAL, not from orderly shutdown. */
+    fflush(NULL);
+    _exit(rc);
   }
 
   char msg[256] = {0};

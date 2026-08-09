@@ -27,4 +27,11 @@ cJSON *feed_post_json(http_client *http, const char *url, const char *body,
  * → first 20 hex chars into out (>=21 bytes). NULL parts skipped. */
 void feed_hash_key(char *out21, const char *const *parts, int n);
 
+/* Is `url`'s host under .jp? The one gate on "read a non-UTF-8 body as
+ * Shift_JIS". Exported (rather than static in feedlib.c) because jocore.h's
+ * jo_get() has the identical decision to make for 133 collectors, and two
+ * copies of a host test is how the two answers drift. Port, userinfo, path and
+ * query are all handled; `something.jp.evil.com` is NOT a match. */
+int feed_url_host_is_jp(const char *url);
+
 #endif

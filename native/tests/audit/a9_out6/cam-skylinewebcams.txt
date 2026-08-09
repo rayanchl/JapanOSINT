@@ -1,0 +1,36 @@
+=== cam-skylinewebcams
+exit: 0
+sched: rc=0 records=101 257ms
+--- stderr ---
+[cam-skylinewebcams] emitted 101
+[sched] cam-skylinewebcams run rc=0 records=101 257ms
+--- persisted: 36 rows, 36 with lat/lon, 36 with geometry ---
+record_type: camera=36
+sub_source_id: (null)=36
+
+--- row 1 ---
+  uid            camera-discovery|35.6762:139.6503:https://www.skylinewebcams.com/fr/webcam/japan/kanto/tokyo/k
+  title          Tokyo - Kabukicho Vue depuis le quartier de Kabukicho à Tokyo, Japon
+  lat            35.6762
+  lon            139.6503
+  geometry       {"type":"Point","coordinates":[139.6503,35.6762]}
+  record_type    camera
+  properties     {"camera_uid":"35.6762:139.6503:https://www.skylinewebcams.com/fr/webcam/japan/kanto/tokyo/k","name":"Tokyo - Kabukicho Vue depuis le quartier de Kabukicho à Tokyo, Japon","camera_type":"aggregator_skyline","discovery_channel":"skylinewebcams","country":"JP","url":"https://www.skylinewebcams.com/fr/webcam/japan/kanto/tokyo/kabukicho.html","city":"tokyo","location_precision":"prefecture","location_approximate":1,"thumbnail_url":null,"operator":null,"discovery_channels":["skylinewebcams"],"first_seen_at":"2026-07-31T18:27:41.705Z","last_seen_at":"2026-07-31T18:27:41.740Z","seen_count":2}
+
+--- row 2 ---
+  uid            camera-discovery|35.6762:139.6503:https://www.skylinewebcams.com/fr/webcam/japan/kanto/tokyo/s
+  title          Tokyo - Shinjuku Kabukicho Vue depuis le quartier de Shinjuku Kabukicho à Tokyo
+  lat            35.6762
+  lon            139.6503
+  geometry       {"type":"Point","coordinates":[139.6503,35.6762]}
+  record_type    camera
+  properties     {"camera_uid":"35.6762:139.6503:https://www.skylinewebcams.com/fr/webcam/japan/kanto/tokyo/s","name":"Tokyo - Shinjuku Kabukicho Vue depuis le quartier de Shinjuku Kabukicho à Tokyo","camera_type":"aggregator_skyline","discovery_channel":"skylinewebcams","country":"JP","url":"https://www.skylinewebcams.com/fr/webcam/japan/kanto/tokyo/shinjuku-kabukicho.html","city":"tokyo","location_precision":"prefecture","location_approximate":1,"thumbnail_url":null,"operator":null,"discovery_channels":["skylinewebcams"],"first_seen_at":"2026-07-31T18:27:41.706Z","last_seen_at":"2026-07-31T18:27:41.775Z","seen_count":6}
+
+--- row 3 ---
+  uid            camera-discovery|35.3606:138.7274:https://www.skylinewebcams.com/fr/webcam/japan/yamanashi-pre
+  title          Mont Fuji - Japon Vue du Mont Fuji depuis Fujikawaguchiko, Japon
+  lat            35.3606
+  lon            138.7274
+  geometry       {"type":"Point","coordinates":[138.7274,35.3606]}
+  record_type    camera
+  properties     {"camera_uid":"35.3606:138.7274:https://www.skylinewebcams.com/fr/webcam/japan/yamanashi-pre","name":"Mont Fuji - Japon Vue du Mont Fuji depuis Fujikawaguchiko, Japon","camera_type":"aggregator_skyline","discovery_channel":"skylinewebcams","country":"JP","url":"https://www.skylinewebcams.com/fr/webcam/japan/yamanashi-prefecture/fujikawaguchiko/mount-fuji.html","city":"fujikawaguchiko","location_precision":"city","location_approximate":1,"thumbnail_url":null,"operator":null,"discovery_channels":["skylinewebcams"],"first_seen_at":"2026-07-31T18:27:41.706Z","last_seen_at":"2026-07-31T18:27:41.779Z","seen_count":7}

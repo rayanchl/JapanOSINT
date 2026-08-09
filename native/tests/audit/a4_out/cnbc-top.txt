@@ -1,0 +1,45 @@
+=== cnbc-top
+exit: 0
+sched: rc=0 records=30 240ms
+--- stderr ---
+[rss] cnbc-top emitted 30
+[sched] cnbc-top run rc=0 records=30 240ms
+--- persisted: 30 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=30
+sub_source_id: (null)=30
+
+--- row 1 ---
+  uid            cnbc-top|108343090
+  title          How Leopold Aschenbrenner built a $45 billion AI hedge fund — and lost most of it in days
+  body           Leopold Aschenbrenner, a former OpenAI researcher-turned-hedge fund manager, saw a dramatic decline this week in his AI-focused fund, Situational Awareness.
+  summary        Leopold Aschenbrenner, a former OpenAI researcher-turned-hedge fund manager, saw a dramatic decline this week in his AI-focused fund, Situational Awareness.
+  link           https://www.cnbc.com/2026/07/31/leopold-aschenbrenner-situational-awareness-fund-fire-sale.html
+  language       en
+  published_at   Fri, 31 Jul 2026 17:57:53 GMT
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"108343090"}
+
+--- row 2 ---
+  uid            cnbc-top|108343263
+  title          Trump says U.S. has 'not agreed to' grant Ukraine Patriot missile licenses
+  body           President Donald Trump said the U.S. hasn't agreed to grant Ukraine licenses to produce Patriot missile systems.
+  summary        President Donald Trump said the U.S. hasn't agreed to grant Ukraine licenses to produce Patriot missile systems.
+  link           https://www.cnbc.com/2026/07/31/trump-ukraine-patriot-missile-license-russia.html
+  language       en
+  published_at   Fri, 31 Jul 2026 17:38:10 GMT
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"108343263"}
+
+--- row 3 ---
+  uid            cnbc-top|108343139
+  title          FIFA tests the limits of private equity in sports with World Cup subsidiary sale
+  body           UEFA and Concacaf's rejection of FIFA's plan to sell a 20% stake in the World Cup's commercial operations highlights uneasiness with private equity in sports.
+  summary        UEFA and Concacaf's rejection of FIFA's plan to sell a 20% stake in the World Cup's commercial operations highlights uneasiness with private equity in sports.
+  link           https://www.cnbc.com/2026/07/31/fifa-world-cup-private-equity-sports.html
+  language       en
+  published_at   Fri, 31 Jul 2026 16:19:16 GMT
+  record_type    article
+  tags           ["economy","markets","markets"]
+  properties     {"guid":"108343139"}

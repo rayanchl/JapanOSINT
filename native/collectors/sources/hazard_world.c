@@ -212,6 +212,12 @@ static int hz_rss(const source_ctx *ctx, intel_sink *sink, const char *url,
     char *date  = jo_tag_inner(&dc, "pubDate");
     const char *sc = item;
     char *desc  = jo_tag_inner(&sc, "description");
+    /* GVP gives EVERY item the same <link> (reports_weekly.cfm); keying on it
+     * collapsed all 22 weekly volcano reports into one persisted row. The
+     * <guid> (…reports_weekly.cfm#vn_<volcano number>) is the per-report
+     * identity. One-time re-key for GDACS, which also carries a guid. */
+    const char *gc2 = item;
+    char *guid  = jo_tag_inner(&gc2, "guid");
 
     /* advance cur to end of this item so the outer loop moves forward */
     cur = iend ? iend : (item + 1);
@@ -235,7 +241,8 @@ static int hz_rss(const source_ctx *ctx, intel_sink *sink, const char *url,
       cJSON_Delete(props);
 
       intel_item it = {0};
-      it.remote_key      = (link && link[0]) ? link : title;
+      it.remote_key      = (guid && guid[0]) ? guid
+                         : ((link && link[0]) ? link : title);
       it.title           = title;
       it.summary         = desc;
       it.body            = desc;
@@ -249,7 +256,7 @@ static int hz_rss(const source_ctx *ctx, intel_sink *sink, const char *url,
       if (sink->emit(sink, &it) >= 0) emitted++;
       free(pj);
     }
-    free(title); free(link); free(date); free(desc);
+    free(title); free(link); free(date); free(desc); free(guid);
   }
   free(xml);
   fprintf(stderr, "[%s] emitted %d\n", service, emitted);
@@ -365,9 +372,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (strcmp(id, "USGS_QUAKES") == 0)     return hz_usgs(ctx, sink);
   if (strcmp(id, "EMSC_QUAKES") == 0)     return hz_emsc(ctx, sink);
   if (strcmp(id, "GVP_VOLCANOES") == 0)
+    /* want_geo=1: every GVP item carries <georss:point>lat lon</georss:point>
+     * for the volcano itself — it was being ignored, so an erupting volcano
+     * could never pin on the map. */
     return hz_rss(ctx, sink, "https://volcano.si.edu/news/WeeklyVolcanoRSS.xml",
                   "GVP_VOLCANOES", "gvp-volcano", "volcano",
-                  "[\"hazard\",\"volcano\",\"GVP\"]", 0);
+                  "[\"hazard\",\"volcano\",\"GVP\"]", 1);
   if (strcmp(id, "GDACS_DISASTERS") == 0)
     return hz_rss(ctx, sink, "https://www.gdacs.org/xml/rss.xml",
                   "GDACS_DISASTERS", "gdacs-disaster", "disaster",

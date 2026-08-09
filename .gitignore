@@ -21,11 +21,27 @@ DerivedData/
 models/*.gguf
 native/llama/llama-server
 
-# C build artifacts
+# C build artifacts. `obj-*` covers the per-agent object trees that
+# tests/audit/agent_build.sh creates (obj-a0 … obj-a9, obj-asan, obj-tsan);
+# they totalled 758 MB unignored before this rule existed.
 native/obj/
+native/obj-*/
 native/bin/
+native/out1/
 # Runtime PID/state files written by launch.sh
 native/.run/
+
+# Audit harness build/scratch output. The reports (*.md) and the scripts
+# (*.sh, *.py) ARE tracked — see the negations below; only the artifacts they
+# generate are not.
+native/tests/audit/obj*/
+native/tests/audit/bin/
+native/tests/audit/**/*.o
+native/tests/audit/**/*.d
+
+# Python bytecode (61 .py files live under native/tests/)
+__pycache__/
+*.pyc
 
 # relocated runtime data (moved out of server/)
 /models/

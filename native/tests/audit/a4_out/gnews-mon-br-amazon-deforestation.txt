@@ -1,0 +1,45 @@
+=== gnews-mon-br-amazon-deforestation
+exit: 0
+sched: rc=0 records=67 532ms
+--- stderr ---
+[rss] gnews-mon-br-amazon-deforestation emitted 67
+[sched] gnews-mon-br-amazon-deforestation run rc=0 records=67 532ms
+--- persisted: 67 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=67
+sub_source_id: (null)=67
+
+--- row 1 ---
+  uid            gnews-mon-br-amazon-deforestation|CBMitgFBVV95cUxQSVNwS3NrQlBJcE5jSnhiOXNUYUFnbnBPY2IxZjN0dGxMT1dnallXR1RvSXV4ejNLOHljUjNTbW1wc2VtQlpneDVNMFczTFNPekNRV0I1TDQ3MFBCc1ZLYU9YcVR1SHNjVWpMTUJ3US1nX0k3RTZjTFFXdTlzdnNrNmREeUFYcWloZFZLZm9MYjV3RXA4eTVwLUpnREwzWG1HZ3l6NWVHVWo1VUVETnYtd1RwNUdzQQ
+  title          Por que os desmatadores investem em destruir a floresta amazônica –1: introdução à série - Amazônia Real
+  body           <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxQSVNwS3NrQlBJcE5jSnhiOXNUYUFnbnBPY2IxZjN0dGxMT1dnallXR1RvSXV4ejNLOHljUjNTbW1wc2VtQlpneDVNMFczTFNPekNRV0I1TDQ3MFBCc1ZLYU9YcVR1SHNjVWpMTUJ3US1nX0k3RTZjTFFXdTlzdnNrNmREeUFYcWloZFZLZm9MYjV3RXA4eTVwLUpnREwzWG1HZ3l6NWVHVWo1VUVETnYtd1RwNUdzQQ?oc=5" target="_blank">Por que os desmatadores investem em destruir a floresta amazônica –1: introdução à série</a>&nbsp;&nbsp;<font color="#6f6f6f">Amazônia Real</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxQSVNwS3NrQlBJcE5jSnhiOXNUYUFnbnBPY2IxZjN0dGxMT1dnallXR1RvSXV4ejNLOHljUjNTbW1wc2VtQlpneDVNMFczTFNPekNRV0I1TDQ3MFBCc1ZLYU9YcVR1SHNjVWpMTUJ3US1nX0k3RTZjTFFXdTlzdnNrNmREeUFYcWloZFZLZm
+  link           https://news.google.com/rss/articles/CBMitgFBVV95cUxQSVNwS3NrQlBJcE5jSnhiOXNUYUFnbnBPY2IxZjN0dGxMT1dnallXR1RvSXV4ejNLOHljUjNTbW1wc2VtQlpneDVNMFczTFNPekNRV0I1TDQ3MFBCc1ZLYU9YcVR1SHNjVWpMTUJ3US1nX0k3RTZjTFFXdTlzdnNrNmREeUFYcWloZFZLZm9MYjV3RXA4eTVwLUpnREwzWG1HZ3l6NWVHVWo1VUVETnYtd1RwNUdzQQ?oc=5
+  language       pt
+  published_at   Mon, 13 Jul 2026 15:52:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","br"]
+  properties     {"guid":"CBMitgFBVV95cUxQSVNwS3NrQlBJcE5jSnhiOXNUYUFnbnBPY2IxZjN0dGxMT1dnallXR1RvSXV4ejNLOHljUjNTbW1wc2VtQlpneDVNMFczTFNPekNRV0I1TDQ3MFBCc1ZLYU9YcVR1SHNjVWpMTUJ3US1nX0k3RTZjTFFXdTlzdnNrNmREeUFYcWloZFZLZm9MYjV3RXA4eTVwLUpnREwzWG1HZ3l6NWVHVWo1VUVETnYtd1RwNUdzQQ"}
+
+--- row 2 ---
+  uid            gnews-mon-br-amazon-deforestation|CBMijwFBVV95cUxPbzIxSGN6ak1xcllPYWs2am0zellnWE1ZZS04TTdFUU9IdnhsMFlveVhoMVdCbklKYWw1Z0JjbFNxYXlSQWNoa3FqV01hM1gxTVV6WGhhMGZ5SDJiemZrN2lSR0k5bzVKNjM2WUZwSkVXX3NZako3Ry12LU83VkZ6cWhMdXpFYVhocERkQWlEMA
+  title          Monitoring Forests From the Ground to the Cloud - Instituto do Homem e Meio Ambiente da Amazônia
+  body           <a href="https://news.google.com/rss/articles/CBMijwFBVV95cUxPbzIxSGN6ak1xcllPYWs2am0zellnWE1ZZS04TTdFUU9IdnhsMFlveVhoMVdCbklKYWw1Z0JjbFNxYXlSQWNoa3FqV01hM1gxTVV6WGhhMGZ5SDJiemZrN2lSR0k5bzVKNjM2WUZwSkVXX3NZako3Ry12LU83VkZ6cWhMdXpFYVhocERkQWlEMA?oc=5" target="_blank">Monitoring Forests From the Ground to the Cloud</a>&nbsp;&nbsp;<font color="#6f6f6f">Instituto do Homem e Meio Ambiente da Amazônia</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMijwFBVV95cUxPbzIxSGN6ak1xcllPYWs2am0zellnWE1ZZS04TTdFUU9IdnhsMFlveVhoMVdCbklKYWw1Z0JjbFNxYXlSQWNoa3FqV01hM1gxTVV6WGhhMGZ5SDJiemZrN2lSR0k5bzVKNjM2WUZwSkVXX3NZako3Ry12LU83VkZ6cWhMdXpFYVhocERkQW
+  link           https://news.google.com/rss/articles/CBMijwFBVV95cUxPbzIxSGN6ak1xcllPYWs2am0zellnWE1ZZS04TTdFUU9IdnhsMFlveVhoMVdCbklKYWw1Z0JjbFNxYXlSQWNoa3FqV01hM1gxTVV6WGhhMGZ5SDJiemZrN2lSR0k5bzVKNjM2WUZwSkVXX3NZako3Ry12LU83VkZ6cWhMdXpFYVhocERkQWlEMA?oc=5
+  language       pt
+  published_at   Fri, 03 Apr 2026 22:07:06 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","br"]
+  properties     {"guid":"CBMijwFBVV95cUxPbzIxSGN6ak1xcllPYWs2am0zellnWE1ZZS04TTdFUU9IdnhsMFlveVhoMVdCbklKYWw1Z0JjbFNxYXlSQWNoa3FqV01hM1gxTVV6WGhhMGZ5SDJiemZrN2lSR0k5bzVKNjM2WUZwSkVXX3NZako3Ry12LU83VkZ6cWhMdXpFYVhocERkQWlEMA"}
+
+--- row 3 ---
+  uid            gnews-mon-br-amazon-deforestation|CBMivAFBVV95cUxNa1ZjcmhCU2hWVVlNYVBFOGVoTzdoTUNkZ0VVdmZySnNxTEJybnZZbXhIdnJaYWthQUhZajlwQmNCVndNUjJnTkQ3a01VeVNkbHE5TC00Z1F2VFhXYm55WHgzbXJENU0wLVVVZUpKUm9tVXV2eFRiUTd1TmIwak50RUJwWXotbFg5WEpza1h0ZXliZGxhS0pkX3gxNXlZV1dEZGpOSmFKbXllT0JQRTVqRHluVVczM1oyMGpXbw
+  title          Desmatamento e aquecimento podem causar mudanças irreversíveis na Amazônia até 2040 - Mongabay Brasil
+  body           <a href="https://news.google.com/rss/articles/CBMivAFBVV95cUxNa1ZjcmhCU2hWVVlNYVBFOGVoTzdoTUNkZ0VVdmZySnNxTEJybnZZbXhIdnJaYWthQUhZajlwQmNCVndNUjJnTkQ3a01VeVNkbHE5TC00Z1F2VFhXYm55WHgzbXJENU0wLVVVZUpKUm9tVXV2eFRiUTd1TmIwak50RUJwWXotbFg5WEpza1h0ZXliZGxhS0pkX3gxNXlZV1dEZGpOSmFKbXllT0JQRTVqRHluVVczM1oyMGpXbw?oc=5" target="_blank">Desmatamento e aquecimento podem causar mudanças irreversíveis na Amazônia até 2040</a>&nbsp;&nbsp;<font color="#6f6f6f">Mongabay Brasil</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMivAFBVV95cUxNa1ZjcmhCU2hWVVlNYVBFOGVoTzdoTUNkZ0VVdmZySnNxTEJybnZZbXhIdnJaYWthQUhZajlwQmNCVndNUjJnTkQ3a01VeVNkbHE5TC00Z1F2VFhXYm55WHgzbXJENU0wLVVVZUpKUm9tVXV2eFRiUTd1TmIwak50RUJwWXotbFg5WEpza1
+  link           https://news.google.com/rss/articles/CBMivAFBVV95cUxNa1ZjcmhCU2hWVVlNYVBFOGVoTzdoTUNkZ0VVdmZySnNxTEJybnZZbXhIdnJaYWthQUhZajlwQmNCVndNUjJnTkQ3a01VeVNkbHE5TC00Z1F2VFhXYm55WHgzbXJENU0wLVVVZUpKUm9tVXV2eFRiUTd1TmIwak50RUJwWXotbFg5WEpza1h0ZXliZGxhS0pkX3gxNXlZV1dEZGpOSmFKbXllT0JQRTVqRHluVVczM1oyMGpXbw?oc=5
+  language       pt
+  published_at   Fri, 05 Jun 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","regional","br"]
+  properties     {"guid":"CBMivAFBVV95cUxNa1ZjcmhCU2hWVVlNYVBFOGVoTzdoTUNkZ0VVdmZySnNxTEJybnZZbXhIdnJaYWthQUhZajlwQmNCVndNUjJnTkQ3a01VeVNkbHE5TC00Z1F2VFhXYm55WHgzbXJENU0wLVVVZUpKUm9tVXV2eFRiUTd1TmIwak50RUJwWXotbFg5WEpza1h0ZXliZGxhS0pkX3gxNXlZV1dEZGpOSmFKbXllT0JQRTVqRHluVVczM1oyMGpXbw"}

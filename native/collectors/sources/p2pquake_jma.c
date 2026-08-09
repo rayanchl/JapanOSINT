@@ -62,6 +62,46 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                 strcmp(dt->valuestring, "None") != 0);
       cJSON_AddItemToObject(p, "tsunami_warning", cJSON_CreateBool(tw));
       cJSON_AddStringToObject(p, "source", "p2pquake");
+
+      /* The geojson toolkit derives the intel title from title|name|name_ja|
+       * label; none of the JS keys above are one, so every quake landed with a
+       * NULL title and was unreadable in the UI. Build it from the fields we
+       * genuinely fetched (place / magnitude / JMA shindo scale). */
+      {
+        cJSON *mg = cJSON_GetObjectItem(p, "magnitude");
+        cJSON *dp = cJSON_GetObjectItem(p, "depth_km");
+        cJSON *ms = cJSON_GetObjectItem(p, "max_intensity");
+        cJSON *pl = cJSON_GetObjectItem(p, "place");
+        const char *place = (pl && cJSON_IsString(pl) && pl->valuestring[0])
+                              ? pl->valuestring : NULL;
+        /* snprintf returns what it WOULD have written, so a bare `o += ...`
+         * walks the cursor past the buffer the first time it truncates and
+         * every later `t + o` is out of bounds while `sizeof t - o` wraps to
+         * ~SIZE_MAX. `place` comes straight from the feed and is unbounded, so
+         * this was reachable. Clamp the cursor to the terminator. */
+        char t[320]; size_t o = 0;
+        #define T_ADV(expr) do { int w_ = (expr); \
+          if (w_ > 0) o += (size_t)w_; \
+          if (o >= sizeof t) o = sizeof t - 1; } while (0)
+        if (mg && cJSON_IsNumber(mg) && mg->valuedouble > -1)
+          T_ADV(snprintf(t + o, sizeof t - o, "M%.1f ", mg->valuedouble));
+        T_ADV(snprintf(t + o, sizeof t - o, "%s",
+                       place ? place : "\xE9\x9C\x87\xE6\xBA\x90\xE4\xB8\x8D\xE6\x98\x8E"));
+        /* maxScale is JMA shindo x10 (10=1 … 70=7); -1/unknown is omitted */
+        if (ms && cJSON_IsNumber(ms) && ms->valuedouble >= 10) {
+          int s10 = (int)ms->valuedouble;
+          const char *sfx = (s10 == 45 || s10 == 55) ? "-" :
+                            (s10 == 50 || s10 == 60) ? "+" : "";
+          T_ADV(snprintf(t + o, sizeof t - o,
+                         " \xE6\x9C\x80\xE5\xA4\xA7\xE9\x9C\x87\xE5\xBA\xA6%d%s",
+                         s10 / 10, sfx));
+        }
+        if (dp && cJSON_IsNumber(dp) && dp->valuedouble >= 0)
+          T_ADV(snprintf(t + o, sizeof t - o, " / %.0fkm", dp->valuedouble));
+        if (tw) snprintf(t + o, sizeof t - o, " \xE2\x80\x94 tsunami");
+        #undef T_ADV
+        cJSON_AddStringToObject(p, "title", t);
+      }
       cJSON_AddItemToObject(f, "properties", p);
       cJSON_AddItemToArray(features, f);
     }

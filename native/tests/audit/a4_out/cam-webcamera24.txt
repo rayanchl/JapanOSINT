@@ -1,0 +1,36 @@
+=== cam-webcamera24
+exit: 0
+sched: rc=0 records=160 1510ms
+--- stderr ---
+[cam-webcamera24] emitted 160
+[sched] cam-webcamera24 run rc=0 records=160 1510ms
+--- persisted: 160 rows, 160 with lat/lon, 160 with geometry ---
+record_type: camera=160
+sub_source_id: (null)=160
+
+--- row 1 ---
+  uid            camera-discovery|32.7448:129.8737:https://webcamera24.com/fr/camera/japan/nagasaki-airport/
+  title          Aéroport de Nagasaki Nagasaki, Japon Webcam en ligne
+  lat            32.7448
+  lon            129.8737
+  geometry       {"type":"Point","coordinates":[129.8737,32.7448]}
+  record_type    camera
+  properties     {"camera_uid":"32.7448:129.8737:https://webcamera24.com/fr/camera/japan/nagasaki-airport/","name":"Aéroport de Nagasaki Nagasaki, Japon Webcam en ligne","camera_type":"aggregator_webcamera24","discovery_channel":"webcamera24","country":"JP","url":"https://webcamera24.com/fr/camera/japan/nagasaki-airport/","location_precision":"prefecture","location_approximate":true,"thumbnail_url":null,"operator":null,"discovery_channels":["webcamera24"],"first_seen_at":"2026-07-31T18:02:49.942Z","last_seen_at":"2026-07-31T18:02:49.942Z","seen_count":1}
+
+--- row 2 ---
+  uid            camera-discovery|37.7503:140.4677:https://webcamera24.com/fr/camera/japan/yunokamionsen-statio
+  title          Gare de Yunokamionsen, Japon Préfecture de Fukushima, Japon Webcam en ligne
+  lat            37.7503
+  lon            140.4677
+  geometry       {"type":"Point","coordinates":[140.4677,37.7503]}
+  record_type    camera
+  properties     {"camera_uid":"37.7503:140.4677:https://webcamera24.com/fr/camera/japan/yunokamionsen-statio","name":"Gare de Yunokamionsen, Japon Préfecture de Fukushima, Japon Webcam en ligne","camera_type":"aggregator_webcamera24","discovery_channel":"webcamera24","country":"JP","url":"https://webcamera24.com/fr/camera/japan/yunokamionsen-station-cam/","location_precision":"prefecture","location_approximate":true,"thumbnail_url":null,"operator":null,"discovery_channels":["webcamera24"],"first_seen_at":"2026-07-31T18:02:49.943Z","last_seen_at":"2026-07-31T18:02:49.943Z","seen_count":1}
+
+--- row 3 ---
+  uid            camera-discovery|36.3906:139.0604:https://webcamera24.com/fr/camera/japan/jizo-hot-spring-cam/
+  title          Jizo Hot Spring, Japon Gunma, Japon Webcam en ligne
+  lat            36.3906
+  lon            139.0604
+  geometry       {"type":"Point","coordinates":[139.0604,36.3906]}
+  record_type    camera
+  properties     {"camera_uid":"36.3906:139.0604:https://webcamera24.com/fr/camera/japan/jizo-hot-spring-cam/","name":"Jizo Hot Spring, Japon Gunma, Japon Webcam en ligne","camera_type":"aggregator_webcamera24","discovery_channel":"webcamera24","country":"JP","url":"https://webcamera24.com/fr/camera/japan/jizo-hot-spring-cam/","location_precision":"prefecture","location_approximate":true,"thumbnail_url":null,"operator":null,"discovery_channels":["webcamera24"],"first_seen_at":"2026-07-31T18:02:49.943Z","last_seen_at":"2026-07-31T18:02:49.943Z","seen_count":1}

@@ -142,15 +142,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char sid[32];
     snprintf(sid, sizeof sid, "SPRING_%05ld", i);
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(lon, lat);
 
     cJSON *p = cJSON_CreateObject();  /* EXACT JS key order */
     cJSON_AddStringToObject(p, "spring_id", sid);

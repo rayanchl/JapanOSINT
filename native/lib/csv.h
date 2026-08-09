@@ -19,4 +19,10 @@ cJSON *csv_parse(const char *text, int headers);
  * returns a plain UTF-8 copy of the input (mirrors JS catch → utf8). */
 char *csv_decode_sjis(const char *buf, size_t len);
 
+/* Strict UTF-8 validation. The cheap way to tell "already UTF-8" from "legacy
+ * Japanese encoding" when the response carries no charset header — which is
+ * the only signal csv_decode_sjis's callers have. Lives here rather than in
+ * three collectors because it is the guard that makes the transcode safe. */
+int csv_is_utf8(const char *s, size_t n);
+
 #endif

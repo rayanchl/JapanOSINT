@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Node-vs-C latency comparison (simple curl -w table).
+# Node-vs-C latency comparison (simple curl -w table). With server/ deleted
+# this degrades to a C-only latency table — see NODE_OK below.
 #
 # Reuses the contract harness's parity profile: both backends under HS256
 # with a known secret, JWKS disabled (SUPABASE_URL=""), ambient API-key env
@@ -10,8 +11,20 @@
 #   run.sh --with-sweeps    # also benchmark the heavy /api/data sweep layers
 #   N=10 run.sh             # runs per route (default 6; first is warmup)
 set -euo pipefail
-ROOT=/Users/rayan/JapanOSINT
+# Derive the repo root from this script's own location. It was hardcoded to
+# /Users/rayan/JapanOSINT — the absolute path of the machine the harness was
+# written on — so the suite could not run in any other checkout. The prior
+# audit report attributed this to tests/contract/run.sh; that one was fixed and
+# this one was missed, so it kept failing before its first sample. Same
+# resolution as tests/contract/run.sh; JO_REPO_ROOT still overrides.
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="${JO_REPO_ROOT:-$(cd "$HERE/../../.." && pwd)}"
 SECRET=parity-secret
+# The Node backend (server/) was deleted on 2026-05-17. Where it is absent this
+# becomes a C-only latency table rather than half a comparison against a server
+# that cannot start — the NODE column reads "-" and nothing is invented.
+NODE_OK=0
+[ -f "$ROOT/server/src/index.js" ] && command -v node >/dev/null 2>&1 && NODE_OK=1
 N="${N:-6}"                       # samples/route (run 1 discarded as warmup)
 WITH_SWEEPS=0
 [ "${1:-}" = "--with-sweeps" ] && WITH_SWEEPS=1
@@ -40,10 +53,22 @@ if [ "$WITH_SWEEPS" = 1 ]; then
            /api/data/unified-buses /api/data/cameras /api/data/unified-stations)
 fi
 
+# openssl fallback so the bench still runs on a host with no Node (the normal
+# case now that server/ is gone) — same construction as tests/contract/run.sh.
+b64url() { openssl base64 -A | tr '+/' '-_' | tr -d '='; }
 mk_token() {
-  node -e 'const c=require("crypto");const b=o=>Buffer.from(JSON.stringify(o)).toString("base64url");
-  const h=b({alg:"HS256",typ:"JWT"}),p=b({sub:"bench",email:"bench@local",aud:"authenticated",role:"authenticated",exp:Math.floor(Date.now()/1e3)+86400});
-  process.stdout.write(h+"."+p+"."+c.createHmac("sha256",process.argv[1]).update(h+"."+p).digest("base64url"))' "$SECRET"
+  if command -v node >/dev/null 2>&1; then
+    node -e 'const c=require("crypto");const b=o=>Buffer.from(JSON.stringify(o)).toString("base64url");
+    const h=b({alg:"HS256",typ:"JWT"}),p=b({sub:"bench",email:"bench@local",aud:"authenticated",role:"authenticated",exp:Math.floor(Date.now()/1e3)+86400});
+    process.stdout.write(h+"."+p+"."+c.createHmac("sha256",process.argv[1]).update(h+"."+p).digest("base64url"))' "$SECRET"
+    return
+  fi
+  local h p sig
+  h=$(printf '%s' '{"alg":"HS256","typ":"JWT"}' | b64url)
+  p=$(printf '{"sub":"bench","email":"bench@local","aud":"authenticated","role":"authenticated","exp":%s}' \
+        "$(( $(date +%s) + 86400 ))" | b64url)
+  sig=$(printf '%s' "$h.$p" | openssl dgst -sha256 -hmac "$SECRET" -binary | b64url)
+  printf '%s.%s.%s' "$h" "$p" "$sig"
 }
 
 free_ports() {
@@ -71,18 +96,27 @@ cleanup() {
 trap cleanup EXIT
 
 free_ports
-( set -a; . "$ROOT/.env"; set +a; SUPABASE_URL="" SUPABASE_JWT_SECRET="$SECRET" \
-  PLATFORM_OPERATOR_EMAILS="$OP_EMAIL" env $CRED_UNSET PORT=4071 \
-  node "$ROOT/server/src/index.js" ) >/tmp/jo_bench_node.log 2>&1 &
-NPID=$!
+if [ "$NODE_OK" = 1 ]; then
+  ( set -a; . "$ROOT/.env"; set +a; SUPABASE_URL="" SUPABASE_JWT_SECRET="$SECRET" \
+    PLATFORM_OPERATOR_EMAILS="$OP_EMAIL" env $CRED_UNSET PORT=4071 \
+    node "$ROOT/server/src/index.js" ) >/tmp/jo_bench_node.log 2>&1 &
+  NPID=$!
+else
+  echo "note: $ROOT/server/src/index.js is gone (Node backend removed 2026-05-17)"
+  echo "      — running C-only; the NODE column will read '-'."
+fi
 SUPABASE_URL="" SUPABASE_JWT_SECRET="$SECRET" PLATFORM_OPERATOR_EMAILS="$OP_EMAIL" \
   env $CRED_UNSET PORT=4072 "$ROOT/native/bin/japanosint" --serve \
   >/tmp/jo_bench_c.log 2>&1 &
 CPID=$!
 
 for _ in $(seq 1 60); do
-  curl -s -o /dev/null http://127.0.0.1:4071/api/health 2>/dev/null \
-    && curl -s -o /dev/null http://127.0.0.1:4072/api/health 2>/dev/null && break
+  if [ "$NODE_OK" = 1 ]; then
+    curl -s -o /dev/null http://127.0.0.1:4071/api/health 2>/dev/null \
+      && curl -s -o /dev/null http://127.0.0.1:4072/api/health 2>/dev/null && break
+  else
+    curl -s -o /dev/null http://127.0.0.1:4072/api/health 2>/dev/null && break
+  fi
   sleep 0.5
 done
 TOK=$(mk_token)
@@ -92,7 +126,9 @@ TOK=$(mk_token)
 # 429 under N rapid samples and would make the comparison meaningless —
 # PLAN_MULTIPLIER.enterprise === Infinity → middleware/rateLimit.js returns
 # next() with no cap). C has no rate limiter, so both now do real work.
-curl -s -o /dev/null -H "Authorization: Bearer $TOK" http://127.0.0.1:4071/api/me || true
+if [ "$NODE_OK" = 1 ]; then
+  curl -s -o /dev/null -H "Authorization: Bearer $TOK" http://127.0.0.1:4071/api/me || true
+fi
 curl -s -o /dev/null -H "Authorization: Bearer $TOK" http://127.0.0.1:4072/api/me || true
 sqlite3 "$ROOT/data/japanmap.db" \
   "UPDATE tenants SET plan='enterprise' WHERE id IN
@@ -118,11 +154,21 @@ samp() {  # $1=base $2=route -> "median_s size httpcode"
 printf '%-34s %10s %10s %9s %12s %s\n' ROUTE NODE_med C_med "N/C" BYTES "HTTP(n/c)"
 printf '%-34s %10s %10s %9s %12s %s\n' "-----" "-------" "------" "----" "--------" "----"
 for r in "${ROUTES[@]}"; do
-  read -r nmed nsize ncode <<<"$(samp http://127.0.0.1:4071 "$r")"
+  if [ "$NODE_OK" = 1 ]; then
+    read -r nmed nsize ncode <<<"$(samp http://127.0.0.1:4071 "$r")"
+  else
+    # No Node backend to sample. Emit nothing rather than a plausible-looking
+    # zero: a fabricated baseline is worse than an absent one.
+    nmed="-"; nsize="-"; ncode="-"
+  fi
   read -r cmed csize ccode <<<"$(samp http://127.0.0.1:4072 "$r")"
-  spd=$(awk -v n="$nmed" -v c="$cmed" 'BEGIN{ if(c>0 && n!="NA" && c!="NA") printf "%.2fx", n/c; else print "-" }')
-  printf '%-34s %9ss %9ss %9s %12s %s/%s\n' "$r" "$nmed" "$cmed" "$spd" "${nsize}|${csize}" "$ncode" "$ccode"
+  spd=$(awk -v n="$nmed" -v c="$cmed" 'BEGIN{ if(c>0 && n!="NA" && n!="-" && c!="NA") printf "%.2fx", n/c; else print "-" }')
+  printf '%-34s %10s %9ss %9s %12s %s/%s\n' "$r" "$nmed" "$cmed" "$spd" "${nsize}|${csize}" "$ncode" "$ccode"
 done
 echo
-echo "N=$N samples/route (1 warmup dropped). Node :4071  C :4072  same japanmap.db."
+if [ "$NODE_OK" = 1 ]; then
+  echo "N=$N samples/route (1 warmup dropped). Node :4071  C :4072  same japanmap.db."
+else
+  echo "N=$N samples/route (1 warmup dropped). C :4072 only — no Node backend exists."
+fi
 echo "Sizes node|c; differing sizes => shape divergence to investigate (not just speed)."

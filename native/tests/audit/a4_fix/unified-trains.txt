@@ -1,0 +1,7 @@
+=== unified-trains
+exit: TIMEOUT after 280s
+sched: (no [sched] line — the collector never returned)
+--- stderr ---
+[mlit-n02-stations] emitted 0
+[overpass] odpt-transport no elements
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

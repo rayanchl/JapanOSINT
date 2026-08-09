@@ -1,0 +1,7 @@
+=== bom-au-warnings
+exit: 1
+sched: rc=-1 records=0 372ms
+--- stderr ---
+[sched] bom-au-warnings run rc=-1 records=0 372ms
+[detect] anomaly opened: bom-au-warnings verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

@@ -1,0 +1,45 @@
+=== gnews-mon-power-grid-failure
+exit: 0
+sched: rc=0 records=100 784ms
+--- stderr ---
+[rss] gnews-mon-power-grid-failure emitted 100
+[sched] gnews-mon-power-grid-failure run rc=0 records=100 784ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-power-grid-failure|CBMiogFBVV95cUxNT0p6eTVfSWhfRC1wV05DNWprTV9fQXpQVkptSFY2QXg2NXJkQmo5cXJkTTB3RjFacTdKNUhLMVppSlJZSDVjMmxDOU9NOEtQdHdYWG12Q0hyanNVYU5CWmFTMUdlZm9jalFDaDhseUNGdkV5WHJIaHQ2TDdkd3g3VmdRalFLQXVqYkhzc1FIaTVLNUFzb1IwdW5XZjRzTWpBZEE
+  title          Emergency power authorized for Montana, Wyoming grid for upcoming heat wave - KTVQ
+  body           <a href="https://news.google.com/rss/articles/CBMiogFBVV95cUxNT0p6eTVfSWhfRC1wV05DNWprTV9fQXpQVkptSFY2QXg2NXJkQmo5cXJkTTB3RjFacTdKNUhLMVppSlJZSDVjMmxDOU9NOEtQdHdYWG12Q0hyanNVYU5CWmFTMUdlZm9jalFDaDhseUNGdkV5WHJIaHQ2TDdkd3g3VmdRalFLQXVqYkhzc1FIaTVLNUFzb1IwdW5XZjRzTWpBZEE?oc=5" target="_blank">Emergency power authorized for Montana, Wyoming grid for upcoming heat wave</a>&nbsp;&nbsp;<font color="#6f6f6f">KTVQ</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiogFBVV95cUxNT0p6eTVfSWhfRC1wV05DNWprTV9fQXpQVkptSFY2QXg2NXJkQmo5cXJkTTB3RjFacTdKNUhLMVppSlJZSDVjMmxDOU9NOEtQdHdYWG12Q0hyanNVYU5CWmFTMUdlZm9jalFDaDhseUNGdkV5WHJIaHQ2TDdkd3g3VmdRalFLQXVqYkhzc1
+  link           https://news.google.com/rss/articles/CBMiogFBVV95cUxNT0p6eTVfSWhfRC1wV05DNWprTV9fQXpQVkptSFY2QXg2NXJkQmo5cXJkTTB3RjFacTdKNUhLMVppSlJZSDVjMmxDOU9NOEtQdHdYWG12Q0hyanNVYU5CWmFTMUdlZm9jalFDaDhseUNGdkV5WHJIaHQ2TDdkd3g3VmdRalFLQXVqYkhzc1FIaTVLNUFzb1IwdW5XZjRzTWpBZEE?oc=5
+  language       en
+  published_at   Tue, 28 Jul 2026 23:55:40 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","power"]
+  properties     {"guid":"CBMiogFBVV95cUxNT0p6eTVfSWhfRC1wV05DNWprTV9fQXpQVkptSFY2QXg2NXJkQmo5cXJkTTB3RjFacTdKNUhLMVppSlJZSDVjMmxDOU9NOEtQdHdYWG12Q0hyanNVYU5CWmFTMUdlZm9jalFDaDhseUNGdkV5WHJIaHQ2TDdkd3g3VmdRalFLQXVqYkhzc1FIaTVLNUFzb1IwdW5XZjRzTWpBZEE"}
+
+--- row 2 ---
+  uid            gnews-mon-power-grid-failure|CBMigwFBVV95cUxNS1RXTncxTWFsZXhBMV84all5c3dPVFpmVjN6N21kSGgzT011MXlzWXFRWmJGdVV1d2c3TlpNczkxQ1FtN2U2RXctM3BUZG40YjBscGlhZjZOekRSZTUwVVkybDZtUGhoWmk4R2lma28tcjM1ZHE5eVh3WG94YjQzUFAyZw
+  title          Catching Silent Threats to the Power Grid - UT Austin News
+  body           <a href="https://news.google.com/rss/articles/CBMigwFBVV95cUxNS1RXTncxTWFsZXhBMV84all5c3dPVFpmVjN6N21kSGgzT011MXlzWXFRWmJGdVV1d2c3TlpNczkxQ1FtN2U2RXctM3BUZG40YjBscGlhZjZOekRSZTUwVVkybDZtUGhoWmk4R2lma28tcjM1ZHE5eVh3WG94YjQzUFAyZw?oc=5" target="_blank">Catching Silent Threats to the Power Grid</a>&nbsp;&nbsp;<font color="#6f6f6f">UT Austin News</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMigwFBVV95cUxNS1RXTncxTWFsZXhBMV84all5c3dPVFpmVjN6N21kSGgzT011MXlzWXFRWmJGdVV1d2c3TlpNczkxQ1FtN2U2RXctM3BUZG40YjBscGlhZjZOekRSZTUwVVkybDZtUGhoWmk4R2lma28tcjM1ZHE5eVh3WG94YjQzUFAyZw?oc=5" targe
+  link           https://news.google.com/rss/articles/CBMigwFBVV95cUxNS1RXTncxTWFsZXhBMV84all5c3dPVFpmVjN6N21kSGgzT011MXlzWXFRWmJGdVV1d2c3TlpNczkxQ1FtN2U2RXctM3BUZG40YjBscGlhZjZOekRSZTUwVVkybDZtUGhoWmk4R2lma28tcjM1ZHE5eVh3WG94YjQzUFAyZw?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 17:39:52 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","power"]
+  properties     {"guid":"CBMigwFBVV95cUxNS1RXTncxTWFsZXhBMV84all5c3dPVFpmVjN6N21kSGgzT011MXlzWXFRWmJGdVV1d2c3TlpNczkxQ1FtN2U2RXctM3BUZG40YjBscGlhZjZOekRSZTUwVVkybDZtUGhoWmk4R2lma28tcjM1ZHE5eVh3WG94YjQzUFAyZw"}
+
+--- row 3 ---
+  uid            gnews-mon-power-grid-failure|CBMi8wFBVV95cUxQSWFubFJqZEpkeW5mTC1aaDQ3SWtWUnZfNEhrbUhIWnNPOVBjbjZPRS1wVlZWazlVZXJaWF9hdW5aLVNueExCakxfWTVKM0VLd0hxYVY0ZkhNdlFKUVVjWlBaaUV4SFFES2RRS0c5dFJieGVYSnozUGJEV2F5b3hZWGp5MDcxTzVRX3JKbmItelV3cDZIYVhTME52OGd4Mm5FR3pLSDVlUlItY2steGREaXhFaVZ3LTAyVmg2Vk05TDF1Zm5PbWhkVjEzZXVRNFdqMUZ6SmswNlJmMy1vU2VFY25kYUJmQWdCdVIzdVBBYzY3NWM
+  title          Is Louisiana under emergency order? What to know about energy concerns - Shreveport Times
+  body           <a href="https://news.google.com/rss/articles/CBMi8wFBVV95cUxQSWFubFJqZEpkeW5mTC1aaDQ3SWtWUnZfNEhrbUhIWnNPOVBjbjZPRS1wVlZWazlVZXJaWF9hdW5aLVNueExCakxfWTVKM0VLd0hxYVY0ZkhNdlFKUVVjWlBaaUV4SFFES2RRS0c5dFJieGVYSnozUGJEV2F5b3hZWGp5MDcxTzVRX3JKbmItelV3cDZIYVhTME52OGd4Mm5FR3pLSDVlUlItY2steGREaXhFaVZ3LTAyVmg2Vk05TDF1Zm5PbWhkVjEzZXVRNFdqMUZ6SmswNlJmMy1vU2VFY25kYUJmQWdCdVIzdVBBYzY3NWM?oc=5" target="_blank">Is Louisiana under emergency order? What to know about energy concerns</a>&nbsp;&nbsp;<font color="#6f6f6f">Shreveport Times</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi8wFBVV95cUxQSWFubFJqZEpkeW5mTC1aaDQ3SWtWUnZfNEhrbUhIWnNPOVBjbjZPRS1wVlZWazlVZXJaWF9hdW5aLVNueExCakxfWTVKM0VLd0hxYVY0ZkhNdlFKUVVjWlBaaUV4SFFES2RRS0c5dFJieGVYSnozUGJEV2F5b3hZWGp5MDcxTzVRX3JKbm
+  link           https://news.google.com/rss/articles/CBMi8wFBVV95cUxQSWFubFJqZEpkeW5mTC1aaDQ3SWtWUnZfNEhrbUhIWnNPOVBjbjZPRS1wVlZWazlVZXJaWF9hdW5aLVNueExCakxfWTVKM0VLd0hxYVY0ZkhNdlFKUVVjWlBaaUV4SFFES2RRS0c5dFJieGVYSnozUGJEV2F5b3hZWGp5MDcxTzVRX3JKbmItelV3cDZIYVhTME52OGd4Mm5FR3pLSDVlUlItY2steGREaXhFaVZ3LTAyVmg2Vk05TDF1Zm5PbWhkVjEzZXVRNFdqMUZ6SmswNlJmMy1vU2VFY25kYUJmQWdCdVIzdVBBYzY3NWM?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 18:20:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","power"]
+  properties     {"guid":"CBMi8wFBVV95cUxQSWFubFJqZEpkeW5mTC1aaDQ3SWtWUnZfNEhrbUhIWnNPOVBjbjZPRS1wVlZWazlVZXJaWF9hdW5aLVNueExCakxfWTVKM0VLd0hxYVY0ZkhNdlFKUVVjWlBaaUV4SFFES2RRS0c5dFJieGVYSnozUGJEV2F5b3hZWGp5MDcxTzVRX3JKbmItelV3cDZIYVhTME52OGd4Mm5FR3pLSDVlUlItY2steGREaXhFaVZ3LTAyVmg2Vk05TDF1Zm5PbWhkVjEzZXVRNFdqMUZ6SmswNlJmMy1vU2VFY25kYUJmQWdCdVIzdVBBYzY3NWM"}

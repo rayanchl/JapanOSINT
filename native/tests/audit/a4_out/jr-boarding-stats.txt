@@ -1,0 +1,30 @@
+=== jr-boarding-stats
+exit: 0
+sched: rc=0 records=2 366ms
+--- stderr ---
+[jr-boarding-stats] JR-East reachable=0
+[jr-boarding-stats] Tokyo-Metro reachable=0
+[sched] jr-boarding-stats run rc=0 records=2 366ms
+--- persisted: 2 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=2
+sub_source_id: (null)=2
+
+--- row 1 ---
+  uid            jr-boarding-stats|JR-East
+  title          JR-East — per-station boarding stats
+  summary        Annual passenger boardings (乗降客数) by station
+  link           https://www.jreast.co.jp/passenger/
+  language       ja
+  published_at   2026-07-31T18:04:16.445Z
+  tags           ["transit","rail","boarding","unreachable"]
+  properties     {"operator":"JR-East","reachable":false}
+
+--- row 2 ---
+  uid            jr-boarding-stats|Tokyo-Metro
+  title          Tokyo-Metro — per-station boarding stats
+  summary        Annual passenger boardings (乗降客数) by station
+  link           https://www.tokyometro.jp/corporate/enterprise/passenger_rail/
+  language       ja
+  published_at   2026-07-31T18:04:16.445Z
+  tags           ["transit","rail","boarding","unreachable"]
+  properties     {"operator":"Tokyo-Metro","reachable":false}

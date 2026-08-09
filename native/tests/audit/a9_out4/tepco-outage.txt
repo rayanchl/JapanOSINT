@@ -1,0 +1,19 @@
+=== tepco-outage
+exit: 0
+sched: rc=0 records=1 391ms
+--- stderr ---
+[tepco-outage] probe reachable=0
+[sched] tepco-outage run rc=0 records=1 391ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            tepco-outage|portal
+  title          TEPCO Kanto outage map
+  summary        Per-municipality power outage feed, customer-count granular
+  link           https://teideninfo.tepco.co.jp/
+  language       ja
+  published_at   2026-07-31T18:20:28.579Z
+  tags           ["power","outage","tepco","unreachable"]
+  properties     {"operator":"東京電力パワーグリッド","reachable":false}

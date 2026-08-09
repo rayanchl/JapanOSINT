@@ -82,12 +82,20 @@ typedef struct source_def {
   const char *name_ja;
   int  update_interval_sec;   /* >0 scheduled; 0 = on-demand (OSINT/explicit) */
   int  (*run)(const source_ctx *, intel_sink *);
-  /* Self-describing metadata. The 420 curated map collectors keep their rich
-   * rows in source_registry.gen.c; sources NOT in that table (OSINT services
-   * + a few map collectors) carry their metadata here, which src_meta_get()
-   * synthesizes into a src_meta. All fields optional (designated initializers
-   * leave them NULL/0). `layer` MUST stay NULL for entity-pivot services so
-   * they never appear in /api/layers. */
+  /* Self-describing metadata — THE place a source describes itself.
+   *
+   * These fields are the whole of `src_meta` (core/source_registry.h), so a
+   * source needs nothing outside its own .c file to appear in /api/status,
+   * /api/intel/sources and — when it declares a `layer` — /api/layers.
+   * core/source_registry.gen.c is only an OVERLAY of Node-era prose (rich JA
+   * names, long descriptions) laid on top per field by
+   * core/source_registry_dyn.c; NEW SOURCES MUST NOT BE ADDED TO IT.
+   *
+   * All fields optional (designated initializers leave them NULL/0). `layer`
+   * MUST stay NULL for entity-pivot services so they never appear in
+   * /api/layers. Emit nothing rather than a plausible default: a NULL url or
+   * description is serialized as JSON null, which a client can tell apart from
+   * a guess. */
   const char *category;       /* NULL → "investigation" when synthesized   */
   const char *type;           /* api|dataset|scraped|web_request; NULL→"api" */
   const char *url;            /* canonical/base or internal:// sentinel      */
@@ -97,9 +105,36 @@ typedef struct source_def {
   int  free_tier;             /* 1 = free; 0 (default) = paid                */
 } source_def;
 
+/* The `category` vocabulary — ONE list, for both registries.
+ *
+ * The two registries had grown two disjoint vocabularies: 28 values appeared
+ * only in source_registry.gen.c rows, 19 only in inline `.category=`
+ * literals, overlapping in just 16 — so /api/status already emitted the union
+ * of 31 while neither half could be used as a reference. Reconciled by taking
+ * THE UNION as canonical rather than by collapsing synonyms: `category` is a
+ * free-form string in every client (ios/JapanOsintApp/Models.swift decodes it
+ * as `String?` and falls back to "Other"), the values are user-visible group
+ * headings, and merging e.g. news/media into intelligence would silently
+ * re-bucket live sources for no gain. Nothing is renamed; the list is written
+ * down so the next author picks from it instead of inventing a 32nd.
+ *
+ *   agriculture  breach       classifieds  commercial   crime
+ *   culture      cyber        defense      economy      environment
+ *   food         geospatial   government   health       industry
+ *   infrastructure  intelligence  investigation  marketplace  media
+ *   news         ocean        safety       satellite    seismic
+ *   social       statistics   telecom      tourism      transport
+ *   wildlife
+ *
+ * (`breach` is also synthesized for the breach_meta catalog rows that
+ * /api/status and /api/intel/sources append for operators.) */
+
 /* registry.c */
 void               registry_add(const source_def *def);
 int                registry_count(void);
+/* >0 means some source id is defined twice and the second copy is
+ * unreachable via registry_get/--run/the OSINT dispatcher. */
+int                registry_duplicate_count(void);
 const source_def **registry_all(void);
 const source_def  *registry_get(const char *id);
 

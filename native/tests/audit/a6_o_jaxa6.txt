@@ -1,0 +1,126 @@
+=== createList.js
+size=6293
+
+import * as je from "./jaxa.earth.esm_v1.2.2.js";
+import DomFilter from "../../assets/DomFilter.js";
+import getTemporalExtent from "../../assets/getTemporalExtent.js";
+
+const url = "https://data.earth.jaxa.jp/stac/cog/v1/catalog.json";
+
+const keywords = [
+	"ALOS|_alos",
+	"SHIKISAI|_gcom-c",
+	"SHIZUKU|_gcom-w",
+	"Precipitation|_gsmap",
+	"Flood|_te_",
+
+	"Land Cover|lulc",
+	"Terrain|dsm",
+	"LST|lst",
+	"NDVI|ndvi",
+	"Evapotranspiration|evapo",
+	"Soil Moisture|smc",
+	"SST|sst",
+	"Chlorophyll-a|chla",
+	"Wind Speed|ssw",
+	"Sea Ice|ic0",
+	"Aerosol|arot",
+	"SWR|swr",
+
+	"Global|_global",
+	"Japan|_japan",
+
+	"Daytime|daytime",
+	"Nighttime|nighttime",
+
+	"Daily|_daily",
+	"Monthly|_monthly",
+	"Half-Monthly|_half-monthly",
+	"Climate|-normal",
+
+	"Updating|Present"
+];
+
+export default async () => {
+	const c = new je.stac.Catalog({ url });
+	await c.init();
+
+	const loading = document.createElement("div");
+	loading.style.textAlign = "center";
+	loading.style.fontSize = "2em";
+	loading.style.margin = "32px";
+	loading.innerHTML = "Loading...";
+
+
+	document.getElementById("content").innerHTML = "<br>";
+	document.getElementById("content").appendChild(loading);
+
+
+	const df = document.createDocumentFragment();
+
+	const size = c.getChildUrlAll().length;
+	let count = 0;
+
+	const prs = c.getChildUrlAll().map(async collection => {
+		const ic = new je.
+=== createDatails.js
+size=10425
+
+import * as je1 from "./jaxa.earth.esm_v1.2.2.js";
+import * as je2 from "./jaxa.earth.esm_v2.0.1.js";
+
+const createTitle = (title) => {
+	const e = document.createElement("h2");
+	e.innerHTML = title;
+	return e;
+};
+
+const createCode = (s) => {
+	const e = document.createElement("code");
+	e.innerHTML = s;
+	return e;
+};
+
+//id存在確認、カタログ情報取得
+const id2collectionUrl = async (id) => {
+	const url = "https://data.earth.jaxa.jp/stac/cog/v1/catalog.json";
+
+	const c = new je1.stac.Catalog({ url });
+	await c.init();
+
+	const collection = c.getChildUrlAll().find(e => {
+		return e.indexOf("/" + id + "/collection.json") > 0;
+	});
+
+	if (collection == undefined) {
+		throw new Error();
+	}
+
+	return collection;
+}
+
+export default async (id) => {
+	// console.log(id);
+
+	{
+		const loading = document.createElement("div");
+		loading.style.textAlign = "center";
+		loading.style.fontSize = "2em";
+		loading.style.margin = "32px";
+		loading.innerHTML = "Loading...<br><br>";
+	
+		document.getElementById("content").innerHTML = "";
+		document.getElementById("content").appendChild(loading);
+	}
+
+	const collectionUrl = await id2collectionUrl(id);
+
+
+
+	const ic = new je2.ImageCollection({ collectionUrl });
+	await ic.init();
+	const icatalog = ic.td.collection.json;
+	// console.log(icatalog);
+
+
+	const df = document.createDocumentFragment();

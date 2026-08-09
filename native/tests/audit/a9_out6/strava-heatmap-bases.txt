@@ -1,0 +1,36 @@
+=== strava-heatmap-bases
+exit: 0
+sched: rc=0 records=14 1140ms
+--- stderr ---
+[strava-heatmap-bases] emitted 14
+[sched] strava-heatmap-bases run rc=0 records=14 1140ms
+--- persisted: 14 rows, 14 with lat/lon, 14 with geometry ---
+record_type: strava-heatmap-bases=14
+sub_source_id: (null)=14
+
+--- row 1 ---
+  uid            strava-heatmap-bases|STRAVA_Yokota_Air_Base
+  title          Yokota Air Base
+  lat            35.7486
+  lon            139.3486
+  geometry       {"type":"Point","coordinates":[139.3486,35.7486]}
+  record_type    strava-heatmap-bases
+  properties     {"id":"STRAVA_Yokota_Air_Base","idx":0,"name":"Yokota Air Base","branch":"USAF","tile_z":12,"tile_x":3633,"tile_y":1611,"tile_url":"https://heatmap-external-a.strava.com/tiles/all/hot/12/3633/1611.png","tile_bytes":null,"activity_detected":null,"ok":false,"error":null,"http":403,"source":"strava_heatmap_tile_probe"}
+
+--- row 2 ---
+  uid            strava-heatmap-bases|STRAVA_Misawa_Air_Base
+  title          Misawa Air Base
+  lat            40.7028
+  lon            141.3681
+  geometry       {"type":"Point","coordinates":[141.3681,40.7028]}
+  record_type    strava-heatmap-bases
+  properties     {"id":"STRAVA_Misawa_Air_Base","idx":1,"name":"Misawa Air Base","branch":"USAF","tile_z":12,"tile_x":3656,"tile_y":1540,"tile_url":"https://heatmap-external-a.strava.com/tiles/all/hot/12/3656/1540.png","tile_bytes":null,"activity_detected":null,"ok":false,"error":null,"http":403,"source":"strava_heatmap_tile_probe"}
+
+--- row 3 ---
+  uid            strava-heatmap-bases|STRAVA_Kadena_Air_Base
+  title          Kadena Air Base
+  lat            26.3556
+  lon            127.7681
+  geometry       {"type":"Point","coordinates":[127.7681,26.3556]}
+  record_type    strava-heatmap-bases
+  properties     {"id":"STRAVA_Kadena_Air_Base","idx":2,"name":"Kadena Air Base","branch":"USAF","tile_z":12,"tile_x":3501,"tile_y":1736,"tile_url":"https://heatmap-external-a.strava.com/tiles/all/hot/12/3501/1736.png","tile_bytes":null,"activity_detected":null,"ok":false,"error":null,"http":403,"source":"strava_heatmap_tile_probe"}

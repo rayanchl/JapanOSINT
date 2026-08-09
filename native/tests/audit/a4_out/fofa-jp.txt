@@ -1,0 +1,7 @@
+=== fofa-jp
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[fofa-jp] gated (no FOFA_API_KEY)
+[sched] fofa-jp run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

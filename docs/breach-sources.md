@@ -17,8 +17,13 @@
 
 | Artifact | What it is | How to (re)build |
 |---|---|---|
-| [`breach-corpus.seed.tsv`](./breach-corpus.seed.tsv) | **1,018-breach identity manifest** — the pasted HIBP-style catalog: `name / records / added / breach_date`. The "which breaches exist" list. | committed; hand-editable |
-| [`breach-corpus.json`](./breach-corpus.json) | Normalized manifest (integer counts, stable `id` slugs) → seeds the `breach_meta` table so a hit reports *which* breach. | `node scripts/fetch-breach-corpus.mjs` (offline) |
+| [`breach-corpus.seed.tsv`](./breach-corpus.seed.tsv) | **1,172-row breach identity manifest** (1,171 distinct names; 3 leading `#` comment lines) — the pasted HIBP-style catalog: `name / records / added / breach_date`. The "which breaches exist" list. | committed; hand-editable |
+| [`breach-corpus.json`](./breach-corpus.json) | Normalized manifest (integer counts, stable `id` slugs) → seeds the `breach_meta` table so a hit reports *which* breach. **Currently STALE at 1,018 entries** — it was generated before the seed TSV grew to 1,172 rows; regenerate before relying on it. | `node scripts/fetch-breach-corpus.mjs` (offline) |
+
+> Counts here were wrong in every prior revision of this file (they all said
+> 1,018, the size of the *generated* JSON, for the *seed TSV* as well). Verify
+> rather than copy: `grep -cvE '^\s*(#\|$)' docs/breach-corpus.seed.tsv` for the
+> seed, `grep -c '"id"' docs/breach-corpus.json` for the generated manifest.
 | `data/breach/<type>/<prefix>.bin` | The actual **hashed index** (built by the ingest pipeline from data you hold). Not in git. | `japanosint --ingest ...` (pipeline §3) |
 
 The provider *ecosystem* (query-time APIs, tooling) is already cataloged in
@@ -34,7 +39,7 @@ The feature answers four pivots. Each is fed by different data classes within th
 | Pivot | Fed by | Primary lawful bulk source |
 |---|---|---|
 | **Password** | any breach exposing passwords/hashes; password-only wordlists | **Pwned Passwords bulk file** (§4.1) — stands up this pivot alone, fully offline |
-| **Email** | breaches whose `DataClasses` include email addresses (the vast majority of the 1,018) | licensed feed export / lawfully-held dumps → hashed email index |
+| **Email** | breaches whose `DataClasses` include email addresses (the vast majority of the corpus) | licensed feed export / lawfully-held dumps → hashed email index |
 | **Username** | breaches exposing usernames/handles (forums, gaming, social) | same; usernames indexed as exact-hash |
 | **Phone** | breaches exposing phone numbers (telco, delivery, marketing dumps) | same; E.164-normalized then hashed |
 
@@ -45,7 +50,7 @@ breach contributes to at ingest time.
 
 ## 3. Dataset-identity manifest — notable high-volume entries
 
-The full list is in `breach-corpus.seed.tsv` (1,018 rows). The largest aggregate datasets — the ones
+The full list is in `breach-corpus.seed.tsv` (1,172 data rows). The largest aggregate datasets — the ones
 that dominate coverage and are worth prioritizing/deduping first — by record count:
 
 | Dataset | ~Records | Nature (identifier coverage) |

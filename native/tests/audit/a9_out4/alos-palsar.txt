@@ -1,0 +1,42 @@
+=== alos-palsar
+exit: 0
+sched: rc=0 records=50 1430ms
+--- stderr ---
+[alos-palsar] emitted 50
+[sched] alos-palsar run rc=0 records=50 1430ms
+--- persisted: 25 rows, 0 with lat/lon, 0 with geometry ---
+record_type: alos-palsar=25
+sub_source_id: (null)=25
+
+--- row 1 ---
+  uid            alos-palsar|ALPSRP279120920
+  title          ALOS PALSAR scene ALPSRP279120920
+  body           ALOS PALSAR L-band SAR scene ALPSRP279120920 (ASF DAAC archive) intersecting the Japan AOI. Acquired 2011-04-21T13:24:59Z.
+  summary        JAXA ALOS PALSAR SAR scene acquired 2011-04-21T13:24:59Z over Japan.
+  link           https://search.asf.alaska.edu/
+  published_at   2011-04-21T13:24:59Z
+  record_type    alos-palsar
+  tags           ["satellite","alos","palsar","sar","jaxa","raster"]
+  properties     {"bbox":[122,24,146,46],"acquired":"2011-04-21T13:24:59Z","sensor":"PALSAR","platform":"ALOS","scene_id":"ALPSRP279120920","beam_mode":"PLR","polarization":"quadrature","download_url":null}
+
+--- row 2 ---
+  uid            alos-palsar|ALPSRP279120910
+  title          ALOS PALSAR scene ALPSRP279120910
+  body           ALOS PALSAR L-band SAR scene ALPSRP279120910 (ASF DAAC archive) intersecting the Japan AOI. Acquired 2011-04-21T13:24:51Z.
+  summary        JAXA ALOS PALSAR SAR scene acquired 2011-04-21T13:24:51Z over Japan.
+  link           https://search.asf.alaska.edu/
+  published_at   2011-04-21T13:24:51Z
+  record_type    alos-palsar
+  tags           ["satellite","alos","palsar","sar","jaxa","raster"]
+  properties     {"bbox":[122,24,146,46],"acquired":"2011-04-21T13:24:51Z","sensor":"PALSAR","platform":"ALOS","scene_id":"ALPSRP279120910","beam_mode":"PLR","polarization":"quadrature","download_url":null}
+
+--- row 3 ---
+  uid            alos-palsar|ALPSRP279120900
+  title          ALOS PALSAR scene ALPSRP279120900
+  body           ALOS PALSAR L-band SAR scene ALPSRP279120900 (ASF DAAC archive) intersecting the Japan AOI. Acquired 2011-04-21T13:24:42Z.
+  summary        JAXA ALOS PALSAR SAR scene acquired 2011-04-21T13:24:42Z over Japan.
+  link           https://search.asf.alaska.edu/
+  published_at   2011-04-21T13:24:42Z
+  record_type    alos-palsar
+  tags           ["satellite","alos","palsar","sar","jaxa","raster"]
+  properties     {"bbox":[122,24,146,46],"acquired":"2011-04-21T13:24:42Z","sensor":"PALSAR","platform":"ALOS","scene_id":"ALPSRP279120900","beam_mode":"PLR","polarization":"quadrature","download_url":null}

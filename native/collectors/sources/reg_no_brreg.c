@@ -24,7 +24,12 @@ static char *brreg_addr(const cJSON *a) {
     cJSON_ArrayForEach(ln, lines) {
       if (!cJSON_IsString(ln) || !ln->valuestring || !ln->valuestring[0]) continue;
       int n = snprintf(buf + j, sizeof buf - j, "%s%s", j ? ", " : "", ln->valuestring);
-      if (n > 0) j += (size_t)n; if (j >= sizeof buf - 1) break;
+      /* snprintf returns the length it WOULD have written, so on truncation j
+       * ran PAST the buffer — and the break below happened only after the
+       * increment, leaving the post-loop snprintf writing at `buf + j` with a
+       * `sizeof buf - j` that wrapped to ~SIZE_MAX. Clamp to the terminator. */
+      if (n > 0) j += (size_t)n;
+      if (j >= sizeof buf - 1) { j = sizeof buf - 1; break; }
     }
   }
   const char *post = jo_sv(a, "postnummer");

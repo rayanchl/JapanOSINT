@@ -60,6 +60,7 @@
  *    this generic endpoint. The general collector path is ported.
  */
 #include "dataapi.h"
+#include "collcache.h"
 #include "../source.h"
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
@@ -71,20 +72,13 @@
 
 /* ── collectorCache.js constants (verbatim) ─────────────────────────────── */
 #define DEFAULT_TTL_MS (15LL * 60 * 1000)        /* 15 min */
-#define MIN_TTL_MS     (60LL * 1000)             /* 1 min floor */
-#define MAX_TTL_MS     (24LL * 60 * 60 * 1000)   /* 24 h ceiling */
 
-static long long clamp_ttl(long long ms) {       /* == clampTtl() */
-  if (ms <= 0) return DEFAULT_TTL_MS;
-  if (ms < MIN_TTL_MS) return MIN_TTL_MS;
-  if (ms > MAX_TTL_MS) return MAX_TTL_MS;
-  return ms;
-}
-
-static long long now_ms(void) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  return (long long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
-}
+/* The collector_cache get/set/clampTtl port lives in core/collcache.c
+ * (collcache_get / collcache_set) and is shared with sweepapi.c and
+ * scheduler.c. This file used to carry a byte-identical private copy — same
+ * SQL, same [1min,24h] clamp with the same 15-min default, same
+ * `age <= ttl_ms` freshness test — which has been removed in favour of the
+ * shared one. Behaviour is unchanged. */
 
 static void iso_now(char *o, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
@@ -110,53 +104,6 @@ static long long get_ttl_ms(db_handle *db, const char *key) {
   }
   sqlite3_finalize(s);
   return ttl;
-}
-
-/* getCached(key): the cached FC JSON if fresh (ageMs <= ttl_ms), with its
- * stored age. Returns malloc'd JSON or NULL; *age_out set on hit. Mirrors
- * collectorCache.getCached exactly (age = now - fetched_at; expire when
- * age > ttl_ms). Missing table → NULL (miss). */
-static char *cache_get(db_handle *db, const char *key, long long *age_out) {
-  sqlite3_stmt *s = NULL;
-  char *out = NULL;
-  if (sqlite3_prepare_v2(db->h,
-        "SELECT fc_json, fetched_at, ttl_ms FROM collector_cache "
-        "WHERE key=?1", -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_text(s, 1, key, -1, SQLITE_TRANSIENT);
-    if (sqlite3_step(s) == SQLITE_ROW) {
-      const char *fc = (const char *)sqlite3_column_text(s, 0);
-      long long fetched = sqlite3_column_int64(s, 1);
-      long long ttl = sqlite3_column_int64(s, 2);
-      long long age = now_ms() - fetched;
-      if (fc && age <= ttl) {
-        out = strdup(fc);
-        if (age_out) *age_out = age;
-      }
-    }
-  }
-  sqlite3_finalize(s);
-  return out;
-}
-
-/* setCached(key, fc, ttlMs): INSERT … ON CONFLICT upsert, clamped TTL. Best
- * effort — a missing collector_cache table (C-only DB) is silently skipped,
- * exactly like collectorCache catching a stringify failure. */
-static void cache_set(db_handle *db, const char *key, const char *fc_json,
-                      long long ttl_ms) {
-  sqlite3_stmt *s = NULL;
-  if (sqlite3_prepare_v2(db->h,
-        "INSERT INTO collector_cache (key, fc_json, fetched_at, ttl_ms) "
-        "VALUES (?1,?2,?3,?4) "
-        "ON CONFLICT(key) DO UPDATE SET "
-        "  fc_json=excluded.fc_json, fetched_at=excluded.fetched_at, "
-        "  ttl_ms=excluded.ttl_ms", -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_text(s, 1, key, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(s, 2, fc_json, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int64(s, 3, now_ms());
-    sqlite3_bind_int64(s, 4, clamp_ttl(ttl_ms));
-    sqlite3_step(s);
-  }
-  sqlite3_finalize(s);
 }
 
 /* layer_work_* telemetry — DOCUMENTED NO-OP (see header). Call sites are
@@ -439,7 +386,7 @@ char *dataapi_layer(db_handle *db, const char *id) {
    * cached FC for sources not yet mirrored. */
   {
     long long age = 0;
-    char *cached_raw = cache_get(db, id, &age);
+    char *cached_raw = collcache_get(db, id, &age);
     if (cached_raw) {
       int n = 0;
       char *ifc = fc_from_intel(db, id, "hit", age, ttl, &n);
@@ -565,7 +512,7 @@ char *dataapi_layer(db_handle *db, const char *id) {
     cJSON_AddItemToObject(fc, "features", feats);    /* ownership moves */
     add_meta(fc, id, emitted, emitted > 0, NULL, NULL, -1, -1, NULL);
     char *raw = cJSON_PrintUnformatted(fc);
-    if (raw) { cache_set(db, id, raw, ttl); free(raw); }
+    if (raw) { collcache_set(db, id, raw, ttl); free(raw); }
 
     /* Prefer intel_items reconstruction (carries record_type/sub_source_id/
      * geom_source the cached FC lacks); fall back to the normalised FC. */

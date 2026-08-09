@@ -24,6 +24,8 @@
  * Each Feature → camera_upsert(...,"worldcams") (discovery_channels[] union
  * + existing-non-null-wins merge + seen_count++, exactly like cameraRunner).
  */
+#include "../../lib/geojson.h"
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/camera_store.h"
 #include "../../lib/feedlib.h"
@@ -37,19 +39,6 @@
 typedef struct { const char *k; const char *sv; int is_num; double nv;
                  int is_null; int is_bool; int bv; } kv;
 
-static double round4(double v) { return floor(v * 1e4 + 0.5) / 1e4; }
-
-static void uid_tail(const char *url, const char *name, char *out,
-                     size_t outsz) {
-  const char *src = (url && *url) ? url : (name ? name : "");
-  size_t i = 0;
-  for (; src[i] && i < 60 && i + 1 < outsz; i++) {
-    unsigned char c = (unsigned char)src[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
-
 static cJSON *make_feature(double lat, double lon, const char *name,
                            const char *camera_type,
                            const char *discovery_channel,
@@ -60,20 +49,12 @@ static cJSON *make_feature(double lat, double lon, const char *name,
       url = extra[i].sv; break;
     }
   char lats[32], lons[32], tail[80], uid[160];
-  snprintf(lats, sizeof lats, "%.4f", round4(lat));
-  snprintf(lons, sizeof lons, "%.4f", round4(lon));
-  uid_tail(url, name, tail, sizeof tail);
+  snprintf(lats, sizeof lats, "%.4f", jo_round4(lat));
+  snprintf(lons, sizeof lons, "%.4f", jo_round4(lon));
+  jo_uid_tail(url, name, tail, sizeof tail);
   snprintf(uid, sizeof uid, "%s:%s:%s", lats, lons, tail);
 
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "camera_uid", uid);
@@ -138,15 +119,6 @@ static const char *precision_for_index(size_t i) {
   return (i < N_PREFECTURES) ? "prefecture" : "city";
 }
 
-static void to_lower_buf(const char *in, char *out, size_t n) {
-  size_t i = 0;
-  for (; in && in[i] && i + 1 < n; i++) {
-    unsigned char c = (unsigned char)in[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
-
 /* PREFECTURE_CENTROIDS[key] exact lookup (JS object index, no _city strip).
  * On match: fills lat/lon with the EXACT centroid and returns its table index
  * (so the caller can report honest precision); returns -1 on no match. */
@@ -164,7 +136,7 @@ static int centroid_exact(const char *key, double *lat, double *lon) {
 static int guess_centroid(const char *text, double *lat, double *lon) {
   if (!text || !*text) return -1;
   char low[1024];
-  to_lower_buf(text, low, sizeof low);
+  jo_lower_buf(text, low, sizeof low);
   for (size_t i = 0; i < N_CENTROIDS; i++) {
     const char *k = PREFECTURE_CENTROIDS[i].key;
     char kb[64];
@@ -180,22 +152,6 @@ static int guess_centroid(const char *text, double *lat, double *lon) {
     }
   }
   return -1;
-}
-
-static void abs_url(const char *href, const char *base, char *out, size_t n) {
-  if (href && (strncmp(href, "http://", 7) == 0 ||
-                strncmp(href, "https://", 8) == 0)) {
-    snprintf(out, n, "%s", href);
-    return;
-  }
-  const char *p = base;
-  int slashes = 0;
-  while (*p) { if (*p == '/') { slashes++; if (slashes == 3) break; } p++; }
-  size_t hostlen = (size_t)(p - base);
-  if (href && href[0] == '/')
-    snprintf(out, n, "%.*s%s", (int)hostlen, base, href);
-  else
-    snprintf(out, n, "%.*s/%s", (int)hostlen, base, href ? href : "");
 }
 
 /* anchor scanner — see cam_geocam.c for the regex-equivalence note. */
@@ -226,7 +182,8 @@ static const char *next_anchor(const char *from, char *href, size_t hn,
 
 /* JS href shape: /japan/([a-z0-9-]+)/([a-z0-9-]+)  — exactly two segments
  * after /japan/. Extract city + slug; reject anything else. */
-static int worldcams_href(const char *href, char *city, size_t cn) {
+static int worldcams_href(const char *href, char *city, size_t cn,
+                          char *slug, size_t sn) {
   const char *pfx = "/japan/";
   size_t pl = strlen(pfx);
   if (strncmp(href, pfx, pl) != 0) return 0;
@@ -244,7 +201,28 @@ static int worldcams_href(const char *href, char *city, size_t cn) {
   while (*p && ((*p >= 'a' && *p <= 'z') || (*p >= '0' && *p <= '9') ||
                 *p == '-')) p++;
   if (p == ss) return 0;
+  size_t slen = (size_t)(p - ss);
+  if (slug && sn) {
+    if (slen >= sn) slen = sn - 1;
+    memcpy(slug, ss, slen);
+    slug[slen] = 0;
+  }
   return *p == 0;                       /* nothing after slug */
+}
+
+/* audit-09: the anchor text on the list page is the CITY, so every camera in a
+ * city shared one title ("tokyo" ×N) and the only per-camera label upstream
+ * gives us — the URL slug — was discarded. "shibuya-crossing" → "Shibuya
+ * Crossing". Nothing is invented; this is the publisher's own slug. */
+static void slug_to_name(const char *slug, char *out, size_t n) {
+  size_t o = 0; int start = 1;
+  for (size_t i = 0; slug[i] && o + 1 < n; i++) {
+    char c = slug[i];
+    if (c == '-') { out[o++] = ' '; start = 1; continue; }
+    if (start && c >= 'a' && c <= 'z') c = (char)(c - 32);
+    out[o++] = c; start = 0;
+  }
+  out[o] = 0;
 }
 
 static const char *WC_BASE = "https://worldcams.tv/japan/";
@@ -289,8 +267,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   while (count < 300 &&
          (cur = next_anchor(cur, href, sizeof href, &inner)) != NULL) {
     if (!inner) continue;
-    char city[128];
-    if (!worldcams_href(href, city, sizeof city)) { free(inner); continue; }
+    char city[128], slug[160];
+    if (!worldcams_href(href, city, sizeof city, slug, sizeof slug)) {
+      free(inner); continue;
+    }
 
     int dup = 0;
     for (int s = 0; s < nseen; s++)
@@ -304,7 +284,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     char *label = html_strip(inner);
     free(inner);
-    const char *nm = (label && label[0]) ? label : city;
+    /* Prefer the per-camera slug name; keep the anchor label only when it says
+     * something the slug does not (it is usually just the city again). */
+    char slugname[192];
+    slug_to_name(slug, slugname, sizeof slugname);
+    const char *nm = slugname[0] ? slugname
+                                 : ((label && label[0]) ? label : city);
 
     /* Only centroid-derived location is available on the list page (no real
      * GPS in the markup). Match a prefecture/city centroid and emit it
@@ -312,17 +297,21 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     double lat, lon;
     int cidx = centroid_exact(city, &lat, &lon);
     if (cidx < 0) cidx = guess_centroid(nm, &lat, &lon);
+    /* the anchor label still gets a look — it names the city for some rows and
+     * is the only locality hint when neither the city segment nor the slug
+     * matches the centroid table. */
+    if (cidx < 0 && label && label[0]) cidx = guess_centroid(label, &lat, &lon);
     if (cidx < 0) { free(label); continue; }
 
     char fullurl[640];
-    abs_url(href, WC_BASE, fullurl, sizeof fullurl);
+    jo_abs_url(href, WC_BASE, fullurl, sizeof fullurl);
 
     kv ex[4] = {0};
     ex[0].k = "url"; ex[0].sv = fullurl;
     ex[1].k = "city"; ex[1].sv = city;
-    ex[2].k = "location_precision";
+    ex[2].k = "geo_precision";
       ex[2].sv = precision_for_index((size_t)cidx);
-    ex[3].k = "location_approximate"; ex[3].is_bool = 1; ex[3].bv = 1;
+    ex[3].k = "geo_uncertain"; ex[3].is_bool = 1; ex[3].bv = 1;
     cJSON *f = make_feature(lat, lon, nm, "aggregator_worldcams",
                             "worldcams", ex, 4);
     if (camera_upsert(ctx->db, sink, f, "worldcams") >= 0) count++;
@@ -338,8 +327,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_worldcams_def = {
-  .id = "cam-worldcams", .collector = "infrastructure",
+  .id = "cam-worldcams", .collector = "camera-discovery",
   .name = "Camera Discovery: Worldcams",
   .name_ja = "カメラ探索: Worldcams",
-   .update_interval_sec = 21600, .run = run };
+   .layer = "cameras",
+   .update_interval_sec = 3600, .run = run };
 REGISTER_SOURCE(cam_worldcams_def)

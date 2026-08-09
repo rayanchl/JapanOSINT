@@ -1,0 +1,17 @@
+=== PHONE_LOOKUP  entity=+81312345678
+exit: 0
+sched: rc=0 records=1 1ms
+--- stderr ---
+[sched] PHONE_LOOKUP run rc=0 records=1 1ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: osint_service_result=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            PHONE_LOOKUP|phone:PHONE_LOOKUP:+81312345678
+  title          PHONE_LOOKUP — +81312345678
+  body           {"service":"PHONE_LOOKUP","entity":"+81312345678","validation":{"normalized":"+81312345678","country_code":"81","country":"Japan","region":"Asia","valid":false,"likely_type":"landline"}}
+  summary        PHONE_LOOKUP
+  record_type    osint_service_result
+  tags           ["osint-search","PHONE_LOOKUP"]
+  properties     {"service":"PHONE_LOOKUP","entity":"+81312345678"}

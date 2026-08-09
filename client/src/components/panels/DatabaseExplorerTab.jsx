@@ -38,9 +38,11 @@ export default function DatabaseExplorerTab() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Reload rows whenever the query changes.
+  // Reload rows whenever the query changes. An in-flight request is dropped
+  // on cleanup so a slow response can't overwrite a newer table's rows.
   useEffect(() => {
-    if (!selected) return;
+    if (!selected) return undefined;
+    let ignore = false;
     const params = new URLSearchParams();
     params.set('limit', String(limit));
     params.set('offset', String(offset));
@@ -52,18 +54,11 @@ export default function DatabaseExplorerTab() {
     setLoading(true);
     fetch(apiUrl(`/api/db/tables/${encodeURIComponent(selected)}?${params}`))
       .then((r) => r.ok ? r.json() : null)
-      .then((j) => setData(j))
-      .catch(() => setData(null))
-      .finally(() => setLoading(false));
+      .then((j) => { if (!ignore) setData(j); })
+      .catch(() => { if (!ignore) setData(null); })
+      .finally(() => { if (!ignore) setLoading(false); });
+    return () => { ignore = true; };
   }, [selected, q, limit, offset, orderBy, orderDir]);
-
-  // Reset pagination/filter when switching tables.
-  useEffect(() => {
-    setQ('');
-    setOffset(0);
-    setOrderBy(null);
-    setExpandedRow(null);
-  }, [selected]);
 
   const pageCount = data && data.total > 0 ? Math.ceil(data.total / limit) : 1;
   const pageIndex = Math.floor(offset / limit) + 1;
@@ -91,7 +86,16 @@ export default function DatabaseExplorerTab() {
           <button
             key={t.name}
             type="button"
-            onClick={() => setSelected(t.name)}
+            onClick={() => {
+              if (selected === t.name) return;
+              // Reset filter/pagination synchronously with the switch so the
+              // rows effect only ever fires once, with the new table's params.
+              setQ('');
+              setOffset(0);
+              setOrderBy(null);
+              setExpandedRow(null);
+              setSelected(t.name);
+            }}
             className={`w-full text-left px-3 py-1.5 text-[11px] font-mono border-b border-osint-border/30 hover:bg-white/5 transition-colors ${
               selected === t.name ? 'bg-neon-cyan/10 text-neon-cyan' : 'text-gray-300'
             }`}

@@ -1,0 +1,17 @@
+cfr-a https://www.cfr.org/rss/feeds/publication.xml
+cfr-b https://feeds.cfr.org/publication/
+cfr-c https://www.cfr.org/rss-feeds
+cfr-d https://www.cfr.org/feed
+ki-a https://kyivindependent.com/feed/rss/
+ki-b https://kyivindependent.com/rss/
+ki-c https://kyivindependent.com/rss
+ki-d https://kyivindependent.com/feed.xml
+me-a https://maritime-executive.com/articles/rss
+me-b https://www.maritime-executive.com/articles/rss
+me-c https://www.maritime-executive.com/feed
+me-d https://maritime-executive.com/rss
+isw-a https://www.understandingwar.org/feed
+isw-b https://understandingwar.org/backgrounder/feed
+rferl-a https://www.rferl.org/api/zrqiteuuir_
+rferl-b https://www.rferl.org/api/z-tqievmtq
+rferl-c https://www.rferl.org/z/17756/rss

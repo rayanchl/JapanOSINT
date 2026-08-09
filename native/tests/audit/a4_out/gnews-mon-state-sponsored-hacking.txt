@@ -1,0 +1,45 @@
+=== gnews-mon-state-sponsored-hacking
+exit: 0
+sched: rc=0 records=100 612ms
+--- stderr ---
+[rss] gnews-mon-state-sponsored-hacking emitted 100
+[sched] gnews-mon-state-sponsored-hacking run rc=0 records=100 612ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-state-sponsored-hacking|CBMi7AFBVV95cUxQQU1pZzlJQTBpT2plUnJMTTNwNVY1MXdVSkZlcF9aSzhZYjBmanJjRHBSUDJtLWxQVkpzYVJNXzd5cVhEc01pQy00YXhkZmdieU9GdXo5Z0pKUkFxXzRZd0xncENSV2diTWdBR1dHS3U1NXhIbjNQc3FJNXFvbXNpakhDSFo5ZXEwSEpCU2RZUUdqZkhUREZyZzRyU0hRZXJRUFNnSEdieldtdzBnRU5PUWJWOW81VmRkU21MLWtGREdIRFlXbnFtVkJaWmNwS21ZVF9tRzRjNzNPU3hxajViYXJGc2hhR29TeXNZZA
+  title          Iranian state-sponsored hackers exploit Microsoft Exchange, Fortinet flaws to access US infrastructure networks, CRS finds - Industrial Cyber
+  body           <a href="https://news.google.com/rss/articles/CBMi7AFBVV95cUxQQU1pZzlJQTBpT2plUnJMTTNwNVY1MXdVSkZlcF9aSzhZYjBmanJjRHBSUDJtLWxQVkpzYVJNXzd5cVhEc01pQy00YXhkZmdieU9GdXo5Z0pKUkFxXzRZd0xncENSV2diTWdBR1dHS3U1NXhIbjNQc3FJNXFvbXNpakhDSFo5ZXEwSEpCU2RZUUdqZkhUREZyZzRyU0hRZXJRUFNnSEdieldtdzBnRU5PUWJWOW81VmRkU21MLWtGREdIRFlXbnFtVkJaWmNwS21ZVF9tRzRjNzNPU3hxajViYXJGc2hhR29TeXNZZA?oc=5" target="_blank">Iranian state-sponsored hackers exploit Microsoft Exchange, Fortinet flaws to access US infrastructure networks, CRS finds</a>&nbsp;&nbsp;<font color="#6f6f6f">Industrial Cyber</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi7AFBVV95cUxQQU1pZzlJQTBpT2plUnJMTTNwNVY1MXdVSkZlcF9aSzhZYjBmanJjRHBSUDJtLWxQVkpzYVJNXzd5cVhEc01pQy00YXhkZmdieU9GdXo5Z0pKUkFxXzRZd0xncENSV2diTWdBR1dHS3U1NXhIbjNQc3FJNXFvbXNpakhDSFo5ZXEwSEpCU2
+  link           https://news.google.com/rss/articles/CBMi7AFBVV95cUxQQU1pZzlJQTBpT2plUnJMTTNwNVY1MXdVSkZlcF9aSzhZYjBmanJjRHBSUDJtLWxQVkpzYVJNXzd5cVhEc01pQy00YXhkZmdieU9GdXo5Z0pKUkFxXzRZd0xncENSV2diTWdBR1dHS3U1NXhIbjNQc3FJNXFvbXNpakhDSFo5ZXEwSEpCU2RZUUdqZkhUREZyZzRyU0hRZXJRUFNnSEdieldtdzBnRU5PUWJWOW81VmRkU21MLWtGREdIRFlXbnFtVkJaWmNwS21ZVF9tRzRjNzNPU3hxajViYXJGc2hhR29TeXNZZA?oc=5
+  language       en
+  published_at   Fri, 22 May 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","state-sponsored"]
+  properties     {"guid":"CBMi7AFBVV95cUxQQU1pZzlJQTBpT2plUnJMTTNwNVY1MXdVSkZlcF9aSzhZYjBmanJjRHBSUDJtLWxQVkpzYVJNXzd5cVhEc01pQy00YXhkZmdieU9GdXo5Z0pKUkFxXzRZd0xncENSV2diTWdBR1dHS3U1NXhIbjNQc3FJNXFvbXNpakhDSFo5ZXEwSEpCU2RZUUdqZkhUREZyZzRyU0hRZXJRUFNnSEdieldtdzBnRU5PUWJWOW81VmRkU21MLWtGREdIRFlXbnFtVkJaWmNwS21ZVF9tRzRjNzNPU3hxajViYXJGc2hhR29TeXNZZA"}
+
+--- row 2 ---
+  uid            gnews-mon-state-sponsored-hacking|CBMilwFBVV95cUxOWlJpX1lVTlJCNC1INm5IV3d4RkNTNjNBb0RBd1hmNGIwU3FVdU9DenVmLUlSaFRKOVNJWGMtbngwb3dZbmtfNmI4Xy1QNWxLbkxfeElQSUw0Wnp4bUNOcUwwMjFNTndWMkNlLU80Vk92QUJKYnNpcW02QWpfTGNFTnpFVC15enpiczlLdmNOa3BKMjczamJn0gGcAUFVX3lxTE8yYTZPZlJWcFlpc2lGZFBjUjhBdElTOVcxTW1NV25WMGdDRUZtemxKSGFNOWliZjR0TUQ1bW5yNlFyMEdYSmdGT283MmR5YUZPNzIxTGhGTFpRUXJOR0dxWVZqNnNMaHVSNXUtOTRpMFFsOHZpLVNJSFNRVDF3VHBWZTVIdzdmMkJrXzhadXRXT2FxMFY2NXRaRHpzZw
+  title          LA Metro Cyberattack Linked to Iranian State-Sponsored Hackers - SecurityWeek
+  body           <a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxOWlJpX1lVTlJCNC1INm5IV3d4RkNTNjNBb0RBd1hmNGIwU3FVdU9DenVmLUlSaFRKOVNJWGMtbngwb3dZbmtfNmI4Xy1QNWxLbkxfeElQSUw0Wnp4bUNOcUwwMjFNTndWMkNlLU80Vk92QUJKYnNpcW02QWpfTGNFTnpFVC15enpiczlLdmNOa3BKMjczamJn0gGcAUFVX3lxTE8yYTZPZlJWcFlpc2lGZFBjUjhBdElTOVcxTW1NV25WMGdDRUZtemxKSGFNOWliZjR0TUQ1bW5yNlFyMEdYSmdGT283MmR5YUZPNzIxTGhGTFpRUXJOR0dxWVZqNnNMaHVSNXUtOTRpMFFsOHZpLVNJSFNRVDF3VHBWZTVIdzdmMkJrXzhadXRXT2FxMFY2NXRaRHpzZw?oc=5" target="_blank">LA Metro Cyberattack Linked to Iranian State-Sponsored Hackers</a>&nbsp;&nbsp;<font color="#6f6f6f">SecurityWeek</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxOWlJpX1lVTlJCNC1INm5IV3d4RkNTNjNBb0RBd1hmNGIwU3FVdU9DenVmLUlSaFRKOVNJWGMtbngwb3dZbmtfNmI4Xy1QNWxLbkxfeElQSUw0Wnp4bUNOcUwwMjFNTndWMkNlLU80Vk92QUJKYnNpcW02QWpfTGNFTnpFVC15enpiczlLdm
+  link           https://news.google.com/rss/articles/CBMilwFBVV95cUxOWlJpX1lVTlJCNC1INm5IV3d4RkNTNjNBb0RBd1hmNGIwU3FVdU9DenVmLUlSaFRKOVNJWGMtbngwb3dZbmtfNmI4Xy1QNWxLbkxfeElQSUw0Wnp4bUNOcUwwMjFNTndWMkNlLU80Vk92QUJKYnNpcW02QWpfTGNFTnpFVC15enpiczlLdmNOa3BKMjczamJn0gGcAUFVX3lxTE8yYTZPZlJWcFlpc2lGZFBjUjhBdElTOVcxTW1NV25WMGdDRUZtemxKSGFNOWliZjR0TUQ1bW5yNlFyMEdYSmdGT283MmR5YUZPNzIxTGhGTFpRUXJOR0dxWVZqNnNMaHVSNXUtOTRpMFFsOHZpLVNJSFNRVDF3VHBWZTVIdzdmMkJrXzhadXRXT2FxMFY2NXRaRHpzZw?oc=5
+  language       en
+  published_at   Wed, 27 May 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","state-sponsored"]
+  properties     {"guid":"CBMilwFBVV95cUxOWlJpX1lVTlJCNC1INm5IV3d4RkNTNjNBb0RBd1hmNGIwU3FVdU9DenVmLUlSaFRKOVNJWGMtbngwb3dZbmtfNmI4Xy1QNWxLbkxfeElQSUw0Wnp4bUNOcUwwMjFNTndWMkNlLU80Vk92QUJKYnNpcW02QWpfTGNFTnpFVC15enpiczlLdmNOa3BKMjczamJn0gGcAUFVX3lxTE8yYTZPZlJWcFlpc2lGZFBjUjhBdElTOVcxTW1NV25WMGdDRUZtemxKSGFNOWliZjR0TUQ1bW5yNlFyMEdYSmdGT283MmR5YUZPNzIxTGhGTFpRUXJOR0dxWVZqNnNMaHVSNXUtOTRpMFFsOHZpLVNJSFNRVDF3VHBWZTVIdzdmMkJrXzhadXRXT2FxMFY2NXRaRHpzZw"}
+
+--- row 3 ---
+  uid            gnews-mon-state-sponsored-hacking|CBMibEFVX3lxTFBuNHJOeUc2ZjV3eWE1R1E3QjdjTjNpQTM2RjlWUjhGMVRTSmpWYnV4UGlCZ29aZWU1dmQ5b0dGSHZsY0EzdkR2N2VaM3FnelRfc3dWaXdXcmVnS3dIWVp1eGlFMURzM002MzNEdw
+  title          Google finds state-sponsored hackers use AI at ‘all stages’ of attack cycle - CyberScoop
+  body           <a href="https://news.google.com/rss/articles/CBMibEFVX3lxTFBuNHJOeUc2ZjV3eWE1R1E3QjdjTjNpQTM2RjlWUjhGMVRTSmpWYnV4UGlCZ29aZWU1dmQ5b0dGSHZsY0EzdkR2N2VaM3FnelRfc3dWaXdXcmVnS3dIWVp1eGlFMURzM002MzNEdw?oc=5" target="_blank">Google finds state-sponsored hackers use AI at ‘all stages’ of attack cycle</a>&nbsp;&nbsp;<font color="#6f6f6f">CyberScoop</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMibEFVX3lxTFBuNHJOeUc2ZjV3eWE1R1E3QjdjTjNpQTM2RjlWUjhGMVRTSmpWYnV4UGlCZ29aZWU1dmQ5b0dGSHZsY0EzdkR2N2VaM3FnelRfc3dWaXdXcmVnS3dIWVp1eGlFMURzM002MzNEdw?oc=5" target="_blank">Google finds state-sp
+  link           https://news.google.com/rss/articles/CBMibEFVX3lxTFBuNHJOeUc2ZjV3eWE1R1E3QjdjTjNpQTM2RjlWUjhGMVRTSmpWYnV4UGlCZ29aZWU1dmQ5b0dGSHZsY0EzdkR2N2VaM3FnelRfc3dWaXdXcmVnS3dIWVp1eGlFMURzM002MzNEdw?oc=5
+  language       en
+  published_at   Thu, 12 Feb 2026 08:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","state-sponsored"]
+  properties     {"guid":"CBMibEFVX3lxTFBuNHJOeUc2ZjV3eWE1R1E3QjdjTjNpQTM2RjlWUjhGMVRTSmpWYnV4UGlCZ29aZWU1dmQ5b0dGSHZsY0EzdkR2N2VaM3FnelRfc3dWaXdXcmVnS3dIWVp1eGlFMURzM002MzNEdw"}

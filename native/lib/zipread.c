@@ -171,36 +171,13 @@ char *zip_first_entry(const char *buf, size_t len, size_t *out_len) {
   }
   if (method != 8) return NULL;                       /* only deflate else */
 
-  /* zlib raw inflate (windowBits -15 = no zlib/gzip wrapper, as in ZIP). */
-  z_stream s; memset(&s, 0, sizeof s);
-  if (inflateInit2(&s, -15) != Z_OK) return NULL;
-  size_t capacity = uncomp ? uncomp + 1 : (comp ? comp * 4 + 64 : 1024);
-  char *o = malloc(capacity);
-  if (!o) { inflateEnd(&s); return NULL; }
-  s.next_in = (Bytef *)data;
-  s.avail_in = (uInt)comp;
-  s.next_out = (Bytef *)o;
-  s.avail_out = (uInt)(capacity - 1);
-  int rc;
-  for (;;) {
-    rc = inflate(&s, Z_NO_FLUSH);
-    if (rc == Z_STREAM_END) break;
-    if (rc != Z_OK && rc != Z_BUF_ERROR) { free(o); inflateEnd(&s); return NULL; }
-    if (s.avail_out == 0) {                            /* grow */
-      size_t used = capacity - 1 - s.avail_out;        /* == capacity-1 */
-      size_t ncap = capacity * 2;
-      char *no = realloc(o, ncap);
-      if (!no) { free(o); inflateEnd(&s); return NULL; }
-      o = no; capacity = ncap;
-      s.next_out = (Bytef *)(o + used);
-      s.avail_out = (uInt)(capacity - 1 - used);
-    } else if (rc == Z_BUF_ERROR) {                    /* no progress & not end */
-      free(o); inflateEnd(&s); return NULL;
-    }
-  }
-  size_t total = capacity - 1 - s.avail_out;
-  inflateEnd(&s);
-  o[total] = 0;
-  if (out_len) *out_len = total;
-  return o;
+  /* Same inflate as zip_find_entry, and now literally the same code.
+   *
+   * This function used to carry its own copy of the loop WITHOUT the ceiling:
+   * it trusted `uncomp` straight from the local header (a 32-bit field the
+   * file chooses) for the initial malloc and then doubled without any limit,
+   * so a deflate bomb reaching this entry point grew until the allocator gave
+   * up — exactly the hole inflate_raw() was written to close, left open on the
+   * sibling path. */
+  return inflate_raw(data, comp, (size_t)uncomp, out_len);
 }

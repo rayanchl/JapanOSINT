@@ -3,6 +3,7 @@
  * Keyed on EIGHT_SESSION (sent as Cookie header). No unauth public API ->
  * honest empty when absent / on failure. Non-spatial intel.
  * uid = eight-sansan|<id>. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -12,15 +13,10 @@
 
 #define SOURCE_ID "eight-sansan"
 
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
-}
-
 /* c.id || c.card_id as string (string or number). */
 static int card_id(const cJSON *c, char *out, size_t cap) {
-  const char *s = sv(c, "id");
-  if (!s) s = sv(c, "card_id");
+  const char *s = jo_sv(c, "id");
+  if (!s) s = jo_sv(c, "card_id");
   if (s) { snprintf(out, cap, "%s", s); return 1; }
   const cJSON *v = cJSON_GetObjectItem(c, "id");
   if (!v) v = cJSON_GetObjectItem(c, "card_id");
@@ -51,10 +47,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       char id[64];
       if (!card_id(c, id, sizeof id)) continue;
 
-      const char *name = sv(c, "name");
-      const char *ttl = sv(c, "title");
-      const char *comp = sv(c, "company");
-      const char *email = sv(c, "email");
+      const char *name = jo_sv(c, "name");
+      const char *ttl = jo_sv(c, "title");
+      const char *comp = jo_sv(c, "company");
+      const char *email = jo_sv(c, "email");
 
       char uidb[128];
       snprintf(uidb, sizeof uidb, "%s|%s", SOURCE_ID, id);
@@ -112,9 +108,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_Delete(tags); cJSON_Delete(props);
     }
   }
+  int fetched = data != NULL;
   if (data) cJSON_Delete(data);
   fprintf(stderr, "[eight-sansan] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* STATUS code, not a row count: only a failed fetch is an error. An empty
+   * card list is an honest empty and must not quarantine the source. */
+  return fetched ? 0 : -1;
 }
 
 static const source_def eight_sansan_def = {

@@ -93,18 +93,5 @@ struct IntelSourceRow: View {
     }
 }
 
-func relativeTime(_ iso: String?) -> String {
-    guard let iso, let date = isoToDate(iso) else { return "—" }
-    let f = RelativeDateTimeFormatter()
-    f.unitsStyle = .abbreviated
-    return f.localizedString(for: date, relativeTo: Date())
-}
-
-private func isoToDate(_ s: String) -> Date? {
-    let f1 = ISO8601DateFormatter()
-    f1.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    if let d = f1.date(from: s) { return d }
-    let f2 = ISO8601DateFormatter()
-    f2.formatOptions = [.withInternetDateTime]
-    return f2.date(from: s)
-}
+// `relativeTime` / `isoToDate` moved to Shared/DateFormatting.swift so the
+// dashboard and scheduler screens stop shadowing them with private clones.

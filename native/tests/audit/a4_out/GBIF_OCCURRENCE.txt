@@ -1,0 +1,51 @@
+=== GBIF_OCCURRENCE  entity=Tokyo
+exit: 0
+sched: rc=0 records=30 484ms
+--- stderr ---
+[GBIF_OCCURRENCE] emitted 30
+[sched] GBIF_OCCURRENCE run rc=0 records=30 484ms
+--- persisted: 30 rows, 30 with lat/lon, 0 with geometry ---
+record_type: gbif-occurrence=30
+sub_source_id: (null)=30
+
+--- row 1 ---
+  uid            GBIF_OCCURRENCE|GBIF|6120445501
+  title          Ninox novaeseelandiae
+  body           {"species":"Ninox novaeseelandiae","scientific_name":"Ninox novaeseelandiae (J.F.Gmelin, 1788)","locality":"Orig location provided: 24 Tokyo Rd, AUSTRAL, 2171; Additional location info provided: ; Geocoded location: 24B TOKYO RD, AUSTRAL, NSW, 2179; Geocode geotype: Parcel; MatchScore: 89; matchQuality: Confident","dataset":"Wildlife Rehab Database","observed":"2025-02-28","lat":-33.911434,"lon":150.828908,"source":"GBIF_OCCURRENCE"}
+  summary        Orig location provided: 24 Tokyo Rd, AUSTRAL, 2171; Additional location info provided: ; Geocoded location: 24B TOKYO RD, AUSTRAL, NSW, 2179; Geocode geotype: Parcel; MatchScore: 89; matchQuality: Confident
+  link           https://www.gbif.org/occurrence/6120445501
+  language       en
+  published_at   2025-02-28
+  lat            -33.911434
+  lon            150.828908
+  record_type    gbif-occurrence
+  tags           ["osint-search","biodiversity"]
+  properties     {"service":"GBIF_OCCURRENCE","source":"GBIF_OCCURRENCE","scientific_name":"Ninox novaeseelandiae (J.F.Gmelin, 1788)","dataset":"Wildlife Rehab Database","query":"Tokyo","lat":-33.911434,"lon":150.828908,"success":true}
+
+--- row 2 ---
+  uid            GBIF_OCCURRENCE|GBIF|4060864218
+  title          Betulaceae
+  body           {"scientific_name":"Betulaceae","locality":"Tokyo Prefecture. Tokyo. Imperial Garden in central Tokyo.","dataset":"Tropicos","observed":"1993-08-28","lat":35.7,"lon":139.76666,"source":"GBIF_OCCURRENCE"}
+  summary        Tokyo Prefecture. Tokyo. Imperial Garden in central Tokyo.
+  link           https://www.gbif.org/occurrence/4060864218
+  language       en
+  published_at   1993-08-28
+  lat            35.7
+  lon            139.76666
+  record_type    gbif-occurrence
+  tags           ["osint-search","biodiversity"]
+  properties     {"service":"GBIF_OCCURRENCE","source":"GBIF_OCCURRENCE","scientific_name":"Betulaceae","dataset":"Tropicos","query":"Tokyo","lat":35.7,"lon":139.76666,"success":true}
+
+--- row 3 ---
+  uid            GBIF_OCCURRENCE|GBIF|4061610515
+  title          Vitaceae
+  body           {"scientific_name":"Vitaceae","locality":"Tokyo Prefecture. Tokyo. Imperial Garden in central Tokyo.","dataset":"Tropicos","observed":"1993-08-28","lat":35.7,"lon":139.76666,"source":"GBIF_OCCURRENCE"}
+  summary        Tokyo Prefecture. Tokyo. Imperial Garden in central Tokyo.
+  link           https://www.gbif.org/occurrence/4061610515
+  language       en
+  published_at   1993-08-28
+  lat            35.7
+  lon            139.76666
+  record_type    gbif-occurrence
+  tags           ["osint-search","biodiversity"]
+  properties     {"service":"GBIF_OCCURRENCE","source":"GBIF_OCCURRENCE","scientific_name":"Vitaceae","dataset":"Tropicos","query":"Tokyo","lat":35.7,"lon":139.76666,"success":true}

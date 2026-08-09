@@ -297,6 +297,35 @@ private struct StageDiagram: View {
     }
 }
 
+// MARK: - Barrel-roll transition
+
+/// Rotates a view around its horizontal axis. The outgoing step rolls up and
+/// away while the incoming step rolls in from below — a barrel turning — used by
+/// the collapsed pipeline row as it advances between steps.
+private struct BarrelRollModifier: ViewModifier {
+    let angle: Double
+    let opacity: Double
+    func body(content: Content) -> some View {
+        content
+            .rotation3DEffect(.degrees(angle),
+                              axis: (x: 1, y: 0, z: 0),
+                              anchor: .center,
+                              perspective: 0.5)
+            .opacity(opacity)
+    }
+}
+
+private extension AnyTransition {
+    static var barrelRoll: AnyTransition {
+        .asymmetric(
+            insertion: .modifier(active: BarrelRollModifier(angle: -90, opacity: 0),
+                                 identity: BarrelRollModifier(angle: 0, opacity: 1)),
+            removal:   .modifier(active: BarrelRollModifier(angle: 90, opacity: 0),
+                                 identity: BarrelRollModifier(angle: 0, opacity: 1))
+        )
+    }
+}
+
 // MARK: - Entity ↔ service cross-linking
 
 /// SF Symbol for an entity type (mirrors the web `getEntityIcon`).
@@ -899,6 +928,12 @@ struct SearchRunDetailView: View {
         store.active.first { $0.id == id } ?? store.completed.first { $0.id == id }
     }
 
+    /// 1 while the investigation is still working, 0 once finished — drives the
+    /// backdrop's bloom the same way the Search tab does.
+    private var detailAuraIntensity: Double {
+        (run.map { !$0.finished } ?? false) ? 1 : 0
+    }
+
     var body: some View {
         let snap = run?.snapshot
         ScrollView {
@@ -931,7 +966,17 @@ struct SearchRunDetailView: View {
             }
             .padding(Space.lg)
         }
-        .themedScreenBackground(theme)
+        // Same amber top-fade as the Search tab, so opening a query keeps the
+        // backdrop instead of dropping to a flat surface. Blooms while the run
+        // is still working (see SearchAuraBackground.intensity), calm once done.
+        .scrollContentBackground(.hidden)
+        .background {
+            ZStack {
+                theme.surface
+                SearchAuraBackground(intensity: detailAuraIntensity)
+            }
+            .ignoresSafeArea()
+        }
         .navigationTitle(snap?.query ?? run?.query ?? "Investigation")
         .compatInlineTitle()
         .onAppear { seedIfNeeded() }
@@ -976,12 +1021,6 @@ struct SearchRunDetailView: View {
                 HStack(spacing: Space.sm) {
                     Text("PIPELINE").font(Typography.h3).foregroundStyle(theme.textMuted)
                     Spacer(minLength: Space.sm)
-                    if stagesCollapsed {
-                        Text(currentStageTitle())
-                            .font(Typography.body(11))
-                            .foregroundStyle(animator.errored ? theme.danger : theme.textMuted)
-                            .lineLimit(1)
-                    }
                     Image(systemName: stagesCollapsed ? "chevron.down" : "chevron.up")
                         .font(.caption2).foregroundStyle(theme.textMuted)
                 }
@@ -989,7 +1028,9 @@ struct SearchRunDetailView: View {
             }
             .buttonStyle(.plain)
 
-            if !stagesCollapsed {
+            if stagesCollapsed {
+                collapsedStageRow(snap)
+            } else {
                 StageDiagram(shown: animator.shown,
                              finished: animator.finished,
                              errored: animator.errored,
@@ -998,12 +1039,27 @@ struct SearchRunDetailView: View {
         }
     }
 
-    /// Title of the stage currently on screen, for the collapsed summary.
-    private func currentStageTitle() -> String {
+    /// Collapsed pipeline: the SAME timeline row design, but only the step the
+    /// run is actually on (with its status icon). As the run advances, the row's
+    /// icon + text barrel-roll to the next step rather than the whole pipeline
+    /// re-expanding.
+    @ViewBuilder
+    private func collapsedStageRow(_ snap: SearchSnapshot?) -> some View {
         let last = PipelineStage.allCases.count - 1
-        if animator.errored { return "Error" }
-        if animator.finished && animator.shown >= last { return PipelineStage.completed.title }
-        return PipelineStage(rawValue: min(animator.shown, last))?.title ?? ""
+        let idx = min(animator.shown, last)
+        let stage = PipelineStage(rawValue: idx) ?? .queued
+        let state: StageState = animator.errored ? .error
+            : (animator.finished && idx >= last ? .done : .current)
+        StageRow(stage: stage,
+                 state: state,
+                 isLast: true,          // single row → no trailing connector
+                 connectorDone: false,
+                 roundSuffix: stage == .followupAnalyzing ? roundSuffix(snap) : "")
+            // Identity keyed on the step so advancing removes the old row and
+            // inserts the next one, firing the barrel-roll transition.
+            .id(idx)
+            .transition(.barrelRoll)
+            .animation(.easeInOut(duration: 0.45), value: idx)
     }
 
     private func header(_ s: SearchSnapshot?) -> some View {
@@ -1024,6 +1080,9 @@ struct SearchRunDetailView: View {
             ProgressView(value: pct / 100.0)
                 .tint(animator.errored ? theme.danger : theme.accent)
                 .compatThinProgress()
+                // Glide the fill as the walked stage advances rather than
+                // jumping between each stage's percent floor.
+                .animation(.easeInOut(duration: 0.6), value: pct)
         }
     }
 }

@@ -1,0 +1,39 @@
+=== CA_PARLIAMENT  entity=Trudeau
+exit: 0
+sched: rc=0 records=20 544ms
+--- stderr ---
+[CA_PARLIAMENT] emitted 20
+[sched] CA_PARLIAMENT run rc=0 records=20 544ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: ca-politician=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            CA_PARLIAMENT|/politicians/ziad-aboultaif/
+  title          Ziad Aboultaif
+  body           {"name":"Ziad Aboultaif","source":"OpenParliament.ca"}
+  link           https://openparliament.ca/politicians/ziad-aboultaif/
+  language       en
+  record_type    ca-politician
+  tags           ["osint-search","CA_PARLIAMENT"]
+  properties     {"service":"CA_PARLIAMENT","success":true}
+
+--- row 2 ---
+  uid            CA_PARLIAMENT|/politicians/burton-bailey/
+  title          Burton Bailey
+  body           {"name":"Burton Bailey","source":"OpenParliament.ca"}
+  link           https://openparliament.ca/politicians/burton-bailey/
+  language       en
+  record_type    ca-politician
+  tags           ["osint-search","CA_PARLIAMENT"]
+  properties     {"service":"CA_PARLIAMENT","success":true}
+
+--- row 3 ---
+  uid            CA_PARLIAMENT|/politicians/john-barlow/
+  title          John Barlow
+  body           {"name":"John Barlow","source":"OpenParliament.ca"}
+  link           https://openparliament.ca/politicians/john-barlow/
+  language       en
+  record_type    ca-politician
+  tags           ["osint-search","CA_PARLIAMENT"]
+  properties     {"service":"CA_PARLIAMENT","success":true}

@@ -1,0 +1,2 @@
+OCHA_FTS	Afghanistan
+GDELT_TV	Japan

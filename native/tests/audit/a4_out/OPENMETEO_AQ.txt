@@ -1,0 +1,22 @@
+=== OPENMETEO_AQ  entity=Tokyo
+exit: 0
+sched: rc=0 records=1 90ms
+--- stderr ---
+[OPENMETEO_AQ] emitted 1
+[sched] OPENMETEO_AQ run rc=0 records=1 90ms
+--- persisted: 1 rows, 1 with lat/lon, 0 with geometry ---
+record_type: air-quality-measurement=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            OPENMETEO_AQ|openmeteo-aq|35.7000,139.7000|2026-07-31T18:00
+  title          Air quality @ 35.7000,139.7000 — EU AQI 66
+  body           {"lat":35.700005,"lon":139.70001,"measured_at":"2026-07-31T18:00","pm2_5":32.6,"pm10":36.7,"carbon_monoxide":409,"nitrogen_dioxide":60,"sulphur_dioxide":44.7,"ozone":49,"european_aqi":66,"us_aqi":94,"source":"Open-Meteo"}
+  summary        Tokyo (default)
+  language       en
+  published_at   2026-07-31T18:00
+  lat            35.700005
+  lon            139.70001
+  record_type    air-quality-measurement
+  tags           ["osint-search","air-quality","Open-Meteo"]
+  properties     {"service":"OPENMETEO_AQ","source":"Open-Meteo","lat":35.700005,"lon":139.70001,"european_aqi":66,"us_aqi":94,"success":true}

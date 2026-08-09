@@ -19,6 +19,7 @@
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
+#include "../../lib/threatintel.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -251,7 +252,24 @@ static int query_threatfox(http_client *http, const char *ind, intel_sink *sink)
   char *payload = cJSON_PrintUnformatted(req);
   cJSON_Delete(req);
   if (!payload) return 0;
-  static const char *hdrs[] = { "Content-Type", "application/json", NULL };
+  /* Two bugs were here.
+   * (1) http_request takes whole "Key: value" header LINES; this passed the
+   *     name and the value as two separate entries, so curl was handed the
+   *     malformed headers "Content-Type" and "application/json" instead of
+   *     one correct one.
+   * (2) abuse.ch made Auth-Key mandatory on *-api.abuse.ch (measured
+   *     2026-08-01: 401 without it). Unauthenticated, every indicator came
+   *     back with no hit — and for a threat lookup "no hit" reads as "clean",
+   *     so this failed in the direction that hides risk. Gate honestly. */
+  const char *auth = abusech_auth_header();
+  if (!auth) {
+    fprintf(stderr, "[threat-feed] threatfox skipped: no ABUSE_CH_AUTH_KEY "
+                    "(unauthenticated queries 401 and would look like a clean "
+                    "verdict)\n");
+    free(payload);
+    return 0;
+  }
+  const char *hdrs[] = { "Content-Type: application/json", auth, NULL };
   http_response hr = {0};
   int hc = http_request(http, "POST", "https://threatfox-api.abuse.ch/api/v1/",
                          hdrs, payload, strlen(payload), 15000, 1, &hr);

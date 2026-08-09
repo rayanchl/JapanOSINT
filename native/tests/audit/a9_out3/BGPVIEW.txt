@@ -1,0 +1,7 @@
+=== BGPVIEW  entity=8.8.8.8
+exit: 0
+sched: rc=0 records=0 296ms
+--- stderr ---
+[BGPVIEW] http status=0
+[sched] BGPVIEW run rc=0 records=0 296ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

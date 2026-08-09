@@ -1,0 +1,7 @@
+=== houjin-bangou
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[houjin-bangou] gated (no HOUJIN_BANGOU_KEY)
+[sched] houjin-bangou run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

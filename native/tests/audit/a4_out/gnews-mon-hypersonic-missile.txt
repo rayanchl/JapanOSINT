@@ -1,0 +1,45 @@
+=== gnews-mon-hypersonic-missile
+exit: 0
+sched: rc=0 records=92 609ms
+--- stderr ---
+[rss] gnews-mon-hypersonic-missile emitted 92
+[sched] gnews-mon-hypersonic-missile run rc=0 records=92 609ms
+--- persisted: 92 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=92
+sub_source_id: (null)=92
+
+--- row 1 ---
+  uid            gnews-mon-hypersonic-missile|CBMiyAFBVV95cUxQTWhBUjVfcFhaZ2czSVlXUllmN3FNQ1l5WDVpUnJvSWx4TGpMMmVOeUlQamlvOWFkWFpUQnoyNDdySDZudHRHYnliZEhoXzZ5RU80bUJoVWNHdjJ5blVWVFFDemZMR2l3WlR5dVY4NG9qOFBzVnhMQVRQSHVMRjlkSUs3WmdsRkd0VEl6dXI3UmJ0RDg5U3pvVHdSRkNmQ19rTEVTN3UzejFaaVFFUm1LQjZ6Q2tBQ3NKTEtkWkZLZm9peTlqOEQyX9IByAFBVV95cUxNOFp5TUlhRGMtRmFGUUF2REhaZjJNTGhKd1lfMm1JQzdNZGp2NjRIdk9QOEM2N1ZKdklROXI1cHRwNVB0ZnV0eFB4NEpaeXNSdkZPeXNJUFhDR0NBRWdPX2dBWmZMa3NGX3hEOW5yOUEyRFp6TndfYnRUeS1jY1lDZG9aTTYyaWppeUVxdDYza25JVkU5c0lmdF
+  title          Can China’s expanding hypersonic missile fleet alter the global naval balance? - South China Morning Post
+  body           <ol><li><a href="https://news.google.com/rss/articles/CBMiyAFBVV95cUxQTWhBUjVfcFhaZ2czSVlXUllmN3FNQ1l5WDVpUnJvSWx4TGpMMmVOeUlQamlvOWFkWFpUQnoyNDdySDZudHRHYnliZEhoXzZ5RU80bUJoVWNHdjJ5blVWVFFDemZMR2l3WlR5dVY4NG9qOFBzVnhMQVRQSHVMRjlkSUs3WmdsRkd0VEl6dXI3UmJ0RDg5U3pvVHdSRkNmQ19rTEVTN3UzejFaaVFFUm1LQjZ6Q2tBQ3NKTEtkWkZLZm9peTlqOEQyX9IByAFBVV95cUxNOFp5TUlhRGMtRmFGUUF2REhaZjJNTGhKd1lfMm1JQzdNZGp2NjRIdk9QOEM2N1ZKdklROXI1cHRwNVB0ZnV0eFB4NEpaeXNSdkZPeXNJUFhDR0NBRWdPX2dBWmZMa3NGX3hEOW5yOUEyRFp6TndfYnRUeS1jY1lDZG9aTTYyaWppeUVxdDYza25JVkU5c0lmdFluSy1ud3VRcDRvanFCMXVSaHhORUFhMUtyYnd2WGdPSzBZTFVWTlo5Y3ZrRlJFSA?oc=5" target="_blank">Can China’s expanding hypersonic missile fleet alter the global naval balance?</a>&nbsp;&nbsp;<font color="#6f6f6f">South China Morning Post</font></li><li><a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxOVGdyc3VVY3h2OXB3V3RUSFM3YzdCT0lRQU1XbjF1VDBfZkY2bENINmh3Y3l …<3413 more chars>
+  summary        <ol><li><a href="https://news.google.com/rss/articles/CBMiyAFBVV95cUxQTWhBUjVfcFhaZ2czSVlXUllmN3FNQ1l5WDVpUnJvSWx4TGpMMmVOeUlQamlvOWFkWFpUQnoyNDdySDZudHRHYnliZEhoXzZ5RU80bUJoVWNHdjJ5blVWVFFDemZMR2l3WlR5dVY4NG9qOFBzVnhMQVRQSHVMRjlkSUs3WmdsRk
+  link           https://news.google.com/rss/articles/CBMiyAFBVV95cUxQTWhBUjVfcFhaZ2czSVlXUllmN3FNQ1l5WDVpUnJvSWx4TGpMMmVOeUlQamlvOWFkWFpUQnoyNDdySDZudHRHYnliZEhoXzZ5RU80bUJoVWNHdjJ5blVWVFFDemZMR2l3WlR5dVY4NG9qOFBzVnhMQVRQSHVMRjlkSUs3WmdsRkd0VEl6dXI3UmJ0RDg5U3pvVHdSRkNmQ19rTEVTN3UzejFaaVFFUm1LQjZ6Q2tBQ3NKTEtkWkZLZm9peTlqOEQyX9IByAFBVV95cUxNOFp5TUlhRGMtRmFGUUF2REhaZjJNTGhKd1lfMm1JQzdNZGp2NjRIdk9QOEM2N1ZKdklROXI1cHRwNVB0ZnV0eFB4NEpaeXNSdkZPeXNJUFhDR0NBRWdPX2dBWmZMa3NGX3hEOW5yOUEyRFp6TndfYnRUeS1jY1lDZG9aTTYyaWppeUVxdDYza25JVkU5c0lmdFluSy1ud3VRcDRvanFCMXVSaHhORUFhMUtyYnd2WGdPSzBZTFVWTlo5Y3ZrRlJFSA?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 04:00:26 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","hypersonic"]
+  properties     {"guid":"CBMiyAFBVV95cUxQTWhBUjVfcFhaZ2czSVlXUllmN3FNQ1l5WDVpUnJvSWx4TGpMMmVOeUlQamlvOWFkWFpUQnoyNDdySDZudHRHYnliZEhoXzZ5RU80bUJoVWNHdjJ5blVWVFFDemZMR2l3WlR5dVY4NG9qOFBzVnhMQVRQSHVMRjlkSUs3WmdsRkd0VEl6dXI3UmJ0RDg5U3pvVHdSRkNmQ19rTEVTN3UzejFaaVFFUm1LQjZ6Q2tBQ3NKTEtkWkZLZm9peTlqOEQyX9IByAFBVV95cUxNOFp5TUlhRGMtRmFGUUF2REhaZjJNTGhKd1lfMm1JQzdNZGp2NjRIdk9QOEM2N1ZKdklROXI1cHRwNVB0ZnV0eFB4NEpaeXNSdkZPeXNJUFhDR0NBRWdPX2dBWmZMa3NGX3hEOW5yOUEyRFp6TndfYnRUeS1jY1lDZG9aTTYyaWppeUVxdDYza25JVkU5c0lmdFluSy1ud3VRcDRvanFCMX
+
+--- row 2 ---
+  uid            gnews-mon-hypersonic-missile|CBMilgFBVV95cUxNMVZiYmtWdVZIYnUzNjF0cG9QWTNOWkJndWxrZC1XZ2w0MmNLLThOc3psb2pHcjR1T2x4dzhoaW9WOXM0YXl2djlqdUxtTkxNUkl6WEJ4NllFaDZxWU5rTEtrQnBCWDFZRzJycWxnSzB5Z1FmRmFYNlBmVm01TU1qUTVzV1poSFBKNHFxWkxPenc4QXZvRGc
+  title          US builds $50M hypersonic payload hub ahead of schedule to speed Mach 5+ flight testing - Interesting Engineering
+  body           <a href="https://news.google.com/rss/articles/CBMilgFBVV95cUxNMVZiYmtWdVZIYnUzNjF0cG9QWTNOWkJndWxrZC1XZ2w0MmNLLThOc3psb2pHcjR1T2x4dzhoaW9WOXM0YXl2djlqdUxtTkxNUkl6WEJ4NllFaDZxWU5rTEtrQnBCWDFZRzJycWxnSzB5Z1FmRmFYNlBmVm01TU1qUTVzV1poSFBKNHFxWkxPenc4QXZvRGc?oc=5" target="_blank">US builds $50M hypersonic payload hub ahead of schedule to speed Mach 5+ flight testing</a>&nbsp;&nbsp;<font color="#6f6f6f">Interesting Engineering</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMilgFBVV95cUxNMVZiYmtWdVZIYnUzNjF0cG9QWTNOWkJndWxrZC1XZ2w0MmNLLThOc3psb2pHcjR1T2x4dzhoaW9WOXM0YXl2djlqdUxtTkxNUkl6WEJ4NllFaDZxWU5rTEtrQnBCWDFZRzJycWxnSzB5Z1FmRmFYNlBmVm01TU1qUTVzV1poSFBKNHFxWk
+  link           https://news.google.com/rss/articles/CBMilgFBVV95cUxNMVZiYmtWdVZIYnUzNjF0cG9QWTNOWkJndWxrZC1XZ2w0MmNLLThOc3psb2pHcjR1T2x4dzhoaW9WOXM0YXl2djlqdUxtTkxNUkl6WEJ4NllFaDZxWU5rTEtrQnBCWDFZRzJycWxnSzB5Z1FmRmFYNlBmVm01TU1qUTVzV1poSFBKNHFxWkxPenc4QXZvRGc?oc=5
+  language       en
+  published_at   Tue, 28 Jul 2026 21:09:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","hypersonic"]
+  properties     {"guid":"CBMilgFBVV95cUxNMVZiYmtWdVZIYnUzNjF0cG9QWTNOWkJndWxrZC1XZ2w0MmNLLThOc3psb2pHcjR1T2x4dzhoaW9WOXM0YXl2djlqdUxtTkxNUkl6WEJ4NllFaDZxWU5rTEtrQnBCWDFZRzJycWxnSzB5Z1FmRmFYNlBmVm01TU1qUTVzV1poSFBKNHFxWkxPenc4QXZvRGc"}
+
+--- row 3 ---
+  uid            gnews-mon-hypersonic-missile|CBMivgFBVV95cUxNeUFqeHQyTW05TFNRZV82dk5ZZ2NjTWJ1LTE2eTBLS1Y5YzhHaU5QZGNiSjhmWnhBYUpqV0U1RWFKQnJhdk5XVjItUVVXUnY0SzdTUXVNUW16MWY5U3ZpcG1RbHVkS2JadGNSQkJ5Zk13Z2o4VGVvcUxId0tpbkwyOHVsZk9KSTJmR1JHb2RyODIwOVYxbURVV0dyUnhBVzJ0dzQ0aEVRTVZPcUxWZWZpTUNMVUNzSVo0MF8zRktB
+  title          China Demonstrates YJ-20 Hypersonic Missile Launch From Type 052D Destroyer For First Time - Marine Insight
+  body           <a href="https://news.google.com/rss/articles/CBMivgFBVV95cUxNeUFqeHQyTW05TFNRZV82dk5ZZ2NjTWJ1LTE2eTBLS1Y5YzhHaU5QZGNiSjhmWnhBYUpqV0U1RWFKQnJhdk5XVjItUVVXUnY0SzdTUXVNUW16MWY5U3ZpcG1RbHVkS2JadGNSQkJ5Zk13Z2o4VGVvcUxId0tpbkwyOHVsZk9KSTJmR1JHb2RyODIwOVYxbURVV0dyUnhBVzJ0dzQ0aEVRTVZPcUxWZWZpTUNMVUNzSVo0MF8zRktB?oc=5" target="_blank">China Demonstrates YJ-20 Hypersonic Missile Launch From Type 052D Destroyer For First Time</a>&nbsp;&nbsp;<font color="#6f6f6f">Marine Insight</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMivgFBVV95cUxNeUFqeHQyTW05TFNRZV82dk5ZZ2NjTWJ1LTE2eTBLS1Y5YzhHaU5QZGNiSjhmWnhBYUpqV0U1RWFKQnJhdk5XVjItUVVXUnY0SzdTUXVNUW16MWY5U3ZpcG1RbHVkS2JadGNSQkJ5Zk13Z2o4VGVvcUxId0tpbkwyOHVsZk9KSTJmR1JHb2
+  link           https://news.google.com/rss/articles/CBMivgFBVV95cUxNeUFqeHQyTW05TFNRZV82dk5ZZ2NjTWJ1LTE2eTBLS1Y5YzhHaU5QZGNiSjhmWnhBYUpqV0U1RWFKQnJhdk5XVjItUVVXUnY0SzdTUXVNUW16MWY5U3ZpcG1RbHVkS2JadGNSQkJ5Zk13Z2o4VGVvcUxId0tpbkwyOHVsZk9KSTJmR1JHb2RyODIwOVYxbURVV0dyUnhBVzJ0dzQ0aEVRTVZPcUxWZWZpTUNMVUNzSVo0MF8zRktB?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 11:04:57 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","hypersonic"]
+  properties     {"guid":"CBMivgFBVV95cUxNeUFqeHQyTW05TFNRZV82dk5ZZ2NjTWJ1LTE2eTBLS1Y5YzhHaU5QZGNiSjhmWnhBYUpqV0U1RWFKQnJhdk5XVjItUVVXUnY0SzdTUXVNUW16MWY5U3ZpcG1RbHVkS2JadGNSQkJ5Zk13Z2o4VGVvcUxId0tpbkwyOHVsZk9KSTJmR1JHb2RyODIwOVYxbURVV0dyUnhBVzJ0dzQ0aEVRTVZPcUxWZWZpTUNMVUNzSVo0MF8zRktB"}

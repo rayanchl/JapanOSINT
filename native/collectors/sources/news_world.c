@@ -176,8 +176,21 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     { "https://www.scmp.com/rss/91/feed",                                   "SCMP",             "en" },
     { "https://tass.com/rss/v2.xml",                                        "TASS",             "en" },
     { "https://english.news.cn/rss/worldrss.xml",                           "Xinhua",           "en" },
+    /* AUDIT NOTE (slice a3): five of the feeds in this table are dead and were
+     * silently contributing zero rows on every run —
+     *   feeds.reuters.com/reuters/topNews            DNS gone (Reuters retired
+     *                                                 public RSS in 2020)
+     *   www.reutersagency.com/feed/?best-topics=…    404
+     *   apnews.com/index.rss                          401 (AP retired it)
+     *   english.kyodonews.net/rss/news.xml            404, no working Kyodo
+     *                                                 RSS path found
+     *   www3.nhk.or.jp/nhkworld/en/news/feeds/        404
+     * NHK still publishes a live feed at the domestic path below (verified 200
+     * with real <item>s), so it is restored here as a ja feed. Reuters, AP and
+     * Kyodo have no key-free replacement — they are left in place and reported
+     * rather than swapped for an invented endpoint. */
     { "https://english.kyodonews.net/rss/news.xml",                         "Kyodo News",       "en" },
-    { "https://www3.nhk.or.jp/nhkworld/en/news/feeds/",                     "NHK World",        "en" },
+    { "https://www3.nhk.or.jp/rss/news/cat0.xml",                           "NHK",              "ja" },
     { "https://feeds.npr.org/1004/rss.xml",                                 "NPR",              "en" },
     { "http://rss.cnn.com/rss/edition_world.rss",                           "CNN",              "en" },
     { "https://abcnews.go.com/abcnews/internationalheadlines",             "ABC News",         "en" },

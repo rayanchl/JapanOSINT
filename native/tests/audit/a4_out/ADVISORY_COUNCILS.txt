@@ -1,0 +1,7 @@
+=== ADVISORY_COUNCILS  entity=CVE-2021-44228
+exit: 0
+sched: rc=0 records=0 2897ms
+--- stderr ---
+[ADVISORY_COUNCILS] http status=404
+[sched] ADVISORY_COUNCILS run rc=0 records=0 2897ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

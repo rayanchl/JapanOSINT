@@ -46,8 +46,14 @@ static int prop_num(cJSON *p, const char *const *keys, int nk, double *out) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *url = getenv("BEAR_ENCOUNTERS_GEOJSON_URL");
   if (!url || !*url) {
-    fprintf(stderr, "[bear-encounters] no source (BEAR_ENCOUNTERS_GEOJSON_URL unset)\n");
-    return -1;
+    /* Unconfigured is not a failure. Returning -1 makes scheduler_run_source
+     * write fetch_log status='error' AND open a collector_anomaly every single
+     * tick, so a source nobody configured shows up as permanently broken and
+     * buries real breakages in the anomaly table. "Needs a key" is already
+     * modelled separately (credtab.c -> requiresKey/gated). Ran fine, zero
+     * rows — the same convention the other 138 gated collectors use. */
+    fprintf(stderr, "[bear-encounters] gated (no BEAR_ENCOUNTERS_GEOJSON_URL)\n");
+    return 0;
   }
   cJSON *data = feed_get_json(ctx->http, url, 20000);
   cJSON *src = data ? cJSON_GetObjectItem(data, "features") : NULL;
@@ -106,15 +112,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const char *spc = prop(p, SP_K, 3);
     const char *nt  = prop(p, NT_K, 3);
 
-    cJSON *nf = cJSON_CreateObject();
-    cJSON_AddStringToObject(nf, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(nf, "geometry", g);
+    cJSON *nf = gj_point_feature(lon, lat);
 
     cJSON *np = cJSON_CreateObject();             /* EXACT JS key order */
     cJSON_AddStringToObject(np, "sighting_id", sid);
@@ -136,7 +134,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[bear-encounters] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def bear_encounters_def = {

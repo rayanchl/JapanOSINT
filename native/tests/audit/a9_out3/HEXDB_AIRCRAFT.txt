@@ -1,0 +1,20 @@
+=== HEXDB_AIRCRAFT  entity=c0103a
+exit: 0
+sched: rc=0 records=1 229ms
+--- stderr ---
+[hexdb] emitted 1
+[sched] HEXDB_AIRCRAFT run rc=0 records=1 229ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: aircraft=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            HEXDB_AIRCRAFT|C0103A
+  title          C-FGDT — 787 9
+  body           {"mode_s":"C0103A","registration":"C-FGDT","manufacturer":"Boeing","type":"787 9","icao_type_code":"B789","registered_owner":"Air Canada","operator_flag_code":"ACA","source":"hexdb.io"}
+  summary        Air Canada
+  link           https://hexdb.io/registration?reg=C-FGDT
+  language       en
+  record_type    aircraft
+  tags           ["osint-search","HEXDB_AIRCRAFT"]
+  properties     {"service":"HEXDB_AIRCRAFT","source":"hexdb.io","mode_s":"C0103A","registration":"C-FGDT","success":true}

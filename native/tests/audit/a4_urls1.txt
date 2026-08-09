@@ -1,0 +1,7 @@
+https://www.emsc-csem.org/service/rss/rss.php?typ=emsc
+https://www.volcanodiscovery.com/rss.xml
+http://www.bom.gov.au/rss/1.xml
+https://www.metoffice.gov.uk/public/data/PWSCache/WarningsRSS/Region/UK
+https://en.vedur.is/earthquakes-and-volcanism/earthquakes/rss/
+https://emergency.copernicus.eu/mapping/activations-rapid/rss.xml
+https://www.pdc.org/feed/

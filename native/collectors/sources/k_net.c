@@ -2,41 +2,32 @@
  * server/src/collectors/kNet.js (fetchOverpass single area.jp).
  * SEED_KNET offline fallback intentionally not ported (rule 8).
  * `updated_at` mirrors JS `new Date().toISOString()` (UTC, ms). */
+#include "../../lib/geojson.h"
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
 
-static void iso_now(char *o, size_t n) {
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  struct tm tm;
-  gmtime_r(&tv.tv_sec, &tm);
-  char base[32];
-  strftime(base, sizeof base, "%Y-%m-%dT%H:%M:%S", &tm);
-  snprintf(o, n, "%s.%03dZ", base, (int)(tv.tv_usec / 1000));
-}
-
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
-  char sb[32];
-  snprintf(sb, sizeof sb, "KNET_LIVE_%04d", i + 1);
-  cJSON_AddStringToObject(p, "station_id", sb);
-
   cJSON *id = cJSON_GetObjectItem(el, "id");
   long long oid = id && cJSON_IsNumber(id) ? (long long)id->valuedouble : 0;
+
+  /* AUDIT NOTE (slice a3): station_id used to be "KNET_LIVE_<i+1>", i.e. the
+   * element's POSITION in the Overpass reply. station_id is in
+   * geojson.c NATIVE_ID_KEYS, so that position became the row uid — every
+   * station's identity shifted the moment OSM returned the set in a different
+   * order or one node was added, producing duplicate rows instead of updates.
+   * Keyed on the stable OSM node id instead. */
+  char sb[48];
+  snprintf(sb, sizeof sb, "KNET_OSM_%lld", oid);
+  cJSON_AddStringToObject(p, "station_id", sb);
+  (void)i;
 
   const char *ref = ov_tag(el, "ref");
   const char *nm = ov_tag(el, "name");
@@ -72,7 +63,7 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
 
   cJSON_AddStringToObject(p, "country", "JP");
   char ts[40];
-  iso_now(ts, sizeof ts);
+  jo_iso_now(ts, sizeof ts);
   cJSON_AddStringToObject(p, "updated_at", ts);
   cJSON_AddStringToObject(p, "source", "knet_live");
   cJSON_AddItemToObject(f, "properties", p);
@@ -83,7 +74,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = overpass_collect(ctx, sink,
     "node[\"man_made\"=\"monitoring_station\"]"
     "[\"monitoring:strong_motion\"=\"yes\"](area.jp);",
-    180, 60000, map, NULL);
+    180, 200000, map, NULL);
   return n >= 0 ? 0 : -1;
 }
 

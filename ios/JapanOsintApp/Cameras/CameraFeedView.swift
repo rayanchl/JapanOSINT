@@ -127,7 +127,14 @@ struct CameraFeedView: View {
     private var feedView: some View {
         switch mode {
         case .youtube(let id):
-            embed(URL(string: "https://www.youtube.com/embed/\(id)?autoplay=1&mute=1&playsinline=1")!)
+            // `id` originates from scraped page HTML, so it is NOT trusted to
+            // be URL-safe — a stray space or quote makes URL(string:) nil and
+            // the old force-unwrap crashed the whole app on a bad scrape.
+            if let url = Self.youtubeEmbedURL(id) {
+                embed(url)
+            } else {
+                placeholder(showing: statusStack(icon: "video.slash", text: "No feed"))
+            }
         case .iframe(let url):
             embed(url)
         case .hls(let url):
@@ -256,6 +263,20 @@ struct CameraFeedView: View {
     }
 
     // MARK: - URL builders
+
+    /// Characters a YouTube video id may legally contain. Anything else means
+    /// the collector handed us junk (or an attacker-controlled page did), so we
+    /// refuse to build a URL from it rather than trusting `URL(string:)`.
+    private static let youtubeIDAllowed = CharacterSet(
+        charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-")
+
+    static func youtubeEmbedURL(_ id: String) -> URL? {
+        guard !id.isEmpty, id.count <= 24,
+              id.unicodeScalars.allSatisfy({ youtubeIDAllowed.contains($0) })
+        else { return nil }
+        return URL(string:
+            "https://www.youtube.com/embed/\(id)?autoplay=1&mute=1&playsinline=1")
+    }
 
     private var bustQuery: String {
         "_t=\(Int(lastRefresh.timeIntervalSince1970))"

@@ -1,0 +1,8 @@
+=== EMAILREP_LOOKUP  entity=test@example.com
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[EMAILREP_LOOKUP] no EMAILREP_KEY
+[EMAILREP_LOOKUP] emitted 0
+[sched] EMAILREP_LOOKUP run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

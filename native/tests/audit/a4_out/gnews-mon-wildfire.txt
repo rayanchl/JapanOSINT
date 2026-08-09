@@ -1,0 +1,45 @@
+=== gnews-mon-wildfire
+exit: 0
+sched: rc=0 records=110 832ms
+--- stderr ---
+[rss] gnews-mon-wildfire emitted 110
+[sched] gnews-mon-wildfire run rc=0 records=110 832ms
+--- persisted: 110 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=110
+sub_source_id: (null)=110
+
+--- row 1 ---
+  uid            gnews-mon-wildfire|CBMiqAFBVV95cUxPZ1NvMkhvMHlzREpuZ2J2dmRPaVlzdXN2UjZWYlhUVlpNdjRHYVhVemFXbnBBUHdWeHc0cGE3Um9WcHhheXk4bEdUX0x6NDh4ekE4MHVSSFpOQ3F3aVpFenIxcjVIR3ZkbWd5SklfSjh1Z0s0UGRnVG1SZjBQN2wzZTdIYVlnN2daY3FoZk9jMDlzeHVyTVpJRW5feWNkb0JNbXdGTndpSmo
+  title          Daughter of British couple killed in Spanish wildfire rejects claim they ignored order to leave | Spain - The Guardian
+  body           <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxPZ1NvMkhvMHlzREpuZ2J2dmRPaVlzdXN2UjZWYlhUVlpNdjRHYVhVemFXbnBBUHdWeHc0cGE3Um9WcHhheXk4bEdUX0x6NDh4ekE4MHVSSFpOQ3F3aVpFenIxcjVIR3ZkbWd5SklfSjh1Z0s0UGRnVG1SZjBQN2wzZTdIYVlnN2daY3FoZk9jMDlzeHVyTVpJRW5feWNkb0JNbXdGTndpSmo?oc=5" target="_blank">Daughter of British couple killed in Spanish wildfire rejects claim they ignored order to leave | Spain</a>&nbsp;&nbsp;<font color="#6f6f6f">The Guardian</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxPZ1NvMkhvMHlzREpuZ2J2dmRPaVlzdXN2UjZWYlhUVlpNdjRHYVhVemFXbnBBUHdWeHc0cGE3Um9WcHhheXk4bEdUX0x6NDh4ekE4MHVSSFpOQ3F3aVpFenIxcjVIR3ZkbWd5SklfSjh1Z0s0UGRnVG1SZjBQN2wzZTdIYVlnN2daY3FoZk
+  link           https://news.google.com/rss/articles/CBMiqAFBVV95cUxPZ1NvMkhvMHlzREpuZ2J2dmRPaVlzdXN2UjZWYlhUVlpNdjRHYVhVemFXbnBBUHdWeHc0cGE3Um9WcHhheXk4bEdUX0x6NDh4ekE4MHVSSFpOQ3F3aVpFenIxcjVIR3ZkbWd5SklfSjh1Z0s0UGRnVG1SZjBQN2wzZTdIYVlnN2daY3FoZk9jMDlzeHVyTVpJRW5feWNkb0JNbXdGTndpSmo?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 13:29:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","wildfire"]
+  properties     {"guid":"CBMiqAFBVV95cUxPZ1NvMkhvMHlzREpuZ2J2dmRPaVlzdXN2UjZWYlhUVlpNdjRHYVhVemFXbnBBUHdWeHc0cGE3Um9WcHhheXk4bEdUX0x6NDh4ekE4MHVSSFpOQ3F3aVpFenIxcjVIR3ZkbWd5SklfSjh1Z0s0UGRnVG1SZjBQN2wzZTdIYVlnN2daY3FoZk9jMDlzeHVyTVpJRW5feWNkb0JNbXdGTndpSmo"}
+
+--- row 2 ---
+  uid            gnews-mon-wildfire|CBMiogFBVV95cUxOYjZWd3dxZDNQWnFwYzM3LXE3QmtMYm5WNVVtZndDQWs5SWs3MkVjekkyR3JydEVHSVJTZ2steWJYMlA1c3gyazhjT3FjdEtWZ0hNdFNSekNoQVlOa2NPWllFa2JZQUQ1TFlOd3QtNTBXakVuWmZiYzZ0eXUyQ29TX3d0RWJONGhwcXZnSzdGSlBsLTFacllVNlotME9POWVISGc
+  title          Northern Minnesota July lightning fires nearly 60 percent contained, crews watch for new starts - MPR News
+  body           <a href="https://news.google.com/rss/articles/CBMiogFBVV95cUxOYjZWd3dxZDNQWnFwYzM3LXE3QmtMYm5WNVVtZndDQWs5SWs3MkVjekkyR3JydEVHSVJTZ2steWJYMlA1c3gyazhjT3FjdEtWZ0hNdFNSekNoQVlOa2NPWllFa2JZQUQ1TFlOd3QtNTBXakVuWmZiYzZ0eXUyQ29TX3d0RWJONGhwcXZnSzdGSlBsLTFacllVNlotME9POWVISGc?oc=5" target="_blank">Northern Minnesota July lightning fires nearly 60 percent contained, crews watch for new starts</a>&nbsp;&nbsp;<font color="#6f6f6f">MPR News</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiogFBVV95cUxOYjZWd3dxZDNQWnFwYzM3LXE3QmtMYm5WNVVtZndDQWs5SWs3MkVjekkyR3JydEVHSVJTZ2steWJYMlA1c3gyazhjT3FjdEtWZ0hNdFNSekNoQVlOa2NPWllFa2JZQUQ1TFlOd3QtNTBXakVuWmZiYzZ0eXUyQ29TX3d0RWJONGhwcXZnSz
+  link           https://news.google.com/rss/articles/CBMiogFBVV95cUxOYjZWd3dxZDNQWnFwYzM3LXE3QmtMYm5WNVVtZndDQWs5SWs3MkVjekkyR3JydEVHSVJTZ2steWJYMlA1c3gyazhjT3FjdEtWZ0hNdFNSekNoQVlOa2NPWllFa2JZQUQ1TFlOd3QtNTBXakVuWmZiYzZ0eXUyQ29TX3d0RWJONGhwcXZnSzdGSlBsLTFacllVNlotME9POWVISGc?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 17:19:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","wildfire"]
+  properties     {"guid":"CBMiogFBVV95cUxOYjZWd3dxZDNQWnFwYzM3LXE3QmtMYm5WNVVtZndDQWs5SWs3MkVjekkyR3JydEVHSVJTZ2steWJYMlA1c3gyazhjT3FjdEtWZ0hNdFNSekNoQVlOa2NPWllFa2JZQUQ1TFlOd3QtNTBXakVuWmZiYzZ0eXUyQ29TX3d0RWJONGhwcXZnSzdGSlBsLTFacllVNlotME9POWVISGc"}
+
+--- row 3 ---
+  uid            gnews-mon-wildfire|CBMigwNBVV95cUxOdFdCVmRBUFdOSjRYb3pWaHg4cndieFZGcnFIWExVTzlkdWl5SGRSVDBvUzlBSXVyYUJuX0RmVmN3TndRcThxWmNPb1lRVnp5eldleEhTU1lQMHEyS1FNdGtFeVUxUWljYm1sVHJHR21IWW5Sb3QzVWF4ZDNRTXJRSlNmaklNaW1yNGx2d1FkRFJSTmphWExtV3JKWUN0cUMzSUJHVzFnYXlQS2JoZUFZSFZ5Z1FGSl82ZUhISWVNUWNlQnNjVFluRTV5UFJfNWRHS0NjWTktM3N0ZE9rbGhjRmFpbi1paVp4dkZRT19UalVSZFNYbEI2dE5CRUtydmNtblh1NFhaTmJISVI2Y0FLM2xRVllFODIxLUJlMXRZRjlfclNwemFnSEJtSWlvV1VmaFg3SEtESzJyNWF0MDd5Y1BGdkJETkhVTjJiOXhYeWczamN0YlhsdVlqSjBHSTd0cGZGYjBWdXRzX3h1
+  title          13K-acre wildfire near Area 15 reaches 12 percent containment - Las Vegas Review-Journal
+  body           <a href="https://news.google.com/rss/articles/CBMigwNBVV95cUxOdFdCVmRBUFdOSjRYb3pWaHg4cndieFZGcnFIWExVTzlkdWl5SGRSVDBvUzlBSXVyYUJuX0RmVmN3TndRcThxWmNPb1lRVnp5eldleEhTU1lQMHEyS1FNdGtFeVUxUWljYm1sVHJHR21IWW5Sb3QzVWF4ZDNRTXJRSlNmaklNaW1yNGx2d1FkRFJSTmphWExtV3JKWUN0cUMzSUJHVzFnYXlQS2JoZUFZSFZ5Z1FGSl82ZUhISWVNUWNlQnNjVFluRTV5UFJfNWRHS0NjWTktM3N0ZE9rbGhjRmFpbi1paVp4dkZRT19UalVSZFNYbEI2dE5CRUtydmNtblh1NFhaTmJISVI2Y0FLM2xRVllFODIxLUJlMXRZRjlfclNwemFnSEJtSWlvV1VmaFg3SEtESzJyNWF0MDd5Y1BGdkJETkhVTjJiOXhYeWczamN0YlhsdVlqSjBHSTd0cGZGYjBWdXRzX3h1LVAzbGZPQmp3R01tek5VM01lMEJIU0U?oc=5" target="_blank">13K-acre wildfire near Area 15 reaches 12 percent containment</a>&nbsp;&nbsp;<font color="#6f6f6f">Las Vegas Review-Journal</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMigwNBVV95cUxOdFdCVmRBUFdOSjRYb3pWaHg4cndieFZGcnFIWExVTzlkdWl5SGRSVDBvUzlBSXVyYUJuX0RmVmN3TndRcThxWmNPb1lRVnp5eldleEhTU1lQMHEyS1FNdGtFeVUxUWljYm1sVHJHR21IWW5Sb3QzVWF4ZDNRTXJRSlNmaklNaW1yNGx2d1
+  link           https://news.google.com/rss/articles/CBMigwNBVV95cUxOdFdCVmRBUFdOSjRYb3pWaHg4cndieFZGcnFIWExVTzlkdWl5SGRSVDBvUzlBSXVyYUJuX0RmVmN3TndRcThxWmNPb1lRVnp5eldleEhTU1lQMHEyS1FNdGtFeVUxUWljYm1sVHJHR21IWW5Sb3QzVWF4ZDNRTXJRSlNmaklNaW1yNGx2d1FkRFJSTmphWExtV3JKWUN0cUMzSUJHVzFnYXlQS2JoZUFZSFZ5Z1FGSl82ZUhISWVNUWNlQnNjVFluRTV5UFJfNWRHS0NjWTktM3N0ZE9rbGhjRmFpbi1paVp4dkZRT19UalVSZFNYbEI2dE5CRUtydmNtblh1NFhaTmJISVI2Y0FLM2xRVllFODIxLUJlMXRZRjlfclNwemFnSEJtSWlvV1VmaFg3SEtESzJyNWF0MDd5Y1BGdkJETkhVTjJiOXhYeWczamN0YlhsdVlqSjBHSTd0cGZGYjBWdXRzX3h1LVAzbGZPQmp3R01tek5VM01lMEJIU0U?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 17:56:43 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","wildfire"]
+  properties     {"guid":"CBMigwNBVV95cUxOdFdCVmRBUFdOSjRYb3pWaHg4cndieFZGcnFIWExVTzlkdWl5SGRSVDBvUzlBSXVyYUJuX0RmVmN3TndRcThxWmNPb1lRVnp5eldleEhTU1lQMHEyS1FNdGtFeVUxUWljYm1sVHJHR21IWW5Sb3QzVWF4ZDNRTXJRSlNmaklNaW1yNGx2d1FkRFJSTmphWExtV3JKWUN0cUMzSUJHVzFnYXlQS2JoZUFZSFZ5Z1FGSl82ZUhISWVNUWNlQnNjVFluRTV5UFJfNWRHS0NjWTktM3N0ZE9rbGhjRmFpbi1paVp4dkZRT19UalVSZFNYbEI2dE5CRUtydmNtblh1NFhaTmJISVI2Y0FLM2xRVllFODIxLUJlMXRZRjlfclNwemFnSEJtSWlvV1VmaFg3SEtESzJyNWF0MDd5Y1BGdkJETkhVTjJiOXhYeWczamN0YlhsdVlqSjBHSTd0cGZGYjBWdXRzX3h1LVAzbGZPQm

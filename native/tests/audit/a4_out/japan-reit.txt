@@ -1,0 +1,8 @@
+=== japan-reit
+exit: 1
+sched: rc=-1 records=0 1448ms
+--- stderr ---
+[japan-reit] unreachable
+[sched] japan-reit run rc=-1 records=0 1448ms
+[detect] anomaly opened: japan-reit verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

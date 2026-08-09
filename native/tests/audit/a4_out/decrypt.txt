@@ -1,0 +1,45 @@
+=== decrypt
+exit: 0
+sched: rc=0 records=38 111ms
+--- stderr ---
+[rss] decrypt emitted 38
+[sched] decrypt run rc=0 records=38 111ms
+--- persisted: 38 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=38
+sub_source_id: (null)=38
+
+--- row 1 ---
+  uid            decrypt|https://decrypt.co/?p=374796
+  title          Tether Reports $1.5B Q2 Profit as USDT Supply Grows, Gold Holdings Rise
+  body           The latest attestation offers a snapshot of the assets backing the world's largest stablecoin, including U.S. Treasuries, repo agreements, and more than 146 metric tons of gold.
+  summary        The latest attestation offers a snapshot of the assets backing the world's largest stablecoin, including U.S. Treasuries, repo agreements, and more than 146 metric tons of gold.
+  link           https://decrypt.co/374796/tether-reports-1-5b-q2-profit-usdt-supply-grows
+  language       en
+  published_at   Fri, 31 Jul 2026 17:10:49 +0000
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"https://decrypt.co/?p=374796"}
+
+--- row 2 ---
+  uid            decrypt|https://decrypt.co/?p=374791
+  title          Circle Lands New York Trust Charter as Stablecoin Issuer Expands Regulatory Footprint
+  body           The approval comes weeks after Circle won federal approval to establish a national trust bank, adding another license as the USDC issuer expands.
+  summary        The approval comes weeks after Circle won federal approval to establish a national trust bank, adding another license as the USDC issuer expands.
+  link           https://decrypt.co/374791/circle-new-york-trust-charter-stablecoin-issuer
+  language       en
+  published_at   Fri, 31 Jul 2026 15:32:02 +0000
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"https://decrypt.co/?p=374791"}
+
+--- row 3 ---
+  uid            decrypt|https://decrypt.co/?p=374789
+  title          US Treasury Sanctions Iranian Firms Taking Bitcoin for Hormuz Passage
+  body           OFAC sanctioned two Iranian firms including Hormuz Safe, which “accepts payment in Bitcoin and other digital assets.”
+  summary        OFAC sanctioned two Iranian firms including Hormuz Safe, which “accepts payment in Bitcoin and other digital assets.”
+  link           https://decrypt.co/374789/us-treasury-sanctions-iranian-firms-taking-bitcoin-for-hormuz-passage
+  language       en
+  published_at   Fri, 31 Jul 2026 15:05:43 +0000
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"https://decrypt.co/?p=374789"}

@@ -7,6 +7,7 @@
  * this gates on GITHUB_TOKEN / GITHUB_API_TOKEN and returns honest-empty
  * without one. Emits one item per code hit (repo + path + url) — real data
  * only, never fabricated. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/httpclient.h"
 #include "../../third_party/cJSON.h"
@@ -14,16 +15,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
-static void urlenc(const char *s, char *out, size_t cap) {
-  size_t o = 0;
-  for (const char *p = s; *p && o + 4 < cap; p++) {
-    unsigned char c = (unsigned char)*p;
-    if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') out[o++] = (char)c;
-    else o += (size_t)snprintf(out + o, cap - o, "%%%02X", c);
-  }
-  out[o] = 0;
-}
 
 static int emit_hit(intel_sink *sink, const char *entity, cJSON *item) {
   cJSON *path = cJSON_GetObjectItem(item, "path");
@@ -64,11 +55,28 @@ static int cred_run(const source_ctx *ctx, intel_sink *sink) {
   if (!entity || !*entity) return 0;
   const char *token = getenv("GITHUB_TOKEN");
   if (!token || !*token) token = getenv("GITHUB_API_TOKEN");
-  if (!token || !*token) return 0;             /* code search needs auth */
+  if (!token || !*token) {
+    /* AUDIT NOTE (slice a3): this returned a silent 0 with no log, so the
+     * source was indistinguishable from "ran and found nothing". Say it is
+     * gated so it classifies as gated rather than as a mystery empty. */
+    fprintf(stderr, "[CREDENTIAL_LEAK_SEARCH] gated (no GITHUB_TOKEN)\n");
+    return 0;                                  /* code search needs auth */
+  }
 
+  /* The entity is analyst-supplied and is wrapped in a GitHub code-search
+   * phrase literal. An entity containing a `"` closed the phrase early and the
+   * remainder became extra query operators — a different search than the one
+   * the analyst asked for, silently. Escape the quote (and the backslash that
+   * escapes it) before interpolating. */
+  char ent[256]; size_t ei = 0;
+  for (const char *p = entity; *p && ei < sizeof ent - 2; p++) {
+    if (*p == '"' || *p == '\\') ent[ei++] = '\\';
+    ent[ei++] = *p;
+  }
+  ent[ei] = 0;
   char q[512];
-  snprintf(q, sizeof q, "\"%s\" (password OR api_key OR secret OR token)", entity);
-  char enc[640]; urlenc(q, enc, sizeof enc);
+  snprintf(q, sizeof q, "\"%s\" (password OR api_key OR secret OR token)", ent);
+  char enc[640]; jo_urlencode_buf(q, enc, sizeof enc);
   char url[768];
   snprintf(url, sizeof url, "https://api.github.com/search/code?q=%s&per_page=30", enc);
 
@@ -84,7 +92,13 @@ static int cred_run(const source_ctx *ctx, intel_sink *sink) {
   int emitted = 0, n = (items && cJSON_IsArray(items)) ? cJSON_GetArraySize(items) : 0;
   for (int i = 0; i < n; i++) emitted += emit_hit(sink, entity, cJSON_GetArrayItem(items, i));
   cJSON_Delete(j);
-  return emitted;
+  /* AUDIT NOTE (slice a3): this used to `return emitted`, i.e. the ROW COUNT.
+   * core/scheduler.c:70 treats any non-zero rc as status='error' and feeds it
+   * to anomaly_detect(), so a successful run that found 7 leaked-credential
+   * hits reported rc=7 and quarantined the source; only a run that found
+   * nothing looked healthy. run() returns a STATUS. */
+  fprintf(stderr, "[CREDENTIAL_LEAK_SEARCH] emitted %d\n", emitted);
+  return 0;
 }
 
 static const source_def credential_leak_def = {

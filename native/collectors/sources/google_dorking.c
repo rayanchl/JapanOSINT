@@ -2,6 +2,7 @@
  * Port of server/src/collectors/googleDorking.js (intelEnvelope).
  * Keyed anyOf: GOOGLE_CSE_KEY(+GOOGLE_CSE_CX) | SERPAPI_KEY. No key → 0 rows.
  * uid = google-dorking|<r.link> (remote_key = link). No seed. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -16,28 +17,6 @@ static const char *DORKS[] = {
   "site:jp inurl:admin intitle:login",
   "site:ac.jp filetype:env OR filetype:sql",
 };
-
-/* encodeURIComponent. */
-static void uric(const char *s, char *out, size_t n) {
-  size_t o = 0;
-  for (; *s && o + 4 < n; s++) {
-    unsigned char c = (unsigned char)*s;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' ||
-        c == '!' || c == '~' || c == '*' || c == '\'' || c == '(' || c == ')') {
-      out[o++] = (char)c;
-    } else {
-      snprintf(out + o, n - o, "%%%02X", c);
-      o += 3;
-    }
-  }
-  out[o] = '\0';
-}
-
-static const char *sv(cJSON *o, const char *k) {
-  cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *cseKey = getenv("GOOGLE_CSE_KEY");
@@ -55,7 +34,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   for (size_t di = 0; di < nd; di++) {
     const char *q = DORKS[di];
     char qenc[512];
-    uric(q, qenc, sizeof qenc);
+    jo_uri_encode_buf(q, qenc, sizeof qenc);
     char url[1024];
     if (hasCse)
       snprintf(url, sizeof url,
@@ -73,9 +52,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (cJSON_IsArray(list)) {
       cJSON *r;
       cJSON_ArrayForEach(r, list) {
-        const char *link = sv(r, "link");
-        const char *title = sv(r, "title");
-        const char *snippet = sv(r, "snippet");
+        const char *link = jo_sv(r, "link");
+        const char *title = jo_sv(r, "title");
+        const char *snippet = jo_sv(r, "snippet");
         if (!link) continue;            /* uid keyed on link */
 
         cJSON *tags = cJSON_CreateArray();
@@ -90,7 +69,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON *p = cJSON_CreateObject();           /* EXACT JS key order */
         cJSON_AddStringToObject(p, "dork", q);
         if (hasCse) {
-          const char *dl = sv(r, "displayLink");
+          const char *dl = jo_sv(r, "displayLink");
           cJSON_AddItemToObject(p, "display_link",
             dl ? cJSON_CreateString(dl) : cJSON_CreateNull());
           cJSON_AddStringToObject(p, "source", "google_cse_api");
@@ -103,9 +82,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         }
         char *pj = cJSON_PrintUnformatted(p);
 
-        const char *author = hasCse ? sv(r, "displayLink")
-                                    : sv(r, "displayed_link");
-        const char *pub = hasCse ? NULL : sv(r, "date");
+        const char *author = hasCse ? jo_sv(r, "displayLink")
+                                    : jo_sv(r, "displayed_link");
+        const char *pub = hasCse ? NULL : jo_sv(r, "date");
 
         intel_item it = {0};
         it.remote_key     = link;

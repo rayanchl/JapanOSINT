@@ -1,0 +1,42 @@
+=== WIKIDATA_ENTITY_SEARCH  entity=Tokyo
+exit: 0
+sched: rc=0 records=20 313ms
+--- stderr ---
+[WIKIDATA_ENTITY_SEARCH] emitted 20
+[sched] WIKIDATA_ENTITY_SEARCH run rc=0 records=20 313ms
+--- persisted: 20 rows, 0 with lat/lon, 0 with geometry ---
+record_type: wikidata-entity=20
+sub_source_id: (null)=20
+
+--- row 1 ---
+  uid            WIKIDATA_ENTITY_SEARCH|Q1490
+  title          Tokyo
+  body           {"label":"Tokyo","description":"capital and largest city of Japan","qid":"Q1490","source":"Wikidata"}
+  summary        capital and largest city of Japan
+  link           https://www.wikidata.org/wiki/Q1490
+  language       en
+  record_type    wikidata-entity
+  tags           ["osint-search","WIKIDATA_ENTITY_SEARCH"]
+  properties     {"qid":"Q1490","service":"WIKIDATA_ENTITY_SEARCH","success":true}
+
+--- row 2 ---
+  uid            WIKIDATA_ENTITY_SEARCH|Q7473516
+  title          Tokyo
+  body           {"label":"Tokyo","description":"special wards in the eastern part of Tokyo Metropolis in Japan, that used to form a single city","qid":"Q7473516","source":"Wikidata"}
+  summary        special wards in the eastern part of Tokyo Metropolis in Japan, that used to form a single city
+  link           https://www.wikidata.org/wiki/Q7473516
+  language       en
+  record_type    wikidata-entity
+  tags           ["osint-search","WIKIDATA_ENTITY_SEARCH"]
+  properties     {"qid":"Q7473516","service":"WIKIDATA_ENTITY_SEARCH","success":true}
+
+--- row 3 ---
+  uid            WIKIDATA_ENTITY_SEARCH|Q41187
+  title          Sony Group
+  body           {"label":"Sony Group","description":"Japanese multinational conglomerate corporation","qid":"Q41187","source":"Wikidata"}
+  summary        Japanese multinational conglomerate corporation
+  link           https://www.wikidata.org/wiki/Q41187
+  language       en
+  record_type    wikidata-entity
+  tags           ["osint-search","WIKIDATA_ENTITY_SEARCH"]
+  properties     {"qid":"Q41187","service":"WIKIDATA_ENTITY_SEARCH","success":true}

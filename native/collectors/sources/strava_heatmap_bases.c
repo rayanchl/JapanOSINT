@@ -97,15 +97,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     http_response_free(&resp);
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(b->lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(b->lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(b->lon, b->lat);
 
     cJSON *p = cJSON_CreateObject();          /* EXACT JS key order */
     char sl[96]; slug(b->name, sl, sizeof sl);

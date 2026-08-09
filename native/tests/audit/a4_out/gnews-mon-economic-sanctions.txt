@@ -1,0 +1,45 @@
+=== gnews-mon-economic-sanctions
+exit: 0
+sched: rc=0 records=100 814ms
+--- stderr ---
+[rss] gnews-mon-economic-sanctions emitted 100
+[sched] gnews-mon-economic-sanctions run rc=0 records=100 814ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-economic-sanctions|CBMiekFVX3lxTE5xbnVYQ25VOU5kWXhoSlF5VTFjcEJrT0xEcFI5cHpPSUxqOG5WMnNpOGJ0NmR0cGgzM2lEbHBGcTZhNWdlQWF6bUFxcTBRazA5cElMVFVfZzY4Yk55LTdFdF9MZ1lxYlVxeW02VDJzSThyTUJ6Y091RV9B0gF_QVVfeXFMUFYxaW93MVVqcHhJVTVRSWxwaU9ickpzalAtWVJhWW9iQklwa2J6S1RSYjgxcTJBZklDOG5PQi1WS2tzbW1UR2Z6Z25kSlh6MVRfeFJpQjY0LWN0dDRid1FiYzZFZ0FaN1VJeFdKc2stSW5BRnlfWE5XNG5RdjdsSQ
+  title          Trump says sanctions bill should include tariffs on Iran, despite 'trivial' trade with U.S. - CNBC
+  body           <a href="https://news.google.com/rss/articles/CBMiekFVX3lxTE5xbnVYQ25VOU5kWXhoSlF5VTFjcEJrT0xEcFI5cHpPSUxqOG5WMnNpOGJ0NmR0cGgzM2lEbHBGcTZhNWdlQWF6bUFxcTBRazA5cElMVFVfZzY4Yk55LTdFdF9MZ1lxYlVxeW02VDJzSThyTUJ6Y091RV9B0gF_QVVfeXFMUFYxaW93MVVqcHhJVTVRSWxwaU9ickpzalAtWVJhWW9iQklwa2J6S1RSYjgxcTJBZklDOG5PQi1WS2tzbW1UR2Z6Z25kSlh6MVRfeFJpQjY0LWN0dDRid1FiYzZFZ0FaN1VJeFdKc2stSW5BRnlfWE5XNG5RdjdsSQ?oc=5" target="_blank">Trump says sanctions bill should include tariffs on Iran, despite 'trivial' trade with U.S.</a>&nbsp;&nbsp;<font color="#6f6f6f">CNBC</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiekFVX3lxTE5xbnVYQ25VOU5kWXhoSlF5VTFjcEJrT0xEcFI5cHpPSUxqOG5WMnNpOGJ0NmR0cGgzM2lEbHBGcTZhNWdlQWF6bUFxcTBRazA5cElMVFVfZzY4Yk55LTdFdF9MZ1lxYlVxeW02VDJzSThyTUJ6Y091RV9B0gF_QVVfeXFMUFYxaW93MVVqcH
+  link           https://news.google.com/rss/articles/CBMiekFVX3lxTE5xbnVYQ25VOU5kWXhoSlF5VTFjcEJrT0xEcFI5cHpPSUxqOG5WMnNpOGJ0NmR0cGgzM2lEbHBGcTZhNWdlQWF6bUFxcTBRazA5cElMVFVfZzY4Yk55LTdFdF9MZ1lxYlVxeW02VDJzSThyTUJ6Y091RV9B0gF_QVVfeXFMUFYxaW93MVVqcHhJVTVRSWxwaU9ickpzalAtWVJhWW9iQklwa2J6S1RSYjgxcTJBZklDOG5PQi1WS2tzbW1UR2Z6Z25kSlh6MVRfeFJpQjY0LWN0dDRid1FiYzZFZ0FaN1VJeFdKc2stSW5BRnlfWE5XNG5RdjdsSQ?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 19:21:01 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","economic"]
+  properties     {"guid":"CBMiekFVX3lxTE5xbnVYQ25VOU5kWXhoSlF5VTFjcEJrT0xEcFI5cHpPSUxqOG5WMnNpOGJ0NmR0cGgzM2lEbHBGcTZhNWdlQWF6bUFxcTBRazA5cElMVFVfZzY4Yk55LTdFdF9MZ1lxYlVxeW02VDJzSThyTUJ6Y091RV9B0gF_QVVfeXFMUFYxaW93MVVqcHhJVTVRSWxwaU9ickpzalAtWVJhWW9iQklwa2J6S1RSYjgxcTJBZklDOG5PQi1WS2tzbW1UR2Z6Z25kSlh6MVRfeFJpQjY0LWN0dDRid1FiYzZFZ0FaN1VJeFdKc2stSW5BRnlfWE5XNG5RdjdsSQ"}
+
+--- row 2 ---
+  uid            gnews-mon-economic-sanctions|CBMisAFBVV95cUxOYzBsRVZmbUFxSlFpNGRzTDlDcURLMlFKdnlncVpvYUhBbGl6YjFCNGhiMVNLczRHOXRMeWVMWF9wb1kxNnFJR09XMVhDc20xRGZKZWh6VG1iNDVUOGk4dWRWek5sS242VzFVN3Y3cnZTaFFyWlNwMUNOLXEzeWxuTnY1SUV6ZmVCX3dQaGxzcmFGRUR4ZkJOMkgtNVVISDBJY3pGaERRRzFsckRKZFpFWNIBtgFBVV95cUxNdTBIX2lPUnhiTEllWWE4V1hHaXhSaVJiMXVyaTd4YUFNeFIxWnFRbFlxYzdSSFk1d1UxMjRqRlVGcFIta1BtQUN5NXlKQW13V3ZjbHlBMEJTaVpjTDgtZ2VuT2xVYTExenRhNjY2eEJRT2tleWZBLXphSDQyZmRuNlBKOXpjYmxIcG9ZWUpoN1VhNzBVdE1NQVJxSWVWQ0N6cWVpTnRqNEh1S0hWSDdQbT
+  title          How US Senate Russia sanctions could spell 100% tariffs for India, China - Al Jazeera
+  body           <a href="https://news.google.com/rss/articles/CBMisAFBVV95cUxOYzBsRVZmbUFxSlFpNGRzTDlDcURLMlFKdnlncVpvYUhBbGl6YjFCNGhiMVNLczRHOXRMeWVMWF9wb1kxNnFJR09XMVhDc20xRGZKZWh6VG1iNDVUOGk4dWRWek5sS242VzFVN3Y3cnZTaFFyWlNwMUNOLXEzeWxuTnY1SUV6ZmVCX3dQaGxzcmFGRUR4ZkJOMkgtNVVISDBJY3pGaERRRzFsckRKZFpFWNIBtgFBVV95cUxNdTBIX2lPUnhiTEllWWE4V1hHaXhSaVJiMXVyaTd4YUFNeFIxWnFRbFlxYzdSSFk1d1UxMjRqRlVGcFIta1BtQUN5NXlKQW13V3ZjbHlBMEJTaVpjTDgtZ2VuT2xVYTExenRhNjY2eEJRT2tleWZBLXphSDQyZmRuNlBKOXpjYmxIcG9ZWUpoN1VhNzBVdE1NQVJxSWVWQ0N6cWVpTnRqNEh1S0hWSDdQbTd4a3dJdw?oc=5" target="_blank">How US Senate Russia sanctions could spell 100% tariffs for India, China</a>&nbsp;&nbsp;<font color="#6f6f6f">Al Jazeera</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMisAFBVV95cUxOYzBsRVZmbUFxSlFpNGRzTDlDcURLMlFKdnlncVpvYUhBbGl6YjFCNGhiMVNLczRHOXRMeWVMWF9wb1kxNnFJR09XMVhDc20xRGZKZWh6VG1iNDVUOGk4dWRWek5sS242VzFVN3Y3cnZTaFFyWlNwMUNOLXEzeWxuTnY1SUV6ZmVCX3dQaG
+  link           https://news.google.com/rss/articles/CBMisAFBVV95cUxOYzBsRVZmbUFxSlFpNGRzTDlDcURLMlFKdnlncVpvYUhBbGl6YjFCNGhiMVNLczRHOXRMeWVMWF9wb1kxNnFJR09XMVhDc20xRGZKZWh6VG1iNDVUOGk4dWRWek5sS242VzFVN3Y3cnZTaFFyWlNwMUNOLXEzeWxuTnY1SUV6ZmVCX3dQaGxzcmFGRUR4ZkJOMkgtNVVISDBJY3pGaERRRzFsckRKZFpFWNIBtgFBVV95cUxNdTBIX2lPUnhiTEllWWE4V1hHaXhSaVJiMXVyaTd4YUFNeFIxWnFRbFlxYzdSSFk1d1UxMjRqRlVGcFIta1BtQUN5NXlKQW13V3ZjbHlBMEJTaVpjTDgtZ2VuT2xVYTExenRhNjY2eEJRT2tleWZBLXphSDQyZmRuNlBKOXpjYmxIcG9ZWUpoN1VhNzBVdE1NQVJxSWVWQ0N6cWVpTnRqNEh1S0hWSDdQbTd4a3dJdw?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 06:31:38 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","economic"]
+  properties     {"guid":"CBMisAFBVV95cUxOYzBsRVZmbUFxSlFpNGRzTDlDcURLMlFKdnlncVpvYUhBbGl6YjFCNGhiMVNLczRHOXRMeWVMWF9wb1kxNnFJR09XMVhDc20xRGZKZWh6VG1iNDVUOGk4dWRWek5sS242VzFVN3Y3cnZTaFFyWlNwMUNOLXEzeWxuTnY1SUV6ZmVCX3dQaGxzcmFGRUR4ZkJOMkgtNVVISDBJY3pGaERRRzFsckRKZFpFWNIBtgFBVV95cUxNdTBIX2lPUnhiTEllWWE4V1hHaXhSaVJiMXVyaTd4YUFNeFIxWnFRbFlxYzdSSFk1d1UxMjRqRlVGcFIta1BtQUN5NXlKQW13V3ZjbHlBMEJTaVpjTDgtZ2VuT2xVYTExenRhNjY2eEJRT2tleWZBLXphSDQyZmRuNlBKOXpjYmxIcG9ZWUpoN1VhNzBVdE1NQVJxSWVWQ0N6cWVpTnRqNEh1S0hWSDdQbTd4a3dJdw"}
+
+--- row 3 ---
+  uid            gnews-mon-economic-sanctions|CBMigAFBVV95cUxPamp6c0Mzal9zbUVkZDVneDJNVTJsYVZvRWNuYjZpTmI2RHROZ3ZZaWFmSjNLZXZ4ZzJVWU1sZzlrYzFhbFJaVW5sdEF6S0prMnNraG9XMy1BUHF6c3FYRVBKaV91cjBFUVdIb2xxcVhabzFmUVNLY3kybFRIRk9UQw
+  title          Sanctions Bill Would Give Trump Sweeping New Tariff Powers - The New York Times
+  body           <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxPamp6c0Mzal9zbUVkZDVneDJNVTJsYVZvRWNuYjZpTmI2RHROZ3ZZaWFmSjNLZXZ4ZzJVWU1sZzlrYzFhbFJaVW5sdEF6S0prMnNraG9XMy1BUHF6c3FYRVBKaV91cjBFUVdIb2xxcVhabzFmUVNLY3kybFRIRk9UQw?oc=5" target="_blank">Sanctions Bill Would Give Trump Sweeping New Tariff Powers</a>&nbsp;&nbsp;<font color="#6f6f6f">The New York Times</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxPamp6c0Mzal9zbUVkZDVneDJNVTJsYVZvRWNuYjZpTmI2RHROZ3ZZaWFmSjNLZXZ4ZzJVWU1sZzlrYzFhbFJaVW5sdEF6S0prMnNraG9XMy1BUHF6c3FYRVBKaV91cjBFUVdIb2xxcVhabzFmUVNLY3kybFRIRk9UQw?oc=5" target="_
+  link           https://news.google.com/rss/articles/CBMigAFBVV95cUxPamp6c0Mzal9zbUVkZDVneDJNVTJsYVZvRWNuYjZpTmI2RHROZ3ZZaWFmSjNLZXZ4ZzJVWU1sZzlrYzFhbFJaVW5sdEF6S0prMnNraG9XMy1BUHF6c3FYRVBKaV91cjBFUVdIb2xxcVhabzFmUVNLY3kybFRIRk9UQw?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 16:18:48 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","economic"]
+  properties     {"guid":"CBMigAFBVV95cUxPamp6c0Mzal9zbUVkZDVneDJNVTJsYVZvRWNuYjZpTmI2RHROZ3ZZaWFmSjNLZXZ4ZzJVWU1sZzlrYzFhbFJaVW5sdEF6S0prMnNraG9XMy1BUHF6c3FYRVBKaV91cjBFUVdIb2xxcVhabzFmUVNLY3kybFRIRk9UQw"}

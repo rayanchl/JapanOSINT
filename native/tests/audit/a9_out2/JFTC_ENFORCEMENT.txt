@@ -1,0 +1,7 @@
+=== JFTC_ENFORCEMENT  entity=東京
+exit: 0
+sched: rc=0 records=0 2361ms
+--- stderr ---
+[JFTC_ENFORCEMENT] emitted 0
+[sched] JFTC_ENFORCEMENT run rc=0 records=0 2361ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

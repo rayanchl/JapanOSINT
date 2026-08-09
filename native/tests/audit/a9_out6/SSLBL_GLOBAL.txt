@@ -1,0 +1,39 @@
+=== SSLBL_GLOBAL
+exit: 0
+sched: rc=0 records=200 196ms
+--- stderr ---
+[SSLBL_GLOBAL] emitted 200
+[sched] SSLBL_GLOBAL run rc=0 records=200 196ms
+--- persisted: 27 rows, 0 with lat/lon, 0 with geometry ---
+record_type: malicious-ssl-cert=27
+sub_source_id: (null)=27
+
+--- row 1 ---
+  uid            SSLBL_GLOBAL|SSLBL_GLOBAL|2026-07-30
+  title          2026-07-30
+  summary        2026-07-30 16:34:07,1727143583fd38bc4b6b5986f5c7b2c919f885af,KongTuke C&C
+  link           https://sslbl.abuse.ch/blacklist/sslblacklist.csv
+  language       en
+  record_type    malicious-ssl-cert
+  tags           ["threat-intel","ssl-blacklist","sslbl"]
+  properties     {"service":"SSLBL_GLOBAL","feed":"SSLBL_GLOBAL","success":true}
+
+--- row 2 ---
+  uid            SSLBL_GLOBAL|SSLBL_GLOBAL|2026-07-29
+  title          2026-07-29
+  summary        2026-07-29 07:48:05,e15c7bdeb747a9fff47c514a10229a2a59d1157d,AnimateClipper C&C
+  link           https://sslbl.abuse.ch/blacklist/sslblacklist.csv
+  language       en
+  record_type    malicious-ssl-cert
+  tags           ["threat-intel","ssl-blacklist","sslbl"]
+  properties     {"service":"SSLBL_GLOBAL","feed":"SSLBL_GLOBAL","success":true}
+
+--- row 3 ---
+  uid            SSLBL_GLOBAL|SSLBL_GLOBAL|2026-07-27
+  title          2026-07-27
+  summary        2026-07-27 07:00:32,e6cc4eebe2d73c7174be4be73bc00d4642122ac4,ACRStealer C&C
+  link           https://sslbl.abuse.ch/blacklist/sslblacklist.csv
+  language       en
+  record_type    malicious-ssl-cert
+  tags           ["threat-intel","ssl-blacklist","sslbl"]
+  properties     {"service":"SSLBL_GLOBAL","feed":"SSLBL_GLOBAL","success":true}

@@ -21,17 +21,51 @@ static long count1(sqlite3 *h, const char *sql) {
   sqlite3_finalize(s);
   return n;
 }
+static long count1_t(sqlite3 *h, const char *sql, const char *tenant) {
+  sqlite3_stmt *s; long n = 0;
+  if (sqlite3_prepare_v2(h, sql, -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, tenant ? tenant : "", -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(s) == SQLITE_ROW) n = sqlite3_column_int64(s, 0);
+  }
+  sqlite3_finalize(s);
+  return n;
+}
 
-char *entityapi_stats(db_handle *db) {
+/* ── tenant scoping ────────────────────────────────────────────────────────
+ * This file previously had no tenant predicate at all: the only `tenant`
+ * reference selected the column without ever filtering on it, and httpd.c
+ * reached these routes without resolving a tenant. Siblings (casesapi.c,
+ * aoiapi.c, exportapi.c) all filter; this is that same predicate.
+ *
+ * entities.tenant_id is NULLABLE and NULL for the shared, pre-tenancy graph,
+ * so the predicate is exportapi.c's exact shape — "the shared graph, plus
+ * anything privately mine" — not a bare equality, which would blank every
+ * existing deployment's entity screens. intel_items.tenant_id is instead NOT
+ * NULL DEFAULT 'legacy', so its counterpart admits 'legacy'.
+ *
+ * entity_mentions / entity_relationships / entity_extraction_state carry no
+ * tenant column. They hang off `entities`, and every entry point below
+ * resolves an entity FIRST, so a caller can only ever walk edges from a node
+ * they are allowed to see. Their corpus-wide counters in stats() stay
+ * corpus-wide, and are labelled as such rather than being filtered by a
+ * column that does not exist. */
+
+char *entityapi_stats(db_handle *db, const char *tenant) {
   cJSON *o = cJSON_CreateObject();
   cJSON_AddNumberToObject(o, "intel_items",
-    (double)count1(db->h, "SELECT COUNT(*) FROM intel_items"));
+    (double)count1_t(db->h, "SELECT COUNT(*) FROM intel_items "
+                            "WHERE tenant_id='legacy' OR tenant_id=?1", tenant));
+  /* Extraction-pipeline health is a platform-wide property of the corpus, not
+   * a per-tenant number; there is no tenant column to filter it by and
+   * inventing one here would report a plausible-looking wrong figure. */
   cJSON_AddNumberToObject(o, "extracted", (double)count1(db->h,
     "SELECT COUNT(*) FROM entity_extraction_state WHERE extracted_at != ''"));
   cJSON_AddNumberToObject(o, "failed", (double)count1(db->h,
     "SELECT COUNT(*) FROM entity_extraction_state WHERE failed_count >= 5"));
   cJSON_AddNumberToObject(o, "entities",
-    (double)count1(db->h, "SELECT COUNT(*) FROM entities"));
+    (double)count1_t(db->h, "SELECT COUNT(*) FROM entities WHERE"
+                            " (entities.tenant_id IS NULL OR entities.tenant_id = ?1)",
+                     tenant));
   cJSON_AddNumberToObject(o, "mentions",
     (double)count1(db->h, "SELECT COUNT(*) FROM entity_mentions"));
   cJSON_AddNumberToObject(o, "relationships",
@@ -44,10 +78,27 @@ char *entityapi_stats(db_handle *db) {
 /* searchEntities({q,type,limit}) — entityMirror.search: pre-segment q like
  * the write path (fts_segment == jpTokenizer.segmentForFts), MATCH joined
  * back to `entities` via entities_fts.uid, mention_count DESC. */
-char *entityapi_search(db_handle *db, const char *q, const char *type, int limit) {
+char *entityapi_search(db_handle *db, const char *q, const char *type, int limit,
+                       const char *tenant) {
   cJSON *results = cJSON_CreateArray();
-  /* q already trimmed/non-empty by caller */
-  char *segq = fts_segment(q);                 /* malloc'd; passthrough-safe */
+  /* q already trimmed/non-empty by caller.
+   *
+   * fts_query_expr(), not fts_segment(): this is typed end-user input and
+   * fts_segment is a TOKENIZER, so its Latin output went to the FTS5
+   * expression parser verbatim. Verified against FTS5: `cam-tabi` steps with
+   * "no such column: tabi", a lone `"` with "unterminated string" and `tok(yo`
+   * with a syntax error — each of which this loop reads as zero rows, so the
+   * caller got a cheerful empty result set for an ordinary hyphenated query.
+   * intelapi.c and exportapi.c were converted to fts_query_expr for exactly
+   * this; entity search is the sibling that was left behind. NULL means "no
+   * usable token", which is the same {"results":[]} the caller already emits
+   * for an empty q. */
+  char *segq = fts_query_expr(q);              /* malloc'd, or NULL */
+  if (!segq) {
+    char *empty = cJSON_PrintUnformatted(results);
+    cJSON_Delete(results);
+    return empty;
+  }
   int lim = limit > 0 ? limit : 30;
   if (lim > 100) lim = 100;
 
@@ -55,10 +106,12 @@ char *entityapi_search(db_handle *db, const char *q, const char *type, int limit
     ? "SELECT entities.*, snippet(entities_fts,-1,'<mark>','</mark>','…',12) "
       "FROM entities_fts JOIN entities ON entities.entity_id=entities_fts.uid "
       "WHERE entities_fts MATCH ?1 AND entities.type=?2 "
+      "AND (entities.tenant_id IS NULL OR entities.tenant_id=?4) "
       "ORDER BY entities.mention_count DESC LIMIT ?3"
     : "SELECT entities.*, snippet(entities_fts,-1,'<mark>','</mark>','…',12) "
       "FROM entities_fts JOIN entities ON entities.entity_id=entities_fts.uid "
       "WHERE entities_fts MATCH ?1 "
+      "AND (entities.tenant_id IS NULL OR entities.tenant_id=?3) "
       "ORDER BY entities.mention_count DESC LIMIT ?2";
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) {
@@ -71,8 +124,10 @@ char *entityapi_search(db_handle *db, const char *q, const char *type, int limit
     for (char *p = tl; *p; p++) if (*p >= 'A' && *p <= 'Z') *p += 32;
     sqlite3_bind_text(s, 2, tl, -1, SQLITE_TRANSIENT);
     sqlite3_bind_int(s, 3, lim);
+    sqlite3_bind_text(s, 4, tenant ? tenant : "", -1, SQLITE_TRANSIENT);
   } else {
     sqlite3_bind_int(s, 2, lim);
+    sqlite3_bind_text(s, 3, tenant ? tenant : "", -1, SQLITE_TRANSIENT);
   }
   /* entities.* column order = entities table DDL; _excerpt is the last col */
   int rc;
@@ -100,15 +155,20 @@ char *entityapi_search(db_handle *db, const char *q, const char *type, int limit
   return js;
 }
 
-/* getEntity(id) → row, with the entities.js type-guard. Caller frees ret. */
-static sqlite3_stmt *entity_by_id(db_handle *db, const char *id) {
+/* getEntity(id) → row, with the entities.js type-guard. Caller frees ret.
+ * Every /api/entities/:type/:id route enters through here, so this is the one
+ * place the tenant predicate has to hold for the whole subtree. */
+static sqlite3_stmt *entity_by_id(db_handle *db, const char *id,
+                                  const char *tenant) {
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT entity_id,type,canonical,norm_key,name_ja,name_romaji,"
         "aliases_json,properties,mention_count,first_seen_at,last_seen_at,"
-        "tenant_id FROM entities WHERE entity_id=?1", -1, &s, NULL) != SQLITE_OK)
+        "tenant_id FROM entities WHERE entity_id=?1 "
+        "AND (tenant_id IS NULL OR tenant_id=?2)", -1, &s, NULL) != SQLITE_OK)
     return NULL;
   sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 2, tenant ? tenant : "", -1, SQLITE_TRANSIENT);
   if (sqlite3_step(s) != SQLITE_ROW) { sqlite3_finalize(s); return NULL; }
   return s;                                      /* positioned on the row */
 }
@@ -183,8 +243,8 @@ static cJSON *exposure_summary(db_handle *db, const char *entity_id) {
 /* GET /api/entities/:type/:id/breaches — the breaches this entity appears in.
  * NULL if the entity is missing or the type does not match (caller → 404). */
 char *entityapi_breaches(db_handle *db, const char *type, const char *id,
-                         int limit, int offset) {
-  sqlite3_stmt *chk = entity_by_id(db, id);
+                         int limit, int offset, const char *tenant) {
+  sqlite3_stmt *chk = entity_by_id(db, id, tenant);
   if (!chk) return NULL;
   const char *etype = (const char *)sqlite3_column_text(chk, 1);
   if (!etype || strcmp(etype, type) != 0) { sqlite3_finalize(chk); return NULL; }
@@ -246,8 +306,9 @@ char *entityapi_breaches(db_handle *db, const char *type, const char *id,
   return js;
 }
 
-char *entityapi_get(db_handle *db, const char *type, const char *id) {
-  sqlite3_stmt *s = entity_by_id(db, id);
+char *entityapi_get(db_handle *db, const char *type, const char *id,
+                    const char *tenant) {
+  sqlite3_stmt *s = entity_by_id(db, id, tenant);
   if (!s) return NULL;
   const char *etype = (const char *)sqlite3_column_text(s, 1);
   if (!etype || strcmp(etype, type) != 0) { sqlite3_finalize(s); return NULL; }
@@ -285,12 +346,15 @@ static int gn_find(gnode *v, int n, const char *id) {
   return -1;
 }
 /* fetch a node's display fields; returns 0 if entity_id absent */
-static int fetch_node(db_handle *db, const char *id, gnode *out) {
+static int fetch_node(db_handle *db, const char *id, const char *tenant,
+                      gnode *out) {
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT entity_id,type,canonical,mention_count FROM entities "
-        "WHERE entity_id=?1", -1, &s, NULL) != SQLITE_OK) return 0;
+        "WHERE entity_id=?1 AND (tenant_id IS NULL OR tenant_id=?2)",
+        -1, &s, NULL) != SQLITE_OK) return 0;
   sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 2, tenant ? tenant : "", -1, SQLITE_TRANSIENT);
   int ok = 0;
   if (sqlite3_step(s) == SQLITE_ROW) {
     out->id    = strdup((const char *)sqlite3_column_text(s, 0));
@@ -340,8 +404,9 @@ static long entity_degree(db_handle *db, const char *eid) {
 }
 
 char *entityapi_graph(db_handle *db, const char *type, const char *id, int depth,
-                      const char *rel_types, int exclude_hubs, int max_nodes) {
-  sqlite3_stmt *r = entity_by_id(db, id);
+                      const char *rel_types, int exclude_hubs, int max_nodes,
+                      const char *tenant) {
+  sqlite3_stmt *r = entity_by_id(db, id, tenant);
   if (!r) return NULL;
   const char *etype = (const char *)sqlite3_column_text(r, 1);
   if (!etype || strcmp(etype, type) != 0) { sqlite3_finalize(r); return NULL; }
@@ -365,7 +430,7 @@ char *entityapi_graph(db_handle *db, const char *type, const char *id, int depth
     (arr)[(cnt)++] = (val); } while (0)
 
   gnode root;
-  if (fetch_node(db, id, &root)) {
+  if (fetch_node(db, id, tenant, &root)) {
     if (nn == ncap) { ncap = 16; nodes = realloc(nodes, ncap*sizeof *nodes); }
     nodes[nn++] = root;
   }
@@ -391,6 +456,15 @@ char *entityapi_graph(db_handle *db, const char *type, const char *id, int depth
         double w = sqlite3_column_double(s, 3);
         const char *other = strcmp(a, cur) == 0 ? b : a;
         if (!rel_allowed(rel_types, rt)) continue;
+        /* entity_relationships carries no tenant column, so visibility of the
+         * far endpoint is what bounds the walk. Skipping the EDGE too, not
+         * just the node, matters: an edge whose target is invisible would
+         * still disclose that entity's id to the canvas. */
+        { gnode probe;
+          if (gn_find(nodes, nn, other) < 0) {
+            if (!fetch_node(db, other, tenant, &probe)) continue;
+            free(probe.id); free(probe.type); free(probe.canon);
+          } }
 
         char key[600];
         snprintf(key, sizeof key, "%s|%s|%s", a, b, rt);
@@ -410,7 +484,7 @@ char *entityapi_graph(db_handle *db, const char *type, const char *id, int depth
             dropped_cap++;              /* counted, never silently discarded */
           } else {
             gnode g;
-            if (fetch_node(db, other, &g)) {
+            if (fetch_node(db, other, tenant, &g)) {
               if (nn == ncap) { ncap = ncap ? ncap*2 : 16;
                 nodes = realloc(nodes, ncap*sizeof *nodes); }
               nodes[nn++] = g;
@@ -475,8 +549,8 @@ char *entityapi_graph(db_handle *db, const char *type, const char *id, int depth
 }
 
 char *entityapi_mentions(db_handle *db, const char *type, const char *id,
-                         int limit, int offset) {
-  sqlite3_stmt *r = entity_by_id(db, id);
+                         int limit, int offset, const char *tenant) {
+  sqlite3_stmt *r = entity_by_id(db, id, tenant);
   if (!r) return NULL;
   const char *etype = (const char *)sqlite3_column_text(r, 1);
   if (!etype || strcmp(etype, type) != 0) { sqlite3_finalize(r); return NULL; }
@@ -486,17 +560,33 @@ char *entityapi_mentions(db_handle *db, const char *type, const char *id,
   if (lim > 200) lim = 200;
   if (offset < 0) offset = 0;
 
+  /* The joined side needs its OWN predicate. "resolve the entity first" bounds
+   * which NODE you may walk from, and that is enough for the graph — but this
+   * query returns intel_items columns, and intel_items IS tenant-owned. Almost
+   * every entity is shared (tenant_id NULL, visible to everyone), so without
+   * this a member of tenant B reading the mentions of a shared node received
+   * the titles, summaries and links of tenant A's private items that happen to
+   * mention it. Predicate is intel_items' own form — NOT NULL DEFAULT 'legacy',
+   * so the shared corpus is the literal 'legacy' (exportapi.c:461,
+   * nearapi.c:158) — not the nullable-column form used for `entities`.
+   *
+   * `i.uid IS NULL` is kept deliberately: the join is a LEFT JOIN because a
+   * mention can point at a synthetic uid with no intel_items row (breach
+   * records), and those rows carry no tenant-owned content to leak. */
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT m.item_uid,m.source_id,m.surface,m.field,m.confidence,"
         "m.extractor,m.created_at,i.title,i.summary,i.link,i.published_at,"
         "i.record_type FROM entity_mentions m "
         "LEFT JOIN intel_items i ON i.uid=m.item_uid "
-        "WHERE m.entity_id=?1 ORDER BY m.created_at DESC LIMIT ?2 OFFSET ?3",
+        "WHERE m.entity_id=?1 "
+        "AND (i.uid IS NULL OR i.tenant_id='legacy' OR i.tenant_id=?4) "
+        "ORDER BY m.created_at DESC LIMIT ?2 OFFSET ?3",
         -1, &s, NULL) != SQLITE_OK) return NULL;
   sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
   sqlite3_bind_int(s, 2, lim);
   sqlite3_bind_int(s, 3, offset);
+  sqlite3_bind_text(s, 4, tenant ? tenant : "", -1, SQLITE_TRANSIENT);
 
   static const char *K[] = {"item_uid","source_id","surface","field",
     "confidence","extractor","created_at","title","summary","link",

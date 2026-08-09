@@ -112,15 +112,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (ee != elevS) hasElev = 1; /* Number.isFinite(parseFloat(...)) */
     }
 
-    cJSON *feat = cJSON_CreateObject();
-    cJSON_AddStringToObject(feat, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(feat, "geometry", g);
+    cJSON *feat = gj_point_feature(lon, lat);
 
     cJSON *p = cJSON_CreateObject(); /* EXACT JS key order */
     char idbuf[96];
@@ -148,7 +140,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[wdcgg-co2] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def wdcgg_co2_def = {

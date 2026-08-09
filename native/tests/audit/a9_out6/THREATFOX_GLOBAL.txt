@@ -1,0 +1,42 @@
+=== THREATFOX_GLOBAL
+exit: 0
+sched: rc=0 records=200 251ms
+--- stderr ---
+[THREATFOX_GLOBAL] emitted 200
+[sched] THREATFOX_GLOBAL run rc=0 records=200 251ms
+--- persisted: 200 rows, 0 with lat/lon, 0 with geometry ---
+record_type: threat-ioc=200
+sub_source_id: (null)=200
+
+--- row 1 ---
+  uid            THREATFOX_GLOBAL|threatfox|64.118.132.68:8084
+  title          64.118.132.68:8084
+  body           {"ioc":"64.118.132.68:8084","ioc_type":"ip:port","threat_type":"botnet_cc","malware":"VShell","first_seen_utc":"2026-07-31 18:05:06","feed":"ThreatFox"}
+  summary        VShell
+  language       en
+  published_at   2026-07-31 18:05:06
+  record_type    threat-ioc
+  tags           ["threat-intel","ioc","threatfox"]
+  properties     {"service":"THREATFOX_GLOBAL","feed":"THREATFOX_GLOBAL","success":true}
+
+--- row 2 ---
+  uid            THREATFOX_GLOBAL|threatfox|45.145.228.16:3232
+  title          45.145.228.16:3232
+  body           {"ioc":"45.145.228.16:3232","ioc_type":"ip:port","threat_type":"botnet_cc","malware":"Unknown malware","first_seen_utc":"2026-07-31 18:05:05","feed":"ThreatFox"}
+  summary        Unknown malware
+  language       en
+  published_at   2026-07-31 18:05:05
+  record_type    threat-ioc
+  tags           ["threat-intel","ioc","threatfox"]
+  properties     {"service":"THREATFOX_GLOBAL","feed":"THREATFOX_GLOBAL","success":true}
+
+--- row 3 ---
+  uid            THREATFOX_GLOBAL|threatfox|obparso.eventmanagementindia.com
+  title          obparso.eventmanagementindia.com
+  body           {"ioc":"obparso.eventmanagementindia.com","ioc_type":"domain","threat_type":"payload_delivery","malware":"ClearFake","first_seen_utc":"2026-07-31 17:59:07","feed":"ThreatFox"}
+  summary        ClearFake
+  language       en
+  published_at   2026-07-31 17:59:07
+  record_type    threat-ioc
+  tags           ["threat-intel","ioc","threatfox"]
+  properties     {"service":"THREATFOX_GLOBAL","feed":"THREATFOX_GLOBAL","success":true}

@@ -247,12 +247,16 @@ struct SourceDashboardTab: View {
     }
 
     private var statusChart: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        // Bound ONCE. Read twice, this full filter + Dictionary(grouping:) over
+        // ~1,700 status rows ran twice per body pass — and `search` is @State
+        // driven by `.searchable`, so that is every keystroke, on the main actor.
+        let buckets = sourcesByStatus
+        return VStack(alignment: .leading, spacing: 8) {
             Text("Status").font(.headline).foregroundStyle(theme.text)
-            if sourcesByStatus.isEmpty {
+            if buckets.isEmpty {
                 Text("No sources").font(.caption).foregroundStyle(theme.textMuted)
             } else {
-                ForEach(Array(sourcesByStatus.enumerated()), id: \.offset) { _, entry in
+                ForEach(Array(buckets.enumerated()), id: \.offset) { _, entry in
                     let (status, rows, color, icon) = entry
                     bucketRect(status: status, rows: rows, color: color, icon: icon)
                 }
@@ -321,16 +325,19 @@ struct SourceDashboardTab: View {
     }
 
     private var categoryChart: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        // Bound once — `categoryBuckets` groups every status row into collectors
+        // before sorting, and it was being read twice per body pass.
+        let buckets = categoryBuckets
+        return VStack(alignment: .leading, spacing: 6) {
             Text("Collectors by category (top 12)").font(.headline).foregroundStyle(theme.text)
-            Chart(categoryBuckets, id: \.0) { (cat, count, favs) in
+            Chart(buckets, id: \.0) { (cat, count, favs) in
                 BarMark(
                     x: .value("Count", count),
                     y: .value("Category", cat)
                 )
                 .foregroundStyle(favs > 0 ? theme.warning : theme.accent)
             }
-            .frame(height: CGFloat(max(140, categoryBuckets.count * 18)))
+            .frame(height: CGFloat(max(140, buckets.count * 18)))
         }
         .padding(12)
         .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: 12))
@@ -442,9 +449,12 @@ struct SourceDashboardTab: View {
     }
 
     private var collectorsList: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        // Bound once: `collectors` filters, groups and sorts ~1,700 rows, and
+        // the count in the header plus the ForEach made that twice per keystroke.
+        let items = collectors
+        return VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("Collectors (\(collectors.count))")
+                Text("Collectors (\(items.count))")
                     .font(.headline.monospacedDigit())
                     .foregroundStyle(theme.text)
                 Spacer()
@@ -453,7 +463,7 @@ struct SourceDashboardTab: View {
                     .foregroundStyle(theme.textMuted)
             }
             VStack(spacing: 8) {
-                ForEach(collectors) { c in
+                ForEach(items) { c in
                     CollectorRow(
                         collector: c,
                         isFavorite: favs.contains(c.id),
@@ -765,8 +775,9 @@ private struct SourceDetail: View {
                 section("Health") {
                     kv("Status",       row.status ?? "—",
                        valueColor: statusColor(row.status))
-                    kv("Last check",   prettyDate(row.lastCheck))
-                    kv("Last success", prettyDate(row.lastSuccess))
+                    if let trust = row.trust { trustRow(trust) }
+                    kv("Last check",   relativeTime(row.lastCheck))
+                    kv("Last success", relativeTime(row.lastSuccess))
                     kv("Latency",      row.responseTimeMs.map { "\(Int($0)) ms" } ?? "—")
                     kv("Records",      row.recordsCount.map(String.init) ?? "—")
                 }
@@ -841,7 +852,7 @@ private struct SourceDetail: View {
                     kv("Accounts (catalog)", (row.recordsCount ?? 0).formatted())
                     kv("Records ingested", "none yet", valueColor: theme.textMuted)
                 }
-                kv("Last seen", prettyDate(row.lastSuccess))
+                kv("Last seen", relativeTime(row.lastSuccess))
             }
             if hasRecords {
                 NavigationLink {
@@ -873,10 +884,7 @@ private struct SourceDetail: View {
                     last_fetched: row.lastSuccess,
                     last_published: row.lastSuccess,
                     ttl_ms: nil,
-                    // A breach corpus is a static dump, not a polled feed —
-                    // there is no fetch history to score, so it is correctly
-                    // unrated rather than given a fabricated grade.
-                    trust: nil)
+                    parent_id: nil)
     }
 
     private var probeActions: some View {
@@ -919,6 +927,21 @@ private struct SourceDetail: View {
             VStack(spacing: 1) { content() }
                 .clipShape(RoundedRectangle(cornerRadius: 8))
         }
+    }
+
+    /// Reliability, laid out like a `kv` row so it sits in the Health block
+    /// without breaking the rhythm. `TrustBadge` owns the hard part: a
+    /// `rated:false` source renders as a neutral "—", NEVER as a zero score —
+    /// "no evidence" and "evidence of badness" are different claims.
+    private func trustRow(_ trust: SourceTrust) -> some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text("Reliability").font(.caption.bold()).foregroundStyle(theme.textMuted)
+                .frame(width: 100, alignment: .leading)
+            TrustBadge(trust: trust, sourceName: row.name ?? row.id)
+            Spacer(minLength: 0)
+        }
+        .padding(8)
+        .background(theme.surfaceElevated)
     }
 
     private func kv(_ k: String, _ v: String, valueColor: Color? = nil) -> some View {
@@ -989,16 +1012,5 @@ private struct SourceDetail: View {
         case "offline":  return theme.danger
         default:         return theme.textMuted
         }
-    }
-
-    private func prettyDate(_ iso: String?) -> String {
-        guard let iso else { return "—" }
-        let f = ISO8601DateFormatter()
-        f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        let d = f.date(from: iso) ?? ISO8601DateFormatter().date(from: iso)
-        guard let d else { return iso }
-        let rel = RelativeDateTimeFormatter()
-        rel.unitsStyle = .abbreviated
-        return rel.localizedString(for: d, relativeTo: Date())
     }
 }

@@ -1,0 +1,45 @@
+=== gnews-mon-airspace-violation
+exit: 0
+sched: rc=0 records=100 574ms
+--- stderr ---
+[rss] gnews-mon-airspace-violation emitted 100
+[sched] gnews-mon-airspace-violation run rc=0 records=100 574ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-airspace-violation|CBMirAFBVV95cUxOb2M4QkNNTGlmSHF4R2VoTDdnbWtCd2JqMmRuRnZlMFRzbVVQYWwyYXJXZHVQbGlkVHpnX3JtYWNJZHRTS1pwSVFGWXp0RlFDRTVzQzFuU1V0Nm5zUks3ZEVCeFNwZEdzVmtNVnU0MHVoU1JPcFNOVFRCSVJYMDZtTVRudUNSWlI3WmphTVJBTDNCY002UE1QdTdhUGs1VWh3Rlp3eTJ4MFN5Z3ZV
+  title          NATO says Polish airspace violation caused by Russian missile: Report - Anadolu Ajansı
+  body           <a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxOb2M4QkNNTGlmSHF4R2VoTDdnbWtCd2JqMmRuRnZlMFRzbVVQYWwyYXJXZHVQbGlkVHpnX3JtYWNJZHRTS1pwSVFGWXp0RlFDRTVzQzFuU1V0Nm5zUks3ZEVCeFNwZEdzVmtNVnU0MHVoU1JPcFNOVFRCSVJYMDZtTVRudUNSWlI3WmphTVJBTDNCY002UE1QdTdhUGs1VWh3Rlp3eTJ4MFN5Z3ZV?oc=5" target="_blank">NATO says Polish airspace violation caused by Russian missile: Report</a>&nbsp;&nbsp;<font color="#6f6f6f">Anadolu Ajansı</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxOb2M4QkNNTGlmSHF4R2VoTDdnbWtCd2JqMmRuRnZlMFRzbVVQYWwyYXJXZHVQbGlkVHpnX3JtYWNJZHRTS1pwSVFGWXp0RlFDRTVzQzFuU1V0Nm5zUks3ZEVCeFNwZEdzVmtNVnU0MHVoU1JPcFNOVFRCSVJYMDZtTVRudUNSWlI3WmphTV
+  link           https://news.google.com/rss/articles/CBMirAFBVV95cUxOb2M4QkNNTGlmSHF4R2VoTDdnbWtCd2JqMmRuRnZlMFRzbVVQYWwyYXJXZHVQbGlkVHpnX3JtYWNJZHRTS1pwSVFGWXp0RlFDRTVzQzFuU1V0Nm5zUks3ZEVCeFNwZEdzVmtNVnU0MHVoU1JPcFNOVFRCSVJYMDZtTVRudUNSWlI3WmphTVJBTDNCY002UE1QdTdhUGs1VWh3Rlp3eTJ4MFN5Z3ZV?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 12:33:06 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","airspace"]
+  properties     {"guid":"CBMirAFBVV95cUxOb2M4QkNNTGlmSHF4R2VoTDdnbWtCd2JqMmRuRnZlMFRzbVVQYWwyYXJXZHVQbGlkVHpnX3JtYWNJZHRTS1pwSVFGWXp0RlFDRTVzQzFuU1V0Nm5zUks3ZEVCeFNwZEdzVmtNVnU0MHVoU1JPcFNOVFRCSVJYMDZtTVRudUNSWlI3WmphTVJBTDNCY002UE1QdTdhUGs1VWh3Rlp3eTJ4MFN5Z3ZV"}
+
+--- row 2 ---
+  uid            gnews-mon-airspace-violation|CBMi6AFBVV95cUxNaHhSSmxXYU1zSWkwajY0NXJXMnlidHNMd2QyT2twVV80N0psT0tCS1ZvY0tlNFFhblFXVTdDYURsZUhacFN1NmR0OC1URVN3eEJobDFFd3NwQVo3aUxpNnRJdlNNM2RUbzhzMkNzMWRVemhkemRYTHV5emdvODhySlBVRlFoQTJKRVFxTTN4SUhTVmNHUmNya2RtNHdxNU9oRXp6aHY2NDU1NDZfT18zMS1vQmxoa25XQUpTYjJndlVBOWZIaElHa1k2dDlBNm81MVAtWGI2OXRNSmM1d0dnblYxSnF6T3Jn
+  title          Poland probes 'airspace violation' after mystery 10-meter crater found as Russia pounds Ukraine - TVP World
+  body           <a href="https://news.google.com/rss/articles/CBMi6AFBVV95cUxNaHhSSmxXYU1zSWkwajY0NXJXMnlidHNMd2QyT2twVV80N0psT0tCS1ZvY0tlNFFhblFXVTdDYURsZUhacFN1NmR0OC1URVN3eEJobDFFd3NwQVo3aUxpNnRJdlNNM2RUbzhzMkNzMWRVemhkemRYTHV5emdvODhySlBVRlFoQTJKRVFxTTN4SUhTVmNHUmNya2RtNHdxNU9oRXp6aHY2NDU1NDZfT18zMS1vQmxoa25XQUpTYjJndlVBOWZIaElHa1k2dDlBNm81MVAtWGI2OXRNSmM1d0dnblYxSnF6T3Jn?oc=5" target="_blank">Poland probes 'airspace violation' after mystery 10-meter crater found as Russia pounds Ukraine</a>&nbsp;&nbsp;<font color="#6f6f6f">TVP World</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMi6AFBVV95cUxNaHhSSmxXYU1zSWkwajY0NXJXMnlidHNMd2QyT2twVV80N0psT0tCS1ZvY0tlNFFhblFXVTdDYURsZUhacFN1NmR0OC1URVN3eEJobDFFd3NwQVo3aUxpNnRJdlNNM2RUbzhzMkNzMWRVemhkemRYTHV5emdvODhySlBVRlFoQTJKRVFxTT
+  link           https://news.google.com/rss/articles/CBMi6AFBVV95cUxNaHhSSmxXYU1zSWkwajY0NXJXMnlidHNMd2QyT2twVV80N0psT0tCS1ZvY0tlNFFhblFXVTdDYURsZUhacFN1NmR0OC1URVN3eEJobDFFd3NwQVo3aUxpNnRJdlNNM2RUbzhzMkNzMWRVemhkemRYTHV5emdvODhySlBVRlFoQTJKRVFxTTN4SUhTVmNHUmNya2RtNHdxNU9oRXp6aHY2NDU1NDZfT18zMS1vQmxoa25XQUpTYjJndlVBOWZIaElHa1k2dDlBNm81MVAtWGI2OXRNSmM1d0dnblYxSnF6T3Jn?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 06:42:21 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","airspace"]
+  properties     {"guid":"CBMi6AFBVV95cUxNaHhSSmxXYU1zSWkwajY0NXJXMnlidHNMd2QyT2twVV80N0psT0tCS1ZvY0tlNFFhblFXVTdDYURsZUhacFN1NmR0OC1URVN3eEJobDFFd3NwQVo3aUxpNnRJdlNNM2RUbzhzMkNzMWRVemhkemRYTHV5emdvODhySlBVRlFoQTJKRVFxTTN4SUhTVmNHUmNya2RtNHdxNU9oRXp6aHY2NDU1NDZfT18zMS1vQmxoa25XQUpTYjJndlVBOWZIaElHa1k2dDlBNm81MVAtWGI2OXRNSmM1d0dnblYxSnF6T3Jn"}
+
+--- row 3 ---
+  uid            gnews-mon-airspace-violation|CBMiswFBVV95cUxPNVhvVHFMbW9mWmNuRy14eXFOa2s5VWJPT01ZQWdTazBxXzJzQXc3WUcyUW8yWHZIazROWE5uc1ZSYkU0c0lRdzB5QlhiNVFsZnQ5ZTdrNFRGTWVYMm41WHJ6ZndyVFZNSUM4eEhyU2NhNGoySzBVRzBnM0FRSlpJZVF2dlMwWktQczJocUZyS3phYU5RT0VJSVl2cE1EWlM3UHpaTGhOUHNZTnpJbnIyLUlzb9IBuAFBVV95cUxQOE5nT0JKdmgxeXJkQzE0MFFia2Zha25BN3RHRm93WnFKeGxHLTN3NTZMby1SakNYMVVIeHJPcno4XzZyZ3VKRHl0SGFMenNVcUpTWWNoWHRmSUZNa0VZRkJ1YkpyME8xenVJN2VUYTBPeFNLR3VhMjl1VGplWllsMDdnNVZ1RGppellicjFnZ3NYako1N0xCZTY4SEp5M01tRzNmdW5GZUdNUjFMS3
+  title          Russian missile violated NATO airspace in Poland, Kyiv says, amid deadly strikes - ABC News - Breaking News, Latest News and Videos
+  body           <a href="https://news.google.com/rss/articles/CBMiswFBVV95cUxPNVhvVHFMbW9mWmNuRy14eXFOa2s5VWJPT01ZQWdTazBxXzJzQXc3WUcyUW8yWHZIazROWE5uc1ZSYkU0c0lRdzB5QlhiNVFsZnQ5ZTdrNFRGTWVYMm41WHJ6ZndyVFZNSUM4eEhyU2NhNGoySzBVRzBnM0FRSlpJZVF2dlMwWktQczJocUZyS3phYU5RT0VJSVl2cE1EWlM3UHpaTGhOUHNZTnpJbnIyLUlzb9IBuAFBVV95cUxQOE5nT0JKdmgxeXJkQzE0MFFia2Zha25BN3RHRm93WnFKeGxHLTN3NTZMby1SakNYMVVIeHJPcno4XzZyZ3VKRHl0SGFMenNVcUpTWWNoWHRmSUZNa0VZRkJ1YkpyME8xenVJN2VUYTBPeFNLR3VhMjl1VGplWllsMDdnNVZ1RGppellicjFnZ3NYako1N0xCZTY4SEp5M01tRzNmdW5GZUdNUjFMS3BRMjRwWlc3WjRI?oc=5" target="_blank">Russian missile violated NATO airspace in Poland, Kyiv says, amid deadly strikes</a>&nbsp;&nbsp;<font color="#6f6f6f">ABC News - Breaking News, Latest News and Videos</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiswFBVV95cUxPNVhvVHFMbW9mWmNuRy14eXFOa2s5VWJPT01ZQWdTazBxXzJzQXc3WUcyUW8yWHZIazROWE5uc1ZSYkU0c0lRdzB5QlhiNVFsZnQ5ZTdrNFRGTWVYMm41WHJ6ZndyVFZNSUM4eEhyU2NhNGoySzBVRzBnM0FRSlpJZVF2dlMwWktQczJocU
+  link           https://news.google.com/rss/articles/CBMiswFBVV95cUxPNVhvVHFMbW9mWmNuRy14eXFOa2s5VWJPT01ZQWdTazBxXzJzQXc3WUcyUW8yWHZIazROWE5uc1ZSYkU0c0lRdzB5QlhiNVFsZnQ5ZTdrNFRGTWVYMm41WHJ6ZndyVFZNSUM4eEhyU2NhNGoySzBVRzBnM0FRSlpJZVF2dlMwWktQczJocUZyS3phYU5RT0VJSVl2cE1EWlM3UHpaTGhOUHNZTnpJbnIyLUlzb9IBuAFBVV95cUxQOE5nT0JKdmgxeXJkQzE0MFFia2Zha25BN3RHRm93WnFKeGxHLTN3NTZMby1SakNYMVVIeHJPcno4XzZyZ3VKRHl0SGFMenNVcUpTWWNoWHRmSUZNa0VZRkJ1YkpyME8xenVJN2VUYTBPeFNLR3VhMjl1VGplWllsMDdnNVZ1RGppellicjFnZ3NYako1N0xCZTY4SEp5M01tRzNmdW5GZUdNUjFMS3BRMjRwWlc3WjRI?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 10:16:39 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","airspace"]
+  properties     {"guid":"CBMiswFBVV95cUxPNVhvVHFMbW9mWmNuRy14eXFOa2s5VWJPT01ZQWdTazBxXzJzQXc3WUcyUW8yWHZIazROWE5uc1ZSYkU0c0lRdzB5QlhiNVFsZnQ5ZTdrNFRGTWVYMm41WHJ6ZndyVFZNSUM4eEhyU2NhNGoySzBVRzBnM0FRSlpJZVF2dlMwWktQczJocUZyS3phYU5RT0VJSVl2cE1EWlM3UHpaTGhOUHNZTnpJbnIyLUlzb9IBuAFBVV95cUxQOE5nT0JKdmgxeXJkQzE0MFFia2Zha25BN3RHRm93WnFKeGxHLTN3NTZMby1SakNYMVVIeHJPcno4XzZyZ3VKRHl0SGFMenNVcUpTWWNoWHRmSUZNa0VZRkJ1YkpyME8xenVJN2VUYTBPeFNLR3VhMjl1VGplWllsMDdnNVZ1RGppellicjFnZ3NYako1N0xCZTY4SEp5M01tRzNmdW5GZUdNUjFMS3BRMjRwWlc3WjRI"}

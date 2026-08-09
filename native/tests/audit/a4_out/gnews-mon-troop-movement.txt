@@ -1,0 +1,45 @@
+=== gnews-mon-troop-movement
+exit: 0
+sched: rc=0 records=100 762ms
+--- stderr ---
+[rss] gnews-mon-troop-movement emitted 100
+[sched] gnews-mon-troop-movement run rc=0 records=100 762ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-troop-movement|CBMiwAFBVV95cUxOa0VXdHdtVERiZFVrTmlZLW16UHV3VHBsOWc5ODlLNkFGdWd2cWxHaGp6MG02MENMRjlYQ3VsbnZlZ2pQdHA2ODNXaXE3X3E1UHVEZG5kcGVpakI2ZXQ4aHhZVlJvdXJjVlVxY0pybWFoWlYwcXV3SWZKX296S1VWZ2UwelBTZVdBd3Z1VjJRUDBnQ19oU19xNTFNZHo4TjNSU29RcnRfdmx1Y0dzMnBXQndDTWh2UXhTbTU0MTVfMDk
+  title          Flight data suggests possible US troop movement toward Middle East - Middle East Eye
+  body           <a href="https://news.google.com/rss/articles/CBMiwAFBVV95cUxOa0VXdHdtVERiZFVrTmlZLW16UHV3VHBsOWc5ODlLNkFGdWd2cWxHaGp6MG02MENMRjlYQ3VsbnZlZ2pQdHA2ODNXaXE3X3E1UHVEZG5kcGVpakI2ZXQ4aHhZVlJvdXJjVlVxY0pybWFoWlYwcXV3SWZKX296S1VWZ2UwelBTZVdBd3Z1VjJRUDBnQ19oU19xNTFNZHo4TjNSU29RcnRfdmx1Y0dzMnBXQndDTWh2UXhTbTU0MTVfMDk?oc=5" target="_blank">Flight data suggests possible US troop movement toward Middle East</a>&nbsp;&nbsp;<font color="#6f6f6f">Middle East Eye</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiwAFBVV95cUxOa0VXdHdtVERiZFVrTmlZLW16UHV3VHBsOWc5ODlLNkFGdWd2cWxHaGp6MG02MENMRjlYQ3VsbnZlZ2pQdHA2ODNXaXE3X3E1UHVEZG5kcGVpakI2ZXQ4aHhZVlJvdXJjVlVxY0pybWFoWlYwcXV3SWZKX296S1VWZ2UwelBTZVdBd3Z1Vj
+  link           https://news.google.com/rss/articles/CBMiwAFBVV95cUxOa0VXdHdtVERiZFVrTmlZLW16UHV3VHBsOWc5ODlLNkFGdWd2cWxHaGp6MG02MENMRjlYQ3VsbnZlZ2pQdHA2ODNXaXE3X3E1UHVEZG5kcGVpakI2ZXQ4aHhZVlJvdXJjVlVxY0pybWFoWlYwcXV3SWZKX296S1VWZ2UwelBTZVdBd3Z1VjJRUDBnQ19oU19xNTFNZHo4TjNSU29RcnRfdmx1Y0dzMnBXQndDTWh2UXhTbTU0MTVfMDk?oc=5
+  language       en
+  published_at   Tue, 24 Mar 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","troop"]
+  properties     {"guid":"CBMiwAFBVV95cUxOa0VXdHdtVERiZFVrTmlZLW16UHV3VHBsOWc5ODlLNkFGdWd2cWxHaGp6MG02MENMRjlYQ3VsbnZlZ2pQdHA2ODNXaXE3X3E1UHVEZG5kcGVpakI2ZXQ4aHhZVlJvdXJjVlVxY0pybWFoWlYwcXV3SWZKX296S1VWZ2UwelBTZVdBd3Z1VjJRUDBnQ19oU19xNTFNZHo4TjNSU29RcnRfdmx1Y0dzMnBXQndDTWh2UXhTbTU0MTVfMDk"}
+
+--- row 2 ---
+  uid            gnews-mon-troop-movement|CBMiqwFBVV95cUxQMFc4YkJmU3Bka0g5V01LZ3kzUnFsOUJIbEhvWjRveXcxMy1KWFFmdURuUUV6cFRybXd4cW43Y2dMUXp5dlhqTzZsX0pJOXhiQkRVbm5iVjZIcnFjX0FVTmhfY0dzWDZQMkQ4S3QwSzJmdUkyNUE0bGxDNEdHM3J5MGs5NG9JVVdyQ0lJamVaUjRkOGtOT2dHZng3X0cwY0Jjc2VUb2tHYWtyY3PSAbABQVVfeXFMTzdlZmtxY2NKeHd4OURzLU5GV0NYU0NqVGRwTWR3QUtxbXNjVFF6aTJNZ1NlWE1fTkltaHl2N3Z1cFA0bjhUM0xfcFVsYWZJT3gxY012WFZtZjhRbTIyR3pxWDRpMlRNaEFfMVpKeVdNTXI1QmpPU0pCVGV3U0FsOXltWmp4dDZLZ19mdld1eGdwNV9zMWxCNXZocHg0VlhFVVZGLXFPTXVhSEFXZTRKMGU
+  title          Deployment of Marines to Middle East raises specter of ground troops in Iran - ABC News - Breaking News, Latest News and Videos
+  body           <a href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxQMFc4YkJmU3Bka0g5V01LZ3kzUnFsOUJIbEhvWjRveXcxMy1KWFFmdURuUUV6cFRybXd4cW43Y2dMUXp5dlhqTzZsX0pJOXhiQkRVbm5iVjZIcnFjX0FVTmhfY0dzWDZQMkQ4S3QwSzJmdUkyNUE0bGxDNEdHM3J5MGs5NG9JVVdyQ0lJamVaUjRkOGtOT2dHZng3X0cwY0Jjc2VUb2tHYWtyY3PSAbABQVVfeXFMTzdlZmtxY2NKeHd4OURzLU5GV0NYU0NqVGRwTWR3QUtxbXNjVFF6aTJNZ1NlWE1fTkltaHl2N3Z1cFA0bjhUM0xfcFVsYWZJT3gxY012WFZtZjhRbTIyR3pxWDRpMlRNaEFfMVpKeVdNTXI1QmpPU0pCVGV3U0FsOXltWmp4dDZLZ19mdld1eGdwNV9zMWxCNXZocHg0VlhFVVZGLXFPTXVhSEFXZTRKMGU?oc=5" target="_blank">Deployment of Marines to Middle East raises specter of ground troops in Iran</a>&nbsp;&nbsp;<font color="#6f6f6f">ABC News - Breaking News, Latest News and Videos</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxQMFc4YkJmU3Bka0g5V01LZ3kzUnFsOUJIbEhvWjRveXcxMy1KWFFmdURuUUV6cFRybXd4cW43Y2dMUXp5dlhqTzZsX0pJOXhiQkRVbm5iVjZIcnFjX0FVTmhfY0dzWDZQMkQ4S3QwSzJmdUkyNUE0bGxDNEdHM3J5MGs5NG9JVVdyQ0lJam
+  link           https://news.google.com/rss/articles/CBMiqwFBVV95cUxQMFc4YkJmU3Bka0g5V01LZ3kzUnFsOUJIbEhvWjRveXcxMy1KWFFmdURuUUV6cFRybXd4cW43Y2dMUXp5dlhqTzZsX0pJOXhiQkRVbm5iVjZIcnFjX0FVTmhfY0dzWDZQMkQ4S3QwSzJmdUkyNUE0bGxDNEdHM3J5MGs5NG9JVVdyQ0lJamVaUjRkOGtOT2dHZng3X0cwY0Jjc2VUb2tHYWtyY3PSAbABQVVfeXFMTzdlZmtxY2NKeHd4OURzLU5GV0NYU0NqVGRwTWR3QUtxbXNjVFF6aTJNZ1NlWE1fTkltaHl2N3Z1cFA0bjhUM0xfcFVsYWZJT3gxY012WFZtZjhRbTIyR3pxWDRpMlRNaEFfMVpKeVdNTXI1QmpPU0pCVGV3U0FsOXltWmp4dDZLZ19mdld1eGdwNV9zMWxCNXZocHg0VlhFVVZGLXFPTXVhSEFXZTRKMGU?oc=5
+  language       en
+  published_at   Tue, 17 Mar 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","troop"]
+  properties     {"guid":"CBMiqwFBVV95cUxQMFc4YkJmU3Bka0g5V01LZ3kzUnFsOUJIbEhvWjRveXcxMy1KWFFmdURuUUV6cFRybXd4cW43Y2dMUXp5dlhqTzZsX0pJOXhiQkRVbm5iVjZIcnFjX0FVTmhfY0dzWDZQMkQ4S3QwSzJmdUkyNUE0bGxDNEdHM3J5MGs5NG9JVVdyQ0lJamVaUjRkOGtOT2dHZng3X0cwY0Jjc2VUb2tHYWtyY3PSAbABQVVfeXFMTzdlZmtxY2NKeHd4OURzLU5GV0NYU0NqVGRwTWR3QUtxbXNjVFF6aTJNZ1NlWE1fTkltaHl2N3Z1cFA0bjhUM0xfcFVsYWZJT3gxY012WFZtZjhRbTIyR3pxWDRpMlRNaEFfMVpKeVdNTXI1QmpPU0pCVGV3U0FsOXltWmp4dDZLZ19mdld1eGdwNV9zMWxCNXZocHg0VlhFVVZGLXFPTXVhSEFXZTRKMGU"}
+
+--- row 3 ---
+  uid            gnews-mon-troop-movement|CBMiggFBVV95cUxPNE0xZ25Gek9ZZ3ZLUXdnSzFHUmZSaG1WeTZ4eDg0amlDY3FnV2dXZmJ0R0dfTkwyeHJxaUhEWGlHVU5lTTQ5MGdUSWY0MTg5aEU0MHZpZWJ1bHZLR0JBcnM2OFpaRjIxN01TOUR4MWt4MndYVXhVbFJHcngwT2tteGRR0gGHAUFVX3lxTFBlZG9nVVBuZ0xhekJ0NFhwcVpTV2publVFUjQ0QlNzSU8wY1JvaGYwbXpjNjV4NjYwSmktZ1NrR0EzcnVvVUhHYUswNTMxQ0JfcjIzQVZ2NGt2c25SdDdteHQxcEJVMHpMbnBVbEhMXzNmcFB5MmJYUnJONC1GNTZLM0E2bFhwaw
+  title          House Democrat says Germany troop withdrawal ‘no way to run a foreign policy’ - The Hill
+  body           <a href="https://news.google.com/rss/articles/CBMiggFBVV95cUxPNE0xZ25Gek9ZZ3ZLUXdnSzFHUmZSaG1WeTZ4eDg0amlDY3FnV2dXZmJ0R0dfTkwyeHJxaUhEWGlHVU5lTTQ5MGdUSWY0MTg5aEU0MHZpZWJ1bHZLR0JBcnM2OFpaRjIxN01TOUR4MWt4MndYVXhVbFJHcngwT2tteGRR0gGHAUFVX3lxTFBlZG9nVVBuZ0xhekJ0NFhwcVpTV2publVFUjQ0QlNzSU8wY1JvaGYwbXpjNjV4NjYwSmktZ1NrR0EzcnVvVUhHYUswNTMxQ0JfcjIzQVZ2NGt2c25SdDdteHQxcEJVMHpMbnBVbEhMXzNmcFB5MmJYUnJONC1GNTZLM0E2bFhwaw?oc=5" target="_blank">House Democrat says Germany troop withdrawal ‘no way to run a foreign policy’</a>&nbsp;&nbsp;<font color="#6f6f6f">The Hill</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiggFBVV95cUxPNE0xZ25Gek9ZZ3ZLUXdnSzFHUmZSaG1WeTZ4eDg0amlDY3FnV2dXZmJ0R0dfTkwyeHJxaUhEWGlHVU5lTTQ5MGdUSWY0MTg5aEU0MHZpZWJ1bHZLR0JBcnM2OFpaRjIxN01TOUR4MWt4MndYVXhVbFJHcngwT2tteGRR0gGHAUFVX3lxTF
+  link           https://news.google.com/rss/articles/CBMiggFBVV95cUxPNE0xZ25Gek9ZZ3ZLUXdnSzFHUmZSaG1WeTZ4eDg0amlDY3FnV2dXZmJ0R0dfTkwyeHJxaUhEWGlHVU5lTTQ5MGdUSWY0MTg5aEU0MHZpZWJ1bHZLR0JBcnM2OFpaRjIxN01TOUR4MWt4MndYVXhVbFJHcngwT2tteGRR0gGHAUFVX3lxTFBlZG9nVVBuZ0xhekJ0NFhwcVpTV2publVFUjQ0QlNzSU8wY1JvaGYwbXpjNjV4NjYwSmktZ1NrR0EzcnVvVUhHYUswNTMxQ0JfcjIzQVZ2NGt2c25SdDdteHQxcEJVMHpMbnBVbEhMXzNmcFB5MmJYUnJONC1GNTZLM0E2bFhwaw?oc=5
+  language       en
+  published_at   Sun, 03 May 2026 07:00:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","troop"]
+  properties     {"guid":"CBMiggFBVV95cUxPNE0xZ25Gek9ZZ3ZLUXdnSzFHUmZSaG1WeTZ4eDg0amlDY3FnV2dXZmJ0R0dfTkwyeHJxaUhEWGlHVU5lTTQ5MGdUSWY0MTg5aEU0MHZpZWJ1bHZLR0JBcnM2OFpaRjIxN01TOUR4MWt4MndYVXhVbFJHcngwT2tteGRR0gGHAUFVX3lxTFBlZG9nVVBuZ0xhekJ0NFhwcVpTV2publVFUjQ0QlNzSU8wY1JvaGYwbXpjNjV4NjYwSmktZ1NrR0EzcnVvVUhHYUswNTMxQ0JfcjIzQVZ2NGt2c25SdDdteHQxcEJVMHpMbnBVbEhMXzNmcFB5MmJYUnJONC1GNTZLM0E2bFhwaw"}

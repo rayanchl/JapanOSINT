@@ -38,6 +38,8 @@
  * and run() still returns 0 (ran) — the JS `if (!combined) return []` shape.
  * A hard transport failure of the very first GET → return -1 (fetch fail).
  */
+#include "../../lib/geojson.h"
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../core/camera_store.h"
 #include "../../core/httpclient.h"
@@ -57,19 +59,6 @@
 typedef struct { const char *k; const char *sv; int is_num; double nv;
                  int is_null; } kv;
 
-static double round4(double v) { return floor(v * 1e4 + 0.5) / 1e4; }
-
-static void uid_tail(const char *url, const char *name, char *out,
-                     size_t outsz) {
-  const char *src = (url && *url) ? url : (name ? name : "");
-  size_t i = 0;
-  for (; src[i] && i < 60 && i + 1 < outsz; i++) {
-    unsigned char c = (unsigned char)src[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
-
 /* (js_num intentionally omitted: worldcam_eu emits no numeric extras —
  * its only extra is the string `url`. The shared makeFeature shape is
  * otherwise byte-identical to camera_discovery.c.) */
@@ -84,20 +73,12 @@ static cJSON *make_feature(double lat, double lon, const char *name,
       url = extra[i].sv; break;
     }
   char lats[32], lons[32], tail[80], uid[160];
-  snprintf(lats, sizeof lats, "%.4f", round4(lat));
-  snprintf(lons, sizeof lons, "%.4f", round4(lon));
-  uid_tail(url, name, tail, sizeof tail);
+  snprintf(lats, sizeof lats, "%.4f", jo_round4(lat));
+  snprintf(lons, sizeof lons, "%.4f", jo_round4(lon));
+  jo_uid_tail(url, name, tail, sizeof tail);
   snprintf(uid, sizeof uid, "%s:%s:%s", lats, lons, tail);
 
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "camera_uid", uid);
@@ -472,8 +453,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_worldcam_eu_def = {
-  .id = "cam-worldcam_eu", .collector = "infrastructure",
+  .id = "cam-worldcam_eu", .collector = "camera-discovery",
   .name = "Camera discovery — WorldCam.eu",
   .name_ja = "カメラ探索 — WorldCam.eu",
-   .update_interval_sec = 21600, .run = run };
+   .layer = "cameras",
+   .update_interval_sec = 3600, .run = run };
 REGISTER_SOURCE(cam_worldcam_eu_def)

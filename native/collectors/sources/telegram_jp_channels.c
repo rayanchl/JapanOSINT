@@ -3,6 +3,7 @@
  * Keyed: TGSTAT_API_KEY (channels/search) | TELEGRAM_API_ID+HASH (no userbot
  * → honest empty). No usable key → 0 rows. uid = telegram-jp-channels|<id>.
  * No seed. */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
@@ -17,22 +18,6 @@ static const char *QUERIES[] = {
   "OSINT",
   "\xE3\x82\xBB\xE3\x82\xAD\xE3\x83\xA5\xE3\x83\xAA\xE3\x83\x86\xE3\x82\xA3",  /* セキュリティ */
 };
-
-static void uric(const char *s, char *out, size_t n) {
-  size_t o = 0;
-  for (; *s && o + 4 < n; s++) {
-    unsigned char c = (unsigned char)*s;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' ||
-        c == '!' || c == '~' || c == '*' || c == '\'' || c == '(' || c == ')') {
-      out[o++] = (char)c;
-    } else {
-      snprintf(out + o, n - o, "%%%02X", c);
-      o += 3;
-    }
-  }
-  out[o] = '\0';
-}
 
 static const char *sv(cJSON *o, const char *k) {
   if (!o) return NULL;
@@ -67,7 +52,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   for (size_t qi = 0; qi < nq; qi++) {
     const char *q = QUERIES[qi];
     char qenc[256];
-    uric(q, qenc, sizeof qenc);
+    jo_uri_encode_buf(q, qenc, sizeof qenc);
     char url[768];
     snprintf(url, sizeof url,
       "https://api.tgstat.com/channels/search?token=%s&q=%s&country=JP&limit=30",

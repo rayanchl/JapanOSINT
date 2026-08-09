@@ -1,0 +1,39 @@
+=== WIKIMEDIA_COMMONS  entity=Tokyo
+exit: 0
+sched: rc=0 records=25 1017ms
+--- stderr ---
+[wikimedia_commons] emitted 25
+[sched] WIKIMEDIA_COMMONS run rc=0 records=25 1017ms
+--- persisted: 25 rows, 0 with lat/lon, 0 with geometry ---
+record_type: commons-media=25
+sub_source_id: (null)=25
+
+--- row 1 ---
+  uid            WIKIMEDIA_COMMONS|https://commons.wikimedia.org/wiki/File%3ASoba-Noodles-Deliveryman-Tokyo-1935.png
+  title          File:Soba-Noodles-Deliveryman-Tokyo-1935.png
+  body           {"title":"File:Soba-Noodles-Deliveryman-Tokyo-1935.png","source":"Wikimedia Commons"}
+  link           https://commons.wikimedia.org/wiki/File%3ASoba-Noodles-Deliveryman-Tokyo-1935.png
+  language       en
+  record_type    commons-media
+  tags           ["osint-search","WIKIMEDIA_COMMONS"]
+  properties     {"service":"WIKIMEDIA_COMMONS","href":"https://commons.wikimedia.org/wiki/File%3ASoba-Noodles-Deliveryman-Tokyo-1935.png","success":true}
+
+--- row 2 ---
+  uid            WIKIMEDIA_COMMONS|https://commons.wikimedia.org/wiki/File%3AMinato%20City%2C%20Tokyo%2C%20Japan.jpg
+  title          File:Minato City, Tokyo, Japan.jpg
+  body           {"title":"File:Minato City, Tokyo, Japan.jpg","source":"Wikimedia Commons"}
+  link           https://commons.wikimedia.org/wiki/File%3AMinato%20City%2C%20Tokyo%2C%20Japan.jpg
+  language       en
+  record_type    commons-media
+  tags           ["osint-search","WIKIMEDIA_COMMONS"]
+  properties     {"service":"WIKIMEDIA_COMMONS","href":"https://commons.wikimedia.org/wiki/File%3AMinato%20City%2C%20Tokyo%2C%20Japan.jpg","success":true}
+
+--- row 3 ---
+  uid            WIKIMEDIA_COMMONS|https://commons.wikimedia.org/wiki/File%3AExterior%20view%20of%20the%20illuminated%20facade%20of%20Maison%20Herm%C3%A8s%2C%20Ginza%2C%20Tokyo%2C%20Japan.jpg
+  title          File:Exterior view of the illuminated facade of Maison Hermès, Ginza, Tokyo, Japan.jpg
+  body           {"title":"File:Exterior view of the illuminated facade of Maison Hermès, Ginza, Tokyo, Japan.jpg","source":"Wikimedia Commons"}
+  link           https://commons.wikimedia.org/wiki/File%3AExterior%20view%20of%20the%20illuminated%20facade%20of%20Maison%20Herm%C3%A8s%2C%20Ginza%2C%20Tokyo%2C%20Japan.jpg
+  language       en
+  record_type    commons-media
+  tags           ["osint-search","WIKIMEDIA_COMMONS"]
+  properties     {"service":"WIKIMEDIA_COMMONS","href":"https://commons.wikimedia.org/wiki/File%3AExterior%20view%20of%20the%20illuminated%20facade%20of%20Maison%20Herm%C3%A8s%2C%20Ginza%2C%20Tokyo%2C%20Japan.jpg","success":true}

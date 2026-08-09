@@ -191,31 +191,93 @@ void breach_index_keyid(breach_type t, const char *value, char *out, size_t n) {
 typedef struct { char path[1024]; FILE *f; unsigned long long lru; } wc_ent;
 typedef struct { wc_ent e[WC_MAX]; int n; unsigned long long clock; } wcache;
 
+/* NULL on failure, leaving the cache in a consistent state. Getting that wrong
+ * is not theoretical: the slot used to be claimed (n++) or vacated (fclose)
+ * BEFORE the fopen, so a failed open left either a NULL handle or a freed one
+ * sitting in the table — which wc_closeall() then fclose()d, and which the
+ * strcmp above would hand back to a later caller. */
 static FILE *wc_get(wcache *c, const char *path) {
   for (int i = 0; i < c->n; i++)
-    if (strcmp(c->e[i].path, path) == 0) { c->e[i].lru = ++c->clock; return c->e[i].f; }
-  int slot;
-  if (c->n < WC_MAX) { slot = c->n++; }
-  else {
+    if (c->e[i].f && strcmp(c->e[i].path, path) == 0) {
+      c->e[i].lru = ++c->clock; return c->e[i].f;
+    }
+  int slot = -1;
+  /* A slot vacated by an earlier FAILED fopen is reused before anything is
+   * evicted. Without this the table stayed full of one empty entry whose lru
+   * was still the smallest, so the next call re-picked that same slot and ran
+   * fclose(NULL) on it — deterministic the moment a disk fills mid-ingest.
+   * (Bumping lru on the vacated slot would hide the crash but leak the free
+   * slot; reusing it is the actual repair.) */
+  for (int i = 0; i < c->n; i++) if (!c->e[i].f) { slot = i; break; }
+  if (slot < 0 && c->n < WC_MAX) slot = c->n;
+  if (slot < 0) {
     slot = 0;
     for (int i = 1; i < c->n; i++) if (c->e[i].lru < c->e[slot].lru) slot = i;
-    fclose(c->e[slot].f);
+    fclose(c->e[slot].f);                 /* non-NULL: every slot is occupied */
+    c->e[slot].f = NULL;                  /* vacate before we risk failing */
+    c->e[slot].path[0] = 0;
   }
   FILE *f = fopen(path, "ab");
-  if (!f) return NULL;
+  if (!f) return NULL;                    /* slot stays empty / n unchanged */
   snprintf(c->e[slot].path, sizeof c->e[slot].path, "%s", path);
   c->e[slot].f = f; c->e[slot].lru = ++c->clock;
+  if (slot == c->n) c->n++;               /* commit the new slot only on success */
   return f;
 }
 static void wc_closeall(wcache *c) {
-  for (int i = 0; i < c->n; i++) fclose(c->e[i].f);
+  for (int i = 0; i < c->n; i++)
+    if (c->e[i].f) { fclose(c->e[i].f); c->e[i].f = NULL; }
   c->n = 0;
 }
 
-static bloom *bloom_for(breach_type t) {
+/* Rows the input can plausibly contain, from its size on disk. Deliberately an
+ * OVER-estimate (a short average line length) — oversizing the dedup filter
+ * costs memory, undersizing it costs data. */
+static unsigned long long estimate_rows(const char *path, breach_type t) {
+  struct stat sb;
+  if (!path || stat(path, &sb) != 0 || sb.st_size <= 0) return 50000000ULL;
+  /* "SHA1HEX:count\n" is ~48 B; identity rows are shorter and more variable. */
+  unsigned long long avg = (t == BT_PASSWORD) ? 40ULL : 24ULL;
+  unsigned long long n = (unsigned long long)sb.st_size / avg;
+  return n < 1000000ULL ? 1000000ULL : n;
+}
+
+/* The dedup filter for `t`, sized for `expect` insertions.
+ *
+ * A bloom hit makes the ingest SKIP the row, so a saturated filter silently
+ * discards real data — this used to be hard-wired to 50M entries while the
+ * password path targets the ~850M-row Pwned Passwords list, which pushes the
+ * false-positive rate past 50% and drops the majority of the file. If the
+ * filter restored from disk was built for materially fewer rows than this input
+ * needs, rebuild it larger: losing the dedup history costs duplicate rows in a
+ * shard, which is recoverable, whereas dropping rows is not. */
+static bloom *bloom_for(breach_type t, unsigned long long expect) {
   char p[1024]; snprintf(p, sizeof p, "%s/%s.bloom", root_dir(), breach_type_name(t));
   bloom *b = bloom_load(p);
-  return b ? b : bloom_new(50000000ULL, 0.001);
+  if (b) {
+    unsigned long long need = bloom_count(b) + expect;
+    if (bloom_capacity(b) >= need) return b;
+    fprintf(stderr,
+            "[breach_index] %s.bloom sized for %llu but %llu needed "
+            "(%llu already in it) — rebuilding, dedup history is reset\n",
+            breach_type_name(t), bloom_capacity(b), need, bloom_count(b));
+    bloom_free(b);
+    expect = need;
+  }
+  return bloom_new(expect, 0.001);
+}
+
+/* 1 = seen before, caller skips the row.
+ *
+ * Returns 0 when the filter is absent (allocation failed) or already past its
+ * design capacity: at that point a "hit" is more likely to be a false positive
+ * than a real duplicate, and skipping would destroy data. Writing a duplicate
+ * into a shard is recoverable; dropping a breach record is not. */
+static int dedup_seen(bloom *b, const void *key, size_t len) {
+  if (!b) return 0;
+  if (bloom_maybe(b, key, len) && !bloom_saturated(b)) return 1;
+  bloom_add(b, key, len);
+  return 0;
 }
 
 /* ── ingest ───────────────────────────────────────────────────────────── */
@@ -224,6 +286,7 @@ int breach_index_ingest(const char *source_id, const char *path, breach_type typ
                         db_handle *db, int materialize, int dry_run) {
   bigfile *bf = bigfile_open(path);
   if (!bf) return -1;
+  const unsigned long long expect = estimate_rows(path, type);
   wcache wc = {0};
   /* Optional eager intel materialization into breach_items (dedicated store).
    * Never opened for a dry run — a projection persists nothing. */
@@ -246,9 +309,9 @@ int breach_index_ingest(const char *source_id, const char *path, breach_type typ
       for (size_t i = 0; i < 40; i++) hash[i] = (char)toupper((unsigned char)line[i]);
       hash[40] = 0;
       long long count = colon ? atoll(colon + 1) : 1;
-      if (!blooms[BT_PASSWORD]) blooms[BT_PASSWORD] = bloom_for(BT_PASSWORD);
-      if (bloom_maybe(blooms[BT_PASSWORD], hash, 40)) continue;
-      bloom_add(blooms[BT_PASSWORD], hash, 40); touched[BT_PASSWORD] = 1;
+      if (!blooms[BT_PASSWORD]) blooms[BT_PASSWORD] = bloom_for(BT_PASSWORD, expect);
+      if (dedup_seen(blooms[BT_PASSWORD], hash, 40)) continue;
+      touched[BT_PASSWORD] = 1;
       if (!dry_run) {
         ensure_type_dir(BT_PASSWORD);
         char sp[1024]; shard_path(BT_PASSWORD, hash, sp, sizeof sp);
@@ -283,10 +346,10 @@ int breach_index_ingest(const char *source_id, const char *path, breach_type typ
     char *val = store ? nv : NULL;
     if (!val) free(nv);
 
-    if (!blooms[ct]) blooms[ct] = bloom_for(ct);
+    if (!blooms[ct]) blooms[ct] = bloom_for(ct, expect);
     char dkey[160]; snprintf(dkey, sizeof dkey, "%s|%.100s", hash, source_id ? source_id : "");
-    if (bloom_maybe(blooms[ct], dkey, strlen(dkey))) { free(val); continue; }
-    bloom_add(blooms[ct], dkey, strlen(dkey)); touched[ct] = 1;
+    if (dedup_seen(blooms[ct], dkey, strlen(dkey))) { free(val); continue; }
+    touched[ct] = 1;
 
     char *enc = (!dry_run && secret && *secret) ? enc_secret(secret) : NULL;
     if (!dry_run) {
@@ -363,6 +426,12 @@ int breach_index_lookup(breach_type type, const char *value, int reveal, cJSON *
       matches++;
       if (type == BT_PASSWORD) {
         pw_count = atoll(ln + 41);
+        /* A password hash is unique within its shard by construction (the
+         * ingest dedups on the hash alone), so there is nothing further to
+         * find. Without this the scan always ran to EOF — and after a bulk
+         * ingest a shard is hundreds of MB, read line-by-line, on the single
+         * mongoose event-loop thread. */
+        break;
       } else {
         char *p = ln + 41;
         char *tab = strchr(p, '\t');

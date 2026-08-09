@@ -1,0 +1,49 @@
+size=882
+
+import createList from "./createList.js";
+import createDatails from "./createDatails.js";
+
+const showList = () => {
+	const id = location.hash.slice(1);
+
+	history.replaceState(null, null, "./");
+	createList().then(e => {
+
+		const target = document.getElementById(id);
+		if (target) target.scrollIntoView();
+
+	});
+};
+
+const route = () => {
+	window.scroll({
+		// top: 60,
+		// behavior: 'smooth'
+	});
+
+	try {
+		const hash = location.hash.slice(1);
+
+		if (hash.startsWith("/id/")) {
+			const id = hash.slice(4);
+			if (id == "") throw new Error();
+
+			createDatails(id).catch(e => {
+				showList();
+			});
+
+		} else {
+			throw new Error();
+		}
+
+	} catch (e) {
+		// console.log(e);
+		showList();
+	}
+};
+
+window.addEventListener("hashchange", route);
+route();
+
+//★テスト用
+// createDatails("JAXA.EORC_ALOS.PRISM_AW3D30.v3.2_global");

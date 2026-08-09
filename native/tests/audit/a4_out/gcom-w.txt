@@ -1,0 +1,8 @@
+=== gcom-w
+exit: 1
+sched: rc=-1 records=0 197ms
+--- stderr ---
+[gcom-w] unavailable (NASA CMR no granules)
+[sched] gcom-w run rc=-1 records=0 197ms
+[detect] anomaly opened: gcom-w verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

@@ -581,11 +581,15 @@ struct LiveVehiclesRow: View {
             VStack(alignment: .leading, spacing: 1) {
                 Text("Live carriages")
                     .font(.subheadline)
+                // Not-connected is muted rather than red: the realtime channel
+                // is an enhancement, and `WebSocketClient.statusLabel` says
+                // which of "off / idle / connecting / unavailable" it is
+                // instead of the blanket "offline" this used to claim.
                 HStack(spacing: 4) {
                     Circle()
-                        .fill(ws.isConnected ? theme.success : theme.danger)
+                        .fill(ws.isConnected ? theme.success : theme.textMuted)
                         .frame(width: 6, height: 6)
-                    Text(ws.isConnected ? "WebSocket connected" : "WebSocket offline")
+                    Text(ws.statusLabel)
                         .font(.caption2)
                         .foregroundStyle(theme.textMuted)
                 }

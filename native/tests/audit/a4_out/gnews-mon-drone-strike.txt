@@ -1,0 +1,45 @@
+=== gnews-mon-drone-strike
+exit: 0
+sched: rc=0 records=100 688ms
+--- stderr ---
+[rss] gnews-mon-drone-strike emitted 100
+[sched] gnews-mon-drone-strike run rc=0 records=100 688ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-drone-strike|CBMiowFBVV95cUxQM0ZOOGk4MHA3dEUteWJQN1lCWXY4LUtIV3dyNTRLb05BMmxuT0dVRFFpNWM0Z2JCaFRzUndQblAwYW5UTVRIY0M0N2QtdGZNVXpTMG5Yd1NyaW5fSG82NU4xd1NRekM3aFhSTXRVc1RHT2RhdXdJc2xSTzRxUG1KMHRsajhvYnVya09XZlpsdWlDMGVoMGJJNmVkamkxX3k0bUxF
+  title          Egypt Suffers First Drone Attack, Widening the Iran War - wsj.com
+  body           <ol><li><a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxQM0ZOOGk4MHA3dEUteWJQN1lCWXY4LUtIV3dyNTRLb05BMmxuT0dVRFFpNWM0Z2JCaFRzUndQblAwYW5UTVRIY0M0N2QtdGZNVXpTMG5Yd1NyaW5fSG82NU4xd1NRekM3aFhSTXRVc1RHT2RhdXdJc2xSTzRxUG1KMHRsajhvYnVya09XZlpsdWlDMGVoMGJJNmVkamkxX3k0bUxF?oc=5" target="_blank">Egypt Suffers First Drone Attack, Widening the Iran War</a>&nbsp;&nbsp;<font color="#6f6f6f">wsj.com</font></li><li><a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxNUjlxdTM1SnYtZ3Bzei1qLUpRXzlYanVpb1MwNnRuQjY2NmkzZHNTeEl5cGljWGE5VDQ5ZHF0djVzVnV5OEprZWdlWUpPMV9fanYyN1N5cHdhbkxBZC1fZTlHWmpRMG8zdlRZV0hLSW9nTHU0S3JDZU44WWVHbnhWZVhRTVJ1Z0RaM25nR09fTFNTMUR2SVNkVXdlVHpDZHRmMXlJdDN3?oc=5" target="_blank">Drone strike at Egypt port near Suez Canal ignites new shipping risks</a>&nbsp;&nbsp;<font color="#6f6f6f">Reuters</font></li><li><a href="https://news.google.com/rss/articles/CBMibkFVX3 …<460 more chars>
+  summary        <ol><li><a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxQM0ZOOGk4MHA3dEUteWJQN1lCWXY4LUtIV3dyNTRLb05BMmxuT0dVRFFpNWM0Z2JCaFRzUndQblAwYW5UTVRIY0M0N2QtdGZNVXpTMG5Yd1NyaW5fSG82NU4xd1NRekM3aFhSTXRVc1RHT2RhdXdJc2xSTzRxUG1KMHRsajhvYn
+  link           https://news.google.com/rss/articles/CBMiowFBVV95cUxQM0ZOOGk4MHA3dEUteWJQN1lCWXY4LUtIV3dyNTRLb05BMmxuT0dVRFFpNWM0Z2JCaFRzUndQblAwYW5UTVRIY0M0N2QtdGZNVXpTMG5Yd1NyaW5fSG82NU4xd1NRekM3aFhSTXRVc1RHT2RhdXdJc2xSTzRxUG1KMHRsajhvYnVya09XZlpsdWlDMGVoMGJJNmVkamkxX3k0bUxF?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 10:41:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","drone"]
+  properties     {"guid":"CBMiowFBVV95cUxQM0ZOOGk4MHA3dEUteWJQN1lCWXY4LUtIV3dyNTRLb05BMmxuT0dVRFFpNWM0Z2JCaFRzUndQblAwYW5UTVRIY0M0N2QtdGZNVXpTMG5Yd1NyaW5fSG82NU4xd1NRekM3aFhSTXRVc1RHT2RhdXdJc2xSTzRxUG1KMHRsajhvYnVya09XZlpsdWlDMGVoMGJJNmVkamkxX3k0bUxF"}
+
+--- row 2 ---
+  uid            gnews-mon-drone-strike|CBMivAFBVV95cUxPci1oZGNSclBOc3NUX2VsZDdBYlVSNnJsYklvRDduS0d5S3BGa1ljb3I3cEZkS1dUS0dNcVIyS29sOXUzYXp3UG9Qa1g1YjhtOFdRWkw3Q2ZBdURkUzVaX1JERmJBQ2d5Tmw1TEhxRFVvd21YUVBMeHc4clNxbFlLY2REc0VtMUJGYjFBdkREX0pRTk5VVXFxUmtZZFBYOGJndTV3YmJnb0pwUEI0eGlaVVNpN28xNjJOblRxVQ
+  title          Ukrainian drones strike across Russia, hitting refineries, Wildberries warehouse - Reuters
+  body           <ol><li><a href="https://news.google.com/rss/articles/CBMivAFBVV95cUxPci1oZGNSclBOc3NUX2VsZDdBYlVSNnJsYklvRDduS0d5S3BGa1ljb3I3cEZkS1dUS0dNcVIyS29sOXUzYXp3UG9Qa1g1YjhtOFdRWkw3Q2ZBdURkUzVaX1JERmJBQ2d5Tmw1TEhxRFVvd21YUVBMeHc4clNxbFlLY2REc0VtMUJGYjFBdkREX0pRTk5VVXFxUmtZZFBYOGJndTV3YmJnb0pwUEI0eGlaVVNpN28xNjJOblRxVQ?oc=5" target="_blank">Ukrainian drones strike across Russia, hitting refineries, Wildberries warehouse</a>&nbsp;&nbsp;<font color="#6f6f6f">Reuters</font></li><li><a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPRmNUZFNJSjM0bkkwQ2wycU1SeEd1X1hWRUtna3JvS2pYeUtIdWl1bGRZMFpLMTVkNnFaRlBSUjZlSDVsR2RsV3NsanhacGRvaWJPX0N2bXZTNkxFcUQzUEJuTS1hWWRraGNWTHViVWFEZFBBLUc3SVFqcGlzcmRnbEk2YlZnRF9ib3pKb3NQV2ZXQ096NHoyRkVHNHY0Vm1nQUZJSlVB0gGrAUFVX3lxTE96cTVGZlFtb1Q5QkxEU3ljeDlFSmRkamppZ0MxTGJXYXM5TlhCM0RoOE12WmYyZ3hyczFPZHZDR0huMGpBeHV2aGJvb0N2WFJmRk5mYmIzWlVPYkVSZTZiczhrMUJMblQyY0wwZX …<645 more chars>
+  summary        <ol><li><a href="https://news.google.com/rss/articles/CBMivAFBVV95cUxPci1oZGNSclBOc3NUX2VsZDdBYlVSNnJsYklvRDduS0d5S3BGa1ljb3I3cEZkS1dUS0dNcVIyS29sOXUzYXp3UG9Qa1g1YjhtOFdRWkw3Q2ZBdURkUzVaX1JERmJBQ2d5Tmw1TEhxRFVvd21YUVBMeHc4clNxbFlLY2REc0VtMU
+  link           https://news.google.com/rss/articles/CBMivAFBVV95cUxPci1oZGNSclBOc3NUX2VsZDdBYlVSNnJsYklvRDduS0d5S3BGa1ljb3I3cEZkS1dUS0dNcVIyS29sOXUzYXp3UG9Qa1g1YjhtOFdRWkw3Q2ZBdURkUzVaX1JERmJBQ2d5Tmw1TEhxRFVvd21YUVBMeHc4clNxbFlLY2REc0VtMUJGYjFBdkREX0pRTk5VVXFxUmtZZFBYOGJndTV3YmJnb0pwUEI0eGlaVVNpN28xNjJOblRxVQ?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 16:42:01 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","drone"]
+  properties     {"guid":"CBMivAFBVV95cUxPci1oZGNSclBOc3NUX2VsZDdBYlVSNnJsYklvRDduS0d5S3BGa1ljb3I3cEZkS1dUS0dNcVIyS29sOXUzYXp3UG9Qa1g1YjhtOFdRWkw3Q2ZBdURkUzVaX1JERmJBQ2d5Tmw1TEhxRFVvd21YUVBMeHc4clNxbFlLY2REc0VtMUJGYjFBdkREX0pRTk5VVXFxUmtZZFBYOGJndTV3YmJnb0pwUEI0eGlaVVNpN28xNjJOblRxVQ"}
+
+--- row 3 ---
+  uid            gnews-mon-drone-strike|CBMiowFBVV95cUxNY01lUVgxQ0FYWl9ZZnVmcEdxN19fSF9abW01WGFUU3pja2JpNS11Z3dxMXJLb0RWSkZvR01QVEVfeEEtTzF2U056bExUTHpNWFBCOUhwb2RIUnJMM3BhOE5JMHN6MTBKWXJUcTc3VEw4XzBycTRkREZ2UExHMGM3bVRoTG9ucmJGbzR6RUREU2pqWTNGZU8wQVdWUTFxaTNEeW1r0gGoAUFVX3lxTE1DZHZFdDZnaTRnTEE1bjhvdXFMck5wS0hoNnhHZGNmcGFuN09DMkJiNGtBaWdidjlFMUswUmRyOG5ueHBkV3BYeDFJcC1XWG53ckxFSVk0NlUycmlqV0VGWE9JZWREVGRIbnNpcl85eU1rUUlqem53cTRURXJrazB2bUJSR0R2OTNmMTBTUFNHdDlvN1Fya05ZUmhQUUFMSXBQdDQ2YllsRw
+  title          Democrats investigating Iranian drone attack that killed 6 US service members - The Hill
+  body           <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxNY01lUVgxQ0FYWl9ZZnVmcEdxN19fSF9abW01WGFUU3pja2JpNS11Z3dxMXJLb0RWSkZvR01QVEVfeEEtTzF2U056bExUTHpNWFBCOUhwb2RIUnJMM3BhOE5JMHN6MTBKWXJUcTc3VEw4XzBycTRkREZ2UExHMGM3bVRoTG9ucmJGbzR6RUREU2pqWTNGZU8wQVdWUTFxaTNEeW1r0gGoAUFVX3lxTE1DZHZFdDZnaTRnTEE1bjhvdXFMck5wS0hoNnhHZGNmcGFuN09DMkJiNGtBaWdidjlFMUswUmRyOG5ueHBkV3BYeDFJcC1XWG53ckxFSVk0NlUycmlqV0VGWE9JZWREVGRIbnNpcl85eU1rUUlqem53cTRURXJrazB2bUJSR0R2OTNmMTBTUFNHdDlvN1Fya05ZUmhQUUFMSXBQdDQ2YllsRw?oc=5" target="_blank">Democrats investigating Iranian drone attack that killed 6 US service members</a>&nbsp;&nbsp;<font color="#6f6f6f">The Hill</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxNY01lUVgxQ0FYWl9ZZnVmcEdxN19fSF9abW01WGFUU3pja2JpNS11Z3dxMXJLb0RWSkZvR01QVEVfeEEtTzF2U056bExUTHpNWFBCOUhwb2RIUnJMM3BhOE5JMHN6MTBKWXJUcTc3VEw4XzBycTRkREZ2UExHMGM3bVRoTG9ucmJGbzR6RU
+  link           https://news.google.com/rss/articles/CBMiowFBVV95cUxNY01lUVgxQ0FYWl9ZZnVmcEdxN19fSF9abW01WGFUU3pja2JpNS11Z3dxMXJLb0RWSkZvR01QVEVfeEEtTzF2U056bExUTHpNWFBCOUhwb2RIUnJMM3BhOE5JMHN6MTBKWXJUcTc3VEw4XzBycTRkREZ2UExHMGM3bVRoTG9ucmJGbzR6RUREU2pqWTNGZU8wQVdWUTFxaTNEeW1r0gGoAUFVX3lxTE1DZHZFdDZnaTRnTEE1bjhvdXFMck5wS0hoNnhHZGNmcGFuN09DMkJiNGtBaWdidjlFMUswUmRyOG5ueHBkV3BYeDFJcC1XWG53ckxFSVk0NlUycmlqV0VGWE9JZWREVGRIbnNpcl85eU1rUUlqem53cTRURXJrazB2bUJSR0R2OTNmMTBTUFNHdDlvN1Fya05ZUmhQUUFMSXBQdDQ2YllsRw?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 16:56:00 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","drone"]
+  properties     {"guid":"CBMiowFBVV95cUxNY01lUVgxQ0FYWl9ZZnVmcEdxN19fSF9abW01WGFUU3pja2JpNS11Z3dxMXJLb0RWSkZvR01QVEVfeEEtTzF2U056bExUTHpNWFBCOUhwb2RIUnJMM3BhOE5JMHN6MTBKWXJUcTc3VEw4XzBycTRkREZ2UExHMGM3bVRoTG9ucmJGbzR6RUREU2pqWTNGZU8wQVdWUTFxaTNEeW1r0gGoAUFVX3lxTE1DZHZFdDZnaTRnTEE1bjhvdXFMck5wS0hoNnhHZGNmcGFuN09DMkJiNGtBaWdidjlFMUswUmRyOG5ueHBkV3BYeDFJcC1XWG53ckxFSVk0NlUycmlqV0VGWE9JZWREVGRIbnNpcl85eU1rUUlqem53cTRURXJrazB2bUJSR0R2OTNmMTBTUFNHdDlvN1Fya05ZUmhQUUFMSXBQdDQ2YllsRw"}

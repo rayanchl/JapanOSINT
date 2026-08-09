@@ -1,0 +1,36 @@
+=== osm-changesets-jp
+exit: 0
+sched: rc=0 records=100 362ms
+--- stderr ---
+[osm-changesets-jp] emitted 100
+[sched] osm-changesets-jp run rc=0 records=100 362ms
+--- persisted: 28 rows, 28 with lat/lon, 28 with geometry ---
+record_type: osm-changesets-jp=28
+sub_source_id: (null)=28
+
+--- row 1 ---
+  uid            osm-changesets-jp|18531916
+  link           https://www.openstreetmap.org/changeset/186721008
+  lat            27.06052365
+  lon            128.42866255
+  geometry       {"type":"Point","coordinates":[128.42866255,27.06052365]}
+  record_type    osm-changesets-jp
+  properties     {"idx":15,"cs_id":186721008,"user":"Myo Hlaing","uid":18531916,"created_at":"2026-07-31T17:47:52Z","closed_at":"2026-07-31T17:47:53Z","comment":"#hotosm-project-19113 #hotosm-project-18262 Adding Farmland polygons in Yoron Island, Japan.  #YouthMappersAGU #YouthMappersReitaku #IHM2025 #FuruhashiLab #PoliMappers #Yoron #DRONEBIRD #Amanto #古橋研究室","created_by":"iD 2.41.2","source_tag":null,"changes_count":1,"bbox":[128.4286422,27.0605191,128.4286829,27.0605282],"url":"https://www.openstreetmap.org/changeset/186721008","source":"osm_changesets_jp"}
+
+--- row 2 ---
+  uid            osm-changesets-jp|7130304
+  link           https://www.openstreetmap.org/changeset/186714410
+  lat            34.9861355
+  lon            138.290604
+  geometry       {"type":"Point","coordinates":[138.290604,34.9861355]}
+  record_type    osm-changesets-jp
+  properties     {"idx":76,"cs_id":186714410,"user":"gc27","uid":7130304,"created_at":"2026-07-31T15:55:58Z","closed_at":"2026-07-31T15:56:03Z","comment":"KSJ2:ADSノーマライズ（at静岡県） #ksj2salvage","created_by":"JOSM/1.5 (19555 ja)","source_tag":null,"changes_count":1657,"bbox":[137.484337,34.597548,139.096871,35.374723],"url":"https://www.openstreetmap.org/changeset/186714410","source":"osm_changesets_jp"}
+
+--- row 3 ---
+  uid            osm-changesets-jp|7163247
+  link           https://www.openstreetmap.org/changeset/186720697
+  lat            35.45252155
+  lon            139.3874287
+  geometry       {"type":"Point","coordinates":[139.3874287,35.45252155]}
+  record_type    osm-changesets-jp
+  properties     {"idx":16,"cs_id":186720697,"user":"Oos1812","uid":7163247,"created_at":"2026-07-31T17:43:10Z","closed_at":"2026-07-31T17:43:14Z","comment":"駐車場の閉鎖反映、建設中の建物追加、情報追記ほか（海老名市めぐみ町）","created_by":"iD 2.41.2","source_tag":"Esri;survey;local knowledge;aerial imagery;streetlevel imagery","changes_count":42,"bbox":[139.3861923,35.4516129,139.3886651,35.4534302],"url":"https://www.openstreetmap.org/changeset/186720697","source":"osm_changesets_jp"}

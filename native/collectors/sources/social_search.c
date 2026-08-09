@@ -210,7 +210,8 @@ static int run_email(const source_ctx *ctx, intel_sink *sink) {
     u += jo_social_platforms_run(ctx, sink);
     u += jo_sherlock_run(ctx, sink);
     u += jo_maigret_run(ctx, sink);
-    return u;
+    (void)u;
+    return 0;
   }
   int t = 0;
   t += holehe_run(ctx, sink, "SOCIAL_EMAIL", e);
@@ -228,7 +229,12 @@ static int run_email(const source_ctx *ctx, intel_sink *sink) {
     t += jo_sherlock_run(&c2, sink);
     t += jo_maigret_run(&c2, sink);
   }
-  return t;
+  /* run() is a STATUS code, not a row count: core/scheduler.c does
+   * `status = rc == 0 ? "ok" : "error"` and feeds it to anomaly_detect(), so
+   * returning the emitted count marked every successful lookup as an errored
+   * run and quarantined the source precisely because it worked. */
+  (void)t;
+  return 0;
 }
 
 static const source_def social_email_def = {

@@ -13,7 +13,11 @@
 #include <string.h>
 #include <time.h>
 
-#define NICTER_STATS_URL "https://www.nicter.jp/atlas/"
+/* NOTE 2026-07: the trailing-slash form 404s — https://www.nicter.jp/atlas/
+ * returns "404 Not Found" so feed_get_text yielded NULL and the source
+ * returned -1 on every run (permanent quarantine). The slash-less path is a
+ * live 200. */
+#define NICTER_STATS_URL "https://www.nicter.jp/atlas"
 
 #define NICT_HQ_LON 139.4878
 #define NICT_HQ_LAT 35.7100
@@ -79,7 +83,10 @@ static int extract_int(const char *html, const char *label, long *out) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char *html = feed_get_text(ctx->http, NICTER_STATS_URL, 15000);
-  if (!html) return -1;                           /* !ok → 0 features */
+  if (!html) {
+    fprintf(stderr, "[nicter-stats] fetch failed: %s\n", NICTER_STATS_URL);
+    return -1;                                    /* !ok → 0 features */
+  }
 
   long today = 0, total = 0, sensors = 0;
   int hasToday   = extract_int(html, "\xe6\x9c\xac\xe6\x97\xa5", &today);   /* 本日 */
@@ -90,6 +97,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   size_t html_len = strlen(html);
 
+  /* Every counter absent means the page carries no measurement at all (the
+   * Atlas page is now a JS-rendered description with no server-side numbers).
+   * Emitting a Feature whose three metrics are all null would be a row that
+   * shows a label and no data — an honest empty is the correct result. */
+  if (!hasToday && !hasTotal && !hasSensors) {
+    fprintf(stderr, "[nicter-stats] no counters in %zu bytes of %s "
+                    "(page is JS-rendered; live figures are served at "
+                    "https://www.nicter.jp/top10) — emitting 0\n",
+            html_len, NICTER_STATS_URL);
+    free(html);
+    return 0;
+  }
+
   /* observed_at = new Date().toISOString() */
   char iso[32];
   time_t now = time(NULL);
@@ -98,15 +118,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &tmv);
 
   cJSON *features = cJSON_CreateArray();
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *co = cJSON_CreateArray();
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(NICT_HQ_LON));
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(NICT_HQ_LAT));
-  cJSON_AddItemToObject(g, "coordinates", co);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(NICT_HQ_LON, NICT_HQ_LAT);
 
   cJSON *p = cJSON_CreateObject();                /* EXACT JS key order */
   cJSON_AddStringToObject(p, "id", "NICTER_STATS");
@@ -119,6 +131,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(p, "observed_at", iso);
   cJSON_AddNumberToObject(p, "html_length", (double)html_len);
   cJSON_AddStringToObject(p, "source", "nicter_atlas_scrape");
+  /* The Point is NICT's Koganei headquarters, not where the packets were seen —
+   * NICTER is a nationwide darknet sensor aggregate and publishes no location.
+   * The pin is kept (it is the real publisher) but is now labelled as such
+   * instead of reading as an observation site. */
+  cJSON_AddStringToObject(p, "geo_provenance", "nict-headquarters");
+  cJSON_AddStringToObject(p, "geo_precision", "publisher-hq");
+  cJSON_AddBoolToObject(p, "geo_uncertain", 1);
+  cJSON_AddStringToObject(p, "geo_note",
+    "nationwide darknet aggregate; the point is NICT's Koganei HQ, not an "
+    "observation site");
   cJSON_AddItemToObject(f, "properties", p);
   cJSON_AddItemToArray(features, f);
 

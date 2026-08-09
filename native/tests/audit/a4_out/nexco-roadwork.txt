@@ -1,0 +1,42 @@
+=== nexco-roadwork
+exit: 0
+sched: rc=0 records=3 11464ms
+--- stderr ---
+[nexco-roadwork] NEXCO-East reachable=0
+[nexco-roadwork] NEXCO-Central reachable=0
+[nexco-roadwork] NEXCO-West reachable=1
+[sched] nexco-roadwork run rc=0 records=3 11464ms
+[detect] anomaly opened: nexco-roadwork verdict=duration_outlier — duration 11464ms exceeds 10000ms threshold
+--- persisted: 3 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=3
+sub_source_id: (null)=3
+
+--- row 1 ---
+  uid            nexco-roadwork|NEXCO-East
+  title          NEXCO-East roadwork / planned closures
+  summary        Construction + lane-closure outlook by section
+  link           https://www.e-nexco.co.jp/traffic/
+  language       ja
+  published_at   2026-07-31T18:03:57.187Z
+  tags           ["highway","roadwork","nexco","unreachable"]
+  properties     {"operator":"NEXCO-East","reachable":false}
+
+--- row 2 ---
+  uid            nexco-roadwork|NEXCO-Central
+  title          NEXCO-Central roadwork / planned closures
+  summary        Construction + lane-closure outlook by section
+  link           https://www.c-nexco.co.jp/road_info/
+  language       ja
+  published_at   2026-07-31T18:03:57.187Z
+  tags           ["highway","roadwork","nexco","unreachable"]
+  properties     {"operator":"NEXCO-Central","reachable":false}
+
+--- row 3 ---
+  uid            nexco-roadwork|NEXCO-West
+  title          NEXCO-West roadwork / planned closures
+  summary        Construction + lane-closure outlook by section
+  link           https://www.w-nexco.co.jp/traffic/
+  language       ja
+  published_at   2026-07-31T18:03:57.187Z
+  tags           ["highway","roadwork","nexco","reachable"]
+  properties     {"operator":"NEXCO-West","reachable":true}

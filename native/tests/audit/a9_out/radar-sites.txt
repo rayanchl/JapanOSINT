@@ -1,0 +1,8 @@
+=== radar-sites
+exit: 1
+sched: rc=-1 records=0 144089ms
+--- stderr ---
+[overpass] radar-sites no elements
+[sched] radar-sites run rc=-1 records=0 144089ms
+[detect] anomaly opened: radar-sites verdict=status_bad — run errored (status=error)
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

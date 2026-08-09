@@ -1,0 +1,19 @@
+=== psbdmp-pastes
+exit: 0
+sched: rc=0 records=1 14ms
+--- stderr ---
+[psbdmp-pastes] probe reachable=0
+[sched] psbdmp-pastes run rc=0 records=1 14ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            psbdmp-pastes|portal
+  title          PSBDMP — pastebin mirror search
+  summary        Pastebin / mirror search — JP TLD + kanji corp name queries
+  link           https://psbdmp.ws/
+  language       en
+  published_at   2026-07-31T18:03:13.189Z
+  tags           ["paste","leak","psbdmp","unreachable"]
+  properties     {"reachable":false,"requires_key":false}

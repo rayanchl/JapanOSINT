@@ -1,0 +1,42 @@
+=== IATI_REGISTRY  entity=unicef
+exit: 0
+sched: rc=0 records=25 558ms
+--- stderr ---
+[IATI_REGISTRY] emitted 25
+[sched] IATI_REGISTRY run rc=0 records=25 558ms
+--- persisted: 25 rows, 0 with lat/lon, 0 with geometry ---
+record_type: aid-dataset=25
+sub_source_id: (null)=25
+
+--- row 1 ---
+  uid            IATI_REGISTRY|IATI_REGISTRY|unicef-afghanistan
+  title          unicef-afghanistan
+  body           {"title":"unicef-afghanistan","summary":"United Nations Children's Fund (UNICEF)","link":"https://iatiregistry.org/dataset/unicef-afghanistan","source":"IATI_REGISTRY","organization":"United Nations Children's Fund (UNICEF)"}
+  summary        United Nations Children's Fund (UNICEF)
+  link           https://iatiregistry.org/dataset/unicef-afghanistan
+  language       en
+  record_type    aid-dataset
+  tags           ["osint-search","aid","humanitarian"]
+  properties     {"service":"IATI_REGISTRY","source":"IATI_REGISTRY","query":"unicef","href":"https://iatiregistry.org/dataset/unicef-afghanistan","success":true}
+
+--- row 2 ---
+  uid            IATI_REGISTRY|IATI_REGISTRY|unicef-albania
+  title          unicef-albania
+  body           {"title":"unicef-albania","summary":"United Nations Children's Fund (UNICEF)","link":"https://iatiregistry.org/dataset/unicef-albania","source":"IATI_REGISTRY","organization":"United Nations Children's Fund (UNICEF)"}
+  summary        United Nations Children's Fund (UNICEF)
+  link           https://iatiregistry.org/dataset/unicef-albania
+  language       en
+  record_type    aid-dataset
+  tags           ["osint-search","aid","humanitarian"]
+  properties     {"service":"IATI_REGISTRY","source":"IATI_REGISTRY","query":"unicef","href":"https://iatiregistry.org/dataset/unicef-albania","success":true}
+
+--- row 3 ---
+  uid            IATI_REGISTRY|IATI_REGISTRY|unicef-algeria
+  title          unicef-algeria
+  body           {"title":"unicef-algeria","summary":"United Nations Children's Fund (UNICEF)","link":"https://iatiregistry.org/dataset/unicef-algeria","source":"IATI_REGISTRY","organization":"United Nations Children's Fund (UNICEF)"}
+  summary        United Nations Children's Fund (UNICEF)
+  link           https://iatiregistry.org/dataset/unicef-algeria
+  language       en
+  record_type    aid-dataset
+  tags           ["osint-search","aid","humanitarian"]
+  properties     {"service":"IATI_REGISTRY","source":"IATI_REGISTRY","query":"unicef","href":"https://iatiregistry.org/dataset/unicef-algeria","success":true}

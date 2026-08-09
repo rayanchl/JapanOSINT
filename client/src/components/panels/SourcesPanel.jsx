@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import apiUrl from '../../utils/apiUrl.js';
+import { relativeTime } from '../../utils/time.js';
 import StatusBadge from '../ui/StatusBadge';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import CameraDiscoveryThread from './CameraDiscoveryThread';
@@ -17,20 +18,6 @@ const FILTERS = [
   { key: 'gated', label: 'Gated' },
   { key: 'missingKey', label: 'Missing key' },
 ];
-
-function relativeTime(iso) {
-  if (!iso) return 'never';
-  const ts = new Date(iso).getTime();
-  if (Number.isNaN(ts)) return 'never';
-  const diff = Math.max(0, Date.now() - ts);
-  const s = Math.floor(diff / 1000);
-  if (s < 60) return `${s}s ago`;
-  const m = Math.floor(s / 60);
-  if (m < 60) return `${m}m ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
-}
 
 function prettyJson(str) {
   if (!str) return '';

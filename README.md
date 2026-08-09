@@ -1,53 +1,108 @@
-# JapanOSINT - Intelligence Map Platform
+# OSINTsaas / JapanOSINT
 
-Real-time geospatial intelligence map aggregating 150+ Japanese public data sources onto a single interactive map.
+An open-source-intelligence engine: a few thousand public data sources, fetched
+on their own schedules into one searchable, geo-aware intel store, plus an
+LLM-driven OSINT search that dispatches those same sources against an entity
+you care about.
 
-## Features
+It is **one C binary and one iOS app**.
 
-- **Interactive Map** — MapLibre GL dark-themed map with 12+ data layers (earthquakes, weather, transit, air quality, radiation, cameras, population, land prices, river levels, crime, buildings, social media)
-- **150+ Data Sources** — JMA, ODPT, e-Stat, PLATEAU, SORAMAME, NRA, MLIT, GSI, RESAS, and more
-- **Source Dashboard** — Real-time monitoring of all sources with status, type (API/Dataset/Scraped/Web Request), usage stats, and data flow visualization
-- **Real-time Feeds** — WebSocket push for earthquake alerts, weather warnings, and transport updates
-- **Dark OSINT Theme** — Cyberpunk-inspired command center aesthetic
+```
+native/     the engine — a single C binary, bin/japanosint
+              collectors/sources/*.c   one data source per file (1,016 files)
+              core/                    scheduler, intel store, FTS, entity graph,
+                                       alerts, LLM pipeline, HTTP API
+              lib/                     shared parsers/clients (RSS, CSV, geo, ws…)
+              third_party/             vendored SQLite, cJSON, mongoose
+              tools/lint_sources.py    mechanical checks over the collector tree
+ios/        the live client — SwiftUI app (map, intel, dashboard, cases, breach)
+grammars/   GBNF grammars constraining the LLM's structured output
+docs/       see docs/BUILD.md and docs/pipeline.md first
+client/     DORMANT React web app — not served, not started. See client/README.md
+scripts/    llama-server launcher, breach-corpus generator
+launch.sh   the orchestrator: build → server → llama → status
+```
+
+Measured 2026-08-09: 221,534 lines of C outside `third_party/` (163,933 of it
+collectors) and 39,181 lines of Swift.
+
+## Quick start
+
+```sh
+./launch.sh up          # freeze stale procs → build → server :4000 → llama :8080
+./launch.sh tags        # every env knob and flag, grouped
+./launch.sh down
+```
+
+Build and test the engine on its own:
+
+```sh
+cd native
+make -j                 # -> bin/japanosint
+make selftest
+make unit
+make lint-sources
+```
+
+Prerequisites, sanitizer builds, the `JO_REPO_ROOT` story and CI are all in
+[`docs/BUILD.md`](docs/BUILD.md).
+
+## How many sources are there?
+
+Ask the tree, never a document:
+
+```sh
+make -C native source-count           # macro-aware count of registered source_defs
+native/bin/japanosint --list-sources  # what the built binary registered
+```
+
+As of 2026-08-09 that reports **2,563 registered `source_def`s** (1,104 written
+directly, 1,459 produced by per-file registration macros) — a figure verified
+by diffing the static count against the built binary's `--list-sources` output
+id-for-id, with zero difference in either direction. The number moves with
+every commit, which is exactly why it is derived rather than typed here.
+
+That derivation matters. Many collector files define a local macro — `RSSX`,
+`RSS`, `DEF` and friends — that expands to a complete `source_def` *plus* its
+own `REGISTER_SOURCE`; a single `RSSX(...)` line in
+`native/collectors/sources/arxiv_feeds.c` is 41 sources. A
+`grep -c REGISTER_SOURCE` therefore undercounts badly, and six different wrong
+source counts (150+, 286, 313, 318, 476, ~551) were committed to this repo
+before anyone counted properly. `native/tools/lint_sources.py` expands the
+macros and is the only counter that agrees with the running binary.
 
 ## Architecture
 
-```
-client/          React + Vite + MapLibre GL + Deck.gl + Tailwind
-server/          Express + SQLite + node-cron + WebSocket
-  collectors/    Data fetchers for each source (JMA, ODPT, etc.)
-  routes/        REST API endpoints (/api/sources, /api/layers, /api/data)
-  utils/         Database, scheduler, source registry (150+ sources)
-```
+Every data source is one `source_def` (`native/source.h`) that self-registers
+at load time. The scheduler runs the due ones; each emits records through the
+single `intel_sink` chokepoint (`native/core/intel.c`) which upserts into
+`intel_items`, indexes them into FTS5 (MeCab-segmented for Japanese), runs
+near-duplicate detection, extracts entities into the entity graph, and
+evaluates alert rules. The OSINT search pipeline reuses the *same* registry:
+an LLM picks source ids, they run pivoted on an entity, and the results are
+both persisted as intel and synthesised into an answer.
 
-## Quick Start
+Full walkthrough: [`docs/pipeline.md`](docs/pipeline.md).
+Writing a new source: [`native/collectors/SOURCE_AUTHORING_CONTRACT.md`](native/collectors/SOURCE_AUTHORING_CONTRACT.md).
 
-```bash
-npm run install:all   # Install all dependencies
-npm run dev           # Start both server (4000) and client (3000)
-```
+## Clients
 
-- Map UI: http://localhost:3000
-- Source Dashboard: http://localhost:3000/sources
-- API: http://localhost:4000/api/sources
+* **`ios/` — the live client.** SwiftUI: map with per-layer feature caching,
+  intel feed, source dashboard, cases, entity graph, camera viewer, breach
+  check, plus a share extension and widgets.
+* **`client/` — dormant.** A React/Vite/MapLibre web app from the Node era.
+  Nothing builds, serves or starts it; the C server has no static handler and
+  404s every non-`/api` path. Read [`client/README.md`](client/README.md)
+  before touching it.
 
-## Data Source Categories
+## History, so the tree makes sense
 
-| Category | Sources | Examples |
-|----------|---------|---------|
-| Environment | 20+ | JMA earthquakes, weather, AMeDAS, Himawari satellite |
-| Transport | 15+ | ODPT trains/buses, Shinkansen status, flight tracking |
-| Geospatial | 10+ | PLATEAU 3D buildings, GSI tiles, active fault maps |
-| Statistics | 15+ | e-Stat population mesh, RESAS, census data |
-| Economy | 10+ | MLIT land prices, rental data, J-REIT |
-| Safety | 10+ | Police crime maps, hazard maps, shelter locations |
-| Infrastructure | 15+ | River levels, XRAIN radar, power grid, EV charging |
-| Cyber/IoT | 8+ | Shodan, NICTER darknet, JPCERT alerts |
-| Social | 10+ | Twitter/X, Flickr, YouTube |
-| Satellite | 8+ | Tellus, Sentinel, Himawari-9, ALOS |
-| Health | 5+ | NDB, influenza surveillance, pharmacy map |
-| Commercial | 8+ | Docomo, Agoop, HERE Maps |
-| Ocean/Marine | 7+ | AIS vessels, wave data, sea temperature |
+There used to be a Node backend at `server/` (Express + SQLite + node-cron +
+WebSocket). It was **deleted on 2026-05-17** and fully replaced by the C
+engine. Nothing in this repo runs `npm run dev` any more. Two artefacts of that
+era survive on purpose: the contract-parity fixtures in
+`native/tests/contract/` (byte-level Node baselines that can never be
+re-captured — treat them as read-only) and the `client/` app above.
 
 ## License
 

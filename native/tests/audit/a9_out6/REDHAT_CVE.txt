@@ -1,0 +1,21 @@
+=== REDHAT_CVE  entity=CVE-2021-44228
+exit: 0
+sched: rc=0 records=1 331ms
+--- stderr ---
+[REDHAT_CVE] emitted 1
+[sched] REDHAT_CVE run rc=0 records=1 331ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: cve=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            REDHAT_CVE|CVE-2021-44228
+  title          CVE-2021-44228 — Critical
+  body           {"cve":"CVE-2021-44228","severity":"Critical","cvss3_score":"9.8","description":"log4j-core: Remote code execution in Log4j 2.x when logs contain an attacker-controlled string value","source":"Red Hat Security Data"}
+  summary        Critical
+  link           https://access.redhat.com/security/cve/CVE-2021-44228
+  language       en
+  published_at   2021-12-10T02:01:00Z
+  record_type    cve
+  tags           ["osint-search","REDHAT_CVE"]
+  properties     {"service":"REDHAT_CVE","cve":"CVE-2021-44228","success":true}

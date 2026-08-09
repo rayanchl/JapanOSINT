@@ -1,0 +1,7 @@
+=== FSA_FINBIZ_REGISTRY  entity=野村
+exit: 0
+sched: rc=0 records=0 754ms
+--- stderr ---
+[fsa-registry] http status=403
+[sched] FSA_FINBIZ_REGISTRY run rc=0 records=0 754ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

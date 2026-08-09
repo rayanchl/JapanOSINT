@@ -1,0 +1,33 @@
+=== chaos-bugbounty-jp
+exit: 0
+sched: rc=0 records=8 1301ms
+--- stderr ---
+[threatintel] chaos-bugbounty-jp emitted 8
+[sched] chaos-bugbounty-jp run rc=0 records=8 1301ms
+--- persisted: 8 rows, 0 with lat/lon, 0 with geometry ---
+record_type: program=8
+sub_source_id: (null)=8
+
+--- row 1 ---
+  uid            chaos-bugbounty-jp|Alaska Airlines
+  title          Alaska Airlines bug bounty
+  link           https://chaos-data.projectdiscovery.io/alaska_airlines.zip
+  published_at   2026-07-31T00:28:54.375325028Z
+  record_type    program
+  properties     {"idx":0,"kind":"program","program_name":"Alaska Airlines","program_url":"https://chaos-data.projectdiscovery.io/alaska_airlines.zip","bounty":false,"platform":"","download_url":"https://chaos-data.projectdiscovery.io/alaska_airlines.zip","last_updated":"2026-07-31T00:28:54.375325028Z","change":0,"domains":[],"source":"chaos_index","uid":"Alaska Airlines","title":"Alaska Airlines bug bounty","url":"https://chaos-data.projectdiscovery.io/alaska_airlines.zip","published_at":"2026-07-31T00:28:54.375325028Z"}
+
+--- row 2 ---
+  uid            chaos-bugbounty-jp|Coinsbit
+  title          Coinsbit bug bounty (hackenproof, paid)
+  link           https://chaos-data.projectdiscovery.io/coinsbit.zip
+  published_at   2026-07-31T00:29:10.578669593Z
+  record_type    program
+  properties     {"idx":1,"kind":"program","program_name":"Coinsbit","program_url":"https://chaos-data.projectdiscovery.io/coinsbit.zip","bounty":true,"platform":"hackenproof","download_url":"https://chaos-data.projectdiscovery.io/coinsbit.zip","last_updated":"2026-07-31T00:29:10.578669593Z","change":0,"domains":[],"source":"chaos_index","uid":"Coinsbit","title":"Coinsbit bug bounty (hackenproof, paid)","url":"https://chaos-data.projectdiscovery.io/coinsbit.zip","published_at":"2026-07-31T00:29:10.578669593Z"}
+
+--- row 3 ---
+  uid            chaos-bugbounty-jp|LINE
+  title          LINE bug bounty (hackerone, paid)
+  link           https://chaos-data.projectdiscovery.io/line.zip
+  published_at   2026-07-31T00:29:31.079929734Z
+  record_type    program
+  properties     {"idx":2,"kind":"program","program_name":"LINE","program_url":"https://chaos-data.projectdiscovery.io/line.zip","bounty":true,"platform":"hackerone","download_url":"https://chaos-data.projectdiscovery.io/line.zip","last_updated":"2026-07-31T00:29:31.079929734Z","change":0,"domains":[],"source":"chaos_index","uid":"LINE","title":"LINE bug bounty (hackerone, paid)","url":"https://chaos-data.projectdiscovery.io/line.zip","published_at":"2026-07-31T00:29:31.079929734Z"}

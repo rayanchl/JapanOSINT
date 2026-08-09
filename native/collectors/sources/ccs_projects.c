@@ -88,15 +88,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (live) {
     for (int i = 0; i < NPROJ; i++) {
       const ccs_proj *pr = &PROJECTS[i];
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(pr->lon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(pr->lat));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(pr->lon, pr->lat);
 
       cJSON *p = cJSON_CreateObject();   /* EXACT JS key order */
       char pid[16];
@@ -113,6 +105,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddItemToObject(p, "operators", ops);
       cJSON_AddStringToObject(p, "operator_lead", pr->operators[0]);
       cJSON_AddStringToObject(p, "verified_at", iso);   /* live ? iso : null */
+      /* AUDIT NOTE (slice a3): only the NAME of each project is confirmed
+       * against the live JOGMEC page (that is all `matched` counts). The
+       * coordinates, operator lists, region and storage_type in PROJECTS[]
+       * above are a STATIC TABLE compiled into this binary — the page is
+       * image-heavy and exposes no parseable rows or coordinates. Say so in
+       * the record rather than letting `verified_at` imply the whole row was
+       * fetched. */
+      cJSON_AddStringToObject(p, "data_origin", "static_table_name_verified_upstream");
+      cJSON_AddStringToObject(p, "geo_precision", "approximate_project_area");
       cJSON_AddStringToObject(p, "source", "ccs_advanced_jogmec");
       cJSON_AddStringToObject(p, "source_url", SOURCE_URL);
       cJSON_AddItemToObject(f, "properties", p);

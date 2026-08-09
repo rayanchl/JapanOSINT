@@ -1,0 +1,19 @@
+=== kafun-pollen
+exit: 0
+sched: rc=0 records=1 16ms
+--- stderr ---
+[kafun-pollen] probe reachable=0
+[sched] kafun-pollen run rc=0 records=1 16ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: (null)=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            kafun-pollen|portal
+  title          MOE pollen monitoring (はなこさん)
+  summary        Per-prefecture pollen concentration — cedar / cypress / grasses
+  link           https://kafun.env.go.jp/
+  language       ja
+  published_at   2026-07-31T18:03:10.858Z
+  tags           ["pollen","environment","moe","unreachable"]
+  properties     {"operator":"環境省","reachable":false}

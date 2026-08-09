@@ -1,0 +1,62 @@
+=== bitcoin-mag
+exit: 0
+sched: rc=0 records=10 218ms
+--- stderr ---
+[rss] bitcoin-mag emitted 10
+[sched] bitcoin-mag run rc=0 records=10 218ms
+--- persisted: 10 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=10
+sub_source_id: (null)=10
+
+--- row 1 ---
+  uid            bitcoin-mag|https://bitcoinmagazine.com/?p=53797
+  title          Coinkite Releases Fixed Firmware After Coldcard Bug; AI Likely Involved In The Breach
+  body           <p><a rel="nofollow" href="https://bitcoinmagazine.com">Bitcoin Magazine</a><br />
+<img src="https://bitcoinmagazine.com/wp-content/uploads/2026/07/tn2-3.webp" style="display: block; margin: 1em auto"><br />
+<a rel="nofollow" href="https://bitcoinmagazine.com/business/coinkite-releases-fixed-firmware-after-coldcard-bug-ai-likely-involved-in-the-hack">Coinkite Releases Fixed Firmware After Coldcard Bug; AI Likely Involved In The Breach</a></p>
+<p>NVK stated that AI-assisted code review can now find latent bugs at a speed outpacing even the industry’s most seasoned experts, calling it a sober reality of the new AI paradigm.</p>
+<p>This post <a rel="nofollow" href="https://bitcoinmagazine.com/business/coinkite-releases-fixed-firmware-after-coldcard-bug-ai-likely-involved-in-the-hack">Coinkite Releases Fixed Firmware After Coldcard Bug; AI Likely Involved In The Breach</a> first appeared on  …<181 more chars>
+  summary        <p><a rel="nofollow" href="https://bitcoinmagazine.com">Bitcoin Magazine</a><br />
+<img src="https://bitcoinmagazine.com/wp-content/uploads/2026/07/tn2-3.webp" style="display: block; margin: 1em auto"><br />
+<a rel="nofollow" href="https://
+  link           https://bitcoinmagazine.com/business/coinkite-releases-fixed-firmware-after-coldcard-bug-ai-likely-involved-in-the-hack
+  language       en
+  published_at   Fri, 31 Jul 2026 17:57:02 +0000
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"https://bitcoinmagazine.com/?p=53797"}
+
+--- row 2 ---
+  uid            bitcoin-mag|https://bitcoinmagazine.com/?p=53793
+  title          US Closes in on Iran&#8217;s Strait of Hormuz Bitcoin Insurance Policy, Sanctions Companies
+  body           <p><a rel="nofollow" href="https://bitcoinmagazine.com">Bitcoin Magazine</a><br />
+<img src="https://bitcoinmagazine.com/wp-content/uploads/2026/07/US-Closes-In-of-Irans-Bitcoin-Insurance-Policy-in-strait-of-hormuz.jpg" style="display: block; margin: 1em auto"><br />
+<a rel="nofollow" href="https://bitcoinmagazine.com/news/us-sanctions-iran-companies-using-bitcoin">US Closes in on Iran&#8217;s Strait of Hormuz Bitcoin Insurance Policy, Sanctions Companies</a></p>
+<p>The news comes after the U.S. froze Iran's other digital assets. </p>
+<p>This post <a rel="nofollow" href="https://bitcoinmagazine.com/news/us-sanctions-iran-companies-using-bitcoin">US Closes in on Iran&#8217;s Strait of Hormuz Bitcoin Insurance Policy, Sanctions Companies</a> first appeared on <a rel="nofollow" href="https://bitcoinmagazine.com">Bitcoin Magazine</a> and is written by <a rel="nofollow" href="https://bitcoinm …<59 more chars>
+  summary        <p><a rel="nofollow" href="https://bitcoinmagazine.com">Bitcoin Magazine</a><br />
+<img src="https://bitcoinmagazine.com/wp-content/uploads/2026/07/US-Closes-In-of-Irans-Bitcoin-Insurance-Policy-in-strait-of-hormuz.jpg" style="display: bloc
+  link           https://bitcoinmagazine.com/news/us-sanctions-iran-companies-using-bitcoin
+  language       en
+  published_at   Fri, 31 Jul 2026 16:20:58 +0000
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"https://bitcoinmagazine.com/?p=53793"}
+
+--- row 3 ---
+  uid            bitcoin-mag|https://bitcoinmagazine.com/?p=53783
+  title          COLDCARD SECURITY RISK: IMMEDIATE ACTION REQUIRED
+  body           <p><a rel="nofollow" href="https://bitcoinmagazine.com">Bitcoin Magazine</a><br />
+<img src="https://bitcoinmagazine.com/wp-content/uploads/2024/11/coldcard12-scaled.jpg" style="display: block; margin: 1em auto"><br />
+<a rel="nofollow" href="https://bitcoinmagazine.com/news/coldcard-security-risk-immediate-action-required">COLDCARD SECURITY RISK: IMMEDIATE ACTION REQUIRED</a></p>
+<p>IMPORTANT: Major security vulnerability discovered in Coldcard hardware wallets. For your own safety read disclosures and take necessary actions immediately. </p>
+<p>This post <a rel="nofollow" href="https://bitcoinmagazine.com/news/coldcard-security-risk-immediate-action-required">COLDCARD SECURITY RISK: IMMEDIATE ACTION REQUIRED</a> first appeared on <a rel="nofollow" href="https://bitcoinmagazine.com">Bitcoin Magazine</a> and is written by <a rel="nofollow" href="https://bitcoinmagazine.com/authors/shinob …<19 more chars>
+  summary        <p><a rel="nofollow" href="https://bitcoinmagazine.com">Bitcoin Magazine</a><br />
+<img src="https://bitcoinmagazine.com/wp-content/uploads/2024/11/coldcard12-scaled.jpg" style="display: block; margin: 1em auto"><br />
+<a rel="nofollow" hre
+  link           https://bitcoinmagazine.com/news/coldcard-security-risk-immediate-action-required
+  language       en
+  published_at   Fri, 31 Jul 2026 15:22:26 +0000
+  record_type    article
+  tags           ["economy","crypto","markets"]
+  properties     {"guid":"https://bitcoinmagazine.com/?p=53783"}

@@ -4,21 +4,14 @@
  * intentionally not ported (rule 7). No registry row for "police-crime";
  * category derived as "crime" from the collector domain (cf. the related
  * pref-police-crime registry row, category "crime"). */
+#include "../../lib/geojson.h"
 #include "../../source.h"
 #include "../../lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   char iid[32];
@@ -26,15 +19,25 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   cJSON_AddStringToObject(p, "incident_id", iid);
   cJSON *id = cJSON_GetObjectItem(el, "id");
   long long oid = id && cJSON_IsNumber(id) ? (long long)id->valuedouble : 0;
+  /* Stable identity. incident_id is the ARRAY INDEX, and no other property is
+   * a NATIVE_ID_KEY, so lib/geojson.c fell back to sha1({geometry,properties})
+   * — which changes the moment Overpass returns the elements in a different
+   * order, re-keying all ~9.9k rows. The OSM element id is the real identity.
+   * (One-time re-key on deploy.) */
+  char ouid[48];
+  snprintf(ouid, sizeof ouid, "osm/%lld", oid);
+  cJSON_AddStringToObject(p, "uid", ouid);
   const char *nm = ov_tag(el, "name");
   if (!nm) nm = ov_tag(el, "name:en");
-  if (nm) {
-    cJSON_AddStringToObject(p, "area", nm);
-  } else {
-    char dn[48];
-    snprintf(dn, sizeof dn, "Police %lld", oid);
-    cJSON_AddStringToObject(p, "area", dn);
-  }
+  char dn[64];
+  if (!nm) { snprintf(dn, sizeof dn, "Police %lld", oid); nm = dn; }
+  cJSON_AddStringToObject(p, "area", nm);
+  /* lib/geojson.c reads title|name|name_ja|label off the properties, and this
+   * feature carried the station name under "area" only — so all 9,903 rows
+   * persisted with title=NULL (the NO_TITLE verdict). */
+  cJSON_AddStringToObject(p, "title", nm);
+  const char *nmja = ov_tag(el, "name:ja");
+  if (nmja) cJSON_AddStringToObject(p, "name_ja", nmja);
   const char *st = ov_tag(el, "addr:state");
   if (st) cJSON_AddStringToObject(p, "pref", st);
   else cJSON_AddItemToObject(p, "pref", cJSON_CreateNull());
@@ -43,6 +46,13 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   const char *op = ov_tag(el, "operator");
   if (op) cJSON_AddStringToObject(p, "operator", op);
   else cJSON_AddItemToObject(p, "operator", cJSON_CreateNull());
+  /* contact/address tags OSM already gave us and the port threw away */
+  static const char *const EXTRA[] = { "addr:city", "addr:full", "phone",
+                                       "website", "opening_hours", NULL };
+  for (int k = 0; EXTRA[k]; k++) {
+    const char *v = ov_tag(el, EXTRA[k]);
+    if (v) cJSON_AddStringToObject(p, EXTRA[k], v);
+  }
   cJSON_AddStringToObject(p, "country", "JP");
   cJSON_AddStringToObject(p, "source", "police_live");
   cJSON_AddItemToObject(f, "properties", p);

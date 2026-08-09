@@ -7,11 +7,13 @@
 #include "entitystore.h"
 #include "../source.h"
 #include "../third_party/cJSON.h"
+#include "../third_party/sqlite3.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <pthread.h>
 
 /* first balanced {...} → cJSON (== JS extractJson). */
 static cJSON *extract_json(const char *raw) {
@@ -125,12 +127,125 @@ static void assign_services(osint_request *rp, tasklist *tl) {
   free(names);
 }
 
+/* runTasks: dispatch each (persisting LIVE via the per-worker sink), collect
+ * into per-task slots, update progress.
+ *
+ * WHY THIS IS NO LONGER SEQUENTIAL. It was, and the comment here used to say
+ * "faithful" — meaning faithful to the Node original's serial loop. Every task
+ * is a network round trip to a different provider, so an investigation touching
+ * 15 services paid the SUM of 15 latencies for work that shares no state. On a
+ * fleet where single services routinely take 5-30 s that is minutes of wall
+ * clock per query, which is the difference between an investigation tool and a
+ * batch job. Fidelity to a JS loop is not worth that; the observable contract
+ * (which services ran, in what order they appear in `results`) is preserved.
+ *
+ * WHAT IS PRESERVED. Results are written into PREALLOCATED PER-TASK SLOTS and
+ * appended to `results` in task order after the join, so the array is
+ * byte-identical to the serial version regardless of completion order. That
+ * matters beyond tidiness: `results` is serialised straight into the Phase-2
+ * prompt, so a completion-order array would make the same query produce
+ * different follow-up rounds run to run.
+ *
+ * WHAT EACH WORKER MUST OWN. Three things are NOT shareable across threads and
+ * each worker therefore builds its own:
+ *   - db_handle. A sqlite transaction belongs to a connection, and core/intel.c
+ *     wraps every emit in BEGIN/COMMIT; sharing one handle would interleave
+ *     transactions so one worker's ROLLBACK could discard another's rows.
+ *   - intel_sink. It closes over that db_handle, so it has to be per-worker
+ *     too (same source_id/tenant, so the persisted rows are identical).
+ *   - http_client + llm_client. http_client carries a CURLSH share handle with
+ *     no CURLSHOPT_LOCKFUNC installed and a host_log array that log_host()
+ *     reallocs unlocked — sharing one across threads corrupts both. Note
+ *     osint_dispatch() already makes its own http_client per call for the
+ *     source itself; this is for ctx->llm, which it does not.
+ * progress_service_status is safe to call concurrently (core/progress.c is
+ * mutex-guarded so httpd's SSE reader can poll while the worker writes).
+ *
+ * JO_OSINT_FANOUT=1 restores the exact serial behaviour. */
+
+typedef struct {
+  task_t *t;
+  cJSON  *slot;          /* this task's result object, appended in order later */
+} disp_job;
+
+typedef struct {
+  disp_job       *jobs;
+  int             n;
+  int             next;            /* next unclaimed job index */
+  pthread_mutex_t mu;
+  osint_request  *rp;
+} disp_pool;
+
+/* Builds one task's result object. Runs on a worker; touches only `job`,
+ * `rp` (thread-safe) and the resources passed in, all worker-owned. */
+static void dispatch_one(disp_pool *p, disp_job *job, db_handle *db,
+                         llm_client *llm, intel_sink *sink) {
+  task_t *t = job->t;
+  char msg[256];
+  snprintf(msg, sizeof msg, "querying %s", t->entity);
+  progress_service_status(p->rp, t->service, "running", msg, -1, t->entity);
+
+  osint_result r;
+  osint_dispatch(db, llm, t->service, t->entity, t->type, sink, &r);
+
+  cJSON *sr = cJSON_CreateObject();
+  cJSON_AddStringToObject(sr, "name", t->service);
+  cJSON_AddStringToObject(sr, "entity", t->entity);
+  cJSON_AddBoolToObject(sr, "success", r.success);
+  cJSON_AddNumberToObject(sr, "confidence", r.confidence);
+  if (r.data) {
+    cJSON *d = cJSON_Parse(r.data);              /* keep structure if JSON */
+    cJSON_AddItemToObject(sr, "data", d ? d : cJSON_CreateString(r.data));
+  } else cJSON_AddItemToObject(sr, "data", cJSON_CreateNull());
+  /* Every record the service emitted is inside data.records; carry the count
+   * up here too so a client can see at a glance that nothing was dropped. */
+  cJSON_AddNumberToObject(sr, "record_count", r.records);
+  cJSON_AddItemToObject(sr, "error",
+    r.error ? cJSON_CreateString(r.error) : cJSON_CreateNull());
+  /* underlying sources the service hit (provider/endpoint/corpus-source) */
+  cJSON *sj = r.sources_json ? cJSON_Parse(r.sources_json) : NULL;
+  cJSON_AddItemToObject(sr, "sources", sj ? sj : cJSON_CreateArray());
+  job->slot = sr;
+
+  if (!osint_is_implemented(t->service))
+    progress_service_status(p->rp, t->service, "skipped", "not_implemented",
+                            0, t->entity);
+  else
+    progress_service_status(p->rp, t->service, r.success ? "completed" : "failed",
+                            r.error ? r.error : "done",
+                            r.success ? 1 : 0, t->entity);
+  osint_result_free(&r);
+}
+
+static void *dispatch_worker(void *arg) {
+  disp_pool *p = (disp_pool *)arg;
+  db_handle own = {0};
+  if (db_attach(&own, NULL) != 0) return NULL;   /* jobs fall to other workers */
+  sqlite3_exec(own.h, "PRAGMA busy_timeout=30000;", NULL, NULL, NULL);
+  http_client *http = http_client_new();
+  llm_client llm; llm_init(&llm, http);
+  intel_sink sink = intel_sink_make(&own, "osint-search", "legacy");
+
+  for (;;) {
+    pthread_mutex_lock(&p->mu);
+    int i = (p->next < p->n) ? p->next++ : -1;
+    pthread_mutex_unlock(&p->mu);
+    if (i < 0) break;
+    dispatch_one(p, &p->jobs[i], &own, &llm, &sink);
+  }
+
+  intel_sink_free(&sink);
+  http_client_free(http);
+  db_close(&own);
+  return NULL;
+}
+
 /* An LLM prompt is the ONE place in this pipeline that physically cannot take
  * every record a service returned — context is finite. The exhaustive-use rule
- * (docs/SOURCE_EXHAUSTIVENESS.md) therefore does not say "never bound"; it says
- * a bound must be the consumer's, explicit, and visible. So: the stored result
- * and /api/search/results keep every record, and the prompt gets a labelled
- * view — `records` trimmed to JO_PROMPT_RECORDS_PER_SERVICE (default 8) with
+ * (docs/SOURCE_EXHAUSTIVENESS.md) does not say "never bound"; it says a bound
+ * must be the consumer's, explicit, and visible. So the stored result and
+ * /api/search/results keep every record, and the prompt gets a labelled view —
+ * `records` trimmed to JO_PROMPT_RECORDS_PER_SERVICE (default 8) with
  * `records_shown`, `record_count` and `prompt_truncated` stated in-band, so the
  * model knows what it is not being shown instead of assuming it saw it all. */
 static int prompt_records_per_service(void) {
@@ -164,55 +279,82 @@ static char *results_view_for_prompt(const cJSON *results) {
   return out;
 }
 
-/* runTasks: dispatch each (persisting LIVE via `sink`), append to results,
- * update progress (== JS runTasks; sequential — faithful, dispatch is the
- * unit of work). */
 static void run_tasks(osint_request *rp, db_handle *db, llm_client *llm,
                       intel_sink *sink, tasklist *tl, cJSON *results) {
-  for (int i = 0; i < tl->n; i++) {
-    task_t *t = &tl->t[i];
-    char msg[256];
-    snprintf(msg, sizeof msg, "querying %s", t->entity);
-    progress_service_status(rp, t->service, "running", msg, -1, t->entity);
+  if (tl->n <= 0) return;
 
-    osint_result r;
-    osint_dispatch(db, llm, t->service, t->entity, t->type, sink, &r);
+  int fanout = 6;
+  const char *fe = getenv("JO_OSINT_FANOUT");
+  if (fe) fanout = atoi(fe);
+  if (fanout < 1)  fanout = 1;
+  if (fanout > 16) fanout = 16;
+  if (fanout > tl->n) fanout = tl->n;
 
-    cJSON *sr = cJSON_CreateObject();
-    cJSON_AddStringToObject(sr, "name", t->service);
-    cJSON_AddStringToObject(sr, "entity", t->entity);
-    cJSON_AddBoolToObject(sr, "success", r.success);
-    cJSON_AddNumberToObject(sr, "confidence", r.confidence);
-    if (r.data) {
-      cJSON *d = cJSON_Parse(r.data);            /* keep structure if JSON */
-      cJSON_AddItemToObject(sr, "data", d ? d : cJSON_CreateString(r.data));
-    } else cJSON_AddItemToObject(sr, "data", cJSON_CreateNull());
-    /* Every record the service emitted is inside data.records; carry the count
-     * up here too so a client can see at a glance that nothing was dropped. */
-    cJSON_AddNumberToObject(sr, "record_count", r.records);
-    cJSON_AddItemToObject(sr, "error",
-      r.error ? cJSON_CreateString(r.error) : cJSON_CreateNull());
-    /* underlying sources the service hit (provider/endpoint/corpus-source) */
-    cJSON *sj = r.sources_json ? cJSON_Parse(r.sources_json) : NULL;
-    cJSON_AddItemToObject(sr, "sources", sj ? sj : cJSON_CreateArray());
-    cJSON_AddItemToArray(results, sr);
+  disp_pool p = {0};
+  p.jobs = calloc((size_t)tl->n, sizeof *p.jobs);
+  if (!p.jobs) return;
+  p.n = tl->n;
+  p.rp = rp;
+  for (int i = 0; i < tl->n; i++) p.jobs[i].t = &tl->t[i];
+  pthread_mutex_init(&p.mu, NULL);
 
-    if (!osint_is_implemented(t->service))
-      progress_service_status(rp, t->service, "skipped", "not_implemented",
-                              0, t->entity);
-    else
-      progress_service_status(rp, t->service, r.success ? "completed" : "failed",
-                              r.error ? r.error : "done",
-                              r.success ? 1 : 0, t->entity);
-    osint_result_free(&r);
+  if (fanout == 1) {
+    /* Serial: reuse the caller's db/llm/sink exactly as before, so a fanout of
+     * 1 is not merely equivalent to the old path but literally is it. */
+    for (int i = 0; i < tl->n; i++) dispatch_one(&p, &p.jobs[i], db, llm, sink);
+  } else {
+    /* The threads that ACTUALLY started are collected contiguously, so the
+     * join walks exactly them.
+     *
+     * It used to join th[0..started) where `started` was a COUNT, not the set
+     * of successful indices: one EAGAIN at i=0 meant joining a calloc-zeroed
+     * pthread_t (undefined behaviour) and, worse, never joining the worker
+     * that DID start — leaving it running dispatch_one() against p.jobs after
+     * this function had freed it and returned off its own stack frame. */
+    pthread_t *th = calloc((size_t)fanout, sizeof *th);
+    int started = 0;
+    if (th) {
+      for (int i = 0; i < fanout; i++)
+        if (pthread_create(&th[started], NULL, dispatch_worker, &p) == 0)
+          started++;
+    }
+    /* If not a single worker could start, run the queue inline rather than
+     * returning an empty result set — a thread-creation failure must degrade
+     * to "slow", never to "this investigation found nothing". */
+    if (started == 0) {
+      for (int i = 0; i < tl->n; i++) dispatch_one(&p, &p.jobs[i], db, llm, sink);
+    } else {
+      /* Every started worker is joined before the shared state below is
+       * touched — a partial failure must not free p.jobs / p.mu out from
+       * under a worker that is still draining the queue. */
+      for (int i = 0; i < started; i++) pthread_join(th[i], NULL);
+    }
+    free(th);
   }
+
+  /* Append in TASK order, not completion order — see the note above. */
+  for (int i = 0; i < tl->n; i++)
+    if (p.jobs[i].slot) cJSON_AddItemToArray(results, p.jobs[i].slot);
+
+  pthread_mutex_destroy(&p.mu);
+  free(p.jobs);
 }
 
-void osint_pipeline_run(db_handle *db, llm_client *llm,
+void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
                         const char *request_id, const char *query,
                         int max_rounds) {
   osint_request *rp = progress_get(request_id);
   if (!rp) return;
+  /* This function IS the off-loop thread (searchapi.c spawns it detached), and
+   * everything below writes through emit()'s BEGIN/COMMIT. On the caller's
+   * shared handle those transactions interleave with the event loop's own
+   * BEGIN IMMEDIATE handlers — a concurrent upload's ROLLBACK would discard
+   * this investigation's rows, its COMMIT would publish them half-written. The
+   * dispatch workers below already each own a connection (db_attach in
+   * dispatch_worker); this is the same rule applied to the thread that owns
+   * the serial path, the run-summary row and the entity-graph writes. */
+  db_handle own;
+  db_handle *db = db_worker_open(&own, shared_db);
   intel_sink sink = intel_sink_make(db, "osint-search", "legacy");
   if (max_rounds <= 0) max_rounds = 5;
 
@@ -480,6 +622,8 @@ void osint_pipeline_run(db_handle *db, llm_client *llm,
   cJSON_Delete(results);
   if (analysis) cJSON_Delete(analysis);
   strset_free(&executed);
+  intel_sink_free(&sink);          /* make() heap-allocates; nothing freed it */
+  db_worker_close(&own);           /* no-op if we fell back to shared_db */
   fprintf(stderr, "[pipeline] %s done: %d svc, %d ok, %d round(s)\n",
           request_id, total, ok, round + 1);
 }

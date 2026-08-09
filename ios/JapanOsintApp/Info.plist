@@ -34,5 +34,26 @@
 			</array>
 		</dict>
 	</array>
+	<!-- NSSupportsLiveActivities is deliberately ABSENT.
+	     Declaring it advertises a capability the app cannot deliver: nothing
+	     calls Activity.request(...), and the only renderer
+	     (JapanOsintWidgets/SearchLiveActivity.swift) sits in a folder with no
+	     Xcode target, so it never compiles. Re-add this key in the same change
+	     that adds the widget extension target — see ios/EXTENSION_TARGETS_TODO.md
+	     step 7. It is required on the APP target as well as the extension, or
+	     Activity.request(...) throws at runtime. -->
+	<!-- Background refresh (roadmap 37). These identifiers must match the ones
+	     registered in BackgroundRefresh.swift verbatim, and the target needs the
+	     Background Modes capability (fetch + processing) enabled in Xcode. -->
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.rayanchl.japanosint.refresh</string>
+		<string>com.rayanchl.japanosint.sync</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>processing</string>
+	</array>
 </dict>
 </plist>

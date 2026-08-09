@@ -1,0 +1,51 @@
+=== INATURALIST  entity=Tokyo
+exit: 0
+sched: rc=0 records=30 1725ms
+--- stderr ---
+[INATURALIST] emitted 30
+[sched] INATURALIST run rc=0 records=30 1725ms
+--- persisted: 30 rows, 30 with lat/lon, 0 with geometry ---
+record_type: inaturalist-observation=30
+sub_source_id: (null)=30
+
+--- row 1 ---
+  uid            INATURALIST|INAT|386823431
+  title          Vespa analis insularis
+  body           {"scientific_name":"Vespa analis insularis","locality":"Aobacho 2-Chōme, Higashimurayama, Tokyo, JP","dataset":"iNaturalist","observed":"2026-07-31","lat":35.7616132856,"lon":139.4863412517,"source":"INATURALIST"}
+  summary        Aobacho 2-Chōme, Higashimurayama, Tokyo, JP
+  link           https://www.inaturalist.org/observations/386823431
+  language       en
+  published_at   2026-07-31
+  lat            35.7616132856
+  lon            139.4863412517
+  record_type    inaturalist-observation
+  tags           ["osint-search","biodiversity"]
+  properties     {"service":"INATURALIST","source":"INATURALIST","scientific_name":"Vespa analis insularis","dataset":"iNaturalist","query":"Tokyo","lat":35.7616132856,"lon":139.4863412517,"success":true}
+
+--- row 2 ---
+  uid            INATURALIST|INAT|386836794
+  title          Alcimocoris japonensis
+  body           {"scientific_name":"Alcimocoris japonensis","locality":"Fuchu, Tokyo, JP","dataset":"iNaturalist","observed":"2026-07-31","lat":35.6815033333,"lon":139.484955,"source":"INATURALIST"}
+  summary        Fuchu, Tokyo, JP
+  link           https://www.inaturalist.org/observations/386836794
+  language       en
+  published_at   2026-07-31
+  lat            35.6815033333
+  lon            139.484955
+  record_type    inaturalist-observation
+  tags           ["osint-search","biodiversity"]
+  properties     {"service":"INATURALIST","source":"INATURALIST","scientific_name":"Alcimocoris japonensis","dataset":"iNaturalist","query":"Tokyo","lat":35.6815033333,"lon":139.484955,"success":true}
+
+--- row 3 ---
+  uid            INATURALIST|INAT|386814503
+  title          Greater Blue Skimmer
+  body           {"species":"Greater Blue Skimmer","scientific_name":"Orthetrum melania","locality":"Setagaya, Tokyo, Japan","dataset":"iNaturalist","observed":"2026-07-31","lat":35.6546804833,"lon":139.6639773833,"source":"INATURALIST"}
+  summary        Setagaya, Tokyo, Japan
+  link           https://www.inaturalist.org/observations/386814503
+  language       en
+  published_at   2026-07-31
+  lat            35.6546804833
+  lon            139.6639773833
+  record_type    inaturalist-observation
+  tags           ["osint-search","biodiversity"]
+  properties     {"service":"INATURALIST","source":"INATURALIST","scientific_name":"Orthetrum melania","dataset":"iNaturalist","query":"Tokyo","lat":35.6546804833,"lon":139.6639773833,"success":true}

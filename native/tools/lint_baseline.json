@@ -1,0 +1,24 @@
+{
+  "_comment": [
+    "Known-bad counts for native/tools/lint_sources.py. CI fails only",
+    "when a count goes UP, so the numbers can only ratchet down.",
+    "Regenerate with: python3 native/tools/lint_sources.py --write-baseline",
+    "Every count here is a defect that still needs fixing, not an",
+    "approved exception."
+  ],
+  "checks": {
+    "dup-id": 0,
+    "geo-precision": 118,
+    "quarantine-empty": 11,
+    "registry-orphan": 1,
+    "rowid-unchecked": 0,
+    "snprintf-guard": 6,
+    "unresolved-id": 0
+  },
+  "registered_sources": {
+    "direct": 1104,
+    "macro_expanded": 6975,
+    "total": 8079,
+    "unresolved": 0
+  }
+}

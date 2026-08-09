@@ -54,17 +54,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         (rd && cJSON_IsString(rd) && rd->valuestring && rd->valuestring[0])
           ? rd->valuestring : NULL;
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(a->lon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(a->lat));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(a->lon, a->lat);
 
       cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
+      /* Stable per-area identity. Without an id key the geojson toolkit fell
+       * back to sha1(geometry+properties) — and since the properties contain
+       * the weather string, EVERY forecast change minted a brand-new row
+       * instead of updating the area's pin (10 areas → ~240 rows/day). */
+      {
+        char sid[32];
+        snprintf(sid, sizeof sid, "jma-area-%s", a->code);
+        cJSON_AddStringToObject(p, "id", sid);
+      }
       cJSON_AddStringToObject(p, "area_code", a->code);
       cJSON_AddStringToObject(p, "area_name", a->name);
       cJSON_AddStringToObject(p, "weather", weather);
@@ -72,7 +73,25 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         wind ? cJSON_CreateString(wind) : cJSON_CreateNull());
       cJSON_AddItemToObject(p, "report_at",
         report_at ? cJSON_CreateString(report_at) : cJSON_CreateNull());
+      /* geojson T_PUB is published_at|observed_at|time|timestamp — "report_at"
+       * matched none, so the timeline column stayed empty. */
+      if (report_at) cJSON_AddStringToObject(p, "published_at", report_at);
       cJSON_AddStringToObject(p, "source", "jma_forecast");
+      /* geojson pickText looks for title|name|name_ja|label; "area_name" is
+       * none of them, so every forecast row had a NULL title. Compose it from
+       * the fetched area name + the fetched weather string. */
+      {
+        char t[512];
+        snprintf(t, sizeof t, "%s \xE2\x80\x94 %s", a->name, weather);
+        cJSON_AddStringToObject(p, "title", t);
+      }
+      {
+        char lk[160];
+        snprintf(lk, sizeof lk,
+          "https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=%s",
+          a->code);
+        cJSON_AddStringToObject(p, "link", lk);
+      }
       cJSON_AddItemToObject(f, "properties", p);
       cJSON_AddItemToArray(features, f);
     }

@@ -1,0 +1,39 @@
+=== jma-tide
+exit: 0
+sched: rc=0 records=166 1737ms
+--- stderr ---
+[jma-tide] emitted 166
+[sched] jma-tide run rc=0 records=166 1737ms
+--- persisted: 166 rows, 166 with lat/lon, 166 with geometry ---
+record_type: jma-tide=166
+sub_source_id: (null)=166
+
+--- row 1 ---
+  uid            jma-tide|JMA_TIDE_102331
+  title          函館
+  published_at   2026-08-01T01:00:00+09:00
+  lat            41.78167
+  lon            140.72472
+  geometry       {"type":"Point","coordinates":[140.72472,41.78167]}
+  record_type    jma-tide
+  properties     {"station_id":"JMA_TIDE_102331","name":"函館","level_cm":53,"astro_cm":-12,"anomaly_cm":65,"hours_ago":0,"class20_name":"函館市","address":"北海道 函館市 海岸町","reference":"TP（東京湾平均海面）","operator_type":"気象庁","country":"JP","observed_at":"2026-08-01T01:00:00+09:00","source":"jma_bosai_tidelevel"}
+
+--- row 2 ---
+  uid            jma-tide|JMA_TIDE_101631
+  title          小樽
+  published_at   2026-08-01T01:00:00+09:00
+  lat            43.19028
+  lon            141.01306
+  geometry       {"type":"Point","coordinates":[141.01306,43.19028]}
+  record_type    jma-tide
+  properties     {"station_id":"JMA_TIDE_101631","name":"小樽","level_cm":19,"astro_cm":11,"anomaly_cm":8,"hours_ago":0,"class20_name":"小樽市","address":"北海道 小樽市 築港","reference":"TP（東京湾平均海面）","operator_type":"気象庁","country":"JP","observed_at":"2026-08-01T01:00:00+09:00","source":"jma_bosai_tidelevel"}
+
+--- row 3 ---
+  uid            jma-tide|JMA_TIDE_102103
+  title          室蘭
+  published_at   2026-08-01T01:00:00+09:00
+  lat            42.34444
+  lon            140.95333
+  geometry       {"type":"Point","coordinates":[140.95333,42.34444]}
+  record_type    jma-tide
+  properties     {"station_id":"JMA_TIDE_102103","name":"室蘭","level_cm":47,"astro_cm":-12,"anomaly_cm":59,"hours_ago":0,"class20_name":"室蘭市","address":"北海道 室蘭市 祝津町１丁目","reference":"TP（東京湾平均海面）","operator_type":"港湾局","country":"JP","observed_at":"2026-08-01T01:00:00+09:00","source":"jma_bosai_tidelevel"}

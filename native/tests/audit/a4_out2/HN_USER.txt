@@ -1,0 +1,20 @@
+=== HN_USER  entity=pg
+exit: 0
+sched: rc=0 records=1 210ms
+--- stderr ---
+[HN_USER] emitted 1
+[sched] HN_USER run rc=0 records=1 210ms
+--- persisted: 1 rows, 0 with lat/lon, 0 with geometry ---
+record_type: hackernews-user=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            HN_USER|pg
+  title          HN user pg (karma 157316)
+  body           {"username":"pg","karma":157316,"about":"Bug fixer.","source":"Hacker News"}
+  summary        Bug fixer.
+  link           https://news.ycombinator.com/user?id=pg
+  language       en
+  record_type    hackernews-user
+  tags           ["osint-search","HN_USER"]
+  properties     {"service":"HN_USER","success":true}

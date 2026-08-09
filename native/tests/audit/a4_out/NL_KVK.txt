@@ -1,0 +1,7 @@
+=== NL_KVK  entity=Toyota
+exit: 0
+sched: rc=0 records=0 0ms
+--- stderr ---
+[NL_KVK] gated (no KVK_API_KEY)
+[sched] NL_KVK run rc=0 records=0 0ms
+--- persisted: 0 rows, 0 with lat/lon, 0 with geometry ---

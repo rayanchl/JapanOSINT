@@ -1,0 +1,21 @@
+=== BIGDATACLOUD_REVERSE  entity=35.68,139.76
+exit: 0
+sched: rc=0 records=1 141ms
+--- stderr ---
+[BIGDATACLOUD_REVERSE] emitted 1
+[sched] BIGDATACLOUD_REVERSE run rc=0 records=1 141ms
+--- persisted: 1 rows, 1 with lat/lon, 0 with geometry ---
+record_type: reverse-geocode=1
+sub_source_id: (null)=1
+
+--- row 1 ---
+  uid            BIGDATACLOUD_REVERSE|revgeo:35.68000,139.76000
+  title          Chiyoda, Japan
+  body           {"locality":"Chiyoda","city":"Tokyo","subdivision":"Tokyo","country":"Japan","lat":35.68,"lon":139.76,"source":"BigDataCloud"}
+  summary        Tokyo
+  language       en
+  lat            35.68
+  lon            139.76
+  record_type    reverse-geocode
+  tags           ["osint-search","BIGDATACLOUD_REVERSE"]
+  properties     {"service":"BIGDATACLOUD_REVERSE","success":true}

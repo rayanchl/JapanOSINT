@@ -179,6 +179,12 @@ static cJSON *query_malwarebazaar(http_client *http, const char *hash) {
   int hc = http_request(http, "POST", "https://mb-api.abuse.ch/api/v1/",
                         hdrs, post, strlen(post), 30000, 1, &hr);
   if (hc != 0 || hr.status != 200 || !hr.body) {
+    /* 2026-07: mb-api.abuse.ch answers 401 {"error":"Unauthorized"} for
+     * keyless calls — abuse.ch made Auth-Key mandatory, so the MalwareBazaar
+     * half of this lookup is effectively key-gated now. */
+    fprintf(stderr, "[hash-lookup] MalwareBazaar http status=%d%s\n",
+            (int)hr.status,
+            hr.status == 401 ? " (abuse.ch now requires an Auth-Key header)" : "");
     http_response_free(&hr);
     cJSON_AddStringToObject(result, "error", "API request failed");
     return result;

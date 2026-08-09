@@ -50,15 +50,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         lon = cJSON_GetArrayItem(gc, 0);
       if (!lat || cJSON_IsNull(lat) || !lon || cJSON_IsNull(lon)) continue;
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(cJSON_GetNumberValue(lon)));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(cJSON_GetNumberValue(lat)));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(cJSON_GetNumberValue(lon), cJSON_GetNumberValue(lat));
 
       cJSON *pr = cJSON_CreateObject();          /* EXACT JS key order */
       /* name = p.name ?? p.properties?.name ?? null */

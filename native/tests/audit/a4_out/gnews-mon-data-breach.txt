@@ -1,0 +1,45 @@
+=== gnews-mon-data-breach
+exit: 0
+sched: rc=0 records=100 806ms
+--- stderr ---
+[rss] gnews-mon-data-breach emitted 100
+[sched] gnews-mon-data-breach run rc=0 records=100 806ms
+--- persisted: 100 rows, 0 with lat/lon, 0 with geometry ---
+record_type: article=100
+sub_source_id: (null)=100
+
+--- row 1 ---
+  uid            gnews-mon-data-breach|CBMiWkFVX3lxTE5QZWp3U00tUGhsakNBNU1DY0VvTmhWTjFKeUs0TExDSUZ3WTg4SHYxcjhrcDZBZnBRR2poUXpaU0lSY3VUOWpNWWVfT0JyRk1wbXVSZjZmNE85UQ
+  title          MoD data breach a 'foreseeable' failure that left Afghans in danger, inquiry finds - BBC
+  body           <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE5QZWp3U00tUGhsakNBNU1DY0VvTmhWTjFKeUs0TExDSUZ3WTg4SHYxcjhrcDZBZnBRR2poUXpaU0lSY3VUOWpNWWVfT0JyRk1wbXVSZjZmNE85UQ?oc=5" target="_blank">MoD data breach a 'foreseeable' failure that left Afghans in danger, inquiry finds</a>&nbsp;&nbsp;<font color="#6f6f6f">BBC</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE5QZWp3U00tUGhsakNBNU1DY0VvTmhWTjFKeUs0TExDSUZ3WTg4SHYxcjhrcDZBZnBRR2poUXpaU0lSY3VUOWpNWWVfT0JyRk1wbXVSZjZmNE85UQ?oc=5" target="_blank">MoD data breach a 'foreseeable' failure that 
+  link           https://news.google.com/rss/articles/CBMiWkFVX3lxTE5QZWp3U00tUGhsakNBNU1DY0VvTmhWTjFKeUs0TExDSUZ3WTg4SHYxcjhrcDZBZnBRR2poUXpaU0lSY3VUOWpNWWVfT0JyRk1wbXVSZjZmNE85UQ?oc=5
+  language       en
+  published_at   Wed, 29 Jul 2026 23:13:43 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","data"]
+  properties     {"guid":"CBMiWkFVX3lxTE5QZWp3U00tUGhsakNBNU1DY0VvTmhWTjFKeUs0TExDSUZ3WTg4SHYxcjhrcDZBZnBRR2poUXpaU0lSY3VUOWpNWWVfT0JyRk1wbXVSZjZmNE85UQ"}
+
+--- row 2 ---
+  uid            gnews-mon-data-breach|CBMiogFBVV95cUxQdnBNTGVCMGRiNDZXX19sU2hSaVNXNmpJeWFOUUpPbDUtYThTNVNxVHk1ekVvbHVjbDR0VEhTRDhTekRDVGxRdU9oMlhOSENvMG5CZjJ2cXBRYTA1YXNfcDE4MHhXcFl6YUJXYzIzMXpSckk5VlV6NC1rYU5TTENHY1JvYkw5Wkx4QkhDQ1YyMFBLbFhsN0dPeW9XR1FJQXNwTHc
+  title          Hawthorn Medical breach exposes personal data for 290,000 Mass. residents - The New Bedford Light
+  body           <a href="https://news.google.com/rss/articles/CBMiogFBVV95cUxQdnBNTGVCMGRiNDZXX19sU2hSaVNXNmpJeWFOUUpPbDUtYThTNVNxVHk1ekVvbHVjbDR0VEhTRDhTekRDVGxRdU9oMlhOSENvMG5CZjJ2cXBRYTA1YXNfcDE4MHhXcFl6YUJXYzIzMXpSckk5VlV6NC1rYU5TTENHY1JvYkw5Wkx4QkhDQ1YyMFBLbFhsN0dPeW9XR1FJQXNwTHc?oc=5" target="_blank">Hawthorn Medical breach exposes personal data for 290,000 Mass. residents</a>&nbsp;&nbsp;<font color="#6f6f6f">The New Bedford Light</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMiogFBVV95cUxQdnBNTGVCMGRiNDZXX19sU2hSaVNXNmpJeWFOUUpPbDUtYThTNVNxVHk1ekVvbHVjbDR0VEhTRDhTekRDVGxRdU9oMlhOSENvMG5CZjJ2cXBRYTA1YXNfcDE4MHhXcFl6YUJXYzIzMXpSckk5VlV6NC1rYU5TTENHY1JvYkw5Wkx4QkhDQ1
+  link           https://news.google.com/rss/articles/CBMiogFBVV95cUxQdnBNTGVCMGRiNDZXX19sU2hSaVNXNmpJeWFOUUpPbDUtYThTNVNxVHk1ekVvbHVjbDR0VEhTRDhTekRDVGxRdU9oMlhOSENvMG5CZjJ2cXBRYTA1YXNfcDE4MHhXcFl6YUJXYzIzMXpSckk5VlV6NC1rYU5TTENHY1JvYkw5Wkx4QkhDQ1YyMFBLbFhsN0dPeW9XR1FJQXNwTHc?oc=5
+  language       en
+  published_at   Thu, 30 Jul 2026 17:14:08 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","data"]
+  properties     {"guid":"CBMiogFBVV95cUxQdnBNTGVCMGRiNDZXX19sU2hSaVNXNmpJeWFOUUpPbDUtYThTNVNxVHk1ekVvbHVjbDR0VEhTRDhTekRDVGxRdU9oMlhOSENvMG5CZjJ2cXBRYTA1YXNfcDE4MHhXcFl6YUJXYzIzMXpSckk5VlV6NC1rYU5TTENHY1JvYkw5Wkx4QkhDQ1YyMFBLbFhsN0dPeW9XR1FJQXNwTHc"}
+
+--- row 3 ---
+  uid            gnews-mon-data-breach|CBMitAFBVV95cUxPMGNBMlpSYTRYVlFfN25yZjdMQzY3M0xHelhiNE5BSGdUTGFXN2Izd01WV2l4eEcyRWo0bXNiUkd3RjFVd2M0MlFFZUVHZEpDZERHM3E5QktlQnhucWg2VHhfa3dtNEJwYVNDVEpCWFVWY3NIdE92U3hiVFVTb1BaRmpfYmpsb0VtYk5xRnQyRjA4c0RSaUVHZjQ1WFI2NFg1cy1DUk1UVmZyTDJUTUNFOUlvU00
+  title          Anthropic says its own AI models breached three companies during security tests - techcrunch.com
+  body           <a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxPMGNBMlpSYTRYVlFfN25yZjdMQzY3M0xHelhiNE5BSGdUTGFXN2Izd01WV2l4eEcyRWo0bXNiUkd3RjFVd2M0MlFFZUVHZEpDZERHM3E5QktlQnhucWg2VHhfa3dtNEJwYVNDVEpCWFVWY3NIdE92U3hiVFVTb1BaRmpfYmpsb0VtYk5xRnQyRjA4c0RSaUVHZjQ1WFI2NFg1cy1DUk1UVmZyTDJUTUNFOUlvU00?oc=5" target="_blank">Anthropic says its own AI models breached three companies during security tests</a>&nbsp;&nbsp;<font color="#6f6f6f">techcrunch.com</font>
+  summary        <a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxPMGNBMlpSYTRYVlFfN25yZjdMQzY3M0xHelhiNE5BSGdUTGFXN2Izd01WV2l4eEcyRWo0bXNiUkd3RjFVd2M0MlFFZUVHZEpDZERHM3E5QktlQnhucWg2VHhfa3dtNEJwYVNDVEpCWFVWY3NIdE92U3hiVFVTb1BaRmpfYmpsb0VtYk5xRn
+  link           https://news.google.com/rss/articles/CBMitAFBVV95cUxPMGNBMlpSYTRYVlFfN25yZjdMQzY3M0xHelhiNE5BSGdUTGFXN2Izd01WV2l4eEcyRWo0bXNiUkd3RjFVd2M0MlFFZUVHZEpDZERHM3E5QktlQnhucWg2VHhfa3dtNEJwYVNDVEpCWFVWY3NIdE92U3hiVFVTb1BaRmpfYmpsb0VtYk5xRnQyRjA4c0RSaUVHZjQ1WFI2NFg1cy1DUk1UVmZyTDJUTUNFOUlvU00?oc=5
+  language       en
+  published_at   Fri, 31 Jul 2026 01:06:54 GMT
+  record_type    article
+  tags           ["osint","monitor","alert","data"]
+  properties     {"guid":"CBMitAFBVV95cUxPMGNBMlpSYTRYVlFfN25yZjdMQzY3M0xHelhiNE5BSGdUTGFXN2Izd01WV2l4eEcyRWo0bXNiUkd3RjFVd2M0MlFFZUVHZEpDZERHM3E5QktlQnhucWg2VHhfa3dtNEJwYVNDVEpCWFVWY3NIdE92U3hiVFVTb1BaRmpfYmpsb0VtYk5xRnQyRjA4c0RSaUVHZjQ1WFI2NFg1cy1DUk1UVmZyTDJUTUNFOUlvU00"}

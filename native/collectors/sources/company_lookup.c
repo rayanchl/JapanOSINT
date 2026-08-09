@@ -90,7 +90,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   http_response hr = {0};
   int hc = http_request(ctx->http, "GET", url, NULL, NULL, 0, 20000, 1, &hr);
-  if (hc != 0 || hr.status != 200 || !hr.body) { http_response_free(&hr); return 0; }
+  if (hc != 0 || hr.status != 200 || !hr.body) {
+    /* 2026-07: OpenCorporates closed the keyless v0.4 tier — the search
+     * endpoint answers 401 {"error":{"message":"Invalid Api Token…"}}. Say so
+     * instead of returning a silent empty that looks like "no such company". */
+    fprintf(stderr, "[company-lookup] OpenCorporates http status=%d "
+                    "(v0.4 now requires an api_token) — 0 rows\n", (int)hr.status);
+    http_response_free(&hr); return 0;
+  }
   cJSON *root = cJSON_Parse(hr.body);
   http_response_free(&hr);
   if (!root) return 0;
