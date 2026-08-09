@@ -169,6 +169,9 @@ private struct SearchRunCard: View {
             ProgressView(value: (s?.progress_percent ?? 0) / 100.0)
                 .tint(isError ? theme.danger : theme.accent)
                 .compatThinProgress()
+                // Ease the fill between backend percentage jumps instead of
+                // snapping — the bar glides to each new stage.
+                .animation(.easeInOut(duration: 0.6), value: s?.progress_percent ?? 0)
             HStack {
                 Text(stageLabel(s) + roundSuffix(s))
                     .font(.caption2).foregroundColor(theme.textMuted)
