@@ -39,6 +39,11 @@ struct MapTab: View {
     @State private var spotlightFeature: GeoFeature?
 
     @State private var showLayers = false
+    /// Roadmap 32 — GTFS travel-time reachability. A sheet on both platforms
+    /// (not the macOS inspector the other panels use): it owns its own `Map`
+    /// and tap gesture, so it needs the full canvas, exactly like
+    /// `AOIDrawOverlay`.
+    @State private var showIsochrone = false
     @State private var lookAroundScene: MKLookAroundScene?
     @State private var lookAroundUnavailable = false
     @State private var mapMode: MapMode = .explore
@@ -212,6 +217,11 @@ struct MapTab: View {
                         .inspectorColumnWidth(min: 320, ideal: 380, max: 520)
                 }
                 #endif
+                .sheet(isPresented: $showIsochrone) {
+                    IsochroneOverlay(initialRegion: visibleRect.map {
+                        MKCoordinateRegion($0)
+                    })
+                }
                 .alert("Street view not available here",
                        isPresented: $lookAroundUnavailable) {
                     Button("OK", role: .cancel) {}
@@ -696,6 +706,15 @@ struct MapTab: View {
             Divider()
             Button(action: openLookAround) {
                 Label("Street view", systemImage: "binoculars.fill")
+            }
+            // Roadmap 32. Opens on the region currently in view, so "how far
+            // can I get from here" means from what the analyst is looking at.
+            Button {
+                selectedFeature = nil
+                lookAroundScene = nil
+                showIsochrone = true
+            } label: {
+                Label("Travel time from…", systemImage: "figure.walk.circle")
             }
         } label: {
             Image(systemName: "ellipsis")

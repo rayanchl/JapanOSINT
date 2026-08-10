@@ -132,7 +132,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(data);
   fprintf(stderr, "[edinet-filings] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* Every failure path already returned before here: no key → 0 (gated), and
+   * a failed/unparseable fetch → -1 at `if (!data)`. Reaching this line means
+   * EDINET answered and listed nothing for today — which is the normal state
+   * every weekend and public holiday, since filings land on business days.
+   * The old `n > 0 ? 0 : -1` reported that as a failure, so the scheduler
+   * recorded an error and anomaly_detect quarantined a source that had just
+   * told the truth. */
+  return 0;      /* honest empty is not an error */
 }
 
 static const source_def edinet_filings_def = {
