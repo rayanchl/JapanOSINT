@@ -70,21 +70,43 @@ static cJSON *search_ahmia(http_client *h, const char *q) {
   return on;
 }
 
-/* search_pastebin_count: real Pastebin search → count of /raw/ links found.
- * Returns the count (0 on failure/no hits). */
-static int search_pastebin_count(http_client *h, const char *q) {
+/* search_pastebin: real Pastebin search → the DISTINCT paste URLs the result
+ * page links to. Each hit in the fetched HTML is a `/raw/<key>` reference; we
+ * surface every one of them (exhaustive use — the earlier version counted the
+ * `/raw/` occurrences and discarded the paste identities behind them). Returns
+ * a (possibly empty) array of "https://pastebin.com/<key>" strings; caller owns
+ * it. */
+static cJSON *search_pastebin(http_client *h, const char *q) {
+  cJSON *a = cJSON_CreateArray();
   char enc[1024]; jo_uri_encode_buf(q, enc, sizeof enc);
   char url[1100];
   snprintf(url, sizeof url, "https://pastebin.com/search?q=%s", enc);
   http_response hr = {0};
   int hc = http_request(h, "GET", url, NULL, NULL, 0, 15000, 1, &hr);
-  int pc = 0;
   if (hc == 0 && hr.status == 200 && hr.body) {
     const char *p = hr.body;
-    while ((p = strstr(p, "/raw/")) != NULL) { pc++; p++; }
+    while ((p = strstr(p, "/raw/")) != NULL) {
+      const char *k = p + 5;                 /* start of the paste key */
+      size_t klen = 0;
+      while (k[klen] && ((k[klen] >= 'a' && k[klen] <= 'z') ||
+                         (k[klen] >= 'A' && k[klen] <= 'Z') ||
+                         (k[klen] >= '0' && k[klen] <= '9')) && klen < 16)
+        klen++;
+      if (klen >= 6) {                        /* pastebin keys are ~8 chars */
+        char purl[64];
+        snprintf(purl, sizeof purl, "https://pastebin.com/%.*s", (int)klen, k);
+        int dup = 0, n = cJSON_GetArraySize(a);
+        for (int i = 0; i < n; i++) {
+          cJSON *it = cJSON_GetArrayItem(a, i);
+          if (it && cJSON_IsString(it) && strcmp(it->valuestring, purl) == 0) { dup = 1; break; }
+        }
+        if (!dup) cJSON_AddItemToArray(a, cJSON_CreateString(purl));
+      }
+      p = k + (klen ? klen : 1);
+    }
   }
   http_response_free(&hr);
-  return pc;
+  return a;
 }
 
 static cJSON *search_intelx(http_client *h, const char *q) {
@@ -155,9 +177,9 @@ static int emit_item(intel_sink *sink, const char *q, const char *rk,
 }
 
 /* PER-RECORD EMIT: one item per discovered .onion URL (real Ahmia scrape),
- * one item for the Pastebin mention count when >0 (real /raw/ count), and one
- * item if IntelX (key-gated) returns a real search id. Nothing found → emit
- * nothing, return 0. */
+ * one item per distinct Pastebin paste the search links to (real /raw/ keys),
+ * and one item if IntelX (key-gated) returns a real search id. Nothing found →
+ * emit nothing, return 0. */
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!q || !*q) return 0;
@@ -181,18 +203,23 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(onions);
 
-  /* One item for the Pastebin mention count, only if >0. */
-  int pc = search_pastebin_count(ctx->http, q);
-  if (pc > 0) {
+  /* One item per distinct paste the Pastebin search links to — every paste
+   * identity behind the /raw/ hits is surfaced, not just an aggregate count. */
+  cJSON *pastes = search_pastebin(ctx->http, q);
+  int paste_n = cJSON_GetArraySize(pastes);
+  for (int i = 0; i < paste_n; i++) {
+    cJSON *pu = cJSON_GetArrayItem(pastes, i);
+    if (!pu || !cJSON_IsString(pu)) continue;
+    const char *purl = pu->valuestring;
     cJSON *data = cJSON_CreateObject();
     cJSON_AddStringToObject(data, "source", "Pastebin");
     cJSON_AddStringToObject(data, "query", q);
-    cJSON_AddNumberToObject(data, "mention_count", pc);
-    char rk[320]; snprintf(rk, sizeof rk, "pastecount:%s", q);
-    char title[360]; snprintf(title, sizeof title,
-                              "Pastebin mentions (%d) — %s", pc, q);
-    emitted += emit_item(sink, q, rk, title, "pastebin mentions", data);
+    cJSON_AddStringToObject(data, "paste_url", purl);
+    char rk[320]; snprintf(rk, sizeof rk, "paste:%s", purl);
+    char title[360]; snprintf(title, sizeof title, "Pastebin paste — %s", purl);
+    emitted += emit_item(sink, q, rk, title, "pastebin paste", data);
   }
+  cJSON_Delete(pastes);
 
   /* IntelX only when INTELX_API_KEY is set and returns a real search id. */
   cJSON *ix = search_intelx(ctx->http, q);

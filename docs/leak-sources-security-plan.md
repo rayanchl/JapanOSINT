@@ -271,6 +271,31 @@ k-anon `range` API; owner-reveal `/mine`; sorted-binary `.bin` store; feed-inges
 
 This doc is not legal advice. Get counsel before hosting identity data.
 
+### Leak-collector audit (2026-08-10)
+
+Fabrication + exhaustiveness pass over all breach/leak/paste/darkweb collectors
+(`breach_*`, `credential_leak`, `dehashed_search`, `dark_web_monitor`,
+`pastebin_monitor`, `github_leaks_jp`, `global_ransomlook`,
+`cyi_xposedornot_breaches`, `hudson_rock_jp`, `leakix_jp`, `password_checker`,
+`global_aleph`, `global_icij`):
+
+- **Exhaustiveness (`make audit-sources`):** 0 findings across the leak set; the
+  strict `hp*` gate stays at 0.
+- **Fabrication:** none emit invented rows. `SOURCE_REALITY_REPORT.md` was
+  **stale** — it still flagged `DARK_WEB_MONITOR`, `DEHASHED_SEARCH`, and
+  `PASSWORD_CHECKER` for "names-not-data" halves that had already been removed;
+  the report is now corrected (PARTIAL 21 → 19).
+- **Fixed this pass:** (1) `dark_web_monitor` Pastebin path counted `/raw/` hits
+  and **discarded the paste identities** — now emits one record per distinct
+  paste URL (house-rule #2). (2) `dehashed_search` header comment contradicted
+  its code ("never sends Basic auth" — it does); corrected.
+- **Open, flagged not fixed** (changes an emitted contract — owner's call):
+  `password_checker` still writes the **full** SHA-1/SHA-256/MD5 of the
+  submitted password into its body JSON, which `breach-check-pipeline.md` §7
+  says the served path must not do (emit the 5-char prefix only). This is the
+  live OSINT-pivot tool, not the offline `BREACH_INDEX_PASSWORD` path, but it
+  persists a plaintext-equivalent digest into `intel_items`.
+
 ---
 
 ## 8. Phased roadmap
