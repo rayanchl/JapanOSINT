@@ -3,15 +3,15 @@
  * (dehashed_search → handle_dehashed_search). Canonical SERVICE id in
  * osint_dispatcher.c: {SERVICE_DEHASHED_SEARCH, handle_dehashed_search,
  * "DEHASHED_SEARCH", true}. Entity = email/username/ip/phone/hash/domain/
- * name (auto-detected by detect_query_type, mirrored verbatim). Keys
- * DEHASHED_EMAIL + DEHASHED_API_KEY are read but the upstream Dehashed call
- * is itself only a structured placeholder (it never sends Basic auth), and
- * LeakCheck is keyless — so this is NOT a hard gate; upstream always returns
- * a success=true row. We reproduce its exact `root`:
- *  {query,timestamp,detected_type,results:[<dehashed-stub|err>,<leakcheck>],
- *   total_breaches_found,compromised,recommendation|note,disclaimer}
- * success=true, confidence 90 if total_found>0 else 70. Emits one
- * osint_service_result row (body = {success,confidence,data}). */
+ * name (auto-detected by detect_query_type, mirrored verbatim). Two real
+ * fetches: DeHashed via HTTP Basic auth (DEHASHED_EMAIL + DEHASHED_API_KEY —
+ * skipped silently, no fabricated row, when either is absent), and the keyless
+ * LeakCheck public endpoint. Neither is a hard gate; with no keys and no
+ * breach the source is honestly empty. PER-RECORD EMIT: one osint_service_result
+ * row per real breach source returned (body = {success,confidence,data}); no
+ * breaches → emit nothing. The earlier port carried a Dehashed stub that never
+ * authenticated — that placeholder is gone; the call below sends real Basic
+ * auth and returns NULL on any failure. */
 #include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
