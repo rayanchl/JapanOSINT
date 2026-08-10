@@ -24,7 +24,10 @@ static const hp_source HP2_EU_CENTRAL[] = {
       "the licences held. KRS covers companies; this covers the far larger "
       "population of individual entrepreneurs" },
 
-  { .id = "PL_VAT_WHITELIST", .name = "Poland — VAT taxpayer whitelist",
+  /* The podatki.gov.pl search page — a different endpoint from
+   * reg2_taxid_pivots.c's PL_VAT_WHITELIST, which calls the MF API at
+   * wl-api.mf.gov.pl. Two real sources that had collided on one id (R5). */
+  { .id = "PL_VAT_WHITELIST_SEARCH", .name = "Poland — VAT taxpayer whitelist",
     .name_ja = "ポーランド VAT納税者ホワイトリスト", .category = "government",
     .portal = "https://www.podatki.gov.pl", .record_type = "pl-vat-status",
     .tags = "\"pl\",\"tax\",\"registry\"",

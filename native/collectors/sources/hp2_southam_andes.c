@@ -165,7 +165,11 @@ static const hp_source HP2_ANDES[] = {
       "behind each dataset" },
 
   /* ── Ecuador / Bolivia / Paraguay / Uruguay / Venezuela ────────────────── */
-  { .id = "EC_SRI_RUC", .name = "Ecuador SRI — RUC taxpayer record",
+  /* Same SRI endpoint as reg2_latam_tax.c's EC_SRI_RUC, but read by the engine,
+   * which keeps EVERY scalar of the record rather than the bespoke parser's
+   * chosen fields. Distinct id so both stay reachable (R5) — sharing one id
+   * left whichever linked second dead. */
+  { .id = "EC_SRI_RUC_RECORD", .name = "Ecuador SRI — RUC taxpayer record",
     .name_ja = "エクアドル 納税者登録(RUC)", .category = "economy",
     .portal = "https://srienlinea.sri.gob.ec", .record_type = "ec-taxpayer",
     .tags = "\"ec\",\"tax\",\"identity\"", .want = HP_NUMERIC, .free_tier = 1,
