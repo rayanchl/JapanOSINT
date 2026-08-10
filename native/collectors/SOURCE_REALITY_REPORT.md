@@ -99,7 +99,7 @@ counts without any actual fetched values — exactly the pattern you described.
 | HASH_LOOKUP | MalwareBazaar file intel | VT key-gated; fixed 3-URL "analysis_resources" list |
 | NEWS_AGGREGATOR | GDELT articles + computed sentiment/tallies | NewsAPI key-gated; hardcoded `osint_tips` |
 | NEWS_ARCHIVE | *(dup of aggregator)* hits **live GDELT, not an archive** | same hardcoded tips; mislabeled as archival |
-| PASSWORD_CHECKER | real hashes, entropy, HIBP k-anonymity range check | ~~hardcoded `security_tips`~~ removed; top-20 `COMMON_PASSWORDS` kept as a **scoring input only** (not emitted as a finding). *Open privacy note: still writes the full SHA-1/SHA-256/MD5 of the submitted password into the emitted body — `breach-check-pipeline.md` §7 says the served path must emit only the 5-char prefix.* |
+| PASSWORD_CHECKER | real entropy/strength, HIBP k-anonymity range check | ~~hardcoded `security_tips`~~ removed; top-20 `COMMON_PASSWORDS` kept as a **scoring input only** (not emitted as a finding). *Privacy fixed 2026-08-10: the full SHA-1/SHA-256/MD5 of the submitted password are no longer emitted — only the 5-char SHA-1 k-anon prefix, per `breach-check-pipeline.md` §7.* |
 | TRADEMARK_SEARCH | WIPO + EUIPO marks (often 403 → `api_unavailable`) | USPTO "manual_search_required" + Nice classification hardcoded labels |
 | VEHICLE_LOOKUP | VIN → NHTSA vPIC decode + recalls (real) | **~16** hardcoded source descriptors (CARFAX, FaxVin, Parivahan, Goo-net…) tagged `real_data:true`, no fetch; plate branch local-only |
 | WAYBACK_MACHINE | Internet Archive availability + CDX snapshots | **6** hardcoded "additional_archives" (Archive.is, GhostArchive, Google Cache…) tagged `real_data:true`, built URLs only |

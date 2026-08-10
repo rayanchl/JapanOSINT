@@ -289,12 +289,12 @@ Fabrication + exhaustiveness pass over all breach/leak/paste/darkweb collectors
   and **discarded the paste identities** — now emits one record per distinct
   paste URL (house-rule #2). (2) `dehashed_search` header comment contradicted
   its code ("never sends Basic auth" — it does); corrected.
-- **Open, flagged not fixed** (changes an emitted contract — owner's call):
-  `password_checker` still writes the **full** SHA-1/SHA-256/MD5 of the
-  submitted password into its body JSON, which `breach-check-pipeline.md` §7
-  says the served path must not do (emit the 5-char prefix only). This is the
-  live OSINT-pivot tool, not the offline `BREACH_INDEX_PASSWORD` path, but it
-  persists a plaintext-equivalent digest into `intel_items`.
+- **Also fixed:** `password_checker` used to write the **full** SHA-1/SHA-256/
+  MD5 of the submitted password into its body JSON — a plaintext-equivalent
+  digest persisted into `intel_items`, the exact thing `breach-check-pipeline.md`
+  §7 forbids. Now it emits only the 5-char SHA-1 k-anonymity prefix; the SHA-256
+  and MD5 digest helpers were removed. The useful non-sensitive analysis
+  (entropy, strength score, policy, HIBP breach count) is unchanged.
 
 ---
 

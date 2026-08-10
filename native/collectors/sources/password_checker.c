@@ -5,17 +5,23 @@
  * "PASSWORD_CHECKER" (line 324). On-demand (interval 0); the OSINT dispatcher
  * runs it with ctx->entity = a password.
  *
- * Reproduces password_check() exactly: SHA-1/SHA-256/MD5 hashing (OpenSSL),
- * strength analysis (entropy, char classes, repeating/sequential, common-pass
- * list as a SCORING INPUT only, 0-100 score + rating), HaveIBeenPwned
- * k-anonymity range check (only the first 5 SHA-1 hex chars are sent —
- * https://api.pwnedpasswords.com/range/<prefix>, no API key), enterprise
- * policy check, and a recommendation computed from the real score/breach data.
+ * Reproduces password_check(): strength analysis (entropy, char classes,
+ * repeating/sequential, common-pass list as a SCORING INPUT only, 0-100 score
+ * + rating), HaveIBeenPwned k-anonymity range check (only the first 5 SHA-1 hex
+ * chars are sent — https://api.pwnedpasswords.com/range/<prefix>, no API key),
+ * enterprise policy check, and a recommendation computed from the real
+ * score/breach data.
  *
  * PER-RECORD EMIT: emits ONE intel row keyed "pw:<sha1prefix>" (only the first
- * 5 SHA-1 hex chars — the password is never echoed into a key). body = the
- * real computed hashes/entropy/strength + the real HIBP breach_count. No
- * {success,confidence,data} envelope. The hardcoded security_tips advisory
+ * 5 SHA-1 hex chars — the password is never echoed into a key). body = the real
+ * computed entropy/strength + the real HIBP breach_count. No
+ * {success,confidence,data} envelope.
+ *
+ * PRIVACY (deliberate deviation from upstream — breach-check-pipeline.md §7):
+ * the submitted password's FULL SHA-1/SHA-256/MD5 are NOT emitted. A SHA-1 or
+ * MD5 of a password is plaintext-equivalent (rainbow-tableable), so persisting
+ * it into intel_items would defeat the whole hash-only model. Only the 5-char
+ * SHA-1 k-anonymity prefix is surfaced. The hardcoded security_tips advisory
  * list has been removed (COMMON_PASSWORDS is kept as a scoring input only). */
 #include "../../source.h"
 #include "../../lib/feedlib.h"
@@ -28,7 +34,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <openssl/sha.h>
-#include <openssl/evp.h>
 
 #define HIBP_PASSWORD_URL "https://api.pwnedpasswords.com/range/%s"
 
@@ -56,34 +61,9 @@ static char *sha1_hash(const char *password) {
   return hex;
 }
 
-static char *sha256_hash(const char *password) {
-  unsigned char hash[SHA256_DIGEST_LENGTH];
-  SHA256((const unsigned char *)password, strlen(password), hash);
-  char *hex = calloc(SHA256_DIGEST_LENGTH * 2 + 1, 1);
-  if (!hex) return NULL;
-  for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
-    sprintf(hex + (i * 2), "%02X", hash[i]);
-  return hex;
-}
-
-static char *md5_hash(const char *password) {
-  unsigned char hash[16];
-  unsigned int hash_len = 0;
-  EVP_MD_CTX *ctx = EVP_MD_CTX_new();
-  if (!ctx) return NULL;
-  if (EVP_DigestInit_ex(ctx, EVP_md5(), NULL) != 1 ||
-      EVP_DigestUpdate(ctx, password, strlen(password)) != 1 ||
-      EVP_DigestFinal_ex(ctx, hash, &hash_len) != 1) {
-    EVP_MD_CTX_free(ctx);
-    return NULL;
-  }
-  EVP_MD_CTX_free(ctx);
-  char *hex = calloc(hash_len * 2 + 1, 1);
-  if (!hex) return NULL;
-  for (unsigned int i = 0; i < hash_len; i++)
-    sprintf(hex + (i * 2), "%02X", hash[i]);
-  return hex;
-}
+/* SHA-256/MD5 of the submitted password were removed with the full-digest
+ * emit (breach-check-pipeline.md §7): a password digest is plaintext-equivalent
+ * and must never be persisted. Only the SHA-1 k-anon prefix is used, below. */
 
 static int is_common_password(const char *password) {
   if (!password) return 0;
@@ -337,20 +317,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *hibp = check_hibp(ctx->http, password);
   cJSON_AddItemToObject(root, "breach_check", hibp);
 
+  /* Only the 5-char SHA-1 k-anonymity prefix is surfaced. The full digest of a
+   * submitted password is plaintext-equivalent and is never emitted or stored
+   * (breach-check-pipeline.md §7). */
   cJSON *hashes = cJSON_CreateObject();
   char *sha1 = sha1_hash(password);
-  char *sha256 = sha256_hash(password);
-  char *md5 = md5_hash(password);
   char sha1prefix[6] = {0};
-  if (sha1) strncpy(sha1prefix, sha1, 5);
-  if (sha1) { cJSON_AddStringToObject(hashes, "sha1", sha1); free(sha1); }
-  if (sha256) { cJSON_AddStringToObject(hashes, "sha256", sha256); free(sha256); }
-  if (md5) {
-    cJSON_AddStringToObject(hashes, "md5", md5);
-    cJSON_AddStringToObject(hashes, "md5_warning",
-      "MD5 is cryptographically broken - never use for passwords");
-    free(md5);
-  }
+  if (sha1) { strncpy(sha1prefix, sha1, 5); free(sha1); }
+  cJSON_AddStringToObject(hashes, "sha1_prefix", sha1prefix);
+  cJSON_AddStringToObject(hashes, "note",
+    "Only the SHA-1 k-anonymity prefix is stored; full digests are withheld.");
   cJSON_AddItemToObject(root, "hashes", hashes);
 
   cJSON *policy = check_policy(password, 8, 1, 1, 1, 1);
