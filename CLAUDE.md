@@ -13,6 +13,12 @@ values standing in for a failed fetch. A failure degrades to an explicit
 Full audit of how each collector behaves today:
 `native/collectors/SOURCE_REALITY_REPORT.md`.
 
+One batch is registered but **not** proof-of-life verified: the 1,001
+`collectors/sources/csrc14_*.c` candidates, authored without egress. They obey
+this rule (a dead endpoint returns an explicit error, never invented content)
+but carry no 2xx/parse proof. See `docs/candidate-sources-batch14.md`; promote
+them with `make verify-candidates`.
+
 ## 2. Never discard data — a source that is called must be used exhaustively
 
 **If we spend a request on a source, we use everything it gave back.** Every
