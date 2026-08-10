@@ -446,6 +446,57 @@ extension API {
         return try await request(url, timeout: 60)
     }
 
+    // ── Item 32: GTFS travel-time reachability ─────────────────────────────
+
+    /// `GET /api/isochrone` — where can you actually get to from here, on the
+    /// real timetable, within `maxMin` minutes.
+    ///
+    /// Deliberately no client-side timeout (the inherited `get()` default): a
+    /// cold origin is seconds of server CPU over ~1500 timetable queries, and
+    /// the server answers on a worker thread. Capping it here would abandon a
+    /// request that is about to succeed — and, worse, burn one of the twelve
+    /// per-minute slots for nothing.
+    ///
+    /// Only `lat`/`lon` are required. Every other parameter is omitted when
+    /// nil so the SERVER's documented default applies; sending a client-side
+    /// guess of the default would mean the UI has to be kept in sync with
+    /// isochrone.h forever. All of them come back echoed (and clamped) in
+    /// `meta.params`, which is what the UI displays.
+    func isochrone(lat: Double,
+                   lon: Double,
+                   maxMin: Int? = nil,
+                   bands: [Int]? = nil,
+                   departAt: String? = nil,
+                   maxWalkM: Int? = nil,
+                   walkKmh: Double? = nil,
+                   maxTransfers: Int? = nil) async throws -> Isochrone {
+        var q = [URLQueryItem(name: "lat", value: String(lat)),
+                 URLQueryItem(name: "lon", value: String(lon))]
+        if let v = maxMin       { q.append(.init(name: "max_min", value: String(v))) }
+        if let v = bands, !v.isEmpty {
+            q.append(.init(name: "bands", value: v.map(String.init).joined(separator: ",")))
+        }
+        if let v = departAt, !v.isEmpty { q.append(.init(name: "depart_at", value: v)) }
+        if let v = maxWalkM     { q.append(.init(name: "max_walk_m", value: String(v))) }
+        if let v = walkKmh      { q.append(.init(name: "walk_kmh", value: String(format: "%.1f", v))) }
+        if let v = maxTransfers { q.append(.init(name: "max_transfers", value: String(v))) }
+        let raw: IsochroneResponse = try await get("/api/isochrone", query: q)
+        return raw.decoded()
+    }
+
+    /// Seconds to wait after a 429 from `/api/isochrone`, read out of the
+    /// server's `{"error":"too_many_requests","retry_after_sec":N}` body.
+    /// Returns nil for any other error, so a caller can branch on "throttled"
+    /// without string-matching an error message.
+    static func isochroneRetryAfter(_ error: Error) -> Int? {
+        guard case APIError.http(429, let body) = error,
+              let data = body.data(using: .utf8),
+              let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        else { return nil }
+        return (obj["retry_after_sec"] as? Int)
+            ?? (obj["retry_after_sec"] as? NSNumber)?.intValue
+    }
+
     // ── helpers ────────────────────────────────────────────────────────────
 
     /// Percent-escape a path segment. Ids here include uids like
