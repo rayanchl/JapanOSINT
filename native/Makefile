@@ -102,6 +102,36 @@ selftest: $(BIN)
 audit-sources:
 	@python3 tests/audit_source_exhaustiveness.py --strict 'collectors/sources/hp*_*.c'
 
+# Batch 14 candidate lifecycle (docs/candidate-sources-batch14.tsv). These rows
+# were authored without egress, so they are registered as UNVERIFIED csrc14_*
+# collectors. `verify-candidates` is the promotion step and NEEDS NETWORK: it
+# probes every candidate, keeps the ones that really answer, and records the
+# rest as rejects. Run it, then regenerate from the verified manifest and drop
+# the csrc14_* files.
+.PHONY: verify-candidates
+verify-candidates:
+	@python3 tools/promote_candidates.py ../docs/candidate-sources-batch14.tsv \
+	  --verified ../docs/verified-sources-batch14.tsv \
+	  --rejects  ../docs/rejected-sources-batch14.tsv
+
+# Rebuild the candidate manifest and its collectors from the generator. The
+# reserved-id list is taken live from the tree minus this batch's own ids, so
+# regenerating is idempotent rather than self-excluding.
+.PHONY: regen-candidates
+regen-candidates:
+	@python3 tools/lint_sources.py --list-ids > /tmp/jo_all_ids.txt
+	@cut -f1 ../docs/candidate-sources-batch14.tsv | tail -n +2 > /tmp/jo_b14_ids.txt
+	@grep -Fxv -f /tmp/jo_b14_ids.txt /tmp/jo_all_ids.txt > /tmp/jo_reserved.txt || true
+	@grep -hoE 'https?://[^" ]+' \
+	  $$(ls collectors/sources/*.c collectors/sources/*.inc | grep -v csrc14_) \
+	  | sed 's/[",)\\]*$$//' | sort -u > /tmp/jo_urls.txt
+	@python3 collectors/gen_candidates_jp_fr_us.py \
+	  --out ../docs/candidate-sources-batch14.tsv \
+	  --exclude-urls /tmp/jo_urls.txt --exclude-ids /tmp/jo_reserved.txt
+	@python3 collectors/gen_verified_sources.py ../docs/candidate-sources-batch14.tsv \
+	  --outdir collectors/sources --reserved /tmp/jo_reserved.txt \
+	  --prefix csrc14 --unverified
+
 # Offline unit test for the high-penetrancy record engine (lib/hpengine.c). Its
 # own http_request stub replaces libcurl, so it needs no network and no key —
 # see tests/hpengine_test.c.
