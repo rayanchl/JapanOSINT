@@ -127,9 +127,21 @@ static int derive_key(const char *tenant_id, unsigned char out[32]) {
 /* blob = [12 nonce][16 tag][ct]. Returns malloc'd blob, sets *blen. */
 static unsigned char *secret_encrypt(const char *tid, const char *pt, int *blen) {
   unsigned char key[32]; if (!derive_key(tid, key)) return NULL;
-  unsigned char nonce[12]; RAND_bytes(nonce, 12);
+  /* RAND_bytes CAN fail (no entropy source, a FIPS provider in an error state)
+   * and returns 0 without necessarily filling the buffer. Ignoring that left
+   * the AES-GCM nonce as whatever was on the stack — and a repeated GCM nonce
+   * under one key is not a degraded mode, it is a break: it leaks the XOR of
+   * the two plaintexts and lets an attacker forge the authentication tag. The
+   * data being protected here is tenant API keys, so the only safe response to
+   * a failed draw is to refuse to encrypt. */
+  unsigned char nonce[12];
+  if (RAND_bytes(nonce, 12) != 1) {
+    OPENSSL_cleanse(key, sizeof key);
+    return NULL;
+  }
   int ptl = (int)strlen(pt);
   unsigned char *blob = malloc(12 + 16 + ptl + 16);
+  if (!blob) { OPENSSL_cleanse(key, sizeof key); return NULL; }
   memcpy(blob, nonce, 12);
   EVP_CIPHER_CTX *x = EVP_CIPHER_CTX_new();
   int len, ok = 0;
@@ -146,6 +158,7 @@ static unsigned char *secret_encrypt(const char *tid, const char *pt, int *blen)
     }
   }
   EVP_CIPHER_CTX_free(x);
+  OPENSSL_cleanse(key, sizeof key);   /* don't leave the derived key on the stack */
   if (!ok) { free(blob); return NULL; }
   return blob;
 }
