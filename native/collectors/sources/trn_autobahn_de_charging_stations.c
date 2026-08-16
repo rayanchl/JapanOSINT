@@ -16,7 +16,7 @@
  * This is a keyless alternative to Open Charge Map, which now refuses unkeyed
  * requests. Per-road endpoint; road ids come from /o/autobahn/.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static void charging_extra(cJSON *pr, const cJSON *item) {

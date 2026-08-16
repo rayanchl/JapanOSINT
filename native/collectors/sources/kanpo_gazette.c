@@ -10,8 +10,8 @@
  * Flow: top page → latest issue dates (YYYYMMDD.fullcontents.html) → for each
  * recent date, parse the contents page's <a href="...f.html"><span class="text">
  * TITLE</span></a> entries. uid = kanpo|sha1(date|href|title). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -10,10 +10,10 @@
  * UniCourt — not ported (would be bare links / paywalled). Honest-empty on no
  * match. CourtListener is US case law; results are court cases referencing the
  * query, surfaced verbatim — never fabricated. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

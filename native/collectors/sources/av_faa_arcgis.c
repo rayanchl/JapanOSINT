@@ -50,9 +50,9 @@
  * Licence: US Government work (FAA Aeronautical Information Services / FAA UAS
  * Data Delivery System), public domain, keyless.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

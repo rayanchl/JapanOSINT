@@ -16,10 +16,10 @@
  * The window is bounded with starttime/endtime because the default 12 h for one
  * place is already ~570 KB.
  * Licence: CC BY 4.0 (FMI open data). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

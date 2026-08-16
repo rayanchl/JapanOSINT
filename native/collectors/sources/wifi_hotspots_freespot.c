@@ -15,10 +15,10 @@
  *
  * so every hotspot carries real coordinates and can pin. We follow the picker
  * (never a hardcoded prefecture list) and emit one geo intel item per <item>. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -44,11 +44,11 @@
  *               documented public API and an explicit no-key policy. Read-only
  *               analysis of domain names; no personal data.
  */
-#include "../../lib/osintemit.h"
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/osintemit.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <arpa/inet.h>
 #include <ctype.h>
 #include <netdb.h>

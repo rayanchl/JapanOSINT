@@ -9,9 +9,9 @@
  * address) — NOT a {success,confidence,data,results[]} envelope. title =
  * "<vendor>", remote_key = "mac:<oui>". On HTTP failure / vendor not found →
  * emit NOTHING and return 0 (honest empty). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

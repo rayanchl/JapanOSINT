@@ -13,9 +13,9 @@
  * is_vpn/is_tor/is_proxy/is_datacenter/is_mobile/risk_score.
  * Licence: ipquery.io free API, keyless, no stated rate limit.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -8,9 +8,9 @@
  * We emit one intel_item per matched company: registry code (registrikood),
  * name (nimi), and legal status when the API supplies it. Only real, parsed
  * fields are emitted; fetch failure / no matches → honest empty (return 0). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

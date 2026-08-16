@@ -18,10 +18,10 @@
  * merged. remote_key = "email:<addr>" | "subdomain:<host>"; title = the
  * email/subdomain; body = {value,type,found_via:[...]}. If nothing is
  * harvested, emits nothing and returns 0 (honest empty). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -68,7 +68,8 @@ static int emit_hit(intel_sink *sink, const char *domain, const char *value,
   cJSON_AddStringToObject(body, "type", type);
   cJSON *via = cJSON_CreateArray();
   char tmp[256]; strncpy(tmp, srclist, 255); tmp[255] = 0;
-  for (char *tok = strtok(tmp, ","); tok; tok = strtok(NULL, ","))
+  char *save = NULL;              /* strtok_r: concurrent workers, see jsonlist.c */
+  for (char *tok = strtok_r(tmp, ",", &save); tok; tok = strtok_r(NULL, ",", &save))
     cJSON_AddItemToArray(via, cJSON_CreateString(tok));
   cJSON_AddItemToObject(body, "found_via", via);
   char *bj = cJSON_PrintUnformatted(body);

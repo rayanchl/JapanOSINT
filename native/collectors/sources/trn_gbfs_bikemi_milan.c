@@ -8,7 +8,7 @@
  * Licence: Comune di Milano / Urban Sharing open GBFS feed; listed in MobilityData systems.csv.
  * Parse notes: Same Urban Sharing shape as Bergen: string names, MultiPolygon station_area.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

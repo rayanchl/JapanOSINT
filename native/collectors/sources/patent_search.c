@@ -4,10 +4,10 @@
  * patents by title. PatentsView now requires an API key, so this gates on
  * PATENTSVIEW_API_KEY and is honest-empty without one. (Japan-specific patents
  * are already covered by the scheduled JPO collectors.) */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

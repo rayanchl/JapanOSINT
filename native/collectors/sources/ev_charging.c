@@ -4,9 +4,9 @@
  * (tryOSMChargers, single area.jp) is the faithful keyless live path ported
  * here. The curated EV_CHARGERS seed / _meta envelope is intentionally not
  * ported (JS does `features = []` when nothing live). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

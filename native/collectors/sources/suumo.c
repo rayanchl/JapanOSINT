@@ -5,9 +5,9 @@
  * with no parseable count is OMITTED (honest, possibly empty). Never
  * fabricated counts. Non-spatial: emit intel_item (has_geo=0).
  * uid = suumo|<slug> (mirrors intelUid). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

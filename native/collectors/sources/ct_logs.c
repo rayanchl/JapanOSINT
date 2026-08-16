@@ -10,11 +10,11 @@
  * success always true, confidence 95. Single-entity (pivot) form of the
  * upstream multi-entity loop. Emits one osint_service_result row (body =
  * {success,confidence,data}), like dns_records.c. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/seenset.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/seenset.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <strings.h>
 #include <stdio.h>

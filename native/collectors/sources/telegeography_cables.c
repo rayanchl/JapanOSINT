@@ -3,9 +3,9 @@
  * endpoints (landing points + cables), JP-bbox filter, intel rows.
  * uid = telegeography-cables|landing|<id||name>  /  |cable|<id||name>
  * (== intelUid(SOURCE_ID, "landing|"+...)). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../core/intel.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "core/intel.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -14,9 +14,9 @@
  * HONESTY: the BOE search UI is partly JS-driven and shaped for humans; when
  * the server-rendered HTML yields no /borme/ anchors for the query, run()
  * emits nothing (honest empty, return 0) rather than fabricating records. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -17,9 +17,9 @@
  * bankruptcy?},notes:[…]}}. success = (total>0 || sources_checked>0);
  * confidence 80 / 50 / 30. Emits one osint_service_result row (body =
  * {success,confidence,data}). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>

@@ -3,10 +3,10 @@
  * Keyed on INSTAGRAM_SESSION_COOKIE. Resolves web_info metadata for a fixed
  * set of JP location pages -> non-spatial intel (a location directory).
  * honest empty when gated / on failure. uid = instagram-locations|<locId>. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -15,6 +15,7 @@ No third-party deps — this has to run in CI and in a bare WSL image.
 """
 import sys, json, csv, io, re, gzip, socket
 import urllib.request, urllib.error
+from urllib.parse import urlsplit, urlunsplit, quote
 from concurrent.futures import ThreadPoolExecutor
 
 TIMEOUT = 25
@@ -31,8 +32,31 @@ REFUSAL = re.compile(
     r"subscription required|token (?:is )?(?:invalid|required|expired)",
     re.I)
 
+# urllib puts the URL straight into the request line, which must be ASCII. Our
+# manifests legitimately carry non-ASCII URLs — a CKAN portal is queried as
+# `?q=防災`, and French portals carry accented facet values — and those used to
+# die inside fetch() as `UnicodeEncodeError`, caught by verify()'s generic
+# handler and recorded as a rejection. That read as "endpoint is dead" when the
+# endpoint was never contacted: 208 of batch 14's 457 rejections were this bug.
+# Percent-encode instead. Idempotent, because '%' is in every `safe` set, so an
+# already-encoded URL passes through byte-identical.
+def encode_url(url):
+    p = urlsplit(url)
+    host = p.netloc
+    if any(ord(c) > 127 for c in host):
+        try:
+            host = host.encode("idna").decode("ascii")
+        except UnicodeError:
+            pass                       # let the request fail honestly as NET_ERR
+    return urlunsplit((
+        p.scheme, host,
+        quote(p.path,     safe="/%:@!$&'()*+,;=~-._"),
+        quote(p.query,    safe="/%:@!$&'()*+,;=~-._?"),
+        quote(p.fragment, safe="/%:@!$&'()*+,;=~-._?"),
+    ))
+
 def fetch(url):
-    req = urllib.request.Request(url, headers={
+    req = urllib.request.Request(encode_url(url), headers={
         "User-Agent": UA,
         "Accept": "application/rss+xml, application/atom+xml, application/xml, "
                   "application/json, application/geo+json, text/csv, */*",
@@ -100,6 +124,16 @@ def count_json(text):
                         best, bestk = len(v2), f"{k}.{k2}"
         if best:
             return f"json:{bestk}", best
+        # An envelope whose ONLY list is empty is a result set with no results,
+        # not a one-record document. `{"total_count": 0, "results": []}` used to
+        # fall through to json-object/1 and PASS — a source verified as live
+        # that is structurally guaranteed to emit nothing on every run, which is
+        # the same silent-empty this harness exists to catch. Real single-object
+        # documents (a status/summary doc with no list at all) still pass.
+        if any(isinstance(v, list) for v in doc.values()) or \
+           any(isinstance(v, dict) and any(isinstance(x, list) for x in v.values())
+               for v in doc.values()):
+            return "__empty__", 0
         if doc:
             return "json-object", 1
     return None, 0
@@ -143,6 +177,9 @@ def verify(rec):
     if kind == "__error__":
         head = re.sub(r"\s+", " ", text[:100])
         return (sid, url, "ERROR_BODY", "", 0, status, nbytes, head)
+    if kind == "__empty__":
+        head = re.sub(r"\s+", " ", text[:100])
+        return (sid, url, "EMPTY_RESULTSET", "", 0, status, nbytes, head)
     if not kind:
         head = re.sub(r"\s+", " ", text[:80])
         return (sid, url, "UNPARSEABLE", "", 0, status, nbytes, head)

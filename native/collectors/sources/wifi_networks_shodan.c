@@ -2,9 +2,9 @@
  * Port of server/src/collectors/wifiNetworksShodan.js.
  * Shodan host/search (country:JP wifi OR "wireless" port:80,8080), key in
  * querystring → slice(0,50) → FeatureCollection. Gated on SHODAN_API_KEY. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

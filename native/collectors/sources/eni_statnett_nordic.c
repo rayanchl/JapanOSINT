@@ -16,10 +16,10 @@
  * KEYING: each *Data[] element carries its own countryCode; we key off that,
  * never off array index (index 0 is the row LABEL, not a country).
  * Licence: Statnett driftsdata REST API, public, no key. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

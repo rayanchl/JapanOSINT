@@ -5,11 +5,11 @@
  * rows — JS .map always yields an item). GREYNOISE_API_KEY optional (sent as
  * `key:` header when present); endpoint also tolerates anonymous. Curated
  * _meta dropped. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -1,9 +1,9 @@
 /* collectors/infrastructure/sources/electrical_grid.c — port of
  * server/src/collectors/electricalGrid.js (fetchOverpass single area.jp).
  * POWER_FACILITIES offline fallback intentionally not ported (rule 8). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -45,7 +45,25 @@ CFLAGS  ?= -O2 -g -Wall -Wextra -Wno-unused-parameter -pthread
 # doing an unusual build. `override` keeps the correctness flags no matter
 # what the caller passes, while still letting them change the optimisation
 # level, which is the only thing they actually wanted to change.
-override CFLAGS += -DJO_REPO_ROOT='"$(REPO_ROOT)"' $(PKG_CFLAGS) $(MECAB_CFLAGS) -Ithird_party
+# -iquote decouples a collector's #include lines from its DEPTH in the tree.
+# Every collector used to say #include "../../source.h", which encodes "I am
+# exactly two directories below native/". That made the flat
+# collectors/sources/ layout load-bearing: moving one file into a subdirectory
+# broke ~3,000 include lines, so the tree could never be organised without a
+# mechanical rewrite of all of them, and a per-destination rewrite would have
+# to be redone on the next move too.
+#
+# With these, a collector writes what it means -- #include "source.h",
+# "lib/feedlib.h", "core/httpclient.h" -- and it resolves from any depth,
+# forever. -iquote (not -I) because this must apply to "..." includes only and
+# be searched AFTER the including file's own directory, so a sibling header
+# still wins over a same-named one at the root.
+#   .                    native/ itself: source.h, lib/*, core/*, third_party/*
+#   collectors/sources   the shared .inc/.h siblings (_jp_osint.inc,
+#                        _verified_macros.inc, trn_common.inc, social_fuse.h …)
+#                        which 200+ collectors include by bare name.
+override CFLAGS += -DJO_REPO_ROOT='"$(REPO_ROOT)"' $(PKG_CFLAGS) $(MECAB_CFLAGS) \
+                   -Ithird_party -iquote . -iquote collectors/sources
 # Auto-generate header dependency files (.d) next to each .o so editing a
 # header (e.g. source.h, which defines the ABI-critical source_def struct)
 # forces a recompile of every TU that includes it. Without this, a struct
@@ -61,7 +79,14 @@ BIN := bin/japanosint
 
 CORE_SRC := $(wildcard core/*.c)
 LIB_SRC  := $(wildcard lib/*.c)
-SRC_SRC  := $(wildcard collectors/sources/*.c)
+# RECURSIVE on purpose. This was `wildcard collectors/sources/*.c`, which is a
+# trap the moment anyone organises the 1,200+ collector files into
+# subdirectories: a moved file silently leaves the link, the constructor that
+# would have called REGISTER_SOURCE never runs, and the source simply stops
+# existing at runtime — no error, no warning, and `make` still succeeds. The
+# only symptom is a smaller number from `make source-count`, which nobody
+# diffs. Any nesting under collectors/ is now picked up.
+SRC_SRC  := $(shell find collectors -name '*.c' | sort)
 SRCS     := main.c registry.c $(CORE_SRC) $(LIB_SRC) $(SRC_SRC)
 OBJS     := $(patsubst %.c,$(OBJ)/%.o,$(SRCS)) \
             $(OBJ)/third_party/cJSON.o $(OBJ)/third_party/sqlite3.o \
@@ -112,7 +137,7 @@ print-ldlibs:
 
 .PHONY: audit-sources
 audit-sources:
-	@python3 tests/audit_source_exhaustiveness.py --strict 'collectors/sources/hp*_*.c'
+	@python3 tests/audit_source_exhaustiveness.py --strict 'collectors/pivot/table/hp*_*.c'
 
 # Batch 14 candidate lifecycle (docs/candidate-sources-batch14.tsv). These rows
 # were authored without egress, so they are registered as UNVERIFIED csrc14_*
@@ -135,7 +160,7 @@ regen-candidates:
 	@cut -f1 ../docs/candidate-sources-batch14.tsv | tail -n +2 > /tmp/jo_b14_ids.txt
 	@grep -Fxv -f /tmp/jo_b14_ids.txt /tmp/jo_all_ids.txt > /tmp/jo_reserved.txt || true
 	@grep -hoE 'https?://[^" ]+' \
-	  $$(ls collectors/sources/*.c collectors/sources/*.inc | grep -v csrc14_) \
+	  $$(find collectors \( -name '*.c' -o -name '*.inc' \) | grep -v csrc14_) \
 	  | sed 's/[",)\\]*$$//' | sort -u > /tmp/jo_urls.txt
 	@python3 collectors/gen_candidates_jp_fr_us.py \
 	  --out ../docs/candidate-sources-batch14.tsv \
@@ -151,7 +176,7 @@ regen-candidates:
 hptest:
 	@mkdir -p bin
 	$(CC) $(CFLAGS) -o bin/hpengine_test tests/hpengine_test.c lib/hpengine.c \
-	  lib/csv.c lib/htmlparse.c lib/seenset.c collectors/sources/hp_uk_deep.c \
+	  lib/csv.c lib/htmlparse.c lib/seenset.c collectors/pivot/table/hp_uk_deep.c \
 	  third_party/cJSON.c $(ICONV_LIB)
 	./bin/hpengine_test
 
@@ -301,6 +326,33 @@ lint-baseline:
 # is how you get the current one (macro-expanded, so it is not a grep count).
 source-count:
 	@python3 tools/lint_sources.py --count
+
+# Assert the fleet did not shrink. `make source-count` is a number nobody
+# diffs, which is exactly how a silently-dropped collector survives a refactor:
+# the build succeeds, the binary links, and the only trace is a smaller count.
+# Record the number before a move, assert it after:
+#
+#   make source-floor-record        # before
+#   ...move files...
+#   make source-floor               # after — fails if any source vanished
+#
+# The floor is committed (tools/source-floor.txt) so CI and a reviewer see the
+# same number the author did.
+.PHONY: source-floor source-floor-record
+source-floor-record:
+	@python3 tools/lint_sources.py --count | grep -oE '[0-9]+' | head -1 > tools/source-floor.txt
+	@echo "recorded source floor: $$(cat tools/source-floor.txt)"
+
+source-floor:
+	@test -f tools/source-floor.txt || { echo "no floor recorded; run make source-floor-record"; exit 1; }
+	@now=$$(python3 tools/lint_sources.py --count | grep -oE '[0-9]+' | head -1); \
+	 floor=$$(cat tools/source-floor.txt); \
+	 if [ "$$now" -lt "$$floor" ]; then \
+	   echo "SOURCE COUNT REGRESSED: $$now < $$floor (floor in tools/source-floor.txt)"; \
+	   echo "a collector stopped registering — most likely it moved out of the build glob"; \
+	   exit 1; \
+	 fi; \
+	 echo "source floor ok: $$now >= $$floor"
 
 # obj-* covers every sanitizer/agent-slot tree (obj-asan, obj-tsan, obj-a0…),
 # which is where the hundreds of orphaned megabytes lived: clean removed only

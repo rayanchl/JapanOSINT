@@ -1,6 +1,6 @@
 /* Rights / investigative-NGO feeds (real RSS) — corruption, digital rights, press freedom, cross-border investigations, via rss_collect. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 #include "_source_macros.inc"
 

@@ -3,9 +3,9 @@
  * OSM rail tracks → LineString features for the unified-trains layer.
  * REFERENCE source.c for the OVERPASS_WAYS + line_color family.
  * (No source_registry.gen.c row — internal unified-trains layer feed.) */
-#include "../../source.h"
-#include "../../lib/overpass.h"
-#include "../../lib/linecolor.h"
+#include "source.h"
+#include "lib/overpass.h"
+#include "lib/linecolor.h"
 #include <stdio.h>
 
 static void body(const char *bbox, char *o, size_t n, void *ud) {

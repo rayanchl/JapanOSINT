@@ -4,10 +4,10 @@
  * SEED_WHS offline fallback NOT ported (JS does `if(!live) features=[]`).
  * uid = whs_id hash: feed_hash_key(name, lat-str, lon-str) — deterministic
  * (raw XML coord text; not Node-String()-identical, fine post-parity). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

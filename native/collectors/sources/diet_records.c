@@ -8,10 +8,10 @@
  *
  * uid = diet-records|<speechID>. The masthead pseudo-record (speaker
  * "会議録情報", speechOrder 0) is skipped — it carries no speaker. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/jocore.h"   /* jo_truncation_notice_ex() — the ONE builder */
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/jocore.h"   /* jo_truncation_notice_ex() — the ONE builder */
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

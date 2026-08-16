@@ -10,10 +10,10 @@
  * result->success = (root has "dates"); confidence 85/30. Emits ONE
  * osint_service_result row; body = {success,confidence,data,error?} envelope
  * (data == the OSINTsaas service_result_t.data JSON), like ip_geolocation.c. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <strings.h>
 #include <stdio.h>

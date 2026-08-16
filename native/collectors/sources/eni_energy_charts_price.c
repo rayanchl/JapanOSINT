@@ -8,9 +8,9 @@
  * must be indexed together — index i of price[] belongs to unix_seconds[i].
  * NEGATIVE PRICES ARE REAL and common; they are emitted, not filtered.
  * Licence: CC BY 4.0 (license_info: "... from Bundesnetzagentur | SMARD.de"). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

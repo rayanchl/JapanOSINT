@@ -2,9 +2,9 @@
  * Port of server/src/collectors/netlasJp.js (createThreatIntelCollector).
  * env NETLAS_API_KEY → responses search geo.country:"Japan", size 100,
  * geo.location point or TOKYO fallback. */
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

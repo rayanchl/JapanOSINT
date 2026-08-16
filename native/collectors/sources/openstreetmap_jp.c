@@ -4,9 +4,9 @@
  * station, police, post office, railway station). Real OSM data only;
  * honest empty on Overpass failure (JS returns empty FeatureCollection).
  * Property key order mirrors the JS mapFn for featureUid hash parity. */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static void add_str_or_null(cJSON *p, const char *k, const char *v) {

@@ -19,9 +19,9 @@
  * Every field emitted is a real, parsed value from the live API. No entity,
  * fetch failure, unresolvable location, or empty result → honest empty
  * (return 0). Nothing is synthesized. All LIVE + keyless. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

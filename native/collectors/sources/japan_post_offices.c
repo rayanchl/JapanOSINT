@@ -1,9 +1,9 @@
 /* collectors/infrastructure/sources/japan_post_offices.c
  * Port of server/src/collectors/japanPostOffices.js (fetchOverpassTiled).
  * Single nationwide tiled Overpass sweep of amenity=post_office. */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static void body(const char *bbox, char *o, size_t n, void *ud) {

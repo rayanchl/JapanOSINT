@@ -41,8 +41,8 @@ def urlenc(q):
             out.append('%' + format(ord(ch), '02X'))
     return ''.join(out)
 
-MACRO = r'''#include "../../source.h"
-#include "../../lib/rss_atom.h"
+MACRO = r'''#include "source.h"
+#include "lib/rss_atom.h"
 
 /* SYM, id, name, name_ja, collector, category, url, lang, tags_json, interval, description */
 #define RSSX(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)  \

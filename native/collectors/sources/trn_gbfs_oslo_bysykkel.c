@@ -8,7 +8,7 @@
  * Licence: Entur open mobility API, NLOD / CC-BY. Entur asks for an ET-Client-Name header identifying the client.
  * Parse notes: GBFS v3.0, localised name array, no .json suffix on feed URLs. station_status answered HTTP 429 during discovery — Entur rate-limits, hence the identifying header and the 15-minute interval; a 429 simply yields no live counts, not an error.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 /* Entur asks every client to identify itself with ET-Client-Name and

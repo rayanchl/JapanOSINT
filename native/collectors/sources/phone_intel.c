@@ -10,9 +10,9 @@
  * email_validator's format checks) plus live NumVerify enrichment when
  * NUMVERIFY_API_KEY is set. No key → validation-only (still real). Never
  * fabricates carrier/owner data. */
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,7 +76,8 @@ static int is_likely_mobile(const char *digits, const char *cc) {
     if (!*MOBILE_PREFIXES[i].prefixes) return 1;  /* prefix not indicative */
     char buf[64]; snprintf(buf, sizeof buf, "%s", MOBILE_PREFIXES[i].prefixes);
     const char *national = digits + strlen(cc);
-    for (char *p = strtok(buf, ","); p; p = strtok(NULL, ","))
+    char *save = NULL;            /* strtok_r: concurrent workers, see jsonlist.c */
+    for (char *p = strtok_r(buf, ",", &save); p; p = strtok_r(NULL, ",", &save))
       if (strncmp(national, p, strlen(p)) == 0) return 1;
     return 0;
   }

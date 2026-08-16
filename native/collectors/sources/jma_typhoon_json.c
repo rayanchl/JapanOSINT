@@ -10,10 +10,10 @@
  * category-TY typhoon live at the time of this audit. The positions live one
  * level down, in data/<tropicalCyclone>/specifications.json. SEED branch
  * dropped (rule 8). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

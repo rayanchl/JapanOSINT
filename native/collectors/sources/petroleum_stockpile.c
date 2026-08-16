@@ -3,9 +3,9 @@
  * tryOverpass() rows are emitted; the curated NATIONAL_BASES /
  * COMMERCIAL_DEPOTS seed arrays and the JOGMEC HTML scrape enrichment are
  * intentionally not ported (rule 7 — curated/seed data). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <string.h>
 

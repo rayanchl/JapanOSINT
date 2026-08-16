@@ -5,9 +5,9 @@
  * water-monitoring proxy (single area.jp query, timeoutMs 60000 /
  * queryTimeout 120). The curated RIVER_STATIONS seed / _meta envelope is
  * intentionally not ported (JS does `features = []` when nothing live). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

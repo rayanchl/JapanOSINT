@@ -10,7 +10,7 @@
  * differs per system (/pl/ here, /sv/ in Gothenburg, /sr/ in Prishtina), so the
  * URLs are read out of the discovery document instead of being hardcoded.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define VETURILO_GBFS "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_vw/gbfs.json"

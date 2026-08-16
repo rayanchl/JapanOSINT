@@ -3,10 +3,10 @@
  * env GITHUB_TOKEN → GitHub code search over DEFAULT_QUERIES → one intel row
  * per hit. The intel envelope IS the product. No token → 0 rows (JS returns
  * an empty live=false envelope; the curated _meta is dropped). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

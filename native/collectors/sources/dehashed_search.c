@@ -12,10 +12,10 @@
  * breaches → emit nothing. The earlier port carried a Dehashed stub that never
  * authenticated — that placeholder is gone; the call below sends real Basic
  * auth and returns NULL on any failure. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>

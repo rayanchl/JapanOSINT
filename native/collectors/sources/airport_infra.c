@@ -3,9 +3,9 @@
  * tryOSMAirportInfra() (fetchOverpass, single area.jp query). The curated
  * AIRPORT_FACILITIES seed / _meta envelope is intentionally not ported
  * (JS does `if (!live) features = []` and the seed-merge loop is empty). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

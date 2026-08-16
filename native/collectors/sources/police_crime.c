@@ -4,9 +4,9 @@
  * intentionally not ported (rule 7). No registry row for "police-crime";
  * category derived as "crime" from the collector domain (cf. the related
  * pref-police-crime registry row, category "crime"). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

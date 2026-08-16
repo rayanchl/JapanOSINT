@@ -6,11 +6,11 @@
  * (id JYUYO_<code>_<i+1>); an unresolved one becomes an intel item
  * (uid intelUid(SOURCE_ID,name)). _meta/SEED n/a (this collector has none).
  * Feature uid/title derived by the geojson sink. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

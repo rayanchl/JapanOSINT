@@ -6,12 +6,12 @@
  * (total/male/female/age groups/dementia); one feature per year w/
  * total!=null pinned at NPA HQ, plus ONE index intel item
  * (uid npa-missing-persons|index). SEED/_meta dropped (rule 7). */
-#include "../../source.h"
-#include "../../lib/csv.h"
-#include "../../lib/geojson.h"
-#include "../../lib/probe.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/csv.h"
+#include "lib/geojson.h"
+#include "lib/probe.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

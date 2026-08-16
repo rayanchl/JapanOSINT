@@ -13,9 +13,9 @@
  * map_url and resources. Invalid BSSID → success=false, confidence 0 (matches
  * the C early-return). confidence 85 if a location was found else 50. Emits ONE
  * osint_service_result row like dns_records.c. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <strings.h>
 #include <stdio.h>

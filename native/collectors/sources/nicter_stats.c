@@ -4,10 +4,10 @@
  * off the JS-rendered page, emit ONE synthetic stats feature pinned at NICT
  * HQ (Koganei). Numbers are best-effort and may be null. _meta dropped; when
  * the fetch fails JS emits 0 features → we emit 0. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

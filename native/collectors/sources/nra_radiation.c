@@ -4,9 +4,9 @@
  * (tryOsmStations / generateSeedData) are intentionally NOT ported (RULE 8:
  * JSON-API primary, drop the Overpass/seed fallback). JSON_API family.
  * Registry id "nra-radiation", category "environment". */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

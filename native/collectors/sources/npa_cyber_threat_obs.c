@@ -8,11 +8,11 @@
  * When fetch fails JS emits 0 features + 0 intel; we emit nothing.
  * Feature uid/title derived by the geojson sink; intel item uid =
  * intelUid(SOURCE_ID,'dashboard') -> remote_key 'dashboard'. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

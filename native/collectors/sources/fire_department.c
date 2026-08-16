@@ -5,10 +5,10 @@
  * item; uid = fire-department|<sha1(joined)[:20]> (== intelUid(SOURCE_ID,
  * intelHashKey(joined))). Honest empty on fetch/parse failure or no rows
  * (rule 8 — never guess dispatch rows). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

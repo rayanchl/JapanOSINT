@@ -42,7 +42,11 @@ static char *pw_next_link(const cJSON *doc) {
   if (!cJSON_IsObject(doc)) return NULL;
   static const char *const direct[] = {
     "next", "@odata.nextLink", "nextLink", "next_page_url", "nextPageUrl",
-    "nextRecordsUrl", NULL
+    /* `next_url` and `next_page` are the DRF/CKAN-adjacent spellings; they
+     * came from the jsonlist page walk this module absorbed, where they were
+     * measured against the live fleet. Same contract as the rest of the list:
+     * an absolute http(s) URL the SERVER handed us, or nothing. */
+    "next_url", "next_page", "nextRecordsUrl", NULL
   };
   static const char *const nested[] = { "links", "paging", "meta", "pagination", NULL };
 
@@ -81,6 +85,13 @@ static long pw_total_available(const cJSON *doc) {
      * set, not the size of this page. Checked before adding — that is the only
      * reason `count` above is deliberately absent from this list. */
     "resultcount",
+    /* Absorbed from the jsonlist page walk when the two engines were unified.
+     * Each names the size of the whole match set in the API family that
+     * publishes it: `numberMatched` is OGC API — Features, `totalElements` is
+     * Spring Data's Page envelope, `recordsTotal` is DataTables, and `total`
+     * is the CKAN/JSON:API house spelling. Bare `count` stays out, for the
+     * reason above — these do not share its ambiguity. */
+    "numberMatched", "totalElements", "recordsTotal", "total",
     NULL
   };
   for (int i = 0; keys[i]; i++) {

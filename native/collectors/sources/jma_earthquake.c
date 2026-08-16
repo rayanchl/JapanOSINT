@@ -2,9 +2,9 @@
  * FEED source — port of server/src/collectors/jmaEarthquake.js.
  * https://www.jma.go.jp/bosai/quake/data/list.json -> one intel row/quake.
  * uid = jma-earthquake|<eid> (matches Node featureUid earthquake_id key). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

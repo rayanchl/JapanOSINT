@@ -8,11 +8,11 @@
  * Property key order (station, flowering_date, observation_id, link,
  * source) mirrors the JS mapFn for featureUid hash parity.
  * (No native wildlife/ dir — filed under agriculture per task rule.) */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

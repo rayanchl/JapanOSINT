@@ -6,10 +6,10 @@
  * generateSeedData() + _meta NOT ported (live-only; 0 rows when upstream down).
  * Feature has no `id` member → featureUid = sha1(JSON.stringify{g,p}); the JS
  * applies random lat/lon jitter so upstream uids are non-deterministic too. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

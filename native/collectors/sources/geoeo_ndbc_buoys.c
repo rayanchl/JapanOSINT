@@ -22,8 +22,8 @@
  *  - The station metadata list (activestations.xml, with lat/lon as ATTRIBUTES
  *    and a dart='y' subset) is a separate document and is not merged here.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL = "https://www.ndbc.noaa.gov/data/latest_obs/latest_obs.txt";

@@ -21,11 +21,11 @@
  * several rows over time. cam_make_feature() derives the uid, so the ip:port
  * key is carried as a `shodan_endpoint` extra and the row is additionally
  * addressable by it. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../core/camera_store.h"
-#include "../../lib/camfeature.h"
-#include "../../lib/feedlib.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "core/camera_store.h"
+#include "lib/camfeature.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

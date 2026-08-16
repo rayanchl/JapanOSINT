@@ -5,10 +5,10 @@
  * Per <tr>: first <a href="...pdf">title</a> + all <td> stripped cells.
  * uid = tdnet-disclosure|<pdfUrl>  (== intelUid(SOURCE_ID, r.pdfUrl, …);
  * pdfUrl is always non-empty so it wins over the `${ymd}-${i}` fallback). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

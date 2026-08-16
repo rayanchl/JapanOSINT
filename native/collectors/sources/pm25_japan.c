@@ -4,8 +4,8 @@
  * Node returns an honest EMPTY FeatureCollection (zero features) after a
  * best-effort reachability probe. Faithful port: probe, emit NOTHING.
  * RULE 8: never fabricate — honest empty is correct here. */
-#include "../../source.h"
-#include "../../lib/probe.h"
+#include "source.h"
+#include "lib/probe.h"
 #include <stdio.h>
 
 #define PROBE "https://soramame.env.go.jp/"

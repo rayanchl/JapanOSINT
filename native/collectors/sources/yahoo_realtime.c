@@ -10,11 +10,11 @@
  * No NATIVE_ID prop → uid = sha1(JSON.stringify{g,p})[:16]; geometry is the
  * fixed TOKYO point so deterministic. live=html.length>0 → source string.
  * SEED/_meta NOT ported (HARD RULE 8); when down html="" → 0 rows. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

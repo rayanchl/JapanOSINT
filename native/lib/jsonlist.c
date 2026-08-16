@@ -2,6 +2,7 @@
 #include "jsonlist.h"
 #include "feedlib.h"
 #include "jocore.h"
+#include "pagewalk.h"   /* jsonlist_emit_paged() is an adapter onto pw_walk() */
 
 /* One wording for the "records the labeller could not name" shortfall, shared
  * by the list and single-record paths so the disclosure reads the same either
@@ -255,7 +256,16 @@ cJSON *jsonlist_find_array(cJSON *doc, const char *path) {
   char buf[256];
   snprintf(buf, sizeof buf, "%s", path);
   cJSON *cur = doc;
-  for (char *tok = strtok(buf, "."); tok && cur; tok = strtok(NULL, "."))
+  /* strtok_r, not strtok: this runs on 8 scheduler workers and up to 16
+   * dispatch workers concurrently, and strtok's resume pointer is ONE
+   * process-global. Interleaved calls made a worker resume inside another
+   * thread's buffer, so cJSON_GetObjectItem() looked up a garbage key, the
+   * array was not found, and the collector reported a clean empty result for a
+   * fetch that had actually succeeded — silently, non-deterministically,
+   * across the ~142 sources that reach this path. */
+  char *save = NULL;
+  for (char *tok = strtok_r(buf, ".", &save); tok && cur;
+       tok = strtok_r(NULL, ".", &save))
     cur = cJSON_GetObjectItem(cur, tok);
   return (cur && cJSON_IsArray(cur)) ? cur : NULL;
 }
@@ -288,9 +298,28 @@ static int emit_record(intel_sink *sink, const char *source_id, cJSON *rec,
      * that never carried it. */
     cJSON *fields = rec;
     if (!title) {
-      static const char *const ENV[] = { "attributes", "properties", NULL };
+      /* Dotted entries descend more than one level. OpenDataSoft's Explore
+       * v2.1 catalogue is the case that forced it: a dataset record is
+       * {visibility, fields[], dataset_id, dataset_uid, has_records, features,
+       * attachments, metas:{dcat, inspire, default:{title, description, theme,
+       * keyword, license, modified, …}, custom}} — the title is two levels
+       * down under metas.default, so a one-level descent found nothing and
+       * every record was dropped as unlabelled. Measured against
+       * data.loire-atlantique.fr: total_count 2, records emitted 0, while the
+       * response carried real titles ("Sentiers et points d'intérêt
+       * d'Abbaretz"), licences and modification dates. Same shape on every ODS
+       * deployment, which is a large share of the EU portal fleet. */
+      static const char *const ENV[] = {
+        "attributes", "properties", "metas.default", "metas", NULL
+      };
       for (int i = 0; ENV[i] && !title; i++) {
-        cJSON *inner = cJSON_GetObjectItem(rec, ENV[i]);
+        cJSON *inner = rec;
+        char path[64];
+        snprintf(path, sizeof path, "%s", ENV[i]);
+        char *save = NULL;
+        for (char *seg = strtok_r(path, ".", &save); seg && inner;
+             seg = strtok_r(NULL, ".", &save))
+          inner = cJSON_GetObjectItem(inner, seg);
         if (!inner || !cJSON_IsObject(inner)) continue;
         title = scalar_dup(pick(inner, K_TITLE));
         if (!title) title = pick_name_suffixed(inner);
@@ -423,4 +452,47 @@ int jsonlist_emit(intel_sink *sink, const char *source_id, cJSON *doc,
                   const char *lang, const char *tags_json) {
   return jsonlist_emit_ex(sink, source_id, doc, path, record_type, lang,
                           tags_json, NULL);
+}
+
+/* ── the paged entry point ────────────────────────────────────────────────
+ * See jsonlist.h. This is an ADAPTER onto lib/pagewalk.c, deliberately: the
+ * tree had two page walks for a while — this one and pw_walk() — and they
+ * disagreed about when a page counts as full, whether an absent cursor
+ * parameter may be appended, and which envelope keys are trustworthy totals.
+ * Two engines answering "is there more?" differently is how a truncation
+ * notice turns into a false claim of completeness, so there is now one loop
+ * and two doors into it. Everything below is plumbing: a fetcher that honours
+ * the caller's timeout, and an emitter that reports records SEEN as well as
+ * emitted so the walk's full-page test is not fooled by unlabelled records. */
+struct jl_page {
+  const char *path, *record_type, *lang, *tags_json;
+  int timeout_ms;
+};
+
+static cJSON *jl_fetch(const source_ctx *c, const char *url, void *ud) {
+  const struct jl_page *p = ud;
+  return feed_get_json(c->http, url, p->timeout_ms);
+}
+
+static int jl_emit_page(const source_ctx *c, intel_sink *s, const char *id,
+                        cJSON *doc, void *ud, int *seen) {
+  (void)c;
+  const struct jl_page *p = ud;
+  return jsonlist_emit_ex(s, id, doc, p->path, p->record_type, p->lang,
+                          p->tags_json, seen);
+}
+
+int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
+                        http_client *http, const char *url, int timeout_ms,
+                        const char *path, const char *record_type,
+                        const char *lang, const char *tags_json) {
+  if (!sink || !http || !url) return -1;
+  struct jl_page p = { path, record_type, lang, tags_json,
+                       timeout_ms > 0 ? timeout_ms : 25000 };
+  /* pw_walk() reads nothing from the context but the http client it hands to
+   * the fetcher, so a stack context is the whole of what this call needs. */
+  source_ctx c = {0};
+  c.source_id = source_id;
+  c.http      = http;
+  return pw_walk(&c, sink, source_id, url, jl_fetch, jl_emit_page, &p);
 }

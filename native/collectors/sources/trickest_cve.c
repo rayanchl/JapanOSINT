@@ -5,11 +5,11 @@
  * fetches each raw markdown and regex-extracts up to 6 PoC github repo URLs.
  * Features at TOKYO; sha1 hash-fallback uid; props in exact JS key order.
  * The seed/_meta envelope is dropped (live rows only). */
-#include "../../source.h"
-#include "../../lib/seenset.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../core/intel.h"
+#include "source.h"
+#include "lib/seenset.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "core/intel.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -8,7 +8,7 @@
  * Licence: City of Toronto / PBSC open GBFS feed; listed in MobilityData systems.csv.
  * Parse notes: GBFS v3.0 — name is an ARRAY of {text,language} objects, not a string (trn_gbfs_name handles it); feed URLs have no .json suffix; status uses num_vehicles_available, not num_bikes_available.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

@@ -10,11 +10,11 @@
  *
  * Real data only; honest-empty when a platform is auth-gated and no key/usable
  * response is available. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
+#include "lib/jocore.h"
+#include "source.h"
 #include "social_fuse.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -10,10 +10,10 @@
  * {success,confidence,data} envelope). remote_key = "ip:<ip>". has_geo/lat/lon
  * are set from the response. On HTTP failure / status!=success → emit NOTHING
  * and return 0 (honest empty). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

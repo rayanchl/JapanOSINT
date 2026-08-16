@@ -16,10 +16,10 @@
  * STRING TRAP: all numeric-looking ECHO fields are strings; TotalPenalties is a
  * formatted currency string and is kept verbatim as a string.
  * Licence: US EPA ECHO, public domain, keyless. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

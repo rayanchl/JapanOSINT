@@ -48,8 +48,8 @@
  * fetch returns 0 even at zero rows; only a failed fetch/parse returns -1.
  *
  * Keyless. Licence: stated per source_def where the publisher states one. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 #include <stdio.h>
 #include <stddef.h>
 #include <string.h>

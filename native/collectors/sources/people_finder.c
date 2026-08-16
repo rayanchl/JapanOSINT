@@ -29,9 +29,9 @@
  * per source, never actually fetched, marked success:true) was REMOVED — it
  * emitted records for endpoints it never queried. Key-gated APIs (Companies
  * House, OpenSanctions) emit nothing when their key is unset. */
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

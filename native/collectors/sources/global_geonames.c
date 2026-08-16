@@ -5,9 +5,9 @@
  * GEONAMES_USER env var (no username → honest empty, like gbizinfo.c). One
  * intel_item per matched place, carrying name + lat/lng (has_geo=1) + country.
  * No matches / fetch failure → emits nothing. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

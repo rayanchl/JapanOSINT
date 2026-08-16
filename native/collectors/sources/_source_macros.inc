@@ -20,8 +20,8 @@
 #ifndef JO_SOURCE_MACROS_INC
 #define JO_SOURCE_MACROS_INC
 
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 /* RSS/Atom source, fully parameterised: collector and interval per call. */
 #define RSSX(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)  \

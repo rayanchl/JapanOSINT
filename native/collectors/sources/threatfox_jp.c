@@ -2,11 +2,11 @@
  * Port of server/src/collectors/threatfoxJp.js (createThreatIntelCollector).
  * env ABUSE_CH_AUTH_KEY (fallback THREATFOX_AUTH_KEY) → POST get_iocs days=N,
  * JP-relevant + confidence filter, slice 300, TOKYO points. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

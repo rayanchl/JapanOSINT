@@ -1,9 +1,9 @@
 /* collectors/infrastructure/sources/transmission_towers.c
  * Port of server/src/collectors/transmissionTowers.js (fetchOverpassTiled).
  * Single nationwide tiled Overpass sweep of power towers/poles/substations. */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static void body(const char *bbox, char *o, size_t n, void *ud) {

@@ -5,9 +5,9 @@
  * walks the JSON pulling {title,url,kind} triples, emits up to 100 as intel
  * items. uid = intelUid(SOURCE_ID, it.url, idx_i) → remote_key=it.url. The
  * meta/envelope wrapper is dropped (rule 7 — only live rows). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

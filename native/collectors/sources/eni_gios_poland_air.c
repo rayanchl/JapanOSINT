@@ -21,10 +21,10 @@
  * keys — key uniqueness is never assumed, only the Polish keys are read.
  * Station budget: JO_GIOS_STATIONS (default 15) bounds the request fan-out.
  * Licence: GIOS public API, keyless. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

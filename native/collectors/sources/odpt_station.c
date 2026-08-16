@@ -4,11 +4,11 @@
  * fallback (always available, ported faithfully): every OSM rail station
  * across Japan via a single area.jp Overpass query. Token idiom mirrors
  * odpt_transport.c. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../lib/overpass.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

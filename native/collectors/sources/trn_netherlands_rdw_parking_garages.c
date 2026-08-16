@@ -12,7 +12,7 @@
  * Beware the sibling resource adw6-9hsg ("GEBIED REGELING"), which returns 200
  * but has NO coordinates at all, so it is not a substitute for this one.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define RDW_GARAGES "https://opendata.rdw.nl/resource/t5pc-eb34.json?$limit=1000"

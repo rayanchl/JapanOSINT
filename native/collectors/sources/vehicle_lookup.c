@@ -13,10 +13,10 @@
  * recallsByVehicle) and emits ONE intel_item per recall campaign. VIN decode
  * failure → emits nothing. License-plate branch: no real fetch is available →
  * emits nothing (honest empty — no static source-link descriptors). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

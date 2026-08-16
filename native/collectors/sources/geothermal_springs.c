@@ -3,10 +3,10 @@
  * (fetchText KML + regex Placemark/coordinates/CDATA-description parse).
  * No SEED fallback in the JS (empty features on fetch fail) — HARD RULE 8 ok.
  * HTML_SCRAPE family — mirrors unesco_heritage.c shape. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

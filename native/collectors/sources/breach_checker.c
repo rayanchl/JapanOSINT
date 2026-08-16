@@ -9,11 +9,11 @@
  *   - 404 (no breaches), 401/429 (key absent or rate-limited), or any other
  *     status: emit NOTHING (no note row). Without the key set, do not even
  *     issue the request — emit nothing. Never fabricate. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
+#include "lib/jocore.h"
+#include "source.h"
 #include "social_fuse.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

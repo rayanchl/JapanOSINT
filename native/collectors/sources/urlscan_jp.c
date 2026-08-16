@@ -3,9 +3,9 @@
  * urlscan.io search?q=page.country:JP&size=100 → one intel row/result.
  * uid = urlscan-jp|<r._id || idx_<i>>. URLSCAN_API_KEY optional (anon works,
  * so NOT gated) — when set it raises rate limits via API-Key header. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

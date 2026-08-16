@@ -5,11 +5,11 @@
  * (Node: envFor → native: getenv). Without it (or on failure / no usable
  * geometry) → honest empty (rule 8 — no fabricated land-use polygons).
  * Property key order (mesh_id, landuse_code, landuse, source) mirrors JS. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

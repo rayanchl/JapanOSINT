@@ -4,11 +4,11 @@
  * NO public API. Gated honest-empty on DOCOMO_POPULATION_API_KEY (emit
  * nothing without it). With key: attempt contract endpoint, build point
  * features, emit; honest empty on failure. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

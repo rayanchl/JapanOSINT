@@ -14,10 +14,10 @@
  * to carry no NATIVE_ID key at all, so the row was uid'd by
  * sha1(JSON.stringify{g,p})[:16], i.e. by a hash that included the changing
  * incident/damage figures. See the comment on ward_id below. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

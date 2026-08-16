@@ -18,9 +18,9 @@
  * 'outside coverage' and must return 0, not -1." Handled explicitly.
  * parse_notes — "Depths are negative metres."
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

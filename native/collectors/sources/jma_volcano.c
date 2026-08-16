@@ -3,9 +3,9 @@
  * JMA developer eqvol Atom feed carries earthquake AND volcano bulletins;
  * keep only volcano-related entries (火山/噴火/降灰/Volcan/Ash Fall).
  * uid = jma-volcano|<guid|link|sha1(title|pubDate)>. Honest empty on failure. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

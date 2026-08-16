@@ -15,9 +15,9 @@
  * given query yields a JS-only / anti-bot / empty page it simply returns 0
  * (honest empty) — expected and fine; we NEVER fabricate an enterprise record.
  * The search path is KBO's real public endpoint. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

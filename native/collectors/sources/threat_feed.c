@@ -16,10 +16,10 @@
  * "circl:<sha256>"). title = a short descriptor; body = that item's real
  * fetched JSON. No synthetic threat_score summary row. Nothing found → emit
  * nothing, return 0 (honest empty). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/threatintel.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/threatintel.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -5,9 +5,9 @@
  *   NEWSAPI_SEARCH    newsapi.org/v2/everything            NEWSAPI_KEY
  *   GNEWS_SEARCH      gnews.io/api/v4/search               GNEWS_API_KEY
  *   MEDIASTACK_SEARCH api.mediastack.com/v1/news           MEDIASTACK_KEY */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

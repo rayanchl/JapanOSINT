@@ -17,9 +17,9 @@
  *
  * Keyless & LIVE. Endpoints are the documented public OCDS search APIs; a portal
  * that is offline or JS-only simply contributes nothing. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

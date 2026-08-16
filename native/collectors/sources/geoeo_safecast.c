@@ -26,8 +26,8 @@
  * centre, the COORDINATES ON EACH ROW are the ones the measurement itself
  * carried — never the query centre.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 #define SAFECAST_DEFAULT_LAT 35.6

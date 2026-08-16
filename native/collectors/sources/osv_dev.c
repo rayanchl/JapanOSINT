@@ -4,9 +4,9 @@
  * {name,ecosystem}}]} for JP-relevant packages. results[qi].vulns[:6] →
  * TOKYO Point features. No SEED branch (always live → source "osv_querybatch").
  */
-#include "../../source.h"
-#include "../../lib/geojson.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/geojson.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

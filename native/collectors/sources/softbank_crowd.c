@@ -3,11 +3,11 @@
  * SoftBank crowd/movement analytics — paid, contract-only, NO public API.
  * Gated honest-empty on SOFTBANK_CROWD_API_KEY. With key: attempt contract
  * endpoint, build point features; honest empty on failure. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

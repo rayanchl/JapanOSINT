@@ -6,9 +6,9 @@
  * name = m[2].replace(/\s+/g,' ').trim(). Honest empty (return -1) when
  * markup yields nothing. Never fabricated. Non-spatial intel_item.
  * uid = japan-reit|<code> (mirrors intelUid). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

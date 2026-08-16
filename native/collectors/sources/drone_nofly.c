@@ -4,10 +4,10 @@
  * dataset); collect() then does `if(!live) features=[]`. SEED_NOFLY_ZONES/
  * generateSeedData is NOT in the live path (RULE 8 → drop). Faithful port:
  * reachability fetch (parity with Node hitting the host), emit 0 features. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdlib.h>
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

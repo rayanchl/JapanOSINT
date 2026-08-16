@@ -2,10 +2,10 @@
  * server/src/collectors/osmTransportTrains.js
  * (createOsmTransportCollector, geometry:'point' → fetchOverpassTiled).
  * Always-on nationwide mainline train stations. No SEED / _meta envelope. */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
-#include "../../lib/linecolor.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
+#include "lib/linecolor.h"
 #include <stdio.h>
 
 static void body(const char *bbox, char *o, size_t n, void *ud) {

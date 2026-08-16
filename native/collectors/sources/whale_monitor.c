@@ -21,9 +21,9 @@
  * classifier input on the address item. All values are real values fetched
  * from the live endpoints; nothing is fabricated. Nothing fetched → NOTHING
  * emitted and run() returns 0. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <strings.h>
 #include <stdio.h>

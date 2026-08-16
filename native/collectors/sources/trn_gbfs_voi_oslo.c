@@ -7,7 +7,7 @@
  * Licence: Entur open mobility API (NLOD / CC-BY). Send an ET-Client-Name header.
  * Parse notes: GBFS v3.0. Almost every station is is_virtual_station:true with a MultiPolygon station_area, so each row is tagged geo_precision=parking-zone rather than presented as a physical dock. Entur rate-limits (HTTP 429) clients that do not send ET-Client-Name.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 /* Entur asks every client to identify itself with ET-Client-Name and

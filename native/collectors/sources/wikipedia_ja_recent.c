@@ -2,9 +2,9 @@
  * Port of server/src/collectors/wikipediaJaRecent.js.
  * ja.wikipedia recentchanges (ns0, rclimit=200) → FeatureCollection at TOKYO.
  * Keyless. Fetch-fail → 0 features (correctness-neutral). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

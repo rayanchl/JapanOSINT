@@ -15,10 +15,10 @@
  * STRING TRAP: value[].value is a STRING ("9.5").
  * GEO (R2): station[].latitude/longitude from the response.
  * Licence: CC BY 4.0 (SMHI open data). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

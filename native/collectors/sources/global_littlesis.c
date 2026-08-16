@@ -7,9 +7,9 @@
  * returns a JSON:API document — { data: [ { type, id, attributes:{ name,
  * primary_ext, blurb, ... } } ] }. One intel_item per matched entity, keyed by
  * LittleSis entity id. No matches / fetch failure → emits nothing (honest empty). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

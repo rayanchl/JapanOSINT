@@ -1,9 +1,9 @@
 /* collectors/cyber/sources/ioda_jp.c
  * Port of server/src/collectors/iodaJp.js (createThreatIntelCollector).
  * Keyless. IODA 7-day JP signals (3 datasources) + events, TOKYO points. */
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

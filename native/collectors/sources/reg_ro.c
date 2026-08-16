@@ -20,9 +20,9 @@
  * NOTE: openapi.ro field names follow its public v1 schema (denumire, cui,
  * adresa, judet, stare, cod_postal …). Where a field is absent it is simply
  * omitted; the CUI is the natural remote_key. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

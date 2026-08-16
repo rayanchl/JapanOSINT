@@ -4,9 +4,9 @@
  * Gated on FOFA_API_KEY (JS: no key → empty → 0 rows); FOFA_EMAIL optional.
  * uid = fofa-jp|<ip>_<port>_<i>. published_at = r.lastupdatetime passthrough
  * (JS new Date(x).toISOString() is tz-coupled, not in uid/props). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

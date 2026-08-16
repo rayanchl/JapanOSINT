@@ -17,7 +17,7 @@
  * individual cab between polls. Coordinate precision varies between vehicles
  * (5 to 10 decimals), so rows are tagged geo_precision="vehicle-gps".
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define SG_TAXI_URL "https://api.data.gov.sg/v1/transport/taxi-availability"

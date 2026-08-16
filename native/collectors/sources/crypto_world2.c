@@ -9,9 +9,9 @@
  *   DEFILLAMA_TVL     api.llama.fi/protocols  (filtered by name/symbol)  (JSON)
  *   BLOCKCYPHER_ADDR  api.blockcypher.com/v1/btc/main/addrs/<addr>/balance(JSON)
  *   BLOCKCHAIN_INFO   blockchain.info/rawaddr/<addr>?limit=0             (JSON) */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -6,10 +6,10 @@
  *   tonnes and NOT g/MWh) + the UTC timestamp.
  * KEYING TRAP: two rows (DK1, DK2) share every 5-minute stamp — key by area.
  * Licence: Energi Data Service open data, no key. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

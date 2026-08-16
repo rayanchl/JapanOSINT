@@ -12,9 +12,9 @@
  * Licence: MPL 2.0 (stated in the file header); redistribution allowed with
  * the licence notice.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

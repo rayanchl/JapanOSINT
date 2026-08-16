@@ -13,10 +13,10 @@
  * the URL, and every coordinate is additionally range-checked to degrees before
  * it is emitted — a metre-valued coordinate is rejected, never wrapped.
  * Licence: Open Government Licence - British Columbia. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

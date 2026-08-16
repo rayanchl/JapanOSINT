@@ -15,9 +15,9 @@
  * fields (strtok does collapse them — that is what slid the column index), and
  * a row is only used when the Load token is non-empty and numeric.
  * Licence: US Department of Energy / BPA public data, no key. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

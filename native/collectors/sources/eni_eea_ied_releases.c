@@ -15,10 +15,10 @@
  * swapping them puts every European factory in the Sahara." x_3857/y_3857 are
  * Web Mercator METRES and are not requested at all.
  * Licence: EEA standard re-use policy — free reuse with attribution. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -15,11 +15,11 @@
  * Feature props (exact JS order): id, platform, title, address, rent_display,
  *   size, area, prefecture, listing_type, source.  id="SUUMO_<property
  *   code from the block's own /chintai/ detail href>" → uid via NATIVE_ID "id". */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

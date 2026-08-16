@@ -6,8 +6,8 @@
  *
  * These complement the existing JP-centric cyber collectors (jpcert-alerts,
  * ipa-alerts, sans-isc) with worldwide vendor + government threat intel. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 #define COLL     "cyber"
 #define INTERVAL 3600

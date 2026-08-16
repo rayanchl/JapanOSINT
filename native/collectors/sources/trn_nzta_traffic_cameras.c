@@ -18,7 +18,7 @@
  *
  * imageUrl is relative to https://trafficnz.info and is expanded here.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define NZTA_URL "https://trafficnz.info/service/traffic/rest/4/cameras/all"

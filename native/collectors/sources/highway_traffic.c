@@ -2,10 +2,10 @@
  * server/src/collectors/highwayTraffic.js (fetchOverpass single area.jp).
  * HIGHWAY_NODES offline fallback intentionally not ported (rule 8).
  * `updated_at` mirrors JS `new Date().toISOString()` (UTC, ms). */
-#include "../../lib/geojson.h"
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <time.h>
 #include <sys/time.h>

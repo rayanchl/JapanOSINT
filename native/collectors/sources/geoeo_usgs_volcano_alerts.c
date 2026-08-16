@@ -18,8 +18,8 @@
  * Top level is a bare JSON array, and on a quiet week it can legitimately be
  * empty — that is R3 return 0, not -1.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL =

@@ -5,13 +5,13 @@
  * with headers=true → {year_month,count} rows → one map Feature each, and
  * ALWAYS one directory intel item (uid pref-police-crime|<code>).
  * SEED/_meta dropped (rule 7); 0 features when no adapter env vars set. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/csv.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../lib/probe.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/csv.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "lib/probe.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

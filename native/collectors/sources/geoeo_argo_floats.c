@@ -22,8 +22,8 @@
  * Rows are POSITIONAL arrays, so every field is indexed by its position in
  * columnNames, not by key. distinct() is what keeps the response to ~274 KB.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static int col_index(cJSON *names, const char *want) {

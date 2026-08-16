@@ -3,9 +3,9 @@
  * tryOSMBridgesTunnels() (fetchOverpass, single area.jp query). The curated
  * BRIDGE_TUNNEL_FACILITIES seed / _meta envelope is intentionally not ported
  * (seedFeatures is [] and JS does `if (!live) features = []`). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

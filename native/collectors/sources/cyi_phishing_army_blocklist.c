@@ -12,10 +12,10 @@
  * Licence: CC BY-NC-SA style community feed — NON-COMMERCIAL; check the
  * project page terms before commercial redistribution.
  */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

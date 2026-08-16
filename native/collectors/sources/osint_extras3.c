@@ -5,9 +5,9 @@
  *   SECURITY_SE_SEARCH / SUPERUSER_SEARCH / SERVERFAULT_SEARCH
  *       api.stackexchange.com/2.3/search/advanced?site=<site>&q=
  *   COINCAP_ASSETS  api.coincap.io/v2/assets?search=<e> */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

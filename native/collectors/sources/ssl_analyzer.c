@@ -13,12 +13,12 @@
  *     with real common_name/issuer/serial/validity.
  * If the TLS handshake fails, emits NOTHING. TRUSTED_CAS[] stays a match list
  * and is never emitted as data. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../core/hostgate.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "core/hostgate.h"
 #include <ctype.h>
 #include <string.h>
 #include <strings.h>

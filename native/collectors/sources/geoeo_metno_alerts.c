@@ -20,8 +20,8 @@
  * geometry_geojson. Rings repeat their first vertex at the end, which the mean
  * tolerates. Zero alerts is normal in calm weather — R3 return 0.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL =

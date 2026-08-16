@@ -134,8 +134,13 @@ def main():
                     help='print every finding, not just per-file counts')
     args = ap.parse_args()
 
+    # recursive: a collector that moved into a subdirectory must still be
+    # scanned. A flat 'collectors/sources/*.c' silently stopped seeing 221
+    # moved files and reported 121 findings instead of 146 — an audit that
+    # under-reports because of a glob is worse than no audit, because the
+    # smaller number reads as progress.
     paths = args.file or sorted(
-        glob.glob('collectors/sources/*.c') + glob.glob('lib/*.c') +
+        glob.glob('collectors/**/*.c', recursive=True) + glob.glob('lib/*.c') +
         glob.glob('core/pipeline.c') + glob.glob('core/osint_dispatch.c'))
     strict_paths = set(glob.glob(args.strict)) if args.strict else set()
 

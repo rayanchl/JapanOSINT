@@ -20,9 +20,9 @@
  * Separate feeds exist for contratos menores (sindicacion_1044) and for awards;
  * only the probed one above is wired here.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

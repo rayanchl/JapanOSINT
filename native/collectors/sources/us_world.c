@@ -5,9 +5,9 @@
  *   FEDERAL_REGISTER  federalregister.gov/api/v1/documents.json?conditions[term]=
  *   US_NPI_PROVIDER   npiregistry.cms.hhs.gov/api/?version=2.1&...   (healthcare)
  *   COURTLISTENER     courtlistener.com/api/rest/v4/search/?q=       (court opinions) */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

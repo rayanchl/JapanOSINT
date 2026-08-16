@@ -3,9 +3,9 @@
  * area.jp query). MLIT publishes only Excel/PDF inventory; OSM Overpass
  * man_made=bridge is the real queryable source. Honest empty on failure
  * (RULE 8). REFERENCE embassies.c (lib/overpass.h). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 /* JS: el.tags?.x || ... || null */

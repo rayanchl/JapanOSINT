@@ -5,10 +5,10 @@
  *   2. tryAtmosJson: ATMOS_URLS list
  *   3. tryOsmStations: OSM Overpass monitoring_station
  * First non-empty wins. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../lib/overpass.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

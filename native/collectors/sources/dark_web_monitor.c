@@ -12,10 +12,10 @@
  * target,monitor_type,tor_search,paste_search,intelx?,total_mentions,
  * risk_score,risk_level>, disclaimer}. success=true conf 70. Emits one
  * osint_service_result row (body = {success,confidence,data}). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>

@@ -24,9 +24,9 @@
  *    taken from it, but the COORDINATES are taken from the geo: elements, not
  *    from the "Lat/Lon:" text.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
 #include <strings.h>
 #include "geoeo_common.inc"
 

@@ -7,9 +7,9 @@
  * (remote_key="sat:<norad_id>", body=real norad_id/name/intl_designator/
  * latitude/longitude/altitude_km, has_geo + lat/lon). WITHOUT the key: emit
  * NOTHING (no note row). Empty feed: emit nothing. Never fabricate. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

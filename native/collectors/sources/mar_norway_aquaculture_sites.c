@@ -21,10 +21,10 @@
  * parse_notes — "placement.prodAreaStatus (RØD/GUL/GRØNN) is the sea-lice
  * traffic-light status for the production area"; carried through verbatim.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

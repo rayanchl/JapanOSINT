@@ -20,8 +20,8 @@
  *  - 'deltatime' is a human string ("@ 31 mins 31.662 secs"), so it is carried
  *    as text and never parsed as a number.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL =

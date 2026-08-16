@@ -13,7 +13,7 @@
  * would be exactly the invented geometry R2 forbids; the companion "Grade
  * Crossings" resource nw2s-ygjq is the geospatial one for anybody who needs it.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define FRA_URL "https://data.transportation.gov/resource/m2f8-22s6.json?$limit=1000"

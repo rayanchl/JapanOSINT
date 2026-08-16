@@ -4,10 +4,10 @@
  * default 8000) or until BLUESKY_JETSTREAM_MAX (default 200) JP posts, then
  * closes — fits the run-once scheduler (lib/ws). _meta dropped per RULE 8;
  * features emitted via the geojson sink. */
-#include "../../source.h"
-#include "../../lib/ws.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/ws.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

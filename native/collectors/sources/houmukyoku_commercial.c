@@ -3,10 +3,10 @@
  * Gated on HOUMUKYOKU_API_KEY (paid contracted API). Optional
  * HOUMUKYOKU_API_BASE override + HOUMUKYOKU_WATCHLIST (comma list). No key
  * or empty watchlist → 0 rows. uid = houmukyoku-commercial|<id>. No seed. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

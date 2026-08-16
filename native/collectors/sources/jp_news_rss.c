@@ -6,8 +6,8 @@
  * the publisher-hashed uid refinement (intelHashKey) are not portable through
  * the shared rss_collect helper (no uid-override hook) — uid precedence
  * guid→link→sha1(title|pubDate) mirrors intelUid for the common case. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 #include <stdio.h>
 
 struct feed { const char *url; const char *lang; const char *tags; };

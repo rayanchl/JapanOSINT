@@ -16,9 +16,9 @@
  * but genuine upstream area, not an invented location. A feed with no bounds is
  * emitted with has_geo = 0.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
-#include "../../lib/csv.h"
+#include "lib/csv.h"
 
 #define MDB_URL "https://storage.googleapis.com/storage/v1/b/mdb-csv/o/" \
                 "sources.csv?alt=media"

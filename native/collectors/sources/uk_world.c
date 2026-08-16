@@ -5,9 +5,9 @@
  *   UK_POLICE_CRIME  data.police.uk/api/crimes-street/all-crime?lat=&lng= (lat,lon)
  *   UK_POSTCODES     api.postcodes.io/postcodes/<postcode>
  *   UK_FSA_RATINGS   api.ratings.food.gov.uk/Establishments?name= */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

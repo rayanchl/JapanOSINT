@@ -5,10 +5,10 @@
  * OFF (env-gated, multi-fetch) — we emit the default (program-only) output.
  * These rows carry NO geometry: Chaos publishes no coordinates and a bug
  * bounty program is not a place (see the note in run_fetch). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

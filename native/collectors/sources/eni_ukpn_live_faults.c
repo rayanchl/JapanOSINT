@@ -11,10 +11,10 @@
  * GEO (R2): geopoint is an OBJECT {lon, lat} (lon first in the raw JSON) and is
  * used directly. A location is NEVER derived from the postcode strings.
  * Licence: UK Power Networks Open Data Portal open data licence (OGL-compatible). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

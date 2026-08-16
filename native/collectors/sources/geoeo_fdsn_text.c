@@ -23,8 +23,8 @@
  *    ("181 km SW of Port Hardy, BC/181 km SO de Port Hardy, BC"). Splitting on
  *    '/' would corrupt place names, so it is kept whole.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 #include <strings.h>
 

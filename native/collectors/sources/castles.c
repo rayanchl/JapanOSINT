@@ -2,9 +2,9 @@
  * server/src/collectors/castles.js (fetchOverpass single area.jp).
  * SEED_CASTLES offline fallback intentionally not ported (rule 8).
  * JS `.slice(0,200)` cap is count-only / correctness-neutral; omitted. */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

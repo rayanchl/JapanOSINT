@@ -5,9 +5,9 @@
  * list intentionally not ported (rule 7). Note: `wikidata` has no JS `||`
  * fallback (=== JS undefined when the tag is absent → key omitted from
  * JSON.stringify), so it is only emitted when present (featureUid parity). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

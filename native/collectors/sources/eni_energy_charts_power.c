@@ -11,9 +11,9 @@
  * unix_seconds[i] of the SAME index. nulls mean "not yet reported" and are
  * skipped, never coerced to 0.
  * Licence: CC BY 4.0 from Bundesnetzagentur | SMARD.de (response license_info). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

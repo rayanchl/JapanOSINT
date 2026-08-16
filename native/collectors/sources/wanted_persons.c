@@ -8,10 +8,10 @@
  *    prefecture (the PREF_POLICE row) so there is no unresolved-intel
  *    split here. SEED branch returns [] -> dropped (port guide rule 8).
  *    Feature uid/title derived by the geojson sink. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

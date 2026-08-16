@@ -2,9 +2,9 @@
  * server/src/collectors/sentoPublicBaths.js. fetchOverpass (single area.jp
  * query, tryLive). SEED_SENTO offline fallback intentionally not ported (JS
  * does `if (!live) features = []`). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <string.h>
 

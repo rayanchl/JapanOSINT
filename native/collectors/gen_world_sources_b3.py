@@ -20,8 +20,8 @@ def usym(base):
         i += 1; c = f"{base}_{i}"
     used_syms.add(c); return c
 def cesc(s): return s.replace('\\', '\\\\').replace('"', '\\"')
-MACRO = r'''#include "../../source.h"
-#include "../../lib/rss_atom.h"
+MACRO = r'''#include "source.h"
+#include "lib/rss_atom.h"
 
 #define RSSX(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)  \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \

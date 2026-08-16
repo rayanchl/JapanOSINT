@@ -2,9 +2,9 @@
  * Port of server/src/collectors/p2pquakeJma.js.
  * P2P Quake community JMA mirror (codes=551, limit=50) → FeatureCollection.
  * Keyless. Items with no hypocenter / null lat|lon are dropped (=== JS). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

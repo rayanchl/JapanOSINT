@@ -2,9 +2,9 @@
  * Port of server/src/collectors/stadiums.js — PRIMARY tryOSMOverpass() path.
  * JS post-maps `.slice(0,200)`; ported UNCAPPED (slice cap dropped per port
  * rules). The curated SEED_STADIUMS fallback is intentionally not ported. */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 

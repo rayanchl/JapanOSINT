@@ -22,9 +22,9 @@
  * or link. Where a portal's exact query param is uncertain we still use its
  * real public search path and let it honest-empty rather than invent data.
  * Keyless; free_tier=1. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

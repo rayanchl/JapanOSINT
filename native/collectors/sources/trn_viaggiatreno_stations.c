@@ -17,7 +17,7 @@
  * and trn_geo_ok additionally rejects the (0,0) placeholder that some rows
  * carry in those real fields too.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define VT_URL "https://www.viaggiatreno.it/infomobilita/resteasy/viaggiatreno/" \

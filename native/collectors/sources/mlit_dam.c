@@ -3,9 +3,9 @@
  * query). MLIT CGI has no public JSON feed; OSM Overpass waterway=dam is
  * the real, policy-clean source. Honest empty on failure (RULE 8).
  * REFERENCE embassies.c (lib/overpass.h). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 

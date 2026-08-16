@@ -19,11 +19,11 @@
  * body = that platform's real fetched profile JSON, link = profile_url). The
  * aggregate cross-platform analysis (presence_level/assessment/statistics) is
  * dropped — only real found profiles are emitted; none found → emit nothing. */
-#include "../../source.h"
+#include "source.h"
 #include "social_fuse.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>

@@ -18,10 +18,10 @@
  * add_measure() below drops any numeric that parses to exactly 0 for the
  * measurement fields, so a "not recorded" never surfaces as a 0 m depth.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

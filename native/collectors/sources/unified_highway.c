@@ -4,9 +4,9 @@
  * both already-registered upstreams. No dedupe (node/congestion geometries
  * are disjoint), no filter, no postProcess. _meta envelope dropped per
  * RULE 8 (same as every other port). */
-#include "../../source.h"
-#include "../../lib/unified.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/unified.h"
+#include "third_party/cJSON.h"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   static const unified_upstream ups[] = {

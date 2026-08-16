@@ -5,10 +5,10 @@
  * subway/tram/monorail, dedupes by station_code then qualified station_id,
  * and recomputes line_color via computeLineColor (lib/linecolor). The
  * `_meta` envelope is dropped per RULE 8 (same as every other port). */
-#include "../../source.h"
-#include "../../lib/unified.h"
-#include "../../lib/linecolor.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/unified.h"
+#include "lib/linecolor.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>

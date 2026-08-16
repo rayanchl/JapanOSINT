@@ -4,9 +4,9 @@
  * population table), gated on ESTAT_APP_ID, limit=3000. Honest empty
  * without key / on failure / empty VALUE — no seed. uid key mirrors JS
  * `${mesh}-${cat}-${time}` (always non-empty → JS `|| i` is dead). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -1,9 +1,9 @@
 /* collectors/cyber/sources/shadowserver_jp.c
  * Port of server/src/collectors/shadowserverJp.js (createThreatIntelCollector).
  * Keyless. Shadowserver public time-series, last point per dataset, TOKYO. */
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

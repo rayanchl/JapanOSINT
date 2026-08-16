@@ -5,9 +5,9 @@
  * live path ported here. The curated JAPAN_PORTS/shipping-lane seed / _meta
  * envelope is intentionally not ported (JS does `features = []` when nothing
  * live). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

@@ -20,10 +20,10 @@
  * A NULL, empty or wrong-shaped entity returns 0 without touching the network.
  * Licence: SOTA database public API — keyless, community use with attribution.
  */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

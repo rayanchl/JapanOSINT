@@ -6,10 +6,10 @@
  * 404 today — JAXA moved the catalog to STAC, which is what their own
  * en/datasets/ page reads (assets createList.js: catalog.json → rel=child
  * collection.json). We walk the same graph. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

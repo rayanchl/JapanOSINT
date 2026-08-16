@@ -2,9 +2,9 @@
  * server/src/collectors/waterTowers.js. fetchOverpass(body, mapFn, 60000,
  * {limit:0, queryTimeout:180}) — single area.jp query. No SEED branch in JS
  * (returns live rows or []). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

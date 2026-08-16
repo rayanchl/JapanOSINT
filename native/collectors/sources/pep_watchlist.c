@@ -8,10 +8,10 @@
  * Backed by OpenSanctions (api.opensanctions.org), which requires an API key —
  * gates on OPENSANCTIONS_API_KEY and is honest-empty without it. Results are
  * the real matched entities (caption / schema / datasets / topics). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

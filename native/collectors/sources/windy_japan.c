@@ -2,9 +2,9 @@
  * FEED source — port of server/src/collectors/windyJapan.js.
  * Gated on WINDY_API_KEY: POST api.windy.com point-forecast over a sparse
  * Japan city grid -> FeatureCollection. No key / no data -> honest empty. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

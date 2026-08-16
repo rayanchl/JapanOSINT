@@ -7,11 +7,11 @@
  * NOTE: the JS original pinned every row at Tokyo station. A GitHub repo is
  * not a place; those coordinates were invented and put 94 fake pins on the
  * map every run. Rows are now emitted geometry-less (has_geo=0). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

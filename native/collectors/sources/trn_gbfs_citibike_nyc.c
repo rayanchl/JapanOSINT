@@ -8,7 +8,7 @@
  * Licence: Lyft/NYC Citi Bike GBFS data licence — public GBFS feed listed in the MobilityData systems catalog, published for reuse.
  * Parse notes: Discovery gbfs.citibikenyc.com redirects the feed URLs to gbfs.lyft.com. GBFS v2.3 data.stations[]; free_bike_status is empty for this dock-only system.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

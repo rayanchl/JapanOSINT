@@ -18,9 +18,9 @@
  * public result/listing pages and emit only anchors/fields actually extracted
  * from the returned HTML; JS-only / POST-only / anti-bot pages simply yield 0
  * (honest empty). Nothing is ever synthesized. No entity → honest empty. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

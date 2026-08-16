@@ -18,8 +18,8 @@
  *    optional field is copied with geoeo_copy(), which drops nulls instead of
  *    stringifying them.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static void utc_stamp(time_t t, char *out, size_t n) {

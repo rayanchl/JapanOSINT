@@ -24,8 +24,8 @@
  *  - Per-station sea level VALUES need a second call (query=data&code=<Code>)
  *    and are deliberately not fetched here.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL =

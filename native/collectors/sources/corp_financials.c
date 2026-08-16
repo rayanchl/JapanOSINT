@@ -6,9 +6,9 @@
  *   • Buffett Code — real API, gated on BUFFETT_CODE_TOKEN (honest empty without).
  *   • Shikiho     — paid; gated on SHIKIHO_API_KEY (honest empty without).
  * No fabricated financials — only fetched filing metadata / API rows. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

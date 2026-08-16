@@ -2,10 +2,10 @@
  * Port of server/src/collectors/hereJapan.js.
  * HERE Browse API over metro centroids → FeatureCollection.
  * Gated on HERE_API_KEY. No seed. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

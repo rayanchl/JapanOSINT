@@ -32,9 +32,9 @@
  * Licence: US Government work (FAA / FAA ATCSCC), public domain. Keyless.
  * tfr.faa.gov's JSON API is undocumented but stable behind the public site.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

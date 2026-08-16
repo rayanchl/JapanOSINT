@@ -4,9 +4,9 @@
  *
  *   SERPAPI_SEARCH    serpapi.com/search.json?engine=google&q=  SERPAPI_KEY
  *   BING_WEB_SEARCH   api.bing.microsoft.com/v7.0/search?q=     BING_SEARCH_KEY */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

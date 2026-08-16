@@ -7,10 +7,10 @@
  * nothing unless a private plate-lookup endpoint is wired via env
  * (PLATE_LOOKUP_URL, a "%s" template + optional PLATE_LOOKUP_API_KEY bearer).
  * Registered for OSINTsaas parity; honest-empty by default. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

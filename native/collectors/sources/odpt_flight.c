@@ -3,9 +3,9 @@
  * Live ODPT v4 odpt:FlightInformationArrival + ...Departure when an ODPT
  * token is set; honest empty without one. Each flight is placed at its
  * airport's hard-coded coordinate (HND/NRT/KIX/CTS only; others skipped). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

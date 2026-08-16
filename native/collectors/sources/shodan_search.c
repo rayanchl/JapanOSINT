@@ -23,10 +23,10 @@
  * All ports/vulns/hostnames/tags are real values fetched from InternetDB/the
  * Shodan API; nothing is fabricated. If the host is not found / errors / yields
  * no ports, vulns or host metadata, NOTHING is emitted and run() returns 0. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

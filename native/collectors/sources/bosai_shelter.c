@@ -2,9 +2,9 @@
  * Port of server/src/collectors/bosaiShelter.js (fetchOverpassTiled). The
  * curated SEED_SHELTERS offline fallback is intentionally NOT ported —
  * correctness-neutral (JS does `if (!live) features = []` anyway). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 

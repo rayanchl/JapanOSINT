@@ -8,9 +8,9 @@
  * insensitive); on a scheduled run (entity == NULL) we emit all items. A feed
  * that fails to fetch, or yields no matching items, simply contributes 0 (honest
  * empty). One intel_item per article, keyed by its link. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

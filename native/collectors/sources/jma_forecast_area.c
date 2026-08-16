@@ -2,10 +2,10 @@
  * Port of server/src/collectors/jmaForecastArea.js.
  * Per-area JMA regional forecast JSON; one Point Feature per area that has a
  * weather string. The seed fallback (rule 7) is dropped — live rows only. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 

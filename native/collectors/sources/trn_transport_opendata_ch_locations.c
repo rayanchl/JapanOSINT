@@ -16,7 +16,7 @@
  * LONGITUDE, which is the opposite of the usual x=lon convention. Reading them
  * the conventional way drops every Swiss stop into the Indian Ocean.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static const char *const CH_QUERIES[] = {

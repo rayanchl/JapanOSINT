@@ -10,8 +10,8 @@
  * builder produced items {"IMO Analysis"|"MMSI Analysis"|"MarineTraffic"};
  * here the single item's data object is the envelope payload. confidence 75.
  * Emits ONE osint_service_result row like dns_records.c. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "third_party/cJSON.h"
 #include <string.h>
 #include <strings.h>
 #include <stdio.h>

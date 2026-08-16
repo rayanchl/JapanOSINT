@@ -12,7 +12,7 @@
  * survey-grade — every row is tagged geo_precision="vehicle-gps". The list runs
  * to 8,000+ scooters and refreshes every few minutes, so it is capped per run.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

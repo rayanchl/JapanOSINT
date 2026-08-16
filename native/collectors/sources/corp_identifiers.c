@@ -6,10 +6,10 @@
  *   VAT_VALIDATOR — EU VAT number → EU VIES validation (free)
  *
  * Both hit free public APIs (no key); honest-empty on no match / error. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

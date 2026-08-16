@@ -5,9 +5,9 @@
  *   HOST_IO_FULL     host.io/api/full/<domain>?token=          HOSTIO_TOKEN
  *   WHOISFREAKS      api.whoisfreaks.com/v1.0/whois?...         WHOISFREAKS_API_KEY
  *   IPINFO_LOOKUP    ipinfo.io/<ip>?token=                      IPINFO_TOKEN */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

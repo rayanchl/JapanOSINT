@@ -5,12 +5,12 @@
  * rss_collect; each becomes an FTS-indexed intel row the alert hooks can raise
  * on. These extend the JP-domestic disaster collectors (jma, saigai, bosai) to
  * worldwide coverage. Scheduled on tighter intervals for the live hazard feeds. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/rss_atom.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

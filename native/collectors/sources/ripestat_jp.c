@@ -2,10 +2,10 @@
  * Port of server/src/collectors/ripestatJp.js (intelEnvelope, single item).
  * RIPEstat country-resource-list?resource=JP → 1 intel row, ASN/IPv4/IPv6
  * prefix counts. uid = ripestat-jp|jp-country-resources (fixed). No geometry. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

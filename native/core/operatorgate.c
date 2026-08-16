@@ -9,7 +9,11 @@
 static int csv_has(const char *csv, const char *needle, int lower) {
   if (!csv || !*csv || !needle || !*needle) return 0;
   char buf[4096]; snprintf(buf, sizeof buf, "%s", csv);
-  for (char *p = strtok(buf, ","); p; p = strtok(NULL, ",")) {
+  /* strtok_r: this is an AUTHORIZATION check running on the HTTP thread while
+   * collector threads tokenize concurrently. Sharing strtok's global cursor
+   * meant a concurrent call could corrupt the operator-list walk. */
+  char *save = NULL;
+  for (char *p = strtok_r(buf, ",", &save); p; p = strtok_r(NULL, ",", &save)) {
     while (*p == ' ' || *p == '\t') p++;
     size_t n = strlen(p);
     while (n && (p[n-1]==' '||p[n-1]=='\t')) p[--n]=0;

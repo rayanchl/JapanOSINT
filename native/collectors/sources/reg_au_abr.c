@@ -7,9 +7,9 @@
  * JSONP (callback({...})); we strip the wrapper, then emit one intel_item per
  * matched entity with its ABN, name, state, postcode and status. No matches /
  * fetch failure → emits nothing. Nothing here is synthesized. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

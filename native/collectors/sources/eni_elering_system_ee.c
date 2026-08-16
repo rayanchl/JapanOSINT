@@ -15,9 +15,9 @@
  * omitted from the row rather than coerced to 0.
  * timestamp is epoch SECONDS.
  * Licence: Elering live dashboard API, public, no key. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

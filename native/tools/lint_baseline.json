@@ -145,7 +145,7 @@
       "native/collectors/sources/geoeo_usgs_water_levels.c": 1,
       "native/collectors/sources/geoeo_vaac_ash.c": 1,
       "native/collectors/sources/geohazard_extra.c": 1,
-      "native/collectors/sources/geojson_file.c": 1,
+      "native/collectors/pod/geojson_file.c": 1,
       "native/collectors/sources/geopremium_world.c": 2,
       "native/collectors/sources/geothermal_springs.c": 2,
       "native/collectors/sources/google_my_maps.c": 1,

@@ -3,9 +3,9 @@
  * Best-effort HTML scrape of the homepage weather-telop blocks; on any
  * fetch/parse miss fall back to ONE reachability portal item.
  * uid = tenki-jp|<sha1(telop|n)[:20]> or tenki-jp|portal. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

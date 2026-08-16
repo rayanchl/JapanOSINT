@@ -5,11 +5,11 @@
  * (0 rows when CelesTrak is unreachable / nothing over Japan, same contract
  * as every other live port). Deep-space objects are skipped (sgp4 near-Earth
  * scope) — documented post-parity vs satellite.js's bundled SDP4. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/sgp4.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/sgp4.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -55,7 +55,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     /* parseTleBlock: trimmed non-empty lines, name/l1/l2 triples. */
     char **ln = NULL; int nl = 0, cap = 0;
-    for (char *p = strtok(body, "\n"); p; p = strtok(NULL, "\n")) {
+    char *save = NULL;            /* strtok_r: concurrent workers, see jsonlist.c */
+    for (char *p = strtok_r(body, "\n", &save); p;
+         p = strtok_r(NULL, "\n", &save)) {
       char *t = trim(p);
       if (!*t) continue;
       if (nl == cap) { cap = cap ? cap * 2 : 256; ln = realloc(ln, cap * sizeof *ln); }

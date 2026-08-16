@@ -5,9 +5,9 @@
  * Array.isArray(data.data) gate. Honest empty on failure — never fabricated.
  * Non-spatial: emit intel_item (has_geo=0).
  * uid = tochi-info|<area>-<year>Q<quarter>-<i> (mirrors intelUid). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

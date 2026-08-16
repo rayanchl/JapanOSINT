@@ -2,10 +2,10 @@
  * Port of server/src/collectors/googleDorking.js (intelEnvelope).
  * Keyed anyOf: GOOGLE_CSE_KEY(+GOOGLE_CSE_CX) | SERPAPI_KEY. No key → 0 rows.
  * uid = google-dorking|<r.link> (remote_key = link). No seed. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -11,10 +11,10 @@
  * then lib/zipread.h resolves the named entry from the central directory and
  * lib/csv.h parses the header row.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
-#include "../../lib/csv.h"
-#include "../../lib/zipread.h"
+#include "lib/csv.h"
+#include "lib/zipread.h"
 
 #define MBTA_GTFS_URL "https://cdn.mbta.com/MBTA_GTFS.zip"
 

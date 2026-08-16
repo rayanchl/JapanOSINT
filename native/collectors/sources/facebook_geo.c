@@ -3,10 +3,10 @@
  * Graph API place search around Tokyo; gated on FACEBOOK_ACCESS_TOKEN
  * (JS: no token / failure → empty FeatureCollection → 0 rows).
  * Feature props order: id, platform, place_name, checkins, source. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

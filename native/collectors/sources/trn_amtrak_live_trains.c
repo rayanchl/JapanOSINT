@@ -11,7 +11,7 @@
  * value is an ARRAY of train instances (the same number can be running in more
  * than one place). Iterating it as an array of trains yields nothing.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

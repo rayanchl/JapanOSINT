@@ -3,9 +3,9 @@
  * NOWPHAS pastdata page but never maps it (returns null even on HTTP 200);
  * the only data is the curated SEED, which rule 8 drops. Faithful behaviour:
  * GET the page, emit 0 live rows. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 

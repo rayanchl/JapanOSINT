@@ -3,10 +3,10 @@
  * env LUUP_MOBILE_TOKEN. No token → ONE portal-pointer intel row (fetchHead
  * probe of luup.sc). With token → per-bbox /v1/ports read → one intel row
  * per port. The intel envelope IS the product; curated _meta dropped. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/probe.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/probe.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

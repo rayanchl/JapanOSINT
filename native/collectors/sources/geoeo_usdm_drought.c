@@ -22,9 +22,9 @@
  *  - The sibling StateStatistics/GetDroughtSeverityStatisticsByArea path with
  *    aoi=us returned an empty body and is deliberately not used.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/csv.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/csv.h"
 #include "geoeo_common.inc"
 
 static void mdy(time_t t, char *out, size_t n) {

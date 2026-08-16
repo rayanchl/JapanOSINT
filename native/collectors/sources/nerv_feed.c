@@ -3,10 +3,10 @@
  * (array or {alerts:[]}). No natural id → sha1 hash-fallback uid. properties
  * {kind,headline,severity,issued_at,source} in exact JS order with the same
  * ?? fallbacks so the serialization (hence hash) matches Node. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../core/intel.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "core/intel.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

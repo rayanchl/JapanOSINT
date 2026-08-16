@@ -6,9 +6,9 @@
  *                       ctx->entity is set (company/org/domain).
  * Emits one intel_item per victim (org, group, discovered date). Real fetch or
  * honest empty — nothing fabricated. Keyless LIVE. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

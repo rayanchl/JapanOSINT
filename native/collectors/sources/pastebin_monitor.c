@@ -21,11 +21,11 @@
  * (remote_key="archive:<url>"). Body = that finding's JSON; link set when
  * available. No aggregate/note row. If nothing is found, emits nothing and
  * returns 0 (honest empty). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

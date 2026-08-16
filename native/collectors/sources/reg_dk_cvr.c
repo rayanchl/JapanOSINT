@@ -8,9 +8,9 @@
  * comes straight from the parsed API response.
  *
  * API: GET https://cvrapi.dk/api?search=<entity>&country=dk  (JSON object). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

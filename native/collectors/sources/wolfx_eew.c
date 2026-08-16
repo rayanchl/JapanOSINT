@@ -2,9 +2,9 @@
  * Port of server/src/collectors/wolfxEew.js. api.wolfx.jp/jma_eew.json is a
  * single EEW object → at most one Feature. Keyless. SEED branch (d==null)
  * dropped → 0 features when upstream down. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

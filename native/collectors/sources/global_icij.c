@@ -8,9 +8,9 @@
  * linked entity extracted from the live page (title = anchor text = entity name).
  * If the response is JS-only / has no /nodes/ links, we emit nothing (honest
  * empty). Nothing is fabricated. type="scraped". */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

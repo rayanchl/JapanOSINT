@@ -14,9 +14,9 @@
  * live resource: uen / entity_name / uen_status_desc / entity_type_desc /
  * uen_issue_date / reg_street_name). Fetch failure or no matches → honest
  * empty (return 0). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

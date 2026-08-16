@@ -12,7 +12,7 @@
  * most of those require an API key (511ia.org, for instance, answers the same
  * path with an HTML app shell rather than JSON), so they are not wired up here.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

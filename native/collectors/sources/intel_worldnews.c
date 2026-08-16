@@ -3,8 +3,8 @@
  * pivot or scheduled sweep has broad worldwide press coverage to correlate
  * against the JP news collectors (nhk, kyodo, yahoo). Real RSS/Atom via
  * rss_collect; each article is one FTS-indexed intel row. Scheduled hourly. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 #define COLL     "osint"
 #define INTERVAL 3600

@@ -61,4 +61,31 @@ int jsonlist_emit_ex(intel_sink *sink, const char *source_id, cJSON *doc,
                      const char *path, const char *record_type,
                      const char *lang, const char *tags_json, int *seen);
 
+/* Fetch `url` and emit every record — ACROSS PAGES.
+ *
+ * jsonlist_emit() above takes a document that is already in hand, so it can
+ * only ever see page 1. That is the shape the whole generated fleet was built
+ * on (_verified_macros.inc: one GET, one emit), and it meant ~6,500 sources
+ * silently stopped at the first page — 2,081 of them against URLs that
+ * hard-code a page size, so the discard was both guaranteed and invisible.
+ * `api.dane.gov.pl/1.4/datasets?page=1&per_page=100` answers with
+ * `meta.count: 26536` and a `links.next`, and the collector kept 100 of them.
+ *
+ * This is the JSON-list-shaped ENTRY POINT to lib/pagewalk.c, not a second
+ * implementation of it. There is one walk loop in this tree and this is a
+ * ~20-line adapter onto it: the continuation rules, the repeat-page guards,
+ * the seen-vs-emitted accounting and the truncation disclosure all live in
+ * pw_walk(), so a caller that says `jsonlist_emit_paged` and a caller that
+ * says `pw_walk` cannot drift apart. Two engines answering the same question
+ * differently is how a disclosure becomes a lie.
+ *
+ * Pass the whole document's timeout in `timeout_ms`; every page uses it.
+ *
+ * Returns total records emitted (>= 0), or -1 if the FIRST fetch failed (so
+ * the caller can still distinguish a dead endpoint from an honest empty, R3). */
+int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
+                        http_client *http, const char *url, int timeout_ms,
+                        const char *path, const char *record_type,
+                        const char *lang, const char *tags_json);
+
 #endif

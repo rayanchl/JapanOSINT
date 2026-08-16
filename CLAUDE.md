@@ -13,12 +13,25 @@ values standing in for a failed fetch. A failure degrades to an explicit
 Full audit of how each collector behaves today:
 `native/collectors/SOURCE_REALITY_REPORT.md`.
 
-One batch is registered but **not** proof-of-life verified: the 1,001 candidate
-sources defined across the 20 `collectors/sources/csrc14_*.c` files, authored
-without egress. They obey
-this rule (a dead endpoint returns an explicit error, never invented content)
-but carry no 2xx/parse proof. See `docs/candidate-sources-batch14.md`; promote
-them with `make verify-candidates`.
+**Every registered source is now proof-of-life verified.** Batch 14's 1,001
+unverified `csrc14_*` candidates were probed and promoted (594 PASS →
+`vsrc14_*`); batch 15 added 1,029 more (`vsrc15_*`, see
+`docs/verified-sources-batch15.md`). Rejects are kept as data in
+`docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
+
+Three verifier/engine traps that pass exposed — check for them before trusting
+any "verified" number:
+
+* **Non-ASCII URLs.** `urllib` puts the URL in the request line, which must be
+  ASCII, so a CKAN `?q=防災` died inside `fetch()` and was logged as a dead
+  endpoint. 196 live sources were being discarded by that alone.
+* **Empty result sets.** `{"total_count":0,"results":[]}` used to count as
+  `json-object`/1 item and PASS — a source verified live that emits nothing on
+  every run, forever. Now `EMPTY_RESULTSET` (172 rows across the two batches).
+* **Two-level envelopes.** `lib/jsonlist.c` descended one level looking for a
+  label; OpenDataSoft puts the title at `metas.default.title`, so every ODS
+  catalogue record was dropped as unlabelled despite carrying a real title and
+  licence. The envelope list now takes dotted paths.
 
 ## 2. Never discard data — a source that is called must be used exhaustively
 
@@ -37,20 +50,32 @@ If anything was left unused, it is reported as data (a
 Rule, examples of violations, and what the shared machinery guarantees:
 `docs/SOURCE_EXHAUSTIVENESS.md`.
 
-`make audit-sources` holds the **hp_\* engine rows at zero findings** — that is
-the set it gates strictly, and it is the set to write new deep-record collectors
-into. The wider tree is **not** at zero: the same run scans 1,211 files and
-reports 66 heuristic findings across 50 of them (record caps, first-array-
-element-only, single-page fetches of paged endpoints). They are heuristics that
-each need a human read, not proven violations — but do not read "audit-sources
-passes" as "nothing is being discarded". Deliberate exceptions carry an inline
-`/* exhaustive-ok: <reason> */` marker (`grep -rn exhaustive-ok`).
+Where the tree actually stands, as `make audit-sources` reports it:
+
+* **strict set (`collectors/sources/hp*_*.c`) — 0 findings.** This is the part
+  the Makefile gates on, and it is held clean.
+* **the rest of the tree — 55 findings across 42 of 1,239 files**: 28
+  single-page, 26 record-cap, 1 first-only. These are heuristics and each needs
+  a human read, but "zero audit findings" is true only of the strict set — do
+  not read it as true of the tree.
+
+Deliberate exceptions carry an inline `/* exhaustive-ok: <reason> */` marker
+(`grep -rn exhaustive-ok`, currently 254).
+
+**There is ONE page walk**: `lib/pagewalk.c`. `jsonlist_emit_paged()` is a
+~20-line adapter onto it, not a second engine — the tree briefly carried two,
+and they disagreed about when a page counts as full and whether a cursor
+parameter absent from the URL may be invented. New paged collectors call
+`pw_walk()` (or the jsonlist door onto it); nothing else re-derives "is there
+more?".
 
 ```sh
 cd native
-make audit-sources   # scan every collector for discard patterns (hp*_*.c: expect 0;
-                     # the wider tree currently reports 66 findings across 50 files)
+make audit-sources   # scan every collector for discard patterns
 make hptest          # offline check of the engine's guarantees
+make pagewalktest    # offline check of the paging + disclosure engine
+make lint-sources    # mechanical collector checks against tools/lint_baseline.json
+make source-floor    # fails if a collector stopped registering (tools/source-floor.txt)
 make                 # full build (-Wall -Wextra)
 ```
 
@@ -59,7 +84,9 @@ make                 # full build (-Wall -Wextra)
 ```
 native/source.h                 the ONE data-acquisition ABI (source_def + intel_sink)
 native/lib/hpengine.{c,h}       declarative deep-record collector engine
-native/collectors/sources/*.c   one file per collector family; Makefile globs them
+native/lib/pagewalk.{c,h}       the ONE page walk + truncation disclosure
+native/collectors/**/*.c        one file per collector family; the Makefile glob
+                                is RECURSIVE — sources/ plus feed/, pivot/, pod/
 native/core/                    db, http, intel sink, dispatcher, pipeline, HTTP API
 docs/                           plans, pipeline notes, and the two house rules above
 ```

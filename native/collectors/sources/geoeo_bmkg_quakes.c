@@ -19,8 +19,8 @@
  * string and a shakemap filename — a different shape, deliberately not wired
  * into this parser.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL = "https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json";

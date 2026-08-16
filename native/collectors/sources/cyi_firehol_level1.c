@@ -13,10 +13,10 @@
  * Licence: firehol/blocklist-ipsets repo (GPLv3-style repo licence); the
  * constituent upstream feeds keep their own terms, recorded in the file header.
  */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -8,9 +8,9 @@
  * sent as "Authorization: ApiKey <key>" to widen access to private collections.
  * One intel_item per matched entity: name, schema, collection, countries.
  * Non-200 / no matches → honest empty (return 0). Never synthesizes records. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

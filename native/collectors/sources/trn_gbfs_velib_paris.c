@@ -8,7 +8,7 @@
  * Licence: Smovengo / Vélib' Métropole open data, Licence Ouverte (Etalab) v2.0.
  * Parse notes: station_id is a NUMBER here (213688169), not a string — trn_idstr normalises both forms so the station_status join still matches.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

@@ -9,10 +9,10 @@
  * No coordinates -> has_geo 0 (R2).
  * Licence: Emerging Threats open ruleset feed (BSD-style open rules); no key.
  */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

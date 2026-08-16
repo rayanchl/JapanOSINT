@@ -8,10 +8,10 @@
  * copied into any emitted field; only the count of offered URLs is recorded.
  * Licence: M-Lab measurement data is open (CC0); the Locate API is keyless.
  */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

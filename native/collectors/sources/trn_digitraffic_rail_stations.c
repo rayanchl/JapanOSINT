@@ -11,7 +11,7 @@
  * TURNOUT_IN_THE_OPEN_LINE, which is what makes the freight-only sites that
  * passenger timetables omit visible here.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static const char *const DT_HDRS[] = {

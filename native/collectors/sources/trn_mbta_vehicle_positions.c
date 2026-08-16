@@ -12,7 +12,7 @@
  * endpoint is used in place of the protobuf GTFS-RT feed because this platform
  * has no protobuf decoder. carriages[] carries per-car occupancy when present.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 /* relationships.<rel>.data.id */

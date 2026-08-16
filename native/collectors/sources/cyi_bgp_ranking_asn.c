@@ -12,9 +12,9 @@
  * ranking.total_known_asns. No coordinates -> has_geo 0 (R2).
  * Licence: CIRCL public service, free for research and operational use.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

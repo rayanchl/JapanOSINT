@@ -1,7 +1,7 @@
 /* core/cameraproxy.c — see cameraproxy.h. */
 #include "cameraproxy.h"
+#include "hostgate.h"          /* the SSRF floor every outbound fetch must clear */
 #include "httpclient.h"        /* http_client_global_init() — the one curl init */
-#include "hostgate.h"          /* the SSRF checks this path used to skip */
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <curl/curl.h>
@@ -135,25 +135,19 @@ static char *upstream_url_of(const char *props_json) {
   return out;
 }
 
-static int is_http_url(const char *u) {
-  return u && (strncasecmp(u, "http://", 7) == 0 ||
-               strncasecmp(u, "https://", 8) == 0);
-}
-
-
-/* Per-connection SSRF re-check, the same one core/httpclient.c installs.
- * libcurl calls this after each hop's socket connects and before the request
- * goes out, so a 302 into 169.254.169.254 — or a DNS answer that rebinds
- * between our check and curl's own resolve — is caught here instead of
- * followed. The FLOOR as configured, so JO_HTTP_BLOCK_PRIVATE still governs
- * whether the LAN cameras this proxy exists to reach are allowed. */
+/* Per-connection SSRF re-check, the same one httpclient.c installs on every
+ * shared-client transfer. This handle is private — it exists because
+ * http_response carries no Content-Type and this route must return the
+ * upstream's, see the fetch below — and a private handle inherits none of
+ * http_request()'s policy, so the callback is repeated rather than assumed.
+ * With FOLLOWLOCATION on it is also the only thing that judges hops 2..5. */
 #if LIBCURL_VERSION_NUM >= 0x075000            /* 7.80.0: CURLOPT_PREREQFUNCTION */
-static int cam_prereq(void *ud, char *conn_primary_ip, char *conn_local_ip,
-                      int conn_primary_port, int conn_local_port) {
-  (void)ud; (void)conn_local_ip; (void)conn_primary_port; (void)conn_local_port;
-  if (hostgate_addr_check_floor(conn_primary_ip) != HG_URL_OK) {
-    fprintf(stderr, "[camproxy] blocked connection to %s (private/link-local)\n",
-            conn_primary_ip ? conn_primary_ip : "?");
+static int proxy_prereq(void *ud, char *primary_ip, char *local_ip,
+                        int primary_port, int local_port) {
+  (void)ud; (void)local_ip; (void)primary_port; (void)local_port;
+  if (hostgate_addr_check_floor(primary_ip) != HG_URL_OK) {
+    fprintf(stderr, "[camera-proxy] blocked connection to %s "
+                    "(private/link-local)\n", primary_ip ? primary_ip : "?");
     return CURL_PREREQFUNC_ABORT;
   }
   return CURL_PREREQFUNC_OK;
@@ -204,22 +198,29 @@ char *camera_proxy_fetch(db_handle *db, const char *camera_uid,
   char *url = upstream_url_of(props);
   free(props);
   if (!url) return errj("camera has no url");
-  /* The uid → URL indirection narrows this but does NOT make it safe: the URL
-   * is read from intel_items.properties, i.e. it was scraped from a
-   * third-party camera aggregator, and it is then followed through up to five
-   * redirects. So this path gets the same three defences http_request() has,
-   * rather than a scheme check on its own — which is all it used to carry:
+  /* The uid → URL indirection narrows WHO chooses the URL, not WHAT it may
+   * point at: the caller supplies an id, but the value behind that id was
+   * written into intel_items.properties by shodan_api / insecam_scrape, which
+   * report whatever their upstream said, and it is then followed through up to
+   * five redirects. A scheme test alone let `http://169.254.169.254/latest/
+   * meta-data/` through as a "camera", and this route hands the response body
+   * back to the caller — so this path gets the same three defences
+   * http_request() has, rather than a scheme check on its own:
    *   1. hostgate_url_check() before dialling,
    *   2. the protocol set pinned on the initial request AND the redirect chain,
-   *   3. cam_prereq() re-checking the peer address on every hop. */
-  if (!is_http_url(url)) { free(url); return errj("only http/https allowed"); }
+   *   3. proxy_prereq() re-checking the peer address on every hop.
+   * Floor strength, not _strict: LAN cameras on RFC1918 are a shipped feature
+   * (hostgate.h says so), and JO_HTTP_BLOCK_PRIVATE=1 raises this call and
+   * proxy_prereq() together. */
   { int gk = hostgate_url_check(url);
     if (gk != HG_URL_OK) {
-      fprintf(stderr, "[camproxy] refused %s: %s\n", url,
+      fprintf(stderr, "[camera-proxy] refused %s: %s\n", url,
               hostgate_url_reason(gk));
       free(url);
+      /* 502, not 400: the caller's request was well-formed — it is the
+       * upstream this row points at that we refuse to dial. */
       if (status) *status = 502;
-      return errj("upstream blocked");
+      return errj(hostgate_url_reason(gk));
     } }
 
   http_client_global_init();
@@ -234,6 +235,8 @@ char *camera_proxy_fetch(db_handle *db, const char *camera_uid,
   curl_easy_setopt(e, CURLOPT_WRITEDATA, &sk);
   curl_easy_setopt(e, CURLOPT_FOLLOWLOCATION, 1L);
   curl_easy_setopt(e, CURLOPT_MAXREDIRS, 5L);
+  /* The redirect chain is the half hostgate_url_check() above cannot see: it
+   * judged the first URL only. Same clamps do_once() sets. */
 #if LIBCURL_VERSION_NUM >= 0x075500            /* 7.85.0 */
   curl_easy_setopt(e, CURLOPT_PROTOCOLS_STR, "http,https");
   curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS_STR, "http,https");
@@ -244,7 +247,7 @@ char *camera_proxy_fetch(db_handle *db, const char *camera_uid,
                    (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
 #endif
 #if LIBCURL_VERSION_NUM >= 0x075000
-  curl_easy_setopt(e, CURLOPT_PREREQFUNCTION, cam_prereq);
+  curl_easy_setopt(e, CURLOPT_PREREQFUNCTION, proxy_prereq);
   curl_easy_setopt(e, CURLOPT_PREREQDATA, (void *)0);
 #endif
   curl_easy_setopt(e, CURLOPT_TIMEOUT_MS, (long)CAM_PROXY_TIMEOUT_MS);

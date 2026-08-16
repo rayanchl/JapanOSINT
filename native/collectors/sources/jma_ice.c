@@ -3,9 +3,9 @@
  * Tab-separated "SEASON<TAB>MAX" longterm Okhotsk sea-ice file; emit ONE
  * intel item for the latest season's maximum extent (+ recent seasons).
  * uid = jma-ice|<latest season>. Honest empty on fetch/parse failure. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

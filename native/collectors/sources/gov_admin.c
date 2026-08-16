@@ -2,9 +2,9 @@
  * OSINT services — administrative transparency & licensing registries.
  * Server-rendered listing pages → real anchor scrape; one run() dispatches on
  * ctx->source_id. Entity (when given) filters anchors by keyword. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

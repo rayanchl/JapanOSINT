@@ -4,9 +4,9 @@
  *
  *   EMAILREP_LOOKUP  emailrep.io/<email>                    EMAILREP_KEY
  *   NUMVERIFY_PHONE  apilayer.net/api/validate?number=      NUMVERIFY_KEY */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

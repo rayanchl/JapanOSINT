@@ -11,9 +11,9 @@
  *
  * All keyless. Nothing synthesized: titles, URLs, dates, authors are extracted
  * from the live JSON. Fetch failure / no match → honest empty. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

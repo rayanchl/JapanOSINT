@@ -3,9 +3,9 @@
  * overview-forecast feature is real upstream; the JS seed-supplement for the
  * other 46 prefectures is dropped (rule 8). The unused area.json fetch in the
  * JS Promise.all is omitted (its result is never read for the live feature). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 

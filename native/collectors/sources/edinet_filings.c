@@ -5,9 +5,9 @@
  * uid = edinet-filings|<d.docID || idx_<i>> (intelUid first non-empty).
  * published_at mirrors d.submitDateTime (source string passthrough; JS does
  * new Date(x).toISOString() — server-tz-coupled, not in uid/props). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

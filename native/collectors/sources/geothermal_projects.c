@@ -8,11 +8,11 @@
  * district coordinates/metadata are intrinsic record identity (the pages are
  * narrative HTML with no parseable capacity), kept verbatim from JS.
  * uid/title derived by the geojson sink. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

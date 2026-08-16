@@ -15,10 +15,10 @@
  * STRING TRAP: sensordatavalues[].value is a STRING.
  * Row cap: JO_SENSORCOMMUNITY_MAX (default 3000) bounds a multi-MB payload.
  * Licence: ODbL 1.0 (attribution + share-alike). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -26,8 +26,8 @@
  *    separate concern, so the measure @id is carried here to make that join
  *    possible.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 #define EA_STATIONS                                                           \

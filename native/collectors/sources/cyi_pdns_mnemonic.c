@@ -14,9 +14,9 @@
  * Licence: Mnemonic open passive DNS tier, TLP:WHITE records only; the
  * anonymous quota is limited (results capped and rate-limited).
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

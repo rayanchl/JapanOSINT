@@ -1,9 +1,9 @@
 /* collectors/cyber/sources/crtsh_historical.c
  * Port of server/src/collectors/crtshHistorical.js (createThreatIntelCollector).
  * Keyless. crt.sh historical certs for a curated JP target list, geometry null. */
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

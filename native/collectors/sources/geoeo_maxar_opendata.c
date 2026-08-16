@@ -26,8 +26,8 @@
  *  - Relative hrefs ("./…", "../…") are resolved against the parent URL.
  *  - The number of event fetches is capped per run.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 #define MAXAR_ROOT "https://maxar-opendata.s3.amazonaws.com/events/catalog.json"

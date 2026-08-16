@@ -15,7 +15,7 @@
  * order (unusual) and is kept as a verbatim string rather than misread.
  * `description` is an array of display lines, not prose.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

@@ -1,10 +1,10 @@
 /* collectors/cyber/sources/alienvault_otx_jp.c
  * Port of server/src/collectors/alienvaultOtxJp.js (createThreatIntelCollector).
  * env OTX_API_KEY → OTX pulse search q=japan, 50 recent, TOKYO points. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 

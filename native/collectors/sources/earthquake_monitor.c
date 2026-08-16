@@ -7,9 +7,9 @@
  * (lat/lon) + event time so individual quakes surface as distinct search/map
  * items. If USGS returns nothing, emits nothing (honest empty — no seeded
  * rows). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

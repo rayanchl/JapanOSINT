@@ -3,9 +3,9 @@
  * (HelloCycling, DOCOMO Cycle Tokyo): discovery → station_information +
  * station_status → one intel row per station (slice 0..500). The
  * intelEnvelope wrapper/_meta is dropped (rule 7); only the live rows. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

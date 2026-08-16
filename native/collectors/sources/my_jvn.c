@@ -12,9 +12,9 @@
  *   tags      = ['advisory','jvn','cyber']
  *   props     = { jvn_id: id||null, modified: <dcterms:modified>||null }
  * The intel _meta/seed envelope is dropped (live rows only). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

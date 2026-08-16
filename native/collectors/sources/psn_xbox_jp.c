@@ -11,10 +11,10 @@
  * Xbox/OpenXBL branch (plain GET + X-Authorization header) is ported fully.
  * honest empty when gated / no watchlist / on failure.
  * uid = psn-xbox-jp|xbl:<gamertag>. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

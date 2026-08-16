@@ -33,10 +33,10 @@
  * All keyless. Licences: Kubernetes docs CC BY 4.0; curl docs under the curl
  * (MIT-like) licence; the Go vulnerability database is published by the Go team
  * for public reuse. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

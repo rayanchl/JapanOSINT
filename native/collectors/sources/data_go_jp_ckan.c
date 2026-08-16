@@ -3,10 +3,10 @@
  * data.go.jp CKAN action/package_search?rows=50 → one intel row/package.
  * uid = data-go-jp-ckan|<p.id||p.name> (intelUid first non-empty). The
  * curated _meta/portal-summary envelope is dropped (live rows only). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

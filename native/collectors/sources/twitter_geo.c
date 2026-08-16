@@ -13,12 +13,12 @@
  * dropped here exactly like other ancillary stores in this port (it does not
  * influence the FeatureCollection the source returns). _meta is also dropped.
  */
-#include "../../core/dbutil.h"
-#include "../../source.h"
-#include "../../core/db.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
-#include "../../third_party/sqlite3.h"
+#include "core/dbutil.h"
+#include "source.h"
+#include "core/db.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
+#include "third_party/sqlite3.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

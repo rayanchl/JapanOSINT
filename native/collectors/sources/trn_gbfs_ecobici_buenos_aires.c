@@ -8,7 +8,7 @@
  * Licence: Ciudad de Buenos Aires open data / PBSC GBFS feed; listed in MobilityData systems.csv.
  * Parse notes: GBFS v3.0 localised name array (en/nl/pt/es).
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

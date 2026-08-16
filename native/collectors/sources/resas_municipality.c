@@ -5,9 +5,9 @@
  * empty without the key; per-pref fetch failures are skipped (Node:
  * result null → continue). One intel_item per city. uid key mirrors
  * JS intelUid(SOURCE_ID, `${pref}-${cityCode}`). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

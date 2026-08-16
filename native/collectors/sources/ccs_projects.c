@@ -9,10 +9,10 @@
  * image-heavy, no parseable rows) so they are kept verbatim from JS — they
  * are NOT a curated fallback dataset, they are the verified live records.
  * uid/title derived by the geojson sink. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

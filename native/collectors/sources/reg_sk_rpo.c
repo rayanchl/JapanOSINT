@@ -13,9 +13,9 @@
  * "value" (and validity dates); helpers below pull the current "value" out of
  * either a plain string, an object with "value", or the first element of such
  * an array — tolerant of the documented shape without inventing anything. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

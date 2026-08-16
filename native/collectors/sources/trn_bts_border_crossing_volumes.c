@@ -13,7 +13,7 @@
  * STRINGS (there is also a GeoJSON `point` object holding [lon,lat]); both
  * forms are handled and neither is ever substituted by a state centroid.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define BTS_URL "https://data.transportation.gov/resource/keg4-3bc2.json" \

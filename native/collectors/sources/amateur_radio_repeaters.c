@@ -3,9 +3,9 @@
  * RepeaterBook CSV export for Japan → GeoJSON Point Features.
  * The SEED_REPEATERS / generateSeedData fallback is dropped (rule 7);
  * only live upstream rows are emitted. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

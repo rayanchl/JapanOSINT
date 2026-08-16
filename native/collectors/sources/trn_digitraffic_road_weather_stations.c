@@ -10,7 +10,7 @@
  * `state` field carries the sensor health enum (e.g. OK_FAULT_DOUBT_CANCELLED),
  * which is what tells you whether a station's readings can be trusted.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static const char *const DT_HDRS[] = {

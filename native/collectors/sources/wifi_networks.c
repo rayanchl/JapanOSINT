@@ -5,9 +5,9 @@
  * postProcess. _meta envelope dropped per RULE 8.
  * NOTE: no source_registry.gen.c row for "wifi-networks"; category derived
  * from the WiFi domain → "cyber" (matches the three sub-collectors). */
-#include "../../source.h"
-#include "../../lib/unified.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/unified.h"
+#include "third_party/cJSON.h"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   static const unified_upstream ups[] = {

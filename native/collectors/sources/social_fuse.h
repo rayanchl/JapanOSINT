@@ -13,7 +13,7 @@
  * them. Every jo_*_run reads ctx->entity and emits per-record rows. */
 #ifndef JO_SOCIAL_FUSE_H
 #define JO_SOCIAL_FUSE_H
-#include "../../source.h"
+#include "source.h"
 
 /* username-pivot providers */
 int jo_social_intel_run(const source_ctx *ctx, intel_sink *sink);

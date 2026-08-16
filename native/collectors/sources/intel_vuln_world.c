@@ -3,8 +3,8 @@
  * archives, coordinated-disclosure programs) routed through rss_collect so each
  * disclosure lands as an intel row keyed by guid/link. Scheduled hourly to
  * surface fresh CVEs and PoCs alongside the JP cyber collectors. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 #define COLL     "cyber"
 #define INTERVAL 3600

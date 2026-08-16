@@ -2,9 +2,9 @@
  * Port of server/src/collectors/birdMakeupJp.js. Polls bird.makeup
  * ActivityPub /outbox for a curated (or BIRD_HANDLES-overridden) handle
  * list → one intel row per post. intelEnvelope wrapper dropped (rule 7). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

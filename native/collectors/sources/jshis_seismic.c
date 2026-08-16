@@ -2,9 +2,9 @@
  * Port of server/src/collectors/jshisSeismic.js. NIED J-SHIS PSHM geojson;
  * slice(0,1000), pass geometry through, mesh_id = JSHIS_<sha1(JSON.stringify
  * (geometry))[:20]> (== intelHashKey). SEED branch dropped (rule 8). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 

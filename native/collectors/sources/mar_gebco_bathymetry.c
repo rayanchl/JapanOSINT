@@ -21,9 +21,9 @@
  * parse_notes — "status:'OK' on success; over-quota returns HTTP 429": any
  * non-200 or non-OK status is an honest empty (return 0).
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

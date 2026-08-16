@@ -22,9 +22,9 @@
  * dataset, so we probe a small set of common company-master keys and fall back
  * to serialising the whole record. Verify field mapping against a live response
  * once a resource id is configured. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

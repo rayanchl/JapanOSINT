@@ -3,10 +3,10 @@
  * inlined utils/gsiAddressSearch.js (single GET, top hit).
  * Probe q=東京駅 → 1 Feature on hit; seed branch dropped (rule 8) so a
  * miss/failure → 0 rows. Props order: title, source. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 

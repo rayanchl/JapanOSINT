@@ -7,9 +7,9 @@
  * gated on MEDIACLOUD_API_KEY (no key → honest empty, return 0, like
  * gbizinfo.c). One intel_item per matched story: title, media, url, date.
  * Non-200 / no matches → honest empty. Never synthesizes records. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

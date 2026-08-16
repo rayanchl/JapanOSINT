@@ -8,9 +8,9 @@
  *   MUSICBRAINZ            musicbrainz.org/ws/2/artist?query=<e>       (artists)
  *   PHOTON_GEOCODE         photon.komoot.io/api?q=<e>                  (OSM geocode)
  *   CHRONICLING_AMERICA    chroniclingamerica.loc.gov/search/pages/... (old news) */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

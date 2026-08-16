@@ -16,8 +16,8 @@
  *
  * Distinct host and product from the NHC sources; do not confuse the two.
  */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 #include <stdio.h>
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

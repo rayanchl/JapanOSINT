@@ -3,10 +3,10 @@
  * Navitime RapidAPI transport_node search around 5 major metros, gated on
  * NAVITIME_API_KEY (RapidAPI key, sent via X-RapidAPI-* headers). No key-free
  * fallback — honest empty FeatureCollection without the key or on failure. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

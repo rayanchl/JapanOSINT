@@ -11,7 +11,7 @@
  * feed, so every row is emitted with has_geo = 0 rather than pinned to London
  * (R2) — a line is a corridor, not a point, and TfL does not publish one here.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define TFL_LINE_URL \

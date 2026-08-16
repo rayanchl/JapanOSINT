@@ -1,8 +1,8 @@
 /* JPCERT/CC alerts — RSS sibling of ipa_alerts.c. Replaces the de-duped
  * Node `jpcert-alerts` (Node keeps `jpcert-alerts-rss`; C had no rss variant,
  * so this restores JPCERT coverage at the canonical id). uid PK dedups. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 #include <stdio.h>
 static const char *FEEDS[] = {
   "https://www.jpcert.or.jp/rss/jpcert.rdf",

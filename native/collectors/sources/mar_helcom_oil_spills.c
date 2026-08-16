@@ -23,10 +23,10 @@
  * under a suspected_* label with an explicit caveat, never as a vessel id.
  * parse_notes — "Date/Time_UTC are epoch milliseconds."
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

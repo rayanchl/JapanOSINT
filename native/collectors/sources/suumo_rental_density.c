@@ -6,10 +6,10 @@
  * so 47 rows regardless of upstream — not a SEED fallback (HARD RULE 8 N/A).
  * Feature props (exact JS order): id, prefecture_ja, prefecture_slug,
  *   rental_listings, source.  id="SUUMO_<slug>" → uid via NATIVE_ID "id". */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

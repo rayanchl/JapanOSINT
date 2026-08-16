@@ -31,11 +31,11 @@
  *
  * All keyless. Licences: none of these five publishers states one on the
  * endpoint itself beyond public availability. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/pagewalk.h"   /* pw_walk() — house rule 2 paging */
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/pagewalk.h"   /* pw_walk() — house rule 2 paging */
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

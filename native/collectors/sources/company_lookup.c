@@ -11,9 +11,9 @@
  * Each row's body carries the real fetched fields (name, jurisdiction, number,
  * status, type, incorporation date, address). No companies / fetch failure →
  * emits nothing (honest empty — no fabricated registry-name stubs). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

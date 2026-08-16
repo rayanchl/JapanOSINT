@@ -5,10 +5,10 @@
  * (event_id ∈ NATIVE_ID_KEYS). The JS coord quirk
  * (coordinates[0]=cod.split('+')[1], [1]=cod.split('+')[0]) is reproduced
  * verbatim for byte-parity. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../core/intel.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "core/intel.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>

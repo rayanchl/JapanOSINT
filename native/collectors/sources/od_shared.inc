@@ -18,10 +18,10 @@
 #ifndef JO_OD_SHARED_C
 #define JO_OD_SHARED_C
 
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/jocore.h"   /* jo_truncation_notice — house rule 2 disclosure */
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/jocore.h"   /* jo_truncation_notice — house rule 2 disclosure */
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

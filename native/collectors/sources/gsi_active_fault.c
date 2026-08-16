@@ -5,11 +5,11 @@
  * unverified AIST candidate endpoint. Honest empty when no usable geometry
  * (rule 8 — no fabricated fault geometry). Property key order
  * (fault_id, name, fault_type, activity, source) mirrors JS for parity. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 

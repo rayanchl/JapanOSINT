@@ -12,10 +12,10 @@
  * STRING TRAP: metadata.lat/lon and data[].v/.t are all STRINGS; they are
  * strtod'ed, and a non-numeric token means no row.
  * Licence: NOAA/NOS, public domain. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

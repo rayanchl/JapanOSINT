@@ -3,10 +3,10 @@
  * Tellus Traveler data-search API (POST, Bearer TELLUS_TOKEN) → one intel
  * item per scene. Non-spatial scene catalog (has_geo=0). Gated on
  * TELLUS_TOKEN (no key-free path). Honest empty on fetch failure. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

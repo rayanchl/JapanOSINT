@@ -14,10 +14,10 @@
  * Licence: public register operated by CERT Polska/NASK under Polish law;
  * free to consume.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/jocore.h"     /* jo_truncation_notice() */
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/jocore.h"     /* jo_truncation_notice() */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

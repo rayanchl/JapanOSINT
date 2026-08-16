@@ -16,8 +16,8 @@
  *    0, not a fetch failure.
  *  - capId is the CAP identifier and is used as the dedupe key across polls.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL = "https://www.met.ie/Open_Data/json/warning_IRELAND.json";

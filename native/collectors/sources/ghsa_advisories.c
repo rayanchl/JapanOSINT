@@ -2,9 +2,9 @@
  * Port of server/src/collectors/ghsaAdvisories.js (createThreatIntelCollector).
  * Keyless (optional GITHUB_TOKEN env raises rate limit). GHSA REST, recent
  * 100, TOKYO points; ecosystems = unique non-falsy package.ecosystem. */
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

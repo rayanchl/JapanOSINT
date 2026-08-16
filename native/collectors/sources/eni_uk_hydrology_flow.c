@@ -14,10 +14,10 @@
  * (the measure notation's leading 36-char GUID); no station match -> no
  * geometry.
  * Licence: Open Government Licence v3 (meta.licenseName = "OGL 3"). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

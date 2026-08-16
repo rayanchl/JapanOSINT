@@ -5,9 +5,9 @@
  * Overpass harbour-node proxy (tryOsmPorts, single area.jp query) which is
  * the faithful keyless live path. The curated SEED_PORTS / _meta envelope is
  * intentionally not ported (JS does `features = []` when nothing live). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

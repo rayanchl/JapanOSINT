@@ -3,9 +3,9 @@
  * Faithful live path = tryLive() fetchOverpass (man_made=satellite_dish +
  * building=observatory). GEONET CSV merge and the SEED_* arrays are not
  * ported (curated/seed; rule 7). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <string.h>
 

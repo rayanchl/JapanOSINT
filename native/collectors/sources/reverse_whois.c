@@ -24,12 +24,12 @@
  * (remote_key="domain:<domain>"), body {domain,source}, deduped case-
  * insensitively within the run. If no domains are found, emits nothing and
  * returns 0 (honest empty). */
-#include "../../lib/jocore.h"
-#include "../../lib/seenset.h"    /* growable dedup — no fixed cap on domains */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "lib/seenset.h"    /* growable dedup — no fixed cap on domains */
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <strings.h>
 #include <ctype.h>

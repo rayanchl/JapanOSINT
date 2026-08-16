@@ -23,9 +23,9 @@
  *  - latitude/longitude are decimal element text; a bean where either fails a
  *    full-string numeric parse is emitted with has_geo=0.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
 #include "geoeo_common.inc"
 
 static const char *URL = "https://hpxml.pdc.org/public.xml";

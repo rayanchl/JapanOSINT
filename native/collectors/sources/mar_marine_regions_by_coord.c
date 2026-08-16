@@ -23,9 +23,9 @@
  * emitted alongside. No region centroid is ever used as the row's lat/lon.
  * parse_notes — "Empty array for a land point is an honest empty."
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

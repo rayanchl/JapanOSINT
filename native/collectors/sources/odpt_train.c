@@ -5,10 +5,10 @@
  * odpt_transport.c token idiom: ODPT_TOKEN | ODPT_CONSUMER_KEY |
  * ODPT_CHALLENGE_TOKEN. Tries the two ODPT v4 bases in order, first non-empty
  * array wins (=== odptGet). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

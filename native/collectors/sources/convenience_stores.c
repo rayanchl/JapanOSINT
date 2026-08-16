@@ -2,9 +2,9 @@
  * Port of server/src/collectors/convenienceStores.js (fetchOverpassTiled).
  * Curated SEED_KONBINI offline fallback intentionally NOT ported —
  * correctness-neutral (JS does `if (!live) features = []` anyway). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static void body(const char *bbox, char *o, size_t n, void *ud) {

@@ -4,9 +4,9 @@
  * POIs with full OSM metadata. osmPoiOverpassBody / osmPoiMapFeature /
  * osmPoiCategoryOf / wikipediaUrl / commonsUrl reproduced verbatim. Properties
  * built in EXACT JS key order (featureUid parity). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <string.h>
 

@@ -16,9 +16,9 @@
  * Every field emitted is a REAL parsed value from the respective public API.
  * No keys required. Fetch failure / no matches → honest empty (return 0).
  * Nothing here fabricates records, names, coordinates or counts. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

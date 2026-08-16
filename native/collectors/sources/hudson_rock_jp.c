@@ -1,9 +1,9 @@
 /* collectors/cyber/sources/hudson_rock_jp.c
  * Port of server/src/collectors/hudsonRockJp.js (createThreatIntelCollector).
  * Keyless. HudsonRock Cavalier per-JP-domain infostealer summary, TOKYO points. */
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

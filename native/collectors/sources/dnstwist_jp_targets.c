@@ -4,9 +4,9 @@
  * domain list, DNS-resolve via public DoH (dns.google/resolve type=A), emit
  * only resolving candidates. Honest empty if 0 probed. No seed.
  * uid = dnstwist-jp-targets|<candidate>. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

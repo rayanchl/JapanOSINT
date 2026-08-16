@@ -12,9 +12,9 @@
  * description}]}], website:{url}, status } ] }. name type "1" = primary;
  * a name with no endDate is the current one. Descriptions languageCode "3"
  * = English. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

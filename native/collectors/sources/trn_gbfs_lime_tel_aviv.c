@@ -9,7 +9,7 @@
  * used — emitting it would put one point somewhere in Tel Aviv that stands for
  * 5,000 vehicles (R2). The vehicle list is capped per run.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

@@ -92,7 +92,7 @@ for f in ORDER:
         s = s[:a] + txt + s[b:]
 
     if "AUDIT NOTE (2026-08-09)" not in s:
-        anchor = '#include "../../lib/rss_atom.h"\n'
+        anchor = '#include "lib/rss_atom.h"\n'
         assert s.count(anchor) == 1, f
         s = s.replace(anchor, anchor + "\n" + NOTE, 1)
     open(f, "w", encoding="utf-8", newline="").write(s)

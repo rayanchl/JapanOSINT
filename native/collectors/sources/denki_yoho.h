@@ -34,10 +34,10 @@
 #ifndef JO_DENKI_YOHO_H
 #define JO_DENKI_YOHO_H
 
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../lib/probe.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "lib/probe.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

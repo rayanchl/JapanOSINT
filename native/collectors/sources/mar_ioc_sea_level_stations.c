@@ -18,10 +18,10 @@
  * staleness is visible; the position is kept as published.
  * parse_notes — "Endpoint is plain HTTP (no TLS on the service.php path)."
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

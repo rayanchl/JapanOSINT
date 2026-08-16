@@ -34,8 +34,8 @@
  *    and `resolution` is the source DEM resolution in metres (1 = lidar) —
  *    real intelligence about data quality. Coverage is US only.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 /* "35.36,138.73" (or "35.36 138.73") → lat, lon. */

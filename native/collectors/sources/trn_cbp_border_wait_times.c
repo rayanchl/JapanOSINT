@@ -13,7 +13,7 @@
  * collector bts-border-crossing-volumes carries the real port coordinates and
  * joins on port_number.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 /* One lane group's standard lane: delay minutes + lanes open, both strings. */

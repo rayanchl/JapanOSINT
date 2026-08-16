@@ -13,9 +13,9 @@
  * No coordinates -> has_geo 0 (R2).
  * Licence: RIPE NCC public API, keyless.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

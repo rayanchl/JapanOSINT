@@ -1,6 +1,6 @@
 /* Science / space / technology feeds (real RSS) — emerging-tech and dual-use research signal, via rss_collect. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 #include "_source_macros.inc"
 

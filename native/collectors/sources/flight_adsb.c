@@ -5,9 +5,9 @@
  * Merge by ICAO24 (adsb.lol wins, property bags unioned), then dedupe
  * AeroDataBox into the live set by normalized callsign. Curated SEED /
  * _meta envelope intentionally dropped (live rows only). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

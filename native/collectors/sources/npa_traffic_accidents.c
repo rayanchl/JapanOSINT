@@ -6,11 +6,11 @@
  * decoded text > 100000 bytes wins. Emits one feature per grid bucket + one
  * intel item (uid intelUid(SOURCE_ID,'index')). namedCache TTL layer dropped
  * (correctness-neutral). _meta/SEED n/a. Feature uid/title via geojson sink. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/csv.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/csv.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

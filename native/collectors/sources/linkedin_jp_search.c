@@ -4,10 +4,10 @@
  * quoted JSESSIONID value doubles as the Csrf-Token. Voyager blended search
  * for JP-relevant terms -> non-spatial intel. Dedup by id across queries.
  * honest empty when gated / no csrf / on failure. uid = linkedin-jp-search|<id>. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
