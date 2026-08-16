@@ -970,8 +970,15 @@ const LAYER_DEFINITIONS = {
     category: 'Mapping',
   },
   // -- Unified transport collectors (fused + deduped) --
+  // The moving vehicles on these three layers are a MIX: schedule-backed GTFS
+  // positions where /api/transit/active-trips has a trip, and browser-computed
+  // estimates everywhere else (useLiveVehicles.js). The label says so, because
+  // a toggle reading plain "Trains & Subways" invites the reader to treat every
+  // marker as an observation. On the map the two are drawn differently — solid
+  // icon = observed, hollow ring = estimated.
   unifiedTrains: {
     name: 'Trains & Subways',
+    subtitle: 'live where scheduled, else estimated',
     icon: '\u{1F686}',
     color: '#2e7d32',
     endpoint: '/api/data/unified-trains',
@@ -990,6 +997,7 @@ const LAYER_DEFINITIONS = {
   },
   unifiedBuses: {
     name: 'Buses',
+    subtitle: 'live where scheduled, else estimated',
     icon: '\u{1F68C}',
     color: '#fb8c00',
     endpoint: '/api/data/unified-buses',

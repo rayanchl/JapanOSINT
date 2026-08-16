@@ -4,11 +4,12 @@ import apiUrl from '../../../utils/apiUrl.js';
 
 export default function VehiclePopup({ properties }) {
   const tripId = properties?.trip_id;
+  const synthetic = properties?.synthetic === true || properties?.synthetic === 'true';
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!tripId) { setError('Not a schedule-backed vehicle'); return; }
+    if (synthetic || !tripId) return;   // nothing to look up; see the render below
     let cancelled = false;
     (async () => {
       try {
@@ -23,6 +24,27 @@ export default function VehiclePopup({ properties }) {
     return () => { cancelled = true; };
   }, [tripId]);
 
+  // An estimated marker must say so plainly, and must not imply a real vehicle
+  // sits here. The old copy for this case was "Not a schedule-backed vehicle",
+  // which reads as a lookup failure rather than as "nothing observed this".
+  if (synthetic) {
+    return (
+      <div className="space-y-1">
+        <div className="text-xs font-medium text-amber-300">Estimated position</div>
+        <div className="text-xs text-gray-400">
+          No live or scheduled position is available for this route, so this
+          marker is drawn by moving along the route geometry at a constant speed.
+          <span className="text-gray-500"> Nothing observed a vehicle here.</span>
+        </div>
+        {properties?.estimate_basis && (
+          <div className="text-[11px] font-mono text-gray-500">{properties.estimate_basis}</div>
+        )}
+      </div>
+    );
+  }
+  if (!tripId) {
+    return <div className="text-xs text-gray-500">No trip id on this vehicle.</div>;
+  }
   if (error) return <div className="text-xs text-gray-500">{error}</div>;
   if (!data) return <div className="text-xs text-gray-500">Loading…</div>;
 

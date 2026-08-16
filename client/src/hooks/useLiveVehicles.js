@@ -184,7 +184,17 @@ export default function useLiveVehicles(mode, enabled, viewport = null) {
         const estimatedCount = scheduleTripsRef.current.length + simVehicles.length;
         const features = [];
         features.length = 0;
-        // (a) simulator vehicles for routes with no schedule data
+        // (a) simulator vehicles for routes with no schedule data.
+        //
+        // `synthetic: true` is NOT decoration. These positions were computed
+        // here, from a route polyline and a hardcoded constant speed — nothing
+        // observed them. Until this property existed they were pushed into the
+        // same FeatureCollection as the schedule-backed positions below, with
+        // no distinguishing field, and MapView drew both through one symbol
+        // layer with one icon and one opacity. A user watching the map, or
+        // screenshotting it as evidence, could not tell an estimate from an
+        // observation. That is the fabrication the house rules forbid, so the
+        // marker has to travel WITH the data, not live in a comment.
         for (const v of simVehicles) {
           if (v.routeId && scheduledRouteIds.has(v.routeId)) continue;
           features.push({
@@ -195,6 +205,9 @@ export default function useLiveVehicles(mode, enabled, viewport = null) {
               mode: v.mode,
               line_color: v.color,
               bearing: v.bearing,
+              synthetic: true,
+              schedule_backed: false,
+              estimate_basis: `constant ${Math.round(MODE_SPEED_MPS[v.mode] * 3.6)} km/h along the route polyline`,
             },
           });
         }
@@ -210,6 +223,7 @@ export default function useLiveVehicles(mode, enabled, viewport = null) {
               line_color: st.route_color,
               headsign: st.headsign || null,
               schedule_backed: true,
+              synthetic: false,
             },
           });
         }

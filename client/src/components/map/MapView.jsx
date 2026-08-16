@@ -4130,7 +4130,11 @@ function collectInteractiveLayerIds(map) {
     const id = l.id;
     if (!id) continue;
     if (id.startsWith('layer-')) out.push(id);
-    else if (id.startsWith('live-vehicles-') && id.endsWith('-layer')) out.push(id);
+    // `-layer` and `-layer-synthetic` both: the estimated vehicles must be
+    // clickable too, so the popup can say what they are rather than leaving a
+    // marker on the map that answers nothing when you interrogate it.
+    else if (id.startsWith('live-vehicles-') &&
+             (id.endsWith('-layer') || id.endsWith('-layer-synthetic'))) out.push(id);
   }
   return out;
 }
@@ -4411,21 +4415,31 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
 
     for (const s of specs) {
       if (!s.visible) {
+        /* -synthetic first: removeSource throws while a layer still references
+         * it, so dropping this one would strand both and leave stale vehicles
+         * on the map after the toggle is switched off. */
+        if (map.getLayer(`${s.layerId}-synthetic`)) map.removeLayer(`${s.layerId}-synthetic`);
         if (map.getLayer(s.layerId)) map.removeLayer(s.layerId);
         if (map.getSource(s.sourceId)) map.removeSource(s.sourceId);
         continue;
       }
       if (!map.getSource(s.sourceId)) {
         map.addSource(s.sourceId, { type: 'geojson', data: s.data, tolerance: 0 });
-        // Rounded-rectangle SDF icon, tinted with the line color (darkened),
-        // rotated so the long axis aligns with the track, ground-aligned
-        // so it lies flat against the basemap — same treatment as the
-        // ground-cross pin marker.
+        // TWO layers, because these are two different kinds of claim and the
+        // map must not blur them. A schedule-backed position came from GTFS
+        // via /api/transit/active-trips; a synthetic one was computed in the
+        // browser at a constant speed and nothing observed it. Both used to
+        // render through this single solid-icon layer, so an estimate was
+        // pixel-identical to an observation — and a screenshot of the map read
+        // as evidence of where a train actually was.
+        //
+        // Solid rounded-rectangle = observed. Hollow dashed-ish ring = estimate.
         map.addLayer({
           id: s.layerId,
           type: 'symbol',
           source: s.sourceId,
           minzoom: 10,
+          filter: ['!=', ['get', 'synthetic'], true],
           layout: {
             'icon-image': 'live-train-rect',
             'icon-size': 0.6,
@@ -4440,6 +4454,22 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
           paint: {
             'icon-color': ['coalesce', ['get', 'line_color'], s.defaultColor],
             'icon-opacity': 0.9,
+          },
+        });
+        map.addLayer({
+          id: `${s.layerId}-synthetic`,
+          type: 'circle',
+          source: s.sourceId,
+          minzoom: 10,
+          filter: ['==', ['get', 'synthetic'], true],
+          paint: {
+            // Hollow: no fill at all, so it cannot be mistaken for the solid
+            // observed marker even at a glance or in a screenshot.
+            'circle-radius': 4,
+            'circle-opacity': 0,
+            'circle-stroke-width': 1.5,
+            'circle-stroke-color': ['coalesce', ['get', 'line_color'], s.defaultColor],
+            'circle-stroke-opacity': 0.55,
           },
         });
       } else {
@@ -4467,6 +4497,9 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
       if (!m) return;
       for (const id of ['live-vehicles-train', 'live-vehicles-subway', 'live-vehicles-bus']) {
         const layerId = `${id}-layer`;
+        /* -synthetic first: a source cannot be removed while any layer still
+         * references it, so missing this one would leave both behind. */
+        if (m.getLayer(`${layerId}-synthetic`)) m.removeLayer(`${layerId}-synthetic`);
         if (m.getLayer(layerId)) m.removeLayer(layerId);
         if (m.getSource(id)) m.removeSource(id);
       }

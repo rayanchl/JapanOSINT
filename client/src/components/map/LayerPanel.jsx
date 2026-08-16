@@ -47,8 +47,19 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
           onClick={() => setShowOpacity(!showOpacity)}
         >
           <Icon size={14} color={def.color} aria-hidden="true" />
-          <span className={`text-xs truncate ${isActive ? 'text-gray-200' : 'text-gray-500'}`}>
-            {def.name}
+          <span className="flex flex-col min-w-0">
+            <span className={`text-xs truncate ${isActive ? 'text-gray-200' : 'text-gray-500'}`}>
+              {def.name}
+            </span>
+            {/* A layer whose data is not purely observed says so here, next to
+              * the switch that turns it on. Without this the transit layers
+              * read as "these are the trains", when some markers are positions
+              * this browser computed rather than positions anyone observed. */}
+            {def.subtitle && (
+              <span className="text-[10px] truncate text-amber-400/70" title={def.subtitle}>
+                {def.subtitle}
+              </span>
+            )}
           </span>
         </button>
 
