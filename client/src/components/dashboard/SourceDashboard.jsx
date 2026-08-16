@@ -63,20 +63,29 @@ export default function SourceDashboard({ sources: propSources }) {
   const [filterStatus, setFilterStatus] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [expandedRow, setExpandedRow] = useState(null);
+  const [fetchError, setFetchError] = useState(null);
 
   // Fetch sources only when mounted without them — App.jsx's useDataSources
   // already polls /api/sources and passes the rows down as props.
   const selfFetch = !propSources?.length;
 
+  // A failed fetch has to be VISIBLE here, not just in the console. This
+  // screen's entire job is to answer "is collection healthy", and with no
+  // error state a 503 rendered as a settled, finished page: Total Sources 0,
+  // Online 0, Total Records 0, three empty charts, "No sources match the
+  // current filters", and a pulsing green live dot next to "Auto-refresh 30s".
+  // Every one of those is a fabricated fact -- the client obtained nothing and
+  // displayed a specific, actionable operational picture.
   const fetchData = useCallback(async () => {
     try {
       const res = await fetch(apiUrl('/api/sources'));
-      if (res.ok) {
-        const data = await res.json();
-        setSources(normalizeSources(Array.isArray(data) ? data : data.sources || []));
-      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setSources(normalizeSources(Array.isArray(data) ? data : data.sources || []));
+      setFetchError(null);
     } catch (err) {
       console.warn('[SourceDashboard] fetch error:', err.message);
+      setFetchError(err.message || 'request failed');
     } finally {
       setLoading(false);
     }
@@ -187,10 +196,38 @@ export default function SourceDashboard({ sources: propSources }) {
             <span className="text-neon-cyan">Source</span> Monitor
           </h1>
           <div className="flex items-center gap-2 text-xs text-gray-500">
-            <span className="pulse-live w-2 h-2 rounded-full bg-neon-green inline-block" />
-            Auto-refresh 30s
+            {/* The live dot is an assertion that this page is current. It must
+              * not keep pulsing green while the last refresh failed. */}
+            {fetchError ? (
+              <>
+                <span className="w-2 h-2 rounded-full bg-red-500 inline-block" />
+                <span className="text-red-300">Refresh failing</span>
+              </>
+            ) : (
+              <>
+                <span className="pulse-live w-2 h-2 rounded-full bg-neon-green inline-block" />
+                Auto-refresh 30s
+              </>
+            )}
           </div>
         </div>
+
+        {/* A failed load is stated, not rendered as a healthy screen of zeros.
+          * Whether any rows are on screen decides the wording: with none, every
+          * number below would be a fabrication; with stale rows, they are real
+          * but no longer current, and saying which is the point. */}
+        {fetchError && (
+          <div className="rounded border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm">
+            <div className="font-medium text-red-300">
+              Could not load /api/sources ({fetchError})
+            </div>
+            <div className="mt-1 text-xs text-red-200/80">
+              {sources.length
+                ? `Showing ${sources.length} source${sources.length === 1 ? '' : 's'} from the last successful refresh — these figures are stale, not live.`
+                : 'No source data was obtained, so the figures below are not a picture of the fleet. They are zeros because nothing was returned.'}
+            </div>
+          </div>
+        )}
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3">
