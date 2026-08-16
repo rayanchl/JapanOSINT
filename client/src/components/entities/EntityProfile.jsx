@@ -102,6 +102,16 @@ function Loaded({ type, entityId, tab, setTab, navigate }) {
 
         {tab === 'timeline' && (
           <ul className="space-y-2">
+            {/* State the bound. useSearch.js requests ?limit=50, and this very
+              * component already prints profile.mention_count in the header —
+              * so a profile with 1,234 mentions showed 50 of them with nothing
+              * saying so, while the true total sat a few lines above. Showing a
+              * slice is allowed; showing it silently is not. */}
+            {mentions.length > 0 && profile?.mention_count > mentions.length && (
+              <li className="text-xs text-amber-400/80 pb-1">
+                Showing the {mentions.length} most recent of {profile.mention_count.toLocaleString()} mentions.
+              </li>
+            )}
             {mentions.length === 0 && <li className="text-sm text-gray-600">No mentions.</li>}
             {mentions.map((m, i) => (
               <li key={i} className="rounded border border-osint-border bg-osint-surface p-2">
