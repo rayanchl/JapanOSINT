@@ -361,7 +361,7 @@ function FilterStrip({
 
 export default function FollowPanel({ onClose, embedded = false }) {
   const {
-    hits, runs, activeRuns, connected, paused, setPaused, seeded, clear,
+    hits, runs, activeRuns, connected, paused, setPaused, seeded, historyError, clear,
   } = useCollectorFollowStream();
 
   const [statusFilter, setStatusFilter] = useState('all');
@@ -533,9 +533,17 @@ export default function FollowPanel({ onClose, embedded = false }) {
       >
         {filtered.length === 0 ? (
           <div className="text-gray-500 text-xs px-3 py-6 text-center italic">
-            {hits.length === 0
-              ? 'No collector traffic yet. The first cron tick or any /api/data/* call will populate this stream.'
-              : 'No hits match the current filter.'}
+            {hits.length > 0
+              ? 'No hits match the current filter.'
+              : historyError?.notImplemented
+                /* Do not invent a cause. The server said exactly why, and the
+                 * old copy ("the first cron tick will populate this stream")
+                 * promised something that will never happen: history is not
+                 * implemented, so only live traffic can ever appear here. */
+                ? `History unavailable: ${historyError.detail || 'not implemented by this server'}. Only live traffic from now on will appear here.`
+                : historyError
+                  ? `Could not load history (${historyError.status ? `HTTP ${historyError.status}` : historyError.detail}). Live traffic will still stream in.`
+                  : 'No collector traffic yet. Any collector run or /api/data/* call will appear here live.'}
           </div>
         ) : (
           filtered.map((h) => (

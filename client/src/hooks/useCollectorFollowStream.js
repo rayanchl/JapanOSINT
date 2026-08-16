@@ -24,6 +24,7 @@ export default function useCollectorFollowStream() {
   const [runs, setRuns] = useState([]);            // newest first
   const [paused, setPaused] = useState(false);
   const [seeded, setSeeded] = useState(false);
+  const [historyError, setHistoryError] = useState(null);
 
   // ── Coalescer ─────────────────────────────────────────────────────────
   // Burst WS traffic (every collector request emits start+end frames) used
@@ -101,15 +102,38 @@ export default function useCollectorFollowStream() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
+      // Keep WHY the seed failed. The server goes out of its way to make this
+      // distinguishable: /api/follow/recent answers 501 with
+      // {"error":"not_implemented","detail":"collector-tap history is not
+      // supported by the native server"} precisely so a client cannot mistake
+      // it for an empty result (native/core/miscapi.c:263). Swallowing it left
+      // the panel asserting "The first cron tick or any /api/data/* call will
+      // populate this stream" — which is false: history is not implemented, so
+      // nothing ever will. The server's own words are better than ours.
       try {
         const res = await fetch(apiUrl('/api/follow/recent?limit=500'));
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) {
+          let detail = '';
+          try {
+            const body = await res.json();
+            detail = body?.detail || body?.error || '';
+          } catch { /* non-JSON error body: the status alone is the message */ }
+          if (!cancelled) {
+            setHistoryError({ status: res.status, detail,
+                              notImplemented: res.status === 501 });
+          }
+          return;
+        }
         const json = await res.json();
         if (cancelled || !Array.isArray(json.events)) return;
         const reduced = reduceEvents(json.events);
         setHits(reduced.hits);
         setRuns(reduced.runs);
-      } catch { /* tolerable: stream will fill in */ } finally {
+        if (!cancelled) setHistoryError(null);
+      } catch (e) {
+        if (!cancelled) setHistoryError({ status: 0, detail: e?.message || 'request failed',
+                                          notImplemented: false });
+      } finally {
         if (!cancelled) setSeeded(true);
       }
     })();
@@ -149,6 +173,7 @@ export default function useCollectorFollowStream() {
     paused,
     setPaused,
     seeded,
+    historyError,
     clear,
   };
 }
