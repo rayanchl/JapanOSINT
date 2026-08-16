@@ -8,6 +8,7 @@
 #include "lib/feedlib.h"
 #include "lib/geojson.h"
 #include "lib/jsonlist.h"
+#include "lib/jsonstream.h"
 #include "lib/csv.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -67,6 +68,31 @@
     .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
     .update_interval_sec = IVAL, .run = run_##SYM,                            \
     .category = CAT, .type = "api", .url = URL,                               \
+    .description = DESC, .layer = NULL, .free_tier = 1 };                     \
+  REGISTER_SOURCE(SYM)
+
+/* Huge JSON array, streamed. Same arguments as VJSON.
+ *
+ * VJSON buffers the whole body and hands it to cJSON, which is fine for a
+ * 100-record page and impossible for a bulk register: Ukraine's Interior
+ * Ministry publishes ~1.1M firearms as a single 714 MB JSON array, and the
+ * body plus the parsed tree would be several GB. verify_feeds.py refused those
+ * files at 8 MB and the tree never saw them, so a size limit was quietly
+ * deciding which public registers this platform could cover.
+ *
+ * jsonstream_emit finds each top-level element as the bytes arrive, parses that
+ * element alone, emits it and drops it — peak memory is one record regardless
+ * of file size. Rows are labelled by jsonlist's rules, so a streamed row is
+ * indistinguishable from a buffered one. See lib/jsonstream.h. */
+#define VJSONBIG(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, PATH, LANG, TAGS, IVAL, DESC) \
+  static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
+    int n = jsonstream_emit(s, ID, URL, 900000, PATH, CAT, LANG, TAGS);       \
+    if (n < 0) { fprintf(stderr, "[%s] stream failed\n", ID); return -1; }    \
+    return 0; }                                                               \
+  static const source_def SYM = {                                            \
+    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
+    .update_interval_sec = IVAL, .run = run_##SYM,                            \
+    .category = CAT, .type = "dataset", .url = URL,                           \
     .description = DESC, .layer = NULL, .free_tier = 1 };                     \
   REGISTER_SOURCE(SYM)
 

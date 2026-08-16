@@ -211,9 +211,21 @@ def main():
                          desc=row.get('description') or ''))
 
     os.makedirs(args.outdir, exist_ok=True)
-    with open(os.path.join(args.outdir, MACRO_INC), 'w',
-              encoding='utf-8', newline='\n') as out:
-        out.write(MACROS)
+    # The macros live in ONE place: collectors/sources/_verified_macros.inc,
+    # reached from any output directory through the Makefile's
+    # `-iquote collectors/sources`.
+    #
+    # This used to write a second copy of MACROS into --outdir. Because an
+    # #include "..." searches the including file's own directory FIRST, that
+    # copy shadowed the canonical file for every generated collector — so
+    # adding VJSONBIG to the real one had no effect and the build failed with
+    # "expected ')' before string constant", which reads like a syntax error in
+    # the collector rather than two competing copies of a header. Emit nothing
+    # here and let -iquote resolve it.
+    stale = os.path.join(args.outdir, MACRO_INC)
+    if os.path.exists(stale) and os.path.abspath(args.outdir) != \
+       os.path.abspath(os.path.dirname(__file__) + '/sources'):
+        os.remove(stale)
     written = []
     for coll, rows in sorted(by_collector.items()):
         rows.sort(key=lambda r: r['sid'])
