@@ -13,11 +13,25 @@ values standing in for a failed fetch. A failure degrades to an explicit
 Full audit of how each collector behaves today:
 `native/collectors/SOURCE_REALITY_REPORT.md`.
 
-One batch is registered but **not** proof-of-life verified: the 1,001
-`collectors/sources/csrc14_*.c` candidates, authored without egress. They obey
-this rule (a dead endpoint returns an explicit error, never invented content)
-but carry no 2xx/parse proof. See `docs/candidate-sources-batch14.md`; promote
-them with `make verify-candidates`.
+**Every registered source is now proof-of-life verified.** Batch 14's 1,001
+unverified `csrc14_*` candidates were probed and promoted (594 PASS →
+`vsrc14_*`); batch 15 added 1,029 more (`vsrc15_*`, see
+`docs/verified-sources-batch15.md`). Rejects are kept as data in
+`docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
+
+Three verifier/engine traps that pass exposed — check for them before trusting
+any "verified" number:
+
+* **Non-ASCII URLs.** `urllib` puts the URL in the request line, which must be
+  ASCII, so a CKAN `?q=防災` died inside `fetch()` and was logged as a dead
+  endpoint. 196 live sources were being discarded by that alone.
+* **Empty result sets.** `{"total_count":0,"results":[]}` used to count as
+  `json-object`/1 item and PASS — a source verified live that emits nothing on
+  every run, forever. Now `EMPTY_RESULTSET` (172 rows across the two batches).
+* **Two-level envelopes.** `lib/jsonlist.c` descended one level looking for a
+  label; OpenDataSoft puts the title at `metas.default.title`, so every ODS
+  catalogue record was dropped as unlabelled despite carrying a real title and
+  licence. The envelope list now takes dotted paths.
 
 ## 2. Never discard data — a source that is called must be used exhaustively
 
@@ -36,13 +50,22 @@ If anything was left unused, it is reported as data (a
 Rule, examples of violations, and what the shared machinery guarantees:
 `docs/SOURCE_EXHAUSTIVENESS.md`.
 
-The tree is at **zero audit findings**; deliberate exceptions carry an inline
-`/* exhaustive-ok: <reason> */` marker (`grep -rn exhaustive-ok`).
+Where the tree actually stands, as `make audit-sources` reports it:
+
+* **strict set (`collectors/sources/hp*_*.c`) — 0 findings.** This is the part
+  the Makefile gates on, and it is held clean.
+* **the rest of the tree — 147 findings across 91 of 1,214 files**: 52
+  first-only, 34 single-page, 32 record-cap, 27 loop-break, 1 limit-one, 1
+  dedupe-ring. These are heuristics and each needs a human read, but "zero audit
+  findings" is true only of the strict set — do not read it as true of the tree.
+
+Deliberate exceptions carry an inline `/* exhaustive-ok: <reason> */` marker
+(`grep -rn exhaustive-ok`, currently 145).
 
 ```sh
 cd native
-make audit-sources   # scan every collector for discard patterns (expect 0)
-make hptest          # offline check of the engine's guarantees
+make audit-sources   # scan every collector for discard patterns
+make hptest          # offline check of the engine's guarantees (23 assertions)
 make                 # full build (-Wall -Wextra)
 ```
 
