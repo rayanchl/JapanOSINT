@@ -651,7 +651,12 @@ def check_dup_endpoint():
     this ratchets down instead of blocking. Adding a NEW duplicate fails.
     """
     from urllib.parse import urlsplit
-    url_re = re.compile(r'https?://[^\s"\',)\\]+')
+    # A comma is LEGAL inside a query value and must not end the match.
+    # Excluding it truncated `?from=act,trans&trans_country_code=BW` to
+    # `?from=act`, so eleven distinct per-country IATI endpoints collapsed onto
+    # one key and were reported as duplicates of each other. The closing quote
+    # already terminates a URL in a C string literal, so `,` never needed to.
+    url_re = re.compile(r'https?://[^\s"\')\\]+')
     by_url = {}
     for root, _dirs, names in os.walk(COLLECTORS):
         if os.sep + "obj" in root:

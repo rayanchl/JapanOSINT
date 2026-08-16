@@ -7,7 +7,7 @@
     "approved exception."
   ],
   "checks": {
-    "dup-endpoint": 531,
+    "dup-endpoint": 528,
     "dup-id": 0,
     "geo-precision": 118,
     "quarantine-empty": 11,
@@ -18,8 +18,8 @@
   },
   "registered_sources": {
     "direct": 1114,
-    "macro_expanded": 8603,
-    "total": 9717,
+    "macro_expanded": 9450,
+    "total": 10564,
     "unresolved": 0
   }
 }
