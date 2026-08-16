@@ -631,8 +631,61 @@ def check_geo_precision():
     return out
 
 
+def check_dup_endpoint():
+    """The same upstream endpoint fetched by more than one collector file.
+
+    Why this is a real defect and not just untidiness: core/intel.c keys every
+    row as uid = "<source_id>|<remote_key>", so two collectors hitting one
+    endpoint do NOT dedupe — the same upstream record is stored twice in
+    intel_items and twice in the FTS mirror, and we spend two requests to get
+    it. At the time this check was added, 531 endpoints were fetched by 2+
+    files. The dominant pattern is cross-batch: a later generated batch
+    re-discovered endpoints an earlier one already had (vsrc13 vs vsrc2), plus
+    the world_reg_* / reg_* registry families covering the same ground.
+
+    Normalised on host+path+query, lowercased host, trailing slash dropped, so
+    a scheme change or a stray slash is not counted as a second endpoint.
+
+    Baselined rather than hard-failing: untangling 531 pairs is a per-pair
+    judgement (some are genuinely different query shapes against one base), so
+    this ratchets down instead of blocking. Adding a NEW duplicate fails.
+    """
+    from urllib.parse import urlsplit
+    url_re = re.compile(r'https?://[^\s"\',)\\]+')
+    by_url = {}
+    for root, _dirs, names in os.walk(COLLECTORS):
+        if os.sep + "obj" in root:
+            continue
+        for f in names:
+            if not f.endswith((".c", ".inc")):
+                continue
+            p = os.path.join(root, f)
+            for m in url_re.findall(read(p)):
+                u = m.rstrip('".,)\\')
+                try:
+                    s = urlsplit(u)
+                except ValueError:
+                    continue
+                if not s.netloc:
+                    continue
+                key = (s.netloc.lower(), s.path.rstrip("/"), s.query)
+                by_url.setdefault(key, set()).add(os.path.relpath(p, REPO))
+    out = []
+    for (host, path, q), files in sorted(by_url.items()):
+        if len(files) < 2:
+            continue
+        # a URL that only ever appears in shared .inc helpers is one definition
+        if all(f.endswith(".inc") for f in files):
+            continue
+        out.append("%s%s%s: fetched by %d files (%s)"
+                   % (host, path, ("?" + q) if q else "", len(files),
+                      ", ".join(sorted(files)[:3])))
+    return out
+
+
 CHECKS = [
     ("dup-id", check_dup_id),
+    ("dup-endpoint", check_dup_endpoint),
     ("unresolved-id", check_unresolved_id),
     ("registry-orphan", check_registry_orphan),
     ("quarantine-empty", check_quarantine_empty),

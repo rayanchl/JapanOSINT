@@ -7,6 +7,7 @@
     "approved exception."
   ],
   "checks": {
+    "dup-endpoint": 531,
     "dup-id": 0,
     "geo-precision": 118,
     "quarantine-empty": 11,
@@ -16,9 +17,9 @@
     "unresolved-id": 0
   },
   "registered_sources": {
-    "direct": 1104,
-    "macro_expanded": 6975,
-    "total": 8079,
+    "direct": 1114,
+    "macro_expanded": 8603,
+    "total": 9717,
     "unresolved": 0
   }
 }
