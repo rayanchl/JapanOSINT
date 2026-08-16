@@ -231,6 +231,15 @@ static int hp_needs_missing(const char *tmpl, const hp_vars *v) {
   return 0;
 }
 
+/* Does a template reference the pivot entity at all? Every entity token starts
+ * "{q" ({q} {qd} {qc} {qh} {qu} {ql} {qU} {qn}) except the raw POST form {Q}.
+ * A row whose URL and body name none of them describes a fixed endpoint, and
+ * so is meaningful on a scheduled run where there is no entity — see hp_run. */
+static int hp_uses_entity(const char *tmpl) {
+  if (!tmpl) return 0;
+  return strstr(tmpl, "{q") != NULL || strstr(tmpl, "{Q}") != NULL;
+}
+
 /* ── entity shape gate ───────────────────────────────────────────────────── */
 
 static int hp_is_hex(const char *s, size_t n) {
@@ -369,8 +378,16 @@ static void hp_flatten_c(const cJSON *node, const char *prefix, cJSON *out,
 }
 
 /* Per-record accounting for the flatten bounds, so a truncated record is
- * always labelled as one. Reset by hp_flatten() at each record. */
-static int g_flat_drops = 0, g_flat_trunc = 0;
+ * always labelled as one. Reset by hp_flatten() at each record.
+ *
+ * _Thread_local, because "per-record" is only true per THREAD: pipeline.c
+ * dispatches up to 16 collectors concurrently and scheduler.c runs 8 more, so
+ * as plain globals two workers interleaved one's reset with the other's
+ * increments. The visible consequence was the wrong one to have — a record
+ * that WAS truncated could ship stamped 0, i.e. presented as complete. That
+ * stamp is exactly what the exhaustive-use rule relies on. (lib/jsonlist.c:207
+ * already uses _Thread_local for its scratch buffer, same reason.) */
+static _Thread_local int g_flat_drops = 0, g_flat_trunc = 0;
 
 static void hp_flatten(const cJSON *node, const char *prefix, cJSON *out, int depth) {
   if (depth == 0) { g_flat_drops = 0; g_flat_trunc = 0; }
@@ -400,7 +417,11 @@ static const char *hp_pick(const cJSON *flat, const char *csv_keys,
   char buf[512];
   if (csv_keys && *csv_keys) {
     snprintf(buf, sizeof buf, "%s", csv_keys);
-    for (char *tok = strtok(buf, ","); tok; tok = strtok(NULL, ",")) {
+    /* strtok_r: hp_pick runs for every record on every concurrent dispatch
+     * worker, and strtok's cursor is a process-global (see jsonlist.c:246). */
+    char *save = NULL;
+    for (char *tok = strtok_r(buf, ",", &save); tok;
+         tok = strtok_r(NULL, ",", &save)) {
       while (*tok == ' ') tok++;
       const cJSON *v = hp_flat_get(flat, tok);
       if (v && cJSON_IsString(v) && v->valuestring[0]) return v->valuestring;
@@ -644,6 +665,11 @@ static int hp_run_json(hp_run_state *st, const char *body) {
   int deep_left = hp_detail_budget(s);
 
   if (!arr) {                                          /* root IS the record */
+    /* Count it. The availability tally is the in-band "N of M" disclosure the
+     * exhaustive-use rule requires, and this path used to skip it — a
+     * single-object endpoint reported "emitted 1 of 0 available", which reads
+     * as a discard when nothing was discarded. */
+    st->available += 1;
     cJSON *flat = cJSON_CreateObject();
     hp_flatten(doc, "", flat, 0);
     hp_emit_record(st, flat, deep_left > 0);
@@ -765,8 +791,29 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   const hp_source *s = hp_lookup(ctx->source_id);
   if (!s) return -1;
   const char *e = ctx->entity;
-  if (!e || !*e) return 0;                    /* on-demand pivot, no entity */
-  if (!hp_matches(s->want, e)) {
+
+  /* Two ways in. A pivot run carries an entity. A SCHEDULED run does not, and
+   * used to fall straight out of this early return — which meant a row that set
+   * `interval` was registered with a live update_interval_sec, was picked up by
+   * the scheduler, and then did nothing on every tick, forever, reporting
+   * rc=0/records=0 as though the upstream had simply been quiet. That is the
+   * failure mode the no-fabrication rule exists to prevent, one level up: a
+   * source asserting an honest empty it never actually went and checked.
+   *
+   * A scheduled run is legitimate exactly when the row names a fixed endpoint —
+   * no entity token in the URL or POST body — because then there is nothing an
+   * entity would have supplied. A row that does reference {q…} genuinely has
+   * nothing to fetch without one and still returns the honest empty. */
+  int scheduled = (!e || !*e);
+  if (scheduled) {
+    if (s->interval <= 0) return 0;           /* on-demand pivot, no entity */
+    if (hp_uses_entity(s->url) || hp_uses_entity(s->post_body)) {
+      fprintf(stderr, "[hp:%s] scheduled run but the row needs an entity — skipped\n",
+              s->id);
+      return 0;
+    }
+    e = "";
+  } else if (!hp_matches(s->want, e)) {
     fprintf(stderr, "[hp:%s] entity shape mismatch — skipped\n", s->id);
     return 0;
   }

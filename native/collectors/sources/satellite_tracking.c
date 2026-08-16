@@ -55,7 +55,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     /* parseTleBlock: trimmed non-empty lines, name/l1/l2 triples. */
     char **ln = NULL; int nl = 0, cap = 0;
-    for (char *p = strtok(body, "\n"); p; p = strtok(NULL, "\n")) {
+    char *save = NULL;            /* strtok_r: concurrent workers, see jsonlist.c */
+    for (char *p = strtok_r(body, "\n", &save); p;
+         p = strtok_r(NULL, "\n", &save)) {
       char *t = trim(p);
       if (!*t) continue;
       if (nl == cap) { cap = cap ? cap * 2 : 256; ln = realloc(ln, cap * sizeof *ln); }

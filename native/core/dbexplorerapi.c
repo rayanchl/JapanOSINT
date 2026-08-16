@@ -140,8 +140,9 @@ static int fld_match(const char *f, int v) {
 }
 static void cron_next_iso(const char *cron, char *out, size_t n) {
   char c[64]; snprintf(c,sizeof c,"%s",cron);
-  char *mi=strtok(c," "), *ho=strtok(NULL," "), *dm=strtok(NULL," "),
-       *mo=strtok(NULL," "), *dw=strtok(NULL," ");
+  char *sv=NULL;                     /* strtok_r: HTTP thread, see operatorgate.c */
+  char *mi=strtok_r(c," ",&sv), *ho=strtok_r(NULL," ",&sv), *dm=strtok_r(NULL," ",&sv),
+       *mo=strtok_r(NULL," ",&sv), *dw=strtok_r(NULL," ",&sv);
   if (!mi||!ho||!dm||!mo||!dw){ snprintf(out,n,"null"); return; }
   time_t t=time(NULL); t -= t%60; t += 60;       /* start next minute */
   for (int i=0;i<366*24*60;i++,t+=60){

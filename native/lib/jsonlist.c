@@ -243,7 +243,16 @@ cJSON *jsonlist_find_array(cJSON *doc, const char *path) {
   char buf[256];
   snprintf(buf, sizeof buf, "%s", path);
   cJSON *cur = doc;
-  for (char *tok = strtok(buf, "."); tok && cur; tok = strtok(NULL, "."))
+  /* strtok_r, not strtok: this runs on 8 scheduler workers and up to 16
+   * dispatch workers concurrently, and strtok's resume pointer is ONE
+   * process-global. Interleaved calls made a worker resume inside another
+   * thread's buffer, so cJSON_GetObjectItem() looked up a garbage key, the
+   * array was not found, and the collector reported a clean empty result for a
+   * fetch that had actually succeeded — silently, non-deterministically,
+   * across the ~142 sources that reach this path. */
+  char *save = NULL;
+  for (char *tok = strtok_r(buf, ".", &save); tok && cur;
+       tok = strtok_r(NULL, ".", &save))
     cur = cJSON_GetObjectItem(cur, tok);
   return (cur && cJSON_IsArray(cur)) ? cur : NULL;
 }

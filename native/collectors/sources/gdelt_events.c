@@ -42,7 +42,9 @@ static cJSON *date_added(const char *s) {
 
 /* rowsToFeatures: tab-split, need >=61 cols, col53=="JA". */
 static void rows_to_features(char *csv, cJSON *features) {
-  for (char *line = strtok(csv, "\n"); line; line = strtok(NULL, "\n")) {
+  char *save = NULL;              /* strtok_r: concurrent workers, see jsonlist.c */
+  for (char *line = strtok_r(csv, "\n", &save); line;
+       line = strtok_r(NULL, "\n", &save)) {
     if (!*line) continue;
     char *col[61]; int n = 0;
     for (char *p = line; n < 61; ) {
@@ -126,7 +128,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(e); return z >= 0 ? 0 : -1;
   }
   char latest[512] = {0};
-  for (char *ln = strtok(ir.body, "\n"); ln; ln = strtok(NULL, "\n")) {
+  char *lsave = NULL;             /* strtok_r: concurrent workers, see jsonlist.c */
+  for (char *ln = strtok_r(ir.body, "\n", &lsave); ln;
+       ln = strtok_r(NULL, "\n", &lsave)) {
     if (!*ln) continue;
     char *parts[4]; int pn = 0;
     for (char *p = ln; pn < 3 && p; ) {
