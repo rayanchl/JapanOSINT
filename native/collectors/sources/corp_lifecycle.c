@@ -1,24 +1,37 @@
 /* collectors/sources/corp_lifecycle.c
  * OSINT services — corporate lifecycle. "Is this company changing, or dying?"
- * Three entity-pivot services, all keyed on a company/domain:
+ * Two entity-pivot services, both keyed on a company/domain:
  *
  *   • VENDOR_VIABILITY      — LIVE, keyless. Three independent decay signals for
  *                             a vendor you depend on: RDAP domain expiry/status,
  *                             GitHub repo archived/disabled/last-push, and the
  *                             vendor's own Atlassian Statuspage summary.
- *   • UK_CH_FILING_HISTORY  — UK Companies House filing history + officer changes
- *                             + registered charges. Free key, HTTP Basic; gated on
- *                             COMPANIES_HOUSE_API_KEY (honest empty without).
  *   • GAZETTE_INSOLVENCY    — LIVE, keyless. The Gazette (UK official public
  *                             record) insolvency notices matching the entity:
  *                             winding-up, administration, liquidation.
+ *
+ * A THIRD SERVICE, UK_CH_FILING_HISTORY, LIVED HERE AND WAS DELETED (2026-08-16).
+ * It registered the same id as the hpengine row at hp_uk_deep.c:61, and since
+ * this file links first, that engine row had never executed on any boot —
+ * "[registry] DUPLICATE id 'UK_CH_FILING_HISTORY' … second definition is
+ * unreachable" was printed on every start. The two collect the same thing, so
+ * this is a true duplicate rather than a rename, and the hand-written one lost
+ * on the merits: it read exactly ONE page of each of /filing-history, /officers
+ * and /charges (items_per_page=50, no start_index walk), so filing 51 onwards
+ * was dropped with no collector-truncation-notice — the discard
+ * docs/SOURCE_EXHAUSTIVENESS.md exists to forbid. The three hp rows
+ * UK_CH_FILING_HISTORY / UK_CH_OFFICERS / UK_CH_CHARGES cover the same three
+ * legs one for one, page through all of them, flatten every field the API
+ * returned instead of the six mapped by hand here, and stamp the bound on every
+ * record when page_max bites. The one capability that went with it is the
+ * name→company-number search hop; that pivot belongs to the name-search rows
+ * (UK_CH_ADVANCED_SEARCH, UK_CH_DISSOLVED, reg_uk_companies.c), which emit the
+ * company_number the numeric deep rows take as their entity.
  *
  * Endpoints:
  *   https://rdap.org/domain/<domain>                        (IANA RDAP bootstrap)
  *   https://api.github.com/repos/<owner>/<repo>             (keyless, 60 req/h)
  *   https://<status host>/api/v2/summary.json               (Atlassian Statuspage)
- *   https://api.company-information.service.gov.uk/company/<n>/{filing-history,
- *                                                            officers,charges}
  *   https://www.thegazette.co.uk/insolvency/notice/data.feed?text=<q>  (Atom)
  *
  * Licence/terms: RDAP and The Gazette are open public records. Statuspage's
@@ -40,7 +53,6 @@
 #include "../../lib/rss_atom.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
-#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -75,26 +87,6 @@ static int cl_emit(intel_sink *sink, const char *service, cJSON *data,
   int rc = sink->emit(sink, &it);
   free(pj);
   return rc >= 0 ? 1 : 0;
-}
-
-/* base64, standard alphabet, padded. malloc'd; caller frees. */
-static char *cl_b64(const unsigned char *in, size_t n) {
-  static const char *T =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-  char *out = malloc(((n + 2) / 3) * 4 + 1);
-  if (!out) return NULL;
-  size_t o = 0;
-  for (size_t i = 0; i < n; i += 3) {
-    unsigned v = (unsigned)in[i] << 16;
-    if (i + 1 < n) v |= (unsigned)in[i + 1] << 8;
-    if (i + 2 < n) v |= (unsigned)in[i + 2];
-    out[o++] = T[(v >> 18) & 63];
-    out[o++] = T[(v >> 12) & 63];
-    out[o++] = (i + 1 < n) ? T[(v >> 6) & 63] : '=';
-    out[o++] = (i + 2 < n) ? T[v & 63] : '=';
-  }
-  out[o] = 0;
-  return out;
 }
 
 /* Strip scheme and any path/port from an entity so "https://acme.com/x" and
@@ -335,146 +327,6 @@ static int run_viability(const source_ctx *ctx, intel_sink *sink) {
   return 0;                                    /* honest empty is not an error */
 }
 
-/* ------------------------------------------------- UK_CH_FILING_HISTORY */
-
-/* Build the Basic-auth header for Companies House: username=key, empty
- * password → base64("<key>:"). Writes into `out`; returns 0 on failure. */
-static int ch_auth(const char *key, char *out, size_t cap) {
-  char raw[256];
-  snprintf(raw, sizeof raw, "%s:", key);
-  char *b = cl_b64((const unsigned char *)raw, strlen(raw));
-  if (!b) return 0;
-  snprintf(out, cap, "Authorization: Basic %s", b);
-  free(b);
-  return 1;
-}
-
-/* A UK company number is 8 chars: 8 digits, or 2 letters + 6 digits. */
-static int ch_is_company_number(const char *s) {
-  size_t n = strlen(s);
-  if (n != 8) return 0;
-  int lead_alpha = isalpha((unsigned char)s[0]) && isalpha((unsigned char)s[1]);
-  size_t start = lead_alpha ? 2 : 0;
-  for (size_t i = start; i < n; i++)
-    if (!isdigit((unsigned char)s[i])) return 0;
-  return 1;
-}
-
-/* Resolve a company NAME to its number via the search endpoint. Returns 1 and
- * fills `out` on success. The dispatcher hands services free-text entities, so
- * without this the service 404s on every human-shaped query. */
-static int ch_resolve(const source_ctx *ctx, const char *const *hdrs,
-                      const char *name, char *out, size_t cap) {
-  char *enc = jo_urlencode(name);
-  if (!enc) return 0;
-  char url[1024];
-  snprintf(url, sizeof url,
-           "https://api.company-information.service.gov.uk"
-           "/search/companies?q=%s&items_per_page=1", enc);
-  free(enc);
-  char *body = jo_get(ctx, url, hdrs, "uk-ch-filing/resolve");
-  if (!body) return 0;
-  cJSON *root = cJSON_Parse(body);
-  free(body);
-  if (!root) return 0;
-  int ok = 0;
-  cJSON *items = cJSON_GetObjectItem(root, "items");
-  if (cJSON_IsArray(items) && cJSON_GetArraySize(items) > 0) {
-    const char *num = jo_sv(cJSON_GetArrayItem(items, 0), "company_number");
-    if (num) { snprintf(out, cap, "%s", num); ok = 1; }
-  }
-  cJSON_Delete(root);
-  return ok;
-}
-
-/* Emit every object in `arr` as one row, mapping the fields each Companies
- * House sub-resource actually returns. `kind` selects the field mapping. */
-static int ch_emit_items(intel_sink *sink, const char *num, const char *kind,
-                         cJSON *arr) {
-  if (!cJSON_IsArray(arr)) return 0;
-  int n = 0, idx = 0;
-  cJSON *it;
-  cJSON_ArrayForEach(it, arr) {
-    idx++;
-    const char *date = NULL, *label = NULL, *extra = NULL;
-    if (!strcmp(kind, "filing")) {
-      date  = jo_sv(it, "date");
-      label = jo_sv(it, "description");
-      extra = jo_sv(it, "type");
-    } else if (!strcmp(kind, "officer")) {
-      date  = jo_sv(it, "resigned_on");
-      if (!date) date = jo_sv(it, "appointed_on");
-      label = jo_sv(it, "name");
-      extra = jo_sv(it, "officer_role");
-    } else {                                   /* charge */
-      date  = jo_sv(it, "delivered_on");
-      label = jo_sv(it, "status");
-      extra = jo_sv(it, "charge_number");
-    }
-    if (!label) continue;                      /* no label → not a row (R1) */
-
-    cJSON *data = cJSON_Duplicate(it, 1);
-    if (!data) continue;
-    cJSON_AddStringToObject(data, "company_number", num);
-    cJSON_AddStringToObject(data, "record_kind", kind);
-
-    char rk[300], title[440], link[300];
-    snprintf(rk, sizeof rk, "ukch:%s:%s:%s:%d", num, kind, date ? date : "?", idx);
-    snprintf(title, sizeof title, "%s %s — %s%s%s",
-             num, kind, label, extra ? " / " : "", extra ? extra : "");
-    snprintf(link, sizeof link,
-             "https://find-and-update.company-information.service.gov.uk/company/%s",
-             num);
-    n += cl_emit(sink, "UK_CH_FILING_HISTORY", data, "uk-company-event", rk,
-                 title, extra, link, date,
-                 "[\"osint-search\",\"companies-house\",\"corp-lifecycle\"]");
-  }
-  return n;
-}
-
-static int run_uk_ch(const source_ctx *ctx, intel_sink *sink) {
-  if (!ctx->entity || !*ctx->entity) return -1;
-  const char *key = jo_env("COMPANIES_HOUSE_API_KEY");
-  if (!key) {
-    fprintf(stderr, "[uk-ch-filing] gated (no COMPANIES_HOUSE_API_KEY)\n");
-    return 0;
-  }
-  char auth[400];
-  if (!ch_auth(key, auth, sizeof auth)) return 0;
-  const char *hdrs[] = { auth, "Accept: application/json", NULL };
-
-  char num[64];
-  if (ch_is_company_number(ctx->entity)) {
-    snprintf(num, sizeof num, "%s", ctx->entity);
-  } else if (!ch_resolve(ctx, hdrs, ctx->entity, num, sizeof num)) {
-    fprintf(stderr, "[uk-ch-filing] no company matched '%s'\n", ctx->entity);
-    return 0;                                  /* honest empty, no row (R1) */
-  }
-
-  static const struct { const char *path, *node, *kind; } LEGS[] = {
-    { "filing-history", "items", "filing"  },
-    { "officers",       "items", "officer" },
-    { "charges",        "items", "charge"  },
-  };
-  int n = 0;
-  for (size_t i = 0; i < sizeof LEGS / sizeof LEGS[0]; i++) {
-    char url[512];
-    snprintf(url, sizeof url,
-             "https://api.company-information.service.gov.uk/company/%s/%s?items_per_page=50",
-             num, LEGS[i].path);
-    char *body = jo_get(ctx, url, hdrs, "uk-ch-filing");
-    if (!body) continue;                       /* 404 on charges is normal */
-    cJSON *root = cJSON_Parse(body);
-    free(body);
-    if (!root) continue;
-    n += ch_emit_items(sink, num, LEGS[i].kind,
-                       cJSON_GetObjectItem(root, LEGS[i].node));
-    cJSON_Delete(root);
-  }
-  fprintf(stderr, "[uk-ch-filing] emitted %d\n", n);
-  return 0;
-}
-
 /* --------------------------------------------------- GAZETTE_INSOLVENCY */
 
 static int run_gazette(const source_ctx *ctx, intel_sink *sink) {
@@ -507,19 +359,6 @@ static const source_def vendor_viability_def = {
   .layer = NULL, .free_tier = 1,
 };
 REGISTER_SOURCE(vendor_viability_def)
-
-static const source_def uk_ch_filing_def = {
-  .id = "UK_CH_FILING_HISTORY", .collector = "osint",
-  .name = "UK Companies House Events", .name_ja = "英国会社登記イベント",
-  .update_interval_sec = 0, .run = run_uk_ch,
-  .category = "government", .type = "api",
-  .url = "internal://osint/uk-ch-filing-history",
-  .description = "UK Companies House filing history, officer appointments and "
-                 "resignations, and registered charges for a company number or name "
-                 "(needs free COMPANIES_HOUSE_API_KEY).",
-  .layer = NULL, .free_tier = 1,
-};
-REGISTER_SOURCE(uk_ch_filing_def)
 
 static const source_def gazette_insolvency_def = {
   .id = "GAZETTE_INSOLVENCY", .collector = "osint",
