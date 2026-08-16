@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 /* JO_REPO_ROOT is -D'd by the Makefile to the JapanOSINT repo root so the
  * binary finds the DB + schema without args; JO_DB / JO_SCHEMA env override. */
@@ -278,11 +280,55 @@ void db_worker_close(db_handle *own) {
   if (own && own->h) db_close(own);
 }
 
+/* Create the parent directory of `path`, one level, best effort.
+ *
+ * SQLITE_OPEN_CREATE creates the FILE, never the DIRECTORY, and data/ is
+ * gitignored — so on a fresh clone the very first run died with
+ * "[db] open failed: unable to open database file" and nothing worked,
+ * including read-only commands like --list-sources and --selftest, because
+ * main() opens the DB before it parses argv. A clone that cannot start is a
+ * bad first impression for a defect that is one mkdir. */
+static void ensure_parent_dir(const char *path) {
+  char buf[1024];
+  snprintf(buf, sizeof buf, "%s", path);
+  char *slash = strrchr(buf, '/');
+#ifdef _WIN32
+  char *bs = strrchr(buf, '\\');
+  if (bs && (!slash || bs > slash)) slash = bs;
+#endif
+  if (!slash || slash == buf) return;
+  *slash = 0;                                 /* buf is now the parent dir */
+  if (!*buf) return;
+  struct stat st;
+  if (stat(buf, &st) == 0) return;            /* already there */
+
+  /* Every missing level, not just the last one: mkdir() creates ONE
+   * directory, so a JO_DB pointing somewhere two levels deep would still fail
+   * with the same unhelpful "unable to open database file". Walk the path and
+   * create each component; errors stay silent here because the real diagnosis
+   * is sqlite's own message a few lines below, which the caller already
+   * prints. */
+  for (char *p = buf + 1; *p; p++) {
+    if (*p != '/'
+#ifdef _WIN32
+        && *p != '\\'
+#endif
+       ) continue;
+    char sep = *p;
+    *p = 0;
+    if (stat(buf, &st) != 0) mkdir(buf, 0755);
+    *p = sep;
+  }
+  mkdir(buf, 0755);
+}
+
 int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   const char *dbp = db_path ? db_path
     : (getenv("JO_DB") ? getenv("JO_DB") : JO_REPO_ROOT "/data/japanmap.db");
   const char *scp = schema_path ? schema_path
     : (getenv("JO_SCHEMA") ? getenv("JO_SCHEMA") : JO_REPO_ROOT "/native/core/schema.sql");
+
+  ensure_parent_dir(dbp);
 
   int rc = sqlite3_open_v2(dbp, &db->h,
                            SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
