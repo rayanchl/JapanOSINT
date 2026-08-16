@@ -355,14 +355,39 @@ static int emit_record(intel_sink *sink, const char *source_id, cJSON *rec,
                  meas->string, num_brief(meas));
       if (geo || meas) title = strdup(composed);
     }
-    if (!title) { free(when); return 0; }  /* no label -> not a row (R1) */
 
-    char *link = scalar_dup(pick(fields, K_LINK));
     /* id stays anchored to the OUTER record when it has one: JSON:API puts the
      * stable identifier at the top level and the descriptive fields inside
      * `attributes`, and the uid is what makes a row stable across runs. */
     char *rid  = scalar_dup(pick(rec, K_ID));
     if (!rid && fields != rec) rid = scalar_dup(pick(fields, K_ID));
+
+    /* Still unlabelled, but the upstream gave it a stable id: label it
+     * "<record_type> <id>", exactly as lib/hpengine.c:588 already does.
+     *
+     * The two engines disagreed on the same question and hpengine had the
+     * better answer. Government tables are routinely keyed on a code with no
+     * human-readable column anywhere in the row — EPA Envirofacts
+     * tri_transfer_qty is {doc_ctrl_num, transfer_loc_num, type_of_waste_
+     * management, …}: real regulatory data, no name, no timestamp, so the
+     * measurement composer above cannot fire either. jsonlist dropped every
+     * such record. Measured over a 59-source sample of batch 16, 33 fetched
+     * successfully and emitted NOTHING, and this shape was the dominant cause.
+     *
+     * This is composition, not invention, on the same grounds the comment above
+     * argues for the measurement case: record_type is the collector's own
+     * declared type and the id came from the upstream. Nothing is guessed. A
+     * record with neither a title NOR an id is still shape noise and is still
+     * dropped. */
+    char idtitle[224];
+    if (!title && rid) {
+      snprintf(idtitle, sizeof idtitle, "%s %s",
+               record_type ? record_type : "record", rid);
+      title = strdup(idtitle);
+    }
+    if (!title) { free(when); free(rid); return 0; }  /* no label, no id -> not a row (R1) */
+
+    char *link = scalar_dup(pick(fields, K_LINK));
     char *body = scalar_dup(pick(fields, K_BODY));
     char *props = cJSON_PrintUnformatted(rec);
 
