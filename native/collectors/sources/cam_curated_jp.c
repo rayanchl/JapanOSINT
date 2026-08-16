@@ -24,7 +24,9 @@
 #include "core/camera_store.h"
 #include "lib/camfeature.h"
 #include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 typedef struct {
@@ -262,10 +264,48 @@ static const char *cam_precision(const curated_cam *c) {
   return "exact";
 }
 
+/* Is this camera's page actually there?
+ *
+ * The whole table used to be emitted with ZERO network I/O — 194 transcribed
+ * rows published as camera discoveries. A full probe of the tree's endpoints
+ * (2026-08-16) found 35 of these URLs answering 404: the largest block of dead
+ * URLs in any single file. So a third of what this source presented as cameras
+ * you could open were pages that no longer exist.
+ *
+ * The coordinates are still the genuine article — operator-published station
+ * positions, and per the header the only exact ones in the camera fleet — so
+ * the fix is not to delete the catalogue. It is to stop asserting that a
+ * camera is there without asking. A row whose page answers is emitted, with
+ * the check stamped on it; a row whose page is gone is not a camera anyone can
+ * watch and is not emitted as one.
+ *
+ * Returns the HTTP status, or 0 if the request never completed. */
+static long cam_url_alive(http_client *http, const char *url) {
+  if (!http || !url || !*url) return 0;
+  if (strncmp(url, "http", 4) != 0) return 0;   /* rtsp:// etc — not checkable here */
+  http_response r = {0};
+  /* GET, not HEAD: several of these operators answer 405 to HEAD while serving
+   * the page fine. Short timeout and no retries — this runs 194 times. */
+  int rc = http_request(http, "GET", url, NULL, NULL, 0, 8000, 0, &r);
+  long st = (rc == 0) ? r.status : 0;
+  http_response_free(&r);
+  return st;
+}
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = 0;
+  int n = 0, checked = 0, dead = 0, unchecked = 0;
+  char statbuf[N_CAMS][16];   /* long, not 3 digits: -Wformat-truncation */
   for (int i = 0; i < N_CAMS; i++) {
     const curated_cam *c = &CAMS[i];
+    /* Ask before asserting. */
+    long st = cam_url_alive(ctx->http, c->url);
+    if (st == 0) {
+      unchecked++;                 /* no URL, or a scheme we cannot probe */
+    } else {
+      checked++;
+      if (st >= 400) { dead++; continue; }   /* gone: not a camera to publish */
+    }
+    snprintf(statbuf[i], sizeof statbuf[i], "%ld", st);
     char portbuf[16];
     if (c->port) snprintf(portbuf, sizeof portbuf, "%d", c->port);
     cam_kv extra[11];
@@ -301,6 +341,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     extra[e].is_num = extra[e].is_bool = extra[e].is_null = 0; e++;
     extra[e].k = "geo_precision";  extra[e].sv = cam_precision(c);
     extra[e].is_num = extra[e].is_bool = extra[e].is_null = 0; e++;
+    /* Record the check ON the record, so a consumer can tell a camera we just
+     * confirmed from one we could not probe. */
+    extra[e].k = "url_http_status";
+    extra[e].sv = (st > 0) ? statbuf[i] : "unchecked";
+    extra[e].is_num = extra[e].is_bool = extra[e].is_null = 0; e++;
 
     cJSON *f = cam_make_feature(c->lat, c->lon, c->name, c->camera_type,
                                 c->channel, extra, e);
@@ -308,14 +353,46 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (camera_upsert(ctx->db, sink, f, c->channel) >= 0) n++;
     cJSON_Delete(f);
   }
-  fprintf(stderr, "[cam-curated-jp] emitted %d of %d curated cameras\n", n, N_CAMS);
+  /* The shortfall is data, not a log line. Without this record an operator sees
+   * a camera layer that quietly shrank and has no way to learn that N catalogue
+   * entries are now dead links. */
+  {
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddNumberToObject(p, "catalog_entries", N_CAMS);
+    cJSON_AddNumberToObject(p, "url_checked", checked);
+    cJSON_AddNumberToObject(p, "emitted", n);
+    cJSON_AddNumberToObject(p, "dropped_dead_url", dead);
+    cJSON_AddNumberToObject(p, "unchecked_scheme_or_missing_url", unchecked);
+    cJSON_AddStringToObject(p, "reason",
+      "entries whose page answered 4xx/5xx are not emitted: a camera you cannot "
+      "open is not a camera. Coordinates remain operator-published and exact.");
+    char *pj = cJSON_PrintUnformatted(p);
+    cJSON_Delete(p);
+    char title[160];
+    snprintf(title, sizeof title,
+             "cam-curated-jp published %d of %d catalogue entries (%d dead links)",
+             n, N_CAMS, dead);
+    intel_item note = {0};
+    note.remote_key      = "catalog-liveness";
+    note.title           = title;
+    note.lang            = "en";
+    note.record_type     = "collector-truncation-notice";
+    note.properties_json = pj ? pj : "{}";
+    note.tags_json       = "[\"camera\",\"truncation-notice\"]";
+    sink->emit(sink, &note);
+    free(pj);
+  }
+  fprintf(stderr, "[cam-curated-jp] emitted %d of %d (checked %d, dead %d, unchecked %d)\n",
+          n, N_CAMS, checked, dead, unchecked);
   return 0;
 }
 
 static const source_def cam_curated_jp_def = {
   .id = "cam-curated-jp", .collector = "camera-discovery",
   .name = "Curated Japan camera catalog", .name_ja = "\xe5\x9b\xbd\xe5\x86\x85\xe3\x82\xab\xe3\x83\xa1\xe3\x83\xa9\xe3\x82\xab\xe3\x82\xbf\xe3\x83\xad\xe3\x82\xb0",
-  .update_interval_sec = 3600, .run = run,
+  /* 194 liveness probes per run: hourly was fine for a static table, not
+   * for one that now makes a request per entry. Daily. */
+  .update_interval_sec = 86400, .run = run,
   .category = "infrastructure", .type = "dataset",
   .url = "internal://curated-camera-catalog",
   .description = "Curated JMA volcano, MLIT river, expressway, broadcast, tourism, "
