@@ -11,6 +11,9 @@
 #   * no network-touching collector runs (they hit real third-party APIs)
 #   * no llama-server (11 GB model); --selftest reports it "down" and passes
 #   * no contract-parity suite (its fixtures need a DB with real intel rows)
+#   * no iOS build (needs macOS + Xcode) and no web-client build/test yet —
+#     ~55k lines of ios/ and client/ are still ungated here, which is a real
+#     gap, not a decision.
 name: ci
 
 on:
@@ -59,3 +62,30 @@ jobs:
       - name: Lint collector sources
         working-directory: native
         run: make lint-sources
+
+      # The engine's own guarantees, offline. hpengine.c is the only code path
+      # with pagination, detail-hops and in-band truncation notices, and
+      # tests/hpengine_test.c asserts 23 of them with a stubbed http_request —
+      # no network, no key, seconds to run. It was not wired in, so the checks
+      # that verify the house rules were the checks CI never ran.
+      - name: Engine guarantees (hptest)
+        working-directory: native
+        run: make hptest
+
+      # A collector that moves out of the build glob stops registering with no
+      # error: the build succeeds, the binary links, and only the source count
+      # drops. That happened during the collectors/ reorganisation — four
+      # separate tools under-reported while the binary was correct — so the
+      # count is asserted rather than printed. Floor lives in
+      # native/tools/source-floor.txt and only ever ratchets up.
+      - name: Source count floor
+        working-directory: native
+        run: make source-floor
+
+      # Reported, not gated. audit-sources is a heuristic scan for discarded
+      # data (docs/SOURCE_EXHAUSTIVENESS.md); every finding needs a human read,
+      # so failing on the count would train people to ignore it. But it must be
+      # VISIBLE — it was reporting 146 findings that no CI run ever printed.
+      - name: Exhaustive-use audit (report)
+        working-directory: native
+        run: make audit-sources
