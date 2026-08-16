@@ -71,6 +71,7 @@
 #include "audit.h"
 #include "evidence.h"
 #include "ffmpeg.h"         /* THE video seam — this file no longer has one   */
+#include "hostgate.h"       /* the SSRF floor every outbound fetch must clear */
 #include "httpclient.h"     /* http_client_global_init() — the one curl init */
 #include "media.h"
 #include "operatorgate.h"
@@ -489,6 +490,53 @@ static char *normalize_camera_id(const char *id) {
 
 /* The global libcurl init lives in httpclient.c behind a single pthread_once. */
 
+/* Per-connection SSRF re-check, verbatim in intent to httpclient.c's on_prereq.
+ * It has to be repeated here because stream_grab() drives a PRIVATE handle:
+ * everything http_request() applies — the floor, the redirect protocol
+ * allowlist, this callback — is a property of THAT function, not of libcurl, so
+ * a private handle starts with none of it. stream_grab follows up to 5
+ * redirects, and a camera whose URL came out of shodan_api/insecam_scrape is
+ * exactly the kind of upstream that can 302 into 169.254.169.254. */
+#if LIBCURL_VERSION_NUM >= 0x075000            /* 7.80.0: CURLOPT_PREREQFUNCTION */
+static int cam_prereq(void *ud, char *primary_ip, char *local_ip,
+                      int primary_port, int local_port) {
+  (void)ud; (void)local_ip; (void)primary_port; (void)local_port;
+  if (hostgate_addr_check_floor(primary_ip) != HG_URL_OK) {
+    fprintf(stderr, "[camera-stills] blocked connection to %s "
+                    "(private/link-local)\n", primary_ip ? primary_ip : "?");
+    return CURL_PREREQFUNC_ABORT;
+  }
+  return CURL_PREREQFUNC_OK;
+}
+#endif
+
+/* THE DESTINATION check for this module's own sockets, at the FLOOR strength
+ * (hostgate_url_check, not _strict): every camera in the corpus is somebody
+ * else's LAN box reached over RFC1918 or a plain public address, and the strict
+ * ruleset — written for URLs an API CALLER supplied — would refuse the LAN
+ * cameras hostgate.h explicitly names as a shipped feature. An operator who
+ * wants those refused sets JO_HTTP_BLOCK_PRIVATE=1, which raises this call and
+ * cam_prereq() together, because both read the floor rather than hardcoding a
+ * strength.
+ *
+ * rtsp/rtsps cannot go through hostgate_url_check() — it answers BAD_SCHEME for
+ * anything that is not http(s) — and ffmpeg owns that socket, so there is no
+ * connect callback to hang the resolved-address half on. What is checkable is
+ * the literal address, which is what an SSRF payload actually spells
+ * (rtsp://169.254.169.254/…): hostgate_addr_check_floor() classifies it and
+ * fails open on a hostname, exactly as it does on the http path before DNS. A
+ * NAME that resolves into a blocked range is therefore NOT caught on the rtsp
+ * leg; that gap belongs to core/ffmpeg.h, and it is stated here rather than
+ * left to be discovered. */
+static int cam_gate_url(const char *url) {
+  if (!url || !*url) return HG_URL_BAD_HOST;
+  if (strncasecmp(url, "http://", 7) == 0 || strncasecmp(url, "https://", 8) == 0)
+    return hostgate_url_check(url);
+  char host[256];
+  if (!hostgate_url_host(url, host, sizeof host)) return HG_URL_BAD_HOST;
+  return hostgate_addr_check_floor(host);
+}
+
 typedef struct {
   unsigned char *buf;
   size_t len, cap, max;
@@ -567,6 +615,22 @@ static int stream_grab(const char *url, int timeout_ms, size_t maxb,
   curl_easy_setopt(e, CURLOPT_WRITEDATA, &g);
   curl_easy_setopt(e, CURLOPT_FOLLOWLOCATION, 1L);
   curl_easy_setopt(e, CURLOPT_MAXREDIRS, 5L);
+  /* Same two clamps do_once() sets, for the same reason: without
+   * REDIR_PROTOCOLS a 302 can walk this fetch into file:// or scp://, and
+   * cam_gate_url() only ever saw the FIRST url. */
+#if LIBCURL_VERSION_NUM >= 0x075500            /* 7.85.0 */
+  curl_easy_setopt(e, CURLOPT_PROTOCOLS_STR, "http,https");
+  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS_STR, "http,https");
+#else
+  curl_easy_setopt(e, CURLOPT_PROTOCOLS,
+                   (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
+  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS,
+                   (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
+#endif
+#if LIBCURL_VERSION_NUM >= 0x075000
+  curl_easy_setopt(e, CURLOPT_PREREQFUNCTION, cam_prereq);
+  curl_easy_setopt(e, CURLOPT_PREREQDATA, (void *)0);
+#endif
   curl_easy_setopt(e, CURLOPT_TIMEOUT_MS, (long)timeout_ms);
   curl_easy_setopt(e, CURLOPT_CONNECTTIMEOUT_MS, 5000L);
   curl_easy_setopt(e, CURLOPT_USERAGENT, "JapanOSINT/1.0 (+native)");
@@ -934,6 +998,21 @@ static int fetch_frame(http_client *http, const char *url, int kind,
   *reason = NULL;
   *out_kind = kind;
   *out_status = 0;      /* 0 = "not an HTTP fetch" (the ffmpeg paths)        */
+
+  /* ONE gate in front of all three legs, because all three dial a URL that was
+   * written into intel_items.properties by a discovery collector (shodan_api,
+   * insecam_scrape, …) — i.e. by an upstream that can choose it. It fails
+   * CLOSED and with a reason that reaches camera_stills_state.last_error: a
+   * blocked destination that looked like an empty result would be indexed as
+   * "this camera has nothing", which is the silent-skip this file's retention
+   * and backoff logic would then treat as a healthy no-op. */
+  { int gk = cam_gate_url(url);
+    if (gk != HG_URL_OK) {
+      fprintf(stderr, "[camera-stills] refused %s: %s\n", url,
+              hostgate_url_reason(gk));
+      *reason = "blocked_destination";
+      return 0;
+    } }
 
   if (kind == CAM_FEED_RTSP || kind == CAM_FEED_HLS)
     return ffmpeg_grab(url, kind, tmo, (size_t)maxb, out, outlen, reason);
