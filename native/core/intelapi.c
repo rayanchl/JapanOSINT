@@ -178,15 +178,28 @@ static cJSON *row_to_item(sqlite3_stmt *s, int full) {
   return out;
 }
 
-char *intelapi_item_by_uid(db_handle *db, const char *uid) {
+char *intelapi_item_by_uid_tenant(db_handle *db, const char *uid,
+                                  const char *tenant) {
   /* Breach records are served from breach_items via the adapter, not intel_items. */
   if (uid && strncmp(uid, "breach:", 7) == 0)
     return breach_adapter_item_by_uid(db, uid);
-  static const char *Q =
+  /* Two statements rather than one with a `?2 IS NULL OR …` disjunction: that
+   * form is a filter SQLite cannot use the uid index through as cleanly, and it
+   * makes "unscoped" a value the query has to reason about instead of a
+   * decision the caller already made. A miss under the tenant predicate is
+   * indistinguishable from a missing uid on purpose — the caller's 404 must not
+   * confirm that another tenant holds that row. */
+  static const char *Q_ANY =
     "SELECT " ITEM_COLS " FROM intel_items WHERE uid=?1";
+  static const char *Q_TENANT =
+    "SELECT " ITEM_COLS " FROM intel_items WHERE uid=?1"
+    " AND tenant_id IN (?2,'legacy')";
+  int scoped = tenant && *tenant;
   sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(db->h, Q, -1, &s, NULL) != SQLITE_OK) return NULL;
+  if (sqlite3_prepare_v2(db->h, scoped ? Q_TENANT : Q_ANY, -1, &s, NULL)
+      != SQLITE_OK) return NULL;
   sqlite3_bind_text(s, 1, uid, -1, SQLITE_TRANSIENT);
+  if (scoped) sqlite3_bind_text(s, 2, tenant, -1, SQLITE_TRANSIENT);
   if (sqlite3_step(s) != SQLITE_ROW) { sqlite3_finalize(s); return NULL; }
   cJSON *out = row_to_item(s, 1);
   sqlite3_finalize(s);
@@ -198,12 +211,35 @@ char *intelapi_item_by_uid(db_handle *db, const char *uid) {
   return js;
 }
 
+char *intelapi_item_by_uid(db_handle *db, const char *uid) {
+  return intelapi_item_by_uid_tenant(db, uid, NULL);
+}
+
 /* GET /api/intel/items — faithful port of intelStore.listItems({}):
  * structured WHERE (source/since/until/lang/tag/record_type/sub_source_id/
  * has_geom) + keyset cursor; ?q= goes through intel_items_fts (segmented
  * exactly like the write path, == entityapi_search / Node intelMirror.search,
  * caller-composed extra WHERE). ORDER/limit/cursor/envelope unchanged, so a
- * query with only `limit` set is byte-identical to the prior contract. */
+ * query with only `limit` set is byte-identical to the prior contract.
+ *
+ * TENANCY. This is the primary feed and it carried NO tenant predicate at all,
+ * while /api/export (exportapi.c:461) and /api/intel/near (nearapi.c:162) —
+ * both of which read the same table through the same filter struct — carried
+ * one. That asymmetry is latent rather than exploited only because every
+ * intel_sink_make() hardcodes tenant_id 'legacy' today, so the corpus is a
+ * single tenant's; the day a collector writes a real tenant_id, the export
+ * route would scope and the feed beside it would not. The predicate is now
+ * applied whenever the caller supplies Q->tenant.
+ *
+ * STILL UNWIRED, deliberately out of scope here: httpd.c's /api/intel/items,
+ * /api/intel/search and /api/intel/items/:uid have an auth_user but never call
+ * tenant_resolve(), so they pass no tenant and the predicate stays off — which
+ * is exactly today's behaviour, i.e. this change cannot make a row disappear.
+ * Closing it is one tenant_resolve() + `Q.tenant = tc.tenant_id` per route,
+ * the same three lines every other tenant-scoped route in httpd.c already has.
+ *
+ * The breach branch below takes no tenant: breach_items is a global catalog
+ * with no tenant column, gated instead by httpd.c's breach_gate(). */
 char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
   /* A source-filtered request for a breach source is served from breach_items
    * via the adapter (keyset over row id). Unfiltered / non-breach requests stay
@@ -244,6 +280,14 @@ char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
 #define WPUSH(frag) do { int _n = snprintf(wbuf + wl, sizeof wbuf - wl, \
     " AND %s", (frag)); if (_n > 0) wl += (size_t)_n; \
     if (wl >= sizeof wbuf) wl = sizeof wbuf - 1; } while (0)
+  /* Tenant scope FIRST, exactly as exportapi.c's build_intel_sql() does it and
+   * for the same reason: wbuf is clamped, and the guard must never be the
+   * fragment a clamp drops. `IN (?,'legacy')` because intel_items.tenant_id is
+   * NOT NULL DEFAULT 'legacy' (schema.sql:308) — the `IS NULL OR tenant_id=?`
+   * spelling used for the nullable `entities` column returns nothing here.
+   * NULL/"" leaves the predicate off; see intel_items_query::tenant. */
+  if (Q && Q->tenant && *Q->tenant)
+                             { WPUSH("intel_items.tenant_id IN (?,'legacy')"); bnd[nb++] = Q->tenant; }
   if (Q && Q->source)        { WPUSH("intel_items.source_id = ?");        bnd[nb++] = Q->source; }
   if (Q && Q->since)         { WPUSH("COALESCE(intel_items.published_at,intel_items.fetched_at) >= ?"); bnd[nb++] = Q->since; }
   if (Q && Q->until)         { WPUSH("COALESCE(intel_items.published_at,intel_items.fetched_at) <= ?"); bnd[nb++] = Q->until; }

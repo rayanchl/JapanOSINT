@@ -6,7 +6,18 @@
 #include "db.h"
 
 /* GET /api/intel/items/:uid body. Returns malloc'd `{"data":{...}}` (200) or
- * NULL if the uid doesn't exist (caller → 404 {"error":"not_found"}). */
+ * NULL if the uid doesn't exist (caller → 404 {"error":"not_found"}).
+ *
+ * TENANCY. `tenant` NULL or "" means UNSCOPED and is a deliberate contract, not
+ * an oversight: three of the four callers hold a row they have already
+ * authorised by other means — alert_deliver.c renders an item for the delivery
+ * worker, which has no auth_user at all; nearapi.c already selected the uid
+ * with this very predicate before rendering it; casesapi.c resolves a ref off a
+ * case row it fetched tenant-scoped. Only a request that arrives with a caller
+ * identity can pass a tenant, and for it `tenant` is matched as
+ * `tenant_id IN (?,'legacy')` — see the note on intel_items_query::tenant. */
+char *intelapi_item_by_uid_tenant(db_handle *db, const char *uid,
+                                  const char *tenant);
 char *intelapi_item_by_uid(db_handle *db, const char *uid);
 
 /* GET /api/intel/items filter set — faithful port of intelStore.listItems({})
@@ -26,6 +37,15 @@ typedef struct {
   const char *sub_source_id;   /* intel_items.sub_source_id = ?           */
   const char *has_geom;        /* "yes" → lat NOT NULL; "no" → lat NULL    */
   const char *cursor;          /* base64url {"p":..,"u":..} keyset page    */
+  /* Active tenant_ctx.tenant_id, or NULL/"" for an unscoped read.
+   *
+   * Matched as `tenant_id IN (?,'legacy')`, NOT as `tenant_id IS NULL OR
+   * tenant_id=?`: schema.sql declares intel_items.tenant_id NOT NULL DEFAULT
+   * 'legacy', so the shared pre-tenancy corpus is the literal string 'legacy'
+   * and the IS NULL form (correct for `entities`, whose column IS nullable)
+   * would match no row on this table at all. exportapi.c:461 and nearapi.c:162
+   * spell it the same way over the same table. */
+  const char *tenant;
   int         limit;
 } intel_items_query;
 
