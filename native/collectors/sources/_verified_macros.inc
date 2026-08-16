@@ -44,11 +44,16 @@
  * to take the longest array of objects in the document. */
 #define VJSON(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, PATH, LANG, TAGS, IVAL, DESC) \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
-    cJSON *d = feed_get_json(c->http, URL, 25000);                            \
-    if (!d) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }        \
-    int n = jsonlist_emit(s, ID, d, PATH, CAT, LANG, TAGS);                   \
-    cJSON_Delete(d);                                                          \
-    fprintf(stderr, "[%s] emitted %d\n", ID, n);                              \
+    /* PAGED. This used to be one GET of one URL, which meant every source    \
+     * built on this macro — about 6,500 of them, 2,081 against URLs that     \
+     * hard-code a page size — read page 1 and discarded the rest silently.   \
+     * jsonlist_emit_paged walks while the upstream says there is more, and   \
+     * emits a collector-truncation-notice if the ceiling stops it early.     \
+     * It returns -1 only when the FIRST fetch fails, so a dead endpoint is   \
+     * still an error and an honest empty is still 0 (R3). */                 \
+    int n = jsonlist_emit_paged(s, ID, c->http, URL, 25000,                   \
+                                PATH, CAT, LANG, TAGS);                       \
+    if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
     return 0; }                                                               \
   static const source_def SYM = {                                            \
     .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \

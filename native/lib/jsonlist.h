@@ -38,4 +38,37 @@ int jsonlist_emit(intel_sink *sink, const char *source_id, cJSON *doc,
                   const char *path, const char *record_type,
                   const char *lang, const char *tags_json);
 
+/* Fetch `url` and emit every record — ACROSS PAGES.
+ *
+ * jsonlist_emit() above takes a document that is already in hand, so it can
+ * only ever see page 1. That is the shape the whole generated fleet was built
+ * on (_verified_macros.inc: one GET, one emit), and it meant ~6,500 sources
+ * silently stopped at the first page — 2,081 of them against URLs that
+ * hard-code a page size, so the discard was both guaranteed and invisible.
+ * `api.dane.gov.pl/1.4/datasets?page=1&per_page=100` answers with
+ * `meta.count: 26536` and a `links.next`, and the collector kept 100 of them.
+ *
+ * The walk continues while the upstream keeps saying there is more, and stops
+ * on the first of: no next-page signal, a page that produced no records, or
+ * the page ceiling ($JO_JSONLIST_PAGE_MAX, default 20). Two signals are
+ * honoured, in this order:
+ *
+ *   1. a server-supplied next link (links.next, next, next_url, meta.next,
+ *      paging.next, @odata.nextLink) — authoritative, no guessing;
+ *   2. otherwise, offset/page arithmetic, but ONLY when the URL declares a
+ *      page size AND the page came back exactly full. A short page is the
+ *      upstream saying it is done, so a partial page never triggers another
+ *      request.
+ *
+ * When the ceiling stops a walk that had more to give, that shortfall is
+ * emitted as a `collector-truncation-notice` record — the same disclosure
+ * hpengine makes — because a log line nobody reads is not a disclosure.
+ *
+ * Returns total records emitted (>= 0), or -1 if the FIRST fetch failed (so
+ * the caller can still distinguish a dead endpoint from an honest empty, R3). */
+int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
+                        http_client *http, const char *url, int timeout_ms,
+                        const char *path, const char *record_type,
+                        const char *lang, const char *tags_json);
+
 #endif
