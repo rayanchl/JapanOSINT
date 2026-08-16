@@ -25,10 +25,10 @@
  * to avoid double counting": the band is carried in properties and an
  * is_aggregate flag marks the TOTAL rows so a consumer can exclude them.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

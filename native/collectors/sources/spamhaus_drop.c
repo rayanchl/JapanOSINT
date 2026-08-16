@@ -10,10 +10,10 @@
  * uid is now the natural key (cidr:<cidr> / asn:<asn>) instead of a sha1 over
  * {geometry, properties} that embedded the row's list POSITION, which made
  * every uid churn whenever Spamhaus added or dropped a line. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../core/intel.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "core/intel.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

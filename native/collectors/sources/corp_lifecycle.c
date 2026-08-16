@@ -47,12 +47,12 @@
  * shared remote_key prefix + tags make it a query.
  *
  * R2: none of these upstreams return coordinates, so no row here sets has_geo. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/rss_atom.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/rss_atom.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

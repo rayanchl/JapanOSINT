@@ -1,9 +1,9 @@
 /* collectors/government/sources/courts_prisons.c — port of
  * server/src/collectors/courtsPrisons.js (fetchOverpass single area.jp).
  * SEED_FACILITIES offline fallback intentionally not ported (rule 8). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <string.h>
 

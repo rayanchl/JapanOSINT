@@ -7,9 +7,9 @@
  * registry publication timestamp. No coordinates upstream -> has_geo 0 (R2).
  * Licence: IANA public registry, free to redistribute.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

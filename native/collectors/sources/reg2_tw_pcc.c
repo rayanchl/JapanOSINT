@@ -24,10 +24,10 @@
  * Licence: g0v/openfun mirror of web.pcc.gov.tw notices, which are statutorily
  * public; the PCC is cited as the origin in every row.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

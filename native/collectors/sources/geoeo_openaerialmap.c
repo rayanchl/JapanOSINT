@@ -22,8 +22,8 @@
  *  - acquisition_start/end are null on older uploads and are dropped rather
  *    than stringified.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL = "https://api.openaerialmap.org/meta?limit=50";

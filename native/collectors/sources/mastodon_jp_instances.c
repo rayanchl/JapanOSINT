@@ -9,11 +9,11 @@
  * (139.6917, 35.6895); a public-timeline post carries no location, so that
  * was an invented coordinate that stacked hundreds of false pins on one
  * point. Mastodon's status object has no lat/lon field at all. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

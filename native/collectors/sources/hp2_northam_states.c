@@ -7,7 +7,7 @@
  * is sitting against it. US corporate existence is a state fact, not a federal
  * one, so a US entity that is invisible federally is usually fully documented
  * in exactly one state. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP2_NORTHAM_STATES[] = {
   /* ── Secretary-of-State entity registers ───────────────────────────────── */

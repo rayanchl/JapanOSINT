@@ -9,8 +9,8 @@
  * `_maint` for the usual reason — it emits no intel_items, so fetch_log would
  * record records=0 on every run and trip records_drop against its own
  * baseline. It also inherits the scheduler's skip-if-running serialisation. */
-#include "../../source.h"
-#include "../../core/content_change.h"
+#include "source.h"
+#include "core/content_change.h"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   (void)sink;                    /* retention writes nothing to intel */

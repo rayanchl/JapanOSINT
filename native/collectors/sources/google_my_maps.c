@@ -6,9 +6,9 @@
  * tryOsmPois() = fetchOverpassTiled(osmPoiOverpassBody, osmPoiMapFeature, …),
  * IDENTICAL body + feature shape as the famousPlaces collector. Reproduced
  * verbatim (see famous_places.c) for featureUid parity. */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <string.h>
 

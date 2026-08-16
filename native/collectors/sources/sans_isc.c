@@ -7,10 +7,10 @@
  * sans-isc-feeds|infocon-current) and is ported here. The _meta/seed envelope
  * is dropped. JS SOURCE_ID is 'sans-isc-feeds'; registry id is 'sans-isc' —
  * the infocon uid is kept verbatim to JS. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/rss_atom.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

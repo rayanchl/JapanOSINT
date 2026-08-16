@@ -6,10 +6,10 @@
  * intelUid(SOURCE_ID, g.id) == "grid-usage-realtime|<gid>" (remote_key=g.id).
  * properties order: grid, lat, lon, load_mw, reachable. tags: power,grid,
  * demand,<gid>. title/summary/link/lang/published_at mirrored. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/probe.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/probe.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

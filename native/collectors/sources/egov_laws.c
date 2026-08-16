@@ -6,10 +6,10 @@
  * non-empty of (id,name); sink prefixes "<source_id>|". SEED/_meta n/a (none).
  * pickTag = first <tag ...>INNER</tag>, .trim() (no tag-strip / entity decode
  * in JS), so we only trim ASCII whitespace. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

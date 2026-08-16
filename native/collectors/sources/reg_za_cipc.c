@@ -18,9 +18,9 @@
  * SAFLII may rate-limit — those simply yield 0 (honest empty), which is
  * expected and fine. We NEVER fabricate a company, registration number, or
  * case. Honest-empty beats fake. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

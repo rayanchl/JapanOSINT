@@ -11,10 +11,10 @@
  * real geo (lat/lon) so individual matches surface as distinct search/map
  * items. If the query yields zero results (or HTTP fails), emits nothing and
  * returns 0 (honest empty — no seeded rows). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

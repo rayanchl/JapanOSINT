@@ -31,13 +31,13 @@
  *
  * None of these upstreams returns coordinates → has_geo stays 0 (R2).
  */
-#include "../../lib/osintemit.h"
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "lib/osintemit.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

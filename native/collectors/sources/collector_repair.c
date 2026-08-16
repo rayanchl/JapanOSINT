@@ -18,12 +18,12 @@
  * real http(s) URL the fetch layer can match; an internal:// or dynamically
  * built URL can't be matched by the override, so we record 'verified' (a human
  * suggestion) and leave the anomaly open — never a faked live fix. */
-#include "../../source.h"
-#include "../../core/prompts.h"
-#include "../../core/source_registry.h"
-#include "../../core/url_override.h"
-#include "../../third_party/cJSON.h"
-#include "../../third_party/sqlite3.h"
+#include "source.h"
+#include "core/prompts.h"
+#include "core/source_registry.h"
+#include "core/url_override.h"
+#include "third_party/cJSON.h"
+#include "third_party/sqlite3.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

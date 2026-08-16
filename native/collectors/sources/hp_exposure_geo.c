@@ -11,7 +11,7 @@
  * Geo/actor: an OSM contributor's changeset history, a place's extra tags
  * (operator, website, phone), a gazetteer hierarchy and NASA's granule index —
  * all keyed off a name rather than a bounding box. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP_EXPOSURE_GEO[] = {
   /* ── Credential & infostealer exposure ─────────────────────────────────── */

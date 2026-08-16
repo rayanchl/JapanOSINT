@@ -7,7 +7,7 @@
  * Credit China discredited-entity lists, Korea's business-status and tender
  * APIs, Hong Kong's SFC licensee register — and almost none of it was reachable
  * from here before. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP2_ASIA_EAST[] = {
   /* ── Korea ─────────────────────────────────────────────────────────────── */

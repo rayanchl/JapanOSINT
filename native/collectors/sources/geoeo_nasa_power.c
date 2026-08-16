@@ -31,8 +31,8 @@
  *  - The geometry is the ECHOED QUERY point. That is honest — it is what the
  *    service returned — and it is labelled geo_precision "echoed-query".
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static int parse_entity_ll(const char *e, double *lat, double *lon) {

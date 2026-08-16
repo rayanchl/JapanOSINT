@@ -3,10 +3,10 @@
  * NTA Houjin Bangou /4/diff (JSON type=12), rolling 7-day UTC window.
  * Gated on HOUJIN_BANGOU_KEY (JS: no key → empty → 0 rows).
  * uid = houjin-bangou|<cn || changeDate||updateDate>. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -5,9 +5,9 @@
  *   APRS_FI_LOC     api.aprs.fi/api/get?name=<call>&what=loc   APRS_FI_KEY
  *   OPENCELLID_CELL opencellid.org/cell/get?...  OPENCELLID_KEY
  *                   (entity = "mcc,mnc,lac,cellid") */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -16,10 +16,10 @@
  * "gitlab:<path>", "leak:<repo>/<path>"); link = the result html_url; body =
  * that result's JSON. De-duplicated within the run by remote_key. Nothing
  * found → emits nothing, returns 0 (honest empty). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

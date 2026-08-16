@@ -27,9 +27,9 @@
  * Licence: US Government work (NOAA/NWS Aviation Weather Center), public
  * domain, keyless.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

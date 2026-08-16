@@ -12,9 +12,9 @@
  * found across all sources, emits nothing (honest empty — no seeded rows). The
  * former J-STAGE / KAKEN / researchmap lookup-URL stubs (which emitted only a
  * label + URL with no fetched data) have been removed. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

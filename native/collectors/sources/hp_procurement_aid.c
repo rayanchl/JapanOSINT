@@ -5,7 +5,7 @@
  * and usually the losing bidders too. These rows go to the award-level records
  * rather than tender headlines, and cover the multilateral side (World Bank,
  * IATI, OCHA FTS, Global Fund, USAID) that no existing collector touched. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP_PROCUREMENT[] = {
   { .id = "UK_CONTRACTS_FINDER", .name = "UK Contracts Finder — OCDS notices",

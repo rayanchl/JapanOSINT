@@ -7,7 +7,7 @@
  * genuine open-data judgment API. Liechtenstein and Switzerland are attached
  * here rather than to "Europe" because the DACH corporate chain routinely runs
  * through Vaduz and Zug regardless of where the operating company sits. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP2_EU_DACH[] = {
   /* ── Germany ───────────────────────────────────────────────────────────── */

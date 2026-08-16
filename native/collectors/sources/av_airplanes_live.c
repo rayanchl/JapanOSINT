@@ -34,9 +34,9 @@
  * R3: `{"ac":[],"total":0}` is an honest empty — a bbox with nothing in it
  * right now returns 0, not -1.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

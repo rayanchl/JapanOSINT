@@ -4,9 +4,9 @@
  * <item> blocks (custom RDF parse mirroring the JS regex parser), dedup by
  * link across feeds, emits non-spatial intel. honest empty on failure.
  * uid = hatena-bookmark-extended|<link>. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

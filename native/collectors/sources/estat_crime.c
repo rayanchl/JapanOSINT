@@ -5,10 +5,10 @@
  * also emits one map feature per (prefecture, year). The _meta envelope is
  * dropped (rule 7) — the baseIntel directory row is the intel-status row
  * the collector exists to publish, so it is kept. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -9,10 +9,10 @@
  *
  * NOTE: field mapping follows the public gBizINFO v1 spec ("hojin-infos" array);
  * verify against a live response once a token is configured. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

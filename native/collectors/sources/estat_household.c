@@ -6,9 +6,9 @@
  * one intel_item per statistical VALUE. uid key mirrors the JS
  * `${area}-${cat}-${time}` template (always a non-empty string, so the
  * JS `|| i` index fallback is dead code and is not ported). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

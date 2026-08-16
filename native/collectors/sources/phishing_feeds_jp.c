@@ -4,9 +4,9 @@
  * intel items. PHISHTANK_APP_KEY raises the PhishTank rate limit (optional).
  * intelEnvelope _meta not ported. (feed_get_text sends no custom UA header;
  * these public feeds are UA-agnostic — content-neutral for the live path.) */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

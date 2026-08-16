@@ -1,9 +1,9 @@
 /* collectors/government/sources/government_buildings.c — port of
  * server/src/collectors/governmentBuildings.js (fetchOverpass single
  * area.jp). SEED_GOV_BUILDINGS offline fallback not ported (rule 8). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

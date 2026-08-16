@@ -26,11 +26,11 @@
  *
  * Keyless. Licence: MITRE CWE and CAPEC terms of use — free to use and
  * redistribute with attribution to MITRE. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

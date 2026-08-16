@@ -12,9 +12,9 @@
  * assessment. No {success,confidence,data} envelope. Invalid hash, not-found,
  * or total fetch failure → emit nothing (return 0). The fixed
  * analysis_resources URL list has been removed. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -14,10 +14,10 @@
  *   - file hash / unknown / file-not-found / non-image URL: emit nothing
  *     (the previous fabricated VirusTotal lookup-URL note has been removed —
  *      there is no fetch, so no record). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <strings.h>
 #include <ctype.h>

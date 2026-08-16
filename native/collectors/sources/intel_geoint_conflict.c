@@ -3,8 +3,8 @@
  * cross-border investigative journalism, defense reporting). Real RSS/Atom
  * endpoints via rss_collect; each item becomes an FTS-indexed intel row that the
  * OSINT entity/alert hooks can pivot on. Scheduled hourly. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 #define COLL     "osint"
 #define INTERVAL 3600

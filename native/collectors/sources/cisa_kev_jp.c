@@ -14,10 +14,10 @@
  * and properties led with "idx" = the row's POSITION in the filtered list. Any
  * KEV insertion re-numbered every later row and thus changed its uid, so
  * re-runs inserted duplicates instead of updating. Keyed on cve_id now. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

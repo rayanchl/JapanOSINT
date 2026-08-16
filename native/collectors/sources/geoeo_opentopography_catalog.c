@@ -26,8 +26,8 @@
  *  - A survey whose box does not parse into four sane ordinates is emitted
  *    with has_geo=0.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL =

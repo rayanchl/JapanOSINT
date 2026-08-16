@@ -10,10 +10,10 @@
  * "take the first record" then reads a FORECAST as a MEASUREMENT. The filter
  * and order_by are both baked into the URL, and totalload is re-checked here.
  * Licence: Elia Open Data (Opendatasoft), CC BY 4.0 equivalent, keyless. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

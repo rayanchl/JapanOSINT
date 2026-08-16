@@ -15,10 +15,10 @@
  * duplicated in properties.long/properties.lat — the marina entrance/basin
  * point." The geometry is used; the duplicated properties are not re-derived.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -14,10 +14,10 @@
  * from /id/stations on stationReference, and a measure whose station is not in
  * that list is emitted without geometry.
  * Licence: Open Government Licence v3 (response meta.licence = OGL v3). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

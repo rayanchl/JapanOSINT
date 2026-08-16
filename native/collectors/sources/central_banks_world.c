@@ -1,6 +1,6 @@
 /* Central-bank / monetary-authority press feeds (best-effort real RSS) — macro-financial and policy signal, via rss_collect. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 #include "_source_macros.inc"
 

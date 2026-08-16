@@ -18,9 +18,9 @@
  * merged. remote_key = "email:<addr>" | "subdomain:<host>"; title = the
  * email/subdomain; body = {value,type,found_via:[...]}. If nothing is
  * harvested, emits nothing and returns 0 (honest empty). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

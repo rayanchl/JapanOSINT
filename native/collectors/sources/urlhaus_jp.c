@@ -4,11 +4,11 @@
  * JP-host filter, slice 200. Emitted WITHOUT geometry: URLhaus gives no host
  * coordinates, so we do not invent any (the JS upstream stamped every row with a
  * hardcoded Tokyo point — dropped here per the no-fabricated-data rule). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

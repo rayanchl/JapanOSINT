@@ -1,6 +1,6 @@
 /* Think-tank / research-institute analysis feeds (best-effort real RSS) — geopolitical and security analysis, via rss_collect. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 #include "_source_macros.inc"
 

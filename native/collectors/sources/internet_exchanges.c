@@ -4,9 +4,9 @@
  * FeatureCollection. SEED_IX offline fallback intentionally not ported
  * (JS does `if (!live) features = []`).
  */
-#include "../../source.h"
-#include "../../lib/geojson.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/geojson.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 

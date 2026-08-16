@@ -9,8 +9,8 @@
  * "ptr:<ip>:<hostname>". No PTR record / resolver failure / invalid IP →
  * emit NOTHING and return 0 (honest empty). No {success,confidence,data}
  * envelope. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "third_party/cJSON.h"
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>

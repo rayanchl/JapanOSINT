@@ -7,10 +7,10 @@
  * a percentage. intensity.index is a BUCKET STRING ("low"/"moderate"/...),
  * never a number — it is emitted as a string property only.
  * Licence: CC-BY 4.0 (NESO carbon intensity API). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

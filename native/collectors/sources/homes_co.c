@@ -5,9 +5,9 @@
  * total as a rental-market-size proxy. Pref with no count is OMITTED
  * (honest, possibly empty). Never fabricated. Non-spatial intel_item.
  * uid = homes-co|<slug> (mirrors intelUid). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

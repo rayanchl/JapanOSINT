@@ -24,9 +24,9 @@
  *    substituted; both are fetched here, and a failure of the second does not
  *    fail the run.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/csv.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/csv.h"
 #include "geoeo_common.inc"
 
 #define NSIDC_TAIL 45

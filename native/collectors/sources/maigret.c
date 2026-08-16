@@ -16,10 +16,10 @@
  * surface as distinct search items, with link = the profile URL. Only the live
  * per-site probe's confirmed hits are emitted; if none are found, emits nothing
  * (honest empty — no seeded rows). */
-#include "../../source.h"
+#include "source.h"
 #include "social_fuse.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

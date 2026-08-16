@@ -2,10 +2,10 @@
  * Port of server/src/collectors/torExitNodes.js.
  * Tor onionoo details?country=jp&flag=Exit → FeatureCollection. Keyless.
  * SEED branch (no live relays) dropped → 0 features when down. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

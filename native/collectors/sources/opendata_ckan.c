@@ -9,9 +9,9 @@
  * Only real, parsed API fields are emitted; a portal that errors, is offline,
  * JS-only, or returns no matches simply contributes nothing (honest empty per
  * portal). Nothing here fabricates dataset titles, orgs, or URLs. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

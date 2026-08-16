@@ -5,9 +5,9 @@
  *   FR_ADDRESS_BAN  api-adresse.data.gouv.fr/search/?q=   (Base Adresse Nationale)
  *   FR_BODACC       bodacc-datadila.opendatasoft.com (annonces-commerciales)
  *   FR_DATAGOUV     data.gouv.fr/api/1/datasets/?q= */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

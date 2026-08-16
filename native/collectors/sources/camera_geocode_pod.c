@@ -24,12 +24,12 @@
  *
  * Runs as a `_maint` pod so scheduler.c skips fetch_log/anomaly for it, exactly
  * like camera_stills.c. */
-#include "../../source.h"
-#include "../../core/camera_store.h"
-#include "../../core/geoproxyapi.h"
-#include "../../core/db.h"
-#include "../../core/intel.h"   /* intel_fts_remirror: properties is indexed */
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "core/camera_store.h"
+#include "core/geoproxyapi.h"
+#include "core/db.h"
+#include "core/intel.h"   /* intel_fts_remirror: properties is indexed */
+#include "third_party/cJSON.h"
 #include <ctype.h>
 #include <math.h>
 #include <stdio.h>

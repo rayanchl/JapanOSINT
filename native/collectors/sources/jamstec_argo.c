@@ -2,9 +2,9 @@
  * FEED source — port of server/src/collectors/jamstecArgo.js.
  * Argovis API: Argo profiling-float positions, last ~14 days, Japan polygon.
  * -> FeatureCollection. Honest empty on failure — never fabricated. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

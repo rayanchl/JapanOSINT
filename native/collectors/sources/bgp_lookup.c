@@ -2,9 +2,9 @@
  * JapanOSINT source ABI. Resolves an IP or ASN to its BGP origin (prefix,
  * announcing ASN(s), holder) via RIPEstat — free, no key. Honest-empty on no
  * data. */
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

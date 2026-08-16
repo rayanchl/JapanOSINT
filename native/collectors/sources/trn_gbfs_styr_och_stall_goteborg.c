@@ -10,7 +10,7 @@
  * of the Warsaw system on the same host — the feed URLs are therefore read from
  * the discovery document rather than hardcoded.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define STYR_GBFS "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_zg/gbfs.json"

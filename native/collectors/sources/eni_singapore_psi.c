@@ -13,10 +13,10 @@
  * GEO (R2): region_metadata[].label_location is a REGION LABEL POINT, not a
  * station, so rows carry "geo_precision": "area-centroid".
  * Licence: Singapore Open Data Licence (data.gov.sg), keyless. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

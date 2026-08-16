@@ -8,9 +8,9 @@
  * If NO key is set, no source returns data → emit NOTHING (a verdict computed
  * over zero signals would be fabricated). Private/invalid IP → emit NOTHING.
  * Never fabricate. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <strings.h>
 #include <stdio.h>

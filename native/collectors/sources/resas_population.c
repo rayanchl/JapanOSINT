@@ -6,9 +6,9 @@
  * failures skipped (Node: result null / data not array → continue).
  * One intel_item per series. uid key mirrors JS
  * intelUid(SOURCE_ID, `${pref}-${label}`). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

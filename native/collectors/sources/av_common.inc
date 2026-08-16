@@ -14,7 +14,7 @@
 #define JO_AV_COMMON_INC
 
 #include <time.h>
-#include "../../lib/geojson.h"
+#include "lib/geojson.h"
 #include "_jp_osint.inc"
 
 #define AV_UA_HDR "User-Agent: JapanOSINT/1.0 (aviation collector)"

@@ -3,9 +3,9 @@
  * Wayback CDX (output=json → [header,...rows]) for 10 fixed JP gov/cyber
  * hosts, one GET per host, flattened. uid = wayback-jp|<digest ||
  * <target>|<timestamp>|<flatIdx>>. WAYBACK_TARGETS env override not ported. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

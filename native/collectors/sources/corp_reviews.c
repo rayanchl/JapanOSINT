@@ -9,9 +9,9 @@
  * NOTE: these sites are partly client-rendered; the selectors are intentionally
  * generic (match the company name in result anchors). Verify yield against live
  * HTML — like other scrape sources, no-match degrades to honest empty. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

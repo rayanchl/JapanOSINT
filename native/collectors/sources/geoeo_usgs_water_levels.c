@@ -26,8 +26,8 @@
  *  - waterwatch.usgs.gov/webservices/floodstage is DECOMMISSIONED (returns a
  *    blog page); this is the live path.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 /* Deliberately chosen states, not a 50-state sweep. */

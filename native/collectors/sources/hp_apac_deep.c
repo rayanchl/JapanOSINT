@@ -6,7 +6,7 @@
  * and Indonesia are scrape-only but their public search paths are real. Rows
  * that need a credential (DART, data.gov.in, ABR) return an honest empty
  * without it rather than a placeholder record. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP_APAC[] = {
   /* ── Korea ─────────────────────────────────────────────────────────────── */

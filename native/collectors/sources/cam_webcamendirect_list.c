@@ -36,12 +36,12 @@
  * Index fetch failure → return -1 (fetch fail).  0 categories / 0 cams = 0
  * rows, return 0 (faithful: JS `return []`).
  */
-#include "../../lib/geojson.h"
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../core/camera_store.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "core/camera_store.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

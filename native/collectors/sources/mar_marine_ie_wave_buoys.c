@@ -21,9 +21,9 @@
  * parse_notes — "Use time>=now-2days; a bare request returns the 2001 start of
  * record first."
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

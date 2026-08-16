@@ -2,9 +2,9 @@
  * server/src/collectors/jobBoards.js (fetchOverpass single area.jp).
  * Curated JOB_AREAS offline fallback intentionally not ported (rule 8).
  * `updated_at`-free; `source` is job_boards_live. */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

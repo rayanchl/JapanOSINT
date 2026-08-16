@@ -10,10 +10,10 @@
  * GEO (R2): the feed carries no station coordinates, so no geometry is emitted.
  * Licence: HKSAR EPD open data (data.gov.hk terms); the XML carries an explicit
  * EPD copyright line — attribution required. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

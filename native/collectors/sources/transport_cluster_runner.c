@@ -5,11 +5,11 @@
  * station_line_dots, then upsert OSM station-boundary footprints and link
  * them to clusters. Registered SRC_FEED so the existing scheduler runs it on
  * its interval = the runner (camera-discovery similarly self-schedules). */
-#include "../../source.h"
-#include "../../core/station_clusterer.h"
-#include "../../core/station_footprints.h"
-#include "../../third_party/sqlite3.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "core/station_clusterer.h"
+#include "core/station_footprints.h"
+#include "third_party/sqlite3.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

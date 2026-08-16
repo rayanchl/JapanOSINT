@@ -5,10 +5,10 @@
  *   /<tr[^>]*>[\s\S]*?<td[^>]*>(.*?)<\/td>[\s\S]*?<td[^>]*>(.*?)<\/td>/gi
  * → iterate <tr> blocks, take first two <td> inner, strip tags, trim.
  * uid = wifi-hotspots-jcfw|<area>|<venue> (== intelUid(SOURCE_ID,`${area}|${venue}`)). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

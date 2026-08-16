@@ -9,7 +9,7 @@
  * genuinely tiny (10 docks) — that is the true size, not a truncated page — and
  * it is one of the very few open mobility feeds that exist for Kosovo.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define PRISHTINA_GBFS "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_gs/gbfs.json"

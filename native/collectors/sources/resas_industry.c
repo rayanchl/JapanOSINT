@@ -3,9 +3,9 @@
  * without it JS falls back to tryOSMIndustrial() (a single area.jp Overpass
  * query), the faithful live path ported here. SEED_INDUSTRY curated list
  * intentionally not ported (rule 7). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

@@ -7,9 +7,9 @@
  *   AIRPLANES_LIVE   api.airplanes.live/v2/{hex|reg|callsign}/<e> (JSON)
  *   OPENSKY_STATES   opensky-network.org/api/states/all?icao24=<hex> (JSON)
  *   PLANESPOTTERS    api.planespotters.net/pub/photos/{hex|reg}/<e> (JSON) */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

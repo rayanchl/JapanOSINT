@@ -19,11 +19,11 @@
  * entity's full record JSON (name, score, datasets, nationality, topics, …).
  * No synthetic risk-overview row is emitted. If zero matches, emits nothing
  * and returns 0 (honest empty — no seeded rows). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

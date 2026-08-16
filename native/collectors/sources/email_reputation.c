@@ -12,10 +12,10 @@
  * {success,confidence,data} envelope. If the input is empty, emit nothing
  * (return 0); EmailRep failure simply omits those fields (format/MX still
  * computed locally). */
-#include "../../source.h"
+#include "source.h"
 #include "social_fuse.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <strings.h>
 #include <stdio.h>

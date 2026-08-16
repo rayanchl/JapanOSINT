@@ -14,7 +14,7 @@
  * of nullable numbers. EncodedPolyline is Google-encoded and is passed through
  * untouched rather than decoded into a fake geometry.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

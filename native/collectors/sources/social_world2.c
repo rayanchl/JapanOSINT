@@ -2,9 +2,9 @@
  * OSINT service — YouTube Data API search (key-gated), pivot on ctx->entity
  * (keyword/handle). Honest-empty when YOUTUBE_API_KEY unset.
  *   YOUTUBE_SEARCH  googleapis.com/youtube/v3/search?part=snippet&q= */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -38,9 +38,9 @@
  * commercial, source must be cited: "Federal Office of Civil Aviation FOCA /
  * geo.admin.ch". Keyless.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

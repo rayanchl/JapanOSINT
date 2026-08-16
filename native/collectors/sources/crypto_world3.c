@@ -6,9 +6,9 @@
  *
  *   ETHPLORER_ADDR   api.ethplorer.io/getAddressInfo/<addr>?apiKey=freekey (JSON)
  *   MEMPOOL_ADDR     mempool.space/api/address/<addr>                       (JSON) */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

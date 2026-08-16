@@ -6,7 +6,7 @@
  * all free. The rest of these rows cover the same idea in other jurisdictions:
  * ECHR's HUDOC, CanLII, AustLII, BAILII, the US Federal Register and GovInfo,
  * WIPO domain-name panel decisions, and the US bankruptcy/appellate surface. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 #define CL_KEY  "COURTLISTENER_API_KEY"
 #define CL_AUTH { "Authorization: Token {key}", NULL }

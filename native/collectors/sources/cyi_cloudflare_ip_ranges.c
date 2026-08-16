@@ -9,9 +9,9 @@
  * No coordinates -> has_geo 0 (R2).
  * Licence: Cloudflare public API endpoint, works without a token.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

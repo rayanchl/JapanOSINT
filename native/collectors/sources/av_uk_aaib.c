@@ -23,9 +23,9 @@
  * Licence: Crown copyright, Open Government Licence v3.0 — free reuse with
  * attribution. The GOV.UK Search API is public, documented and keyless.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

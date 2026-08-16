@@ -16,8 +16,8 @@
  * ring array is never read as a longitude.
  * `closed` is JSON null for open events and is never stringified.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL =

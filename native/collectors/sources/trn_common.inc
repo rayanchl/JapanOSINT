@@ -16,9 +16,9 @@
 #ifndef TRN_COMMON_INC
 #define TRN_COMMON_INC
 
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

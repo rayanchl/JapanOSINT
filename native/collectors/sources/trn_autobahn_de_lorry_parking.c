@@ -13,7 +13,7 @@
  * 8"), so they are extracted by prefix match and only added when the line is
  * actually present. Per-road endpoint; road ids come from /o/autobahn/.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static void parking_extra(cJSON *pr, const cJSON *item) {

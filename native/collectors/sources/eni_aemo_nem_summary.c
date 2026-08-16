@@ -13,10 +13,10 @@
  * TIME NOTE: SETTLEMENTDATE carries no timezone marker; it is AEST (UTC+10),
  * recorded as such in the properties.
  * Licence: AEMO market data, published for public use with attribution. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

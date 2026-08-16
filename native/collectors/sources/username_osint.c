@@ -25,10 +25,10 @@
  * profile (keyed "profile:<platform>:<username>"), carrying
  * platform/url/http_status/response_time_ms with link = the profile URL. No
  * confirmed hits → emits nothing (honest empty — no seeded rows). */
-#include "../../source.h"
+#include "source.h"
 #include "social_fuse.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

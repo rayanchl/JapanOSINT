@@ -2,10 +2,10 @@
  * Port of server/src/collectors/atlasJp.js.
  * RIPE Atlas public API (key-free), connected probes in JP, paginated up to
  * MAX_PAGES → FeatureCollection. Honest empty on failure. No seed. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

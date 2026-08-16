@@ -2,9 +2,9 @@
  * OSINT service — net-new keyless Japan postal-code lookup, pivot on ctx->entity
  * (a 7-digit postal code). Real fetch or honest-empty. No API key.
  *   JP_POSTAL  zipcloud.ibsnet.co.jp/api/search?zipcode=<7digits> */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

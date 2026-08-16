@@ -17,9 +17,9 @@
  *   themselves": a descriptive User-Agent is sent.
  * Licence: NASA GSFC SSCWeb REST service, keyless, US Government public domain.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

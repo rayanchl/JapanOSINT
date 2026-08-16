@@ -13,10 +13,10 @@
  * GEO (R2): coordinates come from sourceInfo.geoLocation.geogLocation
  * (NAD83) and are emitted only when the upstream supplied them.
  * Licence: US Geological Survey, public domain. Data are PROVISIONAL. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

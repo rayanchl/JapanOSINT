@@ -5,10 +5,10 @@
  * Real GSI data only; dedupe by title|lon|lat (5dp). Honest empty when
  * nothing was fetched (rule 8 — no fabrication). Property key order
  * (title, dataType, source) mirrors the JS mapFn for featureUid parity. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

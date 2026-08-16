@@ -3,10 +3,10 @@
  * https://www.jma.go.jp/bosai/tsunami/data/list.json (key-free, ISO 6709 cod)
  * -> one Feature per advisory; emitted via geojson toolkit.
  * Honest empty on fetch failure / no active bulletins. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

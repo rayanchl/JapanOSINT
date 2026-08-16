@@ -2,9 +2,9 @@
  * Port of server/src/collectors/virustotalJp.js (createThreatIntelCollector).
  * env VIRUSTOTAL_API_KEY → per-JP-domain VT v3 reputation, 16s spacing,
  * stop on 429. TOKYO points. */
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

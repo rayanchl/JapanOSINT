@@ -7,9 +7,9 @@
  *   • Real-property registry — 登記情報提供サービス (paid; TOUKI_API_KEY).
  *   • Zenrin jūtaku-chizu    — building-level maps (paid; ZENRIN_API_KEY).
  * Real fetch or honest empty; paid sources gate on their key. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

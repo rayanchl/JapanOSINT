@@ -7,7 +7,7 @@
  * EU's two service jurisdictions of choice, so their company registers and
  * securities regulators sit on the paperwork of structures that operate
  * everywhere else. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP2_EU_SOUTH[] = {
   /* ── Italy ─────────────────────────────────────────────────────────────── */

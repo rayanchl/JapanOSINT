@@ -6,8 +6,8 @@
  * else 'spot' (mirrors JS). JS also sets properties.feed_url and slices to 200
  * combined; those refinements are not portable through the shared rss_collect
  * helper. The _meta/seed envelope is dropped. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 #include <stdio.h>
 
 struct feed { const char *url; const char *tags; };

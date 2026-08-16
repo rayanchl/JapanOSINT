@@ -5,8 +5,8 @@
  * + intelUid (uid precedence guid → link → sha1(title|pubDate), matching
  * the JS intelUid(SOURCE_ID,id,link,intelHashKey(title,updated))).
  * Honest empty (rss_collect → -1) on fetch/parse failure (rule 8). */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 #include <stdio.h>
 
 #define FEED_URL "https://www.data.jma.go.jp/developer/xml/feed/extra.xml"

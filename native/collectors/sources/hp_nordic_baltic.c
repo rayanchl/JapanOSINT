@@ -6,7 +6,7 @@
  * this name exist"; these rows take the organisation number and pull the
  * roles, the sub-units, the annual accounts, the register events and the
  * bankruptcy record behind it — which is the entire point of an org number. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP_NORDIC[] = {
   /* ── Norway (Brønnøysund, keyless) ─────────────────────────────────────── */

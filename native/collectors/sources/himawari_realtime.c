@@ -4,9 +4,9 @@
  * intel item describing the latest full-disk frame + preview/tile URLs.
  * Non-spatial single raster frame (has_geo=0). Honest empty if pointer
  * unreachable. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

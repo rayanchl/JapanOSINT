@@ -10,9 +10,9 @@
  * email_validator's format checks) plus live NumVerify enrichment when
  * NUMVERIFY_API_KEY is set. No key → validation-only (still real). Never
  * fabricates carrier/owner data. */
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

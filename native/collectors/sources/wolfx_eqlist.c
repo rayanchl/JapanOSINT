@@ -3,10 +3,10 @@
  * is an OBJECT keyed by report; each object value → a Feature. uid via
  * event_id (∈ NATIVE_ID_KEYS) = EventID ?? key. Non-object values (md5,
  * Title…) skipped, exactly like `typeof v==='object' && v`. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../core/intel.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "core/intel.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

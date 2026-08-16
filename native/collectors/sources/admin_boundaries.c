@@ -3,9 +3,9 @@
  * JS: fetchOverpass(body, mapFn, 30000, {limit:2000,queryTimeout:90}).
  * The `limit` (out-clause cap) is not part of overpass_collect — count-only,
  * correctness-neutral for emitted rows (toolkit uses `out center;`). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 

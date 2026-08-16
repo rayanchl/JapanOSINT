@@ -2,9 +2,9 @@
  * Port of server/src/collectors/openmeteoJma.js.
  * Open-Meteo JMA mirror — one current-weather GET per fixed city, then a
  * FeatureCollection. Keyless. SEED branch (features.length===0) NOT ported. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

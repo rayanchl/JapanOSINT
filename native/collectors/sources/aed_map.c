@@ -3,9 +3,9 @@
  * SEED_AEDS offline fallback (synthetic source:'aed_seed') is intentionally
  * NOT ported — correctness-neutral: real OSM rows when Overpass is up, 0 when
  * down (same precedent as hospital-map). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static void body(const char *bbox, char *o, size_t n, void *ud) {

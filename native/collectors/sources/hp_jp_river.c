@@ -40,7 +40,7 @@
  * 水文水質データベース (www1.river.go.jp, SrchWaterData.exe, EUC-JP HTML) and
  * needs a bespoke parser, not a declarative row. Tracked in
  * docs/jp-river-flood-sources.md; no row here pretends to carry it. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 #define KWB_FILES  "https://www.river.go.jp/kawabou/file/files"
 #define KWB_SYSTEM "https://www.river.go.jp/kawabou/file/system"

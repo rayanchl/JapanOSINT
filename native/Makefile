@@ -45,7 +45,25 @@ CFLAGS  ?= -O2 -g -Wall -Wextra -Wno-unused-parameter -pthread
 # doing an unusual build. `override` keeps the correctness flags no matter
 # what the caller passes, while still letting them change the optimisation
 # level, which is the only thing they actually wanted to change.
-override CFLAGS += -DJO_REPO_ROOT='"$(REPO_ROOT)"' $(PKG_CFLAGS) $(MECAB_CFLAGS) -Ithird_party
+# -iquote decouples a collector's #include lines from its DEPTH in the tree.
+# Every collector used to say #include "../../source.h", which encodes "I am
+# exactly two directories below native/". That made the flat
+# collectors/sources/ layout load-bearing: moving one file into a subdirectory
+# broke ~3,000 include lines, so the tree could never be organised without a
+# mechanical rewrite of all of them, and a per-destination rewrite would have
+# to be redone on the next move too.
+#
+# With these, a collector writes what it means -- #include "source.h",
+# "lib/feedlib.h", "core/httpclient.h" -- and it resolves from any depth,
+# forever. -iquote (not -I) because this must apply to "..." includes only and
+# be searched AFTER the including file's own directory, so a sibling header
+# still wins over a same-named one at the root.
+#   .                    native/ itself: source.h, lib/*, core/*, third_party/*
+#   collectors/sources   the shared .inc/.h siblings (_jp_osint.inc,
+#                        _verified_macros.inc, trn_common.inc, social_fuse.h …)
+#                        which 200+ collectors include by bare name.
+override CFLAGS += -DJO_REPO_ROOT='"$(REPO_ROOT)"' $(PKG_CFLAGS) $(MECAB_CFLAGS) \
+                   -Ithird_party -iquote . -iquote collectors/sources
 # Auto-generate header dependency files (.d) next to each .o so editing a
 # header (e.g. source.h, which defines the ABI-critical source_def struct)
 # forces a recompile of every TU that includes it. Without this, a struct

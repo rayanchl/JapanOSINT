@@ -3,10 +3,10 @@
  * Key-free public note.com v2 search API; queries a fixed JP-relevant term
  * set, emits author profiles as non-spatial intel. Dedup by urlname across
  * queries. honest empty on failure. uid = note-com-profiles|<urlname>. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

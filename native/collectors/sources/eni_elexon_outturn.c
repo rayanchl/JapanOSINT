@@ -8,10 +8,10 @@
  * is_interconnector so they are never silently summed into GB generation.
  * SHAPE: top level is an ARRAY of settlement periods, each with a nested data[].
  * Licence: Elexon BMRS Insights API, open, no key required for this path. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

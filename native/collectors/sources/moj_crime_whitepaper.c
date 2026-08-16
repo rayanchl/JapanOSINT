@@ -7,11 +7,11 @@
  *  probe(u) = fetchHead(u) OR (fetchText(u) && len>200)
  *  feature uid/title derived by geojson sink; intel uids =
  *  intelUid(SOURCE_ID,'ja_<ed>') / 'en_<ed>'. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/probe.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/probe.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

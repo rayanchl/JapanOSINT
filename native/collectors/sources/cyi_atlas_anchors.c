@@ -10,10 +10,10 @@
  * on Null Island (R2).
  * Licence: RIPE NCC Atlas data, CC BY-SA 4.0 style terms; attribute RIPE Atlas.
  */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

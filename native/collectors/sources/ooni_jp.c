@@ -4,10 +4,10 @@
  * OONI returns no measurement coordinates, so we do not invent any (the JS
  * upstream stamped every row with a hardcoded Tokyo point — dropped here per the
  * no-fabricated-data rule; non-geo intel rows carry the real measurement fields). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 

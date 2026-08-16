@@ -7,9 +7,9 @@
  *
  * Etherscan needs a key → gates on ETHERSCAN_API_KEY, honest-empty without it.
  * Real chain data only. */
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

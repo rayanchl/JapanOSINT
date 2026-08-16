@@ -1,6 +1,6 @@
 /* Google News national top-headlines editions (real per-country RSS). One high-yield OSINT news monitor per country worldwide, via rss_collect. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 /* AUDIT NOTE (2026-08-09) — why the interval is ~7200 and not 3600/1800.
  *

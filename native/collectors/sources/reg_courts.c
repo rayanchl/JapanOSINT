@@ -10,9 +10,9 @@
  * result anchor via jo_emit_anchors (REAL extracted links/titles only). Pages
  * that are JS-rendered (notably CanLII) or shaped differently yield 0 — honest
  * empty, never fabricated. Keyless, all free_tier=1. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

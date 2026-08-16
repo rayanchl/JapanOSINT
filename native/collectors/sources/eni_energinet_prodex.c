@@ -10,10 +10,10 @@
  * time silently overwrites one area, so rows are keyed by PriceArea+time.
  * sort=Minutes5UTC DESC is mandatory: the default order starts in 2017.
  * Licence: Energi Data Service open data, attribution to Energinet. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -1,9 +1,9 @@
 /* collectors/geospatial/sources/japan_api_prefectures.c
  * Port of server/src/collectors/japanApiPrefectures.js. japan-api community
  * REST API → one Feature per prefecture. SEED branch dropped (rule 8). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 

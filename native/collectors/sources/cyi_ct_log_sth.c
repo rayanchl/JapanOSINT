@@ -13,10 +13,10 @@
  * No coordinates upstream -> has_geo 0 (R2).
  * Licence: RFC 6962 public log endpoints, no stated restriction.
  */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

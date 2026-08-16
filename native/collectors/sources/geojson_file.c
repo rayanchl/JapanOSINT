@@ -1,7 +1,7 @@
 /* test harness source: reads $GEOJSON_FILE, emits via the geojson toolkit.
  * Lets us parity-test featureToMasterItem/featureUid vs Node deterministically. */
-#include "../../source.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 static int run(const source_ctx *c, intel_sink *s) {

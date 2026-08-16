@@ -5,9 +5,9 @@
  * Feature per station with latest observed level vs astronomical prediction.
  * SEED fallback intentionally not ported (JS uses it only when live empty).
  */
-#include "../../source.h"
-#include "../../lib/geojson.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/geojson.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

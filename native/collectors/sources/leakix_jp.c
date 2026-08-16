@@ -3,10 +3,10 @@
  * env LEAKIX_API_KEY → service search country:"JP", slice 200, geoip point
  * when the record has one and no geometry at all when it does not (the Tokyo
  * fallback this was ported with stacked every unlocated host on one pin). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 

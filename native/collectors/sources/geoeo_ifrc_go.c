@@ -24,8 +24,8 @@
  *    GDACS/ReliefWeb when it is not.
  *  - dtype is a NESTED OBJECT, not a string.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL = "https://goadmin.ifrc.org/api/v2/event/?limit=50";

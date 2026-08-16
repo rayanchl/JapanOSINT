@@ -6,10 +6,10 @@
  * gated / on failure. uid = instagram-geo|<shortcode> (Node featureUid:
  * NATIVE_ID_KEYS has no shortcode, so feature has no .id -> here we mirror
  * the post identity by emitting per-media with remote_key = shortcode). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

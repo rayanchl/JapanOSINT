@@ -9,10 +9,10 @@
  * verbatim. success=true; weather confidence 85. Emits ONE
  * osint_service_result row; body = {success,confidence,data} envelope, like
  * ip_geolocation.c. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <strings.h>            /* strcasecmp */
 #include <stdio.h>

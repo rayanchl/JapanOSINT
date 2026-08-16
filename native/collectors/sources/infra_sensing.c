@@ -8,9 +8,9 @@
  *   • Drone registry — DIPS 無人航空機登録 (anchor scrape).
  *   • Hazmat sites   — 危険物・高圧ガス施設 (anchor scrape).
  * Real fetch or honest empty; key-gated APIs return empty without their key. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

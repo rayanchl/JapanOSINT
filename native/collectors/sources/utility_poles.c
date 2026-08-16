@@ -1,9 +1,9 @@
 /* collectors/infrastructure/sources/utility_poles.c
  * Port of server/src/collectors/utilityPoles.js (fetchOverpassTiled).
  * Single nationwide tiled Overpass sweep of man_made=utility_pole. */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static void body(const char *bbox, char *o, size_t n, void *ud) {

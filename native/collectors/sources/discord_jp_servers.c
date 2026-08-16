@@ -3,9 +3,9 @@
  * Key-free best-effort: scrape Disboard JP-tagged listing HTML, extract
  * /server/join/<id> ... </a> pairs. Honest empty on failure. No seed.
  * uid = discord-jp-servers|<id>. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

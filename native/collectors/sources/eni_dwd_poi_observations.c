@@ -18,9 +18,9 @@
  * pinned to a guessed station location.
  * Licence: GeoNutzV / DWD open data — free reuse with attribution to
  * Deutscher Wetterdienst. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

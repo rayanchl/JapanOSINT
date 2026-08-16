@@ -8,10 +8,10 @@
  * slot table so it never enters properties (equivalent, cleaner). _meta
  * dropped per RULE 8; emitted via the geojson sink (uid keys off
  * properties.id). */
-#include "../../source.h"
-#include "../../lib/unified.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/unified.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

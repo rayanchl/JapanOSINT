@@ -20,8 +20,8 @@
  *    version and the paging parameter are kept matched here.
  *  - Roughly 3 KB per contour, so the count stays modest.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL =

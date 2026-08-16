@@ -9,7 +9,7 @@
  *
  * Rows whose upstream is JS-only or anti-bot are declared HP_HTML and yield
  * real anchors or nothing at all — never a synthesized "found in registry" row. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP_EU[] = {
   /* ── France ────────────────────────────────────────────────────────────── */

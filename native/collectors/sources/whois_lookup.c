@@ -12,10 +12,10 @@
  * nameservers, created, expires) — NOT a {success,confidence,data} envelope.
  * title = "WHOIS <domain>", remote_key = "whois:<domain>". On RDAP non-200 /
  * parse failure → emit NOTHING and return 0 (honest empty). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

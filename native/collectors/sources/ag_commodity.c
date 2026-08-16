@@ -34,11 +34,11 @@
  * verified without one, and FAOSTAT's parameter names could not be confirmed.
  * Adding either against a guessed schema is an R1 violation even when the URL
  * resolves, so they are left out rather than shipped unverified. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

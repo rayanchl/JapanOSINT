@@ -18,8 +18,8 @@
  *  - Distinct endpoint from the nhc-atlantic / nhc-cpac RSS sources, which
  *    carry advisory prose and links but no structured position.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL = "https://www.nhc.noaa.gov/CurrentStorms.json";

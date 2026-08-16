@@ -6,7 +6,7 @@
  * clinical trial's sponsor, and — most under-used in corporate OSINT — the
  * patent and trademark ASSIGNMENT ledgers, which are a public record of who
  * bought what intellectual property from whom, and when. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 #define OA_UA { "User-Agent: JapanOSINT (research; contact@japanosint.local)", NULL }
 

@@ -19,9 +19,9 @@
  * All values are real values fetched from blockchain.info / BlockCypher /
  * Etherscan; nothing is fabricated. Unknown/unresolved address (no balance
  * fetched) → NOTHING is emitted and run() returns 0. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>

@@ -30,10 +30,10 @@
  * returns 0 at zero rows, and -1 only when the fetch/parse itself failed.
  *
  * Keyless. Licence: ENISA publishes EUVD as a public service; no key required. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

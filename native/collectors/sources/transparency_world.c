@@ -24,9 +24,9 @@
  * HONESTY: every branch REAL-fetches via jo_get and emits only parsed fields, or
  * honest-empty (return 0). OPENSECRETS returns 0 with a [gated] log when its key
  * is unset. Nothing is fabricated. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

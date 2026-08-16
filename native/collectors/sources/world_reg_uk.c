@@ -15,9 +15,9 @@
  * URLs are the registries' REAL public search paths. Where the exact query
  * param was uncertain we use the registry's known search path so it
  * honest-empties rather than inventing a fake endpoint. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

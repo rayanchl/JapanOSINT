@@ -12,7 +12,7 @@
  * Status != "Enabled" has no live image, so the enabled count is emitted
  * explicitly rather than every camera being presented as live.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

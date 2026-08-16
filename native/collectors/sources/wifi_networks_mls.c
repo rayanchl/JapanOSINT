@@ -16,7 +16,7 @@
  * id, catalog entry and any operator config keep resolving; if an MLS successor
  * with a public BSSID endpoint appears, wire the fetch in here.
  */
-#include "../../source.h"
+#include "source.h"
 #include <stdio.h>
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

@@ -13,8 +13,8 @@
  * 900s interval against entity_stats.c's 6h TTL: new edges (stats_at NULL)
  * are picked up within 15 minutes, the corpus is fully rescored every 6
  * hours, and a sweep too large for one tick continues on the next. */
-#include "../../source.h"
-#include "../../core/entity_stats.h"
+#include "source.h"
+#include "core/entity_stats.h"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   (void)sink;                    /* scoring writes through entity_stats */

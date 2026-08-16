@@ -10,7 +10,7 @@
  *
  * Wikidata, VIAF, LittleSis and OpenCorporates' officer index add the other
  * half: linking a person to organisations, offices and relationships. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 #define GH_HDRS { "Accept: application/vnd.github+json", NULL }
 

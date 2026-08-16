@@ -19,7 +19,7 @@
  * number of routes and stops per run — no coordinate is ever guessed for the
  * rest (R2).
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define HK_ROUTES  "https://rt.data.gov.hk/v2/transport/citybus/route/CTB"

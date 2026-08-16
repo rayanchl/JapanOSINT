@@ -8,7 +8,7 @@
  * financial regulators in this cluster — AMF, FSMA, AFM, CSSF, the Central
  * Bank of Ireland — all publish warning lists that name unauthorised firms
  * long before any sanctions body does. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP2_EU_WEST[] = {
   /* ── France ────────────────────────────────────────────────────────────── */

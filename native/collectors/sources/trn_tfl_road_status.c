@@ -15,7 +15,7 @@
  * itself published, not an invented location, so it is emitted with
  * geo_precision="corridor-bbox" and the real polygon alongside it.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 /* Parse the double-encoded bounds string into sw/ne corners. */

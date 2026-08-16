@@ -5,8 +5,8 @@
  * Overpass fallback + _meta envelope are dropped per HARD RULE 8 /
  * the documented JSON_API fallback-drop decision (0 rows when no MLIT
  * mirror responds is correctness-neutral, same as every other port). */
-#include "../../source.h"
-#include "../../lib/mlit_ksj.h"
+#include "source.h"
+#include "lib/mlit_ksj.h"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   static const char *const mirrors[] = {

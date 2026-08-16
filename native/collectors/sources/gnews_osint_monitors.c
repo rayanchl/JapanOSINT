@@ -1,6 +1,6 @@
 /* Google News OSINT keyword monitors — real search-feed RSS tracking high-yield security/conflict/infrastructure/disaster terms globally and per hotspot region. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 /* AUDIT NOTE (2026-08-09) — why the interval is ~7200 and not 3600/1800.
  *

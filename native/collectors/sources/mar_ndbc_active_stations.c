@@ -15,10 +15,10 @@
  * timestamps the snapshot." A station whose lat/lon attributes are missing or
  * unparseable is emitted with has_geo=0 rather than given a coordinate (R2).
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

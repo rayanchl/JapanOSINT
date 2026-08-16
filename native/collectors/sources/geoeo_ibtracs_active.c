@@ -21,9 +21,9 @@
  *    blank for a basin therefore yield "no value", not 0.0.
  *  - A fix whose canonical LAT or LON does not parse is emitted with has_geo=0.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/csv.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/csv.h"
 #include "geoeo_common.inc"
 
 static const char *URL =

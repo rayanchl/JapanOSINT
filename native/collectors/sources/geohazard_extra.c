@@ -2,11 +2,11 @@
  * RSS ones go through rss_collect; the seismic ones go through the EMSC/ORFEUS
  * seismicportal FDSN event web service, which — unlike the retired RSS feeds —
  * carries real hypocentre coordinates, so those rows can actually pin. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/rss_atom.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

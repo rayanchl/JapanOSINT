@@ -12,10 +12,10 @@
  * (honest empty — no seeded rows). The former hardcoded osint_tips array and
  * the synthetic source/country/sentiment tally summary row have been
  * removed. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

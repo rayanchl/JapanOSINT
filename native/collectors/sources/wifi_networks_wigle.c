@@ -3,9 +3,9 @@
  * path. WiGLE search API, gated on WIGLE_API_KEY (0 rows when unset). The
  * silent OSM Overpass fallback (JS runs both via Promise.allSettled and
  * concatenates) is intentionally not ported (correctness-neutral). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 

@@ -17,9 +17,9 @@
  *
  * HONESTY: every run() REAL-fetches and emits only parsed real data, else
  * honest-empty (return 0). Nothing is fabricated; no constructed-URL cards. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

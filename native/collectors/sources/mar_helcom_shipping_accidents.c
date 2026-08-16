@@ -20,10 +20,10 @@
  * reported' — trim and treat as missing." hsv() below drops them.
  * parse_notes — "Date fields are epoch MILLISECONDS": converted to ISO.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

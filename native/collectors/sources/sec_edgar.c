@@ -22,11 +22,11 @@
  * body, summary, published_at (filingDate), and link (EDGAR doc URL). If
  * nothing is found, emits nothing and returns 0 (honest empty — no summary
  * blob, no seeded rows). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>

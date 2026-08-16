@@ -12,10 +12,10 @@
  * (URLScan.io / Direct Analysis / Reputation) become an "items" array in the
  * envelope; confidence 90 if URLScan succeeded else 70. Emits ONE
  * osint_service_result row like dns_records.c. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <strings.h>
 #include <stdio.h>

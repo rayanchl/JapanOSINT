@@ -7,10 +7,10 @@
  * Sibling paths on the same host: Get/Geracao_SIN_json, Get/Carga_SE_json.
  * Licence: ONS "Energia Agora" public dashboard API, keyless; the archival
  * series is CC-BY on dados.ons.org.br. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

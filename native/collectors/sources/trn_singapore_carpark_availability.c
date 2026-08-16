@@ -12,7 +12,7 @@
  * HDB Carpark Information dataset for geography, and no position is invented
  * here (R2).
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define SG_CARPARK_URL "https://api.data.gov.sg/v1/transport/carpark-availability"

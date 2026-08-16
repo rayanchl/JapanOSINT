@@ -10,7 +10,7 @@
  * SAT 69-B list of firms that issued invoices for simulated operations. Being
  * on that list is the single strongest public indicator that a Mexican
  * counterparty is an invoicing shell. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP2_NORTHAM_CA_MX[] = {
   /* ── Canada ────────────────────────────────────────────────────────────── */

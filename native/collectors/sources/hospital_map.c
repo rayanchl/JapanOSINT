@@ -4,9 +4,9 @@
  * is intentionally NOT ported — correctness-neutral: real OSM rows when
  * Overpass is up, 0 when down (same precedent as the empty-endpoint nerv-feed).
  * REFERENCE source.c for the OVERPASS_TILED family. */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 

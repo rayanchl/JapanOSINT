@@ -25,9 +25,9 @@
  *  - iso_code is a COMMA-SEPARATED multi-country string, not a single code, and
  *    is carried verbatim rather than split.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
 #include "geoeo_common.inc"
 
 static const char *URL = "https://whc.unesco.org/en/list/xml/";

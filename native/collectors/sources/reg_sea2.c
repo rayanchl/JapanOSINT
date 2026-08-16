@@ -17,9 +17,9 @@
  *   - per-registry cap  SEA2_PER_REG   (3)
  *   - total cap         SEA2_TOTAL_MAX (30)
  * Keyless, free_tier=1. One id, one run(). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

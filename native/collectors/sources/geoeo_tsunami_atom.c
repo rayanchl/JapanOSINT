@@ -21,9 +21,9 @@
  *  - A single entry holding the latest message is the normal steady state —
  *    that is a real record, and an empty feed is R3 return 0.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
 #include "geoeo_common.inc"
 
 static int tsunami_collect(const source_ctx *ctx, intel_sink *sink,

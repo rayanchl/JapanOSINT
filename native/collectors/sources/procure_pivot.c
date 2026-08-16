@@ -27,11 +27,11 @@
  * R2: none of these upstreams return coordinates — place of performance is a
  * name and a ZIP, not a position — so no row here sets has_geo. Resolving those
  * to a point would be exactly the invented geometry the audit removed. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

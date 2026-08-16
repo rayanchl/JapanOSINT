@@ -3,9 +3,9 @@
  * (createOsmTransportCollector, geometry:'point' → fetchOverpassTiled,
  *  overpassOpts {queryTimeout:180,timeoutMs:150_000}).
  * Always-on bus stops + terminals. No SEED / _meta envelope. */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <string.h>
 

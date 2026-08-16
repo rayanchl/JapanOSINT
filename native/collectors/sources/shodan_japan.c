@@ -2,10 +2,10 @@
  * Port of server/src/collectors/shodanJapan.js.
  * Shodan host/search?query=country:JP (key in querystring) → FeatureCollection.
  * Gated on SHODAN_API_KEY. No seed. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

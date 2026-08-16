@@ -7,11 +7,11 @@
  * every *-api.abuse.ch endpoint behind an Auth-Key (ABUSE_CH_AUTH_KEY), so
  * that leg is gated rather than silently returning "no match".
  * Honest-empty when the indicator is genuinely unknown. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
-#include "../../lib/threatintel.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
+#include "lib/threatintel.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

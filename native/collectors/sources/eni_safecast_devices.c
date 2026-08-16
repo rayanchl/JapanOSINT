@@ -13,10 +13,10 @@
  * GEO (R2): loc_lat/loc_lon from the device itself; missing -> no row (a
  * radiation reading with no location is not useful and must not be invented).
  * Licence: Safecast data is CC0. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

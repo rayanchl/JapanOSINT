@@ -23,9 +23,9 @@
  * HONESTY: every branch REAL-fetches (jo_get / http_request / jo_emit_anchors)
  * and emits only parsed real data, or honest empty (return 0), or gated
  * (missing key → log + return 0). Nothing is fabricated. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

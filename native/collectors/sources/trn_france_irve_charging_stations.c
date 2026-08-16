@@ -22,7 +22,7 @@
  * ceiling (100 pages) once a week rather than pretending to mirror the whole
  * 231k-row dataset in one run.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define IRVE_BASE "https://odre.opendatasoft.com/api/explore/v2.1/catalog/" \

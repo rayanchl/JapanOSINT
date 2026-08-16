@@ -6,7 +6,7 @@
  * and device recalls, EPA toxic-release quantities, CMS open-payments transfers
  * from industry to named physicians. Each of these is an API, and each answers
  * a question a corporate registry cannot. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP2_US_REG[] = {
   /* ── Labour & workplace ────────────────────────────────────────────────── */

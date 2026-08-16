@@ -13,10 +13,10 @@
  * marked elevated=true (a flag, not a filter).
  * GEO (R2): geometry.coordinates = [lon, lat] from the WFS itself.
  * Licence: BfS open data WFS (DL-DE->BY-2.0 / open data), keyless. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

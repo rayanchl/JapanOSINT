@@ -7,10 +7,10 @@
  *   • Local tenders   — 入札情報 portals (anchor scrape).
  *   • Customs trade   — 税関 貿易統計 index (anchor scrape).
  * Real fetch or honest empty. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/csv.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/csv.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

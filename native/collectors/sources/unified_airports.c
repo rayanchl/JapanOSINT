@@ -4,10 +4,10 @@
  * (already-registered upstreams), dedupes by icao, then iata, then
  * name (lowercased + trimmed). No filter, no postProcess. The `_meta`
  * envelope is dropped per RULE 8 (same as every other port). */
-#include "../../source.h"
-#include "../../lib/unified.h"
-#include "../../lib/linecolor.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/unified.h"
+#include "lib/linecolor.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>

@@ -4,9 +4,9 @@
  * the real queryable source, fetched via the 12-tile nationwide fanout.
  * Honest empty on failure (RULE 8). REFERENCE embassies.c +
  * lib/overpass.h (overpass_tiled_collect). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 /* JS: (bbox) => `node["man_made"="manhole"](${bbox});` */

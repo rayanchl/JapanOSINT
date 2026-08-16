@@ -19,11 +19,11 @@
  * Licence: POTA's public API is keyless and used by the project's own map and
  *   third-party clients; attribution to Parks on the Air appreciated.
  */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/feedlib.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

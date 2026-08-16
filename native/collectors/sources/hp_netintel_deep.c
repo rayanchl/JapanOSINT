@@ -11,7 +11,7 @@
  *
  * All RIPEstat/BGPView/PeeringDB rows are keyless. The rows that need a
  * credential say so and honest-empty without it. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 #define RIPE(call) "https://stat.ripe.net/data/" call "/data.json?resource={q}"
 

@@ -17,9 +17,9 @@
  * each state's known public search path; where an exact GET query param is
  * uncertain we still use the real search path and let it honest-empty rather
  * than invent data. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

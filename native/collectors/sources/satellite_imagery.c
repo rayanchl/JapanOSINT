@@ -14,10 +14,10 @@
  *   9 sentinel1_multi      first-wins: CDSE OData → Planetary Computer
  *                          → Earth Search
  * generateSeed() fallback dropped (rule 7). _meta dropped. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

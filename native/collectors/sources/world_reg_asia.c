@@ -16,9 +16,9 @@
  *   - total cap         ASIA_TOTAL_MAX (default 40)
  * We NEVER emit a constructed search URL as a record — only extracted anchors.
  * Keyless, free_tier=1. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

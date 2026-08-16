@@ -11,7 +11,7 @@
  * additionalProperties[] as {key,value} pairs whose value is a STRING, so each
  * counter has to be looked up by key and coerced. lat/lon are top-level numbers.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 /* additionalProperties[] lookup: returns the raw string value for `key`. */

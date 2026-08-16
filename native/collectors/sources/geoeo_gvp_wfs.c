@@ -27,8 +27,8 @@
  *  - maxFeatures is set on both requests; without it the whole ~1,350-record
  *    table is pulled every run.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 #include <strings.h>
 

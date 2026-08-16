@@ -10,8 +10,8 @@
  * PER-RECORD EMIT: emits ONE intel_item per OPEN port
  * (remote_key="port:<host>:<port>"), body {host,port,service,state:"open"}.
  * Only open ports surface; if none are open, emits nothing, returns 0. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "third_party/cJSON.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

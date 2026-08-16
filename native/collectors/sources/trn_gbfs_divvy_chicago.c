@@ -11,7 +11,7 @@
  * Parse notes: Discovery gbfs.divvybikes.com/gbfs/2.3/gbfs.json redirects the
  * feed URLs to the gbfs.lyft.com/gbfs/2.3/chi/en/ prefix used here.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

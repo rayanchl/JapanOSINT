@@ -21,9 +21,9 @@
  *
  * Licence: ISC asks API users to identify themselves with a contact
  * User-Agent, which is set below. Keyless. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

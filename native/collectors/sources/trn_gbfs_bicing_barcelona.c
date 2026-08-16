@@ -8,7 +8,7 @@
  * Licence: Ajuntament de Barcelona / PBSC open GBFS feed; listed in MobilityData systems.csv.
  * Parse notes: GBFS v3.0 — localised name array (ca/en/es); station_status at the sibling path.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

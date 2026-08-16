@@ -6,7 +6,7 @@
  * embargoes, CEIS/CNEP/CEPIM debarment, the CEAF register of dismissed public
  * servants, and the electoral court's candidate and donation records. All of it
  * is public, keyed by CNPJ/CPF, and mostly free. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 #define BR_KEY  "BR_TRANSPARENCIA_KEY"
 #define BR_HDR  { "chave-api-dados: {key}", NULL }

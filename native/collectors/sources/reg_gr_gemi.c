@@ -12,9 +12,9 @@
  * (honest empty). We NEVER fabricate a company, number or count. The search
  * path is GEMI's real public search endpoint; where the exact query param is
  * uncertain we still use the real path and honest-empty rather than invent. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

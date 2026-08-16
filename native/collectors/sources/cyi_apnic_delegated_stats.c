@@ -14,9 +14,9 @@
  * Licence: the file carries its own "CONDITIONS OF USE" header block — APNIC
  * publishes it for public use, and redistribution should keep that notice.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

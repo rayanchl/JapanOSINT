@@ -19,9 +19,9 @@
 #ifndef JO_SANC_COMMON_INC
 #define JO_SANC_COMMON_INC
 
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

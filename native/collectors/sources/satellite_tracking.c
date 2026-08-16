@@ -5,11 +5,11 @@
  * (0 rows when CelesTrak is unreachable / nothing over Japan, same contract
  * as every other live port). Deep-space objects are skipped (sgp4 near-Earth
  * scope) — documented post-parity vs satellite.js's bundled SDP4. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/sgp4.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/sgp4.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

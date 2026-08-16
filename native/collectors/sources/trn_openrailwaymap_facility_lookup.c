@@ -15,7 +15,7 @@
  * from addr:city would be exactly the invented geometry R2 forbids; the osm_id
  * is emitted so geometry can be resolved against the OSM API when it is needed.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static const char *const FACILITIES[] = {

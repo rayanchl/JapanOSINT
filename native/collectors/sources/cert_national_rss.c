@@ -32,8 +32,8 @@
  * fetch returns 0 even at zero rows; only a failed fetch/parse returns -1.
  *
  * Keyless. Licence: see each source_def .license (only BSI states terms). */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 #include <stdio.h>
 #include <stddef.h>
 #include <string.h>

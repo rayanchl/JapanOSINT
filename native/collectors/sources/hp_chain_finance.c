@@ -7,7 +7,7 @@
  * publishes the direct parent, the ultimate parent, the direct children and the
  * ISINs attached to that LEI. That parent/child graph is regulator-verified
  * corporate ownership, which almost nothing else gives away for free. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP_CHAINFIN[] = {
   /* ── Bitcoin ───────────────────────────────────────────────────────────── */

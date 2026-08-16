@@ -3,9 +3,9 @@
  * FR24 public zone feed for the Japan bbox — KEY-FREE. The reply is an object
  * whose values are per-aircraft arrays (plus full_count/version scalars). On
  * failure: honest empty FeatureCollection — never fabricated aircraft. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

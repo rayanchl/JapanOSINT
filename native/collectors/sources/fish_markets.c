@@ -1,9 +1,9 @@
 /* collectors/food/sources/fish_markets.c — port of
  * server/src/collectors/fishMarkets.js (fetchOverpass single area.jp).
  * SEED_MARKETS offline fallback intentionally not ported (rule 8). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

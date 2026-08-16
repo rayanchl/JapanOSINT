@@ -9,9 +9,9 @@
  *   HN_USER                hn.algolia.com/api/v1/users/<user>
  *   OPENVERSE              api.openverse.org/v1/images/?q=
  *   STACKEXCHANGE_SEARCH   api.stackexchange.com/2.3/search/advanced?q= */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

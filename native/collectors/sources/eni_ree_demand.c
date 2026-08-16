@@ -9,10 +9,10 @@
  * SHAPE TRAP: the measurements live in included[].attributes.values[] — NOT in
  * data.attributes, which only carries the title/metadata.
  * Licence: REE apidatos public API, keyless; REE asks for attribution. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

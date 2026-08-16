@@ -3,9 +3,9 @@
  * targetTimes_fd.json (array of {basetime,validtime} JST stamps); emit ONE
  * intel item describing the latest full-disk frame + tile template + viewer.
  * uid = jma-himawari|<validtime|latest>. Honest empty on failure. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

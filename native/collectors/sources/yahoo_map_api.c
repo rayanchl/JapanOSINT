@@ -2,9 +2,9 @@
  * Port of server/src/collectors/yahooMapApi.js.
  * Yahoo! Japan Local Search API over metro centroids → FeatureCollection.
  * Gated on YAHOO_APP_ID. No seed. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

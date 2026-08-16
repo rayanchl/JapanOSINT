@@ -38,8 +38,8 @@
  *    named constant here so the choice is explicit and revisable rather than
  *    buried in a URL.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 #define NIFC_URL                                                              \

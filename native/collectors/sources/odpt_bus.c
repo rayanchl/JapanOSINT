@@ -2,10 +2,10 @@
  * Port of server/src/collectors/odptRealtime.js::collectOdptBus.
  * Live ODPT v4 odpt:Bus pull when an ODPT token is set; honest empty
  * FeatureCollection without one. Token idiom mirrors odpt_transport.c. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

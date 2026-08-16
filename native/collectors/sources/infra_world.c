@@ -19,9 +19,9 @@
  * entity semantics: IPv4/IPv6 literal, an ASN ("AS13335" or "13335"), or an
  * org/name string. Each source picks the queries that make sense for the shape
  * of the entity it received; irrelevant shapes → honest empty. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

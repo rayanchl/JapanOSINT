@@ -22,10 +22,10 @@
  * parse_notes — "'volume' is a required query parameter (110-116 etc.);
  * requests without it return 400." Volume 110 is pinned in the URL.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,9 +1,9 @@
 /* collectors/geospatial/sources/parking_facilities.c
  * Port of server/src/collectors/parkingFacilities.js (fetchOverpassTiled).
  * Single nationwide tiled Overpass sweep of amenity=parking. */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 

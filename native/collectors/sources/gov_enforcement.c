@@ -3,9 +3,9 @@
  * penalties, recalls. All server-rendered .go.jp listing pages → real anchor
  * scrape (links/titles are extracted from the live page; honest empty if the
  * page is shaped differently). One run() dispatches on ctx->source_id. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

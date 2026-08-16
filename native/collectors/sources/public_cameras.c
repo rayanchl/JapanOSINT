@@ -14,10 +14,10 @@
  * semantics — discovery_channels[] union, existing-non-null-wins, seen_count++,
  * first_seen_at preservation — apply here identically.
  * discovery_channel = 'osm_surveillance'. */
-#include "../../source.h"
-#include "../../core/camera_store.h"
-#include "../../lib/camfeature.h"
-#include "../../lib/overpass.h"
+#include "source.h"
+#include "core/camera_store.h"
+#include "lib/camfeature.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 /* ── Overpass element → camera Feature ─────────────────────────────────────*/

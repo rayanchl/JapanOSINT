@@ -4,10 +4,10 @@
  * currently has >=1 active warning (status != "解除", code != "00").
  * Real JMA data only; honest empty when nothing fetched (rule 8).
  * Property key order mirrors the JS mapFn for featureUid hash parity. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

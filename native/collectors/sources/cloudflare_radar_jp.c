@@ -1,9 +1,9 @@
 /* collectors/cyber/sources/cloudflare_radar_jp.c
  * Port of server/src/collectors/cloudflareRadarJp.js (createThreatIntelCollector).
  * env CLOUDFLARE_API_TOKEN → 5 Radar endpoints merged, TOKYO points. */
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -11,9 +11,9 @@
  * URLs are real public search paths for each registry; where a portal is
  * JS-driven and the exact query param is uncertain, the known search path is
  * used and the row honest-empties rather than inventing records. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

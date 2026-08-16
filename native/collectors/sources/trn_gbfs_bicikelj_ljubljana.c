@@ -8,7 +8,7 @@
  * Licence: JCDecaux Cyclocity open GBFS feed; listed in MobilityData systems.csv.
  * Parse notes: Same shape as Dublinbikes; names carry Slovene diacritics — UTF-8 is passed through untouched.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

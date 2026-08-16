@@ -48,11 +48,11 @@
  *      licence: npm's public download-counts API, keyless and explicitly
  *               documented for third-party use.
  */
-#include "../../lib/osintemit.h"
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/osintemit.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

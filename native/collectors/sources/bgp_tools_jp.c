@@ -4,11 +4,11 @@
  * the RIPEstat JP-country ASN set. SEED/_meta dropped (rule 7); the JS
  * `ua_required` branch yields 0 features so we likewise emit 0 when no UA.
  * Features pinned at Tokyo; props order: idx, asn, name, url, source. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

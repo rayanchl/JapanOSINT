@@ -30,9 +30,9 @@
  * shortfall is reported as a record rather than a log line nobody reads. That
  * makes it visible to the operator and mechanically sweepable, instead of
  * hiding inside a fake green run. */
-#include "../../source.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdlib.h>
 
 #define DAM_BASE "http://www1.river.go.jp/cgi-bin/DspDamData.exe"

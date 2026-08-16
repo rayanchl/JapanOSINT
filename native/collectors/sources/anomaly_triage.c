@@ -9,11 +9,11 @@
  * classify it with the triage_classification grammar, and persist the verdict.
  * LLM-null/unparseable → leave the anomaly untriaged (retry next tick), the
  * same "no row on failure" contract as the Node triageOne. */
-#include "../../source.h"
-#include "../../core/prompts.h"
-#include "../../core/source_registry.h"
-#include "../../third_party/cJSON.h"
-#include "../../third_party/sqlite3.h"
+#include "source.h"
+#include "core/prompts.h"
+#include "core/source_registry.h"
+#include "third_party/cJSON.h"
+#include "third_party/sqlite3.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

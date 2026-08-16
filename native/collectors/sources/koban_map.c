@@ -2,9 +2,9 @@
  * Port of server/src/collectors/kobanMap.js (fetchOverpassTiled). Curated
  * SEED_KOBAN offline fallback intentionally NOT ported — correctness-neutral
  * (JS does `if (!live) features = []` anyway). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>

@@ -5,11 +5,11 @@
  * getenv); CSV w/ defensive header names + Japan bbox filter. No
  * configured source / fetch fail / no rows → honest empty (rule 8).
  * Property key order (incident_type, date, place, source) mirrors JS. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/csv.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/csv.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

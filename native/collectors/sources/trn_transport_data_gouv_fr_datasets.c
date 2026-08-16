@@ -15,7 +15,7 @@
  * URLs live, which is what makes this a discovery layer for dozens of
  * downstream GTFS / GTFS-RT / GBFS / SIRI feeds.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define TDG_URL "https://transport.data.gouv.fr/api/datasets"

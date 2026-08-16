@@ -15,8 +15,8 @@
  * a fault. It stays fully visible and runnable either way — db_seed_sources()
  * gives every registered id a `sources` row, so it appears in /api/status and
  * answers POST /api/intel/sources/breach-corpus/run like any other source. */
-#include "../../source.h"
-#include "../../core/breach_meta.h"
+#include "source.h"
+#include "core/breach_meta.h"
 #include <stdio.h>
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

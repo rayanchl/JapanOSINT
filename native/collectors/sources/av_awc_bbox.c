@@ -46,9 +46,9 @@
  * Licence: US Government work (NOAA/NWS AWC; obstacles derived from the FAA
  * Digital Obstacle File, airports from FAA NASR), public domain, keyless.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

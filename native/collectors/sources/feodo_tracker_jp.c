@@ -10,10 +10,10 @@
  * uid is now the stable natural key <ip>:<port> instead of a sha1 over
  * {geometry, properties} that included a positional "idx" (so every row's uid
  * churned whenever abuse.ch inserted or removed an entry). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../core/intel.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "core/intel.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

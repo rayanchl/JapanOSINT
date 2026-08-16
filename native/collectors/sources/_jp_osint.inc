@@ -15,14 +15,14 @@
 #ifndef JO_JP_OSINT_INC
 #define JO_JP_OSINT_INC
 
-#include "../../lib/htmlparse.h"   /* the one anchor scanner + dedupe set */
+#include "lib/htmlparse.h"   /* the one anchor scanner + dedupe set */
 /* Shared small helpers (jo_sv / jo_env / jo_urlencode / jo_get / jo_num / …)
  * live in jocore.h — the same four this file used to define inline were
  * extracted there, so include it rather than duplicate them (guarded, so a
  * collector that also includes jocore.h directly is fine). The anchor-scanner
  * helpers below (jo_tag_inner / jo_next_entry / jo_emit_anchors) are unique to
  * this include and stay. */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 
 /* Extract inner text of the FIRST <tag>…</tag> at/after *cur within [buf..end).
  * Advances *cur past the close tag. Returns a malloc'd, CDATA-stripped string

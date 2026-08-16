@@ -10,7 +10,7 @@
  * Licence: Public GBFS feed (MobilityData systems.csv), published for reuse.
  * Parse notes: GBFS v2.3. free_bike_status carries bike_id/lat/lon/current_range_meters/vehicle_type_id.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

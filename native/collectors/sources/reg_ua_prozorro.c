@@ -8,9 +8,9 @@
  * announce date is not a separate field in the search shape; Prozorro encodes
  * it in tenderID as UA-YYYY-MM-DD-..., which we parse out. No matches / fetch
  * failure → emits nothing (honest empty). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

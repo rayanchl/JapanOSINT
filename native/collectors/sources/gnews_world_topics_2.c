@@ -1,6 +1,6 @@
 /* Google News per-country topic sections (Technology/Science/Health) — real RSS editions for priority countries, via rss_collect. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 /* AUDIT NOTE (2026-08-09) — why the interval is ~7200 and not 3600/1800.
  *

@@ -7,7 +7,7 @@
  * excluded under EDES is excluded from every EU-funded contract everywhere.
  * That makes these the highest-leverage European lookups: one query, 27
  * jurisdictions of coverage. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP2_EU_INSTITUTIONS[] = {
   /* ── Product & food safety ─────────────────────────────────────────────── */

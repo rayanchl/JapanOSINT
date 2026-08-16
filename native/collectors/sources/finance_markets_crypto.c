@@ -1,9 +1,9 @@
 /* Finance / markets / crypto feeds (real RSS) — economic and digital-asset signal for follow-the-money OSINT, via rss_collect. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/rss_atom.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

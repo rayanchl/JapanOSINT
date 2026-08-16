@@ -8,7 +8,7 @@
  * Licence: EMT Madrid / PBSC open GBFS feed; listed in MobilityData systems.csv.
  * Parse notes: GBFS v3.0 localised name array; station_area is a GeoJSON MultiPolygon on some docks and is deliberately not used as a position.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

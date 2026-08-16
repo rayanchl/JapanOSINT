@@ -11,7 +11,7 @@
  * record with id "|undefined" and no lat/lon. Rows without usable coordinates
  * are skipped outright rather than emitted at a depot or city centre (R2).
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define CARRIS_URL "https://api.carrismetropolitana.pt/vehicles"

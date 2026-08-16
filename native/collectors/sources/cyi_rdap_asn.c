@@ -16,9 +16,9 @@
  * Licence: RIPE NCC database terms are linked in every response; bulk
  * re-publication of contact data is restricted.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -3,10 +3,10 @@
  * path only. The synthetic MLIT real-time dam levels and JWWA facility
  * arrays (always concatenated in JS) are curated seed data and are
  * intentionally not ported (correctness-neutral). */
-#include "../../lib/geojson.h"
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <time.h>
 #include <sys/time.h>

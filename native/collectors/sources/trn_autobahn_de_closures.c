@@ -12,7 +12,7 @@
  * emitted as a property so a consumer never presents a scheduled closure as
  * current. Per-road endpoint — the road ids come from /o/autobahn/.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

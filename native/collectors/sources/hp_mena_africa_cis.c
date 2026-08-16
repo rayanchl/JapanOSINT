@@ -8,7 +8,7 @@
  * primary registries charge for. Every scrape row emits real anchors or
  * nothing — several of these portals are behind CAPTCHAs and will legitimately
  * return zero from a datacenter IP. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP_MENA_AF_CIS[] = {
   /* ── Gulf & wider Middle East ──────────────────────────────────────────── */

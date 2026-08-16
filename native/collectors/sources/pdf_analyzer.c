@@ -5,9 +5,9 @@
  * /Producer, /Creator, /CreationDate, /ModDate — plus an approximate page
  * count, by scanning the raw bytes (Info-dict values are plaintext in most
  * PDFs). No external parser. Honest-empty for non-PDF / no metadata. */
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

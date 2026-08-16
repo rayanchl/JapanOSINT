@@ -12,10 +12,10 @@
  * WITHOUT a geometry key (a cJSON null would serialise to the literal string
  * "null" in the geometry column, so the key must be absent). `city` /
  * `country` stay in properties for anyone who wants to geocode later. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

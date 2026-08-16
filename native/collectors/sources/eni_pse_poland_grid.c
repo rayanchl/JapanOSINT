@@ -13,10 +13,10 @@
  * dtime is Polish local time and dtime_utc is the UTC twin — dtime_utc is
  * preferred for the row timestamp.
  * Licence: PSE raporty API, public, keyless. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -32,8 +32,8 @@
  *  - 'alerts' is NOT a valid collection id on this service (404) and is not
  *    requested.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static void iso_days_ago(int days, char *out, size_t n) {

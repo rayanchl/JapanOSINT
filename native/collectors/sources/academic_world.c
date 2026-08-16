@@ -12,9 +12,9 @@
  * honest-empty (return 0) on fetch failure / no matches. Nothing is fabricated;
  * links are resolvable URLs taken from (or trivially derived from) the API's own
  * identifiers (DOI, arXiv id, PMID, OpenLibrary key). No API keys required. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

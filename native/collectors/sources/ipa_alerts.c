@@ -1,7 +1,7 @@
 /* port of server/src/collectors/ipaAlertsRss.js — multi-feed, one sourceId.
  * uid PK dedups across the 3 feeds (== Node concat+map). */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 #include <stdio.h>
 static const char *FEEDS[] = {
   "https://www.ipa.go.jp/security/alert-rss.rdf",

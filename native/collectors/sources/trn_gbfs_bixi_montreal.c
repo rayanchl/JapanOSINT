@@ -8,7 +8,7 @@
  * Licence: BIXI Montréal open data — public GBFS feed listed in MobilityData systems.csv.
  * Parse notes: Two-call join on station_id is required to get the live counts; is_charging marks the e-bike charging docks.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

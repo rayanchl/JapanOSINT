@@ -12,7 +12,7 @@
  * Companies House rows authenticate with HTTP Basic where the API key is the
  * username and the password is empty — {keyb64} builds exactly that header.
  * Without COMPANIES_HOUSE_API_KEY every CH row returns an honest empty. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 #define CH_AUTH { "Authorization: Basic {keyb64}", NULL }
 #define CH_KEY  "COMPANIES_HOUSE_API_KEY"

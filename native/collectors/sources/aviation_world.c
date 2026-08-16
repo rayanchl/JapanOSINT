@@ -20,9 +20,9 @@
  * HONESTY: every branch REAL-fetches and emits only parsed fields, or returns 0
  * (honest empty). Nothing is fabricated; no constructed URL is emitted as a
  * record. Missing/idle aircraft simply yield nothing. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

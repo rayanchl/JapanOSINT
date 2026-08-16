@@ -1,9 +1,9 @@
 /* collectors/transport/sources/bus_routes.c — port of
  * server/src/collectors/busRoutes.js (fetchOverpass single area.jp).
  * BUS_TERMINALS offline fallback intentionally not ported (rule 8). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

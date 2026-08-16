@@ -11,10 +11,10 @@
  * Licence: CAIDA AS Rank — free with citation of CAIDA AS Rank; review the
  * CAIDA AUP before commercial redistribution of bulk data.
  */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

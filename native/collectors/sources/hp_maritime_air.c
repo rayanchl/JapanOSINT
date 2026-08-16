@@ -6,7 +6,7 @@
  * registry record, the operator, the photographic history, the scheduled route
  * and — for ships — the port-state inspection and detention record, which is the
  * closest thing to a compliance history a vessel has. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP_MARAIR[] = {
   /* ── Aircraft identity ─────────────────────────────────────────────────── */

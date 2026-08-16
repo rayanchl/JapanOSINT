@@ -15,7 +15,7 @@
  * extensions are prefixed with '+' (e.g. "+ivr_message"). Results are paginated
  * via meta/pagination.next_url, which is followed up to a bounded page count.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define BC_MAX_PAGES 20

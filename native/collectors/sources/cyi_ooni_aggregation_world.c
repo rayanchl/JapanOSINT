@@ -10,9 +10,9 @@
  * Licence: OONI data is CC BY-SA 4.0 / public-domain measurements; attribution
  * to OONI required.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

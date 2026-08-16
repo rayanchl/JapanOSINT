@@ -18,7 +18,7 @@
  * float scan would not. /api/v1/stops does not exist (404); the live endpoints
  * are /geocode, /plan and /stoptimes.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static const char *const HUBS[] = {

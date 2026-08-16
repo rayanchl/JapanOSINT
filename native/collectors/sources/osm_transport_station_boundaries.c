@@ -4,8 +4,8 @@
  *  factory way defaults {queryTimeout:180,timeoutMs:180_000}).
  * Nationwide OSM station-building Polygons. No source_registry.gen.c row —
  * internal unified-stations layer feed. No SEED / _meta envelope. */
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static void body(const char *bbox, char *o, size_t n, void *ud) {

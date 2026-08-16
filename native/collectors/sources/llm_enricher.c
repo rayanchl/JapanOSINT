@@ -6,8 +6,8 @@
  * like Node. Writes via core/entitystore.h — the one entity-graph path,
  * draining the one intel_items the one sink fills (collectors + osint-search
  * alike). No new mechanism, no source_kind. */
-#include "../../source.h"
-#include "../../core/entity_enrich.h"
+#include "source.h"
+#include "core/entity_enrich.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

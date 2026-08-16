@@ -14,10 +14,10 @@
  * STRING TRAP: lat, long, value and aqi are ALL strings.
  * GEO (R2): lat/long come from the station record itself.
  * Licence: Thai PCD Air4Thai public service, keyless. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

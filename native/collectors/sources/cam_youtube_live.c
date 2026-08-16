@@ -44,12 +44,12 @@
  * faithful to the JS `if (!apiKey) return []`.  A hard fetch failure of the
  * search call → return -1 (fetch fail); empty result sets → 0 rows, return 0.
  */
-#include "../../lib/geojson.h"
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../core/camera_store.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "core/camera_store.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

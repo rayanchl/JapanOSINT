@@ -6,11 +6,11 @@
  * latter to the intel store, same as Node mirrorCollectorOutput). _meta
  * dropped per RULE 8. GDELT_SLICES env (1..96, default 1) walks back N
  * consecutive 15-min slices, exactly as JS. */
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../lib/zipread.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "lib/zipread.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

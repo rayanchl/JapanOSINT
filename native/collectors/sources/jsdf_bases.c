@@ -3,9 +3,9 @@
  * SEED_JSDF offline fallback intentionally not ported (rule 8).
  * mapFn skips elements whose operator is set but matches none of
  * /自衛|jsdf|jasdf|jgsdf|jmsdf/ (case-insensitive, plain substrings). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>

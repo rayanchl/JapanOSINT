@@ -8,7 +8,7 @@
  * Licence: Mobi by Rogers / Fifteen open GBFS feed; listed in MobilityData systems.csv.
  * Parse notes: GBFS v2.2, string names. rental_uris contain internal todo:// scheme URIs and are deliberately ignored.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

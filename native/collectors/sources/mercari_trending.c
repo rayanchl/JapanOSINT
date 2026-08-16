@@ -2,9 +2,9 @@
  * Port of server/src/collectors/mercariTrending.js. Mercari internal trending
  * keywords endpoint → intel items. uid = mercari-trending|<keyword>
  * (== intelUid(SOURCE_ID, keyword, `rank_${i+1}`)). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

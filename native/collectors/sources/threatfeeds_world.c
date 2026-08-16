@@ -18,9 +18,9 @@
  * HONESTY: every run() REAL-fetches the live feed and emits ONLY parsed real
  * records, or honest-empty (return 0) on fetch failure / no entity match.
  * Nothing is synthesized. One run() dispatches on ctx->source_id. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

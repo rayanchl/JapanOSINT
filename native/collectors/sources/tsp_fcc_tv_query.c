@@ -25,10 +25,10 @@
  *    cell is treated as absent and the key is simply omitted.
  * Licence: FCC Media Bureau public query tool — US Government public domain.
  */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

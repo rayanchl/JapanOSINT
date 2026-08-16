@@ -2,9 +2,9 @@
  * server/src/collectors/vendingMachines.js. fetchOverpass (single query,
  * tryLive — bbox-sampled, body verbatim). SEED_ZONES offline fallback
  * intentionally not ported (JS does `if (!live) features = []`). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <string.h>
 

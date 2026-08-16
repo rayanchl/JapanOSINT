@@ -12,7 +12,7 @@
  * the 60 s a single-call feed would justify: it keeps the request rate on
  * svc.metrotransit.org modest. latitude/longitude are numbers.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define MT_ROUTES "https://svc.metrotransit.org/nextrip/routes"

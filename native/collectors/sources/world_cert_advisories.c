@@ -1,6 +1,6 @@
 /* National CERT / CSIRT cyber-advisory feeds worldwide (real RSS), via rss_collect. Complements the JP jpcert/ipa collectors with global coverage. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 /* SYM, id, name, name_ja, collector, category, url, lang, tags_json, interval, description */
 #include "_source_macros.inc"

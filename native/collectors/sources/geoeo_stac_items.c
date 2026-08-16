@@ -42,8 +42,8 @@
  *  - Items are large (70 KB each with assets); limits are kept low and the
  *    asset blobs are not copied into the row.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static int stac_collect(const source_ctx *ctx, intel_sink *sink,

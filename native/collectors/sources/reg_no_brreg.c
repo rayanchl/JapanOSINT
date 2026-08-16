@@ -5,9 +5,9 @@
  * No key required — keyless LIVE. One intel_item per matched entity, keyed by
  * organisasjonsnummer (orgnr). Emits org name, orgnr, org form, address and
  * industry (NACE) code. No matches / fetch failure → emits nothing. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

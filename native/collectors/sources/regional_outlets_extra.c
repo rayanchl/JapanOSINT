@@ -1,6 +1,6 @@
 /* Regional OSINT outlets for gap regions (Africa, Caucasus, Central/Emerging Europe, SE Asia, Gulf, LatAm, Caribbean, Pacific) — real RSS, via rss_collect. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 #include "_source_macros.inc"
 

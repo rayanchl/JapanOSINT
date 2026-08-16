@@ -7,9 +7,9 @@
  * (remote_key="tech:<url>:<tech>", body={technology,category,url}). The
  * signature table stays a matching table — it is never emitted as data. If
  * the fetch fails or nothing is detected, emits NOTHING (honest empty). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

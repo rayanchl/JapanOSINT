@@ -26,8 +26,8 @@
  *    request=DescribeFeatureType; this collector deliberately takes the point
  *    layer only.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL =

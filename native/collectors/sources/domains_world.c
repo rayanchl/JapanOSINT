@@ -18,9 +18,9 @@
  * HONESTY: every branch REAL-fetches and emits only parsed API/response data,
  * or honest-empty (return 0) on failure/no-match, or gated (stderr + 0). No
  * constructed URLs, names or counts are ever emitted as records. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

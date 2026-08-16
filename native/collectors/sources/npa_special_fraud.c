@@ -5,12 +5,12 @@
  * rows; pivot to YYYY-MM; one feature per month w/ recognised!=null pinned at
  * NPA HQ, plus ONE directory intel item (uid npa-special-fraud|index).
  * SEED/_meta dropped; the JS unreachable branch → 0 rows. */
-#include "../../source.h"
-#include "../../lib/csv.h"
-#include "../../lib/geojson.h"
-#include "../../lib/probe.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/csv.h"
+#include "lib/geojson.h"
+#include "lib/probe.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

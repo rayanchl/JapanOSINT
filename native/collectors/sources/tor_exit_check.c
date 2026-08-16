@@ -8,9 +8,9 @@
  * upstream {service,total_*,...,results:[...]} shape with a single result.
  * success=true, confidence 95. Emits ONE osint_service_result row; body =
  * {success,confidence,data} envelope, like ip_geolocation.c. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

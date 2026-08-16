@@ -3,9 +3,9 @@
  * Real DOCOMO Bike Share GBFS via the public ODPT GBFS gateway: per network
  * fetch gbfs.json discovery → resolve station_information feed url → emit a
  * Point per docked port. Honest empty on failure — no fabricated ports. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

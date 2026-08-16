@@ -7,9 +7,9 @@
  * (KAKEN, CINII, RESEARCHMAP, MANSION_COMMUNITY, TDB_TSR) now live in
  * people_finder.c, which is the person+company superset. Only the place/
  * business-review source remains here. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

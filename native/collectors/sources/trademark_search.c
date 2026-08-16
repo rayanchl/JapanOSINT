@@ -12,10 +12,10 @@
  * real fetched fields (mark/holder/status/applicant/application_number). APIs
  * 403/unavailable or no hits → emits nothing (honest empty — no USPTO
  * manual-search block, no Nice-classification reference block). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

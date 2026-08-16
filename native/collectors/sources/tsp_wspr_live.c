@@ -28,10 +28,10 @@
  *   free for research with no key; the operators ask that queries be reasonable
  *   and not faster than the 2-minute WSPR cycle — hence a 10-minute interval.
  */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

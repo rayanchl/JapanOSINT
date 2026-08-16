@@ -12,8 +12,8 @@
  * Licence: GeoNet data is CC BY 3.0 NZ (GNS Science / EQC). Programmatic
  *          reuse explicitly permitted; attribution required.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *Q_URL = "https://api.geonet.org.nz/quake?MMI=3";

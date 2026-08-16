@@ -44,14 +44,14 @@
  * pointers, so peak memory is one decompressed member.
  *
  *   props order (map layer): stop_id, name, operator, feed_id, source */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../lib/zipread.h"
-#include "../../core/db.h"
-#include "../../third_party/sqlite3.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "lib/zipread.h"
+#include "core/db.h"
+#include "third_party/sqlite3.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

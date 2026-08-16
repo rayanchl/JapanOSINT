@@ -19,11 +19,11 @@
  * "account:<platform>:<email>", body={platform,email,account_exists,confidence,
  * http_status}). Platforms where the account does not exist (or detection was
  * inconclusive) are not emitted; none confirmed → emits nothing (return 0). */
-#include "../../source.h"
+#include "source.h"
 #include "social_fuse.h"
-#include "../../lib/jocore.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -13,9 +13,9 @@
  * the name (danePodmiotu) and seat address (siedzibaIAdres.adres); dzial2 carries
  * the representation organ (reprezentacja.sklad[]). Missing sub-objects are
  * tolerated — we emit whatever real fields are present. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

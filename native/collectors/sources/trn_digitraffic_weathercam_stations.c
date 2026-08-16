@@ -13,7 +13,7 @@
  * hidden. Image URLs are built from the preset id returned by the API
  * (weathercam.digitraffic.fi/<presetId>.jpg), which is the documented layout.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static const char *const DT_HDRS[] = {

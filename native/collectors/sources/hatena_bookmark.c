@@ -3,9 +3,9 @@
  * feed; bespoke item scan for title/link/dc:date/hatena:bookmarkcount/
  * dc:subject. uid = hatena-bookmark|<link> (== intelUid(SOURCE_ID,link,...)).
  * summary "<n> bookmarks · <subject>" reproduced for parity. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

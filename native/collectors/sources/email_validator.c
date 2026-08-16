@@ -12,10 +12,10 @@
  * status, status/score, risk_factors, hunter_io when keyed). No
  * {success,confidence,data} envelope. Empty input or a parse that yields no
  * domain/local part → emit nothing (return 0). */
-#include "../../source.h"
+#include "source.h"
 #include "social_fuse.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

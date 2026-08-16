@@ -8,10 +8,10 @@
  * unified_ais_ships.c shape (lib/unified.h capture sink); no dedupe — the
  * poller already deduped (JS is a pure passthrough). _meta dropped per
  * RULE 8; emitted via the geojson sink. */
-#include "../../source.h"
-#include "../../lib/unified.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/unified.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <string.h>
 #include <time.h>

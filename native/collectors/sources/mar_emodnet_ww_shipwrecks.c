@@ -21,10 +21,10 @@
  * parse_notes trap — "Very many fields are the literal string 'n/a' rather
  * than null, so treat 'n/a' as missing." wsv() below drops them.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

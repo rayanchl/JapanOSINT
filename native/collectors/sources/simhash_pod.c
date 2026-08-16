@@ -11,8 +11,8 @@
  * fingerprinted can then never be older than one already processed, so it can
  * never displace an existing cluster representative — the whole migration
  * costs 4 band inserts + 1 UPDATE per row with no relabelling at all. */
-#include "../../source.h"
-#include "../../core/simhash.h"
+#include "source.h"
+#include "core/simhash.h"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   (void)sink;                  /* fingerprinting writes in place */

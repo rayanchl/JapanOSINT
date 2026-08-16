@@ -2,9 +2,9 @@
  * Port of server/src/collectors/osmChangesetsJp.js.
  * OSM changesets.json within JP bbox (closed, limit 100) → FeatureCollection.
  * Keyless. Error/empty branch returns 0 features (correctness-neutral). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

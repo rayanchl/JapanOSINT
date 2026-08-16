@@ -10,7 +10,7 @@
  *
  * These are deliberately the checks that cannot be substituted by a national
  * register lookup. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP2_WORLD_CRITICAL[] = {
   /* ── Multilateral development bank debarment ───────────────────────────── */

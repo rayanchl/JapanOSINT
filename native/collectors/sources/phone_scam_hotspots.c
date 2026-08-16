@@ -11,10 +11,10 @@
  *   ward_id, ward, prefecture, incidents_yr, damage_yen, source_url,
  *   country, source.  ward_id="LIVE_SCAM_<idx>" (1-based over matched rows).
  * properties has no NATIVE_ID key → uid = sha1(JSON.stringify{g,p})[:16]. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

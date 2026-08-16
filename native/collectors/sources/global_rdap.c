@@ -8,9 +8,9 @@
  * intel_item per domain. Keyless LIVE. Only runs when the entity looks like a
  * domain; non-domain entity or a fetch/parse failure → honest empty (return 0).
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

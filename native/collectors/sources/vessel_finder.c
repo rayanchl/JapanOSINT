@@ -3,9 +3,9 @@
  * VesselFinder Master REST API, gated on VESSELFINDER_API_KEY (0 rows when
  * unset). The OSM ferry-terminal fallback and the curated SEED_HUBS are
  * intentionally not ported (correctness-neutral). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

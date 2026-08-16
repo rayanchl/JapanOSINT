@@ -16,9 +16,9 @@
  * avg_period_s, mean_wave_dir_degt, pressure_hpa, pressure_tendency_hpa,
  * air_temp_c, water_temp_c, dewpoint_c, visibility_nmi, tide_ft.
  * Licence: NOAA public domain. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

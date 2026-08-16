@@ -19,10 +19,10 @@
  * slashes and spaces, so positional indexing is avoided entirely.
  * GEO: this table carries no coordinates; none are invented (R2).
  * Licence: Sodir FactPages open data (NLOD-equivalent) with attribution. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/csv.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/csv.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

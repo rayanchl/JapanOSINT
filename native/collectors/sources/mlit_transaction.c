@@ -2,10 +2,10 @@
  * Port of server/src/collectors/mlitTransaction.js (tryMlit live path).
  * Single MLIT webland TradeListSearch call (Tokyo Q4 2023, area=13),
  * slice(0,200), pinned at Tokyo. SEED branch dropped (rule 8). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

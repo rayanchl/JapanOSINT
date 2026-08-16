@@ -18,9 +18,9 @@
  * search path; where the exact query param is uncertain we still use the real
  * search path and let it honest-empty rather than invent data. Total output is
  * capped so one query can't fan out forever. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

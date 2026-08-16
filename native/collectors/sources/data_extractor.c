@@ -11,9 +11,9 @@
  * (remote_key="ioc:<type>:<value>"), deduped within the run across all types.
  * Each row's body is {type,value}; title "<type>: <value>"; summary=type.
  * Nothing extracted → emits nothing, returns 0 (honest empty). */
-#include "../../source.h"
-#include "../../lib/seenset.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/seenset.h"
+#include "third_party/cJSON.h"
 #include <ctype.h>
 #include <regex.h>
 #include <string.h>

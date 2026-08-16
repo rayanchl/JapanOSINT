@@ -18,9 +18,9 @@
  *
  * HONESTY: only real, parsed API fields are emitted; fetch failure / no
  * matches / missing key → honest empty (return 0). Nothing is synthesized. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

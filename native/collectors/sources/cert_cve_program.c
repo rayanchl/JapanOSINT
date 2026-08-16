@@ -25,10 +25,10 @@
  *
  * Keyless. Licence: CVE Program terms of use — free to use with attribution to
  * the CVE Program. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

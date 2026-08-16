@@ -2,9 +2,9 @@
  * server/src/collectors/ricePaddies.js. fetchOverpass (single area.jp query,
  * tryLive). SEED_PADDIES offline fallback intentionally not ported (JS does
  * `if (!live) features = []`). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

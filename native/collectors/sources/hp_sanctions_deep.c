@@ -11,7 +11,7 @@
  * The OpenSanctions rows share one credential (OPENSANCTIONS_API_KEY). Without
  * it they return an honest empty — the entity is not declared clean, it is
  * declared unchecked. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 #define OS_KEY  "OPENSANCTIONS_API_KEY"
 #define OS_AUTH { "Authorization: ApiKey {key}", NULL }

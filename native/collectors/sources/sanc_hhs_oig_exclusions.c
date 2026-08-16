@@ -25,7 +25,7 @@
  *            trailing PARTIAL line is discarded rather than parsed into a half-row.
  */
 #include "sanc_common.inc"
-#include "../../lib/csv.h"
+#include "lib/csv.h"
 
 #define OIG_URL "https://oig.hhs.gov/exclusions/downloadables/UPDATED.csv"
 

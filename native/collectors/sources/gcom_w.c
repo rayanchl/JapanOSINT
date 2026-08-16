@@ -3,10 +3,10 @@
  * Keyless NASA CMR granule search (keyword=AMSR2, JP bbox) → one intel item
  * per granule. Optional JAXA_GPORTAL_TOKEN (note only — CMR path is keyless).
  * Non-spatial swath catalog (has_geo=0). Honest empty on fetch failure. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

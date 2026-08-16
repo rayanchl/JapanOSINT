@@ -18,10 +18,10 @@
  * on MonitoringLocationIdentifier; no station match -> no geometry.
  * Responses are large, so the window is bounded with startDateLo.
  * Licence: US public domain (EPA / USGS / NWQMC). Keyless. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/csv.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/csv.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

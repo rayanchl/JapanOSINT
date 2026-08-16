@@ -34,9 +34,9 @@
  * registered address is never geocoded. R3: a taxpayer id with no match is a
  * clean empty (return 0).
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

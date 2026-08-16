@@ -8,7 +8,7 @@
  * Licence: Public GBFS feed (MobilityData systems.csv), published for reuse.
  * Parse notes: GBFS v1.1 (older schema, still data.stations[]). free_bike_status is present but empty for this system.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

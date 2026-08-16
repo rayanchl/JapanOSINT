@@ -12,9 +12,9 @@
  * Licence: Malpedia data is CC BY-SA 4.0 for the free tier; sample binaries are
  * restricted but this list endpoint is open.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

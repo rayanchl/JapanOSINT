@@ -2,9 +2,9 @@
  * Port of server/src/collectors/msilUmishiru.js. JCG MDA "Umishiru" ports API
  * (key-gated). With UMISHIRU_API_KEY → single bbox GET → Features. Without a
  * key the JS emits only the curated SEED, which rule 8 drops → 0 rows. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 

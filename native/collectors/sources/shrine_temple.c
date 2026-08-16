@@ -3,9 +3,9 @@
  * — single area.jp query, timeoutMs=180000, queryTimeout default 180.
  * SEED_SITES offline fallback intentionally not ported (JS uses it only when
  * upstream is empty; we emit live rows or 0 — correctness-neutral). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

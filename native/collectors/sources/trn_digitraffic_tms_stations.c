@@ -15,7 +15,7 @@
  * the check is still emitted, just without a position (R2 — better no location
  * than a wrong one).
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static const char *const DT_HDRS[] = {

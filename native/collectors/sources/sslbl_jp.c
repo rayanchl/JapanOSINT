@@ -2,9 +2,9 @@
  * Port of server/src/collectors/sslblJp.js (createThreatIntelCollector).
  * Keyless. SSLBL IP CSV intersected with Feodo JP IP set, TOKYO points.
  * JS parseCsv is hand-rolled (split lines, split ',', strip ^"|"$, >=4 cols). */
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

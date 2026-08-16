@@ -8,9 +8,9 @@
  * remote_key). intelEnvelope/_meta dropped per RULE 8. Exact-uid parity with
  * Node is impossible (its buffer is long-lived process state) — shape /
  * fields / filters are faithful; documented post-parity. */
-#include "../../source.h"
-#include "../../lib/ws.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/ws.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

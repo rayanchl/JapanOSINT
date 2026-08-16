@@ -5,7 +5,7 @@
  * procurement systems that publish awards *and* the suppliers barred from
  * bidding, and the judicial portals. Peru's OSCE debarment list and Argentina's
  * padrón lookup in particular answer questions no company register can. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP2_ANDES[] = {
   /* ── Argentina ─────────────────────────────────────────────────────────── */

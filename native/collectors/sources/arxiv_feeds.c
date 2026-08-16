@@ -1,6 +1,6 @@
 /* arXiv research-category feeds (deterministic real RSS at rss.arxiv.org). Early-signal scientific/technical intelligence, via rss_collect. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 #include "_source_macros.inc"
 

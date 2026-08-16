@@ -9,9 +9,9 @@
  *   RUBYGEMS       rubygems.org/api/v1/search.json?query=<e>       (JSON)
  *   PACKAGIST      packagist.org/search.json?q=<e>                 (JSON)
  *   DOCKERHUB      hub.docker.com/v2/search/repositories?query=<e> (JSON) */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

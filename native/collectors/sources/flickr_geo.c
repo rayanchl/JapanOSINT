@@ -3,10 +3,10 @@
  * Flickr REST flickr.photos.search, JP bbox, has_geo=1. Keyed on
  * FLICKR_API_KEY (no key-free fallback) -> honest empty when absent.
  * Emits a Point Feature per geotagged photo via geojson toolkit. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

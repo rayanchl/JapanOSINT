@@ -17,9 +17,9 @@
  * HONESTY: every item is a REAL element parsed from the API response, carrying
  * the coordinates/attributes OSM/Wikimapia actually returned. Fetch failure /
  * no matches → honest empty (return 0). Nothing is synthesized. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

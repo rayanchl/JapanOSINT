@@ -16,9 +16,9 @@
  * fine; we never fabricate a result. Non-Latin queries are %-encoded (UTF-8
  * safe) via jo_urlencode. Total emit capped at ~40, per-registry at ~3, so one
  * query never fans out forever. Keyless, free_tier=1. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

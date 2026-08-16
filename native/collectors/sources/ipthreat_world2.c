@@ -5,9 +5,9 @@
  *   ABUSEIPDB_CHECK      api.abuseipdb.com/api/v2/check?ipAddress=  ABUSEIPDB_API_KEY
  *   IPQUALITYSCORE_IP    ipqualityscore.com/api/json/ip/<KEY>/<ip>  IPQUALITYSCORE_KEY
  *   PULSEDIVE_INDICATOR  pulsedive.com/api/info.php?indicator=      PULSEDIVE_API_KEY */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

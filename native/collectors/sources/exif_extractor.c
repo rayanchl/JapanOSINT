@@ -4,9 +4,9 @@
  * for camera make/model, timestamp, and — the OSINT payload — GPS coordinates,
  * which geolocate the photo. Pure C, no external library. Honest-empty when
  * the image has no EXIF/GPS. */
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

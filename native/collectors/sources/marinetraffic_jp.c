@@ -4,9 +4,9 @@
  * one has none). MarineTraffic Exportvessels REST API for the Japan bbox,
  * gated on MARINETRAFFIC_API_KEY. Honest empty without the key or on
  * failure — never fabricated vessels. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -16,9 +16,9 @@
  * fine; we NEVER fabricate a result. The URL templates use each registry's
  * known public search path; where the exact query param is uncertain we still
  * use the real search path and let it honest-empty rather than invent data. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

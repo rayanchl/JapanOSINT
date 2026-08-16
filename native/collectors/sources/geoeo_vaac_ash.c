@@ -24,8 +24,8 @@
  * real geometry_geojson when at least three points decode.
  * The directory listing's mtime is used to skip stale bulletins.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 #include <strings.h>
 

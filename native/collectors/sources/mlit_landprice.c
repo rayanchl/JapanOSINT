@@ -6,10 +6,10 @@
  * prefecture-capital entry keyed by the 2-digit prefecture code).
  * SEED_PRICES / _meta dropped (port guide rule 8). Feature uid/title are
  * derived by the geojson sink. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

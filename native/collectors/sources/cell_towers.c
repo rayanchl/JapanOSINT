@@ -6,9 +6,9 @@
  * The curated MIC_STATIONS / RAKUTEN_TOWERS / generateSeedData() synthetic
  * arrays are NOT ported (HARD RULE 7 — offline seed). Properties built in
  * EXACT JS key order (featureUid parity). */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

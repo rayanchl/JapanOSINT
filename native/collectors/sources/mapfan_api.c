@@ -4,11 +4,11 @@
  * feed. Gated honest-empty on MAPFAN_API_KEY. With key: attempt POI-search
  * over JP bbox (key in querystring), build point features; honest empty on
  * failure. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

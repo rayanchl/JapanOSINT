@@ -4,10 +4,10 @@
  * item per SAR scene. Optional JAXA_GPORTAL_TOKEN (note only — ASF path is
  * always attempted, keyless). Each scene pins on its REAL ASF footprint
  * (wkt → GeoJSON Polygon). Honest empty on fetch failure. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -31,9 +31,9 @@
  * One <entry> exists per region per warning, so uid is identifier|EMMA_ID:
  * that keeps the per-region granularity while making repeated polls idempotent.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
 #include "geoeo_common.inc"
 #include <strings.h>
 

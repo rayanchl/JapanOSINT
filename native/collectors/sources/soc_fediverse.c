@@ -43,11 +43,11 @@
  *              monitor uptime / down
  *       licence: public directory of the AGPL Invidious project, keyless.
  */
-#include "../../lib/osintemit.h"
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/osintemit.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -42,11 +42,11 @@
  *   • OpenChargeMap. Confirmed key-gated (403 "You must specify an API key")
  *     but the response shape could not be verified without one, and ev-charging
  *     / france-irve / autobahn-de already cover the theme. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

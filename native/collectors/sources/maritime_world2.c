@@ -2,9 +2,9 @@
  * OSINT service — Datalastic vessel lookup (key-gated), pivot on ctx->entity
  * (a vessel name, IMO, or MMSI). Honest-empty when DATALASTIC_KEY unset.
  *   DATALASTIC_VESSEL  api.datalastic.com/api/v0/vessel_find?name= */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

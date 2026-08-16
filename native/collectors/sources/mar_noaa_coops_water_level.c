@@ -27,9 +27,9 @@
  * {\"error\":{\"message\":...}} with HTTP 200 — check for the error key and
  * treat as honest empty." Checked; returns 0.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <math.h>
 #include <stdio.h>

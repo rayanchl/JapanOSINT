@@ -14,9 +14,9 @@
  * exact query parameter name is uncertain the known search endpoint is used and
  * the page is allowed to honest-empty rather than inventing a param. The query
  * is %-encoded (jo_urlencode, UTF-8 safe) for Arabic/Turkish/Hebrew scripts. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

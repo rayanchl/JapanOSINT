@@ -29,9 +29,9 @@
  * Also references OpenSeaMap (openseamap.org) — an open nautical map — only as
  * documentation; it exposes no per-vessel search API to emit real records from,
  * so it is not registered as a data-emitting source (honest: no fake nodes). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

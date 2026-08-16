@@ -18,10 +18,10 @@
  * legitimately reports 0 MW — neither is dropped.
  * DateTime is Taiwan local time (UTC+8) with no offset marker.
  * Licence: Taiwan Government Open Data Licence (Taipower open data platform). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

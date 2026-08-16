@@ -9,7 +9,7 @@
  * xmlns, so the scan matches on local tag names only) and HTTP-only. Coverage
  * includes the Northern Ireland cross-border stations, not just the Republic.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define IE_STATIONS_URL \

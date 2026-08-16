@@ -15,9 +15,9 @@
  * must not be dropped as "missing" — only a non-numeric token is dropped.
  * COLUMN SAFETY: split_pipe() is positional and never collapses empty fields.
  * Licence: US Nuclear Regulatory Commission, public domain. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

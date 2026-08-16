@@ -3,10 +3,10 @@
  * Keyed: TGSTAT_API_KEY (channels/search) | TELEGRAM_API_ID+HASH (no userbot
  * → honest empty). No usable key → 0 rows. uid = telegram-jp-channels|<id>.
  * No seed. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

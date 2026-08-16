@@ -17,9 +17,9 @@
  * parse_notes trap — Accept-Encoding: gzip is required; the platform HTTP
  * layer already sends it, so no custom header is added.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

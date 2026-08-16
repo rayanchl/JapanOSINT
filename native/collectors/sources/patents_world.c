@@ -15,9 +15,9 @@
  * Google Patents has no keyless public API; a Wikidata fallback would only yield
  * link cards, so it is deliberately honest-empty (documented, emits nothing).
  * Every path REAL-fetches or is honest-empty; nothing is fabricated. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

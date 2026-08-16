@@ -5,9 +5,9 @@
  * the OSM layer self-tags kind), dedupes by GTFS-JP qualified stop_id then the
  * name+coord-grid fallback (coordPrecision 4). No postProcess. The `_meta`
  * envelope is dropped per RULE 8 (same as every other port). */
-#include "../../source.h"
-#include "../../lib/unified.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/unified.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>

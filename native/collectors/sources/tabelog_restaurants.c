@@ -3,10 +3,10 @@
  * Primary: HotPepper Gourmet API (gated on HOTPEPPER_API_KEY) →
  * fallback: OSM Overpass restaurants/fast_food. SEED_RESTAURANTS not
  * ported (rule 7). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../lib/overpass.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -5,7 +5,7 @@
  * than their reputation suggests. For sanctions-adjacent work this region is
  * where re-export routes and shell intermediaries are registered, so the
  * procurement and company records here carry disproportionate weight. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP2_ASIA_CENTRAL[] = {
   /* ── Kazakhstan ────────────────────────────────────────────────────────── */

@@ -10,9 +10,9 @@
  * user is a separate, authenticated, ownership-verified path (reveal=1), which
  * belongs in an /api/breach/mine endpoint gated by auth — NOT here. See
  * docs/breach-check-pipeline.md §5/§6. */
-#include "../../source.h"
-#include "../../core/breach_index.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "core/breach_index.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

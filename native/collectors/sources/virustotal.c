@@ -14,9 +14,9 @@
  * field extraction, root {service,api_key_configured,entities_analyzed,
  * threats_detected,results[],note?}. confidence 90. Emits ONE
  * osint_service_result row like dns_records.c. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

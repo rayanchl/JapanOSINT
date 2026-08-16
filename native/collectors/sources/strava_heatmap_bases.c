@@ -3,10 +3,10 @@
  * heatmap tile probe around a curated JP installation set; one GeoJSON
  * Feature per base with a tile-size activity heuristic. STRAVA_BASES env
  * override + _meta envelope not ported. */
-#include "../../source.h"
-#include "../../lib/geojson.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/geojson.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

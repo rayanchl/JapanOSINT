@@ -2,9 +2,9 @@
  * Port of server/src/collectors/abuseipdbJp.js (createThreatIntelCollector).
  * env ABUSEIPDB_API_KEY → blacklist, JP-filter, slice 500, TOKYO points.
  * REFERENCE source.c for the THREATINTEL family. */
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -7,8 +7,8 @@
  * empty (return -1), NEVER fabricate counts. uid key mirrors JS
  * intelUid(SOURCE_ID, date) (date is always a non-empty field → JS index
  * fallback is dead). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

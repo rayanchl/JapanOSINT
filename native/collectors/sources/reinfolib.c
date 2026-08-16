@@ -6,9 +6,9 @@
  * Gated (no key) → emit nothing. Honest empty on upstream failure — never a
  * fabricated transaction. Non-spatial: emit intel_item (has_geo=0).
  * uid = reinfolib|<area>-<year>Q<quarter>-<i> (mirrors intelUid). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

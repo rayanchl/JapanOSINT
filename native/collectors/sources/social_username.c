@@ -6,7 +6,7 @@
  * a username/handle. Each constituent keeps its own probing/detection and is
  * invoked via social_fuse.h; rows dedupe naturally on remote_key
  * ("profile:<platform>:<username>"). Honest-empty when nothing is confirmed. */
-#include "../../source.h"
+#include "source.h"
 #include "social_fuse.h"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

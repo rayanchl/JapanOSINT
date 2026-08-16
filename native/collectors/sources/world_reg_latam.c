@@ -9,9 +9,9 @@
  * query never fans out without bound. Many LATAM registries are JS-only /
  * anti-bot / captcha-gated — those simply yield 0 for their row (honest empty);
  * we NEVER fabricate results. Keyless, free_tier=1. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

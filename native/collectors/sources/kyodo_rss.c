@@ -1,6 +1,6 @@
 /* port of server/src/collectors/kyodoRss.js (createRssCollector) */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 /* /rss/news.xml has 404'd since the site rebuild (verified: 404 text/html for
  * both the collector UA and a browser UA). The homepage still advertises one
  * feed — /list/feed/rss4kyodonews-fzone — which serves text/xml with 25

@@ -10,7 +10,7 @@
  * aantal_laad_punten, maximale_inrij_hoogte) are STRINGS too — all are coerced
  * rather than read at the wrong type.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define RDW_CARPOOL "https://opendata.rdw.nl/resource/9c54-cmfx.json?$limit=1000"

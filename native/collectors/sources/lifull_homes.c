@@ -5,9 +5,9 @@
  * /([0-9,]{2,})\s*件/ total as a for-sale-market-size proxy. Pref with no
  * count is OMITTED (honest, possibly empty). Never fabricated. Non-spatial.
  * uid = lifull-homes|<slug> (mirrors intelUid). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

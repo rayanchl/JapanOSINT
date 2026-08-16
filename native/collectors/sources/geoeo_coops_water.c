@@ -24,8 +24,8 @@
  *  - data[].v is a string; q='p' means preliminary and is carried so the
  *    analyst sees the provisional flag.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 #define COOPS_CATALOG                                                         \

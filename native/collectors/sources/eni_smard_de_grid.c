@@ -14,9 +14,9 @@
  * Both figures are emitted explicitly: energy_mwh_per_quarter_hour (raw) and
  * average_power_mw (= raw * 4), each with its own unit string.
  * Licence: CC BY 4.0, Bundesnetzagentur | SMARD.de. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

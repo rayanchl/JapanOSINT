@@ -25,9 +25,9 @@
  *    it is iterated; <cap:value /> self-closing empties (e.g. glide) yield no
  *    property rather than an empty one.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
 #include "geoeo_common.inc"
 #include <strings.h>
 

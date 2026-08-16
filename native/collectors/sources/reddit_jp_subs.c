@@ -2,10 +2,10 @@
  * Port of server/src/collectors/redditJpSubs.js (intelEnvelope).
  * 5 fixed subs, one /new.json?limit=25 GET each, slice(0,25) → intel rows.
  * uid = reddit-jp-subs|<p.id> (intelUid first non-empty). */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

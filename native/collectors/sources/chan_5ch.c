@@ -4,10 +4,10 @@
  *   "<tid>.dat<TAB>title (replyCount)"  → trending-thread intel rows.
  * uid = chan-5ch|<host>_<board>_<tid> (intelUid → remote_key, sink derives).
  * SEED/_meta/extraMeta NOT ported (live-only; 0 rows when 5ch geo-blocks). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/csv.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/csv.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

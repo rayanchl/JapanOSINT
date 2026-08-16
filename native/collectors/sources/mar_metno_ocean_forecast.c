@@ -23,9 +23,9 @@
  * empty." Any non-200 returns 0.
  * parse_notes — "Values live under timeseries[].data.instant.details."
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

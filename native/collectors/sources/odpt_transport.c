@@ -4,9 +4,9 @@
  * Overpass query) which is the faithful live path ported here. ODPT live + seed
  * branches intentionally not ported (rule 7). No registry row → category
  * derived as "transport" from the collector domain. */
-#include "../../lib/geojson.h"
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {

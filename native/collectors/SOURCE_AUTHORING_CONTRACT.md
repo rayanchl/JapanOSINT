@@ -113,8 +113,8 @@ every parsed doc on every path including early returns.
 ```c
 /* <what this is>. Endpoint: <url>. Emits: <real fields>. Keyless.
  * Licence: <if stated>. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <string.h>
 

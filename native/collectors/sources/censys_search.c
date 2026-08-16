@@ -10,9 +10,9 @@
  *     search (one item per cert, remote_key="censyscert:<fp>").
  * WITHOUT credentials: emit NOTHING (no no_credentials note row). Net/parse
  * failures or empty results: emit nothing. Never fabricate. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>

@@ -11,9 +11,9 @@
  * VPN Gate publishes no coordinates -> has_geo 0 (R2).
  * Licence: VPN Gate (University of Tsukuba) public API, academic project.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

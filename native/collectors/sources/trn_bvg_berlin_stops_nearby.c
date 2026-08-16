@@ -19,7 +19,7 @@
  * v6.db.transport.rest (Deutsche Bahn) has the same shape but was returning
  * HTTP 503 when this was written.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 /* Anchor points spread across Berlin's districts. */

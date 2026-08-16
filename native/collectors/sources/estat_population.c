@@ -5,8 +5,8 @@
  * (single area.jp query) which is the faithful keyless live path. The curated
  * CITY_GRIDS seed / _meta envelope is intentionally not ported (JS does
  * `features = []` when nothing live). Each feature is a 1km mesh Polygon. */
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 

@@ -6,7 +6,7 @@
  * facility-level enforcement, the Senate LDA database carries who lobbies for
  * whom, and Brazil publishes the full partner list (QSA) behind every CNPJ.
  * These rows target exactly those records. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 #define SEC_UA { "User-Agent: JapanOSINT research contact@japanosint.local", NULL }
 

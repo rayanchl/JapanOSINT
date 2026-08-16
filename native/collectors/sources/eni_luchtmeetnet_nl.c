@@ -13,10 +13,10 @@
  * emitted WITHOUT geometry — never with a guessed location.
  * Station lookups are bounded (JO_LUCHTMEETNET_STATIONS, default 40).
  * Licence: RIVM Luchtmeetnet open API, keyless, open government data. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

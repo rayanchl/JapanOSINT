@@ -12,7 +12,7 @@
  * Rail does not offer HTTPS here. PublicMessage embeds literal backslash-n
  * sequences, which are left exactly as published rather than rewritten.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 #include <stdlib.h>
 

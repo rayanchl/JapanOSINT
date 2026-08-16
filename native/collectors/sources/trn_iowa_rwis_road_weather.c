@@ -15,7 +15,7 @@
  * zeros (a 0 °F pavement reading is a very different claim from "no sensor").
  * The network= parameter swaps in other US state RWIS networks.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define IA_RWIS_URL \

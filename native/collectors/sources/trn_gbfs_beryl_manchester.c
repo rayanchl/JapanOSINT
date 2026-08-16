@@ -10,7 +10,7 @@
  * Licence: Beryl public GBFS feed; listed in MobilityData systems.csv.
  * Parse notes: GBFS v2.2, string names; free_bike_status is non-empty on this scheme.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

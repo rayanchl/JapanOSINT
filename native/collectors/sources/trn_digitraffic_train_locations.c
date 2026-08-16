@@ -14,7 +14,7 @@
  *    LONGITUDE and coordinates[1] the latitude — the opposite order to the
  *    latitude/longitude field pair used by the sibling station metadata API.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static const char *const DT_HDRS[] = {

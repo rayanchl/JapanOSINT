@@ -3,9 +3,9 @@
  * TikTok discover/place endpoint, keyed on TIKTOK_MS_TOKEN (msToken
  * querystring). No key-free path -> honest empty when absent.
  * Emits a Point Feature per place via geojson toolkit. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

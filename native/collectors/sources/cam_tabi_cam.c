@@ -27,12 +27,12 @@
  * Every feature → camera_upsert(channel="tabi_cam").  makeFeature parity
  * byte-identical to camera_discovery.c.
  */
-#include "../../lib/geojson.h"
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../core/camera_store.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "core/camera_store.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

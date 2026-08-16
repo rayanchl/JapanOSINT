@@ -15,9 +15,9 @@
  * Fan-out is bounded: <=3 anchors per registry, <=40 total per query, so a
  * single pivot cannot explode. The %-encoded query (jo_urlencode) is UTF-8
  * safe for the CJK names these registries expect. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

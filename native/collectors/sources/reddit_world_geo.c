@@ -24,8 +24,8 @@
  * lib/rss_atom.c so a 429 stops counting as a collector failure — both live in
  * shared code and are reported rather than patched here.
  */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 /* SYM, id, name, name_ja, collector, category, url, lang, tags_json, interval, description */
 #include "_source_macros.inc"

@@ -4,9 +4,9 @@
  *
  *   GREYNOISE_COMMUNITY  api.greynoise.io/v3/community/<ip>              (JSON)
  *   REDHAT_CVE           access.redhat.com/hydra/rest/securitydata/cve/<id>.json */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

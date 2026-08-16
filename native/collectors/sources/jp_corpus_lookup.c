@@ -30,11 +30,11 @@
  * link = the hit's link. The entity-graph neighbourhood is still computed via
  * ctx->db but no longer surfaced as a row. If nothing matches, emits nothing
  * and returns 0 (honest empty). */
-#include "../../core/dbutil.h"
-#include "../../source.h"
-#include "../../core/fts.h"
-#include "../../third_party/cJSON.h"
-#include "../../third_party/sqlite3.h"
+#include "core/dbutil.h"
+#include "source.h"
+#include "core/fts.h"
+#include "third_party/cJSON.h"
+#include "third_party/sqlite3.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

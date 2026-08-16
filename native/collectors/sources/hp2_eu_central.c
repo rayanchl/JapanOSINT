@@ -8,7 +8,7 @@
  * the highest concentration of sanctions-circumvention routing in Europe, so
  * the procurement and tax-status rows here answer questions no western register
  * can. */
-#include "../../lib/hpengine.h"
+#include "lib/hpengine.h"
 
 static const hp_source HP2_EU_CENTRAL[] = {
   /* ── Poland ────────────────────────────────────────────────────────────── */

@@ -16,7 +16,7 @@
  * the affected stretch — the first published position is used as the row point
  * and the full geometry is carried alongside it.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 static const char *const DT_HDRS[] = {

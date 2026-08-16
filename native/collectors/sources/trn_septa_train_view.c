@@ -9,7 +9,7 @@
  * `late` is a number — trn_num coerces both forms, so no field is read at the
  * wrong type. `consist` is a comma-joined list of railcar numbers.
  */
-#include "../../lib/jocore.h"
+#include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define SEPTA_URL "https://www3.septa.org/api/TrainView/index.php"

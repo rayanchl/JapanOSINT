@@ -14,10 +14,10 @@
  * parse_notes — "status=INFORCE/CANCELLED drives whether the advisory is
  * current"; status is carried verbatim and surfaced in the summary.
  */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

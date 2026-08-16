@@ -23,10 +23,10 @@
  * it into intel_items would defeat the whole hash-only model. Only the 5-char
  * SHA-1 k-anonymity prefix is surfaced. The hardcoded security_tips advisory
  * list has been removed (COMMON_PASSWORDS is kept as a scoring input only). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <math.h>
 #include <string.h>

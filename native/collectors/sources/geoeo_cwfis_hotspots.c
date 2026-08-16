@@ -26,8 +26,8 @@
  * HTTP 200, which is why the features array is validated before use.
  * frp/temp can be null on low-confidence detections and are dropped, not zeroed.
  */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include "geoeo_common.inc"
 
 static const char *URL =

@@ -3,10 +3,10 @@
  * GrayhatWarfare /api/v2/buckets?keywords=...&limit=100, Bearer key.
  * Gated on GRAYHAT_API_KEY (JS: no key → empty → 0 rows).
  * uid = grayhat-buckets|<b.id || b.bucket||b.name || idx_<i>>. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

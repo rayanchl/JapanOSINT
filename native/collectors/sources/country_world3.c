@@ -2,9 +2,9 @@
  * OSINT service — Denmark address search (keyless DAWA), pivot on ctx->entity.
  * Real fetch or honest-empty. No API key.
  *   DK_ADDRESS  api.dataforsyningen.dk/adresser?q= */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

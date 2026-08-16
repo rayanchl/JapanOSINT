@@ -1,6 +1,6 @@
 /* Government / agency / IGO press and advisory feeds worldwide (best-effort real RSS). Official primary-source intel, via rss_collect. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 #include "_source_macros.inc"
 

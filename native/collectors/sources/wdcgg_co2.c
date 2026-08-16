@@ -7,10 +7,10 @@
  * species/operator are always null and name_ja is absent (→ JS null).
  * Feature props order: id, station_code, name, name_ja, country,
  * elevation_m, species, operator, source. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

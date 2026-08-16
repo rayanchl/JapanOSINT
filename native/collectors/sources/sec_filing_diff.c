@@ -42,12 +42,12 @@
  * req/s; this makes at most 4 requests per pivot and hostgate serialises them.
  *
  * R2: a filing carries no coordinates, so no row here sets has_geo. */
-#include "../../lib/jocore.h"
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../core/content_change.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "core/content_change.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

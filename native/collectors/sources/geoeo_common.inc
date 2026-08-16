@@ -15,7 +15,7 @@
 #ifndef GEOEO_COMMON_INC
 #define GEOEO_COMMON_INC
 
-#include "../../third_party/cJSON.h"
+#include "third_party/cJSON.h"
 #include <ctype.h>
 #include <math.h>
 #include <stdio.h>
