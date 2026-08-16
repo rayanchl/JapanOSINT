@@ -46,7 +46,8 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 NATIVE = os.path.dirname(HERE)                 # native/
 REPO = os.path.dirname(NATIVE)                 # repo root
-SRC_DIR = os.path.join(NATIVE, "collectors", "sources")
+COLLECTORS = os.path.join(NATIVE, "collectors")
+SRC_DIR = os.path.join(COLLECTORS, "sources")  # the shared .inc/.h still live here
 GEN_REGISTRY = os.path.join(NATIVE, "core", "source_registry.gen.c")
 BASELINE_PATH = os.path.join(HERE, "lint_baseline.json")
 
@@ -111,7 +112,17 @@ def inline_includes(path, seen=None):
     for m in re.finditer(r'^[ \t]*#[ \t]*include[ \t]*"([^"]+\.inc)"[ \t]*$',
                          text, re.M):
         out.append(text[pos:m.start()])
+        # Mirror the compiler's -iquote search: the including file's own
+        # directory first, then collectors/sources where the shared .inc files
+        # live. Without the second path a collector that has MOVED out of
+        # sources/ silently fails to inline _verified_macros.inc, its VJSON
+        # invocations never expand, and the file reports ZERO sources while
+        # compiling and registering all of them correctly. Measured: the count
+        # collapsed 9,717 -> 1,801 the moment 181 generated files moved into
+        # feed/generated/, with the binary still registering 10,323.
         inc = os.path.join(base, m.group(1))
+        if not os.path.exists(inc):
+            inc = os.path.join(SRC_DIR, m.group(1))
         out.append(inline_includes(inc, seen) if os.path.exists(inc) else "")
         pos = m.end()
     out.append(text[pos:])
@@ -388,23 +399,42 @@ def source_files():
     Not just collectors/sources/: core/db.c, core/media.c, core/translate.c and
     core/camera_stills.c each REGISTER_SOURCE an internal maintenance/enrich
     pod. Scanning only the collector directory undercounted the registry by 17
-    against what the built binary reports from --list-sources."""
+    against what the built binary reports from --list-sources.
+
+    RECURSIVE under collectors/, because a collector organised into a
+    subdirectory still registers. A flat listdir() here is the same trap the
+    Makefile had: it reported 1,801 sources the moment 221 files moved, while
+    the binary went on registering 10,323. The other three roots stay flat --
+    core/, lib/ and native/ itself have no collector subtree.
+    """
     out = []
-    for d in (SRC_DIR, os.path.join(NATIVE, "core"),
-              os.path.join(NATIVE, "lib"), NATIVE):
+    for root, _dirs, names in os.walk(COLLECTORS):
+        out.extend(os.path.join(root, f) for f in names if f.endswith(".c"))
+    for d in (os.path.join(NATIVE, "core"), os.path.join(NATIVE, "lib"), NATIVE):
         if not os.path.isdir(d):
             continue
         for f in sorted(os.listdir(d)):
             p = os.path.join(d, f)
             if f.endswith(".c") and os.path.isfile(p):
                 out.append(p)
-    return out
+    return sorted(out)
 
 
 def collector_files():
-    """Only collectors/sources/*.c — the files that emit intel rows."""
-    return sorted(os.path.join(SRC_DIR, f)
-                  for f in os.listdir(SRC_DIR) if f.endswith(".c"))
+    """Every .c under collectors/ — the files that emit intel rows.
+
+    RECURSIVE, and it has to stay that way. This used to list SRC_DIR flatly,
+    which is the same trap the Makefile had: once collectors are organised into
+    subdirectories a listdir() stops seeing them, --count silently drops, and
+    the number every doc quotes (and `make source-floor` asserts) is wrong while
+    the binary registers all of them correctly. Walk COLLECTORS, not SRC_DIR.
+    """
+    out = []
+    for root, _dirs, names in os.walk(COLLECTORS):
+        for f in names:
+            if f.endswith(".c"):
+                out.append(os.path.join(root, f))
+    return sorted(out)
 
 
 _REG_CACHE = {}

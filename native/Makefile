@@ -125,7 +125,7 @@ selftest: $(BIN)
 # the hp_* engine rows are held strictly clean.
 .PHONY: audit-sources
 audit-sources:
-	@python3 tests/audit_source_exhaustiveness.py --strict 'collectors/sources/hp*_*.c'
+	@python3 tests/audit_source_exhaustiveness.py --strict 'collectors/pivot/table/hp*_*.c'
 
 # Batch 14 candidate lifecycle (docs/candidate-sources-batch14.tsv). These rows
 # were authored without egress, so they are registered as UNVERIFIED csrc14_*
@@ -148,7 +148,7 @@ regen-candidates:
 	@cut -f1 ../docs/candidate-sources-batch14.tsv | tail -n +2 > /tmp/jo_b14_ids.txt
 	@grep -Fxv -f /tmp/jo_b14_ids.txt /tmp/jo_all_ids.txt > /tmp/jo_reserved.txt || true
 	@grep -hoE 'https?://[^" ]+' \
-	  $$(ls collectors/sources/*.c collectors/sources/*.inc | grep -v csrc14_) \
+	  $$(find collectors \( -name '*.c' -o -name '*.inc' \) | grep -v csrc14_) \
 	  | sed 's/[",)\\]*$$//' | sort -u > /tmp/jo_urls.txt
 	@python3 collectors/gen_candidates_jp_fr_us.py \
 	  --out ../docs/candidate-sources-batch14.tsv \
@@ -164,7 +164,7 @@ regen-candidates:
 hptest:
 	@mkdir -p bin
 	$(CC) $(CFLAGS) -o bin/hpengine_test tests/hpengine_test.c lib/hpengine.c \
-	  lib/csv.c lib/htmlparse.c lib/seenset.c collectors/sources/hp_uk_deep.c \
+	  lib/csv.c lib/htmlparse.c lib/seenset.c collectors/pivot/table/hp_uk_deep.c \
 	  third_party/cJSON.c $(ICONV_LIB)
 	./bin/hpengine_test
 
