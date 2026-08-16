@@ -21,6 +21,7 @@
  * inconclusive) are not emitted; none confirmed → emits nothing (return 0). */
 #include "../../source.h"
 #include "social_fuse.h"
+#include "../../lib/jocore.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
 #include <string.h>
@@ -42,8 +43,12 @@ typedef struct {
 static const holehe_site_t holehe_sites[] = {
   {"Instagram","https://www.instagram.com/accounts/web_create_ajax/attempt/","POST",
    "email={}","email_is_taken","not_taken",1},
+  /* Indicators must match a VALUE, not a key: "taken" alone is present in every
+   * response this endpoint gives, including its "empty email" refusal, so it
+   * asserted an account for any input. The live contract is
+   * {"valid":…,"msg":…,"taken":true|false}. */
   {"Twitter","https://api.twitter.com/i/users/email_available.json","GET",
-   "email={}","taken","available",1},
+   "email={}","\"taken\":true","\"taken\":false",1},
   {"GitHub","https://github.com/signup_check/email","GET",
    "value={}","\"taken\":true","\"taken\":false",1},
   {"Discord","https://discord.com/api/v9/auth/register","POST",
@@ -97,8 +102,22 @@ static int check_email_account(http_client *http, const char *email,
   http_response hr = {0};
   int hc;
   if (strcmp(s->method, "GET") == 0) {
-    char url[1024];
-    format_email_data(url, sizeof url, s->url, email);
+    /* The GET rows carry their parameter in data_template ("email={}"), NOT in
+     * url — url holds no "{}" at all. This used to format s->url, so
+     * format_email_data fell through to its verbatim-copy branch and the
+     * address was never transmitted: every GET row queried the bare endpoint
+     * and then matched an indicator against a response about nothing. Twitter
+     * answered 200 with {"valid":false,"msg":"Vous ne pouvez pas avoir une
+     * adresse email vide.","taken":false} and the substring test below found
+     * "taken" — the KEY — so every email on earth was reported as having a
+     * confirmed Twitter account at confidence 90. Build the query string from
+     * data_template, and %-encode the address so a '+' or '&' in it cannot
+     * reshape the request. */
+    char url[1024], enc[512], qs[768];
+    jo_urlencode_buf(email, enc, sizeof enc);
+    format_email_data(qs, sizeof qs, s->data_template, enc);
+    snprintf(url, sizeof url, "%s%s%s", s->url,
+             strchr(s->url, '?') ? "&" : "?", qs);
     hc = http_request(http, "GET", url, NULL, NULL, 0, 15000, 0, &hr);
   } else {
     char body[1024];
