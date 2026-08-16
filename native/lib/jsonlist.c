@@ -285,9 +285,28 @@ static int emit_record(intel_sink *sink, const char *source_id, cJSON *rec,
      * that never carried it. */
     cJSON *fields = rec;
     if (!title) {
-      static const char *const ENV[] = { "attributes", "properties", NULL };
+      /* Dotted entries descend more than one level. OpenDataSoft's Explore
+       * v2.1 catalogue is the case that forced it: a dataset record is
+       * {visibility, fields[], dataset_id, dataset_uid, has_records, features,
+       * attachments, metas:{dcat, inspire, default:{title, description, theme,
+       * keyword, license, modified, …}, custom}} — the title is two levels
+       * down under metas.default, so a one-level descent found nothing and
+       * every record was dropped as unlabelled. Measured against
+       * data.loire-atlantique.fr: total_count 2, records emitted 0, while the
+       * response carried real titles ("Sentiers et points d'intérêt
+       * d'Abbaretz"), licences and modification dates. Same shape on every ODS
+       * deployment, which is a large share of the EU portal fleet. */
+      static const char *const ENV[] = {
+        "attributes", "properties", "metas.default", "metas", NULL
+      };
       for (int i = 0; ENV[i] && !title; i++) {
-        cJSON *inner = cJSON_GetObjectItem(rec, ENV[i]);
+        cJSON *inner = rec;
+        char path[64];
+        snprintf(path, sizeof path, "%s", ENV[i]);
+        char *save = NULL;
+        for (char *seg = strtok_r(path, ".", &save); seg && inner;
+             seg = strtok_r(NULL, ".", &save))
+          inner = cJSON_GetObjectItem(inner, seg);
         if (!inner || !cJSON_IsObject(inner)) continue;
         title = scalar_dup(pick(inner, K_TITLE));
         if (!title) title = pick_name_suffixed(inner);
