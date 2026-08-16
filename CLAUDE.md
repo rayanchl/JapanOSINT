@@ -13,8 +13,9 @@ values standing in for a failed fetch. A failure degrades to an explicit
 Full audit of how each collector behaves today:
 `native/collectors/SOURCE_REALITY_REPORT.md`.
 
-One batch is registered but **not** proof-of-life verified: the 1,001
-`collectors/sources/csrc14_*.c` candidates, authored without egress. They obey
+One batch is registered but **not** proof-of-life verified: the 1,001 candidate
+sources defined across the 20 `collectors/sources/csrc14_*.c` files, authored
+without egress. They obey
 this rule (a dead endpoint returns an explicit error, never invented content)
 but carry no 2xx/parse proof. See `docs/candidate-sources-batch14.md`; promote
 them with `make verify-candidates`.
@@ -36,12 +37,19 @@ If anything was left unused, it is reported as data (a
 Rule, examples of violations, and what the shared machinery guarantees:
 `docs/SOURCE_EXHAUSTIVENESS.md`.
 
-The tree is at **zero audit findings**; deliberate exceptions carry an inline
+`make audit-sources` holds the **hp_\* engine rows at zero findings** — that is
+the set it gates strictly, and it is the set to write new deep-record collectors
+into. The wider tree is **not** at zero: the same run scans 1,211 files and
+reports 66 heuristic findings across 50 of them (record caps, first-array-
+element-only, single-page fetches of paged endpoints). They are heuristics that
+each need a human read, not proven violations — but do not read "audit-sources
+passes" as "nothing is being discarded". Deliberate exceptions carry an inline
 `/* exhaustive-ok: <reason> */` marker (`grep -rn exhaustive-ok`).
 
 ```sh
 cd native
-make audit-sources   # scan every collector for discard patterns (expect 0)
+make audit-sources   # scan every collector for discard patterns (hp*_*.c: expect 0;
+                     # the wider tree currently reports 66 findings across 50 files)
 make hptest          # offline check of the engine's guarantees
 make                 # full build (-Wall -Wextra)
 ```

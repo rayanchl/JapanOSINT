@@ -26,6 +26,7 @@
  */
 #include "../../source.h"
 #include "../../lib/feedlib.h"
+#include "../../lib/jocore.h"     /* jo_truncation_notice() */
 #include "geoeo_common.inc"
 
 #define COOPS_CATALOG                                                         \
@@ -51,10 +52,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return -1;
   }
 
-  int n = 0, polled = 0;
+  const int n_stations = cJSON_GetArraySize(stations);
+  int n = 0, polled = 0, capped = 0;
   cJSON *st;
   cJSON_ArrayForEach(st, stations) {
-    if (polled >= COOPS_MAX_STATIONS) break;
+    if (polled >= COOPS_MAX_STATIONS) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     const char *sid = geoeo_str(st, "id");
     const char *sname = geoeo_str(st, "name");
     if (!sid) continue;
@@ -87,7 +89,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (!sname && meta) sname = geoeo_str(meta, "name");
 
     cJSON *data = cJSON_GetObjectItem(doc, "data");
-    cJSON *d0 = cJSON_IsArray(data) ? cJSON_GetArrayItem(data, 0) : NULL;
+    cJSON *d0 = cJSON_IsArray(data) ? cJSON_GetArrayItem(data, 0) : NULL;  /* exhaustive-ok: date=latest returns exactly one reading */
     double v = 0, sigma = 0;
     int has_v = d0 ? geoeo_numlax(d0, "v", &v) : 0;
     int has_s = d0 ? geoeo_numlax(d0, "s", &sigma) : 0;
@@ -154,6 +156,21 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON_Delete(cat);
+  /* House rule 2: the catalogue request returned every waterlevels station, but
+   * datagetter serves one station per call, so this run polled only the first
+   * COOPS_MAX_STATIONS. The catalogue rows for the rest — id, name, lat/lon,
+   * all already in memory — are not emitted in any form either. Say so. */
+  if (capped)
+    jo_truncation_notice(sink, "coops-water-levels", "stations.json?type=waterlevels",
+                         polled, (long)n_stations,
+                         "datagetter serves one station per request, so the run "
+                         "polls only the first COOPS_MAX_STATIONS of the "
+                         "catalogue; the catalogue entries for the unpolled "
+                         "stations are held in memory and never emitted",
+                         "raise COOPS_MAX_STATIONS in collectors/sources/"
+                         "geoeo_coops_water.c, rotate the slice across runs, or "
+                         "emit a station record for every catalogue entry and "
+                         "attach readings only to the polled ones");
   fprintf(stderr, "[coops-water-levels] emitted %d readings from %d stations "
                   "polled\n", n, polled);
   return 0;

@@ -84,6 +84,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
+  /* House rule 2: `qualified` counts every address in the downloaded feed that
+   * met MIN_LISTS; MAX_ROWS stopped materialising them partway through. */
+  if (qualified > n)
+    jo_truncation_notice(sink, "ipsum-threat-feed", "ipsum.txt", n,
+                         (long)qualified,
+                         "MAX_ROWS reached; the remaining qualifying addresses "
+                         "in the downloaded feed were counted but not emitted "
+                         "as rows",
+                         "raise or drop MAX_ROWS in collectors/sources/"
+                         "cyi_ipsum_threat_feed.c");
   fprintf(stderr, "[ipsum-threat-feed] emitted %d of %d IPs with >=%d list hits\n",
           n, qualified, MIN_LISTS);
   return 0;

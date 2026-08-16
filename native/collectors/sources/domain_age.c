@@ -44,7 +44,23 @@ static int calculate_age_days(time_t created) {
   return (int)(diff / 86400);
 }
 
-/* domain_age.c calculate_trust_score (verbatim). */
+#define TRUST_SCORE_BASIS \
+  "locally computed by calculate_trust_score() in this collector, NOT an " \
+  "upstream reputation feed: base 50, then age +40 >10y / +30 >5y / +20 >2y / " \
+  "+10 >1y / -20 <30d, then RDAP status clientTransferProhibited +5, " \
+  "serverDeleteProhibited +5, pendingDelete -30, redemptionPeriod -20, " \
+  "clamped to 0..100. Inputs are RDAP facts; the weights are an in-tree " \
+  "heuristic."
+
+/* domain_age.c calculate_trust_score (verbatim).
+ *
+ * Every INPUT here is fetched (the RDAP registration event, the RDAP status
+ * array), so the output is a deterministic function of real data, not an
+ * invention — but the base 50 and the +40/+30/+20/+10/-20/±5/-30/-20 weights
+ * are a judgement made in this file and nothing in the emitted row said so.
+ * `trust_score: 90` sat in properties next to `registrar` and `created`, which
+ * come from the registry, in the same shape a bought reputation feed would
+ * emit. TRUST_SCORE_BASIS below travels with every emission of it. */
 static int calculate_trust_score(int age_days, const char *status) {
   int score = 50;
   if (age_days > 3650) score += 40;
@@ -249,6 +265,7 @@ static cJSON *domain_age_build(http_client *http, const char *domain,
       int age_days = created_time > 0 ? calculate_age_days(created_time) : -1;
       int trust = calculate_trust_score(age_days, status_str);
       cJSON_AddNumberToObject(root, "trust_score", trust);
+      cJSON_AddStringToObject(root, "trust_score_basis", TRUST_SCORE_BASIS);
       if (trust >= 80) cJSON_AddStringToObject(root, "trust_category", "highly_trusted");
       else if (trust >= 60) cJSON_AddStringToObject(root, "trust_category", "trusted");
       else if (trust >= 40) cJSON_AddStringToObject(root, "trust_category", "neutral");
@@ -313,7 +330,10 @@ static int emit_one(intel_sink *sink, const char *svc, const char *prefix,
   cJSON *tc = cJSON_GetObjectItem(data, "trust_category");
   if (tc && cJSON_IsString(tc)) cJSON_AddStringToObject(props, "trust_category", tc->valuestring);
   cJSON *ts = cJSON_GetObjectItem(data, "trust_score");
-  if (ts && cJSON_IsNumber(ts)) cJSON_AddNumberToObject(props, "trust_score", ts->valueint);
+  if (ts && cJSON_IsNumber(ts)) {
+    cJSON_AddNumberToObject(props, "trust_score", ts->valueint);
+    cJSON_AddStringToObject(props, "trust_score_basis", TRUST_SCORE_BASIS);
+  }
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[320];

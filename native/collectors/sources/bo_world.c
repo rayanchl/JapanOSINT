@@ -31,12 +31,6 @@
 
 /* GLEIF JSON:API attribute helpers -------------------------------------- */
 
-/* nested attribute: obj->attributes->...->key (single level under attributes) */
-static const char *bo_attr(const cJSON *rec, const char *key) {
-  const cJSON *at = cJSON_GetObjectItem(rec, "attributes");
-  return at ? jo_sv(at, key) : NULL;
-}
-
 /* ---- GLEIF LEI records (L1 reference data) ----------------------------- *
  * GET api.gleif.org/api/v1/lei-records?filter[entity.legalName]=<name>
  * → { data: [ { id:"<LEI>", attributes:{ lei, entity:{ legalName:{name},

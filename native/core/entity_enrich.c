@@ -123,8 +123,23 @@ int entity_enrich_extract(db_handle *db, llm_client *llm, int batch) {
       int dup = 0;
       for (int k = 0; k < nids; k++) if (!strcmp(ids[k], id)) { dup = 1; break; }
       if (dup) { free(id); continue; }
-      if (nids == cids) { cids = cids ? cids * 2 : 16;
-        ids = realloc(ids, sizeof(char *) * cids); }
+      /* `ids = realloc(ids, ...)` followed by `ids[nids++]` on the next line
+       * leaks the old block and writes through NULL when the grow fails.
+       * Realloc into a temp, and on failure stop collecting rather than
+       * corrupting: the entity itself is already upserted and its mention
+       * already recorded, only the co_mention edges below are affected. */
+      if (nids == cids) {
+        int ncap = cids ? cids * 2 : 16;
+        char **nv = realloc(ids, sizeof(char *) * (size_t)ncap);
+        if (!nv) {
+          fprintf(stderr, "[entity-enrich] out of memory after %d entit(ies) "
+                          "on %s; co_mention edges for the rest are skipped\n",
+                  nids, pr->uid);
+          free(id);
+          break;
+        }
+        ids = nv; cids = ncap;
+      }
       ids[nids++] = id;
     }
     /* co_mention edges among distinct entities in the same item */
@@ -140,7 +155,21 @@ int entity_enrich_extract(db_handle *db, llm_client *llm, int batch) {
       sqlite3_bind_text(s, 1, pr->uid, -1, SQLITE_TRANSIENT);
       sqlite3_step(s); sqlite3_finalize(s);
     }
-    sqlite3_exec(h, "COMMIT", 0, 0, 0);
+    /* `processed` is this function's return value and its log line. Everything
+     * counted by it — the entities, the mentions, the co_mention edges and the
+     * extraction-state row — is inside this transaction, so a discarded COMMIT
+     * result meant counting an item whose work rolled back. It will be picked
+     * up again next pass (extracted_at was never written), which is correct;
+     * claiming it now is not. */
+    if (sqlite3_exec(h, "COMMIT", 0, 0, 0) != SQLITE_OK) {
+      fprintf(stderr, "[entity-enrich] COMMIT failed for %s: %s — the "
+                      "extraction was discarded and will be retried\n",
+              pr->uid, sqlite3_errmsg(h));
+      sqlite3_exec(h, "ROLLBACK", 0, 0, 0);
+      cJSON_Delete(out);
+      failed++;
+      continue;
+    }
     cJSON_Delete(out);
     processed++;
   }
@@ -172,12 +201,30 @@ int entity_enrich_resolve(db_handle *db, llm_client *llm, int batch) {
       " WHERE e1.type IN ('person','company','address') LIMIT ?1",
       -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_int(s, 1, batch * 4);
-    while (sqlite3_step(s) == SQLITE_ROW) {
-      if (np == cp) { cp = cp ? cp * 2 : 64; ps = realloc(ps, sizeof(pair) * cp); }
+    int scan_rc;
+    while ((scan_rc = sqlite3_step(s)) == SQLITE_ROW) {
+      /* Self-assigning realloc dereferenced two lines later: on failure the
+       * old block leaks and ps[np].a writes through NULL. */
+      if (np == cp) {
+        int ncap = cp ? cp * 2 : 64;
+        pair *nv = realloc(ps, sizeof(pair) * (size_t)ncap);
+        if (!nv) {
+          fprintf(stderr, "[entity-enrich] out of memory after %d candidate "
+                          "pair(s); resolving only those\n", np);
+          break;
+        }
+        ps = nv; cp = ncap;
+      }
       ps[np].a = dupcol(s, 0); ps[np].ty = dupcol(s, 1); ps[np].ca = dupcol(s, 2);
       ps[np].b = dupcol(s, 3); ps[np].cb = dupcol(s, 4);
       np++;
     }
+    /* `while (step() == ROW)` cannot tell DONE from IOERR/CORRUPT/BUSY/
+     * INTERRUPT. A short candidate list is not wrong output — the next pass
+     * re-runs the same query — but it is silently less work than claimed. */
+    if (scan_rc != SQLITE_DONE)
+      fprintf(stderr, "[entity-enrich] candidate pair scan interrupted after "
+                      "%d pair(s): %s\n", np, sqlite3_errmsg(h));
     sqlite3_finalize(s);
   }
 

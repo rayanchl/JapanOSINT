@@ -68,7 +68,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (cJSON_IsNumber(cJSON_GetArrayItem(pair, 1))) { best = pair; break; }
     }
     if (!best) { cJSON_Delete(doc); continue; }
-    long long ems = (long long)cJSON_GetArrayItem(best, 0)->valuedouble;
+    long long ems = (long long)cJSON_GetArrayItem(best, 0)->valuedouble;  /* exhaustive-ok: [epoch_ms,value] tuple, both read */
     double mwh_qh = cJSON_GetArrayItem(best, 1)->valuedouble;
     /* MWh per quarter-hour -> average MW over that quarter-hour */
     double mw = mwh_qh * 4.0;

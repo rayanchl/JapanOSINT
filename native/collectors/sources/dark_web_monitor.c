@@ -148,17 +148,27 @@ static cJSON *search_intelx(http_client *h, const char *q) {
 /* Emit one item. data is owned by this fn (duplicated into envelope). */
 static int emit_item(intel_sink *sink, const char *q, const char *rk,
                      const char *title, const char *summary, cJSON *data) {
+  /* `confidence: 70` was a constant on every row this collector has ever
+   * emitted — an Ahmia hit, a Pastebin key and an IntelX search id all scored
+   * 70. Nothing measured it and nothing distinguishes the three, so on a
+   * 0..100 scale it reads as a calibrated likelihood that this hit really
+   * concerns the searched entity, which is precisely the thing we did not
+   * establish. Emit the absence instead. `success` stays: each caller only
+   * reaches here with a real scraped/parsed result in hand. */
   cJSON *env = cJSON_CreateObject();
   cJSON_AddBoolToObject(env, "success", 1);
-  cJSON_AddNumberToObject(env, "confidence", 70);
+  cJSON_AddItemToObject(env, "confidence", cJSON_CreateNull());
+  cJSON_AddStringToObject(env, "confidence_basis",
+    "not scored: this is a keyword hit on a public index, with no relevance "
+    "or attribution score from the upstream");
   cJSON_AddItemToObject(env, "data", data);   /* takes ownership */
   char *bj = cJSON_PrintUnformatted(env);
 
   cJSON *props = cJSON_CreateObject();
   cJSON_AddStringToObject(props, "service", "DARK_WEB_MONITOR");
   cJSON_AddStringToObject(props, "entity", q);
-  cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 70);
+  cJSON_AddBoolToObject(props, "success", 1);  /* a real hit was parsed */
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   intel_item it = {0};

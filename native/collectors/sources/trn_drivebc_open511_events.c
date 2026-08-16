@@ -18,7 +18,7 @@
 #include "../../lib/jocore.h"
 #include "trn_common.inc"
 
-#define BC_MAX_PAGES 20
+#define BC_MAX_PAGES 20  /* exhaustive-ok: page-walk runaway guard; a walk it actually stops is reported below */
 
 static int emit_page(intel_sink *sink, cJSON *doc) {
   int n = 0;
@@ -80,7 +80,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char url[512];
   snprintf(url, sizeof url, "https://api.open511.gov.bc.ca/events?format=json");
 
-  int n = 0, pages = 0, ok = 0;
+  int n = 0, pages = 0, ok = 0, had_next = 0;
   while (pages < BC_MAX_PAGES) {
     cJSON *doc = feed_get_json(ctx->http, url, 30000);
     if (!doc) break;
@@ -91,6 +91,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON_GetObjectItem(doc, "meta"), "pagination");
     const char *next = pg ? jo_sv(pg, "next_url") : NULL;
     if (!next) { cJSON_Delete(doc); break; }
+    had_next = 1;
     snprintf(url, sizeof url, "%s", next);
     cJSON_Delete(doc);
   }
@@ -98,6 +99,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[drivebc-open511-events] fetch/parse failed\n");
     return -1;
   }
+  /* House rule 2: the walk normally ends when Open511 stops publishing a
+   * next_url. If the runaway guard ended it instead, say so as data. */
+  if (pages >= BC_MAX_PAGES && had_next)
+    jo_truncation_notice(sink, "drivebc-open511-events", "events", n, -1,
+                         "the page walk stopped at the BC_MAX_PAGES runaway "
+                         "guard while Open511 was still publishing a next_url, "
+                         "so later pages of the event list were never fetched",
+                         "raise BC_MAX_PAGES in collectors/sources/"
+                         "trn_drivebc_open511_events.c");
   fprintf(stderr, "[drivebc-open511-events] emitted %d over %d page(s)\n",
           n, pages);
   return 0;

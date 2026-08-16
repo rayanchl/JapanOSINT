@@ -173,7 +173,7 @@ static int emit_breach(intel_sink *sink, const char *q, const char *prov,
 
   cJSON *env = cJSON_CreateObject();
   cJSON_AddBoolToObject(env, "success", 1);
-  cJSON_AddNumberToObject(env, "confidence", 90);
+  cJSON_AddItemToObject(env, "confidence", cJSON_CreateNull());
   cJSON_AddItemToObject(env, "data", cJSON_Duplicate(data, 1));
   char *bj = cJSON_PrintUnformatted(env);
 
@@ -182,7 +182,7 @@ static int emit_breach(intel_sink *sink, const char *q, const char *prov,
   cJSON_AddStringToObject(props, "entity", q);
   cJSON_AddStringToObject(props, "breach_source", src_name);
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 90);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[640]; snprintf(rk, sizeof rk, "breach:%s:%s", src_name, q);

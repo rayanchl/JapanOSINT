@@ -271,6 +271,9 @@ struct SavedTab: View {
                             color: registry.color(for: item.layerId)
                         )
                     }
+                    // The pin glyph is `.accessibilityHidden`, so name the
+                    // button after the saved item it opens.
+                    .accessibilityLabel(item.displayName)
                 }
             }
         }

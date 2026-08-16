@@ -21,6 +21,26 @@ DerivedData/
 models/*.gguf
 native/llama/llama-server
 
+# Vendored llama.cpp soname aliases. These are not symlinks — each chain was
+# committed as three IDENTICAL full copies (verified byte-for-byte with cmp),
+# so libllama.so / .so.0 / .so.0.0.10068 cost 3x 3.8 MB instead of 1x. Across
+# the five chains that is 23.5 MB of the 63 MB runtime, duplicated in every
+# clone and re-transferred on every change. Only the fully-versioned file is
+# tracked; the loader still needs the aliases PRESENT locally, so they stay on
+# disk — recreate them after a fresh clone with e.g.
+#   cd native/llama && ln -sf libllama.so.0.0.10068 libllama.so.0 \
+#                    && ln -sf libllama.so.0 libllama.so    (etc.)
+native/llama/libllama.so
+native/llama/libllama.so.0
+native/llama/libllama-common.so
+native/llama/libllama-common.so.0
+native/llama/libmtmd.so
+native/llama/libmtmd.so.0
+native/llama/libggml-base.so
+native/llama/libggml-base.so.0
+native/llama/libggml.so
+native/llama/libggml.so.0
+
 # C build artifacts. `obj-*` covers the per-agent object trees that
 # tests/audit/agent_build.sh creates (obj-a0 … obj-a9, obj-asan, obj-tsan);
 # they totalled 758 MB unignored before this rule existed.
@@ -38,6 +58,14 @@ native/tests/audit/obj*/
 native/tests/audit/bin/
 native/tests/audit/**/*.o
 native/tests/audit/**/*.d
+
+# Contract-harness OUTPUT, not input. tests/contract/run.sh writes *.c.json
+# fresh on every run (line 212) and diffs it against the *.node.json baseline
+# in the same run; nothing ever reads a committed one. Five of them were
+# tracked anyway — 4.6 MB of last-Tuesday's server responses, re-staged as a
+# diff every time anyone ran the suite. The *.node.json baselines stay tracked:
+# those ARE the contract.
+native/tests/contract/*.c.json
 
 # Python bytecode (61 .py files live under native/tests/)
 __pycache__/

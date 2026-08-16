@@ -371,12 +371,25 @@ int breach_index_ingest(const char *source_id, const char *path, breach_type typ
       /* Phase 3 — full entity materialization (deterministic, no LLM). Every
        * identity record's identifier becomes an entity + a mention keyed on the
        * synthetic item uid "breach:"+keyid, so breach items get entity chips and
-       * "entity → its breaches" works. Passwords are never entities. */
+       * "entity → its breaches" works. Passwords are never entities.
+       *
+       * ES_BREACH_TENANT, not the shared graph. `val` is the normalized
+       * CLEARTEXT identifier and the mention also records which breach it came
+       * out of — the same material /api/breach/search, the two /api/intel
+       * breach doors and /api/export all put behind httpd.c's breach_gate().
+       * The unscoped versions of these two calls wrote it with tenant_id NULL,
+       * which is precisely the disjunct /api/entities/... matches, so a viewer
+       * in any tenant could read breached addresses out of entity search and
+       * enumerate an identifier's breaches out of /:type/:id/breaches. Scoping
+       * it here — at the ingest, once — is what makes every reader of
+       * `entities` safe without each of them having to remember a gate. */
       char uid[144];
       snprintf(uid, sizeof uid, "breach:%s", keyid);
-      char *eid = es_upsert_entity(db, breach_type_name(ct), val);
+      char *eid = es_upsert_entity_scoped(db, breach_type_name(ct), val,
+                                          ES_BREACH_TENANT);
       if (eid) {
-        es_add_mention(db, eid, uid, source_id, val, "breach", 0.99, "breach-ingest");
+        es_add_mention_scoped(db, eid, uid, source_id, val, "breach", 0.99,
+                              "breach-ingest", ES_BREACH_TENANT);
         free(eid);
       }
     }

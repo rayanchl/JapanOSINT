@@ -12,8 +12,10 @@
 struct breach_store {
   sqlite3      *db;    /* borrowed (owned by the caller's db_handle) */
   sqlite3_stmt *ins;
-  long long     pending;   /* rows since last COMMIT */
-  long long     total;
+  long long     pending;   /* rows stepped into the OPEN batch (not yet durable) */
+  long long     total;     /* rows this store attempted to insert */
+  long long     committed; /* rows that made it through a successful COMMIT */
+  int           broken;    /* a batch failed to commit; refuse further writes */
 };
 
 static int exec1(sqlite3 *db, const char *sql) {
@@ -24,6 +26,35 @@ static int exec1(sqlite3 *db, const char *sql) {
     sqlite3_free(err);
   }
   return rc;
+}
+
+/* Commit the open batch, and when `reopen` start the next one. 0 on success.
+ *
+ * The COMMIT return is NOT optional. On SQLITE_BUSY or SQLITE_FULL the
+ * transaction stays OPEN, and discarding the rc had three consequences at
+ * once: `pending` was reset anyway, so the row count this store reports
+ * counted a batch that was never durable; the BEGIN that follows failed
+ * silently on the still-open transaction; and that same transaction then went
+ * on absorbing another BREACH_BATCH rows per "batch" for the rest of the
+ * ingest — unbounded WAL growth on a corpus of this size, all of it discarded
+ * together if anything later failed. Roll the batch back and latch the store
+ * broken instead: the on-disk shard corpus is the source of truth, so the
+ * honest outcome is a failed materialize that is re-run, never a partial
+ * table reported as a complete one. */
+static int store_flush(breach_store *s, int reopen) {
+  if (exec1(s->db, "COMMIT") != SQLITE_OK) {
+    exec1(s->db, "ROLLBACK");   /* leave the connection usable, not mid-txn */
+    s->pending = 0;
+    s->broken  = 1;
+    return -1;
+  }
+  s->committed += s->pending;
+  s->pending    = 0;
+  if (reopen && exec1(s->db, "BEGIN") != SQLITE_OK) {
+    s->broken = 1;
+    return -1;
+  }
+  return 0;
 }
 
 breach_store *breach_store_open(db_handle *db) {
@@ -62,6 +93,11 @@ int breach_store_put(breach_store *s, const char *keyid, const char *type,
                      const char *value, const char *source_id, const char *hash,
                      int has_secret, long long count) {
   if (!s) return -1;
+  /* Once a batch has failed to commit there is no open transaction to write
+   * into; stepping on regardless would dribble rows out in autocommit at a
+   * fraction of the throughput and leave a half-loaded table that still looks
+   * finished. Refuse instead. */
+  if (s->broken) return -1;
   sqlite3_stmt *st = s->ins;
 
   sqlite3_bind_text(st, 1, keyid, -1, SQLITE_TRANSIENT);
@@ -82,26 +118,34 @@ int breach_store_put(breach_store *s, const char *keyid, const char *type,
   }
 
   s->total++;
-  if (++s->pending >= BREACH_BATCH) {
-    exec1(s->db, "COMMIT");
-    exec1(s->db, "BEGIN");
-    s->pending = 0;
-  }
+  if (++s->pending >= BREACH_BATCH) return store_flush(s, 1);
   return 0;
 }
 
 int breach_store_finish(breach_store *s) {
   if (!s) return -1;
-  exec1(s->db, "COMMIT");
+  /* A broken store already rolled its batch back and holds no transaction, so
+   * there is nothing left to commit — only the final batch of a healthy store
+   * is flushed here. Either way the return says whether every attempted row
+   * is durable, rather than the unconditional 0 it used to report. */
+  int rc = s->broken ? -1 : store_flush(s, 0);
   if (s->ins) sqlite3_finalize(s->ins);
   /* Deferred bulk FTS build over the freshly-loaded content table — far cheaper
-   * than maintaining the index incrementally during the load. */
+   * than maintaining the index incrementally during the load. Run even after a
+   * failed batch: breach_fts is external-content, so an index left describing
+   * rows the table no longer has would answer searches with phantom hits. */
   exec1(s->db, "INSERT INTO breach_fts(breach_fts) VALUES('rebuild')");
   /* Restore durable behavior for normal operation. */
   exec1(s->db, "PRAGMA synchronous=NORMAL");
-  fprintf(stderr, "[breach_store] materialized %lld rows into breach_items\n", s->total);
+  /* Report what was COMMITTED, not what was attempted. */
+  fprintf(stderr, "[breach_store] materialized %lld rows into breach_items\n",
+          s->committed);
+  if (s->committed != s->total)
+    fprintf(stderr, "[breach_store] INCOMPLETE: %lld of %lld attempted rows were "
+                    "not committed (transaction failure) — re-run the materialize\n",
+            s->total - s->committed, s->total);
   free(s);
-  return 0;
+  return rc;
 }
 
 /* Wrap an arbitrary user term as a single quoted FTS5 phrase so it can never be

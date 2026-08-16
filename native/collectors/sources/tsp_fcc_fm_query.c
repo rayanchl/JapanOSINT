@@ -45,7 +45,9 @@
   "&vac=&freq=88.0&fre2=108.0&facid=&class=&dkt=&list=4&dist=&dlat2=&mlat2=" \
   "&slat2=&NS=N&dlon2=&mlon2=&slon2=&EW=W&size=9"
 #define MAXF 64
-#define MAX_ROWS 40000
+#define MAX_ROWS 40000  /* exhaustive-ok: per-run runaway guard, far above the
+                         * real station count; a run it actually stops, or that
+                         * the wall-clock budget stops, is reported below */
 #define BUDGET_SEC 240
 
 static const char *const STATES[] = {
@@ -228,6 +230,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (ok_states == 0) {
     fprintf(stderr, "[fcc-fm-query] no state query succeeded\n");
     return -1;
+  }
+  /* House rule 2: this collector queries the FCC one state at a time, and both
+   * the wall-clock budget and MAX_ROWS can end the sweep before every state has
+   * been asked. The states never queried are missing data — say so. */
+  if (ok_states < NSTATES) {
+    char reason[240];
+    snprintf(reason, sizeof reason,
+             "the per-run sweep covered %d of %d states before the wall-clock "
+             "budget (BUDGET_SEC) or MAX_ROWS ended it; the remaining states "
+             "were never queried this run", ok_states, NSTATES);
+    jo_truncation_notice(sink, "fcc-fm-query", "FM Query by state", total, -1, reason,
+                         "raise BUDGET_SEC/MAX_ROWS in collectors/sources/tsp_fcc_fm_query.c, "
+                         "or rotate the state list across runs");
   }
   fprintf(stderr, "[fcc-fm-query] emitted %d over %d/%d states "
                   "(%d records skipped: no site DMS)\n",

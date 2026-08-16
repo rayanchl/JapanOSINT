@@ -6,7 +6,7 @@
  * the CKAN response. Keyless.
  * Licence: Code for Africa portal, datasets predominantly CC-BY; the
  * per-dataset licence fields are emitted verbatim. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-open-africa"
 static const char *URL =

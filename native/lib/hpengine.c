@@ -7,6 +7,7 @@
 #include "hpengine.h"
 #include "csv.h"
 #include "htmlparse.h"   /* the one anchor scanner + dedupe set */
+#include "jocore.h"      /* jo_truncation_notice_ex() — the ONE notice builder */
 #include "../core/httpclient.h"
 #include "../third_party/cJSON.h"
 #include <ctype.h>
@@ -891,38 +892,24 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   /* Note the condition: a page-ceiling stop leaves an UNKNOWN remainder (we
    * never fetched those pages), so `available == out` there. Disclose whenever
    * the walk stopped early, not only when we can count what was missed. */
+  /* One builder for this record across the whole tree: lib/jocore.h owns the
+   * record_type, the uid convention, the tags and the six base properties, and
+   * the three facts only the engine can know travel in `extra`. Hand-rolling
+   * it here is what let four copies of one record type drift apart. */
   if (st.truncated) {
-    cJSON *p = cJSON_CreateObject();
-    cJSON_AddStringToObject(p, "source_id", s->id);
-    cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
-    cJSON_AddNumberToObject(p, "records_used", out);
-    cJSON_AddNumberToObject(p, "records_available", st.available);
-    cJSON_AddNumberToObject(p, "pages_read", st.page);
-    cJSON_AddBoolToObject(p, "more_pages_pending", st.available <= out);
-    cJSON_AddNumberToObject(p, "declared_max_items", s->max_items);
-    cJSON_AddStringToObject(p, "reason",
+    cJSON *extra = cJSON_CreateObject();
+    if (extra) {
+      cJSON_AddNumberToObject(extra, "pages_read", st.page);
+      cJSON_AddBoolToObject(extra, "more_pages_pending", st.available <= out);
+      cJSON_AddNumberToObject(extra, "declared_max_items", s->max_items);
+    }
+    jo_truncation_notice_ex(sink, s->id, vars.raw ? vars.raw : "",
+                            out, st.available,
       (s->max_items > 0 && out >= s->max_items)
         ? "the row declares max_items and the upstream offered more"
-        : "the page ceiling or a cancel stopped the walk");
-    cJSON_AddStringToObject(p, "remedy",
+        : "the page ceiling or a cancel stopped the walk",
       "raise max_items/page_max on this row (lib/hpengine.h) — see "
-      "docs/SOURCE_EXHAUSTIVENESS.md");
-    char *pj = cJSON_PrintUnformatted(p);
-    cJSON_Delete(p);
-    char key[320], title[256];
-    snprintf(key, sizeof key, "%.150s|truncation:%.120s", s->id,
-             vars.raw ? vars.raw : "");
-    snprintf(title, sizeof title, "%s used %d of %d available records",
-             s->id, out, st.available);
-    intel_item note = {0};
-    note.remote_key      = key;
-    note.title           = title;
-    note.lang            = "en";
-    note.record_type     = "collector-truncation-notice";
-    note.properties_json = pj ? pj : "{}";
-    note.tags_json       = "[\"osint-search\",\"truncation-notice\"]";
-    sink->emit(sink, &note);
-    free(pj);
+      "docs/SOURCE_EXHAUSTIVENESS.md", extra);
   }
 
   for (int i = 0; i < nh; i++) free(hdr_store[i]);

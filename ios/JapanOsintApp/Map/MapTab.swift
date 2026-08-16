@@ -532,6 +532,7 @@ struct MapTab: View {
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(registry.color(for: id))
                             .frame(width: 18)
+                            .accessibilityHidden(true)   // the layer name follows
                         Text(LayerRegistry.displayName(forId: id))
                             .font(.caption)
                             .foregroundStyle(theme.text)
@@ -634,6 +635,7 @@ struct MapTab: View {
                 .frame(width: 36, height: 36)
                 .mapBarSurface(in: Circle())
                 .frame(minWidth: 44, minHeight: 44)
+                .accessibilityLabel("Probe the map centre")
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -680,6 +682,7 @@ struct MapTab: View {
         Button { selectedFeature = nil; lookAroundScene = nil; showLayers = true } label: {
             HStack(spacing: 4) {
                 Image(systemName: "square.3.stack.3d")
+                    .accessibilityHidden(true)   // named by the button below
                 Text("\(settings.activeLayerIds.count)")
                     .font(.subheadline.weight(.semibold))
                     .monospacedDigit()
@@ -1059,9 +1062,16 @@ func mapPinView(symbol: String, color: Color, opacity: Double = 1, scale: CGFloa
         Circle()
             .fill(color.opacity(opacity))
             .frame(width: size, height: size)
+        // Fixed size on purpose, and not routed through `Typography`: the glyph
+        // is geometrically locked to the `22 * scale` disc above it and to the
+        // pin's map anchor. Growing it with Dynamic Type would spill it out of
+        // the circle and make dense layers unreadable. It is already at the
+        // 11 pt floor at the default `scale` of 1, and it carries no text —
+        // the annotation's own title is what VoiceOver reads.
         Image(systemName: symbol)
             .font(.system(size: 11 * scale, weight: .bold))
             .foregroundStyle(.white)
+            .accessibilityHidden(true)
     }
     .overlay(
         Circle().stroke(.white.opacity(0.85), lineWidth: 1)

@@ -22,6 +22,16 @@ int geojson_emit_features(intel_sink *sink, const char *source_id,
 /* Convenience: parse a FeatureCollection / {features:[...]} / array and emit. */
 int geojson_emit_doc(intel_sink *sink, const char *source_id, cJSON *doc);
 
+/* As above, but also report how many features the document CONTAINED.
+ * A feature that is not an object, or whose emit is refused, is not counted in
+ * the return value — so the emitted count alone cannot tell a caller whether a
+ * page came back full. lib/pagewalk.c needs the contained count to decide
+ * whether to continue; see the note in lib/jsonlist.h. `seen` may be NULL. */
+int geojson_emit_features_ex(intel_sink *sink, const char *source_id,
+                             cJSON *features, int *seen);
+int geojson_emit_doc_ex(intel_sink *sink, const char *source_id, cJSON *doc,
+                        int *seen);
+
 /* One Point Feature, properties not yet attached:
  *   {"type":"Feature","geometry":{"type":"Point","coordinates":[lon,lat]}}
  * The caller adds "properties" (and anything else) afterwards.

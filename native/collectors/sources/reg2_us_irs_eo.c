@@ -58,10 +58,11 @@ static int irs_run(const source_ctx *ctx, intel_sink *sink) {
   free(text);
   if (!rows) { fprintf(stderr, "[us-irs-exempt-orgs] csv parse failed\n"); return -1; }
 
-  int n = 0;
+  int parsed = cJSON_GetArraySize(rows);
+  int n = 0, capped = 0;
   const cJSON *row;
   cJSON_ArrayForEach(row, rows) {
-    if (n >= IRS_MAX) break;
+    if (n >= IRS_MAX) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     if (!cJSON_IsObject(row)) continue;
     const char *name = jo_sv(row, "NAME");
     const char *ein  = jo_sv(row, "EIN");
@@ -107,6 +108,18 @@ static int irs_run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON_Delete(rows);
+  /* House rule 2: this run parsed `parsed` rows out of the leading IRS_BYTES
+   * slice and stopped emitting at IRS_MAX. Say so in the data, not in a log. */
+  if (capped)
+    jo_truncation_notice(sink, "us-irs-exempt-orgs", "eo1.csv", n, (long)parsed,
+                         "IRS_MAX row cap reached; the rows parsed from the "
+                         "fetched byte range past that point were not emitted, "
+                         "and the run only requested the leading IRS_BYTES of a "
+                         "file that is tens of megabytes, so the region file "
+                         "holds more rows still",
+                         "raise or drop IRS_MAX and IRS_BYTES in "
+                         "collectors/sources/reg2_us_irs_eo.c, or walk the file "
+                         "in successive Range windows across runs");
   fprintf(stderr, "[us-irs-exempt-orgs] emitted %d\n", n);
   return 0;
 }

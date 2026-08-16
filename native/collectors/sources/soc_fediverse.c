@@ -395,10 +395,11 @@ static int run_lemmyverse(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[lemmyverse-instances] fetch/parse failed\n");
     cJSON_Delete(doc); return -1;
   }
-  int n = 0;
+  int n = 0, capped = 0;
+  const int have = cJSON_GetArraySize(doc);
   const cJSON *it;
   cJSON_ArrayForEach(it, doc) {
-    if (n >= 600) break;
+    if (n >= 600) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     const char *base = jo_sv(it, "base");
     if (!base) continue;
     const char *name = jo_sv(it, "name");
@@ -417,6 +418,15 @@ static int run_lemmyverse(const source_ctx *ctx, intel_sink *sink) {
                   "[\"fediverse\",\"lemmy\",\"instance\"]",
                   base, name ? name : base, summary, link, NULL, NULL);
   }
+  /* House rule 2: the whole crawled instance index was fetched and parsed; the
+   * emit loop stopped at 600 of it. */
+  if (capped)
+    jo_truncation_notice(sink, "lemmyverse-instances", "instance.min.json",
+                         n, (long)have,
+                         "the emit loop stops at 600 instances, so the tail of "
+                         "the fetched index was never emitted",
+                         "remove the `n >= 600` break in run_lemmyverse() in "
+                         "collectors/sources/soc_fediverse.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[lemmyverse-instances] emitted %d\n", n);
   return 0;
@@ -447,10 +457,11 @@ static int run_misskey_dir(const source_ctx *ctx, intel_sink *sink) {
   }
   const cJSON *stats = cJSON_GetObjectItem(doc, "stats");
   const char *latest = jo_sv(doc, "latestMisskeyVersion");
-  int n = 0;
+  int n = 0, capped = 0;
+  const int have = cJSON_GetArraySize(arr);
   const cJSON *it;
   cJSON_ArrayForEach(it, arr) {
-    if (n >= 600) break;
+    if (n >= 600) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     const char *host = jo_sv(it, "url");
     if (!host) continue;
     /* Some entries carry a null meta — guard before touching it. */
@@ -488,6 +499,15 @@ static int run_misskey_dir(const source_ctx *ctx, intel_sink *sink) {
                   "[\"fediverse\",\"misskey\",\"instance\"]",
                   host, iname ? iname : host, summary, link, NULL, NULL);
   }
+  /* House rule 2: the whole directory was fetched; the emit loop stopped at
+   * 600 of the instancesInfos array. */
+  if (capped)
+    jo_truncation_notice(sink, "misskey-instance-directory", "instances.json",
+                         n, (long)have,
+                         "the emit loop stops at 600 instances, so the tail of "
+                         "the fetched directory was never emitted",
+                         "remove the `n >= 600` break in run_misskey_dir() in "
+                         "collectors/sources/soc_fediverse.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[misskey-instance-directory] emitted %d\n", n);
   return 0;
@@ -582,7 +602,7 @@ static int run_invidious(const source_ctx *ctx, intel_sink *sink) {
   /* Array of [hostname, details] PAIRS, not objects. */
   cJSON_ArrayForEach(pair, doc) {
     if (!cJSON_IsArray(pair) || cJSON_GetArraySize(pair) < 2) continue;
-    const cJSON *hostv = cJSON_GetArrayItem(pair, 0);
+    const cJSON *hostv = cJSON_GetArrayItem(pair, 0);  /* exhaustive-ok: [hostname,details] pair, both read */
     const cJSON *d     = cJSON_GetArrayItem(pair, 1);
     if (!cJSON_IsString(hostv) || !hostv->valuestring || !cJSON_IsObject(d)) continue;
     const char *host = hostv->valuestring;

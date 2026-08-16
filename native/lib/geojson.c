@@ -242,8 +242,11 @@ static const char *T_AUTH[]   = {"author","operator",NULL};
 static const char *T_LANG[]   = {"language","lang",NULL};
 static const char *T_PUB[]    = {"published_at","observed_at","time","timestamp",NULL};
 
-int geojson_emit_features(intel_sink *sink, const char *sid, cJSON *features) {
+int geojson_emit_features_ex(intel_sink *sink, const char *sid, cJSON *features,
+                             int *seen) {
+  if (seen) *seen = 0;
   if (!cJSON_IsArray(features)) return 0;
+  if (seen) *seen = cJSON_GetArraySize(features);
   int n = 0, hashed = 0; cJSON *feat;
   cJSON_ArrayForEach(feat, features) {
     if (!cJSON_IsObject(feat)) continue;
@@ -296,6 +299,10 @@ int geojson_emit_features(intel_sink *sink, const char *sid, cJSON *features) {
   return n;
 }
 
+int geojson_emit_features(intel_sink *sink, const char *sid, cJSON *features) {
+  return geojson_emit_features_ex(sink, sid, features, NULL);
+}
+
 cJSON *gj_point_feature(double lon, double lat) {
   cJSON *f = cJSON_CreateObject();
   cJSON_AddStringToObject(f, "type", "Feature");
@@ -309,9 +316,15 @@ cJSON *gj_point_feature(double lon, double lat) {
   return f;
 }
 
-int geojson_emit_doc(intel_sink *sink, const char *sid, cJSON *doc) {
+int geojson_emit_doc_ex(intel_sink *sink, const char *sid, cJSON *doc,
+                        int *seen) {
+  if (seen) *seen = 0;
   if (!doc) return 0;
-  if (cJSON_IsArray(doc)) return geojson_emit_features(sink, sid, doc);
+  if (cJSON_IsArray(doc)) return geojson_emit_features_ex(sink, sid, doc, seen);
   cJSON *f = cJSON_GetObjectItem(doc, "features");
-  return f ? geojson_emit_features(sink, sid, f) : 0;
+  return f ? geojson_emit_features_ex(sink, sid, f, seen) : 0;
+}
+
+int geojson_emit_doc(intel_sink *sink, const char *sid, cJSON *doc) {
+  return geojson_emit_doc_ex(sink, sid, doc, NULL);
 }

@@ -4,7 +4,7 @@
  * access_level and custom_license_url - the last of which points at Landgate
  * terms for some records, so it is emitted verbatim rather than assuming
  * CC-BY. Keyless. Licence: per-dataset (license_title/custom_license_url). */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-au-wa"
 static const char *URL =

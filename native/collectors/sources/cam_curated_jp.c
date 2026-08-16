@@ -23,9 +23,12 @@
 #include "../../source.h"
 #include "../../core/camera_store.h"
 #include "../../lib/camfeature.h"
+#include "../../core/httpclient.h"   /* the liveness probe */
 #include "../../third_party/cJSON.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 typedef struct {
   const char *name;
@@ -262,13 +265,61 @@ static const char *cam_precision(const curated_cam *c) {
   return "exact";
 }
 
+/* ── liveness ──────────────────────────────────────────────────────────────
+ *
+ * The rows below are real operator-published positions, but until now nothing
+ * checked that the camera still exists: a station decommissioned in 2019 kept
+ * rendering as a live camera every hour, indistinguishable from one that
+ * answered a minute ago.
+ *
+ * A HEAD, not a GET. The question a probe can honestly answer is "did the host
+ * answer", not "is the video good" — and several of these URLs are MJPEG
+ * streams that never end, so a GET would sit there until the timeout on every
+ * single one. ANY HTTP status counts as reachable, including 403 and 405: a
+ * server that refuses the method still proved it is there, and treating that
+ * as dead would delete working cameras from the map.
+ *
+ * Cost: N_CAMS HEADs per run against an update_interval_sec of 3600, with a
+ * short timeout and no retry. JO_CAM_PROBE=0 turns it off, in which case the
+ * row says so (`liveness_checked: false`) rather than quietly claiming a
+ * freshness it does not have. */
+#define CAM_PROBE_TIMEOUT_MS 3000
+
+typedef struct { int attempted; long code; } cam_probe_result;
+
+static cam_probe_result cam_probe(const source_ctx *ctx, const char *url) {
+  cam_probe_result r = { 0, 0 };
+  const char *off = getenv("JO_CAM_PROBE");
+  if (off && off[0] == '0' && off[1] == 0) return r;
+  if (!url || !*url) return r;
+  if (strncmp(url, "http://", 7) != 0 && strncmp(url, "https://", 8) != 0) return r;
+  const char *hdrs[] = { "User-Agent: JapanOSINT/1.0 (camera liveness probe)", NULL };
+  http_response hr = {0};
+  r.attempted = 1;
+  http_request(ctx->http, "HEAD", url, hdrs, NULL, 0,
+               CAM_PROBE_TIMEOUT_MS, 0, &hr);
+  r.code = hr.status;
+  http_response_free(&hr);
+  return r;
+}
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = 0;
+  int n = 0, alive = 0, dead = 0;
+  char nowbuf[40];
+  { time_t tt = time(NULL); struct tm g; gmtime_r(&tt, &g);
+    strftime(nowbuf, sizeof nowbuf, "%Y-%m-%dT%H:%M:%SZ", &g); }
   for (int i = 0; i < N_CAMS; i++) {
     const curated_cam *c = &CAMS[i];
+    cam_probe_result pr = cam_probe(ctx, c->url[0] ? c->url : NULL);
+    if (pr.attempted) { if (pr.code > 0) alive++; else dead++; }
     char portbuf[16];
     if (c->port) snprintf(portbuf, sizeof portbuf, "%d", c->port);
-    cam_kv extra[11];
+    /* Bound: url, thumbnail_url, operator, catalog, reference, ip, port, path,
+     * product, geo_provenance, geo_precision, record_provenance,
+     * liveness_checked, reachable, last_probe_status, last_probe_at = 16.
+     * `e` is a running index with no per-write bounds check, so this MUST stay
+     * ahead of the longest path through the block below. */
+    cam_kv extra[17];
     int e = 0;
     /* `url` MUST come first among the extras: camera_upsert reads it as m_url
      * for it.link, and cam_make_feature keys the uid tail off it. */
@@ -301,6 +352,34 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     extra[e].is_num = extra[e].is_bool = extra[e].is_null = 0; e++;
     extra[e].k = "geo_precision";  extra[e].sv = cam_precision(c);
     extra[e].is_num = extra[e].is_bool = extra[e].is_null = 0; e++;
+    /* Say on the ROW what the source_def already says about the source: the
+     * position, name and operator come from the compile-time table above, not
+     * from a fetch. The source is honestly declared (`.type = "dataset"`,
+     * `internal://` url), but a reader holding a single row saw none of that
+     * and could reasonably have taken it for a live discovery — every other
+     * camera channel in the fleet is one. */
+    extra[e].k = "record_provenance"; extra[e].sv = "static-catalogue";
+    extra[e].is_num = extra[e].is_bool = extra[e].is_null = 0; e++;
+    /* …and then actually CHECK it, rather than shipping a decommissioned 2019
+     * volcano cam forever. See cam_probe() above for why a HEAD and why any
+     * HTTP answer counts as reachable. The row is emitted either way: dropping
+     * a camera on one failed probe would discard a real catalogue entry over a
+     * transient outage (house rule 2), so the honest move is to keep it and
+     * state what the probe found. */
+    extra[e].k = "liveness_checked";  extra[e].sv = NULL;
+    extra[e].is_num = 0; extra[e].is_bool = 1; extra[e].is_null = 0;
+    extra[e].bv = (pr.code != 0 || pr.attempted); e++;
+    extra[e].k = "reachable";         extra[e].sv = NULL;
+    extra[e].is_num = 0; extra[e].is_bool = 1; extra[e].is_null = 0;
+    extra[e].bv = (pr.code > 0); e++;
+    if (pr.code > 0) {
+      extra[e].k = "last_probe_status"; extra[e].sv = NULL;
+      extra[e].is_bool = extra[e].is_null = 0;
+      extra[e].is_num = 1; extra[e].nv = (double)pr.code; e++;
+    }
+    extra[e].k = "last_probe_at";     extra[e].sv = pr.attempted ? nowbuf : NULL;
+    extra[e].is_num = extra[e].is_bool = 0;
+    extra[e].is_null = pr.attempted ? 0 : 1; e++;
 
     cJSON *f = cam_make_feature(c->lat, c->lon, c->name, c->camera_type,
                                 c->channel, extra, e);
@@ -308,7 +387,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (camera_upsert(ctx->db, sink, f, c->channel) >= 0) n++;
     cJSON_Delete(f);
   }
-  fprintf(stderr, "[cam-curated-jp] emitted %d of %d curated cameras\n", n, N_CAMS);
+  fprintf(stderr,
+          "[cam-curated-jp] emitted %d of %d curated cameras "
+          "(probe: %d answered, %d unreachable)\n", n, N_CAMS, alive, dead);
   return 0;
 }
 

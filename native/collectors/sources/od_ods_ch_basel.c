@@ -5,7 +5,7 @@
  * Emits, per dataset: dataset_id, title, description, publisher, licence,
  * records_count, theme and modified - all from metas.default. Keyless.
  * Licence: CC-BY / Open-Government-Data Basel-Stadt terms. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ods-ch-basel"
 static const char *URL =

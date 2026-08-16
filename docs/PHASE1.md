@@ -1,5 +1,40 @@
 # Phase 1 — Multi-tenancy + Auth foundation
 
+> **DELIVERED IN C — every `server/…` path below is gone. Do not read this
+> file as a description of the tree.** The Node backend (`server/`) was
+> deleted on **2026-05-17**; the C backend under `native/core/` replaced it.
+> The *substance* of Phase 1 landed — the tenancy schema, the auth gate,
+> tenant resolution, audit, break-glass, platform and per-tenant keys are all
+> live — but this is the last document that still tables eight `server/…`
+> JavaScript files as "already in the tree", two of them ticked `[x]`, and
+> every one of those files has not existed for months. The section below maps
+> each claim onto what actually implements it, so the file stays readable as
+> the design record it is (the locked decisions and the risk list are still
+> correct) without being mistaken for a file inventory.
+>
+> **Where each tabled file actually lives now**
+>
+> | Doc says (deleted) | Actually implemented in |
+> | --- | --- |
+> | `server/src/utils/tenancyMigration.js` | `native/core/schema.sql` — `tenants`, `users`, `memberships`, `audit_events`, `tenant_secrets`, `tenant_quotas`, `tenant_api_keys`, `tenant_idp_connections`, `sso_group_role_map` are all `CREATE TABLE IF NOT EXISTS` there, applied at boot by `core/db.c` `db_open()`. No separate migration module. |
+> | `server/src/middleware/auth.js` | `native/core/auth.{c,h}` — the `requireSupabaseAuth` gate, HS256 via OpenSSL HMAC plus the JWKS/RS256 path. |
+> | `server/src/middleware/tenant.js` | `native/core/tenantapi.{c,h}` — `tenant_ctx` + first-seen provisioning (user, personal tenant, owner membership) and active-tenant selection. |
+> | `server/src/utils/tenancy.js` | No direct equivalent, and deliberately: the `tenantDb` SQL-string guard was a JS runtime trick. Tenant scoping in C is per-statement binding in the api modules. **This is the one item where the mechanism did not carry over — risk 1 below still stands and has no automated enforcement.** |
+> | `server/src/utils/credentials.js` | `native/core/keysapi.{c,h}` — HKDF + AES-256-GCM over `tenant_secrets`, plus `core/credtab.{c,h}` for the CREDENTIALS var table. |
+> | `server/src/routes/breakGlass.js` | `native/core/keysapi.c`, routed from `core/httpd.c:767` — `/admin/break-glass/login`, mounted outside the `/api` auth gate, TOTP → HS256 JWT, throttled by `core/ratelimit.c` (`RL_BREAKGLASS`, 5/60s). |
+> | `server/src/middleware/audit.js` (ticked `[x]`) | `native/core/audit.{c,h}` — `audit_write()`, the one shared audit-row writer; read side is `/api/audit` and `/api/audit/verify` (`tenantapi_audit_list` / `tenantapi_audit_verify`, `core/httpd.c:2346`). |
+> | `server/src/middleware/rateLimit.js` (ticked `[x]`) | `native/core/ratelimit.{c,h}` — **partial.** A fixed-window throttle exists, but it is applied at two call sites (break-glass login, isochrone), not as the per-`(tenant_id, route_class)` token bucket with plan multipliers this doc describes. Treat that `[x]` as unfinished in C. |
+>
+> **Routes that exist today** (`native/core/httpd.c`): `/admin/break-glass/login`,
+> `/api/me`, `/api/audit`, `/api/audit/verify`, `/api/members`,
+> `/api/tenant-keys`, `/api/keys`.
+>
+> **Also not carried over:** the Week 5 Stripe item is ticked `[x]` here and
+> there is **no billing code in `native/`** — only a `stripe_customer_id`
+> column on `tenants` (`core/schema.sql:549`). No checkout, portal or webhook
+> route exists. The "Quick smoke test" at the bottom of this file invokes
+> deleted JavaScript and cannot run.
+
 Tracking doc for the multi-tenant cutover. Captures the locked tech
 decisions, the files that are already in the tree, and what still needs to
 land before the system goes live.

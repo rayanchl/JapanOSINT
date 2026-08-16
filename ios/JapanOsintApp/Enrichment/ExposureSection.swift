@@ -72,6 +72,7 @@ struct ExposureSection: View {
             Image(systemName: "lock.trianglebadge.exclamationmark")
                 .font(.subheadline)
                 .foregroundStyle(breaches.isEmpty ? theme.textMuted : theme.danger)
+                .accessibilityHidden(true)   // the section title follows
             Text(title)
                 .font(.headline)
                 .foregroundStyle(theme.text)
@@ -88,6 +89,7 @@ struct ExposureSection: View {
             .buttonStyle(.plain)
             .foregroundStyle(theme.accent)
             .disabled(loading)
+            .accessibilityLabel("Reload exposure")
             .accessibilityLabel("Reload breach exposure")
         }
     }
@@ -232,6 +234,7 @@ struct ExposureSection: View {
                     Image(systemName: "chevron.right")
                         .font(.caption2)
                         .foregroundStyle(theme.textMuted)
+                        .accessibilityHidden(true)   // navigation affordance
                 }
             }
 
@@ -277,6 +280,7 @@ struct ExposureSection: View {
                 Text("No known exposure").foregroundStyle(theme.text)
             } icon: {
                 Image(systemName: "lock.shield").foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // "No known exposure" is the label
             }
         } description: {
             Text("No breach in the local corpus references this entity. That is an absence of evidence, not proof that it was never exposed.")
@@ -290,6 +294,7 @@ struct ExposureSection: View {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.caption)
                     .foregroundStyle(theme.danger)
+                    .accessibilityHidden(true)   // the message follows
                 Text(message)
                     .font(.caption)
                     .foregroundStyle(theme.text)

@@ -9,7 +9,7 @@
  * and any footnote text the API attached. Keyless (a descriptive User-Agent
  * is sent, as BLS asks).
  * Licence: US federal government work - public domain. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "us-bls-timeseries"
 static const char *URL =

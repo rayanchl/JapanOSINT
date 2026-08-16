@@ -9,8 +9,11 @@
  *               (×10000 if 万円, ×100000000 if 億円)
  * skip if no incidents && no damage. Feature props (exact order):
  *   ward_id, ward, prefecture, incidents_yr, damage_yen, source_url,
- *   country, source.  ward_id="LIVE_SCAM_<idx>" (1-based over matched rows).
- * properties has no NATIVE_ID key → uid = sha1(JSON.stringify{g,p})[:16]. */
+ *   country, source.  ward_id="LIVE_SCAM_<PAGES[] slot>" (1-based, fixed).
+ * properties now carries a stable `uid` (the page's own host+path) — it used
+ * to carry no NATIVE_ID key at all, so the row was uid'd by
+ * sha1(JSON.stringify{g,p})[:16], i.e. by a hash that included the changing
+ * incident/damage figures. See the comment on ward_id below. */
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/geojson.h"
@@ -102,7 +105,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(idx_html);
 
   cJSON *features = cJSON_CreateArray();
-  int idx = 0;
   for (int i = 0; i < NPAGES; i++) {
     char url[256];
     snprintf(url, sizeof url, "https://%s%s", PAGES[i].host, PAGES[i].path);
@@ -136,13 +138,26 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
 
     if (!has_inc && !has_dmg) { free(html); continue; }
-    idx++;
 
     cJSON *f = gj_point_feature(PAGES[i].lon, PAGES[i].lat);
 
+    /* `ward_id` was a counter of the pages that happened to parse this run, so
+     * a single prefectural site being down or changing its wording renumbered
+     * every ward after it. ward_id is not one of lib/geojson.c's
+     * NATIVE_ID_KEYS, so it is not the uid directly — but the uid for these
+     * rows is a hash of the whole properties bag, which ward_id is part of, so
+     * the renumbering re-keyed the rows all the same. Key it on the fixed
+     * PAGES[] slot, which identifies the police force whose page this is and
+     * does not move when a sibling page fails. `uid` (a real NATIVE_ID_KEY)
+     * pins it explicitly to the page's own URL, so the yearly incident/damage
+     * figures can change without minting a new row every run. */
     cJSON *p = cJSON_CreateObject();   /* EXACT JS key order */
-    char wid[32]; snprintf(wid, sizeof wid, "LIVE_SCAM_%d", idx);
+    char wid[32]; snprintf(wid, sizeof wid, "LIVE_SCAM_%d", i + 1);
     cJSON_AddStringToObject(p, "ward_id", wid);
+    char uidb[320];
+    snprintf(uidb, sizeof uidb, "phone-scam:%.128s%.160s",
+             PAGES[i].host, PAGES[i].path);
+    cJSON_AddStringToObject(p, "uid", uidb);
     cJSON_AddStringToObject(p, "ward", PAGES[i].name);
     cJSON_AddStringToObject(p, "prefecture", PAGES[i].pref);
     cJSON_AddItemToObject(p, "incidents_yr",

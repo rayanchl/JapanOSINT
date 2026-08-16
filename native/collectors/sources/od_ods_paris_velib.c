@@ -9,7 +9,7 @@
  * R2: coordinates come only from the upstream coordonnees_geo{lon,lat}.
  * Keyless. Licence: ODbL / Licence Ouverte; Paris open-data terms permit
  * reuse with attribution. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ods-paris-velib"
 static const char *URL =

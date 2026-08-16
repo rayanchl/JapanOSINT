@@ -6,10 +6,16 @@ import CoreLocation
 // Saved areas of interest (roadmap 9) — list, inspect, delete.
 //
 // Mount inside a NavigationStack (like `AlertsTab`), or present as a sheet from
-// one. Optionally pass `onAlertHere` to enable the "Draw new area" button: the
-// closure is handed the finished geometry so the caller can open a prefilled
-// `AlertEditor`. Without it the button is hidden rather than being a control
-// that does nothing.
+// one. Drawing is ALWAYS available: "Draw new area" and the empty state's
+// "Draw an area" both open `AOIDrawOverlay`, whose save path (POST /api/aoi) is
+// entirely self-contained. Gating those buttons on an `onAlertHere` handler —
+// which neither mount site passes — is what previously left AOI creation with
+// no live entry point anywhere in the app.
+//
+// `onAlertHere` remains as a HOST OVERRIDE: a caller that owns an alerts UI
+// (e.g. the map) can take the finished geometry and open its own prefilled
+// editor. When it is not supplied this view opens one itself, so "Alert me
+// here" is never a dead control either.
 //
 // Delete is the interesting case. The server returns **409 `aoi_in_use`** with
 // the referencing rules when a rule still geofences on the shape, because
@@ -19,8 +25,9 @@ import CoreLocation
 // ─────────────────────────────────────────────────────────────────────────────
 
 struct AOIListView: View {
-    /// Supply to enable in-place drawing. Receives the finished shape so the
-    /// caller can open a prefilled `AlertEditor`.
+    /// Optional host override for "Alert me here". Receives the finished shape
+    /// so a caller that owns its own alerts UI can open a prefilled editor.
+    /// When nil this view opens `AlertEditor` itself.
     var onAlertHere: ((DrawnAOI) -> Void)? = nil
 
     @EnvironmentObject var apiClient: APIClient
@@ -33,6 +40,12 @@ struct AOIListView: View {
     /// read as a failure of the app.
     @State private var inUseMessage: String?
     @State private var showDraw = false
+    /// A blank rule pre-loaded with a geofence — either the shape just drawn or
+    /// a saved area's `aoi_id`. Presented as an `AlertEditor` sheet.
+    @State private var draftRule: AlertRule?
+    /// The area being renamed (PATCH /api/aoi/:id), and the pending name.
+    @State private var renaming: AreaOfInterest?
+    @State private var renameText = ""
 
     var body: some View {
         Group {
@@ -47,13 +60,11 @@ struct AOIListView: View {
         .themedScreenBackground(theme)
         .navigationTitle("Areas of interest")
         .toolbar {
-            if onAlertHere != nil {
-                ToolbarItem(placement: .compatPrimary) {
-                    Button { showDraw = true } label: {
-                        Image(systemName: "plus.circle.fill")
-                    }
-                    .accessibilityLabel("Draw new area")
+            ToolbarItem(placement: .compatPrimary) {
+                Button { showDraw = true } label: {
+                    Image(systemName: "plus.circle.fill")
                 }
+                .accessibilityLabel("Draw new area")
             }
             ToolbarItem(placement: .compatPrimary) {
                 Button { Task { await reload() } } label: {
@@ -68,12 +79,28 @@ struct AOIListView: View {
             AOIDrawOverlay(
                 onAlertHere: { drawn in
                     showDraw = false
-                    onAlertHere?(drawn)
+                    if let host = onAlertHere {
+                        host(drawn)
+                    } else {
+                        draftRule = AlertRule.blank(geofencedBy: drawn)
+                    }
                 },
                 onSaved: { saved in
                     areas.insert(saved, at: 0)
                 }
             )
+        }
+        .sheet(item: $draftRule) { rule in
+            AlertEditor(rule: rule, onSave: { _ in })
+        }
+        .alert("Rename area", isPresented: Binding(get: { renaming != nil },
+                                                   set: { if !$0 { renaming = nil } }),
+               presenting: renaming) { aoi in
+            TextField("Name", text: $renameText)
+            Button("Save") { Task { await rename(aoi) } }
+            Button("Cancel", role: .cancel) { renaming = nil }
+        } message: { _ in
+            Text("The shape is unchanged — only the name every rule shows for it.")
         }
         .alert("Area still in use",
                isPresented: Binding(get: { inUseMessage != nil },
@@ -143,7 +170,33 @@ struct AOIListView: View {
                 Label("Delete", systemImage: "trash")
             }
         }
+        .swipeActions(edge: .leading, allowsFullSwipe: false) {
+            Button {
+                renameText = aoi.name
+                renaming = aoi
+            } label: {
+                Label("Rename", systemImage: "pencil")
+            }
+            .tint(theme.accent)
+            Button {
+                draftRule = AlertRule.blank(geofencedByAOI: aoi)
+            } label: {
+                Label("Alert", systemImage: "bell.badge")
+            }
+            .tint(theme.accentAlt)
+        }
         .contextMenu {
+            Button {
+                renameText = aoi.name
+                renaming = aoi
+            } label: {
+                Label("Rename area", systemImage: "pencil")
+            }
+            Button {
+                draftRule = AlertRule.blank(geofencedByAOI: aoi)
+            } label: {
+                Label("Alert on this area", systemImage: "bell.badge")
+            }
             Button {
                 Clipboard.copy(aoi.id)
             } label: {
@@ -162,15 +215,11 @@ struct AOIListView: View {
             Label("No saved areas", systemImage: "mappin.and.ellipse")
                 .foregroundStyle(theme.text)
         } description: {
-            Text(onAlertHere == nil
-                 ? "Draw a polygon or circle on the map and choose “Save as area”. Saved areas can then be reused by any alert rule."
-                 : "Draw a polygon or circle, then save it. Saved areas can be reused by any alert rule.")
+            Text("Draw a polygon or circle, then choose “Save as area”. Saved areas can be reused by any alert rule.")
                 .foregroundStyle(theme.textMuted)
         } actions: {
-            if onAlertHere != nil {
-                Button("Draw an area") { showDraw = true }
-                    .buttonStyle(.borderedProminent)
-            }
+            Button("Draw an area") { showDraw = true }
+                .buttonStyle(.borderedProminent)
             if let error {
                 Text(error)
                     .font(.caption2)
@@ -189,6 +238,25 @@ struct AOIListView: View {
             error = nil
         } catch let e {
             error = e.localizedDescription
+            Haptics.error()
+        }
+    }
+
+    /// PATCH /api/aoi/:id. Name only — the server merges, so omitting
+    /// `geometry` leaves the stored shape exactly as it was, which is what
+    /// "Saved areas … stay editable" promises without inventing a re-draw flow.
+    private func rename(_ aoi: AreaOfInterest) async {
+        let name = renameText.trimmingCharacters(in: .whitespaces)
+        renaming = nil
+        guard !name.isEmpty, name != aoi.name else { return }
+        do {
+            let updated = try await apiClient.api.aoiUpdate(aoi.id, name: name)
+            if let i = areas.firstIndex(where: { $0.id == updated.id }) {
+                areas[i] = updated
+            }
+            Haptics.success()
+        } catch let e {
+            error = ServerError.message(e)
             Haptics.error()
         }
     }

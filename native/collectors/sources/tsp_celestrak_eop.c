@@ -96,7 +96,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char cutoff[16];
   jo_days_ago_iso(WINDOW_DAYS, cutoff, sizeof cutoff);
 
-  int n = 0, seen = 0;
+  int n = 0, seen = 0, capped = 0;
   double prev_dat = -1;
   char *line;
   while ((line = jo_next_line_cr(&p)) != NULL) {
@@ -115,7 +115,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (dat >= 0) prev_dat = dat;
 
     if (strcmp(date, cutoff) < 0) continue;
-    if (n >= MAX_ROWS) break;
+    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
 
     const char *typ = tsp_cell(f, nf, i_typ);
     const char *ut1 = tsp_cell(f, nf, i_ut1);
@@ -163,6 +163,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
+  /* House rule 2: the whole EOP file was downloaded and every daily row
+   * counted; MAX_ROWS stopped the emit loop inside the recent window. */
+  if (capped)
+    jo_truncation_notice(sink, "celestrak-eop", "EOP-All", n, (long)seen,
+                         "MAX_ROWS reached; the remaining in-window daily rows "
+                         "of the downloaded file were not emitted",
+                         "raise or drop MAX_ROWS in collectors/sources/"
+                         "tsp_celestrak_eop.c");
   free(body);
   fprintf(stderr, "[celestrak-eop] emitted %d of %d daily rows (>= %s)\n",
           n, seen, cutoff);

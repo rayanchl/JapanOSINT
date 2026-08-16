@@ -14,6 +14,7 @@
  *     integer seq. `filename` is data, never a path component. */
 #include "uploadapi.h"
 #include "audit.h"
+#include "docmeta.h"
 #include "evidence.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
@@ -672,8 +673,20 @@ static char *h_part(db_handle *db, const tenant_ctx *t, const char *id,
   /* Metadata first, bytes published second. The rename happens only after the
    * transaction commits, so a rolled-back part can never clobber a previously
    * accepted one — the failure mode of the reverse order is a part whose file
-   * and row disagree, which surfaces as a corrupt file instead of an error. */
-  sqlite3_exec(db->h, "BEGIN IMMEDIATE", NULL, NULL, NULL);
+   * and row disagree, which surfaces as a corrupt file instead of an error.
+   *
+   * That invariant depends on the BEGIN having actually started a transaction.
+   * db->h is the shared event-loop handle a collector write can be holding, so
+   * BEGIN IMMEDIATE really does fail with SQLITE_BUSY here; unchecked, the
+   * INSERT below would run in autocommit and every error-path ROLLBACK in this
+   * function would be a no-op on nothing, publishing a part the handler then
+   * reported as rejected. Refuse the part instead — the client re-sends. */
+  if (sqlite3_exec(db->h, "BEGIN IMMEDIATE", NULL, NULL, NULL) != SQLITE_OK) {
+    fprintf(stderr, "[upload] part BEGIN failed for %s seq %ld: %s\n",
+            id, seq, sqlite3_errmsg(db->h));
+    unlink(tmp);
+    return err(st, 500, "server_error");
+  }
   int ok = 1;
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
@@ -712,7 +725,20 @@ static char *h_part(db_handle *db, const tenant_ctx *t, const char *id,
     fprintf(stderr, "[upload] part txn: %s\n", sqlite3_errmsg(db->h));
     return err(st, 500, "server_error");
   }
-  sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL);
+  /* The COMMIT return is NOT optional. On SQLITE_BUSY or SQLITE_FULL the
+   * transaction stays OPEN, and discarding the rc had three consequences at
+   * once: this handler answered 200 for a part row that was never durable; the
+   * rename below published the bytes on top of that phantom row; and the NEXT
+   * request's BEGIN IMMEDIATE failed silently, so its writes joined this stale
+   * transaction and its error-path ROLLBACK discarded this part too. Roll back
+   * explicitly, drop the staged file, and answer 500 so the client re-sends. */
+  if (sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
+    fprintf(stderr, "[upload] part COMMIT failed for %s seq %ld: %s\n",
+            id, seq, sqlite3_errmsg(db->h));
+    sqlite3_exec(db->h, "ROLLBACK", NULL, NULL, NULL);
+    unlink(tmp);
+    return err(st, 500, "server_error");
+  }
 
   char dst[1200];
   up_part_path(id, seq, dst, sizeof dst);
@@ -747,6 +773,38 @@ static char *h_part(db_handle *db, const tenant_ctx *t, const char *id,
 
 /* ── POST /api/uploads/:id/commit ─────────────────────────────────────────── */
 
+/* uploads.docmeta_json, parsed, or NULL when the column is empty.
+ *
+ * Attribution is extracted once at commit and STORED, not recomputed per read:
+ * the bytes are handed to the content-addressed evidence store and released
+ * immediately after commit, so this is the only moment the whole document is
+ * in memory. A read path that wanted it later would have to fetch the blob
+ * back — and after the evidence reaper has run, it may not be there. */
+static cJSON *docmeta_of(db_handle *db, const char *id) {
+  sqlite3_stmt *s;
+  cJSON *out = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT docmeta_json FROM uploads WHERE id=?1", -1, &s, NULL) != SQLITE_OK)
+    return NULL;
+  sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  if (sqlite3_step(s) == SQLITE_ROW) {
+    const char *v = ctext(s, 0);
+    if (v && *v) out = cJSON_Parse(v);
+  }
+  sqlite3_finalize(s);
+  return out;
+}
+
+/* Attach `docmeta` to a response object: the stored attribution, or an honest
+ * null. Null means "not extracted" — an upload committed before this ran, or
+ * one whose extraction failed — and is deliberately NOT an empty object, which
+ * would read as "this document carries no metadata". */
+static void add_docmeta(cJSON *d, db_handle *db, const char *id) {
+  cJSON *dm = docmeta_of(db, id);
+  if (dm) cJSON_AddItemToObject(d, "docmeta", dm);
+  else    cJSON_AddNullToObject(d, "docmeta");
+}
+
 /* The committed response, rebuilt from the row. Shared by the first commit and
  * by a retried one, so a client that loses the reply to its commit and asks
  * again gets the SAME answer instead of a 409 it cannot act on. */
@@ -767,6 +825,7 @@ static char *commit_response(db_handle *db, const up_row *r, const char *uid,
   cJSON_AddItemToObject(d, "committed_at",
                         r->has_committed ? cJSON_CreateString(r->committed)
                                          : cJSON_CreateNull());
+  add_docmeta(d, db, r->id);
   return wrap(d, st, code);
 }
 
@@ -873,21 +932,43 @@ static char *h_commit(db_handle *db, const tenant_ctx *t, const char *id,
                               curl, "UPLOAD", NULL, 0L, NULL,
                               buf, (size_t)assembled,
                               r.has_ct ? r.ct : NULL);
+
+  /* Forensic attribution, extracted HERE because this is the only moment the
+   * assembled document exists in memory — the bytes go to the content-
+   * addressed store and are freed on the next line, and the evidence reaper
+   * may later remove the blob entirely. A PDF's producer/creator/timestamps
+   * and a DOCX's creator/last-modified-by are the whole reason an analyst
+   * uploads the file; recovering them later would mean re-reading a blob that
+   * might not be there.
+   *
+   * Pure function over bytes: no I/O, no network, bounded work for ANY input
+   * (docmeta.h's DOCMETA_* caps), so it cannot stall the commit. The hints are
+   * the client's declared filename and content type — echoed and diffed
+   * against the magic bytes (a ".jpg" that is really a ZIP is a finding), and
+   * they never steer the parser. It never returns NULL short of malloc
+   * exhaustion; if it does, docmeta_json stays NULL and the response says so
+   * rather than inventing an empty object. */
+  char *dm = docmeta_extract(buf, (size_t)assembled,
+                             r.filename[0] ? r.filename : NULL,
+                             r.has_ct ? r.ct : NULL);
   free(buf);
 
   sqlite3_stmt *up;
   if (sqlite3_prepare_v2(db->h,
         "UPDATE uploads SET status='committed', sha256=?1, received_bytes=?2,"
-        "part_count=?3, committed_at=datetime('now') "
+        "part_count=?3, committed_at=datetime('now'), docmeta_json=?6 "
         "WHERE id=?4 AND tenant_id=?5 AND status='open'",
-        -1, &up, NULL) != SQLITE_OK) return err(st, 500, "server_error");
+        -1, &up, NULL) != SQLITE_OK) { free(dm); return err(st, 500, "server_error"); }
   sqlite3_bind_text (up, 1, sha, -1, SQLITE_TRANSIENT);
   sqlite3_bind_int64(up, 2, (sqlite3_int64)assembled);
   sqlite3_bind_int64(up, 3, (sqlite3_int64)n);
   sqlite3_bind_text (up, 4, id, -1, SQLITE_TRANSIENT);
   sqlite3_bind_text (up, 5, t->tenant_id, -1, SQLITE_TRANSIENT);
+  if (dm) sqlite3_bind_text(up, 6, dm, -1, SQLITE_TRANSIENT);
+  else    sqlite3_bind_null(up, 6);
   int urc = sqlite3_step(up);
   sqlite3_finalize(up);
+  free(dm);
   if (urc != SQLITE_DONE) {
     fprintf(stderr, "[upload] commit update: %s\n", sqlite3_errmsg(db->h));
     return err(st, 500, "server_error");
@@ -985,6 +1066,11 @@ static char *h_status(db_handle *db, const tenant_ctx *t, const char *id,
                         r.has_committed ? cJSON_CreateString(r.committed)
                                         : cJSON_CreateNull());
   cJSON_AddNumberToObject(d, "expires_in_sec", (double)up_ttl_sec());
+  /* Served here too, not only in the commit reply: a client that lost the
+   * commit response must be able to read the attribution back, and it is the
+   * one fact about the document that the bytes no longer answer once they are
+   * in the evidence store. Null until the upload is committed. */
+  add_docmeta(d, db, r.id);
   return wrap(d, st, 200);
 }
 
@@ -1095,6 +1181,13 @@ void uploadapi_migrate(db_handle *db) {
     fprintf(stderr, "[upload] schema: %s\n", e ? e : "?");
     sqlite3_free(e);
   }
+
+  /* Forensic attribution of the committed document (core/docmeta.c), stored at
+   * commit. An ADDED column, so it goes through ensure_column and NOT through
+   * the CREATE above — CREATE TABLE IF NOT EXISTS no-ops on a table that is
+   * already there, so a column appended to the CREATE would never reach a
+   * deployed database. Same reasoning as db.c's boot-migration block. */
+  ensure_column(db, "uploads", "docmeta_json", "TEXT");
 
   if (ensure_dir(up_root()) != 0)
     fprintf(stderr, "[upload] scratch root %s is not writable — uploads will "

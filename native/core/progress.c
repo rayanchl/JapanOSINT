@@ -453,12 +453,15 @@ static cJSON *ent_array(entity_t *p, int n) {
   return a;
 }
 
-char *progress_to_json(osint_request *r) {
+/* Serialise one request. THE CALLER MUST HOLD g_lock — this is the shared
+ * body of progress_to_json() and progress_snapshot(); the latter needs the
+ * lookup, the serialise and the done-read to happen without ever letting go,
+ * so the locking cannot live in here. */
+static char *to_json_locked(osint_request *r) {
   if (!r) return NULL;
-  pthread_mutex_lock(&g_lock);
 
   cJSON *o = cJSON_CreateObject();
-  if (!o) { pthread_mutex_unlock(&g_lock); return NULL; }
+  if (!o) return NULL;
 
   cJSON_AddStringToObject(o, "request_id", r->request_id ? r->request_id : "");
   cJSON_AddStringToObject(o, "query", r->query ? r->query : "");
@@ -544,9 +547,41 @@ char *progress_to_json(osint_request *r) {
     if (res) cJSON_AddItemToObject(o, "results", res);
   }
 
-  pthread_mutex_unlock(&g_lock);
-
   char *out = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
   return out;
 }
+
+char *progress_to_json(osint_request *r) {
+  if (!r) return NULL;
+  pthread_mutex_lock(&g_lock);
+  char *out = to_json_locked(r);
+  pthread_mutex_unlock(&g_lock);
+  return out;
+}
+
+/* Look up, serialise and read `done` in ONE critical section.
+ *
+ * This exists because progress_get() + progress_to_json() is a use-after-free.
+ * progress_get() finds the request under the lock and then returns the raw
+ * pointer AFTER unlocking, while progress_create()'s 200-entry retention sweep
+ * frees the oldest *finished* request — so between a reader's get and its
+ * to_json, a pipeline thread starting a new search can free the very entry the
+ * reader is about to serialise. 200 completed searches is an ordinary day.
+ *
+ * Every READER is now this one call. progress_get() survives for the two
+ * WRITERS (osint_pipeline_run and translate's backfill thread), which own the
+ * request they were handed and finish it as their last act — eviction only
+ * ever takes a request that is already `done`, so their pointer cannot be the
+ * one freed. */
+char *progress_snapshot(const char *request_id, int *done_out) {
+  if (done_out) *done_out = 0;
+  if (!request_id) return NULL;
+  pthread_mutex_lock(&g_lock);
+  osint_request *r = find_locked(request_id);
+  char *out = r ? to_json_locked(r) : NULL;
+  if (r && done_out) *done_out = r->done;
+  pthread_mutex_unlock(&g_lock);
+  return out;
+}
+

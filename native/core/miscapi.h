@@ -23,8 +23,18 @@ char *miscapi_source_logs(db_handle *db, const char *id, int limit);
  * (null.replace). Always non-NULL; malloc'd JSON array. */
 char *miscapi_list_layers(void);
 
-/* GET /api/layers/:layerId/geojson — empty FC + _meta.sources for the
- * layer. NULL when no registry source maps to that layer (caller → 404). */
+/* GET /api/layers/:layerId/geojson — the FALLBACK half of that route only.
+ *
+ * httpd.c serves the route through the real data path first (sweepapi_data,
+ * then dataapi_layer), so a layer id that names a servable layer or source
+ * returns its actual FeatureCollection. This function is reached only when
+ * neither can answer under that id — an aggregate layer whose records live
+ * under its contributing source ids — and it returns an explicit
+ * {"error":"layer_not_directly_servable",...,"sources":[...]} body that the
+ * caller sends as HTTP 501, never a 200 with an empty feature array (which a
+ * map client cannot tell apart from "this layer is empty").
+ *
+ * NULL when no registry source maps to that layer at all (caller → 404). */
 char *miscapi_layer_geojson(const char *layer_id);
 
 /* GET /api/follow/recent — collector-tap history. The C scheduler keeps no

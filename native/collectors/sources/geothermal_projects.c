@@ -136,9 +136,24 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddItemToObject(p, "page_title",
       has_title ? cJSON_CreateString(title) : cJSON_CreateNull());
     cJSON_AddStringToObject(p, "country", "JP");
+    /* The coordinate is the last un-provenanced field on this row. It is a
+     * district-level point typed into DISTRICTS[] above, not published by the
+     * page we just fetched and not the location of any plant — and once it
+     * reaches lib/geojson.c it becomes intel_items.lat/lon, where the geofence
+     * and alert read path cannot tell it from a surveyed position. Say what it
+     * is, in the same vocabulary wifi_networks_shodan.c uses. */
+    cJSON_AddStringToObject(p, "geo_provenance", "static-catalogue");
+    cJSON_AddStringToObject(p, "geo_precision", "district");
+    cJSON_AddBoolToObject(p, "geo_uncertain", 1);
     /* was "jogmec_geothermal_live": only page_title and source_url come from
-     * the fetch; the district identity and capacity are a static catalogue. */
+     * the fetch; the district identity, coordinates and capacity are a static
+     * catalogue, and the 200 that gates this row is a 200 on a narrative page
+     * that publishes none of them. */
     cJSON_AddStringToObject(p, "source", "jogmec_geothermal_page_probe");
+    cJSON_AddStringToObject(p, "fetched_fields", "page_title, source_url");
+    cJSON_AddStringToObject(p, "static_fields",
+      "name, name_ja, district_type, prefecture, town, coordinates, "
+      "notable_plants, installed_capacity_mw");
     cJSON_AddStringToObject(p, "source_url", url);
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);

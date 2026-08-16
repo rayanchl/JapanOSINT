@@ -157,6 +157,7 @@ struct ApiKeyDetailView: View {
                                     } else {
                                         Image(systemName: "checkmark.circle.fill")
                                             .font(.title3)
+                                            .accessibilityLabel("Saved")
                                     }
                                 }
                                 .frame(width: 28, height: 28)
@@ -299,6 +300,7 @@ struct ApiKeyDetailView: View {
                     Image(systemName: "chevron.right")
                         .font(.caption2)
                         .foregroundStyle(theme.textMuted)
+                        .accessibilityHidden(true)   // navigation affordance
                 }
                 .padding(.vertical, 4)
                 .contentShape(Rectangle())

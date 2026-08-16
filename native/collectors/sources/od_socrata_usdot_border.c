@@ -7,7 +7,7 @@
  * R2: `point` is a proper upstream GeoJSON Point and is the coordinate
  * source; nothing is derived when it is absent. Keyless.
  * Licence: US federal government work - public domain. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "socrata-usdot-border-crossing"
 static const char *URL =

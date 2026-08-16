@@ -103,9 +103,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *extent = cJSON_GetObjectItem(coll, "extent");
     cJSON *sp = extent ? cJSON_GetObjectItem(extent, "spatial") : NULL;
     cJSON *bb = sp ? cJSON_GetObjectItem(sp, "bbox") : NULL;
-    cJSON *b0 = cJSON_IsArray(bb) ? cJSON_GetArrayItem(bb, 0) : NULL;
+    cJSON *b0 = cJSON_IsArray(bb) ? cJSON_GetArrayItem(bb, 0) : NULL;  /* exhaustive-ok: STAC bbox[0] IS the overall spatial extent by spec */
     if (cJSON_IsArray(b0) && cJSON_GetArraySize(b0) >= 4) {
-      cJSON *a0 = cJSON_GetArrayItem(b0, 0), *a1 = cJSON_GetArrayItem(b0, 1);
+      cJSON *a0 = cJSON_GetArrayItem(b0, 0), *a1 = cJSON_GetArrayItem(b0, 1);  /* exhaustive-ok: [w,s,e,n] tuple, all four read */
       cJSON *a2 = cJSON_GetArrayItem(b0, 2), *a3 = cJSON_GetArrayItem(b0, 3);
       if (cJSON_IsNumber(a0) && cJSON_IsNumber(a1) && cJSON_IsNumber(a2) &&
           cJSON_IsNumber(a3)) {
@@ -119,9 +119,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const char *tstart = NULL, *tend = NULL;
     cJSON *tp = extent ? cJSON_GetObjectItem(extent, "temporal") : NULL;
     cJSON *iv = tp ? cJSON_GetObjectItem(tp, "interval") : NULL;
-    cJSON *i0 = cJSON_IsArray(iv) ? cJSON_GetArrayItem(iv, 0) : NULL;
+    cJSON *i0 = cJSON_IsArray(iv) ? cJSON_GetArrayItem(iv, 0) : NULL;  /* exhaustive-ok: STAC interval[0] IS the overall temporal extent by spec */
     if (cJSON_IsArray(i0)) {
-      cJSON *a = cJSON_GetArrayItem(i0, 0), *b = cJSON_GetArrayItem(i0, 1);
+      cJSON *a = cJSON_GetArrayItem(i0, 0), *b = cJSON_GetArrayItem(i0, 1);  /* exhaustive-ok: [start,end] tuple, both read */
       if (cJSON_IsString(a)) tstart = a->valuestring;
       if (cJSON_IsString(b)) tend = b->valuestring;
     }

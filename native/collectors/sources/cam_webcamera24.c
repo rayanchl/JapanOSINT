@@ -111,7 +111,7 @@ static const centroid PREFECTURE_CENTROIDS[] = {
 /* The first 47 entries are prefectures; the rest are city/locality anchors. */
 #define N_PREFECTURES 47
 
-/* Returns 1 on match, setting *lat/*lon to the exact centroid and *precision
+/* Returns 1 on match, setting *lat / *lon to the exact centroid and *precision
  * to "prefecture" or "city". No jitter — the centroid is an honest area anchor,
  * not the camera's GPS. */
 static int guess_centroid(const char *text, double *lat, double *lon,

@@ -557,6 +557,129 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
  * stateful. Suppressed events are excluded by default: a storm-capped row
  * exists so the storm is diagnosable, not so it can bury the inbox it was
  * capping. read_at is added by db.c's ensure_column() boot migration. */
+/* GET /api/alert-events/:id/deliveries — the per-channel delivery ledger.
+ *
+ * alert_deliveries has been written on every enqueue, every attempt and every
+ * test since the delivery worker landed, and nothing ever read it: an operator
+ * asking "why did this alert never arrive" could see delivered_channels_json
+ * (a summary that cannot express "tried 4 times, 502") and nothing else. This
+ * is that read.
+ *
+ * Every row and every column, uncapped: a delivery ledger for one event is
+ * bounded by the rule's channel count times the 5-attempt ladder, and the one
+ * row an operator needs is exactly the one a LIMIT would drop.
+ *
+ * The event is resolved against alert_events FIRST, so an id belonging to
+ * another tenant is a 404 and never a row. Deliveries recorded by
+ * POST /api/alerts/:id/test carry a synthetic "test-<uuid>" event_id with no
+ * alert_events row on purpose (a test must not pollute the event feed); they
+ * are therefore not tenant-attributable and are not reachable here — the test
+ * call returns its own per-channel results in its response. */
+char *alertdeliveriesapi(db_handle *db, const char *tid, const char *uid,
+                         const char *event_id, int *st) {
+  if (!db || !db->h || !event_id || !*event_id) return err(st,400,"bad_request");
+  if (member_rank(db, tid, uid) < RANK_READ) {
+    *st = 403; return strdup("{\"error\":\"forbidden\"}");
+  }
+
+  sqlite3_stmt *s;
+  int owned = 0;
+  char matched_at[40] = {0}, rule_id[64] = {0};
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT matched_at,rule_id FROM alert_events WHERE id=?1 AND tenant_id=?2",
+        -1,&s,NULL) != SQLITE_OK) return err(st,500,"server_error");
+  sqlite3_bind_text(s,1,event_id,-1,SQLITE_TRANSIENT);
+  sqlite3_bind_text(s,2,tid,-1,SQLITE_TRANSIENT);
+  if (sqlite3_step(s) == SQLITE_ROW) {
+    owned = 1;
+    const char *v;
+    if ((v = ctext(s,0))) snprintf(matched_at,sizeof matched_at,"%s",v);
+    if ((v = ctext(s,1))) snprintf(rule_id,sizeof rule_id,"%s",v);
+  }
+  sqlite3_finalize(s);
+  if (!owned) return err(st,404,"Not found");
+
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT id,channel_idx,channel_type,target,attempt,status,http_code,"
+        "error,next_attempt_at,attempted_at FROM alert_deliveries "
+        "WHERE event_id=?1 ORDER BY channel_idx ASC, id ASC",
+        -1,&s,NULL) != SQLITE_OK) return err(st,500,"server_error");
+  sqlite3_bind_text(s,1,event_id,-1,SQLITE_TRANSIENT);
+
+  cJSON *arr = cJSON_CreateArray();
+  int pending = 0, ok = 0, failed = 0, dead = 0, skipped = 0, attempts = 0;
+  while (sqlite3_step(s) == SQLITE_ROW) {
+    cJSON *r = cJSON_CreateObject();
+    cJSON_AddNumberToObject(r,"id",(double)sqlite3_column_int64(s,0));
+    int cidx = sqlite3_column_int(s,1);
+    cJSON_AddNumberToObject(r,"channel_idx",(double)cidx);
+    /* channel_idx -1 is the reserved sentinel the worker writes when an event
+     * was resolved without any channel being tried (rule deleted/disabled/
+     * muted, or no channels). Naming it here is the difference between "no
+     * delivery was attempted, and here is why" and a row that looks like a
+     * malformed channel. */
+    cJSON_AddBoolToObject(r,"no_channel_attempted", cidx < 0);
+    cJSON_AddStringToObject(r,"channel_type",(const char*)sqlite3_column_text(s,2));
+    const char *tg = ctext(s,3);
+    cJSON_AddItemToObject(r,"target", tg?cJSON_CreateString(tg):cJSON_CreateNull());
+    int att = sqlite3_column_int(s,4);
+    attempts += att;
+    cJSON_AddNumberToObject(r,"attempt",(double)att);
+    const char *stt = (const char*)sqlite3_column_text(s,5);
+    cJSON_AddStringToObject(r,"status", stt ? stt : "");
+    if (stt) {
+      if      (!strcmp(stt,"pending")) pending++;
+      else if (!strcmp(stt,"ok"))      ok++;
+      else if (!strcmp(stt,"failed"))  failed++;
+      else if (!strcmp(stt,"dead"))    dead++;
+      else if (!strcmp(stt,"skipped")) skipped++;
+    }
+    if (sqlite3_column_type(s,6) == SQLITE_NULL)
+      cJSON_AddNullToObject(r,"http_code");
+    else
+      cJSON_AddNumberToObject(r,"http_code",(double)sqlite3_column_int64(s,6));
+    const char *er = ctext(s,7), *na = ctext(s,8), *aa = ctext(s,9);
+    cJSON_AddItemToObject(r,"error", er?cJSON_CreateString(er):cJSON_CreateNull());
+    cJSON_AddItemToObject(r,"next_attempt_at", na?cJSON_CreateString(na):cJSON_CreateNull());
+    cJSON_AddItemToObject(r,"attempted_at", aa?cJSON_CreateString(aa):cJSON_CreateNull());
+    cJSON_AddItemToArray(arr,r);
+  }
+  sqlite3_finalize(s);
+
+  cJSON *ev = cJSON_CreateObject();
+  cJSON_AddStringToObject(ev,"event_id",event_id);
+  cJSON_AddItemToObject(ev,"rule_id",
+    rule_id[0]?cJSON_CreateString(rule_id):cJSON_CreateNull());
+  cJSON_AddItemToObject(ev,"matched_at",
+    matched_at[0]?cJSON_CreateString(matched_at):cJSON_CreateNull());
+
+  cJSON *sum = cJSON_CreateObject();
+  int n = cJSON_GetArraySize(arr);
+  cJSON_AddNumberToObject(sum,"rows",(double)n);
+  cJSON_AddNumberToObject(sum,"total_attempts",(double)attempts);
+  cJSON_AddNumberToObject(sum,"pending",(double)pending);
+  cJSON_AddNumberToObject(sum,"ok",(double)ok);
+  cJSON_AddNumberToObject(sum,"failed",(double)failed);
+  cJSON_AddNumberToObject(sum,"dead",(double)dead);
+  cJSON_AddNumberToObject(sum,"skipped",(double)skipped);
+  /* Zero rows is a real, distinct state: the worker has not enqueued this
+   * event yet, or it is older than JO_ALERT_DELIVER_LOOKBACK_SEC and never
+   * will be. Say which rather than let an empty array read as "nothing was
+   * ever tried, cause unknown". */
+  if (n == 0)
+    cJSON_AddStringToObject(sum,"note",
+      "no delivery rows exist for this event: it has not been enqueued yet, or "
+      "it was matched outside the worker's enqueue horizon "
+      "(JO_ALERT_DELIVER_LOOKBACK_SEC) and never will be");
+
+  cJSON *w = cJSON_CreateObject();
+  cJSON_AddItemToObject(w,"event",ev);
+  cJSON_AddItemToObject(w,"data",arr);
+  cJSON_AddItemToObject(w,"summary",sum);
+  char *o = cJSON_PrintUnformatted(w); cJSON_Delete(w);
+  *st = 200; return o;
+}
+
 char *alerteventsapi(db_handle *db, const char *tid, const char *uid,
                      const char *method, const char *seg,
                      const char *qs, int *st) {
@@ -658,7 +781,7 @@ char *alerteventsapi(db_handle *db, const char *tid, const char *uid,
       cJSON_AddBoolToObject(r,"unread", ra ? 0 : 1);
       cJSON_AddItemToObject(r,"delivered_channels", safe_json(ctext(s,6),1));
       const char *t=ctext(s,7),*sr=ctext(s,8),*lk=ctext(s,9);
-      const char *uid = (const char *)sqlite3_column_text(s,3);
+      const char *row_uid = (const char *)sqlite3_column_text(s,3);
       /* Breach-monitor hits (roadmap 24) carry a synthetic "breach:<keyid>"
        * uid that has no intel_items row, so the LEFT JOIN above yields NULL
        * previews and the inbox would show a bare uid. Resolve those through
@@ -666,8 +789,8 @@ char *alerteventsapi(db_handle *db, const char *tid, const char *uid,
        * webhook payload uses — the inbox and the webhook must not disagree
        * about what an alert was. Only breach uids take this per-row lookup;
        * ordinary intel rows keep the single-query join. */
-      if (!t && uid && strncmp(uid, "breach:", 7) == 0) {
-        char *bj = breach_adapter_item_by_uid(db, uid);
+      if (!t && row_uid && strncmp(row_uid, "breach:", 7) == 0) {
+        char *bj = breach_adapter_item_by_uid(db, row_uid);
         if (bj) {
           cJSON *bo = cJSON_Parse(bj);
           cJSON *bd = bo ? cJSON_GetObjectItem(bo, "data") : NULL;

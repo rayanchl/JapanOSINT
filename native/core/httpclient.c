@@ -302,20 +302,43 @@ int http_request(http_client *c, const char *method, const char *url,
    * whenever the rewrite crosses hosts. Same-host repairs (a moved path, a
    * changed query) keep their auth and keep working. */
   const char *const *eff_headers = headers;
-  const char *stripped[24];
+  const char **stripped = NULL;
   if (eff != url && eff && url && strcmp(eff, url) != 0) {
     fprintf(stderr, "[url-override] rewrite %s -> %s\n", url, eff);
     if (!hostgate_same_host(url, eff) && headers && *headers) {
-      int n = 0, dropped = 0;
-      for (const char *const *h = headers; *h && n < 23; ++h) {
-        if (header_is_credential(*h)) { dropped++; continue; }
-        stripped[n++] = *h;
-      }
-      stripped[n] = NULL;
+      /* This scan MUST reach the end of the array. It used to stop at 23 KEPT
+       * headers — a bound on the wrong counter and in the wrong direction: a
+       * caller with 23 innocuous headers ahead of its `Authorization:` never
+       * reached the credential, `dropped` stayed 0, `eff_headers` was left
+       * pointing at the ORIGINAL array, and the key went to the host this
+       * check exists to keep it away from. A security control whose overflow
+       * behaviour is fail-OPEN is not a control.
+       *
+       * So the list is now sized to the input and the failure is closed. If
+       * the copy cannot be allocated we do not fall back to sending the
+       * original headers — we refuse the request, because the only thing we
+       * know at that point is that we cannot prove the credential is gone. */
+      size_t nh = 0;
+      while (headers[nh]) nh++;
+      int dropped = 0;
+      for (size_t i = 0; i < nh; i++)
+        if (header_is_credential(headers[i])) dropped++;
       if (dropped) {
+        stripped = malloc((nh + 1) * sizeof *stripped);
+        if (!stripped) {
+          fprintf(stderr, "[url-override] refusing %s: cannot build a "
+                          "credential-free header list\n", eff);
+          return 1;                 /* out is already zeroed: status 0, no body */
+        }
+        size_t n = 0;
+        for (size_t i = 0; i < nh; i++) {
+          if (header_is_credential(headers[i])) continue;
+          stripped[n++] = headers[i];
+        }
+        stripped[n] = NULL;
         fprintf(stderr, "[url-override] dropped %d auth header(s): host "
                         "changed\n", dropped);
-        eff_headers = stripped;
+        eff_headers = (const char *const *)stripped;
       }
     }
     url = eff;
@@ -341,6 +364,7 @@ int http_request(http_client *c, const char *method, const char *url,
        * "content changed", and admitting it would fire on every outage AND
        * again on every recovery. */
       content_change_http_hook(method, url, r.status, r.body, r.body_len);
+      free(stripped);
       return hard && attempt >= retries ? 1 : 0;
     }
     http_response_free(&r);

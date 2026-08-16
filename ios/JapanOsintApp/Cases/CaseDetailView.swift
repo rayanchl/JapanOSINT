@@ -122,12 +122,14 @@ struct CaseDetailView: View {
                     Image(systemName: "ellipsis.circle")
                 }
                 .disabled(detail == nil)
+                .accessibilityLabel("Case actions")
             }
             ToolbarItem(placement: .compatPrimary) {
                 Button { Task { await loadAll() } } label: {
                     Image(systemName: "arrow.clockwise")
                 }
                 .disabled(loading)
+                .accessibilityLabel("Reload case")
             }
         }
         .task { if detail == nil { await loadAll() } }
@@ -350,6 +352,8 @@ struct CaseDetailView: View {
                 Image(systemName: CaseRefType.icon(item.ref_type))
                     .font(.caption2)
                     .foregroundStyle(resolved ? theme.accent : theme.warning)
+                    .accessibilityLabel(resolved ? "\(item.ref_type) reference"
+                                                 : "\(item.ref_type) reference, unresolved")
                 Text(title)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(theme.text)
@@ -514,6 +518,8 @@ struct CaseDetailView: View {
                 Image(systemName: note.isDeleted ? "trash.slash" : "note.text")
                     .font(.caption2)
                     .foregroundStyle(note.isDeleted ? theme.textMuted : theme.accent)
+                    // "Deleted" exists nowhere else in the row.
+                    .accessibilityLabel(note.isDeleted ? "Deleted note" : "Note")
                 Text(noteTargetLabel(note))
                     .font(.caption2.monospaced())
                     .foregroundStyle(theme.textMuted)
@@ -650,6 +656,7 @@ struct CaseDetailView: View {
                 .foregroundStyle(CaseActivityKind.isSystem(entry.kind)
                                  ? theme.textMuted : theme.accent)
                 .frame(width: 22, height: 22)
+                .accessibilityHidden(true)   // the entry text names the action
 
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: Space.xs) {
@@ -713,6 +720,7 @@ struct CaseDetailView: View {
                               : "person.crop.circle")
                             .font(.body)
                             .foregroundStyle(member.role == "lead" ? theme.accent : theme.textMuted)
+                            .accessibilityHidden(true)   // the role is spelled out beside it
                         VStack(alignment: .leading, spacing: 1) {
                             Text(member.email ?? member.user_id)
                                 .font(.subheadline)
@@ -772,6 +780,7 @@ struct CaseDetailView: View {
                 Image(systemName: icon)
                     .font(.body)
                     .foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // decorative empty-state mark
                 Text(title)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(theme.text)
@@ -793,6 +802,7 @@ struct CaseDetailView: View {
                 Image(systemName: "arrow.down.circle")
                     .font(.caption)
                     .foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // the label follows
             }
             Text(busy ? "Loading…" : label)
                 .font(.caption)
@@ -1169,6 +1179,7 @@ private struct CaseDeleteSheet: View {
                         HStack(spacing: Space.sm) {
                             Image(systemName: "exclamationmark.triangle.fill")
                                 .foregroundStyle(theme.danger)
+                                .accessibilityHidden(true)   // warning text follows
                             Text("This cannot be undone")
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundStyle(theme.text)

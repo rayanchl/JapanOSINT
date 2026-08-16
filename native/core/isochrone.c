@@ -21,6 +21,20 @@
  *    coordinate. Two cells sharing an edge then produce the byte-identical
  *    endpoint, so ring chaining is exact integer matching and needs no
  *    floating-point tolerance.
+ * 5. SERVICE CALENDAR EXCEPTIONS. The ride query below honours
+ *    gtfs_calendar_dates (calendar_dates.txt) as well as gtfs_calendar:
+ *    exception_type=2 removes a service on a date, exception_type=1 adds it.
+ *    Japanese feeds express public holidays almost entirely that way.
+ *    HOWEVER — the ingest side does not write that table yet. gtfs_jp.c's
+ *    load_calendar()/prep_all()/DEL[] read and replace calendar.txt only, so
+ *    on a live database gtfs_calendar_dates is EMPTY, the exception clauses
+ *    are vacuously satisfied, and a holiday still returns the ordinary
+ *    weekday timetable. That is the pre-existing behaviour, not a new one:
+ *    the query is now correct and waiting on the loader. Until gtfs_jp.c
+ *    ingests calendar_dates.txt, treat holiday isochrones as weekday
+ *    isochrones. (isochrone.h documents the other two limits — the ~3.6% of
+ *    trips with no calendar row, and the past-midnight under-report — and is
+ *    owned elsewhere; this note belongs beside them.)
  */
 #include "isochrone.h"
 #include "collcache.h"
@@ -595,20 +609,48 @@ char *isochrone_run(db_handle *db, const char *qs, int *status) {
   sqlite3_bind_double(st, 2, olat + dlat_bb);
   sqlite3_bind_double(st, 3, olon - dlon_bb);
   sqlite3_bind_double(st, 4, olon + dlon_bb);
-  while (sqlite3_step(st) == SQLITE_ROW) {
+  /* Three ways this load can be short of the bbox, none of which the old loop
+   * could tell apart from "that is every stop in range":
+   *   - set_add() hits S.cap (ISO_MAX_STOPS) and the rest of the bbox is
+   *     dropped — meta.truncated was only ever set by ISO_MAX_QUERIES, so a
+   *     60,000-stop load shipped as `stops_loaded:60000, truncated:false`;
+   *   - set_add() fails on malloc;
+   *   - `while (step() == ROW)` cannot tell DONE from IOERR/CORRUPT/BUSY/
+   *     INTERRUPT, so a dying read ends the loop exactly like a finished one.
+   * Each undersizes the stop universe, which undersizes the POLYGON — the one
+   * output nobody can eyeball for completeness. Record the reason and report
+   * it in meta below; `truncated` itself is set later and doubles as the
+   * round-loop's stop flag, so it must not be raised here. */
+  int stops_capped = 0, stops_oom = 0, load_rc;
+  while ((load_rc = sqlite3_step(st)) == SQLITE_ROW) {
     const char *o = (const char *) sqlite3_column_text(st, 0);
     const char *f = (const char *) sqlite3_column_text(st, 1);
     const char *sp = (const char *) sqlite3_column_text(st, 2);
     if (!o || !f || !sp) continue;
     if (set_add(&S, o, f, sp, sqlite3_column_double(st, 3),
-                sqlite3_column_double(st, 4)) < 0) break;
+                sqlite3_column_double(st, 4)) < 0) {
+      if (S.n >= S.cap) stops_capped = 1; else stops_oom = 1;
+      break;
+    }
+  }
+  int stops_load_failed = (load_rc != SQLITE_DONE && !stops_capped && !stops_oom);
+  char stops_load_err[160]; stops_load_err[0] = 0;
+  if (stops_load_failed) {
+    snprintf(stops_load_err, sizeof stops_load_err, "%s", sqlite3_errmsg(db->h));
+    fprintf(stderr, "[isochrone] stop load interrupted after %d stop(s): %s\n",
+            S.n, stops_load_err);
   }
   sqlite3_finalize(st);
+  int stops_partial = stops_capped || stops_oom || stops_load_failed;
 
   /* No timetable in this database is a real answer, not an error: say so
-   * rather than returning an empty shape that looks like "nothing nearby". */
+   * rather than returning an empty shape that looks like "nothing nearby".
+   * That claim is only available when the read actually reached the end —
+   * otherwise "nothing nearby" is a guess about rows we never saw. */
   if (S.n == 0) {
     set_free(&S);
+    if (stops_partial)
+      return errj(status, 500, stops_load_failed ? "gtfs_stop_read_failed" : "oom");
     cJSON *fc = cJSON_CreateObject();
     cJSON_AddStringToObject(fc, "type", "FeatureCollection");
     cJSON_AddItemToObject(fc, "features", cJSON_CreateArray());
@@ -639,33 +681,71 @@ char *isochrone_run(db_handle *db, const char *qs, int *status) {
   }
 
   /* ── prepared ride query ─────────────────────────────────────────────── */
-  char sql[1400];
+  /* SERVICE-ACTIVE TEST. gtfs_calendar alone is the weekly pattern; the
+   * exceptions in gtfs_calendar_dates are how Japanese feeds express public
+   * holidays, so joining only the former rides the ordinary weekday timetable
+   * on a holiday. The GTFS rule, written out as two subqueries rather than
+   * folded into the join because the join it replaces is not an equality:
+   *
+   *   active(service, D) = (weekday bit set AND D in [start,end]
+   *                         AND no exception_type=2 row for (service,D))
+   *                        OR an exception_type=1 row for (service,D)
+   *
+   * With gtfs_calendar_dates EMPTY the NOT EXISTS is always true and the
+   * trailing EXISTS always false, so this collapses to exactly the old
+   * predicate — "no exceptions known" degrades to today's answer, never to
+   * "no service". A trip with no calendar row and no ADD exception is still
+   * not ridden, as documented in isochrone.h. */
+  char sql[2400];
   const char *core_sql =
     "SELECT st2.stop_id, MIN(st2.arrival_sec) "
     "FROM gtfs_stop_times st1 %s "
     "JOIN gtfs_trips t ON t.org_id=st1.org_id AND t.feed_id=st1.feed_id "
     "                 AND t.trip_id=st1.trip_id "
-    "JOIN gtfs_calendar cal ON cal.org_id=t.org_id AND cal.feed_id=t.feed_id "
-    "                      AND cal.service_id=t.service_id "
     "JOIN gtfs_stop_times st2 ON st2.org_id=st1.org_id AND st2.feed_id=st1.feed_id "
     "                        AND st2.trip_id=st1.trip_id "
     "                        AND st2.stop_sequence>st1.stop_sequence "
     "WHERE st1.stop_id=?1 AND st1.org_id=?2 AND st1.feed_id=?3 "
     "  AND st1.departure_sec>=?4 AND st1.departure_sec<=?5 "
     "  AND st2.arrival_sec IS NOT NULL AND st2.arrival_sec<=?5 "
-    "  AND cal.%s=1 "
-    "  AND (cal.start_date IS NULL OR cal.start_date<=?6) "
-    "  AND (cal.end_date   IS NULL OR cal.end_date  >=?6) "
+    "  AND ( ( EXISTS (SELECT 1 FROM gtfs_calendar cal "
+    "                   WHERE cal.org_id=t.org_id AND cal.feed_id=t.feed_id "
+    "                     AND cal.service_id=t.service_id "
+    "                     AND cal.%s=1 "
+    "                     AND (cal.start_date IS NULL OR cal.start_date<=?6) "
+    "                     AND (cal.end_date   IS NULL OR cal.end_date  >=?6)) "
+    "          AND NOT EXISTS (SELECT 1 FROM gtfs_calendar_dates cx "
+    "                   WHERE cx.org_id=t.org_id AND cx.feed_id=t.feed_id "
+    "                     AND cx.service_id=t.service_id AND cx.date=?6 "
+    "                     AND cx.exception_type=2) ) "
+    "        OR EXISTS (SELECT 1 FROM gtfs_calendar_dates ca "
+    "                   WHERE ca.org_id=t.org_id AND ca.feed_id=t.feed_id "
+    "                     AND ca.service_id=t.service_id AND ca.date=?6 "
+    "                     AND ca.exception_type=1) ) "
     "GROUP BY st2.stop_id";
   /* INDEXED BY pins the stop_id index. Without it SQLite prefers
    * idx_gtfs_stop_times_trip_time and scans every stop_time in the FEED,
    * which measured ~5x slower per hop. Fall back if the index is absent. */
+  /* Truncation must be caught here, not discovered downstream. This buffer has
+   * already had to grow once (the calendar_dates exception clauses pushed the
+   * formatted statement past the previous 1400 bytes), and a silently clipped
+   * statement is not guaranteed to be invalid SQL — it can still parse and
+   * quietly answer a DIFFERENT question, which on a timetable means confidently
+   * wrong departure times. Fail loudly instead. */
   sqlite3_stmt *ride = NULL;
-  snprintf(sql, sizeof sql, core_sql, "INDEXED BY idx_gtfs_stop_times_stop", wd);
+  int sqln = snprintf(sql, sizeof sql, core_sql,
+                      "INDEXED BY idx_gtfs_stop_times_stop", wd);
+  if (sqln < 0 || (size_t)sqln >= sizeof sql) {
+    fprintf(stderr, "[isochrone] ride SQL truncated (%d >= %zu) — refusing\n",
+            sqln, sizeof sql);
+    grid_free(&G); set_free(&S);
+    return errj(status, 500, "gtfs_timetable_unavailable");
+  }
   if (sqlite3_prepare_v2(db->h, sql, -1, &ride, NULL) != SQLITE_OK) {
     ride = NULL;
-    snprintf(sql, sizeof sql, core_sql, "", wd);
-    if (sqlite3_prepare_v2(db->h, sql, -1, &ride, NULL) != SQLITE_OK) {
+    sqln = snprintf(sql, sizeof sql, core_sql, "", wd);
+    if (sqln < 0 || (size_t)sqln >= sizeof sql ||
+        sqlite3_prepare_v2(db->h, sql, -1, &ride, NULL) != SQLITE_OK) {
       grid_free(&G); set_free(&S);
       return errj(status, 500, "gtfs_timetable_unavailable");
     }
@@ -936,11 +1016,35 @@ char *isochrone_run(db_handle *db, const char *qs, int *status) {
   cJSON_AddItemToObject(par, "bands", ba);
   cJSON_AddItemToObject(meta, "params", par);
   cJSON_AddNumberToObject(meta, "stops_loaded", S.n);
+  cJSON_AddBoolToObject(meta, "stops_complete", !stops_partial);
   cJSON_AddNumberToObject(meta, "stops_reached", reached);
   cJSON_AddNumberToObject(meta, "stops_first_reached_by_transit", transit_gain);
   cJSON_AddNumberToObject(meta, "rounds", rounds);
   cJSON_AddNumberToObject(meta, "timetable_queries", queries);
-  cJSON_AddBoolToObject(meta, "truncated", truncated);
+  /* One flag, every reason the answer is short of what was asked for. A
+   * consumer that only reads `truncated` must never see false on a run that
+   * dropped part of the bbox. */
+  cJSON_AddBoolToObject(meta, "truncated", truncated || stops_partial);
+  {
+    cJSON *why = cJSON_CreateArray();
+    if (truncated)
+      cJSON_AddItemToArray(why, cJSON_CreateString("timetable_query_cap"));
+    if (stops_capped)
+      cJSON_AddItemToArray(why, cJSON_CreateString("stop_cap"));
+    if (stops_oom)
+      cJSON_AddItemToArray(why, cJSON_CreateString("stop_load_oom"));
+    if (stops_load_failed)
+      cJSON_AddItemToArray(why, cJSON_CreateString("stop_read_error"));
+    cJSON_AddItemToObject(meta, "truncated_reasons", why);
+    if (stops_capped)
+      cJSON_AddNumberToObject(meta, "stop_cap", ISO_MAX_STOPS);
+    if (stops_load_failed)
+      cJSON_AddStringToObject(meta, "stop_read_error", stops_load_err);
+    if (stops_partial)
+      cJSON_AddStringToObject(meta, "stops_note",
+        "the stop set is short of the search box, so this polygon is a LOWER "
+        "BOUND on reachable area, not the reachable area");
+  }
   cJSON *gr = cJSON_CreateObject();
   cJSON_AddNumberToObject(gr, "cell_m", cell_m);
   cJSON_AddNumberToObject(gr, "nx", F.nx);
@@ -957,6 +1061,11 @@ char *isochrone_run(db_handle *db, const char *qs, int *status) {
   set_free(&S);
   char *out = cJSON_PrintUnformatted(fc);
   cJSON_Delete(fc);
-  if (out) collcache_set(db, ck, out, ISO_CACHE_TTL_MS);
+  /* A stop cap is deterministic — the same request recomputes to the same
+   * short answer, so caching it costs nothing. A read error or an OOM is
+   * transient: pinning that result for the whole TTL would keep serving an
+   * undersized polygon long after the cause cleared. */
+  if (out && !stops_load_failed && !stops_oom)
+    collcache_set(db, ck, out, ISO_CACHE_TTL_MS);
   return out;
 }

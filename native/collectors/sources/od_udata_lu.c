@@ -7,7 +7,7 @@
  * Keyless.
  * Licence: portal metadata is open, most datasets CC-BY / CC0; no stated
  * restriction on API reuse. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-lu-datapublic"
 static const char *URL = "https://data.public.lu/api/1/datasets/?page_size=20";

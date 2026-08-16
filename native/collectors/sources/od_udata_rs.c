@@ -7,7 +7,7 @@
  * Includes the mandatory retail price-list publications by Serbian companies,
  * which makes this a commercial-entity pivot. Keyless.
  * Licence: public portal, no auth, no stated reuse restriction. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-rs-datagovrs"
 static const char *URL = "https://data.gov.rs/api/1/datasets/?page_size=20";

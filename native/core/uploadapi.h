@@ -218,12 +218,29 @@
  *                                       part_count, total_bytes, complete}
  *   POST   /api/uploads/:id/commit   → {upload_id, sha256, bytes, content_type,
  *                                       filename, part_count, blob_present,
- *                                       evidence}
- *   GET    /api/uploads/:id          → {..., received_seqs:[…], missing_seqs:[…]}
+ *                                       evidence, docmeta}
+ *   GET    /api/uploads/:id          → {..., received_seqs:[…], missing_seqs:[…],
+ *                                       docmeta}
  *   DELETE /api/uploads/:id          → {upload_id, status:"aborted",
  *                                       bytes_discarded, parts_discarded}
  *
  * POST /api/uploads (no segment) is accepted as a synonym for .../begin.
+ *
+ * DOCUMENT ATTRIBUTION. commit runs core/docmeta.c's docmeta_extract() over
+ * the assembled buffer and stores the result in uploads.docmeta_json, which
+ * both commit and GET /:id return as `docmeta` (null when nothing was
+ * extracted — never {} , which would read as "this document has no metadata").
+ * It happens at commit because that is the ONLY moment the whole document is
+ * in memory: the bytes go straight to the content-addressed evidence store and
+ * are freed, and the evidence reaper may later remove the blob altogether, so
+ * a PDF's producer/creator/timestamps or a DOCX's last-modified-by would
+ * otherwise be unrecoverable. The extraction is a pure bounded function over
+ * bytes — no I/O, no network — so it cannot stall or fail the commit.
+ *
+ * `docmeta_json` is an ADDED column and is therefore created by
+ * uploadapi_migrate() through ensure_column(), NOT by the CREATE TABLE above:
+ * CREATE TABLE IF NOT EXISTS no-ops on an existing table, so a column appended
+ * to that statement would never reach a deployed database.
  *
  * ERROR MODEL. A tenant mismatch is 404 "not_found", never 403 — 403 would
  * confirm the existence of another tenant's upload id, which is exactly the

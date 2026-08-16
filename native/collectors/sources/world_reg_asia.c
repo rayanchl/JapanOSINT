@@ -26,7 +26,11 @@
 #include "_jp_osint.inc"
 
 #define ASIA_PER_REG   0     /* 0 = every hit the page yielded */
-#define ASIA_TOTAL_MAX 500   /* exhaustive-ok: runaway guard, logged */
+/* NOT a page cap: it sits in the loop condition over REGISTRIES, so hitting it
+ * ends the sweep and the portals after it go unqueried — reported as data by
+ * jo_registry_sweep_notice(). */
+#define ASIA_TOTAL_MAX 500   /* exhaustive-ok: whole-run emit cap; the sweep it
+                              * cuts short is reported as a truncation notice */
 
 /* One registry search portal. `url_tmpl` has exactly one %s for the encoded
  * query. `href_must` is a substring an emittable result href must contain (to
@@ -148,9 +152,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *enc = jo_urlencode(q);       /* UTF-8 safe %-encoding for CJK/Thai/Hangul */
   if (!enc) return -1;
 
-  int total = 0;
-  for (int i = 0; i < NREGS && total < ASIA_TOTAL_MAX; i++) {
-    if (ctx->cancel && *ctx->cancel) break;
+  int total = 0, i = 0, cancelled = 0;
+  for (; i < NREGS && total < ASIA_TOTAL_MAX; i++) {
+    if (ctx->cancel && *ctx->cancel) { cancelled = 1; break; }
     const asia_reg *r = &REGS[i];
 
     char url[1200];
@@ -162,16 +166,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char tag[64];
     snprintf(tag, sizeof tag, "asia_reg[%s]", r->cc);
 
-    int remaining = ASIA_TOTAL_MAX - total;
-    int cap = remaining < ASIA_PER_REG ? remaining : ASIA_PER_REG;
-
+    /* The old `remaining`/`cap` min() was dead: ASIA_PER_REG is 0, `remaining`
+     * is always > 0 inside this loop, so min(remaining, 0) was always 0 — and
+     * jo_emit_anchors reads <= 0 as "no cap". Removed rather than given teeth,
+     * which would change what this collector emits. */
     int n = jo_emit_anchors(ctx, sink, url, r->href_must, r->name, rt,
-                            r->base, q, cap, tag);
+                            r->base, q, ASIA_PER_REG, tag);
     if (n > 0) total += n;
   }
 
   free(enc);
-  fprintf(stderr, "[asia_registry] emitted %d across %d portals\n", total, NREGS);
+  jo_registry_sweep_notice(sink, "ASIA_REGISTRY", q, total, i, NREGS,
+                           "ASIA_TOTAL_MAX", ASIA_TOTAL_MAX, cancelled);
+  fprintf(stderr, "[asia_registry] emitted %d across %d of %d portals\n",
+          total, i, NREGS);
   return 0;   /* honest empty is not an error */
 }
 

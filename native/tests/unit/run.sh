@@ -27,10 +27,21 @@ fi
 
 CFLAGS="-O1 -g -Wall -Wextra -Wno-unused-parameter -pthread -Ithird_party"
 CFLAGS="$CFLAGS -DJO_REPO_ROOT=\"$(cd .. && pwd)\""
-# iconv is folded into glibc on Linux but is a standalone lib on macOS/BSD, where
-# csv.c's SJIS decode needs it linked explicitly (mirrors the main Makefile).
-ICONV_LIB=""; [ "$(uname -s)" != "Linux" ] && ICONV_LIB="-liconv"
-LDLIBS="$(pkg-config --libs libcurl openssl 2>/dev/null) $(mecab-config --libs 2>/dev/null) -lpthread -lm -ldl -lz $ICONV_LIB"
+# Ask the Makefile for the link line rather than re-deriving it. The previous
+# `pkg-config --libs libcurl openssl 2>/dev/null` had none of the fallbacks the
+# Makefile spends fifteen lines explaining are necessary on macOS: openssl@3 is
+# keg-only so pkg-config often resolves nothing, and Apple's libcurl is built
+# without the WebSocket support lib/ws.c needs. Worse, the 2>/dev/null turned a
+# total failure to resolve into an EMPTY STRING, so the failure surfaced as
+# undefined EVP_* symbols at link instead of a clear message. Duplicating the
+# resolution is why the two drifted; there is now one copy.
+LDLIBS="$(make -s -C "$(dirname "$0")/../.." print-ldlibs)"
+if [ -z "$LDLIBS" ]; then
+  echo "FAILED: could not resolve link libraries via 'make print-ldlibs'." >&2
+  echo "Check that libcurl, openssl and mecab are installed and discoverable." >&2
+  exit 1
+fi
+CFLAGS="$CFLAGS $(make -s -C "$(dirname "$0")/../.." print-cflags)"
 
 SCRATCH="${TMPDIR:-/tmp}/jo-unit-$$"
 mkdir -p "$SCRATCH"

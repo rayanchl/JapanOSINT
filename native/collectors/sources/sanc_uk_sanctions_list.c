@@ -121,7 +121,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     if (!primary[0]) {
       /* no Primary Name marked — fall back to the first name we did parse */
-      const cJSON *a0 = cJSON_GetArrayItem(aliases, 0);
+      const cJSON *a0 = cJSON_GetArrayItem(aliases, 0);  /* exhaustive-ok: primary-name fallback; the whole aliases array is emitted */
       if (cJSON_IsString(a0)) snprintf(primary, sizeof primary, "%s", a0->valuestring);
     }
     if (!primary[0]) { cJSON_Delete(aliases); continue; }   /* no name -> no row */
@@ -291,6 +291,24 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(bj); free(pj);
     free(uid); free(ofsi); free(unref); free(regime); free(kind); free(dsource);
     free(imposed); free(reasons); free(other); free(designated); free(updated);
+  }
+  /* House rule 2: the whole publication is downloaded, so when the row cap
+   * bites, keep scanning it WITHOUT emitting and report the real number of
+   * <Designation> elements that were left unread. */
+  if (n >= max_rows) {
+    int rest = 0;
+    sanc_el skip;
+    while (sanc_xml_next(&cur, end, "Designation", &skip)) rest++;
+    if (rest > 0)
+      jo_truncation_notice(sink, "uk-sanctions-list", UK_SANC_URL, n,
+                           (long)n + rest,
+                           "JO_SANC_MAX_ROWS (default 5000) stopped the row "
+                           "loop; the remaining <Designation> elements in the "
+                           "downloaded publication were counted but never "
+                           "parsed or emitted",
+                           "raise JO_SANC_MAX_ROWS above the UK sanctions "
+                           "list's designation count to ingest the whole "
+                           "publication");
   }
   free(xml);
   fprintf(stderr, "[uk-sanctions-list] emitted %d (generated %s)\n", n,

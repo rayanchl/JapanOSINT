@@ -106,7 +106,10 @@ static int bio_gbif(const source_ctx *ctx, intel_sink *sink, const char *enc,
       if (!loc) loc = jo_sv(r, "verbatimLocality");
       const char *ds  = jo_sv(r, "datasetName");
       const char *dt  = jo_sv(r, "eventDate");
-      double lat, lon;
+      /* Both must be initialised before the `&&`: it short-circuits, so a
+       * record carrying a latitude but no longitude leaves `lon` untouched and
+       * it is still passed by value to bio_emit below. */
+      double lat = 0, lon = 0;
       int geo = jo_num(r, "decimalLatitude", &lat) &&
                 jo_num(r, "decimalLongitude", &lon);
       const cJSON *kv = cJSON_GetObjectItem(r, "key");
@@ -210,7 +213,8 @@ static int bio_obis(const source_ctx *ctx, intel_sink *sink, const char *enc,
       if (!loc) loc = jo_sv(r, "waterBody");
       const char *ds  = jo_sv(r, "datasetName");
       const char *dt  = jo_sv(r, "eventDate");
-      double lat, lon;
+      /* Initialised for the same short-circuit reason as the GBIF loop above. */
+      double lat = 0, lon = 0;
       int geo = jo_num(r, "decimalLatitude", &lat) &&
                 jo_num(r, "decimalLongitude", &lon);
       const char *id  = jo_sv(r, "id");

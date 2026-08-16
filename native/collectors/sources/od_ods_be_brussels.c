@@ -8,7 +8,7 @@
  * emitted verbatim so a row fetch is not attempted against an empty dataset.
  * Keyless. Licence: Ville de Bruxelles open-data terms, reuse with
  * attribution. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ods-be-brussels"
 static const char *URL =

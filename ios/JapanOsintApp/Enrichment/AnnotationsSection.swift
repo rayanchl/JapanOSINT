@@ -91,6 +91,7 @@ struct AnnotationsSection: View {
             Image(systemName: "note.text")
                 .font(.subheadline)
                 .foregroundStyle(theme.accentAlt)
+                .accessibilityHidden(true)   // the section title follows
             Text(title)
                 .font(.headline)
                 .foregroundStyle(theme.text)
@@ -251,6 +252,7 @@ struct AnnotationsSection: View {
                 Text("No notes yet").foregroundStyle(theme.text)
             } icon: {
                 Image(systemName: "note.text").foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // "No notes yet" is the label
             }
         } description: {
             Text("Notes you add here stay attached to this record and are kept — including after deletion — as an audit trail.")
@@ -263,6 +265,7 @@ struct AnnotationsSection: View {
             Image(systemName: "exclamationmark.triangle.fill")
                 .font(.caption)
                 .foregroundStyle(theme.danger)
+                .accessibilityHidden(true)   // the message follows
             Text(message)
                 .font(.caption)
                 .foregroundStyle(theme.text)

@@ -159,12 +159,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return -1;
   }
 
-  int n = 0, seen = 0, nogeo = 0;
+  int n = 0, seen = 0, nogeo = 0, capped = 0;
   char *line;
   while ((line = jo_next_line_cr(&p)) != NULL) {
     if (!*line) continue;
     seen++;
-    if (n >= MAX_ROWS) break;
+    /* Past the cap keep counting rows so the notice can state a real total. */
+    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     char *f[MAXCOL];
     int nf = csv_split(line, f, MAXCOL);
     for (int i = 0; i < nf; i++) f[i] = trim(f[i]);
@@ -270,6 +271,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
+  /* House rule 2: two bounds apply here — the byte-bounded prefix fetch and
+   * MAX_ROWS. `seen` is the counted row total of what was downloaded. */
+  if (capped || bounded)
+    jo_truncation_notice(sink, "ofcom-wtr", "WTR licence register", n,
+                         (long)seen,
+                         capped
+                           ? "MAX_ROWS reached; the remaining rows of the "
+                             "downloaded register were counted but not emitted"
+                           : "the register was fetched as a bounded byte "
+                             "prefix, so rows past that prefix were never "
+                             "downloaded",
+                         "raise or drop MAX_ROWS and the byte bound in "
+                         "collectors/sources/tsp_ofcom_wtr.c");
   free(body);
   fprintf(stderr, "[ofcom-wtr] emitted %d of %d rows read (%s prefix, cap %d, "
                   "%d rows without site coordinates)\n",

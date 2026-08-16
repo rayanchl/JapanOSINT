@@ -8,7 +8,7 @@
  * Licence: the Hub search API is public and keyless; each dataset carries its
  * publishing agency licence, which is read per record (attributes.license)
  * and never assumed. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "arcgis-hub-datasets"
 static const char *URL = "https://hub.arcgis.com/api/v3/datasets?page%5Bsize%5D=20";

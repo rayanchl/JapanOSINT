@@ -43,7 +43,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   cJSON *features = cJSON_CreateArray();
   if (cJSON_IsArray(matches)) {
-    int i = 0;
     cJSON *m;
     cJSON_ArrayForEach(m, matches) {
       /* (cap removed: every record of the fetched array is emitted —
@@ -69,9 +68,35 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       }
 
       cJSON *p = cJSON_CreateObject();             /* EXACT JS key order */
-      char idb[32];
-      snprintf(idb, sizeof idb, "SHODAN_%d", i);
-      cJSON_AddStringToObject(p, "id", idb);
+      /* `id` is the FIRST of lib/geojson.c's NATIVE_ID_KEYS present here, so
+       * whatever goes in it becomes this row's uid for the lifetime of the
+       * database. It used to be "SHODAN_<position in this response>", which is
+       * not a property of the host at all: Shodan's result ordering is not
+       * stable between runs, so every re-poll re-labelled every host and the
+       * previous run's rows were orphaned under ids now pointing at different
+       * machines. Key off Shodan's own identity for a service banner — the
+       * host and the port it was seen on — which is what the row is about. */
+      char idb[96];
+      cJSON *ipv = cJSON_GetObjectItem(m, "ip_str");
+      cJSON *ptv = cJSON_GetObjectItem(m, "port");
+      const char *ips = (ipv && cJSON_IsString(ipv)) ? ipv->valuestring : NULL;
+      if (ips && cJSON_IsNumber(ptv))
+        snprintf(idb, sizeof idb, "SHODAN_%.64s:%d", ips, (int)ptv->valuedouble);
+      else if (ips)
+        snprintf(idb, sizeof idb, "SHODAN_%.64s", ips);
+      else
+        idb[0] = 0;
+      if (idb[0]) {
+        cJSON_AddStringToObject(p, "id", idb);
+      } else {
+        /* No ip_str: Shodan gave us nothing to key on. Say that, rather than
+         * inventing a positional id — with no `id` present lib/geojson.c falls
+         * back to hashing the feature's own contents, which at least does not
+         * claim to be an identifier. */
+        cJSON_AddStringToObject(p, "id_basis",
+          "none: this Shodan match carried no ip_str, so the row is uid'd by "
+          "content hash rather than a positional id");
+      }
       passthru(p, "ip", m, "ip_str");
       passthru(p, "port", m, "port");
       passthru(p, "org", m, "org");
@@ -90,7 +115,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       }
       cJSON_AddItemToObject(f, "properties", p);
       cJSON_AddItemToArray(features, f);
-      i++;
     }
   }
   if (data) cJSON_Delete(data);

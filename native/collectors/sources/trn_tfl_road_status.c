@@ -26,9 +26,9 @@ static int parse_bounds(const char *s, double *lat0, double *lon0,
   if (!cJSON_IsArray(b) || cJSON_GetArraySize(b) < 2) {
     cJSON_Delete(b); return 0;
   }
-  cJSON *sw = cJSON_GetArrayItem(b, 0), *ne = cJSON_GetArrayItem(b, 1);
-  cJSON *x0 = cJSON_GetArrayItem(sw, 0), *y0 = cJSON_GetArrayItem(sw, 1);
-  cJSON *x1 = cJSON_GetArrayItem(ne, 0), *y1 = cJSON_GetArrayItem(ne, 1);
+  cJSON *sw = cJSON_GetArrayItem(b, 0), *ne = cJSON_GetArrayItem(b, 1);  /* exhaustive-ok: bounds is a fixed [sw,ne] pair, both read */
+  cJSON *x0 = cJSON_GetArrayItem(sw, 0), *y0 = cJSON_GetArrayItem(sw, 1);  /* exhaustive-ok: [lon,lat] corner tuple */
+  cJSON *x1 = cJSON_GetArrayItem(ne, 0), *y1 = cJSON_GetArrayItem(ne, 1);  /* exhaustive-ok: [lon,lat] corner tuple */
   int ok = 0;
   if (cJSON_IsNumber(x0) && cJSON_IsNumber(y0) &&
       cJSON_IsNumber(x1) && cJSON_IsNumber(y1)) {

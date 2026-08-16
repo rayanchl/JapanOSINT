@@ -34,6 +34,7 @@ struct GeocodeSearchBar: View {
         HStack(spacing: 6) {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
+                .accessibilityHidden(true)   // the field is already labelled
             TextField("Search Japan", text: $model.query)
                 .compatNoAutocap()
                 .autocorrectionDisabled()
@@ -49,6 +50,7 @@ struct GeocodeSearchBar: View {
                     model.clear()
                 } label: { Image(systemName: "xmark.circle.fill") }
                     .foregroundStyle(.secondary)
+                    .accessibilityLabel("Clear search")
             }
         }
         .padding(.horizontal, 10)

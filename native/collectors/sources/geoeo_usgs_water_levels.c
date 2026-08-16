@@ -5,15 +5,18 @@
  * Endpoint (keyless):
  *   https://waterservices.usgs.gov/nwis/iv/?format=json&stateCd=<st>
  *   &parameterCd=00065&siteStatus=active          (00065 = gage height, ft)
- * Emits per gauge: site name, USGS site code, the surveyed
- *   latitude/longitude, the variable name/unit and the most recent reading with
- *   its timestamp and qualifiers.
+ * Emits per gauge AND per measurement method (values[] carries one block per
+ *   method and every block is emitted, not just values[0]): site name, USGS
+ *   site code, the surveyed latitude/longitude, the variable name/unit, the
+ *   method id/description and the most recent reading with its timestamp and
+ *   qualifiers.
  * Licence: USGS public domain. The response carries the standard "Provisional
  *   data are subject to revision" note, which is surfaced on every row.
  *
  * parse_notes honoured:
  *  - Deeply nested WaterML-in-JSON: value → timeSeries[] → sourceInfo /
- *    variable / values[0].value[].
+ *    variable / values[].value[] — values[] is per method, and all of it is
+ *    walked.
  *  - Coordinates live at timeSeries[i].sourceInfo.geoLocation.geogLocation
  *    .{latitude,longitude} as real numbers with srs EPSG:4326. A series without
  *    them is emitted with has_geo=0.
@@ -59,7 +62,7 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
     const char *scode = NULL;
     cJSON *codes = si ? cJSON_GetObjectItem(si, "siteCode") : NULL;
     if (cJSON_IsArray(codes))
-      scode = geoeo_str(cJSON_GetArrayItem(codes, 0), "value");
+      scode = geoeo_str(cJSON_GetArrayItem(codes, 0), "value");  /* exhaustive-ok: WaterML wraps the single siteCode in an array */
     if (!sname && !scode) continue;
 
     double lat = 0, lon = 0;
@@ -83,87 +86,129 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
     cJSON *ndv = var ? cJSON_GetObjectItem(var, "noDataValue") : NULL;
     if (cJSON_IsNumber(ndv)) nodata = ndv->valuedouble;
 
-    /* Most recent reading. */
-    double reading = 0;
-    int has_reading = 0;
-    const char *when = NULL, *quals = NULL;
+    /* values[] holds one block PER MEASUREMENT METHOD — a gauge with two
+     * sensors on gage height ships two of them. Reading values[0] emitted one
+     * and dropped the rest of a response already paid for (house rule 2), so
+     * every block is emitted, keyed on its methodID when there is more than
+     * one. */
     cJSON *vals = cJSON_GetObjectItem(ts, "values");
-    cJSON *v0 = cJSON_IsArray(vals) ? cJSON_GetArrayItem(vals, 0) : NULL;
-    cJSON *plist = v0 ? cJSON_GetObjectItem(v0, "value") : NULL;
-    if (cJSON_IsArray(plist)) {
-      int pn = cJSON_GetArraySize(plist);
-      for (int i = pn - 1; i >= 0 && !has_reading; i--) {
-        cJSON *pv = cJSON_GetArrayItem(plist, i);
-        double d = 0;
-        if (!geoeo_numlax(pv, "value", &d)) continue;
-        if (d == nodata) continue;             /* sentinel — never emit it */
-        reading = d;
-        has_reading = 1;
-        when = geoeo_str(pv, "dateTime");
-        cJSON *q = cJSON_GetObjectItem(pv, "qualifiers");
-        if (cJSON_IsArray(q) && cJSON_IsString(cJSON_GetArrayItem(q, 0)))
-          quals = cJSON_GetArrayItem(q, 0)->valuestring;
+    if (!cJSON_IsArray(vals)) continue;
+    const int nblocks = cJSON_GetArraySize(vals);
+    cJSON *blk;
+    cJSON_ArrayForEach(blk, vals) {
+      /* Most recent reading of this block. */
+      double reading = 0;
+      int has_reading = 0;
+      const char *when = NULL, *quals = NULL;
+      cJSON *quals_all = NULL;      /* every qualifier code, when there is >1 */
+      cJSON *plist = cJSON_GetObjectItem(blk, "value");
+      if (cJSON_IsArray(plist)) {
+        int pn = cJSON_GetArraySize(plist);
+        for (int i = pn - 1; i >= 0 && !has_reading; i--) {
+          cJSON *pv = cJSON_GetArrayItem(plist, i);
+          double d = 0;
+          if (!geoeo_numlax(pv, "value", &d)) continue;
+          if (d == nodata) continue;             /* sentinel — never emit it */
+          reading = d;
+          has_reading = 1;
+          when = geoeo_str(pv, "dateTime");
+          cJSON *q = cJSON_GetObjectItem(pv, "qualifiers");
+          if (cJSON_IsArray(q) && cJSON_IsString(cJSON_GetArrayItem(q, 0))) {  /* exhaustive-ok: display pick; qualifiers_all below keeps every code */
+            quals = cJSON_GetArrayItem(q, 0)->valuestring;  /* exhaustive-ok: display pick; qualifiers_all below keeps every code */
+            if (cJSON_GetArraySize(q) > 1) quals_all = q;
+          }
+        }
       }
-    }
 
-    cJSON *props = cJSON_CreateObject();
-    geoeo_add_str(props, "site_name", sname);
-    geoeo_add_str(props, "site_code", scode);
-    geoeo_add_str(props, "state", st);
-    geoeo_add_str(props, "variable", vname);
-    geoeo_add_str(props, "unit", unit);
-    geoeo_add_str(props, "qualifiers", quals);
-    geoeo_add_str(props, "observed_at", when);
-    if (has_reading) cJSON_AddNumberToObject(props, "value", reading);
-    if (geo) { cJSON_AddNumberToObject(props, "latitude", lat);
-               cJSON_AddNumberToObject(props, "longitude", lon);
-               cJSON_AddStringToObject(props, "srs", "EPSG:4326"); }
-    cJSON_AddStringToObject(props, "data_note",
-                            "Provisional data are subject to revision (USGS)");
-    char *pj = cJSON_PrintUnformatted(props);
-    cJSON_Delete(props);
+      /* method identity, as the upstream stated it */
+      char mid[32] = {0};
+      const char *mdesc = NULL;
+      cJSON *ml = cJSON_GetObjectItem(blk, "method");
+      if (cJSON_IsArray(ml)) {
+        cJSON *m;
+        cJSON_ArrayForEach(m, ml) {
+          cJSON *idv = cJSON_GetObjectItem(m, "methodID");
+          if (!mid[0] && cJSON_IsNumber(idv))
+            snprintf(mid, sizeof mid, "%lld", (long long)idv->valuedouble);
+          else if (!mid[0] && cJSON_IsString(idv) && idv->valuestring[0])
+            snprintf(mid, sizeof mid, "%.31s", idv->valuestring);
+          if (!mdesc) mdesc = geoeo_str(m, "methodDescription");
+        }
+      }
 
-    char *gj = NULL;
-    if (geo) {
-      cJSON *g = geoeo_mk_point(lon, lat);
-      gj = cJSON_PrintUnformatted(g);
-      cJSON_Delete(g);
-    }
+      cJSON *props = cJSON_CreateObject();
+      geoeo_add_str(props, "site_name", sname);
+      geoeo_add_str(props, "site_code", scode);
+      geoeo_add_str(props, "state", st);
+      geoeo_add_str(props, "variable", vname);
+      geoeo_add_str(props, "unit", unit);
+      geoeo_add_str(props, "qualifiers", quals);
+      if (quals_all)               /* house rule 2: keep every qualifier, not [0] */
+        cJSON_AddItemToObject(props, "qualifiers_all", cJSON_Duplicate(quals_all, 1));
+      geoeo_add_str(props, "observed_at", when);
+      if (mid[0]) geoeo_add_str(props, "method_id", mid);
+      if (mdesc)  geoeo_add_str(props, "method_description", mdesc);
+      if (nblocks > 1) cJSON_AddNumberToObject(props, "method_count", nblocks);
+      if (has_reading) cJSON_AddNumberToObject(props, "value", reading);
+      if (geo) { cJSON_AddNumberToObject(props, "latitude", lat);
+                 cJSON_AddNumberToObject(props, "longitude", lon);
+                 cJSON_AddStringToObject(props, "srs", "EPSG:4326"); }
+      cJSON_AddStringToObject(props, "data_note",
+                              "Provisional data are subject to revision (USGS)");
+      char *pj = cJSON_PrintUnformatted(props);
+      cJSON_Delete(props);
 
-    char title[320];
-    if (has_reading)
-      snprintf(title, sizeof title, "%s — %.2f %s",
-               sname ? sname : scode, reading, unit ? unit : "");
-    else
-      snprintf(title, sizeof title, "%s — no current reading",
-               sname ? sname : scode);
+      char *gj = NULL;
+      if (geo) {
+        cJSON *g = geoeo_mk_point(lon, lat);
+        gj = cJSON_PrintUnformatted(g);
+        cJSON_Delete(g);
+      }
 
-    char key[160];
-    snprintf(key, sizeof key, "%s|00065", scode ? scode : sname);
+      char title[400];
+      if (has_reading)
+        snprintf(title, sizeof title, "%s — %.2f %s%s%s",
+                 sname ? sname : scode, reading, unit ? unit : "",
+                 (nblocks > 1 && mdesc) ? " · " : "",
+                 (nblocks > 1 && mdesc) ? mdesc : "");
+      else
+        snprintf(title, sizeof title, "%s — no current reading%s%s",
+                 sname ? sname : scode,
+                 (nblocks > 1 && mdesc) ? " · " : "",
+                 (nblocks > 1 && mdesc) ? mdesc : "");
 
-    char link[160];
-    if (scode)
-      snprintf(link, sizeof link,
-               "https://waterdata.usgs.gov/monitoring-location/%s/", scode);
-    else link[0] = 0;
+      /* Key on site+parameter, plus the method when the gauge reports more than
+       * one — otherwise the second block would overwrite the first. */
+      char key[200];
+      if (nblocks > 1 && mid[0])
+        snprintf(key, sizeof key, "%s|00065|%s", scode ? scode : sname, mid);
+      else
+        snprintf(key, sizeof key, "%s|00065", scode ? scode : sname);
 
-    intel_item it = {0};
-    it.remote_key = key;
-    it.title = title;
-    it.summary = vname;
-    it.link = link[0] ? link : NULL;
-    it.lang = "en";
-    it.published_at = when;
-    it.record_type = "river-gauge";
-    it.has_geo = geo;
-    it.lat = lat;
-    it.lon = lon;
-    it.geometry_geojson = gj;
-    it.properties_json = pj ? pj : "{}";
-    it.tags_json = "[\"water\",\"river\",\"gauge\",\"flood\",\"usgs\"]";
-    if (sink->emit(sink, &it) >= 0) (*emitted)++;
-    free(pj);
-    free(gj);
+      char link[160];
+      if (scode)
+        snprintf(link, sizeof link,
+                 "https://waterdata.usgs.gov/monitoring-location/%s/", scode);
+      else link[0] = 0;
+
+      intel_item it = {0};
+      it.remote_key = key;
+      it.title = title;
+      it.summary = vname;
+      it.link = link[0] ? link : NULL;
+      it.lang = "en";
+      it.published_at = when;
+      it.record_type = "river-gauge";
+      it.has_geo = geo;
+      it.lat = lat;
+      it.lon = lon;
+      it.geometry_geojson = gj;
+      it.properties_json = pj ? pj : "{}";
+      it.tags_json = "[\"water\",\"river\",\"gauge\",\"flood\",\"usgs\"]";
+      if (sink->emit(sink, &it) >= 0) (*emitted)++;
+      free(pj);
+      free(gj);
+    }   /* values[] block */
   }
   cJSON_Delete(doc);
   return seen;

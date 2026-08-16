@@ -276,6 +276,7 @@ private struct LoadingGate: View {
                     VStack(spacing: 6) {
                         Image(systemName: "wifi.exclamationmark")
                             .font(.title2).foregroundStyle(theme.warning)
+                            .accessibilityHidden(true)   // headline says it
                         Text("Can't reach the backend")
                             .font(.headline).foregroundStyle(theme.text)
                         Text("Check the server URL or that the backend is running on this network.")

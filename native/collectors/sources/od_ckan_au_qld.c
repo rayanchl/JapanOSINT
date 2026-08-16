@@ -4,7 +4,7 @@
  * the non-standard but populated data_last_updated, de_identified_data and
  * data_driven_application fields. Keyless.
  * Licence: Queensland Government open data, mostly CC-BY 4.0. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-au-qld"
 static const char *URL =

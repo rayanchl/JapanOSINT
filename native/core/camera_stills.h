@@ -339,7 +339,9 @@
  *      routing them through a JSON string would corrupt them and invite
  *      exactly the HTML echo the octet-stream framing exists to prevent.
  *
- *      Optional operator route, answers "why is everything NULL" without SSH:
+ *      Operator route, answers "why is everything NULL" without SSH.
+ *      REGISTERED (it was listed here as optional and then never wired, so the
+ *      module's own answer to that question was unreachable):
  *        GET /api/camera-stills/capabilities → camera_stills_capabilities(g_db)
  *
  * 4. No core/main.c change. No new thread. No new link dependency (libcurl,

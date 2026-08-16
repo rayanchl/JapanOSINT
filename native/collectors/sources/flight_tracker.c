@@ -117,17 +117,26 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *fi = query_opensky_aircraft(ctx->http, q, &lat, &lon, &has_geo);
   if (!fi) return 0;          /* aircraft not broadcasting → nothing */
 
+  /* `confidence: 90` was a constant. Nothing computed it, nothing varies it,
+   * and OpenSky publishes no confidence figure for a state vector — it was a
+   * number on a 0..100 scale sitting next to real altitude and velocity
+   * readings, which is exactly the shape a calibrated score would take. There
+   * is no such score here, so there is no such field; `success` stays, because
+   * this branch is only reached after a state vector really came back, but it
+   * now says which fetch it is asserting. */
   cJSON *env = cJSON_CreateObject();
   cJSON_AddBoolToObject(env, "success", 1);
-  cJSON_AddNumberToObject(env, "confidence", 90);
+  cJSON_AddItemToObject(env, "confidence", cJSON_CreateNull());
+  cJSON_AddStringToObject(env, "confidence_basis",
+    "not scored: OpenSky publishes no confidence for a state vector");
   cJSON_AddItemToObject(env, "data", cJSON_Duplicate(fi, 1));
   char *bj = cJSON_PrintUnformatted(env);
 
   cJSON *props = cJSON_CreateObject();
   cJSON_AddStringToObject(props, "service", "FLIGHT_TRACKER");
   cJSON_AddStringToObject(props, "entity", q);
-  cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 90);
+  cJSON_AddBoolToObject(props, "success", 1);   /* a live state vector was returned */
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   /* remote_key = flight:<icao24>. */

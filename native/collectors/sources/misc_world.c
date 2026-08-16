@@ -48,8 +48,8 @@ static char *dblp_authors(const cJSON *info) {
       const char *t = jo_sv(e, "text"); if (!t) continue;
       size_t need = len + strlen(t) + 3; if (need > cap) { cap = need * 2; char *x = realloc(out, cap); if (!x) break; out = x; }
       if (n) { strcpy(out + len, ", "); len += 2; } strcpy(out + len, t); len += strlen(t);
-      /* (cap removed: every record of the fetched array is emitted —
-       * docs/SOURCE_EXHAUSTIVENESS.md) */
+      n++;  /* the count IS the separator/emptiness flag — the cap that used
+              * to increment it was removed, this must not go with it. */
     }
   } else {
     const char *t = jo_sv(a, "text"); if (t) { strncpy(out, t, cap - 1); out[cap-1]=0; n = 1; }

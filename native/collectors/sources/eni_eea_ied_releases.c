@@ -101,6 +101,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &row) >= 0) n++;
     free(pj);
   }
+  /* House rule 2: the DiscoData query carries SELECT TOP 1000 and &p=1, so a
+   * result set that comes back exactly full was clipped upstream and no later
+   * page is requested. DiscoData does not report the unclipped total. */
+  if (cJSON_GetArraySize(res) >= 1000)
+    jo_truncation_notice(sink, SRC, "IED PollutantRelease", n, -1,
+                         "the SQL carries SELECT TOP 1000 and the request pins "
+                         "p=1; the result came back exactly full, so releases "
+                         "beyond it were never fetched",
+                         "raise the TOP/nrOfHits bound and walk p=2,3,… in URL "
+                         "in collectors/sources/eni_eea_ied_releases.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[" SRC "] emitted %d\n", n);
   return 0;

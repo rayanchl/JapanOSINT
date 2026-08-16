@@ -9,7 +9,7 @@
  * source; rows without it get no location. Keyless.
  * Licence: City of Baton Rouge / East Baton Rouge Parish open data, public
  * record. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "socrata-brla-crime"
 static const char *URL =

@@ -42,6 +42,7 @@
 #include "camera_store.h"
 #include "breach_store.h"
 #include "breach_jobs.h"
+#include "pagination_probe.h"
 #include "breach_meta.h"
 #include "breach_adapter.h"
 #include "../third_party/mongoose.h"
@@ -67,10 +68,70 @@ static void iso_now(char *buf, size_t n) {
            tm.tm_hour, tm.tm_min, tm.tm_sec, (int)(tv.tv_usec / 1000));
 }
 
+/* Escape `s` for embedding inside a JSON string literal, truncating only on a
+ * COMPLETE escape sequence so the result is always valid JSON.
+ *
+ * Several error/ack bodies below are hand-built with snprintf and interpolate a
+ * value that came out of the URL — seg() runs mg_url_decode(), so `%22` arrives
+ * as a literal `"` and closed the string. `POST /api/intel/sources/x%22,%22oops
+ * %22:%22yes/run` came back as
+ *   {"error":"no_collector_registered","source_id":"x","oops":"yes"}
+ * i.e. the caller chose the response's shape. Harmless to this server, but it
+ * is fabricated content in an API reply, and a client that trusts the envelope
+ * has no way to tell. The rest of the tree builds JSON with cJSON; these few
+ * sites are on the error path where an allocation is the thing you least want,
+ * so they get an escaper instead — the same call reg_ua_prozorro.c makes. */
+static void jesc(const char *s, char *out, size_t cap) {
+  size_t o = 0;
+  if (!out || cap == 0) return;
+  for (const char *q = s ? s : ""; *q; q++) {
+    unsigned char ch = (unsigned char)*q;
+    const char *rep = NULL; char ubuf[7];
+    switch (ch) {
+      case '"':  rep = "\\\""; break;
+      case '\\': rep = "\\\\"; break;
+      case '\n': rep = "\\n";  break;
+      case '\r': rep = "\\r";  break;
+      case '\t': rep = "\\t";  break;
+      default:
+        if (ch < 0x20) { snprintf(ubuf, sizeof ubuf, "\\u%04x", ch); rep = ubuf; }
+        break;
+    }
+    size_t need = rep ? strlen(rep) : 1;
+    if (o + need >= cap) break;          /* never split an escape */
+    if (rep) { memcpy(out + o, rep, need); o += need; }
+    else out[o++] = (char)ch;
+  }
+  out[o] = 0;
+}
+
 static void reply_json(struct mg_connection *c, int code, const char *body) {
   mg_http_reply(c, code,
     "Content-Type: application/json\r\nAccess-Control-Allow-Origin: *\r\n",
     "%s", body);
+}
+
+/* Copy the request's query string into a fixed buffer, or answer 414.
+ *
+ * The shape this replaces was `if (len && len < sizeof qsb) memcpy(...)`,
+ * repeated at seven routes. One byte over the buffer left qsb EMPTY, so every
+ * filter, cursor and limit silently vanished and the handler returned its
+ * widest default result set — the caller asked to NARROW and got everything.
+ * That is failing open, and it is the same defect /api/export was fixed for
+ * (it 414s rather than truncate). There is no way to honour half a filter set.
+ *
+ * Returns 1 when the request has already been answered and the caller must
+ * stop; the caller is responsible for freeing anything it allocated first. */
+static int qs_copy_or_414(struct mg_connection *c, struct mg_http_message *hm,
+                          char *dst, size_t cap) {
+  if (hm->query.len >= cap) {
+    reply_json(c, 414, "{\"error\":\"query_string_too_long\",\"detail\":"
+                       "\"filters are never silently dropped\"}");
+    return 1;
+  }
+  if (hm->query.len) memcpy(dst, hm->query.buf, hm->query.len);
+  dst[hm->query.len] = 0;
+  return 0;
 }
 
 /* export_write_fn over a mongoose connection: one Transfer-Encoding chunk per
@@ -124,12 +185,14 @@ static void search_stream_open(struct mg_connection *c, const char *id) {
     "Cache-Control: no-cache, no-transform\r\nConnection: keep-alive\r\n"
     "X-Accel-Buffering: no\r\n\r\n");
   c->is_resp = 0;
-  osint_request *rp = progress_get(id);
-  if (!rp) { mg_printf(c, "event: error\r\ndata: {\"error\":\"not_found\"}\n\n");
-             c->is_draining = 1; return; }
-  char *snap = progress_to_json(rp);
-  if (snap) { mg_printf(c, "event: progress\r\ndata: %s\n\n", snap); free(snap); }
-  if (progress_is_done(rp)) {
+  /* One locked snapshot, not get-then-serialise: progress_get() hands back a
+   * pointer the 200-cap retention sweep can free the instant the lock drops. */
+  int done = 0;
+  char *snap = progress_snapshot(id, &done);
+  if (!snap) { mg_printf(c, "event: error\r\ndata: {\"error\":\"not_found\"}\n\n");
+               c->is_draining = 1; return; }
+  mg_printf(c, "event: progress\r\ndata: %s\n\n", snap); free(snap);
+  if (done) {
     mg_printf(c, "event: close\r\ndata: {}\n\n"); c->is_draining = 1; return;
   }
   for (int i = 0; i < SSTREAM_MAX; i++) if (!g_sstream[i].c) {
@@ -144,11 +207,11 @@ static void search_stream_poll(struct mg_connection *c) {
     if (g_sstream[i].c != c) continue;
     if (mg_millis() < g_sstream[i].next) return;
     g_sstream[i].next = mg_millis() + 500;
-    osint_request *rp = progress_get(g_sstream[i].id);
-    if (!rp) { g_sstream[i].c = NULL; c->is_draining = 1; return; }
-    char *snap = progress_to_json(rp);
-    if (snap) { mg_printf(c, "event: progress\r\ndata: %s\n\n", snap); free(snap); }
-    if (progress_is_done(rp)) {
+    int done = 0;
+    char *snap = progress_snapshot(g_sstream[i].id, &done);
+    if (!snap) { g_sstream[i].c = NULL; c->is_draining = 1; return; }
+    mg_printf(c, "event: progress\r\ndata: %s\n\n", snap); free(snap);
+    if (done) {
       mg_printf(c, "event: close\r\ndata: {}\n\n");
       g_sstream[i].c = NULL; c->is_draining = 1;
     }
@@ -366,6 +429,52 @@ static void *cam_trigger_thread(void *vp) {
 static void wakeup_reply_big(struct mg_mgr *mgr, unsigned long cid,
                              int status, char *owned);   /* defined below */
 
+/* ── keeping the manager alive under the threads that wake it ──────────────
+ *
+ * `struct mg_mgr mgr` is a LOCAL of httpd_serve(). Four kinds of detached
+ * thread (suggest, isochrone, source-run, camera-trigger) are handed
+ * `c->mgr` and call mg_wakeup() on it whenever they finish — which can be
+ * minutes later, because a source-run thread is running a real collector.
+ * On SIGTERM httpd_serve() called mg_mgr_free(&mgr) and RETURNED, so that
+ * frame died while those threads still held a pointer into it; mg_wakeup()
+ * dereferences mgr->pipe immediately. main() then spends up to three more
+ * seconds draining the scheduler before _exit, which is a wide window.
+ *
+ * scheduler_stop_background() does not cover these — it drains the collector
+ * POOL, and a source-run thread is not in it. So the wakeup path gets its own
+ * door: enter/leave brackets every touch of `mgr`, and shutdown closes the
+ * door and waits for whoever is already through it. A thread that arrives
+ * after the close simply drops its reply, which is correct — the process is
+ * on its way out and the client's connection is about to go with it. The wait
+ * is bounded by mg_wakeup() itself (one non-blocking send), not by the
+ * collector that preceded it. */
+static pthread_mutex_t g_wake_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t  g_wake_idle = PTHREAD_COND_INITIALIZER;
+static int g_wake_active = 0;
+static int g_wake_closed = 0;
+
+/* 1 = the caller may touch `mgr`, and MUST pair this with wake_leave(). */
+static int wake_enter(void) {
+  pthread_mutex_lock(&g_wake_lock);
+  if (g_wake_closed) { pthread_mutex_unlock(&g_wake_lock); return 0; }
+  g_wake_active++;
+  pthread_mutex_unlock(&g_wake_lock);
+  return 1;
+}
+static void wake_leave(void) {
+  pthread_mutex_lock(&g_wake_lock);
+  if (--g_wake_active == 0) pthread_cond_broadcast(&g_wake_idle);
+  pthread_mutex_unlock(&g_wake_lock);
+}
+/* Close the door, then wait for every wakeup already inside to come out.
+ * Call this BEFORE mg_mgr_free(). */
+static void wake_shutdown(void) {
+  pthread_mutex_lock(&g_wake_lock);
+  g_wake_closed = 1;
+  while (g_wake_active > 0) pthread_cond_wait(&g_wake_idle, &g_wake_lock);
+  pthread_mutex_unlock(&g_wake_lock);
+}
+
 static void wakeup_reply(struct mg_mgr *mgr, unsigned long cid,
                          int status, const char *json) {
   size_t jn = strlen(json);
@@ -380,7 +489,10 @@ static void wakeup_reply(struct mg_mgr *mgr, unsigned long cid,
   char *buf = malloc(n);
   if (!buf) return;
   int len = snprintf(buf, n, "%03d %s", status, json);
-  if (len > 0) mg_wakeup(mgr, cid, buf, (size_t)len);   /* copied by mongoose */
+  if (len > 0 && wake_enter()) {
+    mg_wakeup(mgr, cid, buf, (size_t)len);              /* copied by mongoose */
+    wake_leave();
+  }
   free(buf);
 }
 
@@ -451,7 +563,12 @@ static void wakeup_reply_big(struct mg_mgr *mgr, unsigned long cid,
   unsigned tk = wbody_park(owned);
   char tok[24];
   int len = snprintf(tok, sizeof tok, "%03d \x01%u", status, tk);
-  if (len > 0 && !mg_wakeup(mgr, cid, tok, (size_t) len)) free(wbody_take(tk));
+  if (len > 0) {
+    if (!wake_enter()) { free(wbody_take(tk)); return; }
+    int woke = mg_wakeup(mgr, cid, tok, (size_t) len);
+    wake_leave();
+    if (!woke) free(wbody_take(tk));
+  }
 }
 
 /* GET /api/isochrone — GTFS reachability. Seconds of CPU and ~1500 timetable
@@ -520,8 +637,9 @@ static void *srcrun_thread(void *vp) {
 
   char b[256];
   if (rc < 0) {
+    char eid[176]; jesc(a->id, eid, sizeof eid);
     snprintf(b, sizeof b,
-      "{\"ran\":false,\"source_id\":\"%.80s\",\"error\":\"collector_run_failed\"}", a->id);
+      "{\"ran\":false,\"source_id\":\"%s\",\"error\":\"collector_run_failed\"}", eid);
     wakeup_reply(a->mgr, a->cid, 500, b);
   } else {
     snprintf(b, sizeof b,
@@ -645,7 +763,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     if (seg(u, "/api/search/stream/", "", sid, sizeof sid)) {
       search_stream_open(c, sid); return; } }
 
-  /* /admin/break-glass/* is mounted OUTSIDE the /api auth gate (it exists
+  /* /admin/break-glass/... is mounted OUTSIDE the /api auth gate (it exists
    * precisely for when Supabase auth is down). Only /login is implemented. */
   if (starts(u, "/admin/break-glass")) {
     if (!eq(u, "/admin/break-glass/login")) { reply_json(c, 404, "{\"error\":\"Not found\"}"); return; }
@@ -680,7 +798,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     return;
   }
 
-  /* ---- everything else under /api/* passes the auth gate ---- */
+  /* ---- everything else under /api/... passes the auth gate ---- */
   if (starts(u, "/api/")) {
     struct mg_str *h = mg_http_get_header(hm, "Authorization");
     char hdr[2048] = {0};
@@ -837,7 +955,11 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       /* GET /api/intel/items/:uid/entities — entities mentioned in an item
        * (works for both breach records and normal intel items). Plain-auth read. */
       if (seg(u, "/api/intel/items/", "/entities", pe, sizeof pe)) {
-        char *body = entityapi_item_entities(g_db, pe);
+        /* Breach-derived entity chips are operator-only: the sibling route
+         * GET /api/intel/items/breach:<keyid> is breach_gate()d, and this one
+         * returns the same cleartext identifier as a chip. */
+        char *body = entityapi_item_entities_scoped(g_db, pe,
+                                                    opgate_check(&usr) == 0);
         if (!body) { reply_json(c, 500, "{\"error\":\"failed_to_list_item_entities\"}"); return; }
         reply_json(c, 200, body); free(body); return;
       }
@@ -925,17 +1047,69 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     }
 
     /* GET /api/status/:id */
+    /* POST /api/status/:id/probe and /consent. These two routes did not exist:
+     * the probe_* columns and probe_consent have been in the schema and served
+     * by statusapi since the Node port, but nothing ever wrote them, so the
+     * iOS client's two probe controls 404'd unconditionally.
+     *
+     * Operator-only, and deliberately so: a probe makes the server issue an
+     * outbound request and then persists a snippet of the reply into a row
+     * every authenticated user can read. The URL is the source's own
+     * registered endpoint, so this is not an SSRF primitive — but "which
+     * source do I make the server fetch, and store the answer of" is still an
+     * operator's decision, not a viewer's. These MUST precede the bare
+     * /api/status/:id matcher below, which would otherwise swallow the tail. */
+    if (seg(u, "/api/status/", "/probe", p, sizeof p)) {
+      if (hm->method.len != 4 || memcmp(hm->method.buf, "POST", 4) != 0) {
+        reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return;
+      }
+      if (breach_gate(c, &usr)) return;      /* same opgate wrapper, same codes */
+      int st = 200;
+      char *body = statusapi_probe(g_db, p, &st);
+      if (!body) { reply_json(c, 500, "{\"error\":\"probe_failed\"}"); return; }
+      audit_write(g_db, "platform", usr.id, "source.probe", p, NULL);
+      reply_json(c, st, body); free(body); return;
+    }
+    if (seg(u, "/api/status/", "/consent", p, sizeof p)) {
+      if (hm->method.len != 4 || memcmp(hm->method.buf, "POST", 4) != 0) {
+        reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return;
+      }
+      if (breach_gate(c, &usr)) return;
+      cJSON *jb = hm->body.len ? cJSON_ParseWithLength(hm->body.buf, hm->body.len) : NULL;
+      cJSON *jc = jb ? cJSON_GetObjectItem(jb, "consent") : NULL;
+      int consent = cJSON_IsBool(jc) ? cJSON_IsTrue(jc) : 0;
+      if (!cJSON_IsBool(jc)) {
+        if (jb) cJSON_Delete(jb);
+        reply_json(c, 400, "{\"error\":\"body must be {\\\"consent\\\":true|false}\"}");
+        return;
+      }
+      cJSON_Delete(jb);
+      int st = 200;
+      char *body = statusapi_set_consent(g_db, p, consent, &st);
+      if (!body) { reply_json(c, 500, "{\"error\":\"consent_failed\"}"); return; }
+      audit_write(g_db, "platform", usr.id, "source.probe.consent", p, NULL);
+      reply_json(c, st, body); free(body); return;
+    }
     if (seg(u, "/api/status/", "", p, sizeof p)) {
       char *body = statusapi_one(g_db, p);
       if (!body) { reply_json(c, 404, "{\"error\":\"Source not found\"}"); return; }
       reply_json(c, 200, body); free(body); return;
     }
 
-    /* GET /api/layers/:layerId/geojson */
+    /* GET /api/layers/:layerId/geojson — proxied to the SAME handlers that
+     * serve /api/data/:layerId (sweep stores first, then the generic collector
+     * layer). It used to answer every known layer with a hardcoded
+     * {"features":[]} and a 200, so a client rendered an empty map and had no
+     * way to know nothing had been read. If neither handler can answer under
+     * this id, miscapi_layer_geojson returns an explicit error naming the
+     * layer's contributing sources — 501, not a fabricated empty success. */
     if (seg(u, "/api/layers/", "/geojson", p, sizeof p)) {
-      char *body = miscapi_layer_geojson(p);
-      if (!body) { reply_json(c, 404, "{\"error\":\"Layer not found\"}"); return; }
-      reply_json(c, 200, body); free(body); return;
+      char *body = sweepapi_data(g_db, p);
+      if (!body) body = dataapi_layer(g_db, p);
+      if (body) { reply_json(c, 200, body); free(body); return; }
+      char *note = miscapi_layer_geojson(p);
+      if (!note) { reply_json(c, 404, "{\"error\":\"Layer not found\"}"); return; }
+      reply_json(c, 501, note); free(note); return;
     }
 
     /* GET /api/intel/search — alias of /api/intel/items */
@@ -962,14 +1136,17 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       }
       const source_def *d = registry_get(p);
       char b[256];
+      /* `p` is URL-DECODED by seg(), so it can carry a quote. Escape once for
+       * every body this route builds by hand. */
+      char eid[176]; jesc(p, eid, sizeof eid);
       if (!d) {
         snprintf(b, sizeof b,
-          "{\"error\":\"no_collector_registered\",\"source_id\":\"%s\"}", p);
+          "{\"error\":\"no_collector_registered\",\"source_id\":\"%s\"}", eid);
         reply_json(c, 404, b); return;
       }
       if (!run_begin(p)) {
         snprintf(b, sizeof b,
-          "{\"error\":\"run_in_flight\",\"source_id\":\"%s\"}", p);
+          "{\"error\":\"run_in_flight\",\"source_id\":\"%s\"}", eid);
         reply_json(c, 409, b); return;
       }
       srcrun_arg *ra = calloc(1, sizeof *ra);
@@ -994,13 +1171,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         run_end(p);
         if (rc < 0) {
           snprintf(b, sizeof b,
-            "{\"ran\":false,\"source_id\":\"%s\",\"error\":\"collector_run_failed\"}", p);
+            "{\"ran\":false,\"source_id\":\"%s\",\"error\":\"collector_run_failed\"}", eid);
           reply_json(c, 500, b); return;
         }
         snprintf(b, sizeof b,
           "{\"ran\":true,\"source_id\":\"%s\",\"ingested\":%lld,"
           "\"duration_ms\":%llu,\"kind\":null,\"meta\":null}",
-          p, delta, (unsigned long long)(mg_millis() - t0));
+          eid, delta, (unsigned long long)(mg_millis() - t0));
         reply_json(c, 200, b);
       }
       return;
@@ -1020,7 +1197,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 501, body); free(body); return;
     }
 
-    /* ---- /api/admin/* and /api/db/* — requirePlatformOperator ---- */
+    /* ---- /api/admin/... and /api/db/... — requirePlatformOperator ---- */
     if (starts(u,"/api/admin/") ||
         eq(u,"/api/db/tables") || starts(u,"/api/db/tables/") ||
         eq(u,"/api/db/scheduler")) {
@@ -1094,6 +1271,24 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           b=maintenance_repair_action(g_db,atol(idb),0,&st);
           reply_json(c,st,b); free(b); return;
         }
+        /* DELETE /api/admin/repairs/:id — undo an APPLIED url_swap. Approval
+         * installs a runtime rewrite that steers every outbound fetch matching
+         * the old URL; until now nothing called url_override_remove(), so a
+         * repair merged onto the wrong endpoint could only be undone by hand-
+         * editing the table and restarting. Audited like the approve path,
+         * because it changes where collectors fetch from. */
+        if (seg(u,"/api/admin/repairs/","",idb,sizeof idb)) {
+          if (hm->method.len != 6 || memcmp(hm->method.buf,"DELETE",6) != 0) {
+            reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+          long rid = atol(idb);
+          b = maintenance_repair_revert(g_db, rid, &st);
+          if (st == 200) {
+            char tgt[32];
+            snprintf(tgt,sizeof tgt,"%ld",rid);
+            audit_write(g_db,"platform",usr.id,"collector.repair.revert",tgt,b);
+          }
+          reply_json(c,st,b); free(b); return;
+        }
         if (seg(u,"/api/admin/sources/","/unquarantine",idb,sizeof idb)) {
           if (!is_post){ reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
           b=maintenance_unquarantine(g_db,idb,&st);
@@ -1124,13 +1319,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           int ch = sqlite3_changes(g_db->h);
           sqlite3_finalize(cs);
           if (ch == 0) { reply_json(c,404,"{\"error\":\"not_found\"}"); return; }
-          char pj[160];
+          char pj[160], ejd[176]; jesc(idb, ejd, sizeof ejd);
           snprintf(pj,sizeof pj,"{\"source_id\":\"%.80s\",\"enabled\":%s}",
-                   idb, on ? "true" : "false");
+                   ejd, on ? "true" : "false");
           audit_write(g_db, "platform", usr.id, "evidence.capture.toggle", idb, pj);
           char ob[128];
           snprintf(ob,sizeof ob,"{\"ok\":true,\"source_id\":\"%.80s\",\"capture_evidence\":%s}",
-                   idb, on ? "true" : "false");
+                   ejd, on ? "true" : "false");
           reply_json(c,200,ob); return;
         }
         /* Roadmap 28 — the same reachability problem as capture-evidence:
@@ -1156,9 +1351,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           int ch = sqlite3_changes(g_db->h);
           sqlite3_finalize(cs);
           if (ch == 0) { reply_json(c,404,"{\"error\":\"not_found\"}"); return; }
-          char pj[200];
+          char pj[200], ejd[176]; jesc(idb, ejd, sizeof ejd);
           snprintf(pj,sizeof pj,"{\"camera_id\":\"%.80s\",\"enabled\":%s}",
-                   idb, on ? "true" : "false");
+                   ejd, on ? "true" : "false");
           audit_write(g_db, "platform", usr.id, "camera.stills.toggle", idb, pj);
           /* Frames are only PRESERVED if the camera-stills source is also
            * opted into evidence capture — the module reuses that blob store
@@ -1178,7 +1373,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           reply_json(c,st,b); free(b); return;
         }
       }
-      /* ---- /api/admin/breach/* — one-shot corpus fetch / ingest (async jobs)
+      /* ---- /api/admin/breach/... — one-shot corpus fetch / ingest (async jobs)
        * + job status. Ingest/fetch run on detached threads (own DB connection),
        * so a multi-GB job never blocks the event loop. Operator-gated above. */
       if (eq(u,"/api/admin/breach/ingest") || eq(u,"/api/admin/breach/fetch")) {
@@ -1233,15 +1428,15 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         cJSON_AddNumberToObject(o,"rows_existing", stt.rows_existing);
         cJSON *arr = cJSON_CreateArray();
         for (int i=0;i<nr;i++) {
-          cJSON *r = cJSON_CreateObject();
-          cJSON_AddStringToObject(r,"breach_id", rows[i].breach_id);
-          cJSON_AddStringToObject(r,"name", rows[i].name);
+          cJSON *jrow = cJSON_CreateObject();
+          cJSON_AddStringToObject(jrow,"breach_id", rows[i].breach_id);
+          cJSON_AddStringToObject(jrow,"name", rows[i].name);
           if (rows[i].pwn_count >= 0)
-            cJSON_AddNumberToObject(r,"pwn_count",(double)rows[i].pwn_count);
-          else cJSON_AddNullToObject(r,"pwn_count");
-          cJSON_AddStringToObject(r,"added_date", rows[i].added_date);
-          cJSON_AddStringToObject(r,"breach_date", rows[i].breach_date);
-          cJSON_AddItemToArray(arr,r);
+            cJSON_AddNumberToObject(jrow,"pwn_count",(double)rows[i].pwn_count);
+          else cJSON_AddNullToObject(jrow,"pwn_count");
+          cJSON_AddStringToObject(jrow,"added_date", rows[i].added_date);
+          cJSON_AddStringToObject(jrow,"breach_date", rows[i].breach_date);
+          cJSON_AddItemToArray(arr,jrow);
         }
         cJSON_AddItemToObject(o,"sample",arr);
         free(rows);
@@ -1297,6 +1492,35 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           char *b=breach_job_status(jid); reply_json(c,200,b); free(b); return;
         }
       }
+      /* ---- /api/admin/pagination — the pagination survey ----------------
+       * 2,898 registered sources declare a page size and no offset, so
+       * lib/pagewalk.c fetches page 1 and stops; those caps sum to ~531k
+       * records against upstreams holding far more. Blindly appending an
+       * offset would make pagewalk re-fetch page 1 forever wherever the guess
+       * was wrong, so this MEASURES instead: page 1 vs page 2, compared by
+       * record set. Proven sources become url_swap repairs for the existing
+       * approval route — this never changes a URL by itself. Minutes of work
+       * and thousands of requests, hence a detached job, never inline. */
+      if (eq(u,"/api/admin/pagination/probe")) {
+        if (hm->method.len != 4 || memcmp(hm->method.buf, "POST", 4) != 0) {
+          reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return;
+        }
+        char lv[16]={0};
+        int hl = mg_http_get_var(&hm->query,"limit",lv,sizeof lv);
+        int st=202;
+        char *b = pagination_probe_start(g_db, hl>0?atoi(lv):0, &st);
+        if (st==202) audit_write(g_db,"platform",usr.id,"pagination.probe",NULL,NULL);
+        reply_json(c,st,b?b:"{\"error\":\"server_error\"}"); free(b); return;
+      }
+      if (eq(u,"/api/admin/pagination/jobs")) {
+        char *b=pagination_probe_status(NULL); reply_json(c,200,b); free(b); return;
+      }
+      { char pjid[32]={0};
+        if (seg(u,"/api/admin/pagination/jobs/","",pjid,sizeof pjid)) {
+          char *b=pagination_probe_status(pjid); reply_json(c,200,b); free(b); return;
+        }
+      }
+
       if (eq(u,"/api/db/tables")) {
         char *b=dbexplorer_tables(g_db); reply_json(c,200,b); free(b); return;
       }
@@ -1306,7 +1530,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       /* /api/db/tables/:name
        *
        * This is the tail of the block, so anything that entered it and matched
-       * no route above lands here — including every unmatched /api/admin/*
+       * no route above lands here — including every unmatched /api/admin/...
        * path. The offset arithmetic below is blind, so `GET /api/admin/xxxsources`
        * used to slice out "sources" and dump that table. Only real
        * /api/db/tables/ URIs may reach the explorer. */
@@ -1441,7 +1665,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     /* ---- roadmap 10: POST /api/alerts/preview — backtest a predicate over
      * history WITHOUT writing alert_events. Shares alert_eval.c's matcher
      * with the live ingest path, so what you preview is what will fire.
-     * Must precede the /api/alerts/* block, which would otherwise treat
+     * Must precede the /api/alerts/... block, which would otherwise treat
      * "preview" as a rule id. ---- */
     if (eq(u, "/api/alerts/preview")) {
       if (mg_strcmp(hm->method, mg_str("POST")) != 0) {
@@ -1461,9 +1685,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
       cJSON *b = bdy ? cJSON_Parse(bdy) : NULL;
       free(bdy);
-      cJSON *p = b ? cJSON_GetObjectItem(b, "predicate") : NULL;
+      cJSON *pred = b ? cJSON_GetObjectItem(b, "predicate") : NULL;
       cJSON *sn = b ? cJSON_GetObjectItem(b, "since") : NULL;
-      char *pj = p ? cJSON_PrintUnformatted(p) : NULL;
+      char *pj = pred ? cJSON_PrintUnformatted(pred) : NULL;
       int status = 200;
       char *body = alert_eval_preview(g_db, tc.tenant_id, pj,
         (sn && cJSON_IsString(sn)) ? sn->valuestring : NULL, &status);
@@ -1475,6 +1699,28 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     /* ---- /api/alert-events[...] — notification inbox (roadmap item 11).
      * "/api/alert-events" does not share the "/api/alerts" prefix, but the
      * two are kept adjacent so the ordering is obvious to the next reader. */
+    /* GET /api/alert-events/:id/deliveries — per-channel delivery attempts.
+     * MUST precede the /api/alert-events block below, whose segment parser
+     * drops everything after the first '/' (it exists to make POST :id/read
+     * and POST :id the same call) and would swallow this tail. */
+    { char evid[160] = {0};
+      if (seg(u, "/api/alert-events/", "/deliveries", evid, sizeof evid)) {
+        if (mg_strcmp(hm->method, mg_str("GET")) != 0) {
+          reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return; }
+        struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+        char xtid[128] = {0};
+        if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+        tenant_ctx tc;
+        int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+        if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+        if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+        int status = 200;
+        char *body = alertdeliveriesapi(g_db, tc.tenant_id, tc.user_id,
+                                        evid, &status);
+        if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
+        reply_json(c, status, body); free(body); return;
+      } }
+
     if (eq(u, "/api/alert-events") || starts(u, "/api/alert-events/")) {
       struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
       char xtid[128] = {0};
@@ -1500,8 +1746,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
       memcpy(meth, hm->method.buf, ml);
       char qsb[512] = {0};
-      if (hm->query.len && hm->query.len < sizeof qsb)
-        memcpy(qsb, hm->query.buf, hm->query.len);
+      if (qs_copy_or_414(c, hm, qsb, sizeof qsb)) { return; }
       int status = 200;
       char *body = alerteventsapi(g_db, tc.tenant_id, tc.user_id, meth,
                                   seg1, qsb, &status);
@@ -1509,7 +1754,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, status, body); free(body); return;
     }
 
-    /* ---- P7 Wave 3b: /api/alerts/* (tenant-scoped rule CRUD) ---- */
+    /* ---- P7 Wave 3b: /api/alerts/... (tenant-scoped rule CRUD) ---- */
     if (eq(u, "/api/alerts") || starts(u, "/api/alerts/")) {
       struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
       char xtid[128] = {0};
@@ -1622,9 +1867,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
       if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      /* qs_copy_or_414, not a clamp: the timeline query string IS the filter
+       * set (kinds, window, cursor, limit). Truncating it at 1023 bytes handed
+       * timelineapi_query a mangled — or, on a boundary, empty — filter and it
+       * answered with its widest default view. A caller that asked to narrow
+       * must never be given everything instead. */
       char qs[1024] = {0};
-      size_t ql = hm->query.len < sizeof qs - 1 ? hm->query.len : sizeof qs - 1;
-      memcpy(qs, hm->query.buf, ql);
+      if (qs_copy_or_414(c, hm, qs, sizeof qs)) return;
       int status = 200;
       char *body = timelineapi_query(g_db, &tc, qs, &status);
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
@@ -1754,8 +2003,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (hm->body.len) { bdy = malloc(hm->body.len + 1);
         memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
       char qsb[768] = {0};
-      if (hm->query.len && hm->query.len < sizeof qsb)
-        memcpy(qsb, hm->query.buf, hm->query.len);
+      if (qs_copy_or_414(c, hm, qsb, sizeof qsb)) { free(bdy); return; }
 
       int status = 200;
       char *body = annotationsapi(g_db, &tc, meth, aid, qsb, bdy, &status);
@@ -1766,11 +2014,30 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     }
 
     /* ---- Roadmap 17: chain of custody ----
-     * GET /api/intel/items/:uid/evidence  — custody records (plain auth)
-     * GET /api/evidence/verify            — re-walk the hash chain (operator)
-     * GET /api/evidence/:id/raw           — the captured bytes (operator)
+     * GET  /api/intel/items/:uid/evidence — custody records (plain auth)
+     * GET  /api/evidence/verify           — re-walk the hash chain (operator)
+     * GET  /api/evidence/:id/raw          — the captured bytes (operator)
+     * POST /api/evidence/gc               — run the reaper now (operator)
      * Raw evidence is whatever a source returned: untrusted bytes, served as
      * octet-stream with nosniff so it can never execute as markup. */
+
+    /* POST /api/evidence/gc — evidence.h:156 documents this route and nothing
+     * ever registered it, so the byte-budget reaper could only be run by the
+     * background pod's own timer. Deleting stored evidence on demand is an
+     * operator action, hence the same gate as the rest of the admin surface,
+     * and it is audited: this destroys custody bytes. */
+    if (eq(u, "/api/evidence/gc")) {
+      if (mg_strcmp(hm->method, mg_str("POST")) != 0) {
+        reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return; }
+      int oc = opgate_check(&usr);
+      if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
+      if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
+      if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+      char *body = evidence_gc(g_db);
+      if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+      audit_write(g_db, "platform", usr.id, "evidence.gc.run", NULL, body);
+      reply_json(c, 200, body); free(body); return;
+    }
     if (eq(u, "/api/evidence/verify")) {
       if (opgate_check(&usr) != 0) {
         reply_json(c, 403, "{\"error\":\"forbidden\"}"); return; }
@@ -1799,9 +2066,39 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         return;
       } }
 
+    /* GET /api/media/capabilities — which external tools this host actually
+     * has (exiftool, an OCR engine, ffmpeg). media.h:353 documented the route
+     * and ffmpeg.h:168 called it "the existing route"; neither was true — it
+     * was never registered, so the one question the module can answer ("why is
+     * every media field NULL") had no answer short of an SSH session.
+     * Operator-gated: it is host inventory, not tenant data. */
+    if (eq(u, "/api/media/capabilities")) {
+      int oc = opgate_check(&usr);
+      if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
+      if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
+      if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+      char *body = media_capabilities();
+      if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, 200, body); free(body); return;
+    }
+
     /* ---- Roadmap 28: camera stills. Raw frames are untrusted bytes from
      * arbitrary internet cameras, so the raw route is operator-gated and
      * served as octet-stream + nosniff, never inline. ---- */
+
+    /* GET /api/camera-stills/capabilities — same purpose, same gate, for the
+     * stills pod (camera_stills.h:343). Must precede the /:id/raw matcher
+     * below, which would otherwise never see it anyway but the ordering is
+     * what makes that obvious. */
+    if (eq(u, "/api/camera-stills/capabilities")) {
+      int oc = opgate_check(&usr);
+      if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
+      if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
+      if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+      char *body = camera_stills_capabilities(g_db);
+      if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, 200, body); free(body); return;
+    }
     { char cid2[192] = {0};
       if (seg(u, "/api/cameras/", "/stills", cid2, sizeof cid2)) {
         char lv[16] = {0}, cv2[512] = {0};
@@ -1860,8 +2157,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (hm->body.len) { bdy = malloc(hm->body.len + 1);
         memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
       char qsb[512] = {0};
-      if (hm->query.len && hm->query.len < sizeof qsb)
-        memcpy(qsb, hm->query.buf, hm->query.len);
+      if (qs_copy_or_414(c, hm, qsb, sizeof qsb)) { free(bdy); return; }
       int status = 200;
       char *body = aoiapi(g_db, &tc, meth, aid, qsb, bdy, &status);
       free(bdy);
@@ -1896,14 +2192,51 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (hm->body.len) { bdy = malloc(hm->body.len + 1);
         memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
       char qsb[512] = {0};
-      if (hm->query.len && hm->query.len < sizeof qsb)
-        memcpy(qsb, hm->query.buf, hm->query.len);
+      if (qs_copy_or_414(c, hm, qsb, sizeof qsb)) { free(bdy); return; }
       int status = 200;
       char *body = watchlistsapi(g_db, &tc, meth, wid, qsb, bdy, &status);
       free(bdy);
       if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, status, body); free(body); return;
+    }
+
+    /* ---- POST /api/docmeta — forensic attribution of a document's bytes.
+     *
+     * core/docmeta.c is 1,246 lines of PDF/OOXML/text metadata extraction that
+     * linked in with ZERO callers; docmeta.h:169 documented this route and
+     * nothing registered it. It is a pure function over a byte buffer — no db,
+     * no network, no state — so plain auth is the right gate: it touches no
+     * tenant data and returns facts about the bytes the caller just sent.
+     *
+     * The body is BINARY (same rule as the upload part path below): pass
+     * hm->body.buf/len straight through, never a NUL-terminated copy. Size is
+     * bounded by mongoose's MG_MAX_RECV_SIZE (3 MiB), which rejects the request
+     * before this handler runs — so the buffer here is always whole, never a
+     * silent prefix. Larger documents go through /api/uploads, whose commit
+     * now runs the same extraction. ---- */
+    if (eq(u, "/api/docmeta")) {
+      if (mg_strcmp(hm->method, mg_str("POST")) != 0) {
+        reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return; }
+      if (hm->body.len == 0) {
+        reply_json(c, 400, "{\"error\":\"empty_body\",\"detail\":"
+          "\"POST the document bytes as the request body\"}"); return; }
+      char fnv[256] = {0};
+      int hf = mg_http_get_var(&hm->query, "filename", fnv, sizeof fnv);
+      struct mg_str *cth = mg_http_get_header(hm, "Content-Type");
+      char ctv[192] = {0};
+      if (cth && cth->len < sizeof ctv) { memcpy(ctv, cth->buf, cth->len); ctv[cth->len] = 0; }
+      /* Both are HINTS, echoed and diffed against the magic bytes; they never
+       * steer the parser (docmeta.h:284). */
+      char *m = docmeta_extract(hm->body.buf, hm->body.len,
+                                hf > 0 ? fnv : NULL, ctv[0] ? ctv : NULL);
+      if (!m) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+      size_t need = strlen(m) + 16;
+      char *out = malloc(need);
+      if (!out) { free(m); reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+      snprintf(out, need, "{\"data\":%s}", m);
+      free(m);
+      reply_json(c, 200, out); free(out); return;
     }
 
     /* ---- Chunked upload: begin / part / commit / status / abort.
@@ -1935,8 +2268,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
       memcpy(meth, hm->method.buf, ml);
       char qsb[256] = {0};
-      if (hm->query.len && hm->query.len < sizeof qsb)
-        memcpy(qsb, hm->query.buf, hm->query.len);
+      if (qs_copy_or_414(c, hm, qsb, sizeof qsb)) { return; }
       int status = 200;
       char *body = uploadapi(g_db, &tc, meth, uid2, act, qsb,
                              hm->body.buf, hm->body.len, &status);
@@ -2010,8 +2342,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (hm->body.len) { bdy = malloc(hm->body.len + 1);
         memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
       char qsb[512] = {0};
-      if (hm->query.len && hm->query.len < sizeof qsb)
-        memcpy(qsb, hm->query.buf, hm->query.len);
+      if (qs_copy_or_414(c, hm, qsb, sizeof qsb)) { free(bdy); return; }
       int status = 200;
       char *body = savedsearchapi(g_db, &tc, meth, sid, act, qsb, bdy, &status);
       free(bdy);
@@ -2035,8 +2366,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
       memcpy(meth, hm->method.buf, ml);
       char qsb[512] = {0};
-      if (hm->query.len && hm->query.len < sizeof qsb)
-        memcpy(qsb, hm->query.buf, hm->query.len);
+      if (qs_copy_or_414(c, hm, qsb, sizeof qsb)) { return; }
       int status = 200;
       char *body = searchhistoryapi(g_db, &tc, meth, qsb, &status);
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
@@ -2069,7 +2399,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, status, body); free(body); return;
     }
 
-    /* ---- /api/members[/*] — member roster + invites (tenant-scoped) ---- */
+    /* ---- /api/members[/...] — member roster + invites (tenant-scoped) ---- */
     if (eq(u, "/api/members") || starts(u, "/api/members/")) {
       struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
       char xtid[128] = {0};
@@ -2155,6 +2485,26 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           return;
         }
       }
+      /* /api/keys is the PLATFORM credential store — one JSON overlay that
+       * every tenant's collectors resolve before getenv. keysapi_platform()
+       * guards it with is_admin_role(t->role), which is the caller's role
+       * inside their OWN workspace, and creating a workspace makes you its
+       * owner. So any user could read every stored third-party credential in
+       * cleartext and PUT a replacement that takes effect for everyone. Its
+       * own header says "requirePlatformAdmin"; nothing implemented that.
+       * The whole family is operator-gated here, GET and PUT alike — a write
+       * to this store is if anything the more dangerous half. */
+      if (!tenantk) {
+        int oc = opgate_check(&usr);
+        if (oc != 0) {
+          free(bdy);
+          if (oc == -401) reply_json(c,401,"{\"error\":\"Auth required\"}");
+          else if (oc == -1403)
+            reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}");
+          else reply_json(c,403,"{\"error\":\"Platform operator role required\"}");
+          return;
+        }
+      }
       if (tenantk) body = keysapi_tenant(g_db,&tc,meth,seg,bdy,&status);
       else         body = keysapi_platform(g_db,&tc,meth,seg,bdy,&status);
       free(bdy);
@@ -2186,7 +2536,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 200, body); free(body); return;
     }
 
-    /* ---- P7 Wave 2: /api/entities/* (entity graph, pure SQLite) ----
+    /* ---- P7 Wave 2: /api/entities/... (entity graph, pure SQLite) ----
      * These routes reached entityapi without ever resolving a tenant, and
      * entityapi had no tenant predicate — the whole subtree was cross-tenant
      * readable. Resolve once here, at the top of the subtree, and pass the id
@@ -2200,9 +2550,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int etr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &etc);
       if (etr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
       if (etr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      /* Breach-derived rows live under a reserved tenant sentinel and are
+       * invisible to the ordinary shared-graph predicate; only a platform
+       * operator sees them. Evaluated once for the whole subtree. */
+      const int e_op = (opgate_check(&usr) == 0);
 
     if (eq(u, "/api/entities/stats")) {
-      char *body = entityapi_stats(g_db, etc.tenant_id);
+      char *body = entityapi_stats_scoped(g_db, etc.tenant_id, e_op);
       reply_json(c, 200, body); free(body); return;
     }
     if (eq(u, "/api/entities/search")) {
@@ -2215,8 +2569,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       size_t ql = strlen(qs);
       while (ql && qs[ql-1] == ' ') qs[--ql] = 0;
       if (!*qs) { reply_json(c, 200, "{\"results\":[]}"); return; }
-      char *body = entityapi_search(g_db, qs, ht > 0 ? tv : NULL,
-                                    hl > 0 ? atoi(lv) : 0, etc.tenant_id);
+      char *body = entityapi_search_scoped(g_db, qs, ht > 0 ? tv : NULL,
+                                           hl > 0 ? atoi(lv) : 0,
+                                           etc.tenant_id, e_op);
       if (!body) { reply_json(c, 500, "{\"error\":\"search_failed\"}"); return; }
       reply_json(c, 200, body); free(body); return;
     }
@@ -2237,7 +2592,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         mg_url_decode(rest, strlen(rest), eid, sizeof eid, 0);
         char *body = NULL; int notfound = 0;
         if (tail[0] == 0) {
-          body = entityapi_get(g_db, type, eid, etc.tenant_id);
+          body = entityapi_get_scoped(g_db, type, eid, etc.tenant_id, e_op);
           notfound = !body;
         } else if (strcmp(tail, "graph") == 0) {
           char dv[16] = {0}, rtv[256] = {0}, xhv[16] = {0}, mnv[16] = {0};
@@ -2245,17 +2600,32 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           int hr = mg_http_get_var(&hm->query, "rel_types", rtv, sizeof rtv);
           int hx = mg_http_get_var(&hm->query, "exclude_hubs", xhv, sizeof xhv);
           int hmn = mg_http_get_var(&hm->query, "max_nodes", mnv, sizeof mnv);
-          body = entityapi_graph(g_db, type, eid, hd > 0 ? atoi(dv) : 1,
-                                 hr > 0 ? rtv : NULL,
-                                 hx > 0 ? atoi(xhv) : 0,
-                                 hmn > 0 ? atoi(mnv) : 0, etc.tenant_id);
+          body = entityapi_graph_scoped(g_db, type, eid, hd > 0 ? atoi(dv) : 1,
+                                        hr > 0 ? rtv : NULL,
+                                        hx > 0 ? atoi(xhv) : 0,
+                                        hmn > 0 ? atoi(mnv) : 0,
+                                        etc.tenant_id, e_op);
           notfound = !body;
         } else if (strcmp(tail, "mentions") == 0) {
           char lv[16] = {0}, ov[16] = {0};
           int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
           int ho = mg_http_get_var(&hm->query, "offset", ov, sizeof ov);
-          body = entityapi_mentions(g_db, type, eid, hl > 0 ? atoi(lv) : 0,
-                                    ho > 0 ? atoi(ov) : 0, etc.tenant_id);
+          body = entityapi_mentions_scoped(g_db, type, eid,
+                                           hl > 0 ? atoi(lv) : 0,
+                                           ho > 0 ? atoi(ov) : 0,
+                                           etc.tenant_id, e_op);
+          notfound = !body;
+        } else if (strcmp(tail, "merges") == 0) {
+          /* Why this node is (or is not) the same as another. Same tenant +
+           * breach scoping as every sibling: the counterpart entity is joined
+           * under the same disjunct, so a quarantined node is never named. */
+          char lv[16] = {0}, ov[16] = {0};
+          int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
+          int ho = mg_http_get_var(&hm->query, "offset", ov, sizeof ov);
+          body = entityapi_merges_scoped(g_db, type, eid,
+                                         hl > 0 ? atoi(lv) : 0,
+                                         ho > 0 ? atoi(ov) : 0,
+                                         etc.tenant_id, e_op);
           notfound = !body;
         } else if (strcmp(tail, "breaches") == 0) {
           /* roadmap item 23 — entity → its breaches (catalog metadata only;
@@ -2263,11 +2633,21 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           char lv[16] = {0}, ov[16] = {0};
           int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
           int ho = mg_http_get_var(&hm->query, "offset", ov, sizeof ov);
-          /* Breach CATALOG metadata only (names/dates/data classes) — the
-           * identifiers and secrets stay behind breach_gate()/the operator
-           * reveal path, so this stays plain-auth as documented. */
-          body = entityapi_breaches(g_db, type, eid, hl > 0 ? atoi(lv) : 0,
-                                    ho > 0 ? atoi(ov) : 0, etc.tenant_id);
+          /* Operator-only, and DENIED rather than emptied. Every row this
+           * can return is breach-derived by construction, so there is no
+           * partial view to serve — and an empty list is indistinguishable
+           * from the truthful "this identifier appears in no breach", a false
+           * negative an analyst would act on. Worse, if clean entities
+           * answered 0 and breached ones refused, the difference between the
+           * two responses would itself be the exposure oracle. So the denial
+           * is uniform across every entity. */
+          if (!e_op) {
+            reply_json(c, 403, "{\"error\":\"Platform operator role required\"}");
+            return;
+          }
+          body = entityapi_breaches_scoped(g_db, type, eid, hl > 0 ? atoi(lv) : 0,
+                                           ho > 0 ? atoi(ov) : 0,
+                                           etc.tenant_id, 1);
           notfound = !body;
         }
         if (notfound) { reply_json(c, 404, "{\"error\":\"not_found\"}"); return; }
@@ -2276,7 +2656,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 404, "{\"error\":\"not_found\"}");
       return;
     }
-    }   /* end /api/entities/* tenant-resolved block */
+    }   /* end /api/entities/... tenant-resolved block */
 
     /* GET /api/data/cameras/discovery-feed — port of data.js getDiscoveryFeed
      * route. Explicit (the generic /api/data/ matcher below rejects a
@@ -2297,7 +2677,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
      * Serves the upstream camera image over our own origin so iOS doesn't need
      * an ATS exception per discovered IP. Bytes are from an arbitrary internet
      * camera, so: nosniff, and the content type is echoed only after it was
-     * checked to be image/*. Explicit route — the generic /api/data/ matcher
+     * checked to be image/.... Explicit route — the generic /api/data/ matcher
      * below would treat "cameras/proxy" as a layer id. */
     if (eq(u, "/api/data/cameras/proxy")) {
       char cu[192] = {0};
@@ -2457,8 +2837,10 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     }
 
     /* GET /api/data/<sweep-layer> — unified-* / cameras / unified-stations /
-     * unified-station-footprints served from the sweep stores. Non-sweep
-     * /api/data/ ids fall through to the 501 below (still P5/P6-gated). */
+     * unified-station-footprints served from the sweep stores, then the
+     * generic collector layer. An id neither of them can answer falls through
+     * to the 404 at the bottom of this function — there is no 501 here (there
+     * once was; the sentence saying so outlived it). */
     if (starts(u, "/api/data/")) {
       char did[256];
       if (seg(u, "/api/data/", "", did, sizeof did)) {
@@ -2472,16 +2854,27 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     if (starts(u, "/api/transit")) {
       char tp[512] = {0}, tq[512] = {0};
       size_t pre = strlen("/api/transit");
-      if (u.len >= pre) {
-        size_t sl = u.len - pre;
-        if (sl >= sizeof tp) sl = sizeof tp - 1;
-        memcpy(tp, u.buf + pre, sl); tp[sl] = 0;
+      size_t sl = u.len - pre;            /* starts() already proved u.len>=pre */
+      /* Both halves refuse rather than truncate, for the same reason.
+       *
+       * The QUERY is the filter set (bbox, mode, limit, cursor); a clamp that
+       * drops its tail leaves transitapi() reading a mangled — or, on a
+       * boundary, empty — filter and answering with its widest default. That is
+       * failing open, which is exactly what qs_copy_or_414 exists to stop.
+       *
+       * The PATH is worse than a lost filter: a truncated path is a DIFFERENT
+       * route. "/api/transit/<long id>/departures" cut at 511 bytes becomes
+       * some other transit sub-route, or an unknown one, and the caller is
+       * answered as though nothing was dropped. Refusing keeps routing exactly
+       * as it was for every path that fits — nothing that used to reach a
+       * handler stops reaching it. */
+      if (sl >= sizeof tp) {
+        reply_json(c, 414, "{\"error\":\"uri_too_long\",\"detail\":"
+                           "\"the transit path is never silently truncated\"}");
+        return;
       }
-      if (hm->query.len) {
-        size_t ql = hm->query.len;
-        if (ql >= sizeof tq) ql = sizeof tq - 1;
-        memcpy(tq, hm->query.buf, ql); tq[ql] = 0;
-      }
+      memcpy(tp, u.buf + pre, sl); tp[sl] = 0;
+      if (qs_copy_or_414(c, hm, tq, sizeof tq)) return;
       char *body = transitapi(g_db, tp, tq);
       if (body) {
         /* Unported transit routes (hydrate, station-boundaries) return a
@@ -2554,6 +2947,16 @@ int httpd_serve(db_handle *db, int port) {
 
   fprintf(stderr, "[httpd] signal %d received; shutting down\n",
           (int)g_shutdown_signal);
+  /* Tell a running pagination survey to stop first: it is a detached thread
+   * that can run for the better part of an hour, and db_worker_open() falls
+   * back to handing out the SHARED handle — which db_close() would close from
+   * under it. Setting the flag before wake_shutdown() gives it the whole
+   * drain window to notice. */
+  pagination_probe_stop_all();
+
+  /* Shut the wakeup door and let the threads already inside finish BEFORE the
+   * manager (a local of this frame) is freed and this function returns. */
+  wake_shutdown();
   mg_mgr_free(&mgr);
   return 0;
 }

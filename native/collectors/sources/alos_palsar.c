@@ -158,13 +158,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddNumberToObject(p, "size_mb", szv->valuedouble);
     cJSON *orb = cJSON_GetObjectItem(r, "orbit");
     if (orb && cJSON_IsArray(orb) && cJSON_GetArraySize(orb) > 0) {
-      cJSON *o0 = cJSON_GetArrayItem(orb, 0);
+      cJSON *o0 = cJSON_GetArrayItem(orb, 0);  /* exhaustive-ok: display pick; orbit_all below carries every value */
       if (cJSON_IsString(o0)) cJSON_AddStringToObject(p, "orbit", o0->valuestring);
+      cJSON_AddItemToObject(p, "orbit_all", cJSON_Duplicate(orb, 1));
     }
     cJSON *br = cJSON_GetObjectItem(r, "browse");
     if (br && cJSON_IsArray(br) && cJSON_GetArraySize(br) > 0) {
-      cJSON *b0 = cJSON_GetArrayItem(br, 0);
+      cJSON *b0 = cJSON_GetArrayItem(br, 0);  /* exhaustive-ok: display pick; browse_urls_all below carries every browse image */
       if (cJSON_IsString(b0)) cJSON_AddStringToObject(p, "browse_url", b0->valuestring);
+      cJSON_AddItemToObject(p, "browse_urls_all", cJSON_Duplicate(br, 1));
     }
     if (gj) cJSON_AddStringToObject(p, "footprint_wkt", jo_sv(r, "wkt"));
     char *pj = cJSON_PrintUnformatted(p);

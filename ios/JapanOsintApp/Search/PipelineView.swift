@@ -217,6 +217,10 @@ private struct StageRow: View {
                         ProgressView().controlSize(.small).tint(theme.accentAlt)
                             .transition(.opacity)
                     } else {
+                        // Fixed size: the glyph shares the 22×22 gutter below
+                        // with a `ProgressView` (whose `.small` control size is
+                        // itself fixed), so the two must crossfade at the same
+                        // dimensions. The stage title beside it scales.
                         Image(systemName: glyph)
                             .font(.system(size: 16))
                             .foregroundStyle(tint)
@@ -225,6 +229,7 @@ private struct StageRow: View {
                     }
                 }
                 .frame(width: 22, height: 22)
+                .accessibilityHidden(true)   // spoken as the row's value instead
                 .animation(.easeInOut(duration: 0.32), value: state)
                 if !isLast {
                     Rectangle()
@@ -237,6 +242,19 @@ private struct StageRow: View {
                 .foregroundStyle(state == .pending ? theme.textMuted : theme.text)
                 .padding(.top, 2)
             Spacer(minLength: 0)
+        }
+        // One VoiceOver element per stage: "Fetching sources, done" rather than
+        // "checkmark.circle.fill" followed by the title.
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(stateDescription)
+    }
+
+    private var stateDescription: String {
+        switch state {
+        case .done:    return "Done"
+        case .current: return "In progress"
+        case .pending: return "Pending"
+        case .error:   return "Failed"
         }
     }
 
@@ -599,6 +617,7 @@ private struct ServiceQueueSection: View {
                     HStack(spacing: Space.sm) {
                         Image(systemName: src.ok ? "checkmark.circle.fill" : "xmark.circle.fill")
                             .font(.caption2).foregroundStyle(src.ok ? theme.success : theme.danger)
+                            .accessibilityLabel(src.ok ? "OK" : "Failed")
                         Text(src.name).font(Typography.body(11)).foregroundStyle(theme.text).lineLimit(1)
                         if let d = src.detail, !d.isEmpty {
                             Text(d).font(Typography.body(10)).foregroundStyle(theme.danger).lineLimit(1)
@@ -618,6 +637,7 @@ private struct ServiceQueueSection: View {
                             Image(systemName: (c.success ?? false) ? "checkmark.circle.fill" : "xmark.circle.fill")
                                 .font(.caption2)
                                 .foregroundStyle((c.success ?? false) ? theme.success : theme.danger)
+                                .accessibilityLabel((c.success ?? false) ? "Succeeded" : "Failed")
                             Text(c.entity ?? "—").font(Typography.body(11)).foregroundStyle(theme.text)
                             if let e = c.error, !e.isEmpty {
                                 Text(e).font(Typography.body(10)).foregroundStyle(theme.danger).lineLimit(1)
@@ -649,6 +669,7 @@ private struct ServiceQueueSection: View {
                     ForEach(found) { e in
                         HStack(spacing: 3) {
                             Image(systemName: entityIcon(for: e.type)).font(.caption2)
+                                .accessibilityHidden(true)   // the value follows
                             Text(e.value).font(.caption2).lineLimit(1)
                         }
                         .padding(.horizontal, Space.sm - 2).padding(.vertical, 2)
@@ -772,6 +793,7 @@ private struct EntityCrossLinkRow: View {
                     // Discovered entities use the alt tone; query entities the accent.
                     HStack(spacing: 3) {
                         Image(systemName: entityIcon(for: entity.type)).font(.caption2)
+                            .accessibilityHidden(true)   // the type follows
                         Text(entity.type.uppercased()).font(.caption2.bold())
                     }
                     .padding(.horizontal, Space.sm - 2).padding(.vertical, 2)
@@ -875,9 +897,12 @@ private struct ThinkingSection: View {
                     Spacer()
                     Image(systemName: expanded ? "chevron.up" : "chevron.down")
                         .font(.caption2).foregroundStyle(theme.textMuted)
+                        .accessibilityHidden(true)   // state is the button's value
                 }
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("LLM reasoning")
+            .accessibilityValue(expanded ? "Expanded" : "Collapsed")
             if expanded {
                 Text(text)
                     .font(Typography.body(12))
@@ -1023,10 +1048,13 @@ struct SearchRunDetailView: View {
                     Spacer(minLength: Space.sm)
                     Image(systemName: stagesCollapsed ? "chevron.down" : "chevron.up")
                         .font(.caption2).foregroundStyle(theme.textMuted)
+                        .accessibilityHidden(true)   // state is the button's value
                 }
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Pipeline")
+            .accessibilityValue(stagesCollapsed ? "Collapsed" : "Expanded")
 
             if stagesCollapsed {
                 collapsedStageRow(snap)

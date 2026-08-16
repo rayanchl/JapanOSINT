@@ -67,13 +67,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *xml = feed_get_text(ctx->http, API_URL, 10000);
   if (!xml) return -1;
 
-  int n = 0, taken = 0;
+  int n = 0;
   const char *cur = xml;
   const char *inner; int ilen;
   while ((cur = html_block(cur, "LawNameListInfo", &inner, &ilen)) != NULL) {
     char *b = strndup(inner, (size_t)ilen);
     if (!b) continue;
-    taken++;
 
     char id[512] = {0}, name[1024] = {0}, no[512] = {0}, date[128] = {0};
     if (!pick_tag(b, "LawId", id, sizeof id))

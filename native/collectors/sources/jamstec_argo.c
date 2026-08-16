@@ -116,7 +116,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     /* source[0].url is the DAC NetCDF profile — the provenance link */
     if (src && cJSON_IsArray(src) && cJSON_GetArraySize(src) > 0) {
-      cJSON *s0 = cJSON_GetArrayItem(src, 0);
+      cJSON *s0 = cJSON_GetArrayItem(src, 0);  /* exhaustive-ok: provenance display pick; sources_all below carries every source entry */
+      if (cJSON_GetArraySize(src) > 1)
+        cJSON_AddItemToObject(pr, "sources_all", cJSON_Duplicate(src, 1));
       cJSON *u = s0 ? cJSON_GetObjectItem(s0, "url") : NULL;
       if (u && cJSON_IsString(u) && u->valuestring[0])
         cJSON_AddStringToObject(pr, "url", u->valuestring);
@@ -137,9 +139,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     /* data_info[0] is the list of variables this profile actually measured */
     cJSON *di = cJSON_GetObjectItem(p, "data_info");
     if (di && cJSON_IsArray(di) && cJSON_GetArraySize(di) > 0) {
-      cJSON *vars = cJSON_GetArrayItem(di, 0);
+      cJSON *vars = cJSON_GetArrayItem(di, 0);  /* exhaustive-ok: data_info[0] IS the variable-name list; data_info_all keeps the rest */
       if (cJSON_IsArray(vars))
         cJSON_AddItemToObject(pr, "measured_variables", cJSON_Duplicate(vars, 1));
+      /* data_info also carries the units/keys blocks after [0]; keep them. */
+      if (cJSON_GetArraySize(di) > 1)
+        cJSON_AddItemToObject(pr, "data_info_all", cJSON_Duplicate(di, 1));
     }
 
     cJSON_AddItemToObject(f, "properties", pr);

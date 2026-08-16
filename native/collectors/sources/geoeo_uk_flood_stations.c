@@ -70,10 +70,13 @@ static int stations(const source_ctx *ctx, intel_sink *sink, int *emitted) {
     seen++;
     const char *notation = geoeo_str(s, "notation");
     const char *label = geoeo_str(s, "label");
+    cJSON *label_arr = NULL;         /* every label, when there is more than one */
     if (!label) {                    /* label is occasionally an array */
       cJSON *l = cJSON_GetObjectItem(s, "label");
-      if (cJSON_IsArray(l) && cJSON_IsString(cJSON_GetArrayItem(l, 0)))
-        label = cJSON_GetArrayItem(l, 0)->valuestring;
+      if (cJSON_IsArray(l) && cJSON_IsString(cJSON_GetArrayItem(l, 0))) {  /* exhaustive-ok: display pick; labels_all keeps every label */
+        label = cJSON_GetArrayItem(l, 0)->valuestring;  /* exhaustive-ok: display pick; labels_all carries every label */
+        if (cJSON_GetArraySize(l) > 1) label_arr = l;
+      }
     }
     if (!notation && !label) continue;
 
@@ -85,6 +88,8 @@ static int stations(const source_ctx *ctx, intel_sink *sink, int *emitted) {
     cJSON *props = cJSON_CreateObject();
     geoeo_copy_all(props, s, KEYS);
     if (label) cJSON_AddStringToObject(props, "label", label);
+    if (label_arr)                   /* house rule 2: keep every label, not just [0] */
+      cJSON_AddItemToObject(props, "labels_all", cJSON_Duplicate(label_arr, 1));
     if (geo) { cJSON_AddNumberToObject(props, "lat", lat);
                cJSON_AddNumberToObject(props, "long", lon); }
     cJSON *measures = cJSON_GetObjectItem(s, "measures");

@@ -1,4 +1,5 @@
 #include "db.h"
+#include "entitystore.h"
 #include "translate.h"         /* translate_migrate (owns its own index) */
 #include "simhash.h"           /* simhash_ensure_schema (owns its own index) */
 #include "content_change.h"    /* content_change_ensure_schema (same reason) */
@@ -349,6 +350,18 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * schema.sql (which executes above this block) would fail with "no such
    * column", abandon the rest of the script, and brick first boot. */
   translate_migrate(db);
+
+  /* Breach-derived entity/mention quarantine. Breach ingest used to write the
+   * cleartext identifier into the SHARED entity graph (tenant_id NULL) and
+   * into entities_fts, where /api/entities/... — which has no role check — served
+   * it to any authenticated viewer, bypassing the platform-operator gate that
+   * every other door onto the corpus carries. Those rows now carry a reserved
+   * tenant sentinel so they fall out of the ordinary shared-graph predicate by
+   * construction. This runs the one-time backfill for rows earlier ingests
+   * already wrote; entitystore.c self-heals if it is ever missed, but doing it
+   * at boot means the first entity request after a deploy is not the one that
+   * pays for a corpus-sized UPDATE. */
+  es_breach_scope_migrate(db);
 
   /* Near-duplicate clustering (roadmap 25) likewise owns its own migration:
    * idx_intel_items_cluster and its partial backfill index both reference

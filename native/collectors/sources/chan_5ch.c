@@ -6,6 +6,7 @@
  * SEED/_meta/extraMeta NOT ported (live-only; 0 rows when 5ch geo-blocks). */
 #include "../../source.h"
 #include "../../lib/feedlib.h"
+#include "../../lib/jocore.h"   /* jo_get() — the fetch that actually sends headers */
 #include "../../lib/csv.h"
 #include "../../third_party/cJSON.h"
 #include <stdio.h>
@@ -97,9 +98,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char url[256];
     snprintf(url, sizeof url, "https://%s/%s/subject.txt", host, board);
 
-    char *raw = feed_get_text(ctx->http, url, TIMEOUT_MS);
+    /* jo_get, not feed_get_text: `hdrs` above was built and then never passed
+     * to anything, so every request went out with the default agent. 5ch
+     * serves subject.txt only to a Monazilla-identified client and answers
+     * anything else with an error page, which parse_line then rejects line by
+     * line — the collector fetched five boards and emitted nothing.
+     * jo_get's own Shift_JIS leg is gated on a .jp host and these are .net, so
+     * it passes the bytes through and the explicit decode below still owns the
+     * transcode. */
+    char *raw = jo_get(ctx, url, hdrs, "chan-5ch");
     if (!raw) continue;
-    /* feed_get_text returns the raw body bytes; subject.txt is Shift_JIS. */
+    /* subject.txt is Shift_JIS. */
     char *text = csv_decode_sjis(raw, strlen(raw));
     free(raw);
     if (!text) continue;

@@ -92,10 +92,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const cJSON *cnt = cJSON_GetObjectItem(root, "count");
   double total = cJSON_IsNumber(cnt) ? cnt->valuedouble : 0;
 
-  int n = 0;
+  int n = 0, capped = 0;
   const cJSON *d;
   cJSON_ArrayForEach(d, cJSON_GetObjectItem(root, "data")) {
-    if (n >= MAX_ROWS) break;
+    if (n >= MAX_ROWS) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     const char *answer = jo_sv(d, "answer");
     if (!answer) continue;
     const char *query = jo_sv(d, "query");
@@ -147,6 +147,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
+  /* House rule 2: mnemonic states the true total in `count` while the open tier
+   * pages the answers; MAX_ROWS stopped this run short of that total. Report it
+   * as data, not only as total_known_answers on each row. */
+  if (capped)
+    jo_truncation_notice(sink, "PDNS_MNEMONIC", q, n,
+                         total > 0 ? (long)total : -1,
+                         "MAX_ROWS reached; the remaining answers in the "
+                         "fetched data[] page were not emitted, and no later "
+                         "page of the open-tier result set is requested",
+                         "raise or drop MAX_ROWS in collectors/sources/"
+                         "cyi_pdns_mnemonic.c and walk the offset/limit pages");
   cJSON_Delete(root);
   fprintf(stderr, "[PDNS_MNEMONIC] emitted %d of %.0f known answers (%s)\n", n, total, q);
   return 0;                       /* no passive DNS history is not an error */

@@ -307,6 +307,7 @@ struct BreachMonitorsView: View {
                 Image(systemName: "chevron.right")
                     .font(.caption2)
                     .foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // navigation affordance
             }
             .padding(.vertical, Space.xs)
             .contentShape(Rectangle())
@@ -340,6 +341,7 @@ struct BreachMonitorsView: View {
                 .font(.subheadline)
                 .foregroundStyle(theme.accent)
                 .frame(width: 24)
+                .accessibilityHidden(true)   // "Only a hash is stored" follows
             VStack(alignment: .leading, spacing: 2) {
                 Text("Only a hash is stored")
                     .font(.subheadline.weight(.semibold))
@@ -359,6 +361,7 @@ struct BreachMonitorsView: View {
             } icon: {
                 Image(systemName: "shield.lefthalf.filled")
                     .foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // "No monitors yet" is the label
             }
         } description: {
             Text("Watch an address, domain, username or phone number for appearances in the breach corpus. Only a hash of it is stored.")
@@ -473,6 +476,7 @@ private struct BreachMonitorCreateSheet: View {
                         Image(systemName: "lock.shield.fill")
                             .font(.caption)
                             .foregroundStyle(theme.accent)
+                            .accessibilityHidden(true)   // the notice text follows
                         Text("Sent once, hashed, then discarded. Only the SHA-1 is stored — this value is never written to the database, never returned by the API, and never appears in an audit log. You will not see it again after saving.")
                             .font(.caption2)
                             .foregroundStyle(theme.textMuted)
@@ -604,6 +608,7 @@ private struct BreachMonitorDetailSheet: View {
                         Image(systemName: "arrow.clockwise")
                     }
                     .disabled(loading)
+                    .accessibilityLabel("Reload matches")
                 }
             }
             .task { if hits.isEmpty { await load() } }
@@ -698,6 +703,7 @@ private struct BreachMonitorDetailSheet: View {
             } icon: {
                 Image(systemName: "checkmark.shield")
                     .foregroundStyle(theme.success)
+                    .accessibilityHidden(true)   // "No matches" is the label
             }
         } description: {
             Text("Nothing in the breach corpus currently matches this monitor. That is a statement about the corpus this server has indexed, not a guarantee the identifier has never been exposed.")

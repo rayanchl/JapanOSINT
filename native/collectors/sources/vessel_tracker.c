@@ -162,7 +162,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   cJSON *env = cJSON_CreateObject();
   cJSON_AddBoolToObject(env, "success", 1);
-  cJSON_AddNumberToObject(env, "confidence", 75);
+  cJSON_AddItemToObject(env, "confidence", cJSON_CreateNull());
   cJSON_AddItemToObject(env, "data", cJSON_Duplicate(data, 1));
   char *bj = cJSON_PrintUnformatted(env);
 
@@ -170,7 +170,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "service", "VESSEL_TRACKER");
   cJSON_AddStringToObject(props, "entity", q);
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 75);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   /* remote_key = vessel:<imo-or-mmsi> (the canonical identifier itself). */

@@ -47,10 +47,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) { fprintf(stderr, "[" SRC "] fetch failed\n"); return -1; }
   if (!cJSON_IsArray(doc)) { cJSON_Delete(doc); fprintf(stderr, "[" SRC "] unexpected shape\n"); return -1; }
 
-  int n = 0;
+  int n = 0, capped = 0;
+  const int have_rows = cJSON_GetArraySize(doc);
   cJSON *r;
   cJSON_ArrayForEach(r, doc) {
-    if (n >= cap) break;
+    if (n >= cap) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     cJSON *loc = cJSON_GetObjectItem(r, "location");
     cJSON *sen = cJSON_GetObjectItem(r, "sensor");
     cJSON *vals = cJSON_GetObjectItem(r, "sensordatavalues");
@@ -132,6 +133,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
   cJSON_Delete(doc);
+  /* House rule 2: the whole multi-MB snapshot was fetched and parsed; the row
+   * cap stopped the emit loop partway, so say so as data. */
+  if (capped) {
+    char reason[220];
+    snprintf(reason, sizeof reason,
+             "row cap JO_SENSORCOMMUNITY_MAX (%d this run) reached; the "
+             "remaining sensor readings in the fetched snapshot were parsed "
+             "but never emitted", cap);
+    jo_truncation_notice(sink, SRC, "static/v2/data.json", n, (long)have_rows,
+                         reason,
+                         "raise or unset JO_SENSORCOMMUNITY_MAX, or drop the "
+                         "`cap` default in collectors/sources/"
+                         "eni_sensor_community_air.c");
+  }
   fprintf(stderr, "[" SRC "] emitted %d\n", n);
   return 0;
 }

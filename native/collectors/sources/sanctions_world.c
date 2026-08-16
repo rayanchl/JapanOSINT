@@ -480,62 +480,78 @@ typedef struct {
 } sw_row;
 
 static const sw_row ROWS[] = {
+  /* Designated initialisers, not positional: sw_row has twelve members and the
+   * per-source rows fill between six and twelve of them, so a positional table
+   * both warned (-Wmissing-field-initializers) and put the reader one comma
+   * away from silently shifting xml_alias into xml_prog. Omitted members are
+   * zero/NULL, which is the documented "not applicable to this mode" value. */
+
   /* OFAC SDN — keyless CSV bulk export */
-  { "OFAC_SDN", "OFAC_SDN", "sanctions-sdn",
-    "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.CSV",
-    "https://sanctionssearch.ofac.treas.gov/", NULL, M_OFAC_CSV },
+  { .id = "OFAC_SDN", .service = "OFAC_SDN", .rectype = "sanctions-sdn",
+    .url = "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.CSV",
+    .listing = "https://sanctionssearch.ofac.treas.gov/",
+    .mode = M_OFAC_CSV },
+
   /* EU consolidated — the machine-readable export needs a (free) token/crl
    * user id; gate rather than fake. */
-  { "EU_SANCTIONS", "EU_SANCTIONS", "sanctions-eu",
-    "https://webgate.ec.europa.eu/fsd/fsf/public/files/csvFullSanctionsList_1_1/content?token=",
-    "https://data.europa.eu/data/datasets/consolidated-list-of-persons-groups-and-entities-subject-to-eu-financial-sanctions",
-    "EU_SANCTIONS_TOKEN", M_SCAN },
+  { .id = "EU_SANCTIONS", .service = "EU_SANCTIONS", .rectype = "sanctions-eu",
+    .url = "https://webgate.ec.europa.eu/fsd/fsf/public/files/csvFullSanctionsList_1_1/content?token=",
+    .listing = "https://data.europa.eu/data/datasets/consolidated-list-of-persons-groups-and-entities-subject-to-eu-financial-sanctions",
+    .token_env = "EU_SANCTIONS_TOKEN", .mode = M_SCAN },
+
   /* UN Security Council consolidated — keyless XML, one record per
    * <INDIVIDUAL>/<ENTITY> element */
-  { "UN_SANCTIONS", "UN_SANCTIONS", "sanctions-un",
-    "https://scsanctions.un.org/resources/xml/en/consolidated.xml",
-    "https://www.un.org/securitycouncil/content/un-sc-consolidated-list",
-    NULL, M_XML,
-    "INDIVIDUAL,ENTITY",
-    "FIRST_NAME,SECOND_NAME,THIRD_NAME,FOURTH_NAME",
-    "ALIAS_NAME",
-    "UN_LIST_TYPE",
-    "REFERENCE_NUMBER,LISTED_ON,NATIONALITY,DATE_OF_BIRTH,COMMENTS1" },
+  { .id = "UN_SANCTIONS", .service = "UN_SANCTIONS", .rectype = "sanctions-un",
+    .url = "https://scsanctions.un.org/resources/xml/en/consolidated.xml",
+    .listing = "https://www.un.org/securitycouncil/content/un-sc-consolidated-list",
+    .mode = M_XML,
+    .xml_rec    = "INDIVIDUAL,ENTITY",
+    .xml_name   = "FIRST_NAME,SECOND_NAME,THIRD_NAME,FOURTH_NAME",
+    .xml_alias  = "ALIAS_NAME",
+    .xml_prog   = "UN_LIST_TYPE",
+    .xml_detail = "REFERENCE_NUMBER,LISTED_ON,NATIONALITY,DATE_OF_BIRTH,COMMENTS1" },
+
   /* UK OFSI consolidated — keyless CSV. Columns 1-6 are "Name 6" (family
    * name) followed by "Name 1".."Name 5"; everything after that is
    * biographical/narrative and must not be screened as a name. */
-  { "UK_OFSI", "UK_OFSI", "sanctions-uk",
-    "https://ofsistorage.blob.core.windows.net/publishlive/2022format/ConList.csv",
-    "https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets",
-    NULL, M_SCAN, NULL, NULL, NULL, NULL, NULL, 6 },
+  { .id = "UK_OFSI", .service = "UK_OFSI", .rectype = "sanctions-uk",
+    .url = "https://ofsistorage.blob.core.windows.net/publishlive/2022format/ConList.csv",
+    .listing = "https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets",
+    .mode = M_SCAN, .csv_name_cols = 6 },
+
   /* World Bank debarred firms — keyless JSON */
-  { "WORLDBANK_DEBARRED", "WORLDBANK_DEBARRED", "sanctions-debarment",
-    "https://apigwext.worldbank.org/dvsvc/v1.0/json/APPLICATION/ADOBE_EXPRT_WS/OFFICIAL/DEBARRED_FIRMS",
-    "https://www.worldbank.org/en/projects-operations/procurement/debarred-firms",
-    NULL, M_WB_JSON },
+  { .id = "WORLDBANK_DEBARRED", .service = "WORLDBANK_DEBARRED",
+    .rectype = "sanctions-debarment",
+    .url = "https://apigwext.worldbank.org/dvsvc/v1.0/json/APPLICATION/ADOBE_EXPRT_WS/OFFICIAL/DEBARRED_FIRMS",
+    .listing = "https://www.worldbank.org/en/projects-operations/procurement/debarred-firms",
+    .mode = M_WB_JSON },
+
   /* Canada SEMA consolidated autonomous sanctions — keyless XML, one record
    * per <record> element (person: LastName+GivenName, else EntityOrShip) */
-  { "CA_SANCTIONS", "CA_SANCTIONS", "sanctions-ca",
-    "https://www.international.gc.ca/world-monde/assets/office_docs/international_relations-relations_internationales/sanctions/sema-lmes.xml",
-    "https://www.international.gc.ca/world-monde/international_relations-relations_internationales/sanctions/consolidated-consolide.aspx",
-    NULL, M_XML,
-    "record",
-    "LastName,GivenName,EntityOrShip",
-    "Aliases",
-    "Country",
-    "Schedule,Item,DateOfListing,DateOfBirthOrShipBuildDate,ShipIMONumber,TitleOrShip" },
+  { .id = "CA_SANCTIONS", .service = "CA_SANCTIONS", .rectype = "sanctions-ca",
+    .url = "https://www.international.gc.ca/world-monde/assets/office_docs/international_relations-relations_internationales/sanctions/sema-lmes.xml",
+    .listing = "https://www.international.gc.ca/world-monde/international_relations-relations_internationales/sanctions/consolidated-consolide.aspx",
+    .mode = M_XML,
+    .xml_rec    = "record",
+    .xml_name   = "LastName,GivenName,EntityOrShip",
+    .xml_alias  = "Aliases",
+    .xml_prog   = "Country",
+    .xml_detail = "Schedule,Item,DateOfListing,DateOfBirthOrShipBuildDate,ShipIMONumber,TitleOrShip" },
+
   /* Australia DFAT consolidated list — the authoritative export is XLSX; the
    * open-data CSV mirror is used here. */
-  { "AU_DFAT", "AU_DFAT", "sanctions-au",
-    "https://www.dfat.gov.au/sites/default/files/regulation8_consolidated.csv",
-    "https://www.dfat.gov.au/international-relations/security/sanctions/consolidated-list",
-    NULL, M_SCAN },
+  { .id = "AU_DFAT", .service = "AU_DFAT", .rectype = "sanctions-au",
+    .url = "https://www.dfat.gov.au/sites/default/files/regulation8_consolidated.csv",
+    .listing = "https://www.dfat.gov.au/international-relations/security/sanctions/consolidated-list",
+    .mode = M_SCAN },
+
   /* Switzerland SECO sanctions — keyless XML export */
-  { "CH_SECO", "CH_SECO", "sanctions-ch",
-    "https://www.sesam.search.admin.ch/sesam-search-web/pages/downloadXmlGesamtliste.xhtml?lang=en&action=downloadXmlGesamtlisteEn",
-    "https://www.seco.admin.ch/seco/en/home/Aussenwirtschaftspolitik_Wirtschaftliche_Zusammenarbeit/Wirtschaftsbeziehungen/exportkontrollen-und-sanktionen/sanktionen-embargos/sanktionsmassnahmen/suche_sanktionsadressaten.html",
-    NULL, M_SCAN },
+  { .id = "CH_SECO", .service = "CH_SECO", .rectype = "sanctions-ch",
+    .url = "https://www.sesam.search.admin.ch/sesam-search-web/pages/downloadXmlGesamtliste.xhtml?lang=en&action=downloadXmlGesamtlisteEn",
+    .listing = "https://www.seco.admin.ch/seco/en/home/Aussenwirtschaftspolitik_Wirtschaftliche_Zusammenarbeit/Wirtschaftsbeziehungen/exportkontrollen-und-sanktionen/sanktionen-embargos/sanktionsmassnahmen/suche_sanktionsadressaten.html",
+    .mode = M_SCAN },
 };
+
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;

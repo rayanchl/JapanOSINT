@@ -116,6 +116,11 @@ regardless.
 |---|---|---|
 | `make selftest` | `--selftest`: SQLite integrity check, schema object count, llama-server reachability probe | anywhere; llama "down" is a pass |
 | `make unit` → `native/tests/unit/run.sh` | each test `#include`s the `.c` it exercises so it can reach static functions; links every object except `main.o` and the file under test | needs `obj/` (run `make` first) |
+| `make hptest` | offline test of the deep-record engine (`lib/hpengine.c`); its own `http_request` stub replaces libcurl, so both house rules (truncation notices, pagination, detail hops, missing-credential-is-an-honest-empty) are asserted with no network and no key | anywhere |
+| `make authtest` | offline JWT round-trip for `core/auth.c`: generates real RSA-2048 and P-256 keys, publishes them as JWKs and verifies real tokens — a wrong public key does not crash, it silently stops verifying every legitimate token | anywhere |
+| `make pagewalktest` | offline test of the paging + disclosure engine (`lib/pagewalk.c`) against a scripted upstream: when we may keep asking for more, and what we must disclose when we stop | anywhere |
+| `make htmlparsetest` | offline test of the HTML attribute scanner (`lib/htmlparse.c`); pins the boundary rule that keeps `data-src=` from answering a lookup for `src` | anywhere |
+| `make audit-sources` | house rule 2's mechanical scan (`tests/audit_source_exhaustiveness.py`) for discarded data. Gates `collectors/sources/hp*_*.c` strictly (held at 0); reports the wider tree's heuristic count without failing on it — see `docs/SOURCE_EXHAUSTIVENESS.md` | anywhere (python3) |
 | `make asan-test` / `make tsan-test` | the same unit tests under ASan / TSan | Linux |
 | `make tsan-sched` | 90 s of the real scheduler worker pool under TSan | Linux (`setarch -R`) |
 | `native/tests/contract/run.sh` | route/JSON parity of the C server against committed Node fixtures | needs a built binary |
@@ -164,18 +169,51 @@ make -C native lint-baseline     # python3 tools/lint_sources.py --write-baselin
 
 ---
 
-## 6. CI
+## 6. Candidate sources (batch 14)
 
-`.github/workflows/ci.yml` — the first CI this repository has had. On
-ubuntu-latest: install the deps above, `make -j`, `make selftest`, `make unit`,
-`make lint-sources`. It deliberately does not run collectors (they hit real
-third-party APIs), does not start llama-server (an 11 GB model), and does not
-run the contract suite (its fixtures need a DB with real intel rows). A CI that
-is red for unrelated reasons is a CI nobody looks at.
+The 1,001 `collectors/sources/csrc14_*.c` rows were authored without egress, so
+they are registered but carry no 2xx/parse proof (`docs/candidate-sources-batch14.md`).
+Two targets manage their lifecycle:
+
+```sh
+make -C native verify-candidates   # NEEDS NETWORK: probes every candidate, writes
+                                   # docs/verified-sources-batch14.tsv + rejected-…tsv
+make -C native regen-candidates    # rebuild the manifest and its collectors from the
+                                   # generator; reserved ids are taken live from the
+                                   # tree minus this batch, so it is idempotent
+```
+
+`verify-candidates` is the promotion step: run it, regenerate from the verified
+manifest, then drop the `csrc14_*` files. It is the only target here that hits
+the network, which is why CI does not run either of them.
 
 ---
 
-## 7. Running it
+## 7. CI
+
+`.github/workflows/ci.yml` — the first CI this repository has had. Three jobs:
+
+| Job | Runner | Steps |
+|---|---|---|
+| `build-and-test` | ubuntu-latest | install the deps above, `make -j`, `selftest`, `unit`, `hptest`, `authtest`, `pagewalktest`, `htmlparsetest`, `lint-sources`, `audit-sources` |
+| `asan` | ubuntu-latest | `make asan-test` — its own object tree, because every TU must carry `-fsanitize=address` |
+| `macos` | macos-latest | Homebrew deps, `make -j`, `selftest`, `unit`, `hptest`, `authtest`, `pagewalktest`, `htmlparsetest` |
+
+`asan` is a separate job rather than a step because the sanitizer needs its own
+build. `macos` exists because the Makefile's second half (`BREW_SSL`,
+`BREW_CURL`, `ICONV_LIB`) is macOS-only and was never executed by CI, while
+being the half the primary developer builds with daily. It deliberately skips
+`lint-sources` and `audit-sources`: both are pure python3 over the source text
+with no platform-dependent behaviour, and the Ubuntu job already gates on them.
+
+CI deliberately does not run collectors (they hit real third-party APIs), does
+not start llama-server (an 11 GB model), and does not run the contract suite
+(its fixtures need a DB with real intel rows). A CI that is red for unrelated
+reasons is a CI nobody looks at.
+
+---
+
+## 8. Running it
 
 `./launch.sh up` from the repo root: freeze stale processes → incremental build
 → server pod → llama pod → suggest-llama pod → status. `./launch.sh tags`

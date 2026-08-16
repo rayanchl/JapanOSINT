@@ -9,7 +9,7 @@
  * returned. A quiet day (no releases) is an honest empty, not an error.
  * Keyless. Licence: Statistics Canada Open Licence - reproduction permitted
  * with attribution. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "stats-ca-statcan-releases"
 

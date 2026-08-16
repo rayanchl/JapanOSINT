@@ -4,7 +4,7 @@
  * Emits, per dataset: title, organisation, author (issuing office), notes,
  * licence, dataQuality and metadata_modified. Keyless.
  * Licence: CC-BY / City of Zurich open-data terms. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-ch-zurich"
 static const char *URL =

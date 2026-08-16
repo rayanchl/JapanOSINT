@@ -1,20 +1,54 @@
 #include "feedlib.h"
 #include "csv.h"           /* csv_is_utf8 / csv_decode_sjis */
-#include <openssl/sha.h>
+#include <openssl/evp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void feed_hash_key(char *out21, const char *const *parts, int n) {
-  SHA_CTX c; SHA1_Init(&c);
-  for (int i = 0; i < n; i++) {
-    if (!parts[i]) continue;
-    SHA1_Update(&c, parts[i], strlen(parts[i]));
-    SHA1_Update(&c, "|", 1);
+/* The two joined-SHA-1 shapes this tree needs, in one place.
+ *
+ * `sep_between` picks between them: 0 appends the separator AFTER every part
+ * (intelHashKey's shape, so "a|b|" — a trailing pipe is part of the hashed
+ * input and removing it would change every uid ever minted), 1 puts it only
+ * BETWEEN parts ("a|b", which is what station_clusterer's cluster_uid hashes).
+ * `hex_chars` is how much of the digest to emit; the caller's buffer must hold
+ * hex_chars + 1.
+ *
+ * EVP rather than SHA1_Init/Update/Final: those are deprecated in OpenSSL 3
+ * and were the single largest source of build warnings in the tree (26 of 88),
+ * repeated across five hand-rolled copies of this same loop. SHA-1 is used
+ * here only to derive stable record keys — never as a security primitive —
+ * so the algorithm choice is a compatibility constraint, not a weakness: it
+ * has to keep matching the uids already in the database. */
+static void hash_join(char *out, const char *const *parts, int n,
+                      int sep_between, int hex_chars) {
+  unsigned char d[EVP_MAX_MD_SIZE];
+  unsigned int dlen = 0;
+  EVP_MD_CTX *c = EVP_MD_CTX_new();
+  if (c && EVP_DigestInit_ex(c, EVP_sha1(), NULL) == 1) {
+    for (int i = 0, emitted = 0; i < n; i++) {
+      if (!parts[i]) continue;
+      if (sep_between && emitted) EVP_DigestUpdate(c, "|", 1);
+      EVP_DigestUpdate(c, parts[i], strlen(parts[i]));
+      if (!sep_between) EVP_DigestUpdate(c, "|", 1);
+      emitted++;
+    }
+    EVP_DigestFinal_ex(c, d, &dlen);
   }
-  unsigned char d[20]; SHA1_Final(d, &c);
-  for (int i = 0; i < 10; i++) sprintf(out21 + i*2, "%02x", d[i]);
-  out21[20] = 0;
+  EVP_MD_CTX_free(c);
+  /* An allocation failure inside OpenSSL leaves dlen 0; zero-fill rather than
+   * emit uninitialised stack as a record key. */
+  if (dlen == 0) memset(d, 0, sizeof d);
+  for (int i = 0; i < hex_chars / 2; i++) sprintf(out + i*2, "%02x", d[i]);
+  out[hex_chars] = 0;
+}
+
+void feed_hash_key(char *out21, const char *const *parts, int n) {
+  hash_join(out21, parts, n, 0, 20);
+}
+
+void feed_hash_join(char *out41, const char *const *parts, int n) {
+  hash_join(out41, parts, n, 1, 40);
 }
 
 /* Is `url` on a Japanese host? Used to decide whether a body that is not valid

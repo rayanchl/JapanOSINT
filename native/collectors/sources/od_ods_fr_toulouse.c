@@ -7,7 +7,7 @@
  * Emits, per dataset: dataset_id, title, description, publisher, licence,
  * records_count and modified - all from metas.default. Keyless.
  * Licence: Licence Ouverte (Etalab). */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ods-fr-toulouse"
 static const char *URL =

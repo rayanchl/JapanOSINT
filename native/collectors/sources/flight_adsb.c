@@ -231,7 +231,6 @@ static cJSON *try_opensky(const source_ctx *ctx) {
   if (!states || !cJSON_IsArray(states)) { cJSON_Delete(data); return NULL; }
 
   cJSON *out = cJSON_CreateArray();
-  int i = 0;
   cJSON *s;
   cJSON_ArrayForEach(s, states) {
     /* (cap removed: every record of the fetched array is emitted —
@@ -249,10 +248,27 @@ static cJSON *try_opensky(const source_ctx *ctx) {
     cJSON *f = gj_point_feature(lon, lat);
 
     cJSON *p = cJSON_CreateObject();                  /* EXACT JS key order */
-    char idbuf[32];
-    snprintf(idbuf, sizeof idbuf, "ADSB_LIVE_%d", i);
-    cJSON_AddStringToObject(p, "id", idbuf);
-    cJSON_AddItemToObject(p, "icao24", dup_or_null(cJSON_GetArrayItem(s, 0)));  /* exhaustive-ok: fixed state-vector tuple */
+    /* `id` is a NATIVE_ID_KEY (lib/geojson.c), so it IS this row's uid — and
+     * it used to be the aircraft's position in the OpenSky states array, which
+     * is not an aircraft property: the array reorders on every 10-second poll,
+     * and this loop's counter additionally skips the state vectors dropped for
+     * having no position fix. Every poll therefore re-pointed every uid at a
+     * different aeroplane. icao24 — the ICAO 24-bit transponder address, the
+     * globally unique identifier of the airframe — is s[0], read one line
+     * below into `icao24`. Use it. */
+    cJSON *icao = cJSON_GetArrayItem(s, 0);  /* exhaustive-ok: fixed state-vector tuple */
+    char idbuf[64];
+    if (icao && cJSON_IsString(icao) && icao->valuestring[0]) {
+      snprintf(idbuf, sizeof idbuf, "ADSB_LIVE_%.40s", icao->valuestring);
+      cJSON_AddStringToObject(p, "id", idbuf);
+    } else {
+      /* A state vector with no icao24 has no identity OpenSky can give us. Say
+       * that instead of minting a positional one. */
+      cJSON_AddStringToObject(p, "id_basis",
+        "none: this OpenSky state vector carried no icao24, so the row is "
+        "uid'd by content hash rather than a positional id");
+    }
+    cJSON_AddItemToObject(p, "icao24", dup_or_null(icao));
     cJSON *s1 = cJSON_GetArrayItem(s, 1);
     char *cs = trim_or_null((s1 && cJSON_IsString(s1)) ? s1->valuestring : "");
     /* JS: (s[1]||'').trim() — empty string, not null */
@@ -308,7 +324,6 @@ static cJSON *try_opensky(const source_ctx *ctx) {
     cJSON_AddStringToObject(p, "source", "opensky_api");
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(out, f);
-    i++;
   }
   cJSON_Delete(data);
   return out;

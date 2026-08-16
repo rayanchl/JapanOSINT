@@ -7,7 +7,7 @@
  * by sex, month and region in TAB5444). Table ids are discoverable at
  * /v2beta/api/v2/tables?lang=en. Keyless.
  * Licence: SCB official statistics are free to reuse with attribution. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "stats-se-scb-table"
 static const char *URL =

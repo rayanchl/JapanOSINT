@@ -1,6 +1,18 @@
 /* lib/jsonlist.c — see jsonlist.h. */
 #include "jsonlist.h"
 #include "feedlib.h"
+#include "jocore.h"
+
+/* One wording for the "records the labeller could not name" shortfall, shared
+ * by the list and single-record paths so the disclosure reads the same either
+ * way. A record with no derivable title is not a row (see emit_record). */
+#define JL_UNLABELLED_REASON \
+  "records in this page carried no field this collector could use as a title, " \
+  "so they were not emitted as rows"
+#define JL_UNLABELLED_REMEDY \
+  "give this source an explicit record path or a title field mapping — see " \
+  "docs/SOURCE_EXHAUSTIVENESS.md"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -213,7 +225,7 @@ static const char *num_brief(const cJSON *v) {
 
 static int array_of_objects(cJSON *a) {
   if (!cJSON_IsArray(a) || cJSON_GetArraySize(a) == 0) return 0;
-  cJSON *first = cJSON_GetArrayItem(a, 0);
+  cJSON *first = cJSON_GetArrayItem(a, 0);  /* exhaustive-ok: type probe — asks what SHAPE the array holds, emits nothing */
   return first && cJSON_IsObject(first);
 }
 
@@ -370,21 +382,45 @@ static int emit_record(intel_sink *sink, const char *source_id, cJSON *rec,
     return ok ? 1 : 0;
 }
 
-int jsonlist_emit(intel_sink *sink, const char *source_id, cJSON *doc,
-                  const char *path, const char *record_type,
-                  const char *lang, const char *tags_json) {
+int jsonlist_emit_ex(intel_sink *sink, const char *source_id, cJSON *doc,
+                     const char *path, const char *record_type,
+                     const char *lang, const char *tags_json, int *seen) {
+  if (seen) *seen = 0;
+
   /* A single-object document is one record, not a degenerate list. Several
    * public APIs return exactly this — a status or summary document — and
    * treating it as an empty list would silently drop the source. */
-  if (path && !strcmp(path, "."))
-    return emit_record(sink, source_id, doc, record_type, lang, tags_json);
+  if (path && !strcmp(path, ".")) {
+    if (seen) *seen = 1;
+    int n = emit_record(sink, source_id, doc, record_type, lang, tags_json);
+    if (!seen && n == 0)
+      jo_truncation_notice(sink, source_id, path ? path : "",
+                           0, 1, JL_UNLABELLED_REASON, JL_UNLABELLED_REMEDY);
+    return n;
+  }
 
   cJSON *arr = jsonlist_find_array(doc, path);
   if (!arr) return 0;
 
-  int n = 0;
+  int n = 0, have = 0;
   cJSON *rec;
-  cJSON_ArrayForEach(rec, arr)
+  cJSON_ArrayForEach(rec, arr) {
+    have++;
     n += emit_record(sink, source_id, rec, record_type, lang, tags_json);
+  }
+  if (seen) *seen = have;
+
+  /* The shortfall is data, not a log line. Only disclosed here when no caller
+   * claimed responsibility for it — see the header. */
+  if (!seen && have > n)
+    jo_truncation_notice(sink, source_id, path ? path : "", n, have,
+                         JL_UNLABELLED_REASON, JL_UNLABELLED_REMEDY);
   return n;
+}
+
+int jsonlist_emit(intel_sink *sink, const char *source_id, cJSON *doc,
+                  const char *path, const char *record_type,
+                  const char *lang, const char *tags_json) {
+  return jsonlist_emit_ex(sink, source_id, doc, path, record_type, lang,
+                          tags_json, NULL);
 }

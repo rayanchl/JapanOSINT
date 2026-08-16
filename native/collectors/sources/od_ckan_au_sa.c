@@ -4,7 +4,7 @@
  * Emits, per dataset: title, organisation, notes, contact_point (departmental
  * email), data_state, licence and metadata timestamps. Keyless.
  * Licence: CC-BY 4.0 for most datasets. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-au-sa"
 static const char *URL =

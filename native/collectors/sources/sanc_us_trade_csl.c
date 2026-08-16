@@ -51,10 +51,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   cJSON *results = cJSON_GetObjectItem(doc, "results");
   int max_rows = sanc_env_int("JO_SANC_MAX_ROWS", 5000);
-  int n = 0;
+  int n = 0, rest = 0;
   const cJSON *rec;
   cJSON_ArrayForEach(rec, results) {
-    if (n >= max_rows) break;
+    /* House rule 2: the whole consolidated.json is already parsed, so count
+     * the records the cap makes us skip rather than breaking out — the notice
+     * below then states a real total instead of "unknown". */
+    if (n >= max_rows) { rest++; continue; }
     const char *name = jo_sv(rec, "name");
     const char *id = jo_sv(rec, "id");
     if (!name) continue;                       /* no fetched name -> no row (R1) */
@@ -141,6 +144,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(bj);
     free(pj);
   }
+  if (rest > 0)
+    jo_truncation_notice(sink, "us-trade-csl", "consolidated.json", n,
+                         (long)n + rest,
+                         "JO_SANC_MAX_ROWS (default 5000) stopped the row "
+                         "loop; the remaining entries of the downloaded "
+                         "consolidated screening list (~15,000 records across "
+                         "the 11 agency lists) were counted but not emitted",
+                         "raise JO_SANC_MAX_ROWS above the list's record count "
+                         "to ingest the whole download");
   cJSON_Delete(doc);
   fprintf(stderr, "[us-trade-csl] emitted %d\n", n);
   return 0;                       /* fetched fine (R3) */

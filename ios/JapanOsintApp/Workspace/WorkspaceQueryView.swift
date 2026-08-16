@@ -101,6 +101,11 @@ struct WorkspaceQueryView: View {
         .themedScreenBackground(theme)
         .navigationTitle("Queries")
         .compatInlineTitle()
+        // This screen is pushed and popped; its pipeline streams have to go
+        // with it, or each LLM run leaves a live Task and an open SSE
+        // connection behind. A run still in flight is re-attached on return.
+        .onAppear { searchStore.resumeActive(api: api) }
+        .onDisappear { searchStore.cancelAll() }
         .sheet(item: $draft) { rule in
             AlertEditor(rule: rule, onSave: { _ in draft = nil })
         }
@@ -168,6 +173,7 @@ struct WorkspaceQueryView: View {
         HStack(spacing: Space.md) {
             if done {
                 Image(systemName: "checkmark.circle.fill").foregroundStyle(theme.success)
+                    .accessibilityLabel("Finished")
             } else {
                 ProgressView().controlSize(.small)
             }

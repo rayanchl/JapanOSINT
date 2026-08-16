@@ -105,9 +105,13 @@ struct SettingsTab: View {
 
     private var lockedView: some View {
         VStack(spacing: 18) {
+            // Fixed size: hero glyph on the lock screen. It restates the
+            // headline below it rather than adding information, so it is hidden
+            // from VoiceOver and does not need to track Dynamic Type.
             Image(systemName: "lock.fill")
                 .font(.system(size: 56, weight: .regular))
                 .foregroundStyle(theme.accent)
+                .accessibilityHidden(true)
             Text("Settings Locked")
                 .font(.title3.bold())
                 .foregroundStyle(theme.text)
@@ -198,16 +202,21 @@ struct SettingsTab: View {
     @ViewBuilder
     private var icon: some View {
         switch phase {
+        // Each of these is the *only* rendering of the connection state, so
+        // each gets a label rather than being hidden.
         case .idle:
             Image(systemName: "wifi")
+                .accessibilityLabel("Not checked")
         case .checking:
             ProgressView().scaleEffect(0.8)
         case .live:
             Image(systemName: "checkmark.circle.fill")
                 .foregroundStyle(theme.success)
+                .accessibilityLabel("Connected")
         case .failure:
             Image(systemName: "xmark.circle.fill")
                 .foregroundStyle(theme.danger)
+                .accessibilityLabel("Not reachable")
         }
     }
 
@@ -314,6 +323,7 @@ struct SettingsTab: View {
             } label: {
                 HStack {
                     Image(systemName: "rectangle.portrait.and.arrow.right")
+                        .accessibilityHidden(true)   // "Disconnect" follows
                     Text("Disconnect")
                     Spacer()
                 }
@@ -605,6 +615,7 @@ struct SettingsTab: View {
         case .done:
             HStack(spacing: 6) {
                 Image(systemName: "checkmark.circle.fill")
+                    .accessibilityHidden(true)   // "Done" follows
                 Text("Done")
             }
             .foregroundStyle(theme.success)

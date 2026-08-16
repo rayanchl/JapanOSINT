@@ -311,7 +311,14 @@ int breach_meta_load_manifest(db_handle *db, const char *path) {
   sqlite3_stmt *st = bm_prepare(db);
   if (!st) { cJSON_Delete(root); return -1; }
 
-  sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL);
+  /* BEGIN can fail (a transaction is already open on this connection, or the
+   * db is locked). That is survivable — the upserts below still land, just
+   * unbatched — but it must not be assumed, because `in_txn` decides whether
+   * there is anything to COMMIT afterwards. */
+  int in_txn = (sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL) == SQLITE_OK);
+  if (!in_txn)
+    fprintf(stderr, "[breach_meta] BEGIN failed (%s); loading without an "
+                    "explicit transaction\n", sqlite3_errmsg(db->h));
   int n = 0;
   cJSON *b = NULL;
   cJSON_ArrayForEach(b, arr) {
@@ -342,8 +349,21 @@ int breach_meta_load_manifest(db_handle *db, const char *path) {
     n += bm_write(st, &r);
     free(djs);
   }
-  sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL);
+  /* Finalize BEFORE COMMIT: an unfinalized statement is a stock way to make
+   * COMMIT return SQLITE_BUSY, and this commit is the only thing standing
+   * between `n` upserts and nothing at all. */
   sqlite3_finalize(st);
+  /* `n` is the count this function RETURNS to the operator-facing
+   * catalog/load endpoint. Every one of those rows is inside this transaction,
+   * so a discarded COMMIT result meant reporting "loaded N breaches" for a
+   * batch that rolled back — the loudest possible false claim of stored data. */
+  if (in_txn && sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
+    fprintf(stderr, "[breach_meta] COMMIT failed after %d row(s): %s — "
+                    "NOTHING was loaded from %s\n", n, sqlite3_errmsg(db->h), p);
+    sqlite3_exec(db->h, "ROLLBACK", NULL, NULL, NULL);
+    cJSON_Delete(root);
+    return -1;
+  }
   cJSON_Delete(root);
   fprintf(stderr, "[breach_meta] loaded %d breaches from %s\n", n, p);
   return n;
@@ -479,11 +499,24 @@ int breach_meta_load_seed_tsv(db_handle *db, const char *path,
   sqlite3_stmt *st = bm_prepare(db);
   if (!st) return -1;
 
-  sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL);
+  int in_txn = (sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL) == SQLITE_OK);
+  if (!in_txn)
+    fprintf(stderr, "[breach_meta] BEGIN failed (%s); loading without an "
+                    "explicit transaction\n", sqlite3_errmsg(db->h));
   int written = 0;
   int parsed = seed_scan(db, path, st, 0, NULL, NULL, stats, &written);
-  sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL);
-  sqlite3_finalize(st);
+  sqlite3_finalize(st);                    /* before COMMIT — see the manifest
+                                            * loader for why */
+  /* Same as the manifest loader: `written` is the number this returns to the
+   * operator, and a rolled-back COMMIT makes it a count of rows that no longer
+   * exist. */
+  if (in_txn && sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
+    fprintf(stderr, "[breach_meta] COMMIT failed after %d row(s): %s — "
+                    "NOTHING was loaded from %s\n", written, sqlite3_errmsg(db->h),
+            (path && *path) ? path : breach_meta_seed_path());
+    sqlite3_exec(db->h, "ROLLBACK", NULL, NULL, NULL);
+    return -1;
+  }
 
   if (parsed < 0) return -1;
   fprintf(stderr, "[breach_meta] loaded %d breaches from %s\n", written,
@@ -532,8 +565,20 @@ breach_src_row *breach_meta_sources(db_handle *db, int *n) {
   int cap = 64, k = 0;
   breach_src_row *R = malloc((size_t)cap * sizeof *R);
   if (!R) { sqlite3_finalize(st); return NULL; }
-  while (sqlite3_step(st) == SQLITE_ROW) {
-    if (k == cap) { cap *= 2; R = realloc(R, (size_t)cap * sizeof *R); }
+  int scan_rc;
+  while ((scan_rc = sqlite3_step(st)) == SQLITE_ROW) {
+    if (k == cap) {
+      /* `R = realloc(R, ...)` then `R[k++]` on the next line: on failure the
+       * old block leaks and the write goes through NULL. Grow into a temp and
+       * keep the rows already collected. */
+      breach_src_row *nr = realloc(R, (size_t)cap * 2 * sizeof *R);
+      if (!nr) {
+        fprintf(stderr, "[breach_meta] out of memory after %d source(s); "
+                        "the breach source list is INCOMPLETE\n", k);
+        break;
+      }
+      R = nr; cap *= 2;
+    }
     breach_src_row *r = &R[k++];
     snprintf(r->breach_id,   sizeof r->breach_id,   "%s", (const char *)sqlite3_column_text(st, 0));
     snprintf(r->name,        sizeof r->name,        "%s", (const char *)sqlite3_column_text(st, 1));
@@ -544,6 +589,14 @@ breach_src_row *breach_meta_sources(db_handle *db, int *n) {
     r->item_count = sqlite3_column_int64(st, 6);
     snprintf(r->last_seen,   sizeof r->last_seen,   "%s", (const char *)sqlite3_column_text(st, 7));
   }
+  /* `while (step() == ROW)` cannot tell DONE from IOERR/CORRUPT/BUSY/
+   * INTERRUPT. The signature has no error channel — the caller gets rows and a
+   * count — so the least it can do is not stay quiet: a short list here shows
+   * up as breach sources that simply "do not exist". */
+  if (scan_rc != SQLITE_DONE)
+    fprintf(stderr, "[breach_meta] source scan interrupted after %d row(s): "
+                    "%s — the returned list is INCOMPLETE\n",
+            k, sqlite3_errmsg(db->h));
   sqlite3_finalize(st);
   if (n) *n = k;
   if (k == 0) { free(R); return NULL; }

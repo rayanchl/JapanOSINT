@@ -233,9 +233,20 @@ char *miscapi_list_layers(void) {
 }
 
 char *miscapi_layer_geojson(const char *layer_id) {
-  /* getLayerDefinitions(): a layer exists iff some registry source declares
-   * it. data_cache is gone, so the body is the documented empty FC whose
-   * _meta.sources lists that layer's contributing source ids. */
+  /* A layer exists iff some registry source declares it. This used to answer
+   * every such layer with HTTP 200 and
+   *     {"type":"FeatureCollection","features":[], "_meta":{...}}
+   * which a map client cannot distinguish from "this layer has nothing in it
+   * today". That is a fabricated finding: zero features were never measured,
+   * they were hardcoded. The caller now serves the layer through the real data
+   * path first (sweepapi_data → dataapi_layer) and only reaches this function
+   * when NEITHER can answer under this id — which happens for an aggregate
+   * layer whose records live under its several contributing SOURCE ids.
+   *
+   * So the body below is an explicit error, not an empty success: it names the
+   * sources that make up the layer and the route that serves each of them.
+   * Returns NULL when no registry source maps to the layer at all (caller
+   * → 404). */
   cJSON *srcs = cJSON_CreateArray();
   int n = src_meta_count();
   for (int i = 0; i < n; i++) {
@@ -245,18 +256,20 @@ char *miscapi_layer_geojson(const char *layer_id) {
   }
   if (cJSON_GetArraySize(srcs) == 0) { cJSON_Delete(srcs); return NULL; }
 
-  cJSON *meta = cJSON_CreateObject();
-  cJSON_AddStringToObject(meta, "layer", layer_id);
-  cJSON_AddStringToObject(meta, "message",
-                          "Use /api/data/:layerId for live collector output.");
-  cJSON_AddItemToObject(meta, "sources", srcs);
-
-  cJSON *fc = cJSON_CreateObject();
-  cJSON_AddStringToObject(fc, "type", "FeatureCollection");
-  cJSON_AddItemToObject(fc, "features", cJSON_CreateArray());
-  cJSON_AddItemToObject(fc, "_meta", meta);
-  char *js = cJSON_PrintUnformatted(fc);
-  cJSON_Delete(fc);
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddStringToObject(o, "error", "layer_not_directly_servable");
+  cJSON_AddStringToObject(o, "layer", layer_id);
+  cJSON_AddStringToObject(o, "detail",
+    "This layer id has no collector output of its own; its records are stored "
+    "under the contributing source ids listed here. No feature set is returned "
+    "because none was read — an empty FeatureCollection would read as 'this "
+    "layer has no data', which is not what was measured.");
+  cJSON_AddStringToObject(o, "remedy",
+    "GET /api/data/<source_id> for each id in `sources`.");
+  cJSON_AddNumberToObject(o, "source_count", cJSON_GetArraySize(srcs));
+  cJSON_AddItemToObject(o, "sources", srcs);
+  char *js = cJSON_PrintUnformatted(o);
+  cJSON_Delete(o);
   return js;
 }
 

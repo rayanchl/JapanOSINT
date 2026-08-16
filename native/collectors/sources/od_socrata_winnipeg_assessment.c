@@ -7,7 +7,7 @@
  * assessed_value. No coordinates are published on this dataset, so has_geo is
  * never set (R2). Keyless.
  * Licence: Open Government Licence - City of Winnipeg. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "socrata-winnipeg-assessment"
 static const char *URL = "https://data.winnipeg.ca/resource/d4mq-wa44.json?$limit=100";

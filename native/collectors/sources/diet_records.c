@@ -10,6 +10,7 @@
  * "会議録情報", speechOrder 0) is skipped — it carries no speaker. */
 #include "../../source.h"
 #include "../../lib/feedlib.h"
+#include "../../lib/jocore.h"   /* jo_truncation_notice_ex() — the ONE builder */
 #include "../../third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -159,43 +160,37 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   /* Rule 2: what we did not take is reported as data, not as a log line
-   * nobody reads (docs/SOURCE_EXHAUSTIVENESS.md). Shape mirrors the engine's
-   * notice in lib/hpengine.c so both are one record_type downstream. */
+   * nobody reads (docs/SOURCE_EXHAUSTIVENESS.md). Built by the ONE notice
+   * builder (lib/jocore.h) so this record is byte-shaped like every other
+   * collector-truncation-notice in the tree; the window and the walk's own
+   * counters ride along as extras.
+   *
+   * The `query` is the window, which reproduces this collector's historical
+   * uid exactly: "diet-records|truncation:<from>..<until>". One row per window.
+   *
+   * records_available is -1 and MUST be: the API states nextRecordPosition,
+   * not a total for the window, so how many speeches remain is genuinely
+   * unknown and any number here would be invented. */
   if (cut) {
-    cJSON *p = cJSON_CreateObject();
-    cJSON_AddStringToObject(p, "source_id", "diet-records");
-    cJSON_AddStringToObject(p, "window_from", from_s);
-    cJSON_AddStringToObject(p, "window_until", to_s);
-    cJSON_AddNumberToObject(p, "records_used", emitted);
-    cJSON_AddNumberToObject(p, "pages_read", pages_read);
-    cJSON_AddNumberToObject(p, "next_record_position", start);
-    cJSON_AddBoolToObject(p, "more_pages_pending", 1);
-    cJSON_AddNumberToObject(p, "declared_max_pages", MAX_PAGES);
-    cJSON_AddStringToObject(p, "reason",
+    char window[32];
+    snprintf(window, sizeof window, "%s..%s", from_s, to_s);
+    cJSON *extra = cJSON_CreateObject();
+    if (extra) {
+      cJSON_AddStringToObject(extra, "window_from", from_s);
+      cJSON_AddStringToObject(extra, "window_until", to_s);
+      cJSON_AddNumberToObject(extra, "pages_read", pages_read);
+      cJSON_AddNumberToObject(extra, "next_record_position", start);
+      cJSON_AddBoolToObject(extra, "more_pages_pending", 1);
+      cJSON_AddNumberToObject(extra, "declared_max_pages", MAX_PAGES);
+    }
+    jo_truncation_notice_ex(sink, "diet-records", window, emitted, -1,
       cut == 2 ? "the MAX_PAGES ceiling stopped a walk the API would have continued"
-               : "a page fetch failed part-way through the window");
-    cJSON_AddStringToObject(p, "remedy",
+               : "a page fetch failed part-way through the window",
       cut == 2 ? "raise MAX_PAGES in collectors/sources/diet_records.c — see "
                  "docs/SOURCE_EXHAUSTIVENESS.md"
                : "transient upstream failure; the next scheduled run re-walks "
-                 "the whole window");
-    char *pj = cJSON_PrintUnformatted(p);
-    cJSON_Delete(p);
-
-    char key[320], title[256];
-    snprintf(key, sizeof key, "diet-records|truncation:%s..%s", from_s, to_s);
-    snprintf(title, sizeof title,
-             "diet-records read %d page%s of %s..%s before stopping",
-             pages_read, pages_read == 1 ? "" : "s", from_s, to_s);
-    intel_item note = {0};
-    note.remote_key      = key;
-    note.title           = title;
-    note.lang            = "en";
-    note.record_type     = "collector-truncation-notice";
-    note.properties_json = pj ? pj : "{}";
-    note.tags_json       = "[\"truncation-notice\"]";
-    sink->emit(sink, &note);
-    free(pj);
+                 "the whole window",
+      extra);
   }
 
   fprintf(stderr, "[diet-records] emitted %d over %d page(s)%s\n",

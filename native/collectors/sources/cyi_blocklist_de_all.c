@@ -29,11 +29,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int total = 0;
   for (const char *q = body; *q; q++) if (*q == '\n') total++;
 
-  int n = 0;
+  int n = 0, listed = 0, capped = 0;
   char *cur = body, *line;
-  while ((line = jo_next_line(&cur)) != NULL && n < MAX_ROWS) {
+  while ((line = jo_next_line(&cur)) != NULL) {
     if (!line[0] || line[0] == '#') continue;
     if (!jo_is_ipv4(line)) continue;
+    listed++;
+    /* Past the cap keep counting addresses rather than stopping, so the notice
+     * below can state the feed's real size instead of an unknown. */
+    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "ip", line);
@@ -58,6 +62,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
+  /* House rule 2: the whole list was downloaded and every address counted; only
+   * the first MAX_ROWS became rows. */
+  if (capped)
+    jo_truncation_notice(sink, "blocklist-de-all", "lists/all.txt", n,
+                         (long)listed,
+                         "MAX_ROWS reached; the remaining addresses in the "
+                         "downloaded list were counted but not emitted as rows",
+                         "raise or drop MAX_ROWS in collectors/sources/"
+                         "cyi_blocklist_de_all.c");
   fprintf(stderr, "[blocklist-de-all] emitted %d of ~%d listed IPs\n", n, total);
   return 0;
 }

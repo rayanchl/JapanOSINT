@@ -11,6 +11,7 @@
  * (remote_key="port:<host>:<port>"), body {host,port,service,state:"open"}.
  * Only open ports surface; if none are open, emits nothing, returns 0. */
 #include "../../source.h"
+#include "../../core/hostgate.h"
 #include "../../third_party/cJSON.h"
 #include <string.h>
 #include <stdio.h>
@@ -22,6 +23,20 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
+
+/* SSRF gate. This collector never touches core/httpclient.c — it opens raw
+ * sockets — so hostgate, the protocol pins and the per-hop peer recheck that
+ * live inside http_request() do not apply to it by construction. `host` comes
+ * from ctx->entity, which on the /api/search pivot path is caller-supplied
+ * text and reaches this file because .collector="osint" puts PORT_SCANNER in
+ * the LLM's schema enum. Strict strength: no loopback, no RFC1918, no
+ * link-local, no metadata range. Checked once per run, before any connect(). */
+static int host_allowed(const char *host, const char *sid) {
+  int rc = hostgate_host_check(host, 1);
+  if (rc == HG_URL_OK) return 1;
+  fprintf(stderr, "[%s] refusing %s: %s\n", sid, host, hostgate_url_reason(rc));
+  return 0;
+}
 
 /* check_port: non-blocking connect + select, verbatim. */
 static int check_port(const char *host, int port, int timeout_ms) {
@@ -102,6 +117,8 @@ static int emit_open_port(intel_sink *sink, const char *host, int port,
 static int run_ports(const source_ctx *ctx, intel_sink *sink) {
   const char *host = ctx->entity;
   if (!host || !*host) return -1;
+  if (!host_allowed(host, ctx->source_id ? ctx->source_id : "PORT_SCANNER"))
+    return -1;
 
   static const int common_ports[] = {
     21,22,23,25,53,80,110,143,443,445,
@@ -124,8 +141,30 @@ static int run_ports(const source_ctx *ctx, intel_sink *sink) {
   return 0;                  /* no open ports → honest empty, not an error */
 }
 
+/* collector="_probe", NOT "osint" — deliberately, and this is the whole point.
+ *
+ * core/osint_dispatch.c builds the LLM's schema enum from collector=="osint"
+ * (osint_service_id_array / osint_services_list). Anything in that enum can be
+ * SELECTED BY THE MODEL from arbitrary user text arriving at POST /api/search,
+ * which needs nothing but a valid JWT. A 22-port connect scan against a host a
+ * stranger names is not something a language model should be able to trigger on
+ * their behalf, however well the target is gated.
+ *
+ * Dispatch itself is unaffected: osint_dispatch() resolves through
+ * registry_get(id), which does not consult .collector — so `--dispatch
+ * PORT_SCANNER <host>` still works for a local operator. What changes is that
+ * the model is no longer offered it.
+ *
+ * The leading underscore also keeps it out of scheduler fetch_log/anomaly, which
+ * is correct: it is on-demand (interval 0) and operator-invoked.
+ *
+ * This is defence in depth, not a replacement for the gate — host_allowed()
+ * above still refuses loopback/RFC1918/link-local/metadata before any connect().
+ * SSL_ANALYZER deliberately KEEPS collector="osint": inspecting a public host's
+ * certificate is genuine, high-value OSINT, and with hostgate in front of it the
+ * residual risk does not justify losing the capability. */
 static const source_def port_scanner_def = {
-  .id = "PORT_SCANNER", .collector = "osint",
+  .id = "PORT_SCANNER", .collector = "_probe",
   .name = "Port Scanner", .name_ja = "ポートスキャナ",
   .update_interval_sec = 0, .run = run_ports,
   .category = "cyber", .type = "api",

@@ -280,7 +280,7 @@ static int hz_firms(const source_ctx *ctx, intel_sink *sink) {
   char *body = jo_get(ctx, url, hdrs, "FIRMS_GLOBAL");
   if (!body) return 0;
 
-  int emitted = 0, row = 0;
+  int emitted = 0;
   const char *line = body;
   /* skip header line */
   const char *nl = strchr(line, '\n');
@@ -357,7 +357,6 @@ static int hz_firms(const source_ctx *ctx, intel_sink *sink) {
         free(bj); free(pj);
       }
     }
-    row++;
     if (!nl) break;
     line = nl + 1;
   }

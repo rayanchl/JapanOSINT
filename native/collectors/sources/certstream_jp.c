@@ -184,7 +184,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     /* A precertificate can carry no CN at all (SAN-only). `cn` was passed
      * through as the title regardless, so the row went out with a NULL title;
      * fall back to the first .jp SAN, which is what the row is actually about. */
-    it.title = cn ? cn : (njp > 0 ? cJSON_GetArrayItem(jp, 0)->valuestring : NULL);
+    it.title = cn ? cn : (njp > 0 ? cJSON_GetArrayItem(jp, 0)->valuestring : NULL);  /* exhaustive-ok: title fallback; every .jp SAN is in properties */
     if (!it.title) { free(body); cJSON_Delete(props); cJSON_Delete(tagsA);
                      free(tags); free(pj); i++; continue; }
     it.summary = summary;

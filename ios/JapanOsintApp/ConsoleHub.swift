@@ -162,6 +162,7 @@ struct ConsoleHub: View {
             } label: {
                 HStack {
                     Image(systemName: "rectangle.portrait.and.arrow.right")
+                        .accessibilityHidden(true)   // "Disconnect" follows
                     Text("Disconnect")
                     Spacer()
                 }
@@ -195,6 +196,7 @@ struct ConsoleHub: View {
                     .font(.body)
                     .foregroundStyle(theme.accent)
                     .frame(width: 28, height: 28)
+                    .accessibilityHidden(true)   // title + subtitle follow
                     .background(
                         theme.accent.opacity(0.12),
                         in: RoundedRectangle(cornerRadius: Radius.sm)

@@ -18,6 +18,7 @@
  * merged. remote_key = "email:<addr>" | "subdomain:<host>"; title = the
  * email/subdomain; body = {value,type,found_via:[...]}. If nothing is
  * harvested, emits nothing and returns 0 (honest empty). */
+#include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
@@ -26,7 +27,15 @@
 #include <stdlib.h>
 #include <regex.h>
 
-#define MAX_RESULTS 1000  /* exhaustive-ok: per-run request budget, logged */
+/* NOT a request budget, and nothing logged it: this is the size of the emails[]
+ * and subs[] tables. When one fills, add_hit() drops further values and
+ * extract() stops scanning the page at all, so hits past the 1000th are lost
+ * without a trace. run() now emits a collector-truncation-notice when it bites.
+ * records_available cannot be known there and must stay -1: once the table is
+ * full there is nothing left to de-duplicate a further match against, so any
+ * "remaining" count would be a guess. */
+#define MAX_RESULTS 1000  /* exhaustive-ok: result-table size; overflow is
+                           * reported as a truncation notice, not dropped */
 #define MAX_PAGES   10    /* exhaustive-ok: page-walk runaway guard */
 
 typedef struct { char v[256]; char src[256]; } hit_t;
@@ -148,6 +157,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   dre[dw] = 0;
 
+  /* The same entity also goes into four query strings, so it needs the other
+   * escape too: percent-encoding. Raw, an entity containing '&' or '=' stopped
+   * being a search TERM and became extra request parameters (…?q=site:x&num=1
+   * →  a second parameter we never intended to send), and '#' truncated the
+   * URL. Encode once here and interpolate `enc` — never `domain` — into a URL.
+   * The regex above keeps using the raw domain: that is a different escape. */
+  char enc[512];
+  jo_urlencode_buf(domain, enc, sizeof enc);
+
   char epat[512], spat[512];
   snprintf(epat, sizeof epat, "[a-zA-Z0-9._%%+-]+@%s", dre);
   snprintf(spat, sizeof spat,
@@ -155,34 +173,34 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* search_google: 10 SERP pages */
   for (int page = 0; page < MAX_PAGES; page++) {
-    char url[512];
+    char url[1024];
     snprintf(url, sizeof url,
       "https://www.google.com/search?q=site:%s+OR+@%s&start=%d",
-      domain, domain, page * 10);
+      enc, enc, page * 10);
     char *b = fetch(ctx->http, url);
     if (b) { extract(b, epat, emails, &ne, "Google");
              extract(b, spat, subs, &ns, "Google"); free(b); }
   }
   /* search_crtsh */
   {
-    char url[512];
-    snprintf(url, sizeof url, "https://crt.sh/?q=%%.%s&output=json", domain);
+    char url[1024];
+    snprintf(url, sizeof url, "https://crt.sh/?q=%%.%s&output=json", enc);
     char *b = fetch(ctx->http, url);
     if (b) { extract(b, spat, subs, &ns, "crt.sh"); free(b); }
   }
   /* search_github */
   {
-    char url[512];
-    snprintf(url, sizeof url, "https://api.github.com/search/code?q=%s", domain);
+    char url[1024];
+    snprintf(url, sizeof url, "https://api.github.com/search/code?q=%s", enc);
     char *b = fetch(ctx->http, url);
     if (b) { extract(b, epat, emails, &ne, "GitHub");
              extract(b, spat, subs, &ns, "GitHub"); free(b); }
   }
   /* search_duckduckgo */
   {
-    char url[512];
+    char url[1024];
     snprintf(url, sizeof url,
-      "https://html.duckduckgo.com/html/?q=site:%s+OR+@%s", domain, domain);
+      "https://html.duckduckgo.com/html/?q=site:%s+OR+@%s", enc, enc);
     char *b = fetch(ctx->http, url);
     if (b) { extract(b, epat, emails, &ne, "DuckDuckGo");
              extract(b, spat, subs, &ns, "DuckDuckGo"); free(b); }
@@ -197,6 +215,35 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   free(emails); free(subs);
   (void)emitted;            /* nothing harvested → emitted nothing, honest 0 */
+
+  /* House rule 2: a full table means the scan stopped early and threw matches
+   * away. Say so in the data. -1 is the only honest `available` here — see the
+   * note on MAX_RESULTS. */
+  char tq[320];
+  if (ne >= MAX_RESULTS) {
+    /* Distinct query strings: the notice uid is derived per (source, query),
+     * so a shared one would make the second notice overwrite the first. */
+    snprintf(tq, sizeof tq, "%.280s (emails)", domain);
+    jo_truncation_notice(sink, "EMAIL_HARVESTER", tq, ne, -1,
+                         "the emails[] result table (MAX_RESULTS = 1000) "
+                         "filled; extract() then stopped scanning the fetched "
+                         "pages, so any further addresses on them were neither "
+                         "de-duplicated nor emitted",
+                         "raise MAX_RESULTS in collectors/sources/"
+                         "theharvester.c, or grow the hit table instead of "
+                         "fixing its size");
+  }
+  if (ns >= MAX_RESULTS) {
+    snprintf(tq, sizeof tq, "%.280s (subdomains)", domain);
+    jo_truncation_notice(sink, "EMAIL_HARVESTER", tq, ns, -1,
+                         "the subs[] result table (MAX_RESULTS = 1000) filled; "
+                         "extract() then stopped scanning the fetched pages, "
+                         "so any further subdomains on them were neither "
+                         "de-duplicated nor emitted",
+                         "raise MAX_RESULTS in collectors/sources/"
+                         "theharvester.c, or grow the hit table instead of "
+                         "fixing its size");
+  }
   return 0;
 }
 

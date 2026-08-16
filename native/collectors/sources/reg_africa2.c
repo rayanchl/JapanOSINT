@@ -25,7 +25,11 @@
 #include "_jp_osint.inc"
 
 /* per-query global cap and per-registry cap */
-#define AFR2_TOTAL_MAX   500  /* exhaustive-ok: runaway guard, logged */
+/* NOT a page cap: it sits in the loop condition over REGISTRIES, so hitting it
+ * ends the sweep and the registries after it go unqueried — reported as data
+ * by jo_registry_sweep_notice(). */
+#define AFR2_TOTAL_MAX   500  /* exhaustive-ok: whole-run emit cap; the sweep it
+                               * cuts short is reported as a truncation notice */
 #define AFR2_PER_REG_MAX 0    /* exhaustive-ok: 0 = every hit on the page */
 
 typedef struct {
@@ -107,9 +111,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *enc = jo_urlencode(q);
   if (!enc) return -1;
 
-  int total = 0;
-  for (int i = 0; i < AFR2_N && total < AFR2_TOTAL_MAX; i++) {
-    if (ctx->cancel && *ctx->cancel) break;
+  int total = 0, i = 0, cancelled = 0;
+  for (; i < AFR2_N && total < AFR2_TOTAL_MAX; i++) {
+    if (ctx->cancel && *ctx->cancel) { cancelled = 1; break; }
     const afr2_reg *r = &AFR2[i];
 
     char url[1024];
@@ -118,17 +122,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char tag[64];
     snprintf(tag, sizeof tag, "africa2_reg:%s", r->cc);
 
-    int remaining = AFR2_TOTAL_MAX - total;
-    int cap = remaining < AFR2_PER_REG_MAX ? remaining : AFR2_PER_REG_MAX;
+    /* The old `remaining`/`cap` min() was dead: AFR2_PER_REG_MAX is 0 and
+     * `remaining` is always > 0 inside this loop, so min(remaining, 0) was
+     * always 0 — and jo_emit_anchors reads <= 0 as "no cap". Removed rather
+     * than given teeth, which would change what this collector emits. */
 
     /* REAL fetch + real anchor extraction. JS-only/anti-bot rows honest-empty. */
     total += jo_emit_anchors(ctx, sink, url, r->href_must, r->name,
-                             "africa2-registry-company", r->base, q, cap, tag);
+                             "africa2-registry-company", r->base, q,
+                             AFR2_PER_REG_MAX, tag);
   }
 
   free(enc);
-  fprintf(stderr, "[africa2_reg] total emitted %d across %d registries\n",
-          total, AFR2_N);
+  jo_registry_sweep_notice(sink, "AFRICA2_REGISTRY", q, total, i, AFR2_N,
+                           "AFR2_TOTAL_MAX", AFR2_TOTAL_MAX, cancelled);
+  fprintf(stderr, "[africa2_reg] total emitted %d across %d of %d registries\n",
+          total, i, AFR2_N);
   return 0;   /* honest empty is not an error */
 }
 

@@ -10,7 +10,7 @@
  * is very large, so the request is bounded with $limit (narrow further with
  * $where=stateabbr=... when pivoting). Keyless.
  * Licence: US federal government work - public domain. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "socrata-cdc-places"
 static const char *URL = "https://chronicdata.cdc.gov/resource/eav7-hnsx.json?$limit=100";

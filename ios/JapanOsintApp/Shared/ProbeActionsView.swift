@@ -81,6 +81,7 @@ struct ProbeActionsView: View {
             }
         }
         .frame(width: 14, height: 14)
+        .accessibilityHidden(true)   // the button title beside it names the probe
     }
 
     private func pingNow() {

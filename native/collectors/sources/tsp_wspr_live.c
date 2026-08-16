@@ -180,6 +180,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(r);
   }
 
+  /* House rule 2: ROW_LIMIT is a LIMIT clause in the SQL, so wspr.live itself
+   * clips the result set. A response that came back exactly full means spots in
+   * the window were left behind upstream; wspr.live does not state how many. */
+  if (lines >= ROW_LIMIT)
+    jo_truncation_notice(sink, "wspr-live", "last 10 minutes", n, -1,
+                         "the query carries LIMIT ROW_LIMIT and came back "
+                         "exactly full, so wspr.live clipped the spot set for "
+                         "this window; the upstream does not report a total",
+                         "raise ROW_LIMIT and the matching LIMIT in WSPR_SQL in "
+                         "collectors/sources/tsp_wspr_live.c, or page the query "
+                         "by time");
   free(body);
   fprintf(stderr, "[wspr-live] emitted %d of %d NDJSON lines (last %d min)\n",
           n, lines, WINDOW_MIN);

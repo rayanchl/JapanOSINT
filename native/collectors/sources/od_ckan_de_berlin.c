@@ -4,7 +4,7 @@
  * Emits, per dataset: title, organisation, author, notes, licence, and the
  * portal-specific berlin_type (datensatz vs dokument) / berlin_source fields.
  * Keyless. Licence: Datenlizenz Deutschland / CC-BY, per dataset. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-de-berlin"
 static const char *URL =

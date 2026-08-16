@@ -249,10 +249,11 @@ static int run_brew_analytics(const source_ctx *ctx, intel_sink *sink) {
   }
   const char *start = jo_sv(doc, "start_date"), *end = jo_sv(doc, "end_date");
   const cJSON *totalv = cJSON_GetObjectItem(doc, "total_count");
-  int n = 0;
+  int n = 0, capped = 0;
+  const int have = cJSON_GetArraySize(items);
   const cJSON *i;
   cJSON_ArrayForEach(i, items) {
-    if (n >= 300) break;                     /* top 300 of ~25,000 formulae */
+    if (n >= 300) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     const char *formula = jo_sv(i, "formula");
     if (!formula) continue;
     double cnt = strip_commas_num(cJSON_GetObjectItem(i, "count"));
@@ -278,6 +279,16 @@ static int run_brew_analytics(const source_ctx *ctx, intel_sink *sink) {
                   rk, formula, summary, link, NULL, NULL);
   }
   cJSON_Delete(doc);
+  /* House rule 2: the 30d analytics document lists every formula that was
+   * installed in the window; this run emitted only the head of that list. */
+  if (capped)
+    jo_truncation_notice(sink, "homebrew-install-analytics", "install/30d",
+                         n, (long)have,
+                         "the emit loop stops at 300 formulae, so the tail of "
+                         "the ranked install list that was already fetched and "
+                         "parsed was never emitted",
+                         "remove the `n >= 300` break in run_brew_analytics() "
+                         "in collectors/sources/soc_packages_feeds.c");
   fprintf(stderr, "[homebrew-install-analytics] emitted %d\n", n);
   return 0;
 }

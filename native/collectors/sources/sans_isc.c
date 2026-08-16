@@ -46,10 +46,23 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     gmtime_r(&now, &tmv);
     strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &tmv);
 
-    char title[128], tags[128];
+    char title[128];
     snprintf(title, sizeof title, "Infocon level: %s", status);
-    snprintf(tags, sizeof tags,
-             "[\"sans-isc\",\"infocon\",\"status:%s\"]", status);
+
+    /* `status` is fetched text, so the tags array is BUILT, not printf'd. A
+     * quote or backslash in it used to produce malformed JSON in tags_json,
+     * which is stored verbatim — and the API filters tags with SQLite's
+     * json_each(intel_items.tags), which errors on the malformed row and takes
+     * the WHOLE tag-filtered listing down with it, not just this one item.
+     * (A long status truncating inside the snprintf buffer broke it the same
+     * way.) cJSON escapes and cannot truncate. */
+    cJSON *tag_arr = cJSON_CreateArray();
+    cJSON_AddItemToArray(tag_arr, cJSON_CreateString("sans-isc"));
+    cJSON_AddItemToArray(tag_arr, cJSON_CreateString("infocon"));
+    char status_tag[256];
+    snprintf(status_tag, sizeof status_tag, "status:%s", status);
+    cJSON_AddItemToArray(tag_arr, cJSON_CreateString(status_tag));
+    char *tags = cJSON_PrintUnformatted(tag_arr);
 
     cJSON *props = cJSON_CreateObject();
     cJSON_AddStringToObject(props, "kind", "infocon");
@@ -64,9 +77,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     it.published_at = iso;
     it.record_type = "article";
     it.properties_json = props_s ? props_s : "{}";
-    it.tags_json = tags;
+    it.tags_json = tags ? tags : "[\"sans-isc\",\"infocon\"]";
     if (sink->emit(sink, &it) >= 0) total++;
 
+    free(tags);
+    cJSON_Delete(tag_arr);
     free(props_s);
     cJSON_Delete(props);
     cJSON_Delete(infocon);

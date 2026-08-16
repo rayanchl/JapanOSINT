@@ -239,7 +239,8 @@ void fts_schema_migrate(db_handle *db) {
   }
 
   long long done = 0;
-  while (sqlite3_step(sel) == SQLITE_ROW) {
+  int scan_rc;
+  while ((scan_rc = sqlite3_step(sel)) == SQLITE_ROW) {
     const char *uid = (const char *)sqlite3_column_text(sel, 0);
     if (!uid || !*uid) continue;
 
@@ -291,6 +292,19 @@ void fts_schema_migrate(db_handle *db) {
     if (++done % 25000 == 0)
       fprintf(stderr, "[fts]   %lld/%lld items reindexed (%.0fs)\n",
               done, nrows, (now_ms() - t0) / 1000.0);
+  }
+  /* `while (step() == ROW)` cannot tell DONE from IOERR/CORRUPT/BUSY/INTERRUPT,
+   * and this loop is repopulating a table that was DROPped a few lines above.
+   * Committing a partial scan here would leave every row past the failure
+   * point permanently unsearchable AND stamp _fts_meta with the new version,
+   * so fts_index_is_v2() would answer yes and the migration would never run
+   * again. On a corpus this size that is silent, total and unrecoverable
+   * without a manual rebuild — so a short scan must roll back, not commit. */
+  if (scan_rc != SQLITE_DONE) {
+    fprintf(stderr, "[fts] REBUILD ABORTED after %lld/%lld items: %s — "
+                    "rolling back; the old index is left in place\n",
+            done, nrows, sqlite3_errmsg(h));
+    goto fail;
   }
   sqlite3_finalize(sel); sel = NULL;
   sqlite3_finalize(ins); ins = NULL;

@@ -2,11 +2,11 @@
  * Endpoint: https://data.ontario.ca/api/3/action/package_search?rows=20
  * PARSE TRAP: title, notes and access_instructions are OBJECTS
  * {"en":...,"fr":...}, not strings - cJSON_GetStringValue returns NULL on
- * them, so od_sml() descends into the language member (see od_shared.c).
+ * them, so od_sml() descends into the language member (see od_shared.inc).
  * Emits, per dataset: title, organisation, notes, access_level,
  * current_as_of, asset_type, exemption and metadata timestamps. Keyless.
  * Licence: Open Government Licence - Ontario. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-ca-ontario"
 static const char *URL =

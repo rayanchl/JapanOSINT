@@ -2,8 +2,7 @@
 
 > **HISTORICAL SNAPSHOT.** "(318 sources)" below is the state at the time this
 > port landed, not a current count, and it did not expand registration macros.
-> Current figure: `make -C native source-count` — 2,563 on 2026-08-09. See
-> [`../docs/collectors.md`](../docs/collectors.md).
+> Current figure: run `make -C native source-count` — 9,681 on 2026-08-10.
 
 Port-from: server/src/osint/{pipeline,dispatcher,prompts,progressTracker}.js
 + utils/searchIngest.js + routes/search.js. All build-green (318 sources).
@@ -31,7 +30,7 @@ Port-from: server/src/osint/{pipeline,dispatcher,prompts,progressTracker}.js
   terminal close, via MG_EV_POLL/CLOSE). /api/search no longer 501.
 - Services as unified sources (interval=0, on-demand): **61 OSINT services
   registered** (was 5). The OSINTsaas `osint_tools/*.c` catalog was ported
-  via 4 parallel agents into `collectors/osint/sources/*.c` under the unified
+  via 4 parallel agents into `collectors/sources/*.c` under the unified
   ABI (.id = the canonical SERVICE name from osint_dispatcher.c; run() reads
   ctx->entity, emits one osint_service_result; dispatcher auto-routes any
   registered id). Build-green, REGISTER_SOURCE==registered (375), zero dup

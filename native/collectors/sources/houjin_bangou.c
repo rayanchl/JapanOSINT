@@ -81,13 +81,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     else corps = cJSON_GetObjectItem(json, "data");
   }
 
-  int n = 0, i = 0;
+  int n = 0;
   if (cJSON_IsArray(corps)) {
     cJSON *c;
     cJSON_ArrayForEach(c, corps) {
       /* (cap removed: every record of the fetched array is emitted —
        * docs/SOURCE_EXHAUSTIVENESS.md) */
-      i++;
       char cnbuf[40];
       const char *cn   = cn_of(c, cnbuf, sizeof cnbuf);
       const char *proc = jo_sv(c, "process");    /* c.process || null */

@@ -112,7 +112,12 @@ static const cn_reg REGS[] = {
 static const int N_REGS = (int)(sizeof(REGS) / sizeof(REGS[0]));
 
 #define CN_PER_REG   3    /* cap anchors emitted per registry            */
-#define CN_TOTAL_CAP 500   /* exhaustive-ok: runaway guard, logged */
+/* NOT a page cap: it sits in the loop condition over REGISTRIES, so hitting it
+ * ends the sweep and the portals after it go unqueried — reported as data by
+ * jo_registry_sweep_notice(). (CN_PER_REG above is a real per-page cap and
+ * jo_emit_anchors already discloses whatever it trims.) */
+#define CN_TOTAL_CAP 500   /* exhaustive-ok: whole-run emit cap; the sweep it
+                            * cuts short is reported as a truncation notice */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
@@ -121,9 +126,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
 
-  int total = 0;
-  for (int i = 0; i < N_REGS && total < CN_TOTAL_CAP; i++) {
-    if (ctx->cancel && *ctx->cancel) break;
+  int total = 0, i = 0, cancelled = 0;
+  for (; i < N_REGS && total < CN_TOTAL_CAP; i++) {
+    if (ctx->cancel && *ctx->cancel) { cancelled = 1; break; }
     const cn_reg *r = &REGS[i];
 
     char url[1024];
@@ -145,7 +150,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(enc);
-  fprintf(stderr, "[china-registry] emitted %d across %d portals\n", total, N_REGS);
+  jo_registry_sweep_notice(sink, "CHINA_REGISTRY", q, total, i, N_REGS,
+                           "CN_TOTAL_CAP", CN_TOTAL_CAP, cancelled);
+  fprintf(stderr, "[china-registry] emitted %d across %d of %d portals\n",
+          total, i, N_REGS);
   return 0;   /* honest empty is not an error */
 }
 

@@ -11,7 +11,6 @@
 #include <string.h>
 #include <strings.h>
 #include <ctype.h>
-#include <openssl/sha.h>
 
 #define FEED_URL "https://www.data.jma.go.jp/developer/xml/feed/eqvol.xml"
 
@@ -71,14 +70,13 @@ static char *atom_link(const char *from, const char *end) {
   return NULL;
 }
 
+/* intelHashKey(a, b) — the digest loop lives in lib/feedlib.c (feed_hash_key);
+ * this keeps the malloc'd-string shape its caller expects. */
 static char *sha1_20(const char *a, const char *b) {
-  unsigned char d[20]; SHA_CTX c; SHA1_Init(&c);
-  if (a) { SHA1_Update(&c, a, strlen(a)); SHA1_Update(&c, "|", 1); }
-  if (b) { SHA1_Update(&c, b, strlen(b)); SHA1_Update(&c, "|", 1); }
-  SHA1_Final(d, &c);
+  const char *parts[2] = { a, b };
   char *h = malloc(21);
-  for (int i = 0; i < 10; i++) sprintf(h + i*2, "%02x", d[i]);
-  h[20] = 0;
+  if (!h) return NULL;
+  feed_hash_key(h, parts, 2);
   return h;
 }
 

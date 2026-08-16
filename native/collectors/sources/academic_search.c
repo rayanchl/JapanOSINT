@@ -148,10 +148,16 @@ static cJSON *search_arxiv(http_client *h, const char *q, int limit) {
       }
       char *ps = strstr(entry, "<published>"), *pe = strstr(entry, "</published>");
       if (ps && pe && ps < ee) {
-        ps += 11; size_t L = pe - ps;
+        ps += 11; size_t L = (size_t)(pe - ps);
+        /* `d` is uninitialised stack and only `c` bytes are written, but the
+         * terminator was hard-coded at index 10 — so for any <published> body
+         * shorter than 10 bytes (a truncated or malformed arXiv entry), d[c..9]
+         * was whatever the stack happened to hold, and that indeterminate run
+         * was published as the record's `date`. Terminate where the copy
+         * actually ended. */
         char d[32]; size_t c = L > 10 ? 10 : L;
-        memcpy(d, ps, c); d[10] = 0;
-        cJSON_AddStringToObject(it, "date", d);
+        memcpy(d, ps, c); d[c] = 0;
+        if (d[0]) cJSON_AddStringToObject(it, "date", d);
       }
       char *ss = strstr(entry, "<summary>"), *se = strstr(entry, "</summary>");
       if (ss && se && ss < ee) {

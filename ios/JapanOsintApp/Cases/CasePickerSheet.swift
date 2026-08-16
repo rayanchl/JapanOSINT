@@ -80,6 +80,7 @@ struct CasePickerSheet: View {
                         Image(systemName: "arrow.clockwise")
                     }
                     .disabled(loading)
+                    .accessibilityLabel("Reload cases")
                 }
             }
             .task { await seedAndReload() }
@@ -96,6 +97,7 @@ struct CasePickerSheet: View {
                     Image(systemName: CaseRefType.icon(refType))
                         .font(.caption)
                         .foregroundStyle(theme.accent)
+                        .accessibilityHidden(true)   // the label follows
                     Text(label ?? refId)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(theme.text)
@@ -197,10 +199,12 @@ struct CasePickerSheet: View {
             Task { await pin(summary) }
         } label: {
             HStack(alignment: .top, spacing: Space.md) {
+                // Open/closed is carried by this glyph alone, so it is spoken.
                 Image(systemName: CaseStatus.icon(summary.status))
                     .font(.body)
                     .foregroundStyle(summary.isOpen ? theme.success : theme.textMuted)
                     .frame(width: 24, height: 24)
+                    .accessibilityLabel(summary.isOpen ? "Open case" : "Closed case")
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(summary.name)
@@ -236,6 +240,7 @@ struct CasePickerSheet: View {
                     Image(systemName: "pin")
                         .font(.caption)
                         .foregroundStyle(theme.textMuted)
+                        .accessibilityLabel("Pin to this case")
                 }
             }
             .padding(.vertical, 2)

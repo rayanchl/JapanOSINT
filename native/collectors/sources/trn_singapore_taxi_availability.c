@@ -43,10 +43,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *coords = cJSON_GetObjectItem(
       cJSON_GetObjectItem(feat, "geometry"), "coordinates");
 
-  int n = 0, idx = 0;
+  int n = 0, idx = 0, capped = 0;
+  const int have = cJSON_GetArraySize(coords);
   cJSON *p;
   cJSON_ArrayForEach(p, coords) {
-    if (n >= SG_TAXI_CAP) break;
+    if (n >= SG_TAXI_CAP) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     cJSON *x = cJSON_GetArrayItem(p, 0), *y = cJSON_GetArrayItem(p, 1);
     double lo, la;
     if (!trn_numv(x, &lo) || !trn_numv(y, &la)) { idx++; continue; }
@@ -78,6 +79,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(pr);
     idx++;
   }
+  /* House rule 2: the feature's coordinates array holds every available taxi
+   * in the snapshot; SG_TAXI_CAP stopped the emit loop partway. */
+  if (capped)
+    jo_truncation_notice(sink, "singapore-taxi-availability",
+                         ts ? ts : "latest", n, (long)have,
+                         "SG_TAXI_CAP reached; the remaining taxi positions in "
+                         "the fetched snapshot were not emitted",
+                         "raise or drop SG_TAXI_CAP in collectors/sources/"
+                         "trn_singapore_taxi_availability.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[singapore-taxi-availability] emitted %d\n", n);
   return 0;

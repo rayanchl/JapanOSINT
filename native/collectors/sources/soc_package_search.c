@@ -246,10 +246,11 @@ static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[HEXPM_PACKAGE_SEARCH] no usable response for %s\n", q);
     cJSON_Delete(doc); return 0;
   }
-  int n = 0;
+  int n = 0, capped = 0;
+  const int have = cJSON_GetArraySize(doc);
   const cJSON *d;
   cJSON_ArrayForEach(d, doc) {
-    if (n >= 50) break;
+    if (n >= 50) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     const char *name = jo_sv(d, "name");
     if (!name) continue;
     const cJSON *meta = cJSON_GetObjectItem(d, "meta");
@@ -277,8 +278,9 @@ static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
     /* releases[] gives a free first-published / last-published pair */
     const char *latest_ver = NULL, *latest_at = NULL, *first_at = NULL;
     if (cJSON_IsArray(rels)) {
-      const cJSON *r0 = cJSON_GetArrayItem(rels, 0);
+      const cJSON *r0 = cJSON_GetArrayItem(rels, 0);  /* exhaustive-ok: newest/oldest display pick; releases_all below carries every release */
       int sz = cJSON_GetArraySize(rels);
+      cJSON_AddItemToObject(p, "releases_all", cJSON_Duplicate(rels, 1));
       const cJSON *rn = sz > 0 ? cJSON_GetArrayItem(rels, sz - 1) : NULL;
       if (cJSON_IsObject(r0)) { latest_ver = jo_sv(r0, "version");
                                 latest_at = jo_sv(r0, "inserted_at"); }
@@ -300,6 +302,20 @@ static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
                   "[\"osint-search\",\"HEXPM_PACKAGE_SEARCH\",\"packages\"]",
                   name, title, summary, link, jo_sv(d, "inserted_at"), NULL);
   }
+  /* House rule 2: hex.pm pages its search and this pivot asks for page=1 only,
+   * then stops emitting at 50 of that page. Neither bound was visible. */
+  /* records_available is `have` ONLY when the page came back short — that is
+   * the whole result set. A full page means later pages exist and hex.pm
+   * states no total, so the honest answer is -1, never the page size dressed
+   * up as a total (house rule 1). */
+  if (capped || have >= 100)
+    jo_truncation_notice(sink, "HEXPM_PACKAGE_SEARCH", q, n,
+                         have >= 100 ? -1L : (long)have,
+                         "the emit loop stops at 50 packages and the request "
+                         "pins page=1, so the rest of page 1 and every later "
+                         "page of the search result are discarded",
+                         "remove the `n >= 50` break and walk page=2,3,… in "
+                         "run_hexpm() in collectors/sources/soc_package_search.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[HEXPM_PACKAGE_SEARCH] emitted %d for %s\n", n, q);
   return 0;
@@ -331,10 +347,10 @@ static int run_aur(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) { fprintf(stderr, "[AUR_PACKAGE_SEARCH] no response for %s\n", q); return 0; }
   const cJSON *res = cJSON_GetObjectItem(doc, "results");
   const cJSON *cnt = cJSON_GetObjectItem(doc, "resultcount");
-  int n = 0;
+  int n = 0, capped = 0;
   const cJSON *d;
   if (cJSON_IsArray(res)) cJSON_ArrayForEach(d, res) {
-    if (n >= 60) break;
+    if (n >= 60) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     const char *name = jo_sv(d, "Name");
     if (!name) continue;
     const cJSON *fs = cJSON_GetObjectItem(d, "FirstSubmitted");
@@ -384,6 +400,15 @@ static int run_aur(const source_ctx *ctx, intel_sink *sink) {
                   "[\"osint-search\",\"AUR_PACKAGE_SEARCH\",\"packages\"]",
                   name, title, summary, link, first[0] ? first : NULL, NULL);
   }
+  /* House rule 2: AUR states the true size of the match set in `resultcount`
+   * and returns all of it in one response; the emit loop stopped at 60. */
+  if (capped)
+    jo_truncation_notice(sink, "AUR_PACKAGE_SEARCH", q, n,
+                         cJSON_IsNumber(cnt) ? (long)cnt->valuedouble : -1,
+                         "the emit loop stops at 60 packages, so the tail of "
+                         "the fetched results[] array was never emitted",
+                         "remove the `n >= 60` break in run_aur() in "
+                         "collectors/sources/soc_package_search.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[AUR_PACKAGE_SEARCH] emitted %d for %s\n", n, q);
   return 0;

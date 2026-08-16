@@ -492,4 +492,99 @@ static inline char *jo_get(const source_ctx *ctx, const char *url,
   return body;
 }
 
+/* ------------------------------------------------------- truncation notice */
+
+/* Say, IN THE DATA, that this run did not use everything it fetched.
+ *
+ * House rule 2 (docs/SOURCE_EXHAUSTIVENESS.md): a consumer that cannot take
+ * everything may bound its own view, but the bound has to be stated in-band —
+ * "if anything was left unused, it is reported as data, not as a log line
+ * nobody reads." For a while the only things that obeyed that were
+ * lib/hpengine.c, lib/pagewalk.c, _jp_osint.inc's anchor scanner and
+ * diet_records.c, each with its own hand-rolled copy of this record. Four
+ * copies is how the shape drifts, and it left ~66 hand-written collectors that
+ * genuinely truncate saying nothing at all.
+ *
+ * This is now the ONE builder: all four of those call it, so every
+ * `collector-truncation-notice` row in the tree has the same record_type, the
+ * same remote_key convention, the same tags and the same base properties.
+ *
+ *   used       records actually emitted.
+ *   available  what the upstream said exists, or -1 when it did not say —
+ *              NEVER guess here; a fabricated total is worse than an unknown.
+ *              -1 is published as `"records_available": null`, never as 0 and
+ *              never as a missing key: "unknown" has to be legible.
+ *   reason     what stopped the run, in the collector's own terms.
+ *   remedy     what a maintainer should change. A notice that only complains
+ *              is not actionable.
+ *   extra      OPTIONAL object of caller-specific facts merged into the
+ *              properties alongside the six above (the page-walkers compute
+ *              `pages_read` / `records_dropped` / `more_pages_pending` /
+ *              `declared_max_items`, and a notice that computed a number and
+ *              then dropped it would be the very thing this record exists to
+ *              report). Members that collide with a base key are ignored, so
+ *              no caller can redefine the stable half of the shape.
+ *              OWNERSHIP: `extra` is CONSUMED — freed here on every path,
+ *              including the early returns.
+ *
+ * The uid is derived per (source, query) so re-runs update one row rather than
+ * accumulating a pile of near-identical notices. */
+static inline void jo_truncation_notice_ex(intel_sink *sink, const char *source_id,
+                                           const char *query, long used,
+                                           long available, const char *reason,
+                                           const char *remedy, cJSON *extra) {
+  if (!sink || !source_id) { cJSON_Delete(extra); return; }
+  cJSON *p = cJSON_CreateObject();
+  if (!p) { cJSON_Delete(extra); return; }
+  cJSON_AddStringToObject(p, "source_id", source_id);
+  if (query) cJSON_AddStringToObject(p, "query", query);
+  cJSON_AddNumberToObject(p, "records_used", (double)used);
+  if (available >= 0) cJSON_AddNumberToObject(p, "records_available", (double)available);
+  else                cJSON_AddNullToObject(p, "records_available");
+  cJSON_AddStringToObject(p, "reason", reason ? reason : "a cap stopped the run");
+  cJSON_AddStringToObject(p, "remedy",
+                          remedy ? remedy : "see docs/SOURCE_EXHAUSTIVENESS.md");
+  if (cJSON_IsObject(extra))
+    for (const cJSON *m = extra->child; m; m = m->next) {
+      if (!m->string || cJSON_GetObjectItem(p, m->string)) continue;
+      cJSON *cp = cJSON_Duplicate(m, 1);
+      if (cp) cJSON_AddItemToObject(p, m->string, cp);
+    }
+  cJSON_Delete(extra);
+  char *pj = cJSON_PrintUnformatted(p);
+  cJSON_Delete(p);
+
+  char key[320], title[256];
+  snprintf(key, sizeof key, "%.150s|truncation:%.120s", source_id,
+           query ? query : "");
+  if (available >= 0)
+    snprintf(title, sizeof title, "%s used %ld of %ld available records",
+             source_id, used, available);
+  else
+    snprintf(title, sizeof title,
+             "%s used %ld records and stopped before the upstream ran out",
+             source_id, used);
+
+  intel_item note = {0};
+  note.remote_key      = key;
+  note.title           = title;
+  note.lang            = "en";
+  note.record_type     = "collector-truncation-notice";
+  note.properties_json = pj ? pj : "{}";
+  note.tags_json       = "[\"truncation-notice\"]";
+  sink->emit(sink, &note);
+  free(pj);
+}
+
+/* The 7-argument form every hand-written collector already calls: the same
+ * notice with no caller-specific extras. Kept as a thin wrapper so the ~70
+ * existing call sites are untouched. */
+static inline void jo_truncation_notice(intel_sink *sink, const char *source_id,
+                                        const char *query, int used,
+                                        long available, const char *reason,
+                                        const char *remedy) {
+  jo_truncation_notice_ex(sink, source_id, query, (long)used, available,
+                          reason, remedy, NULL);
+}
+
 #endif /* JO_CORE_H */

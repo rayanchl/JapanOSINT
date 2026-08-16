@@ -33,10 +33,11 @@ static int emit_cc(const source_ctx *ctx, intel_sink *sink, const char *cc) {
   const char *window = jo_sv(doc, "Window");
   const cJSON *data = cJSON_GetObjectItem(doc, "Data");
 
-  int n = 0;
+  const int have = cJSON_GetArraySize(data);
+  int n = 0, capped = 0;
   const cJSON *r;
   cJSON_ArrayForEach(r, data) {
-    if (n >= PER_CC) break;                /* bounded: top of the list */
+    if (n >= PER_CC) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     const char *as = jo_sv(r, "AS");
     double asnum = 0;
     char asbuf[24] = "";
@@ -81,6 +82,15 @@ static int emit_cc(const source_ctx *ctx, intel_sink *sink, const char *cc) {
     free(pj);
   }
   cJSON_Delete(doc);
+  /* House rule 2: the per-country response carries every AS APNIC ranks for
+   * that country; this run emitted only the head of that list. */
+  if (capped)
+    jo_truncation_notice(sink, "apnic-as-population", cc, n, (long)have,
+                         "PER_CC keeps only the top ASNs per country by user "
+                         "estimate; the rest of the fetched Data[] array was "
+                         "parsed but not emitted",
+                         "raise or drop PER_CC in collectors/sources/"
+                         "cyi_apnic_as_population.c");
   return n;
 }
 

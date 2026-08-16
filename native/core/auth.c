@@ -7,6 +7,8 @@
 #include <openssl/ec.h>
 #include <openssl/bn.h>
 #include <openssl/ecdsa.h>
+#include <openssl/param_build.h>   /* OSSL_PARAM_BLD — JWK -> EVP_PKEY */
+#include <openssl/core_names.h>    /* OSSL_PKEY_PARAM_* */
 #include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
@@ -138,9 +140,30 @@ static cJSON *find_jwk(cJSON *doc, const char *kid) {
   return NULL;
 }
 
+/* JWK -> EVP_PKEY, via OpenSSL 3's provider-backed EVP_PKEY_fromdata.
+ *
+ * The previous form built a low-level RSA or EC_KEY object by hand and fed it to
+ * EVP_PKEY_assign_*. Every one of those calls is deprecated in OpenSSL 3 (nine
+ * of the tree's build warnings came from this one function) and the hand-built
+ * path also dropped errors: RSA_new()'s result was never checked, and
+ * RSA_set0_key()'s return was ignored — when BN_bin2bn failed, that left a key
+ * with a NULL modulus and leaked the other BIGNUM. fromdata reports failure
+ * once, for both key types, and owns the cleanup. */
+static EVP_PKEY *pkey_fromdata(const char *type, OSSL_PARAM *params) {
+  EVP_PKEY *pk = NULL;
+  EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(NULL, type, NULL);
+  if (ctx && EVP_PKEY_fromdata_init(ctx) == 1) {
+    if (EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_PUBLIC_KEY, params) != 1)
+      pk = NULL;
+  }
+  EVP_PKEY_CTX_free(ctx);
+  return pk;
+}
+
 static EVP_PKEY *jwk_to_pkey(cJSON *jwk) {
   cJSON *kty = cJSON_GetObjectItem(jwk, "kty");
   if (!cJSON_IsString(kty)) return NULL;
+
   if (!strcmp(kty->valuestring, "RSA")) {
     cJSON *N = cJSON_GetObjectItem(jwk, "n"), *E = cJSON_GetObjectItem(jwk, "e");
     if (!cJSON_IsString(N) || !cJSON_IsString(E)) return NULL;
@@ -148,15 +171,24 @@ static EVP_PKEY *jwk_to_pkey(cJSON *jwk) {
     unsigned char *nb = b64url_decode(N->valuestring, strlen(N->valuestring), &nl);
     unsigned char *eb = b64url_decode(E->valuestring, strlen(E->valuestring), &el);
     EVP_PKEY *pk = NULL;
-    if (nb && eb) {
-      RSA *rsa = RSA_new();
-      RSA_set0_key(rsa, BN_bin2bn(nb, nl, NULL), BN_bin2bn(eb, el, NULL), NULL);
-      pk = EVP_PKEY_new();
-      if (EVP_PKEY_assign_RSA(pk, rsa) != 1) { RSA_free(rsa); EVP_PKEY_free(pk); pk = NULL; }
+    BIGNUM *n = NULL, *e = NULL;
+    OSSL_PARAM_BLD *bld = OSSL_PARAM_BLD_new();
+    if (nb && eb && bld) {
+      n = BN_bin2bn(nb, (int)nl, NULL);
+      e = BN_bin2bn(eb, (int)el, NULL);
+      if (n && e &&
+          OSSL_PARAM_BLD_push_BN(bld, OSSL_PKEY_PARAM_RSA_N, n) == 1 &&
+          OSSL_PARAM_BLD_push_BN(bld, OSSL_PKEY_PARAM_RSA_E, e) == 1) {
+        OSSL_PARAM *params = OSSL_PARAM_BLD_to_param(bld);
+        if (params) { pk = pkey_fromdata("RSA", params); OSSL_PARAM_free(params); }
+      }
     }
+    BN_free(n); BN_free(e);
+    OSSL_PARAM_BLD_free(bld);
     free(nb); free(eb);
     return pk;
   }
+
   if (!strcmp(kty->valuestring, "EC")) {
     cJSON *X = cJSON_GetObjectItem(jwk, "x"), *Y = cJSON_GetObjectItem(jwk, "y");
     if (!cJSON_IsString(X) || !cJSON_IsString(Y)) return NULL;
@@ -164,16 +196,27 @@ static EVP_PKEY *jwk_to_pkey(cJSON *jwk) {
     unsigned char *xb = b64url_decode(X->valuestring, strlen(X->valuestring), &xl);
     unsigned char *yb = b64url_decode(Y->valuestring, strlen(Y->valuestring), &yl);
     EVP_PKEY *pk = NULL;
-    if (xb && yb) {
-      EC_KEY *ec = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1);
-      BIGNUM *bx = BN_bin2bn(xb, xl, NULL), *by = BN_bin2bn(yb, yl, NULL);
-      if (ec && bx && by &&
-          EC_KEY_set_public_key_affine_coordinates(ec, bx, by) == 1) {
-        pk = EVP_PKEY_new();
-        if (EVP_PKEY_assign_EC_KEY(pk, ec) != 1) { EC_KEY_free(ec); EVP_PKEY_free(pk); pk = NULL; }
-      } else if (ec) EC_KEY_free(ec);
-      BN_free(bx); BN_free(by);
+    OSSL_PARAM_BLD *bld = OSSL_PARAM_BLD_new();
+    /* fromdata takes the public key as an uncompressed SEC1 point,
+     * 0x04 || X || Y, with each coordinate left-padded to the P-256 field
+     * width. A JWK MAY ship a coordinate with leading zero bytes stripped, so
+     * pad rather than assume 32 — an unpadded 31-byte X would otherwise shift
+     * Y by one byte and silently produce a key that verifies nothing. */
+    if (xb && yb && bld && xl <= 32 && yl <= 32) {
+      unsigned char pt[65];
+      memset(pt, 0, sizeof pt);
+      pt[0] = 0x04;
+      memcpy(pt + 1  + (32 - xl), xb, xl);
+      memcpy(pt + 33 + (32 - yl), yb, yl);
+      if (OSSL_PARAM_BLD_push_utf8_string(bld, OSSL_PKEY_PARAM_GROUP_NAME,
+                                          "prime256v1", 0) == 1 &&
+          OSSL_PARAM_BLD_push_octet_string(bld, OSSL_PKEY_PARAM_PUB_KEY,
+                                           pt, sizeof pt) == 1) {
+        OSSL_PARAM *params = OSSL_PARAM_BLD_to_param(bld);
+        if (params) { pk = pkey_fromdata("EC", params); OSSL_PARAM_free(params); }
+      }
     }
+    OSSL_PARAM_BLD_free(bld);
     free(xb); free(yb);
     return pk;
   }
@@ -245,7 +288,14 @@ static int jwt_header(const char *tok, const char *d1, char *alg, size_t an,
                                               * lands mid-window still recovers
                                               * within one refresh cycle */
 static struct { char kid[256]; time_t at; } g_kidneg[KIDNEG_SLOTS];
-static int g_kidneg_next;                    /* round-robin victim */
+/* UNSIGNED, and it matters. This counter is incremented once per request
+ * carrying an unknown kid — i.e. by anyone, unauthenticated, as fast as
+ * ratelimit.c lets them. As a signed int, reaching INT_MAX is overflow, which
+ * is undefined behaviour rather than a wrap, and the modulus of a negative
+ * value in C is negative: g_kidneg[-something] is a write outside the array,
+ * off the back of an attacker-driven counter. Unsigned wraps by definition and
+ * the modulus stays in [0, KIDNEG_SLOTS). */
+static unsigned g_kidneg_next;               /* round-robin victim */
 
 /* Caller holds g_jwks_lock. */
 static int kid_known_bad(const char *kid, time_t now) {
@@ -259,7 +309,7 @@ static void kid_mark_bad(const char *kid, time_t now) {
     if (g_kidneg[i].kid[0] && strcmp(g_kidneg[i].kid, kid) == 0) {
       g_kidneg[i].at = now; return;
     }
-  int v = g_kidneg_next++ % KIDNEG_SLOTS;
+  unsigned v = g_kidneg_next++ % KIDNEG_SLOTS;
   snprintf(g_kidneg[v].kid, sizeof g_kidneg[v].kid, "%s", kid);
   g_kidneg[v].at = now;
 }

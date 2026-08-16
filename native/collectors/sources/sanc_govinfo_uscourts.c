@@ -11,7 +11,9 @@
  *            usable and is what the endpoint was verified with. Per R6 we read GOVINFO_API_KEY
  *            with getenv and fall back to DEMO_KEY rather than hard-failing — DEMO_KEY is
  *            throttled to roughly 30 requests/hour/IP, which is why the interval is 12 h and
- *            each run makes exactly one request.
+ *            a run makes at most JO_PAGE_MAX (20) requests: lib/pagewalk.c advances the
+ *            offset= the URL already carries, and a page the throttle refuses ends the walk
+ *            with a collector-truncation-notice instead of a silent stop.
  * Emits    : case caption, GovInfo packageId, the court code and docket number decoded from
  *            that id, date issued, last modified and the package summary link.
  * Geometry : NONE (R2).
@@ -24,28 +26,36 @@
  *            appellate courts without scraping PACER.
  */
 #include "sanc_common.inc"
+#include "../../lib/pagewalk.h"   /* pw_walk() — house rule 2 paging */
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  /* R6: a real key raises the ceiling; its absence is not an error. */
-  const char *key = jo_env("GOVINFO_API_KEY");
-  if (!key) {
-    key = "DEMO_KEY";
-    fprintf(stderr, "[govinfo-uscourts] GOVINFO_API_KEY unset — using the documented "
-                    "shared DEMO_KEY (throttled ~30 req/hour/IP)\n");
-  }
-  char since[32];
-  sanc_utc_days_ago(3, since, sizeof since);
+/* sanc_http_json's Accept header and 45 s timeout, kept for every page. */
+static cJSON *gi_fetch(const source_ctx *ctx, const char *url, void *ud) {
+  (void)ud;
+  return sanc_http_json(ctx, url, NULL, 45000, "govinfo-uscourts");
+}
 
-  char url[512];
-  snprintf(url, sizeof url,
-           "https://api.govinfo.gov/collections/USCOURTS/%s?offset=0&pageSize=100&api_key=%s",
-           since, key);
-
-  cJSON *doc = sanc_http_json(ctx, url, NULL, 45000, "govinfo-uscourts");
-  if (!doc) return -1;
-
+/* One page of packages[]. Returns #emitted and reports #records the page
+ * CONTAINED through `seen`; see lib/pagewalk.h for why the two differ. */
+static int gi_emit_page(const source_ctx *ctx, intel_sink *sink, const char *id,
+                        cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)id;
+  const char *since = (const char *)ud;
   cJSON *pkgs = cJSON_GetObjectItem(doc, "packages");
   if (!cJSON_IsArray(pkgs)) pkgs = cJSON_GetObjectItem(doc, "results");
+  if (!cJSON_IsArray(pkgs)) return 0;
+  *seen = cJSON_GetArraySize(pkgs);
+
+  /* govinfo states the size of the whole collection window in `count`, a name
+   * lib/pagewalk.c deliberately does not read (half the APIs here use `count`
+   * for "records in THIS page"). It is unambiguous here, so republish the
+   * upstream's OWN number under a name pagewalk does read, and let the
+   * truncation notice carry a real records_available. Copied, never
+   * computed (house rule 1). */
+  {
+    const cJSON *cv = cJSON_GetObjectItem(doc, "count");
+    if (cJSON_IsNumber(cv) && !cJSON_GetObjectItem(doc, "totalCount"))
+      cJSON_AddNumberToObject(doc, "totalCount", cv->valuedouble);
+  }
 
   int n = 0;
   const cJSON *p;
@@ -117,7 +127,38 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(bj);
     free(pj);
   }
-  cJSON_Delete(doc);
+  return n;
+}
+
+/* House rule 2: the URL already carries the author's own offset=0&pageSize=100,
+ * so pw_walk advances offset=100,200,… for as long as a page comes back full
+ * and discloses whatever is left at the JO_PAGE_MAX ceiling. The page size is
+ * unchanged, and no parameter is invented.
+ *
+ * Rate limit: with the shared DEMO_KEY this is up to JO_PAGE_MAX (20) requests
+ * per run at a 12-hour cadence — inside api.data.gov's documented 30/hour and
+ * 50/day allowance. If a page is nonetheless throttled, the fetch returns NULL,
+ * the walk stops there and says so as a collector-truncation-notice rather than
+ * pretending the collection ended. */
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  /* R6: a real key raises the ceiling; its absence is not an error. */
+  const char *key = jo_env("GOVINFO_API_KEY");
+  if (!key) {
+    key = "DEMO_KEY";
+    fprintf(stderr, "[govinfo-uscourts] GOVINFO_API_KEY unset — using the documented "
+                    "shared DEMO_KEY (throttled ~30 req/hour/IP)\n");
+  }
+  char since[32];
+  sanc_utc_days_ago(3, since, sizeof since);
+
+  char url[512];
+  snprintf(url, sizeof url,
+           "https://api.govinfo.gov/collections/USCOURTS/%s?offset=0&pageSize=100&api_key=%s",  /* exhaustive-ok: offset=0 is where the pw_walk() below STARTS — it advances offset=100,200,… and discloses the remainder */
+           since, key);
+
+  int n = pw_walk(ctx, sink, "govinfo-uscourts", url, gi_fetch, gi_emit_page,
+                  since);
+  if (n < 0) return -1;
   fprintf(stderr, "[govinfo-uscourts] emitted %d (since %s)\n", n, since);
   return 0;
 }

@@ -9,8 +9,52 @@
 #include "../../lib/geojson.h"
 #include "../../lib/jsonlist.h"
 #include "../../lib/csv.h"
+#include "../../lib/pagewalk.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+/* Paging and disclosure for the three list macros below.
+ *
+ * These macros used to do ONE fetch of ONE literal URL and stop. 2,727 of the
+ * URLs they are instantiated with carry a hardcoded page-size parameter
+ * (`limit=`, `rows=`, `per_page=`, `$top=`, `resultRecordCount=`), so those
+ * sources returned page 1 and nothing else, forever, with no record of what
+ * they left behind — the single largest house-rule-2 violation in the tree, and
+ * one `make audit-sources` cannot see because it lives in string literals.
+ *
+ * lib/pagewalk.c continues the walk ONLY where the upstream said how (a next
+ * link in the response, or an offset parameter the author already wrote), and
+ * discloses whatever it cannot legitimately reach as a
+ * `collector-truncation-notice` record. It never invents a query parameter.
+ * See lib/pagewalk.h. */
+typedef struct { const char *path, *cat, *lang, *tags; } vm_ctx;
+
+/* Both emitters report records SEEN through `seen` as well as records emitted.
+ * pagewalk drives its "did this page come back full" test off the former; see
+ * lib/pagewalk.h for why the difference is load-bearing. Passing a non-NULL
+ * `seen` also hands the shortfall disclosure to pagewalk, which states it once
+ * per walk instead of once per page. */
+static inline int vm_emit_json(const source_ctx *c, intel_sink *s, const char *id,
+                        cJSON *doc, void *ud, int *seen) {
+  const vm_ctx *v = (const vm_ctx *)ud;
+  (void)c;
+  return jsonlist_emit_ex(s, id, doc, v->path, v->cat, v->lang, v->tags, seen);
+}
+static inline int vm_emit_geo(const source_ctx *c, intel_sink *s, const char *id,
+                       cJSON *doc, void *ud, int *seen) {
+  (void)c; (void)ud;
+  return geojson_emit_doc_ex(s, id, doc, seen);
+}
+/* CSV shares jsonlist's emitter: csv_parse yields header-keyed objects, which
+ * is exactly jsonlist_emit's input shape. Only the FETCH differs. */
+static inline cJSON *vm_fetch_csv(const source_ctx *c, const char *url, void *ud) {
+  (void)ud;
+  char *t = feed_get_text(c->http, url, 25000);
+  if (!t) return NULL;
+  cJSON *d = csv_parse(t, 1);
+  free(t);
+  return d;
+}
 
 /* RSS/Atom. rss_collect returns #emitted or -1; an honest empty is 0 (R3). */
 #define VRSS(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)   \
@@ -27,11 +71,8 @@
  * else — geojson_emit_doc never invents a position (R2). */
 #define VGEO(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)   \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
-    cJSON *d = feed_get_json(c->http, URL, 25000);                            \
-    if (!d) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }        \
-    int n = geojson_emit_doc(s, ID, d);                                       \
-    cJSON_Delete(d);                                                          \
-    fprintf(stderr, "[%s] emitted %d\n", ID, n);                              \
+    int n = pw_walk(c, s, ID, URL, pw_fetch_json, vm_emit_geo, NULL);         \
+    if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
     return 0; }                                                               \
   static const source_def SYM = {                                            \
     .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
@@ -44,11 +85,9 @@
  * to take the longest array of objects in the document. */
 #define VJSON(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, PATH, LANG, TAGS, IVAL, DESC) \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
-    cJSON *d = feed_get_json(c->http, URL, 25000);                            \
-    if (!d) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }        \
-    int n = jsonlist_emit(s, ID, d, PATH, CAT, LANG, TAGS);                   \
-    cJSON_Delete(d);                                                          \
-    fprintf(stderr, "[%s] emitted %d\n", ID, n);                              \
+    vm_ctx v = { PATH, CAT, LANG, TAGS };                                     \
+    int n = pw_walk(c, s, ID, URL, pw_fetch_json, vm_emit_json, &v);          \
+    if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
     return 0; }                                                               \
   static const source_def SYM = {                                            \
     .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
@@ -63,13 +102,9 @@
  * emits nothing rather than rows labelled by their first cell. */
 #define VCSV(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)   \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
-    char *t = feed_get_text(c->http, URL, 25000);                             \
-    if (!t) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }        \
-    cJSON *d = csv_parse(t, 1);                                               \
-    free(t);                                                                  \
-    int n = jsonlist_emit(s, ID, d, "", CAT, LANG, TAGS);                     \
-    cJSON_Delete(d);                                                          \
-    fprintf(stderr, "[%s] emitted %d\n", ID, n);                              \
+    vm_ctx v = { "", CAT, LANG, TAGS };                                       \
+    int n = pw_walk(c, s, ID, URL, vm_fetch_csv, vm_emit_json, &v);           \
+    if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
     return 0; }                                                               \
   static const source_def SYM = {                                            \
     .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \

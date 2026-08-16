@@ -99,7 +99,7 @@ static int emit_eth_tx(intel_sink *sink, const char *addr, cJSON *tx) {
   cJSON_AddStringToObject(props, "service", "WHALE_ALERT");
   cJSON_AddStringToObject(props, "record", "transaction");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 80);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[200];
@@ -165,7 +165,7 @@ static int emit_wa_tx(intel_sink *sink, cJSON *tx) {
   cJSON_AddStringToObject(props, "record", "transaction");
   cJSON_AddStringToObject(props, "feed", "whale_alert");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 80);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[200];
@@ -219,7 +219,7 @@ static int emit_defi(intel_sink *sink, cJSON *pr) {
   cJSON_AddStringToObject(props, "service", "WHALE_ALERT");
   cJSON_AddStringToObject(props, "record", "defi_protocol");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 80);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char slug[96], rk[128], title[200];
@@ -279,7 +279,7 @@ static int emit_addr_balance(intel_sink *sink, http_client *http, const char *ad
   cJSON_AddStringToObject(props, "record", "address");
   cJSON_AddStringToObject(props, "entity", addr);
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 80);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[256];
@@ -358,7 +358,7 @@ static int emit_btc_stats(intel_sink *sink, http_client *http) {
   cJSON_AddStringToObject(props, "service", "WHALE_ALERT");
   cJSON_AddStringToObject(props, "record", "btc_network");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 80);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   intel_item it = {0};

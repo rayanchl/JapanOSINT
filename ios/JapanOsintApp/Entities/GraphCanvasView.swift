@@ -419,8 +419,11 @@ struct GraphCanvasView: View {
             if labelsVisible, let label = GraphCanvasModel.liftLabel(for: edge) {
                 let mid = CGPoint(x: (a.x + b.x) / 2, y: (a.y + b.y) / 2)
                 context.draw(
+                    // Was 8 pt — under the 11 pt floor. `Typography` resolves to
+                    // `.caption2`, which `Canvas` scales from the environment
+                    // like any other text.
                     Text(label)
-                        .font(.system(size: 8, weight: .semibold, design: .monospaced))
+                        .font(Typography.display(11, weight: .semibold))
                         .foregroundColor(theme.warning),
                     at: CGPoint(x: mid.x, y: mid.y - 7)
                 )
@@ -462,8 +465,9 @@ struct GraphCanvasView: View {
             if labelsVisible || node.id == model.rootId || model.selected == node.id {
                 let text = node.label.isEmpty ? node.value : node.label
                 context.draw(
+                    // Was 9 pt — under the 11 pt floor.
                     Text(String(text.prefix(22)))
-                        .font(.system(size: 9))
+                        .font(Typography.body(11))
                         .foregroundColor(theme.text),
                     at: CGPoint(x: center.x, y: center.y - radius - 8)
                 )

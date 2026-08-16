@@ -97,11 +97,38 @@ const char *html_block(const char *from, const char *tag,
   return gt ? gt + 1 : end;
 }
 
-int html_attr(const char *s, const char *attr, char *out, size_t n) {
-  out[0] = 0;
-  if (!s) return 0;
+/* An attribute name only ever STARTS at the beginning of the buffer, after
+ * whitespace, or immediately after a tag's '<'. Without this left boundary the
+ * scan matched the name as a bare substring, so `src` was satisfied by the
+ * "src" inside `data-src=` and `id` by the one inside `data-id=`. On the
+ * lazy-loading markup the camera scrapers meet — `<img data-src="spinner.gif"
+ * src="snapshot.jpg">` — that stored the placeholder and the real snapshot URL
+ * was never seen. (The RIGHT boundary is already implied: after the name we
+ * require optional spaces then '=', so `srcset=` cannot satisfy `src`.) */
+static int attr_start(const char *s, const char *p) {
+  if (p == s) return 1;
+  char c = p[-1];
+  return c == '<' || c == ' ' || c == '\t' || c == '\n' || c == '\r' ||
+         c == '\f' || c == '\v';
+}
+
+/* One scan of the buffer. `allow_unquoted` = 0 considers only quoted values.
+ *
+ * html_attr runs this twice, quoted-first, because an unquoted match can be a
+ * fragment of ANOTHER attribute's quoted text and this scanner is deliberately
+ * not quote-aware (it is handed text-bearing XML blocks, where an apostrophe in
+ * prose would desync any quote tracking). Given
+ *   <Weakness Description="compare Name=Other here" Name="Real Name">
+ * a single pass returned `Other` — the bad-character filter below does not
+ * catch it, because the filter only fires when the closing quote is GLUED to
+ * the value (`href=/x"`); put a space before it and the fragment reads as a
+ * clean unquoted value. Preferring any quoted match resolves it without
+ * needing to know where the quotes are. */
+static int html_attr_scan(const char *s, const char *attr, char *out, size_t n,
+                          int allow_unquoted) {
   size_t al = strlen(attr);
-  for (const char *p = s; (p = strchr(p, *attr ? attr[0] : '=')) != NULL; p++) {
+  for (const char *p = s; *p; p++) {
+    if (!attr_start(s, p)) continue;
     if (strncasecmp(p, attr, al) != 0) continue;
     const char *e = p + al;
     while (*e == ' ' || *e == '\t') e++;
@@ -109,10 +136,33 @@ int html_attr(const char *s, const char *attr, char *out, size_t n) {
     e++;
     while (*e == ' ' || *e == '\t') e++;
     char q = *e;
-    if (q != '"' && q != '\'') continue;
-    const char *v = e + 1;
-    const char *ve = strchr(v, q);
-    if (!ve) return 0;
+    const char *v, *ve;
+    if (q == '"' || q == '\'') {
+      v = e + 1;
+      ve = strchr(v, q);
+      if (!ve) return 0;                     /* unterminated quote → give up */
+    } else if (!allow_unquoted) {
+      continue;
+    } else {
+      /* Unquoted value (`src=snapshot.jpg`), which HTML allows and municipal
+       * pages do emit: runs to whitespace or the tag's '>'. A spec-legal
+       * unquoted value contains none of ` " ' = < > ` — enforcing that is what
+       * keeps a stray `href=/x` sitting INSIDE another attribute's quoted
+       * value (`title="see href=/x"`) from beating the tag's real href, since
+       * this scanner is deliberately not quote-aware (it is also handed
+       * text-bearing XML blocks, where an apostrophe in prose would desync
+       * any quote tracking). */
+      v = e;
+      ve = v;
+      while (*ve && *ve != '>' && *ve != ' ' && *ve != '\t' && *ve != '\n' &&
+             *ve != '\r' && *ve != '\f' && *ve != '\v') ve++;
+      if (ve == v) continue;                        /* `attr=` with no value */
+      int bad = 0;
+      for (const char *c = v; c < ve; c++)
+        if (*c == '"' || *c == '\'' || *c == '=' || *c == '<' || *c == '`')
+          bad = 1;
+      if (bad) continue;
+    }
     size_t len = (size_t)(ve - v);
     if (len >= n) len = n - 1;
     memcpy(out, v, len);
@@ -120,6 +170,15 @@ int html_attr(const char *s, const char *attr, char *out, size_t n) {
     return 1;
   }
   return 0;
+}
+
+int html_attr(const char *s, const char *attr, char *out, size_t n) {
+  if (!out || n == 0) return 0;
+  out[0] = 0;
+  if (!s || !attr || !*attr) return 0;
+  if (html_attr_scan(s, attr, out, n, 0)) return 1;   /* quoted wins outright */
+  out[0] = 0;
+  return html_attr_scan(s, attr, out, n, 1);
 }
 
 /* ── anchors: the single implementation both anchor consumers share ─────── */

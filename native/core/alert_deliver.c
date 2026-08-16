@@ -230,9 +230,19 @@ static void b64(const unsigned char *in, size_t n, char *out, size_t out_sz) {
 static void encode_subject(const char *name, char *out, size_t out_sz) {
   char raw[256];
   snprintf(raw, sizeof raw, "[JapanOSINT] %s", sv(name, "alert"));
+  /* "> 0x7F" was the wrong test, and the gap was CR and LF. Those are ASCII,
+   * so a rule named "Alert\r\nBcc: attacker@example.com" took the plain path
+   * and was copied verbatim into `Subject: %s\r\n` — arbitrary SMTP header
+   * injection through the deployment's own authenticated MTA, reachable by any
+   * analyst who can create an email alert rule (alertsapi.c only TRIMS
+   * surrounding whitespace, so an embedded CRLF survives validation). A bare
+   * \r\n\r\n would end the header block and replace the body outright.
+   *
+   * Every control byte now forces the RFC 2047 encoded-word, which is
+   * base64 and therefore cannot carry a line break out of the value. */
   int ascii = 1;
   for (const char *p = raw; *p; p++)
-    if ((unsigned char)*p > 0x7F) { ascii = 0; break; }
+    if ((unsigned char)*p > 0x7F || (unsigned char)*p < 0x20) { ascii = 0; break; }
   if (ascii) { snprintf(out, out_sz, "%s", raw); return; }
   char enc[512];
   b64((const unsigned char *)raw, strlen(raw), enc, sizeof enc);
@@ -415,14 +425,30 @@ static void refresh_event_channels(db_handle *db, const char *event_id) {
         "ORDER BY channel_idx", -1, &s, NULL) != SQLITE_OK) return;
   sqlite3_bind_text(s, 1, event_id, -1, SQLITE_TRANSIENT);
   cJSON *arr = cJSON_CreateArray();
-  while (sqlite3_step(s) == SQLITE_ROW) {
+  int n = 0, scan_rc;
+  while ((scan_rc = sqlite3_step(s)) == SQLITE_ROW) {
     const char *ty = sv(ctext(s, 0), "?"), *st = sv(ctext(s, 1), "?");
     char lbl[64];
     if (strcmp(st, "ok") == 0) snprintf(lbl, sizeof lbl, "%s", ty);
     else                       snprintf(lbl, sizeof lbl, "%s:%s", ty, st);
     cJSON_AddItemToArray(arr, cJSON_CreateString(lbl));
+    n++;
   }
   sqlite3_finalize(s);
+  /* `while (step() == ROW)` cannot tell DONE from IOERR/CORRUPT/BUSY/INTERRUPT.
+   * This is a full RECOMPUTE that overwrites delivered_channels_json, so a
+   * short read here does not lose a pending write — it DURABLY replaces the
+   * correct list with a shorter one, and nothing ever recomputes it again
+   * unless another delivery for the same event happens to land. The event then
+   * reads, forever, as if channels that did fire never existed. A partial
+   * ledger read is not a summary; drop it and leave the stored value alone. */
+  if (scan_rc != SQLITE_DONE) {
+    fprintf(stderr, "[alert-deliver] ledger read for event %s interrupted "
+                    "after %d row(s): %s — leaving delivered_channels_json "
+                    "unchanged\n", event_id, n, sqlite3_errmsg(db->h));
+    cJSON_Delete(arr);
+    return;
+  }
   char *js = cJSON_PrintUnformatted(arr);
   cJSON_Delete(arr);
   if (!js) return;
@@ -431,8 +457,17 @@ static void refresh_event_channels(db_handle *db, const char *event_id) {
         -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_text(s, 1, js, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 2, event_id, -1, SQLITE_TRANSIENT);
-    sqlite3_step(s);
+    /* The summary silently not landing is the same defect one step later: the
+     * event keeps a stale list and no one is told. Nothing to retry against
+     * here, so at least make it visible. */
+    if (sqlite3_step(s) != SQLITE_DONE)
+      fprintf(stderr, "[alert-deliver] delivered_channels_json update failed "
+                      "for event %s: %s\n", event_id, sqlite3_errmsg(db->h));
     sqlite3_finalize(s);
+  } else {
+    fprintf(stderr, "[alert-deliver] delivered_channels_json update prepare "
+                    "failed for event %s: %s\n", event_id,
+            sqlite3_errmsg(db->h));
   }
   free(js);
 }

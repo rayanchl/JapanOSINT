@@ -108,6 +108,19 @@ int hostgate_addr_check(const char *ip_text, int strict);
  * seen, and hardcoding the strength there silently disabled the env switch. */
 int hostgate_addr_check_floor(const char *ip_text);
 
+/* Resolve a BARE HOSTNAME (no URL, no scheme) and judge every address it
+ * answers with, plus the metadata hostnames. Returns HG_URL_OK or an HG_URL_*
+ * code, same as the url_check family.
+ *
+ * This exists for the collectors that open RAW SOCKETS rather than going
+ * through core/httpclient.c — port_scanner, ssl_analyzer and email_validator
+ * call socket()/connect() directly, so none of the protection inside
+ * http_request() reaches them. They take ctx->entity, which on the
+ * /api/search pivot path is caller-supplied text, so `strict` is the right
+ * strength there: a tenant has no legitimate reason to aim our socket layer at
+ * our own network. Call it AFTER resolution is needed and BEFORE connect(). */
+int hostgate_host_check(const char *host, int strict);
+
 /* Textual (lowercased, port/userinfo/brackets stripped) host of `url` into
  * out[], including loopback — url_host()'s politeness exemption is NOT applied.
  * Returns 1 on success, 0 if there is no parseable host. */

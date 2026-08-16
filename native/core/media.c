@@ -826,37 +826,66 @@ static char *build_cmd(const char *tmpl, const char *path) {
   return out;
 }
 
-/* popen + bounded read. Returns NULL on spawn failure, on a non-zero exit
- * status, or on OOM — a tool that failed is indistinguishable from a tool that
- * is absent, and both mean "store NULL", so there is nothing to distinguish. */
+/* Bounded, DEADLINED subprocess capture. Returns NULL on spawn failure, on a
+ * non-zero exit status, on the deadline, on more than `maxb` bytes, or on OOM
+ * — a tool that failed is indistinguishable from a tool that is absent, and
+ * both mean "store NULL", so there is nothing to distinguish.
+ *
+ * THE DEADLINE IS THE POINT. This was a bare popen()/pclose() pair with no
+ * clock at all. media_phash_file()'s ffmpeg rung was given a hard timeout (see
+ * the note there — "a wedged decoder blocked a scheduler thread forever") and
+ * this path was not, so every OCR of every fetched image ran a tesseract that
+ * a crafted input could wedge, holding a media_analyze_batch() worker for as
+ * long as the remote side liked. That is a third party choosing how long one
+ * of our threads lives.
+ *
+ * ffmpeg_run() is the mechanism instead of a second one written here: it is
+ * the codebase's one process-spawning primitive (fork/execvp, poll to a
+ * deadline, SIGKILL, waitpid on EVERY path so nothing is left a zombie, and a
+ * byte cap), and core/ffmpeg.h names this exact substitution as its wiring
+ * note 3(a). Nothing else about this seam changes: the argv is
+ * ["/bin/sh","-c",cmd] because the templates ARE shell (they carry
+ * `2>/dev/null` and quoting) and MEDIA_PHASH_CMD / MEDIA_OCR_CMD are
+ * documented as shell commands, so the interpolation is the same one path_ok()
+ * has always guarded.
+ *
+ * What the shell costs, stated rather than hidden: SIGKILL lands on the SHELL.
+ * `sh -c` of a single simple command execs in place on dash and bash, so the
+ * tool itself takes the signal for both built-in templates; a compound
+ * override could leave a grandchild, which then dies on EPIPE the moment it
+ * writes into the closed pipe. Either way THIS thread is bounded, which is the
+ * property that was missing.
+ *
+ * Two behaviour changes worth knowing. Exit 0 with no output is now NULL
+ * rather than an empty buffer — every caller already failed on the empty
+ * buffer. And exceeding `maxb` is now a refusal rather than a silent
+ * truncation, so callers pass a budget generous enough that hitting it means
+ * "this is not the kind of output the tool was asked for".
+ *
+ * JO_NO_FFMPEG (ffmpeg_run's process-wide "spawn nothing" switch) therefore
+ * also silences OCR and the legacy pHash tool. That degrades exactly like an
+ * absent tool — NULL, EXIF only — and MEDIA_NO_TOOLS remains this module's own
+ * knob. */
 static char *run_capture(const char *cmd, size_t maxb, size_t *outlen) {
-  FILE *f = popen(cmd, "r");
-  if (!f) return NULL;
-  size_t cap = 8192, len = 0;
-  char *buf = malloc(cap);
-  if (!buf) { pclose(f); return NULL; }
-  for (;;) {
-    if (len + 4097 > cap) {
-      if (cap >= maxb + 8192) break;
-      size_t nc = cap * 2;
-      char *q = realloc(buf, nc);
-      if (!q) { free(buf); pclose(f); return NULL; }
-      buf = q; cap = nc;
-    }
-    size_t got = fread(buf + len, 1, 4096, f);
-    len += got;
-    if (got < 4096) break;
-    if (len >= maxb) break;
+  int tmo = env_int("MEDIA_TOOL_TIMEOUT_MS", 20000);
+  if (tmo < 1000) tmo = 1000;
+  const char *const argv[] = { "/bin/sh", "-c", cmd, NULL };
+  unsigned char *out = NULL;
+  size_t n = 0;
+  char err[FFMPEG_ERRBUF_MAX];
+  int rc = ffmpeg_run(argv, tmo, maxb, &out, &n, err, sizeof err);
+  if (rc != FFMPEG_OK) {
+    /* One line for the two failures an operator can act on. A non-zero exit is
+     * routine (the tool refused this file) and stays quiet. */
+    if (rc == FFMPEG_ERR_TIMEOUT)
+      fprintf(stderr, "[media] tool killed at %dms deadline: %s\n", tmo, cmd);
+    else if (rc == FFMPEG_ERR_TOO_LARGE)
+      fprintf(stderr, "[media] tool output exceeded %zu bytes: %s\n", maxb, cmd);
+    free(out);
+    return NULL;
   }
-  /* Drain whatever is left so the child is never blocked writing into a full
-   * pipe while we sit in pclose() waiting for it to exit. */
-  char sink[4096];
-  while (fread(sink, 1, sizeof sink, f) > 0) { /* discard */ }
-  int rc = pclose(f);
-  buf[len] = '\0';
-  if (rc != 0) { free(buf); return NULL; }
-  if (outlen) *outlen = len;
-  return buf;
+  if (outlen) *outlen = n;
+  return (char *)out;
 }
 
 /* ── pHash: ask a decoder for 1024 grayscale bytes, hash them ourselves ──── */
@@ -916,8 +945,10 @@ int media_phash_file(const char *path, uint64_t *out) {
    * for free — which is what makes camera scene-change work once ffmpeg is
    * present.
    *
-   * Unlike the legacy path below this one has a HARD TIMEOUT. The old
-   * popen() had none: a wedged decoder blocked a scheduler thread forever. */
+   * Both this and the legacy path below are now deadlined. The legacy one was
+   * a bare popen() with no clock — a wedged decoder blocked a scheduler thread
+   * forever — and run_capture() has since been moved onto the same
+   * ffmpeg_run() mechanism this rung uses. */
   if (ffmpeg_available()) {
     unsigned char px[1024];
     char err[192] = {0};
@@ -1077,9 +1108,13 @@ int media_ocr_file(const char *path, char **out_text, double *out_conf) {
 
   char *cmd = build_cmd(tmpl, path);
   if (!cmd) return 0;
-  /* TSV is far bulkier than the text it carries, so the raw capture budget is
-   * larger than the storage budget; the stored text is clipped below. */
-  char *raw = run_capture(cmd, (size_t)maxb * 8 + 4096, NULL);
+  /* TSV is far bulkier than the text it carries (one row per word, with six
+   * geometry columns and a confidence), so the raw capture budget is much
+   * larger than the storage budget; the stored text is clipped below.
+   * Deliberately generous: run_capture()'s cap is now a hard refusal rather
+   * than the old silent truncation, so it has to sit where hitting it means
+   * "this is not a page of text" and not "this is a dense page". */
+  char *raw = run_capture(cmd, (size_t)maxb * 32 + 65536, NULL);
   free(cmd);
   if (!raw) return 0;
 
@@ -1554,32 +1589,52 @@ static char *join_en(const char *title, const char *summary, const char *body) {
 
 /* Build the full keywords payload for one item and, separately, the segmented
  * OCR half so the caller can test whether the index already contains it.
- * Returns 0 when the item has no OCR text at all (nothing to do). */
+ * Returns 0 when the item has no OCR text at all (nothing to do) AND when the
+ * scan that would have produced it did not complete — see below. */
 static int media_fts_compose(sqlite3 *h, const char *uid, char **out_full,
                              char **out_ocr) {
   *out_full = NULL; *out_ocr = NULL;
 
   char *ocr = NULL;
   size_t olen = 0;
+  /* A PARTIAL concatenation must never leave this function. What media_fts_put()
+   * does with the result is a durable UPDATE of intel_items_fts.keywords, so a
+   * scan cut short by a realloc failure or by a step error (SQLITE_BUSY,
+   * SQLITE_CORRUPT, a schema change under the cursor) would overwrite a row
+   * that already held the COMPLETE OCR with a prefix of it — and its
+   * `strstr(cur, ocr)` idempotence check then finds the short string inside the
+   * short row and calls it settled, so nothing ever puts the missing assets
+   * back. The keywords column is the only place that text is searchable; a
+   * failed read must cost this pass, not the record. */
+  int complete = 0;
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(h,
       "SELECT ocr_text FROM media_assets"
       " WHERE item_uid=?1 AND ocr_text IS NOT NULL AND ocr_text<>''"
       " ORDER BY rowid", -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_text(s, 1, uid, -1, SQLITE_TRANSIENT);
-    while (sqlite3_step(s) == SQLITE_ROW) {
+    int rc;
+    while ((rc = sqlite3_step(s)) == SQLITE_ROW) {
       const char *t = ctext(s, 0);
       if (!t || !*t) continue;
       size_t tl = strlen(t);
       char *q = realloc(ocr, olen + tl + 2);
-      if (!q) break;
+      if (!q) break;                      /* rc stays SQLITE_ROW → incomplete */
       ocr = q;
       if (olen) ocr[olen++] = ' ';
       memcpy(ocr + olen, t, tl);
       olen += tl;
       ocr[olen] = '\0';
     }
+    complete = (rc == SQLITE_DONE);
     sqlite3_finalize(s);
+  }
+  if (!complete) {
+    if (ocr)
+      fprintf(stderr, "[media] fts: incomplete ocr scan for %s; "
+                      "leaving keywords as they are\n", uid);
+    free(ocr);
+    return 0;
   }
   if (!ocr || !olen) { free(ocr); return 0; }
 
@@ -1588,17 +1643,29 @@ static int media_fts_compose(sqlite3 *h, const char *uid, char **out_full,
   if (!seg_ocr) return 0;
 
   /* The _en columns may not exist yet (translate_migrate not run). A failed
-   * prepare is the probe: we then index OCR alone, which is correct — there is
-   * no English to preserve. */
+   * PREPARE is the probe: we then index OCR alone, which is correct — there is
+   * no English to preserve.
+   *
+   * A failed STEP is not the same thing and must not be read as "no English".
+   * The write below replaces the whole keywords column, so answering SQLITE_BUSY
+   * with "no English exists" would delete translate.c's half of a row that has
+   * it. Only DONE (no such item) and ROW (we read what there is) are answers. */
   char *t_en = NULL, *s_en = NULL, *b_en = NULL;
   if (sqlite3_prepare_v2(h,
       "SELECT title_en,summary_en,body_en FROM intel_items WHERE uid=?1",
       -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_text(s, 1, uid, -1, SQLITE_TRANSIENT);
-    if (sqlite3_step(s) == SQLITE_ROW) {
+    int rc = sqlite3_step(s);
+    if (rc == SQLITE_ROW) {
       t_en = dupcol(s, 0); s_en = dupcol(s, 1); b_en = dupcol(s, 2);
     }
     sqlite3_finalize(s);
+    if (rc != SQLITE_ROW && rc != SQLITE_DONE) {
+      fprintf(stderr, "[media] fts: could not read _en columns for %s; "
+                      "leaving keywords as they are\n", uid);
+      free(seg_ocr);
+      return 0;
+    }
   }
   char *seg_en = NULL;
   if (t_en || s_en || b_en) seg_en = join_en(t_en, s_en, b_en);

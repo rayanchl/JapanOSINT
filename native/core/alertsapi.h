@@ -48,4 +48,21 @@ char *alerteventsapi(db_handle *db, const char *tenant_id, const char *user_id,
                      const char *method, const char *seg,
                      const char *qs, int *status);
 
+/* GET /api/alert-events/:id/deliveries — the per-channel delivery ledger for
+ * one event: every alert_deliveries row, every column, uncapped
+ * (attempt, status, http_code, error, next_attempt_at, attempted_at) plus a
+ * status summary. schema.sql:664 states why the table exists —
+ * "delivered_channels_json alone cannot express 'tried 4 times, 502'; this
+ * table is what makes a failed alert diagnosable" — and until now nothing
+ * read it.
+ *
+ * Needs any membership (same rank as reading the inbox). The event is resolved
+ * against alert_events WHERE tenant_id first, so another tenant's event id is
+ * 404, never rows. Zero rows is reported as an explicit state, not as an empty
+ * success: the summary says the event has not been enqueued or fell outside
+ * the worker's horizon. Malloc'd; never NULL. */
+char *alertdeliveriesapi(db_handle *db, const char *tenant_id,
+                         const char *user_id, const char *event_id,
+                         int *status);
+
 #endif

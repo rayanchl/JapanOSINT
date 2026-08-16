@@ -16,6 +16,7 @@
 #include "social_fuse.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
+#include "../../core/hostgate.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,6 +29,14 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
+/* The three classifier lists below are IN-TREE EDITORIAL JUDGEMENT, not fetched
+ * data. They are legitimate as classifier INPUTS, but the booleans they drive
+ * are emitted next to `mx_exists` and the SMTP verdict, which ARE measurements
+ * — and a reader has no way to tell them apart unless the row says so. Each
+ * emitted flag therefore carries a `*_basis` string naming the list and its
+ * size, the same treatment ip_reputation.c and email_reputation.c already got.
+ * A domain absent from a 20-entry list is not "not disposable"; it is
+ * "not on our list". */
 static const char *DISPOSABLE_DOMAINS[] = {
   "tempmail.com","throwaway.email","guerrillamail.com","10minutemail.com",
   "mailinator.com","maildrop.cc","temp-mail.org","fakeinbox.com",
@@ -107,6 +116,17 @@ static cJSON *get_mx_records(http_client *http, const char *domain) {
 /* verify_smtp: raw socket EHLO/MAIL FROM/RCPT TO on 25 then 587.
  * 1=valid, 0=invalid, -1=unable. */
 static int verify_smtp(const char *email, const char *mx_host) {
+  /* Raw sockets bypass core/httpclient.c entirely, so hostgate does not reach
+   * this path by construction. `mx_host` is derived from a caller-supplied
+   * address via a DNS answer we do not control — an MX record can point
+   * anywhere, including inside our own network. Strict strength, before any
+   * connect(). */
+  int hg = hostgate_host_check(mx_host, 1);
+  if (hg != HG_URL_OK) {
+    fprintf(stderr, "[EMAIL_VALIDATOR] refusing MX %s: %s\n",
+            mx_host, hostgate_url_reason(hg));
+    return -1;
+  }
   struct hostent *he = gethostbyname(mx_host);
   if (!he) return -1;
   struct timeval to = { 10, 0 };
@@ -255,7 +275,12 @@ int jo_email_validator_run(const source_ctx *ctx, intel_sink *sink) {
   if (!format_valid) {
     cJSON_AddStringToObject(root, "status", "invalid");
     cJSON_AddStringToObject(root, "reason", "Invalid email format");
-    return emit_one(sink, email, root, "invalid") > 0 ? 0 : 0;
+  /* emit_one returns >0 on a written row and <0 when the sink refused it.
+   * This used to be `> 0 ? 0 : 0` — both arms 0 — so a failed DB write was
+   * reported as a clean run and the scheduler recorded it as ok. The only
+   * caller that accumulates these (social_search.c's run_email) discards its
+   * total with `(void)t`, so surfacing the failure costs nothing there. */
+    return emit_one(sink, email, root, "invalid") > 0 ? 0 : -1;
   }
 
   const char *at = strchr(email, '@');
@@ -278,8 +303,18 @@ int jo_email_validator_run(const source_ctx *ctx, intel_sink *sink) {
   int free_provider = lc_in_list(dom, FREE_PROVIDERS);
   int role_based = lc_in_list(local, ROLE_PREFIXES);
   cJSON_AddBoolToObject(root, "is_disposable", disposable);
+  cJSON_AddStringToObject(root, "is_disposable_basis",
+    "matched against a 20-entry in-tree list of known disposable-mail domains "
+    "(collectors/sources/email_validator.c) — NOT a lookup of any registry; "
+    "false means 'not on that list', not 'not disposable'");
   cJSON_AddBoolToObject(root, "is_free_provider", free_provider);
+  cJSON_AddStringToObject(root, "is_free_provider_basis",
+    "matched against a 15-entry in-tree list of consumer mail providers "
+    "(collectors/sources/email_validator.c) — editorial, not fetched");
   cJSON_AddBoolToObject(root, "is_role_based", role_based);
+  cJSON_AddStringToObject(root, "is_role_based_basis",
+    "local-part matched against an 18-entry in-tree list of role prefixes "
+    "(collectors/sources/email_validator.c) — editorial, not fetched");
 
   cJSON *mx = get_mx_records(ctx->http, dom);
   int mx_count = cJSON_GetArraySize(mx);
@@ -310,8 +345,17 @@ int jo_email_validator_run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *hunter = query_hunter_io(ctx->http, email);
   if (hunter) cJSON_AddItemToObject(root, "hunter_io", hunter);
 
+  /* Every score below is derived from something we actually established
+   * (format, MX, the SMTP probe's verdict, domain age) — except the last
+   * branch. `status = "unknown"` is precisely the case where the SMTP probe
+   * could not tell us anything (connect refused, greylisted, timed out), and
+   * pairing it with `score = 50` published a mid-range number nothing
+   * measured, in the same field and the same units as the 95 that a real
+   * deliverable probe earns. A consumer sorting or thresholding on `score`
+   * cannot tell the two apart. The status string already says "unknown"; the
+   * score says so too, by being absent. */
   const char *status;
-  int score = 100;
+  int score = 100, have_score = 1;
   if (!format_valid) { status = "invalid"; score = 0; }
   else if (disposable) { status = "risky"; score = 20; }
   else if (mx_count == 0) { status = "invalid"; score = 10; }
@@ -321,9 +365,14 @@ int jo_email_validator_run(const source_ctx *ctx, intel_sink *sink) {
     status = "valid"; score = 95;
     if (domain_age >= 0 && domain_age < 30) score -= 10;
     if (role_based) score -= 5;
-  } else { status = "unknown"; score = 50; }
+  } else { status = "unknown"; have_score = 0; }
   cJSON_AddStringToObject(root, "status", status);
-  cJSON_AddNumberToObject(root, "score", score);
+  cJSON_AddItemToObject(root, "score",
+    have_score ? cJSON_CreateNumber(score) : cJSON_CreateNull());
+  cJSON_AddStringToObject(root, "score_basis",
+    have_score ? "derived from format + MX + SMTP probe + domain age"
+               : "not scored: the SMTP probe returned no verdict for this "
+                 "address, so there is nothing to score");
 
   cJSON *risks = cJSON_CreateArray();
   if (disposable) cJSON_AddItemToArray(risks, cJSON_CreateString("Disposable email domain"));
@@ -333,7 +382,7 @@ int jo_email_validator_run(const source_ctx *ctx, intel_sink *sink) {
   if (mx_count == 0) cJSON_AddItemToArray(risks, cJSON_CreateString("No MX records"));
   cJSON_AddItemToObject(root, "risk_factors", risks);
 
-  return emit_one(sink, email, root, status) > 0 ? 0 : 0;
+  return emit_one(sink, email, root, status) > 0 ? 0 : -1;
 }
 
 /* Fused into SOCIAL_EMAIL — exposed via social_fuse.h as jo_email_validator_run. */

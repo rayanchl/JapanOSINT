@@ -6,7 +6,7 @@
  * the publisher did not state appears on the map. Static reference layer, so
  * the poll interval is monthly. Keyless.
  * Licence: County of San Diego open data, public record. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "socrata-sandiego-zips"
 static const char *URL =

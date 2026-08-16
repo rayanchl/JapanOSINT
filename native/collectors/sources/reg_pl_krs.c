@@ -53,8 +53,8 @@ static char *krs_board(const cJSON *dzial2) {
     if (need > cap) { cap = need * 2; char *t = realloc(out, cap); if (!t) break; out = t; }
     if (n) { strcpy(out + len, "; "); len += 2; }
     strcpy(out + len, frag); len += strlen(frag);
-    /* (cap removed: every record of the fetched array is emitted —
-     * docs/SOURCE_EXHAUSTIVENESS.md) */
+    n++;  /* the count IS the separator/emptiness flag — the cap that used
+            * to increment it was removed, this must not go with it. */
   }
   if (!n) { free(out); return NULL; }
   return out;

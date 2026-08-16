@@ -114,7 +114,7 @@ static const centroid PREFECTURE_CENTROIDS[] = {
 /* Index of the first city-level entry (entries before this are prefectures). */
 #define FIRST_CITY_IDX 47
 
-/* On match, sets *lat/*lon to the centroid and *prec to "city" or
+/* On match, sets *lat / *lon to the centroid and *prec to "city" or
  * "prefecture" depending on which table entry matched. Returns 1/0. */
 static int centroid_exact(const char *key, double *lat, double *lon,
                           const char **prec) {

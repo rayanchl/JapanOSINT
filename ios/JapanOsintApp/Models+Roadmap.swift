@@ -468,6 +468,17 @@ struct EvidenceVerifyResult: Decodable {
     let checked: Int?
     let broken_at: Int?
     let reason: String?
+
+    /// The server spells these `count` and `brokenAt` (core/evidence.c).
+    /// Because `ok` and `reason` did match, the decode SUCCEEDED and only the
+    /// two numbers silently vanished — so "N records checked" and "broken at
+    /// seq N" could never render, with no error to explain why.
+    private enum CodingKeys: String, CodingKey {
+        case ok
+        case checked   = "count"
+        case broken_at = "brokenAt"
+        case reason
+    }
 }
 
 // ── Item 27: media assets ──────────────────────────────────────────────────

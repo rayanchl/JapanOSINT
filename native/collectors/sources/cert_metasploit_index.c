@@ -56,11 +56,12 @@ static int run(const source_ctx *c, intel_sink *s) {
     fprintf(stderr, "[metasploit-module-index] fetch/parse failed\n");
     return -1;
   }
-  int n = 0, seen = 0;
+  int n = 0, seen = 0, capped = 0;
+  const int modules = cJSON_GetArraySize(doc);
   cJSON *m;
   /* cJSON_ArrayForEach walks an object's children too; m->string is the key. */
   cJSON_ArrayForEach(m, doc) {
-    if (n >= MSF_MAX_ROWS) break;
+    if (n >= MSF_MAX_ROWS) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     if (!cJSON_IsObject(m)) continue;
     seen++;
     const char *full = jo_sv(m, "fullname");
@@ -139,6 +140,16 @@ static int run(const source_ctx *c, intel_sink *s) {
     if (s->emit(s, &it) >= 0) n++;
     free(pj);
   }
+  /* House rule 2: MSF_MAX_ROWS is a runaway guard sized above the module index
+   * as it stands, so it normally never bites — but if the index outgrows it,
+   * say so in the data instead of silently keeping the first slice. */
+  if (capped)
+    jo_truncation_notice(s, "metasploit-module-index", "modules_metadata", n,
+                         (long)modules,
+                         "MSF_MAX_ROWS reached; the remaining modules in the "
+                         "fetched index were not emitted",
+                         "raise or drop MSF_MAX_ROWS in collectors/sources/"
+                         "cert_metasploit_index.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[metasploit-module-index] emitted %d of %d modules "
                   "(CVE-referencing subset)\n", n, seen);

@@ -7,7 +7,7 @@
  * forest_products_break_bulk_, steel_amp_other_metals_tons and the other
  * commodity columns the API returned. Keyless.
  * Licence: State of Maryland open data, public record. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "socrata-maryland-port-cargo"
 static const char *URL =

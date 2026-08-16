@@ -109,7 +109,11 @@ static const cis_reg REGS[] = {
 };
 static const int NREGS = (int)(sizeof(REGS) / sizeof(REGS[0]));
 
-#define CIS_TOTAL_CAP   500   /* exhaustive-ok: runaway guard, logged */
+/* NOT a page cap: it sits in the loop condition over REGISTRIES, so hitting it
+ * ends the sweep and the registries after it go unqueried — reported as data
+ * by jo_registry_sweep_notice(). */
+#define CIS_TOTAL_CAP   500   /* exhaustive-ok: whole-run emit cap; the sweep it
+                               * cuts short is reported as a truncation notice */
 #define CIS_PER_REG_CAP 0     /* exhaustive-ok: 0 = no cap, every hit is emitted */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -119,9 +123,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *enc = jo_urlencode(q);   /* UTF-8 safe %-encode for Cyrillic etc. */
   if (!enc) return -1;
 
-  int total = 0;
-  for (int i = 0; i < NREGS && total < CIS_TOTAL_CAP; i++) {
-    if (ctx->cancel && *ctx->cancel) break;
+  int total = 0, i = 0, cancelled = 0;
+  for (; i < NREGS && total < CIS_TOTAL_CAP; i++) {
+    if (ctx->cancel && *ctx->cancel) { cancelled = 1; break; }
     const cis_reg *r = &REGS[i];
 
     char url[1024];
@@ -131,18 +135,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(tag, sizeof tag, "cis_reg:%s", r->cc);
     snprintf(rtype, sizeof rtype, "cis-%s", r->category);
 
-    int room = CIS_TOTAL_CAP - total;
-    int cap = room < CIS_PER_REG_CAP ? room : CIS_PER_REG_CAP;
+    /* The old `room`/`cap` min() was dead: CIS_PER_REG_CAP is 0 and `room` is
+     * always > 0 inside this loop, so min(room, 0) was always 0 — and
+     * jo_emit_anchors reads <= 0 as "no cap". Removed rather than given teeth,
+     * which would change what this collector emits. */
 
     /* Real fetch + real anchor extraction. JS-only/anti-bot rows → 0. */
     int n = jo_emit_anchors(ctx, sink, url, r->href_must, r->name,
-                            rtype, r->base, NULL, cap, tag);
+                            rtype, r->base, NULL, CIS_PER_REG_CAP, tag);
     total += n;
   }
 
   free(enc);
-  fprintf(stderr, "[cis_registry] tabled %d registries, emitted %d\n",
-          NREGS, total);
+  jo_registry_sweep_notice(sink, "CIS_REGISTRY", q, total, i, NREGS,
+                           "CIS_TOTAL_CAP", CIS_TOTAL_CAP, cancelled);
+  fprintf(stderr, "[cis_registry] queried %d of %d tabled registries, emitted %d\n",
+          i, NREGS, total);
   return 0;   /* honest empty is not an error */
 }
 

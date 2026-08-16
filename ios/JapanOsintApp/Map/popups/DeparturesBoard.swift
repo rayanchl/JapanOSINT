@@ -28,6 +28,7 @@ struct DeparturesBoard: View {
                 Button {
                     Task { await load() }
                 } label: { Image(systemName: "arrow.clockwise") }
+                .accessibilityLabel("Reload departures")
             }
 
             if rows.isEmpty {

@@ -1,5 +1,13 @@
 # Collector Catalog
 
+> **HISTORICAL — Node era (2026-05).** This catalogue describes the collectors
+> of the Node backend under `server/src/collectors/`, which was deleted on
+> 2026-05-17. It is kept for provenance only; nothing below is a current
+> inventory, and no count in it is live. The fleet today is C, one file per
+> collector family under `native/collectors/sources/`, and the authoritative
+> count comes from `make -C native source-count` (it expands registration
+> macros; `grep -c REGISTER_SOURCE` does not).
+
 > **House rules for every collector in this catalogue** — a collector must never
 > fabricate data (`native/collectors/SOURCE_REALITY_REPORT.md`) and must use the
 > sources it calls exhaustively: every record, every field, every page, and the

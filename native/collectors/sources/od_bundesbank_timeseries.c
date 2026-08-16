@@ -10,7 +10,7 @@
  * (Destatis GENESIS was not used: it requires a registered account.)
  * Licence: the Bundesbank permits reuse of published statistics with
  * attribution. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "bundesbank-timeseries"
 static const char *URL =

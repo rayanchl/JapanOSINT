@@ -7,7 +7,7 @@
  * service_category, year, month. No coordinates are published on this
  * dataset, so has_geo is never set (R2). Keyless.
  * Licence: Open Government Licence - City of Edmonton. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "socrata-edmonton-311"
 static const char *URL =

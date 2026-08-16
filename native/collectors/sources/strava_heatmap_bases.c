@@ -78,7 +78,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     int ok = 0;            /* res.ok */
     int have_bytes = 0;    /* tile_bytes !== null */
     long bytes = 0;
-    int activity = 0;      /* activity_detected !== null */
     int have_http = 0;     /* http (res.status) only on !res.ok branch */
     long httpst = 0;
     int have_err = (rc != 0);  /* catch branch → err.message present */
@@ -88,7 +87,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         ok = 1;
         have_bytes = 1;
         bytes = (long)resp.body_len;
-        activity = (resp.body_len > 1800);
       } else {
         ok = 0;
         have_http = 1;
@@ -97,7 +95,24 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     http_response_free(&resp);
 
-    cJSON *f = gj_point_feature(b->lon, b->lat);
+    /* The base coordinate is an INPUT to this probe (it is what picked the
+     * tile), never something the probe measured. On a success we did observe
+     * that tile, so pinning the row at the installation is fair. On a failure
+     * we observed nothing at all — and this row was built and appended outside
+     * every success branch, so a Strava outage or a blanket 403 still produced
+     * fourteen map pins at fourteen named military installations, each one
+     * indistinguishable on the map from a live observation. A failed probe
+     * carries `"geometry": null` (lib/geojson.c treats that as absent, so no
+     * lat/lon reaches intel_items); the row survives as the error report it
+     * is, with the tile coordinates still in properties. */
+    cJSON *f;
+    if (have_bytes) {
+      f = gj_point_feature(b->lon, b->lat);
+    } else {
+      f = cJSON_CreateObject();
+      cJSON_AddStringToObject(f, "type", "Feature");
+      cJSON_AddNullToObject(f, "geometry");
+    }
 
     cJSON *p = cJSON_CreateObject();          /* EXACT JS key order */
     char sl[96]; slug(b->name, sl, sizeof sl);
@@ -112,8 +127,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(p, "tile_url", url);
     cJSON_AddItemToObject(p, "tile_bytes",
       have_bytes ? cJSON_CreateNumber((double)bytes) : cJSON_CreateNull());
-    cJSON_AddItemToObject(p, "activity_detected",
-      have_bytes ? cJSON_CreateBool(activity) : cJSON_CreateNull());
+    /* `activity_detected` used to be `(body_len > 1800)`. 1800 was never
+     * calibrated against anything: a heatmap PNG's size tracks TILE COMPLEXITY
+     * — coastline, road mesh, palette, the encoder's settings — not human
+     * activity, so a coastal base reads "active" while an inland one of equal
+     * traffic reads "quiet", and one CDN re-encode flips all fourteen at once.
+     * Publishing that as a detection about a named military installation is a
+     * measurement nobody took. tile_bytes above IS the real observation and is
+     * kept; the byte comparison is kept too, but named for what it compares. */
+    cJSON_AddItemToObject(p, "activity_detected", cJSON_CreateNull());
+    cJSON_AddStringToObject(p, "activity_detected_basis",
+      "not measured: this probe reads a heatmap tile's byte length, which does "
+      "not distinguish activity from tile complexity");
+    cJSON_AddItemToObject(p, "tile_bytes_over_1800",
+      have_bytes ? cJSON_CreateBool(bytes > 1800) : cJSON_CreateNull());
     cJSON_AddBoolToObject(p, "ok", ok);
     /* error: err?.message || null — only set in catch (transport hard fail) */
     cJSON_AddItemToObject(p, "error",

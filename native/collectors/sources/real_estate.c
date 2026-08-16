@@ -13,8 +13,8 @@
  *   need title && addr; area = findArea(addr) (AREA names first, then PREF
  *   names; substring; iteration = JS Object.keys order). jitter ±0.01 random.
  * Feature props (exact JS order): id, platform, title, address, rent_display,
- *   size, area, prefecture, listing_type, source.  id="SUUMO_<idx>" 1-based
- *   over matched rows → uid via NATIVE_ID "id". */
+ *   size, area, prefecture, listing_type, source.  id="SUUMO_<property
+ *   code from the block's own /chintai/ detail href>" → uid via NATIVE_ID "id". */
 #include "../../source.h"
 #include "../../lib/feedlib.h"
 #include "../../lib/htmlparse.h"
@@ -104,7 +104,6 @@ static const char *SLUGS[] = {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *features = cJSON_CreateArray();
-  int idx = 0;
 
   for (int si = 0; si < NSLUG; si++) {
     for (int page = 1; page <= 5; page++) {
@@ -139,8 +138,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         const struct ra *a = find_area(addr);
         if (!a) { free(title); free(addr); free(rent); free(size); free(block); continue; }
 
-        idx++;
-
         /* NO-FABRICATION: SUUMO listing pages give no per-listing lat/lon, so
          * the JS random ±0.01 jitter invented precise coordinates. Drop it and
          * place the listing at the REAL area/ward centroid (a true location of
@@ -149,8 +146,36 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON *f = gj_point_feature(a->lon, a->lat);
 
         cJSON *p = cJSON_CreateObject();      /* EXACT JS key order */
-        char id[32]; snprintf(id, sizeof id, "SUUMO_%d", idx);
-        cJSON_AddStringToObject(p, "id", id);
+        /* `id` is the first of lib/geojson.c's NATIVE_ID_KEYS present here, so
+         * it IS the row's uid. "SUUMO_<running index over every matched row of
+         * every slug and page>" made the uid a function of the ORDER SUUMO
+         * happened to return results in — a paginated, freshness-sorted rental
+         * listing, which reorders constantly. One new listing appearing on
+         * page 1 shifted every subsequent listing's identity by one, so each
+         * poll re-labelled the whole set and orphaned the previous poll's rows.
+         * SUUMO's own per-property key is the detail path in the block's own
+         * anchor (/chintai/jnc_… or /chintai/bc_…); use it, and when a block
+         * has none, say so rather than fall back to a positional label. */
+        char pcode[64] = {0};
+        {
+          const char *h = strstr(block, "href=\"/chintai/");
+          if (h) {
+            const char *s = h + strlen("href=\"/chintai/");
+            size_t k = 0;
+            while (s[k] && s[k] != '/' && s[k] != '"' && s[k] != '?' &&
+                   k < sizeof pcode - 1) k++;
+            if (k >= 4) { memcpy(pcode, s, k); pcode[k] = 0; }
+          }
+        }
+        if (pcode[0]) {
+          char id[96]; snprintf(id, sizeof id, "SUUMO_%s", pcode);
+          cJSON_AddStringToObject(p, "id", id);
+        } else {
+          cJSON_AddStringToObject(p, "id_basis",
+            "none: this SUUMO cassetteitem block carried no /chintai/ detail "
+            "href, so the row is uid'd by content hash rather than a "
+            "positional id");
+        }
         cJSON_AddStringToObject(p, "platform", "suumo");
         cJSON_AddStringToObject(p, "title", title);
         cJSON_AddStringToObject(p, "address", addr);

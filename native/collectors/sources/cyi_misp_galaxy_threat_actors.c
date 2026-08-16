@@ -73,7 +73,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (cJSON_IsObject(meta)) {
       const cJSON *refs = cJSON_GetObjectItem(meta, "refs");
       if (cJSON_IsArray(refs)) {
-        const cJSON *r0 = cJSON_GetArrayItem(refs, 0);
+        const cJSON *r0 = cJSON_GetArrayItem(refs, 0);  /* exhaustive-ok: link display pick; properties.references carries every ref */
         if (cJSON_IsString(r0) && r0->valuestring && r0->valuestring[0])
           link = r0->valuestring;
       }

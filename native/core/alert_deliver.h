@@ -115,18 +115,14 @@ void alert_deliver_stop(void);
  * endpoint — so the status stays 200 and "ok" carries the verdict.
  * Secrets are never echoed. Never returns NULL for a valid tenant/rule.
  *
- * ORCHESTRATOR WIRING (P0.3) — the endpoint already exists as a non-dispatching
- * stub. Replace the body of the `test` action in core/alertsapi.c (~line 404,
- * the block returning "{\"ok\":true,\"fired\":true}") with:
- *
- *     if (is_post && strcmp(action,"test")==0) {
- *       if (jb) cJSON_Delete(jb);
- *       return alert_deliver_test(db, tid, id, st);   // 404 handled inside
- *     }
- *
- * (plus `#include "alert_deliver.h"`). No httpd.c change is needed — the route
- * POST /api/alerts/:id/test already reaches alertsapi(). Requires role analyst
- * or better; apply the same role gate the surrounding mutations use.
+ * WIRED (P0.3) — DONE, no longer a plan. The `test` action in core/alertsapi.c
+ * (alertsapi.c:531) calls this function, so POST /api/alerts/:id/test really
+ * dispatches through the rule's channels; it was a non-dispatching stub that
+ * returned {"ok":true,"fired":true} without sending anything, and that
+ * sentence outlived the stub by a while. httpd.c needed no change — the route
+ * already reached alertsapi() — and the surrounding analyst-or-better role
+ * gate applies to it like every other mutation there. The successful test is
+ * audited as "alert_rule.test", and only once it actually fired.
  *
  * CLIENT NOTE: ios/JapanOsintApp/API.swift:458 decodes this response as
  * `[String: Bool]`, which cannot hold the nested "data" object. That line must

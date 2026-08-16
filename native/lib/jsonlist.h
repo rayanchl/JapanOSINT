@@ -38,4 +38,27 @@ int jsonlist_emit(intel_sink *sink, const char *source_id, cJSON *doc,
                   const char *path, const char *record_type,
                   const char *lang, const char *tags_json);
 
+/* As jsonlist_emit, but also reports how many records the page CONTAINED.
+ *
+ * Why the distinction matters, twice over. A record this emitter cannot label
+ * is not emitted (emit_record returns 0 when no title can be derived), so the
+ * emitted count is silently smaller than the page. That gap used to be
+ * invisible, and it broke two things:
+ *
+ *   1. house rule 2 — records were dropped with no counter and no notice, so a
+ *      source that fetched 10,000 rows and labelled none of them was
+ *      indistinguishable from an upstream that is honestly empty;
+ *   2. lib/pagewalk.c — which used the EMITTED count as its "did this page come
+ *      back full" test. A full page of 20 holding 2 unlabelled records reported
+ *      18, so the walk stopped AND suppressed its own truncation notice: a
+ *      silent stop plus a silent claim of completeness.
+ *
+ * `seen` may be NULL. When it is, this function discloses any shortfall itself
+ * as a collector-truncation-notice. When it is non-NULL the caller is taking
+ * responsibility for the disclosure (pagewalk discloses once per walk rather
+ * than once per page), and nothing is emitted here. */
+int jsonlist_emit_ex(intel_sink *sink, const char *source_id, cJSON *doc,
+                     const char *path, const char *record_type,
+                     const char *lang, const char *tags_json, int *seen);
+
 #endif

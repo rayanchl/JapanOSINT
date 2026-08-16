@@ -6,7 +6,7 @@
  * count, and the catalogue total. Keyless (canonical CKAN action API).
  * Licence: World Bank open data; per-dataset licences are exposed in
  * license_title / license_url (mostly CC-BY-4.0) and emitted verbatim. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-energydata-info"
 static const char *URL =

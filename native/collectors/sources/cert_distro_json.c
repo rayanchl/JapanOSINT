@@ -34,6 +34,7 @@
 #include "../../lib/jocore.h"
 #include "../../source.h"
 #include "../../lib/feedlib.h"
+#include "../../lib/pagewalk.h"   /* pw_walk() — house rule 2 paging */
 #include "../../third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,7 +44,7 @@
 #define ARCH_URL   "https://security.archlinux.org/json"
 #define ALPINE_URL "https://secdb.alpinelinux.org/v3.21/main.json"
 #define ALMA_URL   "https://errata.almalinux.org/9/errata.full.json"
-#define ROCKY_URL  "https://apollo.build.resf.org/api/v3/advisories/?page=1&size=100"
+#define ROCKY_URL  "https://apollo.build.resf.org/api/v3/advisories/?page=1&size=100"  /* exhaustive-ok: page=1 is where a pw_walk() STARTS — rocky_run() advances page=2,3,… and discloses the remainder */
 #define RH_URL     "https://access.redhat.com/hydra/rest/securitydata/csaf.json?per_page=100"
 
 #define ALMA_WINDOW_SEC (365L * 24 * 3600)   /* recent window, see header */
@@ -244,15 +245,16 @@ static int alma_run(const source_ctx *c, intel_sink *s) {
   }
   long cutoff = newest > 0 ? newest - ALMA_WINDOW_SEC : 0;
 
-  int n = 0;
+  int n = 0, capped = 0, outside_window = 0;
+  const int alma_total = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
   if (cJSON_IsArray(arr)) {
     cJSON *e;
     cJSON_ArrayForEach(e, arr) {
-      if (n >= ALMA_MAX_ROWS) break;
+      if (n >= ALMA_MAX_ROWS) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
       const char *id = jo_sv(e, "id");
       if (!id) continue;                     /* no erratum id -> no row (R1) */
       long issued = epoch_of(cJSON_GetObjectItem(e, "issued_date"));
-      if (cutoff && issued && issued < cutoff) continue;
+      if (cutoff && issued && issued < cutoff) { outside_window++; continue; }
 
       const char *ttl  = jo_sv(e, "title");
       const char *desc = jo_sv(e, "description");
@@ -299,6 +301,22 @@ static int alma_run(const source_ctx *c, intel_sink *s) {
     }
   }
   cJSON_Delete(doc);
+  /* House rule 2: the whole ~25 MB errata history was downloaded and parsed.
+   * Two things then dropped rows — the recent-date window and ALMA_MAX_ROWS —
+   * and neither was visible outside this log line until now. */
+  if (capped || outside_window > 0) {
+    char reason[300];
+    snprintf(reason, sizeof reason,
+             "of the errata in the downloaded document, %d fell outside the "
+             "%ld-day recent window and were skipped%s",
+             outside_window, (long)(ALMA_WINDOW_SEC / 86400),
+             capped ? ", and the emit loop then stopped at ALMA_MAX_ROWS "
+                      "before reaching the end of the array" : "");
+    jo_truncation_notice(s, "almalinux-errata-full", "9/errata.full.json",
+                         n, (long)alma_total, reason,
+                         "widen ALMA_WINDOW_SEC and raise or drop ALMA_MAX_ROWS "
+                         "in collectors/sources/cert_distro_json.c");
+  }
   fprintf(stderr, "[almalinux-errata-full] emitted %d (window %ld d)\n",
           n, (long)(ALMA_WINDOW_SEC / 86400));
   return 0;
@@ -306,14 +324,32 @@ static int alma_run(const source_ctx *c, intel_sink *s) {
 
 /* ---- rockylinux-errata-api ------------------------------------------------ */
 
-static int rocky_run(const source_ctx *c, intel_sink *s) {
+static cJSON *rocky_fetch(const source_ctx *c, const char *url, void *ud) {
+  (void)ud;
   const char *hdrs[] = { "accept: application/json", NULL };
-  cJSON *doc = feed_get_json_h(c->http, ROCKY_URL, hdrs, 30000);
-  if (!doc) { fprintf(stderr, "[rockylinux-errata-api] fetch/parse failed\n"); return -1; }
+  return feed_get_json_h(c->http, url, hdrs, 30000);
+}
+
+/* One page of doc.advisories[]. Returns #emitted and reports #records the page
+ * CONTAINED through `seen`; see lib/pagewalk.h for why the two differ. */
+static int rocky_emit_page(const source_ctx *c, intel_sink *s, const char *id,
+                           cJSON *doc, void *ud, int *seen) {
+  (void)c; (void)id; (void)ud;
   cJSON *arr = cJSON_GetObjectItem(doc, "advisories");
   if (!cJSON_IsArray(arr) && cJSON_IsArray(doc)) arr = doc;
+  if (!cJSON_IsArray(arr)) return 0;
+  *seen = cJSON_GetArraySize(arr);
+  /* Apollo reports the size of the whole result set alongside the page as
+   * `total`, which is not one of the names lib/pagewalk.c reads. Republish the
+   * upstream's OWN number under one that it does, so the truncation notice can
+   * state a real records_available. Copied, never computed (house rule 1). */
+  {
+    const cJSON *tv = cJSON_GetObjectItem(doc, "total");
+    if (cJSON_IsNumber(tv) && !cJSON_GetObjectItem(doc, "totalCount"))
+      cJSON_AddNumberToObject(doc, "totalCount", tv->valuedouble);
+  }
   int n = 0;
-  if (cJSON_IsArray(arr)) {
+  {
     cJSON *e;
     cJSON_ArrayForEach(e, arr) {
       const char *name = jo_sv(e, "name");
@@ -359,8 +395,19 @@ static int rocky_run(const source_ctx *c, intel_sink *s) {
       free(pj);
     }
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[rockylinux-errata-api] emitted %d\n", n);
+  return n;
+}
+
+/* House rule 2: ROCKY_URL carries the author's own page=1&size=100, so pw_walk
+ * advances page=2,3,… for as long as a page comes back full, and discloses
+ * whatever is left at the JO_PAGE_MAX ceiling as a collector-truncation-notice.
+ * The page size is the author's and is left as it was. Apollo's page numbering
+ * is 1-BASED (page=0 answers HTTP 422), which is exactly what advancing the
+ * existing value preserves. */
+static int rocky_run(const source_ctx *c, intel_sink *s) {
+  int n = pw_walk(c, s, "rockylinux-errata-api", ROCKY_URL,
+                  rocky_fetch, rocky_emit_page, NULL);
+  if (n < 0) { fprintf(stderr, "[rockylinux-errata-api] fetch/parse failed\n"); return -1; }
   return 0;
 }
 

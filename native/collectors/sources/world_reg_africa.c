@@ -21,7 +21,11 @@
 #include "_jp_osint.inc"
 
 /* per-query global cap and per-registry cap */
-#define AFR_TOTAL_MAX   500  /* exhaustive-ok: runaway guard, logged */
+/* NOT a page cap: it sits in the loop condition over REGISTRIES, so hitting it
+ * ends the sweep and the registries after it go unqueried — reported as data
+ * by jo_registry_sweep_notice(). */
+#define AFR_TOTAL_MAX   500  /* exhaustive-ok: whole-run emit cap; the sweep it
+                              * cuts short is reported as a truncation notice */
 #define AFR_PER_REG_MAX 0    /* exhaustive-ok: 0 = no cap, every hit is emitted */
 
 typedef struct {
@@ -139,8 +143,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *enc = jo_urlencode(q);
   if (!enc) return -1;
 
-  int total = 0;
-  for (int i = 0; i < AFR_N && total < AFR_TOTAL_MAX; i++) {
+  int total = 0, i = 0;
+  for (; i < AFR_N && total < AFR_TOTAL_MAX; i++) {
     const afr_reg *r = &AFR[i];
     char url[1024];
     snprintf(url, sizeof url, r->url_tmpl, enc);
@@ -150,17 +154,21 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char tag[64];
     snprintf(tag, sizeof tag, "africa_reg:%s", r->cc);
 
-    int remaining = AFR_TOTAL_MAX - total;
-    int cap = remaining < AFR_PER_REG_MAX ? remaining : AFR_PER_REG_MAX;
+    /* The old `remaining`/`cap` min() was dead: AFR_PER_REG_MAX is 0 and
+     * `remaining` is always > 0 inside this loop, so min(remaining, 0) was
+     * always 0 — and jo_emit_anchors reads <= 0 as "no cap". Removed rather
+     * than given teeth, which would change what this collector emits. */
 
     /* REAL fetch + real anchor extraction. JS-only/anti-bot rows honest-empty. */
     total += jo_emit_anchors(ctx, sink, url, r->href_must, r->name,
-                             rectype, r->base, q, cap, tag);
+                             rectype, r->base, q, AFR_PER_REG_MAX, tag);
   }
 
   free(enc);
-  fprintf(stderr, "[africa_reg] total emitted %d across %d registries\n",
-          total, AFR_N);
+  jo_registry_sweep_notice(sink, "AFRICA_REGISTRY", q, total, i, AFR_N,
+                           "AFR_TOTAL_MAX", AFR_TOTAL_MAX, 0);
+  fprintf(stderr, "[africa_reg] total emitted %d across %d of %d registries\n",
+          total, i, AFR_N);
   return 0;   /* honest empty is not an error */
 }
 

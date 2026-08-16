@@ -208,10 +208,27 @@ static int run_lens(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[lens_patents] gated (no LENS_TOKEN)\n");
     return 0;
   }
-  /* Lens patent search: POST a JSON query to /patent/search. */
+  /* Lens patent search: POST a JSON query to /patent/search.
+   *
+   * The entity used to be spliced in raw. It is analyst-supplied text, so a
+   * single `"` in it closed the JSON string and everything after became
+   * sibling keys of the request object — a malformed body at best, and at
+   * worst a query that silently searches for something other than what was
+   * asked while still returning 200 and emitting rows. Escape it the way
+   * grants_world.c's nih_run() already does (quote, backslash, and the three
+   * control characters that are illegal bare inside a JSON string). */
+  char esc[512]; size_t ej = 0;
+  for (size_t i = 0; q[i] && ej < sizeof esc - 2; i++) {
+    unsigned char c = (unsigned char)q[i];
+    if (c == '"' || c == '\\') { esc[ej++] = '\\'; esc[ej++] = (char)c; }
+    else if (c == '\n' || c == '\r' || c == '\t') esc[ej++] = ' ';
+    else esc[ej++] = (char)c;
+  }
+  esc[ej] = 0;
+
   char post[1024];
   snprintf(post, sizeof post,
-    "{\"query\":{\"match\":{\"invention_title\":\"%s\"}},\"size\":20}", q);
+    "{\"query\":{\"match\":{\"invention_title\":\"%s\"}},\"size\":20}", esc);
   char auth[600];
   snprintf(auth, sizeof auth, "Authorization: Bearer %s", token);
   const char *hdrs[] = { auth, "Content-Type: application/json",

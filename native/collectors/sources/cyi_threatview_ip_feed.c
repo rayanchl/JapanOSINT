@@ -80,6 +80,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
+  /* House rule 2: `seen` is every address parsed out of the downloaded feed.
+   * Two things kept some of them out of the sink — the bogon filter and
+   * MAX_ROWS — and until now only this log line said so. */
+  if (seen > n) {
+    char reason[260];
+    snprintf(reason, sizeof reason,
+             "%d of the addresses parsed from the downloaded feed were dropped "
+             "as bogons (unroutable/reserved space)%s", dropped,
+             (seen - dropped) > n
+               ? ", and MAX_ROWS then stopped the rest from being emitted" : "");
+    jo_truncation_notice(sink, "threatview-ip-feed", "high-confidence IP feed",
+                         n, (long)seen, reason,
+                         "raise or drop MAX_ROWS in collectors/sources/"
+                         "cyi_threatview_ip_feed.c; the bogon filter is "
+                         "is_bogon() in the same file");
+  }
   fprintf(stderr, "[threatview-ip-feed] emitted %d of %d (%d bogons dropped)\n",
           n, seen, dropped);
   return 0;

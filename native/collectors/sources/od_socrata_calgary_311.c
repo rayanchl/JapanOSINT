@@ -7,7 +7,7 @@
  * R2: latitude/longitude are checked per row and older rows omit them - when
  * they are absent no location is set, and none is substituted. Keyless.
  * Licence: Open Government Licence - City of Calgary. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "socrata-calgary-311"
 static const char *URL =

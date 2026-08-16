@@ -4,6 +4,8 @@
 #include "source_trust.h"
 #include "breach_meta.h"
 #include "credtab.h"
+#include "httpclient.h"       /* the probe fetch — hostgated, protocol-pinned */
+#include "../source.h"        /* registry_get — the probe URL comes from the registry */
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <stdio.h>
@@ -82,8 +84,23 @@ static int env_set(const char *name) {
 static int add_cred_status(cJSON *o, const char *id) {
   const cred_def *e = cred_get(id);
   if (!e) {
-    cJSON_AddBoolToObject(o, "requiresKey", 0);
-    cJSON_AddBoolToObject(o, "configured", 1);
+    /* NO RECORD IS NOT THE SAME AS NO REQUIREMENT.
+     *
+     * This used to answer requiresKey:0, configured:1 — asserting as fact that
+     * the source needs no credential and is ready to run. credtab.c covers a
+     * fraction of the 9,681 registered sources, so that assertion was made for
+     * thousands of sources nobody had ever classified, including 88 collectors
+     * that DO gate on a credential and 32 of those that are scheduled and
+     * therefore no-op on every tick. It also made the dashboard's "needs key"
+     * filter structurally unable to surface any of them.
+     *
+     * null is the honest answer: we do not know. House rule 1 — a failure to
+     * determine something degrades to an explicit unknown, never to invented
+     * content. `credentialStatus` names the reason in-band so a client can
+     * distinguish "no key needed" from "never classified". */
+    cJSON_AddNullToObject(o, "requiresKey");
+    cJSON_AddNullToObject(o, "configured");
+    cJSON_AddStringToObject(o, "credentialStatus", "unknown");
     cJSON_AddItemToObject(o, "envVars", cJSON_CreateArray());
     cJSON_AddItemToObject(o, "missingVars", cJSON_CreateArray());
     return 0;
@@ -473,4 +490,158 @@ char *statusapi_build(db_handle *db, int include_breach) {
   char *js = cJSON_PrintUnformatted(env);
   cJSON_Delete(env);
   return js;
+}
+
+/* ── probe ─────────────────────────────────────────────────────────────────
+ *
+ * The `probe_*` columns and `probe_consent` have been in the schema — and read
+ * by status_row() above — since the Node port, but NOTHING in the tree ever
+ * wrote them. They were read-only scaffolding: every value was permanently
+ * NULL, `probeConsent` permanently 0, and the iOS client's two probe controls
+ * called routes that did not exist. This is the writer.
+ *
+ * WHAT A PROBE IS. One GET of the source's OWN registered endpoint
+ * (source_def.url — a compile-time constant, never anything the caller
+ * supplies), recording what went out and what came back. It answers "is this
+ * source's endpoint reachable, and what does it actually say" without running
+ * the collector or writing a single intel row.
+ *
+ * WHY IT IS NOT AN SSRF PRIMITIVE. The URL is not attacker-influenced: it is
+ * looked up from the registry by id, and the fetch goes through
+ * http_request(), which applies hostgate's URL check, the protocol pins and
+ * the per-hop peer re-check. A caller can choose WHICH registered source to
+ * probe, never WHERE the request goes.
+ *
+ * WHAT IS STORED, AND WHY IT IS SAFE TO SERVE. status_row() exposes
+ * probeRequestHeaders and probeResponseBody to any authenticated reader, so a
+ * probe must never capture a credential. It does not: the probe deliberately
+ * sends NO collector auth headers — only a User-Agent — and that is exactly
+ * what gets recorded, so the stored request headers are a constant. The body
+ * is a bounded, control-character-scrubbed snippet of a public endpoint's
+ * reply.
+ *
+ * probe_response_headers stays NULL: http_response does not carry them, and a
+ * plausible-looking reconstruction would be invented content (house rule 1).
+ */
+#define PROBE_BODY_MAX   2000
+#define PROBE_TIMEOUT_MS 10000
+#define PROBE_UA "User-Agent: JapanOSINT/1.0 (source probe; +https://github.com/)"
+
+static char *probe_err(int *st, int code, const char *msg) {
+  *st = code;
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddStringToObject(o, "error", msg);
+  char *j = cJSON_PrintUnformatted(o); cJSON_Delete(o); return j;
+}
+
+/* A bounded, printable snippet. Truncation is disclosed by the caller via
+ * `body_truncated`, never silently. */
+static char *probe_snip(const char *body, size_t len, int *truncated) {
+  size_t n = len < PROBE_BODY_MAX ? len : PROBE_BODY_MAX;
+  *truncated = (len > n);
+  char *out = malloc(n + 1);
+  if (!out) return NULL;
+  size_t o = 0;
+  for (size_t i = 0; i < n; i++) {
+    unsigned char ch = (unsigned char)body[i];
+    if (ch == '\n' || ch == '\t') out[o++] = ' ';
+    else if (ch < 0x20 || ch == 0x7F) out[o++] = '.';
+    else out[o++] = (char)ch;
+  }
+  out[o] = 0;
+  return out;
+}
+
+char *statusapi_set_consent(db_handle *db, const char *id, int consent, int *st) {
+  if (!db || !db->h || !id || !*id) return probe_err(st, 400, "source id required");
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "UPDATE sources SET probe_consent=?1 WHERE id=?2", -1, &s, NULL) != SQLITE_OK)
+    return probe_err(st, 500, "prepare_failed");
+  sqlite3_bind_int(s, 1, consent ? 1 : 0);
+  sqlite3_bind_text(s, 2, id, -1, SQLITE_TRANSIENT);
+  int rc = sqlite3_step(s);
+  sqlite3_finalize(s);
+  if (rc != SQLITE_DONE) return probe_err(st, 500, "consent_update_failed");
+  /* changes()==0 means no such source — report that rather than a cheerful ok
+   * for a row that does not exist. */
+  if (sqlite3_changes(db->h) == 0) return probe_err(st, 404, "not_found");
+
+  *st = 200;
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddBoolToObject(o, "ok", 1);
+  cJSON_AddStringToObject(o, "id", id);
+  cJSON_AddBoolToObject(o, "probeConsent", consent ? 1 : 0);
+  char *j = cJSON_PrintUnformatted(o); cJSON_Delete(o); return j;
+}
+
+char *statusapi_probe(db_handle *db, const char *id, int *st) {
+  if (!db || !db->h || !id || !*id) return probe_err(st, 400, "source id required");
+
+  const source_def *d = registry_get(id);
+  if (!d) return probe_err(st, 404, "no_collector_registered");
+  const char *url = d->url;
+  if (!url || !*url) return probe_err(st, 400, "source declares no endpoint to probe");
+  /* Datasets and internal pods carry an `internal://` url — there is nothing
+   * on the network to reach, and pretending otherwise would manufacture a
+   * result. */
+  if (strncmp(url, "http://", 7) != 0 && strncmp(url, "https://", 8) != 0)
+    return probe_err(st, 400, "source endpoint is not an http(s) url");
+
+  const char *hdrs[] = { PROBE_UA, NULL };
+  http_client *hc = http_client_new();
+  if (!hc) return probe_err(st, 500, "http_client_alloc_failed");
+  http_response r = {0};
+  int hard = http_request(hc, "GET", url, hdrs, NULL, 0,
+                          PROBE_TIMEOUT_MS, 0, &r);
+  long code = r.status;
+  int truncated = 0;
+  char *snip = (r.body && r.body_len) ? probe_snip(r.body, r.body_len, &truncated) : NULL;
+  http_response_free(&r);
+  http_client_free(hc);
+
+  char now[40]; iso_now(now, sizeof now);
+
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "UPDATE sources SET probe_request_url=?1, probe_request_method='GET',"
+        " probe_request_headers=?2, probe_response_status=?3,"
+        " probe_response_headers=NULL, probe_response_body=?4, probe_kind='http'"
+        " WHERE id=?5", -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, url, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 2, PROBE_UA, -1, SQLITE_STATIC);
+    if (code > 0) sqlite3_bind_int(s, 3, (int)code); else sqlite3_bind_null(s, 3);
+    if (snip) sqlite3_bind_text(s, 4, snip, -1, SQLITE_TRANSIENT);
+    else      sqlite3_bind_null(s, 4);
+    sqlite3_bind_text(s, 5, id, -1, SQLITE_TRANSIENT);
+    /* The step result decides what we claim below: a probe that could not be
+     * recorded is still a probe that HAPPENED, but the row the client will
+     * read next has not moved, and saying "stored" would be a lie. */
+    if (sqlite3_step(s) != SQLITE_DONE) {
+      fprintf(stderr, "[status] probe of %s ran but could not be stored: %s\n",
+              id, sqlite3_errmsg(db->h));
+    }
+  }
+  sqlite3_finalize(s);
+
+  *st = 200;
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddStringToObject(o, "id", id);
+  cJSON_AddStringToObject(o, "probedAt", now);
+  cJSON_AddStringToObject(o, "probeRequestUrl", url);
+  cJSON_AddStringToObject(o, "probeRequestMethod", "GET");
+  cJSON_AddStringToObject(o, "probeRequestHeaders", PROBE_UA);
+  cJSON_AddStringToObject(o, "probeKind", "http");
+  if (code > 0) cJSON_AddNumberToObject(o, "probeResponseStatus", (double)code);
+  else          cJSON_AddNullToObject(o, "probeResponseStatus");
+  /* http_response carries no headers, so this is null rather than invented. */
+  cJSON_AddNullToObject(o, "probeResponseHeaders");
+  if (snip) cJSON_AddStringToObject(o, "probeResponseBody", snip);
+  else      cJSON_AddNullToObject(o, "probeResponseBody");
+  cJSON_AddBoolToObject(o, "bodyTruncated", truncated);
+  cJSON_AddBoolToObject(o, "reachable", (!hard && code > 0));
+  if (hard || code == 0)
+    cJSON_AddStringToObject(o, "error", "transport_error");
+  free(snip);
+  char *j = cJSON_PrintUnformatted(o); cJSON_Delete(o); return j;
 }

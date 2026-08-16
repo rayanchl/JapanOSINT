@@ -109,8 +109,21 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     cJSON *p = cJSON_CreateObject();          /* EXACT JS key order */
     cJSON_AddStringToObject(p, "grid", g->id);
+    /* lat/lon are typed into GRIDS[] above — one city-centre point standing in
+     * for a service area that spans a whole region, published on a row that is
+     * emitted whether or not the CSV was reachable. The measurement half of
+     * this row is already honest (load_mw null, reachable false when the fetch
+     * failed); the coordinate half said nothing about itself, so a consumer
+     * reading `lat` had no way to know it is neither a plant, a substation,
+     * nor anything the utility published. */
     cJSON_AddNumberToObject(p, "lat", g->lat);
     cJSON_AddNumberToObject(p, "lon", g->lon);
+    cJSON_AddStringToObject(p, "geo_provenance", "static-catalogue");
+    cJSON_AddStringToObject(p, "geo_precision", "utility-service-region");
+    cJSON_AddBoolToObject(p, "geo_uncertain", 1);
+    cJSON_AddStringToObject(p, "geo_basis",
+      "regional utility HQ city centre hardcoded in grid_usage_realtime.c; "
+      "not published by the fetched juyo CSV");
     cJSON_AddItemToObject(p, "load_mw",
       parsed ? cJSON_CreateNumber(load_mw) : cJSON_CreateNull());
     cJSON_AddBoolToObject(p, "reachable", parsed ? 1 : 0);

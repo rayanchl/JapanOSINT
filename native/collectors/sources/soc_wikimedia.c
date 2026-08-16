@@ -70,16 +70,17 @@ static int run_top_pageviews(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json_h(ctx->http, url, WM_UA, 25000);
   if (!doc) { fprintf(stderr, "[wikipedia-top-pageviews] fetch failed\n"); return -1; }
   const cJSON *items = cJSON_GetObjectItem(doc, "items");
-  const cJSON *it0 = cJSON_IsArray(items) ? cJSON_GetArrayItem(items, 0) : NULL;
+  const cJSON *it0 = cJSON_IsArray(items) ? cJSON_GetArrayItem(items, 0) : NULL;  /* exhaustive-ok: pageviews/top for one day returns a single items[] envelope */
   const cJSON *arts = cJSON_IsObject(it0) ? cJSON_GetObjectItem(it0, "articles") : NULL;
   if (!cJSON_IsArray(arts)) {
     fprintf(stderr, "[wikipedia-top-pageviews] unexpected shape\n");
     cJSON_Delete(doc); return -1;
   }
-  int n = 0;
+  int n = 0, capped = 0;
+  const int have = cJSON_GetArraySize(arts);
   const cJSON *a;
   cJSON_ArrayForEach(a, arts) {
-    if (n >= 200) break;                       /* top 200 of the 1,000 rows */
+    if (n >= 200) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     const char *article = jo_sv(a, "article");
     if (!article) continue;
     const cJSON *vw = cJSON_GetObjectItem(a, "views");
@@ -103,6 +104,14 @@ static int run_top_pageviews(const source_ctx *ctx, intel_sink *sink) {
                   "[\"wikipedia\",\"pageviews\",\"attention\"]",
                   remote, article, summary, link, NULL, "en");
   }
+  /* House rule 2: the endpoint returns the day's whole top list (1,000 rows);
+   * only the head of it is emitted. */
+  if (capped)
+    jo_truncation_notice(sink, "wikipedia-top-pageviews", daystr, n, (long)have,
+                         "the emit loop stops at 200 articles, so the tail of "
+                         "the fetched top-pageviews list was never emitted",
+                         "remove the `n >= 200` break in run_top_pageviews() in "
+                         "collectors/sources/soc_wikimedia.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[wikipedia-top-pageviews] emitted %d for %s\n", n, daystr);
   return 0;
@@ -168,11 +177,13 @@ static int run_featured(const source_ctx *ctx, intel_sink *sink) {
     char *txt = story ? html_strip(story) : NULL;
     if (!txt || !txt[0]) { free(txt); continue; }
     const cJSON *links = cJSON_GetObjectItem(ni, "links");
-    const cJSON *l0 = cJSON_IsArray(links) ? cJSON_GetArrayItem(links, 0) : NULL;
+    const cJSON *l0 = cJSON_IsArray(links) ? cJSON_GetArrayItem(links, 0) : NULL;  /* exhaustive-ok: headline display pick; links_all below carries every linked article */
     cJSON *p = cJSON_CreateObject();
     if (!p) { free(txt); continue; }
     cJSON_AddStringToObject(p, "source", "api.wikimedia.org");
     cJSON_AddStringToObject(p, "section", "in_the_news");
+    if (cJSON_IsArray(links) && cJSON_GetArraySize(links) > 1)
+      cJSON_AddItemToObject(p, "links_all", cJSON_Duplicate(links, 1));
     cJSON_AddStringToObject(p, "date", daystr);
     cJSON_AddStringToObject(p, "story", txt);
     cJSON *qids = cJSON_CreateArray();

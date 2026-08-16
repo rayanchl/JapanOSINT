@@ -316,21 +316,44 @@ static void add_meta(cJSON *fc, const char *source, int record_count,
   if (served_from) cJSON_AddStringToObject(m, "served_from", served_from);
 }
 
+/* A collector run that FAILED must not be reported in the same shape as a run
+ * that succeeded and found nothing. `live:false` cannot carry the difference —
+ * an empty successful run is live:false too — and `recordCount:0` with a null
+ * description reads as "this layer has no data", which is a claim we did not
+ * earn. Stamp the failure into _meta so the client can tell the two apart.
+ * `collector_rc` is def->run()'s own return value, kept verbatim. */
+static void meta_mark_run_failed(cJSON *m, int rc) {
+  if (!m || rc >= 0) return;
+  cJSON_AddStringToObject(m, "collector_status", "error");
+  cJSON_AddNumberToObject(m, "collector_rc", rc);
+  cJSON_AddBoolToObject(m, "complete", 0);
+}
+static const char *run_failed_note(int rc) {
+  return rc < 0 ? "collector run failed; an empty result here is a FAILURE, "
+                  "not a statement that this source has no data"
+                : NULL;
+}
+
 /* Build the FeatureCollection from the intel_items reconstruction. Returns
  * malloc'd JSON, or NULL if there are zero geocoded rows (== buildFcFromIntel
- * returning null so the caller can fall back). */
+ * returning null so the caller can fall back). `collector_rc` is <0 only when
+ * this call is standing in for a run that failed: the stored rows are still
+ * served (they are real), but the envelope says the refresh did not happen, so
+ * they must not be read as current. */
 static char *fc_from_intel(db_handle *db, const char *source_id,
                            const char *cache_status, long long age_ms,
-                           long long ttl_ms, int *count_out) {
+                           long long ttl_ms, int *count_out, int collector_rc) {
   cJSON *feats = intel_fc_features(db, source_id);
   int n = cJSON_GetArraySize(feats);
   if (n == 0) { cJSON_Delete(feats); return NULL; }
   cJSON *fc = cJSON_CreateObject();
   cJSON_AddStringToObject(fc, "type", "FeatureCollection");
   cJSON_AddItemToObject(fc, "features", feats);
-  /* buildFcFromIntel: live = (at == null) → always true on the live path. */
-  add_meta(fc, source_id, n, 1, NULL, cache_status, age_ms, ttl_ms,
-           "intel_items");
+  /* buildFcFromIntel: live = (at == null) → always true on the live path.
+   * Not live when the run that was supposed to refresh these rows failed. */
+  add_meta(fc, source_id, n, collector_rc >= 0, run_failed_note(collector_rc),
+           cache_status, age_ms, ttl_ms, "intel_items");
+  meta_mark_run_failed(cJSON_GetObjectItem(fc, "_meta"), collector_rc);
   if (count_out) *count_out = n;
   char *js = cJSON_PrintUnformatted(fc);
   cJSON_Delete(fc);
@@ -353,7 +376,7 @@ char *dataapi_layer(db_handle *db, const char *id) {
   if (!def || !def->run) {
     long long ttl = get_ttl_ms(db, id);
     int n = 0;
-    char *fc = fc_from_intel(db, id, "miss", 0, ttl, &n);
+    char *fc = fc_from_intel(db, id, "miss", 0, ttl, &n, 0);
     if (fc) return fc;
     if (!intel_has_source(db, id)) return NULL;   /* genuinely unknown */
     /* Known source id but zero geocoded rows → explicit empty FC. */
@@ -389,7 +412,7 @@ char *dataapi_layer(db_handle *db, const char *id) {
     char *cached_raw = collcache_get(db, id, &age);
     if (cached_raw) {
       int n = 0;
-      char *ifc = fc_from_intel(db, id, "hit", age, ttl, &n);
+      char *ifc = fc_from_intel(db, id, "hit", age, ttl, &n, 0);
       if (ifc) {
         free(cached_raw);
         lw_finished(id, n, "hit");
@@ -448,7 +471,10 @@ char *dataapi_layer(db_handle *db, const char *id) {
    * data.js's collector throw → 500; here the unified ABI returns rc<0 and
    * the faithful, more-graceful analog is the canonical empty FC (the same
    * shape data.js's no-data path produces) rather than surfacing a 500 from
-   * a read endpoint. Documented choice. */
+   * a read endpoint. Documented choice — but the SHAPE being the same must not
+   * make the two OUTCOMES indistinguishable: the rc<0 envelope now carries
+   * _meta.collector_status="error", collector_rc and complete:false, and is
+   * not written to collector_cache. See meta_mark_run_failed(). */
   cJSON *feats = cJSON_CreateArray();
   int emitted = 0;
   if (rc >= 0) {
@@ -475,7 +501,7 @@ char *dataapi_layer(db_handle *db, const char *id) {
       /* Prefer the intel_items reconstruction (some rows may be geocoded by
        * a prior/concurrent real run); else the migrated-to-intel empty FC. */
       int n = 0;
-      char *ifc = fc_from_intel(db, id, "miss", 0, ttl, &n);
+      char *ifc = fc_from_intel(db, id, "miss", 0, ttl, &n, 0);  /* rc>=0 here */
       if (ifc) { cJSON_Delete(feats); lw_finished(id, n, "miss"); return ifc; }
 
       cJSON *fc = cJSON_CreateObject();
@@ -510,14 +536,22 @@ char *dataapi_layer(db_handle *db, const char *id) {
     cJSON *fc = cJSON_CreateObject();
     cJSON_AddStringToObject(fc, "type", "FeatureCollection");
     cJSON_AddItemToObject(fc, "features", feats);    /* ownership moves */
-    add_meta(fc, id, emitted, emitted > 0, NULL, NULL, -1, -1, NULL);
-    char *raw = cJSON_PrintUnformatted(fc);
-    if (raw) { collcache_set(db, id, raw, ttl); free(raw); }
+    add_meta(fc, id, emitted, emitted > 0, run_failed_note(rc),
+             NULL, -1, -1, NULL);
+    meta_mark_run_failed(cJSON_GetObjectItem(fc, "_meta"), rc);
+    /* Never cache a failed run. Writing the empty envelope to collector_cache
+     * would turn one transient upstream failure into TTL-worth of responses
+     * that additionally claim `cache_status:"hit"` — i.e. the failure would
+     * stop being visible at all after the first request. */
+    if (rc >= 0) {
+      char *raw = cJSON_PrintUnformatted(fc);
+      if (raw) { collcache_set(db, id, raw, ttl); free(raw); }
+    }
 
     /* Prefer intel_items reconstruction (carries record_type/sub_source_id/
      * geom_source the cached FC lacks); fall back to the normalised FC. */
     int n = 0;
-    char *ifc = fc_from_intel(db, id, "miss", 0, ttl, &n);
+    char *ifc = fc_from_intel(db, id, "miss", 0, ttl, &n, rc);
     if (ifc) { cJSON_Delete(fc); lw_finished(id, n, "miss"); return ifc; }
 
     /* Fallback path: re-stamp _meta with cache fields + served_from. */

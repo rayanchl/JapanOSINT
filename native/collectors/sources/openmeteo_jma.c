@@ -60,13 +60,36 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
           snprintf(title, sizeof title, "%s %.1f\xc2\xb0""C", CITIES[i].name, t->valuedouble);
         else
           snprintf(title, sizeof title, "%s current weather", CITIES[i].name);
-        int off = snprintf(summ, sizeof summ, "%s:", CITIES[i].name);
-        if (cJSON_IsNumber(t))
-          off += snprintf(summ + off, sizeof summ - (size_t)off, " %.1f\xc2\xb0""C", t->valuedouble);
-        if (cJSON_IsNumber(w))
-          off += snprintf(summ + off, sizeof summ - (size_t)off, ", wind %.1f m/s", w->valuedouble);
-        if (cJSON_IsNumber(pr))
-          snprintf(summ + off, sizeof summ - (size_t)off, ", precip %.1f mm", pr->valuedouble);
+        /* CLAMP `off` after every append. snprintf returns what it WOULD have
+         * written, not what it did, and these are `%.1f` of doubles taken
+         * straight out of the upstream JSON — `%.1f` of 1e308 is ~310
+         * characters. One oversized value and `off` runs past the 224-byte
+         * buffer, after which `summ + off` is out of bounds and
+         * `sizeof summ - (size_t)off` UNDERFLOWS to nearly SIZE_MAX, handing
+         * the next snprintf an unbounded write. A previous audit recorded this
+         * site as a false positive on the grounds that `off` is seeded from a
+         * compile-time city table — true of the seed, and irrelevant to the
+         * three appends after it. Same clamp intelapi.c and annotationsapi.c
+         * already use. */
+        size_t off = 0;
+        int wrote = snprintf(summ, sizeof summ, "%s:", CITIES[i].name);
+        if (wrote > 0) off = (size_t)wrote < sizeof summ ? (size_t)wrote
+                                                        : sizeof summ - 1;
+        if (cJSON_IsNumber(t) && off < sizeof summ - 1) {
+          wrote = snprintf(summ + off, sizeof summ - off,
+                           " %.1f\xc2\xb0""C", t->valuedouble);
+          if (wrote > 0) off += (size_t)wrote;
+          if (off >= sizeof summ) off = sizeof summ - 1;
+        }
+        if (cJSON_IsNumber(w) && off < sizeof summ - 1) {
+          wrote = snprintf(summ + off, sizeof summ - off,
+                           ", wind %.1f m/s", w->valuedouble);
+          if (wrote > 0) off += (size_t)wrote;
+          if (off >= sizeof summ) off = sizeof summ - 1;
+        }
+        if (cJSON_IsNumber(pr) && off < sizeof summ - 1)
+          snprintf(summ + off, sizeof summ - off, ", precip %.1f mm",
+                   pr->valuedouble);
         cJSON_AddStringToObject(p, "title", title);
         cJSON_AddStringToObject(p, "summary", summ);
         char link[192];

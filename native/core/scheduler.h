@@ -14,4 +14,9 @@ void scheduler_start_background(db_handle *db);
  * is a drain, not a join: it can return with runs still in flight, and it says
  * so on stderr when it does. Safe to call when the scheduler never started. */
 void scheduler_stop_background(int wait_ms);
+/* 1 when the circuit breaker has this source benched (sources.quarantined_until
+ * in the future). Shared with the entity-pivot path in core/osint_dispatch.c so
+ * both entry points honour one answer — see the note at the definition. */
+int sched_is_quarantined(db_handle *db, const char *id);
+
 #endif

@@ -298,16 +298,9 @@ int hostgate_url_check_strict_nodns(const char *url) {
   return url_check(url, 1);
 }
 
-int hostgate_url_check_strict(const char *url) {
-  int rc = url_check(url, 1);
-  if (rc != HG_URL_OK) return rc;
-
-  /* Caller-supplied URL: resolve it and judge EVERY answer, so a name that
-   * points at 127.0.0.1 (or at a metadata address) is rejected at save time
-   * rather than at fetch time. One DNS lookup on a config-write path is free;
-   * doing this on the collector hot path would not be. */
-  char host[HG_HOSTLEN];
-  if (!hostgate_url_host(url, host, sizeof host)) return HG_URL_BAD_HOST;
+int hostgate_host_check(const char *host, int strict) {
+  if (!host || !*host) return HG_URL_BAD_HOST;
+  if (metadata_hostname(host)) return HG_URL_PRIVATE;
   struct addrinfo hints, *res = NULL;
   memset(&hints, 0, sizeof hints);
   hints.ai_family   = AF_UNSPEC;
@@ -324,10 +317,23 @@ int hostgate_url_check_strict(const char *url) {
       inet_ntop(AF_INET6, &((struct sockaddr_in6 *)ai->ai_addr)->sin6_addr,
                 txt, sizeof txt);
     else continue;
-    bad = hostgate_addr_check(txt, 1);
+    bad = hostgate_addr_check(txt, strict);
   }
   freeaddrinfo(res);
   return bad;
+}
+
+int hostgate_url_check_strict(const char *url) {
+  int rc = url_check(url, 1);
+  if (rc != HG_URL_OK) return rc;
+
+  /* Caller-supplied URL: resolve it and judge EVERY answer, so a name that
+   * points at 127.0.0.1 (or at a metadata address) is rejected at save time
+   * rather than at fetch time. One DNS lookup on a config-write path is free;
+   * doing this on the collector hot path would not be. */
+  char host[HG_HOSTLEN];
+  if (!hostgate_url_host(url, host, sizeof host)) return HG_URL_BAD_HOST;
+  return hostgate_host_check(host, 1);
 }
 
 const char *hostgate_url_reason(int rc) {

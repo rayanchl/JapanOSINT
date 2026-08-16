@@ -18,6 +18,7 @@
 #include "../../lib/feedlib.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
+#include "../../core/hostgate.h"
 #include <ctype.h>
 #include <string.h>
 #include <strings.h>
@@ -96,6 +97,18 @@ static cJSON *analyze_ssl_direct(const char *hostname, int port) {
   const SSL_METHOD *method = TLS_client_method();
   SSL_CTX *ctx = SSL_CTX_new(method);
   if (!ctx) return NULL;
+
+  /* Raw socket + OpenSSL, so nothing in core/httpclient.c applies here.
+   * `hostname` comes from ctx->entity and the port is caller-influenced, which
+   * together make this a general-purpose connect primitive; gate it at strict
+   * strength before the socket is even opened. */
+  int hg = hostgate_host_check(hostname, 1);
+  if (hg != HG_URL_OK) {
+    fprintf(stderr, "[SSL_ANALYZER] refusing %s: %s\n",
+            hostname, hostgate_url_reason(hg));
+    SSL_CTX_free(ctx);
+    return NULL;
+  }
 
   int sock = socket(AF_INET, SOCK_STREAM, 0);
   if (sock < 0) { SSL_CTX_free(ctx); return NULL; }

@@ -4,7 +4,7 @@
  * records_count and modified - all from metas.default. Keyless.
  * Licence: Licence Ouverte / ODbL depending on the dataset; the per-dataset
  * licence field is emitted verbatim. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ods-fr-rennes"
 static const char *URL =

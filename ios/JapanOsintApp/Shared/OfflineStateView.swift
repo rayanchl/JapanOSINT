@@ -44,6 +44,7 @@ struct OfflineStateView: View {
             } icon: {
                 Image(systemName: systemImage ?? defaults.icon)
                     .foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // the title beside it says it
             }
         } description: {
             Text(message ?? defaults.message)

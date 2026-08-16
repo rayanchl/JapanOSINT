@@ -128,6 +128,7 @@ struct SearchHistoryView: View {
                 .font(.subheadline)
                 .foregroundStyle(theme.accent)
                 .frame(width: 24)
+                .accessibilityHidden(true)   // "Private to you" follows
             VStack(alignment: .leading, spacing: 2) {
                 Text("Private to you")
                     .font(.subheadline.weight(.semibold))
@@ -188,6 +189,7 @@ struct SearchHistoryView: View {
                 Image(systemName: "arrow.counterclockwise")
                     .font(.caption2)
                     .foregroundStyle(theme.textMuted)
+                    .accessibilityLabel("Run this search again")
             }
         }
         .padding(.vertical, Space.xs)
@@ -201,6 +203,7 @@ struct SearchHistoryView: View {
             } icon: {
                 Image(systemName: "clock.arrow.circlepath")
                     .foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // "No recent searches" is the label
             }
         } description: {
             Text("Searches you run are recorded here, privately — only your account can read this list.")

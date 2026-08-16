@@ -10,7 +10,7 @@
  * record. It nevertheless contains NAMED INDIVIDUALS - public employees only
  * - so it is a name-to-public-employer pivot and should be treated as such.
  * Licence: New Jersey YourMoney transparency portal, public record. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "socrata-nj-pension-members"
 static const char *URL = "https://data.nj.gov/resource/44xg-bswk.json?$limit=100";

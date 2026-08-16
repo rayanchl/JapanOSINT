@@ -10,6 +10,21 @@
 intel_sink intel_sink_make(db_handle *db, const char *source_id,
                            const char *tenant_id);
 
+/* A copy of `base` bound to a different source_id, keeping its db and tenant.
+ * Returns 1 and fills `out` on success, 0 if `base` is not an intel sink (the
+ * caller should then just use `base`). The caller owns `out` and must
+ * intel_sink_free() it.
+ *
+ * This exists for the entity-pivot path. core/pipeline.c binds ONE sink for the
+ * whole run, as "osint-search", so every dispatched service's rows were stored
+ * under that id and their uids became "osint-search|<remote_key>" — pivot data
+ * was not attributable to the source that produced it, two services sharing a
+ * remote_key collided, and /api/intel/items?source=<service> could not find any
+ * of it. Rebinding per service makes the pivot path store rows exactly the way
+ * the scheduled path does. */
+int intel_sink_rebind(const intel_sink *base, const char *source_id,
+                      intel_sink *out);
+
 /* Releases the state intel_sink_make() allocated. There was no such call
  * until the scheduler became a worker pool: every make() heap-allocates a
  * sink_state and no caller freed it, so the process leaked one per source run

@@ -229,7 +229,7 @@ static int run_author_feed(const source_ctx *ctx, intel_sink *sink) {
     if (cJSON_IsObject(rec)) {
       const cJSON *ls = cJSON_GetObjectItem(rec, "langs");
       if (cJSON_IsArray(ls)) {
-        const cJSON *l0 = cJSON_GetArrayItem(ls, 0);
+        const cJSON *l0 = cJSON_GetArrayItem(ls, 0);  /* exhaustive-ok: display pick; jcopy above put the whole langs array in properties */
         if (cJSON_IsString(l0) && l0->valuestring && l0->valuestring[0])
           lang = l0->valuestring;
       }
@@ -269,14 +269,16 @@ static int plc_line(intel_sink *sink, const char *line) {
   /* handle: legacy `create` ops carry operation.handle, plc_operation ops
    * carry alsoKnownAs[] = ["at://alice.bsky.social", ...] */
   const char *handle = cJSON_IsObject(op) ? jo_sv(op, "handle") : NULL;
+  const cJSON *aka_all = NULL;   /* every alsoKnownAs, when there is >1 */
   if (!handle && cJSON_IsObject(op)) {
     const cJSON *aka = cJSON_GetObjectItem(op, "alsoKnownAs");
     if (cJSON_IsArray(aka)) {
-      const cJSON *a0 = cJSON_GetArrayItem(aka, 0);
+      const cJSON *a0 = cJSON_GetArrayItem(aka, 0);  /* exhaustive-ok: display pick; handles_all below carries every alsoKnownAs entry */
       if (cJSON_IsString(a0) && a0->valuestring && a0->valuestring[0]) {
         handle = a0->valuestring;
         if (strncmp(handle, "at://", 5) == 0) handle += 5;
       }
+      if (cJSON_GetArraySize(aka) > 1) aka_all = aka;
     }
   }
   /* PDS: legacy operation.service, or services.atproto_pds.endpoint */
@@ -298,6 +300,8 @@ static int plc_line(intel_sink *sink, const char *line) {
   jcopy(p, "nullified", o, "nullified");
   if (type)   cJSON_AddStringToObject(p, "operation_type", type);
   if (handle) cJSON_AddStringToObject(p, "handle", handle);
+  /* house rule 2: a DID can publish several handles — keep them all */
+  if (aka_all) cJSON_AddItemToObject(p, "handles_all", cJSON_Duplicate(aka_all, 1));
   if (pds)    cJSON_AddStringToObject(p, "pds", pds);
 
   char title[400], summary[400], rk[200];

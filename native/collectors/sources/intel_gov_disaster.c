@@ -71,7 +71,7 @@ static int usgs_run(const source_ctx *ctx, intel_sink *sink, const char *url) {
               return -1; }
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
   int n = 0; cJSON *f;
-  cJSON_ArrayForEach(f, feats ? feats : NULL) {
+  cJSON_ArrayForEach(f, feats) {
     cJSON *p = cJSON_GetObjectItem(f, "properties");
     if (!p) continue;
     double lat = 0, lon = 0, depth = 0;
@@ -149,7 +149,7 @@ USGS(gd_usgs_45, "usgs-quake-m45-week", "USGS M4.5+ Earthquakes (7d)",
  * — no coordinate is invented. */
 static void vertex_mean(cJSON *node, double *sx, double *sy, int *cnt) {
   if (!cJSON_IsArray(node)) return;
-  cJSON *a = cJSON_GetArrayItem(node, 0), *b = cJSON_GetArrayItem(node, 1);
+  cJSON *a = cJSON_GetArrayItem(node, 0), *b = cJSON_GetArrayItem(node, 1);  /* exhaustive-ok: [x,y] vertex tuple; the recursion below visits every vertex */
   if (a && b && cJSON_IsNumber(a) && cJSON_IsNumber(b)) {
     *sx += a->valuedouble; *sy += b->valuedouble; (*cnt)++; return;
   }
@@ -193,7 +193,7 @@ static int gdacs_run(const source_ctx *ctx, intel_sink *sink) {
   if (!ev) { cJSON_Delete(doc); return -1; }
 
   cJSON *f;
-  cJSON_ArrayForEach(f, feats ? feats : NULL) {
+  cJSON_ArrayForEach(f, feats) {
     cJSON *p = cJSON_GetObjectItem(f, "properties");
     if (!p) continue;
     double eid = 0, epi = 0;
@@ -316,7 +316,7 @@ static int nws_run(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) { fprintf(stderr, "[nws-alerts-us] fetch failed\n"); return -1; }
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
   cJSON *f;
-  cJSON_ArrayForEach(f, feats ? feats : NULL) {
+  cJSON_ArrayForEach(f, feats) {
     cJSON *p = cJSON_GetObjectItem(f, "properties");
     if (!p) continue;
     /* audit-09 (2nd pass): most active alerts are zone-referenced and carry
@@ -423,7 +423,7 @@ static int who_don_run(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) { fprintf(stderr, "[who-outbreak-news] fetch failed\n"); return -1; }
   cJSON *arr = cJSON_GetObjectItem(doc, "value");
   int n = 0; cJSON *e;
-  cJSON_ArrayForEach(e, arr ? arr : NULL) {
+  cJSON_ArrayForEach(e, arr) {
     const char *id = jo_sv(e, "Id");
     const char *title = jo_sv(e, "Title");
     if (!title) title = jo_sv(e, "OverrideTitle");

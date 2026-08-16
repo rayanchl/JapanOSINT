@@ -5,7 +5,7 @@
  * metadata_modified, resource count - parsed from the CKAN response. Keyless.
  * Licence: CC-BY 4.0 for most; the per-dataset license_title is emitted
  * verbatim rather than assumed. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-au-nsw"
 static const char *URL =

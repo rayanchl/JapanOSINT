@@ -10,7 +10,13 @@
 #include <sys/time.h>
 #include <time.h>
 
-typedef struct { db_handle *db; char source_id[128]; char tenant_id[64]; } sink_state;
+/* `magic` exists so intel_sink_rebind() can prove the sink it was handed is
+ * really one of ours before reading ctx as a sink_state. Several sinks in this
+ * tree are NOT intel sinks — dataapi.c's capture sink and lib/unified.c's both
+ * put an unrelated struct in ctx — and misreading one would be a wild pointer
+ * dereference, not a wrong answer. */
+#define SINK_MAGIC 0x53494E4Bu   /* 'SINK' */
+typedef struct { unsigned magic; db_handle *db; char source_id[128]; char tenant_id[64]; } sink_state;
 
 static void iso_now(char *b, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
@@ -266,7 +272,18 @@ static int emit(struct intel_sink *self, const intel_item *it) {
   fts_write(h, uid, it->title, it->body, it->summary, it->link, it->author,
             it->tags_json ? it->tags_json : "[]",
             it->properties_json ? it->properties_json : "{}");
-  sqlite3_exec(h, "COMMIT", NULL, NULL, NULL);
+  /* The COMMIT return is NOT optional. On SQLITE_BUSY or SQLITE_FULL the
+   * transaction stays OPEN, and discarding the rc had three consequences at
+   * once: this emit reported success for a row that was never durable; the
+   * alert and simhash hooks below fired on it; and the NEXT emit's BEGIN
+   * failed silently, so its upsert joined this stale transaction and its
+   * error-path ROLLBACK (above) would have discarded this item's work too.
+   * Fail loudly instead, and leave the connection in a usable state. */
+  if (sqlite3_exec(h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
+    fprintf(stderr, "[intel] COMMIT failed for %s: %s\n", uid, sqlite3_errmsg(h));
+    sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
+    return -1;
+  }
 
   /* Alert matching (roadmap P0.1) — AFTER the commit, never inside it. An
    * alert write must not be able to roll back the ingest that produced it,
@@ -288,11 +305,21 @@ static int emit(struct intel_sink *self, const intel_item *it) {
 intel_sink intel_sink_make(db_handle *db, const char *source_id,
                            const char *tenant_id) {
   sink_state *st = calloc(1, sizeof *st);
+  st->magic = SINK_MAGIC;
   st->db = db;
   snprintf(st->source_id, sizeof st->source_id, "%s", source_id ? source_id : "unknown");
   if (tenant_id) snprintf(st->tenant_id, sizeof st->tenant_id, "%s", tenant_id);
   intel_sink k; k.ctx = st; k.emit = emit;
   return k;
+}
+
+int intel_sink_rebind(const intel_sink *base, const char *source_id,
+                      intel_sink *out) {
+  if (!base || !base->ctx || !source_id || !*source_id || !out) return 0;
+  const sink_state *b = (const sink_state *)base->ctx;
+  if (b->magic != SINK_MAGIC) return 0;    /* not an intel sink — refuse */
+  *out = intel_sink_make(b->db, source_id, b->tenant_id[0] ? b->tenant_id : NULL);
+  return 1;
 }
 
 /* sink_state is flat (a db_handle* it does not own, plus two char arrays), so

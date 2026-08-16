@@ -1,6 +1,7 @@
 /* core/cameraproxy.c — see cameraproxy.h. */
 #include "cameraproxy.h"
 #include "httpclient.h"        /* http_client_global_init() — the one curl init */
+#include "hostgate.h"          /* the SSRF checks this path used to skip */
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <curl/curl.h>
@@ -139,6 +140,26 @@ static int is_http_url(const char *u) {
                strncasecmp(u, "https://", 8) == 0);
 }
 
+
+/* Per-connection SSRF re-check, the same one core/httpclient.c installs.
+ * libcurl calls this after each hop's socket connects and before the request
+ * goes out, so a 302 into 169.254.169.254 — or a DNS answer that rebinds
+ * between our check and curl's own resolve — is caught here instead of
+ * followed. The FLOOR as configured, so JO_HTTP_BLOCK_PRIVATE still governs
+ * whether the LAN cameras this proxy exists to reach are allowed. */
+#if LIBCURL_VERSION_NUM >= 0x075000            /* 7.80.0: CURLOPT_PREREQFUNCTION */
+static int cam_prereq(void *ud, char *conn_primary_ip, char *conn_local_ip,
+                      int conn_primary_port, int conn_local_port) {
+  (void)ud; (void)conn_local_ip; (void)conn_primary_port; (void)conn_local_port;
+  if (hostgate_addr_check_floor(conn_primary_ip) != HG_URL_OK) {
+    fprintf(stderr, "[camproxy] blocked connection to %s (private/link-local)\n",
+            conn_primary_ip ? conn_primary_ip : "?");
+    return CURL_PREREQFUNC_ABORT;
+  }
+  return CURL_PREREQFUNC_OK;
+}
+#endif
+
 char *camera_proxy_fetch(db_handle *db, const char *camera_uid,
                          unsigned char **out_bytes, size_t *out_len,
                          char *ct, size_t ct_cap, int *status) {
@@ -183,11 +204,23 @@ char *camera_proxy_fetch(db_handle *db, const char *camera_uid,
   char *url = upstream_url_of(props);
   free(props);
   if (!url) return errj("camera has no url");
-  /* The uid → URL indirection is what makes this not an SSRF: the caller never
-   * supplies a URL, only the id of a camera this server discovered. The scheme
-   * check keeps a file:// or gopher:// value in the property bag from becoming
-   * a curl target. */
+  /* The uid → URL indirection narrows this but does NOT make it safe: the URL
+   * is read from intel_items.properties, i.e. it was scraped from a
+   * third-party camera aggregator, and it is then followed through up to five
+   * redirects. So this path gets the same three defences http_request() has,
+   * rather than a scheme check on its own — which is all it used to carry:
+   *   1. hostgate_url_check() before dialling,
+   *   2. the protocol set pinned on the initial request AND the redirect chain,
+   *   3. cam_prereq() re-checking the peer address on every hop. */
   if (!is_http_url(url)) { free(url); return errj("only http/https allowed"); }
+  { int gk = hostgate_url_check(url);
+    if (gk != HG_URL_OK) {
+      fprintf(stderr, "[camproxy] refused %s: %s\n", url,
+              hostgate_url_reason(gk));
+      free(url);
+      if (status) *status = 502;
+      return errj("upstream blocked");
+    } }
 
   http_client_global_init();
   CURL *e = curl_easy_init();
@@ -201,6 +234,19 @@ char *camera_proxy_fetch(db_handle *db, const char *camera_uid,
   curl_easy_setopt(e, CURLOPT_WRITEDATA, &sk);
   curl_easy_setopt(e, CURLOPT_FOLLOWLOCATION, 1L);
   curl_easy_setopt(e, CURLOPT_MAXREDIRS, 5L);
+#if LIBCURL_VERSION_NUM >= 0x075500            /* 7.85.0 */
+  curl_easy_setopt(e, CURLOPT_PROTOCOLS_STR, "http,https");
+  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS_STR, "http,https");
+#else
+  curl_easy_setopt(e, CURLOPT_PROTOCOLS,
+                   (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
+  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS,
+                   (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
+#endif
+#if LIBCURL_VERSION_NUM >= 0x075000
+  curl_easy_setopt(e, CURLOPT_PREREQFUNCTION, cam_prereq);
+  curl_easy_setopt(e, CURLOPT_PREREQDATA, (void *)0);
+#endif
   curl_easy_setopt(e, CURLOPT_TIMEOUT_MS, (long)CAM_PROXY_TIMEOUT_MS);
   curl_easy_setopt(e, CURLOPT_CONNECTTIMEOUT_MS, 3000L);
   curl_easy_setopt(e, CURLOPT_USERAGENT, "JapanOsintApp/1.0 (camera-proxy)");

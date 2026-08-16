@@ -3,7 +3,7 @@
  * Emits, per dataset: title, organisation, author and author_email (the owning
  * city department), the DCAT-AP update frequency URI, notes and licence.
  * Keyless. Licence: CC-BY 4.0 / DL-DE-BY. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-de-muenchen"
 static const char *URL =

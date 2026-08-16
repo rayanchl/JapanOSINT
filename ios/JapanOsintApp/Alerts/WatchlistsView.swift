@@ -94,6 +94,7 @@ struct WatchlistsView: View {
                     .font(.body)
                     .foregroundStyle(theme.accent)
                     .frame(width: 26, height: 26)
+                    .accessibilityHidden(true)   // the watchlist name follows
                     .background(theme.accent.opacity(0.14),
                                 in: RoundedRectangle(cornerRadius: Radius.sm))
                 Text(wl.name)
@@ -365,6 +366,7 @@ struct WatchlistEditor: View {
                 }
                 Image(systemName: "plus.circle")
                     .foregroundStyle(theme.accent)
+                    .accessibilityHidden(true)   // the row is the button
             }
         }
         .buttonStyle(.plain)

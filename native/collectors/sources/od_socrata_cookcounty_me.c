@@ -9,7 +9,7 @@
  * them get no location - a county centroid is never substituted. Keyless.
  * Licence: Cook County open data, public record. Rows are already
  * de-identified by the publisher (no names). */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "socrata-cookcounty-medical-examiner"
 static const char *URL =

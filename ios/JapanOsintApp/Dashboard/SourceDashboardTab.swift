@@ -92,6 +92,7 @@ struct SourceDashboardTab: View {
                     Image(systemName: "arrow.clockwise")
                 }
                 .disabled(loading)
+                .accessibilityLabel("Reload collectors")
             }
         }
         .searchable(text: $search, prompt: "Filter collectors")
@@ -158,6 +159,7 @@ struct SourceDashboardTab: View {
             HStack(spacing: 6) {
                 Image(systemName: "lock.trianglebadge.exclamationmark")
                     .font(.caption).foregroundStyle(theme.danger)
+                    .accessibilityHidden(true)   // "Breach corpus" follows
                 Text("Breach corpus").font(.headline).foregroundStyle(theme.text)
                 Spacer()
                 Text("\(breachTotal)")
@@ -190,6 +192,7 @@ struct SourceDashboardTab: View {
             Image(systemName: "chart.pie")
                 .font(.largeTitle)
                 .foregroundStyle(theme.textMuted)
+                .accessibilityHidden(true)   // decorative empty-state mark
             Text("No sources reported.")
                 .font(.subheadline)
                 .foregroundStyle(theme.text)
@@ -210,12 +213,15 @@ struct SourceDashboardTab: View {
                 Image(systemName: icon)
                     .font(.caption2)
                     .foregroundStyle(color)
+                    .accessibilityHidden(true)   // the label beside it says it
                 Text(label).font(.caption2).foregroundStyle(theme.textMuted)
             }
             Text("\(value)")
                 .font(.title3.bold().monospacedDigit())
                 .foregroundStyle(color)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(label): \(value)")
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(Space.md - 2)
         .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: Radius.md))
@@ -276,6 +282,7 @@ struct SourceDashboardTab: View {
         return VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 6) {
                 Image(systemName: icon).font(.caption2).foregroundStyle(color)
+                    .accessibilityHidden(true)   // status name follows
                 Text(status.rawValue.capitalized)
                     .font(.caption.bold()).foregroundStyle(theme.text)
                 Text("\(rows.count)")
@@ -589,10 +596,14 @@ struct CollectorRow: View {
                 Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                     .font(.caption)
                     .foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // state is the button's value
             }
             .padding(10)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(collector.name)
+        .accessibilityValue(isExpanded ? "Expanded" : "Collapsed")
+        .accessibilityHint("Double tap to \(isExpanded ? "collapse" : "expand") this collector")
     }
 
     private var healthChips: some View {
@@ -647,6 +658,7 @@ struct CollectorRow: View {
                             ProgressView().scaleEffect(0.7)
                         } else {
                             Image(systemName: "arrow.clockwise")
+                                .accessibilityHidden(true)   // button title follows
                         }
                         Text(isRefreshing ? "Refreshing…" : "Refresh collector")
                     }
@@ -689,6 +701,8 @@ struct SourceRow: View {
                         .font(.caption2)
                         .foregroundStyle(theme.danger)
                         .frame(width: 10, height: 10)
+                        // The only marker that this row is a breach source.
+                        .accessibilityLabel("Breach source")
                 } else {
                     Circle().fill(statusColor)
                         .frame(width: 10, height: 10)
@@ -970,6 +984,7 @@ private struct SourceDetail: View {
                 Image(systemName: spec.set == true ? "key.fill" : "key.slash")
                     .foregroundStyle(spec.set == true ? theme.success : theme.textMuted)
                     .frame(width: 22)
+                    .accessibilityHidden(true)   // restated by envStatusPill
                 Text(spec.name)
                     .font(.system(.body, design: .monospaced).weight(.medium))
                     .foregroundStyle(theme.text)

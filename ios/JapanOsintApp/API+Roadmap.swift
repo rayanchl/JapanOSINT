@@ -257,6 +257,23 @@ extension API {
         return env.data
     }
 
+    /// `PATCH /api/aoi/:id`. The server MERGES: any field left out keeps its
+    /// stored value, and the merged document is re-validated as a whole (so a
+    /// kind change re-checks the geometry it now claims to be). Passing only
+    /// `name` therefore renames without touching the shape — which is what
+    /// makes `AOIDrawOverlay`'s "saved areas … stay editable" true.
+    @discardableResult
+    func aoiUpdate(_ id: String, name: String? = nil, kind: String? = nil,
+                   geometry: Any? = nil) async throws -> AreaOfInterest {
+        var body: [String: Any] = [:]
+        if let name { body["name"] = name }
+        if let kind { body["kind"] = kind }
+        if let geometry { body["geometry"] = geometry }
+        let env: AOIOneEnvelope = try await patch("/api/aoi/\(esc(id))",
+                                                  body: try enc(body))
+        return env.data
+    }
+
     func aoiDelete(_ id: String) async throws {
         try await delete("/api/aoi/\(esc(id))")
     }
@@ -275,6 +292,25 @@ extension API {
         struct One: Decodable { let data: Watchlist }
         let env: One = try await post("/api/watchlists",
             body: try enc(["name": name, "entity_ids": entityIds]), timeout: 20)
+        return env.data
+    }
+
+    /// `PATCH /api/watchlists/:id` — rename, re-point at a different entity
+    /// set, or enable/disable the rule behind it. Merging server-side: omit
+    /// `entityIds` and the stored list stands. An EMPTY list is refused rather
+    /// than accepted, because a watchlist with no entity term is not a narrower
+    /// watchlist, it is a firehose.
+    @discardableResult
+    func watchlistUpdate(_ id: String, name: String? = nil,
+                         entityIds: [String]? = nil,
+                         enabled: Bool? = nil) async throws -> Watchlist {
+        var body: [String: Any] = [:]
+        if let name { body["name"] = name }
+        if let entityIds { body["entity_ids"] = entityIds }
+        if let enabled { body["enabled"] = enabled }
+        struct One: Decodable { let data: Watchlist }
+        let env: One = try await patch("/api/watchlists/\(esc(id))",
+                                        body: try enc(body))
         return env.data
     }
 
@@ -444,6 +480,45 @@ extension API {
     func cameraStillRaw(_ stillId: String) async throws -> Data {
         let url = try makeURL("/api/camera-stills/\(esc(stillId))/raw")
         return try await request(url, timeout: 60)
+    }
+
+    // ── Roadmap 17 / 28: the capture opt-ins ───────────────────────────────
+    //
+    // `sources.capture_evidence` and `intel_items.capture_stills` both default
+    // to 0 and both capture hooks fail closed, so with no client method the two
+    // features were permanently off: the evidence VIEWER was wired and could
+    // only ever render an empty chain of custody. Both routes are operator-
+    // gated and audited server-side (httpd.c's opgate block) — the switch here
+    // adds no authority, it just makes the existing one reachable.
+
+    /// `POST` (on) / `DELETE` (off) `/api/admin/sources/:id/capture-evidence`.
+    /// Turning this on starts writing third-party content to the server's disk.
+    @discardableResult
+    func setSourceCaptureEvidence(_ sourceId: String,
+                                  enabled: Bool) async throws -> Bool {
+        struct Reply: Decodable { let ok: Bool?; let capture_evidence: Bool? }
+        let url = try makeURL("/api/admin/sources/\(esc(sourceId))/capture-evidence")
+        let data = try await request(url, method: enabled ? "POST" : "DELETE",
+                                     timeout: 20)
+        let r = try? JSONDecoder().decode(Reply.self, from: data)
+        return r?.capture_evidence ?? enabled
+    }
+
+    /// `POST` (on) / `DELETE` (off) `/api/admin/cameras/:uid/capture-stills`.
+    /// The reply's `note` is load-bearing: frames are only PRESERVED when the
+    /// `camera-stills` source is itself opted into evidence capture, so the
+    /// caller must show it rather than report a bare success.
+    @discardableResult
+    func setCameraCaptureStills(_ cameraUID: String,
+                                enabled: Bool) async throws -> (on: Bool, note: String?) {
+        struct Reply: Decodable {
+            let ok: Bool?; let capture_stills: Bool?; let note: String?
+        }
+        let url = try makeURL("/api/admin/cameras/\(esc(cameraUID))/capture-stills")
+        let data = try await request(url, method: enabled ? "POST" : "DELETE",
+                                     timeout: 20)
+        let r = try? JSONDecoder().decode(Reply.self, from: data)
+        return (r?.capture_stills ?? enabled, r?.note)
     }
 
     // ── Item 32: GTFS travel-time reachability ─────────────────────────────

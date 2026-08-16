@@ -20,6 +20,7 @@
  */
 #include "breach_monitor.h"
 #include "audit.h"
+#include "httpclient.h"   /* DoH TXT lookup for domain ownership proof */
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <openssl/rand.h>
@@ -29,6 +30,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
 
 /* id windows for the full value_domain backfill. Big enough that the per-batch
  * transaction overhead disappears, small enough that a cancel is honoured
@@ -42,8 +45,40 @@
 
 /* ── shared idioms (verbatim from alertsapi.c / casesapi.c) ─────────────── */
 
+/* RAND_bytes CAN fail (a provider that failed to load, an exhausted entropy
+ * source, a fork the DRBG noticed), and its return was discarded: `b` is then
+ * UNINITIALISED STACK, which is wrong in both directions. It is not unique —
+ * two calls made from the same call path see the same stack bytes and produce
+ * the SAME "uuid", and this value is a PRIMARY KEY (breach_monitors.id,
+ * alert_events.id), so the second insert is silently lost to the dedup check
+ * or to a constraint — and it is not empty either: whatever the previous frame
+ * left there is rendered as hex into a column the API serves back.
+ *
+ * These ids are uniqueness keys, not capabilities (every route that resolves
+ * one also filters on tenant_id), so the answer is not to fail the write and
+ * lose the row. It is to fall back to something INITIALISED and still unique:
+ * a process-lifetime counter, the clock and the pid, mixed. The version and
+ * variant nibbles are still set, so the shape is unchanged; what changes is
+ * that the value no longer claims randomness it does not have. */
+static void uuid4_fallback(unsigned char b[16]) {
+  static unsigned long long seq;
+  unsigned long long n = __atomic_add_fetch(&seq, 1, __ATOMIC_RELAXED);
+  unsigned long long t = (unsigned long long)time(NULL);
+  unsigned long long p = (unsigned long long)getpid();
+  unsigned long long h = 1469598103934665603ULL;      /* FNV-1a over n,t,p */
+  unsigned long long parts[3] = { n, t, p };
+  for (int i = 0; i < 3; i++)
+    for (int k = 0; k < 8; k++) {
+      h ^= (parts[i] >> (k * 8)) & 0xFF;
+      h *= 1099511628211ULL;
+    }
+  for (int i = 0; i < 8; i++) b[i]     = (unsigned char)(n >> (i * 8));
+  for (int i = 0; i < 8; i++) b[8 + i] = (unsigned char)(h >> (i * 8));
+}
+
 static void uuid4(char out[37]) {
-  unsigned char b[16]; RAND_bytes(b, 16);
+  unsigned char b[16];
+  if (RAND_bytes(b, 16) != 1) uuid4_fallback(b);
   b[6] = (b[6] & 0x0F) | 0x40; b[8] = (b[8] & 0x3F) | 0x80;
   snprintf(out, 37,
     "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
@@ -363,7 +398,11 @@ static void touch_checked(db_handle *db, const char *monitor_id) {
  *
  * The candidate keyids are read out in full and the statement finalized BEFORE
  * any INSERT — see the file header. The cap is what stops a domain monitor on a
- * heavily-breached host from writing a six-figure inbox on its first scan. */
+ * heavily-breached host from writing a six-figure inbox on its first scan.
+ *
+ * Returns the number of alert_events rows that were COMMITTED, or -1 when the
+ * transaction could not be opened or could not be committed — in which case
+ * nothing was written and the caller must not count anything. */
 static long long scan_monitor(db_handle *db, const mon_row *m,
                               const char *source_id, volatile int *cancel) {
   int is_domain = strcmp(m->kind, "domain") == 0;
@@ -397,15 +436,39 @@ static long long scan_monitor(db_handle *db, const mon_row *m,
   sqlite3_finalize(s);
 
   long long hits = 0;
+  int failed = 0;
   if (n > 0 && !cancelled(cancel)) {
-    sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL);
-    for (int i = 0; i < n; i++) hits += emit_event(db, m, keys[i]);
-    sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL);
+    /* The BEGIN and COMMIT returns are NOT optional — the same failure
+     * core/intel.c documents at its own COMMIT. Discarding them cost two
+     * things at once here. A COMMIT that fails on SQLITE_BUSY or SQLITE_FULL
+     * leaves the transaction OPEN on this connection, so the next monitor's
+     * BEGIN fails too and its inserts silently join this stale transaction —
+     * and `hits` was returned regardless, which is what the API publishes as
+     * meta.initial_hits / data.hits. That number would have counted
+     * alert_events rows that were never durable and that the delivery worker
+     * will therefore never send: the caller is told it has alerts it does not
+     * have. Report the failure instead, and leave the connection usable. */
+    if (sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL) != SQLITE_OK) {
+      fprintf(stderr, "[breach-monitor] BEGIN failed for %s: %s\n",
+              m->id, sqlite3_errmsg(db->h));
+      failed = 1;
+    } else {
+      for (int i = 0; i < n; i++) hits += emit_event(db, m, keys[i]);
+      if (sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
+        fprintf(stderr, "[breach-monitor] COMMIT failed for %s: %s\n",
+                m->id, sqlite3_errmsg(db->h));
+        sqlite3_exec(db->h, "ROLLBACK", NULL, NULL, NULL);
+        hits = 0;                    /* nothing above this line is durable */
+        failed = 1;
+      }
+    }
   }
   for (int i = 0; i < n; i++) free(keys[i]);
   free(keys);
-  touch_checked(db, m->id);
-  return hits;
+  /* last_checked_at is only true if the pass committed; a scan whose events
+   * were rolled back has not checked anything. */
+  if (!failed) touch_checked(db, m->id);
+  return failed ? -1 : hits;
 }
 
 static void mon_from_stmt(sqlite3_stmt *s, mon_row *m) {
@@ -453,8 +516,14 @@ long long breach_monitor_scan_new(db_handle *db, const char *source_id,
   sqlite3_finalize(s);
 
   long long hits = 0;
-  for (int i = 0; i < n && !cancelled(cancel); i++)
-    hits += scan_monitor(db, &mons[i], source_id, cancel);
+  for (int i = 0; i < n && !cancelled(cancel); i++) {
+    /* A monitor whose events did not commit contributes NOTHING to the count
+     * (it must not subtract either). This entry point deliberately does not
+     * propagate the failure — see the header: losing an alert is survivable,
+     * failing the corpus ingest that produced it is not. It is on stderr. */
+    long long r = scan_monitor(db, &mons[i], source_id, cancel);
+    if (r > 0) hits += r;
+  }
   free(mons);
   return hits;
 }
@@ -490,6 +559,7 @@ int breach_monitor_rescan_all(db_handle *shared_db, const char *tenant_id,
 
   char after[64] = "";
   long long seen = 0, hits = 0;
+  int failed = 0;
   for (;;) {
     if (cancelled(cancel)) break;
     sqlite3_stmt *s;
@@ -508,7 +578,9 @@ int breach_monitor_rescan_all(db_handle *shared_db, const char *tenant_id,
     if (n == 0) break;
 
     for (int i = 0; i < n && !cancelled(cancel); i++) {
-      hits += scan_monitor(db, &page[i], NULL, cancel);
+      long long r = scan_monitor(db, &page[i], NULL, cancel);
+      if (r < 0) failed = 1;               /* not committed — see scan_monitor */
+      else hits += r;
       seen++;
     }
     snprintf(after, sizeof after, "%s", page[n - 1].id);
@@ -517,7 +589,53 @@ int breach_monitor_rescan_all(db_handle *shared_db, const char *tenant_id,
   if (out_monitors) *out_monitors = seen;
   if (out_hits) *out_hits = hits;
   db_worker_close(&own);       /* no-op if we fell back to the shared handle */
-  return 0;
+  /* *out_hits counts only what committed, so it is still true on the failure
+   * path; the non-zero return is what stops a caller from serving it as a
+   * complete result. Re-running is safe and is the repair (the existence check
+   * makes every scan idempotent). */
+  return failed ? -1 : 0;
+}
+
+/* ── the same rescan, off the request thread ───────────────────────────── */
+
+/* breach_monitor_rescan_all() begins with `if (any_domain_monitor(db))
+ * backfill_all(db, cancel)`, and backfill_all() walks the WHOLE of
+ * breach_items in BACKFILL_WINDOW-row UPDATE batches — a table
+ * core/breach_store.h sizes at "millions–billions of rows". That is not
+ * something a request thread can wait for, and from a request there is no
+ * cancel flag to cut it short either. So when the backfill is going to run,
+ * the scan is handed to a detached thread and the response says so instead of
+ * pretending to a hit count nobody has computed yet.
+ *
+ * The thread takes the SHARED handle only to hand it to rescan_all(), which
+ * opens its own connection off it (db_worker_open) — the shared handle is
+ * process-lifetime, so there is nothing here to outlive. */
+typedef struct { db_handle *db; char tenant[64], monitor[64]; } rescan_job;
+
+static void *rescan_job_thread(void *p) {
+  rescan_job *j = (rescan_job *)p;
+  long long mons = 0, hits = 0;
+  int rc = breach_monitor_rescan_all(j->db, j->tenant, j->monitor, NULL,
+                                     &mons, &hits);
+  fprintf(stderr, "[breach-monitor] background rescan %s: monitors=%lld "
+                  "hits=%lld%s\n",
+          j->monitor, mons, hits, rc ? " (INCOMPLETE — see above)" : "");
+  free(j);
+  return NULL;
+}
+
+/* 1 when the scan is now running on its own thread, 0 when it could not be
+ * started (the caller must then not claim it was). */
+static int rescan_async(db_handle *db, const char *tenant, const char *monitor) {
+  rescan_job *j = calloc(1, sizeof *j);
+  if (!j) return 0;
+  j->db = db;
+  snprintf(j->tenant,  sizeof j->tenant,  "%s", tenant  ? tenant  : "");
+  snprintf(j->monitor, sizeof j->monitor, "%s", monitor ? monitor : "");
+  pthread_t th;
+  if (pthread_create(&th, NULL, rescan_job_thread, j) != 0) { free(j); return 0; }
+  pthread_detach(th);
+  return 1;
 }
 
 /* ── HTTP surface ──────────────────────────────────────────────────────── */
@@ -525,6 +643,143 @@ int breach_monitor_rescan_all(db_handle *shared_db, const char *tenant_id,
 static int can_write(const tenant_ctx *t) {
   return t && (!strcmp(t->role, "owner") || !strcmp(t->role, "admin") ||
                !strcmp(t->role, "analyst"));
+}
+
+/* Registering a monitor is the one operation here that takes an identifier the
+ * CALLER chose and reports back whether it appears in the breach corpus. That
+ * makes it an exposure oracle for arbitrary third parties, which is exactly
+ * what core/entityapi.c refuses uniformly — entityapi_breaches_scoped() returns
+ * NULL for every entity to a non-operator, breached or not, specifically so a
+ * difference in responses cannot be used to probe. This route answers the same
+ * question with richer metadata (name, domain, breach_date, pwn_count,
+ * data_classes, sensitive), so it needs a gate of comparable weight.
+ *
+ * Deliberately narrower than can_write(): delete and rescan act on a monitor
+ * that already exists and reveal nothing new, so an analyst keeps those. Only
+ * the act of naming a NEW identifier is restricted. Creation is additionally
+ * audited with a non-reversible hash prefix (audit_payload), so it stays
+ * attributable. */
+static int can_create(const tenant_ctx *t) {
+  return t && (!strcmp(t->role, "owner") || !strcmp(t->role, "admin"));
+}
+
+/* The domain an identifier belongs to, or NULL when the kind has none.
+ * `username` and `phone` are not domain-scoped, so ownership cannot be proven
+ * for them this way and they stay owner/admin-only. */
+static const char *ident_domain(const char *kind, const char *nv) {
+  if (!kind || !nv) return NULL;
+  if (!strcmp(kind, "domain")) return nv;
+  if (!strcmp(kind, "email")) {
+    const char *at = strrchr(nv, '@');
+    return (at && at[1]) ? at + 1 : NULL;
+  }
+  return NULL;
+}
+
+/* 1 when this tenant has PROVEN control of `domain` (a TXT record carrying the
+ * issued token was observed). Exact match only — deliberately NOT suffix
+ * matching: proving `example.com` says nothing about who runs
+ * `example.com.evil.tld`, and a suffix test is precisely how that becomes a
+ * bypass. A tenant that wants a subdomain verifies that subdomain. */
+static int domain_verified(db_handle *db, const char *tid, const char *domain) {
+  if (!db || !db->h || !tid || !domain || !*domain) return 0;
+  sqlite3_stmt *s; int ok = 0;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT 1 FROM breach_monitor_domains"
+        " WHERE tenant_id=?1 AND domain=?2 AND verified_at IS NOT NULL LIMIT 1",
+        -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, tid,    -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 2, domain, -1, SQLITE_TRANSIENT);
+    ok = (sqlite3_step(s) == SQLITE_ROW);
+    sqlite3_finalize(s);
+  }
+  return ok;
+}
+
+/* May `t` register a monitor for this identifier?
+ *   proven ownership of its domain -> any writer, analyst included
+ *   otherwise                      -> owner/admin only (the audited fallback)
+ *
+ * Role alone was always a blunt instrument: an admin probing a competitor's
+ * domain is the same oracle as an analyst doing it. A verified domain is a real
+ * answer to "is this yours to ask about"; a role is not. The fallback keeps the
+ * feature usable for kinds that have no domain and for a tenant that has not
+ * verified anything yet, and every creation is audited either way. */
+static int mon_can_create_for(db_handle *db, const tenant_ctx *t,
+                              const char *tid, const char *kind,
+                              const char *nv) {
+  if (!can_write(t)) return 0;
+  const char *dom = ident_domain(kind, nv);
+  if (dom && domain_verified(db, tid, dom)) return 1;
+  return can_create(t);
+}
+
+/* ── domain ownership proof ────────────────────────────────────────────────
+ * The token a tenant publishes as a TXT record. Not a secret — it only has to
+ * be unguessable enough that one tenant cannot claim another's pending domain
+ * by publishing a token they predicted. uuid4() is already RAND_bytes-backed. */
+#define BMD_TOKEN_PREFIX "japanosint-domain-verify="
+
+static void bmd_make_token(char out[64]) {
+  char u[37]; uuid4(u);
+  snprintf(out, 64, "%s%s", BMD_TOKEN_PREFIX, u);
+}
+
+/* Does `domain` publish a TXT record containing `token`?
+ *
+ * Over DNS-over-HTTPS deliberately, not res_query: it goes through
+ * core/httpclient.c, so it inherits hostgate, the protocol pins, the timeout
+ * and the body ceiling like every other outbound request in this process — and
+ * a bare resolver call would inherit none of them. Same provider and shape
+ * email_validator.c already uses.
+ *
+ * Returns 1 on match. On any other outcome returns 0 and writes a short reason
+ * into `why` — the caller stores it, because "we looked and did not find it"
+ * and "the lookup itself failed" are different things to a user who is trying
+ * to get this working. */
+static int txt_has_token(http_client *http, const char *domain,
+                         const char *token, char *why, size_t whyn) {
+  snprintf(why, whyn, "lookup did not run");
+  if (!http || !domain || !*domain || !token) return 0;
+
+  /* The domain is bounded and charset-checked by norm_ident() before reaching
+   * here, so it cannot inject query parameters. */
+  char url[512];
+  snprintf(url, sizeof url,
+           "https://dns.google/resolve?name=%s&type=TXT", domain);
+
+  http_response hr = {0};
+  int hc = http_request(http, "GET", url, NULL, NULL, 0, 15000, 1, &hr);
+  if (hc != 0 || hr.status != 200 || !hr.body) {
+    snprintf(why, whyn, "DNS-over-HTTPS lookup failed (status %ld)",
+             (long)hr.status);
+    http_response_free(&hr);
+    return 0;
+  }
+  cJSON *doc = cJSON_Parse(hr.body);
+  http_response_free(&hr);
+  if (!doc) { snprintf(why, whyn, "resolver returned an unparseable answer"); return 0; }
+
+  cJSON *ans = cJSON_GetObjectItem(doc, "Answer");
+  int found = 0, records = 0;
+  if (cJSON_IsArray(ans)) {
+    cJSON *a;
+    cJSON_ArrayForEach(a, ans) {
+      cJSON *d = cJSON_GetObjectItem(a, "data");
+      if (!cJSON_IsString(d) || !d->valuestring) continue;
+      records++;
+      /* The resolver hands TXT data back quoted, and a long record arrives as
+       * several quoted chunks. strstr over the raw value handles both without
+       * having to reassemble them. */
+      if (strstr(d->valuestring, token)) { found = 1; break; }
+    }
+  }
+  cJSON_Delete(doc);
+  if (found) snprintf(why, whyn, "ok");
+  else if (records) snprintf(why, whyn,
+             "%d TXT record(s) found, none carrying the token", records);
+  else snprintf(why, whyn, "no TXT records published for this domain");
+  return found;
 }
 
 /* One monitor row → JSON. The identifier is NOT here and must never be: the
@@ -570,11 +825,17 @@ static int load_mon(db_handle *db, const char *tid, const char *id, mon_row *m) 
   return ok;
 }
 
-/* {data:{monitor}} (+ hit_count when `detail`, + meta.initial_hits when the
- * caller just created it). 404 when the row is not this tenant's. */
+/* {data:{monitor}} (+ hit_count when `detail`, + meta when the caller just
+ * created it). 404 when the row is not this tenant's.
+ *
+ * `scan` describes what happened to the initial corpus match and is NULL for
+ * every caller that did not attempt one; when it is set, meta always carries
+ * BOTH fields, with initial_hits null unless a committed count is in hand.
+ * "complete" is the only value that licenses a number: a client must not read
+ * a missing count as zero hits. */
 static char *one_monitor(db_handle *db, const char *tid, const char *id,
                          int code, int detail, const long long *initial_hits,
-                         int *st) {
+                         const char *scan, int *st) {
   char sql[512];
   snprintf(sql, sizeof sql, "%sWHERE id=?1 AND tenant_id=?2", API_COLS);
   sqlite3_stmt *s;
@@ -601,10 +862,25 @@ static char *one_monitor(db_handle *db, const char *tid, const char *id,
     }
     cJSON *w = cJSON_CreateObject();
     cJSON_AddItemToObject(w, "data", m);
-    if (initial_hits) {
+    if (scan) {
       cJSON *meta = cJSON_CreateObject();
       cJSON_AddItemToObject(meta, "initial_hits",
-                            cJSON_CreateNumber((double)*initial_hits));
+                            initial_hits
+                              ? cJSON_CreateNumber((double)*initial_hits)
+                              : cJSON_CreateNull());
+      cJSON_AddStringToObject(meta, "scan", scan);
+      if (!strcmp(scan, "running"))
+        cJSON_AddStringToObject(meta, "note",
+          "the existing corpus is being matched in the background; poll "
+          "GET /api/breach-monitors/<id>/hits, or re-run POST .../rescan");
+      else if (!strcmp(scan, "not_started"))
+        cJSON_AddStringToObject(meta, "note",
+          "the monitor is stored but the existing corpus has NOT been "
+          "matched; run POST /api/breach-monitors/<id>/rescan");
+      else if (!strcmp(scan, "failed"))
+        cJSON_AddStringToObject(meta, "note",
+          "the initial match did not commit and no count is available; "
+          "re-run POST /api/breach-monitors/<id>/rescan");
       cJSON_AddItemToObject(w, "meta", meta);
     }
     out = cJSON_PrintUnformatted(w); cJSON_Delete(w); *st = code;
@@ -810,10 +1086,156 @@ char *breach_monitors_api(db_handle *db, const tenant_ctx *t,
   int is_get = !strcmp(method, "GET"),  is_post = !strcmp(method, "POST"),
       is_del = !strcmp(method, "DELETE");
 
+  /* ── domain ownership proofs ──────────────────────────────────────────────
+   * GET    /domains          this tenant's domains and their state
+   * POST   /domains          {domain} -> issue (or re-show) the TXT token
+   * POST   /domains/verify   {domain} -> look for the TXT record now
+   * Any writer may drive this: proving you control a domain is not itself a
+   * privileged act, and it is the mechanism by which an analyst earns the
+   * ability to monitor identifiers under it. */
+  if (!strcmp(seg, "domains")) {
+    if (is_get) {
+      sqlite3_stmt *s;
+      cJSON *arr = cJSON_CreateArray();
+      if (sqlite3_prepare_v2(db->h,
+            "SELECT domain,token,created_at,verified_at,last_error"
+            " FROM breach_monitor_domains WHERE tenant_id=?1"
+            " ORDER BY domain", -1, &s, NULL) == SQLITE_OK) {
+        sqlite3_bind_text(s, 1, tid, -1, SQLITE_TRANSIENT);
+        while (sqlite3_step(s) == SQLITE_ROW) {
+          cJSON *o = cJSON_CreateObject();
+          add_str_or_null(o, "domain",      ctext(s, 0));
+          add_str_or_null(o, "txt_record",  ctext(s, 1));
+          add_str_or_null(o, "created_at",  ctext(s, 2));
+          add_str_or_null(o, "verified_at", ctext(s, 3));
+          add_str_or_null(o, "last_error",  ctext(s, 4));
+          cJSON_AddBoolToObject(o, "verified", ctext(s, 3) != NULL);
+          cJSON_AddItemToArray(arr, o);
+        }
+        sqlite3_finalize(s);
+      }
+      cJSON *env = cJSON_CreateObject();
+      cJSON_AddItemToObject(env, "data", arr);
+      char *out = cJSON_PrintUnformatted(env);
+      cJSON_Delete(env);
+      *status = 200;
+      return out;
+    }
+    if (!is_post) return err(status, 405, "method_not_allowed");
+    if (!can_write(t)) return err(status, 403, "forbidden");
+
+    cJSON *jb = (body && *body) ? cJSON_Parse(body) : NULL;
+    char *dn = NULL, *out = NULL;
+    if (!jb || !cJSON_IsObject(jb)) { out = err(status, 400, "body_required"); goto dom_done; }
+    dn = norm_ident("domain", jstr(jb, "domain"));
+    if (!dn) { out = err(status, 400, "invalid_domain"); goto dom_done; }
+
+    if (!act[0]) {                                  /* issue / re-show a token */
+      char tok[64] = {0};
+      sqlite3_stmt *s;
+      if (sqlite3_prepare_v2(db->h,
+            "SELECT token FROM breach_monitor_domains"
+            " WHERE tenant_id=?1 AND domain=?2", -1, &s, NULL) == SQLITE_OK) {
+        sqlite3_bind_text(s, 1, tid, -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(s, 2, dn,  -1, SQLITE_TRANSIENT);
+        if (sqlite3_step(s) == SQLITE_ROW) {
+          const char *e = ctext(s, 0);
+          if (e) snprintf(tok, sizeof tok, "%s", e);
+        }
+        sqlite3_finalize(s);
+      }
+      if (!tok[0]) {                     /* first request for this domain */
+        bmd_make_token(tok);
+        sqlite3_stmt *i;
+        if (sqlite3_prepare_v2(db->h,
+              "INSERT INTO breach_monitor_domains"
+              "(tenant_id,domain,token,created_by) VALUES(?1,?2,?3,?4)",
+              -1, &i, NULL) == SQLITE_OK) {
+          sqlite3_bind_text(i, 1, tid, -1, SQLITE_TRANSIENT);
+          sqlite3_bind_text(i, 2, dn,  -1, SQLITE_TRANSIENT);
+          sqlite3_bind_text(i, 3, tok, -1, SQLITE_TRANSIENT);
+          sqlite3_bind_text(i, 4, t->user_id, -1, SQLITE_TRANSIENT);
+          sqlite3_step(i);
+          sqlite3_finalize(i);
+        }
+        audit_write(db, tid, t->user_id, "breach_monitor.domain.claim", dn, NULL);
+      }
+      cJSON *o = cJSON_CreateObject();
+      cJSON_AddStringToObject(o, "domain", dn);
+      cJSON_AddStringToObject(o, "txt_record", tok);
+      cJSON_AddStringToObject(o, "instructions",
+        "Publish this exact string as a TXT record on the domain, then POST "
+        "/api/breach-monitors/domains/verify with the same domain.");
+      out = cJSON_PrintUnformatted(o); cJSON_Delete(o);
+      *status = 200;
+      goto dom_done;
+    }
+
+    if (!strcmp(act, "verify")) {
+      char tok[64] = {0};
+      sqlite3_stmt *s;
+      if (sqlite3_prepare_v2(db->h,
+            "SELECT token FROM breach_monitor_domains"
+            " WHERE tenant_id=?1 AND domain=?2", -1, &s, NULL) == SQLITE_OK) {
+        sqlite3_bind_text(s, 1, tid, -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(s, 2, dn,  -1, SQLITE_TRANSIENT);
+        if (sqlite3_step(s) == SQLITE_ROW) {
+          const char *e = ctext(s, 0);
+          if (e) snprintf(tok, sizeof tok, "%s", e);
+        }
+        sqlite3_finalize(s);
+      }
+      if (!tok[0]) { out = err(status, 404, "domain_not_claimed"); goto dom_done; }
+
+      char why[192];
+      http_client *http = http_client_new();
+      int ok = txt_has_token(http, dn, tok, why, sizeof why);
+      http_client_free(http);
+
+      sqlite3_stmt *u;
+      if (sqlite3_prepare_v2(db->h,
+            ok ? "UPDATE breach_monitor_domains SET verified_at=datetime('now'),"
+                 " last_error=NULL WHERE tenant_id=?1 AND domain=?2"
+               : "UPDATE breach_monitor_domains SET last_error=?3"
+                 " WHERE tenant_id=?1 AND domain=?2",
+            -1, &u, NULL) == SQLITE_OK) {
+        sqlite3_bind_text(u, 1, tid, -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(u, 2, dn,  -1, SQLITE_TRANSIENT);
+        if (!ok) sqlite3_bind_text(u, 3, why, -1, SQLITE_TRANSIENT);
+        sqlite3_step(u);
+        sqlite3_finalize(u);
+      }
+      if (ok)
+        audit_write(db, tid, t->user_id, "breach_monitor.domain.verified", dn, NULL);
+
+      cJSON *o = cJSON_CreateObject();
+      cJSON_AddStringToObject(o, "domain", dn);
+      cJSON_AddBoolToObject(o, "verified", ok);
+      /* The reason is stated whether it succeeded or not — a verification that
+       * failed silently is the single most frustrating thing this flow could
+       * do, and the detail is about the caller's OWN domain, so there is
+       * nothing to withhold. */
+      cJSON_AddStringToObject(o, "detail", why);
+      if (!ok) cJSON_AddStringToObject(o, "txt_record", tok);
+      out = cJSON_PrintUnformatted(o); cJSON_Delete(o);
+      *status = ok ? 200 : 409;
+      goto dom_done;
+    }
+    out = err(status, 404, "unknown_action");
+
+  dom_done:
+    free(dn);
+    if (jb) cJSON_Delete(jb);
+    return out;
+  }
+
   /* ── collection ── */
   if (!seg[0]) {
     if (is_get) return list_monitors(db, tid, cursor, limit, status);
     if (!is_post) return err(status, 405, "method_not_allowed");
+    /* Cheap gate first so a reader is refused without the body being parsed.
+     * The precise one (mon_can_create_for) needs the normalised identifier and
+     * therefore runs below, once `kind` and `nv` exist. */
     if (!can_write(t)) return err(status, 403, "forbidden");
 
     cJSON *jb = (body && *body) ? cJSON_Parse(body) : NULL;
@@ -829,6 +1251,31 @@ char *breach_monitors_api(db_handle *db, const tenant_ctx *t,
       if (label && strlen(label) > 200) { out = err(status, 400, "label_too_long"); goto post_done; }
       nv = norm_ident(kind, raw);
       if (!nv) { out = err(status, 400, "invalid_value"); goto post_done; }
+
+      /* Ownership gate. Refusing here — after normalisation but BEFORE any
+       * lookup against the corpus — is what keeps this from being an oracle:
+       * the caller learns only that they may not ask, never anything about
+       * whether the identifier is breached. The 403 body names the remedy so
+       * an analyst can act on it without guessing. */
+      if (!mon_can_create_for(db, t, tid, kind, nv)) {
+        const char *dom = ident_domain(kind, nv);
+        cJSON *o = cJSON_CreateObject();
+        cJSON_AddStringToObject(o, "error", "domain_not_verified");
+        if (dom) {
+          cJSON_AddStringToObject(o, "domain", dom);
+          cJSON_AddStringToObject(o, "remedy",
+            "POST /api/breach-monitors/domains {\"domain\":\"...\"} to get a TXT "
+            "token, publish it, then POST .../domains/verify. An owner or admin "
+            "may create this monitor without verification.");
+        } else {
+          cJSON_AddStringToObject(o, "remedy",
+            "this identifier kind is not domain-scoped, so ownership cannot be "
+            "proven; an owner or admin must create it.");
+        }
+        out = cJSON_PrintUnformatted(o); cJSON_Delete(o);
+        *status = 403;
+        goto post_done;
+      }
 
       /* A rule_id is what gives the monitor CHANNELS; it must be this tenant's
        * or delivery would silently resolve someone else's webhook. */
@@ -907,12 +1354,34 @@ char *breach_monitors_api(db_handle *db, const tenant_ctx *t,
 
       /* Match the EXISTING corpus immediately. Without this a monitor created
        * after ingest would only ever see future breaches and would miss all
-       * 1,018 already-loaded ones — which is the entire product promise. It is
-       * one indexed seek plus at most JO_BREACH_MONITOR_MAX_HITS inserts, so it
-       * is safe to do inline on the request. */
-      long long hits = 0;
-      breach_monitor_rescan_all(db, tid, nid, NULL, NULL, &hits);
-      out = one_monitor(db, tid, nid, 201, 1, &hits, status);
+       * 1,018 already-loaded ones — which is the entire product promise.
+       *
+       * WHERE IT RUNS depends on whether the value_domain backfill has to run
+       * first, and the old comment here ("one indexed seek plus at most
+       * JO_BREACH_MONITOR_MAX_HITS inserts, so it is safe to do inline") was
+       * false in exactly the case that matters. rescan_all() opens with
+       * `if (any_domain_monitor(db)) backfill_all(...)`, and the row we have
+       * just INSERTed may itself be the first domain monitor — so creating one
+       * turned a POST into an uncancellable UPDATE over the whole of
+       * breach_items, 50,000 rows at a time, on the request thread. It is not
+       * even specific to domain monitors: once any tenant has one, every
+       * subsequent create pays the same walk.
+       *
+       * So the inline claim is now CHECKED rather than asserted. No domain
+       * monitor anywhere → no backfill, the seek-plus-inserts case really does
+       * hold, and the caller gets its count. Otherwise the scan goes to a
+       * detached thread and the response says the count is not known yet
+       * instead of reporting a zero it never measured. */
+      if (!any_domain_monitor(db)) {
+        long long hits = 0;
+        int scan_rc = breach_monitor_rescan_all(db, tid, nid, NULL, NULL, &hits);
+        out = scan_rc == 0 ? one_monitor(db, tid, nid, 201, 1, &hits, "complete", status)
+                      : one_monitor(db, tid, nid, 201, 1, NULL, "failed", status);
+      } else {
+        int started = rescan_async(db, tid, nid);
+        out = one_monitor(db, tid, nid, 201, 1, NULL,
+                          started ? "running" : "not_started", status);
+      }
     }
 post_done:
     free(pl); free(nv);
@@ -922,7 +1391,7 @@ post_done:
 
   /* ── item ── */
   if (!act[0]) {
-    if (is_get) return one_monitor(db, tid, seg, 200, 1, NULL, status);
+    if (is_get) return one_monitor(db, tid, seg, 200, 1, NULL, NULL, status);
     if (is_del) {
       if (!can_write(t)) return err(status, 403, "forbidden");
       mon_row m;
@@ -958,11 +1427,17 @@ post_done:
     mon_row m;
     if (!load_mon(db, tid, seg, &m)) return err(status, 404, "not_found");
     long long mons = 0, hits = 0;
-    breach_monitor_rescan_all(db, tid, seg, NULL, &mons, &hits);
+    /* This route runs inline on purpose — the operator asked for the corpus
+     * walk and is waiting for its result, which is the difference between it
+     * and the create path above. It is still not allowed to report a count it
+     * did not commit: a scan whose events were rolled back is a 500, and the
+     * re-run is safe because every scan is idempotent. */
+    int rc = breach_monitor_rescan_all(db, tid, seg, NULL, &mons, &hits);
     char *pl = audit_payload(m.kind, NULL, m.rule_id[0] ? m.rule_id : NULL,
                              m.domain[0] ? m.domain : NULL, m.hash);
     audit_write(db, tid, t->user_id, "breach_monitor.rescan", seg, pl);
     free(pl);
+    if (rc != 0) return err(status, 500, "rescan_incomplete");
     cJSON *d = cJSON_CreateObject();
     cJSON_AddStringToObject(d, "monitor_id", seg);
     cJSON_AddItemToObject(d, "monitors_scanned", cJSON_CreateNumber((double)mons));

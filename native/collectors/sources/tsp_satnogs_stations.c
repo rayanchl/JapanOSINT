@@ -38,10 +38,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return -1;
   }
 
-  int n = 0;
+  int n = 0, capped = 0;
+  const int have = cJSON_GetArraySize(doc);
   cJSON *st;
   cJSON_ArrayForEach(st, doc) {
-    if (n >= MAX_ROWS) break;
+    if (n >= MAX_ROWS) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     double sid;
     if (!jo_num(st, "id", &sid)) continue;
     const char *name = jo_sv(st, "name");
@@ -124,6 +125,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
+  /* House rule 2: the whole station list was fetched; MAX_ROWS stopped the
+   * emit loop partway. */
+  if (capped)
+    jo_truncation_notice(sink, "satnogs-network-stations", "stations", n,
+                         (long)have,
+                         "MAX_ROWS reached; the remaining stations in the "
+                         "fetched list were not emitted",
+                         "raise or drop MAX_ROWS in collectors/sources/"
+                         "tsp_satnogs_stations.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[satnogs-network-stations] emitted %d\n", n);
   return 0;

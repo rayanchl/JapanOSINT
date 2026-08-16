@@ -131,8 +131,18 @@ int scheduler_run_source(db_handle *db, const source_def *d,
 }
 
 /* sources.quarantined_until in the future → the circuit breaker has this source
- * benched; the scheduler must not probe it (mirrors Node's quarantine skip). */
-static int is_quarantined(db_handle *db, const char *id) {
+ * benched; the scheduler must not probe it (mirrors Node's quarantine skip).
+ *
+ * Non-static because the ENTITY-PIVOT path needs the same answer. Enforcing
+ * this only in scheduler_loop() meant a source the breaker had benched stayed
+ * fully reachable through POST /api/search — and since the pivot path also
+ * skipped anomaly_detect, pivot traffic could never bench it in the first
+ * place. Two halves of one loop; sched_is_quarantined() closes both.
+ *
+ * is_search_only() deliberately stays static and scheduler-only: a search-only
+ * source is one that EXISTS to be dispatched, so applying it here would refuse
+ * exactly the sources the pivot path is for. */
+static int is_quarantined_impl(db_handle *db, const char *id) {
   sqlite3_stmt *s; int q = 0;
   if (sqlite3_prepare_v2(db->h,
         "SELECT 1 FROM sources WHERE id=?1 AND quarantined_until IS NOT NULL"
@@ -143,6 +153,10 @@ static int is_quarantined(db_handle *db, const char *id) {
     sqlite3_finalize(s);
   }
   return q;
+}
+
+int sched_is_quarantined(db_handle *db, const char *id) {
+  return is_quarantined_impl(db, id);
 }
 
 /* sources.schedule_mode for `id` (default 'map_cron' if row/col absent).
@@ -404,7 +418,7 @@ void scheduler_loop(db_handle *db) {
       if (is_search_only(db, d->id)) { next[i] = now + d->update_interval_sec; continue; }
       /* Circuit breaker: a quarantined source is benched until the cooldown
        * lapses (a later probe past quarantined_until runs and may clear it). */
-      if (is_quarantined(db, d->id)) { next[i] = now + d->update_interval_sec; continue; }
+      if (is_quarantined_impl(db, d->id)) { next[i] = now + d->update_interval_sec; continue; }
       /* Cadence is measured from the DUE time, not from completion: a source
        * that takes 90 s on a 60 s interval stays due immediately rather than
        * silently drifting to 150 s. q_push's skip-if-running is what stops

@@ -57,11 +57,25 @@ struct AlertEditor: View {
     /// is replaced server-side, so every webhook in it needs a real secret).
     private let loadedChannels: [AlertChannel]
 
+    /// The predicate exactly as it arrived. `save()` starts from THIS and
+    /// overwrites only the five terms the form owns.
+    ///
+    /// The server replaces the predicate wholesale — `core/alertsapi.c` does
+    /// `cJSON_Duplicate(bp,1)` whenever the PATCH body carries one — so building
+    /// a fresh `AlertPredicate()` here silently deleted every term this editor
+    /// has no control for: `bbox`, `polygon`, `circle`, `aoi_id`, `tags_all`,
+    /// `entity_ids`, `entity_types`, `record_types`. Renaming a geofenced rule
+    /// un-geofenced it, and nothing said so. Keeping the loaded value also lets
+    /// a caller PREFILL a spatial term (see `AlertRule.blank(geofencedBy:)`) and
+    /// have it survive Create.
+    private let loadedPredicate: AlertPredicate
+
     init(rule: AlertRule, onSave: @escaping (AlertRule) -> Void) {
         self.onSave = onSave
         self.ruleId = rule.id
         self.isCreate = rule.id.isEmpty
         self.loadedChannels = rule.channels
+        self.loadedPredicate = rule.predicate
         _name = State(initialValue: rule.name)
         _enabled = State(initialValue: rule.enabled)
         _mode = State(initialValue: rule.predicate.mode ?? "fts")
@@ -125,6 +139,21 @@ struct AlertEditor: View {
                          ? "LLM mode runs the agentic search pipeline on your natural-language query (ingesting new intel as usual) and fires on items matching the FTS query below. Tap “Suggest FTS query” to have the model draft it, then edit freely."
                          : "All filled fields combine with AND. Leave everything blank to match every new item (use a tight throttle if you do).")
                         .font(.caption2)
+                }
+
+                if !preservedTerms.isEmpty {
+                    Section {
+                        ForEach(preservedTerms, id: \.self) { term in
+                            Label(term, systemImage: "lock")
+                                .font(.caption)
+                                .foregroundStyle(theme.textMuted)
+                        }
+                    } header: {
+                        Text("Also matching")
+                    } footer: {
+                        Text("This rule carries terms this form has no control for. They are kept exactly as they are when you save — they are listed here so \"save\" never looks like it dropped them.")
+                            .font(.caption2)
+                    }
                 }
 
                 Section {
@@ -212,6 +241,7 @@ struct AlertEditor: View {
             HStack(spacing: Space.sm) {
                 Image(systemName: ch.type == .email ? "envelope.fill" : "link")
                     .foregroundStyle(theme.accent)
+                    .accessibilityHidden(true)   // the channel type follows
                 Text(ch.type.label.uppercased())
                     .font(.caption2.bold())
                     .tracking(0.6)
@@ -251,6 +281,43 @@ struct AlertEditor: View {
             }
         }
         .padding(.vertical, 2)
+    }
+
+    // MARK: - Preserved (uneditable) predicate terms
+
+    /// Human names for every loaded predicate term the form cannot edit. Shown
+    /// read-only so the analyst can see the rule is more than what is on screen.
+    private var preservedTerms: [String] {
+        let p = loadedPredicate
+        var out: [String] = []
+        if let b = p.bbox, b.count == 4 {
+            out.append(String(format: "Inside bbox %.3f, %.3f → %.3f, %.3f",
+                              b[0], b[1], b[2], b[3]))
+        }
+        if let ring = p.polygon, !ring.isEmpty {
+            out.append("Inside a \(ring.count)-point polygon")
+        }
+        if let c = p.circle {
+            out.append(String(format: "Within %@ of lat %.3f, lon %.3f",
+                              DrawnAOI.formatRadius(c.radius_m), c.lat, c.lon))
+        }
+        if let id = p.aoi_id, !id.isEmpty { out.append("Inside saved area \(id)") }
+        if let t = p.tags_all, !t.isEmpty {
+            out.append("All of these tags: \(t.joined(separator: ", "))")
+        }
+        if let e = p.entity_ids, !e.isEmpty {
+            out.append("\(e.count) watched entit\(e.count == 1 ? "y" : "ies")")
+        }
+        if let t = p.entity_types, !t.isEmpty {
+            out.append("Entity types: \(t.joined(separator: ", "))")
+        }
+        // `record_types` is deliberately included even though the C matcher
+        // ignores it (see Models.swift): it round-trips, and hiding a stored key
+        // would make "save" look lossy the next time someone diffs the rule.
+        if let t = p.record_types, !t.isEmpty {
+            out.append("Record types (not enforced by the server): \(t.joined(separator: ", "))")
+        }
+        return out
     }
 
     // MARK: - Backtest preview (roadmap 10)
@@ -325,18 +392,23 @@ struct AlertEditor: View {
         // survive. Anything else sends the array as authored.
         let omitChannels = !isCreate && !channelsWereEdited && anyUntouchedWebhook
 
-        var predicate = AlertPredicate()
+        // Start from what was loaded, not from a blank — see `loadedPredicate`.
+        // Every field below is assigned unconditionally (nil when the control is
+        // empty) so clearing a box in the form still clears the term; every
+        // field NOT named here is carried through untouched.
+        var predicate = loadedPredicate
         predicate.mode = mode
         let trimQ = q.trimmingCharacters(in: .whitespaces)
-        if !trimQ.isEmpty { predicate.q = trimQ }
+        predicate.q = trimQ.isEmpty ? nil : trimQ
         let srcs = splitCSV(sourcesCSV)
-        if !srcs.isEmpty { predicate.source_ids = srcs }
+        predicate.source_ids = srcs.isEmpty ? nil : srcs
         let tags = splitCSV(tagsCSV)
-        if !tags.isEmpty { predicate.tags_any = tags }
-        if mode == "llm" {
-            let nl = nlQuery.trimmingCharacters(in: .whitespaces)
-            if !nl.isEmpty { predicate.nl_query = nl }
-        }
+        predicate.tags_any = tags.isEmpty ? nil : tags
+        let nl = nlQuery.trimmingCharacters(in: .whitespaces)
+        // `nl_query` only means anything in llm mode, but it is preserved rather
+        // than dropped when the user switches back to fts — switching modes is
+        // not a request to throw the prompt away.
+        predicate.nl_query = nl.isEmpty ? nil : nl
 
         let rule = AlertRule(
             id: ruleId, name: trimmedName, enabled: enabled,

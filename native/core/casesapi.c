@@ -12,7 +12,6 @@
 #include "annotationsapi.h"   /* the one ref_type vocabulary */
 #include "audit.h"
 #include "intelapi.h"
-#include "breach_adapter.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <openssl/rand.h>
@@ -183,6 +182,40 @@ static int trim_into(const char *in, char *out, size_t n) {
 static const char *jstr(cJSON *o, const char *k) {
   cJSON *v = o ? cJSON_GetObjectItem(o, k) : NULL;
   return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
+}
+
+/* ── transaction control ────────────────────────────────────────────────── */
+
+/* Open a multi-statement transaction. 0 when one is actually open.
+ *
+ * db->h is the shared event-loop handle, so BEGIN can come back SQLITE_BUSY
+ * behind a collector write. Unchecked, the statements that follow run in
+ * autocommit and the error-path ROLLBACK undoes nothing — the all-or-nothing
+ * property these handlers depend on would silently not hold. */
+static int txn_begin(sqlite3 *h) {
+  if (sqlite3_exec(h, "BEGIN", NULL, NULL, NULL) == SQLITE_OK) return 0;
+  fprintf(stderr, "[cases] BEGIN failed: %s\n", sqlite3_errmsg(h));
+  return -1;
+}
+
+/* Close it: COMMIT when ok, ROLLBACK otherwise. Returns 0 only when the work
+ * is durable.
+ *
+ * The COMMIT return is NOT optional. On SQLITE_BUSY or SQLITE_FULL the
+ * transaction stays OPEN, and discarding the rc had three consequences at
+ * once: the handler answered 200/204 for writes that were never durable; the
+ * activity/audit rows written after it recorded a change that did not happen;
+ * and the NEXT request's BEGIN on this shared handle failed silently, so its
+ * writes joined this stale transaction and a later ROLLBACK discarded them
+ * too. Fail loudly and leave the connection usable. */
+static int txn_end(sqlite3 *h, int ok) {
+  if (!ok) { sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL); return -1; }
+  if (sqlite3_exec(h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
+    fprintf(stderr, "[cases] COMMIT failed: %s\n", sqlite3_errmsg(h));
+    sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
+    return -1;
+  }
+  return 0;
 }
 
 /* ── tenancy + authorization ────────────────────────────────────────────── */
@@ -383,15 +416,22 @@ static char *build_snapshot(db_handle *db, const tenant_ctx *t,
   } else if (!strcmp(ref_type, "entity")) {
     data = entity_snapshot(db, t, ref_id);
   } else if (!strcmp(ref_type, "breach_item")) {
-    /* breach uids are "breach:<keyid>"; accept either form from the client and
-     * always go through the adapter, which is what redacts the secret. */
-    if (!strncmp(ref_id, "breach:", 7)) {
-      data = unwrap_data(breach_adapter_item_by_uid(db, ref_id));
-    } else {
-      char uid[600];
-      snprintf(uid, sizeof uid, "breach:%s", ref_id);
-      data = unwrap_data(breach_adapter_item_by_uid(db, uid));
-    }
+    /* NO server-side fetch for breach rows. The adapter redacts the leaked
+     * SECRET, but properties.value is the breached IDENTIFIER itself, and that
+     * is the corpus data every other door keeps behind breach_gate()
+     * (httpd.c:786, :883, :943, :1573 — all opgate_check). This function runs
+     * with a tenant_ctx and no auth_user, so it cannot evaluate that gate; a
+     * fetch here would have handed a plain tenant analyst a breached
+     * identifier and then persisted it into case_items.snapshot_json, which is
+     * exactly the "a gate on one of N doors is not a gate" failure
+     * intelapi.c:214-218 documents.
+     *
+     * The reference still attaches: ref_type/ref_id are stored either way, so
+     * a case can cite a breach hit. Only the server-side CONTENT copy is
+     * refused. An operator who legitimately read the item can still attach its
+     * content through the `supplied` client-snapshot path above, which is
+     * gated by their having been able to read it in the first place. */
+    data = NULL;
   }
   /* feature / camera / search_run: no canonical row reachable from here. */
   return snapshot_wrap(ref_type, ref_id, "server", data);
@@ -811,7 +851,7 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
         "DELETE FROM case_items    WHERE case_id=?1",
         "DELETE FROM case_members  WHERE case_id=?1"
       };
-      sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL);
+      if (txn_begin(db->h) != 0) { out = err(st, 500, "server_error"); goto done; }
       int ok = 1;
       for (int i = 0; i < 3 && ok; i++) {
         sqlite3_stmt *s = NULL;
@@ -833,8 +873,7 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
         }
         sqlite3_finalize(s);
       }
-      sqlite3_exec(db->h, ok ? "COMMIT" : "ROLLBACK", NULL, NULL, NULL);
-      if (!ok) { out = err(st, 500, "server_error"); goto done; }
+      if (txn_end(db->h, ok) != 0) { out = err(st, 500, "server_error"); goto done; }
       audit_write(db, t->tenant_id, t->user_id, "case.delete", seg, NULL);
       *st = 204; out = NULL; goto done;
     }
@@ -1152,7 +1191,7 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
         }
       }
 
-      sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL);
+      if (txn_begin(db->h) != 0) { out = err(st, 500, "server_error"); goto done; }
       int ok = 1;
       {
         sqlite3_stmt *s = NULL;
@@ -1183,8 +1222,9 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
         }
         sqlite3_finalize(s);
       }
-      sqlite3_exec(db->h, ok ? "COMMIT" : "ROLLBACK", NULL, NULL, NULL);
-      if (!ok) { out = err(st, 500, "server_error"); goto done; }
+      /* A roster that did not commit must not produce a members_changed
+       * activity row or an audit entry claiming it did — both run below. */
+      if (txn_end(db->h, ok) != 0) { out = err(st, 500, "server_error"); goto done; }
 
       char msg[64];
       snprintf(msg, sizeof msg, "roster set to %d member(s)", count);

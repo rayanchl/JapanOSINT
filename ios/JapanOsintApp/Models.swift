@@ -556,9 +556,33 @@ struct IntelItem: Codable, Identifiable, Hashable {
     let via_translation: Bool?
 
     /// Near-duplicate corroboration, present only when the request asked for
-    /// `?collapse=1` (roadmap 25). Optional so every existing call site and
-    /// all cached JSON keep decoding unchanged.
-    let cluster: ClusterInfo?
+    /// `?collapse=1` (roadmap 25).
+    ///
+    /// The server emits these FLAT on the item (core/simhash.c writes
+    /// `cluster_id`, `cluster_size`, `cluster_source_count`, `duplicates` and
+    /// `duplicates_truncated` as siblings of `uid`) — there has never been a
+    /// nested `cluster` object on the wire. Declaring one meant the field was
+    /// permanently nil and every value the server computed and shipped was
+    /// dropped at the decode seam, leaving `ClusterBadge` a view with no call
+    /// sites. These stay stored-and-flat to match the wire; `cluster` below
+    /// reassembles them so existing call sites read unchanged.
+    let cluster_id: String?
+    let cluster_size: Int?
+    let cluster_source_count: Int?
+    let duplicates: [ClusterDuplicate]?
+    let duplicates_truncated: Bool?
+
+    /// The five fields above as one value, or nil when the response did not
+    /// carry clustering at all (no `?collapse=1`).
+    var cluster: ClusterInfo? {
+        guard cluster_id != nil || cluster_size != nil || duplicates != nil
+        else { return nil }
+        return ClusterInfo(cluster_id: cluster_id,
+                           cluster_size: cluster_size,
+                           cluster_source_count: cluster_source_count,
+                           duplicates: duplicates,
+                           duplicates_truncated: duplicates_truncated)
+    }
     /// Machine translation, present only when the request asked for
     /// `?lang_view=` (roadmap 29). `machine == true` must be labelled as such
     /// in the UI — it is never the source's own words.
@@ -937,6 +961,30 @@ struct DBPage: Decodable {
     let total: Int
     let limit: Int
     let offset: Int
+
+    /// Completeness of the scan behind this page.
+    ///
+    /// `total` is always a number, even when the server could not determine it —
+    /// making it optional here would fail the whole decode including `error`,
+    /// which is precisely the field you need when something went wrong. So the
+    /// truth rides alongside: `totalKnown == false` means `total` is a
+    /// placeholder, and `complete == false` means the row scan ended early
+    /// (a read error, or a WHERE clause the server could not build). Without
+    /// these, a truncated read is indistinguishable from an empty table.
+    ///
+    /// Optional with a safe default so a response from an older server — which
+    /// sends neither — still decodes and simply reads as complete.
+    let complete: Bool?
+    let totalKnown: Bool?
+    let error: String?
+
+    var isComplete: Bool { complete ?? true }
+    var isTotalKnown: Bool { totalKnown ?? true }
+
+    private enum CodingKeys: String, CodingKey {
+        case name, columns, rows, total, limit, offset, complete, error
+        case totalKnown = "total_known"
+    }
 }
 
 struct SchedulerJob: Decodable, Identifiable, Hashable {

@@ -9,7 +9,7 @@
  * territory (geocod/geodsg), dimension labels and the value. Keyless.
  * Licence: INE Portugal permits reuse with attribution; the API is publicly
  * documented. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "stats-pt-ine-indicator"
 static const char *URL =

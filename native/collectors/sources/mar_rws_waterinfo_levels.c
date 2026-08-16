@@ -57,7 +57,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     /* first measurement entry carries the latest value for this point */
     const cJSON *ms = cJSON_GetObjectItem(pr, "measurements");
-    const cJSON *m0 = cJSON_IsArray(ms) ? cJSON_GetArrayItem(ms, 0) : NULL;
+    const cJSON *m0 = cJSON_IsArray(ms) ? cJSON_GetArrayItem(ms, 0) : NULL;  /* exhaustive-ok: display pick; measurements_all below carries every entry */
     const cJSON *lv = m0 ? cJSON_GetObjectItem(m0, "latestValue") : NULL;
     const char *when = m0 ? jo_sv(m0, "dateTime") : NULL;
     const char *unit = m0 ? jo_sv(m0, "unitCode") : NULL;
@@ -79,6 +79,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddStringToObject(p, "measurementLabel", v);
     if ((v = jo_sv(pr, "locationLabel")))
       cJSON_AddStringToObject(p, "locationLabel", v);
+    /* A point can report more than one measurement entry; the fields above are
+     * the display pick from [0], so keep the whole array too (house rule 2). */
+    if (cJSON_IsArray(ms) && cJSON_GetArraySize(ms) > 1)
+      cJSON_AddItemToObject(p, "measurements_all", cJSON_Duplicate(ms, 1));
 
     /* the response geometry is EPSG:25831 metres, NOT degrees — carried as
      * raw projected coordinates only, never as lat/lon (see the header) */

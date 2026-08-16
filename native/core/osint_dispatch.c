@@ -3,6 +3,12 @@
 #include "httpclient.h"
 #include "llm.h"
 #include "prompts.h"
+#include "intel.h"          /* intel_sink_rebind — per-service row attribution */
+#include "scheduler.h"      /* sched_is_quarantined — the breaker applies here too */
+#include "evidence.h"       /* evidence_scope_begin/end */
+#include "content_change.h" /* content_change_scope_begin/end */
+#include "maint_detect.h"   /* anomaly_detect */
+#include <time.h>
 #include "../third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -143,7 +149,8 @@ typedef struct {
    * the last one (what this did before) silently discarded N-1 of N fetched
    * records at the dispatcher seam; see docs/SOURCE_EXHAUSTIVENESS.md. */
   cJSON      *caps;          /* JSON array, created lazily */
-  int         n_emit;
+  int         n_emit;      /* rows the sink ACCEPTED */
+  int         n_refused;   /* rows the sink refused (emit() < 0) */
   int         any_new;
   /* per-emit source attribution, deduped by name (empty name = "the service
    * itself", resolved to the canonical id at finalize). */
@@ -185,10 +192,38 @@ static int dual_emit(struct intel_sink *s, const intel_item *it) {
    * sub_source_id, else "" — finalize fills "" from the real HTTP host(s) the
    * collector contacted (automatic for every HTTP collector), or the service
    * name for purely local ones. */
-  acc_add(d, (it->sub_source_id && *it->sub_source_id) ? it->sub_source_id : "");
-  d->n_emit++;
+  /* Count only what the real sink ACCEPTED. These counters become
+   * `record_count` and the per-source `records` figures in the API response,
+   * and intel.c's emit() returns <0 when the row was not written — so
+   * incrementing unconditionally made the response state a number of stored
+   * records the store had rejected. The capture above is deliberately NOT
+   * gated: we really did fetch that payload, and dropping it silently would
+   * trade one wrong number for a discarded record. A refusal is carried
+   * instead, so the shortfall is visible rather than absorbed. */
+  if (rc >= 0) {
+    acc_add(d, (it->sub_source_id && *it->sub_source_id) ? it->sub_source_id : "");
+    d->n_emit++;
+  } else {
+    d->n_refused++;
+  }
   if (rc > 0) d->any_new = 1;
   return rc;
+}
+
+/* Byte-for-byte the same verdict core/scheduler.c:run_status() reaches, so a
+ * source's fetch_log rows mean the same thing whichever path produced them. It
+ * is duplicated rather than shared because the scheduler's copy is static and
+ * lives behind a worker-pool header this file does not otherwise include; if a
+ * third caller ever needs it, that is the moment to lift it into db.h. */
+static const char *dispatch_run_status(int rc, long records, int hosts,
+                                       int hosts_ok, const char **why) {
+  *why = NULL;
+  if (rc >= 0) return "ok";
+  if (records > 0) return "ok";
+  if (hosts > 0 && hosts_ok == hosts) return "ok";
+  *why = (hosts > 0) ? "run returned non-zero; no host answered"
+                     : "run returned non-zero";
+  return "error";
 }
 
 int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
@@ -208,10 +243,26 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
     return 0;
   }
 
+  /* The circuit breaker applies here too. It used to be enforced only in
+   * scheduler_loop(), so a source benched for repeated failure or abuse stayed
+   * fully reachable through POST /api/search — and because this path also
+   * skipped anomaly_detect (fixed below), pivot traffic could never bench it
+   * either. Honouring it here closes both halves of that loop. */
+  if (db && sched_is_quarantined(db, def->id)) {
+    out->error = strdup("quarantined");
+    return 0;
+  }
+
+  /* Store this service's rows under ITS OWN id, not under the pipeline's
+   * run-wide "osint-search" sink. See intel_sink_rebind() for why. Falls back
+   * to the caller's sink when it is not an intel sink (main.c --dispatch and
+   * the offline tests both pass one that is, but this must not assume it). */
+  intel_sink own; int own_ok = intel_sink_rebind(persist, def->id, &own);
+
   dual_sink ds = {0};
   ds.base.ctx = &ds;
   ds.base.emit = dual_emit;
-  ds.real = persist;
+  ds.real = own_ok ? &own : persist;
 
   http_client *http = http_client_new();
   volatile int cancel = 0;
@@ -224,7 +275,31 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
   ctx.llm         = llm;
   ctx.cancel      = &cancel;
 
+  /* The four observability systems the scheduled path has always had and this
+   * one never did. evidence and content-change are thread-local scopes that
+   * core/httpclient.c's hooks read (they have no db_handle or source_id of
+   * their own and fail closed when nothing is bound) — so without these, a
+   * pivot fetch produced no chain-of-custody blob and no diff, silently.
+   * Mirrors core/scheduler.c:scheduler_run_source(). */
+  struct timespec t0, t1;
+  clock_gettime(CLOCK_MONOTONIC, &t0);
+  evidence_scope_begin(db, def->id, entity);
+  content_change_scope_begin(db, def->id);
+
   int rc = def->run(&ctx, &ds.base);
+
+  content_change_scope_end();
+  evidence_scope_end();
+  clock_gettime(CLOCK_MONOTONIC, &t1);
+  long duration_ms = (t1.tv_sec - t0.tv_sec) * 1000L +
+                     (t1.tv_nsec - t0.tv_nsec) / 1000000L;
+
+  /* Transport evidence must be read BEFORE the client is freed. */
+  int hosts = http_client_host_count(http), hosts_ok = 0;
+  for (int i = 0; i < hosts; i++) {
+    int ok = 0;
+    if (http_client_host_at(http, i, NULL, &ok) && ok) hosts_ok++;
+  }
 
   out->success    = (rc >= 0 && ds.n_emit > 0) ? 1 : 0;
   out->confidence = out->success ? 70 : 0;     /* JS default */
@@ -292,8 +367,24 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
   cJSON_Delete(ds.caps);        /* NULL unless the wrap above never ran */
 
   http_client_free(http);   /* after reading its host log */
+  if (own_ok) intel_sink_free(&own);
+
+  /* Stage 0+1, exactly as scheduler_run_source() does it: log the run and let
+   * the breaker see it. Without this a pivot source could fail every time and
+   * never be benched, because the only code path that writes fetch_log was the
+   * scheduler's. Same '_' guard — internal pods emit nothing and would trip
+   * duration_outlier on their own LLM calls. */
+  if (db && def->collector && def->collector[0] != '_') {
+    const char *why = NULL;
+    const char *status = dispatch_run_status(rc, ds.n_emit, hosts, hosts_ok, &why);
+    long flid = fetch_log_write(db, def->id, status, ds.n_emit, duration_ms, why);
+    anomaly_detect(db, def->id, flid, status, ds.n_emit, duration_ms);
+  }
 
   fprintf(stderr, "[osint] %s(%s) success=%d emit=%d sources=%d hosts=%d\n",
           canon, entity, out->success, ds.n_emit, n_labeled, nh);
+  if (ds.n_refused)
+    fprintf(stderr, "[osint] %s: %d record(s) refused by the store\n",
+            canon, ds.n_refused);
   return 0;
 }

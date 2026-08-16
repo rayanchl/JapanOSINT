@@ -121,7 +121,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char cutoff[16];
   jo_days_ago_iso(WINDOW_DAYS, cutoff, sizeof cutoff);
 
-  int n = 0, seen = 0;
+  int n = 0, seen = 0, capped = 0;
   char *line;
   while ((line = jo_next_line_cr(&p)) != NULL) {
     if (!*line) continue;
@@ -136,7 +136,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     int recent = (launch && strcmp(launch, cutoff) >= 0) ||
                  (decay  && strcmp(decay,  cutoff) >= 0);
     if (!recent) continue;
-    if (n >= MAX_ROWS) break;
+    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
 
     const char *owner = tsp_cell(f, nf, i_own);
     const char *otype = tsp_cell(f, nf, i_type);
@@ -198,6 +198,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
+  /* House rule 2: the whole SATCAT was downloaded and every object counted;
+   * MAX_ROWS stopped the emit loop inside the recent window. */
+  if (capped)
+    jo_truncation_notice(sink, "celestrak-satcat", "SATCAT", n, (long)seen,
+                         "MAX_ROWS reached; the remaining recently "
+                         "launched/decayed objects in the downloaded catalogue "
+                         "were not emitted",
+                         "raise or drop MAX_ROWS in collectors/sources/"
+                         "tsp_celestrak_satcat.c");
   free(body);
   fprintf(stderr, "[celestrak-satcat] emitted %d of %d catalogued objects "
                   "(launched/decayed since %s)\n", n, seen, cutoff);

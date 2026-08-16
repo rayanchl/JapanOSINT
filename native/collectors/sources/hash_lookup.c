@@ -349,7 +349,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   free(bj); free(pj);
   cJSON_Delete(root); cJSON_Delete(props);
-  return rc >= 0 ? 0 : 0;
+  /* Both arms used to be 0, so a sink/DB write failure — the one case where we
+   * fetched a real verdict and then LOST it — was reported as a clean run. */
+  return rc >= 0 ? 0 : -1;
 }
 
 static const source_def hash_lookup_def = {

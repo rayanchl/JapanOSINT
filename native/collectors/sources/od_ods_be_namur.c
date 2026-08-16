@@ -4,7 +4,7 @@
  * Emits, per dataset: dataset_id, title, description, publisher, licence,
  * records_count and modified - all from metas.default. Keyless.
  * Licence: Ville de Namur / Statbel open data, reuse with attribution. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ods-be-namur"
 static const char *URL =

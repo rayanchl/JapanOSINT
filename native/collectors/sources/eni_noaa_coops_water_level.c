@@ -49,7 +49,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (!meta || !cJSON_IsArray(data) || cJSON_GetArraySize(data) == 0) {
       cJSON_Delete(doc); continue;
     }
-    cJSON *d = cJSON_GetArrayItem(data, 0);
+    cJSON *d = cJSON_GetArrayItem(data, 0);  /* exhaustive-ok: date=latest returns exactly one reading */
     const char *vs = jo_sv(d, "v"), *when = jo_sv(d, "t");
     if (!vs || !when) { cJSON_Delete(doc); continue; }
     char *end = NULL;

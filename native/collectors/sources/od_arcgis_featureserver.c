@@ -13,7 +13,7 @@
  * Keyless (public unauthenticated service).
  * Licence: layer-level licence comes from the owning agency Hub metadata; the
  * service itself is public and unauthenticated. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "arcgis-featureserver-query"
 static const char *URL =

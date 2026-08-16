@@ -71,7 +71,8 @@
 #include "audit.h"
 #include "evidence.h"
 #include "ffmpeg.h"         /* THE video seam — this file no longer has one   */
-#include "httpclient.h"     /* http_client_global_init() — the one curl init */
+#include "httpclient.h"
+#include "hostgate.h"          /* the SSRF checks this path used to skip */
 #include "media.h"
 #include "operatorgate.h"
 #include "../source.h"
@@ -542,6 +543,23 @@ static size_t grab_write(char *ptr, size_t sz, size_t nm, void *ud) {
   return sz * nm;
 }
 
+/* Per-connection SSRF re-check, identical to the one in core/httpclient.c and
+ * core/cameraproxy.c. `url` here comes from a scraped camera property bag and
+ * is followed through redirects, so the peer address has to be re-checked on
+ * every hop rather than trusted from the pre-flight name check. */
+#if LIBCURL_VERSION_NUM >= 0x075000            /* 7.80.0 */
+static int stills_prereq(void *ud, char *conn_primary_ip, char *conn_local_ip,
+                         int conn_primary_port, int conn_local_port) {
+  (void)ud; (void)conn_local_ip; (void)conn_primary_port; (void)conn_local_port;
+  if (hostgate_addr_check_floor(conn_primary_ip) != HG_URL_OK) {
+    fprintf(stderr, "[stills] blocked connection to %s (private/link-local)\n",
+            conn_primary_ip ? conn_primary_ip : "?");
+    return CURL_PREREQFUNC_ABORT;
+  }
+  return CURL_PREREQFUNC_OK;
+}
+#endif
+
 /* Returns 1 on success with *out (malloc'd, caller frees) / *outlen set.
  * `want_jpeg` makes it stop at the first complete frame, which is the only way
  * an infinite multipart stream ever terminates. A CURLE_WRITE_ERROR after we
@@ -551,6 +569,11 @@ static int stream_grab(const char *url, int timeout_ms, size_t maxb,
                        int want_jpeg, unsigned char **out, size_t *outlen,
                        char *ct_out, size_t ct_cap, long *status_out) {
   if (!url || !out || !outlen) return 0;
+  { int gk = hostgate_url_check(url);
+    if (gk != HG_URL_OK) {
+      fprintf(stderr, "[stills] refused %s: %s\n", url, hostgate_url_reason(gk));
+      return 0;
+    } }
   http_client_global_init();
   CURL *e = curl_easy_init();
   if (!e) return 0;
@@ -567,6 +590,19 @@ static int stream_grab(const char *url, int timeout_ms, size_t maxb,
   curl_easy_setopt(e, CURLOPT_WRITEDATA, &g);
   curl_easy_setopt(e, CURLOPT_FOLLOWLOCATION, 1L);
   curl_easy_setopt(e, CURLOPT_MAXREDIRS, 5L);
+#if LIBCURL_VERSION_NUM >= 0x075500            /* 7.85.0 */
+  curl_easy_setopt(e, CURLOPT_PROTOCOLS_STR, "http,https");
+  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS_STR, "http,https");
+#else
+  curl_easy_setopt(e, CURLOPT_PROTOCOLS,
+                   (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
+  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS,
+                   (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
+#endif
+#if LIBCURL_VERSION_NUM >= 0x075000
+  curl_easy_setopt(e, CURLOPT_PREREQFUNCTION, stills_prereq);
+  curl_easy_setopt(e, CURLOPT_PREREQDATA, (void *)0);
+#endif
   curl_easy_setopt(e, CURLOPT_TIMEOUT_MS, (long)timeout_ms);
   curl_easy_setopt(e, CURLOPT_CONNECTTIMEOUT_MS, 5000L);
   curl_easy_setopt(e, CURLOPT_USERAGENT, "JapanOSINT/1.0 (+native)");

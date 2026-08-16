@@ -1,9 +1,13 @@
-/* od_shared.c — helpers shared by the od_* open-data collectors.
+/* od_shared.inc — helpers shared by the od_* open-data collectors.
  *
- * Everything here is `static inline`, so this translation unit emits no
- * symbols: the Makefile wildcard compiles it standalone (cleanly, and with no
- * -Wunused-function noise) and every od_*.c #includes it to get its own
- * private copy. No source_def is registered here.
+ * Everything here is `static inline` and every od_*.c #includes it to get its
+ * own private copy. No source_def is registered here.
+ *
+ * The extension is .inc, not .c, and that is load-bearing: the Makefile globs
+ * collectors/sources with a .c extension, so as a .c this file was ALSO
+ * compiled standalone —
+ * a 55th translation unit that emitted no symbols and warned about nine of its
+ * own helpers being unused, because in a standalone TU nothing calls them.
  *
  * The rules this file exists to enforce once instead of 54 times:
  *   R1 every emitted field came back from the network;
@@ -16,6 +20,7 @@
 
 #include "../../source.h"
 #include "../../lib/feedlib.h"
+#include "../../lib/jocore.h"   /* jo_truncation_notice — house rule 2 disclosure */
 #include "../../third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -618,6 +623,19 @@ static inline int od_js_row(intel_sink *sink, const od_jsctx *jc, int flat,
   return od_emit(sink, &it, props);
 }
 
+/* Would od_js_row materialise this observation? JSON-stat nulls are gaps, not
+ * records being withheld, so they must not be counted as "available" in a
+ * truncation notice. Same test as od_js_row's head, and only that. */
+static inline int od_js_usable(const cJSON *v) {
+  if (cJSON_IsNumber(v)) return 1;
+  if (cJSON_IsString(v) && v->valuestring && v->valuestring[0]) {
+    char *end = NULL;
+    (void)strtod(v->valuestring, &end);
+    return (end && end != v->valuestring) ? 1 : 0;
+  }
+  return 0;
+}
+
 /* JSON-stat 1.x ({"dataset":{…}}) and 2.0 (class=dataset at the root) reader.
  * Emits one row per NON-NULL observation, capped at `max_rows`.
  * Returns #emitted, or -1 on a fetch/parse failure. */
@@ -666,21 +684,34 @@ static inline int od_jsonstat_collect(const source_ctx *ctx, intel_sink *sink,
   jc.ndim = d;
   if (jc.ndim == 0) { cJSON_Delete(doc); return -1; }
 
-  int n = 0, i = 0;
+  /* House rule 2: `max_rows` stops the emit loop, but the whole table is
+   * already in hand — so keep walking it and COUNT what is left rather than
+   * breaking out and reporting an unknown. A JSON-stat table routinely holds
+   * tens of thousands of observations against a caller cap of 300. */
+  int n = 0, i = 0, rest = 0;
   const cJSON *v;
   if (cJSON_IsArray(value)) {
     cJSON_ArrayForEach(v, value) {
-      if (n >= max_rows) break;
+      if (n >= max_rows) { if (od_js_usable(v)) rest++; i++; continue; }
       n += od_js_row(sink, &jc, i, v);
       i++;
     }
   } else {
     cJSON_ArrayForEach(v, value) {                 /* sparse object form */
-      if (n >= max_rows) break;
       if (!v->string) continue;
+      if (n >= max_rows) { if (od_js_usable(v)) rest++; continue; }
       n += od_js_row(sink, &jc, atoi(v->string), v);
     }
   }
+  if (rest > 0)
+    jo_truncation_notice(sink, ctx->source_id, url, n, (long)n + rest,
+                         "the caller's max_rows cap stopped the emit loop; the "
+                         "remaining non-null observations of this JSON-stat "
+                         "table were counted in the downloaded document but "
+                         "not emitted as rows",
+                         "raise the max_rows argument passed to "
+                         "od_jsonstat_collect() in this collector's run(), or "
+                         "narrow the query URL to the slice actually wanted");
   cJSON_Delete(doc);
   return n;
 }
@@ -718,16 +749,25 @@ static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
     return -1;
   }
 
-  int n = 0;
+  /* House rule 2: as in od_jsonstat_collect, once `max_rows` bites we keep
+   * walking the message and count the observations we are not emitting, so
+   * the notice below carries a real total instead of "unknown". */
+  int n = 0, rest = 0;
   const cJSON *set;
   cJSON_ArrayForEach(set, sets) {
     const cJSON *series = cJSON_GetObjectItem(set, "series");
     if (!cJSON_IsObject(series)) continue;
     const cJSON *s;
     cJSON_ArrayForEach(s, series) {
-      if (n >= max_rows) break;
       const cJSON *obs = cJSON_GetObjectItem(s, "observations");
       if (!cJSON_IsObject(obs) || !s->string) continue;
+      if (n >= max_rows) {                    /* count only, decode nothing */
+        const cJSON *co;
+        cJSON_ArrayForEach(co, obs)
+          if (co->string && cJSON_IsArray(co) &&
+              od_js_usable(cJSON_GetArrayItem(co, 0))) rest++;
+        continue;
+      }
 
       /* decode the positional series key against structure.dimensions.series */
       char slabel[320];
@@ -762,8 +802,11 @@ static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
 
       const cJSON *o;
       cJSON_ArrayForEach(o, obs) {
-        if (n >= max_rows) break;
         if (!o->string || !cJSON_IsArray(o)) continue;
+        if (n >= max_rows) {                  /* count only, decode nothing */
+          if (od_js_usable(cJSON_GetArrayItem(o, 0))) rest++;
+          continue;
+        }
         const cJSON *first = cJSON_GetArrayItem(o, 0);
         double val;
         if (cJSON_IsNumber(first)) val = first->valuedouble;
@@ -803,6 +846,16 @@ static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
       if (skey) cJSON_Delete(skey);
     }
   }
+  if (rest > 0)
+    jo_truncation_notice(sink, ctx->source_id, url, n, (long)n + rest,
+                         "the caller's max_rows cap stopped the emit loop; the "
+                         "remaining numeric observations of this SDMX-JSON "
+                         "message were counted in the downloaded document but "
+                         "not emitted as rows",
+                         "raise the max_rows argument passed to "
+                         "od_sdmx_collect() in this collector's run(), or "
+                         "narrow the dataflow key / lastNObservations in the "
+                         "query URL");
   cJSON_Delete(doc);
   return n;
 }

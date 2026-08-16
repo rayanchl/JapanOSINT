@@ -442,6 +442,19 @@ static int valid_role(const char *r) {
   return r && (!strcmp(r,"owner") || !strcmp(r,"admin") ||
                !strcmp(r,"analyst") || !strcmp(r,"viewer"));
 }
+/* Only an owner may create another owner.
+ *
+ * member_can_manage() lets admins run every membership route, and valid_role()
+ * accepts "owner" — so without this an admin could PATCH their OWN membership
+ * to owner (or invite a second account as owner) and then demote the original
+ * owner, because the last-owner guard only fires when the TARGET is currently
+ * an owner. That is a full workspace takeover from the lower of the two
+ * privileged roles, and owner is a real boundary: keysapi.c reserves the
+ * credential write-policy to it. Granting a role you do not hold is the one
+ * thing role management must refuse. */
+static int may_grant_role(const tenant_ctx *t, const char *role) {
+  return strcmp(role, "owner") != 0 || strcmp(t->role, "owner") == 0;
+}
 static char *merr(int *status, int code, const char *msg) {
   *status = code;
   cJSON *o = cJSON_CreateObject();
@@ -565,6 +578,8 @@ char *tenantapi_members(db_handle *db, const tenant_ctx *t,
       return merr(status, 400, "valid email required"); }
     if (!valid_role(role)) { if (jb) cJSON_Delete(jb);
       return merr(status, 400, "invalid role"); }
+    if (!may_grant_role(t, role)) { if (jb) cJSON_Delete(jb);
+      return merr(status, 403, "only a workspace owner can grant the owner role"); }
     char mail[256]; int mi = 0;
     for (const char *p = em; *p && mi < 255; p++) mail[mi++] = (char)tolower((unsigned char)*p);
     mail[mi] = 0;
@@ -654,6 +669,8 @@ char *tenantapi_members(db_handle *db, const tenant_ctx *t,
     const char *role = (jr && cJSON_IsString(jr)) ? jr->valuestring : NULL;
     if (!valid_role(role)) { if (jb) cJSON_Delete(jb);
       return merr(status, 400, "invalid role"); }
+    if (!may_grant_role(t, role)) { if (jb) cJSON_Delete(jb);
+      return merr(status, 403, "only a workspace owner can grant the owner role"); }
     char cur[32];
     if (!member_role(h, t->tenant_id, seg, cur)) { if (jb) cJSON_Delete(jb);
       return merr(status, 404, "member not found"); }
@@ -662,16 +679,23 @@ char *tenantapi_members(db_handle *db, const tenant_ctx *t,
       if (jb) cJSON_Delete(jb);
       return merr(status, 400, "cannot demote the last owner");
     }
-    sqlite3_stmt *s;
+    /* The step result decides whether the audit row is written. Discarding it
+     * and auditing unconditionally is how you get a hash-chained
+     * `member.role` entry for a change that never landed — the same fabricated
+     * record alertsapi.c:387-392 was rewritten to prevent. */
+    sqlite3_stmt *s = NULL;
+    int changed = 0;
     if (sqlite3_prepare_v2(h,
           "UPDATE memberships SET role=?1 WHERE tenant_id=?2 AND user_id=?3",
           -1, &s, NULL) == SQLITE_OK) {
       sqlite3_bind_text(s, 1, role, -1, SQLITE_TRANSIENT);
       sqlite3_bind_text(s, 2, t->tenant_id, -1, SQLITE_TRANSIENT);
       sqlite3_bind_text(s, 3, seg, -1, SQLITE_TRANSIENT);
-      sqlite3_step(s);
+      if (sqlite3_step(s) == SQLITE_DONE) changed = sqlite3_changes(h);
     }
     sqlite3_finalize(s);
+    if (!changed) { if (jb) cJSON_Delete(jb);
+      return merr(status, 500, "role update failed"); }
     member_audit(h, t, "member.role", seg, NULL);
     cJSON *o = cJSON_CreateObject();
     cJSON_AddBoolToObject(o, "ok", 1);

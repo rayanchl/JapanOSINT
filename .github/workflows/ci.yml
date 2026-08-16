@@ -52,10 +52,184 @@ jobs:
         working-directory: native
         run: make selftest
 
-      - name: Unit tests
+      - name: Unit tests (dispatcher fan-out)
         working-directory: native
         run: make unit
+
+      # The two offline test binaries. Both were in the tree, both pass, and
+      # neither was gated by anything — hptest is 38 assertions that encode
+      # both house rules directly (truncation notices, pagination, detail hops,
+      # missing-credential-is-an-honest-empty), and authtest generates real
+      # RSA/EC keys and proves a JWT still verifies after the OpenSSL 3
+      # migration. Neither needs network, a key, or a model.
+      - name: Record-engine tests (house rules 1 and 2)
+        working-directory: native
+        run: make hptest
+
+      - name: JWT public-key round-trip
+        working-directory: native
+        run: make authtest
+
+      - name: Paging and truncation disclosure
+        working-directory: native
+        run: make pagewalktest
+
+      - name: HTML attribute scanner
+        working-directory: native
+        run: make htmlparsetest
 
       - name: Lint collector sources
         working-directory: native
         run: make lint-sources
+
+      # House rule 2's mechanical check. Gates the hp_* engine rows strictly
+      # (they are held at zero) and reports the wider tree's heuristic count
+      # without failing on it — those need a human read, not a build break.
+      - name: Exhaustive-use audit
+        working-directory: native
+        run: make audit-sources
+
+  # Memory safety is this codebase's named critical bug class — heap
+  # use-after-free and over-read, none of which crash reliably, so "it built
+  # and produced rows" is not evidence. The asan target already existed and
+  # was wired to nothing. Separate job because ASan needs its own object tree.
+  asan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      JO_DB: ${{ runner.temp }}/ci-asan.db
+      JO_SCHEMA: ${{ github.workspace }}/native/core/schema.sql
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libcurl4-openssl-dev libssl-dev libmecab-dev mecab zlib1g-dev \
+            mecab-ipadic-utf8
+      - name: Unit tests under AddressSanitizer
+        working-directory: native
+        run: make asan-test
+
+  # The Makefile's entire second half is macOS-only and, until this job, was
+  # never once executed by CI: BREW_SSL (Homebrew openssl@3 when pkg-config
+  # resolves nothing), BREW_CURL (Apple's libcurl is built WITHOUT WebSocket
+  # support, which lib/ws.c needs, so the keg-only curl is prepended with an
+  # -Wl,-rpath), and ICONV_LIB (-liconv exists off-Linux only). Those are
+  # lines 8-20 and 29-35 of native/Makefile — and they are the half the
+  # primary developer builds with every day, so the platform most likely to
+  # break was the one platform nothing watched.
+  #
+  # macos-latest is Apple Silicon, so /opt/homebrew is the prefix both brew
+  # probes in the Makefile test for.
+  macos:
+    runs-on: macos-latest
+    timeout-minutes: 90
+    env:
+      JO_DB: ${{ runner.temp }}/ci-macos.db
+      JO_SCHEMA: ${{ github.workspace }}/native/core/schema.sql
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          for f in curl openssl@3 mecab mecab-ipadic pkg-config; do
+            brew list --formula "$f" >/dev/null 2>&1 || brew install "$f"
+          done
+        # mecab-ipadic is the runtime dictionary, matching mecab-ipadic-utf8 on
+        # the Ubuntu job: without it core/fts.c degrades to Latin passthrough
+        # and the Japanese tokenizer path is never exercised.
+
+      - name: Build
+        working-directory: native
+        run: make -j"$(sysctl -n hw.ncpu)"
+
+      - name: Selftest
+        working-directory: native
+        run: make selftest
+
+      - name: Unit tests (dispatcher fan-out)
+        working-directory: native
+        run: make unit
+
+      - name: Record-engine tests (house rules 1 and 2)
+        working-directory: native
+        run: make hptest
+
+      - name: JWT public-key round-trip
+        working-directory: native
+        run: make authtest
+
+      - name: Paging and truncation disclosure
+        working-directory: native
+        run: make pagewalktest
+
+      - name: HTML attribute scanner
+        working-directory: native
+        run: make htmlparsetest
+
+      # Deliberately NOT repeated here: lint-sources and audit-sources. Both
+      # are pure python3 over the source text with no platform-dependent
+      # behaviour, and the Ubuntu job above already fails the build on them.
+      # Running them twice would only spend macOS runner minutes (billed 10x)
+      # to re-derive the same numbers.
+
+  # 41,108 lines of Swift across 148 files had no build, no test and no lint in
+  # CI — the single largest ungated surface in the repo. That gap is not
+  # theoretical: the probe-consent bug (audit F-12, iOS posted `allow` while
+  # core/httpd.c read `consent`, an unconditional 400) was written on both sides
+  # in one session and shipped, because nothing ever compiled the two together.
+  # A later session's iOS work sat unverified for the same reason until it was
+  # built by hand.
+  #
+  # This is a COMPILE gate and nothing more. There is no XCTest target in the
+  # project today, so there is nothing to run; claiming otherwise would be the
+  # aspirational wiring this file's header refuses. What it does catch is every
+  # class of break that actually happens here — a Swift type error, a renamed
+  # symbol, a file added to the tree but not the target.
+  ios:
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pinned to nothing on purpose: the app targets the current SDK, and a
+      # runner-image Xcode bump that breaks the build is a real break worth
+      # seeing. The version is echoed so a sudden failure is diagnosable.
+      - name: Xcode version
+        run: xcodebuild -version
+
+      # CODE_SIGNING_ALLOWED=NO on both destinations. The runner holds no
+      # signing identity, and the macOS build fails at once without it ("No Mac
+      # Development signing certificate matching team ID YXQHVT52SE"). Signing
+      # is not what this job tests — compilation is — and a simulator/unsigned
+      # build exercises every line the signed one does.
+      - name: Build (iOS Simulator)
+        working-directory: ios
+        run: |
+          xcodebuild -project JapanOsintApp.xcodeproj \
+                     -scheme JapanOsintApp \
+                     -configuration Debug \
+                     -destination 'generic/platform=iOS Simulator' \
+                     -derivedDataPath "$RUNNER_TEMP/dd-ios" \
+                     CODE_SIGNING_ALLOWED=NO \
+                     -quiet build
+
+      # macOS is the SAME multiplatform target, not a separate app: the shared
+      # sources compile against AppKit here and UIKit above, through the shims
+      # in Shared/PlatformCompat.swift. Building only the simulator would leave
+      # every one of those #if os() branches unchecked, which is precisely where
+      # a cross-platform tree breaks.
+      - name: Build (macOS)
+        working-directory: ios
+        run: |
+          xcodebuild -project JapanOsintApp.xcodeproj \
+                     -scheme JapanOsintApp \
+                     -configuration Debug \
+                     -destination 'platform=macOS,arch=arm64' \
+                     -derivedDataPath "$RUNNER_TEMP/dd-macos" \
+                     CODE_SIGNING_ALLOWED=NO \
+                     -quiet build

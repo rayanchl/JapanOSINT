@@ -16,13 +16,21 @@ struct ThemedCheckboxToggleStyle: ToggleStyle {
             HStack(spacing: 8) {
                 configuration.label
                 Spacer(minLength: 8)
+                // Chrome: the on/off state is published as the control's
+                // accessibility value below, not as an SF Symbol name.
                 Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
                     .font(.body)
                     .foregroundStyle(configuration.isOn ? theme.accent : theme.textMuted)
+                    .accessibilityHidden(true)
             }
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        // A custom `ToggleStyle` built out of a `Button` announces itself as a
+        // plain button, so nothing tells VoiceOver whether the box is ticked.
+        // These two lines restore what the stock `.switch` style gives free.
+        .accessibilityAddTraits(.isToggle)
+        .accessibilityValue(configuration.isOn ? "On" : "Off")
     }
 }
 

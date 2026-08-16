@@ -60,6 +60,76 @@ static const cred_def CREDS[] = {
   {"BANKRUPTCY_SEARCH",   {0},{0},{"COURTLISTENER_API_KEY"}},
   {"CRIMINAL_RECORDS",    {0},{0},{"COURTLISTENER_API_KEY"}},
   {"LICENSE_PLATE_LOOKUP",{0},{0},{"PLATE_LOOKUP_URL","PLATE_LOOKUP_API_KEY"}},
+  /* ── collectors that GATE on a credential but had no entry here ────────
+   * Derived by scanning every collector for a getenv()/jo_env() of a
+   * credential-shaped name that is followed by an early return — i.e. the
+   * collector refuses to run without it — and keeping only files with exactly
+   * one source_def, so the id↔var mapping is unambiguous.
+   *
+   * Without a row here three things were true at once: /api/keys REFUSED to
+   * set the variable ("Unknown key"), /api/status asserted requiresKey:0 /
+   * configured:1 for the source, and the dashboard's "needs key" filter could
+   * never surface it. So a scheduled collector could gate on a credential the
+   * operator had no way to supply and no way to discover, and re-gate on every
+   * tick forever.
+   *
+   * Note COURTLISTENER_OPINIONS below: it reads COURTLISTENER_TOKEN, while the
+   * pre-existing rows expose COURTLISTENER_API_KEY. Same family, different
+   * variable — setting the documented one did nothing for this source. The
+   * name recorded here is the one the collector actually reads. */
+  {"CENSYS_SEARCH",             {"CENSYS_API_SECRET"},{0},{0}},
+  {"COURTLISTENER_OPINIONS",    {"COURTLISTENER_TOKEN"},{0},{0}},
+  {"DARK_WEB_MONITOR",          {"INTELX_API_KEY"},{0},{0}},
+  {"DATALASTIC_VESSEL",         {"DATALASTIC_KEY"},{0},{0}},
+  {"DEHASHED_SEARCH",           {"DEHASHED_API_KEY"},{0},{0}},
+  {"GBIZINFO",                  {"GBIZINFO_TOKEN"},{0},{0}},
+  {"GEONAMES",                  {"GEONAMES_USER"},{0},{0}},
+  {"HASH_LOOKUP",               {"VIRUSTOTAL_API_KEY"},{0},{0}},
+  {"IE_CRO",                    {"CRO_API_KEY"},{0},{0}},
+  {"IN_MCA",                    {"INDIA_DATA_KEY"},{0},{0}},
+  {"IP_REPUTATION",             {0},{"ABUSEIPDB_API_KEY","IPQS_API_KEY"},{0}},
+  {"KR_DART",                   {"DART_API_KEY"},{0},{0}},
+  {"MEDIACLOUD",                {"MEDIACLOUD_API_KEY"},{0},{0}},
+  {"NEWS_AGGREGATOR",           {"NEWSAPI_KEY"},{0},{0}},
+  {"NEWS_ARCHIVE",              {"NEWSAPI_KEY"},{0},{0}},
+  {"OPENCORPORATES",            {"OPENCORPORATES_API_KEY"},{0},{0}},
+  {"RO_COMPANIES",              {0},{"OPENAPI_RO_KEY","OPENAPIRO_KEY"},{0}},
+  {"SATELLITE_TRACKER",         {"N2YO_API_KEY"},{0},{0}},
+  {"THREAT_FEED_LOOKUP",        {"OTX_API_KEY"},{0},{0}},
+  {"THREAT_INTEL",              {"ABUSEIPDB_API_KEY"},{0},{0}},
+  {"UK_COMPANIES",              {"COMPANIES_HOUSE_API_KEY"},{0},{0}},
+  {"WHALE_ALERT",               {0},{"ETHERSCAN_API_KEY","WHALE_ALERT_API_KEY"},{0}},
+  {"WIFI_LOOKUP",               {0},{"WIGLE_API_NAME","WIGLE_API_TOKEN"},{0}},
+  {"YOUTUBE_SEARCH",            {"YOUTUBE_API_KEY"},{0},{0}},
+  {"agoop-flow",                {"AGOOP_API_KEY"},{0},{0}},
+  {"censys-japan",              {"CENSYS_API_SECRET"},{0},{0}},
+  {"docomo-insight",            {"DOCOMO_INSIGHT_API_KEY"},{0},{0}},
+  {"docomo-population",         {"DOCOMO_POPULATION_API_KEY"},{0},{0}},
+  {"estat-census",              {"ESTAT_APP_ID"},{0},{0}},
+  {"estat-education",           {"ESTAT_APP_ID"},{0},{0}},
+  {"estat-employment",          {"ESTAT_APP_ID"},{0},{0}},
+  {"estat-household",           {"ESTAT_APP_ID"},{0},{0}},
+  {"estat-industry",            {"ESTAT_APP_ID"},{0},{0}},
+  {"flickr-geo",                {"FLICKR_API_KEY"},{0},{0}},
+  {"google-dorking",            {0},{"GOOGLE_CSE_KEY","SERPAPI_KEY"},{0}},
+  {"here-japan",                {"HERE_API_KEY"},{0},{0}},
+  {"houjin-bangou",             {"HOUJIN_BANGOU_KEY"},{0},{0}},
+  {"houmukyoku-commercial",     {"HOUMUKYOKU_API_KEY"},{0},{0}},
+  {"jstat-map",                 {"ESTAT_APP_ID"},{0},{0}},
+  {"mapfan-api",                {"MAPFAN_API_KEY"},{0},{0}},
+  {"marinetraffic-jp",          {"MARINETRAFFIC_API_KEY"},{0},{0}},
+  {"nasa-firms-jp",             {0},{"NASA_FIRMS_MAP_KEY","FIRMS_MAP_KEY"},{0}},
+  {"navitime-api",              {"NAVITIME_API_KEY"},{0},{0}},
+  {"nvd-cpe-dictionary",        {"NVD_API_KEY"},{0},{0}},
+  {"psn-xbox-jp",               {"XBOX_API_KEY"},{0},{0}},
+  {"reinfolib",                 {"REINFOLIB_API_KEY"},{0},{0}},
+  {"resas-population",          {"RESAS_API_KEY"},{0},{0}},
+  {"softbank-crowd",            {"SOFTBANK_CROWD_API_KEY"},{0},{0}},
+  {"telegram-jp-channels",      {"TGSTAT_API_KEY"},{0},{0}},
+  {"tellus-satellite",          {"TELLUS_TOKEN"},{0},{0}},
+  {"tiktok-geo",                {"TIKTOK_MS_TOKEN"},{0},{0}},
+  {"windy-japan",               {"WINDY_API_KEY"},{0},{0}},
+  {"yahoo-map-api",             {"YAHOO_APP_ID"},{0},{0}},
 };
 
 const cred_def *cred_get(const char *id) {

@@ -117,6 +117,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &row) >= 0) n++;
     free(pj);
   }
+  /* House rule 2: the measurements endpoint is paged and this collector asks
+   * for page=1 only. Luchtmeetnet publishes the page count in `pagination`;
+   * read it when present rather than guessing a total. */
+  {
+    const cJSON *pg = cJSON_GetObjectItem(doc, "pagination");
+    const cJSON *lastp = cJSON_IsObject(pg) ? cJSON_GetObjectItem(pg, "last_page") : NULL;
+    if (!cJSON_IsNumber(lastp) || lastp->valuedouble > 1)
+      jo_truncation_notice(sink, SRC, "measurements page=1", n, -1,
+                           "the measurements endpoint is paged and the request "
+                           "pins page=1; every later page is never fetched",
+                           "walk page=2,3,… until the endpoint returns an empty "
+                           "data[] in collectors/sources/eni_luchtmeetnet_nl.c");
+  }
   cJSON_Delete(doc);
   fprintf(stderr, "[" SRC "] emitted %d\n", n);
   return 0;

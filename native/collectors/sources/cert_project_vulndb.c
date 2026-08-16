@@ -222,11 +222,12 @@ static int go_run(const source_ctx *c, intel_sink *s) {
   cJSON *doc = feed_get_json_h(c->http, GO_URL, hdrs, 30000);
   if (!doc) { fprintf(stderr, "[go-vulndb-index] fetch/parse failed\n"); return -1; }
   cJSON *arr = cJSON_IsArray(doc) ? doc : cJSON_GetObjectItem(doc, "vulns");
-  int n = 0;
+  int n = 0, capped = 0;
+  const int have = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
   if (cJSON_IsArray(arr)) {
     cJSON *e;
     cJSON_ArrayForEach(e, arr) {
-      if (n >= GO_MAX_ROWS) break;
+      if (n >= GO_MAX_ROWS) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
       const char *id = jo_sv(e, "id");
       if (!id) continue;                      /* no GO- id -> no row (R1) */
       const char *mod = jo_sv(e, "modified");
@@ -262,6 +263,14 @@ static int go_run(const source_ctx *c, intel_sink *s) {
       free(pj);
     }
   }
+  /* House rule 2: GO_MAX_ROWS is a runaway guard sized above today's index, so
+   * it normally never bites — but if the index outgrows it, say so as data. */
+  if (capped)
+    jo_truncation_notice(s, "go-vulndb-index", "index/vulns.json", n, (long)have,
+                         "GO_MAX_ROWS reached; the remaining GO-* advisories in "
+                         "the fetched index were not emitted",
+                         "raise or drop GO_MAX_ROWS in collectors/sources/"
+                         "cert_project_vulndb.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[go-vulndb-index] emitted %d\n", n);
   return 0;

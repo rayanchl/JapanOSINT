@@ -9,7 +9,7 @@
  * the /series/catalog endpoints on the same host. Keyless.
  * Licence: CBS Israel public statistics; the API is openly documented and
  * needs no auth. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "stats-il-cbs-series"
 static const char *URL =

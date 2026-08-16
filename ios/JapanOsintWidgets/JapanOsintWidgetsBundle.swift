@@ -47,6 +47,7 @@ struct WidgetDisconnected: View {
         VStack(spacing: 4) {
             Image(systemName: "wifi.exclamationmark")
                 .foregroundStyle(WidgetTheme.muted)
+                .accessibilityHidden(true)   // decorative; label follows
             Text("Open JapanOSINT")
                 .font(.caption2)
                 .foregroundStyle(WidgetTheme.muted)
@@ -60,8 +61,10 @@ struct WidgetStaleness: View {
     let generatedAt: Date
     var body: some View {
         if generatedAt > .distantPast {
+            // Was a hardcoded 9 pt — below the 11 pt legibility floor and blind
+            // to Dynamic Type. `.caption2` is 11 pt by default and scales.
             Text(generatedAt, style: .relative)
-                .font(.system(size: 9))
+                .font(.caption2)
                 .foregroundStyle(WidgetTheme.muted)
         }
     }

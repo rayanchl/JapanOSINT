@@ -1,7 +1,8 @@
 #include "rss_atom.h"
 #include "../core/httpclient.h"
 #include "../third_party/cJSON.h"
-#include <openssl/sha.h>
+#include "feedlib.h"          /* feed_hash_key — the one SHA-1 join */
+#include "jocore.h"           /* jo_truncation_notice — house rule 2 disclosure */
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -255,14 +256,14 @@ static char *latin1_to_utf8(const char *s, size_t n, size_t *out_len) {
   return o;
 }
 
+/* intelHashKey(a, b) — sha1("a|b|")[:20 hex]. The digest loop itself lives in
+ * feedlib.c so there is one copy of it rather than five; this keeps the
+ * malloc'd-string signature its single caller expects. */
 static char *sha1_20(const char *a, const char *b) {
-  unsigned char d[20]; SHA_CTX c; SHA1_Init(&c);
-  if (a) { SHA1_Update(&c, a, strlen(a)); SHA1_Update(&c, "|", 1); }
-  if (b) { SHA1_Update(&c, b, strlen(b)); SHA1_Update(&c, "|", 1); }
-  SHA1_Final(d, &c);
-  char *h = malloc(41);
-  for (int i = 0; i < 20; i++) sprintf(h + i*2, "%02x", d[i]);
-  h[40] = 0; h[20] = 0;            /* intelHashKey slices to 20 hex chars */
+  const char *parts[2] = { a, b };
+  char *h = malloc(21);
+  if (!h) return NULL;
+  feed_hash_key(h, parts, 2);
   return h;
 }
 
@@ -327,11 +328,8 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
   const char *cap_env = getenv("JO_RSS_MAX_ITEMS");
   int max_items = cap_env ? atoi(cap_env) : 500;
   if (max_items <= 0) max_items = 500;
+  int capped = 0;  /* exhaustive-ok: a flag, not a bound — the bound is max_items above and is disclosed as a truncation notice below */
   for (;;) {
-    if (n >= max_items) {
-      fprintf(stderr, "[rss] %s capped at %d items\n", ctx->source_id, max_items);
-      break;
-    }
     /* next <item ...>/<entry ...> block. Require a delimiter after the name
      * so the RDF <items> table-of-contents (Seq) is NOT matched. */
     const char *open = NULL; int atom = 0;
@@ -344,6 +342,14 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
           d == '\r' || d == '/') { open = p; atom = ise; break; }
     }
     if (!open || open >= xend) break;
+    /* Cap check AFTER locating the next block, so `capped` means "there was
+     * genuinely another entry we did not read", not "the feed happened to hold
+     * exactly max_items". A feed of exactly the cap size gets no notice. */
+    if (n >= max_items) {
+      fprintf(stderr, "[rss] %s capped at %d items\n", ctx->source_id, max_items);
+      capped = 1;
+      break;
+    }
     const char *it = NULL; size_t itlen = 0; const char *blkend = NULL;
     const char *closeTag = atom ? "</entry>" : "</item>";
     const char *cl = strcasestr(open, closeTag);
@@ -413,6 +419,18 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
     free(title); free(desc); free(link); free(pub); free(guid); free(author);
     cur = blkend + strlen(closeTag);
   }
+  /* House rule 2: the stderr line above is a log nobody reads. Say it in the
+   * data too. The item count is NOT knowable here: this is a forward-only
+   * scan over the feed body and the remaining entries were never located, so
+   * -1 ("honestly unknown") is the only truthful total. */
+  if (capped)
+    jo_truncation_notice(sink, ctx->source_id, url, n, -1,
+                         "the per-run item cap (JO_RSS_MAX_ITEMS, default 500) "
+                         "stopped the read while the feed still had further "
+                         "entries; feeds are newest-first, so the older tail "
+                         "was not parsed or emitted",
+                         "raise JO_RSS_MAX_ITEMS (or set it high enough to "
+                         "cover this feed's archive) to read the whole feed");
   http_response_free(&r);
   free(conv);
   fprintf(stderr, "[rss] %s emitted %d\n", ctx->source_id, n);

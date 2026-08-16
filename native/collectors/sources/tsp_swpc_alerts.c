@@ -64,10 +64,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return -1;
   }
 
-  int n = 0;
+  int n = 0, capped = 0;
+  const int have = cJSON_GetArraySize(doc);
   cJSON *a;
   cJSON_ArrayForEach(a, doc) {
-    if (n >= MAX_ROWS) break;
+    if (n >= MAX_ROWS) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     const char *pid  = jo_sv(a, "product_id");
     const char *issd = jo_sv(a, "issue_datetime");
     const char *msg  = jo_sv(a, "message");
@@ -131,6 +132,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
+  /* House rule 2: the whole alert feed was fetched; MAX_ROWS stopped the emit
+   * loop partway. */
+  if (capped)
+    jo_truncation_notice(sink, "swpc-alerts", "alerts.json", n, (long)have,
+                         "MAX_ROWS reached; the remaining alerts in the fetched "
+                         "feed were not emitted",
+                         "raise or drop MAX_ROWS in collectors/sources/"
+                         "tsp_swpc_alerts.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[swpc-alerts] emitted %d\n", n);
   return 0;

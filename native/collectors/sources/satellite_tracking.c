@@ -64,6 +64,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     for (int i = 0; i + 2 < nl; i += 3) {
       const char *name = ln[i], *l1 = ln[i+1], *l2 = ln[i+2];
       if (strncmp(l1, "1 ", 2) || strncmp(l2, "2 ", 2)) continue;
+      /* The strncmp above proves only that l1 starts "1 " — two bytes. The
+       * NORAD field is l1[2..6], so memcpy(nb, l1+2, 5) read up to five bytes
+       * past the end of a truncated line and strtol'd whatever followed it in
+       * the response buffer into a satellite id. A real TLE line 1 is 69
+       * columns; require at least the NORAD field before reading it. */
+      if (strlen(l1) < 7 || strlen(l2) < 7) continue;
       char nb[8] = {0};
       memcpy(nb, l1 + 2, 5);
       long norad = strtol(nb, NULL, 10);

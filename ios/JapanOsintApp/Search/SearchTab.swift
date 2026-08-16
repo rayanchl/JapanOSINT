@@ -101,6 +101,13 @@ struct SearchTab: View {
         // any later hand-off while the tab is already showing.
         .onChange(of: nav.pendingSearchQuery) { _, q in consumePendingSearch(q) }
         .task { consumePendingSearch(nav.pendingSearchQuery) }
+        // Streams whose run already finished are left open by the backend, so
+        // they hang here forever; drop them when the tab goes away. NOT
+        // `cancelAll()`: this also fires when the tab is pushed into
+        // SearchRunDetailView, and that screen renders the still-running
+        // stream — cancelling it would freeze the investigation the user just
+        // opened.
+        .onDisappear { store.cancelFinishedStreams() }
     }
 
     /// Kick off a handed-in query exactly once, clearing the hand-off slot so it

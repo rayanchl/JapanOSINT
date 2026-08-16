@@ -186,8 +186,12 @@ struct API: Sendable {
 
     /// Persist whether the scheduler is allowed to auto-probe a keyed
     /// source. `allow:false` puts the row back into the gated bucket.
+    ///
+    /// The wire key is `consent`, not `allow` — core/httpd.c rejects anything
+    /// else with a 400 before touching state, so this route was inert until the
+    /// two sides were reconciled.
     func setProbeConsent(_ id: String, allow: Bool) async throws -> StatusRow {
-        let body = try JSONSerialization.data(withJSONObject: ["allow": allow])
+        let body = try JSONSerialization.data(withJSONObject: ["consent": allow])
         return try await post("/api/status/\(id)/consent", body: body)
     }
 
@@ -244,13 +248,27 @@ struct API: Sendable {
     func intelSources() async throws -> IntelSourcesEnvelope {
         try await get("/api/intel/sources")
     }
+    /// `collapse` and `langView` are the two post-passes `core/httpd.c` runs
+    /// over the envelope intelapi already built:
+    ///
+    ///  · `collapse: true` → `?collapse=1`, roadmap 25. Near-identical reports
+    ///    fold into one row and the survivor carries `cluster_*` +
+    ///    `duplicates`. This is CORROBORATION data, not tidying — the caller
+    ///    must render it (`ClusterBadge`), never silently drop the folded rows.
+    ///  · `langView` → `?lang_view=<code>`, roadmap 29. Attaches a
+    ///    `translation` object whose `machine` flag has to be shown as such.
+    ///
+    /// Both are off by default, so an uncollapsed/untranslated list behaves
+    /// exactly as before.
     func intelItems(source: String? = nil,
                     q: String? = nil,
                     qAlt: String? = nil,
                     lang: String? = nil,
                     since: String? = nil,
                     limit: Int = 50,
-                    cursor: String? = nil) async throws -> IntelItemsEnvelope {
+                    cursor: String? = nil,
+                    collapse: Bool = false,
+                    langView: String? = nil) async throws -> IntelItemsEnvelope {
         var qs: [URLQueryItem] = [URLQueryItem(name: "limit", value: String(limit))]
         if let source { qs.append(URLQueryItem(name: "source", value: source)) }
         if let q, !q.isEmpty { qs.append(URLQueryItem(name: "q", value: q)) }
@@ -258,6 +276,10 @@ struct API: Sendable {
         if let lang { qs.append(URLQueryItem(name: "lang", value: lang)) }
         if let since { qs.append(URLQueryItem(name: "since", value: since)) }
         if let cursor { qs.append(URLQueryItem(name: "cursor", value: cursor)) }
+        if collapse { qs.append(URLQueryItem(name: "collapse", value: "1")) }
+        if let langView, !langView.isEmpty {
+            qs.append(URLQueryItem(name: "lang_view", value: langView))
+        }
         return try await get("/api/intel/items", query: qs)
     }
     func intelItem(uid: String) async throws -> IntelItem {

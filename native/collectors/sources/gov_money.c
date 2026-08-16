@@ -114,10 +114,12 @@ static int gm_emit_anchors(const source_ctx *ctx, intel_sink *sink,
                            int max, const char *tag) {
   char *html = gm_fetch_utf8(ctx, url, tag);
   if (!html) return 0;
-  int emitted = 0;
+  int emitted = 0, matched = 0, capped = 0;
   const char *p = html;
-  char *seen[64]; int nseen = 0;
-  while (emitted < max && (p = strstr(p, "<a ")) != NULL) {
+  /* Growable dedupe set — a fixed seen[] ring stops deduping once full and is
+   * the exact failure docs/SOURCE_EXHAUSTIVENESS.md calls out. */
+  seen_set seen = {0};
+  while ((p = strstr(p, "<a ")) != NULL) {
     const char *h = strstr(p, "href=\"");
     const char *tagend = strchr(p, '>');
     p += 3;
@@ -146,10 +148,11 @@ static int gm_emit_anchors(const source_ctx *ctx, intel_sink *sink,
     if (href[0] == '#') continue;                  /* in-page nav */
     if (href_must && !strstr(href, href_must)) continue;
     if (query && *query && !strstr(text, query) && !strstr(href, query)) continue;
-    int dup = 0;
-    for (int i = 0; i < nseen; i++) if (!strcmp(seen[i], href)) { dup = 1; break; }
-    if (dup) continue;
-    if (nseen < 64) seen[nseen++] = strdup(href);
+    if (!seen_add(&seen, href)) continue;          /* already emitted */
+    matched++;
+    /* Past the caller's cap keep scanning so the notice below can state how
+     * many anchors the page really had (house rule 2). */
+    if (max > 0 && emitted >= max) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
 
     char link[900];
     if (!strncmp(href, "http", 4)) snprintf(link, sizeof link, "%s", href);
@@ -174,10 +177,20 @@ static int gm_emit_anchors(const source_ctx *ctx, intel_sink *sink,
     if (sink->emit(sink, &it) >= 0) emitted++;
     free(pj);
   }
-  for (int i = 0; i < nseen; i++) free(seen[i]);
+  seen_free(&seen);
   free(html);
   (void)ctx;
-  fprintf(stderr, "[%s] emitted %d\n", tag, emitted);
+  /* House rule 2: the page was fetched and every matching anchor counted; the
+   * caller's `max` stopped the emit loop partway. */
+  if (capped)
+    jo_truncation_notice(sink, service, query ? query : url, emitted,
+                         (long)matched,
+                         "the caller's anchor cap was reached; the remaining "
+                         "matching links on the fetched page were counted but "
+                         "not emitted",
+                         "raise the `max` argument passed to gm_emit_anchors() "
+                         "in collectors/sources/gov_money.c");
+  fprintf(stderr, "[%s] emitted %d of %d matching links\n", tag, emitted, matched);
   return emitted;
 }
 

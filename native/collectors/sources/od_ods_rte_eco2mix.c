@@ -8,7 +8,7 @@
  * columns - every scalar the API returned for that row.
  * Keyless. Licence: Licence Ouverte v2.0; RTE open-data terms permit reuse
  * with attribution. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ods-rte-eco2mix"
 static const char *URL =

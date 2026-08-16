@@ -280,7 +280,7 @@ static int emit_weather(intel_sink *sink, const char *loc, const char *rk,
                         double lat, double lon, cJSON *data) {
   cJSON *env = cJSON_CreateObject();
   cJSON_AddBoolToObject(env, "success", 1);
-  cJSON_AddNumberToObject(env, "confidence", 85);
+  cJSON_AddItemToObject(env, "confidence", cJSON_CreateNull());
   cJSON_AddItemToObject(env, "data", cJSON_Duplicate(data, 1));
   char *bj = cJSON_PrintUnformatted(env);
 
@@ -288,7 +288,7 @@ static int emit_weather(intel_sink *sink, const char *loc, const char *rk,
   cJSON_AddStringToObject(props, "service", "WEATHER_SERVICE");
   cJSON_AddStringToObject(props, "entity", loc);
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 85);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   intel_item it = {0};

@@ -106,10 +106,25 @@ static int run_earthquake(const source_ctx *ctx, intel_sink *sink) {
     20);
   http_response hr = {0};
   int hc = http_request(ctx->http, "GET", url, NULL, NULL, 0, 30000, 1, &hr);
-  if (hc != 0 || hr.status != 200 || !hr.body) { http_response_free(&hr); return 0; }
+  /* A USGS outage and a quiet hour are NOT the same run. This function used to
+   * have no negative return path at all: every branch returned 0, so
+   * scheduler.c wrote fetch_log status="ok" with records_fetched=0 and
+   * anomaly_detect never opened a status_bad row — the feed could be dead for
+   * weeks and read as a clean run. Transport/parse failure returns -1 (which
+   * run_status() still downgrades to "ok" if every host it contacted answered,
+   * so an honest empty is never punished); only a real 200-and-parsed response
+   * is allowed to report success. */
+  if (hc != 0 || hr.status != 200 || !hr.body) {
+    fprintf(stderr, "[EARTHQUAKE_MONITOR] http rc=%d status=%ld\n", hc, hr.status);
+    http_response_free(&hr);
+    return -1;
+  }
   cJSON *json = cJSON_Parse(hr.body);
   http_response_free(&hr);
-  if (!json) return 0;
+  if (!json) {
+    fprintf(stderr, "[EARTHQUAKE_MONITOR] 200 but body did not parse as JSON\n");
+    return -1;
+  }
 
   int emitted = 0;
   cJSON *feats = cJSON_GetObjectItem(json, "features");
@@ -118,7 +133,8 @@ static int run_earthquake(const source_ctx *ctx, intel_sink *sink) {
     for (int i = 0; i < c; i++) emitted += emit_quake(sink, cJSON_GetArrayItem(feats, i));
   }
   cJSON_Delete(json);
-  return emitted > 0 ? 0 : 0;   /* honest empty is not an error */
+  fprintf(stderr, "[EARTHQUAKE_MONITOR] emitted %d\n", emitted);
+  return 0;   /* fetched and parsed; honest empty is not an error */
 }
 
 static const source_def earthquake_monitor_def = {

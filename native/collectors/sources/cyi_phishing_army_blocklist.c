@@ -42,7 +42,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   for (const char *q = body; *q; q++) if (*q == '\n') total++;
 
   char updated[128] = "";
-  int n = 0;
+  int n = 0, hosts = 0, capped = 0;
   char *cur = body, *line;
   while ((line = jo_next_line(&cur)) != NULL) {
     if (!line[0]) continue;
@@ -56,7 +56,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       continue;
     }
     if (!looks_like_host(line)) continue;
-    if (n >= MAX_ROWS) break;
+    hosts++;
+    /* Past the cap keep counting host lines rather than breaking, so the notice
+     * below reports the file's REAL domain count instead of an unknown. */
+    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "domain", line);
@@ -80,6 +83,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
+  /* House rule 2: the whole blocklist was downloaded and every domain line was
+   * counted; only the first MAX_ROWS became rows. Say so as data. */
+  if (capped)
+    jo_truncation_notice(sink, "phishing-army-blocklist", "phishing_army_blocklist.txt",
+                         n, (long)hosts,
+                         "MAX_ROWS reached; the remaining domains in the "
+                         "downloaded blocklist were counted but not emitted as "
+                         "rows",
+                         "raise or drop MAX_ROWS in collectors/sources/"
+                         "cyi_phishing_army_blocklist.c");
   fprintf(stderr, "[phishing-army-blocklist] emitted %d of ~%d domains (updated %s)\n",
           n, total, updated[0] ? updated : "n/a");
   return 0;

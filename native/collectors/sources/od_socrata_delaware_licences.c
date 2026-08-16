@@ -7,7 +7,7 @@
  * The endpoint also supports $q= and $where= for name pivots.
  * No coordinates are published, so has_geo is never set (R2). Keyless.
  * Licence: State of Delaware open data, public record. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "socrata-delaware-business-licences"
 static const char *URL = "https://data.delaware.gov/resource/5zy2-grhr.json?$limit=100";

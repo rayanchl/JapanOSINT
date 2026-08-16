@@ -101,10 +101,11 @@ static int rpvs_partners_run(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) { fprintf(stderr, "[sk_rpvs_partners] unparseable payload\n"); return -1; }
 
   const cJSON *arr = cJSON_GetObjectItem(doc, "value");
-  int n = 0;
+  int n = 0, capped = 0;
+  const int have = cJSON_GetArraySize(arr);
   const cJSON *row;
   cJSON_ArrayForEach(row, arr) {
-    if (n >= RPVS_MAX) break;
+    if (n >= RPVS_MAX) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     if (!cJSON_IsObject(row)) continue;
     const char *name = jo_sv(row, "ObchodneMeno");
     if (!name) continue;                         /* no real name -> no row */
@@ -155,6 +156,16 @@ static int rpvs_partners_run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
+  /* House rule 2: the OData page returned `have` matching partners and the
+   * emit loop stopped at RPVS_MAX. Note also that no $skip page is requested,
+   * so an over-full result set has more behind it than `have`. */
+  if (capped)
+    jo_truncation_notice(sink, "SK_RPVS_PARTNERS", q, n, (long)have,
+                         "RPVS_MAX reached; the remaining partners in the "
+                         "fetched OData page were not emitted, and no $skip "
+                         "page is requested",
+                         "raise or drop RPVS_MAX in collectors/sources/"
+                         "reg2_sk_rpvs.c and walk the OData $skip pages");
   cJSON_Delete(doc);
   fprintf(stderr, "[sk_rpvs_partners] emitted %d\n", n);
   return 0;
@@ -187,10 +198,11 @@ static int rpvs_ubo_run(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) { fprintf(stderr, "[sk_rpvs_ubo] unparseable payload\n"); return -1; }
 
   const cJSON *arr = cJSON_GetObjectItem(doc, "value");
-  int n = 0;
+  int n = 0, capped = 0;
+  const int have = cJSON_GetArraySize(arr);
   const cJSON *row;
   cJSON_ArrayForEach(row, arr) {
-    if (n >= RPVS_MAX) break;
+    if (n >= RPVS_MAX) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     if (!cJSON_IsObject(row)) continue;
     const char *meno = jo_sv(row, "Meno");
     const char *prie = jo_sv(row, "Priezvisko");
@@ -255,6 +267,14 @@ static int rpvs_ubo_run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
+  /* House rule 2: same bound on the beneficial-owner leg. */
+  if (capped)
+    jo_truncation_notice(sink, "SK_RPVS_UBO", q, n, (long)have,
+                         "RPVS_MAX reached; the remaining beneficial owners in "
+                         "the fetched OData page were not emitted, and no $skip "
+                         "page is requested",
+                         "raise or drop RPVS_MAX in collectors/sources/"
+                         "reg2_sk_rpvs.c and walk the OData $skip pages");
   cJSON_Delete(doc);
   fprintf(stderr, "[sk_rpvs_ubo] emitted %d\n", n);
   return 0;

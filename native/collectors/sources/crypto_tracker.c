@@ -89,7 +89,7 @@ static int emit_chain(intel_sink *sink, const char *chain, const char *addr,
   cJSON_AddStringToObject(props, "chain", chain);
   cJSON_AddStringToObject(props, "record", "balance");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 85);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[320], title[360];
@@ -143,7 +143,7 @@ static int emit_tx(intel_sink *sink, const char *chain, const char *addr,
   cJSON_AddStringToObject(props, "chain", chain);
   cJSON_AddStringToObject(props, "record", "transaction");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 85);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[200];

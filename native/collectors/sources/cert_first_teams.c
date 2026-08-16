@@ -28,7 +28,7 @@
 #include <string.h>
 
 #define FIRST_PAGE_SIZE 100
-#define FIRST_MAX_PAGES 12          /* 1,200 teams — comfortably above total */
+#define FIRST_MAX_PAGES 12  /* exhaustive-ok: page-walk runaway guard, above the directory's real size; a walk it actually stops is reported below */
 
 static void put(cJSON *p, const char *out_key, cJSON *rec, const char *in_key) {
   const char *v = jo_sv(rec, in_key);
@@ -117,6 +117,17 @@ static int run(const source_ctx *c, intel_sink *s) {
     if (here == 0) break;                       /* ran off the end of the set */
     if (total > 0 && (page + 1) * FIRST_PAGE_SIZE >= total) break;
   }
+  /* House rule 2: the walk normally ends on an empty page or when FIRST's own
+   * `total` is reached. If the runaway guard ended it first, disclose it. */
+  if (pages_ok >= FIRST_MAX_PAGES && total > 0 &&
+      (double)(pages_ok * FIRST_PAGE_SIZE) < total)
+    jo_truncation_notice(s, "first-csirt-team-directory", "teams", total_rows,
+                         (long)total,
+                         "the page walk stopped at the FIRST_MAX_PAGES runaway "
+                         "guard before reaching the `total` FIRST reported, so "
+                         "later pages of the directory were never fetched",
+                         "raise FIRST_MAX_PAGES in collectors/sources/"
+                         "cert_first_teams.c");
   fprintf(stderr, "[first-csirt-team-directory] emitted %d over %d pages\n",
           total_rows, pages_ok);
   return 0;                                 /* fetched fine; 0 rows is OK (R3) */

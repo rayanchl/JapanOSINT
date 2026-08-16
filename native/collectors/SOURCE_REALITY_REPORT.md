@@ -1,6 +1,6 @@
 # OSINT Source Reality Report
 
-Audit of all 61 collectors in `native/collectors/osint/sources/`. Method: full
+Audit of all 61 OSINT collectors in `native/collectors/sources/`. Method: full
 source read of each `run()` + what it emits into `intel_item`, validated by live
 `./bin/japanosint --run <ID> <entity>` spot-runs (latency + emitted DB body).
 

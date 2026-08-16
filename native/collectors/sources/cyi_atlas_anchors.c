@@ -19,7 +19,7 @@
 #include <string.h>
 
 #define FIRST_URL "https://atlas.ripe.net/api/v2/anchors/?format=json&page_size=500"
-#define MAX_PAGES 5
+#define MAX_PAGES 5   /* exhaustive-ok: page-walk runaway guard; a walk it actually stops is reported below */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char url[512];
@@ -114,6 +114,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(doc);
   }
 
+  /* House rule 2: the walk normally ends when RIPE stops publishing a `next`.
+   * If the runaway guard ended it instead, pages remain unfetched — say so. */
+  if (pages >= MAX_PAGES && url[0])
+    jo_truncation_notice(sink, "atlas-anchors", "anchors", n, -1,
+                         "the page walk stopped at the MAX_PAGES runaway guard "
+                         "while RIPE was still publishing a `next` page link, "
+                         "so later pages of the anchor list were never fetched",
+                         "raise MAX_PAGES in collectors/sources/"
+                         "cyi_atlas_anchors.c");
   fprintf(stderr, "[atlas-anchors] emitted %d over %d page(s)\n", n, pages);
   return 0;
 }

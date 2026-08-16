@@ -3,21 +3,32 @@
  * In-memory per-request OSINT-search progress. A process-global registry
  * keyed by request_id holds one `osint_request` per in-flight search; the
  * pipeline (worker thread) mutates it through the setters below and the SSE
- * handler (httpd thread) snapshots it with progress_to_json().
+ * handler (httpd thread) snapshots it with progress_snapshot().
  *
  * THREAD SAFETY: a single global pthread_mutex guards the registry AND every
  * field of every request (one lock, coarse — the mutation rate is low and the
- * critical sections are tiny). progress_get() returns a stable pointer (entries
- * are never freed for the process lifetime, only the oldest *finished* one is
- * dropped past a 200-cap exactly like the JS Map eviction), so callers may hold
- * it across calls; all access goes back through the lock inside each function.
+ * critical sections are tiny).
+ *
+ * progress_get() DOES NOT return a stable pointer, and this comment used to
+ * claim it did. Entries ARE freed: progress_create()'s 200-cap sweep drops the
+ * oldest *finished* request. So a pointer obtained from progress_get() may be
+ * freed by another thread the moment the lock is released.
+ *
+ *   READERS must use progress_snapshot(id, &done) — one lookup, one
+ *   serialisation, one done-read, all inside a single critical section, so
+ *   there is never a pointer to outlive.
+ *
+ *   WRITERS (osint_pipeline_run, translate's backfill thread) may still hold
+ *   the progress_get() pointer for the life of the run: eviction only takes a
+ *   request that is already `done`, and a writer's own request is not done
+ *   until the writer finishes it as its last act.
  *
  * NO EVENT EMITTER. The JS RequestProgress is an EventEmitter that emits
  * 'update'/'done'. In C there is no push: the mongoose SSE handler polls
- * progress_to_json() on MG_EV_POLL and diffs/streams the fresh snapshot
- * itself (and treats progress_is_done()!=0 as the JS 'done'/close event).
+ * progress_snapshot() on MG_EV_POLL and diffs/streams the fresh snapshot
+ * itself (its `done` out-parameter is the JS 'done'/close event).
  *
- * progress_to_json() output matches progressTracker.js toJSON() field-for-
+ * The snapshot's output matches progressTracker.js toJSON() field-for-
  * field (request_id, query, phase, progress_percent, gpt_thinking,
  * total_results, preliminary_findings, created_at, updated_at, entities,
  * services_assigned, services, stats, phase_history, current_round,
@@ -87,6 +98,11 @@ void progress_finish(osint_request *r, const char *phase);
 /* toJSON() snapshot. Heap-allocated JSON; CALLER FREES with free(). NULL on
  * OOM or r==NULL. */
 char *progress_to_json(osint_request *r);
+
+/* The reader-safe form: look up `request_id`, serialise it, and report whether
+ * it is finished, without ever handing out a pointer. Returns malloc'd JSON, or
+ * NULL when no such request exists. See the THREAD SAFETY note above. */
+char *progress_snapshot(const char *request_id, int *done_out);
 
 /* the `done` flag (1 finished, 0 in-flight; 0 if r==NULL). */
 int progress_is_done(osint_request *r);

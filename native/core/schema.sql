@@ -109,6 +109,25 @@ CREATE TABLE IF NOT EXISTS entity_extraction_state (
       extractor_version INTEGER NOT NULL DEFAULT 1,
       failed_count      INTEGER NOT NULL DEFAULT 0
     );
+-- entities.tenant_id and entity_mentions.tenant_id both accept the reserved
+-- value '__breach__' (ES_BREACH_TENANT, core/entitystore.h). It is NOT a
+-- tenant and never appears in `tenants`: it marks rows materialized from the
+-- breach corpus by breach_index.c, whose entities.canonical and
+-- entity_mentions.surface are CLEARTEXT breached identifiers and whose
+-- entity_mentions.source_id names the breach. Every reader of this graph
+-- filters "tenant_id IS NULL OR tenant_id = :me" (entityapi.c, casesapi.c:341,
+-- aoiapi.c:639, exportapi.c:529); the sentinel satisfies neither disjunct, so
+-- those rows are outside the shared graph by construction rather than by each
+-- route remembering an opgate_check(). Only a platform operator's query binds
+-- the sentinel as a third disjunct. Such entities are also deliberately absent
+-- from entities_fts.
+--
+-- entity_mentions.tenant_id is added by es_breach_scope_migrate()
+-- (core/entitystore.c) via ensure_column, NOT here: every statement in this
+-- file is CREATE ... IF NOT EXISTS, which silently no-ops on an existing
+-- table, so a column appended below would never reach a deployed database.
+-- That function also backfills rows written by breach ingests that ran before
+-- the scope existed, and creates the partial index its probe uses.
 CREATE TABLE IF NOT EXISTS entity_mentions (
       entity_id   TEXT NOT NULL REFERENCES entities(entity_id) ON DELETE CASCADE,
       item_uid    TEXT NOT NULL,
@@ -157,6 +176,22 @@ CREATE TABLE IF NOT EXISTS gtfs_calendar (
     start_date      TEXT,
     end_date        TEXT,
     PRIMARY KEY (org_id, feed_id, service_id)
+  );
+-- calendar_dates.txt: EXCEPTIONS to the weekly pattern in gtfs_calendar.
+-- exception_type 1 = service ADDED on that date, 2 = service REMOVED.
+-- Japanese public holidays are overwhelmingly expressed this way, so without
+-- this table a holiday silently returns the ordinary weekday timetable.
+-- date is the GTFS YYYYMMDD string, the same form gtfs_calendar.start_date /
+-- end_date use, so it compares directly against them.
+-- The PK doubles as the (service_id, date) lookup index the service-active
+-- subqueries in isochrone.c / transitapi.c probe per trip.
+CREATE TABLE IF NOT EXISTS gtfs_calendar_dates (
+    org_id          TEXT NOT NULL,
+    feed_id         TEXT NOT NULL,
+    service_id      TEXT NOT NULL,
+    date            TEXT NOT NULL,
+    exception_type  INTEGER NOT NULL,
+    PRIMARY KEY (org_id, feed_id, service_id, date)
   );
 CREATE TABLE IF NOT EXISTS gtfs_feeds (
     feed_id              TEXT PRIMARY KEY,
@@ -543,6 +578,10 @@ CREATE INDEX IF NOT EXISTS idx_alert_events_rule_item
       ON alert_events(rule_id, item_uid);
 CREATE INDEX IF NOT EXISTS idx_alert_events_rule_ts
       ON alert_events(rule_id, matched_at DESC);
+/* timelineapi.h's alert stream scans one tenant's events over a time window.
+ * idx_alert_events_rule_ts leads on rule_id and cannot serve that. */
+CREATE INDEX IF NOT EXISTS idx_alert_events_tenant_ts
+      ON alert_events(tenant_id, matched_at DESC);
 CREATE INDEX IF NOT EXISTS idx_alert_rules_tenant_enabled
       ON alert_rules(tenant_id, enabled);
 CREATE INDEX IF NOT EXISTS idx_anomaly_open
@@ -570,6 +609,14 @@ CREATE INDEX IF NOT EXISTS idx_entities_type_seen
       ON entities(type, last_seen_at DESC);
 CREATE INDEX IF NOT EXISTS idx_er_dst ON entity_relationships(dst_entity_id, weight DESC);
 CREATE INDEX IF NOT EXISTS idx_er_src ON entity_relationships(src_entity_id, weight DESC);
+/* Two access patterns. The per-trip probes in isochrone.c / transitapi.c bind
+ * (org_id, feed_id, service_id, date) and are served by the PRIMARY KEY.
+ * active-trips also asks "which services were ADDED on this date" across the
+ * whole corpus, with no org/feed/service to lead on — the PK cannot serve that
+ * at all (verified: SCAN before this index, SEARCH after). Leading on date,
+ * and carrying the three key columns so the branch is covering. */
+CREATE INDEX IF NOT EXISTS idx_gtfs_calendar_dates_date
+    ON gtfs_calendar_dates(date, exception_type, org_id, feed_id, service_id);
 CREATE INDEX IF NOT EXISTS idx_gtfs_feeds_agency ON gtfs_feeds(ag_id);
 CREATE INDEX IF NOT EXISTS idx_gtfs_rt_alerts_reported
     ON gtfs_rt_alerts(reported_at);
@@ -611,6 +658,16 @@ CREATE INDEX IF NOT EXISTS idx_intel_items_tenant_fetched
       ON intel_items(tenant_id, fetched_at DESC);
 CREATE INDEX IF NOT EXISTS idx_intel_items_tenant_source
       ON intel_items(tenant_id, source_id);
+/* timelineapi.c orders and range-scans one tenant's items on the NORMALISED
+ * timestamp, not on the raw column, so idx_intel_items_pub (which lacks
+ * tenant_id) and idx_intel_items_tenant_fetched (which ignores published_at)
+ * both leave it sorting the tenant's whole table. The expression here is the
+ * one that module generates; uid is its tiebreaker and belongs in the key or
+ * the sort returns for the ties. */
+CREATE INDEX IF NOT EXISTS idx_intel_items_tenant_tsnorm
+      ON intel_items(tenant_id,
+                     strftime('%Y-%m-%dT%H:%M:%SZ',
+                              COALESCE(published_at, fetched_at)) DESC, uid);
 CREATE INDEX IF NOT EXISTS idx_intel_items_type
         ON intel_items(record_type, source_id);
 CREATE INDEX IF NOT EXISTS idx_log_source ON fetch_log(source_id);
@@ -756,6 +813,33 @@ CREATE INDEX IF NOT EXISTS idx_breach_monitors_domain ON breach_monitors(value_d
 CREATE INDEX IF NOT EXISTS idx_breach_monitors_tenant ON breach_monitors(tenant_id);
 CREATE INDEX IF NOT EXISTS idx_breach_monitors_tenant_created
   ON breach_monitors(tenant_id, created_at DESC, id);
+
+-- Proof of ownership for the identifiers a tenant may monitor.
+--
+-- WHY. Registering a monitor is the one operation that takes an identifier the
+-- CALLER chose and reports back whether it appears in the breach corpus — an
+-- exposure oracle for arbitrary third parties. core/entityapi.c refuses that
+-- question uniformly (entityapi_breaches_scoped returns NULL for every entity
+-- to a non-operator, breached or not, precisely so a DIFFERENCE in responses
+-- cannot be probed). This table is what lets the monitor route answer it
+-- safely: only for domains the tenant has demonstrably proven it controls.
+--
+-- The proof is a DNS TXT record containing the token below, checked over
+-- DNS-over-HTTPS so it goes through core/httpclient.c and its hostgate like
+-- every other outbound request. The DOMAIN is stored in plaintext deliberately
+-- — unlike a monitored identifier it is not sensitive, and the verifier has to
+-- be able to re-check it.
+CREATE TABLE IF NOT EXISTS breach_monitor_domains (
+  tenant_id TEXT NOT NULL,
+  domain TEXT NOT NULL,
+  token TEXT NOT NULL,
+  created_by TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  verified_at TEXT,                    -- NULL until the TXT record was seen
+  last_error TEXT,                     -- why the most recent attempt failed
+  PRIMARY KEY (tenant_id, domain));
+CREATE INDEX IF NOT EXISTS idx_bmd_verified
+  ON breach_monitor_domains(tenant_id, domain) WHERE verified_at IS NOT NULL;
 -- NOT an optimization: breach_items had no index on `hash` at all (only type,
 -- (source_id,id) and UNIQUE(keyid)), so every monitor check was a full scan of
 -- a corpus measured in millions of rows.

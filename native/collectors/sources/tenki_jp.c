@@ -12,7 +12,6 @@
 #include <strings.h>
 #include <ctype.h>
 #include <time.h>
-#include <openssl/sha.h>
 
 #define HOME "https://tenki.jp/"
 /* Regional forecast page: this is where the per-city highs/lows actually live.
@@ -24,15 +23,12 @@ static void iso_now(char *out, size_t n) {
   strftime(out, n, "%Y-%m-%dT%H:%M:%S.000Z", &g);
 }
 
-/* intelHashKey(telop, n): sha1( telop "|" n "|" )[:20 hex] */
+/* intelHashKey(telop, n): sha1( telop "|" n "|" )[:20 hex] — digest loop in
+ * lib/feedlib.c (feed_hash_key). */
 static void hash_key(char *out21, const char *telop, int n) {
-  unsigned char d[20]; SHA_CTX c; SHA1_Init(&c);
-  SHA1_Update(&c, telop, strlen(telop)); SHA1_Update(&c, "|", 1);
   char nb[16]; snprintf(nb, sizeof nb, "%d", n);
-  SHA1_Update(&c, nb, strlen(nb)); SHA1_Update(&c, "|", 1);
-  SHA1_Final(d, &c);
-  for (int i = 0; i < 10; i++) sprintf(out21 + i*2, "%02x", d[i]);
-  out21[20] = 0;
+  const char *parts[2] = { telop, nb };
+  feed_hash_key(out21, parts, 2);
 }
 
 /* decode(): strip tags already done by caller; entity-decode + whitespace
@@ -62,18 +58,6 @@ static void decode(const char *in, char *out, size_t cap) {
   while (to > 0 && tmp[to-1] == ' ') to--;
   tmp[to] = 0;
   strncpy(out, tmp, cap - 1); out[cap-1] = 0;
-}
-
-/* strip <...> tags into spaces (m[1].replace(/<[^>]+>/g,' ')) */
-static void strip_tags(const char *in, size_t len, char *out, size_t cap) {
-  size_t o = 0; int intag = 0;
-  for (size_t i = 0; i < len && o + 1 < cap; i++) {
-    char ch = in[i];
-    if (ch == '<') { intag = 1; if (o + 1 < cap) out[o++] = ' '; }
-    else if (ch == '>') intag = 0;
-    else if (!intag) out[o++] = ch;
-  }
-  out[o] = 0;
 }
 
 /* Pull the inner text of the first `class="<cls>"` element at/after `from`.

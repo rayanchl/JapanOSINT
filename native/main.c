@@ -18,6 +18,7 @@
 #include "core/scheduler.h"
 #include "core/osint_dispatch.h"
 #include "core/intel.h"
+#include "core/keysapi.h"
 #include "core/breach_index.h"
 #include "core/breach_meta.h"
 #include "core/alert_deliver.h"
@@ -67,6 +68,10 @@ static void load_dotenv(void) {
 }
 
 int main(int argc, char **argv) {
+  /* Order matters: the api-keys.json overlay is applied FIRST so it wins over
+   * .env, matching keysapi.c's resolved_env(). Both use overwrite=0, so a real
+   * shell export still beats either. */
+  keysapi_apply_overlay_env();
   load_dotenv();
   int selftest = 1; /* P1 default */
   for (int i = 1; i < argc; i++)

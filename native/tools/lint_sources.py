@@ -39,6 +39,7 @@ disagrees with every count previously written down.
 
 import argparse
 import json
+import glob
 import os
 import re
 import sys
@@ -359,6 +360,75 @@ def _brace_block(text, open_idx):
 _DEF_RE = re.compile(r"\bsource_def\s+([A-Za-z_]\w*)\s*=\s*\{")
 _REG_RE = re.compile(r"\bREGISTER_SOURCE\s*\(\s*([A-Za-z_]\w*)\s*\)")
 
+# The SECOND registration path. lib/hpengine.h's HP_REGISTER_TABLE(TBL) takes a
+# `static const hp_source TBL[]` row table and turns every row into a
+# source_def at constructor time (lib/hpengine.c hp_register). There is no
+# `source_def X = {` and no REGISTER_SOURCE(X) anywhere in those files, so the
+# two regexes above see nothing — which is how 601 registered ids across 29
+# hp_*.c files stayed invisible to every check in this tool, and why
+# `--count` disagreed with the built binary's --list-sources by exactly that
+# number.
+_HP_TBL_RE = re.compile(r"\bhp_source\s+([A-Za-z_]\w*)\s*\[\s*\]\s*=\s*\{")
+_HP_REG_RE = re.compile(r"\bHP_REGISTER_TABLE\s*\(\s*([A-Za-z_]\w*)\s*\)")
+
+
+def _hp_rows(block):
+    """Split an hp_source[] initialiser into its top-level `{ ... }` rows.
+
+    Brace counting, not a regex: rows nest braces and carry string literals
+    holding both braces and escaped quotes."""
+    rows, depth, start = [], 0, None
+    in_str = esc = False
+    for i, ch in enumerate(block):
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch == "{":
+            depth += 1
+            if depth == 2:
+                start = i
+        elif ch == "}":
+            if depth == 2 and start is not None:
+                rows.append(block[start:i + 1])
+                start = None
+            depth -= 1
+            if depth == 0:
+                break
+    return rows
+
+
+def _hp_registrations(text):
+    """-> [(id, table_symbol, collector)] for every HP_REGISTER_TABLE row.
+
+    Mirrors hp_register() exactly, including its two skip rules: a row with no
+    .id or no .url is never registered, so it must not be counted here."""
+    tables = {m.group(1): _brace_block(text, m.end() - 1)
+              for m in _HP_TBL_RE.finditer(text)}
+    found = []
+    for m in _HP_REG_RE.finditer(text):
+        block = tables.get(m.group(1))
+        if not block:
+            continue
+        for row in _hp_rows(block):
+            idm = re.search(r"\.id\s*=", row)
+            if not idm or not re.search(r"\.url\s*=", row):
+                continue                      # hp_register skips these rows
+            sid = _read_string_concat(row, idm.end())
+            if not sid:
+                continue
+            cm = re.search(r"\.collector\s*=", row)
+            coll = _read_string_concat(row, cm.end()) if cm else None
+            # hp_register's default when the row does not name one.
+            found.append((sid, m.group(1), coll or "osint"))
+    return found
+
 
 def registrations(path):
     """-> (list of (id, symbol, collector), list of unresolved symbols)."""
@@ -379,6 +449,7 @@ def registrations(path):
             found.append((sid, sym, coll))
         else:
             unresolved.append(sym)
+    found.extend(_hp_registrations(text))
     return found, unresolved
 
 
@@ -402,9 +473,18 @@ def source_files():
 
 
 def collector_files():
-    """Only collectors/sources/*.c — the files that emit intel rows."""
+    """The files that emit intel rows: collectors/sources/*.c AND *.inc.
+
+    The .inc files are not headers-with-declarations, they are collector bodies
+    that happen to be textually included — od_shared.inc alone is 817 lines
+    ending in an emit(), sanc_common.inc 931, trn_common.inc 770, and
+    _verified_macros.inc is the emit path for 144 files. Scanning only *.c
+    meant every line-based check below (geo-precision, quarantine-empty,
+    snprintf-guard, rowid-unchecked) was blind to ~3k lines of exactly the code
+    they exist to police."""
     return sorted(os.path.join(SRC_DIR, f)
-                  for f in os.listdir(SRC_DIR) if f.endswith(".c"))
+                  for f in os.listdir(SRC_DIR)
+                  if f.endswith(".c") or f.endswith(".inc"))
 
 
 _REG_CACHE = {}
@@ -461,6 +541,14 @@ def _gen_registry_ids():
     return ids
 
 
+# Source ids the ENGINE writes under, which therefore have curated metadata in
+# source_registry.gen.c but deliberately no source_def. Keep this list to ids
+# that a `grep -n '"<id>"' core/*.c` shows being passed to intel_sink_make().
+ENGINE_SOURCE_IDS = {
+    "osint-search",     # core/pipeline.c:227,358 — the entity-pivot result bucket
+}
+
+
 def check_registry_orphan():
     """Rows in core/source_registry.gen.c with no implementation.
 
@@ -468,22 +556,87 @@ def check_registry_orphan():
     registered source_def describes a source that cannot ever run, so it
     inflates /api/sources and /api/layers with entries that can never report
     a status — exactly the failure the file's own header comment records
-    having cleaned up once for traffic-cameras/public-webcams."""
+    having cleaned up once for traffic-cameras/public-webcams.
+
+    EXCEPT for a source_id that is written by the engine rather than collected.
+    core/pipeline.c builds its sink with intel_sink_make(db, "osint-search"),
+    so those rows really are in intel_items and really do need a name, a
+    description and a category to render — but there is nothing to schedule or
+    dispatch, so a source_def would be wrong in the other direction: it would
+    put a non-collector into /api/sources' run lists and the entity-pivot menu.
+    Carrying it as a permanent baseline of 1 was the worse option again: a check
+    whose output is a constant is a check nobody reads."""
     live = {sid for _, (found, _) in all_registrations().items()
             for sid, _sym, _coll in found}
     rel = os.path.relpath(GEN_REGISTRY, REPO)
     return ["%s:%d: registry row '%s' has no registered source_def"
             % (rel, line, sid)
-            for sid, line in _gen_registry_ids() if sid not in live]
+            for sid, line in _gen_registry_ids()
+            if sid not in live and sid not in ENGINE_SOURCE_IDS]
 
 
 # `return n > 0 ? 0 : -1` and its casted variants. An honest empty fetch
 # (upstream had nothing new) returns -1, which the scheduler records as a
 # failure and eventually quarantines the source — so a *working* collector
 # gets switched off for succeeding quietly.
+#
+# WHAT THE IDENTIFIER MEANS IS THE WHOLE CHECK.  The shape is only a defect
+# when the thing being tested is a ROW count. The identical shape testing a
+# *host-success* counter is the documented FIX for this very bug, and it is
+# what most of this tree does:
+#
+#     fprintf(stderr, "[resas-population] emitted %d (%d/47 prefectures …)", …);
+#     /* STATUS code, not a row count: a prefecture that returns no series is
+#      * an honest empty. Only a total fetch failure is a real error. */
+#     return fetched > 0 ? 0 : -1;
+#
+# Flagging those inverted the check: it reported the cure as the disease, in
+# every one of the eleven files it matched. So the name is now part of the
+# pattern — it must plausibly mean "rows I emitted", and must not be one of
+# the transport-health words.
 _QUARANTINE_RE = re.compile(
     r"return\s*\(?\s*(?:\(\s*(?:int|long|size_t|ssize_t|unsigned)"
-    r"(?:\s+\w+)?\s*\)\s*)?[A-Za-z_]\w*\s*\)?\s*>\s*0\s*\?\s*0\s*:\s*-\s*1")
+    r"(?:\s+\w+)?\s*\)\s*)?([A-Za-z_]\w*)\s*\)?\s*>\s*0\s*\?\s*0\s*:\s*-\s*1")
+
+# Names that mean "how many rows did I emit". Zero of these is the honest
+# empty the scheduler must not punish.
+_ROW_EXACT = {"n", "nn", "cnt", "num", "tot", "total", "rows", "row", "hit",
+              "hits", "added", "emitted", "count", "items", "records", "rec",
+              "recs", "out", "written", "kept"}
+_ROW_SUBSTR = ("count", "cnt", "rows", "emit", "added", "hits", "total",
+               "item", "record", "written")
+
+# Names that mean "how many endpoints answered me". Zero of these IS a real
+# error — every host was down — and returning -1 is correct.
+_HEALTH_EXACT = {"fetched", "ok", "oks", "tok", "done", "transport_ok",
+                 "reachable", "live", "alive", "up", "got", "tried", "hosts",
+                 "feeds", "pages", "queries", "urls", "success", "successes",
+                 "responses", "resp", "http_ok", "any", "seen_ok"}
+_HEALTH_SUBSTR = ("fetch", "reachab", "transport", "_ok", "ok_", "alive",
+                  "http", "status", "respond", "connect")
+
+# An accumulator legitimately reaches zero; a 0/1 status flag cannot.
+# `int n = (sink->emit(sink, &it) >= 0) ? 1 : 0;` in a collector that always
+# emits exactly one row is not a row count at all — n==0 means the SINK
+# rejected the write, which is a genuine error and must return -1.
+_FLAG_ASSIGN = r"\b%s\b\s*=\s*[^;]*\?\s*1\s*:\s*0\s*;"
+_ACCUMULATES = r"(?:\b%s\b\s*(?:\+\+|\+=)|\+\+\s*\b%s\b)"
+
+
+def _is_row_name(name):
+    low = name.lower()
+    if low in _HEALTH_EXACT or any(s in low for s in _HEALTH_SUBSTR):
+        return False
+    return low in _ROW_EXACT or any(s in low for s in _ROW_SUBSTR)
+
+
+def _function_window(text, pos):
+    """Text of the enclosing top-level function (a `}` in column 0 ends one)."""
+    s = text.rfind("\n}", 0, pos)
+    s = s + 2 if s >= 0 else 0
+    e = text.find("\n}", pos)
+    e = e + 2 if e >= 0 else len(text)
+    return text[s:e]
 
 
 def _scan_lines(paths, regex, message):
@@ -508,10 +661,49 @@ def _tree_c_files():
     return out
 
 
+_UNCLASSIFIED = []
+
+
+def check_quarantine_unclassified():
+    """Visible coverage gap for check_quarantine_empty's name vocabulary.
+
+    Reported as its own row so the vocabulary's reach is measured instead of
+    assumed. Populated as a side effect of check_quarantine_empty, which the
+    CHECKS order guarantees runs first.
+    """
+    return list(_UNCLASSIFIED)
+
+
 def check_quarantine_empty():
-    return _scan_lines(_tree_c_files(), _QUARANTINE_RE,
-                       "`return n > 0 ? 0 : -1` — an honest empty fetch is "
-                       "reported as failure and quarantines the source")
+    del _UNCLASSIFIED[:]
+    out = []
+    for path in _tree_c_files():
+        text = strip_comments(read(path))
+        for m in _QUARANTINE_RE.finditer(text):
+            var = m.group(1)
+            if not _is_row_name(var):
+                # Not in the known row-counter vocabulary. That is usually a
+                # host-success counter (correct), but it is also how `nrec`,
+                # `wrote` and `found` slipped through — so the skip is COUNTED
+                # rather than silent. A check reporting 0 must not be read as
+                # "the pattern is eradicated" when its own vocabulary is what
+                # bounds it; see the quarantine-empty-unclassified row.
+                _UNCLASSIFIED.append(
+                    "%s:%d: `return %s > 0 ? 0 : -1` — counter name outside the "
+                    "known vocabulary, not classified either way"
+                    % (os.path.relpath(path, REPO),
+                       text[:m.start()].count("\n") + 1, var))
+                continue
+            fn = _function_window(text, m.start())
+            if (re.search(_FLAG_ASSIGN % re.escape(var), fn)
+                    and not re.search(_ACCUMULATES % (re.escape(var),
+                                                      re.escape(var)), fn)):
+                continue                     # 0/1 emit-succeeded flag, not a count
+            line = text[:m.start()].count("\n") + 1
+            out.append("%s:%d: `return %s > 0 ? 0 : -1` — an honest empty fetch "
+                       "is reported as failure and quarantines the source"
+                       % (os.path.relpath(path, REPO), line, var))
+    return out
 
 
 # `off += snprintf(buf + off, sizeof buf - off, …)`: snprintf returns the
@@ -525,13 +717,216 @@ _SNPRINTF_ACC = re.compile(
 
 # A guard is any comparison of the accumulator against something that is a
 # capacity: sizeof, an ALL_CAPS constant, an identifier that reads like a size
-# (cap/len/sz/size/max/lim), or a literal. `o + 4 < cap` and
-# `sw + 2 < sizeof summary` are both real guards and both appear in this tree.
+# (cap/len/sz/size/max/lim, or a bare `n`/`avail`/`space`, which is what a
+# `(char *out, size_t n)` writer calls its capacity), or a literal.
+# `o + 4 < cap`, `j + 4 < n` and `sw + 2 < sizeof summary` are all real guards
+# and all appear in this tree.
 _GUARD_TMPL = (r"\b%s\b\s*(?:[-+]\s*\w+\s*)?(?:>=|>|<|<=)\s*\(?\s*"
                r"(?:\(\s*\w+(?:\s+\w+)?\s*\)\s*)?"
                r"(?:sizeof\b|[A-Z][A-Z_0-9]{1,}\b"
-               r"|\w*(?:cap|len|sz|size|max|lim|room|rem)\w*\b|[1-9]\d*)")
+               r"|\w*(?:cap|len|sz|size|max|lim|room|rem)\w*\b"
+               r"|n\b|nn\b|avail\b|space\b|remaining\b|[1-9]\d*)")
 _CLAMP_TMPL = r"\b%s\b\s*=\s*\(?\s*(?:\(\s*\w+\s*\)\s*)?(?:sizeof|[A-Z][A-Z_0-9]+)"
+
+# --- proving a sequence of appends cannot overflow -------------------------
+#
+# The other half of this check's false-positive rate is the append chain that
+# needs no runtime guard because it is bounded at compile time:
+# core/camera_store.c builds a WHERE clause from three fixed SQL literals whose
+# only conversions are `%d` — ~470 bytes worst case into `char w[1200]`. No
+# clamp will ever fire there, and demanding one is noise.
+#
+# So: when every snprintf writing into the buffer has an all-literal format
+# whose worst-case expansion is computable, and the sum of those fits the
+# declared buffer, the chain is proven safe and is not reported.
+#
+# `%s` and `%f` are deliberately NOT computable. `%.1f` of a double read from
+# an upstream JSON body is up to ~310 characters — a bound that comes from the
+# data, not from the code, is not a bound.
+_STRING_ARG = re.compile(r'\s*(?:"(?:\\.|[^"\\])*"\s*)+\Z')
+_CONV = re.compile(r"%([-+ #0']*)(\d+|\*)?(?:\.(\d+|\*))?(hh|h|ll|l|j|z|t|L)?"
+                   r"([diouxXeEfFgGaAcspn%])")
+
+
+def _literal_len(s):
+    """Bytes a C string literal's non-conversion text expands to (escape == 1)."""
+    return len(re.sub(r"\\(?:x[0-9A-Fa-f]+|[0-7]{1,3}|.)", "E", s))
+
+
+def _fmt_bound(fmt):
+    """Worst-case bytes `fmt` can produce, or None when it is unbounded."""
+    total = 0
+    pos = 0
+    for m in _CONV.finditer(fmt):
+        total += _literal_len(fmt[pos:m.start()])
+        pos = m.end()
+        width, prec, length, conv = m.group(2), m.group(3), m.group(4), m.group(5)
+        if width == "*" or prec == "*":
+            return None                       # width supplied at runtime
+        if conv == "%":
+            b = 1
+        elif conv in "diouxX":
+            b = 20 if length in ("l", "ll", "j", "z", "t") else 11
+        elif conv == "c":
+            b = 1
+        elif conv == "p":
+            b = 20
+        elif conv == "n":
+            b = 0
+        elif conv in "eEgGaA":
+            b = int(prec or 6) + 12           # exponent form is bounded
+        else:
+            return None                       # %s, %f: magnitude/length is data
+        total += max(b, int(width or 0))
+    total += _literal_len(fmt[pos:])
+    return total
+
+
+def _string_literal_value(arg):
+    """Concatenated contents of an all-string-literal argument, else None."""
+    if not _STRING_ARG.match(arg):
+        return None
+    return "".join(re.findall(r'"((?:\\.|[^"\\])*)"', arg))
+
+
+def _snprintf_calls(region):
+    for m in re.finditer(r"\bsnprintf\s*\(", region):
+        args, _end = _split_args(region, m.end() - 1)
+        if args and len(args) >= 3:
+            yield args
+
+
+def _provably_bounded(region, buf):
+    """True when every snprintf into `buf` in `region` is compile-time bounded
+    and their total worst case fits `buf`'s declared size."""
+    decl = re.search(r"\b%s\s*\[\s*(\d+)\s*\]" % re.escape(buf), region)
+    if not decl:
+        return False                          # size not visible: prove nothing
+    cap = int(decl.group(1))
+    total = 0
+    for args in _snprintf_calls(region):
+        dst = args[0].strip()
+        if dst != buf and not re.match(r"^%s\s*\+" % re.escape(buf), dst):
+            continue
+        fmt = _string_literal_value(args[2])
+        if fmt is None:
+            return False
+        b = _fmt_bound(fmt)
+        if b is None:
+            return False
+        total += b
+    return total > 0 and total + 1 <= cap
+
+
+def _enclosing_conditions(text, pos):
+    """Conditions of the if/for/while constructs that ENCLOSE `pos`.
+
+    Walks backwards counting braces. Each time the depth rises (an unmatched
+    '{' to our left), the text immediately before that brace is the head of the
+    construct we are inside; if it ends in `)` we take the matching
+    parenthesised condition. Returns outermost-last. This is what makes the
+    difference between a guard that actually protects the call and one that
+    merely happens to sit nearby.
+    """
+    def _cond_ending_at(end):
+        """If text[end] is ')' closing an if/for/while head, return (cond, kw_start)."""
+        if end <= 0 or text[end] != ')':
+            return None, None
+        d, j = 0, end
+        while j > 0:
+            if text[j] == ')':
+                d += 1
+            elif text[j] == '(':
+                d -= 1
+                if d == 0:
+                    break
+            j -= 1
+        if j <= 0:
+            return None, None
+        k = j - 1
+        while k > 0 and text[k] in " \t\n\r":
+            k -= 1
+        kw_end = k + 1
+        while k > 0 and (text[k - 1].isalpha() or text[k - 1] == '_'):
+            k -= 1
+        if text[k:kw_end] not in ("if", "for", "while"):
+            return None, None
+        return text[j:end + 1], k
+
+    conds = []
+
+    # 1. UNBRACED bodies: `if (has_dc && w < sizeof buf)\n  w += snprintf(...);`
+    #    is the dominant idiom in this tree and has no '{' at all, so a
+    #    brace-walk alone never sees the guard. Walk back to the start of this
+    #    statement, then peel off any chain of unbraced heads above it.
+    i, depth = pos, 0
+    while i > 0:
+        ch = text[i]
+        if ch in ')]':
+            depth += 1
+        elif ch in '([':
+            depth -= 1
+        elif depth <= 0 and ch in ';{}':
+            break
+        i -= 1
+    j = i
+    # Anything between that boundary and the call that is an if/for/while head
+    # WITHOUT a following '{' is an unbraced construct enclosing this statement.
+    # Scanning forward from the boundary is what makes this correct: walking
+    # backwards sails straight past the head and anchors on the previous block's
+    # closing brace, which is how the guard on the line directly above the call
+    # went unseen.
+    for hm in re.finditer(r"\b(if|for|while)\s*\(", text[i + 1:pos]):
+        st = i + 1 + hm.end() - 1
+        d, e = 0, st
+        while e < pos:
+            if text[e] == '(':
+                d += 1
+            elif text[e] == ')':
+                d -= 1
+                if d == 0:
+                    break
+            e += 1
+        if d == 0 and e < pos:
+            tail = text[e + 1:pos]
+            if '{' not in tail:
+                conds.append(text[st:e + 1])
+
+    # 2. BRACED enclosures, outward.
+    depth, i = 0, j
+    while i > 0 and len(conds) < 8:
+        ch = text[i]
+        if ch == '}':
+            depth += 1
+        elif ch == '{':
+            if depth == 0:
+                head_end = i - 1
+                while head_end > 0 and text[head_end] in " \t\n\r":
+                    head_end -= 1
+                cond, _ = _cond_ending_at(head_end)
+                if cond:
+                    conds.append(cond)
+            else:
+                depth -= 1
+        i -= 1
+    return conds
+
+
+def _zero_before_first_append(text, pos, var):
+    """True when `var` is provably 0 at `pos`.
+
+    The first append of an accumulator chain is `w += snprintf(buf + w,
+    sizeof buf - w, ...)` with `w` freshly initialised to 0, so the size
+    argument is the full buffer and no guard is possible or needed. Only the
+    APPENDS AFTER it need one.
+    """
+    head = text[:pos]
+    init = list(re.finditer(r"\b(?:int|size_t|long|unsigned)?\s*\b%s\s*=\s*0\s*;"
+                            % re.escape(var), head))
+    if not init:
+        return False
+    after = head[init[-1].end():]
+    return not re.search(r"\b%s\s*(?:\+=|=|\+\+|--)" % re.escape(var), after)
 
 
 def check_snprintf_guard():
@@ -542,15 +937,39 @@ def check_snprintf_guard():
         for m in _SNPRINTF_ACC.finditer(text):
             var = m.group(1)
             ln = text[:m.start()].count("\n")
-            # Look at the surrounding block: the guard is usually the enclosing
-            # loop condition just above, or an explicit clamp just below.
-            window = "\n".join(lines[max(0, ln - 8):ln + 12])
-            guard = re.search(_GUARD_TMPL % re.escape(var), window)
-            clamp = re.search(_CLAMP_TMPL % re.escape(var), window)
-            if not guard and not clamp:
-                out.append("%s:%d: `%s += snprintf(...)` with no remaining-space "
-                           "guard on %s" % (os.path.relpath(path, REPO),
-                                            ln + 1, var, var))
+            # The guard must DOMINATE the call, not merely co-occur near it.
+            #
+            # This used to scan a +-20 line window, which any incidental
+            # comparison of the same variable disarmed:
+            #
+            #     if (off > 3) { puts("x"); }              /* unrelated */
+            #     off += snprintf(buf + off, sizeof buf - off, "%s", junk);
+            #
+            # went undetected. A real guard is either the condition of the
+            # construct ENCLOSING the call (`for (...; w < sizeof buf; ...)`,
+            # `if (off < cap)`) or a clamp on the lines immediately after it.
+            # Both are checked below; nothing else counts.
+            if _zero_before_first_append(text, m.start(), var):
+                continue
+            guard = None
+            for cond in _enclosing_conditions(text, m.start()):
+                if re.search(_GUARD_TMPL % re.escape(var), cond):
+                    guard = cond
+                    break
+            # A clamp belongs to this call only if it is right underneath it.
+            clamp = re.search(_CLAMP_TMPL % re.escape(var),
+                              "\n".join(lines[ln:ln + 4]))
+            if guard or clamp:
+                continue
+            args, _end = _split_args(text, m.end() - 1)   # regex ends at '('
+            dst = args[0].strip() if args else ""
+            bm = re.match(r"^([A-Za-z_]\w*)\s*(?:\+|$)", dst)
+            if bm and _provably_bounded(_function_window(text, m.start()),
+                                        bm.group(1)):
+                continue
+            out.append("%s:%d: `%s += snprintf(...)` with no remaining-space "
+                       "guard on %s" % (os.path.relpath(path, REPO),
+                                        ln + 1, var, var))
     return out
 
 
@@ -583,21 +1002,88 @@ def check_rowid_unchecked():
 # Without geo_precision the map cannot tell an exact camera fix from a
 # prefecture centroid, and the audit's fabricated-geometry findings all look
 # identical to real geometry at the API boundary.
+#
+# TWO WAYS TO EMIT GEOMETRY, and for a long time this check only saw one.
+#
+#   1. By hand, on the intel_item:  `it.has_geo = 1; it.geometry_geojson = …`.
+#   2. Through the library: build `gj_point_feature(lon, lat)`, attach
+#      properties, and hand the array to geojson_emit_features() /
+#      geojson_emit_doc(); or hand a camera Feature to camera_upsert().
+#
+# In form (2) `has_geo` is set inside lib/geojson.c (geojson_emit_features →
+# `it.has_geo = geo`) and core/camera_store.c, never in the collector file, so
+# neither of the two patterns above appears anywhere in the ~225 collectors
+# that take that path. They were invisible to this check — which is the whole
+# population the check exists for, since a library-emitted Point looks exactly
+# as authoritative at the API boundary as a hand-built one. Matching the call
+# sites is what makes the reported population the real one.
 _EMITS_GEO = re.compile(r"\.has_geo\s*=\s*1|\.geometry_geojson\s*=\s*[^N]|"
-                        r"\bhas_geo\s*=\s*1\b")
+                        r"\bhas_geo\s*=\s*1\b|"
+                        r"\bgj_point_feature\s*\(|"
+                        r"\bgeojson_emit_features\s*\(|"
+                        r"\bgeojson_emit_doc\s*\(|"
+                        r"\bcamera_upsert\s*\(")
 
 
 def check_geo_precision():
+    """One emit site is exempted by ITS OWN function, not by the whole file.
+
+    A file-wide `if "geo_precision" in text: continue` meant one compliant emit
+    hid every other emit in the same file. That matters most exactly where the
+    file is shared: _verified_macros.inc is the emit path for 144 collectors,
+    and av_common.inc / od_shared.inc / sanc_common.inc are similar.
+    """
     out = []
     for path in collector_files():
         text = strip_comments(read(path))
-        if "geo_precision" in text:
-            continue
-        m = _EMITS_GEO.search(text)
-        if m:
+        for m in _EMITS_GEO.finditer(text):
+            if "geo_precision" in _function_window(text, m.start()):
+                continue
             ln = text[:m.start()].count("\n") + 1
             out.append("%s:%d: emits geometry with no geo_precision property"
                        % (os.path.relpath(path, REPO), ln))
+    return out
+
+
+_IDX_NAME    = re.compile(r"\bidx_[a-z0-9_]+")
+_IDX_CREATE  = re.compile(r"CREATE\s+(?:UNIQUE\s+)?INDEX\s+(?:IF\s+NOT\s+EXISTS\s+)?"
+                          r"(idx_[a-z0-9_]+)", re.I)
+
+
+def check_phantom_index():
+    """An index a header PROMISES must actually be created somewhere.
+
+    21 headers name 57 different indexes, usually to explain why a query is
+    fast ("this probe hits idx_entities_normkey, never a prefix scan"). That is
+    durable, useful knowledge — but it is an assertion about state owned by a
+    DIFFERENT file, so nothing stops schema.sql changing underneath it. A header
+    that claims an index which no longer exists does not fail a build or a test;
+    it just quietly misinforms the next person reasoning about a slow endpoint.
+
+    Creation may legitimately live in schema.sql OR in a .c (several indexes are
+    built at runtime by migrations that must run after an ensure_column). Both
+    count. Matching must allow CREATE UNIQUE INDEX — omitting that is exactly
+    how this check first reported three false phantoms.
+    """
+    created = set()
+    for path in [os.path.join(REPO, "native", "core", "schema.sql")] + _tree_c_files():
+        try:
+            text = read(path)
+        except OSError:
+            continue
+        created.update(m.group(1) for m in _IDX_CREATE.finditer(text))
+
+    out = []
+    hdrs = sorted(glob.glob(os.path.join(REPO, "native", "core", "*.h")) +
+                  glob.glob(os.path.join(REPO, "native", "lib", "*.h")))
+    for path in hdrs:
+        text = read(path)
+        lines = text.split("\n")
+        for ln, line in enumerate(lines, 1):
+            for name in set(_IDX_NAME.findall(line)):
+                if name not in created:
+                    out.append("%s:%d: header names `%s`, which no CREATE INDEX "
+                               "anywhere creates" % (os.path.relpath(path, REPO), ln, name))
     return out
 
 
@@ -606,9 +1092,11 @@ CHECKS = [
     ("unresolved-id", check_unresolved_id),
     ("registry-orphan", check_registry_orphan),
     ("quarantine-empty", check_quarantine_empty),
+    ("quarantine-empty-unclassified", check_quarantine_unclassified),
     ("snprintf-guard", check_snprintf_guard),
     ("rowid-unchecked", check_rowid_unchecked),
     ("geo-precision", check_geo_precision),
+    ("phantom-index", check_phantom_index),
 ]
 CHECK_NAMES = [n for n, _ in CHECKS]
 
@@ -643,6 +1131,17 @@ def load_baseline():
         return {}
 
 
+def _baseline_value(findings):
+    """A scalar for a clean check, a per-file map for one with a real floor."""
+    if not findings:
+        return 0
+    per = {}
+    for f in findings:
+        p = f.split(":", 1)[0]
+        per[p] = per.get(p, 0) + 1
+    return per
+
+
 def write_baseline(results):
     total, direct, macro, unres = count_sources()
     doc = {
@@ -652,12 +1151,18 @@ def write_baseline(results):
             "Regenerate with: python3 native/tools/lint_sources.py --write-baseline",
             "Every count here is a defect that still needs fixing, not an",
             "approved exception.",
+            "",
+            "A check with a NONZERO floor is recorded PER FILE, not as one",
+            "number. With a single total, a new offending file lands unnoticed",
+            "whenever an unrelated file is fixed — the total stays flat and CI",
+            "stays green. Per file, a new offender is a regression regardless.",
+            "Checks sitting at 0 stay scalar; there is nothing to mask.",
         ],
         "registered_sources": {
             "total": total, "direct": direct, "macro_expanded": macro,
             "unresolved": unres,
         },
-        "checks": {name: len(f) for name, f in results},
+        "checks": {name: _baseline_value(f) for name, f in results},
     }
     with open(BASELINE_PATH, "w", encoding="utf-8") as fh:
         json.dump(doc, fh, indent=2, sort_keys=True)
@@ -725,6 +1230,34 @@ def main(argv):
     for name, findings in results:
         base = baseline.get(name)
         n = len(findings)
+
+        # PER-FILE for any check with a nonzero floor. A single global counter
+        # lets a brand-new offending file land unnoticed whenever an unrelated
+        # file is fixed — and geo-precision is the only check not at 0, so it is
+        # the only one where that masking is possible. Comparing the set of
+        # offending FILES makes a new offender a regression even when the total
+        # falls. Checks at a 0 floor need none of this.
+        if isinstance(base, dict):
+            cur = {}
+            for f in findings:
+                cur[f.split(":", 1)[0]] = cur.get(f.split(":", 1)[0], 0) + 1
+            worse = sorted(p for p, c in cur.items() if c > base.get(p, 0))
+            if worse:
+                print("%-18s %5d  REGRESSED in %d file(s) (per-file baseline)"
+                      % (name, n, len(worse)))
+                for p in worse[:20]:
+                    print("    %s: %d (baseline %d)" % (p, cur[p], base.get(p, 0)))
+                if len(worse) > 20:
+                    print("    … %d more" % (len(worse) - 20))
+                failed = True
+            else:
+                total_base = sum(base.values())
+                print("%-18s %5d  %s" % (name, n,
+                      "at per-file baseline" if n == total_base
+                      else "improved (per-file baseline %d — run --write-baseline)"
+                           % total_base))
+            continue
+
         if base is None:
             status = "NEW"
             bad = n > 0

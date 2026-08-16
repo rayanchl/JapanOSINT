@@ -254,6 +254,14 @@
  *   GET    /api/breach-monitors/:id/hits   matched breaches + catalog metadata
  *   POST   /api/breach-monitors/:id/rescan re-run this monitor over the corpus
  *
+ * CREATE returns 201 with meta = {initial_hits, scan}. `scan` is the one to
+ * read: "complete" (initial_hits is a real committed count), "running" (the
+ * corpus match is on a background thread because the value_domain backfill had
+ * to run — initial_hits is null and MUST NOT be read as zero), "failed" (the
+ * match did not commit) or "not_started" (no thread could be started; the
+ * monitor is stored and POST .../rescan will match it). initial_hits is null
+ * in every case but the first.
+ *
  * AUTH: read = any tenant member (tenant_resolve already proved membership);
  * write (POST/DELETE/rescan) = role analyst|admin|owner, else 403 forbidden.
  * AUDIT: breach_monitor.create / .delete / .rescan via audit_write(). The
@@ -310,8 +318,20 @@ long long breach_monitor_scan_new(db_handle *db, const char *source_id,
  * shutdown returns within one batch. Progress is durable: work already
  * committed is not undone, and re-running skips it via the existence check.
  * `*out_monitors` / `*out_hits` (either may be NULL) receive the number of
- * monitors examined and alert_events rows written. Returns 0, or <0 on a bad
- * handle. */
+ * monitors examined and alert_events rows COMMITTED.
+ *
+ * Returns 0, or <0 on a bad handle AND when any monitor's events could not be
+ * committed. `*out_hits` still counts only what did commit, so it is safe to
+ * report; the non-zero return is what stops a caller from serving a partial
+ * pass as a complete one. Re-running is the repair.
+ *
+ * NOT FOR A REQUEST THREAD when a domain monitor exists anywhere: the
+ * value_domain backfill it starts with walks the whole of breach_items in
+ * 50,000-row UPDATE batches, and a `cancel` of NULL cannot stop it. The HTTP
+ * create path checks that (any domain monitor → detached thread, and the
+ * response carries meta.scan="running" with a null initial_hits rather than a
+ * count nobody measured); POST /rescan runs it inline because that is what the
+ * operator asked for. */
 int breach_monitor_rescan_all(db_handle *db, const char *tenant_id,
                               const char *monitor_id, volatile int *cancel,
                               long long *out_monitors, long long *out_hits);

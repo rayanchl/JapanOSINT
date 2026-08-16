@@ -7,7 +7,7 @@
  * (geo_point_2d / geom), which is why has_geo is left unset here: the
  * catalogue tier returns no coordinates and none are invented (R2). Keyless.
  * Licence: Open Government Licence - Vancouver. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ods-ca-vancouver"
 static const char *URL =

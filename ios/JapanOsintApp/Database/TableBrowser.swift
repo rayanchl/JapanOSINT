@@ -44,6 +44,7 @@ struct TableBrowser: View {
         HStack(spacing: 8) {
             Image(systemName: "tablecells")
                 .foregroundStyle(theme.accent)
+                .accessibilityHidden(true)   // decorative section mark
             Menu {
                 Picker("Table", selection: Binding(
                     get: { selected ?? tables.first?.name ?? "" },
@@ -69,8 +70,11 @@ struct TableBrowser: View {
                     Image(systemName: "chevron.up.chevron.down")
                         .font(.caption2)
                         .foregroundStyle(theme.textMuted)
+                        .accessibilityHidden(true)   // menu affordance
                 }
             }
+            .accessibilityLabel("Table")
+            .accessibilityValue(selected ?? "None selected")
             Spacer()
             if let p = page {
                 Text("\(p.total) rows")
@@ -89,6 +93,15 @@ struct TableBrowser: View {
     private var content: some View {
         if let err = errorMessage {
             errorBanner(err)
+        }
+        if let p = page, !p.isComplete {
+            // A short scan used to be invisible here: the server returned
+            // total:0 / rows:[] and this screen drew an empty table, which
+            // reads as "this table has no rows" rather than "we could not
+            // finish reading it". Say which it is.
+            errorBanner(p.error.map { "Partial result — \($0)" }
+                        ?? "Partial result: the server could not finish reading "
+                         + "this table. Rows and totals below are incomplete.")
         }
         if let p = page {
             ScrollView {
@@ -124,8 +137,11 @@ struct TableBrowser: View {
                     HStack(spacing: 3) {
                         Text(c.name).font(.caption2.bold())
                         if orderBy == c.name {
+                            // Sort direction is otherwise conveyed only by the
+                            // arrow's shape, so it gets a spoken label.
                             Image(systemName: orderAsc ? "arrow.up" : "arrow.down")
                                 .font(.caption2)
+                                .accessibilityLabel(orderAsc ? "sorted ascending" : "sorted descending")
                         }
                     }
                     .foregroundStyle(orderBy == c.name ? theme.accent : theme.textMuted)
@@ -170,6 +186,7 @@ struct TableBrowser: View {
                     Image(systemName: isOpen ? "chevron.up" : "chevron.down")
                         .font(.caption2)
                         .foregroundStyle(theme.textMuted)
+                        .accessibilityLabel(isOpen ? "Collapse row" : "Expand row")
                 }
                 .contentShape(Rectangle())
             }
@@ -238,6 +255,7 @@ struct TableBrowser: View {
         HStack(spacing: 8) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .foregroundStyle(theme.danger)
+                .accessibilityHidden(true)   // the message text follows
             Text(msg).font(.caption).foregroundStyle(theme.text).lineLimit(3)
             Spacer()
         }
@@ -245,6 +263,22 @@ struct TableBrowser: View {
         .background(theme.danger.opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
         .padding(.horizontal)
         .padding(.top, 8)
+    }
+
+    private func rangeLabel(_ p: DBPage) -> String {
+        let first = p.rows.isEmpty ? 0 : p.offset + 1
+        let last  = p.offset + p.rows.count
+        guard p.isTotalKnown else { return "\(first)–\(last) of ?" }
+        let suffix = p.isComplete ? "" : "+"
+        return "\(first)–\(last) of \(p.total)\(suffix)"
+    }
+
+    private func rangeAccessibilityLabel(_ p: DBPage) -> String {
+        let first = p.rows.isEmpty ? 0 : p.offset + 1
+        let last  = p.offset + p.rows.count
+        if !p.isTotalKnown { return "Rows \(first) to \(last), total unknown" }
+        if !p.isComplete   { return "Rows \(first) to \(last) of at least \(p.total)" }
+        return "Rows \(first) to \(last) of \(p.total)"
     }
 
     private func footer(p: DBPage) -> some View {
@@ -262,9 +296,13 @@ struct TableBrowser: View {
             .disabled(offset == 0)
 
             Spacer()
-            Text("\(p.offset + 1)–\(min(p.offset + p.rows.count, p.total)) of \(p.total)")
+            // `total` is a placeholder when the server could not count, so
+            // "of N" would be a fabricated number. Show the range alone, and
+            // mark it approximate when the scan was cut short.
+            Text(rangeLabel(p))
                 .font(.caption2.monospacedDigit())
-                .foregroundStyle(theme.textMuted)
+                .foregroundStyle(p.isComplete ? theme.textMuted : theme.danger)
+                .accessibilityLabel(rangeAccessibilityLabel(p))
             Spacer()
 
             Button {

@@ -2,7 +2,23 @@
  * server/src/routes/transit.js. SQL + JSON shapes reproduced verbatim from
  * the JS (and the helpers it imports: transportStore.getLinesByMode,
  * gtfsStore.getDeparturesAt/listHydratedOperators, gtfsActiveTrips
- * .getActiveTripsAt, odptStationTimetable.getStationTimetable). */
+ * .getActiveTripsAt, odptStationTimetable.getStationTimetable).
+ *
+ * DEVIATION FROM THE JS, deliberate: service-day resolution here honours
+ * gtfs_calendar_dates (calendar_dates.txt) on top of gtfs_calendar, in both
+ * /gtfs/stop/:id/departures and /gtfs/active-trips. exception_type=2 removes
+ * a service on a date, exception_type=1 adds it, and Japanese public holidays
+ * are expressed almost entirely that way; calendar.txt alone hands back the
+ * ordinary weekday board on a holiday, confidently and silently wrong.
+ *
+ * NOT YET TRUE END-TO-END: nothing populates gtfs_calendar_dates. gtfs_jp.c's
+ * load_calendar()/prep_all() parse calendar.txt only and its per-feed DELETE
+ * list does not clear the exception table either. So on a live database the
+ * table is empty, every exception clause below is vacuously satisfied, and the
+ * answers are byte-identical to the previous calendar-only ones — the holiday
+ * gap stays open until that loader ingests calendar_dates.txt. Documented
+ * rather than papered over. (transitapi.h's DEVIATIONS list is owned
+ * elsewhere; this note belongs there too.) */
 #include "transitapi.h"
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
@@ -401,6 +417,17 @@ static char *route_stop_departures(db_handle *db, const char *stopId,
       "SELECT sun,mon,tue,wed,thu,fri,sat,start_date,end_date "
       "FROM gtfs_calendar WHERE org_id=?1 AND feed_id=?2 AND service_id=?3",
       -1, &cal, NULL);
+    /* calendar.txt is only the weekly PATTERN; calendar_dates.txt carries the
+     * exceptions to it (1 = service added on that date, 2 = removed), which is
+     * how Japanese feeds encode public holidays. Consulting gtfs_calendar
+     * alone hands back the ordinary weekday board on a holiday. If the
+     * exception table is absent or empty this statement simply never returns a
+     * row, and the calendar-only branch below runs exactly as it did before. */
+    sqlite3_stmt *calx = NULL;
+    sqlite3_prepare_v2(db->h,
+      "SELECT exception_type FROM gtfs_calendar_dates "
+      "WHERE org_id=?1 AND feed_id=?2 AND service_id=?3 AND date=?4",
+      -1, &calx, NULL);
     while (sqlite3_step(st) == SQLITE_ROW) {
       const char *org = col_text(st, 0);
       const char *feed = col_text(st, 1);
@@ -411,9 +438,24 @@ static char *route_stop_departures(db_handle *db, const char *stopId,
       long dep_sec = dep_null ? 0 : sqlite3_column_int64(st, 4);
       const char *svc = col_text(st, 8);
 
-      /* isServiceActive */
+      /* isServiceActive — exception first, weekly pattern second. */
+      int exc = 0;                              /* 0 none, 1 added, 2 removed */
+      if (calx) {
+        sqlite3_reset(calx);
+        sqlite3_bind_text(calx, 1, org,  -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(calx, 2, feed, -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(calx, 3, svc,  -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(calx, 4, ymd,  -1, SQLITE_TRANSIENT);
+        if (sqlite3_step(calx) == SQLITE_ROW) exc = sqlite3_column_int(calx, 0);
+      }
       int active = 0;
-      if (cal) {
+      if (exc == 1) {
+        /* Added on this date. GTFS says an ADD exception stands on its own —
+         * it needs no calendar row and overrides the weekday bits. */
+        active = 1;
+      } else if (exc == 2) {
+        active = 0;                             /* removed on this date */
+      } else if (cal) {
         sqlite3_reset(cal);
         sqlite3_bind_text(cal, 1, org, -1, SQLITE_TRANSIENT);
         sqlite3_bind_text(cal, 2, feed, -1, SQLITE_TRANSIENT);
@@ -455,6 +497,7 @@ static char *route_stop_departures(db_handle *db, const char *stopId,
       cJSON_AddItemToArray(deps, d);
     }
     sqlite3_finalize(cal);
+    sqlite3_finalize(calx);
   }
   sqlite3_finalize(st);
 
@@ -603,12 +646,30 @@ static char *route_active_trips(db_handle *db, const char *query) {
            lt.tm_year+1900, lt.tm_mon+1, lt.tm_mday);
   long nowSec = lt.tm_hour*3600 + lt.tm_min*60 + lt.tm_sec;
 
-  char sql[1024];
-  snprintf(sql, sizeof sql,
+  /* active_services is calendar.txt's weekly pattern MINUS the day's
+   * exception_type=2 removals, UNION calendar_dates.txt's exception_type=1
+   * additions — the GTFS definition of a service running on a date. Japanese
+   * holidays live almost entirely in that second table, so the pattern alone
+   * puts the weekday timetable on the map on a holiday. UNION (not UNION ALL)
+   * so a service that is both pattern-active and explicitly added appears
+   * once. An empty/absent gtfs_calendar_dates makes the NOT EXISTS vacuously
+   * true and the second branch empty, i.e. exactly the previous set. */
+  char sql[2048];
+  /* Same truncation hazard as isochrone.c: this buffer already had to grow for
+   * the calendar_dates clauses, and a clipped statement can still parse while
+   * answering a different question. Checked below. */
+  int sqln = snprintf(sql, sizeof sql,
     "WITH active_services AS ("
-    " SELECT org_id,feed_id,service_id FROM gtfs_calendar "
-    " WHERE %s=1 AND (start_date IS NULL OR start_date<=?1) "
-    "   AND (end_date IS NULL OR end_date>=?1)),"
+    " SELECT c.org_id,c.feed_id,c.service_id FROM gtfs_calendar c "
+    " WHERE c.%s=1 AND (c.start_date IS NULL OR c.start_date<=?1) "
+    "   AND (c.end_date IS NULL OR c.end_date>=?1) "
+    "   AND NOT EXISTS (SELECT 1 FROM gtfs_calendar_dates cx "
+    "                    WHERE cx.org_id=c.org_id AND cx.feed_id=c.feed_id "
+    "                      AND cx.service_id=c.service_id AND cx.date=?1 "
+    "                      AND cx.exception_type=2) "
+    " UNION "
+    " SELECT ca.org_id,ca.feed_id,ca.service_id FROM gtfs_calendar_dates ca "
+    " WHERE ca.date=?1 AND ca.exception_type=1),"
     "active_trips AS ("
     " SELECT t.org_id,t.feed_id,t.trip_id,t.route_id,t.shape_id,t.headsign "
     " FROM gtfs_trips t JOIN active_services s "
@@ -625,7 +686,10 @@ static char *route_active_trips(db_handle *db, const char *query) {
 
   cJSON *trips = cJSON_CreateArray();
   sqlite3_stmt *st = NULL, *sStops = NULL, *sShape = NULL, *sRoute = NULL;
-  if (sqlite3_prepare_v2(db->h, sql, -1, &st, NULL) == SQLITE_OK) {
+  if (sqln < 0 || (size_t)sqln >= sizeof sql) {
+    fprintf(stderr, "[transit] active-trips SQL truncated (%d >= %zu) — refusing\n",
+            sqln, sizeof sql);
+  } else if (sqlite3_prepare_v2(db->h, sql, -1, &st, NULL) == SQLITE_OK) {
     sqlite3_bind_text(st, 1, today, -1, SQLITE_TRANSIENT);
     sqlite3_bind_int64(st, 2, nowSec);
     sqlite3_bind_int(st, 3, limit * 4);
@@ -658,9 +722,22 @@ static char *route_active_trips(db_handle *db, const char *query) {
       sqlite3_bind_text(sStops, 1, org, -1, SQLITE_TRANSIENT);
       sqlite3_bind_text(sStops, 2, feed, -1, SQLITE_TRANSIENT);
       sqlite3_bind_text(sStops, 3, trip, -1, SQLITE_TRANSIENT);
-      while (sqlite3_step(sStops) == SQLITE_ROW) {
-        if (ns == scap) { scap = scap ? scap*2 : 16;
-                          stops = realloc(stops, scap*sizeof *stops); }
+      /* A SHORT stop list does not produce a smaller answer here, it produces a
+       * WRONG one: the position below is interpolated between two consecutive
+       * rows of this list, so a missing tail silently relocates the vehicle.
+       * Both the self-assigning realloc (old block leaked, next line writes
+       * through NULL) and `while (step() == ROW)` — which cannot tell DONE from
+       * IOERR/CORRUPT/BUSY/INTERRUPT — end this loop the same way a complete
+       * read does. Neither may be allowed to reach interp_shape(); drop the
+       * trip instead of plotting it somewhere it is not. */
+      int st_rc, st_bad = 0;
+      while ((st_rc = sqlite3_step(sStops)) == SQLITE_ROW) {
+        if (ns == scap) {
+          int ncap = scap ? scap*2 : 16;
+          sr_t *nv = realloc(stops, (size_t)ncap*sizeof *stops);
+          if (!nv) { st_bad = 1; break; }
+          stops = nv; scap = ncap;
+        }
         sr_t *r = &stops[ns++];
         r->has_arr = sqlite3_column_type(sStops,1)!=SQLITE_NULL;
         r->has_dep = sqlite3_column_type(sStops,2)!=SQLITE_NULL;
@@ -669,6 +746,7 @@ static char *route_active_trips(db_handle *db, const char *query) {
         r->dep = r->has_dep ? sqlite3_column_int64(sStops,2) : 0;
         r->dist= r->has_dist? sqlite3_column_double(sStops,3): 0;
       }
+      if (st_bad || st_rc != SQLITE_DONE) { free(stops); continue; }
       if (ns < 2) { free(stops); continue; }
 
       int prevIdx = -1;
@@ -697,14 +775,23 @@ static char *route_active_trips(db_handle *db, const char *query) {
       sqlite3_bind_text(sShape, 1, org, -1, SQLITE_TRANSIENT);
       sqlite3_bind_text(sShape, 2, feed, -1, SQLITE_TRANSIENT);
       sqlite3_bind_text(sShape, 3, shape_id ? shape_id : "", -1, SQLITE_TRANSIENT);
-      while (sqlite3_step(sShape) == SQLITE_ROW) {
-        if (nsh == shcap) { shcap = shcap ? shcap*2 : 64;
-                            sh = realloc(sh, shcap*sizeof *sh); }
+      /* Same as the stop list, and for the same reason: interp_shape() walks
+       * this polyline to place the vehicle, so a truncated shape puts it on the
+       * wrong part of the route rather than merely omitting it. */
+      int sh_rc, sh_bad = 0;
+      while ((sh_rc = sqlite3_step(sShape)) == SQLITE_ROW) {
+        if (nsh == shcap) {
+          int ncap = shcap ? shcap*2 : 64;
+          shp_pt *nv = realloc(sh, (size_t)ncap*sizeof *sh);
+          if (!nv) { sh_bad = 1; break; }
+          sh = nv; shcap = ncap;
+        }
         sh[nsh].lat = sqlite3_column_double(sShape,0);
         sh[nsh].lon = sqlite3_column_double(sShape,1);
         sh[nsh].dist= sqlite3_column_double(sShape,2);
         nsh++;
       }
+      if (sh_bad || sh_rc != SQLITE_DONE) { free(sh); continue; }
       if (nsh < 2) { free(sh); continue; }
       double plat, plon;
       if (!interp_shape(sh, nsh, distM, &plat, &plon)) { free(sh); continue; }

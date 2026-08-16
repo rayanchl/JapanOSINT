@@ -16,6 +16,7 @@
 #include "aoiapi.h"
 #include "alert_eval.h"
 #include "audit.h"
+#include "dbutil.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <openssl/rand.h>
@@ -724,6 +725,38 @@ static char *wl_list(db_handle *db, const tenant_ctx *t, const char *qs,
   return o;
 }
 
+/* Open a watchlist transaction. 0 when a transaction is actually open.
+ *
+ * db->h is the shared event-loop handle, so BEGIN really can come back
+ * SQLITE_BUSY behind a collector write. Unchecked, every statement that
+ * follows runs in autocommit and each error-path ROLLBACK becomes a no-op —
+ * the "rule and its sugar row go in together or not at all" guarantee these
+ * handlers are built on would silently not hold. */
+static int wl_txn_begin(sqlite3 *h) {
+  if (sqlite3_exec(h, "BEGIN", 0, 0, 0) == SQLITE_OK) return 0;
+  fprintf(stderr, "[aoiapi] watchlist BEGIN failed: %s\n", sqlite3_errmsg(h));
+  return -1;
+}
+
+/* Close it. Returns 0 only when the work is durable.
+ *
+ * The COMMIT return is NOT optional. On SQLITE_BUSY or SQLITE_FULL the
+ * transaction stays OPEN, and discarding the rc had three consequences at
+ * once: the handler answered 200/201/204 for rows that were never written;
+ * the audit_write and the read-back that builds the response ran against
+ * them; and the NEXT request's BEGIN on this shared handle failed silently,
+ * so its writes joined this stale transaction and a later ROLLBACK discarded
+ * those too. Fail loudly and leave the connection usable. */
+static int wl_txn_end(sqlite3 *h, int ok) {
+  if (!ok) { sqlite3_exec(h, "ROLLBACK", 0, 0, 0); return -1; }
+  if (sqlite3_exec(h, "COMMIT", 0, 0, 0) != SQLITE_OK) {
+    fprintf(stderr, "[aoiapi] watchlist COMMIT failed: %s\n", sqlite3_errmsg(h));
+    sqlite3_exec(h, "ROLLBACK", 0, 0, 0);
+    return -1;
+  }
+  return 0;
+}
+
 static char *wl_create(db_handle *db, const tenant_ctx *t, const char *body,
                        int *st) {
   if (!can_write(t)) return err(st, 403, "forbidden");
@@ -751,7 +784,9 @@ static char *wl_create(db_handle *db, const tenant_ctx *t, const char *body,
   /* The rule and its sugar row go in together or not at all: a watchlists row
    * pointing at a rule that does not exist would show up in the UI as a
    * watchlist that can never fire. */
-  sqlite3_exec(db->h, "BEGIN", 0, 0, 0);
+  if (wl_txn_begin(db->h) != 0) {
+    free(pj); free(idj); return err(st, 500, "server_error");
+  }
   sqlite3_stmt *s;
   int ok = 0;
   if (sqlite3_prepare_v2(db->h,
@@ -782,7 +817,7 @@ static char *wl_create(db_handle *db, const tenant_ctx *t, const char *body,
     ok = sqlite3_step(s) == SQLITE_DONE;
     sqlite3_finalize(s);
   } else ok = 0;
-  sqlite3_exec(db->h, ok ? "COMMIT" : "ROLLBACK", 0, 0, 0);
+  if (wl_txn_end(db->h, ok) != 0) ok = 0;
   free(pj);
   if (!ok) { free(idj); return err(st, 500, "server_error"); }
 
@@ -867,7 +902,16 @@ static char *wl_patch(db_handle *db, const tenant_ctx *t, const char *id,
   cJSON_Delete(ids);
   if (!pj || !idj) { free(pj); free(idj); return err(st, 500, "server_error"); }
 
-  sqlite3_exec(db->h, "BEGIN", 0, 0, 0);
+  /* Both UPDATEs are load-bearing and neither result may be ignored: the
+   * watchlists row is what the UI shows, the alert_rules predicate is what
+   * actually fires. Committing after a failed rule update published a
+   * watchlist whose displayed entity_ids and whose matching behaviour
+   * disagree — the shape wl_create already uses (ok ? COMMIT : ROLLBACK), so
+   * use it here too. */
+  if (wl_txn_begin(db->h) != 0) {
+    free(pj); free(idj); return err(st, 500, "server_error");
+  }
+  int ok = 1;
   if (rule_id[0]) {
     const char *sql = has_enabled
       ? "UPDATE alert_rules SET name=?1,predicate_json=?2,enabled=?3,"
@@ -881,11 +925,10 @@ static char *wl_patch(db_handle *db, const tenant_ctx *t, const char *id,
       if (has_enabled) sqlite3_bind_int(s, bi++, enabled ? 1 : 0);
       sqlite3_bind_text(s, bi++, rule_id,      -1, SQLITE_TRANSIENT);
       sqlite3_bind_text(s, bi,   t->tenant_id, -1, SQLITE_TRANSIENT);
-      sqlite3_step(s);
-      sqlite3_finalize(s);
-    }
+      ok = db_run_stmt(s) == 0;
+    } else ok = 0;
   }
-  if (sqlite3_prepare_v2(db->h,
+  if (ok && sqlite3_prepare_v2(db->h,
         "UPDATE watchlists SET name=?1,entity_ids_json=?2,"
         " updated_at=datetime('now') WHERE id=?3 AND tenant_id=?4",
         -1, &s, NULL) == SQLITE_OK) {
@@ -893,11 +936,11 @@ static char *wl_patch(db_handle *db, const tenant_ctx *t, const char *id,
     sqlite3_bind_text(s, 2, idj,          -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 3, id,           -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 4, t->tenant_id, -1, SQLITE_TRANSIENT);
-    sqlite3_step(s);
-    sqlite3_finalize(s);
-  }
-  sqlite3_exec(db->h, "COMMIT", 0, 0, 0);
+    ok = db_run_stmt(s) == 0;
+  } else ok = 0;
+  if (wl_txn_end(db->h, ok) != 0) ok = 0;
   free(pj);
+  if (!ok) { free(idj); return err(st, 500, "server_error"); }
 
   cJSON *pl = cJSON_CreateObject();
   cJSON_AddStringToObject(pl, "name", name);
@@ -926,30 +969,33 @@ static char *wl_delete(db_handle *db, const tenant_ctx *t, const char *id,
   sqlite3_finalize(s);
 
   /* Same order alertsapi.c deletes a rule in — events first, then the rule —
-   * so no alert_events row is ever left pointing at a rule that is gone. */
-  sqlite3_exec(db->h, "BEGIN", 0, 0, 0);
+   * so no alert_events row is ever left pointing at a rule that is gone. That
+   * ordering only means anything inside a transaction that actually opened and
+   * actually committed, and a delete that half-lands is exactly the dangling
+   * rule_id the ordering exists to prevent — so all three statements are
+   * checked and a 204 is only ever returned for a committed delete. */
+  if (wl_txn_begin(db->h) != 0) return err(st, 500, "server_error");
+  int ok = 1;
   if (rule_id[0]) {
     static const char *DEL[2] = {
       "DELETE FROM alert_events WHERE rule_id=?1 AND tenant_id=?2",
       "DELETE FROM alert_rules  WHERE id=?1 AND tenant_id=?2"
     };
-    for (int i = 0; i < 2; i++) {
-      if (sqlite3_prepare_v2(db->h, DEL[i], -1, &s, NULL) != SQLITE_OK) continue;
+    for (int i = 0; ok && i < 2; i++) {
+      if (sqlite3_prepare_v2(db->h, DEL[i], -1, &s, NULL) != SQLITE_OK) { ok = 0; break; }
       sqlite3_bind_text(s, 1, rule_id,      -1, SQLITE_TRANSIENT);
       sqlite3_bind_text(s, 2, t->tenant_id, -1, SQLITE_TRANSIENT);
-      sqlite3_step(s);
-      sqlite3_finalize(s);
+      ok = db_run_stmt(s) == 0;
     }
   }
-  if (sqlite3_prepare_v2(db->h,
+  if (ok && sqlite3_prepare_v2(db->h,
         "DELETE FROM watchlists WHERE id=?1 AND tenant_id=?2",
         -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_text(s, 1, id,           -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 2, t->tenant_id, -1, SQLITE_TRANSIENT);
-    sqlite3_step(s);
-    sqlite3_finalize(s);
-  }
-  sqlite3_exec(db->h, "COMMIT", 0, 0, 0);
+    ok = db_run_stmt(s) == 0;
+  } else ok = 0;
+  if (wl_txn_end(db->h, ok) != 0) return err(st, 500, "server_error");
 
   cJSON *pl = cJSON_CreateObject();
   add_str_or_null(pl, "rule_id", rule_id[0] ? rule_id : NULL);

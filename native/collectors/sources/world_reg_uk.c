@@ -122,7 +122,11 @@ static const uk_reg REGS[] = {
 };
 
 #define UK_REG_COUNT ((int)(sizeof(REGS) / sizeof(REGS[0])))
-#define UK_TOTAL_CAP 500   /* exhaustive-ok: runaway guard, logged */
+/* NOT a page cap: it sits in the loop condition over REGISTRIES, so hitting it
+ * ends the sweep and the registries after it go unqueried — reported as data
+ * by jo_registry_sweep_notice(). */
+#define UK_TOTAL_CAP 500   /* exhaustive-ok: whole-run emit cap; the sweep it
+                            * cuts short is reported as a truncation notice */
 #define UK_PER_REG_CAP 0     /* exhaustive-ok: 0 = no cap, every hit is emitted */
 
 /* Substitute the single "%s" placeholder in a search-URL template.
@@ -156,8 +160,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *enc = jo_urlencode(q);
   if (!enc) return -1;
 
-  int total = 0;
-  for (int i = 0; i < UK_REG_COUNT && total < UK_TOTAL_CAP; i++) {
+  int total = 0, i = 0;
+  for (; i < UK_REG_COUNT && total < UK_TOTAL_CAP; i++) {
     const uk_reg *r = &REGS[i];
     char url[1200];
     uk_build_url(url, sizeof url, r->tmpl, enc);
@@ -165,17 +169,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char rt[64];
     snprintf(rt, sizeof rt, "uk-registry-%s", r->cat);
 
-    int budget = UK_TOTAL_CAP - total;
-    if (budget > UK_PER_REG_CAP) budget = UK_PER_REG_CAP;
-
+    /* The old `budget` was dead: UK_PER_REG_CAP is 0 and `budget` starts at
+     * UK_TOTAL_CAP - total, which is always > 0 inside this loop, so the
+     * clamp always drove it to 0 — and jo_emit_anchors reads <= 0 as "no cap".
+     * Removed rather than given teeth, which would change what is emitted. */
     int n = jo_emit_anchors(ctx, sink, url, r->href_must, r->name, rt,
-                            r->base, NULL, budget, "uk_registry");
+                            r->base, NULL, UK_PER_REG_CAP, "uk_registry");
     total += n;
   }
 
   free(enc);
-  fprintf(stderr, "[uk_registry] emitted %d across %d registries\n",
-          total, UK_REG_COUNT);
+  jo_registry_sweep_notice(sink, "UK_REGISTRY", q, total, i, UK_REG_COUNT,
+                           "UK_TOTAL_CAP", UK_TOTAL_CAP, 0);
+  fprintf(stderr, "[uk_registry] emitted %d across %d of %d registries\n",
+          total, i, UK_REG_COUNT);
   return 0;   /* honest empty is not an error */
 }
 

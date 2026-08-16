@@ -178,6 +178,7 @@ struct ApiKeysView: View {
             Image(systemName: item.set ? "key.fill" : "key.slash")
                 .foregroundStyle(item.set ? theme.success : theme.textMuted)
                 .frame(width: 22)
+                .accessibilityHidden(true)   // restated by `statusPill`
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.name)
                     .font(.system(.body, design: .monospaced).weight(.medium))
@@ -193,6 +194,7 @@ struct ApiKeysView: View {
             Image(systemName: "chevron.right")
                 .font(.caption2)
                 .foregroundStyle(theme.textMuted)
+                .accessibilityHidden(true)   // navigation affordance
         }
         .contentShape(Rectangle())
     }

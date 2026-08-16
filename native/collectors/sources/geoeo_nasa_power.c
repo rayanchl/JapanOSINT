@@ -103,8 +103,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (header) geoeo_num(header, "fill_value", &fill);
   const char *sources = NULL;
   cJSON *src = header ? cJSON_GetObjectItem(header, "sources") : NULL;
-  if (cJSON_IsArray(src) && cJSON_IsString(cJSON_GetArrayItem(src, 0)))
-    sources = cJSON_GetArrayItem(src, 0)->valuestring;
+  if (cJSON_IsArray(src) && cJSON_IsString(cJSON_GetArrayItem(src, 0)))  /* exhaustive-ok: display pick; source_models_all keeps every source */
+    sources = cJSON_GetArrayItem(src, 0)->valuestring;  /* exhaustive-ok: display pick; source_models_all below carries every source */
   else if (cJSON_IsString(src))
     sources = src->valuestring;
 
@@ -148,6 +148,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddNumberToObject(props, "value", v);
       geoeo_add_str(props, "units", unit);
       geoeo_add_str(props, "source_model", sources);
+      /* header.sources can name several models; keep them all, not just the
+       * one used for display (house rule 2). */
+      if (cJSON_IsArray(src) && cJSON_GetArraySize(src) > 1)
+        cJSON_AddItemToObject(props, "source_models_all", cJSON_Duplicate(src, 1));
       if (has_elev) cJSON_AddNumberToObject(props, "site_elevation_m", elev);
       if (geo) {
         cJSON_AddNumberToObject(props, "latitude", lat);

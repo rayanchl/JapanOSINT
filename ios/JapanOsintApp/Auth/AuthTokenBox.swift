@@ -59,26 +59,33 @@ final class AuthTokenBox: @unchecked Sendable {
     /// expiry can refresh again. Returns `false` if no refresh hook is armed
     /// (legacy single-tenant mode).
     func coalescedRefresh() async -> Bool {
-        lock.lock()
-        if let inFlight = _inFlightRefresh {
-            lock.unlock()
-            return await inFlight.value
-        }
-        guard let refresh = _refresh else {
-            lock.unlock()
-            return false
-        }
+        guard let task = claimRefresh() else { return false }
+        return await task.value
+    }
+
+    /// Synchronous half of `coalescedRefresh` — returns the task to await, or
+    /// `nil` when no refresh hook is armed. `NSLock.lock()`/`unlock()` are
+    /// unavailable from async contexts (a hard error under Swift 6), and
+    /// rightly so: a lock must never be held across a suspension point. Keeping
+    /// the whole critical section in a non-async method is what guarantees that
+    /// — the caller only awaits once the lock is already released.
+    private func claimRefresh() -> Task<Bool, Never>? {
+        lock.lock(); defer { lock.unlock() }
+        if let inFlight = _inFlightRefresh { return inFlight }
+        guard let refresh = _refresh else { return nil }
         let task = Task<Bool, Never> {
             let ok = await refresh()
             // Clear the slot from inside the task so any caller that arrives
             // after we finished but before we cleared still got our result.
-            self.lock.lock()
-            self._inFlightRefresh = nil
-            self.lock.unlock()
+            self.clearInFlight()
             return ok
         }
         _inFlightRefresh = task
-        lock.unlock()
-        return await task.value
+        return task
+    }
+
+    private func clearInFlight() {
+        lock.lock(); defer { lock.unlock() }
+        _inFlightRefresh = nil
     }
 }

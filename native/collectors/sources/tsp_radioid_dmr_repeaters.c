@@ -57,11 +57,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return -1;
   }
 
-  int n = 0, seen = 0;
+  int n = 0, seen = 0, capped = 0;
   cJSON *r;
   cJSON_ArrayForEach(r, arr) {
     seen++;
-    if (n >= MAX_ROWS) break;
+    /* Past the cap keep counting so the notice below can state a real total. */
+    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     double id = 0;
     int has_id = jo_num(r, "id", &id);
     if (!has_id) has_id = jo_num(r, "locator", &id);
@@ -134,6 +135,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
+  /* House rule 2: the whole repeater register was fetched and counted;
+   * MAX_ROWS stopped the emit loop partway. */
+  if (capped)
+    jo_truncation_notice(sink, "radioid-dmr-repeaters", "repeater register", n,
+                         (long)seen,
+                         "MAX_ROWS reached; the remaining registered repeaters "
+                         "in the fetched register were counted but not emitted",
+                         "raise or drop MAX_ROWS in collectors/sources/"
+                         "tsp_radioid_dmr_repeaters.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[radioid-dmr-repeaters] emitted %d ACTIVE of %d registered\n",
           n, seen);

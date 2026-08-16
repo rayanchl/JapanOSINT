@@ -63,10 +63,18 @@ static cJSON *parse_pdf_metadata(const char *path) {
   size_t br = fread(buf, 1, 65535, fp);
   buf[br] = 0;
   fclose(fp);
-  if (strncmp(buf, "%PDF-", 5) == 0) {
-    char ver[8] = {0};
-    memcpy(ver, buf + 5, 3);
-    cJSON_AddStringToObject(m, "pdf_version", ver);
+  if (br >= 5 && strncmp(buf, "%PDF-", 5) == 0) {
+    /* The header check proves only 5 bytes exist. memcpy(ver, buf+5, 3) then
+     * read up to three bytes PAST what fread() actually delivered — for a
+     * 5-byte file that is uninitialised malloc'd memory, published as
+     * `pdf_version`. Copy only what was read. */
+    size_t avail = br - 5;
+    if (avail > 3) avail = 3;
+    if (avail > 0) {
+      char ver[8] = {0};
+      memcpy(ver, buf + 5, avail);
+      cJSON_AddStringToObject(m, "pdf_version", ver);
+    }
   }
   cJSON *props = cJSON_CreateObject();
   for (int i = 0; PDF_KEYS[i]; i++) {
@@ -317,7 +325,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   free(bj); free(pj);
   cJSON_Delete(root); cJSON_Delete(props);
-  return rc >= 0 ? 0 : 0;
+  /* Both arms used to be 0, so a sink/DB write failure — the one case where we
+   * extracted real data and then LOST it — was reported as a clean run. */
+  return rc >= 0 ? 0 : -1;
 }
 
 static const source_def document_analyzer_def = {

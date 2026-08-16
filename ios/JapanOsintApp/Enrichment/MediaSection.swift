@@ -63,6 +63,7 @@ struct MediaSection: View {
             Image(systemName: "photo.on.rectangle.angled")
                 .font(.subheadline)
                 .foregroundStyle(theme.accentAlt)
+                .accessibilityHidden(true)   // the section title follows
             Text(title)
                 .font(.headline)
                 .foregroundStyle(theme.text)
@@ -144,9 +145,11 @@ struct MediaSection: View {
             case .failure:
                 ZStack {
                     theme.surface
+                    // The only indication the thumbnail failed to load.
                     Image(systemName: "photo.badge.exclamationmark")
                         .font(.title3)
                         .foregroundStyle(theme.textMuted)
+                        .accessibilityLabel("Image failed to load")
                 }
             case .empty:
                 ZStack {
@@ -181,7 +184,9 @@ struct MediaSection: View {
                         Image(systemName: "camera")
                             .font(.caption2)
                             .foregroundStyle(theme.textMuted)
+                            .accessibilityHidden(true)   // decorative EXIF mark
                         Text(camera)
+                            .accessibilityLabel("Camera: \(camera)")
                             .font(.caption2)
                             .foregroundStyle(theme.text)
                             .lineLimit(1)
@@ -192,7 +197,9 @@ struct MediaSection: View {
                         Image(systemName: "clock")
                             .font(.caption2)
                             .foregroundStyle(theme.textMuted)
+                            .accessibilityHidden(true)   // decorative EXIF mark
                         Text(captured)
+                            .accessibilityLabel("Captured: \(captured)")
                             .font(.caption2.monospacedDigit())
                             .foregroundStyle(theme.text)
                             .lineLimit(1)
@@ -212,6 +219,7 @@ struct MediaSection: View {
             Image(systemName: "mappin.and.ellipse")
                 .font(.subheadline)
                 .foregroundStyle(theme.accentAlt)
+                .accessibilityHidden(true)   // "EXIF location" follows
             VStack(alignment: .leading, spacing: Space.xs) {
                 Text("EXIF location")
                     .font(.caption.weight(.semibold))
@@ -291,6 +299,7 @@ struct MediaSection: View {
                 Text("No media").foregroundStyle(theme.text)
             } icon: {
                 Image(systemName: "photo.on.rectangle").foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // "No media" is the label
             }
         } description: {
             Text("No images were attached to this item, or the media pipeline has not analyzed it yet.")
@@ -304,6 +313,7 @@ struct MediaSection: View {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.caption)
                     .foregroundStyle(theme.danger)
+                    .accessibilityHidden(true)   // the message follows
                 Text(message)
                     .font(.caption)
                     .foregroundStyle(theme.text)

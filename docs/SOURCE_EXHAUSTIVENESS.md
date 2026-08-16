@@ -81,6 +81,8 @@ cJSON_ArrayForEach(rec, arr) {
 | `native/core/pipeline.c` | Stores and serves all records; the LLM prompt gets a labelled view via `results_view_for_prompt()` — `records_shown`, `record_count`, `prompt_truncated` and a note that the rest are persisted. Bound size: `$JO_PROMPT_RECORDS_PER_SERVICE` (default 8) |
 | `native/core/intel.c` | Upserts every emitted item; `properties` is stored verbatim |
 | `native/lib/htmlparse.c` | `html_anchor_next()` + the growable `seen_set` are THE anchor scanner and dedupe for the whole tree (both `jo_emit_anchors` and the engine's HP_HTML rows). `jo_emit_anchors(max<=0)` means every matching anchor; a caller-imposed cap logs both numbers and emits a truncation notice |
+| `native/lib/pagewalk.c` | The paging + disclosure engine behind the generated `VJSON`/`VGEO`/`VCSV` collectors. Continues a walk ONLY where the upstream said how — a next link in the response envelope, or an offset/page parameter the collector's own URL already carries — and never invents a query parameter. Whatever it cannot legitimately reach is emitted as a `collector-truncation-notice`. Bounds: `$JO_PAGE_MAX` (default 20 pages); `JO_PAGE_WALK=0` restores single-fetch behaviour and **keeps** the disclosure |
+| `native/lib/jocore.h` | `jo_truncation_notice()` / `jo_truncation_notice_ex()` — **the** builder for `collector-truncation-notice`, used by every emitter in the tree (hand-written collectors, `lib/hpengine.c`, `lib/pagewalk.c`, `_jp_osint.inc`, `diet_records.c`), so the record has one record_type, one uid convention (`<source_id>\|truncation:<query>`), one tag set (`["truncation-notice"]`) and one shape. Base properties: `source_id`, `query`, `records_used`, `records_available`, `reason`, `remedy`. Pass `available = -1` when the upstream did not state a total — it publishes as `"records_available": null`, never 0 and never a missing key; a guessed total is a rule-1 violation. The `_ex` form takes an `extra` object whose members are merged alongside the base six, for facts only one caller can know (`url`, `pages_read`, `records_dropped`, `more_pages_pending`, `declared_max_items`, `declared_max_pages`, `next_record_position`, `window_from`/`window_until`); a member colliding with a base key is ignored, so the stable half cannot be redefined |
 | `native/lib/seenset.c` | One growable "already seen" set. Fixed-size dedupe rings were a recurring violation: `char *seen[500]` stops collecting once full, so a domain with 600 certificates silently lost 100 |
 
 ## Checking your work
@@ -95,8 +97,16 @@ make hptest            # engine-level guarantees, offline
 data: hardcoded record caps, `break` in a record loop, first-element-only access,
 single-page fetches of paged APIs, and fixed dedupe rings.
 
-**The tree is currently at zero findings** across all 685 scanned files. It got
-there by fixing, not by silencing: arbitrary per-loop emit caps were deleted,
+**`make audit-sources` gates the `hp*_*.c` engine rows strictly, and those are at
+zero findings.** The wider tree is not: the same run scans 1,211 files and
+reports 66 heuristic findings across 50 of them. They are heuristics that each
+need a human read, not proven violations — but do not read a passing
+`audit-sources` as "nothing is being discarded". Note also what the scan cannot
+see: it greps C control flow, so a discard expressed as a *string literal* — a
+URL with `limit=20` and no pagination — is invisible to it. That class was 2,727
+generated sources until `lib/pagewalk.c` (above) took it on.
+
+The progress that has been made was by fixing, not by silencing: arbitrary per-loop emit caps were deleted,
 paged endpoints (OpenPLZ, Etherscan, grep.app, arXiv, NZ Companies Office, UK
 Electoral Commission) now walk their pages, fixed dedupe rings became growable
 sets, and multi-valued fields that were cut to their first element now carry the

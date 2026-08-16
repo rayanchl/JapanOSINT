@@ -51,8 +51,8 @@ static char *aw_crossref_authors(const cJSON *w) {
     if (need > cap) { cap = need * 2; char *t = realloc(out, cap); if (!t) break; out = t; }
     if (n) { strcpy(out + len, ", "); len += 2; }
     strcpy(out + len, buf); len += strlen(buf);
-    /* (cap removed: every record of the fetched array is emitted —
-     * docs/SOURCE_EXHAUSTIVENESS.md) */
+    n++;  /* the count IS the separator/emptiness flag — the cap that used
+            * to increment it was removed, this must not go with it. */
   }
   if (!n) { free(out); return NULL; }
   return out;
@@ -137,8 +137,8 @@ static char *aw_s2_authors(const cJSON *p) {
     if (need > cap) { cap = need * 2; char *t = realloc(out, cap); if (!t) break; out = t; }
     if (n) { strcpy(out + len, ", "); len += 2; }
     strcpy(out + len, nm); len += strlen(nm);
-    /* (cap removed: every record of the fetched array is emitted —
-     * docs/SOURCE_EXHAUSTIVENESS.md) */
+    n++;  /* the count IS the separator/emptiness flag — the cap that used
+            * to increment it was removed, this must not go with it. */
   }
   if (!n) { free(out); return NULL; }
   return out;

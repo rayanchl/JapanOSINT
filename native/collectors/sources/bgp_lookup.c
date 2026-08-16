@@ -15,14 +15,28 @@ static const char *jstr(cJSON *o, const char *k) {
   return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
 }
 
-static cJSON *ripestat(http_client *http, const char *endpoint, const char *resource) {
+/* `fetch_failed` (may be NULL) separates "RIPEstat did not answer" from
+ * "RIPEstat answered and had nothing". Without it both collapsed into a NULL
+ * return and then into the same `return 0` in bgp_run, so an outage scored as
+ * a clean run against a prefix that simply is not announced. */
+static cJSON *ripestat(http_client *http, const char *endpoint,
+                       const char *resource, int *fetch_failed) {
+  if (fetch_failed) *fetch_failed = 0;
   char url[400];
   snprintf(url, sizeof url, "https://stat.ripe.net/data/%s/data.json?resource=%s",
            endpoint, resource);
   http_response hr = {0};
   if (http_request(http, "GET", url, NULL, NULL, 0, 12000, 1, &hr) != 0 ||
-      hr.status != 200 || !hr.body) { http_response_free(&hr); return NULL; }
+      hr.status != 200 || !hr.body) {
+    fprintf(stderr, "[BGP_LOOKUP] %s: http status=%ld\n", endpoint, hr.status);
+    http_response_free(&hr);
+    if (fetch_failed) *fetch_failed = 1;
+    return NULL;
+  }
   cJSON *j = cJSON_Parse(hr.body); http_response_free(&hr);
+  /* A 200 whose body is not JSON is a transport-class failure too — we have no
+   * answer, as opposed to an answer that says "nothing here". */
+  if (!j && fetch_failed) *fetch_failed = 1;
   return j;
 }
 
@@ -55,9 +69,10 @@ static int bgp_run(const source_ctx *ctx, intel_sink *sink) {
   if (is_asn) {
     char res[32];
     snprintf(res, sizeof res, "%s%s", (strncasecmp(e, "AS", 2) == 0) ? "" : "AS", e);
-    cJSON *j = ripestat(ctx->http, "as-overview", res);
+    int ff = 0;
+    cJSON *j = ripestat(ctx->http, "as-overview", res, &ff);
     cJSON *d = j ? cJSON_GetObjectItem(j, "data") : NULL;
-    if (!d) { if (j) cJSON_Delete(j); return 0; }
+    if (!d) { if (j) cJSON_Delete(j); return ff ? -1 : 0; }
     cJSON *out = cJSON_CreateObject();
     cJSON_AddStringToObject(out, "source", "stat.ripe.net");
     cJSON_AddStringToObject(out, "asn", res);
@@ -71,9 +86,10 @@ static int bgp_run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   /* IP form → network-info (prefix + asns). */
-  cJSON *j = ripestat(ctx->http, "network-info", e);
+  int ff = 0;
+  cJSON *j = ripestat(ctx->http, "network-info", e, &ff);
   cJSON *d = j ? cJSON_GetObjectItem(j, "data") : NULL;
-  if (!d) { if (j) cJSON_Delete(j); return 0; }
+  if (!d) { if (j) cJSON_Delete(j); return ff ? -1 : 0; }
   cJSON *out = cJSON_CreateObject();
   cJSON_AddStringToObject(out, "source", "stat.ripe.net");
   cJSON_AddStringToObject(out, "ip", e);
@@ -91,7 +107,7 @@ static int bgp_run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_ArrayForEach(an, asns) {
       if (!cJSON_IsString(an)) continue;
       char res[32]; snprintf(res, sizeof res, "AS%s", an->valuestring);
-      cJSON *jo = ripestat(ctx->http, "as-overview", res);
+      cJSON *jo = ripestat(ctx->http, "as-overview", res, NULL);
       cJSON *dd = jo ? cJSON_GetObjectItem(jo, "data") : NULL;
       const char *holder = dd ? jstr(dd, "holder") : NULL;
       if (holder) {

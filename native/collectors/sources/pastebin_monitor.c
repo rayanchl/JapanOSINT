@@ -149,7 +149,7 @@ static int emit_finding(intel_sink *sink, const char *remote_key,
   cJSON *props = cJSON_CreateObject();
   cJSON_AddStringToObject(props, "service", "PASTE_SITE_SEARCH");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 85);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   intel_item it = {0};

@@ -81,7 +81,6 @@ static cJSON *extract_pattern(const char *text, const char *pat,
   if (regcomp(&re, pat, REG_EXTENDED | REG_ICASE) != 0) return matches;
   regmatch_t m;
   const char *cur = text;
-  int mc = 0;
   seen_set seen = {0};
   while (regexec(&re, cur, 1, &m, 0) == 0) {
     int len = (int)(m.rm_eo - m.rm_so);
@@ -97,7 +96,6 @@ static cJSON *extract_pattern(const char *text, const char *pat,
     }
     cur += m.rm_eo;
     if (*cur == 0) break;
-    mc++;
   }
   regfree(&re);
   seen_free(&seen);

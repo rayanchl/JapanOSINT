@@ -27,6 +27,7 @@ struct SearchLiveActivity: Widget {
                 HStack {
                     Image(systemName: "magnifyingglass")
                         .foregroundStyle(WidgetTheme.accent)
+                        .accessibilityHidden(true)   // the query text follows
                     Text(context.attributes.query)
                         .font(.caption).lineLimit(1)
                         .foregroundStyle(WidgetTheme.text)
@@ -34,11 +35,14 @@ struct SearchLiveActivity: Widget {
                     Text("\(context.state.resultsSoFar)")
                         .font(.caption).monospacedDigit()
                         .foregroundStyle(WidgetTheme.accent)
+                        .accessibilityLabel("\(context.state.resultsSoFar) results so far")
                 }
                 ProgressView(value: progress(context.state))
                     .tint(WidgetTheme.accent)
+                // Was a hardcoded 10 pt — below the 11 pt legibility floor and
+                // blind to Dynamic Type. `.caption2` is 11 pt and scales.
                 Text(subtitle(context.state))
-                    .font(.system(size: 10))
+                    .font(.caption2)
                     .foregroundStyle(WidgetTheme.muted)
             }
             .padding()
@@ -61,8 +65,9 @@ struct SearchLiveActivity: Widget {
                             .font(.caption).lineLimit(1)
                         ProgressView(value: progress(context.state))
                             .tint(WidgetTheme.accent)
+                        // Was 10 pt — below the 11 pt floor. See above.
                         Text(subtitle(context.state))
-                            .font(.system(size: 10))
+                            .font(.caption2)
                             .foregroundStyle(WidgetTheme.muted)
                     }
                 }

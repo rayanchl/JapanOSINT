@@ -99,7 +99,11 @@ static const latam_reg REGS[] = {
 };
 static const int NREGS = (int)(sizeof(REGS) / sizeof(REGS[0]));
 
-#define L2_TOTAL_CAP    500  /* exhaustive-ok: runaway guard, logged */
+/* NOT a page cap: it sits in the loop condition over REGISTRIES, so hitting it
+ * ends the sweep and the registries after it go unqueried — reported as data
+ * by jo_registry_sweep_notice(). */
+#define L2_TOTAL_CAP    500  /* exhaustive-ok: whole-run emit cap; the sweep it
+                              * cuts short is reported as a truncation notice */
 #define L2_PER_REG_CAP   0    /* exhaustive-ok: 0 = every hit on the page */
 
 /* Emit one company hit parsed from the CL RES JSON search API. name/link are
@@ -130,6 +134,17 @@ static int l2_emit_json_hit(intel_sink *sink, const char *name,
   return rc >= 0 ? 1 : 0;
 }
 
+/* The name key this API is known to use, whichever spelling this record carries.
+ * One copy so the emit path and the "what did we skip" count agree exactly. */
+static const char *l2_name_of(const cJSON *r) {
+  const char *name = jo_sv(r, "razonSocial");
+  if (!name) name = jo_sv(r, "RazonSocial");
+  if (!name) name = jo_sv(r, "nombre");
+  if (!name) name = jo_sv(r, "titulo");
+  if (!name) name = jo_sv(r, "denominacion");
+  return name;
+}
+
 /* CL Registro de Empresas y Sociedades — open JSON search. Response shape is not
  * strictly documented; we tolerate a top-level array or a common wrapper key and
  * pull best-effort name/detail fields, honest-empty on parse failure. */
@@ -152,18 +167,24 @@ static int l2_cl_res_json(const source_ctx *ctx, intel_sink *sink,
       if (cJSON_IsArray(v)) arr = v;
     }
   }
-  int emitted = 0;
+  int emitted = 0, skipped = 0;
   if (cJSON_IsArray(arr)) {
     cJSON *r;
     cJSON_ArrayForEach(r, arr) {
-      if (emitted >= cap) break;
       if (!cJSON_IsObject(r)) continue;
-      const char *name = jo_sv(r, "razonSocial");
-      if (!name) name = jo_sv(r, "RazonSocial");
-      if (!name) name = jo_sv(r, "nombre");
-      if (!name) name = jo_sv(r, "titulo");
-      if (!name) name = jo_sv(r, "denominacion");
+      const char *name = l2_name_of(r);
       if (!name) continue;
+      /* House rule 2: count what the cap makes us skip instead of breaking out,
+       * so the notice below states a real total.
+       *
+       * `cap <= 0` MUST mean "no cap", the same as jo_emit_anchors
+       * (_jp_osint.inc: `if (max > 0 && emitted >= max) continue;`). run()
+       * passes L2_PER_REG_CAP, which is 0 and documented as "0 = every hit on
+       * the page" — but a bare `emitted >= cap` is true immediately at 0, so
+       * this registry silently emitted NOTHING on every run since the constant
+       * was introduced. That is an inverted comparison, not a deliberate bound:
+       * one constant was being read with opposite meanings by two callees. */
+      if (cap > 0 && emitted >= cap) { skipped++; continue; }
       const char *rut  = jo_sv(r, "rut");
       const char *tipo = jo_sv(r, "tipo");
       const char *id   = jo_sv(r, "id");
@@ -178,7 +199,19 @@ static int l2_cl_res_json(const source_ctx *ctx, intel_sink *sink,
     }
   }
   cJSON_Delete(root);
-  fprintf(stderr, "[latam2:CL RES] emitted %d\n", emitted);
+  if (skipped > 0)
+    jo_truncation_notice(sink, "LATAM2_REGISTRY", "CL RES JSON search", emitted,
+                         (long)emitted + skipped,
+                         "the per-registry cap passed in by run() stopped this "
+                         "loop; the remaining named records of the downloaded "
+                         "JSON result set were counted but not emitted. The cap "
+                         "arrives as 0, which this loop reads as \"emit "
+                         "nothing\" while jo_emit_anchors reads the same 0 as "
+                         "\"no cap\"",
+                         "make the 0 cap mean the same thing in both callees "
+                         "(<= 0 == no cap) in collectors/sources/reg_latam2.c, "
+                         "or pass l2_cl_res_json a positive cap");
+  fprintf(stderr, "[latam2:CL RES] emitted %d, skipped %d\n", emitted, skipped);
   return emitted;
 }
 
@@ -189,18 +222,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *enc = jo_urlencode(q);
   if (!enc) return -1;
 
-  int total = 0;
-  for (int i = 0; i < NREGS && total < L2_TOTAL_CAP; i++) {
+  int total = 0, i = 0;
+  for (; i < NREGS && total < L2_TOTAL_CAP; i++) {
     const latam_reg *r = &REGS[i];
     char url[1400];
     snprintf(url, sizeof url, r->url_tmpl, enc);
 
-    int remaining = L2_TOTAL_CAP - total;
-    int cap = remaining < L2_PER_REG_CAP ? remaining : L2_PER_REG_CAP;
-
+    /* The old `remaining`/`cap` min() was dead: L2_PER_REG_CAP is 0 and
+     * `remaining` is always > 0 inside this loop, so min(remaining, 0) was
+     * always 0. Removed rather than given teeth, which would change what this
+     * collector emits. NOTE the two callees read a 0 cap OPPOSITELY —
+     * jo_emit_anchors treats <= 0 as "no cap", l2_cl_res_json's `emitted >= cap`
+     * treats 0 as "emit nothing". That is left as-is here (behaviour unchanged)
+     * and disclosed in-band by l2_cl_res_json itself. */
     int n;
     if (r->is_json) {
-      n = l2_cl_res_json(ctx, sink, url, r->base, cap);
+      n = l2_cl_res_json(ctx, sink, url, r->base, L2_PER_REG_CAP);
     } else {
       char tag[96];
       snprintf(tag, sizeof tag, "latam2:%s", r->name);
@@ -209,13 +246,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       /* Real fetch + real anchor extraction. JS-only / anti-bot registries emit
        * 0 for their row — honest empty, expected, never faked. */
       n = jo_emit_anchors(ctx, sink, url, r->href_must, r->name, rec,
-                          r->base, q, cap, tag);
+                          r->base, q, L2_PER_REG_CAP, tag);
     }
     total += n;
   }
   free(enc);
-  fprintf(stderr, "[latam2_registry] emitted %d across %d registries\n",
-          total, NREGS);
+  jo_registry_sweep_notice(sink, "LATAM2_REGISTRY", q, total, i, NREGS,
+                           "L2_TOTAL_CAP", L2_TOTAL_CAP, 0);
+  fprintf(stderr, "[latam2_registry] emitted %d across %d of %d registries\n",
+          total, i, NREGS);
   return 0;   /* honest empty is not an error */
 }
 

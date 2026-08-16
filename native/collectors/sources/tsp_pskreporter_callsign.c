@@ -32,6 +32,7 @@
 #include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include "../../core/httpclient.h"
+#include "../../lib/jocore.h"     /* jo_truncation_notice() */
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -245,6 +246,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
+  /* House rule 2: MAX_ROWS stops the parse partway through a response that was
+   * downloaded whole. Count what is left so the notice states a real total. */
+  if (n >= MAX_ROWS) {
+    int rest = 0;
+    for (const char *q = p; (q = strstr(q, "<receptionReport")) != NULL; q += 16) rest++;
+    if (rest > 0)
+      jo_truncation_notice(sink, "PSKREPORTER_CALLSIGN", call, n,
+                           (long)(n + rest),
+                           "MAX_ROWS reached; the remaining <receptionReport> "
+                           "entries in the downloaded response were not parsed "
+                           "or emitted",
+                           "raise or drop MAX_ROWS in collectors/sources/"
+                           "tsp_pskreporter_callsign.c");
+  }
   free(body);
   fprintf(stderr, "[PSKREPORTER_CALLSIGN] emitted %d for %s\n", n, call);
   return 0;              /* nobody heard them in the window is not an error */

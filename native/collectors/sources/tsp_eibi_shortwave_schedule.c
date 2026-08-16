@@ -197,12 +197,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return -1;
   }
 
-  int n = 0, seen = 0;
+  int n = 0, seen = 0, capped = 0;
   char *line;
   while ((line = jo_next_line_cr(&p)) != NULL) {
     if (!*line) continue;
     seen++;
-    if (n >= MAX_ROWS) break;
+    /* Past the cap keep counting rows rather than breaking, so the truncation
+     * notice below can state a REAL total instead of an unknown. */
+    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     char *f[MAXCOL];
     int nf = semi_split(line, f, MAXCOL);
     for (int i = 0; i < nf; i++) f[i] = trim(f[i]);
@@ -265,6 +267,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
+  /* House rule 2: the whole season file was downloaded; MAX_ROWS stopped the
+   * emit loop. `seen` is the counted row total of the file, not an estimate. */
+  if (capped)
+    jo_truncation_notice(sink, "eibi-shortwave-schedule", season, n, (long)seen,
+                         "MAX_ROWS reached; the remaining schedule rows of the "
+                         "downloaded season file were counted but not parsed "
+                         "or emitted",
+                         "raise or drop MAX_ROWS in collectors/sources/"
+                         "tsp_eibi_shortwave_schedule.c");
   fprintf(stderr, "[eibi-shortwave-schedule] emitted %d of %d rows (season %s)\n",
           n, seen, season);
   return 0;

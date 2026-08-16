@@ -298,7 +298,9 @@ static int emit_result(intel_sink *sink, const char *sha1prefix,
   free(bj); free(pj);
   cJSON_Delete(props);
   cJSON_Delete(root);
-  return rc >= 0 ? 0 : 0;
+  /* Both arms used to be 0, so a sink/DB write failure — the one case where we
+   * computed a real result and then LOST it — was reported as a clean run. */
+  return rc >= 0 ? 0 : -1;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {

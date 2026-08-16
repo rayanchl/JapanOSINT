@@ -890,7 +890,8 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
   o->fn = write; o->ctx = write_ctx;
 
   long rows = 0, skipped = 0, scanned = 0;
-  int truncated = 0, aborted = 0;
+  int truncated = 0, aborted = 0, incomplete = 0;
+  char scan_err[160]; scan_err[0] = 0;
 
   /* ── prologue ── */
   if (f == F_CSV) {
@@ -907,7 +908,8 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
   }
 
   /* ── rows ── */
-  while (!o->broken && sqlite3_step(s) == SQLITE_ROW) {
+  int scan_rc = SQLITE_DONE;
+  while (!o->broken && (scan_rc = sqlite3_step(s)) == SQLITE_ROW) {
     /* The cap counts rows SCANNED, not rows emitted. GeoJSON drops rows with
      * no geometry, so counting emitted features would let the statement hit
      * LIMIT cap+1 with rows < cap and truncate silently — exactly the failure
@@ -930,6 +932,25 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
       rows++;
     }
   }
+  /* `while (step() == ROW)` cannot tell DONE from IOERR/CORRUPT/BUSY/INTERRUPT,
+   * so a failed scan exits the loop exactly like a completed one. Every other
+   * short-output path in this file is *known* (the LIMIT cap+1 trick above,
+   * the writer going away) and is reported as such; this was the one path that
+   * assumed. A dropped page mid-scan would otherwise ship a well-formed file
+   * stamped `truncated:false` with a null next_cursor — the operator has no
+   * way to tell it apart from a complete export, and the audit row would agree
+   * with it. A short scan IS a truncation, so say so, and carry the sqlite
+   * message so the cause is recoverable from the response and the audit trail.
+   * (`o->broken` and the cap break both leave scan_rc == SQLITE_ROW; they are
+   * already reported through `aborted` / `truncated` and are excluded here.) */
+  if (!truncated && !o->broken && scan_rc != SQLITE_DONE) {
+    incomplete = 1;
+    truncated  = 1;
+    snprintf(scan_err, sizeof scan_err, "%s", sqlite3_errmsg(db->h));
+    fprintf(stderr, "[export] %s/%s scan interrupted after %ld row(s): %s — "
+                    "reporting the export as truncated\n",
+            kind, fname, rows, scan_err);
+  }
   sqlite3_finalize(s);
   if (o->broken) aborted = 1;
 
@@ -937,7 +958,13 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
   if (!o->broken) {
     char ts[40]; iso_now(ts, sizeof ts);
     if (f == F_CSV) {
-      if (truncated) {
+      if (incomplete) {
+        char note[416];
+        snprintf(note, sizeof note,
+          "# truncated=true; read error after %ld row(s): %s; "
+          "this export is incomplete\r\n", rows, scan_err);
+        ob_s(o, note);
+      } else if (truncated) {
         /* RFC 4180 has no comment syntax; a visible trailing row is still far
          * better than a file that is silently short. */
         char note[224];
@@ -959,6 +986,12 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
       cJSON_AddNumberToObject(m, "rows", (double)rows);
       cJSON_AddNumberToObject(m, "skipped_no_geometry", (double)skipped);
       cJSON_AddBoolToObject(m, "truncated", truncated);
+      /* Distinguish "we stopped because the plan says so" from "the read
+       * failed": both are truncated, only one is retryable. */
+      if (incomplete) {
+        cJSON_AddStringToObject(m, "truncated_reason", "read_error");
+        cJSON_AddStringToObject(m, "error", scan_err);
+      }
       cJSON_AddItemToObject(m, "filters", cJSON_Duplicate(p.filters, 1));
       ob_s(o, "],\"properties\":");
       ob_json(o, m);
@@ -966,7 +999,12 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
     } else {
       cJSON *env = cJSON_CreateObject();
       cJSON *page = cJSON_AddObjectToObject(env, "page");
-      cJSON_AddNullToObject(page, "next_cursor");      /* export ran to end */
+      /* null next_cursor means "there is nothing after this" — only true when
+       * the scan actually reached SQLITE_DONE. It stays null on the read-error
+       * path (there is no resumable position to hand back), so meta.export
+       * below carries `incomplete` and the sqlite message; a client that only
+       * reads next_cursor must not treat this file as the whole set. */
+      cJSON_AddNullToObject(page, "next_cursor");
       cJSON_AddNullToObject(page, "limit");
       cJSON_AddNumberToObject(page, "total", (double)rows);
       cJSON *meta = cJSON_AddObjectToObject(env, "meta");
@@ -979,6 +1017,11 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
       add_row_cap(ex, cap);
       cJSON_AddNumberToObject(ex, "rows", (double)rows);
       cJSON_AddBoolToObject(ex, "truncated", truncated);
+      if (incomplete) {
+        cJSON_AddBoolToObject(ex, "incomplete", 1);
+        cJSON_AddStringToObject(ex, "truncated_reason", "read_error");
+        cJSON_AddStringToObject(ex, "error", scan_err);
+      }
       /* Splice the trailer in without re-printing `data`: print the envelope
        * and drop its outer braces. */
       char *js = cJSON_PrintUnformatted(env);
@@ -1007,6 +1050,13 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
     cJSON_AddBoolToObject(pay, "truncated", truncated);
     cJSON_AddNumberToObject(pay, "skipped_no_geometry", (double)skipped);
     cJSON_AddBoolToObject(pay, "aborted", aborted);
+    /* `aborted` stays reserved for "the peer went away". A read failure is a
+     * different event and gets its own field, with the sqlite message, so the
+     * audit trail never records a short export as a complete one. */
+    if (incomplete) {
+      cJSON_AddBoolToObject(pay, "incomplete", 1);
+      cJSON_AddStringToObject(pay, "scan_error", scan_err);
+    }
     cJSON_AddItemToObject(pay, "filters", cJSON_Duplicate(p.filters, 1));
     char *pj = cJSON_PrintUnformatted(pay);
     cJSON_Delete(pay);

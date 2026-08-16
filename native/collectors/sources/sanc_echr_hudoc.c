@@ -26,23 +26,63 @@
  * on appno+kpdate within the page.
  */
 #include "sanc_common.inc"
+#include "../../lib/pagewalk.h"
 
+/* start=0 is the FIRST page, not the only one: run() hands this url to
+ * pw_walk(), which advances start=50,100,… to the JO_PAGE_MAX ceiling and
+ * discloses the remainder against HUDOC's own resultcount.
+ * exhaustive-ok: first page of a pw_walk, not a single fetch */
 #define HUDOC_URL \
   "https://hudoc.echr.coe.int/app/query/results?query=contentsitename%3DECHR%20AND%20" \
   "(documentcollectionid2%3D%22JUDGMENTS%22)&select=itemid,docname,appno,article," \
-  "conclusion,kpdate&sort=kpdate%20Descending&start=0&length=50"
+  "conclusion,kpdate&sort=kpdate%20Descending&start=0&length=50"  /* exhaustive-ok: first page of a pw_walk, not a single fetch */
 
-#define HUDOC_MAX_SEEN 128
+/* Dedupe state for the WHOLE walk, not one page.
+ *
+ * HUDOC publishes each judgment twice, EN and FR, sharing an appno — so rows
+ * are deduped on appno+kpdate. That used to be a fixed 128-entry array scoped
+ * to a single 50-row page, which was sufficient only because exactly one page
+ * was ever fetched. Now that pagewalk continues over start=50,100,…, two things
+ * break unless the state spans the walk: 128 slots cannot hold ~1,000 rows, and
+ * an EN/FR pair split across a page boundary would slip through as two rows.
+ * Growable, and freed once at the end of run(). */
+typedef struct { char **k; int n, cap; } hudoc_seen;
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = sanc_http_json(ctx, HUDOC_URL, NULL, 45000, "echr-hudoc");
-  if (!doc) return -1;
+static int hudoc_seen_add(hudoc_seen *s, const char *key) {
+  for (int i = 0; i < s->n; i++)
+    if (strcmp(s->k[i], key) == 0) return 0;          /* already emitted */
+  if (s->n >= s->cap) {
+    int nc = s->cap ? s->cap * 2 : 128;
+    char **p = realloc(s->k, (size_t)nc * sizeof *p);
+    if (!p) return 1;            /* OOM: emit rather than silently drop a row */
+    s->k = p; s->cap = nc;
+  }
+  char *d = strdup(key);
+  if (d) s->k[s->n++] = d;
+  return 1;
+}
+
+/* pagewalk fetch shim: keeps the collector's 45 s timeout and header set. */
+static cJSON *hudoc_fetch(const source_ctx *c, const char *url, void *ud) {
+  (void)ud;
+  return sanc_http_json(c, url, NULL, 45000, "echr-hudoc");
+}
+
+static int hudoc_emit_page(const source_ctx *ctx, intel_sink *sink,
+                           const char *sid, cJSON *doc, void *ud, int *seen_out) {
+  (void)ctx; (void)sid;
+  hudoc_seen *seen_st = (hudoc_seen *)ud;
 
   cJSON *results = cJSON_GetObjectItem(doc, "results");
   const cJSON *rc = cJSON_GetObjectItem(doc, "resultcount");
 
-  char *seen[HUDOC_MAX_SEEN];
-  int nseen = 0, n = 0;
+  /* Records the page CONTAINED — pagewalk decides "did this come back full"
+   * from this, not from the emitted count. A page of 50 holding 25 EN/FR pairs
+   * emits 25 and is still full; reporting 25 would stop the walk early and
+   * suppress the truncation notice. See lib/pagewalk.h. */
+  if (seen_out) *seen_out = cJSON_IsArray(results) ? cJSON_GetArraySize(results) : 0;
+
+  int n = 0;
   const cJSON *r;
   cJSON_ArrayForEach(r, results) {
     const cJSON *col = cJSON_GetObjectItem(r, "columns");
@@ -65,14 +105,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     /* dedupe the EN/FR pair of the same judgment */
     char key[128];
     snprintf(key, sizeof key, "%s|%s", appno ? appno : itemid, date);
-    int dup = 0;
-    for (int i = 0; i < nseen; i++)
-      if (strcmp(seen[i], key) == 0) { dup = 1; break; }
-    if (dup) continue;
-    if (nseen < HUDOC_MAX_SEEN) {
-      char *k = strdup(key);
-      if (k) seen[nseen++] = k;
-    }
+    if (!hudoc_seen_add(seen_st, key)) continue;
 
     /* respondent state is the tail of the Court's own case name */
     const char *state = NULL;
@@ -128,9 +161,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(bj);
     free(pj);
   }
-  for (int i = 0; i < nseen; i++) free(seen[i]);
-  cJSON_Delete(doc);
-  fprintf(stderr, "[echr-hudoc] emitted %d\n", n);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  /* pw_walk advances the `start=` offset the query already carries, bounded by
+   * JO_PAGE_MAX, and reports what it could not reach as a truncation notice —
+   * including HUDOC's own `resultcount` (~90k) as records_available, which
+   * pw_total_available now reads. This replaces a hand-written notice that
+   * disclosed the same gap but never tried to close it: the reporting half of
+   * house rule 2 was satisfied, the collection half was not. */
+  hudoc_seen seen = {0};
+  int n = pw_walk(ctx, sink, "echr-hudoc", HUDOC_URL,
+                  hudoc_fetch, hudoc_emit_page, &seen);
+  for (int i = 0; i < seen.n; i++) free(seen.k[i]);
+  free(seen.k);
+  if (n < 0) return -1;                    /* dead endpoint is an error */
   return 0;
 }
 

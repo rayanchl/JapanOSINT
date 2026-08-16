@@ -12,7 +12,7 @@
  * SSRF: the only reachable targets are URLs already stored against a camera
  * record this server itself discovered — the caller supplies a camera_uid, not
  * a URL. Plus http/https only, one bounded fetch, a size cap, and an
- * image/* content-type requirement.
+ * image/... content-type requirement.
  *
  * NOT PORTED from the Node version: the puppeteer snapshot fallback for
  * Referer-gated / MJPEG-only cameras (it needs a headless browser this server

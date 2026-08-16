@@ -3,6 +3,7 @@
 #include "../../source.h"
 #include "../../lib/rss_atom.h"
 #include "../../lib/feedlib.h"
+#include "../../lib/pagewalk.h"   /* pw_walk() — house rule 2 paging */
 #include "../../third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -79,15 +80,22 @@ RSSX(fin_oilprice_2, "oilprice-2", "OilPrice Energy News", "OilPrice Energy News
  * /rss/news.aspx answers 403 to every non-browser client. The site's own
  * news stream endpoint (ws/stream.ashx) is open and returns richer JSON than
  * the RSS ever did (country, category, importance, author). */
-#define TE_URL "https://tradingeconomics.com/ws/stream.ashx?start=0&size=100"
+#define TE_URL "https://tradingeconomics.com/ws/stream.ashx?start=0&size=100"  /* exhaustive-ok: start=0 is where a pw_walk() STARTS — run_fin_trading_econ() advances start=100,200,… and discloses the remainder */
 
-static int run_fin_trading_econ(const source_ctx *c, intel_sink *s) {
-  cJSON *arr = feed_get_json(c->http, TE_URL, 15000);
-  if (!cJSON_IsArray(arr)) {
-    if (arr) cJSON_Delete(arr);
-    fprintf(stderr, "[trading-econ] fetch failed\n");
-    return -1;
-  }
+/* The collector's own 15 s timeout, kept rather than pw_fetch_json's 25 s. */
+static cJSON *pw_fetch_te(const source_ctx *c, const char *url, void *ud) {
+  (void)ud;
+  return feed_get_json(c->http, url, 15000);
+}
+
+/* One window of the stream. Returns #emitted and reports #records the window
+ * CONTAINED through `seen` — pagewalk decides "did this window come back full"
+ * off the latter, see lib/pagewalk.h. */
+static int te_emit_page(const source_ctx *c, intel_sink *s, const char *id,
+                        cJSON *arr, void *ud, int *seen) {
+  (void)c; (void)id; (void)ud;
+  if (!cJSON_IsArray(arr)) return 0;
+  *seen = cJSON_GetArraySize(arr);
   int n = 0;
   cJSON *e;
   cJSON_ArrayForEach(e, arr) {
@@ -138,8 +146,18 @@ static int run_fin_trading_econ(const source_ctx *c, intel_sink *s) {
     if (s->emit(s, &it) >= 0) n++;
     free(pj); cJSON_Delete(p);
   }
-  cJSON_Delete(arr);
-  fprintf(stderr, "[trading-econ] emitted %d\n", n);
+  return n;
+}
+
+/* House rule 2: the stream endpoint is offset-paged and TE_URL already carries
+ * the author's own start=/size= pair, so pw_walk advances start=100,200,… for
+ * as long as a window comes back full and discloses whatever is left behind as
+ * a collector-truncation-notice. The window size is unchanged. The response is
+ * a bare array and the endpoint states no total, so records_available stays
+ * null rather than being guessed. */
+static int run_fin_trading_econ(const source_ctx *c, intel_sink *s) {
+  int n = pw_walk(c, s, "trading-econ", TE_URL, pw_fetch_te, te_emit_page, NULL);
+  if (n < 0) { fprintf(stderr, "[trading-econ] fetch failed\n"); return -1; }
   return 0;
 }
 

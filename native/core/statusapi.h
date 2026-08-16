@@ -26,4 +26,17 @@ char *statusapi_one(db_handle *db, const char *id);
  * Shared so /api/layers filters identically (Node imported the same set). */
 int statusapi_strip_has(const char *id);
 
+/* POST /api/status/:id/probe — one GET of the source's OWN registered endpoint,
+ * recording request + response into the sources row's probe_* columns. The URL
+ * comes from the registry, never from the caller, and the fetch goes through
+ * http_request()'s hostgate/protocol pins; no collector credential is sent, so
+ * nothing secret can land in the columns status_row() serves. Operator-only.
+ * Returns malloc'd JSON; *st is the HTTP status. */
+char *statusapi_probe(db_handle *db, const char *id, int *st);
+
+/* POST /api/status/:id/consent {"consent":bool} — set probe_consent, which
+ * status_row()'s `gated` flag already reads. Operator-only. */
+char *statusapi_set_consent(db_handle *db, const char *id, int consent, int *st);
+
+
 #endif

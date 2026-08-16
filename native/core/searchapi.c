@@ -147,8 +147,8 @@ char *searchapi_suggest(const char *q) {
 
 char *searchapi_results(db_handle *db, const char *id) {
   if (!id || !*id) return NULL;
-  osint_request *rp = progress_get(id);
-  if (rp) return progress_to_json(rp);
+  char *live = progress_snapshot(id, NULL);
+  if (live) return live;
 
   /* Server restarted: reconstruct from the persisted run row (== JS else). */
   char uid[128];

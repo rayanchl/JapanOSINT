@@ -144,7 +144,7 @@ static int cl_run(const source_ctx *ctx, intel_sink *sink) {
     char fecha[16];
     strftime(fecha, sizeof fecha, "%d%m%Y", &g);
     n += cl_fetch_day(ctx, sink, fecha, ticket, from_env, &parsed);
-    if (n > 0) break;                    /* got a day's worth; stop polling */
+    if (n > 0) break;  /* exhaustive-ok: probe loop over candidate DAYS, not a record cap — the first day that answers is fetched whole */
   }
 
   fprintf(stderr, "[cl-mercadopublico-tenders] emitted %d%s\n",

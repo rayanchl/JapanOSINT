@@ -51,12 +51,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int total = 0;
   for (const char *q = body; *q; q++) if (*q == '\n') total++;
 
-  int n = 0;
+  int n = 0, listed = 0, capped = 0;
   char *cur = body, *line;
-  while ((line = jo_next_line(&cur)) != NULL && n < MAX_ROWS) {
+  while ((line = jo_next_line(&cur)) != NULL) {
     if (!line[0] || line[0] == '#') continue;
     int len = v4_cidr_len(line);
     if (len < 0) continue;
+    listed++;
+    /* Past the cap keep counting prefixes rather than stopping, so the notice
+     * below can state the list's real size instead of an unknown. */
+    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "prefix", line);
@@ -81,6 +85,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
+  /* House rule 2: the whole list was downloaded and every prefix counted; only
+   * the first MAX_ROWS became rows. */
+  if (capped)
+    jo_truncation_notice(sink, "vpn-ip-ranges-x4bnet", "lists_vpn", n,
+                         (long)listed,
+                         "MAX_ROWS reached; the remaining CIDR prefixes in the "
+                         "downloaded list were counted but not emitted as rows",
+                         "raise or drop MAX_ROWS in collectors/sources/"
+                         "cyi_vpn_ip_ranges_x4bnet.c");
   fprintf(stderr, "[vpn-ip-ranges-x4bnet] emitted %d of ~%d CIDRs\n", n, total);
   return 0;
 }

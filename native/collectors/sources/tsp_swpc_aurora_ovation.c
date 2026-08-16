@@ -52,7 +52,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *c;
   cJSON_ArrayForEach(c, coords) {
     if (!cJSON_IsArray(c) || cJSON_GetArraySize(c) < 3) continue;
-    cJSON *jlon = cJSON_GetArrayItem(c, 0);
+    cJSON *jlon = cJSON_GetArrayItem(c, 0);  /* exhaustive-ok: OVATION cell is a [lon,lat,probability] tuple, all three read */
     cJSON *jlat = cJSON_GetArrayItem(c, 1);
     cJSON *jpr  = cJSON_GetArrayItem(c, 2);
     if (!cJSON_IsNumber(jlon) || !cJSON_IsNumber(jlat) || !cJSON_IsNumber(jpr))

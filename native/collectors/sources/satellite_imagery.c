@@ -173,7 +173,6 @@ static void prov_landsat(http_client *http, cJSON *out) {
     body, JSON_HDRS, 10000);
   cJSON *feats = data ? cJSON_GetObjectItem(data, "features") : NULL;
   if (cJSON_IsArray(feats)) {
-    int i = 0;
     cJSON *fe;
     cJSON_ArrayForEach(fe, feats) {
       cJSON *geom = cJSON_GetObjectItem(fe, "geometry");
@@ -203,12 +202,24 @@ static void prov_landsat(http_client *http, cJSON *out) {
       }
       const char *fid = sv(fe, "id");
       char idbuf[96];
+      /* The STAC item id IS the scene's identity and is used whenever present.
+       * The positional fallback was the one path where `id` — a NATIVE_ID_KEY,
+       * so the row's uid — described the scene's slot in this search response
+       * instead of the scene: the STAC search is date-sorted over a rolling
+       * window, so the slots shift with every run and each poll re-pointed
+       * those uids at different scenes. A STAC item without an id has no
+       * upstream identity; say so instead of inventing one. */
       if (fid) snprintf(idbuf, sizeof idbuf, "IMG_LANDSAT_%s", fid);
-      else snprintf(idbuf, sizeof idbuf, "IMG_LANDSAT_%d", i);
+      else idbuf[0] = 0;
 
       cJSON *f = mk_feat(cx, cy);
       cJSON *p = cJSON_CreateObject();
-      cJSON_AddStringToObject(p, "id", idbuf);
+      if (idbuf[0])
+        cJSON_AddStringToObject(p, "id", idbuf);
+      else
+        cJSON_AddStringToObject(p, "id_basis",
+          "none: this STAC item carried no id, so the row is uid'd by content "
+          "hash rather than a positional id");
       const char *plat = sv(props, "platform");
       cJSON_AddStringToObject(p, "platform", plat ? plat : "Landsat-9");
       cJSON_AddStringToObject(p, "sensor", "OLI");
@@ -226,7 +237,6 @@ static void prov_landsat(http_client *http, cJSON *out) {
       cJSON_AddStringToObject(p, "country", "JP");
       cJSON_AddItemToObject(f, "properties", p);
       cJSON_AddItemToArray(out, f);
-      i++;
     }
   }
   if (data) cJSON_Delete(data);
