@@ -61,7 +61,14 @@ BIN := bin/japanosint
 
 CORE_SRC := $(wildcard core/*.c)
 LIB_SRC  := $(wildcard lib/*.c)
-SRC_SRC  := $(wildcard collectors/sources/*.c)
+# RECURSIVE on purpose. This was `wildcard collectors/sources/*.c`, which is a
+# trap the moment anyone organises the 1,200+ collector files into
+# subdirectories: a moved file silently leaves the link, the constructor that
+# would have called REGISTER_SOURCE never runs, and the source simply stops
+# existing at runtime — no error, no warning, and `make` still succeeds. The
+# only symptom is a smaller number from `make source-count`, which nobody
+# diffs. Any nesting under collectors/ is now picked up.
+SRC_SRC  := $(shell find collectors -name '*.c' | sort)
 SRCS     := main.c registry.c $(CORE_SRC) $(LIB_SRC) $(SRC_SRC)
 OBJS     := $(patsubst %.c,$(OBJ)/%.o,$(SRCS)) \
             $(OBJ)/third_party/cJSON.o $(OBJ)/third_party/sqlite3.o \
@@ -248,6 +255,33 @@ lint-baseline:
 # is how you get the current one (macro-expanded, so it is not a grep count).
 source-count:
 	@python3 tools/lint_sources.py --count
+
+# Assert the fleet did not shrink. `make source-count` is a number nobody
+# diffs, which is exactly how a silently-dropped collector survives a refactor:
+# the build succeeds, the binary links, and the only trace is a smaller count.
+# Record the number before a move, assert it after:
+#
+#   make source-floor-record        # before
+#   ...move files...
+#   make source-floor               # after — fails if any source vanished
+#
+# The floor is committed (tools/source-floor.txt) so CI and a reviewer see the
+# same number the author did.
+.PHONY: source-floor source-floor-record
+source-floor-record:
+	@python3 tools/lint_sources.py --count | grep -oE '[0-9]+' | head -1 > tools/source-floor.txt
+	@echo "recorded source floor: $$(cat tools/source-floor.txt)"
+
+source-floor:
+	@test -f tools/source-floor.txt || { echo "no floor recorded; run make source-floor-record"; exit 1; }
+	@now=$$(python3 tools/lint_sources.py --count | grep -oE '[0-9]+' | head -1); \
+	 floor=$$(cat tools/source-floor.txt); \
+	 if [ "$$now" -lt "$$floor" ]; then \
+	   echo "SOURCE COUNT REGRESSED: $$now < $$floor (floor in tools/source-floor.txt)"; \
+	   echo "a collector stopped registering — most likely it moved out of the build glob"; \
+	   exit 1; \
+	 fi; \
+	 echo "source floor ok: $$now >= $$floor"
 
 # obj-* covers every sanitizer/agent-slot tree (obj-asan, obj-tsan, obj-a0…),
 # which is where the hundreds of orphaned megabytes lived: clean removed only

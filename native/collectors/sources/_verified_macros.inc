@@ -41,16 +41,24 @@
   REGISTER_SOURCE(SYM)
 
 /* Plain JSON list. PATH is the array's dot-path, "" for a bare array, or "*"
- * to take the longest array of objects in the document. */
+ * to take the longest array of objects in the document.
+ *
+ * PAGED since 2026-08. This used to be one GET of one URL, which meant every
+ * source built on this macro — about 6,500 of them, 2,081 against URLs that
+ * hard-code a page size — read page 1 and discarded the rest silently.
+ * jsonlist_emit_paged() walks while the upstream says there is more and emits
+ * a collector-truncation-notice if the ceiling stops it early; it returns -1
+ * only when the FIRST fetch fails, so a dead endpoint stays an error and an
+ * honest empty stays 0 (R3). See lib/jsonlist.h for the walk's rules.
+ *
+ * Keep long commentary OUT of the macro body. A block comment inside a
+ * backslash-continued body is legal C, but it breaks the static macro expander
+ * in tools/lint_sources.py: it silently reported 5,311 sources instead of
+ * 9,718, with "166 unresolved registrations", while the binary linked fine.
+ * The count is what every doc quotes, so a tool-only regression still
+ * misinforms everyone downstream. */
 #define VJSON(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, PATH, LANG, TAGS, IVAL, DESC) \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
-    /* PAGED. This used to be one GET of one URL, which meant every source    \
-     * built on this macro — about 6,500 of them, 2,081 against URLs that     \
-     * hard-code a page size — read page 1 and discarded the rest silently.   \
-     * jsonlist_emit_paged walks while the upstream says there is more, and   \
-     * emits a collector-truncation-notice if the ceiling stops it early.     \
-     * It returns -1 only when the FIRST fetch fails, so a dead endpoint is   \
-     * still an error and an honest empty is still 0 (R3). */                 \
     int n = jsonlist_emit_paged(s, ID, c->http, URL, 25000,                   \
                                 PATH, CAT, LANG, TAGS);                       \
     if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
