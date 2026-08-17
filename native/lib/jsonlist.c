@@ -1,6 +1,7 @@
 /* lib/jsonlist.c — see jsonlist.h. */
 #include "jsonlist.h"
 #include "feedlib.h"
+#include "pager.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -447,117 +448,10 @@ int jsonlist_emit(intel_sink *sink, const char *source_id, cJSON *doc,
  * has the upstream told us there is more? We answer it from what the upstream
  * actually said, and never from an assumption. */
 
-/* Dotted lookup that tolerates a missing level, for probing candidate keys. */
-static cJSON *dotted(cJSON *doc, const char *path) {
-  char buf[128];
-  snprintf(buf, sizeof buf, "%s", path);
-  cJSON *cur = doc;
-  char *save = NULL;
-  for (char *tok = strtok_r(buf, ".", &save); tok && cur;
-       tok = strtok_r(NULL, ".", &save))
-    cur = cJSON_GetObjectItem(cur, tok);
-  return cur;
-}
-
-/* The server's own "next page" link, if it published one. Ordered most- to
- * least-specific: `links.next` is the JSON:API/CKAN spelling, `@odata.nextLink`
- * is OData, the rest are common house styles. A next link that is present but
- * null/false/empty means "this is the last page" in every one of these
- * dialects, so it is treated as absent rather than followed. */
-static char *next_link(cJSON *doc) {
-  static const char *const KEYS[] = {
-    "links.next", "next", "next_url", "nextUrl", "nextPageUrl",
-    "meta.next", "paging.next", "@odata.nextLink", "next_page", NULL };
-  for (int i = 0; KEYS[i]; i++) {
-    cJSON *v = dotted(doc, KEYS[i]);
-    if (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0] &&
-        !strncmp(v->valuestring, "http", 4))
-      return strdup(v->valuestring);
-    /* CKAN and some JSON:API servers nest it as {next: {href: "..."}}. */
-    if (v && cJSON_IsObject(v)) {
-      cJSON *h = cJSON_GetObjectItem(v, "href");
-      if (h && cJSON_IsString(h) && h->valuestring && !strncmp(h->valuestring, "http", 4))
-        return strdup(h->valuestring);
-    }
-  }
-  return NULL;
-}
-
-/* The upstream's own count of what exists, for the in-band disclosure. -1 when
- * it did not say, which is itself worth recording: "unknown" is honest, a
- * guessed total is not. */
-static long declared_total(cJSON *doc) {
-  static const char *const KEYS[] = {
-    "total_count", "totalCount", "total", "count", "meta.count",
-    "numberMatched", "totalResults", "result.count", "meta.total",
-    "totalElements", "recordsTotal", NULL };
-  for (int i = 0; KEYS[i]; i++) {
-    cJSON *v = dotted(doc, KEYS[i]);
-    if (v && cJSON_IsNumber(v) && v->valuedouble >= 0)
-      return (long)v->valuedouble;
-  }
-  return -1;
-}
-
-/* Read `name=<int>` out of a query string. Returns -1 if absent/unparseable. */
-static long query_int(const char *url, const char *name) {
-  const char *q = strchr(url, '?');
-  if (!q) return -1;
-  size_t nlen = strlen(name);
-  for (const char *p = q + 1; p && *p; ) {
-    if (!strncmp(p, name, nlen) && p[nlen] == '=') {
-      char *end = NULL;
-      long v = strtol(p + nlen + 1, &end, 10);
-      return (end && end != p + nlen + 1) ? v : -1;
-    }
-    p = strchr(p, '&');
-    if (p) p++;
-  }
-  return -1;
-}
-
-/* Replace `name=<old>` with `name=<new>`, or append it. Caller frees. */
-static char *query_set(const char *url, const char *name, long value) {
-  size_t cap = strlen(url) + strlen(name) + 48;
-  char *out = malloc(cap);
-  if (!out) return NULL;
-  const char *q = strchr(url, '?');
-  size_t nlen = strlen(name);
-  const char *hit = NULL;
-  if (q) {
-    for (const char *p = q + 1; p && *p; ) {
-      if (!strncmp(p, name, nlen) && p[nlen] == '=') { hit = p; break; }
-      p = strchr(p, '&');
-      if (p) p++;
-    }
-  }
-  if (!hit) {
-    snprintf(out, cap, "%s%c%s=%ld", url, q ? '&' : '?', name, value);
-    return out;
-  }
-  const char *tail = strchr(hit, '&');
-  size_t head = (size_t)(hit - url);
-  memcpy(out, url, head);
-  int w = snprintf(out + head, cap - head, "%s=%ld", name, value);
-  if (tail) snprintf(out + head + w, cap - head - w, "%s", tail);
-  return out;
-}
-
-/* A page-size parameter the URL already declares, paired with the cursor
- * parameter that upstream family uses to advance. The pairing is what makes
- * the arithmetic safe: we only ever move a cursor whose page-size sibling is
- * present, so a URL with no declared page size is never paginated by guess. */
-struct pager { const char *size_param, *cursor_param; int page_numbered; };
-static const struct pager PAGERS[] = {
-  { "per_page",  "page",        1 },   /* CKAN/dane.gov.pl, GitHub, uData     */
-  { "page_size", "page",        1 },   /* DRF                                 */
-  { "pageSize",  "page",        1 },   /* ArcGIS Hub, many .NET APIs          */
-  { "rows",      "start",       0 },   /* Solr / CKAN package_search          */
-  { "limit",     "offset",      0 },   /* Socrata, ODS, most REST             */
-  { "$top",      "$skip",       0 },   /* OData                               */
-  { "maxRecords","offset",      0 },   /* Airtable-style                      */
-  { NULL, NULL, 0 }
-};
+/* The four questions the walk asks — is there a next link, what does the
+ * upstream say exists, and where does the cursor go next — are answered by
+ * lib/pager.c, which hpengine shares so that a row moved between the two
+ * engines keeps the same page walk. See pager.h. */
 
 int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
                         http_client *http, const char *url, int timeout_ms,
@@ -587,7 +481,7 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
       truncated = 1;
       break;
     }
-    if (available < 0) available = declared_total(doc);
+    if (available < 0) available = pager_declared_total(doc);
 
     int n = jsonlist_emit(sink, source_id, doc, path, record_type, lang, tags_json);
     total += n;
@@ -595,22 +489,10 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
     cJSON *arr = jsonlist_find_array(doc, path);
     int got = arr ? cJSON_GetArraySize(arr) : 0;
 
-    char *next = next_link(doc);
-    if (!next && got > 0) {
-      /* No server link. Advance a cursor only when the URL declares a page
-       * size AND this page came back exactly full — a short page is the
-       * upstream saying it is finished, and following it would be us
-       * inventing a page that was never offered. */
-      for (int i = 0; PAGERS[i].size_param && !next; i++) {
-        long size = query_int(page_url, PAGERS[i].size_param);
-        if (size <= 0 || got < size) continue;
-        long cur = query_int(page_url, PAGERS[i].cursor_param);
-        long nextval = PAGERS[i].page_numbered
-                         ? (cur > 0 ? cur + 1 : 2)
-                         : (cur >= 0 ? cur + size : size);
-        next = query_set(page_url, PAGERS[i].cursor_param, nextval);
-      }
-    }
+    char *next = pager_next_link(doc);
+    /* No server link: advance a cursor only when the URL declares a page size
+     * AND this page came back exactly full (pager_advance's rule). */
+    if (!next) next = pager_advance(page_url, got);
     cJSON_Delete(doc);
 
     if (got <= 0) { free(next); break; }   /* upstream is exhausted */

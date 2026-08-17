@@ -7,6 +7,7 @@
 #include "hpengine.h"
 #include "csv.h"
 #include "htmlparse.h"   /* the one anchor scanner + dedupe set */
+#include "pager.h"       /* shared with jsonlist: next-link + cursor walk */
 #include "../core/httpclient.h"
 #include "../third_party/cJSON.h"
 #include <ctype.h>
@@ -471,6 +472,10 @@ typedef struct {
   int   page;             /* 1-based page currently being read               */
   int   page_records;     /* records in the page just read (paging stop test) */
   char *next_url;         /* next-page URL from the response, when declared  */
+  /* What the upstream itself said exists, from its own count field; -1 when it
+   * said nothing. Without this a page-ceiling stop could only report the
+   * records it had already counted, which reads as "nothing was missed". */
+  long  declared_total;
 } hp_run_state;
 
 /* 0 = no cap (every record). A row's non-zero max_items is its author's
@@ -644,6 +649,9 @@ static int hp_run_json(hp_run_state *st, const char *body) {
   cJSON *doc = cJSON_Parse(body);
   if (!doc) { fprintf(stderr, "[hp:%s] non-JSON body\n", s->id); return 0; }
 
+  /* Ask the upstream what it has, once, on the first page. */
+  if (st->declared_total < 0) st->declared_total = pager_declared_total(doc);
+
   cJSON *arr = NULL;
   if (s->array_path && *s->array_path) {
     cJSON *n = hp_path(doc, s->array_path);
@@ -692,13 +700,18 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     if (st->emitted > before && deep_left > 0) deep_left--;
     cJSON_Delete(flat);
   }
-  /* Hand the caller the next page URL when the row declared one, so the walk
-   * continues instead of stopping at page 1. */
-  if (s->next_path && !st->next_url) {
+  /* Hand the caller the next page URL, so the walk continues instead of
+   * stopping at page 1. The row's own next_path wins — it names the field for
+   * this upstream specifically — and where the row declared nothing we fall
+   * back to the shared list of dialects every JSON API publishes a next link
+   * under (lib/pager.c), which is what jsonlist has always done. */
+  if (!st->next_url && s->next_path) {
     cJSON *nx = hp_path(doc, s->next_path);
     if (nx && cJSON_IsString(nx) && nx->valuestring[0])
       st->next_url = strdup(nx->valuestring);
   }
+  if (!st->next_url && !s->next_path && !s->page_param)
+    st->next_url = pager_next_link(doc);
   st->page_records = arr ? cJSON_GetArraySize(arr) : 0;
   cJSON_Delete(doc);
   return st->emitted;
@@ -857,14 +870,20 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * first, which is exactly what the exhaustive-use rule forbids. When a row
    * declares next_path or page_param we keep going until the upstream stops
    * producing records (or the page ceiling bites, which is stamped, not
-   * silent). Rows that declare no paging do exactly one request, as before. */
+   * silent).
+   *
+   * A row that declares NEITHER is still walked, on the upstream's own
+   * evidence only: a next link it published, or a cursor whose page-size
+   * sibling is in the URL and whose page came back exactly full (lib/pager.c).
+   * This used to be `page_max = 1` — one request, every later page discarded
+   * without a word. jsonlist_emit_paged() fixed the same bug for the generated
+   * collectors; leaving it unfixed here meant a row that gained a detail hop by
+   * moving to this engine paid for it with every page after the first. */
   int out = 0, hard_error = 0;
   int page_max = s->page_max > 0 ? s->page_max : HP_PAGE_MAX_DEF;
-  int paged = (s->next_path || s->page_param) ? 1 : 0;
-  if (!paged) page_max = 1;
 
   hp_run_state st = { .s = s, .ctx = ctx, .sink = sink, .vars = &vars,
-                      .url = url, .emitted = 0 };
+                      .url = url, .emitted = 0, .declared_total = -1 };
   int page_start = s->page_start;
   if (!page_start && s->page_param && !strstr(s->page_param, "offset")) page_start = 1;
 
@@ -897,7 +916,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     }
     http_response_free(&hr);
 
-    if (!paged || st.truncated) break;
+    if (st.truncated) break;
     /* Stop when this page produced nothing new — that is the upstream telling
      * us the collection is exhausted. */
     if (st.page_records <= 0) break;
@@ -914,11 +933,14 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
                          strstr(s->page_param, "start") || strstr(s->page_param, "skip");
       long value = offset_style ? (long)(page_start + (page + 1) * step)
                                 : (long)(page_start + page + 1);
-      size_t n = strlen(url) + 64;
-      nextp = malloc(n);
-      if (nextp)
-        snprintf(nextp, n, "%s%c%s=%ld", url, strchr(url, '?') ? '&' : '?',
-                 s->page_param, value);
+      /* SET the parameter rather than appending it. Appending built
+       * "…&page=2&page=3&page=4" as the walk went on and left it to the server
+       * to pick a winner — on a server that takes the first, the walk re-read
+       * page 2 until the ceiling. */
+      nextp = pager_query_set(url, s->page_param, value);
+    } else {
+      /* Neither declared: the upstream's own cursor, on the rules in pager.h. */
+      nextp = pager_advance(page_url, st.page_records);
     }
     free(page_url);
     page_url = nextp;
@@ -939,13 +961,22 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * never fetched those pages), so `available == out` there. Disclose whenever
    * the walk stopped early, not only when we can count what was missed. */
   if (st.truncated) {
+    /* What "available" means here: the upstream's own declared total when it
+     * published one, else the records we personally counted. The second is a
+     * floor, not a total — on a ceiling stop we never fetched the rest — so it
+     * is labelled as such rather than presented as the full size. */
+    long avail = st.declared_total > (long)st.available ? st.declared_total
+                                                       : (long)st.available;
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "source_id", s->id);
     cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
     cJSON_AddNumberToObject(p, "records_used", out);
-    cJSON_AddNumberToObject(p, "records_available", st.available);
+    cJSON_AddNumberToObject(p, "records_available", (double)avail);
+    cJSON_AddStringToObject(p, "records_available_basis",
+      st.declared_total >= 0 ? "upstream declared this total"
+                             : "records counted so far — the unread pages are not included");
     cJSON_AddNumberToObject(p, "pages_read", st.page);
-    cJSON_AddBoolToObject(p, "more_pages_pending", st.available <= out);
+    cJSON_AddBoolToObject(p, "more_pages_pending", avail <= (long)out);
     cJSON_AddNumberToObject(p, "declared_max_items", s->max_items);
     cJSON_AddStringToObject(p, "reason",
       (s->max_items > 0 && out >= s->max_items)
@@ -959,8 +990,8 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     char key[320], title[256];
     snprintf(key, sizeof key, "%.150s|truncation:%.120s", s->id,
              vars.raw ? vars.raw : "");
-    snprintf(title, sizeof title, "%s used %d of %d available records",
-             s->id, out, st.available);
+    snprintf(title, sizeof title, "%s used %d of %ld available records",
+             s->id, out, avail);
     intel_item note = {0};
     note.remote_key      = key;
     note.title           = title;
