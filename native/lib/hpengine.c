@@ -939,8 +939,11 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
        * page 2 until the ceiling. */
       nextp = pager_query_set(url, s->page_param, value);
     } else {
-      /* Neither declared: the upstream's own cursor, on the rules in pager.h. */
+      /* Neither declared: the upstream's own cursor, on the rules in pager.h —
+       * a provable page size first, then its own declared total. */
       nextp = pager_advance(page_url, st.page_records);
+      if (!nextp)
+        nextp = pager_advance_by_total(page_url, st.declared_total, st.available);
     }
     free(page_url);
     page_url = nextp;

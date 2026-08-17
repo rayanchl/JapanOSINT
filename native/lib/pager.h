@@ -50,4 +50,20 @@ long pager_declared_total(const cJSON *doc);
  * records the page actually produced. Caller frees. */
 char *pager_advance(const char *url, int got);
 
+/* Last resort, for the URLs pager_advance() cannot move: `?page=1` with no page
+ * size anywhere in it. Those are not unpaged — they are paged endpoints whose
+ * page size only the server knows (ROR serves 20, bio.tools 10) — and reading
+ * page 1 of 100,000 ROR organisations and stopping is the discard this whole
+ * file exists to prevent.
+ *
+ * The evidence here is the upstream's own arithmetic: it declared a total, it
+ * has handed over fewer records than that, and the URL names a page cursor. Then
+ * there IS more and it says so itself. Returns NULL when it declared no total
+ * (`total` < 0), when `seen` has reached it, or when no cursor is present —
+ * never on an assumption about page size.
+ *
+ * `total` is pager_declared_total()'s answer, `seen` the records emitted so far
+ * across the walk. Caller frees. */
+char *pager_advance_by_total(const char *url, long total, long seen);
+
 #endif

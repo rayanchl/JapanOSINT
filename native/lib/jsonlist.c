@@ -491,8 +491,10 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
 
     char *next = pager_next_link(doc);
     /* No server link: advance a cursor only when the URL declares a page size
-     * AND this page came back exactly full (pager_advance's rule). */
+     * AND this page came back exactly full (pager_advance's rule), or failing
+     * that when the upstream's own declared total says records remain. */
     if (!next) next = pager_advance(page_url, got);
+    if (!next) next = pager_advance_by_total(page_url, available, total);
     cJSON_Delete(doc);
 
     if (got <= 0) { free(next); break; }   /* upstream is exhausted */

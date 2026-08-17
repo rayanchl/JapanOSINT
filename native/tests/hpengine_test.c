@@ -175,6 +175,27 @@ static const hp_source T[] = {
     .title_keys = "name", .id_keys = "id", .interval = 3600,
     .record_type = "t-auto-short", .free_tier = 1, .description = "d" },
 
+  /* `rp` is nobody's conventional page-size name, so the cursor table cannot
+   * match it. The RESPONSE proves it instead: 3 records back for rp=3. */
+  { .id = "T_PAGE_PROVEN", .name = "page size proven by the response",
+    .url = "https://x.test/pp?page=1&rp=3", .array_path = "items",
+    .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .record_type = "t-proven", .free_tier = 1, .description = "d" },
+
+  /* Same shape, but nothing in the URL equals the record count, so there is no
+   * evidence of a page size and the walk must not invent one. */
+  { .id = "T_PAGE_NOPROOF", .name = "no provable page size",
+    .url = "https://x.test/np?page=1&order_by=name", .array_path = "items",
+    .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .record_type = "t-noproof", .free_tier = 1, .description = "d" },
+
+  /* `?page=1` with no page size anywhere — ROR's and bio.tools' shape. Only the
+   * upstream's declared total can say whether more remains. */
+  { .id = "T_PAGE_TOTAL", .name = "cursor advanced on the declared total",
+    .url = "https://x.test/pt?page=1", .array_path = "items",
+    .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .record_type = "t-total-page", .free_tier = 1, .description = "d" },
+
   { .id = "T_PAGE_SET", .name = "page_param replaces, never appends",
     .url = "https://x.test/pset?page=1&per=2", .array_path = "items",
     .title_keys = "name", .id_keys = "id", .page_param = "page", .interval = 3600,
@@ -400,6 +421,52 @@ int main(void) {
   rc = run_source("T_PAGE_SHORT", "");
   ok(rc == 0 && g_ncap == 1 && g_ncalls == 1,
      "a short page stops the walk — no guessed second request");
+
+  /* 9j2. a house-named page size (`rp`) is not in the cursor table, so the
+   * response proves it: 3 records for rp=3 means rp IS the page size, and the
+   * `page` cursor beside it advances. */
+  fx_reset();
+  fx_add("page=2", 200, "{\"items\":[{\"name\":\"r4\",\"id\":\"4\"}]}");
+  fx_add("/pp?page=1&rp=3", 200,
+    "{\"items\":[{\"name\":\"r1\",\"id\":\"1\"},{\"name\":\"r2\",\"id\":\"2\"},"
+    "{\"name\":\"r3\",\"id\":\"3\"}]}");
+  rc = run_source("T_PAGE_PROVEN", "");
+  ok(rc == 0 && g_ncap == 4 && g_ncalls == 2,
+     "a page size the URL spells its own way is proven by the record count");
+  ok(strstr(g_last_url, "page=2") != NULL && strstr(g_last_url, "rp=3") != NULL,
+     "the cursor advanced and the proven page size was left alone");
+
+  /* 9j3. and with nothing in the URL equal to the record count there is no
+   * evidence of a page size, so the walk stops rather than guessing. */
+  fx_reset();
+  fx_add("/np?page=1", 200,
+    "{\"items\":[{\"name\":\"n1\",\"id\":\"1\"},{\"name\":\"n2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_NOPROOF", "");
+  ok(rc == 0 && g_ncap == 2 && g_ncalls == 1,
+     "no provable page size = one request, not a guessed page 2");
+
+  /* 9j4. `?page=1` with no page size at all: the upstream declares 3 of them and
+   * hands over 2, so it has said itself that more remains. */
+  fx_reset();
+  fx_add("page=2", 200,
+    "{\"number_of_results\":3,\"items\":[{\"name\":\"t3\",\"id\":\"3\"}]}");
+  fx_add("/pt?page=1", 200,
+    "{\"number_of_results\":3,\"items\":[{\"name\":\"t1\",\"id\":\"1\"},"
+    "{\"name\":\"t2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_TOTAL", "");
+  ok(rc == 0 && g_ncap == 3 && g_ncalls == 2,
+     "a declared total moves a page cursor the URL gives no page size for");
+  ok(strstr(g_last_url, "page=2") != NULL, "page cursor advanced to 2");
+
+  /* 9j5. and once the declared total is reached the walk stops — the upstream
+   * has handed over everything it said it had. */
+  fx_reset();
+  fx_add("/pt?page=1", 200,
+    "{\"number_of_results\":2,\"items\":[{\"name\":\"u1\",\"id\":\"1\"},"
+    "{\"name\":\"u2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_TOTAL", "");
+  ok(rc == 0 && g_ncap == 2 && g_ncalls == 1,
+     "walk stops when the declared total has been delivered");
 
   /* 9k. page_param SETS its parameter. Appending built page=1&page=2&page=3 and
    * left the winner to the server. */

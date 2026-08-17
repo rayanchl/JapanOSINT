@@ -69,72 +69,13 @@ VJSON(us_cpsc_recall_by_number, "us-cpsc-recall-by-number", "CPSC SaferProducts 
   "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Same full recall envelope as RecallID but keyed on the public RecallNumber string as printed on notices (dashes are optional: 24-001 resolves to RecallNumber '24001'). Useful when pivoting from a press release or a retailer notice.");
 
-VJSON(us_openfda_device_510k_detail, "us-openfda-device-510k-detail", "openFDA — 510(k) clearance detail by K-number", "openFDA — 510(k) clearance detail by K-number",
-  "us_health", "health",
-  "https://api.fda.gov/device/510k.json?search=k_number:%22K092877%22&limit=1",
-  "results",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
-  "DETAIL HOP on a device clearance: k_number, applicant, contact, address_1/2, city/state/postal_code/country_code, date_received, decision_date, decision_code/description, clearance_type, product_code, advisory_committee and description, review_advisory_committee, statement_or_summary, third_party_flag, expedited_review_flag, device_name, plus the openfda block (device_class, regulation_number, medical_specialty_description). Links a marketed device back to the firm that cleared it.");
-
-VJSON(us_openfda_device_classification_detail, "us-openfda-device-classification-detail", "openFDA — device product-code classification detail", "openFDA — device product-code classification detail",
-  "us_health", "health",
-  "https://api.fda.gov/device/classification.json?search=product_code:%22LZG%22&limit=1",
-  "results",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
-  "DETAIL HOP that resolves the product_code appearing on every MAUDE report, recall and 510(k): device_name, medical_specialty_description, device_class, regulation_number, definition, physical_state, technical_method, target_area, gmp_exempt_flag, implant_flag, life_sustain_support_flag, third_party_flag, review_panel, submission_type_id, unclassified_reason.");
-
-VJSON(us_openfda_device_enforcement_by_recall_number, "us-openfda-device-enforcement-by-recall-number", "openFDA — device enforcement report detail by recall number", "openFDA — device enforcement report detail by recall number",
-  "us_health", "health",
-  "https://api.fda.gov/device/enforcement.json?search=recall_number:%22Z-2372-2023%22&limit=1",
-  "results",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
-  "DETAIL HOP on the formal FDA enforcement report: recall_number, classification (Class I/II/III), status, recalling_firm and full address, event_id, product_type, product_description, product_quantity, code_info, reason_for_recall, recall_initiation_date, center_classification_date, termination_date, report_date, distribution_pattern, initial_firm_notification, voluntary_mandated, and openfda linkage.");
-
-VJSON(us_openfda_device_pma_detail, "us-openfda-device-pma-detail", "openFDA — PMA premarket approval detail by PMA number", "openFDA — PMA premarket approval detail by PMA number",
-  "us_health", "health",
-  "https://api.fda.gov/device/pma.json?search=pma_number:%22P150003%22&limit=1",
-  "results",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
-  "DETAIL HOP: pma_number, supplement_number and supplement_type/reason, applicant, street/city/state/zip, generic_name, trade_name, product_code, advisory_committee, date_received, decision_date, decision_code, expedited_review_flag, ao_statement (the approval-order text), docket_number, and openfda device_class/regulation_number. The highest-scrutiny device approval record.");
-
-VJSON(us_openfda_device_udi_detail, "us-openfda-device-udi-detail", "openFDA — Unique Device Identifier record detail", "openFDA — Unique Device Identifier record detail",
-  "us_health", "health",
-  "https://api.fda.gov/device/udi.json?search=public_device_record_key:%22040e0d90-d3b0-4666-9bdb-0920dab5b7ac%22&limit=1",
-  "results",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
-  "DETAIL HOP into the GUDID: public_device_record_key, public_version_number/date/status, device_description, brand_name, version_or_model_number, catalog_number, company_name, labeler DUNS, identifiers[] (GTIN/DI values and issuing agency), device_sizes, sterilization info, mri_safety, is_rx/is_otc/is_kit/is_combination_product, has_lot_or_batch_number/serial_number/expiration_date, product_codes[], customer_contacts[], device_publish/commercial_distribution dates.");
-
-VJSON(us_openfda_drug_enforcement_by_recall_number, "us-openfda-drug-enforcement-by-recall-number", "openFDA — drug enforcement report detail by recall number", "openFDA — drug enforcement report detail by recall number",
-  "us_health", "health",
-  "https://api.fda.gov/drug/enforcement.json?search=recall_number:%22D-321-2016%22&limit=1",
-  "results",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
-  "DETAIL HOP: full FDA drug recall enforcement record — recall_number, classification, status, recalling_firm, city/state/country/postal_code, event_id, product_description, product_quantity, code_info, reason_for_recall, recall_initiation_date, center_classification_date, termination_date, report_date, distribution_pattern, initial_firm_notification, voluntary_mandated, plus openfda (application_number, brand_name, generic_name, manufacturer_name, product_ndc, substance_name, unii, spl_id).");
-
-VJSON(us_openfda_drug_ndc_by_product_ndc, "us-openfda-drug-ndc-by-product-ndc", "openFDA — National Drug Code directory detail", "openFDA — National Drug Code directory detail",
-  "us_health", "health",
-  "https://api.fda.gov/drug/ndc.json?search=product_ndc:%220002-1433%22&limit=1",
-  "results",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
-  "DETAIL HOP: product_ndc, generic_name, labeler_name, brand_name and suffix, active_ingredients[], finished flag, packaging[] (package_ndc, description, marketing_start_date, sample flag), listing_expiration_date, marketing_category, dosage_form, route[], product_type, marketing_start/end_date, application_number, pharm_class[], dea_schedule. Resolves an NDC seen on a recall or adverse event back to its labeler.");
-
-VJSON(us_openfda_drugsfda_by_application, "us-openfda-drugsfda-by-application", "openFDA — Drugs@FDA application detail by NDA/ANDA/BLA number", "openFDA — Drugs@FDA application detail by NDA/ANDA/BLA number",
-  "us_health", "health",
-  "https://api.fda.gov/drug/drugsfda.json?search=application_number:%22NDA021436%22&limit=1",
-  "results",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
-  "DETAIL HOP: application_number, sponsor_name, products[] (product_number, reference_drug, brand_name, active_ingredients[] with strength, dosage_form, route, marketing_status, te_code), submissions[] — every supplement with submission_type, submission_number, submission_status and date, review_priority, submission_class_code_description, and application_docs[] with URLs to the approval letters, labels and review packages.");
-
-VJSON(us_openfda_food_enforcement_by_recall_number, "us-openfda-food-enforcement-by-recall-number", "openFDA — food recall enforcement detail by recall number", "openFDA — food recall enforcement detail by recall number",
-  "us_health", "health",
-  "https://api.fda.gov/food/enforcement.json?search=recall_number:%22F-0001-2024%22&limit=1",
-  "results",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
-  "DETAIL HOP: recall_number, classification, status, recalling_firm with full address, event_id, product_type, product_description, product_quantity, code_info, reason_for_recall, recall_initiation_date, center_classification_date, termination_date, report_date, distribution_pattern, initial_firm_notification, voluntary_mandated, more_code_info.");
-
 VJSON(us_openfda_other_historicaldocument, "us-openfda-other-historicaldocument", "openFDA — FDA historical document archive", "openFDA — FDA historical document archive",
   "us_health", "health",
-  "https://api.fda.gov/other/historicaldocument.json?limit=1",
+  /* limit was 1 — the probe's page size shipped as the collector's, so a
+   * 8,858-document archive returned one document per run. openFDA's own limit,
+   * raised to a real page; the paged walk in lib/jsonlist.c takes it from
+   * there and discloses in-band whatever it does not reach. */
+  "https://api.fda.gov/other/historicaldocument.json?limit=100",
   "results",
   "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
   "8,858 documents. Per record: doc_type, title, text/body, num (document number) and date. Endpoint the tree does not currently carry; useful for archival FDA notices and regulatory correspondence.");

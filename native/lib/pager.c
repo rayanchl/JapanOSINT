@@ -44,7 +44,17 @@ long pager_declared_total(const cJSON *doc) {
   static const char *const KEYS[] = {
     "total_count", "totalCount", "total", "count", "meta.count",
     "numberMatched", "totalResults", "result.count", "meta.total",
-    "totalElements", "recordsTotal", NULL };
+    "totalElements", "recordsTotal",
+    /* Spellings found in the fleet's own upstreams. These matter more than they
+     * look: pager_advance_by_total() can only move a `?page=1` URL that declares
+     * no page size if it can read the total, so a missing spelling here is the
+     * difference between walking ROR's 100k+ organisations and reading the first
+     * twenty of them. */
+    "number_of_results",   /* ROR                                            */
+    "nhits",               /* OpenDataSoft                                   */
+    "total_results", "totalRecords", "resultCount", "found",
+    "hits.total.value",    /* Elasticsearch                                  */
+    NULL };
   if (!doc) return -1;
   for (int i = 0; KEYS[i]; i++) {
     const cJSON *v = dotted(doc, KEYS[i]);
@@ -120,6 +130,53 @@ static const struct pager_pair PAGERS[] = {
   { NULL, NULL, 0 }
 };
 
+/* Cursor parameters, for the case below where the page SIZE parameter has a
+ * house-specific name the table above cannot know. page_numbered ones count
+ * pages; the rest count records. */
+struct pager_cursor { const char *param; int page_numbered; };
+static const struct pager_cursor CURSORS[] = {
+  { "page",   1 },
+  { "p",      1 },   /* CORDIS                                              */
+  { "offset", 0 },
+  { "start",  0 },
+  { "skip",   0 },
+  { "$skip",  0 },
+  { NULL, 0 }
+};
+
+/* Is `name` one of the cursor parameters? (So the size search below cannot
+ * mistake the cursor itself for the page size.) */
+static int is_cursor_param(const char *name, size_t len) {
+  for (int i = 0; CURSORS[i].param; i++)
+    if (strlen(CURSORS[i].param) == len && !strncmp(CURSORS[i].param, name, len))
+      return 1;
+  return 0;
+}
+
+/* Find a query parameter whose value is exactly `got`, i.e. one the RESPONSE
+ * just proved is the page size. Writes the name into `out`. */
+static int proven_size_param(const char *url, int got, char *out, size_t outn) {
+  const char *q = strchr(url, '?');
+  if (!q) return 0;
+  for (const char *p = q + 1; p && *p; ) {
+    const char *eq = strchr(p, '=');
+    const char *amp = strchr(p, '&');
+    if (eq && (!amp || eq < amp)) {
+      size_t nlen = (size_t)(eq - p);
+      char *end = NULL;
+      long v = strtol(eq + 1, &end, 10);
+      if (end && end != eq + 1 && v == (long)got && nlen && nlen < outn &&
+          !is_cursor_param(p, nlen)) {
+        memcpy(out, p, nlen);
+        out[nlen] = 0;
+        return 1;
+      }
+    }
+    p = amp ? amp + 1 : NULL;
+  }
+  return 0;
+}
+
 char *pager_advance(const char *url, int got) {
   if (!url || got <= 0) return NULL;
   for (int i = 0; PAGERS[i].size_param; i++) {
@@ -131,6 +188,45 @@ char *pager_advance(const char *url, int got) {
     long nextval = PAGERS[i].page_numbered ? (cur > 0 ? cur + 1 : 2)
                                            : (cur >= 0 ? cur + size : size);
     return pager_query_set(url, PAGERS[i].cursor_param, nextval);
+  }
+
+  /* Nothing in the table matched — but the page size may simply be spelled in
+   * a house style (`rp`, `itemsPerPage`, `num`, `nrOfHits`, `length`), and
+   * enumerating those names is a guessing game the walk should not depend on.
+   *
+   * So don't guess it: let the RESPONSE prove it. When the URL pins a cursor we
+   * recognise at its first value AND carries some other numeric parameter whose
+   * value is EXACTLY the number of records this page returned, that parameter is
+   * the page size — the upstream just demonstrated it. `?page=1&rp=10` that
+   * answers with 10 records has told us what rp means.
+   *
+   * The same "exactly full" discipline applies, so a short page still ends the
+   * walk. A coincidental match (some unrelated parameter that happens to equal
+   * the record count) costs one extra request whose records upsert onto the ones
+   * already stored, and the walk then stops on the short page — bounded, and
+   * cheaper than reading 10 of 40,000 records forever. */
+  char size_param[64];
+  if (!proven_size_param(url, got, size_param, sizeof size_param)) return NULL;
+  for (int i = 0; CURSORS[i].param; i++) {
+    long cur = pager_query_int(url, CURSORS[i].param);
+    if (cur < 0) continue;                        /* cursor not in this URL */
+    long nextval = CURSORS[i].page_numbered ? cur + 1 : cur + (long)got;
+    return pager_query_set(url, CURSORS[i].param, nextval);
+  }
+  return NULL;
+}
+
+char *pager_advance_by_total(const char *url, long total, long seen) {
+  if (!url || total < 0 || seen <= 0 || seen >= total) return NULL;
+  for (int i = 0; CURSORS[i].param; i++) {
+    long cur = pager_query_int(url, CURSORS[i].param);
+    if (cur < 0) continue;
+    /* A page-numbered cursor is the only one that can be advanced without
+     * knowing the page size. An offset cursor needs a stride, and `seen` is a
+     * running total across pages rather than this page's width, so guessing one
+     * from it would be exactly the invention this file refuses to make. */
+    if (!CURSORS[i].page_numbered) return NULL;
+    return pager_query_set(url, CURSORS[i].param, cur + 1);
   }
   return NULL;
 }

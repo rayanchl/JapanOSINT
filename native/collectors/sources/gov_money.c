@@ -11,6 +11,7 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/csv.h"
+#include "lib/seenset.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -116,7 +117,10 @@ static int gm_emit_anchors(const source_ctx *ctx, intel_sink *sink,
   if (!html) return 0;
   int emitted = 0;
   const char *p = html;
-  char *seen[64]; int nseen = 0;
+  /* Was char *seen[64]: past the 64th anchor the dedupe stopped RECORDING while
+   * the loop kept emitting, so anchor 65 onwards could be emitted twice. The
+   * growable set costs nothing and cannot silently stop working. */
+  seen_set seen = {0};
   while (emitted < max && (p = strstr(p, "<a ")) != NULL) {
     const char *h = strstr(p, "href=\"");
     const char *tagend = strchr(p, '>');
@@ -146,10 +150,7 @@ static int gm_emit_anchors(const source_ctx *ctx, intel_sink *sink,
     if (href[0] == '#') continue;                  /* in-page nav */
     if (href_must && !strstr(href, href_must)) continue;
     if (query && *query && !strstr(text, query) && !strstr(href, query)) continue;
-    int dup = 0;
-    for (int i = 0; i < nseen; i++) if (!strcmp(seen[i], href)) { dup = 1; break; }
-    if (dup) continue;
-    if (nseen < 64) seen[nseen++] = strdup(href);
+    if (!seen_add(&seen, href)) continue;
 
     char link[900];
     if (!strncmp(href, "http", 4)) snprintf(link, sizeof link, "%s", href);
@@ -174,7 +175,7 @@ static int gm_emit_anchors(const source_ctx *ctx, intel_sink *sink,
     if (sink->emit(sink, &it) >= 0) emitted++;
     free(pj);
   }
-  for (int i = 0; i < nseen; i++) free(seen[i]);
+  seen_free(&seen);
   free(html);
   (void)ctx;
   fprintf(stderr, "[%s] emitted %d\n", tag, emitted);

@@ -91,6 +91,56 @@ SKIP_LINE = re.compile(r'^\s*(\*|//|/\*)')
 WAIVER = re.compile(r'exhaustive-ok:')
 
 
+_URL_IN_LINE = re.compile(r'https?://[^\s"\')\\]+')
+# re.M matters: this is searched against a joined block of preceding lines, and
+# without it the anchor only ever matches the block's first line.
+_PAGED_MACRO = re.compile(r'^\s*(?:VJSON|VJSONBIG)\s*\(', re.M)
+
+
+def engine_walks(lines, n, line):
+    """Is this pinned-cursor URL walked by lib/pager.c rather than discarded?
+
+    Two engines page on the upstream's own evidence — jsonlist_emit_paged() for
+    the VJSON/VJSONBIG collectors and hp_run() for the hp_source tables — so a
+    URL that merely CONTAINS `page=1` is not by itself a discard. It is one only
+    when the pager cannot advance it, which needs both halves:
+
+      * the row runs on one of those two engines (a bespoke collector calling
+        feed_get_json() itself, or a VGEO/VCSV row, still gets no walk), and
+      * the URL carries a page-size candidate — a name lib/pager.c's table
+        knows, or any other integer parameter, which the pager proves against
+        the record count at runtime.
+
+    A URL with a pinned cursor and NOTHING that could be a page size (e.g.
+    `?page=1&order_by=name`) stays a finding: neither path can move it, and that
+    really is every page after the first thrown away."""
+    ctx_before = '\n'.join(lines[max(0, n - 14):n])
+    on_paged_engine = bool(_PAGED_MACRO.search(ctx_before) or
+                           _PAGED_MACRO.search(line) or
+                           ('.url' in line and
+                            re.search(r'hp_source\s+\w+\s*\[', ctx_before)))
+    if not on_paged_engine:
+        return False
+    m = _URL_IN_LINE.search(line)
+    if not m:
+        return False
+    q = m.group(0).split('?', 1)
+    if len(q) < 2:
+        return False
+    cursors = {'page', 'pagina', 'p', 'offset', 'start', 'start_index', 'skip',
+               '$skip'}
+    for part in q[1].split('&'):
+        k, _, v = part.partition('=')
+        if k in cursors or not v:
+            continue
+        try:
+            if int(v) > 1:
+                return True        # a page-size candidate exists
+        except ValueError:
+            continue
+    return False
+
+
 def audit(path, verbose=False):
     findings = []
     try:
@@ -119,6 +169,8 @@ def audit(path, verbose=False):
                 ctx = '\n'.join(lines[max(0, n - 16):n + 16])
                 if re.search(r'page_param|next_path|page\+\+|\+\+page|'
                              r'for\s*\(\s*int\s+page|while\s*\([^)]*page', ctx):
+                    continue
+                if engine_walks(lines, n, line):
                     continue
             findings.append((cid, n, line.strip()[:120], desc, hint))
     return findings
