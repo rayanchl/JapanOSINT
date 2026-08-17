@@ -257,14 +257,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char (*seen_ids)[24] = NULL;
   int nseen = 0, capseen = 0;
 
-  for (int ci = 0; ci < ncats && nf < 200; ci++) {
+  /* The cap here was arbitrary: the feature array grows (realloc), so it was
+   * not a memory bound — just a number. The page/category loop above is the
+   * real request budget; within a page we emit every camera the aggregator
+   * listed. */
+  for (int ci = 0; ci < ncats; ci++) {
     char url[256];
     abs_url(cats[ci], url, sizeof url);
     char *html = get_ua(http, url, 20000, NULL);
     if (!html) continue;
     const char *p = html;
     const char *a;
-    while (nf < 200 && (a = strstr(p, "<a")) != NULL) {
+    while ((a = strstr(p, "<a")) != NULL) {
       const char *gt = strchr(a, '>');
       const char *href = strstr(a, "href=\"https://webcamendirect.net/webcam/");
       if (!href || (gt && href > gt)) { p = a + 2; continue; }

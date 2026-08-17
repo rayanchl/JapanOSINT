@@ -238,7 +238,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int nseen = 0, capseen = 0;
   int any_transport_ok = 0, any_body = 0;
 
-  for (int page = 1; page <= 6 && nf < 200; page++) {
+  /* The cap here was arbitrary: the feature array grows (realloc), so it was
+   * not a memory bound — just a number. The page/category loop above is the
+   * real request budget; within a page we emit every camera the aggregator
+   * listed. */
+  for (int page = 1; page <= 6; page++) {
     char url[160];
     if (page == 1) snprintf(url, sizeof url, "%s", CAMSCAPE_BASE);
     else snprintf(url, sizeof url,
@@ -251,7 +255,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     const char *p = html;
     const char *a;
-    while (nf < 200 && (a = strstr(p, "<a")) != NULL) {
+    while ((a = strstr(p, "<a")) != NULL) {
       const char *gt = strchr(a, '>');
       const char *href = strstr(a, "href=\"");
       if (!href || (gt && href > gt)) { p = a + 2; continue; }

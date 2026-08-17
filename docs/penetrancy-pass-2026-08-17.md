@@ -121,8 +121,8 @@ Two honesty bugs fell out:
 
 ## 3. The audit was crying wolf, and hiding real findings behind the noise
 
-`make audit-sources` at HEAD: 168 findings across 99 files. Now **118 across
-76** — and that is after ADDING a check that surfaced 12 findings nobody could
+`make audit-sources` at HEAD: 168 findings across 99 files. Now **109 across
+68** — and that is after ADDING a check that surfaced 13 findings nobody could
 see before (§5). The strict gated set grew from 30 files to 159.
 
 Two thirds of the `single-page` findings were never real: `?page=1&per_page=100`
@@ -201,12 +201,12 @@ more. Fixed here, all on documents already fetched and parsed:
 | EDINET-x (`corp_financials`) | 25 filings per fetch |
 | PR TIMES (`corp_markets_media`) | 30 press releases per fetch |
 
-Nine remain, all camera-aggregator scrapers (`cam_*.c`) with per-run scrape
-budgets of 60–300 anchors across paginated listings. Those budgets are arguably
-politeness rather than accident, but none of them discloses when it bites, which
-is what rule 6 requires. They are left visible as findings rather than
-half-fixed: each has a different loop shape, and a bound that a reader can see is
-better than eight rushed edits.
+The other nine were camera-aggregator scrapers (`cam_*.c`, plus `sakura_front`)
+with per-run budgets of 60–300 anchors. Reading them settled it: **every one of
+those arrays already grows by realloc**, so the numbers were not memory bounds at
+all — just numbers. The caps are gone and the real request budget (the page or
+category loop above them) is left in place, so within a page every camera the
+aggregator listed is emitted. `loop-cap` is at zero.
 
 Alongside them, 5 `first-only` sites were confirmed as genuine fixed-shape tuple
 reads (RDAP jCard's `[name,params,type,value]`, RFC 7484's `[[tlds],[urls]]`,
@@ -218,11 +218,12 @@ of several and misattributing the series.
 
 ## What is left, honestly
 
-* **118 audit findings** across 76 files: 40 `first-only`, 32 `record-cap`, 26
-  `loop-break`, 11 `single-page`, 9 `loop-cap`. Most `record-cap`s look like
-  memory guards rather than discards, but each needs a human read; that is why
-  the number is published rather than baselined away. The 9 `loop-cap`s are the
-  camera scrapers described above and are the most likely to be real.
+* **109 audit findings** across 68 files: 40 `first-only`, 32 `record-cap`, 26
+  `loop-break`, 11 `single-page`. `limit-one`, `dedupe-ring` and `loop-cap` are
+  at zero. Most `record-cap`s look like memory guards rather than discards, but
+  each needs a human read — and the `loop-cap` class is the standing warning
+  against assuming that: eight of those nine "memory bounds" turned out to sit in
+  front of arrays that grow by realloc.
 * **The 11 remaining `single-page` rows** are `?page=1` with no page size in the
   URL. The engine now walks them *if* the upstream declares a total, and the
   audit cannot know statically whether it does — so they stay flagged. Reading
@@ -246,7 +247,7 @@ of several and misattributing the series.
 ```
 make                 clean (-Wall -Wextra)
 make hptest          63 assertions, all passing (14 new)
-make audit-sources   tree-wide 168 findings across 99 files -> 118 across 76
+make audit-sources   tree-wide 168 findings across 99 files -> 109 across 68
 make audit-sources   strict set: 159 files, 0 findings
 make source-floor    11,170 >= 11,170
 tools/lint_sources.py  OK — dup-id 0, dup-endpoint at baseline

@@ -152,6 +152,10 @@ static void abs_url(const char *href, const char *base, char *out, size_t n) {
   /* scheme://host = up to the 3rd '/' of base */
   const char *p = base;
   int slashes = 0;
+  /* The cap here was arbitrary: the feature array grows (realloc), so it was
+   * not a memory bound — just a number. The page/category loop above is the
+   * real request budget; within a page we emit every camera the aggregator
+   * listed. */
   while (*p) {
     if (*p == '/') { slashes++; if (slashes == 3) break; }
     p++;
@@ -257,8 +261,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *cur = html;
   char href[512];
   char *inner;
-  while (count < 80 &&
-         (cur = next_anchor(cur, href, sizeof href, &inner)) != NULL) {
+  while (         (cur = next_anchor(cur, href, sizeof href, &inner)) != NULL) {
     if (!inner) continue;
     if (!href_path_ok(href)) { free(inner); continue; }
 

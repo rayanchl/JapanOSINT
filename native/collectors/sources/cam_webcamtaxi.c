@@ -186,6 +186,10 @@ static int webcamtaxi_href(const char *href, char *pref, size_t pn) {
   if (strncmp(href, pfx, pl) != 0) return 0;
   const char *p = href + pl;
   const char *ps = p;
+  /* The cap here was arbitrary: the feature array grows (realloc), so it was
+   * not a memory bound — just a number. The page/category loop above is the
+   * real request budget; within a page we emit every camera the aggregator
+   * listed. */
   while (*p && ((*p >= 'a' && *p <= 'z') || *p == '-')) p++;
   if (p == ps || *p != '/') return 0;
   size_t plen = (size_t)(p - ps);
@@ -221,8 +225,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *cur = html;
   char href[512];
   char *inner;
-  while (count < 60 &&
-         (cur = next_anchor(cur, href, sizeof href, &inner)) != NULL) {
+  while (         (cur = next_anchor(cur, href, sizeof href, &inner)) != NULL) {
     if (!inner) continue;
     char pref[128];
     if (!webcamtaxi_href(href, pref, sizeof pref)) { free(inner); continue; }

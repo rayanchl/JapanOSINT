@@ -169,6 +169,10 @@ static int href_path_ok(const char *href) {
   if (strncmp(href, pfx, pl) != 0) return 0;
   const char *p = href + pl;
   int n = 0;
+  /* The cap here was arbitrary: the feature array grows (realloc), so it was
+   * not a memory bound — just a number. The page/category loop above is the
+   * real request budget; within a page we emit every camera the aggregator
+   * listed. */
   while (*p && ((*p >= 'a' && *p <= 'z') || (*p >= '0' && *p <= '9') ||
                 *p == '-')) { p++; n++; }
   if (n == 0) return 0;
@@ -217,8 +221,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *cur = html;
   char href[512];
   char *inner;
-  while (count < 200 &&
-         (cur = next_anchor(cur, href, sizeof href, &inner)) != NULL) {
+  while (         (cur = next_anchor(cur, href, sizeof href, &inner)) != NULL) {
     if (!inner) continue;
     if (!href_path_ok(href)) { free(inner); continue; }
 
