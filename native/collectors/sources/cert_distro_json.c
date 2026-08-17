@@ -34,6 +34,8 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/pager.h"
+#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,11 +45,25 @@
 #define ARCH_URL   "https://security.archlinux.org/json"
 #define ALPINE_URL "https://secdb.alpinelinux.org/v3.21/main.json"
 #define ALMA_URL   "https://errata.almalinux.org/9/errata.full.json"
-#define ROCKY_URL  "https://apollo.build.resf.org/api/v3/advisories/?page=1&size=100"
+/* page is 1-BASED here (page=0 answers 422 — the trap in the probe notes), and
+ * this used to be pinned at page=1: one page of 100 advisories per run, with the
+ * rest of the Apollo errata index neither read nor mentioned. `size` is not one
+ * of lib/pager.c's conventional page-size names and this collector does its own
+ * fetch anyway, so the walk is explicit below. */
+#define ROCKY_URL_FMT "https://apollo.build.resf.org/api/v3/advisories/?page=%d&size=%d"
+#define ROCKY_URL  "https://apollo.build.resf.org/api/v3/advisories/"
+#define ROCKY_PAGE_SIZE 100
+#define ROCKY_PAGES     10   /* per run; override with ROCKY_PAGE_MAX */
 #define RH_URL     "https://access.redhat.com/hydra/rest/securitydata/csaf.json?per_page=100"
 
+/* The recent window is a deliberate bounded VIEW of a ~25 MB document that is
+ * re-fetched daily, and it is disclosed below as a record rather than applied
+ * quietly. What was NOT defensible was the row cap that sat beside it:
+ * ALMA_MAX_ROWS 800 stopped emission part-way through the window, on a document
+ * already fetched, already parsed and already in memory — the records were
+ * counted and then thrown away, which is the cheapest possible discard to avoid.
+ * It is gone; every in-window erratum is emitted. */
 #define ALMA_WINDOW_SEC (365L * 24 * 3600)   /* recent window, see header */
-#define ALMA_MAX_ROWS   800
 
 /* Join an array of strings into "a, b, c" (bounded). */
 static void join_strings(cJSON *arr, char *out, size_t n) {
@@ -248,7 +264,6 @@ static int alma_run(const source_ctx *c, intel_sink *s) {
   if (cJSON_IsArray(arr)) {
     cJSON *e;
     cJSON_ArrayForEach(e, arr) {
-      if (n >= ALMA_MAX_ROWS) break;
       const char *id = jo_sv(e, "id");
       if (!id) continue;                     /* no erratum id -> no row (R1) */
       long issued = epoch_of(cJSON_GetObjectItem(e, "issued_date"));
@@ -299,19 +314,23 @@ static int alma_run(const source_ctx *c, intel_sink *s) {
     }
   }
   cJSON_Delete(doc);
-  fprintf(stderr, "[almalinux-errata-full] emitted %d (window %ld d)\n",
-          n, (long)(ALMA_WINDOW_SEC / 86400));
+  int in_doc = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
+  fprintf(stderr, "[almalinux-errata-full] emitted %d of %d in the document "
+                  "(window %ld d)\n", n, in_doc, (long)(ALMA_WINDOW_SEC / 86400));
+  /* The window is a bounded view of data we DID fetch, so it says how much it is
+   * showing out of how much exists rather than leaving the difference silent. */
+  if (in_doc > n)
+    trunc_notice(s, "almalinux-errata-full", ALMA_URL, NULL, n, in_doc,
+                 "errata older than the recent window were parsed but not "
+                 "emitted; the window keeps a daily 25 MB re-fetch from "
+                 "re-emitting the whole history",
+                 "widen ALMA_WINDOW_SEC to emit further back");
   return 0;
 }
 
 /* ---- rockylinux-errata-api ------------------------------------------------ */
 
-static int rocky_run(const source_ctx *c, intel_sink *s) {
-  const char *hdrs[] = { "accept: application/json", NULL };
-  cJSON *doc = feed_get_json_h(c->http, ROCKY_URL, hdrs, 30000);
-  if (!doc) { fprintf(stderr, "[rockylinux-errata-api] fetch/parse failed\n"); return -1; }
-  cJSON *arr = cJSON_GetObjectItem(doc, "advisories");
-  if (!cJSON_IsArray(arr) && cJSON_IsArray(doc)) arr = doc;
+static int rocky_emit(intel_sink *s, cJSON *arr) {
   int n = 0;
   if (cJSON_IsArray(arr)) {
     cJSON *e;
@@ -359,8 +378,49 @@ static int rocky_run(const source_ctx *c, intel_sink *s) {
       free(pj);
     }
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[rockylinux-errata-api] emitted %d\n", n);
+  return n;
+}
+
+static int rocky_run(const source_ctx *c, intel_sink *s) {
+  const char *hdrs[] = { "accept: application/json", NULL };
+  int pages_max = ROCKY_PAGES;
+  const char *pm = getenv("ROCKY_PAGE_MAX");
+  if (pm && atoi(pm) > 0) pages_max = atoi(pm);
+
+  int n = 0, pages_read = 0, truncated = 0;
+  long available = -1;
+  char url[192];
+
+  for (int page = 1; page <= pages_max; page++) {
+    snprintf(url, sizeof url, ROCKY_URL_FMT, page, ROCKY_PAGE_SIZE);
+    cJSON *doc = feed_get_json_h(c->http, url, hdrs, 30000);
+    if (!doc) {
+      if (page == 1) {
+        fprintf(stderr, "[rockylinux-errata-api] fetch/parse failed\n");
+        return -1;
+      }
+      truncated = 1;               /* died mid-walk; keep what is already real */
+      break;
+    }
+    cJSON *arr = cJSON_GetObjectItem(doc, "advisories");
+    if (!cJSON_IsArray(arr) && cJSON_IsArray(doc)) arr = doc;
+    int got = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
+    if (available < 0) available = pager_declared_total(doc);
+    n += rocky_emit(s, arr);
+    cJSON_Delete(doc);
+    pages_read++;
+
+    if (got < ROCKY_PAGE_SIZE) break;      /* short page = end of the index */
+    if (page == pages_max) truncated = 1;
+  }
+
+  fprintf(stderr, "[rockylinux-errata-api] emitted %d across %d page(s)%s\n",
+          n, pages_read, truncated ? " (TRUNCATED)" : "");
+  if (truncated)
+    trunc_notice(s, "rockylinux-errata-api", ROCKY_URL, NULL, n, available,
+                 "the per-run page budget stopped the walk through the Apollo "
+                 "errata index",
+                 "raise ROCKY_PAGE_MAX");
   return 0;
 }
 

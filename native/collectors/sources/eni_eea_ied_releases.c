@@ -18,6 +18,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,7 +32,7 @@ static const char *URL =
   "%2Cr.pollutant%2Cr.totalPollutantQuantityKg%2Cr.mediumCode"
   "%20FROM%20%5BIED%5D.%5Blatest%5D.%5BPollutantRelease%5D%20r"
   "%20JOIN%20%5BIED%5D.%5Blatest%5D.%5BProductionFacility%5D%20f"
-  "%20ON%20f.id%3Dr.facilityReportId&p=1&nrOfHits=1000";
+  "%20ON%20f.id%3Dr.facilityReportId&p=1&nrOfHits=1000";   /* exhaustive-ok: the SQL's own TOP 1000 bounds the result set; the shortfall is disclosed in run() */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, URL, 60000);
@@ -45,6 +46,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *res = cJSON_GetObjectItem(doc, "results");
   if (!cJSON_IsArray(res)) { cJSON_Delete(doc); fprintf(stderr, "[" SRC "] no results[]\n"); return -1; }
 
+  /* The bound here is inside the QUERY — SELECT TOP 1000 — so paging `p` cannot
+   * reach past it: the server never offers a row 1001 for this query to page to.
+   * The EU IED register holds far more pollutant releases than 1,000, so this is
+   * a bounded view, and a bounded view has to say what it is bounding
+   * (docs/SOURCE_EXHAUSTIVENESS.md). It is disclosed after the loop.
+   *
+   * Raising TOP and walking `p` is the real fix and it needs one thing this
+   * session does not have: egress to watch DiscoData answer p=2 and confirm
+   * whether TOP bounds the result set or each page. Asserting the semantics
+   * without that would be guessing at another service's contract. */
   int n = 0;
   cJSON *r;
   cJSON_ArrayForEach(r, res) {
@@ -102,7 +113,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
   cJSON_Delete(doc);
-  fprintf(stderr, "[" SRC "] emitted %d\n", n);
+  int rows = cJSON_IsArray(res) ? cJSON_GetArraySize(res) : 0;
+  fprintf(stderr, "[" SRC "] emitted %d of %d returned (query caps at 1000)\n",
+          n, rows);
+  /* At exactly the cap the register almost certainly holds more, and how much
+   * more is genuinely unknown from this response — so it is reported as unknown
+   * rather than filled in. */
+  if (rows >= 1000)
+    trunc_notice(sink, SRC, URL, NULL, n, -1,
+                 "the SQL query declares SELECT TOP 1000, so the EU IED "
+                 "register's remaining pollutant releases were never offered",
+                 "raise the TOP clause and walk the p= cursor once DiscoData's "
+                 "paging semantics have been confirmed against a live response");
   return 0;
 }
 

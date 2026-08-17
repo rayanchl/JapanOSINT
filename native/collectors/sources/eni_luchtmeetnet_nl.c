@@ -64,8 +64,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *env = getenv("JO_LUCHTMEETNET_STATIONS");
   if (env && *env) { int b = atoi(env); if (b > 0 && b <= MAXST) budget = b; }
 
+  /* exhaustive-ok: hourly current-conditions snapshot. The feed is newest-first
+   * and this source runs every hour, so page 1 is the hour that has not been
+   * seen yet; the later pages are measurements earlier runs already stored under
+   * remote_key station|pollutant|timestamp. Walking them would re-fetch and
+   * re-upsert the same rows every hour rather than add any. */
   cJSON *doc = feed_get_json(ctx->http,
-    "https://api.luchtmeetnet.nl/open_api/measurements?page=1"
+    "https://api.luchtmeetnet.nl/open_api/measurements?page=1"   /* exhaustive-ok: see above */
     "&order_by=timestamp_measured&order_direction=desc", 30000);
   if (!doc) { fprintf(stderr, "[" SRC "] fetch failed\n"); return -1; }
 
