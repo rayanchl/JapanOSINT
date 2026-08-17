@@ -13,13 +13,6 @@ VJSON(global_nominatim_lookup, "global-nominatim-lookup", "Nominatim batch OSM-i
   "en", "[\"gb\",\"civilian\",\"batch16\",\"high-penetrancy\"]", 21600,
   "Resolve up to 50 OSM ids at once to place records with address components, extratags (ref:gss, ons_code, wikidata, wikipedia, council_name, admin_level) and multilingual namedetails. Batch hop from OSM ids found elsewhere.");
 
-VJSON(global_osm_changesets_by_user, "global-osm-changesets-by-user", "OpenStreetMap changesets by user id", "OpenStreetMap changesets by user id",
-  "gb_civilian", "civilian",
-  "https://api.openstreetmap.org/api/0.6/changesets.json?user=1&limit=5",
-  "changesets",
-  "en", "[\"gb\",\"civilian\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "An individual mapper's edit stream: changeset id, created_at/closed_at, counts, bbox (min/max lat/lon — i.e. where they were editing), and tags naming the editor software, host and imagery used. Tree had bbox and display_name queries but not the uid query.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(global_osm_relation_full, "global-osm-relation-full", "OpenStreetMap relation with all members", "OpenStreetMap relation with all members",
   "gb_civilian", "civilian",
   "https://api.openstreetmap.org/api/0.6/relation/146656/full.json",

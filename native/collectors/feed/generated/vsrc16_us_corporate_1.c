@@ -13,33 +13,12 @@ VJSON(global_peeringdb_carrier_detail, "global-peeringdb-carrier-detail", "Peeri
   "en", "[\"us\",\"corporate\",\"batch16\",\"high-penetrancy\"]", 86400,
   "One carrier with its owning org object inlined (legal address, lat/lon, all *_set id lists) and its facility footprint.");
 
-VJSON(global_peeringdb_org_list, "global-peeringdb-org-list", "PeeringDB organisations (list)", "PeeringDB organisations (list)",
-  "us_corporate", "corporate",
-  "https://www.peeringdb.com/api/org?limit=3",
-  "data",
-  "en", "[\"us\",\"corporate\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Every network/facility/IX owning organisation: id, legal name, aka, website, social_media handles, street address + city/state/zip/country, lat/lon, created/updated timestamps. This is the root of the PeeringDB ownership tree.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_ca_dcc_cannabis_detail, "us-ca-dcc-cannabis-detail", "California DCC - single cannabis licence record", "California DCC - single cannabis licence record",
-  "us_corporate", "corporate",
-  "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/16186",
-  ".",
-  "en", "[\"us\",\"corporate\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Full licence record including businessOwnerName (named natural persons, e.g. 'Collin Hammans, JoAnn Hammans'), businessLegalName, businessDbaName, businessStructure, licensingAuthority, issue/expiration dates, premiseStreetAddress and status history fields.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_ca_dcc_cannabis_licensetypes, "us-ca-dcc-cannabis-licensetypes", "California DCC - licence type vocabulary", "California DCC - licence type vocabulary",
   "us_corporate", "corporate",
   "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licensetypes",
   "",
   "en", "[\"us\",\"corporate\",\"batch16\",\"high-penetrancy\"]", 86400,
   "id/name/description for all 34 licence categories (Retailer, Non-Storefront, Testing Laboratory, Microbusiness, Event Organizer, Distributor, Manufacturer Type 6/7/N/P...). Needed to drive AdvancedSearch facets.");
-
-VJSON(us_ca_dcc_cannabis_search, "us-ca-dcc-cannabis-search", "California Dept of Cannabis Control - licence search API", "California Dept of Cannabis Control - licence search API",
-  "us_corporate", "corporate",
-  "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/filteredSearch?searchQuery=green&pageSize=50&pageNumber=1",
-  "data",
-  "en", "[\"us\",\"corporate\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Undocumented public backend of search.cannabis.ca.gov (base URL published in /config.js). Paged results with metadata{currentPage,totalPages,totalCount} and data[] of id, licenseNumber, licenseStatus, licenseTerm, licenseType, licenseDesignation, issueDate, expirationDate, licensingAuthority, businessLegalName, businessDbaName, businessOwnerName, businessStructure, premise address. Also /licensetypes, /licensestatuses, /licenseterms, /licensedesignations, /licensingauthorities, /licensebusinesstypes.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 VJSON(us_cfpb_hmda_filers, "us-cfpb-hmda-filers", "CFPB/FFIEC HMDA filer list", "CFPB/FFIEC HMDA filer list",
   "us_corporate", "corporate",

@@ -128,8 +128,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--file', action='append', default=[],
                     help='audit these files instead of the default glob set')
-    ap.add_argument('--strict', default=None,
-                    help='glob whose findings make the exit code non-zero')
+    # Repeatable. It was a single glob, and the gated set has since grown to
+    # two directories (the pivot tables and the generated deep-record tables) —
+    # passing --strict twice silently kept only the last one, which is the
+    # failure mode where a gate reports "0 findings" for a set it never scanned.
+    ap.add_argument('--strict', action='append', default=[],
+                    help='glob whose findings make the exit code non-zero; '
+                         'repeatable')
     ap.add_argument('-v', '--verbose', action='store_true',
                     help='print every finding, not just per-file counts')
     args = ap.parse_args()
@@ -142,7 +147,9 @@ def main():
     paths = args.file or sorted(
         glob.glob('collectors/**/*.c', recursive=True) + glob.glob('lib/*.c') +
         glob.glob('core/pipeline.c') + glob.glob('core/osint_dispatch.c'))
-    strict_paths = set(glob.glob(args.strict)) if args.strict else set()
+    strict_paths = set()
+    for g in args.strict:
+        strict_paths |= set(glob.glob(g))
 
     total = 0
     per_check = {}
@@ -182,7 +189,8 @@ def main():
     print('used exhaustively. Findings are heuristics; each needs a human read.')
 
     if strict_paths:
-        print(f'\nstrict set ({args.strict}): {strict_hits} finding(s)')
+        print(f'\nstrict set ({", ".join(args.strict)}): '
+              f'{len(strict_paths)} files, {strict_hits} finding(s)')
         return 1 if strict_hits else 0
     return 0
 

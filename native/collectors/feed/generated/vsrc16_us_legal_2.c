@@ -6,41 +6,6 @@
  * rather than hand-editing. */
 #include "_verified_macros.inc"
 
-VJSON(us_ma_ocpf_barred_filers, "us-ma-ocpf-barred-filers", "Massachusetts OCPF - disqualified/barred filers", "Massachusetts OCPF - disqualified/barred filers",
-  "us_legal", "legal",
-  "https://api.ocpf.us/filers/barred",
-  "",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "cpfId, accountType, isClosed/isActive, depository bank, treasurerTrainingCompletionDate and the disqualification order PDF filename for each barred committee.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_ma_ocpf_legal_actions, "us-ma-ocpf-legal-actions", "Massachusetts OCPF - enforcement actions and disposition agreements", "Massachusetts OCPF - enforcement actions and disposition agreements",
-  "us_legal", "legal",
-  "https://api.ocpf.us/legal/actions",
-  "",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Every OCPF enforcement resolution back to the 1990s: id, actionTypeId, subject (name + town), subjectCpfId, resolutionDate, year, and the URL of the signed disposition agreement PDF. Links an enforcement action to the filer record by cpfId.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_ma_ocpf_nonfilers, "us-ma-ocpf-nonfilers", "Massachusetts OCPF - candidates referred for non-filing", "Massachusetts OCPF - candidates referred for non-filing",
-  "us_legal", "legal",
-  "https://api.ocpf.us/legal/nonfilers",
-  "",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "cpfId, candidateName, full street address/city/state/zip, treasurerName, referralDate and the expectedReports[] the candidate failed to file. Home addresses of referred candidates are in-band.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_oyez_advocates, "us-oyez-advocates", "Oyez — advocate roster", "Oyez — advocate roster",
-  "us_legal", "legal",
-  "https://api.oyez.org/advocates?per_page=3",
-  "",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Every lawyer who has argued before the Supreme Court in Oyez's coverage: ID, name, href to /people/{identifier}, last_name, length_of_service, identifier. Paginated list; the entry point for 'which cases did this lawyer argue'.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_oyez_case_detail, "us-oyez-case-detail", "Oyez — Supreme Court case full record", "Oyez — Supreme Court case full record",
-  "us_legal", "legal",
-  "https://api.oyez.org/cases/2022/20-1199",
-  "decided_by.members",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Full expanded SCOTUS case: facts, question presented, conclusion, lower court and its ruling, plus hrefs into every sub-resource — case_advocate/{id} (the arguing lawyers), case_citation/{id}, case_decision/{id}, case_document/written_opinion/{id}, case_media/oral_argument_audio/{id}, case_media/opinion_announcement_audio/{id}, case_timeline/{id}, decision_vote/{id} (per-justice vote), and courts/{natural-court}. Every one of those hrefs is itself a live keyless endpoint.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_oyez_cases_all, "us-oyez-cases-all", "Oyez — full case index (paginated)", "Oyez — full case index (paginated)",
   "us_legal", "legal",
   "https://api.oyez.org/cases?per_page=3&page=0",
@@ -48,26 +13,12 @@ VJSON(us_oyez_cases_all, "us-oyez-cases-all", "Oyez — full case index (paginat
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "The whole Oyez SCOTUS case corpus back to the 1950s, paginated: ID, name, href, docket_number, timeline[] with decided/argued dates, and term. Feed each href to the case-detail hop.");
 
-VJSON(us_oyez_cases_by_term, "us-oyez-cases-by-term", "Oyez — Supreme Court cases by term", "Oyez — Supreme Court cases by term",
-  "us_legal", "legal",
-  "https://api.oyez.org/cases?filter=term:2022&labels=true&per_page=3",
-  "",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Keyless SCOTUS case index. Each case: ID, name, href (api.oyez.org/cases/{term}/{docket}), docket_number, additional_docket_numbers, timeline[] of events (Granted/Argued/Decided with unix dates), lower_court, facts_of_the_case, question, conclusion, term, and labelled issue areas.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_oyez_decision_vote, "us-oyez-decision-vote", "Oyez — single justice vote record", "Oyez — single justice vote record",
   "us_legal", "legal",
   "https://api.oyez.org/decision_vote/decision_vote/212671",
   "member.roles",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "One justice's vote in one case: nested member object with ID, full name, href, last_name and roles[] (type scotus_justice, date_start, date_end, appointing_president, role_title), plus the vote value, opinion_type and joining information.");
-
-VJSON(us_oyez_natural_court, "us-oyez-natural-court", "Oyez — natural court composition", "Oyez — natural court composition",
-  "us_legal", "legal",
-  "https://api.oyez.org/courts/roberts13",
-  "members",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "A 'natural court' (a stable bench composition, e.g. roberts13 = Roberts Court 2022-): ID, name, date range, and members[] — every sitting justice with ID, name, href to their person record, roles and service dates. Lets you resolve who was on the Court on any date.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 VJSON(us_oyez_person, "us-oyez-person", "Oyez — justice / advocate biography", "Oyez — justice / advocate biography",
   "us_legal", "legal",
@@ -234,13 +185,6 @@ VJSON(us_phl_carto_rtt_summary, "us-phl-carto-rtt-summary", "Philadelphia Realty
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Recorder-of-deeds records: document_id, document_type (DEED, MORTGAGE, SHERIFF DEED...), display_date, street_address, zip_code, opa_account_num, grantors and grantees, cash consideration and total consideration. This is the transaction layer that links a parcel to the buying/selling entity.");
 
-VJSON(us_scotus_docket_json, "us-scotus-docket-json", "US Supreme Court — full docket record (JSON)", "US Supreme Court — full docket record (JSON)",
-  "us_legal", "legal",
-  "https://www.supremecourt.gov/rss/cases/JSON/24-1234.json",
-  "proceedingsandorder",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "The complete SCOTUS docket for one case number, straight from supremecourt.gov and completely keyless. Contains CaseNumber, term, case type (Paid/IFP/Application), PetitionerTitle, RespondentTitle, DocketedDate, LowerCourt + lower-court docket numbers and decision date, RelatedCaseNumber[], Petitioner[] and Respondent[] arrays of counsel (name, firm, address, phone, party represented), Other[] (amici counsel), and ProceedingsandOrder[] — 53 dated docket entries here — each with Date, Text and a Links[] array of DocumentUrl PDFs on supremecourt.gov/DocketPDF/. Docket -> entries -> documents in a single hop. Works for merits dockets (24-1234) and applications (24A1012).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VRSS(us_scotus_slip_opinions_rss, "us-scotus-slip-opinions-rss", "US Supreme Court — slip opinions feed", "US Supreme Court — slip opinions feed",
   "us_legal", "legal",
   "https://www.supremecourt.gov/rss/slipopinion.xml",
@@ -253,16 +197,3 @@ VRSS(us_uscourts_news_rss, "us-uscourts-news-rss", "US Courts (AO) — judiciary
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Administrative Office of the US Courts news feed: title, link, description, dc:date. Low volume; carries judicial-vacancy, caseload-statistics and policy announcements for the federal judiciary.");
 
-VJSON(us_ustaxcourt_case_detail, "us-ustaxcourt-case-detail", "US Tax Court (DAWSON) — full public case record", "US Tax Court (DAWSON) — full public case record",
-  "us_legal", "legal",
-  "https://public-api.dawson.ustaxcourt.gov/public-api/cases/12345-20",
-  "docketentries",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Keyless full docket for a Tax Court case: caseCaption, docketNumber(+suffix), createdAt, partyType, judge, and three deep arrays — docketEntries[] (index, filingDate, receivedAt, documentTitle, documentType, eventCode, filedBy, filedByRole, servedAt, servedPartiesCode, numberOfPages, isFileAttached, isSealed, isStricken, attachments, objections, lodged, signedJudgeName, docketEntryId), petitioners[] (name, state, contactId, serviceIndicator), irsPractitioners[] and privatePractitioners[] (name, barNumber, originalBarState, practiceType, practitionerType, admissionsDate, admissionsStatus). Case -> entries -> parties -> counsel in one request.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_ustaxcourt_order_search, "us-ustaxcourt-order-search", "US Tax Court (DAWSON) — order full-text search", "US Tax Court (DAWSON) — order full-text search",
-  "us_legal", "legal",
-  "https://public-api.dawson.ustaxcourt.gov/public-api/order-search?dateRange=allDates&keyword=summary",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Full-text search across Tax Court orders. Each result: caseCaption, docketNumber(+suffix), documentTitle, documentType, eventCode, filingDate, signedJudgeName and docketEntryId. The docketNumber pivots straight to the case-detail endpoint and the docketEntryId to the signed PDF URL endpoint. Supports dateRange=customDates&startDate=&endDate= and judge filters.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

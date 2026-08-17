@@ -6,13 +6,6 @@
  * rather than hand-editing. */
 #include "_verified_macros.inc"
 
-VJSON(eu_eib_projects_list, "eu-eib-projects-list", "European Investment Bank — financed project list", "European Investment Bank — financed project list",
-  "eu_procurement", "procurement",
-  "https://www.eib.org/page-provider/projects/list?or=&pageNumber=0&itemPerPage=5&pageable=true&language=EN&sortColumn=projectStatusDate",
-  "data",
-  "en", "[\"eu\",\"procurement\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "Every EIB loan/financing operation back to 1959. Rows give project id, description of the works financed, status and signature date plus signed and disbursed amounts in additionalInformation, and primaryTags carrying the country (label + ISO code) and sector (label + code). The url field is the numeric project id used for the detail page.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(eu_kohesio_beneficiaries, "eu-kohesio-beneficiaries", "Kohesio (EU) — cohesion-fund beneficiary list", "Kohesio (EU) — cohesion-fund beneficiary list",
   "eu_procurement", "procurement",
   "https://kohesio.ec.europa.eu/api/beneficiaries?limit=5",

@@ -19,13 +19,6 @@ VCSV(us_epa_echo_download_csv, "us-epa-echo-download-csv", "EPA ECHO — bulk CS
   "en", "[\"us\",\"environment\",\"batch16\",\"high-penetrancy\"]", 10800,
   "Dumps an entire ECHO query result set as CSV instead of paging get_qid. Columns are selected by index via qcolumns (1,2,3 = FacName, FacStreet, FacCity; RegistryID always included). 30,577 data rows in the observed response. Same qid-recycling caveat: take qid from the paired search call's QueryID.");
 
-VJSON(us_epa_envirofacts_br_reporting, "us-epa-envirofacts-br-reporting", "EPA RCRA Biennial Report — hazardous waste generation", "EPA RCRA Biennial Report — hazardous waste generation",
-  "us_environment", "environment",
-  "https://data.epa.gov/efservice/br_reporting/rows/0:0/JSON",
-  "",
-  "en", "[\"us\",\"environment\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 10800,
-  "Biennial hazardous-waste report rows: handler_id (EPA Handler ID), activity_location (state), source_type (B = biennial), sequence number, waste description, generation quantity, management method and receiving facility. The tonnage behind a RCRA generator.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_epa_envirofacts_frs_facility_site, "us-epa-envirofacts-frs-facility-site", "EPA Envirofacts — FRS facility site master", "EPA Envirofacts — FRS facility site master",
   "us_environment", "environment",
   "https://data.epa.gov/efservice/frs_facility_site/state_code/RI/rows/0:1/JSON",
@@ -54,26 +47,12 @@ VJSON(us_epa_envirofacts_icis_facility_interest, "us-epa-envirofacts-icis-facili
   "en", "[\"us\",\"environment\",\"batch16\",\"high-penetrancy\"]", 10800,
   "Facility-side of ICIS-NPDES: location_address, city, state, zip, geocoding coordinates and format code, facility UIN, federal/state flag. Joins ICIS permits to physical sites and to FRS.");
 
-VJSON(us_epa_envirofacts_pcs_permit_facility, "us-epa-envirofacts-pcs-permit-facility", "EPA PCS — NPDES permitted discharger master", "EPA PCS — NPDES permitted discharger master",
-  "us_environment", "environment",
-  "https://data.epa.gov/efservice/pcs_permit_facility/rows/0:0/JSON",
-  "",
-  "en", "[\"us\",\"environment\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 10800,
-  "Permit Compliance System discharger record: npdes (permit number, the join key), name_1 and name_2 (facility and process description), major_discharge_indicator, region, city_code/city_name, county_code/county_name, state, SIC, permit dates. Pivots to that permit's inspections and enforcement actions.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_epa_envirofacts_tri_chem_info, "us-epa-envirofacts-tri-chem-info", "EPA Envirofacts — TRI chemical dictionary", "EPA Envirofacts — TRI chemical dictionary",
   "us_environment", "environment",
   "https://data.epa.gov/efservice/tri_chem_info/rows/0:1/JSON",
   "",
   "en", "[\"us\",\"environment\",\"batch16\",\"high-penetrancy\"]", 10800,
   "Resolves tri_chem_id to a substance: chem_name, active_date/inactive_date, caac_ind (Clean Air Act chemical), carc_ind (carcinogen), r3350_ind, metal_ind, feds_ind, classification, pbt_start_year (persistent bioaccumulative toxic).");
-
-VJSON(us_epa_envirofacts_tri_facility, "us-epa-envirofacts-tri-facility", "EPA Envirofacts — TRI facility master", "EPA Envirofacts — TRI facility master",
-  "us_environment", "environment",
-  "https://data.epa.gov/efservice/tri_facility/state_abbr/TX/rows/0:2/JSON",
-  "",
-  "en", "[\"us\",\"environment\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 10800,
-  "Toxics Release Inventory reporting facilities. Per row: tri_facility_id, facility_name, street_address, city_name, county_name, state_county_fips_code, state_abbr, zip_code, EPA region, fac_closed_ind, and the full mailing-address block (mail_name/street/city). Filter by any column: /efservice/tri_facility/<column>/<value>/rows/0:N/JSON. Joins straight into tri_reporting_form.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 VJSON(us_epa_envirofacts_tri_reporting_form, "us-epa-envirofacts-tri-reporting-form", "EPA Envirofacts — TRI Form R submissions", "EPA Envirofacts — TRI Form R submissions",
   "us_environment", "environment",
@@ -88,13 +67,6 @@ VJSON(us_ny_dec_remediation_spills, "us-ny-dec-remediation-spills", "New York St
   "fields",
   "en", "[\"us\",\"environment\",\"batch16\",\"high-penetrancy\"]", 10800,
   "NY Division of Environmental Remediation site register: SITECODE, SITENAME, PROGRAM, SITECLASS, ADDRESS1/2, LOCALITY, ZIPCODE, COUNTY, TOWN, REGION, UTMX/UTMY, METHOD, and per-record DETAIL_URL, DOC_URL, BROWN_URL, CLASS_URL fields that link straight to the DEC case file and documents. Rate-sensitive: it reset the connection on repeated rapid hits.");
-
-VJSON(us_sdwis_water_system, "us-sdwis-water-system", "EPA SDWIS — public water system master", "EPA SDWIS — public water system master",
-  "us_environment", "environment",
-  "https://data.epa.gov/efservice/water_system/state_code/RI/rows/0:1/JSON",
-  "",
-  "en", "[\"us\",\"environment\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 10800,
-  "Every regulated public water system. pwsid (the key for the whole SDWIS family), pws_name, primacy_agency_code, epa_region, season_begin/end_date, pws_activity_code, pws_deactivation_date, pws_type_code (CWS/TNCWS/NTNCWS), gw_sw_code (groundwater/surface), dbpr and lt2 schedule categories, cds_id, population served. Pivots directly to that system's drinking-water violations.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 VJSON(us_sdwis_water_system_facility, "us-sdwis-water-system-facility", "EPA SDWIS — physical facilities within a water system", "EPA SDWIS — physical facilities within a water system",
   "us_environment", "environment",

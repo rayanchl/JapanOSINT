@@ -69,20 +69,6 @@ VJSON(unsd_sdg_geoarea_list, "unsd-sdg-geoarea-list", "UN Statistics — SDG geo
   "en", "[\"int\",\"government\",\"batch17\",\"high-penetrancy\"]", 86400,
   "460 UN M49 geographic areas (countries, regions, aggregates) with geoAreaCode and geoAreaName — the join key for every SDG observation.");
 
-VJSON(unsd_sdg_goal_list, "unsd-sdg-goal-list", "UN Statistics — SDG goals", "UN Statistics — SDG goals",
-  "int_government", "government",
-  "https://unstats.un.org/sdgapi/v1/sdg/Goal/List",
-  "",
-  "en", "[\"int\",\"government\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "The 17 SDG goals with code, title, description and API uri. Detail hop verified with code 1 — returns that goal's targets, so this is the entry point to the whole SDG tree.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
-VJSON(unsd_sdg_indicator_list, "unsd-sdg-indicator-list", "UN Statistics — SDG indicators", "UN Statistics — SDG indicators",
-  "int_government", "government",
-  "https://unstats.un.org/sdgapi/v1/sdg/Indicator/List",
-  "",
-  "en", "[\"int\",\"government\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "251 official SDG indicators: goal, target, indicator code, full description, tier classification and the nested series that measure it. Detail hop verified with code 1.1.1 — returns every data series under that indicator.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
 VJSON(unsd_sdg_series_data, "unsd-sdg-series-data", "UN Statistics — SDG observations (extreme poverty series)", "UN Statistics — SDG observations (extreme poverty series)",
   "int_government", "government",
   "https://unstats.un.org/sdgapi/v1/sdg/Series/Data?seriesCode=SI_POV_DAY1&pageSize=500",
@@ -104,9 +90,3 @@ VJSON(unsd_sdg_target_list, "unsd-sdg-target-list", "UN Statistics — SDG targe
   "en", "[\"int\",\"government\",\"batch17\",\"high-penetrancy\"]", 86400,
   "All 169 SDG targets with goal, code (1.1), full target text, description and the nested indicator list belonging to each target.");
 
-VJSON(worldbank_microdata_catalog, "worldbank-microdata-catalog", "World Bank — microdata survey catalogue", "World Bank — microdata survey catalogue",
-  "int_government", "government",
-  "https://microdata.worldbank.org/index.php/api/catalog/search?ps=100&format=json",
-  "result.rows",
-  "en", "[\"int\",\"government\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Survey and census catalogue across the World Bank, UNHCR, IHSN and national statistics offices: title, idno, DOI, survey type, country, authoring entity, collection years, form model, repository. Detail hop verified with idno AFG_2024_CBPM-Q3_v01_M (note: it takes the idno string, NOT the numeric id — the numeric id returns IDNO-NOT-FOUND).  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

@@ -20,13 +20,6 @@ VJSON(np_bipad_citizen_report, "np-bipad-citizen-report", "Nepal BIPAD - citizen
   "en", "[\"np\",\"disaster\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Public-submitted incident reports before verification: description of the event, GeoJSON point, image URL, comment, verified flag and createdOn/modifiedOn. Shows what was reported versus what the state later confirmed.");
 
-VJSON(np_bipad_earthquake, "np-bipad-earthquake", "Nepal BIPAD - earthquake catalogue", "Nepal BIPAD - earthquake catalogue",
-  "np_disaster", "disaster",
-  "https://bipadportal.gov.np/api/v1/earthquake/?format=json&limit=50",
-  "results",
-  "en", "[\"np\",\"disaster\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "National Seismological Centre earthquake catalogue: description (source), magnitude, GeoJSON epicentre point, address (district), eventOn timestamp and the ward/municipality/district/province codes. Detail endpoint verified with id 698.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
 VJSON(np_bipad_event, "np-bipad-event", "Nepal BIPAD - declared disaster events", "Nepal BIPAD - declared disaster events",
   "np_disaster", "disaster",
   "https://bipadportal.gov.np/api/v1/event/?format=json&limit=50",

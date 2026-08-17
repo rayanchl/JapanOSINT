@@ -20,13 +20,6 @@ VJSON(ar_georef_calles, "ar-georef-calles", "Georef Argentina - calles", "Georef
   "es", "[\"ar\",\"geography\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Street-level gazetteer: street id, nombre, category (CALLE/AVENIDA), the full nomenclatura string, house-number ranges per side (altura.inicio/fin, derecha/izquierda) and the parent departamento/localidad_censal/provincia. This is what turns a free-text Argentine address into a normalised one.");
 
-VJSON(ar_georef_departamentos, "ar-georef-departamentos", "Georef Argentina - departamentos", "Georef Argentina - departamentos",
-  "ar_geography", "geography",
-  "https://apis.datos.gob.ar/georef/api/departamentos?max=3",
-  "departamentos",
-  "es", "[\"ar\",\"geography\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "529 departments with id, nombre, centroid and parent province (id + nombre). The ?id= detail hop was probed with a real id (06014) and returned the single matching record. Auto-labels on 'nombre'.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
 VJSON(ar_georef_localidades, "ar-georef-localidades", "Georef Argentina - localidades", "Georef Argentina - localidades",
   "ar_geography", "geography",
   "https://apis.datos.gob.ar/georef/api/localidades?provincia=06&max=3",

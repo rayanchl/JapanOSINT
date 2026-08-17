@@ -12,53 +12,11 @@ VRSS(uk_caselaw_tna_akomantoso_detail, "uk-caselaw-tna-akomantoso-detail", "Find
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
   "National Archives Find Case Law, 8,124 pages of judgments. Each entry: document id (d-uuid), case name, court, date, and alternate links to the HTML page, the PDF on assets.caselaw.nationalarchives.gov.uk, and - the part the tree does not have - the /data.xml Akoma Ntoso representation. That XML carries structured FRBR metadata, neutral citation, court, judges, PARTIES and their counsel, and the fully marked-up judgment body with numbered paragraphs. NOTE: country should read GB.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
-VJSON(uk_govuk_search_cma_cases, "uk-govuk-search-cma-cases", "GOV.UK Search API - CMA competition and merger cases", "GOV.UK Search API - CMA competition and merger cases",
-  "us_legal", "legal",
-  "https://www.gov.uk/api/search.json?filter_format=cma_case&count=3&fields=title,link,description,case_type,case_state,opened_date,closed_date,market_sector",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "2,573 Competition and Markets Authority cases (mergers, cartels, market investigations, consumer enforcement). Per row: title naming the parties, link, description of the transaction/conduct, case_type, case_state (open/closed), opened_date, closed_date, market_sector. Detail hop via the GOV.UK Content API returns the full case page including every published document (decision notices, provisional findings, undertakings, penalty notices) with dates and file URLs. NOTE: country should read GB.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(uk_govuk_search_employment_tribunal, "uk-govuk-search-employment-tribunal", "GOV.UK Search API - Employment Tribunal decisions", "GOV.UK Search API - Employment Tribunal decisions",
-  "us_legal", "legal",
-  "https://www.gov.uk/api/search.json?filter_format=employment_tribunal_decision&count=3&fields=title,link,description,tribunal_decision_categories,tribunal_decision_decision_date",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Employment Tribunal judgments, title carries claimant v respondent employer and case number (e.g. 2600557/2024), plus decision categories and decision date. Detail hop via the Content API yields the full decision page with the downloadable judgment documents. Names employers found liable for discrimination, unfair dismissal, whistleblowing detriment. NOTE: country should read GB.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(uk_govuk_search_tax_tribunal, "uk-govuk-search-tax-tribunal", "GOV.UK Search API - Tax and Chancery Tribunal decisions", "GOV.UK Search API - Tax and Chancery Tribunal decisions",
-  "us_legal", "legal",
-  "https://www.gov.uk/api/search.json?filter_format=tax_tribunal_decision&count=3&fields=title,link,description,tribunal_decision_category,tribunal_decision_decision_date",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Upper Tribunal Tax and Chancery decisions - HMRC v taxpayer, financial-services regulatory references, VAT and avoidance-scheme litigation. Neutral citation, parties, category and decision date; Content API detail hop returns the full judgment. NOTE: country should read GB.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(uk_govuk_search_utaac_decisions, "uk-govuk-search-utaac-decisions", "GOV.UK Search API - Upper Tribunal (Administrative Appeals) decisions", "GOV.UK Search API - Upper Tribunal (Administrative Appeals) decisions",
-  "us_legal", "legal",
-  "https://www.gov.uk/api/search.json?filter_format=utaac_decision&count=3&fields=title,link,description,tribunal_decision_categories,tribunal_decision_decision_date,tribunal_decision_judges",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Upper Tribunal AAC decisions with neutral citation ([2026] UKUT 276 (AAC)), parties, subject categories, decision date and the judges. Content API detail hop returns the full decision document. NOTE: country should read GB.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VRSS(us_cafc_feed, "us-cafc-feed", "US Court of Appeals for the Federal Circuit — opinions/orders feed", "US Court of Appeals for the Federal Circuit — opinions/orders feed",
   "us_legal", "legal",
   "https://www.cafc.uscourts.gov/feed/",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "100 items: precedential and nonprecedential Federal Circuit opinions and orders with title (case name + appeal number), link to the PDF, dc:creator, pubDate and content. The appellate court for all US patent, trade and government-contract appeals.");
-
-VJSON(us_cap_reporter_volumes, "us-cap-reporter-volumes", "Caselaw Access Project — reporter volume index", "Caselaw Access Project — reporter volume index",
-  "us_legal", "legal",
-  "https://static.case.law/a2d/VolumesMetadata.json",
-  "",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Harvard CAP's full static corpus (api.case.law is retired; this R2 bucket replaces it and is keyless). One reporter (a2d = Atlantic Reporter 2d) lists 967 volumes with volume_number, title, publisher, publication_year, start_year/end_year and jurisdictions[] (id, name, name_long, slug). The bucket root https://static.case.law/ lists every reporter slug.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_cap_volume_cases, "us-cap-volume-cases", "Caselaw Access Project — cases in a volume", "Caselaw Access Project — cases in a volume",
-  "us_legal", "legal",
-  "https://static.case.law/a2d/100/CasesMetadata.json",
-  "",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Every case in one reporter volume: id, name, name_abbreviation, decision_date, docket_number, first_page/last_page, citations[] (type official/parallel, cite), court object, jurisdiction, and the file_name that forms the case-detail path. Second hop of the CAP chain.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 VJSON(us_courtlistener_aba_ratings, "us-courtlistener-aba-ratings", "CourtListener — ABA judicial nominee ratings", "CourtListener — ABA judicial nominee ratings",
   "us_legal", "legal",
@@ -87,20 +45,6 @@ VJSON(us_courtlistener_fd_investments, "us-courtlistener-fd-investments", "Court
   "results",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Line-item holdings from a judge's financial disclosure: page_number, description of the asset, redacted flag, income_during_reporting_period_code and _type, gross_value_code and _method, transaction_during_reporting_period, transaction_date, transaction_value_code, transaction_gain_code, transaction_partner. This is the conflict-of-interest layer behind a judge.");
-
-VJSON(us_courtlistener_financial_disclosures, "us-courtlistener-financial-disclosures", "CourtListener — federal judge financial disclosure filings", "CourtListener — federal judge financial disclosure filings",
-  "us_legal", "legal",
-  "https://www.courtlistener.com/api/rest/v4/financial-disclosures/?person=1213",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Annual EIGA financial-disclosure reports filed by federal judges: id, year, page_count, filepath (scanned PDF), thumbnail, has_been_extracted, is_amended, addendum_content_raw, plus report_type. The id is the parent key for the seven line-item endpoints below (investments, gifts, debts, agreements, reimbursements, spouse income, outside positions).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_courtlistener_people_by_lastname, "us-courtlistener-people-by-lastname", "CourtListener — judge lookup by surname", "CourtListener — judge lookup by surname",
-  "us_legal", "legal",
-  "https://www.courtlistener.com/api/rest/v4/people/?name_last=Sotomayor",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Name-filtered judge lookup (name_last, name_first also supported) returning the full person record incl. embedded aba_ratings. The entity-pivot form: feed a surname, get the person id, then walk positions/educations/disclosures.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 VJSON(us_courtlistener_political_affiliations, "us-courtlistener-political-affiliations", "CourtListener — judge political affiliation history", "CourtListener — judge political affiliation history",
   "us_legal", "legal",
@@ -136,20 +80,6 @@ VJSON(us_courtlistener_search_oral_argument, "us-courtlistener-search-oral-argum
   "results",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Oral-argument recordings, count 1624 for one term. Rows give absolute_url to /audio/{id}/, caseName, court, dateArgued, docketNumber, duration and the mp3 local path.");
-
-VJSON(us_courtlistener_search_people, "us-courtlistener-search-people", "CourtListener — judge search (type=p)", "CourtListener — judge search (type=p)",
-  "us_legal", "legal",
-  "https://www.courtlistener.com/api/rest/v4/search/?q=Roberts&type=p",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Federal and state judges, count 664 for one surname. Rows carry id, name_full, absolute_url, court list, appointer, selection_method, aba_rating array, political_affiliation, school, date_start/date_termination. The id feeds every judge detail hop below.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_courtlistener_search_recap_dockets, "us-courtlistener-search-recap-dockets", "CourtListener RECAP — federal docket search (anonymous-accessible)", "CourtListener RECAP — federal docket search (anonymous-accessible)",
-  "us_legal", "legal",
-  "https://www.courtlistener.com/api/rest/v4/search/?q=Google&type=r",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Federal PACER/RECAP dockets. count 98124 dockets / document_count 520436 for one query. Each row carries docketNumber, caseName, court, assignedTo judge name + assigned_to_id, referredTo, dateFiled, dateTerminated, cause, natureOfSuit, juryDemand, and a nested recap_documents[] array with entry_number, description, is_available, filepath_local and page_count. This is the deep RECAP hop that works WITHOUT a token (the REST /dockets/ endpoint is 401 anonymously).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 VJSON(us_courtlistener_search_recap_documents, "us-courtlistener-search-recap-documents", "CourtListener RECAP — docket-entry/document search", "CourtListener RECAP — docket-entry/document search",
   "us_legal", "legal",
@@ -193,13 +123,6 @@ VJSON(us_ecfr_corrections, "us-ecfr-corrections", "eCFR — official corrections
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Published corrections against a CFR title: id, cfr_references[] with the exact cfr_reference string and full hierarchy, corrective_action text, error_corrected and error_occurred dates, fr_citation, position, display_in_toc, year, last_modified. The errata trail on federal regulation.");
 
-VJSON(us_ecfr_titles, "us-ecfr-titles", "eCFR — CFR title index and currency", "eCFR — CFR title index and currency",
-  "us_legal", "legal",
-  "https://www.ecfr.gov/api/versioner/v1/titles.json",
-  "titles",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "All 50 CFR titles, keyless: number, name, latest_amended_on, latest_issue_date, up_to_date_as_of, reserved. The freshness ledger for the whole Code of Federal Regulations and the entry point for the versioner endpoints.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_epa_echo_case_report, "us-epa-echo-case-report", "EPA ECHO — enforcement case detail report", "EPA ECHO — enforcement case detail report",
   "us_legal", "legal",
   "https://echodata.epa.gov/echo/case_rest_services.get_case_report?output=JSON&p_activity_id=275",
@@ -213,40 +136,12 @@ VCSV(us_fed_enforcement_actions_csv, "us-fed-enforcement-actions-csv", "Federal 
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "455 KB CSV, columns: Effective Date, Termination Date, Individual (the NAMED person barred or fined), Individual Affiliation (their bank and city/state), Banking Organization (for entity actions), Action (Prohibition from Banking, Written Agreement, Cease and Desist, Civil Money Penalty), URL to the press release, Name, Note. Both the institution-level and the named-individual-level enforcement record of the Federal Reserve, in one file, no scraping.");
 
-VJSON(us_federalregister_by_cfr, "us-federalregister-by-cfr", "Federal Register — documents affecting a CFR part", "Federal Register — documents affecting a CFR part",
-  "us_legal", "legal",
-  "https://www.federalregister.gov/api/v1/documents.json?conditions%5Bcfr%5D%5Btitle%5D=40&conditions%5Bcfr%5D%5Bpart%5D=63&per_page=5",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Every FR document that amends a given CFR title/part (count 1,532 for 40 CFR 63). Gives the rulemaking history of a specific regulation, with next_page_url cursor. Joins directly to the eCFR endpoints above.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_federalregister_by_docket, "us-federalregister-by-docket", "Federal Register — documents filtered by agency docket id", "Federal Register — documents filtered by agency docket id",
-  "us_legal", "legal",
-  "https://www.federalregister.gov/api/v1/documents.json?conditions%5Btype%5D%5B%5D=PRORULE&conditions%5Bdocket_id%5D=FAA-2022-0674&per_page=5",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Pulls every FR notice/rule filed under a specific agency docket number, optionally narrowed by document type. Returns title, type, publication_date, document_number, html_url, abstract. The bridge between a Regulations.gov docket and its Federal Register publications.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_federalregister_document_detail, "us-federalregister-document-detail", "Federal Register — document detail record", "Federal Register — document detail record",
   "us_legal", "legal",
   "https://www.federalregister.gov/api/v1/documents/2024-01234.json",
   "agencies",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "The full FR document behind a document_number: abstract, action, agencies[], body_html_url, cfr_references, comments_close_on, dates, docket_ids[], document_number, effective_on, excerpts, full_text_xml_url, html_url, json_url, page ranges, pdf_url, president, publication_date, raw_text_url, regulation_id_numbers (RINs), regulations_dot_gov_info, significant, signing_date, subtype, title, topics[], type. The tree has the LIST endpoint but not this detail hop.");
-
-VJSON(us_federalregister_executive_orders, "us-federalregister-executive-orders", "Federal Register — presidential documents / executive orders", "Federal Register — presidential documents / executive orders",
-  "us_legal", "legal",
-  "https://www.federalregister.gov/api/v1/documents.json?conditions%5Bpresidential_document_type%5D%5B%5D=executive_order&per_page=5&order=newest",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Executive orders, proclamations, memoranda and notices (count 1,556 EOs). Each row: title, executive_order_number, signing_date, publication_date, president, document_number, html_url, pdf_url, disposition_notes. Swap presidential_document_type for proclamation/memorandum/notice/determination.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_federalregister_public_inspection_by_date, "us-federalregister-public-inspection-by-date", "Federal Register — public inspection documents by date", "Federal Register — public inspection documents by date",
-  "us_legal", "legal",
-  "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2026-08-14",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Documents on public inspection on a given day — 24 to 72 hours BEFORE they publish (88 rows for one date). agencies[], title, type, document_number, filed_at, publication_date, pdf_url, html_url, raw_text_url, docket_numbers. The early-warning feed; the tree only has /current.json.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 VJSON(us_federalregister_public_inspection_detail, "us-federalregister-public-inspection-detail", "Federal Register — public inspection document detail", "Federal Register — public inspection document detail",
   "us_legal", "legal",
@@ -353,20 +248,6 @@ VJSON(us_legistar_seattle_bodies, "us-legistar-seattle-bodies", "Legistar — le
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Council, committees, boards and commissions: BodyId, BodyGuid, BodyName, BodyTypeId/Name, BodyMeetFlag, BodyActiveFlag, BodyDescription, BodyContactNameId, BodyLastModifiedUtc. The org chart above matters and events.");
 
-VJSON(us_legistar_seattle_eventitems, "us-legistar-seattle-eventitems", "Legistar — agenda items inside a meeting", "Legistar — agenda items inside a meeting",
-  "us_legal", "legal",
-  "https://webapi.legistar.com/v1/seattle/events/1326/eventitems",
-  "",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "What was actually taken up at a meeting: EventItemId, EventItemEventId, EventItemAgendaSequence, EventItemMinutesSequence, EventItemAgendaNumber, EventItemTitle, EventItemActionName, EventItemActionText, EventItemPassedFlag, EventItemMatterId (links back to the legislation), EventItemMover/Seconder, EventItemVideo, EventItemTally. Verified meeting -> item -> matter hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_legistar_seattle_events, "us-legistar-seattle-events", "Legistar — council/committee meetings", "Legistar — council/committee meetings",
-  "us_legal", "legal",
-  "https://webapi.legistar.com/v1/seattle/events?$top=1",
-  "",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Meetings: EventId, EventGuid, EventBodyId, EventBodyName (e.g. 'Parks, Seattle Center, Libraries, and Gender Pay Equity Committee'), EventDate, EventTime, EventLocation, EventAgendaFile, EventMinutesFile, EventVideoPath, EventInSiteURL, EventLastModifiedUtc. EventId opens the agenda-item hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_legistar_seattle_matter_attachments, "us-legistar-seattle-matter-attachments", "Legistar — documents attached to a matter", "Legistar — documents attached to a matter",
   "us_legal", "legal",
   "https://webapi.legistar.com/v1/seattle/matters/17258/attachments",
@@ -394,13 +275,6 @@ VJSON(us_legistar_seattle_matter_versions, "us-legistar-seattle-matter-versions"
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Key/Value pairs mapping each internal text id to its version number ([{\"Key\":\"18624\",\"Value\":\"1\"},...]), letting you retrieve every successive draft of an ordinance and diff what changed between readings.");
-
-VJSON(us_legistar_seattle_matters, "us-legistar-seattle-matters", "Legistar — Seattle City Council legislation (matters)", "Legistar — Seattle City Council legislation (matters)",
-  "us_legal", "legal",
-  "https://webapi.legistar.com/v1/seattle/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
-  "",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Granicus Legistar municipal-legislature API, keyless, OData-queryable ($top/$skip/$filter/$orderby). Each matter: MatterId, MatterGuid, MatterFile (e.g. 'CB 121253'), MatterName, MatterTitle (the full ordinance text summary), MatterTypeName, MatterStatusName, MatterBodyId/Name, MatterIntroDate, MatterAgendaDate, MatterPassedDate, MatterEnactmentDate, MatterEnactmentNumber, MatterRequester, MatterNotes, MatterVersion, MatterLastModifiedUtc. MatterId opens four verified sub-resources (sponsors, histories, attachments, versions).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 VJSON(us_legistar_seattle_persons, "us-legistar-seattle-persons", "Legistar — council members and filers", "Legistar — council members and filers",
   "us_legal", "legal",

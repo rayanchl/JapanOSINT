@@ -371,6 +371,76 @@ _DEF_RE = re.compile(r"\bsource_def\s+([A-Za-z_]\w*)\s*=\s*\{")
 _REG_RE = re.compile(r"\bREGISTER_SOURCE\s*\(\s*([A-Za-z_]\w*)\s*\)")
 
 
+_HP_REG_RE = re.compile(r"\bHP_REGISTER_TABLE\s*\(\s*([A-Za-z_]\w*)\s*\)")
+
+
+def hp_table_registrations(text):
+    """-> list of (id, symbol, collector) for every hp_source table row.
+
+    THE BLIND SPOT THIS CLOSES. hp rows do not go through REGISTER_SOURCE: a
+    table declares N rows and HP_REGISTER_TABLE hands them to hp_register(),
+    which builds the source_defs at startup. So the counter above saw ZERO of
+    them — 30 shipped tables' worth — and `make source-floor`, whose entire job
+    is to fail when a source vanishes, could not see an hp row disappear.
+
+    It showed up when 362 verified rows moved from VJSON onto hpengine to pick
+    up their detail hops: the count fell by exactly 362 while nothing had been
+    lost, and the floor gate stayed green through a change it should have had an
+    opinion about."""
+    out = []
+    for m in _HP_REG_RE.finditer(text):
+        tbl = m.group(1)
+        dm = re.search(r"\bhp_source\s+" + re.escape(tbl) + r"\s*\[\s*\]\s*=\s*\{",
+                       text)
+        if not dm:
+            continue
+        block = _brace_block(text, dm.end() - 1)
+        # _brace_block hands back the table's OWN braces too, so the rows are
+        # one level in from here.
+        inner = block[1:-1] if block.startswith("{") else block
+        for row in _split_top_level_braces(inner):
+            idm = re.search(r"\.id\s*=", row)
+            if not idm:
+                continue
+            sid = _read_string_concat(row, idm.end())
+            cm = re.search(r"\.collector\s*=", row)
+            coll = _read_string_concat(row, cm.end()) if cm else None
+            if sid:
+                out.append((sid, tbl, coll))
+    return out
+
+
+def _split_top_level_braces(text):
+    """Yield each `{...}` element of an initialiser list, skipping over string
+    literals. String-awareness is not optional here: an hp row's own fields
+    carry braces INSIDE quotes — `.detail_url = "https://…/catalog/{v}"` — and a
+    scan that counts those as nesting splits rows in the wrong places and loses
+    most of the table."""
+    depth, start, i, n = 0, None, 0, len(text)
+    while i < n:
+        c = text[i]
+        if c == '"' or c == "'":
+            q = c
+            i += 1
+            while i < n:
+                if text[i] == "\\":
+                    i += 2
+                    continue
+                if text[i] == q:
+                    break
+                i += 1
+        elif c == "{":
+            depth += 1
+            if depth == 1:
+                start = i
+        elif c == "}":
+            depth -= 1
+            if depth == 0 and start is not None:
+                yield text[start:i + 1]
+                start = None
+        i += 1
+
+
 def registrations(path):
     """-> (list of (id, symbol, collector), list of unresolved symbols)."""
     text = preprocess_tu(path)
@@ -390,6 +460,7 @@ def registrations(path):
             found.append((sid, sym, coll))
         else:
             unresolved.append(sym)
+    found.extend(hp_table_registrations(text))
     return found, unresolved
 
 
@@ -672,6 +743,17 @@ def check_dup_endpoint():
                 except ValueError:
                     continue
                 if not s.netloc:
+                    continue
+                # A {v} template is a PER-RECORD detail route, not an endpoint.
+                # It expands to one URL per id drawn from its own row's list, so
+                # 24 country rows sharing ".../catalog/{v}" fetch 24 disjoint
+                # record sets — the opposite of the duplicated work this check
+                # looks for. Counting them collapsed every shared platform hop
+                # (IHSN, GLEIF, d-portal, UNDP) into a false duplicate.
+                # Note {v} specifically and not the other tokens: two rows
+                # sharing a {q} SEARCH url really would answer the same query
+                # twice, and that is still worth reporting.
+                if "{v}" in u:
                     continue
                 key = (s.netloc.lower(), s.path.rstrip("/"), s.query)
                 by_url.setdefault(key, set()).add(os.path.relpath(p, REPO))

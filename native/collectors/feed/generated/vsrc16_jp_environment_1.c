@@ -40,13 +40,6 @@ VJSON(jp_safecast_bgeigie_import_detail, "jp-safecast-bgeigie-import-detail", "S
   "en", "[\"jp\",\"environment\",\"batch16\",\"high-penetrancy\"]", 10800,
   "One survey batch with the downloadable raw log URL, checksum, per-stage processing status, 4,147 measurement count, contributor credits and the route description. Links a named volunteer to a geolocated radiation survey.");
 
-VJSON(jp_safecast_bgeigie_imports, "jp-safecast-bgeigie-imports", "Safecast bGeigie import batches", "Safecast bGeigie import batches",
-  "jp_environment", "environment",
-  "https://api.safecast.org/bgeigie_imports.json?limit=3",
-  "",
-  "en", "[\"jp\",\"environment\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 10800,
-  "Each uploaded survey drive: import id, user_id, source.url (the raw .LOG file on S3), md5sum, status and status_details, measurements_count, lines_count, approved flag, created/updated, name, description, credits, height, orientation and the cities covered — often in Japanese. Not present in the tree.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(jp_safecast_measurement_detail, "jp-safecast-measurement-detail", "Safecast measurement detail", "Safecast measurement detail",
   "jp_environment", "environment",
   "https://api.safecast.org/measurements/230413448.json",
@@ -54,9 +47,3 @@ VJSON(jp_safecast_measurement_detail, "jp-safecast-measurement-detail", "Safecas
   "en", "[\"jp\",\"environment\",\"batch16\",\"high-penetrancy\"]", 10800,
   "Single reading with its uploading user_id, device_id, original_id and measurement_import_id — the keys that pivot to the contributor and the drive log.");
 
-VJSON(jp_safecast_measurements, "jp-safecast-measurements", "Safecast radiation measurements", "Safecast radiation measurements",
-  "jp_environment", "environment",
-  "https://api.safecast.org/measurements.json?limit=3",
-  "",
-  "en", "[\"jp\",\"environment\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 10800,
-  "Volunteer radiation readings: id, user_id, value, unit (cpm), device_id, devicetype_id, sensor_id, station_id, channel_id, captured_at, height, latitude, longitude, and measurement_import_id linking back to the upload batch.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

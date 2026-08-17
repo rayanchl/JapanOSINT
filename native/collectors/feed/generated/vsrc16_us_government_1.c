@@ -110,48 +110,6 @@ VJSON(us_ma_ocpf_districts, "us-ma-ocpf-districts", "Massachusetts OCPF - legisl
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "office (House/Senate/Governor's Council/Statewide), code, description, incumbentName, officeTypeGroupId - the district lookup that joins filers to seats.");
 
-VJSON(us_ma_ocpf_filer, "us-ma-ocpf-filer", "Massachusetts OCPF - filer (candidate/committee) profile", "Massachusetts OCPF - filer (candidate/committee) profile",
-  "us_government", "government",
-  "https://api.ocpf.us/filer/15021",
-  "tags",
-  "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "cpfId, candidate first/last name, committeeName, accountType (candidate/PAC/ballot-question/party flags), officeSought, district, treasurer, depository bank id and name, address, isActive/isClosed, treasurerTrainingCompletionDate. Entry point for a person -> committee -> reports -> donors chain.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_ma_ocpf_iepacs, "us-ma-ocpf-iepacs", "Massachusetts OCPF - independent-expenditure PAC reports", "Massachusetts OCPF - independent-expenditure PAC reports",
-  "us_government", "government",
-  "https://api.ocpf.us/miscreports/iepacs/reports/2026",
-  "",
-  "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Per IE-PAC filing: reportId, cpfId, committeeName, treasurer first/last name, street address, city/state, reporting period, filing date, amendment lineage. The dark-money layer of MA politics.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_ma_ocpf_municipalities, "us-ma-ocpf-municipalities", "Massachusetts OCPF - all 351 municipalities with their elected filers", "Massachusetts OCPF - all 351 municipalities with their elected filers",
-  "us_government", "government",
-  "https://api.ocpf.us/municipalities",
-  "",
-  "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Per town: code, city, county, pop2020, localReportsUrl, and electedFilers[] with cpfId, filerName, candidateFullAddress (home address), districtNameHeld, officeNameHeld, partyAffiliation. A complete officeholder roster for the state keyed to campaign-finance ids.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_ma_ocpf_report_detail, "us-ma-ocpf-report-detail", "Massachusetts OCPF - itemised report (donors and spending)", "Massachusetts OCPF - itemised report (donors and spending)",
-  "us_government", "government",
-  "https://api.ocpf.us/report/1038377",
-  "receipts",
-  "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Full contents of one filing: receipts[] with each contributor's name, address, occupation, employer, principalOfficer, amount, date, tenderTypeDescription (Credit Card/Check), relatedCpfId; plus merchantProviderFees, refundedContributions, expenditures, bankName, officeDistrictSought and reporting totals. This is the deepest hop in MA campaign finance.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_ma_ocpf_report_list, "us-ma-ocpf-report-list", "Massachusetts OCPF - all reports for one filer", "Massachusetts OCPF - all reports for one filer",
-  "us_government", "government",
-  "https://api.ocpf.us/reports/reportList/15021?baseReportTypeId=2",
-  "items",
-  "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Every report a committee has filed of a given base type, each already containing its receipts/expenditure arrays, bankName, reportingPeriod, depositSequence and totals. Combined with /reports/baseReportTypes/{cpfId} this enumerates a filer's complete filing history.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_miamidade_arcgis_services, "us-miamidade-arcgis-services", "Miami-Dade County FL ArcGIS service directory", "Miami-Dade County FL ArcGIS service directory",
-  "us_government", "government",
-  "https://gisweb.miamidade.gov/arcgis/rest/services?f=json",
-  "services",
-  "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "21 folders including 311, LandManagement (zoning/platting records), EnerGov (permits), MDFRInspections (fire inspections), MDPD, RER (regulatory & economic resources), CAD911, BusinessTracker. Verified drill-down into /LandManagement.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VGEO(us_nyc_geosearch_autocomplete, "us-nyc-geosearch-autocomplete", "NYC Planning Labs GeoSearch - autocomplete", "NYC Planning Labs GeoSearch - autocomplete",
   "us_government", "government",
   "https://geosearch.planninglabs.nyc/v2/autocomplete?text=120+broadway",
@@ -178,47 +136,12 @@ VJSON(us_phl_arcgis_zoning_basedistricts, "us-phl-arcgis-zoning-basedistricts", 
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Zoning district polygons with code/long_code attributes. The org id fLeGjb7u4uXqeF9q hosts the rest of Philadelphia's authoritative feature services (the service directory at /arcgis/rest/services?f=json enumerates them) and complements the Carto tables with the spatial layer.");
 
-VJSON(us_phl_carto_311, "us-phl-carto-311", "Philadelphia 311 service requests", "Philadelphia 311 service requests",
-  "us_government", "government",
-  "https://phl.carto.com/api/v2/sql?q=SELECT%20*%20FROM%20public_cases_fc%20LIMIT%205",
-  "rows",
-  "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "service_request_id, status, status_notes, service_name, service_code, requested_datetime, updated_datetime, expected_datetime, agency_responsible, address, zipcode, lat/lon, media_url. Verified detail lookup by service_request_id=10007982.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_phl_carto_li_permits, "us-phl-carto-li-permits", "Philadelphia L&I building permits", "Philadelphia L&I building permits",
-  "us_government", "government",
-  "https://phl.carto.com/api/v2/sql?q=SELECT%20*%20FROM%20li_permits%20LIMIT%205",
-  "rows",
-  "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "permitnumber, permittype, permit_type_name, typeofwork, descriptionofwork, status, permitissuedate, address, unit, zip, opa_account_num, ownername, organization, contractorname/contractortype, censustract. Pivots straight into the violations and case tables by opa_account_num.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_phl_carto_opa_properties, "us-phl-carto-opa-properties", "Philadelphia OPA Property Assessments (Carto SQL API)", "Philadelphia OPA Property Assessments (Carto SQL API)",
-  "us_government", "government",
-  "https://phl.carto.com/api/v2/sql?q=SELECT%20*%20FROM%20opa_properties_public%20LIMIT%205",
-  "rows",
-  "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Full assessor record per parcel: parcel_number (OPA account), location, owner_1/owner_2, mailing_address_1/2 + mailing city/state/zip (the out-of-state LLC address), market_value, sale_date, sale_price, book_and_page, building_code_description, category_code_description, year_built, total_livable_area, zoning, census_tract, council_district, lat/lng. Arbitrary SQL SELECT/WHERE/JOIN is accepted against the table.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_usaspending_agency_federal_account, "us-usaspending-agency-federal-account", "USAspending agency federal-account breakdown", "USAspending agency federal-account breakdown",
-  "us_government", "government",
-  "https://api.usaspending.gov/api/v2/agency/012/federal_account/?fiscal_year=2024&limit=3",
-  "results",
-  "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "157 federal accounts for USDA FY2024, each with code, name, obligated_amount, gross_outlay_amount and children[] listing the treasury account symbols beneath it. The appropriations map of an agency.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_usaspending_agency_object_class, "us-usaspending-agency-object-class", "USAspending agency object-class breakdown", "USAspending agency object-class breakdown",
   "us_government", "government",
   "https://api.usaspending.gov/api/v2/agency/012/object_class/?fiscal_year=2024",
   "results",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "30 object classes per agency-year with name, obligated_amount and gross_outlay_amount - what the money was spent ON (Grants subsidies and contributions, Insurance claims and indemnities, Personnel compensation, Equipment). Detects an agency's spending mix shifting.");
-
-VJSON(us_usaspending_agency_overview, "us-usaspending-agency-overview", "USAspending agency profile", "USAspending agency profile",
-  "us_government", "government",
-  "https://api.usaspending.gov/api/v2/agency/012/",
-  "def_codes",
-  "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Detail hop off a toptier agency code: fiscal_year, toptier_code, name, abbreviation, agency_id, mission statement, website, congressional_justification_url, subtier_agency_count, and def_codes[] listing every disaster/emergency funding statute the agency draws on (code, public_law, title, govinfo URL, disaster type).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 VJSON(us_usaspending_agency_program_activity, "us-usaspending-agency-program-activity", "USAspending agency program-activity breakdown", "USAspending agency program-activity breakdown",
   "us_government", "government",
@@ -241,9 +164,3 @@ VJSON(us_usaspending_federal_obligations, "us-usaspending-federal-obligations", 
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "176 account rows per agency-year with account_title, account_number and obligated_amount, plus page_metadata carrying explicit next/current/previous URLs for exhaustive pagination.");
 
-VJSON(us_usaspending_reporting_agencies_overview, "us-usaspending-reporting-agencies-overview", "USAspending agency data-quality overview", "USAspending agency data-quality overview",
-  "us_government", "government",
-  "https://api.usaspending.gov/api/v2/reporting/agencies/overview/?fiscal_year=2024&fiscal_period=9&limit=3",
-  "results",
-  "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "111 agencies with agency_name, abbreviation, toptier_code, agency_id, current_total_budget_authority_amount, recent_publication_date, discrepancy_count, obligation_difference, unlinked contract/assistance award counts and assurance statement URL. This is the metadata that tells you how trustworthy an agency's reported spending is.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

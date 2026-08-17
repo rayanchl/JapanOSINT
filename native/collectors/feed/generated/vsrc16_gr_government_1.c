@@ -6,20 +6,6 @@
  * rather than hand-editing. */
 #include "_verified_macros.inc"
 
-VJSON(gr_diavgeia_decision_search, "gr-diavgeia-decision-search", "Diavgeia (Greece) — government decision search", "Diavgeia (Greece) — government decision search",
-  "gr_government", "government",
-  "https://diavgeia.gov.gr/opendata/search.json?q=organizationUid:%2215168%22&size=5",
-  "decisions",
-  "el", "[\"gr\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Every published act of every Greek public body, including expenditure approvals, procurement awards and payment orders. Each row gives the ADA (unique decision id), protocol number, full Greek subject line, decision type, issuing organisation and unit, signer, and thematic categories. Queryable by organizationUid, decision type, date and free text — this is the single deepest 'who was paid by whom' feed in Greece.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(gr_diavgeia_dictionaries, "gr-diavgeia-dictionaries", "Diavgeia — controlled-vocabulary index", "Diavgeia — controlled-vocabulary index",
-  "gr_government", "government",
-  "https://diavgeia.gov.gr/opendata/dictionaries.json",
-  "dictionaries",
-  "el", "[\"gr\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Index of the 19 reference dictionaries Diavgeia records reference (CPV, CURRENCY, ADMIN_STRUCTURE_KALLIKRATIS administrative geography, and 16 more), each with uid and label. Each uid dereferences to the full vocabulary.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(gr_diavgeia_positions, "gr-diavgeia-positions", "Diavgeia — official position register", "Diavgeia — official position register",
   "gr_government", "government",
   "https://diavgeia.gov.gr/opendata/positions.json",

@@ -6,54 +6,12 @@
  * rather than hand-editing. */
 #include "_verified_macros.inc"
 
-VJSON(global_ooni_measurements_jp, "global-ooni-measurements-jp", "OONI measurements list (country filtered)", "OONI measurements list (country filtered)",
-  "jp_research", "research",
-  "https://api.ooni.io/api/v1/measurements?limit=3&probe_cc=JP",
-  "results",
-  "en", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Measurement rows with anomaly/confirmed/failure flags, input URL, probe_asn, probe_cc, report_id, blocking scores (general/global/country/isp/local) and, critically, measurement_url — the raw_measurement link used as the detail hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(jp_ihr_hegemony_countries, "jp-ihr-hegemony-countries", "IIJ IHR country-level AS hegemony", "IIJ IHR country-level AS hegemony",
   "jp_research", "research",
   "https://ihr.iijlab.net/ihr/api/hegemony/countries/?country=JP&af=4",
   "results",
   "en", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\"]", 86400,
   "For a country, every transit AS ranked by hegemony score (dependency weight) with timebin, asn, asn_name, weight, weightscheme, transitonly flag. 1,488 rows for JP. Shows which foreign carriers a national internet depends on.");
-
-VJSON(jp_ihr_networks, "jp-ihr-networks", "IIJ Internet Health Report network lookup", "IIJ Internet Health Report network lookup",
-  "jp_research", "research",
-  "https://ihr.iijlab.net/ihr/api/networks/?number=2497",
-  "results",
-  "en", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Resolves an AS number to IHR's canonical network name plus flags for which IHR datasets exist for it (hegemony, delay_forwarding, disco). The index hop before the heavier IHR calls.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(jp_ndl_authority_person, "jp-ndl-authority-person", "Web NDL Authorities - person/corporate name authority record (JSON-LD)", "Web NDL Authorities - person/corporate name authority record (JSON-LD)",
-  "jp_research", "research",
-  "https://id.ndl.go.jp/auth/ndlna/00270232.json",
-  "altlabel",
-  "ja", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Authority record for a named person or organisation: uri, primaryTopic with foaf:Person/foaf:Organization type, prefLabel literalForm plus transcription (kana reading), altLabel variant names and pseudonyms, birth/death dates, related authorities (owl:sameAs to VIAF/LCNAME), source citations and created/modified timestamps. The entity-resolution layer for Japanese personal and corporate names in library data.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(jp_ndl_authority_subject, "jp-ndl-authority-subject", "Web NDL Authorities - subject heading (NDLSH) record", "Web NDL Authorities - subject heading (NDLSH) record",
-  "jp_research", "research",
-  "https://id.ndl.go.jp/auth/ndlsh/00560222.json",
-  "narrower",
-  "ja", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "NDL subject heading as SKOS Concept: uri, prefLabel literalForm with kana transcription, altLabel synonyms, broader/narrower/related concept links, created (back to 1980) and modified dates. Lets you expand or normalise a topic before running an NDL Search query.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(jp_ndl_dl_iiif_manifest, "jp-ndl-dl-iiif-manifest", "NDL Digital Collections - IIIF Presentation manifest", "NDL Digital Collections - IIIF Presentation manifest",
-  "jp_research", "research",
-  "https://dl.ndl.go.jp/api/iiif/1032509/manifest.json",
-  "structures",
-  "ja", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "IIIF 2.x manifest for a digitised NDL item: label, metadata array (Persistent ID info:ndljp/pid/NNNN, Title, Creator, Publisher, Date, call number, rights), attribution, license, and the sequence of canvases with per-page image service URLs. Turns any NDL pid seen in a search result into page-level scanned imagery.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(jp_ndl_lab_dl_book_search, "jp-ndl-lab-dl-book-search", "NDL Lab Next Digital Library - full-text book search", "NDL Lab Next Digital Library - full-text book search",
-  "jp_research", "research",
-  "https://lab.ndl.go.jp/dl/api/book/search?keyword=%E9%98%B2%E7%81%BD",
-  "list",
-  "ja", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Full-text OCR search across NDL Digital Collections public-domain books. 5,426 hits for one keyword; each row carries id (NDL pid), version, title, volume, responsibility statement, publisher, published/publishyear, NDC class, bibId, callNo, leftopen flag, autoTOCFlag and an index array of OCR'd table-of-contents entries with .jp2 page anchors. Also returns an isClassic facet.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 VRSS(jstage_articles_by_issn, "jstage-articles-by-issn", "J-STAGE article search by ISSN (JP)", "J-STAGE article search by ISSN (JP)",
   "jp_research", "research",
@@ -79,30 +37,3 @@ VRSS(jstage_volumes_by_journal, "jstage-volumes-by-journal", "J-STAGE volumes an
   "ja", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
   "377KB: every volume and issue of a Japanese journal with dates and issue-level urls - the journal->issue->article drilldown. Requires cdjournal or issn (ERR_011 otherwise).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
-VJSON(openalex_authors_by_institution, "openalex-authors-by-institution", "OpenAlex authors at an institution", "OpenAlex authors at an institution",
-  "jp_research", "research",
-  "https://api.openalex.org/authors?filter=last_known_institutions.id:I22299242&per_page=10",
-  "results",
-  "en", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Researchers whose last known affiliation is a given institution (meta.count=45,762 at Kyoto University), each with ORCID, name variants, h-index and full affiliation history. The institution->people roster hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(openalex_funders_country_jp, "openalex-funders-country-jp", "OpenAlex funders by country (JP)", "OpenAlex funders by country (JP)",
-  "jp_research", "research",
-  "https://api.openalex.org/funders?filter=country_code:jp&per_page=25",
-  "results",
-  "en", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "1,140 Japanese funding bodies (JSPS/KAKENHI first), each with alternate names in Japanese and English, awards_count, works_count and cross-ids. Entry point for tracing Japanese public research money.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(openalex_institutions_lineage, "openalex-institutions-lineage", "OpenAlex institutions under a parent (lineage)", "OpenAlex institutions under a parent (lineage)",
-  "jp_research", "research",
-  "https://api.openalex.org/institutions?filter=lineage:I22299242&per_page=25",
-  "results",
-  "en", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "All 19 institutions whose lineage contains Kyoto University - the sub-institutes, hospitals and centres rolled up under one parent org, each a full institution record with ROR and geo.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(ror_filter_types_country, "ror-filter-types-country", "ROR organisations by type + country", "ROR organisations by type + country",
-  "jp_research", "research",
-  "https://api.ror.org/organizations?filter=types:Education,country.country_code:JP",
-  "items",
-  "en", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "1,546 Japanese education-type organisations, full records with fundref/GRID/ISNI/Wikidata cross-ids and geonames. Enumerates a country's higher-education sector as a joinable id list.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

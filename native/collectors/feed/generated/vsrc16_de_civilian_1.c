@@ -13,13 +13,6 @@ VJSON(global_osm_map_bbox, "global-osm-map-bbox", "OpenStreetMap raw map extract
   "en", "[\"de\",\"civilian\",\"batch16\",\"high-penetrancy\"]", 21600,
   "Every node, way and relation inside a bounding box with full tags plus per-element version, timestamp, changeset, user and uid. 600 KB for a 1 km square — a full local feature inventory with edit provenance, without touching Overpass.");
 
-VJSON(global_osm_node_history, "global-osm-node-history", "OpenStreetMap element version history", "OpenStreetMap element version history",
-  "de_civilian", "civilian",
-  "https://api.openstreetmap.org/api/0.6/node/240109189/history.json",
-  "elements",
-  "en", "[\"de\",\"civilian\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "Every historical version of one element: version number, timestamp, changeset id, user and uid, and the complete tag set as it stood at that version. Shows who changed what about a feature and when.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(global_osm_node_relations, "global-osm-node-relations", "OpenStreetMap relations containing an element", "OpenStreetMap relations containing an element",
   "de_civilian", "civilian",
   "https://api.openstreetmap.org/api/0.6/node/240109189/relations.json",

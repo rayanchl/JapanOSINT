@@ -6,20 +6,6 @@
  * rather than hand-editing. */
 #include "_verified_macros.inc"
 
-VJSON(de_vbb_transport_rest_locations, "de-vbb-transport-rest-locations", "VBB (Berlin-Brandenburg) location search", "VBB (Berlin-Brandenburg) location search",
-  "de_transport", "transport",
-  "https://v6.vbb.transport.rest/locations?query=Alexanderplatz&results=3",
-  "",
-  "de", "[\"de\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "Stop name -> stop id with lat/lon, products served (suburban/subway/tram/bus/ferry/express/regional booleans), IFOPT id and stationDHID (the German national stop identifier). Entry hop for the departures API.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(eu_transitous_map_stops, "eu-transitous-map-stops", "Transitous stops in a bounding box", "Transitous stops in a bounding box",
-  "de_transport", "transport",
-  "https://api.transitous.org/api/v1/map/stops?min=52.5,13.4&max=52.52,13.42",
-  "",
-  "en", "[\"de\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "All transit stops inside a bbox with stopId, name, lat/lon, level, timezone, free-text description of the physical stop, vertexType and served modes. Geographic entry point into the aggregated feed set.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(eu_transitous_stoptimes, "eu-transitous-stoptimes", "Transitous (MOTIS) stop times", "Transitous (MOTIS) stop times",
   "de_transport", "transport",
   "https://api.transitous.org/api/v1/stoptimes?stopId=de-DELFI_de:11000:900100003&n=5",

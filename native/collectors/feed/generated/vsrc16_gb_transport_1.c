@@ -20,27 +20,6 @@ VJSON(uk_tfl_line_meta_modes, "uk-tfl-line-meta-modes", "TfL transport mode regi
   "en", "[\"gb\",\"transport\",\"batch16\",\"high-penetrancy\"]", 3600,
   "Every mode name with isTflService, isFarePaying and isScheduledService flags. Needed to enumerate the Line API exhaustively instead of hardcoding tube/bus.");
 
-VJSON(uk_tfl_line_route_all, "uk-tfl-line-route-all", "TfL all lines with route sections", "TfL all lines with route sections",
-  "gb_transport", "transport",
-  "https://api.tfl.gov.uk/Line/Route?serviceTypes=Regular",
-  "",
-  "en", "[\"gb\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "Every line in the network (82 KB) with id, name, modeName, created/modified, lineStatuses and routeSections giving each direction's name, originationName/destinationName, originator and destination Naptan codes and validFrom/validTo. Full network graph in one request.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(uk_tfl_line_route_sequence, "uk-tfl-line-route-sequence", "TfL line route sequence with geometry", "TfL line route sequence with geometry",
-  "gb_transport", "transport",
-  "https://api.tfl.gov.uk/Line/victoria/Route/Sequence/inbound",
-  "stations",
-  "en", "[\"gb\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "Ordered station sequence for a line and direction plus the lineStrings polyline geometry, orderedLineRoutes and per-station stationId/icsId/topMostParentId/zone/lat/lon. Physical route trace, not just a stop list.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(uk_tfl_line_stoppoints, "uk-tfl-line-stoppoints", "TfL line -> all stop points", "TfL line -> all stop points",
-  "gb_transport", "transport",
-  "https://api.tfl.gov.uk/Line/victoria/StopPoints",
-  "",
-  "en", "[\"gb\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "Every stop served by a line: naptanId, stationNaptan, hubNaptanCode, icsCode, stopType, modes, the lines and lineGroups served, lineModeGroups, lat/lon and additionalProperties. Line -> station roster hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(uk_tfl_stoppoint_arrivals, "uk-tfl-stoppoint-arrivals", "TfL live arrivals at a stop", "TfL live arrivals at a stop",
   "gb_transport", "transport",
   "https://api.tfl.gov.uk/StopPoint/940GZZLUVIC/Arrivals",
@@ -48,16 +27,3 @@ VJSON(uk_tfl_stoppoint_arrivals, "uk-tfl-stoppoint-arrivals", "TfL live arrivals
   "en", "[\"gb\",\"transport\",\"batch16\",\"high-penetrancy\"]", 3600,
   "Live vehicle predictions: prediction id, vehicleId, lineId/lineName, platformName, direction, bearing, currentLocation free text, towards, timeToStation seconds, expectedArrival, and timing provenance. The deepest live hop off a stop id.");
 
-VJSON(uk_tfl_stoppoint_detail, "uk-tfl-stoppoint-detail", "TfL stop point detail", "TfL stop point detail",
-  "gb_transport", "transport",
-  "https://api.tfl.gov.uk/StopPoint/940GZZLUVIC",
-  "additionalproperties",
-  "en", "[\"gb\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "One station/interchange: naptanId, hubNaptanCode, stopType, all modes, every line calling there, lineGroup and lineModeGroups, children stops (platforms, entrances, bus stands) and additionalProperties (zone, WiFi, toilets, accessibility).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(uk_tfl_stoppoint_search, "uk-tfl-stoppoint-search", "TfL stop point name search", "TfL stop point name search",
-  "gb_transport", "transport",
-  "https://api.tfl.gov.uk/StopPoint/Search/Victoria",
-  "matches",
-  "en", "[\"gb\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "Name -> stop ids with icsId, modes, fare zone, topMostParentId, lat/lon and total match count. The entry point that makes every other TfL id-based hop reachable from a plain place name.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

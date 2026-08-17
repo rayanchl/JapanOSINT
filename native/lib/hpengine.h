@@ -72,6 +72,12 @@ typedef struct hp_source {
   const char *description;
   const char *record_type;    /* stamped on every emitted item             */
   const char *tags;           /* extra JSON array members, e.g. "\"uk\""   */
+  /* BCP-47-ish language of the upstream's own text. NULL → "en", which is the
+   * only value this engine used to emit: every row was stamped English no
+   * matter what it fetched. That is a claim about the content, and it was wrong
+   * for a Brazilian transparency portal or a Korean disclosure filing — the
+   * translate and search paths downstream read it. */
+  const char *lang;
 
   hp_mode mode;
   hp_want want;

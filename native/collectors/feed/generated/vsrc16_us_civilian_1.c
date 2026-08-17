@@ -13,62 +13,6 @@ VJSON(global_nominatim_details, "global-nominatim-details", "Nominatim place det
   "en", "[\"us\",\"civilian\",\"batch16\",\"high-penetrancy\"]", 21600,
   "Deepest Nominatim record: place_id and parent_place_id, all names including old_name, addresstags, calculated_postcode, indexed_date, importance, rank_address/rank_search, isarea, centroid, geometry, admin hierarchy and linked places. The genuine detail hop behind a search hit.");
 
-VJSON(global_nominatim_structured_search, "global-nominatim-structured-search", "Nominatim structured address search", "Nominatim structured address search",
-  "us_civilian", "civilian",
-  "https://nominatim.openstreetmap.org/search?street=1600+Amphitheatre+Parkway&city=Mountain+View&country=USA&format=jsonv2&addressdetails=1&extratags=1&namedetails=1&limit=5",
-  "",
-  "en", "[\"us\",\"civilian\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "Field-by-field address query (street/city/county/state/postalcode/country) returning place_id, osm_type+osm_id, lat/lon, category/type, addresstype, parsed address components with ISO3166-2, extratags (height, building:levels, architect, operator, old descriptions) and namedetails in every language.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(global_osm_way_full, "global-osm-way-full", "OpenStreetMap way with all member nodes", "OpenStreetMap way with all member nodes",
-  "us_civilian", "civilian",
-  "https://api.openstreetmap.org/api/0.6/way/23733659/full.json",
-  "elements",
-  "en", "[\"us\",\"civilian\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "A way plus every node it references, each with lat/lon, timestamp, version, changeset id, editing user name and uid. Turns one feature id into its full geometry and its complete edit provenance.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(littlesis_entity_connections, "littlesis-entity-connections", "LittleSis entity connections (neighbour entities, hydrated)", "LittleSis entity connections (neighbour entities, hydrated)",
-  "us_civilian", "civilian",
-  "https://littlesis.org/api/entities/1/connections",
-  "data",
-  "en", "[\"us\",\"civilian\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "The entities on the other end of every relationship, returned as FULL entity records (name, blurb, biography, types, aliases) rather than ids - so one request gives the whole first-degree network around a company or person already hydrated.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(littlesis_entity_extensions, "littlesis-entity-extensions", "LittleSis entity type extensions", "LittleSis entity type extensions",
-  "us_civilian", "civilian",
-  "https://littlesis.org/api/entities/1/extensions",
-  "data",
-  "en", "[\"us\",\"civilian\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "The typed extension records attached to an entity (Org -> Business -> PublicCompany), each with definition_id and display name. Tells a parser which additional typed field sets exist for that entity.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(littlesis_entity_lists, "littlesis-entity-lists", "LittleSis lists containing an entity", "LittleSis lists containing an entity",
-  "us_civilian", "civilian",
-  "https://littlesis.org/api/entities/1/lists",
-  "data",
-  "en", "[\"us\",\"civilian\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "Every curated list an entity belongs to (Fortune 1000, donor lists, board networks) with list id, description, entity_count and ranking flag. Reverse membership lookup - tells you what cohort researchers have already placed this entity in.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_austin_apd_crime_arcgis, "us-austin-apd-crime-arcgis", "Austin Police Dept reported crimes (city ArcGIS FeatureServer, non-Socrata)", "Austin Police Dept reported crimes (city ArcGIS FeatureServer, non-Socrata)",
-  "us_civilian", "civilian",
-  "https://maps.austintexas.gov/arcgis/rest/services/CrimeViewer_new/APD_Reported_Crimes_new/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=2&f=json",
-  "fields",
-  "en", "[\"us\",\"civilian\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "CRIME_INCIDENT_POINTS_ID, RIN (report incident number), OCCURRENCE_DATE, OCCURRENCE_TIME, OCCURRENCE_WEEK_DAY, ADDRESS_BLOCK, offence fields and point geometry. Full ArcGIS query grammar (where=, time filters, geometry envelope, returnIdsOnly, orderByFields) so it can be paged exhaustively. Detail hop verified with objectIds=4388.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_brookline_311_open311_request_detail, "us-brookline-311-open311-request-detail", "Brookline MA 311 - single service request", "Brookline MA 311 - single service request",
-  "us_civilian", "civilian",
-  "https://spot.brooklinema.gov/open311/v2/requests/SR-138499.json",
-  "",
-  "en", "[\"us\",\"civilian\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "Single-case detail with full status_notes and geocoded address.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_brookline_311_open311_requests, "us-brookline-311-open311-requests", "Brookline MA 311 (SPOT) - Open311 GeoReport v2 requests", "Brookline MA 311 (SPOT) - Open311 GeoReport v2 requests",
-  "us_civilian", "civilian",
-  "https://spot.brooklinema.gov/open311/v2/requests.json",
-  "",
-  "en", "[\"us\",\"civilian\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "service_request_id (SR-nnnnnn), status, status_notes, service_name, service_code, requested_datetime, updated_datetime, address, lat/long, token. Municipal complaint stream for a Boston-area town, keyless.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_brookline_311_open311_services, "us-brookline-311-open311-services", "Brookline MA 311 - service catalogue", "Brookline MA 311 - service catalogue",
   "us_civilian", "civilian",
   "https://spot.brooklinema.gov/open311/v2/services.json",
@@ -83,23 +27,3 @@ VJSON(us_phl_carto_shootings, "us-phl-carto-shootings", "Philadelphia shooting v
   "en", "[\"us\",\"civilian\",\"batch16\",\"high-penetrancy\"]", 21600,
   "Per-victim record: year, dist, dc_key, code, date_, time, race, sex, latino, age, wound, officer_involved, offender_injured/deceased, location. Joins to incidents_part1_part2 on dc_key.");
 
-VJSON(us_sf_311_open311_request_detail, "us-sf-311-open311-request-detail", "San Francisco 311 - single service request", "San Francisco 311 - single service request",
-  "us_civilian", "civilian",
-  "https://mobile311.sfgov.org/open311/v2/requests/101004634285.json",
-  "",
-  "en", "[\"us\",\"civilian\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "Full record for one case id including the complete free-text description, resolution status_notes, media_url and coordinates.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_sf_311_open311_requests, "us-sf-311-open311-requests", "San Francisco 311 - Open311 GeoReport v2 requests", "San Francisco 311 - Open311 GeoReport v2 requests",
-  "us_civilian", "civilian",
-  "https://mobile311.sfgov.org/open311/v2/requests.json?page_size=5",
-  "",
-  "en", "[\"us\",\"civilian\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "Live 311 case feed: service_request_id, status, status_notes, service_name, service_code, description (free text, frequently contains licence plates, vehicle descriptions and named complaints), requested_datetime, updated_datetime, address, lat/long, media_url. Supports &service_code=, &start_date=, &end_date=, &status= filters. One of the only surviving Open311 GeoReport servers in the US.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_sf_311_open311_services, "us-sf-311-open311-services", "San Francisco 311 - service catalogue", "San Francisco 311 - service catalogue",
-  "us_civilian", "civilian",
-  "https://mobile311.sfgov.org/open311/v2/services.json",
-  "",
-  "en", "[\"us\",\"civilian\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "service_code, service_name, metadata flag, type, group for each request category (MTA:Parking Enforcement, RPD:General, PW:BSM:Damage Property...). The service_code values are the filter keys for the requests feed.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

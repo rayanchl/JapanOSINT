@@ -20,13 +20,6 @@ VJSON(who_biographies, "who-biographies", "WHO — official biographies", "WHO �
   "en", "[\"int\",\"health\",\"batch17\",\"high-penetrancy\"]", 43200,
   "Biography records for WHO officials and directors: title, biography HTML, summary, parent record id linking the person to their unit. Named-person data inside a UN agency.");
 
-VJSON(who_collaborating_centres, "who-collaborating-centres", "WHO — collaborating centres directory", "WHO — collaborating centres directory",
-  "int_health", "health",
-  "https://www.who.int/api/news/collaboratingcentres?%24top=50&%24format=json",
-  "value",
-  "en", "[\"int\",\"health\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Designated WHO Collaborating Centres worldwide: reference code (e.g. KOR-106), TitleOfTheCentre (the actual institution), host website, date of designation, last redesignation, expiry date, WHOCC portal URL. Institution-level records tying named research bodies to WHO. Detail hop verified with a real GUID.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
 VJSON(who_countries, "who-countries", "WHO — member state register", "WHO — member state register",
   "int_health", "health",
   "https://www.who.int/api/news/countries?%24top=50&%24format=json",

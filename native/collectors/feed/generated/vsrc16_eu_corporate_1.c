@@ -20,13 +20,6 @@ VJSON(esma_solr_mifid_shsexs, "esma-solr-mifid-shsexs", "ESMA — MiFID share tr
   "en", "[\"eu\",\"corporate\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Instrument-level register: shs_isin, shs_name (issuer), shs_countryCode, shs_relevantAuthority (e.g. 'Federal Financial Supervisory Authority (BaFin)'), shs_status, shs_exemptionStartDateStr, shs_modificationDateStr. 162k rows mapping ISINs to issuers and their supervising national authority — useful for resolving a security back to a regulated issuer and its home regulator.");
 
-VJSON(esma_solr_upreg, "esma-solr-upreg", "ESMA registers — raw Solr, upreg core (101,959 docs)", "ESMA registers — raw Solr, upreg core (101,959 docs)",
-  "eu_corporate", "corporate",
-  "https://registers.esma.europa.eu/solr/esma_registers_upreg/select?q=*:*&wt=json&rows=3",
-  "response.docs",
-  "en", "[\"eu\",\"corporate\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "The raw Solr index behind the ESMA register UI, far deeper than the searchRegister HTML endpoint already in the tree. Parent docs are entities (ae_entityName, ae_entityTypeCode MIF/CI/…, ae_lei, ae_headOfficeLei, ae_officeType Branch/Head office, ae_competentAuthority, ae_lastUpdate); child docs (type_s:child, _root_) are the individual authorised activities/services (ac_serviceName, ac_authorisationNotificationDateStr, ac_status). Supports full Solr syntax, e.g. q=ae_entityName:*Deutsche* → 46 hits.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(eu_esma_solr_benchmark_entities, "eu-esma-solr-benchmark-entities", "ESMA registers - raw Solr core: benchmark administrators", "ESMA registers - raw Solr core: benchmark administrators",
   "eu_corporate", "corporate",
   "https://registers.esma.europa.eu/solr/esma_registers_bench_entities/select?q=*%3A*&wt=json&rows=3",

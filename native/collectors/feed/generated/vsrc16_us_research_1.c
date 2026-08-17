@@ -6,13 +6,6 @@
  * rather than hand-editing. */
 #include "_verified_macros.inc"
 
-VJSON(crossref_work_detail, "crossref-work-detail", "Crossref work record (detail)", "Crossref work record (detail)",
-  "us_research", "research",
-  "https://api.crossref.org/works/10.1038/nature12373",
-  "message.reference",
-  "en", "[\"us\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Full deposited metadata for one DOI: publisher, reference-count, license terms with delay-in-days and TDM urls, funder array (name + Crossref Funder DOI + award numbers), authors with ORCID and affiliations, container title, ISSNs, update-to (retraction/correction pointers) and assertion blocks. The DOI->funding+licence hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(nsf_awards_research_gov, "nsf-awards-research-gov", "NSF award search on research.gov (alternate live host)", "NSF award search on research.gov (alternate live host)",
   "us_research", "research",
   "https://www.research.gov/awardapi-service/v1/awards.json?keyword=graphene&rpp=10",
@@ -20,79 +13,3 @@ VJSON(nsf_awards_research_gov, "nsf-awards-research-gov", "NSF award search on r
   "en", "[\"us\",\"research\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Same NSF award data as api.nsf.gov but served from research.gov: full abstractText, award id, title, dates, awardee organisation and PI. Worth carrying as a second host because api.nsf.gov has had outages; both returned identical 55KB payloads in this probe.");
 
-VJSON(openalex_institution_associated, "openalex-institution-associated", "OpenAlex institution -> associated institutions / roles", "OpenAlex institution -> associated institutions / roles",
-  "us_research", "research",
-  "https://api.openalex.org/institutions/I27837315?select=id,display_name,associated_institutions,roles,repositories",
-  "associated_institutions",
-  "en", "[\"us\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Trimmed institution record exposing the org-graph edges: associated_institutions (each with id, ROR, country, type and relationship=parent/child/related) plus the institution's roles as funder/publisher/institution. Turns one university into its hospital, campus and institute network.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(openalex_institution_by_ror, "openalex-institution-by-ror", "OpenAlex institution by ROR id", "OpenAlex institution by ROR id",
-  "us_research", "research",
-  "https://api.openalex.org/institutions?filter=ror:00cvxb145",
-  "results",
-  "en", "[\"us\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Resolve a bare ROR identifier to the full OpenAlex institution record (works counts, lineage, geo, associated institutions). The ROR->OpenAlex join key.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(openalex_institution_detail, "openalex-institution-detail", "OpenAlex institution record (detail)", "OpenAlex institution record (detail)",
-  "us_research", "research",
-  "https://api.openalex.org/institutions/I27837315",
-  "topics",
-  "en", "[\"us\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "One institution: ROR id, country, type, homepage, acronyms and alternative names, lineage (parent institutions), geo coordinates, works/cited-by counts, associated_institutions and repositories.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(openalex_work_by_doi, "openalex-work-by-doi", "OpenAlex work by DOI (id pivot)", "OpenAlex work by DOI (id pivot)",
-  "us_research", "research",
-  "https://api.openalex.org/works/doi:10.1038/nature12373",
-  "mesh",
-  "en", "[\"us\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Same full work record but keyed by DOI instead of OpenAlex id - lets you enter the OpenAlex graph from any Crossref/DataCite DOI you already hold and come back out with authors, institutions, funders and the referenced_works edge list.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(openalex_works_by_author, "openalex-works-by-author", "OpenAlex works by author id", "OpenAlex works by author id",
-  "us_research", "research",
-  "https://api.openalex.org/works?filter=authorships.author.id:A5023888391&per_page=25",
-  "results",
-  "en", "[\"us\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Every work attributed to one OpenAlex author id (meta.count=68 for the probe), each row a full work object with co-authors, their institutions and countries, funders and citation counts. The author->publications hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(openalex_works_by_ror, "openalex-works-by-ror", "OpenAlex works by institution ROR", "OpenAlex works by institution ROR",
-  "us_research", "research",
-  "https://api.openalex.org/works?filter=authorships.institutions.ror:https://ror.org/00cvxb145&per_page=10",
-  "results",
-  "en", "[\"us\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "All works with at least one author affiliated to a given ROR org (meta.count=499,568 for U. Washington), full work objects with co-author institutions and countries. Institution->output hop keyed on ROR rather than OpenAlex id.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(ror_org_detail_v1, "ror-org-detail-v1", "ROR organisation record (v1 detail)", "ROR organisation record (v1 detail)",
-  "us_research", "research",
-  "https://api.ror.org/organizations/https://ror.org/02kpeqv85",
-  "relationships",
-  "en", "[\"us\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Authoritative research-org record: established year, all external ids (Crossref Fundref ids, GRID, ISNI, Wikidata), names in multiple scripts, relationships to parent/child/related orgs, geonames location with lat/lng and country subdivision, website links, admin/schema versions.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(ror_org_detail_v2, "ror-org-detail-v2", "ROR organisation record (v2 detail, bare id)", "ROR organisation record (v2 detail, bare id)",
-  "us_research", "research",
-  "https://api.ror.org/v2/organizations/02kpeqv85",
-  "relationships",
-  "en", "[\"us\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Same record via the v2 path taking a bare ROR id (no url prefix) - the form you get from an OpenAlex or DataCite affiliation field. Includes the fundref id array which joins straight into Crossref funder queries.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(ror_search_v2, "ror-search-v2", "ROR v2 organisation search", "ROR v2 organisation search",
-  "us_research", "research",
-  "https://api.ror.org/v2/organizations?query=kyoto",
-  "items",
-  "en", "[\"us\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Free-text org search returning 122 hits as full v2 records (external ids, locations, links, relationships) - the name->ROR-id resolver that then feeds OpenAlex, Crossref and DataCite affiliation filters.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(semanticscholar_paper_by_doi_graph, "semanticscholar-paper-by-doi-graph", "Semantic Scholar paper with references+citations expanded", "Semantic Scholar paper with references+citations expanded",
-  "us_research", "research",
-  "https://api.semanticscholar.org/graph/v1/paper/DOI:10.7717/peerj.4375?fields=title,authors,references.title,citations.title",
-  "citations",
-  "en", "[\"us\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "175KB in one request: the paper plus its authors with S2 authorIds AND the titles of every reference and every citing paper inline via the nested fields syntax. Three graph hops for one request. Keyless but rate-limited - the sibling /paper/search returned HTTP 429 during this probe, so expect intermittent throttling (S2_API_KEY raises limits).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(unpaywall_doi, "unpaywall-doi", "Unpaywall OA location for a DOI", "Unpaywall OA location for a DOI",
-  "us_research", "research",
-  "https://api.unpaywall.org/v2/10.7717/peerj.4375?email=rayanchouialkessal@gmail.com",
-  "z_authors",
-  "en", "[\"us\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "For any Crossref DOI: best_oa_location and first_oa_location with host_type (publisher vs repository), licence, OA date, landing page and PDF url, plus the full oa_locations array listing every repository copy found. Requires an email query param, not a key.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

@@ -630,7 +630,7 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
   it.body            = body;
   it.summary         = body;
   it.link            = linkbuf[0] ? linkbuf : (s->portal ? s->portal : NULL);
-  it.lang            = "en";
+  it.lang            = s->lang ? s->lang : "en";
   it.published_at    = date;
   it.record_type     = s->record_type ? s->record_type : "record";
   it.properties_json = props ? props : "{}";

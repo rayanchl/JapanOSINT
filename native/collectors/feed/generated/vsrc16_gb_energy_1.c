@@ -27,9 +27,3 @@ VJSON(uk_elexon_interconnectors_reference, "uk-elexon-interconnectors-reference"
   "en", "[\"gb\",\"energy\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Every GB electricity interconnector with interconnectorId, interconnectorName and the counterparty biddingZone (Eleclink/France, Greenlink/Ireland, Moyle/Northern Ireland, BritNed/Netherlands, NSL/Norway, Viking/Denmark).");
 
-VJSON(uk_elexon_remit_list, "uk-elexon-remit-list", "Elexon BMRS REMIT message list", "Elexon BMRS REMIT message list",
-  "gb_energy", "energy",
-  "https://data.elexon.co.uk/bmrs/api/v1/remit/list/by-event?from=2026-08-10T00:00Z&to=2026-08-16T00:00Z",
-  "data",
-  "en", "[\"gb\",\"energy\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Index of REMIT inside-information filings (generation unavailability notices): id, mrid, revisionNumber, createdTime, publishTime and a direct url to the full message. Max 7-day window. This is the list half of the highest-value energy disclosure feed in GB.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

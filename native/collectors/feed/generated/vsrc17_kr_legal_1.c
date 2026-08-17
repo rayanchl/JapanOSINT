@@ -6,34 +6,6 @@
  * rather than hand-editing. */
 #include "_verified_macros.inc"
 
-VJSON(kr_administrative_appeal_rulings, "kr-administrative-appeal-rulings", "Korea — administrative appeal (행정심판) rulings", "Korea — administrative appeal (행정심판) rulings",
-  "kr_legal", "legal",
-  "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=decc&type=JSON&query=%ED%9A%8C%EC%82%AC",
-  "decc.decc",
-  "ko", "[\"kr\",\"legal\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Rulings on administrative appeals against government decisions: id, 재결청 (adjudicating body, e.g. 국민권익위원회), 처분청 (the agency whose decision was challenged), 사건번호, 사건명 describing the contested disposition, 의결일자, 처분일자 and 행정심판재결례일련번호. The detail service returns 청구취지 and full reasoning. Citizen-vs-agency disputes that never reach a court.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
-VJSON(kr_law_english_statutes, "kr-law-english-statutes", "Korea MOLEG — English-titled statute search", "Korea MOLEG — English-titled statute search",
-  "kr_legal", "legal",
-  "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=elaw&type=JSON&query=fair",
-  "lawsearch.law",
-  "ko", "[\"kr\",\"legal\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Korean statutes with both Korean and ENGLISH names: id, 법령ID, 법령일련번호 (MST), 법령명한글, 법령명영문 (e.g. FAIR TRANSACTIONS IN FRANCHISE BUSINESS ACT), 법령구분명, 소관부처명 (competent ministry), 공포번호, 공포일자, 시행일자 and a detail link. Keyless — OC=test is the documented public demo id and it works.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
-VJSON(kr_legal_interpretations, "kr-legal-interpretations", "Korea MOLEG — official statutory interpretations", "Korea MOLEG — official statutory interpretations",
-  "kr_legal", "legal",
-  "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=expc&type=JSON&query=%ED%9A%8C%EC%82%AC",
-  "expc.expc",
-  "ko", "[\"kr\",\"legal\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Binding legal interpretations issued by the Ministry of Government Legislation: id, 안건명 (the question asked), 안건번호, 회신기관명 and code (who answered), 질의기관명 and code (which agency asked), 회신일자 and 법령해석례일련번호. The detail service returns the full 이유 reasoning. Shows which agency was uncertain about which rule.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
-VJSON(kr_local_ordinances, "kr-local-ordinances", "Korea — municipal ordinance and rule search", "Korea — municipal ordinance and rule search",
-  "kr_legal", "legal",
-  "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=ordin&type=JSON&query=%EC%84%9C%EC%9A%B8",
-  "ordinsearch.law",
-  "ko", "[\"kr\",\"legal\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Local-government ordinances: id, 자치법규ID, 자치법규명, 자치법규일련번호, 지자체기관명 (the specific city/gu that enacted it, e.g. 서울특별시 송파구), 자치법규종류, 시행일자 and detail link. Ties regulatory action to a named Korean local authority.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
 VJSON(kr_treaties, "kr-treaties", "Korea — treaty register search", "Korea — treaty register search",
   "kr_legal", "legal",
   "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=trty&type=JSON&query=%ED%86%B5%EC%83%81",

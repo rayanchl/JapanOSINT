@@ -20,13 +20,6 @@ VJSON(np_bipad_layer, "np-bipad-layer", "Nepal BIPAD - hazard and risk map layer
   "en", "[\"np\",\"geospatial\",\"batch17\",\"high-penetrancy\"]", 86400,
   "GeoServer layer registry: title and titleNe, category (hazard / exposure / vulnerability), type (raster / vector), workspace and layername needed to pull the layer itself, plus legendTitle, legendDescription and units (e.g. flood depth in metres, 5-year return period).");
 
-VJSON(np_bipad_municipality, "np-bipad-municipality", "Nepal BIPAD - municipality gazetteer with geometry", "Nepal BIPAD - municipality gazetteer with geometry",
-  "np_geospatial", "geospatial",
-  "https://bipadportal.gov.np/api/v1/municipality/?format=json&limit=50",
-  "results",
-  "en", "[\"np\",\"geospatial\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Authoritative local-unit gazetteer: title, title_en, title_ne, type (Rural Municipality / Municipality / Sub-Metropolitan), official code, district id, bbox and centroid point. Resolves a Nepali place name to its official code and extent. Detail endpoint verified with id 1005.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
 VJSON(np_bipad_openspace_detail, "np-bipad-openspace-detail", "Nepal BIPAD - designated emergency open spaces", "Nepal BIPAD - designated emergency open spaces",
   "np_geospatial", "geospatial",
   "https://bipadportal.gov.np/api/v1/openspace-detail/?format=json&limit=5",

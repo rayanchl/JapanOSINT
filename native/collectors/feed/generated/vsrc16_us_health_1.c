@@ -6,34 +6,6 @@
  * rather than hand-editing. */
 #include "_verified_macros.inc"
 
-VJSON(uk_govuk_search_drug_safety_update, "uk-govuk-search-drug-safety-update", "GOV.UK Search API - MHRA Drug Safety Update", "GOV.UK Search API - MHRA Drug Safety Update",
-  "us_health", "health",
-  "https://www.gov.uk/api/search.json?filter_format=drug_safety_update&count=3&fields=title,link,description,first_published_at",
-  "results",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "MHRA monthly drug safety bulletins - product-level warnings, restrictions and label changes (e.g. botulinum toxin type A iatrogenic botulism warning). Title, link, summary, first_published_at; Content API detail hop returns the full article with the affected products and the regulatory action taken. NOTE: country should read GB.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(uk_govuk_search_medical_safety_alerts, "uk-govuk-search-medical-safety-alerts", "GOV.UK Search API - MHRA medical device / drug safety alerts", "GOV.UK Search API - MHRA medical device / drug safety alerts",
-  "us_health", "health",
-  "https://www.gov.uk/api/search.json?filter_format=medical_safety_alert&count=3&fields=title,link,description,alert_type,issued_date,medical_specialism",
-  "results",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "MHRA device safety information and national patient safety alerts, e.g. devices supplied without valid UKCA/CE conformity marking ordered removed from use. Per row: title with alert reference (DSI/2026/007), alert_type, issued_date, medical specialism. Content API detail hop returns the full alert naming the manufacturer, affected models and required action. NOTE: country should read GB.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_cms_data_catalog, "us-cms-data-catalog", "CMS Open Data — DCAT catalogue", "CMS Open Data — DCAT catalogue",
-  "us_health", "health",
-  "https://data.cms.gov/data.json",
-  "dataset",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "3 MB Project Open Data catalogue for data.cms.gov. Per dataset: title, description, accrualPeriodicity, contactPoint, describedBy (data dictionary URL), and distribution[] where the entry carrying description:'latest' holds the STABLE accessURL https://data.cms.gov/data-api/v1/dataset/{uuid}/data. This is the authoritative way to resolve the provider-enrollment, ownership, change-of-ownership and revalidation dataset uuids used below.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_cms_open_payments_catalog, "us-cms-open-payments-catalog", "CMS Open Payments — dataset catalogue", "CMS Open Payments — dataset catalogue",
-  "us_health", "health",
-  "https://openpaymentsdata.cms.gov/api/1/metastore/schemas/dataset/items?show-reference-ids=false",
-  "",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "127 KB DKAN catalogue of all 65 Open Payments datasets (general, research and ownership payment detail per reporting year 2013-2025, plus profile files). Each record's distribution[0].identifier is the id used by /api/1/datastore/query/{id}. The tree carries only the bare /datastore/query/ path with no dataset id — this resolves them.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_cms_opt_out_affidavits, "us-cms-opt-out-affidavits", "CMS — Medicare opt-out affidavits", "CMS — Medicare opt-out affidavits",
   "us_health", "health",
   "https://data.cms.gov/data-api/v1/dataset/9887a515-7552-4693-bf58-735c77af46d7/data?size=2",
@@ -55,26 +27,12 @@ VJSON(us_cms_pos_file_iqies, "us-cms-pos-file-iqies", "CMS — Provider of Servi
   "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
   "12 KB for 2 rows — the full certification record for every non-hospital Medicare provider: prvdr_num (CCN), fac_name, prvdr_sbtyp_id, mdcd_vndr_num, orgnl_prtcptn_dt (original participation date), prvdr_type_id, st_adr, city_name, ssa_cnty_cd, zip_cd, phne_num, crtfctn_dt, TRMNTN_EXPRTN_DT (termination/expiration date — i.e. when CMS cut them off), state_cd, ssa_state_cd, plus scores of certification, bed-count and service-offering fields.");
 
-VJSON(us_cms_provider_data_catalog, "us-cms-provider-data-catalog", "CMS Care Compare — dataset catalogue (DKAN metastore)", "CMS Care Compare — dataset catalogue (DKAN metastore)",
-  "us_health", "health",
-  "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items?show-reference-ids=false",
-  "",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "550 KB DCAT catalogue of every Care Compare dataset with identifier (the 4x4 used by /datastore/query/{id}/0), title, description, theme, keyword[], modified/released/nextUpdateDate, publisher, contactPoint and distribution downloadURL. This is how you discover the nursing-home, hospital, hospice, home-health and dialysis enforcement tables without hardcoding ids.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_cms_provider_data_dataset_detail, "us-cms-provider-data-dataset-detail", "CMS Care Compare — single dataset metadata", "CMS Care Compare — single dataset metadata",
   "us_health", "health",
   "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/r5ix-sfxw?show-reference-ids=false",
   "keyword",
   "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
   "DETAIL HOP on the catalogue: accessLevel, landingPage, bureauCode, issued/modified/released/nextUpdateDate, keyword[] with identifiers ('Complaints', 'Deficiencies'), publisher, contactPoint, describedBy (data dictionary), temporal coverage and distribution[] with the CSV downloadURL and the datastore resource identifier.");
-
-VJSON(us_cms_provider_enrollment, "us-cms-provider-enrollment", "CMS — Medicare Fee-For-Service public provider enrollment", "CMS — Medicare Fee-For-Service public provider enrollment",
-  "us_health", "health",
-  "https://data.cms.gov/data-api/v1/dataset/2457ea29-fc82-48b0-86ec-3b0755de7515/data?size=2",
-  "",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "2,978,925 rows (confirmed via the /data/stats endpoint). Per provider: NPI, MULTIPLE_NPI_FLAG, PECOS_ASCT_CNTL_ID (the PECOS associate id that links individuals to organisations), ENRLMT_ID, PROVIDER_TYPE_CD and PROVIDER_TYPE_DESC, STATE_CD, FIRST_NAME/MDL_NAME/LAST_NAME, ORG_NAME. Server-side filtering works: ?filter[NPI]=... returns the single record.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 VJSON(us_cms_revalidation_clinic_group_reassignment, "us-cms-revalidation-clinic-group-reassignment", "CMS — revalidation clinic group practice reassignment", "CMS — revalidation clinic group practice reassignment",
   "us_health", "health",
@@ -97,13 +55,6 @@ VJSON(us_cms_revalidation_reassignment_list, "us-cms-revalidation-reassignment-l
   "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Group PAC ID, Group Enrollment ID, Group Legal Business Name, Group State Code, Group Due Date, Group Reassignments and Physician Assistants, Record Type, Individual PAC ID, Individual Enrollment ID, Individual NPI and name, Individual Specialty Description, Individual State Code and Due Date. Second view of the billing-reassignment network.");
 
-VJSON(us_cpsc_recall_by_date_range, "us-cpsc-recall-by-date-range", "CPSC SaferProducts — recalls in a date window", "CPSC SaferProducts — recalls in a date window",
-  "us_health", "health",
-  "https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallDateStart=2026-01-01&RecallDateEnd=2026-06-30",
-  "",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "902 KB covering H1-2026 recalls with the full nested envelope per recall (Products, Hazards, Injuries, Remedies, Manufacturers, Importers, Retailers, Distributors, ManufacturerCountries, ProductUPCs). The bounded-window form for incremental crawling; RecallDateEnd is the parameter the tree's existing open-ended call omits.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_cpsc_recall_by_id, "us-cpsc-recall-by-id", "CPSC SaferProducts — recall detail by RecallID", "CPSC SaferProducts — recall detail by RecallID",
   "us_health", "health",
   "https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallID=9728",
@@ -117,13 +68,6 @@ VJSON(us_cpsc_recall_by_number, "us-cpsc-recall-by-number", "CPSC SaferProducts 
   "",
   "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Same full recall envelope as RecallID but keyed on the public RecallNumber string as printed on notices (dashes are optional: 24-001 resolves to RecallNumber '24001'). Useful when pivoting from a press release or a retailer notice.");
-
-VJSON(us_cpsc_recall_by_product_name, "us-cpsc-recall-by-product-name", "CPSC SaferProducts — recall search by product name", "CPSC SaferProducts — recall search by product name",
-  "us_health", "health",
-  "https://www.saferproducts.gov/RestWebServices/Recall?format=json&ProductName=helmet",
-  "",
-  "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "85 recalls matching 'helmet', each a complete recall record (not a stub) with Products/Hazards/Injuries/Manufacturers/Importers/Retailers arrays. Free-text product pivot the tree lacks — the tree only carries the RecallDateStart form.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 VJSON(us_openfda_device_510k_detail, "us-openfda-device-510k-detail", "openFDA — 510(k) clearance detail by K-number", "openFDA — 510(k) clearance detail by K-number",
   "us_health", "health",

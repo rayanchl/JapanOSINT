@@ -24,13 +24,6 @@ VGEO(eu_emodnet_ha_pipelines, "eu-emodnet-ha-pipelines", "EMODnet subsea pipelin
   "en", "[\"eu\",\"infrastructure\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Pipeline routes as MultiLineString with name, status, medium carried, operator, size_in (diameter), length_m, year, from_loc/to_loc endpoints, country code and source agency note.");
 
-VJSON(global_taginfo_key_values, "global-taginfo-key-values", "OSM taginfo values for a key", "OSM taginfo values for a key",
-  "eu_infrastructure", "infrastructure",
-  "https://taginfo.openstreetmap.org/api/4/key/values?key=operator&page=1&rp=10&sortname=count_all&sortorder=desc",
-  "data",
-  "en", "[\"eu\",\"infrastructure\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Ranked distinct values of a key with count, fraction, in_wiki flag and wiki description. For key=operator this is a global census of infrastructure operators (Enedis 1.62 M objects, RTE 345 k, SNCF Réseau 313 k, DB InfraGO 120 k) — a company-to-asset-count index. total=1,318,754 values, fully paginable.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(ripe_atlas_probe_detail, "ripe-atlas-probe-detail", "RIPE Atlas probe detail", "RIPE Atlas probe detail",
   "eu_infrastructure", "infrastructure",
   "https://atlas.ripe.net/api/v2/probes/6001/",

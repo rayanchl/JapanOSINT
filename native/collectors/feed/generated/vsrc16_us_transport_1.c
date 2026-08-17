@@ -6,53 +6,12 @@
  * rather than hand-editing. */
 #include "_verified_macros.inc"
 
-VCSV(global_gbfs_systems_catalog, "global-gbfs-systems-catalog", "MobilityData GBFS systems catalogue", "MobilityData GBFS systems catalogue",
-  "us_transport", "transport",
-  "https://raw.githubusercontent.com/MobilityData/gbfs/master/systems.csv",
-  "en", "[\"us\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "The canonical registry of every public bike/scooter share system worldwide: Country Code, Name, Location, System ID, operator URL, Auto-Discovery URL (the gbfs.json to crawl), supported GBFS versions and authentication requirements. 38 KB — this is the seed list that makes exhaustive GBFS collection possible, and it is keyless unlike api.mobilitydatabase.org.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(uk_govuk_search_maib_reports, "uk-govuk-search-maib-reports", "GOV.UK Search API - Marine Accident Investigation Branch reports", "GOV.UK Search API - Marine Accident Investigation Branch reports",
-  "us_transport", "transport",
-  "https://www.gov.uk/api/search.json?filter_format=maib_report&count=3&fields=title,link,description,date_of_occurrence,vessel_type",
-  "results",
-  "en", "[\"us\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "MAIB reports naming the vessel and its registration (e.g. fishing vessel Silver Cloud II WK 80), date_of_occurrence and vessel type. Content API detail hop returns the full investigation report with owner/operator, causal analysis and recommendations. NOTE: country should read GB.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(uk_govuk_search_raib_reports, "uk-govuk-search-raib-reports", "GOV.UK Search API - Rail Accident Investigation Branch reports", "GOV.UK Search API - Rail Accident Investigation Branch reports",
-  "us_transport", "transport",
-  "https://www.gov.uk/api/search.json?filter_format=raib_report&count=3&fields=title,link,description,date_of_occurrence,railway_type",
-  "results",
-  "en", "[\"us\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "RAIB investigation reports: report number, incident description, date_of_occurrence, railway type. Content API detail hop returns the full report page with the PDF, findings, causal factors and safety recommendations addressed to named operators and infrastructure managers. NOTE: country should read GB.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_fmcsa_carrier_authority_status, "us-fmcsa-carrier-authority-status", "FMCSA — carrier authority status (all with history)", "FMCSA — carrier authority status (all with history)",
   "us_transport", "transport",
   "https://data.transportation.gov/resource/6eyk-hxee.json?$limit=2",
   "",
   "en", "[\"us\",\"transport\",\"batch16\",\"high-penetrancy\"]", 3600,
   "Per docket: docket_number, dot_number, common_stat / contract_stat / broker_stat (A=active, I=inactive, N=none), common_app_pend / contract_app_pend / broker_app_pend (pending applications), common_rev_pend / contract_rev_pend / broker_rev_pend (PENDING REVOCATIONS), property_chk, passenger/household-goods/enterprise flags. Live view of which authorities a carrier holds and which are being revoked.");
-
-VJSON(us_fmcsa_carrier_census, "us-fmcsa-carrier-census", "FMCSA — motor carrier census (SAFER replacement)", "FMCSA — motor carrier census (SAFER replacement)",
-  "us_transport", "transport",
-  "https://data.transportation.gov/resource/az4n-8mr2.json?$limit=2",
-  "",
-  "en", "[\"us\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "Keyless substitute for the 403-blocked QCMobile/SAFER APIs. Per carrier: dot_number, status_code, add_date, mcs150_date, mcs150_mileage and year, dun_bradstreet_no, carrier_operation (interstate/intrastate), business_org_id, phy_omc_region, safety_inv_terr, legal and DBA name, physical and mailing address, phone, power units, driver count, hazmat flags, cargo-carried flags, and the safety rating with its rating date. Verified server-side filter ?dot_number=162845.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_fmcsa_crash_file, "us-fmcsa-crash-file", "FMCSA — motor carrier crash file", "FMCSA — motor carrier crash file",
-  "us_transport", "transport",
-  "https://data.transportation.gov/resource/aayw-vxb3.json?$limit=2",
-  "",
-  "en", "[\"us\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "CARRIER → ITS CRASHES, the exact detail hop required. Per crash: crash_id, dot_number, report_state, report_number, report_date and time, report_seq_no, ci_status_code, final_status_date, location, state, county, fatalities, injuries, tow_away flag, vehicle configuration, hazmat released flag, weather and light conditions, road access control, trafficway description, and citation issued. Verified filter ?dot_number=728630.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_fmcsa_vehicle_inspection_file, "us-fmcsa-vehicle-inspection-file", "FMCSA — roadside vehicle inspection file", "FMCSA — roadside vehicle inspection file",
-  "us_transport", "transport",
-  "https://data.transportation.gov/resource/fx4q-ay7w.json?$limit=2",
-  "",
-  "en", "[\"us\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "CARRIER → ITS ROADSIDE INSPECTIONS. Per inspection: inspection_id, dot_number, report_state, report_number, insp_date, insp_start_time/insp_end_time, region, ci_status_code, location_desc, inspection level, driver and vehicle out-of-service counts and OOS totals, hazmat inspection flag, unsafe-driving and fatigued-driving violation counts, and the vehicle/licence-plate identifiers. Verified filter ?dot_number=728630.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
 VJSON(us_fra_highway_rail_crossing_incidents, "us-fra-highway-rail-crossing-incidents", "FRA — highway-rail grade crossing incidents (Form 57)", "FRA — highway-rail grade crossing incidents (Form 57)",
   "us_transport", "transport",
@@ -82,9 +41,3 @@ VJSON(us_nhtsa_vpic_manufacturer_detail, "us-nhtsa-vpic-manufacturer-detail", "N
   "en", "[\"us\",\"transport\",\"batch16\",\"high-penetrancy\"]", 3600,
   "DETAIL HOP: 14 registered entities matching 'honda'. Per entity: Mfr_ID, Mfr_Name, Mfr_CommonName, Address, Address2, City, State/PostalCode, Country, ContactEmail, ContactPhone, ContactFax, DBAs, PrincipalFirstName/LastName, ManufacturerTypes[], VehicleTypes[], EquipmentItems[], LastUpdated. Named contacts and addresses for every vehicle/equipment manufacturer registered with NHTSA.");
 
-VJSON(us_nhtsa_vpic_manufacturers, "us-nhtsa-vpic-manufacturers", "NHTSA vPIC — all registered vehicle manufacturers", "NHTSA vPIC — all registered vehicle manufacturers",
-  "us_transport", "transport",
-  "https://vpic.nhtsa.dot.gov/api/vehicles/GetAllManufacturers?format=json&page=1",
-  "results",
-  "en", "[\"us\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "100 manufacturers per page. Per row: Mfr_ID, Mfr_Name, Mfr_CommonName, Country, VehicleTypes[] with IsPrimary flag. The enumeration list whose Mfr_Name feeds the manufacturer-detail hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

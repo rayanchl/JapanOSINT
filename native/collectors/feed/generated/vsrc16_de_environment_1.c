@@ -20,9 +20,3 @@ VJSON(de_opensensemap_box_detail, "de-opensensemap-box-detail", "openSenseMap bo
   "en", "[\"de\",\"environment\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 10800,
   "One station with each sensor's lastMeasurement resolved inline to value and createdAt, plus sensorType, title and unit. Detail hop off the box registry.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
-VJSON(de_opensensemap_box_sensors, "de-opensensemap-box-sensors", "openSenseMap box sensor list", "openSenseMap box sensor list",
-  "de_environment", "environment",
-  "https://api.opensensemap.org/boxes/5391be52a8341554157792e6/sensors",
-  "sensors",
-  "en", "[\"de\",\"environment\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 10800,
-  "Sensor inventory for a station: sensor _id, boxes_id, sensorType, title, unit and lastMeasurement (value + createdAt). The sensor _id is the key for the time-series hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
