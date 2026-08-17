@@ -30,7 +30,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const cJSON *svc;
   cJSON_ArrayForEach(svc, services) {
     if (!cJSON_IsArray(svc) || cJSON_GetArraySize(svc) < 2) continue;
-    const cJSON *tlds = cJSON_GetArrayItem(svc, 0);
+    const cJSON *tlds = cJSON_GetArrayItem(svc, 0);  /* exhaustive-ok: RFC 7484 service block is the fixed pair [[tlds],[urls]]; both halves read */
     const cJSON *urls = cJSON_GetArrayItem(svc, 1);
     if (!cJSON_IsArray(tlds) || !cJSON_IsArray(urls)) continue;
 

@@ -22,7 +22,9 @@ static int run_prtimes(const source_ctx *ctx, intel_sink *sink) {
   if (!body) return 0;
   int emitted = 0;
   char *p = body, *e;
-  while (emitted < 30 && (e = strstr(p, "<item")) != NULL) {
+  /* Was `emitted < 30`: the RDF is already fetched, so a cap here throws away
+   * press releases that arrived in the same document. */
+  while ((e = strstr(p, "<item")) != NULL) {
     char *end = strstr(e, "</item>");
     if (!end) break;
     char saved = *end; *end = 0;

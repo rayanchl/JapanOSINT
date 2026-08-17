@@ -101,12 +101,25 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *header = cJSON_GetObjectItem(doc, "header");
   double fill = -999.0;
   if (header) geoeo_num(header, "fill_value", &fill);
+  /* header.sources is the provenance of the series — POWER blends more than one
+   * (MERRA-2, CERES SYN1deg, …) and naming only the first misattributes the
+   * data. Every entry is joined, so the row states what it was actually built
+   * from. */
   const char *sources = NULL;
+  char sources_all[256] = {0};
   cJSON *src = header ? cJSON_GetObjectItem(header, "sources") : NULL;
-  if (cJSON_IsArray(src) && cJSON_IsString(cJSON_GetArrayItem(src, 0)))
-    sources = cJSON_GetArrayItem(src, 0)->valuestring;
-  else if (cJSON_IsString(src))
+  if (cJSON_IsArray(src)) {
+    const cJSON *e;
+    cJSON_ArrayForEach(e, src) {
+      if (!cJSON_IsString(e) || !e->valuestring[0]) continue;
+      size_t used = strlen(sources_all);
+      snprintf(sources_all + used, sizeof sources_all - used, "%s%s",
+               used ? ", " : "", e->valuestring);
+    }
+    if (sources_all[0]) sources = sources_all;
+  } else if (cJSON_IsString(src)) {
     sources = src->valuestring;
+  }
 
   cJSON *props_root = cJSON_GetObjectItem(doc, "properties");
   cJSON *params = props_root ? cJSON_GetObjectItem(props_root, "parameter")

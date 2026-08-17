@@ -121,7 +121,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     if (!primary[0]) {
       /* no Primary Name marked — fall back to the first name we did parse */
-      const cJSON *a0 = cJSON_GetArrayItem(aliases, 0);
+      const cJSON *a0 = cJSON_GetArrayItem(aliases, 0);  /* exhaustive-ok: fallback display name when no Primary Name is marked; every alias is kept in the aliases array */
       if (cJSON_IsString(a0)) snprintf(primary, sizeof primary, "%s", a0->valuestring);
     }
     if (!primary[0]) { cJSON_Delete(aliases); continue; }   /* no name -> no row */

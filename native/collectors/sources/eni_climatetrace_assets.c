@@ -115,7 +115,7 @@ static int collect_sector(const source_ctx *ctx, intel_sink *sink,
       cJSON *g = cJSON_GetObjectItem(cen, "Geometry");
       if (cJSON_IsArray(g) && cJSON_GetArraySize(g) >= 2 &&
           (!cJSON_IsNumber(srid) || (int)srid->valuedouble == 4326)) {
-        cJSON *x = cJSON_GetArrayItem(g, 0), *y = cJSON_GetArrayItem(g, 1);
+        cJSON *x = cJSON_GetArrayItem(g, 0), *y = cJSON_GetArrayItem(g, 1);  /* exhaustive-ok: fixed [lon,lat] pair */
         if (cJSON_IsNumber(x) && cJSON_IsNumber(y)) {
           lon = x->valuedouble; lat = y->valuedouble;   /* [lon, lat] */
           if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) has_geo = 1;

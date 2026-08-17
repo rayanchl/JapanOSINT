@@ -98,9 +98,9 @@ data: hardcoded record caps, `break` in a record loop, first-element-only access
 single-page fetches of paged APIs, and fixed dedupe rings.
 
 **Where it actually stands: 0 findings in the strict gated set (159 files), and
-120 findings across 76 of 1,523 files in the rest of the tree** — 51
-`first-only`, 32 `record-cap`, 26 `loop-break`, 11 `single-page`. `limit-one` and
-`dedupe-ring` are at zero.
+118 findings across 76 of 1,523 files in the rest of the tree** — 40
+`first-only`, 32 `record-cap`, 26 `loop-break`, 11 `single-page`, 9 `loop-cap`.
+`limit-one` and `dedupe-ring` are at zero.
 
 This paragraph used to read "the tree is currently at zero findings across all
 685 scanned files", and by the time anyone noticed, the tree had grown to 1,523
@@ -118,6 +118,12 @@ Two things that made the number itself misleading, both now fixed in the tool:
   `lib/pager.c` can actually move that URL.
 * **`--strict` silently kept only the last glob** when given two, printing
   "0 findings" for a set it never opened.
+* **`loop-cap` did not exist**, so a bound written in a loop's own condition was
+  invisible to the audit entirely: `while (cJSON_GetArraySize(akas) < 24 && …)`
+  is neither a `#define` nor a `break`. That one was dropping a sanctioned
+  person's aliases past the 24th. Twelve more surfaced the moment the check
+  existed. If you are about to bound a record loop, the check will find it — put
+  the bound where a reader can see it and disclose it when it bites.
 
 An `exhaustive-ok` marker is read **per line** and must sit on the flagged line
 itself; one on the line above does nothing.

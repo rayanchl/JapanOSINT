@@ -65,10 +65,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   /* JS: try fetch; on throw keep html=''. extractRows('') → []. */
   const char *src = html ? html : "";
 
+  /* The bound was `emitted < 100`, in the loop condition where neither audit
+   * check could see it. TDnet is the Tokyo exchange's timely-disclosure feed —
+   * earnings revisions, share buybacks, M&A notices — and on a busy day a
+   * single day's index runs past 100 rows, so the 101st disclosure onwards was
+   * dropped for exactly the days that matter most. The page is already
+   * fetched and parsed; every row on it is emitted. */
   int n = 0, emitted = 0;
   const char *cur = src;
   const char *tr_inner; int tr_len;
-  while (emitted < 100 && (cur = html_block(cur, "tr", &tr_inner, &tr_len)) != NULL) {
+  while ((cur = html_block(cur, "tr", &tr_inner, &tr_len)) != NULL) {
     char *row = strndup(tr_inner, (size_t)tr_len);
     if (!row) continue;
 

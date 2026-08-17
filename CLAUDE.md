@@ -69,13 +69,23 @@ Where the tree actually stands, as `make audit-sources` reports it:
 * **strict set — 0 findings across 159 files.** `collectors/pivot/table/hp*_*.c`
   plus the generated deep-record tables `collectors/feed/generated/hp1[0-9]_*.c`.
   This is the part the Makefile gates on, and it is held clean.
-* **the rest of the tree — 120 findings across 76 of 1,523 files**: 51
-  first-only, 32 record-cap, 26 loop-break, 11 single-page. `limit-one` and
-  `dedupe-ring` are now zero. These are heuristics and each needs a human read,
-  but "zero audit findings" is true only of the strict set — do not read it as
-  true of the tree.
+* **the rest of the tree — 118 findings across 76 of 1,523 files**: 40
+  first-only, 32 record-cap, 26 loop-break, 11 single-page, 9 loop-cap.
+  `limit-one` and `dedupe-ring` are now zero. These are heuristics and each needs
+  a human read, but "zero audit findings" is true only of the strict set — do not
+  read it as true of the tree.
 
-Two traps in reading that number, both of which cost real coverage:
+Three traps in reading that number, all of which cost real coverage:
+
+* **A whole class of cap was invisible until 2026-08-17.** A bound written in a
+  loop's own CONDITION — `while (cJSON_GetArraySize(akas) < 24 && …)` — is
+  neither a `#define …MAX` (`record-cap`) nor a `break` (`loop-break`), so
+  nothing flagged it. It was found by hand in the OFAC consolidated sanctions
+  parser, where it silently dropped a designated person's aliases past the 24th
+  — on a sanctions list, an alias *is* what screening matches on, so that is a
+  false negative manufactured quietly. The `loop-cap` check now covers the
+  pattern and immediately surfaced 12 more, including TDnet's timely-disclosure
+  feed capped at 100 rows a day and EDINET-x filings capped at 25.
 
 * **The audit does not know what the engines do.** It flagged `?page=1&
   per_page=100` as a discard on 21 rows that `jsonlist_emit_paged` had been
@@ -89,7 +99,7 @@ Two traps in reading that number, both of which cost real coverage:
   both. They are pivots now (`collectors/pivot/table/hp18_us_openfda_ids.c`).
 
 Deliberate exceptions carry an inline `/* exhaustive-ok: <reason> */` marker
-(`grep -rn exhaustive-ok`, currently 147). The marker must sit on the flagged
+(`grep -rn exhaustive-ok`, currently 156). The marker must sit on the flagged
 line itself — the audit reads it per line, so one on the line above is ignored.
 
 ```sh

@@ -126,8 +126,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (sanc_xml_next(&ac, e, "akaList", &al)) {
         const char *c2 = al.body;
         sanc_el ae;
-        while (cJSON_GetArraySize(akas) < 24 &&
-               sanc_xml_next(&c2, al.body_end, "aka", &ae)) {
+        /* The cap here was 24, and OFAC publishes designations with more akas
+         * than that. On a SANCTIONS list an alias is not a nice-to-have field —
+         * it is the thing screening matches on — so a dropped alias is a false
+         * negative on a designated person, produced silently. The upstream
+         * decides how many names it published; we keep them all.
+         *
+         * Neither audit check caught this one: it is a bound in a while
+         * CONDITION rather than a `#define …MAX` or a `break`, which is worth
+         * remembering when reading a finding count as a clean bill of health. */
+        while (sanc_xml_next(&c2, al.body_end, "aka", &ae)) {
           char *af = sanc_xml_text(ae.body, ae.body_end, "firstName");
           char *alast = sanc_xml_text(ae.body, ae.body_end, "lastName");
           char *at = sanc_xml_text(ae.body, ae.body_end, "type");
@@ -191,7 +199,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              proglist[0] ? " · " : "", proglist,
              cJSON_GetArraySize(akas) ? " · aka " : "",
              cJSON_GetArraySize(akas)
-               ? cJSON_GetStringValue(cJSON_GetArrayItem(akas, 0)) : "");
+               ? cJSON_GetStringValue(cJSON_GetArrayItem(akas, 0)) : "");  /* exhaustive-ok: summary shows one and counts the rest; properties.aka has all */
+    /* The summary line shows ONE alias. Where there are more, it says how many
+     * it is not showing rather than implying the first is the only one; the full
+     * set is in properties.aka either way. */
+    int nakas = cJSON_GetArraySize(akas);
+    if (nakas > 1) {
+      size_t used = strlen(summary);
+      snprintf(summary + used, sizeof summary - used, " (+%d more aliases)",
+               nakas - 1);
+    }
 
     char link[160];
     snprintf(link, sizeof link,

@@ -60,6 +60,23 @@ CHECKS = [
                 r'page_size|resultPerPage)=1\b'),
      "request the full page size and paginate"),
 
+    # Found the hard way: sanc_ofac_consolidated.c bounded a SANCTIONS entry's
+    # alias list with `while (cJSON_GetArraySize(akas) < 24 && …)`. On a
+    # sanctions list an alias is the thing screening matches on, so a dropped
+    # one is a silent false negative on a designated person — and neither
+    # `record-cap` (which wants a #define) nor `loop-break` (which wants a
+    # `break`) could see it, because the bound was in the loop CONDITION.
+    #
+    # Only counter-ish names are flagged: `chars < 280` bounding a UTF-8 buffer
+    # is a byte guard, not a record cap.
+    ("loop-cap",
+     "record loop bounded in its own condition — records past it never happen",
+     re.compile(r'\b(?:while|for)\s*\([^;{]*\b'
+                r'(?:count|counted|considered|emitted|n|nf|nrec|nrows|nitems|'
+                r'nseen|rows|items|recs|records|found|hits|GetArraySize\s*\([^)]*\))'
+                r'\s*<=?\s*\d{2,}\s*&&'),
+     "drop the bound, or bound it and emit a collector-truncation-notice"),
+
     ("dedupe-ring",
      "fixed-size seen[] ring — entries past it are mis-deduped or dropped",
      re.compile(r'\*\s*seen\s*\[\s*\d+\s*\]|char\s+\*\s*seen\s*\[\s*\d+\s*\]'),

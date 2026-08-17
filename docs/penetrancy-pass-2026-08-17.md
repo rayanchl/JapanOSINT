@@ -121,8 +121,9 @@ Two honesty bugs fell out:
 
 ## 3. The audit was crying wolf, and hiding real findings behind the noise
 
-`make audit-sources` at HEAD: 168 findings across 99 files. Now **120 across
-76**, and the strict gated set grew from 30 files to 159.
+`make audit-sources` at HEAD: 168 findings across 99 files. Now **118 across
+76** — and that is after ADDING a check that surfaced 12 findings nobody could
+see before (§5). The strict gated set grew from 30 files to 159.
 
 Two thirds of the `single-page` findings were never real: `?page=1&per_page=100`
 **is** walked by `jsonlist_emit_paged`. The audit did not model the engine, so it
@@ -174,12 +175,54 @@ hand-copied into five collectors and had already drifted — some name a remedy,
 some forget the upstream's count — so the shape a consumer must recognise
 depended on which collector produced it.
 
+## 5. A cap class nobody could see
+
+Reading the OFAC consolidated sanctions parser turned up a bound the audit had no
+pattern for:
+
+```c
+while (cJSON_GetArraySize(akas) < 24 && sanc_xml_next(&c2, al.body_end, "aka", &ae)) {
+```
+
+Twenty-four aliases, then stop. OFAC publishes designations with more, and on a
+**sanctions list an alias is the thing screening matches on** — so alias 25
+onwards was a false negative on a designated person, produced silently. Neither
+existing check could see it: `record-cap` wants a `#define …MAX`, `loop-break`
+wants a `break`, and this was a bound in the loop's own condition.
+
+The new `loop-cap` check covers that shape, and only for counter-ish names, so a
+`chars < 280` guarding a UTF-8 buffer is not swept in. It immediately surfaced 12
+more. Fixed here, all on documents already fetched and parsed:
+
+| collector | was |
+|---|---|
+| OFAC consolidated | aliases past the 24th dropped |
+| TDnet timely disclosure | **100 rows per day** — a busy day at the Tokyo exchange runs past that, so it truncated exactly when it mattered |
+| EDINET-x (`corp_financials`) | 25 filings per fetch |
+| PR TIMES (`corp_markets_media`) | 30 press releases per fetch |
+
+Nine remain, all camera-aggregator scrapers (`cam_*.c`) with per-run scrape
+budgets of 60–300 anchors across paginated listings. Those budgets are arguably
+politeness rather than accident, but none of them discloses when it bites, which
+is what rule 6 requires. They are left visible as findings rather than
+half-fixed: each has a different loop shape, and a bound that a reader can see is
+better than eight rushed edits.
+
+Alongside them, 5 `first-only` sites were confirmed as genuine fixed-shape tuple
+reads (RDAP jCard's `[name,params,type,value]`, RFC 7484's `[[tlds],[urls]]`,
+`[lon,lat]`, a `[from,to]` interval) and marked, and 2 as display picks whose full
+array is already in `properties` (MISP galaxy `references`, UK sanctions
+aliases). UK flood stations now carry `label_all` for multi-named stations, and
+NASA POWER joins its whole `sources` provenance list instead of naming the first
+of several and misattributing the series.
+
 ## What is left, honestly
 
-* **120 audit findings** across 76 files: 51 `first-only`, 32 `record-cap`, 26
-  `loop-break`, 11 `single-page`. Most `record-cap`s look like memory guards
-  rather than discards, but each needs a human read; that is why the number is
-  published rather than baselined away.
+* **118 audit findings** across 76 files: 40 `first-only`, 32 `record-cap`, 26
+  `loop-break`, 11 `single-page`, 9 `loop-cap`. Most `record-cap`s look like
+  memory guards rather than discards, but each needs a human read; that is why
+  the number is published rather than baselined away. The 9 `loop-cap`s are the
+  camera scrapers described above and are the most likely to be real.
 * **The 11 remaining `single-page` rows** are `?page=1` with no page size in the
   URL. The engine now walks them *if* the upstream declares a total, and the
   audit cannot know statically whether it does — so they stay flagged. Reading
@@ -203,6 +246,7 @@ depended on which collector produced it.
 ```
 make                 clean (-Wall -Wextra)
 make hptest          63 assertions, all passing (14 new)
+make audit-sources   tree-wide 168 findings across 99 files -> 118 across 76
 make audit-sources   strict set: 159 files, 0 findings
 make source-floor    11,170 >= 11,170
 tools/lint_sources.py  OK — dup-id 0, dup-endpoint at baseline

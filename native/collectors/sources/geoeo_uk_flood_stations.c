@@ -70,10 +70,17 @@ static int stations(const source_ctx *ctx, intel_sink *sink, int *emitted) {
     seen++;
     const char *notation = geoeo_str(s, "notation");
     const char *label = geoeo_str(s, "label");
-    if (!label) {                    /* label is occasionally an array */
+    /* label is occasionally an ARRAY — a station with more than one name. The
+     * display picks the first, but the alternates are how a reader recognises
+     * the station under the name their own source used, so the whole array is
+     * carried in properties as label_all rather than dropped after [0]. */
+    cJSON *label_arr = NULL;
+    if (!label) {
       cJSON *l = cJSON_GetObjectItem(s, "label");
-      if (cJSON_IsArray(l) && cJSON_IsString(cJSON_GetArrayItem(l, 0)))
-        label = cJSON_GetArrayItem(l, 0)->valuestring;
+      if (cJSON_IsArray(l) && cJSON_IsString(cJSON_GetArrayItem(l, 0))) {  /* exhaustive-ok: display pick; every name kept in label_all below */
+        label = cJSON_GetArrayItem(l, 0)->valuestring;  /* exhaustive-ok: ditto */
+        if (cJSON_GetArraySize(l) > 1) label_arr = l;
+      }
     }
     if (!notation && !label) continue;
 
@@ -85,6 +92,13 @@ static int stations(const source_ctx *ctx, intel_sink *sink, int *emitted) {
     cJSON *props = cJSON_CreateObject();
     geoeo_copy_all(props, s, KEYS);
     if (label) cJSON_AddStringToObject(props, "label", label);
+    if (label_arr) {
+      cJSON *all = cJSON_AddArrayToObject(props, "label_all");
+      const cJSON *ln;
+      cJSON_ArrayForEach(ln, label_arr)
+        if (cJSON_IsString(ln) && ln->valuestring[0])
+          cJSON_AddItemToArray(all, cJSON_CreateString(ln->valuestring));
+    }
     if (geo) { cJSON_AddNumberToObject(props, "lat", lat);
                cJSON_AddNumberToObject(props, "long", lon); }
     cJSON *measures = cJSON_GetObjectItem(s, "measures");

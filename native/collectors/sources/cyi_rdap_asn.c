@@ -34,7 +34,7 @@ static const char *vcard_value(const cJSON *ent, const char *want) {
   const cJSON *prop;
   cJSON_ArrayForEach(prop, props) {
     if (!cJSON_IsArray(prop) || cJSON_GetArraySize(prop) < 4) continue;
-    const cJSON *pn = cJSON_GetArrayItem(prop, 0);
+    const cJSON *pn = cJSON_GetArrayItem(prop, 0);  /* exhaustive-ok: jCard entry is the fixed 4-tuple [name,params,type,value] */
     const cJSON *pv = cJSON_GetArrayItem(prop, 3);
     if (cJSON_IsString(pn) && pn->valuestring && strcmp(pn->valuestring, want) == 0 &&
         cJSON_IsString(pv) && pv->valuestring && pv->valuestring[0])
