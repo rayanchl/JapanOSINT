@@ -46,7 +46,37 @@ from gen_hp_batch import load, split_opts   # noqa: E402  (manifest parser, reus
 # was found. This still says exactly what we are and gives a contact — it drops
 # only the library name, which is not information the operator needs and is the
 # one part they are filtering on.
-DEFAULT_UA = "Mozilla/5.0 (compatible; JapanOSINT-research/1.0; +https://github.com/)"
+def _engine_user_agent():
+    """The User-Agent the ENGINE will send, read from core/httpclient.h.
+
+    This prober's whole promise is that a row is never verified under different
+    request conditions than the ones its collector will actually use — and it
+    was breaking that promise on the single most consequential header. It sent
+    `Mozilla/5.0 (compatible; JapanOSINT-research/1.0; …)` while every hp row at
+    runtime sends JO_USER_AGENT, so 1,623 of batch 19's 1,810 rows (the ones not
+    declaring a header of their own) were proven against a string they will
+    never send. Measured, the difference decides the response rarely — 13 of 14
+    HTTP-error rows answered identically to both — but "rarely" is not "never",
+    and IXF_TORIX answers 200 to one and 403 to the other.
+
+    Parsed from the header rather than copied, so the two cannot drift apart
+    again. A row that genuinely needs a different UA declares header1, which the
+    engine then honours — that is the supported way to ask for one.
+    """
+    path = os.path.join(NATIVE, "core", "httpclient.h")
+    try:
+        src = open(path, encoding="utf-8").read()
+    except OSError:
+        return None
+    m = re.search(r"#define\s+JO_USER_AGENT\s*((?:\\\s*\n|.)*)", src)
+    if not m:
+        return None
+    parts = re.findall(r'"([^"]*)"', m.group(1))
+    return "".join(parts) or None
+
+
+DEFAULT_UA = _engine_user_agent() or \
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; feed collector; contact via repo issues)"
 
 # verify_feeds caps a body at 8 MB on the reasoning that "a feed that big is not
 # a feed". That was true of the RSS-shaped sources it was written for, but this
