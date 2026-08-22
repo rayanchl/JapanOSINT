@@ -2726,6 +2726,8 @@ static const hp_source HP3B19_EURASIA[] = {
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "name",
+    .page_param = "start",
+    .page_size = 100,
     .title_keys = "title",
     .description = "Azerbaijan national open-data catalogue, one record per dataset "
       "with the publishing state body, translated titles, licence, tags "

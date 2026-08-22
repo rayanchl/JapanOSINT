@@ -67,6 +67,20 @@ def declares_paging(r):
     return ("page_param=" in o) or ("next_path=" in o)
 
 
+def declares_exception(r):
+    """`pagination_ok=<reason>` — the C tree's `exhaustive-ok` marker, in a
+    manifest. Some endpoints genuinely cannot be paged: the Wikimedia core
+    search API caps `limit` at 100 and has no offset parameter at all, and the
+    OSM changesets API refuses limit>100. Those rows would stay flagged forever
+    otherwise, and a warning that can never be cleared is a warning nobody
+    reads — which is how the real ones get missed. The reason is mandatory."""
+    for kv in r["opts"].split(";"):
+        k, _, v = kv.partition("=")
+        if k.strip() == "pagination_ok":
+            return v.strip()
+    return None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("manifests", nargs="+")
@@ -80,10 +94,13 @@ def main():
             if rec.get("items", "").isdigit():
                 items[rec["id"]] = int(rec["items"])
 
-    n = flagged = 0
+    n = flagged = excepted = 0
     for r in rows(a.manifests):
         n += 1
         if declares_paging(r):
+            continue
+        if declares_exception(r):
+            excepted += 1
             continue
         url = urllib.parse.unquote(r["url"])
         why = None
@@ -106,7 +123,8 @@ def main():
             if not a.quiet:
                 print("%-38s %-26s %s" % (r["_at"], r["id"], why))
 
-    print("\n%d of %d rows declare no pagination but look paged" % (flagged, n))
+    print("\n%d of %d rows declare no pagination but look paged"
+          "  (%d declared pagination_ok)" % (flagged, n, excepted))
     return 1 if flagged else 0
 
 

@@ -262,7 +262,7 @@ static const hp_source HP3B19_OSM[] = {
     .record_type = "osm-note",
     .tags = "\"osm\",\"notes\",\"dispute\",\"geo\",\"conflict\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.openstreetmap.org/api/0.6/notes.json?bbox=29.0,44.0,35.0,48.0&limit=100&closed=0",
+    .url = "https://api.openstreetmap.org/api/0.6/notes.json?bbox=29.0,44.0,35.0,48.0&limit=10000&closed=0",
     .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/)" },
     .array_path = "features",
     .date_keys = "date_created",

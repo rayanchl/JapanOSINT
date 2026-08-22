@@ -188,6 +188,8 @@ static const hp_source HP3B19_NORTHAM[] = {
     .url = "https://publicapi.fcc.gov/ecfs/filings?api_key=DEMO_KEY&limit=100",
     .array_path = "filing",
     .interval = 21600,
+    .page_param = "offset",
+    .page_size = 100,
     .description = "Filings in FCC proceedings, naming the filing party, the law "
       "firm representing it, the proceeding docket, the filing type and "
       "the document. Ex parte filings record who met which commissioner "

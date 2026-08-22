@@ -63,6 +63,18 @@ INT_OPTS = {"detail_max", "page_start", "page_size", "page_max", "max_items",
 # request conditions than the ones its collector will actually use.
 HDR_OPTS = ("header1", "header2", "header3")
 
+# Documentation-only opts. They are parsed, validated and then NOT emitted --
+# they carry a statement about the row for another tool to read, exactly as the
+# inline  marker does in C.
+#
+#   pagination_ok=<reason>   this endpoint genuinely cannot be paged, and here
+#                            is what was measured. Without it a row like the
+#                            Wikimedia search API -- whose limit is capped at
+#                            100 with no offset parameter at all -- stays
+#                            flagged by audit_batch_pagination forever, and a
+#                            permanent warning is one nobody reads.
+DOC_OPTS = {"pagination_ok"}
+
 
 def load(paths):
     """Parse manifests, failing loudly on any malformed or duplicated row."""
@@ -150,6 +162,10 @@ def emit_row(r):
             continue
         k, _, v = kv.partition("=")
         k, v = k.strip(), v.strip()
+        if k in DOC_OPTS:
+            if not v:
+                raise SystemExit("%s: %s needs a reason" % (r["_src"], k))
+            continue
         if k not in STR_OPTS and k not in INT_OPTS and k not in HDR_OPTS:
             raise SystemExit("%s: unknown opt %r" % (r["_src"], k))
         o[k] = v
