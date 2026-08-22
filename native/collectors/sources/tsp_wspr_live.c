@@ -39,7 +39,7 @@
 
 #define WSPR_HOST "https://db1.wspr.live/?query="
 #define WINDOW_MIN 10
-#define ROW_LIMIT 500
+#define ROW_LIMIT 500   /* exhaustive-ok: the query asks the upstream for a page; a full page emits a collector-truncation-notice */
 
 static const char *WSPR_SQL =
   "SELECT time,band,tx_sign,tx_loc,rx_sign,rx_loc,frequency,snr,power,drift,"

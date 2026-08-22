@@ -36,7 +36,6 @@
 
 #define TVQ_URL_FMT "https://transition.fcc.gov/fcc-bin/tvq?state=%s&list=4&size=9"
 #define MAXF 64
-#define MAX_ROWS 40000
 #define BUDGET_SEC 240
 
 static const char *const STATES[] = {
@@ -209,9 +208,8 @@ static int emit_state(const source_ctx *ctx, intel_sink *sink,
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t t0 = time(NULL);
-  int total = 0, ok_states = 0, nodms = 0;
-  for (int i = 0; i < NSTATES; i++) {
-    if (total >= MAX_ROWS) break;
+  int total = 0, ok_states = 0, nodms = 0, i = 0;
+  for (; i < NSTATES; i++) {
     if (time(NULL) - t0 > BUDGET_SEC) {
       fprintf(stderr, "[fcc-tv-query] wall-clock budget reached after %d state(s)\n",
               ok_states);
@@ -223,6 +221,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (ok_states == 0) {
     fprintf(stderr, "[fcc-tv-query] no state query succeeded\n");
     return -1;
+  }
+  if (i < NSTATES) {
+    char left[512];
+    int w = snprintf(left, sizeof left,
+      "the wall-clock budget (%d s) stopped the state walk; these states were "
+      "never queried:", BUDGET_SEC);
+    for (int k = i; k < NSTATES && w > 0 && (size_t)w < sizeof left - 4; k++)
+      w += snprintf(left + w, sizeof left - (size_t)w, " %s", STATES[k]);
+    jo_trunc_notice(sink, "fcc-tv-query",
+      "https://transition.fcc.gov/fcc-bin/tvq", total, -1, left,
+      "raise BUDGET_SEC in collectors/sources/tsp_fcc_tv_query.c, or run the "
+      "collector more often so each run resumes further along");
   }
   fprintf(stderr, "[fcc-tv-query] emitted %d over %d/%d states "
                   "(%d records skipped: no site DMS)\n",

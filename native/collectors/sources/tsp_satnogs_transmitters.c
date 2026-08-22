@@ -21,7 +21,6 @@
 #include <string.h>
 
 #define SATNOGS_TX_URL "https://db.satnogs.org/api/transmitters/?format=json"
-#define MAX_ROWS 12000
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, SATNOGS_TX_URL, 60000);
@@ -38,7 +37,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   cJSON *tx;
   cJSON_ArrayForEach(tx, doc) {
-    if (n >= MAX_ROWS) break;
     const char *uuid = jo_sv(tx, "uuid");
     if (!uuid) continue;                          /* no identity -> no row */
 

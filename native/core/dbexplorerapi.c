@@ -68,36 +68,66 @@ char *dbexplorer_table(db_handle *db, const char *name, int limit, int offset,
   cJSON_ArrayForEach(cc,cols)
     if (orderBy&&*orderBy&&strcmp(cJSON_GetObjectItem(cc,"name")->valuestring,orderBy)==0) ob_ok=1;
   const char *dir = (orderDir && strcasecmp(orderDir,"DESC")==0) ? "DESC" : "ASC";
-  char where[512]=""; int hasq = q && *q;
+  /* The WHERE disjunction is sized from the ACTUAL column set, not a fixed
+   * 512 bytes. intel_items carries 26 TEXT columns once the boot migrations
+   * have run (keywords_at, media_scanned_at, title_en/body_en/summary_en,
+   * translated_at, cluster_id …) and their OR-chain is ~515 bytes, so the
+   * strncat() that used to build this truncated it mid-identifier. Both
+   * prepares below then failed and the endpoint answered every `q=` search of
+   * the main table with rows:[] total:0 — a silent, permanent "no matches"
+   * that is indistinguishable from an empty table. */
+  int hasq = q && *q;
+  size_t wcap = 8;
+  cJSON_ArrayForEach(cc,cols) {
+    cJSON *cn = cJSON_GetObjectItem(cc,"name");
+    wcap += (cn && cn->valuestring ? strlen(cn->valuestring) : 0) + 24;
+  }
+  char *where = calloc(1, wcap);
+  if (!where) { cJSON_Delete(cols); return NULL; }
   if (hasq) {
-    int first=1;
+    int first=1; size_t wl=0;
     cJSON_ArrayForEach(cc,cols) {
       const char *ty=cJSON_GetObjectItem(cc,"type")->valuestring;
       if (ty && (strcasestr(ty,"TEXT")||strcasestr(ty,"CHAR")||strcasestr(ty,"CLOB"))) {
-        char frag[96]; snprintf(frag,sizeof frag,"%s\"%s\" LIKE ?",
+        int n = snprintf(where+wl,wcap-wl,"%s\"%s\" LIKE ?",
           first?"WHERE ":" OR ",cJSON_GetObjectItem(cc,"name")->valuestring);
-        strncat(where,frag,sizeof where-strlen(where)-1); first=0;
+        /* wcap is computed from the real column set above, so this cannot bite
+         * today. Guard it anyway: snprintf returns what it WOULD have written,
+         * so an unchecked `wl +=` can carry wl past wcap, and `wcap - wl` is
+         * size_t — it underflows to ~2^64 and the next iteration writes far
+         * past the allocation. Fail the request rather than continue with a
+         * truncated disjunction, because a short WHERE silently searches fewer
+         * columns and answers "no matches" for rows that do match, which is
+         * the exact bug this whole block was rewritten to fix. */
+        if (n < 0 || (size_t)n >= wcap - wl) {
+          free(where); cJSON_Delete(cols); return NULL;
+        }
+        wl += (size_t)n;
+        first=0;
       }
     }
     if (first) hasq=0; /* no text cols → no filter */
   }
   char like[256]; if (hasq) snprintf(like,sizeof like,"%%%s%%",q);
+  char order[128]=""; if (ob_ok) snprintf(order,sizeof order,"ORDER BY \"%s\" %s",orderBy,dir);
+  size_t scap = wcap + strlen(name) + sizeof order + 64;
+  char *cq = malloc(scap), *sql = malloc(scap);
+  if (!cq || !sql) { free(cq); free(sql); free(where); cJSON_Delete(cols); return NULL; }
   /* count */
-  long total=0; char cq[700];
-  snprintf(cq,sizeof cq,"SELECT COUNT(*) FROM \"%s\" %s",name,hasq?where:"");
+  long total=0; int qerr=0;
+  snprintf(cq,scap,"SELECT COUNT(*) FROM \"%s\" %s",name,hasq?where:"");
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,cq,-1,&s,NULL)==SQLITE_OK){
     int bi=1; if (hasq){ int n=0; for(const char*p=where;(p=strstr(p,"LIKE ?"));p+=6)n++;
       for(int i=0;i<n;i++) sqlite3_bind_text(s,bi++,like,-1,SQLITE_TRANSIENT); }
     if (sqlite3_step(s)==SQLITE_ROW) total=sqlite3_column_int64(s,0);
-  }
+  } else qerr=1;
   sqlite3_finalize(s);
-  char order[128]=""; if (ob_ok) snprintf(order,sizeof order,"ORDER BY \"%s\" %s",orderBy,dir);
-  char sql[900];
-  snprintf(sql,sizeof sql,"SELECT * FROM \"%s\" %s %s LIMIT ? OFFSET ?",
+  snprintf(sql,scap,"SELECT * FROM \"%s\" %s %s LIMIT ? OFFSET ?",
     name,hasq?where:"",order);
   cJSON *rows=cJSON_CreateArray();
-  if (sqlite3_prepare_v2(db->h,sql,-1,&s,NULL)==SQLITE_OK){
+  if (sqlite3_prepare_v2(db->h,sql,-1,&s,NULL)!=SQLITE_OK) qerr=1;
+  else {
     int bi=1; if (hasq){ int n=0; for(const char*p=where;(p=strstr(p,"LIKE ?"));p+=6)n++;
       for(int i=0;i<n;i++) sqlite3_bind_text(s,bi++,like,-1,SQLITE_TRANSIENT); }
     sqlite3_bind_int(s,bi++,limit); sqlite3_bind_int(s,bi++,offset);
@@ -117,11 +147,17 @@ char *dbexplorer_table(db_handle *db, const char *name, int limit, int offset,
     }
   }
   sqlite3_finalize(s);
+  const char *emsg = qerr ? sqlite3_errmsg(db->h) : NULL;
+  free(where); free(cq); free(sql);
   cJSON *o=cJSON_CreateObject();
   cJSON_AddStringToObject(o,"name",name);
   cJSON_AddItemToObject(o,"columns",cols);
   cJSON_AddItemToObject(o,"rows",rows);
   cJSON_AddNumberToObject(o,"total",(double)total);
+  /* A query that could not be prepared is reported as one. Serving the empty
+   * rows[] on its own would read as "the table has nothing matching", which is
+   * exactly the failure-as-plausible-success this codebase forbids. */
+  if (qerr) cJSON_AddStringToObject(o,"error",emsg?emsg:"query failed");
   cJSON_AddNumberToObject(o,"limit",limit);
   cJSON_AddNumberToObject(o,"offset",offset);
   cJSON_AddItemToObject(o,"orderBy",ob_ok?cJSON_CreateString(orderBy):cJSON_CreateNull());

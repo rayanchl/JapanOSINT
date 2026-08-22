@@ -45,8 +45,8 @@ static void add_hit(hit_t *arr, int *n, const char *v, const char *src) {
     }
   }
   if (*n >= MAX_RESULTS) return;
-  strncpy(arr[*n].v, v, 255); arr[*n].v[255] = 0;
-  strncpy(arr[*n].src, src, 255); arr[*n].src[255] = 0;
+  snprintf(arr[*n].v, sizeof arr[*n].v, "%s", v);
+  snprintf(arr[*n].src, sizeof arr[*n].src, "%s", src);
   (*n)++;
 }
 

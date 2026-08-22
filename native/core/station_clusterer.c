@@ -1130,8 +1130,19 @@ static int json_str_array(char **a, int n, char *buf, size_t bufsz) {
     char *s = cJSON_PrintUnformatted(arr);
     cJSON_Delete(arr);
     if (!s) return -1;
-    snprintf(buf, bufsz, "%s", s);
+    /* The truncation has to be an error, not a shrug. member_uids for a large
+     * cluster runs past a 16 KiB buffer, and a cut-off array is bound into the
+     * row as if it were valid JSON — the reader then parses NULL and reports
+     * member_count 0 with no error anywhere. */
+    int need = snprintf(buf, bufsz, "%s", s);
+    int over = (need < 0 || (size_t)need >= bufsz);
     free(s);
+    if (over) {
+        if (bufsz) buf[0] = 0;
+        fprintf(stderr, "[cluster] array of %d entries needs %d bytes, buffer "
+                        "is %zu — row not written\n", n, need, bufsz);
+        return -1;
+    }
     return 0;
 }
 
@@ -1266,7 +1277,11 @@ static int compute_line_dots(db_handle *db, cluster_row_t *rows, int nrows,
                 if (dn == dcap) {
                     int nc = dcap ? dcap * 2 : 64;
                     dot_t *nd = realloc(dots, (size_t)nc * sizeof(dot_t));
-                    if (!nd) { free(snaps); rc = -1; break; }
+                    /* No free(snaps) here: this `break` only leaves the inner
+                     * per-snap loop and drops straight onto the unconditional
+                     * free(snaps) below, so freeing it here made the OOM path
+                     * a double free. */
+                    if (!nd) { rc = -1; break; }
                     dots = nd; dcap = nc;
                 }
                 char wbuf[256];
@@ -1338,8 +1353,15 @@ int station_clusterer_run(db_handle *db) {
                 int  *gs2 = realloc(gsz,    (size_t)nc * sizeof(int));
                 int  *gc2 = realloc(gcap,   (size_t)nc * sizeof(int));
                 if (!ng2 || !gs2 || !gc2) {
-                    free(ng2 ? ng2 : groups);
-                    /* gs2/gc2 freed via originals below */
+                    /* Whichever realloc SUCCEEDED has already freed its old
+                     * block, so the survivors must be adopted before bailing.
+                     * The previous shape freed the new `groups` and left the
+                     * variable holding the stale pointer, which the cleanup
+                     * below then walked and freed a second time — and it leaked
+                     * gs2/gc2 whenever only one of the three failed. */
+                    if (ng2) groups = ng2;
+                    if (gs2) gsz   = gs2;
+                    if (gc2) gcap  = gc2;
                     fail = 1; break;
                 }
                 groups = ng2; gsz = gs2; gcap = gc2; gscap = nc;

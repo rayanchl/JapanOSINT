@@ -16,7 +16,7 @@
  *    to detect a future leap-second announcement": DAT is emitted as a number
  *    and any change from the previous row is flagged in properties.
  * STATED BOUND: only the last WINDOW_DAYS of the ~1,700-row file are emitted
- *   (earlier rows never change), capped at MAX_ROWS.
+ *   (earlier rows never change).
  * Licence: CelesTrak usage policy — free reuse with attribution, derived from
  *   IERS.
  */
@@ -31,7 +31,6 @@
 
 #define EOP_URL "https://celestrak.org/SpaceData/EOP-Last5Years.csv"
 #define WINDOW_DAYS 30
-#define MAX_ROWS 120
 #define MAXCOL 24
 
 static int tsp_split(char *line, char **out, int max) {
@@ -115,7 +114,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (dat >= 0) prev_dat = dat;
 
     if (strcmp(date, cutoff) < 0) continue;
-    if (n >= MAX_ROWS) break;
 
     const char *typ = tsp_cell(f, nf, i_typ);
     const char *ut1 = tsp_cell(f, nf, i_ut1);

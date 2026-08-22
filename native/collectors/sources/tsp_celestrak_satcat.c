@@ -16,8 +16,8 @@
  *
  * STATED BOUND (not a silent truncation): the catalogue is ~64k objects and is
  * almost entirely static, so this collector emits the part that moves —
- * objects LAUNCHED or DECAYED within the last WINDOW_DAYS — capped at
- * MAX_ROWS. Both numbers are recorded in every row's properties.
+ * objects LAUNCHED or DECAYED within the last WINDOW_DAYS. The window is
+ * recorded in every row's properties; every object inside it is emitted.
  *
  * Licence: CelesTrak usage policy (celestrak.org/usage-policy.php) — free
  * reuse, no more than one retrieval per data-update cycle, attribution to
@@ -34,7 +34,6 @@
 
 #define SATCAT_URL  "https://celestrak.org/pub/satcat.csv"
 #define WINDOW_DAYS 365
-#define MAX_ROWS    6000
 #define MAXCOL      32
 
 /* RFC4180 field splitter, in place. Cells are NUL-terminated inside `line`. */
@@ -136,7 +135,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     int recent = (launch && strcmp(launch, cutoff) >= 0) ||
                  (decay  && strcmp(decay,  cutoff) >= 0);
     if (!recent) continue;
-    if (n >= MAX_ROWS) break;
 
     const char *owner = tsp_cell(f, nf, i_own);
     const char *otype = tsp_cell(f, nf, i_type);
@@ -163,7 +161,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     jo_add_str(pr, "orbit_center", tsp_cell(f, nf, i_ctr));
     jo_add_str(pr, "orbit_type", tsp_cell(f, nf, i_otype));
     cJSON_AddStringToObject(pr, "window", "launched or decayed in the last 365 days");
-    cJSON_AddNumberToObject(pr, "row_cap", MAX_ROWS);
     cJSON_AddStringToObject(pr, "source", "CelesTrak SATCAT");
     char *pj = cJSON_PrintUnformatted(pr);
     cJSON_Delete(pr);

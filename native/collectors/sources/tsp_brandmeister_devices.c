@@ -20,7 +20,7 @@
  *  - "the response is ~10 MB, so poll infrequently": interval 21600 s, and only
  *    devices seen within RECENT_DAYS are emitted (STATED BOUND — that is the
  *    live network; the full historical roster is tens of thousands of rows and
- *    does not change), capped at MAX_ROWS.
+ *    does not change).
  * Licence: BrandMeister publishes this v2 API openly with no key; the data is
  *   self-declared by repeater operators.
  */
@@ -36,7 +36,6 @@
 
 #define BM_URL "https://api.brandmeister.network/v2/device"
 #define RECENT_DAYS 3
-#define MAX_ROWS 12000
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, BM_URL, 120000);
@@ -57,7 +56,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *dv;
   cJSON_ArrayForEach(dv, doc) {
     seen++;
-    if (n >= MAX_ROWS) break;
     double id;
     if (!jo_num(dv, "id", &id)) continue;
     const char *call = jo_sv(dv, "callsign");

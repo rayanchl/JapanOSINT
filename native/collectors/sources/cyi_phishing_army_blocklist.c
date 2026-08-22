@@ -5,9 +5,12 @@
  * parse_notes: "Bare domains after a '#' header block. 154k entries: index it,
  * do not emit rows one-per-domain." The full file is therefore parsed and
  * counted — the real total and the '# Last Update' header are carried on every
- * row — but only the first MAX_ROWS domains are materialised as intel rows, so
- * this stays the breadth layer behind the smaller high-precision feeds rather
- * than a 154k-row dump. Every emitted domain is a literal line from the file.
+ * row — and EVERY domain is materialised as a row. The old 5,000-row cap was
+ * a silent slice of a 154k-line file we had already downloaded and parsed:
+ * nothing in the output said the other 149k existed. Consumers that want the
+ * breadth layer as an index rather than a list bound their own view; the
+ * collector does not decide that for them. Every emitted domain is a literal
+ * line from the file.
  * No coordinates -> has_geo 0 (R2).
  * Licence: CC BY-NC-SA style community feed — NON-COMMERCIAL; check the
  * project page terms before commercial redistribution.
@@ -22,7 +25,6 @@
 #include <string.h>
 
 #define CYI_URL "https://phishing.army/download/phishing_army_blocklist.txt"
-#define MAX_ROWS 5000
 
 static int looks_like_host(const char *s) {
   size_t n = strlen(s);
@@ -56,7 +58,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       continue;
     }
     if (!looks_like_host(line)) continue;
-    if (n >= MAX_ROWS) break;
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "domain", line);

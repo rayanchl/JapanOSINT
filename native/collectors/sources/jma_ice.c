@@ -143,10 +143,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   it.tags_json = tj;
   int rc = sink->emit(sink, &it);
 
-  free(pj); free(tj); free(rows);
+  free(pj); free(tj);
   cJSON_Delete(p); cJSON_Delete(tags);
   fprintf(stderr, "[jma-ice] emitted %d (latest=%s)\n",
           rc >= 0 ? 1 : 0, latest->season);
+  free(rows);                      /* `latest` points into rows — free last */
   return rc >= 0 ? 0 : -1;
 }
 

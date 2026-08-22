@@ -70,10 +70,14 @@ static const dialcode *identify_country(const char *digits) {
   return NULL;
 }
 
+/* 1 = mobile, 0 = landline, -1 = not determined.
+ * The -1 arm used to be `return 1` with the comment "mobile is most common" —
+ * an estimate emitted as if it were a determination (house rule 1). A country
+ * with no prefix table entry now yields a null likely_type. */
 static int is_likely_mobile(const char *digits, const char *cc) {
   for (int i = 0; MOBILE_PREFIXES[i].cc; i++) {
     if (strcmp(MOBILE_PREFIXES[i].cc, cc) != 0) continue;
-    if (!*MOBILE_PREFIXES[i].prefixes) return 1;  /* prefix not indicative */
+    if (!*MOBILE_PREFIXES[i].prefixes) return -1; /* prefix not indicative */
     char buf[64]; snprintf(buf, sizeof buf, "%s", MOBILE_PREFIXES[i].prefixes);
     const char *national = digits + strlen(cc);
     char *save = NULL;            /* strtok_r: concurrent workers, see jsonlist.c */
@@ -81,7 +85,7 @@ static int is_likely_mobile(const char *digits, const char *cc) {
       if (strncmp(national, p, strlen(p)) == 0) return 1;
     return 0;
   }
-  return 1;  /* default: mobile is most common */
+  return -1;                      /* country not in the table */
 }
 
 /* Deterministic E.164 validation of the input (real analysis, no network). */
@@ -104,11 +108,17 @@ static cJSON *validate_phone(const char *norm) {
     size_t national = digit_count - strlen(c->code);
     int ok = national >= (size_t)c->min_len && national <= (size_t)c->max_len;
     cJSON_AddBoolToObject(r, "valid", ok);
-    cJSON_AddStringToObject(r, "likely_type",
-                            is_likely_mobile(digits, c->code) ? "mobile" : "landline");
+    int lm = is_likely_mobile(digits, c->code);
+    if (lm >= 0) cJSON_AddStringToObject(r, "likely_type", lm ? "mobile" : "landline");
+    else cJSON_AddItemToObject(r, "likely_type", cJSON_CreateNull());
   } else {
-    cJSON_AddBoolToObject(r, "valid", 1);
-    cJSON_AddStringToObject(r, "country", "Unknown");
+    /* no-fabrication (house rule 1): an unrecognised dial code used to be
+     * reported as country "Unknown" AND valid:true — a verdict we had no
+     * basis for. Both are now absent: country is null and `valid` is omitted
+     * rather than asserted, with the reason stated in-band. */
+    cJSON_AddItemToObject(r, "country", cJSON_CreateNull());
+    cJSON_AddStringToObject(r, "country_code_note",
+      "dial code not in the E.164 prefix table; country and validity not determined");
   }
   return r;
 }
@@ -165,21 +175,28 @@ static int phone_run(const source_ctx *ctx, intel_sink *sink,
     cJSON *lt = nv ? cJSON_GetObjectItem(nv, "line_type") : NULL;
     cJSON *car = nv ? cJSON_GetObjectItem(nv, "carrier") : NULL;
     if (car && cJSON_IsString(car)) cJSON_AddStringToObject(data, "carrier", car->valuestring);
-    cJSON_AddStringToObject(data, "line_type",
-      (lt && cJSON_IsString(lt)) ? lt->valuestring
-      : (cJSON_IsString(cJSON_GetObjectItem(val, "likely_type"))
-         ? cJSON_GetObjectItem(val, "likely_type")->valuestring : "unknown"));
+    cJSON *lg = cJSON_GetObjectItem(val, "likely_type");
+    const char *ltv = (lt && cJSON_IsString(lt)) ? lt->valuestring
+                    : (cJSON_IsString(lg) ? lg->valuestring : NULL);
+    if (ltv) cJSON_AddStringToObject(data, "line_type", ltv);
+    else cJSON_AddItemToObject(data, "line_type", cJSON_CreateNull());
   } else if (mode == 2) {                /* PHONE_REPUTATION */
+    /* no-fabrication: `valid` defaulted to true when nothing had determined
+     * it. An undetermined verdict is now reported as such instead. */
     cJSON *vv = cJSON_GetObjectItem(nv ? nv : val, "valid");
-    int valid = vv && cJSON_IsBool(vv) ? cJSON_IsTrue(vv) : 1;
+    int have_valid = vv && cJSON_IsBool(vv);
+    int valid = have_valid ? cJSON_IsTrue(vv) : 0;
     cJSON *lt = nv ? cJSON_GetObjectItem(nv, "line_type") : NULL;
     const char *line = (lt && cJSON_IsString(lt)) ? lt->valuestring : NULL;
     /* deterministic risk note from real signals only */
-    const char *risk = !valid ? "high (invalid/unallocated number)"
+    const char *risk = !have_valid ? NULL
+                     : !valid ? "high (invalid/unallocated number)"
                      : (line && (strstr(line, "voip") || strstr(line, "VoIP")))
                        ? "elevated (VoIP — disposable/spoofable)" : "baseline";
-    cJSON_AddStringToObject(data, "risk", risk);
-    cJSON_AddBoolToObject(data, "valid", valid);
+    if (risk) cJSON_AddStringToObject(data, "risk", risk);
+    else cJSON_AddItemToObject(data, "risk", cJSON_CreateNull());
+    if (have_valid) cJSON_AddBoolToObject(data, "valid", valid);
+    else cJSON_AddItemToObject(data, "valid", cJSON_CreateNull());
   }
 
   cJSON_AddItemToObject(data, "validation", val);   /* val ownership → data */

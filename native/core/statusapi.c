@@ -51,6 +51,7 @@ static void overlay_load(void) {
   fseek(f, 0, SEEK_END); long n = ftell(f); fseek(f, 0, SEEK_SET);
   if (n > 0 && n < (1 << 20)) {
     char *buf = malloc(n + 1);
+    if (!buf) { fclose(f); return; }
     if (fread(buf, 1, n, f) == (size_t)n) {
       buf[n] = 0;
       cJSON *j = cJSON_Parse(buf);
@@ -347,8 +348,14 @@ static agg_t *load_aggs(db_handle *db, int *out_n) {
   if (sqlite3_prepare_v2(db->h, AQ, -1, &s, NULL) != SQLITE_OK) return NULL;
   int cap = 64, n = 0;
   agg_t *A = malloc(cap * sizeof *A);
+  if (!A) { sqlite3_finalize(s); return NULL; }
   while (sqlite3_step(s) == SQLITE_ROW) {
-    if (n == cap) { cap *= 2; A = realloc(A, cap * sizeof *A); }
+    /* unchecked realloc leaked the old block and then wrote through NULL */
+    if (n == cap) {
+      agg_t *NA = realloc(A, (size_t)cap * 2 * sizeof *A);
+      if (!NA) break;
+      A = NA; cap *= 2;
+    }
     agg_t *r = &A[n++];
     snprintf(r->src, sizeof r->src, "%s", (const char *)sqlite3_column_text(s,0));
     r->ic = sqlite3_column_int64(s,1); r->gc = sqlite3_column_int64(s,2);

@@ -147,8 +147,11 @@ char *searchapi_suggest(const char *q) {
 
 char *searchapi_results(db_handle *db, const char *id) {
   if (!id || !*id) return NULL;
-  osint_request *rp = progress_get(id);
-  if (rp) return progress_to_json(rp);
+  /* Find + serialise under one lock: progress_create() frees the oldest
+   * FINISHED request past 200, and a pointer taken from progress_get() and
+   * used after the unlock can be that entry. */
+  char *live = progress_snapshot_by_id(id, NULL);
+  if (live) return live;
 
   /* Server restarted: reconstruct from the persisted run row (== JS else). */
   char uid[128];

@@ -37,7 +37,8 @@ static char *aw_crossref_authors(const cJSON *w) {
   const cJSON *au = cJSON_GetObjectItem(w, "author");
   if (!cJSON_IsArray(au)) return NULL;
   size_t cap = 256, len = 0; char *out = (char *)malloc(cap);
-  if (!out) return NULL; out[0] = 0; int n = 0;
+  if (!out) return NULL;
+  out[0] = 0; int n = 0;
   const cJSON *a;
   cJSON_ArrayForEach(a, au) {
     const char *given = jo_sv(a, "given");
@@ -128,7 +129,8 @@ static char *aw_s2_authors(const cJSON *p) {
   const cJSON *au = cJSON_GetObjectItem(p, "authors");
   if (!cJSON_IsArray(au)) return NULL;
   size_t cap = 256, len = 0; char *out = (char *)malloc(cap);
-  if (!out) return NULL; out[0] = 0; int n = 0;
+  if (!out) return NULL;
+  out[0] = 0; int n = 0;
   const cJSON *a;
   cJSON_ArrayForEach(a, au) {
     const char *nm = jo_sv(a, "name");

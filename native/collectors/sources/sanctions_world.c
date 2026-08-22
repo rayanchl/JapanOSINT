@@ -359,12 +359,25 @@ static int sw_scan_xml(intel_sink *sink, const char *body, const char *q,
   char *save = NULL;
   for (char *rt = strtok_r(tags, ",", &save); rt && emitted < max;
        rt = strtok_r(NULL, ",", &save)) {
+    /* Match the opening tag WITHOUT its '>' so an element carrying attributes
+     * is still a record. The UN and Canadian schemas write a bare
+     * <INDIVIDUAL>, but Switzerland writes <target ssid="5142"> — matching
+     * "<target>" found zero records in a 42 MB file that holds 17,292 of them,
+     * and the source reported a clean screen. */
     char open[64], close[64];
-    snprintf(open, sizeof open, "<%s>", rt);
+    int openl = snprintf(open, sizeof open, "<%s", rt);
     snprintf(close, sizeof close, "</%s>", rt);
     const char *p = body;
     for (;;) {
       const char *s = strstr(p, open);
+      /* reject a longer tag that merely shares the prefix (<targetGroup>) */
+      while (s && s[openl] != '>' && s[openl] != ' ' && s[openl] != '\t' &&
+             s[openl] != '\n' && s[openl] != '/')
+        s = strstr(s + 1, open);
+      if (s) {
+        const char *gt = strchr(s, '>');
+        if (!gt) s = NULL;
+      }
       if (!s) break;
       const char *e = strstr(s, close);
       if (!e) break;
@@ -484,12 +497,17 @@ static const sw_row ROWS[] = {
   { "OFAC_SDN", "OFAC_SDN", "sanctions-sdn",
     "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.CSV",
     "https://sanctionssearch.ofac.treas.gov/", NULL, M_OFAC_CSV },
-  /* EU consolidated — the machine-readable export needs a (free) token/crl
-   * user id; gate rather than fake. */
+  /* EU consolidated — keyless. This was gated behind EU_SANCTIONS_TOKEN, which
+   * nobody sets, so the URL was fetched as "...content?token=" and answered 403
+   * on every run: a registered sanctions source that has never returned a row.
+   * The token is not a credential — `dG9rZW4tMjAxNw` is base64 "token-2017",
+   * the fixed value the Commission publishes on its own download page for
+   * anonymous access. With it the endpoint returns ~25 MB of CSV, keyless.
+   * Verified 2026-08-17: without it 403; with it 25,166,172 bytes. */
   { "EU_SANCTIONS", "EU_SANCTIONS", "sanctions-eu",
-    "https://webgate.ec.europa.eu/fsd/fsf/public/files/csvFullSanctionsList_1_1/content?token=",
+    "https://webgate.ec.europa.eu/fsd/fsf/public/files/csvFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw",
     "https://data.europa.eu/data/datasets/consolidated-list-of-persons-groups-and-entities-subject-to-eu-financial-sanctions",
-    "EU_SANCTIONS_TOKEN", M_SCAN },
+    NULL, M_SCAN },
   /* UN Security Council consolidated — keyless XML, one record per
    * <INDIVIDUAL>/<ENTITY> element */
   { "UN_SANCTIONS", "UN_SANCTIONS", "sanctions-un",
@@ -508,11 +526,17 @@ static const sw_row ROWS[] = {
     "https://ofsistorage.blob.core.windows.net/publishlive/2022format/ConList.csv",
     "https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets",
     NULL, M_SCAN, NULL, NULL, NULL, NULL, NULL, 6 },
-  /* World Bank debarred firms — keyless JSON */
+  /* World Bank debarred firms — NOT keyless any more. The gateway now answers
+   * 401 "Access denied due to missing subscription key" on this path and on
+   * its SANCTIONED_FIRM sibling, so the row was fetching nothing and reporting
+   * CLEAR. Declaring the credential makes the failure honest: with no key set
+   * the source reports "needs credential" instead of an empty screen, which is
+   * the difference between "not debarred" and "not checked".
+   * Verified 2026-08-17: 401 on both paths. */
   { "WORLDBANK_DEBARRED", "WORLDBANK_DEBARRED", "sanctions-debarment",
     "https://apigwext.worldbank.org/dvsvc/v1.0/json/APPLICATION/ADOBE_EXPRT_WS/OFFICIAL/DEBARRED_FIRMS",
     "https://www.worldbank.org/en/projects-operations/procurement/debarred-firms",
-    NULL, M_WB_JSON },
+    "WORLDBANK_API_KEY", M_WB_JSON },
   /* Canada SEMA consolidated autonomous sanctions — keyless XML, one record
    * per <record> element (person: LastName+GivenName, else EntityOrShip) */
   { "CA_SANCTIONS", "CA_SANCTIONS", "sanctions-ca",
@@ -530,11 +554,29 @@ static const sw_row ROWS[] = {
     "https://www.dfat.gov.au/sites/default/files/regulation8_consolidated.csv",
     "https://www.dfat.gov.au/international-relations/security/sanctions/consolidated-list",
     NULL, M_SCAN },
-  /* Switzerland SECO sanctions — keyless XML export */
+  /* Switzerland SECO sanctions — keyless XML export.
+   *
+   * The registered action was `downloadXmlGesamtlisteEn`, which is not the
+   * export: it answers HTTP 200 with a 3,290-byte XHTML landing page. The
+   * fetch succeeded, the scan found no names, and the source reported CLEAR on
+   * every run — so the Swiss list has never actually been screened. The export
+   * is `downloadXmlGesamtlisteAction`, which returns ~42 MB containing 17,292
+   * <target> records. Verified 2026-08-17: 3,290 bytes vs 42,194,880.
+   *
+   * Also promoted from M_SCAN to M_XML. A text scan of 42 MB cannot see a name
+   * whose parts are split across <name-part> elements — the same per-line
+   * failure documented above for the UN and Canadian lists, which is why those
+   * two are record-aware. Swiss names live in <value> under <name-part>, with
+   * transliterations in <spelling-variant>, so both are collected. */
   { "CH_SECO", "CH_SECO", "sanctions-ch",
-    "https://www.sesam.search.admin.ch/sesam-search-web/pages/downloadXmlGesamtliste.xhtml?lang=en&action=downloadXmlGesamtlisteEn",
+    "https://www.sesam.search.admin.ch/sesam-search-web/pages/downloadXmlGesamtliste.xhtml?lang=en&action=downloadXmlGesamtlisteAction",
     "https://www.seco.admin.ch/seco/en/home/Aussenwirtschaftspolitik_Wirtschaftliche_Zusammenarbeit/Wirtschaftsbeziehungen/exportkontrollen-und-sanktionen/sanktionen-embargos/sanktionsmassnahmen/suche_sanktionsadressaten.html",
-    NULL, M_SCAN },
+    NULL, M_XML,
+    "target",
+    "value",
+    "spelling-variant",
+    "sanctions-set-id",
+    "other-information" },
 };
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -566,7 +608,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       "Accept: application/json, text/csv, application/xml;q=0.9, */*;q=0.8",
       "User-Agent: JapanOSINT/1.0 (sanctions-screening)",
       NULL };
-    char *body = jo_get(ctx, url, hdrs, r->id);
+    /* These are whole consolidated registers, not pages: the Swiss list is
+     * 42 MB, the EU CSV 25 MB, the UK OFSI list 54 MB. jo_get's 20-second
+     * default cannot finish any of them, and a timeout here returns NULL, which
+     * this function treats as an honest empty — i.e. the screen reports the
+     * name as CLEAR because the download did not complete. For a sanctions
+     * check that failure mode is the dangerous one, so these fetches are given
+     * the time a bulk register actually needs. */
+    char *body = jo_get_t(ctx, url, hdrs, r->id, 120000);
     if (!body) return 0;                   /* fetch failed → honest empty */
 
     int emitted = 0;

@@ -88,6 +88,16 @@ void progress_finish(osint_request *r, const char *phase);
  * OOM or r==NULL. */
 char *progress_to_json(osint_request *r);
 
+/* Look up `request_id` and serialise it in ONE critical section, also
+ * reporting its `done` flag. Returns NULL when no such request is tracked.
+ * CALLER FREES.
+ *
+ * This is what an off-thread reader (httpd's SSE poll) must use. The
+ * "entries are never freed" note above is not quite true: progress_create()
+ * evicts the oldest FINISHED request past 200, so a progress_get() pointer
+ * held across the unlock can be freed underneath the caller. */
+char *progress_snapshot_by_id(const char *request_id, int *out_done);
+
 /* the `done` flag (1 finished, 0 in-flight; 0 if r==NULL). */
 int progress_is_done(osint_request *r);
 

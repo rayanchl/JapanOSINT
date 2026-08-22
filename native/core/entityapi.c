@@ -95,8 +95,14 @@ char *entityapi_search(db_handle *db, const char *q, const char *type, int limit
    * for an empty q. */
   char *segq = fts_query_expr(q);              /* malloc'd, or NULL */
   if (!segq) {
-    char *empty = cJSON_PrintUnformatted(results);
-    cJSON_Delete(results);
+    /* The comment above says this is "the same {"results":[]} the caller
+     * already emits for an empty q" — it was not: this printed the bare array
+     * `[]`, so a client reading body.results got undefined instead of an empty
+     * list, on the one path an ordinary unusable query takes. */
+    cJSON *o = cJSON_CreateObject();
+    cJSON_AddItemToObject(o, "results", results);
+    char *empty = cJSON_PrintUnformatted(o);
+    cJSON_Delete(o);
     return empty;
   }
   int lim = limit > 0 ? limit : 30;
@@ -512,8 +518,10 @@ char *entityapi_graph(db_handle *db, const char *type, const char *id, int depth
   }
   for (int i = 0; i < nf; i++) free(frontier[i]);
   free(frontier);
-  for (int i = 0; i < nek; i++) free(ek[i]); free(ek);
-  for (int i = 0; i < nv; i++) free(visited[i]); free(visited);
+  for (int i = 0; i < nek; i++) free(ek[i]);
+  free(ek);
+  for (int i = 0; i < nv; i++) free(visited[i]);
+  free(visited);
 
   cJSON *jnodes = cJSON_CreateArray();
   for (int i = 0; i < nn; i++) {

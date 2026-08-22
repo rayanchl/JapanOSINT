@@ -4,9 +4,9 @@
  * an overlap between them is a genuine confidence signal.
  * Endpoint: https://cinsscore.com/list/ci-badguys.txt                (keyless)
  * parse_notes: "Fixed 15,000 lines, bare IPv4, no comments." The full list is
- * counted and the real total carried on every row; at most MAX_ROWS entries are
- * materialised so one hourly run stays bounded (the feed's intended use is a
- * lookup set). Every emitted address is a literal line from the feed.
+ * counted, the real total carried on every row, and EVERY line emitted — the
+ * old 5,000-row cap discarded two thirds of a list we had already fetched in
+ * full. Every emitted address is a literal line from the feed.
  * No coordinates -> has_geo 0 (R2).
  * Licence: free feed from Sentinel IPS/CINS; attribution requested.
  */
@@ -19,7 +19,6 @@
 #include <string.h>
 
 #define CYI_URL "https://cinsscore.com/list/ci-badguys.txt"
-#define MAX_ROWS 5000
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char *body = feed_get_text(ctx->http, CYI_URL, 40000);
@@ -30,7 +29,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   int n = 0;
   char *cur = body, *line;
-  while ((line = jo_next_line(&cur)) != NULL && n < MAX_ROWS) {
+  while ((line = jo_next_line(&cur)) != NULL) {
     if (!line[0] || line[0] == '#') continue;
     if (!jo_is_ipv4(line)) continue;
 

@@ -49,7 +49,8 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   cJSON_AddStringToObject(p, "highway", hw ? hw : "motorway_junction");
 
   const char *op = ov_tag(el, "operator");
-  cJSON_AddStringToObject(p, "operator", op ? op : "unknown");
+  if (op) cJSON_AddStringToObject(p, "operator", op);
+  else cJSON_AddItemToObject(p, "operator", cJSON_CreateNull());
   cJSON_AddStringToObject(p, "node_type", "JCT");
 
   cJSON_AddItemToObject(p, "ref",

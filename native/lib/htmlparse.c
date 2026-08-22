@@ -127,17 +127,54 @@ int html_attr(const char *s, const char *attr, char *out, size_t n) {
 const char *html_anchor_next(const char *from, html_anchor *out) {
   if (!from || !out) return NULL;
   const char *p = from;
-  while ((p = strstr(p, "<a ")) != NULL) {
-    const char *h = strstr(p, "href=\"");
+  while ((p = strchr(p, '<')) != NULL) {
+    /* `<a` plus a delimiter. The old test was the literal "<a ", so an anchor
+     * written `<a\nhref=…>` or `<a\thref=…>` — ordinary output from a
+     * pretty-printing CMS — was never seen at all, and every record behind it
+     * was discarded with no error and no notice. */
+    if ((p[1] != 'a' && p[1] != 'A') ||
+        (p[2] != ' ' && p[2] != '\t' && p[2] != '\n' && p[2] != '\r')) {
+      p++; continue;
+    }
     const char *tagend = strchr(p, '>');
-    p += 3;
-    if (!h || !tagend || h > tagend) continue;      /* not this tag's href */
-    h += 6;
-    const char *he = strchr(h, '"');
-    if (!he) continue;
-    size_t hlen = (size_t)(he - h);
+    const char *scan = p + 2;
+    p += 2;
+    if (!tagend) continue;
+    /* href=, case-insensitive, either quote style, or unquoted. Matching only
+     * the literal lowercase `href="` dropped `href='…'` and `HREF=…` outright;
+     * both are legal and both appear in the government listing pages this
+     * scanner exists for. Requiring whitespace before the name is what keeps
+     * `data-href=` from being mistaken for the real attribute. */
+    const char *h = NULL;
+    char q = 0;
+    for (const char *c = scan; c + 6 <= tagend; c++) {
+      if (*c != ' ' && *c != '\t' && *c != '\n' && *c != '\r') continue;
+      if (strncasecmp(c + 1, "href", 4) != 0) continue;
+      const char *e = c + 5;
+      while (*e == ' ' || *e == '\t') e++;
+      if (*e != '=') continue;
+      e++;
+      while (*e == ' ' || *e == '\t') e++;
+      h = e; q = *e; break;
+    }
+    if (!h) continue;                               /* not this tag's href */
+    size_t hlen;
+    const char *after;                              /* first byte past value */
+    if (q == '"' || q == '\'') {
+      h++;
+      const char *he = strchr(h, q);
+      if (!he) continue;
+      hlen = (size_t)(he - h);
+      after = he + 1;
+    } else {
+      const char *he = h;
+      while (he < tagend && *he != ' ' && *he != '\t' && *he != '\n' &&
+             *he != '\r') he++;
+      hlen = (size_t)(he - h);
+      after = he;
+    }
     if (!hlen || hlen > 800) continue;
-    const char *atext = strchr(he, '>');
+    const char *atext = strchr(after, '>');
     const char *aclose = atext ? strstr(atext, "</a>") : NULL;
     if (!atext || !aclose) continue;
     atext++;

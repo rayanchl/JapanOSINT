@@ -10,7 +10,10 @@ char *miscapi_source_by_id(db_handle *db, const char *id);
 
 /* PUT /api/sources/:id/schedule — body {"mode":"map_cron"|"search_only"}.
  * Returns the updated source row JSON; NULL if `id` unknown (→404); the
- * sentinel "\1bad" if the mode is invalid (caller → 400). */
+ * sentinel "\1bad" if the mode is invalid (caller → 400); the sentinel "\1err"
+ * if the UPDATE itself failed (caller → 500). The last one exists because
+ * sqlite3_changes() is per-connection and survives a failed step, so a busy
+ * write used to be reported as a successful one. */
 char *miscapi_set_schedule(db_handle *db, const char *id, const char *body);
 
 /* GET /api/sources/:id/logs — malloc'd JSON array (newest first, capped).

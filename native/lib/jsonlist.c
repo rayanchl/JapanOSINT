@@ -206,14 +206,22 @@ static const cJSON *first_measure(cJSON *o) {
 static const char *num_brief(const cJSON *v) {
   static _Thread_local char b[40];
   double d = v->valuedouble;
-  if (d == (double) (long long) d) snprintf(b, sizeof b, "%lld", (long long) d);
+  /* Range-check BEFORE the cast, exactly as scalar_dup above does. `(long
+   * long)d` is undefined outside long long's range, and this runs on the FIRST
+   * NUMERIC FIELD of any unlabelled record — an upstream only has to return
+   * 1e308 (or inf/NaN) in one measurement to reach it. On x86 the cast yields
+   * INT64_MIN, so the composed title read "…flux=-9223372036854775808" for a
+   * value that was nothing of the sort. NaN fails every comparison and
+   * correctly falls through to %.6g. */
+  if (d >= (double) LLONG_MIN && d < (double) LLONG_MAX &&
+      d == (double) (long long) d) snprintf(b, sizeof b, "%lld", (long long) d);
   else                             snprintf(b, sizeof b, "%.6g", d);
   return b;
 }
 
 static int array_of_objects(cJSON *a) {
   if (!cJSON_IsArray(a) || cJSON_GetArraySize(a) == 0) return 0;
-  cJSON *first = cJSON_GetArrayItem(a, 0);
+  cJSON *first = cJSON_GetArrayItem(a, 0);  /* exhaustive-ok: type probe — is this an array OF OBJECTS; the caller then walks every element */
   return first && cJSON_IsObject(first);
 }
 
@@ -464,23 +472,90 @@ static cJSON *dotted(cJSON *doc, const char *path) {
  * is OData, the rest are common house styles. A next link that is present but
  * null/false/empty means "this is the last page" in every one of these
  * dialects, so it is treated as absent rather than followed. */
-static char *next_link(cJSON *doc) {
+/* Resolve a next-link against the page it came from. An absolute URL passes
+ * through; "?page=2" and "/api/x?page=2" are the two relative spellings that
+ * actually occur (bio.tools answers `"next": "?page=2&format=json"`, and that
+ * one string was the whole reason 30,000 bio.tools rows stopped at page 1 —
+ * the link WAS published, we just refused to read it). Anything else — a
+ * scheme we do not speak, a bare token — is not a URL and is refused rather
+ * than glued onto the base and hoped for. */
+static char *resolve_link(const char *base, const char *href) {
+  if (!href || !href[0]) return NULL;
+  if (!strncmp(href, "http://", 7) || !strncmp(href, "https://", 8))
+    return strdup(href);
+  size_t cap = strlen(base) + strlen(href) + 2;
+  char *out = malloc(cap);
+  if (!out) return NULL;
+  if (href[0] == '?') {                       /* same path, new query */
+    const char *q = strchr(base, '?');
+    size_t head = q ? (size_t)(q - base) : strlen(base);
+    memcpy(out, base, head);
+    snprintf(out + head, cap - head, "%s", href);
+    return out;
+  }
+  if (href[0] == '/') {                       /* same origin, new path */
+    const char *p = strstr(base, "://");
+    const char *slash = p ? strchr(p + 3, '/') : NULL;
+    size_t head = slash ? (size_t)(slash - base) : strlen(base);
+    memcpy(out, base, head);
+    snprintf(out + head, cap - head, "%s", href);
+    return out;
+  }
+  free(out);
+  return NULL;
+}
+
+/* The server's own "next page" link, if it published one. Ordered most- to
+ * least-specific: `links.next` is the JSON:API/CKAN spelling, `@odata.nextLink`
+ * is OData, the rest are common house styles. A next link that is present but
+ * null/false/empty means "this is the last page" in every one of these
+ * dialects, so it is treated as absent rather than followed. */
+static char *next_link(cJSON *doc, const char *base) {
   static const char *const KEYS[] = {
     "links.next", "next", "next_url", "nextUrl", "nextPageUrl",
-    "meta.next", "paging.next", "@odata.nextLink", "next_page", NULL };
+    "meta.next", "paging.next", "@odata.nextLink", "next_page",
+    "meta.pagination.next", "pagination.next", "pagination.next_page",
+    "meta.pagination.next_page", "links.next_url", NULL };
   for (int i = 0; KEYS[i]; i++) {
     cJSON *v = dotted(doc, KEYS[i]);
-    if (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0] &&
-        !strncmp(v->valuestring, "http", 4))
-      return strdup(v->valuestring);
+    if (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0]) {
+      char *u = resolve_link(base, v->valuestring);
+      if (u) return u;
+    }
     /* CKAN and some JSON:API servers nest it as {next: {href: "..."}}. */
     if (v && cJSON_IsObject(v)) {
       cJSON *h = cJSON_GetObjectItem(v, "href");
-      if (h && cJSON_IsString(h) && h->valuestring && !strncmp(h->valuestring, "http", 4))
-        return strdup(h->valuestring);
+      if (h && cJSON_IsString(h) && h->valuestring) {
+        char *u = resolve_link(base, h->valuestring);
+        if (u) return u;
+      }
     }
   }
   return NULL;
+}
+
+/* Fingerprint of a page's records, used only to notice that the upstream is
+ * handing back the SAME page again. That happens whenever a cursor guess is
+ * wrong — the server ignores the parameter it does not know and re-serves
+ * page 1 — and without this the walk would spend the whole ceiling refetching
+ * one page and then file a truncation notice claiming pages were pending.
+ * Stopping on no-progress makes a wrong guess cost one wasted request and
+ * tell no lies. */
+static unsigned long long page_fp(cJSON *arr) {
+  unsigned long long h = 1469598103934665603ULL;   /* FNV-1a 64 */
+  if (!arr) return h;
+  int i = 0;
+  cJSON *rec;
+  cJSON_ArrayForEach(rec, arr) {
+    char *s = cJSON_PrintUnformatted(rec);
+    if (s) {
+      for (const unsigned char *p = (const unsigned char *)s; *p; p++)
+        h = (h ^ *p) * 1099511628211ULL;
+      free(s);
+    }
+    if (++i >= 8) break;   /* exhaustive-ok: identity probe, not a record read */
+  }
+  return h;
 }
 
 /* The upstream's own count of what exists, for the in-band disclosure. -1 when
@@ -490,7 +565,15 @@ static long declared_total(cJSON *doc) {
   static const char *const KEYS[] = {
     "total_count", "totalCount", "total", "count", "meta.count",
     "numberMatched", "totalResults", "result.count", "meta.total",
-    "totalElements", "recordsTotal", NULL };
+    "totalElements", "recordsTotal",
+    /* The families whose totals the walk was blind to. ROR answers
+     * `number_of_results: 108000` next to 20 items, Solr `response.numFound`,
+     * OpenDataSoft `nhits`, CORDIS `payload.totalHits`; each of those is the
+     * upstream telling us, in its own words, how much it is holding back. */
+    "number_of_results", "numFound", "response.numFound", "nhits",
+    "totalHits", "payload.totalHits", "totalResultCount", "total_results",
+    "resultCount", "hits.total", "meta.pagination.total", "pagination.total",
+    NULL };
   for (int i = 0; KEYS[i]; i++) {
     cJSON *v = dotted(doc, KEYS[i]);
     if (v && cJSON_IsNumber(v) && v->valuedouble >= 0)
@@ -546,24 +629,35 @@ static char *query_set(const char *url, const char *name, long value) {
 /* A page-size parameter the URL already declares, paired with the cursor
  * parameter that upstream family uses to advance. The pairing is what makes
  * the arithmetic safe: we only ever move a cursor whose page-size sibling is
- * present, so a URL with no declared page size is never paginated by guess. */
-struct pager { const char *size_param, *cursor_param; int page_numbered; };
+ * present, so a URL with no declared page size is never paginated by guess.
+ *
+ * `alt_cursor` is the same family's other spelling. It is used only when the
+ * URL ALREADY carries it, which is how openFDA (`limit` + `skip`) is told
+ * apart from Socrata (`limit` + `offset`): both declare `limit`, and moving
+ * the wrong one would re-serve page 1 forever. */
+struct pager { const char *size_param, *cursor_param, *alt_cursor; int page_numbered; };
 static const struct pager PAGERS[] = {
-  { "per_page",  "page",        1 },   /* CKAN/dane.gov.pl, GitHub, uData     */
-  { "page_size", "page",        1 },   /* DRF                                 */
-  { "pageSize",  "page",        1 },   /* ArcGIS Hub, many .NET APIs          */
-  { "rows",      "start",       0 },   /* Solr / CKAN package_search          */
-  { "limit",     "offset",      0 },   /* Socrata, ODS, most REST             */
-  { "$top",      "$skip",       0 },   /* OData                               */
-  { "maxRecords","offset",      0 },   /* Airtable-style                      */
-  { NULL, NULL, 0 }
+  { "per_page",  "page",   NULL,     1 },   /* CKAN/dane.gov.pl, GitHub, uData */
+  { "page_size", "page",   NULL,     1 },   /* DRF                             */
+  { "pageSize",  "page",   NULL,     1 },   /* ArcGIS Hub, many .NET APIs      */
+  { "perPage",   "page",   NULL,     1 },   /* house style                     */
+  { "rp",        "page",   NULL,     1 },   /* flexigrid — taginfo (OSM)       */
+  { "itemsPerPage", "page",NULL,     1 },   /* ERDDAP index.json               */
+  { "size",      "page",   NULL,     1 },   /* Spring Data / Apollo (RESF)     */
+  { "num",       "p",      NULL,     1 },   /* CORDIS search API               */
+  { "rows",      "start",  NULL,     0 },   /* Solr / CKAN package_search      */
+  { "length",    "start",  NULL,     0 },   /* DataTables — HUDOC (ECHR)       */
+  { "limit",     "offset", "skip",   0 },   /* Socrata, ODS, most REST; openFDA*/
+  { "$top",      "$skip",  NULL,     0 },   /* OData                           */
+  { "maxRecords","offset", NULL,     0 },   /* Airtable-style                  */
+  { NULL, NULL, NULL, 0 }
 };
 
 int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
                         http_client *http, const char *url, int timeout_ms,
                         const char *path, const char *record_type,
                         const char *lang, const char *tags_json) {
-  int page_max = 20;
+  int page_max = 20;   /* exhaustive-ok: page-walk ceiling; an early stop is disclosed as a collector-truncation-notice and $JO_JSONLIST_PAGE_MAX raises it */
   const char *env = getenv("JO_JSONLIST_PAGE_MAX");
   if (env && *env) {
     int v = atoi(env);
@@ -575,6 +669,8 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
 
   int total = 0, pages = 0, truncated = 0;
   long available = -1;
+  unsigned long long prev_fp = 0;
+  int repeated = 0;
 
   for (; pages < page_max && page_url; pages++) {
     cJSON *doc = feed_get_json(http, page_url, timeout_ms);
@@ -595,8 +691,15 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
     cJSON *arr = jsonlist_find_array(doc, path);
     int got = arr ? cJSON_GetArraySize(arr) : 0;
 
-    char *next = next_link(doc);
-    if (!next && got > 0) {
+    /* Did the upstream actually move? An ignored cursor parameter re-serves
+     * the page we already have; that is the end of the data as far as this
+     * URL is concerned, not a page we are owed. */
+    unsigned long long fp = page_fp(arr);
+    if (pages > 0 && got > 0 && fp == prev_fp) repeated = 1;
+    prev_fp = fp;
+
+    char *next = repeated ? NULL : next_link(doc, page_url);
+    if (!next && got > 0 && !repeated) {
       /* No server link. Advance a cursor only when the URL declares a page
        * size AND this page came back exactly full — a short page is the
        * upstream saying it is finished, and following it would be us
@@ -604,16 +707,39 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
       for (int i = 0; PAGERS[i].size_param && !next; i++) {
         long size = query_int(page_url, PAGERS[i].size_param);
         if (size <= 0 || got < size) continue;
-        long cur = query_int(page_url, PAGERS[i].cursor_param);
+        /* Move the cursor this URL already names, when the family has two
+         * spellings; otherwise the canonical one. */
+        const char *cursor = PAGERS[i].cursor_param;
+        if (PAGERS[i].alt_cursor && query_int(page_url, PAGERS[i].alt_cursor) >= 0)
+          cursor = PAGERS[i].alt_cursor;
+        long cur = query_int(page_url, cursor);
         long nextval = PAGERS[i].page_numbered
                          ? (cur > 0 ? cur + 1 : 2)
                          : (cur >= 0 ? cur + size : size);
-        next = query_set(page_url, PAGERS[i].cursor_param, nextval);
+        next = query_set(page_url, cursor, nextval);
+      }
+    }
+    /* Last resort, and the only one that needs no page-size sibling: the
+     * upstream published a total BIGGER than what it has handed us, and the
+     * URL already carries a page number. ROR says `number_of_results: 108000`
+     * and hands over 20; retsinformation.dk says `totalResultCount` and hands
+     * over a screenful. There is no guessing here — the remainder is the
+     * upstream's own arithmetic — and the cursor is one this URL already
+     * declares, so we are turning a dial the caller wrote, not inventing one.
+     * A server that ignores it re-serves page 1 and the no-progress guard
+     * above ends the walk on the next turn. */
+    if (!next && got > 0 && !repeated && available > (long)(total)) {
+      static const char *const PAGE_CURSORS[] = { "page", "p", "pageNumber",
+                                                  "pagina", "pageNum", NULL };
+      for (int i = 0; PAGE_CURSORS[i] && !next; i++) {
+        long cur = query_int(page_url, PAGE_CURSORS[i]);
+        if (cur < 1) continue;               /* must already be declared */
+        next = query_set(page_url, PAGE_CURSORS[i], cur + 1);
       }
     }
     cJSON_Delete(doc);
 
-    if (got <= 0) { free(next); break; }   /* upstream is exhausted */
+    if (got <= 0 || repeated) { free(next); break; }   /* upstream is exhausted */
     free(page_url);
     page_url = next;
     if (pages + 1 >= page_max && page_url) truncated = 1;   /* ceiling bit */

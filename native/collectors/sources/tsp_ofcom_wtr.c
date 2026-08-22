@@ -17,8 +17,10 @@
  *    54 MB into RAM this collector issues an HTTP Range request for the first
  *    RANGE_BYTES and, when the server honours it (206), DISCARDS the final
  *    partial line. That is a STATED BOUND, not a silent truncation: the byte
- *    bound and the row cap are written into every emitted row's properties and
- *    into the run log. If the server ignores Range and returns 200, the whole
+ *    bound is written into every emitted row's properties AND emitted as a
+ *    collector-truncation-notice row. (There is no row cap: the 12,000-row one
+ *    this collector used to carry discarded rows it had already parsed out of
+ *    the prefix it had already paid for.) If the server ignores Range and returns 200, the whole
  *    file is parsed, still line-by-line and in place with no second copy.
  *  - "Geo is given twice: DMS ... and, more conveniently, as decimal
  *    'Latitude(Deg)' and 'Longitude(Deg)' in the LAST TWO columns. These are
@@ -45,7 +47,6 @@
 
 #define WTR_URL "https://static.ofcom.org.uk/static/radiolicensing/html/register/WTR.csv"
 #define RANGE_BYTES (16 * 1024 * 1024)   /* stated prefix bound, see header */
-#define MAX_ROWS 12000
 #define MAXCOL 64
 
 /* RFC4180 splitter, in place (licensee company names contain commas). */
@@ -164,7 +165,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   while ((line = jo_next_line_cr(&p)) != NULL) {
     if (!*line) continue;
     seen++;
-    if (n >= MAX_ROWS) break;
     char *f[MAXCOL];
     int nf = csv_split(line, f, MAXCOL);
     for (int i = 0; i < nf; i++) f[i] = trim(f[i]);
@@ -229,7 +229,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     cJSON_AddBoolToObject(pr, "extract_byte_bounded", bounded ? 1 : 0);
     if (bounded) cJSON_AddNumberToObject(pr, "extract_bytes_fetched", RANGE_BYTES);
-    cJSON_AddNumberToObject(pr, "row_cap", MAX_ROWS);
     cJSON_AddStringToObject(pr, "source", "Ofcom Wireless Telegraphy Register");
     char *pj = cJSON_PrintUnformatted(pr);
     cJSON_Delete(pr);
@@ -271,9 +270,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
-  fprintf(stderr, "[ofcom-wtr] emitted %d of %d rows read (%s prefix, cap %d, "
+  if (bounded)
+    jo_trunc_notice(sink, "ofcom-wtr", WTR_URL, n, -1,
+      "the WTR is 53.9 MB and there is no streaming CSV reader on this path, so "
+      "only the first 16 MB was requested (HTTP Range); the rows beyond it were "
+      "never fetched",
+      "raise RANGE_BYTES in collectors/sources/tsp_ofcom_wtr.c, or wire the CSV "
+      "leg through lib/bigfile.c — see docs/SOURCE_EXHAUSTIVENESS.md");
+  fprintf(stderr, "[ofcom-wtr] emitted %d of %d rows read (%s prefix, "
                   "%d rows without site coordinates)\n",
-          n, seen, bounded ? "byte-bounded" : "full-file", MAX_ROWS, nogeo);
+          n, seen, bounded ? "byte-bounded" : "full-file", nogeo);
   return 0;
 }
 

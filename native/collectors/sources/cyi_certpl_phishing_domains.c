@@ -24,7 +24,6 @@
 
 #define CYI_URL "https://hole.cert.pl/domains/v2/domains.csv"
 #define WINDOW_DAYS 7
-#define MAX_ROWS 5000
 
 static char *next_line(char **p) {
   char *s = *p;
@@ -81,7 +80,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (removed) continue;                      /* delisted -> not active */
     active++;
     if (strncmp(added, cutoff, 10) < 0) continue;   /* older than the window */
-    if (n >= MAX_ROWS) continue;
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "domain", domain);

@@ -46,7 +46,6 @@
 #define CURL_URL "https://curl.se/docs/vuln.json"
 #define GO_URL   "https://vuln.go.dev/index/vulns.json"
 
-#define GO_MAX_ROWS 5000
 
 static void join_strings(cJSON *arr, char *out, size_t n) {
   out[0] = 0;
@@ -226,7 +225,6 @@ static int go_run(const source_ctx *c, intel_sink *s) {
   if (cJSON_IsArray(arr)) {
     cJSON *e;
     cJSON_ArrayForEach(e, arr) {
-      if (n >= GO_MAX_ROWS) break;
       const char *id = jo_sv(e, "id");
       if (!id) continue;                      /* no GO- id -> no row (R1) */
       const char *mod = jo_sv(e, "modified");

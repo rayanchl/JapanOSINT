@@ -8,7 +8,7 @@
  *           description, references[] and targets[].
  *
  * SCOPE: the file holds ~7,100 modules. This collector emits the modules that
- * carry at least one CVE reference (capped at MSF_MAX_ROWS), because that is
+ * carry at least one CVE reference, because that is
  * the subset that answers "does this CVE have an exploit module" — the reason
  * the source is here. Modules with no CVE reference are skipped rather than
  * padded with an invented identifier.
@@ -34,7 +34,6 @@
 
 #define MSF_URL "https://raw.githubusercontent.com/rapid7/metasploit-framework/" \
                 "master/db/modules_metadata_base.json"
-#define MSF_MAX_ROWS 6000
 
 /* Metasploit's own reliability scale, as documented in the framework. Decoding
  * a fetched numeric field, not inventing one. */
@@ -60,7 +59,6 @@ static int run(const source_ctx *c, intel_sink *s) {
   cJSON *m;
   /* cJSON_ArrayForEach walks an object's children too; m->string is the key. */
   cJSON_ArrayForEach(m, doc) {
-    if (n >= MSF_MAX_ROWS) break;
     if (!cJSON_IsObject(m)) continue;
     seen++;
     const char *full = jo_sv(m, "fullname");

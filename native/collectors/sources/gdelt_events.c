@@ -6,6 +6,12 @@
  * latter to the intel store, same as Node mirrorCollectorOutput). _meta
  * dropped per RULE 8. GDELT_SLICES env (1..96, default 1) walks back N
  * consecutive 15-min slices, exactly as JS. */
+/* strptime() and timegm() are POSIX/GNU extensions; glibc only declares them
+ * under _GNU_SOURCE. Without it strptime is implicitly declared, its char*
+ * return is truncated to int, and the pointer we test is garbage. */
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
 #include "source.h"
 #include "core/httpclient.h"
 #include "lib/zipread.h"

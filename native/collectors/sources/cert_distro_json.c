@@ -47,7 +47,6 @@
 #define RH_URL     "https://access.redhat.com/hydra/rest/securitydata/csaf.json?per_page=100"
 
 #define ALMA_WINDOW_SEC (365L * 24 * 3600)   /* recent window, see header */
-#define ALMA_MAX_ROWS   800
 
 /* Join an array of strings into "a, b, c" (bounded). */
 static void join_strings(cJSON *arr, char *out, size_t n) {
@@ -248,7 +247,6 @@ static int alma_run(const source_ctx *c, intel_sink *s) {
   if (cJSON_IsArray(arr)) {
     cJSON *e;
     cJSON_ArrayForEach(e, arr) {
-      if (n >= ALMA_MAX_ROWS) break;
       const char *id = jo_sv(e, "id");
       if (!id) continue;                     /* no erratum id -> no row (R1) */
       long issued = epoch_of(cJSON_GetObjectItem(e, "issued_date"));

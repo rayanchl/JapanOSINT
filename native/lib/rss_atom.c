@@ -1,5 +1,7 @@
 #include "rss_atom.h"
 #include "../core/httpclient.h"
+#include "feedlib.h"   /* feed_url_host_is_jp: the one .jp host gate */
+#include "csv.h"       /* csv_decode_sjis */
 #include "../third_party/cJSON.h"
 #include <openssl/sha.h>
 #include <ctype.h>
@@ -91,20 +93,53 @@ static char *tag_text(const char *from, const char *end, const char *tag,
   return NULL;
 }
 
-/* Atom <link href="..."/> */
-static char *atom_link(const char *from, const char *end) {
-  for (const char *p = from; p < end; p++) {
-    if (strncasecmp(p, "<link", 5) != 0) continue;
-    const char *gt = memchr(p, '>', (size_t)(end - p)); if (!gt) return NULL;
-    const char *h = NULL;
-    for (const char *c = p; c < gt - 4; c++)
-      if (strncasecmp(c, "href=", 5) == 0) { h = c + 5; break; }
-    if (!h) return NULL;
-    char quote = *h; if (quote != '"' && quote != '\'') return NULL;
-    const char *e2 = memchr(h + 1, quote, (size_t)(gt - h));
-    return e2 ? dup_n(h + 1, (size_t)(e2 - h - 1)) : NULL;
+/* An attribute value inside the tag [p,gt): whitespace-anchored so `hreflang=`
+ * or a `rel=` sitting inside somebody's query string is not mistaken for the
+ * attribute itself. Returns a pointer to the value's first byte, or NULL. */
+static const char *tag_attr_val(const char *p, const char *gt, const char *name,
+                                size_t nlen) {
+  for (const char *c = p; c + nlen + 1 <= gt; c++) {
+    if (*c != ' ' && *c != '\t' && *c != '\n' && *c != '\r') continue;
+    if (strncasecmp(c + 1, name, nlen) != 0) continue;
+    const char *e = c + 1 + nlen;
+    while (*e == ' ' || *e == '\t') e++;
+    if (*e != '=') continue;
+    e++;
+    while (*e == ' ' || *e == '\t') e++;
+    return e;
   }
   return NULL;
+}
+
+/* Atom <link href="..."/>.
+ *
+ * An entry carries SEVERAL <link>s and only the one with rel="alternate" (or
+ * no rel at all) is the entry itself. Taking the first one blindly is wrong on
+ * every Blogger/Atom entry, which lists rel="replies" — the item's comment
+ * feed — ahead of the alternate, so `link` pointed at the comment stream for
+ * the whole of that fleet. A <link> with no usable href no longer aborts the
+ * hunt either; it just is not the one. */
+static char *atom_link(const char *from, const char *end) {
+  char *first = NULL;
+  for (const char *p = from; p < end; p++) {
+    if (strncasecmp(p, "<link", 5) != 0) continue;
+    const char *gt = memchr(p, '>', (size_t)(end - p));
+    if (!gt) break;
+    const char *h = tag_attr_val(p, gt, "href", 4);
+    if (!h) { p = gt; continue; }
+    char quote = *h;
+    if (quote != '"' && quote != '\'') { p = gt; continue; }
+    const char *e2 = memchr(h + 1, quote, (size_t)(gt - h));
+    if (!e2) { p = gt; continue; }
+    char *val = dup_n(h + 1, (size_t)(e2 - h - 1));
+    if (!val) { p = gt; continue; }
+    const char *rel = tag_attr_val(p, gt, "rel", 3);
+    if (rel && (*rel == '"' || *rel == '\'')) rel++;
+    if (!rel || strncasecmp(rel, "alternate", 9) == 0) return val;
+    if (!first) first = val; else free(val);
+    p = gt;
+  }
+  return first;      /* no alternate: the first href seen is the best we have */
 }
 
 /* Atom's <author> is a container: <author><name>X</name><uri>…</uri></author>.
@@ -309,11 +344,29 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
   size_t body_len = r.body_len;
   if (r.body && body_len && !is_utf8(r.body, body_len)) {
     size_t cl = 0;
-    conv = latin1_to_utf8(r.body, body_len, &cl);
-    if (conv) {
-      fprintf(stderr, "[rss] %s body was not UTF-8; transcoded from Latin-1 "
-                      "(%zu -> %zu bytes)\n", ctx->source_id, body_len, cl);
-      body_len = cl;
+    /* WHICH legacy encoding is not a guess we get to make blind. A .jp
+     * publisher serving no charset is serving Shift_JIS (customs.go.jp,
+     * soumu.go.jp), and running those bytes through the Latin-1 path produced
+     * valid-but-wrong UTF-8 — mojibake that no read path can detect, which is
+     * worse than the undecodable bytes this transcode exists to prevent. Gate
+     * on the same host test feed_get_text() uses (feedlib.h), so the two
+     * answers cannot drift; csv_decode_sjis fails closed to a verbatim copy,
+     * so a .jp host serving something else is not made worse. */
+    if (feed_url_host_is_jp(url)) {
+      conv = csv_decode_sjis(r.body, body_len);
+      if (conv) {
+        cl = strlen(conv);
+        fprintf(stderr, "[rss] %s body was not UTF-8; transcoded from Shift_JIS "
+                        "(%zu -> %zu bytes)\n", ctx->source_id, body_len, cl);
+        body_len = cl;
+      }
+    } else {
+      conv = latin1_to_utf8(r.body, body_len, &cl);
+      if (conv) {
+        fprintf(stderr, "[rss] %s body was not UTF-8; transcoded from Latin-1 "
+                        "(%zu -> %zu bytes)\n", ctx->source_id, body_len, cl);
+        body_len = cl;
+      }
     }
   }
   const char *xml = conv ? conv : r.body;
@@ -327,11 +380,12 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
   const char *cap_env = getenv("JO_RSS_MAX_ITEMS");
   int max_items = cap_env ? atoi(cap_env) : 500;
   if (max_items <= 0) max_items = 500;
+  /* When the cap bites we keep WALKING the feed — only the per-item field
+   * extraction is skipped — so `scanned` is the real count of items the feed
+   * offered and the disclosure below can say "N of M" instead of "N of ?".
+   * Walking costs one more pass over a body we already have in memory. */
+  int scanned = 0, capped = 0;
   for (;;) {
-    if (n >= max_items) {
-      fprintf(stderr, "[rss] %s capped at %d items\n", ctx->source_id, max_items);
-      break;
-    }
     /* next <item ...>/<entry ...> block. Require a delimiter after the name
      * so the RDF <items> table-of-contents (Seq) is NOT matched. */
     const char *open = NULL; int atom = 0;
@@ -349,6 +403,12 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
     const char *cl = strcasestr(open, closeTag);
     if (!cl) break;
     it = open; blkend = cl; itlen = (size_t)(blkend - it);
+    scanned++;
+    if (n >= max_items) {          /* cap bit: keep counting, stop extracting */
+      capped = 1;
+      cur = blkend + strlen(closeTag);
+      continue;
+    }
     const char *a;
     char *title = tag_text(it, it + itlen, "title", &a);
     char *desc  = tag_text(it, it + itlen, atom ? "summary" : "description", &a);
@@ -412,6 +472,41 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
     }
     free(title); free(desc); free(link); free(pub); free(guid); free(author);
     cur = blkend + strlen(closeTag);
+  }
+  /* The cap left real items on the table. Per docs/SOURCE_EXHAUSTIVENESS.md a
+   * shortfall is reported as DATA — the stderr line this used to be is not a
+   * disclosure, and a consumer reading the rows had no way to tell 500 items
+   * from a feed of 500 apart from 500 items out of msrc-blog's 4,995. Same
+   * record_type and shape as lib/hpengine.c and lib/jsonlist.c emit, so one
+   * check finds a partial result from any of the three engines. */
+  if (capped) {
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "source_id", ctx->source_id);
+    cJSON_AddStringToObject(p, "endpoint", url);
+    cJSON_AddNumberToObject(p, "records_used", n);
+    cJSON_AddNumberToObject(p, "records_available", scanned);
+    cJSON_AddNumberToObject(p, "declared_max_items", max_items);
+    cJSON_AddBoolToObject(p, "more_pages_pending", 0);
+    cJSON_AddStringToObject(p, "reason",
+      "the per-run item cap stopped the walk while the feed had more items");
+    cJSON_AddStringToObject(p, "remedy",
+      "raise $JO_RSS_MAX_ITEMS — see docs/SOURCE_EXHAUSTIVENESS.md");
+    char *pj = cJSON_PrintUnformatted(p);
+    cJSON_Delete(p);
+    char title[256];
+    snprintf(title, sizeof title, "%s used %d of %d available items",
+             ctx->source_id, n, scanned);
+    intel_item note = {0};
+    note.remote_key      = "truncation";
+    note.title           = title;
+    note.lang            = "en";
+    note.record_type     = "collector-truncation-notice";
+    note.properties_json = pj ? pj : "{}";
+    note.tags_json       = "[\"truncation-notice\"]";
+    sink->emit(sink, &note);
+    free(pj);
+    fprintf(stderr, "[rss] %s capped at %d of %d items (disclosed)\n",
+            ctx->source_id, max_items, scanned);
   }
   http_response_free(&r);
   free(conv);

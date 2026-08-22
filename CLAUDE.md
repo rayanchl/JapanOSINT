@@ -52,32 +52,93 @@ Rule, examples of violations, and what the shared machinery guarantees:
 
 Where the tree actually stands, as `make audit-sources` reports it:
 
-* **strict set (`collectors/sources/hp*_*.c`) — 0 findings.** This is the part
-  the Makefile gates on, and it is held clean.
-* **the rest of the tree — 147 findings across 91 of 1,214 files**: 52
-  first-only, 34 single-page, 32 record-cap, 27 loop-break, 1 limit-one, 1
-  dedupe-ring. These are heuristics and each needs a human read, but "zero audit
-  findings" is true only of the strict set — do not read it as true of the tree.
+* **strict set (`collectors/pivot/table/hp*_*.c`) — 0 findings.** This is the
+  part the Makefile gates on, and it is held clean. Run `make audit-sources`
+  after adding a table: batch 18 introduced two `single-page` findings here (a
+  paged endpoint declared without `page_param`) and they had to be fixed before
+  the gate would pass again.
+* **the rest of the tree — ~127 findings across ~74 files**: first-only,
+  single-page, record-cap, loop-break, limit-one and dedupe-ring. These are
+  heuristics and each needs a human read, but "zero audit findings" is true
+  only of the strict set — do not read it as true of the tree.
 
 Deliberate exceptions carry an inline `/* exhaustive-ok: <reason> */` marker
-(`grep -rn exhaustive-ok`, currently 145).
+(`grep -rn exhaustive-ok`).
 
 ```sh
 cd native
 make audit-sources   # scan every collector for discard patterns
-make hptest          # offline check of the engine's guarantees (23 assertions)
+make hptest          # offline check of the engine's guarantees
+make lint-sources    # dup ids/endpoints, quarantine-empty, snprintf guards
 make                 # full build (-Wall -Wextra)
 ```
+
+Note that `make source-count` (and the `source-floor` gate built on it) counts
+`REGISTER_SOURCE` registrations only. Rows registered through
+`HP_REGISTER_TABLE` are invisible to it, so the number it prints is a floor on
+the registry, not its size — the built binary's own seed count is the real one.
 
 ## Where things live
 
 ```
-native/source.h                 the ONE data-acquisition ABI (source_def + intel_sink)
-native/lib/hpengine.{c,h}       declarative deep-record collector engine
-native/collectors/sources/*.c   one file per collector family; Makefile globs them
-native/core/                    db, http, intel sink, dispatcher, pipeline, HTTP API
-docs/                           plans, pipeline notes, and the two house rules above
+native/source.h                    the ONE data-acquisition ABI (source_def + intel_sink)
+native/lib/hpengine.{c,h}          declarative deep-record collector engine
+native/collectors/sources/*.c      hand-written collectors, one file per family
+native/collectors/feed/generated/  generated scheduled feed collectors (vsrc*)
+native/collectors/pivot/table/*.c  hpengine tables (hp*, hp2*, hp3*) — the strict set
+native/collectors/pod/*.c          enrichment/maintenance pods
+native/core/                       db, http, intel sink, dispatcher, pipeline, HTTP API
+native/tools/                      lint_sources.py, gen_hp_batch.py, probe_hp_batch.py
+docs/                              plans, pipeline notes, and the two house rules above
 ```
+
+The Makefile globs `collectors/` RECURSIVELY, so a collector registers from any
+depth. Do not flatten it back.
+
+## 3. A registered source must actually be reachable
+
+`lib/hpengine.c` (hp_run) reaches a row in exactly two ways:
+
+* it references an entity token (`{q}`, `{qd}`, `{qh}`, …) in its URL or POST
+  body, so it is dispatchable as an entity pivot; or
+* it declares `interval > 0`, so the scheduler picks it up.
+
+A row with **neither** — a static URL and no interval — is registered, appears
+in `/api/status`, and never executes. It emits nothing, forever, which is the
+same silent-nothing as an `EMPTY_RESULTSET` source and just as invisible. This
+is easy to introduce by accident because `hp_source.interval` defaults to 0 and
+0 means "on-demand pivot", which is right for a `{q}` row and wrong for a bulk
+file. 763 rows across batches 18 and 19 were in that state before it was
+checked for.
+
+```sh
+python3 native/tools/audit_batch_reachable.py docs/candidate-sources-batch*.txt
+```
+
+## Batch tooling
+
+New sources are authored as a pipe-delimited manifest and generated, not
+hand-written. `docs/candidate-sources-batch<N>.<beat>.txt` is the source of
+truth; `collectors/pivot/table/hp3*_<beat>.c` is generated. Edit the manifest.
+
+| tool | what it enforces |
+| --- | --- |
+| `tools/probe_hp_batch.py` | proof of life: 2xx, parses in its declared mode, ≥1 real record. Honours each row's own headers, handles JSON/CSV/XML/HTML, rejects empty result sets, HTTP-200 refusals, one-element error arrays and bot-wall challenge pages |
+| `tools/batch_exclusions.py` | no duplicate id or endpoint against the existing tree or within the batch (normalising `{q}` and `%s` to one form; `.portal` is documentation and is excluded) |
+| `tools/audit_batch_pagination.py` | a paged endpoint declares `page_param` or `next_path` |
+| `tools/audit_batch_reachable.py` | rule 3 above |
+| `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide |
+
+Two engine subtleties worth knowing before writing a paged row:
+
+* `page_start`'s unset value is 0, which is also a legitimate first page. Set
+  **`page_zero_based=1`** for a 0-based API — otherwise the engine coerces the
+  start to 1 and silently never fetches page 1.
+* `next_path` accepts a `key=value` segment: write **`links.rel=next.href`**,
+  not `links.1.href`. Indexing a hypermedia link array positionally breaks when
+  a server reorders it, and the failure mode is the engine refetching page 1
+  until the page ceiling — every later page lost, with the run still looking
+  successful.
 
 Every source self-registers with `REGISTER_SOURCE` (or `HP_REGISTER_TABLE`) and
 is both schedulable (`update_interval_sec > 0`) and dispatchable as an

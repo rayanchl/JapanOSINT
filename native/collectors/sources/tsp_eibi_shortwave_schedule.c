@@ -39,7 +39,6 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX_ROWS 12000
 #define MAXCOL 24
 
 static int semi_split(char *line, char **out, int max) {
@@ -202,7 +201,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   while ((line = jo_next_line_cr(&p)) != NULL) {
     if (!*line) continue;
     seen++;
-    if (n >= MAX_ROWS) break;
     char *f[MAXCOL];
     int nf = semi_split(line, f, MAXCOL);
     for (int i = 0; i < nf; i++) f[i] = trim(f[i]);

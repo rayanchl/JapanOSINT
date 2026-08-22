@@ -24,7 +24,6 @@
 
 #define CYI_URL "https://ftp.apnic.net/stats/apnic/delegated-apnic-extended-latest"
 #define WINDOW_DAYS 90
-#define MAX_ROWS 5000
 
 /* In-place line splitter; returns the next line (trimmed of CR), advances *p. */
 static char *next_line(char **p) {
@@ -87,7 +86,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (strcmp(type, "ipv4") && strcmp(type, "ipv6") && strcmp(type, "asn")) continue;
     seen++;
     if (strlen(date) != 8 || strcmp(date, cutoff) < 0) continue;
-    if (n >= MAX_ROWS) continue;
 
     char iso[16];
     snprintf(iso, sizeof iso, "%.4s-%.2s-%.2s", date, date + 4, date + 6);

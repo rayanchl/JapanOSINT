@@ -147,11 +147,18 @@ int tenant_resolve(db_handle *db, const auth_user *u,
       }
       sqlite3_finalize(st);
     }
-    if (nv > 0) {
+    /* Scoped to the tenants actually granted above, not to the email.
+     * The read caps at 16 rows; the old DELETE was keyed on email alone, so a
+     * user invited to 17+ workspaces was added to 16 of them and ALL 17 invite
+     * rows were destroyed — the remainder unrecoverable, with the inviting
+     * admin's invite gone from /api/members too. Per-tenant deletes leave the
+     * surplus invites in place, and the next sign-in claims the next batch. */
+    for (int i = 0; i < nv; i++) {
       if (sqlite3_prepare_v2(h,
-            "DELETE FROM tenant_invites WHERE lower(email)=lower(?1)",
-            -1, &st, NULL) == SQLITE_OK) {
+            "DELETE FROM tenant_invites WHERE lower(email)=lower(?1)"
+            " AND tenant_id=?2", -1, &st, NULL) == SQLITE_OK) {
         sqlite3_bind_text(st, 1, out->email, -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(st, 2, itids[i], -1, SQLITE_TRANSIENT);
         sqlite3_step(st);
       }
       sqlite3_finalize(st);

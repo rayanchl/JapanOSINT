@@ -453,12 +453,15 @@ static cJSON *ent_array(entity_t *p, int n) {
   return a;
 }
 
-char *progress_to_json(osint_request *r) {
-  if (!r) return NULL;
-  pthread_mutex_lock(&g_lock);
-
+/* Body of the snapshot, with g_lock ALREADY held by the caller. Split out so
+ * progress_snapshot_by_id() can do find + serialise inside ONE critical
+ * section: looking the request up, dropping the lock and only then serialising
+ * is a use-after-free, because progress_create() evicts and frees the oldest
+ * FINISHED request once more than 200 are tracked — exactly the entry an SSE
+ * reader attached to a completed run is holding. */
+static char *to_json_locked(osint_request *r) {
   cJSON *o = cJSON_CreateObject();
-  if (!o) { pthread_mutex_unlock(&g_lock); return NULL; }
+  if (!o) return NULL;
 
   cJSON_AddStringToObject(o, "request_id", r->request_id ? r->request_id : "");
   cJSON_AddStringToObject(o, "query", r->query ? r->query : "");
@@ -544,9 +547,26 @@ char *progress_to_json(osint_request *r) {
     if (res) cJSON_AddItemToObject(o, "results", res);
   }
 
-  pthread_mutex_unlock(&g_lock);
-
   char *out = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
+  return out;
+}
+
+char *progress_to_json(osint_request *r) {
+  if (!r) return NULL;
+  pthread_mutex_lock(&g_lock);
+  char *out = to_json_locked(r);
+  pthread_mutex_unlock(&g_lock);
+  return out;
+}
+
+char *progress_snapshot_by_id(const char *request_id, int *out_done) {
+  if (out_done) *out_done = 0;
+  if (!request_id) return NULL;
+  pthread_mutex_lock(&g_lock);
+  osint_request *r = find_locked(request_id);
+  char *out = r ? to_json_locked(r) : NULL;
+  if (r && out_done) *out_done = r->done;
+  pthread_mutex_unlock(&g_lock);
   return out;
 }

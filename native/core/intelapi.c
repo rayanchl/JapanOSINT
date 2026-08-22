@@ -60,6 +60,7 @@ static char *b64url(const char *in) {
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
   size_t len = strlen(in);
   char *out = malloc(((len + 2) / 3) * 4 + 1);
+  if (!out) return NULL;   /* the sibling copies in aoiapi.c and timelineapi.c already check */
   size_t o = 0;
   for (size_t i = 0; i < len; i += 3) {
     unsigned a = (unsigned char)in[i];
@@ -611,8 +612,15 @@ char *intelapi_intel_sources(db_handle *db) {
   if (sqlite3_prepare_v2(db->h, AQ, -1, &s, NULL) != SQLITE_OK) return NULL;
   int cap = 64, na = 0;
   agg_row *A = malloc(cap * sizeof *A);
+  if (!A) { sqlite3_finalize(s); return NULL; }
   while (sqlite3_step(s) == SQLITE_ROW) {
-    if (na == cap) { cap *= 2; A = realloc(A, cap * sizeof *A); }
+    /* An unchecked realloc here leaked the old block AND wrote through the
+     * NULL on the very next line. */
+    if (na == cap) {
+      agg_row *NA = realloc(A, (size_t)cap * 2 * sizeof *A);
+      if (!NA) break;
+      A = NA; cap *= 2;
+    }
     agg_row *r = &A[na++];
     snprintf(r->src, sizeof r->src, "%s",
              (const char *)sqlite3_column_text(s, 0));

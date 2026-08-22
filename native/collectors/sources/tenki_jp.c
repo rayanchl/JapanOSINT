@@ -51,9 +51,12 @@ static void decode(const char *in, char *out, size_t cap) {
     } else out[o++] = *p++;
   }
   out[o] = 0;
-  /* collapse whitespace + trim */
+  /* collapse whitespace + trim. Bound the scratch by `out`'s own capacity as
+   * well as its own, so the copy-back below is an exact-length copy that can
+   * never truncate what we just decoded. */
   char tmp[1024]; size_t to = 0; int sp = 0;
-  for (size_t i = 0; out[i] && to + 1 < sizeof tmp; i++) {
+  size_t tcap = cap < sizeof tmp ? cap : sizeof tmp;
+  for (size_t i = 0; out[i] && to + 1 < tcap; i++) {
     unsigned char ch = (unsigned char)out[i];
     if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' || ch == '\f' || ch == '\v') {
       if (to > 0 && !sp) { tmp[to++] = ' '; sp = 1; }
@@ -61,7 +64,7 @@ static void decode(const char *in, char *out, size_t cap) {
   }
   while (to > 0 && tmp[to-1] == ' ') to--;
   tmp[to] = 0;
-  strncpy(out, tmp, cap - 1); out[cap-1] = 0;
+  memcpy(out, tmp, to + 1);      /* to + 1 <= tcap <= cap */
 }
 
 /* strip <...> tags into spaces (m[1].replace(/<[^>]+>/g,' ')) */

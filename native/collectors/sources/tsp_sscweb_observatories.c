@@ -25,7 +25,6 @@
 #include <string.h>
 
 #define SSC_URL "https://sscweb.gsfc.nasa.gov/WS/sscr/2/observatories"
-#define MAX_ROWS 2000
 
 /* Inner text of <tag>…</tag> inside [blk, blkend). Returns length written. */
 static size_t xml_field(const char *blk, const char *blkend, const char *tag,
@@ -63,7 +62,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   const char *p = body;
   const char *s;
-  while (n < MAX_ROWS && (s = strstr(p, "<Observatory>")) != NULL) {
+  while ((s = strstr(p, "<Observatory>")) != NULL) {
     const char *e = strstr(s, "</Observatory>");
     if (!e) break;
     p = e + strlen("</Observatory>");

@@ -33,7 +33,8 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   if (nat && strcmp(nat, "volcano") == 0)
     cJSON_AddStringToObject(p, "hazard", "volcano");
   else
-    cJSON_AddStringToObject(p, "hazard", haz ? haz : "unknown");
+    if (haz) cJSON_AddStringToObject(p, "hazard", haz);
+    else cJSON_AddItemToObject(p, "hazard", cJSON_CreateNull());
 
   const char *st = ov_tag(el, "addr:state");
   cJSON_AddItemToObject(p, "prefecture",

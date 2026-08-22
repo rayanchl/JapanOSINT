@@ -538,7 +538,6 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   cJSON_AddStringToObject(res, "query", query);
   cJSON_AddItemToObject(res, "services", cJSON_Duplicate(results, 1));
   cJSON_AddStringToObject(res, "synthesis", synth);   /* cJSON copies it */
-  free(synth_llm);
   char *rjson = cJSON_PrintUnformatted(res);
   cJSON_Delete(res);
   progress_set_results(rp, rjson);
@@ -573,6 +572,12 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   it.tags_json = "[\"osint-search\"]";
   sink.emit(&sink, &it);
   free(pj);
+  /* Only now. `synth` aliases synth_llm, and it is still the summary/body of
+   * the run-summary row emitted just above. Freeing it at the cJSON copy —
+   * where it used to happen — left it.summary/it.body pointing into freed
+   * heap, so the row persisted for this run carried whatever the allocator
+   * had since put there instead of the synthesis. */
+  free(synth_llm);
 
   /* searchIngest.js step-2: entity graph via the SAME es_* surface the NER
    * enricher uses (one path). seeds = query entities (field 'query', 0.9);

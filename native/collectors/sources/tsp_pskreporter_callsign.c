@@ -38,7 +38,6 @@
 #include <string.h>
 
 #define PSK_WINDOW_SEC 900
-#define MAX_ROWS 800
 
 /* Amateur callsigns: alnum plus '/' and '-', 3..16 chars, must contain a digit
  * and a letter. Anything else is not a callsign — honest miss. */
@@ -157,7 +156,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   int n = 0;
   const char *p = body, *s;
-  while (n < MAX_ROWS && (s = strstr(p, "<receptionReport")) != NULL) {
+  while ((s = strstr(p, "<receptionReport")) != NULL) {
     const char *e = strchr(s, '>');
     if (!e) break;
     p = e + 1;

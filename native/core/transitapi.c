@@ -560,8 +560,12 @@ static int parse_iso_utc(const char *s, time_t *out) {
   time_t base = timegm(&tm);
   if (base == (time_t)-1) return -1;
 
-  /* explicit numeric offset -> normalise back to UTC */
-  const char *z = strpbrk(s + 10, "+-");
+  /* explicit numeric offset -> normalise back to UTC.
+   * Bounded by the real length: a 3-field parse accepts "2024-5-1" (8 bytes),
+   * and s+10 then pointed past the NUL into the caller's uninitialised
+   * tbuf[64] — a stale '+'/'-' there shifted the answer by up to 99 hours,
+   * and with none in range strpbrk walked off the buffer entirely. */
+  const char *z = (strlen(s) > 10) ? strpbrk(s + 10, "+-") : NULL;
   if (z) {
     int oh = 0, om = 0;
     if (sscanf(z + 1, "%2d:%2d", &oh, &om) >= 1) {

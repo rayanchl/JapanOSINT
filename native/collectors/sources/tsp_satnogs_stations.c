@@ -24,7 +24,6 @@
 #include <string.h>
 
 #define SATNOGS_STATIONS_URL "https://network.satnogs.org/api/stations/?format=json"
-#define MAX_ROWS 6000
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, SATNOGS_STATIONS_URL, 60000);
@@ -41,7 +40,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   cJSON *st;
   cJSON_ArrayForEach(st, doc) {
-    if (n >= MAX_ROWS) break;
     double sid;
     if (!jo_num(st, "id", &sid)) continue;
     const char *name = jo_sv(st, "name");

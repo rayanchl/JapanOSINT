@@ -4,10 +4,11 @@
  * Endpoint: https://lists.blocklist.de/lists/all.txt                 (keyless)
  * parse_notes: "Bare IPv4 per line, no comments. Best stored as a lookup set
  * that enriches other rows rather than 22k standalone intel rows." The feed is
- * therefore parsed in full — the true total is counted and carried on every row
- * as feed_total — while at most MAX_ROWS entries are materialised as intel rows
- * so one hourly run stays bounded. Every emitted address is a literal line
- * from the feed; nothing is synthesised. No coordinates -> has_geo 0 (R2).
+ * therefore parsed in full and EVERY listed address is emitted — the 5,000-row
+ * cap this collector used to apply threw away roughly 17k of the 22k it had
+ * already downloaded and parsed, with nothing in the output to say so. The
+ * true total is still counted and carried on every row as feed_total. Every
+ * emitted address is a literal line from the feed; nothing is synthesised. No coordinates -> has_geo 0 (R2).
  * Licence: free community feed, no key; attribution to blocklist.de.
  */
 #include "lib/jocore.h"
@@ -19,7 +20,6 @@
 #include <string.h>
 
 #define CYI_URL "https://lists.blocklist.de/lists/all.txt"
-#define MAX_ROWS 5000
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char *body = feed_get_text(ctx->http, CYI_URL, 40000);
@@ -31,7 +31,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   int n = 0;
   char *cur = body, *line;
-  while ((line = jo_next_line(&cur)) != NULL && n < MAX_ROWS) {
+  while ((line = jo_next_line(&cur)) != NULL) {
     if (!line[0] || line[0] == '#') continue;
     if (!jo_is_ipv4(line)) continue;
 

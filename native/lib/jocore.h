@@ -472,10 +472,19 @@ static inline int jo_is_utf8(const char *s, size_t n) {
  * jo_get callers are non-Japanese (govdata.de, opendata.swiss,
  * api-adresse.data.gouv.fr, dataforsyningen.dk …), which is precisely the
  * population feed_get_text's gate was written to protect. */
-static inline char *jo_get(const source_ctx *ctx, const char *url,
-                           const char *const *headers, const char *tag) {
+/* Same, with an explicit timeout. The 20-second default is right for the ~130
+ * page-sized callers and far too short for a bulk register: Switzerland's
+ * consolidated sanctions list is 42 MB and takes about forty seconds on a good
+ * link, so it timed out, `jo_get` returned NULL, and the collector reported a
+ * clean screen. A sanctions source that reports CLEAR because the download did
+ * not finish is worse than one that fails loudly, so a caller fetching a whole
+ * register asks for the time it needs. */
+static inline char *jo_get_t(const source_ctx *ctx, const char *url,
+                             const char *const *headers, const char *tag,
+                             int timeout_ms) {
   http_response hr = {0};
-  int rc = http_request(ctx->http, "GET", url, headers, NULL, 0, 20000, 1, &hr);
+  int rc = http_request(ctx->http, "GET", url, headers, NULL, 0,
+                        timeout_ms > 0 ? timeout_ms : 20000, 1, &hr);
   if (rc != 0 || hr.status != 200 || !hr.body) {
     fprintf(stderr, "[%s] http status=%ld\n", tag, hr.status);
     http_response_free(&hr);
@@ -490,6 +499,81 @@ static inline char *jo_get(const source_ctx *ctx, const char *url,
     if (conv) { free(body); return conv; }
   }
   return body;
+}
+
+static inline char *jo_get(const source_ctx *ctx, const char *url,
+                           const char *const *headers, const char *tag) {
+  return jo_get_t(ctx, url, headers, tag, 20000);
+}
+
+
+/* ------------------------------------------- exhaustive-use disclosure (R7) */
+
+/* Emit the shared `collector-truncation-notice` row.
+ *
+ * House rule 2 (docs/SOURCE_EXHAUSTIVENESS.md) allows a bound only when the
+ * shortfall is reported IN THE DATA. lib/hpengine.c, lib/jsonlist.c and
+ * lib/jsonstream.c each grew their own copy of this record; a bespoke
+ * collector that caps its own loop had no way to make the same disclosure
+ * short of copying forty lines, so in practice it made none at all — a
+ * `#define MAX_ROWS 5000` with a silent `break` was the commonest shape in
+ * the tree. This is that record, once.
+ *
+ * `available` is the upstream's own count when we know it (rows seen before
+ * the cap bit, a declared total), or -1 for "we never found out", which is
+ * itself the honest answer and is written out as such rather than guessed.
+ *
+ * One notice per source per endpoint: remote_key is "truncation" (+ a caller
+ * scope), so the sink upserts it and a re-run refreshes the disclosure rather
+ * than piling up duplicates. */
+static inline void jo_trunc_notice_scoped(intel_sink *sink, const char *source_id,
+                                          const char *scope, const char *endpoint,
+                                          long used, long available,
+                                          const char *reason, const char *remedy) {
+  if (!sink || !sink->emit) return;
+  cJSON *p = cJSON_CreateObject();
+  if (!p) return;
+  if (source_id) cJSON_AddStringToObject(p, "source_id", source_id);
+  if (endpoint)  cJSON_AddStringToObject(p, "endpoint", endpoint);
+  cJSON_AddNumberToObject(p, "records_used", (double) used);
+  if (available >= 0) cJSON_AddNumberToObject(p, "records_available", (double) available);
+  else cJSON_AddStringToObject(p, "records_available",
+                               "unknown — the upstream declared no total");
+  cJSON_AddBoolToObject(p, "more_records_pending", 1);
+  if (reason) cJSON_AddStringToObject(p, "reason", reason);
+  if (remedy) cJSON_AddStringToObject(p, "remedy", remedy);
+  char *pj = cJSON_PrintUnformatted(p);
+  cJSON_Delete(p);
+
+  char key[160], title[320];
+  if (scope && *scope) snprintf(key, sizeof key, "truncation:%s", scope);
+  else                 snprintf(key, sizeof key, "truncation");
+  if (available >= 0)
+    snprintf(title, sizeof title, "%s used %ld of %ld available records",
+             source_id ? source_id : "collector", used, available);
+  else
+    snprintf(title, sizeof title, "%s used %ld records and stopped at its own cap",
+             source_id ? source_id : "collector", used);
+
+  intel_item note = {0};
+  note.remote_key      = key;
+  note.title           = title;
+  note.summary         = reason;
+  note.lang            = "en";
+  note.record_type     = "collector-truncation-notice";
+  note.properties_json = pj ? pj : "{}";
+  note.tags_json       = "[\"truncation-notice\"]";
+  sink->emit(sink, &note);
+  free(pj);
+}
+
+/* The common case: one cap, one endpoint, one notice. */
+static inline void jo_trunc_notice(intel_sink *sink, const char *source_id,
+                                   const char *endpoint, long used,
+                                   long available, const char *reason,
+                                   const char *remedy) {
+  jo_trunc_notice_scoped(sink, source_id, NULL, endpoint, used, available,
+                         reason, remedy);
 }
 
 #endif /* JO_CORE_H */

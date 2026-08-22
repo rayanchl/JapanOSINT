@@ -536,6 +536,14 @@ char *keysapi_breakglass(db_handle *db, const char *body,
 
   unsigned char key[128];
   int klen=base32_decode(totp,key,sizeof key);
+  /* base32_decode returns -1 on the first character outside the alphabet, and
+   * HMAC()'s key_len is an int that OpenSSL widens to size_t — so an
+   * ADMIN_TOTP_SECRET containing 0/1/8/9/-/_ (a hex or URL-safe secret, or a
+   * transcription slip) turned every unauthenticated break-glass POST into a
+   * read of SIZE_MAX bytes from a 128-byte stack buffer. A secret we cannot
+   * decode is a configuration failure, not a failed code. */
+  if (klen<=0){ if(jb)cJSON_Delete(jb);
+    return jerr(st,503,"Break-glass not configured"); }
   long now=(long)time(NULL), step=now/30;
   int valid=0;
   for (int d=-1; d<=1 && !valid; d++){ char e[7]; totp_at(key,klen,step+d,e);

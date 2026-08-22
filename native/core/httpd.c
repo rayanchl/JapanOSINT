@@ -73,6 +73,21 @@ static void reply_json(struct mg_connection *c, int code, const char *body) {
     "%s", body);
 }
 
+/* {"error":<err>,"source_id":<id>} with `id` properly escaped and no length
+ * ceiling. Path segments reach us URL-DECODED, so an id can contain a quote,
+ * a backslash or a newline; formatting one into a fixed char[256] with %s both
+ * truncated the body and let the caller inject JSON keys of its own. */
+static void reply_json_err_id(struct mg_connection *c, int code,
+                              const char *err, const char *id) {
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddStringToObject(o, "error", err);
+  cJSON_AddStringToObject(o, "source_id", id ? id : "");
+  char *j = cJSON_PrintUnformatted(o);
+  cJSON_Delete(o);
+  reply_json(c, code, j ? j : "{\"error\":\"internal\"}");
+  free(j);
+}
+
 /* export_write_fn over a mongoose connection: one Transfer-Encoding chunk per
  * batch. Returning non-zero once the peer is gone is what makes export_run()
  * abandon a 250k-row walk instead of formatting it into a socket nobody is
@@ -96,7 +111,7 @@ static const char *jget_str(const cJSON *o, const char *k) {
 
 /* GET /api/sources/stats — aggregate counts from the sources table. */
 static void route_sources_stats(struct mg_connection *c) {
-  int total = 0, online = 0, offline = 0;
+  int total = 0, online = 0, offline = 0, got = 0;
   sqlite3_stmt *st;
   if (sqlite3_prepare_v2(g_db->h,
         "SELECT COUNT(*),"
@@ -105,8 +120,19 @@ static void route_sources_stats(struct mg_connection *c) {
     total = sqlite3_column_int(st, 0);
     online = sqlite3_column_int(st, 1);
     offline = sqlite3_column_int(st, 2);
+    got = 1;
   }
   sqlite3_finalize(st);
+  /* SELECT COUNT(*) always yields a row when it runs at all, so the branch
+   * above is purely the error path — SQLITE_BUSY behind the 5 s timeout, an
+   * IO error, a corrupt page. It used to fall through to the same 200 body
+   * with the zeroed locals, i.e. a fleet of 1,214 sources reported as
+   * {"total":0,"online":0,"offline":0}. Zeros we did not measure are not an
+   * answer. */
+  if (!got) {
+    reply_json(c, 500, "{\"error\":\"sources_stats_query_failed\"}");
+    return;
+  }
   char body[256];
   snprintf(body, sizeof body,
            "{\"total\":%d,\"online\":%d,\"offline\":%d}", total, online, offline);
@@ -124,31 +150,41 @@ static void search_stream_open(struct mg_connection *c, const char *id) {
     "Cache-Control: no-cache, no-transform\r\nConnection: keep-alive\r\n"
     "X-Accel-Buffering: no\r\n\r\n");
   c->is_resp = 0;
-  osint_request *rp = progress_get(id);
-  if (!rp) { mg_printf(c, "event: error\r\ndata: {\"error\":\"not_found\"}\n\n");
-             c->is_draining = 1; return; }
-  char *snap = progress_to_json(rp);
-  if (snap) { mg_printf(c, "event: progress\r\ndata: %s\n\n", snap); free(snap); }
-  if (progress_is_done(rp)) {
+  /* Look-up + serialise as one locked step. progress_get() hands back a
+   * pointer that progress_create() may free (it evicts the oldest FINISHED
+   * request past 200) — and a reconnect to a completed run is exactly the
+   * eviction candidate. */
+  int done = 0;
+  char *snap = progress_snapshot_by_id(id, &done);
+  if (!snap) { mg_printf(c, "event: error\r\ndata: {\"error\":\"not_found\"}\n\n");
+               c->is_draining = 1; return; }
+  mg_printf(c, "event: progress\r\ndata: %s\n\n", snap); free(snap);
+  if (done) {
     mg_printf(c, "event: close\r\ndata: {}\n\n"); c->is_draining = 1; return;
   }
+  /* No free slot must NOT leave the connection registered nowhere: it had
+   * already been handed 200 + the event-stream headers, so it would hang open
+   * for ever waiting for events that can never be polled to it, pinning the fd
+   * until the client gave up. Say the stream is unavailable and close. */
   for (int i = 0; i < SSTREAM_MAX; i++) if (!g_sstream[i].c) {
     g_sstream[i].c = c;
     snprintf(g_sstream[i].id, sizeof g_sstream[i].id, "%s", id);
     g_sstream[i].next = mg_millis() + 500;
-    break;
+    return;
   }
+  mg_printf(c, "event: error\r\ndata: {\"error\":\"stream_capacity\"}\n\n");
+  c->is_draining = 1;
 }
 static void search_stream_poll(struct mg_connection *c) {
   for (int i = 0; i < SSTREAM_MAX; i++) {
     if (g_sstream[i].c != c) continue;
     if (mg_millis() < g_sstream[i].next) return;
     g_sstream[i].next = mg_millis() + 500;
-    osint_request *rp = progress_get(g_sstream[i].id);
-    if (!rp) { g_sstream[i].c = NULL; c->is_draining = 1; return; }
-    char *snap = progress_to_json(rp);
-    if (snap) { mg_printf(c, "event: progress\r\ndata: %s\n\n", snap); free(snap); }
-    if (progress_is_done(rp)) {
+    int done = 0;
+    char *snap = progress_snapshot_by_id(g_sstream[i].id, &done);
+    if (!snap) { g_sstream[i].c = NULL; c->is_draining = 1; return; }
+    mg_printf(c, "event: progress\r\ndata: %s\n\n", snap); free(snap);
+    if (done) {
       mg_printf(c, "event: close\r\ndata: {}\n\n");
       g_sstream[i].c = NULL; c->is_draining = 1;
     }
@@ -538,27 +574,47 @@ static void *srcrun_thread(void *vp) {
  * run it. Locals outlive the call (SQLITE_TRANSIENT copies bound values, the
  * envelope is malloc'd). mg_http_get_var > 0 == present & non-empty → NULL
  * means "filter not applied" (== Node `req.query.x ? String(x) : null`). */
-static char *intel_items_run(struct mg_http_message *hm) {
+
+/* mg_http_get_var returns -4 when the parameter is ABSENT and -3 when the
+ * value would not fit the destination (mg_url_decode gives up as soon as
+ * `j + 1 >= dst_len`). Both are `!(n > 0)`, so an over-long value used to be
+ * indistinguishable from a missing one: `?q=` with 256+ decoded bytes — about
+ * 86 Japanese characters, an ordinary pasted phrase — dropped the filter and
+ * returned the ENTIRE unfiltered feed under HTTP 200, and an over-long
+ * `?cursor=` silently restarted pagination at page 1. Half a filter set cannot
+ * be honoured; /api/export already refuses that case with a 414 and this is
+ * the same call. */
+static int qvar(struct mg_http_message *hm, const char *k, char *out,
+                size_t cap, int *too_long) {
+  int n = mg_http_get_var(&hm->query, k, out, cap);
+  if (n == -3) *too_long = 1;
+  return n > 0;
+}
+
+static char *intel_items_run(struct mg_http_message *hm, int *too_long) {
   char src[160]={0}, q[256]={0}, qalt[256]={0}, lang[16]={0}, since[40]={0},
        until[40]={0}, rt[48]={0}, ssid[120]={0}, hg[8]={0}, tag[120]={0},
        cur[768]={0}, lim[16]={0};
+  int tl = 0;
   intel_items_query Q = {0};
-  if (mg_http_get_var(&hm->query, "source",        src,  sizeof src ) > 0) Q.source = src;
-  if (mg_http_get_var(&hm->query, "q",             q,    sizeof q   ) > 0) Q.q = q;
+  if (qvar(hm, "source",        src,  sizeof src,  &tl)) Q.source = src;
+  if (qvar(hm, "q",             q,    sizeof q,    &tl)) Q.q = q;
   /* The iOS client has always sent qAlt (the translated counterpart of q) and
    * this parser has always ignored it, so bilingual search was a no-op and the
    * "Also searching:" banner it drives was dead UI. intelapi_list_items() ORs
    * the two. */
-  if (mg_http_get_var(&hm->query, "qAlt",          qalt, sizeof qalt) > 0) Q.q_alt = qalt;
-  if (mg_http_get_var(&hm->query, "lang",          lang, sizeof lang) > 0) Q.lang = lang;
-  if (mg_http_get_var(&hm->query, "since",         since,sizeof since) > 0) Q.since = since;
-  if (mg_http_get_var(&hm->query, "until",         until,sizeof until) > 0) Q.until = until;
-  if (mg_http_get_var(&hm->query, "record_type",   rt,   sizeof rt  ) > 0) Q.record_type = rt;
-  if (mg_http_get_var(&hm->query, "sub_source_id", ssid, sizeof ssid) > 0) Q.sub_source_id = ssid;
-  if (mg_http_get_var(&hm->query, "has_geom",      hg,   sizeof hg  ) > 0) Q.has_geom = hg;
-  if (mg_http_get_var(&hm->query, "tag",           tag,  sizeof tag ) > 0) Q.tag = tag;
-  if (mg_http_get_var(&hm->query, "cursor",        cur,  sizeof cur ) > 0) Q.cursor = cur;
-  if (mg_http_get_var(&hm->query, "limit",         lim,  sizeof lim ) > 0) Q.limit = atoi(lim);
+  if (qvar(hm, "qAlt",          qalt, sizeof qalt, &tl)) Q.q_alt = qalt;
+  if (qvar(hm, "lang",          lang, sizeof lang, &tl)) Q.lang = lang;
+  if (qvar(hm, "since",         since,sizeof since,&tl)) Q.since = since;
+  if (qvar(hm, "until",         until,sizeof until,&tl)) Q.until = until;
+  if (qvar(hm, "record_type",   rt,   sizeof rt,   &tl)) Q.record_type = rt;
+  if (qvar(hm, "sub_source_id", ssid, sizeof ssid, &tl)) Q.sub_source_id = ssid;
+  if (qvar(hm, "has_geom",      hg,   sizeof hg,   &tl)) Q.has_geom = hg;
+  if (qvar(hm, "tag",           tag,  sizeof tag,  &tl)) Q.tag = tag;
+  if (qvar(hm, "cursor",        cur,  sizeof cur,  &tl)) Q.cursor = cur;
+  if (qvar(hm, "limit",         lim,  sizeof lim,  &tl)) Q.limit = atoi(lim);
+  if (too_long) *too_long = tl;
+  if (tl) return NULL;
   return intelapi_list_items(g_db, &Q);
 }
 
@@ -645,7 +701,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     if (seg(u, "/api/search/stream/", "", sid, sizeof sid)) {
       search_stream_open(c, sid); return; } }
 
-  /* /admin/break-glass/* is mounted OUTSIDE the /api auth gate (it exists
+  /* /admin/break-glass/\* is mounted OUTSIDE the /api auth gate (it exists
    * precisely for when Supabase auth is down). Only /login is implemented. */
   if (starts(u, "/admin/break-glass")) {
     if (!eq(u, "/admin/break-glass/login")) { reply_json(c, 404, "{\"error\":\"Not found\"}"); return; }
@@ -680,7 +736,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     return;
   }
 
-  /* ---- everything else under /api/* passes the auth gate ---- */
+  /* ---- everything else under /api/\* passes the auth gate ---- */
   if (starts(u, "/api/")) {
     struct mg_str *h = mg_http_get_header(hm, "Authorization");
     char hdr[2048] = {0};
@@ -807,7 +863,11 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           if (!nb) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
           reply_json(c, nst, nb); free(nb); return;
         } }
-      char *body = intel_items_run(hm);
+      int qtl = 0;
+      char *body = intel_items_run(hm, &qtl);
+      if (qtl) { reply_json(c, 414,
+        "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
+        "its maximum length; half a filter set cannot be honoured\"}"); return; }
       if (!body) { reply_json(c, 500, "{\"error\":\"failed_to_list_intel_items\"}"); return; }
       /* Post-passes over the envelope intelapi already built, so every filter,
        * the FTS branch and the keyset cursor keep working untouched. Both
@@ -906,6 +966,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (!body) { reply_json(c, 404, "{\"error\":\"Source not found\"}"); return; }
       if (!strcmp(body, "\1bad")) { free(body);
         reply_json(c, 400, "{\"error\":\"mode must be map_cron or search_only\"}"); return; }
+      if (!strcmp(body, "\1err")) { free(body);
+        reply_json(c, 500, "{\"error\":\"schedule_update_failed\"}"); return; }
       reply_json(c, 200, body); free(body); return;
     }
 
@@ -941,7 +1003,11 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     /* GET /api/intel/search — alias of /api/intel/items */
     if (eq(u, "/api/intel/search")) {
       if (intel_query_is_breach(hm) && breach_gate(c, &usr)) return;
-      char *body = intel_items_run(hm);
+      int qtl = 0;
+      char *body = intel_items_run(hm, &qtl);
+      if (qtl) { reply_json(c, 414,
+        "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
+        "its maximum length; half a filter set cannot be honoured\"}"); return; }
       if (!body) { reply_json(c, 500, "{\"error\":\"failed_to_list_intel_items\"}"); return; }
       reply_json(c, 200, body); free(body); return;
     }
@@ -961,17 +1027,14 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return;
       }
       const source_def *d = registry_get(p);
-      char b[256];
-      if (!d) {
-        snprintf(b, sizeof b,
-          "{\"error\":\"no_collector_registered\",\"source_id\":\"%s\"}", p);
-        reply_json(c, 404, b); return;
-      }
-      if (!run_begin(p)) {
-        snprintf(b, sizeof b,
-          "{\"error\":\"run_in_flight\",\"source_id\":\"%s\"}", p);
-        reply_json(c, 409, b); return;
-      }
+      /* `p` is a URL-DECODED path segment of up to 1023 bytes, so it can carry
+       * a literal '"' (from %22) and it can outrun any fixed body buffer. The
+       * snprintf pair that used to build these two replies did neither escape
+       * nor check its return: %22 injected attacker-chosen keys into the JSON,
+       * and a 206-byte id truncated the body mid-string. Build it with cJSON,
+       * which escapes and sizes itself. */
+      if (!d) { reply_json_err_id(c, 404, "no_collector_registered", p); return; }
+      if (!run_begin(p)) { reply_json_err_id(c, 409, "run_in_flight", p); return; }
       srcrun_arg *ra = calloc(1, sizeof *ra);
       if (ra) {
         ra->mgr = c->mgr; ra->cid = c->id; ra->db = g_db; ra->d = d;
@@ -993,15 +1056,22 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         if (delta < 0) delta = 0;
         run_end(p);
         if (rc < 0) {
-          snprintf(b, sizeof b,
-            "{\"ran\":false,\"source_id\":\"%s\",\"error\":\"collector_run_failed\"}", p);
-          reply_json(c, 500, b); return;
+          reply_json_err_id(c, 500, "collector_run_failed", p); return;
         }
-        snprintf(b, sizeof b,
-          "{\"ran\":true,\"source_id\":\"%s\",\"ingested\":%lld,"
-          "\"duration_ms\":%llu,\"kind\":null,\"meta\":null}",
-          p, delta, (unsigned long long)(mg_millis() - t0));
-        reply_json(c, 200, b);
+        /* Same reason as the two replies above: `p` is decoded, so it is
+         * neither guaranteed JSON-safe nor guaranteed to fit a fixed body. */
+        cJSON *ok = cJSON_CreateObject();
+        cJSON_AddBoolToObject(ok, "ran", 1);
+        cJSON_AddStringToObject(ok, "source_id", p);
+        cJSON_AddNumberToObject(ok, "ingested", (double)delta);
+        cJSON_AddNumberToObject(ok, "duration_ms",
+                                (double)(mg_millis() - t0));
+        cJSON_AddNullToObject(ok, "kind");
+        cJSON_AddNullToObject(ok, "meta");
+        char *b = cJSON_PrintUnformatted(ok);
+        cJSON_Delete(ok);
+        reply_json(c, 200, b ? b : "{\"ran\":true}");
+        free(b);
       }
       return;
     }
@@ -1020,7 +1090,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 501, body); free(body); return;
     }
 
-    /* ---- /api/admin/* and /api/db/* — requirePlatformOperator ---- */
+    /* ---- /api/admin/\* and /api/db/\* — requirePlatformOperator ---- */
     if (starts(u,"/api/admin/") ||
         eq(u,"/api/db/tables") || starts(u,"/api/db/tables/") ||
         eq(u,"/api/db/scheduler")) {
@@ -1178,7 +1248,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           reply_json(c,st,b); free(b); return;
         }
       }
-      /* ---- /api/admin/breach/* — one-shot corpus fetch / ingest (async jobs)
+      /* ---- /api/admin/breach/\* — one-shot corpus fetch / ingest (async jobs)
        * + job status. Ingest/fetch run on detached threads (own DB connection),
        * so a multi-GB job never blocks the event loop. Operator-gated above. */
       if (eq(u,"/api/admin/breach/ingest") || eq(u,"/api/admin/breach/fetch")) {
@@ -1306,7 +1376,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       /* /api/db/tables/:name
        *
        * This is the tail of the block, so anything that entered it and matched
-       * no route above lands here — including every unmatched /api/admin/*
+       * no route above lands here — including every unmatched /api/admin/\*
        * path. The offset arithmetic below is blind, so `GET /api/admin/xxxsources`
        * used to slice out "sources" and dump that table. Only real
        * /api/db/tables/ URIs may reach the explorer. */
@@ -1441,7 +1511,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     /* ---- roadmap 10: POST /api/alerts/preview — backtest a predicate over
      * history WITHOUT writing alert_events. Shares alert_eval.c's matcher
      * with the live ingest path, so what you preview is what will fire.
-     * Must precede the /api/alerts/* block, which would otherwise treat
+     * Must precede the /api/alerts/\* block, which would otherwise treat
      * "preview" as a rule id. ---- */
     if (eq(u, "/api/alerts/preview")) {
       if (mg_strcmp(hm->method, mg_str("POST")) != 0) {
@@ -1509,7 +1579,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, status, body); free(body); return;
     }
 
-    /* ---- P7 Wave 3b: /api/alerts/* (tenant-scoped rule CRUD) ---- */
+    /* ---- P7 Wave 3b: /api/alerts/\* (tenant-scoped rule CRUD) ---- */
     if (eq(u, "/api/alerts") || starts(u, "/api/alerts/")) {
       struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
       char xtid[128] = {0};
@@ -2069,7 +2139,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, status, body); free(body); return;
     }
 
-    /* ---- /api/members[/*] — member roster + invites (tenant-scoped) ---- */
+    /* ---- /api/members[/\*] — member roster + invites (tenant-scoped) ---- */
     if (eq(u, "/api/members") || starts(u, "/api/members/")) {
       struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
       char xtid[128] = {0};
@@ -2186,7 +2256,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 200, body); free(body); return;
     }
 
-    /* ---- P7 Wave 2: /api/entities/* (entity graph, pure SQLite) ----
+    /* ---- P7 Wave 2: /api/entities/\* (entity graph, pure SQLite) ----
      * These routes reached entityapi without ever resolving a tenant, and
      * entityapi had no tenant predicate — the whole subtree was cross-tenant
      * readable. Resolve once here, at the top of the subtree, and pass the id
@@ -2276,7 +2346,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 404, "{\"error\":\"not_found\"}");
       return;
     }
-    }   /* end /api/entities/* tenant-resolved block */
+    }   /* end /api/entities/\* tenant-resolved block */
 
     /* GET /api/data/cameras/discovery-feed — port of data.js getDiscoveryFeed
      * route. Explicit (the generic /api/data/ matcher below rejects a
@@ -2297,7 +2367,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
      * Serves the upstream camera image over our own origin so iOS doesn't need
      * an ATS exception per discovered IP. Bytes are from an arbitrary internet
      * camera, so: nosniff, and the content type is echoed only after it was
-     * checked to be image/*. Explicit route — the generic /api/data/ matcher
+     * checked to be image/\*. Explicit route — the generic /api/data/ matcher
      * below would treat "cameras/proxy" as a layer id. */
     if (eq(u, "/api/data/cameras/proxy")) {
       char cu[192] = {0};
@@ -2528,8 +2598,29 @@ int httpd_serve(db_handle *db, int port) {
   auth_init();
   struct mg_mgr mgr;
   mg_mgr_init(&mgr);
-  char url[64];
-  snprintf(url, sizeof url, "http://0.0.0.0:%d", port);
+  /* Loopback by default. There is no TLS anywhere in this server — no mg_tls,
+   * no SSL_CTX, nothing to switch on — and every authenticated request carries
+   * a Supabase bearer and X-Tenant-Id, while GET /api/tenant-keys/:name returns
+   * a PLAINTEXT upstream API key (Shodan, Censys, HIBP) in its body. Binding
+   * 0.0.0.0 unconditionally put all of that on the wire for anyone on the same
+   * network, which is also what let an mDNS squatter answer for the shipping
+   * iOS default host.
+   *
+   * Exposing the server is now a decision someone makes explicitly, and the
+   * only correct way to make it is behind a TLS-terminating proxy:
+   *
+   *     JO_BIND=127.0.0.1   (default) loopback only
+   *     JO_BIND=0.0.0.0     every interface — proxy MUST terminate TLS
+   *     JO_BIND=10.0.0.5    one interface
+   */
+  const char *bind_addr = getenv("JO_BIND");
+  if (!bind_addr || !*bind_addr) bind_addr = "127.0.0.1";
+  char url[128];
+  snprintf(url, sizeof url, "http://%s:%d", bind_addr, port);
+  if (strcmp(bind_addr, "127.0.0.1") != 0 && strcmp(bind_addr, "localhost") != 0)
+    fprintf(stderr, "[httpd] WARNING: bound %s in cleartext — bearer tokens and "
+                    "plaintext upstream API keys traverse this socket. Put a "
+                    "TLS-terminating proxy in front of it.\n", url);
   if (!mg_http_listen(&mgr, url, fn, NULL)) {
     fprintf(stderr, "[httpd] cannot bind %s\n", url);
     mg_mgr_free(&mgr);

@@ -57,10 +57,16 @@ char *miscapi_set_schedule(db_handle *db, const char *id, const char *body) {
       != SQLITE_OK) { if (jb) cJSON_Delete(jb); return NULL; }
   sqlite3_bind_text(s, 1, mode, -1, SQLITE_TRANSIENT);
   sqlite3_bind_text(s, 2, id, -1, SQLITE_TRANSIENT);
-  sqlite3_step(s);
-  int changed = sqlite3_changes(db->h);
+  /* sqlite3_changes() reports the last COMPLETED write on the connection, so
+   * reading it after an unchecked step meant a failed UPDATE (SQLITE_BUSY
+   * behind the 5 s timeout while a collector holds the write lock) inherited
+   * some earlier statement's count — non-zero — and the endpoint answered 200
+   * with the row still carrying the OLD schedule_mode. */
+  int done = sqlite3_step(s) == SQLITE_DONE;
+  int changed = done ? sqlite3_changes(db->h) : -1;
   sqlite3_finalize(s);
   if (jb) cJSON_Delete(jb);
+  if (changed < 0) return strdup("\1err");       /* write failed → 500 */
   if (changed == 0) return NULL;                 /* unknown id → 404 */
   return miscapi_source_by_id(db, id);           /* updated row */
 }

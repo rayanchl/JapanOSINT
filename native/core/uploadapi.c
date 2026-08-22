@@ -949,6 +949,12 @@ static char *h_status(db_handle *db, const tenant_ctx *t, const char *id,
        * us; anything above it, it already knows it has not sent. */
       while (expect < q && cJSON_GetArraySize(miss) < UP_STATUS_SEQ_CAP)
         cJSON_AddItemToArray(miss, cJSON_CreateNumber((double)expect++));
+      /* `truncated` used to be latched only by the received_seqs cap, so a
+       * client that sent seq 0 and seq 5000 got received_seqs=[0,5000],
+       * seqs_truncated=false, and a missing_seqs list that stopped at 2047
+       * with 2048..4999 silently omitted. It would then upload exactly what it
+       * was told was missing and still get a missing_parts 409 on commit. */
+      if (expect < q) truncated = 1;
       expect = q + 1;
       if (emitted < UP_STATUS_SEQ_CAP) {
         cJSON_AddItemToArray(recv, cJSON_CreateNumber((double)q));

@@ -657,6 +657,16 @@ def check_dup_endpoint():
     # one key and were reported as duplicates of each other. The closing quote
     # already terminates a URL in a C string literal, so `,` never needed to.
     url_re = re.compile(r'https?://[^\s"\')\\]+')
+    # `.portal` is documentation, not a request. source.h defines it as the
+    # "canonical/base" human-facing URL, and the engine never fetches it -- it
+    # only ever requests `.url` (and `.detail_url`). Counting it as a fetched
+    # endpoint makes two hp_source tables that merely CITE the same portal look
+    # like two collectors fetching one endpoint twice. That is a false positive,
+    # and it scales with the number of rows: batch 18 added 212 rows and pushed
+    # this check 528 -> 559 without introducing a single duplicate request
+    # (verified by recomputing over `.url` values alone, which gives 0). Strip
+    # the portal assignment before harvesting URLs.
+    portal_re = re.compile(r'\.portal\s*=\s*"[^"]*"')
     by_url = {}
     for root, _dirs, names in os.walk(COLLECTORS):
         if os.sep + "obj" in root:
@@ -665,7 +675,7 @@ def check_dup_endpoint():
             if not f.endswith((".c", ".inc")):
                 continue
             p = os.path.join(root, f)
-            for m in url_re.findall(read(p)):
+            for m in url_re.findall(portal_re.sub("", read(p))):
                 u = m.rstrip('".,)\\')
                 try:
                     s = urlsplit(u)
