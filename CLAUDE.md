@@ -127,9 +127,31 @@ truth; `collectors/pivot/table/hp3*_<beat>.c` is generated. Edit the manifest.
 | `tools/batch_exclusions.py` | no duplicate id or endpoint against the existing tree or within the batch (normalising `{q}` and `%s` to one form; `.portal` is documentation and is excluded) |
 | `tools/audit_batch_pagination.py` | a paged endpoint declares `page_param` or `next_path` |
 | `tools/audit_batch_reachable.py` | rule 3 above |
+| `tools/audit_batch_emit.py` | rule 4 below: runs each row through the real binary and reads back `emitted N of M` |
+| `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
 | `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide |
 
-Two engine subtleties worth knowing before writing a paged row:
+## 4. Fetching is not emitting — prove the second one
+
+`probe_hp_batch.py` proves an endpoint answers and that its body parses. It says
+nothing about whether the **engine** turns those records into `intel_items`, and
+the gap between the two is not small. Batch 18 was fully probe-verified, and
+when its 223 rows were first run through the actual binary, **59 of them fetched
+real records and stored none** — `DATAPLANE_TELNET` fetched 36,166 and emitted
+0, exit code 0, run reported successful. That is the same invisible nothing as
+an `EMPTY_RESULTSET` source.
+
+```sh
+python3 native/tools/audit_batch_emit.py docs/candidate-sources-batch<N>.*.txt \
+        --bin ./bin/japanosint --jobs 6
+```
+
+Run it before believing a batch. `DROPS_EVERYTHING` is the verdict that matters;
+`diagnose_emit_keys.py` then separates the three causes, which want different
+fixes (an engine bug, a per-row `title_keys`, or a row that is not a record
+source at all).
+
+Engine subtleties worth knowing before writing a row:
 
 * `page_start`'s unset value is 0, which is also a legitimate first page. Set
   **`page_zero_based=1`** for a 0-based API — otherwise the engine coerces the
@@ -139,6 +161,17 @@ Two engine subtleties worth knowing before writing a paged row:
   a server reorders it, and the failure mode is the engine refetching page 1
   until the page ceiling — every later page lost, with the run still looking
   successful.
+* A "CSV" feed is often not comma-separated. DataPlane.org publishes
+  `ASN | AS name | ip | lastseen | category`; declare **`csv_delim=pipe`** (or
+  `tab`, or `semi` — named, because the manifest is itself pipe-delimited) or
+  the whole line lands as one unqueryable cell. **`csv_comment=#`** strips a
+  banner before the parse, which matters because URLhaus keeps its column names
+  in a `#` line and header parsing would otherwise name every column after a
+  comment.
+* Titles: the engine will key a record on its first non-empty scalar rather than
+  drop it, so a row without `title_keys` still emits — but it emits titled
+  `<record_type> <whatever came first>`. Declare `title_keys`/`id_keys` for
+  anything whose fields are not named `name`/`title`/`id`.
 
 Every source self-registers with `REGISTER_SOURCE` (or `HP_REGISTER_TABLE`) and
 is both schedulable (`update_interval_sec > 0`) and dispatchable as an
