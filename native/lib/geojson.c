@@ -1,4 +1,6 @@
 #include "geojson.h"
+#include "jsonlist.h"
+#include "feedlib.h"
 #include <openssl/sha.h>
 #include <stdio.h>
 #include <string.h>
@@ -314,4 +316,171 @@ int geojson_emit_doc(intel_sink *sink, const char *sid, cJSON *doc) {
   if (cJSON_IsArray(doc)) return geojson_emit_features(sink, sid, doc);
   cJSON *f = cJSON_GetObjectItem(doc, "features");
   return f ? geojson_emit_features(sink, sid, f) : 0;
+}
+
+/* ── paged walk (see geojson.h) ──────────────────────────────────────────── */
+
+/* Truthy `exceededTransferLimit`, wherever ArcGIS chose to put it this time:
+ * FeatureServer sets it at the top level, some MapServer builds nest it under
+ * `properties`, and a few emit the string "true" rather than a JSON boolean. */
+static int gj_exceeded(cJSON *doc) {
+  const char *K = "exceededTransferLimit";
+  cJSON *v = cJSON_GetObjectItem(doc, K);
+  if (!v) {
+    cJSON *p = cJSON_GetObjectItem(doc, "properties");
+    if (p) v = cJSON_GetObjectItem(p, K);
+  }
+  if (!v) return 0;
+  if (cJSON_IsBool(v)) return cJSON_IsTrue(v);
+  if (cJSON_IsNumber(v)) return v->valueint != 0;
+  if (cJSON_IsString(v) && v->valuestring) return !strcasecmp(v->valuestring, "true");
+  return 0;
+}
+
+/* An OGC API Features / WFS3 `links` entry with rel="next". Returned malloc'd. */
+static char *gj_next_link(cJSON *doc) {
+  cJSON *links = cJSON_GetObjectItem(doc, "links");
+  if (!cJSON_IsArray(links)) return NULL;
+  cJSON *l;
+  cJSON_ArrayForEach(l, links) {
+    cJSON *rel = cJSON_GetObjectItem(l, "rel");
+    if (!cJSON_IsString(rel) || strcasecmp(rel->valuestring, "next")) continue;
+    cJSON *href = cJSON_GetObjectItem(l, "href");
+    if (cJSON_IsString(href) && href->valuestring[0]) return strdup(href->valuestring);
+  }
+  return NULL;
+}
+
+/* What the server says the full set holds, across the spellings in use. */
+static long gj_declared_total(cJSON *doc) {
+  static const char *const K[] = { "numberMatched", "totalFeatures",
+                                   "matchedCount", "count", NULL };
+  for (int i = 0; K[i]; i++) {
+    cJSON *v = cJSON_GetObjectItem(doc, K[i]);
+    if (cJSON_IsNumber(v) && v->valuedouble > 0) return (long)v->valuedouble;
+  }
+  return -1;
+}
+
+/* Cheap fingerprint of a page, to notice a cursor the server ignored. */
+static unsigned long long gj_page_fp(cJSON *features) {
+  unsigned long long h = 1469598103934665603ULL;
+  int n = features ? cJSON_GetArraySize(features) : 0;
+  h ^= (unsigned long long)n; h *= 1099511628211ULL;
+  for (int i = 0; i < n && i < 8; i++) {
+    char *s = cJSON_PrintUnformatted(cJSON_GetArrayItem(features, i));
+    if (!s) continue;
+    for (const char *p = s; *p; p++) { h ^= (unsigned char)*p; h *= 1099511628211ULL; }
+    free(s);
+  }
+  return h;
+}
+
+int geojson_emit_paged(intel_sink *sink, const char *source_id,
+                       http_client *http, const char *url, int timeout_ms) {
+  int page_max = 20;   /* exhaustive-ok: page-walk ceiling; an early stop is disclosed as a collector-truncation-notice and $JO_GEOJSON_PAGE_MAX raises it */
+  const char *env = getenv("JO_GEOJSON_PAGE_MAX");
+  if (env && *env) { int v = atoi(env); if (v > 0) page_max = v; }
+
+  char *page_url = strdup(url);
+  if (!page_url) return -1;
+
+  int total = 0, pages = 0, truncated = 0;
+  long available = -1;
+  unsigned long long prev_fp = 0;
+  int repeated = 0;
+
+  for (; pages < page_max && page_url; pages++) {
+    cJSON *doc = feed_get_json(http, page_url, timeout_ms);
+    if (!doc) {
+      /* A failed FIRST fetch is a dead endpoint and is the caller's to report.
+       * A failure mid-walk means we already hold real features: keep them, stop,
+       * and disclose the shortfall. */
+      if (pages == 0) { free(page_url); return -1; }
+      truncated = 1;
+      break;
+    }
+    if (available < 0) available = gj_declared_total(doc);
+
+    cJSON *features = cJSON_IsArray(doc) ? doc : cJSON_GetObjectItem(doc, "features");
+    int got = cJSON_IsArray(features) ? cJSON_GetArraySize(features) : 0;
+
+    unsigned long long fp = gj_page_fp(features);
+    if (pages > 0 && got > 0 && fp == prev_fp) repeated = 1;
+    prev_fp = fp;
+
+    total += geojson_emit_doc(sink, source_id, doc);
+
+    char *next = NULL;
+    if (!repeated && got > 0) {
+      /* 1. the server said outright that it held features back */
+      if (gj_exceeded(doc)) {
+        long size = jsonlist_query_int(page_url, "resultRecordCount");
+        if (size <= 0) size = got;              /* it truncated at whatever it gave */
+        long cur = jsonlist_query_int(page_url, "resultOffset");
+        next = jsonlist_query_set(page_url, "resultOffset", (cur >= 0 ? cur : 0) + size);
+      }
+      /* 2. a next link, followed verbatim */
+      if (!next) next = gj_next_link(doc);
+      /* 3. the upstream's own total exceeds what we hold, and the URL already
+       *    names a cursor. No page size is required here: the remainder is the
+       *    server's arithmetic, not ours. */
+      if (!next && available > (long)total) {
+        static const char *const CURSORS[] = { "startIndex", "startindex",
+                                               "resultOffset", "offset", NULL };
+        for (int i = 0; CURSORS[i] && !next; i++) {
+          long cur = jsonlist_query_int(page_url, CURSORS[i]);
+          if (cur < 0) continue;               /* must already be declared */
+          next = jsonlist_query_set(page_url, CURSORS[i], cur + got);
+        }
+      }
+    }
+    cJSON_Delete(doc);
+
+    if (got <= 0 || repeated) { free(next); break; }
+    free(page_url);
+    page_url = next;
+    if (pages + 1 >= page_max && page_url) truncated = 1;
+  }
+  free(page_url);
+
+  if (truncated) {
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "source_id", source_id);
+    cJSON_AddStringToObject(p, "endpoint", url);
+    cJSON_AddNumberToObject(p, "records_used", total);
+    if (available >= 0) cJSON_AddNumberToObject(p, "records_available", available);
+    else cJSON_AddStringToObject(p, "records_available",
+                                 "unknown — upstream declared no total");
+    cJSON_AddNumberToObject(p, "pages_read", pages);
+    cJSON_AddNumberToObject(p, "page_ceiling", page_max);
+    cJSON_AddBoolToObject(p, "more_pages_pending", 1);
+    cJSON_AddStringToObject(p, "reason",
+      "the page ceiling stopped the walk while the upstream still had features");
+    cJSON_AddStringToObject(p, "remedy",
+      "raise $JO_GEOJSON_PAGE_MAX — see docs/SOURCE_EXHAUSTIVENESS.md");
+    char *pj = cJSON_PrintUnformatted(p);
+    cJSON_Delete(p);
+    char title[256];
+    if (available >= 0)
+      snprintf(title, sizeof title, "%s used %d of %ld available features",
+               source_id, total, available);
+    else
+      snprintf(title, sizeof title,
+               "%s used %d features and stopped at the page ceiling", source_id, total);
+    intel_item note = {0};
+    note.remote_key      = "truncation";
+    note.title           = title;
+    note.lang            = "en";
+    note.record_type     = "collector-truncation-notice";
+    note.properties_json = pj ? pj : "{}";
+    note.tags_json       = "[\"truncation-notice\"]";
+    sink->emit(sink, &note);
+    free(pj);
+  }
+
+  if (pages > 1 || truncated)
+    fprintf(stderr, "[%s] emitted %d across %d page(s)%s\n",
+            source_id, total, pages, truncated ? " (TRUNCATED)" : "");
+  return total;
 }

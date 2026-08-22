@@ -25,14 +25,23 @@
   REGISTER_SOURCE(SYM)
 
 /* GeoJSON FeatureCollection. Geometry comes from the upstream and nowhere
- * else — geojson_emit_doc never invents a position (R2). */
+ * else — geojson_emit_doc never invents a position (R2).
+ *
+ * PAGED since 2026-08. This was one GET of one URL, and 643 of the 770 URLs
+ * built on it ask the upstream for a SLICE — almost all of them ArcGIS
+ * `query?...&resultRecordCount=500&f=geojson`. Those layers were read 500
+ * features at a time, once, and the rest was discarded with nothing in the
+ * output to show for it, even though ArcGIS says so itself by setting
+ * `exceededTransferLimit`. geojson_emit_paged() walks while the upstream
+ * signals more and discloses a ceiling stop as a collector-truncation-notice;
+ * it returns -1 only when the FIRST fetch fails, so a dead endpoint stays an
+ * error and an honest empty stays 0 (R3). See lib/geojson.h.
+ *
+ * Keep long commentary OUT of the macro body — see the note on VJSON. */
 #define VGEO(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)   \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
-    cJSON *d = feed_get_json(c->http, URL, 25000);                            \
-    if (!d) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }        \
-    int n = geojson_emit_doc(s, ID, d);                                       \
-    cJSON_Delete(d);                                                          \
-    fprintf(stderr, "[%s] emitted %d\n", ID, n);                              \
+    int n = geojson_emit_paged(s, ID, c->http, URL, 25000);                   \
+    if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
     return 0; }                                                               \
   static const source_def SYM = {                                            \
     .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \

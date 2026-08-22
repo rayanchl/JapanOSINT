@@ -71,4 +71,13 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
                         const char *path, const char *record_type,
                         const char *lang, const char *tags_json);
 
+/* Query-string cursor arithmetic, shared so that the GeoJSON walk in
+ * lib/geojson.c advances a page the same way this one does rather than growing
+ * a second, subtly different copy.
+ *
+ * jsonlist_query_int  — value of `name=` as a long, or -1 if absent/not a number.
+ * jsonlist_query_set  — url with `name=value` replaced, or appended. Caller frees. */
+long  jsonlist_query_int(const char *url, const char *name);
+char *jsonlist_query_set(const char *url, const char *name, long value);
+
 #endif

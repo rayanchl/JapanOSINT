@@ -583,7 +583,7 @@ static long declared_total(cJSON *doc) {
 }
 
 /* Read `name=<int>` out of a query string. Returns -1 if absent/unparseable. */
-static long query_int(const char *url, const char *name) {
+long jsonlist_query_int(const char *url, const char *name) {
   const char *q = strchr(url, '?');
   if (!q) return -1;
   size_t nlen = strlen(name);
@@ -600,7 +600,7 @@ static long query_int(const char *url, const char *name) {
 }
 
 /* Replace `name=<old>` with `name=<new>`, or append it. Caller frees. */
-static char *query_set(const char *url, const char *name, long value) {
+char *jsonlist_query_set(const char *url, const char *name, long value) {
   size_t cap = strlen(url) + strlen(name) + 48;
   char *out = malloc(cap);
   if (!out) return NULL;
@@ -705,18 +705,18 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
        * upstream saying it is finished, and following it would be us
        * inventing a page that was never offered. */
       for (int i = 0; PAGERS[i].size_param && !next; i++) {
-        long size = query_int(page_url, PAGERS[i].size_param);
+        long size = jsonlist_query_int(page_url, PAGERS[i].size_param);
         if (size <= 0 || got < size) continue;
         /* Move the cursor this URL already names, when the family has two
          * spellings; otherwise the canonical one. */
         const char *cursor = PAGERS[i].cursor_param;
-        if (PAGERS[i].alt_cursor && query_int(page_url, PAGERS[i].alt_cursor) >= 0)
+        if (PAGERS[i].alt_cursor && jsonlist_query_int(page_url, PAGERS[i].alt_cursor) >= 0)
           cursor = PAGERS[i].alt_cursor;
-        long cur = query_int(page_url, cursor);
+        long cur = jsonlist_query_int(page_url, cursor);
         long nextval = PAGERS[i].page_numbered
                          ? (cur > 0 ? cur + 1 : 2)
                          : (cur >= 0 ? cur + size : size);
-        next = query_set(page_url, cursor, nextval);
+        next = jsonlist_query_set(page_url, cursor, nextval);
       }
     }
     /* Last resort, and the only one that needs no page-size sibling: the
@@ -732,9 +732,9 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
       static const char *const PAGE_CURSORS[] = { "page", "p", "pageNumber",
                                                   "pagina", "pageNum", NULL };
       for (int i = 0; PAGE_CURSORS[i] && !next; i++) {
-        long cur = query_int(page_url, PAGE_CURSORS[i]);
+        long cur = jsonlist_query_int(page_url, PAGE_CURSORS[i]);
         if (cur < 1) continue;               /* must already be declared */
-        next = query_set(page_url, PAGE_CURSORS[i], cur + 1);
+        next = jsonlist_query_set(page_url, PAGE_CURSORS[i], cur + 1);
       }
     }
     cJSON_Delete(doc);
