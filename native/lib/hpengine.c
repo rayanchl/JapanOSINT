@@ -539,7 +539,18 @@ typedef struct {
   int emitted;
   /* Exhaustive-use accounting, stamped onto every record so a consumer can
    * always tell a complete result from a bounded one. */
-  int   available;        /* records the upstream actually offered           */
+  int   available;        /* array slots the upstream handed over            */
+  /* Slots that held no content at all — a trailing blank line in a CSV, a null
+   * or a bare scalar in a JSON array. They are counted separately because they
+   * are not records, and folding them into `available` made the run report a
+   * shortfall that never happened: IAEA_NDS_LEVELS said "emitted 197 of 198"
+   * forever, the 198th being the newline at the end of the file. 87 rows of
+   * batch 19 reported exactly that phantom -1. A disclosure that cries wolf on
+   * every trailing newline is one nobody will read when a real discard happens. */
+  int   empty;
+  int   refused;          /* the sink declined it — a discard with a cause    */
+  int   filtered;         /* filter_query excluded it — the row asked for that */
+  int   duplicate;        /* the same href twice on one page — one record     */
   int   truncated;        /* a declared cap or a cancel stopped the walk     */
   int   page;             /* 1-based page currently being read               */
   int   page_records;     /* records in the page just read (paging stop test) */
@@ -637,13 +648,21 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
 /* One flattened record → one intel_item. Takes ownership of nothing. */
 static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
   const hp_source *s = st->s;
-  if (cJSON_GetArraySize(flat) == 0) return;
+  /* Nothing survived flattening — an array slot that held no value at all. The
+   * trailing newline of a CSV is the common case: every field maps to "" and
+   * hp_flatten keeps none of them. Counted, not silently returned, because the
+   * caller has already added this slot to `available` and the difference read
+   * as a one-record shortfall that never happened. */
+  if (cJSON_GetArraySize(flat) == 0) { st->empty++; return; }
 
   if (s->filter_query && st->vars->raw) {
     char *txt = cJSON_PrintUnformatted(flat);
     int hit = txt ? hp_icontains(txt, st->vars->raw) : 0;
     free(txt);
-    if (!hit) return;
+    /* A filter miss is the row doing exactly what it asked for, so it is not a
+     * shortfall either — but it is still not a record we kept, and lumping it
+     * in with `available` overstated what the endpoint offered for this query. */
+    if (!hit) { st->filtered++; return; }
   }
   if (deepen) hp_deepen(st, flat);
   else if (s->detail_url)
@@ -696,7 +715,7 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
   char titlebuf[512], lastbuf[64];
   if (!title) {
     if (!rkey) rkey = hp_first_scalar(flat, lastbuf, sizeof lastbuf);
-    if (!rkey) return;
+    if (!rkey) { st->empty++; return; }
     snprintf(titlebuf, sizeof titlebuf, "%s %s", s->record_type ? s->record_type : "record", rkey);
     title = titlebuf;
   }
@@ -733,7 +752,12 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
   if (s->lat_key && s->lon_key && (lat != 0.0 || lon != 0.0)) {
     it.has_geo = 1; it.lat = lat; it.lon = lon;
   }
+  /* A record the SINK refused is a discard too, and it was invisible: the run
+   * line just showed a smaller `emitted` and looked like a shortfall with no
+   * cause. Counted so the two reasons a record does not land — no content, and
+   * the store declined it — can be told apart. */
   if (st->sink->emit(st->sink, &it) >= 0) st->emitted++;
+  else                                    st->refused++;
   free(props);
 }
 
@@ -1063,7 +1087,11 @@ static int hp_run_html(hp_run_state *st, const char *html) {
         !hp_icontains(a.text, st->vars->raw) && !hp_icontains(href, st->vars->raw))
       continue;
     st->available++;
-    if (!html_seen_add(&st->hseen, href)) continue; /* already emitted */
+    /* The same href twice on one page is one record, not a discard. Listings
+     * routinely link each item from both an icon and its title, which made
+     * ECMA's standards index report "emitted 295 of 590" and ITLOS "36 of 72" —
+     * a perfect 50% shortfall that was really a perfect 2x duplication. */
+    if (!html_seen_add(&st->hseen, href)) { st->duplicate++; continue; }
     page_hits++;
 
     char link[900];
@@ -1244,9 +1272,20 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   free(st.next_url);
   html_seen_free(&st.hseen);
 
-  if (out > 0 || st.available > 0)
-    fprintf(stderr, "[hp:%s] emitted %d of %d available across %d page(s)%s\n",
-            s->id, out, st.available, st.page, st.truncated ? " (TRUNCATED)" : "");
+  /* `available` counts what the upstream handed over as records — array slots
+   * that held nothing are reported separately rather than as a shortfall. */
+  int real_available = st.available - st.empty - st.filtered - st.duplicate;
+  if (real_available < out) real_available = out;
+  if (out > 0 || st.available > 0) {
+    char emptynote[128] = "";
+    if (st.empty || st.refused || st.filtered || st.duplicate)
+      snprintf(emptynote, sizeof emptynote,
+               " [%d empty, %d duplicate, %d filtered out, %d refused by sink]",
+               st.empty, st.duplicate, st.filtered, st.refused);
+    fprintf(stderr, "[hp:%s] emitted %d of %d available across %d page(s)%s%s\n",
+            s->id, out, real_available, st.page,
+            st.truncated ? " (TRUNCATED)" : "", emptynote);
+  }
 
   /* If anything WAS left on the table, say so in the data itself — a log line
    * nobody reads is not a disclosure. One upsert-keyed notice row per
@@ -1260,9 +1299,11 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(p, "source_id", s->id);
     cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
     cJSON_AddNumberToObject(p, "records_used", out);
-    cJSON_AddNumberToObject(p, "records_available", st.available);
+    cJSON_AddNumberToObject(p, "records_available", real_available);
+    if (st.empty > 0)
+      cJSON_AddNumberToObject(p, "empty_slots_skipped", st.empty);
     cJSON_AddNumberToObject(p, "pages_read", st.page);
-    cJSON_AddBoolToObject(p, "more_pages_pending", st.available <= out);
+    cJSON_AddBoolToObject(p, "more_pages_pending", real_available <= out);
     cJSON_AddNumberToObject(p, "declared_max_items", s->max_items);
     cJSON_AddStringToObject(p, "reason",
       (s->max_items > 0 && out >= s->max_items)
@@ -1277,7 +1318,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(key, sizeof key, "%.150s|truncation:%.120s", s->id,
              vars.raw ? vars.raw : "");
     snprintf(title, sizeof title, "%s used %d of %d available records",
-             s->id, out, st.available);
+             s->id, out, real_available);
     intel_item note = {0};
     note.remote_key      = key;
     note.title           = title;

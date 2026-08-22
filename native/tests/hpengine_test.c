@@ -499,6 +499,21 @@ int main(void) {
   rc = run_source("T_EMPTY_REC", "x");
   ok(rc == 0 && g_ncap == 0, "a record with no content at all is still dropped");
 
+  /* 11d. ...and an empty slot is not reported as a shortfall. A trailing
+   *      newline made every such CSV say "emitted 197 of 198" forever; 87 rows
+   *      of batch 19 carried that phantom -1. Two real records plus one empty
+   *      slot must emit 2 and disclose nothing — a truncation notice here would
+   *      be a false alarm, and false alarms are why real ones get ignored. */
+  fx_reset();
+  fx_add("/e?q=", 200,
+    "{\"items\":[{\"name\":\"A\"},{\"a\":\"\",\"b\":null},{\"name\":\"B\"}]}");
+  rc = run_source("T_EMPTY_REC", "x");
+  ok(rc == 0 && g_ncap == 2, "the empty slot is skipped, both real records emit");
+  int notice = 0;
+  for (int i = 0; i < g_ncap; i++)
+    if (!strcmp(g_cap[i].rtype, "collector-truncation-notice")) notice = 1;
+  ok(!notice, "an empty slot raises no truncation notice");
+
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
 }
