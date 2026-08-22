@@ -523,18 +523,26 @@ function WeatherDetail({ properties }) {
 
 function AirQualityDetail({ properties }) {
   const aqi = properties.aqi ?? properties.value;
-  let color = '#00ff88';
-  let label = 'Good';
-  if (aqi > 150) { color = '#ff4444'; label = 'Unhealthy'; }
-  else if (aqi > 100) { color = '#ff8c00'; label = 'Moderate-High'; }
-  else if (aqi > 50) { color = '#ffb74d'; label = 'Moderate'; }
+  // With `aqi` undefined every `aqi > N` test is false, so this fell through
+  // to a green "Good" beside a `?` — a station that reported nothing shown as
+  // clean air. Presence is tested first.
+  const measured = Number.isFinite(Number(aqi)) && aqi !== '' && aqi != null;
+  let color = '#9ca3af';
+  let label = 'No reading';
+  if (measured) {
+    color = '#00ff88';
+    label = 'Good';
+    if (aqi > 150) { color = '#ff4444'; label = 'Unhealthy'; }
+    else if (aqi > 100) { color = '#ff8c00'; label = 'Moderate-High'; }
+    else if (aqi > 50) { color = '#ffb74d'; label = 'Moderate'; }
+  }
 
   const highlighted = ['aqi', 'value', 'station', 'name'];
   return (
     <div className="space-y-1">
       <p className="text-sm font-medium">{properties.station || properties.name || 'Station'}</p>
       <div className="flex items-center gap-2">
-        <span className="text-2xl font-mono font-bold" style={{ color }}>{aqi ?? '?'}</span>
+        <span className="text-2xl font-mono font-bold" style={{ color }}>{measured ? aqi : '—'}</span>
         <span className="text-xs px-2 py-0.5 rounded" style={{ background: color + '22', color }}>{label}</span>
       </div>
       <PropertyTable properties={properties} exclude={highlighted} />
@@ -544,16 +552,24 @@ function AirQualityDetail({ properties }) {
 
 function RadiationDetail({ properties }) {
   const value = properties.value ?? properties.nGy;
-  let color = '#00ff88';
-  if (value > 100) color = '#ff4444';
-  else if (value > 50) color = '#ffd600';
+  // Same fall-through as AirQualityDetail, in safe-green: no dose reported
+  // rendered as a reassuringly low dose.
+  const measured = Number.isFinite(Number(value)) && value !== '' && value != null;
+  let color = '#9ca3af';
+  if (measured) {
+    color = '#00ff88';
+    if (value > 100) color = '#ff4444';
+    else if (value > 50) color = '#ffd600';
+  }
   const highlighted = ['value', 'nGy', 'station', 'name'];
 
   return (
     <div className="space-y-1">
       <p className="text-sm font-medium">{properties.station || properties.name || 'Station'}</p>
       <p className="font-mono text-xl font-bold" style={{ color }}>
-        {value ?? '?'} <span className="text-xs text-gray-400">nGy/h</span>
+        {measured
+          ? <>{value} <span className="text-xs text-gray-400">nGy/h</span></>
+          : <span className="text-base">No reading</span>}
       </p>
       <PropertyTable properties={properties} exclude={highlighted} />
     </div>
@@ -998,8 +1014,13 @@ function SatelliteTrackingDetail({ properties }) {
   );
 }
 
+// The board asked for ?limit=5 and rendered the answer as the whole schedule.
+// 20 is the server's own hard cap (native/core/transitapi.c: qint(...,1,20)),
+// so this asks for everything it will give and then states the bound.
+const DEPARTURES_LIMIT = 20;
+
 function BusStopDetail({ properties }) {
-  const [state, setState] = useState({ loading: true, departures: [], error: null });
+  const [state, setState] = useState({ loading: true, departures: [], total: null, error: null });
   const stopId = properties?.stop_id;
   // GTFS-JP stop_ids are emitted by the gtfsJp collector as
   // `GTFSJP_<orgId>_<rawStopId>`. Non-GTFS bus stops (OSM, MLIT P11) won't
@@ -1010,7 +1031,7 @@ function BusStopDetail({ properties }) {
 
   useEffect(() => {
     if (!orgId || !stopId) {
-      setState({ loading: false, departures: [], error: 'No schedule data for this stop.' });
+      setState({ loading: false, departures: [], total: null, error: 'No schedule data for this stop.' });
       return;
     }
     let cancelled = false;
@@ -1019,15 +1040,20 @@ function BusStopDetail({ properties }) {
         // POST is idempotent on the server; cached after first success.
         await fetch(apiUrl(`/api/transit/gtfs/hydrate/${encodeURIComponent(orgId)}`), { method: 'POST' });
         const res = await fetch(
-          apiUrl(`/api/transit/gtfs/stop/${encodeURIComponent(stopId)}/departures?limit=5`),
+          apiUrl(`/api/transit/gtfs/stop/${encodeURIComponent(stopId)}/departures?limit=${DEPARTURES_LIMIT}`),
         );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         if (cancelled) return;
-        setState({ loading: false, departures: data.departures || [], error: null });
+        setState({
+          loading: false,
+          departures: data.departures || [],
+          total: Number.isFinite(data.total) ? data.total : null,
+          error: null,
+        });
       } catch (err) {
         if (cancelled) return;
-        setState({ loading: false, departures: [], error: err?.message || 'fetch failed' });
+        setState({ loading: false, departures: [], total: null, error: err?.message || 'fetch failed' });
       }
     })();
     return () => { cancelled = true; };
@@ -1053,6 +1079,17 @@ function BusStopDetail({ properties }) {
       )}
       {!state.loading && state.departures.length > 0 && (
         <div className="space-y-1">
+          {/* State the bound in-band: this is a slice of the board, not the
+            * board. The endpoint returns no total, so when the response comes
+            * back full we can only say that more may exist. */}
+          <div className="text-[10px] text-gray-500 font-mono">
+            Next departures — showing {state.departures.length}
+            {state.total != null
+              ? ` of ${state.total}`
+              : (state.departures.length >= DEPARTURES_LIMIT
+                  ? ` of more (the server caps this board at ${DEPARTURES_LIMIT})`
+                  : '')}
+          </div>
           {state.departures.map((d) => {
             const color = d.route_color || '#888';
             return (

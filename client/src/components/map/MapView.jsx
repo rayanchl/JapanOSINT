@@ -694,6 +694,32 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
   }
 }
 
+// A `coalesce` default inside a paint ramp is a fabricated measurement: a
+// monitoring post with no dose drew safe-green, a dam with no reading drew the
+// blue of 70% capacity, a JMA point with no intensity drew as shindo 5, an
+// event with no magnitude drew as a magnitude-3 orange dot. The sentinel below
+// is out of band for every one of those quantities, so it can never collide
+// with a real reading, and it is painted grey (and small, on the size ramps)
+// so unmeasured is visibly distinct from measured rather than plausible.
+const UNMEASURED = -1;
+const UNMEASURED_COLOR = '#6b7280';
+
+function unmeasuredAwareColor(valueExpr, ramp) {
+  return [
+    'case',
+    ['==', valueExpr, UNMEASURED], UNMEASURED_COLOR,
+    ['interpolate', ['linear'], valueExpr, ...ramp],
+  ];
+}
+
+function unmeasuredAwareRadius(valueExpr, ramp, unmeasuredPx = 3) {
+  return [
+    'case',
+    ['==', valueExpr, UNMEASURED], unmeasuredPx,
+    ['interpolate', ['linear'], valueExpr, ...ramp],
+  ];
+}
+
 function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayerId) {
   switch (layerId) {
     case 'earthquakes':
@@ -702,24 +728,14 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
         type: 'circle',
         source: sourceId,
         paint: {
-          'circle-radius': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'magnitude'], ['get', 'mag'], 3],
-            1, 4,
-            3, 8,
-            5, 16,
-            7, 28,
-            9, 40,
-          ],
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'magnitude'], ['get', 'mag'], 3],
-            1, '#ffeb3b',
-            3, '#ff9800',
-            5, '#ff5722',
-            7, '#f44336',
-            9, '#b71c1c',
-          ],
+          'circle-radius': unmeasuredAwareRadius(
+            ['coalesce', ['get', 'magnitude'], ['get', 'mag'], UNMEASURED],
+            [1, 4, 3, 8, 5, 16, 7, 28, 9, 40],
+          ),
+          'circle-color': unmeasuredAwareColor(
+            ['coalesce', ['get', 'magnitude'], ['get', 'mag'], UNMEASURED],
+            [1, '#ffeb3b', 3, '#ff9800', 5, '#ff5722', 7, '#f44336', 9, '#b71c1c'],
+          ),
           'circle-opacity': opacity * 0.8,
           'circle-stroke-width': 1,
           'circle-stroke-color': '#ff4444',
@@ -951,15 +967,10 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
         source: sourceId,
         paint: {
           'circle-radius': 10,
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'aqi'], ['get', 'value'], 50],
-            0, '#00ff88',
-            50, '#ffeb3b',
-            100, '#ff9800',
-            150, '#ff4444',
-            300, '#8b0000',
-          ],
+          'circle-color': unmeasuredAwareColor(
+            ['coalesce', ['get', 'aqi'], ['get', 'value'], UNMEASURED],
+            [0, '#00ff88', 50, '#ffeb3b', 100, '#ff9800', 150, '#ff4444', 300, '#8b0000'],
+          ),
           'circle-opacity': opacity * 0.75,
           'circle-stroke-width': 2,
           'circle-stroke-color': '#000000',
@@ -975,14 +986,10 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
         source: sourceId,
         paint: {
           'circle-radius': 8,
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'value'], ['get', 'nGy'], 30],
-            0, '#00ff88',
-            50, '#ffd600',
-            100, '#ff8c00',
-            200, '#ff4444',
-          ],
+          'circle-color': unmeasuredAwareColor(
+            ['coalesce', ['get', 'value'], ['get', 'nGy'], UNMEASURED],
+            [0, '#00ff88', 50, '#ffd600', 100, '#ff8c00', 200, '#ff4444'],
+          ),
           'circle-opacity': opacity * 0.8,
           'circle-stroke-width': 1.5,
           'circle-stroke-color': '#ffd600',
@@ -2137,23 +2144,14 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
         type: 'circle',
         source: sourceId,
         paint: {
-          'circle-radius': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'intensity_numeric'], ['get', 'magnitude'], 5],
-            0, 5,
-            4, 9,
-            6, 16,
-            7, 24,
-          ],
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'intensity_numeric'], ['get', 'magnitude'], 5],
-            0, '#ffeb3b',
-            3, '#ff9800',
-            5, '#ff5722',
-            6, '#d84315',
-            7, '#b71c1c',
-          ],
+          'circle-radius': unmeasuredAwareRadius(
+            ['coalesce', ['get', 'intensity_numeric'], ['get', 'magnitude'], UNMEASURED],
+            [0, 5, 4, 9, 6, 16, 7, 24],
+          ),
+          'circle-color': unmeasuredAwareColor(
+            ['coalesce', ['get', 'intensity_numeric'], ['get', 'magnitude'], UNMEASURED],
+            [0, '#ffeb3b', 3, '#ff9800', 5, '#ff5722', 6, '#d84315', 7, '#b71c1c'],
+          ),
           'circle-opacity': opacity * 0.85,
           'circle-stroke-width': 1.5,
           'circle-stroke-color': '#ffffff',
@@ -2360,14 +2358,10 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
             300000000, 16,
             660000000, 24,
           ],
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'current_pct'], 70],
-            0, '#b71c1c',
-            40, '#fb8c00',
-            70, '#42a5f5',
-            90, '#0277bd',
-          ],
+          'circle-color': unmeasuredAwareColor(
+            ['coalesce', ['get', 'current_pct'], UNMEASURED],
+            [0, '#b71c1c', 40, '#fb8c00', 70, '#42a5f5', 90, '#0277bd'],
+          ),
           'circle-opacity': opacity * 0.85,
           'circle-stroke-width': 1.5,
           'circle-stroke-color': '#ffffff',
@@ -4354,11 +4348,17 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
         : layerData[layerId];
       const prev = prevLayersRef.current[layerId];
       const wasVisible = prev?.visible;
-      const wasData = prev?.dataLength;
-      const currentDataLength = data?.features?.length ?? 0;
+      // Keying the repaint on feature *count* meant the opacity slider moved
+      // its own readout and nothing else, on every layer, and that any
+      // background refresh returning the same number of features — the normal
+      // case for aircraft, AIS, weather, river and dam — was discarded,
+      // leaving the previous positions on screen. Compare what actually
+      // changes: the collection's identity and the opacity being painted.
+      const wasDataRef = prev?.dataRef;
+      const wasOpacity = prev?.opacity;
 
       if (layerState.visible && data) {
-        if (!wasVisible || wasData !== currentDataLength) {
+        if (!wasVisible || wasDataRef !== data || wasOpacity !== layerState.opacity) {
           addLayerToMap(map, layerId, data, def, layerState.opacity);
         }
       } else if (!layerState.visible && wasVisible) {
@@ -4367,7 +4367,8 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
 
       prevLayersRef.current[layerId] = {
         visible: layerState.visible,
-        dataLength: currentDataLength,
+        dataRef: data,
+        opacity: layerState.opacity,
       };
     }
 
@@ -4602,8 +4603,14 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
         source: SRC,
         paint: {
           'line-color': ['get', 'color'],
-          'line-width': 3,
-          'line-opacity': 0.85,
+          // These tracks are propagated from the TLE 90 minutes into the
+          // FUTURE in the browser; they are a prediction, not an observation.
+          // Drawn solid at 0.85 and colour-matched to the observed marker they
+          // carried the same visual weight as a measured position. Dashed and
+          // dimmed so the difference is on the screen, not just in the code.
+          'line-width': 1.5,
+          'line-opacity': 0.35,
+          'line-dasharray': [2, 3],
         },
       });
     } else {
@@ -4853,8 +4860,11 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
 
     // Re-add layers after style change (icons must be re-registered
     // because map.setStyle() drops all previously added images)
-    mapRef.current.once('style.load', () => {
-      registerLayerIcons(mapRef.current);
+    mapRef.current.once('style.load', async () => {
+      // registerLayerIcons is async and was not awaited, so every hasImage()
+      // check inside addLayerToMap ran before the images existed and the
+      // layers came back as bare circles after a style switch.
+      await registerLayerIcons(mapRef.current);
       for (const [layerId, layerState] of Object.entries(layers)) {
         if (layerState.visible && layerData[layerId]) {
           addLayerToMap(
@@ -4866,6 +4876,13 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
           );
         }
       }
+      // setStyle drops the mode filter with everything else, so station pins
+      // for modes the user had turned off reappeared on the new basemap.
+      const enabledModes = new Set();
+      if (layers?.unifiedTrains?.visible) enabledModes.add('train');
+      if (layers?.unifiedSubways?.visible) enabledModes.add('subway');
+      if (layers?.unifiedBuses?.visible) enabledModes.add('bus');
+      applyUnifiedStationsModeFilter(mapRef.current, enabledModes);
       // PLATEAU's overlay survives setStyle, but setLayoutProperty does
       // not — re-hide the new basemap's flat building layer if PLATEAU
       // is currently on. The PLATEAU effect will also re-fire because

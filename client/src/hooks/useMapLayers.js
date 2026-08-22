@@ -681,6 +681,9 @@ const LAYER_DEFINITIONS = {
   },
   satelliteTracking: {
     name: 'Live Satellite Positions',
+    // The markers are observed; the trailing line is propagated from the TLE
+    // 90 minutes forward in the browser. Say so on the toggle.
+    subtitle: 'ground track is predicted from TLE, not observed',
     icon: '\u{1F6F0}',
     color: '#ba68c8',
     endpoint: '/api/data/satellite-tracking',
@@ -1422,6 +1425,9 @@ export default function useMapLayers() {
   // FCs without round-tripping to the server. See persistToSession() for
   // the write-through in doFetch().
   const cacheRef = useRef(loadPersistedCache());
+  // Memo for the temporal-window view below, keyed per layer on (source FC,
+  // window) so the filtered collection keeps a stable identity.
+  const viewCacheRef = useRef({});
 
   // Server-driven loading flags keyed by endpoint-slug (e.g. 'fire-station-map')
   // — merged into per-layer `loading` via OR, so the spinner fires whenever
@@ -1441,11 +1447,18 @@ export default function useMapLayers() {
   // _meta.age_ms + _meta.ttl_ms (Track 1) to decide. A cached copy is fresh
   // while its effective age is under half of TTL — past the halfway mark we
   // still render it instantly but kick a background refresh (SWR).
+  //
+  // `age_ms` is frozen at response time, and nothing used to record when the
+  // client stored its copy — so a collection cached with age_ms: 0 stayed
+  // "fresh" across F5 and across hours, and aircraft/AIS/river/dam positions
+  // were restated as current observations. Age it from receipt time too.
   const isCachedFresh = (fc) => {
     const ttl = fc?._meta?.ttl_ms;
     const age = fc?._meta?.age_ms;
     if (!Number.isFinite(ttl) || ttl <= 0) return false;
-    const effectiveAge = Number.isFinite(age) ? age : 0;
+    const storedAt = fc?._meta?.client_stored_at;
+    const sinceStored = Number.isFinite(storedAt) ? Math.max(0, Date.now() - storedAt) : 0;
+    const effectiveAge = (Number.isFinite(age) ? age : 0) + sinceStored;
     return effectiveAge < ttl / 2;
   };
 
@@ -1473,17 +1486,28 @@ export default function useMapLayers() {
         features: Array.isArray(data) ? data : (data.features || []),
       };
 
+      // Stamp receipt time so the cache can age (isCachedFresh) and so the
+      // map's "last update" can report the data's age instead of the clock.
+      geojson._meta = { ...(geojson._meta || {}), client_stored_at: Date.now() };
+
       cacheRef.current[layerId] = geojson;
       persistToSession(layerId, geojson);
       setLayerData((prev) => ({ ...prev, [layerId]: geojson }));
     } catch (err) {
       console.warn(`[useMapLayers] Failed to fetch ${layerId}:`, err.message);
       if (!background) {
-        // Only surface the empty-collection fallback on foreground failure;
-        // a background-refresh error leaves the cached copy in place.
+        // Only surface the failure placeholder on foreground failure; a
+        // background-refresh error leaves the cached copy in place.
+        // The failure travels WITH the collection: an empty FC on its own is
+        // pixel-identical to a source that legitimately returned zero
+        // records, so the panel could never tell them apart.
         setLayerData((prev) => ({
           ...prev,
-          [layerId]: { type: 'FeatureCollection', features: [] },
+          [layerId]: {
+            type: 'FeatureCollection',
+            features: [],
+            _error: err.message || 'request failed',
+          },
         }));
       }
     } finally {
@@ -1643,6 +1667,47 @@ export default function useMapLayers() {
     return out;
   }, [layers, serverLoadingByLayerId]);
 
+  // The Window selector had no consumer: `temporalWindow` was written into
+  // layer state and read back only by the <select>, so a user who picked
+  // 2024-03 saw the control confirm that month while the map kept plotting
+  // every month it held. `layerData` stays whole — the panel needs the full
+  // month list and the true total to state "showing N of M" — and the map
+  // draws this filtered view.
+  const layerDataView = useMemo(() => {
+    const out = {};
+    for (const [id, fc] of Object.entries(layerData)) {
+      const def = LAYER_DEFINITIONS[id];
+      const win = layers[id]?.temporalWindow;
+      const key = def?.temporal ? (def.temporalKey || 'year_month') : null;
+      if (!key || !win || !Array.isArray(fc?.features)) {
+        out[id] = fc;
+        continue;
+      }
+      const start = String(win[0]);
+      const end = String(win[1]);
+      // Reuse the previous filtered collection when neither the source data
+      // nor the window moved, so an unrelated layer toggle doesn't hand
+      // MapView a brand-new object and force a needless repaint.
+      const memo = viewCacheRef.current[id];
+      if (memo && memo.fc === fc && memo.start === start && memo.end === end) {
+        out[id] = memo.result;
+        continue;
+      }
+      const result = {
+        ...fc,
+        features: fc.features.filter((f) => {
+          const v = f?.properties?.[key];
+          if (v == null) return false;
+          const sv = String(v);
+          return sv >= start && sv <= end;
+        }),
+      };
+      viewCacheRef.current[id] = { fc, start, end, result };
+      out[id] = result;
+    }
+    return out;
+  }, [layerData, layers]);
+
   return {
     layers: mergedLayers,
     toggleLayer,
@@ -1650,6 +1715,7 @@ export default function useMapLayers() {
     setLayerTemporalWindow,
     setAllLayers,
     layerData,
+    layerDataView,
     activeCount,
   };
 }

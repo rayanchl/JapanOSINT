@@ -15,6 +15,9 @@ const STATUS_COLOR = {
   failed: 'text-status-offline', skipped: 'text-gray-600',
 };
 
+// How much of a raw service payload the card renders inline.
+const RAW_CHARS = 1500;
+
 /** Live progress card — port of the OSINTsaas SearchCard live subtree. */
 export default function SearchCard({ snapshot, query, onPivot }) {
   const s = snapshot;
@@ -93,11 +96,25 @@ export default function SearchCard({ snapshot, query, onPivot }) {
                 <div className="text-[11px] text-gray-400">
                   {r.name} · {r.entity} · {r.success ? 'ok' : (r.error || 'no data')}
                 </div>
-                {r.data && (
-                  <pre className="mt-1 whitespace-pre-wrap break-all text-[11px] text-gray-400">
-                    {String(r.data).slice(0, 1500)}
-                  </pre>
-                )}
+                {r.data && (() => {
+                  // A truncated payload that doesn't say it is truncated reads
+                  // as the whole response the service gave us.
+                  const full = String(r.data);
+                  const clipped = full.length > RAW_CHARS;
+                  return (
+                    <>
+                      <pre className="mt-1 whitespace-pre-wrap break-all text-[11px] text-gray-400">
+                        {clipped ? full.slice(0, RAW_CHARS) : full}
+                      </pre>
+                      {clipped && (
+                        <div className="text-[10px] text-amber-400/80">
+                          Showing the first {RAW_CHARS.toLocaleString()} of{' '}
+                          {full.length.toLocaleString()} characters.
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             ))}
           </div>

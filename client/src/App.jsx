@@ -64,12 +64,14 @@ function JSTClock() {
 }
 
 export default function App() {
-  const { sources, stats, isConnected, lastUpdate } = useDataSources();
+  const { sources, stats, isConnected, lastUpdate, error: sourcesError } = useDataSources();
   const { theme, toggle: toggleTheme } = useTheme();
   const [showSources, setShowSources] = React.useState(false);
   const openSources = () => setShowSources((v) => !v);
 
-  const activeSources = stats?.online ?? 0;
+  // '?? 0' turned "we could not ask" into the specific claim "zero sources
+  // are online" — in neon green, next to a LIVE dot.
+  const activeSources = stats?.online;
 
   return (
     <div className="h-screen w-screen flex flex-col bg-osint-bg text-gray-100 overflow-hidden">
@@ -151,13 +153,23 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-1.5 text-gray-400">
-            <span className="font-mono text-neon-green">{activeSources}</span>
-            <span>active sources</span>
+            {activeSources == null ? (
+              <>
+                <span className="font-mono text-gray-500" title={sourcesError || 'not loaded yet'}>—</span>
+                <span>{sourcesError ? 'sources unavailable' : 'active sources'}</span>
+              </>
+            ) : (
+              <>
+                <span className="font-mono text-neon-green">{activeSources}</span>
+                <span>active sources</span>
+              </>
+            )}
           </div>
 
           {lastUpdate && (
-            <div className="text-gray-500 font-mono">
+            <div className={sourcesError ? 'text-red-300 font-mono' : 'text-gray-500 font-mono'}>
               Last: {new Date(lastUpdate).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })}
+              {sourcesError && <span title={sourcesError}> · refresh failing</span>}
             </div>
           )}
 
@@ -191,7 +203,17 @@ export default function App() {
       <main className="flex-1 relative overflow-hidden">
         <Routes>
           <Route path="/" element={<MapPage />} />
-          <Route path="/sources" element={<SourceDashboard sources={sources} stats={stats} />} />
+          <Route
+            path="/sources"
+            element={
+              <SourceDashboard
+                sources={sources}
+                stats={stats}
+                pollError={sourcesError}
+                lastUpdate={lastUpdate}
+              />
+            }
+          />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/entities" element={<EntitiesPage />} />
           <Route path="/entities/:type/:id" element={<EntityProfile />} />

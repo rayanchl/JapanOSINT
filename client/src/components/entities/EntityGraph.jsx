@@ -8,6 +8,8 @@ import { entityVisual } from '../../utils/entityVisuals.js';
  * Canvas approach). Click a node to pivot to its profile. Falls back to a
  * list above ~120 nodes.
  */
+const EDGE_LIST_CAP = 200;
+
 export default function EntityGraph({ graph, rootId }) {
   const navigate = useNavigate();
   const nodes = graph?.nodes || [];
@@ -74,9 +76,20 @@ export default function EntityGraph({ graph, rootId }) {
     return <div className="text-sm text-gray-600 py-8 text-center">No relationships yet.</div>;
   }
   if (nodes.length > 120) {
+    // The force layout is skipped above 120 nodes and this list stands in for
+    // it, bounded at EDGE_LIST_CAP so the DOM stays sane. A bounded view is
+    // allowed; a bounded view that does not say so is the violation.
+    const shownEdges = edges.slice(0, EDGE_LIST_CAP);
     return (
       <ul className="text-sm space-y-1">
-        {edges.slice(0, 200).map((e, i) => (
+        <li className="text-xs text-amber-400/80 pb-1">
+          {nodes.length.toLocaleString()} nodes — too many to lay out, so the edges are listed instead.
+          {' '}
+          {edges.length > shownEdges.length
+            ? `Showing ${shownEdges.length} of ${edges.length.toLocaleString()} edges.`
+            : `Showing all ${edges.length.toLocaleString()} edges.`}
+        </li>
+        {shownEdges.map((e, i) => (
           <li key={i} className="text-gray-400">
             {e.source} —<span className="text-gray-600"> {e.relationship} </span>→ {e.target}
           </li>

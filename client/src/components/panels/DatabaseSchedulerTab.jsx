@@ -28,6 +28,10 @@ function StatusPill({ status }) {
 export default function DatabaseSchedulerTab() {
   const [state, setState] = useState(null);
   const [loading, setLoading] = useState(true);
+  // Behind the same operator gate as /api/db/tables: without this the tab
+  // rendered "Scheduled jobs" with nothing under it and a "0/0" source count,
+  // which reads as "nothing is scheduled" rather than "we were refused".
+  const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
   const [q, setQ] = useState('');
   const [sortBy, setSortBy] = useState('last_check');
@@ -37,9 +41,12 @@ export default function DatabaseSchedulerTab() {
     let alive = true;
     setLoading(true);
     fetch(apiUrl('/api/db/scheduler'))
-      .then((r) => r.ok ? r.json() : null)
-      .then((j) => { if (alive) setState(j); })
-      .catch(() => {})
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((j) => { if (alive) { setState(j); setError(null); } })
+      .catch((err) => { if (alive) setError(err.message || 'request failed'); })
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
   }, []);
@@ -83,9 +90,14 @@ export default function DatabaseSchedulerTab() {
         {loading && !state && (
           <div className="text-[10px] text-gray-500">Loading…</div>
         )}
+        {!loading && error && (
+          <div className="text-[10px] text-status-offline">
+            Could not load the scheduler ({error}). Nothing below was obtained.
+          </div>
+        )}
         {state && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-            {state.jobs.map((j) => (
+            {(state.jobs || []).map((j) => (
               <div
                 key={j.id}
                 className="rounded border border-osint-border/40 bg-osint-bg/40 p-2"
@@ -141,7 +153,7 @@ export default function DatabaseSchedulerTab() {
           className="flex-1 px-2 py-1 bg-osint-bg/60 border border-osint-border rounded text-[11px] text-gray-200 placeholder-gray-600 focus:outline-none focus:border-neon-cyan/40 font-mono"
         />
         <span className="text-[10px] text-gray-500">
-          {filteredSources.length}/{state?.sources?.length ?? 0}
+          {state ? `${filteredSources.length}/${state.sources?.length ?? 0}` : '—'}
         </span>
       </div>
 

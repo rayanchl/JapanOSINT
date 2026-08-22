@@ -566,9 +566,13 @@ export default function SourcesPanel({ onClose }) {
             <LoadingSpinner />
           </div>
         )}
-        {error && !data && (
+        {/* Gating this on `!data` hid every failed 30s refresh: the rows below
+         *  stayed on screen with their status badges asserting a health we had
+         *  stopped being able to confirm. State it in-band instead. */}
+        {error && (
           <div className="text-status-offline text-xs px-2 py-3">
             Failed to load sources: {error}
+            {data && ' — the rows below are the last successful fetch, not current.'}
           </div>
         )}
         {data && filtered.length === 0 && (

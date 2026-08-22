@@ -63,11 +63,17 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
           </span>
         </button>
 
-        {/* Loading / Count */}
+        {/* Loading / Count. A layer whose fetch failed carries _error and must
+          * not be shown as a count of 0 — that reads as "this layer is empty",
+          * which is a fact we never obtained. */}
         <div className="flex-shrink-0 w-10 text-right">
           {showSpinner ? (
             <LoadingSpinner size="sm" />
-          ) : featureCount > 0 ? (
+          ) : featureData?._error ? (
+            <span className="text-[10px] font-mono text-status-offline" title={`Load failed: ${featureData._error}`}>
+              err
+            </span>
+          ) : isActive ? (
             <span className="text-[10px] font-mono text-gray-500">{featureCount}</span>
           ) : null}
         </div>
@@ -120,6 +126,21 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
               )}
             </select>
           </div>
+          {/* State the bound: the map is drawing the window, not the layer. */}
+          {window && (
+            <div className="text-[10px] text-amber-400/80">
+              {(() => {
+                const total = featureData?.features?.length ?? 0;
+                const shown = (featureData?.features || []).filter((f) => {
+                  const v = f?.properties?.[temporalKey];
+                  if (v == null) return false;
+                  const sv = String(v);
+                  return sv >= String(window[0]) && sv <= String(window[1]);
+                }).length;
+                return `Showing ${shown.toLocaleString()} of ${total.toLocaleString()} features in this window.`;
+              })()}
+            </div>
+          )}
         </div>
       )}
     </div>

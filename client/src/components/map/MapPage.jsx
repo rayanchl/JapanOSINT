@@ -16,6 +16,7 @@ export default function MapPage() {
     setLayerTemporalWindow,
     setAllLayers,
     layerData,
+    layerDataView,
     activeCount,
   } = useMapLayers();
 
@@ -62,6 +63,7 @@ export default function MapPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState(null);
   const mapRef = useRef(null);
 
   const handleMapReady = useCallback((map) => {
@@ -83,38 +85,55 @@ export default function MapPage() {
     if (!searchQuery.trim()) return;
 
     setIsSearching(true);
+    setSearchError(null);
     try {
       // Backend chains Nominatim -> Photon -> GSI, with caching.
       const res = await fetch(
         apiUrl(`/api/geocode?q=${encodeURIComponent(searchQuery)}`)
       );
-      if (res.ok) {
-        const { results } = await res.json();
-        // Normalise to the shape the dropdown already expects.
-        setSearchResults(
-          (results || []).map((r) => ({
-            display_name: r.display_name,
-            lat: r.lat,
-            lon: r.lon,
-            source: r.source,
-          }))
-        );
-      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const { results } = await res.json();
+      // Normalise to the shape the dropdown already expects.
+      setSearchResults(
+        (results || []).map((r) => ({
+          display_name: r.display_name,
+          lat: r.lat,
+          lon: r.lon,
+          source: r.source,
+        }))
+      );
     } catch (err) {
+      // A failed lookup used to leave the PREVIOUS query's hits sitting in the
+      // dropdown, under the new query — those places were then read as the
+      // answer to a question they never answered.
       console.warn('[Search] Failed:', err.message);
+      setSearchResults([]);
+      setSearchError(err.message || 'geocode failed');
     } finally {
       setIsSearching(false);
     }
   }, [searchQuery]);
 
-  const lastUpdate = new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' });
+  // Layer collections carry the server's own `_meta` and the client's
+  // `client_stored_at` (useMapLayers). The newest of those is the only honest
+  // answer to "last update"; `new Date()` at render time simply printed the
+  // clock and called it the data's age.
+  const lastUpdate = React.useMemo(() => {
+    let newest = null;
+    for (const [id, st] of Object.entries(layers)) {
+      if (!st.visible) continue;
+      const t = layerData[id]?._meta?.client_stored_at;
+      if (Number.isFinite(t) && (newest === null || t > newest)) newest = t;
+    }
+    return newest;
+  }, [layers, layerData]);
 
   return (
     <div className="relative w-full h-full">
       {/* Map */}
       <MapView
         layers={layers}
-        layerData={layerData}
+        layerData={layerDataView}
         onFeatureClick={handleFeatureClick}
         onMapReady={handleMapReady}
       />
@@ -149,6 +168,12 @@ export default function MapPage() {
           </button>
         </form>
 
+        {searchError && (
+          <div className="mt-1 glass-panel px-3 py-2 text-xs text-status-offline">
+            Location search failed ({searchError}) — no results were obtained.
+          </div>
+        )}
+
         {/* Search results dropdown */}
         {searchResults.length > 0 && (
           <div className="mt-1 glass-panel overflow-hidden">
@@ -158,6 +183,7 @@ export default function MapPage() {
                 className="w-full text-left px-3 py-2 text-xs text-gray-300 hover:bg-neon-cyan/10 hover:text-neon-cyan border-b border-osint-border/50 last:border-0 transition-colors"
                 onClick={() => {
                   setSearchResults([]);
+                  setSearchError(null);
                   setSearchQuery(r.display_name.split(',')[0]);
                   // MapView listens for `japanosint:flyto` — same channel the
                   // Camera Discovery panel uses to recenter the map.
@@ -199,12 +225,17 @@ export default function MapPage() {
             <span className="text-neon-green">
               {Object.entries(layers)
                 .filter(([, s]) => s.visible)
-                .reduce((sum, [id]) => sum + (layerData[id]?.features?.length ?? 0), 0)}
+                .reduce((sum, [id]) => sum + (layerDataView[id]?.features?.length ?? 0), 0)}
             </span>
           </span>
         </div>
         <div>
-          Last update: <span className="text-gray-400">{lastUpdate} JST</span>
+          Last update:{' '}
+          <span className="text-gray-400">
+            {lastUpdate
+              ? `${new Date(lastUpdate).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })} JST`
+              : 'no layer loaded'}
+          </span>
         </div>
       </div>
     </div>

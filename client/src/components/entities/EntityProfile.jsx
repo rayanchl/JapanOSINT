@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import apiUrl from '../../utils/apiUrl.js';
 import { entityVisual } from '../../utils/entityVisuals.js';
-import { useEntity } from '../../hooks/useSearch.js';
+import { useEntity, MENTION_LIMIT } from '../../hooks/useSearch.js';
 import EntityGraph from './EntityGraph.jsx';
 
 /** Resolve a /:type/lookup?q=value chip link to a concrete entity_id. */
@@ -42,7 +42,7 @@ export default function EntityProfile() {
 }
 
 function Loaded({ type, entityId, tab, setTab, navigate }) {
-  const { profile, graph, mentions, depth, setDepth, loading } = useEntity(type, entityId);
+  const { profile, graph, mentions, depth, setDepth, loading, errors } = useEntity(type, entityId);
   const v = entityVisual(type);
 
   return (
@@ -63,6 +63,12 @@ function Loaded({ type, entityId, tab, setTab, navigate }) {
             </span>
           )}
         </div>
+
+        {errors.profile && (
+          <div className="rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-xs text-red-300">
+            Could not load this entity ({errors.profile}) — the fields below are missing, not empty.
+          </div>
+        )}
 
         {profile?.aliases?.length > 0 && (
           <div className="text-xs text-gray-500">aliases: {profile.aliases.join(' · ')}</div>
@@ -96,7 +102,13 @@ function Loaded({ type, entityId, tab, setTab, navigate }) {
                 </button>
               ))}
             </div>
-            <EntityGraph graph={graph} rootId={entityId} />
+            {errors.graph ? (
+              <div className="rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-xs text-red-300">
+                Could not load relationships ({errors.graph}). Not the same as having none.
+              </div>
+            ) : (
+              <EntityGraph graph={graph} rootId={entityId} />
+            )}
           </div>
         )}
 
@@ -112,7 +124,23 @@ function Loaded({ type, entityId, tab, setTab, navigate }) {
                 Showing the {mentions.length} most recent of {profile.mention_count.toLocaleString()} mentions.
               </li>
             )}
-            {mentions.length === 0 && <li className="text-sm text-gray-600">No mentions.</li>}
+            {/* The total lives on the profile, so when THAT request is the one
+              * that failed the bound still has to be stated — just without a
+              * denominator we do not have. */}
+            {mentions.length >= MENTION_LIMIT && profile?.mention_count == null && (
+              <li className="text-xs text-amber-400/80 pb-1">
+                Showing the {mentions.length} most recent mentions; the total is unknown
+                {errors.profile ? ' (the profile request failed)' : ''}.
+              </li>
+            )}
+            {errors.mentions && (
+              <li className="rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-xs text-red-300">
+                Could not load the mention timeline ({errors.mentions}). Not the same as having none.
+              </li>
+            )}
+            {!errors.mentions && mentions.length === 0 && (
+              <li className="text-sm text-gray-600">No mentions.</li>
+            )}
             {mentions.map((m, i) => (
               <li key={i} className="rounded border border-osint-border bg-osint-surface p-2">
                 <div className="text-xs text-gray-500">

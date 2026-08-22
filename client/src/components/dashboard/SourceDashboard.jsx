@@ -7,6 +7,11 @@ import {
 import StatusBadge from '../ui/StatusBadge';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { normalizeSources, typeLabel } from '../../utils/normalizeSource.js';
+import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers.js';
+
+// The pipeline strip printed a hardcoded `12` in the same type as the two
+// figures beside it, which are counted from real rows. Count the registry.
+const MAP_LAYER_COUNT = Object.keys(LAYER_DEFINITIONS).length;
 
 // Keyed on the wire values (schema.sql constrains both columns to lowercase).
 const STATUS_COLORS = {
@@ -54,7 +59,7 @@ function DarkTooltip({ active, payload, label }) {
   );
 }
 
-export default function SourceDashboard({ sources: propSources }) {
+export default function SourceDashboard({ sources: propSources, pollError, lastUpdate: propLastUpdate }) {
   const [sources, setSources] = useState(propSources || []);
   const [loading, setLoading] = useState(!propSources?.length);
   const [sortField, setSortField] = useState('name');
@@ -64,6 +69,9 @@ export default function SourceDashboard({ sources: propSources }) {
   const [filterCategory, setFilterCategory] = useState('');
   const [expandedRow, setExpandedRow] = useState(null);
   const [fetchError, setFetchError] = useState(null);
+  // Timestamp of the last fetch that actually returned rows, for the self-fetch
+  // path. Null until one succeeds — never a render-time clock reading.
+  const [fetchedAt, setFetchedAt] = useState(null);
 
   // Fetch sources only when mounted without them — App.jsx's useDataSources
   // already polls /api/sources and passes the rows down as props.
@@ -83,6 +91,7 @@ export default function SourceDashboard({ sources: propSources }) {
       const data = await res.json();
       setSources(normalizeSources(Array.isArray(data) ? data : data.sources || []));
       setFetchError(null);
+      setFetchedAt(new Date().toISOString());
     } catch (err) {
       console.warn('[SourceDashboard] fetch error:', err.message);
       setFetchError(err.message || 'request failed');
@@ -101,6 +110,15 @@ export default function SourceDashboard({ sources: propSources }) {
   useEffect(() => {
     if (propSources?.length) setSources(propSources);
   }, [propSources]);
+
+  // On the props path this component never fetches, so `fetchError` stays null
+  // forever and the health dot kept pulsing green over rows of unknown age
+  // while App's poller was failing. The poller's own verdict is the one that
+  // matters there, so combine them.
+  const loadError = selfFetch ? fetchError : (pollError || null);
+  // The age of the data on screen, from whichever path supplied it. Null means
+  // "we have never successfully loaded", which is what gets displayed.
+  const lastSuccess = selfFetch ? fetchedAt : (propLastUpdate || null);
 
   // Derived data. `pending` is the schema default for a freshly-seeded source,
   // so it has to be in the seed or those rows vanish from the cards + pie.
@@ -198,7 +216,7 @@ export default function SourceDashboard({ sources: propSources }) {
           <div className="flex items-center gap-2 text-xs text-gray-500">
             {/* The live dot is an assertion that this page is current. It must
               * not keep pulsing green while the last refresh failed. */}
-            {fetchError ? (
+            {loadError ? (
               <>
                 <span className="w-2 h-2 rounded-full bg-red-500 inline-block" />
                 <span className="text-red-300">Refresh failing</span>
@@ -216,10 +234,10 @@ export default function SourceDashboard({ sources: propSources }) {
           * Whether any rows are on screen decides the wording: with none, every
           * number below would be a fabrication; with stale rows, they are real
           * but no longer current, and saying which is the point. */}
-        {fetchError && (
+        {loadError && (
           <div className="rounded border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm">
             <div className="font-medium text-red-300">
-              Could not load /api/sources ({fetchError})
+              Could not load /api/sources ({loadError})
             </div>
             <div className="mt-1 text-xs text-red-200/80">
               {sources.length
@@ -237,11 +255,15 @@ export default function SourceDashboard({ sources: propSources }) {
           <StatCard label="Offline" value={statusCounts.offline} color="#ff4444" />
           <StatCard label="Pending" value={statusCounts.pending} color="#9ca3af" />
           <StatCard label="Total Records" value={totalRecords.toLocaleString()} color="#a855f7" />
+          {/* `new Date()` here was the render clock, not the data's age: every
+            * refresh, successful or not, stamped the rows "just now". */}
           <StatCard
             label="Last Update"
-            value={new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })}
+            value={lastSuccess
+              ? new Date(lastSuccess).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })
+              : '—'}
             color="#3b82f6"
-            subtitle="JST"
+            subtitle={lastSuccess ? 'JST · last successful fetch' : 'never loaded'}
           />
         </div>
 
@@ -337,7 +359,7 @@ export default function SourceDashboard({ sources: propSources }) {
             </div>
             <span className="text-gray-600 text-lg">\u2192</span>
             <div className="flex flex-col items-center gap-1 px-4 py-3 rounded border border-neon-purple/20 bg-neon-purple/5 min-w-[100px]">
-              <span className="text-neon-purple font-mono text-lg">12</span>
+              <span className="text-neon-purple font-mono text-lg">{MAP_LAYER_COUNT}</span>
               <span className="text-gray-400">Map Layers</span>
             </div>
           </div>

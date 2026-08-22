@@ -23,18 +23,28 @@ export default function DatabaseExplorerTab() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [expandedRow, setExpandedRow] = useState(null);
+  // /api/db/* sits behind the operator gate (native/core/httpd.c opgate_check)
+  // and the web client sends no Authorization header, so these calls 401.
+  // Swallowing that rendered "no tables"/"No rows." — an assertion that the
+  // database is empty, manufactured out of a request we were refused.
+  const [tablesError, setTablesError] = useState(null);
+  const [rowsError, setRowsError] = useState(null);
 
   // Load the table list once.
   useEffect(() => {
     fetch(apiUrl('/api/db/tables'))
-      .then((r) => r.ok ? r.json() : [])
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
       .then((j) => {
         // Server returns a bare array; older code returned { tables: [...] }.
         const list = Array.isArray(j) ? j : (j.tables || []);
         setTables(list);
+        setTablesError(null);
         if (list.length && !selected) setSelected(list[0].name);
       })
-      .catch(() => setTables([]));
+      .catch((err) => { setTables([]); setTablesError(err.message || 'request failed'); });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -53,9 +63,12 @@ export default function DatabaseExplorerTab() {
     }
     setLoading(true);
     fetch(apiUrl(`/api/db/tables/${encodeURIComponent(selected)}?${params}`))
-      .then((r) => r.ok ? r.json() : null)
-      .then((j) => { if (!ignore) setData(j); })
-      .catch(() => { if (!ignore) setData(null); })
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((j) => { if (!ignore) { setData(j); setRowsError(null); } })
+      .catch((err) => { if (!ignore) { setData(null); setRowsError(err.message || 'request failed'); } })
       .finally(() => { if (!ignore) setLoading(false); });
     return () => { ignore = true; };
   }, [selected, q, limit, offset, orderBy, orderDir]);
@@ -82,6 +95,12 @@ export default function DatabaseExplorerTab() {
     <div className="flex h-full">
       {/* Left: table list */}
       <div className="w-40 flex-shrink-0 border-r border-osint-border overflow-y-auto">
+        {tablesError && (
+          <div className="px-3 py-2 text-[9.5px] text-status-offline leading-snug">
+            Could not load the table list ({tablesError}). This endpoint is
+            operator-gated — the list below is not a statement about the database.
+          </div>
+        )}
         {tables.map((t) => (
           <button
             key={t.name}
@@ -131,7 +150,13 @@ export default function DatabaseExplorerTab() {
           {loading && (
             <div className="px-3 py-2 text-[10px] text-gray-500">Loading…</div>
           )}
-          {!loading && data && data.rows.length === 0 && (
+          {!loading && rowsError && (
+            <div className="px-3 py-2 text-[10px] text-status-offline">
+              Could not read {selected} ({rowsError}). No rows were obtained — this
+              is a failed request, not an empty table.
+            </div>
+          )}
+          {!loading && !rowsError && data && data.rows.length === 0 && (
             <div className="px-3 py-2 text-[10px] text-gray-500">No rows.</div>
           )}
           {!loading && data && data.rows.length > 0 && selectedMeta && (
