@@ -15,7 +15,6 @@
 #include <string.h>
 #include <strings.h>
 
-#define HP_MAX_SOURCES   1024   /* exhaustive-ok: registry table size */
 /* Bounds exist only to keep one pathological response from exhausting memory —
  * they are NOT an editorial filter. Per the exhaustive-use rule
  * (docs/SOURCE_EXHAUSTIVENESS.md) they are set well above any real record, and
@@ -29,8 +28,16 @@
 #define HP_PAGE_MAX_DEF    10   /* exhaustive-ok: runaway guard, stamped    */
 #define HP_DETAIL_MAX_DEF  25   /* exhaustive-ok: request budget, stamped   */
 
-static const hp_source *g_specs[HP_MAX_SOURCES];
+/* Grown on demand rather than fixed. The fixed HP_MAX_SOURCES array silently
+ * ate every row past the cap: measured 2026-08-22, 1,481 rows were dropped at
+ * boot — batches 18 and 19 alone register more than 1,024 between them, so most
+ * of two batches was registered into nothing. It did print a line per drop, but
+ * 1,481 lines of stderr at startup is not a signal anyone receives, and
+ * /api/status showed no trace of it. A registry that cannot hold the registry
+ * is not a bound worth keeping. */
+static const hp_source **g_specs = NULL;
 static int g_nspecs = 0;
+static int g_cspecs = 0;
 
 /* ── small utilities ─────────────────────────────────────────────────────── */
 
@@ -1293,9 +1300,18 @@ void hp_register(const hp_source *specs, int n, source_def *defs) {
   for (int i = 0; i < n; i++) {
     const hp_source *s = &specs[i];
     if (!s->id || !s->url) continue;
-    if (g_nspecs >= HP_MAX_SOURCES) {
-      fprintf(stderr, "[hp] OVERFLOW: dropped '%s' (cap %d)\n", s->id, HP_MAX_SOURCES);
-      continue;
+    if (g_nspecs >= g_cspecs) {
+      int nc = g_cspecs ? g_cspecs * 2 : 2048;
+      const hp_source **ns = realloc((void *)g_specs, (size_t)nc * sizeof *ns);
+      if (!ns) {
+        /* Out of memory is the only reason a row is dropped now, and it is a
+         * real failure rather than a configured limit — say so once per row. */
+        fprintf(stderr, "[hp] OUT OF MEMORY registering '%s' at %d rows\n",
+                s->id, g_nspecs);
+        continue;
+      }
+      g_specs = ns;
+      g_cspecs = nc;
     }
     g_specs[g_nspecs++] = s;
     defs[i] = (source_def){

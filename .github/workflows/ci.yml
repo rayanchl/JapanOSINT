@@ -87,6 +87,14 @@ jobs:
         working-directory: native
         run: make source-floor
 
+      # source-floor greps the tree for REGISTER_SOURCE and is therefore blind
+      # to HP_REGISTER_TABLE. It passed for months while the hp spec table's
+      # fixed 1,024-entry array silently dropped 1,481 rows at boot. This asks
+      # the binary instead, and fails on any duplicate id or dropped row.
+      - name: Registry floor (asks the binary)
+        working-directory: native
+        run: make registry-floor
+
       # Reported, not gated. audit-sources is a heuristic scan for discarded
       # data (docs/SOURCE_EXHAUSTIVENESS.md); every finding needs a human read,
       # so failing on the count would train people to ignore it. But it must be
