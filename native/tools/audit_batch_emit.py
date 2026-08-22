@@ -43,6 +43,32 @@ COLS = ["id", "mode", "want", "category", "record_type", "tags", "portal",
 TOKEN = re.compile(r"\{q[a-zA-Z]*\}")
 EMITTED = re.compile(r"\[hp:([^\]]+)\] emitted (\d+) of (\d+) available")
 
+# When the engine prints no `emitted` line it has still said WHY, and the first
+# version of this tool threw that away: 84 rows of batch 19 came back as one
+# opaque NO_RUN_LINE covering at least four unrelated situations — a 404, an
+# entity pivot invoked with no entity, a body that would not parse, and a source
+# that is simply empty right now (the CVE delta feed's `new` array legitimately
+# holds 0 entries between publications). Only two of those are defects, and a
+# verdict that cannot tell them apart sends you to read 84 rows by hand.
+#
+# Ordered: the first pattern that matches wins, most specific first.
+REASONS = [
+    (re.compile(r"\[hp:[^\]]+\] status=(\d+)"),                 "HTTP_%s"),
+    (re.compile(r"\[hp:[^\]]+\] transport failure"),            "TRANSPORT_FAIL"),
+    (re.compile(r"\[hp:[^\]]+\] non-JSON body"),                "UNPARSEABLE"),
+    (re.compile(r"\[hp:[^\]]+\] non-XML body"),                 "UNPARSEABLE"),
+    (re.compile(r"\[hp:[^\]]+\] entity shape mismatch"),        "ENTITY_SHAPE"),
+    (re.compile(r"\[hp:[^\]]+\] scheduled run but the row needs an entity"),
+                                                                "NEEDS_ENTITY"),
+    (re.compile(r"\[hp:[^\]]+\] entity yields no value"),        "NEEDS_ENTITY"),
+    (re.compile(r"\[hp:[^\]]+\] missing key"),                   "NEEDS_KEY"),
+]
+# `[sched] <id> run rc=0 records=0 0ms` with no [hp:] line at all: the engine
+# returned before making a request. For an on-demand pivot that is rule 3 doing
+# its job, and it means THIS TOOL failed to recover an entity, not that the row
+# is broken.
+SCHED_ZERO = re.compile(r"\[sched\] \S+ run rc=(-?\d+) records=(\d+) (\d+)ms")
+
 
 def rows(paths):
     out = []
@@ -93,6 +119,21 @@ def run_one(args):
         return (r["id"], "UNREGISTERED", 0, 0, ent or "")
     m = EMITTED.search(blob)
     if not m:
+        for pat, label in REASONS:
+            hit = pat.search(blob)
+            if hit:
+                return (r["id"],
+                        label % hit.group(1) if "%s" in label else label,
+                        0, 0, ent or "")
+        s = SCHED_ZERO.search(blob)
+        if s and s.group(2) == "0":
+            # No [hp:] line at all. Either the engine never fetched (0ms — an
+            # on-demand pivot with no entity, so the tool is at fault), or it
+            # fetched and the upstream had nothing (the emitted line is
+            # suppressed when both counts are zero), which is an honest empty.
+            if s.group(3) == "0":
+                return (r["id"], "NO_ENTITY_RECOVERED", 0, 0, ent or "")
+            return (r["id"], "EMPTY_UPSTREAM", 0, 0, ent or "")
         return (r["id"], "NO_RUN_LINE", 0, 0, ent or "")
     emitted, avail = int(m.group(2)), int(m.group(3))
     if avail == 0:
