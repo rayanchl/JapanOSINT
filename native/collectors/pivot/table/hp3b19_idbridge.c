@@ -56,6 +56,26 @@ static const hp_source HP3B19_IDBRIDGE[] = {
       "execution ceiling rather than capping a result set that would "
       "otherwise be complete." },
 
+  { .id = "WDID_OPENCORPORATES", .name = "Wikidata — OpenCorporates ID bridge",
+    .name_ja = "Wikidata OpenCorporates対応表",
+    .category = "corporate", .portal = "https://www.wikidata.org",
+    .record_type = "identifier-bridge",
+    .tags = "\"identifier\",\"corporate\",\"registry\",\"wikidata\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://query.wikidata.org/sparql?query=SELECT%20%3Fitem%20%3FitemLabel%20%3Fextid%20%3FcountryLabel%20WHERE%20%7B%0A%20%20%3Fitem%20wdt%3AP1320%20%3Fextid%20.%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP17%20%3Fcountry%20%7D%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%2Cmul%22%20%7D%0A%7D%20LIMIT%20800&format=json",
+    .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/)" },
+    .array_path = "results.bindings",
+    .id_keys = "extid.value",
+    .interval = 86400,
+    .title_keys = "itemLabel.value",
+    .description = "OpenCorporates identifiers, which are themselves "
+      "jurisdiction-plus-company-number pairs, mapped to Wikidata "
+      "items. A two-step bridge from a national company register "
+      "straight into the knowledge graph. Returned as SPARQL JSON "
+      "bindings; LIMIT 800 guards the service's 60-second execution "
+      "ceiling rather than capping a result set that would otherwise be "
+      "complete." },
+
   { .id = "WDID_SIREN_FR", .name = "Wikidata — French SIREN bridge",
     .name_ja = "Wikidata SIREN対応表",
     .category = "corporate", .portal = "https://www.wikidata.org",

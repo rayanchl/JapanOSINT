@@ -1130,7 +1130,7 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"ukraine\",\"currency\",\"exchange\",\"centralbank\",\"nbu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://bank.gov.ua/NBU_Exchange/exchange_site?start={q}&end={q}&valcode=usd&sort=exchangedate&order=desc&json",
-    .date_keys = "exchangedate",
+    .date_keys = "exchangedate;pagination_ok=start/end are a DATE range, not paging — measured, start=20240101&end=20240110 returns exactly the 10 days asked for",
     .title_keys = "cc,enname",
     .description = "The NBU official rate for one currency over an arbitrary date "
       "range, each row carrying the date, ISO numeric and alpha codes, "
@@ -2333,7 +2333,7 @@ static const hp_source HP3B19_EURASIA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://public-api.dream.gov.ua/marketplace/public/dream/ideas?from={q}&order=asc",
     .array_path = "data",
-    .detail_key = "id",
+    .detail_key = "id;pagination_ok=from= is not an offset — measured, from=0 and from=100 return byte-identical responses of 1000 records",
     .detail_url = "https://public-api.dream.gov.ua/marketplace/public/dream/ideas/{q}",
     .id_keys = "id",
     .description = "Ukraine national reconstruction project register run by the "

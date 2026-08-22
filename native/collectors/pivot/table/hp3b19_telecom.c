@@ -600,6 +600,7 @@ static const hp_source HP3B19_TELECOM[] = {
     .tags = "\"ixp\",\"peering\",\"canada\",\"toronto\",\"asn\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://portal.torix.ca/participants.json",
+    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT-research/1.0; +https://github.com/)" },
     .array_path = "member_list",
     .id_keys = "asnum",
     .interval = 86400,

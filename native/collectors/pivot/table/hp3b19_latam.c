@@ -89,6 +89,25 @@ static const hp_source HP3B19_LATAM[] = {
       "each survey date. This is the number the central bank itself "
       "watches when it sets rates" },
 
+  { .id = "BR_BCB_IFDATA_CADASTRO", .name = "Banco Central do Brasil — IF.data institution register",
+    .name_ja = "ブラジル中央銀行 金融機関登録 IF.data",
+    .category = "corporate", .portal = "https://www.bcb.gov.br",
+    .record_type = "financial-institution",
+    .tags = "\"brazil\",\"centralbank\",\"bank\",\"register\",\"finance\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://olinda.bcb.gov.br/olinda/servico/IFDATA/versao/v1/odata/IfDataCadastro(AnoMes=@AnoMes)?@AnoMes=202403&%24top=100&%24format=json",
+    .array_path = "value",
+    .interval = 86400,
+    .page_param = "%24skip",
+    .page_size = 100,
+    .page_start = 0,
+    .description = "Every institution supervised by the Banco Central do Brasil for "
+      "a given reference month, with its CNPJ, corporate name, "
+      "prudential conglomerate, institution type, city, state and the "
+      "segment it is classified in. The CNPJ makes each row joinable to "
+      "the Brazilian company register, which turns a bank licence into "
+      "a corporate-ownership lead" },
+
   { .id = "BR_CNES_ESTABELECIMENTOS", .name = "Ministry of Health — CNES health establishment register",
     .name_ja = "ブラジル保健省 医療施設登録 CNES",
     .category = "health", .portal = "https://apidadosabertos.saude.gov.br",
@@ -1033,6 +1052,67 @@ static const hp_source HP3B19_LATAM[] = {
       "price catalogues and supplier obligations. These are the rules "
       "every Honduran state purchase is made under, published by the "
       "body that writes them" },
+
+  { .id = "CR_HEREDIA_PATENTES", .name = "Municipalidad de Heredia — municipal business licences",
+    .name_ja = "コスタリカ エレディア市 営業許可",
+    .category = "corporate", .portal = "https://www.heredia.go.cr",
+    .record_type = "business-licence",
+    .tags = "\"costarica\",\"heredia\",\"licence\",\"business\",\"municipal\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://sig.heredia.go.cr/server/rest/services/Patentes/PatentesVista/MapServer/0/query?where=1%3D1&outFields=*&f=json&returnGeometry=false&resultRecordCount=1000",
+    .array_path = "features",
+    .interval = 86400,
+    .page_param = "resultOffset",
+    .page_size = 1000,
+    .page_start = 0,
+    .description = "Ten thousand municipal business licences in Heredia, Costa Rica, "
+      "each naming the licence number, the trading name, the address, "
+      "the holder's national identity number and full name, two "
+      "telephone numbers, an e-mail address, the licensed activity, the "
+      "licence status, whether it is suspended, the amount of tax in "
+      "arrears and whether a liquor licence is attached. A licence "
+      "register carrying the holder's cédula and arrears is effectively "
+      "a small company register" },
+
+  { .id = "CR_HEREDIA_ANTENAS", .name = "Municipalidad de Heredia — telecom masts and antennas",
+    .name_ja = "コスタリカ エレディア市 通信鉄塔",
+    .category = "telecom", .portal = "https://www.heredia.go.cr",
+    .record_type = "telecom-mast",
+    .tags = "\"costarica\",\"heredia\",\"telecom\",\"antenna\",\"infrastructure\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://sig.heredia.go.cr/server/rest/services/Cartografia/Postes_y_Antenas/MapServer/0/query?where=1%3D1&outFields=*&f=json&returnGeometry=false",
+    .array_path = "features",
+    .interval = 86400,
+    .page_param = "resultOffset",
+    .page_size = 1000,
+    .page_start = 0,
+    .description = "Every telecommunications mast and antenna permitted in Heredia, "
+      "with the site name and mast identifier, longitude and latitude, "
+      "the construction permit number, the owning company and its "
+      "corporate cédula, the land parcel, the address, the mast height "
+      "and type, the year, the frequency bands in megahertz, the radio "
+      "technology and the operator using it. Tower ownership separated "
+      "from operator is exactly the structure that mobile-network "
+      "mapping needs" },
+
+  { .id = "CR_HEREDIA_POZOS", .name = "Municipalidad de Heredia — registered wells and springs",
+    .name_ja = "コスタリカ エレディア市 井戸・湧水登録",
+    .category = "environment", .portal = "https://www.heredia.go.cr",
+    .record_type = "water-permit",
+    .tags = "\"costarica\",\"heredia\",\"water\",\"well\",\"environment\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://sig.heredia.go.cr/server/rest/services/Ambiental/Pozos_y_Nacientes/MapServer/0/query?where=1%3D1&outFields=*&f=json&returnGeometry=false",
+    .array_path = "features",
+    .interval = 21600,
+    .page_param = "resultOffset",
+    .page_size = 1000,
+    .page_start = 0,
+    .description = "Registered wells and springs in the Heredia aquifer with the "
+      "well file number, the owner, the requested depth and flow rate, "
+      "the authorised use, the coordinates and the record's creation "
+      "and last-edit user and date. Heredia sits on the aquifer that "
+      "supplies much of Costa Rica's central valley, and this names who "
+      "is drawing from it" },
 
   { .id = "CR_SANCARLOS_PATENTES", .name = "IDESCA San Carlos — commercial licences",
     .name_ja = "コスタリカ サンカルロス市 営業許可",

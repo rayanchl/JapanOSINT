@@ -1293,6 +1293,25 @@ static const hp_source HP3B19_SCIENCE[] = {
       "entire catalogue by its own next link, giving orbit state for "
       "every tracked object rather than a themed subset" },
 
+  { .id = "USGS_SCIENCEBASE_CATALOG", .name = "USGS ScienceBase — data catalogue search",
+    .name_ja = "USGS ScienceBase データ目録検索",
+    .category = "research", .portal = "https://www.sciencebase.gov",
+    .record_type = "dataset-catalogue-record",
+    .tags = "\"usgs\",\"dataset\",\"catalogue\",\"science\",\"earth\",\"search\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.sciencebase.gov/catalog/items?format=json&max=100&q={q}",
+    .array_path = "items",
+    .id_keys = "id",
+    .next_path = "nextlink.url",
+    .title_keys = "title",
+    .description = "The US Geological Survey's own data catalogue searched by term, "
+      "each hit carrying the ScienceBase item identifier, title, "
+      "summary, whether it has child items, its related items and the "
+      "direct item link. ScienceBase holds the underlying data behind "
+      "USGS earthquake, volcano, mineral and hydrology publications, "
+      "and the catalogue pages through every match rather than the "
+      "first hundred" },
+
   { .id = "NASA_EXOPLANET_ARCHIVE_PLANETS", .name = "NASA Exoplanet Archive — composite planetary parameters",
     .name_ja = "NASA 系外惑星アーカイブ 惑星パラメータ",
     .category = "research", .portal = "https://exoplanetarchive.ipac.caltech.edu",

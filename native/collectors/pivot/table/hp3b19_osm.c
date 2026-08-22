@@ -59,6 +59,46 @@ static const hp_source HP3B19_OSM[] = {
       "movement of people across a national border and the first "
       "infrastructure to saturate in a displacement event" },
 
+  { .id = "OVERPASS_AERIALWAY_STATION", .name = "Overpass - cable car and gondola stations",
+    .name_ja = "Overpass 索道駅",
+    .category = "transport", .portal = "https://overpass-api.de",
+    .record_type = "aerialway-station",
+    .tags = "\"transport\",\"aerialway\",\"osm\",\"geo\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22aerialway%22%3D%22station%22%5D%2845.9%2C6.8%2C46.6%2C7.8%29%3Bout%20center%20meta%20100%3B",
+    .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/)" },
+    .array_path = "elements",
+    .date_keys = "timestamp",
+    .id_keys = "id",
+    .interval = 86400,
+    .lat_key = "lat",
+    .lon_key = "lon",
+    .title_keys = "name",
+    .description = "Terminal and intermediate stations of aerial ropeways with the "
+      "line served, the elevation and the operator. Ropeway stations "
+      "are the only mechanised access to a great deal of high terrain, "
+      "which makes them logistics infrastructure and not merely tourism" },
+
+  { .id = "OVERPASS_GONDOLA_LINE", .name = "Overpass - gondola and cableway lines",
+    .name_ja = "Overpass ゴンドラ索道",
+    .category = "transport", .portal = "https://overpass-api.de",
+    .record_type = "aerialway-line",
+    .tags = "\"transport\",\"aerialway\",\"osm\",\"geo\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22aerialway%22%3D%22gondola%22%5D%2845.9%2C6.8%2C46.6%2C7.8%29%3Bout%20center%20meta%20100%3B",
+    .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/)" },
+    .array_path = "elements",
+    .date_keys = "timestamp",
+    .id_keys = "id",
+    .interval = 86400,
+    .lat_key = "lat",
+    .lon_key = "lon",
+    .title_keys = "name",
+    .description = "The routed line geometry of gondola and cableway installations "
+      "with capacity per hour, duration and operator. A cableway is a "
+      "fixed mechanical link across terrain that has no road, so its "
+      "line is a hard constraint on movement in mountain country" },
+
   { .id = "OVERPASS_TAXIWAY", .name = "Overpass - airport taxiway network",
     .name_ja = "Overpass 誘導路",
     .category = "aviation", .portal = "https://overpass-api.de",
@@ -120,6 +160,29 @@ static const hp_source HP3B19_OSM[] = {
       "Turntable diameter is a hard physical limit on the locomotive "
       "classes a depot can service, which is a durable clue to what "
       "motive power a line actually runs" },
+
+  { .id = "OVERPASS_MOTORWAY_JUNCTION", .name = "Overpass - motorway interchanges",
+    .name_ja = "Overpass 高速道路インターチェンジ",
+    .category = "transport", .portal = "https://overpass-api.de",
+    .record_type = "motorway-junction",
+    .tags = "\"road\",\"transport\",\"osm\",\"geo\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnode%5B%22highway%22%3D%22motorway_junction%22%5D%2851.3%2C6.8%2C51.7%2C7.4%29%3Bout%20meta%20100%3B",
+    .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/)" },
+    .array_path = "elements",
+    .date_keys = "timestamp",
+    .detail_key = "id",
+    .detail_path = "elements",
+    .detail_url = "https://api.openstreetmap.org/api/0.6/node/{v}/history.json",
+    .id_keys = "id",
+    .interval = 86400,
+    .lat_key = "lat",
+    .lon_key = "lon",
+    .title_keys = "name",
+    .description = "Numbered motorway exits and interchanges with the junction "
+      "reference, the destinations signed and the roads joined. Exit "
+      "numbering is the coordinate system in which every road incident, "
+      "closure and convoy movement is actually reported" },
 
   { .id = "OVERPASS_VEHICLE_INSPECTION", .name = "Overpass - vehicle inspection stations",
     .name_ja = "Overpass 自動車検査場",

@@ -491,6 +491,32 @@ static const hp_source HP3B19_USSTATE[] = {
       "makes this usable as a per-department activity series as well as "
       "a safety dataset" },
 
+  { .id = "NY_PROPERTY_ASSESSMENT_ROLLS", .name = "New York Department of Taxation and Finance — local assessment "
+      "rolls",
+    .name_ja = "ニューヨーク州税務財政局 固定資産評価台帳",
+    .category = "economy", .portal = "https://data.ny.gov",
+    .record_type = "property-assessment",
+    .tags = "\"us\",\"newyork\",\"property\",\"assessment\",\"tax\",\"ownership\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://data.ny.gov/resource/7vem-aaz7.json?$limit=1000",
+    .date_keys = "roll_year",
+    .id_keys = "print_key_code",
+    .interval = 604800,
+    .page_param = "$offset",
+    .page_size = 1000,
+    .title_keys = "primary_owner_last_name",
+    .description = "The consolidated New York property assessment roll — 23.5 "
+      "million parcel-years — with roll year, county, municipality and "
+      "school district, the parcel print key, street address, lot "
+      "dimensions, deed book and page, the primary owner's first middle "
+      "and last name plus up to three additional owners, the full "
+      "mailing address including country, up to ten exemption codes "
+      "with their county city and school amounts, full market value, "
+      "land and total assessment and the taxable values. Named owners "
+      "with a foreign mailing address and a deed reference make this "
+      "the closest thing New York has to a public ownership file for "
+      "real property" },
+
   { .id = "NY_RADIOACTIVE_MATERIALS_LICENSEES", .name = "New York Department of Health — radioactive materials licensees",
     .name_ja = "ニューヨーク州保健局 放射性物質許可事業者",
     .category = "health", .portal = "https://health.data.ny.gov",

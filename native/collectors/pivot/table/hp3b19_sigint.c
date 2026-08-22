@@ -797,6 +797,24 @@ static const hp_source HP3B19_SIGINT[] = {
       "epochs in one paged sweep, which is how a national programme's "
       "on-orbit inventory is enumerated" },
 
+  { .id = "LL2_LOCATIONS", .name = "Launch Library 2 — launch site register",
+    .name_ja = "Launch Library 射場所在地登録",
+    .category = "space", .portal = "https://thespacedevs.com",
+    .record_type = "launch-site",
+    .tags = "\"space\",\"launch\",\"facility\",\"geo\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://ll.thespacedevs.com/2.2.0/location/?format=json&limit=100",
+    .array_path = "results",
+    .id_keys = "id",
+    .interval = 21600,
+    .next_path = "next",
+    .title_keys = "name",
+    .description = "Every launch site on Earth as a named location with its country, "
+      "total launch count, active pad count and the pads it contains — "
+      "Plesetsk, Jiuquan, Sohae and Semnan alongside the western "
+      "ranges. The parent register above the pad list, giving the "
+      "site-level view of world launch infrastructure" },
+
   { .id = "GCAT_SATCAT", .name = "GCAT — General Catalog of Artificial Space Objects",
     .name_ja = "GCAT 人工宇宙物体総合カタログ",
     .category = "space", .portal = "https://planet4589.org",
@@ -966,6 +984,24 @@ static const hp_source HP3B19_SIGINT[] = {
       "it became active and its continent. The top level of the summit "
       "hierarchy, giving the named human contact and the callsign "
       "prefix for portable operations in each territory" },
+
+  { .id = "LL2_SPACE_STATIONS", .name = "Launch Library 2 — space station register",
+    .name_ja = "Launch Library 宇宙ステーション登録",
+    .category = "space", .portal = "https://thespacedevs.com",
+    .record_type = "space-station",
+    .tags = "\"space\",\"station\",\"orbital\",\"inventory\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://ll.thespacedevs.com/2.2.0/spacestation/?format=json&limit=100",
+    .array_path = "results",
+    .id_keys = "id",
+    .interval = 21600,
+    .next_path = "next",
+    .title_keys = "name",
+    .description = "Every crewed orbital station ever flown or currently planned "
+      "with its operating agencies, status, founding and deorbit dates, "
+      "orbit type, mass, volume, docking port count and the vehicles "
+      "currently attached. Covers Tiangong and the commercial stations "
+      "alongside the ISS and the historical Salyut and Mir programmes" },
 
   { .id = "ANFR_MOBILE_TRANSMITTERS", .name = "ANFR — French mobile network transmitter register",
     .name_ja = "ANFR フランス携帯基地局送信機登録",

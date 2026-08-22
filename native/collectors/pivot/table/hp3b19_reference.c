@@ -597,7 +597,7 @@ static const hp_source HP3B19_REFERENCE[] = {
     .tags = "\"reference\",\"wikipedia\",\"search\",\"knowledge\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q={q}&limit=100",
-    .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/)" },
+    .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/);pagination_ok=the Wikimedia core search API caps limit at 100 and exposes no offset (measured: limit=500 returns 0 results)" },
     .array_path = "pages",
     .description = "Full-text search across a Wikipedia language edition returning "
       "the page id, key, title, excerpt and description for each hit. "
