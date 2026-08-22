@@ -32,6 +32,15 @@ typedef enum {
   HP_JSON = 0,   /* JSON document → record array (or the root object)      */
   HP_HTML = 1,   /* server-rendered listing → real <a> hits                */
   HP_CSV  = 2,   /* CSV/TSV with a header row → one record per row         */
+  /* XML document → one record per repeated element. Added because the most
+   * authoritative sanctions lists in existence — the UK OFSI consolidated
+   * list, the EU financial sanctions file and the Swiss SECO whole list — are
+   * published as XML and only as XML, and every one of them was unreachable:
+   * hp_run's switch fell through to hp_run_json, cJSON refused the body, and
+   * the row emitted nothing forever while still registering as a source.
+   * `array_path` names the record element; leave it empty to auto-detect the
+   * most repeated one. */
+  HP_XML  = 3,
 } hp_mode;
 
 /* Shape gate: a row that only makes sense for a domain must not burn a request
@@ -123,10 +132,27 @@ typedef struct hp_source {
   const char *page_param;
   int         page_start;     /* first value of page_param (default 1, or 0
                                * when the param name contains "offset")      */
+  /* `page_start` cannot express "this API's first page is 0", because 0 is
+   * also its unset value and the engine coerces that to 1 for a non-offset
+   * param. A 0-based API (CKAN's `start`, opendata.ch's `page`) therefore had
+   * its first extra page computed as 2 and page 1 was never fetched — silent
+   * data loss on every paged read. Set this instead of hunting for a negative
+   * `page_start` that happens to cancel out. */
+  int         page_zero_based;/* 1 = the first page is numbered 0, not 1      */
   int         page_size;      /* records per page, for offset-style paging    */
   int         page_max;       /* max pages to walk (default 10)              */
 
   int csv_no_header;          /* CSV mode: file has no header row → col0..colN */
+  /* CSV mode: field delimiter, if not a comma. DataPlane.org's feeds are
+   * `ASN | AS name | ip | lastseen | category`; parsed on commas the whole line
+   * became one cell, so five real fields were stored as one blob nothing could
+   * query. First character is used; "tab" and "\t" both mean U+0009. */
+  const char *csv_delim;
+  /* CSV mode: lines starting with this prefix are comments, not records. Both
+   * DataPlane and URLhaus ship a `#` banner (URLhaus puts its column names
+   * there), and emitting those as findings would file documentation as
+   * intelligence. */
+  const char *csv_comment;
   int filter_query;           /* 1 = keep only records mentioning the query */
   /* Cap on emitted records. 0 (the default) means EVERY record the upstream
    * returned — the engine does not invent a limit the caller did not ask for.

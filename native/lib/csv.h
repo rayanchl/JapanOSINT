@@ -15,6 +15,17 @@
  * Returns a new cJSON (caller cJSON_Delete) or an empty array; never NULL. */
 cJSON *csv_parse(const char *text, int headers);
 
+/* Same, with an explicit field delimiter. Not every "CSV" feed uses a comma:
+ * DataPlane.org publishes `ASN | AS name | ip | lastseen | category`, and
+ * parsing it on commas made each whole line a single cell — so the IP, the
+ * timestamp and the category were present in the store as one unqueryable blob.
+ *
+ * When `delim` is not ',' each UNQUOTED cell is also whitespace-trimmed. Those
+ * feeds pad their columns to align them for a human reader, so the padding is
+ * layout rather than content; comma CSV is left byte-exact as RFC 4180 expects,
+ * which is why this is not simply applied to every parse. */
+cJSON *csv_parse_d(const char *text, int headers, char delim);
+
 /* Shift_JIS → UTF-8, malloc'd NUL-terminated (caller frees). On iconv error
  * returns a plain UTF-8 copy of the input (mirrors JS catch → utf8). */
 char *csv_decode_sjis(const char *buf, size_t len);

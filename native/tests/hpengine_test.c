@@ -147,6 +147,32 @@ static const hp_source T[] = {
     .page_param = "offset", .page_size = 2,
     .record_type = "t-page", .free_tier = 1, .description = "d" },
 
+  /* A hypermedia API whose link array is NOT ordered with `next` first. Selecting
+   * it positionally is what breaks when a server reorders its links. */
+  { .id = "T_PAGE_REL", .name = "next selected by rel", .url = "https://x.test/pr?q={q}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .next_path = "links.rel=next.href",
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+
+  /* XML: the shape the primary sanctions lists actually ship in. `target` is
+   * the record; each carries leaf fields and one nested block. */
+  { .id = "T_XML", .name = "xml records", .url = "https://x.test/x?q={q}",
+    .mode = HP_XML, .array_path = "target",
+    .title_keys = "name", .id_keys = "ref",
+    .record_type = "t-xml", .free_tier = 1, .description = "d" },
+
+  /* XML with no array_path: the engine must find the repeated element itself. */
+  { .id = "T_XML_AUTO", .name = "xml autodetect", .url = "https://x.test/xa?q={q}",
+    .mode = HP_XML, .title_keys = "name",
+    .record_type = "t-xml", .free_tier = 1, .description = "d" },
+
+  /* A 0-based page-numbered API. Without page_zero_based the engine coerces the
+   * unset page_start to 1 and computes the first extra page as 2, skipping 1. */
+  { .id = "T_PAGE_ZERO", .name = "zero-based paging", .url = "https://x.test/pz?q={q}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "page", .page_zero_based = 1,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+
   { .id = "T_CAPPED", .name = "declared cap", .url = "https://x.test/cap?q={q}",
     .array_path = "items", .title_keys = "name", .id_keys = "id", .max_items = 2,
     .record_type = "t-cap", .free_tier = 1, .description = "d" },
@@ -158,6 +184,30 @@ static const hp_source T[] = {
 
   { .id = "T_ERR", .name = "upstream error", .url = "https://x.test/err?q={q}",
     .record_type = "t-err", .free_tier = 1, .description = "d" },
+
+  /* A headerless CSV that declares NO title_keys/id_keys — the DataPlane shape.
+   * Columns parse as col0..colN, which match no fallback list, so before the
+   * first-scalar rescue every record was dropped and the run reported
+   * "emitted 0 of 36166". */
+  /* .interval is not decoration: a static URL with no interval references no
+   * entity token and is never scheduled, so hp_run returns 0 without fetching
+   * (rule 3). A bulk file row must declare a cadence to exist at all. */
+  { .id = "T_CSV_BARE", .name = "headerless csv, no keys declared",
+    .url = "https://x.test/bare.csv", .mode = HP_CSV, .csv_no_header = 1,
+    .interval = 3600,
+    .record_type = "t-bare", .free_tier = 1, .description = "d" },
+
+  /* Conventional key names holding JSON NUMBERS (SEC's cik, RIPEstat's number,
+   * BrandMeister's id). cJSON_IsString alone was blind to every one of them. */
+  { .id = "T_NUM_ID", .name = "numeric identifier", .url = "https://x.test/n?q={q}",
+    .array_path = "items", .record_type = "t-num",
+    .free_tier = 1, .description = "d" },
+
+  /* Genuinely empty records must STILL be dropped — the rescue widens what
+   * counts as content, it does not remove the noise floor. */
+  { .id = "T_EMPTY_REC", .name = "no content at all", .url = "https://x.test/e?q={q}",
+    .array_path = "items", .record_type = "t-empty",
+    .free_tier = 1, .description = "d" },
 };
 HP_REGISTER_TABLE(T)
 
@@ -317,6 +367,65 @@ int main(void) {
   ok(rc == 0 && g_ncap == 3 && g_ncalls == 2,
      "next_path pagination reads page 2 instead of discarding it");
 
+  /* 9d-bis. XML records reach the sink with their fields intact.
+   * Before HP_XML existed, hp_run's switch fell through to hp_run_json, cJSON
+   * refused the body, and the row emitted nothing while still registering — so
+   * the UK, EU and Swiss consolidated sanctions lists, which are published as
+   * XML and only as XML, were unreachable. */
+  fx_reset();
+  fx_add("/x?q=", 200,
+    "<?xml version=\"1.0\"?><list>"
+    "<target><ref>7001</ref><name>ACME &amp; CO</name>"
+    "<addr><country>CH</country><city>Zug</city></addr></target>"
+    "<target><ref>7002</ref><name>BETA LTD</name>"
+    "<addr><country>GB</country><city>London</city></addr></target>"
+    "</list>");
+  rc = run_source("T_XML", "x");
+  ok(rc == 0 && g_ncap == 2, "XML mode emits one record per repeated element");
+  ok(g_ncap >= 1 && strstr(g_cap[0].title, "ACME & CO") != NULL,
+     "XML entities are decoded in the emitted title");
+  ok(g_ncap >= 1 && strstr(g_cap[0].props, "\"addr.country\"") != NULL,
+     "nested XML elements flatten to dotted keys like JSON does");
+
+  /* 9d-ter. with no array_path the most-repeated element is the record. */
+  fx_reset();
+  fx_add("/xa?q=", 200,
+    "<feed><entry><name>one</name></entry><entry><name>two</name></entry>"
+    "<entry><name>three</name></entry></feed>");
+  rc = run_source("T_XML_AUTO", "x");
+  ok(rc == 0 && g_ncap == 3, "XML record element is auto-detected when unset");
+
+  /* 9e-bis. the next link is found by rel, not by position.
+   * `self` is deliberately first here. A positional `links.0.href` would follow
+   * it, refetch page 1 and keep doing so until the page ceiling — losing every
+   * later page while still looking like a successful run. */
+  fx_reset();
+  fx_add("/pr?q=", 200,
+    "{\"items\":[{\"name\":\"r1\",\"id\":\"1\"}],"
+    "\"links\":[{\"rel\":\"self\",\"href\":\"https://x.test/pr?q=x\"},"
+    "{\"rel\":\"next\",\"href\":\"https://x.test/pr2\"}]}");
+  fx_add("/pr2", 200,
+    "{\"items\":[{\"name\":\"r2\",\"id\":\"2\"}],"
+    "\"links\":[{\"rel\":\"self\",\"href\":\"https://x.test/pr2\"}]}");
+  rc = run_source("T_PAGE_REL", "x");
+  ok(rc == 0 && g_ncap == 2 && g_ncalls == 2,
+     "next_path selects the link by rel, not by array position");
+
+  /* 9e-ter. a 0-based page-numbered API fetches page 1, not page 2.
+   * page_start's unset value is 0, which used to be coerced to 1 for any
+   * non-offset param — so the first extra page came out as 2 and page 1 was
+   * silently never fetched. */
+  fx_reset();
+  fx_add("page=1", 200, "{\"items\":[{\"name\":\"z2\",\"id\":\"2\"}]}");
+  fx_add("page=2", 200, "{\"items\":[]}");
+  fx_add("/pz?q=", 200, "{\"items\":[{\"name\":\"z1\",\"id\":\"1\"}]}");
+  rc = run_source("T_PAGE_ZERO", "x");
+  /* base page (0) + page 1 + the empty page 2 that stops the walk. Two records
+   * means page 1 was actually read; the pre-fix engine jumped straight to 2 and
+   * emitted only the base page's single record. */
+  ok(rc == 0 && g_ncap == 2 && g_ncalls == 3,
+     "page_zero_based fetches page 1 rather than skipping to page 2");
+
   /* 9f. offset pagination stops when a page comes back empty */
   fx_reset();
   fx_add("offset=2", 200, "{\"items\":[{\"name\":\"q3\",\"id\":\"3\"}]}");
@@ -362,6 +471,33 @@ int main(void) {
   const source_def *psc = find_def("UK_CH_PSC");
   ok(psc && psc->update_interval_sec == 0 && psc->layer == NULL,
      "shipped rows are on-demand pivots and never map layers");
+
+  /* 11. a record is dropped only when it carries NO content — not merely when
+   *     its fields are named unconventionally. */
+
+  /* 11a. headerless CSV with nothing declared: col0..colN match no fallback */
+  fx_reset();
+  fx_add("/bare.csv", 200, "1.2.3.4,ssh,2026-08-01\n5.6.7.8,telnet,2026-08-02\n");
+  rc = run_source("T_CSV_BARE", "");
+  ok(rc == 0 && g_ncap == 2, "headerless CSV with no declared keys still emits");
+  ok(strstr(g_cap[0].key, "1.2.3.4") != NULL,
+     "headerless CSV record is keyed on its first column");
+  ok(strstr(g_cap[0].props, "\"col1\":\"ssh\"") != NULL,
+     "every column is preserved, not just the keying one");
+
+  /* 11b. a conventional key holding a number */
+  fx_reset();
+  fx_add("/n?q=", 200, "{\"items\":[{\"cik\":320193,\"form\":\"10-K\"}]}");
+  rc = run_source("T_NUM_ID", "x");
+  ok(rc == 0 && g_ncap == 1, "a numeric identifier is an identifier");
+  ok(strstr(g_cap[0].key, "320193") != NULL,
+     "the numeric id is keyed as its decimal text, not dropped");
+
+  /* 11c. the noise floor still holds */
+  fx_reset();
+  fx_add("/e?q=", 200, "{\"items\":[{\"a\":\"\",\"b\":null,\"c\":{},\"d\":[]}]}");
+  rc = run_source("T_EMPTY_REC", "x");
+  ok(rc == 0 && g_ncap == 0, "a record with no content at all is still dropped");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
