@@ -109,8 +109,11 @@ static const hp_source HP3_RESEARCH[] = {
     .category = "research", .portal = "https://arxiv.org",
     .record_type = "preprint",
     .tags = "\"research\",\"preprint\",\"physics\",\"arxiv\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "http://export.arxiv.org/api/query?search_query=all:{q}&max_results=100",
+    .array_path = "entry",
+    .id_keys = "id",
+    .title_keys = "title",
     .description = "Preprints in physics, mathematics, computer science, "
       "quantitative biology and economics with the full abstract, all "
       "authors, affiliations where given, subject categories, DOI where "

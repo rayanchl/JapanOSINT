@@ -163,9 +163,12 @@ static const hp_source HP3_THREAT[] = {
     .category = "threat", .portal = "https://jvndb.jvn.jp",
     .record_type = "vulnerability",
     .tags = "\"threat\",\"vulnerability\",\"japan\",\"cert\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://jvndb.jvn.jp/myjvn?method=getVulnOverviewList&feed=hnd&rangeDatePublished=n&maxCountItem=50",
+    .array_path = "item",
+    .id_keys = "identifier,link",
     .interval = 3600,
+    .title_keys = "title",
     .description = "The Japanese national vulnerability database maintained by "
       "JPCERT and IPA, carrying advisories for Japanese vendor products "
       "that never receive a CVE and are absent from NVD entirely" },

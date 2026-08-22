@@ -94,8 +94,11 @@ static const hp_source HP3_GOV[] = {
     .category = "legal", .portal = "https://www.legislation.gov.uk",
     .record_type = "uk-legislation",
     .tags = "\"uk\",\"legislation\",\"legal\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.legislation.gov.uk/all/data.feed?title={q}",
+    .array_path = "entry",
+    .id_keys = "id",
+    .title_keys = "title",
     .description = "The full UK statute book including Acts, statutory instruments "
       "and Northern Ireland, Scottish and Welsh legislation, with the "
       "amendment and commencement history that determines what is "
