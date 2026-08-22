@@ -1,0 +1,50 @@
+id	url	verdict	kind	items	http	bytes	note
+ABS_AUSTRALIA_DATAFLOW	https://data.api.abs.gov.au/rest/dataflow?format=jsondata	TIMEOUT		0	0	0	timeout
+CONGRESS_BILLS	https://api.congress.gov/v3/bill?api_key=DEMO_KEY&limit=100&format=json	HTTP_ERR		0	429	0	Too Many Requests
+COPERNICUS_MARINE_CATALOG	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22man_made%22%3D%22lighthouse%22%5D%2851.0%2C1.0%2C52.0%2C2.5%29%3Bout%20center%20100%3B	HTTP_ERR		0	504	0	Gateway Timeout
+EIA_ELECTRICITY_RTO	https://api.eia.gov/v2/electricity/rto/region-data/data/?api_key=DEMO_KEY&frequency=hourly&data%5B0%5D=value&length=200	HTTP_ERR		0	429	0	Too Many Requests
+EIA_PETROLEUM_STOCKS	https://api.eia.gov/v2/petroleum/stoc/wstk/data/?api_key=DEMO_KEY&frequency=weekly&data%5B0%5D=value&length=200	HTTP_ERR		0	429	0	Too Many Requests
+FEC_CANDIDATES	https://api.open.fec.gov/v1/candidates/?api_key=DEMO_KEY&q=smith&per_page=100	HTTP_ERR		0	429	0	Too Many Requests
+GDELT_DOC_SEARCH	https://api.gdeltproject.org/api/v2/doc/doc?query=sanctions&mode=artlist&format=json&maxrecords=100	HTTP_ERR		0	429	0	Too Many Requests
+GOVINFO_PACKAGES	https://api.govinfo.gov/collections/BILLS/2024-01-01T00%3A00%3A00Z?offset=0&pageSize=100&api_key=DEMO_KEY	HTTP_ERR		0	429	0	Too Many Requests
+MEDIACLOUD_SOURCES	https://api.gdeltproject.org/api/v2/doc/doc?query=election&mode=sourcecountry&format=json	HTTP_ERR		0	429	0	Too Many Requests
+ONS_UK_TIMESERIES	https://api.ons.gov.uk/dataset	HTTP_ERR		0	404	0	Not Found
+OPENSTREETMAP_OVERPASS_POWER	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22power%22%3D%22plant%22%5D%2851.3%2C-0.5%2C51.7%2C0.3%29%3Bout%20center%20100%3B	HTTP_ERR		0	504	0	Gateway Timeout
+OVERPASS_AERODROME	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22aeroway%22%3D%22aerodrome%22%5D%2851.0%2C-1.0%2C52.0%2C0.5%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_ANTENNA	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnode%5B%22man_made%22%3D%22antenna%22%5D%2851.0%2C-1.0%2C52.5%2C1.5%29%3Bout%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_BORDER_CONTROL	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnode%5B%22barrier%22%3D%22border_control%22%5D%2845%2C5%2C48%2C12%29%3Bout%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_BORDER_FENCE	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bway%5B%22barrier%22%3D%22border_fence%22%5D%2845.0%2C15.0%2C50.0%2C25.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_BRIDGE	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bway%5B%22bridge%22%3D%22yes%22%5D%5B%22name%22%5D%2851.45%2C-0.2%2C51.55%2C0.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_CRANE	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22man_made%22%3D%22crane%22%5D%2851.85%2C4.0%2C52.0%2C4.6%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_DAM	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22waterway%22%3D%22dam%22%5D%2846.0%2C6.0%2C47.0%2C8.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	504	0	Gateway Timeout
+OVERPASS_DATA_CENTER	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22telecom%22%3D%22data_center%22%5D%2850.0%2C2.0%2C53.0%2C7.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_FACTORY	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22man_made%22%3D%22works%22%5D%2851.0%2C-0.5%2C51.7%2C0.5%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_FUEL_DEPOT	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22man_made%22%3D%22storage_tank%22%5D%2851.4%2C0.2%2C51.6%2C0.8%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_HARBOUR	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22harbour%22%5D%2851.85%2C4.0%2C52.0%2C4.6%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_HOSPITAL	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22amenity%22%3D%22hospital%22%5D%2850.4%2C30.3%2C50.6%2C30.7%29%3Bout%20center%20100%3B	HTTP_ERR		0	504	0	Gateway Timeout
+OVERPASS_MILITARY_AIRFIELD	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22military%22%3D%22airfield%22%5D%2850.0%2C-3.0%2C54.0%2C2.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_MILITARY_BUNKER	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22military%22%3D%22bunker%22%5D%2849.0%2C2.0%2C51.5%2C7.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_MILITARY_RANGE	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22military%22%3D%22range%22%5D%2850.0%2C-3.0%2C54.0%2C2.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_NUCLEAR	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22generator%3Asource%22%3D%22nuclear%22%5D%2846.0%2C-2.0%2C51.0%2C8.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_PIPELINES	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bway%5B%22man_made%22%3D%22pipeline%22%5D%2851.4%2C-0.2%2C51.6%2C0.05%29%3Bout%20100%3B	HTTP_ERR		0	504	0	Gateway Timeout
+OVERPASS_PIPELINE_MARKER	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnode%5B%22pipeline%22%5D%2851.0%2C-1.0%2C52.5%2C1.5%29%3Bout%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_POLICE	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22amenity%22%3D%22police%22%5D%2851.4%2C-0.3%2C51.6%2C0.1%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_PRISON	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22amenity%22%3D%22prison%22%5D%2851.0%2C-1.0%2C52.0%2C1.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_RAILWAY_YARD	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22landuse%22%3D%22railway%22%5D%2851.3%2C-0.5%2C51.7%2C0.3%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_SATELLITE_DISH	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22man_made%22%3D%22satellite_dish%22%5D%2850.0%2C-2.0%2C53.0%2C2.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_SCHOOL	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22amenity%22%3D%22school%22%5D%2850.4%2C30.3%2C50.5%2C30.6%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_SILO	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22man_made%22%3D%22silo%22%5D%2846.0%2C30.0%2C48.0%2C34.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_SOLAR_FARM	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22generator%3Asource%22%3D%22solar%22%5D%2851.0%2C-1.0%2C52.0%2C1.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_SUBSTATIONS	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnode%5B%22power%22%3D%22substation%22%5D%2851.4%2C-0.2%2C51.6%2C0.05%29%3Bout%20100%3B	HTTP_ERR		0	504	0	Gateway Timeout
+OVERPASS_WAREHOUSE	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22building%22%3D%22warehouse%22%5D%2851.45%2C-0.2%2C51.55%2C0.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_WASTEWATER	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22man_made%22%3D%22wastewater_plant%22%5D%2851.0%2C-1.0%2C52.0%2C1.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_WATER_TOWER	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22man_made%22%3D%22water_tower%22%5D%2851.0%2C-1.0%2C52.0%2C1.0%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+OVERPASS_WIND_TURBINE	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnode%5B%22generator%3Asource%22%3D%22wind%22%5D%2853.0%2C7.0%2C54.0%2C9.0%29%3Bout%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+REGULATIONS_GOV_DOCKETS	https://api.regulations.gov/v4/documents?filter%5BsearchTerm%5D=semiconductor&api_key=DEMO_KEY	HTTP_ERR		0	429	0	Too Many Requests
+RIPESTAT_BGP_STATE	https://stat.ripe.net/data/bgp-state/data.json?resource=AS15169	TIMEOUT		0	0	0	timeout
+RIPESTAT_RPKI_HISTORY	https://stat.ripe.net/data/rpki-history/data.json?resource=AS15169	TIMEOUT		0	0	0	timeout
+SEMANTIC_SCHOLAR_PAPER	https://api.semanticscholar.org/graph/v1/paper/search?query=lidar&limit=100&fields=title%2Cyear%2CexternalIds%2Cauthors%2Cabstract%2CfieldsOfStudy	HTTP_ERR		0	429	0	
+UNLOCODE_OVERPASS	https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bnwr%5B%22amenity%22%3D%22customs%22%5D%2845%2C5%2C48%2C12%29%3Bout%20center%20100%3B	HTTP_ERR		0	429	0	Too Many Requests
+UN_SDMX_STRUCTURE	https://sdmx.oecd.org/public/rest/dataflow/all/all/latest?format=jsondata	UNPARSEABLE		0	200	8880337	"<?xml version=""1.0"" encoding=""utf-8""?>
+ <!--NSI Web Service v8.19.8.0-->
+ <messa"
