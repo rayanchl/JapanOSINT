@@ -91,6 +91,31 @@ SKIP_LINE = re.compile(r'^\s*(\*|//|/\*)')
 WAIVER = re.compile(r'exhaustive-ok:')
 
 
+# Macros whose body walks pages, so a page-1 URL passed to one is not a
+# single-page read. Kept as a name list rather than inferred, because being
+# wrong in this direction hides a real discard — add a macro here only after
+# reading its body in collectors/sources/_verified_macros.inc.
+PAGED_MACROS = ('VJSON', 'VJSONBIG', 'VGEO')
+MACRO_OPEN = re.compile(r'^\s*([A-Z][A-Z0-9_]*)\s*\(')
+
+
+def _paged_macro_at(lines, n):
+    """Is line `n` inside a call to a macro that pages?
+
+    Walks back to the nearest macro invocation at the start of a line; a vsrc
+    row is one such call spanning a handful of lines. Stops at a blank line so
+    the previous row's macro is never credited to this one.
+    """
+    for i in range(n - 1, max(0, n - 25), -1):
+        line = lines[i - 1] if i - 1 < len(lines) else ''
+        if not line.strip():
+            break
+        m = MACRO_OPEN.match(line)
+        if m:
+            return m.group(1) in PAGED_MACROS
+    return False
+
+
 def audit(path, verbose=False):
     findings = []
     try:
@@ -119,6 +144,17 @@ def audit(path, verbose=False):
                 ctx = '\n'.join(lines[max(0, n - 16):n + 16])
                 if re.search(r'page_param|next_path|page\+\+|\+\+page|'
                              r'for\s*\(\s*int\s+page|while\s*\([^)]*page', ctx):
+                    continue
+                # The walk may not be anywhere near the URL. A vsrc row is one
+                # macro call, and the paging lives inside the macro:
+                # VJSON -> jsonlist_emit_paged, VGEO -> geojson_emit_paged,
+                # VJSONBIG -> jsonstream_emit. Reading only the surrounding
+                # lines, this check reported every one of them as a discard —
+                # including `api.dane.gov.pl/1.4/datasets?page=1&per_page=100`,
+                # which is the exact URL jsonlist.h cites as the case the paged
+                # walk was written to fix. 44 findings that were all already
+                # fixed is not a backlog, it is noise that hides the real ones.
+                if _paged_macro_at(lines, n):
                     continue
             findings.append((cid, n, line.strip()[:120], desc, hint))
     return findings
