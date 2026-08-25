@@ -19,6 +19,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "third_party/cJSON.h"
+#include "_timefmt.inc"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -96,10 +97,12 @@ static inline void trn_idfield(const cJSON *o, const char *k,
 static inline void trn_iso_from_unix(double secs, char *out, size_t n) {
   out[0] = 0;
   if (!isfinite(secs) || secs <= 0 || secs > 4102444800.0) return; /* > 2100 */
-  time_t t = (time_t)secs;
-  struct tm g;
-  if (!gmtime_r(&t, &g)) return;
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &g);
+  /* The gmtime_r NULL was checked; strftime's 0 was not, and on that path the
+   * buffer is unspecified with no NUL written. jo_epoch_iso checks both and
+   * leaves out[0]=0, which is exactly the "no timestamp" signal every caller
+   * of this helper already tests for. The >2100 sanity bound stays: it is a
+   * plausibility filter on the upstream value, not a rendering limit. */
+  jo_epoch_iso(secs, out, n);
 }
 
 /* cJSON_AddStringToObject only when the value is really there. */

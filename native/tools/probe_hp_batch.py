@@ -27,6 +27,7 @@ import argparse
 import urllib.request
 import urllib.error
 import collections
+import json
 import re
 import socket
 from concurrent.futures import ThreadPoolExecutor
@@ -37,7 +38,8 @@ sys.path.insert(0, os.path.join(NATIVE, "collectors"))
 sys.path.insert(0, HERE)
 
 import verify_feeds as VF          # noqa: E402  (verdict logic, reused verbatim)
-from gen_hp_batch import load, split_opts   # noqa: E402  (manifest parser, reused)
+from gen_hp_batch import load               # noqa: E402  (adds the mode/want check)
+from manifest import parse_opts, opt        # noqa: E402  (THE opts parser)
 
 # verify_feeds' UA ends in a literal "Python-urllib" token, and several hosts
 # block on that token alone: opendata.gov.jo answered HTTP 451 and boi.org.il
@@ -91,16 +93,22 @@ MAXBYTES = 64 * 1024 * 1024
 
 
 def row_headers(r):
-    """The headers this row's generated collector will send."""
+    """The headers this row's generated collector will send.
+
+    Read through manifest.parse_opts — the ONE opts parser — so a probe can
+    never be sent under different request conditions than the generator emits
+    into C because the two split the field differently. That is not
+    hypothetical: the `\\;` escape exists precisely because header values
+    contain semicolons."""
     hdrs = {}
-    for kv in split_opts(r["opts"]):
-        if not kv:
+    o, _dups, _junk = parse_opts(r["opts"])
+    for k in ("header1", "header2", "header3"):
+        v = o.get(k)
+        if not v:
             continue
-        k, _, v = kv.partition("=")
-        if k.strip() in ("header1", "header2", "header3"):
-            name, _, val = v.partition(":")
-            if name.strip():
-                hdrs[name.strip()] = val.strip()
+        name, _, val = v.partition(":")
+        if name.strip():
+            hdrs[name.strip()] = val.strip()
     return hdrs
 
 
@@ -202,6 +210,80 @@ def is_enveloped_error(text):
     return False
 
 
+# ── is the row's filter actually honoured? ───────────────────────────────────
+#
+# A 2xx that parses and yields records proves the endpoint answered. It does NOT
+# prove it answered THE QUESTION. Three APIs in batch 21 accept a filter,
+# silently ignore it, and return the whole unfiltered collection with HTTP 200:
+#
+#   * EPA Envirofacts, given a column that does not exist
+#     (tri_reporting_form/facility_name) -> 10,000 unrelated records
+#   * the German BMJ portal, on court / documentNumber / dateFrom
+#   * Health Canada MDALL, on licence_id -> the entire 21 MB table
+#
+# Every existing gate passes those rows: probe PASS, emit OK, stored == emitted.
+# But the row is an ENTITY PIVOT, so an analyst asking "what do we have on X"
+# receives thousands of records about everything else, attributed to X. That is
+# worse than a source that returns nothing — it is a confident wrong answer, and
+# no amount of record counting can see it.
+#
+# The check is cheap: ask the same endpoint about an entity that cannot exist.
+# A working filter returns nothing (or something much smaller). A filter being
+# ignored returns the same collection it just returned for the real entity.
+IMPOSSIBLE = {
+    "q":  "zzqx9nonexistent7q",
+    "qd": "99999999999999999",
+    "qh": "zzqx9nonexistent7q.invalid",
+    "ql": "zzqx9nonexistent7q",
+    "qU": "ZZQX9NONEXISTENT7Q",
+    "Q":  "zzqx9nonexistent7q",
+}
+TOKEN_RE = re.compile(r"\{(q[dhlU]?|Q)\}")
+
+# Set from --check-filter. Off by default because it doubles the request count
+# for every pivot row; a batch should be run through it at least once.
+CHECK_FILTER = False
+
+
+def impossible_probe_url(r):
+    """The row's URL template with every entity token replaced by a value that
+    cannot match anything. None when the row takes no entity (a bulk file has
+    no filter to honour, so there is nothing to check)."""
+    tmpl = r.get("url") or ""
+    if not TOKEN_RE.search(tmpl):
+        return None
+    return TOKEN_RE.sub(lambda m: IMPOSSIBLE.get(m.group(1), IMPOSSIBLE["q"]), tmpl)
+
+
+def filter_is_honoured(r, real_items):
+    """(ok, note). ok=False means the endpoint returned substantially the same
+    result set for an impossible entity as for the real one."""
+    url = impossible_probe_url(r)
+    if not url or real_items < 2:
+        return True, ""          # nothing to compare against
+    try:
+        status, ctype, raw = fetch(url, row_headers(r))
+    except Exception:
+        return True, ""          # a refusal here is not evidence either way
+    if status < 200 or status >= 300:
+        return True, ""
+    text = raw.decode("utf-8", "replace")
+    kind, items = VF.count_feed(text)
+    if not kind:
+        kind, items = VF.count_json(text)
+    if not kind:
+        return True, ""
+    if not isinstance(items, int) or items < 1:
+        return True, ""          # empty for a nonsense entity == filter works
+    # Same-sized answer for a nonsense entity: the filter is not being applied.
+    # 90% rather than equality because a few APIs pad a collection differently
+    # between calls, and a genuine filter never lands within 10% of the whole.
+    if items >= real_items * 0.9:
+        return False, ("filter ignored: an impossible entity returned %d records "
+                       "vs %d for the real one" % (items, real_items))
+    return True, ""
+
+
 def verify(r):
     """Verdict for one manifest row. Mirrors verify_feeds.verify exactly."""
     sid, url = r["id"], r["probe"]
@@ -225,7 +307,54 @@ def verify(r):
         return (sid, url, "ERROR_BODY", "", 0, status, nbytes,
                 text[:80].replace("\n", " "))
 
-    kind, items = VF.count_feed(text)
+    # A DECLARED array_path beats every heuristic below.
+    #
+    # VF.count_json() hunts for the densest array in the document, which is a
+    # reasonable guess when the row says nothing — and a wrong answer whenever
+    # the row HAS said something. OPENPAY_RESEARCH_2024 answered
+    #     {"results":[], "count":0, "query":{"properties":{ …252 keys… }}}
+    # and scored `PASS json:query.properties 252`: the prober counted the
+    # response's own SCHEMA BLOCK as records and passed a row whose result set
+    # was empty. Only audit_batch_emit's EMPTY_UPSTREAM caught it later.
+    #
+    # The engine reads exactly one place — the declared array_path — so the
+    # probe must judge exactly that place, and an empty one is an
+    # EMPTY_RESULTSET, not a pass on some other array that happens to be
+    # nearby. This is the same rule the CLAUDE.md notes already state for the
+    # engine: a declared path that does not resolve means the response is not
+    # the shape the row expects, and guessing is what produces the false pass.
+    kind = items = None
+    # manifest.opt(), not parse_opts(): it returns None for a DUPLICATED key,
+    # which is the right answer here — a row that declares array_path twice has
+    # no value this can act on, so fall through to the heuristics rather than
+    # pick one and judge the row against it.
+    ap_decl = opt(r, "array_path")
+    if r["mode"] == "json" and ap_decl:
+        try:
+            doc = json.loads(text)
+        except Exception:
+            return (sid, url, "UNPARSEABLE", "", 0, status, nbytes,
+                    "declared array_path but body is not JSON")
+        node = doc
+        for seg in ap_decl.split("."):
+            if isinstance(node, dict) and seg in node:
+                node = node[seg]
+            else:
+                node = None
+                break
+        if node is None:
+            return (sid, url, "PATH_UNRESOLVED", "", 0, status, nbytes,
+                    "array_path %r not present in the response" % ap_decl)
+        if not isinstance(node, list):
+            return (sid, url, "PATH_NOT_ARRAY", "", 0, status, nbytes,
+                    "array_path %r is %s, not an array" % (ap_decl, type(node).__name__))
+        if not node:
+            return (sid, url, "EMPTY_RESULTSET", "json:" + ap_decl, 0, status,
+                    nbytes, "declared array_path resolved to an empty array")
+        kind, items = "json:" + ap_decl, len(node)
+
+    if not kind:
+        kind, items = VF.count_feed(text)
     if not kind:
         kind, items = VF.count_json(text)
     if not kind and ("csv" in ctype.lower() or url.lower().endswith(".csv")):
@@ -278,6 +407,13 @@ def verify(r):
         return (sid, url, "UNPARSEABLE", "", 0, status, nbytes, text[:80].replace("\n", " "))
     if items < 1:
         return (sid, url, "EMPTY", kind, 0, status, nbytes, "parsed but zero items")
+
+    # Answering is not answering THE QUESTION — see filter_is_honoured().
+    if CHECK_FILTER:
+        ok, why = filter_is_honoured(r, items)
+        if not ok:
+            return (sid, url, "FILTER_IGNORED", kind, items, status, nbytes, why)
+
     return (sid, url, "PASS", kind, items, status, nbytes, "")
 
 
@@ -288,7 +424,17 @@ def main():
     ap.add_argument("--pass-ids")
     ap.add_argument("--jobs", type=int, default=8)
     ap.add_argument("--only", help="comma-separated ids to probe")
+    ap.add_argument("--check-filter", action="store_true",
+                    help="for every entity-pivot row, ask the endpoint about an "
+                         "IMPOSSIBLE entity as well and fail it (FILTER_IGNORED) "
+                         "when the answer is the same size. Catches an API that "
+                         "accepts a filter, ignores it, and returns the whole "
+                         "collection with HTTP 200 — which every other gate "
+                         "passes. Doubles the request count for pivot rows, so "
+                         "it is opt-in; run it at least once per batch.")
     a = ap.parse_args()
+    global CHECK_FILTER
+    CHECK_FILTER = a.check_filter
 
     rows = load(a.manifests)
     if a.only:

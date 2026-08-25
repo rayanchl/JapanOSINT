@@ -5,11 +5,18 @@
  *   GET https://www.irs.gov/pub/irs-soi/eo1.csv     (eo1 = Northeast region;
  *       eo2/eo3/eo4 cover the rest, eo_pr.csv etc. for territories)
  *
- * The full region file is tens of megabytes and is refreshed monthly, so this
- * collector asks for a byte RANGE (HTTP 206) instead of buffering the whole
- * file, truncates the received bytes at the last complete line, and parses only
- * that. Servers that ignore Range and answer 200 are handled by truncating the
- * body to the same cap before parsing. Nothing outside the fetched bytes is
+ * This used to ask for a byte RANGE and parse the first 2 MB. Measured
+ * 2026-08-24: **irs.gov ignores Range entirely** — `curl -r 0-999` answers
+ * HTTP 200 with all 48,629,769 bytes. So the collector was already paying for
+ * the whole 48.6 MB file every run, throwing 46 MB of it away unparsed, and
+ * then capping the survivors at 5,000 rows. eo1.csv holds 278,014 records:
+ * 1.8% reached the sink and nothing in the output said so.
+ *
+ * The body is now parsed in full. It is parsed in LINE-ALIGNED CHUNKS rather
+ * than in one csv_parse call, because a 48 MB CSV inflated into one cJSON tree
+ * is roughly half a gigabyte of small allocations; the chunk size is a memory
+ * guard on the parse, not a bound on records — every chunk's rows are emitted
+ * and the walk continues to end-of-file. Nothing outside the fetched bytes is
  * ever emitted, and no row is synthesized.
  *
  * Emits per CSV row, verbatim: EIN, NAME, ICO, STREET, CITY, STATE, ZIP,
@@ -31,37 +38,14 @@
 #include "_jp_osint.inc"
 
 #define IRS_URL   "https://www.irs.gov/pub/irs-soi/eo1.csv"
-#define IRS_BYTES 2000000      /* leading slice requested per run (~15k rows) */
-#define IRS_MAX   5000         /* rows emitted per run                        */
+/* exhaustive-ok: parse-buffer size, not a record bound — every chunk is emitted and the walk runs to EOF */
+#define IRS_CHUNK 4000000      /* bytes of CSV handed to csv_parse at a time */
 
-static int irs_run(const source_ctx *ctx, intel_sink *sink) {
-  const char *hdrs[] = { "Range: bytes=0-1999999", "Accept: text/csv", NULL };
-  http_response hr = {0};
-  int rc = http_request(ctx->http, "GET", IRS_URL, hdrs, NULL, 0, 60000, 1, &hr);
-  if (rc != 0 || !hr.body || (hr.status != 200 && hr.status != 206)) {
-    fprintf(stderr, "[us-irs-exempt-orgs] http status=%ld\n", hr.status);
-    http_response_free(&hr);
-    return -1;
-  }
-  char *text = hr.body;
-  size_t len = hr.body_len;
-  hr.body = NULL;
-  http_response_free(&hr);
-
-  /* Cap and cut at the last complete line so no partial record is parsed. */
-  if (len > IRS_BYTES) { len = IRS_BYTES; text[len] = 0; }
-  size_t cut = len;
-  while (cut > 0 && text[cut - 1] != '\n') cut--;
-  if (cut > 0) text[cut] = 0;
-
-  cJSON *rows = csv_parse(text, 1);
-  free(text);
-  if (!rows) { fprintf(stderr, "[us-irs-exempt-orgs] csv parse failed\n"); return -1; }
-
+/* Emit every row of one parsed chunk. Returns rows emitted. */
+static int irs_emit_rows(intel_sink *sink, const cJSON *rows) {
   int n = 0;
   const cJSON *row;
   cJSON_ArrayForEach(row, rows) {
-    if (n >= IRS_MAX) break;
     if (!cJSON_IsObject(row)) continue;
     const char *name = jo_sv(row, "NAME");
     const char *ein  = jo_sv(row, "EIN");
@@ -105,9 +89,91 @@ static int irs_run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
+  return n;
+}
 
-  cJSON_Delete(rows);
-  fprintf(stderr, "[us-irs-exempt-orgs] emitted %d\n", n);
+static int irs_run(const source_ctx *ctx, intel_sink *sink) {
+  /* No Range header: irs.gov ignores it (measured — see the file header), so
+   * asking for one only made the collector believe it had a slice when it had
+   * the whole file. Ask for what we intend to read. */
+  const char *hdrs[] = { "Accept: text/csv", NULL };
+  http_response hr = {0};
+  int rc = http_request(ctx->http, "GET", IRS_URL, hdrs, NULL, 0, 180000, 1, &hr);
+  if (rc != 0 || !hr.body || (hr.status != 200 && hr.status != 206)) {
+    fprintf(stderr, "[us-irs-exempt-orgs] http status=%ld\n", hr.status);
+    http_response_free(&hr);
+    return -1;
+  }
+  char *text = hr.body;
+  size_t len = hr.body_len;
+  long status = hr.status;
+  hr.body = NULL;
+  http_response_free(&hr);
+
+  /* The header line is prepended to every chunk so each chunk parses into
+   * header-keyed objects exactly as one whole-file parse would. */
+  const char *nl = memchr(text, '\n', len);
+  if (!nl) {
+    fprintf(stderr, "[us-irs-exempt-orgs] no header line in %zu bytes\n", len);
+    free(text);
+    return -1;
+  }
+  size_t hdr_len = (size_t)(nl - text) + 1;
+
+  /* A trailing partial line means the transfer stopped short of end-of-file.
+   * Cut it (never parse half a record) but remember that it happened — a body
+   * that ends mid-row is a real shortfall and gets disclosed below. */
+  size_t body_end = len;
+  while (body_end > hdr_len && text[body_end - 1] != '\n') body_end--;
+  int short_body = (body_end != len);
+
+  int n = 0, chunks = 0;
+  size_t pos = hdr_len;
+  while (pos < body_end) {
+    size_t end = pos + IRS_CHUNK;
+    if (end >= body_end) end = body_end;
+    else {
+      size_t back = end;
+      while (back > pos && text[back - 1] != '\n') back--;
+      if (back > pos) end = back;      /* line-align; a pathological single
+                                        * line longer than IRS_CHUNK is taken
+                                        * whole rather than split */
+      else { const char *e = memchr(text + pos, '\n', body_end - pos);
+             end = e ? (size_t)(e - text) + 1 : body_end; }
+    }
+
+    size_t clen = end - pos;
+    char *chunk = (char *)malloc(hdr_len + clen + 1);
+    if (!chunk) break;                 /* out of memory — disclosed below */
+    memcpy(chunk, text, hdr_len);
+    memcpy(chunk + hdr_len, text + pos, clen);
+    chunk[hdr_len + clen] = 0;
+
+    cJSON *rows = csv_parse(chunk, 1);
+    free(chunk);
+    if (!rows) { fprintf(stderr, "[us-irs-exempt-orgs] csv parse failed at byte %zu\n", pos); break; }
+    n += irs_emit_rows(sink, rows);
+    cJSON_Delete(rows);
+    chunks++;
+    pos = end;
+  }
+  int stopped_early = (pos < body_end);
+  free(text);
+
+  if (short_body || stopped_early)
+    jo_trunc_notice(sink, "us-irs-exempt-orgs", IRS_URL, n, -1,
+                    short_body
+                      ? "the response body ended mid-record, so the transfer "
+                        "did not reach the end of the file"
+                      : "the chunked parse stopped before end-of-file "
+                        "(allocation or CSV parse failure)",
+                    "re-run the collector; the BMF is a static monthly file, "
+                    "so a complete run supersedes a short one");
+
+  fprintf(stderr, "[us-irs-exempt-orgs] emitted %d rows from %zu bytes "
+                  "(status %ld, %d chunk(s))%s\n",
+          n, len, status, chunks,
+          (short_body || stopped_early) ? " (TRUNCATED — notice emitted)" : "");
   return 0;
 }
 

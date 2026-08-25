@@ -54,7 +54,9 @@ static const hp_source HP3_GOV[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.courtlistener.com/api/rest/v4/search/?q={q}&type=r&format=json",
     .array_path = "results",
+    .id_keys = "recap_documents.0.id",
     .next_path = "next",
+    .title_keys = "caseName",
     .description = "Federal court dockets mirrored from PACER through the RECAP "
       "archive: case name, docket number, court, filing date, parties, "
       "attorneys and the individual docket entries with their "

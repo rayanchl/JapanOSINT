@@ -8,7 +8,7 @@
 
 VJSON(esma_solr_sanctions, "esma-solr-sanctions", "ESMA — national securities-regulator sanctions register (1,378 docs)", "ESMA — national securities-regulator sanctions register (1,378 docs)",
   "eu_legal", "legal",
-  "https://registers.esma.europa.eu/solr/esma_registers_sanctions/select?q=*:*&wt=json&rows=1",
+  "https://registers.esma.europa.eu/solr/esma_registers_sanctions/select?q=*:*&wt=json&rows=500",
   "response.docs",
   "en", "[\"eu\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
   "Every sanction imposed by an EU national competent authority under MiFID/MAR/UCITS/AIFMD etc.: sn_entityName (with an embedded href to the entity's upreg detail page), sn_entityEsmaID, sn_sanctionLegalFrameworkName, sn_date, sn_ncaCodeFullName + sn_sanctioningNCACode (e.g. CZ_CNB Czech National Bank), sn_countryName, sn_nature/sn_natureFullName (ADSM administrative sanction and measure). The enforcement-actions layer sitting on top of the ESMA entity register.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

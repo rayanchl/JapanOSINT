@@ -29,8 +29,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const cJSON *services = cJSON_GetObjectItem(doc, "services");
   const cJSON *svc;
   cJSON_ArrayForEach(svc, services) {
+    /* RFC 7484 §10.2: a service entry is the fixed 2-element array
+     * [ [entry keys…], [service URLs…] ] — index 0 is the TLD list and index 1
+     * is the URL list, not the head of a longer list. Both halves are read in
+     * full below (every TLD becomes a row, every URL goes into rdap_urls). */
     if (!cJSON_IsArray(svc) || cJSON_GetArraySize(svc) < 2) continue;
-    const cJSON *tlds = cJSON_GetArrayItem(svc, 0);
+    const cJSON *tlds = cJSON_GetArrayItem(svc, 0);  /* exhaustive-ok: RFC 7484 service 2-tuple; [0] is the whole TLD list, iterated below */
     const cJSON *urls = cJSON_GetArrayItem(svc, 1);
     if (!cJSON_IsArray(tlds) || !cJSON_IsArray(urls)) continue;
 

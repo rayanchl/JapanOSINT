@@ -78,23 +78,37 @@ static void sha1_hex16(const char *s, char *out17) {
  * so a source in this state is visible instead of silent. A collector whose
  * count is non-zero AND whose properties change between runs must add one of
  * NATIVE_ID_KEYS (`uid` is the conventional choice) to its properties. */
-static void feature_uid(cJSON *feat, const char *sid, char *out, size_t n,
-                        int *hash_fallbacks) {
+/* The upstream-id half of feature_uid(), factored out so the collision pre-pass
+ * below can ask "does this feature carry an id of its own?" without paying for
+ * the content hash of every feature that does not. Returns 1 and fills `out`
+ * with the bare id; 0 when the feature has none. */
+static int feature_native_id(cJSON *feat, char *out, size_t n) {
   cJSON *props = cJSON_GetObjectItem(feat, "properties");
   if (props) {
     for (int i = 0; NATIVE_ID_KEYS[i]; i++) {
       cJSON *v = cJSON_GetObjectItem(props, NATIVE_ID_KEYS[i]);
       if (v && !cJSON_IsNull(v)) {
         char idv[256]; id_to_str(v, idv, sizeof idv);
-        if (idv[0]) { snprintf(out, n, "%s|%s", sid, idv); return; }
+        if (idv[0]) { snprintf(out, n, "%s", idv); return 1; }
       }
     }
   }
   cJSON *fid = cJSON_GetObjectItem(feat, "id");
   if (fid && !cJSON_IsNull(fid)) {
     char idv[256]; id_to_str(fid, idv, sizeof idv);
-    if (idv[0]) { snprintf(out, n, "%s|%s", sid, idv); return; }
+    if (idv[0]) { snprintf(out, n, "%s", idv); return 1; }
   }
+  return 0;
+}
+
+static void feature_uid(cJSON *feat, const char *sid, char *out, size_t n,
+                        int *hash_fallbacks) {
+  char idv[256];
+  if (feature_native_id(feat, idv, sizeof idv)) {
+    snprintf(out, n, "%s|%s", sid, idv);
+    return;
+  }
+  cJSON *props = cJSON_GetObjectItem(feat, "properties");
   cJSON *g = cJSON_GetObjectItem(feat, "geometry");
   cJSON *fp = cJSON_CreateObject();
   cJSON_AddItemToObject(fp, "g", g ? cJSON_Duplicate(g, 1) : cJSON_CreateNull());
@@ -244,14 +258,74 @@ static const char *T_AUTH[]   = {"author","operator",NULL};
 static const char *T_LANG[]   = {"language","lang",NULL};
 static const char *T_PUB[]    = {"published_at","observed_at","time","timestamp",NULL};
 
+/* ── the uid collision guard ──────────────────────────────────────────────
+ *
+ * `it.uid` is what the sink upserts on, so two features producing the same one
+ * store as ONE row while the caller still counts both. The content-hash
+ * fallback in feature_uid() is already collision-free; the UPSTREAM-ID path is
+ * not, because NATIVE_ID_KEYS contains names like `station_id` and `id` that
+ * are routinely a DIMENSION rather than a record identity. A station reporting
+ * hourly is one `station_id` and many observations, so a FeatureCollection of
+ * readings collapsed onto one row per station.
+ *
+ * This mirrors the guards in lib/jsonlist.c and lib/hpengine.c, including why
+ * disambiguation is by CONTENT hash: features that are byte-identical still
+ * collapse, which is real deduplication, while features that merely share an id
+ * are all kept. Nothing is invented and nothing that differs is merged.
+ *
+ * Only features that collide are touched, so a feature whose id was already
+ * unique keeps its existing uid and is not re-emitted as new. Scope is one
+ * FeatureCollection, as with the other two. */
+typedef struct { char key[257]; int idx; } gj_keyed;
+
+static int gj_keyed_cmp(const void *a, const void *b) {
+  return strcmp(((const gj_keyed *)a)->key, ((const gj_keyed *)b)->key);
+}
+
+static unsigned char *gj_collision_map(cJSON *features, int n) {
+  if (n < 2) return NULL;
+  gj_keyed *k = malloc((size_t)n * sizeof *k);
+  unsigned char *dup = calloc((size_t)n, 1);
+  /* Out of memory degrades to the old behaviour rather than failing the emit. */
+  if (!k || !dup) { free(k); free(dup); return NULL; }
+  int m = 0, i = 0; cJSON *f;
+  cJSON_ArrayForEach(f, features) {
+    if (cJSON_IsObject(f) && feature_native_id(f, k[m].key, sizeof k[m].key)) {
+      k[m].idx = i; m++;
+    }
+    i++;
+  }
+  qsort(k, (size_t)m, sizeof *k, gj_keyed_cmp);
+  int flagged = 0;
+  for (int a = 0; a < m; ) {
+    int b = a + 1;
+    while (b < m && !strcmp(k[a].key, k[b].key)) b++;
+    if (b - a > 1) for (int j = a; j < b; j++) { dup[k[j].idx] = 1; flagged++; }
+    a = b;
+  }
+  free(k);
+  if (!flagged) { free(dup); return NULL; }
+  return dup;
+}
+
 int geojson_emit_features(intel_sink *sink, const char *sid, cJSON *features) {
   if (!cJSON_IsArray(features)) return 0;
   int n = 0, hashed = 0; cJSON *feat;
+  unsigned char *dupmap = gj_collision_map(features, cJSON_GetArraySize(features));
+  int fi = -1;
   cJSON_ArrayForEach(feat, features) {
+    fi++;
     if (!cJSON_IsObject(feat)) continue;
     cJSON *props = cJSON_GetObjectItem(feat, "properties");
     cJSON *geom  = cJSON_GetObjectItem(feat, "geometry");
     char uid[600]; feature_uid(feat, sid, uid, sizeof uid, &hashed);
+    if (dupmap && dupmap[fi]) {
+      char *fs = cJSON_PrintUnformatted(feat);
+      char ch[17]; sha1_hex16(fs ? fs : uid, ch);
+      free(fs);
+      size_t ul = strlen(uid);
+      snprintf(uid + ul, sizeof uid - ul, "|c:%s", ch);
+    }
     double lat=0, lon=0; int geo = centroid(geom, &lat, &lon);
 
     const char *rt = props ? prop_str(props, "record_type") : NULL;
@@ -287,6 +361,7 @@ int geojson_emit_features(intel_sink *sink, const char *sid, cJSON *features) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(gj); free(pj); free(tj);
   }
+  free(dupmap);
   /* See feature_uid(): these rows are keyed by a hash of their own contents,
    * so if this source's properties carry a changing measurement the row count
    * grows every run instead of the rows being updated. One line, once per

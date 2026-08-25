@@ -255,6 +255,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .interval = 86400,
     .page_param = "$offset",
     .page_size = 1000,
+    .title_keys = "month_year",
     .description = "Monthly average hours a container vessel spent in port across "
       "the top 25 US container ports. Dwell time is the congestion "
       "signal that moves before throughput does" },
@@ -270,6 +271,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .interval = 86400,
     .page_param = "$offset",
     .page_size = 1000,
+    .title_keys = "month_year",
     .description = "Monthly average hours a tanker or liquid bulk vessel spent in "
       "port at the largest US energy ports. Read against the container "
       "series it separates an energy-specific stoppage from general "
@@ -334,6 +336,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Runways/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=500",
     .array_path = "features",
+    .id_keys = "attributes.OBJECTID",
     .interval = 86400,
     .page_param = "resultOffset",
     .description = "Every runway in the FAA aeronautical database with its parent "
@@ -350,8 +353,10 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/NAVAIDSystem/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=500",
     .array_path = "features",
+    .id_keys = "attributes.OBJECTID",
     .interval = 88200,
     .page_param = "resultOffset",
+    .title_keys = "attributes.NAME_TXT",
     .description = "VOR, VORTAC, TACAN, NDB and DME installations with identifier, "
       "name, class, frequency, magnetic variation, owner and "
       "coordinates. A TACAN with a military owner is a base indicator "
@@ -366,8 +371,10 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Special_Use_Airspace/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=500",
     .array_path = "features",
+    .id_keys = "attributes.OBJECTID",
     .interval = 90000,
     .page_param = "resultOffset",
+    .title_keys = "attributes.NAME",
     .description = "Prohibited, restricted, warning, alert and military operations "
       "areas with designator, name, vertical limits, controlling and "
       "using agency and activation times. The using-agency field names "
@@ -382,8 +389,10 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/MTRSegment/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=500",
     .array_path = "features",
+    .id_keys = "attributes.OBJECTID",
     .interval = 91800,
     .page_param = "resultOffset",
+    .title_keys = "attributes.GLOBAL_ID",
     .description = "Segments of instrument and visual military training routes with "
       "route identifier, segment sequence, width, floor and ceiling "
       "altitudes and geometry. Training-route geometry explains "
@@ -398,8 +407,10 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Digital_Obstacle_File/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=500",
     .array_path = "features",
+    .id_keys = "attributes.OBJECTID",
     .interval = 93600,
     .page_param = "resultOffset",
+    .title_keys = "attributes.OAS_Number",
     .description = "Verified vertical obstructions — towers, stacks, masts, cranes, "
       "wind turbines — with obstacle number, type, height above ground "
       "and above sea level, lighting, marking, accuracy code and "
@@ -415,8 +426,10 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/US_Airport/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=500",
     .array_path = "features",
+    .id_keys = "attributes.OBJECTID",
     .interval = 95400,
     .page_param = "resultOffset",
+    .title_keys = "attributes.NAME",
     .description = "US airport facilities with location identifier, ICAO code, name, "
       "ownership and use category, elevation and the servicing city and "
       "state. Ownership and use together separate a public field from a "
@@ -456,6 +469,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .array_path = "content",
     .page_param = "page",
     .page_zero_based = 1,
+    .title_keys = "name",
     .description = "Airports matching a name or code with aviowiki id, name, ICAO "
       "and IATA identifiers, time zone, servicing city and country. The "
       "result set is paged and the page envelope states the total, so "
@@ -501,6 +515,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .interval = 86400,
     .page_param = "$offset",
     .page_size = 1000,
+    .title_keys = "total_distance_flight_sm",
     .description = "Monthly departures, passengers, seats, freight and mail flown by "
       "each reporting US air carrier. T-100 is the filing every US "
       "carrier must make, so a carrier that flew is in it and a month "
@@ -534,6 +549,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .interval = 900,
     .page_param = "$offset",
     .page_size = 1000,
+    .title_keys = "name",
     .description = "The individual event reports behind the incident log, each with "
       "a lookup id, report type and the official report text naming the "
       "operator, the aircraft or train, the airport or location and "
@@ -652,9 +668,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/lijnsecties/records?limit=100",
     .array_path = "results",
+    .id_keys = "ls_id",
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "symnameto",
     .description = "Line sections of the Belgian network with line number, section "
       "endpoints, geometry, track count, electrification and the "
       "operational points that bound them. Section-level detail is what "
@@ -671,6 +689,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "aantal",
     .description = "Private rail sidings inside the Flemish port zones of Antwerp, "
       "Ghent, Zeebrugge and Ostend, counted by area and year. A private "
       "siding into a port terminal is the physical evidence that a "
@@ -688,6 +707,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "trimester",
     .description = "The count of GSM-R railway radio base stations on the Belgian "
       "network by year. GSM-R is a dedicated licensed network operated "
       "by the infrastructure manager rather than by a telco, so its "
@@ -706,6 +726,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "incident_desciption",
     .description = "Month by month, the incidents that most disrupted the Belgian "
       "network with cause category and the delay minutes attributed to "
       "each. Attributing delay minutes to a named cause is how an "
@@ -722,6 +743,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "aantal",
     .description = "Signalling control posts on the Belgian network by area and "
       "year. Signal boxes are the small number of physical sites from "
       "which the whole network is actually controlled, which makes them "
@@ -1366,6 +1388,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .interval = 604800,
     .page_param = "$offset",
     .page_size = 1000,
+    .title_keys = "val",
     .description = "The hazardous materials cut of the US Commodity Flow Survey: "
       "origin and destination geography, hazmat class, transport mode, "
       "value, tonnage and ton-miles shipped, with sampling error. This "
@@ -1382,6 +1405,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .interval = 604800,
     .page_param = "$offset",
     .page_size = 1000,
+    .title_keys = "val",
     .description = "The export cut of the US Commodity Flow Survey by origin "
       "geography, NAICS industry, commodity code, export mode and "
       "destination world region, with value, tonnage and ton-miles. "

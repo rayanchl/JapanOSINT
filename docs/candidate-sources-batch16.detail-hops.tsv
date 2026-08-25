@@ -150,7 +150,7 @@ es-bdns-minimis	https://www.infosubvenciones.es/bdnstrans/api/minimis/busqueda?p
 es-bdns-partidos-politicos	https://www.infosubvenciones.es/bdnstrans/api/partidospoliticos/busqueda?page=0&pageSize=5	https://www.infosubvenciones.es/bdnstrans/api/convocatorias?numConv={v}	numeroConvocatoria
 es-bdns-grandes-beneficiarios	https://www.infosubvenciones.es/bdnstrans/api/grandesbeneficiarios/busqueda?page=0&pageSize=5&anio=2024	https://www.infosubvenciones.es/bdnstrans/api/concesiones/busqueda?page=0&pageSize=50&nifCif={v}	beneficiario
 esma-solr-upreg	https://registers.esma.europa.eu/solr/esma_registers_upreg/select?q=*:*&wt=json&rows=3	https://registers.esma.europa.eu/publication/details?core=esma_registers_upreg&docId={v}	id
-esma-solr-sanctions	https://registers.esma.europa.eu/solr/esma_registers_sanctions/select?q=*:*&wt=json&rows=1	https://registers.esma.europa.eu/publication/details?core=esma_registers_upreg&docId=ae{v}	sn_entityEsmaID
+esma-solr-sanctions	https://registers.esma.europa.eu/solr/esma_registers_sanctions/select?q=*:*&wt=json&rows=500	https://registers.esma.europa.eu/publication/details?core=esma_registers_upreg&docId=ae{v}	sn_entityEsmaID
 eba-euclid-search-entities	https://euclid.eba.europa.eu/register/api/search/entities	https://euclid.eba.europa.eu/register/api/search/entities	EntityCode
 de-rechtsprechung-im-internet-toc	https://www.rechtsprechung-im-internet.de/rii-toc.xml	https://www.rechtsprechung-im-internet.de/jportal/docs/bsjrs/jb-{v}.zip	link
 de-rechtsprechung-decision-zip	https://www.rechtsprechung-im-internet.de/jportal/docs/bsjrs/jb-JURE100054597.zip	https://www.rechtsprechung-im-internet.de/jportal/docs/bsjrs/jb-{v}.zip	link

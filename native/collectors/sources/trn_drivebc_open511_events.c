@@ -12,13 +12,29 @@
  * against other Open511 jurisdictions. `geography` is an embedded GeoJSON
  * geometry that may be a Point OR a LineString — both are handled, and the row
  * point is the first published vertex rather than a computed centre. Vendor
- * extensions are prefixed with '+' (e.g. "+ivr_message"). Results are paginated
- * via meta/pagination.next_url, which is followed up to a bounded page count.
+ * extensions are prefixed with '+' (e.g. "+ivr_message").
+ *
+ * PAGINATION — the walk was reading the wrong place and stopping after one
+ * page. Measured 2026-08-24:
+ *   • `pagination` sits at the TOP LEVEL of the document, not under `meta`.
+ *     The old code asked for `meta.pagination.next_url`, which does not exist,
+ *     so `next` was always NULL and the loop broke on its first turn.
+ *   • DriveBC's default page is 50 events; `limit=500` returns all 239 current
+ *     events in one short page. So the collector was storing 50 of 239 road
+ *     incidents, every five minutes, with nothing in the output to show it.
+ *   • DriveBC does not emit `next_url` at all — only `previous_url` and
+ *     `offset` — so a full page is walked by advancing `offset`, which is the
+ *     parameter the URL already carries. Other Open511 jurisdictions that do
+ *     publish `next_url` (top level or nested under `meta`) are still honoured
+ *     first, because a server-supplied link beats arithmetic.
+ * A ceiling stop is disclosed as a collector-truncation-notice rather than
+ * ending the run in silence.
  */
 #include "lib/jocore.h"
 #include "trn_common.inc"
 
-#define BC_MAX_PAGES 20
+#define BC_PAGE_SIZE 500
+#define BC_MAX_PAGES 20   /* exhaustive-ok: page-walk runaway guard; a stop with pages left emits a collector-truncation-notice */
 
 static int emit_page(intel_sink *sink, cJSON *doc) {
   int n = 0;
@@ -76,30 +92,65 @@ static int emit_page(intel_sink *sink, cJSON *doc) {
   return n;
 }
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  char url[512];
-  snprintf(url, sizeof url, "https://api.open511.gov.bc.ca/events?format=json");
+#define BC_BASE "https://api.open511.gov.bc.ca"
 
-  int n = 0, pages = 0, ok = 0;
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  char first[512], url[512];
+  snprintf(first, sizeof first,
+           BC_BASE "/events?format=json&limit=%d", BC_PAGE_SIZE);
+  snprintf(url, sizeof url, "%s", first);
+
+  int n = 0, pages = 0, ok = 0, truncated = 0;
+  long offset = 0;
   while (pages < BC_MAX_PAGES) {
     cJSON *doc = feed_get_json(ctx->http, url, 30000);
-    if (!doc) break;
+    if (!doc) { if (pages > 0) truncated = 1; break; }
     ok = 1;
     n += emit_page(sink, doc);
     pages++;
-    const cJSON *pg = cJSON_GetObjectItem(
-        cJSON_GetObjectItem(doc, "meta"), "pagination");
+
+    const cJSON *evs = cJSON_GetObjectItem(doc, "events");
+    int got = cJSON_IsArray(evs) ? cJSON_GetArraySize(evs) : 0;
+
+    /* the standard's own next link, top level first, then nested under meta */
+    const cJSON *pg = cJSON_GetObjectItem(doc, "pagination");
+    if (!cJSON_IsObject(pg))
+      pg = cJSON_GetObjectItem(cJSON_GetObjectItem(doc, "meta"), "pagination");
     const char *next = pg ? jo_sv(pg, "next_url") : NULL;
-    if (!next) { cJSON_Delete(doc); break; }
-    snprintf(url, sizeof url, "%s", next);
+
+    if (next && *next) {
+      /* Open511 next_url is document-relative ("/events?...") */
+      if (next[0] == '/') snprintf(url, sizeof url, BC_BASE "%s", next);
+      else                snprintf(url, sizeof url, "%s", next);
+    } else if (got >= BC_PAGE_SIZE) {
+      /* A full page with no link: advance the offset this URL already names.
+       * A SHORT page is the upstream saying it is finished, and following it
+       * would be inventing a page nobody offered. */
+      offset += BC_PAGE_SIZE;
+      snprintf(url, sizeof url, BC_BASE "/events?format=json&limit=%d&offset=%ld",
+               BC_PAGE_SIZE, offset);
+    } else {
+      cJSON_Delete(doc);
+      break;                                     /* upstream is exhausted */
+    }
     cJSON_Delete(doc);
+    if (pages >= BC_MAX_PAGES) truncated = 1;    /* ceiling, not the upstream */
   }
   if (!ok) {
     fprintf(stderr, "[drivebc-open511-events] fetch/parse failed\n");
     return -1;
   }
-  fprintf(stderr, "[drivebc-open511-events] emitted %d over %d page(s)\n",
-          n, pages);
+
+  if (truncated)
+    jo_trunc_notice(sink, "drivebc-open511-events", first, n, -1,
+                    "the Open511 page walk stopped at its ceiling, or a "
+                    "mid-walk fetch failed, while DriveBC was still handing "
+                    "over full pages (it publishes no event total)",
+                    "raise BC_MAX_PAGES in collectors/sources/"
+                    "trn_drivebc_open511_events.c");
+
+  fprintf(stderr, "[drivebc-open511-events] emitted %d over %d page(s)%s\n",
+          n, pages, truncated ? " (TRUNCATED — notice emitted)" : "");
   return 0;
 }
 

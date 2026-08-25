@@ -13,19 +13,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define API_URL "https://www.reinfolib.mlit.go.jp/ex-api/external/XIT001"
 
 /* JS: d=new Date(); d.setMonth(d.getMonth()-6);
  *     year=d.getFullYear(); quarter=floor(d.getMonth()/3)+1 */
-static void latest_yq(int *year, int *quarter) {
+static int latest_yq(int *year, int *quarter) {
   time_t t = time(NULL);
-  struct tm tm; localtime_r(&t, &tm);
+  struct tm tm;
+  if (!jo_tm_local(t, &tm)) return 0;
   int m = tm.tm_mon - 6;            /* 0-based month, shifted back 6 */
   int y = tm.tm_year + 1900;
   while (m < 0) { m += 12; y -= 1; }
   *year = y;
   *quarter = m / 3 + 1;
+  return 1;
 }
 
 /* r.X ?? null : returns string for any JSON scalar, else NULL. cJSON owns. */
@@ -45,16 +48,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("REINFOLIB_API_KEY");
   if (!key || !*key) { fprintf(stderr, "[reinfolib] gated\n"); return 0; }
 
+  /* year/quarter ARE the query — there is no request to make without them. */
   int year, quarter;
-  latest_yq(&year, &quarter);
+  if (!latest_yq(&year, &quarter)) {
+    fprintf(stderr, "[reinfolib] cannot render the query window as a date\n");
+    return -1;
+  }
 
   char hdr[256];
   snprintf(hdr, sizeof hdr, "Ocp-Apim-Subscription-Key: %s", key);
   const char *headers[] = { hdr, "Accept: application/json", NULL };
 
-  char now[32];
-  { time_t t = time(NULL); struct tm tm; gmtime_r(&t, &tm);
-    strftime(now, sizeof now, "%Y-%m-%dT%H:%M:%S.000Z", &tm); }
+  char now[32] = {0};
+  jo_now_iso_ms(now, sizeof now);      /* empty ⇒ published_at stays NULL */
 
   int n = 0, fetched = 0;
   for (int pref = 1; pref <= 47; pref++) {
@@ -116,7 +122,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       it.body         = body;
       it.link         = "https://www.reinfolib.mlit.go.jp/";
       it.lang         = "ja";
-      it.published_at = now;
+      it.published_at = now[0] ? now : NULL;
       it.record_type  = "reinfolib";
       it.tags_json    = tj;
       it.properties_json = pj;

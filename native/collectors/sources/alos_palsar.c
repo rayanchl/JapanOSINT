@@ -57,14 +57,29 @@ static char *wkt_polygon_to_geojson(const char *wkt, double *out_lat,
   return s;
 }
 
+/* Rows asked of ASF per run. Raise with $JO_ALOS_MAX_RESULTS; a full response
+ * is disclosed as a collector-truncation-notice, never dropped in silence. */
+#define ALOS_MAX_RESULTS 50   /* exhaustive-ok: request page size, and a full page emits a collector-truncation-notice */
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *gportal = getenv("JAXA_GPORTAL_TOKEN");
   int has_gp = gportal && *gportal;
 
-  const char *url =
+  /* ASF's SearchAPI has no offset/cursor: `maxResults` is the only bound it
+   * offers, and the archive behind this bbox is far larger than one run wants
+   * to pull. That makes this a bounded VIEW, which house rule 2 allows only if
+   * the bound is stated in the data — so when the response comes back exactly
+   * full we say so with a collector-truncation-notice below rather than
+   * letting the shortfall be invisible. */
+  int max_results = ALOS_MAX_RESULTS;
+  const char *menv = getenv("JO_ALOS_MAX_RESULTS");
+  if (menv && *menv) { int m = atoi(menv); if (m > 0) max_results = m; }
+
+  char url[256];
+  snprintf(url, sizeof url,
     "https://api.daac.asf.alaska.edu/services/search/param"
     "?platform=ALOS&bbox=122.0,24.0,146.0,46.0"
-    "&maxResults=50&output=jsonlite";
+    "&maxResults=%d&output=jsonlite", max_results);
   cJSON *data = feed_get_json(ctx->http, url, 20000);
 
   cJSON *rows = NULL;
@@ -156,15 +171,35 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *szv = cJSON_GetObjectItem(r, "sizeMB");
     if (szv && cJSON_IsNumber(szv))
       cJSON_AddNumberToObject(p, "size_mb", szv->valuedouble);
+    /* `orbit` and `browse` are ARRAYS in ASF's jsonlite: one orbit number per
+     * revolution the granule spans, one browse JPEG per product view. Taking
+     * [0] threw the rest away, which for a granule that straddles two orbits
+     * or carries several quicklooks is a real loss. Every element is emitted
+     * as `orbits` / `browse_urls`; the scalar `orbit` / `browse_url` stays as
+     * the display pick so existing consumers keep working. */
     cJSON *orb = cJSON_GetObjectItem(r, "orbit");
     if (orb && cJSON_IsArray(orb) && cJSON_GetArraySize(orb) > 0) {
-      cJSON *o0 = cJSON_GetArrayItem(orb, 0);
-      if (cJSON_IsString(o0)) cJSON_AddStringToObject(p, "orbit", o0->valuestring);
+      cJSON *all = cJSON_CreateArray(), *o;
+      cJSON_ArrayForEach(o, orb) {
+        if (!cJSON_IsString(o) || !o->valuestring || !o->valuestring[0]) continue;
+        if (cJSON_GetArraySize(all) == 0)
+          cJSON_AddStringToObject(p, "orbit", o->valuestring);  /* display pick */
+        cJSON_AddItemToArray(all, cJSON_CreateString(o->valuestring));
+      }
+      if (cJSON_GetArraySize(all) > 0) cJSON_AddItemToObject(p, "orbits", all);
+      else cJSON_Delete(all);
     }
     cJSON *br = cJSON_GetObjectItem(r, "browse");
     if (br && cJSON_IsArray(br) && cJSON_GetArraySize(br) > 0) {
-      cJSON *b0 = cJSON_GetArrayItem(br, 0);
-      if (cJSON_IsString(b0)) cJSON_AddStringToObject(p, "browse_url", b0->valuestring);
+      cJSON *all = cJSON_CreateArray(), *b;
+      cJSON_ArrayForEach(b, br) {
+        if (!cJSON_IsString(b) || !b->valuestring || !b->valuestring[0]) continue;
+        if (cJSON_GetArraySize(all) == 0)
+          cJSON_AddStringToObject(p, "browse_url", b->valuestring);  /* display */
+        cJSON_AddItemToArray(all, cJSON_CreateString(b->valuestring));
+      }
+      if (cJSON_GetArraySize(all) > 0) cJSON_AddItemToObject(p, "browse_urls", all);
+      else cJSON_Delete(all);
     }
     if (gj) cJSON_AddStringToObject(p, "footprint_wkt", jo_sv(r, "wkt"));
     char *pj = cJSON_PrintUnformatted(p);
@@ -197,8 +232,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(p); cJSON_Delete(tags);
     i++;
   }
+  int available = cJSON_GetArraySize(rows);
   cJSON_Delete(data);
-  fprintf(stderr, "[alos-palsar] emitted %d\n", n);
+  fprintf(stderr, "[alos-palsar] emitted %d of %d fetched\n", n, available);
+  /* A response that came back exactly `max_results` long means ASF had at
+   * least that many and we asked for no more. The archive total is not
+   * published by this endpoint, so `available` is honestly reported as
+   * unknown rather than guessed. */
+  if (available >= max_results)
+    jo_trunc_notice(sink, "alos-palsar", url, n, -1,
+                    "ASF SearchAPI returned a full maxResults page and offers "
+                    "no offset or cursor parameter, so scenes beyond this page "
+                    "were not requested.",
+                    "raise $JO_ALOS_MAX_RESULTS, or narrow the bbox/time range "
+                    "so a run fits inside one response");
   return 0;      /* the empty-result case already returned -1 above */
 }
 

@@ -1,18 +1,34 @@
 #include "feedlib.h"
 #include "csv.h"           /* csv_is_utf8 / csv_decode_sjis */
-#include <openssl/sha.h>
+#include <openssl/evp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+/* EVP rather than SHA1_Init/Update/Final: those are deprecated in OpenSSL 3.0.
+ * The digest is byte-identical — same algorithm, same bytes, same order — and
+ * that identity is the whole constraint here: this value is the dedupe/uid key
+ * under which every feed record was stored, so a digest that shifted by one
+ * bit would make the entire existing corpus look new and re-emit it.
+ *
+ * EVP can fail where SHA1_Init could not (it allocates a context), so the
+ * failure path leaves an EMPTY key rather than a zeroed one. An empty uid is
+ * honestly empty and visibly wrong downstream; a fabricated all-zero digest
+ * would silently collide every record that hit the same failure into one. */
 void feed_hash_key(char *out21, const char *const *parts, int n) {
-  SHA_CTX c; SHA1_Init(&c);
+  out21[0] = 0;
+  EVP_MD_CTX *c = EVP_MD_CTX_new();
+  if (!c) return;
+  if (EVP_DigestInit_ex(c, EVP_sha1(), NULL) != 1) { EVP_MD_CTX_free(c); return; }
   for (int i = 0; i < n; i++) {
     if (!parts[i]) continue;
-    SHA1_Update(&c, parts[i], strlen(parts[i]));
-    SHA1_Update(&c, "|", 1);
+    EVP_DigestUpdate(c, parts[i], strlen(parts[i]));
+    EVP_DigestUpdate(c, "|", 1);
   }
-  unsigned char d[20]; SHA1_Final(d, &c);
+  unsigned char d[EVP_MAX_MD_SIZE]; unsigned int dl = 0;
+  int ok = EVP_DigestFinal_ex(c, d, &dl) == 1;
+  EVP_MD_CTX_free(c);
+  if (!ok) return;
   for (int i = 0; i < 10; i++) sprintf(out21 + i*2, "%02x", d[i]);
   out21[20] = 0;
 }

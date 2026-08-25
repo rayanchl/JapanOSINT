@@ -76,6 +76,40 @@ static const char *run_status(int rc, long records, int hosts, int hosts_ok,
   return "error";
 }
 
+/* fetch_log.stored — house rule 4b's number, kept next to records_fetched so
+ * the two can be compared over history rather than only in the run a human
+ * happened to be watching. The column is added by db.c's ensure_column()
+ * block; it is NULL on rows written before it existed, and NULL is the honest
+ * value there ("not measured"), which is why it has no DEFAULT 0.
+ *
+ * WHY A FOLLOW-UP UPDATE and not a sixth argument to fetch_log_write().
+ * fetch_log_write() is the shared stage-0 API in core/maint_detect.c and its
+ * signature is quoted in seven header files as the thing scheduler.c skips for
+ * `_maint` collectors; widening it would touch every one of them for a column
+ * only this caller can supply. This is one UPDATE by INTEGER PRIMARY KEY on a
+ * row inserted microseconds earlier — an rowid seek, still inside the same
+ * page cache. If the column is absent (a database that has not booted through
+ * db_open, e.g. a unit-test fixture) the prepare fails and we say nothing:
+ * the run line already carried the number, and a missing migration is not a
+ * reason to make a collector run look failed.
+ *
+ * A floor (`exact` = 0) is stored NEGATED. There is no room in an INTEGER
+ * column for "at least", and writing the floor as though it were the truth
+ * would be exactly the quiet over-reporting rule 4b exists to stop; a reader
+ * seeing stored < 0 knows the real value is >= -stored. */
+static void fetch_log_set_stored(db_handle *db, long flid, long stored,
+                                 int exact) {
+  if (!db || !db->h || flid < 0 || stored < 0) return;
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h, "UPDATE fetch_log SET stored=?1 WHERE id=?2",
+                         -1, &s, NULL) != SQLITE_OK)
+    return;
+  sqlite3_bind_int64(s, 1, (sqlite3_int64)(exact ? stored : -stored));
+  sqlite3_bind_int64(s, 2, (sqlite3_int64)flid);
+  sqlite3_step(s);
+  sqlite3_finalize(s);
+}
+
 int scheduler_run_source(db_handle *db, const source_def *d,
                          const char *entity) {
   intel_sink inner = intel_sink_make(db, d->id, "legacy");
@@ -114,9 +148,40 @@ int scheduler_run_source(db_handle *db, const source_def *d,
     if (http_client_host_at(http, i, NULL, &ok) && ok) hosts_ok++;
   }
   http_client_free(http);
+  /* Read the distinct-row count BEFORE the sink is freed — it lives in the
+   * sink_state that free() is about to release. */
+  int stored_exact = 1;
+  long stored = intel_sink_stored(&inner, &stored_exact);
   intel_sink_free(&inner);        /* make() heap-allocates; nothing freed it */
-  fprintf(stderr, "[sched] %s run rc=%d records=%ld %ldms\n",
-          d->id, rc, cs.n, duration_ms);
+
+  /* ── the run line, and why `stored=` sits at the END of it ───────────────
+   *
+   * Rule 4b: `records=` counts emit() calls, `stored=` counts the distinct
+   * rows those calls actually left behind. When they differ, the difference
+   * IS the finding — 12,648 emitted onto 31 rows is 12,617 records discarded
+   * inside our own sink, with rc=0 and a run that looked healthy. The number
+   * exists in fetch_log too, but a number that only appears in a database is
+   * a number nobody reads, so it is stated here on every run.
+   *
+   * It is appended after the duration rather than next to `records=` for a
+   * boring compatibility reason: eight parsers in tests/audit/ and tools/
+   * match `records=(-?\d+) (\d+)ms` as ONE unit, and inserting a field
+   * between those two groups would silently stop every one of them matching —
+   * which is precisely the class of quiet failure this line exists to expose.
+   * Appending is invisible to all of them.
+   *
+   * `stored=?` means the sink could not tell us (not an intel sink);
+   * `stored>=N` means N is a floor because the counter hit its ceiling. */
+  char sbuf[64], note[192];
+  if (stored < 0) snprintf(sbuf, sizeof sbuf, "stored=?");
+  else snprintf(sbuf, sizeof sbuf, "stored=%s%ld", stored_exact ? "" : ">=", stored);
+  note[0] = '\0';
+  if (stored >= 0 && stored_exact && stored < cs.n)
+    snprintf(note, sizeof note,
+             " UID-COLLISION: %ld of %ld emitted records collapsed onto a uid"
+             " already written this run", cs.n - stored, cs.n);
+  fprintf(stderr, "[sched] %s run rc=%d records=%ld %ldms %s%s\n",
+          d->id, rc, cs.n, duration_ms, sbuf, note);
 
   /* Stage 0+1: log the run and detect anomalies — but only for real data
    * collectors. The internal pods (_maint, _enrich) emit nothing and would
@@ -126,6 +191,7 @@ int scheduler_run_source(db_handle *db, const source_def *d,
     const char *status = run_status(rc, cs.n, hosts, hosts_ok, &why);
     long flid = fetch_log_write(db, d->id, status, (int)cs.n, duration_ms, why);
     anomaly_detect(db, d->id, flid, status, (int)cs.n, duration_ms);
+    fetch_log_set_stored(db, flid, stored, stored_exact);
   }
   return rc;
 }

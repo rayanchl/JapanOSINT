@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define COLL "government"
 
@@ -44,12 +45,6 @@ static int js_num(cJSON *o, const char *k, double *out) {
   if (!v || !cJSON_IsNumber(v)) return 0;
   *out = v->valuedouble; return 1;
 }
-/* epoch-milliseconds → "YYYY-MM-DDTHH:MM:SSZ" */
-static void ms_iso(double ms, char *out, size_t n) {
-  time_t t = (time_t)(ms / 1000.0);
-  struct tm tm; gmtime_r(&t, &tm);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &tm);
-}
 /* Point geometry → lat/lon (+ depth from the third ordinate when present). */
 static int geom_point(cJSON *g, double *lat, double *lon, double *depth) {
   if (!g) return 0;
@@ -71,13 +66,16 @@ static int usgs_run(const source_ctx *ctx, intel_sink *sink, const char *url) {
               return -1; }
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
   int n = 0; cJSON *f;
-  cJSON_ArrayForEach(f, feats ? feats : NULL) {
+  cJSON_ArrayForEach(f, feats) {
     cJSON *p = cJSON_GetObjectItem(f, "properties");
     if (!p) continue;
     double lat = 0, lon = 0, depth = 0;
     int geo = geom_point(cJSON_GetObjectItem(f, "geometry"), &lat, &lon, &depth);
     double ms = 0; char iso[32] = {0};
-    if (js_num(p, "time", &ms)) ms_iso(ms, iso, sizeof iso);
+    /* epoch-milliseconds → "YYYY-MM-DDTHH:MM:SSZ"; an unrenderable upstream
+     * `time` leaves iso empty and every use below already tests iso[0]. */
+    if (js_num(p, "time", &ms))
+      jo_time_fmt((time_t)(ms / 1000.0), "%Y-%m-%dT%H:%M:%SZ", iso, sizeof iso);
 
     char body[512]; double mag = 0; int hasmag = js_num(p, "mag", &mag);
     const char *place = jo_sv(p, "place");
@@ -149,7 +147,12 @@ USGS(gd_usgs_45, "usgs-quake-m45-week", "USGS M4.5+ Earthquakes (7d)",
  * — no coordinate is invented. */
 static void vertex_mean(cJSON *node, double *sx, double *sy, int *cnt) {
   if (!cJSON_IsArray(node)) return;
-  cJSON *a = cJSON_GetArrayItem(node, 0), *b = cJSON_GetArrayItem(node, 1);
+  /* [0] and [1] are the x and y of ONE GeoJSON position, not the first two of a
+   * record list — a position is defined to be exactly that pair. When they are
+   * not both numbers this node is a nested array (ring, polygon,
+   * MultiLineString) and the ArrayForEach two lines down recurses over every
+   * child, so every coordinate in the geometry is visited. */
+  cJSON *a = cJSON_GetArrayItem(node, 0), *b = cJSON_GetArrayItem(node, 1); /* exhaustive-ok: one [x,y] position; nested arrays recurse below */
   if (a && b && cJSON_IsNumber(a) && cJSON_IsNumber(b)) {
     *sx += a->valuedouble; *sy += b->valuedouble; (*cnt)++; return;
   }
@@ -193,7 +196,7 @@ static int gdacs_run(const source_ctx *ctx, intel_sink *sink) {
   if (!ev) { cJSON_Delete(doc); return -1; }
 
   cJSON *f;
-  cJSON_ArrayForEach(f, feats ? feats : NULL) {
+  cJSON_ArrayForEach(f, feats) {
     cJSON *p = cJSON_GetObjectItem(f, "properties");
     if (!p) continue;
     double eid = 0, epi = 0;
@@ -316,7 +319,7 @@ static int nws_run(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) { fprintf(stderr, "[nws-alerts-us] fetch failed\n"); return -1; }
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
   cJSON *f;
-  cJSON_ArrayForEach(f, feats ? feats : NULL) {
+  cJSON_ArrayForEach(f, feats) {
     cJSON *p = cJSON_GetObjectItem(f, "properties");
     if (!p) continue;
     /* audit-09 (2nd pass): most active alerts are zone-referenced and carry
@@ -423,7 +426,7 @@ static int who_don_run(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) { fprintf(stderr, "[who-outbreak-news] fetch failed\n"); return -1; }
   cJSON *arr = cJSON_GetObjectItem(doc, "value");
   int n = 0; cJSON *e;
-  cJSON_ArrayForEach(e, arr ? arr : NULL) {
+  cJSON_ArrayForEach(e, arr) {
     const char *id = jo_sv(e, "Id");
     const char *title = jo_sv(e, "Title");
     if (!title) title = jo_sv(e, "OverrideTitle");

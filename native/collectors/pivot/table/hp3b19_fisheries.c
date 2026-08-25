@@ -107,6 +107,7 @@ static const hp_source HP3B19_FISHERIES[] = {
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "links.0.href",
     .description = "Haul-level catch from the Alaska Fisheries Science Center "
       "bottom-trawl surveys — the fishery-independent series against "
       "which North Pacific stock assessments are calibrated." },

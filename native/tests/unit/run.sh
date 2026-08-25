@@ -26,6 +26,13 @@ fi
 [ -d "$OBJDIR" ] || { echo "no $OBJDIR/ — run make first"; exit 2; }
 
 CFLAGS="-O1 -g -Wall -Wextra -Wno-unused-parameter -pthread -Ithird_party"
+# The same two quote-include paths the main Makefile passes. A test that
+# #includes a COLLECTOR reaches `#include "source.h"` and `#include
+# "_jp_osint.inc"`, and "" search starts in the directory of the including
+# file — collectors/sources/ — not in native/. Without these the collector
+# under test does not compile at all, which reads as a broken test rather than
+# as a missing -I. Additive: nothing that built before builds differently.
+CFLAGS="$CFLAGS -iquote . -iquote collectors/sources"
 CFLAGS="$CFLAGS -DJO_REPO_ROOT=\"$(cd .. && pwd)\""
 # iconv is folded into glibc on Linux but is a standalone lib on macOS/BSD, where
 # csv.c's SJIS decode needs it linked explicitly (mirrors the main Makefile).

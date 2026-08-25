@@ -12,6 +12,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,10 +23,11 @@
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t now = time(NULL);
-  struct tm tmv;
-  gmtime_r(&now, &tmv);
   char day[16];
-  strftime(day, sizeof day, "%Y-%m-%d", &tmv);
+  if (!jo_time_fmt(now, "%Y-%m-%d", day, sizeof day)) {
+    fprintf(stderr, "[" SRC "] cannot render the query window as a date\n");
+    return -1;
+  }
 
   char url[320];
   snprintf(url, sizeof url,

@@ -42,17 +42,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 static const char *const SOC_UA[] = {
   "User-Agent: JapanOSINT-native/1.0 (OSINT research collector; +https://github.com/)",
   "Accept: application/json", NULL
 };
-
-static inline void soc_iso(time_t t, char *out, size_t n) {
-  struct tm g;
-  gmtime_r(&t, &g);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &g);
-}
 
 /* ---- 1. Hacker News ranked front page (Firebase) ------------------------ */
 
@@ -79,7 +74,8 @@ static int run_hn_front(const source_ctx *ctx, intel_sink *sink) {
     if (!title) { cJSON_Delete(item); continue; }
     const cJSON *tv = cJSON_GetObjectItem(item, "time");
     char iso[40]; iso[0] = 0;
-    if (cJSON_IsNumber(tv)) soc_iso((time_t)tv->valuedouble, iso, sizeof iso);
+    if (cJSON_IsNumber(tv))
+      jo_time_fmt((time_t)tv->valuedouble, "%Y-%m-%dT%H:%M:%SZ", iso, sizeof iso);
     cJSON *p = cJSON_CreateObject();
     if (!p) { cJSON_Delete(item); continue; }
     cJSON_AddStringToObject(p, "source", "hacker-news.firebaseio.com");
@@ -280,9 +276,11 @@ static int run_4chan_news(const source_ctx *ctx, intel_sink *sink) {
   int hi = 0;
   hdrs[hi++] = "User-Agent: JapanOSINT-native/1.0 (OSINT research collector; +https://github.com/)";
   hdrs[hi++] = "Accept: application/json";
-  if (last_ok) {
-    struct tm g; gmtime_r(&last_ok, &g);
-    strftime(ims, sizeof ims, "If-Modified-Since: %a, %d %b %Y %H:%M:%S GMT", &g);
+  /* An unrenderable last_ok simply means no If-Modified-Since header — the
+   * same request we send on the first pass, so nothing is lost. */
+  if (last_ok &&
+      jo_time_fmt(last_ok, "If-Modified-Since: %a, %d %b %Y %H:%M:%S GMT",
+                  ims, sizeof ims)) {
     hdrs[hi++] = ims;
   }
   hdrs[hi] = NULL;
@@ -328,7 +326,8 @@ static int run_4chan_news(const source_ctx *ctx, intel_sink *sink) {
       if (!title) { free(subtxt); free(comtxt); continue; }
       const cJSON *tv = cJSON_GetObjectItem(t, "time");
       char iso[40]; iso[0] = 0;
-      if (cJSON_IsNumber(tv)) soc_iso((time_t)tv->valuedouble, iso, sizeof iso);
+      if (cJSON_IsNumber(tv))
+        jo_time_fmt((time_t)tv->valuedouble, "%Y-%m-%dT%H:%M:%SZ", iso, sizeof iso);
       const cJSON *rep = cJSON_GetObjectItem(t, "replies");
       cJSON *p = cJSON_CreateObject();
       if (!p) { free(subtxt); free(comtxt); continue; }

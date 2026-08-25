@@ -42,7 +42,15 @@ static cJSON *http_json(http_client *h, const char *url) {
 static cJSON *search_pubmed(http_client *h, const char *q, int limit) {
   cJSON *results = cJSON_CreateArray();
   char enc[1024]; uri_encode(q, enc, sizeof enc);
-  char url[1100];
+  /* 1200, not 1100, here and in the five sibling builders below. `enc` holds up
+   * to 1023 bytes of percent-encoded query and `limit` up to 11, so the PubMed
+   * URL — whose fixed part is 97 bytes — reaches 1131 and was being chopped at
+   * 1100. A truncated URL here is not a failed search: it is a DIFFERENT search
+   * that returns plausible results for a query nobody asked for, with nothing
+   * in the output to say the term was cut. The other five have shorter fixed
+   * parts and squeaked under 1100 by a handful of bytes rather than by design,
+   * so they move together. */
+  char url[1200];
   snprintf(url, sizeof url,
     "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=%d&term=%s",
     limit, enc);
@@ -118,7 +126,7 @@ static cJSON *search_arxiv(http_client *h, const char *q, int limit) {
   int page_size = limit > 0 ? limit : 100;
   for (int start = 0; start < page_size * 20; start += page_size) {
     int before = cJSON_GetArraySize(results);
-    char url[1100];
+    char url[1200];
     snprintf(url, sizeof url,
       "http://export.arxiv.org/api/query?search_query=%s&start=%d&max_results=%d",
       enc, start, page_size);
@@ -172,7 +180,7 @@ static cJSON *search_arxiv(http_client *h, const char *q, int limit) {
 static cJSON *search_crossref(http_client *h, const char *q, int limit) {
   cJSON *results = cJSON_CreateArray();
   char enc[1024]; uri_encode(q, enc, sizeof enc);
-  char url[1100];
+  char url[1200];
   snprintf(url, sizeof url, "https://api.crossref.org/works?query=%s&rows=%d", enc, limit);
   cJSON *j = http_json(h, url);
   if (!j) return results;
@@ -217,7 +225,7 @@ static cJSON *search_crossref(http_client *h, const char *q, int limit) {
 static cJSON *search_semantic(http_client *h, const char *q, int limit) {
   cJSON *results = cJSON_CreateArray();
   char enc[1024]; uri_encode(q, enc, sizeof enc);
-  char url[1100];
+  char url[1200];
   snprintf(url, sizeof url,
     "https://api.semanticscholar.org/graph/v1/paper/search?query=%s&limit=%d", enc, limit);
   cJSON *j = http_json(h, url);
@@ -249,7 +257,7 @@ static cJSON *search_semantic(http_client *h, const char *q, int limit) {
 static cJSON *search_orcid(http_client *h, const char *q, int limit) {
   cJSON *results = cJSON_CreateArray();
   char enc[1024]; uri_encode(q, enc, sizeof enc);
-  char url[1100];
+  char url[1200];
   snprintf(url, sizeof url, "https://pub.orcid.org/v3.0/search/?q=%s&rows=%d", enc, limit);
   cJSON *j = http_json(h, url);
   if (!j) return results;
@@ -277,7 +285,7 @@ static cJSON *search_orcid(http_client *h, const char *q, int limit) {
 static cJSON *search_cinii(http_client *h, const char *q, int limit) {
   cJSON *results = cJSON_CreateArray();
   char enc[1024]; uri_encode(q, enc, sizeof enc);
-  char url[1100];
+  char url[1200];
   snprintf(url, sizeof url,
     "https://cir.nii.ac.jp/all?q=%s&count=%d&format=json", enc, limit);
   cJSON *j = http_json(h, url);

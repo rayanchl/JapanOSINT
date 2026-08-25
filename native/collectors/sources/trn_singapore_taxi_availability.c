@@ -21,7 +21,6 @@
 #include "trn_common.inc"
 
 #define SG_TAXI_URL "https://api.data.gov.sg/v1/transport/taxi-availability"
-#define SG_TAXI_CAP 4000
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, SG_TAXI_URL, 30000);
@@ -43,18 +42,27 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *coords = cJSON_GetObjectItem(
       cJSON_GetObjectItem(feat, "geometry"), "coordinates");
 
-  int n = 0, idx = 0;
+  int slots = cJSON_IsArray(coords) ? cJSON_GetArraySize(coords) : 0;
+
+  /* No cap. LTA publishes its own `taxi_count` and hands over exactly that
+   * many [lon,lat] pairs (2,160 = 2,160, measured 2026-08-24); the old
+   * `SG_TAXI_CAP 4000` was a number chosen by this collector, and a busy hour
+   * that pushes availability past it would have lost the excess in silence —
+   * on a feed whose whole value is the city-wide distribution. Slots that
+   * carry no usable coordinate are counted and named below (rule 8), not
+   * folded into a shortfall they did not cause. */
+  int n = 0, idx = 0, unusable = 0;
   cJSON *p;
   cJSON_ArrayForEach(p, coords) {
-    if (n >= SG_TAXI_CAP) break;
-    cJSON *x = cJSON_GetArrayItem(p, 0), *y = cJSON_GetArrayItem(p, 1);
+    cJSON *x = cJSON_GetArrayItem(p, 0), *y = cJSON_GetArrayItem(p, 1);  /* exhaustive-ok: fixed [lon,lat] pair, both components read */
     double lo, la;
-    if (!trn_numv(x, &lo) || !trn_numv(y, &la)) { idx++; continue; }
-    if (!trn_geo_ok(la, lo)) { idx++; continue; }
+    if (!trn_numv(x, &lo) || !trn_numv(y, &la)) { idx++; unusable++; continue; }
+    if (!trn_geo_ok(la, lo)) { idx++; unusable++; continue; }
 
     cJSON *pr = cJSON_CreateObject();
     cJSON_AddStringToObject(pr, "operator", "LTA Singapore (data.gov.sg)");
     cJSON_AddNumberToObject(pr, "slot_index", idx);
+    cJSON_AddNumberToObject(pr, "slot_count", slots);
     if (have_count) cJSON_AddNumberToObject(pr, "taxi_count", taxi_count);
     trn_put_str(pr, "timestamp", ts);
     cJSON_AddStringToObject(pr, "geo_precision", "vehicle-gps");
@@ -79,7 +87,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     idx++;
   }
   cJSON_Delete(doc);
-  fprintf(stderr, "[singapore-taxi-availability] emitted %d\n", n);
+
+  /* A slot that never became a row is a real, if small, shortfall — say so,
+   * with the cause, rather than letting the count quietly differ from LTA's
+   * own taxi_count. */
+  if (unusable > 0)
+    jo_trunc_notice(sink, "singapore-taxi-availability", SG_TAXI_URL, n, slots,
+                    "MultiPoint slots carrying no finite in-range [lon,lat] "
+                    "pair were skipped rather than pinned to an invented "
+                    "position",
+                    "none — the upstream published those slots without a "
+                    "usable coordinate");
+
+  fprintf(stderr, "[singapore-taxi-availability] emitted %d of %d slot(s) "
+                  "(%d unusable)\n", n, slots, unusable);
   return 0;
 }
 

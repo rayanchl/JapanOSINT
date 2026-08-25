@@ -20,10 +20,13 @@
  *      licence: official NuGet V3 search service (discoverable from
  *               api.nuget.org/v3/index.json); keyless, documented.
  *  HEXPM_PACKAGE_SEARCH (keyword)
- *      GET https://hex.pm/api/packages?search=&page=1 — bare array
+ *      GET https://hex.pm/api/packages?search=&page=N — bare array, 100/page.
+ *      PAGED to the end (short page = done); the ceiling is disclosed as a
+ *      collector-truncation-notice. It used to read page 1 and emit 50 of the
+ *      100 it received, against a term with 500+ matches.
  *      emits: name, url, inserted_at, updated_at, repository,
- *             meta.description/licenses/links, first and latest release
- *             version + timestamp from the embedded releases[]
+ *             meta.description/licenses/links, the whole embedded releases[]
+ *             plus the first and latest release version + timestamp
  *      licence: Hex.pm public API; keyless read, asks for an identifying
  *               User-Agent, which we send.
  *  AUR_PACKAGE_SEARCH (keyword)
@@ -58,6 +61,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 static const char *const SOC_UA[] = {
   "User-Agent: JapanOSINT-native/1.0 (OSINT research collector; +https://github.com/)",
@@ -69,12 +73,6 @@ static int looks_like_package(const char *s) {
   if (!jo_looks_like_keyword(s)) return 0;
   for (const char *p = s; *p; p++) if (isspace((unsigned char)*p)) return 0;
   return 1;
-}
-
-static void iso_from_epoch(double secs, char *out, size_t n) {
-  time_t t = (time_t)secs;
-  struct tm g; gmtime_r(&t, &g);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &g);
 }
 
 /* ---- MAVEN_CENTRAL_SEARCH ----------------------------------------------- */
@@ -111,7 +109,8 @@ static int run_maven(const source_ctx *ctx, intel_sink *sink) {
     const cJSON *tsv = cJSON_GetObjectItem(d, "timestamp");
     char iso[40]; iso[0] = 0;
     if (cJSON_IsNumber(tsv))      /* epoch MILLIseconds */
-      iso_from_epoch(tsv->valuedouble / 1000.0, iso, sizeof iso);
+      jo_time_fmt((time_t)(tsv->valuedouble / 1000.0),
+                  "%Y-%m-%dT%H:%M:%SZ", iso, sizeof iso);
     cJSON *p = cJSON_CreateObject();
     if (!p) continue;
     cJSON_AddStringToObject(p, "service", "MAVEN_CENTRAL_SEARCH");
@@ -233,23 +232,21 @@ REGISTER_SOURCE(soc_nuget_def)
 
 /* ---- HEXPM_PACKAGE_SEARCH ------------------------------------------------ */
 
-static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
-  const char *q = ctx->entity;
-  if (!jo_looks_like_keyword(q)) return 0;
-  char *enc = soc_urlenc(q);
-  if (!enc) return 0;
-  char url[400];
-  snprintf(url, sizeof url, "https://hex.pm/api/packages?search=%s&page=1", enc);
-  free(enc);
-  cJSON *doc = feed_get_json_h(ctx->http, url, SOC_UA, 20000);
-  if (!cJSON_IsArray(doc)) {
-    fprintf(stderr, "[HEXPM_PACKAGE_SEARCH] no usable response for %s\n", q);
-    cJSON_Delete(doc); return 0;
-  }
+/* hex.pm serves exactly 100 packages per page and offers no total, so a full
+ * page means "ask for the next one" and a short page means it is done. */
+#define HEXPM_PAGE_SIZE 100
+#define HEXPM_PAGE_MAX  20   /* exhaustive-ok: page-walk ceiling; an early stop emits a collector-truncation-notice, and $JO_HEXPM_PAGE_MAX raises it */
+
+static int hexpm_page_max(void) {
+  const char *e = getenv("JO_HEXPM_PAGE_MAX");
+  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
+  return HEXPM_PAGE_MAX;
+}
+
+static int hexpm_emit_page(intel_sink *sink, const cJSON *doc, const char *q) {
   int n = 0;
   const cJSON *d;
   cJSON_ArrayForEach(d, doc) {
-    if (n >= 50) break;
     const char *name = jo_sv(d, "name");
     if (!name) continue;
     const cJSON *meta = cJSON_GetObjectItem(d, "meta");
@@ -274,16 +271,21 @@ static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
       if (cJSON_IsObject(links))
         cJSON_AddItemToObject(p, "links", cJSON_Duplicate(links, 1));
     }
-    /* releases[] gives a free first-published / last-published pair */
+    /* releases[] gives a free first-published / last-published pair — and the
+     * whole version history in between, which used to be reduced to a count.
+     * The release list is what tells you when a package went quiet, when it
+     * was suddenly republished, and how many versions were cut on one day, so
+     * it is carried whole beside the two display picks. */
     const char *latest_ver = NULL, *latest_at = NULL, *first_at = NULL;
     if (cJSON_IsArray(rels)) {
-      const cJSON *r0 = cJSON_GetArrayItem(rels, 0);
+      const cJSON *r0 = cJSON_GetArrayItem(rels, 0);  /* exhaustive-ok: newest-release display pick; the whole releases array is emitted below */
       int sz = cJSON_GetArraySize(rels);
       const cJSON *rn = sz > 0 ? cJSON_GetArrayItem(rels, sz - 1) : NULL;
       if (cJSON_IsObject(r0)) { latest_ver = jo_sv(r0, "version");
                                 latest_at = jo_sv(r0, "inserted_at"); }
       if (cJSON_IsObject(rn)) first_at = jo_sv(rn, "inserted_at");
       cJSON_AddNumberToObject(p, "release_count", sz);
+      cJSON_AddItemToObject(p, "releases", cJSON_Duplicate(rels, 1));
     }
     if (latest_ver) cJSON_AddStringToObject(p, "latest_version", latest_ver);
     if (latest_at)  cJSON_AddStringToObject(p, "latest_release_at", latest_at);
@@ -300,8 +302,59 @@ static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
                   "[\"osint-search\",\"HEXPM_PACKAGE_SEARCH\",\"packages\"]",
                   name, title, summary, link, jo_sv(d, "inserted_at"), NULL);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[HEXPM_PACKAGE_SEARCH] emitted %d for %s\n", n, q);
+  return n;
+}
+
+static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
+  const char *q = ctx->entity;
+  if (!jo_looks_like_keyword(q)) return 0;
+  char *enc = soc_urlenc(q);
+  if (!enc) return 0;
+
+  /* PAGED. This asked for `page=1` and then emitted the first FIFTY of the
+   * hundred it got back — two bounds stacked on one request. Measured
+   * 2026-08-24, `search=phoenix` has at least five full pages of 100, so a
+   * pivot that mattered was answered with 50 of 500+ and no sign of the rest.
+   * hex.pm publishes no total, so the walk stops on a short page (the
+   * upstream saying it is done) or on the ceiling, which is disclosed. */
+  const int page_max = hexpm_page_max();
+  int n = 0, pages = 0, truncated = 0;
+  char first_url[400];
+  snprintf(first_url, sizeof first_url,
+           "https://hex.pm/api/packages?search=%s&page=1", enc);  /* exhaustive-ok: the walk's first page, kept only to name the endpoint in a truncation notice; the loop below fetches page 1..N */
+
+  for (; pages < page_max; pages++) {
+    char url[400];
+    snprintf(url, sizeof url, "https://hex.pm/api/packages?search=%s&page=%d",
+             enc, pages + 1);
+    cJSON *doc = feed_get_json_h(ctx->http, url, SOC_UA, 20000);
+    if (!cJSON_IsArray(doc)) {
+      cJSON_Delete(doc);
+      if (pages == 0) {
+        fprintf(stderr, "[HEXPM_PACKAGE_SEARCH] no usable response for %s\n", q);
+        free(enc);
+        return 0;
+      }
+      truncated = 1;
+      break;
+    }
+    int got = cJSON_GetArraySize(doc);
+    n += hexpm_emit_page(sink, doc, q);
+    cJSON_Delete(doc);
+    if (got < HEXPM_PAGE_SIZE) { pages++; break; }   /* upstream is finished */
+    if (pages + 1 >= page_max) truncated = 1;
+  }
+  free(enc);
+
+  if (truncated)
+    jo_trunc_notice(sink, "HEXPM_PACKAGE_SEARCH", first_url, n, -1,
+                    "page ceiling reached, or a mid-walk fetch failed, while "
+                    "hex.pm was still returning full pages (it publishes no "
+                    "result total)",
+                    "raise $JO_HEXPM_PAGE_MAX, or narrow the search term");
+
+  fprintf(stderr, "[HEXPM_PACKAGE_SEARCH] emitted %d across %d page(s) for %s%s\n",
+          n, pages, q, truncated ? " (TRUNCATED — notice emitted)" : "");
   return 0;
 }
 
@@ -333,16 +386,22 @@ static int run_aur(const source_ctx *ctx, intel_sink *sink) {
   const cJSON *cnt = cJSON_GetObjectItem(doc, "resultcount");
   int n = 0;
   const cJSON *d;
+  /* No cap. AUR answers a search in ONE response and states its own
+   * `resultcount`; the old `n >= 60` silently discarded the tail of any
+   * broader term, and AUR asks for one request per pivot precisely so that
+   * the one response is used. A term too broad for the RPC is refused
+   * upstream ("Too many package results") rather than trimmed here. */
   if (cJSON_IsArray(res)) cJSON_ArrayForEach(d, res) {
-    if (n >= 60) break;
     const char *name = jo_sv(d, "Name");
     if (!name) continue;
     const cJSON *fs = cJSON_GetObjectItem(d, "FirstSubmitted");
     const cJSON *lm = cJSON_GetObjectItem(d, "LastModified");
     const cJSON *ood = cJSON_GetObjectItem(d, "OutOfDate");
     char first[40] = {0}, last[40] = {0};
-    if (cJSON_IsNumber(fs)) iso_from_epoch(fs->valuedouble, first, sizeof first);
-    if (cJSON_IsNumber(lm)) iso_from_epoch(lm->valuedouble, last, sizeof last);
+    if (cJSON_IsNumber(fs))
+      jo_time_fmt((time_t)fs->valuedouble, "%Y-%m-%dT%H:%M:%SZ", first, sizeof first);
+    if (cJSON_IsNumber(lm))
+      jo_time_fmt((time_t)lm->valuedouble, "%Y-%m-%dT%H:%M:%SZ", last, sizeof last);
     /* Maintainer is null for orphaned packages — that null IS the signal. */
     const cJSON *mv = cJSON_GetObjectItem(d, "Maintainer");
     const char *maint = (cJSON_IsString(mv) && mv->valuestring && mv->valuestring[0])
@@ -365,8 +424,10 @@ static int run_aur(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddBoolToObject(p, "orphaned", maint ? 0 : 1);
     if (cJSON_IsNumber(ood)) {
       char ooiso[40];
-      iso_from_epoch(ood->valuedouble, ooiso, sizeof ooiso);
-      cJSON_AddStringToObject(p, "out_of_date_since", ooiso);
+      /* Unrenderable → the key is simply absent, as first/last already are. */
+      if (jo_time_fmt((time_t)ood->valuedouble, "%Y-%m-%dT%H:%M:%SZ",
+                      ooiso, sizeof ooiso))
+        cJSON_AddStringToObject(p, "out_of_date_since", ooiso);
     }
     if (first[0]) cJSON_AddStringToObject(p, "first_submitted", first);
     if (last[0])  cJSON_AddStringToObject(p, "last_modified", last);

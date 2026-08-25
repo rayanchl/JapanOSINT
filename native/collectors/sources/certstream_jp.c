@@ -10,6 +10,7 @@
  * fields / filters are faithful; documented post-parity. */
 #include "source.h"
 #include "lib/ws.h"
+#include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,8 +26,11 @@ typedef struct { cJSON *events; } cs_ud;
 
 static void now_iso(char *o, size_t n) {        /* new Date().toISOString() */
   struct timeval tv; gettimeofday(&tv, NULL);
-  time_t t = tv.tv_sec; struct tm tm; gmtime_r(&t, &tm);
-  char base[32]; strftime(base, sizeof base, "%Y-%m-%dT%H:%M:%S", &tm);
+  if (!o || n == 0) return;
+  o[0] = 0;
+  char base[32];
+  if (!jo_time_fmt((time_t)tv.tv_sec, "%Y-%m-%dT%H:%M:%S", base, sizeof base))
+    return;                          /* stays empty; the caller emits null */
   snprintf(o, n, "%s.%03dZ", base, (int)(tv.tv_usec / 1000));
 }
 
@@ -64,7 +68,8 @@ static int on_msg(const char *data, size_t len, void *udp) {
   char iso[40]; now_iso(iso, sizeof iso);
 
   cJSON *ev = cJSON_CreateObject();
-  cJSON_AddStringToObject(ev, "ts", iso);                 /* capture time */
+  cJSON_AddItemToObject(ev, "ts", iso[0] ? cJSON_CreateString(iso)
+                                         : cJSON_CreateNull());  /* capture */
   cJSON *seen = d ? cJSON_GetObjectItem(d, "seen") : NULL;
   cJSON_AddItemToObject(ev, "seen", seen ? cJSON_Duplicate(seen, 1) : cJSON_CreateNull());
   const char *cn = so(subj, "CN");
@@ -184,7 +189,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     /* A precertificate can carry no CN at all (SAN-only). `cn` was passed
      * through as the title regardless, so the row went out with a NULL title;
      * fall back to the first .jp SAN, which is what the row is actually about. */
-    it.title = cn ? cn : (njp > 0 ? cJSON_GetArrayItem(jp, 0)->valuestring : NULL);
+    it.title = cn ? cn : (njp > 0 ? cJSON_GetArrayItem(jp, 0)->valuestring : NULL);  /* exhaustive-ok: display title only; every .jp SAN is already in properties.jp_domains */
     if (!it.title) { free(body); cJSON_Delete(props); cJSON_Delete(tagsA);
                      free(tags); free(pj); i++; continue; }
     it.summary = summary;

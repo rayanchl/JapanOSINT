@@ -7,9 +7,9 @@
     "approved exception."
   ],
   "checks": {
-    "dup-endpoint": 528,
+    "dup-endpoint": 484,
     "dup-id": 0,
-    "geo-precision": 118,
+    "geo-precision": 116,
     "quarantine-empty": 11,
     "registry-orphan": 1,
     "rowid-unchecked": 0,

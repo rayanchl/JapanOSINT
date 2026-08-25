@@ -38,7 +38,8 @@ static int b64_decode(const char *in, unsigned char *out, int outcap) {
   static int rev[256]; static int init = 0;
   if (!init) { for (int i=0;i<256;i++) rev[i]=-1;
     const char *T="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    for (int i=0;i<64;i++) rev[(unsigned char)T[i]]=i; init=1; }
+    for (int i=0;i<64;i++) rev[(unsigned char)T[i]]=i;
+    init=1; }
   int val=0,bits=-8,o=0;
   for (const char *p=in; *p; p++) {
     if (*p=='=' ) break;
@@ -338,7 +339,8 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
       cJSON *jp=jb?cJSON_GetObjectItem(jb,"policy"):NULL;
       const char *pol=(jp&&cJSON_IsString(jp))?jp->valuestring:"";
       if (strcmp(pol,"owner_only")&&strcmp(pol,"selected_member")&&strcmp(pol,"all_members")){
-        if(jb)cJSON_Delete(jb); return jerr(st,400,"Invalid policy");
+        if(jb)cJSON_Delete(jb);
+        return jerr(st,400,"Invalid policy");
       }
       char mid[64]={0};
       if (strcmp(pol,"selected_member")==0){
@@ -471,7 +473,8 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
     cJSON_AddBoolToObject(o,"set",byok||platform);
     cJSON_AddItemToObject(o,"source",
       byok?cJSON_CreateString("tenant"):platform?cJSON_CreateString("platform"):cJSON_CreateNull());
-    if(jb)cJSON_Delete(jb); cJSON_Delete(ov);
+    if(jb)cJSON_Delete(jb);
+    cJSON_Delete(ov);
     return jstr(o,st,200);
   }
   cJSON_Delete(ov); return jerr(st,404,"not_found");
@@ -508,7 +511,8 @@ static char *b64url(const unsigned char *in,int len){
   for (int i=0;i<len;i+=3){
     unsigned a=in[i],b=i+1<len?in[i+1]:0,c=i+2<len?in[i+2]:0,v=(a<<16)|(b<<8)|c;
     o[p++]=T[(v>>18)&63]; o[p++]=T[(v>>12)&63];
-    if(i+1<len)o[p++]=T[(v>>6)&63]; if(i+2<len)o[p++]=T[v&63];
+    if(i+1<len)o[p++]=T[(v>>6)&63];
+    if(i+2<len)o[p++]=T[v&63];
   }
   o[p]=0; return o;
 }

@@ -105,15 +105,27 @@
     .description = DESC, .layer = NULL, .free_tier = 1 };                     \
   REGISTER_SOURCE(SYM)
 
-/* CSV. csv_parse(text, 1) yields an array of header-keyed objects, which is
- * exactly jsonlist_emit's input shape, so the same field-name precedence and
- * the same no-invented-geometry rule apply. A CSV with no title-ish column
- * emits nothing rather than rows labelled by their first cell. */
+/* CSV. csv_parse_dc(text, 1, ',', "#") yields an array of header-keyed
+ * objects, which is exactly jsonlist_emit's input shape, so the same field-name
+ * precedence and the same no-invented-geometry rule apply.
+ *
+ * The `#` argument is the fix for a whole-source silent zero, and it is
+ * unconditional here rather than per-row on purpose. lib/hpengine.c has carried
+ * a `csv_comment` option since batch 18 (CLAUDE.md rule 4); this path never got
+ * one, so every scientific CSV that opens with a licence banner had that banner
+ * read as its column names. NOAA GML's sf6_mm_gl.csv is 45 lines of `#` notice
+ * followed by `year,month,decimal,average,…` and 347 monthly observations, and
+ * it emitted 0 records on every run since it was registered. csv_parse_dc only
+ * strips a LEADING run of comment lines — data never precedes the header — and
+ * recovers the header from that run when the publisher put it there, so no CSV
+ * that was parsing correctly changes shape. See lib/csv.h.
+ *
+ * Keep long commentary OUT of the macro body — see the note on VJSON. */
 #define VCSV(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)   \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
     char *t = feed_get_text(c->http, URL, 25000);                             \
     if (!t) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }        \
-    cJSON *d = csv_parse(t, 1);                                               \
+    cJSON *d = csv_parse_dc(t, 1, ',', "#");                                  \
     free(t);                                                                  \
     int n = jsonlist_emit(s, ID, d, "", CAT, LANG, TAGS);                     \
     cJSON_Delete(d);                                                          \

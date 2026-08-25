@@ -58,6 +58,12 @@ int breach_meta_load_seed_tsv(db_handle *db, const char *path,
 /* Default seed path: env JO_BREACH_SEED, else <repo>/docs/breach-corpus.seed.tsv. */
 const char *breach_meta_seed_path(void);
 
+/* Default JSON manifest path: env JO_BREACH_CORPUS, else
+ * <repo>/docs/breach-corpus.json. Exported so breach_jobs.c's path
+ * confinement can allow this exact file without keeping its own copy of the
+ * default and the env override. */
+const char *breach_meta_corpus_path(void);
+
 /* 1 if `id` is a known breach (a breach_meta.breach_id), else 0. Used by the
  * intel item/list endpoints to route a source-filtered request to the adapter. */
 int breach_meta_is_source(db_handle *db, const char *id);

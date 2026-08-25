@@ -384,6 +384,21 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * block, so it would reference a column that does not exist yet. */
   ensure_column(db, "breach_items", "value_domain", "TEXT");
 
+  /* House rule 4b, "emitting is not storing either". fetch_log.records_fetched
+   * counts emit() CALLS; this counts the DISTINCT rows those calls left
+   * behind. They differ whenever a source's records key onto each other in the
+   * sink's uid — ECDC_RESPIRATORY emitted 12,648 and stored 31 — and until
+   * this column existed there was nowhere to see that except by eye, in one
+   * run, on stderr.
+   *
+   * NO DEFAULT, deliberately. Every fetch_log row written before this
+   * migration is NULL here, and NULL is the truth about them: the number was
+   * not measured. A `DEFAULT 0` would backfill the entire history with a
+   * measurement nobody took and make every archived run look like total loss.
+   * A NEGATIVE value is a floor, not a count — see fetch_log_set_stored() in
+   * core/scheduler.c. */
+  ensure_column(db, "fetch_log", "stored", "INTEGER");
+
   /* Evidence capture (roadmap 17) is per-source OPT-IN and defaults OFF. 415
    * sources on schedules down to 60s would fill a disk in days otherwise, and
    * the hot-path check fails closed if this column is missing. */

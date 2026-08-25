@@ -1,6 +1,7 @@
 /* lib/threatintel.c — port of threatIntelCollectorFactory.js. See header. */
 #include "threatintel.h"
 #include "geojson.h"
+#include "_credential_notice.inc"   /* jo_needs_credential — see the gate below */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -55,10 +56,30 @@ int threatintel_collect(const source_ctx *ctx, intel_sink *sink,
       v = getenv(fallbacks[i]);
       if (v && *v) key = v;
     }
-    if (!key) {                       /* JS "<id>_no_key": 0 features */
-      fprintf(stderr, "[threatintel] %s gated (no %s)\n",
-              ctx->source_id, env_key);
-      return 0;
+    if (!key) {
+      /* NOT a bare `return 0`. This gate covers the whole abuse.ch / threat
+       * feed family — roughly eighteen registered collectors — and each of
+       * them used to degrade to a log line plus success, which reads
+       * downstream as "ran, spent a request, found nothing": fetch_log
+       * status='ok' records=0, /api/status green, nothing for anomaly triage
+       * to catch. That is the invisible-nothing house rule 1 names, and at
+       * this call site it was eighteen sources at once rather than one.
+       *
+       * jo_needs_credential() emits the tree's single status-notice shape
+       * (record_type "collector-status-notice", constant remote_key so the
+       * sink upserts one row however long the source stays unconfigured, no
+       * observation of any kind in it) and still returns 0, because "gated"
+       * is a state and not a run failure — returning -1 would open a
+       * collector_anomaly on every tick and bury real breakages.
+       *
+       * The helper lives under collectors/sources/ because that is where its
+       * twelve other callers are; `-iquote collectors/sources` is in CFLAGS so
+       * it resolves from here. It is header-only and static inline, so there is
+       * one definition of the shape and no link-order question. */
+      return jo_needs_credential(sink, ctx->source_id, ctx->source_id,
+                                 (const char *[]){ env_key, NULL }, NULL,
+                                 "set the key in .env; see docs/ for the "
+                                 "provider's free-tier signup");
     }
   }
 

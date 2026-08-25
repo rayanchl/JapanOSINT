@@ -22,6 +22,7 @@
 #include <string.h>
 #include <time.h>
 #include "_jp_osint.inc"
+#include "_timefmt.inc"
 
 /* ---- USGS earthquakes (GeoJSON FeatureCollection) ----------------------- *
  * features[].geometry.coordinates = [lon, lat, depth]
@@ -60,11 +61,11 @@ static int hz_usgs(const source_ctx *ctx, intel_sink *sink) {
       }
     }
     char iso[40] = {0};
-    if (cJSON_IsNumber(tms)) {
-      time_t t = (time_t)(tms->valuedouble / 1000.0);
-      struct tm g; gmtime_r(&t, &g);
-      strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%SZ", &g);
-    }
+    if (cJSON_IsNumber(tms))
+      /* USGS `time` is an epoch-ms number the upstream chose; when it cannot
+       * be rendered `iso` stays empty and published_at below stays NULL. */
+      jo_time_fmt((time_t)(tms->valuedouble / 1000.0),
+                  "%Y-%m-%dT%H:%M:%SZ", iso, sizeof iso);
 
     cJSON *data = cJSON_CreateObject();
     if (title) cJSON_AddStringToObject(data, "title", title);

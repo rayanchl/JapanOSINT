@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "cyi_common.inc"
 
 #define MAX_PREFIXES 8
 
@@ -49,22 +50,13 @@ static unsigned long parse_asn_prefix(const char *s, char *prefix, size_t plen) 
   return v;
 }
 
-static char *http_get(const source_ctx *ctx, const char *url, long *status) {
-  http_response hr = {0};
-  int rc = http_request(ctx->http, "GET", url, NULL, NULL, 0, 20000, 1, &hr);
-  *status = hr.status;
-  if (rc != 0 || hr.status != 200 || !hr.body) { http_response_free(&hr); return NULL; }
-  char *b = hr.body; hr.body = NULL; http_response_free(&hr);
-  return b;
-}
-
 static int emit_validity(const source_ctx *ctx, intel_sink *sink,
                          unsigned long asn, const char *prefix) {
   char url[256];
   snprintf(url, sizeof url,
            "https://rpki-validator.ripe.net/api/v1/validity/%lu/%s", asn, prefix);
   long status = 0;
-  char *body = http_get(ctx, url, &status);
+  char *body = cyi_get_plain(ctx, url, &status);
   if (!body) return 0;                            /* validator had no answer */
   cJSON *root = cJSON_Parse(body);
   free(body);
@@ -144,7 +136,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(url, sizeof url,
            "https://stat.ripe.net/data/announced-prefixes/data.json?resource=AS%lu", asn);
   long status = 0;
-  char *body = http_get(ctx, url, &status);
+  char *body = cyi_get_plain(ctx, url, &status);
   if (!body) {
     fprintf(stderr, "[RPKI_VALIDITY] prefix enumeration status=%ld\n", status);
     if (status >= 400 && status < 500) return 0;

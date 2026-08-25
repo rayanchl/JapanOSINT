@@ -143,9 +143,11 @@ static const hp_source HP3B19_NORTHAM[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.open.fec.gov/v1/filings/?api_key=DEMO_KEY&per_page=100",
     .array_path = "results",
+    .id_keys = "sub_id",
     .interval = 21600,
     .page_param = "page",
     .page_start = 1,
+    .title_keys = "document_description",
     .description = "Filings submitted to the FEC with the filer, form type, coverage "
       "period, total receipts and disbursements, cash on hand and a "
       "link to the document itself. The receipts and disbursements "
@@ -160,6 +162,7 @@ static const hp_source HP3B19_NORTHAM[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.gsa.gov/travel/perdiem/v2/rates/conus/lodging/2024?api_key=DEMO_KEY",
     .interval = 86400,
+    .title_keys = "DID",
     .description = "Official federal lodging and meal reimbursement rates by county "
       "and month. Mundane on its face, and precisely the reference "
       "needed to test whether a claimed federal travel expense is "

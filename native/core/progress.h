@@ -24,7 +24,14 @@
  * max_rounds, awaiting_user_action, discovered_entities, confirmed_entities,
  * all_entities, and `results` ONLY when set) — the exact shape the SSE route
  * and utils/searchIngest.js consume. Returned string is heap-allocated; the
- * caller frees() it. */
+ * caller frees() it.
+ *
+ * Two fields are ADDITIVE to that shape and have no JS counterpart:
+ * `degraded` (bool) and `stage_errors` (array). They exist because the JS
+ * original had no way to say "a stage of this run did not happen" either, and
+ * inheriting that hole is not parity worth keeping — see progress_stage_error
+ * below. Both are always present, so a consumer never has to distinguish
+ * "not degraded" from "this server is too old to tell you". */
 #ifndef JO_PROGRESS_H
 #define JO_PROGRESS_H
 
@@ -64,6 +71,58 @@ void progress_assign_services(osint_request *r, const char *const *names,
 void progress_service_status(osint_request *r, const char *name,
                              const char *status, const char *message,
                              int results_count, const char *entities);
+
+/* Record that a NON-SERVICE stage of the run failed or ran degraded, and mark
+ * the whole request degraded.
+ *
+ * WHY THIS EXISTS. A service that fails already has somewhere to say so: its
+ * row goes status="failed" with a status_message, and stats.failed_services
+ * counts it. The stages BETWEEN the service calls had nowhere. When
+ * llama-server was not running, core/pipeline.c's phase-1 analysis call
+ * returned NULL, the pipeline extracted zero entities, fell back to a single
+ * JP_CORPUS_LOOKUP on the raw query string — and then walked the whole normal
+ * phase ladder (gpt_analyzing → services_assigned → agents_working →
+ * aggregating → completed) and finished at 100%. Nothing in the snapshot, the
+ * SSE stream or /api/search/results said the analysis had never happened; a
+ * dead model host and a model that ran and found nothing produced an
+ * identical, confidently-complete-looking payload. That is precisely the
+ * silent success house rule 1 forbids.
+ *
+ * `stage` is where it happened ("analysis", "followup_round_2", "synthesis"),
+ * `code` is a stable machine token the client can branch on (e.g.
+ * "llm_unreachable", "llm_unusable_output", "no_entities_extracted"), `detail`
+ * is human prose. NULL fields become "". Duplicates are kept: three rounds
+ * failing the same way is a different fact from one round failing.
+ *
+ * The run may still PROCEED after one of these — a corpus lookup is better
+ * than nothing — but it is then reported as `degraded:true` with these rows
+ * attached, never as a completed investigation. */
+void progress_stage_error(osint_request *r, const char *stage,
+                          const char *code, const char *detail);
+
+/* Same array, severity "notice": something the consumer must be told but that
+ * did NOT stop the stage from doing its job — the canonical case being a
+ * prompt that could only show the model part of the service catalogue
+ * (docs/SOURCE_EXHAUSTIVENESS.md: a bounded view must state its bound).
+ *
+ * It is deliberately NOT an error, and does not set `degraded`. Every run on
+ * this registry bounds its catalogue, so folding that into the degraded flag
+ * would raise it on every single search — and a flag that is always on is one
+ * nobody reads when a real failure happens. Same reasoning as the `stored=`
+ * metric in CLAUDE.md rule 4b: a metric that cries wolf on every ordinary run
+ * stops carrying information. */
+void progress_stage_note(osint_request *r, const char *stage,
+                         const char *code, const char *detail);
+
+/* 1 once any stage row of severity "error" has been recorded. A run carrying
+ * only notices is NOT degraded. */
+int progress_is_degraded(osint_request *r);
+
+/* The recorded stage errors as a JSON array string ("[]" when none), for
+ * embedding in the results payload and the persisted run row so the
+ * reconstructed-from-store answer is not a rosier account of the run than the
+ * live one was. CALLER FREES. NULL only on OOM / r==NULL. */
+char *progress_stage_errors_json(osint_request *r);
 
 /* setRound(r). */
 void progress_set_round(osint_request *r, int round);

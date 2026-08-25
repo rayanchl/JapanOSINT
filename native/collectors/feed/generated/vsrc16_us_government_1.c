@@ -166,7 +166,7 @@ VGEO(us_nyc_geosearch_search, "us-nyc-geosearch-search", "NYC Planning Labs GeoS
 
 VJSON(us_nycopendata_views_index, "us-nycopendata-views-index", "NYC Open Data - dataset/view metadata index", "NYC Open Data - dataset/view metadata index",
   "us_government", "government",
-  "https://data.cityofnewyork.us/api/views.json?limit=1",
+  "https://data.cityofnewyork.us/api/views.json?limit=10000",
   "",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Reported only as the enumeration hop for NYC's ~2,800 datasets (id, name, assetType, category, description, createdAt, columns). Included because the id values are what the JustFix/HPD/DOB pivots above resolve against; the underlying rows themselves are Socrata and already covered elsewhere in the tree.");

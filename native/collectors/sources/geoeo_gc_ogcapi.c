@@ -35,17 +35,15 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "geoeo_common.inc"
+#include "_timefmt.inc"
 
-static void iso_days_ago(int days, char *out, size_t n) {
+static int iso_days_ago(int days, char *out, size_t n) {
   time_t t = time(NULL) - (time_t)days * 86400;
   struct tm tmv;
-#if defined(_WIN32)
-  gmtime_s(&tmv, &t);
-#else
-  gmtime_r(&t, &tmv);
-#endif
+  if (!jo_tm_utc(t, &tmv)) { if (n) out[0] = 0; return 0; }
   snprintf(out, n, "%04d-%02d-%02dT%02d:00:00Z", tmv.tm_year + 1900,
            tmv.tm_mon + 1, tmv.tm_mday, tmv.tm_hour);
+  return 1;
 }
 
 /* 1 when another feature for the same station carries a newer (or equal but
@@ -78,7 +76,12 @@ static int superseded(cJSON *feats, int self_idx, const char *idkey,
 static cJSON *ogc_fetch(const source_ctx *ctx, const char *sid,
                         const char *collection, int days) {
   char since[40];
-  iso_days_ago(days, since, sizeof since);
+  /* The rolling datetime filter is not optional here - without it the service
+   * answers with OLD timestamps (see the header note). */
+  if (!iso_days_ago(days, since, sizeof since)) {
+    fprintf(stderr, "[%s] cannot render the query window as a date\n", sid);
+    return NULL;
+  }
   char url[384];
   snprintf(url, sizeof url,
            "https://api.weather.gc.ca/collections/%s/items?limit=500&f=json"

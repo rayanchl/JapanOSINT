@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define MOJ_HQ_LON 139.7531
 #define MOJ_HQ_LAT 35.6735
@@ -38,10 +39,16 @@ static int first_reachable(http_client *http, const char *const *cand,
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
+  /* this_year is not decoration: it picks the 5-edition probe window below, so
+   * a clock we cannot break down leaves nothing to probe. */
   char iso[32];
   time_t now = time(NULL);
-  struct tm tmv; gmtime_r(&now, &tmv);
-  strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &tmv);
+  struct tm tmv;
+  if (!jo_tm_utc(now, &tmv) ||
+      !jo_time_fmt(now, "%Y-%m-%dT%H:%M:%S.000Z", iso, sizeof iso)) {
+    fprintf(stderr, "[moj-crime-whitepaper] cannot render today as a date\n");
+    return -1;
+  }
   int this_year = tmv.tm_year + 1900;
 
   int found = 0, edition = 0, year = 0, en_ok = 0;

@@ -2358,6 +2358,7 @@ static const hp_source HP3B19_USSTATE[] = {
     .interval = 86400,
     .page_param = "$offset",
     .page_size = 1000,
+    .title_keys = "facility_name",
     .description = "Maryland water discharge permit holders currently in significant "
       "non-compliance, naming the permitted facility, its permit number "
       "and location and the nature of the non-compliance. Significant "

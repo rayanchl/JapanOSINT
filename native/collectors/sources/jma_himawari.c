@@ -10,14 +10,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define TARGET_TIMES_FD "https://www.jma.go.jp/bosai/himawari/data/satimg/targetTimes_fd.json"
 #define VIEWER "https://www.jma.go.jp/bosai/map.html#5/34.5/137/&elem=satellite&contents=himawari"
-
-static void iso_now(char *out, size_t n) {
-  time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%S.000Z", &g);
-}
 
 /* "20260516060000" (JST) -> ISO 8601 UTC string (subtract 9h). */
 static int jst_stamp_to_iso(const char *s, char *out, size_t n) {
@@ -33,8 +29,7 @@ static int jst_stamp_to_iso(const char *s, char *out, size_t n) {
   time_t base = timegm(&tmv);              /* interpret fields as UTC */
   if (base == (time_t)-1) return 0;
   base -= 9 * 3600;                        /* JST -> UTC */
-  struct tm g; gmtime_r(&base, &g);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%S.000Z", &g);
+  if (!jo_time_fmt(base, "%Y-%m-%dT%H:%M:%S.000Z", out, n)) return 0;
   return 1;
 }
 
@@ -52,7 +47,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *validtime = (vt && cJSON_IsString(vt)) ? vt->valuestring : NULL;
 
   char observed[40]; int has_obs = jst_stamp_to_iso(validtime, observed, sizeof observed);
-  char now[40]; iso_now(now, sizeof now);
+  char now[40] = {0}; jo_now_iso_ms(now, sizeof now);
 
   char tile[512] = {0};
   if (basetime && validtime)
@@ -95,7 +90,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   it.link = VIEWER;
   it.author = "\xE6\xB0\x97\xE8\xB1\xA1\xE5\xBA\x81 Japan Meteorological Agency";
   it.lang = "ja";
-  it.published_at = has_obs ? observed : now;
+  it.published_at = has_obs ? observed : (now[0] ? now : NULL);
   it.record_type = "article";
   it.properties_json = pj;
   it.tags_json = tj;

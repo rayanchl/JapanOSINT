@@ -25,9 +25,19 @@ and it is invisible to a fetch-only probe. The fix is per-row: declare
 The row's own probe URL supplies the pivot entity, recovered by diffing the URL
 template against it, so entity-gated rows are exercised too rather than skipped.
 
+SLOW IS NOT BROKEN. The timeout used to be a fixed 180 s with no flag, and a
+run that hit it came back `TIMEOUT` — reported in the same list, at the same
+weight, as `DROPS_EVERYTHING`. They want opposite responses: one is a row whose
+identity or keys are wrong, the other is a bulk file that is simply large.
+Batch 19 spent an afternoon on rows that only needed a bigger number. `SLOW`
+is now its own verdict, it carries whatever partial `emitted N of M` the engine
+had printed before the kill, and `--timeout` moves the line. A SLOW row is
+UNMEASURED — it does not fail the run, because this tool did not establish
+anything about it.
+
 Usage:
   audit_batch_emit.py MANIFEST... --bin PATH_TO_japanosint [--only ID,ID]
-                                  [--jobs N] [--out results.tsv]
+                                  [--jobs N] [--timeout S] [--out results.tsv]
 """
 import argparse
 import io
@@ -37,8 +47,8 @@ import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 
-COLS = ["id", "mode", "want", "category", "record_type", "tags", "portal",
-        "name", "name_ja", "url", "probe", "description", "opts"]
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from manifest import COLS, iter_lines                       # noqa: E402
 
 TOKEN = re.compile(r"\{q[a-zA-Z]*\}")
 EMITTED = re.compile(r"\[hp:([^\]]+)\] emitted (\d+) of (\d+) available")
@@ -71,14 +81,17 @@ SCHED_ZERO = re.compile(r"\[sched\] \S+ run rc=(-?\d+) records=(\d+) (\d+)ms")
 
 
 def rows(paths):
-    out = []
+    """-> (rows, malformed). Malformed lines used to be skipped in silence,
+    which made "no DROPS_EVERYTHING" cover rows this tool never ran."""
+    out, bad = [], []
     for p in paths:
-        for line in io.open(p, encoding="utf-8"):
-            s = line.rstrip("\n")
-            if s.startswith("#") or s.count("|") != 12:
-                continue
-            out.append(dict(zip(COLS, s.split("|"))))
-    return out
+        for lno, raw, kind, r in iter_lines(p):
+            if kind == "row":
+                out.append(r)
+            elif kind == "bad":
+                bad.append(("%s:%d" % (os.path.basename(p), lno),
+                            raw.count("|") + 1))
+    return out, bad
 
 
 def entity_of(r):
@@ -106,14 +119,31 @@ def entity_of(r):
     return rest or None
 
 
+def partial_of(blob):
+    """The last `emitted N of M` the engine managed to print. On a killed run
+    this is the whole difference between "slow" and "drops everything": a row
+    that had emitted 40,000 of 900,000 when the axe fell is working."""
+    last = None
+    for m in EMITTED.finditer(blob or ""):
+        last = m
+    return (int(last.group(2)), int(last.group(3))) if last else (0, 0)
+
+
 def run_one(args):
-    binpath, r = args
+    binpath, r, timeout = args
     ent = entity_of(r)
     cmd = [binpath, "--run", r["id"]] + ([ent] if ent else [])
     try:
-        p = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
-    except subprocess.TimeoutExpired:
-        return (r["id"], "TIMEOUT", 0, 0, ent or "")
+        p = subprocess.run(cmd, capture_output=True, text=True,
+                           timeout=timeout, stdin=subprocess.DEVNULL)
+    except subprocess.TimeoutExpired as e:
+        # Keep whatever it printed before the kill. TimeoutExpired carries the
+        # output captured so far; it is bytes or str depending on how the pipe
+        # was drained, so normalise both.
+        def s(x):
+            return x.decode("utf-8", "replace") if isinstance(x, bytes) else (x or "")
+        em, av = partial_of(s(e.stdout) + s(e.stderr))
+        return (r["id"], "SLOW", em, av, ent or "")
     blob = (p.stdout or "") + (p.stderr or "")
     if "unknown source" in blob:
         return (r["id"], "UNREGISTERED", 0, 0, ent or "")
@@ -153,17 +183,25 @@ def main():
     ap.add_argument("--bin", required=True)
     ap.add_argument("--only")
     ap.add_argument("--jobs", type=int, default=4)
+    ap.add_argument("--timeout", type=int, default=180,
+                    help="seconds before a run is killed and called SLOW "
+                         "(180). SLOW is unmeasured, not failed — raise this "
+                         "and re-run the SLOW rows to measure them.")
     ap.add_argument("--out")
     a = ap.parse_args()
 
-    rs = rows(a.manifests)
+    rs, malformed = rows(a.manifests)
+    for at, nf in malformed:
+        print("%s MALFORMED %d fields, want %d — NOT CHECKED"
+              % (at, nf, len(COLS)))
     if a.only:
         want = set(x.strip() for x in a.only.split(","))
         rs = [r for r in rs if r["id"] in want]
-    sys.stderr.write("running %d rows through the engine\n" % len(rs))
+    sys.stderr.write("running %d rows through the engine, timeout=%ds\n"
+                     % (len(rs), a.timeout))
 
     with ThreadPoolExecutor(max_workers=a.jobs) as ex:
-        res = list(ex.map(run_one, [(a.bin, r) for r in rs]))
+        res = list(ex.map(run_one, [(a.bin, r, a.timeout) for r in rs]))
 
     if a.out:
         with io.open(a.out, "w", encoding="utf-8", newline="\n") as fh:
@@ -182,7 +220,16 @@ def main():
         print("\nfetched records but emitted none — needs title_keys/id_keys:")
         for x in sorted(bad, key=lambda y: -y[3])[:40]:
             print("  %-34s %7d available" % (x[0], x[3]))
-    return 1 if bad else 0
+    slow = [x for x in res if x[1] == "SLOW"]
+    if slow:
+        print("\nUNMEASURED — killed at --timeout %ds, NOT judged (re-run "
+              "these with a larger --timeout):" % a.timeout)
+        for x in sorted(slow, key=lambda y: -y[2]):
+            print("  %-34s %s" % (x[0], "reached emitted %d of %d" % (x[2], x[3])
+                                  if x[3] else "printed no progress at all"))
+    if malformed:
+        print("\nNOT CHECKED: %d malformed manifest line(s)." % len(malformed))
+    return 1 if (bad or malformed) else 0
 
 
 if __name__ == "__main__":

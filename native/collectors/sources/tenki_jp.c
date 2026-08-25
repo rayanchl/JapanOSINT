@@ -12,27 +12,46 @@
 #include <strings.h>
 #include <ctype.h>
 #include <time.h>
-#include <openssl/sha.h>
+#include "_timefmt.inc"
+#include <openssl/evp.h>   /* SHA-1 via EVP; see hash_key() for why not sha.h */
 
 #define HOME "https://tenki.jp/"
 /* Regional forecast page: this is where the per-city highs/lows actually live.
  * The homepage carries navigation and a map, not readable values. */
 #define FORECAST "https://tenki.jp/forecast/3/16/"
 
-static void iso_now(char *out, size_t n) {
-  time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%S.000Z", &g);
-}
-
-/* intelHashKey(telop, n): sha1( telop "|" n "|" )[:20 hex] */
-static void hash_key(char *out21, const char *telop, int n) {
-  unsigned char d[20]; SHA_CTX c; SHA1_Init(&c);
-  SHA1_Update(&c, telop, strlen(telop)); SHA1_Update(&c, "|", 1);
+/* intelHashKey(telop, n): sha1( telop "|" n "|" )[:20 hex]. Returns 1 on
+ * success, 0 on failure (out21 emptied).
+ *
+ * Written on EVP rather than the SHA1_Init/Update/Final trio, which OpenSSL 3.0
+ * deprecates along with the whole low-level SHA_CTX surface. The DIGEST IS
+ * UNCHANGED: same FIPS-180 SHA-1 over the same byte stream, same "|"
+ * separators, same decimal rendering of `n`. That is the whole point — this is
+ * the remote_key for every tenki.jp forecast row, so a digest that shifted by a
+ * byte would re-key the entire retained corpus and re-emit it as new. Proven
+ * byte-for-byte against the old implementation before the swap.
+ *
+ * EVP introduces a failure mode SHA1_Init did not have (context allocation), so
+ * the function now reports it rather than leaving the caller's buffer holding
+ * whatever was on the stack. run() skips a city it cannot key — an unkeyed row
+ * would collide with the next one under an arbitrary identity. */
+static int hash_key(char *out21, const char *telop, int n) {
+  out21[0] = 0;
+  unsigned char d[EVP_MAX_MD_SIZE]; unsigned int dl = 0;
   char nb[16]; snprintf(nb, sizeof nb, "%d", n);
-  SHA1_Update(&c, nb, strlen(nb)); SHA1_Update(&c, "|", 1);
-  SHA1_Final(d, &c);
+  EVP_MD_CTX *c = EVP_MD_CTX_new();
+  if (!c) return 0;
+  int ok = EVP_DigestInit_ex(c, EVP_sha1(), NULL) == 1
+        && EVP_DigestUpdate(c, telop, strlen(telop)) == 1
+        && EVP_DigestUpdate(c, "|", 1) == 1
+        && EVP_DigestUpdate(c, nb, strlen(nb)) == 1
+        && EVP_DigestUpdate(c, "|", 1) == 1
+        && EVP_DigestFinal_ex(c, d, &dl) == 1;
+  EVP_MD_CTX_free(c);
+  if (!ok || dl < 10) return 0;
   for (int i = 0; i < 10; i++) sprintf(out21 + i*2, "%02x", d[i]);
   out21[20] = 0;
+  return 1;
 }
 
 /* decode(): strip tags already done by caller; entity-decode + whitespace
@@ -67,17 +86,16 @@ static void decode(const char *in, char *out, size_t cap) {
   memcpy(out, tmp, to + 1);      /* to + 1 <= tcap <= cap */
 }
 
-/* strip <...> tags into spaces (m[1].replace(/<[^>]+>/g,' ')) */
-static void strip_tags(const char *in, size_t len, char *out, size_t cap) {
-  size_t o = 0; int intag = 0;
-  for (size_t i = 0; i < len && o + 1 < cap; i++) {
-    char ch = in[i];
-    if (ch == '<') { intag = 1; if (o + 1 < cap) out[o++] = ' '; }
-    else if (ch == '>') intag = 0;
-    else if (!intag) out[o++] = ch;
-  }
-  out[o] = 0;
-}
+/* A strip_tags() lived here — the `m[1].replace(/<[^>]+>/g,' ')` leg of the
+ * retired weather-telop scan (see run()). The scan went; this went with it and
+ * nothing has called it since. Verified against the live page before deleting
+ * rather than wiring it in, because a dead tag-stripper in an HTML scraper
+ * usually means raw markup is reaching titles. Here it is not: every text this
+ * file lifts is bounded to a single text node. tenki.jp ships each value as a
+ * plain `<span class="max-temp">34</span>` / `<span class="prob-precip">10%
+ * </span>`, and the city is the text node between the `<a …>` and the first
+ * `<br>`, so cls_text()'s "from '>' to the next '<'" grab and the city grab
+ * both stop before a tag could be captured. decode() handles the entities. */
 
 /* Pull the inner text of the first `class="<cls>"` element at/after `from`.
  * Returns the position just past it, or NULL. tenki.jp wraps each value in a
@@ -104,7 +122,7 @@ static const char *cls_text(const char *from, const char *cls,
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char *html = feed_get_text(ctx->http, HOME, 10000);
   int reachable = html != NULL;
-  char now[40]; iso_now(now, sizeof now);
+  char now[40]; jo_now_iso_ms(now, sizeof now);
   int n = 0;
 
   /* tenki.jp's homepage no longer carries `weather-telop` anywhere — the site
@@ -165,7 +183,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
          * it fills in client-side, and a placeholder is not an observation. */
         if (!isdigit((unsigned char)hi[0]) || !isdigit((unsigned char)lo[0])) continue;
 
-        char hk[24]; hash_key(hk, city, 0);
+        char hk[24];
+        if (!hash_key(hk, city, 0)) continue;   /* no key → no honest row */
         cJSON *tags = cJSON_CreateArray();
         cJSON_AddItemToArray(tags, cJSON_CreateString("weather"));
         cJSON_AddItemToArray(tags, cJSON_CreateString("tenki-jp"));
@@ -195,7 +214,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         it.link = href[0] ? href : FORECAST;
         it.author = "\xE6\x97\xA5\xE6\x9C\xAC\xE6\xB0\x97\xE8\xB1\xA1\xE5\x8D\x94\xE4\xBC\x9A tenki.jp";
         it.lang = "ja";
-        it.published_at = now;
+        it.published_at = now[0] ? now : NULL;
         it.record_type = "weather-observation";
         it.tags_json = tj;
         it.properties_json = pj;

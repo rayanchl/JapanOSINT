@@ -29,23 +29,36 @@ Usage:
 """
 import argparse
 import io
+import os
 import re
 import sys
 
-COLS = ["id", "mode", "want", "category", "record_type", "tags", "portal",
-        "name", "name_ja", "url", "probe", "description", "opts"]
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# THE manifest parser, shared with gen_hp_batch.py and the other auditors.
+# This file is the reason it exists: it used to carry its own copy of
+# split_opts() and a FIRST-wins opt() lookup, while the generator resolved the
+# same duplicated key last-wins — and so reported OSM_API_CHANGESETS_BLACKSEA,
+# which runs daily, as a row that can never run. See tools/manifest.py.
+from manifest import COLS, parse_opts                      # noqa: E402
 
 # mirrors hp_uses_entity(): every entity token starts "{q"
 ENTITY_TOKEN = re.compile(r"\{q")
 
 
 def rows(path):
+    """(lno, raw, row|None, malformed) — a line that LOOKS like a row and is
+    not comes back flagged rather than silently indistinguishable from a
+    comment, because "skipped" and "checked and clean" are not the same
+    answer and this file used to give the second one for both."""
     for lno, line in enumerate(io.open(path, encoding="utf-8"), 1):
         s = line.rstrip("\n")
-        if s.startswith("#") or s.count("|") != 12:
-            yield lno, s, None
+        if not s.strip() or s.lstrip().startswith("#"):
+            yield lno, s, None, False
             continue
-        yield lno, s, dict(zip(COLS, s.split("|")))
+        if s.count("|") != len(COLS) - 1:
+            yield lno, s, None, True
+            continue
+        yield lno, s, dict(zip(COLS, s.split("|"))), False
 
 
 # How often a static source is worth re-fetching. A blanket number would be
@@ -80,30 +93,6 @@ def cadence_for(r):
     return DEFAULT_CADENCE
 
 
-def split_opts(s):
-    """Split on `;`, honouring a `\\;` escape — see gen_hp_batch.split_opts."""
-    out, cur, esc = [], [], False
-    for ch in s:
-        if esc:
-            cur.append(ch if ch == ";" else "\\" + ch)
-            esc = False
-        elif ch == "\\":
-            esc = True
-        elif ch == ";":
-            out.append("".join(cur)); cur = []
-        else:
-            cur.append(ch)
-    out.append("".join(cur))
-    return [x.strip() for x in out]
-
-
-def opt(r, k):
-    for kv in split_opts(r["opts"]):
-        if kv.startswith(k + "="):
-            return kv.split("=", 1)[1]
-    return None
-
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("manifests", nargs="+")
@@ -112,18 +101,37 @@ def main():
     ap.add_argument("--quiet", action="store_true")
     a = ap.parse_args()
 
-    total = flagged = fixed = 0
+    total = flagged = fixed = ambiguous = malformed = 0
     chosen = {}
     for p in a.manifests:
         out, changed = [], False
-        for lno, raw, r in rows(p):
+        for lno, raw, r, bad in rows(p):
+            if bad:
+                malformed += 1
+                print("%-34s %-30s %d fields, want %d — NOT CHECKED"
+                      % ("%s:%d" % (p.rsplit("/", 1)[-1], lno), "",
+                         raw.count("|") + 1, len(COLS)))
+                out.append(raw)
+                continue
             if r is None:
                 out.append(raw)
                 continue
             total += 1
+            o, dups, _junk = parse_opts(r["opts"])
+            if dups:
+                # A duplicated key has no value this tool is willing to state,
+                # so it does not state one. Reporting "never runs" off a guess
+                # is exactly what this file used to do.
+                ambiguous += 1
+                print("%-34s %-30s duplicate opt %r — UNVERIFIABLE, fix the "
+                      "manifest (gen_hp_batch.py rejects it too)"
+                      % ("%s:%d" % (p.rsplit("/", 1)[-1], lno), r["id"],
+                         dups[0]))
+                out.append(raw)
+                continue
             pivotable = bool(ENTITY_TOKEN.search(r["url"]) or
-                             ENTITY_TOKEN.search(opt(r, "post_body") or ""))
-            interval = opt(r, "interval")
+                             ENTITY_TOKEN.search(o.get("post_body", "")))
+            interval = o.get("interval")
             scheduled = interval is not None and interval.isdigit() and int(interval) > 0
             if pivotable or scheduled:
                 out.append(raw)
@@ -147,7 +155,14 @@ def main():
           % (flagged, total, (" — %d given an interval" % fixed) if a.fix else ""))
     if chosen:
         print("    cadence: " + ", ".join("%ds x%d" % (k, v) for k, v in sorted(chosen.items())))
-    return 1 if (flagged and not a.fix) else 0
+    if ambiguous or malformed:
+        print("    NOT CHECKED: %d row(s) with an ambiguous opt, %d malformed "
+              "line(s). These are not 'clean' — they are unexamined."
+              % (ambiguous, malformed))
+    # An unexamined row fails the gate. The alternative is a tool that exits 0
+    # over rows it could not read, which is the failure mode this whole batch
+    # of fixes is about.
+    return 1 if ((flagged and not a.fix) or ambiguous or malformed) else 0
 
 
 if __name__ == "__main__":

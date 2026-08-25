@@ -79,6 +79,7 @@ static const hp_source HP3B19_IANA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://raw.githubusercontent.com/musalbas/mcc-mnc-table/master/mcc-mnc-table.json",
     .interval = 21600,
+    .title_keys = "network",
     .description = "Mobile Country Code and Mobile Network Code pairs mapped to the "
       "operator, country, ISO code and network name. An MCC/MNC pair is "
       "what a handset broadcasts and what appears in cell-site and "

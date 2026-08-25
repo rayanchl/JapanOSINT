@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 typedef struct { const char *addr, *label, *chain; } known_t;
 static const known_t KNOWN[] = {
@@ -90,8 +91,9 @@ static int emit_eth_tx(intel_sink *sink, const char *addr, cJSON *tx) {
   if (to && cJSON_IsString(to)) cJSON_AddStringToObject(data, "to", to->valuestring);
   if (ts && cJSON_IsString(ts)) {
     time_t t = (time_t)atol(ts->valuestring);
-    strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%SZ", gmtime(&t));
-    cJSON_AddStringToObject(data, "time", iso);
+    /* iso stays empty on failure: "time" omitted, published_at NULL. */
+    if (jo_time_fmt(t, "%Y-%m-%dT%H:%M:%SZ", iso, sizeof iso))
+      cJSON_AddStringToObject(data, "time", iso);
   }
   char *bj = cJSON_PrintUnformatted(data);
 
@@ -141,8 +143,8 @@ static int emit_wa_tx(intel_sink *sink, cJSON *tx) {
   if (au && cJSON_IsNumber(au)) cJSON_AddNumberToObject(data, "amount_usd", au->valuedouble);
   if (tm && cJSON_IsNumber(tm)) {
     time_t t = (time_t)tm->valuedouble;
-    strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%SZ", gmtime(&t));
-    cJSON_AddStringToObject(data, "time", iso);
+    if (jo_time_fmt(t, "%Y-%m-%dT%H:%M:%SZ", iso, sizeof iso))
+      cJSON_AddStringToObject(data, "time", iso);
   }
   for (int k = 0; k < 2; k++) {
     const char *side = k ? "to" : "from";

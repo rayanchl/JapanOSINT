@@ -209,12 +209,16 @@ extension API {
 
     // ── Item 11: alert inbox ───────────────────────────────────────────────
 
+    /// Returns the rows AND how many exist server-side, so the inbox can say
+    /// "showing 200 of 700" instead of presenting a capped page as the whole.
+    /// `total` is nil when the server could not count (it sends null rather
+    /// than a plausible 0) or when talking to a pre-envelope server.
     func alertInbox(unreadOnly: Bool = false,
-                    limit: Int = 100) async throws -> [AlertInboxEvent] {
+                    limit: Int = 100) async throws -> (events: [AlertInboxEvent], total: Int?) {
         var q = [URLQueryItem(name: "limit", value: String(limit))]
         if unreadOnly { q.append(URLQueryItem(name: "unread", value: "1")) }
         let env: AlertInboxEnvelope = try await get("/api/alert-events", query: q)
-        return env.data
+        return (env.data, env.page?.total)
     }
 
     func alertUnreadCount() async throws -> Int {

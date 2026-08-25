@@ -191,7 +191,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              proglist[0] ? " · " : "", proglist,
              cJSON_GetArraySize(akas) ? " · aka " : "",
              cJSON_GetArraySize(akas)
-               ? cJSON_GetStringValue(cJSON_GetArrayItem(akas, 0)) : "");
+               ? cJSON_GetStringValue(cJSON_GetArrayItem(akas, 0)) : "");  /* exhaustive-ok: display pick for a 512-byte summary line; the whole akas array is transferred to body.aka and properties.aka below */
 
     char link[160];
     snprintf(link, sizeof link,

@@ -16,7 +16,7 @@
  * JSON:API and hands back its own `links.next`, so the walk below follows the
  * upstream's arithmetic rather than guessing at a page count. */
 static const char *URL =
-  "https://api.dane.gov.pl/1.4/datasets?page=1&per_page=100";
+  "https://api.dane.gov.pl/1.4/datasets?page=1&per_page=100";  /* exhaustive-ok: this is the walk's FIRST page; run() follows links.next to the end and discloses an early stop */
 
 /* exhaustive-ok: ceiling on a walk that discloses in-band when it stops early.
  * Set from the catalogue's real size, not from taste: dane.gov.pl reports
@@ -32,7 +32,7 @@ static const char *URL =
  * is roughly 26,500 datasets: reaching the remainder needs a different
  * traversal (slicing by date or institution), not a bigger page number. Worth
  * knowing before anyone reads 10,000 as "all of Poland's open data". */
-#define PL_PAGE_MAX 300
+#define PL_PAGE_MAX 300   /* exhaustive-ok: page-walk ceiling (see above), disclosed as a collector-truncation-notice when it stops a walk with more to give */
 
 static int emit_page(intel_sink *sink, const cJSON *arr) {
   int n = 0;
@@ -141,7 +141,7 @@ static const source_def od_pl_dane_def = {
   .name = "Poland dane.gov.pl open-data API",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://api.dane.gov.pl/1.4/datasets?page=1&per_page=100",
+  .url = "https://api.dane.gov.pl/1.4/datasets?page=1&per_page=100",  /* exhaustive-ok: registry metadata for /api/status, not the fetch; run() walks links.next */
   .description = "Polish national open-data portal (JSON:API): dataset title, notes, institution and resource collection per record",
   .license = "Otwarte Dane; per-dataset licences in attributes.license_*",
   .free_tier = 1,

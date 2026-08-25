@@ -219,15 +219,44 @@ static int sw_ofac_csv(const source_ctx *ctx, intel_sink *sink,
   return emitted;
 }
 
-/* ---- Generic line/record scan for CSV & XML lists ----------------------- *
+/* ---- Generic line/record scan for CSV lists ----------------------------- *
  * For lists whose exact column semantics we don't want to hard-code, we still
  * behave honestly: we only emit records that literally contain the query, and
  * we surface the REAL matched line as the "detail". The record name is the
  * matched fragment's owning line, trimmed. This never fabricates data — it
- * echoes the genuine matched entry from the official file. */
+ * echoes the genuine matched entry from the official file.
+ *
+ * WHERE the name lives is described by a DELIMITER and a 1-based inclusive
+ * COLUMN RANGE. It used to be a single count meaning "how many LEADING
+ * COMMA-separated columns are the name", and that could not describe the EU
+ * consolidated export at all: verified against the live file on 2026-08-24,
+ * it is SEMICOLON-delimited and its name fields (NameAlias_LastName,
+ * _FirstName, _MiddleName, _WholeName) are columns 17-20. The only value that
+ * field could hold for the EU row was 0 = "screen the whole row", which is the
+ * behaviour that made the query "Putin" return 708 UK OFSI records — Abramovich,
+ * Abakarov, … — because their free-text Statement of Reasons mentions Putin.
+ * Only 10 OFSI records carry Putin/Putina as a NAME. In a sanctions screen a
+ * false positive is a person wrongly flagged, so "over-match and let a human
+ * sort it out" is not a resting place.
+ *
+ * A row whose declared name columns are ALL EMPTY is not screened at all. That
+ * is a deliberate change from the previous fall-back-to-the-whole-row: when we
+ * know which columns hold names, a row with nothing in them holds no name, and
+ * screening its narrative columns instead can only produce the false positive
+ * this function exists to remove. It cannot cause a miss for either list that
+ * declares a range, because both are denormalised one-row-per-name-alias — the
+ * EU file repeats the whole entity block for every alias, so every alias is
+ * itself a row with populated name columns.
+ *
+ * `delim` of 0 means comma. `col_lo` of 0 means the layout is unknown, and
+ * then the whole row is screened exactly as before — over-matching, never
+ * missing, and honest about not knowing. */
 static int sw_scan_lines(intel_sink *sink, const char *body, const char *q,
                          const char *service, const char *rectype,
-                         const char *listing_url, int name_cols, int max) {
+                         const char *listing_url, char delim,
+                         int col_lo, int col_hi, int max) {
+  if (!delim) delim = ',';
+  if (col_hi < col_lo) col_hi = col_lo;
   int emitted = 0, idx = 0;
   const char *line = body;
   while (line && *line && emitted < max) {
@@ -242,40 +271,39 @@ static int sw_scan_lines(intel_sink *sink, const char *body, const char *q,
       memcpy(buf, line, cp); buf[cp] = 0;
       sw_clean(buf);
 
-      /* Name from the leading name columns rather than 200 bytes of raw CSV:
-       * OFSI puts the six name parts first ("MITHOO,Mian,,,,,"), so the first
-       * `name_cols` POSITIONAL fields are the name (most usually empty). */
+      /* Concatenate the declared name columns, in order, skipping the empty
+       * ones — OFSI's six name parts are usually mostly blank
+       * ("MITHOO,Mian,,,,,"), and so are the EU's four. */
       char nm[256]; nm[0] = 0;
-      if (name_cols > 0) {
-        size_t o = 0; int nf = 0, inq = 0;
+      if (col_lo > 0) {
+        size_t o = 0;
+        int col = 1, inq = 0;              /* 1-based, like a header row */
         const char *fs = buf;
-        for (const char *r2 = buf; nf < name_cols; r2++) {
-          if (inq) { if (*r2 == '"') inq = 0; if (*r2) continue; }
-          if (*r2 == '"') { inq = 1; continue; }
-          if (*r2 == ',' || *r2 == 0) {
-            size_t fl = (size_t)(r2 - fs);
-            while (fl && (fs[0] == ' ' || fs[0] == '"')) { fs++; fl--; }
-            while (fl && (fs[fl-1] == ' ' || fs[fl-1] == '"')) fl--;
-            nf++;                            /* positional, empty or not */
+        for (const char *r2 = buf; ; r2++) {
+          if (*r2 == '"') { inq = !inq; continue; }
+          if (inq && *r2) continue;
+          if (*r2 != delim && *r2 != 0) continue;
+          if (col >= col_lo && col <= col_hi) {
+            const char *f = fs; size_t fl = (size_t)(r2 - fs);
+            while (fl && (*f == ' ' || *f == '"')) { f++; fl--; }
+            while (fl && (f[fl-1] == ' ' || f[fl-1] == '"')) fl--;
             if (fl && o + fl + 2 < sizeof nm) {
               if (o) nm[o++] = ' ';
-              memcpy(nm + o, fs, fl); o += fl; nm[o] = 0;
+              memcpy(nm + o, f, fl); o += fl; nm[o] = 0;
             }
-            if (!*r2) break;
-            fs = r2 + 1;
           }
+          if (!*r2 || col >= col_hi) break;
+          col++;
+          fs = r2 + 1;
         }
         sw_unescape(nm);
       }
 
-      /* Screen on the NAME columns when we know the layout. Matching the whole
-       * CSV row matched the free-text "Statement of Reasons" as well: the
-       * query "Putin" returned 708 OFSI records (capped at 50) — Abramovich,
-       * Abakarov, … — because their reasons text mentions Putin. Only 10 OFSI
-       * records carry Putin/Putina as a NAME. Reporting an unlisted-for-that-
-       * name person as a sanctions hit is exactly the failure mode we are
-       * fixing. */
-      const char *hay = (name_cols > 0 && nm[0]) ? nm : buf;
+      /* Screen the NAME columns when the layout is declared, the whole row
+       * when it is not. `nm[0] == 0` under a declared range means this row
+       * carries no name — see the note above on why it is skipped rather than
+       * widened back out to the row. */
+      const char *hay = col_lo > 0 ? nm : buf;
       if (hay[0] && sw_name_match(hay, q)) {
         if (!nm[0]) snprintf(nm, sizeof nm, "%.200s", buf);
         emitted += sw_emit(sink, service, rectype, q, nm, buf, NULL,
@@ -487,16 +515,26 @@ typedef struct {
   /* M_XML only: which element is one record, which tags carry the name, the
    * aliases, the programme and the extra detail (all comma-separated). */
   const char *xml_rec, *xml_name, *xml_alias, *xml_prog, *xml_detail;
-  /* M_SCAN only: how many leading CSV columns are the NAME (0 = layout
-   * unknown, screen the whole row and accept the noise). */
-  int csv_name_cols;
+  /* M_SCAN only: where the NAME lives in the CSV.
+   *   csv_delim   0 = comma, else the byte that separates the columns.
+   *   name_col_lo 1-based first name column; 0 = layout unknown, in which
+   *               case the WHOLE ROW is screened (over-matches on narrative
+   *               columns, never misses, and says so).
+   *   name_col_hi 1-based last name column, inclusive. */
+  char csv_delim;
+  int  name_col_lo, name_col_hi;
 } sw_row;
 
 static const sw_row ROWS[] = {
   /* OFAC SDN — keyless CSV bulk export */
   { "OFAC_SDN", "OFAC_SDN", "sanctions-sdn",
     "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.CSV",
-    "https://sanctionssearch.ofac.treas.gov/", NULL, M_OFAC_CSV },
+    "https://sanctionssearch.ofac.treas.gov/", NULL, M_OFAC_CSV,
+    /* sw_ofac_csv() parses the SDN export's own fixed column layout, so
+     * neither the xml_* record description nor the name-column range is
+     * consulted in this mode. Spelled out so the zeros read as a decision
+     * rather than as a row somebody forgot to finish. */
+    .xml_rec = NULL, .name_col_lo = 0 },
   /* EU consolidated — keyless. This was gated behind EU_SANCTIONS_TOKEN, which
    * nobody sets, so the URL was fetched as "...content?token=" and answered 403
    * on every run: a registered sanctions source that has never returned a row.
@@ -507,7 +545,31 @@ static const sw_row ROWS[] = {
   { "EU_SANCTIONS", "EU_SANCTIONS", "sanctions-eu",
     "https://webgate.ec.europa.eu/fsd/fsf/public/files/csvFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw",
     "https://data.europa.eu/data/datasets/consolidated-list-of-persons-groups-and-entities-subject-to-eu-financial-sanctions",
-    NULL, M_SCAN },
+    NULL, M_SCAN,
+    /* SEMICOLON-delimited, names at columns 17-20. Read off the live export
+     * rather than assumed — header fetched 2026-08-24, 25,166,172 bytes:
+     *
+     *   1  fileGenerationDate        …  16 Entity_Regulation_PublicationUrl
+     *   17 NameAlias_LastName        18  NameAlias_FirstName
+     *   19 NameAlias_MiddleName      20  NameAlias_WholeName
+     *   21 NameAlias_NameLanguage    …  113 Citizenship_Regulation_…Url
+     *
+     * This is the layout the old `csv_name_cols` ("how many LEADING
+     * COMMA-separated columns are the name") could not express at ANY value:
+     * comma-splitting a semicolon file makes column 1 the whole line, and the
+     * name columns are not leading. So the row was pinned at 0 = screen the
+     * whole 113-column line, narrative columns (Entity_Remark,
+     * Entity_DesignationDetails) included — the same over-match that made the
+     * query "Putin" return 708 UK OFSI records. Now that sw_scan_lines takes a
+     * delimiter and a range, the layout can simply be stated.
+     *
+     * Restricting the screen to 17-20 cannot miss an alias: this export is
+     * denormalised, one row per NameAlias, repeating the entity block each
+     * time — so "Saddam Hussein Al-Tikriti" and "Abu Ali" are two rows of the
+     * same entity, each with its own populated name columns. Titles, functions
+     * and document names are deliberately NOT in the range: they are not the
+     * designated person's name. */
+    .xml_rec = NULL, .csv_delim = ';', .name_col_lo = 17, .name_col_hi = 20 },
   /* UN Security Council consolidated — keyless XML, one record per
    * <INDIVIDUAL>/<ENTITY> element */
   { "UN_SANCTIONS", "UN_SANCTIONS", "sanctions-un",
@@ -518,14 +580,19 @@ static const sw_row ROWS[] = {
     "FIRST_NAME,SECOND_NAME,THIRD_NAME,FOURTH_NAME",
     "ALIAS_NAME",
     "UN_LIST_TYPE",
-    "REFERENCE_NUMBER,LISTED_ON,NATIONALITY,DATE_OF_BIRTH,COMMENTS1" },
-  /* UK OFSI consolidated — keyless CSV. Columns 1-6 are "Name 6" (family
-   * name) followed by "Name 1".."Name 5"; everything after that is
-   * biographical/narrative and must not be screened as a name. */
+    "REFERENCE_NUMBER,LISTED_ON,NATIONALITY,DATE_OF_BIRTH,COMMENTS1",
+    .name_col_lo = 0 },        /* M_XML: not a CSV, sw_scan_lines never runs */
+  /* UK OFSI consolidated — keyless COMMA-separated CSV. Columns 1-6 are
+   * "Name 6" (family name) followed by "Name 1".."Name 5"; everything after
+   * that is biographical/narrative and must not be screened as a name.
+   * Re-read off the live export on 2026-08-24. This is the row that already
+   * carried a column count (as `csv_name_cols = 6`, i.e. the leading six);
+   * expressed as a range it is columns 1-6, and the screen it produces is
+   * byte-for-byte the same set of columns as before. */
   { "UK_OFSI", "UK_OFSI", "sanctions-uk",
     "https://ofsistorage.blob.core.windows.net/publishlive/2022format/ConList.csv",
     "https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets",
-    NULL, M_SCAN, NULL, NULL, NULL, NULL, NULL, 6 },
+    NULL, M_SCAN, .csv_delim = ',', .name_col_lo = 1, .name_col_hi = 6 },
   /* World Bank debarred firms — NOT keyless any more. The gateway now answers
    * 401 "Access denied due to missing subscription key" on this path and on
    * its SANCTIONED_FIRM sibling, so the row was fetching nothing and reporting
@@ -536,7 +603,10 @@ static const sw_row ROWS[] = {
   { "WORLDBANK_DEBARRED", "WORLDBANK_DEBARRED", "sanctions-debarment",
     "https://apigwext.worldbank.org/dvsvc/v1.0/json/APPLICATION/ADOBE_EXPRT_WS/OFFICIAL/DEBARRED_FIRMS",
     "https://www.worldbank.org/en/projects-operations/procurement/debarred-firms",
-    "WORLDBANK_API_KEY", M_WB_JSON },
+    "WORLDBANK_API_KEY", M_WB_JSON,
+    /* sw_worldbank() reads named JSON keys (SUPP_NAME, GRND, …), so no XML
+     * record description and no CSV column range apply in this mode. */
+    .xml_rec = NULL, .name_col_lo = 0 },
   /* Canada SEMA consolidated autonomous sanctions — keyless XML, one record
    * per <record> element (person: LastName+GivenName, else EntityOrShip) */
   { "CA_SANCTIONS", "CA_SANCTIONS", "sanctions-ca",
@@ -547,13 +617,29 @@ static const sw_row ROWS[] = {
     "LastName,GivenName,EntityOrShip",
     "Aliases",
     "Country",
-    "Schedule,Item,DateOfListing,DateOfBirthOrShipBuildDate,ShipIMONumber,TitleOrShip" },
+    "Schedule,Item,DateOfListing,DateOfBirthOrShipBuildDate,ShipIMONumber,TitleOrShip",
+    .name_col_lo = 0 },        /* M_XML: not a CSV, sw_scan_lines never runs */
   /* Australia DFAT consolidated list — the authoritative export is XLSX; the
    * open-data CSV mirror is used here. */
   { "AU_DFAT", "AU_DFAT", "sanctions-au",
     "https://www.dfat.gov.au/sites/default/files/regulation8_consolidated.csv",
     "https://www.dfat.gov.au/international-relations/security/sanctions/consolidated-list",
-    NULL, M_SCAN },
+    NULL, M_SCAN,
+    /* name_col_lo stays 0 = "layout unknown, screen the whole row", and it
+     * stays there UNVERIFIED. dfat.gov.au refused every connection from the
+     * build host on 2026-08-24 (curl exit 92 on HTTP/2, exit 28 timeout on
+     * HTTP/1.1 and on forced IPv4; the sanctions landing page is unreachable
+     * too), and again on the retry that accompanied the EU fix below — so the
+     * real header still could not be read. A column range written from memory
+     * would be a guess baked into a sanctions screen, which is worse than
+     * admitting the layout is unknown, so it keeps the conservative value: it
+     * over-matches on narrative columns but never misses a listed name.
+     *
+     * The EXCUSE for leaving it is gone, though — sw_scan_lines now takes a
+     * delimiter and an arbitrary column range, so whatever the header turns
+     * out to say can be expressed here. All that is missing is one successful
+     * fetch of the file by someone whose network this host is not on. */
+    .xml_rec = NULL, .name_col_lo = 0 },
   /* Switzerland SECO sanctions — keyless XML export.
    *
    * The registered action was `downloadXmlGesamtlisteEn`, which is not the
@@ -576,7 +662,8 @@ static const sw_row ROWS[] = {
     "value",
     "spelling-variant",
     "sanctions-set-id",
-    "other-information" },
+    "other-information",
+    .name_col_lo = 0 },        /* M_XML: not a CSV, sw_scan_lines never runs */
 };
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -634,7 +721,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       case M_SCAN:
       default:
         emitted = sw_scan_lines(sink, body, q, r->service, r->rectype,
-                                r->listing, r->csv_name_cols, 50);
+                                r->listing, r->csv_delim,
+                                r->name_col_lo, r->name_col_hi, 50);
         break;
     }
     (void)emitted;

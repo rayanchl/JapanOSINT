@@ -10,6 +10,93 @@ cJSON *csv_parse(const char *text, int headers) {
   return csv_parse_d(text, headers, ',');
 }
 
+/* Cells in one line, honouring RFC 4180 quoting. Used only to decide whether a
+ * banner line is secretly the header, so it has to agree with the real parser
+ * about what a delimiter is — an embedded delimiter inside quotes is not one. */
+static int csv_field_count(const char *line, size_t len, char delim) {
+  int n = 1, in_q = 0;
+  for (size_t i = 0; i < len; i++) {
+    char c = line[i];
+    if (in_q) {
+      if (c == '"') { if (i + 1 < len && line[i + 1] == '"') i++; else in_q = 0; }
+    } else if (c == '"') in_q = 1;
+    else if (c == delim) n++;
+  }
+  return n;
+}
+
+/* Strip a LEADING comment banner, and recover the header out of it if that is
+ * where the publisher put the column names. See csv.h for why this exists.
+ * Returns a malloc'd replacement, or NULL to mean "nothing to strip, use the
+ * original text". */
+static char *csv_strip_banner(const char *text, char delim, const char *prefix,
+                              int headers) {
+  size_t plen = strlen(prefix);
+  const char *p = text;
+  const char *last_c = NULL; size_t last_clen = 0;   /* last banner line */
+  int skipped = 0;
+
+  for (;;) {
+    const char *eol = strchr(p, '\n');
+    size_t linelen = eol ? (size_t)(eol - p) : strlen(p);
+    size_t body = linelen;
+    while (body && (p[body-1] == '\r')) body--;
+    const char *t = p;
+    size_t tlen = body;
+    while (tlen && (*t == ' ' || *t == '\t')) { t++; tlen--; }
+    if (tlen == 0) {                       /* blank line inside the banner */
+      if (!eol) break;
+      skipped = 1; p = eol + 1; continue;
+    }
+    if (tlen < plen || strncmp(t, prefix, plen) != 0) break;   /* first real line */
+    last_c = t; last_clen = tlen;
+    skipped = 1;
+    if (!eol) { p = t + tlen; break; }
+    p = eol + 1;
+  }
+  if (!skipped) return NULL;               /* no banner — leave the text alone */
+
+  /* Is the last banner line the column-name row? URLhaus writes its header as
+   * `# id,dateadded,url,url_status,…`, so dropping the whole banner would take
+   * the column names with it and promote the first real record into their
+   * place — losing that record AND naming every column after its values. The
+   * test is arity: the line, with the prefix peeled off, has to split into
+   * exactly as many cells as the first data row, and into more than one. */
+  const char *data = p;
+  const char *deol = strchr(data, '\n');
+  size_t dlen = deol ? (size_t)(deol - data) : strlen(data);
+  while (dlen && data[dlen-1] == '\r') dlen--;
+  const char *hdr = NULL; size_t hlen = 0;
+  if (headers && last_c && dlen) {
+    const char *h = last_c + plen;
+    size_t hl = last_clen - plen;
+    while (hl && (*h == ' ' || *h == '\t')) { h++; hl--; }
+    while (hl && (h[hl-1] == ' ' || h[hl-1] == '\t')) hl--;
+    int want = csv_field_count(data, dlen, delim);
+    if (hl && want > 1 && csv_field_count(h, hl, delim) == want) {
+      hdr = h; hlen = hl;
+    }
+  }
+
+  size_t rest = strlen(data);
+  char *out = malloc(hlen + 1 + rest + 1);
+  if (!out) return NULL;
+  size_t w = 0;
+  if (hdr) { memcpy(out, hdr, hlen); w = hlen; out[w++] = '\n'; }
+  memcpy(out + w, data, rest);
+  out[w + rest] = 0;
+  return out;
+}
+
+cJSON *csv_parse_dc(const char *text, int headers, char delim,
+                    const char *comment) {
+  if (!text || !comment || !*comment) return csv_parse_d(text, headers, delim);
+  char *stripped = csv_strip_banner(text, delim, comment, headers);
+  cJSON *r = csv_parse_d(stripped ? stripped : text, headers, delim);
+  free(stripped);
+  return r;
+}
+
 cJSON *csv_parse_d(const char *text, int headers, char delim) {
   const int trim = (delim != ',');   /* see the note in csv.h */
   cJSON *rows = cJSON_CreateArray();

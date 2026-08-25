@@ -1,8 +1,11 @@
 /* core/breach_jobs.c — see breach_jobs.h. */
 #include "breach_jobs.h"
 #include "breach_index.h"   /* breach_index_ingest, breach_type_parse (+ db.h) */
+#include "breach_meta.h"    /* breach_meta_seed_path / _corpus_path            */
+#include "hostgate.h"
 #include "httpclient.h"
 #include "../third_party/cJSON.h"
+#include <limits.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,6 +38,88 @@ static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
 static const char *root_dir(void) {
   const char *e = getenv("JO_BREACH_DIR");
   return (e && *e) ? e : JO_REPO_ROOT "/data/breach";
+}
+
+/* ── caller-supplied path confinement ──────────────────────────────────────
+ * POST /api/admin/breach/ingest {"path":…} and
+ * GET  /api/admin/breach/catalog/preview?path=… handed the caller's string
+ * straight to fopen(). Preview then returned the parsed lines in its JSON
+ * `sample[]`, so
+ *
+ *     GET /api/admin/breach/catalog/preview?path=/etc/passwd
+ *     → 200 {"rows_read":28,"sample":[{"name":"root:x:0:0:root:/root:/bin/bash"…
+ *
+ * was an arbitrary file read that echoed its contents back over HTTP, and
+ * ingest was the same read with the file's lines written into the breach
+ * corpus. Both routes are operator-gated, but an operator token is a licence
+ * to administer the breach corpus, not a filesystem read primitive: the whole
+ * point of the gate is that a stolen or over-scoped operator token stays
+ * bounded by what the route legitimately does.
+ *
+ * The bound is the breach data directory — JO_BREACH_DIR, the same root
+ * breach_index.c shards into and the one ensure_staging() writes downloads to,
+ * so every path these routes are actually FOR is already inside it. Both sides
+ * are put through realpath() and compared as resolved absolute paths, which
+ * settles "..", symlinks, and absolute paths in one check rather than three
+ * string tests that each need to be right.
+ *
+ * The two committed catalogue files (docs/breach-corpus.seed.tsv and
+ * docs/breach-corpus.json) are allowed by exact resolved path. They are the
+ * defaults these routes use when `path` is omitted, and an operator pasting
+ * the path they can see in the docs must not be told no; allowing the two
+ * FILES rather than their directory is what keeps the rest of docs/ out.
+ *
+ * A rejection is deliberately ONE outcome for every cause — outside the base,
+ * does not exist, is not readable, is a dangling symlink. realpath() cannot
+ * distinguish them to the caller either way, so the 400 does not become an
+ * existence oracle for paths the caller is not allowed to read. */
+static int path_inside(const char *base, const char *path) {
+  size_t bl = strlen(base);
+  while (bl > 1 && base[bl - 1] == '/') bl--;      /* tolerate a trailing '/' */
+  if (bl == 0) return 0;
+  if (strncmp(path, base, bl) != 0) return 0;
+  /* The boundary test matters: without it "/data/breach-evil/x" passes the
+   * prefix test for base "/data/breach". */
+  return path[bl] == '/';
+}
+
+/* Exact-resolved-path match against one of the two committed catalogue files.
+ * A file that does not resolve simply never matches. */
+static int is_allowed_file(const char *resolved, const char *candidate) {
+  char rp[PATH_MAX];
+  if (!candidate || !*candidate) return 0;
+  if (!realpath(candidate, rp)) return 0;
+  return strcmp(resolved, rp) == 0;
+}
+
+int breach_path_confine(const char *req, char *out, size_t cap) {
+  if (!req || !*req || !out || cap == 0) return -1;
+  out[0] = 0;
+
+  char rp[PATH_MAX];
+  if (!realpath(req, rp)) return -1;
+
+  char base[PATH_MAX];
+  /* mkdir first for the same reason ensure_staging() does: on a fresh install
+   * the breach root does not exist yet, realpath() would fail on it, and every
+   * ingest would be refused with a message about confinement that was really
+   * about a missing directory. */
+  mkdir(root_dir(), 0755);
+  int ok = realpath(root_dir(), base) && path_inside(base, rp);
+
+  if (!ok) ok = is_allowed_file(rp, breach_meta_seed_path());
+  if (!ok) ok = is_allowed_file(rp, breach_meta_corpus_path());
+  if (!ok) return -1;
+
+  if (strlen(rp) >= cap) return -1;
+  snprintf(out, cap, "%s", rp);
+  return 0;
+}
+
+const char *breach_path_confine_error(void) {
+  return "{\"error\":\"path_not_permitted\",\"detail\":\"path must resolve to a "
+         "readable file inside the breach data directory (JO_BREACH_DIR) or to "
+         "a committed breach catalogue file\"}";
 }
 
 /* Reserve a job slot (unused, else recycle the oldest finished one). Caller
@@ -131,6 +216,15 @@ char *breach_job_ingest(const char *source_id, const char *path, const char *typ
     *http_status = 400;
     return strdup("{\"error\":\"source_id and path required\"}");
   }
+  /* Confine BEFORE a job slot is taken, so a rejected path cannot also park
+   * the single ingest slot. The resolved path is what the thread opens — the
+   * caller's spelling is never re-derived, which is what stops a check/use
+   * gap between this test and the fopen() in ingest_thread(). */
+  char safe_path[PATH_MAX];
+  if (breach_path_confine(path, safe_path, sizeof safe_path) != 0) {
+    *http_status = 400;
+    return strdup(breach_path_confine_error());
+  }
   pthread_mutex_lock(&g_lock);
   if (g_ingest_busy) {
     pthread_mutex_unlock(&g_lock);
@@ -153,7 +247,7 @@ char *breach_job_ingest(const char *source_id, const char *path, const char *typ
     return strdup("{\"error\":\"oom\"}"); }
   a->slot = slot;
   snprintf(a->source, sizeof a->source, "%s", source_id);
-  a->path = strdup(path);
+  a->path = strdup(safe_path);
   snprintf(a->type, sizeof a->type, "%s", type ? type : "");
   a->materialize = materialize; a->dry_run = dry_run;
 
@@ -221,6 +315,33 @@ char *breach_job_fetch(const char *source_id, const char *url, int *http_status)
     *http_status = 400;
     return strdup("{\"error\":\"source_id and url required\"}");
   }
+
+  /* `url` is a caller-supplied fetch destination, which is exactly the class
+   * alertsapi.c's webhook target belongs to — and it was going out through
+   * http_request()'s floor check (hostgate_url_check), which permits loopback
+   * and RFC1918 by default because llama-server lives on 127.0.0.1 and LAN
+   * cameras are a shipped feature. So
+   *
+   *     POST /api/admin/breach/fetch {"url":"http://127.0.0.1:4712/api/health"}
+   *
+   * fetched this server's own API and staged the response body to disk, with
+   * the job status line reporting the byte count — an SSRF read primitive with
+   * a result channel. The strict ruleset (no loopback, no RFC1918, no
+   * link-local, no CGNAT, no unique-local v6, every RESOLVED address judged,
+   * not just the literal) is the one alertsapi.c:264 already applies to the
+   * webhook target for the identical reason. Refused here, at save time, where
+   * there is still a 400 to return and before a job slot is taken. */
+  { int gr = hostgate_url_check_strict(url);
+    if (gr != HG_URL_OK) {
+      *http_status = 400;
+      cJSON *e = cJSON_CreateObject();
+      cJSON_AddStringToObject(e, "error", "fetch_url_rejected");
+      cJSON_AddStringToObject(e, "detail", hostgate_url_reason(gr));
+      char *s = cJSON_PrintUnformatted(e);
+      cJSON_Delete(e);
+      return s ? s : strdup("{\"error\":\"fetch_url_rejected\"}");
+    } }
+
   pthread_mutex_lock(&g_lock);
   if (g_fetch_busy) {
     pthread_mutex_unlock(&g_lock);

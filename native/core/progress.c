@@ -43,6 +43,11 @@ typedef struct {
   long results_count; int is_followup;
 } service_t;
 typedef struct { char *phase; long timestamp; long progress; } phist_t;
+/* a stage between the service calls that failed or ran degraded — see
+ * progress_stage_error() in progress.h for what this is for */
+typedef struct {
+  char *stage; char *code; char *detail; char *severity; long timestamp;
+} serr_t;
 
 /* generic grow-by-one vector backing the above (manual; bounded by run size) */
 #define VEC(T) struct { T *p; int n, cap; }
@@ -75,6 +80,7 @@ struct osint_request {
   long stat_total, stat_active, stat_completed, stat_failed, stat_skipped;
 
   VEC(phist_t)  phase_history;
+  VEC(serr_t)   stage_errors;
   long current_round;
   long max_rounds;
   int  awaiting_user_action;
@@ -165,6 +171,13 @@ osint_request *progress_create(const char *request_id, const char *query,
       for (int i = 0; i < oldest->phase_history.n; i++)
         free(oldest->phase_history.p[i].phase);
       free(oldest->phase_history.p);
+      for (int i = 0; i < oldest->stage_errors.n; i++) {
+        free(oldest->stage_errors.p[i].stage);
+        free(oldest->stage_errors.p[i].code);
+        free(oldest->stage_errors.p[i].detail);
+        free(oldest->stage_errors.p[i].severity);
+      }
+      free(oldest->stage_errors.p);
       for (int i = 0; i < oldest->discovered_entities.n; i++) {
         free(oldest->discovered_entities.p[i].value);
         free(oldest->discovered_entities.p[i].type);
@@ -387,6 +400,87 @@ void progress_add_discovered(osint_request *r, const char *value,
   pthread_mutex_unlock(&g_lock);
 }
 
+/* Build the stage_errors array. Caller holds g_lock (both the snapshot path
+ * and progress_stage_errors_json() need it and neither may drop the lock
+ * between reading the vector and copying out of it). */
+static cJSON *stage_errors_array_locked(osint_request *r) {
+  cJSON *a = cJSON_CreateArray();
+  if (!a) return NULL;
+  for (int i = 0; i < r->stage_errors.n; i++) {
+    serr_t *e = &r->stage_errors.p[i];
+    cJSON *o = cJSON_CreateObject();
+    if (!o) continue;
+    cJSON_AddStringToObject(o, "stage",  e->stage  ? e->stage  : "");
+    cJSON_AddStringToObject(o, "code",   e->code   ? e->code   : "");
+    cJSON_AddStringToObject(o, "detail", e->detail ? e->detail : "");
+    cJSON_AddStringToObject(o, "severity", e->severity ? e->severity : "error");
+    cJSON_AddNumberToObject(o, "timestamp", (double)e->timestamp);
+    cJSON_AddItemToArray(a, o);
+  }
+  return a;
+}
+
+/* 1 when any recorded row is severity "error" (caller holds g_lock). */
+static int degraded_locked(osint_request *r) {
+  for (int i = 0; i < r->stage_errors.n; i++) {
+    const char *sv = r->stage_errors.p[i].severity;
+    if (!sv || strcmp(sv, "error") == 0) return 1;
+  }
+  return 0;
+}
+
+static void stage_row(osint_request *r, const char *stage, const char *code,
+                      const char *detail, const char *severity) {
+  if (!r) return;
+  pthread_mutex_lock(&g_lock);
+  if (vec_reserve((void **)&r->stage_errors.p, &r->stage_errors.cap,
+                  r->stage_errors.n + 1, sizeof(serr_t))) {
+    serr_t *e = &r->stage_errors.p[r->stage_errors.n++];
+    e->stage     = dup_s(stage);
+    e->code      = dup_s(code);
+    e->detail    = dup_s(detail);
+    e->severity  = dup_s(severity);
+    e->timestamp = now_secs();
+  }
+  touch_locked(r);
+  pthread_mutex_unlock(&g_lock);
+  /* Also on stderr, where an operator watching the server sees it without
+   * having to fish the request id out of the client. */
+  fprintf(stderr, "[pipeline] %s %s at %s: %s (%s)\n",
+          r->request_id ? r->request_id : "?",
+          (severity && strcmp(severity, "notice") == 0) ? "NOTICE" : "DEGRADED",
+          stage ? stage : "?", code ? code : "?", detail ? detail : "");
+}
+
+void progress_stage_error(osint_request *r, const char *stage,
+                          const char *code, const char *detail) {
+  stage_row(r, stage, code, detail, "error");
+}
+
+void progress_stage_note(osint_request *r, const char *stage,
+                         const char *code, const char *detail) {
+  stage_row(r, stage, code, detail, "notice");
+}
+
+int progress_is_degraded(osint_request *r) {
+  if (!r) return 0;
+  pthread_mutex_lock(&g_lock);
+  int d = degraded_locked(r);
+  pthread_mutex_unlock(&g_lock);
+  return d;
+}
+
+char *progress_stage_errors_json(osint_request *r) {
+  if (!r) return NULL;
+  pthread_mutex_lock(&g_lock);
+  cJSON *a = stage_errors_array_locked(r);
+  pthread_mutex_unlock(&g_lock);
+  if (!a) return NULL;
+  char *out = cJSON_PrintUnformatted(a);
+  cJSON_Delete(a);
+  return out;
+}
+
 void progress_set_round(osint_request *r, int round) {
   if (!r) return;
   pthread_mutex_lock(&g_lock);
@@ -517,6 +611,12 @@ static char *to_json_locked(osint_request *r) {
     cJSON_AddItemToArray(ph, ho);
   }
   cJSON_AddItemToObject(o, "phase_history", ph);
+
+  /* Additive to the JS shape, and ALWAYS present (never omitted when empty) so
+   * a client can treat a missing `degraded` key as "this server predates the
+   * field" rather than as "this run was fine". */
+  cJSON_AddBoolToObject(o, "degraded", degraded_locked(r));
+  cJSON_AddItemToObject(o, "stage_errors", stage_errors_array_locked(r));
 
   cJSON_AddNumberToObject(o, "current_round", (double)r->current_round);
   cJSON_AddNumberToObject(o, "max_rounds", (double)r->max_rounds);

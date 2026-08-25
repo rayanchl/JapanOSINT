@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 /* Generation calls are serialized per llama-server by the global LLM worker
  * (core/llm_worker.c): each base_url has one dedicated thread, so concurrent
@@ -37,8 +38,29 @@ static char *url_join(const char *base, const char *path) {
   return u;
 }
 
+const char *llm_status_code(llm_status s) {
+  switch (s) {
+    case LLM_OK:              return "ok";
+    case LLM_ERR_BAD_REQUEST: return "llm_bad_request";
+    case LLM_ERR_UNREACHABLE: return "llm_unreachable";
+    case LLM_ERR_TIMEOUT:     return "llm_timeout";
+    case LLM_ERR_HTTP:        return "llm_http_error";
+    case LLM_ERR_EMPTY:       return "llm_empty_response";
+  }
+  return "llm_error";
+}
+
+/* `st`/`http` (either may be NULL) report WHY a NULL came back — see the
+ * llm_status comment in llm.h. http_request's contract is the discriminator we
+ * need and it was being thrown away: it returns 0 for any COMPLETED exchange
+ * whatever the status, and non-zero only when no exchange happened at all. So
+ * rc != 0 (or a status of 0) is "nothing is listening on base_url", which is
+ * the operational condition the search pipeline has to be able to name, and a
+ * non-2xx is a server that is up and refusing — a different fix entirely. */
 static char *post_json(llm_client *c, const char *path, cJSON *body,
-                       int timeout_ms) {
+                       int timeout_ms, llm_status *st, long *http) {
+  if (st)   *st = LLM_ERR_BAD_REQUEST;
+  if (http) *http = 0;
   char *url = url_join(c->base_url, path);
   char *payload = cJSON_PrintUnformatted(body);
   if (!url || !payload) { free(url); free(payload); cJSON_Delete(body); return NULL; }
@@ -47,17 +69,46 @@ static char *post_json(llm_client *c, const char *path, cJSON *body,
   /* Route through the per-server worker: one thread owns generation for this
    * base_url, so callers queue here instead of contending on the server (or
    * blocking the request thread). c->http is no longer used for generation. */
+  int budget = timeout_ms > 0 ? timeout_ms : 30000;
+  struct timespec t0, t1;
+  clock_gettime(CLOCK_MONOTONIC, &t0);
   int rc = llm_worker_request(c->base_url, "POST", url, hdrs, payload,
-                              strlen(payload),
-                              timeout_ms > 0 ? timeout_ms : 30000, 1,
+                              strlen(payload), budget, 1,
                               c->interactive, &r);
+  clock_gettime(CLOCK_MONOTONIC, &t1);
+  long elapsed_ms = (t1.tv_sec - t0.tv_sec) * 1000L
+                  + (t1.tv_nsec - t0.tv_nsec) / 1000000L;
   free(url); free(payload); cJSON_Delete(body);
-  if (rc != 0 || r.status < 200 || r.status >= 300 || !r.body) {
+  if (http) *http = r.status;
+  if (rc != 0 || r.status == 0) {
+    /* SPLIT ON THE CLOCK, because "unreachable" and "too slow" send an
+     * operator to opposite ends of the system and http_request cannot tell us
+     * which it was — it reports any failed exchange as non-zero with status 0.
+     * A local llama-server on CPU spends ~100 s on prompt-eval for the 18k-token
+     * analysis request, blows the 60 s budget, and was reported as "llama-server
+     * is not running" while it was sitting there working. The wall clock is the
+     * one thing we can measure ourselves: a call that consumed essentially its
+     * whole budget timed out; one that failed immediately had nothing to talk
+     * to. 90% of budget, because the client's own timeout fires slightly early
+     * and the queue wait before it is not free either. */
+    if (st) *st = (elapsed_ms >= (long)budget * 9 / 10) ? LLM_ERR_TIMEOUT
+                                                        : LLM_ERR_UNREACHABLE;
+    http_response_free(&r);
+    return NULL;
+  }
+  if (r.status < 200 || r.status >= 300) {
+    if (st) *st = LLM_ERR_HTTP;
+    http_response_free(&r);
+    return NULL;
+  }
+  if (!r.body) {
+    if (st) *st = LLM_ERR_EMPTY;
     http_response_free(&r);
     return NULL;
   }
   char *resp = strdup(r.body);
   http_response_free(&r);
+  if (st) *st = resp ? LLM_OK : LLM_ERR_EMPTY;
   return resp;
 }
 
@@ -92,7 +143,7 @@ char *llm_complete(llm_client *c, const char *prompt, const char *grammar,
   cJSON_AddBoolToObject(b, "cache_prompt", 1);
   add_sampler_defaults(b);
   if (grammar && *grammar) cJSON_AddStringToObject(b, "grammar", grammar);
-  char *raw = post_json(c, "/completion", b, timeout_ms);
+  char *raw = post_json(c, "/completion", b, timeout_ms, NULL, NULL);
   if (!raw) return NULL;
   cJSON *j = cJSON_Parse(raw);
   free(raw);
@@ -107,6 +158,15 @@ char *llm_complete(llm_client *c, const char *prompt, const char *grammar,
 
 char *llm_chat(llm_client *c, const char *messages_json, const char *json_schema,
                int max_tokens, double temperature, int timeout_ms) {
+  return llm_chat_ex(c, messages_json, json_schema, max_tokens, temperature,
+                     timeout_ms, NULL, NULL);
+}
+
+char *llm_chat_ex(llm_client *c, const char *messages_json,
+                  const char *json_schema, int max_tokens, double temperature,
+                  int timeout_ms, llm_status *out_status, long *out_http) {
+  if (out_status) *out_status = LLM_ERR_BAD_REQUEST;
+  if (out_http)   *out_http = 0;
   cJSON *msgs = cJSON_Parse(messages_json);
   if (!msgs) return NULL;
   cJSON *b = cJSON_CreateObject();
@@ -134,11 +194,15 @@ char *llm_chat(llm_client *c, const char *messages_json, const char *json_schema
       cJSON_AddItemToObject(b, "response_format", rf);
     }
   }
-  char *raw = post_json(c, "/v1/chat/completions", b, timeout_ms);
+  char *raw = post_json(c, "/v1/chat/completions", b, timeout_ms, out_status,
+                        out_http);
   if (!raw) return NULL;
+  /* From here on the exchange succeeded, so any remaining failure is a body we
+   * could not use — a distinct verdict from "the host is down", and the one a
+   * caller answers by fixing the prompt/schema rather than the deployment. */
   cJSON *j = cJSON_Parse(raw);
   free(raw);
-  if (!j) return NULL;
+  if (!j) { if (out_status) *out_status = LLM_ERR_EMPTY; return NULL; }
   char *out = NULL;
   cJSON *choices = cJSON_GetObjectItem(j, "choices");
   cJSON *ch0 = choices ? cJSON_GetArrayItem(choices, 0) : NULL;
@@ -148,6 +212,7 @@ char *llm_chat(llm_client *c, const char *messages_json, const char *json_schema
       content->valuestring[0])
     out = strdup(content->valuestring);
   cJSON_Delete(j);
+  if (out_status) *out_status = out ? LLM_OK : LLM_ERR_EMPTY;
   return out;
 }
 

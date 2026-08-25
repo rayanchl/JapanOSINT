@@ -34,6 +34,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "geoeo_common.inc"
+#include "_timefmt.inc"
 
 static int parse_entity_ll(const char *e, double *lat, double *lon) {
   if (!e || !*e) return 0;
@@ -47,16 +48,13 @@ static int parse_entity_ll(const char *e, double *lat, double *lon) {
   return geoeo_ll_ok(*lat, *lon);
 }
 
-static void yyyymmdd(time_t t, char *out, size_t n) {
+static int yyyymmdd(time_t t, char *out, size_t n) {
   struct tm tmv;
-#if defined(_WIN32)
-  gmtime_s(&tmv, &t);
-#else
-  gmtime_r(&t, &tmv);
-#endif
+  if (!jo_tm_utc(t, &tmv)) { if (n) out[0] = 0; return 0; }
   /* Components masked into range so the formatted width is provably bounded. */
   snprintf(out, n, "%04d%02d%02d", (tmv.tm_year + 1900) % 10000,
            (tmv.tm_mon + 1) % 100, tmv.tm_mday % 100);
+  return 1;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -70,8 +68,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   /* POWER daily lags real time; ask for a window that is already published. */
   time_t now = time(NULL);
   char start[16], end[16];
-  yyyymmdd(now - 40 * 24 * 3600, start, sizeof start);
-  yyyymmdd(now - 10 * 24 * 3600, end, sizeof end);
+  if (!yyyymmdd(now - 40 * 24 * 3600, start, sizeof start) ||
+      !yyyymmdd(now - 10 * 24 * 3600, end, sizeof end)) {
+    fprintf(stderr,
+            "[nasa-power-climate] cannot render the query window as a date\n");
+    return -1;
+  }
 
   char url[448];
   snprintf(url, sizeof url,
@@ -101,12 +103,27 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *header = cJSON_GetObjectItem(doc, "header");
   double fill = -999.0;
   if (header) geoeo_num(header, "fill_value", &fill);
+  /* header.sources is a LIST of the source models behind the request — one
+   * entry for a plain meteorology pull ("MERRA2"), more when the parameter set
+   * spans models (solar irradiance adds its own). Taking [0] named one model
+   * and dropped the others, which for a multi-model answer is a wrong
+   * provenance string, not merely a short one. Every model is joined into
+   * `sources` and the full list rides on each row as source_models. */
+  char srcbuf[256] = "";
   const char *sources = NULL;
   cJSON *src = header ? cJSON_GetObjectItem(header, "sources") : NULL;
-  if (cJSON_IsArray(src) && cJSON_IsString(cJSON_GetArrayItem(src, 0)))
-    sources = cJSON_GetArrayItem(src, 0)->valuestring;
-  else if (cJSON_IsString(src))
+  if (cJSON_IsArray(src)) {
+    cJSON *sm;
+    cJSON_ArrayForEach(sm, src) {
+      if (!cJSON_IsString(sm) || !sm->valuestring || !sm->valuestring[0]) continue;
+      size_t l = strlen(srcbuf);
+      snprintf(srcbuf + l, sizeof srcbuf - l, "%s%s", l ? ", " : "",
+               sm->valuestring);
+    }
+    if (srcbuf[0]) sources = srcbuf;
+  } else if (cJSON_IsString(src)) {
     sources = src->valuestring;
+  }
 
   cJSON *props_root = cJSON_GetObjectItem(doc, "properties");
   cJSON *params = props_root ? cJSON_GetObjectItem(props_root, "parameter")
@@ -148,6 +165,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddNumberToObject(props, "value", v);
       geoeo_add_str(props, "units", unit);
       geoeo_add_str(props, "source_model", sources);
+      if (cJSON_IsArray(src) && cJSON_GetArraySize(src) > 0)
+        cJSON_AddItemToObject(props, "source_models", cJSON_Duplicate(src, 1));
       if (has_elev) cJSON_AddNumberToObject(props, "site_elevation_m", elev);
       if (geo) {
         cJSON_AddNumberToObject(props, "latitude", lat);

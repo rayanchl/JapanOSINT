@@ -25,6 +25,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "geoeo_common.inc"
+#include "_timefmt.inc"
 
 static int col_index(cJSON *names, const char *want) {
   int i = 0;
@@ -39,11 +40,11 @@ static int col_index(cJSON *names, const char *want) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t since = time(NULL) - 7 * 24 * 3600;
   struct tm tmv;
-#if defined(_WIN32)
-  gmtime_s(&tmv, &since);
-#else
-  gmtime_r(&since, &tmv);
-#endif
+  if (!jo_tm_utc(since, &tmv)) {
+    fprintf(stderr,
+            "[argo-float-positions] cannot render the query window as a date\n");
+    return -1;
+  }
   char url[512];
   snprintf(url, sizeof url,
            "https://erddap.ifremer.fr/erddap/tabledap/ArgoFloats.json"

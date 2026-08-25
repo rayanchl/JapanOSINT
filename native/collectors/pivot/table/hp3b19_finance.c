@@ -227,6 +227,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/tpex_international_bond_issue_investor",
     .interval = 86400,
+    .title_keys = "ShortName",
     .description = "Formosa bonds and other international bonds listed in Taipei, "
       "each with its bond code, short name, issuer, issue and maturity "
       "dates, tenor, currency of denomination and amount issued. This "
@@ -241,6 +242,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/bond_ISSBD1_data",
     .interval = 86400,
+    .title_keys = "ShortName",
     .description = "The full issuance register for Taiwan central government bonds "
       "with issuer code and name, bond code, type, series and tranche, "
       "issue and maturity dates and the amount issued. A complete "
@@ -255,6 +257,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/bond_ISSBD5_data",
     .interval = 86400,
+    .title_keys = "ShortName",
     .description = "Every convertible or exchangeable corporate bond issued in "
       "Taiwan with the issuer code and name, bond code and type, series "
       "and tranche, issue and maturity dates and amount. Convertible "
@@ -283,6 +286,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap01",
     .interval = 604800,
+    .title_keys = "驗證人員-模型管理",
     .description = "Headcount across Taiwanese securities firms by licensed role, "
       "covering brokerage, derivatives sales, internal audit, margin "
       "financing and settlement. Internal-audit headcount relative to "
@@ -297,6 +301,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/t187ap46_O_9",
     .interval = 604800,
+    .title_keys = "公司名稱",
     .description = "Every TPEx issuer functional-committee disclosure for the "
       "reporting year with committee seats, independent-director "
       "composition and meeting counts, keyed to the issuer code and "
@@ -311,6 +316,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/opendata/t187ap45_L",
     .interval = 21600,
+    .title_keys = "本期淨利(淨損)(元)",
     .description = "Dividend decisions of every TWSE-listed company with the issuer "
       "code and name, the stage the decision has reached, the dividend "
       "year and the period covered, and the cash and stock components. "
@@ -325,6 +331,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L",
     .interval = 86400,
+    .title_keys = "發行單位數/轉換數",
     .description = "Every listed fund and ETF with its fund code, abbreviated and "
       "full Chinese name, fund type and the manager behind it. The fund "
       "register is the join key between an exchange ticker and the "
@@ -338,6 +345,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/opendata/t187ap05_P",
     .interval = 86400,
+    .title_keys = "公司名稱",
     .description = "Monthly operating revenue for every public company in Taiwan, "
       "listed or not, with the company code and name, industry, this "
       "month, last month and same-month-last-year revenue and the "
@@ -353,6 +361,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_ci",
     .interval = 604800,
+    .title_keys = "非流動資產",
     .description = "Quarterly balance sheets for every Taiwanese public company "
       "outside the financial sector, with current and non-current "
       "assets, liabilities, equity attributable to owners and "
@@ -453,6 +462,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/opendata/t187ap46_L_18",
     .interval = 604800,
+    .title_keys = "公司名稱",
     .description = "The shareholding and control section of the ESG summary for "
       "every TWSE issuer, including a link to the filed document "
       "listing the top ten shareholders. This is the only structured "
@@ -466,6 +476,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/opendata/t187ap46_L_19",
     .interval = 604800,
+    .title_keys = "公司名稱",
     .description = "Each TWSE issuer stated risk-management policy for material "
       "events, in its own words, keyed to the issuer code, name and "
       "reporting year. What a company says it has prepared for is "
@@ -793,7 +804,9 @@ static const hp_source HP3B19_FINANCE[] = {
     .tags = "\"brazil\",\"securities\",\"registry\",\"issuers\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://dados.cvm.gov.br/dados/CIA_ABERTA/CAD/DADOS/cad_cia_aberta.csv",
+    .csv_delim = "semi",
     .interval = 86400,
+    .title_keys = "DENOM_SOCIAL",
     .description = "Every company ever registered with the Brazilian securities "
       "regulator: CNPJ, corporate and trade names, registration and "
       "incorporation dates, cancellation date and its stated reason, "
@@ -1043,6 +1056,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .tags = "\"us\",\"treasury\",\"debt\",\"auctions\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.treasurydirect.gov/TA_WS/securities/auctioned?format=json&days={qd}",
+    .title_keys = "xmlFilenameCompetitiveResults",
     .description = "Every Treasury security auctioned in the requested window with "
       "its CUSIP, security type and term, announcement, auction, issue, "
       "dated and maturity dates, interest rate, accrued interest, "
@@ -1314,7 +1328,9 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://yields.llama.fi/pools",
     .array_path = "data",
+    .id_keys = "pool",
     .interval = 21600,
+    .title_keys = "project",
     .description = "Every yield-bearing pool on every tracked chain with the project "
       "that runs it, the token symbols, total value locked in dollars, "
       "base and reward APY, the reward tokens paid out, "
@@ -1475,6 +1491,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap34_O",
     .interval = 604800,
+    .title_keys = "SecuritiesCompanyCode",
     .description = "How each TPEx company elected its board, whether by cumulative "
       "voting, full-slate or candidate nomination, together with the "
       "meeting date and the elected directors and supervisors. Election "
@@ -1504,6 +1521,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap08_O",
     .interval = 604800,
+    .title_keys = "已發行股份總額",
     .description = "TPEx companies whose directors or supervisors hold fewer shares "
       "than Taiwanese law requires, with the total issued shares, the "
       "required holding for the board excluding independent directors, "
@@ -1533,6 +1551,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/opendata/t187ap46_L_16",
     .interval = 604800,
+    .title_keys = "公司名稱",
     .description = "Each TWSE issuer own count of information-security breaches for "
       "the reporting year, split into total incidents and those "
       "involving personal data, with the losses incurred. A "

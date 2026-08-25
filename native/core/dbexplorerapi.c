@@ -59,7 +59,8 @@ char *dbexplorer_tables(db_handle *db) {
 char *dbexplorer_table(db_handle *db, const char *name, int limit, int offset,
                   const char *q, const char *orderBy, const char *orderDir) {
   if (!allowed_tbl(name)) return NULL;            /* → 400 */
-  if (limit<1) limit=50; if (limit>200) limit=200;
+  if (limit<1) limit=50;
+  if (limit>200) limit=200;
   if (offset<0) offset=0;
   cJSON *cols=cols_of(db->h,name);
   /* text columns + name validation for orderBy */

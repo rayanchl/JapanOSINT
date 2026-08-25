@@ -7,6 +7,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,7 +17,12 @@
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *appId = getenv("ESTAT_APP_ID");
-  if (!appId || !*appId) { fprintf(stderr, "[jstat-map] gated (ESTAT_APP_ID)\n"); return 0; }
+  if (!appId || !*appId) {
+    static const char *const envs[] = { "ESTAT_APP_ID", NULL };
+    return jo_needs_credential(sink, "jstat-map",
+        "jSTAT MAP (e-Stat regional mesh population)",
+        envs, API_BASE, "free appId at e-stat.go.jp/api");
+  }
   const char *sdi = getenv("JSTAT_MAP_STATS_DATA_ID");
   if (!sdi || !*sdi) sdi = DEFAULT_STATS_DATA_ID;
 

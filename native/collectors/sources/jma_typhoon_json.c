@@ -44,7 +44,7 @@ static cJSON *part_at(cJSON *arr, int hours) {
 static int part_pos(cJSON *part, double *lat, double *lon) {
   cJSON *p = part ? cJSON_GetObjectItem(part, "position") : NULL;
   cJSON *d = p ? cJSON_GetObjectItem(p, "deg") : NULL;
-  cJSON *a = d ? cJSON_GetArrayItem(d, 0) : NULL;
+  cJSON *a = d ? cJSON_GetArrayItem(d, 0) : NULL;  /* exhaustive-ok: fixed [lat,lon] pair, both components read */
   cJSON *b = d ? cJSON_GetArrayItem(d, 1) : NULL;
   if (!cJSON_IsNumber(a) || !cJSON_IsNumber(b)) return 0;
   *lat = a->valuedouble; *lon = b->valuedouble;

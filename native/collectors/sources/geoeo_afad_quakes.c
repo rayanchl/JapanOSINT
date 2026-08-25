@@ -21,23 +21,24 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "geoeo_common.inc"
+#include "_timefmt.inc"
 
-static void utc_stamp(time_t t, char *out, size_t n) {
+static int utc_stamp(time_t t, char *out, size_t n) {
   struct tm tmv;
-#if defined(_WIN32)
-  gmtime_s(&tmv, &t);
-#else
-  gmtime_r(&t, &tmv);
-#endif
+  if (!jo_tm_utc(t, &tmv)) { if (n) out[0] = 0; return 0; }
   snprintf(out, n, "%04d-%02d-%02d%%20%02d:%02d:%02d", tmv.tm_year + 1900,
            tmv.tm_mon + 1, tmv.tm_mday, tmv.tm_hour, tmv.tm_min, tmv.tm_sec);
+  return 1;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t now = time(NULL);
   char s_start[40], s_end[40];
-  utc_stamp(now - 7 * 24 * 3600, s_start, sizeof s_start);
-  utc_stamp(now, s_end, sizeof s_end);
+  if (!utc_stamp(now - 7 * 24 * 3600, s_start, sizeof s_start) ||
+      !utc_stamp(now, s_end, sizeof s_end)) {
+    fprintf(stderr, "[afad-quakes] cannot render the query window as a date\n");
+    return -1;
+  }
 
   char url[512];
   snprintf(url, sizeof url,

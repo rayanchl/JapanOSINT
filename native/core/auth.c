@@ -3,8 +3,8 @@
 #include "../third_party/cJSON.h"
 #include <openssl/hmac.h>
 #include <openssl/evp.h>
-#include <openssl/rsa.h>
-#include <openssl/ec.h>
+#include <openssl/param_build.h>
+#include <openssl/core_names.h>
 #include <openssl/bn.h>
 #include <openssl/ecdsa.h>
 #include <pthread.h>
@@ -138,6 +138,35 @@ static cJSON *find_jwk(cJSON *doc, const char *kid) {
   return NULL;
 }
 
+/* Build an EVP_PKEY from the JWK parameters via the OpenSSL 3.0 provider path
+ * (EVP_PKEY_fromdata), rather than RSA_new/RSA_set0_key/EC_KEY_* + the
+ * EVP_PKEY_assign_* handoff, all of which are deprecated in 3.0.
+ *
+ * Same key, same verify result — only the construction route changed. The one
+ * genuine difference is where the group lives: EC_KEY_new_by_curve_name took
+ * an NID, fromdata takes the group by name, so P-256 is spelled "P-256" here.
+ * Still P-256 only, which is what ES256 means and all verify_asym() accepts.
+ *
+ * fromdata wants the EC public key as a single uncompressed SEC1 point
+ * (0x04 || X || Y) with X and Y at the curve's fixed 32-byte width, whereas
+ * BN_bin2bn + affine coordinates accepted whatever width the JWK carried. A
+ * few JWKS producers strip leading zero bytes from x/y, so the halves are
+ * LEFT-PADDED into place rather than memcpy'd at offset 1 — dropping that
+ * padding would shift a stripped coordinate left and reject every token from
+ * such a key. Anything wider than 32 bytes is not a P-256 coordinate and is
+ * refused instead of being silently truncated. */
+static EVP_PKEY *pkey_fromdata(const char *type, OSSL_PARAM *params) {
+  EVP_PKEY *pk = NULL;
+  EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(NULL, type, NULL);
+  if (ctx) {
+    if (EVP_PKEY_fromdata_init(ctx) != 1 ||
+        EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_PUBLIC_KEY, params) != 1)
+      pk = NULL;
+    EVP_PKEY_CTX_free(ctx);
+  }
+  return pk;
+}
+
 static EVP_PKEY *jwk_to_pkey(cJSON *jwk) {
   cJSON *kty = cJSON_GetObjectItem(jwk, "kty");
   if (!cJSON_IsString(kty)) return NULL;
@@ -149,10 +178,17 @@ static EVP_PKEY *jwk_to_pkey(cJSON *jwk) {
     unsigned char *eb = b64url_decode(E->valuestring, strlen(E->valuestring), &el);
     EVP_PKEY *pk = NULL;
     if (nb && eb) {
-      RSA *rsa = RSA_new();
-      RSA_set0_key(rsa, BN_bin2bn(nb, nl, NULL), BN_bin2bn(eb, el, NULL), NULL);
-      pk = EVP_PKEY_new();
-      if (EVP_PKEY_assign_RSA(pk, rsa) != 1) { RSA_free(rsa); EVP_PKEY_free(pk); pk = NULL; }
+      BIGNUM *bn = BN_bin2bn(nb, nl, NULL), *be = BN_bin2bn(eb, el, NULL);
+      OSSL_PARAM_BLD *bld = OSSL_PARAM_BLD_new();
+      OSSL_PARAM *params = NULL;
+      if (bn && be && bld &&
+          OSSL_PARAM_BLD_push_BN(bld, OSSL_PKEY_PARAM_RSA_N, bn) == 1 &&
+          OSSL_PARAM_BLD_push_BN(bld, OSSL_PKEY_PARAM_RSA_E, be) == 1 &&
+          (params = OSSL_PARAM_BLD_to_param(bld)) != NULL)
+        pk = pkey_fromdata("RSA", params);
+      OSSL_PARAM_free(params);
+      OSSL_PARAM_BLD_free(bld);
+      BN_free(bn); BN_free(be);
     }
     free(nb); free(eb);
     return pk;
@@ -164,15 +200,22 @@ static EVP_PKEY *jwk_to_pkey(cJSON *jwk) {
     unsigned char *xb = b64url_decode(X->valuestring, strlen(X->valuestring), &xl);
     unsigned char *yb = b64url_decode(Y->valuestring, strlen(Y->valuestring), &yl);
     EVP_PKEY *pk = NULL;
-    if (xb && yb) {
-      EC_KEY *ec = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1);
-      BIGNUM *bx = BN_bin2bn(xb, xl, NULL), *by = BN_bin2bn(yb, yl, NULL);
-      if (ec && bx && by &&
-          EC_KEY_set_public_key_affine_coordinates(ec, bx, by) == 1) {
-        pk = EVP_PKEY_new();
-        if (EVP_PKEY_assign_EC_KEY(pk, ec) != 1) { EC_KEY_free(ec); EVP_PKEY_free(pk); pk = NULL; }
-      } else if (ec) EC_KEY_free(ec);
-      BN_free(bx); BN_free(by);
+    if (xb && yb && xl && yl && xl <= 32 && yl <= 32) {
+      unsigned char pt[65] = {0};             /* 0x04 || X(32) || Y(32) */
+      pt[0] = 0x04;
+      memcpy(pt + 1  + (32 - xl), xb, xl);    /* left-pad, see above */
+      memcpy(pt + 33 + (32 - yl), yb, yl);
+      OSSL_PARAM_BLD *bld = OSSL_PARAM_BLD_new();
+      OSSL_PARAM *params = NULL;
+      if (bld &&
+          OSSL_PARAM_BLD_push_utf8_string(bld, OSSL_PKEY_PARAM_GROUP_NAME,
+                                          "P-256", 0) == 1 &&
+          OSSL_PARAM_BLD_push_octet_string(bld, OSSL_PKEY_PARAM_PUB_KEY,
+                                           pt, sizeof pt) == 1 &&
+          (params = OSSL_PARAM_BLD_to_param(bld)) != NULL)
+        pk = pkey_fromdata("EC", params);
+      OSSL_PARAM_free(params);
+      OSSL_PARAM_BLD_free(bld);
     }
     free(xb); free(yb);
     return pk;

@@ -120,8 +120,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       }
     }
     if (!primary[0]) {
-      /* no Primary Name marked — fall back to the first name we did parse */
-      const cJSON *a0 = cJSON_GetArrayItem(aliases, 0);
+      /* No Primary Name marked — fall back to the first name we did parse.
+       * This picks a TITLE, it does not choose which names survive: every
+       * parsed name is already in `aliases` and `aliases` is stored whole. */
+      const cJSON *a0 = cJSON_GetArrayItem(aliases, 0);  /* exhaustive-ok: title fallback; the full aliases array is stored on the record */
       if (cJSON_IsString(a0)) snprintf(primary, sizeof primary, "%s", a0->valuestring);
     }
     if (!primary[0]) { cJSON_Delete(aliases); continue; }   /* no name -> no row */
@@ -292,9 +294,33 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(uid); free(ofsi); free(unref); free(regime); free(kind); free(dsource);
     free(imposed); free(reasons); free(other); free(designated); free(updated);
   }
+  /* JO_SANC_MAX_ROWS (default 5,000) is a shared bound across the sanctions
+   * collectors, and on this list it BITES: the FCDO consolidated list is past
+   * 5,000 designations, so a run emitted exactly 5,000 and stopped — the round
+   * number in the log being the only hint that anything was missing, which is
+   * the "a log nobody reads is not a disclosure" case house rule 2 names.
+   *
+   * The bound stays (it is the shared guard against a half-parsed 40 MB XML),
+   * but the shortfall is now counted from the document itself and reported as
+   * data. `available` is the number of <Designation> elements the FCDO
+   * actually published — scanned, not estimated. */
+  long available = n;
+  if (n >= max_rows) {
+    sanc_el extra;
+    while (sanc_xml_next(&cur, end, "Designation", &extra)) available++;
+    if (available > n)
+      jo_trunc_notice(sink, "uk-sanctions-list", UK_SANC_URL, n, available,
+                      "the shared JO_SANC_MAX_ROWS row bound stopped the parse "
+                      "before the end of the FCDO designation list",
+                      "raise $JO_SANC_MAX_ROWS above the list's designation "
+                      "count");
+  }
+
   free(xml);
-  fprintf(stderr, "[uk-sanctions-list] emitted %d (generated %s)\n", n,
-          geniso[0] ? geniso : "?");
+  fprintf(stderr, "[uk-sanctions-list] emitted %d of %ld designation(s) "
+                  "(generated %s)%s\n", n, available,
+          geniso[0] ? geniso : "?",
+          (available > n) ? " (TRUNCATED — notice emitted)" : "");
   return 0;
 }
 

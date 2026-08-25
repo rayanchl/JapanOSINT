@@ -33,8 +33,17 @@ typedef struct {
   char *error;           /* malloc'd; "not_implemented" when no such source */
   /* malloc'd JSON array of the underlying sources/providers the service hit,
    * one entry per distinct attribution: [{ "name", "status", "records",
-   * ["detail"] }]. Derived from each emit's sub_source_id / body "source" /
-   * the service name. Surfaced as results.services[i].sources. */
+   * ["requests"], ["detail"] }]. Derived from each emit's sub_source_id /
+   * the real HTTP hosts contacted / the service name. Surfaced as
+   * results.services[i].sources.
+   *
+   * `records` is a NUMBER only when the rows were actually attributable to
+   * that source (the collector labelled its emits with sub_source_id). When
+   * attribution came from the HTTP host log it is NULL and `requests` carries
+   * what was really measured — the host log counts requests, not records, and
+   * writing the service total into each host row claimed 11,220 records out of
+   * 187 for one 60-host service. A consumer must treat null as "not measured",
+   * never as zero. */
   char *sources_json;
 } osint_result;
 
@@ -46,9 +55,31 @@ int  osint_canon(const char *name, char *out, size_t n);
 /* True if a source with this (canonical) id is registered (any source). */
 int  osint_is_implemented(const char *name);
 
-/* Comma-separated list of ALL registered source ids — every source is
- * eligible, fed verbatim into the analysis/phase2 prompts (== JS
- * getServicesList(), now the full registry). Caller frees. */
+/* What osint_services_list_bounded() actually put in the prompt. `total` is
+ * how many entity-pivot services are registered, `shown` how many are listed,
+ * `descriptions` whether each line carries its description or is a bare id,
+ * `truncated` == (shown < total). The pipeline reports these to the client, so
+ * a routing decision made from a partial menu is never presented as one made
+ * from the whole registry. */
+typedef struct {
+  int total;
+  int shown;
+  int descriptions;
+  int truncated;
+} osint_catalogue_note;
+
+/* The service catalogue fed to the analysis / phase-2 prompts: one ON-DEMAND
+ * entity-pivot service per line (collector=="osint" AND
+ * update_interval_sec==0 — scheduled bulk feeds cannot pivot on an entity and
+ * are excluded), bounded to a character budget
+ * (JO_PROMPT_SERVICE_CATALOGUE_CHARS, default 32768) with the bound STATED
+ * in-band at the end of the text. `note` may be NULL. Caller frees.
+ *
+ * Unbounded, this text was 207,353 tokens and llama-server rejected every
+ * analysis request outright — see the long comment in osint_dispatch.c. */
+char *osint_services_list_bounded(osint_catalogue_note *note);
+
+/* osint_services_list_bounded(NULL). */
 char *osint_services_list(void);
 
 /* The osint_analysis JSON schema with its service-name enums (recommended_
@@ -57,6 +88,11 @@ char *osint_services_list(void);
  * maintenance on registry changes. malloc'd; caller frees. NULL → fall back to
  * the static schema_load("osint_analysis"). */
 char *osint_analysis_schema_dynamic(void);
+
+/* Same, but the enums hold only the first `limit` entity-pivot services —
+ * pass osint_catalogue_note.shown so what the model is ALLOWED to answer is
+ * exactly what it was SHOWN. `limit` <= 0 means no limit. */
+char *osint_analysis_schema_dynamic_limited(int limit);
 
 /* Handler-dedup key (== JS handlerKey). Unified model: the canonical id IS
  * the key (distinct source_def per service); alias-grouping is an additive

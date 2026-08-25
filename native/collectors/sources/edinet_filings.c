@@ -27,12 +27,21 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return 0;
   }
 
-  /* today() = new Date().toISOString().slice(0,10) (UTC date) */
+  /* today() = new Date().toISOString().slice(0,10) (UTC date).
+   * strftime rather than snprintf("%04d-%02d-%02d", tm_year + 1900, …): tm_year
+   * is an int the compiler cannot bound, so that form can emit up to 33 bytes
+   * into this 11-byte buffer and -Wformat-truncation says so. strftime is
+   * bounded by construction — it writes nothing and returns 0 rather than
+   * cutting a date in half. The rendering is identical for every year this can
+   * see. gmtime_r's NULL return is checked too; it was not before, and reading
+   * an unset `struct tm` would have queried EDINET for a garbage date. */
   time_t now = time(NULL);
-  struct tm g; gmtime_r(&now, &g);
+  struct tm g;
   char day[11];
-  snprintf(day, sizeof day, "%04d-%02d-%02d",
-           g.tm_year + 1900, g.tm_mon + 1, g.tm_mday);
+  if (!gmtime_r(&now, &g) || !strftime(day, sizeof day, "%Y-%m-%d", &g)) {
+    fprintf(stderr, "[edinet-filings] cannot render today as a date\n");
+    return -1;
+  }
 
   char url[512];
   snprintf(url, sizeof url,

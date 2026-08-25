@@ -14,6 +14,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 /* JS \s for replace(/\s+/g,' '): space, \t, \n, \r, \f, \v. */
 static int js_ws(unsigned char c) {
@@ -125,9 +126,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     html = feed_get_text(ctx->http, PAGES[i], 15000);
   if (!html) { fprintf(stderr, "[japan-reit] unreachable\n"); return -1; }
 
-  char now[32];
-  { time_t t = time(NULL); struct tm tm; gmtime_r(&t, &tm);
-    strftime(now, sizeof now, "%Y-%m-%dT%H:%M:%S.000Z", &tm); }
+  char now[32] = {0};
+  jo_now_iso_ms(now, sizeof now);      /* empty ⇒ published_at stays NULL */
 
   /* dedup by 4-digit code (0000..9999) */
   static unsigned char seen[10000];
@@ -176,7 +176,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     it.body         = body;
     it.link         = link;
     it.lang         = "ja";
-    it.published_at = now;
+    it.published_at = now[0] ? now : NULL;
     it.record_type  = "japan-reit";
     it.tags_json    = tj;
     it.properties_json = pj;

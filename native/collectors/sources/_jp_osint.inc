@@ -10,8 +10,11 @@
  * House rules honoured by every helper (see SOURCE_REALITY_REPORT.md / the
  * "no fabricated collector data" guidance): real fetch or honest empty. Nothing
  * here invents records, names, coordinates or values. Key-gated sources return
- * 0 (honest empty) when their credential env var is unset, exactly like
- * gbizinfo.c. */
+ * 0 (never -1) when their credential env var is unset — but "return 0 and emit
+ * nothing" is no longer the whole answer, because it reads exactly like a
+ * source that ran and found nothing. See R6 in SOURCE_AUTHORING_CONTRACT.md and
+ * `_credential_notice.inc`: the gate emits one upserting
+ * `collector-status-notice` row so the state is data, not a log line. */
 #ifndef JO_JP_OSINT_INC
 #define JO_JP_OSINT_INC
 

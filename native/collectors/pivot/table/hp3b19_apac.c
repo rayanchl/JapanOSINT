@@ -497,6 +497,7 @@ static const hp_source HP3B19_APAC[] = {
     .url = "https://api.data.gov.my/weather/forecast?limit=100",
     .interval = 10800,
     .page_param = "page",
+    .title_keys = "location.location_name",
     .description = "District-level Malaysian weather forecasts from the Malaysian "
       "Meteorological Department with location code, district, state, "
       "morning, afternoon, night and general forecast text per date" },
@@ -509,6 +510,7 @@ static const hp_source HP3B19_APAC[] = {
     .url = "https://api.data.gov.my/weather/warning?limit=100",
     .interval = 900,
     .page_param = "page",
+    .title_keys = "warning_issue.title_en",
     .description = "Malaysian Meteorological Department severe weather warnings with "
       "issue and valid times, heading and full English and Malay "
       "warning text" },
@@ -521,6 +523,7 @@ static const hp_source HP3B19_APAC[] = {
     .url = "https://api.data.gov.my/weather/warning/earthquake?limit=100",
     .interval = 900,
     .page_param = "page",
+    .title_keys = "utcdatetime",
     .description = "Earthquake and tsunami bulletins issued by the Malaysian "
       "Meteorological Department with UTC and local origin time, "
       "magnitude, depth, epicentre coordinates, location description "
@@ -912,6 +915,7 @@ static const hp_source HP3B19_APAC[] = {
     .url = "https://www.szse.cn/api/report/ShowReport/data?SHOWTYPE=JSON&CATALOGID=1110&TABKEY=tab1&PAGENO=1",
     .interval = 86400,
     .page_param = "PAGENO",
+    .title_keys = "metadata.name",
     .description = "Companies listed on the Shenzhen Stock Exchange with code, "
       "Chinese name, English name, board, listing date, total and "
       "tradable share counts, a primary register for Chinese "
@@ -938,9 +942,11 @@ static const hp_source HP3B19_APAC[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets?limit=100",
     .array_path = "results",
+    .id_keys = "dataset_uid",
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "metas.default.title",
     .description = "Every City of Melbourne dataset with title, description, "
       "publisher, theme, licence, record count and field schema, "
       "covering pedestrian counting, parking sensors, trees, planning "
@@ -970,6 +976,7 @@ static const hp_source HP3B19_APAC[] = {
     .interval = 300,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "status_description",
     .description = "Live occupancy status for every instrumented on-street parking "
       "bay in central Melbourne with bay id, kerbside id, zone, status, "
       "last updated time and geocoordinates" },
@@ -981,9 +988,11 @@ static const hp_source HP3B19_APAC[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/development-activity-monitor/records?limit=100",
     .array_path = "results",
+    .id_keys = "development_key",
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "street_address",
     .description = "Every tracked development project in the City of Melbourne with "
       "property id, address, status, floor count, dwelling and room "
       "counts, land use breakdown, completion year and geocoordinates, "
@@ -1024,9 +1033,11 @@ static const hp_source HP3B19_APAC[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://catalogue-imos.aodn.org.au/geonetwork/srv/eng/q?_content_type=json&fast=index&from=1&to=100",
     .array_path = "metadata",
+    .id_keys = "link.0",
     .interval = 86400,
     .page_param = "from",
     .page_size = 100,
+    .title_keys = "title",
     .description = "Australian marine and oceanographic dataset records from the "
       "Integrated Marine Observing System with title, abstract, "
       "custodian, temporal and spatial extent, licence and download "
@@ -1193,6 +1204,7 @@ static const hp_source HP3B19_APAC[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "name",
     .description = "Every named street in the City of Melbourne with street id, "
       "name, type, suburb, segment geometry and the naming authority "
       "record, the addressing gazetteer for the municipality" },
@@ -1207,6 +1219,7 @@ static const hp_source HP3B19_APAC[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "trading_name",
     .description = "Every registered cafe, restaurant and bar in the City of "
       "Melbourne with trading name, business address, property and "
       "building id, industry classification, indoor and outdoor seat "

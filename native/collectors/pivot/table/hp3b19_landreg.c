@@ -26,10 +26,12 @@ static const hp_source HP3B19_LANDREG[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://landregistry.data.gov.uk/data/ppi/transaction-record.json?_pageSize=100",
     .array_path = "result.items",
+    .id_keys = "propertyAddress._about",
     .interval = 86400,
     .page_param = "_page",
     .page_start = 0,
     .page_zero_based = 1,
+    .title_keys = "propertyType.prefLabel.0._value",
     .description = "Every residential property sale registered in England and Wales "
       "as linked data: the price paid, the transaction and transfer "
       "dates, the full address down to PAON and postcode, whether the "
@@ -129,6 +131,7 @@ static const hp_source HP3B19_LANDREG[] = {
     .url = "https://ws.geonorge.no/adresser/v1/punktsok?lat=59.91&lon=10.75&radius=500&treffPerSide=100",
     .array_path = "adresser",
     .interval = 86400,
+    .title_keys = "representasjonspunkt.lon",
     .description = "Reverse lookup from a coordinate to every registered Norwegian "
       "address within a radius, with the cadastral identifiers and the "
       "distance to each. Turns an observed position — from imagery, a "

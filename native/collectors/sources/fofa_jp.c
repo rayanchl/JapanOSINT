@@ -7,6 +7,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "third_party/cJSON.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,8 +63,14 @@ static void cell_or_null(const cJSON *row, int i, char *buf, size_t bn) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("FOFA_API_KEY");
   if (!key || !*key) {
-    fprintf(stderr, "[fofa-jp] gated (no FOFA_API_KEY)\n");
-    return 0;
+    /* FOFA_EMAIL is listed too: the query string carries both, and an
+     * operator who sets only the key gets a 401 that looks like a fetch
+     * failure. Naming both here is the difference between "needs a key" and
+     * "needs THESE two variables". */
+    static const char *const envs[] = { "FOFA_API_KEY", "FOFA_EMAIL", NULL };
+    return jo_needs_credential(sink, "fofa-jp", "FOFA (Japan asset search)",
+        envs, "https://fofa.info/api/v1/search/all",
+        "free account at fofa.info; the API key and the account email are both sent");
   }
   const char *email = getenv("FOFA_EMAIL");
   if (!email) email = "";

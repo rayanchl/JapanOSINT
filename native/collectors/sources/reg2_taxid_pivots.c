@@ -44,6 +44,7 @@
 #include <string.h>
 #include <time.h>
 #include "_jp_osint.inc"
+#include "_timefmt.inc"
 
 static int tp_digits(const char *s, char *out, int cap) {
   if (!s) { out[0] = 0; return 0; }
@@ -54,11 +55,8 @@ static int tp_digits(const char *s, char *out, int cap) {
   return nd;
 }
 
-static void tp_today(char *out, size_t n) {
-  time_t t = time(NULL);
-  struct tm g;
-  gmtime_r(&t, &g);
-  strftime(out, n, "%Y-%m-%d", &g);
+static int tp_today(char *out, size_t n) {
+  return jo_now_fmt("%Y-%m-%d", out, n) != NULL;
 }
 
 /* ------------------------------------------------------ Poland — biala lista */
@@ -66,8 +64,13 @@ static int pl_run(const source_ctx *ctx, intel_sink *sink) {
   char nip[16];
   if (tp_digits(ctx->entity, nip, (int)sizeof nip) != 10) return 0;
 
+  /* `date=` is mandatory and must be today or earlier — there is no request
+   * to make without it, and any other day would be a different question. */
   char today[16];
-  tp_today(today, sizeof today);
+  if (!tp_today(today, sizeof today)) {
+    fprintf(stderr, "[PL_VAT_WHITELIST] cannot render today as a date\n");
+    return -1;
+  }
   char url[160];
   snprintf(url, sizeof url,
            "https://wl-api.mf.gov.pl/api/search/nip/%s?date=%s", nip, today);
@@ -178,7 +181,10 @@ static int ro_run(const source_ctx *ctx, intel_sink *sink) {
   if (nd < 2 || nd > 10) return 0;             /* CUI is 2..10 digits */
 
   char today[16];
-  tp_today(today, sizeof today);
+  if (!tp_today(today, sizeof today)) {
+    fprintf(stderr, "[RO_ANAF_VAT] cannot render today as a date\n");
+    return -1;
+  }
   char body[128];
   snprintf(body, sizeof body, "[{\"cui\":%s,\"data\":\"%s\"}]", cui, today);
 

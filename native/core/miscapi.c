@@ -71,7 +71,50 @@ char *miscapi_set_schedule(db_handle *db, const char *id, const char *body) {
   return miscapi_source_by_id(db, id);           /* updated row */
 }
 
-char *miscapi_source_logs(db_handle *db, const char *id, int limit) {
+/* Node's new Date().toISOString(), the modulo-clamped spelling used across the
+ * tree so -Wformat-truncation can prove the 24 chars fit. */
+static void iso_now(char *buf, size_t n) {
+  struct timeval tv; gettimeofday(&tv, NULL);
+  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
+  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
+}
+
+/* GET /api/sources/:id/logs
+ *
+ * DELIBERATE RESPONSE-SHAPE CHANGE — this route used to answer a BARE JSON
+ * ARRAY, `[{…},{…}]`, capped at 500 rows with no total and no paging. With 800
+ * fetch_log rows for a source it returned 500 of them and the body contained
+ * nothing that could distinguish that from all 500 there were. House rule 2
+ * requires the bounded view to state in-band how much it is showing out of how
+ * much exists, and a bare array has nowhere in-band to state it: there is no
+ * key to add. Keeping the array meant keeping the violation.
+ *
+ * So the array moved under "data" and gained the same page/meta block every
+ * other list in this API now carries. This BREAKS a client doing
+ * `logs.map(...)` on the response; that was weighed, not overlooked:
+ *
+ *   - No caller in this repository consumes the route (grepped across the
+ *     Swift/TS/JS/HTML sources — the only hits are httpd.c's own wiring and
+ *     miscapi.h). It is a diagnostics endpoint for the operator console.
+ *   - No contract fixture covers it. tests/contract/run.sh gates exactly five
+ *     routes (/api/status, /api/sources, /api/layers, /api/intel/sources,
+ *     /api/intel/items?limit=10) and this is not one of them, so no
+ *     irreplaceable *.node.json baseline describes its shape.
+ *   - The tree has already made this same call once: entityapi_search's
+ *     no-usable-token path used to print a bare `[]` and was changed to
+ *     {"results":[]} precisely because a client reading a keyed field off a
+ *     bare array gets undefined.
+ *
+ * `offset` is new for the same reason the envelope is: rows past the 500 cap
+ * were previously unreachable, and disclosing a total the caller cannot then
+ * page to is only half of rule 2. ORDER BY is unchanged and was already a
+ * total order (timestamp DESC, id DESC — id is the INTEGER PRIMARY KEY), so
+ * paging across a boundary cannot repeat or drop a row. */
+char *miscapi_source_logs(db_handle *db, const char *id, int limit, int offset) {
   /* getSourceById guard first — unknown id is a 404, not an empty list. */
   sqlite3_stmt *chk;
   int exists = 0;
@@ -85,19 +128,53 @@ char *miscapi_source_logs(db_handle *db, const char *id, int limit) {
 
   int lim = limit > 0 ? limit : 50;
   if (lim > 500) lim = 500;
+  int off = offset > 0 ? offset : 0;
+
+  /* Measured, over the identical predicate. -1 (rendered as null) if the count
+   * could not be taken: rule 1 — never report a number we did not obtain. */
+  long total = -1;
+  { sqlite3_stmt *cs = NULL;
+    if (sqlite3_prepare_v2(db->h,
+          "SELECT COUNT(*) FROM fetch_log WHERE source_id = ?1",
+          -1, &cs, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(cs, 1, id, -1, SQLITE_TRANSIENT);
+      if (sqlite3_step(cs) == SQLITE_ROW) total = (long)sqlite3_column_int64(cs, 0);
+    }
+    sqlite3_finalize(cs); }
+
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT * FROM fetch_log WHERE source_id = ?1 "
-        "ORDER BY timestamp DESC, id DESC LIMIT ?2", -1, &s, NULL) != SQLITE_OK)
+        "ORDER BY timestamp DESC, id DESC LIMIT ?2 OFFSET ?3",
+        -1, &s, NULL) != SQLITE_OK)
     return NULL;
   sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
   sqlite3_bind_int(s, 2, lim);
+  sqlite3_bind_int(s, 3, off);
   cJSON *arr = cJSON_CreateArray();
   while (sqlite3_step(s) == SQLITE_ROW)
     cJSON_AddItemToArray(arr, row_obj(s));
   sqlite3_finalize(s);
-  char *js = cJSON_PrintUnformatted(arr);
-  cJSON_Delete(arr);
+
+  cJSON *page = cJSON_CreateObject();
+  cJSON_AddNumberToObject(page, "limit", lim);
+  cJSON_AddNumberToObject(page, "offset", off);
+  if (total < 0) cJSON_AddNullToObject(page, "total");
+  else           cJSON_AddNumberToObject(page, "total", (double)total);
+
+  cJSON *filters = cJSON_CreateObject();
+  cJSON_AddStringToObject(filters, "source_id", id);
+  char ts[40]; iso_now(ts, sizeof ts);
+  cJSON *meta = cJSON_CreateObject();
+  cJSON_AddStringToObject(meta, "fetched_at", ts);
+  cJSON_AddItemToObject(meta, "filters", filters);
+
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddItemToObject(o, "data", arr);
+  cJSON_AddItemToObject(o, "page", page);
+  cJSON_AddItemToObject(o, "meta", meta);
+  char *js = cJSON_PrintUnformatted(o);
+  cJSON_Delete(o);
   return js;
 }
 

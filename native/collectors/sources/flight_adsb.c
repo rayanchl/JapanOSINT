@@ -8,6 +8,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/geojson.h"
+#include "_timefmt.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -492,13 +493,14 @@ static void try_aerodatabox_airport(const source_ctx *ctx,
   if (!key || !*key) return;                          /* RULE 9: 0 rows     */
 
   time_t now = time(NULL);
-  struct tm tmv;
-  gmtime_r(&now, &tmv);
   char start[32], end[32];
-  strftime(start, sizeof start, "%Y-%m-%dT%H:%M", &tmv);
-  time_t later = now + 11 * 3600;
-  gmtime_r(&later, &tmv);
-  strftime(end, sizeof end, "%Y-%m-%dT%H:%M", &tmv);
+  /* The window is part of the request PATH, so an unrenderable one means no
+   * request at all - 0 rows, exactly like the key-gated return above. */
+  if (!jo_time_fmt(now, "%Y-%m-%dT%H:%M", start, sizeof start) ||
+      !jo_time_fmt(now + 11 * 3600, "%Y-%m-%dT%H:%M", end, sizeof end)) {
+    fprintf(stderr, "[flight-adsb] cannot render the query window as a date\n");
+    return;
+  }
 
   char url[512];
   snprintf(url, sizeof url,

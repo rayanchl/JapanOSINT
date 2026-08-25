@@ -224,10 +224,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://xmart-api-public.who.int/NCD/FACT_NCD_MORTALITY?%24format=json&%24top=1000",
     .array_path = "value",
+    .id_keys = "_RecordID",
     .interval = 604800,
     .page_param = "%24skip",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "CANCERMORTLABEL",
     .description = "Noncommunicable disease mortality by country, year, sex, age "
       "group and cause, with the probability of premature death from "
       "the four main NCD groups and the underlying rate and count. The "
@@ -242,10 +244,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://xmart-api-public.who.int/NCD/FACT_NCD_CANCER?%24format=json&%24top=1000",
     .array_path = "value",
+    .id_keys = "_RecordID",
     .interval = 604800,
     .page_param = "%24skip",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "Sys_VersionID",
     .description = "Cancer incidence, mortality and prevalence estimates by country, "
       "year, sex, age group and cancer site as carried in the WHO NCD "
       "mart, with counts and crude and age-standardised rates. "
@@ -261,10 +265,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://xmart-api-public.who.int/TOBACCO/TREATY_PARTIES?%24format=json&%24top=1000",
     .array_path = "value",
+    .id_keys = "_RecordID",
     .interval = 604800,
     .page_param = "%24skip",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "Sys_RowTitle",
     .description = "Party status under the WHO Framework Convention on Tobacco "
       "Control by country and year, together with the treaty-reporting "
       "indicators each party submitted. A compliance register for the "
@@ -278,10 +284,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://xmart-api-public.who.int/TOBACCO/FACT_TOBACCO?%24format=json&%24top=1000",
     .array_path = "value",
+    .id_keys = "_RecordID",
     .interval = 604800,
     .page_param = "%24skip",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "INDICATOR_FK__Sys_ID",
     .description = "The MPOWER indicator set country by country and year: "
       "advertising bans, brand placement rules, health warning "
       "requirements, taxation levels, smoke-free legislation and "
@@ -296,10 +304,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://xmart-api-public.who.int/NUTRITION/VMNIS_MICRONUTS_PUBLIC?%24format=json&%24top=1000",
     .array_path = "value",
+    .id_keys = "Sys_PK",
     .interval = 604800,
     .page_param = "%24skip",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "SURVEY_TITLE",
     .description = "Individual micronutrient survey results collated by WHO: "
       "country, survey year, population group, micronutrient and "
       "indicator, sample size, prevalence and the bibliographic source "
@@ -314,10 +324,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://xmart-api-public.who.int/NUTRITION/GTT_SURVEY?%24format=json&%24top=1000",
     .array_path = "value",
+    .id_keys = "_RecordID",
     .interval = 604800,
     .page_param = "%24skip",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "NAME_IND",
     .description = "The survey observations behind the WHO global nutrition targets "
       "tracking tool: stunting, wasting, overweight, anaemia, low birth "
       "weight and exclusive breastfeeding by country, survey year and "
@@ -332,10 +344,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://xmart-api-public.who.int/DEX_CMS/GHE_FULL?%24format=json&%24top=1000",
     .array_path = "value",
+    .id_keys = "_RecordID",
     .interval = 604800,
     .page_param = "%24skip",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "Sys_RowTitle",
     .description = "The full WHO Global Health Estimates fact table: deaths, death "
       "rates, DALYs and years of life lost by country, year, age group, "
       "sex and GHE cause code with the cause title attached. This is "
@@ -350,10 +364,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://xmart-api-public.who.int/DEX_CMS/WHSA_FACT?%24format=json&%24top=1000",
     .array_path = "value",
+    .id_keys = "_RecordID",
     .interval = 604800,
     .page_param = "%24skip",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "Sys_RowTitle",
     .description = "Every value printed in the annual World Health Statistics report "
       "as a queryable row: indicator code, location, period, dimension "
       "members, the value and its footnote. Reading the machine table "
@@ -443,6 +459,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Daily laboratory-confirmed COVID-19 case counts for England as "
       "published by UKHSA, each record carrying theme, sub-theme, "
       "topic, geography, metric, date, value and the in-reporting-delay "
@@ -461,6 +478,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Weekly influenza hospital admission rate per hundred thousand "
       "population for England from the UKHSA severe respiratory "
       "surveillance system. Admission rate is the metric that "
@@ -478,6 +496,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Weekly respiratory syncytial virus hospital admission rate for "
       "England. RSV drives paediatric bed pressure ahead of influenza "
       "most winters and is the metric the new maternal and older-adult "
@@ -494,6 +513,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Laboratory-confirmed measles cases in England by week of symptom "
       "onset. Measles is the sentinel for collapsing MMR coverage and "
       "is the vaccine-preventable disease that reappears first when "
@@ -510,6 +530,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Rolling-month percentage of Escherichia coli bloodstream "
       "isolates in England resistant to key antibiotic classes, from "
       "the UKHSA antimicrobial resistance surveillance programme. "
@@ -527,6 +548,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Clostridioides difficile infection counts in England split by "
       "whether onset was hospital-associated or community-associated. "
       "The onset split is the part that attributes infection to "
@@ -543,6 +565,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 604800,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Annual central estimate of chronic hepatitis C prevalence in "
       "England, published alongside its own lower and upper bound "
       "metrics. Part of the UK elimination-target monitoring and one of "
@@ -558,6 +581,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .array_path = "epidata",
     .date_keys = "epiweek",
     .interval = 86400,
+    .title_keys = "wili",
     .description = "The CDC US Outpatient Influenza-like Illness Surveillance "
       "Network as a queryable API rather than a spreadsheet: weighted "
       "and unweighted ILI percentage, patient and provider counts and "
@@ -576,6 +600,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .array_path = "epidata",
     .date_keys = "epiweek",
     .interval = 86400,
+    .title_keys = "total_specimens",
     .description = "Clinical laboratory influenza testing for the United States by "
       "epiweek and region: total specimens, influenza A and B counts "
       "and percent positivity, with release date and issue so each "
@@ -608,6 +633,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .array_path = "epidata",
     .date_keys = "epiweek",
     .interval = 86400,
+    .title_keys = "epiweek",
     .description = "Weekly outpatient visit counts and influenza-like illness "
       "percentage from Taiwan's National Infectious Disease Statistics "
       "System, by region and epiweek with revision issue. Taiwan CDC's "
@@ -625,6 +651,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .array_path = "epidata",
     .date_keys = "epiweek",
     .interval = 86400,
+    .title_keys = "epiweek",
     .description = "Weekly dengue case counts from Taiwan's National Infectious "
       "Disease Statistics System, available nationwide and by city or "
       "county. Dengue in Taiwan is strongly seasonal and "
@@ -641,6 +668,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .array_path = "epidata",
     .date_keys = "epiweek",
     .interval = 86400,
+    .title_keys = "epiweek",
     .description = "Pan American Health Organization dengue reporting by country and "
       "epiweek: total and severe case counts, deaths, incidence rate, "
       "population denominator and circulating serotype. Serotype shift "
@@ -657,6 +685,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .array_path = "epidata",
     .date_keys = "epiweek",
     .interval = 86400,
+    .title_keys = "lag",
     .description = "Weekly influenza-like illness rate for the Republic of Korea "
       "from the Korea Disease Control and Prevention Agency sentinel "
       "network, with release date and revision issue. KDCA's own open "
@@ -1711,6 +1740,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .url = "https://data.rivm.nl/data/covid-19/COVID-19_ic_opnames.json",
     .date_keys = "Date_of_statistics",
     .interval = 86400,
+    .title_keys = "Date_of_statistics",
     .description = "Daily national intensive care admission notifications and "
       "confirmed admissions for the Netherlands, with both the date of "
       "statistics and the date of report so the notification lag "
@@ -1759,6 +1789,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .url = "https://data.rivm.nl/data/covid-19/ARI_Infectieradar_symptomen_per_dag.json",
     .date_keys = "Date_of_statistics",
     .interval = 86400,
+    .title_keys = "Date_of_statistics",
     .description = "Daily percentage of Infectieradar panel participants reporting "
       "acute respiratory infection symptoms. Participatory syndromic "
       "surveillance sits outside the healthcare system entirely, so it "
@@ -1858,6 +1889,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Daily deaths with COVID-19 on the death certificate for England, "
       "sourced from Office for National Statistics registrations rather "
       "than from the surveillance system. Registration-based mortality "
@@ -1875,6 +1907,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Daily new hospital admissions of patients with COVID-19 in "
       "England as reported through NHS situation reporting. Admissions "
       "lead deaths by roughly two weeks and are the operational number "
@@ -1891,6 +1924,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Daily count of hospital beds in England occupied by patients "
       "with COVID-19. Occupancy rather than admission is the measure "
       "that captures how long patients are staying and therefore how "
@@ -1907,6 +1941,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Seven-day rolling COVID-19 test positivity for England. "
       "Positivity is the ratio that stays interpretable when testing "
       "volume collapses, which is exactly the regime every country's "
@@ -1923,6 +1958,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Weekly share of sequenced SARS-CoV-2 cases in England "
       "attributable to each named lineage, with the stratum field "
       "carrying the lineage name. English genomic surveillance output "
@@ -1940,6 +1976,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Cumulative daily uptake percentage for the autumn COVID-19 "
       "vaccination campaign in England by eligible age stratum. "
       "Campaign-specific uptake is the measure of whether a programme "
@@ -1957,6 +1994,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Weekly influenza intensive care and high dependency unit "
       "admission rate for England. The critical-care admission rate is "
       "the severity signal that distinguishes a season straining wards "
@@ -1974,6 +2012,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Weekly influenza test positivity for England from UKHSA "
       "laboratory surveillance. Positivity is the earliest reliable "
       "indicator that a season has started, ahead of both consultation "
@@ -1990,6 +2029,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 86400,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Weekly influenza-like illness rate in England measured by "
       "community survey rather than by healthcare contact, published "
       "alongside its own participant count metric so the denominator is "
@@ -2007,6 +2047,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "date",
     .interval = 604800,
     .next_path = "next",
+    .title_keys = "topic",
     .description = "Annual first-dose measles, mumps and rubella vaccination "
       "coverage for England by age stratum. MMR first-dose coverage "
       "below the elimination threshold is the precondition for every "
@@ -2021,10 +2062,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://xmart-api-public.who.int/NCD/FACT_NCD_RISKFACTOR_HYPERTENSION?%24format=json&%24top=1000",
     .array_path = "value",
+    .id_keys = "_RecordID",
     .interval = 604800,
     .page_param = "%24skip",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "INDICATOR__Sys_ID",
     .description = "Hypertension prevalence, diagnosis, treatment and control "
       "estimates by country, year, sex and age group with the "
       "uncertainty interval around each estimate. The treatment and "
@@ -2039,10 +2082,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://xmart-api-public.who.int/NCD/FACT_NCD_ALCOHOL?%24format=json&%24top=1000",
     .array_path = "value",
+    .id_keys = "_RecordID",
     .interval = 604800,
     .page_param = "%24skip",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "INDICATOR__Sys_ID",
     .description = "Alcohol consumption indicators by country, year, sex and age "
       "group: total per capita consumption, heavy episodic drinking "
       "prevalence, abstention rates and unrecorded consumption. The "
@@ -2057,10 +2102,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://xmart-api-public.who.int/TOBACCO/WHOTobPrev?%24format=json&%24top=1000",
     .array_path = "value",
+    .id_keys = "_RecordID",
     .interval = 604800,
     .page_param = "%24skip",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "INDICATOR_FK",
     .description = "WHO trend estimates of current tobacco use prevalence by "
       "country, year, sex and indicator, standardised so countries with "
       "different survey instruments can be compared. These are the "
@@ -2133,10 +2180,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://xmart-api-public.who.int/NUTRITION/FACT_FBD?%24format=json&%24top=1000",
     .array_path = "value",
+    .id_keys = "_RecordID",
     .interval = 604800,
     .page_param = "%24skip",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "Sys_VersionID",
     .description = "WHO estimates of the burden of foodborne disease by hazard, "
       "region, year, sex and age group: illnesses, deaths, years lived "
       "with disability and disability-adjusted life years attributable "
@@ -2152,10 +2201,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://xmart-api-public.who.int/DEX_CMS/POP_COUNT?%24format=json&%24top=1000",
     .array_path = "value",
+    .id_keys = "_RecordID",
     .interval = 604800,
     .page_param = "%24skip",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "Sys_VersionID",
     .description = "The population denominators WHO itself uses, by country M49 "
       "code, year, age group and sex. Every rate in the WHO health "
       "datasets is computed against these numbers, so holding them is "

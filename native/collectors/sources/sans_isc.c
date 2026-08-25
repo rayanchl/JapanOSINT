@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define URL_RSS     "https://isc.sans.edu/rssfeed.xml"
 #define URL_INFOCON "https://isc.sans.edu/api/infocon?json"
@@ -41,10 +42,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       status = st->valuestring;
 
     char iso[32];
-    time_t now = time(NULL);
-    struct tm tmv;
-    gmtime_r(&now, &tmv);
-    strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &tmv);
+    /* This is the row's OWN observation time, not an upstream field: if the
+     * clock cannot be rendered the item still carries the fetched infocon
+     * status, with published_at absent rather than invented. */
+    const char *iso_p = jo_now_iso_ms(iso, sizeof iso);
 
     char title[128], tags[128];
     snprintf(title, sizeof title, "Infocon level: %s", status);
@@ -61,7 +62,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     it.title = title;
     it.summary = "SANS ISC global threat-level indicator";
     it.lang = "en";
-    it.published_at = iso;
+    it.published_at = iso_p;
     it.record_type = "article";
     it.properties_json = props_s ? props_s : "{}";
     it.tags_json = tags;

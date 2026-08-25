@@ -16,9 +16,21 @@ char *miscapi_source_by_id(db_handle *db, const char *id);
  * write used to be reported as a successful one. */
 char *miscapi_set_schedule(db_handle *db, const char *id, const char *body);
 
-/* GET /api/sources/:id/logs — malloc'd JSON array (newest first, capped).
- * NULL when the source id is unknown (caller → 404). */
-char *miscapi_source_logs(db_handle *db, const char *id, int limit);
+/* GET /api/sources/:id/logs?limit&offset — newest first.
+ * NULL when the source id is unknown (caller → 404).
+ *
+ * SHAPE CHANGED, deliberately. This returned a bare JSON array capped at 500
+ * rows: with 800 rows stored it served 500 and the body said nothing about the
+ * other 300, and a bare array has no key in which to say it. It now returns
+ *
+ *   {"data":[…],"page":{"limit":N,"offset":K,"total":M},
+ *    "meta":{"fetched_at":"…","filters":{"source_id":"…"}}}
+ *
+ * — the envelope the rest of this API uses, with `total` a measured COUNT(*).
+ * `offset` is new so the rows past the cap are reachable and not merely
+ * counted. The reasoning, and the checks that no client or contract fixture
+ * depended on the old shape, are recorded above the implementation. */
+char *miscapi_source_logs(db_handle *db, const char *id, int limit, int offset);
 
 /* GET /api/layers — registry layers (grouped by source.layer), STRIP-filtered,
  * each carrying its contributing sources + time-slider disposition. Sources

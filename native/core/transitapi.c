@@ -357,8 +357,15 @@ static void iso_local_to_z(char *out, size_t n) {
   /* req.query.t default is `new Date()`; .toISOString() is UTC Z. */
   time_t t = time(NULL);
   struct tm g; gmtime_r(&t, &g);
-  snprintf(out, n, "%04d-%02d-%02dT%02d:%02d:%02d.000Z",
-           g.tm_year+1900, g.tm_mon+1, g.tm_mday, g.tm_hour, g.tm_min, g.tm_sec);
+  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
+   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
+   * fixed 24-char stamp "may be truncated". The modulos are identity for
+   * every value gmtime_r can return and make the 24 provable, not merely
+   * true. */
+  snprintf(out, n, "%04u-%02u-%02uT%02u:%02u:%02u.000Z",
+           (unsigned)(g.tm_year+1900) % 10000u, (unsigned)(g.tm_mon+1) % 100u,
+           (unsigned)g.tm_mday % 100u, (unsigned)g.tm_hour % 100u,
+           (unsigned)g.tm_min % 100u, (unsigned)g.tm_sec % 100u);
 }
 
 static char *route_stop_departures(db_handle *db, const char *stopId,
@@ -380,9 +387,10 @@ static char *route_stop_departures(db_handle *db, const char *stopId,
 
   struct tm lt; jst_now(&lt);
   int dow = lt.tm_wday;                       /* 0=Sun, == Date.getDay() */
-  char ymd[9];
-  snprintf(ymd, sizeof ymd, "%04d%02d%02d",
-           lt.tm_year+1900, lt.tm_mon+1, lt.tm_mday);
+  char ymd[9];                                /* YYYYMMDD + NUL, exactly */
+  snprintf(ymd, sizeof ymd, "%04u%02u%02u",
+           (unsigned)(lt.tm_year+1900) % 10000u, (unsigned)(lt.tm_mon+1) % 100u,
+           (unsigned)lt.tm_mday % 100u);
   int secOfDay = lt.tm_hour*3600 + lt.tm_min*60 + lt.tm_sec;
 
   cJSON *deps = cJSON_CreateArray();
@@ -478,7 +486,11 @@ static char *route_stop_departures(db_handle *db, const char *stopId,
   free(a);
   cJSON_Delete(deps);
 
-  char nowz[40];
+  /* Sized to tbuf, not to a formatted stamp: when ?t= is supplied this echoes
+   * the CLIENT's string back as `now`, and tbuf takes 63 bytes. At 40 a longer
+   * ?t= came back silently cut, so the reply reported an instant the caller
+   * never asked for. */
+  char nowz[sizeof tbuf];
   if (has_t && tbuf[0]) { snprintf(nowz, sizeof nowz, "%s", tbuf); }
   else iso_local_to_z(nowz, sizeof nowz);
 
@@ -602,9 +614,10 @@ static char *route_active_trips(db_handle *db, const char *query) {
     jst_now(&lt);
   }
   const char *dowc = DOW_COLS[lt.tm_wday];
-  char today[9];
-  snprintf(today, sizeof today, "%04d%02d%02d",
-           lt.tm_year+1900, lt.tm_mon+1, lt.tm_mday);
+  char today[9];                              /* YYYYMMDD + NUL, exactly */
+  snprintf(today, sizeof today, "%04u%02u%02u",
+           (unsigned)(lt.tm_year+1900) % 10000u, (unsigned)(lt.tm_mon+1) % 100u,
+           (unsigned)lt.tm_mday % 100u);
   long nowSec = lt.tm_hour*3600 + lt.tm_min*60 + lt.tm_sec;
 
   char sql[1024];
@@ -690,7 +703,8 @@ static char *route_active_trips(db_handle *db, const char *query) {
       long nextT = nx->has_arr ? nx->arr : nx->dep;
       double span = (nextT - prevT) > 1 ? (double)(nextT - prevT) : 1.0;
       double ratio = (double)(nowSec - prevT) / span;
-      if (ratio < 0) ratio = 0; if (ratio > 1) ratio = 1;
+      if (ratio < 0) ratio = 0;
+      if (ratio > 1) ratio = 1;
       if (!pv->has_dist || !nx->has_dist) { free(stops); continue; }
       double distM = pv->dist + ratio * (nx->dist - pv->dist);
       free(stops);
@@ -754,7 +768,11 @@ static char *route_active_trips(db_handle *db, const char *query) {
   sqlite3_finalize(sShape);
   sqlite3_finalize(sRoute);
 
-  char nowz[40];
+  /* Sized to tbuf, not to a formatted stamp: when ?t= is supplied this echoes
+   * the CLIENT's string back as `now`, and tbuf takes 63 bytes. At 40 a longer
+   * ?t= came back silently cut, so the reply reported an instant the caller
+   * never asked for. */
+  char nowz[sizeof tbuf];
   if (has_t && tbuf[0]) snprintf(nowz, sizeof nowz, "%s", tbuf);
   else iso_local_to_z(nowz, sizeof nowz);
   cJSON *body = cJSON_CreateObject();

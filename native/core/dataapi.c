@@ -83,9 +83,16 @@
 static void iso_now(char *o, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
   struct tm g; gmtime_r(&tv.tv_sec, &g);
-  snprintf(o, n, "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-           g.tm_year + 1900, g.tm_mon + 1, g.tm_mday, g.tm_hour, g.tm_min,
-           g.tm_sec, (int)(tv.tv_usec / 1000));
+  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
+   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
+   * fixed 24-char stamp "may be truncated". The modulos are identity for
+   * every value gmtime_r can return and make the 24 provable, not merely
+   * true. */
+  snprintf(o, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(g.tm_year + 1900) % 10000u, (unsigned)(g.tm_mon + 1) % 100u,
+           (unsigned)g.tm_mday % 100u, (unsigned)g.tm_hour % 100u,
+           (unsigned)g.tm_min % 100u, (unsigned)g.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 
 /* getTtlMs(key): collector_ttls row else DEFAULT_TTL_MS. The table is

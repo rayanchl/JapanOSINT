@@ -28,11 +28,18 @@
  */
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/jocore.h"          /* jo_trunc_notice — the shared R7 disclosure */
 #include "geoeo_common.inc"
 
 #define MAXAR_ROOT "https://maxar-opendata.s3.amazonaws.com/events/catalog.json"
 #define MAXAR_BASE "https://maxar-opendata.s3.amazonaws.com/events/"
-#define MAXAR_MAX_EVENTS 40
+/* Events fetched per run. This was 40 against a catalogue that currently
+ * publishes 55 child links, so the 15 most recently added disaster events —
+ * exactly the ones this source exists to surface — were dropped on every run
+ * with nothing said about it. The bound is now a runaway guard well above the
+ * catalogue, raisable with $JO_MAXAR_MAX_EVENTS, and a run that ends on it is
+ * disclosed as a collector-truncation-notice. */
+#define MAXAR_MAX_EVENTS 250   /* exhaustive-ok: fetch-count runaway guard; a run that ends on it emits a collector-truncation-notice */
 
 /* Resolve a STAC relative href against a base directory URL. */
 static void resolve_href(const char *base_dir, const char *href, char *out,
@@ -74,14 +81,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   const char *root_license = geoeo_str(root, "license");
 
-  int n = 0, fetched = 0;
+  int max_events = MAXAR_MAX_EVENTS;
+  const char *eenv = getenv("JO_MAXAR_MAX_EVENTS");
+  if (eenv && *eenv) { int v = atoi(eenv); if (v > 0) max_events = v; }
+
+  int n = 0, fetched = 0, candidates = 0, skipped = 0;
   cJSON *l;
   cJSON_ArrayForEach(l, links) {
-    if (fetched >= MAXAR_MAX_EVENTS) break;
     const char *rel = geoeo_str(l, "rel");
     const char *href = geoeo_str(l, "href");
     if (!rel || !href) continue;
     if (strcmp(rel, "child") != 0 && strcmp(rel, "item") != 0) continue;
+    candidates++;
+    if (fetched >= max_events) { skipped++; continue; }
 
     char url[640];
     resolve_href(MAXAR_BASE, href, url, sizeof url);
@@ -97,15 +109,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const char *clic = geoeo_str(coll, "license");
     if (!cid && !ctitle) { cJSON_Delete(coll); continue; }
 
-    /* extent.spatial.bbox = [[west, south, east, north]] */
+    /* extent.spatial.bbox = [[west, south, east, north]].
+     * STAC defines bbox[0] as the OVERALL extent of the collection, with any
+     * later entries being sub-extents contained within it — so bbox[0] is the
+     * whole footprint, not one of several to choose between, and the inner
+     * array is the fixed 4-ordinate box, all four of which are read. */
     double w = 0, s = 0, e = 0, nn = 0;
     int geo = 0;
     cJSON *extent = cJSON_GetObjectItem(coll, "extent");
     cJSON *sp = extent ? cJSON_GetObjectItem(extent, "spatial") : NULL;
     cJSON *bb = sp ? cJSON_GetObjectItem(sp, "bbox") : NULL;
-    cJSON *b0 = cJSON_IsArray(bb) ? cJSON_GetArrayItem(bb, 0) : NULL;
+    cJSON *b0 = cJSON_IsArray(bb) ? cJSON_GetArrayItem(bb, 0) : NULL;  /* exhaustive-ok: STAC bbox[0] is the collection's overall extent by spec */
     if (cJSON_IsArray(b0) && cJSON_GetArraySize(b0) >= 4) {
-      cJSON *a0 = cJSON_GetArrayItem(b0, 0), *a1 = cJSON_GetArrayItem(b0, 1);
+      cJSON *a0 = cJSON_GetArrayItem(b0, 0), *a1 = cJSON_GetArrayItem(b0, 1);  /* exhaustive-ok: fixed 4-ordinate bbox tuple; all four are read */
       cJSON *a2 = cJSON_GetArrayItem(b0, 2), *a3 = cJSON_GetArrayItem(b0, 3);
       if (cJSON_IsNumber(a0) && cJSON_IsNumber(a1) && cJSON_IsNumber(a2) &&
           cJSON_IsNumber(a3)) {
@@ -115,13 +131,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       }
     }
 
-    /* extent.temporal.interval = [[start, end]] */
+    /* extent.temporal.interval = [[start, end]]. As with bbox, STAC defines
+     * interval[0] as the OVERALL time range of the collection and the inner
+     * array as the fixed [start, end] pair — both ends are read. */
     const char *tstart = NULL, *tend = NULL;
     cJSON *tp = extent ? cJSON_GetObjectItem(extent, "temporal") : NULL;
     cJSON *iv = tp ? cJSON_GetObjectItem(tp, "interval") : NULL;
-    cJSON *i0 = cJSON_IsArray(iv) ? cJSON_GetArrayItem(iv, 0) : NULL;
+    cJSON *i0 = cJSON_IsArray(iv) ? cJSON_GetArrayItem(iv, 0) : NULL;  /* exhaustive-ok: STAC interval[0] is the collection's overall time range by spec */
     if (cJSON_IsArray(i0)) {
-      cJSON *a = cJSON_GetArrayItem(i0, 0), *b = cJSON_GetArrayItem(i0, 1);
+      cJSON *a = cJSON_GetArrayItem(i0, 0), *b = cJSON_GetArrayItem(i0, 1);  /* exhaustive-ok: fixed [start,end] interval tuple; both ends are read */
       if (cJSON_IsString(a)) tstart = a->valuestring;
       if (cJSON_IsString(b)) tend = b->valuestring;
     }
@@ -188,8 +206,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON_Delete(root);
-  fprintf(stderr, "[maxar-opendata] emitted %d events (%d collections fetched)\n",
-          n, fetched);
+  fprintf(stderr, "[maxar-opendata] emitted %d events (%d of %d collections "
+                  "fetched)\n", n, fetched, candidates);
+  if (skipped)
+    jo_trunc_notice(sink, "maxar-opendata", MAXAR_ROOT, n, candidates,
+                    "the per-run event-fetch bound stopped the walk before "
+                    "every child collection in Maxar's catalogue was read",
+                    "raise $JO_MAXAR_MAX_EVENTS");
   return 0;
 }
 

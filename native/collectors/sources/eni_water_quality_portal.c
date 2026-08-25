@@ -20,6 +20,7 @@
  * Licence: US public domain (EPA / USGS / NWQMC). Keyless. */
 #include "source.h"
 #include "lib/feedlib.h"
+#include "_timefmt.inc"
 #include "lib/csv.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
@@ -41,9 +42,12 @@ typedef struct { const char *id; double lat, lon; } wqstn_t;
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t now = time(NULL) - 30 * 24 * 3600;
-  struct tm tmv; gmtime_r(&now, &tmv);
   char since[16];
-  strftime(since, sizeof since, "%m-%d-%Y", &tmv);   /* WQP wants mm-dd-yyyy */
+  /* WQP wants mm-dd-yyyy */
+  if (!jo_time_fmt(now, "%m-%d-%Y", since, sizeof since)) {
+    fprintf(stderr, "[" SRC "] cannot render the query window as a date\n");
+    return -1;
+  }
 
   /* --- station coordinates --- */
   wqstn_t *stns = NULL; int nstn = 0;

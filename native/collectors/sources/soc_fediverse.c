@@ -397,8 +397,11 @@ static int run_lemmyverse(const source_ctx *ctx, intel_sink *sink) {
   }
   int n = 0;
   const cJSON *it;
+  /* No cap. instance.min.json is a 32 KB static file the crawler publishes
+   * whole (497 instances, measured 2026-08-24) and the old `n >= 600` was a
+   * number nobody chose for a reason — the crawler decides how many Lemmy
+   * instances exist, not this collector. */
   cJSON_ArrayForEach(it, doc) {
-    if (n >= 600) break;
     const char *base = jo_sv(it, "base");
     if (!base) continue;
     const char *name = jo_sv(it, "name");
@@ -449,8 +452,10 @@ static int run_misskey_dir(const source_ctx *ctx, intel_sink *sink) {
   const char *latest = jo_sv(doc, "latestMisskeyVersion");
   int n = 0;
   const cJSON *it;
+  /* No cap. The directory returned 893 instances on 2026-08-24 and the old
+   * `n >= 600` was silently throwing 293 of them away on every daily run —
+   * an arbitrary bound on a list whose length is the upstream's to decide. */
   cJSON_ArrayForEach(it, arr) {
-    if (n >= 600) break;
     const char *host = jo_sv(it, "url");
     if (!host) continue;
     /* Some entries carry a null meta — guard before touching it. */
@@ -582,7 +587,7 @@ static int run_invidious(const source_ctx *ctx, intel_sink *sink) {
   /* Array of [hostname, details] PAIRS, not objects. */
   cJSON_ArrayForEach(pair, doc) {
     if (!cJSON_IsArray(pair) || cJSON_GetArraySize(pair) < 2) continue;
-    const cJSON *hostv = cJSON_GetArrayItem(pair, 0);
+    const cJSON *hostv = cJSON_GetArrayItem(pair, 0);  /* exhaustive-ok: fixed [hostname, details] pair, both elements read */
     const cJSON *d     = cJSON_GetArrayItem(pair, 1);
     if (!cJSON_IsString(hostv) || !hostv->valuestring || !cJSON_IsObject(d)) continue;
     const char *host = hostv->valuestring;

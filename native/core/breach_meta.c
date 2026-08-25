@@ -10,10 +10,18 @@
 #define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
 #endif
 
+/* Exported (as breach_meta_corpus_path) as well as used locally: the path
+ * confinement in breach_jobs.c allows the two committed catalogue files by
+ * exact resolved path, and it has to ask THIS function where they are rather
+ * than keep a second copy of the default and the env override. A copy would
+ * drift the day JO_BREACH_CORPUS is set and quietly refuse the operator's own
+ * corpus file. */
 static const char *corpus_path(void) {
   const char *e = getenv("JO_BREACH_CORPUS");
   return (e && *e) ? e : JO_REPO_ROOT "/docs/breach-corpus.json";
 }
+
+const char *breach_meta_corpus_path(void) { return corpus_path(); }
 
 const char *breach_meta_seed_path(void) {
   const char *e = getenv("JO_BREACH_SEED");

@@ -28,9 +28,18 @@ Usage:
 import argparse
 import csv
 import io
+import os
 import re
 import sys
 import urllib.parse
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# THE manifest parser. This file used to read the opts field with a bare
+# `"page_param=" in o` SUBSTRING test -- which finds the text inside a
+# post_body value and calls the row paginated -- and split `pagination_ok` out
+# with a naive `.split(";")` that ignores the `\;` escape the format defines
+# for header values. Two more ways for two tools to disagree about one line.
+from manifest import COLS, parse_opts                       # noqa: E402
 
 PAGE_PARAM = re.compile(
     r"[?&](page|pageNum|pageNumber|offset|start|startIndex|startAt|skip|from|"
@@ -47,37 +56,43 @@ SIZE_PARAM = re.compile(
     r"maxrecords|maxCountItem|resultsPerPage|retmax|\$limit|"
     r"page%5Bsize%5D)=(\d+)", re.I)
 
-COLS = ["id", "mode", "want", "category", "record_type", "tags", "portal",
-        "name", "name_ja", "url", "probe", "description", "opts"]
-
-
 def rows(paths):
+    """-> (rows, malformed) — the lines that LOOK like rows and are not come
+    back rather than being `continue`d over. Skipping them silently meant this
+    tool reported "0 findings" about a file it had only partly read, which is
+    the same lie as a passing gate."""
+    out, bad = [], []
     for p in paths:
         for lno, line in enumerate(io.open(p, encoding="utf-8"), 1):
             s = line.rstrip("\n")
-            if s.startswith("#") or s.count("|") != 12:
+            if not s.strip() or s.lstrip().startswith("#"):
+                continue
+            at = "%s:%d" % (p.rsplit("/", 1)[-1], lno)
+            if s.count("|") != len(COLS) - 1:
+                bad.append((at, s.count("|") + 1))
                 continue
             r = dict(zip(COLS, s.split("|")))
-            r["_at"] = "%s:%d" % (p.rsplit("/", 1)[-1], lno)
-            yield r
+            r["_at"] = at
+            out.append(r)
+    return out, bad
 
 
-def declares_paging(r):
-    o = r["opts"]
-    return ("page_param=" in o) or ("next_path=" in o)
+def declares_paging(o):
+    """`o` is the PARSED opts. The old test was `"page_param=" in r["opts"]`,
+    which is true whenever those nine characters occur anywhere in the field —
+    inside a post_body, inside a header, inside a pagination_ok reason — and a
+    row that merely mentions paging was thereby excused from declaring it."""
+    return bool(o.get("page_param") or o.get("next_path"))
 
 
-def declares_exception(r):
+def declares_exception(o):
     """`pagination_ok=<reason>` — the C tree's `exhaustive-ok` marker, in a
     manifest. Some endpoints genuinely cannot be paged: the Wikimedia core
     search API caps `limit` at 100 and has no offset parameter at all, and the
     OSM changesets API refuses limit>100. Those rows would stay flagged forever
     otherwise, and a warning that can never be cleared is a warning nobody
     reads — which is how the real ones get missed. The reason is mandatory."""
-    for kv in r["opts"].split(";"):
-        k, _, v = kv.partition("=")
-        if k.strip() == "pagination_ok":
-            return v.strip()
+    return o.get("pagination_ok") or None
     return None
 
 
@@ -94,12 +109,22 @@ def main():
             if rec.get("items", "").isdigit():
                 items[rec["id"]] = int(rec["items"])
 
-    n = flagged = excepted = 0
-    for r in rows(a.manifests):
+    n = flagged = excepted = ambiguous = 0
+    rs, malformed = rows(a.manifests)
+    for at, nf in malformed:
+        print("%-38s %-26s %d fields, want %d — NOT CHECKED"
+              % (at, "", nf, len(COLS)))
+    for r in rs:
         n += 1
-        if declares_paging(r):
+        o, dups, _junk = parse_opts(r["opts"])
+        if dups:
+            ambiguous += 1
+            print("%-38s %-26s duplicate opt %r — UNVERIFIABLE"
+                  % (r["_at"], r["id"], dups[0]))
             continue
-        if declares_exception(r):
+        if declares_paging(o):
+            continue
+        if declares_exception(o):
             excepted += 1
             continue
         url = urllib.parse.unquote(r["url"])
@@ -125,7 +150,10 @@ def main():
 
     print("\n%d of %d rows declare no pagination but look paged"
           "  (%d declared pagination_ok)" % (flagged, n, excepted))
-    return 1 if flagged else 0
+    if ambiguous or malformed:
+        print("    NOT CHECKED: %d row(s) with an ambiguous opt, %d malformed "
+              "line(s) — unexamined, not clean." % (ambiguous, len(malformed)))
+    return 1 if (flagged or ambiguous or malformed) else 0
 
 
 if __name__ == "__main__":

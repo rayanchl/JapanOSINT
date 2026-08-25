@@ -166,9 +166,11 @@ static const hp_source HP3B19_MENA[] = {
     .array_path = "features",
     .date_keys = "attributes.date",
     .filter_query = 1,
+    .id_keys = "attributes.ObjectId",
     .interval = 900,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .title_keys = "attributes.volume_import_total",
     .description = "Monthly nowcast estimates of country trade volumes derived from "
       "AIS port calls, published far ahead of official customs "
       "statistics. For countries that publish trade data late or not at "
@@ -283,6 +285,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "economic_activities_output",
     .description = "The Saudi General Authority for Statistics input-output table at "
       "current prices, one record per input activity, output activity, "
       "year and value. Fifty-five thousand cells describing which Saudi "
@@ -300,6 +303,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "value",
     .description = "Ships arriving at Saudi ports broken out by year, flag state of "
       "registration and port of call. A flag-by-port arrival series for "
       "Jeddah, Dammam, Yanbu, Jubail and Jizan that can be read against "
@@ -316,6 +320,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 3600,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "indicator",
     .description = "Monthly electricity load for each Saudi operating region as "
       "published by the Electricity and Cogeneration Regulatory "
       "Authority. Regional load is a proxy for industrial activity and "
@@ -332,6 +337,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "indicator",
     .description = "Saudi labour market administrative records by quarter, "
       "indicator, sector, nationality and gender, drawn from GOSI and "
       "Ministry of Human Resources registrations rather than survey. "
@@ -349,6 +355,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "item",
     .description = "Saudi Central Bank balance of payments by year, quarter and line "
       "item. Current account, oil and non-oil trade, services, "
       "investment income and reserve movements as machine-readable rows "
@@ -365,6 +372,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 900,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "category",
     .description = "The Saudi Central Bank international investment position "
       "statement by period and instrument — direct investment, "
       "portfolio, other investment and reserve assets on both sides of "
@@ -382,6 +390,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "energy_product",
     .description = "The Joint Organisations Data Initiative oil balance for China as "
       "republished by KAPSARC, one record per period, energy product, "
       "flow breakdown and unit with the assessment code attached. JODI "
@@ -401,6 +410,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "economic_activity",
     .description = "Operating surplus of Saudi establishments broken out by "
       "employee-count band and economic activity, from the GASTAT "
       "establishment survey. Establishment-size bands are the only "
@@ -419,6 +429,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 3600,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "region",
     .description = "Observed wind speed in knots at named Presidency of Meteorology "
       "and Environment stations across Saudi Arabia. Station-level wind "
       "records support dust-storm, plume-dispersion and "
@@ -435,6 +446,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 3600,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "index",
     .description = "GASTAT construction cost indices by sector and section over "
       "time. Construction cost is the cost base of the Saudi "
       "giga-projects and the index is the public series against which "
@@ -532,6 +544,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "ldwl_lmstwrd",
     .description = "Certificates of origin issued by the Qatar Chamber of Commerce "
       "and Industry by year, certificate type and importing country. "
       "Certificates of origin are issued per shipment, so the counts "
@@ -549,6 +562,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "economic_activity",
     .description = "District cooling plants in Qatar by economic activity, water "
       "source and cubic metres consumed. District cooling is the single "
       "largest summer electricity and desalinated-water load in the "
@@ -583,6 +597,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "number",
     .description = "Monthly loaded and unloaded air cargo and mail tonnage through "
       "Hamad International Airport. Doha is one of the two Gulf "
       "air-freight hubs and the monthly series shows blockades, "
@@ -600,6 +615,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "number_of_visitors_dd_lmrj_yn",
     .description = "Visit counts for each named primary health centre in Qatar by "
       "year. Named-facility throughput is a rare granularity for a Gulf "
       "health system and it is an indirect read on where the migrant "
@@ -774,6 +790,7 @@ static const hp_source HP3B19_MENA[] = {
     .url = "https://gis.mme.gov.qa/giswai/rest/services/MCIT/FARMS/MapServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=1000",
     .array_path = "features",
     .filter_query = 1,
+    .id_keys = "attributes.OBJECTID",
     .interval = 21600,
     .page_param = "resultOffset",
     .page_size = 1000,
@@ -864,6 +881,7 @@ static const hp_source HP3B19_MENA[] = {
     .url = "https://services.arcgis.com/kuR0ZmzEAOg4q3DU/arcgis/rest/services/SpeciesSightings/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=1000",
     .array_path = "features",
     .filter_query = 1,
+    .id_keys = "attributes.OBJECTID",
     .interval = 21600,
     .lat_key = "geometry.y",
     .lon_key = "geometry.x",
@@ -1387,9 +1405,11 @@ static const hp_source HP3B19_MENA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=e7b837ba-9435-4de9-8f6e-3b37807a9743&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 3600,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "SAAT",
     .description = "Izmir fire brigade inspection, safety and precaution service "
       "records for the current year, broken down by district and "
       "service type. A dated operational log of a metropolitan fire "
@@ -1405,9 +1425,11 @@ static const hp_source HP3B19_MENA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=ae8feb0e-0e41-4939-b9e8-529253762023&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 3600,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "CIKIS_SAATI",
     .description = "Search and rescue incidents handled through the Izmir AKS112 "
       "emergency line this year, by district, incident type and "
       "outcome. Rescue call logs are the ground-level incident record "
@@ -1422,9 +1444,11 @@ static const hp_source HP3B19_MENA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=25866cc4-298a-4ee7-bfd3-719ea7f530b2&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 21600,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "ARAC_SAYISI",
     .description = "Vehicle counts recorded at instrumented points across Izmir "
       "province with location, direction and period. Traffic counters "
       "are a continuously updated proxy for economic activity and for "
@@ -1439,9 +1463,11 @@ static const hp_source HP3B19_MENA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=a3bd880f-dfc6-4f65-bbfd-5fcc998268c3&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 21600,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "HIZ",
     .description = "Daily average speed and journey time on Izmir's main arterial "
       "corridors. Corridor-level travel times are the observable that "
       "changes first when a road is closed, a district is evacuated or "
@@ -1472,9 +1498,11 @@ static const hp_source HP3B19_MENA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=9bfbf3cd-ab9d-4fdc-8da8-3537467138ae&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "YOL_SAYISI",
     .description = "Counts of named roads per district and neighbourhood across "
       "metropolitan Izmir. The street-name inventory is the denominator "
       "for address matching and for checking the completeness of any "
@@ -1489,9 +1517,11 @@ static const hp_source HP3B19_MENA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=54af6862-2d36-48d0-838f-a42133e8b943&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .title_keys = "MAHALLE",
     .description = "Building counts per district and neighbourhood in Izmir. "
       "Combined with the assembly-area register this is the "
       "municipality's own exposure denominator for earthquake planning" },

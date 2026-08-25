@@ -511,6 +511,7 @@ static const hp_source HP3B19_CYBER[] = {
     .url = "https://d3fend.mitre.org/api/ontology/inference/d3fend-full-mappings.json",
     .array_path = "results.bindings",
     .interval = 604800,
+    .title_keys = "off_tech_label.value",
     .description = "The complete D3FEND mapping set as SPARQL result bindings: every "
       "ATT&CK offensive technique paired with the defensive "
       "countermeasure techniques that address it, plus the digital "
@@ -627,6 +628,7 @@ static const hp_source HP3B19_CYBER[] = {
     .url = "https://api.nuget.org/v3/index.json",
     .array_path = "resources",
     .interval = 2592000,
+    .title_keys = "@type",
     .description = "The NuGet v3 service index: every resource endpoint the registry "
       "exposes with its type and version, including the catalogue, "
       "registration, search and package base address services. It is "
@@ -1048,8 +1050,10 @@ static const hp_source HP3B19_CYBER[] = {
     .array_path = "providers",
     .detail_key = "id",
     .detail_url = "https://registry.terraform.io/v1/providers/{v}",
+    .id_keys = "id",
     .page_param = "offset",
     .page_size = 50,
+    .title_keys = "name",
     .description = "Every Terraform provider with its namespace, source repository, "
       "published version, tier and download count. Providers are "
       "compiled plugins that Terraform executes locally against cloud "
@@ -1120,6 +1124,7 @@ static const hp_source HP3B19_CYBER[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://raw.githubusercontent.com/joshhighet/ransomwatch/main/posts.json",
     .interval = 1800,
+    .title_keys = "post_title",
     .description = "Every victim named on a ransomware group's extortion site since "
       "the project began, with the victim name, the group that posted "
       "it, the discovery timestamp and the leak site URL. Extortion "
@@ -1264,6 +1269,7 @@ static const hp_source HP3B19_CYBER[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://isc.sans.edu/api/threatfeeds?json",
     .interval = 86400,
+    .title_keys = "date",
     .description = "The number of addresses the SANS Internet Storm Centre added to "
       "its aggregated threat feed on each of the last thirty-one days. "
       "A sustained rise is the sensor network telling you that scanning "
@@ -1363,6 +1369,7 @@ static const hp_source HP3B19_CYBER[] = {
     .url = "https://api.ooni.io/api/_/circumvention_stats_by_country",
     .array_path = "results",
     .interval = 21600,
+    .title_keys = "probe_cc",
     .description = "Per-country success rates for circumvention tools including "
       "Psiphon, Tor and Tor bridges, from OONI's global probe network. "
       "When a country's numbers collapse it means the censor has "
@@ -1403,7 +1410,9 @@ static const hp_source HP3B19_CYBER[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.ooni.io/api/_/domains",
     .array_path = "results",
+    .id_keys = "domain_name",
     .interval = 86400,
+    .title_keys = "domain_name",
     .description = "Every domain OONI has measurements for, with the canonical "
       "domain name and the associated category code from the Citizen "
       "Lab test list. The category code is what turns raw blocking "
@@ -1497,6 +1506,7 @@ static const hp_source HP3B19_CYBER[] = {
     .interval = 900,
     .page_param = "page",
     .page_start = 0,
+    .title_keys = "location_name",
     .description = "Discrete detected outage events rather than alert points, each "
       "with the affected entity, the datasource that saw it, the start "
       "time, the duration and the severity score. Events are the "

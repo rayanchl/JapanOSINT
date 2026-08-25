@@ -5,6 +5,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/geojson.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -13,8 +14,13 @@
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *k = getenv("UMISHIRU_API_KEY");
   if (!k || !*k) {
-    fprintf(stderr, "[msil-umishiru] gated (no UMISHIRU_API_KEY)\n");
-    return 0;                                   /* JS: SEED-only → dropped */
+    /* The JS original fell back to a curated SEED here, which rule 1 forbids
+     * and rule 8 dropped — leaving a silent 0. The state is the record now. */
+    static const char *const envs[] = { "UMISHIRU_API_KEY", NULL };
+    return jo_needs_credential(sink, "msil-umishiru",
+        "JCG MDA \xe6\xb5\xb7\xe3\x81\x97\xe3\x82\x8b (Umishiru) ports API",
+        envs, API_URL,
+        "an Ocp-Apim-Subscription-Key from portal.msil.go.jp");
   }
 
   char keyh[256];

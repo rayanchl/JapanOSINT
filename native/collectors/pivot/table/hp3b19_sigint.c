@@ -241,10 +241,12 @@ static const hp_source HP3B19_SIGINT[] = {
     .tags = "\"sigint\",\"spectrum\",\"enforcement\",\"unlicensed\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://opendata.fcc.gov/resource/xqgr-24et.json?$limit=1000",
+    .id_keys = "link_to_document.url",
     .interval = 21600,
     .page_param = "$offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "enforcement_target",
     .description = "The FCC's record of unlicensed broadcast operations it has acted "
       "against: the operating frequency, the city and state, the date "
       "of the field investigation, the enforcement step taken and the "
@@ -282,6 +284,7 @@ static const hp_source HP3B19_SIGINT[] = {
     .page_param = "$offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "facility_id",
     .description = "The adjacency table the FCC uses in repacking and interference "
       "analysis, linking each broadcast facility to the stations whose "
       "contours it touches. Turns a flat list of licensed stations into "
@@ -300,6 +303,7 @@ static const hp_source HP3B19_SIGINT[] = {
     .page_param = "$offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "firm_name",
     .description = "The laboratories accredited to run FCC equipment authorisation "
       "measurements, with firm name, designation number, address, "
       "country and accrediting body. Useful for tracing the supply "
@@ -318,6 +322,7 @@ static const hp_source HP3B19_SIGINT[] = {
     .page_param = "$offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "tcb_name",
     .description = "The bodies empowered to issue FCC equipment certifications on "
       "the Commission's behalf, with name, designation, scope of "
       "accreditation, country and contact. Together with the grantee "

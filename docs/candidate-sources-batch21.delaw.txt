@@ -1,0 +1,37 @@
+# Batch 21 - delaw: the German federal legal information portal API
+# (Rechtsinformationsportal des Bundes, run by the Bundesministerium der Justiz
+# and DigitalService).
+#
+# SCOPE. The tree carried de.openlegaldata.io - a volunteer scrape - and
+# nothing from the German state's own legal information service. This is the
+# official one: the BMJ's replacement for gesetze-im-internet.de and
+# rechtsprechung-im-internet.de, serving federal legislation and the published
+# case law of the five federal supreme courts as JSON-LD with ECLIs.
+#
+# WHAT THE API ACTUALLY ACCEPTS, established by probing rather than by reading
+# documentation: `searchTerm` filters, and `pageIndex`/`size` page. `court`,
+# `documentNumber`, `dateFrom` and `eli` are ACCEPTED AND IGNORED - a request
+# carrying them answers HTTP 200 with the unfiltered collection and
+# totalItems 10000, so a row written from the parameter list would have looked
+# live and returned the wrong records forever. /v1/literature exists and is
+# empty; /v1/administrative-regulation does not exist.
+#
+# pageIndex is ZERO-based, so every row declares page_zero_based=1. The
+# `view.next` hypermedia link is a RELATIVE path, which is why these rows page
+# arithmetically rather than through next_path.
+#
+# PAGING STABILITY, measured across ten pages of 100. Without an explicit sort
+# the /v1/document search returns 965 rows carrying 963 distinct documents - the
+# index reorders under the walk and repeats records. `sort=date` makes it
+# 965 of 965, so the cross-search row declares it. The same fix does NOT work on
+# the unfiltered /v1/case-law stream: sorted by date it returns 990 distinct of
+# 1000 and unsorted 997 of 1000, because the date has too many ties. A row that
+# structurally cannot walk its own collection without repeating was removed
+# rather than shipped (DERIB_CASELAW_RECENT, in the rejects file); the
+# searchTerm-filtered case-law row is stable and is kept.
+#
+# Columns: id|mode|want|category|record_type|tags|portal|name|name_ja|url|probe|description|opts
+DERIB_CASELAW_SEARCH|json|any|legal|court-decision|germany,court,caselaw,ecli,bmj|https://testphase.rechtsinformationen.bund.de|Rechtsinformationsportal - federal case law search|ドイツ連邦判例検索|https://testphase.rechtsinformationen.bund.de/v1/case-law?searchTerm={q}&size=100|https://testphase.rechtsinformationen.bund.de/v1/case-law?searchTerm=Kartell&size=100|Published decisions of the German federal supreme courts matching a search term - the document number the ECLI the headline the case file numbers the deciding court and judicial senate the seat of the court the document type and the decision date plus direct links to the full text in HTML XML and ZIP. Each hit also carries the matched passages of the reasoning with the term marked in place|array_path=member;page_param=pageIndex;page_zero_based=1;title_keys=item.headline,item.titleLine,item.documentNumber;id_keys=item.documentNumber;date_keys=item.decisionDate;link_keys=item.@id;link_tmpl=https://testphase.rechtsinformationen.bund.de{v};body_keys=item.titleLine
+DERIB_LEGISLATION_SEARCH|json|any|legal|legislation-record|germany,legislation,eli,bmj|https://testphase.rechtsinformationen.bund.de|Rechtsinformationsportal - federal legislation search|ドイツ連邦法令検索|https://testphase.rechtsinformationen.bund.de/v1/legislation?searchTerm={q}&size=100|https://testphase.rechtsinformationen.bund.de/v1/legislation?searchTerm=Steuer&size=100|German federal statutes and ordinances matching a search term - the full title the official abbreviation the alternate name the European Legislation Identifier of both the expression and the work the gazette issue it was promulgated in the legislation date and whether the version is still in force. The ELI is the stable identifier the whole EU legal-data ecosystem joins on|array_path=member;page_param=pageIndex;page_zero_based=1;title_keys=item.name,item.alternateName,item.abbreviation;id_keys=item.legislationIdentifier;date_keys=item.exampleOfWork.datePublished;link_keys=item.@id;link_tmpl=https://testphase.rechtsinformationen.bund.de{v}
+DERIB_LEGISLATION_ALL|json|any|legal|legislation-record|germany,legislation,eli,bmj|https://testphase.rechtsinformationen.bund.de|Rechtsinformationsportal - federal legislation corpus|ドイツ連邦法令 全件|https://testphase.rechtsinformationen.bund.de/v1/legislation?size=100|https://testphase.rechtsinformationen.bund.de/v1/legislation?size=100|The federal legislation collection walked page by page with abbreviations ELIs promulgation references and in-force status. The abbreviation table alone is worth the walk: German legal text cites almost entirely by abbreviation and resolving StAuskV or AO to a full title with an ELI is otherwise a manual lookup|array_path=member;page_param=pageIndex;page_zero_based=1;title_keys=item.name,item.alternateName,item.abbreviation;id_keys=item.legislationIdentifier;date_keys=item.exampleOfWork.datePublished;link_keys=item.@id;link_tmpl=https://testphase.rechtsinformationen.bund.de{v};interval=604800
+DERIB_DOCUMENT_SEARCH|json|any|legal|legal-document|germany,legislation,caselaw,bmj|https://testphase.rechtsinformationen.bund.de|Rechtsinformationsportal - all document types search|ドイツ法情報 横断検索|https://testphase.rechtsinformationen.bund.de/v1/document?searchTerm={q}&size=100&sort=date|https://testphase.rechtsinformationen.bund.de/v1/document?searchTerm=Datenschutz&size=100&sort=date|The combined index across every document type the portal holds - legislation and case law in one ranked result set with the matched passages quoted. A term that appears both in a statute and in the judgments interpreting it comes back as one answer here rather than as two searches that have to be reconciled by hand|array_path=member;page_param=pageIndex;page_zero_based=1;title_keys=item.name,item.headline,item.abbreviation,item.documentNumber;id_keys=item.@id;date_keys=item.decisionDate,item.exampleOfWork.datePublished;link_keys=item.@id;link_tmpl=https://testphase.rechtsinformationen.bund.de{v}

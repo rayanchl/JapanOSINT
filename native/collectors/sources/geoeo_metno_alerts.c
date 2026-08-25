@@ -70,7 +70,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *when = cJSON_GetObjectItem(f, "when");
     cJSON *iv = when ? cJSON_GetObjectItem(when, "interval") : NULL;
     if (cJSON_IsArray(iv)) {
-      cJSON *a = cJSON_GetArrayItem(iv, 0), *b = cJSON_GetArrayItem(iv, 1);
+      /* when.interval is the fixed 2-element [from, to] pair; both ends are
+       * read into valid_from / valid_to below. */
+      cJSON *a = cJSON_GetArrayItem(iv, 0), *b = cJSON_GetArrayItem(iv, 1);  /* exhaustive-ok: fixed [from,to] validity tuple; both ends are read */
       if (cJSON_IsString(a)) from = a->valuestring;
       if (cJSON_IsString(b)) to = b->valuestring;
     }

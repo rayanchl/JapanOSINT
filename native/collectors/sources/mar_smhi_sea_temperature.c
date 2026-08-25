@@ -24,19 +24,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 #include "_jp_osint.inc"
 
 #define SMHI_URL "https://opendata-download-ocobs.smhi.se/api/version/latest/" \
                  "parameter/5/station-set/all/period/latest-hour/data.json"
-
-static const char *iso_ms(double ms, char *buf, size_t n) {
-  if (!(ms > 0)) return NULL;
-  time_t t = (time_t)(ms / 1000.0);
-  struct tm g;
-  if (!gmtime_r(&t, &g)) return NULL;
-  if (strftime(buf, n, "%Y-%m-%dT%H:%M:%SZ", &g) == 0) return NULL;
-  return buf;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, SMHI_URL, 30000);
@@ -82,7 +74,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         if (qf) cJSON_AddStringToObject(o, "quality", qf);
         cJSON_AddItemToArray(readings, o);
         if (!whenp && cJSON_IsNumber(dt))
-          whenp = iso_ms(dt->valuedouble, when, sizeof when);
+          whenp = jo_ms_iso(dt->valuedouble, when, sizeof when);
         if (!have_surf && depth && strcmp(depth, "0") == 0 && cJSON_IsNumber(vv)) {
           surf = vv->valuedouble; have_surf = 1; surf_q = qf;
         }

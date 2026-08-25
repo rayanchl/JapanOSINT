@@ -38,8 +38,14 @@ import sys
 import argparse
 import re
 
-COLS = ["id", "mode", "want", "category", "record_type", "tags", "portal",
-        "name", "name_ja", "url", "probe", "description", "opts"]
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# ONE manifest parser for the seven tools that read these files. See
+# tools/manifest.py for the incident that made a shared one non-negotiable:
+# this generator resolved a duplicated opt last-wins while
+# audit_batch_reachable.py resolved it first-wins, and the auditor therefore
+# reported a row that runs daily as one that can never run.
+from manifest import (COLS, split_opts, parse_opts,          # noqa: E402
+                      load as _manifest_load)
 
 MODE = {"json": "HP_JSON", "csv": "HP_CSV", "html": "HP_HTML", "xml": "HP_XML"}
 WANT = {"any": "HP_ANY", "domain": "HP_DOMAIN", "ip": "HP_IP",
@@ -75,38 +81,75 @@ HDR_OPTS = ("header1", "header2", "header3")
 #                            permanent warning is one nobody reads.
 DOC_OPTS = {"pagination_ok"}
 
+# An opt value that CONTAINS `;<known opt>=` was not written that way on
+# purpose: an escaped `\;` ate the separator and the opt that followed it was
+# absorbed into the previous value. Three rows in the tree are in that state
+# right now and the shape is always the same --
+#
+#   ...;detail_key=id\;pagination_ok=from= is not an offset — measured...
+#
+# which generates `.detail_key = "id;pagination_ok=from= is not an offset…"`.
+# The row is not merely missing its pagination_ok: it carries a WRONG detail
+# key, silently, in committed C. The duplicate-opt check does not see this
+# (there is only one key) and the integer check does not either (these are all
+# string opts), so it needs its own.
+#
+# `post_body` is exempt: a form body legitimately contains `k=v` pairs and a
+# semicolon is a legal separator in one.
+def _swallowed_re():
+    known = sorted(STR_OPTS | INT_OPTS | DOC_OPTS | set(HDR_OPTS))
+    return re.compile(r";\s*(%s)=" % "|".join(re.escape(k) for k in known))
+
+
+SWALLOWED = _swallowed_re()
+
 
 def load(paths):
-    """Parse manifests, failing loudly on any malformed or duplicated row."""
-    rows, seen = [], {}
-    for p in paths:
-        with open(p, encoding="utf-8") as fh:
-            for lno, line in enumerate(fh, 1):
-                line = line.rstrip("\n").rstrip("\r")
-                if not line.strip() or line.lstrip().startswith("#"):
-                    continue
-                parts = line.split("|")
-                if len(parts) != len(COLS):
-                    raise SystemExit("%s:%d: %d fields, want %d\n  %s"
-                                     % (p, lno, len(parts), len(COLS),
-                                        line[:150]))
-                r = dict(zip(COLS, (x.strip() for x in parts)))
-                r["_src"] = "%s:%d" % (p, lno)
-                if r["id"] in seen:
-                    raise SystemExit("%s:%d: duplicate id %s (also at %s)"
-                                     % (p, lno, r["id"], seen[r["id"]]))
-                seen[r["id"]] = r["_src"]
-                if r["mode"] not in MODE:
-                    raise SystemExit("%s:%d: bad mode %r" % (p, lno, r["mode"]))
-                if r["want"] not in WANT:
-                    raise SystemExit("%s:%d: bad want %r" % (p, lno, r["want"]))
-                for k in ("id", "portal", "name", "url", "probe",
-                          "description", "category", "record_type"):
-                    if not r[k]:
-                        raise SystemExit("%s:%d: empty required field %s"
-                                         % (p, lno, k))
-                rows.append(r)
+    """Parse manifests, failing loudly on any malformed or duplicated row.
+
+    Line splitting, field count, duplicate ids and required fields are
+    manifest.load()'s job — shared, so no two tools can read the same line
+    differently. What stays here is the half only the generator can check:
+    that `mode` and `want` name real hp_source enums, because only this file
+    knows what those enums are."""
+    rows = _manifest_load(paths, strict=True)
+    for r in rows:
+        if r["mode"] not in MODE:
+            raise SystemExit("%s: bad mode %r" % (r["_src"], r["mode"]))
+        if r["want"] not in WANT:
+            raise SystemExit("%s: bad want %r" % (r["_src"], r["want"]))
+        validate_opts(r)
     return rows
+
+
+def validate_opts(r):
+    """-> the resolved opts dict, or SystemExit naming the row.
+
+    Called from load(), not only from emit_row(), because probe_hp_batch.py and
+    diagnose_emit_keys.py import THIS load() and then send requests built from
+    these opts. A row whose `header1` has had a pagination_ok reason glued onto
+    it by a stray `\\;` gets probed with a corrupted User-Agent — verified under
+    request conditions the engine will never reproduce, which is the exact
+    failure a previous fix to probe_hp_batch was about."""
+    parsed, dups, junk = parse_opts(r["opts"])
+    for k in dups:
+        raise SystemExit("%s: %s: duplicate opt %r -- there is no correct way "
+                         "to resolve it, so nothing tries: manifest.parse_opts "
+                         "reports duplicates and every reader refuses to guess"
+                         % (r["_src"], r["id"], k))
+    for tok in junk:
+        raise SystemExit("%s: %s: opts token %r has no '=' -- a mistyped "
+                         "separator silently swallows the opt that follows it"
+                         % (r["_src"], r["id"], tok))
+    for k, v in parsed.items():
+        m = SWALLOWED.search(v) if k != "post_body" else None
+        if m:
+            raise SystemExit(
+                "%s: %s: opt %s=... swallowed %r -- a `\\;` escaped the "
+                "separator, so %r is part of this VALUE instead of being its "
+                "own opt. The generated C would carry the wrong %s.\n  %s=%s"
+                % (r["_src"], r["id"], k, m.group(1), m.group(1), k, k, v[:160]))
+    return parsed
 
 
 def cstr(s, indent="      "):
@@ -127,47 +170,50 @@ def cstr(s, indent="      "):
     return body + "\n" + indent + '"%s"' % out[-1]
 
 
-def split_opts(s):
-    """Split an opts field on `;`, honouring a backslash escape.
-
-    A semicolon is legal inside a header value -- `Accept: application/json;q=0.9`
-    is an ordinary content-negotiation header, and several government WAFs only
-    admit a User-Agent that contains one. Splitting naively made those headers
-    inexpressible, so two sources in this batch had to be dropped for a reason
-    that was purely a limitation of this file format. `\\;` now passes through
-    as a literal semicolon.
-    """
-    out, cur, esc = [], [], False
-    for ch in s:
-        if esc:
-            cur.append(ch if ch == ";" else "\\" + ch)
-            esc = False
-        elif ch == "\\":
-            esc = True
-        elif ch == ";":
-            out.append("".join(cur)); cur = []
-        else:
-            cur.append(ch)
-    if esc:
-        cur.append("\\")
-    out.append("".join(cur))
-    return [x.strip() for x in out]
-
 
 def emit_row(r):
     """One hp_source initialiser."""
     o = {}
-    for kv in split_opts(r["opts"]):
-        if not kv:
-            continue
-        k, _, v = kv.partition("=")
-        k, v = k.strip(), v.strip()
+    # WHY THE TWO CHECKS BELOW EXIST.
+    #
+    # `o[k] = v` is last-wins, and it used to be the only thing here. That made
+    # two different failures invisible at generation time:
+    #
+    #   1. A DUPLICATED KEY. OSM_API_CHANGESETS_BLACKSEA carried
+    #      `interval=86400\;pagination_ok=...;interval=86400`. The stray
+    #      backslash escaped the separator, so the FIRST token parsed as the
+    #      key `interval` with the value `86400;pagination_ok=OSM refuses...`,
+    #      and the trailing duplicate then overwrote it with a clean 86400.
+    #      The generated C was correct -- purely by accident of ordering -- so
+    #      nothing downstream complained, while `pagination_ok` was swallowed
+    #      into the bad value and never registered at all.
+    #
+    #      Worse, tools/audit_batch_reachable.py reads the same manifest with a
+    #      FIRST-wins `opt()` lookup, so it saw interval="86400;pagination_ok=…",
+    #      failed `.isdigit()`, and reported the row as "static URL and no
+    #      interval -- never runs" (house rule 3) about a row that in fact runs
+    #      daily. Two tools disagreeing about the same manifest line is the real
+    #      defect; rejecting the duplicate outright removes the ambiguity
+    #      instead of trying to keep two parsers in agreement forever.
+    #
+    #   2. A NON-INTEGER INT OPT. Those are emitted unquoted as
+    #      `.interval = <v>,`, so a malformed value does not become a wrong
+    #      number -- it becomes a C syntax error several hundred lines into a
+    #      generated file, blamed on the table rather than on the manifest row
+    #      that caused it. Checking here names the row.
+    parsed = validate_opts(r)
+    for k, v in parsed.items():
         if k in DOC_OPTS:
             if not v:
                 raise SystemExit("%s: %s needs a reason" % (r["_src"], k))
             continue
         if k not in STR_OPTS and k not in INT_OPTS and k not in HDR_OPTS:
             raise SystemExit("%s: unknown opt %r" % (r["_src"], k))
+        if k in INT_OPTS:
+            body = v[1:] if v[:1] == "-" else v
+            if not body.isdigit():
+                raise SystemExit("%s: %s: opt %s=%r is not an integer"
+                                 % (r["_src"], r["id"], k, v))
         o[k] = v
     hdrs = [o.pop(h) for h in HDR_OPTS if h in o]
     L = ['  { .id = "%s", .name = %s,' % (r["id"], cstr(r["name"]))]

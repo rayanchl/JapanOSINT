@@ -82,6 +82,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "%24skip",
     .page_size = 100,
     .page_start = 0,
+    .title_keys = "Media",
     .description = "The Focus survey: what the Brazilian market expects for "
       "inflation, GDP, the policy rate and the exchange rate, by "
       "reference year, with the median, mean, standard deviation, "
@@ -142,6 +143,7 @@ static const hp_source HP3B19_LATAM[] = {
     .interval = 21600,
     .page_param = "pagina",
     .page_start = 1,
+    .title_keys = "nomeRazaoSocialFornecedor",
     .description = "Every public contract signed anywhere in Brazil inside a date "
       "window, from the single national portal all federal, state and "
       "municipal bodies are now obliged to publish to. Each record "
@@ -194,6 +196,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "offset",
     .page_size = 25,
     .page_start = 0,
+    .title_keys = "valor",
     .description = "Line-by-line budget execution as every Brazilian state and "
       "municipality reported it to the National Treasury: the reporting "
       "entity and its IBGE code, the exercise and period, the account "
@@ -214,6 +217,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "offset",
     .page_size = 25,
     .page_start = 0,
+    .title_keys = "conta",
     .description = "The annual balance-sheet filing every Brazilian federative "
       "entity makes to the National Treasury, by account line: entity "
       "name and IBGE code, exercise, annex, account code and "
@@ -403,6 +407,7 @@ static const hp_source HP3B19_LATAM[] = {
     .url = "https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Maestros/Divisas",
     .array_path = "results",
     .interval = 86400,
+    .title_keys = "denominacion",
     .description = "Every currency the Argentine central bank quotes, with its ISO "
       "code and Spanish description. Small, but it is the key table for "
       "the BCRA exchange-statistics API and it comes from the central "
@@ -483,6 +488,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "%24offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "nombre_persona",
     .description = "Colombia's register of authorised mineral operators tied to a "
       "mining title: the file number, the operator's name, the mineral "
       "extracted, the processing plant, and the municipality and "
@@ -502,6 +508,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "%24offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "observacion",
     .description = "Every annotation on the Colombian national mining register: the "
       "title file number, its legal status, the contract modality, the "
       "annotation type and date and the parties involved. Assignments, "
@@ -520,6 +527,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "%24offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "nombre_municipio",
     .description = "Declared production volume by mineral, municipality and "
       "department as used to liquidate Colombian mining royalties, with "
       "the DANE municipality code and the operator. Comparing declared "
@@ -538,6 +546,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "%24offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "precio",
     .description = "The resolution-by-resolution base prices Colombia's mining and "
       "energy planning unit sets for each mineral, with the resolution "
       "number, its date and the period it applies to. These are the "
@@ -555,6 +564,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "%24offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "nombre_proveedor_objeto_de",
     .description = "Fines and sanctions imposed inside Colombian public procurement: "
       "the process and contract identifiers, the contracting entity, "
       "the sanctioned supplier, the type of sanction and its value and "
@@ -572,6 +582,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "%24offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "id_proceso",
     .description = "Who actually bid on each Colombian public tender under SECOP I: "
       "the process number, the bidder's document type and NIT or "
       "cédula, name, and whether the bid was accepted. Losing bidders "
@@ -590,6 +601,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "%24offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "c_digo_entidad",
     .description = "Every offer submitted electronically through SECOP II: the offer "
       "reference, the date it was registered, the process it belongs "
       "to, the bidding supplier and the offered value. Together with "
@@ -621,10 +633,12 @@ static const hp_source HP3B19_LATAM[] = {
     .tags = "\"colombia\",\"invima\",\"enforcement\",\"health\",\"sanction\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.datos.gov.co/resource/rq4n-pzga.json?%24limit=1000",
+    .id_keys = "numero_proceso",
     .interval = 3600,
     .page_param = "%24offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "producto",
     .description = "Concluded sanction proceedings by Colombia's medicines and food "
       "regulator: the case number, the quarter, the named alleged "
       "infringer with its NIT, the conduct, the resolution and the "
@@ -642,6 +656,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "%24offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "contador",
     .description = "Disciplinary sanctions against Colombian public accountants: the "
       "sanction type, the accountant's name and cédula, the "
       "disciplinary case number, the resolution and the period of "
@@ -660,6 +675,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "%24offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "solicitudes_de_licencias",
     .description = "Licences to cultivate and handle cannabis issued by Colombia's "
       "justice ministry, by period: applications received, granted, "
       "refused, archived and revoked. Colombia is one of the largest "
@@ -695,6 +711,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "%24offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "nombres",
     .description = "The named staff of Colombia's supreme audit institution with "
       "their post, dependency, official e-mail address and telephone. A "
       "named official directory of the body that audits every peso of "
@@ -712,6 +729,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "%24offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "tipoinstitucion",
     .description = "Colombia's national register of qualified health personnel: the "
       "awarding institution and its type, the programme and title, the "
       "qualification level and the registration record. It is the "
@@ -729,6 +747,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "%24offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "nombreentidad",
     .description = "How Colombia's oil and mining royalties are actually spent, by "
       "biennium, fund, department and municipality with the DANE codes: "
       "appropriation, commitment, obligation and payment. The royalties "
@@ -746,6 +765,7 @@ static const hp_source HP3B19_LATAM[] = {
     .interval = 21600,
     .page_param = "pagina",
     .page_start = 1,
+    .title_keys = "usuarioNome",
     .description = "Tender notices published to Brazil's single national procurement "
       "portal in a date window: the contracting body with its CNPJ and "
       "unit, the procurement modality and judgement criterion, the "
@@ -2141,6 +2161,7 @@ static const hp_source HP3B19_LATAM[] = {
     .url = "https://www.simem.co/backend-files/api/PublicData?datasetId=EC6945&startdate=2026-08-01&enddate=2026-08-02",
     .array_path = "result.records",
     .interval = 3600,
+    .title_keys = "Valor",
     .description = "The hourly spot electricity price for Colombia — national, "
       "international and TIE — published by XM, the grid and market "
       "operator, with the variable code, the timestamp, the duration "
@@ -2159,6 +2180,7 @@ static const hp_source HP3B19_LATAM[] = {
     .url = "https://www.simem.co/backend-files/api/PublicData?datasetId=ff027b&startdate=2026-08-15&enddate=2026-08-16",
     .array_path = "result.records",
     .interval = 3600,
+    .title_keys = "Valor",
     .description = "The scheduled generation programme of the Colombian economic "
       "dispatch, hour by hour and generating unit by generating unit, "
       "with the resource code, the timestamp, the duration code and the "
@@ -2493,6 +2515,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "%24offset",
     .page_size = 1000,
     .page_start = 0,
+    .title_keys = "votos",
     .description = "Polling-station level results for the 2018 Colombian Chamber of "
       "Representatives election as published by the national electoral "
       "registry: the constituency, department, municipality, zone, "

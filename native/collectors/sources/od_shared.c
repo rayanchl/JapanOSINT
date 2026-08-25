@@ -170,7 +170,7 @@ static inline int od_geo_item(const cJSON *v, double *lat, double *lon) {
     return 0;
   }
   if (cJSON_IsArray(v) && cJSON_GetArraySize(v) >= 2) {
-    const cJSON *x = cJSON_GetArrayItem(v, 0), *y = cJSON_GetArrayItem(v, 1);
+    const cJSON *x = cJSON_GetArrayItem(v, 0), *y = cJSON_GetArrayItem(v, 1);  /* exhaustive-ok: fixed [lon,lat] coordinate pair, both components read */
     if (cJSON_IsNumber(x) && cJSON_IsNumber(y)) {
       lo = x->valuedouble; la = y->valuedouble;      /* GeoJSON order */
       if (od_ll_ok(la, lo)) { *lat = la; *lon = lo; return 1; }
@@ -687,10 +687,52 @@ static inline int od_jsonstat_collect(const source_ctx *ctx, intel_sink *sink,
 
 /* ------------------------------------------------------------- SDMX-JSON  */
 
+/* SDMX-JSON attaches attributes as POSITIONAL index arrays: entry i of `idx`
+ * (counting from `from`) is an index into defs[i - from].values[], or null for
+ * "this attribute is not set here". Resolve every one of them onto `dst`.
+ *
+ * This is where an SDMX series keeps its TITLE, TITLE_COMPL, UNIT, UNIT_MULT,
+ * DECIMALS, COLLECTION and SOURCE_AGENCY, and where an observation keeps
+ * OBS_STATUS — whether the figure is a normal value, provisional, or an
+ * estimate. The reader used to take observation element 0 (the number) and
+ * ignore the rest of the array, and never looked at series attributes at all,
+ * so an ECB observation reached the store as a bare float: 20 series-level
+ * fields and 4 observation-level fields per row, dropped at the collector. */
+static inline void od_sdmx_attrs(cJSON *dst, const cJSON *defs,
+                                 const cJSON *idx, int from) {
+  if (!dst || !cJSON_IsArray(defs) || !cJSON_IsArray(idx)) return;
+  int nd = cJSON_GetArraySize(defs), ni = cJSON_GetArraySize(idx);
+  for (int i = from; i < ni && (i - from) < nd; i++) {
+    const cJSON *def = cJSON_GetArrayItem(defs, i - from);
+    const char *aid = def ? od_s(def, "id") : NULL;
+    if (!aid) continue;
+    const cJSON *at = cJSON_GetArrayItem(idx, i);
+    if (!at || cJSON_IsNull(at)) continue;      /* not set — not the same as empty */
+    const cJSON *vals = cJSON_GetObjectItem(def, "values");
+    const cJSON *v = (cJSON_IsNumber(at) && cJSON_IsArray(vals))
+                       ? cJSON_GetArrayItem(vals, (int) at->valuedouble) : NULL;
+    const char *iv = v ? od_s(v, "id") : NULL;
+    const char *nm = v ? od_s(v, "name") : NULL;
+    if (iv || nm) {
+      cJSON_AddStringToObject(dst, aid, iv ? iv : nm);
+      if (iv && nm && strcmp(iv, nm) != 0) {    /* keep the label too */
+        char k2[96];
+        snprintf(k2, sizeof k2, "%s_name", aid);
+        cJSON_AddStringToObject(dst, k2, nm);
+      }
+    } else if (cJSON_IsString(at) && at->valuestring[0]) {
+      cJSON_AddStringToObject(dst, aid, at->valuestring);   /* inline value */
+    } else if (cJSON_IsNumber(at)) {
+      cJSON_AddNumberToObject(dst, aid, at->valuedouble);   /* index we cannot resolve */
+    }
+  }
+}
+
 /* SDMX-JSON (ECB Data Portal, Bundesbank). Observation keys are POSITIONAL
- * indices into structure.dimensions.observation[0].values[] — they must be
- * joined against that list to recover the real period, and the series key
- * ("0:0:0:0:0") is likewise positional into structure.dimensions.series[].
+ * indices into structure.dimensions.observation[] — colon-joined, one
+ * component per observation dimension — and must be joined against those lists
+ * to recover the real period; the series key ("0:0:0:0:0") is likewise
+ * positional into structure.dimensions.series[].
  * Values arrive as numbers (ECB) or strings (Bundesbank).
  * Returns #emitted, or -1 on a fetch/parse failure. */
 static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
@@ -711,8 +753,17 @@ static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
                            ? cJSON_GetObjectItem(dims, "observation") : NULL;
   const cJSON *serdims = cJSON_IsObject(dims)
                            ? cJSON_GetObjectItem(dims, "series") : NULL;
+  const cJSON *sattrs = cJSON_IsObject(structure)
+                          ? cJSON_GetObjectItem(structure, "attributes") : NULL;
+  const cJSON *serattrs = cJSON_IsObject(sattrs)
+                            ? cJSON_GetObjectItem(sattrs, "series") : NULL;
+  const cJSON *obsattrs = cJSON_IsObject(sattrs)
+                            ? cJSON_GetObjectItem(sattrs, "observation") : NULL;
+  /* observation[0] is only the SHAPE CHECK — that there is at least one
+   * observation dimension with a value list to decode against. The decode
+   * below walks every observation dimension, not just this one. */
   const cJSON *obsvals = cJSON_IsArray(obsdims) && cJSON_GetArraySize(obsdims) > 0
-      ? cJSON_GetObjectItem(cJSON_GetArrayItem(obsdims, 0), "values") : NULL;
+      ? cJSON_GetObjectItem(cJSON_GetArrayItem(obsdims, 0), "values") : NULL;  /* exhaustive-ok: shape check on the first observation dimension; the decode loop below walks all of them */
   if (!cJSON_IsArray(sets) || !cJSON_IsArray(obsvals)) {
     cJSON_Delete(doc);
     return -1;
@@ -758,13 +809,20 @@ static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
           p = dot ? dot + 1 : NULL;
           di++;
         }
+        /* …and the series' own attributes, which carry the human title, the
+         * unit and the compiling agency. Positional against
+         * structure.attributes.series[], from element 0. */
+        od_sdmx_attrs(skey, serattrs, cJSON_GetObjectItem(s, "attributes"), 0);
       }
 
       const cJSON *o;
       cJSON_ArrayForEach(o, obs) {
         if (n >= max_rows) break;
         if (!o->string || !cJSON_IsArray(o)) continue;
-        const cJSON *first = cJSON_GetArrayItem(o, 0);
+        /* Element 0 is the number. Elements 1.. are attribute indices and are
+         * decoded below — dropping them used to send a provisional or
+         * estimated figure to the store indistinguishable from a final one. */
+        const cJSON *first = cJSON_GetArrayItem(o, 0);  /* exhaustive-ok: SDMX puts the observation VALUE at index 0; elements 1.. are attributes and od_sdmx_attrs resolves every one */
         double val;
         if (cJSON_IsNumber(first)) val = first->valuedouble;
         else if (cJSON_IsString(first) && first->valuestring[0]) {
@@ -773,23 +831,67 @@ static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
           if (!end || end == first->valuestring) continue;
         } else continue;               /* null observation → skip, not zero */
 
-        const cJSON *pv = cJSON_GetArrayItem(obsvals, atoi(o->string));
-        const char *period = pv ? od_s(pv, "id") : NULL;
-        if (!period && pv) period = od_s(pv, "name");
-        if (!period) continue;         /* cannot name the period → no row */
+        cJSON *props = skey ? cJSON_Duplicate(skey, 1) : cJSON_CreateObject();
+        if (!props) continue;
+
+        /* The observation key is colon-joined positional indices, ONE PER
+         * ENTRY of structure.dimensions.observation. Reading only the first
+         * component was right for a flow whose sole observation dimension is
+         * TIME_PERIOD and wrong for any other: "0:1" and "0:2" are distinct
+         * observations that both decoded to the same period, so they collided
+         * on one remote_key and the sink upserted the second over the first —
+         * a silent record loss. Decode every component. */
+        const char *period = NULL;
+        char okey[192];
+        int ooff = 0;
+        okey[0] = 0;
+        {
+          const char *pk = o->string;
+          int odi = 0;
+          while (pk && *pk) {
+            int pos = atoi(pk);
+            const cJSON *odim = cJSON_IsArray(obsdims)
+                                  ? cJSON_GetArrayItem(obsdims, odi) : NULL;
+            const cJSON *ovals = odim ? cJSON_GetObjectItem(odim, "values") : NULL;
+            const cJSON *ov = cJSON_IsArray(ovals)
+                                ? cJSON_GetArrayItem(ovals, pos) : NULL;
+            const char *oid = ov ? od_s(ov, "id") : NULL;
+            if (!oid && ov) oid = od_s(ov, "name");
+            const char *odid = odim ? od_s(odim, "id") : NULL;
+            if (odi == 0) period = oid;
+            else if (odid && oid) cJSON_AddStringToObject(props, odid, oid);
+            if (oid && ooff < (int) sizeof okey - 2) {
+              ooff += snprintf(okey + ooff, sizeof okey - (size_t) ooff,
+                               "%s%s", ooff ? "." : "", oid);
+              if (ooff > (int) sizeof okey - 1) ooff = (int) sizeof okey - 1;
+            }
+            const char *colon = strchr(pk, ':');
+            pk = colon ? colon + 1 : NULL;
+            odi++;
+          }
+        }
+        if (!period) { cJSON_Delete(props); continue; }  /* cannot name it → no row */
+
+        /* Observation-level attributes: OBS_STATUS, OBS_CONF, OBS_PRE_BREAK,
+         * OBS_COM — indices from element 1 onward. */
+        od_sdmx_attrs(props, obsattrs, o, 1);
 
         char title[420];
         snprintf(title, sizeof title, "%s %s = %g",
                  slabel[0] ? slabel : "series", period, val);
 
-        cJSON *props = skey ? cJSON_Duplicate(skey, 1) : cJSON_CreateObject();
-        if (!props) continue;
         cJSON_AddStringToObject(props, "period", period);
         cJSON_AddNumberToObject(props, "value", val);
         if (slabel[0]) cJSON_AddStringToObject(props, "series_key", slabel);
+        if (okey[0] && strcmp(okey, period) != 0)
+          cJSON_AddStringToObject(props, "observation_key", okey);
 
-        char rk[420];
-        snprintf(rk, sizeof rk, "%s|%s", slabel[0] ? slabel : "series", period);
+        /* Key on the FULL observation key, not just the period: with a second
+         * observation dimension the period alone is not unique within a
+         * series, and a colliding remote_key is a record lost to the upsert. */
+        char rk[620];
+        snprintf(rk, sizeof rk, "%s|%s", slabel[0] ? slabel : "series",
+                 okey[0] ? okey : period);
 
         intel_item it = {0};
         it.title = title;

@@ -55,6 +55,8 @@ static const hp_source HP3_RESEARCH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.crossref.org/works?query={q}&rows=100",
     .array_path = "message.items",
+    .id_keys = "resource.primary.URL",
+    .title_keys = "title.0",
     .description = "The DOI registration agency metadata: title, all authors with "
       "ORCID and affiliation strings, publisher, journal, publication "
       "and acceptance dates, funder awards with grant numbers, licence "

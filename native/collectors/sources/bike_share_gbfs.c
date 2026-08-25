@@ -5,6 +5,7 @@
  * intelEnvelope wrapper/_meta is dropped (rule 7); only the live rows. */
 #include "source.h"
 #include "lib/feedlib.h"
+#include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,9 +30,7 @@ static cJSON *nullish(const cJSON *v) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char iso[32];
-  time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
-  strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S", &g);
-  size_t L = strlen(iso); snprintf(iso + L, sizeof iso - L, ".000Z");
+  const char *pub = jo_now_iso_ms(iso, sizeof iso);   /* NULL if unrenderable */
 
   int n = 0;
   for (int oi = 0; oi < 2; oi++) {
@@ -150,7 +149,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         it.title = title;
         it.summary = summary;
         it.lang = "ja";
-        it.published_at = iso;
+        it.published_at = pub;   /* absent, never a date built from stack */
         it.tags_json = tj;
         it.properties_json = pj;
         it.record_type = "bike-share-station";

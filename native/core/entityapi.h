@@ -1,4 +1,4 @@
-/* core/entityapi.h — P7 Wave 2: /api/entities/* (read paths of
+/* core/entityapi.h — P7 Wave 2: /api/entities/… (read paths of
  * entityStore.js). Pure SQLite over the shared entity graph. Single C backend
  * (faithful behaviour, not Node byte-parity).
  *
@@ -22,10 +22,22 @@
  * tenant column to filter on. */
 char *entityapi_stats(db_handle *db, const char *tenant);
 
-/* GET /api/entities/search?q&type&limit — FTS (MeCab-segmented).
- * Empty q → {"results":[]}. NULL only on a SQL/MATCH failure (caller 500). */
+/* GET /api/entities/search?q&type&limit&offset — FTS (MeCab-segmented).
+ * NULL only on a SQL/MATCH failure (caller 500).
+ *
+ * `offset` is new. The route capped at 100 rows with no total and no paging at
+ * all, so a query matching thousands of entities returned the top 100 and the
+ * rest were not merely undisclosed but unreachable — house rule 2 requires
+ * both. The reply now carries page{limit,offset,total} and
+ * meta{fetched_at,filters}, with `total` a measured COUNT(*) over the same
+ * MATCH/type/tenant predicate. `results` keeps its key and its contents, so
+ * existing readers are unaffected.
+ *
+ * Every reply has that envelope, including the "q had no usable token" one
+ * (filters.q_applied=false, total=0), so a caller never needs a second parser
+ * for the degenerate case. */
 char *entityapi_search(db_handle *db, const char *q, const char *type, int limit,
-                       const char *tenant);
+                       int offset, const char *tenant);
 
 /* GET /api/entities/:type/:id — profile. NULL if missing, type mismatch, or
  * not visible to `tenant` (caller → 404 {"error":"not_found"}). */
@@ -51,7 +63,10 @@ char *entityapi_graph(db_handle *db, const char *type, const char *id, int depth
                       const char *rel_types, int exclude_hubs, int max_nodes,
                       const char *tenant);
 
-/* GET /api/entities/:type/:id/mentions?limit&offset — NULL → 404. */
+/* GET /api/entities/:type/:id/mentions?limit&offset — NULL → 404.
+ * {mentions:[...], page:{limit,offset,total}, meta:{...}}. `total` counts
+ * through the same tenant predicate the list uses, so it never reveals the
+ * existence of another tenant's items. */
 char *entityapi_mentions(db_handle *db, const char *type, const char *id,
                          int limit, int offset, const char *tenant);
 
@@ -66,7 +81,12 @@ char *entityapi_mentions(db_handle *db, const char *type, const char *id,
  * same node. This is purely the reverse read that was never surfaced.
  * Secrets are NOT reachable here: only the breach catalog metadata and the
  * synthetic item_uid are returned; plaintext stays behind the operator
- * reveal path in breach_adapter.h. */
+ * reveal path in breach_adapter.h.
+ *
+ * page{limit,offset,total} is added alongside data/exposure. `total` counts
+ * DISTINCT source_id — the grouped population `data` is a slice of — and is
+ * NOT the same figure as exposure.breach_count, which is a summary about the
+ * entity rather than about this page. */
 char *entityapi_breaches(db_handle *db, const char *type, const char *id,
                          int limit, int offset, const char *tenant);
 

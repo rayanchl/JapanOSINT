@@ -28,12 +28,24 @@
  */
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/jocore.h"          /* jo_trunc_notice — the shared R7 disclosure */
 #include "geoeo_common.inc"
 
 #define EA_STATIONS                                                           \
   "https://environment.data.gov.uk/flood-monitoring/id/stations"              \
   "?_limit=500&parameter=level"
+#define EA_STATIONS_BASE                                                      \
+  "https://environment.data.gov.uk/flood-monitoring/id/stations"              \
+  "?parameter=level"
 #define EA_FLOODS "https://environment.data.gov.uk/flood-monitoring/id/floods"
+
+/* `_limit` is the EA's page size and `_offset` walks the pages. The station
+ * list is 376 rows at parameter=level today, so a single `_limit=500` request
+ * happened to cover it — but "happens to fit" is not a guarantee, and the day
+ * the network passes 500 stations a single-page read would clip the tail with
+ * no error and no notice. The walk below ends on a short page instead. */
+#define EA_PAGE_SIZE 500
+#define EA_MAX_PAGES 40   /* exhaustive-ok: offset-walk runaway guard; an early stop emits a collector-truncation-notice */
 
 /* 'items' may be an array OR a single object. Returns an array to iterate and
  * sets *owned when the caller must delete it. */
@@ -50,8 +62,12 @@ static cJSON *items_array(cJSON *doc, int *owned) {
   return NULL;
 }
 
-static int stations(const source_ctx *ctx, intel_sink *sink, int *emitted) {
-  cJSON *doc = feed_get_json(ctx->http, EA_STATIONS, 45000);
+static int stations_page(const source_ctx *ctx, intel_sink *sink, int *emitted,
+                         int offset) {
+  char url[224];
+  snprintf(url, sizeof url, "%s&_limit=%d&_offset=%d", EA_STATIONS_BASE,
+           EA_PAGE_SIZE, offset);
+  cJSON *doc = feed_get_json(ctx->http, url, 45000);
   if (!doc) return -1;
   int owned = 0;
   cJSON *items = items_array(doc, &owned);
@@ -69,13 +85,25 @@ static int stations(const source_ctx *ctx, intel_sink *sink, int *emitted) {
   cJSON_ArrayForEach(s, items) {
     seen++;
     const char *notation = geoeo_str(s, "notation");
+    /* JSON-LD: `label` is a string on most stations and an ARRAY on the ones
+     * the EA has recorded under more than one name. The first is the display
+     * label; the others are alternate names a search would otherwise never
+     * match, so they are kept as labels_all rather than dropped. */
     const char *label = geoeo_str(s, "label");
-    if (!label) {                    /* label is occasionally an array */
+    cJSON *label_arr = NULL;
+    if (!label) {
       cJSON *l = cJSON_GetObjectItem(s, "label");
-      if (cJSON_IsArray(l) && cJSON_IsString(cJSON_GetArrayItem(l, 0)))
-        label = cJSON_GetArrayItem(l, 0)->valuestring;
+      if (cJSON_IsArray(l) && cJSON_GetArraySize(l) > 0) {
+        cJSON *e;
+        cJSON_ArrayForEach(e, l) {
+          if (!cJSON_IsString(e) || !e->valuestring || !e->valuestring[0]) continue;
+          if (!label) label = e->valuestring;
+          if (!label_arr) label_arr = cJSON_CreateArray();
+          cJSON_AddItemToArray(label_arr, cJSON_CreateString(e->valuestring));
+        }
+      }
     }
-    if (!notation && !label) continue;
+    if (!notation && !label) { cJSON_Delete(label_arr); continue; }
 
     /* 'lat' / 'long' — never easting/northing, which are OSGB metres. */
     double lat = 0, lon = 0;
@@ -85,6 +113,8 @@ static int stations(const source_ctx *ctx, intel_sink *sink, int *emitted) {
     cJSON *props = cJSON_CreateObject();
     geoeo_copy_all(props, s, KEYS);
     if (label) cJSON_AddStringToObject(props, "label", label);
+    if (label_arr && cJSON_GetArraySize(label_arr) > 1)
+      cJSON_AddItemToObject(props, "labels_all", cJSON_Duplicate(label_arr, 1));
     if (geo) { cJSON_AddNumberToObject(props, "lat", lat);
                cJSON_AddNumberToObject(props, "long", lon); }
     cJSON *measures = cJSON_GetObjectItem(s, "measures");
@@ -135,10 +165,42 @@ static int stations(const source_ctx *ctx, intel_sink *sink, int *emitted) {
     if (sink->emit(sink, &it) >= 0) (*emitted)++;
     free(pj);
     free(gj);
+    cJSON_Delete(label_arr);
   }
   if (owned) cJSON_Delete(items);
   cJSON_Delete(doc);
   return seen;
+}
+
+/* Walk the offsets until the EA stops handing back full pages. */
+static int stations(const source_ctx *ctx, intel_sink *sink, int *emitted) {
+  int max_pages = EA_MAX_PAGES;
+  const char *penv = getenv("JO_EA_STATION_PAGES");
+  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+
+  int total_seen = 0, offset = 0;
+  for (int page = 0; page < max_pages; page++) {
+    int seen = stations_page(ctx, sink, emitted, offset);
+    if (seen < 0) {
+      if (page == 0) return -1;              /* the first fetch failed (R3) */
+      jo_trunc_notice(sink, "uk-flood-stations", EA_STATIONS_BASE, total_seen,
+                      -1,
+                      "the station page walk stopped when a page failed to "
+                      "fetch or parse; later stations were not read",
+                      "re-run the collector; the walk restarts at _offset=0");
+      break;
+    }
+    total_seen += seen;
+    if (seen < EA_PAGE_SIZE) break;          /* short page = last page      */
+    offset += seen;
+    if (page + 1 == max_pages)
+      jo_trunc_notice(sink, "uk-flood-stations", EA_STATIONS_BASE, total_seen,
+                      -1,
+                      "the page-walk ceiling stopped the run while the EA was "
+                      "still returning full pages of stations",
+                      "raise $JO_EA_STATION_PAGES");
+  }
+  return total_seen;
 }
 
 /* Secondary call: an empty items array is the normal state in England. */

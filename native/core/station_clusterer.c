@@ -24,7 +24,7 @@
 #include "../lib/utf8.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
-#include <openssl/sha.h>
+#include <openssl/evp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -622,14 +622,30 @@ static int cmp_cstr(const void *a, const void *b) {
                               member_uids/operator/mode are ASCII → matches */
 }
 
-/* sha1(member_uids.join('|')) hex into out[41]. */
+/* sha1(member_uids.join('|')) hex into out[41].
+ *
+ * EVP rather than the deprecated (OpenSSL 3.0) SHA1_* calls. The digest is
+ * byte-identical — same algorithm, same bytes, same order — which is required:
+ * this is the cluster_uid every already-stored cluster row is keyed on, and a
+ * changed digest would orphan all of them and re-create the set.
+ *
+ * EVP allocates, so unlike SHA1_Init it can fail. On failure out41 is left
+ * EMPTY rather than zeroed: an empty cluster_uid is honestly missing, whereas
+ * an all-zero one is a plausible-looking digest that would silently merge
+ * every failed cluster into a single row. */
 static void sha1_join_pipe(char **uids, int n, char *out41) {
-    SHA_CTX c; SHA1_Init(&c);
+    out41[0] = 0;
+    EVP_MD_CTX *c = EVP_MD_CTX_new();
+    if (!c) return;
+    if (EVP_DigestInit_ex(c, EVP_sha1(), NULL) != 1) { EVP_MD_CTX_free(c); return; }
     for (int i = 0; i < n; i++) {
-        if (i) SHA1_Update(&c, "|", 1);
-        SHA1_Update(&c, uids[i], strlen(uids[i]));
+        if (i) EVP_DigestUpdate(c, "|", 1);
+        EVP_DigestUpdate(c, uids[i], strlen(uids[i]));
     }
-    unsigned char d[20]; SHA1_Final(d, &c);
+    unsigned char d[EVP_MAX_MD_SIZE]; unsigned int dl = 0;
+    int ok = EVP_DigestFinal_ex(c, d, &dl) == 1;
+    EVP_MD_CTX_free(c);
+    if (!ok) return;
     for (int i = 0; i < 20; i++) sprintf(out41 + i * 2, "%02x", d[i]);
     out41[40] = 0;
 }

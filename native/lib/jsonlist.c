@@ -180,6 +180,23 @@ static char *pick_name_suffixed(cJSON *o) {
   return NULL;
 }
 
+/* The record's first non-empty scalar, whatever it is called. Last resort for
+ * a label, and the direct counterpart of lib/hpengine.c:474 hp_first_scalar —
+ * the two engines are supposed to answer the same question the same way.
+ *
+ * Nested values are skipped, because a label has to be something a human can
+ * read, and keys beginning with "_" are skipped because those are markers this
+ * tree stamps on a record rather than fields the upstream sent. */
+static char *first_scalar_dup(cJSON *o) {
+  for (cJSON *k = o->child; k; k = k->next) {
+    if (!k->string || k->string[0] == '_') continue;
+    if (!cJSON_IsString(k) && !cJSON_IsNumber(k) && !cJSON_IsBool(k)) continue;
+    char *v = scalar_dup(k);
+    if (v) return v;
+  }
+  return NULL;
+}
+
 static int key_listed(const char *k, const char *const *keys) {
   for (int i = 0; keys[i]; i++)
     if (!strcmp(k, keys[i])) return 1;
@@ -265,13 +282,302 @@ cJSON *jsonlist_find_array(cJSON *doc, const char *path) {
   return (cur && cJSON_IsArray(cur)) ? cur : NULL;
 }
 
+/* ── columnar tables ──────────────────────────────────────────────────────
+ *
+ * Some upstreams publish a record list SIDEWAYS: one array of column names and
+ * one array of rows, each row a bare array of cells. Nothing above understands
+ * that shape — emit_record wants an object, so every row scores as a non-object
+ * and the whole source emits zero while reporting a clean success.
+ *
+ * ERDDAP's tabledap is the fleet's case. `allDatasets.json` answers
+ * {"table":{"columnNames":["datasetID","title","institution",…],
+ *           "columnTypes":[…],"columnUnits":[…],"rows":[[…],[…]]}} and
+ * geo-erddap-ioos-sensors declares path "table.rows" — 27,245 catalogued
+ * sensor datasets, each with a real title and institution, discarded on every
+ * single run. 16 registered sources use this shape.
+ *
+ * The projection invents nothing: the names are the upstream's own column
+ * names, the values are the upstream's own cells, and it only fires when a
+ * sibling array of non-empty strings has EXACTLY the row's arity — anything
+ * less certain is left alone rather than guessed at. */
+
+/* The object that CONTAINS the record array, so its sibling keys are visible.
+ * "table.rows" → doc["table"]; "rows" → doc. NULL when the path cannot name
+ * one ("" is a bare array with no envelope, "*" was auto-detected and is only
+ * ever an array of objects anyway). */
+static cJSON *columnar_parent(cJSON *doc, const char *path) {
+  if (!path || !*path || !strcmp(path, "*") || !strcmp(path, ".")) return NULL;
+  char buf[256];
+  snprintf(buf, sizeof buf, "%s", path);
+  char *dot = strrchr(buf, '.');
+  if (!dot) return cJSON_IsObject(doc) ? doc : NULL;
+  *dot = 0;
+  cJSON *cur = doc;
+  char *save = NULL;
+  for (char *tok = strtok_r(buf, ".", &save); tok && cur;
+       tok = strtok_r(NULL, ".", &save))
+    cur = cJSON_GetObjectItem(cur, tok);
+  return (cur && cJSON_IsObject(cur)) ? cur : NULL;
+}
+
+/* rows-of-arrays + a sibling name list → a real array of objects, or NULL when
+ * this is not that shape. Caller cJSON_Delete()s the result. */
+static cJSON *columnar_objects(cJSON *parent, cJSON *rows) {
+  if (!parent || !cJSON_IsArray(rows) || cJSON_GetArraySize(rows) == 0)
+    return NULL;
+  cJSON *first = cJSON_GetArrayItem(rows, 0);  /* exhaustive-ok: shape probe — is this rows-of-arrays; every row is projected below */
+  if (!first || !cJSON_IsArray(first)) return NULL;
+  int width = cJSON_GetArraySize(first);
+  if (width < 1) return NULL;
+
+  static const char *const NAMEKEYS[] = {
+    "columnNames", "column_names", "columnnames", "columns", "cols",
+    "header", "headers", "fields", NULL };
+  cJSON *names = NULL;
+  for (int i = 0; NAMEKEYS[i] && !names; i++) {
+    cJSON *c = cJSON_GetObjectItem(parent, NAMEKEYS[i]);
+    if (!cJSON_IsArray(c) || cJSON_GetArraySize(c) != width) continue;
+    int ok = 1;
+    cJSON *e;
+    cJSON_ArrayForEach(e, c)
+      if (!cJSON_IsString(e) || !e->valuestring || !e->valuestring[0]) {
+        ok = 0; break;
+      }
+    if (ok) names = c;
+  }
+  if (!names) return NULL;
+
+  cJSON *out = cJSON_CreateArray();
+  if (!out) return NULL;
+  cJSON *row;
+  cJSON_ArrayForEach(row, rows) {
+    if (!cJSON_IsArray(row)) continue;
+    cJSON *o = cJSON_CreateObject();
+    if (!o) break;
+    int i = 0;
+    cJSON *cell;
+    cJSON_ArrayForEach(cell, row) {
+      /* A row longer than the header keeps the positional name csv.c already
+       * uses for the same situation, rather than losing the surplus cells. */
+      char pos[24];
+      const char *key;
+      if (i < width) key = cJSON_GetArrayItem(names, i)->valuestring;
+      else { snprintf(pos, sizeof pos, "col%d", i); key = pos; }
+      i++;
+      if (cJSON_IsNull(cell)) continue;          /* an empty cell is nothing */
+      cJSON *dupv = cJSON_Duplicate(cell, 1);
+      if (dupv) cJSON_AddItemToObject(o, key, dupv);
+    }
+    cJSON_AddItemToArray(out, o);
+  }
+  return out;
+}
+
+/* The node a path names, whatever its type — jsonlist_find_array's sibling for
+ * the cases below, which have to look at something that is deliberately NOT an
+ * array. "", "*" and "." all mean the document itself. */
+static cJSON *jsonlist_node(cJSON *doc, const char *path) {
+  if (!path || !*path || !strcmp(path, "*") || !strcmp(path, ".")) return doc;
+  char buf[256];
+  snprintf(buf, sizeof buf, "%s", path);
+  cJSON *cur = doc;
+  char *save = NULL;
+  for (char *tok = strtok_r(buf, ".", &save); tok && cur;
+       tok = strtok_r(NULL, ".", &save))
+    cur = cJSON_GetObjectItem(cur, tok);
+  return cur;
+}
+
+/* The same table, written a third way: one array PER COLUMN, side by side, with
+ * no array of records anywhere in the document.
+ *
+ * api.energy-charts.info answers `{"license_info":"CC BY 4.0 …",
+ * "unix_seconds":[96 timestamps], "price":[96 numbers], "unit":"EUR / MWh",
+ * "deprecated":false}`. There is no array of objects, so jsonlist_find_array
+ * returns nothing under every path spelling and all 96 half-hourly wholesale
+ * prices were discarded on every run — 31 registered sources on that one API.
+ *
+ * The pairing of index i across the arrays is the publisher's own row
+ * structure, not an inference this file is making up — but it IS the one thing
+ * here that was not stated field-by-field, so every projected record carries
+ * `_projection` saying so in-band. The guard is arity: EVERY array in the
+ * object must be all-scalar and exactly the same length, and there must be at
+ * least two of them. One array of a different length means the document is
+ * something else and it is left alone rather than guessed at. */
+static cJSON *parallel_arrays_objects(cJSON *node) {
+  if (!node || !cJSON_IsObject(node)) return NULL;
+  int len = -1, cols = 0;
+  for (cJSON *k = node->child; k; k = k->next) {
+    if (!cJSON_IsArray(k)) continue;
+    int n = cJSON_GetArraySize(k);
+    if (n < 2) return NULL;                 /* not a column */
+    cJSON *e;
+    cJSON_ArrayForEach(e, k)
+      if (cJSON_IsObject(e) || cJSON_IsArray(e)) return NULL;  /* not scalar */
+    if (len < 0) len = n;
+    else if (n != len) return NULL;         /* ragged — ambiguous, refuse */
+    cols++;
+  }
+  if (cols < 2 || len < 2) return NULL;
+
+  cJSON *out = cJSON_CreateArray();
+  if (!out) return NULL;
+  for (int i = 0; i < len; i++) {
+    cJSON *o = cJSON_CreateObject();
+    if (!o) break;
+    for (cJSON *k = node->child; k; k = k->next) {
+      if (!cJSON_IsArray(k) || !k->string) continue;
+      cJSON *cell = cJSON_GetArrayItem(k, i);
+      if (!cell || cJSON_IsNull(cell)) continue;
+      cJSON *dupv = cJSON_Duplicate(cell, 1);
+      if (dupv) cJSON_AddItemToObject(o, k->string, dupv);
+    }
+    if (cJSON_GetArraySize(o) == 0) { cJSON_Delete(o); continue; }
+    cJSON_AddStringToObject(o, "_projection",
+                            "parallel-arrays: row i is index i of every column"
+                            " array the upstream published together");
+    cJSON_AddItemToArray(out, o);
+  }
+  if (cJSON_GetArraySize(out) == 0) { cJSON_Delete(out); return NULL; }
+  return out;
+}
+
+/* ── nested scalar maps ───────────────────────────────────────────────────
+ *
+ * The fourth way to publish a table: as a map of maps of maps, with the record
+ * keys spent on the nesting and no array anywhere at all.
+ *
+ * IMF's DataMapper is the fleet's case. /api/v1/PCPIPCH answers
+ * {"values":{"PCPIPCH":{"SDN":{"1980":26.5,"1981":24,…},"USA":{…},…}},
+ *  "api":{"version":"1","output-method":"json"}} — 228 economies × ~47 years =
+ * 10,789 real World Economic Outlook observations, measured, in one response,
+ * and jsonlist_find_array returns NULL under every path spelling because there
+ * is no array to find. Nine registered sources sit on that API and all nine
+ * emitted zero on every run.
+ *
+ * The projection reads what the document says and nothing else: one record per
+ * LEAF, carrying the leaf's value and the keys that addressed it. It is
+ * deliberately narrow — the subtree must be uniformly deep, every leaf must be
+ * a scalar, no arrays may appear anywhere inside it, and it must hold at least
+ * eight leaves, so an error envelope or a two-field config block is not mistaken
+ * for a dataset. Like the other two projections it stamps `_projection` on every
+ * record, because the row structure is the one thing here the upstream did not
+ * write out itself. */
+#define MAP_MAX_DEPTH 6
+
+/* Uniform depth and leaf count of an all-scalar-leaf map. depth < 0 means the
+ * subtree is not that shape (mixed depths, an array, an empty object). */
+static void map_profile(cJSON *node, int limit, int *depth, long *leaves) {
+  *depth = -1; *leaves = 0;
+  if (!cJSON_IsObject(node) || !node->child || limit <= 0) return;
+  int d = -1; long total = 0;
+  for (cJSON *k = node->child; k; k = k->next) {
+    if (!k->string || !k->string[0]) return;
+    if (cJSON_IsString(k) || cJSON_IsNumber(k) || cJSON_IsBool(k)) {
+      if (d < 0) d = 1; else if (d != 1) return;
+      total++;
+    } else if (cJSON_IsObject(k)) {
+      int cd; long cl;
+      map_profile(k, limit - 1, &cd, &cl);
+      if (cd < 0) return;
+      if (d < 0) d = cd + 1; else if (d != cd + 1) return;
+      total += cl;
+    } else return;                    /* array, null — not this shape */
+  }
+  *depth = d; *leaves = total;
+}
+
+/* The richest eligible subtree, preferring the OUTERMOST on a tie so the
+ * outer key survives as a field rather than being spent walking past it. */
+static void map_best(cJSON *node, int limit, cJSON **best, long *bestl) {
+  if (!cJSON_IsObject(node) || limit <= 0) return;
+  int d; long l;
+  map_profile(node, MAP_MAX_DEPTH, &d, &l);
+  if (d >= 2 && l >= 8 && l > *bestl) { *best = node; *bestl = l; }
+  for (cJSON *k = node->child; k; k = k->next)
+    if (cJSON_IsObject(k)) map_best(k, limit - 1, best, bestl);
+}
+
+static void map_flatten(cJSON *node, int level, char keys[][160],
+                        const char *prefix, cJSON *out) {
+  for (cJSON *k = node->child; k; k = k->next) {
+    if (!k->string) continue;
+    char path[512];
+    snprintf(path, sizeof path, "%s%s%s", prefix, prefix[0] ? "." : "", k->string);
+    if (cJSON_IsObject(k)) {
+      if (level < MAP_MAX_DEPTH) {
+        snprintf(keys[level], 160, "%s", k->string);
+        map_flatten(k, level + 1, keys, path, out);
+      }
+      continue;
+    }
+    cJSON *o = cJSON_CreateObject();
+    if (!o) return;
+    /* The dotted address IS this record's identifier inside the document — it
+     * is what makes the row stable across runs and distinct from its siblings —
+     * so it is named `id` and jsonlist keys the row on it. Nothing is invented:
+     * every segment is a key the upstream wrote. */
+    cJSON_AddStringToObject(o, "id", path);
+    for (int i = 0; i < level; i++) {
+      char kn[16];
+      snprintf(kn, sizeof kn, "key%d", i + 1);
+      cJSON_AddStringToObject(o, kn, keys[i]);
+    }
+    cJSON_AddStringToObject(o, "key", k->string);
+    /* Built fresh rather than duplicated: a duplicate carries the leaf's own
+     * key in ->string, which would then have to be freed before the value could
+     * be re-named "value" — and freeing a cJSON-allocated string with libc's
+     * free() is only correct while the default allocator hooks are installed.
+     * map_profile has already guaranteed the leaf is one of these three. */
+    cJSON *v = cJSON_IsString(k) ? cJSON_CreateString(k->valuestring)
+             : cJSON_IsNumber(k) ? cJSON_CreateNumber(k->valuedouble)
+             : cJSON_CreateBool(cJSON_IsTrue(k));
+    if (v) cJSON_AddItemToObject(o, "value", v);
+    cJSON_AddStringToObject(o, "_projection",
+                            "nested-map: one record per leaf, keyed by the"
+                            " path the upstream nested it under");
+    cJSON_AddItemToArray(out, o);
+  }
+}
+
+static cJSON *scalar_map_objects(cJSON *node) {
+  if (!node || !cJSON_IsObject(node)) return NULL;
+  cJSON *best = NULL; long bestl = 0;
+  map_best(node, MAP_MAX_DEPTH, &best, &bestl);
+  if (!best) return NULL;
+  cJSON *out = cJSON_CreateArray();
+  if (!out) return NULL;
+  char keys[MAP_MAX_DEPTH][160];
+  map_flatten(best, 0, keys, "", out);
+  if (cJSON_GetArraySize(out) == 0) { cJSON_Delete(out); return NULL; }
+  return out;
+}
+
 /* One record → one row. Split out of the loop so that a single-object
  * document ("." path) goes through byte-identical logic to a list element;
  * two code paths that "should" agree are how the tree grew its duplicate-fix
  * problem in the first place. */
-static int emit_record(intel_sink *sink, const char *source_id, cJSON *rec,
-                       const char *record_type, const char *lang,
-                       const char *tags_json) {
+/* Everything a record resolves to, derived once. This used to live inline in
+ * emit_record; it was lifted out because the uid collision guard in
+ * jsonlist_emit has to derive the SAME title/link/date a second time, BEFORE
+ * anything is emitted, in order to see which records are about to key onto each
+ * other. Two copies of this logic is exactly how the two collector engines in
+ * this tree drifted apart in the first place, so there is one. */
+typedef struct {
+  char  *title, *link, *when, *rid;
+  cJSON *fields;                 /* rec, or the envelope the label came from */
+  int    geo;
+  double lat, lon;
+} row_view;
+
+static void row_view_free(row_view *v) {
+  free(v->title); free(v->link); free(v->when); free(v->rid);
+  v->title = v->link = v->when = v->rid = NULL;
+}
+
+/* 1 = this record resolves to an intel row; 0 = shape noise (R1). */
+static int row_derive(cJSON *rec, const char *record_type, row_view *v) {
+    memset(v, 0, sizeof *v);
     if (!cJSON_IsObject(rec)) return 0;
 
     char *when = scalar_dup(pick(rec, K_DATE));
@@ -304,8 +610,19 @@ static int emit_record(intel_sink *sink, const char *source_id, cJSON *rec,
        * response carried real titles ("Sentiers et points d'intérêt
        * d'Abbaretz"), licences and modification dates. Same shape on every ODS
        * deployment, which is a large share of the EU portal fleet. */
+      /* `resource` is Socrata's cross-portal catalogue envelope. A hit on
+       * api.us.socrata.com/api/catalog/v1 is
+       * {resource:{name, id, description, columns_name[], updatedAt, …},
+       *  classification, metadata, permalink, link, owner, creator} — the
+       * dataset's name, id and every column are one level down under
+       * `resource`, and the outer object carries nothing title-ish at all, so
+       * all 100 results of every catalogue query were dropped as unlabelled.
+       * Measured against ?q=restaurant%20inspections: 100 results returned,
+       * 0 emitted, while the first one alone was "DOHMH New York City
+       * Restaurant Inspection Results". 75 registered sources are built on
+       * this one endpoint shape. */
       static const char *const ENV[] = {
-        "attributes", "properties", "metas.default", "metas", NULL
+        "attributes", "properties", "resource", "metas.default", "metas", NULL
       };
       for (int i = 0; ENV[i] && !title; i++) {
         cJSON *inner = rec;
@@ -393,42 +710,244 @@ static int emit_record(intel_sink *sink, const char *source_id, cJSON *rec,
                record_type ? record_type : "record", rid);
       title = strdup(idtitle);
     }
-    if (!title) { free(when); free(rid); return 0; }  /* no label, no id -> not a row (R1) */
 
-    char *link = scalar_dup(pick(fields, K_LINK));
-    char *body = scalar_dup(pick(fields, K_BODY));
+    /* Still nothing conventional — and "no CONVENTIONALLY NAMED field" is not
+     * the same thing as "no content". lib/hpengine.c:717 settled this question
+     * for the other engine and this one never got the answer: a record that
+     * carried something real is keyed on its FIRST NON-EMPTY SCALAR rather than
+     * thrown away.
+     *
+     * The measured cost of not doing it, on a 1,234-source sweep of the
+     * scheduled fleet: Regione Lombardia's access register answers 390 rows of
+     * {tipologia_accesso, oggetto_della_richiesta, data_della_richiesta,
+     * stato_della_pratica, esito, direzione_competente, …} and Migración
+     * Colombia answers 500 of {a_o, mes, nacionalidad, codigo_m49, femenino,
+     * masculino, total} — real, complete, public-register rows, every field
+     * present, and not one field named title/name/id/date, so every one of
+     * them was discarded. Whole national datasets, fetched daily, stored never.
+     *
+     * It is a worse label than a real title — which is why an upstream that
+     * HAS one still wins on every branch above — but a worse label is not a
+     * reason to destroy the record. Nothing is invented: record_type is the
+     * collector's own declared type and the value came from the upstream. A
+     * record that yields no scalar at all is still shape noise and is still
+     * dropped (R1). */
+    char fstitle[224];
+    if (!title) {
+      char *fs = first_scalar_dup(fields);
+      if (fs) {
+        snprintf(fstitle, sizeof fstitle, "%s %s",
+                 record_type ? record_type : "record", fs);
+        free(fs);
+        title = strdup(fstitle);
+      }
+    }
+    if (!title) { free(when); free(rid); return 0; }  /* nothing real -> not a row (R1) */
+
+    v->title  = title;
+    v->when   = when;
+    v->rid    = rid;
+    v->fields = fields;
+    v->geo    = geo;
+    v->lat    = lat;
+    v->lon    = lon;
+    v->link   = scalar_dup(pick(fields, K_LINK));
+    return 1;
+}
+
+/* The uid an id-less record falls back to.
+ *
+ * `disambiguate` folds the serialized record into the hash. It is set ONLY for
+ * records that jsonlist_emit has already proved would otherwise key onto a
+ * sibling — see the collision guard below — so a record that was uniquely
+ * identified by (title, link, date) keeps byte-identical uids across this
+ * change and nothing already stored re-emits. */
+static void row_hash(const row_view *v, cJSON *rec, int disambiguate,
+                     char out[21]) {
+  const char *parts[4] = { v->title, v->link ? v->link : "",
+                           v->when ? v->when : "", NULL };
+  int np = 3;
+  char *js = NULL;
+  if (disambiguate) {
+    js = cJSON_PrintUnformatted(rec);
+    parts[3] = js ? js : "";
+    np = 4;
+  }
+  feed_hash_key(out, parts, np);
+  free(js);
+}
+
+static int emit_record(intel_sink *sink, const char *source_id, cJSON *rec,
+                       const char *record_type, const char *lang,
+                       const char *tags_json, int disambiguate) {
+    row_view v;
+    if (!row_derive(rec, record_type, &v)) return 0;
+
+    char *body  = scalar_dup(pick(v.fields, K_BODY));
     char *props = cJSON_PrintUnformatted(rec);
 
     /* uid: prefer the upstream's own id, else a hash of the record's stable
-     * parts. Deriving it from the serialized record would make every
-     * cosmetic upstream change look like a new row. */
+     * parts. Deriving it from the serialized record unconditionally would make
+     * every cosmetic upstream change look like a new row, which is why the
+     * record's content only joins the hash when it has to. */
     char hash[21] = {0};
-    if (!rid) {
-      const char *parts[3] = { title, link ? link : "", when ? when : "" };
-      feed_hash_key(hash, parts, 3);
-    }
+    if (!v.rid) row_hash(&v, rec, disambiguate, hash);
     char uid[192];
-    snprintf(uid, sizeof uid, "%s|%s", source_id, rid ? rid : hash);
+    snprintf(uid, sizeof uid, "%s|%s", source_id, v.rid ? v.rid : hash);
 
     intel_item it = {0};
     it.uid             = uid;
-    it.remote_key      = rid;
-    it.title           = title;
+    it.remote_key      = v.rid;
+    it.title           = v.title;
     it.body            = body;
-    it.link            = link;
+    it.link            = v.link;
     it.lang            = lang;
-    it.published_at    = when;
+    it.published_at    = v.when;
     it.record_type     = record_type;
-    it.has_geo         = geo;
-    it.lat             = lat;
-    it.lon             = lon;
+    it.has_geo         = v.geo;
+    it.lat             = v.lat;
+    it.lon             = v.lon;
     it.properties_json = props ? props : "{}";
     it.tags_json       = tags_json ? tags_json : "[]";
 
     int ok = sink->emit(sink, &it) >= 0;
 
-    free(title); free(link); free(when); free(rid); free(body); free(props);
+    row_view_free(&v);
+    free(body); free(props);
     return ok ? 1 : 0;
+}
+
+/* ── the uid collision guard ──────────────────────────────────────────────
+ *
+ * `records=N` in a run line counts sink->emit() CALLS. It says nothing about
+ * how many rows landed, because the sink upserts on uid — so a source whose
+ * records key onto each other reports a healthy N and stores one row. That is
+ * the same invisible data loss as an emit-zero source and it is invisible to
+ * the metric normally used to find them.
+ *
+ * `us-openfda-device-pma-detail` is the case that forced this: 109 PMA
+ * supplements, each a distinct regulatory filing, all sharing one device trade
+ * name. pick_name_suffixed reads `trade_name` as the title, none of them
+ * carries a field this file recognises as an id, and (title, link, date) is
+ * therefore identical for all 109. Measured: emitted 109, stored 1.
+ *
+ * The guard derives every record's fallback key first and only extends the ones
+ * that are about to collide. That precision is the point: a record whose key
+ * was already unique keeps the uid it has, so this change re-emits nothing that
+ * was correctly stored. The colliding groups DO change uid — but those rows
+ * were never correctly stored to begin with (n-1 of every group had been
+ * overwritten), so the only residue is one stale row per group under the old
+ * shared key.
+ *
+ * Scope is one array — one page of one response. A record on page 2 that keys
+ * onto one from page 1 is not caught, because page 1 is already emitted by
+ * then; catching that would mean buffering the whole walk in memory. Stated
+ * plainly rather than papered over. */
+typedef struct { char key[21]; int idx; } keyed_row;
+
+static int keyed_cmp(const void *a, const void *b) {
+  return strcmp(((const keyed_row *)a)->key, ((const keyed_row *)b)->key);
+}
+
+static unsigned char *collision_map(cJSON *arr, const char *record_type, int n) {
+  if (n < 2) return NULL;
+  keyed_row *k = malloc((size_t)n * sizeof *k);
+  unsigned char *dup = calloc((size_t)n, 1);
+  /* Out of memory here must degrade to the old behaviour, not abort the emit:
+   * a colliding row is a worse outcome than a dropped guard, but a dropped
+   * SOURCE is worse than both. */
+  if (!k || !dup) { free(k); free(dup); return NULL; }
+
+  int m = 0, i = 0;
+  cJSON *rec;
+  cJSON_ArrayForEach(rec, arr) {
+    row_view v;
+    if (row_derive(rec, record_type, &v)) {
+      /* A record with the upstream's own id is keyed on that id; two records
+       * sharing one is the upstream telling us they are the same record, and
+       * second-guessing it would fabricate a distinction. Only the hashed
+       * fallback is at risk here. */
+      if (!v.rid) { row_hash(&v, rec, 0, k[m].key); k[m].idx = i; m++; }
+      row_view_free(&v);
+    }
+    i++;
+  }
+  qsort(k, (size_t)m, sizeof *k, keyed_cmp);
+  int flagged = 0;
+  for (int a = 0; a < m; ) {
+    int b = a + 1;
+    while (b < m && !strcmp(k[a].key, k[b].key)) b++;
+    if (b - a > 1)
+      for (int j = a; j < b; j++) { dup[k[j].idx] = 1; flagged++; }
+    a = b;
+  }
+  free(k);
+  if (!flagged) { free(dup); return NULL; }
+  return dup;
+}
+
+/* ── list envelopes ───────────────────────────────────────────────────────
+ *
+ * A "record" that holds nothing but ANOTHER list of records is not a record;
+ * it is a grouping level the declared path stopped one short of.
+ *
+ * JMA's warning feed is the fleet's case, and it is 56 registered sources.
+ * warning/440000.json is {reportDatetime, publishingOffice, headlineText,
+ * areaTypes:[{areas:[{code:"440010", warnings:[{status:"…"}]}, …]}, …]} and
+ * the rows declare path "areatypes" — so every element handed to emit_record
+ * is {areas:[…]}, which has no label, no id and not one scalar of its own. All
+ * 56 prefectural warning feeds stored nothing, on a 15-minute schedule, for
+ * live disaster data.
+ *
+ * Only reached when the record itself produced no row, and only when it has NO
+ * scalar of its own and EXACTLY ONE array of objects inside it — one candidate
+ * and nothing else to lose, so there is no choice being made here. Depth-capped
+ * because a malicious or merely odd document could nest these forever. */
+#define ENVELOPE_MAX_DEPTH 3
+
+static int emit_array(intel_sink *sink, const char *source_id, cJSON *arr,
+                      const char *record_type, const char *lang,
+                      const char *tags_json, int depth);
+
+static int emit_wrapped_list(intel_sink *sink, const char *source_id,
+                             cJSON *rec, const char *record_type,
+                             const char *lang, const char *tags_json,
+                             int depth) {
+  if (depth >= ENVELOPE_MAX_DEPTH || !cJSON_IsObject(rec)) return 0;
+  cJSON *only = NULL;
+  for (cJSON *k = rec->child; k; k = k->next) {
+    /* Any scalar means the record had content of its own; it was dropped for
+     * some other reason and descending past it would lose that content. */
+    if (cJSON_IsString(k) || cJSON_IsNumber(k) || cJSON_IsBool(k)) return 0;
+    if (array_of_objects(k)) {
+      if (only) return 0;                 /* two candidates — not obvious */
+      only = k;
+    }
+  }
+  if (!only) return 0;
+  return emit_array(sink, source_id, only, record_type, lang, tags_json,
+                    depth + 1);
+}
+
+static int emit_array(intel_sink *sink, const char *source_id, cJSON *arr,
+                      const char *record_type, const char *lang,
+                      const char *tags_json, int depth) {
+  int total = cJSON_GetArraySize(arr);
+  unsigned char *dup = collision_map(arr, record_type, total);
+
+  int n = 0, i = 0;
+  cJSON *rec;
+  cJSON_ArrayForEach(rec, arr) {
+    int got = emit_record(sink, source_id, rec, record_type, lang, tags_json,
+                          dup && dup[i]);
+    if (!got)
+      got = emit_wrapped_list(sink, source_id, rec, record_type, lang,
+                              tags_json, depth);
+    n += got;
+    i++;
+  }
+  free(dup);
+  return n;
 }
 
 int jsonlist_emit(intel_sink *sink, const char *source_id, cJSON *doc,
@@ -437,16 +956,32 @@ int jsonlist_emit(intel_sink *sink, const char *source_id, cJSON *doc,
   /* A single-object document is one record, not a degenerate list. Several
    * public APIs return exactly this — a status or summary document — and
    * treating it as an empty list would silently drop the source. */
-  if (path && !strcmp(path, "."))
-    return emit_record(sink, source_id, doc, record_type, lang, tags_json);
+  if (path && !strcmp(path, ".")) {
+    int n = emit_record(sink, source_id, doc, record_type, lang, tags_json, 0);
+    if (!n)
+      n = emit_wrapped_list(sink, source_id, doc, record_type, lang,
+                            tags_json, 0);
+    return n;
+  }
 
-  cJSON *arr = jsonlist_find_array(doc, path);
-  if (!arr) return 0;
+  /* A columnar table is a list of records written sideways; project it before
+   * anything else looks at it. `owned` is non-NULL only when we built one. */
+  cJSON *arr = jsonlist_find_array(doc, path), *owned = NULL;
+  if (arr) {
+    owned = columnar_objects(columnar_parent(doc, path), arr);
+    if (owned) arr = owned;
+  } else {
+    /* No array under this path at all. Before reporting an empty source, ask
+     * whether the records are here in a shape that simply is not an array. */
+    cJSON *node = jsonlist_node(doc, path);
+    owned = parallel_arrays_objects(node);
+    if (!owned) owned = scalar_map_objects(node);
+    if (!owned) return 0;
+    arr = owned;
+  }
 
-  int n = 0;
-  cJSON *rec;
-  cJSON_ArrayForEach(rec, arr)
-    n += emit_record(sink, source_id, rec, record_type, lang, tags_json);
+  int n = emit_array(sink, source_id, arr, record_type, lang, tags_json, 0);
+  cJSON_Delete(owned);
   return n;
 }
 

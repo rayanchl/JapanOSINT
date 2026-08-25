@@ -279,6 +279,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .array_path = "value",
     .interval = 3600,
     .next_path = "nextLink",
+    .title_keys = "plan_dtime_utc",
     .description = "Hourly Polish demand forecast, required power reserve, forecast "
       "PV and wind generation and available capacity. The required "
       "reserve figure is the operator quantifying its own uncertainty "
@@ -294,6 +295,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .array_path = "value",
     .interval = 3600,
     .next_path = "nextLink",
+    .title_keys = "ofcg",
     .description = "Balancing energy offers by fifteen minute period for the Polish "
       "day-ahead balancing market with the offered prices and volumes. "
       "Offer curves show the marginal cost the fleet is willing to "
@@ -309,6 +311,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .array_path = "value",
     .interval = 3600,
     .next_path = "nextLink",
+    .title_keys = "wi",
     .description = "Polish generation split by scheduling unit class including "
       "photovoltaic, wind and the individually dispatched units, at "
       "fifteen minute resolution. Separates centrally dispatched "
@@ -406,6 +409,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .interval = 3600,
     .page_param = "offset",
     .page_size = 50,
+    .title_keys = "mostrecentforecast",
     .description = "Quarter-hourly measured and forecast Belgian wind output split "
       "offshore against onshore, by region and grid connection type, "
       "with monitored capacity. Offshore against onshore separation is "
@@ -422,6 +426,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .interval = 21600,
     .page_param = "offset",
     .page_size = 50,
+    .title_keys = "generatedpower",
     .description = "Quarter-hourly Belgian generation by fuel code with the total, "
       "over a multi-year history. Belgium's nuclear share makes each "
       "reactor outage legible as a step in this series" },
@@ -437,6 +442,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .interval = 3600,
     .page_param = "offset",
     .page_size = 50,
+    .title_keys = "generatedpower",
     .description = "Recent quarter-hourly Belgian generation per publication fuel "
       "type including nuclear, gas and biofuels. The near-real-time "
       "companion to the historical series, so an outage is visible the "
@@ -546,10 +552,12 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.marktstammdatenregister.de/MaStR/Einheit/EinheitJson/GetErweiterteOeffentlicheEinheitStromerzeugung?sort=&page=1&pageSize=50&group=&filter=",
     .array_path = "Data",
+    .id_keys = "Id",
     .interval = 86400,
     .page_param = "page",
     .page_size = 50,
     .page_start = 1,
+    .title_keys = "AnlagenbetreiberName",
     .description = "The German statutory register of every electricity generating "
       "unit, in its extended form: the operator identity and MaStR "
       "number, the unit name, the commissioning date, the net rated "
@@ -846,6 +854,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 50,
+    .title_keys = "ts_afs_name",
     .description = "US commercial fishery landings by species, state, region and "
       "year with pounds landed, dollar value and the survey source. "
       "Landings by species and port are the quantitative basis for any "
@@ -862,6 +871,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 50,
+    .title_keys = "name",
     .description = "Monthly US seafood imports and exports by harmonised tariff "
       "code, product group, partner country, volume and value. Trade at "
       "HTS granularity exposes transshipment routes that aggregate "
@@ -923,6 +933,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://factpages.sodir.no/public?/Factpages/external/tableview/field_reserves&rs:Format=CSV&Top100=false",
     .interval = 86400,
+    .title_keys = "fldName",
     .description = "Recoverable and remaining oil, gas, NGL and condensate for every "
       "Norwegian field with the estimate date and version. Remaining "
       "reserves per field with a version history is what makes a "
@@ -1164,6 +1175,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .interval = 900,
     .page_param = "offset",
     .page_size = 50,
+    .title_keys = "assetname",
     .description = "Quarter-hourly loading of each named Belgian transmission asset "
       "with its asset identifier, asset name, asset type and base "
       "voltage. Per-line loading on a named 380 kV circuit is as close "
@@ -1179,6 +1191,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .interval = 86400,
     .page_param = "rows",
     .page_size = 100,
+    .title_keys = "doc_ctrl_num",
     .description = "Reported quantities released to each environmental medium, air, "
       "water and land, per TRI reporting form, with the estimation "
       "basis code. The quantity table behind the facility names, which "
@@ -1194,6 +1207,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .interval = 86400,
     .page_param = "rows",
     .page_size = 100,
+    .title_keys = "doc_ctrl_num",
     .description = "Off-site transfers of TRI-listed chemicals by waste management "
       "type and receiving location number. Transfers name where a "
       "facility sends its waste, which is the half of the pollution "
@@ -1210,6 +1224,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .interval = 86400,
     .page_param = "rows",
     .page_size = 100,
+    .title_keys = "co2e_emission",
     .description = "Reported CO2-equivalent emissions per facility, per reporting "
       "subpart, per gas, per year under the US mandatory greenhouse gas "
       "reporting rule. Subpart and gas granularity separates process "

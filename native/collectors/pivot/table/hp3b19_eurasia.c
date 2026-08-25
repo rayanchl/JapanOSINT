@@ -683,6 +683,7 @@ static const hp_source HP3B19_EURASIA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=65e8f0b0-186d-4dc7-a100-9e151e2b3b19&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 86400,
     .lat_key = "Z platuma koordinātas",
     .lon_key = "A garuma koordinātas",
@@ -702,10 +703,12 @@ static const hp_source HP3B19_EURASIA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=4a3e6292-235e-4083-815d-9ea0c4870f4b&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
     .page_start = 0,
+    .title_keys = "Atkritumu_klases_kods",
     .description = "Latvia's register of licensed waste traders and waste-management "
       "operators: decision number, operator name and registration "
       "number, status, registration and removal dates, the financial "
@@ -722,6 +725,7 @@ static const hp_source HP3B19_EURASIA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=66dd77e3-868d-474c-b24a-4e7e83c0ca34&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -739,10 +743,12 @@ static const hp_source HP3B19_EURASIA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=62131cb1-2add-4ef1-a04f-b0eda9fa5576&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
     .page_start = 0,
+    .title_keys = "Atļaujas numurs",
     .description = "Latvian water-resource use permits: permit number, status, the "
       "operator and its registration number, the validity window, a "
       "description of the permitted activity and the specific "
@@ -756,6 +762,7 @@ static const hp_source HP3B19_EURASIA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.gov.hr/ckan/api/3/action/datastore_search?resource_id=4623749f-a3bf-4fb5-b2b8-4c01484b8003&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -846,10 +853,12 @@ static const hp_source HP3B19_EURASIA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://podatki.gov.si/api/3/action/datastore_search?resource_id=beb70929-3d0d-41c6-9af2-25d525d906d3&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
     .page_start = 0,
+    .title_keys = "Popolno ime",
     .description = "The Poslovni register Slovenije published as queryable rows, two "
       "hundred and ninety four thousand of them: each registered "
       "Slovenian business entity with its maticna stevilka registration "
@@ -944,10 +953,12 @@ static const hp_source HP3B19_EURASIA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.gov.me/api/3/action/datastore_search?resource_id=77c3018f-cc56-4532-992d-5b6a68f86f42&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
     .page_start = 0,
+    .title_keys = "Broj i datum rješenja",
     .description = "Every medicine authorised for human use in Montenegro, two "
       "thousand of them: the ATC classification code, the international "
       "non-proprietary name, the brand name, the pharmaceutical form "
@@ -1130,7 +1141,7 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"ukraine\",\"currency\",\"exchange\",\"centralbank\",\"nbu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://bank.gov.ua/NBU_Exchange/exchange_site?start={q}&end={q}&valcode=usd&sort=exchangedate&order=desc&json",
-    .date_keys = "exchangedate;pagination_ok=start/end are a DATE range, not paging — measured, start=20240101&end=20240110 returns exactly the 10 days asked for",
+    .date_keys = "exchangedate",
     .title_keys = "cc,enname",
     .description = "The NBU official rate for one currency over an arbitrary date "
       "range, each row carrying the date, ISO numeric and alpha codes, "
@@ -1392,10 +1403,12 @@ static const hp_source HP3B19_EURASIA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.gov.ua/api/3/action/datastore_search?resource_id=0d9f131a-389f-407d-8f49-cee60838af22&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
     .page_start = 0,
+    .title_keys = "addresspostname",
     .description = "The Ukrainian state address register as queryable rows: "
       "postcode, the three levels of administrative unit, the "
       "settlement name, the thoroughfare and the building locator "
@@ -1411,10 +1424,12 @@ static const hp_source HP3B19_EURASIA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://podatki.gov.si/api/3/action/datastore_search?resource_id=c6408144-48f0-4e03-9d35-172a7779fece&limit=100",
     .array_path = "result.records",
+    .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
     .page_start = 0,
+    .title_keys = "priimek",
     .description = "Every individual holding a Slovenian licence to practise healing "
       "activity, by given name and surname, with the field the licence "
       "covers and its duration. A named professional licensing register "
@@ -1586,7 +1601,9 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"ireland\",\"energy\",\"wind\",\"generation\",\"seai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://seaiopendata.blob.core.windows.net/wind/WindFarmsConnectedJune2022.csv",
+    .id_keys = "Connection_Ref",
     .interval = 604800,
+    .title_keys = "Windfarm_Name",
     .description = "Every wind farm connected to the Irish grid as CSV: farm name, "
       "whether it connects to the distribution or transmission system, "
       "the connection reference, county, present status, installed "
@@ -2333,8 +2350,8 @@ static const hp_source HP3B19_EURASIA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://public-api.dream.gov.ua/marketplace/public/dream/ideas?from={q}&order=asc",
     .array_path = "data",
-    .detail_key = "id;pagination_ok=from= is not an offset — measured, from=0 and from=100 return byte-identical responses of 1000 records",
-    .detail_url = "https://public-api.dream.gov.ua/marketplace/public/dream/ideas/{q}",
+    .detail_key = "id",
+    .detail_url = "https://public-api.dream.gov.ua/marketplace/public/dream/ideas/{v}",
     .id_keys = "id",
     .description = "Ukraine national reconstruction project register run by the "
       "Ministry for Communities and Territories Development: every "
@@ -3008,10 +3025,12 @@ static const hp_source HP3B19_EURASIA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://inspire.lechnerkozpont.hu/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=CP%3ACP.CadastralParcels&count=100&outputFormat=application%2Fjson",
     .array_path = "features",
+    .id_keys = "properties.id_localid",
     .interval = 604800,
     .page_param = "startIndex",
     .page_size = 100,
     .page_start = 0,
+    .title_keys = "properties.datasetidcode",
     .description = "Hungarian cadastral parcels as INSPIRE-conformant GeoJSON "
       "features: the national cadastral reference, the parcel label, "
       "the cadastral zoning it belongs to, the area and the boundary "
@@ -3045,10 +3064,12 @@ static const hp_source HP3B19_EURASIA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://inspire.lechnerkozpont.hu/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=AU.2025%3AAdministrativeUnits.2025&count=100&outputFormat=application%2Fjson",
     .array_path = "features",
+    .id_keys = "properties.nuts_code",
     .interval = 604800,
     .page_param = "startIndex",
     .page_size = 100,
     .page_start = 0,
+    .title_keys = "properties.label",
     .description = "Hungarian administrative units as INSPIRE features: national, "
       "county, district and municipal levels with their official codes, "
       "names, hierarchy level and boundary geometry, versioned by year. "
@@ -3098,10 +3119,12 @@ static const hp_source HP3B19_EURASIA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://inspire.lechnerkozpont.hu/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=OI.2025%3AOrthoimageCoveragePolygon2025&count=100&outputFormat=application%2Fjson",
     .array_path = "features",
+    .id_keys = "properties.id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_size = 100,
     .page_start = 0,
+    .title_keys = "properties.phenomenontime_timeperiod_end_timeinstant_timeposition",
     .description = "The footprint of every Hungarian national aerial orthoimage "
       "survey tile with its acquisition date, resolution and coverage "
       "polygon, published per survey year from 2000 onward. Knowing "

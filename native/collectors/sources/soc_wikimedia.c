@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 /* Wikimedia's UA policy asks for a descriptive agent identifying the client. */
 static const char *const WM_UA[] = {
@@ -59,9 +60,14 @@ static void wiki_link(char *out, size_t n, const char *host, const char *title) 
 static int run_top_pageviews(const source_ctx *ctx, intel_sink *sink) {
   /* today-2 UTC: yesterday's aggregate is not always final yet. */
   time_t t = time(NULL) - 2 * 86400;
-  struct tm g; gmtime_r(&t, &g);
+  struct tm g;
   char url[300], daystr[16];
-  strftime(daystr, sizeof daystr, "%Y-%m-%d", &g);
+  /* The day is pinned INTO the URL path, so an unrenderable one is not a
+   * broader query — there is no request left to make. */
+  if (!jo_tm_utc(t, &g) || !strftime(daystr, sizeof daystr, "%Y-%m-%d", &g)) {
+    fprintf(stderr, "[wikipedia-top-pageviews] cannot render the query window as a date\n");
+    return -1;
+  }
   snprintf(url, sizeof url,
       "https://wikimedia.org/api/rest_v1/metrics/pageviews/top/"
       "en.wikipedia/all-access/%04d/%02d/%02d",
@@ -70,7 +76,10 @@ static int run_top_pageviews(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json_h(ctx->http, url, WM_UA, 25000);
   if (!doc) { fprintf(stderr, "[wikipedia-top-pageviews] fetch failed\n"); return -1; }
   const cJSON *items = cJSON_GetObjectItem(doc, "items");
-  const cJSON *it0 = cJSON_IsArray(items) ? cJSON_GetArrayItem(items, 0) : NULL;
+  /* The URL pins project, access AND the single day, so the REST endpoint
+   * answers with a one-element `items` envelope carrying that day's
+   * `articles` list (verified: items 1, articles 1000). There is no tail. */
+  const cJSON *it0 = cJSON_IsArray(items) ? cJSON_GetArrayItem(items, 0) : NULL;  /* exhaustive-ok: 1-element response envelope — project/access/day are all fixed by the URL */
   const cJSON *arts = cJSON_IsObject(it0) ? cJSON_GetObjectItem(it0, "articles") : NULL;
   if (!cJSON_IsArray(arts)) {
     fprintf(stderr, "[wikipedia-top-pageviews] unexpected shape\n");
@@ -78,8 +87,11 @@ static int run_top_pageviews(const source_ctx *ctx, intel_sink *sink) {
   }
   int n = 0;
   const cJSON *a;
+  /* No cap. The endpoint returns exactly 1,000 ranked articles in one 55 KB
+   * response and `n >= 200` threw 800 of them away every day. The interesting
+   * row is rarely in the top 200 — a company or a person whose pageviews jump
+   * from nowhere lands at rank 400, and that spike is the lead. */
   cJSON_ArrayForEach(a, arts) {
-    if (n >= 200) break;                       /* top 200 of the 1,000 rows */
     const char *article = jo_sv(a, "article");
     if (!article) continue;
     const cJSON *vw = cJSON_GetObjectItem(a, "views");
@@ -124,9 +136,12 @@ REGISTER_SOURCE(soc_top_pageviews_def)
 
 static int run_featured(const source_ctx *ctx, intel_sink *sink) {
   time_t t = time(NULL) - 86400;
-  struct tm g; gmtime_r(&t, &g);
+  struct tm g;
   char url[300], daystr[16];
-  strftime(daystr, sizeof daystr, "%Y-%m-%d", &g);
+  if (!jo_tm_utc(t, &g) || !strftime(daystr, sizeof daystr, "%Y-%m-%d", &g)) {
+    fprintf(stderr, "[wikimedia-featured-feed] cannot render the query window as a date\n");
+    return -1;
+  }
   snprintf(url, sizeof url,
       "https://api.wikimedia.org/feed/v1/wikipedia/en/featured/%04d/%02d/%02d",
       g.tm_year + 1900, g.tm_mon + 1, g.tm_mday);
@@ -168,7 +183,10 @@ static int run_featured(const source_ctx *ctx, intel_sink *sink) {
     char *txt = story ? html_strip(story) : NULL;
     if (!txt || !txt[0]) { free(txt); continue; }
     const cJSON *links = cJSON_GetObjectItem(ni, "links");
-    const cJSON *l0 = cJSON_IsArray(links) ? cJSON_GetArrayItem(links, 0) : NULL;
+    /* links[0] is only the story's PERMALINK target; every linked article and
+     * every Wikidata QID is collected below into linked_articles/wikidata_qids
+     * on the same row, so nothing in the array is decided away here. */
+    const cJSON *l0 = cJSON_IsArray(links) ? cJSON_GetArrayItem(links, 0) : NULL;  /* exhaustive-ok: permalink display pick; the whole links array is emitted as linked_articles + wikidata_qids */
     cJSON *p = cJSON_CreateObject();
     if (!p) { free(txt); continue; }
     cJSON_AddStringToObject(p, "source", "api.wikimedia.org");

@@ -208,6 +208,31 @@ static const hp_source T[] = {
   { .id = "T_EMPTY_REC", .name = "no content at all", .url = "https://x.test/e?q={q}",
     .array_path = "items", .record_type = "t-empty",
     .free_tier = 1, .description = "d" },
+
+  /* A row that DECLARES where its records live. Batch 20 found ArcGIS
+   * answering an over-quota query with HTTP 200 and {"error":{"code":429}}:
+   * `results` did not resolve, so the engine fell through to "root IS the
+   * record" and filed a finding titled `<record_type> 429`. */
+  { .id = "T_ERRDOC", .name = "declared shape", .url = "https://x.test/ed?q={q}",
+    .array_path = "results", .title_keys = "name", .id_keys = "id",
+    .record_type = "t-errdoc", .free_tier = 1, .description = "d" },
+
+  /* SDMX structural metadata: the identity is in ATTRIBUTES (id=, agencyID=),
+   * not in child elements. hp_xml_flatten walked child ELEMENTS only, so the
+   * whole ILO/OECD/ABS/Istat/ECB/Eurostat/IMF family parsed into records with
+   * a human-readable name and nothing to key it on. */
+  { .id = "T_XML_ATTR", .name = "xml attributes", .url = "https://x.test/xat?q={q}",
+    .mode = HP_XML, .array_path = "Codelist",
+    .title_keys = "Name", .id_keys = "id",
+    .record_type = "t-xmlattr", .free_tier = 1, .description = "d" },
+
+  /* The same thing against the real bytes, namespace prefixes and all — the
+   * fixture below is a trimmed copy of what data-api.ecb.europa.eu actually
+   * returns for /service/codelist/ECB/CL_FREQ. */
+  { .id = "T_SDMX", .name = "sdmx codelist", .url = "https://x.test/sdmx?q={q}",
+    .mode = HP_XML, .array_path = "str:Code",
+    .title_keys = "com:Name", .id_keys = "id",
+    .record_type = "t-sdmx", .free_tier = 1, .description = "d" },
 };
 HP_REGISTER_TABLE(T)
 
@@ -513,6 +538,225 @@ int main(void) {
   for (int i = 0; i < g_ncap; i++)
     if (!strcmp(g_cap[i].rtype, "collector-truncation-notice")) notice = 1;
   ok(!notice, "an empty slot raises no truncation notice");
+
+  /* 12. the uid collision guard.
+   *
+   *     remote_key is the sink's upsert key, so two records that produce the
+   *     same string store as ONE row while the run line still reports both.
+   *     `name` is a title fallback but not an id fallback, so these records are
+   *     keyed on their title — and three sharing a title collapsed onto one.
+   *     Measured across a 1,197-source sweep: 46 rows losing 114,795 records a
+   *     pass, invisible to `records=N` because emit() really was called. */
+  fx_reset();
+  fx_add("/e?q=", 200,
+    "{\"items\":[{\"name\":\"Widget\",\"lot\":\"1\"},"
+    "{\"name\":\"Widget\",\"lot\":\"2\"},{\"name\":\"Other\"}]}");
+  rc = run_source("T_EMPTY_REC", "x");
+  ok(rc == 0 && g_ncap == 3, "three title-keyed records all emit");
+  ok(strcmp(g_cap[0].key, g_cap[1].key) != 0,
+     "records sharing a title get distinct remote_keys");
+  ok(strstr(g_cap[2].key, "Other") != NULL &&
+     strstr(g_cap[2].key, "|") != NULL &&
+     !strchr(strstr(g_cap[2].key, "Other"), '|'),
+     "a record whose title was already unique keeps its old key unchanged");
+
+  /* 12b. a shared ID is covered too, because the id is usually OURS: `id_keys`
+   *      is a manifest declaration and a wrong one is an ordinary mistake.
+   *      ECDC_RESPIRATORY declared id_keys=country_code on a weekly time
+   *      series, so 12,648 observations keyed onto 438 rows. Records sharing an
+   *      id but DIFFERING must both survive. */
+  fx_reset();
+  fx_add("/e?q=", 200,
+    "{\"items\":[{\"id\":\"X\",\"v\":\"1\"},{\"id\":\"X\",\"v\":\"2\"}]}");
+  rc = run_source("T_EMPTY_REC", "x");
+  ok(rc == 0 && g_ncap == 2, "both id-carrying records emit");
+  ok(strcmp(g_cap[0].key, g_cap[1].key) != 0,
+     "same id + different content = two records behind a bad id declaration");
+
+  /* 12d. THE SHAPE THE FIRST VERSION OF THE GUARD COULD NOT SEE.
+   *
+   *      A row declaring neither `id_keys` nor `title_keys`, whose fields match
+   *      neither fallback list either, is keyed by hp_emit_record() on its
+   *      FIRST NON-EMPTY SCALAR. The collision map originally computed only
+   *      `rkey ? rkey : title` and skipped the record when both were NULL — so
+   *      this one shape was unguarded, and every record whose first scalar was
+   *      a dimension constant collapsed onto one uid.
+   *
+   *      Measured over the full registry: 1,818 hp rows are in this shape.
+   *      WHO_XMART_NCD_MORTALITY emitted 10,001 and stored 2. `indicator` is in
+   *      neither TITLE_FALLBACK nor ID_FALLBACK, so it reproduces exactly. */
+  fx_reset();
+  fx_add("/e?q=", 200,
+    "{\"items\":[{\"indicator\":\"NCD\",\"country\":\"FR\",\"v\":1},"
+    "{\"indicator\":\"NCD\",\"country\":\"DE\",\"v\":2},"
+    "{\"indicator\":\"NCD\",\"country\":\"IT\",\"v\":3}]}");
+  rc = run_source("T_EMPTY_REC", "x");
+  ok(rc == 0 && g_ncap == 3, "first-scalar-keyed records all emit");
+  ok(strcmp(g_cap[0].key, g_cap[1].key) != 0 &&
+     strcmp(g_cap[1].key, g_cap[2].key) != 0 &&
+     strcmp(g_cap[0].key, g_cap[2].key) != 0,
+     "a row declaring NEITHER key is still guarded — the map mirrors the emitter");
+
+  /* 12c. ...but the disambiguator is a CONTENT hash, so genuinely identical
+   *      records still collapse. That is real deduplication, and it is what
+   *      stops 12b from fabricating a distinction the data does not contain. */
+  fx_reset();
+  fx_add("/e?q=", 200,
+    "{\"items\":[{\"id\":\"X\",\"v\":\"1\"},{\"id\":\"X\",\"v\":\"1\"}]}");
+  rc = run_source("T_EMPTY_REC", "x");
+  ok(rc == 0 && g_ncap == 2, "both byte-identical records are emitted");
+  ok(!strcmp(g_cap[0].key, g_cap[1].key),
+     "byte-identical records still key onto one row — real dedupe survives");
+
+  /* 13. an HTTP 200 whose BODY is an error report is not a finding.
+   *
+   *     Observed live in batch 20: ArcGIS answers an over-quota query with
+   *     status 200 and {"error":{"code":429,"message":"..."}}. `results` did
+   *     not resolve, hp_find_array() found no array of objects, and the
+   *     root-record fallback flattened the envelope — `code` matched
+   *     ID_FALLBACK through the last-segment rule, so a number lifted out of
+   *     an error message was stored and served as a finding titled
+   *     `airway-record 429`. tools/probe_hp_batch.py rejects that shape; the
+   *     engine did not. Nothing may be stored, and the run must report what
+   *     the equivalent HTTP status would have reported. */
+  fx_reset();
+  fx_add("/ed?q=", 200, "{\"error\":{\"code\":429,\"message\":\"quota exceeded\"}}");
+  rc = run_source("T_ERRDOC", "x");
+  ok(g_ncap == 0, "an HTTP-200 error document stores nothing");
+  ok(rc == 0, "a 4xx/429-class error code is an honest empty, like an HTTP 404");
+
+  fx_reset();
+  fx_add("/ed?q=", 200, "{\"error\":{\"code\":500,\"message\":\"boom\"}}");
+  rc = run_source("T_ERRDOC", "x");
+  ok(rc == -1 && g_ncap == 0, "a 5xx-class error document errors like an HTTP 500");
+
+  /* No code at all: unclassifiable, so it is reported as an error rather than
+   * as a successful empty run — "found nothing" and "was never checked" must
+   * not look the same. */
+  fx_reset();
+  fx_add("/ed?q=", 200, "{\"error\":\"rate limited\"}");
+  rc = run_source("T_ERRDOC", "x");
+  ok(rc == -1 && g_ncap == 0, "an error document with no code is an errored run, not an empty one");
+
+  /* The same envelope reaching a row that declares NO array_path — the
+   * root-record fallback is exactly the path that fabricated the record.
+   *
+   * These are the REAL bytes: services.arcgis.com answered a bad query with
+   * exactly this, under HTTP 200, on 2026-08-24. `details` is why the
+   * densest-array heuristic did not save us either — it is an array of
+   * STRINGS, so hp_find_array() (which requires objects) skips it and the
+   * root-record path takes over. */
+  fx_reset();
+  fx_add("/auto?q=", 200,
+    "{\"error\":{\"code\":400,\"message\":\"Cannot perform query. Invalid query "
+    "parameters.\",\"details\":[\"'Invalid field: BOGUS_FIELD' parameter is invalid\"]}}");
+  rc = run_source("T_AUTO", "x");
+  ok(g_ncap == 0, "the root-record fallback no longer files an error envelope as a finding");
+
+  /* A declared array_path that does not resolve: the response is not the shape
+   * the row expects, and guessing at it is what produced the garbage record. */
+  fx_reset();
+  fx_add("/ed?q=", 200, "{\"payload\":{\"name\":\"Widget\",\"id\":\"1\"}}");
+  rc = run_source("T_ERRDOC", "x");
+  ok(rc == 0 && g_ncap == 0,
+     "a declared array_path that does not resolve emits nothing rather than guessing");
+
+  /* ...but a row that declares NO array_path never told us where its records
+   * live, so the single-object response is still the record. This is the case
+   * the narrowing must not break. */
+  fx_reset();
+  fx_add("/auto?q=", 200, "{\"name\":\"Solo Record\",\"id\":\"s1\"}");
+  rc = run_source("T_AUTO", "x");
+  ok(rc == 0 && g_ncap == 1 && !strcmp(g_cap[0].title, "Solo Record"),
+     "root IS the record still works for a row with no array_path");
+
+  /* ...and an `error` member sitting ALONGSIDE real records must not delete
+   * them. Plenty of APIs ship a permanently-present error slot; the check only
+   * runs once the response has been found to carry no records at all. */
+  fx_reset();
+  fx_add("/ed?q=", 200,
+    "{\"error\":{\"code\":0,\"message\":\"\"},\"results\":[{\"name\":\"A\",\"id\":\"1\"}]}");
+  rc = run_source("T_ERRDOC", "x");
+  ok(rc == 0 && g_ncap == 1 && !strcmp(g_cap[0].title, "A"),
+     "an error member alongside real records does not suppress them");
+
+  /* 14. XML ATTRIBUTES are records too.
+   *
+   *     hp_xml_flatten walked child ELEMENTS only, so every attribute was
+   *     dropped. In SDMX structural metadata the identity is the attribute —
+   *     <Codelist id="CL_FREQ" agencyID="ILO"> — which made the whole
+   *     ILO/OECD/ABS/Istat/ECB/Eurostat/IMF family unusable and cost two live
+   *     WITS endpoints their place in batch 20. Attributes now flatten into
+   *     the same dotted keyspace under an `@` last segment, which cannot
+   *     collide with a child element of the same name. */
+  fx_reset();
+  fx_add("/xat?q=", 200,
+    "<?xml version=\"1.0\"?><Structures><Codelists>"
+    "<Codelist id=\"CL_FREQ\" agencyID=\"ILO\" version=\"1.0\">"
+    "<Name xml:lang=\"en\">Frequency</Name><Ref id=\"R1\" agencyID=\"X\"/></Codelist>"
+    "<Codelist id=\"CL_AREA\" agencyID=\"ILO\" version=\"1.0\">"
+    "<Name xml:lang=\"en\">Reference area</Name></Codelist>"
+    "</Codelists></Structures>");
+  rc = run_source("T_XML_ATTR", "x");
+  ok(rc == 0 && g_ncap == 2, "XML attribute records emit (the `<Codelists>` wrapper is not one)");
+  ok(g_ncap >= 1 && strstr(g_cap[0].key, "CL_FREQ") != NULL,
+     "id_keys=id resolves to the @id ATTRIBUTE, so the record is keyed on its identity");
+  ok(g_ncap >= 1 && !strcmp(g_cap[0].title, "Frequency"),
+     "an element-valued title still wins over the attributes beside it");
+  ok(g_ncap >= 1 && strstr(g_cap[0].props, "\"@agencyID\":\"ILO\"") != NULL,
+     "record-element attributes flatten as @name");
+  ok(g_ncap >= 1 && strstr(g_cap[0].props, "\"Name.@xml:lang\":\"en\"") != NULL,
+     "child-element attributes flatten as <path>.@name");
+  ok(g_ncap >= 1 && strstr(g_cap[0].props, "\"Ref.@id\":\"R1\"") != NULL,
+     "a self-closing child is attribute payload, not an empty element");
+  ok(g_ncap >= 2 && strstr(g_cap[1].key, "CL_AREA") != NULL,
+     "the second record keys on its own @id, not the first one's");
+
+  /* An attribute must never shadow a child element of the same name: `@id` and
+   * `id` are different keys, and an exact-key request resolves to the one it
+   * named. */
+  fx_reset();
+  fx_add("/xat?q=", 200,
+    "<Codelists><Codelist id=\"ATTR\"><id>ELEM</id><Name>N1</Name></Codelist>"
+    "<Codelist id=\"ATTR2\"><id>ELEM2</id><Name>N2</Name></Codelist></Codelists>");
+  rc = run_source("T_XML_ATTR", "x");
+  ok(rc == 0 && g_ncap == 2, "attribute + same-named element both survive");
+  ok(g_ncap >= 1 && strstr(g_cap[0].props, "\"@id\":\"ATTR\"") != NULL &&
+                    strstr(g_cap[0].props, "\"id\":\"ELEM\"") != NULL,
+     "@id and id are distinct keys — neither overwrites the other");
+  ok(g_ncap >= 1 && strstr(g_cap[0].key, "ELEM") != NULL,
+     "id_keys=id prefers the exact key `id` over the @id attribute");
+
+  /* 14b. the same fix against the REAL bytes. This is a trimmed copy of what
+   *      https://data-api.ecb.europa.eu/service/codelist/ECB/CL_FREQ returned
+   *      on 2026-08-24 — namespace-prefixed element names, a `urn` attribute
+   *      and an `xml:lang` on the name. Before attributes were flattened,
+   *      every one of these records carried a label and no identity, which is
+   *      what made the SDMX structural family unusable. */
+  fx_reset();
+  fx_add("/sdmx?q=", 200,
+    "<?xml version='1.0' encoding='UTF-8'?><mes:Structure "
+    "xmlns:mes=\"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message\" "
+    "xmlns:str=\"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure\" "
+    "xmlns:com=\"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common\">"
+    "<mes:Structures><str:Codelists>"
+    "<str:Codelist urn=\"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_FREQ(1.0)\" "
+    "isExternalReference=\"false\" agencyID=\"ECB\" id=\"CL_FREQ\" isFinal=\"false\" version=\"1.0\">"
+    "<com:Name xml:lang=\"en\">Frequency code list</com:Name>"
+    "<str:Code urn=\"urn:sdmx:org.sdmx.infomodel.codelist.Code=ECB:CL_FREQ(1.0).A\" id=\"A\">"
+    "<com:Name xml:lang=\"en\">Annual</com:Name></str:Code>"
+    "<str:Code urn=\"urn:sdmx:org.sdmx.infomodel.codelist.Code=ECB:CL_FREQ(1.0).D\" id=\"D\">"
+    "<com:Name xml:lang=\"en\">Daily</com:Name></str:Code>"
+    "</str:Codelist></str:Codelists></mes:Structures></mes:Structure>");
+  rc = run_source("T_SDMX", "x");
+  ok(rc == 0 && g_ncap == 2, "a real SDMX codelist yields one record per <str:Code>");
+  ok(g_ncap >= 2 && strstr(g_cap[0].key, "|A") != NULL &&
+                    strstr(g_cap[1].key, "|D") != NULL,
+     "each SDMX code is keyed on its own id= attribute");
+  ok(g_ncap >= 1 && !strcmp(g_cap[0].title, "Annual"),
+     "the SDMX label still comes from <com:Name>");
+  ok(g_ncap >= 1 && strstr(g_cap[0].props, "urn:sdmx:org.sdmx.infomodel.codelist.Code") != NULL,
+     "the urn attribute is kept, not discarded");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

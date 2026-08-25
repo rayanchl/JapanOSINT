@@ -16,6 +16,7 @@
 #include "core/httpclient.h"
 #include "lib/zipread.h"
 #include "lib/geojson.h"
+#include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -168,8 +169,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (i == 0) snprintf(url, sizeof url, "%s", latest);
     else if (have_t0) {
       time_t t = t0 - (time_t)i * 15 * 60;
-      struct tm g; gmtime_r(&t, &g);
-      char st[16]; strftime(st, sizeof st, "%Y%m%d%H%M%S", &g);
+      char st[16];
+      /* No stamp, no slice URL: skip this 15-minute slice rather than fetch a
+       * path assembled from stack contents. The other slices still run. */
+      if (!jo_time_fmt(t, "%Y%m%d%H%M%S", st, sizeof st)) continue;
       snprintf(url, sizeof url, "%s/%s.export.CSV.zip", BUCKET, st);
     } else break;
     size_t zl = 0;

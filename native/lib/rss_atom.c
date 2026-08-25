@@ -3,7 +3,7 @@
 #include "feedlib.h"   /* feed_url_host_is_jp: the one .jp host gate */
 #include "csv.h"       /* csv_decode_sjis */
 #include "../third_party/cJSON.h"
-#include <openssl/sha.h>
+#include <openssl/evp.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -290,12 +290,22 @@ static char *latin1_to_utf8(const char *s, size_t n, size_t *out_len) {
   return o;
 }
 
+/* EVP rather than the deprecated (OpenSSL 3.0) SHA1_* calls. Byte-identical
+ * digest: this is the item uid for feeds that carry no guid and no link, so a
+ * changed digest would re-emit every such item as new. NULL on failure, which
+ * the caller already treats as "no uid" (`if (rk)`). */
 static char *sha1_20(const char *a, const char *b) {
-  unsigned char d[20]; SHA_CTX c; SHA1_Init(&c);
-  if (a) { SHA1_Update(&c, a, strlen(a)); SHA1_Update(&c, "|", 1); }
-  if (b) { SHA1_Update(&c, b, strlen(b)); SHA1_Update(&c, "|", 1); }
-  SHA1_Final(d, &c);
+  EVP_MD_CTX *c = EVP_MD_CTX_new();
+  if (!c) return NULL;
+  unsigned char d[EVP_MAX_MD_SIZE]; unsigned int dl = 0;
+  int ok = EVP_DigestInit_ex(c, EVP_sha1(), NULL) == 1;
+  if (ok && a) { EVP_DigestUpdate(c, a, strlen(a)); EVP_DigestUpdate(c, "|", 1); }
+  if (ok && b) { EVP_DigestUpdate(c, b, strlen(b)); EVP_DigestUpdate(c, "|", 1); }
+  ok = ok && EVP_DigestFinal_ex(c, d, &dl) == 1;
+  EVP_MD_CTX_free(c);
+  if (!ok) return NULL;
   char *h = malloc(41);
+  if (!h) return NULL;
   for (int i = 0; i < 20; i++) sprintf(h + i*2, "%02x", d[i]);
   h[40] = 0; h[20] = 0;            /* intelHashKey slices to 20 hex chars */
   return h;

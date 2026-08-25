@@ -563,8 +563,30 @@ struct IntelItem: Codable, Identifiable, Hashable {
     /// `?lang_view=` (roadmap 29). `machine == true` must be labelled as such
     /// in the UI — it is never the source's own words.
     let translation: TranslationInfo?
+    /// Served top-level by intelapi.c from `intel_items.record_type`. Optional
+    /// so older cached JSON still decodes.
+    ///
+    /// This field exists on the model for one reason: collectors now emit rows
+    /// that are NOT findings. `collector-truncation-notice` says a bounded walk
+    /// stopped short and by how much; `collector-status-notice` says a source
+    /// is unconfigured (needs a credential) and fetched nothing. Both are the
+    /// engine being honest about its own gaps, and both carry no observation
+    /// about the world. Rendering them as ordinary intel rows — or worse,
+    /// pinning a "needs credential" row on the map — turns an honest
+    /// disclosure into something that reads as fabricated content.
+    let record_type: String?
 
     var id: String { uid }
+
+    /// True for the engine's self-disclosure rows. Every list that shows intel
+    /// must either style these as notices or filter them — never present them
+    /// as findings.
+    var isCollectorNotice: Bool {
+        guard let rt = record_type else { return false }
+        return rt == "collector-truncation-notice" || rt == "collector-status-notice"
+    }
+    var isTruncationNotice: Bool { record_type == "collector-truncation-notice" }
+    var isStatusNotice: Bool { record_type == "collector-status-notice" }
 
     static func == (lhs: IntelItem, rhs: IntelItem) -> Bool { lhs.uid == rhs.uid }
     func hash(into hasher: inout Hasher) { hasher.combine(uid) }

@@ -37,7 +37,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(os.path.dirname(HERE), "collectors"))
 
-from gen_hp_batch import load, split_opts          # noqa: E402
+from gen_hp_batch import load                      # noqa: E402
+from manifest import parse_opts                    # noqa: E402  (THE opts parser)
 from probe_hp_batch import fetch, row_headers      # noqa: E402
 
 # Mirrored from lib/hpengine.c. Kept in sync by hand; the test below prints the
@@ -185,10 +186,7 @@ def classify(rec):
 
 def run_one(r):
     rid = r["id"]
-    opts = {}
-    for kv in split_opts(r["opts"]):
-        k, _, v = kv.partition("=")
-        opts[k.strip()] = v.strip()
+    opts, _dups, _junk = parse_opts(r["opts"])
     try:
         status, ctype, raw = fetch(r["probe"], row_headers(r))
     except Exception as e:

@@ -491,7 +491,10 @@ static int c2_tronscan(const source_ctx *ctx, intel_sink *sink, const char *addr
   if (!root) return 0;
 
   cJSON *arr = cJSON_GetObjectItem(root, "data");
-  cJSON *acc = (arr && cJSON_IsArray(arr)) ? cJSON_GetArrayItem(arr, 0) : NULL;
+  /* /v1/accounts/<addr> is a single-account lookup: TronGrid answers with a
+   * one-element data[] and says so itself in meta.page_size = 1. data[0] is
+   * the whole payload, not the head of a list. */
+  cJSON *acc = (arr && cJSON_IsArray(arr)) ? cJSON_GetArrayItem(arr, 0) : NULL;  /* exhaustive-ok: single-account lookup envelope, meta.page_size is 1 */
   if (!acc) {
     cJSON_Delete(root);
     fprintf(stderr, "[TRON_SCAN] no account\n");
