@@ -83,6 +83,44 @@ nonisolated struct LayerDef: Codable, Identifiable, Hashable, Sendable {
     /// True for static reference data (boundaries, infra dumps) — rendered
     /// unchanged at every slider position.
     var isStatic: Bool { temporal == nil && liveOnly != true }
+
+    /// The server-declared modality, typed. `.undeclared` when the server
+    /// sent null (mixed / not yet classified) or a value this build does
+    /// not know — both render by each feature's own geometry, which is the
+    /// only honest thing to do without a declaration.
+    var renderModality: LayerModality {
+        LayerModality(rawValue: modality ?? "") ?? .undeclared
+    }
+}
+
+/// How a layer renders on the map. Mirrors `core/layers.def`'s modality
+/// column one-for-one; it is DECLARED server-side and never inferred here.
+nonisolated enum LayerModality: String, Sendable {
+    case point, heatmap, line, polygon, raster
+    case undeclared = ""
+
+    /// Short user-facing label for the Layers tab badge; nil = no badge.
+    var label: String? {
+        switch self {
+        case .point:      return "Points"
+        case .heatmap:    return "Heatmap"
+        case .line:       return "Lines"
+        case .polygon:    return "Areas"
+        case .raster:     return "Raster"
+        case .undeclared: return nil
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .point:      return "mappin"
+        case .heatmap:    return "square.grid.3x3.fill"
+        case .line:       return "line.diagonal"
+        case .polygon:    return "pentagon"
+        case .raster:     return "square.stack.3d.up"
+        case .undeclared: return "questionmark.circle"
+        }
+    }
 }
 
 extension LayerDef {
