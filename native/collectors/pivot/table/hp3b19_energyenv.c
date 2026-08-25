@@ -550,7 +550,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "generation-unit",
     .tags = "\"energy\",\"register\",\"germany\",\"renewable\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.marktstammdatenregister.de/MaStR/Einheit/EinheitJson/GetErweiterteOeffentlicheEinheitStromerzeugung?sort=&page=1&pageSize=50&group=&filter=",
+    .url = "https://www.marktstammdatenregister.de/MaStR/Einheit/EinheitJson/GetErweiterteOeffentlicheEinheitStromerzeugung?sort=&pageSize=50&group=&filter=",
     .array_path = "Data",
     .id_keys = "Id",
     .interval = 86400,
@@ -666,7 +666,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.meteo.lt/v1/stations",
     .detail_key = "code",
-    .detail_url = "https://api.meteo.lt/v1/stations/{}/observations/latest",
+    .detail_url = "https://api.meteo.lt/v1/stations/{v}/observations/latest",
     .interval = 3600,
     .lat_key = "coordinates.latitude",
     .lon_key = "coordinates.longitude",
@@ -748,7 +748,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .url = "https://opendata-download-metobs.smhi.se/api/version/1.0/parameter/1/station.json",
     .array_path = "station",
     .detail_key = "key",
-    .detail_url = "https://opendata-download-metobs.smhi.se/api/version/1.0/parameter/1/station/{}/period/latest-months/data.json",
+    .detail_url = "https://opendata-download-metobs.smhi.se/api/version/1.0/parameter/1/station/{v}/period/latest-months/data.json",
     .interval = 21600,
     .lat_key = "latitude",
     .lon_key = "longitude",
@@ -767,7 +767,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .url = "https://opendata-download-hydroobs.smhi.se/api/version/1.0/parameter/1/station.json",
     .array_path = "station",
     .detail_key = "key",
-    .detail_url = "https://opendata-download-hydroobs.smhi.se/api/version/1.0/parameter/1/station/{}.json",
+    .detail_url = "https://opendata-download-hydroobs.smhi.se/api/version/1.0/parameter/1/station/{v}.json",
     .interval = 21600,
     .lat_key = "latitude",
     .lon_key = "longitude",
@@ -786,7 +786,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .url = "https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/Paikka?$top=50",
     .array_path = "value",
     .detail_key = "Paikka_Id",
-    .detail_url = "https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/Vedenkorkeus?$filter=Paikka_Id%20eq%20{}&$top=500",
+    .detail_url = "https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/Vedenkorkeus?$filter=Paikka_Id%20eq%20{v}&$top=500",
     .interval = 21600,
     .page_param = "$skip",
     .page_size = 50,
@@ -832,7 +832,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "air-quality-index",
     .tags = "\"air\",\"netherlands\",\"index\",\"station\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.luchtmeetnet.nl/open_api/lki?page=1",
+    .url = "https://api.luchtmeetnet.nl/open_api/lki",
     .array_path = "data",
     .interval = 3600,
     .page_param = "page",
@@ -888,6 +888,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .interval = 3600,
     .page_param = "resultOffset",
     .page_size = 50,
+    .page_zero_based = 1,
     .description = "Every current US wildland fire incident with the incident name, "
       "discovery date, cause, acreage, containment percentage, the "
       "managing agency and the point of origin. The interagency system "
@@ -1278,6 +1279,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .lon_key = "attributes.LONGITUDE",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.NAME",
     .description = "Every recorded gold, silver and platinum-group deposit and mine "
       "in Finland, Sweden, Norway and Greenland with the site name, "
@@ -1302,6 +1304,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .lon_key = "attributes.LONGITUDE",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.NAME",
     .description = "Copper, zinc, lead and nickel deposits and mines across the "
       "Nordic countries with status, mining period, tonnage, grade "
@@ -1323,6 +1326,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .lon_key = "attributes.LONGITUDE",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.NAME",
     .description = "Iron, chromium, manganese, vanadium and titanium deposits and "
       "mines in the Nordic region with named site, status, tonnage and "
@@ -1344,6 +1348,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .lon_key = "attributes.LONGITUDE",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.NAME",
     .description = "Uranium, thorium and other energy-metal occurrences across "
       "Finland, Sweden, Norway and Greenland with the site name, "
@@ -1362,6 +1367,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.MINE_NAME",
     .description = "Every recorded tailings facility at a Finnish mine with the mine "
       "name, the mine status, the waste and storage type, the European "
@@ -1383,6 +1389,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.MINE_NAME",
     .description = "Waste rock piles at Finnish mines with the mine name and status, "
       "the waste classification and catalogue code, the category A "

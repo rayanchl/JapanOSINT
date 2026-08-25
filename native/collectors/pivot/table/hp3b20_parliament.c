@@ -344,13 +344,12 @@ static const hp_source HP3B20_PARLIAMENT[] = {
     .record_type = "speech-record",
     .tags = "\"parliament\",\"sweden\",\"riksdag\",\"speech\",\"debate\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.riksdagen.se/anforandelista/?rm=&anftyp=&d=&ts=&parti=&iid=&sz=100&utformat=json",
+    .url = "https://data.riksdagen.se/anforandelista/?rm=&anftyp=&d=&ts=&parti=&iid=&sz=1000&utformat=json",
     .array_path = "anforandelista.anforande",
     .body_keys = "anforandetext",
     .date_keys = "dok_datum",
     .id_keys = "anforande_id",
     .interval = 21600,
-    .page_param = "p",
     .title_keys = "dok_titel,avsnittsrubrik",
     .description = "Every speech made in the Swedish Riksdag chamber, with the "
       "speaker's name and party, their intressent identifier, the "

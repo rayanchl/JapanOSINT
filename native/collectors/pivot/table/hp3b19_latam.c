@@ -857,7 +857,7 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "procurement-award",
     .tags = "\"elsalvador\",\"procurement\",\"award\",\"comprasal\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprasal.gob.sv/api/v1/publico/obtener/procesos/publicos?page=1&per_page=100",
+    .url = "https://www.comprasal.gob.sv/api/v1/publico/obtener/procesos/publicos?per_page=100",
     .array_path = "data",
     .interval = 21600,
     .page_param = "page",
@@ -948,13 +948,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "licensed-entity",
     .tags = "\"guatemala\",\"electricity\",\"cnee\",\"licence\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cnee.gob.gt/wp-json/wp/v2/agentes-del-sector?per_page=100&page=1",
+    .url = "https://cnee.gob.gt/wp-json/wp/v2/agentes-del-sector?per_page=100",
     .detail_key = "id",
     .detail_url = "https://cnee.gob.gt/wp-json/wp/v2/agentes-del-sector/{v}",
     .id_keys = "id",
     .interval = 3600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "Every agent licensed to operate in Guatemala's electricity "
       "sector — generators, transporters, distributors, traders and "
@@ -970,13 +970,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "regulatory-decision",
     .tags = "\"guatemala\",\"electricity\",\"cnee\",\"regulation\",\"decision\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cnee.gob.gt/wp-json/wp/v2/resoluciones?per_page=100&page=1",
+    .url = "https://cnee.gob.gt/wp-json/wp/v2/resoluciones?per_page=100",
     .detail_key = "id",
     .detail_url = "https://cnee.gob.gt/wp-json/wp/v2/resoluciones/{v}",
     .id_keys = "id",
     .interval = 3600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The full series of resolutions issued by Guatemala's electricity "
       "regulator, over five thousand of them, each with its resolution "
@@ -991,13 +991,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "electoral-notice",
     .tags = "\"belize\",\"elections\",\"notice\",\"electoral\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://elections.gov.bz/wp-json/wp/v2/lsvr_notice?per_page=100&page=1",
+    .url = "https://elections.gov.bz/wp-json/wp/v2/lsvr_notice?per_page=100",
     .detail_key = "id",
     .detail_url = "https://elections.gov.bz/wp-json/wp/v2/lsvr_notice/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The official notices of Belize's electoral authority: "
       "by-election declarations naming the vacant village council seat "
@@ -1014,13 +1014,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "electoral-district",
     .tags = "\"belize\",\"elections\",\"district\",\"registry\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://elections.gov.bz/wp-json/wp/v2/lsvr_listing?per_page=100&page=1",
+    .url = "https://elections.gov.bz/wp-json/wp/v2/lsvr_listing?per_page=100",
     .detail_key = "id",
     .detail_url = "https://elections.gov.bz/wp-json/wp/v2/lsvr_listing/{v}",
     .id_keys = "id",
     .interval = 86400,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The registration offices of Belize's electoral divisions, one "
       "record per division with its name and the directory page "
@@ -1035,13 +1035,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "audit-finding",
     .tags = "\"honduras\",\"audit\",\"tsc\",\"accountability\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.tsc.gob.hn/wp-json/wp/v2/dlp_document?per_page=100&page=1",
+    .url = "https://www.tsc.gob.hn/wp-json/wp/v2/dlp_document?per_page=100",
     .detail_key = "id",
     .detail_url = "https://www.tsc.gob.hn/wp-json/wp/v2/dlp_document/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "Over five thousand documents issued by Honduras's supreme audit "
       "institution, including the notices of administrative liability "
@@ -1058,13 +1058,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "regulatory-notice",
     .tags = "\"honduras\",\"procurement\",\"oncae\",\"regulation\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://oncae.gob.hn/wp-json/wp/v2/knowledgebase?per_page=100&page=1",
+    .url = "https://oncae.gob.hn/wp-json/wp/v2/knowledgebase?per_page=100",
     .detail_key = "id",
     .detail_url = "https://oncae.gob.hn/wp-json/wp/v2/knowledgebase/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The circulars and normative instruments of Honduras's public "
       "procurement regulator, each numbered and dated, covering "
@@ -1085,6 +1085,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "resultOffset",
     .page_size = 1000,
     .page_start = 0,
+    .page_zero_based = 1,
     .description = "Ten thousand municipal business licences in Heredia, Costa Rica, "
       "each naming the licence number, the trading name, the address, "
       "the holder's national identity number and full name, two "
@@ -1106,6 +1107,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "resultOffset",
     .page_size = 1000,
     .page_start = 0,
+    .page_zero_based = 1,
     .description = "Every telecommunications mast and antenna permitted in Heredia, "
       "with the site name and mast identifier, longitude and latitude, "
       "the construction permit number, the owning company and its "
@@ -1127,6 +1129,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "resultOffset",
     .page_size = 1000,
     .page_start = 0,
+    .page_zero_based = 1,
     .description = "Registered wells and springs in the Heredia aquifer with the "
       "well file number, the owner, the requested depth and flow rate, "
       "the authorised use, the coordinates and the record's creation "
@@ -1266,13 +1269,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "oil-well",
     .tags = "\"guyana\",\"petroleum\",\"oil\",\"well\",\"energy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://petroleum.gov.gy/wp-json/wp/v2/oilgas-wells?per_page=100&page=1",
+    .url = "https://petroleum.gov.gy/wp-json/wp/v2/oilgas-wells?per_page=100",
     .detail_key = "id",
     .detail_url = "https://petroleum.gov.gy/wp-json/wp/v2/oilgas-wells/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "Every oil and gas well in Guyana's petroleum programme, one "
       "record per well with its name and slug, the dates it was created "
@@ -1288,13 +1291,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "tender-notice",
     .tags = "\"guyana\",\"petroleum\",\"procurement\",\"tender\",\"energy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://petroleum.gov.gy/wp-json/wp/v2/procurement-notices?per_page=100&page=1",
+    .url = "https://petroleum.gov.gy/wp-json/wp/v2/procurement-notices?per_page=100",
     .detail_key = "id",
     .detail_url = "https://petroleum.gov.gy/wp-json/wp/v2/procurement-notices/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "Tender notices issued by Guyana's petroleum management "
       "programme, each with the notice title naming the service sought, "
@@ -1309,13 +1312,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "tender-notice",
     .tags = "\"suriname\",\"procurement\",\"tender\",\"government\",\"caribbean\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.sr/wp-json/wp/v2/aanbestedingen?per_page=100&page=1",
+    .url = "https://www.gov.sr/wp-json/wp/v2/aanbestedingen?per_page=100",
     .detail_key = "id",
     .detail_url = "https://www.gov.sr/wp-json/wp/v2/aanbestedingen/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "Six hundred and sixty public tenders published on Suriname's "
       "central government portal, each with the publication date, the "
@@ -1331,13 +1334,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "official-notice",
     .tags = "\"suriname\",\"government\",\"notice\",\"official\",\"caribbean\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.sr/wp-json/wp/v2/bekendmaking?per_page=100&page=1",
+    .url = "https://www.gov.sr/wp-json/wp/v2/bekendmaking?per_page=100",
     .detail_key = "id",
     .detail_url = "https://www.gov.sr/wp-json/wp/v2/bekendmaking/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "Nineteen hundred official announcements of the Surinamese "
       "government, one record per notice with its date, title, full "
@@ -1353,13 +1356,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "statistical-release",
     .tags = "\"suriname\",\"statistics\",\"abs\",\"release\",\"caribbean\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.statistics-suriname.org/wp-json/wp/v2/media?media_type=application&per_page=100&page=1",
+    .url = "https://www.statistics-suriname.org/wp-json/wp/v2/media?media_type=application&per_page=100",
     .detail_key = "id",
     .detail_url = "https://www.statistics-suriname.org/wp-json/wp/v2/media/{v}",
     .id_keys = "id",
     .interval = 86400,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The complete file inventory of Suriname's national statistics "
       "office, two thousand records, each giving the release title, its "
@@ -1399,6 +1402,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "resultOffset",
     .page_size = 1000,
     .page_start = 0,
+    .page_zero_based = 1,
     .description = "The eleven parishes of Barbados as published by the Lands and "
       "Surveys Department's own ArcGIS organisation, each with its "
       "name, area in square miles and square kilometres, perimeter and "
@@ -1467,13 +1471,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "dataset-record",
     .tags = "\"jamaica\",\"opendata\",\"dkan\",\"catalogue\",\"caribbean\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.jm/api/dataset/node.json?page=0&parameters%5Btype%5D=dataset",
+    .url = "https://data.gov.jm/api/dataset/node.json?parameters%5Btype%5D=dataset",
     .detail_key = "nid",
     .detail_url = "https://data.gov.jm/api/dataset/node/{v}.json",
     .id_keys = "nid",
     .interval = 86400,
     .page_param = "page",
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "title",
     .description = "The DKAN node API behind Jamaica's open data portal, distinct "
       "from its DCAT file: one record per dataset node with the numeric "
@@ -1489,13 +1494,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "statistical-release",
     .tags = "\"dominicanrepublic\",\"fiscal\",\"statistics\",\"hacienda\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.hacienda.gob.do/wp-json/wp/v2/estadisticas-fiscale?per_page=100&page=1",
+    .url = "https://www.hacienda.gob.do/wp-json/wp/v2/estadisticas-fiscale?per_page=100",
     .detail_key = "id",
     .detail_url = "https://www.hacienda.gob.do/wp-json/wp/v2/estadisticas-fiscale/{v}",
     .id_keys = "id",
     .interval = 86400,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The fiscal statistics releases of the Dominican finance "
       "ministry, each record naming the series, the period it covers, "
@@ -1512,13 +1517,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "legal-instrument",
     .tags = "\"dominicanrepublic\",\"law\",\"regulation\",\"hacienda\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.hacienda.gob.do/wp-json/wp/v2/marco-legal?per_page=100&page=1",
+    .url = "https://www.hacienda.gob.do/wp-json/wp/v2/marco-legal?per_page=100",
     .detail_key = "id",
     .detail_url = "https://www.hacienda.gob.do/wp-json/wp/v2/marco-legal/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The legal instruments the Dominican finance ministry operates "
       "under and issues, one record per law, decree, resolution or norm "
@@ -1532,13 +1537,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "company-record",
     .tags = "\"bermuda\",\"company\",\"offshore\",\"business\",\"caribbean\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bda.bm/wp-json/wp/v2/company?per_page=100&page=1",
+    .url = "https://www.bda.bm/wp-json/wp/v2/company?per_page=100",
     .detail_key = "id",
     .detail_url = "https://www.bda.bm/wp-json/wp/v2/company/{v}",
     .id_keys = "id",
     .interval = 86400,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The directory of Bermuda-registered and Bermuda-resident "
       "companies maintained by the island's business development "
@@ -1554,14 +1559,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "court-document",
     .tags = "\"caymanislands\",\"court\",\"judiciary\",\"legal\",\"caribbean\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.judicial.ky/wp-json/wp/v2/media?media_type=application&per_page=100&page=1",
+    .url = "https://www.judicial.ky/wp-json/wp/v2/media?media_type=application&per_page=100",
     .headers = { "User-Agent: Mozilla/5.0 (compatible;JapanOSINT-research/1.0)" },
     .detail_key = "id",
     .detail_url = "https://www.judicial.ky/wp-json/wp/v2/media/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The document register of the Cayman Islands courts, over five "
       "hundred files, each with its title, date, MIME type and a direct "
@@ -1596,13 +1601,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "statistical-release",
     .tags = "\"saintvincent\",\"statistics\",\"release\",\"caribbean\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://stats.gov.vc/wp-json/wp/v2/media?media_type=application&per_page=100&page=1",
+    .url = "https://stats.gov.vc/wp-json/wp/v2/media?media_type=application&per_page=100",
     .detail_key = "id",
     .detail_url = "https://stats.gov.vc/wp-json/wp/v2/media/{v}",
     .id_keys = "id",
     .interval = 86400,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The published-document register of the St Vincent and the "
       "Grenadines statistical office, over five hundred files, each "
@@ -1617,13 +1622,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "statistical-release",
     .tags = "\"saintlucia\",\"statistics\",\"release\",\"caribbean\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://stats.gov.lc/wp-json/wp/v2/media?media_type=application&per_page=100&page=1",
+    .url = "https://stats.gov.lc/wp-json/wp/v2/media?media_type=application&per_page=100",
     .detail_key = "id",
     .detail_url = "https://stats.gov.lc/wp-json/wp/v2/media/{v}",
     .id_keys = "id",
     .interval = 86400,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The document register of Saint Lucia's central statistical "
       "office: two hundred and thirty releases with title, date, MIME "
@@ -1638,14 +1643,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "statistical-release",
     .tags = "\"grenada\",\"statistics\",\"release\",\"caribbean\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://stats.gov.gd/wp-json/wp/v2/media?media_type=application&per_page=100&page=1",
+    .url = "https://stats.gov.gd/wp-json/wp/v2/media?media_type=application&per_page=100",
     .headers = { "User-Agent: Mozilla/5.0 (compatible;JapanOSINT-research/1.0)" },
     .detail_key = "id",
     .detail_url = "https://stats.gov.gd/wp-json/wp/v2/media/{v}",
     .id_keys = "id",
     .interval = 86400,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The published-file register of Grenada's central statistical "
       "office, two hundred and twenty-seven documents, each with title, "
@@ -1661,13 +1666,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "statistical-release",
     .tags = "\"dominica\",\"statistics\",\"release\",\"caribbean\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://stats.gov.dm/wp-json/wp/v2/media?media_type=application&per_page=100&page=1",
+    .url = "https://stats.gov.dm/wp-json/wp/v2/media?media_type=application&per_page=100",
     .detail_key = "id",
     .detail_url = "https://stats.gov.dm/wp-json/wp/v2/media/{v}",
     .id_keys = "id",
     .interval = 86400,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The document register of the Commonwealth of Dominica's central "
       "statistics office: one hundred and fifty-four files with title, "
@@ -1682,13 +1687,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "official-gazette",
     .tags = "\"curacao\",\"gazette\",\"legal\",\"official\",\"caribbean\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gobiernu.cw/wp-json/wp/v2/landscourant?per_page=100&page=1",
+    .url = "https://www.gobiernu.cw/wp-json/wp/v2/landscourant?per_page=100",
     .detail_key = "id",
     .detail_url = "https://www.gobiernu.cw/wp-json/wp/v2/landscourant/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "Editions of the Landscourant, the official gazette of Curaçao, "
       "one record per edition with the edition number and volume year, "
@@ -1703,13 +1708,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "job-vacancy",
     .tags = "\"curacao\",\"government\",\"employment\",\"vacancy\",\"caribbean\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gobiernu.cw/wp-json/wp/v2/vacature?per_page=100&page=1",
+    .url = "https://www.gobiernu.cw/wp-json/wp/v2/vacature?per_page=100",
     .detail_key = "id",
     .detail_url = "https://www.gobiernu.cw/wp-json/wp/v2/vacature/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "Four hundred public-sector vacancies of the Curaçao government, "
       "each naming the post, the ministry or agency advertising it, the "
@@ -1786,7 +1791,7 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "company-record",
     .tags = "\"guadeloupe\",\"company\",\"register\",\"france\",\"corporate\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://recherche-entreprises.api.gouv.fr/search?departement=971&page=1&per_page=25",
+    .url = "https://recherche-entreprises.api.gouv.fr/search?departement=971&per_page=25",
     .array_path = "results",
     .id_keys = "siren",
     .interval = 86400,
@@ -1855,6 +1860,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "resultOffset",
     .page_size = 1000,
     .page_start = 0,
+    .page_zero_based = 1,
     .description = "Every protected natural area established in Peru, with its code, "
       "category, name, sector, region, legal area, IUCN class, and the "
       "norm and date that created it plus any amending norm and date. "
@@ -1874,6 +1880,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "resultOffset",
     .page_size = 1000,
     .page_start = 0,
+    .page_zero_based = 1,
     .description = "Five and a half thousand zoning polygons inside Peru's protected "
       "areas, each naming the protected area, the zone type such as "
       "recovery or strict protection, the sector code, the master-plan "
@@ -1903,7 +1910,7 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "public-service",
     .tags = "\"ecuador\",\"government\",\"service\",\"procedure\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gob.ec/api/v1/tramites?page=1",
+    .url = "https://www.gob.ec/api/v1/tramites",
     .headers = { "User-Agent: Mozilla/5.0 (Windows NT 10.0;Win64;x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36" },
     .detail_key = "tramite_id",
     .detail_url = "https://www.gob.ec/api/v1/tramites/{v}",
@@ -1946,7 +1953,7 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "regulation-record",
     .tags = "\"ecuador\",\"regulation\",\"law\",\"government\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gob.ec/api/v1/regulaciones?page=1",
+    .url = "https://www.gob.ec/api/v1/regulaciones",
     .headers = { "User-Agent: Mozilla/5.0 (Windows NT 10.0;Win64;x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36" },
     .id_keys = "regulacion_id",
     .interval = 86400,
@@ -2017,6 +2024,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "resultOffset",
     .page_size = 1000,
     .page_start = 0,
+    .page_zero_based = 1,
     .description = "Every hydrocarbon contract area in Colombia in the currently "
       "valid Tierras view: the contract id and name, the contract type "
       "such as exploration and production or technical evaluation, the "
@@ -2038,6 +2046,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "resultOffset",
     .page_size = 1000,
     .page_start = 0,
+    .page_zero_based = 1,
     .description = "Colombia's sedimentary basins as classified by the hydrocarbons "
       "agency, each with its name and code, the classification year, "
       "the frontier or producing type, the area in hectares, the low, "
@@ -2279,7 +2288,7 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "company-record",
     .tags = "\"paraguay\",\"company\",\"register\",\"mic\",\"corporate\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://vueapp.vue.gov.py/datos_abiertos_backend/api/registro?page=1&pageSize=100",
+    .url = "https://vueapp.vue.gov.py/datos_abiertos_backend/api/registro?pageSize=100",
     .headers = { "Accept: application/json", "Content-Type: application/json" },
     .array_path = "data",
     .id_keys = "nroHabilitacion",
@@ -2304,7 +2313,7 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "company-record",
     .tags = "\"paraguay\",\"sme\",\"register\",\"mic\",\"corporate\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://vueapp.vue.gov.py/datos_abiertos_backend/api/mipymes?page=1&pageSize=100",
+    .url = "https://vueapp.vue.gov.py/datos_abiertos_backend/api/mipymes?pageSize=100",
     .headers = { "Accept: application/json", "Content-Type: application/json" },
     .array_path = "data",
     .id_keys = "nroHabilitacion",
@@ -2328,7 +2337,7 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "foi-request",
     .tags = "\"paraguay\",\"transparency\",\"foi\",\"accesstoinformation\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://informacionpublica.paraguay.gov.py/api/dashboard/buscar?keyword={q}&page=0&pageSize=100",
+    .url = "https://informacionpublica.paraguay.gov.py/api/dashboard/buscar?keyword={q}&pageSize=100",
     .headers = { "Content-Type: application/json;charset=utf-8" },
     .array_path = "data.lista",
     .detail_key = "id",
@@ -2337,6 +2346,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "page",
     .page_size = 100,
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "titulo",
     .description = "Every freedom-of-information request made under Paraguay's Law "
       "5282, searchable by keyword: the request id, the date filed, the "
@@ -2376,7 +2386,7 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "grant-record",
     .tags = "\"paraguay\",\"contraloria\",\"ngo\",\"transfer\",\"accountability\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datos-rendicion.contraloria.gov.py/portal-datos-abiertos/ong/rendicion/?inicio=0&cantidad=1000",
+    .url = "https://datos-rendicion.contraloria.gov.py/portal-datos-abiertos/ong/rendicion/?cantidad=1000",
     .headers = { "Referer: https://datos-rendicion.contraloria.gov.py/datos-abiertos/" },
     .array_path = "lista",
     .id_keys = "id",
@@ -2384,6 +2394,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "inicio",
     .page_size = 1000,
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "beneficiario",
     .description = "Four thousand accountability filings for public funds "
       "transferred to named Paraguayan NGOs and foundations, each with "
@@ -2400,7 +2411,7 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "budget-execution",
     .tags = "\"paraguay\",\"contraloria\",\"fonacide\",\"education\",\"accountability\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datos-rendicion.contraloria.gov.py/portal-datos-abiertos/fonacide/rendicion/?inicio=0&cantidad=1000",
+    .url = "https://datos-rendicion.contraloria.gov.py/portal-datos-abiertos/fonacide/rendicion/?cantidad=1000",
     .headers = { "Referer: https://datos-rendicion.contraloria.gov.py/datos-abiertos/" },
     .array_path = "lista",
     .id_keys = "id",
@@ -2408,6 +2419,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "inicio",
     .page_size = 1000,
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "entidad",
     .description = "Three thousand accountability filings for FONACIDE, the fund "
       "that channels Paraguay's Itaipú dam royalties into schools and "
@@ -2444,13 +2456,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "statistical-release",
     .tags = "\"bolivia\",\"statistics\",\"ine\",\"release\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ine.gob.bo/wp-json/wp/v2/media?media_type=application&per_page=100&page=1",
+    .url = "https://www.ine.gob.bo/wp-json/wp/v2/media?media_type=application&per_page=100",
     .detail_key = "id",
     .detail_url = "https://www.ine.gob.bo/wp-json/wp/v2/media/{v}",
     .id_keys = "id",
     .interval = 86400,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The file register of Bolivia's national statistics institute, "
       "one record per published release with the title, publication "
@@ -2467,13 +2479,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "regulatory-document",
     .tags = "\"nicaragua\",\"telecom\",\"telcor\",\"regulator\",\"document\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.telcor.gob.ni/wp-json/wp/v2/media?media_type=application&per_page=100&page=1",
+    .url = "https://www.telcor.gob.ni/wp-json/wp/v2/media?media_type=application&per_page=100",
     .detail_key = "id",
     .detail_url = "https://www.telcor.gob.ni/wp-json/wp/v2/media/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The published-document register of Nicaragua's "
       "telecommunications and postal regulator, each record with the "
@@ -2489,13 +2501,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "regulatory-document",
     .tags = "\"nicaragua\",\"environment\",\"marena\",\"regulator\",\"document\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.marena.gob.ni/wp-json/wp/v2/media?media_type=application&per_page=100&page=1",
+    .url = "https://www.marena.gob.ni/wp-json/wp/v2/media?media_type=application&per_page=100",
     .detail_key = "id",
     .detail_url = "https://www.marena.gob.ni/wp-json/wp/v2/media/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The document register of Nicaragua's environment and natural "
       "resources ministry, one record per file with title, date, MIME "
@@ -2530,14 +2542,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "statistical-release",
     .tags = "\"haiti\",\"centralbank\",\"brh\",\"statistics\",\"caribbean\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.brh.ht/wp-json/wp/v2/media?media_type=application&per_page=100&page=1",
+    .url = "https://www.brh.ht/wp-json/wp/v2/media?media_type=application&per_page=100",
     .headers = { "User-Agent: Mozilla/5.0 (Windows NT 10.0;Win64;x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36" },
     .detail_key = "id",
     .detail_url = "https://www.brh.ht/wp-json/wp/v2/media/{v}",
     .id_keys = "id",
     .interval = 86400,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The document register of Haiti's central bank, each record with "
       "the title, publication date, MIME type and a direct source URL — "
@@ -2749,7 +2761,7 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "environmental-assessment",
     .tags = "\"chile\",\"environment\",\"seia\",\"project\",\"assessment\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://seia.sea.gob.cl/busqueda/buscarProyectoResumenAction.php?offset=1&limit=100",
+    .url = "https://seia.sea.gob.cl/busqueda/buscarProyectoResumenAction.php?limit=100",
     .array_path = "data",
     .detail_key = "EXPEDIENTE_ID",
     .detail_url = "https://seia.sea.gob.cl/expediente/expediente.php?id_expediente={v}&modo=ficha",
@@ -2808,13 +2820,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "regulatory-document",
     .tags = "\"chile\",\"telecom\",\"subtel\",\"regulator\",\"document\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.subtel.gob.cl/wp-json/wp/v2/media?media_type=application&per_page=100&page=1",
+    .url = "https://www.subtel.gob.cl/wp-json/wp/v2/media?media_type=application&per_page=100",
     .detail_key = "id",
     .detail_url = "https://www.subtel.gob.cl/wp-json/wp/v2/media/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The published-document register of Chile's telecommunications "
       "regulator, each record carrying the title, publication date, "
@@ -2830,13 +2842,13 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "electoral-document",
     .tags = "\"chile\",\"election\",\"servel\",\"electoral\",\"document\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.servel.cl/wp-json/wp/v2/media?media_type=application&per_page=100&page=1",
+    .url = "https://www.servel.cl/wp-json/wp/v2/media?media_type=application&per_page=100",
     .detail_key = "id",
     .detail_url = "https://www.servel.cl/wp-json/wp/v2/media/{v}",
     .id_keys = "id",
     .interval = 21600,
-    .page_param = "page",
-    .page_start = 1,
+    .page_param = "offset",
+    .page_size = 100,
     .title_keys = "title.rendered",
     .description = "The document register of Chile's electoral service, each record "
       "with title, date, MIME type and a direct source URL — electoral "
@@ -2872,7 +2884,7 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "dataset-record",
     .tags = "\"uruguay\",\"montevideo\",\"geospatial\",\"catalogue\",\"metadata\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://geoweb.montevideo.gub.uy/geonetwork/srv/spa/q?_content_type=json&fast=index&from=1&to=100",
+    .url = "https://geoweb.montevideo.gub.uy/geonetwork/srv/spa/q?_content_type=json&fast=index",
     .array_path = "metadata",
     .detail_key = "uuid",
     .detail_url = "https://geoweb.montevideo.gub.uy/geonetwork/srv/spa/xml.metadata.get?uuid={v}",

@@ -1172,6 +1172,7 @@ static const hp_source HP3B19_SIGINT[] = {
     .page_param = "resultOffset",
     .page_size = 2000,
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "attributes.name",
     .description = "A queryable copy of the ACMA Register of Radiocommunications "
       "Licences at device level, republished as a feature service by "

@@ -117,3 +117,7 @@ UNCOMTRADE_ARMOURED_VEHICLES	https://comtradeapi.un.org/public/v1/preview/C/A/HS
 UNCOMTRADE_RADAR_NAV	https://comtradeapi.un.org/public/v1/preview/C/A/HS?reporterCode=276&period=2022&cmdCode=8526&flowCode=X	HTTP_ERR		0	429	0	Too Many Requests
 UNCOMTRADE_WARSHIPS	https://comtradeapi.un.org/public/v1/preview/C/A/HS?reporterCode=276&period=2022&cmdCode=8906&flowCode=X	HTTP_ERR		0	429	0	Too Many Requests
 US_TTAB_PROCEEDING_MARKS	https://ttabvue.uspto.gov/ttabvue/v?pno=91250000	UNPARSEABLE		0	200	30031	" <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.01 Transitional//EN"" ""http://www.w3.o"
+MKDCIRT_WP_POSTS	https://mkd-cirt.mk/wp-json/wp/v2/posts?per_page=50	DUP_ENDPOINT	same WordPress posts feed as the eurasia-beat *_ADVISORIES row (which now carries body_keys); one endpoint, one source
+CERT_HR_WP_POSTS	https://www.cert.hr/wp-json/wp/v2/posts?per_page=50	DUP_ENDPOINT	same WordPress posts feed as the eurasia-beat *_ADVISORIES row (which now carries body_keys); one endpoint, one source
+GOVCERT_BG_WP_POSTS	https://www.govcert.bg/wp-json/wp/v2/posts?per_page=50	DUP_ENDPOINT	same WordPress posts feed as the eurasia-beat *_ADVISORIES row (which now carries body_keys); one endpoint, one source
+NGX_EQUITIES	https://doclib.ngxgroup.com/REST/api/statistics/equities/?market=&sector=&orderby=&pageSize=100	DUP_ENDPOINT	same NGX equities endpoint as africa-beat NGX_EQUITY_STATISTICS, which declares title/id/date keys

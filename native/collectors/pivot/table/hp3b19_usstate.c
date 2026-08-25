@@ -845,7 +845,7 @@ static const hp_source HP3B19_USSTATE[] = {
     .tags = "\"us\",\"colorado\",\"petroleum\",\"spill\",\"contamination\",\"tanks\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.colorado.gov/resource/iimu-7683.json?$limit=1000",
-    .id_keys = "event_id",
+    .id_keys = "url",
     .interval = 86400,
     .lat_key = "latitude",
     .lon_key = "longitude",
@@ -2166,7 +2166,7 @@ static const hp_source HP3B19_USSTATE[] = {
     .tags = "\"us\",\"delaware\",\"water\",\"wells\",\"permit\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.delaware.gov/resource/2655-qn8j.json?$limit=1000",
-    .id_keys = "licensenumber",
+    .id_keys = "url",
     .interval = 86400,
     .lat_key = "latitude",
     .lon_key = "longitude",
@@ -2663,7 +2663,7 @@ static const hp_source HP3B19_USSTATE[] = {
     .tags = "\"canada\",\"novascotia\",\"oil\",\"gas\",\"wells\",\"drilling\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.novascotia.ca/resource/5q4c-27fh.json?$limit=1000",
-    .id_keys = "well_id",
+    .id_keys = "objectid",
     .interval = 604800,
     .lat_key = "latitude",
     .lon_key = "longitude",
@@ -2686,10 +2686,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/LandActivity_LandPermitOrLease/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
     .array_path = "features",
-    .id_keys = "attributes.CASE_ID",
+    .id_keys = "OBJECTID",
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.CSTMRNM",
     .description = "Every permit and lease over Alaska state land, with the ADL case "
       "identifier, the named customer holding it broken into last, "
@@ -2708,10 +2709,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/MineralActivity_MineralPermitOrLease/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
     .array_path = "features",
-    .id_keys = "attributes.CASE_ID",
+    .id_keys = "OBJECTID",
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.CSTMRNM",
     .description = "Alaska mineral permits and leases including oil and gas leases, "
       "naming the holder — ConocoPhillips Alaska and its peers appear "
@@ -2728,10 +2730,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/NaturalResource_StateMiningClaim/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
     .array_path = "features",
-    .id_keys = "attributes.CASE_ID",
+    .id_keys = "OBJECTID",
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.CSTMRNM",
     .description = "Active mining claims on Alaska state land with the ADL case id, "
       "the claimant name, the claim name, the case status, the meridian "
@@ -2749,10 +2752,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/MineralActivity_OGLeaseSaleTract/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
     .array_path = "features",
-    .id_keys = "attributes.CASE_ID",
+    .id_keys = "OBJECTID",
     .interval = 604800,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "The tracts offered in Alaska's areawide oil and gas lease sales, "
       "with the LST case identifier, the tract and partition numbers, "
       "the sale area code, the case type and the current status. "
@@ -2772,6 +2776,7 @@ static const hp_source HP3B19_USSTATE[] = {
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.CSTMRNM",
     .description = "Land authorisations for oil and gas well sites in Alaska, naming "
       "the operating company with its land-manager contact line, the "
@@ -2792,6 +2797,7 @@ static const hp_source HP3B19_USSTATE[] = {
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.CSTMRNM",
     .description = "Open and historic trespass cases on Alaska state land, naming "
       "the party alleged to be in trespass, the ADL case id, the "
@@ -2812,6 +2818,7 @@ static const hp_source HP3B19_USSTATE[] = {
     .interval = 604800,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.CSTMRNM",
     .description = "Material and resource sale sites on Alaska state land — gravel "
       "pits, timber and other extractable materials — with the ADL case "
@@ -2832,6 +2839,7 @@ static const hp_source HP3B19_USSTATE[] = {
     .interval = 604800,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.OwnerLastName",
     .description = "Alaska's water well log tracking system, with the log id, the "
       "drilling contractor, the owner's first and last name, the "
@@ -2858,6 +2866,7 @@ static const hp_source HP3B19_USSTATE[] = {
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.OperatorName",
     .description = "Every oil and gas well California regulates, with the API "
       "number, lease name, well number and designation, well status and "
@@ -2882,6 +2891,7 @@ static const hp_source HP3B19_USSTATE[] = {
     .interval = 43200,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.OperatorName",
     .description = "Approved notices of intention and permits issued by CalGEM, with "
       "the permit number, the notice type such as drill, rework or "
@@ -2901,10 +2911,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://gis.conservation.ca.gov/server/rest/services/WellSTAR/Facilities/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
     .array_path = "features",
-    .id_keys = "attributes.TankID",
+    .id_keys = "OBJECTID",
     .interval = 604800,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.OperatorName",
     .description = "Tanks and pressure vessels at California oilfield facilities, "
       "with the tank name and id, the setting and field names, the "
@@ -2930,6 +2941,7 @@ static const hp_source HP3B19_USSTATE[] = {
     .lon_key = "attributes.Longitude",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.OperatorName",
     .description = "Surface expression incidents in California oilfields — "
       "uncontrolled flows of oil and water reaching the surface during "
@@ -2948,10 +2960,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://gis.rrc.texas.gov/server/rest/services/rrc_public/RRC_Public_Viewer_Srvs/MapServer/13/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
     .array_path = "features",
-    .id_keys = "attributes.T4PERMIT",
+    .id_keys = "OBJECTID",
     .interval = 604800,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.OPERATOR",
     .description = "Every pipeline permitted by the Texas Railroad Commission, with "
       "the operator name and contact phone number, the system and "
@@ -2970,12 +2983,13 @@ static const hp_source HP3B19_USSTATE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://gis.rrc.texas.gov/server/rest/services/rrc_public/RRC_Public_Viewer_Srvs/MapServer/1/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
     .array_path = "features",
-    .id_keys = "attributes.API",
+    .id_keys = "OBJECTID",
     .interval = 604800,
     .lat_key = "attributes.GIS_LAT83",
     .lon_key = "attributes.GIS_LONG83",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Surface locations for Texas wells as published by the Railroad "
       "Commission's own mapping service, with the API number, well "
       "number, the symbol description distinguishing a permitted "

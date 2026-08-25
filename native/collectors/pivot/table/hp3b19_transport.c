@@ -34,6 +34,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .lat_key = "lat",
     .lon_key = "lon",
     .page_param = "resultOffset",
+    .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "fullname,portname",
     .description = "Every commercial port the IMF tracks from AIS: port id, name, "
       "country, ISO3, coordinates, annual vessel counts split by "
@@ -55,9 +57,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .detail_key = "portid",
     .detail_path = "features",
     .detail_url = "https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/PortWatch_chokepoints_database/FeatureServer/0/query?where=portid%3D%27{v}%27&outFields=*&f=json",
-    .id_keys = "portid",
+    .id_keys = "ObjectId",
     .interval = 10800,
     .page_param = "resultOffset",
+    .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "portname",
     .description = "One record per chokepoint per day since 2019: the number of "
       "container, dry bulk, general cargo, RoRo and tanker vessels "
@@ -74,8 +78,10 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .url = "https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/Daily_Ports_Data/FeatureServer/0/query?where=portid%3D%27{q}%27&outFields=*&f=json&resultRecordCount=1000",
     .array_path = "features",
     .date_keys = "date",
-    .id_keys = "portid",
+    .id_keys = "ObjectId",
     .page_param = "resultOffset",
+    .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "portname",
     .description = "Daily port calls at a single named port broken out by vessel "
       "class, with the estimated import and export tonnage each class "
@@ -96,6 +102,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .lat_key = "latitude",
     .lon_key = "longitude",
     .page_param = "resultOffset",
+    .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "airport_name",
     .description = "Airports carried in the IMF trade-monitoring stack with name, "
       "IATA code, ISO3 country and coordinates. Authoritative in the "
@@ -115,6 +123,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .lat_key = "latitude",
     .lon_key = "longitude",
     .page_param = "resultOffset",
+    .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "name",
     .description = "Airports with IATA code, municipality, ISO country and ISO "
       "region, continent and coordinates, down to island strips such as "
@@ -131,9 +141,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .url = "https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/Daily_Trade_Data_REG/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=1000",
     .array_path = "features",
     .date_keys = "date",
-    .id_keys = "ISO3",
+    .id_keys = "ObjectId",
     .interval = 10800,
     .page_param = "resultOffset",
+    .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "country",
     .description = "One record per country per day: port calls and import and export "
       "tonnage split by container, dry bulk, general cargo, RoRo and "
@@ -150,11 +162,13 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/spillovers_port_level_impact/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=1000",
     .array_path = "features",
-    .id_keys = "from_portid",
+    .id_keys = "ObjectId",
     .interval = 86400,
     .lat_key = "from_lat",
     .lon_key = "from_lon",
     .page_param = "resultOffset",
+    .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "from_portname",
     .description = "Directed port-to-port links with the origin and destination port "
       "ids, names, countries and coordinates, the average transit time "
@@ -339,6 +353,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .id_keys = "attributes.OBJECTID",
     .interval = 86400,
     .page_param = "resultOffset",
+    .page_size = 500,
+    .page_zero_based = 1,
     .description = "Every runway in the FAA aeronautical database with its parent "
       "airport identifier, designator, length, width, surface type and "
       "condition and lighting. Runway length and surface decide which "
@@ -356,6 +372,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .id_keys = "attributes.OBJECTID",
     .interval = 88200,
     .page_param = "resultOffset",
+    .page_size = 500,
+    .page_zero_based = 1,
     .title_keys = "attributes.NAME_TXT",
     .description = "VOR, VORTAC, TACAN, NDB and DME installations with identifier, "
       "name, class, frequency, magnetic variation, owner and "
@@ -374,6 +392,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .id_keys = "attributes.OBJECTID",
     .interval = 90000,
     .page_param = "resultOffset",
+    .page_size = 500,
+    .page_zero_based = 1,
     .title_keys = "attributes.NAME",
     .description = "Prohibited, restricted, warning, alert and military operations "
       "areas with designator, name, vertical limits, controlling and "
@@ -392,6 +412,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .id_keys = "attributes.OBJECTID",
     .interval = 91800,
     .page_param = "resultOffset",
+    .page_size = 500,
+    .page_zero_based = 1,
     .title_keys = "attributes.GLOBAL_ID",
     .description = "Segments of instrument and visual military training routes with "
       "route identifier, segment sequence, width, floor and ceiling "
@@ -410,6 +432,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .id_keys = "attributes.OBJECTID",
     .interval = 93600,
     .page_param = "resultOffset",
+    .page_size = 500,
+    .page_zero_based = 1,
     .title_keys = "attributes.OAS_Number",
     .description = "Verified vertical obstructions — towers, stacks, masts, cranes, "
       "wind turbines — with obstacle number, type, height above ground "
@@ -429,6 +453,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .id_keys = "attributes.OBJECTID",
     .interval = 95400,
     .page_param = "resultOffset",
+    .page_size = 500,
+    .page_zero_based = 1,
     .title_keys = "attributes.NAME",
     .description = "US airport facilities with location identifier, ICAO code, name, "
       "ownership and use category, elevation and the servicing city and "
@@ -465,7 +491,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "airport",
     .tags = "\"aviation\",\"airport\",\"aerodrome\",\"search\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.aviowiki.com/free/airports/search?query={q}&page=0",
+    .url = "https://api.aviowiki.com/free/airports/search?query={q}",
     .array_path = "content",
     .page_param = "page",
     .page_zero_based = 1,
@@ -595,7 +621,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "journey",
     .tags = "\"rail\",\"switzerland\",\"journey\",\"timetable\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://transport.opendata.ch/v1/connections?from={q}&to=Bern&limit=16&page=0",
+    .url = "https://transport.opendata.ch/v1/connections?from={q}&to=Bern&limit=16",
     .array_path = "connections",
     .page_param = "page",
     .page_zero_based = 1,

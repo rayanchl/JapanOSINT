@@ -482,21 +482,6 @@ static const hp_source HP3B19_FINANCE[] = {
       "reporting year. What a company says it has prepared for is "
       "directly testable against what later happened to it" },
 
-  { .id = "NGX_EQUITIES", .name = "Nigerian Exchange Group — listed equity statistics",
-    .name_ja = "ナイジェリア証券取引所 上場株式統計",
-    .category = "corporate", .portal = "https://ngxgroup.com",
-    .record_type = "market-quote",
-    .tags = "\"nigeria\",\"securities\",\"exchange\",\"africa\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://doclib.ngxgroup.com/REST/api/statistics/equities/?market=&sector=&orderby=&pageSize=100&pageNo={qd}",
-    .page_param = "pageNo",
-    .page_start = 0,
-    .description = "Every equity listed in Lagos with its ticker, full company name, "
-      "board, sector, previous close, open, high, low, close, change, "
-      "trade count, volume and value for the session. Nigeria is the "
-      "largest capital market in West Africa and one of the least "
-      "represented in open datasets" },
-
   { .id = "GLEIF_FUZZY_NAMES", .name = "GLEIF — fuzzy legal-name completion to LEI",
     .name_ja = "GLEIF 法人名あいまい照合",
     .category = "corporate", .portal = "https://www.gleif.org",
@@ -1391,13 +1376,15 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "blockchain-account",
     .tags = "\"crypto\",\"tron\",\"blockchain\",\"whales\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://apilist.tronscanapi.com/api/account/list?limit=25&start={qd}",
+    .url = "https://apilist.tronscanapi.com/api/account/list?limit=25",
     .array_path = "data",
     .detail_key = "address",
     .detail_url = "https://apilist.tronscanapi.com/api/account?address={v}",
+    .interval = 86400,
     .page_param = "start",
     .page_size = 25,
     .page_start = 0,
+    .page_zero_based = 1,
     .description = "Tron accounts ranked by balance, each with the address, balance, "
       "unstaking balance, voting power, total balance, lifetime "
       "transaction count, the share of circulating TRX it holds and its "
@@ -1412,11 +1399,13 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "political-donation",
     .tags = "\"uk\",\"politics\",\"donations\",\"transparency\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://search.electoralcommission.org.uk/api/search/Donations?rows=100&et=pp&sort=AcceptedDate&order=desc&start={qd}",
+    .url = "https://search.electoralcommission.org.uk/api/search/Donations?rows=100&et=pp&sort=AcceptedDate&order=desc",
     .array_path = "Result",
+    .interval = 86400,
     .page_param = "start",
     .page_size = 100,
     .page_start = 0,
+    .page_zero_based = 1,
     .description = "Every donation reported to a British political party with the "
       "donor name and status, the recipient, the value, the date "
       "accepted and the date reported, the nature of the donation, the "

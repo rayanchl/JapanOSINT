@@ -34,6 +34,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .page_param = "resultOffset",
     .page_size = 1000,
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "attributes.Code",
     .description = "Every prospecting licence, mining licence and application on "
       "Kenya's Landfolio mining cadastre, roughly 1,450 rights. Each "
@@ -60,6 +61,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .page_param = "resultOffset",
     .page_size = 1000,
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "attributes.Code",
     .description = "The 715 active mining exploitation permits published by CAMI, "
       "the DRC mining cadastre, as the feature layer that drives its "
@@ -85,6 +87,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .page_param = "resultOffset",
     .page_size = 1000,
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "attributes.Code",
     .description = "The 211 pending applications for DRC mining rights, the "
       "forward-looking half of the CAMI cadastre. Each record names the "
@@ -168,7 +171,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .record_type = "statistical-publication",
     .tags = "\"cabo verde\",\"statistics\",\"publication\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bdmi.ine.cv/site_deploy_api/api/Publication?pageSize=50&currentPage=1",
+    .url = "https://bdmi.ine.cv/site_deploy_api/api/Publication?pageSize=50",
     .array_path = "items",
     .filter_query = 1,
     .id_keys = "codigo",
@@ -189,7 +192,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .record_type = "tender-notice",
     .tags = "\"cabo verde\",\"procurement\",\"tender\",\"concurso\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bdmi.ine.cv/site_deploy_api/api/Competitions?take=50&skip=0",
+    .url = "https://bdmi.ine.cv/site_deploy_api/api/Competitions?take=50",
     .date_keys = "data_inicio",
     .filter_query = 1,
     .id_keys = "codigo",
@@ -197,6 +200,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .page_param = "skip",
     .page_size = 50,
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "nome",
     .description = "Public procurement competitions run by Cabo Verde's national "
       "statistics institute, with the notice title, category, full "
@@ -270,13 +274,14 @@ static const hp_source HP3B19_AFRICA[] = {
     .record_type = "municipality",
     .tags = "\"south africa\",\"municipal\",\"treasury\",\"finance\",\"local government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://municipaldata.treasury.gov.za/api/cubes/municipalities/facts?page=0&pagesize=100",
+    .url = "https://municipaldata.treasury.gov.za/api/cubes/municipalities/facts?pagesize=100",
     .array_path = "data",
     .filter_query = 1,
     .id_keys = "municipality.demarcation_code",
     .interval = 21600,
     .page_param = "page",
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "municipality.name,demarcation.label",
     .description = "Every South African municipality as the National Treasury "
       "identifies it for fiscal reporting, with the demarcation code, "
@@ -292,7 +297,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .record_type = "audit-opinion",
     .tags = "\"south africa\",\"municipal\",\"audit\",\"treasury\",\"accountability\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://municipaldata.treasury.gov.za/api/cubes/audit_opinions/facts?page=0&pagesize=100",
+    .url = "https://municipaldata.treasury.gov.za/api/cubes/audit_opinions/facts?pagesize=100",
     .array_path = "data",
     .body_keys = "opinion.label",
     .date_keys = "financial_year_end.year",
@@ -301,6 +306,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .interval = 21600,
     .page_param = "page",
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "demarcation.label",
     .description = "The Auditor-General's opinion on every municipality for every "
       "financial year, 3,688 findings, each naming the municipality, "
@@ -316,7 +322,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .record_type = "public-official",
     .tags = "\"south africa\",\"municipal\",\"official\",\"contact\",\"treasury\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://municipaldata.treasury.gov.za/api/cubes/officials/facts?page=0&pagesize=100",
+    .url = "https://municipaldata.treasury.gov.za/api/cubes/officials/facts?pagesize=100",
     .array_path = "data",
     .body_keys = "role.role",
     .filter_query = 1,
@@ -324,6 +330,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .interval = 21600,
     .page_param = "page",
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "contact_details.name",
     .description = "The named senior official in each role at each South African "
       "municipality — mayor, deputy mayor, municipal manager, chief "
@@ -340,7 +347,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .record_type = "financial-fact",
     .tags = "\"south africa\",\"municipal\",\"budget\",\"finance\",\"treasury\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://municipaldata.treasury.gov.za/api/cubes/incexp_v2/facts?page=0&pagesize=100",
+    .url = "https://municipaldata.treasury.gov.za/api/cubes/incexp_v2/facts?pagesize=100",
     .array_path = "data",
     .date_keys = "financial_year_end.year",
     .filter_query = 1,
@@ -348,6 +355,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .interval = 21600,
     .page_param = "page",
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "item.label",
     .description = "The statement of financial performance for every South African "
       "municipality, 4.45 million facts, each giving the municipality, "
@@ -363,7 +371,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .record_type = "financial-fact",
     .tags = "\"south africa\",\"municipal\",\"capital\",\"infrastructure\",\"treasury\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://municipaldata.treasury.gov.za/api/cubes/capital_v2/facts?page=0&pagesize=100",
+    .url = "https://municipaldata.treasury.gov.za/api/cubes/capital_v2/facts?pagesize=100",
     .array_path = "data",
     .date_keys = "financial_year_end.year",
     .filter_query = 1,
@@ -371,6 +379,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .interval = 86400,
     .page_param = "page",
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "item.label",
     .description = "Municipal capital spending in South Africa broken down by asset "
       "class and funding source, 2.34 million facts covering budgeted "
@@ -385,7 +394,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .record_type = "financial-fact",
     .tags = "\"south africa\",\"municipal\",\"cashflow\",\"finance\",\"treasury\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://municipaldata.treasury.gov.za/api/cubes/cflow_v2/facts?page=0&pagesize=100",
+    .url = "https://municipaldata.treasury.gov.za/api/cubes/cflow_v2/facts?pagesize=100",
     .array_path = "data",
     .date_keys = "financial_year_end.year",
     .filter_query = 1,
@@ -393,6 +402,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .interval = 21600,
     .page_param = "page",
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "item.label",
     .description = "The municipal cash flow statement cube, giving receipts, "
       "payments and net cash position per municipality per financial "
@@ -538,7 +548,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .record_type = "equity-quote",
     .tags = "\"nigeria\",\"exchange\",\"equity\",\"market\",\"ngx\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://doclib.ngxgroup.com/REST/api/statistics/equities/?market=&sector=&orderby=&pageSize=100&pageNo=0",
+    .url = "https://doclib.ngxgroup.com/REST/api/statistics/equities/?market=&sector=&orderby=&pageSize=100",
     .body_keys = "Company2",
     .date_keys = "TradeDate",
     .filter_query = 1,
@@ -546,6 +556,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .interval = 3600,
     .page_param = "pageNo",
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "Symbol",
     .description = "Every listed equity on the Nigerian Exchange with its ticker "
       "symbol, company name, board and sector, previous close, open, "
@@ -1083,7 +1094,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .record_type = "financial-fact",
     .tags = "\"south africa\",\"municipal\",\"debtors\",\"arrears\",\"treasury\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://municipaldata.treasury.gov.za/api/cubes/aged_debtor_v2/facts?page=0&pagesize=100",
+    .url = "https://municipaldata.treasury.gov.za/api/cubes/aged_debtor_v2/facts?pagesize=100",
     .array_path = "data",
     .date_keys = "financial_year_end.year",
     .filter_query = 1,
@@ -1091,6 +1102,7 @@ static const hp_source HP3B19_AFRICA[] = {
     .interval = 21600,
     .page_param = "page",
     .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "item.label",
     .description = "The aged debtor analysis for every South African municipality, "
       "showing what is owed to the municipality by customer group and "

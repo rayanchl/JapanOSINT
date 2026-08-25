@@ -31,6 +31,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.portname,attributes.fullname",
     .description = "Every port PortWatch tracks, with portid, port and country name, "
       "ISO3, vessel-type traffic shares, industry breakdown and point "
@@ -54,6 +55,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.portname,attributes.fullname",
     .description = "The canonical register of the world's maritime chokepoints with "
       "portid, name, geometry and the vessel-class shares that pass "
@@ -70,9 +72,10 @@ static const hp_source HP3B19_MENA[] = {
     .url = "https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query?where=UPPER(portname)%20LIKE%20UPPER(%27%25{q}%25%27)&outFields=*&f=json&resultRecordCount=1000",
     .array_path = "features",
     .date_keys = "attributes.date",
-    .id_keys = "attributes.portid",
+    .id_keys = "ObjectId",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.portname",
     .description = "Daily transit-call counts and cargo tonnage through each "
       "chokepoint broken out by vessel class — tanker, container, dry "
@@ -93,6 +96,7 @@ static const hp_source HP3B19_MENA[] = {
     .id_keys = "attributes.portid",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.portname",
     .description = "Per-port daily vessel calls and import and export tonnage by "
       "vessel class. Pivoting on a port name gives a dated activity "
@@ -113,6 +117,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.portname",
     .description = "Catalogued port disruption episodes with the affected port, "
       "start and end dates, disruption type and the modelled trade "
@@ -133,6 +138,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Daily seaborne import and export tonnage aggregated to world "
       "region, including the Middle East and North Africa, split by "
       "cargo class. The regional aggregate is what shows whether Red "
@@ -150,6 +156,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.country,attributes.ISO3",
     .description = "One record per country giving its seaborne trade dependence, "
       "port count and share of trade passing each chokepoint. This is "
@@ -170,6 +177,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 900,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.volume_import_total",
     .description = "Monthly nowcast estimates of country trade volumes derived from "
       "AIS port calls, published far ahead of official customs "
@@ -190,6 +198,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Daily world seaborne import and export tonnage by cargo class, "
       "the global denominator against which a Gulf or Red Sea shock has "
       "to be measured. Published with a lag of days rather than months" },
@@ -203,10 +212,11 @@ static const hp_source HP3B19_MENA[] = {
     .url = "https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Container_Metrics/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=1000",
     .array_path = "features",
     .filter_query = 1,
-    .id_keys = "attributes.portid",
+    .id_keys = "ObjectId",
     .interval = 21600,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.portname",
     .description = "Container-specific port performance metrics including call "
       "counts, dwell time and throughput per port. Container dwell time "
@@ -226,6 +236,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .title_keys = "attributes.portname",
     .description = "Narrative and numeric fact records attached to individual ports "
       "— what the terminal handles, who operates it and what its known "
@@ -244,6 +255,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "The port-to-port connection edges behind the PortWatch spillover "
       "simulator, each edge carrying its origin port, destination port "
       "and traffic weight. This is the shipping network graph, and it "
@@ -687,6 +699,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Named public facilities across Qatar with type, municipality, "
       "zone and point coordinates, from the Planning and Statistics "
       "Authority census geodatabase. A gazetteer of state facilities "
@@ -706,6 +719,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Every school, college and university in Qatar as a located "
       "record with name, level, sector and municipality. Education "
       "facility registers are one of the few complete named-institution "
@@ -725,6 +739,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Registered archaeological sites in Qatar with name, period and "
       "location. Heritage registers double as land-use constraint maps "
       "and are the public record against which construction and "
@@ -743,6 +758,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "The Doha Metro and Qatar Rail network as located features with "
       "line, station and segment attributes. Rail geometry is the "
       "backbone against which any urban infrastructure or "
@@ -760,6 +776,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Named major road segments across Qatar with classification and "
       "geometry. The official road network, including the corridors to "
       "the Saudi border crossing at Abu Samra and to Ras Laffan" },
@@ -776,6 +793,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Qatari foreign trade values joined to partner-country geometry, "
       "giving import and export values per trading partner as queryable "
       "records. A two-megabyte layer that carries the whole partner "
@@ -794,6 +812,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Registered agricultural holdings in Qatar served from the "
       "Ministry of Municipality's own ArcGIS server, with holding "
       "identifier, municipality, zone and parcel geometry. A state-held "
@@ -812,6 +831,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Izbah rural holdings — the livestock and camel pens allocated "
       "across the Qatari interior — with holding number, municipality "
       "and boundary geometry. Allocation registers of this kind are the "
@@ -830,6 +850,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "The 2026 mobile izbah survey layer, a dated field-survey "
       "snapshot of rural holdings with survey attributes and geometry. "
       "Because it is stamped with a survey year it can be differenced "
@@ -849,6 +870,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "The Abu Dhabi ambient air quality monitoring network as located "
       "station records with station name, type and coordinates. Station "
       "siting relative to Ruwais, Musaffah and the ports is itself "
@@ -866,6 +888,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Declared terrestrial and marine protected areas of the Emirate "
       "of Abu Dhabi with name, designation, area and full boundary "
       "polygons. Protected area boundaries constrain drilling, dredging "
@@ -887,6 +910,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Dated, located species observation records collected by the "
       "Environment Agency, each with species, observer context and "
       "coordinates. Field observation records are also an incidental "
@@ -906,6 +930,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Arabic and transliterated place names for the Emirate of Abu "
       "Dhabi with feature type and coordinates. A local-authority "
       "gazetteer resolves the transliteration ambiguity that breaks "
@@ -945,6 +970,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Licensed business premises in Tel Aviv-Yafo as located records "
       "with trade name, business type and street address. A municipal "
       "business-licence layer is a named-entity register at street "
@@ -964,6 +990,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Building permit applications and issued permits with permit "
       "number, status, requested works, parcel and location. Permit "
       "records name the applicant and the parcel, which is the "
@@ -983,6 +1010,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Installed cellular antenna sites across Tel Aviv-Yafo with "
       "operator, site attributes and coordinates. A municipal antenna "
       "register is the ground truth for mobile network coverage mapping "
@@ -1003,6 +1031,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Cellular antenna sites approved and under construction, distinct "
       "from the installed layer. Differencing the planned against the "
       "installed layer gives the forward build-out of the mobile "
@@ -1022,6 +1051,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Fuel stations in Tel Aviv-Yafo with operator brand, address and "
       "coordinates. Fuel retail sites are hazardous-materials "
       "installations and appear in municipal emergency planning as well "
@@ -1041,6 +1071,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Active construction sites with project description, status and "
       "location. Together with the permit layer this gives a "
       "before-and-after view of the city's development pipeline as "
@@ -1060,6 +1091,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Hospitals, clinics and medical institutions in Tel Aviv-Yafo "
       "with name, type and location. Named health facilities at "
       "coordinate precision are the reference layer for any "
@@ -1079,6 +1111,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Publicly accessible defibrillator installations with the host "
       "building, access notes and coordinates. Emergency equipment "
       "layers are a proxy inventory of which municipal and private "
@@ -1098,6 +1131,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Schools operating in the current academic year with institution "
       "name, symbol code, sector, level and address. The Israeli school "
       "symbol code is the join key to Ministry of Education datasets, "
@@ -1116,6 +1150,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Cemetery grounds in Tel Aviv-Yafo with name, operator community "
       "and boundary. Burial ground layers are the municipal record of "
       "which religious communities hold land in the city" },
@@ -1134,6 +1169,7 @@ static const hp_source HP3B19_MENA[] = {
     .lon_key = "geometry.x",
     .page_param = "resultOffset",
     .page_size = 1000,
+    .page_zero_based = 1,
     .description = "Cash machine locations with the operating bank and address. An "
       "ATM layer is a located inventory of bank presence, and "
       "bank-branch geography is one of the cheapest reads on which "

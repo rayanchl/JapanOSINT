@@ -459,7 +459,8 @@ static const hp_source HP3B19_APAC[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.bnm.gov.my/public/kijang-emas",
     .headers = { "Accept: application/vnd.BNM.API.v1+json" },
-    .array_path = "data",
+    .date_keys = "effective_date",
+    .id_keys = "effective_date",
     .interval = 21600,
     .description = "Daily Kijang Emas gold bullion buying and selling prices by coin "
       "weight as published by the Malaysian central bank" },
@@ -471,7 +472,8 @@ static const hp_source HP3B19_APAC[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.bnm.gov.my/public/opr",
     .headers = { "Accept: application/vnd.BNM.API.v1+json" },
-    .array_path = "data",
+    .date_keys = "date",
+    .id_keys = "date",
     .interval = 86400,
     .description = "The current Monetary Policy Committee overnight policy rate with "
       "decision date, level and change, the primary record of Malaysian "
@@ -912,7 +914,7 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "listed-company",
     .tags = "\"china\",\"securities\",\"szse\",\"exchange\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.szse.cn/api/report/ShowReport/data?SHOWTYPE=JSON&CATALOGID=1110&TABKEY=tab1&PAGENO=1",
+    .url = "https://www.szse.cn/api/report/ShowReport/data?SHOWTYPE=JSON&CATALOGID=1110&TABKEY=tab1",
     .interval = 86400,
     .page_param = "PAGENO",
     .title_keys = "metadata.name",
@@ -1031,7 +1033,7 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "dataset-record",
     .tags = "\"australia\",\"marine\",\"aodn\",\"imos\",\"oceanography\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://catalogue-imos.aodn.org.au/geonetwork/srv/eng/q?_content_type=json&fast=index&from=1&to=100",
+    .url = "https://catalogue-imos.aodn.org.au/geonetwork/srv/eng/q?_content_type=json&fast=index",
     .array_path = "metadata",
     .id_keys = "link.0",
     .interval = 86400,
