@@ -97,13 +97,16 @@ static int is_valid_imo(const char *imo) {
   return (sum % 10) == (d[6] - '0');
 }
 
+/* NULL when the MID is not in the ITU table — the flag state is then simply
+ * not known, and "Unknown" written into flag_country is indistinguishable from
+ * a real answer (house rule 1). */
 static const char *country_from_mmsi(const char *m) {
-  if (!m || strlen(m) < 3) return "Unknown";
+  if (!m || strlen(m) < 3) return NULL;
   char ms[4]; strncpy(ms, m, 3); ms[3] = 0;
   int mid = atoi(ms);
   for (int i = 0; MID_CODES[i].c; i++)
     if (mid >= MID_CODES[i].s && mid <= MID_CODES[i].e) return MID_CODES[i].c;
-  return "Unknown";
+  return NULL;
 }
 
 /* analyze_imo: returns the validated-identity object, or NULL if the IMO
@@ -123,7 +126,7 @@ static cJSON *analyze_mmsi(const char *m) {
   cJSON *r = cJSON_CreateObject();
   cJSON_AddStringToObject(r, "mmsi", m);
   cJSON_AddBoolToObject(r, "mmsi_valid", 1);
-  const char *t = "Unknown";
+  const char *t = NULL;
   char f = m[0];
   if (f == '0') t = "Coast Station";
   else if (f >= '2' && f <= '7') t = "Ship Station";
@@ -134,8 +137,11 @@ static cJSON *analyze_mmsi(const char *m) {
     else if (m[1] == '9') t = "EPIRB";
     else t = "Special Purpose";
   }
-  cJSON_AddStringToObject(r, "mmsi_type", t);
-  cJSON_AddStringToObject(r, "flag_country", country_from_mmsi(m));
+  if (t) cJSON_AddStringToObject(r, "mmsi_type", t);
+  else cJSON_AddItemToObject(r, "mmsi_type", cJSON_CreateNull());
+  const char *flag = country_from_mmsi(m);
+  if (flag) cJSON_AddStringToObject(r, "flag_country", flag);
+  else cJSON_AddItemToObject(r, "flag_country", cJSON_CreateNull());
   char mid[4]; strncpy(mid, m, 3); mid[3] = 0;
   cJSON_AddStringToObject(r, "mid", mid);
   return r;
@@ -172,6 +178,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   /* remote_key = vessel:<imo-or-mmsi> (the canonical identifier itself). */
   char rk[300]; snprintf(rk, sizeof rk, "vessel:%s", q);

@@ -298,6 +298,28 @@ struct LayerRow: View {
                     Text("\(count.formatted())")
                         .font(.caption2.monospacedDigit())
                         .foregroundStyle(theme.textMuted)
+                } else if let n = layer.recordsGeocoded {
+                    // Not fetched yet: show the server's own measured count
+                    // of geocoded rows (nil from the server = not measured,
+                    // and then nothing is shown — never a made-up 0).
+                    Text("·").font(.caption2).foregroundStyle(theme.textMuted)
+                    Text("\(n.formatted())")
+                        .font(.caption2.monospacedDigit())
+                        .foregroundStyle(theme.textMuted)
+                }
+                // v2 taxonomy badge: the declared modality. Absent when the
+                // server sent null — an undeclared layer shows no badge
+                // rather than a guessed one.
+                if let m = layer.renderModality.label {
+                    Label(m, systemImage: layer.renderModality.symbol)
+                        .font(.caption2.weight(.medium))
+                        .labelStyle(.titleAndIcon)
+                        .foregroundStyle(theme.textMuted)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(theme.surfaceElevated, in: Capsule())
+                        .accessibilityLabel(
+                            layer.dataType.map { "\(m), \($0)" } ?? m)
                 }
                 if layer.isLiveOnly && playback.isReplaying {
                     Text("Live only · hidden")

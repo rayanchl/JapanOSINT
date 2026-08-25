@@ -17,6 +17,7 @@
 #include <ctype.h>
 #include <math.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 /* Math.round (round half toward +Inf); inputs here are positive. */
 static double js_round(double x) { return floor(x + 0.5); }
@@ -67,7 +68,7 @@ static int parse_int_js(const char *s, long *out) {
 }
 
 typedef struct {
-  char key[48];
+  char key[72];        /* must match the local `key` in run(); see there */
   double lat, lon; char ym[16];
   long count, fatalities, severity_max;
 } bucket_t;
@@ -111,16 +112,30 @@ static int discover_csv(http_client *http, int year, char *out, size_t n) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
+  /* this_year drives the 3-year honhyo discovery below, so a clock that will
+   * not break down leaves no CSV to look for. */
   char iso[32];
   time_t now = time(NULL);
-  struct tm tmv; gmtime_r(&now, &tmv);
-  strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &tmv);
+  struct tm tmv;
+  if (!jo_tm_utc(now, &tmv) ||
+      !jo_time_fmt(now, "%Y-%m-%dT%H:%M:%S.000Z", iso, sizeof iso)) {
+    fprintf(stderr, "[npa-traffic-accidents] cannot render today as a date\n");
+    return -1;
+  }
   int this_year = tmv.tm_year + 1900;
 
-  char csv_url[1024] = {0}; char *text = NULL; int year = 0;
+  /* 1152, not 1024, here and for `u` below. discover_csv() resolves an href
+   * that it itself sizes at 1024 against an absolute prefix of up to 83 bytes
+   * ("https://www.npa.go.jp/publications/statistics/koutsuu/opendata/<year>/"),
+   * so the absolute URL reaches 1106 and an equal-sized destination could only
+   * cut it. That cut is not cosmetic: `u` is the URL the honhyo CSV is fetched
+   * FROM, so a long href would have failed the download and taken the entire
+   * year of accident data with it, while `csv_url` is published as the row's
+   * link and provenance. 83 + 1023 + NUL = 1107. */
+  char csv_url[1152] = {0}; char *text = NULL; int year = 0;
   for (int k = 1; k <= 3 && !text; k++) {
     int y = this_year - k;
-    char u[1024];
+    char u[1152];
     if (!discover_csv(ctx->http, y, u, sizeof u)) continue;
     char *raw = feed_get_text(ctx->http, u, 60000);
     if (!raw) continue;
@@ -209,7 +224,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         double lon2 = js_round(lon * 100.0) / 100.0;
         char la[24], lo[24];
         numstr(lat2, la, sizeof la); numstr(lon2, lo, sizeof lo);
-        char key[48];
+        /* 72, not 48: la and lo are 24 each and ym is 16, so the three can
+         * want 23 + 1 + 23 + 1 + 15 + 1 = 64. This string is the BUCKET KEY
+         * that groups accidents by (lat, lon, month) — a truncated key does
+         * not shorten a label, it merges two genuinely different cells into
+         * one and reports their combined count as a single location. */
+        char key[72];
         snprintf(key, sizeof key, "%s,%s,%s", la, lo, ym);
         bucket_t *b = NULL;
         for (int i = 0; i < nb; i++)

@@ -13,45 +13,12 @@
 #include <strings.h>
 #include <ctype.h>
 #include <time.h>
-#include <unistd.h>
 
 #ifndef JO_REPO_ROOT
 #define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
 #endif
 
 /* ── helpers ──────────────────────────────────────────────────────────── */
-
-/* The break-glass audit id. RAND_bytes CAN fail (a provider that failed to
- * load, an exhausted entropy source), and the return was discarded there, so
- * `b` was UNINITIALISED STACK — on the ONE endpoint that runs pre-auth, in the
- * function that has just had the decoded TOTP secret on its stack. Two things
- * follow: the value is audit_events.id, a PRIMARY KEY, so a repeated stack
- * layout means the second break-glass attempt's audit row is dropped, which is
- * precisely the row an incident review needs; and the hex is stack residue
- * that the audit API serves back.
- *
- * The id is a uniqueness key, not a capability, and losing the audit trail of
- * a break-glass login is worse than losing its entropy — so the failure falls
- * back to something INITIALISED and still unique (a process-lifetime counter,
- * the clock and the pid) rather than skipping the write. Contrast
- * secret_encrypt() below, where RAND_bytes failing means REFUSING to encrypt:
- * a GCM nonce has no safe fallback. */
-static void uuid4_bytes(unsigned char b[16]) {
-  if (RAND_bytes(b, 16) != 1) {
-    static unsigned long long seq;
-    unsigned long long n = __atomic_add_fetch(&seq, 1, __ATOMIC_RELAXED);
-    unsigned long long parts[2] = { (unsigned long long)time(NULL),
-                                    (unsigned long long)getpid() };
-    unsigned long long h = 1469598103934665603ULL;    /* FNV-1a */
-    for (int i = 0; i < 2; i++)
-      for (int k = 0; k < 8; k++) { h ^= (parts[i] >> (k * 8)) & 0xFF;
-                                    h *= 1099511628211ULL; }
-    for (int i = 0; i < 8; i++) b[i]     = (unsigned char)(n >> (i * 8));
-    for (int i = 0; i < 8; i++) b[8 + i] = (unsigned char)(h >> (i * 8));
-  }
-  b[6] = (b[6] & 0x0F) | 0x40; b[8] = (b[8] & 0x3F) | 0x80;
-}
-
 static char *jerr(int *st, int code, const char *msg) {
   *st = code;
   cJSON *o = cJSON_CreateObject(); cJSON_AddStringToObject(o,"error",msg);
@@ -71,7 +38,8 @@ static int b64_decode(const char *in, unsigned char *out, int outcap) {
   static int rev[256]; static int init = 0;
   if (!init) { for (int i=0;i<256;i++) rev[i]=-1;
     const char *T="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    for (int i=0;i<64;i++) rev[(unsigned char)T[i]]=i; init=1; }
+    for (int i=0;i<64;i++) rev[(unsigned char)T[i]]=i;
+    init=1; }
   int val=0,bits=-8,o=0;
   for (const char *p=in; *p; p++) {
     if (*p=='=' ) break;
@@ -108,36 +76,6 @@ static void overlay_write(cJSON *o) {
   if (f) { fwrite(txt, 1, strlen(txt), f); fclose(f); rename(tmp, p); }
   free(txt);
 }
-/* Push every overlay key into the process environment at boot.
- *
- * THIS IS THE LINE THAT MADE THE FEATURE WORK. `PUT /api/keys/:name` writes
- * data/api-keys.json, and resolved_env() below reads it back — so /api/keys and
- * /api/status happily reported `set: true` for a key the collectors could never
- * see. Collectors resolve through jo_env(), which is a plain getenv (see
- * lib/jocore.h), and main.c only ever loaded .env. A user could type a Shodan
- * key into the app, watch the dashboard confirm it, and watch the collector log
- * "gated (no SHODAN_API_KEY)" on the next tick, with nothing anywhere
- * reconciling the two.
- *
- * PRECEDENCE. overwrite=0, and main.c calls this BEFORE load_dotenv(), so:
- *     real shell export  >  api-keys.json  >  .env
- * The middle term matches resolved_env()'s "overlay wins, else env". The first
- * term is a deliberate divergence: an operator who exports a value explicitly
- * is making a stronger statement than a file, and silently overriding that
- * would be its own trap. lib/threatintel.h recorded this overlay as a known
- * deferral; it is no longer deferred. */
-void keysapi_apply_overlay_env(void) {
-  cJSON *ov = overlay_read();
-  int n = 0;
-  for (cJSON *m = ov->child; m; m = m->next)
-    if (m->string && cJSON_IsString(m) && m->valuestring[0]) {
-      setenv(m->string, m->valuestring, 0);
-      n++;
-    }
-  cJSON_Delete(ov);
-  if (n) fprintf(stderr, "[keys] applied %d key(s) from data/api-keys.json\n", n);
-}
-
 /* resolved value: overlay non-empty string wins, else process env. */
 static const char *resolved_env(cJSON *ov, const char *name) {
   cJSON *v = cJSON_GetObjectItem(ov, name);
@@ -190,16 +128,21 @@ static int derive_key(const char *tenant_id, unsigned char out[32]) {
 /* blob = [12 nonce][16 tag][ct]. Returns malloc'd blob, sets *blen. */
 static unsigned char *secret_encrypt(const char *tid, const char *pt, int *blen) {
   unsigned char key[32]; if (!derive_key(tid, key)) return NULL;
-  /* A GCM nonce MUST be checked. RAND_bytes can fail, and on failure `nonce`
-   * is uninitialised stack — which across two encryptions under the same
-   * derived key is nonce reuse, and nonce reuse in GCM does not merely leak
-   * the plaintext relationship, it leaks the GHASH subkey and forfeits
-   * authenticity for the whole key. Refusing to encrypt is the only safe
-   * answer. */
+  /* RAND_bytes CAN fail (no entropy source, a FIPS provider in an error state)
+   * and returns 0 without necessarily filling the buffer. Ignoring that left
+   * the AES-GCM nonce as whatever was on the stack — and a repeated GCM nonce
+   * under one key is not a degraded mode, it is a break: it leaks the XOR of
+   * the two plaintexts and lets an attacker forge the authentication tag. The
+   * data being protected here is tenant API keys, so the only safe response to
+   * a failed draw is to refuse to encrypt. */
   unsigned char nonce[12];
-  if (RAND_bytes(nonce, 12) != 1) return NULL;
+  if (RAND_bytes(nonce, 12) != 1) {
+    OPENSSL_cleanse(key, sizeof key);
+    return NULL;
+  }
   int ptl = (int)strlen(pt);
   unsigned char *blob = malloc(12 + 16 + ptl + 16);
+  if (!blob) { OPENSSL_cleanse(key, sizeof key); return NULL; }
   memcpy(blob, nonce, 12);
   EVP_CIPHER_CTX *x = EVP_CIPHER_CTX_new();
   int len, ok = 0;
@@ -216,6 +159,7 @@ static unsigned char *secret_encrypt(const char *tid, const char *pt, int *blen)
     }
   }
   EVP_CIPHER_CTX_free(x);
+  OPENSSL_cleanse(key, sizeof key);   /* don't leave the derived key on the stack */
   if (!ok) { free(blob); return NULL; }
   return blob;
 }
@@ -308,14 +252,6 @@ char *keysapi_platform(db_handle *db, const tenant_ctx *t, const char *method,
     cJSON_DeleteItemFromObject(ov,name);          /* clear */
     if (val[0]) cJSON_AddStringToObject(ov,name,val);  /* set when non-empty */
     overlay_write(ov);
-    /* Apply it to THIS process too, or the key does not take effect until the
-     * next restart — and the response below would report `set: true` for a
-     * value no collector can yet read, which is the exact confusion this whole
-     * change exists to remove. overwrite=1: an explicit operator write through
-     * the API is the strongest statement there is about a key's value.
-     * Collectors read it via getenv on their next scheduled run. */
-    if (val[0]) setenv(name, val, 1);
-    else        unsetenv(name);
     if (jb) cJSON_Delete(jb);
     cJSON *o=cJSON_CreateObject();
     cJSON_AddStringToObject(o,"name",name);
@@ -403,7 +339,8 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
       cJSON *jp=jb?cJSON_GetObjectItem(jb,"policy"):NULL;
       const char *pol=(jp&&cJSON_IsString(jp))?jp->valuestring:"";
       if (strcmp(pol,"owner_only")&&strcmp(pol,"selected_member")&&strcmp(pol,"all_members")){
-        if(jb)cJSON_Delete(jb); return jerr(st,400,"Invalid policy");
+        if(jb)cJSON_Delete(jb);
+        return jerr(st,400,"Invalid policy");
       }
       char mid[64]={0};
       if (strcmp(pol,"selected_member")==0){
@@ -536,7 +473,8 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
     cJSON_AddBoolToObject(o,"set",byok||platform);
     cJSON_AddItemToObject(o,"source",
       byok?cJSON_CreateString("tenant"):platform?cJSON_CreateString("platform"):cJSON_CreateNull());
-    if(jb)cJSON_Delete(jb); cJSON_Delete(ov);
+    if(jb)cJSON_Delete(jb);
+    cJSON_Delete(ov);
     return jstr(o,st,200);
   }
   cJSON_Delete(ov); return jerr(st,404,"not_found");
@@ -573,7 +511,8 @@ static char *b64url(const unsigned char *in,int len){
   for (int i=0;i<len;i+=3){
     unsigned a=in[i],b=i+1<len?in[i+1]:0,c=i+2<len?in[i+2]:0,v=(a<<16)|(b<<8)|c;
     o[p++]=T[(v>>18)&63]; o[p++]=T[(v>>12)&63];
-    if(i+1<len)o[p++]=T[(v>>6)&63]; if(i+2<len)o[p++]=T[v&63];
+    if(i+1<len)o[p++]=T[(v>>6)&63];
+    if(i+2<len)o[p++]=T[v&63];
   }
   o[p]=0; return o;
 }
@@ -599,24 +538,24 @@ char *keysapi_breakglass(db_handle *db, const char *body,
   for (int i=0;six&&i<6;i++) if (!isdigit((unsigned char)code[i])) six=0;
   if (!six){ if(jb)cJSON_Delete(jb); return jerr(st,400,"Six-digit TOTP code required"); }
 
-  /* base32_decode returns -1 on the first non-base32 character, and that -1
-   * used to travel straight into the HMAC as a key LENGTH: OpenSSL tests
-   * `blocksize < keylen` (64 < -1 is false) and falls through to a memcpy
-   * whose length widens to SIZE_MAX. `key` is also uninitialised until the
-   * decode fills it. The trigger is a mistyped ADMIN_TOTP_SECRET — 0, 1, 8, 9
-   * and punctuation are not in the base32 alphabet and are exactly what a
-   * hand-copied secret picks up — on the one endpoint that runs PRE-AUTH. */
-  unsigned char key[128] = {0};
+  unsigned char key[128];
   int klen=base32_decode(totp,key,sizeof key);
+  /* base32_decode returns -1 on the first character outside the alphabet, and
+   * HMAC()'s key_len is an int that OpenSSL widens to size_t — so an
+   * ADMIN_TOTP_SECRET containing 0/1/8/9/-/_ (a hex or URL-safe secret, or a
+   * transcription slip) turned every unauthenticated break-glass POST into a
+   * read of SIZE_MAX bytes from a 128-byte stack buffer. A secret we cannot
+   * decode is a configuration failure, not a failed code. */
   if (klen<=0){ if(jb)cJSON_Delete(jb);
-    return jerr(st,503,"Break-glass secret is not valid base32"); }
+    return jerr(st,503,"Break-glass not configured"); }
   long now=(long)time(NULL), step=now/30;
   int valid=0;
   for (int d=-1; d<=1 && !valid; d++){ char e[7]; totp_at(key,klen,step+d,e);
     if (strcmp(e,code)==0) valid=1; }
 
   /* audit (raw platform-scope insert; matches breakGlass.insertAudit) */
-  char uid[37]; { unsigned char b[16]; uuid4_bytes(b);
+  char uid[37]; { unsigned char b[16]; RAND_bytes(b,16);
+    b[6]=(b[6]&0x0F)|0x40; b[8]=(b[8]&0x3F)|0x80;
     snprintf(uid,37,"%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
       b[0],b[1],b[2],b[3],b[4],b[5],b[6],b[7],b[8],b[9],b[10],b[11],b[12],b[13],b[14],b[15]); }
   sqlite3_stmt *s;
@@ -661,4 +600,34 @@ char *keysapi_breakglass(db_handle *db, const char *body,
   cJSON_AddStringToObject(o,"token",tok);
   cJSON_AddNumberToObject(o,"expires_in",3600);
   return jstr(o,st,200);
+}
+
+/* Push every overlay key into the process environment at boot.
+ *
+ * THIS IS THE LINE THAT MADE THE FEATURE WORK. `PUT /api/keys/:name` writes
+ * data/api-keys.json, and resolved_env() below reads it back — so /api/keys and
+ * /api/status happily reported `set: true` for a key the collectors could never
+ * see. Collectors resolve through jo_env(), which is a plain getenv (see
+ * lib/jocore.h), and main.c only ever loaded .env. A user could type a Shodan
+ * key into the app, watch the dashboard confirm it, and watch the collector log
+ * "gated (no SHODAN_API_KEY)" on the next tick, with nothing anywhere
+ * reconciling the two.
+ *
+ * PRECEDENCE. overwrite=0, and main.c calls this BEFORE load_dotenv(), so:
+ *     real shell export  >  api-keys.json  >  .env
+ * The middle term matches resolved_env()'s "overlay wins, else env". The first
+ * term is a deliberate divergence: an operator who exports a value explicitly
+ * is making a stronger statement than a file, and silently overriding that
+ * would be its own trap. lib/threatintel.h recorded this overlay as a known
+ * deferral; it is no longer deferred. */
+void keysapi_apply_overlay_env(void) {
+  cJSON *ov = overlay_read();
+  int n = 0;
+  for (cJSON *m = ov->child; m; m = m->next)
+    if (m->string && cJSON_IsString(m) && m->valuestring[0]) {
+      setenv(m->string, m->valuestring, 0);
+      n++;
+    }
+  cJSON_Delete(ov);
+  if (n) fprintf(stderr, "[keys] applied %d key(s) from data/api-keys.json\n", n);
 }

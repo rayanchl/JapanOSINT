@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
+#include <sys/time.h>
 
 /* ── authorization ─────────────────────────────────────────────────────────
  * This file had NONE. Every route ran at the caller's mere authenticated-ness,
@@ -78,6 +80,191 @@ static char *err(int *st, int code, const char *msg) {
 static cJSON *safe_json(const char *s, int as_array) {
   if (s && *s) { cJSON *j = cJSON_Parse(s); if (j) return j; }
   return as_array ? cJSON_CreateArray() : cJSON_CreateObject();
+}
+
+/* ── the event list envelope (house rule 2) ─────────────────────────────────
+ * Both event lists — /api/alerts/:id/events and the /api/alert-events inbox —
+ * used to answer a bare {"data":[…]} with a default cap of 100 and a hard cap
+ * of 500. With 700 events stored, a caller asking for limit=1000 got exactly
+ * 500 rows and NOTHING in the body distinguishing "500 of 500" from "500 of
+ * 700": no total, no more-exist flag, and no way to reach row 501 at all.
+ * That is the silent slicing rule 2 names — the bounded view has to state how
+ * much it is showing out of how much exists, and the full set has to stay
+ * reachable.
+ *
+ * Rather than invent a third envelope, this is the one /api/intel/items
+ * (intelapi.c) and /api/timeline (timelineapi.c) already serve:
+ *
+ *   {"data":[…],
+ *    "page":{"next_cursor":<b64url|null>,"limit":N,"total":M},
+ *    "meta":{"fetched_at":"…","filters":{…}}}
+ *
+ * with the one deliberate difference that `total` is a REAL measured COUNT(*)
+ * and not the null those two emit — alert_events is tenant-scoped and indexed,
+ * so the count is one cheap query and an honest number beats a cap+1 "there is
+ * more" bit. A client that already parses /api/intel/items needs no new code.
+ *
+ * The cursor is the same keyset shape those routes use, {"p":<sort key>,
+ * "u":<tiebreak>} base64url-encoded, which is what makes rows past the cap
+ * reachable instead of merely countable. Emitting it is gated on a full page
+ * exactly as intelapi.c gates it, so the worst case is one extra empty page,
+ * never a lost row. */
+
+/* Buffer.from(str,'utf8').toString('base64url') — no padding, +/ → -_.
+ * Byte-for-byte the copy in intelapi.c / aoiapi.c / timelineapi.c: the cursor
+ * these routes hand out must decode with the same reader as every other one. */
+static char *b64url(const char *in) {
+  static const char T[] =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+  size_t len = strlen(in);
+  char *out = malloc(((len + 2) / 3) * 4 + 1);
+  if (!out) return NULL;
+  size_t o = 0;
+  for (size_t i = 0; i < len; i += 3) {
+    unsigned a = (unsigned char)in[i];
+    unsigned b = i + 1 < len ? (unsigned char)in[i + 1] : 0;
+    unsigned cc = i + 2 < len ? (unsigned char)in[i + 2] : 0;
+    unsigned v = (a << 16) | (b << 8) | cc;
+    out[o++] = T[(v >> 18) & 63];
+    out[o++] = T[(v >> 12) & 63];
+    if (i + 1 < len) out[o++] = T[(v >> 6) & 63];
+    if (i + 2 < len) out[o++] = T[v & 63];
+  }
+  out[o] = 0;
+  return out;
+}
+/* Inverse of b64url(); NULL on an invalid char → the caller ignores the cursor
+ * and serves page 1, the same forgiving stance as intelapi.c and aoiapi.c. */
+static char *b64url_decode(const char *in) {
+  static signed char R[256];
+  static int init = 0;
+  if (!init) {
+    for (int i = 0; i < 256; i++) R[i] = -1;
+    const char *T =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+    for (int i = 0; i < 64; i++) R[(unsigned char)T[i]] = (signed char)i;
+    init = 1;
+  }
+  size_t len = strlen(in);
+  char *out = malloc(len / 4 * 3 + 4);
+  if (!out) return NULL;
+  size_t o = 0; unsigned v = 0; int bits = 0;
+  for (size_t i = 0; i < len; i++) {
+    signed char d = R[(unsigned char)in[i]];
+    if (d < 0) { free(out); return NULL; }
+    v = (v << 6) | (unsigned)d; bits += 6;
+    if (bits >= 8) { bits -= 8; out[o++] = (char)((v >> bits) & 0xFF); }
+  }
+  out[o] = 0;
+  return out;
+}
+
+/* Node's new Date().toISOString(), same modulo-clamped spelling intelapi.c
+ * uses so -Wformat-truncation can prove the 24 chars fit. */
+static void iso_now(char *buf, size_t n) {
+  struct timeval tv; gettimeofday(&tv, NULL);
+  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
+  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
+}
+
+/* Read one parameter out of a raw "a=1&b=2" query string into out[], anchored
+ * on a parameter boundary so "limit" cannot be matched inside "xlimit".
+ * Returns 1 when the key was present (out[] may still be empty). */
+static int qs_param(const char *qs, const char *key, char *out, size_t cap) {
+  if (!out || cap == 0) return 0;
+  out[0] = 0;
+  if (!qs || !*qs || !key) return 0;
+  size_t kl = strlen(key);
+  for (const char *p = qs; *p; ) {
+    const char *amp = strchr(p, '&');
+    size_t seglen = amp ? (size_t)(amp - p) : strlen(p);
+    if (seglen > kl && p[kl] == '=' && strncmp(p, key, kl) == 0) {
+      size_t vl = seglen - kl - 1;
+      if (vl >= cap) vl = cap - 1;
+      memcpy(out, p + kl + 1, vl);
+      out[vl] = 0;
+      return 1;
+    }
+    if (!amp) break;
+    p = amp + 1;
+  }
+  return 0;
+}
+
+/* Decode a keyset cursor. On success *holder owns the parsed cJSON (free it
+ * with cJSON_Delete after the query has run — *p and *u point INTO it). A
+ * malformed cursor leaves everything NULL and the caller serves page 1. */
+static void cursor_decode(const char *cur, cJSON **holder,
+                          const char **p, const char **u) {
+  *holder = NULL; *p = NULL; *u = NULL;
+  if (!cur || !*cur) return;
+  char *dec = b64url_decode(cur);
+  if (!dec) return;
+  cJSON *j = cJSON_Parse(dec);
+  free(dec);
+  if (!j) return;
+  cJSON *jp = cJSON_GetObjectItem(j, "p");
+  cJSON *ju = cJSON_GetObjectItem(j, "u");
+  if (cJSON_IsString(jp) && cJSON_IsString(ju) && jp->valuestring && ju->valuestring) {
+    *holder = j; *p = jp->valuestring; *u = ju->valuestring;
+    return;
+  }
+  cJSON_Delete(j);
+}
+
+/* Wrap a finished row array in the shared envelope. Takes ownership of `arr`
+ * and `filters`. `total` is the measured row count for the same predicate
+ * MINUS the cursor window, i.e. how many exist in all, not how many are left.
+ * next_cursor is emitted only on a full page, seeded from the last row. */
+static char *events_envelope(cJSON *arr, long total, int lim,
+                             const char *last_p, const char *last_u,
+                             cJSON *filters) {
+  cJSON *page = cJSON_CreateObject();
+  if (cJSON_GetArraySize(arr) == lim && last_p && last_p[0]) {
+    cJSON *cur = cJSON_CreateObject();
+    cJSON_AddStringToObject(cur, "p", last_p);
+    cJSON_AddStringToObject(cur, "u", last_u ? last_u : "");
+    char *cj = cJSON_PrintUnformatted(cur);
+    cJSON_Delete(cur);
+    char *enc = cj ? b64url(cj) : NULL;
+    if (enc) cJSON_AddStringToObject(page, "next_cursor", enc);
+    else     cJSON_AddNullToObject(page, "next_cursor");
+    free(cj); free(enc);
+  } else {
+    cJSON_AddNullToObject(page, "next_cursor");
+  }
+  cJSON_AddNumberToObject(page, "limit", lim);
+  /* total < 0 means the COUNT itself failed. Report that as null — the same
+   * "unknown" intelapi.c emits — rather than as a number we did not measure. */
+  if (total < 0) cJSON_AddNullToObject(page, "total");
+  else           cJSON_AddNumberToObject(page, "total", (double)total);
+
+  char ts[40]; iso_now(ts, sizeof ts);
+  cJSON *meta = cJSON_CreateObject();
+  cJSON_AddStringToObject(meta, "fetched_at", ts);
+  cJSON_AddItemToObject(meta, "filters", filters);
+
+  cJSON *env = cJSON_CreateObject();
+  cJSON_AddItemToObject(env, "data", arr);
+  cJSON_AddItemToObject(env, "page", page);
+  cJSON_AddItemToObject(env, "meta", meta);
+  char *js = cJSON_PrintUnformatted(env);
+  cJSON_Delete(env);
+  return js;
+}
+
+/* COUNT(*) for a prepared-and-bound statement; -1 when the count could not be
+ * taken. Rule 1: a disclosure has to carry a number we actually measured, so a
+ * failed count must never be reported as a plausible-looking 0. */
+static long count_stmt(sqlite3_stmt *s) {
+  long n = -1;
+  if (s && sqlite3_step(s) == SQLITE_ROW) n = (long)sqlite3_column_int64(s, 0);
+  sqlite3_finalize(s);
+  return n;
 }
 
 /* {data:{decoded rule}} — webhook secrets masked, never echoed. */
@@ -296,7 +483,8 @@ static const char *validate_rule(cJSON *b, const char **name, int *enabled,
 
 char *alertsapi(db_handle *db, const char *tid, const char *uid,
                 const char *method, const char *id, const char *action,
-                const char *body, int ev_limit, int *st) {
+                const char *body, int ev_limit, const char *ev_cursor,
+                int *st) {
   int is_get = strcmp(method,"GET")==0, is_post = strcmp(method,"POST")==0,
       is_patch = strcmp(method,"PATCH")==0, is_del = strcmp(method,"DELETE")==0;
 
@@ -325,7 +513,8 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
       sqlite3_finalize(s);
       cJSON *w = cJSON_CreateObject(); cJSON_AddItemToObject(w,"data",arr);
       char *o = cJSON_PrintUnformatted(w); cJSON_Delete(w);
-      if (jb) cJSON_Delete(jb); *st=200; return o;
+      if (jb) cJSON_Delete(jb);
+      *st=200; return o;
     }
     if (is_post) {
       const char *nm; int en; cJSON *pred=NULL,*chans=NULL; long dd,ss;
@@ -496,17 +685,53 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
   }
   if (is_get && strcmp(action,"events")==0) {
     int lim = ev_limit>0?ev_limit:100; if(lim<1)lim=1; if(lim>500)lim=500;
-    sqlite3_stmt *s;
-    sqlite3_prepare_v2(db->h,
-      "SELECT e.id,e.item_uid,e.matched_at,e.delivered_channels_json,"
-      "e.suppressed,e.reason,i.title,i.source_id,i.link "
-      "FROM alert_events e LEFT JOIN intel_items i ON i.uid=e.item_uid "
-      "WHERE e.rule_id=?1 AND e.tenant_id=?2 ORDER BY e.matched_at DESC LIMIT ?3",
-      -1,&s,NULL);
+
+    /* Keyset cursor, decoded before the count so a bad one costs nothing. */
+    cJSON *curj; const char *cur_p, *cur_u;
+    cursor_decode(ev_cursor, &curj, &cur_p, &cur_u);
+
+    /* How many exist for this rule, before the cap. Measured, not estimated. */
+    long total = -1;
+    { sqlite3_stmt *cs = NULL;
+      if (sqlite3_prepare_v2(db->h,
+            "SELECT COUNT(*) FROM alert_events WHERE rule_id=?1 AND tenant_id=?2",
+            -1,&cs,NULL) == SQLITE_OK) {
+        sqlite3_bind_text(cs,1,id,-1,SQLITE_TRANSIENT);
+        sqlite3_bind_text(cs,2,tid,-1,SQLITE_TRANSIENT);
+        total = count_stmt(cs);
+      } }
+
+    /* ORDER BY gained the `e.id ASC` tiebreak. matched_at alone is not a total
+     * order — the delivery worker writes whole storms inside one second — and
+     * a keyset cursor over a non-total order either repeats or skips rows at
+     * every page boundary. */
+    const char *sql = cur_p
+      ? "SELECT e.id,e.item_uid,e.matched_at,e.delivered_channels_json,"
+        "e.suppressed,e.reason,i.title,i.source_id,i.link "
+        "FROM alert_events e LEFT JOIN intel_items i ON i.uid=e.item_uid "
+        "WHERE e.rule_id=?1 AND e.tenant_id=?2 "
+        "AND (e.matched_at < ?4 OR (e.matched_at = ?4 AND e.id > ?5)) "
+        "ORDER BY e.matched_at DESC, e.id ASC LIMIT ?3"
+      : "SELECT e.id,e.item_uid,e.matched_at,e.delivered_channels_json,"
+        "e.suppressed,e.reason,i.title,i.source_id,i.link "
+        "FROM alert_events e LEFT JOIN intel_items i ON i.uid=e.item_uid "
+        "WHERE e.rule_id=?1 AND e.tenant_id=?2 "
+        "ORDER BY e.matched_at DESC, e.id ASC LIMIT ?3";
+    sqlite3_stmt *s = NULL;
+    if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) {
+      if (curj) cJSON_Delete(curj);
+      if (jb) cJSON_Delete(jb);
+      return err(st,500,"server_error");
+    }
     sqlite3_bind_text(s,1,id,-1,SQLITE_TRANSIENT);
     sqlite3_bind_text(s,2,tid,-1,SQLITE_TRANSIENT);
     sqlite3_bind_int(s,3,lim);
+    if (cur_p) {
+      sqlite3_bind_text(s,4,cur_p,-1,SQLITE_TRANSIENT);
+      sqlite3_bind_text(s,5,cur_u,-1,SQLITE_TRANSIENT);
+    }
     cJSON *arr=cJSON_CreateArray();
+    char last_p[64]={0}, last_u[128]={0};
     while (sqlite3_step(s)==SQLITE_ROW) {
       cJSON *r=cJSON_CreateObject();
       cJSON_AddStringToObject(r,"id",(const char*)sqlite3_column_text(s,0));
@@ -522,11 +747,18 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
       cJSON_AddItemToObject(r,"item_source_id", sr?cJSON_CreateString(sr):cJSON_CreateNull());
       cJSON_AddItemToObject(r,"item_link", lk?cJSON_CreateString(lk):cJSON_CreateNull());
       cJSON_AddItemToArray(arr,r);
+      snprintf(last_p,sizeof last_p,"%s", ctext(s,2)?ctext(s,2):"");
+      snprintf(last_u,sizeof last_u,"%s", ctext(s,0)?ctext(s,0):"");
     }
     sqlite3_finalize(s);
-    cJSON *w=cJSON_CreateObject(); cJSON_AddItemToObject(w,"data",arr);
-    char *o=cJSON_PrintUnformatted(w); cJSON_Delete(w);
-    if (jb) cJSON_Delete(jb); *st=200; return o;
+    if (curj) cJSON_Delete(curj);
+
+    cJSON *filters = cJSON_CreateObject();
+    cJSON_AddStringToObject(filters,"rule_id",id);
+    char *o = events_envelope(arr, total, lim, last_p, last_u, filters);
+    if (jb) cJSON_Delete(jb);
+    if (!o) return err(st,500,"server_error");
+    *st=200; return o;
   }
   if (is_post && strcmp(action,"test")==0) {
     if (jb) cJSON_Delete(jb);
@@ -692,14 +924,19 @@ char *alerteventsapi(db_handle *db, const char *tid, const char *uid,
     *st = 403; return strdup("{\"error\":\"forbidden\"}");
   }
 
-  /* tiny query-string reader: qs is "a=1&b=2" (already URL-decoded enough for
-   * our integer/flag params; no string values are read here). */
+  /* tiny query-string reader: qs is "a=1&b=2". The old spelling was a bare
+   * strstr() per key, which matched the key anywhere — "?xlimit=1" set limit,
+   * and "?next_cursor=" would have set cursor. qs_param() anchors on a
+   * parameter boundary instead. Values are taken raw: the three parameters
+   * read here are two integers and a base64url cursor, none of which contains
+   * a character that needs percent-decoding. */
   int qflag = 0, qlimit = 0;
+  char qcursor[768] = {0};
   if (qs && *qs) {
-    const char *p = strstr(qs, "unread=");
-    if (p) qflag = atoi(p + 7);
-    p = strstr(qs, "limit=");
-    if (p) qlimit = atoi(p + 6);
+    char v[768];
+    if (qs_param(qs, "unread", v, sizeof v)) qflag  = atoi(v);
+    if (qs_param(qs, "limit",  v, sizeof v)) qlimit = atoi(v);
+    qs_param(qs, "cursor", qcursor, sizeof qcursor);
   }
 
   if (is_get && strcmp(seg, "unread-count") == 0) {
@@ -747,27 +984,57 @@ char *alerteventsapi(db_handle *db, const char *tid, const char *uid,
 
   if (is_get && !seg[0]) {
     int lim = qlimit>0?qlimit:100; if(lim<1)lim=1; if(lim>500)lim=500;
-    const char *sql = qflag
-      ? "SELECT e.id,e.rule_id,r.name,e.item_uid,e.matched_at,e.read_at,"
-        "e.delivered_channels_json,i.title,i.source_id,i.link "
-        "FROM alert_events e "
-        "LEFT JOIN alert_rules r ON r.id=e.rule_id "
-        "LEFT JOIN intel_items i ON i.uid=e.item_uid "
-        "WHERE e.tenant_id=?1 AND e.suppressed=0 AND e.read_at IS NULL "
-        "ORDER BY e.matched_at DESC LIMIT ?2"
-      : "SELECT e.id,e.rule_id,r.name,e.item_uid,e.matched_at,e.read_at,"
-        "e.delivered_channels_json,i.title,i.source_id,i.link "
-        "FROM alert_events e "
-        "LEFT JOIN alert_rules r ON r.id=e.rule_id "
-        "LEFT JOIN intel_items i ON i.uid=e.item_uid "
-        "WHERE e.tenant_id=?1 AND e.suppressed=0 "
-        "ORDER BY e.matched_at DESC LIMIT ?2";
+
+    cJSON *curj; const char *cur_p, *cur_u;
+    cursor_decode(qcursor, &curj, &cur_p, &cur_u);
+
+    /* The inbox's own count, under exactly the predicate the list uses (minus
+     * the cursor window). Without it a 500-row answer over a 700-row inbox was
+     * indistinguishable from a complete one — see the envelope comment above. */
+    long total = -1;
+    { sqlite3_stmt *cs = NULL;
+      const char *csql = qflag
+        ? "SELECT COUNT(*) FROM alert_events "
+          "WHERE tenant_id=?1 AND suppressed=0 AND read_at IS NULL"
+        : "SELECT COUNT(*) FROM alert_events "
+          "WHERE tenant_id=?1 AND suppressed=0";
+      if (sqlite3_prepare_v2(db->h, csql, -1, &cs, NULL) == SQLITE_OK) {
+        sqlite3_bind_text(cs,1,tid,-1,SQLITE_TRANSIENT);
+        total = count_stmt(cs);
+      } }
+
+    /* `e.id ASC` tiebreak for the same reason as the per-rule list: matched_at
+     * is not unique, and a keyset cursor over a non-total order loses rows. */
+#define AE_COLS \
+      "SELECT e.id,e.rule_id,r.name,e.item_uid,e.matched_at,e.read_at," \
+      "e.delivered_channels_json,i.title,i.source_id,i.link " \
+      "FROM alert_events e " \
+      "LEFT JOIN alert_rules r ON r.id=e.rule_id " \
+      "LEFT JOIN intel_items i ON i.uid=e.item_uid " \
+      "WHERE e.tenant_id=?1 AND e.suppressed=0 "
+#define AE_TAIL " ORDER BY e.matched_at DESC, e.id ASC LIMIT ?2"
+#define AE_CUR  " AND (e.matched_at < ?3 OR (e.matched_at = ?3 AND e.id > ?4))"
+    const char *sql;
+    if (qflag) sql = cur_p ? AE_COLS "AND e.read_at IS NULL" AE_CUR AE_TAIL
+                           : AE_COLS "AND e.read_at IS NULL" AE_TAIL;
+    else       sql = cur_p ? AE_COLS AE_CUR AE_TAIL
+                           : AE_COLS AE_TAIL;
+#undef AE_COLS
+#undef AE_TAIL
+#undef AE_CUR
     sqlite3_stmt *s;
-    if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK)
+    if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) {
+      if (curj) cJSON_Delete(curj);
       return err(st,500,"server_error");
+    }
     sqlite3_bind_text(s,1,tid,-1,SQLITE_TRANSIENT);
     sqlite3_bind_int(s,2,lim);
+    if (cur_p) {
+      sqlite3_bind_text(s,3,cur_p,-1,SQLITE_TRANSIENT);
+      sqlite3_bind_text(s,4,cur_u,-1,SQLITE_TRANSIENT);
+    }
     cJSON *arr = cJSON_CreateArray();
+    char last_p[64]={0}, last_u[128]={0};
     while (sqlite3_step(s)==SQLITE_ROW) {
       cJSON *r = cJSON_CreateObject();
       cJSON_AddStringToObject(r,"id",(const char*)sqlite3_column_text(s,0));
@@ -815,10 +1082,16 @@ char *alerteventsapi(db_handle *db, const char *tid, const char *uid,
         cJSON_AddItemToObject(r,"item_link", lk?cJSON_CreateString(lk):cJSON_CreateNull());
       }
       cJSON_AddItemToArray(arr,r);
+      snprintf(last_p,sizeof last_p,"%s", ctext(s,4)?ctext(s,4):"");
+      snprintf(last_u,sizeof last_u,"%s", ctext(s,0)?ctext(s,0):"");
     }
     sqlite3_finalize(s);
-    cJSON *w = cJSON_CreateObject(); cJSON_AddItemToObject(w,"data",arr);
-    char *o = cJSON_PrintUnformatted(w); cJSON_Delete(w);
+    if (curj) cJSON_Delete(curj);
+
+    cJSON *filters = cJSON_CreateObject();
+    cJSON_AddBoolToObject(filters,"unread", qflag ? 1 : 0);
+    char *o = events_envelope(arr, total, lim, last_p, last_u, filters);
+    if (!o) return err(st,500,"server_error");
     *st=200; return o;
   }
 

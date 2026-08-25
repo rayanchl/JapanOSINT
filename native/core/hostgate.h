@@ -32,6 +32,12 @@
  * Tunables (env, read once):
  *   JO_HOST_MAX_CONC    in-flight requests per host   (default 2, 0 = off)
  *   JO_HOST_MIN_GAP_MS  min ms between request starts (default 150)
+ *   JO_HOST_MIN_GAP_OVERRIDES  "host=ms,host=ms" per-host gaps that beat the
+ *                       global one (built in: reddit.com=30000 — measured
+ *                       per-IP floor). Matches the host and its subdomains.
+ *                       An override host waits for its gap (up to 5 min)
+ *                       instead of failing open: walking into a known 429
+ *                       wall is not availability.
  */
 #ifndef JO_HOSTGATE_H
 #define JO_HOSTGATE_H

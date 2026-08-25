@@ -32,6 +32,8 @@
  * Licence: FCC Media Bureau public query tool — US Government public domain.
  */
 #include "lib/jocore.h"
+#include "lib/feedlib.h"
+#include "lib/seenset.h"
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
@@ -45,9 +47,6 @@
   "&vac=&freq=88.0&fre2=108.0&facid=&class=&dkt=&list=4&dist=&dlat2=&mlat2=" \
   "&slat2=&NS=N&dlon2=&mlon2=&slon2=&EW=W&size=9"
 #define MAXF 64
-#define MAX_ROWS 40000  /* exhaustive-ok: per-run runaway guard, far above the
-                         * real station count; a run it actually stops, or that
-                         * the wall-clock budget stops, is reported below */
 #define BUDGET_SEC 240
 
 static const char *const STATES[] = {
@@ -127,9 +126,17 @@ static int emit_state(const source_ctx *ctx, intel_sink *sink,
   http_response_free(&hr);
 
   int n = 0;
+  seen_set keyseen = {0};
   char *p = body, *line;
   while ((line = jo_next_line_cr(&p)) != NULL) {
     if (!*line || !strchr(line, '|')) continue;
+    /* rule 4b: distinct rows sharing facility_id|file_number|channel collapsed
+       on upsert (sweep 2026-08-24). Hash the raw line before psv_split mutates
+       it so every distinct row keeps a distinct uid; byte-identical upstream
+       duplicates still collapse. */
+    char linehash[21];
+    const char *lh_parts[1] = { line };
+    feed_hash_key(linehash, lh_parts, 1);
     char *f[MAXF];
     int nf = psv_split(line, f, MAXF);
     for (int i = 0; i < nf; i++) f[i] = trim(f[i]);
@@ -186,6 +193,10 @@ static int emit_state(const source_ctx *ctx, intel_sink *sink,
     char title[256], summary[288], key[128];
     snprintf(key, sizeof key, "%s|%s|%s", facid ? facid : "", call ? call : "",
              fileno ? fileno : "");
+    if (!seen_add(&keyseen, key)) {          /* rule 4b: colliders only */
+      size_t kl = strlen(key);
+      snprintf(key + kl, sizeof key - kl, "|%s", linehash);
+    }
     snprintf(title, sizeof title, "%s %s%s%s%s%s", call ? call : "NEW",
              freq ? freq : "", comm ? " — " : "", comm ? comm : "",
              st ? ", " : "", st ? st : "");
@@ -210,15 +221,15 @@ static int emit_state(const source_ctx *ctx, intel_sink *sink,
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
+  seen_free(&keyseen);
   free(body);
   return n;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t t0 = time(NULL);
-  int total = 0, ok_states = 0, nodms = 0;
-  for (int i = 0; i < NSTATES; i++) {
-    if (total >= MAX_ROWS) break;
+  int total = 0, ok_states = 0, nodms = 0, i = 0;
+  for (; i < NSTATES; i++) {
     if (time(NULL) - t0 > BUDGET_SEC) {
       fprintf(stderr, "[fcc-fm-query] wall-clock budget reached after %d state(s)\n",
               ok_states);
@@ -231,18 +242,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[fcc-fm-query] no state query succeeded\n");
     return -1;
   }
-  /* House rule 2: this collector queries the FCC one state at a time, and both
-   * the wall-clock budget and MAX_ROWS can end the sweep before every state has
-   * been asked. The states never queried are missing data — say so. */
-  if (ok_states < NSTATES) {
-    char reason[240];
-    snprintf(reason, sizeof reason,
-             "the per-run sweep covered %d of %d states before the wall-clock "
-             "budget (BUDGET_SEC) or MAX_ROWS ended it; the remaining states "
-             "were never queried this run", ok_states, NSTATES);
-    jo_truncation_notice(sink, "fcc-fm-query", "FM Query by state", total, -1, reason,
-                         "raise BUDGET_SEC/MAX_ROWS in collectors/sources/tsp_fcc_fm_query.c, "
-                         "or rotate the state list across runs");
+  if (i < NSTATES) {
+    char left[512];
+    int w = snprintf(left, sizeof left,
+      "the wall-clock budget (%d s) stopped the state walk; these states were "
+      "never queried:", BUDGET_SEC);
+    for (int k = i; k < NSTATES && w > 0 && (size_t)w < sizeof left - 4; k++)
+      w += snprintf(left + w, sizeof left - (size_t)w, " %s", STATES[k]);
+    jo_trunc_notice(sink, "fcc-fm-query",
+      "https://transition.fcc.gov/fcc-bin/fmq", total, -1, left,
+      "raise BUDGET_SEC in collectors/sources/tsp_fcc_fm_query.c, or run the "
+      "collector more often so each run resumes further along");
   }
   fprintf(stderr, "[fcc-fm-query] emitted %d over %d/%d states "
                   "(%d records skipped: no site DMS)\n",

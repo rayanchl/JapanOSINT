@@ -1075,6 +1075,73 @@ def check_geo_precision():
     return out
 
 
+def check_dup_endpoint():
+    """The same upstream endpoint fetched by more than one collector file.
+
+    Why this is a real defect and not just untidiness: core/intel.c keys every
+    row as uid = "<source_id>|<remote_key>", so two collectors hitting one
+    endpoint do NOT dedupe — the same upstream record is stored twice in
+    intel_items and twice in the FTS mirror, and we spend two requests to get
+    it. At the time this check was added, 531 endpoints were fetched by 2+
+    files. The dominant pattern is cross-batch: a later generated batch
+    re-discovered endpoints an earlier one already had (vsrc13 vs vsrc2), plus
+    the world_reg_* / reg_* registry families covering the same ground.
+
+    Normalised on host+path+query, lowercased host, trailing slash dropped, so
+    a scheme change or a stray slash is not counted as a second endpoint.
+
+    Baselined rather than hard-failing: untangling 531 pairs is a per-pair
+    judgement (some are genuinely different query shapes against one base), so
+    this ratchets down instead of blocking. Adding a NEW duplicate fails.
+    """
+    from urllib.parse import urlsplit
+    # A comma is LEGAL inside a query value and must not end the match.
+    # Excluding it truncated `?from=act,trans&trans_country_code=BW` to
+    # `?from=act`, so eleven distinct per-country IATI endpoints collapsed onto
+    # one key and were reported as duplicates of each other. The closing quote
+    # already terminates a URL in a C string literal, so `,` never needed to.
+    url_re = re.compile(r'https?://[^\s"\')\\]+')
+    # `.portal` is documentation, not a request. source.h defines it as the
+    # "canonical/base" human-facing URL, and the engine never fetches it -- it
+    # only ever requests `.url` (and `.detail_url`). Counting it as a fetched
+    # endpoint makes two hp_source tables that merely CITE the same portal look
+    # like two collectors fetching one endpoint twice. That is a false positive,
+    # and it scales with the number of rows: batch 18 added 212 rows and pushed
+    # this check 528 -> 559 without introducing a single duplicate request
+    # (verified by recomputing over `.url` values alone, which gives 0). Strip
+    # the portal assignment before harvesting URLs.
+    portal_re = re.compile(r'\.portal\s*=\s*"[^"]*"')
+    by_url = {}
+    for root, _dirs, names in os.walk(COLLECTORS):
+        if os.sep + "obj" in root:
+            continue
+        for f in names:
+            if not f.endswith((".c", ".inc")):
+                continue
+            p = os.path.join(root, f)
+            for m in url_re.findall(portal_re.sub("", read(p))):
+                u = m.rstrip('".,)\\')
+                try:
+                    s = urlsplit(u)
+                except ValueError:
+                    continue
+                if not s.netloc:
+                    continue
+                key = (s.netloc.lower(), s.path.rstrip("/"), s.query)
+                by_url.setdefault(key, set()).add(os.path.relpath(p, REPO))
+    out = []
+    for (host, path, q), files in sorted(by_url.items()):
+        if len(files) < 2:
+            continue
+        # a URL that only ever appears in shared .inc helpers is one definition
+        if all(f.endswith(".inc") for f in files):
+            continue
+        out.append("%s%s%s: fetched by %d files (%s)"
+                   % (host, path, ("?" + q) if q else "", len(files),
+                      ", ".join(sorted(files)[:3])))
+    return out
+
+
 _IDX_NAME    = re.compile(r"\bidx_[a-z0-9_]+")
 _IDX_CREATE  = re.compile(r"CREATE\s+(?:UNIQUE\s+)?INDEX\s+(?:IF\s+NOT\s+EXISTS\s+)?"
                           r"(idx_[a-z0-9_]+)", re.I)
@@ -1119,6 +1186,7 @@ def check_phantom_index():
 
 CHECKS = [
     ("dup-id", check_dup_id),
+    ("dup-endpoint", check_dup_endpoint),
     ("unresolved-id", check_unresolved_id),
     ("registry-orphan", check_registry_orphan),
     ("quarantine-empty", check_quarantine_empty),

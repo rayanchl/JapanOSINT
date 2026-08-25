@@ -29,7 +29,8 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   }
 
   const char *era = ov_tag(el, "start_date");
-  cJSON_AddStringToObject(p, "era", era ? era : "unknown");
+  if (era) cJSON_AddStringToObject(p, "era", era);
+  else cJSON_AddItemToObject(p, "era", cJSON_CreateNull());
   cJSON_AddStringToObject(p, "cls", "osm");
   cJSON_AddStringToObject(p, "country", "JP");
   cJSON_AddStringToObject(p, "source", "osm_overpass");

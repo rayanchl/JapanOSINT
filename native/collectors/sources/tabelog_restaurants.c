@@ -58,9 +58,11 @@ static cJSON *osm_map(cJSON *el, int i, double lon, double lat, void *ud) {
   cJSON_AddItemToObject(p, "name_en",
                         ne ? cJSON_CreateString(ne) : cJSON_CreateNull());
   const char *cuisine = ov_tag(el, "cuisine");
-  cJSON_AddStringToObject(p, "genre", cuisine ? cuisine : "unknown");
+  if (cuisine) cJSON_AddStringToObject(p, "genre", cuisine);
+  else cJSON_AddItemToObject(p, "genre", cJSON_CreateNull());
   const char *amenity = ov_tag(el, "amenity");
-  cJSON_AddStringToObject(p, "amenity", amenity ? amenity : "");
+  if (amenity) cJSON_AddStringToObject(p, "amenity", amenity);
+  else cJSON_AddItemToObject(p, "amenity", cJSON_CreateNull());
   const char *addr = ov_tag(el, "addr:full");
   if (!addr) addr = ov_tag(el, "addr:city");
   cJSON_AddItemToObject(p, "address",

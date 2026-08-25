@@ -33,9 +33,11 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   if (nja) cJSON_AddStringToObject(p, "name_ja", nja);
   else cJSON_AddItemToObject(p, "name_ja", cJSON_CreateNull());
   const char *hb = ov_tag(el, "harbour");
-  cJSON_AddStringToObject(p, "port_class", hb ? hb : "unknown");
+  if (hb) cJSON_AddStringToObject(p, "port_class", hb);
+  else cJSON_AddItemToObject(p, "port_class", cJSON_CreateNull());
   const char *op = ov_tag(el, "operator");
-  cJSON_AddStringToObject(p, "operator", op ? op : "unknown");
+  if (op) cJSON_AddStringToObject(p, "operator", op);
+  else cJSON_AddItemToObject(p, "operator", cJSON_CreateNull());
   const char *pv = ov_tag(el, "addr:province");
   if (!pv) pv = ov_tag(el, "addr:state");
   if (pv) cJSON_AddStringToObject(p, "prefecture", pv);

@@ -49,6 +49,7 @@
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
 #include "scheduler.h"
+#include <limits.h>
 #include <pthread.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -63,9 +64,16 @@ static db_handle *g_db;
 static void iso_now(char *buf, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
   struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-           tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-           tm.tm_hour, tm.tm_min, tm.tm_sec, (int)(tv.tv_usec / 1000));
+  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
+   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
+   * fixed 24-char stamp "may be truncated". The modulos are identity for
+   * every value gmtime_r can return and make the 24 provable, not merely
+   * true. */
+  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 
 /* Escape `s` for embedding inside a JSON string literal, truncating only on a
@@ -81,29 +89,6 @@ static void iso_now(char *buf, size_t n) {
  * has no way to tell. The rest of the tree builds JSON with cJSON; these few
  * sites are on the error path where an allocation is the thing you least want,
  * so they get an escaper instead — the same call reg_ua_prozorro.c makes. */
-static void jesc(const char *s, char *out, size_t cap) {
-  size_t o = 0;
-  if (!out || cap == 0) return;
-  for (const char *q = s ? s : ""; *q; q++) {
-    unsigned char ch = (unsigned char)*q;
-    const char *rep = NULL; char ubuf[7];
-    switch (ch) {
-      case '"':  rep = "\\\""; break;
-      case '\\': rep = "\\\\"; break;
-      case '\n': rep = "\\n";  break;
-      case '\r': rep = "\\r";  break;
-      case '\t': rep = "\\t";  break;
-      default:
-        if (ch < 0x20) { snprintf(ubuf, sizeof ubuf, "\\u%04x", ch); rep = ubuf; }
-        break;
-    }
-    size_t need = rep ? strlen(rep) : 1;
-    if (o + need >= cap) break;          /* never split an escape */
-    if (rep) { memcpy(out + o, rep, need); o += need; }
-    else out[o++] = (char)ch;
-  }
-  out[o] = 0;
-}
 
 static void reply_json(struct mg_connection *c, int code, const char *body) {
   mg_http_reply(c, code,
@@ -134,6 +119,21 @@ static int qs_copy_or_414(struct mg_connection *c, struct mg_http_message *hm,
   return 0;
 }
 
+/* {"error":<err>,"source_id":<id>} with `id` properly escaped and no length
+ * ceiling. Path segments reach us URL-DECODED, so an id can contain a quote,
+ * a backslash or a newline; formatting one into a fixed char[256] with %s both
+ * truncated the body and let the caller inject JSON keys of its own. */
+static void reply_json_err_id(struct mg_connection *c, int code,
+                              const char *err, const char *id) {
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddStringToObject(o, "error", err);
+  cJSON_AddStringToObject(o, "source_id", id ? id : "");
+  char *j = cJSON_PrintUnformatted(o);
+  cJSON_Delete(o);
+  reply_json(c, code, j ? j : "{\"error\":\"internal\"}");
+  free(j);
+}
+
 /* export_write_fn over a mongoose connection: one Transfer-Encoding chunk per
  * batch. Returning non-zero once the peer is gone is what makes export_run()
  * abandon a 250k-row walk instead of formatting it into a socket nobody is
@@ -157,7 +157,7 @@ static const char *jget_str(const cJSON *o, const char *k) {
 
 /* GET /api/sources/stats — aggregate counts from the sources table. */
 static void route_sources_stats(struct mg_connection *c) {
-  int total = 0, online = 0, offline = 0;
+  int total = 0, online = 0, offline = 0, got = 0;
   sqlite3_stmt *st;
   if (sqlite3_prepare_v2(g_db->h,
         "SELECT COUNT(*),"
@@ -166,8 +166,19 @@ static void route_sources_stats(struct mg_connection *c) {
     total = sqlite3_column_int(st, 0);
     online = sqlite3_column_int(st, 1);
     offline = sqlite3_column_int(st, 2);
+    got = 1;
   }
   sqlite3_finalize(st);
+  /* SELECT COUNT(*) always yields a row when it runs at all, so the branch
+   * above is purely the error path — SQLITE_BUSY behind the 5 s timeout, an
+   * IO error, a corrupt page. It used to fall through to the same 200 body
+   * with the zeroed locals, i.e. a fleet of 1,214 sources reported as
+   * {"total":0,"online":0,"offline":0}. Zeros we did not measure are not an
+   * answer. */
+  if (!got) {
+    reply_json(c, 500, "{\"error\":\"sources_stats_query_failed\"}");
+    return;
+  }
   char body[256];
   snprintf(body, sizeof body,
            "{\"total\":%d,\"online\":%d,\"offline\":%d}", total, online, offline);
@@ -178,29 +189,45 @@ static void route_sources_stats(struct mg_connection *c) {
  * routes/search.js searchStreamHandler: JS 'update'/'done' events become a
  * polled snapshot on MG_EV_POLL (throttled 500ms), terminal close on done. */
 #define SSTREAM_MAX 64
-static struct { struct mg_connection *c; char id[40]; uint64_t next; } g_sstream[SSTREAM_MAX];
+/* Wide enough for the whole :id segment the router extracts, so registering a
+ * stream can never key it under a cut-short id: the poller looks the id back
+ * up on every tick, and a truncated one misses for ever — the client keeps a
+ * 200 + event-stream handshake that then goes silent. Request ids are uuid4
+ * (36 chars) today, which is why this never fired, but the router's buffer is
+ * what actually bounds the value and the two must not drift apart. */
+#define SSTREAM_ID_MAX 64
+static struct { struct mg_connection *c; char id[SSTREAM_ID_MAX]; uint64_t next; }
+  g_sstream[SSTREAM_MAX];
 
 static void search_stream_open(struct mg_connection *c, const char *id) {
   mg_printf(c, "HTTP/1.1 200 OK\r\nContent-Type: text/event-stream\r\n"
     "Cache-Control: no-cache, no-transform\r\nConnection: keep-alive\r\n"
     "X-Accel-Buffering: no\r\n\r\n");
   c->is_resp = 0;
-  /* One locked snapshot, not get-then-serialise: progress_get() hands back a
-   * pointer the 200-cap retention sweep can free the instant the lock drops. */
+  /* Look-up + serialise as one locked step. progress_get() hands back a
+   * pointer that progress_create() may free (it evicts the oldest FINISHED
+   * request past 200) — and a reconnect to a completed run is exactly the
+   * eviction candidate. */
   int done = 0;
-  char *snap = progress_snapshot(id, &done);
+  char *snap = progress_snapshot_by_id(id, &done);
   if (!snap) { mg_printf(c, "event: error\r\ndata: {\"error\":\"not_found\"}\n\n");
                c->is_draining = 1; return; }
   mg_printf(c, "event: progress\r\ndata: %s\n\n", snap); free(snap);
   if (done) {
     mg_printf(c, "event: close\r\ndata: {}\n\n"); c->is_draining = 1; return;
   }
+  /* No free slot must NOT leave the connection registered nowhere: it had
+   * already been handed 200 + the event-stream headers, so it would hang open
+   * for ever waiting for events that can never be polled to it, pinning the fd
+   * until the client gave up. Say the stream is unavailable and close. */
   for (int i = 0; i < SSTREAM_MAX; i++) if (!g_sstream[i].c) {
     g_sstream[i].c = c;
     snprintf(g_sstream[i].id, sizeof g_sstream[i].id, "%s", id);
     g_sstream[i].next = mg_millis() + 500;
-    break;
+    return;
   }
+  mg_printf(c, "event: error\r\ndata: {\"error\":\"stream_capacity\"}\n\n");
+  c->is_draining = 1;
 }
 static void search_stream_poll(struct mg_connection *c) {
   for (int i = 0; i < SSTREAM_MAX; i++) {
@@ -208,7 +235,7 @@ static void search_stream_poll(struct mg_connection *c) {
     if (mg_millis() < g_sstream[i].next) return;
     g_sstream[i].next = mg_millis() + 500;
     int done = 0;
-    char *snap = progress_snapshot(g_sstream[i].id, &done);
+    char *snap = progress_snapshot_by_id(g_sstream[i].id, &done);
     if (!snap) { g_sstream[i].c = NULL; c->is_draining = 1; return; }
     mg_printf(c, "event: progress\r\ndata: %s\n\n", snap); free(snap);
     if (done) {
@@ -635,19 +662,31 @@ static void *srcrun_thread(void *vp) {
   db_worker_close(&own);
   run_end(a->id);
 
-  char b[256];
+  /* The THREADED half of the same /run reply the inline fallback below builds
+   * with cJSON. It was left on snprintf with an `%.80s`, which is the quiet
+   * version of the bug: a->id holds up to 127 bytes (the handler refuses
+   * anything longer rather than truncating it — see the note by
+   * "source_id_too_long"), so an id past 80 characters would be answered with
+   * a reply naming a DIFFERENT source than the one that was run. It also
+   * re-opened the quote injection this file closed for the other three
+   * replies, since a path segment arrives URL-DECODED and may contain a `"`.
+   * Both are gone the same way: cJSON sizes itself and escapes. */
+  cJSON *r = cJSON_CreateObject();
+  cJSON_AddBoolToObject(r, "ran", rc >= 0);
+  cJSON_AddStringToObject(r, "source_id", a->id);
   if (rc < 0) {
-    char eid[176]; jesc(a->id, eid, sizeof eid);
-    snprintf(b, sizeof b,
-      "{\"ran\":false,\"source_id\":\"%s\",\"error\":\"collector_run_failed\"}", eid);
-    wakeup_reply(a->mgr, a->cid, 500, b);
+    cJSON_AddStringToObject(r, "error", "collector_run_failed");
   } else {
-    snprintf(b, sizeof b,
-      "{\"ran\":true,\"source_id\":\"%.80s\",\"ingested\":%lld,"
-      "\"duration_ms\":%llu,\"kind\":null,\"meta\":null}",
-      a->id, delta, (unsigned long long)(mg_millis() - t0));
-    wakeup_reply(a->mgr, a->cid, 200, b);
+    cJSON_AddNumberToObject(r, "ingested", (double)delta);
+    cJSON_AddNumberToObject(r, "duration_ms", (double)(mg_millis() - t0));
+    cJSON_AddNullToObject(r, "kind");
+    cJSON_AddNullToObject(r, "meta");
   }
+  char *rj = cJSON_PrintUnformatted(r);
+  cJSON_Delete(r);
+  wakeup_reply(a->mgr, a->cid, rc < 0 ? 500 : 200,
+               rj ? rj : "{\"ran\":false,\"error\":\"internal\"}");
+  free(rj);
   free(a);
   return NULL;
 }
@@ -656,27 +695,47 @@ static void *srcrun_thread(void *vp) {
  * run it. Locals outlive the call (SQLITE_TRANSIENT copies bound values, the
  * envelope is malloc'd). mg_http_get_var > 0 == present & non-empty → NULL
  * means "filter not applied" (== Node `req.query.x ? String(x) : null`). */
-static char *intel_items_run(struct mg_http_message *hm) {
+
+/* mg_http_get_var returns -4 when the parameter is ABSENT and -3 when the
+ * value would not fit the destination (mg_url_decode gives up as soon as
+ * `j + 1 >= dst_len`). Both are `!(n > 0)`, so an over-long value used to be
+ * indistinguishable from a missing one: `?q=` with 256+ decoded bytes — about
+ * 86 Japanese characters, an ordinary pasted phrase — dropped the filter and
+ * returned the ENTIRE unfiltered feed under HTTP 200, and an over-long
+ * `?cursor=` silently restarted pagination at page 1. Half a filter set cannot
+ * be honoured; /api/export already refuses that case with a 414 and this is
+ * the same call. */
+static int qvar(struct mg_http_message *hm, const char *k, char *out,
+                size_t cap, int *too_long) {
+  int n = mg_http_get_var(&hm->query, k, out, cap);
+  if (n == -3) *too_long = 1;
+  return n > 0;
+}
+
+static char *intel_items_run(struct mg_http_message *hm, int *too_long) {
   char src[160]={0}, q[256]={0}, qalt[256]={0}, lang[16]={0}, since[40]={0},
        until[40]={0}, rt[48]={0}, ssid[120]={0}, hg[8]={0}, tag[120]={0},
        cur[768]={0}, lim[16]={0};
+  int tl = 0;
   intel_items_query Q = {0};
-  if (mg_http_get_var(&hm->query, "source",        src,  sizeof src ) > 0) Q.source = src;
-  if (mg_http_get_var(&hm->query, "q",             q,    sizeof q   ) > 0) Q.q = q;
+  if (qvar(hm, "source",        src,  sizeof src,  &tl)) Q.source = src;
+  if (qvar(hm, "q",             q,    sizeof q,    &tl)) Q.q = q;
   /* The iOS client has always sent qAlt (the translated counterpart of q) and
    * this parser has always ignored it, so bilingual search was a no-op and the
    * "Also searching:" banner it drives was dead UI. intelapi_list_items() ORs
    * the two. */
-  if (mg_http_get_var(&hm->query, "qAlt",          qalt, sizeof qalt) > 0) Q.q_alt = qalt;
-  if (mg_http_get_var(&hm->query, "lang",          lang, sizeof lang) > 0) Q.lang = lang;
-  if (mg_http_get_var(&hm->query, "since",         since,sizeof since) > 0) Q.since = since;
-  if (mg_http_get_var(&hm->query, "until",         until,sizeof until) > 0) Q.until = until;
-  if (mg_http_get_var(&hm->query, "record_type",   rt,   sizeof rt  ) > 0) Q.record_type = rt;
-  if (mg_http_get_var(&hm->query, "sub_source_id", ssid, sizeof ssid) > 0) Q.sub_source_id = ssid;
-  if (mg_http_get_var(&hm->query, "has_geom",      hg,   sizeof hg  ) > 0) Q.has_geom = hg;
-  if (mg_http_get_var(&hm->query, "tag",           tag,  sizeof tag ) > 0) Q.tag = tag;
-  if (mg_http_get_var(&hm->query, "cursor",        cur,  sizeof cur ) > 0) Q.cursor = cur;
-  if (mg_http_get_var(&hm->query, "limit",         lim,  sizeof lim ) > 0) Q.limit = atoi(lim);
+  if (qvar(hm, "qAlt",          qalt, sizeof qalt, &tl)) Q.q_alt = qalt;
+  if (qvar(hm, "lang",          lang, sizeof lang, &tl)) Q.lang = lang;
+  if (qvar(hm, "since",         since,sizeof since,&tl)) Q.since = since;
+  if (qvar(hm, "until",         until,sizeof until,&tl)) Q.until = until;
+  if (qvar(hm, "record_type",   rt,   sizeof rt,   &tl)) Q.record_type = rt;
+  if (qvar(hm, "sub_source_id", ssid, sizeof ssid, &tl)) Q.sub_source_id = ssid;
+  if (qvar(hm, "has_geom",      hg,   sizeof hg,   &tl)) Q.has_geom = hg;
+  if (qvar(hm, "tag",           tag,  sizeof tag,  &tl)) Q.tag = tag;
+  if (qvar(hm, "cursor",        cur,  sizeof cur,  &tl)) Q.cursor = cur;
+  if (qvar(hm, "limit",         lim,  sizeof lim,  &tl)) Q.limit = atoi(lim);
+  if (too_long) *too_long = tl;
+  if (tl) return NULL;
   return intelapi_list_items(g_db, &Q);
 }
 
@@ -714,9 +773,80 @@ static int intel_query_is_breach(struct mg_http_message *hm) {
   return breach_meta_is_source(g_db, src);
 }
 
+/* ── request body ceiling ──────────────────────────────────────────────────
+ * third_party/mongoose.h:989 sets MG_MAX_RECV_SIZE to 3 MiB and enforces it by
+ * calling mg_error() on the connection: the socket is torn down mid-upload and
+ * the client gets no HTTP status at all. So a 4 MB POST to /api/cases ended as
+ * `curl: (56) Recv failure`, exit 56, no status line, with the server log
+ * filling with `mongoose.c:read_conn … err 0` — while the SAME request at 2 MB
+ * got a clean 400 "name too long". A reset is not an answer: a client cannot
+ * tell a body-too-big from a crashed server, and cannot know what size would
+ * have worked.
+ *
+ * JO_MAX_BODY_BYTES sits UNDER MG_MAX_RECV_SIZE (so the ceiling is ours and is
+ * reached first, with a connection still alive to answer on) and ABOVE the
+ * largest body any route legitimately takes: uploadapi.h caps one chunk part
+ * at JO_UPLOAD_PART_MAX_BYTES, whose own hard maximum is 2 MiB, and every
+ * other route takes JSON. Raising this above ~3 MiB accomplishes nothing
+ * without raising MG_MAX_RECV_SIZE with it. */
+#define JO_MAX_BODY_BYTES (2u * 1024u * 1024u + 512u * 1024u)   /* 2.5 MiB */
+
+/* Marker in the connection's own 32-byte scratch (mongoose keeps c->data for
+ * exactly this and nothing in this tree used it). Set once a request has been
+ * refused with 413, so the body still streaming in behind the reply is thrown
+ * away as it arrives instead of being buffered into the very mg_error() the
+ * 413 exists to replace. */
+#define JO_CONN_BODY_REFUSED 'X'
+
+static void reject_oversize_body(struct mg_connection *c, long long got) {
+  char body[192];
+  if (got > 0)
+    snprintf(body, sizeof body,
+      "{\"error\":\"payload_too_large\",\"limit_bytes\":%lu,"
+      "\"received_bytes\":%lld}", (unsigned long) JO_MAX_BODY_BYTES, got);
+  else
+    snprintf(body, sizeof body,
+      "{\"error\":\"payload_too_large\",\"limit_bytes\":%lu}",
+      (unsigned long) JO_MAX_BODY_BYTES);
+  reply_json(c, 413, body);
+  c->data[0] = JO_CONN_BODY_REFUSED;
+  c->recv.len = 0;      /* also tells http_cb to detach: it checks for exactly
+                         * this ("user manipulated received data") and stops
+                         * parsing the connection, which is what we want since
+                         * the rest of the bytes are a body we are discarding */
+  c->is_draining = 1;   /* close once the 413 has actually gone out */
+}
+
 static void fn(struct mg_connection *c, int ev, void *ev_data) {
   if (ev == MG_EV_POLL) { search_stream_poll(c); return; }
   if (ev == MG_EV_CLOSE) { search_stream_close(c); return; }
+
+  /* Headers are parsed, the body is not yet buffered — the last point at which
+   * an oversize request can still be answered rather than reset. */
+  if (ev == MG_EV_HTTP_HDRS) {
+    struct mg_http_message *h = ev_data;
+    struct mg_str *cl = mg_http_get_header(h, "Content-Length");
+    if (cl && cl->len > 0 && cl->len < 20) {
+      char b[24] = {0};
+      memcpy(b, cl->buf, cl->len);
+      long long n = strtoll(b, NULL, 10);
+      if (n > (long long) JO_MAX_BODY_BYTES) { reject_oversize_body(c, n); }
+    }
+    return;
+  }
+  /* The belt to that brace: a chunked upload (or one with no Content-Length)
+   * declares nothing, so it can only be caught by what has actually arrived.
+   * mg_call() fires the protocol handler before this one, so by the time a
+   * read is this large the headers have long since been parsed and the
+   * connection is a real HTTP connection we may answer on. */
+  if (ev == MG_EV_READ) {
+    if (c->data[0] == JO_CONN_BODY_REFUSED) { c->recv.len = 0; return; }
+    if (c->recv.len > (size_t) JO_MAX_BODY_BYTES) {
+      reject_oversize_body(c, (long long) c->recv.len);
+      return;
+    }
+    return;
+  }
   if (ev == MG_EV_WAKEUP) {            /* deferred reply from an off-loop thread */
     struct mg_str *d = (struct mg_str *) ev_data;
     int status = 200;
@@ -759,11 +889,11 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
   }
   /* SSE search stream is pre-auth: EventSource can't send Authorization;
    * the unguessable request_id is the capability (== routes/search.js). */
-  { char sid[64];
+  { char sid[SSTREAM_ID_MAX];
     if (seg(u, "/api/search/stream/", "", sid, sizeof sid)) {
       search_stream_open(c, sid); return; } }
 
-  /* /admin/break-glass/... is mounted OUTSIDE the /api auth gate (it exists
+  /* /admin/break-glass/\* is mounted OUTSIDE the /api auth gate (it exists
    * precisely for when Supabase auth is down). Only /login is implemented. */
   if (starts(u, "/admin/break-glass")) {
     if (!eq(u, "/admin/break-glass/login")) { reply_json(c, 404, "{\"error\":\"Not found\"}"); return; }
@@ -798,7 +928,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     return;
   }
 
-  /* ---- everything else under /api/... passes the auth gate ---- */
+  /* ---- everything else under /api/\* passes the auth gate ---- */
   if (starts(u, "/api/")) {
     struct mg_str *h = mg_http_get_header(hm, "Authorization");
     char hdr[2048] = {0};
@@ -815,10 +945,24 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       cJSON *jb = bdy ? cJSON_Parse(bdy) : NULL; free(bdy);
       cJSON *qj = jb ? cJSON_GetObjectItem(jb, "query") : NULL;
       cJSON *mr = jb ? cJSON_GetObjectItem(jb, "max_rounds") : NULL;
+      /* Clamp as a DOUBLE before the narrowing cast. searchapi_analyze()
+       * enforces SEARCH_MAX_ROUNDS_CEILING, but it takes an int, and
+       * converting a double that is outside int range — {"max_rounds":1e300},
+       * or a NaN — is undefined behaviour that happens on the way in, before
+       * any clamp inside the callee can run. Bounding the double first makes
+       * the cast total. */
+      int rounds = 0;
+      if (mr && cJSON_IsNumber(mr)) {
+        double d = mr->valuedouble;
+        if (!(d > 0))                             rounds = 0;   /* also NaN */
+        else if (d > (double) SEARCH_MAX_ROUNDS_CEILING)
+                                                  rounds = SEARCH_MAX_ROUNDS_CEILING;
+        else                                      rounds = (int) d;
+      }
       int ast = 200;
       char *body = searchapi_analyze(g_db,
         (qj && cJSON_IsString(qj)) ? qj->valuestring : NULL,
-        (mr && cJSON_IsNumber(mr)) ? (int)mr->valuedouble : 0, &ast);
+        rounds, &ast);
       if (jb) cJSON_Delete(jb);
       if (!body && ast == 429) {
         reply_json(c, 429,
@@ -863,12 +1007,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       return;
     }
 
-    /* GET /api/layers — registry layers, STRIP-filtered, with each layer's
-     * sources + time-slider disposition. Node crashed here (a registry source
-     * had layer:null → null.replace → 500); miscapi_list_layers skips
-     * layerless sources instead so the Map layer picker actually loads. */
+    /* GET /api/layers — the layer TAXONOMY (v2): curated rows from
+     * core/layers.def (data_type + modality declared), declared layers from
+     * source .layer fields, and the generated per-record_type catch-all that
+     * keeps every geocoded intel_items row reachable. Bare array (v1 shape);
+     * contract fixture tests/contract/_api_layers_v2.json. */
     if (eq(u, "/api/layers")) {
-      char *body = miscapi_list_layers();
+      char *body = miscapi_list_layers(g_db);
       if (!body) { reply_json(c, 500, "{\"error\":\"Failed to list layers\"}"); return; }
       reply_json(c, 200, body);
       free(body);
@@ -925,7 +1070,11 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           if (!nb) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
           reply_json(c, nst, nb); free(nb); return;
         } }
-      char *body = intel_items_run(hm);
+      int qtl = 0;
+      char *body = intel_items_run(hm, &qtl);
+      if (qtl) { reply_json(c, 414,
+        "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
+        "its maximum length; half a filter set cannot be honoured\"}"); return; }
       if (!body) { reply_json(c, 500, "{\"error\":\"failed_to_list_intel_items\"}"); return; }
       /* Post-passes over the envelope intelapi already built, so every filter,
        * the FTS branch and the keyset cursor keep working untouched. Both
@@ -1028,14 +1177,18 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (!body) { reply_json(c, 404, "{\"error\":\"Source not found\"}"); return; }
       if (!strcmp(body, "\1bad")) { free(body);
         reply_json(c, 400, "{\"error\":\"mode must be map_cron or search_only\"}"); return; }
+      if (!strcmp(body, "\1err")) { free(body);
+        reply_json(c, 500, "{\"error\":\"schedule_update_failed\"}"); return; }
       reply_json(c, 200, body); free(body); return;
     }
 
     /* GET /api/sources/:id/logs  (before /:id) */
     if (seg(u, "/api/sources/", "/logs", p, sizeof p)) {
-      char lim[16] = {0};
+      char lim[16] = {0}, ofs[16] = {0};
       int hv = mg_http_get_var(&hm->query, "limit", lim, sizeof lim);
-      char *body = miscapi_source_logs(g_db, p, hv > 0 ? atoi(lim) : 0);
+      int hof = mg_http_get_var(&hm->query, "offset", ofs, sizeof ofs);
+      char *body = miscapi_source_logs(g_db, p, hv > 0 ? atoi(lim) : 0,
+                                       hof > 0 ? atoi(ofs) : 0);
       if (!body) { reply_json(c, 404, "{\"error\":\"Source not found\"}"); return; }
       reply_json(c, 200, body); free(body); return;
     }
@@ -1096,26 +1249,32 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 200, body); free(body); return;
     }
 
-    /* GET /api/layers/:layerId/geojson — proxied to the SAME handlers that
-     * serve /api/data/:layerId (sweep stores first, then the generic collector
-     * layer). It used to answer every known layer with a hardcoded
-     * {"features":[]} and a 200, so a client rendered an empty map and had no
-     * way to know nothing had been read. If neither handler can answer under
-     * this id, miscapi_layer_geojson returns an explicit error naming the
-     * layer's contributing sources — 501, not a fabricated empty success. */
+    /* GET /api/layers/:layerId/geojson?limit=&offset= — the REAL fused
+     * FeatureCollection for a layer (this was a permanent-[] stub while the
+     * point data hid behind per-source /api/data ids). Bounded with in-band
+     * records_available/truncated/next_offset meta; limit/offset page the
+     * rest (dataapi.h). */
     if (seg(u, "/api/layers/", "/geojson", p, sizeof p)) {
-      char *body = sweepapi_data(g_db, p);
-      if (!body) body = dataapi_layer(g_db, p);
-      if (body) { reply_json(c, 200, body); free(body); return; }
-      char *note = miscapi_layer_geojson(p);
-      if (!note) { reply_json(c, 404, "{\"error\":\"Layer not found\"}"); return; }
-      reply_json(c, 501, note); free(note); return;
+      int lim = 0, off = 0;
+      { char v[32] = {0};
+        if (mg_http_get_var(&hm->query, "limit", v, sizeof v) > 0)
+          lim = atoi(v);
+        v[0] = 0;
+        if (mg_http_get_var(&hm->query, "offset", v, sizeof v) > 0)
+          off = atoi(v); }
+      char *body = dataapi_layer_fc(g_db, p, lim, off);
+      if (!body) { reply_json(c, 404, "{\"error\":\"Layer not found\"}"); return; }
+      reply_json(c, 200, body); free(body); return;
     }
 
     /* GET /api/intel/search — alias of /api/intel/items */
     if (eq(u, "/api/intel/search")) {
       if (intel_query_is_breach(hm) && breach_gate(c, &usr)) return;
-      char *body = intel_items_run(hm);
+      int qtl = 0;
+      char *body = intel_items_run(hm, &qtl);
+      if (qtl) { reply_json(c, 414,
+        "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
+        "its maximum length; half a filter set cannot be honoured\"}"); return; }
       if (!body) { reply_json(c, 500, "{\"error\":\"failed_to_list_intel_items\"}"); return; }
       reply_json(c, 200, body); free(body); return;
     }
@@ -1135,24 +1294,29 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return;
       }
       const source_def *d = registry_get(p);
-      char b[256];
-      /* `p` is URL-DECODED by seg(), so it can carry a quote. Escape once for
-       * every body this route builds by hand. */
-      char eid[176]; jesc(p, eid, sizeof eid);
-      if (!d) {
-        snprintf(b, sizeof b,
-          "{\"error\":\"no_collector_registered\",\"source_id\":\"%s\"}", eid);
-        reply_json(c, 404, b); return;
-      }
-      if (!run_begin(p)) {
-        snprintf(b, sizeof b,
-          "{\"error\":\"run_in_flight\",\"source_id\":\"%s\"}", eid);
-        reply_json(c, 409, b); return;
-      }
+      /* `p` is a URL-DECODED path segment of up to 1023 bytes, so it can carry
+       * a literal '"' (from %22) and it can outrun any fixed body buffer. The
+       * snprintf pair that used to build these two replies did neither escape
+       * nor check its return: %22 injected attacker-chosen keys into the JSON,
+       * and a 206-byte id truncated the body mid-string. Build it with cJSON,
+       * which escapes and sizes itself. */
+      if (!d) { reply_json_err_id(c, 404, "no_collector_registered", p); return; }
+      if (!run_begin(p)) { reply_json_err_id(c, 409, "run_in_flight", p); return; }
       srcrun_arg *ra = calloc(1, sizeof *ra);
       if (ra) {
         ra->mgr = c->mgr; ra->cid = c->id; ra->db = g_db; ra->d = d;
-        snprintf(ra->id, sizeof ra->id, "%s", p);
+        /* `p` is up to 1023 bytes and ra->id is 128. registry_get() has
+         * already matched it against a real registration (the longest id in
+         * the tree is under 40 chars), so this cannot fire — but refusing
+         * beats truncating: run_begin() took the FULL id, run_end() would
+         * then release a DIFFERENT one and leak the single-flight guard for
+         * the life of the process, and si_count() would measure the ingest
+         * delta of whatever source shares the truncated prefix. */
+        if (snprintf(ra->id, sizeof ra->id, "%s", p) >= (int)sizeof ra->id) {
+          free(ra); run_end(p);
+          reply_json_err_id(c, 414, "source_id_too_long", p);
+          return;
+        }
         pthread_t th;
         if (pthread_create(&th, NULL, srcrun_thread, ra) == 0) {
           pthread_detach(th);
@@ -1170,15 +1334,22 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         if (delta < 0) delta = 0;
         run_end(p);
         if (rc < 0) {
-          snprintf(b, sizeof b,
-            "{\"ran\":false,\"source_id\":\"%s\",\"error\":\"collector_run_failed\"}", eid);
-          reply_json(c, 500, b); return;
+          reply_json_err_id(c, 500, "collector_run_failed", p); return;
         }
-        snprintf(b, sizeof b,
-          "{\"ran\":true,\"source_id\":\"%s\",\"ingested\":%lld,"
-          "\"duration_ms\":%llu,\"kind\":null,\"meta\":null}",
-          eid, delta, (unsigned long long)(mg_millis() - t0));
-        reply_json(c, 200, b);
+        /* Same reason as the two replies above: `p` is decoded, so it is
+         * neither guaranteed JSON-safe nor guaranteed to fit a fixed body. */
+        cJSON *ok = cJSON_CreateObject();
+        cJSON_AddBoolToObject(ok, "ran", 1);
+        cJSON_AddStringToObject(ok, "source_id", p);
+        cJSON_AddNumberToObject(ok, "ingested", (double)delta);
+        cJSON_AddNumberToObject(ok, "duration_ms",
+                                (double)(mg_millis() - t0));
+        cJSON_AddNullToObject(ok, "kind");
+        cJSON_AddNullToObject(ok, "meta");
+        char *b = cJSON_PrintUnformatted(ok);
+        cJSON_Delete(ok);
+        reply_json(c, 200, b ? b : "{\"ran\":true}");
+        free(b);
       }
       return;
     }
@@ -1197,7 +1368,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 501, body); free(body); return;
     }
 
-    /* ---- /api/admin/... and /api/db/... — requirePlatformOperator ---- */
+    /* ---- /api/admin/\* and /api/db/\* — requirePlatformOperator ---- */
     if (starts(u,"/api/admin/") ||
         eq(u,"/api/db/tables") || starts(u,"/api/db/tables/") ||
         eq(u,"/api/db/scheduler")) {
@@ -1319,14 +1490,38 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           int ch = sqlite3_changes(g_db->h);
           sqlite3_finalize(cs);
           if (ch == 0) { reply_json(c,404,"{\"error\":\"not_found\"}"); return; }
-          char pj[160], ejd[176]; jesc(idb, ejd, sizeof ejd);
-          snprintf(pj,sizeof pj,"{\"source_id\":\"%.80s\",\"enabled\":%s}",
-                   ejd, on ? "true" : "false");
-          audit_write(g_db, "platform", usr.id, "evidence.capture.toggle", idb, pj);
-          char ob[128];
-          snprintf(ob,sizeof ob,"{\"ok\":true,\"source_id\":\"%.80s\",\"capture_evidence\":%s}",
-                   ejd, on ? "true" : "false");
-          reply_json(c,200,ob); return;
+          /* The AUDIT payload has the same defect the reply below it was fixed
+           * for, and it is worse here because an audit row is the record of
+           * what an operator did: `%.80s` does not overflow and does not warn,
+           * it silently cuts a 127-byte id (seg() decodes into char idb[128])
+           * at 80 — so the audit trail names a DIFFERENT source than the one
+           * whose evidence capture was just toggled. Built with cJSON for the
+           * same reasons as the reply: it sizes itself and it escapes, and a
+           * decoded %22 in the path segment would otherwise inject JSON keys
+           * into the stored payload. */
+          cJSON *ap = cJSON_CreateObject();
+          cJSON_AddStringToObject(ap, "source_id", idb);
+          cJSON_AddBoolToObject(ap, "enabled", on);
+          char *pj = cJSON_PrintUnformatted(ap);
+          cJSON_Delete(ap);
+          audit_write(g_db, "platform", usr.id, "evidence.capture.toggle", idb,
+                      pj ? pj : "{}");
+          free(pj);
+          /* Built with cJSON, not snprintf into char[128]: the fixed part of
+           * this body is 45 characters and idb takes 127, so a source id past
+           * 77 chars ran off the end and the client got JSON cut mid-token.
+           * The %.80s cap was no answer either — that silently returns a
+           * DIFFERENT source_id than the one just toggled. cJSON sizes itself
+           * and escapes, which also closes the quote-injection the same file
+           * fixed for the /run replies (a decoded %22 in the segment). */
+          cJSON *ok = cJSON_CreateObject();
+          cJSON_AddBoolToObject(ok,"ok",1);
+          cJSON_AddStringToObject(ok,"source_id",idb);
+          cJSON_AddBoolToObject(ok,"capture_evidence",on);
+          char *okj = cJSON_PrintUnformatted(ok);
+          cJSON_Delete(ok);
+          reply_json(c,200,okj ? okj : "{\"error\":\"internal\"}");
+          free(okj); return;
         }
         /* Roadmap 28 — the same reachability problem as capture-evidence:
          * capture_stills defaults to 0, so without a switch the feature is
@@ -1351,21 +1546,37 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           int ch = sqlite3_changes(g_db->h);
           sqlite3_finalize(cs);
           if (ch == 0) { reply_json(c,404,"{\"error\":\"not_found\"}"); return; }
-          char pj[200], ejd[176]; jesc(idb, ejd, sizeof ejd);
-          snprintf(pj,sizeof pj,"{\"camera_id\":\"%.80s\",\"enabled\":%s}",
-                   ejd, on ? "true" : "false");
-          audit_write(g_db, "platform", usr.id, "camera.stills.toggle", idb, pj);
+          /* Same fix as the evidence-capture audit payload above: a camera uid
+           * reaches us decoded in a char[128], and `%.80s` would silently
+           * record a different camera than the one that was toggled. */
+          cJSON *ap = cJSON_CreateObject();
+          cJSON_AddStringToObject(ap, "camera_id", idb);
+          cJSON_AddBoolToObject(ap, "enabled", on);
+          char *pj = cJSON_PrintUnformatted(ap);
+          cJSON_Delete(ap);
+          audit_write(g_db, "platform", usr.id, "camera.stills.toggle", idb,
+                      pj ? pj : "{}");
+          free(pj);
           /* Frames are only PRESERVED if the camera-stills source is also
            * opted into evidence capture — the module reuses that blob store
            * rather than building a second one, so the byte budget still
            * applies. Say so in the reply instead of leaving it to be
            * discovered when blob_path comes back NULL. */
-          char ob[256];
-          snprintf(ob,sizeof ob,
-            "{\"ok\":true,\"camera_id\":\"%.80s\",\"capture_stills\":%s,"
-            "\"note\":\"raw frames also require capture_evidence on source "
-            "'camera-stills'\"}", idb, on ? "true" : "false");
-          reply_json(c,200,ob); return;
+          /* And the reply itself — the note text alone is 78 characters, so
+           * char[256] plus a 127-byte uid was already tight, and the `%.80s`
+           * that kept it inside the buffer told the caller it had toggled a
+           * camera_id it had not named. cJSON sizes and escapes; identical to
+           * how the capture-evidence reply above was resolved. */
+          cJSON *ok = cJSON_CreateObject();
+          cJSON_AddBoolToObject(ok,"ok",1);
+          cJSON_AddStringToObject(ok,"camera_id",idb);
+          cJSON_AddBoolToObject(ok,"capture_stills",on);
+          cJSON_AddStringToObject(ok,"note",
+            "raw frames also require capture_evidence on source 'camera-stills'");
+          char *okj = cJSON_PrintUnformatted(ok);
+          cJSON_Delete(ok);
+          reply_json(c,200,okj ? okj : "{\"error\":\"internal\"}");
+          free(okj); return;
         }
         if (seg(u,"/api/admin/anomalies/","/requeue",idb,sizeof idb)) {
           if (!is_post){ reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
@@ -1373,7 +1584,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           reply_json(c,st,b); free(b); return;
         }
       }
-      /* ---- /api/admin/breach/... — one-shot corpus fetch / ingest (async jobs)
+      /* ---- /api/admin/breach/\* — one-shot corpus fetch / ingest (async jobs)
        * + job status. Ingest/fetch run on detached threads (own DB connection),
        * so a multi-GB job never blocks the event loop. Operator-gated above. */
       if (eq(u,"/api/admin/breach/ingest") || eq(u,"/api/admin/breach/fetch")) {
@@ -1410,9 +1621,19 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         if (limit < 1)   limit = 1;
         if (limit > 200) limit = 200;   /* the sample is for eyeballing, not export */
 
+        /* ?path= went straight to the seed parser, whose output this route
+         * then returns in `sample[]` — so ?path=/etc/passwd answered 200 with
+         * the file's lines in the JSON body. Confine it to the breach data
+         * directory and parse the RESOLVED path, never the caller's spelling.
+         * An omitted path still means "the committed seed" and is not checked,
+         * because it never came from the network. */
+        char safe_pv[PATH_MAX];
+        if (pv[0] && breach_path_confine(pv, safe_pv, sizeof safe_pv) != 0) {
+          reply_json(c,400,breach_path_confine_error()); return; }
+
         breach_seed_row *rows=NULL; int nr=0;
         breach_seed_stats stt;
-        int parsed = breach_meta_parse_seed(g_db, pv[0]?pv:NULL, limit,
+        int parsed = breach_meta_parse_seed(g_db, pv[0]?safe_pv:NULL, limit,
                                             &rows, &nr, &stt);
         if (parsed < 0) {
           free(rows);
@@ -1461,6 +1682,19 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         const char *path = jget_str(j,"path");
         const char *fmt  = jget_str(j,"format");
         if (path && !*path) path = NULL;
+
+        /* Same unconfined read as preview, minus the echo: this one parses
+         * whatever file it is pointed at and writes the rows into breach_meta,
+         * where they surface as intel sources. Confined for the same reason
+         * and against the same base; `path` becomes the resolved string so the
+         * checked name and the opened name cannot diverge. */
+        char safe_lp[PATH_MAX];
+        if (path) {
+          if (breach_path_confine(path, safe_lp, sizeof safe_lp) != 0) {
+            if (j) cJSON_Delete(j);
+            reply_json(c,400,breach_path_confine_error()); return; }
+          path = safe_lp;
+        }
 
         int use_tsv;
         if      (fmt && strcmp(fmt,"tsv")  == 0) use_tsv = 1;
@@ -1530,7 +1764,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       /* /api/db/tables/:name
        *
        * This is the tail of the block, so anything that entered it and matched
-       * no route above lands here — including every unmatched /api/admin/...
+       * no route above lands here — including every unmatched /api/admin/\*
        * path. The offset arithmetic below is blind, so `GET /api/admin/xxxsources`
        * used to slice out "sources" and dump that table. Only real
        * /api/db/tables/ URIs may reach the explorer. */
@@ -1665,7 +1899,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     /* ---- roadmap 10: POST /api/alerts/preview — backtest a predicate over
      * history WITHOUT writing alert_events. Shares alert_eval.c's matcher
      * with the live ingest path, so what you preview is what will fire.
-     * Must precede the /api/alerts/... block, which would otherwise treat
+     * Must precede the /api/alerts/\* block, which would otherwise treat
      * "preview" as a rule id. ---- */
     if (eq(u, "/api/alerts/preview")) {
       if (mg_strcmp(hm->method, mg_str("POST")) != 0) {
@@ -1754,7 +1988,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, status, body); free(body); return;
     }
 
-    /* ---- P7 Wave 3b: /api/alerts/... (tenant-scoped rule CRUD) ---- */
+    /* ---- P7 Wave 3b: /api/alerts/\* (tenant-scoped rule CRUD) ---- */
     if (eq(u, "/api/alerts") || starts(u, "/api/alerts/")) {
       struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
       char xtid[128] = {0};
@@ -1781,9 +2015,16 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         memcpy(bdy, hm->body.buf, hm->body.len); bdy[hm->body.len] = 0; }
       char lv[16] = {0};
       int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
+      /* ?cursor= for GET /:id/events. That route used to cap at 500 rows with
+       * no total and no cursor, so rows past the cap could not be reached at
+       * all (house rule 2); the cursor is the half of the fix that keeps them
+       * reachable. Sized like the other keyset cursors in this file. */
+      char cv[768] = {0};
+      mg_http_get_var(&hm->query, "cursor", cv, sizeof cv);
       int status = 200;
       char *body = alertsapi(g_db, tc.tenant_id, tc.user_id, meth,
-                             aid, act, bdy, hl > 0 ? atoi(lv) : 0, &status);
+                             aid, act, bdy, hl > 0 ? atoi(lv) : 0,
+                             cv[0] ? cv : NULL, &status);
       free(bdy);
       if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
@@ -2399,7 +2640,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, status, body); free(body); return;
     }
 
-    /* ---- /api/members[/...] — member roster + invites (tenant-scoped) ---- */
+    /* ---- /api/members[/\*] — member roster + invites (tenant-scoped) ---- */
     if (eq(u, "/api/members") || starts(u, "/api/members/")) {
       struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
       char xtid[128] = {0};
@@ -2536,7 +2777,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 200, body); free(body); return;
     }
 
-    /* ---- P7 Wave 2: /api/entities/... (entity graph, pure SQLite) ----
+    /* ---- P7 Wave 2: /api/entities/\* (entity graph, pure SQLite) ----
      * These routes reached entityapi without ever resolving a tenant, and
      * entityapi had no tenant predicate — the whole subtree was cross-tenant
      * readable. Resolve once here, at the top of the subtree, and pass the id
@@ -2560,17 +2801,32 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 200, body); free(body); return;
     }
     if (eq(u, "/api/entities/search")) {
-      char qv[512] = {0}, tv[128] = {0}, lv[16] = {0};
+      char qv[512] = {0}, tv[128] = {0}, lv[16] = {0}, ov[16] = {0};
       mg_http_get_var(&hm->query, "q", qv, sizeof qv);
       int ht = mg_http_get_var(&hm->query, "type", tv, sizeof tv);
       int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
-      /* trim q; empty → {"results":[]} (matches entities.js) */
+      int ho = mg_http_get_var(&hm->query, "offset", ov, sizeof ov);
+      /* trim q; empty → the empty envelope (matches entities.js) */
       char *qs = qv; while (*qs == ' ') qs++;
       size_t ql = strlen(qs);
       while (ql && qs[ql-1] == ' ') qs[--ql] = 0;
-      if (!*qs) { reply_json(c, 200, "{\"results\":[]}"); return; }
+      /* This used to answer the bare literal {"results":[]}, which is now the
+       * one reply on this route without the page/meta envelope every other
+       * reply carries — a client would have to special-case it. Left to
+       * entityapi_search_scoped, which emits the empty envelope itself.
+       * Scoped, like the populated call below it: the operator flag is what
+       * decides whether breach-quarantined nodes are reachable at all. */
+      if (!*qs) {
+        char *eb = entityapi_search_scoped(g_db, "", ht > 0 ? tv : NULL,
+                                           hl > 0 ? atoi(lv) : 0,
+                                           ho > 0 ? atoi(ov) : 0,
+                                           etc.tenant_id, e_op);
+        if (!eb) { reply_json(c, 500, "{\"error\":\"search_failed\"}"); return; }
+        reply_json(c, 200, eb); free(eb); return;
+      }
       char *body = entityapi_search_scoped(g_db, qs, ht > 0 ? tv : NULL,
                                            hl > 0 ? atoi(lv) : 0,
+                                           ho > 0 ? atoi(ov) : 0,
                                            etc.tenant_id, e_op);
       if (!body) { reply_json(c, 500, "{\"error\":\"search_failed\"}"); return; }
       reply_json(c, 200, body); free(body); return;
@@ -2656,7 +2912,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 404, "{\"error\":\"not_found\"}");
       return;
     }
-    }   /* end /api/entities/... tenant-resolved block */
+    }   /* end /api/entities/\* tenant-resolved block */
 
     /* GET /api/data/cameras/discovery-feed — port of data.js getDiscoveryFeed
      * route. Explicit (the generic /api/data/ matcher below rejects a
@@ -2677,7 +2933,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
      * Serves the upstream camera image over our own origin so iOS doesn't need
      * an ATS exception per discovered IP. Bytes are from an arbitrary internet
      * camera, so: nosniff, and the content type is echoed only after it was
-     * checked to be image/.... Explicit route — the generic /api/data/ matcher
+     * checked to be image/\*. Explicit route — the generic /api/data/ matcher
      * below would treat "cameras/proxy" as a layer id. */
     if (eq(u, "/api/data/cameras/proxy")) {
       char cu[192] = {0};
@@ -2921,8 +3177,29 @@ int httpd_serve(db_handle *db, int port) {
   auth_init();
   struct mg_mgr mgr;
   mg_mgr_init(&mgr);
-  char url[64];
-  snprintf(url, sizeof url, "http://0.0.0.0:%d", port);
+  /* Loopback by default. There is no TLS anywhere in this server — no mg_tls,
+   * no SSL_CTX, nothing to switch on — and every authenticated request carries
+   * a Supabase bearer and X-Tenant-Id, while GET /api/tenant-keys/:name returns
+   * a PLAINTEXT upstream API key (Shodan, Censys, HIBP) in its body. Binding
+   * 0.0.0.0 unconditionally put all of that on the wire for anyone on the same
+   * network, which is also what let an mDNS squatter answer for the shipping
+   * iOS default host.
+   *
+   * Exposing the server is now a decision someone makes explicitly, and the
+   * only correct way to make it is behind a TLS-terminating proxy:
+   *
+   *     JO_BIND=127.0.0.1   (default) loopback only
+   *     JO_BIND=0.0.0.0     every interface — proxy MUST terminate TLS
+   *     JO_BIND=10.0.0.5    one interface
+   */
+  const char *bind_addr = getenv("JO_BIND");
+  if (!bind_addr || !*bind_addr) bind_addr = "127.0.0.1";
+  char url[128];
+  snprintf(url, sizeof url, "http://%s:%d", bind_addr, port);
+  if (strcmp(bind_addr, "127.0.0.1") != 0 && strcmp(bind_addr, "localhost") != 0)
+    fprintf(stderr, "[httpd] WARNING: bound %s in cleartext — bearer tokens and "
+                    "plaintext upstream API keys traverse this socket. Put a "
+                    "TLS-terminating proxy in front of it.\n", url);
   if (!mg_http_listen(&mgr, url, fn, NULL)) {
     fprintf(stderr, "[httpd] cannot bind %s\n", url);
     mg_mgr_free(&mgr);

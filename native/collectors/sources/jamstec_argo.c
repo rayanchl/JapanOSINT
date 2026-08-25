@@ -10,22 +10,23 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define ARGOVIS "https://argovis-api.colorado.edu/argo"
 /* Japan-region polygon (lon,lat) closed ring, URL-encoded. */
 #define POLYGON_ENC "%5B%5B122%2C24%5D%2C%5B146%2C24%5D%2C%5B146%2C46%5D%2C%5B122%2C46%5D%2C%5B122%2C24%5D%5D"
 
-static void iso_utc(time_t t, char *out, size_t n) {
-  struct tm g; gmtime_r(&t, &g);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%S.000Z", &g);
-}
-
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t end = time(NULL);
   time_t start = end - 14 * 24 * 3600;
+  /* Both stamps ARE the startDate/endDate of the query; a window we cannot
+   * render is not a window we may guess at. */
   char s_iso[40], e_iso[40];
-  iso_utc(start, s_iso, sizeof s_iso);
-  iso_utc(end, e_iso, sizeof e_iso);
+  if (!jo_time_fmt(start, "%Y-%m-%dT%H:%M:%S.000Z", s_iso, sizeof s_iso) ||
+      !jo_time_fmt(end,   "%Y-%m-%dT%H:%M:%S.000Z", e_iso, sizeof e_iso)) {
+    fprintf(stderr, "[jamstec-argo] cannot render the query window as a date\n");
+    return -1;
+  }
 
   char url[512];
   snprintf(url, sizeof url,
@@ -114,17 +115,34 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         snprintf(title, sizeof title, "Argo float %s", plat);
       cJSON_AddStringToObject(pr, "title", title);
     }
-    /* source[0].url is the DAC NetCDF profile — the provenance link */
+    /* source[].url is the DAC NetCDF profile — the provenance link.
+     *
+     * `source` is NOT a one-element envelope: measured 2026-08-24 against the
+     * live Japan-polygon window, 10 of 95 profiles carried TWO source entries
+     * (a core file and a second stream, each with its own url and
+     * date_updated). Reading source[0] alone threw the second provenance link
+     * away. `url` and `dac_updated_at` stay as the DISPLAY pick — geojson.c
+     * derives the row's link from `url` and takes a scalar — and the whole
+     * array rides alongside them. */
     if (src && cJSON_IsArray(src) && cJSON_GetArraySize(src) > 0) {
-      cJSON *s0 = cJSON_GetArrayItem(src, 0);  /* exhaustive-ok: provenance display pick; sources_all below carries every source entry */
-      if (cJSON_GetArraySize(src) > 1)
-        cJSON_AddItemToObject(pr, "sources_all", cJSON_Duplicate(src, 1));
-      cJSON *u = s0 ? cJSON_GetObjectItem(s0, "url") : NULL;
-      if (u && cJSON_IsString(u) && u->valuestring[0])
-        cJSON_AddStringToObject(pr, "url", u->valuestring);
-      cJSON *du = s0 ? cJSON_GetObjectItem(s0, "date_updated") : NULL;
-      if (du && cJSON_IsString(du))
-        cJSON_AddStringToObject(pr, "dac_updated_at", du->valuestring);
+      cJSON *urls = cJSON_CreateArray();
+      cJSON *s;
+      cJSON_ArrayForEach(s, src) {
+        cJSON *u = cJSON_GetObjectItem(s, "url");
+        cJSON *du = cJSON_GetObjectItem(s, "date_updated");
+        if (u && cJSON_IsString(u) && u->valuestring[0]) {
+          if (!cJSON_GetObjectItem(pr, "url"))            /* first = display pick */
+            cJSON_AddStringToObject(pr, "url", u->valuestring);
+          cJSON_AddItemToArray(urls, cJSON_Duplicate(u, 1));
+        }
+        if (du && cJSON_IsString(du) && !cJSON_GetObjectItem(pr, "dac_updated_at"))
+          cJSON_AddStringToObject(pr, "dac_updated_at", du->valuestring);
+      }
+      if (cJSON_GetArraySize(urls) > 1)
+        cJSON_AddItemToObject(pr, "source_urls_all", urls);
+      else
+        cJSON_Delete(urls);
+      cJSON_AddItemToObject(pr, "source_entries", cJSON_Duplicate(src, 1));
     }
     cJSON *dua = cJSON_GetObjectItem(p, "date_updated_argovis");
     if (dua && cJSON_IsString(dua))
@@ -136,16 +154,50 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (gqc) cJSON_AddItemToObject(pr, "geolocation_qc", cJSON_Duplicate(gqc, 1));
     cJSON *tqc = cJSON_GetObjectItem(p, "timestamp_argoqc");
     if (tqc) cJSON_AddItemToObject(pr, "timestamp_qc", cJSON_Duplicate(tqc, 1));
-    /* data_info[0] is the list of variables this profile actually measured */
+    /* data_info is Argovis' fixed 3-part table:
+     *   [0] the variable names this profile measured
+     *   [1] the names of the per-variable metadata columns
+     *   [2] one row of those columns per variable
+     * Live sample: [["pressure","salinity","temperature",…],
+     *               ["units","data_keys_mode"],
+     *               [["decibar","R"],["psu","R"],["degree_Celsius","R"],…]]
+     * Taking part [0] alone kept the variable names and dropped the UNITS and
+     * the data mode — and `data_keys_mode` is the difference between a
+     * real-time reading ("R") and a delayed-mode, quality-controlled one
+     * ("D"), which is exactly the sort of qualifier a reader must not lose.
+     * Keep the display list, and pivot the whole table into an object. */
     cJSON *di = cJSON_GetObjectItem(p, "data_info");
     if (di && cJSON_IsArray(di) && cJSON_GetArraySize(di) > 0) {
-      cJSON *vars = cJSON_GetArrayItem(di, 0);  /* exhaustive-ok: data_info[0] IS the variable-name list; data_info_all keeps the rest */
+      cJSON *vars = cJSON_GetArrayItem(di, 0);  /* exhaustive-ok: part [0] of the fixed 3-part data_info table; parts [1] and [2] are decoded into measured_variable_info just below */
       if (cJSON_IsArray(vars))
         cJSON_AddItemToObject(pr, "measured_variables", cJSON_Duplicate(vars, 1));
-      /* data_info also carries the units/keys blocks after [0]; keep them. */
-      if (cJSON_GetArraySize(di) > 1)
-        cJSON_AddItemToObject(pr, "data_info_all", cJSON_Duplicate(di, 1));
+
+      cJSON *cols = cJSON_GetArrayItem(di, 1);
+      cJSON *rows = cJSON_GetArrayItem(di, 2);
+      if (cJSON_IsArray(vars) && cJSON_IsArray(cols) && cJSON_IsArray(rows)) {
+        cJSON *info = cJSON_CreateObject();
+        int nv = cJSON_GetArraySize(vars);
+        for (int vi = 0; vi < nv; vi++) {
+          cJSON *vn = cJSON_GetArrayItem(vars, vi);
+          cJSON *rw = cJSON_GetArrayItem(rows, vi);
+          if (!cJSON_IsString(vn) || !cJSON_IsArray(rw)) continue;
+          cJSON *one = cJSON_CreateObject();
+          int nc = cJSON_GetArraySize(cols);
+          for (int ci = 0; ci < nc; ci++) {
+            cJSON *cn = cJSON_GetArrayItem(cols, ci);
+            cJSON *cv = cJSON_GetArrayItem(rw, ci);
+            if (cJSON_IsString(cn) && cv && !cJSON_IsNull(cv))
+              cJSON_AddItemToObject(one, cn->valuestring, cJSON_Duplicate(cv, 1));
+          }
+          cJSON_AddItemToObject(info, vn->valuestring, one);
+        }
+        cJSON_AddItemToObject(pr, "measured_variable_info", info);
+      }
     }
+    /* `metadata` names the float's metadata document(s); it was read by
+     * nothing and therefore never reached the store. */
+    cJSON *meta = cJSON_GetObjectItem(p, "metadata");
+    if (meta) cJSON_AddItemToObject(pr, "metadata_ids", cJSON_Duplicate(meta, 1));
 
     cJSON_AddItemToObject(f, "properties", pr);
     cJSON_AddItemToArray(features, f);

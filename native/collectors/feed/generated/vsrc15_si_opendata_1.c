@@ -22,7 +22,7 @@ VJSON(si_podatki_gov_si_orgs, "si-podatki-gov-si-orgs", "podatki.gov.si — orgs
 
 VJSON(si_podatki_gov_si_tags, "si-podatki-gov-si-tags", "podatki.gov.si — tags (Slovenia)", "podatki.gov.si — tags (Slovenia)",
   "si_opendata", "opendata",
-  "https://podatki.gov.si/api/3/action/tag_list",
+  "https://podatki.gov.si/api/3/action/tag_list?all_fields=true",
   "result",
   "sl", "[\"si\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at podatki.gov.si.");

@@ -22,6 +22,8 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "lib/feedlib.h"   /* feed_hash_key, for guid_reused feeds */
+#include "lib/jocore.h"    /* jo_trunc_notice, for the item-cap disclosure */
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -588,6 +590,16 @@ typedef struct sanc_feed_cfg {
    * court code, neutral citation …) to the row's properties and summary. Never
    * used to invent values: it only re-reads bytes the feed actually returned. */
   void (*enrich)(cJSON *props, const sanc_feed_item *it);
+  /* Set when the feed's <guid> is NOT unique per item. PACER's
+   * cgi-bin/rss_outside.pl stamps one guid (DktRpt.pl?caseid&entry) on every
+   * item a docket entry produces — measured live 2026-08-25 on CAND: 1,611
+   * items, one guid carried by 10 of them — so keying on guid alone upserted
+   * distinct filings onto each other (sweep 2026-08-24: 300 emitted, 268-284
+   * stored across the three courts). With this set, the item's own
+   * title|pubDate|description are folded into the key, so distinct items
+   * survive while a byte-identical re-serve of the same item still lands on
+   * the same uid. */
+  int guid_reused;
 } sanc_feed_cfg;
 
 /* Fetch an RSS 2.0 / RDF / Atom feed and emit one row per item/entry.
@@ -605,8 +617,12 @@ static inline int sanc_feed_run(const source_ctx *ctx, intel_sink *sink,
   const char *end = raw + len;
   if (xml > end) end = xml;
 
-  int max_items = sanc_env_int("JO_SANC_MAX_ITEMS", 300);
-  int n = 0;
+  /* Cap raised 300 -> 2000 (2026-08-25): PACER CAND alone serves 1,611 items
+   * per fetch and the old default silently discarded 1,311 real docket
+   * entries every run. When the cap still bites, the shortfall is disclosed
+   * below as a collector-truncation-notice rather than a log line (rule 2). */
+  int max_items = sanc_env_int("JO_SANC_MAX_ITEMS", 2000);
+  int n = 0, uncounted = 0;
   for (int pass = 0; pass < 2 && n == 0; pass++) {
     const char *item_tag = pass == 0 ? "item" : "entry";
     const char *cur = xml;
@@ -668,7 +684,21 @@ static inline int sanc_feed_run(const source_ctx *ctx, intel_sink *sink,
         cJSON_Delete(props);
 
         intel_item it = {0};
-        it.remote_key = guid && guid[0] ? guid : (link && link[0] ? link : title);
+        char rk[224];
+        if (cfg->guid_reused) {
+          /* See guid_reused in the cfg: guid alone is not an item identity on
+           * this feed, so the item's own text completes the key. */
+          char ih[21];
+          const char *ihp[3] = { title, pub ? pub : "",
+                                 desc ? desc : "" };
+          feed_hash_key(ih, ihp, 3);
+          snprintf(rk, sizeof rk, "%.190s|%s",
+                   guid && guid[0] ? guid : (link && link[0] ? link : ""), ih);
+          it.remote_key = rk;
+        } else {
+          it.remote_key = guid && guid[0] ? guid
+                        : (link && link[0] ? link : title);
+        }
         it.title = title;
         it.summary = summary[0] ? summary : NULL;
         it.body = desc;
@@ -684,9 +714,23 @@ static inline int sanc_feed_run(const source_ctx *ctx, intel_sink *sink,
       }
       free(title); free(desc); free(guid); free(pub); free(link);
     }
+    /* Cap hit with items still unread: count what was left behind so the
+     * shortfall can be disclosed in-band instead of vanishing. */
+    if (n >= max_items) {
+      sanc_el rest;
+      while (sanc_xml_next(&cur, end, item_tag, &rest)) uncounted++;
+    }
   }
   free(raw);
-  fprintf(stderr, "[%s] emitted %d\n", tag, n);
+  if (uncounted > 0)
+    jo_trunc_notice(sink, ctx->source_id ? ctx->source_id : tag, url,
+                    n, (long)n + uncounted,
+                    "JO_SANC_MAX_ITEMS capped the walk while the feed still "
+                    "had items",
+                    "raise JO_SANC_MAX_ITEMS (default 2000) — see "
+                    "docs/SOURCE_EXHAUSTIVENESS.md");
+  fprintf(stderr, "[%s] emitted %d%s\n", tag, n,
+          uncounted ? " (TRUNCATED)" : "");
   return n;
 }
 

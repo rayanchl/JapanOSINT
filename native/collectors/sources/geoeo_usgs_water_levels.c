@@ -5,18 +5,16 @@
  * Endpoint (keyless):
  *   https://waterservices.usgs.gov/nwis/iv/?format=json&stateCd=<st>
  *   &parameterCd=00065&siteStatus=active          (00065 = gage height, ft)
- * Emits per gauge AND per measurement method (values[] carries one block per
- *   method and every block is emitted, not just values[0]): site name, USGS
- *   site code, the surveyed latitude/longitude, the variable name/unit, the
- *   method id/description and the most recent reading with its timestamp and
- *   qualifiers.
+ * Emits per gauge: site name, USGS site code, the surveyed
+ *   latitude/longitude, the variable name/unit and the most recent reading with
+ *   its timestamp and qualifiers.
  * Licence: USGS public domain. The response carries the standard "Provisional
  *   data are subject to revision" note, which is surfaced on every row.
  *
  * parse_notes honoured:
  *  - Deeply nested WaterML-in-JSON: value → timeSeries[] → sourceInfo /
- *    variable / values[].value[] — values[] is per method, and all of it is
- *    walked.
+ *    variable / values[].value[]. Note `values` is a LIST of method blocks,
+ *    not a wrapper — one row is emitted per block, keyed with its methodID.
  *  - Coordinates live at timeSeries[i].sourceInfo.geoLocation.geogLocation
  *    .{latitude,longitude} as real numbers with srs EPSG:4326. A series without
  *    them is emitted with has_geo=0.
@@ -59,11 +57,23 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
     seen++;
     cJSON *si = cJSON_GetObjectItem(ts, "sourceInfo");
     const char *sname = geoeo_str(si, "siteName");
+    /* siteCode is a LIST — a site can be registered in more than one network.
+     * One entry is the norm, but the extras are the join keys to other
+     * agencies' data, so they are kept beside the display pick. */
     const char *scode = NULL;
     cJSON *codes = si ? cJSON_GetObjectItem(si, "siteCode") : NULL;
-    if (cJSON_IsArray(codes))
-      scode = geoeo_str(cJSON_GetArrayItem(codes, 0), "value");  /* exhaustive-ok: WaterML wraps the single siteCode in an array */
-    if (!sname && !scode) continue;
+    cJSON *codes_all = NULL;
+    if (cJSON_IsArray(codes)) {
+      cJSON *e;
+      cJSON_ArrayForEach(e, codes) {
+        const char *v = geoeo_str(e, "value");
+        if (!v) continue;
+        if (!scode) scode = v;
+        if (!codes_all) codes_all = cJSON_CreateArray();
+        cJSON_AddItemToArray(codes_all, cJSON_Duplicate(e, 1));
+      }
+    }
+    if (!sname && !scode) { cJSON_Delete(codes_all); continue; }
 
     double lat = 0, lon = 0;
     int geo = 0;
@@ -86,22 +96,24 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
     cJSON *ndv = var ? cJSON_GetObjectItem(var, "noDataValue") : NULL;
     if (cJSON_IsNumber(ndv)) nodata = ndv->valuedouble;
 
-    /* values[] holds one block PER MEASUREMENT METHOD — a gauge with two
-     * sensors on gage height ships two of them. Reading values[0] emitted one
-     * and dropped the rest of a response already paid for (house rule 2), so
-     * every block is emitted, keyed on its methodID when there is more than
-     * one. */
+    /* `values` is a LIST OF VALUE BLOCKS, one per measurement method, and only
+     * block 0 was read. A gauge with a backup sensor publishes two — the
+     * primary and the "[backup gage height sensor]" series — so the backup
+     * reading was fetched, parsed and thrown away, and it is exactly the one
+     * that matters when the primary sensor is the thing that failed. Every
+     * block is emitted now, with the method id in the key so the two do not
+     * overwrite each other at the sink. */
     cJSON *vals = cJSON_GetObjectItem(ts, "values");
-    if (!cJSON_IsArray(vals)) continue;
-    const int nblocks = cJSON_GetArraySize(vals);
-    cJSON *blk;
-    cJSON_ArrayForEach(blk, vals) {
-      /* Most recent reading of this block. */
+    int nblocks = cJSON_IsArray(vals) ? cJSON_GetArraySize(vals) : 0;
+    if (nblocks == 0) { cJSON_Delete(codes_all); continue; }
+
+    cJSON *block;
+    cJSON_ArrayForEach(block, vals) {
       double reading = 0;
       int has_reading = 0;
-      const char *when = NULL, *quals = NULL;
-      cJSON *quals_all = NULL;      /* every qualifier code, when there is >1 */
-      cJSON *plist = cJSON_GetObjectItem(blk, "value");
+      const char *when = NULL;
+      cJSON *quals_arr = NULL;
+      cJSON *plist = cJSON_GetObjectItem(block, "value");
       if (cJSON_IsArray(plist)) {
         int pn = cJSON_GetArraySize(plist);
         for (int i = pn - 1; i >= 0 && !has_reading; i--) {
@@ -112,43 +124,47 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
           reading = d;
           has_reading = 1;
           when = geoeo_str(pv, "dateTime");
+          /* qualifiers is a list ("P", "e", …) and the whole list is the data
+           * quality statement; keeping only [0] hid the rest. */
           cJSON *q = cJSON_GetObjectItem(pv, "qualifiers");
-          if (cJSON_IsArray(q) && cJSON_IsString(cJSON_GetArrayItem(q, 0))) {  /* exhaustive-ok: display pick; qualifiers_all below keeps every code */
-            quals = cJSON_GetArrayItem(q, 0)->valuestring;  /* exhaustive-ok: display pick; qualifiers_all below keeps every code */
-            if (cJSON_GetArraySize(q) > 1) quals_all = q;
-          }
+          if (cJSON_IsArray(q) && cJSON_GetArraySize(q) > 0) quals_arr = q;
         }
       }
 
-      /* method identity, as the upstream stated it */
-      char mid[32] = {0};
-      const char *mdesc = NULL;
-      cJSON *ml = cJSON_GetObjectItem(blk, "method");
-      if (cJSON_IsArray(ml)) {
-        cJSON *m;
-        cJSON_ArrayForEach(m, ml) {
-          cJSON *idv = cJSON_GetObjectItem(m, "methodID");
-          if (!mid[0] && cJSON_IsNumber(idv))
-            snprintf(mid, sizeof mid, "%lld", (long long)idv->valuedouble);
-          else if (!mid[0] && cJSON_IsString(idv) && idv->valuestring[0])
-            snprintf(mid, sizeof mid, "%.31s", idv->valuestring);
-          if (!mdesc) mdesc = geoeo_str(m, "methodDescription");
+      /* method: [{methodID, methodDescription}] — the block's identity */
+      const char *method_desc = NULL;
+      char midbuf[32] = "";
+      cJSON *meth = cJSON_GetObjectItem(block, "method");
+      /* A value block carries exactly one method — the block IS the method,
+       * which is why a two-sensor gauge answers with two blocks (both emitted
+       * above) rather than one block listing two methods. */
+      if (cJSON_IsArray(meth) && cJSON_GetArraySize(meth) > 0) {
+        cJSON *m0 = cJSON_GetArrayItem(meth, 0);  /* exhaustive-ok: one method per value block; extra methods arrive as extra blocks, and every block is emitted */
+        cJSON *mid = cJSON_GetObjectItem(m0, "methodID");
+        if (cJSON_IsNumber(mid))
+          snprintf(midbuf, sizeof midbuf, "%lld", (long long)mid->valuedouble);
+        else {
+          const char *ms = geoeo_str(m0, "methodID");
+          if (ms) snprintf(midbuf, sizeof midbuf, "%s", ms);
         }
+        method_desc = geoeo_str(m0, "methodDescription");
       }
 
       cJSON *props = cJSON_CreateObject();
       geoeo_add_str(props, "site_name", sname);
       geoeo_add_str(props, "site_code", scode);
+      if (codes_all && cJSON_GetArraySize(codes_all) > 1)
+        cJSON_AddItemToObject(props, "site_codes", cJSON_Duplicate(codes_all, 1));
       geoeo_add_str(props, "state", st);
       geoeo_add_str(props, "variable", vname);
       geoeo_add_str(props, "unit", unit);
-      geoeo_add_str(props, "qualifiers", quals);
-      if (quals_all)               /* house rule 2: keep every qualifier, not [0] */
-        cJSON_AddItemToObject(props, "qualifiers_all", cJSON_Duplicate(quals_all, 1));
+      if (quals_arr)
+        cJSON_AddItemToObject(props, "qualifiers", cJSON_Duplicate(quals_arr, 1));
       geoeo_add_str(props, "observed_at", when);
-      if (mid[0]) geoeo_add_str(props, "method_id", mid);
-      if (mdesc)  geoeo_add_str(props, "method_description", mdesc);
-      if (nblocks > 1) cJSON_AddNumberToObject(props, "method_count", nblocks);
+      geoeo_add_str(props, "method_id", midbuf[0] ? midbuf : NULL);
+      geoeo_add_str(props, "method_description", method_desc);
+      if (nblocks > 1)
+        cJSON_AddNumberToObject(props, "method_series_count", nblocks);
       if (has_reading) cJSON_AddNumberToObject(props, "value", reading);
       if (geo) { cJSON_AddNumberToObject(props, "latitude", lat);
                  cJSON_AddNumberToObject(props, "longitude", lon);
@@ -165,25 +181,21 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
         cJSON_Delete(g);
       }
 
-      char title[400];
+      char title[384];
       if (has_reading)
         snprintf(title, sizeof title, "%s — %.2f %s%s%s",
                  sname ? sname : scode, reading, unit ? unit : "",
-                 (nblocks > 1 && mdesc) ? " · " : "",
-                 (nblocks > 1 && mdesc) ? mdesc : "");
+                 (method_desc && method_desc[0]) ? " " : "",
+                 (method_desc && method_desc[0]) ? method_desc : "");
       else
         snprintf(title, sizeof title, "%s — no current reading%s%s",
                  sname ? sname : scode,
-                 (nblocks > 1 && mdesc) ? " · " : "",
-                 (nblocks > 1 && mdesc) ? mdesc : "");
+                 (method_desc && method_desc[0]) ? " " : "",
+                 (method_desc && method_desc[0]) ? method_desc : "");
 
-      /* Key on site+parameter, plus the method when the gauge reports more than
-       * one — otherwise the second block would overwrite the first. */
-      char key[200];
-      if (nblocks > 1 && mid[0])
-        snprintf(key, sizeof key, "%s|00065|%s", scode ? scode : sname, mid);
-      else
-        snprintf(key, sizeof key, "%s|00065", scode ? scode : sname);
+      char key[224];
+      snprintf(key, sizeof key, "%s|00065%s%s", scode ? scode : sname,
+               midbuf[0] ? "|" : "", midbuf);
 
       char link[160];
       if (scode)
@@ -208,7 +220,8 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
       if (sink->emit(sink, &it) >= 0) (*emitted)++;
       free(pj);
       free(gj);
-    }   /* values[] block */
+    }
+    cJSON_Delete(codes_all);
   }
   cJSON_Delete(doc);
   return seen;

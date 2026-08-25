@@ -13,19 +13,20 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "third_party/cJSON.h"
+#include "_timefmt.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
+/* The "1970-01-01" fallback is deliberate and is NOT a fabricated value: it is
+ * a `since=` bound, so an unrenderable clock WIDENS the window rather than
+ * querying a date built from stack bytes. What was missing is that strftime
+ * also returns 0 (leaving the buffer unspecified, with no NUL written), and
+ * that path fell through unhandled — so it now takes the same fallback.
+ * jo_time_fmt checks both and carries the _WIN32 split this spelled out. */
 static void ymd(time_t t, char *out, size_t n) {
-  struct tm tmv;
-#if defined(_WIN32)
-  if (gmtime_s(&tmv, &t) != 0) { snprintf(out, n, "1970-01-01"); return; }
-#else
-  if (!gmtime_r(&t, &tmv)) { snprintf(out, n, "1970-01-01"); return; }
-#endif
-  strftime(out, n, "%Y-%m-%d", &tmv);
+  if (!jo_time_fmt(t, "%Y-%m-%d", out, n)) snprintf(out, n, "1970-01-01");
 }
 
 static double numv(const cJSON *o, const char *k, int *ok) {

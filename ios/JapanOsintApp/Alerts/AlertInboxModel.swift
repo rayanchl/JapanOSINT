@@ -46,6 +46,12 @@ final class AlertInboxModel: ObservableObject {
     @Published var filter: Filter = .all
 
     @Published private(set) var events: [AlertInboxEvent] = []
+    /// How many events exist server-side for the current filter, when the
+    /// server could count them. The list pulls at most `pageLimit`; when this
+    /// exceeds `events.count` the view must say so. nil = unknown, which is
+    /// rendered as unknown, never as "all".
+    @Published private(set) var serverTotal: Int?
+    var isTruncated: Bool { (serverTotal ?? 0) > events.count }
     /// Read by the tab badge. Counts every unread, non-suppressed event for the
     /// tenant — not just the ones currently loaded into `events`.
     @Published private(set) var unreadCount: Int = 0
@@ -67,8 +73,10 @@ final class AlertInboxModel: ObservableObject {
         loading = true
         defer { loading = false }
         do {
-            events = try await api.alertInbox(unreadOnly: filter == .unread,
-                                              limit: pageLimit)
+            let page = try await api.alertInbox(unreadOnly: filter == .unread,
+                                                limit: pageLimit)
+            events = page.events
+            serverTotal = page.total
             error = nil
         } catch let e {
             error = e.localizedDescription

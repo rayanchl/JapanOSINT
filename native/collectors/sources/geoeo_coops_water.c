@@ -26,13 +26,26 @@
  */
 #include "source.h"
 #include "lib/feedlib.h"
-#include "lib/jocore.h"     /* jo_truncation_notice() */
+#include "lib/jocore.h"          /* jo_trunc_notice — the shared R7 disclosure */
 #include "geoeo_common.inc"
 
 #define COOPS_CATALOG                                                         \
   "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json"      \
   "?type=waterlevels"
-#define COOPS_MAX_STATIONS 25
+/* datagetter serves ONE station per call, so a run cannot poll all ~300
+ * stations every 30 minutes without being abusive. That per-run bound stays —
+ * but it used to be a fixed slice off the FRONT of the catalogue, which meant
+ * the same 25 stations every run and the other ~276 never once read. Two
+ * changes make that honest:
+ *
+ *  - the window ROTATES, stepped by the clock, so consecutive runs cover
+ *    consecutive slices and the whole catalogue is read over a cycle (25 at a
+ *    time on a 30-minute cadence covers ~300 stations in about six hours);
+ *  - the bound is DISCLOSED per run as a collector-truncation-notice naming
+ *    stations polled, stations in the catalogue and where the window started.
+ *
+ * $JO_COOPS_MAX_STATIONS raises the per-run budget. */
+#define COOPS_MAX_STATIONS 25   /* exhaustive-ok: per-run polling budget on a one-station-per-call API; rotates over the catalogue and emits a collector-truncation-notice */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *cat = feed_get_json(ctx->http, COOPS_CATALOG, 40000);
@@ -52,11 +65,33 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return -1;
   }
 
-  const int n_stations = cJSON_GetArraySize(stations);
-  int n = 0, polled = 0, capped = 0;
+  const int nstations = cJSON_GetArraySize(stations);
+  int budget = COOPS_MAX_STATIONS;
+  const char *benv = getenv("JO_COOPS_MAX_STATIONS");
+  if (benv && *benv) { int b = atoi(benv); if (b > 0) budget = b; }
+  if (budget > nstations) budget = nstations;
+
+  /* Where this run's window starts. Stepping by the run cadence rather than by
+   * a stored cursor keeps the collector stateless while still walking the
+   * catalogue; the start offset is reported in the notice below so a reader
+   * can tell which slice a run covered. */
+  int start = 0;
+  if (nstations > 0 && budget < nstations) {
+    long long slot = (long long)(time(NULL) / 1800);      /* the 30-min cadence */
+    start = (int)((slot * budget) % nstations);
+  }
+
+  int n = 0, polled = 0, idx = -1;
   cJSON *st;
   cJSON_ArrayForEach(st, stations) {
-    if (polled >= COOPS_MAX_STATIONS) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
+    idx++;
+    if (polled >= budget) break;
+    /* rotate: skip everything before this run's window (wrapping at the end) */
+    if (nstations > 0 && budget < nstations) {
+      int rel = idx - start;
+      if (rel < 0) rel += nstations;
+      if (rel >= budget) continue;
+    }
     const char *sid = geoeo_str(st, "id");
     const char *sname = geoeo_str(st, "name");
     if (!sid) continue;
@@ -88,8 +123,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     if (!sname && meta) sname = geoeo_str(meta, "name");
 
+    /* date=latest asks for ONE observation and returns exactly one:
+     * {"metadata":{…},"data":[{t,v,s,f,q}]}. data[0] is the whole reading. */
     cJSON *data = cJSON_GetObjectItem(doc, "data");
-    cJSON *d0 = cJSON_IsArray(data) ? cJSON_GetArrayItem(data, 0) : NULL;  /* exhaustive-ok: date=latest returns exactly one reading */
+    cJSON *d0 = cJSON_IsArray(data) ? cJSON_GetArrayItem(data, 0) : NULL;  /* exhaustive-ok: date=latest returns a one-element data[] — the whole payload */
     double v = 0, sigma = 0;
     int has_v = d0 ? geoeo_numlax(d0, "v", &v) : 0;
     int has_s = d0 ? geoeo_numlax(d0, "s", &sigma) : 0;
@@ -156,23 +193,21 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON_Delete(cat);
-  /* House rule 2: the catalogue request returned every waterlevels station, but
-   * datagetter serves one station per call, so this run polled only the first
-   * COOPS_MAX_STATIONS. The catalogue rows for the rest — id, name, lat/lon,
-   * all already in memory — are not emitted in any form either. Say so. */
-  if (capped)
-    jo_truncation_notice(sink, "coops-water-levels", "stations.json?type=waterlevels",
-                         polled, (long)n_stations,
-                         "datagetter serves one station per request, so the run "
-                         "polls only the first COOPS_MAX_STATIONS of the "
-                         "catalogue; the catalogue entries for the unpolled "
-                         "stations are held in memory and never emitted",
-                         "raise COOPS_MAX_STATIONS in collectors/sources/"
-                         "geoeo_coops_water.c, rotate the slice across runs, or "
-                         "emit a station record for every catalogue entry and "
-                         "attach readings only to the polled ones");
-  fprintf(stderr, "[coops-water-levels] emitted %d readings from %d stations "
-                  "polled\n", n, polled);
+  fprintf(stderr, "[coops-water-levels] emitted %d readings from %d of %d "
+                  "stations (window starts at %d)\n", n, polled, nstations,
+          start);
+  if (polled < nstations) {
+    char reason[288];
+    snprintf(reason, sizeof reason,
+             "datagetter serves one station per request, so this run polled %d "
+             "of the %d stations in the catalogue, starting at catalogue "
+             "position %d; the window rotates, so the rest are read by "
+             "subsequent runs", polled, nstations, start);
+    jo_trunc_notice(sink, "coops-water-levels", COOPS_CATALOG, polled,
+                    nstations, reason,
+                    "raise $JO_COOPS_MAX_STATIONS to poll more stations per "
+                    "run");
+  }
   return 0;
 }
 

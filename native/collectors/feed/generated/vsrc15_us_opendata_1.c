@@ -299,7 +299,7 @@ VJSON(us_data_boston_gov_orgs, "us-data-boston-gov-orgs", "Analyze Boston — or
 
 VJSON(us_data_boston_gov_tags, "us-data-boston-gov-tags", "Analyze Boston — tags (United States)", "Analyze Boston — tags (United States)",
   "us_opendata", "opendata",
-  "https://data.boston.gov/api/3/action/tag_list",
+  "https://data.boston.gov/api/3/action/tag_list?all_fields=true",
   "result",
   "en", "[\"us\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at data.boston.gov.");

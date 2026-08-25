@@ -73,6 +73,34 @@ struct API: Sendable {
         }
     }
 
+    /// Whether an outgoing request may carry the Supabase bearer and tenant id.
+    ///
+    /// https always may. Plain http may only when the destination is somewhere
+    /// the user is already trusting at the network layer: loopback, an RFC1918
+    /// / CGNAT / link-local address, or a `.local` mDNS name — which is what
+    /// the LAN development setup uses. Anything else public over http does not.
+    ///
+    /// This deliberately still permits the `.local` default: an mDNS name has
+    /// no authentication and can be answered by any device on the same Wi-Fi,
+    /// but forbidding it here would break the working development loop while
+    /// only half-addressing that; the real fix is to stop shipping a baked-in
+    /// LAN default at all.
+    static func mayCarryCredentials(_ url: URL) -> Bool {
+        let scheme = (url.scheme ?? "").lowercased()
+        if scheme == "https" { return true }
+        guard scheme == "http", let host = url.host?.lowercased() else { return false }
+        if host == "localhost" || host == "127.0.0.1" || host == "::1" { return true }
+        if host.hasSuffix(".local") { return true }
+        let p = host.split(separator: ".").compactMap { Int($0) }
+        guard p.count == 4, p.allSatisfy({ $0 >= 0 && $0 <= 255 }) else { return false }
+        if p[0] == 10 { return true }                             // 10/8
+        if p[0] == 192 && p[1] == 168 { return true }             // 192.168/16
+        if p[0] == 172 && (16...31).contains(p[1]) { return true } // 172.16/12
+        if p[0] == 169 && p[1] == 254 { return true }             // link-local
+        if p[0] == 100 && (64...127).contains(p[1]) { return true } // CGNAT
+        return false
+    }
+
     private func send(_ url: URL, method: String,
                       body: Data?, timeout: TimeInterval?) async throws -> Data {
         var req = URLRequest(url: url)
@@ -91,11 +119,23 @@ struct API: Sendable {
         if body != nil { req.setValue("application/json", forHTTPHeaderField: "Content-Type") }
         // Stamp Supabase bearer + active tenant when present. Absent in
         // legacy single-tenant mode — the server ignores both there.
-        if let token = AuthTokenBox.shared.accessToken, !token.isEmpty {
-            req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-        if let tid = AuthTokenBox.shared.tenantId, !tid.isEmpty {
-            req.setValue(tid, forHTTPHeaderField: "X-Tenant-Id")
+        //
+        // Not unconditionally, though: the backend base URL is user-editable
+        // (Connect field, onboarding) and was accepted as any string at all, so
+        // a typo or a hostile value could send a live Supabase access token and
+        // the tenant id to an arbitrary host in cleartext. Over https, or on a
+        // local network the user chose, that is their call. Over plain http to
+        // a PUBLIC host it is a credential leak with no upside, so the headers
+        // are withheld and the request goes out unauthenticated — the server
+        // then answers 401 and the failure is visible, rather than the token
+        // being spent silently.
+        if API.mayCarryCredentials(url) {
+            if let token = AuthTokenBox.shared.accessToken, !token.isEmpty {
+                req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            }
+            if let tid = AuthTokenBox.shared.tenantId, !tid.isEmpty {
+                req.setValue(tid, forHTTPHeaderField: "X-Tenant-Id")
+            }
         }
         req.httpBody = body
         let (data, resp) = try await API.session.data(for: req)

@@ -25,16 +25,23 @@
  * Webhook channel targets are validated with hostgate_url_check_strict(), so a
  * rule cannot aim this server's outbound connection at loopback, RFC1918 or
  * the 169.254.169.254 metadata address. Rule create/update/delete/test write
- * audit_events rows. */
+ * audit_events rows.
+ *
+ * `ev_limit` / `ev_cursor` are GET /:id/events paging (?limit=, ?cursor=) and
+ * are ignored by every other action. `ev_cursor` was added when that route was
+ * found to cap silently at 500 rows with no total and no way to reach row 501
+ * — see the envelope comment in alertsapi.c. Pass 0/NULL when not paging. */
 char *alertsapi(db_handle *db, const char *tenant_id, const char *user_id,
                 const char *method, const char *id, const char *action,
-                const char *body, int ev_limit, int *status);
+                const char *body, int ev_limit, const char *ev_cursor,
+                int *status);
 
 /* /api/alert-events[...] — the cross-rule notification inbox (roadmap item
  * 11). /api/alerts/:id/events answers "what did THIS rule match"; the inbox
  * answers "what is waiting for me", tenant-wide and stateful.
  *
- *   GET  /api/alert-events?unread=1&limit=N   list (suppressed rows excluded)
+ *   GET  /api/alert-events?unread=1&limit=N&cursor=…
+ *                                             list (suppressed rows excluded)
  *   GET  /api/alert-events/unread-count       badge count
  *   POST /api/alert-events/:id/read           mark one read
  *   POST /api/alert-events/read-all           mark all read
@@ -43,7 +50,13 @@ char *alertsapi(db_handle *db, const char *tenant_id, const char *user_id,
  * collection; "unread-count" / "read-all" are reserved words, anything else
  * is treated as an event id). `qs` is the raw query string (may be NULL).
  * Read state lives in alert_events.read_at, added by db.c's ensure_column()
- * boot migration — it is NOT in the generated schema.sql, by design. */
+ * boot migration — it is NOT in the generated schema.sql, by design.
+ *
+ * The collection GET answers the same envelope /api/intel/items does —
+ * {"data":[…],"page":{next_cursor,limit,total},"meta":{fetched_at,filters}} —
+ * with a MEASURED `total`. It previously answered a bare {"data":[…]} capped
+ * at 500 with no total and no cursor, so a 500-row reply over a 700-row inbox
+ * looked complete and rows 501+ were unreachable. */
 char *alerteventsapi(db_handle *db, const char *tenant_id, const char *user_id,
                      const char *method, const char *seg,
                      const char *qs, int *status);

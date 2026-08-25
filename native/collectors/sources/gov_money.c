@@ -114,10 +114,19 @@ static int gm_emit_anchors(const source_ctx *ctx, intel_sink *sink,
                            int max, const char *tag) {
   char *html = gm_fetch_utf8(ctx, url, tag);
   if (!html) return 0;
-  int emitted = 0, matched = 0, capped = 0;
+  int emitted = 0, matched = 0;
   const char *p = html;
-  /* Growable dedupe set — a fixed seen[] ring stops deduping once full and is
-   * the exact failure docs/SOURCE_EXHAUSTIVENESS.md calls out. */
+  /* The dedupe table used to be `char *seen[64]` with `if (nseen < 64)`
+   * guarding the insert, so on a listing with more than 64 distinct hrefs the
+   * table stopped recording: every later href compared against a stale window
+   * and a link that repeated in a sidebar came back through as a second row.
+   * lib/seenset.h is the tree's one growable seen-set and it costs nothing to
+   * use (docs/SOURCE_EXHAUSTIVENESS.md — fixed rings are a recurring
+   * violation).
+   *
+   * The scan also no longer STOPS at `max`. It keeps walking so `matched`
+   * counts every anchor that passed the filters, which is what makes the
+   * bound below disclosable instead of silent. */
   seen_set seen = {0};
   while ((p = strstr(p, "<a ")) != NULL) {
     const char *h = strstr(p, "href=\"");
@@ -148,11 +157,9 @@ static int gm_emit_anchors(const source_ctx *ctx, intel_sink *sink,
     if (href[0] == '#') continue;                  /* in-page nav */
     if (href_must && !strstr(href, href_must)) continue;
     if (query && *query && !strstr(text, query) && !strstr(href, query)) continue;
-    if (!seen_add(&seen, href)) continue;          /* already emitted */
+    if (!seen_add(&seen, href)) continue;      /* already emitted this href */
     matched++;
-    /* Past the caller's cap keep scanning so the notice below can state how
-     * many anchors the page really had (house rule 2). */
-    if (max > 0 && emitted >= max) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
+    if (max > 0 && emitted >= max) continue;   /* counted, not emitted — see below */
 
     char link[900];
     if (!strncmp(href, "http", 4)) snprintf(link, sizeof link, "%s", href);
@@ -180,17 +187,18 @@ static int gm_emit_anchors(const source_ctx *ctx, intel_sink *sink,
   seen_free(&seen);
   free(html);
   (void)ctx;
-  /* House rule 2: the page was fetched and every matching anchor counted; the
-   * caller's `max` stopped the emit loop partway. */
-  if (capped)
-    jo_truncation_notice(sink, service, query ? query : url, emitted,
-                         (long)matched,
-                         "the caller's anchor cap was reached; the remaining "
-                         "matching links on the fetched page were counted but "
-                         "not emitted",
-                         "raise the `max` argument passed to gm_emit_anchors() "
-                         "in collectors/sources/gov_money.c");
-  fprintf(stderr, "[%s] emitted %d of %d matching links\n", tag, emitted, matched);
+  fprintf(stderr, "[%s] emitted %d of %d matching link(s)\n", tag, emitted,
+          matched);
+  /* These portals are index pages, so the per-service `max` is a bound on a
+   * view of them. A bound is allowed; an invisible one is not — say how many
+   * links the page actually offered. */
+  if (max > 0 && matched > emitted)
+    jo_trunc_notice_scoped(sink, service, tag, url, emitted, matched,
+                           "the per-service link bound stopped this scrape "
+                           "before every matching link on the index page was "
+                           "emitted",
+                           "raise the max argument for this service in "
+                           "gov_money.c");
   return emitted;
 }
 

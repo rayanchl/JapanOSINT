@@ -68,43 +68,43 @@ VJSON(geo_chile_csn_quakes, "geo-chile-csn-quakes", "CSN Chile — recent earthq
 
 VGEO(geo_cwfis_fdr, "geo-cwfis-fdr", "CWFIS Canada — fire weather stations", "カナダCWFIS — 火災気象観測所",
   "disaster", "wildfire",
-  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:firewx_stns_current&outputFormat=application/json&count=1000",
+  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:firewx_stns_current&outputFormat=application/json&srsName=EPSG:4326&count=1000",
   "en", "[\"canada\",\"firewx\",\"stations\"]", 21600,
   "Canadian fire weather station network with current indices.");
 
 VGEO(geo_cwfis_fdr_current, "geo-cwfis-fdr-current", "CWFIS Canada — fire danger rating areas", "カナダCWFIS — 火災危険度区域",
   "disaster", "wildfire",
-  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:fdr_current_shp&outputFormat=application/json&count=300&geometryPrecision=3",
+  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:fdr_current_shp&outputFormat=application/json&srsName=EPSG:4326&count=300&geometryPrecision=3",
   "en", "[\"canada\",\"firedanger\"]", 21600,
   "Current Canadian fire danger rating polygons.");
 
 VGEO(geo_cwfis_firewx_naefs, "geo-cwfis-firewx-naefs", "CWFIS Canada — NAEFS fire weather forecast", "カナダCWFIS — NAEFS 火災気象予報",
   "disaster", "wildfire",
-  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:firewx_naefs&outputFormat=application/json&count=500",
+  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:firewx_naefs&outputFormat=application/json&srsName=EPSG:4326&count=500",
   "en", "[\"canada\",\"firewx\",\"forecast\"]", 21600,
   "Ensemble fire weather forecast values at Canadian stations.");
 
 VGEO(geo_cwfis_firewx_scribe, "geo-cwfis-firewx-scribe", "CWFIS Canada — SCRIBE fire weather forecast", "カナダCWFIS — SCRIBE 火災気象予報",
   "disaster", "wildfire",
-  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:firewx_scribe_fcst&outputFormat=application/json&count=500",
+  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:firewx_scribe_fcst&outputFormat=application/json&srsName=EPSG:4326&count=500",
   "en", "[\"canada\",\"firewx\",\"forecast\"]", 21600,
   "SCRIBE-based fire weather forecast at Canadian stations.");
 
 VGEO(geo_cwfis_hotspots, "geo-cwfis-hotspots", "CWFIS Canada — satellite fire hotspots", "カナダCWFIS — 衛星熱源",
   "disaster", "wildfire",
-  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:hotspots&outputFormat=application/json&count=2000",
+  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:hotspots&outputFormat=application/json&srsName=EPSG:4326&count=2000",
   "en", "[\"canada\",\"wildfire\",\"hotspot\"]", 3600,
   "Canadian Wildland Fire Information System satellite hotspot detections.");
 
 VGEO(geo_cwfis_hotspots_24h, "geo-cwfis-hotspots-24h", "CWFIS Canada — hotspots, last 24 hours", "カナダCWFIS — 熱源(直近24時間)",
   "disaster", "wildfire",
-  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:hotspots_last24hrs&outputFormat=application/json&count=2000",
+  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:hotspots_last24hrs&outputFormat=application/json&srsName=EPSG:4326&count=2000",
   "en", "[\"canada\",\"wildfire\",\"hotspot\"]", 3600,
   "Canadian hotspot detections restricted to the last day.");
 
 VGEO(geo_cwfis_m3_polygons, "geo-cwfis-m3-polygons", "CWFIS Canada — M3 fire perimeters", "カナダCWFIS — M3 延焼域",
   "disaster", "wildfire",
-  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:m3_polygons_current&outputFormat=application/json&count=300",
+  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:m3_polygons_current&outputFormat=application/json&srsName=EPSG:4326&count=300",
   "en", "[\"canada\",\"wildfire\",\"perimeter\"]", 7200,
   "Satellite-derived Canadian fire perimeter polygons.");
 

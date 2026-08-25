@@ -163,9 +163,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
+    /* IDENTITY (rule 4b, measured): name|authority|date alone keyed distinct
+     * excluded people onto each other — the LEIE holds same-named individuals
+     * excluded under the same authority on the same day (sweep 2026-08-24:
+     * emitted 5,000, stored 4,975). NPI/UPIN/DOB/ZIP are the columns the LEIE
+     * itself distinguishes them by, and they are stable across monthly
+     * updates, so they join the key instead of a content hash. */
     char key[512];
-    snprintf(key, sizeof key, "%s|%s|%s", display, excltype ? excltype : "",
-             excl_iso[0] ? excl_iso : "");
+    snprintf(key, sizeof key, "%s|%s|%s|%s|%s|%s|%s", display,
+             excltype ? excltype : "", excl_iso[0] ? excl_iso : "",
+             npi ? npi : "", upin ? upin : "",
+             dob_iso[0] ? dob_iso : "", zip ? zip : "");
 
     intel_item it = {0};
     it.remote_key = key;

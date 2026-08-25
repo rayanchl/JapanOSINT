@@ -147,6 +147,32 @@ static const hp_source T[] = {
     .page_param = "offset", .page_size = 2,
     .record_type = "t-page", .free_tier = 1, .description = "d" },
 
+  /* A hypermedia API whose link array is NOT ordered with `next` first. Selecting
+   * it positionally is what breaks when a server reorders its links. */
+  { .id = "T_PAGE_REL", .name = "next selected by rel", .url = "https://x.test/pr?q={q}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .next_path = "links.rel=next.href",
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+
+  /* XML: the shape the primary sanctions lists actually ship in. `target` is
+   * the record; each carries leaf fields and one nested block. */
+  { .id = "T_XML", .name = "xml records", .url = "https://x.test/x?q={q}",
+    .mode = HP_XML, .array_path = "target",
+    .title_keys = "name", .id_keys = "ref",
+    .record_type = "t-xml", .free_tier = 1, .description = "d" },
+
+  /* XML with no array_path: the engine must find the repeated element itself. */
+  { .id = "T_XML_AUTO", .name = "xml autodetect", .url = "https://x.test/xa?q={q}",
+    .mode = HP_XML, .title_keys = "name",
+    .record_type = "t-xml", .free_tier = 1, .description = "d" },
+
+  /* A 0-based page-numbered API. Without page_zero_based the engine coerces the
+   * unset page_start to 1 and computes the first extra page as 2, skipping 1. */
+  { .id = "T_PAGE_ZERO", .name = "zero-based paging", .url = "https://x.test/pz?q={q}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "page", .page_zero_based = 1,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+
   { .id = "T_CAPPED", .name = "declared cap", .url = "https://x.test/cap?q={q}",
     .array_path = "items", .title_keys = "name", .id_keys = "id", .max_items = 2,
     .record_type = "t-cap", .free_tier = 1, .description = "d" },
@@ -158,6 +184,55 @@ static const hp_source T[] = {
 
   { .id = "T_ERR", .name = "upstream error", .url = "https://x.test/err?q={q}",
     .record_type = "t-err", .free_tier = 1, .description = "d" },
+
+  /* A headerless CSV that declares NO title_keys/id_keys — the DataPlane shape.
+   * Columns parse as col0..colN, which match no fallback list, so before the
+   * first-scalar rescue every record was dropped and the run reported
+   * "emitted 0 of 36166". */
+  /* .interval is not decoration: a static URL with no interval references no
+   * entity token and is never scheduled, so hp_run returns 0 without fetching
+   * (rule 3). A bulk file row must declare a cadence to exist at all. */
+  { .id = "T_CSV_BARE", .name = "headerless csv, no keys declared",
+    .url = "https://x.test/bare.csv", .mode = HP_CSV, .csv_no_header = 1,
+    .interval = 3600,
+    .record_type = "t-bare", .free_tier = 1, .description = "d" },
+
+  /* Conventional key names holding JSON NUMBERS (SEC's cik, RIPEstat's number,
+   * BrandMeister's id). cJSON_IsString alone was blind to every one of them. */
+  { .id = "T_NUM_ID", .name = "numeric identifier", .url = "https://x.test/n?q={q}",
+    .array_path = "items", .record_type = "t-num",
+    .free_tier = 1, .description = "d" },
+
+  /* Genuinely empty records must STILL be dropped — the rescue widens what
+   * counts as content, it does not remove the noise floor. */
+  { .id = "T_EMPTY_REC", .name = "no content at all", .url = "https://x.test/e?q={q}",
+    .array_path = "items", .record_type = "t-empty",
+    .free_tier = 1, .description = "d" },
+
+  /* A row that DECLARES where its records live. Batch 20 found ArcGIS
+   * answering an over-quota query with HTTP 200 and {"error":{"code":429}}:
+   * `results` did not resolve, so the engine fell through to "root IS the
+   * record" and filed a finding titled `<record_type> 429`. */
+  { .id = "T_ERRDOC", .name = "declared shape", .url = "https://x.test/ed?q={q}",
+    .array_path = "results", .title_keys = "name", .id_keys = "id",
+    .record_type = "t-errdoc", .free_tier = 1, .description = "d" },
+
+  /* SDMX structural metadata: the identity is in ATTRIBUTES (id=, agencyID=),
+   * not in child elements. hp_xml_flatten walked child ELEMENTS only, so the
+   * whole ILO/OECD/ABS/Istat/ECB/Eurostat/IMF family parsed into records with
+   * a human-readable name and nothing to key it on. */
+  { .id = "T_XML_ATTR", .name = "xml attributes", .url = "https://x.test/xat?q={q}",
+    .mode = HP_XML, .array_path = "Codelist",
+    .title_keys = "Name", .id_keys = "id",
+    .record_type = "t-xmlattr", .free_tier = 1, .description = "d" },
+
+  /* The same thing against the real bytes, namespace prefixes and all — the
+   * fixture below is a trimmed copy of what data-api.ecb.europa.eu actually
+   * returns for /service/codelist/ECB/CL_FREQ. */
+  { .id = "T_SDMX", .name = "sdmx codelist", .url = "https://x.test/sdmx?q={q}",
+    .mode = HP_XML, .array_path = "str:Code",
+    .title_keys = "com:Name", .id_keys = "id",
+    .record_type = "t-sdmx", .free_tier = 1, .description = "d" },
 };
 HP_REGISTER_TABLE(T)
 
@@ -317,6 +392,65 @@ int main(void) {
   ok(rc == 0 && g_ncap == 3 && g_ncalls == 2,
      "next_path pagination reads page 2 instead of discarding it");
 
+  /* 9d-bis. XML records reach the sink with their fields intact.
+   * Before HP_XML existed, hp_run's switch fell through to hp_run_json, cJSON
+   * refused the body, and the row emitted nothing while still registering — so
+   * the UK, EU and Swiss consolidated sanctions lists, which are published as
+   * XML and only as XML, were unreachable. */
+  fx_reset();
+  fx_add("/x?q=", 200,
+    "<?xml version=\"1.0\"?><list>"
+    "<target><ref>7001</ref><name>ACME &amp; CO</name>"
+    "<addr><country>CH</country><city>Zug</city></addr></target>"
+    "<target><ref>7002</ref><name>BETA LTD</name>"
+    "<addr><country>GB</country><city>London</city></addr></target>"
+    "</list>");
+  rc = run_source("T_XML", "x");
+  ok(rc == 0 && g_ncap == 2, "XML mode emits one record per repeated element");
+  ok(g_ncap >= 1 && strstr(g_cap[0].title, "ACME & CO") != NULL,
+     "XML entities are decoded in the emitted title");
+  ok(g_ncap >= 1 && strstr(g_cap[0].props, "\"addr.country\"") != NULL,
+     "nested XML elements flatten to dotted keys like JSON does");
+
+  /* 9d-ter. with no array_path the most-repeated element is the record. */
+  fx_reset();
+  fx_add("/xa?q=", 200,
+    "<feed><entry><name>one</name></entry><entry><name>two</name></entry>"
+    "<entry><name>three</name></entry></feed>");
+  rc = run_source("T_XML_AUTO", "x");
+  ok(rc == 0 && g_ncap == 3, "XML record element is auto-detected when unset");
+
+  /* 9e-bis. the next link is found by rel, not by position.
+   * `self` is deliberately first here. A positional `links.0.href` would follow
+   * it, refetch page 1 and keep doing so until the page ceiling — losing every
+   * later page while still looking like a successful run. */
+  fx_reset();
+  fx_add("/pr?q=", 200,
+    "{\"items\":[{\"name\":\"r1\",\"id\":\"1\"}],"
+    "\"links\":[{\"rel\":\"self\",\"href\":\"https://x.test/pr?q=x\"},"
+    "{\"rel\":\"next\",\"href\":\"https://x.test/pr2\"}]}");
+  fx_add("/pr2", 200,
+    "{\"items\":[{\"name\":\"r2\",\"id\":\"2\"}],"
+    "\"links\":[{\"rel\":\"self\",\"href\":\"https://x.test/pr2\"}]}");
+  rc = run_source("T_PAGE_REL", "x");
+  ok(rc == 0 && g_ncap == 2 && g_ncalls == 2,
+     "next_path selects the link by rel, not by array position");
+
+  /* 9e-ter. a 0-based page-numbered API fetches page 1, not page 2.
+   * page_start's unset value is 0, which used to be coerced to 1 for any
+   * non-offset param — so the first extra page came out as 2 and page 1 was
+   * silently never fetched. */
+  fx_reset();
+  fx_add("page=1", 200, "{\"items\":[{\"name\":\"z2\",\"id\":\"2\"}]}");
+  fx_add("page=2", 200, "{\"items\":[]}");
+  fx_add("/pz?q=", 200, "{\"items\":[{\"name\":\"z1\",\"id\":\"1\"}]}");
+  rc = run_source("T_PAGE_ZERO", "x");
+  /* base page (0) + page 1 + the empty page 2 that stops the walk. Two records
+   * means page 1 was actually read; the pre-fix engine jumped straight to 2 and
+   * emitted only the base page's single record. */
+  ok(rc == 0 && g_ncap == 2 && g_ncalls == 3,
+     "page_zero_based fetches page 1 rather than skipping to page 2");
+
   /* 9f. offset pagination stops when a page comes back empty */
   fx_reset();
   fx_add("offset=2", 200, "{\"items\":[{\"name\":\"q3\",\"id\":\"3\"}]}");
@@ -362,6 +496,267 @@ int main(void) {
   const source_def *psc = find_def("UK_CH_PSC");
   ok(psc && psc->update_interval_sec == 0 && psc->layer == NULL,
      "shipped rows are on-demand pivots and never map layers");
+
+  /* 11. a record is dropped only when it carries NO content — not merely when
+   *     its fields are named unconventionally. */
+
+  /* 11a. headerless CSV with nothing declared: col0..colN match no fallback */
+  fx_reset();
+  fx_add("/bare.csv", 200, "1.2.3.4,ssh,2026-08-01\n5.6.7.8,telnet,2026-08-02\n");
+  rc = run_source("T_CSV_BARE", "");
+  ok(rc == 0 && g_ncap == 2, "headerless CSV with no declared keys still emits");
+  ok(strstr(g_cap[0].key, "1.2.3.4") != NULL,
+     "headerless CSV record is keyed on its first column");
+  ok(strstr(g_cap[0].props, "\"col1\":\"ssh\"") != NULL,
+     "every column is preserved, not just the keying one");
+
+  /* 11b. a conventional key holding a number */
+  fx_reset();
+  fx_add("/n?q=", 200, "{\"items\":[{\"cik\":320193,\"form\":\"10-K\"}]}");
+  rc = run_source("T_NUM_ID", "x");
+  ok(rc == 0 && g_ncap == 1, "a numeric identifier is an identifier");
+  ok(strstr(g_cap[0].key, "320193") != NULL,
+     "the numeric id is keyed as its decimal text, not dropped");
+
+  /* 11c. the noise floor still holds */
+  fx_reset();
+  fx_add("/e?q=", 200, "{\"items\":[{\"a\":\"\",\"b\":null,\"c\":{},\"d\":[]}]}");
+  rc = run_source("T_EMPTY_REC", "x");
+  ok(rc == 0 && g_ncap == 0, "a record with no content at all is still dropped");
+
+  /* 11d. ...and an empty slot is not reported as a shortfall. A trailing
+   *      newline made every such CSV say "emitted 197 of 198" forever; 87 rows
+   *      of batch 19 carried that phantom -1. Two real records plus one empty
+   *      slot must emit 2 and disclose nothing — a truncation notice here would
+   *      be a false alarm, and false alarms are why real ones get ignored. */
+  fx_reset();
+  fx_add("/e?q=", 200,
+    "{\"items\":[{\"name\":\"A\"},{\"a\":\"\",\"b\":null},{\"name\":\"B\"}]}");
+  rc = run_source("T_EMPTY_REC", "x");
+  ok(rc == 0 && g_ncap == 2, "the empty slot is skipped, both real records emit");
+  int notice = 0;
+  for (int i = 0; i < g_ncap; i++)
+    if (!strcmp(g_cap[i].rtype, "collector-truncation-notice")) notice = 1;
+  ok(!notice, "an empty slot raises no truncation notice");
+
+  /* 12. the uid collision guard.
+   *
+   *     remote_key is the sink's upsert key, so two records that produce the
+   *     same string store as ONE row while the run line still reports both.
+   *     `name` is a title fallback but not an id fallback, so these records are
+   *     keyed on their title — and three sharing a title collapsed onto one.
+   *     Measured across a 1,197-source sweep: 46 rows losing 114,795 records a
+   *     pass, invisible to `records=N` because emit() really was called. */
+  fx_reset();
+  fx_add("/e?q=", 200,
+    "{\"items\":[{\"name\":\"Widget\",\"lot\":\"1\"},"
+    "{\"name\":\"Widget\",\"lot\":\"2\"},{\"name\":\"Other\"}]}");
+  rc = run_source("T_EMPTY_REC", "x");
+  ok(rc == 0 && g_ncap == 3, "three title-keyed records all emit");
+  ok(strcmp(g_cap[0].key, g_cap[1].key) != 0,
+     "records sharing a title get distinct remote_keys");
+  ok(strstr(g_cap[2].key, "Other") != NULL &&
+     strstr(g_cap[2].key, "|") != NULL &&
+     !strchr(strstr(g_cap[2].key, "Other"), '|'),
+     "a record whose title was already unique keeps its old key unchanged");
+
+  /* 12b. a shared ID is covered too, because the id is usually OURS: `id_keys`
+   *      is a manifest declaration and a wrong one is an ordinary mistake.
+   *      ECDC_RESPIRATORY declared id_keys=country_code on a weekly time
+   *      series, so 12,648 observations keyed onto 438 rows. Records sharing an
+   *      id but DIFFERING must both survive. */
+  fx_reset();
+  fx_add("/e?q=", 200,
+    "{\"items\":[{\"id\":\"X\",\"v\":\"1\"},{\"id\":\"X\",\"v\":\"2\"}]}");
+  rc = run_source("T_EMPTY_REC", "x");
+  ok(rc == 0 && g_ncap == 2, "both id-carrying records emit");
+  ok(strcmp(g_cap[0].key, g_cap[1].key) != 0,
+     "same id + different content = two records behind a bad id declaration");
+
+  /* 12d. THE SHAPE THE FIRST VERSION OF THE GUARD COULD NOT SEE.
+   *
+   *      A row declaring neither `id_keys` nor `title_keys`, whose fields match
+   *      neither fallback list either, is keyed by hp_emit_record() on its
+   *      FIRST NON-EMPTY SCALAR. The collision map originally computed only
+   *      `rkey ? rkey : title` and skipped the record when both were NULL — so
+   *      this one shape was unguarded, and every record whose first scalar was
+   *      a dimension constant collapsed onto one uid.
+   *
+   *      Measured over the full registry: 1,818 hp rows are in this shape.
+   *      WHO_XMART_NCD_MORTALITY emitted 10,001 and stored 2. `indicator` is in
+   *      neither TITLE_FALLBACK nor ID_FALLBACK, so it reproduces exactly. */
+  fx_reset();
+  fx_add("/e?q=", 200,
+    "{\"items\":[{\"indicator\":\"NCD\",\"country\":\"FR\",\"v\":1},"
+    "{\"indicator\":\"NCD\",\"country\":\"DE\",\"v\":2},"
+    "{\"indicator\":\"NCD\",\"country\":\"IT\",\"v\":3}]}");
+  rc = run_source("T_EMPTY_REC", "x");
+  ok(rc == 0 && g_ncap == 3, "first-scalar-keyed records all emit");
+  ok(strcmp(g_cap[0].key, g_cap[1].key) != 0 &&
+     strcmp(g_cap[1].key, g_cap[2].key) != 0 &&
+     strcmp(g_cap[0].key, g_cap[2].key) != 0,
+     "a row declaring NEITHER key is still guarded — the map mirrors the emitter");
+
+  /* 12c. ...but the disambiguator is a CONTENT hash, so genuinely identical
+   *      records still collapse. That is real deduplication, and it is what
+   *      stops 12b from fabricating a distinction the data does not contain. */
+  fx_reset();
+  fx_add("/e?q=", 200,
+    "{\"items\":[{\"id\":\"X\",\"v\":\"1\"},{\"id\":\"X\",\"v\":\"1\"}]}");
+  rc = run_source("T_EMPTY_REC", "x");
+  ok(rc == 0 && g_ncap == 2, "both byte-identical records are emitted");
+  ok(!strcmp(g_cap[0].key, g_cap[1].key),
+     "byte-identical records still key onto one row — real dedupe survives");
+
+  /* 13. an HTTP 200 whose BODY is an error report is not a finding.
+   *
+   *     Observed live in batch 20: ArcGIS answers an over-quota query with
+   *     status 200 and {"error":{"code":429,"message":"..."}}. `results` did
+   *     not resolve, hp_find_array() found no array of objects, and the
+   *     root-record fallback flattened the envelope — `code` matched
+   *     ID_FALLBACK through the last-segment rule, so a number lifted out of
+   *     an error message was stored and served as a finding titled
+   *     `airway-record 429`. tools/probe_hp_batch.py rejects that shape; the
+   *     engine did not. Nothing may be stored, and the run must report what
+   *     the equivalent HTTP status would have reported. */
+  fx_reset();
+  fx_add("/ed?q=", 200, "{\"error\":{\"code\":429,\"message\":\"quota exceeded\"}}");
+  rc = run_source("T_ERRDOC", "x");
+  ok(g_ncap == 0, "an HTTP-200 error document stores nothing");
+  ok(rc == 0, "a 4xx/429-class error code is an honest empty, like an HTTP 404");
+
+  fx_reset();
+  fx_add("/ed?q=", 200, "{\"error\":{\"code\":500,\"message\":\"boom\"}}");
+  rc = run_source("T_ERRDOC", "x");
+  ok(rc == -1 && g_ncap == 0, "a 5xx-class error document errors like an HTTP 500");
+
+  /* No code at all: unclassifiable, so it is reported as an error rather than
+   * as a successful empty run — "found nothing" and "was never checked" must
+   * not look the same. */
+  fx_reset();
+  fx_add("/ed?q=", 200, "{\"error\":\"rate limited\"}");
+  rc = run_source("T_ERRDOC", "x");
+  ok(rc == -1 && g_ncap == 0, "an error document with no code is an errored run, not an empty one");
+
+  /* The same envelope reaching a row that declares NO array_path — the
+   * root-record fallback is exactly the path that fabricated the record.
+   *
+   * These are the REAL bytes: services.arcgis.com answered a bad query with
+   * exactly this, under HTTP 200, on 2026-08-24. `details` is why the
+   * densest-array heuristic did not save us either — it is an array of
+   * STRINGS, so hp_find_array() (which requires objects) skips it and the
+   * root-record path takes over. */
+  fx_reset();
+  fx_add("/auto?q=", 200,
+    "{\"error\":{\"code\":400,\"message\":\"Cannot perform query. Invalid query "
+    "parameters.\",\"details\":[\"'Invalid field: BOGUS_FIELD' parameter is invalid\"]}}");
+  rc = run_source("T_AUTO", "x");
+  ok(g_ncap == 0, "the root-record fallback no longer files an error envelope as a finding");
+
+  /* A declared array_path that does not resolve: the response is not the shape
+   * the row expects, and guessing at it is what produced the garbage record. */
+  fx_reset();
+  fx_add("/ed?q=", 200, "{\"payload\":{\"name\":\"Widget\",\"id\":\"1\"}}");
+  rc = run_source("T_ERRDOC", "x");
+  ok(rc == 0 && g_ncap == 0,
+     "a declared array_path that does not resolve emits nothing rather than guessing");
+
+  /* ...but a row that declares NO array_path never told us where its records
+   * live, so the single-object response is still the record. This is the case
+   * the narrowing must not break. */
+  fx_reset();
+  fx_add("/auto?q=", 200, "{\"name\":\"Solo Record\",\"id\":\"s1\"}");
+  rc = run_source("T_AUTO", "x");
+  ok(rc == 0 && g_ncap == 1 && !strcmp(g_cap[0].title, "Solo Record"),
+     "root IS the record still works for a row with no array_path");
+
+  /* ...and an `error` member sitting ALONGSIDE real records must not delete
+   * them. Plenty of APIs ship a permanently-present error slot; the check only
+   * runs once the response has been found to carry no records at all. */
+  fx_reset();
+  fx_add("/ed?q=", 200,
+    "{\"error\":{\"code\":0,\"message\":\"\"},\"results\":[{\"name\":\"A\",\"id\":\"1\"}]}");
+  rc = run_source("T_ERRDOC", "x");
+  ok(rc == 0 && g_ncap == 1 && !strcmp(g_cap[0].title, "A"),
+     "an error member alongside real records does not suppress them");
+
+  /* 14. XML ATTRIBUTES are records too.
+   *
+   *     hp_xml_flatten walked child ELEMENTS only, so every attribute was
+   *     dropped. In SDMX structural metadata the identity is the attribute —
+   *     <Codelist id="CL_FREQ" agencyID="ILO"> — which made the whole
+   *     ILO/OECD/ABS/Istat/ECB/Eurostat/IMF family unusable and cost two live
+   *     WITS endpoints their place in batch 20. Attributes now flatten into
+   *     the same dotted keyspace under an `@` last segment, which cannot
+   *     collide with a child element of the same name. */
+  fx_reset();
+  fx_add("/xat?q=", 200,
+    "<?xml version=\"1.0\"?><Structures><Codelists>"
+    "<Codelist id=\"CL_FREQ\" agencyID=\"ILO\" version=\"1.0\">"
+    "<Name xml:lang=\"en\">Frequency</Name><Ref id=\"R1\" agencyID=\"X\"/></Codelist>"
+    "<Codelist id=\"CL_AREA\" agencyID=\"ILO\" version=\"1.0\">"
+    "<Name xml:lang=\"en\">Reference area</Name></Codelist>"
+    "</Codelists></Structures>");
+  rc = run_source("T_XML_ATTR", "x");
+  ok(rc == 0 && g_ncap == 2, "XML attribute records emit (the `<Codelists>` wrapper is not one)");
+  ok(g_ncap >= 1 && strstr(g_cap[0].key, "CL_FREQ") != NULL,
+     "id_keys=id resolves to the @id ATTRIBUTE, so the record is keyed on its identity");
+  ok(g_ncap >= 1 && !strcmp(g_cap[0].title, "Frequency"),
+     "an element-valued title still wins over the attributes beside it");
+  ok(g_ncap >= 1 && strstr(g_cap[0].props, "\"@agencyID\":\"ILO\"") != NULL,
+     "record-element attributes flatten as @name");
+  ok(g_ncap >= 1 && strstr(g_cap[0].props, "\"Name.@xml:lang\":\"en\"") != NULL,
+     "child-element attributes flatten as <path>.@name");
+  ok(g_ncap >= 1 && strstr(g_cap[0].props, "\"Ref.@id\":\"R1\"") != NULL,
+     "a self-closing child is attribute payload, not an empty element");
+  ok(g_ncap >= 2 && strstr(g_cap[1].key, "CL_AREA") != NULL,
+     "the second record keys on its own @id, not the first one's");
+
+  /* An attribute must never shadow a child element of the same name: `@id` and
+   * `id` are different keys, and an exact-key request resolves to the one it
+   * named. */
+  fx_reset();
+  fx_add("/xat?q=", 200,
+    "<Codelists><Codelist id=\"ATTR\"><id>ELEM</id><Name>N1</Name></Codelist>"
+    "<Codelist id=\"ATTR2\"><id>ELEM2</id><Name>N2</Name></Codelist></Codelists>");
+  rc = run_source("T_XML_ATTR", "x");
+  ok(rc == 0 && g_ncap == 2, "attribute + same-named element both survive");
+  ok(g_ncap >= 1 && strstr(g_cap[0].props, "\"@id\":\"ATTR\"") != NULL &&
+                    strstr(g_cap[0].props, "\"id\":\"ELEM\"") != NULL,
+     "@id and id are distinct keys — neither overwrites the other");
+  ok(g_ncap >= 1 && strstr(g_cap[0].key, "ELEM") != NULL,
+     "id_keys=id prefers the exact key `id` over the @id attribute");
+
+  /* 14b. the same fix against the REAL bytes. This is a trimmed copy of what
+   *      https://data-api.ecb.europa.eu/service/codelist/ECB/CL_FREQ returned
+   *      on 2026-08-24 — namespace-prefixed element names, a `urn` attribute
+   *      and an `xml:lang` on the name. Before attributes were flattened,
+   *      every one of these records carried a label and no identity, which is
+   *      what made the SDMX structural family unusable. */
+  fx_reset();
+  fx_add("/sdmx?q=", 200,
+    "<?xml version='1.0' encoding='UTF-8'?><mes:Structure "
+    "xmlns:mes=\"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message\" "
+    "xmlns:str=\"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure\" "
+    "xmlns:com=\"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common\">"
+    "<mes:Structures><str:Codelists>"
+    "<str:Codelist urn=\"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_FREQ(1.0)\" "
+    "isExternalReference=\"false\" agencyID=\"ECB\" id=\"CL_FREQ\" isFinal=\"false\" version=\"1.0\">"
+    "<com:Name xml:lang=\"en\">Frequency code list</com:Name>"
+    "<str:Code urn=\"urn:sdmx:org.sdmx.infomodel.codelist.Code=ECB:CL_FREQ(1.0).A\" id=\"A\">"
+    "<com:Name xml:lang=\"en\">Annual</com:Name></str:Code>"
+    "<str:Code urn=\"urn:sdmx:org.sdmx.infomodel.codelist.Code=ECB:CL_FREQ(1.0).D\" id=\"D\">"
+    "<com:Name xml:lang=\"en\">Daily</com:Name></str:Code>"
+    "</str:Codelist></str:Codelists></mes:Structures></mes:Structure>");
+  rc = run_source("T_SDMX", "x");
+  ok(rc == 0 && g_ncap == 2, "a real SDMX codelist yields one record per <str:Code>");
+  ok(g_ncap >= 2 && strstr(g_cap[0].key, "|A") != NULL &&
+                    strstr(g_cap[1].key, "|D") != NULL,
+     "each SDMX code is keyed on its own id= attribute");
+  ok(g_ncap >= 1 && !strcmp(g_cap[0].title, "Annual"),
+     "the SDMX label still comes from <com:Name>");
+  ok(g_ncap >= 1 && strstr(g_cap[0].props, "urn:sdmx:org.sdmx.infomodel.codelist.Code") != NULL,
+     "the urn attribute is kept, not discarded");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

@@ -174,6 +174,15 @@ struct AlertInboxView: View {
 
     private var list: some View {
         List {
+            // A bounded view states its bound in-band. The server caps the
+            // inbox and now reports the real total; showing 200 rows without
+            // saying 500 more exist is the silent slicing house rule 2 forbids.
+            if model.isTruncated, let total = model.serverTotal {
+                Text("Showing the \(model.events.count) most recent of \(total)")
+                    .font(Typography.monoSmall)
+                    .foregroundStyle(theme.textMuted)
+                    .listRowBackground(Color.clear)
+            }
             ForEach(model.events) { ev in
                 row(ev)
             }

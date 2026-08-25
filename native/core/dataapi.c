@@ -61,6 +61,7 @@
  */
 #include "dataapi.h"
 #include "collcache.h"
+#include "layertab.h"           /* curated taxonomy + source→layer resolver */
 #include "../source.h"
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
@@ -83,9 +84,16 @@
 static void iso_now(char *o, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
   struct tm g; gmtime_r(&tv.tv_sec, &g);
-  snprintf(o, n, "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-           g.tm_year + 1900, g.tm_mon + 1, g.tm_mday, g.tm_hour, g.tm_min,
-           g.tm_sec, (int)(tv.tv_usec / 1000));
+  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
+   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
+   * fixed 24-char stamp "may be truncated". The modulos are identity for
+   * every value gmtime_r can return and make the 24 provable, not merely
+   * true. */
+  snprintf(o, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(g.tm_year + 1900) % 10000u, (unsigned)(g.tm_mon + 1) % 100u,
+           (unsigned)g.tm_mday % 100u, (unsigned)g.tm_hour % 100u,
+           (unsigned)g.tm_min % 100u, (unsigned)g.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 
 /* getTtlMs(key): collector_ttls row else DEFAULT_TTL_MS. The table is
@@ -261,6 +269,215 @@ static cJSON *intel_fc_features(db_handle *db, const char *source_id) {
   return feats;
 }
 
+/* ── LAYER FeatureCollections (v2 — /api/layers/:id/geojson, /api/data) ───
+ *
+ * intel_fc_features() above serves ONE source. A layer (core/layers.def) is a
+ * SET of sources fused by data_type+modality, or a generated catch-all over
+ * every geocoded row whose source resolves to no layer at all. The predicate
+ * is spliced as a trusted, quote-escaped IN (...) fragment built by
+ * layertab.c — no user input reaches the SQL text (the layer id is only ever
+ * COMPARED against known ids, never spliced).
+ *
+ * BOUNDED, IN-BAND (house rule 2): one crime layer measured ~300 MB as an
+ * unbounded FC, which no client survives — so the FC takes LIMIT/OFFSET over
+ * a total order (rowid) and states records_available vs records_used and the
+ * offset to resume from in _meta. Every row stays reachable by paging;
+ * nothing is silently sliced. */
+
+#define LAYER_FC_DEFAULT_LIMIT 10000
+#define LAYER_FC_MAX_LIMIT     50000
+
+/* COUNT(*) over `where` (a complete WHERE-clause tail). -1 if the count could
+ * not be taken — rule 1: never report a number we did not obtain. */
+static long long count_where(db_handle *db, const char *where) {
+  char *q = sqlite3_mprintf("SELECT COUNT(*) FROM intel_items WHERE %s", where);
+  if (!q) return -1;
+  sqlite3_stmt *s = NULL;
+  long long n = -1;
+  if (sqlite3_prepare_v2(db->h, q, -1, &s, NULL) == SQLITE_OK &&
+      sqlite3_step(s) == SQLITE_ROW)
+    n = sqlite3_column_int64(s, 0);
+  sqlite3_finalize(s);
+  sqlite3_free(q);
+  return n;
+}
+
+/* Features for `where`, ORDER BY rowid (the INTEGER PRIMARY KEY — a total
+ * order, so paging across a boundary cannot repeat or drop a row), bounded.
+ * Same column set + row shaping as intel_fc_features. */
+static cJSON *fc_features_where(db_handle *db, const char *where,
+                                int limit, int offset) {
+  char *q = sqlite3_mprintf(
+    "SELECT uid, source_id, sub_source_id, record_type, lat, lon, geometry,"
+    "       title, summary, link, language, published_at, fetched_at,"
+    "       properties, tags"
+    "  FROM intel_items WHERE %s ORDER BY rowid LIMIT %d OFFSET %d",
+    where, limit, offset);
+  if (!q) return NULL;
+  cJSON *feats = cJSON_CreateArray();
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h, q, -1, &s, NULL) == SQLITE_OK)
+    while (sqlite3_step(s) == SQLITE_ROW)
+      cJSON_AddItemToArray(feats, row_to_feature(s));
+  sqlite3_finalize(s);
+  sqlite3_free(q);
+  return feats;
+}
+
+/* WHERE-clause tail for a layer id, malloc'd, or NULL when `layer_id` names
+ * no layer this server knows (caller → 404). Handles all three kinds:
+ *   curated/declared:  source_id IN (<members>)
+ *   rt-<slug>:         unassigned sources AND record_type slugs to <slug>
+ *   unassigned-geocoded: unassigned sources AND record_type NULL/empty
+ * `member_count`/`is_generated` report shape for _meta. */
+static char *layer_where(db_handle *db, const char *layer_id,
+                         int *member_count, int *is_generated) {
+  *member_count = 0;
+  *is_generated = 0;
+
+  int nmem = 0;
+  char *members = layertab_members_in(layer_id, &nmem);
+  if (members) {
+    char *w = sqlite3_mprintf("lat IS NOT NULL AND source_id IN (%s)", members);
+    free(members);
+    *member_count = nmem;
+    if (!w) return NULL;
+    char *out = strdup(w);         /* strdup: callers free() uniformly */
+    sqlite3_free(w);
+    return out;
+  }
+  /* A curated layer whose match set is empty today still EXISTS — it serves
+   * an honest empty FC, not a 404 (the taxonomy is a promise). */
+  if (layertab_get(layer_id)) return strdup("lat IS NOT NULL AND 0");
+
+  /* Generated ids. The unassigned population is "every geocoded row whose
+   * source id is NOT in the assigned set" — computed as NOT IN over the same
+   * escaped fragment, so the partition is the exact complement of the
+   * curated/declared side and the totals add up. */
+  int is_unassigned = strcmp(layer_id, "unassigned-geocoded") == 0;
+  int is_rt = strncmp(layer_id, "rt-", 3) == 0;
+  if (!is_unassigned && !is_rt) return NULL;
+
+  int nas = 0;
+  char *assigned = layertab_assigned_in(&nas);
+  const char *not_in_pre = assigned ? " AND source_id NOT IN (" : "";
+  const char *not_in_post = assigned ? ")" : "";
+
+  char *w = NULL;
+  if (is_unassigned) {
+    w = sqlite3_mprintf(
+      "lat IS NOT NULL%s%s%s AND (record_type IS NULL OR record_type='')",
+      not_in_pre, assigned ? assigned : "", not_in_post);
+  } else {
+    /* rt-<slug>: find the actual record_type strings that slug to it among
+     * the unassigned geocoded rows (several may collide onto one slug — they
+     * are then the same layer, which keeps the partition exact). */
+    char *rts = NULL; size_t rtlen = 0, rtcap = 0; int nrt = 0;
+    char *dq = sqlite3_mprintf(
+      "SELECT DISTINCT record_type FROM intel_items"
+      " WHERE lat IS NOT NULL AND record_type IS NOT NULL AND record_type<>''"
+      "%s%s%s", not_in_pre, assigned ? assigned : "", not_in_post);
+    if (dq) {
+      sqlite3_stmt *s = NULL;
+      if (sqlite3_prepare_v2(db->h, dq, -1, &s, NULL) == SQLITE_OK) {
+        while (sqlite3_step(s) == SQLITE_ROW) {
+          const char *rt = (const char *)sqlite3_column_text(s, 0);
+          if (!rt) continue;
+          char slug[128]; layertab_rt_slug(rt, slug, sizeof slug);
+          if (!slug[0] || strcmp(layer_id + 3, slug) != 0) continue;
+          /* grow "'a','b'" — same escaping discipline as layertab */
+          size_t need = strlen(rt) * 2 + 4;
+          if (rtlen + need + 1 > rtcap) {
+            size_t nc = rtcap ? rtcap * 2 : 512;
+            while (nc < rtlen + need + 1) nc *= 2;
+            char *nb = realloc(rts, nc);
+            if (!nb) { free(rts); rts = NULL; break; }
+            rts = nb; rtcap = nc;
+          }
+          char *wp = rts + rtlen;
+          if (nrt) *wp++ = ',';
+          *wp++ = '\'';
+          for (const char *p = rt; *p; p++) {
+            if (*p == '\'') *wp++ = '\'';
+            *wp++ = *p;
+          }
+          *wp++ = '\''; *wp = 0;
+          rtlen = (size_t)(wp - rts);
+          nrt++;
+        }
+      }
+      sqlite3_finalize(s);
+      sqlite3_free(dq);
+    }
+    if (rts && nrt > 0) {
+      w = sqlite3_mprintf(
+        "lat IS NOT NULL%s%s%s AND record_type IN (%s)",
+        not_in_pre, assigned ? assigned : "", not_in_post, rts);
+    }
+    free(rts);
+  }
+  free(assigned);
+  if (!w) return NULL;
+  char *out = strdup(w);
+  sqlite3_free(w);
+  *is_generated = 1;
+  return out;
+}
+
+char *dataapi_layer_fc(db_handle *db, const char *layer_id,
+                       int limit, int offset) {
+  if (!db || !layer_id || !*layer_id) return NULL;
+
+  int member_count = 0, is_generated = 0;
+  char *where = layer_where(db, layer_id, &member_count, &is_generated);
+  if (!where) return NULL;                                /* unknown → 404 */
+
+  int lim = limit > 0 ? limit : LAYER_FC_DEFAULT_LIMIT;
+  if (lim > LAYER_FC_MAX_LIMIT) lim = LAYER_FC_MAX_LIMIT;
+  int off = offset > 0 ? offset : 0;
+
+  long long available = count_where(db, where);
+  cJSON *feats = fc_features_where(db, where, lim, off);
+  free(where);
+  if (!feats) return NULL;
+  int used = cJSON_GetArraySize(feats);
+
+  cJSON *fc = cJSON_CreateObject();
+  cJSON_AddStringToObject(fc, "type", "FeatureCollection");
+  cJSON_AddItemToObject(fc, "features", feats);
+
+  const layer_row *row = layertab_get(layer_id);
+  cJSON *m = cJSON_AddObjectToObject(fc, "_meta");
+  cJSON_AddStringToObject(m, "layer", layer_id);
+  cJSON_AddStringToObject(m, "kind",
+    row ? "curated" : (is_generated ? "generated" : "declared"));
+  cJSON_AddItemToObject(m, "data_type",
+    (row && row->data_type) ? cJSON_CreateString(row->data_type)
+                            : cJSON_CreateNull());
+  cJSON_AddItemToObject(m, "modality",
+    (row && row->modality) ? cJSON_CreateString(row->modality)
+                           : cJSON_CreateNull());
+  cJSON_AddNumberToObject(m, "member_count", member_count);
+  char ts[40]; iso_now(ts, sizeof ts);
+  cJSON_AddStringToObject(m, "fetchedAt", ts);
+  /* Rule 2, in-band: the bound and how much lies beyond it. `truncated` is
+   * false only when this page really is the whole predicate. */
+  if (available < 0) cJSON_AddNullToObject(m, "records_available");
+  else cJSON_AddNumberToObject(m, "records_available", (double)available);
+  cJSON_AddNumberToObject(m, "records_used", used);
+  cJSON_AddNumberToObject(m, "limit", lim);
+  cJSON_AddNumberToObject(m, "offset", off);
+  int truncated = available >= 0 && (long long)off + used < available;
+  cJSON_AddBoolToObject(m, "truncated", truncated);
+  if (truncated)
+    cJSON_AddNumberToObject(m, "next_offset", (double)(off + used));
+  cJSON_AddStringToObject(m, "served_from", "intel_items");
+
+  char *js = cJSON_PrintUnformatted(fc);
+  cJSON_Delete(fc);
+  return js;
+}
+
 /* Does intel_items have ANY row for this source_id? (Used to decide the
  * graceful-empty-FC vs genuine-NULL fall-through for an unregistered id —
  * mirrors data.js serving intel rows that arrived via another path.) */
@@ -374,6 +591,16 @@ char *dataapi_layer(db_handle *db, const char *id) {
    * unknown AND has no rows — that's the dataapi.h contract and the closest
    * faithful analog given the C caller already tried sweepapi. */
   if (!def || !def->run) {
+    /* v2: an id that is not a registered source may be a LAYER (curated in
+     * core/layers.def, declared by its member sources, or a generated
+     * catch-all). Serve the fused, bounded FeatureCollection — this is what
+     * makes /api/data/<layerId> real for multi-source layers that previously
+     * fell through to the empty-FC path. A NULL here means the id names no
+     * layer either, and the source-shaped fallbacks below still apply. */
+    {
+      char *lfc = dataapi_layer_fc(db, id, 0, 0);
+      if (lfc) return lfc;
+    }
     long long ttl = get_ttl_ms(db, id);
     int n = 0;
     char *fc = fc_from_intel(db, id, "miss", 0, ttl, &n, 0);

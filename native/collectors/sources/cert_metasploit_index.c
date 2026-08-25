@@ -8,7 +8,7 @@
  *           description, references[] and targets[].
  *
  * SCOPE: the file holds ~7,100 modules. This collector emits the modules that
- * carry at least one CVE reference (capped at MSF_MAX_ROWS), because that is
+ * carry at least one CVE reference, because that is
  * the subset that answers "does this CVE have an exploit module" — the reason
  * the source is here. Modules with no CVE reference are skipped rather than
  * padded with an invented identifier.
@@ -34,7 +34,6 @@
 
 #define MSF_URL "https://raw.githubusercontent.com/rapid7/metasploit-framework/" \
                 "master/db/modules_metadata_base.json"
-#define MSF_MAX_ROWS 6000
 
 /* Metasploit's own reliability scale, as documented in the framework. Decoding
  * a fetched numeric field, not inventing one. */
@@ -56,12 +55,10 @@ static int run(const source_ctx *c, intel_sink *s) {
     fprintf(stderr, "[metasploit-module-index] fetch/parse failed\n");
     return -1;
   }
-  int n = 0, seen = 0, capped = 0;
-  const int modules = cJSON_GetArraySize(doc);
+  int n = 0, seen = 0;
   cJSON *m;
   /* cJSON_ArrayForEach walks an object's children too; m->string is the key. */
   cJSON_ArrayForEach(m, doc) {
-    if (n >= MSF_MAX_ROWS) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     if (!cJSON_IsObject(m)) continue;
     seen++;
     const char *full = jo_sv(m, "fullname");
@@ -140,16 +137,6 @@ static int run(const source_ctx *c, intel_sink *s) {
     if (s->emit(s, &it) >= 0) n++;
     free(pj);
   }
-  /* House rule 2: MSF_MAX_ROWS is a runaway guard sized above the module index
-   * as it stands, so it normally never bites — but if the index outgrows it,
-   * say so in the data instead of silently keeping the first slice. */
-  if (capped)
-    jo_truncation_notice(s, "metasploit-module-index", "modules_metadata", n,
-                         (long)modules,
-                         "MSF_MAX_ROWS reached; the remaining modules in the "
-                         "fetched index were not emitted",
-                         "raise or drop MSF_MAX_ROWS in collectors/sources/"
-                         "cert_metasploit_index.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[metasploit-module-index] emitted %d of %d modules "
                   "(CVE-referencing subset)\n", n, seen);

@@ -16,7 +16,7 @@
  *    to detect a future leap-second announcement": DAT is emitted as a number
  *    and any change from the previous row is flagged in properties.
  * STATED BOUND: only the last WINDOW_DAYS of the ~1,700-row file are emitted
- *   (earlier rows never change), capped at MAX_ROWS.
+ *   (earlier rows never change).
  * Licence: CelesTrak usage policy — free reuse with attribution, derived from
  *   IERS.
  */
@@ -31,7 +31,6 @@
 
 #define EOP_URL "https://celestrak.org/SpaceData/EOP-Last5Years.csv"
 #define WINDOW_DAYS 30
-#define MAX_ROWS 120
 #define MAXCOL 24
 
 static int tsp_split(char *line, char **out, int max) {
@@ -96,7 +95,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char cutoff[16];
   jo_days_ago_iso(WINDOW_DAYS, cutoff, sizeof cutoff);
 
-  int n = 0, seen = 0, capped = 0;
+  int n = 0, seen = 0;
   double prev_dat = -1;
   char *line;
   while ((line = jo_next_line_cr(&p)) != NULL) {
@@ -115,7 +114,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (dat >= 0) prev_dat = dat;
 
     if (strcmp(date, cutoff) < 0) continue;
-    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
 
     const char *typ = tsp_cell(f, nf, i_typ);
     const char *ut1 = tsp_cell(f, nf, i_ut1);
@@ -163,14 +161,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
-  /* House rule 2: the whole EOP file was downloaded and every daily row
-   * counted; MAX_ROWS stopped the emit loop inside the recent window. */
-  if (capped)
-    jo_truncation_notice(sink, "celestrak-eop", "EOP-All", n, (long)seen,
-                         "MAX_ROWS reached; the remaining in-window daily rows "
-                         "of the downloaded file were not emitted",
-                         "raise or drop MAX_ROWS in collectors/sources/"
-                         "tsp_celestrak_eop.c");
   free(body);
   fprintf(stderr, "[celestrak-eop] emitted %d of %d daily rows (>= %s)\n",
           n, seen, cutoff);

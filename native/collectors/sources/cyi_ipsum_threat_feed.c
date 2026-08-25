@@ -21,7 +21,6 @@
 
 #define CYI_URL "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt"
 #define MIN_LISTS 3
-#define MAX_ROWS 5000
 
 static char *next_line(char **p) {
   char *s = *p;
@@ -57,7 +56,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (!jo_is_ipv4(ip)) continue;
     if (lists < MIN_LISTS) continue;
     qualified++;
-    if (n >= MAX_ROWS) continue;
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "ip", ip);

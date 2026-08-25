@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <sys/time.h>
 
 static const char *ctext(sqlite3_stmt *s, int i) {
   return sqlite3_column_type(s, i) == SQLITE_NULL
@@ -30,6 +32,73 @@ static long count1_t(sqlite3 *h, const char *sql, const char *tenant) {
   }
   sqlite3_finalize(s);
   return n;
+}
+
+/* ── the list envelope (house rule 2) ──────────────────────────────────────
+ * Every list in this file capped silently. /api/entities/search took limit=1000
+ * and answered 100 rows inside a bare {"results":[…]}; /mentions and /breaches
+ * took limit=1000 and answered 200. None of the three said how many rows
+ * existed, so "100 results" and "the first 100 of 4,000" were the same
+ * response — the silent slicing rule 2 forbids, and the same finding that was
+ * fixed on /api/alert-events.
+ *
+ * The disclosure block is the one /api/intel/items, /api/timeline and
+ * /api/alert-events now share:
+ *
+ *   "page": { "limit": N, "total": M, <paging knob> }
+ *   "meta": { "fetched_at": "…", "filters": {…} }
+ *
+ * `limit` and `total` are always present — `total` a REAL measured COUNT(*)
+ * over the identical predicate, never an estimate, and null (not 0) if the
+ * count itself failed. The paging knob is whichever one the route actually
+ * honours: "next_cursor" on the keyset routes, "offset" on these three, which
+ * were already offset-paged (or, for search, are now). Emitting the knob the
+ * route does NOT support would be its own lie — a client following a
+ * permanently-null next_cursor concludes there is no more data.
+ *
+ * The row array keeps its existing key ("results"/"mentions"/"data"): the
+ * envelope is added ALONGSIDE it, so no existing reader of these three routes
+ * breaks. Only /api/sources/:id/logs had to change shape, because a bare JSON
+ * array has nowhere to put any of this — see miscapi.c. */
+
+/* Node's new Date().toISOString(), the modulo-clamped spelling used across
+ * this tree so -Wformat-truncation can prove the 24 chars fit. */
+static void iso_now(char *buf, size_t n) {
+  struct timeval tv; gettimeofday(&tv, NULL);
+  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
+  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
+}
+
+/* Step-and-finalize a prepared COUNT(*). -1 when the count could not be taken,
+ * which the envelope must render as null: rule 1 forbids reporting a number we
+ * did not measure, and a fabricated 0 here would read as "nothing exists". */
+static long count_step(sqlite3_stmt *s) {
+  long n = -1;
+  if (s && sqlite3_step(s) == SQLITE_ROW) n = (long)sqlite3_column_int64(s, 0);
+  sqlite3_finalize(s);
+  return n;
+}
+
+/* Attach page{limit,offset,total} + meta{fetched_at,filters} to `o`.
+ * Takes ownership of `filters` (pass NULL for an empty object). */
+static void add_page_meta(cJSON *o, int limit, int offset, long total,
+                          cJSON *filters) {
+  cJSON *page = cJSON_CreateObject();
+  cJSON_AddNumberToObject(page, "limit", limit);
+  cJSON_AddNumberToObject(page, "offset", offset);
+  if (total < 0) cJSON_AddNullToObject(page, "total");
+  else           cJSON_AddNumberToObject(page, "total", (double)total);
+  cJSON_AddItemToObject(o, "page", page);
+
+  char ts[40]; iso_now(ts, sizeof ts);
+  cJSON *meta = cJSON_CreateObject();
+  cJSON_AddStringToObject(meta, "fetched_at", ts);
+  cJSON_AddItemToObject(meta, "filters", filters ? filters : cJSON_CreateObject());
+  cJSON_AddItemToObject(o, "meta", meta);
 }
 
 /* ── tenant scoping ────────────────────────────────────────────────────────
@@ -156,8 +225,8 @@ char *entityapi_stats_scoped(db_handle *db, const char *tenant,
  * the write path (fts_segment == jpTokenizer.segmentForFts), MATCH joined
  * back to `entities` via entities_fts.uid, mention_count DESC. */
 char *entityapi_search(db_handle *db, const char *q, const char *type, int limit,
-                       const char *tenant) {
-  return entityapi_search_scoped(db, q, type, limit, tenant, 0);
+                       int offset, const char *tenant) {
+  return entityapi_search_scoped(db, q, type, limit, offset, tenant, 0);
 }
 
 /* Operator-only exact-identifier probe over the quarantined nodes.
@@ -222,7 +291,8 @@ static void search_breach_exact(db_handle *db, const char *q, const char *type,
 }
 
 char *entityapi_search_scoped(db_handle *db, const char *q, const char *type,
-                              int limit, const char *tenant, int is_operator) {
+                              int limit, int offset, const char *tenant,
+                              int is_operator) {
   es_breach_scope_migrate(db);
   tenant = vis_tenant(tenant);
   cJSON *results = cJSON_CreateArray();
@@ -239,57 +309,116 @@ char *entityapi_search_scoped(db_handle *db, const char *q, const char *type,
    * usable token", which is the same {"results":[]} the caller already emits
    * for an empty q. */
   char *segq = fts_query_expr(q);              /* malloc'd, or NULL */
-  int lim = limit > 0 ? limit : 30;
-  if (lim > 100) lim = 100;
   if (!segq) {
-    /* No usable FTS token — but the operator's exact probe does not go through
-     * FTS at all, so an identifier that tokenizes to nothing must still pivot.
-     * (This branch used to print the bare array, i.e. `[]`, where every other
-     * exit from this function — and httpd.c's empty-q shortcut — emits
-     * {"results":[]}. It now has rows to carry, so it uses the documented
-     * envelope like the rest.) */
-    if (is_operator) search_breach_exact(db, q, type, lim, results);
-    cJSON *oe = cJSON_CreateObject();
-    cJSON_AddItemToObject(oe, "results", results);
-    char *empty = cJSON_PrintUnformatted(oe);
-    cJSON_Delete(oe);
+    /* No usable FTS token. Two things still have to happen here.
+     *
+     * The operator's exact probe does not go through FTS at all, so an
+     * identifier that tokenizes to nothing must still pivot — that is the
+     * whole point of the probe.
+     *
+     * And the envelope must be the SAME one the populated answer uses: this
+     * branch used to print the bare array `[]`, so a client reading
+     * body.results got undefined on the one path an ordinary unusable query
+     * takes. total is a truthful 0 — nothing matched because nothing was
+     * searched for — and the probe's rows, if any, are carried in `results`. */
+    if (is_operator) search_breach_exact(db, q, type, limit > 0 ? limit : 30, results);
+    cJSON *o = cJSON_CreateObject();
+    cJSON_AddItemToObject(o, "results", results);
+    cJSON *f0 = cJSON_CreateObject();
+    add_str_or_null(f0, "q", q);
+    add_str_or_null(f0, "type", type);
+    cJSON_AddBoolToObject(f0, "q_applied", 0);
+    add_page_meta(o, limit > 0 ? limit : 30, offset > 0 ? offset : 0,
+                  cJSON_GetArraySize(results), f0);
+    char *empty = cJSON_PrintUnformatted(o);
+    cJSON_Delete(o);
     return empty;
   }
+  int lim = limit > 0 ? limit : 30;
+  if (lim > 100) lim = 100;
+  int off = offset > 0 ? offset : 0;
 
-  /* The added disjunct is the ONLY way a breach-scoped node can come back out
-   * of this query, and it is bound to SQL NULL for everyone but an operator.
-   * (Belt and braces: those nodes are also absent from entities_fts, so the
-   * JOIN cannot produce them regardless.) */
+  /* Lower-cased type, needed by both the count and the page query. */
+  char tl[128];
+  if (type) {
+    snprintf(tl, sizeof tl, "%s", type);
+    for (char *p = tl; *p; p++) if (*p >= 'A' && *p <= 'Z') *p += 32;
+  } else tl[0] = 0;
+
+  /* How many entities the query really matches, before the cap. Same MATCH,
+   * same type filter, same tenant predicate INCLUDING the breach-scope
+   * disjunct — a count taken over a different predicate than the page query
+   * would be a number about a different question, and for an operator it
+   * would under-report the rows they can actually see. */
+  long total = -1;
+  { const char *csql = type
+      ? "SELECT COUNT(*) FROM entities_fts "
+        "JOIN entities ON entities.entity_id=entities_fts.uid "
+        "WHERE entities_fts MATCH ?1 AND entities.type=?2 "
+        "AND (entities.tenant_id IS NULL OR entities.tenant_id=?3 "
+        "     OR entities.tenant_id=?4)"
+      : "SELECT COUNT(*) FROM entities_fts "
+        "JOIN entities ON entities.entity_id=entities_fts.uid "
+        "WHERE entities_fts MATCH ?1 "
+        "AND (entities.tenant_id IS NULL OR entities.tenant_id=?2 "
+        "     OR entities.tenant_id=?3)";
+    sqlite3_stmt *cs = NULL;
+    if (sqlite3_prepare_v2(db->h, csql, -1, &cs, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(cs, 1, segq, -1, SQLITE_TRANSIENT);
+      if (type) {
+        sqlite3_bind_text(cs, 2, tl, -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(cs, 3, tenant ? tenant : "", -1, SQLITE_TRANSIENT);
+        bind_scope(cs, 4, is_operator);
+      } else {
+        sqlite3_bind_text(cs, 2, tenant ? tenant : "", -1, SQLITE_TRANSIENT);
+        bind_scope(cs, 3, is_operator);
+      }
+      total = count_step(cs);
+    } }
+
+  /* ORDER BY gained the `entities.entity_id ASC` tiebreak. mention_count is
+   * emphatically not unique — the corpus is full of entities sharing a count,
+   * and most share 0 — so the old single-key ORDER BY left ties in whatever
+   * order the query planner happened to produce. That is invisible while the
+   * answer is one un-paged page, and becomes lost and duplicated rows the
+   * moment a caller walks OFFSET across a page boundary, which is exactly what
+   * the paging added here does.
+   *
+   * The added tenant disjunct is the ONLY way a breach-scoped node can come
+   * back out of this query, and it is bound to SQL NULL for everyone but an
+   * operator. (Belt and braces: those nodes are also absent from entities_fts,
+   * so the JOIN cannot produce them regardless.) */
   const char *sql = type
     ? "SELECT entities.*, snippet(entities_fts,-1,'<mark>','</mark>','…',12) "
       "FROM entities_fts JOIN entities ON entities.entity_id=entities_fts.uid "
       "WHERE entities_fts MATCH ?1 AND entities.type=?2 "
       "AND (entities.tenant_id IS NULL OR entities.tenant_id=?4 "
       "     OR entities.tenant_id=?5) "
-      "ORDER BY entities.mention_count DESC LIMIT ?3"
+      "ORDER BY entities.mention_count DESC, entities.entity_id ASC "
+      "LIMIT ?3 OFFSET ?6"
     : "SELECT entities.*, snippet(entities_fts,-1,'<mark>','</mark>','…',12) "
       "FROM entities_fts JOIN entities ON entities.entity_id=entities_fts.uid "
       "WHERE entities_fts MATCH ?1 "
       "AND (entities.tenant_id IS NULL OR entities.tenant_id=?3 "
       "     OR entities.tenant_id=?4) "
-      "ORDER BY entities.mention_count DESC LIMIT ?2";
+      "ORDER BY entities.mention_count DESC, entities.entity_id ASC "
+      "LIMIT ?2 OFFSET ?5";
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) {
     free(segq); cJSON_Delete(results); return NULL;          /* → 500 */
   }
   sqlite3_bind_text(s, 1, segq, -1, SQLITE_TRANSIENT);
-  char tl[128];
   if (type) {
-    snprintf(tl, sizeof tl, "%s", type);
-    for (char *p = tl; *p; p++) if (*p >= 'A' && *p <= 'Z') *p += 32;
     sqlite3_bind_text(s, 2, tl, -1, SQLITE_TRANSIENT);
     sqlite3_bind_int(s, 3, lim);
     sqlite3_bind_text(s, 4, tenant ? tenant : "", -1, SQLITE_TRANSIENT);
     bind_scope(s, 5, is_operator);
+    sqlite3_bind_int(s, 6, off);
   } else {
     sqlite3_bind_int(s, 2, lim);
     sqlite3_bind_text(s, 3, tenant ? tenant : "", -1, SQLITE_TRANSIENT);
     bind_scope(s, 4, is_operator);
+    sqlite3_bind_int(s, 5, off);
   }
   /* entities.* column order = entities table DDL; _excerpt is the last col */
   int rc;
@@ -314,6 +443,11 @@ char *entityapi_search_scoped(db_handle *db, const char *q, const char *type,
 
   cJSON *o = cJSON_CreateObject();
   cJSON_AddItemToObject(o, "results", results);
+  cJSON *f = cJSON_CreateObject();
+  add_str_or_null(f, "q", q);
+  add_str_or_null(f, "type", type);
+  cJSON_AddBoolToObject(f, "q_applied", 1);
+  add_page_meta(o, lim, off, total, f);
   char *js = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
   return js;
@@ -452,6 +586,20 @@ char *entityapi_breaches_scoped(db_handle *db, const char *type, const char *id,
   if (lim > 200) lim = 200;
   int off = offset > 0 ? offset : 0;
 
+  /* COUNT over the GROUPED population, i.e. DISTINCT source_id — the list
+   * GROUP BYs source_id, so counting raw entity_mentions rows would report a
+   * bigger number than the list can ever return and the disclosure would be
+   * wrong in the direction that looks like data is missing. */
+  long total = -1;
+  { sqlite3_stmt *cs = NULL;
+    if (sqlite3_prepare_v2(db->h,
+          "SELECT COUNT(DISTINCT m.source_id) FROM entity_mentions m "
+          "WHERE m.entity_id=?1 AND m.extractor='breach-ingest'",
+          -1, &cs, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(cs, 1, id, -1, SQLITE_TRANSIENT);
+      total = count_step(cs);
+    } }
+
   cJSON *arr = cJSON_CreateArray();
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
@@ -499,6 +647,16 @@ char *entityapi_breaches_scoped(db_handle *db, const char *type, const char *id,
   cJSON *o = cJSON_CreateObject();
   cJSON_AddItemToObject(o, "data", arr);
   cJSON_AddItemToObject(o, "exposure", exposure_summary(db, id));
+  /* `exposure.breach_count` is a summary statistic about the entity, not a
+   * statement about THIS page, and nothing said the two were related — so it
+   * could not stand in for the disclosure. page.total is the count of exactly
+   * the rows `data` is a slice of. The ORDER BY is already a total order
+   * (breach_date DESC, source_id ASC, and source_id is unique after the
+   * GROUP BY), so walking offset across pages is safe. */
+  cJSON *f = cJSON_CreateObject();
+  cJSON_AddStringToObject(f, "entity_id", id);
+  cJSON_AddStringToObject(f, "type", type);
+  add_page_meta(o, lim, off, total, f);
   char *js = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
   return js;
@@ -763,8 +921,10 @@ char *entityapi_graph_scoped(db_handle *db, const char *type, const char *id,
   }
   for (int i = 0; i < nf; i++) free(frontier[i]);
   free(frontier);
-  for (int i = 0; i < nek; i++) free(ek[i]); free(ek);
-  for (int i = 0; i < nv; i++) free(visited[i]); free(visited);
+  for (int i = 0; i < nek; i++) free(ek[i]);
+  free(ek);
+  for (int i = 0; i < nv; i++) free(visited[i]);
+  free(visited);
 
   cJSON *jnodes = cJSON_CreateArray();
   for (int i = 0; i < nn; i++) {
@@ -852,7 +1012,16 @@ char *entityapi_mentions_scoped(db_handle *db, const char *type, const char *id,
         "WHERE m.entity_id=?1 "
         "AND (m.tenant_id IS NOT '" ES_BREACH_TENANT "' OR m.tenant_id=?5) "
         "AND (i.uid IS NULL OR i.tenant_id='legacy' OR i.tenant_id=?4) "
-        "ORDER BY m.created_at DESC LIMIT ?2 OFFSET ?3",
+        /* Tiebreak added for the same reason as entityapi_search: created_at
+         * is a datetime('now') to the SECOND and one extraction pass writes a
+         * whole item's mentions inside that second, so created_at alone is
+         * nowhere near a total order. This route has been offset-paged since
+         * it was written, which means every page boundary that landed inside
+         * such a batch could already repeat or drop rows. (entity_id,
+         * item_uid, field) is the primary key, so with entity_id fixed the
+         * remaining two columns make the order total. */
+        "ORDER BY m.created_at DESC, m.item_uid ASC, COALESCE(m.field,'') ASC "
+        "LIMIT ?2 OFFSET ?3",
         -1, &s, NULL) != SQLITE_OK) return NULL;
   sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
   sqlite3_bind_int(s, 2, lim);
@@ -879,6 +1048,24 @@ char *entityapi_mentions_scoped(db_handle *db, const char *type, const char *id,
   }
   sqlite3_finalize(s);
 
+  /* Counted through the SAME tenant predicate as the list. Counting the raw
+   * entity_mentions rows instead would have reported this tenant a total that
+   * includes another tenant's private items — the very rows the join above
+   * exists to hide — which is a smaller leak than serving them but a leak all
+   * the same. */
+  long total = -1;
+  { sqlite3_stmt *cs = NULL;
+    if (sqlite3_prepare_v2(db->h,
+          "SELECT COUNT(*) FROM entity_mentions m "
+          "LEFT JOIN intel_items i ON i.uid=m.item_uid "
+          "WHERE m.entity_id=?1 "
+          "AND (i.uid IS NULL OR i.tenant_id='legacy' OR i.tenant_id=?2)",
+          -1, &cs, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(cs, 1, id, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(cs, 2, tenant ? tenant : "", -1, SQLITE_TRANSIENT);
+      total = count_step(cs);
+    } }
+
   cJSON *o = cJSON_CreateObject();
   cJSON_AddItemToObject(o, "mentions", arr);
   /* House rule 2: a bounded view says in-band that it is bounded. What it
@@ -891,6 +1078,11 @@ char *entityapi_mentions_scoped(db_handle *db, const char *type, const char *id,
   add_str_or_null(scope, "withheld_reason",
                   is_operator ? NULL : "platform_operator_required");
   cJSON_AddItemToObject(o, "scope", scope);
+
+  cJSON *f = cJSON_CreateObject();
+  cJSON_AddStringToObject(f, "entity_id", id);
+  cJSON_AddStringToObject(f, "type", type);
+  add_page_meta(o, lim, offset, total, f);
   char *js = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
   return js;

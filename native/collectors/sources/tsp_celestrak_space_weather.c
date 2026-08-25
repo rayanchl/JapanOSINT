@@ -19,7 +19,7 @@
  *    prediction is never mistaken for a measurement.
  *  - "Trailing days can have empty cells": empty cells are omitted, not zeroed.
  * STATED BOUND: the file holds ~2,050 daily rows; only the last WINDOW_DAYS are
- *   emitted (the rest never change), capped at MAX_ROWS.
+ *   emitted (the rest never change).
  * Licence: CelesTrak usage policy — free reuse, one retrieval per update
  *   cycle, attribution to CelesTrak.
  */
@@ -34,7 +34,6 @@
 
 #define SW_URL "https://celestrak.org/SpaceData/SW-Last5Years.csv"
 #define WINDOW_DAYS 30
-#define MAX_ROWS 120
 #define MAXCOL 48
 
 static int tsp_split(char *line, char **out, int max) {
@@ -116,7 +115,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char cutoff[16];
   jo_days_ago_iso(WINDOW_DAYS, cutoff, sizeof cutoff);
 
-  int n = 0, seen = 0, capped = 0;
+  int n = 0, seen = 0;
   char *line;
   while ((line = jo_next_line_cr(&p)) != NULL) {
     if (!*line) continue;
@@ -125,7 +124,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     int nf = tsp_split(line, f, MAXCOL);
     const char *date = tsp_cell(f, nf, i_date);
     if (!date || strcmp(date, cutoff) < 0) continue;
-    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
 
     const char *dtype = tsp_cell(f, nf, i_ftyp);
     const char *apavg = tsp_cell(f, nf, i_apavg);
@@ -198,15 +196,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
-  /* House rule 2: the whole space-weather file was downloaded and every daily
-   * row counted; MAX_ROWS stopped the emit loop inside the recent window. */
-  if (capped)
-    jo_truncation_notice(sink, "celestrak-space-weather", "SW-All", n,
-                         (long)seen,
-                         "MAX_ROWS reached; the remaining in-window daily rows "
-                         "of the downloaded file were not emitted",
-                         "raise or drop MAX_ROWS in collectors/sources/"
-                         "tsp_celestrak_space_weather.c");
   free(body);
   fprintf(stderr, "[celestrak-space-weather] emitted %d of %d daily rows (>= %s)\n",
           n, seen, cutoff);

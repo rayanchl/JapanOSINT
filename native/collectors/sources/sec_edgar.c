@@ -51,7 +51,7 @@ static char *pad_cik(const char *cik) {
   if (len > 10) len = 10;
   int padding = 10 - len;
   memset(padded, '0', padding);
-  strncpy(padded + padding, clean, len);
+  memcpy(padded + padding, clean, (size_t)len);  /* exact copy; padded[10] terminates */
   padded[10] = '\0';
   return padded;
 }

@@ -4,9 +4,9 @@
  * an overlap between them is a genuine confidence signal.
  * Endpoint: https://cinsscore.com/list/ci-badguys.txt                (keyless)
  * parse_notes: "Fixed 15,000 lines, bare IPv4, no comments." The full list is
- * counted and the real total carried on every row; at most MAX_ROWS entries are
- * materialised so one hourly run stays bounded (the feed's intended use is a
- * lookup set). Every emitted address is a literal line from the feed.
+ * counted, the real total carried on every row, and EVERY line emitted — the
+ * old 5,000-row cap discarded two thirds of a list we had already fetched in
+ * full. Every emitted address is a literal line from the feed.
  * No coordinates -> has_geo 0 (R2).
  * Licence: free feed from Sentinel IPS/CINS; attribution requested.
  */
@@ -19,7 +19,6 @@
 #include <string.h>
 
 #define CYI_URL "https://cinsscore.com/list/ci-badguys.txt"
-#define MAX_ROWS 5000
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char *body = feed_get_text(ctx->http, CYI_URL, 40000);
@@ -28,15 +27,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int total = 0;
   for (const char *q = body; *q; q++) if (*q == '\n') total++;
 
-  int n = 0, listed = 0, capped = 0;
+  int n = 0;
   char *cur = body, *line;
   while ((line = jo_next_line(&cur)) != NULL) {
     if (!line[0] || line[0] == '#') continue;
     if (!jo_is_ipv4(line)) continue;
-    listed++;
-    /* Past the cap keep counting addresses rather than stopping, so the notice
-     * below can state the feed's real size instead of an unknown. */
-    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "ip", line);
@@ -60,15 +55,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
-  /* House rule 2: the whole list was downloaded and every address counted; only
-   * the first MAX_ROWS became rows. */
-  if (capped)
-    jo_truncation_notice(sink, "cins-army-badguys", "list/ci-badguys.txt", n,
-                         (long)listed,
-                         "MAX_ROWS reached; the remaining addresses in the "
-                         "downloaded list were counted but not emitted as rows",
-                         "raise or drop MAX_ROWS in collectors/sources/"
-                         "cyi_cins_army_badguys.c");
   fprintf(stderr, "[cins-army-badguys] emitted %d of ~%d listed IPs\n", n, total);
   return 0;
 }

@@ -26,25 +26,26 @@
 #include "lib/feedlib.h"
 #include "lib/csv.h"
 #include "geoeo_common.inc"
+#include "_timefmt.inc"
 
-static void mdy(time_t t, char *out, size_t n) {
+static int mdy(time_t t, char *out, size_t n) {
   struct tm tmv;
-#if defined(_WIN32)
-  gmtime_s(&tmv, &t);
-#else
-  gmtime_r(&t, &tmv);
-#endif
+  if (!jo_tm_utc(t, &tmv)) { if (n) out[0] = 0; return 0; }
   /* M/D/YYYY — the ONLY form this API accepts. Components masked into range so
    * the formatted width is provably bounded. */
   snprintf(out, n, "%d/%d/%d", (tmv.tm_mon + 1) % 100, tmv.tm_mday % 100,
            (tmv.tm_year + 1900) % 10000);
+  return 1;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t now = time(NULL);
   char start[24], end[24];
-  mdy(now - 28 * 24 * 3600, start, sizeof start);
-  mdy(now, end, sizeof end);
+  if (!mdy(now - 28 * 24 * 3600, start, sizeof start) ||
+      !mdy(now, end, sizeof end)) {
+    fprintf(stderr, "[usdm-drought] cannot render the query window as a date\n");
+    return -1;
+  }
 
   char url[448];
   snprintf(url, sizeof url,

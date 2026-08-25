@@ -18,6 +18,7 @@
  * Licence: CC BY 4.0 (FMI open data). */
 #include "source.h"
 #include "lib/feedlib.h"
+#include "_timefmt.inc"
 #include "lib/htmlparse.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
@@ -129,11 +130,12 @@ static int collect_place(const source_ctx *ctx, intel_sink *sink,
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t now = time(NULL);
   time_t then = now - 3600;
-  struct tm a, b;
-  gmtime_r(&then, &a); gmtime_r(&now, &b);
   char t0[32], t1[32];
-  strftime(t0, sizeof t0, "%Y-%m-%dT%H:%M:%SZ", &a);
-  strftime(t1, sizeof t1, "%Y-%m-%dT%H:%M:%SZ", &b);
+  if (!jo_time_fmt(then, "%Y-%m-%dT%H:%M:%SZ", t0, sizeof t0) ||
+      !jo_time_fmt(now,  "%Y-%m-%dT%H:%M:%SZ", t1, sizeof t1)) {
+    fprintf(stderr, "[" SRC "] cannot render the query window as a date\n");
+    return -1;
+  }
 
   int total = 0, fetched = 0;
   for (int i = 0; PLACES[i]; i++)

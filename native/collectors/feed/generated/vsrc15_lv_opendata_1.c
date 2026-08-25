@@ -169,7 +169,7 @@ VJSON(lv_data_gov_lv_orgs, "lv-data-gov-lv-orgs", "data.gov.lv — orgs (Latvia)
 
 VJSON(lv_data_gov_lv_tags, "lv-data-gov-lv-tags", "data.gov.lv — tags (Latvia)", "data.gov.lv — tags (Latvia)",
   "lv_opendata", "opendata",
-  "https://data.gov.lv/api/3/action/tag_list",
+  "https://data.gov.lv/api/3/action/tag_list?all_fields=true",
   "result",
   "lv", "[\"lv\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at data.gov.lv.");

@@ -32,6 +32,23 @@ int intel_sink_rebind(const intel_sink *base, const char *source_id,
  * Idempotent and NULL-safe; the sink is unusable afterwards. */
 void intel_sink_free(intel_sink *k);
 
+/* How many DISTINCT rows this sink has actually left behind since make() —
+ * house rule 4b, "emitting is not storing either". The scheduler's
+ * `records=N` counts emit() CALLS; a source whose records key onto each other
+ * calls emit 12,648 times and leaves 31 rows, and nothing in the tree could
+ * see the difference. core/intel.c carries the full definition and the reason
+ * it is distinct-uid rather than rows-inserted (the latter reads as total loss
+ * on every ordinary re-run of an unchanged feed, and a metric that cries wolf
+ * is a metric nobody reads).
+ *
+ * `*exact` is set to 0 when the count is a FLOOR rather than the truth — the
+ * per-run table hit its memory ceiling, or an allocation failed. Report it as
+ * `>=N` in that case; do not round it off into a number you did not measure.
+ *
+ * Returns -1, with *exact = 1, if `k` is not a sink this file made (the
+ * scheduler's counting wrapper, a NULL, a freed sink). */
+long intel_sink_stored(const intel_sink *k, int *exact);
+
 /* Re-mirror ONE intel_items row into intel_items_fts, reading the values back
  * out of the table. Returns 0 when the row was re-indexed, non-zero if `uid`
  * does not exist (or the read failed) — in which case the index is untouched.

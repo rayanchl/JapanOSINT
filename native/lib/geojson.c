@@ -1,4 +1,7 @@
 #include "geojson.h"
+#include "../core/url_override.h"
+#include "jsonlist.h"
+#include "feedlib.h"
 #include <openssl/sha.h>
 #include <stdio.h>
 #include <string.h>
@@ -76,23 +79,37 @@ static void sha1_hex16(const char *s, char *out17) {
  * so a source in this state is visible instead of silent. A collector whose
  * count is non-zero AND whose properties change between runs must add one of
  * NATIVE_ID_KEYS (`uid` is the conventional choice) to its properties. */
-static void feature_uid(cJSON *feat, const char *sid, char *out, size_t n,
-                        int *hash_fallbacks) {
+/* The upstream-id half of feature_uid(), factored out so the collision pre-pass
+ * below can ask "does this feature carry an id of its own?" without paying for
+ * the content hash of every feature that does not. Returns 1 and fills `out`
+ * with the bare id; 0 when the feature has none. */
+static int feature_native_id(cJSON *feat, char *out, size_t n) {
   cJSON *props = cJSON_GetObjectItem(feat, "properties");
   if (props) {
     for (int i = 0; NATIVE_ID_KEYS[i]; i++) {
       cJSON *v = cJSON_GetObjectItem(props, NATIVE_ID_KEYS[i]);
       if (v && !cJSON_IsNull(v)) {
         char idv[256]; id_to_str(v, idv, sizeof idv);
-        if (idv[0]) { snprintf(out, n, "%s|%s", sid, idv); return; }
+        if (idv[0]) { snprintf(out, n, "%s", idv); return 1; }
       }
     }
   }
   cJSON *fid = cJSON_GetObjectItem(feat, "id");
   if (fid && !cJSON_IsNull(fid)) {
     char idv[256]; id_to_str(fid, idv, sizeof idv);
-    if (idv[0]) { snprintf(out, n, "%s|%s", sid, idv); return; }
+    if (idv[0]) { snprintf(out, n, "%s", idv); return 1; }
   }
+  return 0;
+}
+
+static void feature_uid(cJSON *feat, const char *sid, char *out, size_t n,
+                        int *hash_fallbacks) {
+  char idv[256];
+  if (feature_native_id(feat, idv, sizeof idv)) {
+    snprintf(out, n, "%s|%s", sid, idv);
+    return;
+  }
+  cJSON *props = cJSON_GetObjectItem(feat, "properties");
   cJSON *g = cJSON_GetObjectItem(feat, "geometry");
   cJSON *fp = cJSON_CreateObject();
   cJSON_AddItemToObject(fp, "g", g ? cJSON_Duplicate(g, 1) : cJSON_CreateNull());
@@ -242,17 +259,74 @@ static const char *T_AUTH[]   = {"author","operator",NULL};
 static const char *T_LANG[]   = {"language","lang",NULL};
 static const char *T_PUB[]    = {"published_at","observed_at","time","timestamp",NULL};
 
-int geojson_emit_features_ex(intel_sink *sink, const char *sid, cJSON *features,
-                             int *seen) {
-  if (seen) *seen = 0;
+/* ── the uid collision guard ──────────────────────────────────────────────
+ *
+ * `it.uid` is what the sink upserts on, so two features producing the same one
+ * store as ONE row while the caller still counts both. The content-hash
+ * fallback in feature_uid() is already collision-free; the UPSTREAM-ID path is
+ * not, because NATIVE_ID_KEYS contains names like `station_id` and `id` that
+ * are routinely a DIMENSION rather than a record identity. A station reporting
+ * hourly is one `station_id` and many observations, so a FeatureCollection of
+ * readings collapsed onto one row per station.
+ *
+ * This mirrors the guards in lib/jsonlist.c and lib/hpengine.c, including why
+ * disambiguation is by CONTENT hash: features that are byte-identical still
+ * collapse, which is real deduplication, while features that merely share an id
+ * are all kept. Nothing is invented and nothing that differs is merged.
+ *
+ * Only features that collide are touched, so a feature whose id was already
+ * unique keeps its existing uid and is not re-emitted as new. Scope is one
+ * FeatureCollection, as with the other two. */
+typedef struct { char key[257]; int idx; } gj_keyed;
+
+static int gj_keyed_cmp(const void *a, const void *b) {
+  return strcmp(((const gj_keyed *)a)->key, ((const gj_keyed *)b)->key);
+}
+
+static unsigned char *gj_collision_map(cJSON *features, int n) {
+  if (n < 2) return NULL;
+  gj_keyed *k = malloc((size_t)n * sizeof *k);
+  unsigned char *dup = calloc((size_t)n, 1);
+  /* Out of memory degrades to the old behaviour rather than failing the emit. */
+  if (!k || !dup) { free(k); free(dup); return NULL; }
+  int m = 0, i = 0; cJSON *f;
+  cJSON_ArrayForEach(f, features) {
+    if (cJSON_IsObject(f) && feature_native_id(f, k[m].key, sizeof k[m].key)) {
+      k[m].idx = i; m++;
+    }
+    i++;
+  }
+  qsort(k, (size_t)m, sizeof *k, gj_keyed_cmp);
+  int flagged = 0;
+  for (int a = 0; a < m; ) {
+    int b = a + 1;
+    while (b < m && !strcmp(k[a].key, k[b].key)) b++;
+    if (b - a > 1) for (int j = a; j < b; j++) { dup[k[j].idx] = 1; flagged++; }
+    a = b;
+  }
+  free(k);
+  if (!flagged) { free(dup); return NULL; }
+  return dup;
+}
+
+int geojson_emit_features(intel_sink *sink, const char *sid, cJSON *features) {
   if (!cJSON_IsArray(features)) return 0;
-  if (seen) *seen = cJSON_GetArraySize(features);
-  int n = 0, hashed = 0; cJSON *feat;
+  int n = 0, hashed = 0, out_of_range = 0; cJSON *feat;
+  unsigned char *dupmap = gj_collision_map(features, cJSON_GetArraySize(features));
+  int fi = -1;
   cJSON_ArrayForEach(feat, features) {
+    fi++;
     if (!cJSON_IsObject(feat)) continue;
     cJSON *props = cJSON_GetObjectItem(feat, "properties");
     cJSON *geom  = cJSON_GetObjectItem(feat, "geometry");
     char uid[600]; feature_uid(feat, sid, uid, sizeof uid, &hashed);
+    if (dupmap && dupmap[fi]) {
+      char *fs = cJSON_PrintUnformatted(feat);
+      char ch[17]; sha1_hex16(fs ? fs : uid, ch);
+      free(fs);
+      size_t ul = strlen(uid);
+      snprintf(uid + ul, sizeof uid - ul, "|c:%s", ch);
+    }
     double lat=0, lon=0; int geo = centroid(geom, &lat, &lon);
 
     const char *rt = props ? prop_str(props, "record_type") : NULL;
@@ -281,6 +355,14 @@ int geojson_emit_features_ex(intel_sink *sink, const char *sid, cJSON *features,
     it.published_at= props ? pick_text(props, T_PUB)   : NULL;
     it.record_type = rt;
     it.sub_source_id = sub;
+    /* A coordinate outside lon±180 / lat±90 is not a position on Earth — it
+     * is a projected CRS the upstream served instead of WGS84 (CWFIS WFS
+     * answered in Canada Lambert METRES until srsName=EPSG:4326 was added,
+     * and its fire-danger polygons then wrapped the whole map). Store the
+     * record, but never as geocoded: a wrong pin is worse than no pin. */
+    if (geo && (lat < -90 || lat > 90 || lon < -180 || lon > 180)) {
+      geo = 0; free(gj); gj = NULL; out_of_range++;
+    }
     it.has_geo = geo; it.lat = lat; it.lon = lon;
     it.geometry_geojson = gj;
     it.properties_json = pj ? pj : "{}";
@@ -288,6 +370,7 @@ int geojson_emit_features_ex(intel_sink *sink, const char *sid, cJSON *features,
     if (sink->emit(sink, &it) >= 0) n++;
     free(gj); free(pj); free(tj);
   }
+  free(dupmap);
   /* See feature_uid(): these rows are keyed by a hash of their own contents,
    * so if this source's properties carry a changing measurement the row count
    * grows every run instead of the rows being updated. One line, once per
@@ -296,11 +379,11 @@ int geojson_emit_features_ex(intel_sink *sink, const char *sid, cJSON *features,
     fprintf(stderr, "[%s] %d/%d features had no native id — uid'd by content "
                     "hash (add a stable `uid` property if these change)\n",
             sid, hashed, n);
+  if (out_of_range)
+    fprintf(stderr, "[%s] %d/%d features had coordinates outside lon±180/lat±90 "
+                    "(projected CRS? add srsName=EPSG:4326) — stored without "
+                    "geometry, never as a pin\n", sid, out_of_range, n);
   return n;
-}
-
-int geojson_emit_features(intel_sink *sink, const char *sid, cJSON *features) {
-  return geojson_emit_features_ex(sink, sid, features, NULL);
 }
 
 cJSON *gj_point_feature(double lon, double lat) {
@@ -316,15 +399,180 @@ cJSON *gj_point_feature(double lon, double lat) {
   return f;
 }
 
-int geojson_emit_doc_ex(intel_sink *sink, const char *sid, cJSON *doc,
-                        int *seen) {
-  if (seen) *seen = 0;
+int geojson_emit_doc(intel_sink *sink, const char *sid, cJSON *doc) {
   if (!doc) return 0;
-  if (cJSON_IsArray(doc)) return geojson_emit_features_ex(sink, sid, doc, seen);
+  if (cJSON_IsArray(doc)) return geojson_emit_features(sink, sid, doc);
   cJSON *f = cJSON_GetObjectItem(doc, "features");
-  return f ? geojson_emit_features_ex(sink, sid, f, seen) : 0;
+  return f ? geojson_emit_features(sink, sid, f) : 0;
 }
 
-int geojson_emit_doc(intel_sink *sink, const char *sid, cJSON *doc) {
-  return geojson_emit_doc_ex(sink, sid, doc, NULL);
+/* ── paged walk (see geojson.h) ──────────────────────────────────────────── */
+
+/* Truthy `exceededTransferLimit`, wherever ArcGIS chose to put it this time:
+ * FeatureServer sets it at the top level, some MapServer builds nest it under
+ * `properties`, and a few emit the string "true" rather than a JSON boolean. */
+static int gj_exceeded(cJSON *doc) {
+  const char *K = "exceededTransferLimit";
+  cJSON *v = cJSON_GetObjectItem(doc, K);
+  if (!v) {
+    cJSON *p = cJSON_GetObjectItem(doc, "properties");
+    if (p) v = cJSON_GetObjectItem(p, K);
+  }
+  if (!v) return 0;
+  if (cJSON_IsBool(v)) return cJSON_IsTrue(v);
+  if (cJSON_IsNumber(v)) return v->valueint != 0;
+  if (cJSON_IsString(v) && v->valuestring) return !strcasecmp(v->valuestring, "true");
+  return 0;
+}
+
+/* An OGC API Features / WFS3 `links` entry with rel="next". Returned malloc'd. */
+static char *gj_next_link(cJSON *doc) {
+  cJSON *links = cJSON_GetObjectItem(doc, "links");
+  if (!cJSON_IsArray(links)) return NULL;
+  cJSON *l;
+  cJSON_ArrayForEach(l, links) {
+    cJSON *rel = cJSON_GetObjectItem(l, "rel");
+    if (!cJSON_IsString(rel) || strcasecmp(rel->valuestring, "next")) continue;
+    cJSON *href = cJSON_GetObjectItem(l, "href");
+    if (cJSON_IsString(href) && href->valuestring[0]) return strdup(href->valuestring);
+  }
+  return NULL;
+}
+
+/* What the server says the full set holds, across the spellings in use. */
+static long gj_declared_total(cJSON *doc) {
+  static const char *const K[] = { "numberMatched", "totalFeatures",
+                                   "matchedCount", "count", NULL };
+  for (int i = 0; K[i]; i++) {
+    cJSON *v = cJSON_GetObjectItem(doc, K[i]);
+    if (cJSON_IsNumber(v) && v->valuedouble > 0) return (long)v->valuedouble;
+  }
+  return -1;
+}
+
+/* Cheap fingerprint of a page, to notice a cursor the server ignored. */
+static unsigned long long gj_page_fp(cJSON *features) {
+  unsigned long long h = 1469598103934665603ULL;
+  int n = features ? cJSON_GetArraySize(features) : 0;
+  h ^= (unsigned long long)n; h *= 1099511628211ULL;
+  for (int i = 0; i < n && i < 8; i++) {
+    char *s = cJSON_PrintUnformatted(cJSON_GetArrayItem(features, i));
+    if (!s) continue;
+    for (const char *p = s; *p; p++) { h ^= (unsigned char)*p; h *= 1099511628211ULL; }
+    free(s);
+  }
+  return h;
+}
+
+int geojson_emit_paged(intel_sink *sink, const char *source_id,
+                       http_client *http, const char *url, int timeout_ms) {
+  int page_max = 20;   /* exhaustive-ok: page-walk ceiling; an early stop is disclosed as a collector-truncation-notice and $JO_GEOJSON_PAGE_MAX raises it */
+  const char *env = getenv("JO_GEOJSON_PAGE_MAX");
+  if (env && *env) { int v = atoi(env); if (v > 0) page_max = v; }
+
+  /* Plan against the URL that will ACTUALLY be fetched — see the same note in
+   * jsonlist_emit_paged(). An operator-approved offset parameter lives only in
+   * the overridden url, so planning off the compile-time one would leave the
+   * walk reading a single page of an endpoint we just made paginable. */
+  char *page_url = strdup(url_override_apply(url));
+  if (!page_url) return -1;
+
+  int total = 0, pages = 0, truncated = 0;
+  long available = -1;
+  unsigned long long prev_fp = 0;
+  int repeated = 0;
+
+  for (; pages < page_max && page_url; pages++) {
+    cJSON *doc = feed_get_json(http, page_url, timeout_ms);
+    if (!doc) {
+      /* A failed FIRST fetch is a dead endpoint and is the caller's to report.
+       * A failure mid-walk means we already hold real features: keep them, stop,
+       * and disclose the shortfall. */
+      if (pages == 0) { free(page_url); return -1; }
+      truncated = 1;
+      break;
+    }
+    if (available < 0) available = gj_declared_total(doc);
+
+    cJSON *features = cJSON_IsArray(doc) ? doc : cJSON_GetObjectItem(doc, "features");
+    int got = cJSON_IsArray(features) ? cJSON_GetArraySize(features) : 0;
+
+    unsigned long long fp = gj_page_fp(features);
+    if (pages > 0 && got > 0 && fp == prev_fp) repeated = 1;
+    prev_fp = fp;
+
+    total += geojson_emit_doc(sink, source_id, doc);
+
+    char *next = NULL;
+    if (!repeated && got > 0) {
+      /* 1. the server said outright that it held features back */
+      if (gj_exceeded(doc)) {
+        long size = jsonlist_query_int(page_url, "resultRecordCount");
+        if (size <= 0) size = got;              /* it truncated at whatever it gave */
+        long cur = jsonlist_query_int(page_url, "resultOffset");
+        next = jsonlist_query_set(page_url, "resultOffset", (cur >= 0 ? cur : 0) + size);
+      }
+      /* 2. a next link, followed verbatim */
+      if (!next) next = gj_next_link(doc);
+      /* 3. the upstream's own total exceeds what we hold, and the URL already
+       *    names a cursor. No page size is required here: the remainder is the
+       *    server's arithmetic, not ours. */
+      if (!next && available > (long)total) {
+        static const char *const CURSORS[] = { "startIndex", "startindex",
+                                               "resultOffset", "offset", NULL };
+        for (int i = 0; CURSORS[i] && !next; i++) {
+          long cur = jsonlist_query_int(page_url, CURSORS[i]);
+          if (cur < 0) continue;               /* must already be declared */
+          next = jsonlist_query_set(page_url, CURSORS[i], cur + got);
+        }
+      }
+    }
+    cJSON_Delete(doc);
+
+    if (got <= 0 || repeated) { free(next); break; }
+    free(page_url);
+    page_url = next;
+    if (pages + 1 >= page_max && page_url) truncated = 1;
+  }
+  free(page_url);
+
+  if (truncated) {
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "source_id", source_id);
+    cJSON_AddStringToObject(p, "endpoint", url);
+    cJSON_AddNumberToObject(p, "records_used", total);
+    if (available >= 0) cJSON_AddNumberToObject(p, "records_available", available);
+    else cJSON_AddStringToObject(p, "records_available",
+                                 "unknown — upstream declared no total");
+    cJSON_AddNumberToObject(p, "pages_read", pages);
+    cJSON_AddNumberToObject(p, "page_ceiling", page_max);
+    cJSON_AddBoolToObject(p, "more_pages_pending", 1);
+    cJSON_AddStringToObject(p, "reason",
+      "the page ceiling stopped the walk while the upstream still had features");
+    cJSON_AddStringToObject(p, "remedy",
+      "raise $JO_GEOJSON_PAGE_MAX — see docs/SOURCE_EXHAUSTIVENESS.md");
+    char *pj = cJSON_PrintUnformatted(p);
+    cJSON_Delete(p);
+    char title[256];
+    if (available >= 0)
+      snprintf(title, sizeof title, "%s used %d of %ld available features",
+               source_id, total, available);
+    else
+      snprintf(title, sizeof title,
+               "%s used %d features and stopped at the page ceiling", source_id, total);
+    intel_item note = {0};
+    note.remote_key      = "truncation";
+    note.title           = title;
+    note.lang            = "en";
+    note.record_type     = "collector-truncation-notice";
+    note.properties_json = pj ? pj : "{}";
+    note.tags_json       = "[\"truncation-notice\"]";
+    sink->emit(sink, &note);
+    free(pj);
+  }
+
+  if (pages > 1 || truncated)
+    fprintf(stderr, "[%s] emitted %d across %d page(s)%s\n",
+            source_id, total, pages, truncated ? " (TRUNCATED)" : "");
+  return total;
 }

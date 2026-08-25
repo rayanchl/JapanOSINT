@@ -237,13 +237,6 @@ VJSON(eur_sejm_term9_mp, "eur-sejm-term9-mp", "Sejm Poland — MPs of the 9th te
   "pl", "[\"pol\",\"politics\"]", 86400,
   "Deputies of the previous Polish Sejm term with club and constituency.");
 
-VJSON(eur_sejm_votings, "eur-sejm-votings", "Sejm Poland — parliamentary prints", "Sejm Poland — parliamentary prints",
-  "europe_gov", "politics",
-  "https://api.sejm.gov.pl/sejm/term10/prints?limit=100",
-  "",
-  "pl", "[\"pol\",\"politics\"]", 21600,
-  "Every parliamentary print (bill or motion) tabled in the current Sejm term.");
-
 VJSON(eur_ssb_klass2, "eur-ssb-klass2", "Statistics Norway KLASS — classifications", "Statistics Norway KLASS — classifications",
   "europe_gov", "statistics",
   "https://data.ssb.no/api/klass/v1/classifications.json?size=100",

@@ -5,12 +5,15 @@
  *
  * Endpoint: https://api.met.no/weatherapi/oceanforecast/2.0/complete
  *           ?lat=<lat>&lon=<lon>
- * Emits (all fetched) ONE RECORD PER TIMESERIES ENTRY — the whole forecast
- *   horizon, not just step 0 (house rule 2): meta.updated_at, that entry's time
- *   and its instant details (sea_surface_wave_height,
- *   sea_surface_wave_from_direction, sea_water_speed, sea_water_to_direction,
- *   sea_water_temperature), the horizon length and this entry's index within
- *   it, and the grid point MET snapped the request to.
+ * Emits (all fetched): ONE ROW PER FORECAST STEP — MET returns the full hourly
+ *   horizon (204 steps out to nine days, measured 2026-08-24 for 60.1,5.3) and
+ *   this used to emit timeseries[0] only, disclosing the loss as a
+ *   `timeseries_steps` count, which is a number about the data rather than the
+ *   data. Each row carries meta.updated_at, meta.units, the step's time, its
+ *   instant details (sea_surface_wave_height, sea_surface_wave_from_direction,
+ *   sea_water_speed, sea_water_to_direction, sea_water_temperature, plus any
+ *   further numeric parameter MET adds) and the grid point MET snapped the
+ *   request to.
  * Keyless. Licence: MET Norway, NLOD / CC BY 4.0. Terms REQUIRE a unique
  *   identifying User-Agent with contact info — core/httpclient.c sets
  *   "JapanOSINT/1.0 (+native)" on every request.
@@ -55,46 +58,58 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   cJSON *geom = cJSON_GetObjectItem(doc, "geometry");
   cJSON *co = geom ? cJSON_GetObjectItem(geom, "coordinates") : NULL;
-  cJSON *gx = cJSON_GetArrayItem(co, 0), *gy = cJSON_GetArrayItem(co, 1);  /* exhaustive-ok: [lon,lat,alt] tuple */
+  cJSON *gx = cJSON_GetArrayItem(co, 0), *gy = cJSON_GetArrayItem(co, 1);
   if (!cJSON_IsNumber(gx) || !cJSON_IsNumber(gy)) { cJSON_Delete(doc); return 0; }
   double glon = gx->valuedouble, glat = gy->valuedouble;
 
   cJSON *props = cJSON_GetObjectItem(doc, "properties");
   cJSON *meta = props ? cJSON_GetObjectItem(props, "meta") : NULL;
   const char *updated = meta ? jo_sv(meta, "updated_at") : NULL;
+  const cJSON *units = meta ? cJSON_GetObjectItem(meta, "units") : NULL;
   cJSON *tsa = props ? cJSON_GetObjectItem(props, "timeseries") : NULL;
   if (!cJSON_IsArray(tsa)) { cJSON_Delete(doc); return 0; }
-  const int steps = cJSON_GetArraySize(tsa);
+  int steps = cJSON_GetArraySize(tsa);
 
-  /* House rule 2: /complete returns the WHOLE forecast horizon, one entry per
-   * time step, and every one of them was fetched and parsed. Emitting only
-   * timeseries[0] discarded the rest of a response already paid for, so each
-   * step becomes its own record, keyed on the grid point plus its time. */
+  /* EVERY forecast step, not just timeseries[0].
+   *
+   * This used to read `timeseries[0]` — the instant nearest now — and record
+   * the array's length in `timeseries_steps` as if that were a disclosure.
+   * Measured 2026-08-24 for 60.1,5.3: MET returns 204 hourly steps out to
+   * 2026-09-01, so 203 fetched forecast points were dropped on every call.
+   * A number in a property is not the data. Each step is now its own row,
+   * keyed on the point plus its valid time. */
   int n = 0;
-  cJSON *step;
+  const cJSON *step;
   cJSON_ArrayForEach(step, tsa) {
     const char *when = jo_sv(step, "time");
-    cJSON *data = cJSON_GetObjectItem(step, "data");
-    cJSON *inst = data ? cJSON_GetObjectItem(data, "instant") : NULL;
-    cJSON *det  = inst ? cJSON_GetObjectItem(inst, "details") : NULL;
-    if (!det) continue;
+    const cJSON *data = cJSON_GetObjectItem(step, "data");
+    const cJSON *inst = data ? cJSON_GetObjectItem(data, "instant") : NULL;
+    const cJSON *det  = inst ? cJSON_GetObjectItem(inst, "details") : NULL;
+    if (!det || !when) continue;
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "service", "METNO_OCEAN_FORECAST");
     cJSON_AddNumberToObject(p, "requested_lat", qlat);
     cJSON_AddNumberToObject(p, "requested_lon", qlon);
-    cJSON_AddNumberToObject(p, "lat", glat);      /* the grid point MET used */
+    cJSON_AddNumberToObject(p, "lat", glat);        /* the grid point MET used */
     cJSON_AddNumberToObject(p, "lon", glon);
     cJSON_AddStringToObject(p, "geo_precision", "model-grid-point");
     if (updated) cJSON_AddStringToObject(p, "model_updated_at", updated);
-    if (when)    cJSON_AddStringToObject(p, "forecast_time", when);
+    cJSON_AddStringToObject(p, "forecast_time", when);
     add_det(p, det, "sea_surface_wave_height");
     add_det(p, det, "sea_surface_wave_from_direction");
     add_det(p, det, "sea_water_speed");
     add_det(p, det, "sea_water_to_direction");
     add_det(p, det, "sea_water_temperature");
+    /* whatever else `details` carries — MET adds parameters over time and a
+     * hardcoded list would drop the new ones silently */
+    for (const cJSON *d = det->child; d; d = d->next)
+      if (d->string && cJSON_IsNumber(d) && !cJSON_GetObjectItem(p, d->string))
+        cJSON_AddNumberToObject(p, d->string, d->valuedouble);
+    /* meta.units names the unit of every parameter above; it was fetched on
+     * every call and read by nothing. */
+    if (units) cJSON_AddItemToObject(p, "units", cJSON_Duplicate(units, 1));
     cJSON_AddNumberToObject(p, "timeseries_steps", steps);
-    cJSON_AddNumberToObject(p, "timeseries_index", n);
     cJSON_AddStringToObject(p, "source", "MET Norway oceanforecast 2.0");
     cJSON_AddBoolToObject(p, "success", 1);
     char *pj = cJSON_PrintUnformatted(p);
@@ -104,16 +119,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const cJSON *sst = cJSON_GetObjectItem(det, "sea_water_temperature");
     const cJSON *cur = cJSON_GetObjectItem(det, "sea_water_speed");
 
-    char key[280], title[220], summary[240];
-    snprintf(key, sizeof key, "%.200s|%s", url, when ? when : "");
-    snprintf(title, sizeof title, "Ocean forecast %.4f, %.4f%s%s", glat, glon,
-             when ? " " : "", when ? when : "");
+    char key[280], title[200], summary[240];
+    snprintf(key, sizeof key, "%s|%s", url, when);
+    snprintf(title, sizeof title, "Ocean forecast %.4f, %.4f — %s",
+             glat, glon, when);
     snprintf(summary, sizeof summary,
-             "wave %.2f m · current %.2f m/s · SST %.1f °C%s%s",
+             "wave %.2f m · current %.2f m/s · SST %.1f °C · %s",
              cJSON_IsNumber(wh) ? wh->valuedouble : 0.0,
              cJSON_IsNumber(cur) ? cur->valuedouble : 0.0,
-             cJSON_IsNumber(sst) ? sst->valuedouble : 0.0,
-             when ? " · " : "", when ? when : "");
+             cJSON_IsNumber(sst) ? sst->valuedouble : 0.0, when);
 
     intel_item it = {0};
     it.remote_key      = key;
@@ -131,9 +145,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
+
   cJSON_Delete(doc);
-  fprintf(stderr, "[METNO_OCEAN_FORECAST] emitted %d of %d forecast steps (%.4f,%.4f)\n",
-          n, steps, glat, glon);
+  fprintf(stderr, "[METNO_OCEAN_FORECAST] emitted %d of %d forecast step(s) "
+                  "(%.4f,%.4f)\n", n, steps, glat, glon);
   return 0;
 }
 

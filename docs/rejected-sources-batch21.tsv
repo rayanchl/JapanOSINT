@@ -1,0 +1,126 @@
+candidate	endpoint	verdict	note
+# Batch 21 rejects, kept as data. Every line below was fetched over the wire on
+# this machine during discovery or written as a manifest row and then removed.
+# Verdicts: TABLE_NOT_AVAILABLE (Envirofacts serves an explicit "table is not
+# available" error), HTTP_nnn, NET_ERR, NEEDS_KEY, SUMMARY_ONLY (200 with a
+# query-id and counts but no records), FILTER_IGNORED (200 with the unfiltered
+# table), IGNORES_PAGE_PARAM, NO_RECORD_IDENTITY (rule 4b), UNSTABLE_PAGING,
+# NO_PAGINATION_TOO_LARGE, DUP_DATASET, SLOW_CAPPED_INVALID, NOT_SHIPPED.
+EF_RMP_FACILITY	https://data.epa.gov/efservice/rmp_facility/rows/0:1/JSON	TABLE_NOT_AVAILABLE	documented Envirofacts table, not served by this REST endpoint
+EF_SEMS_ACTIVE_SITES	https://data.epa.gov/efservice/sems_active_sites/rows/0:1/JSON	TABLE_NOT_AVAILABLE	Superfund site table not served
+EF_RCRA_HANDLER	https://data.epa.gov/efservice/rcra_handler/rows/0:1/JSON	TABLE_NOT_AVAILABLE	hazardous waste handler table not served
+EF_HD_HANDLER	https://data.epa.gov/efservice/hd_handler/rows/0:1/JSON	TABLE_NOT_AVAILABLE	RCRAInfo handler table not served
+EF_GEO_FACILITY	https://data.epa.gov/efservice/geo_facility/rows/0:1/JSON	TABLE_NOT_AVAILABLE
+EF_TSCA_CHEM	https://data.epa.gov/efservice/tsca_chem/rows/0:1/JSON	TABLE_NOT_AVAILABLE
+EF_METADATA	https://data.epa.gov/efservice/metadata/JSON	TABLE_NOT_AVAILABLE	no machine-readable table catalogue on this service
+EF_PN_VIOLATION_ASSOC	https://data.epa.gov/efservice/pn_violation_assoc/rows/0:1/JSON	TABLE_NOT_AVAILABLE	SDWIS public-notice linkage not served
+EF_SI_AREA	https://data.epa.gov/efservice/si_area/rows/0:1/JSON	TABLE_NOT_AVAILABLE
+EF_SITE_VISIT	https://data.epa.gov/efservice/site_visit/rows/0:1/JSON	TABLE_NOT_AVAILABLE	SDWIS sanitary survey visits not served
+EF_EVENT_MILESTONE	https://data.epa.gov/efservice/event_milestone/rows/0:1/JSON	TABLE_NOT_AVAILABLE
+EF_TRI_SUBMISSION	https://data.epa.gov/efservice/tri_submission/rows/0:1/JSON	TABLE_NOT_AVAILABLE
+EF_TRI_ON_SITE_RELEASE_QTY	https://data.epa.gov/efservice/tri_on_site_release_qty/rows/0:1/JSON	TABLE_NOT_AVAILABLE
+EF_TRI_WASTE_TREATMENT	https://data.epa.gov/efservice/tri_waste_treatment/rows/0:1/JSON	TABLE_NOT_AVAILABLE
+EF_TRI_TRANSFER_LOCATION	https://data.epa.gov/efservice/tri_transfer_location/rows/0:1/JSON	TABLE_NOT_AVAILABLE	the receiving-site table behind tri_transfer_qty is not served
+EF_ICIS_CASE	https://data.epa.gov/efservice/icis_case/rows/0:1/JSON	TABLE_NOT_AVAILABLE	federal enforcement casework not served
+EF_ICIS_ENFORCEMENT_ACTION	https://data.epa.gov/efservice/icis_enforcement_action/rows/0:1/JSON	TABLE_NOT_AVAILABLE
+EF_FRS_PROGRAM_ORGANIZATION	https://data.epa.gov/efservice/frs_program_organization/rows/0:1/JSON	TABLE_NOT_AVAILABLE
+EF_FRS_ALTERNATIVE_NAME	https://data.epa.gov/efservice/frs_alternative_name/rows/0:1/JSON	TABLE_NOT_AVAILABLE	facility alias table not served
+EF_PUB_DIM_GHG_GAS	https://data.epa.gov/efservice/pub_dim_ghg_gas/rows/0:1/JSON	TABLE_NOT_AVAILABLE
+EF_PUB_FACTS_SUBSECTOR	https://data.epa.gov/efservice/pub_facts_subsector_ghg_emission/rows/0:1/JSON	TABLE_NOT_AVAILABLE
+EPA_TRI_FORM_BY_FACILITY_NAME	https://data.epa.gov/efservice/tri_reporting_form/facility_name/CONTAINING/DOW/rows/0:9999/JSON	FILTER_IGNORED	tri_reporting_form has no facility_name column; returns 10000 unfiltered records with the same first record as the unfiltered table. Reshipped keyed on tri_facility_id
+EPA_ICIS_FACILITY_BY_NAME	https://data.epa.gov/efservice/icis_facility_interest/facility_name/CONTAINING/DOW/rows/0:9999/JSON	SLOW_CAPPED_INVALID	16.9 MB in 26 s and capped at the 10000-row window with no way to page; BEGINNING form takes 36 s past the engine's 30 s HTTP timeout; one of four fetches returned malformed JSON
+ECHO_AIR_FACILITIES	https://echodata.epa.gov/echo/air_rest_services.get_facilities?output=JSON&p_fn=Dow	SUMMARY_ONLY	returns a QueryID and row counts, no facility records
+ECHO_CWA_FACILITIES	https://echodata.epa.gov/echo/cwa_rest_services.get_facilities?output=JSON&p_fn=Dow	SUMMARY_ONLY	same shape
+ECHO_RCRA_FACILITIES	https://echodata.epa.gov/echo/rcra_rest_services.get_facilities?output=JSON&p_fn=Dow	SUMMARY_ONLY	same shape
+ECHO_SDW_SYSTEMS	https://echodata.epa.gov/echo/sdw_rest_services.get_systems?output=JSON&p_ws_name=Springfield	HTTP_200_REFUSAL	"Rows Returned would be 434040. Queryset Limit would be exceeded"
+ECHO_EFF_FACILITIES	https://echodata.epa.gov/echo/eff_rest_services.get_facilities?output=JSON&p_fn=Dow	HTTP_500
+ECHO_GHG_FACILITIES	https://echodata.epa.gov/echo/ghg_rest_services.get_facilities?output=JSON&p_fn=Dow	HTTP_404	service does not exist
+FSA_ESTABLISHMENTS_BASIC	https://api.ratings.food.gov.uk/Establishments/basic?pageSize=50&pageNumber=2	IGNORES_PAGE_PARAM	byte-identical 1000-record response for pageNumber=1 and 2; declaring page_param would refetch page one to the ceiling
+FSA_COUNTRIES	https://api.ratings.food.gov.uk/Countries	NOT_SHIPPED	live and parses, 4 records; a key set too small to be worth a registration
+FSA_SORT_OPTIONS	https://api.ratings.food.gov.uk/SortOptions	NOT_SHIPPED	live and parses, 5 records; UI metadata rather than a register
+FSA_RATINGS	https://api.ratings.food.gov.uk/Ratings	NOT_SHIPPED	live and parses, 12 records; superseded by ScoreDescriptors which carries the meaning
+HC_MEDICAL_DEVICE_SINGULAR	https://health-products.canada.ca/api/medical-device/licence/?lang=en&company_id=100	HTTP_404	the root is medical-devices, plural
+HC_MDALL_IDENTIFIER	https://health-products.canada.ca/api/medical-devices/identifier/?lang=en&licence_id=66884	HTTP_404
+HC_MDALL_LICENCE_APPLICATION	https://health-products.canada.ca/api/medical-devices/licence-application/?lang=en	HTTP_404
+HC_MDALL_APPLICATION_TYPE	https://health-products.canada.ca/api/medical-devices/application-type/?lang=en	HTTP_404
+HC_MDALL_LICENCE_STATUS	https://health-products.canada.ca/api/medical-devices/licence-status/?lang=en	HTTP_404
+HC_MDALL_RISK_CLASS	https://health-products.canada.ca/api/medical-devices/risk-class/?lang=en	HTTP_404
+HC_MDALL_LICENCE_HISTORY	https://health-products.canada.ca/api/medical-devices/licence-history/?lang=en&licence_id=66884	HTTP_404
+HC_LNHPD_MEDICINAL_INGREDIENT	https://health-products.canada.ca/api/natural-licences/medicinalingredient/?lang=en&type=json	NO_RECORD_IDENTITY	rule 4b. No column is unique: over 1000 consecutive records lnhpd_id has 839 distinct values and every other field fewer. Engine emitted 5000 and stored 4857 while the upstream served 4997 distinct records
+HC_LNHPD_PRODUCT_LICENCE	https://health-products.canada.ca/api/natural-licences/productlicence/?lang=en	NO_PAGINATION_TOO_LARGE	147 MB single array, no pagination envelope; did not complete in 90 s
+HC_LNHPD_NONMEDICINAL	https://health-products.canada.ca/api/natural-licences/nonmedicinalingredient/?lang=en	NO_PAGINATION_TOO_LARGE	45 MB single array, no pagination envelope
+HC_LNHPD_PRODUCT_ROUTE	https://health-products.canada.ca/api/natural-licences/productroute/?lang=en	NO_PAGINATION_TOO_LARGE	10.7 MB single array, no pagination envelope
+HC_LNHPD_PRODUCT_DOSE	https://health-products.canada.ca/api/natural-licences/productdose/?lang=en	NO_PAGINATION_TOO_LARGE	50.6 MB single array, no pagination envelope
+HC_LNHPD_PRODUCT_HAZARD	https://health-products.canada.ca/api/natural-licences/producthaz/?lang=en	HTTP_404
+HC_LNHPD_COMPANY	https://health-products.canada.ca/api/natural-licences/company/?lang=en	HTTP_404
+HC_CLINICAL_TRIAL	https://health-products.canada.ca/api/clinical-trial/clinicaltrial/?lang=en	HTTP_404	backend name leaks in the error: iis-prod.hc.local/api/ctweb
+HC_MEDEFFECT	https://health-products.canada.ca/api/medeffect/adversereaction/?lang=en	HTTP_404
+HC_RECALLS	https://recalls-rappels.canada.ca/en/api/search?f%5B0%5D=recall_type%3Afood	HTTP_404	Drupal site, no JSON API at this path
+RIS_PATH_BUNDESNORMEN	https://data.bka.gv.at/ris/api/v2.6/Bundesnormen?Suchworte=Datenschutz	HTTP_404	only bundesrecht, landesrecht and judikatur are paths; the register is an Applikation parameter
+RIS_PATH_LANDESNORMEN	https://data.bka.gv.at/ris/api/v2.6/Landesnormen?Suchworte=Bau	HTTP_404
+RIS_PATH_BGBL	https://data.bka.gv.at/ris/api/v2.6/Bgbl?Suchworte=Verordnung	HTTP_404
+RIS_PATH_BGBLAUTH	https://data.bka.gv.at/ris/api/v2.6/BgblAuth?Suchworte=Verordnung	HTTP_404
+RIS_PATH_LGBL	https://data.bka.gv.at/ris/api/v2.6/Lgbl?Suchworte=Verordnung	HTTP_404
+RIS_PATH_LGBLAUTH	https://data.bka.gv.at/ris/api/v2.6/LgblAuth?Suchworte=Verordnung	HTTP_404
+RIS_PATH_ERLAESSE	https://data.bka.gv.at/ris/api/v2.6/Erlaesse?Suchworte=Steuer	HTTP_404
+RIS_PATH_GEMEINDERECHT	https://data.bka.gv.at/ris/api/v2.6/Gemeinderecht?Suchworte=Bau	HTTP_404
+RIS_PATH_BEGUT	https://data.bka.gv.at/ris/api/v2.6/Begut?Suchworte=Gesetz	HTTP_404
+RIS_PATH_REGV	https://data.bka.gv.at/ris/api/v2.6/Regv?Suchworte=Gesetz	HTTP_404
+RIS_PATH_KUNDMACHUNG	https://data.bka.gv.at/ris/api/v2.6/Kundmachung?Suchworte=Bund	HTTP_404
+RIS_PATH_NORMENLISTE	https://data.bka.gv.at/ris/api/v2.6/Normenliste?Suchworte=Bau	HTTP_404
+RIS_PATH_AVSV	https://data.bka.gv.at/ris/api/v2.6/Avsv?Suchworte=Kasse	HTTP_404
+RIS_PATH_VBL	https://data.bka.gv.at/ris/api/v2.6/Vbl?Suchworte=Erlass	HTTP_404
+RIS_PATH_GESAMTABFRAGE	https://data.bka.gv.at/ris/api/v2.6/Gesamtabfrage?Suchworte=Datenschutz	HTTP_404
+RIS_PATH_PRUEFGESELLSCHAFTEN	https://data.bka.gv.at/ris/api/v2.6/Pruefgesellschaften?Suchworte=Wien	HTTP_404
+RIS_PATH_UPTS	https://data.bka.gv.at/ris/api/v2.6/Upts?Suchworte=Wien	HTTP_404
+RIS_APP_BR_BUNDESNORMEN	https://data.bka.gv.at/ris/api/v2.6/bundesrecht?Applikation=Bundesnormen&Suchworte=Gesetz	HTTP_200_REFUSAL	answers 200 with a SOAP schema-validation error document, Applikation=Undefined
+RIS_APP_BR_ERLAESSE	https://data.bka.gv.at/ris/api/v2.6/bundesrecht?Applikation=Erlaesse&Suchworte=Steuer	HTTP_200_REFUSAL	same
+RIS_APP_BR_VERTRAEGE	https://data.bka.gv.at/ris/api/v2.6/bundesrecht?Applikation=Vertraege&Suchworte=Gesetz	HTTP_200_REFUSAL	same
+RIS_APP_BR_NORMENLISTE	https://data.bka.gv.at/ris/api/v2.6/bundesrecht?Applikation=Normenliste&Suchworte=Gesetz	HTTP_200_REFUSAL	same
+RIS_APP_LR_LRK	https://data.bka.gv.at/ris/api/v2.6/landesrecht?Applikation=LrK&Suchworte=Bau	HTTP_200_REFUSAL	same
+RIS_APP_LR_GEMEINDERECHT	https://data.bka.gv.at/ris/api/v2.6/landesrecht?Applikation=Gemeinderecht&Suchworte=Bau	HTTP_200_REFUSAL	same
+RIS_APP_LR_LANDESNORMEN	https://data.bka.gv.at/ris/api/v2.6/landesrecht?Applikation=Landesnormen&Suchworte=Bau	HTTP_200_REFUSAL	same
+RIS_APP_LR_LRNE	https://data.bka.gv.at/ris/api/v2.6/landesrecht?Applikation=LrNe&Suchworte=Bau	HTTP_200_REFUSAL	same
+RIS_APP_JUD_UPTS	https://data.bka.gv.at/ris/api/v2.6/judikatur?Applikation=Upts&Suchworte=Vertrag	HTTP_200_REFUSAL	same
+RIS_APP_JUD_AUSL	https://data.bka.gv.at/ris/api/v2.6/judikatur?Applikation=Ausl&Suchworte=Vertrag	HTTP_200_REFUSAL	same
+RIS_APP_JUD_AVSV	https://data.bka.gv.at/ris/api/v2.6/judikatur?Applikation=Avsv&Suchworte=Vertrag	HTTP_200_REFUSAL	same
+RIS_APP_JUD_BVB	https://data.bka.gv.at/ris/api/v2.6/judikatur?Applikation=Bvb&Suchworte=Vertrag	HTTP_200_REFUSAL	same
+DERIB_CASELAW_RECENT	https://testphase.rechtsinformationen.bund.de/v1/case-law?size=100	UNSTABLE_PAGING	ten pages of 100 yield 997 distinct documents unsorted and 990 sorted by date; the collection cannot be walked without repeating records
+DERIB_LITERATURE	https://testphase.rechtsinformationen.bund.de/v1/literature?searchTerm=Datenschutz	EMPTY_RESULTSET	endpoint exists, totalItems 0 for every term tried
+DERIB_ADMIN_REGULATION	https://testphase.rechtsinformationen.bund.de/v1/administrative-regulation?searchTerm=Steuer	HTTP_404
+DERIB_PROD_HOST	https://rechtsinformationen.bund.de/v1/case-law?searchTerm=Kartell	NET_ERR	does not resolve; only the testphase host serves the API
+DERIB_FILTER_COURT	https://testphase.rechtsinformationen.bund.de/v1/case-law?court=BGH&size=20	FILTER_IGNORED	200 with the unfiltered collection, totalItems 10000
+DERIB_FILTER_DOCNUM	https://testphase.rechtsinformationen.bund.de/v1/case-law?documentNumber=KORE300012024	FILTER_IGNORED	same
+DERIB_FILTER_DATEFROM	https://testphase.rechtsinformationen.bund.de/v1/case-law?dateFrom=2024-01-01&size=20	FILTER_IGNORED	same
+DERIB_FILTER_ELI	https://testphase.rechtsinformationen.bund.de/v1/legislation?size=20&eli=eli/bund/bgbl-1/2021/59	EMPTY_RESULTSET	parameter accepted, totalItems 0
+RDW_VEHICLE_TRACKS	https://opendata.rdw.nl/resource/3xwf-ince.json?kenteken=LDH66R	DUP_DATASET	the table holds 547 rows and vsrc13_europe_data_6.c already reads it in full at $limit=1000; the plate pivot adds nothing
+RDW_TELLERSTAND	https://opendata.rdw.nl/resource/tlpn-kgtc.json?kenteken=SVJ58P	HTTP_404	dataset.missing
+RDW_TERUGROEP_INFO	https://opendata.rdw.nl/resource/t9vc-agbz.json	HTTP_404	dataset.missing
+CMSPD_HOSPITAL_GENERAL	https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0?limit=500&conditions[0][property]=facility_id	DUP_DATASET	hp3b19_health.c CMS_HOSPITAL_GENERAL_INFORMATION already walks this dataset weekly with offset paging
+OPENPAY_BY_DISTRIBUTION_ID	https://openpaymentsdata.cms.gov/api/1/datastore/query/93b512a7-7f65-539b-9e20-bbcc535750bd/0?limit=1	HTTP_404	the query path takes the DATASET identifier, not the distribution identifier the metastore lists first
+CMSPD_BY_DISTRIBUTION_ID	https://data.cms.gov/provider-data/api/1/datastore/query/189f315a-661c-5ae4-afd7-38dbd2533b33/0?limit=3	HTTP_404	same trap on the sibling catalogue
+UKTT_COMMODITIES	https://api.trade-tariff.service.gov.uk/uk/api/v2/commodities/0101210000	HTTP_401	whole API now requires a subscription; ten endpoints probed, all 401
+DTM_ADMIN0	https://dtmapi.iom.int/api/IdpAdmin0Data/GetAdmin0Data?CountryName=Nigeria	HTTP_404	five IOM displacement-tracking paths probed, all 404
+AUTP_ENTITIES	https://api.transparency.gov.au/api/entities	NET_ERR	host does not resolve
+GAMBLING_COMMISSION	https://www.gamblingcommission.gov.uk/public-register/api/search?businessName=bet	HTTP_404	public register is HTML only
+NTSB_CAROL_GET	https://data.ntsb.gov/carol-main-public/api/Query/Main	HTTP_405	GET not supported
+NTSB_CAROL_POST	https://data.ntsb.gov/carol-main-public/api/Query/Main	HTTP_500	POST with the documented query-group body answers "An unknown exception occured."
+ACMA_RRL	https://web.acma.gov.au/rrl/register_search.main_page	HTTP_403	Australian spectrum licence register refuses non-browser clients
+ISED_SMS	https://sms-sgs.ic.gc.ca/equipmentSearch/searchRadioEquipments?lang=en	HTTP_302	redirect to an interactive form
+ANATEL_MOSAICO	https://sistemas.anatel.gov.br/se/public/view/b/srd.php	UNPARSEABLE	server-rendered HTML application
+MRDS_JSON	https://mrdata.usgs.gov/mrds/rest/mrds.json?limit=5	HTTP_404	MRDS serves WFS/WMS only; GetCapabilities answers, no JSON record endpoint
+PARISMOU_INSPECTIONS	https://parismou.org/inspection-search/inspections?search=MAERSK	HTTP_301	port state control inspection search is a form, not an API
+USCG_PSIX	https://cgmix.uscg.mil/xml/PSIXData.asmx/getVesselSummaryXMLString	HTTP_302	redirects to ValidationError.aspx for every parameter set tried
+NCUA_LOCATOR	https://mapping.ncua.gov/api/CreditUnions?name=navy	UNPARSEABLE	single-page application shell
+CHARITIES_NZ_APP	https://app.charities.govt.nz/api/charities?search=trust	NET_ERR	host does not resolve
+CHARITIES_NZ_REGISTER	https://register.charities.govt.nz/api/CharitiesRegister/Search?searchTerm=trust	HTTP_404
+WORLDBANK_DEBARRED	https://apigwext.worldbank.org/dvsvc/v1.0/json/APPREQ/SANCTIONEDFIRM	HTTP_200_EMPTY	answers 200 with a zero-byte body for the published demonstration key
+ADB_SANCTIONS	https://www.adb.org/sites/default/files/page/sanctions.json	HTTP_404
+HMDA_REPORTING_FILERS	https://ffiec.cfpb.gov/v2/reporting/filers/2023/TX	HTTP_404
+HMDA_NATIONWIDE_CSV	https://ffiec.cfpb.gov/v2/data-browser-api/view/nationwide/csv?years=2023&states=RI	BINARY	gzip stream, not a CSV the engine can parse in csv mode
+HMDA_AGGREGATIONS	https://ffiec.cfpb.gov/v2/data-browser-api/view/aggregations?years=2023&states=TX	NOT_SHIPPED	live and parses but returns a single aggregate row, not a record set
+FCC_PUBLICFILES_FACILITY	https://publicfiles.fcc.gov/api/service/facility/search/KABC.json	EMPTY_RESULTSET	200 with "No Facility Found" and zero counts for every call sign tried
+EA_WATER_QUALITY	https://environment.data.gov.uk/water-quality/id/sampling-point.json?_limit=20	HTTP_404	the linked-data water quality archive no longer answers at the documented path
+EA_PUBLIC_REGISTER	https://environment.data.gov.uk/public-register/api/search?register=waste-operations	HTTP_400	"Did not recognize request parameters"
+EA_BATHING_WATER	https://environment.data.gov.uk/doc/bathing-water.json?_limit=10	HTTP_403	blocked at the Azure application gateway
+EA_CATCHMENT	https://environment.data.gov.uk/catchment-planning/so/WaterBody.json?_limit=10	HTTP_404

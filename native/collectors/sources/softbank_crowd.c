@@ -8,6 +8,7 @@
 #include "lib/feedlib.h"
 #include "lib/geojson.h"
 #include "third_party/cJSON.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,8 +50,11 @@ static cJSON *pick3(cJSON *r, const char *a, const char *b, const char *c) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("SOFTBANK_CROWD_API_KEY");
   if (!key || !*key) {
-    fprintf(stderr, "[softbank-crowd] gated (no SOFTBANK_CROWD_API_KEY)\n");
-    return 0;
+    static const char *const envs[] = { "SOFTBANK_CROWD_API_KEY", NULL };
+    return jo_needs_credential(sink, "softbank-crowd",
+        "SoftBank \xe4\xba\xba\xe6\xb5\x81\xe3\x83\x87\xe3\x83\xbc\xe3\x82\xbf (crowd/movement analytics)",
+        envs, "https://api.softbank.jp/ugoki-toukei/v1/crowd",
+        "contract-only: there is no public signup, a bearer token comes with the contract");
   }
   char auth[600];
   snprintf(auth, sizeof auth, "Authorization: Bearer %s", key);

@@ -20,7 +20,6 @@
 #include <string.h>
 
 #define CYI_URL "https://threatview.io/Downloads/IP-High-Confidence-Feed.txt"
-#define MAX_ROWS 5000
 
 /* parse dotted quad; 0 on failure */
 static int parse_v4(const char *s, unsigned oct[4]) {
@@ -57,7 +56,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (!parse_v4(line, o)) continue;
     seen++;
     if (is_bogon(o)) { dropped++; continue; }
-    if (n >= MAX_ROWS) continue;
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "ip", line);

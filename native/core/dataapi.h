@@ -30,4 +30,17 @@
 
 char *dataapi_layer(db_handle *db, const char *id);
 
+/* GET /api/layers/:layerId/geojson — the fused FeatureCollection of a LAYER
+ * (curated in core/layers.def, declared by member sources, or a generated
+ * `rt-<slug>` / `unassigned-geocoded` catch-all): every geocoded intel_items
+ * row of the layer's member sources (or of the catch-all's predicate),
+ * bounded by limit/offset over a total order with in-band
+ * records_available / records_used / truncated / next_offset meta (house
+ * rule 2 — one crime layer measured ~300 MB unbounded). limit<=0 → 10000,
+ * capped at 50000; offset<=0 → 0. NULL iff `layer_id` names no layer this
+ * server knows (caller → 404). A known-but-empty layer serves an honest
+ * empty FC, never invented points. */
+char *dataapi_layer_fc(db_handle *db, const char *layer_id,
+                       int limit, int offset);
+
 #endif

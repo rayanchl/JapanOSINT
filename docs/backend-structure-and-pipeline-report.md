@@ -105,11 +105,19 @@ more importantly, collapse **byte-parity-critical formatters** that today must b
 hand-identical across 8+ files.
 
 ### Dead / stale surface
-- `main.c:4` advertises `--selftest`, but the flag is never parsed (actual toggle is
-  `--serve`; selftest is the default). Stale doc.
-- `--wakati` tokenizer parity harness (`main.c:63-75`) — migration-era; dead now.
-- `/api/_sse_probe` diagnostic route + `sse_probe_start/poll` (`httpd.c:70-96,280`) —
-  dev smoke test compiled into the production listener.
+- ~~`main.c:4` advertises `--selftest`, but the flag is never parsed (actual toggle is
+  `--serve`; selftest is the default). Stale doc.~~ **Fixed 2026-08-24.** `--selftest`
+  is now parsed and is an explicit request for the run that previously happened only
+  because unrecognised flags fell through to the default. That fall-through is gone:
+  an unknown flag or a missing operand is an error (exit 2), so `japanosint --run
+  "$EMPTY"` and `--dispatch <id>` without an entity no longer print `[selftest] PASS`
+  and exit 0. See the argument-validation block in `main()`.
+- ~~`--wakati` tokenizer parity harness (`main.c:63-75`) — migration-era; dead now.~~
+  **Already removed** (re-checked 2026-08-24: no `wakati` in `main.c`; the only
+  remaining uses are MeCab's legitimate `-O wakati` in `core/fts.c`).
+- ~~`/api/_sse_probe` diagnostic route + `sse_probe_start/poll` (`httpd.c:70-96,280`) —
+  dev smoke test compiled into the production listener.~~ **Already removed**
+  (re-checked 2026-08-24: no `_sse_probe` or `sse_probe_start` in `core/httpd.c`).
 - `POST /api/admin/restart` — no-op stub (`httpd.c:541`).
 - `miscapi_follow_recent` (`httpd.c:521`) — deliberate empty-envelope stub.
 - transit `/gtfs/hydrate/:orgId`, `/station-boundaries` — structurally present, always

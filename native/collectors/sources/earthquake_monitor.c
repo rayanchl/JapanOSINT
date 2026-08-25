@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 /* Emit one intel row for a single USGS feature. Returns 1 if emitted. */
 static int emit_quake(intel_sink *sink, cJSON *ft) {
@@ -39,8 +40,10 @@ static int emit_quake(intel_sink *sink, cJSON *ft) {
   char iso[40] = {0};
   if (tm) {
     time_t t = (time_t)(tm->valuedouble / 1000);
-    strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%SZ", gmtime(&t));
-    cJSON_AddStringToObject(data, "time", iso);
+    /* On failure iso stays empty: no "time" field, published_at NULL, and the
+     * remote_key below behaves as it already does for a quake with no time. */
+    if (jo_time_fmt(t, "%Y-%m-%dT%H:%M:%SZ", iso, sizeof iso))
+      cJSON_AddStringToObject(data, "time", iso);
   }
   if (u && u->valuestring)  cJSON_AddStringToObject(data, "details_url", u->valuestring);
   if (ts) cJSON_AddBoolToObject(data, "tsunami_warning", ts->valueint > 0);

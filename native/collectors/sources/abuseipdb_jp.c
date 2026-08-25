@@ -5,6 +5,7 @@
 #include "source.h"
 #include "lib/threatintel.h"
 #include "lib/feedlib.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -71,6 +72,20 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
+  /* threatintel_collect() resolves the key itself and, when it is absent,
+   * returns 0 having emitted nothing — a clean-looking run that collected
+   * zero rows forever. Gate here first so the state is reported as data.
+   * NOTE: lib/threatintel.c is the ONE place this belongs, and it backs ~18
+   * collectors, all of which degrade the same silent way. It is owned
+   * elsewhere this session, so the check is duplicated here rather than
+   * fixed once; see the unification report. The condition is identical to
+   * the toolkit's (getenv on the env_key, no fallbacks passed). */
+  if (!getenv("ABUSEIPDB_API_KEY") || !*getenv("ABUSEIPDB_API_KEY")) {
+    static const char *const envs[] = { "ABUSEIPDB_API_KEY", NULL };
+    return jo_needs_credential(sink, "abuseipdb-jp", "AbuseIPDB blacklist (JP)",
+                               envs, "https://api.abuseipdb.com/api/v2/blacklist",
+                               "free API key at abuseipdb.com/account/api");
+  }
   int n = threatintel_collect(ctx, sink, "ABUSEIPDB_API_KEY", NULL,
                               run_fetch, NULL);
   return n >= 0 ? 0 : -1;

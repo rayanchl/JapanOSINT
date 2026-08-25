@@ -34,6 +34,13 @@ TMPO="$(mktemp -d "${TMPDIR:-/tmp}/jo-synchk-XXXXXX")"
 trap 'rm -rf "$TMPO"' EXIT
 
 CF="-c -O2 -Wall -Wextra -Wno-unused-parameter -Ithird_party"
+# Must mirror the Makefile's -iquote pair. Collectors say #include "source.h"
+# and #include "lib/feedlib.h" -- depth-independent forms that only resolve
+# through these paths -- so without them this script fails on essentially every
+# collector with "source.h: No such file or directory" and looks like 893
+# broken files instead of one stale flag list. A second copy of the compiler
+# flags is a standing trap; if the Makefile's ever change, change them here too.
+CF="$CF -iquote . -iquote collectors/sources"
 CF="$CF -DJO_REPO_ROOT=\"$REPO_ROOT\""
 CF="$CF $(pkg-config --cflags libcurl openssl 2>/dev/null) $(mecab-config --cflags 2>/dev/null)"
 

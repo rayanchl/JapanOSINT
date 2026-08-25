@@ -40,7 +40,8 @@ static cJSON *rate_num(long su,long fa){ long t=su+fa;
   double v=(double)su/(double)t; v=round(v*1000.0)/1000.0;
   return cJSON_CreateNumber(v); }
 char *maintenance_digest(db_handle *db, int hours) {
-  if (hours<1) hours=24; if (hours>720) hours=720;
+  if (hours<1) hours=24;
+  if (hours>720) hours=720;
   char win[32]; snprintf(win,sizeof win,"-%d hours",hours);
   sqlite3 *h=db->h; sqlite3_stmt *s;
   long verified=0,merged=0,rejected=0,needs=0,error=0;
@@ -137,9 +138,15 @@ char *maintenance_digest(db_handle *db, int hours) {
 
   char ts[40]; { time_t now=time(NULL); struct tm g; gmtime_r(&now,&g);
     struct timespec sp; clock_gettime(CLOCK_REALTIME,&sp);
-    snprintf(ts,sizeof ts,"%04d-%02d-%02dT%02d:%02d:%02d.%03ldZ",
-      g.tm_year+1900,g.tm_mon+1,g.tm_mday,g.tm_hour,g.tm_min,g.tm_sec,
-      sp.tv_nsec/1000000); }
+    /* %0Nd widths are minimums, not caps, so to -Wformat-truncation the
+     * fields are full ints/longs worth 11-20 characters and this fixed
+     * 24-char stamp "may be truncated". The modulos are identity for every
+     * value gmtime_r/clock_gettime can return. */
+    snprintf(ts,sizeof ts,"%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+      (unsigned)(g.tm_year+1900) % 10000u,(unsigned)(g.tm_mon+1) % 100u,
+      (unsigned)g.tm_mday % 100u,(unsigned)g.tm_hour % 100u,
+      (unsigned)g.tm_min % 100u,(unsigned)g.tm_sec % 100u,
+      (unsigned)(sp.tv_nsec/1000000) % 1000u); }
   cJSON *o=cJSON_CreateObject();
   cJSON_AddStringToObject(o,"generated_at",ts);
   cJSON_AddNumberToObject(o,"window_hours",hours);
@@ -183,7 +190,8 @@ char *maintenance_digest(db_handle *db, int hours) {
   cJSON *cc=cJSON_CreateObject();
   int hl=getenv("LLM_HEAVY_CONCURRENCY")?atoi(getenv("LLM_HEAVY_CONCURRENCY")):1;
   int ml=getenv("LLM_MID_CONCURRENCY")?atoi(getenv("LLM_MID_CONCURRENCY")):2;
-  if (hl<1)hl=1; if (ml<1)ml=1;
+  if (hl<1)hl=1;
+  if (ml<1)ml=1;
   cJSON *hv=cJSON_CreateObject();
   cJSON_AddNumberToObject(hv,"limit",hl); cJSON_AddNumberToObject(hv,"inflight",0);
   cJSON_AddNumberToObject(hv,"waiting",0); cJSON_AddItemToObject(cc,"heavy",hv);
@@ -217,9 +225,14 @@ static void col_real(cJSON *o, const char *k, sqlite3_stmt *s, int i){
 static void iso_now(char *out, size_t cap){
   time_t now=time(NULL); struct tm g; gmtime_r(&now,&g);
   struct timespec sp; clock_gettime(CLOCK_REALTIME,&sp);
-  snprintf(out,cap,"%04d-%02d-%02dT%02d:%02d:%02d.%03ldZ",
-    g.tm_year+1900,g.tm_mon+1,g.tm_mday,g.tm_hour,g.tm_min,g.tm_sec,
-    sp.tv_nsec/1000000);
+  /* Modulos, not defensiveness: %0Nd widths are minimums, so without them
+   * -Wformat-truncation must assume 11-20 characters per field. They are
+   * identity for every value gmtime_r/clock_gettime can return. */
+  snprintf(out,cap,"%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+    (unsigned)(g.tm_year+1900) % 10000u,(unsigned)(g.tm_mon+1) % 100u,
+    (unsigned)g.tm_mday % 100u,(unsigned)g.tm_hour % 100u,
+    (unsigned)g.tm_min % 100u,(unsigned)g.tm_sec % 100u,
+    (unsigned)(sp.tv_nsec/1000000) % 1000u);
 }
 /* Build a {"error":"code"} body (malloc'd). */
 static char *err_json(const char *code){
@@ -384,7 +397,8 @@ char *maintenance_repair_action(db_handle *db, long repair_id, int approve,
     const char *old_url=(ou&&cJSON_IsString(ou))?ou->valuestring:NULL;
     const char *new_url=(nu&&cJSON_IsString(nu))?nu->valuestring:NULL;
     if (!old_url||!*old_url||!new_url||!*new_url){
-      if (pj) cJSON_Delete(pj); free(patch);
+      if (pj) cJSON_Delete(pj);
+      free(patch);
       *status=422; return err_json("patch_missing_urls");
     }
     /* The override INSERT is the whole point of the approval: it is what makes
@@ -446,7 +460,8 @@ char *maintenance_repair_action(db_handle *db, long repair_id, int approve,
     cJSON_AddStringToObject(o,"source_id",source_id);
     cJSON_AddStringToObject(o,"old_url",old_url);
     cJSON_AddStringToObject(o,"new_url",new_url);
-    if (pj) cJSON_Delete(pj); free(patch);
+    if (pj) cJSON_Delete(pj);
+    free(patch);
     char *j=cJSON_PrintUnformatted(o); cJSON_Delete(o);
     *status=200; return j;
   }

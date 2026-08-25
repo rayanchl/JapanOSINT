@@ -49,7 +49,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (!meta || !cJSON_IsArray(data) || cJSON_GetArraySize(data) == 0) {
       cJSON_Delete(doc); continue;
     }
-    cJSON *d = cJSON_GetArrayItem(data, 0);  /* exhaustive-ok: date=latest returns exactly one reading */
+    /* `date=latest` asks for one observation and returns exactly one: the
+     * response is {"metadata":{…},"data":[{t,v,s,f,q}]}, a single-reading
+     * envelope, not the head of a series. (A date RANGE would return many, and
+     * this collector does not ask for one — it is the current-level feed.) */
+    cJSON *d = cJSON_GetArrayItem(data, 0);  /* exhaustive-ok: date=latest returns a one-element data[] — the whole payload */
     const char *vs = jo_sv(d, "v"), *when = jo_sv(d, "t");
     if (!vs || !when) { cJSON_Delete(doc); continue; }
     char *end = NULL;
@@ -78,6 +82,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const char *sg = jo_sv(d, "s");
     if (sg) { char *e3 = NULL; double sd = strtod(sg, &e3);
               if (e3 != sg) cJSON_AddNumberToObject(p, "sigma_m", sd); }
+    /* `f` is CO-OPS' four-part data-quality flag string ("0,0,0,0"): the
+     * limit/max-min/rate-of-change/flat-line tests. It was the one field of
+     * the reading the row dropped. */
+    const char *fl = jo_sv(d, "f");
+    if (fl) cJSON_AddStringToObject(p, "data_flags", fl);
+    /* The pin is the station's own surveyed position out of metadata.lat/lon,
+     * not a place-name geocode. */
+    if (has_geo) cJSON_AddStringToObject(p, "geo_precision", "station-point");
     char *pj = cJSON_PrintUnformatted(p);
     cJSON_Delete(p);
 

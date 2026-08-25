@@ -10,23 +10,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 static const char *SUBS[] = { "japan", "japanlife", "Tokyo",
                               "newsokur", "JapanFinance" };
 #define NSUB ((int)(sizeof(SUBS) / sizeof(SUBS[0])))
-
-/* new Date(sec*1000).toISOString() → YYYY-MM-DDTHH:MM:SS.mmmZ */
-static void epoch_iso(double sec, char *o, size_t n) {
-  double ms = (sec - (double)(long long)sec) * 1000.0;
-  int msi = (int)(ms + 0.5);
-  time_t t = (time_t)(long long)sec;
-  if (msi >= 1000) { msi -= 1000; t += 1; }
-  struct tm tm;
-  gmtime_r(&t, &tm);
-  char base[32];
-  strftime(base, sizeof base, "%Y-%m-%dT%H:%M:%S", &tm);
-  snprintf(o, n, "%s.%03dZ", base, msi);
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { "User-Agent: JapanOSINT/1.0 (research)", NULL };
@@ -87,8 +75,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         const char *pub = NULL;
         const cJSON *cu = cJSON_GetObjectItem(p, "created_utc");
         if (cu && cJSON_IsNumber(cu) && cu->valuedouble) {
-          epoch_iso(cu->valuedouble, isobuf, sizeof isobuf);
-          pub = isobuf;
+          /* new Date(sec*1000).toISOString() → YYYY-MM-DDTHH:MM:SS.mmmZ.
+           * `created_utc` is whatever number Reddit put in the JSON, so both
+           * halves of the render can fail on a wild value and BOTH used to be
+           * ignored here: gmtime_r returns NULL when the year will not fit an
+           * int, and strftime returns 0 on overflow leaving its buffer
+           * INDETERMINATE — which was then formatted into a published_at. A
+           * timestamp assembled from stack contents is invented data. That
+           * incident is why _timefmt.inc exists; jo_epoch_iso_frac empties the
+           * buffer on either failure, so the test below still holds. */
+          jo_epoch_iso_frac(cu->valuedouble, isobuf, sizeof isobuf);
+          /* empty = the value could not be rendered as a date; leave
+           * published_at NULL rather than store a half-formed timestamp */
+          if (isobuf[0]) pub = isobuf;
         }
 
         /* properties — EXACT JS key order */

@@ -17,6 +17,7 @@
 #include <ctype.h>
 #include <math.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define NPA_BASE "https://www.npa.go.jp"
 
@@ -343,7 +344,13 @@ static const pref_t *resolve_pref(const char *url, const char *label) {
 
 typedef struct {
   char name[256]; int has_age; long age; char height[64];
-  char crime[2048]; char photo[1024]; char hurl[1024]; char hlabel[512];
+  /* photo[] is 1280, not 1024, to match the local `photo` buffer in run() that
+   * it is copied from. The absolute URL is built as NPA_BASE + a `src` of up to
+   * sizeof(img)-1 = 1023 bytes, so it can legitimately reach 1279; the old
+   * 1024-byte field silently chopped the tail off any such URL and stored a
+   * broken photo_url on the wanted-person row. -Wformat-truncation flagged the
+   * copy at the seam. Sizing the field to its source makes it lossless. */
+  char crime[2048]; char photo[1280]; char hurl[1024]; char hlabel[512];
   const char *src_page; const pref_t *pref;
 } entry_t;
 
@@ -353,10 +360,8 @@ static int has_any(const char *b, const char *a, const char *c,
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  char iso[32];
-  time_t now = time(NULL);
-  struct tm tmv; gmtime_r(&now, &tmv);
-  strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &tmv);
+  char iso[32] = {0};
+  jo_now_iso_ms(iso, sizeof iso);      /* empty ⇒ published_at stays NULL */
 
   static const char *PAGES[] = {
     "https://www.npa.go.jp/bureau/criminal/wanted/jyuyo1.html",
@@ -518,7 +523,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         it.summary = e->crime;
         it.link = e->hurl[0] ? e->hurl : e->src_page;  /* handlerUrl || page */
         it.lang = "ja";
-        it.published_at = iso;
+        it.published_at = iso[0] ? iso : NULL;
         it.tags_json =
           "[\"crime\",\"wanted\",\"sensitive\",\"unresolved-prefecture\"]";
         it.properties_json = ipj;

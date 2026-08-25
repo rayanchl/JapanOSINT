@@ -169,8 +169,8 @@ VJSON(eur_ods_amp_fr_reseau_de_transports_aix_marsei, "eur-ods-amp-fr-reseau-de-
 
 VJSON(eur_ods_amp_parc_et_jardin_bd_topo_zone_dactiv, "eur-ods-amp-parc-et-jardin-bd-topo-zone-dactiv", "Aix-Marseille-Provence Metropole open data — Espaces publics (parcs, jardins, places...)", "Aix-Marseille-Provence Metropole open data — Espaces publics (parcs, jardins, places...)",
   "europe_data", "opendata",
-  "https://data.ampmetropole.fr/api/explore/v2.1/catalog/datasets/parc-et-jardin-bd-topo-zone-dactivite-ou-dinteret/records?limit=100",
-  "results",
+  "https://data.ampmetropole.fr/api/explore/v2.1/catalog/datasets/parc-et-jardin-bd-topo-zone-dactivite-ou-dinteret/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Espaces publics (parcs, jardins, places...)' dataset published by Aix-Marseille-Provence Metropole open data.");
 
@@ -302,8 +302,8 @@ VJSON(eur_ods_bl_12850, "eur-ods-bl-12850", "Kanton Basel-Landschaft open data �
 
 VJSON(eur_ods_bl_4bb74943_8e36_4a63_a6f9_cb8afecd0d, "eur-ods-bl-4bb74943-8e36-4a63-a6f9-cb8afecd0d", "Kanton Basel-Landschaft open data — Radondaten Gebäude BL", "Kanton Basel-Landschaft open data — Radondaten Gebäude BL",
   "europe_data", "opendata",
-  "https://data.bl.ch/api/explore/v2.1/catalog/datasets/4bb74943-8e36-4a63-a6f9-cb8afecd0dbc_radondaten_gebaeude/records?limit=100",
-  "results",
+  "https://data.bl.ch/api/explore/v2.1/catalog/datasets/4bb74943-8e36-4a63-a6f9-cb8afecd0dbc_radondaten_gebaeude/exports/json",
+  "",
   "de", "[\"che\",\"opendata\"]", 86400,
   "Records of the 'Radondaten Gebäude BL' dataset published by Kanton Basel-Landschaft open data.");
 
@@ -400,8 +400,8 @@ VJSON(eur_ods_bs_100282, "eur-ods-bs-100282", "Kanton Basel-Stadt open data — 
 
 VJSON(eur_ods_bs_100307, "eur-ods-bs-100307", "Kanton Basel-Stadt open data — Grosser Rat: Ratsmitgliedschaften", "Kanton Basel-Stadt open data — Grosser Rat: Ratsmitgliedschaften",
   "europe_data", "opendata",
-  "https://data.bs.ch/api/explore/v2.1/catalog/datasets/100307/records?limit=100",
-  "results",
+  "https://data.bs.ch/api/explore/v2.1/catalog/datasets/100307/exports/json",
+  "",
   "de", "[\"che\",\"opendata\"]", 86400,
   "Records of the 'Grosser Rat: Ratsmitgliedschaften' dataset published by Kanton Basel-Stadt open data.");
 

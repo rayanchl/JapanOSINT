@@ -34,6 +34,7 @@
 #include <string.h>
 #include <time.h>
 #include "_jp_osint.inc"
+#include "_timefmt.inc"
 
 /* Published in ChileCompra's own API documentation as the general demo ticket. */
 #define CL_PUBLIC_DEMO_TICKET "F8537A18-6766-4DEF-9E59-426B4FEE2844"
@@ -139,12 +140,18 @@ static int cl_run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0, parsed = 0;
   for (int back = 0; back <= 1; back++) {
     time_t t = now - (time_t)back * 24 * 3600;
-    struct tm g;
-    gmtime_r(&t, &g);
     char fecha[16];
-    strftime(fecha, sizeof fecha, "%d%m%Y", &g);
+    /* `fecha` IS the query; a date we cannot render is a day we cannot ask
+     * for, so skip it rather than query some other day. */
+    if (!jo_time_fmt(t, "%d%m%Y", fecha, sizeof fecha)) continue;
     n += cl_fetch_day(ctx, sink, fecha, ticket, from_env, &parsed);
-    if (n > 0) break;  /* exhaustive-ok: probe loop over candidate DAYS, not a record cap — the first day that answers is fetched whole */
+    /* NOT a record loop: `back` walks DATES, and cl_fetch_day above has
+     * already emitted every tender in the day it fetched. This only decides
+     * whether to spend a SECOND request on yesterday, and it does so only when
+     * today produced nothing — which is the documented behaviour and matters
+     * because the API answers 429 when called twice in quick succession. No
+     * fetched record is discarded here. */
+    if (n > 0) break;   /* exhaustive-ok: date-fallback loop, not a record loop — every tender of the fetched day was already emitted */
   }
 
   fprintf(stderr, "[cl-mercadopublico-tenders] emitted %d%s\n",

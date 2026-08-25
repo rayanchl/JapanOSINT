@@ -791,8 +791,11 @@ static char *to_alert(db_handle *db, const tenant_ctx *t, const char *id,
   if (!rbj) { cJSON_Delete(dropped); return err(st, 500, "server_error"); }
 
   int rst = 200;
+  /* 0/NULL = the /:id/events paging parameters, which a rule CREATE does not
+   * use. `ev_cursor` was appended to the published signature when that route's
+   * silent 500-row cap was fixed; see alertsapi.h. */
   char *rout = alertsapi(db, t->tenant_id, t->user_id, "POST", "", "", rbj, 0,
-                         &rst);
+                         NULL, &rst);
   free(rbj);
   if (rst != 201) {
     /* Propagate alertsapi's own 400 verbatim — its wording IS the contract for

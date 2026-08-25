@@ -23,6 +23,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     .tags_json = "[\"court\",\"docket\",\"pacer\",\"us\"]",
     .lang = "en",
     .enrich = sanc_pacer_enrich,
+    .guid_reused = 1,
   };
   int n = sanc_feed_run(ctx, sink, "https://ecf.nysd.uscourts.gov/cgi-bin/rss_outside.pl",
                         &cfg, "pacer-nysd");

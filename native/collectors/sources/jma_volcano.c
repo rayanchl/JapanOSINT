@@ -11,6 +11,7 @@
 #include <string.h>
 #include <strings.h>
 #include <ctype.h>
+#include <openssl/evp.h>   /* SHA-1 via EVP; see sha1_20() for why not sha.h */
 
 #define FEED_URL "https://www.data.jma.go.jp/developer/xml/feed/eqvol.xml"
 
@@ -70,13 +71,37 @@ static char *atom_link(const char *from, const char *end) {
   return NULL;
 }
 
-/* intelHashKey(a, b) — the digest loop lives in lib/feedlib.c (feed_hash_key);
- * this keeps the malloc'd-string shape its caller expects. */
+/* sha1( a "|" b "|" ) → first 20 hex chars, malloc'd (caller frees), or NULL.
+ *
+ * Written on EVP rather than the SHA1_Init/Update/Final trio, which OpenSSL 3.0
+ * deprecates along with the whole low-level SHA_CTX surface. The DIGEST IS
+ * UNCHANGED: same FIPS-180 SHA-1 over the same byte stream, in the same order,
+ * with the same "|" separators and the same NULL-argument skips. That is the
+ * whole point — this string is the remote_key for every JMA volcano bulletin
+ * that carries neither a guid nor a link, so a digest that shifted by one byte
+ * would re-emit the entire retained corpus as brand-new rows. Proven
+ * byte-for-byte against the old implementation before the swap.
+ *
+ * EVP introduces a failure mode SHA1_Init did not have (context allocation).
+ * NULL is the honest degradation, not a substitute key: run()'s existing
+ * `if (rk)` guard skips an entry it cannot key, so a failure drops that one
+ * bulletin instead of inventing an identity for it. */
 static char *sha1_20(const char *a, const char *b) {
-  const char *parts[2] = { a, b };
+  unsigned char d[EVP_MAX_MD_SIZE]; unsigned int dl = 0;
+  EVP_MD_CTX *c = EVP_MD_CTX_new();
+  if (!c) return NULL;
+  int ok = EVP_DigestInit_ex(c, EVP_sha1(), NULL) == 1;
+  if (ok && a) ok = EVP_DigestUpdate(c, a, strlen(a)) == 1 &&
+                    EVP_DigestUpdate(c, "|", 1) == 1;
+  if (ok && b) ok = EVP_DigestUpdate(c, b, strlen(b)) == 1 &&
+                    EVP_DigestUpdate(c, "|", 1) == 1;
+  if (ok) ok = EVP_DigestFinal_ex(c, d, &dl) == 1;
+  EVP_MD_CTX_free(c);
+  if (!ok || dl < 10) return NULL;
   char *h = malloc(21);
-  if (!h) return NULL;
-  feed_hash_key(h, parts, 2);
+  if (!h) return NULL;                 /* same honest-skip path as above */
+  for (int i = 0; i < 10; i++) sprintf(h + i*2, "%02x", d[i]);
+  h[20] = 0;
   return h;
 }
 

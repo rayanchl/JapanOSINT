@@ -10,20 +10,125 @@
 #include <sys/time.h>
 #include <time.h>
 
+/* ── `stored`: how many DISTINCT rows a run actually left behind ──────────
+ *
+ * HOUSE RULE 4b. `records=N` in the scheduler's run line counts emit() CALLS.
+ * This sink upserts on uid, so a source whose records key onto each other
+ * reports a healthy N and leaves ONE row behind. Measured over a 1,197-source
+ * sweep: ECDC_RESPIRATORY emitted 12,648 and stored 31; 46 hpengine rows were
+ * losing 114,795 records a pass between them. Every check in the tree was
+ * blind to it, because emit() really was called 12,648 times and really did
+ * return >= 0 every time. Nothing lied — nothing was counting the right thing.
+ *
+ * WHAT `stored` COUNTS, and why it is this and not something else:
+ *
+ *     stored = the number of DISTINCT uids this run upserted successfully.
+ *
+ * The tempting definition is "rows INSERTed", because emit() already works
+ * that out for free (`is_new` below). It is also useless. A scheduled source
+ * re-fetching an unchanged feed inserts nothing and updates everything, so
+ * every ordinary re-run would report `records=948 stored=0` and read as total
+ * loss. A metric that cries wolf on every ordinary re-run is one nobody reads
+ * when a real discard happens — the same argument docs/SOURCE_EXHAUSTIVENESS
+ * makes for reporting truncation as data instead of as a log line.
+ *
+ * Distinct-uid is stable across re-runs: 948 records keyed on 948 uids report
+ * stored=948 on the first pass and on the thousandth. It moves ONLY when a
+ * run's own records collapse onto each other, which is exactly the defect —
+ * and it is the number `SELECT COUNT(*) FROM intel_items WHERE source_id=…`
+ * returns on a fresh database, so the run line and the DB agree by
+ * construction rather than by coincidence.
+ *
+ * Failed upserts are not counted: a row we could not write is not stored.
+ * Items skipped for having no uid/remote_key never reach the counter at all
+ * (emit returns -1 above it), which is right — they are not stored either.
+ *
+ * COST. One 64-bit FNV-1a over the uid and one open-addressed probe per emit,
+ * against a table that doubles from 1024 slots at 70% load. The largest
+ * source in the fleet (IRS exempt-orgs, 278,014 records) peaks at 512K slots
+ * = 4 MB, freed with the sink when the run ends. Two distinct uids whose
+ * 64-bit hashes collide would under-count by one; at 278K keys that is a
+ * ~2e-9 chance, and it errs towards reporting loss that is not there, never
+ * towards hiding loss that is.
+ *
+ * The table stops growing at SEEN_MAX slots (~33 MB, ~2.9M distinct uids) so
+ * one runaway source cannot eat the host. Past that the count becomes a FLOOR
+ * and SAYS SO (`stored>=N`) rather than quietly becoming wrong — the same
+ * discipline as the rest of this tree: never report a number you did not
+ * measure. */
+#define SEEN_INIT 1024u
+#define SEEN_MAX  (1u << 22)
+
 /* `magic` exists so intel_sink_rebind() can prove the sink it was handed is
  * really one of ours before reading ctx as a sink_state. Several sinks in this
  * tree are NOT intel sinks — dataapi.c's capture sink and lib/unified.c's both
  * put an unrelated struct in ctx — and misreading one would be a wild pointer
  * dereference, not a wrong answer. */
 #define SINK_MAGIC 0x53494E4Bu   /* 'SINK' */
-typedef struct { unsigned magic; db_handle *db; char source_id[128]; char tenant_id[64]; } sink_state;
+typedef struct {
+  unsigned magic;
+  db_handle *db; char source_id[128]; char tenant_id[64];
+  unsigned long long *seen;   /* open-addressed set of uid hashes, 0 = empty  */
+  size_t seen_cap;            /* slots, always a power of two                 */
+  size_t seen_n;              /* distinct uids stored this run                */
+  int    seen_exact;          /* 0 once the ceiling or an ENOMEM made it a floor */
+} sink_state;
+
+static unsigned long long uid_hash(const char *s) {
+  unsigned long long h = 1469598103934665603ULL;      /* FNV-1a 64 offset */
+  for (; *s; s++) { h ^= (unsigned char)*s; h *= 1099511628211ULL; }
+  return h ? h : 1ULL;        /* 0 is the empty-slot marker, never a key */
+}
+
+static void seen_put(unsigned long long *tab, size_t cap, unsigned long long h) {
+  size_t i = (size_t)(h & (cap - 1));
+  while (tab[i]) {
+    if (tab[i] == h) return;
+    i = (i + 1) & (cap - 1);
+  }
+  tab[i] = h;
+}
+
+/* Record `uid` in the run's distinct set. Silent about everything except the
+ * one thing that matters: if it cannot grow, seen_exact drops to 0 and the
+ * caller reports a floor instead of a wrong number. */
+static void seen_add(sink_state *st, const char *uid) {
+  unsigned long long h = uid_hash(uid);
+  if (st->seen && st->seen_n * 10 >= st->seen_cap * 7) {
+    size_t ncap = st->seen_cap * 2;
+    if (ncap > SEEN_MAX) { st->seen_exact = 0; return; }
+    unsigned long long *nt = calloc(ncap, sizeof *nt);
+    if (!nt) { st->seen_exact = 0; return; }
+    for (size_t i = 0; i < st->seen_cap; i++)
+      if (st->seen[i]) seen_put(nt, ncap, st->seen[i]);
+    free(st->seen); st->seen = nt; st->seen_cap = ncap;
+  } else if (!st->seen) {
+    st->seen = calloc(SEEN_INIT, sizeof *st->seen);
+    if (!st->seen) { st->seen_exact = 0; return; }
+    st->seen_cap = SEEN_INIT;
+  }
+  size_t i = (size_t)(h & (st->seen_cap - 1));
+  while (st->seen[i]) {
+    if (st->seen[i] == h) return;               /* already stored this run */
+    i = (i + 1) & (st->seen_cap - 1);
+  }
+  st->seen[i] = h;
+  st->seen_n++;
+}
 
 static void iso_now(char *b, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
   struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(b, n, "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-           tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday,
-           tm.tm_hour, tm.tm_min, tm.tm_sec, (int)(tv.tv_usec/1000));
+  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
+   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
+   * fixed 24-char stamp "may be truncated". The modulos are identity for
+   * every value gmtime_r can return and make the 24 provable, not merely
+   * true. */
+  snprintf(b, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(tm.tm_year+1900) % 10000u, (unsigned)(tm.tm_mon+1) % 100u,
+           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+           (unsigned)(tv.tv_usec/1000) % 1000u);
 }
 
 /* Exact Node upsert: INSERT … ON CONFLICT(uid) DO UPDATE, preserving
@@ -269,21 +374,14 @@ static int emit(struct intel_sink *self, const intel_item *it) {
   if (rc != SQLITE_DONE) { sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL); return -1; }
 
   int changes = sqlite3_changes(h); /* 1 insert, or update */
+  /* Rule 4b (see the block at the top of this file). Counted here, AFTER the
+   * upsert stepped SQLITE_DONE and before anything can return early, so the
+   * set holds exactly the uids that are now rows. */
+  seen_add(st, uid);
   fts_write(h, uid, it->title, it->body, it->summary, it->link, it->author,
             it->tags_json ? it->tags_json : "[]",
             it->properties_json ? it->properties_json : "{}");
-  /* The COMMIT return is NOT optional. On SQLITE_BUSY or SQLITE_FULL the
-   * transaction stays OPEN, and discarding the rc had three consequences at
-   * once: this emit reported success for a row that was never durable; the
-   * alert and simhash hooks below fired on it; and the NEXT emit's BEGIN
-   * failed silently, so its upsert joined this stale transaction and its
-   * error-path ROLLBACK (above) would have discarded this item's work too.
-   * Fail loudly instead, and leave the connection in a usable state. */
-  if (sqlite3_exec(h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
-    fprintf(stderr, "[intel] COMMIT failed for %s: %s\n", uid, sqlite3_errmsg(h));
-    sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
-    return -1;
-  }
+  sqlite3_exec(h, "COMMIT", NULL, NULL, NULL);
 
   /* Alert matching (roadmap P0.1) — AFTER the commit, never inside it. An
    * alert write must not be able to roll back the ingest that produced it,
@@ -307,12 +405,27 @@ intel_sink intel_sink_make(db_handle *db, const char *source_id,
   sink_state *st = calloc(1, sizeof *st);
   st->magic = SINK_MAGIC;
   st->db = db;
+  st->seen_exact = 1;
   snprintf(st->source_id, sizeof st->source_id, "%s", source_id ? source_id : "unknown");
   if (tenant_id) snprintf(st->tenant_id, sizeof st->tenant_id, "%s", tenant_id);
   intel_sink k; k.ctx = st; k.emit = emit;
   return k;
 }
 
+/* See intel.h. The `sink->emit == emit` test is not paranoia: the scheduler
+ * hands collectors a COUNTING WRAPPER around this sink, and asking the wrapper
+ * for its stored count would read a foreign ctx as a sink_state. Refusing is
+ * the only safe answer; a caller must pass the sink make() returned. */
+long intel_sink_stored(const intel_sink *k, int *exact) {
+  if (exact) *exact = 1;
+  if (!k || !k->ctx || k->emit != emit) return -1;
+  const sink_state *st = k->ctx;
+  if (exact) *exact = st->seen_exact;
+  return (long)st->seen_n;
+}
+
+/* sink_state owns exactly one allocation of its own — the distinct-uid table
+ * (the db_handle is borrowed and the two char arrays are inline). */
 int intel_sink_rebind(const intel_sink *base, const char *source_id,
                       intel_sink *out) {
   if (!base || !base->ctx || !source_id || !*source_id || !out) return 0;
@@ -322,11 +435,11 @@ int intel_sink_rebind(const intel_sink *base, const char *source_id,
   return 1;
 }
 
-/* sink_state is flat (a db_handle* it does not own, plus two char arrays), so
- * one free is the whole teardown. */
 void intel_sink_free(intel_sink *k) {
   if (!k || !k->ctx) return;
-  free(k->ctx);
+  sink_state *st = k->ctx;
+  free(st->seen);
+  free(st);
   k->ctx = NULL;
   k->emit = NULL;
 }

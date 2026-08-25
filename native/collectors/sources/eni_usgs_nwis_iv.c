@@ -1,9 +1,7 @@
 /* USGS NWIS instantaneous values — US river discharge and gage height.
  * Endpoint: https://waterservices.usgs.gov/nwis/iv/?format=json
  *           &stateCd=<st>&parameterCd=00060,00065&siteStatus=active  (keyless)
- * Emits one row per (site, parameter, measurement method) block with a real
- * latest reading — values[] carries one block per method and every block is
- * emitted, not just values[0]:
+ * Emits one row per (site, parameter) time series with a real latest reading:
  *   value (UNIT taken verbatim from variable.unit.unitCode — "ft3/s" for
  *   discharge 00060, "ft" for gage height 00065), parameter code, site name,
  *   site code, reading timestamp, and the provisional-data disclaimer.
@@ -51,21 +49,56 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
     const char *site = jo_sv(si, "siteName");
     if (!site) continue;
 
+    /* siteCode and variableCode are LISTS in WaterML-JSON (a site can be
+     * registered in more than one network). One element is the norm — all 724
+     * CO series carry exactly one — but the extra codes are what let a record
+     * join to another agency's data, so every one of them is kept alongside
+     * the display pick. */
     const char *site_code = NULL;
-    cJSON *sc = cJSON_GetObjectItem(si, "siteCode");
-    if (cJSON_IsArray(sc) && cJSON_GetArraySize(sc) > 0)
-      site_code = jo_sv(cJSON_GetArrayItem(sc, 0), "value");  /* exhaustive-ok: WaterML wraps the single siteCode in an array */
+    cJSON *sc = cJSON_GetObjectItem(si, "siteCode"), *sc_all = NULL;
+    if (cJSON_IsArray(sc) && cJSON_GetArraySize(sc) > 0) {
+      sc_all = cJSON_CreateArray();
+      cJSON *e;
+      cJSON_ArrayForEach(e, sc) {
+        const char *v = jo_sv(e, "value");
+        if (!v) continue;
+        if (!site_code) site_code = v;
+        cJSON_AddItemToArray(sc_all, cJSON_Duplicate(e, 1));
+      }
+    }
 
     const char *pcode = NULL;
-    cJSON *vc = cJSON_GetObjectItem(vr, "variableCode");
-    if (cJSON_IsArray(vc) && cJSON_GetArraySize(vc) > 0)
-      pcode = jo_sv(cJSON_GetArrayItem(vc, 0), "value");  /* exhaustive-ok: WaterML wraps the single variableCode in an array */
-    if (!pcode) continue;
+    cJSON *vc = cJSON_GetObjectItem(vr, "variableCode"), *vc_all = NULL;
+    if (cJSON_IsArray(vc) && cJSON_GetArraySize(vc) > 0) {
+      vc_all = cJSON_CreateArray();
+      cJSON *e;
+      cJSON_ArrayForEach(e, vc) {
+        const char *v = jo_sv(e, "value");
+        if (!v) continue;
+        if (!pcode) pcode = v;
+        cJSON_AddItemToArray(vc_all, cJSON_Duplicate(e, 1));
+      }
+    }
+    if (!pcode) { cJSON_Delete(sc_all); cJSON_Delete(vc_all); continue; }
 
     cJSON *un = cJSON_GetObjectItem(vr, "unit");
     const char *unit = un ? jo_sv(un, "unitCode") : NULL;
-    if (!unit) continue;                        /* no unit -> no measurement */
+    if (!unit) { cJSON_Delete(sc_all); cJSON_Delete(vc_all); continue; }
     const char *vname = jo_sv(vr, "variableName");
+
+    /* values[] is a list of VALUE BLOCKS, one per measurement method, and only
+     * block 0 was ever read. A gauge with a backup sensor publishes two blocks
+     * — CAMP CREEK AT GARDEN OF THE GODS reports 00065 from both its primary
+     * (methodID 280009) and its backup gage-height sensor (211192) — and the
+     * second reading was silently discarded. Worse, the file's own header
+     * already said rows should key on "site + parameterCd (+ method id)" while
+     * the key never carried the method, so even reading both blocks would have
+     * collapsed them onto one remote_key. Both are fixed here: every block is
+     * emitted, and the method id is part of the key. */
+    cJSON *vals = cJSON_GetObjectItem(s, "values");
+    if (!cJSON_IsArray(vals) || cJSON_GetArraySize(vals) == 0) {
+      cJSON_Delete(sc_all); cJSON_Delete(vc_all); continue;
+    }
 
     int has_geo = 0; double lat = 0, lon = 0;
     cJSON *gl = cJSON_GetObjectItem(si, "geoLocation");
@@ -79,20 +112,14 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
       }
     }
 
-    /* values[] is one block PER MEASUREMENT METHOD — a site with two sensors on
-     * the same parameter ships two. Reading values[0] emitted one of them and
-     * dropped the rest of a response we had already paid for (house rule 2), so
-     * every block is emitted, keyed on its methodID when there is more than
-     * one. Within a block the LAST element is the latest reading. */
-    cJSON *vals = cJSON_GetObjectItem(s, "values");
-    if (!cJSON_IsArray(vals)) continue;
-    const int nblocks = cJSON_GetArraySize(vals);
-    cJSON *blk;
-    cJSON_ArrayForEach(blk, vals) {
-      cJSON *vlist = cJSON_GetObjectItem(blk, "value");
+    cJSON *block;
+    cJSON_ArrayForEach(block, vals) {
+      cJSON *vlist = cJSON_GetObjectItem(block, "value");
       if (!cJSON_IsArray(vlist)) continue;
       int nv = cJSON_GetArraySize(vlist);
       if (nv == 0) continue;
+      /* The iv service returns the reading(s) in the requested window, newest
+       * last; with no window it returns one. Take the newest. */
       cJSON *last = cJSON_GetArrayItem(vlist, nv - 1);
       const char *vs = jo_sv(last, "value");
       const char *when = jo_sv(last, "dateTime");
@@ -103,51 +130,55 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
       double v = strtod(vs, &end);
       if (end == vs) continue;
 
-      /* method identity, as the upstream stated it */
-      char mid[32] = {0};
-      const char *mdesc = NULL;
-      cJSON *ml = cJSON_GetObjectItem(blk, "method");
-      if (cJSON_IsArray(ml)) {
-        cJSON *m;
-        cJSON_ArrayForEach(m, ml) {
-          cJSON *idv = cJSON_GetObjectItem(m, "methodID");
-          if (!mid[0] && cJSON_IsNumber(idv))
-            snprintf(mid, sizeof mid, "%lld", (long long)idv->valuedouble);
-          else if (!mid[0] && cJSON_IsString(idv) && idv->valuestring[0])
-            snprintf(mid, sizeof mid, "%.31s", idv->valuestring);
-          if (!mdesc) mdesc = jo_sv(m, "methodDescription");
+      /* method: [{methodID, methodDescription}] — the block's identity */
+      const char *method_id = NULL, *method_desc = NULL;
+      cJSON *meth = cJSON_GetObjectItem(block, "method");
+      char midbuf[32] = "";
+      /* A value block carries exactly one method — the block IS the method,
+       * which is why a two-method gauge answers with two blocks (both of which
+       * are now emitted) rather than one block with two methods. */
+      if (cJSON_IsArray(meth) && cJSON_GetArraySize(meth) > 0) {
+        cJSON *m0 = cJSON_GetArrayItem(meth, 0);  /* exhaustive-ok: one method per value block; extra methods arrive as extra blocks, and every block is emitted */
+        cJSON *mid = cJSON_GetObjectItem(m0, "methodID");
+        if (cJSON_IsNumber(mid)) {
+          snprintf(midbuf, sizeof midbuf, "%lld", (long long)mid->valuedouble);
+          method_id = midbuf;
+        } else {
+          method_id = jo_sv(m0, "methodID");
         }
+        method_desc = jo_sv(m0, "methodDescription");
       }
 
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "site_name", site);
       if (site_code) cJSON_AddStringToObject(p, "site_code", site_code);
+      if (sc_all && cJSON_GetArraySize(sc_all) > 1)
+        cJSON_AddItemToObject(p, "site_codes", cJSON_Duplicate(sc_all, 1));
       cJSON_AddStringToObject(p, "parameter_cd", pcode);
+      if (vc_all && cJSON_GetArraySize(vc_all) > 1)
+        cJSON_AddItemToObject(p, "variable_codes", cJSON_Duplicate(vc_all, 1));
       if (vname) cJSON_AddStringToObject(p, "parameter_name", vname);
       cJSON_AddNumberToObject(p, "value", v);
       cJSON_AddStringToObject(p, "unit", unit);
       cJSON_AddStringToObject(p, "observed_at", when);
+      if (method_id) cJSON_AddStringToObject(p, "method_id", method_id);
+      if (method_desc) cJSON_AddStringToObject(p, "method_description", method_desc);
+      cJSON *quals = cJSON_GetObjectItem(last, "qualifiers");
+      if (cJSON_IsArray(quals) && cJSON_GetArraySize(quals) > 0)
+        cJSON_AddItemToObject(p, "qualifiers", cJSON_Duplicate(quals, 1));
       cJSON_AddStringToObject(p, "state", st);
-      if (mid[0]) cJSON_AddStringToObject(p, "method_id", mid);
-      if (mdesc)  cJSON_AddStringToObject(p, "method_description", mdesc);
-      if (nblocks > 1) cJSON_AddNumberToObject(p, "method_count", nblocks);
       cJSON_AddStringToObject(p, "disclaimer", DISCLAIMER);
       char *pj = cJSON_PrintUnformatted(p);
       cJSON_Delete(p);
 
-      /* Key on site+parameter, plus the method when the series carries more
-       * than one — otherwise the second block would overwrite the first. */
-      char key[192], title[352];
-      if (nblocks > 1 && mid[0])
-        snprintf(key, sizeof key, "%s|%s|%s", site_code ? site_code : site,
-                 pcode, mid);
-      else
-        snprintf(key, sizeof key, "%s|%s", site_code ? site_code : site, pcode);
+      char key[224], title[384];
+      snprintf(key, sizeof key, "%s|%s%s%s", site_code ? site_code : site,
+               pcode, method_id ? "|" : "", method_id ? method_id : "");
       snprintf(title, sizeof title, "%s: %s %.3f %s%s%s", site,
                strcmp(pcode, "00060") == 0 ? "discharge" :
                strcmp(pcode, "00065") == 0 ? "gage height" : pcode, v, unit,
-               (nblocks > 1 && mdesc) ? " · " : "",
-               (nblocks > 1 && mdesc) ? mdesc : "");
+               (method_desc && method_desc[0]) ? " " : "",
+               (method_desc && method_desc[0]) ? method_desc : "");
 
       intel_item row = {0};
       row.remote_key      = key;
@@ -164,6 +195,8 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
       if (sink->emit(sink, &row) >= 0) n++;
       free(pj);
     }
+    cJSON_Delete(sc_all);
+    cJSON_Delete(vc_all);
   }
   cJSON_Delete(doc);
   return n;

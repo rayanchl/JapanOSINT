@@ -246,7 +246,7 @@ VJSON(ro_data_gov_ro_orgs, "ro-data-gov-ro-orgs", "Data.Gov.RO - Official Romani
 
 VJSON(ro_data_gov_ro_tags, "ro-data-gov-ro-tags", "Data.Gov.RO - Official Romanian OD Portal — tags (Romania)", "Data.Gov.RO - Official Romanian OD Portal — tags (Romania)",
   "ro_opendata", "opendata",
-  "https://data.gov.ro/api/3/action/tag_list",
+  "https://data.gov.ro/api/3/action/tag_list?all_fields=true",
   "result",
   "ro", "[\"ro\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at data.gov.ro.");

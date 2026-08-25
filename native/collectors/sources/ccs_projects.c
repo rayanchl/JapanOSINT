@@ -12,6 +12,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/geojson.h"
+#include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -80,9 +81,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int live = (matched >= 5);
 
   char iso[32];
-  time_t now = time(NULL);
-  struct tm tmv; gmtime_r(&now, &tmv);
-  strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &tmv);
+  jo_now_iso_ms(iso, sizeof iso);        /* iso[0] == 0 when unrenderable */
 
   cJSON *features = cJSON_CreateArray();
   if (live) {
@@ -104,7 +103,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON_AddItemToArray(ops, cJSON_CreateString(pr->operators[k]));
       cJSON_AddItemToObject(p, "operators", ops);
       cJSON_AddStringToObject(p, "operator_lead", pr->operators[0]);
-      cJSON_AddStringToObject(p, "verified_at", iso);   /* live ? iso : null */
+      /* live ? iso : null - and null too when the clock cannot be rendered */
+      if (iso[0]) cJSON_AddStringToObject(p, "verified_at", iso);
+      else        cJSON_AddNullToObject(p, "verified_at");
       /* AUDIT NOTE (slice a3): only the NAME of each project is confirmed
        * against the live JOGMEC page (that is all `matched` counts). The
        * coordinates, operator lists, region and storage_type in PROJECTS[]

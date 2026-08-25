@@ -60,9 +60,16 @@ static void add_str_or_null(cJSON *o, const char *k, const char *v) {
 static void iso_now(char *buf, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
   struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-           tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-           tm.tm_hour, tm.tm_min, tm.tm_sec, (int)(tv.tv_usec / 1000));
+  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
+   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
+   * fixed 24-char stamp "may be truncated". The modulos are identity for
+   * every value gmtime_r can return and make the 24 provable, not merely
+   * true. */
+  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 
 /* ── cursor codec (byte-identical to intelapi.c) ───────────────────────────── */

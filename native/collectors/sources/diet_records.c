@@ -34,10 +34,21 @@ static void add_str(cJSON *o, const char *k, const char *v) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t now = time(NULL), from = now - WINDOW_DAYS * 86400;
-  struct tm gt, gf; gmtime_r(&now, &gt); gmtime_r(&from, &gf);
+  /* strftime rather than snprintf("%04d-%02d-%02d", tm_year + 1900, …): tm_year
+   * is an int the compiler cannot bound, so that form can emit up to 33 bytes
+   * into these 11-byte buffers and -Wformat-truncation says so. strftime is
+   * bounded by construction — it writes nothing and returns 0 rather than
+   * cutting a date in half. The rendering is identical for every year this can
+   * see. gmtime_r's NULL return is checked too; it was not before, and reading
+   * an unset `struct tm` would have put a garbage window on the query. */
+  struct tm gt, gf;
   char to_s[11], from_s[11];
-  snprintf(to_s,   sizeof to_s,   "%04d-%02d-%02d", gt.tm_year+1900, gt.tm_mon+1, gt.tm_mday);
-  snprintf(from_s, sizeof from_s, "%04d-%02d-%02d", gf.tm_year+1900, gf.tm_mon+1, gf.tm_mday);
+  if (!gmtime_r(&now, &gt) || !gmtime_r(&from, &gf) ||
+      !strftime(to_s,   sizeof to_s,   "%Y-%m-%d", &gt) ||
+      !strftime(from_s, sizeof from_s, "%Y-%m-%d", &gf)) {
+    fprintf(stderr, "[diet-records] cannot render the query window as a date\n");
+    return -1;
+  }
 
   /* Walk every page of the window. The old MAX_RECORDS=300 stopped mid-window,
    * so a busy sitting week lost its later speeches even though the API would

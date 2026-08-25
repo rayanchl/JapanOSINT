@@ -32,7 +32,8 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   }
 
   const char *op = ov_tag(el, "operator");
-  cJSON_AddStringToObject(p, "operator", op ? op : "unknown");
+  if (op) cJSON_AddStringToObject(p, "operator", op);
+  else cJSON_AddItemToObject(p, "operator", cJSON_CreateNull());
 
   const char *mm = ov_tag(el, "man_made");
   const char *ind = ov_tag(el, "industrial");

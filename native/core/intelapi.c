@@ -49,9 +49,16 @@ static void add_str_or_null(cJSON *o, const char *k, const char *v) {
 static void iso_now(char *buf, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
   struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-           tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-           tm.tm_hour, tm.tm_min, tm.tm_sec, (int)(tv.tv_usec / 1000));
+  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
+   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
+   * fixed 24-char stamp "may be truncated". The modulos are identity for
+   * every value gmtime_r can return and make the 24 provable, not merely
+   * true. */
+  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 
 /* Buffer.from(str,'utf8').toString('base64url') — no padding, +/ → -_ */
@@ -60,6 +67,7 @@ static char *b64url(const char *in) {
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
   size_t len = strlen(in);
   char *out = malloc(((len + 2) / 3) * 4 + 1);
+  if (!out) return NULL;   /* the sibling copies in aoiapi.c and timelineapi.c already check */
   size_t o = 0;
   for (size_t i = 0; i < len; i += 3) {
     unsigned a = (unsigned char)in[i];
@@ -410,6 +418,36 @@ char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddItemToObject(meta, "filters", filters);
 
+  /* DISCLOSE A DROPPED TEXT FILTER. Dropping it is deliberate (see the comment
+   * on matchq above: an unparseable q degrades to "unfiltered" rather than to
+   * a 500, the same as any other unusable filter here). The BUG was that
+   * nothing said so. A q of pure FTS metacharacters — "'", "^", "((((", "~",
+   * "-", "%", "_", "{" — sanitizes to no usable token, the MATCH is not
+   * applied, the WHOLE CORPUS comes back, and meta.filters.q still echoes the
+   * raw input, so the response is indistinguishable from a filtered one that
+   * genuinely matched everything. On /api/intel/search that reads as "your
+   * search found 4 things" when it means "your search was not run".
+   *
+   * `q_applied` therefore appears whenever a caller supplied any text at all,
+   * and `notes` carries the reason code in the spelling timelineapi.c already
+   * uses for "we did something other than what you asked" (cursor_ignored,
+   * case_items_table_missing). The result set is NOT changed — this only makes
+   * the envelope honest about what produced it.
+   *
+   * Both keys are omitted entirely when no q/q_alt was sent, which is also
+   * what keeps the /api/intel/items?limit=10 contract fixture byte-identical:
+   * a request with no text filter has nothing to disclose. */
+  { int asked = (Q && ((Q->q && *Q->q) || (Q->q_alt && *Q->q_alt)));
+    if (asked) {
+      cJSON_AddBoolToObject(meta, "q_applied", has_q ? 1 : 0);
+      if (!has_q) {
+        cJSON *notes = cJSON_CreateArray();
+        cJSON_AddItemToArray(notes,
+          cJSON_CreateString("q_ignored_no_searchable_token"));
+        cJSON_AddItemToObject(meta, "notes", notes);
+      }
+    } }
+
   cJSON *env = cJSON_CreateObject();
   cJSON_AddItemToObject(env, "data", data);
   cJSON_AddItemToObject(env, "page", page);
@@ -611,8 +649,15 @@ char *intelapi_intel_sources(db_handle *db) {
   if (sqlite3_prepare_v2(db->h, AQ, -1, &s, NULL) != SQLITE_OK) return NULL;
   int cap = 64, na = 0;
   agg_row *A = malloc(cap * sizeof *A);
+  if (!A) { sqlite3_finalize(s); return NULL; }
   while (sqlite3_step(s) == SQLITE_ROW) {
-    if (na == cap) { cap *= 2; A = realloc(A, cap * sizeof *A); }
+    /* An unchecked realloc here leaked the old block AND wrote through the
+     * NULL on the very next line. */
+    if (na == cap) {
+      agg_row *NA = realloc(A, (size_t)cap * 2 * sizeof *A);
+      if (!NA) break;
+      A = NA; cap *= 2;
+    }
     agg_row *r = &A[na++];
     snprintf(r->src, sizeof r->src, "%s",
              (const char *)sqlite3_column_text(s, 0));

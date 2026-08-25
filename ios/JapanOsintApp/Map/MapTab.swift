@@ -272,6 +272,15 @@ struct MapTab: View {
             ForEach(visibleFeatures, id: \.id) { feat in
                 content(for: feat)
             }
+            // Heatmap-modality layers (server-declared, core/layers.def)
+            // render as density cells, never as one pin per record. Each
+            // cell is the count of REAL records binned into it; nothing is
+            // smoothed in from outside the data.
+            ForEach(heatmapCells) { cell in
+                MapCircle(center: cell.center, radius: cell.radius)
+                    .foregroundStyle(cell.color.opacity(cell.opacity))
+                    .mapOverlayLevel(level: .aboveRoads)
+            }
             if settings.liveTrainsEnabled
                 || settings.liveSubwaysEnabled
                 || settings.liveBusesEnabled {
@@ -766,7 +775,10 @@ struct MapTab: View {
 
             Spacer()
 
-            Text("\(visibleFeatures.count) features")
+            let heat = heatmapRecordCount
+            Text(heat > 0
+                 ? "\(visibleFeatures.count) features · \(heat.formatted()) in heatmap"
+                 : "\(visibleFeatures.count) features")
                 .font(.caption2)
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
@@ -830,6 +842,19 @@ struct MapTab: View {
         var out: [GeoFeature] = []
         for id in settings.activeLayerIds {
             guard let feats = featuresByLayer[id] else { continue }
+            // Heatmap layers render through `heatmapCells`; their points
+            // must not ALSO appear as pins (a crime-density layer and a
+            // crime-points layer are distinct by design — see layers.def).
+            if registry.layer(for: id)?.renderModality == .heatmap {
+                let shapesOnly = feats.filter {
+                    switch $0.geometry {
+                    case .point, .multiPoint: return false
+                    default:                  return true
+                    }
+                }
+                out.append(contentsOf: decimate(cull(shapesOnly), to: shapeCap))
+                continue
+            }
 
             // Split by geometry family so each gets its own cap.
             var points: [GeoFeature] = []
@@ -847,6 +872,84 @@ struct MapTab: View {
             out.append(contentsOf: decimate(cull(shapes), to: shapeCap))
         }
         return out
+    }
+
+    // MARK: - Heatmap modality
+
+    /// One density cell of a heatmap-modality layer: the count of real point
+    /// records that fell into a grid square of the current viewport.
+    struct HeatCell: Identifiable {
+        let id: String
+        let center: CLLocationCoordinate2D
+        let radius: CLLocationDistance
+        let color: Color
+        let opacity: Double
+        let count: Int
+    }
+
+    /// Grid the viewport (~36 cells across) and bin every point/multiPoint
+    /// record of each active heatmap layer into it. Cell opacity scales with
+    /// count relative to the densest cell of that layer, so the picture is
+    /// the data's own distribution and not a fixed palette. No cell is
+    /// emitted for a square with zero records.
+    private var heatmapCells: [HeatCell] {
+        let rect = visibleRect ?? MKMapRect.world
+        let cellsAcross = 36.0
+        let cellSize = max(rect.size.width / cellsAcross, 1)
+        // Radius in metres from the cell's map-point width at the viewport's
+        // mid-latitude; 0.62 keeps neighbouring circles just overlapping.
+        let mpm = MKMapPointsPerMeterAtLatitude(rect.midCoordinate.latitude)
+        let radius = max(cellSize / max(mpm, 1e-9) * 0.62, 5)
+        let padded = rect.insetBy(dx: -cellSize, dy: -cellSize)
+
+        var out: [HeatCell] = []
+        for id in settings.activeLayerIds {
+            guard let layer = registry.layer(for: id),
+                  layer.renderModality == .heatmap,
+                  let feats = featuresByLayer[id] else { continue }
+            let color = registry.color(for: id)
+            let layerOpacity = settings.opacity(for: id)
+
+            var bins: [Int: (x: Int, y: Int, n: Int)] = [:]
+            func bin(_ c: CLLocationCoordinate2D) {
+                let p = MKMapPoint(c)
+                guard padded.contains(p) else { return }
+                let gx = Int(((p.x - rect.origin.x) / cellSize).rounded(.down))
+                let gy = Int(((p.y - rect.origin.y) / cellSize).rounded(.down))
+                let key = gx &* 100_003 &+ gy
+                bins[key, default: (gx, gy, 0)].n += 1
+            }
+            for f in feats {
+                switch f.geometry {
+                case .point(let c):        bin(c)
+                case .multiPoint(let cs):  cs.forEach(bin)
+                default:                   continue
+                }
+            }
+            guard let peak = bins.values.map(\.n).max(), peak > 0 else { continue }
+            for (_, b) in bins {
+                let cx = rect.origin.x + (Double(b.x) + 0.5) * cellSize
+                let cy = rect.origin.y + (Double(b.y) + 0.5) * cellSize
+                // sqrt compresses the range so a single hot cell doesn't
+                // wash every other cell out to invisibility.
+                let rel = (Double(b.n) / Double(peak)).squareRoot()
+                out.append(HeatCell(
+                    id: "\(id)#\(b.x),\(b.y)",
+                    center: MKMapPoint(x: cx, y: cy).coordinate,
+                    radius: radius,
+                    color: color,
+                    opacity: layerOpacity * (0.18 + 0.62 * rel),
+                    count: b.n
+                ))
+            }
+        }
+        return out
+    }
+
+    /// Records currently aggregated into heatmap cells (in-band, so the
+    /// footer can state how many rows the density picture stands for).
+    private var heatmapRecordCount: Int {
+        heatmapCells.reduce(0) { $0 + $1.count }
     }
 
     /// Fetch a set of layers concurrently. Used both at cold-start (every

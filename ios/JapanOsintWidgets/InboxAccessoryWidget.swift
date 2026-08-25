@@ -25,6 +25,31 @@ struct InboxAccessoryView: View {
     @Environment(\.widgetFamily) private var family
 
     var body: some View {
+        // Every other widget gates on `connected` (AlertInboxWidget:24,
+        // QuakeWidget:23). Without it this one rendered a confident "0 unread"
+        // and a zeroed gauge when there was no snapshot to read — the most
+        // glanceable surface asserting the least-known fact.
+        if !entry.snapshot.connected {
+            unavailable
+        } else {
+            content
+        }
+    }
+
+    @ViewBuilder
+    private var unavailable: some View {
+        switch family {
+        case .accessoryInline:
+            Label("Alerts unavailable", systemImage: "wifi.exclamationmark")
+        case .accessoryCircular:
+            Image(systemName: "wifi.exclamationmark")
+        default:
+            WidgetDisconnected()
+        }
+    }
+
+    @ViewBuilder
+    private var content: some View {
         switch family {
         case .accessoryInline:
             // Inline gets one line of text and no custom layout.

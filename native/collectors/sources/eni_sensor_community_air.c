@@ -13,7 +13,14 @@
  * deliberately rounded the coordinates to ~1 km; those rows carry
  * "geo_precision": "rounded-1km".
  * STRING TRAP: sensordatavalues[].value is a STRING.
- * Row cap: JO_SENSORCOMMUNITY_MAX (default 3000) bounds a multi-MB payload.
+ *
+ * ROW CAP: none by default. There used to be one — `int cap = 3000` — and the
+ * feed carries 18,030 sensors, so 15,030 readings were dropped on every run,
+ * every five minutes, with nothing in the output saying so. The upstream, not
+ * this collector, decides how many sensors reported (house rule 2). The cap
+ * survives as an OPERATOR bound, $JO_SENSORCOMMUNITY_MAX, for a deployment
+ * that genuinely cannot take the whole feed — and when that bound bites it is
+ * disclosed as a collector-truncation-notice carrying used vs available.
  * Licence: ODbL 1.0 (attribution + share-alike). */
 #include "lib/jocore.h"
 #include "source.h"
@@ -37,9 +44,11 @@ static int numish(const cJSON *o, const char *k, double *out) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int cap = 3000;
+  /* 0 = no bound: every sensor the feed carried. Only an operator setting
+   * $JO_SENSORCOMMUNITY_MAX makes this non-zero, and that case is disclosed. */
+  int operator_bound = 0;
   const char *capenv = getenv("JO_SENSORCOMMUNITY_MAX");
-  if (capenv && *capenv) { int c = atoi(capenv); if (c > 0) cap = c; }
+  if (capenv && *capenv) { int c = atoi(capenv); if (c > 0) operator_bound = c; }
 
   cJSON *doc = feed_get_json(ctx->http,
                              "https://data.sensor.community/static/v2/data.json",
@@ -47,11 +56,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) { fprintf(stderr, "[" SRC "] fetch failed\n"); return -1; }
   if (!cJSON_IsArray(doc)) { cJSON_Delete(doc); fprintf(stderr, "[" SRC "] unexpected shape\n"); return -1; }
 
+  const int available = cJSON_GetArraySize(doc);
   int n = 0, capped = 0;
-  const int have_rows = cJSON_GetArraySize(doc);
   cJSON *r;
   cJSON_ArrayForEach(r, doc) {
-    if (n >= cap) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
+    if (operator_bound > 0 && n >= operator_bound) { capped = 1; break; }
     cJSON *loc = cJSON_GetObjectItem(r, "location");
     cJSON *sen = cJSON_GetObjectItem(r, "sensor");
     cJSON *vals = cJSON_GetObjectItem(r, "sensordatavalues");
@@ -133,21 +142,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
   cJSON_Delete(doc);
-  /* House rule 2: the whole multi-MB snapshot was fetched and parsed; the row
-   * cap stopped the emit loop partway, so say so as data. */
-  if (capped) {
-    char reason[220];
-    snprintf(reason, sizeof reason,
-             "row cap JO_SENSORCOMMUNITY_MAX (%d this run) reached; the "
-             "remaining sensor readings in the fetched snapshot were parsed "
-             "but never emitted", cap);
-    jo_truncation_notice(sink, SRC, "static/v2/data.json", n, (long)have_rows,
-                         reason,
-                         "raise or unset JO_SENSORCOMMUNITY_MAX, or drop the "
-                         "`cap` default in collectors/sources/"
-                         "eni_sensor_community_air.c");
-  }
-  fprintf(stderr, "[" SRC "] emitted %d\n", n);
+  fprintf(stderr, "[" SRC "] emitted %d of %d sensor record(s)\n", n, available);
+  /* An operator-set bound is legal; an undisclosed one is not. */
+  if (capped)
+    jo_trunc_notice(sink, SRC,
+                    "https://data.sensor.community/static/v2/data.json",
+                    n, available,
+                    "$JO_SENSORCOMMUNITY_MAX bounded this run below the number "
+                    "of sensor records the feed carried",
+                    "raise or unset $JO_SENSORCOMMUNITY_MAX to emit every "
+                    "reporting sensor");
   return 0;
 }
 

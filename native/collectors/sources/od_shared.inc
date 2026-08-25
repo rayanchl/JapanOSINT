@@ -1,13 +1,9 @@
-/* od_shared.inc — helpers shared by the od_* open-data collectors.
+/* od_shared.c — helpers shared by the od_* open-data collectors.
  *
- * Everything here is `static inline` and every od_*.c #includes it to get its
- * own private copy. No source_def is registered here.
- *
- * The extension is .inc, not .c, and that is load-bearing: the Makefile globs
- * collectors/sources with a .c extension, so as a .c this file was ALSO
- * compiled standalone —
- * a 55th translation unit that emitted no symbols and warned about nine of its
- * own helpers being unused, because in a standalone TU nothing calls them.
+ * Everything here is `static inline`, so this translation unit emits no
+ * symbols: the Makefile wildcard compiles it standalone (cleanly, and with no
+ * -Wunused-function noise) and every od_*.c #includes it to get its own
+ * private copy. No source_def is registered here.
  *
  * The rules this file exists to enforce once instead of 54 times:
  *   R1 every emitted field came back from the network;
@@ -20,7 +16,6 @@
 
 #include "source.h"
 #include "lib/feedlib.h"
-#include "lib/jocore.h"   /* jo_truncation_notice — house rule 2 disclosure */
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -175,7 +170,7 @@ static inline int od_geo_item(const cJSON *v, double *lat, double *lon) {
     return 0;
   }
   if (cJSON_IsArray(v) && cJSON_GetArraySize(v) >= 2) {
-    const cJSON *x = cJSON_GetArrayItem(v, 0), *y = cJSON_GetArrayItem(v, 1);
+    const cJSON *x = cJSON_GetArrayItem(v, 0), *y = cJSON_GetArrayItem(v, 1);  /* exhaustive-ok: fixed [lon,lat] coordinate pair, both components read */
     if (cJSON_IsNumber(x) && cJSON_IsNumber(y)) {
       lo = x->valuedouble; la = y->valuedouble;      /* GeoJSON order */
       if (od_ll_ok(la, lo)) { *lat = la; *lon = lo; return 1; }
@@ -595,6 +590,31 @@ static inline int od_js_row(intel_sink *sink, const od_jsctx *jc, int flat,
     pos[d] = rem % sz;
     rem /= sz;
   }
+  /* Identity for the sink. Without uid OR remote_key core/intel.c refuses the
+   * item (-1) and od_emit converts that to 0 — so every JSON-stat observation
+   * in the fleet was parsed, titled and then dropped at the sink, silently
+   * (measured: stats-se-scb-table stored 0 of 2 live observations). The key is
+   * the dimension codes the observation is addressed by — the upstream's own
+   * coordinates — so it is stable when the table's selection grows; the flat
+   * index alone is NOT (it shifts with the selection and would re-insert the
+   * whole table as new rows on every layout change), so it only backstops a
+   * dimension whose code list is missing. */
+  char rk[320];
+  int rkoff = 0;
+  for (int d = 0; d < jc->ndim; d++) {
+    const cJSON *rdim = cJSON_GetObjectItem(jc->dimension, jc->ids[d]);
+    const char *rcode = od_js_code(rdim, pos[d]);
+    if (rkoff < (int)sizeof rk - 1) {
+      if (rcode)
+        rkoff += snprintf(rk + rkoff, sizeof rk - (size_t)rkoff, "%s%s=%s",
+                          rkoff ? "|" : "", jc->ids[d], rcode);
+      else
+        rkoff += snprintf(rk + rkoff, sizeof rk - (size_t)rkoff, "%s%s=#%d",
+                          rkoff ? "|" : "", jc->ids[d], pos[d]);
+      if (rkoff > (int)sizeof rk - 1) rkoff = (int)sizeof rk - 1;
+    }
+  }
+  if (rkoff == 0) snprintf(rk, sizeof rk, "obs-%d", flat);
   for (int d = 0; d < jc->ndim; d++) {
     const cJSON *dim = cJSON_GetObjectItem(jc->dimension, jc->ids[d]);
     const char *code = od_js_code(dim, pos[d]);
@@ -617,23 +637,11 @@ static inline int od_js_row(intel_sink *sink, const od_jsctx *jc, int flat,
 
   intel_item it = {0};
   it.title = title;
+  it.remote_key = rk;
   it.link = jc->link;
   it.record_type = jc->record_type;
   it.tags_json = jc->tags_json;
   return od_emit(sink, &it, props);
-}
-
-/* Would od_js_row materialise this observation? JSON-stat nulls are gaps, not
- * records being withheld, so they must not be counted as "available" in a
- * truncation notice. Same test as od_js_row's head, and only that. */
-static inline int od_js_usable(const cJSON *v) {
-  if (cJSON_IsNumber(v)) return 1;
-  if (cJSON_IsString(v) && v->valuestring && v->valuestring[0]) {
-    char *end = NULL;
-    (void)strtod(v->valuestring, &end);
-    return (end && end != v->valuestring) ? 1 : 0;
-  }
-  return 0;
 }
 
 /* JSON-stat 1.x ({"dataset":{…}}) and 2.0 (class=dataset at the root) reader.
@@ -684,44 +692,73 @@ static inline int od_jsonstat_collect(const source_ctx *ctx, intel_sink *sink,
   jc.ndim = d;
   if (jc.ndim == 0) { cJSON_Delete(doc); return -1; }
 
-  /* House rule 2: `max_rows` stops the emit loop, but the whole table is
-   * already in hand — so keep walking it and COUNT what is left rather than
-   * breaking out and reporting an unknown. A JSON-stat table routinely holds
-   * tens of thousands of observations against a caller cap of 300. */
-  int n = 0, i = 0, rest = 0;
+  int n = 0, i = 0;
   const cJSON *v;
   if (cJSON_IsArray(value)) {
     cJSON_ArrayForEach(v, value) {
-      if (n >= max_rows) { if (od_js_usable(v)) rest++; i++; continue; }
+      if (n >= max_rows) break;
       n += od_js_row(sink, &jc, i, v);
       i++;
     }
   } else {
     cJSON_ArrayForEach(v, value) {                 /* sparse object form */
+      if (n >= max_rows) break;
       if (!v->string) continue;
-      if (n >= max_rows) { if (od_js_usable(v)) rest++; continue; }
       n += od_js_row(sink, &jc, atoi(v->string), v);
     }
   }
-  if (rest > 0)
-    jo_truncation_notice(sink, ctx->source_id, url, n, (long)n + rest,
-                         "the caller's max_rows cap stopped the emit loop; the "
-                         "remaining non-null observations of this JSON-stat "
-                         "table were counted in the downloaded document but "
-                         "not emitted as rows",
-                         "raise the max_rows argument passed to "
-                         "od_jsonstat_collect() in this collector's run(), or "
-                         "narrow the query URL to the slice actually wanted");
   cJSON_Delete(doc);
   return n;
 }
 
 /* ------------------------------------------------------------- SDMX-JSON  */
 
+/* SDMX-JSON attaches attributes as POSITIONAL index arrays: entry i of `idx`
+ * (counting from `from`) is an index into defs[i - from].values[], or null for
+ * "this attribute is not set here". Resolve every one of them onto `dst`.
+ *
+ * This is where an SDMX series keeps its TITLE, TITLE_COMPL, UNIT, UNIT_MULT,
+ * DECIMALS, COLLECTION and SOURCE_AGENCY, and where an observation keeps
+ * OBS_STATUS — whether the figure is a normal value, provisional, or an
+ * estimate. The reader used to take observation element 0 (the number) and
+ * ignore the rest of the array, and never looked at series attributes at all,
+ * so an ECB observation reached the store as a bare float: 20 series-level
+ * fields and 4 observation-level fields per row, dropped at the collector. */
+static inline void od_sdmx_attrs(cJSON *dst, const cJSON *defs,
+                                 const cJSON *idx, int from) {
+  if (!dst || !cJSON_IsArray(defs) || !cJSON_IsArray(idx)) return;
+  int nd = cJSON_GetArraySize(defs), ni = cJSON_GetArraySize(idx);
+  for (int i = from; i < ni && (i - from) < nd; i++) {
+    const cJSON *def = cJSON_GetArrayItem(defs, i - from);
+    const char *aid = def ? od_s(def, "id") : NULL;
+    if (!aid) continue;
+    const cJSON *at = cJSON_GetArrayItem(idx, i);
+    if (!at || cJSON_IsNull(at)) continue;      /* not set — not the same as empty */
+    const cJSON *vals = cJSON_GetObjectItem(def, "values");
+    const cJSON *v = (cJSON_IsNumber(at) && cJSON_IsArray(vals))
+                       ? cJSON_GetArrayItem(vals, (int) at->valuedouble) : NULL;
+    const char *iv = v ? od_s(v, "id") : NULL;
+    const char *nm = v ? od_s(v, "name") : NULL;
+    if (iv || nm) {
+      cJSON_AddStringToObject(dst, aid, iv ? iv : nm);
+      if (iv && nm && strcmp(iv, nm) != 0) {    /* keep the label too */
+        char k2[96];
+        snprintf(k2, sizeof k2, "%s_name", aid);
+        cJSON_AddStringToObject(dst, k2, nm);
+      }
+    } else if (cJSON_IsString(at) && at->valuestring[0]) {
+      cJSON_AddStringToObject(dst, aid, at->valuestring);   /* inline value */
+    } else if (cJSON_IsNumber(at)) {
+      cJSON_AddNumberToObject(dst, aid, at->valuedouble);   /* index we cannot resolve */
+    }
+  }
+}
+
 /* SDMX-JSON (ECB Data Portal, Bundesbank). Observation keys are POSITIONAL
- * indices into structure.dimensions.observation[0].values[] — they must be
- * joined against that list to recover the real period, and the series key
- * ("0:0:0:0:0") is likewise positional into structure.dimensions.series[].
+ * indices into structure.dimensions.observation[] — colon-joined, one
+ * component per observation dimension — and must be joined against those lists
+ * to recover the real period; the series key ("0:0:0:0:0") is likewise
+ * positional into structure.dimensions.series[].
  * Values arrive as numbers (ECB) or strings (Bundesbank).
  * Returns #emitted, or -1 on a fetch/parse failure. */
 static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
@@ -742,32 +779,32 @@ static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
                            ? cJSON_GetObjectItem(dims, "observation") : NULL;
   const cJSON *serdims = cJSON_IsObject(dims)
                            ? cJSON_GetObjectItem(dims, "series") : NULL;
+  const cJSON *sattrs = cJSON_IsObject(structure)
+                          ? cJSON_GetObjectItem(structure, "attributes") : NULL;
+  const cJSON *serattrs = cJSON_IsObject(sattrs)
+                            ? cJSON_GetObjectItem(sattrs, "series") : NULL;
+  const cJSON *obsattrs = cJSON_IsObject(sattrs)
+                            ? cJSON_GetObjectItem(sattrs, "observation") : NULL;
+  /* observation[0] is only the SHAPE CHECK — that there is at least one
+   * observation dimension with a value list to decode against. The decode
+   * below walks every observation dimension, not just this one. */
   const cJSON *obsvals = cJSON_IsArray(obsdims) && cJSON_GetArraySize(obsdims) > 0
-      ? cJSON_GetObjectItem(cJSON_GetArrayItem(obsdims, 0), "values") : NULL;
+      ? cJSON_GetObjectItem(cJSON_GetArrayItem(obsdims, 0), "values") : NULL;  /* exhaustive-ok: shape check on the first observation dimension; the decode loop below walks all of them */
   if (!cJSON_IsArray(sets) || !cJSON_IsArray(obsvals)) {
     cJSON_Delete(doc);
     return -1;
   }
 
-  /* House rule 2: as in od_jsonstat_collect, once `max_rows` bites we keep
-   * walking the message and count the observations we are not emitting, so
-   * the notice below carries a real total instead of "unknown". */
-  int n = 0, rest = 0;
+  int n = 0;
   const cJSON *set;
   cJSON_ArrayForEach(set, sets) {
     const cJSON *series = cJSON_GetObjectItem(set, "series");
     if (!cJSON_IsObject(series)) continue;
     const cJSON *s;
     cJSON_ArrayForEach(s, series) {
+      if (n >= max_rows) break;
       const cJSON *obs = cJSON_GetObjectItem(s, "observations");
       if (!cJSON_IsObject(obs) || !s->string) continue;
-      if (n >= max_rows) {                    /* count only, decode nothing */
-        const cJSON *co;
-        cJSON_ArrayForEach(co, obs)
-          if (co->string && cJSON_IsArray(co) &&
-              od_js_usable(cJSON_GetArrayItem(co, 0))) rest++;
-        continue;
-      }
 
       /* decode the positional series key against structure.dimensions.series */
       char slabel[320];
@@ -798,16 +835,20 @@ static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
           p = dot ? dot + 1 : NULL;
           di++;
         }
+        /* …and the series' own attributes, which carry the human title, the
+         * unit and the compiling agency. Positional against
+         * structure.attributes.series[], from element 0. */
+        od_sdmx_attrs(skey, serattrs, cJSON_GetObjectItem(s, "attributes"), 0);
       }
 
       const cJSON *o;
       cJSON_ArrayForEach(o, obs) {
+        if (n >= max_rows) break;
         if (!o->string || !cJSON_IsArray(o)) continue;
-        if (n >= max_rows) {                  /* count only, decode nothing */
-          if (od_js_usable(cJSON_GetArrayItem(o, 0))) rest++;
-          continue;
-        }
-        const cJSON *first = cJSON_GetArrayItem(o, 0);
+        /* Element 0 is the number. Elements 1.. are attribute indices and are
+         * decoded below — dropping them used to send a provisional or
+         * estimated figure to the store indistinguishable from a final one. */
+        const cJSON *first = cJSON_GetArrayItem(o, 0);  /* exhaustive-ok: SDMX puts the observation VALUE at index 0; elements 1.. are attributes and od_sdmx_attrs resolves every one */
         double val;
         if (cJSON_IsNumber(first)) val = first->valuedouble;
         else if (cJSON_IsString(first) && first->valuestring[0]) {
@@ -816,23 +857,67 @@ static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
           if (!end || end == first->valuestring) continue;
         } else continue;               /* null observation → skip, not zero */
 
-        const cJSON *pv = cJSON_GetArrayItem(obsvals, atoi(o->string));
-        const char *period = pv ? od_s(pv, "id") : NULL;
-        if (!period && pv) period = od_s(pv, "name");
-        if (!period) continue;         /* cannot name the period → no row */
+        cJSON *props = skey ? cJSON_Duplicate(skey, 1) : cJSON_CreateObject();
+        if (!props) continue;
+
+        /* The observation key is colon-joined positional indices, ONE PER
+         * ENTRY of structure.dimensions.observation. Reading only the first
+         * component was right for a flow whose sole observation dimension is
+         * TIME_PERIOD and wrong for any other: "0:1" and "0:2" are distinct
+         * observations that both decoded to the same period, so they collided
+         * on one remote_key and the sink upserted the second over the first —
+         * a silent record loss. Decode every component. */
+        const char *period = NULL;
+        char okey[192];
+        int ooff = 0;
+        okey[0] = 0;
+        {
+          const char *pk = o->string;
+          int odi = 0;
+          while (pk && *pk) {
+            int pos = atoi(pk);
+            const cJSON *odim = cJSON_IsArray(obsdims)
+                                  ? cJSON_GetArrayItem(obsdims, odi) : NULL;
+            const cJSON *ovals = odim ? cJSON_GetObjectItem(odim, "values") : NULL;
+            const cJSON *ov = cJSON_IsArray(ovals)
+                                ? cJSON_GetArrayItem(ovals, pos) : NULL;
+            const char *oid = ov ? od_s(ov, "id") : NULL;
+            if (!oid && ov) oid = od_s(ov, "name");
+            const char *odid = odim ? od_s(odim, "id") : NULL;
+            if (odi == 0) period = oid;
+            else if (odid && oid) cJSON_AddStringToObject(props, odid, oid);
+            if (oid && ooff < (int) sizeof okey - 2) {
+              ooff += snprintf(okey + ooff, sizeof okey - (size_t) ooff,
+                               "%s%s", ooff ? "." : "", oid);
+              if (ooff > (int) sizeof okey - 1) ooff = (int) sizeof okey - 1;
+            }
+            const char *colon = strchr(pk, ':');
+            pk = colon ? colon + 1 : NULL;
+            odi++;
+          }
+        }
+        if (!period) { cJSON_Delete(props); continue; }  /* cannot name it → no row */
+
+        /* Observation-level attributes: OBS_STATUS, OBS_CONF, OBS_PRE_BREAK,
+         * OBS_COM — indices from element 1 onward. */
+        od_sdmx_attrs(props, obsattrs, o, 1);
 
         char title[420];
         snprintf(title, sizeof title, "%s %s = %g",
                  slabel[0] ? slabel : "series", period, val);
 
-        cJSON *props = skey ? cJSON_Duplicate(skey, 1) : cJSON_CreateObject();
-        if (!props) continue;
         cJSON_AddStringToObject(props, "period", period);
         cJSON_AddNumberToObject(props, "value", val);
         if (slabel[0]) cJSON_AddStringToObject(props, "series_key", slabel);
+        if (okey[0] && strcmp(okey, period) != 0)
+          cJSON_AddStringToObject(props, "observation_key", okey);
 
-        char rk[420];
-        snprintf(rk, sizeof rk, "%s|%s", slabel[0] ? slabel : "series", period);
+        /* Key on the FULL observation key, not just the period: with a second
+         * observation dimension the period alone is not unique within a
+         * series, and a colliding remote_key is a record lost to the upsert. */
+        char rk[620];
+        snprintf(rk, sizeof rk, "%s|%s", slabel[0] ? slabel : "series",
+                 okey[0] ? okey : period);
 
         intel_item it = {0};
         it.title = title;
@@ -846,16 +931,6 @@ static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
       if (skey) cJSON_Delete(skey);
     }
   }
-  if (rest > 0)
-    jo_truncation_notice(sink, ctx->source_id, url, n, (long)n + rest,
-                         "the caller's max_rows cap stopped the emit loop; the "
-                         "remaining numeric observations of this SDMX-JSON "
-                         "message were counted in the downloaded document but "
-                         "not emitted as rows",
-                         "raise the max_rows argument passed to "
-                         "od_sdmx_collect() in this collector's run(), or "
-                         "narrow the dataflow key / lastNObservations in the "
-                         "query URL");
   cJSON_Delete(doc);
   return n;
 }

@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "cam_centroids.inc"
 
 typedef struct { const char *k; const char *sv; int is_num; double nv;
                  int is_null; int is_bool; int bv; } kv;
@@ -76,81 +77,6 @@ static cJSON *make_feature(double lat, double lon, const char *name,
   return f;
 }
 
-typedef struct { const char *key; double lat, lon; } centroid;
-static const centroid PREFECTURE_CENTROIDS[] = {
-  {"hokkaido",43.2203,142.8635},{"aomori",40.7644,140.7400},
-  {"iwate",39.7036,141.1527},{"miyagi",38.2688,140.8719},
-  {"akita",39.7186,140.1024},{"yamagata",38.2404,140.3636},
-  {"fukushima",37.7503,140.4677},{"ibaraki",36.3418,140.4468},
-  {"tochigi",36.5657,139.8836},{"gunma",36.3906,139.0604},
-  {"saitama",35.8572,139.6489},{"chiba",35.6050,140.1234},
-  {"tokyo",35.6762,139.6503},{"kanagawa",35.4478,139.6425},
-  {"niigata",37.9161,139.0364},{"toyama",36.6953,137.2113},
-  {"ishikawa",36.5946,136.6256},{"fukui",36.0652,136.2216},
-  {"yamanashi",35.6639,138.5684},{"nagano",36.6513,138.1810},
-  {"gifu",35.3911,136.7222},{"shizuoka",34.9769,138.3831},
-  {"aichi",35.1802,136.9066},{"mie",34.7303,136.5086},
-  {"shiga",35.0045,135.8686},{"kyoto",35.0116,135.7681},
-  {"osaka",34.6937,135.5023},{"hyogo",34.6913,135.1830},
-  {"nara",34.6851,135.8050},{"wakayama",34.2261,135.1675},
-  {"tottori",35.5036,134.2383},{"shimane",35.4723,133.0505},
-  {"okayama",34.6618,133.9344},{"hiroshima",34.3966,132.4596},
-  {"yamaguchi",34.1859,131.4706},{"tokushima",34.0658,134.5593},
-  {"kagawa",34.3401,134.0434},{"ehime",33.8416,132.7657},
-  {"kochi",33.5597,133.5311},{"fukuoka",33.5902,130.4017},
-  {"saga",33.2494,130.2988},{"nagasaki",32.7448,129.8737},
-  {"kumamoto",32.7898,130.7417},{"oita",33.2382,131.6126},
-  {"miyazaki",31.9111,131.4239},{"kagoshima",31.5602,130.5581},
-  {"okinawa",26.3344,127.8056},
-  {"sapporo",43.0642,141.3469},{"yokohama",35.4437,139.6380},
-  {"nagoya",35.1815,136.9066},{"kobe",34.6901,135.1955},
-  {"sendai",38.2682,140.8694},{"nara_city",34.6851,135.8050},
-  {"nikko",36.7581,139.6117},{"nagasaki_city",32.7448,129.8737},
-  {"fuji",35.3606,138.7274},{"hakone",35.2323,139.1069},
-  {"asakusa",35.7148,139.7967},{"shibuya",35.6580,139.7016},
-  {"shinjuku",35.6938,139.7034},
-};
-#define N_CENTROIDS (sizeof PREFECTURE_CENTROIDS / sizeof *PREFECTURE_CENTROIDS)
-/* Index of the first city-level entry (entries before this are prefectures). */
-#define FIRST_CITY_IDX 47
-
-/* On match, sets *lat / *lon to the centroid and *prec to "city" or
- * "prefecture" depending on which table entry matched. Returns 1/0. */
-static int centroid_exact(const char *key, double *lat, double *lon,
-                          const char **prec) {
-  if (!key || !*key) return 0;
-  for (size_t i = 0; i < N_CENTROIDS; i++)
-    if (strcmp(PREFECTURE_CENTROIDS[i].key, key) == 0) {
-      *lat = PREFECTURE_CENTROIDS[i].lat;
-      *lon = PREFECTURE_CENTROIDS[i].lon;
-      *prec = (i >= FIRST_CITY_IDX) ? "city" : "prefecture";
-      return 1;
-    }
-  return 0;
-}
-
-static int guess_centroid(const char *text, double *lat, double *lon,
-                          const char **prec) {
-  if (!text || !*text) return 0;
-  char low[1024];
-  jo_lower_buf(text, low, sizeof low);
-  for (size_t i = 0; i < N_CENTROIDS; i++) {
-    const char *k = PREFECTURE_CENTROIDS[i].key;
-    char kb[64];
-    size_t j = 0;
-    for (; k[j] && j + 1 < sizeof kb; j++) kb[j] = k[j];
-    kb[j] = 0;
-    size_t kl = strlen(kb);
-    if (kl > 5 && strcmp(kb + kl - 5, "_city") == 0) kb[kl - 5] = 0;
-    if (strstr(low, kb)) {
-      *lat = PREFECTURE_CENTROIDS[i].lat;
-      *lon = PREFECTURE_CENTROIDS[i].lon;
-      *prec = (i >= FIRST_CITY_IDX) ? "city" : "prefecture";
-      return 1;
-    }
-  }
-  return 0;
-}
 
 static const char *next_anchor(const char *from, char *href, size_t hn,
                                char **inner_out) {
@@ -257,8 +183,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
      * so if no centroid matches we have no honest location → skip. */
     double lat, lon;
     const char *prec = NULL;
-    if (!centroid_exact(slug, &lat, &lon, &prec) &&
-        !guess_centroid(label ? label : "", &lat, &lon, &prec)) {
+    if (!cam_centroid_exact(slug, &lat, &lon, &prec) &&
+        !cam_centroid_find(label ? label : "", CAM_CENTROID_SCAN_1K,
+                           &lat, &lon, &prec)) {
       free(label);
       continue;
     }

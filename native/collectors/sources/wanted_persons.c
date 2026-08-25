@@ -91,6 +91,12 @@ static int is_namechar(const unsigned char *p, int *adv) {
   return 1;
 }
 
+/* One matcher buffer size for the whole file: the `m` that rx_find() and
+ * rx_find_age() write a match into, and the slots in run() that those matches
+ * are copied to. One constant so the two can never diverge again — see the
+ * collect block in run() for what a narrower slot silently did to the ages. */
+#define RX_MATCH_MAX 512 /* exhaustive-ok: bytes in one regex match, not a record cap */
+
 /* JS /(?:LBL)[^<>]{0,N}(CLASS{lo,hi})/g — find the next match starting at
  * or after *cur. LBL = one of the two alternatives (lit1/lit2). On a match
  * advance *cur past it (global lastIndex) and copy the full match (label +
@@ -282,27 +288,40 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char *html = feed_get_text(ctx->http, url, 10000);
     if (!html) continue;
 
-    /* collect all nameMatches / ageMatches / crimeMatches (global). */
-    char (*names)[256] = NULL; int nn = 0, nc = 0;
-    char (*ages)[64]  = NULL; int an = 0, ac = 0;
-    char (*crimes)[256] = NULL; int cn = 0, cc = 0;
+    /* collect all nameMatches / ageMatches / crimeMatches (global).
+     *
+     * Every slot is RX_MATCH_MAX, i.e. exactly the size of the `mbuf` the two
+     * matchers write into, so the copy out of mbuf is lossless by construction
+     * and there is no second, invisible truncation between the matcher and the
+     * store. They used to be 256 / 64 / 256 against a 512-byte mbuf, which
+     * -Wformat-truncation flagged and which was not merely theoretical for the
+     * ages array: rx_find_age's match runs label(6) + up to 10 gap codepoints
+     * (40 bytes) + 2 digits + AN UNBOUNDED WHITESPACE RUN + 歳/才(3). The
+     * `\s*` between the number and 歳 has no quantifier ceiling, so any
+     * prettyprinted page that wraps a line between "45" and "歳" — 13 bytes of
+     * indentation is enough — overran the 64-byte slot and the tail of the
+     * match was dropped on the floor. Sizing every slot to the matcher's own
+     * buffer is the fix that cannot come back. */
+    char (*names)[RX_MATCH_MAX] = NULL; int nn = 0, nc = 0;
+    char (*ages)[RX_MATCH_MAX]  = NULL; int an = 0, ac = 0;
+    char (*crimes)[RX_MATCH_MAX] = NULL; int cn = 0, cc = 0;
 
     const char *cur = html;
-    char mbuf[512], cbuf[256];
+    char mbuf[RX_MATCH_MAX], cbuf[256];
     /* /(?:氏名|被疑者)[^<>]{0,40}([^\s<>「」]{2,8})/g */
     while (rx_find(&cur, "\xe6\xb0\x8f\xe5\x90\x8d",
                    "\xe8\xa2\xab\xe7\x96\x91\xe8\x80\x85", 40, 2, 8,
                    mbuf, sizeof mbuf, cbuf, sizeof cbuf)) {
       if (nn == nc) { nc = nc ? nc*2 : 16;
         names = realloc(names, (size_t)nc * sizeof *names); }
-      snprintf(names[nn++], 256, "%s", mbuf);
+      snprintf(names[nn++], sizeof names[0], "%s", mbuf);
     }
     cur = html;
     /* /(?:年齢|当時)[^<>]{0,10}(\d{1,2})\s*(?:歳|才)/g */
     while (rx_find_age(&cur, mbuf, sizeof mbuf)) {
       if (an == ac) { ac = ac ? ac*2 : 16;
         ages = realloc(ages, (size_t)ac * sizeof *ages); }
-      snprintf(ages[an++], 64, "%s", mbuf);
+      snprintf(ages[an++], sizeof ages[0], "%s", mbuf);
     }
     cur = html;
     /* /(?:罪名|容疑)[^<>]{0,30}([^\s<>「」]{2,16})/g */
@@ -311,7 +330,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                    mbuf, sizeof mbuf, cbuf, sizeof cbuf)) {
       if (cn == cc) { cc = cc ? cc*2 : 16;
         crimes = realloc(crimes, (size_t)cc * sizeof *crimes); }
-      snprintf(crimes[cn++], 256, "%s", mbuf);
+      snprintf(crimes[cn++], sizeof crimes[0], "%s", mbuf);
     }
 
     /* caseCount used to be max(names, ages, crimes) — three INDEPENDENT regex

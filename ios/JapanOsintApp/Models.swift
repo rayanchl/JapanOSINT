@@ -37,12 +37,38 @@ nonisolated struct LayerDef: Codable, Identifiable, Hashable, Sendable {
     let category: String?
     let sources: [LayerSourceRef]?
 
+    /// v2 taxonomy (server core/layers.def): what kind of data every member
+    /// carries, e.g. "crime-report", "satellite-image". nil on layers nobody
+    /// has classified yet — the server sends JSON null rather than a guess.
+    let dataType: String?
+
+    /// v2 taxonomy: how the layer renders — "point" | "heatmap" | "line" |
+    /// "polygon" | "raster". DECLARED server-side, never inferred; a
+    /// crime-report point layer and a crime-density heatmap layer are
+    /// distinct layers that never share sources. nil = mixed/undeclared.
+    let modality: String?
+
+    /// v2: "curated" (layers.def row) | "declared" (source .layer field) |
+    /// "generated" (per-record_type catch-all keeping every geocoded row
+    /// reachable). nil from a pre-v2 server.
+    let kind: String?
+
+    /// v2: measured count of geocoded rows this layer serves; nil when the
+    /// server could not take the count (never a fabricated 0).
+    let recordsGeocoded: Int?
+
     /// Time-slider disposition emitted by /api/layers:
     ///   `temporal` present → time-coded (slider applies)
     ///   `liveOnly == true` → no historical archive, hidden in replay
     ///   neither present     → static (always rendered, even in replay)
     let temporal: LayerTemporal?
     let liveOnly: Bool?
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, category, sources, temporal, liveOnly, modality, kind
+        case dataType = "data_type"
+        case recordsGeocoded = "records_geocoded"
+    }
 
     /// Backend convention: layer id maps to /api/data/<id> for live collector output.
     var dataEndpoint: String { "/api/data/\(id)" }
@@ -57,6 +83,56 @@ nonisolated struct LayerDef: Codable, Identifiable, Hashable, Sendable {
     /// True for static reference data (boundaries, infra dumps) — rendered
     /// unchanged at every slider position.
     var isStatic: Bool { temporal == nil && liveOnly != true }
+
+    /// The server-declared modality, typed. `.undeclared` when the server
+    /// sent null (mixed / not yet classified) or a value this build does
+    /// not know — both render by each feature's own geometry, which is the
+    /// only honest thing to do without a declaration.
+    var renderModality: LayerModality {
+        LayerModality(rawValue: modality ?? "") ?? .undeclared
+    }
+}
+
+/// How a layer renders on the map. Mirrors `core/layers.def`'s modality
+/// column one-for-one; it is DECLARED server-side and never inferred here.
+nonisolated enum LayerModality: String, Sendable {
+    case point, heatmap, line, polygon, raster
+    case undeclared = ""
+
+    /// Short user-facing label for the Layers tab badge; nil = no badge.
+    var label: String? {
+        switch self {
+        case .point:      return "Points"
+        case .heatmap:    return "Heatmap"
+        case .line:       return "Lines"
+        case .polygon:    return "Areas"
+        case .raster:     return "Raster"
+        case .undeclared: return nil
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .point:      return "mappin"
+        case .heatmap:    return "square.grid.3x3.fill"
+        case .line:       return "line.diagonal"
+        case .polygon:    return "pentagon"
+        case .raster:     return "square.stack.3d.up"
+        case .undeclared: return "questionmark.circle"
+        }
+    }
+}
+
+extension LayerDef {
+    /// Pre-v2 construction shape, kept so local placeholder layers
+    /// (SourceDashboardTab, MapTab) don't have to spell out the taxonomy
+    /// fields they cannot know — nil there means exactly "undeclared".
+    init(id: String, name: String, category: String?, sources: [LayerSourceRef]?,
+         temporal: LayerTemporal?, liveOnly: Bool?) {
+        self.init(id: id, name: name, category: category, sources: sources,
+                  dataType: nil, modality: nil, kind: nil, recordsGeocoded: nil,
+                  temporal: temporal, liveOnly: liveOnly)
+    }
 }
 
 // ── GeoJSON ────────────────────────────────────────────────────────────────
@@ -587,8 +663,30 @@ struct IntelItem: Codable, Identifiable, Hashable {
     /// `?lang_view=` (roadmap 29). `machine == true` must be labelled as such
     /// in the UI — it is never the source's own words.
     let translation: TranslationInfo?
+    /// Served top-level by intelapi.c from `intel_items.record_type`. Optional
+    /// so older cached JSON still decodes.
+    ///
+    /// This field exists on the model for one reason: collectors now emit rows
+    /// that are NOT findings. `collector-truncation-notice` says a bounded walk
+    /// stopped short and by how much; `collector-status-notice` says a source
+    /// is unconfigured (needs a credential) and fetched nothing. Both are the
+    /// engine being honest about its own gaps, and both carry no observation
+    /// about the world. Rendering them as ordinary intel rows — or worse,
+    /// pinning a "needs credential" row on the map — turns an honest
+    /// disclosure into something that reads as fabricated content.
+    let record_type: String?
 
     var id: String { uid }
+
+    /// True for the engine's self-disclosure rows. Every list that shows intel
+    /// must either style these as notices or filter them — never present them
+    /// as findings.
+    var isCollectorNotice: Bool {
+        guard let rt = record_type else { return false }
+        return rt == "collector-truncation-notice" || rt == "collector-status-notice"
+    }
+    var isTruncationNotice: Bool { record_type == "collector-truncation-notice" }
+    var isStatusNotice: Bool { record_type == "collector-status-notice" }
 
     static func == (lhs: IntelItem, rhs: IntelItem) -> Bool { lhs.uid == rhs.uid }
     func hash(into hasher: inout Hasher) { hasher.combine(uid) }

@@ -191,7 +191,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              proglist[0] ? " · " : "", proglist,
              cJSON_GetArraySize(akas) ? " · aka " : "",
              cJSON_GetArraySize(akas)
-               ? cJSON_GetStringValue(cJSON_GetArrayItem(akas, 0)) : "");  /* exhaustive-ok: summary display pick; the whole aka array is in body and properties */
+               ? cJSON_GetStringValue(cJSON_GetArrayItem(akas, 0)) : "");  /* exhaustive-ok: display pick for a 512-byte summary line; the whole akas array is transferred to body.aka and properties.aka below */
 
     char link[160];
     snprintf(link, sizeof link,
@@ -252,24 +252,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     free(bj); free(pj);
     free(uid); free(first); free(last); free(type); free(title_f); free(remarks);
-  }
-  /* House rule 2: the whole publication is already downloaded, so when the row
-   * cap bites, keep scanning it WITHOUT emitting and report the real number of
-   * <sdnEntry> elements that were left unread. */
-  if (n >= max_rows) {
-    int rest = 0;
-    sanc_el skip;
-    while (sanc_xml_next(&cur, end, "sdnEntry", &skip)) rest++;
-    if (rest > 0)
-      jo_truncation_notice(sink, "ofac-consolidated-nonsdn", OFAC_CONS_URL, n,
-                           (long)n + rest,
-                           "JO_SANC_MAX_ROWS (default 5000) stopped the row "
-                           "loop; the remaining <sdnEntry> elements in the "
-                           "downloaded publication were counted but never "
-                           "parsed or emitted",
-                           "raise JO_SANC_MAX_ROWS above the consolidated "
-                           "list's entry count to ingest the whole "
-                           "publication");
   }
   free(xml);
   fprintf(stderr, "[ofac-consolidated] emitted %d (publish %s)\n", n,

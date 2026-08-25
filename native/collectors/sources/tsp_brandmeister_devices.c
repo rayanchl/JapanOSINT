@@ -20,7 +20,7 @@
  *  - "the response is ~10 MB, so poll infrequently": interval 21600 s, and only
  *    devices seen within RECENT_DAYS are emitted (STATED BOUND — that is the
  *    live network; the full historical roster is tens of thousands of rows and
- *    does not change), capped at MAX_ROWS.
+ *    does not change).
  * Licence: BrandMeister publishes this v2 API openly with no key; the data is
  *   self-declared by repeater operators.
  */
@@ -36,7 +36,6 @@
 
 #define BM_URL "https://api.brandmeister.network/v2/device"
 #define RECENT_DAYS 3
-#define MAX_ROWS 12000
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, BM_URL, 120000);
@@ -53,12 +52,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char cutoff[16];
   jo_days_ago_iso(RECENT_DAYS, cutoff, sizeof cutoff);
 
-  int n = 0, seen = 0, nogeo = 0, capped = 0;
+  int n = 0, seen = 0, nogeo = 0;
   cJSON *dv;
   cJSON_ArrayForEach(dv, doc) {
     seen++;
-    /* Past the cap keep counting so the notice below can state a real total. */
-    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     double id;
     if (!jo_num(dv, "id", &id)) continue;
     const char *call = jo_sv(dv, "callsign");
@@ -137,15 +134,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
-  /* House rule 2: the whole device list was fetched and counted; MAX_ROWS
-   * stopped the emit loop partway. */
-  if (capped)
-    jo_truncation_notice(sink, "brandmeister-devices", "device list", n,
-                         (long)seen,
-                         "MAX_ROWS reached; the remaining devices in the "
-                         "fetched list were counted but not emitted",
-                         "raise or drop MAX_ROWS in collectors/sources/"
-                         "tsp_brandmeister_devices.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[brandmeister-devices] emitted %d of %d devices "
                   "(last seen since %s; %d without usable coordinates)\n",

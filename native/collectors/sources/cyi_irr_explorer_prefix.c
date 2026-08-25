@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "cyi_common.inc"
 
 static int looks_like_ip_or_cidr(const char *s) {
   if (!s || !*s) return 0;
@@ -73,15 +74,6 @@ static const char *rpsl_attr(const char *blob, const char *name,
     if (p) p++;
   }
   return NULL;
-}
-
-static char *http_get(const source_ctx *ctx, const char *url, long *status) {
-  http_response hr = {0};
-  int rc = http_request(ctx->http, "GET", url, NULL, NULL, 0, 25000, 1, &hr);
-  *status = hr.status;
-  if (rc != 0 || hr.status != 200 || !hr.body) { http_response_free(&hr); return NULL; }
-  char *b = hr.body; hr.body = NULL; http_response_free(&hr);
-  return b;
 }
 
 static int emit_one(intel_sink *sink, const cJSON *r, const char *query,
@@ -187,7 +179,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
            "https://irrexplorer.nlnog.net/api/prefixes/prefix/%s", q);
 
   long status = 0;
-  char *body = http_get(ctx, url, &status);
+  char *body = cyi_get(ctx, url, NULL, 25000, &status);
   if (!body) {
     fprintf(stderr, "[IRR_EXPLORER_PREFIX] http status=%ld\n", status);
     if (status >= 400 && status < 500) return 0;

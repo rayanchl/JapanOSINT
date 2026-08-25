@@ -5,8 +5,18 @@
  *   2 https://www.smard.de/app/chart_data/{filter}/DE/{filter}_DE_quarterhour_{ts}.json
  *       -> {"series":[[epoch_ms, value], ...]}, null for unpublished steps
  * Emits one row per filter (410 total load, 1223 lignite, 1224 nuclear,
- * 4067 onshore wind, 4068 solar, 4069 hard coal, 4071 natural gas) at the
- * newest published quarter-hour.
+ * 4067 onshore wind, 4068 solar, 4069 hard coal, 4071 natural gas) PER
+ * PUBLISHED QUARTER-HOUR of the fetched week.
+ *
+ * It used to emit one row per filter — the newest non-null point — out of a
+ * series that carries a full week at quarter-hour resolution, so ~671 of every
+ * 672 measurements fetched were parsed, examined and thrown away
+ * (docs/SOURCE_EXHAUSTIVENESS.md rule 1: emit every record the response
+ * contains). Every point is now a row, keyed on filter|epoch_ms, so re-running
+ * refreshes the same week rather than piling up duplicates, and the newest
+ * point additionally carries "latest": true for consumers that only want the
+ * current value. Unpublished steps come back as a null value and are skipped —
+ * a null is an absent measurement, never a zero.
  *
  * UNIT TRAP, quoted from the source survey: "the values are MWh PER
  * QUARTER-HOUR, not MW - multiply by 4 to get average power (10210.02
@@ -59,49 +69,60 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *series = cJSON_GetObjectItem(doc, "series");
     if (!cJSON_IsArray(series)) { cJSON_Delete(doc); continue; }
 
-    /* newest [epoch_ms, value] pair whose value is not null */
-    cJSON *best = NULL;
-    int m = cJSON_GetArraySize(series);
+    /* Index of the newest published point, so it can be labelled `latest`
+     * without giving it a monopoly on the series. */
+    int m = cJSON_GetArraySize(series), newest = -1;
     for (int k = m - 1; k >= 0; k--) {
       cJSON *pair = cJSON_GetArrayItem(series, k);
       if (!cJSON_IsArray(pair) || cJSON_GetArraySize(pair) < 2) continue;
-      if (cJSON_IsNumber(cJSON_GetArrayItem(pair, 1))) { best = pair; break; }
+      if (cJSON_IsNumber(cJSON_GetArrayItem(pair, 1))) { newest = k; break; }
     }
-    if (!best) { cJSON_Delete(doc); continue; }
-    long long ems = (long long)cJSON_GetArrayItem(best, 0)->valuedouble;  /* exhaustive-ok: [epoch_ms,value] tuple, both read */
-    double mwh_qh = cJSON_GetArrayItem(best, 1)->valuedouble;
-    /* MWh per quarter-hour -> average MW over that quarter-hour */
-    double mw = mwh_qh * 4.0;
+    if (newest < 0) { cJSON_Delete(doc); continue; }
 
-    cJSON *p = cJSON_CreateObject();
-    cJSON_AddStringToObject(p, "filter_id", FILTERS[i].filter);
-    cJSON_AddStringToObject(p, "series", FILTERS[i].label);
-    cJSON_AddStringToObject(p, "region", "DE");
-    cJSON_AddNumberToObject(p, "energy_mwh_per_quarter_hour", mwh_qh);
-    cJSON_AddStringToObject(p, "energy_unit", "MWh per 15 min");
-    cJSON_AddNumberToObject(p, "average_power_mw", mw);
-    cJSON_AddStringToObject(p, "power_unit", "MW");
-    cJSON_AddStringToObject(p, "conversion", "average_power_mw = MWh_per_quarter_hour * 4");
-    cJSON_AddNumberToObject(p, "epoch_ms", (double)ems);
-    char *pj = cJSON_PrintUnformatted(p);
-    cJSON_Delete(p);
+    for (int k = 0; k < m; k++) {
+      cJSON *pair = cJSON_GetArrayItem(series, k);
+      if (!cJSON_IsArray(pair) || cJSON_GetArraySize(pair) < 2) continue;
+      /* A series entry is the fixed 2-element [epoch_ms, value] pair. */
+      cJSON *tj = cJSON_GetArrayItem(pair, 0);  /* exhaustive-ok: fixed-shape [epoch_ms, value] series pair; both members are read */
+      cJSON *vj = cJSON_GetArrayItem(pair, 1);
+      if (!cJSON_IsNumber(tj) || !cJSON_IsNumber(vj)) continue;  /* unpublished */
+      long long ems = (long long)tj->valuedouble;
+      double mwh_qh = vj->valuedouble;
+      /* MWh per quarter-hour -> average MW over that quarter-hour */
+      double mw = mwh_qh * 4.0;
 
-    char key[96], title[224];
-    snprintf(key, sizeof key, "%s|%lld", FILTERS[i].filter, ems);
-    snprintf(title, sizeof title, "SMARD DE %s: %.1f MW (%.2f MWh/15min)",
-             FILTERS[i].label, mw, mwh_qh);
+      cJSON *p = cJSON_CreateObject();
+      cJSON_AddStringToObject(p, "filter_id", FILTERS[i].filter);
+      cJSON_AddStringToObject(p, "series", FILTERS[i].label);
+      cJSON_AddStringToObject(p, "region", "DE");
+      cJSON_AddNumberToObject(p, "energy_mwh_per_quarter_hour", mwh_qh);
+      cJSON_AddStringToObject(p, "energy_unit", "MWh per 15 min");
+      cJSON_AddNumberToObject(p, "average_power_mw", mw);
+      cJSON_AddStringToObject(p, "power_unit", "MW");
+      cJSON_AddStringToObject(p, "conversion", "average_power_mw = MWh_per_quarter_hour * 4");
+      cJSON_AddNumberToObject(p, "epoch_ms", (double)ems);
+      cJSON_AddNumberToObject(p, "week_start_epoch_ms", (double)week);
+      if (k == newest) cJSON_AddBoolToObject(p, "latest", 1);
+      char *pj = cJSON_PrintUnformatted(p);
+      cJSON_Delete(p);
 
-    intel_item row = {0};
-    row.remote_key      = key;
-    row.title           = title;
-    row.summary         = title;
-    row.lang            = "en";
-    row.link            = url;
-    row.record_type     = "grid-generation";
-    row.properties_json = pj;
-    row.tags_json       = "[\"energy\",\"grid\",\"germany\",\"smard\"]";
-    if (sink->emit(sink, &row) >= 0) n++;
-    free(pj);
+      char key[96], title[224];
+      snprintf(key, sizeof key, "%s|%lld", FILTERS[i].filter, ems);
+      snprintf(title, sizeof title, "SMARD DE %s: %.1f MW (%.2f MWh/15min)",
+               FILTERS[i].label, mw, mwh_qh);
+
+      intel_item row = {0};
+      row.remote_key      = key;
+      row.title           = title;
+      row.summary         = title;
+      row.lang            = "en";
+      row.link            = url;
+      row.record_type     = "grid-generation";
+      row.properties_json = pj;
+      row.tags_json       = "[\"energy\",\"grid\",\"germany\",\"smard\"]";
+      if (sink->emit(sink, &row) >= 0) n++;
+      free(pj);
+    }
     cJSON_Delete(doc);
   }
   fprintf(stderr, "[" SRC "] emitted %d\n", n);

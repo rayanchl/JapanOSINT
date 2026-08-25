@@ -7,7 +7,6 @@
 #include "hpengine.h"
 #include "csv.h"
 #include "htmlparse.h"   /* the one anchor scanner + dedupe set */
-#include "jocore.h"      /* jo_truncation_notice_ex() — the ONE notice builder */
 #include "../core/httpclient.h"
 #include "../third_party/cJSON.h"
 #include <ctype.h>
@@ -16,7 +15,6 @@
 #include <string.h>
 #include <strings.h>
 
-#define HP_MAX_SOURCES   1024   /* exhaustive-ok: registry table size */
 /* Bounds exist only to keep one pathological response from exhausting memory —
  * they are NOT an editorial filter. Per the exhaustive-use rule
  * (docs/SOURCE_EXHAUSTIVENESS.md) they are set well above any real record, and
@@ -30,8 +28,16 @@
 #define HP_PAGE_MAX_DEF    10   /* exhaustive-ok: runaway guard, stamped    */
 #define HP_DETAIL_MAX_DEF  25   /* exhaustive-ok: request budget, stamped   */
 
-static const hp_source *g_specs[HP_MAX_SOURCES];
+/* Grown on demand rather than fixed. The fixed HP_MAX_SOURCES array silently
+ * ate every row past the cap: measured 2026-08-22, 1,481 rows were dropped at
+ * boot — batches 18 and 19 alone register more than 1,024 between them, so most
+ * of two batches was registered into nothing. It did print a line per drop, but
+ * 1,481 lines of stderr at startup is not a signal anyone receives, and
+ * /api/status showed no trace of it. A registry that cannot hold the registry
+ * is not a bound worth keeping. */
+static const hp_source **g_specs = NULL;
 static int g_nspecs = 0;
+static int g_cspecs = 0;
 
 /* ── small utilities ─────────────────────────────────────────────────────── */
 
@@ -304,7 +310,20 @@ static int hp_matches(hp_want w, const char *e) {
 
 /* ── JSON walking ────────────────────────────────────────────────────────── */
 
-/* Follow a dotted path; numeric segments index arrays. NULL when absent. */
+/* Follow a dotted path. Numeric segments index arrays. A segment of the form
+ * `key=value` selects the first array element whose `key` equals `value`.
+ * NULL when absent.
+ *
+ * The selector form exists because indexing a link array positionally is a
+ * silent trap. STAC and other hypermedia APIs return
+ *   "links": [ {"rel":"self",...}, {"rel":"next","href":...} ]
+ * and the position of `next` is not stable — it is first on some servers,
+ * third on others, and nothing stops a server reordering it between releases.
+ * A row written as `links.1.href` that one day resolves to the `self` link
+ * makes the engine refetch the same page until the page ceiling stops it:
+ * every page after the first is lost, and the run looks successful because
+ * records keep arriving. `links.rel=next.href` says what is meant and cannot
+ * drift. */
 static cJSON *hp_path(cJSON *root, const char *path) {
   if (!root || !path || !*path) return root;
   cJSON *cur = root;
@@ -318,6 +337,21 @@ static cJSON *hp_path(cJSON *root, const char *path) {
     p += n;
     if (*p == '.') p++;
     if (!*seg) continue;
+
+    char *eq = strchr(seg, '=');
+    if (eq && cJSON_IsArray(cur)) {
+      *eq = 0;
+      const char *want = eq + 1;
+      cJSON *hit = NULL, *it = NULL;
+      cJSON_ArrayForEach(it, cur) {
+        cJSON *f = cJSON_GetObjectItem(it, seg);
+        if (f && cJSON_IsString(f) && f->valuestring &&
+            !strcmp(f->valuestring, want)) { hit = it; break; }
+      }
+      cur = hit;
+      continue;
+    }
+
     int allnum = 1;
     for (char *q = seg; *q; q++) if (!isdigit((unsigned char)*q)) allnum = 0;
     if (allnum && cJSON_IsArray(cur)) cur = cJSON_GetArrayItem(cur, atoi(seg));
@@ -396,7 +430,16 @@ static void hp_flatten(const cJSON *node, const char *prefix, cJSON *out, int de
 }
 
 /* Value for `name` in a flattened map: exact dotted key first, then any key
- * whose last segment matches (so "siege.nom" answers a "nom" request). */
+ * whose last segment matches (so "siege.nom" answers a "nom" request).
+ *
+ * An XML attribute is flattened as `@id` / `Codelist.@agencyID` (see
+ * hp_xml_attrs()), and the `@` is stripped before the last-segment compare so
+ * that a row declaring `id_keys=id` finds the identity whether the upstream
+ * spells it as an attribute or as a child element — which is the whole point
+ * of putting attributes in the same keyspace. Writing `id_keys=@id` still
+ * selects the attribute specifically, via the exact-key hit above. Exact
+ * matches are tried first, so a record carrying BOTH `@id` and `id` resolves
+ * `id` to the element and `@id` to the attribute, never one for the other. */
 static const cJSON *hp_flat_get(const cJSON *flat, const char *name) {
   if (!flat || !name || !*name) return NULL;
   const cJSON *ex = cJSON_GetObjectItem(flat, name);
@@ -406,15 +449,54 @@ static const cJSON *hp_flat_get(const cJSON *flat, const char *name) {
     if (!it->string) continue;
     const char *dot = strrchr(it->string, '.');
     const char *last = dot ? dot + 1 : it->string;
+    if (*last == '@' && name[0] != '@') last++;
     if (!strcasecmp(last, name)) return it;
   }
   return NULL;
 }
 
+/* Render a scalar as text for keying purposes. Numbers are identifiers just as
+ * often as strings are -- SEC's `cik`, RIPEstat's `number`, BrandMeister's `id`
+ * are all JSON numbers -- and testing cJSON_IsString alone made the engine
+ * blind to them. It reported "emitted 0 of 2677" for a source whose every
+ * record carried a perfectly good primary key.
+ *
+ * The text goes in a caller-owned buffer because cJSON holds no string form of
+ * a number. Returns NULL for anything with no scalar value (objects, arrays,
+ * null, empty strings). */
+static const char *hp_scalar_str(const cJSON *v, char *buf, size_t cap) {
+  if (!v) return NULL;
+  if (cJSON_IsString(v)) return v->valuestring[0] ? v->valuestring : NULL;
+  if (cJSON_IsNumber(v)) {
+    double d = v->valuedouble;
+    if (d == (double)(long long)d) snprintf(buf, cap, "%lld", (long long)d);
+    else                           snprintf(buf, cap, "%.10g", d);
+    return buf[0] ? buf : NULL;
+  }
+  if (cJSON_IsBool(v)) { snprintf(buf, cap, "%s", cJSON_IsTrue(v) ? "true" : "false"); return buf; }
+  return NULL;
+}
+
+/* The record's first non-empty scalar, in document order — the last-resort
+ * identifier for a record that carries real content under names no fallback
+ * list knows. Skips the engine's own `_`-prefixed annotations, which are
+ * metadata about the record rather than anything the upstream said. */
+static const char *hp_first_scalar(const cJSON *flat, char *buf, size_t cap) {
+  const cJSON *it;
+  cJSON_ArrayForEach(it, flat) {
+    if (it->string && it->string[0] == '_') continue;
+    const char *r = hp_scalar_str(it, buf, cap);
+    if (r) return r;
+  }
+  return NULL;
+}
+
 /* First candidate from a comma-separated list that resolves to a non-empty
- * string in the flattened record. */
-static const char *hp_pick(const cJSON *flat, const char *csv_keys,
-                           const char *const *fallback) {
+ * scalar in the flattened record. `scratch` receives the text of a numeric or
+ * boolean hit and must outlive the returned pointer. */
+static const char *hp_pick_s(const cJSON *flat, const char *csv_keys,
+                             const char *const *fallback,
+                             char *scratch, size_t cap) {
   char buf[512];
   if (csv_keys && *csv_keys) {
     snprintf(buf, sizeof buf, "%s", csv_keys);
@@ -424,13 +506,13 @@ static const char *hp_pick(const cJSON *flat, const char *csv_keys,
     for (char *tok = strtok_r(buf, ",", &save); tok;
          tok = strtok_r(NULL, ",", &save)) {
       while (*tok == ' ') tok++;
-      const cJSON *v = hp_flat_get(flat, tok);
-      if (v && cJSON_IsString(v) && v->valuestring[0]) return v->valuestring;
+      const char *r = hp_scalar_str(hp_flat_get(flat, tok), scratch, cap);
+      if (r) return r;
     }
   }
   for (int i = 0; fallback && fallback[i]; i++) {
-    const cJSON *v = hp_flat_get(flat, fallback[i]);
-    if (v && cJSON_IsString(v) && v->valuestring[0]) return v->valuestring;
+    const char *r = hp_scalar_str(hp_flat_get(flat, fallback[i]), scratch, cap);
+    if (r) return r;
   }
   return NULL;
 }
@@ -467,11 +549,45 @@ typedef struct {
   int emitted;
   /* Exhaustive-use accounting, stamped onto every record so a consumer can
    * always tell a complete result from a bounded one. */
-  int   available;        /* records the upstream actually offered           */
+  int   available;        /* array slots the upstream handed over            */
+  /* Slots that held no content at all — a trailing blank line in a CSV, a null
+   * or a bare scalar in a JSON array. They are counted separately because they
+   * are not records, and folding them into `available` made the run report a
+   * shortfall that never happened: IAEA_NDS_LEVELS said "emitted 197 of 198"
+   * forever, the 198th being the newline at the end of the file. 87 rows of
+   * batch 19 reported exactly that phantom -1. A disclosure that cries wolf on
+   * every trailing newline is one nobody will read when a real discard happens. */
+  int   empty;
+  int   refused;          /* the sink declined it — a discard with a cause    */
+  int   filtered;         /* filter_query excluded it — the row asked for that */
+  int   duplicate;        /* the same href twice on one page — one record     */
   int   truncated;        /* a declared cap or a cancel stopped the walk     */
   int   page;             /* 1-based page currently being read               */
   int   page_records;     /* records in the page just read (paging stop test) */
+  /* Second-hop budget for the WHOLE run, not per page. It used to be a local
+   * of hp_run_json, so it was re-initialised on every page: a row with
+   * page_max 10 could fire 10 x JO_HP_DETAIL_MAX (250) detail requests, which
+   * is exactly the runaway hpengine.h promises the budget prevents. */
+  int   deep_left;
   char *next_url;         /* next-page URL from the response, when declared  */
+  /* HTML mode: the href dedupe set spans the WHOLE walk, not one page. Per
+   * page it could not tell "page 2 is new content" from "the site ignored our
+   * page param and re-served page 1", so the walk had no honest stop signal. */
+  html_seen hseen;
+  /* uid collision guard — see hp_collision_map(). `dup_map` is one byte per
+   * element of the array currently being emitted, non-zero where that record's
+   * fallback key is shared with a sibling; `rec_idx` is the element being
+   * emitted right now. NULL/0 everywhere else, which is the old behaviour. */
+  const unsigned char *dup_map;
+  int   rec_idx;
+  /* The response was HTTP 200 but its BODY said the request failed — see
+   * hp_json_error_doc(). Set by the mode driver, read by hp_run so the walk
+   * stops and the run reports the same thing an HTTP failure reports.
+   * `err_code` is the code the document carried, when it carried a numeric
+   * one, so the transport rule (>=500 is a hard error, everything else is an
+   * honest empty) can be applied to it unchanged. */
+  int   upstream_error;
+  long  err_code;
 } hp_run_state;
 
 /* 0 = no cap (every record). A row's non-zero max_items is its author's
@@ -554,15 +670,149 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
 }
 
 /* One flattened record → one intel_item. Takes ownership of nothing. */
+/* FNV-1a 64, as lowercase hex.
+ *
+ * Deliberately not feed_hash_key(): tests/hpengine_test.c links this file
+ * without lib/feedlib.c (and so without OpenSSL), and adding that dependency to
+ * make an offline engine test build is a bad trade. Nothing here needs a
+ * cryptographic digest — the hash only has to distinguish records inside one
+ * page from each other. */
+static void hp_fnv_hex(const char *s, char out[17]) {
+  unsigned long long h = 1469598103934665603ULL;
+  for (const unsigned char *p = (const unsigned char *)(s ? s : ""); *p; p++) {
+    h ^= (unsigned long long)*p;
+    h *= 1099511628211ULL;
+  }
+  snprintf(out, 17, "%016llx", h);
+}
+
+/* ── the uid collision guard ──────────────────────────────────────────────
+ *
+ * `records=N` in a run line counts emit() CALLS. It says nothing about how many
+ * rows were STORED, because the sink upserts on remote_key — so a source whose
+ * records key onto each other reports a healthy N and stores one row. That is
+ * the same invisible loss as an emit-zero source, and the metric normally used
+ * to find those cannot see it.
+ *
+ * Below, a record with no `rkey` is keyed on its TITLE, so every record sharing
+ * a title collapses onto one row. Measured over a 1,197-source sweep: 46 rows
+ * losing 114,795 records per pass. ECDC_RESPIRATORY emits 12,648 and stores 31;
+ * four rows (three WHO_XMART_… and NY_AUTHORITY_PROCUREMENT) each emit 10,001
+ * and store between 2 and 9. lib/jsonlist.c had the identical defect and this
+ * mirrors the guard written there.
+ *
+ * The map is built by deriving every record's fallback key FIRST and flagging
+ * only the ones about to collide. That precision is the point: a record whose
+ * key was already unique keeps the remote_key it has, so this re-emits nothing
+ * that was being stored correctly. The colliding groups do change key — but
+ * n-1 of every such group was being overwritten and never stored, so the only
+ * residue is one stale row per group under the old shared key.
+ *
+ * Records that DO carry an rkey are covered too, and the reason is worth
+ * stating because the opposite looked right at first. "Two records share an id,
+ * so the upstream says they are the same record" only holds when the id is the
+ * upstream's. Here it is usually OURS: `id_keys` is declared in the manifest,
+ * and a wrong declaration is a very ordinary mistake. ECDC_RESPIRATORY declares
+ * `id_keys=country_code` on a weekly time series — a country code is a
+ * DIMENSION, not a record identity — so 12,648 observations keyed onto 438
+ * rows. Restricting the guard to title-keyed records left that untouched.
+ *
+ * What keeps this honest is that disambiguation is by CONTENT hash. Two records
+ * sharing a key and byte-identical stay one row, which is real deduplication.
+ * Two sharing a key while differing are two records behind a bad identity
+ * declaration, and both are kept. So the engine never fabricates a distinction
+ * the data does not contain, and never merges records that differ.
+ *
+ * Scope is one array — one page of one response. A record on page 2 that keys
+ * onto one from page 1 is not caught, because page 1 is already emitted by
+ * then; catching it would mean buffering the whole walk. Stated plainly rather
+ * than papered over.
+ *
+ * The pre-pass flattens each record a second time. hp_flatten() resets its
+ * depth-0 accounting globals on every call, so the real pass is unaffected. */
+typedef struct { char key[17]; int idx; } hp_keyed_row;
+
+static int hp_keyed_cmp(const void *a, const void *b) {
+  return strcmp(((const hp_keyed_row *)a)->key, ((const hp_keyed_row *)b)->key);
+}
+
+static unsigned char *hp_collision_map(hp_run_state *st, cJSON *arr, int n) {
+  if (n < 2) return NULL;
+  const hp_source *s = st->s;
+  hp_keyed_row *k = malloc((size_t)n * sizeof *k);
+  unsigned char *dup = calloc((size_t)n, 1);
+  /* Out of memory must degrade to the old behaviour, not abort the run: a
+   * colliding row is worse than no guard, but losing the SOURCE is worse than
+   * both. */
+  if (!k || !dup) { free(k); free(dup); return NULL; }
+
+  int m = 0, i = 0;
+  cJSON *rec;
+  cJSON_ArrayForEach(rec, arr) {
+    cJSON *flat = cJSON_CreateObject();
+    if (!flat) { i++; continue; }
+    if (cJSON_IsObject(rec) || cJSON_IsArray(rec)) hp_flatten(rec, "", flat, 0);
+    else if (cJSON_IsString(rec) && rec->valuestring[0])
+      cJSON_AddStringToObject(flat, "value", rec->valuestring);
+    char sc_t[64], sc_r[64], lastbuf[64];
+    const char *title = hp_pick_s(flat, s->title_keys, TITLE_FALLBACK, sc_t, sizeof sc_t);
+    const char *rkey  = hp_pick_s(flat, s->id_keys,    ID_FALLBACK,    sc_r, sizeof sc_r);
+    /* THIS FALLBACK MUST MIRROR hp_emit_record() EXACTLY.
+     *
+     * The emitter, a few dozen lines below, does `if (!title) { if (!rkey)
+     * rkey = hp_first_scalar(...); }` — so a record with NEITHER a title nor an
+     * id is keyed on its first non-empty scalar. This map originally computed
+     * `rkey ? rkey : title` and SKIPPED the record when both were NULL, which
+     * made that one shape — a row declaring neither `id_keys` nor `title_keys`
+     * — the single case the guard could not see. Every such record whose first
+     * scalar happened to be a dimension constant then collapsed onto one uid,
+     * unguarded.
+     *
+     * Measured over the full registry: 1,818 registered hp rows are in that
+     * shape. WHO_XMART_NCD_MORTALITY emitted 10,001 and stored 2, both keyed on
+     * an indicator code, with no content-hash suffix because the map never
+     * flagged them.
+     *
+     * A collision guard that derives its key differently from the code it is
+     * guarding is not a guard. If the emitter's key derivation ever changes,
+     * this must change with it. */
+    if (!title && !rkey) rkey = hp_first_scalar(flat, lastbuf, sizeof lastbuf);
+    const char *kp = rkey ? rkey : title;
+    if (kp) { hp_fnv_hex(kp, k[m].key); k[m].idx = i; m++; }
+    cJSON_Delete(flat);
+    i++;
+  }
+
+  qsort(k, (size_t)m, sizeof *k, hp_keyed_cmp);
+  int flagged = 0;
+  for (int a = 0; a < m; ) {
+    int b = a + 1;
+    while (b < m && !strcmp(k[a].key, k[b].key)) b++;
+    if (b - a > 1) for (int j = a; j < b; j++) { dup[k[j].idx] = 1; flagged++; }
+    a = b;
+  }
+  free(k);
+  if (!flagged) { free(dup); return NULL; }
+  return dup;
+}
+
 static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
   const hp_source *s = st->s;
-  if (cJSON_GetArraySize(flat) == 0) return;
+  /* Nothing survived flattening — an array slot that held no value at all. The
+   * trailing newline of a CSV is the common case: every field maps to "" and
+   * hp_flatten keeps none of them. Counted, not silently returned, because the
+   * caller has already added this slot to `available` and the difference read
+   * as a one-record shortfall that never happened. */
+  if (cJSON_GetArraySize(flat) == 0) { st->empty++; return; }
 
   if (s->filter_query && st->vars->raw) {
     char *txt = cJSON_PrintUnformatted(flat);
     int hit = txt ? hp_icontains(txt, st->vars->raw) : 0;
     free(txt);
-    if (!hit) return;
+    /* A filter miss is the row doing exactly what it asked for, so it is not a
+     * shortfall either — but it is still not a record we kept, and lumping it
+     * in with `available` overstated what the endpoint offered for this query. */
+    if (!hit) { st->filtered++; return; }
   }
   if (deepen) hp_deepen(st, flat);
   else if (s->detail_url)
@@ -575,11 +825,14 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
   if (g_flat_drops)  cJSON_AddNumberToObject(flat, "_fields_dropped", g_flat_drops);
   if (g_flat_trunc)  cJSON_AddNumberToObject(flat, "_array_truncated", g_flat_trunc);
 
-  const char *title = hp_pick(flat, s->title_keys, TITLE_FALLBACK);
-  const char *rkey  = hp_pick(flat, s->id_keys,    ID_FALLBACK);
-  const char *date  = hp_pick(flat, s->date_keys,  DATE_FALLBACK);
-  const char *body  = hp_pick(flat, s->body_keys,  NULL);
-  const char *lnk   = hp_pick(flat, s->link_keys,  LINK_FALLBACK);
+  /* One scratch buffer per pick: the five results coexist, so they cannot
+   * share one. Only a numeric or boolean hit uses its buffer at all. */
+  char sc_t[64], sc_r[64], sc_d[64], sc_b[64], sc_l[64];
+  const char *title = hp_pick_s(flat, s->title_keys, TITLE_FALLBACK, sc_t, sizeof sc_t);
+  const char *rkey  = hp_pick_s(flat, s->id_keys,    ID_FALLBACK,    sc_r, sizeof sc_r);
+  const char *date  = hp_pick_s(flat, s->date_keys,  DATE_FALLBACK,  sc_d, sizeof sc_d);
+  const char *body  = hp_pick_s(flat, s->body_keys,  NULL,           sc_b, sizeof sc_b);
+  const char *lnk   = hp_pick_s(flat, s->link_keys,  LINK_FALLBACK,  sc_l, sizeof sc_l);
 
   char linkbuf[1024] = {0};
   if (s->link_tmpl && lnk) {
@@ -594,17 +847,57 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
     snprintf(linkbuf, sizeof linkbuf, "%s", lnk);
   }
 
-  /* A record with neither a title nor an id is shape noise, not a finding. */
-  char titlebuf[512];
+  /* A record with no content at all is shape noise, not a finding — but "no
+   * CONVENTIONALLY NAMED field" is not the same as "no content", and treating
+   * the two as one was silently destroying whole sources.
+   *
+   * The fallback lists know `name`/`title`/`id`. They do not know DataPlane's
+   * headerless columns (parsed as col0..colN, so NOTHING matches and every
+   * headerless CSV in the tree emitted zero, forever), CelesTrak's OBJECT_NAME,
+   * RIPEstat's `prefix`, or USGS's SiteName. Measured on batch 18: 59 of 223
+   * rows fetched records and stored none — 36,166 records discarded per run by
+   * DATAPLANE_TELNET alone, with the run reporting success.
+   *
+   * So the test is now "did the upstream give us anything real", and a record
+   * that did is keyed on its first non-empty scalar. That is a worse label than
+   * a declared title_keys — which is why the high-volume rows also declare one
+   * — but it is not a reason to throw the record away. */
+  char titlebuf[512], lastbuf[64];
   if (!title) {
-    if (!rkey) return;
+    if (!rkey) rkey = hp_first_scalar(flat, lastbuf, sizeof lastbuf);
+    if (!rkey) { st->empty++; return; }
     snprintf(titlebuf, sizeof titlebuf, "%s %s", s->record_type ? s->record_type : "record", rkey);
     title = titlebuf;
   }
 
+  /* The remote_key is the sink's upsert key, so anything that makes two
+   * different records produce the same string silently discards one of them.
+   * Two things did:
+   *
+   *   - `%.120s` TRUNCATES. Two ids sharing a 120-character prefix — long
+   *     URI-shaped identifiers, an SDMX key, a path — collapsed onto one row.
+   *     A key that is too long is now hashed instead of cut, so it stays a
+   *     function of the whole identifier.
+   *   - records sharing a key COLLAPSED onto one row, whether that key came
+   *     from a title (no rkey) or from an `id_keys` declaration that turned out
+   *     not to be a record identity. hp_collision_map() above marks exactly the
+   *     ones that collide on this page, and only the marked ones get a content
+   *     suffix — see the note there on why the precision, and the choice of a
+   *     content hash, matter. */
   char keybuf[320];
-  if (rkey) snprintf(keybuf, sizeof keybuf, "%.180s|%.120s", s->id, rkey);
-  else      snprintf(keybuf, sizeof keybuf, "%.180s|%.120s", s->id, title);
+  const char *kpart = rkey ? rkey : title;
+  char khash[17];
+  if (strlen(kpart) > 120) { hp_fnv_hex(kpart, khash); kpart = khash; }
+
+  if (st->dup_map && st->dup_map[st->rec_idx]) {
+    char *js = cJSON_PrintUnformatted(flat);
+    char chash[17];
+    hp_fnv_hex(js ? js : title, chash);
+    free(js);
+    snprintf(keybuf, sizeof keybuf, "%.180s|%.120s|%s", s->id, kpart, chash);
+  } else {
+    snprintf(keybuf, sizeof keybuf, "%.180s|%.120s", s->id, kpart);
+  }
 
   cJSON_AddStringToObject(flat, "service", s->name ? s->name : s->id);
   cJSON_AddStringToObject(flat, "source_id", s->id);
@@ -634,11 +927,88 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
   if (s->lat_key && s->lon_key && (lat != 0.0 || lon != 0.0)) {
     it.has_geo = 1; it.lat = lat; it.lon = lon;
   }
+  /* A record the SINK refused is a discard too, and it was invisible: the run
+   * line just showed a smaller `emitted` and looked like a shortfall with no
+   * cause. Counted so the two reasons a record does not land — no content, and
+   * the store declined it — can be told apart. */
   if (st->sink->emit(st->sink, &it) >= 0) st->emitted++;
+  else                                    st->refused++;
   free(props);
 }
 
 /* ── per-mode drivers ────────────────────────────────────────────────────── */
+
+/* Is this 200-OK document an ERROR REPORT rather than a payload?
+ *
+ * Batch 20, live: ArcGIS answers an over-quota query with HTTP 200 and a body
+ * of {"error":{"code":429,"message":"..."}}. Nothing in the engine looked at
+ * that. `array_path` ("features") did not resolve, hp_find_array() found no
+ * array of objects — `details` is an array of STRINGS — and the "root IS the
+ * record" fallback then flattened the error envelope into a record. `code`
+ * matched ID_FALLBACK through hp_flat_get()'s last-segment rule, so the engine
+ * filed a finding titled `airway-record 429`: a number lifted out of an error
+ * message, stored and served as if the upstream had reported it as data. That
+ * is fabricated content, which house rule 1 forbids outright.
+ *
+ * tools/probe_hp_batch.py already rejects this shape ("HTTP-200 refusals"), so
+ * the batch verifier caught it and the ENGINE did not — the gap this closes.
+ *
+ * What counts as an error report is kept deliberately narrow, because a false
+ * positive here silently deletes a real source:
+ *
+ *   - only a root-level `error` / `errors` / `fault` member is considered;
+ *   - only when it holds an OBJECT, a non-empty ARRAY or a non-empty STRING.
+ *     `"error": null`, `"error": 0` and `"error": false` are how a great many
+ *     APIs spell SUCCESS, and an envelope that carries records alongside one
+ *     of those must keep working exactly as before;
+ *   - and the caller only asks once no records array has been found at all, so
+ *     a document that did hand over records is never reclassified.
+ *
+ * Returns 1 and fills `msg`/`code` when the document is an error report.
+ * `code` is left at -1 when the document carried no numeric code. */
+static int hp_json_error_doc(cJSON *doc, char *msg, size_t cap, long *code) {
+  static const char *ERR_KEYS[] = { "error", "errors", "fault", NULL };
+  if (!cJSON_IsObject(doc)) return 0;
+  cJSON *node = NULL;
+  for (int i = 0; ERR_KEYS[i] && !node; i++) {
+    cJSON *e = cJSON_GetObjectItem(doc, ERR_KEYS[i]);
+    if (!e) continue;
+    if (cJSON_IsObject(e) && cJSON_GetArraySize(e) > 0)                node = e;
+    /* Element 0 of an `errors` array only. This reads as a first-only discard
+     * to the exhaustiveness scanner and is not one: nothing from this document
+     * is stored under ANY branch of this function — the whole point of it is
+     * that the response carried no records — so element 0 is a representative
+     * message for the log line and a place to look for a status code, not a
+     * record we are choosing over its siblings. Walking the rest would add log
+     * noise and change nothing about what is kept, which is nothing. */
+    else if (cJSON_IsArray(e)  && cJSON_GetArraySize(e) > 0)           node = cJSON_GetArrayItem(e, 0);   /* exhaustive-ok: error report, not records — nothing here is ever stored */
+    else if (cJSON_IsString(e) && e->valuestring && e->valuestring[0]) node = e;
+  }
+  if (!node) return 0;
+
+  *code = -1;
+  msg[0] = 0;
+  if (cJSON_IsString(node)) {
+    snprintf(msg, cap, "%.200s", node->valuestring);
+  } else if (cJSON_IsObject(node)) {
+    static const char *MSG_KEYS[] = { "message", "msg", "description", "detail",
+                                      "details", "reason", "title", NULL };
+    for (int i = 0; MSG_KEYS[i] && !msg[0]; i++) {
+      cJSON *m = cJSON_GetObjectItem(node, MSG_KEYS[i]);
+      if (m && cJSON_IsString(m) && m->valuestring[0])
+        snprintf(msg, cap, "%.200s", m->valuestring);
+    }
+    static const char *CODE_KEYS[] = { "code", "status", "statusCode", NULL };
+    for (int i = 0; CODE_KEYS[i] && *code < 0; i++) {
+      cJSON *v = cJSON_GetObjectItem(node, CODE_KEYS[i]);
+      if (v && cJSON_IsNumber(v))                    *code = (long)v->valuedouble;
+      else if (v && cJSON_IsString(v) && isdigit((unsigned char)v->valuestring[0]))
+        *code = strtol(v->valuestring, NULL, 10);
+    }
+  }
+  if (!msg[0]) snprintf(msg, cap, "(no message)");
+  return 1;
+}
 
 static int hp_run_json(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
@@ -650,20 +1020,57 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     cJSON *n = hp_path(doc, s->array_path);
     if (n && cJSON_IsArray(n)) arr = n;
     else if (n && cJSON_IsObject(n)) {                 /* single record */
+      /* Count it, exactly as the root-record path below does: an endpoint that
+       * answers with one object at array_path was reporting "emitted 1 of 0
+       * available", which reads as a discard when nothing was discarded. */
+      st->available += 1;
       cJSON *flat = cJSON_CreateObject();
       hp_flatten(n, "", flat, 0);
-      hp_emit_record(st, flat, 1);
+      hp_emit_record(st, flat, st->deep_left > 0);
       cJSON_Delete(flat);
       cJSON_Delete(doc);
       return st->emitted;
     }
   }
-  if (!arr) {
+  /* A DECLARED array_path that did not resolve means this response is not the
+   * shape the row expects, so neither of the two guesses below is safe: the
+   * densest-array heuristic would mine whatever other array the document
+   * happens to contain, and the root-record fallback would file the envelope
+   * itself as a finding (the ArcGIS 429 above). Emit nothing and say why.
+   *
+   * The row that declares NO array_path is untouched — it never told us where
+   * its records live, so discovery and the single-object case are the only
+   * things it can be served by, and tests 3 / 11 / 12 cover them. */
+  int path_declared_missing = 0;
+  if (!arr && s->array_path && *s->array_path) path_declared_missing = 1;
+
+  if (!arr && !path_declared_missing) {
     int best_n = 0;
     hp_find_array(doc, 0, &arr, &best_n);
   }
   int max = hp_record_cap(s);
-  int deep_left = hp_detail_budget(s);
+
+  if (!arr) {
+    /* HTTP 200 with an error DOCUMENT. Checked here and not at parse time so
+     * that an envelope carrying BOTH records and an `error` member keeps its
+     * records: by this point we know the response handed over none. */
+    char emsg[256]; long ecode = -1;
+    if (hp_json_error_doc(doc, emsg, sizeof emsg, &ecode)) {
+      st->upstream_error = 1;
+      st->err_code = ecode;
+      fprintf(stderr, "[hp:%s] HTTP 200 carrying an error document: code=%ld %s\n",
+              s->id, ecode, emsg);
+      cJSON_Delete(doc);
+      return st->emitted;
+    }
+    if (path_declared_missing) {
+      fprintf(stderr,
+              "[hp:%s] array_path \"%s\" did not resolve — response is not the "
+              "declared shape, emitting nothing\n", s->id, s->array_path);
+      cJSON_Delete(doc);
+      return st->emitted;
+    }
+  }
 
   if (!arr) {                                          /* root IS the record */
     /* Count it. The availability tally is the in-band "N of M" disclosure the
@@ -673,14 +1080,20 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     st->available += 1;
     cJSON *flat = cJSON_CreateObject();
     hp_flatten(doc, "", flat, 0);
-    hp_emit_record(st, flat, deep_left > 0);
+    hp_emit_record(st, flat, st->deep_left > 0);
     cJSON_Delete(flat);
     cJSON_Delete(doc);
     return st->emitted;
   }
 
-  st->available += cJSON_GetArraySize(arr);
+  int arr_n = cJSON_GetArraySize(arr);
+  st->available += arr_n;
+  /* Flag the records whose fallback key is shared with a sibling on this page,
+   * before any of them is emitted — see hp_collision_map(). */
+  unsigned char *dupmap = hp_collision_map(st, arr, arr_n);
+  st->dup_map = dupmap;
   cJSON *rec;
+  int ri = 0;
   cJSON_ArrayForEach(rec, arr) {
     if (max && st->emitted >= max) { st->truncated = 1; break; }
     if (st->ctx->cancel && *st->ctx->cancel) { st->truncated = 1; break; }
@@ -689,10 +1102,17 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     else if (cJSON_IsString(rec) && rec->valuestring[0])
       cJSON_AddStringToObject(flat, "value", rec->valuestring);
     int before = st->emitted;
-    hp_emit_record(st, flat, deep_left > 0);
-    if (st->emitted > before && deep_left > 0) deep_left--;
+    st->rec_idx = ri;
+    hp_emit_record(st, flat, st->deep_left > 0);
+    if (st->emitted > before && st->deep_left > 0) st->deep_left--;
     cJSON_Delete(flat);
+    ri++;
   }
+  /* The map describes THIS array only; a later single-record or detail emit
+   * must not read it. */
+  st->dup_map = NULL;
+  st->rec_idx = 0;
+  free(dupmap);
   /* Hand the caller the next page URL when the row declared one, so the walk
    * continues instead of stopping at page 1. */
   if (s->next_path && !st->next_url) {
@@ -711,10 +1131,53 @@ static int hp_run_csv(hp_run_state *st, const char *body) {
    * headers=1: the first data row would become the column names and that row
    * would vanish. Parse positionally and name the columns col0..colN instead —
    * honest about what is known, and nothing is dropped. */
-  cJSON *rows = csv_parse(body, s->csv_no_header ? 0 : 1);
+  /* Named forms exist because the manifest these rows are authored in is itself
+   * pipe-delimited: writing `csv_delim=|` there produces a 14-field line and
+   * fails the row rather than configuring it. */
+  char delim = ',';
+  if (s->csv_delim && s->csv_delim[0]) {
+    if      (!strcmp(s->csv_delim, "tab")  || !strcmp(s->csv_delim, "\\t")) delim = '\t';
+    else if (!strcmp(s->csv_delim, "pipe")) delim = '|';
+    else if (!strcmp(s->csv_delim, "semi")) delim = ';';
+    else                                    delim = s->csv_delim[0];
+  }
+  /* A comment banner is stripped BEFORE the parse, not filtered after it. With
+   * headers=1 the parser takes row 0 as the column names, and URLhaus's row 0
+   * is `# id,dateadded,url,...` — so post-filtering would have named every
+   * column after a comment line, and the real header would have been read as a
+   * record. */
+  char *stripped = NULL;
+  if (s->csv_comment && s->csv_comment[0]) {
+    size_t n = strlen(body);
+    stripped = malloc(n + 1);
+    if (stripped) {
+      size_t w = 0, clen = strlen(s->csv_comment);
+      const char *p = body;
+      while (*p) {
+        const char *eol = strchr(p, '\n');
+        size_t linelen = eol ? (size_t)(eol - p) + 1 : strlen(p);
+        const char *t = p;
+        while (*t == ' ' || *t == '\t') t++;
+        if (strncmp(t, s->csv_comment, clen) != 0) {
+          memcpy(stripped + w, p, linelen);
+          w += linelen;
+        }
+        if (!eol) break;
+        p = eol + 1;
+      }
+      stripped[w] = 0;
+      body = stripped;
+    }
+  }
+  cJSON *rows = csv_parse_d(body, s->csv_no_header ? 0 : 1, delim);
+  free(stripped);
   if (!rows) return 0;
   int max = hp_record_cap(s);
   st->available += cJSON_GetArraySize(rows);
+  /* The page walk stops on `page_records <= 0`. Leaving it at 0 here meant a
+   * paged CSV row read page 1 and silently discarded every page after it —
+   * with no truncation notice either, since nothing set `truncated`. */
+  st->page_records = cJSON_GetArraySize(rows);
   cJSON *row;
   cJSON_ArrayForEach(row, rows) {
     if (max && st->emitted >= max) { st->truncated = 1; break; }
@@ -739,6 +1202,240 @@ static int hp_run_csv(hp_run_state *st, const char *body) {
   return st->emitted;
 }
 
+/* ── XML ─────────────────────────────────────────────────────────────────── */
+
+/* Tag name starting just past '<'. Stops at whitespace, '/' or '>'. */
+static size_t hp_xml_name(const char *p, char *buf, size_t cap) {
+  size_t n = 0;
+  while (p[n] && !isspace((unsigned char)p[n]) && p[n] != '>' && p[n] != '/' &&
+         n + 1 < cap) { buf[n] = p[n]; n++; }
+  buf[n] = 0;
+  return n;
+}
+
+/* Minimal entity decode, in place. Enough for the five predefined entities and
+ * numeric refs, which is what these registers actually emit. */
+static void hp_xml_unescape(char *s) {
+  char *w = s;
+  for (char *r = s; *r; ) {
+    if (*r != '&') { *w++ = *r++; continue; }
+    if      (!strncmp(r, "&amp;", 5))  { *w++ = '&';  r += 5; }
+    else if (!strncmp(r, "&lt;", 4))   { *w++ = '<';  r += 4; }
+    else if (!strncmp(r, "&gt;", 4))   { *w++ = '>';  r += 4; }
+    else if (!strncmp(r, "&quot;", 6)) { *w++ = '"';  r += 6; }
+    else if (!strncmp(r, "&apos;", 6)) { *w++ = '\''; r += 6; }
+    else if (r[1] == '#') {
+      char *end = NULL; long v = strtol(r + 2 + (r[2] == 'x' || r[2] == 'X'),
+                                        &end, (r[2] == 'x' || r[2] == 'X') ? 16 : 10);
+      if (end && *end == ';' && v > 0 && v < 128) { *w++ = (char)v; r = end + 1; }
+      else *w++ = *r++;
+    }
+    else *w++ = *r++;
+  }
+  *w = 0;
+}
+
+/* Flatten the ATTRIBUTES of one start tag into the same dotted keyspace its
+ * child elements use, under an `@` prefix on the last segment: `@id`,
+ * `Codelist.@agencyID`.
+ *
+ * They used to be dropped outright — hp_xml_flatten() walked child ELEMENTS
+ * only — and the cost of that was a whole family of live sources. In SDMX
+ * structural metadata the identity IS the attribute:
+ *
+ *   <str:Codelist id="CL_FREQ" agencyID="ILO" version="1.0">
+ *
+ * so ILO / OECD / ABS / Istat / ECB / Eurostat / IMF all parsed into records
+ * that carried the human-readable <com:Name> and nothing to key it on. Two
+ * live WITS endpoints were rejected in batch 20 rather than shipped as silent
+ * partials, and the rest of the family was simply unreachable.
+ *
+ * `@` is the disambiguator because it is the one character an XML Name cannot
+ * begin with, so `Codelist.@id` can never collide with a child element named
+ * `id` under the same parent — the same property the JSON flattener gets from
+ * dotting (`address.city` cannot collide with a member literally named
+ * "address.city", since it builds every key itself). hp_flat_get() strips a
+ * leading `@` when it compares last segments, so a row that declares
+ * `id_keys=id` finds `@id` without knowing whether the upstream spells its
+ * identity as an attribute or an element; `id_keys=@id` still selects the
+ * attribute specifically.
+ *
+ * `p` points just past the tag NAME, `gt` at the closing '>' (or at the '/' of
+ * a self-closing tag — a trailing slash carries no '=' and is skipped). */
+static void hp_xml_attrs(const char *p, const char *gt, const char *prefix,
+                         cJSON *flat) {
+  char key[256];
+  while (p < gt) {
+    while (p < gt && !(isalpha((unsigned char)*p) || *p == '_' || *p == ':')) p++;
+    const char *ns = p;
+    while (p < gt && (isalnum((unsigned char)*p) || *p == '_' || *p == ':' ||
+                      *p == '-' || *p == '.')) p++;
+    size_t nl = (size_t)(p - ns);
+    if (!nl) return;
+    while (p < gt && isspace((unsigned char)*p)) p++;
+    if (p >= gt || *p != '=') continue;         /* not an attribute — skip it */
+    p++;
+    while (p < gt && isspace((unsigned char)*p)) p++;
+    if (p >= gt) return;
+    const char *vs; size_t vl;
+    if (*p == '"' || *p == '\'') {
+      char q = *p++;
+      const char *e = memchr(p, q, (size_t)(gt - p));
+      if (!e) return;                            /* unterminated — stop here  */
+      vs = p; vl = (size_t)(e - p); p = e + 1;
+    } else {
+      vs = p;
+      while (p < gt && !isspace((unsigned char)*p) && *p != '/') p++;
+      vl = (size_t)(p - vs);
+    }
+    if (!vl || vl >= 4096) continue;
+    if (cJSON_GetArraySize(flat) > 400) return;
+    if (prefix && *prefix) snprintf(key, sizeof key, "%s.@%.*s", prefix, (int)nl, ns);
+    else                   snprintf(key, sizeof key, "@%.*s", (int)nl, ns);
+    if (cJSON_GetObjectItem(flat, key)) continue;
+    char *val = (char *)malloc(vl + 1);
+    if (!val) return;
+    memcpy(val, vs, vl); val[vl] = 0;
+    hp_xml_unescape(val);
+    if (val[0]) cJSON_AddStringToObject(flat, key, val);
+    free(val);
+  }
+}
+
+/* Flatten one record element's children into `flat` with dotted keys, so an
+ * XML record reaches hp_emit_record in exactly the shape a JSON one does and
+ * every downstream field selector (title_keys, id_keys, lat_key…) works
+ * unchanged. Bounded in depth and in field count. */
+static void hp_xml_flatten(const char *p, const char *end, const char *prefix,
+                           cJSON *flat, int depth) {
+  if (depth > 4 || cJSON_GetArraySize(flat) > 400) return;
+  char name[96], key[256];
+  while (p < end && (p = memchr(p, '<', (size_t)(end - p))) != NULL) {
+    p++;
+    if (p >= end) return;
+    if (*p == '/' || *p == '?' || *p == '!') {            /* close / decl / comment */
+      const char *gt = memchr(p, '>', (size_t)(end - p));
+      if (!gt) return;
+      p = gt + 1;
+      continue;
+    }
+    size_t nl = hp_xml_name(p, name, sizeof name);
+    if (!nl) return;
+    const char *gt = memchr(p, '>', (size_t)(end - p));
+    if (!gt) return;
+    /* Build this child's key BEFORE the self-closing test, because a
+     * self-closing element is not an empty element: `<Ref id="X" agencyID="Y"/>`
+     * is pure attribute payload, and skipping the tag threw all of it away. */
+    if (prefix && *prefix) snprintf(key, sizeof key, "%s.%s", prefix, name);
+    else                   snprintf(key, sizeof key, "%s", name);
+    hp_xml_attrs(p + nl, gt, key, flat);
+    if (gt > p && gt[-1] == '/') { p = gt + 1; continue; }  /* self-closing */
+    char close[100];
+    int cl = snprintf(close, sizeof close, "</%s>", name);
+    const char *vs = gt + 1, *ve = vs;
+    /* find this element's matching close, allowing one level of same-name nest */
+    int nest = 1;
+    while (ve < end) {
+      const char *lt = memchr(ve, '<', (size_t)(end - ve));
+      if (!lt) { ve = end; break; }
+      if (!strncmp(lt, close, (size_t)cl)) {
+        if (--nest == 0) { ve = lt; break; }
+        ve = lt + cl;
+      } else if (lt[1] != '/' && !strncmp(lt + 1, name, nl) &&
+                 (isspace((unsigned char)lt[1 + nl]) || lt[1 + nl] == '>')) {
+        nest++; ve = lt + 1;
+      } else {
+        ve = lt + 1;
+      }
+    }
+    if (memchr(vs, '<', (size_t)(ve - vs))) {
+      hp_xml_flatten(vs, ve, key, flat, depth + 1);        /* nested element */
+    } else {
+      size_t vl = (size_t)(ve - vs);
+      while (vl && isspace((unsigned char)*vs)) { vs++; vl--; }
+      while (vl && isspace((unsigned char)vs[vl - 1])) vl--;
+      if (vl && vl < 4096 && !cJSON_GetObjectItem(flat, key)) {
+        char *val = (char *)malloc(vl + 1);
+        if (val) {
+          memcpy(val, vs, vl); val[vl] = 0;
+          hp_xml_unescape(val);
+          cJSON_AddStringToObject(flat, key, val);
+          free(val);
+        }
+      }
+    }
+    p = (ve < end) ? ve + cl : end;
+  }
+}
+
+/* The element that repeats most often is the record. An explicit array_path
+ * overrides it, because auto-detection picks the wrong element on a schema
+ * whose leaf field is more numerous than its record (a list of <target>s each
+ * holding many <name>s). */
+static int hp_xml_record_tag(const char *body, char *out, size_t cap) {
+  struct { char n[96]; int c; } tally[64];
+  int nt = 0;
+  char name[96];
+  for (const char *p = body; (p = strchr(p, '<')) != NULL; ) {
+    p++;
+    if (*p == '/' || *p == '?' || *p == '!') continue;
+    if (!hp_xml_name(p, name, sizeof name)) continue;
+    int i = 0;
+    for (; i < nt; i++) if (!strcmp(tally[i].n, name)) { tally[i].c++; break; }
+    if (i == nt && nt < 64) { snprintf(tally[nt].n, sizeof tally[nt].n, "%s", name); tally[nt].c = 1; nt++; }
+  }
+  int best = -1;
+  for (int i = 0; i < nt; i++)
+    if (tally[i].c >= 2 && (best < 0 || tally[i].c > tally[best].c)) best = i;
+  if (best < 0) return 0;
+  snprintf(out, cap, "%s", tally[best].n);
+  return 1;
+}
+
+static int hp_run_xml(hp_run_state *st, const char *body) {
+  const hp_source *s = st->s;
+  char tag[96];
+  if (s->array_path && *s->array_path) snprintf(tag, sizeof tag, "%s", s->array_path);
+  else if (!hp_xml_record_tag(body, tag, sizeof tag)) {
+    fprintf(stderr, "[hp:%s] XML with no repeated element\n", s->id);
+    return 0;
+  }
+  char open[100], close[100];
+  int ol = snprintf(open, sizeof open, "<%s", tag);
+  int cl = snprintf(close, sizeof close, "</%s>", tag);
+  int max = hp_record_cap(s);
+  const char *p = body;
+  int found = 0;
+  while ((p = strstr(p, open)) != NULL) {
+    const char *after = p + ol;
+    if (*after != '>' && !isspace((unsigned char)*after) && *after != '/') { p = after; continue; }
+    const char *gt = strchr(p, '>');
+    if (!gt) break;
+    if (gt[-1] == '/') { p = gt + 1; continue; }           /* empty record */
+    const char *endrec = strstr(gt, close);
+    if (!endrec) break;
+    found++;
+    st->available++;
+    if (!max || st->emitted < max) {
+      cJSON *flat = cJSON_CreateObject();
+      /* The RECORD element's own attributes, before its children. In SDMX
+       * these are the whole identity — <str:Codelist id=".." agencyID=".."> —
+       * and hp_xml_flatten() starts at gt+1, so nothing on the start tag was
+       * ever seen. First in the object as well as first on the tag, so
+       * hp_first_scalar()'s last-resort key lands on the identifier rather
+       * than on the first prose field. */
+      hp_xml_attrs(after, gt, "", flat);
+      hp_xml_flatten(gt + 1, endrec, "", flat, 0);
+      if (cJSON_GetArraySize(flat) > 0)
+        hp_emit_record(st, flat, st->deep_left > 0);
+      cJSON_Delete(flat);
+    }
+    p = endrec + cl;
+  }
+  st->page_records = found;
+  return st->emitted;
+}
+
 /* Real anchors out of a real listing page. JS-rendered or anti-bot pages
  * simply yield nothing. */
 static int hp_run_html(hp_run_state *st, const char *html) {
@@ -749,9 +1446,9 @@ static int hp_run_html(hp_run_state *st, const char *html) {
    * sweeps. This function is now only the engine's policy: which anchors to
    * accept, and emitting them through the engine's record path so they carry
    * the endpoint / page / truncation provenance every hp row carries. */
-  html_seen seen = {0};
   html_anchor a;
   const char *p = html;
+  int page_hits = 0;
   while ((!max || st->emitted < max) && (p = html_anchor_next(p, &a)) != NULL) {
     char href[820];
     snprintf(href, sizeof href, "%.*s", (int)a.href_len, a.href);
@@ -761,7 +1458,12 @@ static int hp_run_html(hp_run_state *st, const char *html) {
         !hp_icontains(a.text, st->vars->raw) && !hp_icontains(href, st->vars->raw))
       continue;
     st->available++;
-    if (!html_seen_add(&seen, href)) continue;      /* already emitted */
+    /* The same href twice on one page is one record, not a discard. Listings
+     * routinely link each item from both an icon and its title, which made
+     * ECMA's standards index report "emitted 295 of 590" and ITLOS "36 of 72" —
+     * a perfect 50% shortfall that was really a perfect 2x duplication. */
+    if (!html_seen_add(&st->hseen, href)) { st->duplicate++; continue; }
+    page_hits++;
 
     char link[900];
     if (!strncmp(href, "http", 4)) snprintf(link, sizeof link, "%s", href);
@@ -775,7 +1477,11 @@ static int hp_run_html(hp_run_state *st, const char *html) {
     cJSON_Delete(flat);
   }
   if (max && st->emitted >= max) st->truncated = 1;
-  html_seen_free(&seen);
+  /* Same stop signal the JSON path publishes: without it the page walk read
+   * page 1 and silently dropped every later page (EU_EUIPO_TRADEMARKS and
+   * CA_CIPO_TRADEMARKS both declare page_param with mode = HP_HTML), and
+   * `truncated` stayed 0 so not even a notice was emitted. */
+  st->page_records = page_hits;
   return st->emitted;
 }
 
@@ -865,9 +1571,16 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   if (!paged) page_max = 1;
 
   hp_run_state st = { .s = s, .ctx = ctx, .sink = sink, .vars = &vars,
-                      .url = url, .emitted = 0 };
+                      .url = url, .emitted = 0,
+                      .deep_left = hp_detail_budget(s) };
   int page_start = s->page_start;
-  if (!page_start && s->page_param && !strstr(s->page_param, "offset")) page_start = 1;
+  /* Coerce an unset page_start to 1 for page-numbered APIs — but not when the
+   * row has declared the API is 0-based. Without that exemption a 0-based API
+   * gets its first extra page computed as page_start(1) + 0 + 1 = 2, and page 1
+   * is never fetched: a silent one-page hole in every paged read, invisible
+   * because the pages either side arrive normally. */
+  if (!page_start && !s->page_zero_based &&
+      s->page_param && !strstr(s->page_param, "offset")) page_start = 1;
 
   char *page_url = strdup(url);
   for (int page = 0; page < page_max && page_url; page++) {
@@ -893,10 +1606,29 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     switch (s->mode) {
       case HP_HTML: out = hp_run_html(&st, hr.body); break;
       case HP_CSV:  out = hp_run_csv(&st, hr.body);  break;
+      case HP_XML:  out = hp_run_xml(&st, hr.body);  break;
       case HP_JSON:
       default:      out = hp_run_json(&st, hr.body); break;
     }
     http_response_free(&hr);
+
+    /* A 200 whose body is an error report is a FAILED fetch that happened to
+     * arrive with a success status, so it is treated as one: the walk stops
+     * (paging an endpoint that just refused us only multiplies the refusal)
+     * and the run reports what the equivalent HTTP status would have reported.
+     * The rule immediately above is reused verbatim rather than reinvented —
+     * >=500 on the first page is a hard error, anything else is an honest
+     * empty — so a `{"error":{"code":404}}` behaves like an HTTP 404 and a
+     * `{"error":{"code":500}}` like an HTTP 500. A document that carried no
+     * numeric code at all cannot be classified, and an unclassifiable failure
+     * is reported as an error rather than as a successful empty run: that is
+     * the difference between "this source found nothing" and "this source was
+     * not actually checked", and collapsing the two is what house rule 1 is
+     * about. Either way nothing is STORED, which is the part that matters. */
+    if (st.upstream_error) {
+      if (page == 0 && (st.err_code < 0 || st.err_code >= 500)) hard_error = 1;
+      break;
+    }
 
     if (!paged || st.truncated) break;
     /* Stop when this page produced nothing new — that is the upstream telling
@@ -927,10 +1659,22 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   }
   free(page_url);
   free(st.next_url);
+  html_seen_free(&st.hseen);
 
-  if (out > 0 || st.available > 0)
-    fprintf(stderr, "[hp:%s] emitted %d of %d available across %d page(s)%s\n",
-            s->id, out, st.available, st.page, st.truncated ? " (TRUNCATED)" : "");
+  /* `available` counts what the upstream handed over as records — array slots
+   * that held nothing are reported separately rather than as a shortfall. */
+  int real_available = st.available - st.empty - st.filtered - st.duplicate;
+  if (real_available < out) real_available = out;
+  if (out > 0 || st.available > 0) {
+    char emptynote[128] = "";
+    if (st.empty || st.refused || st.filtered || st.duplicate)
+      snprintf(emptynote, sizeof emptynote,
+               " [%d empty, %d duplicate, %d filtered out, %d refused by sink]",
+               st.empty, st.duplicate, st.filtered, st.refused);
+    fprintf(stderr, "[hp:%s] emitted %d of %d available across %d page(s)%s%s\n",
+            s->id, out, real_available, st.page,
+            st.truncated ? " (TRUNCATED)" : "", emptynote);
+  }
 
   /* If anything WAS left on the table, say so in the data itself — a log line
    * nobody reads is not a disclosure. One upsert-keyed notice row per
@@ -939,24 +1683,40 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   /* Note the condition: a page-ceiling stop leaves an UNKNOWN remainder (we
    * never fetched those pages), so `available == out` there. Disclose whenever
    * the walk stopped early, not only when we can count what was missed. */
-  /* One builder for this record across the whole tree: lib/jocore.h owns the
-   * record_type, the uid convention, the tags and the six base properties, and
-   * the three facts only the engine can know travel in `extra`. Hand-rolling
-   * it here is what let four copies of one record type drift apart. */
   if (st.truncated) {
-    cJSON *extra = cJSON_CreateObject();
-    if (extra) {
-      cJSON_AddNumberToObject(extra, "pages_read", st.page);
-      cJSON_AddBoolToObject(extra, "more_pages_pending", st.available <= out);
-      cJSON_AddNumberToObject(extra, "declared_max_items", s->max_items);
-    }
-    jo_truncation_notice_ex(sink, s->id, vars.raw ? vars.raw : "",
-                            out, st.available,
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "source_id", s->id);
+    cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
+    cJSON_AddNumberToObject(p, "records_used", out);
+    cJSON_AddNumberToObject(p, "records_available", real_available);
+    if (st.empty > 0)
+      cJSON_AddNumberToObject(p, "empty_slots_skipped", st.empty);
+    cJSON_AddNumberToObject(p, "pages_read", st.page);
+    cJSON_AddBoolToObject(p, "more_pages_pending", real_available <= out);
+    cJSON_AddNumberToObject(p, "declared_max_items", s->max_items);
+    cJSON_AddStringToObject(p, "reason",
       (s->max_items > 0 && out >= s->max_items)
         ? "the row declares max_items and the upstream offered more"
-        : "the page ceiling or a cancel stopped the walk",
+        : "the page ceiling or a cancel stopped the walk");
+    cJSON_AddStringToObject(p, "remedy",
       "raise max_items/page_max on this row (lib/hpengine.h) — see "
-      "docs/SOURCE_EXHAUSTIVENESS.md", extra);
+      "docs/SOURCE_EXHAUSTIVENESS.md");
+    char *pj = cJSON_PrintUnformatted(p);
+    cJSON_Delete(p);
+    char key[320], title[256];
+    snprintf(key, sizeof key, "%.150s|truncation:%.120s", s->id,
+             vars.raw ? vars.raw : "");
+    snprintf(title, sizeof title, "%s used %d of %d available records",
+             s->id, out, real_available);
+    intel_item note = {0};
+    note.remote_key      = key;
+    note.title           = title;
+    note.lang            = "en";
+    note.record_type     = "collector-truncation-notice";
+    note.properties_json = pj ? pj : "{}";
+    note.tags_json       = "[\"osint-search\",\"truncation-notice\"]";
+    sink->emit(sink, &note);
+    free(pj);
   }
 
   for (int i = 0; i < nh; i++) free(hdr_store[i]);
@@ -970,9 +1730,18 @@ void hp_register(const hp_source *specs, int n, source_def *defs) {
   for (int i = 0; i < n; i++) {
     const hp_source *s = &specs[i];
     if (!s->id || !s->url) continue;
-    if (g_nspecs >= HP_MAX_SOURCES) {
-      fprintf(stderr, "[hp] OVERFLOW: dropped '%s' (cap %d)\n", s->id, HP_MAX_SOURCES);
-      continue;
+    if (g_nspecs >= g_cspecs) {
+      int nc = g_cspecs ? g_cspecs * 2 : 2048;
+      const hp_source **ns = realloc((void *)g_specs, (size_t)nc * sizeof *ns);
+      if (!ns) {
+        /* Out of memory is the only reason a row is dropped now, and it is a
+         * real failure rather than a configured limit — say so once per row. */
+        fprintf(stderr, "[hp] OUT OF MEMORY registering '%s' at %d rows\n",
+                s->id, g_nspecs);
+        continue;
+      }
+      g_specs = ns;
+      g_cspecs = nc;
     }
     g_specs[g_nspecs++] = s;
     defs[i] = (source_def){
@@ -987,7 +1756,11 @@ void hp_register(const hp_source *specs, int n, source_def *defs) {
       .url                 = s->portal,
       .description         = s->description,
       .license             = NULL,
-      .layer               = NULL,              /* services never map-layer */
+      /* NULL (the default) still means "not a map layer" — right for the
+       * entity-pivot services that dominate this registry. A row may now
+       * opt in by declaring hp_source.layer (see hpengine.h); the field is
+       * passed through untouched, never invented. */
+      .layer               = s->layer,
       .free_tier           = s->free_tier,
     };
     registry_add(&defs[i]);

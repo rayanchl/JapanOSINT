@@ -17,7 +17,6 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
-#include "lib/jocore.h"     /* jo_truncation_notice() */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,7 +24,6 @@
 
 #define CYI_URL "https://ftp.apnic.net/stats/apnic/delegated-apnic-extended-latest"
 #define WINDOW_DAYS 90
-#define MAX_ROWS 5000
 
 /* In-place line splitter; returns the next line (trimmed of CR), advances *p. */
 static char *next_line(char **p) {
@@ -60,7 +58,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (gmtime_r(&cut, &tmv)) strftime(cutoff, sizeof cutoff, "%Y%m%d", &tmv);
 #endif
 
-  int n = 0, seen = 0, recent = 0, capped = 0;
+  int n = 0, seen = 0;
   char *cur = body, *line;
   while ((line = next_line(&cur)) != NULL) {
     if (!line[0] || line[0] == '#') continue;
@@ -88,8 +86,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (strcmp(type, "ipv4") && strcmp(type, "ipv6") && strcmp(type, "asn")) continue;
     seen++;
     if (strlen(date) != 8 || strcmp(date, cutoff) < 0) continue;
-    recent++;
-    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
 
     char iso[16];
     snprintf(iso, sizeof iso, "%.4s-%.2s-%.2s", date, date + 4, date + 6);
@@ -133,23 +129,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
-  /* House rule 2: the whole delegated-extended file was downloaded and every
-   * delegation line counted. The WINDOW_DAYS filter and MAX_ROWS each kept some
-   * of them out of the sink; say so as data rather than only in this log. */
-  if (seen > n) {
-    char reason[300];
-    snprintf(reason, sizeof reason,
-             "%d of the %d delegations in the downloaded file are older than "
-             "the %d-day window and were skipped%s", seen - recent, seen,
-             (int)WINDOW_DAYS,
-             capped ? ", and MAX_ROWS then stopped the rest from being emitted"
-                    : "");
-    jo_truncation_notice(sink, "apnic-delegated-stats",
-                         "delegated-apnic-extended-latest", n, (long)seen,
-                         reason,
-                         "widen WINDOW_DAYS and raise or drop MAX_ROWS in "
-                         "collectors/sources/cyi_apnic_delegated_stats.c");
-  }
   fprintf(stderr, "[apnic-delegated-stats] emitted %d of %d delegations (>= %s)\n",
           n, seen, cutoff);
   return 0;                        /* a quiet 90 days is not an error (R3) */

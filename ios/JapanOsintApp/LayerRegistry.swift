@@ -151,6 +151,24 @@ final class LayerRegistry: ObservableObject {
 
         "weather":              semanticBlue,
         "air-quality":          semanticBlue,
+
+        // v2 taxonomy layers (server core/layers.def)
+        "police-crime-points":  semanticRed,
+        "police-crime-heatmap": semanticOrange,   // density, not incidents
+        "police-facilities":    semanticBlue,
+        "earthquakes":          semanticRed,
+        "volcanoes":            semanticRed,
+        "wildfires":            semanticRed,
+        "floods":               semanticBlue,
+        "radiation":            semanticYellow,
+        "satellite-imagery":    semanticGreen,
+        "satellite-orbits":     semanticGreen,
+        "airspace-zones":       semanticBlue,
+        "dns-web":              semanticBlue,
+        "cyber":                semanticRed,
+        "emergency":            semanticRed,
+        "shipping":             semanticBlue,
+        "unassigned-geocoded":  "#78909c",
     ]
 
     /// A stable color per layer for icon tinting. Uses semantic overrides
@@ -196,6 +214,29 @@ final class LayerRegistry: ObservableObject {
         "radiation":           "atom",
         "ocean":               "water.waves",
         "warnings":            "exclamationmark.triangle.fill",
+
+        // v2 taxonomy layers (server core/layers.def). Points and heatmap
+        // carry distinct icons on purpose — they are distinct layers that
+        // never share sources.
+        "police-crime-points":  "exclamationmark.shield.fill",
+        "police-crime-heatmap": "chart.bar.fill",
+        "police-facilities":    "shield.lefthalf.filled",
+        "earthquakes":          "waveform.path.ecg",
+        "volcanoes":            "flame.fill",
+        "wildfires":            "flame.fill",
+        "floods":               "water.waves",
+        "satellite-imagery":    "globe.asia.australia.fill",
+        "satellite-orbits":     "circle.dashed",
+        "satellite-tracking":   "circle.dashed",
+        "airspace-zones":       "airplane.circle.fill",
+        "dns-web":              "network",
+        "cyber":                "lock.shield.fill",
+        "emergency":            "cross.case.fill",
+        "shipping":             "ferry.fill",
+        "government-data":      "building.columns.fill",
+        "geodata":              "map.fill",
+        "defense":              "shield.fill",
+        "unassigned-geocoded":  "mappin.and.ellipse",
 
         // Safety / hazard / crime
         "hazard":              "exclamationmark.triangle.fill",

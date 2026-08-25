@@ -18,8 +18,15 @@
  *    The OData filter is an exact surname match, so a multi-token entity is
  *    reduced to its LAST token (the surname) before querying.
  *
- * Payload shape: {"@odata.context":...,"value":[ ... ]}. Personal-name fields
- * are null for legal persons — those rows simply carry no name.
+ * Payload shape: {"@odata.context":...,"@odata.count":N,"value":[ ... 20 rows ],
+ * "@odata.nextLink":...}. Personal-name fields are null for legal persons —
+ * those rows simply carry no name.
+ *
+ * PAGED. The service hands over twenty records at a time and names the next
+ * page itself; `$top` is refused with a 400, so following `@odata.nextLink` is
+ * the only way to the rest. Both pivots walk it to the end and ask for
+ * `$count=true` so the disclosure below can quote the upstream's own total
+ * rather than a guess.
  *
  * Keyless LIVE. Wrong-shaped / empty entity, or an upstream failure, is an
  * honest empty (return 0). Nothing is synthesized; no geo is claimed (the
@@ -38,7 +45,43 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-#define RPVS_MAX 100
+/* The RPVS OData service pages at TWENTY records and says so with an
+ * `@odata.nextLink`; `$top` is rejected outright (HTTP 400), so the link is
+ * the only way through. Measured 2026-08-24:
+ *
+ *   $filter=contains(ObchodneMeno,'a')&$count=true
+ *     -> "@odata.count": 27393, "value": [20 rows], "@odata.nextLink": ...
+ *
+ * The old `#define RPVS_MAX 100` never even bit — the walk stopped at the
+ * server's first page long before the cap, so a pivot that matched 27,393
+ * partners stored 20 of them with nothing in the output to say so. The cap
+ * below is a runaway guard on the WALK, not on the records, and hitting it is
+ * disclosed as a collector-truncation-notice against the upstream's own
+ * `@odata.count`. $JO_RPVS_PAGE_MAX raises it. */
+#define RPVS_PAGE_MAX 60      /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice carrying @odata.count */
+
+static int rpvs_page_max(void) {
+  const char *e = getenv("JO_RPVS_PAGE_MAX");
+  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
+  return RPVS_PAGE_MAX;
+}
+
+/* The upstream's own total for this filter, or -1 when it declined to say.
+ * Never estimated — an invented "available" is worse than none (rule 8). */
+static long rpvs_declared_count(const cJSON *doc) {
+  const cJSON *c = cJSON_GetObjectItem(doc, "@odata.count");
+  if (cJSON_IsNumber(c)) return (long) c->valuedouble;
+  return -1;
+}
+
+/* `@odata.nextLink` is an absolute URL the server built; we follow it
+ * verbatim rather than doing skiptoken arithmetic of our own. */
+static char *rpvs_next_link(const cJSON *doc) {
+  const cJSON *nl = cJSON_GetObjectItem(doc, "@odata.nextLink");
+  if (cJSON_IsString(nl) && nl->valuestring && *nl->valuestring)
+    return strdup(nl->valuestring);
+  return NULL;
+}
 
 /* Double any single quote so it survives an OData string literal, then
  * %-encode the whole thing. malloc'd; caller frees. */
@@ -81,31 +124,14 @@ static int rpvs_name_ok(const char *s) {
 }
 
 /* ------------------------------------------------------------------ partners */
-static int rpvs_partners_run(const source_ctx *ctx, intel_sink *sink) {
-  const char *q = ctx->entity;
-  if (!rpvs_name_ok(q)) return 0;                /* wrong shape -> no-op */
-
-  char *arg = rpvs_odata_arg(q);
-  if (!arg) return 0;
-  char url[900];
-  snprintf(url, sizeof url,
-           "https://rpvs.gov.sk/opendatav2/PartneriVerejnehoSektora"
-           "?$filter=contains(ObchodneMeno,'%s')&$format=json", arg);
-  free(arg);
-
-  const char *hdrs[] = { "Accept: application/json", NULL };
-  char *body = jo_get(ctx, url, hdrs, "sk_rpvs_partners");
-  if (!body) return 0;                           /* upstream said nothing */
-  cJSON *doc = cJSON_Parse(body);
-  free(body);
-  if (!doc) { fprintf(stderr, "[sk_rpvs_partners] unparseable payload\n"); return -1; }
-
+/* One page of `value`, emitted whole. `url` is the first-page URL and becomes
+ * the row's link; `q` is the pivot term, recorded on every row. */
+static int rpvs_emit_partners_page(intel_sink *sink, const cJSON *doc,
+                                   const char *q, const char *url) {
+  int n = 0;
   const cJSON *arr = cJSON_GetObjectItem(doc, "value");
-  int n = 0, capped = 0;
-  const int have = cJSON_GetArraySize(arr);
   const cJSON *row;
   cJSON_ArrayForEach(row, arr) {
-    if (n >= RPVS_MAX) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     if (!cJSON_IsObject(row)) continue;
     const char *name = jo_sv(row, "ObchodneMeno");
     if (!name) continue;                         /* no real name -> no row */
@@ -155,54 +181,76 @@ static int rpvs_partners_run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
+  return n;
+}
 
-  /* House rule 2: the OData page returned `have` matching partners and the
-   * emit loop stopped at RPVS_MAX. Note also that no $skip page is requested,
-   * so an over-full result set has more behind it than `have`. */
-  if (capped)
-    jo_truncation_notice(sink, "SK_RPVS_PARTNERS", q, n, (long)have,
-                         "RPVS_MAX reached; the remaining partners in the "
-                         "fetched OData page were not emitted, and no $skip "
-                         "page is requested",
-                         "raise or drop RPVS_MAX in collectors/sources/"
-                         "reg2_sk_rpvs.c and walk the OData $skip pages");
-  cJSON_Delete(doc);
-  fprintf(stderr, "[sk_rpvs_partners] emitted %d\n", n);
+static int rpvs_partners_run(const source_ctx *ctx, intel_sink *sink) {
+  const char *q = ctx->entity;
+  if (!rpvs_name_ok(q)) return 0;                /* wrong shape -> no-op */
+
+  char *arg = rpvs_odata_arg(q);
+  if (!arg) return 0;
+  char url[900];
+  snprintf(url, sizeof url,
+           "https://rpvs.gov.sk/opendatav2/PartneriVerejnehoSektora"
+           "?$filter=contains(ObchodneMeno,'%s')&$format=json&$count=true", arg);
+  free(arg);
+
+  const char *hdrs[] = { "Accept: application/json", NULL };
+  const int page_max = rpvs_page_max();
+  char *page = strdup(url);
+  if (!page) return 0;
+
+  int n = 0, pages = 0, truncated = 0;
+  long available = -1;
+
+  for (; page && pages < page_max; pages++) {
+    char *body = jo_get(ctx, page, hdrs, "sk_rpvs_partners");
+    if (!body) {
+      /* A dead FIRST page is the upstream saying nothing, exactly as before.
+       * A failure part-way through a walk is different: we already hold real
+       * records, so we keep them and disclose the short walk below. */
+      if (pages == 0) { free(page); return 0; }
+      truncated = 1;
+      break;
+    }
+    cJSON *doc = cJSON_Parse(body);
+    free(body);
+    if (!doc) {
+      fprintf(stderr, "[sk_rpvs_partners] unparseable payload\n");
+      if (pages == 0) { free(page); return -1; }
+      truncated = 1;
+      break;
+    }
+    if (available < 0) available = rpvs_declared_count(doc);
+    n += rpvs_emit_partners_page(sink, doc, q, url);
+
+    char *next = rpvs_next_link(doc);
+    cJSON_Delete(doc);
+    free(page);
+    page = next;
+    if (page && pages + 1 >= page_max) truncated = 1;   /* ceiling, not upstream */
+  }
+  free(page);
+
+  if (truncated)
+    jo_trunc_notice(sink, "SK_RPVS_PARTNERS", url, n, available,
+                    "the RPVS OData walk stopped before the upstream ran out "
+                    "of pages (page ceiling, or a mid-walk fetch failure)",
+                    "raise $JO_RPVS_PAGE_MAX, or narrow the ObchodneMeno filter");
+
+  fprintf(stderr, "[sk_rpvs_partners] emitted %d across %d page(s)%s\n",
+          n, pages, truncated ? " (TRUNCATED — notice emitted)" : "");
   return 0;
 }
 
 /* ----------------------------------------------------------------- UBO/owners */
-static int rpvs_ubo_run(const source_ctx *ctx, intel_sink *sink) {
-  const char *q = ctx->entity;
-  if (!rpvs_name_ok(q)) return 0;
-
-  /* The OData filter is an exact surname match — take the last token. */
-  const char *surname = q;
-  for (const char *p = q; *p; p++)
-    if (*p == ' ' || *p == '\t') surname = p + 1;
-  if (!surname || strlen(surname) < 2) return 0;
-
-  char *arg = rpvs_odata_arg(surname);
-  if (!arg) return 0;
-  char url[900];
-  snprintf(url, sizeof url,
-           "https://rpvs.gov.sk/opendatav2/KonecniUzivateliaVyhod"
-           "?$filter=Priezvisko%%20eq%%20'%s'&$format=json", arg);
-  free(arg);
-
-  const char *hdrs[] = { "Accept: application/json", NULL };
-  char *body = jo_get(ctx, url, hdrs, "sk_rpvs_ubo");
-  if (!body) return 0;
-  cJSON *doc = cJSON_Parse(body);
-  free(body);
-  if (!doc) { fprintf(stderr, "[sk_rpvs_ubo] unparseable payload\n"); return -1; }
-
+static int rpvs_emit_ubo_page(intel_sink *sink, const cJSON *doc, const char *q,
+                              const char *surname, const char *url) {
+  int n = 0;
   const cJSON *arr = cJSON_GetObjectItem(doc, "value");
-  int n = 0, capped = 0;
-  const int have = cJSON_GetArraySize(arr);
   const cJSON *row;
   cJSON_ArrayForEach(row, arr) {
-    if (n >= RPVS_MAX) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     if (!cJSON_IsObject(row)) continue;
     const char *meno = jo_sv(row, "Meno");
     const char *prie = jo_sv(row, "Priezvisko");
@@ -266,17 +314,69 @@ static int rpvs_ubo_run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
+  return n;
+}
 
-  /* House rule 2: same bound on the beneficial-owner leg. */
-  if (capped)
-    jo_truncation_notice(sink, "SK_RPVS_UBO", q, n, (long)have,
-                         "RPVS_MAX reached; the remaining beneficial owners in "
-                         "the fetched OData page were not emitted, and no $skip "
-                         "page is requested",
-                         "raise or drop RPVS_MAX in collectors/sources/"
-                         "reg2_sk_rpvs.c and walk the OData $skip pages");
-  cJSON_Delete(doc);
-  fprintf(stderr, "[sk_rpvs_ubo] emitted %d\n", n);
+static int rpvs_ubo_run(const source_ctx *ctx, intel_sink *sink) {
+  const char *q = ctx->entity;
+  if (!rpvs_name_ok(q)) return 0;
+
+  /* The OData filter is an exact surname match — take the last token. */
+  const char *surname = q;
+  for (const char *p = q; *p; p++)
+    if (*p == ' ' || *p == '\t') surname = p + 1;
+  if (!surname || strlen(surname) < 2) return 0;
+
+  char *arg = rpvs_odata_arg(surname);
+  if (!arg) return 0;
+  char url[900];
+  snprintf(url, sizeof url,
+           "https://rpvs.gov.sk/opendatav2/KonecniUzivateliaVyhod"
+           "?$filter=Priezvisko%%20eq%%20'%s'&$format=json&$count=true", arg);
+  free(arg);
+
+  const char *hdrs[] = { "Accept: application/json", NULL };
+  const int page_max = rpvs_page_max();
+  char *page = strdup(url);
+  if (!page) return 0;
+
+  int n = 0, pages = 0, truncated = 0;
+  long available = -1;
+
+  for (; page && pages < page_max; pages++) {
+    char *body = jo_get(ctx, page, hdrs, "sk_rpvs_ubo");
+    if (!body) {
+      if (pages == 0) { free(page); return 0; }
+      truncated = 1;
+      break;
+    }
+    cJSON *doc = cJSON_Parse(body);
+    free(body);
+    if (!doc) {
+      fprintf(stderr, "[sk_rpvs_ubo] unparseable payload\n");
+      if (pages == 0) { free(page); return -1; }
+      truncated = 1;
+      break;
+    }
+    if (available < 0) available = rpvs_declared_count(doc);
+    n += rpvs_emit_ubo_page(sink, doc, q, surname, url);
+
+    char *next = rpvs_next_link(doc);
+    cJSON_Delete(doc);
+    free(page);
+    page = next;
+    if (page && pages + 1 >= page_max) truncated = 1;
+  }
+  free(page);
+
+  if (truncated)
+    jo_trunc_notice(sink, "SK_RPVS_UBO", url, n, available,
+                    "the RPVS OData walk stopped before the upstream ran out "
+                    "of pages (page ceiling, or a mid-walk fetch failure)",
+                    "raise $JO_RPVS_PAGE_MAX, or query a rarer surname");
+
+  fprintf(stderr, "[sk_rpvs_ubo] emitted %d across %d page(s)%s\n",
+          n, pages, truncated ? " (TRUNCATED — notice emitted)" : "");
   return 0;
 }
 

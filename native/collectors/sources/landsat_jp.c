@@ -12,17 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-static void iso_now(char *out, size_t n) {
-  time_t t = time(NULL);
-  struct tm g; gmtime_r(&t, &g);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &g);
-}
-static void iso_ago(char *out, size_t n, int days) {
-  time_t t = time(NULL) - (time_t)days * 86400;
-  struct tm g; gmtime_r(&t, &g);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &g);
-}
+#include "_timefmt.inc"
 
 static int centroid(cJSON *geom, double *cx, double *cy) {
   if (!geom) return 0;
@@ -50,9 +40,14 @@ static int centroid(cJSON *geom, double *cx, double *cy) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *m2m = getenv("USGS_M2M_TOKEN");
 
+  /* from/to ARE the STAC "datetime" interval; without them there is no search
+   * to POST, and substituting some other window would be inventing the query. */
   char from[32], to[32];
-  iso_ago(from, sizeof from, 30);
-  iso_now(to, sizeof to);
+  if (!jo_ago_fmt(30L * 86400, "%Y-%m-%dT%H:%M:%SZ", from, sizeof from) ||
+      !jo_now_fmt("%Y-%m-%dT%H:%M:%SZ", to, sizeof to)) {
+    fprintf(stderr, "[landsat-jp] cannot render the query window as a date\n");
+    return -1;
+  }
 
   char body[512];
   snprintf(body, sizeof body,

@@ -1,4 +1,0 @@
-japan-reit
-tor-exit-nodes
-osm-changesets-jp
-poc-in-github

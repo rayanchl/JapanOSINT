@@ -35,6 +35,104 @@ static cJSON *extract_json(const char *raw) {
   return NULL;
 }
 
+/* How long a pipeline LLM call may take. It was three hardcoded 60000s, which
+ * is a fine budget for a GPU-offloaded llama-server and far too short for a
+ * CPU-only one: prompt-eval of the ~18k-token analysis request runs about 100 s
+ * at 190 tok/s, so every analysis timed out — and, before the status split in
+ * llm.c, reported itself as "llama-server is not running". Env-overridable so
+ * the operator can match it to their host without a rebuild; the default is
+ * unchanged so no existing deployment moves. */
+static int llm_timeout_ms(void) {
+  const char *e = getenv("JO_LLM_TIMEOUT_MS");
+  int v = (e && *e) ? atoi(e) : 0;
+  return v > 0 ? v : 60000;
+}
+
+/* A bounded, single-line, printable excerpt of whatever the model DID say, for
+ * the `detail` of an "llm_unusable_output" stage error. Without it that verdict
+ * is unactionable — "the model returned something we could not parse" and not
+ * one byte of what that something was. Newlines and control bytes are folded to
+ * spaces so the excerpt cannot break the JSON line it lands in, and it is hard
+ * limited so a model that emits 2 KB of dot-spam (the degenerate-reasoning bug
+ * this codebase has already seen once) cannot flood the progress record.
+ * Writes into `out` and returns it. */
+#define LLM_EXCERPT_MAX 160
+static char *llm_excerpt(char *out, size_t n, const char *raw) {
+  if (!out || n == 0) return out;
+  if (!raw) { snprintf(out, n, "(no output)"); return out; }
+  while (*raw && isspace((unsigned char)*raw)) raw++;
+  size_t w = 0;
+  for (; raw[w] && w + 1 < n; w++) {
+    unsigned char ch = (unsigned char)raw[w];
+    out[w] = (ch < 0x20 || ch == 0x7f) ? ' ' : (char)ch;
+  }
+  out[w] = '\0';
+  if (w == 0) snprintf(out, n, "(empty output)");
+  else if (raw[w]) snprintf(out + (w > 3 ? w - 3 : 0),
+                            n - (w > 3 ? w - 3 : 0), "...");
+  return out;
+}
+
+/* One place that turns "this LLM call did not give us what we needed" into a
+ * stage error on the progress record, so the analysis call, every follow-up
+ * round and the synthesis all report the SAME codes in the SAME shape. Returns
+ * 1 when the call was usable (nothing recorded), 0 when it was not.
+ *
+ * `parsed_ok` is the caller's verdict on the CONTENT (did the JSON we needed
+ * come out of it), separate from `st`, the transport's verdict. Both matter and
+ * they want different fixes: llm_unreachable is "start llama-server",
+ * llm_unusable_output is "this model cannot hold the schema". */
+static int note_llm_stage(osint_request *rp, const char *stage,
+                          const char *base_url, llm_status st, long http,
+                          const char *raw, int parsed_ok) {
+  char detail[384];
+  if (st != LLM_OK) {
+    if (st == LLM_ERR_HTTP)
+      snprintf(detail, sizeof detail,
+               "llama-server at %s answered HTTP %ld for this stage — if it is "
+               "%d, the prompt did not fit the server's --ctx-size; the server "
+               "log names the token counts and the pipeline logs the prompt's "
+               "byte size",
+               base_url ? base_url : "(unset)", http, 400);
+    else if (st == LLM_ERR_TIMEOUT)
+      snprintf(detail, sizeof detail,
+               "the call to %s ran out its %d ms budget "
+               "(JO_LLM_TIMEOUT_MS) — llama-server is reachable but did not "
+               "finish in time; a CPU-only host needs far longer than a "
+               "GPU-offloaded one for a prompt this size",
+               base_url ? base_url : "(unset)", llm_timeout_ms());
+    else if (st == LLM_ERR_UNREACHABLE)
+      snprintf(detail, sizeof detail,
+               "no LLM reachable at %s (LLM_BASE_URL) — llama-server is not "
+               "running or is not listening there",
+               base_url ? base_url : "(unset)");
+    else if (st == LLM_ERR_BAD_REQUEST)
+      /* Ours, not the model host's — the prompt could not even be built into a
+       * request. Saying "llama-server returned no content" here would send an
+       * operator to restart a service that was never asked anything. */
+      snprintf(detail, sizeof detail,
+               "the request for this stage could not be built, so %s was never "
+               "asked (prompt assembly failed — out of memory, or an unusable "
+               "prompt)", base_url ? base_url : "(unset)");
+    else
+      snprintf(detail, sizeof detail,
+               "llama-server at %s answered but returned no usable content",
+               base_url ? base_url : "(unset)");
+    progress_stage_error(rp, stage, llm_status_code(st), detail);
+    return 0;
+  }
+  if (!parsed_ok) {
+    char ex[LLM_EXCERPT_MAX];
+    snprintf(detail, sizeof detail,
+             "the model at %s replied, but nothing usable for this stage could "
+             "be read out of the reply; it said: %s",
+             base_url ? base_url : "(unset)", llm_excerpt(ex, sizeof ex, raw));
+    progress_stage_error(rp, stage, "llm_unusable_output", detail);
+    return 0;
+  }
+  return 1;
+}
+
 /* Wrap a flat few-shot prompt as a one-message chat array for llm_chat. The
  * analysis/phase-2 prompts run through /v1/chat/completions (not raw
  * /completion) so the gpt-oss harmony template + --reasoning-format apply: the
@@ -74,7 +172,8 @@ static void strset_add(strset *s, const char *k) {
   s->k[s->n++] = strdup(k);
 }
 static void strset_free(strset *s) {
-  for (int i = 0; i < s->n; i++) free(s->k[i]); free(s->k);
+  for (int i = 0; i < s->n; i++) free(s->k[i]);
+  free(s->k);
 }
 
 typedef struct { char *service, *entity, *type; } task_t;
@@ -362,19 +461,64 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
 
   /* ── Phase 1: analysis ─────────────────────────────────────────────── */
   progress_set_phase(rp, "gpt_analyzing", 15);
-  char *svcs = osint_services_list();
+  osint_catalogue_note cat = {0};
+  char *svcs = osint_services_list_bounded(&cat);
   char *p1 = prompt_analysis(query, svcs ? svcs : "");
+  /* The size of the request we are about to make, on the record. The analysis
+   * call failed for months with "request (207353 tokens) exceeds the available
+   * context size (16384 tokens)" and the only place that number existed was
+   * llama-server's own log, which nobody was reading — the C side saw a NULL
+   * and moved on. A byte count next to the outcome makes a context overflow
+   * legible from the server log alone. */
+  fprintf(stderr, "[pipeline] %s analysis prompt %zu bytes "
+                  "(service catalogue: %d of %d entity-pivot services, %s)\n",
+          request_id, p1 ? strlen(p1) : (size_t)0, cat.shown, cat.total,
+          cat.descriptions ? "with descriptions" : "ids only");
+  /* Routing from a partial menu is a bounded view, and rule 2 says a bounded
+   * view states its bound where the consumer can see it — the model gets it
+   * in-band inside the catalogue text, and the USER gets it here. */
+  /* cat.total == 0 means the catalogue could not be built at all (OOM), not
+   * that it was bounded — reporting "shown 0 of 0 services" would be a
+   * confident statement about a measurement that never happened. */
+  if (cat.total > 0 && (cat.truncated || !cat.descriptions)) {
+    char d[256];
+    snprintf(d, sizeof d,
+      "the analysis model was shown %d of %d registered entity-pivot services%s "
+      "(prompt budget, JO_PROMPT_SERVICE_CATALOGUE_CHARS); routing was chosen "
+      "from that subset",
+      cat.shown, cat.total,
+      cat.descriptions ? "" : " as bare ids, descriptions omitted");
+    progress_stage_note(rp, "analysis", "service_catalogue_bounded", d);
+  }
   char *m1 = prompt_to_messages(p1);
   free(p1);
   /* Constrain routing to the LIVE registry: the schema's service enums are
    * rebuilt from the registered services every run, so newly-added collectors
-   * are immediately recommendable and removed ones can't be hallucinated. */
-  char *dynschema = osint_analysis_schema_dynamic();
+   * are immediately recommendable and removed ones can't be hallucinated —
+   * and bounded to the SAME set the catalogue above printed (see
+   * osint_service_id_array()). The enum is the model's permitted vocabulary
+   * and the catalogue is its briefing; if the budget trimmed the briefing, the
+   * vocabulary is trimmed with it rather than inviting a name we never
+   * explained. */
+  char *dynschema = osint_analysis_schema_dynamic_limited(cat.shown);
   const char *aschema = dynschema ? dynschema : schema_load("osint_analysis");
-  char *araw = m1 ? llm_chat(llm, m1, aschema, 2048, 0.2, 60000) : NULL;
+  llm_status ast = LLM_ERR_BAD_REQUEST;
+  long ahttp = 0;
+  char *araw = m1 ? llm_chat_ex(llm, m1, aschema, 2048, 0.2, llm_timeout_ms(),
+                                &ast, &ahttp)
+                  : NULL;
   free(dynschema);
   free(m1);
   cJSON *analysis = extract_json(araw);
+  /* THE WHOLE POINT OF THIS BLOCK. `analysis == NULL` used to flow straight on
+   * into "zero entities", one fallback corpus lookup and a run that reported
+   * every phase as though it had happened. It is now named on the record
+   * before anything downstream consumes it, so an unreachable llama-server and
+   * a model that ran and found nothing are never again the same payload. The
+   * run DOES continue — the corpus lookup below is real data and worth having
+   * — but it continues as an explicitly degraded run. */
+  note_llm_stage(rp, "analysis", llm->base_url, ast, ahttp, araw,
+                 analysis != NULL);
   free(araw);
   cJSON *qents = analysis ? cJSON_GetObjectItem(analysis, "entities") : NULL;
   if (!qents || !cJSON_IsArray(qents)) qents = NULL;
@@ -419,8 +563,21 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
     }
     add_task(&tasks, &executed, "JP_CORPUS_LOOKUP", ev, ety);
   }
-  if (tasks.n == 0 && query && *query)
+  /* The fallback that made "services are not attributed" look like a routing
+   * bug. With no entities there is nothing to route, so the investigation
+   * collapses to ONE keyword lookup on the raw query string — and that is a
+   * materially different thing from the multi-service entity pivot the UI
+   * advertises. Whether we got here because the analysis failed or because a
+   * working model genuinely found no entity, the user is owed the distinction
+   * between "one service was the right answer" and "one service is all we
+   * could manage". */
+  if (tasks.n == 0 && query && *query) {
     add_task(&tasks, &executed, "JP_CORPUS_LOOKUP", query, "keyword");
+    progress_stage_error(rp, "services_assigned", "no_entities_extracted",
+      "no entities came out of the analysis stage, so no service could be "
+      "routed to one; falling back to a single JP_CORPUS_LOOKUP keyword "
+      "search over the stored corpus using the raw query text");
+  }
   assign_services(rp, &tasks);
 
   /* ── Phase 3: dispatch round 0 ─────────────────────────────────────── */
@@ -444,9 +601,21 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
     free(rj);
     char *m2 = prompt_to_messages(p2);
     free(p2);
-    char *p2raw = m2 ? llm_chat(llm, m2, NULL, 2048, 0.2, 60000) : NULL;
+    llm_status p2st = LLM_ERR_BAD_REQUEST;
+    long p2http = 0;
+    char *p2raw = m2 ? llm_chat_ex(llm, m2, NULL, 2048, 0.2, llm_timeout_ms(), &p2st,
+                                   &p2http) : NULL;
     free(m2);
     cJSON *ph2 = extract_json(p2raw);
+    /* Per ROUND, not once for the loop. A run that pivots successfully for two
+     * rounds and then loses the model has done two thirds of an investigation,
+     * and reporting that as a clean stop at round 2 would overstate it exactly
+     * as badly as the phase-1 hole did. The stage name carries the round so
+     * three failures read as three, not as one repeated. */
+    { char stage[32];
+      snprintf(stage, sizeof stage, "followup_round_%d", round);
+      note_llm_stage(rp, stage, llm->base_url, p2st, p2http, p2raw,
+                     ph2 != NULL); }
     free(p2raw);
     cJSON *chain = ph2 ? cJSON_GetObjectItem(ph2, "chain_services") : NULL;
 
@@ -503,8 +672,15 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
     if (cJSON_IsTrue(cJSON_GetObjectItem(r, "success"))) ok++;
   int uniq = ne;                       /* query entities in scope (approx) */
   /* Counts template — kept only as a fallback so `synthesis` is never blank
-   * when the LLM call below is unavailable (offline) or returns nothing. */
-  char synth_fallback[512];
+   * when the LLM call below is unavailable (offline) or returns nothing.
+   *
+   * It USED TO BE INDISTINGUISHABLE from a real narrative conclusion: same
+   * field, same prose register, no marker. A reader of /api/search/results had
+   * no way to know whether "0 returned data" was an analyst's finding or the
+   * string we print when the analyst never showed up. The banner below is
+   * appended when — and only when — the synthesis call failed, and it names
+   * which of the two this is. */
+  char synth_fallback[640];
   snprintf(synth_fallback, sizeof synth_fallback,
     "Investigated \"%s\". Ran %d service call(s) across %d round(s); "
     "%d returned data. %d unique entit%s in scope.",
@@ -521,7 +697,10 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
     free(rj);
     char *ms = ps ? prompt_to_messages(ps) : NULL;
     free(ps);
-    char *raw = ms ? llm_chat(llm, ms, NULL, 1024, 0.3, 60000) : NULL;
+    llm_status sst = LLM_ERR_BAD_REQUEST;
+    long shttp = 0;
+    char *raw = ms ? llm_chat_ex(llm, ms, NULL, 1024, 0.3, llm_timeout_ms(), &sst, &shttp)
+                   : NULL;
     free(ms);
     if (raw) {                                   /* trim; keep if non-empty */
       char *t = raw;
@@ -531,14 +710,36 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
       if (*t) synth_llm = strdup(t);
       free(raw);
     }
+    if (!synth_llm) {
+      note_llm_stage(rp, "synthesis", llm->base_url, sst, shttp, NULL,
+                     0 /* nothing usable came back either way */);
+      /* Say it IN the field a reader actually reads. A degradation flag they
+       * have to go looking for is not the same as the summary itself admitting
+       * it is a row count and not an analysis. */
+      size_t used = strlen(synth_fallback);
+      snprintf(synth_fallback + used, sizeof synth_fallback - used,
+        " [DEGRADED: no narrative analysis was produced — the LLM synthesis "
+        "step failed (%s). This is a generated count of what ran, not a "
+        "conclusion drawn from the data.]", llm_status_code(sst));
+    }
   }
   const char *synth = synth_llm ? synth_llm : synth_fallback;
+
+  /* The degradation record travels with the RESULTS too, not just on the
+   * progress envelope. /api/search/results/:id is what a client reads once the
+   * SSE stream has closed, and searchapi.c's restart path rebuilds a payload
+   * from the stored row alone — so the flag has to be inside `results` or the
+   * answer gets rosier the further you are from the run. */
+  char *serr_json = progress_stage_errors_json(rp);
+  int degraded = progress_is_degraded(rp);
 
   cJSON *res = cJSON_CreateObject();
   cJSON_AddStringToObject(res, "query", query);
   cJSON_AddItemToObject(res, "services", cJSON_Duplicate(results, 1));
   cJSON_AddStringToObject(res, "synthesis", synth);   /* cJSON copies it */
-  free(synth_llm);
+  cJSON_AddBoolToObject(res, "degraded", degraded);
+  { cJSON *se = serr_json ? cJSON_Parse(serr_json) : NULL;
+    cJSON_AddItemToObject(res, "stage_errors", se ? se : cJSON_CreateArray()); }
   char *rjson = cJSON_PrintUnformatted(res);
   cJSON_Delete(res);
   progress_set_results(rp, rjson);
@@ -559,6 +760,13 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   cJSON_AddStringToObject(props, "phase", "completed");
   cJSON_AddNumberToObject(props, "rounds", round);
   if (qents) cJSON_AddItemToObject(props, "entities", cJSON_Duplicate(qents, 1));
+  /* Persisted alongside the run so the from-store reconstruction in
+   * searchapi_results() can still say the run was degraded after a restart has
+   * dropped the in-memory progress record. */
+  cJSON_AddBoolToObject(props, "degraded", degraded);
+  { cJSON *se = serr_json ? cJSON_Parse(serr_json) : NULL;
+    cJSON_AddItemToObject(props, "stage_errors", se ? se : cJSON_CreateArray()); }
+  free(serr_json);
   char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
@@ -573,6 +781,12 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   it.tags_json = "[\"osint-search\"]";
   sink.emit(&sink, &it);
   free(pj);
+  /* Only now. `synth` aliases synth_llm, and it is still the summary/body of
+   * the run-summary row emitted just above. Freeing it at the cJSON copy —
+   * where it used to happen — left it.summary/it.body pointing into freed
+   * heap, so the row persisted for this run carried whatever the allocator
+   * had since put there instead of the synthesis. */
+  free(synth_llm);
 
   /* searchIngest.js step-2: entity graph via the SAME es_* surface the NER
    * enricher uses (one path). seeds = query entities (field 'query', 0.9);
@@ -624,8 +838,9 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   strset_free(&executed);
   intel_sink_free(&sink);          /* make() heap-allocates; nothing freed it */
   db_worker_close(&own);           /* no-op if we fell back to shared_db */
-  fprintf(stderr, "[pipeline] %s done: %d svc, %d ok, %d round(s)\n",
-          request_id, total, ok, round + 1);
+  fprintf(stderr, "[pipeline] %s done: %d svc, %d ok, %d round(s)%s\n",
+          request_id, total, ok, round + 1,
+          degraded ? " DEGRADED (see stage_errors)" : "");
 }
 
 char *osint_suggest(llm_client *llm, const char *query) {

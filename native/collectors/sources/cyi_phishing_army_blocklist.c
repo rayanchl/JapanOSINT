@@ -5,9 +5,12 @@
  * parse_notes: "Bare domains after a '#' header block. 154k entries: index it,
  * do not emit rows one-per-domain." The full file is therefore parsed and
  * counted — the real total and the '# Last Update' header are carried on every
- * row — but only the first MAX_ROWS domains are materialised as intel rows, so
- * this stays the breadth layer behind the smaller high-precision feeds rather
- * than a 154k-row dump. Every emitted domain is a literal line from the file.
+ * row — and EVERY domain is materialised as a row. The old 5,000-row cap was
+ * a silent slice of a 154k-line file we had already downloaded and parsed:
+ * nothing in the output said the other 149k existed. Consumers that want the
+ * breadth layer as an index rather than a list bound their own view; the
+ * collector does not decide that for them. Every emitted domain is a literal
+ * line from the file.
  * No coordinates -> has_geo 0 (R2).
  * Licence: CC BY-NC-SA style community feed — NON-COMMERCIAL; check the
  * project page terms before commercial redistribution.
@@ -22,7 +25,6 @@
 #include <string.h>
 
 #define CYI_URL "https://phishing.army/download/phishing_army_blocklist.txt"
-#define MAX_ROWS 5000
 
 static int looks_like_host(const char *s) {
   size_t n = strlen(s);
@@ -42,7 +44,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   for (const char *q = body; *q; q++) if (*q == '\n') total++;
 
   char updated[128] = "";
-  int n = 0, hosts = 0, capped = 0;
+  int n = 0;
   char *cur = body, *line;
   while ((line = jo_next_line(&cur)) != NULL) {
     if (!line[0]) continue;
@@ -56,10 +58,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       continue;
     }
     if (!looks_like_host(line)) continue;
-    hosts++;
-    /* Past the cap keep counting host lines rather than breaking, so the notice
-     * below reports the file's REAL domain count instead of an unknown. */
-    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "domain", line);
@@ -83,16 +81,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
-  /* House rule 2: the whole blocklist was downloaded and every domain line was
-   * counted; only the first MAX_ROWS became rows. Say so as data. */
-  if (capped)
-    jo_truncation_notice(sink, "phishing-army-blocklist", "phishing_army_blocklist.txt",
-                         n, (long)hosts,
-                         "MAX_ROWS reached; the remaining domains in the "
-                         "downloaded blocklist were counted but not emitted as "
-                         "rows",
-                         "raise or drop MAX_ROWS in collectors/sources/"
-                         "cyi_phishing_army_blocklist.c");
   fprintf(stderr, "[phishing-army-blocklist] emitted %d of ~%d domains (updated %s)\n",
           n, total, updated[0] ? updated : "n/a");
   return 0;

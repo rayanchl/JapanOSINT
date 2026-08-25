@@ -17,46 +17,20 @@ static int allowed_tbl(const char *n) {
     if (strcmp(ALLOWED[i],n)==0) return 1;
   return 0;
 }
-/* `*ok` (optional) reports whether the PRAGMA scan really reached the end.
- * It matters: dbexplorer_table() derives the `q` filter from this list, so a
- * short read there does not just shorten the schema view — it drops WHERE
- * clauses and answers a filtered request with UNFILTERED rows. */
-static cJSON *cols_of(sqlite3 *h, const char *name, int *ok) {
-  if (ok) *ok=0;
+static cJSON *cols_of(sqlite3 *h, const char *name) {
   char sql[128]; snprintf(sql,sizeof sql,"PRAGMA table_info(\"%s\")",name);
-  sqlite3_stmt *s=NULL; cJSON *a=cJSON_CreateArray();
+  sqlite3_stmt *s; cJSON *a=cJSON_CreateArray();
   if (sqlite3_prepare_v2(h,sql,-1,&s,NULL)==SQLITE_OK) {
-    /* `while (step() == ROW)` cannot tell DONE from IOERR/CORRUPT/BUSY/
-     * INTERRUPT, so the loop ends the same way whether the schema was fully
-     * read or the read died halfway. */
-    int scan_rc;
-    while ((scan_rc=sqlite3_step(s))==SQLITE_ROW) {
+    while (sqlite3_step(s)==SQLITE_ROW) {
       cJSON *c=cJSON_CreateObject();
       cJSON_AddStringToObject(c,"name",(const char*)sqlite3_column_text(s,1));
       const char *ty=(const char*)sqlite3_column_text(s,2);
       cJSON_AddStringToObject(c,"type",(ty&&*ty)?ty:"TEXT");
       cJSON_AddItemToArray(a,c);
     }
-    if (ok) *ok = (scan_rc==SQLITE_DONE);
   }
   sqlite3_finalize(s);
   return a;
-}
-
-/* Append to a growing heap string. Returns 0 on OOM (buffer left usable but
- * short — every caller treats that as a hard failure, never as "good enough"). */
-static int sb_add(char **buf, size_t *len, size_t *cap, const char *s) {
-  size_t n=strlen(s);
-  if (*len+n+1 > *cap) {
-    size_t nc = *cap ? *cap : 256;
-    while (nc < *len+n+1) nc*=2;
-    char *nb=realloc(*buf,nc);
-    if (!nb) return 0;
-    *buf=nb; *cap=nc;
-  }
-  memcpy(*buf+*len,s,n+1);
-  *len+=n;
-  return 1;
 }
 char *dbexplorer_tables(db_handle *db) {
   cJSON *arr=cJSON_CreateArray();
@@ -77,7 +51,7 @@ char *dbexplorer_tables(db_handle *db) {
     cJSON *o=cJSON_CreateObject();
     cJSON_AddStringToObject(o,"name",name);
     cJSON_AddNumberToObject(o,"row_count",(double)cnt);
-    cJSON_AddItemToObject(o,"columns",cols_of(db->h,name,NULL));
+    cJSON_AddItemToObject(o,"columns",cols_of(db->h,name));
     cJSON_AddItemToArray(arr,o);
   }
   char *j=cJSON_PrintUnformatted(arr); cJSON_Delete(arr); return j;
@@ -85,137 +59,106 @@ char *dbexplorer_tables(db_handle *db) {
 char *dbexplorer_table(db_handle *db, const char *name, int limit, int offset,
                   const char *q, const char *orderBy, const char *orderDir) {
   if (!allowed_tbl(name)) return NULL;            /* → 400 */
-  if (limit<1) limit=50; if (limit>200) limit=200;
+  if (limit<1) limit=50;
+  if (limit>200) limit=200;
   if (offset<0) offset=0;
-  int cols_ok=0;
-  cJSON *cols=cols_of(db->h,name,&cols_ok);
-  /* Every failure below lands here instead of silently degrading. `complete`
-   * is the field that separates "this table really has no matching rows" from
-   * "we could not read it": the old code left `total` and `rows` at their
-   * initialised 0 / [] on a prepare or step failure and returned 200, which
-   * renders as an empty table. */
-  char err[256]=""; int complete=1;
-  #define FAILED(...) do { if (!err[0]) snprintf(err,sizeof err,__VA_ARGS__); \
-                           complete=0; } while (0)
-  if (!cols_ok) FAILED("schema read failed: %s", sqlite3_errmsg(db->h));
-
+  cJSON *cols=cols_of(db->h,name);
   /* text columns + name validation for orderBy */
   int ob_ok=0;
   cJSON *cc;
   cJSON_ArrayForEach(cc,cols)
     if (orderBy&&*orderBy&&strcmp(cJSON_GetObjectItem(cc,"name")->valuestring,orderBy)==0) ob_ok=1;
   const char *dir = (orderDir && strcasecmp(orderDir,"DESC")==0) ? "DESC" : "ASC";
-
-  /* The WHERE clause is one `"col" LIKE ?` per TEXT column, so its length is a
-   * property of the table, not a constant. It used to be built with strncat
-   * into `char where[512]`: on a wide table that truncated mid-fragment, the
-   * resulting SQL failed to prepare, and both queries below fell through
-   * leaving total=0 / rows=[]. Worse, the bind count was recovered by counting
-   * "LIKE ?" in that same truncated buffer, so the placeholders and the binds
-   * could disagree. Grow the buffer instead (no truncation is possible) and
-   * count the placeholders as they are emitted. */
-  char *where=NULL; size_t wlen=0, wcap=0;
-  int hasq = q && *q, nlike=0;
+  /* The WHERE disjunction is sized from the ACTUAL column set, not a fixed
+   * 512 bytes. intel_items carries 26 TEXT columns once the boot migrations
+   * have run (keywords_at, media_scanned_at, title_en/body_en/summary_en,
+   * translated_at, cluster_id …) and their OR-chain is ~515 bytes, so the
+   * strncat() that used to build this truncated it mid-identifier. Both
+   * prepares below then failed and the endpoint answered every `q=` search of
+   * the main table with rows:[] total:0 — a silent, permanent "no matches"
+   * that is indistinguishable from an empty table. */
+  int hasq = q && *q;
+  size_t wcap = 8;
+  cJSON_ArrayForEach(cc,cols) {
+    cJSON *cn = cJSON_GetObjectItem(cc,"name");
+    wcap += (cn && cn->valuestring ? strlen(cn->valuestring) : 0) + 24;
+  }
+  char *where = calloc(1, wcap);
+  if (!where) { cJSON_Delete(cols); return NULL; }
   if (hasq) {
+    int first=1; size_t wl=0;
     cJSON_ArrayForEach(cc,cols) {
       const char *ty=cJSON_GetObjectItem(cc,"type")->valuestring;
       if (ty && (strcasestr(ty,"TEXT")||strcasestr(ty,"CHAR")||strcasestr(ty,"CLOB"))) {
-        if (!sb_add(&where,&wlen,&wcap, nlike?" OR \"":"WHERE \"") ||
-            !sb_add(&where,&wlen,&wcap, cJSON_GetObjectItem(cc,"name")->valuestring) ||
-            !sb_add(&where,&wlen,&wcap, "\" LIKE ?")) {
-          /* A half-built WHERE would answer a filtered request with a NARROWER
-           * filter than asked for, and look like a legitimate result set. */
-          FAILED("out of memory building the search filter");
-          nlike=0; break;
+        int n = snprintf(where+wl,wcap-wl,"%s\"%s\" LIKE ?",
+          first?"WHERE ":" OR ",cJSON_GetObjectItem(cc,"name")->valuestring);
+        /* wcap is computed from the real column set above, so this cannot bite
+         * today. Guard it anyway: snprintf returns what it WOULD have written,
+         * so an unchecked `wl +=` can carry wl past wcap, and `wcap - wl` is
+         * size_t — it underflows to ~2^64 and the next iteration writes far
+         * past the allocation. Fail the request rather than continue with a
+         * truncated disjunction, because a short WHERE silently searches fewer
+         * columns and answers "no matches" for rows that do match, which is
+         * the exact bug this whole block was rewritten to fix. */
+        if (n < 0 || (size_t)n >= wcap - wl) {
+          free(where); cJSON_Delete(cols); return NULL;
         }
-        nlike++;
+        wl += (size_t)n;
+        first=0;
       }
     }
-    /* Either no text columns, or the build failed: run unfiltered ONLY in the
-     * first case — a dropped filter is otherwise reported, never applied. */
-    if (!nlike) hasq=0;
+    if (first) hasq=0; /* no text cols → no filter */
   }
-  char *like=NULL;
-  if (hasq) {
-    size_t ln=strlen(q)+3;                 /* '%' + q + '%' + NUL */
-    like=malloc(ln);
-    if (!like) { FAILED("out of memory"); hasq=0; nlike=0; }
-    else snprintf(like,ln,"%%%s%%",q);
-  }
-  const char *wclause = hasq ? where : "";
-
-  /* count */
-  long total=0; int total_known=0;
-  size_t qsz = strlen(name)+wlen+128;
-  char *cq=malloc(qsz);
-  sqlite3_stmt *s=NULL;
-  if (!cq) FAILED("out of memory");
-  else {
-    snprintf(cq,qsz,"SELECT COUNT(*) FROM \"%s\" %s",name,wclause);
-    if (sqlite3_prepare_v2(db->h,cq,-1,&s,NULL)==SQLITE_OK){
-      for (int i=0;i<nlike;i++) sqlite3_bind_text(s,i+1,like,-1,SQLITE_TRANSIENT);
-      if (sqlite3_step(s)==SQLITE_ROW) { total=sqlite3_column_int64(s,0); total_known=1; }
-      else FAILED("count failed: %s", sqlite3_errmsg(db->h));
-    } else FAILED("count prepare failed: %s", sqlite3_errmsg(db->h));
-    sqlite3_finalize(s); s=NULL;
-  }
-  free(cq);
-
+  char like[256]; if (hasq) snprintf(like,sizeof like,"%%%s%%",q);
   char order[128]=""; if (ob_ok) snprintf(order,sizeof order,"ORDER BY \"%s\" %s",orderBy,dir);
-  size_t ssz = strlen(name)+wlen+sizeof order+64;
-  char *sql=malloc(ssz);
+  size_t scap = wcap + strlen(name) + sizeof order + 64;
+  char *cq = malloc(scap), *sql = malloc(scap);
+  if (!cq || !sql) { free(cq); free(sql); free(where); cJSON_Delete(cols); return NULL; }
+  /* count */
+  long total=0; int qerr=0;
+  snprintf(cq,scap,"SELECT COUNT(*) FROM \"%s\" %s",name,hasq?where:"");
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h,cq,-1,&s,NULL)==SQLITE_OK){
+    int bi=1; if (hasq){ int n=0; for(const char*p=where;(p=strstr(p,"LIKE ?"));p+=6)n++;
+      for(int i=0;i<n;i++) sqlite3_bind_text(s,bi++,like,-1,SQLITE_TRANSIENT); }
+    if (sqlite3_step(s)==SQLITE_ROW) total=sqlite3_column_int64(s,0);
+  } else qerr=1;
+  sqlite3_finalize(s);
+  snprintf(sql,scap,"SELECT * FROM \"%s\" %s %s LIMIT ? OFFSET ?",
+    name,hasq?where:"",order);
   cJSON *rows=cJSON_CreateArray();
-  if (!sql) FAILED("out of memory");
+  if (sqlite3_prepare_v2(db->h,sql,-1,&s,NULL)!=SQLITE_OK) qerr=1;
   else {
-    snprintf(sql,ssz,"SELECT * FROM \"%s\" %s %s LIMIT ? OFFSET ?",
-      name,wclause,order);
-    if (sqlite3_prepare_v2(db->h,sql,-1,&s,NULL)==SQLITE_OK){
-      int bi=1;
-      for (int i=0;i<nlike;i++) sqlite3_bind_text(s,bi++,like,-1,SQLITE_TRANSIENT);
-      sqlite3_bind_int(s,bi++,limit); sqlite3_bind_int(s,bi++,offset);
-      int ncol=sqlite3_column_count(s);
-      int scan_rc;
-      while ((scan_rc=sqlite3_step(s))==SQLITE_ROW){
-        cJSON *r=cJSON_CreateObject();
-        for (int i=0;i<ncol;i++){
-          const char *cn=sqlite3_column_name(s,i);
-          switch (sqlite3_column_type(s,i)){
-            case SQLITE_NULL: cJSON_AddNullToObject(r,cn); break;
-            case SQLITE_INTEGER: cJSON_AddNumberToObject(r,cn,(double)sqlite3_column_int64(s,i)); break;
-            case SQLITE_FLOAT: cJSON_AddNumberToObject(r,cn,sqlite3_column_double(s,i)); break;
-            default: cJSON_AddStringToObject(r,cn,(const char*)sqlite3_column_text(s,i)); break;
-          }
+    int bi=1; if (hasq){ int n=0; for(const char*p=where;(p=strstr(p,"LIKE ?"));p+=6)n++;
+      for(int i=0;i<n;i++) sqlite3_bind_text(s,bi++,like,-1,SQLITE_TRANSIENT); }
+    sqlite3_bind_int(s,bi++,limit); sqlite3_bind_int(s,bi++,offset);
+    int ncol=sqlite3_column_count(s);
+    while (sqlite3_step(s)==SQLITE_ROW){
+      cJSON *r=cJSON_CreateObject();
+      for (int i=0;i<ncol;i++){
+        const char *cn=sqlite3_column_name(s,i);
+        switch (sqlite3_column_type(s,i)){
+          case SQLITE_NULL: cJSON_AddNullToObject(r,cn); break;
+          case SQLITE_INTEGER: cJSON_AddNumberToObject(r,cn,(double)sqlite3_column_int64(s,i)); break;
+          case SQLITE_FLOAT: cJSON_AddNumberToObject(r,cn,sqlite3_column_double(s,i)); break;
+          default: cJSON_AddStringToObject(r,cn,(const char*)sqlite3_column_text(s,i)); break;
         }
-        cJSON_AddItemToArray(rows,r);
       }
-      /* `while (step() == ROW)` cannot tell DONE from IOERR/CORRUPT/BUSY/
-       * INTERRUPT: a page that died after 3 of its 50 rows is a 3-row page
-       * that reads as the whole page. */
-      if (scan_rc!=SQLITE_DONE)
-        FAILED("row read failed after %d row(s): %s",
-               cJSON_GetArraySize(rows), sqlite3_errmsg(db->h));
-    } else FAILED("row prepare failed: %s", sqlite3_errmsg(db->h));
-    sqlite3_finalize(s); s=NULL;
+      cJSON_AddItemToArray(rows,r);
+    }
   }
-  free(sql); free(where); free(like);
-  #undef FAILED
-
-  if (!complete)
-    fprintf(stderr,"[dbexplorer] %s: %s\n",name,err);
-
+  sqlite3_finalize(s);
+  const char *emsg = qerr ? sqlite3_errmsg(db->h) : NULL;
+  free(where); free(cq); free(sql);
   cJSON *o=cJSON_CreateObject();
   cJSON_AddStringToObject(o,"name",name);
   cJSON_AddItemToObject(o,"columns",cols);
   cJSON_AddItemToObject(o,"rows",rows);
-  /* `total` stays a plain number even when it is not known — the existing iOS
-   * DBPage decodes it as a non-optional Int and a null would fail the whole
-   * response, error field included. `total_known`/`complete`/`error` carry the
-   * truth alongside it; a reader must not take total==0 as "empty table"
-   * without checking them. */
   cJSON_AddNumberToObject(o,"total",(double)total);
-  cJSON_AddBoolToObject(o,"total_known",total_known);
-  cJSON_AddBoolToObject(o,"complete",complete);
-  if (!complete) cJSON_AddStringToObject(o,"error",err);
+  /* A query that could not be prepared is reported as one. Serving the empty
+   * rows[] on its own would read as "the table has nothing matching", which is
+   * exactly the failure-as-plausible-success this codebase forbids. */
+  if (qerr) cJSON_AddStringToObject(o,"error",emsg?emsg:"query failed");
   cJSON_AddNumberToObject(o,"limit",limit);
   cJSON_AddNumberToObject(o,"offset",offset);
   cJSON_AddItemToObject(o,"orderBy",ob_ok?cJSON_CreateString(orderBy):cJSON_CreateNull());

@@ -92,8 +92,54 @@ dispatcher, and by anything else that resolves a source by id.
 ## R6 — Keyless, or gated honestly
 
 Prefer endpoints that work with no credential. If a key is required, read it
-with `getenv`, and when it is absent log one line and `return 0` — do not
-emit a row saying a key is needed.
+with `getenv`, and when it is absent **`return 0`** — never `-1`.
+`scheduler_run_source` turns a `-1` into `fetch_log status='error'` plus a
+`collector_anomaly` on *every* tick, so an unconfigured source reads as
+permanently broken and buries the real breakages.
+
+R6 used to end "log one line and `return 0` — do not emit a row saying a key
+is needed", and the thing it was guarding is still absolute: **a gated source
+must never emit a FINDING.** A row that a map pin, a feed or a synthesis prompt
+would read as an observation about the world is fabricated data (R1), whether
+it is a seed point or a "no key" placeholder.
+
+But a bare `return 0` is not honest either. In `fetch_log`, `/api/status` and
+anomaly triage it is indistinguishable from a source that ran, spent a request
+and genuinely found nothing — the same invisible nothing as an
+`EMPTY_RESULTSET` source, and exactly what CLAUDE.md rule 1 names: *"A failure
+degrades to an explicit `error` / `not_found` / 'needs credential' note."* A
+log line nobody reads is not a disclosure.
+
+The resolution is the shape `dam_water_level.c` already used for its own
+not-implemented state, now shared:
+
+```c
+#include "_credential_notice.inc"
+
+  const char *key = getenv("WIGLE_API_KEY");
+  if (!key || !*key) {
+    static const char *const envs[] = { "WIGLE_API_KEY", NULL };
+    return jo_needs_credential(sink, "wifi-networks-wigle",
+        "WiGLE wireless network search (JP bbox)",
+        envs, "https://api.wigle.net/api/v2/network/search",
+        "free account at wigle.net");
+  }
+```
+
+That emits one `record_type = "collector-status-notice"` row — filtered out of
+every findings surface by record_type, carrying no observation of any kind, and
+keyed on the constant `remote_key = "collector-needs-credential"` so the sink
+upserts it. A source gated for a year holds exactly one row, not one per
+scheduler tick. It still returns 0.
+
+Twelve collectors were converted in the unification sweep (`abuseipdb-jp`,
+`bear-encounters`, `estat-employment`, `facebook-geo`, `fofa-jp`, `jstat-map`,
+`msil-umishiru`, `odpt-train`, `resas-population`, `sentinel-japan`,
+`softbank-crowd`, `wifi-networks-wigle`). The rest of the gated population —
+notably every collector gated inside `lib/threatintel.c`'s
+`threatintel_collect()` — still degrades to the log-only form. Use
+`jo_needs_credential()` for anything new; the gate belongs in the toolkit for
+the threatintel family and that is tracked separately.
 
 ## R7 — Cite the upstream in the file header
 

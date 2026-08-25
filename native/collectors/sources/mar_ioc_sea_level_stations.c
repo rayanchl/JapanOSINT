@@ -101,8 +101,21 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(link, sizeof link,
              "http://www.ioc-sealevelmonitoring.org/station.php?code=%s", code);
 
+    /* stationlist&showall=all returns one row per station x SENSOR — the same
+     * station code recurs for prs/rad/flt/enc channels. Keying on the code
+     * alone upserted the channels onto each other: measured 2,385 emitted,
+     * 1,763 stored. The sensor (and sensorid where present) completes the
+     * upstream's own identity for the row. */
+    char key[128];
+    const cJSON *sidj = cJSON_GetObjectItem(s, "sensorid");
+    if (cJSON_IsNumber(sidj))
+      snprintf(key, sizeof key, "%s|%s|%.0f", code, sensor ? sensor : "",
+               sidj->valuedouble);
+    else
+      snprintf(key, sizeof key, "%s|%s", code, sensor ? sensor : "");
+
     intel_item it = {0};
-    it.remote_key      = code;
+    it.remote_key      = key;
     it.title           = title;
     it.summary         = summary;
     it.link            = link;

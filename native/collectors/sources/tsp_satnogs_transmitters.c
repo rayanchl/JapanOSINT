@@ -21,7 +21,6 @@
 #include <string.h>
 
 #define SATNOGS_TX_URL "https://db.satnogs.org/api/transmitters/?format=json"
-#define MAX_ROWS 12000
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, SATNOGS_TX_URL, 60000);
@@ -35,11 +34,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return -1;
   }
 
-  int n = 0, capped = 0;
-  const int have = cJSON_GetArraySize(doc);
+  int n = 0;
   cJSON *tx;
   cJSON_ArrayForEach(tx, doc) {
-    if (n >= MAX_ROWS) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     const char *uuid = jo_sv(tx, "uuid");
     if (!uuid) continue;                          /* no identity -> no row */
 
@@ -115,15 +112,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
-  /* House rule 2: the whole transmitter list was fetched; MAX_ROWS stopped
-   * the emit loop partway. */
-  if (capped)
-    jo_truncation_notice(sink, "satnogs-db-transmitters", "transmitters", n,
-                         (long)have,
-                         "MAX_ROWS reached; the remaining transmitters in the "
-                         "fetched list were not emitted",
-                         "raise or drop MAX_ROWS in collectors/sources/"
-                         "tsp_satnogs_transmitters.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[satnogs-db-transmitters] emitted %d\n", n);
   return 0;

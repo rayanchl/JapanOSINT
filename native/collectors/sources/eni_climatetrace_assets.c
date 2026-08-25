@@ -1,5 +1,5 @@
 /* Climate TRACE facility-level greenhouse gas emissions.
- * Endpoint: https://api.climatetrace.org/v6/assets?limit=200&sectors=<sector>
+ * Endpoint: https://api.climatetrace.org/v6/assets?limit=<n>&offset=<n>
  * Keyless. Emits one row per asset that returned an emissions figure:
  *   emissions_quantity (UNIT: tonnes of the gas named in `gas`, we take
  *   gas="co2e_100yr" explicitly rather than summing across gases),
@@ -12,7 +12,23 @@
  * LICENCE TRAP: ActivityUnits / CapacityUnits come back literally as the string
  * "license restricted" where the commercial input cannot be redistributed —
  * those are emitted as ABSENT, never as a value.
- * Licence: Climate TRACE data is CC BY 4.0. */
+ * Licence: Climate TRACE data is CC BY 4.0.
+ *
+ * PAGINATION, and the `sectors` trap behind it. This collector used to make
+ * four requests, one per entry in a SECTORS[] list of {power, steel, cement,
+ * oil-and-gas-production}, each `?limit=200&sectors=<name>`. Probing v6
+ * directly shows the `sectors` parameter is IGNORED: the same query with
+ * sectors=steel, sectors=iron-and-steel and no sectors at all returns byte-for
+ * byte the same 50 assets, spanning every sector the dataset has (the real
+ * sector values are `iron-and-steel`, `electricity-generation`, … — the names
+ * in that list matched nothing either way). So the four calls were four copies
+ * of the same first 200 rows: three requests spent for zero additional data,
+ * and 200 assets kept out of a dataset that still answers at offset=100000.
+ *
+ * The fetch is now one offset-paged walk. There is no declared total and the
+ * asset set is far larger than a daily run should pull, so the page ceiling is
+ * a real bound — which means it is stated in the data as a
+ * collector-truncation-notice, and $JO_CLIMATETRACE_PAGES raises it. */
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
@@ -24,8 +40,8 @@
 #define SRC "climatetrace-assets"
 #define WANT_GAS "co2e_100yr"
 
-static const char *SECTORS[] = { "power", "oil-and-gas-production", "steel",
-                                 "cement", NULL };
+#define CT_PAGE_SIZE 1000
+#define CT_MAX_PAGES 20   /* exhaustive-ok: offset-walk ceiling on an undeclared total; a stop here emits a collector-truncation-notice */
 
 /* "license restricted" is a withheld value, not a unit — drop it. */
 static const char *open_str(const cJSON *o, const char *k) {
@@ -34,17 +50,22 @@ static const char *open_str(const cJSON *o, const char *k) {
   return s;
 }
 
-static int collect_sector(const source_ctx *ctx, intel_sink *sink,
-                          const char *sector, int *fetched) {
-  char url[256];
+/* One page. *fetched is set once anything came back; *seen counts the assets
+ * the page carried (records, not rows — an asset with no measured emissions is
+ * a legitimate skip, not a discard). Returns rows emitted. */
+static int collect_page(const source_ctx *ctx, intel_sink *sink, int offset,
+                        int *fetched, int *seen) {
+  char url[160];
   snprintf(url, sizeof url,
-           "https://api.climatetrace.org/v6/assets?limit=200&sectors=%s", sector);
-  cJSON *doc = feed_get_json(ctx->http, url, 40000);
+           "https://api.climatetrace.org/v6/assets?limit=%d&offset=%d",
+           CT_PAGE_SIZE, offset);
+  cJSON *doc = feed_get_json(ctx->http, url, 90000);
   if (!doc) return 0;
   *fetched = 1;
 
   cJSON *assets = cJSON_GetObjectItem(doc, "assets");
   if (!cJSON_IsArray(assets)) { cJSON_Delete(doc); return 0; }
+  *seen = cJSON_GetArraySize(assets);
 
   int n = 0;
   cJSON *a;
@@ -66,6 +87,9 @@ static int collect_sector(const source_ctx *ctx, intel_sink *sink,
     }
     if (!pick) continue;             /* no measured emissions -> no row (R1) */
     double q = cJSON_GetObjectItem(pick, "EmissionsQuantity")->valuedouble;
+    /* The row's headline number is the co2e_100yr figure, but an asset's
+     * EmissionsSummary can carry several gases and every one of them was being
+     * dropped once the pick was made. The whole array rides along. */
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "facility_name", name);
@@ -90,6 +114,15 @@ static int collect_sector(const source_ctx *ctx, intel_sink *sink,
       cJSON_AddNumberToObject(p, "capacity", cap->valuedouble);
       cJSON_AddStringToObject(p, "capacity_unit", capu);
     }
+    if (cJSON_IsArray(summ) && cJSON_GetArraySize(summ) > 0)
+      cJSON_AddItemToObject(p, "emissions_summary", cJSON_Duplicate(summ, 1));
+    const char *nat_id = jo_sv(a, "NativeId");
+    if (nat_id) cJSON_AddStringToObject(p, "native_id", nat_id);
+    const char *rep = jo_sv(a, "ReportingEntity");
+    if (rep) cJSON_AddStringToObject(p, "reporting_entity", rep);
+    cJSON *conf = cJSON_GetObjectItem(a, "Confidence");
+    if (cJSON_IsArray(conf) && cJSON_GetArraySize(conf) > 0)
+      cJSON_AddItemToObject(p, "confidence", cJSON_Duplicate(conf, 1));
     cJSON *owners = cJSON_GetObjectItem(a, "Owners");
     if (cJSON_IsArray(owners)) {
       cJSON *ol = cJSON_CreateArray(), *o;
@@ -115,7 +148,8 @@ static int collect_sector(const source_ctx *ctx, intel_sink *sink,
       cJSON *g = cJSON_GetObjectItem(cen, "Geometry");
       if (cJSON_IsArray(g) && cJSON_GetArraySize(g) >= 2 &&
           (!cJSON_IsNumber(srid) || (int)srid->valuedouble == 4326)) {
-        cJSON *x = cJSON_GetArrayItem(g, 0), *y = cJSON_GetArrayItem(g, 1);  /* exhaustive-ok: [lon,lat] tuple, both read */
+        /* Centroid.Geometry is the fixed [lon, lat] pair, not a list. */
+        cJSON *x = cJSON_GetArrayItem(g, 0), *y = cJSON_GetArrayItem(g, 1);  /* exhaustive-ok: fixed-shape [lon,lat] centroid tuple; both ordinates are read */
         if (cJSON_IsNumber(x) && cJSON_IsNumber(y)) {
           lon = x->valuedouble; lat = y->valuedouble;   /* [lon, lat] */
           if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) has_geo = 1;
@@ -132,9 +166,9 @@ static int collect_sector(const source_ctx *ctx, intel_sink *sink,
     if (cJSON_IsNumber(id))
       snprintf(key, sizeof key, "climatetrace:%lld", (long long)id->valuedouble);
     else
-      snprintf(key, sizeof key, "%s|%s", sector, nat ? nat : name);
+      snprintf(key, sizeof key, "%s|%s", sec ? sec : "asset", nat ? nat : name);
     snprintf(title, sizeof title, "%s — %.0f t %s (%s)", name, q, WANT_GAS,
-             sec ? sec : sector);
+             sec ? sec : "unclassified sector");
 
     intel_item row = {0};
     row.remote_key      = key;
@@ -155,11 +189,35 @@ static int collect_sector(const source_ctx *ctx, intel_sink *sink,
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int total = 0, fetched = 0;
-  for (int i = 0; SECTORS[i]; i++)
-    total += collect_sector(ctx, sink, SECTORS[i], &fetched);
+  int max_pages = CT_MAX_PAGES;
+  const char *penv = getenv("JO_CLIMATETRACE_PAGES");
+  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+
+  int total = 0, fetched = 0, offset = 0, pages = 0, more_pending = 0;
+  long assets_seen = 0;
+  for (int page = 0; page < max_pages; page++) {
+    int seen = 0;
+    total += collect_page(ctx, sink, offset, &fetched, &seen);
+    if (!fetched) break;                     /* first page failed outright   */
+    if (seen == 0) break;                    /* ran off the end of the set   */
+    pages++;
+    assets_seen += seen;
+    offset += seen;
+    if (seen < CT_PAGE_SIZE) break;          /* short page = end of the set  */
+    if (page + 1 == max_pages) more_pending = 1;
+  }
   if (!fetched) { fprintf(stderr, "[" SRC "] fetch failed\n"); return -1; }
-  fprintf(stderr, "[" SRC "] emitted %d\n", total);
+  fprintf(stderr, "[" SRC "] emitted %d row(s) from %ld asset(s) over %d "
+                  "page(s)\n", total, assets_seen, pages);
+  /* The walk stopped at our ceiling, not at the end of the dataset. v6
+   * publishes no total, so `available` is honestly reported as unknown. */
+  if (more_pending)
+    jo_trunc_notice(sink, SRC, "https://api.climatetrace.org/v6/assets",
+                    total, -1,
+                    "the offset walk reached its page ceiling while Climate "
+                    "TRACE was still returning full pages; assets past this "
+                    "offset were not requested",
+                    "raise $JO_CLIMATETRACE_PAGES");
   return 0;
 }
 

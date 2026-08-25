@@ -10,7 +10,7 @@
 
 #define SID "socrata-sandiego-zips"
 static const char *URL =
-  "https://data.sandiegocounty.gov/resource/dg7q-pn9q.json?$limit=100";
+  "https://data.sandiegocounty.gov/resource/dg7q-pn9q.json?$limit=100&$select=*,:id";
 static const char *const TITLE_KEYS[] = { "zip", NULL };
 static const char *const GEOM_KEYS[] = { "the_geom", NULL };
 
@@ -20,7 +20,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   sp.tags_json = "[\"opendata\",\"boundary\",\"us\"]";
   sp.link = URL;
   sp.title_keys = TITLE_KEYS;
-  sp.id_key = "zip";
+  sp.id_key = ":id";   /* rule 4b, measured: zip recurs across rows (100 emitted, 91 stored); :id is Socrata's per-row identity, via $select=*,:id */
   sp.geom_keys = GEOM_KEYS;
   sp.title_prefix = "San Diego County ZIP";
   return od_rc(SID, od_fetch_rows(ctx, sink, URL, NULL, &sp));

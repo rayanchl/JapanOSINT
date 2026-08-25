@@ -29,9 +29,16 @@ static void add_num_or_null(cJSON *o, const char *k, sqlite3_stmt *s, int i) {
 static void iso_now(char *buf, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
   struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-           tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-           tm.tm_hour, tm.tm_min, tm.tm_sec, (int)(tv.tv_usec / 1000));
+  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
+   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
+   * fixed 24-char stamp "may be truncated". The modulos are identity for
+   * every value gmtime_r can return and make the 24 provable, not merely
+   * true. */
+  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 /* The Node entrypoint runs applyOverlayToEnv() (apiKeysStore.js) BEFORE the
  * routes load: every non-empty string in data/api-keys.json (the iOS
@@ -53,6 +60,7 @@ static void overlay_load(void) {
   fseek(f, 0, SEEK_END); long n = ftell(f); fseek(f, 0, SEEK_SET);
   if (n > 0 && n < (1 << 20)) {
     char *buf = malloc(n + 1);
+    if (!buf) { fclose(f); return; }
     if (fread(buf, 1, n, f) == (size_t)n) {
       buf[n] = 0;
       cJSON *j = cJSON_Parse(buf);
@@ -161,6 +169,23 @@ static int add_cred_status(cJSON *o, const char *id) {
  * statusapi_strip_has() below unions this list with intelapi_is_intel_id(), so
  * the membership test is unchanged and there is now one definition of each
  * half. */
+/* 2026-08: THE THEMATIC BLOCK IS RETIRED. This list used to also hide the
+ * multi-source thematic layer ids — transport, cyber, social, satellite,
+ * infrastructure, radar, river, telecom, energy, crime, economy, health,
+ * population, hazard, basemap, elevation, geocode, landuse, poi,
+ * admin-boundaries, news-feed, ocean, emergency, warnings, classifieds —
+ * which meant every source declaring one of them was invisible in
+ * /api/status AND its layer invisible in /api/layers: fetched, stored,
+ * unreachable. Those ids are now REAL layers, owned by the curated taxonomy
+ * in core/layers.def (data_type + modality declared per layer) or surfaced
+ * as declared layers; hiding them again would contradict the whole point of
+ * that table. What remains stripped is only the provider/plumbing tier:
+ * sources folded into unified-* parents (a member listed both inside its
+ * parent and as its own layer would double-serve its rows) and the sweep
+ * sub-layers sweepapi serves under the unified ids. core/layertab.c consults
+ * this same set when honouring a source's declared `.layer`, so nothing can
+ * resolve INTO a stripped id — a source whose declared layer is stripped
+ * falls to the generated catch-all instead of vanishing. */
 static const char *STRIP[] = {
   "osm-transport-trains","osm-transport-subways","osm-transport-buses",
   "osm-transport-ports","mlit-n02-stations","mlit-n07-bus-routes",
@@ -168,11 +193,6 @@ static const char *STRIP[] = {
   "maritime","maritime-ais","marine-traffic","vessel-finder",
   "aviation","narita-flights","haneda-flights","flight-adsb",
   "camera-discovery",
-  "transport","cyber","social","satellite","infrastructure",
-  "radar","river","telecom","energy","crime","economy",
-  "health","population","hazard","basemap","elevation","geocode",
-  "landuse","poi","admin-boundaries","news-feed","ocean",
-  "emergency","warnings","classifieds",
   "unified-station-footprints","unified-stations","bus-routes",
   "highway-traffic","jartic-traffic",
 };
@@ -364,8 +384,14 @@ static agg_t *load_aggs(db_handle *db, int *out_n) {
   if (sqlite3_prepare_v2(db->h, AQ, -1, &s, NULL) != SQLITE_OK) return NULL;
   int cap = 64, n = 0;
   agg_t *A = malloc(cap * sizeof *A);
+  if (!A) { sqlite3_finalize(s); return NULL; }
   while (sqlite3_step(s) == SQLITE_ROW) {
-    if (n == cap) { cap *= 2; A = realloc(A, cap * sizeof *A); }
+    /* unchecked realloc leaked the old block and then wrote through NULL */
+    if (n == cap) {
+      agg_t *NA = realloc(A, (size_t)cap * 2 * sizeof *A);
+      if (!NA) break;
+      A = NA; cap *= 2;
+    }
     agg_t *r = &A[n++];
     snprintf(r->src, sizeof r->src, "%s", (const char *)sqlite3_column_text(s,0));
     r->ic = sqlite3_column_int64(s,1); r->gc = sqlite3_column_int64(s,2);

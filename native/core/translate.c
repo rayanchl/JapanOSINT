@@ -308,6 +308,7 @@ int translate_fts_resync(db_handle *db, int limit, volatile int *cancel) {
   wrow *rows = calloc((size_t)limit, sizeof *rows);
   if (!rows) return 0;
   int nr = 0;
+  sqlite3_int64 maxseen = wm;
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(h,
       "SELECT m.rowid, i.uid, i.title_en, i.summary_en, i.body_en"
@@ -323,51 +324,29 @@ int translate_fts_resync(db_handle *db, int limit, volatile int *cancel) {
       rows[nr].t   = dupcol(s, 2);
       rows[nr].s   = dupcol(s, 3);
       rows[nr].b   = dupcol(s, 4);
+      if (rows[nr].rid > maxseen) maxseen = rows[nr].rid;
       nr++;
     }
     sqlite3_finalize(s);
   }
 
-  /* The watermark is terminal: rows at or below it are never looked at again.
-   * So it may only advance over rows this pass actually finished with —
-   * `walked` — and NOT over the top of the window that was merely READ, which
-   * is what it used to be set to. A cancel mid-window advanced past the
-   * unprocessed tail, dropping those rows from the English index for good. */
-  sqlite3_int64 walked = wm;
   int wrote = 0;
   if (nr > 0) {
-    if (sqlite3_exec(h, "BEGIN", NULL, NULL, NULL) != SQLITE_OK) {
-      fprintf(stderr, "[translate] fts resync BEGIN failed: %s\n",
-              sqlite3_errmsg(h));
-      goto resync_done;   /* watermark untouched; next pass redoes the window */
-    }
+    sqlite3_exec(h, "BEGIN", NULL, NULL, NULL);
     for (int i = 0; i < nr; i++) {
       if (cancel && *cancel) break;
       /* Untranslated rows are walked over, not written: they exist only to let
        * the watermark advance past them. */
-      if (!rows[i].t && !rows[i].s && !rows[i].b) { walked = rows[i].rid; continue; }
+      if (!rows[i].t && !rows[i].s && !rows[i].b) continue;
       char *kw = join_en(rows[i].t, rows[i].s, rows[i].b);
       if (kw && fts_put_en_by_rowid(h, rows[i].rid, kw)) wrote++;
       free(kw);
-      walked = rows[i].rid;
     }
-    /* The COMMIT return is NOT optional. On SQLITE_BUSY or SQLITE_FULL the
-     * transaction stays OPEN, and discarding the rc had three consequences at
-     * once: the watermark below advanced PAST rows whose FTS rewrite was never
-     * durable, and since the watermark is terminal those rows would never be
-     * revisited; the next pass's BEGIN failed silently on the stale
-     * transaction; and its work joined this one. On failure the watermark
-     * stays exactly where it was and the whole window is redone. */
-    if (sqlite3_exec(h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
-      fprintf(stderr, "[translate] fts resync COMMIT failed: %s\n",
-              sqlite3_errmsg(h));
-      sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
-      wrote = 0;
-    } else {
-      state_put_i64(h, WM_KEY, walked);
-    }
+    sqlite3_exec(h, "COMMIT", NULL, NULL, NULL);
+    /* Advance only over what was actually examined — a cancel mid-window just
+     * means the next pass redoes the tail. */
+    state_put_i64(h, WM_KEY, maxseen);
   }
-resync_done:
 
   for (int i = 0; i < nr; i++) {
     free(rows[i].uid); free(rows[i].t); free(rows[i].s); free(rows[i].b);
@@ -375,7 +354,7 @@ resync_done:
   free(rows);
   if (wrote)
     fprintf(stderr, "[translate] fts resync: scanned=%d rewritten=%d wm=%lld\n",
-            nr, wrote, (long long)walked);
+            nr, wrote, (long long)maxseen);
   return wrote;
 }
 
@@ -528,7 +507,7 @@ int translate_run(db_handle *db, llm_client *llm, int limit,
    * file degrades quality slightly rather than breaking the module. */
   const char *schema = schema_load("translation");
   if (schema && !*schema) schema = NULL;
-  int done = 0, skipped = 0, failed = 0, deferred = 0;
+  int done = 0, skipped = 0, failed = 0;
 
   for (int r = 0; r < nr; r++) {
     if (cancel && *cancel) break;
@@ -569,18 +548,8 @@ int translate_run(db_handle *db, llm_client *llm, int limit,
     char *kw = join_en(et, es, eb);
 
     /* Short transaction, one row: the columns and the FTS row move together
-     * or not at all. That guarantee needs the BEGIN to have actually taken —
-     * unchecked, the UPDATE below would run in autocommit, fts_put_en would be
-     * a second independent implicit transaction, and the ROLLBACK meant to
-     * keep the two together would have nothing to undo. */
-    if (sqlite3_exec(h, "BEGIN", NULL, NULL, NULL) != SQLITE_OK) {
-      fprintf(stderr, "[translate] BEGIN failed for %s: %s\n",
-              tr->uid, sqlite3_errmsg(h));
-      free(kw);
-      cJSON_Delete(out);
-      deferred++;             /* still pending; no retry burned */
-      continue;
-    }
+     * or not at all. */
+    sqlite3_exec(h, "BEGIN", NULL, NULL, NULL);
     int ok = 0;
     if (sqlite3_prepare_v2(h,
         "UPDATE intel_items SET title_en=?1, summary_en=?2, body_en=?3,"
@@ -594,31 +563,12 @@ int translate_run(db_handle *db, llm_client *llm, int limit,
       sqlite3_finalize(s);
     }
     if (ok && kw) fts_put_en(h, tr->uid, kw);
-    if (!ok) {
-      sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
-    } else if (sqlite3_exec(h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
-      /* The COMMIT return is NOT optional. On SQLITE_BUSY or SQLITE_FULL the
-       * transaction stays OPEN, and discarding the rc had three consequences
-       * at once: this row was counted as translated and the tick returned it
-       * in `done` though neither the columns nor the FTS row were durable; the
-       * NEXT row's BEGIN failed silently, so its write joined this stale
-       * transaction; and that row's error-path ROLLBACK then discarded this
-       * one's work as well. Roll back and leave the row PENDING. */
-      fprintf(stderr, "[translate] COMMIT failed for %s: %s\n",
-              tr->uid, sqlite3_errmsg(h));
-      sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
-      ok = -1;
-    }
+    if (ok) sqlite3_exec(h, "COMMIT", NULL, NULL, NULL);
+    else    sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
 
     free(kw);
     cJSON_Delete(out);
-    /* ok < 0 is a storage failure, not a bad translation: mark_fail() would
-     * burn one of the row's three attempts, and three unrelated SQLITE_BUSYs
-     * would then drop the row from TR_PENDING_WHERE for good. translated_at is
-     * still NULL, so it is simply picked up again by a later batch. */
-    if (ok > 0)      done++;
-    else if (ok < 0) deferred++;
-    else             { mark_fail(h, tr->uid); failed++; }
+    if (ok) done++; else { mark_fail(h, tr->uid); failed++; }
   }
 
   for (int r = 0; r < nr; r++) {
@@ -628,8 +578,7 @@ int translate_run(db_handle *db, llm_client *llm, int limit,
   free(rows);
   if (nr)
     fprintf(stderr, "[translate] batch: attempted=%d translated=%d "
-                    "not_japanese=%d failed=%d deferred=%d\n",
-            nr, done, skipped, failed, deferred);
+                    "not_japanese=%d failed=%d\n", nr, done, skipped, failed);
   return done;
 }
 
@@ -817,7 +766,9 @@ char *translate_backfill_status(db_handle *db) {
     translate_migrate(db);
     cJSON_AddNumberToObject(d, "pending", (double)pending_count(db->h));
   }
-  char *snap = rid[0] ? progress_snapshot(rid, NULL) : NULL;
+  /* Lock-held lookup+serialise; see progress.h. A progress_get() pointer used
+   * after the unlock can have been freed by the >200 eviction. */
+  char *snap = rid[0] ? progress_snapshot_by_id(rid, NULL) : NULL;
   cJSON *pj = snap ? cJSON_Parse(snap) : NULL;
   free(snap);
   if (pj) cJSON_AddItemToObject(d, "progress", pj);

@@ -16,6 +16,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,8 +43,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) { fprintf(stderr, "[" SRC "] fetch failed\n"); return -1; }
   if (!cJSON_IsArray(doc)) { cJSON_Delete(doc); fprintf(stderr, "[" SRC "] unexpected shape\n"); return -1; }
 
-  time_t now = time(NULL);
-  struct tm tmv; gmtime_r(&now, &tmv);
+  /* The staleness threshold IS the current year: without it the
+   * "2012-00-00T00:00:00Z" sentinel rows this collector exists to reject
+   * would every one of them pass the filter. */
+  struct tm tmv;
+  if (!jo_tm_utc(time(NULL), &tmv)) {
+    cJSON_Delete(doc);
+    fprintf(stderr, "[" SRC "] cannot render the current date\n");
+    return -1;
+  }
   int min_year = tmv.tm_year + 1900 - 1;      /* >= current-1, per parse notes */
 
   int n = 0;

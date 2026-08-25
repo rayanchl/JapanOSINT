@@ -50,7 +50,7 @@ VJSON(it_dati_comune_matera_it_orgs, "it-dati-comune-matera-it-orgs", "Portale D
 
 VJSON(it_dati_comune_matera_it_tags, "it-dati-comune-matera-it-tags", "Portale Dati aperti del Comune di Matera — tags (Italy)", "Portale Dati aperti del Comune di Matera — tags (Italy)",
   "it_opendata", "opendata",
-  "https://dati.comune.matera.it/api/3/action/tag_list",
+  "https://dati.comune.matera.it/api/3/action/tag_list?all_fields=true",
   "result",
   "it", "[\"it\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at dati.comune.matera.it.");
@@ -78,7 +78,7 @@ VJSON(it_dati_comune_milano_it_groups, "it-dati-comune-milano-it-groups", "City 
 
 VJSON(it_dati_comune_milano_it_tags, "it-dati-comune-milano-it-tags", "City of Milan Open Data — tags (Italy)", "City of Milan Open Data — tags (Italy)",
   "it_opendata", "opendata",
-  "https://dati.comune.milano.it/api/3/action/tag_list",
+  "https://dati.comune.milano.it/api/3/action/tag_list?all_fields=true",
   "result",
   "it", "[\"it\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at dati.comune.milano.it.");
@@ -99,7 +99,7 @@ VJSON(it_dati_toscana_it_groups, "it-dati-toscana-it-groups", "Open Data Regione
 
 VJSON(it_dati_toscana_it_tags, "it-dati-toscana-it-tags", "Open Data Regione Toscana — tags (Italy)", "Open Data Regione Toscana — tags (Italy)",
   "it_opendata", "opendata",
-  "https://dati.toscana.it/api/3/action/tag_list",
+  "https://dati.toscana.it/api/3/action/tag_list?all_fields=true",
   "result",
   "it", "[\"it\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at dati.toscana.it.");
@@ -120,7 +120,7 @@ VJSON(it_dati_trentino_it_groups, "it-dati-trentino-it-groups", "Open Data Trent
 
 VJSON(it_dati_trentino_it_tags, "it-dati-trentino-it-tags", "Open Data Trentino — tags (Italy)", "Open Data Trentino — tags (Italy)",
   "it_opendata", "opendata",
-  "https://dati.trentino.it/api/3/action/tag_list",
+  "https://dati.trentino.it/api/3/action/tag_list?all_fields=true",
   "result",
   "it", "[\"it\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at dati.trentino.it.");
@@ -148,7 +148,7 @@ VJSON(it_opendata_comune_bari_it_groups, "it-opendata-comune-bari-it-groups", "B
 
 VJSON(it_opendata_comune_bari_it_tags, "it-opendata-comune-bari-it-tags", "Bari Open Data — tags (Italy)", "Bari Open Data — tags (Italy)",
   "it_opendata", "opendata",
-  "https://opendata.comune.bari.it/api/3/action/tag_list",
+  "https://opendata.comune.bari.it/api/3/action/tag_list?all_fields=true",
   "result",
   "it", "[\"it\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at opendata.comune.bari.it.");

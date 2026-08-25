@@ -217,7 +217,7 @@ VJSON(gov_unesco_uis_indicators, "gov-unesco-uis-indicators", "UNESCO UIS — In
 
 VJSON(gov_unhcr_population, "gov-unhcr-population", "UNHCR — Refugee Population Statistics", "UNHCR 難民人口統計",
   "government", "statistics",
-  "https://api.unhcr.org/population/v1/population/?limit=50&yearFrom=2023",
+  "https://api.unhcr.org/population/v1/population/?limit=50&per_page=50&page=1&yearFrom=2023",
   "items",
   "en", "[\"un\",\"unhcr\",\"refugees\",\"statistics\"]", 86400,
   "Refugee, asylum-seeker and IDP population figures by country of origin and asylum.");

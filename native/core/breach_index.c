@@ -255,12 +255,43 @@ static bloom *bloom_for(breach_type t, unsigned long long expect) {
   char p[1024]; snprintf(p, sizeof p, "%s/%s.bloom", root_dir(), breach_type_name(t));
   bloom *b = bloom_load(p);
   if (b) {
-    unsigned long long need = bloom_count(b) + expect;
-    if (bloom_capacity(b) >= need) return b;
+    const unsigned long long cap = bloom_capacity(b), have = bloom_count(b);
+    /* WHEN A RESTORED FILTER IS ACTUALLY INADEQUATE.
+     *
+     * This used to rebuild whenever `bloom_count(b) + expect > capacity` —
+     * the worst case where every row in this file is new. That condition is
+     * unsatisfiable by construction: a fresh filter is created with capacity
+     * exactly `expect`, and `expect` is estimate_rows(), which floors at 1e6.
+     * So the first ingest left capacity == 1e6 with a count of n, and the
+     * second ingest computed need = n + 1e6 > 1e6 and rebuilt. EVERY run
+     * after the first one rebuilt, discarding the dedup history each time.
+     *
+     * The visible symptom was that re-ingesting an identical file reported
+     * every row as new (rows_new == rows_in) instead of zero, and under
+     * --materialize wrote the whole file into breach_items again — the exact
+     * duplication this filter exists to prevent.
+     *
+     * The worst case is also the wrong question, because the common case is a
+     * re-ingest of an overlapping dump where nearly every row is a hit and the
+     * count barely moves. A filter is inadequate only when:
+     *
+     *   have > cap    it is already past its design capacity, so its
+     *                 false-positive rate has drifted past the target and a
+     *                 hit is no longer trustworthy (== bloom_saturated()); or
+     *   cap < expect  it was built for materially fewer rows than this ONE
+     *                 file needs — the 50M-filter-vs-850M-Pwned-Passwords
+     *                 case that motivated the sizing check in the first place.
+     *
+     * Anything else keeps its history. Overfilling between here and the next
+     * run is safe on its own: dedup_seen() below stops trusting hits once
+     * bloom_saturated() is true, so it degrades to "no dedup" (duplicate rows
+     * in a shard, recoverable) and never to dropping rows. */
+    if (have <= cap && cap >= expect) return b;
+    unsigned long long need = have + expect;
     fprintf(stderr,
-            "[breach_index] %s.bloom sized for %llu but %llu needed "
-            "(%llu already in it) — rebuilding, dedup history is reset\n",
-            breach_type_name(t), bloom_capacity(b), need, bloom_count(b));
+            "[breach_index] %s.bloom holds %llu of a designed %llu and this "
+            "input needs %llu — rebuilding at %llu, dedup history is reset\n",
+            breach_type_name(t), have, cap, expect, need);
     bloom_free(b);
     expect = need;
   }
@@ -319,7 +350,19 @@ int breach_index_ingest(const char *source_id, const char *path, breach_type typ
         if (f) { fprintf(f, "%s\t%lld\n", hash, count); rn++; }
       } else rn++;
       if (store) {
-        char keyid[32]; snprintf(keyid, sizeof keyid, "password:%.10s", hash);
+        /* THE FULL HASH, not the first 10 hex digits.
+         *
+         * keyid is the identity breach_store_put() upserts on, so two records
+         * that produce the same string store as one. Ten hex digits is 40 bits.
+         * The password path targets the ~850M-row Pwned Passwords list, and by
+         * the birthday bound that is n^2/2^41 ~= 330,000 pairs colliding —
+         * a third of a million password records silently overwriting each
+         * other, with the ingest reporting every one of them as written.
+         *
+         * The truncation was forced by keyid[32]: "password:" plus a 40-char
+         * SHA-1 needs 50 bytes and did not fit. The column is SQLite TEXT with
+         * no length limit, so the cap bought nothing at all. */
+        char keyid[64]; snprintf(keyid, sizeof keyid, "password:%s", hash);
         breach_store_put(store, keyid, "password", NULL /* hash-only */,
                          source_id, hash, 0, count);
       }
@@ -362,8 +405,14 @@ int breach_index_ingest(const char *source_id, const char *path, breach_type typ
       /* Per-(identifier, breach) keyid so each breach is a distinct source and
        * `WHERE source_id=?` / COUNT(*) GROUP BY source_id are exact. (Passwords
        * keep a global keyid above — their count is a cross-breach prevalence.) */
-      char keyid[128];
-      snprintf(keyid, sizeof keyid, "%s:%.10s|%.80s", breach_type_name(ct), hash,
+      /* Same defect as the password keyid above, scoped per breach rather than
+       * globally: ten hex digits of the identifier hash is 40 bits, so a
+       * 100M-row dump loses several thousand identities to key collisions. The
+       * source_id cap is widened too — two breaches whose ids shared an 80-char
+       * prefix merged into one. Sized to hold a full 40-char hash and a
+       * realistic source id rather than to a number that happened to fit. */
+      char keyid[320];
+      snprintf(keyid, sizeof keyid, "%s:%s|%.240s", breach_type_name(ct), hash,
                source_id ? source_id : "?");
       breach_store_put(store, keyid, breach_type_name(ct), val, source_id, hash,
                        enc ? 1 : 0, 1);
@@ -383,7 +432,12 @@ int breach_index_ingest(const char *source_id, const char *path, breach_type typ
        * enumerate an identifier's breaches out of /:type/:id/breaches. Scoping
        * it here — at the ingest, once — is what makes every reader of
        * `entities` safe without each of them having to remember a gate. */
-      char uid[144];
+      /* Sized FROM keyid rather than to a round number, so widening the key
+       * above cannot silently start cutting this one. It is the mention's item
+       * uid: truncate it and the mention points at an item that does not
+       * exist, so the entity chips this block exists to build quietly stop
+       * resolving. */
+      char uid[sizeof keyid + 8];   /* "breach:" + keyid + NUL */
       snprintf(uid, sizeof uid, "breach:%s", keyid);
       char *eid = es_upsert_entity_scoped(db, breach_type_name(ct), val,
                                           ES_BREACH_TENANT);

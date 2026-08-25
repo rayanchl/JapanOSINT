@@ -20,13 +20,11 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
-#include "lib/jocore.h"     /* jo_truncation_notice() */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define SSC_URL "https://sscweb.gsfc.nasa.gov/WS/sscr/2/observatories"
-#define MAX_ROWS 2000
 
 /* Inner text of <tag>…</tag> inside [blk, blkend). Returns length written. */
 static size_t xml_field(const char *blk, const char *blkend, const char *tag,
@@ -64,7 +62,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   const char *p = body;
   const char *s;
-  while (n < MAX_ROWS && (s = strstr(p, "<Observatory>")) != NULL) {
+  while ((s = strstr(p, "<Observatory>")) != NULL) {
     const char *e = strstr(s, "</Observatory>");
     if (!e) break;
     p = e + strlen("</Observatory>");
@@ -121,21 +119,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
-  /* House rule 2: MAX_ROWS is a runaway guard above the real observatory
-   * count, so it normally never bites. If it did, count what is still in the
-   * downloaded document and report the real total rather than a guess. */
-  if (n >= MAX_ROWS) {
-    int rest = 0;
-    for (const char *q = p; (q = strstr(q, "<Observatory>")) != NULL; q += 13) rest++;
-    if (rest > 0)
-      jo_truncation_notice(sink, "sscweb-observatories", "observatories", n,
-                           (long)(n + rest),
-                           "MAX_ROWS reached; the remaining <Observatory> "
-                           "entries in the downloaded document were not parsed "
-                           "or emitted",
-                           "raise or drop MAX_ROWS in collectors/sources/"
-                           "tsp_sscweb_observatories.c");
-  }
   free(body);
   fprintf(stderr, "[sscweb-observatories] emitted %d\n", n);
   return 0;

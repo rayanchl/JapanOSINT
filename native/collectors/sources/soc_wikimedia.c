@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 /* Wikimedia's UA policy asks for a descriptive agent identifying the client. */
 static const char *const WM_UA[] = {
@@ -59,9 +60,14 @@ static void wiki_link(char *out, size_t n, const char *host, const char *title) 
 static int run_top_pageviews(const source_ctx *ctx, intel_sink *sink) {
   /* today-2 UTC: yesterday's aggregate is not always final yet. */
   time_t t = time(NULL) - 2 * 86400;
-  struct tm g; gmtime_r(&t, &g);
+  struct tm g;
   char url[300], daystr[16];
-  strftime(daystr, sizeof daystr, "%Y-%m-%d", &g);
+  /* The day is pinned INTO the URL path, so an unrenderable one is not a
+   * broader query — there is no request left to make. */
+  if (!jo_tm_utc(t, &g) || !strftime(daystr, sizeof daystr, "%Y-%m-%d", &g)) {
+    fprintf(stderr, "[wikipedia-top-pageviews] cannot render the query window as a date\n");
+    return -1;
+  }
   snprintf(url, sizeof url,
       "https://wikimedia.org/api/rest_v1/metrics/pageviews/top/"
       "en.wikipedia/all-access/%04d/%02d/%02d",
@@ -70,17 +76,22 @@ static int run_top_pageviews(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json_h(ctx->http, url, WM_UA, 25000);
   if (!doc) { fprintf(stderr, "[wikipedia-top-pageviews] fetch failed\n"); return -1; }
   const cJSON *items = cJSON_GetObjectItem(doc, "items");
-  const cJSON *it0 = cJSON_IsArray(items) ? cJSON_GetArrayItem(items, 0) : NULL;  /* exhaustive-ok: pageviews/top for one day returns a single items[] envelope */
+  /* The URL pins project, access AND the single day, so the REST endpoint
+   * answers with a one-element `items` envelope carrying that day's
+   * `articles` list (verified: items 1, articles 1000). There is no tail. */
+  const cJSON *it0 = cJSON_IsArray(items) ? cJSON_GetArrayItem(items, 0) : NULL;  /* exhaustive-ok: 1-element response envelope — project/access/day are all fixed by the URL */
   const cJSON *arts = cJSON_IsObject(it0) ? cJSON_GetObjectItem(it0, "articles") : NULL;
   if (!cJSON_IsArray(arts)) {
     fprintf(stderr, "[wikipedia-top-pageviews] unexpected shape\n");
     cJSON_Delete(doc); return -1;
   }
-  int n = 0, capped = 0;
-  const int have = cJSON_GetArraySize(arts);
+  int n = 0;
   const cJSON *a;
+  /* No cap. The endpoint returns exactly 1,000 ranked articles in one 55 KB
+   * response and `n >= 200` threw 800 of them away every day. The interesting
+   * row is rarely in the top 200 — a company or a person whose pageviews jump
+   * from nowhere lands at rank 400, and that spike is the lead. */
   cJSON_ArrayForEach(a, arts) {
-    if (n >= 200) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     const char *article = jo_sv(a, "article");
     if (!article) continue;
     const cJSON *vw = cJSON_GetObjectItem(a, "views");
@@ -104,14 +115,6 @@ static int run_top_pageviews(const source_ctx *ctx, intel_sink *sink) {
                   "[\"wikipedia\",\"pageviews\",\"attention\"]",
                   remote, article, summary, link, NULL, "en");
   }
-  /* House rule 2: the endpoint returns the day's whole top list (1,000 rows);
-   * only the head of it is emitted. */
-  if (capped)
-    jo_truncation_notice(sink, "wikipedia-top-pageviews", daystr, n, (long)have,
-                         "the emit loop stops at 200 articles, so the tail of "
-                         "the fetched top-pageviews list was never emitted",
-                         "remove the `n >= 200` break in run_top_pageviews() in "
-                         "collectors/sources/soc_wikimedia.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[wikipedia-top-pageviews] emitted %d for %s\n", n, daystr);
   return 0;
@@ -133,9 +136,12 @@ REGISTER_SOURCE(soc_top_pageviews_def)
 
 static int run_featured(const source_ctx *ctx, intel_sink *sink) {
   time_t t = time(NULL) - 86400;
-  struct tm g; gmtime_r(&t, &g);
+  struct tm g;
   char url[300], daystr[16];
-  strftime(daystr, sizeof daystr, "%Y-%m-%d", &g);
+  if (!jo_tm_utc(t, &g) || !strftime(daystr, sizeof daystr, "%Y-%m-%d", &g)) {
+    fprintf(stderr, "[wikimedia-featured-feed] cannot render the query window as a date\n");
+    return -1;
+  }
   snprintf(url, sizeof url,
       "https://api.wikimedia.org/feed/v1/wikipedia/en/featured/%04d/%02d/%02d",
       g.tm_year + 1900, g.tm_mon + 1, g.tm_mday);
@@ -177,13 +183,14 @@ static int run_featured(const source_ctx *ctx, intel_sink *sink) {
     char *txt = story ? html_strip(story) : NULL;
     if (!txt || !txt[0]) { free(txt); continue; }
     const cJSON *links = cJSON_GetObjectItem(ni, "links");
-    const cJSON *l0 = cJSON_IsArray(links) ? cJSON_GetArrayItem(links, 0) : NULL;  /* exhaustive-ok: headline display pick; links_all below carries every linked article */
+    /* links[0] is only the story's PERMALINK target; every linked article and
+     * every Wikidata QID is collected below into linked_articles/wikidata_qids
+     * on the same row, so nothing in the array is decided away here. */
+    const cJSON *l0 = cJSON_IsArray(links) ? cJSON_GetArrayItem(links, 0) : NULL;  /* exhaustive-ok: permalink display pick; the whole links array is emitted as linked_articles + wikidata_qids */
     cJSON *p = cJSON_CreateObject();
     if (!p) { free(txt); continue; }
     cJSON_AddStringToObject(p, "source", "api.wikimedia.org");
     cJSON_AddStringToObject(p, "section", "in_the_news");
-    if (cJSON_IsArray(links) && cJSON_GetArraySize(links) > 1)
-      cJSON_AddItemToObject(p, "links_all", cJSON_Duplicate(links, 1));
     cJSON_AddStringToObject(p, "date", daystr);
     cJSON_AddStringToObject(p, "story", txt);
     cJSON *qids = cJSON_CreateArray();
@@ -291,7 +298,17 @@ static int recentchanges(const source_ctx *ctx, intel_sink *sink,
     jcopy(p, "comment", c, "comment");
     char link[500], rk[400], summary[400];
     wiki_link(link, sizeof link, host, title);
-    snprintf(rk, sizeof rk, "%s|%s|%s", host, title, ts ? ts : "");
+    /* IDENTITY (rule 4b, measured): host|title|timestamp keyed same-second
+     * edits to one page onto each other (bot bursts) — sweep 2026-08-24:
+     * wikidata 50 emitted / 46 stored, meta 50 / 48. rcid is MediaWiki's own
+     * per-change identity (now requested via rcprop=ids), so it leads the key
+     * when present; the old triple remains the fallback so rows without it
+     * keep their previous uids. */
+    const cJSON *rcid = cJSON_GetObjectItem(c, "rcid");
+    if (cJSON_IsNumber(rcid))
+      snprintf(rk, sizeof rk, "%s|rcid=%.0f", host, rcid->valuedouble);
+    else
+      snprintf(rk, sizeof rk, "%s|%s|%s", host, title, ts ? ts : "");
     snprintf(summary, sizeof summary, "%s by %s%s%.250s",
              jo_sv(c, "type") ? jo_sv(c, "type") : "edit",
              jo_sv(c, "user") ? jo_sv(c, "user") : "?",
@@ -307,7 +324,7 @@ static int recentchanges(const source_ctx *ctx, intel_sink *sink,
 static int run_wikidata_rc(const source_ctx *ctx, intel_sink *sink) {
   return recentchanges(ctx, sink, "www.wikidata.org",
       "https://www.wikidata.org/w/api.php?action=query&list=recentchanges"
-      "&rcnamespace=0&rclimit=50&rcprop=title%7Ctimestamp%7Cuser%7Ccomment"
+      "&rcnamespace=0&rclimit=50&rcprop=ids%7Ctitle%7Ctimestamp%7Cuser%7Ccomment"
       "&format=json",
       "wikidata-recentchanges", "wikidata-change",
       "[\"wikidata\",\"recentchanges\",\"knowledge-graph\"]");
@@ -316,7 +333,7 @@ static int run_wikidata_rc(const source_ctx *ctx, intel_sink *sink) {
 static int run_meta_rc(const source_ctx *ctx, intel_sink *sink) {
   return recentchanges(ctx, sink, "meta.wikimedia.org",
       "https://meta.wikimedia.org/w/api.php?action=query&list=recentchanges"
-      "&rclimit=50&rcprop=title%7Ctimestamp%7Cuser%7Ccomment&format=json",
+      "&rclimit=50&rcprop=ids%7Ctitle%7Ctimestamp%7Cuser%7Ccomment&format=json",
       "wikimedia-meta-recentchanges", "wikimedia-global-action",
       "[\"wikimedia\",\"meta\",\"global-actions\",\"rename\"]");
 }

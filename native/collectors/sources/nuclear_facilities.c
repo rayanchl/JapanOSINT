@@ -41,11 +41,13 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   }
 
   const char *op = ov_tag(el, "operator");
-  cJSON_AddStringToObject(p, "operator", op ? op : "unknown");
+  if (op) cJSON_AddStringToObject(p, "operator", op);
+  else cJSON_AddItemToObject(p, "operator", cJSON_CreateNull());
   cJSON_AddStringToObject(p, "facility_type", "npp");
 
   const char *stt = ov_tag(el, "plant:status");
-  cJSON_AddStringToObject(p, "status", stt ? stt : "unknown");
+  if (stt) cJSON_AddStringToObject(p, "status", stt);
+  else cJSON_AddItemToObject(p, "status", cJSON_CreateNull());
 
   cJSON_AddStringToObject(p, "country", "JP");
   char ts[40];

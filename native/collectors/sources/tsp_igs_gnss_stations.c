@@ -74,7 +74,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     int has_geo = 0, has_h = 0;
     cJSON *llh = cJSON_GetObjectItem(st, "llh");
     if (cJSON_IsArray(llh) && cJSON_GetArraySize(llh) >= 2) {
-      cJSON *a = cJSON_GetArrayItem(llh, 0), *b = cJSON_GetArrayItem(llh, 1);  /* exhaustive-ok: llh is a [lat,lon,height] tuple, all three read */
+      cJSON *a = cJSON_GetArrayItem(llh, 0), *b = cJSON_GetArrayItem(llh, 1);  /* exhaustive-ok: fixed [lat,lon,height] triple, all three read */
       cJSON *c = cJSON_GetArrayItem(llh, 2);
       if (cJSON_IsNumber(a) && cJSON_IsNumber(b)) {
         double la = a->valuedouble, lo = b->valuedouble;

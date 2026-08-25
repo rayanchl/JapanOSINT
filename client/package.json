@@ -1,0 +1,43 @@
+{
+  "name": "japan-osint-client",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 3000",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@deck.gl/aggregation-layers": "^9.3.1",
+    "@deck.gl/core": "^9.3.1",
+    "@deck.gl/extensions": "^9.3.1",
+    "@deck.gl/geo-layers": "^9.3.1",
+    "@deck.gl/layers": "^9.3.1",
+    "@deck.gl/mapbox": "^9.3.1",
+    "@deck.gl/mesh-layers": "^9.3.1",
+    "@loaders.gl/3d-tiles": "^4.4.1",
+    "@loaders.gl/core": "^4.4.1",
+    "@luma.gl/core": "^9.3.2",
+    "@luma.gl/engine": "^9.3.2",
+    "maplibre-gl": "^4.7.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.6.0",
+    "react-router-dom": "^6.28.0",
+    "recharts": "^2.15.0",
+    "satellite.js": "^5.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^18.3.12",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "jsdom": "^29.0.2",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "vite": "^6.0.3",
+    "vitest": "^4.1.4"
+  }
+}

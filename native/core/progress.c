@@ -43,6 +43,11 @@ typedef struct {
   long results_count; int is_followup;
 } service_t;
 typedef struct { char *phase; long timestamp; long progress; } phist_t;
+/* a stage between the service calls that failed or ran degraded — see
+ * progress_stage_error() in progress.h for what this is for */
+typedef struct {
+  char *stage; char *code; char *detail; char *severity; long timestamp;
+} serr_t;
 
 /* generic grow-by-one vector backing the above (manual; bounded by run size) */
 #define VEC(T) struct { T *p; int n, cap; }
@@ -75,6 +80,7 @@ struct osint_request {
   long stat_total, stat_active, stat_completed, stat_failed, stat_skipped;
 
   VEC(phist_t)  phase_history;
+  VEC(serr_t)   stage_errors;
   long current_round;
   long max_rounds;
   int  awaiting_user_action;
@@ -165,6 +171,13 @@ osint_request *progress_create(const char *request_id, const char *query,
       for (int i = 0; i < oldest->phase_history.n; i++)
         free(oldest->phase_history.p[i].phase);
       free(oldest->phase_history.p);
+      for (int i = 0; i < oldest->stage_errors.n; i++) {
+        free(oldest->stage_errors.p[i].stage);
+        free(oldest->stage_errors.p[i].code);
+        free(oldest->stage_errors.p[i].detail);
+        free(oldest->stage_errors.p[i].severity);
+      }
+      free(oldest->stage_errors.p);
       for (int i = 0; i < oldest->discovered_entities.n; i++) {
         free(oldest->discovered_entities.p[i].value);
         free(oldest->discovered_entities.p[i].type);
@@ -387,6 +400,87 @@ void progress_add_discovered(osint_request *r, const char *value,
   pthread_mutex_unlock(&g_lock);
 }
 
+/* Build the stage_errors array. Caller holds g_lock (both the snapshot path
+ * and progress_stage_errors_json() need it and neither may drop the lock
+ * between reading the vector and copying out of it). */
+static cJSON *stage_errors_array_locked(osint_request *r) {
+  cJSON *a = cJSON_CreateArray();
+  if (!a) return NULL;
+  for (int i = 0; i < r->stage_errors.n; i++) {
+    serr_t *e = &r->stage_errors.p[i];
+    cJSON *o = cJSON_CreateObject();
+    if (!o) continue;
+    cJSON_AddStringToObject(o, "stage",  e->stage  ? e->stage  : "");
+    cJSON_AddStringToObject(o, "code",   e->code   ? e->code   : "");
+    cJSON_AddStringToObject(o, "detail", e->detail ? e->detail : "");
+    cJSON_AddStringToObject(o, "severity", e->severity ? e->severity : "error");
+    cJSON_AddNumberToObject(o, "timestamp", (double)e->timestamp);
+    cJSON_AddItemToArray(a, o);
+  }
+  return a;
+}
+
+/* 1 when any recorded row is severity "error" (caller holds g_lock). */
+static int degraded_locked(osint_request *r) {
+  for (int i = 0; i < r->stage_errors.n; i++) {
+    const char *sv = r->stage_errors.p[i].severity;
+    if (!sv || strcmp(sv, "error") == 0) return 1;
+  }
+  return 0;
+}
+
+static void stage_row(osint_request *r, const char *stage, const char *code,
+                      const char *detail, const char *severity) {
+  if (!r) return;
+  pthread_mutex_lock(&g_lock);
+  if (vec_reserve((void **)&r->stage_errors.p, &r->stage_errors.cap,
+                  r->stage_errors.n + 1, sizeof(serr_t))) {
+    serr_t *e = &r->stage_errors.p[r->stage_errors.n++];
+    e->stage     = dup_s(stage);
+    e->code      = dup_s(code);
+    e->detail    = dup_s(detail);
+    e->severity  = dup_s(severity);
+    e->timestamp = now_secs();
+  }
+  touch_locked(r);
+  pthread_mutex_unlock(&g_lock);
+  /* Also on stderr, where an operator watching the server sees it without
+   * having to fish the request id out of the client. */
+  fprintf(stderr, "[pipeline] %s %s at %s: %s (%s)\n",
+          r->request_id ? r->request_id : "?",
+          (severity && strcmp(severity, "notice") == 0) ? "NOTICE" : "DEGRADED",
+          stage ? stage : "?", code ? code : "?", detail ? detail : "");
+}
+
+void progress_stage_error(osint_request *r, const char *stage,
+                          const char *code, const char *detail) {
+  stage_row(r, stage, code, detail, "error");
+}
+
+void progress_stage_note(osint_request *r, const char *stage,
+                         const char *code, const char *detail) {
+  stage_row(r, stage, code, detail, "notice");
+}
+
+int progress_is_degraded(osint_request *r) {
+  if (!r) return 0;
+  pthread_mutex_lock(&g_lock);
+  int d = degraded_locked(r);
+  pthread_mutex_unlock(&g_lock);
+  return d;
+}
+
+char *progress_stage_errors_json(osint_request *r) {
+  if (!r) return NULL;
+  pthread_mutex_lock(&g_lock);
+  cJSON *a = stage_errors_array_locked(r);
+  pthread_mutex_unlock(&g_lock);
+  if (!a) return NULL;
+  char *out = cJSON_PrintUnformatted(a);
+  cJSON_Delete(a);
+  return out;
+}
+
 void progress_set_round(osint_request *r, int round) {
   if (!r) return;
   pthread_mutex_lock(&g_lock);
@@ -453,13 +547,13 @@ static cJSON *ent_array(entity_t *p, int n) {
   return a;
 }
 
-/* Serialise one request. THE CALLER MUST HOLD g_lock — this is the shared
- * body of progress_to_json() and progress_snapshot(); the latter needs the
- * lookup, the serialise and the done-read to happen without ever letting go,
- * so the locking cannot live in here. */
+/* Body of the snapshot, with g_lock ALREADY held by the caller. Split out so
+ * progress_snapshot_by_id() can do find + serialise inside ONE critical
+ * section: looking the request up, dropping the lock and only then serialising
+ * is a use-after-free, because progress_create() evicts and frees the oldest
+ * FINISHED request once more than 200 are tracked — exactly the entry an SSE
+ * reader attached to a completed run is holding. */
 static char *to_json_locked(osint_request *r) {
-  if (!r) return NULL;
-
   cJSON *o = cJSON_CreateObject();
   if (!o) return NULL;
 
@@ -518,6 +612,12 @@ static char *to_json_locked(osint_request *r) {
   }
   cJSON_AddItemToObject(o, "phase_history", ph);
 
+  /* Additive to the JS shape, and ALWAYS present (never omitted when empty) so
+   * a client can treat a missing `degraded` key as "this server predates the
+   * field" rather than as "this run was fine". */
+  cJSON_AddBoolToObject(o, "degraded", degraded_locked(r));
+  cJSON_AddItemToObject(o, "stage_errors", stage_errors_array_locked(r));
+
   cJSON_AddNumberToObject(o, "current_round", (double)r->current_round);
   cJSON_AddNumberToObject(o, "max_rounds", (double)r->max_rounds);
   cJSON_AddBoolToObject(o, "awaiting_user_action",
@@ -560,28 +660,13 @@ char *progress_to_json(osint_request *r) {
   return out;
 }
 
-/* Look up, serialise and read `done` in ONE critical section.
- *
- * This exists because progress_get() + progress_to_json() is a use-after-free.
- * progress_get() finds the request under the lock and then returns the raw
- * pointer AFTER unlocking, while progress_create()'s 200-entry retention sweep
- * frees the oldest *finished* request — so between a reader's get and its
- * to_json, a pipeline thread starting a new search can free the very entry the
- * reader is about to serialise. 200 completed searches is an ordinary day.
- *
- * Every READER is now this one call. progress_get() survives for the two
- * WRITERS (osint_pipeline_run and translate's backfill thread), which own the
- * request they were handed and finish it as their last act — eviction only
- * ever takes a request that is already `done`, so their pointer cannot be the
- * one freed. */
-char *progress_snapshot(const char *request_id, int *done_out) {
-  if (done_out) *done_out = 0;
+char *progress_snapshot_by_id(const char *request_id, int *out_done) {
+  if (out_done) *out_done = 0;
   if (!request_id) return NULL;
   pthread_mutex_lock(&g_lock);
   osint_request *r = find_locked(request_id);
   char *out = r ? to_json_locked(r) : NULL;
-  if (r && done_out) *done_out = r->done;
+  if (r && out_done) *out_done = r->done;
   pthread_mutex_unlock(&g_lock);
   return out;
 }
-

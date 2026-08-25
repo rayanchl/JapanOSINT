@@ -14,7 +14,9 @@
  *    eastern-hemisphere cell would land in the wrong half of the map.
  *  - "64,800 cells — emit only cells above a threshold (e.g. aurora >= 10) or
  *    you will bury the map": threshold MIN_PROB, hard cap MAX_CELLS, both
- *    recorded in properties.
+ *    recorded in properties — and a run that actually hits MAX_CELLS emits a
+ *    collector-truncation-notice naming cells emitted vs cells qualifying,
+ *    because a bound is only legal when the shortfall is in the data (R7).
  *  - "Geo is genuine model output, precision is 1 degree: tag geo_precision
  *    accordingly": properties.geo_precision = "1-degree-model-grid" (R2 — the
  *    coordinate is the upstream's own grid cell, not a guess).
@@ -52,7 +54,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *c;
   cJSON_ArrayForEach(c, coords) {
     if (!cJSON_IsArray(c) || cJSON_GetArraySize(c) < 3) continue;
-    cJSON *jlon = cJSON_GetArrayItem(c, 0);  /* exhaustive-ok: OVATION cell is a [lon,lat,probability] tuple, all three read */
+    cJSON *jlon = cJSON_GetArrayItem(c, 0);  /* exhaustive-ok: fixed [lon,lat,probability] triple, all three read */
     cJSON *jlat = cJSON_GetArrayItem(c, 1);
     cJSON *jpr  = cJSON_GetArrayItem(c, 2);
     if (!cJSON_IsNumber(jlon) || !cJSON_IsNumber(jlat) || !cJSON_IsNumber(jpr))
@@ -107,6 +109,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_Delete(doc);
   fprintf(stderr, "[swpc-aurora-ovation] emitted %d of %d cells >= %d%%\n",
           n, above, MIN_PROB);
+
+  /* MAX_CELLS used to bite in silence: on a severe storm the number of grid
+   * cells at or above the threshold runs well past 3,000, and the only trace
+   * was the stderr line above — exactly the "a log nobody reads is not a
+   * disclosure" case house rule 2 names. `above` is the upstream's own count
+   * of qualifying cells, so records_available here is measured, not guessed. */
+  if (above > n)
+    jo_trunc_notice(sink, "swpc-aurora-ovation", OVATION_URL, n, above,
+                    "cell cap reached: the OVATION grid produced more cells at "
+                    "or above the probability threshold than this run emitted",
+                    "raise MAX_CELLS, or query the stored grid directly");
   return 0;                 /* a quiet magnetosphere is not an error (R3) */
 }
 

@@ -43,6 +43,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 static const char *const SOC_UA[] = {
   "User-Agent: JapanOSINT-native/1.0 (OSINT research collector; +https://github.com/)",
@@ -52,10 +53,13 @@ static const char *const SOC_UA[] = {
 /* ---- go-module-index ---------------------------------------------------- */
 
 static int run_go_index(const source_ctx *ctx, intel_sink *sink) {
-  time_t t = time(NULL) - 6 * 3600;
-  struct tm g; gmtime_r(&t, &g);
   char since[40], url[220];
-  strftime(since, sizeof since, "%Y-%m-%dT%H:%M:%SZ", &g);
+  /* `since` IS the query: without it the endpoint would answer with the whole
+   * index from the epoch, which is a different request, not a degraded one. */
+  if (!jo_ago_fmt(6 * 3600, "%Y-%m-%dT%H:%M:%SZ", since, sizeof since)) {
+    fprintf(stderr, "[go-module-index] cannot render the query window as a date\n");
+    return -1;
+  }
   snprintf(url, sizeof url, "https://index.golang.org/index?since=%s&limit=200",
            since);
   char *txt = feed_get_text(ctx->http, url, 30000);
@@ -249,11 +253,15 @@ static int run_brew_analytics(const source_ctx *ctx, intel_sink *sink) {
   }
   const char *start = jo_sv(doc, "start_date"), *end = jo_sv(doc, "end_date");
   const cJSON *totalv = cJSON_GetObjectItem(doc, "total_count");
-  int n = 0, capped = 0;
-  const int have = cJSON_GetArraySize(items);
+  int n = 0;
   const cJSON *i;
+  /* No cap. The response is one 1.7 MB document that already contains every
+   * formula (23,133 items, measured 2026-08-24) and it was fetched in full on
+   * every run; `n >= 300` then kept the top 300 and dropped 22,833 install
+   * counts with nothing in the output to say so. The long tail is the point:
+   * "is this dependency widely used" is a question about the packages nobody
+   * has heard of, and those are exactly the ones a top-300 slice removes. */
   cJSON_ArrayForEach(i, items) {
-    if (n >= 300) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     const char *formula = jo_sv(i, "formula");
     if (!formula) continue;
     double cnt = strip_commas_num(cJSON_GetObjectItem(i, "count"));
@@ -279,16 +287,6 @@ static int run_brew_analytics(const source_ctx *ctx, intel_sink *sink) {
                   rk, formula, summary, link, NULL, NULL);
   }
   cJSON_Delete(doc);
-  /* House rule 2: the 30d analytics document lists every formula that was
-   * installed in the window; this run emitted only the head of that list. */
-  if (capped)
-    jo_truncation_notice(sink, "homebrew-install-analytics", "install/30d",
-                         n, (long)have,
-                         "the emit loop stops at 300 formulae, so the tail of "
-                         "the ranked install list that was already fetched and "
-                         "parsed was never emitted",
-                         "remove the `n >= 300` break in run_brew_analytics() "
-                         "in collectors/sources/soc_packages_feeds.c");
   fprintf(stderr, "[homebrew-install-analytics] emitted %d\n", n);
   return 0;
 }

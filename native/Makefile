@@ -336,6 +336,42 @@ source-count:
 #   ...move files...
 #   make source-floor               # after — fails if any source vanished
 #
+# registry-floor asks the BINARY, which is the only thing that knows. The
+# source-floor above counts REGISTER_SOURCE occurrences in the tree, so it is
+# structurally blind to HP_REGISTER_TABLE — and that blindness cost us: the hp
+# spec table was a fixed 1,024-entry array, and 1,481 rows were being dropped at
+# boot with source-floor passing the whole time. Nothing failed, /api/status
+# showed nothing, and most of two batches was registered into nothing.
+#
+# It also asserts that registration was CLEAN. A DUPLICATE id means the second
+# definition is unreachable; an OVERFLOW means a row was discarded outright.
+# Neither should ever be non-zero, so neither is merely reported.
+.PHONY: registry-floor registry-floor-record
+registry-floor-record: $(BIN)
+	@rm -rf data/japanmap.db*
+	@./$(BIN) --list-sources 2>/dev/null | wc -l > tools/registry-floor.txt
+	@echo "recorded registry floor: $$(cat tools/registry-floor.txt)"
+
+registry-floor: $(BIN)
+	@test -f tools/registry-floor.txt || { echo "no floor recorded; run make registry-floor-record"; exit 1; }
+	@rm -rf data/japanmap.db*
+	@./$(BIN) --list-sources 2>tools/.reg.log | wc -l > tools/.reg.count
+	@now=$$(cat tools/.reg.count); floor=$$(cat tools/registry-floor.txt); \
+	 dup=$$(grep -c DUPLICATE tools/.reg.log || true); \
+	 ovf=$$(grep -c OVERFLOW tools/.reg.log || true); \
+	 rm -f tools/.reg.log tools/.reg.count; \
+	 if [ "$$now" -lt "$$floor" ]; then \
+	   echo "REGISTRY REGRESSED: $$now < $$floor (floor in tools/registry-floor.txt)"; \
+	   exit 1; \
+	 fi; \
+	 if [ "$$dup" -ne 0 ]; then \
+	   echo "$$dup DUPLICATE id(s) — the second definition of each never runs"; exit 1; \
+	 fi; \
+	 if [ "$$ovf" -ne 0 ]; then \
+	   echo "$$ovf row(s) DROPPED at registration — a table cap is eating sources"; exit 1; \
+	 fi; \
+	 echo "registry ok: $$now >= $$floor, 0 duplicates, 0 dropped"
+
 # The floor is committed (tools/source-floor.txt) so CI and a reviewer see the
 # same number the author did.
 .PHONY: source-floor source-floor-record

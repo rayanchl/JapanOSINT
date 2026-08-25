@@ -23,8 +23,16 @@
 #include <string.h>
 #include <time.h>
 #include "_jp_osint.inc"
+#include "cyi_common.inc"
 
-#define MAX_ROWS 50
+/* The endpoint's own page size, not an editorial bound: `limit` caps a page
+ * and `count` is the true total (1,000 for google.com on the open tier). This
+ * collector used to send no limit at all — so it got the server default of 25
+ * — and then capped itself at 50 rows on top, which meant 25 of 1,000 answers
+ * reached the sink and the other 975 were never even requested. Now the walk
+ * follows offset/limit to `count`. */
+#define PDNS_PAGE_SIZE 100
+#define PDNS_MAX_PAGES 50   /* exhaustive-ok: offset-walk runaway guard; an early stop emits a collector-truncation-notice */
 
 static int looks_like_domain(const char *s) {
   if (!s || !*s) return 0;
@@ -58,46 +66,13 @@ static const char *ms_to_iso(const cJSON *o, const char *k, char *out, size_t n)
   return out;
 }
 
-static char *http_get(const source_ctx *ctx, const char *url, long *status) {
-  http_response hr = {0};
-  const char *hdrs[] = { "Accept: application/json", NULL };
-  int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 20000, 1, &hr);
-  *status = hr.status;
-  if (rc != 0 || hr.status != 200 || !hr.body) { http_response_free(&hr); return NULL; }
-  char *b = hr.body; hr.body = NULL; http_response_free(&hr);
-  return b;
-}
-
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *q = ctx->entity;
-  if (!looks_like_domain(q)) return 0;             /* wrong shape -> no-op */
-
-  char *enc = jo_urlencode(q);
-  if (!enc) return -1;
-  char url[512];
-  snprintf(url, sizeof url, "https://api.mnemonic.no/pdns/v3/%s", enc);
-  free(enc);
-
-  long status = 0;
-  char *body = http_get(ctx, url, &status);
-  if (!body) {
-    fprintf(stderr, "[PDNS_MNEMONIC] http status=%ld\n", status);
-    if (status >= 400 && status < 500) return 0;   /* no history / quota */
-    return -1;
-  }
-  cJSON *root = cJSON_Parse(body);
-  free(body);
-  if (!root) { fprintf(stderr, "[PDNS_MNEMONIC] unparseable body\n"); return -1; }
-
-  const cJSON *cnt = cJSON_GetObjectItem(root, "count");
-  double total = cJSON_IsNumber(cnt) ? cnt->valuedouble : 0;
-
-  int n = 0, capped = 0;
-  const cJSON *d;
-  cJSON_ArrayForEach(d, cJSON_GetObjectItem(root, "data")) {
-    if (n >= MAX_ROWS) { capped = 1; break; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
+/* One passive-DNS answer. `base` is the unpaged endpoint, used as the row's
+ * link so a row does not point at whichever offset happened to carry it.
+ * Returns 1 when the sink took it. */
+static int pdns_emit(intel_sink *sink, const cJSON *d, const char *q,
+                     const char *base, double total) {
     const char *answer = jo_sv(d, "answer");
-    if (!answer) continue;
+    if (!answer) return 0;
     const char *query = jo_sv(d, "query");
     const char *rrtype = jo_sv(d, "rrtype");
     char firstbuf[40], lastbuf[40];
@@ -137,29 +112,86 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     it.remote_key      = key;
     it.title           = title;
     it.summary         = summary;
-    it.link            = url;
+    it.link            = base;
     it.lang            = "en";
     it.published_at    = last;
     it.record_type     = "passive-dns";
     it.properties_json = pj;
     it.tags_json       = "[\"osint-search\",\"cyber\",\"passive-dns\"]";
-    if (sink->emit(sink, &it) >= 0) n++;
+    int rc = sink->emit(sink, &it);
     free(pj);
+    return rc >= 0 ? 1 : 0;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  const char *q = ctx->entity;
+  if (!looks_like_domain(q)) return 0;             /* wrong shape -> no-op */
+
+  char *enc = jo_urlencode(q);
+  if (!enc) return -1;
+  char base[512];
+  snprintf(base, sizeof base, "https://api.mnemonic.no/pdns/v3/%s", enc);
+  free(enc);
+
+  int max_pages = PDNS_MAX_PAGES;
+  const char *penv = getenv("JO_PDNS_MAX_PAGES");
+  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+
+  int n = 0, offset = 0, pages = 0, stopped_early = 0;
+  double total = 0;
+  char url[576];
+
+  for (int page = 0; page < max_pages; page++) {
+    snprintf(url, sizeof url, "%s?limit=%d&offset=%d", base,
+             PDNS_PAGE_SIZE, offset);
+    long status = 0;
+    char *body = cyi_get_json(ctx, url, 20000, &status);
+    if (!body) {
+      fprintf(stderr, "[PDNS_MNEMONIC] http status=%ld at offset %d\n",
+              status, offset);
+      /* 4xx on the FIRST page is "no history / over quota", not an error. */
+      if (page == 0) return (status >= 400 && status < 500) ? 0 : -1;
+      /* Mid-walk it is a real shortfall — the anonymous tier rate-limits, and
+       * a run that quietly returned the first 300 of 1,000 answers would look
+       * exactly like a complete one. */
+      stopped_early = 1;
+      break;
+    }
+    cJSON *root = cJSON_Parse(body);
+    free(body);
+    if (!root) {
+      fprintf(stderr, "[PDNS_MNEMONIC] unparseable body at offset %d\n", offset);
+      if (page == 0) return -1;
+      stopped_early = 1;
+      break;
+    }
+    pages++;
+    const cJSON *cnt = cJSON_GetObjectItem(root, "count");
+    if (cJSON_IsNumber(cnt)) total = cnt->valuedouble;
+
+    int here = 0;
+    const cJSON *d;
+    cJSON_ArrayForEach(d, cJSON_GetObjectItem(root, "data")) {
+      here++;
+      n += pdns_emit(sink, d, q, base, total);
+    }
+    cJSON_Delete(root);
+
+    offset += here;
+    if (here < PDNS_PAGE_SIZE) break;        /* short page = end of the set */
+    if (total > 0 && offset >= total) break; /* reached the declared total  */
+    if (page + 1 == max_pages) stopped_early = 1;
   }
 
-  /* House rule 2: mnemonic states the true total in `count` while the open tier
-   * pages the answers; MAX_ROWS stopped this run short of that total. Report it
-   * as data, not only as total_known_answers on each row. */
-  if (capped)
-    jo_truncation_notice(sink, "PDNS_MNEMONIC", q, n,
-                         total > 0 ? (long)total : -1,
-                         "MAX_ROWS reached; the remaining answers in the "
-                         "fetched data[] page were not emitted, and no later "
-                         "page of the open-tier result set is requested",
-                         "raise or drop MAX_ROWS in collectors/sources/"
-                         "cyi_pdns_mnemonic.c and walk the offset/limit pages");
-  cJSON_Delete(root);
-  fprintf(stderr, "[PDNS_MNEMONIC] emitted %d of %.0f known answers (%s)\n", n, total, q);
+  fprintf(stderr, "[PDNS_MNEMONIC] emitted %d of %.0f known answers over %d "
+                  "page(s) (%s)\n", n, total, pages, q);
+  if (stopped_early)
+    jo_trunc_notice(sink, "PDNS_MNEMONIC", base, n,
+                    total > 0 ? (long)total : -1,
+                    "the offset walk stopped before Mnemonic's declared answer "
+                    "count was reached — the anonymous tier rate-limited the "
+                    "run, or the page-walk ceiling was hit",
+                    "re-run the pivot, or raise $JO_PDNS_MAX_PAGES");
   return 0;                       /* no passive DNS history is not an error */
 }
 

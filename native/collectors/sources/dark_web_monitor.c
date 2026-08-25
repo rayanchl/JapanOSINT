@@ -170,6 +170,7 @@ static int emit_item(intel_sink *sink, const char *q, const char *rk,
   cJSON_AddBoolToObject(props, "success", 1);  /* a real hit was parsed */
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   intel_item it = {0};
   it.remote_key      = rk;

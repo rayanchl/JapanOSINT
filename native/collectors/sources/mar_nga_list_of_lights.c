@@ -103,10 +103,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     double lat = 0, lon = 0;
     int geo = lol_position(jo_sv(a, "position"), &lat, &lon);
 
-    char key[192];
-    snprintf(key, sizeof key, "%s|%s",
+    /* IDENTITY (rule 4b, measured): volume|featureNumber keyed multi-light
+     * structures onto each other — the List of Lights re-uses one feature
+     * number for each light on a structure and for range-light pairs.
+     * Sweep 2026-08-24: emitted 4,917, stored 4,692. The name and the charted
+     * position are what distinguish co-numbered lights, and both are stable
+     * across the weekly notice updates — so the key gains those rather than a
+     * content hash, which would mint a new uid every time NGA edits a
+     * characteristic and break the upsert. */
+    char key[288];
+    snprintf(key, sizeof key, "%s|%s|%.80s|%.40s",
              jo_sv(a, "volumeNumber") ? jo_sv(a, "volumeNumber") : "PUB",
-             feat ? feat : (name ? name : "?"));
+             feat ? feat : "?", name ? name : "?",
+             jo_sv(a, "position") ? jo_sv(a, "position") : "");
     flatten(key);
 
     cJSON *p = cJSON_CreateObject();

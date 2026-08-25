@@ -6,6 +6,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/geojson.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,10 +18,15 @@ static void passthru(cJSON *p, const char *outk, cJSON *r, const char *ink) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("WIGLE_API_KEY");
   /* Gated, not failed: -1 would log fetch_log status='error' and open a
-   * collector_anomaly on every tick for a source that simply has no key. */
+   * collector_anomaly on every tick for a source that simply has no key. So
+   * this still returns 0 — but it now says so in the data instead of only in
+   * stderr, where "ran, found nothing" and "never ran" looked identical. */
   if (!key || !*key) {
-    fprintf(stderr, "[wifi-networks-wigle] gated (no WIGLE_API_KEY)\n");
-    return 0;
+    static const char *const envs[] = { "WIGLE_API_KEY", NULL };
+    return jo_needs_credential(sink, "wifi-networks-wigle",
+        "WiGLE wireless network search (JP bbox)",
+        envs, "https://api.wigle.net/api/v2/network/search",
+        "free account at wigle.net; WIGLE_API_KEY is the base64 API name:token pair");
   }
 
   char auth[256];

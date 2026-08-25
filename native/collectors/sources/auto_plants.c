@@ -22,7 +22,8 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
 
   const char *brand = ov_tag(el, "operator");
   if (!brand) brand = ov_tag(el, "brand");
-  cJSON_AddStringToObject(p, "brand", brand ? brand : "unknown");
+  if (brand) cJSON_AddStringToObject(p, "brand", brand);
+  else cJSON_AddItemToObject(p, "brand", cJSON_CreateNull());
 
   cJSON_AddStringToObject(p, "source", "osm_overpass");
   cJSON_AddItemToObject(f, "properties", p);

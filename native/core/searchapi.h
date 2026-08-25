@@ -11,7 +11,19 @@
 #define JO_SEARCHAPI_H
 #include "db.h"
 
+/* Hard ceiling on the caller-supplied `max_rounds`. Each phase-2 round is a
+ * full collector fan-out plus an LLM call while holding one of the four
+ * concurrent-run slots, and the parameter was previously guarded only by
+ * "> 0" — {"max_rounds":2147483647} was accepted as written. 20 is four times
+ * the default of 5, which is already far past the point where the pivot chain
+ * stops finding anything new. */
+#define SEARCH_MAX_ROUNDS_CEILING 20
+
 /* Spawns the run and returns {request_id,status,query} (caller frees).
+ *
+ * `max_rounds` <= 0 means "the default 5"; anything above
+ * SEARCH_MAX_ROUNDS_CEILING is silently clamped to it, the same way every
+ * other numeric parameter in this tree clamps rather than 400s.
  *
  * NULL means "no run started", and `*out_status` says why so the caller can
  * pick the right HTTP code without guessing:

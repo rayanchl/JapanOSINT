@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 #include "_jp_osint.inc"
 
 #define HELCOM_URL "https://maps.helcom.fi/arcgis/rest/services/MADS/Shipping/" \
@@ -48,14 +49,6 @@ static const char *hsv(const cJSON *o, const char *k) {
 static inline void add_s(cJSON *dst, const cJSON *src, const char *k) {
   const char *s = hsv(src, k);
   if (s) cJSON_AddStringToObject(dst, k, s);
-}
-static const char *iso_ms(double ms, char *buf, size_t n) {
-  if (!(ms > 0)) return NULL;
-  time_t t = (time_t)(ms / 1000.0);
-  struct tm g;
-  if (!gmtime_r(&t, &g)) return NULL;
-  if (strftime(buf, n, "%Y-%m-%dT%H:%M:%SZ", &g) == 0) return NULL;
-  return buf;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -87,7 +80,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     char when[40]; const char *whenp = NULL;
     const cJSON *dt = cJSON_GetObjectItem(pr, "Date");
-    if (cJSON_IsNumber(dt)) whenp = iso_ms(dt->valuedouble, when, sizeof when);
+    if (cJSON_IsNumber(dt)) whenp = jo_ms_iso(dt->valuedouble, when, sizeof when);
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "HELCOM_ID", key);

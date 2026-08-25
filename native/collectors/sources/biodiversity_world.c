@@ -106,12 +106,13 @@ static int bio_gbif(const source_ctx *ctx, intel_sink *sink, const char *enc,
       if (!loc) loc = jo_sv(r, "verbatimLocality");
       const char *ds  = jo_sv(r, "datasetName");
       const char *dt  = jo_sv(r, "eventDate");
-      /* Both must be initialised before the `&&`: it short-circuits, so a
-       * record carrying a latitude but no longitude leaves `lon` untouched and
-       * it is still passed by value to bio_emit below. */
+      /* Both coordinates must really parse. `&&` short-circuits, so lon was
+       * left indeterminate whenever lat was absent, and an indeterminate
+       * double was then passed by value as the record position. */
       double lat = 0, lon = 0;
-      int geo = jo_num(r, "decimalLatitude", &lat) &&
-                jo_num(r, "decimalLongitude", &lon);
+      int have_lat = jo_num(r, "decimalLatitude", &lat);
+      int have_lon = jo_num(r, "decimalLongitude", &lon);
+      int geo = have_lat && have_lon;   /* no geo -> has_geo = 0, honest */
       const cJSON *kv = cJSON_GetObjectItem(r, "key");
       char key[128], link[160];
       key[0] = 0; link[0] = 0;
@@ -213,10 +214,13 @@ static int bio_obis(const source_ctx *ctx, intel_sink *sink, const char *enc,
       if (!loc) loc = jo_sv(r, "waterBody");
       const char *ds  = jo_sv(r, "datasetName");
       const char *dt  = jo_sv(r, "eventDate");
-      /* Initialised for the same short-circuit reason as the GBIF loop above. */
+      /* Both coordinates must really parse. `&&` short-circuits, so lon was
+       * left indeterminate whenever lat was absent, and an indeterminate
+       * double was then passed by value as the record position. */
       double lat = 0, lon = 0;
-      int geo = jo_num(r, "decimalLatitude", &lat) &&
-                jo_num(r, "decimalLongitude", &lon);
+      int have_lat = jo_num(r, "decimalLatitude", &lat);
+      int have_lon = jo_num(r, "decimalLongitude", &lon);
+      int geo = have_lat && have_lon;   /* no geo -> has_geo = 0, honest */
       const char *id  = jo_sv(r, "id");
       char key[160];
       key[0] = 0;

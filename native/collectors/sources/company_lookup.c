@@ -54,6 +54,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   if (st && cJSON_IsString(st)) cJSON_AddStringToObject(props, "status", st->valuestring);
   cJSON_AddBoolToObject(props, "success", 1);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   /* Stable per-company key = jurisdiction:company_number. */
   char rk[320];

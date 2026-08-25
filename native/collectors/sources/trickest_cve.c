@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define REPO_API "https://api.github.com/repos/trickest/cve/contents"
 #define RAW_BASE "https://raw.githubusercontent.com/trickest/cve/main"
@@ -47,7 +48,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* year = new Date().getUTCFullYear(); try [year, year-1] */
   time_t now = time(NULL);
-  struct tm gt; gmtime_r(&now, &gt);
+  struct tm gt;
+  /* The year IS the repo directory this collector lists; with no year there
+   * is no path to fetch, so fail rather than guess one. */
+  if (!jo_tm_utc(now, &gt)) {
+    fprintf(stderr, "[trickest-cve] cannot render the query window as a date\n");
+    return -1;
+  }
   int year = gt.tm_year + 1900;
 
   const char *token = getenv("GITHUB_TOKEN");

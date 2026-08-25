@@ -31,6 +31,39 @@ void llm_init_suggest(llm_client *c, http_client *http);
 char *llm_complete(llm_client *c, const char *prompt, const char *grammar,
                    int max_tokens, double temperature, int timeout_ms);
 
+/* WHY A FAILED CALL NOW HAS A NAME.
+ *
+ * Every generation entry point here returns NULL on failure and returned NULL
+ * for FIVE unrelated reasons: the caller handed us unparsable messages JSON,
+ * nothing was listening on base_url, llama-server answered non-2xx, it answered
+ * 2xx with a body we could not read, or it generated an empty completion. A
+ * caller could not tell any of them apart, and core/pipeline.c did not try: a
+ * NULL from the analysis call fell through to `analysis = NULL`, zero entities,
+ * one fallback corpus lookup, and a run that still reported
+ * gpt_analyzing → services_assigned → agents_working → completed at 100%. An
+ * unreachable model host and a model that ran and found nothing were the same
+ * observable outcome, which is exactly what house rule 1 forbids: a failure
+ * must degrade to an explicit error, never to a silent success.
+ *
+ * So the transport verdict is now reported out-of-band, and the *_ex forms
+ * carry it. The plain llm_chat/llm_complete wrappers are unchanged for the
+ * dozen background callers (enricher, triage, repair, translate) that only ever
+ * cared whether they got text back. */
+typedef enum {
+  LLM_OK = 0,           /* usable content returned                            */
+  LLM_ERR_BAD_REQUEST,  /* caller's messages_json / prompt was unusable       */
+  LLM_ERR_UNREACHABLE,  /* no HTTP exchange completed — refused, DNS, no host */
+  LLM_ERR_TIMEOUT,      /* the call ran out its own timeout budget            */
+  LLM_ERR_HTTP,         /* server answered, status outside 2xx               */
+  LLM_ERR_EMPTY,        /* 2xx, but no usable content in the response        */
+} llm_status;
+
+/* Stable machine-readable token for a status ("ok", "llm_unreachable",
+ * "llm_http_error", "llm_empty_response", "llm_bad_request"). Never NULL —
+ * these strings are surfaced to the client as degradation codes, so they are
+ * part of the API and must not be reworded casually. */
+const char *llm_status_code(llm_status s);
+
 /* /v1/chat/completions. messages_json = a JSON array string. json_schema is an
  * optional JSON-schema OBJECT (as text, e.g. from schema_load); when present it
  * is sent as response_format json_schema, which constrains only the assistant's
@@ -42,6 +75,13 @@ char *llm_complete(llm_client *c, const char *prompt, const char *grammar,
  * content string. */
 char *llm_chat(llm_client *c, const char *messages_json, const char *json_schema,
                int max_tokens, double temperature, int timeout_ms);
+
+/* llm_chat, but *out_status (may be NULL) says WHY on a NULL return and
+ * *out_http (may be NULL) carries the HTTP status when one was received (0 when
+ * no exchange completed). */
+char *llm_chat_ex(llm_client *c, const char *messages_json,
+                  const char *json_schema, int max_tokens, double temperature,
+                  int timeout_ms, llm_status *out_status, long *out_http);
 
 int  llm_healthy(llm_client *c); /* GET /health */
 

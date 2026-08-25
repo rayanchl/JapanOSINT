@@ -169,7 +169,7 @@ VJSON(de_datenregister_berlin_de_orgs, "de-datenregister-berlin-de-orgs", "daten
 
 VJSON(de_datenregister_berlin_de_tags, "de-datenregister-berlin-de-tags", "datenregister.berlin.de — tags (Germany)", "datenregister.berlin.de — tags (Germany)",
   "de_opendata", "opendata",
-  "https://datenregister.berlin.de/api/3/action/tag_list",
+  "https://datenregister.berlin.de/api/3/action/tag_list?all_fields=true",
   "result",
   "de", "[\"de\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at datenregister.berlin.de.");
@@ -372,7 +372,7 @@ VJSON(de_opendata_muenchen_de_orgs, "de-opendata-muenchen-de-orgs", "opendata.mu
 
 VJSON(de_opendata_muenchen_de_tags, "de-opendata-muenchen-de-tags", "opendata.muenchen.de — tags (Germany)", "opendata.muenchen.de — tags (Germany)",
   "de_opendata", "opendata",
-  "https://opendata.muenchen.de/api/3/action/tag_list",
+  "https://opendata.muenchen.de/api/3/action/tag_list?all_fields=true",
   "result",
   "de", "[\"de\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at opendata.muenchen.de.");

@@ -17,13 +17,19 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
            id && cJSON_IsNumber(id) ? (long long)id->valuedouble : 0);
   cJSON_AddStringToObject(p, "track_id", tid);
   const char *name = ov_tag(el, "name");
-  char nbuf[64];
-  if (!name) { snprintf(nbuf, sizeof nbuf, "Track %d", i + 1); name = nbuf; }
-  cJSON_AddStringToObject(p, "name", name);
+  /* no-fabrication (house rule 1): OSM carried no name tag for this element.
+   * The old code wrote "Track %d" + the loop index, which is both an invented
+   * label and an UNSTABLE one — it feeds geojson's content-hash uid, so the
+   * same object was re-keyed whenever Overpass changed element order. An
+   * absent name is serialized as null; pick_text() skips nulls, so the row
+   * persists with a NULL title rather than a made-up one. */
+  if (name) cJSON_AddStringToObject(p, "name", name);
+  else cJSON_AddItemToObject(p, "name", cJSON_CreateNull());
   const char *sport = ov_tag(el, "sport");
   cJSON_AddStringToObject(p, "sport", sport ? sport : "racing");
   const char *operator_ = ov_tag(el, "operator");
-  cJSON_AddStringToObject(p, "operator", operator_ ? operator_ : "unknown");
+  if (operator_) cJSON_AddStringToObject(p, "operator", operator_);
+  else cJSON_AddItemToObject(p, "operator", cJSON_CreateNull());
   cJSON_AddStringToObject(p, "country", "JP");
   cJSON_AddStringToObject(p, "source", "osm_overpass");
   cJSON_AddItemToObject(f, "properties", p);

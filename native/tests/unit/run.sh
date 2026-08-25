@@ -26,6 +26,13 @@ fi
 [ -d "$OBJDIR" ] || { echo "no $OBJDIR/ — run make first"; exit 2; }
 
 CFLAGS="-O1 -g -Wall -Wextra -Wno-unused-parameter -pthread -Ithird_party"
+# The same two quote-include paths the main Makefile passes. A test that
+# #includes a COLLECTOR reaches `#include "source.h"` and `#include
+# "_jp_osint.inc"`, and "" search starts in the directory of the including
+# file — collectors/sources/ — not in native/. Without these the collector
+# under test does not compile at all, which reads as a broken test rather than
+# as a missing -I. Additive: nothing that built before builds differently.
+CFLAGS="$CFLAGS -iquote . -iquote collectors/sources"
 CFLAGS="$CFLAGS -DJO_REPO_ROOT=\"$(cd .. && pwd)\""
 # Ask the Makefile for the link line rather than re-deriving it. The previous
 # `pkg-config --libs libcurl openssl 2>/dev/null` had none of the fallbacks the

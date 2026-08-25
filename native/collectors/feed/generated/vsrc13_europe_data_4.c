@@ -8,15 +8,15 @@
 
 VJSON(eur_ods_namur_namur_plan_de_secteur_affectations, "eur-ods-namur-namur-plan-de-secteur-affectations", "Ville de Namur open data — Namur - Plan de secteur - Affectations", "Ville de Namur open data — Namur - Plan de secteur - Affectations",
   "europe_data", "opendata",
-  "https://data.namur.be/api/explore/v2.1/catalog/datasets/namur-plan-de-secteur-affectations/records?limit=100",
-  "results",
+  "https://data.namur.be/api/explore/v2.1/catalog/datasets/namur-plan-de-secteur-affectations/exports/json",
+  "",
   "fr", "[\"bel\",\"opendata\"]", 86400,
   "Records of the 'Namur - Plan de secteur - Affectations' dataset published by Ville de Namur open data.");
 
 VJSON(eur_ods_namur_population_mouv_indic_tbnatalite, "eur-ods-namur-population-mouv-indic-tbnatalite", "Ville de Namur open data — Namur - Mouvement de population - Taux de natalité", "Ville de Namur open data — Namur - Mouvement de population - Taux de natalité",
   "europe_data", "opendata",
-  "https://data.namur.be/api/explore/v2.1/catalog/datasets/population_mouv_indic_tbnatalite/records?limit=100",
-  "results",
+  "https://data.namur.be/api/explore/v2.1/catalog/datasets/population_mouv_indic_tbnatalite/exports/json?select=annee%2Cquart_nom%2Ccategorie_mouv%2Cvaleur%2Cgenre%2Ccatcode%2Ctotcat%2Cquart_code%2Ccode%20as%20code_dim%2Cgeo_point_2d%2Cgeo_shape",
+  "",
   "fr", "[\"bel\",\"opendata\"]", 86400,
   "Records of the 'Namur - Mouvement de population - Taux de natalité' dataset published by Ville de Namur open data.");
 
@@ -43,8 +43,8 @@ VJSON(eur_ods_nantes_244400404_ilot_fraicheur_nantes_me, "eur-ods-nantes-2444004
 
 VJSON(eur_ods_nantes_244400404_nombre_annuel_naissances, "eur-ods-nantes-244400404-nombre-annuel-naissances", "Nantes Metropole open data — Nombre annuel de naissances à Nantes", "Nantes Metropole open data — Nombre annuel de naissances à Nantes",
   "europe_data", "opendata",
-  "https://data.nantesmetropole.fr/api/explore/v2.1/catalog/datasets/244400404_nombre-annuel-naissances-nantes/records?limit=100",
-  "results",
+  "https://data.nantesmetropole.fr/api/explore/v2.1/catalog/datasets/244400404_nombre-annuel-naissances-nantes/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Nombre annuel de naissances à Nantes' dataset published by Nantes Metropole open data.");
 
@@ -78,8 +78,8 @@ VJSON(eur_ods_odre_consommation_journaliere_maximale, "eur-ods-odre-consommation
 
 VJSON(eur_ods_odre_debit_quotidien_stockages_gaz, "eur-ods-odre-debit-quotidien-stockages-gaz", "Open Data Reseaux Energies — Débit quotidien des stockages de gaz (à partir de novembre 2010)", "Open Data Reseaux Energies — Débit quotidien des stockages de gaz (à partir de novembre 2010)",
   "europe_data", "opendata",
-  "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/debit-quotidien-stockages-gaz/records?limit=100",
-  "results",
+  "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/debit-quotidien-stockages-gaz/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Débit quotidien des stockages de gaz (à partir de novembre 2010)' dataset published by Open Data Reseaux Energies.");
 
@@ -113,8 +113,8 @@ VJSON(eur_ods_odre_projet_commerciaux_et_demonstrateu, "eur-ods-odre-projet-comm
 
 VJSON(eur_ods_odshub_224400028_nb_fonds_solidarite_loge, "eur-ods-odshub-224400028-nb-fonds-solidarite-loge", "Opendatasoft Data Hub — Fonds de solidarité pour le logement (FSL) : aide à l'accès au logement en Loire-Atlantique par commune", "Opendatasoft Data Hub — Fonds de solidarité pour le logement (FSL) : aide à l'accès au logement en Loire-Atlantique par commune",
   "europe_data", "opendata",
-  "https://data.opendatasoft.com/api/explore/v2.1/catalog/datasets/224400028_nb-fonds-solidarite-logement-acces-logement-par-commune@loireatlantique/records?limit=100",
-  "results",
+  "https://data.opendatasoft.com/api/explore/v2.1/catalog/datasets/224400028_nb-fonds-solidarite-logement-acces-logement-par-commune@loireatlantique/exports/json",
+  "",
   "en", "[\"int\",\"opendata\"]", 86400,
   "Records of the 'Fonds de solidarité pour le logement (FSL) : aide à l'accès au logement en Loire-Atlantique par commune' dataset published by Opendatasoft Data Hub.");
 
@@ -127,8 +127,8 @@ VJSON(eur_ods_odshub_budget_participatif_rennes_rennes, "eur-ods-odshub-budget-p
 
 VJSON(eur_ods_odshub_fr_en_inserjeunes_lycee_pro_agri_f, "eur-ods-odshub-fr-en-inserjeunes-lycee-pro-agri-f", "Opendatasoft Data Hub — Inserjeunes Voie professionnelle scolaire agricole par établissement relevant du ministère de l'agriculture et formation fine", "Opendatasoft Data Hub — Inserjeunes Voie professionnelle scolaire agricole par établissement relevant du ministère de l'agriculture et formation fine",
   "europe_data", "opendata",
-  "https://data.opendatasoft.com/api/explore/v2.1/catalog/datasets/fr-en-inserjeunes-lycee_pro-agri-formation-fine@dataeducation/records?limit=100",
-  "results",
+  "https://data.opendatasoft.com/api/explore/v2.1/catalog/datasets/fr-en-inserjeunes-lycee_pro-agri-formation-fine@dataeducation/exports/json",
+  "",
   "en", "[\"int\",\"opendata\"]", 86400,
   "Records of the 'Inserjeunes Voie professionnelle scolaire agricole par établissement relevant du ministère de l'agriculture et formation fine' dataset published by Opendatasoft Data Hub.");
 
@@ -197,22 +197,22 @@ VJSON(eur_ods_odspub_healthref_france_sentinelles_yearl, "eur-ods-odspub-healthr
 
 VJSON(eur_ods_odspub_osm_australia_defibrillator, "eur-ods-odspub-osm-australia-defibrillator", "Opendatasoft public catalogue — Automated External Defibrillators - Australia - OSM data", "Opendatasoft public catalogue — Automated External Defibrillators - Australia - OSM data",
   "europe_data", "opendata",
-  "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/osm-australia-defibrillator/records?limit=100",
-  "results",
+  "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/osm-australia-defibrillator/exports/json?select=name%2Cstatus%2Clocation_type%2Cis_public_access%2Clatitude%2Clongitude%2Caddress_number%2Caddress_street%2Cpostal_code%2Ccity%2Cfloor%2Clocation_details%2Cphoto_url%2Copening_hours%2Cphone%2Cemail%2Cinstallation_date%2Cmanufacturer%2Cmaintainer%2Cmodel%2Cserial_number%2Chas_pediatric_pads%2Clast_maintenance%2Coperator%2Cmeta_geo_point%2Cmeta_osm_id%2Cmeta_osm_url%2Cmeta_first_update%2Cmeta_last_update%2Cmeta_versions_number%2Cmeta_users_number%2Cid%20as%20id_dim%2Cmeta_name_sub%2Cmeta_code_sub%2Cmeta_name_area%2Cmeta_code_area%2Cmeta_name_state%2Cmeta_code_state",
+  "",
   "en", "[\"int\",\"opendata\"]", 86400,
   "Records of the 'Automated External Defibrillators - Australia - OSM data' dataset published by Opendatasoft public catalogue.");
 
 VJSON(eur_ods_odspub_osm_australia_food_service, "eur-ods-odspub-osm-australia-food-service", "Opendatasoft public catalogue — Food Services - Australia - OSM data", "Opendatasoft public catalogue — Food Services - Australia - OSM data",
   "europe_data", "opendata",
-  "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/osm-australia-food-service/records?limit=100",
-  "results",
+  "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/osm-australia-food-service/exports/json",
+  "",
   "en", "[\"int\",\"opendata\"]", 86400,
   "Records of the 'Food Services - Australia - OSM data' dataset published by Opendatasoft public catalogue.");
 
 VJSON(eur_ods_odspub_osm_australia_public_service, "eur-ods-odspub-osm-australia-public-service", "Opendatasoft public catalogue — Public Services - Australia - OSM data", "Opendatasoft public catalogue — Public Services - Australia - OSM data",
   "europe_data", "opendata",
-  "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/osm-australia-public-service/records?limit=100",
-  "results",
+  "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/osm-australia-public-service/exports/json",
+  "",
   "en", "[\"int\",\"opendata\"]", 86400,
   "Records of the 'Public Services - Australia - OSM data' dataset published by Opendatasoft public catalogue.");
 
@@ -253,8 +253,8 @@ VJSON(eur_ods_paris_paris_logement_familles_monoparent, "eur-ods-paris-paris-log
 
 VJSON(eur_ods_paris_parissetransforme, "eur-ods-paris-parissetransforme", "Ville de Paris open data — Paris se transforme", "Ville de Paris open data — Paris se transforme",
   "europe_data", "opendata",
-  "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/parissetransforme/records?limit=100",
-  "results",
+  "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/parissetransforme/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Paris se transforme' dataset published by Ville de Paris open data.");
 
@@ -302,8 +302,8 @@ VJSON(eur_ods_paysdelaloire, "eur-ods-paysdelaloire", "Region Pays de la Loire o
 
 VJSON(eur_ods_pdl_234400034_005_001_fonds_documentai, "eur-ods-pdl-234400034-005-001-fonds-documentai", "Region Pays de la Loire open data — Fonds documentaire général de la Région des Pays de la Loire", "Region Pays de la Loire open data — Fonds documentaire général de la Région des Pays de la Loire",
   "europe_data", "opendata",
-  "https://data.paysdelaloire.fr/api/explore/v2.1/catalog/datasets/234400034_005-001_fonds-documentaire-general-rpdl/records?limit=100",
-  "results",
+  "https://data.paysdelaloire.fr/api/explore/v2.1/catalog/datasets/234400034_005-001_fonds-documentaire-general-rpdl/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Fonds documentaire général de la Région des Pays de la Loire' dataset published by Region Pays de la Loire open data.");
 
@@ -316,15 +316,15 @@ VJSON(eur_ods_pdl_234400034_culture_au_futur_1_l_inc, "eur-ods-pdl-234400034-cul
 
 VJSON(eur_ods_pdl_234400034_effectifs_prives, "eur-ods-pdl-234400034-effectifs-prives", "Region Pays de la Loire open data — Effectifs salariés privés depuis 2006 par commune", "Region Pays de la Loire open data — Effectifs salariés privés depuis 2006 par commune",
   "europe_data", "opendata",
-  "https://data.paysdelaloire.fr/api/explore/v2.1/catalog/datasets/234400034_effectifs_prives/records?limit=100",
-  "results",
+  "https://data.paysdelaloire.fr/api/explore/v2.1/catalog/datasets/234400034_effectifs_prives/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Effectifs salariés privés depuis 2006 par commune' dataset published by Region Pays de la Loire open data.");
 
 VJSON(eur_ods_pdl_234400034_emploi_lieu_travail, "eur-ods-pdl-234400034-emploi-lieu-travail", "Region Pays de la Loire open data — Emploi au lieu de travail 2019 selon le statut", "Region Pays de la Loire open data — Emploi au lieu de travail 2019 selon le statut",
   "europe_data", "opendata",
-  "https://data.paysdelaloire.fr/api/explore/v2.1/catalog/datasets/234400034_emploi_lieu_travail/records?limit=100",
-  "results",
+  "https://data.paysdelaloire.fr/api/explore/v2.1/catalog/datasets/234400034_emploi_lieu_travail/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Emploi au lieu de travail 2019 selon le statut' dataset published by Region Pays de la Loire open data.");
 
@@ -358,8 +358,8 @@ VJSON(eur_ods_ratp, "eur-ods-ratp", "RATP open data — dataset catalogue", "RAT
 
 VJSON(eur_ods_ratp_commerces_de_proximite_agrees_ratp, "eur-ods-ratp-commerces-de-proximite-agrees-ratp", "RATP open data — Commerces de proximité agréés RATP", "RATP open data — Commerces de proximité agréés RATP",
   "europe_data", "opendata",
-  "https://data.ratp.fr/api/explore/v2.1/catalog/datasets/commerces-de-proximite-agrees-ratp/records?limit=100",
-  "results",
+  "https://data.ratp.fr/api/explore/v2.1/catalog/datasets/commerces-de-proximite-agrees-ratp/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Commerces de proximité agréés RATP' dataset published by RATP open data.");
 
@@ -414,8 +414,8 @@ VJSON(eur_ods_sncf, "eur-ods-sncf", "SNCF open data — dataset catalogue", "SNC
 
 VJSON(eur_ods_sncf_agents_nationalite_etrangere, "eur-ods-sncf-agents-nationalite-etrangere", "SNCF open data — Agents SNCF de nationalité étrangère", "SNCF open data — Agents SNCF de nationalité étrangère",
   "europe_data", "opendata",
-  "https://data.sncf.com/api/explore/v2.1/catalog/datasets/agents-nationalite-etrangere/records?limit=100",
-  "results",
+  "https://data.sncf.com/api/explore/v2.1/catalog/datasets/agents-nationalite-etrangere/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Agents SNCF de nationalité étrangère' dataset published by SNCF open data.");
 

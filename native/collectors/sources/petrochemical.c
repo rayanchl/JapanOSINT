@@ -19,7 +19,8 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   const char *name = ov_tag(el, "name");
   cJSON_AddStringToObject(p, "name", name ? name : "Petrochemical");
   const char *operator_ = ov_tag(el, "operator");
-  cJSON_AddStringToObject(p, "operator", operator_ ? operator_ : "unknown");
+  if (operator_) cJSON_AddStringToObject(p, "operator", operator_);
+  else cJSON_AddItemToObject(p, "operator", cJSON_CreateNull());
   cJSON_AddStringToObject(p, "source", "osm_overpass");
   cJSON_AddItemToObject(f, "properties", p);
   return f;

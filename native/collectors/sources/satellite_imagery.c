@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 /* JAPAN_BBOX = [122,24,154,46] (W,S,E,N) */
 #define BB_W 122
@@ -32,21 +33,15 @@
 
 static const char *JSON_HDRS[] = { "Content-Type: application/json", NULL };
 
-/* now ISO + today YYYY-MM-DD (UTC) */
-static void now_iso(char *o, size_t n) {
-  time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
-  strftime(o, n, "%Y-%m-%dT%H:%M:%S.000Z", &g);
-}
-static void today_ymd(char *o, size_t n) {
-  time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
-  strftime(o, n, "%Y-%m-%d", &g);
-}
-/* ISO window: from = now-Ndays, to = now */
-static void iso_window(int days, char *from, size_t fn, char *to, size_t tn) {
-  time_t t = time(NULL); struct tm g;
-  gmtime_r(&t, &g); strftime(to, tn, "%Y-%m-%dT%H:%M:%S.000Z", &g);
-  time_t f = t - (time_t)days * 86400; gmtime_r(&f, &g);
-  strftime(from, fn, "%Y-%m-%dT%H:%M:%S.000Z", &g);
+/* ISO window: from = now-Ndays, to = now. Returns 0 when either end cannot be
+ * rendered — both ends go into a STAC `datetime` range, and a half-built range
+ * is not a narrower query but a malformed one, so the caller skips the
+ * provider instead of asking for a window it did not mean. */
+static int iso_window(int days, char *from, size_t fn, char *to, size_t tn) {
+  time_t t = time(NULL);
+  if (!jo_time_fmt(t, "%Y-%m-%dT%H:%M:%S.000Z", to, tn)) return 0;
+  return jo_time_fmt(t - (time_t)days * 86400,
+                     "%Y-%m-%dT%H:%M:%S.000Z", from, fn) != NULL;
 }
 
 static const char *sv(const cJSON *o, const char *k) {
@@ -115,7 +110,10 @@ static void prov_himawari(http_client *http, cJSON *out) {
     snprintf(iso,sizeof iso,"%s-%s-%sT%s:%s:%s.000Z",y,mo,d,h,mi,se);
     (void)tmp;
   } else {
-    now_iso(iso, sizeof iso);
+    /* Unreachable: the early return above already required a >=16-char date.
+     * Kept faithful to the JS, and honest — an unrenderable clock leaves iso
+     * empty rather than filled from the stack. */
+    if (!jo_now_iso_ms(iso, sizeof iso)) { cJSON_Delete(latest); return; }
   }
   /* scene_id = date || iso ; id digits of (date||iso) */
   char scenebuf[40];
@@ -161,7 +159,10 @@ static void prov_himawari(http_client *http, cJSON *out) {
 /* ── 4. Landsat via Planetary Computer STAC ── */
 static void prov_landsat(http_client *http, cJSON *out) {
   char from[40], to[40];
-  iso_window(14, from, sizeof from, to, sizeof to);
+  if (!iso_window(14, from, sizeof from, to, sizeof to)) {
+    fprintf(stderr, "[satellite-imagery] cannot render the query window as a date\n");
+    return;
+  }
   char body[512];
   snprintf(body, sizeof body,
     "{\"bbox\":[%d,%d,%d,%d],\"datetime\":\"%s/%s\","
@@ -297,7 +298,10 @@ static int s2_stac_search(http_client *http, const char *url,
 /* ── 8. Sentinel-2 first-wins (SentinelHub creds path skipped: no creds) ── */
 static void prov_s2(http_client *http, cJSON *out) {
   char from[40], to[40];
-  iso_window(10, from, sizeof from, to, sizeof to);
+  if (!iso_window(10, from, sizeof from, to, sizeof to)) {
+    fprintf(stderr, "[satellite-imagery] cannot render the query window as a date\n");
+    return;
+  }
   char body[512];
   cJSON *tmp = cJSON_CreateArray();
 
@@ -317,7 +321,12 @@ static void prov_s2(http_client *http, cJSON *out) {
 
   /* CDSE OData */
   {
-    char filt[1024], url[1400];
+    /* url is 2176, not 1400: `enc` below holds up to 2002 bytes of percent-
+     * encoded filter and the fixed part of this URL is 68, so the request can
+     * want 2071. A cut OData $filter is not a shorter query — it is a MALFORMED
+     * one, which Copernicus answers with a 400 that this loop reads as "no
+     * scenes today". Sized so no filter `enc` can hold is ever cut. */
+    char filt[1024], url[2176];
     snprintf(filt, sizeof filt,
       "Collection/Name eq 'SENTINEL-2' and "
       "OData.CSC.Intersects(area=geography'SRID=4326;"
@@ -423,12 +432,20 @@ static const char *s1_platform(const char *name) {
 /* ── 9. Sentinel-1 first-wins: CDSE OData → Planetary Computer → Earth Search */
 static void prov_s1(http_client *http, cJSON *out) {
   char from[40], to[40];
-  iso_window(14, from, sizeof from, to, sizeof to);
+  if (!iso_window(14, from, sizeof from, to, sizeof to)) {
+    fprintf(stderr, "[satellite-imagery] cannot render the query window as a date\n");
+    return;
+  }
   cJSON *tmp = cJSON_CreateArray();
 
   /* CDSE OData */
   {
-    char filt[1024], url[1400];
+    /* url is 2176, not 1400: `enc` below holds up to 2002 bytes of percent-
+     * encoded filter and the fixed part of this URL is 68, so the request can
+     * want 2071. A cut OData $filter is not a shorter query — it is a MALFORMED
+     * one, which Copernicus answers with a 400 that this loop reads as "no
+     * scenes today". Sized so no filter `enc` can hold is ever cut. */
+    char filt[1024], url[2176];
     snprintf(filt, sizeof filt,
       "Collection/Name eq 'SENTINEL-1' and "
       "OData.CSC.Intersects(area=geography'SRID=4326;"
@@ -672,7 +689,7 @@ static void decorate(cJSON *features) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *features = cJSON_CreateArray();
-  char day[16]; today_ymd(day, sizeof day);
+  char day[16]; jo_now_fmt("%Y-%m-%d", day, sizeof day);
 
   prov_himawari(ctx->http, features);                              /* 1 */
   /* 2 nasa_gibs_modis / 3 nasa_gibs_viirs / 5 rammb_slider_goes18:

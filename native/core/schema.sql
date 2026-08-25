@@ -158,6 +158,9 @@ CREATE TABLE IF NOT EXISTS entity_relationships (
       last_seen_at  TEXT NOT NULL DEFAULT (datetime('now')),
       PRIMARY KEY (src_entity_id, dst_entity_id, rel_type)
     );
+-- NOTE: the live table has one more column than this CREATE -- `stored`,
+-- added by db.c's ensure_column() block (house rule 4b). records_fetched
+-- counts emit() CALLS; stored counts the distinct rows they left behind.
 CREATE TABLE IF NOT EXISTS fetch_log (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     source_id       TEXT NOT NULL REFERENCES sources(id),
@@ -696,7 +699,7 @@ CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 -- here — CREATE TABLE IF NOT EXISTS no-ops on an existing table, so a column
 -- appended to a CREATE would never reach a deployed DB. Those live in
 -- db.c's ensure_column() boot-migration block (alert_events.read_at,
--- entity_relationships.pmi/lift/co_count/stats_at).
+-- entity_relationships.pmi/lift/co_count/stats_at, fetch_log.stored).
 -- ─────────────────────────────────────────────────────────────────────────────
 
 -- P0.2 delivery ledger. delivered_channels_json alone cannot express

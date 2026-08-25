@@ -22,9 +22,9 @@
 #include "station_clusterer.h"
 #include "intel.h"            /* intel_fts_remirror: properties is indexed */
 #include "../lib/utf8.h"
-#include "../lib/feedlib.h"   /* feed_hash_join — the one SHA-1 join */
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
+#include <openssl/evp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -622,11 +622,32 @@ static int cmp_cstr(const void *a, const void *b) {
                               member_uids/operator/mode are ASCII → matches */
 }
 
-/* sha1(member_uids.join('|')) hex into out[41]. The digest loop lives in
- * lib/feedlib.c (feed_hash_join) — separator BETWEEN parts, full 40 hex, which
- * is a different input string from feed_hash_key's trailing-pipe form. */
+/* sha1(member_uids.join('|')) hex into out[41].
+ *
+ * EVP rather than the deprecated (OpenSSL 3.0) SHA1_* calls. The digest is
+ * byte-identical — same algorithm, same bytes, same order — which is required:
+ * this is the cluster_uid every already-stored cluster row is keyed on, and a
+ * changed digest would orphan all of them and re-create the set.
+ *
+ * EVP allocates, so unlike SHA1_Init it can fail. On failure out41 is left
+ * EMPTY rather than zeroed: an empty cluster_uid is honestly missing, whereas
+ * an all-zero one is a plausible-looking digest that would silently merge
+ * every failed cluster into a single row. */
 static void sha1_join_pipe(char **uids, int n, char *out41) {
-    feed_hash_join(out41, (const char *const *)uids, n);
+    out41[0] = 0;
+    EVP_MD_CTX *c = EVP_MD_CTX_new();
+    if (!c) return;
+    if (EVP_DigestInit_ex(c, EVP_sha1(), NULL) != 1) { EVP_MD_CTX_free(c); return; }
+    for (int i = 0; i < n; i++) {
+        if (i) EVP_DigestUpdate(c, "|", 1);
+        EVP_DigestUpdate(c, uids[i], strlen(uids[i]));
+    }
+    unsigned char d[EVP_MAX_MD_SIZE]; unsigned int dl = 0;
+    int ok = EVP_DigestFinal_ex(c, d, &dl) == 1;
+    EVP_MD_CTX_free(c);
+    if (!ok) return;
+    for (int i = 0; i < 20; i++) sprintf(out41 + i * 2, "%02x", d[i]);
+    out41[40] = 0;
 }
 
 /* Push s (copied) into a growable string array if not NULL. */
@@ -1125,8 +1146,19 @@ static int json_str_array(char **a, int n, char *buf, size_t bufsz) {
     char *s = cJSON_PrintUnformatted(arr);
     cJSON_Delete(arr);
     if (!s) return -1;
-    snprintf(buf, bufsz, "%s", s);
+    /* The truncation has to be an error, not a shrug. member_uids for a large
+     * cluster runs past a 16 KiB buffer, and a cut-off array is bound into the
+     * row as if it were valid JSON — the reader then parses NULL and reports
+     * member_count 0 with no error anywhere. */
+    int need = snprintf(buf, bufsz, "%s", s);
+    int over = (need < 0 || (size_t)need >= bufsz);
     free(s);
+    if (over) {
+        if (bufsz) buf[0] = 0;
+        fprintf(stderr, "[cluster] array of %d entries needs %d bytes, buffer "
+                        "is %zu — row not written\n", n, need, bufsz);
+        return -1;
+    }
     return 0;
 }
 
@@ -1261,7 +1293,11 @@ static int compute_line_dots(db_handle *db, cluster_row_t *rows, int nrows,
                 if (dn == dcap) {
                     int nc = dcap ? dcap * 2 : 64;
                     dot_t *nd = realloc(dots, (size_t)nc * sizeof(dot_t));
-                    if (!nd) { free(snaps); rc = -1; break; }
+                    /* No free(snaps) here: this `break` only leaves the inner
+                     * per-snap loop and drops straight onto the unconditional
+                     * free(snaps) below, so freeing it here made the OOM path
+                     * a double free. */
+                    if (!nd) { rc = -1; break; }
                     dots = nd; dcap = nc;
                 }
                 char wbuf[256];
@@ -1333,8 +1369,15 @@ int station_clusterer_run(db_handle *db) {
                 int  *gs2 = realloc(gsz,    (size_t)nc * sizeof(int));
                 int  *gc2 = realloc(gcap,   (size_t)nc * sizeof(int));
                 if (!ng2 || !gs2 || !gc2) {
-                    free(ng2 ? ng2 : groups);
-                    /* gs2/gc2 freed via originals below */
+                    /* Whichever realloc SUCCEEDED has already freed its old
+                     * block, so the survivors must be adopted before bailing.
+                     * The previous shape freed the new `groups` and left the
+                     * variable holding the stale pointer, which the cleanup
+                     * below then walked and freed a second time — and it leaked
+                     * gs2/gc2 whenever only one of the three failed. */
+                    if (ng2) groups = ng2;
+                    if (gs2) gsz   = gs2;
+                    if (gc2) gcap  = gc2;
                     fail = 1; break;
                 }
                 groups = ng2; gsz = gs2; gcap = gc2; gscap = nc;

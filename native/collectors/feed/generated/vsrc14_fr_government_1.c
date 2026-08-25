@@ -50,28 +50,28 @@ VJSON(fr_datagouv_q_antenne, "fr-datagouv-q-antenne", "data.gouv.fr — Mobile M
 
 VJSON(fr_datagouv_q_association, "fr-datagouv-q-association", "data.gouv.fr — Non-Profits Datasets", "data.gouv.fr non-profitsデータセット",
   "fr_government", "civil-society",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=association",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=association&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"association\"]", 86400,
   "Datasets published on the French national open-data portal matching 'association' (non-profits) — with publishing organisation, resources, licence, temporal coverage and quality score.");
 
 VJSON(fr_datagouv_q_bruit, "fr-datagouv-q-bruit", "data.gouv.fr — Noise Datasets", "data.gouv.fr noiseデータセット",
   "fr_government", "environment",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=bruit",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=bruit&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"bruit\"]", 86400,
   "Datasets published on the French national open-data portal matching 'bruit' (noise) — with publishing organisation, resources, licence, temporal coverage and quality score.");
 
 VJSON(fr_datagouv_q_budget, "fr-datagouv-q-budget", "data.gouv.fr — Public Budgets Datasets", "data.gouv.fr public budgetsデータセット",
   "fr_government", "economy",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=budget",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=budget&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"budget\"]", 86400,
   "Datasets published on the French national open-data portal matching 'budget' (public budgets) — with publishing organisation, resources, licence, temporal coverage and quality score.");
 
 VJSON(fr_datagouv_q_cadastre, "fr-datagouv-q-cadastre", "data.gouv.fr — Land Registry Datasets", "data.gouv.fr land registryデータセット",
   "fr_government", "geospatial",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=cadastre",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=cadastre&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"cadastre\"]", 86400,
   "Datasets published on the French national open-data portal matching 'cadastre' (land registry) — with publishing organisation, resources, licence, temporal coverage and quality score.");
@@ -99,21 +99,21 @@ VJSON(fr_datagouv_q_collectivite, "fr-datagouv-q-collectivite", "data.gouv.fr �
 
 VJSON(fr_datagouv_q_college, "fr-datagouv-q-college", "data.gouv.fr — Middle Schools Datasets", "data.gouv.fr middle schoolsデータセット",
   "fr_government", "education",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=collège",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=collège&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"college\"]", 86400,
   "Datasets published on the French national open-data portal matching 'collège' (middle schools) — with publishing organisation, resources, licence, temporal coverage and quality score.");
 
 VJSON(fr_datagouv_q_commune, "fr-datagouv-q-commune", "data.gouv.fr — Communes Datasets", "data.gouv.fr communesデータセット",
   "fr_government", "government",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=commune",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=commune&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"commune\"]", 86400,
   "Datasets published on the French national open-data portal matching 'commune' (communes) — with publishing organisation, resources, licence, temporal coverage and quality score.");
 
 VJSON(fr_datagouv_q_culture, "fr-datagouv-q-culture", "data.gouv.fr — Culture Datasets", "data.gouv.fr cultureデータセット",
   "fr_government", "culture",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=culture",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=culture&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"culture\"]", 86400,
   "Datasets published on the French national open-data portal matching 'culture' (culture) — with publishing organisation, resources, licence, temporal coverage and quality score.");
@@ -127,7 +127,7 @@ VJSON(fr_datagouv_q_cybersecurite, "fr-datagouv-q-cybersecurite", "data.gouv.fr 
 
 VJSON(fr_datagouv_q_dechets, "fr-datagouv-q-dechets", "data.gouv.fr — Waste Datasets", "data.gouv.fr wasteデータセット",
   "fr_government", "environment",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=déchets",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=déchets&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"dechets\"]", 86400,
   "Datasets published on the French national open-data portal matching 'déchets' (waste) — with publishing organisation, resources, licence, temporal coverage and quality score.");
@@ -141,7 +141,7 @@ VJSON(fr_datagouv_q_defense, "fr-datagouv-q-defense", "data.gouv.fr — Defence 
 
 VJSON(fr_datagouv_q_deliberation, "fr-datagouv-q-deliberation", "data.gouv.fr — Council Deliberations Datasets", "data.gouv.fr council deliberationsデータセット",
   "fr_government", "government",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=délibération",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=délibération&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"deliberation\"]", 86400,
   "Datasets published on the French national open-data portal matching 'délibération' (council deliberations) — with publishing organisation, resources, licence, temporal coverage and quality score.");
@@ -155,7 +155,7 @@ VJSON(fr_datagouv_q_delinquance, "fr-datagouv-q-delinquance", "data.gouv.fr — 
 
 VJSON(fr_datagouv_q_departement, "fr-datagouv-q-departement", "data.gouv.fr — Departments Datasets", "data.gouv.fr departmentsデータセット",
   "fr_government", "government",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=département",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=département&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"departement\"]", 86400,
   "Datasets published on the French national open-data portal matching 'département' (departments) — with publishing organisation, resources, licence, temporal coverage and quality score.");
@@ -169,14 +169,14 @@ VJSON(fr_datagouv_q_douane, "fr-datagouv-q-douane", "data.gouv.fr — Customs Da
 
 VJSON(fr_datagouv_q_eau, "fr-datagouv-q-eau", "data.gouv.fr — Water Datasets", "data.gouv.fr waterデータセット",
   "fr_government", "environment",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=eau",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=eau&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"eau\"]", 86400,
   "Datasets published on the French national open-data portal matching 'eau' (water) — with publishing organisation, resources, licence, temporal coverage and quality score.");
 
 VJSON(fr_datagouv_q_ecole, "fr-datagouv-q-ecole", "data.gouv.fr — Schools Datasets", "data.gouv.fr schoolsデータセット",
   "fr_government", "education",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=école",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=école&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"ecole\"]", 86400,
   "Datasets published on the French national open-data portal matching 'école' (schools) — with publishing organisation, resources, licence, temporal coverage and quality score.");
@@ -190,7 +190,7 @@ VJSON(fr_datagouv_q_education, "fr-datagouv-q-education", "data.gouv.fr — Educ
 
 VJSON(fr_datagouv_q_election, "fr-datagouv-q-election", "data.gouv.fr — Elections Datasets", "data.gouv.fr electionsデータセット",
   "fr_government", "government",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=élection",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=élection&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"election\"]", 86400,
   "Datasets published on the French national open-data portal matching 'élection' (elections) — with publishing organisation, resources, licence, temporal coverage and quality score.");
@@ -211,21 +211,21 @@ VJSON(fr_datagouv_q_elus, "fr-datagouv-q-elus", "data.gouv.fr — Elected Offici
 
 VJSON(fr_datagouv_q_emploi, "fr-datagouv-q-emploi", "data.gouv.fr — Employment Datasets", "data.gouv.fr employmentデータセット",
   "fr_government", "economy",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=emploi",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=emploi&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"emploi\"]", 86400,
   "Datasets published on the French national open-data portal matching 'emploi' (employment) — with publishing organisation, resources, licence, temporal coverage and quality score.");
 
 VJSON(fr_datagouv_q_energie, "fr-datagouv-q-energie", "data.gouv.fr — Energy Datasets", "data.gouv.fr energyデータセット",
   "fr_government", "energy",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=énergie",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=énergie&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"energie\"]", 86400,
   "Datasets published on the French national open-data portal matching 'énergie' (energy) — with publishing organisation, resources, licence, temporal coverage and quality score.");
 
 VJSON(fr_datagouv_q_entreprise, "fr-datagouv-q-entreprise", "data.gouv.fr — Enterprises Datasets", "data.gouv.fr enterprisesデータセット",
   "fr_government", "corporate",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=entreprise",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=entreprise&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"entreprise\"]", 86400,
   "Datasets published on the French national open-data portal matching 'entreprise' (enterprises) — with publishing organisation, resources, licence, temporal coverage and quality score.");
@@ -239,7 +239,7 @@ VJSON(fr_datagouv_q_environnement, "fr-datagouv-q-environnement", "data.gouv.fr 
 
 VJSON(fr_datagouv_q_etablissement, "fr-datagouv-q-etablissement", "data.gouv.fr — Establishments Datasets", "data.gouv.fr establishmentsデータセット",
   "fr_government", "corporate",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=établissement",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=établissement&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"etablissement\"]", 86400,
   "Datasets published on the French national open-data portal matching 'établissement' (establishments) — with publishing organisation, resources, licence, temporal coverage and quality score.");
@@ -253,14 +253,14 @@ VJSON(fr_datagouv_q_etudiant, "fr-datagouv-q-etudiant", "data.gouv.fr — Studen
 
 VJSON(fr_datagouv_q_ferroviaire, "fr-datagouv-q-ferroviaire", "data.gouv.fr — Rail Datasets", "data.gouv.fr railデータセット",
   "fr_government", "transport",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=ferroviaire",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=ferroviaire&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"ferroviaire\"]", 86400,
   "Datasets published on the French national open-data portal matching 'ferroviaire' (rail) — with publishing organisation, resources, licence, temporal coverage and quality score.");
 
 VJSON(fr_datagouv_q_foncier, "fr-datagouv-q-foncier", "data.gouv.fr — Land Ownership Datasets", "data.gouv.fr land ownershipデータセット",
   "fr_government", "geospatial",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=foncier",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=foncier&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"foncier\"]", 86400,
   "Datasets published on the French national open-data portal matching 'foncier' (land ownership) — with publishing organisation, resources, licence, temporal coverage and quality score.");
@@ -274,7 +274,7 @@ VJSON(fr_datagouv_q_formation, "fr-datagouv-q-formation", "data.gouv.fr — Voca
 
 VJSON(fr_datagouv_q_gaz, "fr-datagouv-q-gaz", "data.gouv.fr — Gas Datasets", "data.gouv.fr gasデータセット",
   "fr_government", "energy",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=gaz",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=gaz&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"gaz\"]", 86400,
   "Datasets published on the French national open-data portal matching 'gaz' (gas) — with publishing organisation, resources, licence, temporal coverage and quality score.");
@@ -330,7 +330,7 @@ VJSON(fr_datagouv_q_industrie_defense, "fr-datagouv-q-industrie-defense", "data.
 
 VJSON(fr_datagouv_q_inondation, "fr-datagouv-q-inondation", "data.gouv.fr — Flooding Datasets", "data.gouv.fr floodingデータセット",
   "fr_government", "disaster",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=inondation",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=inondation&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"inondation\"]", 86400,
   "Datasets published on the French national open-data portal matching 'inondation' (flooding) — with publishing organisation, resources, licence, temporal coverage and quality score.");
@@ -358,21 +358,21 @@ VJSON(fr_datagouv_q_laboratoire, "fr-datagouv-q-laboratoire", "data.gouv.fr — 
 
 VJSON(fr_datagouv_q_logement, "fr-datagouv-q-logement", "data.gouv.fr — Housing Datasets", "data.gouv.fr housingデータセット",
   "fr_government", "geospatial",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=logement",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=logement&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"logement\"]", 86400,
   "Datasets published on the French national open-data portal matching 'logement' (housing) — with publishing organisation, resources, licence, temporal coverage and quality score.");
 
 VJSON(fr_datagouv_q_marches_publics, "fr-datagouv-q-marches-publics", "data.gouv.fr — Public Procurement Datasets", "data.gouv.fr public procurementデータセット",
   "fr_government", "procurement",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=marchés%20publics",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=marchés%20publics&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"marches-publics\"]", 86400,
   "Datasets published on the French national open-data portal matching 'marchés publics' (public procurement) — with publishing organisation, resources, licence, temporal coverage and quality score.");
 
 VJSON(fr_datagouv_q_mobilite, "fr-datagouv-q-mobilite", "data.gouv.fr — Mobility Datasets", "data.gouv.fr mobilityデータセット",
   "fr_government", "transport",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=mobilité",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=mobilité&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"mobilite\"]", 86400,
   "Datasets published on the French national open-data portal matching 'mobilité' (mobility) — with publishing organisation, resources, licence, temporal coverage and quality score.");
@@ -386,14 +386,14 @@ VJSON(fr_datagouv_q_nucleaire, "fr-datagouv-q-nucleaire", "data.gouv.fr — Nucl
 
 VJSON(fr_datagouv_q_numerique, "fr-datagouv-q-numerique", "data.gouv.fr — Digital Services Datasets", "data.gouv.fr digital servicesデータセット",
   "fr_government", "technology",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=numérique",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=numérique&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"numerique\"]", 86400,
   "Datasets published on the French national open-data portal matching 'numérique' (digital services) — with publishing organisation, resources, licence, temporal coverage and quality score.");
 
 VJSON(fr_datagouv_q_police, "fr-datagouv-q-police", "data.gouv.fr — Policing Datasets", "data.gouv.fr policingデータセット",
   "fr_government", "security",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=police",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=police&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"police\"]", 86400,
   "Datasets published on the French national open-data portal matching 'police' (policing) — with publishing organisation, resources, licence, temporal coverage and quality score.");
@@ -407,14 +407,14 @@ VJSON(fr_datagouv_q_pompiers, "fr-datagouv-q-pompiers", "data.gouv.fr — Fire A
 
 VJSON(fr_datagouv_q_population, "fr-datagouv-q-population", "data.gouv.fr — Population Datasets", "data.gouv.fr populationデータセット",
   "fr_government", "statistics",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=population",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=population&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"population\"]", 86400,
   "Datasets published on the French national open-data portal matching 'population' (population) — with publishing organisation, resources, licence, temporal coverage and quality score.");
 
 VJSON(fr_datagouv_q_port, "fr-datagouv-q-port", "data.gouv.fr — Ports Datasets", "data.gouv.fr portsデータセット",
   "fr_government", "maritime",
-  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=port",
+  "https://www.data.gouv.fr/api/1/datasets/?page_size=100&q=port&sort=created",
   "data",
   "fr", "[\"france\",\"opendata\",\"datagouv\",\"port\"]", 86400,
   "Datasets published on the French national open-data portal matching 'port' (ports) — with publishing organisation, resources, licence, temporal coverage and quality score.");

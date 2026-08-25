@@ -13,7 +13,7 @@
 #define SID "ods-rte-eco2mix"
 static const char *URL =
   "https://opendata.reseaux-energies.fr/api/explore/v2.1/catalog/datasets/"
-  "eco2mix-national-tr/records?limit=48&order_by=date_heure%20desc";
+  "eco2mix-national-tr/records?limit=48&order_by=date_heure%20desc&where=consommation%20is%20not%20null";
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, URL, 30000);
@@ -63,7 +63,7 @@ static const source_def od_ods_rte_eco2mix_def = {
   .name = "Reseaux Energies (RTE) eCO2mix national real-time",
   .update_interval_sec = 1800, .run = run,
   .category = "government", .type = "api",
-  .url = "https://opendata.reseaux-energies.fr/api/explore/v2.1/catalog/datasets/eco2mix-national-tr/records?limit=48&order_by=date_heure%20desc",
+  .url = "https://opendata.reseaux-energies.fr/api/explore/v2.1/catalog/datasets/eco2mix-national-tr/records?limit=48&order_by=date_heure%20desc&where=consommation%20is%20not%20null",
   .description = "French national electricity consumption, generation mix by fuel, CO2 intensity and cross-border exchanges at 15-minute resolution",
   .license = "Licence Ouverte v2.0 (RTE open-data terms)",
   .free_tier = 1,

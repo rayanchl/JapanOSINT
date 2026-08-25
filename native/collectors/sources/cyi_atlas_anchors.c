@@ -19,21 +19,35 @@
 #include <string.h>
 
 #define FIRST_URL "https://atlas.ripe.net/api/v2/anchors/?format=json&page_size=500"
-#define MAX_PAGES 5   /* exhaustive-ok: page-walk runaway guard; a walk it actually stops is reported below */
+/* The `next` link decides where the walk ends; this is only a runaway guard
+ * against a server that never stops handing back a next link. It was set at 5,
+ * which at page_size=500 is 2,500 anchors against a mesh that already reports
+ * count=1,785 — two more pages of growth and the tail would have been dropped
+ * with no error and no notice. Raised, made raisable with $JO_ATLAS_MAX_PAGES,
+ * and a guard that actually bites is now disclosed in the data. */
+#define MAX_PAGES 40   /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char url[512];
   snprintf(url, sizeof url, "%s", FIRST_URL);
 
-  int n = 0, pages = 0, fetched_any = 0;
-  while (url[0] && pages < MAX_PAGES) {
+  int max_pages = MAX_PAGES;
+  const char *penv = getenv("JO_ATLAS_MAX_PAGES");
+  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+
+  int n = 0, pages = 0, fetched_any = 0, count = -1, stopped_early = 0;
+  while (url[0] && pages < max_pages) {
     cJSON *doc = feed_get_json(ctx->http, url, 30000);
     if (!doc) {
       if (!fetched_any) { fprintf(stderr, "[atlas-anchors] fetch/parse failed\n"); return -1; }
-      break;                                     /* partial page set is fine */
+      /* A page that failed mid-walk lost every anchor after it. */
+      stopped_early = 1;
+      break;
     }
     fetched_any = 1;
     pages++;
+    const cJSON *cnt = cJSON_GetObjectItem(doc, "count");
+    if (cJSON_IsNumber(cnt)) count = (int)cnt->valuedouble;
 
     const cJSON *results = cJSON_GetObjectItem(doc, "results");
     const cJSON *a;
@@ -112,18 +126,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (next && strncmp(next, "http", 4) == 0) snprintf(url, sizeof url, "%s", next);
     else url[0] = '\0';
     cJSON_Delete(doc);
+    /* url still set means the upstream offered another page we will not take */
+    if (url[0] && pages >= max_pages) stopped_early = 1;
   }
 
-  /* House rule 2: the walk normally ends when RIPE stops publishing a `next`.
-   * If the runaway guard ended it instead, pages remain unfetched — say so. */
-  if (pages >= MAX_PAGES && url[0])
-    jo_truncation_notice(sink, "atlas-anchors", "anchors", n, -1,
-                         "the page walk stopped at the MAX_PAGES runaway guard "
-                         "while RIPE was still publishing a `next` page link, "
-                         "so later pages of the anchor list were never fetched",
-                         "raise MAX_PAGES in collectors/sources/"
-                         "cyi_atlas_anchors.c");
-  fprintf(stderr, "[atlas-anchors] emitted %d over %d page(s)\n", n, pages);
+  fprintf(stderr, "[atlas-anchors] emitted %d of %d anchor(s) over %d page(s)\n",
+          n, count, pages);
+  if (stopped_early)
+    jo_trunc_notice(sink, "atlas-anchors", FIRST_URL, n, count,
+                    "the anchor page walk stopped before RIPE's `next` chain "
+                    "ran out — either the page-walk ceiling was reached or a "
+                    "page failed to fetch",
+                    "raise $JO_ATLAS_MAX_PAGES, or re-run if a page failed");
   return 0;
 }
 

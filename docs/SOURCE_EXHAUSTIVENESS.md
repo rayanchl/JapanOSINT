@@ -39,6 +39,32 @@ plausible-looking result that is missing the record that mattered.
    nobody reads is not a disclosure. The engine emits a
    `collector-truncation-notice` record naming the source, the query, records
    used, records available and why.
+8. **"Available" counts records, not array slots — and a skipped slot says why.**
+   A disclosure that reports a shortfall which did not happen is worse than no
+   disclosure, because it teaches everyone to ignore the real ones. Measured on
+   batch 19 before this was fixed: 95 rows reported a shortfall and essentially
+   none had lost anything. 87 were short by exactly one — the trailing newline
+   at the end of a CSV. `ECMA_PUBLISHED_STANDARDS` reported 295 of 590, a
+   perfect 50% loss that was a perfect 2x duplication (each item linked from
+   both its icon and its title). `MALTRAIL_COBALTSTRIKE` reported 22,954 of
+   36,002 against a feed with 13,048 comment lines.
+
+   So `hp_run` now subtracts, and names, the four reasons a slot never becomes a
+   record — and one of them was previously invisible in every sense:
+
+   | counter | meaning |
+   | --- | --- |
+   | `empty` | nothing survived flattening (a blank CSV line, a `null` element) |
+   | `duplicate` | the same href twice on one page — one record, not a discard |
+   | `filtered out` | the row's own `filter_query` excluded it, as asked |
+   | `refused by sink` | the store declined it. **A real discard**, and it used to show only as a smaller number with no cause |
+
+   ```
+   [hp:ECMA_PUBLISHED_STANDARDS] emitted 295 of 295 available across 1 page(s)
+                                 [0 empty, 295 duplicate, 0 filtered out, 0 refused by sink]
+   ```
+
+   A non-zero `refused by sink` is the one to chase. The others are accounting.
 
 ## What a violation looks like
 

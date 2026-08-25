@@ -3,7 +3,6 @@
 #include "source.h"
 #include "lib/rss_atom.h"
 #include "lib/feedlib.h"
-#include "lib/pagewalk.h"   /* pw_walk() — house rule 2 paging */
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -80,27 +79,25 @@ RSSX(fin_oilprice_2, "oilprice-2", "OilPrice Energy News", "OilPrice Energy News
  * /rss/news.aspx answers 403 to every non-browser client. The site's own
  * news stream endpoint (ws/stream.ashx) is open and returns richer JSON than
  * the RSS ever did (country, category, importance, author). */
-#define TE_URL "https://tradingeconomics.com/ws/stream.ashx?start=0&size=100"  /* exhaustive-ok: start=0 is where a pw_walk() STARTS — run_fin_trading_econ() advances start=100,200,… and discloses the remainder */
+#define TE_URL "https://tradingeconomics.com/ws/stream.ashx"
 
-/* The collector's own 15 s timeout, kept rather than pw_fetch_json's 25 s. */
-static cJSON *pw_fetch_te(const source_ctx *c, const char *url, void *ud) {
-  (void)ud;
-  return feed_get_json(c->http, url, 15000);
-}
+/* `start` is a real offset into the stream, not a cursor into one page:
+ * start=0/5/100/1000 all return distinct, older items, and start=1000 still
+ * answers with content. So `?start=0&size=100` was a single page of an archive
+ * that keeps going backwards indefinitely — a silent slice.
+ *
+ * A news stream has no end, so "fetch everything" is not a thing this source
+ * can do, and the bound is a real one. It is therefore an EXPLICIT bound: the
+ * walk takes TE_PAGES pages of TE_PAGE_SIZE, and when it stops because the
+ * backlog was still producing items it says so with a
+ * collector-truncation-notice naming how far back it reached. */
+#define TE_PAGE_SIZE 100
+#define TE_PAGES 5   /* exhaustive-ok: bound on an unbounded news backlog; a full walk emits a collector-truncation-notice */
 
-/* One window of the stream. Returns #emitted and reports #records the window
- * CONTAINED through `seen` — pagewalk decides "did this window come back full"
- * off the latter, see lib/pagewalk.h. */
-static int te_emit_page(const source_ctx *c, intel_sink *s, const char *id,
-                        cJSON *arr, void *ud, int *seen) {
-  (void)c; (void)id; (void)ud;
-  if (!cJSON_IsArray(arr)) return 0;
-  *seen = cJSON_GetArraySize(arr);
-  int n = 0;
-  cJSON *e;
-  cJSON_ArrayForEach(e, arr) {
+/* One stream item. Returns 1 when the sink took it. */
+static int te_emit(intel_sink *s, cJSON *e) {
     const char *title = jo_sv(e, "title");
-    if (!title) continue;
+    if (!title) return 0;
     const char *desc = jo_sv(e, "description");
     const char *rel  = jo_sv(e, "url");
     const char *date = jo_sv(e, "date");
@@ -143,21 +140,56 @@ static int te_emit_page(const source_ctx *c, intel_sink *s, const char *id,
     it.record_type = "article";
     it.properties_json = pj;
     it.tags_json = "[\"economy\",\"markets\"]";
-    if (s->emit(s, &it) >= 0) n++;
+    int rc = s->emit(s, &it);
     free(pj); cJSON_Delete(p);
-  }
-  return n;
+    return rc >= 0 ? 1 : 0;
 }
 
-/* House rule 2: the stream endpoint is offset-paged and TE_URL already carries
- * the author's own start=/size= pair, so pw_walk advances start=100,200,… for
- * as long as a window comes back full and discloses whatever is left behind as
- * a collector-truncation-notice. The window size is unchanged. The response is
- * a bare array and the endpoint states no total, so records_available stays
- * null rather than being guessed. */
 static int run_fin_trading_econ(const source_ctx *c, intel_sink *s) {
-  int n = pw_walk(c, s, "trading-econ", TE_URL, pw_fetch_te, te_emit_page, NULL);
-  if (n < 0) { fprintf(stderr, "[trading-econ] fetch failed\n"); return -1; }
+  int pages = TE_PAGES;
+  const char *penv = getenv("JO_TRADINGECON_PAGES");
+  if (penv && *penv) { int v = atoi(penv); if (v > 0) pages = v; }
+
+  int n = 0, start = 0, got_pages = 0, more_pending = 0;
+  char url[160];
+  for (int page = 0; page < pages; page++) {
+    snprintf(url, sizeof url, "%s?start=%d&size=%d", TE_URL, start,
+             TE_PAGE_SIZE);
+    cJSON *arr = feed_get_json(c->http, url, 15000);
+    if (!cJSON_IsArray(arr)) {
+      if (arr) cJSON_Delete(arr);
+      if (page == 0) { fprintf(stderr, "[trading-econ] fetch failed\n"); return -1; }
+      fprintf(stderr, "[trading-econ] page at start=%d failed after %d rows\n",
+              start, n);
+      jo_trunc_notice(s, "trading-econ", TE_URL, n, -1,
+                      "the stream walk stopped when a page failed to fetch or "
+                      "parse; older items were not read",
+                      "re-run the collector; the walk restarts at start=0");
+      return 0;
+    }
+    int here = 0;
+    cJSON *e;
+    cJSON_ArrayForEach(e, arr) { here++; n += te_emit(s, e); }
+    cJSON_Delete(arr);
+    got_pages++;
+    start += here;
+    if (here < TE_PAGE_SIZE) break;      /* short page = end of the stream */
+    if (page + 1 == pages) more_pending = 1;
+  }
+
+  fprintf(stderr, "[trading-econ] emitted %d over %d page(s), back to "
+                  "start=%d\n", n, got_pages, start);
+  if (more_pending) {
+    /* The backlog has no declared size, so records_available is honestly
+     * unknown; what IS known is how deep this run went. */
+    char reason[256];
+    snprintf(reason, sizeof reason,
+             "the Trading Economics stream is an open-ended backlog; this run "
+             "read %d item(s) back to offset %d and stopped at its own page "
+             "bound, with older items still available", n, start);
+    jo_trunc_notice(s, "trading-econ", TE_URL, n, -1, reason,
+                    "raise $JO_TRADINGECON_PAGES to walk further back");
+  }
   return 0;
 }
 

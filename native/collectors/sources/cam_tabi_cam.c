@@ -38,6 +38,7 @@
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+#include "cam_centroids.inc"
 
 #define BROWSER_UA \
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
@@ -81,65 +82,6 @@ static cJSON *make_feature(double lat, double lon, const char *name,
   return f;
 }
 
-typedef struct { const char *key; double lat, lon; } centroid;
-static const centroid PREF_CENTROIDS[] = {
-  {"hokkaido",43.2203,142.8635},{"aomori",40.7644,140.7400},
-  {"iwate",39.7036,141.1527},{"miyagi",38.2688,140.8719},
-  {"akita",39.7186,140.1024},{"yamagata",38.2404,140.3636},
-  {"fukushima",37.7503,140.4677},{"ibaraki",36.3418,140.4468},
-  {"tochigi",36.5657,139.8836},{"gunma",36.3906,139.0604},
-  {"saitama",35.8572,139.6489},{"chiba",35.6050,140.1234},
-  {"tokyo",35.6762,139.6503},{"kanagawa",35.4478,139.6425},
-  {"niigata",37.9161,139.0364},{"toyama",36.6953,137.2113},
-  {"ishikawa",36.5946,136.6256},{"fukui",36.0652,136.2216},
-  {"yamanashi",35.6639,138.5684},{"nagano",36.6513,138.1810},
-  {"gifu",35.3911,136.7222},{"shizuoka",34.9769,138.3831},
-  {"aichi",35.1802,136.9066},{"mie",34.7303,136.5086},
-  {"shiga",35.0045,135.8686},{"kyoto",35.0116,135.7681},
-  {"osaka",34.6937,135.5023},{"hyogo",34.6913,135.1830},
-  {"nara",34.6851,135.8050},{"wakayama",34.2261,135.1675},
-  {"tottori",35.5036,134.2383},{"shimane",35.4723,133.0505},
-  {"okayama",34.6618,133.9344},{"hiroshima",34.3966,132.4596},
-  {"yamaguchi",34.1859,131.4706},{"tokushima",34.0658,134.5593},
-  {"kagawa",34.3401,134.0434},{"ehime",33.8416,132.7657},
-  {"kochi",33.5597,133.5311},{"fukuoka",33.5902,130.4017},
-  {"saga",33.2494,130.2988},{"nagasaki",32.7448,129.8737},
-  {"kumamoto",32.7898,130.7417},{"oita",33.2382,131.6126},
-  {"miyazaki",31.9111,131.4239},{"kagoshima",31.5602,130.5581},
-  {"okinawa",26.3344,127.8056},{"sapporo",43.0642,141.3469},
-  {"yokohama",35.4437,139.6380},{"nagoya",35.1815,136.9066},
-  {"kobe",34.6901,135.1955},{"sendai",38.2682,140.8694},
-  {"nara_city",34.6851,135.8050},{"nikko",36.7581,139.6117},
-  {"nagasaki_city",32.7448,129.8737},{"fuji",35.3606,138.7274},
-  {"hakone",35.2323,139.1069},{"asakusa",35.7148,139.7967},
-  {"shibuya",35.6580,139.7016},{"shinjuku",35.6938,139.7034},
-};
-/* Index of the first city/area entry in PREF_CENTROIDS (everything before it
- * is a prefecture). Used to label matches as "prefecture" vs "city". */
-#define FIRST_CITY_IDX 47  /* "sapporo" — entries [0..46] are prefectures */
-static int guess_centroid(const char *text, double *olat, double *olon,
-                          const char **oprecision) {
-  if (!text || !*text) return 0;
-  size_t tl = strlen(text);
-  char *low = malloc(tl + 1);
-  if (!low) return 0;
-  for (size_t i = 0; i <= tl; i++) low[i] = jo_lc(text[i]);
-  for (size_t i = 0; i < sizeof PREF_CENTROIDS / sizeof *PREF_CENTROIDS; i++) {
-    const char *k = PREF_CENTROIDS[i].key;
-    char kb[32]; size_t kl = strlen(k);
-    if (kl > 5 && strcmp(k + kl - 5, "_city") == 0) kl -= 5;
-    if (kl >= sizeof kb) kl = sizeof kb - 1;
-    memcpy(kb, k, kl); kb[kl] = 0;
-    if (strstr(low, kb)) {
-      *olat = PREF_CENTROIDS[i].lat; *olon = PREF_CENTROIDS[i].lon;
-      if (oprecision)
-        *oprecision = (i >= FIRST_CITY_IDX) ? "city" : "prefecture";
-      free(low); return 1;
-    }
-  }
-  free(low);
-  return 0;
-}
 /* absUrl(href, base): href is "/japan/..." (rooted) or full
  * "https://tabi.cam/japan/..." — origin "https://tabi.cam". */
 static void abs_url(const char *href, char *out, size_t n) {
@@ -278,8 +220,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
      * Skip if no location signal — never plant a default (e.g. Tokyo) point. */
     double lat, lon;
     const char *precision = NULL;
-    if (!guess_centroid(slug, &lat, &lon, &precision)) { p = aend + 4; continue; }
-    char aurl[256];
+    if (!cam_centroid_find(slug, 0, &lat, &lon, &precision)) { p = aend + 4; continue; }
+    /* 320, not 256: abs_url() prepends up to 17 bytes of origin to an href
+     * that hbuf already sizes at 256, so an equal-sized destination could only
+     * ever chop the tail off a camera URL — and this string is stored as the
+     * row's "url", i.e. a link that would silently be wrong rather than
+     * absent. 17 + 255 + NUL = 273. */
+    char aurl[320];
     abs_url(hbuf, aurl, sizeof aurl);
     /* Emit centroid coords EXACTLY (no jitter) and flag as area-approximate. */
     kv ex[3] = {0};

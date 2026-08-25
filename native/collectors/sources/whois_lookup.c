@@ -96,6 +96,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "entity", domain);
   if (reg_s) cJSON_AddStringToObject(props, "registrar", reg_s);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   char rk[300];
   snprintf(rk, sizeof rk, "whois:%s", domain);

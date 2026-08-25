@@ -61,43 +61,171 @@ static void sl_append(char **buf, size_t *len, size_t *cap, const char *s) {
   *len += sl;
 }
 
-/* Catalogue handed to the analysis LLM. One service per line as
- *   ID — description (free|paid)
- * so the model can route on what a service actually does and whether it is
- * credential-gated, instead of guessing from the bare ID. No entity-type tag:
- * any service can be dispatched for any entity, so routing is purely semantic.
- * Only entity-pivot OSINT services are listed (collector == "osint"); scheduled
- * map-layer collectors are not entity-dispatchable and would only be noise. */
-char *osint_services_list(void) {
+/* WHICH SOURCES ARE ACTUALLY ROUTABLE BY THE ANALYSIS LLM.
+ *
+ * The filter used to be `collector == "osint"` alone, and the comment above it
+ * claimed that already excluded "scheduled map-layer collectors [that] are not
+ * entity-dispatchable and would only be noise". It did not. 2,642 of the 4,177
+ * sources tagged collector="osint" declare update_interval_sec > 0 — they are
+ * SCHEDULED bulk feeds (gnews-mon-*, DELPHI_EPIDATA_*, ES_AEMPS_CIMA_*) that
+ * fetch the same body whatever entity you hand them. Recommending one as the
+ * answer to "who owns example.com" routes an entity at a feed that cannot
+ * pivot on it.
+ *
+ * House rule 3 states the distinction this restores: a row is an entity pivot
+ * because it takes an entity token, and a row is scheduled because it declares
+ * an interval. update_interval_sec == 0 is the registry's own word for
+ * "on-demand pivot", which is exactly the set this catalogue is for. */
+static int is_entity_pivot(const source_def *d) {
+  return d->collector && strcmp(d->collector, "osint") == 0
+         && d->update_interval_sec == 0;
+}
+
+/* THE PROMPT IS A CONSUMER THAT PHYSICALLY CANNOT TAKE EVERYTHING.
+ *
+ * This catalogue was emitted in full — every entity-pivot service, each with
+ * its whole description — straight into the phase-1 analysis prompt. Measured
+ * on this registry that is a 207,353-token request, and llama-server answers
+ * it with
+ *
+ *   request (207353 tokens) exceeds the available context size (16384 tokens)
+ *
+ * on EVERY search, with every model, at every realistic context size. The
+ * analysis call therefore never once succeeded; llm_chat returned NULL,
+ * core/pipeline.c read that as "no entities", and the whole investigation
+ * collapsed to one keyword corpus lookup while reporting a clean completed
+ * run. That is the actual reason the search tab's LLM "was not firing", and it
+ * was invisible because nothing looked at WHY the call failed.
+ *
+ * docs/SOURCE_EXHAUSTIVENESS.md's carve-out applies exactly here: an LLM
+ * prompt may bound its own view, but the bound must be the consumer's, it must
+ * be explicit, and it must be stated in-band. So the catalogue degrades in
+ * announced steps rather than being cut off mid-list:
+ *
+ *   1. every service WITH its description, when that fits the budget;
+ *   2. else every service as a BARE ID, with a line saying the descriptions
+ *      were dropped — losing prose about 1,535 services is a far smaller loss
+ *      than losing 90% of the services, and every one stays recommendable;
+ *   3. else as many ids as fit, with a line saying K of N.
+ *
+ * The caller gets `note` back so the run can report which step it took instead
+ * of the model quietly routing from a partial menu.
+ *
+ * WHAT STEP 3 COSTS, SO NOBODY REACHES FOR THIS KNOB BLIND. Truncation takes
+ * the FIRST K in registry order, and registry order is link order: the
+ * batch-generated regional registries register first and the hand-written
+ * entity services register LAST. Measured over 1,535 pivots, DNS_RECORDS was
+ * #1201, IP_GEOLOCATION #1288, JP_CORPUS_LOOKUP #1293, SOCIAL_EMAIL #1484 and
+ * DOMAIN_WHOIS #1529 — the exact indices drift with every batch, the position
+ * at the tail does not. So lowering the budget past step 2 drops precisely the
+ * services a person typically wants. Step 2 exists so that shrinking the
+ * prompt does not have to mean shrinking the menu; prefer dropping
+ * descriptions, and treat step 3 as the last resort it is. */
+static int catalogue_budget_chars(void) {
+  const char *e = getenv("JO_PROMPT_SERVICE_CATALOGUE_CHARS");
+  int v = (e && *e) ? atoi(e) : 0;
+  /* 32 KB ≈ 8k tokens. With the ~9 KB few-shot preamble around it the analysis
+   * request lands near 11k tokens, inside the 16384 default context that
+   * scripts/start-llama.sh launches llama-server with. */
+  return v > 0 ? v : 32768;
+}
+
+char *osint_services_list_bounded(osint_catalogue_note *note) {
   const source_def **all = registry_all();
   int n = registry_count();
+  int budget = catalogue_budget_chars();
+
+  int total = 0;
+  size_t full_len = 0;
+  for (int i = 0; i < n; i++) {
+    if (!is_entity_pivot(all[i])) continue;
+    total++;
+    const char *desc = (all[i]->description && *all[i]->description)
+                         ? all[i]->description : "(no description)";
+    full_len += strlen(all[i]->id) + strlen(desc) + 16;
+  }
+  int with_desc = (full_len <= (size_t)budget);
+
   size_t cap = 4096, len = 0;
   char *buf = malloc(cap);
   if (!buf) return NULL;
   buf[0] = 0;
+  int shown = 0;
   for (int i = 0; i < n; i++) {
     const source_def *d = all[i];
-    if (!d->collector || strcmp(d->collector, "osint") != 0) continue;
-    const char *desc = (d->description && *d->description)
-                         ? d->description : "(no description)";
+    if (!is_entity_pivot(d)) continue;
+    /* Stop on the budget rather than half-writing a line: a truncated service
+     * id is a name that does not exist, and the model would route to it. */
+    size_t need = strlen(d->id) + 2;
+    const char *desc = NULL;
+    if (with_desc) {
+      desc = (d->description && *d->description) ? d->description
+                                                 : "(no description)";
+      need += strlen(desc) + 12;
+    }
+    if (len + need > (size_t)budget) break;
     sl_append(&buf, &len, &cap, d->id);
-    sl_append(&buf, &len, &cap, " \xE2\x80\x94 ");   /* " — " (em dash, UTF-8) */
-    sl_append(&buf, &len, &cap, desc);
-    sl_append(&buf, &len, &cap, d->free_tier ? " (free)\n" : " (paid)\n");
+    if (with_desc) {
+      sl_append(&buf, &len, &cap, " \xE2\x80\x94 "); /* " — " (em dash, UTF-8) */
+      sl_append(&buf, &len, &cap, desc);
+      sl_append(&buf, &len, &cap, d->free_tier ? " (free)\n" : " (paid)\n");
+    } else {
+      sl_append(&buf, &len, &cap, "\n");
+    }
     if (!buf) return NULL;   /* OOM mid-build */
+    shown++;
+  }
+
+  /* Say it IN the prompt. The model is told what it is not being shown, so it
+   * routes knowing the menu is partial instead of assuming it saw everything —
+   * the same in-band labelling results_view_for_prompt() applies to records. */
+  char banner[384];
+  if (shown < total)
+    snprintf(banner, sizeof banner,
+      "\n[CATALOGUE BOUNDED: showing the first %d of %d registered "
+      "entity-pivot services in registry order%s. Services not listed here "
+      "still exist and can be reached; recommend from what is listed.]\n",
+      shown, total, with_desc ? "" : ", as bare ids with descriptions omitted "
+                                     "so that every service stays listed");
+  else if (!with_desc)
+    snprintf(banner, sizeof banner,
+      "\n[CATALOGUE BOUNDED: all %d registered entity-pivot services are "
+      "listed, as bare ids — their descriptions did not fit the prompt "
+      "budget and were omitted, not the services.]\n", total);
+  else
+    banner[0] = '\0';
+  if (banner[0]) sl_append(&buf, &len, &cap, banner);
+
+  if (note) {
+    note->total        = total;
+    note->shown        = shown;
+    note->descriptions = with_desc;
+    note->truncated    = (shown < total);
   }
   return buf;
 }
 
-/* cJSON array of every registered entity-pivot service id (collector=="osint"),
- * i.e. exactly the catalogue osint_services_list() advertises. */
-static cJSON *osint_service_id_array(void) {
+char *osint_services_list(void) { return osint_services_list_bounded(NULL); }
+
+/* cJSON array of the entity-pivot service ids the schema enum may contain.
+ *
+ * `limit` > 0 takes the FIRST `limit` of them, which is exactly the set
+ * osint_services_list_bounded() printed — both walk registry_all() in order
+ * with the same predicate, so "the first N" is the same N in both places.
+ * That equality is the point: the enum is what the model is ALLOWED to say and
+ * the catalogue is what it was TOLD about, and letting those two disagree
+ * means either offering names it was never shown the meaning of, or rejecting
+ * names it was explicitly offered. 0 means no limit. */
+static cJSON *osint_service_id_array(int limit) {
   cJSON *a = cJSON_CreateArray();
   const source_def **all = registry_all();
-  int n = registry_count();
-  for (int i = 0; i < n; i++)
-    if (all[i]->collector && strcmp(all[i]->collector, "osint") == 0)
-      cJSON_AddItemToArray(a, cJSON_CreateString(all[i]->id));
+  int n = registry_count(), taken = 0;
+  for (int i = 0; i < n; i++) {
+    if (!is_entity_pivot(all[i])) continue;
+    if (limit > 0 && taken >= limit) break;
+    cJSON_AddItemToArray(a, cJSON_CreateString(all[i]->id));
+    taken++;
+  }
   return a;
 }
 
@@ -107,12 +235,16 @@ static cJSON *osint_service_id_array(void) {
  * recommendable — with zero manual enum maintenance when the registry changes.
  * malloc'd; caller frees. NULL → caller falls back to the static schema file. */
 char *osint_analysis_schema_dynamic(void) {
+  return osint_analysis_schema_dynamic_limited(0);
+}
+
+char *osint_analysis_schema_dynamic_limited(int limit) {
   const char *base = schema_load("osint_analysis");
   if (!base || !*base) return NULL;
   cJSON *s = cJSON_Parse(base);
   if (!s) return NULL;
   cJSON *props = cJSON_GetObjectItem(s, "properties");
-  cJSON *ids = osint_service_id_array();
+  cJSON *ids = osint_service_id_array(limit);
 
   /* properties.recommended_services.items.enum */
   cJSON *rs = props ? cJSON_GetObjectItem(props, "recommended_services") : NULL;
@@ -348,7 +480,27 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
       cJSON_AddStringToObject(o, "name", h);
       cJSON_AddStringToObject(o, "status",
                               (out->success && ok) ? "ok" : (ok ? "empty" : "error"));
-      cJSON_AddNumberToObject(o, "records", out->success ? ds.n_emit : 0);
+      /* `records` is NULL here, and that is the honest value.
+       *
+       * This branch fires when the collector labelled none of its emits with a
+       * sub_source_id, so all we know is the set of HOSTS it contacted — the
+       * host log records requests, not which record came from where. It used
+       * to write `ds.n_emit` into every host row, i.e. the service's TOTAL
+       * repeated once per host: SOCIAL_EMAIL contacted 60 hosts and emitted
+       * 187 records, and the attribution said 187 records for instagram.com,
+       * 187 for github.com, 187 for each of the other 58 — 11,220 records
+       * claimed out of 187 real ones, including for the hosts whose status was
+       * "error" and which returned nothing at all. A per-host figure we do not
+       * have is not something to fill in with the total; house rule 1 says a
+       * missing measurement degrades to an explicit unknown.
+       *
+       * `requests` IS measured per host, so it is reported, and the service's
+       * real total stays where it is actually true — record_count on the
+       * service result. A collector that wants per-source counts already has
+       * the way to get them: label its emits with sub_source_id and it lands
+       * in the labelled branch above. */
+      cJSON_AddItemToObject(o, "records", cJSON_CreateNull());
+      cJSON_AddNumberToObject(o, "requests", reqs);
       cJSON_AddItemToArray(arr, o);
     }
   } else {

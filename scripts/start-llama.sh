@@ -42,12 +42,34 @@ if [ ! -f "$OSINT_MODEL_PATH" ]; then
   exit 1
 fi
 
-echo "[start-llama] launching llama-server :${LLAMA_PORT} (model: $OSINT_MODEL_PATH)"
+# CONTEXT SIZE IS PART OF THE SEARCH PIPELINE'S CONTRACT, NOT A TUNING KNOB.
+#
+# It was 16384, and the OSINT search analysis prompt did not fit. The phase-1
+# prompt carries the entity-pivot service catalogue so the model can route on
+# what a service actually does; unbounded that catalogue was 207,353 tokens and
+# llama-server answered every single search with
+#
+#   request (207353 tokens) exceeds the available context size (16384 tokens)
+#
+# core/osint_dispatch.c now bounds the catalogue to
+# JO_PROMPT_SERVICE_CATALOGUE_CHARS (default 32768 characters) and states the
+# bound in-band, which brings the whole prompt to roughly 18-19k tokens with
+# every registered service still listed. 32768 is the smallest context that
+# holds that plus the 2048-token completion with room to spare, so the shipped
+# default and the shipped launcher agree by construction.
+#
+# If you deliberately run a smaller context, lower
+# JO_PROMPT_SERVICE_CATALOGUE_CHARS to match. A mismatch no longer fails
+# silently — the run is reported degraded with code `llm_http_error` and the
+# server log prints the prompt's byte size next to it — but it does fail.
+LLAMA_CTX="${LLAMA_CTX:-32768}"
+
+echo "[start-llama] launching llama-server :${LLAMA_PORT} (model: $OSINT_MODEL_PATH, ctx: $LLAMA_CTX)"
 exec "$LLAMA_BIN" \
   -m "$OSINT_MODEL_PATH" \
   --port "$LLAMA_PORT" \
   --host 127.0.0.1 \
-  --ctx-size 16384 \
+  --ctx-size "$LLAMA_CTX" \
   --n-gpu-layers 35 \
   --reasoning-format auto \
   -fa auto \

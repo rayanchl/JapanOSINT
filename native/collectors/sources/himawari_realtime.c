@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define LATEST "https://himawari.asia/img/D531106/latest.json"
 
@@ -30,7 +31,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   /* iso = new Date(date.replace(' ','T')+'Z') -> ISO, else now */
-  char iso[32];
+  char iso[32] = {0};
   {
     struct tm tmv; memset(&tmv, 0, sizeof tmv);
     if (sscanf(date, "%4d-%2d-%2d %2d:%2d:%2d",
@@ -40,8 +41,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         tmv.tm_year, tmv.tm_mon, tmv.tm_mday,
         tmv.tm_hour, tmv.tm_min, tmv.tm_sec);
     } else {
-      time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
-      strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%SZ", &g);
+      /* Fallback clock. If even "now" will not render, `iso` stays empty and
+       * the acquisition time is emitted as an honest null below. */
+      jo_now_iso(iso, sizeof iso);
     }
   }
 
@@ -77,7 +79,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddItemToArray(bb, cJSON_CreateNumber(205.0));
   cJSON_AddItemToArray(bb, cJSON_CreateNumber(60.0));
   cJSON_AddItemToObject(p, "bbox", bb);
-  cJSON_AddStringToObject(p, "acquired", iso);
+  if (iso[0]) cJSON_AddStringToObject(p, "acquired", iso);
+  else cJSON_AddNullToObject(p, "acquired");
   cJSON_AddStringToObject(p, "sensor", "AHI");
   cJSON_AddStringToObject(p, "platform", "Himawari-9");
   cJSON_AddStringToObject(p, "scene_id", date);
@@ -101,7 +104,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   it.summary = summary;
   it.body = bodytxt;
   it.link = "https://himawari.asia/";
-  it.published_at = iso;
+  it.published_at = iso[0] ? iso : NULL;
   it.record_type = "himawari-realtime";
   it.has_geo = 0;
   it.properties_json = pj;

@@ -17,8 +17,9 @@
  *  - "frequency and offset are strings in MHz."
  *  - "'id'/'locator' are the DMR repeater id (6-7 digits, first 3 = MCC country
  *    code)": the MCC prefix is recorded as a derived field.
- * STATED BOUND: only repeaters whose status is ACTIVE are emitted, capped at
- *   MAX_ROWS; both facts are recorded in properties.
+ * STATED BOUND: only repeaters whose status is ACTIVE are emitted, and that
+ *   filter is recorded in properties. There is no row cap — the 15,000-row one
+ *   this collector used to carry sliced an array already fully in memory.
  * Licence: RadioID.net publishes the static JSON exports for community use with
  *   no key. Data is operator-supplied.
  */
@@ -32,7 +33,6 @@
 #include <string.h>
 
 #define RADIOID_URL "https://radioid.net/static/rptrs.json"
-#define MAX_ROWS 15000
 
 static void add_strlist(cJSON *dst, const char *key, const cJSON *src) {
   if (!cJSON_IsArray(src)) return;
@@ -57,12 +57,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return -1;
   }
 
-  int n = 0, seen = 0, capped = 0;
+  int n = 0, seen = 0;
   cJSON *r;
   cJSON_ArrayForEach(r, arr) {
     seen++;
-    /* Past the cap keep counting so the notice below can state a real total. */
-    if (n >= MAX_ROWS) { capped = 1; continue; }  /* exhaustive-ok: bounded view, disclosed as a collector-truncation-notice after this loop */
     double id = 0;
     int has_id = jo_num(r, "id", &id);
     if (!has_id) has_id = jo_num(r, "locator", &id);
@@ -106,7 +104,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       "RadioID publishes no coordinates for repeaters; the DMR id joins to "
       "brandmeister-devices where a position is available");
     cJSON_AddStringToObject(pr, "emitted_filter", "status=ACTIVE only");
-    cJSON_AddNumberToObject(pr, "row_cap", MAX_ROWS);
     cJSON_AddStringToObject(pr, "source", "RadioID.net rptrs.json");
     char *pj = cJSON_PrintUnformatted(pr);
     cJSON_Delete(pr);
@@ -135,15 +132,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
-  /* House rule 2: the whole repeater register was fetched and counted;
-   * MAX_ROWS stopped the emit loop partway. */
-  if (capped)
-    jo_truncation_notice(sink, "radioid-dmr-repeaters", "repeater register", n,
-                         (long)seen,
-                         "MAX_ROWS reached; the remaining registered repeaters "
-                         "in the fetched register were counted but not emitted",
-                         "raise or drop MAX_ROWS in collectors/sources/"
-                         "tsp_radioid_dmr_repeaters.c");
   cJSON_Delete(doc);
   fprintf(stderr, "[radioid-dmr-repeaters] emitted %d ACTIVE of %d registered\n",
           n, seen);

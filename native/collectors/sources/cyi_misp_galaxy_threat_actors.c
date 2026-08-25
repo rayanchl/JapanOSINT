@@ -68,12 +68,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char *pj = cJSON_PrintUnformatted(p);
     cJSON_Delete(p);
 
-    /* first reference, when upstream published one */
+    /* Display link only: the row carries ONE `link`, and meta.refs is copied
+     * whole into properties.references above, so nothing is lost by picking
+     * the first for the clickable field. */
     const char *link = NULL;
     if (cJSON_IsObject(meta)) {
       const cJSON *refs = cJSON_GetObjectItem(meta, "refs");
       if (cJSON_IsArray(refs)) {
-        const cJSON *r0 = cJSON_GetArrayItem(refs, 0);  /* exhaustive-ok: link display pick; properties.references carries every ref */
+        const cJSON *r0 = cJSON_GetArrayItem(refs, 0);  /* exhaustive-ok: display link; properties.references carries every ref */
         if (cJSON_IsString(r0) && r0->valuestring && r0->valuestring[0])
           link = r0->valuestring;
       }

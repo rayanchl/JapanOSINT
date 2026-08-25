@@ -28,7 +28,13 @@
 #include <string.h>
 
 #define FIRST_PAGE_SIZE 100
-#define FIRST_MAX_PAGES 12  /* exhaustive-ok: page-walk runaway guard, above the directory's real size; a walk it actually stops is reported below */
+/* Runaway guard, not an editorial bound: the walk normally ends on `total`
+ * (878 teams at the last probe, so it stops at page 9) or on an empty page.
+ * FIRST is a growing membership, though, and a ceiling that quietly clipped
+ * the directory once it passed 1,200 teams would be invisible — so a run that
+ * ends here says so with a collector-truncation-notice, and the ceiling is
+ * raisable with $JO_FIRST_MAX_PAGES. */
+#define FIRST_MAX_PAGES 12   /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
 
 static void put(cJSON *p, const char *out_key, cJSON *rec, const char *in_key) {
   const char *v = jo_sv(rec, in_key);
@@ -87,9 +93,12 @@ static int run(const source_ctx *c, intel_sink *s) {
   const char *hdrs[] = { "accept: application/json", NULL };
   int total_rows = 0, pages_ok = 0;
   double total = -1;
+  int max_pages = FIRST_MAX_PAGES, hit_ceiling = 0, walked_out = 0;
+  const char *penv = getenv("JO_FIRST_MAX_PAGES");
+  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+  char url[160];
 
-  for (int page = 0; page < FIRST_MAX_PAGES; page++) {
-    char url[160];
+  for (int page = 0; page < max_pages; page++) {
     snprintf(url, sizeof url,
              "https://api.first.org/data/v1/teams?limit=%d&offset=%d",
              FIRST_PAGE_SIZE, page * FIRST_PAGE_SIZE);
@@ -114,22 +123,21 @@ static int run(const source_ctx *c, intel_sink *s) {
     }
     cJSON_Delete(doc);
     total_rows += here;
-    if (here == 0) break;                       /* ran off the end of the set */
-    if (total > 0 && (page + 1) * FIRST_PAGE_SIZE >= total) break;
+    if (here == 0) { walked_out = 1; break; }   /* ran off the end of the set */
+    if (total > 0 && (page + 1) * FIRST_PAGE_SIZE >= total) { walked_out = 1; break; }
+    if (page + 1 == max_pages) hit_ceiling = 1;
   }
-  /* House rule 2: the walk normally ends on an empty page or when FIRST's own
-   * `total` is reached. If the runaway guard ended it first, disclose it. */
-  if (pages_ok >= FIRST_MAX_PAGES && total > 0 &&
-      (double)(pages_ok * FIRST_PAGE_SIZE) < total)
-    jo_truncation_notice(s, "first-csirt-team-directory", "teams", total_rows,
-                         (long)total,
-                         "the page walk stopped at the FIRST_MAX_PAGES runaway "
-                         "guard before reaching the `total` FIRST reported, so "
-                         "later pages of the directory were never fetched",
-                         "raise FIRST_MAX_PAGES in collectors/sources/"
-                         "cert_first_teams.c");
   fprintf(stderr, "[first-csirt-team-directory] emitted %d over %d pages\n",
           total_rows, pages_ok);
+  /* The ceiling stopping the walk means the directory outgrew it. Report it as
+   * data — a run that quietly returned the first 1,200 of 1,400 teams would
+   * look identical to a complete one. */
+  if (hit_ceiling && !walked_out)
+    jo_trunc_notice(s, "first-csirt-team-directory", url, total_rows,
+                    total > 0 ? (long)total : -1,
+                    "the page-walk ceiling stopped the run before FIRST's team "
+                    "directory was exhausted",
+                    "raise $JO_FIRST_MAX_PAGES");
   return 0;                                 /* fetched fine; 0 rows is OK (R3) */
 }
 

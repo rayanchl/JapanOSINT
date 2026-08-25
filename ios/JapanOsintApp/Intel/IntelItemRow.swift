@@ -12,6 +12,45 @@ struct IntelItemRow: View {
     @Environment(\.theme) private var theme
 
     var body: some View {
+        if item.isCollectorNotice {
+            noticeRow
+        } else {
+            findingRow
+        }
+    }
+
+    /// A collector's disclosure about itself — a truncated walk or a missing
+    /// credential — styled as a notice, not a finding: neutral icon, no
+    /// source-coloured badge, and a label saying what kind of notice it is.
+    /// See `IntelItem.isCollectorNotice` for why this must never fall through
+    /// to the finding layout.
+    private var noticeRow: some View {
+        HStack(alignment: .top, spacing: Space.md) {
+            Image(systemName: item.isStatusNotice ? "key.slash" : "text.badge.minus")
+                .font(.callout)
+                .foregroundStyle(theme.textMuted)
+                .frame(width: 26, height: 26)
+                .background(theme.textMuted.opacity(0.10),
+                            in: RoundedRectangle(cornerRadius: Radius.sm))
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: Space.xs) {
+                    Pill(text: item.isStatusNotice ? "needs credential" : "truncated",
+                         tone: .info, maxWidth: 140)
+                    Text(item.source_id)
+                        .font(Typography.monoSmall)
+                        .foregroundStyle(theme.textMuted)
+                        .lineLimit(1)
+                }
+                Text(item.title ?? item.uid)
+                    .font(.caption)
+                    .foregroundStyle(theme.textMuted)
+                    .lineLimit(2)
+            }
+        }
+        .padding(.vertical, 2)
+    }
+
+    private var findingRow: some View {
         HStack(alignment: .top, spacing: Space.md) {
             iconBadge
             VStack(alignment: .leading, spacing: 4) {

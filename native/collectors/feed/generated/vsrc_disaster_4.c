@@ -126,28 +126,28 @@ VRSS(geo_un_spider, "geo-un-spider", "UN-SPIDER — space-based disaster respons
 
 VJSON(geo_unhcr_asylum, "geo-unhcr-asylum", "UNHCR — asylum applications", "UNHCR — 庇護申請",
   "disaster", "humanitarian",
-  "https://api.unhcr.org/population/v1/asylum-applications/?limit=100&yearFrom=2024",
+  "https://api.unhcr.org/population/v1/asylum-applications/?limit=100&per_page=100&page=1&yearFrom=2024",
   "items",
   "en", "[\"unhcr\",\"asylum\",\"statistics\"]", 86400,
   "Asylum application counts by country pair and year.");
 
 VJSON(geo_unhcr_idmc, "geo-unhcr-idmc", "UNHCR — IDMC internal displacement figures", "UNHCR — IDMC 国内避難統計",
   "disaster", "humanitarian",
-  "https://api.unhcr.org/population/v1/idmc/?limit=100&yearFrom=2024",
+  "https://api.unhcr.org/population/v1/idmc/?limit=100&per_page=100&page=1&yearFrom=2024",
   "items",
   "en", "[\"unhcr\",\"idmc\",\"displacement\"]", 86400,
   "IDMC internal displacement stocks and flows served through the UNHCR API.");
 
 VJSON(geo_unhcr_population, "geo-unhcr-population", "UNHCR — refugee population statistics", "UNHCR — 難民人口統計",
   "disaster", "humanitarian",
-  "https://api.unhcr.org/population/v1/population/?limit=100&yearFrom=2024",
+  "https://api.unhcr.org/population/v1/population/?limit=100&per_page=100&page=1&yearFrom=2024",
   "items",
   "en", "[\"unhcr\",\"refugees\",\"statistics\"]", 86400,
   "UNHCR population figures by origin and asylum country; country-level, no geometry.");
 
 VJSON(geo_unhcr_solutions, "geo-unhcr-solutions", "UNHCR — durable solutions statistics", "UNHCR — 恒久的解決策統計",
   "disaster", "humanitarian",
-  "https://api.unhcr.org/population/v1/solutions/?limit=100&yearFrom=2024",
+  "https://api.unhcr.org/population/v1/solutions/?limit=100&per_page=100&page=1&yearFrom=2024",
   "items",
   "en", "[\"unhcr\",\"returns\",\"statistics\"]", 86400,
   "Returns, resettlement and naturalisation figures by country.");

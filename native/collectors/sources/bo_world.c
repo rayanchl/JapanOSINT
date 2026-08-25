@@ -31,6 +31,17 @@
 
 /* GLEIF JSON:API attribute helpers -------------------------------------- */
 
+/* A bo_attr(rec, key) — `rec->attributes->key` in one call — lived here and had
+ * no callers. Both GLEIF emitters below already hold the `attributes` object in
+ * a local (they need it for the nested entity{} / registration{} sub-objects
+ * regardless) and read their scalars straight off it, which is the identical
+ * lookup. Checked before deleting rather than wiring it in, since an unused
+ * accessor can mean a field is going unread: it is not. Everything GLEIF
+ * publishes at attributes level is consumed — lei, entity.legalName.name,
+ * entity.jurisdiction, entity.status, entity.legalAddress.{city,country},
+ * registration.status and registration.initialRegistrationDate. OpenOwnership's
+ * search.json is flat rather than JSON:API, so it never wanted this helper. */
+
 /* ---- GLEIF LEI records (L1 reference data) ----------------------------- *
  * GET api.gleif.org/api/v1/lei-records?filter[entity.legalName]=<name>
  * → { data: [ { id:"<LEI>", attributes:{ lei, entity:{ legalName:{name},

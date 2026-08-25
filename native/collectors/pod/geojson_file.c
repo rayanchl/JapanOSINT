@@ -8,7 +8,13 @@ static int run(const source_ctx *c, intel_sink *s) {
   (void)c; const char *p = getenv("GEOJSON_FILE"); if (!p) return -1;
   FILE *f = fopen(p, "rb"); if (!f) return -1;
   fseek(f,0,SEEK_END); long n=ftell(f); fseek(f,0,SEEK_SET);
-  char *b=malloc(n+1); fread(b,1,n,f); b[n]=0; fclose(f);
+  if (n < 0) { fclose(f); return -1; }
+  char *b=malloc((size_t)n+1); if(!b){ fclose(f); return -1; }
+  /* A short read used to be ignored, leaving a truncated buffer that cJSON
+   * then parsed as if it were the whole file. Read it all or fail honestly. */
+  size_t got = fread(b,1,(size_t)n,f); int rerr = (got != (size_t)n);
+  b[got]=0; fclose(f);
+  if (rerr) { free(b); return -1; }
   cJSON *d=cJSON_Parse(b); free(b); if(!d) return -1;
   int e=geojson_emit_doc(s,c->source_id,d); cJSON_Delete(d);
   return e>=0?0:-1; }

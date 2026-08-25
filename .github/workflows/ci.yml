@@ -11,6 +11,14 @@
 #   * no network-touching collector runs (they hit real third-party APIs)
 #   * no llama-server (11 GB model); --selftest reports it "down" and passes
 #   * no contract-parity suite (its fixtures need a DB with real intel rows)
+#
+# The client gap is now closed. `web-client` runs the vitest suite and the
+# production build — both verified green offline before being wired in (3 files,
+# 12 tests, ~23s; `vite build` transforms 2,010 modules in ~17s). `ios-build`
+# compiles all targets on macOS with signing off; it is the one step here that
+# could not be proven on the authoring machine (no macOS), so its first run is
+# the proof. If it is red for an environment reason rather than a code reason,
+# fix it or drop it — do not leave it red.
 name: ci
 
 on:
@@ -82,12 +90,102 @@ jobs:
         working-directory: native
         run: make lint-sources
 
-      # House rule 2's mechanical check. Gates the hp_* engine rows strictly
-      # (they are held at zero) and reports the wider tree's heuristic count
-      # without failing on it — those need a human read, not a build break.
-      - name: Exhaustive-use audit
+      # The engine's own guarantees, offline. hpengine.c is the only code path
+      # with pagination, detail-hops and in-band truncation notices, and
+      # tests/hpengine_test.c asserts 23 of them with a stubbed http_request —
+      # no network, no key, seconds to run. It was not wired in, so the checks
+      # that verify the house rules were the checks CI never ran.
+      - name: Engine guarantees (hptest)
+        working-directory: native
+        run: make hptest
+
+      # A collector that moves out of the build glob stops registering with no
+      # error: the build succeeds, the binary links, and only the source count
+      # drops. That happened during the collectors/ reorganisation — four
+      # separate tools under-reported while the binary was correct — so the
+      # count is asserted rather than printed. Floor lives in
+      # native/tools/source-floor.txt and only ever ratchets up.
+      - name: Source count floor
+        working-directory: native
+        run: make source-floor
+
+      # source-floor greps the tree for REGISTER_SOURCE and is therefore blind
+      # to HP_REGISTER_TABLE. It passed for months while the hp spec table's
+      # fixed 1,024-entry array silently dropped 1,481 rows at boot. This asks
+      # the binary instead, and fails on any duplicate id or dropped row.
+      - name: Registry floor (asks the binary)
+        working-directory: native
+        run: make registry-floor
+
+      # Reported, not gated. audit-sources is a heuristic scan for discarded
+      # data (docs/SOURCE_EXHAUSTIVENESS.md); every finding needs a human read,
+      # so failing on the count would train people to ignore it. But it must be
+      # VISIBLE — it was reporting 146 findings that no CI run ever printed.
+      - name: Exhaustive-use audit (report)
         working-directory: native
         run: make audit-sources
+
+  # 57 JS files, a tracked lockfile and a vitest block that was configured in
+  # vite.config.js and never run by anything. A syntax error in the web client
+  # merged green until this job existed.
+  web-client:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      # `npm ci` and not `npm install`: the lockfile is tracked, so CI must fail
+      # on lockfile drift rather than silently resolving a different tree.
+      - name: Install client dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Client tests
+        working-directory: client
+        run: npx vitest run
+
+      # The suite covers 3 files; the build covers all 57. Most breakage in this
+      # client is an import or JSX error that only a real bundle pass sees.
+      - name: Client build
+        working-directory: client
+        run: npm run build
+
+  # 148 Swift files, ~40k lines, zero tests and — until now — zero compilation
+  # check. There are no shared schemes in the .xcodeproj, so this drives
+  # -alltargets directly instead of -scheme; signing is off because CI has no
+  # certificates and this is a compile gate, not a distribution build.
+  ios-build:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build all iOS targets
+        run: |
+          xcodebuild -project ios/JapanOsintApp.xcodeproj -alltargets \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            build
+
+      # macOS is the SAME multiplatform target, not a separate app: the shared
+      # sources compile against AppKit here and UIKit above, through the shims
+      # in Shared/PlatformCompat.swift. Building only the iOS destination would
+      # leave every one of those #if os() branches unchecked, which is precisely
+      # where a cross-platform tree breaks — and it is the destination the Swift
+      # 6 concurrency work was fixed against.
+      - name: Build (macOS)
+        run: |
+          xcodebuild -project ios/JapanOsintApp.xcodeproj \
+            -scheme JapanOsintApp \
+            -destination 'platform=macOS,arch=arm64' \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            -quiet build
 
   # Memory safety is this codebase's named critical bug class — heap
   # use-after-free and over-read, none of which crash reliably, so "it built
@@ -175,61 +273,3 @@ jobs:
       # behaviour, and the Ubuntu job above already fails the build on them.
       # Running them twice would only spend macOS runner minutes (billed 10x)
       # to re-derive the same numbers.
-
-  # 41,108 lines of Swift across 148 files had no build, no test and no lint in
-  # CI — the single largest ungated surface in the repo. That gap is not
-  # theoretical: the probe-consent bug (audit F-12, iOS posted `allow` while
-  # core/httpd.c read `consent`, an unconditional 400) was written on both sides
-  # in one session and shipped, because nothing ever compiled the two together.
-  # A later session's iOS work sat unverified for the same reason until it was
-  # built by hand.
-  #
-  # This is a COMPILE gate and nothing more. There is no XCTest target in the
-  # project today, so there is nothing to run; claiming otherwise would be the
-  # aspirational wiring this file's header refuses. What it does catch is every
-  # class of break that actually happens here — a Swift type error, a renamed
-  # symbol, a file added to the tree but not the target.
-  ios:
-    runs-on: macos-latest
-    timeout-minutes: 45
-
-    steps:
-      - uses: actions/checkout@v4
-
-      # Pinned to nothing on purpose: the app targets the current SDK, and a
-      # runner-image Xcode bump that breaks the build is a real break worth
-      # seeing. The version is echoed so a sudden failure is diagnosable.
-      - name: Xcode version
-        run: xcodebuild -version
-
-      # CODE_SIGNING_ALLOWED=NO on both destinations. The runner holds no
-      # signing identity, and the macOS build fails at once without it ("No Mac
-      # Development signing certificate matching team ID YXQHVT52SE"). Signing
-      # is not what this job tests — compilation is — and a simulator/unsigned
-      # build exercises every line the signed one does.
-      - name: Build (iOS Simulator)
-        working-directory: ios
-        run: |
-          xcodebuild -project JapanOsintApp.xcodeproj \
-                     -scheme JapanOsintApp \
-                     -configuration Debug \
-                     -destination 'generic/platform=iOS Simulator' \
-                     -derivedDataPath "$RUNNER_TEMP/dd-ios" \
-                     CODE_SIGNING_ALLOWED=NO \
-                     -quiet build
-
-      # macOS is the SAME multiplatform target, not a separate app: the shared
-      # sources compile against AppKit here and UIKit above, through the shims
-      # in Shared/PlatformCompat.swift. Building only the simulator would leave
-      # every one of those #if os() branches unchecked, which is precisely where
-      # a cross-platform tree breaks.
-      - name: Build (macOS)
-        working-directory: ios
-        run: |
-          xcodebuild -project JapanOsintApp.xcodeproj \
-                     -scheme JapanOsintApp \
-                     -configuration Debug \
-                     -destination 'platform=macOS,arch=arm64' \
-                     -derivedDataPath "$RUNNER_TEMP/dd-macos" \
-                     CODE_SIGNING_ALLOWED=NO \
-                     -quiet build
