@@ -129,6 +129,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddNumberToObject(props, "confidence", 90);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   /* remote_key = flight:<icao24>. */
   char rk[32]; snprintf(rk, sizeof rk, "flight:%s", q);

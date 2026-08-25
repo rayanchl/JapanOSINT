@@ -65,6 +65,7 @@ static int emit_snapshot(intel_sink *sink, const cJSON *row) {
   if (mt && mt->valuestring) cJSON_AddStringToObject(props, "mimetype", mt->valuestring);
   cJSON_AddBoolToObject(props, "success", 1);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   char rk[2300];
   snprintf(rk, sizeof rk, "snapshot:%s:%s", ts->valuestring, orig->valuestring);

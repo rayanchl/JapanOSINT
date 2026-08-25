@@ -184,6 +184,7 @@ static int emit_breach(intel_sink *sink, const char *q, const char *prov,
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddNumberToObject(props, "confidence", 90);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   char rk[640]; snprintf(rk, sizeof rk, "breach:%s:%s", src_name, q);
   char title[420]; snprintf(title, sizeof title, "Breach: %s — %s", src_name, q);

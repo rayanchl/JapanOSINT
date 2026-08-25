@@ -98,6 +98,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (city[0]) cJSON_AddStringToObject(props, "city", city);
   if (cc[0])   cJSON_AddStringToObject(props, "country", cc);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   char rk[300];
   snprintf(rk, sizeof rk, "ip:%s", ip);

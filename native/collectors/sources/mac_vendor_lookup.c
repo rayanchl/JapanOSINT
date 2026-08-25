@@ -65,6 +65,7 @@ static int run_mac(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "entity", mac);
   cJSON_AddStringToObject(props, "vendor", vendor);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   char rk[64];
   snprintf(rk, sizeof rk, "mac:%s", oui);

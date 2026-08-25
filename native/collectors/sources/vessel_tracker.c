@@ -178,6 +178,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddNumberToObject(props, "confidence", 75);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   /* remote_key = vessel:<imo-or-mmsi> (the canonical identifier itself). */
   char rk[300]; snprintf(rk, sizeof rk, "vessel:%s", q);

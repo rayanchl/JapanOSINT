@@ -49,6 +49,7 @@ static int emit_mark(intel_sink *sink, const char *office, const cJSON *d,
   if (st && cJSON_IsString(st)) cJSON_AddStringToObject(props, "status", st->valuestring);
   cJSON_AddBoolToObject(props, "success", 1);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   char rk[400];
   snprintf(rk, sizeof rk, "mark:%s:%s", office,

@@ -292,6 +292,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddNumberToObject(props, "confidence", 85);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   /* remote_key = wifi:<normalized-bssid>. */
   char rk[64]; snprintf(rk, sizeof rk, "wifi:%s", norm);
