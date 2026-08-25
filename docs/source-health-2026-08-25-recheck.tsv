@@ -1,0 +1,17 @@
+id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+gnews-ru-world	OK	0	0	68	68	68	-1	1.0	
+gnews-hu-nation	OK	0	0	65	65	65	-1	1.2	
+gnews-hu-business	OK	0	0	47	47	47	-1	1.1	
+gnews-bg-world	OK	0	0	70	70	70	-1	1.3	
+gnews-bg-nation	OK	0	0	39	39	39	-1	1.2	
+gnews-rs-nation	OK	0	0	65	65	65	-1	1.2	
+afr-ci-aip	EMITS_NOTHING	1	-1	0	0	0	-1	22.0	no records reached intel_items
+afr-sn-dakaractu	OK	0	0	20	20	20	-1	1.0	
+cyb-ubuntu-releases-json	OK	0	0	46	46	46	-1	1.7	
+sci-stac-inpe-modisa-ocsmart-poc-daily-1	EMITS_NOTHING	0	0	0	0	0	-1	4.9	no records reached intel_items
+eas-gkukan-fuchu-city	OK	0	0	89	89	89	-1	3.6	
+eas-gkukan-maff-farm-polygons	OK	0	0	188	188	188	-1	7.7	
+eas-hk-hko-warning-detail	OK	0	0	1	1	1	-1	1.8	
+eur-ckan-malaga-recent	OK	0	0	1377	1377	1377	-1	3.7	
+eur-ckan-trentino	OK	0	0	1465	1465	1465	-1	31.5	
+eur-ckan-trentino-budget	OK	0	0	2	2	2	-1	1.1	
