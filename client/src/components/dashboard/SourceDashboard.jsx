@@ -7,11 +7,7 @@ import {
 import StatusBadge from '../ui/StatusBadge';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { normalizeSources, typeLabel } from '../../utils/normalizeSource.js';
-import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers.js';
-
-// The pipeline strip printed a hardcoded `12` in the same type as the two
-// figures beside it, which are counted from real rows. Count the registry.
-const MAP_LAYER_COUNT = Object.keys(LAYER_DEFINITIONS).length;
+import useLayerCatalog from '../../hooks/useLayerCatalog.js';
 
 // Keyed on the wire values (schema.sql constrains both columns to lowercase).
 const STATUS_COLORS = {
@@ -61,6 +57,11 @@ function DarkTooltip({ active, payload, label }) {
 
 export default function SourceDashboard({ sources: propSources, pollError, lastUpdate: propLastUpdate }) {
   const [sources, setSources] = useState(propSources || []);
+  // The pipeline strip printed a hardcoded `12` in the same type as the two
+  // figures beside it, which are counted from real rows. Count the server's
+  // catalogue (plus the client-only layers), and say so while it is loading.
+  const { catalog: layerCatalog, status: layerCatalogStatus } = useLayerCatalog();
+  const mapLayerCount = Object.keys(layerCatalog).length;
   const [loading, setLoading] = useState(!propSources?.length);
   const [sortField, setSortField] = useState('name');
   const [sortDir, setSortDir] = useState('asc');
@@ -359,8 +360,8 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
             </div>
             <span className="text-gray-600 text-lg">\u2192</span>
             <div className="flex flex-col items-center gap-1 px-4 py-3 rounded border border-neon-purple/20 bg-neon-purple/5 min-w-[100px]">
-              <span className="text-neon-purple font-mono text-lg">{MAP_LAYER_COUNT}</span>
-              <span className="text-gray-400">Map Layers</span>
+              <span className="text-neon-purple font-mono text-lg">{layerCatalogStatus === 'loading' ? `${mapLayerCount}+` : mapLayerCount}</span>
+              <span className="text-gray-400" title={layerCatalogStatus === 'ready' ? 'server catalogue + client-only layers' : (layerCatalogStatus === 'error' ? 'server catalogue not obtained; client table only' : 'client table; server catalogue still loading')}>Map Layers{layerCatalogStatus === 'error' ? ' (client table)' : ''}</span>
             </div>
           </div>
         </div>

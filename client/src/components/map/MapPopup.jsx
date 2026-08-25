@@ -1148,12 +1148,14 @@ const DETAIL_RENDERERS = {
   liveVehicle: VehiclePopup,
 };
 
-export default function MapPopup({ feature, layerType, onClose, position }) {
+export default function MapPopup({ feature, layerType, layerDef: catalogDef, onClose, position }) {
   if (!feature) return null;
 
   const properties = feature.properties || feature;
   const Renderer = DETAIL_RENDERERS[layerType] || GenericDetail;
-  const layerDef = layerType ? LAYER_DEFINITIONS[layerType] : null;
+  // The catalogue entry (server name/colour merged with the client table)
+  // wins; the static table is the fallback for callers that pass none.
+  const layerDef = catalogDef || (layerType ? LAYER_DEFINITIONS[layerType] : null);
   const LayerIcon = layerType ? getLayerIcon(layerType) : null;
   const iconColor = layerDef?.color || '#22d3ee';
   const layerLabel = layerDef?.name

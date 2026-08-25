@@ -1,9 +1,78 @@
 import React, { useState } from 'react';
-import { LAYER_DEFINITIONS, LAYER_CATEGORIES } from '../../hooks/useMapLayers';
 import { getLayerIcon } from '../../utils/layerIcons';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import {
+  groupByCategory,
+  categoryLabel,
+  classifyLayerData,
+  truncationNotice,
+} from '../../hooks/layerCatalog.js';
 
-function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporalChange, featureData, featureCount, forceLoading = false }) {
+// Modality badge: the server's declaration, verbatim. `null` is shown as
+// "geom" (rendered by each feature's own geometry) — never as a guess.
+const MODALITY_BADGE = {
+  point: { label: 'pt', title: 'modality: point' },
+  heatmap: { label: 'heat', title: 'modality: heatmap' },
+  line: { label: 'line', title: 'modality: line' },
+  polygon: { label: 'poly', title: 'modality: polygon' },
+  raster: { label: 'img', title: 'modality: raster' },
+};
+
+export function ModalityBadge({ modality }) {
+  const b = MODALITY_BADGE[modality] || { label: 'geom', title: 'modality: undeclared by server — rendered by feature geometry' };
+  return (
+    <span
+      className="text-[9px] font-mono px-1 rounded border border-osint-border-bright text-gray-500"
+      title={b.title}
+      data-testid="modality-badge"
+    >
+      {b.label}
+    </span>
+  );
+}
+
+/**
+ * Status cell: spinner / 404 / err / count. A 404 ("the server has no such
+ * layer"), an error ("we do not know") and an empty answer ("the server
+ * holds zero records") are three different facts and get three different
+ * cells.
+ */
+export function LayerStatusCell({ featureData, isActive, showSpinner }) {
+  if (showSpinner) return <LoadingSpinner size="sm" />;
+  const c = classifyLayerData(featureData);
+  if (c.state === 'not_found') {
+    return (
+      <span className="text-[10px] font-mono text-status-offline" title="The server has no layer with this id (HTTP 404)" data-testid="status-404">
+        404
+      </span>
+    );
+  }
+  if (c.state === 'error') {
+    return (
+      <span className="text-[10px] font-mono text-status-offline" title={`Load failed: ${c.message}`} data-testid="status-error">
+        err
+      </span>
+    );
+  }
+  if (!isActive) return null;
+  if (c.state === 'empty') {
+    return (
+      <span className="text-[10px] font-mono text-gray-500" title="The server answered and holds zero records for this layer" data-testid="status-empty">
+        0
+      </span>
+    );
+  }
+  if (c.state === 'loaded') {
+    return (
+      <span className="text-[10px] font-mono text-gray-500" title={c.truncated ? `${c.count} of ${c.available} loaded` : `${c.count} records`} data-testid="status-count">
+        {c.count}
+      </span>
+    );
+  }
+  return null;
+}
+
+function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporalChange, featureData, forceLoading = false, renderNotices }) {
   const [showOpacity, setShowOpacity] = useState(false);
   const isActive = state.visible;
   const Icon = getLayerIcon(id);
@@ -11,7 +80,7 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
 
   // For temporal layers, derive the sorted list of distinct year_month
   // values present in the loaded data so the slider can snap to real months.
-  const temporalKey = def.temporal ? (def.temporalKey || 'year_month') : null;
+  const temporalKey = def.temporalKey || null;
   const months = (() => {
     if (!temporalKey) return null;
     const features = featureData?.features || [];
@@ -24,6 +93,8 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
     return Array.from(set).sort();
   })();
   const window = state.temporalWindow || null;
+  const truncation = isActive ? truncationNotice(featureData) : null;
+  const stillLoading = !!featureData?._meta?.client_loading;
 
   return (
     <div className={`layer-toggle px-3 py-2 ${isActive ? 'active' : ''}`}>
@@ -51,6 +122,21 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
             <span className={`text-xs truncate ${isActive ? 'text-gray-200' : 'text-gray-500'}`}>
               {def.name}
             </span>
+            {/* Server taxonomy: modality badge + data_type. `data_type` null
+              * is undeclared and is simply not shown. */}
+            <span className="flex items-center gap-1 min-w-0">
+              <ModalityBadge modality={def.modality ?? null} />
+              {def.data_type && (
+                <span className="text-[9px] font-mono truncate text-gray-600" title={`data_type: ${def.data_type}`}>
+                  {def.data_type}
+                </span>
+              )}
+              {def.clientOnly && (
+                <span className="text-[9px] font-mono text-gray-600" title="Not in the server's layer taxonomy; fetched from /api/data">
+                  local
+                </span>
+              )}
+            </span>
             {/* A layer whose data is not purely observed says so here, next to
               * the switch that turns it on. Without this the transit layers
               * read as "these are the trains", when some markers are positions
@@ -63,21 +149,26 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
           </span>
         </button>
 
-        {/* Loading / Count. A layer whose fetch failed carries _error and must
-          * not be shown as a count of 0 — that reads as "this layer is empty",
-          * which is a fact we never obtained. */}
         <div className="flex-shrink-0 w-10 text-right">
-          {showSpinner ? (
-            <LoadingSpinner size="sm" />
-          ) : featureData?._error ? (
-            <span className="text-[10px] font-mono text-status-offline" title={`Load failed: ${featureData._error}`}>
-              err
-            </span>
-          ) : isActive ? (
-            <span className="text-[10px] font-mono text-gray-500">{featureCount}</span>
-          ) : null}
+          <LayerStatusCell featureData={featureData} isActive={isActive} showSpinner={showSpinner} />
         </div>
       </div>
+
+      {/* In-band statement of a bounded view (house rule 2): the map is
+        * drawing N of the M records the server holds. */}
+      {truncation && (
+        <div className="ml-10 mt-1 text-[10px] text-amber-400/80" data-testid="truncation-notice">
+          {truncation}{stillLoading ? ' — loading the rest…' : ''}
+          {featureData?._meta?.truncation_reason ? ` (${featureData._meta.truncation_reason})` : ''}
+        </div>
+      )}
+
+      {/* Renderer notices (e.g. a raster layer whose records carry no image URL) */}
+      {isActive && Array.isArray(renderNotices) && renderNotices.map((n) => (
+        <div key={n.code} className="ml-10 mt-1 text-[10px] text-amber-400/80" data-testid={`render-notice-${n.code}`}>
+          {n.message}
+        </div>
+      ))}
 
       {/* Opacity slider */}
       {showOpacity && isActive && (
@@ -95,6 +186,15 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
           <span className="text-[10px] font-mono text-gray-500 w-8 text-right">
             {Math.round(state.opacity * 100)}%
           </span>
+        </div>
+      )}
+
+      {/* Sources behind this layer, as the server declares them */}
+      {showOpacity && isActive && def.sources && def.sources.length > 0 && (
+        <div className="mt-1 ml-10 text-[10px] text-gray-500">
+          {def.sources.length} source{def.sources.length === 1 ? '' : 's'}
+          {def.kind ? ` · ${def.kind}` : ''}
+          {Number.isFinite(def.records_geocoded) ? ` · ${def.records_geocoded.toLocaleString()} geocoded` : ''}
         </div>
       )}
 
@@ -150,6 +250,10 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
 export default function LayerPanel({
   layers,
   layerData,
+  catalog = {},
+  catalogStatus = 'ready',
+  catalogError = null,
+  renderNotices = {},
   onToggleLayer,
   onSetOpacity,
   onSetTemporalWindow,
@@ -168,21 +272,9 @@ export default function LayerPanel({
     });
   };
 
-  const layersByCategory = {};
-  for (const cat of LAYER_CATEGORIES) {
-    layersByCategory[cat] = [];
-  }
-  for (const [id, def] of Object.entries(LAYER_DEFINITIONS)) {
-    if (def.hidden) continue; // upstream sources fused into a unified layer
-    if (layersByCategory[def.category]) {
-      layersByCategory[def.category].push(id);
-    }
-  }
-
-  const getFeatureCount = (id) => {
-    const data = layerData[id];
-    return data?.features?.length ?? 0;
-  };
+  // Grouped by the SERVER's category. A category this client has never
+  // heard of is appended, not dropped.
+  const groups = groupByCategory(catalog).map(([cat, ids]) => [cat, ids.filter((id) => layers[id])]);
 
   const activeCount = Object.values(layers).filter((l) => l.visible).length;
 
@@ -205,6 +297,19 @@ export default function LayerPanel({
                 <span className="text-[10px] font-mono text-gray-500">{activeCount} active</span>
               </div>
 
+              {/* Where the taxonomy came from. The static table is not the
+                * server's catalogue and must not be presented as it. */}
+              {catalogStatus === 'loading' && (
+                <div className="mt-1 text-[10px] text-gray-500" data-testid="catalog-status">
+                  Loading layer catalogue from server…
+                </div>
+              )}
+              {catalogStatus === 'error' && (
+                <div className="mt-1 text-[10px] text-status-offline" data-testid="catalog-status">
+                  Server layer catalogue not obtained ({catalogError || 'request failed'}); showing the client table only.
+                </div>
+              )}
+
               <div className="flex gap-2 mt-2">
                 <button
                   onClick={() => onSetAll(true)}
@@ -222,13 +327,12 @@ export default function LayerPanel({
             </div>
 
             {/* Layer groups */}
-            {LAYER_CATEGORIES.map((category) => {
-              const ids = layersByCategory[category];
+            {groups.map(([category, ids]) => {
               if (!ids || ids.length === 0) return null;
               const isCollapsed = collapsedCategories.has(category);
               const activeInCat = ids.filter((id) => layers[id]?.visible).length;
               return (
-                <div key={category} className="border-b border-osint-border/50">
+                <div key={category} className="border-b border-osint-border/50" data-testid={`category-${category}`}>
                   <button
                     type="button"
                     onClick={() => toggleCategory(category)}
@@ -239,7 +343,7 @@ export default function LayerPanel({
                       <span className="inline-block w-3 text-gray-600">
                         {isCollapsed ? '▸' : '▾'}
                       </span>
-                      {category}
+                      {categoryLabel(category)}
                     </span>
                     <span className="font-mono text-gray-600">
                       {activeInCat > 0 ? `${activeInCat}/${ids.length}` : ids.length}
@@ -249,14 +353,14 @@ export default function LayerPanel({
                     <LayerToggleItem
                       key={id}
                       id={id}
-                      def={LAYER_DEFINITIONS[id]}
+                      def={catalog[id]}
                       state={layers[id]}
                       onToggle={onToggleLayer}
                       onOpacityChange={onSetOpacity}
                       onTemporalChange={onSetTemporalWindow}
                       featureData={layerData[id]}
-                      featureCount={getFeatureCount(id)}
                       forceLoading={id === 'cameras' && cameraRunActive}
+                      renderNotices={renderNotices[id]}
                     />
                   ))}
                 </div>

@@ -18,7 +18,25 @@ export default function MapPage() {
     layerData,
     layerDataView,
     activeCount,
+    catalog,
+    catalogStatus,
+    catalogError,
   } = useMapLayers();
+
+  // Renderer notices per layer (e.g. a raster layer whose records carry no
+  // image URL): surfaced in the panel, in band, next to the toggle.
+  const [renderNotices, setRenderNotices] = useState({});
+  const handleRenderNotice = useCallback((layerId, notices) => {
+    setRenderNotices((prev) => {
+      const had = prev[layerId];
+      if ((!notices || notices.length === 0) && !had) return prev;
+      if (had && notices && had.length === notices.length && had.every((n, i) => n.code === notices[i].code && n.message === notices[i].message)) return prev;
+      const next = { ...prev };
+      if (!notices || notices.length === 0) delete next[layerId];
+      else next[layerId] = notices;
+      return next;
+    });
+  }, []);
 
   const { activeRun: cameraActiveRun } = useCameraDiscoveryStream();
 
@@ -134,14 +152,20 @@ export default function MapPage() {
       <MapView
         layers={layers}
         layerData={layerDataView}
+        catalog={catalog}
         onFeatureClick={handleFeatureClick}
         onMapReady={handleMapReady}
+        onRenderNotice={handleRenderNotice}
       />
 
       {/* Layer Panel */}
       <LayerPanel
         layers={layers}
         layerData={layerData}
+        catalog={catalog}
+        catalogStatus={catalogStatus}
+        catalogError={catalogError}
+        renderNotices={renderNotices}
         onToggleLayer={toggleLayer}
         onSetOpacity={setLayerOpacity}
         onSetTemporalWindow={setLayerTemporalWindow}
@@ -211,6 +235,7 @@ export default function MapPage() {
         <MapPopup
           feature={popup.feature}
           layerType={popup.layerType}
+          layerDef={catalog[popup.layerType]}
           position={popupPosition}
           onClose={handleClosePopup}
         />
