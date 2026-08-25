@@ -47,3 +47,10 @@ __pycache__/
 /models/
 /data/
 /scripts/llama-*.log
+
+# vendor llama.cpp binaries (kept on disk, not in git)
+native/llama/*.so*
+native/llama/*.dylib
+
+# contract-suite C outputs — run.sh overwrites these every run; not an input
+native/tests/contract/*.c.json
