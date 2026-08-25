@@ -18,6 +18,7 @@ typedef struct {
   char      host[HG_HOSTLEN];    /* empty => free slot                        */
   int       in_flight;
   long long last_start_ms;       /* monotonic ms of the most recent grant     */
+  int       gap_ms;              /* min gap for THIS host (override or global)*/
 } hg_slot;
 
 static hg_slot         g_slots[HG_SLOTS];
@@ -41,7 +42,73 @@ static void cfg_init(void) {
   if (g_max_conc   < 0) g_max_conc   = 0;
   if (g_min_gap_ms < 0) g_min_gap_ms = 0;
 }
-static void cfg_once(void) { pthread_once(&g_cfg_once, cfg_init); }
+/* ── per-host minimum-gap overrides ───────────────────────────────────────
+ * Some upstreams rate-limit per client IP far above the global 150 ms gap.
+ * reddit.com is the measured case (sources/reddit_world_geo.c): roughly one
+ * request per 30 s per IP, and the multireddit groups all come due together,
+ * so 15 of 17 groups were 429'd on every pass even when run one at a time.
+ * The floor has to live HERE, at the point of the real fetch, because no
+ * per-source interval can pace a family that fires as a block.
+ *
+ * A host in this table matches the hostname or any subdomain of it.
+ * JO_HOST_MIN_GAP_OVERRIDES="host=ms,host=ms" adds or replaces entries at
+ * boot. An override is a GAP between starts, never a delay of the first
+ * request. */
+#define HG_MAX_OVERRIDES 32
+static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = {
+  { "reddit.com", 30000 },
+};
+static int g_nover = 1;
+
+static void override_set(const char *host, int gap_ms) {
+  for (int i = 0; i < g_nover; i++)
+    if (strcmp(g_over[i].host, host) == 0) { g_over[i].gap_ms = gap_ms; return; }
+  if (g_nover < HG_MAX_OVERRIDES) {
+    snprintf(g_over[g_nover].host, HG_HOSTLEN, "%s", host);
+    g_over[g_nover].gap_ms = gap_ms;
+    g_nover++;
+  }
+}
+
+static void overrides_init(void) {
+  const char *e = getenv("JO_HOST_MIN_GAP_OVERRIDES");
+  if (!e || !*e) return;
+  char buf[2048];
+  snprintf(buf, sizeof buf, "%s", e);
+  char *save = NULL;
+  for (char *tok = strtok_r(buf, ",", &save); tok; tok = strtok_r(NULL, ",", &save)) {
+    char *eq = strchr(tok, '=');
+    if (!eq) continue;
+    *eq = 0;
+    while (*tok == ' ') tok++;
+    int ms = atoi(eq + 1);
+    if (*tok && ms >= 0) override_set(tok, ms);
+  }
+}
+
+/* Gap for `host`: the longest matching override (exact or parent domain),
+ * else the global gap. "notreddit.com" does not match "reddit.com". */
+static int gap_for_host(const char *host) {
+  int best = g_min_gap_ms; size_t bestlen = 0;
+  size_t hl = strlen(host);
+  for (int i = 0; i < g_nover; i++) {
+    size_t ol = strlen(g_over[i].host);
+    if (ol > hl || ol <= bestlen) continue;
+    if (strcmp(host + (hl - ol), g_over[i].host) != 0) continue;
+    if (ol < hl && host[hl - ol - 1] != '.') continue;
+    best = g_over[i].gap_ms; bestlen = ol;
+  }
+  return best;
+}
+
+/* An override host is NOT allowed to fail open on its gap: proceeding into a
+ * known per-IP rate limit is a guaranteed 429, which is worse than waiting.
+ * The wait is still bounded — a queue deeper than this fails open, and the
+ * source retries on its own interval, now de-clustered by the wait. */
+#define HG_OVERRIDE_MAX_WAIT_MS 300000
+
+static void cfg_init_all(void) { cfg_init(); overrides_init(); }
+static void cfg_once(void) { pthread_once(&g_cfg_once, cfg_init_all); }
 
 static long long mono_ms(void) {
   struct timespec t;
@@ -102,6 +169,7 @@ static hg_slot *slot_for(const char *host) {
     if (s->host[0] == 0) {                 /* free -> claim                   */
       snprintf(s->host, sizeof s->host, "%s", host);
       s->in_flight = 0; s->last_start_ms = 0;
+      s->gap_ms = gap_for_host(host);
       return s;
     }
     if (strcmp(s->host, host) == 0) return s;
@@ -115,18 +183,23 @@ int hostgate_acquire(const char *url, int max_wait_ms) {
   cfg_once();
   if (g_max_conc == 0 && g_min_gap_ms == 0) return 0;   /* gate disabled      */
 
-  const long long deadline = mono_ms() + (max_wait_ms > 0 ? max_wait_ms : 0);
+  long long deadline = mono_ms() + (max_wait_ms > 0 ? max_wait_ms : 0);
   int waited = 0;
 
   pthread_mutex_lock(&g_mu);
   hg_slot *s = slot_for(host);
   if (!s) { pthread_mutex_unlock(&g_mu); return 0; }
+  const int gap_ms = s->gap_ms;
+  if (gap_ms > g_min_gap_ms) {             /* override host: wait for the gap */
+    long long floor = mono_ms() + HG_OVERRIDE_MAX_WAIT_MS;
+    if (floor > deadline) deadline = floor;
+  }
 
   for (;;) {
     long long now = mono_ms();
     int conc_ok = (g_max_conc == 0) || (s->in_flight < g_max_conc);
-    long long ready_at = s->last_start_ms + g_min_gap_ms;
-    int gap_ok  = (g_min_gap_ms == 0) || (now >= ready_at);
+    long long ready_at = s->last_start_ms + gap_ms;
+    int gap_ok  = (gap_ms == 0) || (now >= ready_at);
 
     if (conc_ok && gap_ok) {
       s->in_flight++;
