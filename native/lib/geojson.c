@@ -310,7 +310,7 @@ static unsigned char *gj_collision_map(cJSON *features, int n) {
 
 int geojson_emit_features(intel_sink *sink, const char *sid, cJSON *features) {
   if (!cJSON_IsArray(features)) return 0;
-  int n = 0, hashed = 0; cJSON *feat;
+  int n = 0, hashed = 0, out_of_range = 0; cJSON *feat;
   unsigned char *dupmap = gj_collision_map(features, cJSON_GetArraySize(features));
   int fi = -1;
   cJSON_ArrayForEach(feat, features) {
@@ -354,6 +354,14 @@ int geojson_emit_features(intel_sink *sink, const char *sid, cJSON *features) {
     it.published_at= props ? pick_text(props, T_PUB)   : NULL;
     it.record_type = rt;
     it.sub_source_id = sub;
+    /* A coordinate outside lon±180 / lat±90 is not a position on Earth — it
+     * is a projected CRS the upstream served instead of WGS84 (CWFIS WFS
+     * answered in Canada Lambert METRES until srsName=EPSG:4326 was added,
+     * and its fire-danger polygons then wrapped the whole map). Store the
+     * record, but never as geocoded: a wrong pin is worse than no pin. */
+    if (geo && (lat < -90 || lat > 90 || lon < -180 || lon > 180)) {
+      geo = 0; free(gj); gj = NULL; out_of_range++;
+    }
     it.has_geo = geo; it.lat = lat; it.lon = lon;
     it.geometry_geojson = gj;
     it.properties_json = pj ? pj : "{}";
@@ -370,6 +378,10 @@ int geojson_emit_features(intel_sink *sink, const char *sid, cJSON *features) {
     fprintf(stderr, "[%s] %d/%d features had no native id — uid'd by content "
                     "hash (add a stable `uid` property if these change)\n",
             sid, hashed, n);
+  if (out_of_range)
+    fprintf(stderr, "[%s] %d/%d features had coordinates outside lon±180/lat±90 "
+                    "(projected CRS? add srsName=EPSG:4326) — stored without "
+                    "geometry, never as a pin\n", sid, out_of_range, n);
   return n;
 }
 

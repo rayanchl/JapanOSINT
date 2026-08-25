@@ -182,7 +182,7 @@ VJSON(geo_copernicus_odata_s2, "geo-copernicus-odata-s2", "Copernicus Data Space
 
 VGEO(geo_cwfis_nfdb_points, "geo-cwfis-nfdb-points", "CWFIS Canada — national fire database points", "カナダCWFIS — 全国火災データベース",
   "science", "wildfire",
-  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:NFDB_point&outputFormat=application/json&count=500",
+  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:NFDB_point&outputFormat=application/json&srsName=EPSG:4326&count=500",
   "en", "[\"canada\",\"wildfire\",\"historical\"]", 86400,
   "Historical Canadian fire ignition points for baseline statistics.");
 

@@ -37,6 +37,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON *latv = cJSON_GetObjectItem(h, "latitude");
       cJSON *lonv = cJSON_GetObjectItem(h, "longitude");
       if (!latv || cJSON_IsNull(latv) || !lonv || cJSON_IsNull(lonv)) continue;
+      /* JMA/p2pquake encode "epicentre unknown" (震源不明) as -200/-200, not
+       * null. A sentinel is not a coordinate: treat it as no hypocenter,
+       * the same branch a null takes. Storing it put quakes at (-200,-200). */
+      if (!cJSON_IsNumber(latv) || !cJSON_IsNumber(lonv)
+          || latv->valuedouble < -90 || latv->valuedouble > 90
+          || lonv->valuedouble < -180 || lonv->valuedouble > 180) continue;
 
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");
