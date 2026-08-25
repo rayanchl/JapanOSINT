@@ -188,56 +188,56 @@ VRSS(sec_un_press, "sec-un-press", "UN Press Releases", "国連 プレスリリ�
 
 VJSON(sec_unhcr_asylum_applications, "sec-unhcr-asylum-applications", "UNHCR Asylum Applications", "UNHCR 庇護申請",
   "geopolitics", "migration",
-  "https://api.unhcr.org/population/v1/asylum-applications/?limit=100&yearFrom=2024",
+  "https://api.unhcr.org/population/v1/asylum-applications/?limit=100&per_page=100&page=1&yearFrom=2024",
   "items",
   "en", "[\"asylum\",\"applications\",\"unhcr\"]", 86400,
   "UNHCR Refugee Data Finder API — UNHCR Asylum Applications, country-by-country and year-by-year.");
 
 VJSON(sec_unhcr_asylum_decisions, "sec-unhcr-asylum-decisions", "UNHCR Asylum Decisions", "UNHCR 庇護決定",
   "geopolitics", "migration",
-  "https://api.unhcr.org/population/v1/asylum-decisions/?limit=100&yearFrom=2024",
+  "https://api.unhcr.org/population/v1/asylum-decisions/?limit=100&per_page=100&page=1&yearFrom=2024",
   "items",
   "en", "[\"asylum\",\"decisions\",\"unhcr\"]", 86400,
   "UNHCR Refugee Data Finder API — UNHCR Asylum Decisions, country-by-country and year-by-year.");
 
 VJSON(sec_unhcr_countries, "sec-unhcr-countries", "UNHCR Country Reference List", "UNHCR 国リファレンス",
   "geopolitics", "migration",
-  "https://api.unhcr.org/population/v1/countries/?limit=300",
+  "https://api.unhcr.org/population/v1/countries/?limit=300&per_page=300&page=1",
   "items",
   "en", "[\"reference\",\"countries\",\"unhcr\"]", 86400,
   "UNHCR Refugee Data Finder API — UNHCR Country Reference List, country-by-country and year-by-year.");
 
 VJSON(sec_unhcr_demographics, "sec-unhcr-demographics", "UNHCR Refugee Demographics", "UNHCR 難民人口構成",
   "geopolitics", "migration",
-  "https://api.unhcr.org/population/v1/demographics/?limit=100&yearFrom=2023",
+  "https://api.unhcr.org/population/v1/demographics/?limit=100&per_page=100&page=1&yearFrom=2023",
   "items",
   "en", "[\"demographics\",\"refugees\",\"unhcr\"]", 86400,
   "UNHCR Refugee Data Finder API — UNHCR Refugee Demographics, country-by-country and year-by-year.");
 
 VJSON(sec_unhcr_idmc, "sec-unhcr-idmc", "UNHCR/IDMC Internal Displacement Figures", "UNHCR/IDMC 国内避難民統計",
   "geopolitics", "migration",
-  "https://api.unhcr.org/population/v1/idmc/?limit=100&yearFrom=2023",
+  "https://api.unhcr.org/population/v1/idmc/?limit=100&per_page=100&page=1&yearFrom=2023",
   "items",
   "en", "[\"idp\",\"displacement\",\"idmc\",\"unhcr\"]", 86400,
   "UNHCR Refugee Data Finder API — UNHCR/IDMC Internal Displacement Figures, country-by-country and year-by-year.");
 
 VJSON(sec_unhcr_population, "sec-unhcr-population", "UNHCR Population Figures", "UNHCR 人口統計",
   "geopolitics", "migration",
-  "https://api.unhcr.org/population/v1/population/?limit=100&yearFrom=2024",
+  "https://api.unhcr.org/population/v1/population/?limit=100&per_page=100&page=1&yearFrom=2024",
   "items",
   "en", "[\"refugees\",\"idp\",\"population\",\"unhcr\"]", 86400,
   "UNHCR Refugee Data Finder API — UNHCR Population Figures, country-by-country and year-by-year.");
 
 VJSON(sec_unhcr_solutions, "sec-unhcr-solutions", "UNHCR Durable Solutions", "UNHCR 恒久的解決",
   "geopolitics", "migration",
-  "https://api.unhcr.org/population/v1/solutions/?limit=100&yearFrom=2023",
+  "https://api.unhcr.org/population/v1/solutions/?limit=100&per_page=100&page=1&yearFrom=2023",
   "items",
   "en", "[\"returns\",\"resettlement\",\"solutions\",\"unhcr\"]", 86400,
   "UNHCR Refugee Data Finder API — UNHCR Durable Solutions, country-by-country and year-by-year.");
 
 VJSON(sec_unhcr_unrwa, "sec-unhcr-unrwa", "UNRWA Registered Palestine Refugees", "UNRWA 登録パレスチナ難民",
   "geopolitics", "migration",
-  "https://api.unhcr.org/population/v1/unrwa/?limit=100&yearFrom=2023",
+  "https://api.unhcr.org/population/v1/unrwa/?limit=100&per_page=100&page=1&yearFrom=2023",
   "items",
   "en", "[\"unrwa\",\"palestine\",\"refugees\",\"unhcr\"]", 86400,
   "UNHCR Refugee Data Finder API — UNRWA Registered Palestine Refugees, country-by-country and year-by-year.");

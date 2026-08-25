@@ -39,11 +39,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         if (!od_numv(row, "valor", &valor)) continue;   /* no value -> no row */
         const char *geo = od_s(row, "geodsg");
         const char *d3 = od_s(row, "dim_3_t");
+        const char *d4 = od_s(row, "dim_4_t");
 
         char title[480];
-        snprintf(title, sizeof title, "%s - %s%s%s %s = %g",
+        snprintf(title, sizeof title, "%s - %s%s%s%s%s %s = %g",
                  dsg ? dsg : (cod ? cod : "INE"), geo ? geo : "",
-                 d3 ? " / " : "", d3 ? d3 : "", per->string, valor);
+                 d3 ? " / " : "", d3 ? d3 : "",
+                 d4 ? " / " : "", d4 ? d4 : "", per->string, valor);
 
         cJSON *props = cJSON_CreateObject();
         if (!props) continue;
@@ -53,9 +55,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON_AddStringToObject(props, "period", per->string);
         cJSON_AddNumberToObject(props, "value", valor);
 
+        /* The key must span EVERY dimension the API breaks the value down by.
+         * The old cod|period|geocod key ignored dim_2..dim_9, so the 57
+         * sex x age-group rows of each (territory, year) upserted onto one
+         * uid: measured 19,608 emitted, 344 stored. Appending each dim_N code
+         * present on the row makes the key exactly as fine as the record. */
         char rk[240];
-        snprintf(rk, sizeof rk, "%s|%s|%s", cod ? cod : "ine", per->string,
+        int rkl = snprintf(rk, sizeof rk, "%s|%s|%s", cod ? cod : "ine",
+                           per->string,
                  od_s(row, "geocod") ? od_s(row, "geocod") : (geo ? geo : ""));
+        for (int dn = 2; dn <= 9 && rkl > 0 && rkl < (int)sizeof rk; dn++) {
+          char dk[8];
+          snprintf(dk, sizeof dk, "dim_%d", dn);
+          const char *dv = od_s(row, dk);
+          if (dv)
+            rkl += snprintf(rk + rkl, sizeof rk - (size_t)rkl, "|%s", dv);
+        }
 
         intel_item it = {0};
         it.title = title;

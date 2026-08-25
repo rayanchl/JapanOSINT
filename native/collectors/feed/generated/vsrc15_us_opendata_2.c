@@ -321,7 +321,7 @@ VJSON(us_data_sanjoseca_gov_orgs, "us-data-sanjoseca-gov-orgs", "City of San Jos
 
 VJSON(us_data_sanjoseca_gov_tags, "us-data-sanjoseca-gov-tags", "City of San Jose — tags (United States)", "City of San Jose — tags (United States)",
   "us_opendata", "opendata",
-  "https://data.sanjoseca.gov/api/3/action/tag_list",
+  "https://data.sanjoseca.gov/api/3/action/tag_list?all_fields=true",
   "result",
   "en", "[\"us\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at data.sanjoseca.gov.");

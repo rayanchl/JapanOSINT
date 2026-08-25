@@ -10,7 +10,7 @@
 #include "od_shared.c"
 
 #define SID "socrata-delaware-business-licences"
-static const char *URL = "https://data.delaware.gov/resource/5zy2-grhr.json?$limit=100";
+static const char *URL = "https://data.delaware.gov/resource/5zy2-grhr.json?$limit=100&$select=*,:id";
 static const char *const TITLE_KEYS[] = { "business_name", "trade_name", NULL };
 static const char *const SUM_KEYS[] = { "category", "city", NULL };
 
@@ -21,7 +21,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   sp.link = URL;
   sp.title_keys = TITLE_KEYS;
   sp.summary_keys = SUM_KEYS;
-  sp.id_key = "business_name";
+  sp.id_key = ":id";   /* rule 4b, measured: business_name recurs (100 emitted, 94 stored); :id is Socrata's per-row identity, via $select=*,:id */
   sp.date_key = "current_license_valid_from";
   return od_rc(SID, od_fetch_rows(ctx, sink, URL, NULL, &sp));
 }

@@ -32,15 +32,19 @@ char *miscapi_set_schedule(db_handle *db, const char *id, const char *body);
  * depended on the old shape, are recorded above the implementation. */
 char *miscapi_source_logs(db_handle *db, const char *id, int limit, int offset);
 
-/* GET /api/layers — registry layers (grouped by source.layer), STRIP-filtered,
- * each carrying its contributing sources + time-slider disposition. Sources
- * with no layer (e.g. osint-search) are skipped — Node crashed on them
- * (null.replace). Always non-NULL; malloc'd JSON array. */
-char *miscapi_list_layers(void);
+/* GET /api/layers — the layer TAXONOMY (v2). A bare JSON array; each element
+ * carries id/name/category, data_type + modality (JSON null = undeclared,
+ * never inferred), kind ("curated" from core/layers.def | "declared" from a
+ * source's own .layer | "generated" catch-all per record_type), its member
+ * sources, a measured records_geocoded (null if the count query failed), and
+ * the v1 temporal disposition. Every geocoded intel_items row is credited to
+ * exactly one listed layer — the catch-all rows are what make that total.
+ * `db` may be NULL (counts and generated layers are then null/absent).
+ * Contract fixture: tests/contract/_api_layers_v2.json. */
+char *miscapi_list_layers(db_handle *db);
 
-/* GET /api/layers/:layerId/geojson — empty FC + _meta.sources for the
- * layer. NULL when no registry source maps to that layer (caller → 404). */
-char *miscapi_layer_geojson(const char *layer_id);
+/* GET /api/layers/:layerId/geojson is served by dataapi_layer_fc (dataapi.h):
+ * the real fused FeatureCollection, bounded with in-band truncation meta. */
 
 /* GET /api/follow/recent — collector-tap history. The C scheduler keeps no
  * cross-process ring buffer, so there is no backing store: returns a

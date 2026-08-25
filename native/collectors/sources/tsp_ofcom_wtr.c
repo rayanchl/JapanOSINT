@@ -38,6 +38,8 @@
  *   reuse with attribution to Ofcom.
  */
 #include "lib/jocore.h"
+#include "lib/feedlib.h"
+#include "lib/seenset.h"
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
@@ -161,10 +163,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   int n = 0, seen = 0, nogeo = 0;
+  seen_set keyseen = {0};
   char *line;
   while ((line = jo_next_line_cr(&p)) != NULL) {
     if (!*line) continue;
     seen++;
+    /* The register is per EMISSION, and one licence routinely carries several
+     * emissions on the SAME frequency at the SAME site that differ only in
+     * azimuth / antenna height / ERP / emission code. The manifest's
+     * "Licence + Frequency + coordinates" triple keys those onto each other:
+     * measured 64,208 emitted, 39,287 stored — 24,921 real emissions upserted
+     * away. Hash the raw line (before csv_split mutates it) so every distinct
+     * row keeps a distinct uid while byte-identical upstream duplicates still
+     * collapse. */
+    char linehash[21];
+    const char *lh_parts[1] = { line };
+    feed_hash_key(linehash, lh_parts, 1);
     char *f[MAXCOL];
     int nf = csv_split(line, f, MAXCOL);
     for (int i = 0; i < nf; i++) f[i] = trim(f[i]);
@@ -236,6 +250,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const char *who = company ? company : (surname ? surname : "licensee n/a");
     char title[288], summary[288], key[160];
     snprintf(key, sizeof key, "%s|%s|%.5f|%.5f", lic, freq ? freq : "", lat, lon);
+    /* Only a key that is about to collide gains the line hash, so the ~39k
+     * already-unique emissions keep their stored uids (nothing re-emits) while
+     * each extra same-licence/same-frequency/same-site emission stays a row of
+     * its own instead of upserting over its siblings. */
+    if (!seen_add(&keyseen, key)) {
+      size_t kl = strlen(key);
+      snprintf(key + kl, sizeof key - kl, "|%s", linehash);
+    }
     if (freq) {
       char *e = NULL;
       double hz = strtod(freq, &e);
@@ -269,6 +291,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
+  seen_free(&keyseen);
   free(body);
   if (bounded)
     jo_trunc_notice(sink, "ofcom-wtr", WTR_URL, n, -1,

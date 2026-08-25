@@ -186,14 +186,33 @@ static int geom_repr_point(cJSON *g, double *lat, double *lon) {
 typedef struct { char key[96]; cJSON *pt; cJSON *poly; cJSON *any; cJSON *props;
                  int layers; } gd_event;
 
+/* The bare geteventlist/MAP began answering 400 {"message":"Eventtype is
+ * required."} (measured 2026-08-25), and the parameter accepts exactly ONE
+ * type per request (?eventtype=EQ → 200 with events; EQ;TC / EQ,TC / ALL all
+ * 400). So the six GDACS hazard types are fetched one request each and merged
+ * into the same per-event map as before. A type whose fetch fails is counted
+ * and the run only errors when EVERY type failed (R3: a partial answer with
+ * real events is not a dead source). */
+static const char *const GDACS_TYPES[] = { "EQ", "TC", "FL", "VO", "WF", "DR" };
+#define GDACS_NTYPES (sizeof GDACS_TYPES / sizeof *GDACS_TYPES)
+
 static int gdacs_run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, GDACS_URL, 30000);
-  if (!doc) { fprintf(stderr, "[gdacs] fetch failed\n"); return -1; }
-  cJSON *feats = cJSON_GetObjectItem(doc, "features");
+  cJSON *docs[GDACS_NTYPES] = {0};
+  int fetched = 0;
 
   int cap = 256, nev = 0;
   gd_event *ev = calloc((size_t)cap, sizeof *ev);
-  if (!ev) { cJSON_Delete(doc); return -1; }
+  if (!ev) return -1;
+
+  for (size_t t = 0; t < GDACS_NTYPES; t++) {
+  char turl[160];
+  snprintf(turl, sizeof turl, "%s?eventtype=%s", GDACS_URL, GDACS_TYPES[t]);
+  cJSON *doc = feed_get_json(ctx->http, turl, 30000);
+  if (!doc) { fprintf(stderr, "[gdacs] fetch failed for %s\n", GDACS_TYPES[t]);
+              continue; }
+  docs[t] = doc;
+  fetched++;
+  cJSON *feats = cJSON_GetObjectItem(doc, "features");
 
   cJSON *f;
   cJSON_ArrayForEach(f, feats) {
@@ -228,6 +247,13 @@ static int gdacs_run(const source_ctx *ctx, intel_sink *sink) {
     if (!ev[idx].pt && strcmp(gt, "Point") == 0) ev[idx].pt = g;
     if (!ev[idx].poly && (strcmp(gt, "Polygon") == 0 ||
                           strcmp(gt, "MultiPolygon") == 0)) ev[idx].poly = g;
+  }
+  }  /* per-eventtype fetch loop */
+
+  if (fetched == 0) {
+    fprintf(stderr, "[gdacs] every eventtype fetch failed\n");
+    free(ev);
+    return -1;
   }
 
   int n = 0;
@@ -283,8 +309,9 @@ static int gdacs_run(const source_ctx *ctx, intel_sink *sink) {
     free(pj); free(gj); free(body); cJSON_Delete(props);
   }
   free(ev);
-  cJSON_Delete(doc);
-  fprintf(stderr, "[gdacs] emitted %d events\n", n);
+  for (size_t t = 0; t < GDACS_NTYPES; t++) cJSON_Delete(docs[t]);
+  fprintf(stderr, "[gdacs] emitted %d events across %d/%d hazard types\n",
+          n, fetched, (int)GDACS_NTYPES);
   return 0;
 }
 

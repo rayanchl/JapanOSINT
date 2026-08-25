@@ -26,6 +26,8 @@
  * Licence: FCC Media Bureau public query tool — US Government public domain.
  */
 #include "lib/jocore.h"
+#include "lib/feedlib.h"
+#include "lib/seenset.h"
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
@@ -113,9 +115,17 @@ static int emit_state(const source_ctx *ctx, intel_sink *sink,
   http_response_free(&hr);
 
   int n = 0;
+  seen_set keyseen = {0};
   char *p = body, *line;
   while ((line = jo_next_line_cr(&p)) != NULL) {
     if (!*line || !strchr(line, '|')) continue;
+    /* rule 4b: distinct rows sharing facility_id|file_number|channel collapsed
+       on upsert (sweep 2026-08-24). Hash the raw line before psv_split mutates
+       it so every distinct row keeps a distinct uid; byte-identical upstream
+       duplicates still collapse. */
+    char linehash[21];
+    const char *lh_parts[1] = { line };
+    feed_hash_key(linehash, lh_parts, 1);
     char *f[MAXF];
     int nf = psv_split(line, f, MAXF);
     for (int i = 0; i < nf; i++) f[i] = trim(f[i]);
@@ -176,6 +186,10 @@ static int emit_state(const source_ctx *ctx, intel_sink *sink,
     char title[256], summary[288], key[128];
     snprintf(key, sizeof key, "%s|%s|%s", facid ? facid : "",
              fileno ? fileno : "", chan ? chan : "");
+    if (!seen_add(&keyseen, key)) {          /* rule 4b: colliders only */
+      size_t kl = strlen(key);
+      snprintf(key + kl, sizeof key - kl, "|%s", linehash);
+    }
     snprintf(title, sizeof title, "%s%s%s%s%s%s%s",
              call ? call : "NEW",
              chan ? " ch " : "", chan ? chan : "",
@@ -202,6 +216,7 @@ static int emit_state(const source_ctx *ctx, intel_sink *sink,
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
+  seen_free(&keyseen);
   free(body);
   return n;
 }

@@ -15,8 +15,8 @@ VJSON(eco_odre_conso_region, "eco-odre-conso-region", "France regional gross con
 
 VJSON(eco_odre_eco2mix_regional, "eco-odre-eco2mix-regional", "RTE eCO2mix regional real time", "RTE eCO2mix 地域別リアルタイム",
   "energy", "energy-grid",
-  "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/eco2mix-regional-tr/records?limit=50&order_by=date_heure%20desc",
-  "*",
+  "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/eco2mix-regional-tr/records?limit=100",
+  "results",
   "fr", "[\"france\",\"rte\",\"regional\",\"generation-mix\"]", 900,
   "Quarter-hourly French regional consumption and generation, showing where load stress sits.");
 
@@ -29,22 +29,22 @@ VJSON(eco_odre_eco2mix_tr, "eco-odre-eco2mix-tr", "RTE eCO2mix national real tim
 
 VJSON(eco_odre_parc_eolien, "eco-odre-parc-eolien", "France regional wind and solar fleet", "フランス地域別風力・太陽光設備",
   "energy", "energy-grid",
-  "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/parc-regional-annuel-prod-eolien-solaire/records?limit=50",
-  "*",
+  "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/parc-regional-annuel-prod-eolien-solaire/exports/json",
+  "",
   "fr", "[\"france\",\"wind\",\"solar\",\"capacity\"]", 86400,
   "Annual regional wind and solar capacity and output in France.");
 
 VJSON(eco_odre_prod_region, "eco-odre-prod-region", "France annual regional generation by sector", "フランス地域別年間発電量",
   "energy", "energy-grid",
-  "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/prod-region-annuelle-filiere/records?limit=50",
-  "*",
+  "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/prod-region-annuelle-filiere/exports/json",
+  "",
   "fr", "[\"france\",\"generation\",\"regional\",\"statistics\"]", 86400,
   "Annual French regional electricity generation by technology.");
 
 VJSON(eco_odre_registre_prod, "eco-odre-registre-prod", "France generation and storage registry", "フランス発電・蓄電設備登録簿",
   "energy", "energy-grid",
-  "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/registre-national-installation-production-stockage-electricite-agrege/records?limit=50",
-  "*",
+  "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/registre-national-installation-production-stockage-electricite-agrege/records?limit=100",
+  "results",
   "fr", "[\"france\",\"registry\",\"capacity\",\"storage\"]", 86400,
   "Aggregated national registry of French electricity generation and storage installations.");
 

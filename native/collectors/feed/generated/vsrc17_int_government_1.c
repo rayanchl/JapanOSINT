@@ -15,42 +15,42 @@ VJSON(unesco_uis_geounits, "unesco-uis-geounits", "UNESCO UIS — geographic uni
 
 VJSON(unhcr_asylum_applications, "unhcr-asylum-applications", "UNHCR — asylum applications", "UNHCR — asylum applications",
   "int_government", "government",
-  "https://api.unhcr.org/population/v1/asylum-applications/?limit=1000&yearFrom=2024&yearTo=2024&coo_all=true&coa_all=true",
+  "https://api.unhcr.org/population/v1/asylum-applications/?limit=1000&per_page=1000&page=1&yearFrom=2024&yearTo=2024&coo_all=true&coa_all=true",
   "items",
   "en", "[\"int\",\"government\",\"batch17\",\"high-penetrancy\"]", 86400,
   "New asylum applications lodged, by origin and asylum country, with procedure type, application type, decision level and protection category.");
 
 VJSON(unhcr_asylum_decisions, "unhcr-asylum-decisions", "UNHCR — asylum decisions", "UNHCR — asylum decisions",
   "int_government", "government",
-  "https://api.unhcr.org/population/v1/asylum-decisions/?limit=1000&yearFrom=2024&yearTo=2024&coo_all=true&coa_all=true",
+  "https://api.unhcr.org/population/v1/asylum-decisions/?limit=1000&per_page=1000&page=1&yearFrom=2024&yearTo=2024&coo_all=true&coa_all=true",
   "items",
   "en", "[\"int\",\"government\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Asylum decision outcomes per origin/asylum pair: recognised, other outcome, rejected, closed, total, plus procedure type, decision level and protection category. 2.16 million decisions in 2024 alone.");
 
 VJSON(unhcr_demographics, "unhcr-demographics", "UNHCR — demographics of displaced populations", "UNHCR — demographics of displaced populations",
   "int_government", "government",
-  "https://api.unhcr.org/population/v1/demographics/?limit=1000&yearFrom=2024&yearTo=2024&coa_all=true",
+  "https://api.unhcr.org/population/v1/demographics/?limit=1000&per_page=1000&page=1&yearFrom=2024&yearTo=2024&coa_all=true",
   "items",
   "en", "[\"int\",\"government\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Age/sex disaggregation of displaced populations by asylum country: female and male counts in bands 0-4, 5-11, 12-17, 18-59, 60+, other and totals.");
 
 VJSON(unhcr_population, "unhcr-population", "UNHCR — refugee population by origin and asylum country", "UNHCR — refugee population by origin and asylum country",
   "int_government", "government",
-  "https://api.unhcr.org/population/v1/population/?limit=1000&yearFrom=2024&yearTo=2024&coo_all=true&coa_all=true",
+  "https://api.unhcr.org/population/v1/population/?limit=1000&per_page=1000&page=1&yearFrom=2024&yearTo=2024&coo_all=true&coa_all=true",
   "items",
   "en", "[\"int\",\"government\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Origin-country x asylum-country pairs with refugees, asylum_seekers, returned_refugees, IDPs, returned_idps, stateless, others of concern and host-community counts. coo_all/coa_all are REQUIRED — without them every row collapses to '-' and the parser drops the lot.");
 
 VJSON(unhcr_solutions, "unhcr-solutions", "UNHCR — durable solutions", "UNHCR — durable solutions",
   "int_government", "government",
-  "https://api.unhcr.org/population/v1/solutions/?limit=1000&yearFrom=2024&yearTo=2024&coo_all=true&coa_all=true",
+  "https://api.unhcr.org/population/v1/solutions/?limit=1000&per_page=1000&page=1&yearFrom=2024&yearTo=2024&coo_all=true&coa_all=true",
   "items",
   "en", "[\"int\",\"government\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Returned refugees, resettlement departures, naturalisations and returned IDPs by origin and asylum country — who actually left the caseload and how.");
 
 VJSON(unhcr_unrwa, "unhcr-unrwa", "UNHCR — UNRWA registered Palestine refugees", "UNHCR — UNRWA registered Palestine refugees",
   "int_government", "government",
-  "https://api.unhcr.org/population/v1/unrwa/?limit=1000&yearFrom=2024&yearTo=2024&coa_all=true",
+  "https://api.unhcr.org/population/v1/unrwa/?limit=1000&per_page=1000&page=1&yearFrom=2024&yearTo=2024&coa_all=true",
   "items",
   "en", "[\"int\",\"government\",\"batch17\",\"high-penetrancy\"]", 86400,
   "UNRWA-registered Palestine refugee totals by field of operation (State of Palestine, Jordan, Lebanon, Syria).");

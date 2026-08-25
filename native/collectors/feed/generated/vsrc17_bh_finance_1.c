@@ -8,14 +8,14 @@
 
 VJSON(bh_fdi_stocks_by_country, "bh-fdi-stocks-by-country", "Bahrain — inward FDI stocks by counterparty country", "Bahrain — inward FDI stocks by counterparty country",
   "bh_finance", "finance",
-  "https://data.gov.bh/api/explore/v2.1/catalog/datasets/01-foreign-direct-investment-stocks-in-bhd-millions-classified-by-country/records?limit=100",
-  "results",
+  "https://data.gov.bh/api/explore/v2.1/catalog/datasets/01-foreign-direct-investment-stocks-in-bhd-millions-classified-by-country/exports/json",
+  "",
   "en", "[\"bh\",\"finance\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Annual FDI stock in BHD millions per source country, with geographical region and geographical group classification. Includes offshore jurisdictions such as the Bahamas.");
 
 VJSON(bh_quarterly_fdi_stocks, "bh-quarterly-fdi-stocks", "Bahrain — quarterly inward FDI stocks by country", "Bahrain — quarterly inward FDI stocks by country",
   "bh_finance", "finance",
-  "https://data.gov.bh/api/explore/v2.1/catalog/datasets/18-quarterly-fdi-stocks-in-bhd-millions-by-country/records?limit=100",
-  "results",
+  "https://data.gov.bh/api/explore/v2.1/catalog/datasets/18-quarterly-fdi-stocks-in-bhd-millions-by-country/exports/json",
+  "",
   "en", "[\"bh\",\"finance\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Quarterly FDI stock in BHD millions by counterparty country with year, quarter, geographical region and group. 4,347 rows, current through 2026 Q1.");

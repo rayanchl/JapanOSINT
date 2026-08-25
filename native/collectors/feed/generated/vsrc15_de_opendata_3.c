@@ -8,7 +8,7 @@
 
 VJSON(de_www_opendata_hro_de_tags, "de-www-opendata-hro-de-tags", "OpenData.HRO - Portal für offene Data der Hansestadt Rostock — tags (Germany)", "OpenData.HRO - Portal für offene Data der Hansestadt Rostock — tags (Germany)",
   "de_opendata", "opendata",
-  "https://www.opendata-hro.de/api/3/action/tag_list",
+  "https://www.opendata-hro.de/api/3/action/tag_list?all_fields=true",
   "result",
   "de", "[\"de\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at www.opendata-hro.de.");

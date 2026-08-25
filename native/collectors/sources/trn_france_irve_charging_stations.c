@@ -88,6 +88,13 @@ static int emit_page(intel_sink *sink, cJSON *doc) {
     else summary[0] = 0;
 
     intel_item it = {0};
+    /* Keyed on the upstream's OWN charge-point roaming id. The national IRVE
+     * file carries duplicate id_pdc_itinerance rows (operators re-submit the
+     * same point; sweep 2026-08-24: emitted 10,000, stored 9,418). Two records
+     * sharing the upstream's id are the upstream saying "same charge point",
+     * so collapsing them on upsert is correct — the newest submission wins.
+     * Not a rule-4b loss; second-guessing the registry's identity would
+     * fabricate a distinction. */
     it.remote_key      = pdc ? pdc : (sta ? sta : nom);
     it.title           = title;
     it.summary         = summary[0] ? summary : NULL;

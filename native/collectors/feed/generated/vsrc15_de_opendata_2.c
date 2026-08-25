@@ -127,7 +127,7 @@ VJSON(de_opendata_schleswig_holstein_de_orgs, "de-opendata-schleswig-holstein-de
 
 VJSON(de_opendata_schleswig_holstein_de_tags, "de-opendata-schleswig-holstein-de-tags", "opendata.schleswig-holstein.de — tags (Germany)", "opendata.schleswig-holstein.de — tags (Germany)",
   "de_opendata", "opendata",
-  "https://opendata.schleswig-holstein.de/api/3/action/tag_list",
+  "https://opendata.schleswig-holstein.de/api/3/action/tag_list?all_fields=true",
   "result",
   "de", "[\"de\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at opendata.schleswig-holstein.de.");
@@ -190,7 +190,7 @@ VJSON(de_suche_transparenz_hamburg_de_orgs, "de-suche-transparenz-hamburg-de-org
 
 VJSON(de_suche_transparenz_hamburg_de_tags, "de-suche-transparenz-hamburg-de-tags", "suche.transparenz.hamburg.de — tags (Germany)", "suche.transparenz.hamburg.de — tags (Germany)",
   "de_opendata", "opendata",
-  "https://suche.transparenz.hamburg.de/api/3/action/tag_list",
+  "https://suche.transparenz.hamburg.de/api/3/action/tag_list?all_fields=true",
   "result",
   "de", "[\"de\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at suche.transparenz.hamburg.de.");
@@ -253,7 +253,7 @@ VJSON(de_transparenz_karlsruhe_de_orgs, "de-transparenz-karlsruhe-de-orgs", "Tra
 
 VJSON(de_transparenz_karlsruhe_de_tags, "de-transparenz-karlsruhe-de-tags", "Transparency Portal for the City of Karlsruhe, Germany — tags (Germany)", "Transparency Portal for the City of Karlsruhe, Germany — tags (Germany)",
   "de_opendata", "opendata",
-  "https://transparenz.karlsruhe.de/api/3/action/tag_list",
+  "https://transparenz.karlsruhe.de/api/3/action/tag_list?all_fields=true",
   "result",
   "de", "[\"de\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at transparenz.karlsruhe.de.");
@@ -351,7 +351,7 @@ VJSON(de_www_offenesdatenportal_de_orgs, "de-www-offenesdatenportal-de-orgs", "w
 
 VJSON(de_www_offenesdatenportal_de_tags, "de-www-offenesdatenportal-de-tags", "www.offenesdatenportal.de — tags (Germany)", "www.offenesdatenportal.de — tags (Germany)",
   "de_opendata", "opendata",
-  "https://www.offenesdatenportal.de/api/3/action/tag_list",
+  "https://www.offenesdatenportal.de/api/3/action/tag_list?all_fields=true",
   "result",
   "de", "[\"de\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at www.offenesdatenportal.de.");

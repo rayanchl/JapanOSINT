@@ -15,7 +15,7 @@ VJSON(fi_digitraffic_rail_operators, "fi-digitraffic-rail-operators", "Digitraff
 
 VGEO(fi_digitraffic_road_maintenance_tracking, "fi-digitraffic-road-maintenance-tracking", "Digitraffic road maintenance vehicle tracking", "Digitraffic road maintenance vehicle tracking",
   "fi_transport", "transport",
-  "https://tie.digitraffic.fi/api/maintenance/v1/tracking/routes?endFrom=2026-08-16T10:00:00Z&domain=state-roads",
+  "https://tie.digitraffic.fi/api/maintenance/v1/tracking/routes?domain=state-roads",
   "fi", "[\"fi\",\"transport\",\"batch16\",\"high-penetrancy\"]", 3600,
   "GeoJSON LineString traces of actual maintenance vehicle movements: tracking id and previousId (chainable), sendingTime, startTime/endTime, created, tasks[] performed (MECHANICAL_CUT, SALTING, PLOUGHING...), direction, domain and source agency. 257 KB — real contractor activity on the road network.");
 

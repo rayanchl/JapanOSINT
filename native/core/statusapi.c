@@ -152,6 +152,23 @@ static int add_cred_status(cJSON *o, const char *id) {
  * statusapi_strip_has() below unions this list with intelapi_is_intel_id(), so
  * the membership test is unchanged and there is now one definition of each
  * half. */
+/* 2026-08: THE THEMATIC BLOCK IS RETIRED. This list used to also hide the
+ * multi-source thematic layer ids — transport, cyber, social, satellite,
+ * infrastructure, radar, river, telecom, energy, crime, economy, health,
+ * population, hazard, basemap, elevation, geocode, landuse, poi,
+ * admin-boundaries, news-feed, ocean, emergency, warnings, classifieds —
+ * which meant every source declaring one of them was invisible in
+ * /api/status AND its layer invisible in /api/layers: fetched, stored,
+ * unreachable. Those ids are now REAL layers, owned by the curated taxonomy
+ * in core/layers.def (data_type + modality declared per layer) or surfaced
+ * as declared layers; hiding them again would contradict the whole point of
+ * that table. What remains stripped is only the provider/plumbing tier:
+ * sources folded into unified-* parents (a member listed both inside its
+ * parent and as its own layer would double-serve its rows) and the sweep
+ * sub-layers sweepapi serves under the unified ids. core/layertab.c consults
+ * this same set when honouring a source's declared `.layer`, so nothing can
+ * resolve INTO a stripped id — a source whose declared layer is stripped
+ * falls to the generated catch-all instead of vanishing. */
 static const char *STRIP[] = {
   "osm-transport-trains","osm-transport-subways","osm-transport-buses",
   "osm-transport-ports","mlit-n02-stations","mlit-n07-bus-routes",
@@ -159,11 +176,6 @@ static const char *STRIP[] = {
   "maritime","maritime-ais","marine-traffic","vessel-finder",
   "aviation","narita-flights","haneda-flights","flight-adsb",
   "camera-discovery",
-  "transport","cyber","social","satellite","infrastructure",
-  "radar","river","telecom","energy","crime","economy",
-  "health","population","hazard","basemap","elevation","geocode",
-  "landuse","poi","admin-boundaries","news-feed","ocean",
-  "emergency","warnings","classifieds",
   "unified-station-footprints","unified-stations","bus-routes",
   "highway-traffic","jartic-traffic",
 };

@@ -15,14 +15,14 @@ VJSON(bh_imports_2021, "bh-imports-2021", "Bahrain — imports 2021 (HS line ite
 
 VJSON(bh_national_exports_2025, "bh-national-exports-2025", "Bahrain — national-origin exports 2025 (HS line items)", "Bahrain — national-origin exports 2025 (HS line items)",
   "bh_trade", "trade",
-  "https://data.gov.bh/api/explore/v2.1/catalog/datasets/national-export-1-2025/records?limit=100",
-  "results",
+  "https://data.gov.bh/api/explore/v2.1/catalog/datasets/national-export-1-2025/exports/json",
+  "",
   "en", "[\"bh\",\"trade\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
   "19,901 customs line items: year, month, 8-digit HS commodity code, commodity description (EN and AR), UN country code and destination country name (EN and AR), export value in BHD and USD, weight in kg, quantity and unit of measure. Filterable by partner country, which makes it a working trade-partner pivot for UAE, Saudi and Qatar.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
 
 VJSON(bh_total_exports_2026, "bh-total-exports-2026", "Bahrain — total exports 2026 (HS line items)", "Bahrain — total exports 2026 (HS line items)",
   "bh_trade", "trade",
-  "https://data.gov.bh/api/explore/v2.1/catalog/datasets/total-exports-2026/records?limit=100",
-  "results",
+  "https://data.gov.bh/api/explore/v2.1/catalog/datasets/total-exports-2026/exports/json",
+  "",
   "en", "[\"bh\",\"trade\",\"batch17\",\"high-penetrancy\"]", 86400,
   "24,241 current-year export line items with the same schema: HS code, commodity in English and Arabic, UN code and destination country, value in BHD and USD, weight, quantity and unit.");

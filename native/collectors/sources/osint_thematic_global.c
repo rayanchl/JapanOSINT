@@ -42,7 +42,7 @@ RSSX(them_rigzone, "rigzone", "Rigzone (Oil & Gas)", "Rigzone (Oil & Gas)", "osi
   "Upstream oil and gas industry news");
 
 RSSX(them_argus_energy, "argus-energy", "Reccessary Energy", "Reccessary Energy", "osint", "news",
-  "https://www.reccessary.com/en/rss", "en", "[\"osint\",\"energy\",\"thematic\",\"global\"]", 3600,
+  "https://www.reccessary.com/en/news/list/re-energy?rssfeed=1", "en", "[\"osint\",\"energy\",\"thematic\",\"global\"]", 3600,
   "Asia energy transition and power markets");
 
 RSSX(them_statnews, "statnews", "STAT News (Health)", "STAT News (Health)", "osint", "news",

@@ -71,7 +71,7 @@ VJSON(jp_catalog_data_metro_tokyo_lg_jp_orgs, "jp-catalog-data-metro-tokyo-lg-jp
 
 VJSON(jp_catalog_data_metro_tokyo_lg_jp_tags, "jp-catalog-data-metro-tokyo-lg-jp-tags", "catalog.data.metro.tokyo.lg.jp — tags (Japan)", "catalog.data.metro.tokyo.lg.jp — tags (Japan)",
   "jp_opendata", "opendata",
-  "https://catalog.data.metro.tokyo.lg.jp/api/3/action/tag_list",
+  "https://catalog.data.metro.tokyo.lg.jp/api/3/action/tag_list?all_fields=true",
   "result",
   "ja", "[\"jp\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at catalog.data.metro.tokyo.lg.jp.");
@@ -211,7 +211,7 @@ VJSON(jp_data_city_yokohama_lg_jp_orgs, "jp-data-city-yokohama-lg-jp-orgs", "dat
 
 VJSON(jp_data_city_yokohama_lg_jp_tags, "jp-data-city-yokohama-lg-jp-tags", "data.city.yokohama.lg.jp — tags (Japan)", "data.city.yokohama.lg.jp — tags (Japan)",
   "jp_opendata", "opendata",
-  "https://data.city.yokohama.lg.jp/api/3/action/tag_list",
+  "https://data.city.yokohama.lg.jp/api/3/action/tag_list?all_fields=true",
   "result",
   "ja", "[\"jp\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at data.city.yokohama.lg.jp.");
@@ -253,7 +253,7 @@ VJSON(jp_opendata_city_minato_tokyo_jp_orgs, "jp-opendata-city-minato-tokyo-jp-o
 
 VJSON(jp_opendata_city_minato_tokyo_jp_tags, "jp-opendata-city-minato-tokyo-jp-tags", "opendata.city.minato.tokyo.jp — tags (Japan)", "opendata.city.minato.tokyo.jp — tags (Japan)",
   "jp_opendata", "opendata",
-  "https://opendata.city.minato.tokyo.jp/api/3/action/tag_list",
+  "https://opendata.city.minato.tokyo.jp/api/3/action/tag_list?all_fields=true",
   "result",
   "ja", "[\"jp\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at opendata.city.minato.tokyo.jp.");

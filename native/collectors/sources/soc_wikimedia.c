@@ -298,7 +298,17 @@ static int recentchanges(const source_ctx *ctx, intel_sink *sink,
     jcopy(p, "comment", c, "comment");
     char link[500], rk[400], summary[400];
     wiki_link(link, sizeof link, host, title);
-    snprintf(rk, sizeof rk, "%s|%s|%s", host, title, ts ? ts : "");
+    /* IDENTITY (rule 4b, measured): host|title|timestamp keyed same-second
+     * edits to one page onto each other (bot bursts) — sweep 2026-08-24:
+     * wikidata 50 emitted / 46 stored, meta 50 / 48. rcid is MediaWiki's own
+     * per-change identity (now requested via rcprop=ids), so it leads the key
+     * when present; the old triple remains the fallback so rows without it
+     * keep their previous uids. */
+    const cJSON *rcid = cJSON_GetObjectItem(c, "rcid");
+    if (cJSON_IsNumber(rcid))
+      snprintf(rk, sizeof rk, "%s|rcid=%.0f", host, rcid->valuedouble);
+    else
+      snprintf(rk, sizeof rk, "%s|%s|%s", host, title, ts ? ts : "");
     snprintf(summary, sizeof summary, "%s by %s%s%.250s",
              jo_sv(c, "type") ? jo_sv(c, "type") : "edit",
              jo_sv(c, "user") ? jo_sv(c, "user") : "?",
@@ -314,7 +324,7 @@ static int recentchanges(const source_ctx *ctx, intel_sink *sink,
 static int run_wikidata_rc(const source_ctx *ctx, intel_sink *sink) {
   return recentchanges(ctx, sink, "www.wikidata.org",
       "https://www.wikidata.org/w/api.php?action=query&list=recentchanges"
-      "&rcnamespace=0&rclimit=50&rcprop=title%7Ctimestamp%7Cuser%7Ccomment"
+      "&rcnamespace=0&rclimit=50&rcprop=ids%7Ctitle%7Ctimestamp%7Cuser%7Ccomment"
       "&format=json",
       "wikidata-recentchanges", "wikidata-change",
       "[\"wikidata\",\"recentchanges\",\"knowledge-graph\"]");
@@ -323,7 +333,7 @@ static int run_wikidata_rc(const source_ctx *ctx, intel_sink *sink) {
 static int run_meta_rc(const source_ctx *ctx, intel_sink *sink) {
   return recentchanges(ctx, sink, "meta.wikimedia.org",
       "https://meta.wikimedia.org/w/api.php?action=query&list=recentchanges"
-      "&rclimit=50&rcprop=title%7Ctimestamp%7Cuser%7Ccomment&format=json",
+      "&rclimit=50&rcprop=ids%7Ctitle%7Ctimestamp%7Cuser%7Ccomment&format=json",
       "wikimedia-meta-recentchanges", "wikimedia-global-action",
       "[\"wikimedia\",\"meta\",\"global-actions\",\"rename\"]");
 }

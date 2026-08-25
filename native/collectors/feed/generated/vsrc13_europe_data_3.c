@@ -8,8 +8,8 @@
 
 VJSON(eur_ods_bzh_aires_et_produits_aocaop_et_igp, "eur-ods-bzh-aires-et-produits-aocaop-et-igp", "Region Bretagne open data — Aires et produits AOC/AOP et IGP - Bretagne", "Region Bretagne open data — Aires et produits AOC/AOP et IGP - Bretagne",
   "europe_data", "opendata",
-  "https://data.bretagne.bzh/api/explore/v2.1/catalog/datasets/aires-et-produits-aocaop-et-igp/records?limit=100",
-  "results",
+  "https://data.bretagne.bzh/api/explore/v2.1/catalog/datasets/aires-et-produits-aocaop-et-igp/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Aires et produits AOC/AOP et IGP - Bretagne' dataset published by Region Bretagne open data.");
 
@@ -141,8 +141,8 @@ VJSON(eur_ods_gent_schoolstraten_gent, "eur-ods-gent-schoolstraten-gent", "City 
 
 VJSON(eur_ods_gent_wegen_north_sea_port, "eur-ods-gent-wegen-north-sea-port", "City of Ghent open data — Wegen North Sea Port", "City of Ghent open data — Wegen North Sea Port",
   "europe_data", "opendata",
-  "https://data.stad.gent/api/explore/v2.1/catalog/datasets/wegen-north-sea-port/records?limit=100",
-  "results",
+  "https://data.stad.gent/api/explore/v2.1/catalog/datasets/wegen-north-sea-port/exports/json",
+  "",
   "nl", "[\"bel\",\"opendata\"]", 86400,
   "Records of the 'Wegen North Sea Port' dataset published by City of Ghent open data.");
 
@@ -169,8 +169,8 @@ VJSON(eur_ods_idf_formations_sanitaires_sociales, "eur-ods-idf-formations-sanita
 
 VJSON(eur_ods_idf_sections_des_continuites_ecologiqu, "eur-ods-idf-sections-des-continuites-ecologiqu", "Region Ile-de-France open data — Sections des continuités écologiques, coupures d'urbanisation, liaisons agricoles ou liaisons vertes localisées d'Île-de-France sur la CDGT du Sdrif approuvé par décret le 27 décembre 2013", "Region Ile-de-France open data — Sections des continuités écologiques, coupures d'urbanisation, liaisons agricoles ou liaisons vertes localisées d'Île-de-France sur la CDGT du Sdrif approuvé par décret le 27 décembre 2013",
   "europe_data", "opendata",
-  "https://data.iledefrance.fr/api/explore/v2.1/catalog/datasets/sections-des-continuites-ecologiques-coupures-durbanisation-liaisons-agricoles-0/records?limit=100",
-  "results",
+  "https://data.iledefrance.fr/api/explore/v2.1/catalog/datasets/sections-des-continuites-ecologiques-coupures-durbanisation-liaisons-agricoles-0/exports/json?select=geo_point_2d%2Cgeo_shape%2Cobjectid%2Cshape_leng%2Ccode%20as%20code_dim%2Cnum_id%2Cinfo_e2016%2Cst_length_shape",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Sections des continuités écologiques, coupures d'urbanisation, liaisons agricoles ou liaisons vertes localisées d'Île-de-France sur la CDGT du Sdrif approuvé par décret le 27 décembre 2013' dataset published by Region Ile-de-France open data.");
 
@@ -197,8 +197,8 @@ VJSON(eur_ods_idfm_sanitaires_reseau_ratp, "eur-ods-idfm-sanitaires-reseau-ratp"
 
 VJSON(eur_ods_idfm_schema_gares_pf, "eur-ods-idfm-schema-gares-pf", "Ile-de-France Mobilites open data — Gares et stations du réseau ferré schématique d'Île-de-France (petit format)", "Ile-de-France Mobilites open data — Gares et stations du réseau ferré schématique d'Île-de-France (petit format)",
   "europe_data", "opendata",
-  "https://data.iledefrance-mobilites.fr/api/explore/v2.1/catalog/datasets/schema_gares-pf/records?limit=100",
-  "results",
+  "https://data.iledefrance-mobilites.fr/api/explore/v2.1/catalog/datasets/schema_gares-pf/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Gares et stations du réseau ferré schématique d'Île-de-France (petit format)' dataset published by Ile-de-France Mobilites open data.");
 
@@ -239,8 +239,8 @@ VJSON(eur_ods_issy, "eur-ods-issy", "Issy-les-Moulineaux open data — dataset c
 
 VJSON(eur_ods_issy_bornes_de_recharge_electriques_acc, "eur-ods-issy-bornes-de-recharge-electriques-acc", "Issy-les-Moulineaux open data — Bornes de recharge électriques accessibles au grand public", "Issy-les-Moulineaux open data — Bornes de recharge électriques accessibles au grand public",
   "europe_data", "opendata",
-  "https://data.issy.com/api/explore/v2.1/catalog/datasets/bornes-de-recharge-electriques-accessibles-au-grand-public/records?limit=100",
-  "results",
+  "https://data.issy.com/api/explore/v2.1/catalog/datasets/bornes-de-recharge-electriques-accessibles-au-grand-public/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Bornes de recharge électriques accessibles au grand public' dataset published by Issy-les-Moulineaux open data.");
 
@@ -288,8 +288,8 @@ VJSON(eur_ods_laregion, "eur-ods-laregion", "Region Occitanie open data — data
 
 VJSON(eur_ods_laregion_consultation_lycee_de_demain, "eur-ods-laregion-consultation-lycee-de-demain", "Region Occitanie open data — Consultation lycée de demain", "Region Occitanie open data — Consultation lycée de demain",
   "europe_data", "opendata",
-  "https://data.laregion.fr/api/explore/v2.1/catalog/datasets/consultation-lycee-de-demain/records?limit=100",
-  "results",
+  "https://data.laregion.fr/api/explore/v2.1/catalog/datasets/consultation-lycee-de-demain/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Consultation lycée de demain' dataset published by Region Occitanie open data.");
 
@@ -309,8 +309,8 @@ VJSON(eur_ods_laregion_gares_routieres_autocar_en_occitan, "eur-ods-laregion-gar
 
 VJSON(eur_ods_laregion_individus_presumes_emigres_revolut, "eur-ods-laregion-individus-presumes-emigres-revolut", "Region Occitanie open data — Individus présumés émigrés pendant la Révolution française (1791-1815)", "Region Occitanie open data — Individus présumés émigrés pendant la Révolution française (1791-1815)",
   "europe_data", "opendata",
-  "https://data.laregion.fr/api/explore/v2.1/catalog/datasets/individus_presumes_emigres_revolution_francaise/records?limit=100",
-  "results",
+  "https://data.laregion.fr/api/explore/v2.1/catalog/datasets/individus_presumes_emigres_revolution_francaise/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Individus présumés émigrés pendant la Révolution française (1791-1815)' dataset published by Region Occitanie open data.");
 
@@ -337,8 +337,8 @@ VJSON(eur_ods_lda_224400028_contributions_participat, "eur-ods-lda-224400028-con
 
 VJSON(eur_ods_lda_224400028_donnees_essentielles_com, "eur-ods-lda-224400028-donnees-essentielles-com", "Departement de Loire-Atlantique open data — Marchés publics : données essentielles de la commande publique du Département de Loire-Atlantique", "Departement de Loire-Atlantique open data — Marchés publics : données essentielles de la commande publique du Département de Loire-Atlantique",
   "europe_data", "opendata",
-  "https://data.loire-atlantique.fr/api/explore/v2.1/catalog/datasets/224400028_donnees-essentielles-commande-publique-departement-loire-atlantique/records?limit=100",
-  "results",
+  "https://data.loire-atlantique.fr/api/explore/v2.1/catalog/datasets/224400028_donnees-essentielles-commande-publique-departement-loire-atlantique/exports/json?select=id%20as%20id_dim%2Cuuid%20as%20uuid_dim%2Ctypecontrat%2Cacheteur_id%2Cacheteur_nom%2Cnature%2Cobjet%2Ccodecpv%2Cprocedure%2Clieuexecutiontypecode%2Clieuexecutioncode%2Clieuexecutionnom%2Cdureemois%2Cdatenotification%2Cdatepublicationdonnees%2Cmontant%2Cformeprix%2Ctitulairetypeidentifiant%2Ctitulaireidentifiant%2Ctitulairedenominationsociale%2Cmodifications",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Marchés publics : données essentielles de la commande publique du Département de Loire-Atlantique' dataset published by Departement de Loire-Atlantique open data.");
 
@@ -400,8 +400,8 @@ VJSON(eur_ods_namur_carte1_espvie, "eur-ods-namur-carte1-espvie", "Ville de Namu
 
 VJSON(eur_ods_namur_cim_sepultures_sihl_citoyen, "eur-ods-namur-cim-sepultures-sihl-citoyen", "Ville de Namur open data — Namur - Cimetières - Inventaire des SIHL", "Ville de Namur open data — Namur - Cimetières - Inventaire des SIHL",
   "europe_data", "opendata",
-  "https://data.namur.be/api/explore/v2.1/catalog/datasets/cim-sepultures-sihl-citoyen/records?limit=100",
-  "results",
+  "https://data.namur.be/api/explore/v2.1/catalog/datasets/cim-sepultures-sihl-citoyen/exports/json",
+  "",
   "fr", "[\"bel\",\"opendata\"]", 86400,
   "Records of the 'Namur - Cimetières - Inventaire des SIHL' dataset published by Ville de Namur open data.");
 

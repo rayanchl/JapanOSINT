@@ -51,6 +51,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char *pj = cJSON_PrintUnformatted(pr);
 
     intel_item it = {0};
+    /* Keyed on the station's OWN code. elencoStazioni/0 lists border stations
+     * once per region they touch (same codiceStazione, different codReg) —
+     * verified live 2026-08-25: 1,136 code occurrences, 602 distinct, which is
+     * exactly the sweep's emitted 716 / stored 602. Two rows sharing the code
+     * are the same physical station, so collapsing them on upsert is correct;
+     * not a rule-4b loss. */
     it.remote_key      = code ? code : nome;
     it.title           = nome ? nome : code;
     it.summary         = code;

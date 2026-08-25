@@ -215,14 +215,14 @@ VRSS(sci_eso_top_news, "sci-eso-top-news", "ESO top news", "ヨーロッパ南�
 
 VJSON(sci_exoarchive_direct_imaging, "sci-exoarchive-direct-imaging", "Directly imaged exoplanets", "直接撮像された系外惑星",
   "space", "astronomy",
-  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,disc_year,ra,dec+from+ps+where+discoverymethod+like+%27%25Imaging%25%27&format=json",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,disc_year,pl_refname,default_flag,ra,dec+from+ps+where+discoverymethod+like+%27%25Imaging%25%27&format=json",
   "",
   "en", "[\"exoplanet\",\"imaging\"]", 86400,
   "Planets detected by direct imaging.");
 
 VJSON(sci_exoarchive_k2pandc, "sci-exoarchive-k2pandc", "K2 planets and candidates", "K2 惑星・候補天体",
   "space", "astronomy",
-  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,k2_name,disposition+from+k2pandc&format=json",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,k2_name,disposition,pl_refname,default_flag+from+k2pandc&format=json",
   "",
   "en", "[\"exoplanet\",\"k2\"]", 86400,
   "K2 mission confirmed planets and candidates.");
@@ -243,14 +243,14 @@ VJSON(sci_exoarchive_koi_cumulative, "sci-exoarchive-koi-cumulative", "Kepler Ob
 
 VJSON(sci_exoarchive_microlensing, "sci-exoarchive-microlensing", "Microlensing-discovered exoplanets", "重力マイクロレンズ発見の系外惑星",
   "space", "astronomy",
-  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,disc_year,ra,dec+from+ps+where+discoverymethod+like+%27%25Microlensing%25%27&format=json",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,disc_year,pl_refname,default_flag,ra,dec+from+ps+where+discoverymethod+like+%27%25Microlensing%25%27&format=json",
   "",
   "en", "[\"exoplanet\",\"microlensing\"]", 86400,
   "Planets found by gravitational microlensing surveys.");
 
 VJSON(sci_exoarchive_ps, "sci-exoarchive-ps", "NASA Exoplanet Archive planetary systems", "NASA系外惑星アーカイブ 惑星系表",
   "space", "astronomy",
-  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,hostname,disc_year,discoverymethod,ra,dec+from+ps&format=json",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,hostname,disc_year,discoverymethod,pl_refname,default_flag,ra,dec+from+ps&format=json",
   "",
   "en", "[\"exoplanet\",\"catalogue\",\"nasa\"]", 86400,
   "Every confirmed exoplanet with discovery method, year and host star coordinates.");
@@ -264,14 +264,14 @@ VJSON(sci_exoarchive_pscomppars, "sci-exoarchive-pscomppars", "NASA Exoplanet Ar
 
 VJSON(sci_exoarchive_stellarhosts, "sci-exoarchive-stellarhosts", "Exoplanet host star catalogue", "系外惑星 主星カタログ",
   "space", "astronomy",
-  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,sy_dist,sy_vmag,ra,dec+from+stellarhosts&format=json",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,st_refname,sy_dist,sy_vmag,ra,dec+from+stellarhosts&format=json",
   "",
   "en", "[\"exoplanet\",\"stars\"]", 86400,
   "Host stars of known planetary systems with distance and magnitude.");
 
 VJSON(sci_exoarchive_tess_confirmed, "sci-exoarchive-tess-confirmed", "TESS-discovered confirmed planets", "TESS発見の確定惑星",
   "space", "astronomy",
-  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,disc_facility,disc_year,ra,dec+from+ps+where+disc_facility+like+%27%25TESS%25%27&format=json",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,disc_facility,disc_year,pl_refname,default_flag,ra,dec+from+ps+where+disc_facility+like+%27%25TESS%25%27&format=json",
   "",
   "en", "[\"exoplanet\",\"tess\"]", 86400,
   "Confirmed planets whose discovery facility was TESS.");

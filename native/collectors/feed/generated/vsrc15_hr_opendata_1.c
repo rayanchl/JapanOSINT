@@ -43,7 +43,7 @@ VJSON(hr_data_zagreb_hr_orgs, "hr-data-zagreb-hr-orgs", "data.zagreb.hr Official
 
 VJSON(hr_data_zagreb_hr_tags, "hr-data-zagreb-hr-tags", "data.zagreb.hr Official Open Data Portal — tags (Croatia)", "data.zagreb.hr Official Open Data Portal — tags (Croatia)",
   "hr_opendata", "opendata",
-  "https://data.zagreb.hr/api/3/action/tag_list",
+  "https://data.zagreb.hr/api/3/action/tag_list?all_fields=true",
   "result",
   "hr", "[\"hr\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at data.zagreb.hr.");

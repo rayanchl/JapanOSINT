@@ -1756,7 +1756,11 @@ void hp_register(const hp_source *specs, int n, source_def *defs) {
       .url                 = s->portal,
       .description         = s->description,
       .license             = NULL,
-      .layer               = NULL,              /* services never map-layer */
+      /* NULL (the default) still means "not a map layer" — right for the
+       * entity-pivot services that dominate this registry. A row may now
+       * opt in by declaring hp_source.layer (see hpengine.h); the field is
+       * passed through untouched, never invented. */
+      .layer               = s->layer,
       .free_tier           = s->free_tier,
     };
     registry_add(&defs[i]);

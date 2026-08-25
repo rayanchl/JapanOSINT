@@ -590,6 +590,31 @@ static inline int od_js_row(intel_sink *sink, const od_jsctx *jc, int flat,
     pos[d] = rem % sz;
     rem /= sz;
   }
+  /* Identity for the sink. Without uid OR remote_key core/intel.c refuses the
+   * item (-1) and od_emit converts that to 0 — so every JSON-stat observation
+   * in the fleet was parsed, titled and then dropped at the sink, silently
+   * (measured: stats-se-scb-table stored 0 of 2 live observations). The key is
+   * the dimension codes the observation is addressed by — the upstream's own
+   * coordinates — so it is stable when the table's selection grows; the flat
+   * index alone is NOT (it shifts with the selection and would re-insert the
+   * whole table as new rows on every layout change), so it only backstops a
+   * dimension whose code list is missing. */
+  char rk[320];
+  int rkoff = 0;
+  for (int d = 0; d < jc->ndim; d++) {
+    const cJSON *rdim = cJSON_GetObjectItem(jc->dimension, jc->ids[d]);
+    const char *rcode = od_js_code(rdim, pos[d]);
+    if (rkoff < (int)sizeof rk - 1) {
+      if (rcode)
+        rkoff += snprintf(rk + rkoff, sizeof rk - (size_t)rkoff, "%s%s=%s",
+                          rkoff ? "|" : "", jc->ids[d], rcode);
+      else
+        rkoff += snprintf(rk + rkoff, sizeof rk - (size_t)rkoff, "%s%s=#%d",
+                          rkoff ? "|" : "", jc->ids[d], pos[d]);
+      if (rkoff > (int)sizeof rk - 1) rkoff = (int)sizeof rk - 1;
+    }
+  }
+  if (rkoff == 0) snprintf(rk, sizeof rk, "obs-%d", flat);
   for (int d = 0; d < jc->ndim; d++) {
     const cJSON *dim = cJSON_GetObjectItem(jc->dimension, jc->ids[d]);
     const char *code = od_js_code(dim, pos[d]);
@@ -612,6 +637,7 @@ static inline int od_js_row(intel_sink *sink, const od_jsctx *jc, int flat,
 
   intel_item it = {0};
   it.title = title;
+  it.remote_key = rk;
   it.link = jc->link;
   it.record_type = jc->record_type;
   it.tags_json = jc->tags_json;

@@ -43,8 +43,8 @@ VJSON(eur_ods_stras_equipement_sport, "eur-ods-stras-equipement-sport", "Euromet
 
 VJSON(eur_ods_stras_prenom_nouveaux_nes, "eur-ods-stras-prenom-nouveaux-nes", "Eurometropole de Strasbourg open data — Prénom des nouveaux nés à Strasbourg", "Eurometropole de Strasbourg open data — Prénom des nouveaux nés à Strasbourg",
   "europe_data", "opendata",
-  "https://data.strasbourg.eu/api/explore/v2.1/catalog/datasets/prenom-nouveaux-nes/records?limit=100",
-  "results",
+  "https://data.strasbourg.eu/api/explore/v2.1/catalog/datasets/prenom-nouveaux-nes/exports/json",
+  "",
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Prénom des nouveaux nés à Strasbourg' dataset published by Eurometropole de Strasbourg open data.");
 
@@ -78,8 +78,8 @@ VJSON(eur_ods_tg_dek_aa_1, "eur-ods-tg-dek-aa-1", "Kanton Thurgau open data — 
 
 VJSON(eur_ods_tg_sk_stat_130, "eur-ods-tg-sk-stat-130", "Kanton Thurgau open data — Grossratswahlen 2024: Kandidatenstimmen nach Herkunft der Stimmen (Panaschierstatistik) Bezirk Münchwilen", "Kanton Thurgau open data — Grossratswahlen 2024: Kandidatenstimmen nach Herkunft der Stimmen (Panaschierstatistik) Bezirk Münchwilen",
   "europe_data", "opendata",
-  "https://data.tg.ch/api/explore/v2.1/catalog/datasets/sk-stat-130/records?limit=100",
-  "results",
+  "https://data.tg.ch/api/explore/v2.1/catalog/datasets/sk-stat-130/exports/json",
+  "",
   "de", "[\"che\",\"opendata\"]", 86400,
   "Records of the 'Grossratswahlen 2024: Kandidatenstimmen nach Herkunft der Stimmen (Panaschierstatistik) Bezirk Münchwilen' dataset published by Kanton Thurgau open data.");
 

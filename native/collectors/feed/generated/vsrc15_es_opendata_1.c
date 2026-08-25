@@ -43,7 +43,7 @@ VJSON(es_datos_madrid_es_orgs, "es-datos-madrid-es-orgs", "Datos abiertos — or
 
 VJSON(es_datos_madrid_es_tags, "es-datos-madrid-es-tags", "Datos abiertos — tags (Spain)", "Datos abiertos — tags (Spain)",
   "es_opendata", "opendata",
-  "https://datos.madrid.es/api/3/action/tag_list",
+  "https://datos.madrid.es/api/3/action/tag_list?all_fields=true",
   "result",
   "es", "[\"es\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at datos.madrid.es.");
@@ -344,7 +344,7 @@ VJSON(es_opendata_aragon_es_orgs, "es-opendata-aragon-es-orgs", "Aragón Open Da
 
 VJSON(es_opendata_aragon_es_tags, "es-opendata-aragon-es-tags", "Aragón Open Data — tags (Spain)", "Aragón Open Data — tags (Spain)",
   "es_opendata", "opendata",
-  "https://opendata.aragon.es/api/3/action/tag_list",
+  "https://opendata.aragon.es/api/3/action/tag_list?all_fields=true",
   "result",
   "es", "[\"es\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at opendata.aragon.es.");
@@ -400,7 +400,7 @@ VJSON(es_opendata_ugr_es_orgs, "es-opendata-ugr-es-orgs", "Bienvenido a OpenData
 
 VJSON(es_opendata_ugr_es_tags, "es-opendata-ugr-es-tags", "Bienvenido a OpenData UGR — tags (Spain)", "Bienvenido a OpenData UGR — tags (Spain)",
   "es_opendata", "opendata",
-  "https://opendata.ugr.es/api/3/action/tag_list",
+  "https://opendata.ugr.es/api/3/action/tag_list?all_fields=true",
   "result",
   "es", "[\"es\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at opendata.ugr.es.");

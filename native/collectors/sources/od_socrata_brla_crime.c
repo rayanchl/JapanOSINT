@@ -1,6 +1,6 @@
 /* Baton Rouge police crime incidents (Socrata row tier) - HISTORICAL archive.
  * Endpoint: https://data.brla.gov/resource/fabb-cnnu.json
- *           ?$limit=100&$order=offense_date%20DESC
+ *           ?$limit=100&$order=offense_date%20DESC&$select=*,:id
  * This is the LEGACY dataset: its most recent rows are from 2021, so it is
  * presented as a historical archive, not a live incident feed. Bare JSON
  * array. Emits, per incident: file_number, offense_date, offense_time, crime,
@@ -14,7 +14,7 @@
 #define SID "socrata-brla-crime"
 static const char *URL =
   "https://data.brla.gov/resource/fabb-cnnu.json"
-  "?$limit=100&$order=offense_date%20DESC";
+  "?$limit=100&$order=offense_date%20DESC&$select=*,:id";
 static const char *const TITLE_KEYS[] = { "crime", "offense_desc", "offense",
                                           NULL };
 static const char *const SUM_KEYS[] = { "address", "district", NULL };
@@ -26,7 +26,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   sp.link = URL;
   sp.title_keys = TITLE_KEYS;
   sp.summary_keys = SUM_KEYS;
-  sp.id_key = "file_number";
+  sp.id_key = ":id";   /* rule 4b, measured: file_number recurs per offense of one incident (sweep: 99 emitted, 65 stored); :id is Socrata's own per-row identity, requested via $select=*,:id */
   sp.date_key = "offense_date";
   sp.title_prefix = "Baton Rouge PD:";
   return od_rc(SID, od_fetch_rows(ctx, sink, URL, NULL, &sp));

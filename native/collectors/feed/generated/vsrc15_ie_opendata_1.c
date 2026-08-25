@@ -224,7 +224,7 @@ VJSON(ie_data_gov_ie_orgs, "ie-data-gov-ie-orgs", "data.gov.ie — orgs (Ireland
 
 VJSON(ie_data_gov_ie_tags, "ie-data-gov-ie-tags", "data.gov.ie — tags (Ireland)", "data.gov.ie — tags (Ireland)",
   "ie_opendata", "opendata",
-  "https://data.gov.ie/api/3/action/tag_list",
+  "https://data.gov.ie/api/3/action/tag_list?all_fields=true",
   "result",
   "en", "[\"ie\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at data.gov.ie.");

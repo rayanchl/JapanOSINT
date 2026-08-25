@@ -915,12 +915,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       return;
     }
 
-    /* GET /api/layers — registry layers, STRIP-filtered, with each layer's
-     * sources + time-slider disposition. Node crashed here (a registry source
-     * had layer:null → null.replace → 500); miscapi_list_layers skips
-     * layerless sources instead so the Map layer picker actually loads. */
+    /* GET /api/layers — the layer TAXONOMY (v2): curated rows from
+     * core/layers.def (data_type + modality declared), declared layers from
+     * source .layer fields, and the generated per-record_type catch-all that
+     * keeps every geocoded intel_items row reachable. Bare array (v1 shape);
+     * contract fixture tests/contract/_api_layers_v2.json. */
     if (eq(u, "/api/layers")) {
-      char *body = miscapi_list_layers();
+      char *body = miscapi_list_layers(g_db);
       if (!body) { reply_json(c, 500, "{\"error\":\"Failed to list layers\"}"); return; }
       reply_json(c, 200, body);
       free(body);
@@ -1109,9 +1110,20 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 200, body); free(body); return;
     }
 
-    /* GET /api/layers/:layerId/geojson */
+    /* GET /api/layers/:layerId/geojson?limit=&offset= — the REAL fused
+     * FeatureCollection for a layer (this was a permanent-[] stub while the
+     * point data hid behind per-source /api/data ids). Bounded with in-band
+     * records_available/truncated/next_offset meta; limit/offset page the
+     * rest (dataapi.h). */
     if (seg(u, "/api/layers/", "/geojson", p, sizeof p)) {
-      char *body = miscapi_layer_geojson(p);
+      int lim = 0, off = 0;
+      { char v[32] = {0};
+        if (mg_http_get_var(&hm->query, "limit", v, sizeof v) > 0)
+          lim = atoi(v);
+        v[0] = 0;
+        if (mg_http_get_var(&hm->query, "offset", v, sizeof v) > 0)
+          off = atoi(v); }
+      char *body = dataapi_layer_fc(g_db, p, lim, off);
       if (!body) { reply_json(c, 404, "{\"error\":\"Layer not found\"}"); return; }
       reply_json(c, 200, body); free(body); return;
     }

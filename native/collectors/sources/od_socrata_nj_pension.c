@@ -37,7 +37,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (!props) continue;
     od_copy_scalars(props, r);
 
+    /* Identity (rule 4b): without uid OR remote_key core/intel.c refuses the
+     * item, so this source parsed 100 members and stored 0 on every run. The
+     * dataset has no id column; name + enrollment date + location code is the
+     * upstream's own distinguishing tuple and is stable across snapshots.
+     * as_of_date alone would collapse the whole quarterly file onto one uid. */
+    char rk[320];
+    snprintf(rk, sizeof rk, "%s|%s|%s|%s",
+             last ? last : "-", first ? first : "-",
+             od_s(r, "enrollment_date") ? od_s(r, "enrollment_date") : "-",
+             od_s(r, "location_code") ? od_s(r, "location_code") : "-");
+
     intel_item it = {0};
+    it.remote_key = rk;
     it.title = title;
     it.summary = emp;
     it.published_at = od_s(r, "as_of_date");

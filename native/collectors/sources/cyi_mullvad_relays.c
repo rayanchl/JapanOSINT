@@ -27,7 +27,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) { fprintf(stderr, "[mullvad-relays] fetch/parse failed\n"); return -1; }
 
   const cJSON *locs = cJSON_GetObjectItem(doc, "locations");
-  const cJSON *relays = cJSON_GetObjectItem(doc, "relays");
+  /* app/v1/relays.json moved the relay list one level down: the top level is
+   * now {locations:{...}, wireguard:{relays:[...]}} (measured 2026-08-25;
+   * the old top-level "relays" is gone and this collector stored 0 while the
+   * endpoint served 161 KB of live relays). cJSON_GetObjectItem is NULL-safe,
+   * so a future shape change degrades back to an honest empty, not a crash. */
+  const cJSON *wg = cJSON_GetObjectItem(doc, "wireguard");
+  const cJSON *relays = cJSON_GetObjectItem(wg, "relays");
+  if (!relays) relays = cJSON_GetObjectItem(doc, "relays");
 
   int n = 0;
   const cJSON *r;

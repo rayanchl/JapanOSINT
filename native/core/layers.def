@@ -1,0 +1,276 @@
+/* core/layers.def — the curated map-layer taxonomy, as data.
+ *
+ * WHY THIS FILE EXISTS. /api/layers used to be an accident of history: a
+ * layer existed iff some source happened to declare a `.layer` string, ~40
+ * thematic ids were then hidden again by statusapi's STRIP[], and the ~13,000
+ * generated sources (whose `.layer` is NULL by construction) could never
+ * appear at all. The map could reach a few hundred sources; everything else
+ * was fetched, stored — and unreachable. This table replaces that accident
+ * with a decision.
+ *
+ * THE GROUPING RULE (the whole point — user requirement):
+ *   layers group by DATA TYPE and MODALITY, not by publisher and not by
+ *   country. Two satellite-image feeds from different countries FUSE into one
+ *   layer because they are the same kind of data rendered the same way. A
+ *   police crime-REPORT feed (discrete incident points) and a police
+ *   crime-STATISTICS feed (area densities rendered as a heatmap) NEVER fuse,
+ *   even from the same police force, because they are different modalities of
+ *   different data types. That is why `modality` is a DECLARED column here and
+ *   is never inferred from a category string: VGEO's `crime` category cannot
+ *   say points-vs-density, so a human read the six sources it covers (all
+ *   ArcGIS incident-point datasets — see the police-crime-points row) and
+ *   declared it. When nobody has made that call yet the modality is NULL,
+ *   which serializes as JSON null: "not decided", never a guess (rule 1).
+ *
+ * HOW MEMBERSHIP WORKS. `match` is a '|'-separated list of terms, each
+ * `key:value`:
+ *     id:X      source id equals X
+ *     idp:X     source id starts with X
+ *     layer:X   the source's own declared `.layer` equals X
+ *     cat:X     the source's registry category equals X
+ * core/layertab.c resolves EVERY registered source against this table IN
+ * TABLE ORDER, FIRST MATCH WINS, and a source belongs to AT MOST ONE layer.
+ * That single-assignment rule is what makes the no-fuse guarantee real (a
+ * source cannot serve in both a points layer and a heatmap layer) and what
+ * makes the coverage arithmetic exact: every geocoded intel_items row is
+ * served by exactly one layer — its source's layer, or, when its source
+ * resolves to no layer at all, the generated per-record_type catch-all layer
+ * (`rt-<record_type>` / `unassigned-geocoded`) that core/miscapi.c derives
+ * from the database. Sum the layers' record counts and you get
+ * COUNT(*) WHERE lat IS NOT NULL, with nothing counted twice and nothing
+ * unreachable.
+ *
+ * ORDER MATTERS. Specific rows come before broad ones: police-crime-heatmap
+ * (explicit statistics sources) is above police-crime-points (cat:crime),
+ * so the prefectural monthly-count source can never leak into the incident
+ * layer, and police-facilities (station locations — infrastructure, not
+ * crime events) is above both.
+ *
+ * A row with members nobody has registered yet — or whose members have no
+ * geocoded rows — serves an honest empty FeatureCollection, never invented
+ * points (rule 1).
+ *
+ * Columns: LAYER(id, name, category, data_type, modality, match)
+ *   modality ∈ "point" | "heatmap" | "line" | "polygon" | "raster" | NULL
+ *   (NULL = mixed/undecided, serialized as JSON null).
+ */
+
+/* ── Crime & policing — the modality split this table exists to enforce ── */
+
+/* Aggregate counts per area (pref-police-crime = 47 prefectural monthly
+ * crime-count CSVs; estat-crime = national crime statistics). Densities,
+ * rendered as a heatmap. MUST stay above police-crime-points: both carry
+ * category "crime" and would otherwise fall into the incident layer. */
+LAYER("police-crime-heatmap", "Police Crime Statistics", "crime",
+      "crime-density", "heatmap",
+      "id:pref-police-crime|id:estat-crime")
+
+/* Facility locations (police stations, koban). Infrastructure points, not
+ * crime events — kept out of both crime layers on data_type. */
+LAYER("police-facilities", "Police Facilities", "safety",
+      "facility-location", "point",
+      "id:police-crime|id:koban-map|layer:koban-map")
+
+/* Discrete crime/incident reports. Fuses across countries by design:
+ * police-incidents (JP prefectural crime maps, declared layer "crime"),
+ * socrata-brla-crime (Baton Rouge, US), UK_POLICE_CRIME (data.police.uk
+ * street crimes) and the six VGEO cat:crime sources — nam-ags-nibrs-*,
+ * nam-cambridgema-police-*, nam-norfolk-blocked-railroad-*,
+ * nam-sonomacounty-ca-sheriff-*, nam-ags-police-crime-mapping-*,
+ * us-arcgishub-crime-incidents — each verified by hand to be an ArcGIS
+ * incident-point dataset, which is what lets `cat:crime` carry a declared
+ * "point" here without inferring anything. */
+LAYER("police-crime-points", "Police Crime Reports", "crime",
+      "crime-report", "point",
+      "layer:crime|cat:crime|id:UK_POLICE_CRIME|id:socrata-brla-crime")
+
+/* ── Cameras ─────────────────────────────────────────────────────────── */
+
+LAYER("cameras", "Live Cameras", "cameras",
+      "camera-feed", "point",
+      "layer:cameras|cat:cameras|layer:camera-discovery|id:camera-discovery")
+
+/* ── Satellite / earth observation ───────────────────────────────────── */
+
+/* Imagery catalogues and scenes fuse regardless of operator or country:
+ * the declared "satellite"/"satellite-imagery" sources (Himawari — JP,
+ * Sentinel — EU, Landsat — US, …) plus every VGEO cat:earthobs source
+ * (ASF ALOS/JAXA, ASF Sentinel-1/ESA, ASF UAVSAR/NASA, BGS/UK, …) and the
+ * geoeo-* aerial-imagery collectors. Same data type, same raster modality,
+ * one layer. */
+LAYER("satellite-imagery", "Satellite Imagery", "satellite",
+      "satellite-image", "raster",
+      "layer:satellite|layer:satellite-imagery|cat:earthobs|idp:geoeo-")
+
+LAYER("satellite-orbits", "Satellite Tracking", "satellite",
+      "satellite-orbit", "point",
+      "layer:satellite-tracking|cat:space")
+
+/* ── Seismic / volcanic / hazard events ──────────────────────────────── */
+
+/* JMA + USGS + BGS + every other cat:seismic feed: one earthquake-event
+ * point layer, worldwide. Station networks (hi-net, k-net) keep their own
+ * declared layers — a seismometer is infrastructure, not an event. */
+LAYER("earthquakes", "Earthquakes", "seismic",
+      "seismic-event", "point",
+      "layer:earthquake|cat:seismic")
+
+LAYER("volcanoes", "Volcanic Activity", "hazard",
+      "volcanic-activity", "point",
+      "layer:volcano|cat:volcano")
+
+LAYER("wildfires", "Wildfires", "hazard",
+      "wildfire-incident", "point",
+      "cat:wildfire")
+
+LAYER("floods", "Flood Monitoring", "hazard",
+      "flood-observation", "point",
+      "cat:flood")
+
+/* Mixed zone/advisory datasets (54 VGEO hazard sources: susceptibility
+ * polygons, advisories, shelters …). Modality undecided until a human
+ * splits them — NULL, not a guess. */
+LAYER("hazard", "Hazard Zones", "hazard",
+      "hazard-zone", NULL,
+      "layer:hazard|cat:hazard|cat:disaster")
+
+LAYER("emergency", "Emergency & Warnings", "safety",
+      "emergency-event", NULL,
+      "layer:emergency|layer:warnings|cat:humanitarian")
+
+/* ── Environment / weather ───────────────────────────────────────────── */
+
+LAYER("radiation", "Radiation Monitoring", "environment",
+      "radiation-measurement", "point",
+      "layer:radiation|cat:radiation")
+
+LAYER("air-quality", "Air Quality", "environment",
+      "air-quality-measurement", "point",
+      "layer:air-quality|cat:airquality")
+
+LAYER("weather", "Weather Observations", "weather",
+      "weather-observation", "point",
+      "layer:weather|cat:weather")
+
+LAYER("river", "Rivers & Water Levels", "environment",
+      "water-observation", "point",
+      "layer:river|cat:hydrology")
+
+LAYER("ocean", "Ocean Observations", "ocean",
+      "ocean-observation", NULL,
+      "layer:ocean|cat:ocean")
+
+LAYER("environment", "Environment", "environment",
+      "environmental-observation", NULL,
+      "cat:environment|cat:biodiversity")
+
+/* ── Airspace & aviation ─────────────────────────────────────────────── */
+
+/* Zone/boundary datasets (39 VGEO airspace sources: FIRs, restricted areas,
+ * obstacle surfaces). Polygons by publication format — these are area
+ * charts, not positions. */
+LAYER("airspace-zones", "Airspace Zones", "transport",
+      "airspace-boundary", "polygon",
+      "cat:airspace")
+
+/* ── Transport (the unified-* family keeps its ids — clients know them) ── */
+
+LAYER("unified-trains", "Trains", "transport",
+      "rail-transit", "point",
+      "layer:unified-trains|id:mlit-n02-stations|id:osm-transport-trains")
+
+LAYER("unified-subways", "Subways", "transport",
+      "rail-transit", "point",
+      "layer:unified-subways|id:osm-transport-subways")
+
+LAYER("unified-buses", "Buses", "transport",
+      "bus-transit", "point",
+      "layer:unified-buses|id:mlit-p11-bus-stops|id:gtfs-jp|id:bus-routes|"
+      "layer:bus-routes|id:osm-transport-buses|id:mlit-n07-bus-routes|"
+      "layer:mlit-n07-bus-routes")
+
+LAYER("unified-flights", "Flights", "transport",
+      "aircraft-position", "point",
+      "layer:unified-flights|id:flight-adsb|id:narita-flights|"
+      "layer:narita-flights|id:haneda-flights|layer:haneda-flights|"
+      "layer:aviation|cat:aviation")
+
+LAYER("unified-airports", "Airports", "transport",
+      "airport-facility", "point",
+      "layer:unified-airports|id:mlit-p02-airports")
+
+LAYER("unified-highway", "Road Traffic", "transport",
+      "road-traffic", "line",
+      "layer:unified-highway|id:highway-traffic|layer:highway-traffic|"
+      "id:jartic-traffic|layer:jartic-traffic")
+
+LAYER("unified-port-infra", "Ports", "transport",
+      "port-facility", "point",
+      "layer:unified-port-infra|id:mlit-c02-ports|id:osm-transport-ports")
+
+LAYER("unified-ais-ships", "Ships (AIS)", "ocean",
+      "vessel-position", "point",
+      "layer:unified-ais-ships|id:maritime-ais|layer:maritime-ais|"
+      "id:marine-traffic|layer:marine-traffic|id:vessel-finder|"
+      "layer:vessel-finder|layer:maritime|cat:maritime")
+
+LAYER("shipping", "Shipping & Navigation", "ocean",
+      "maritime-traffic", NULL,
+      "cat:shipping|cat:navwarning")
+
+LAYER("transport", "Transport (Other)", "transport",
+      "transport-data", NULL,
+      "layer:transport|cat:transport")
+
+/* ── Cyber / network ─────────────────────────────────────────────────── */
+
+LAYER("cyber", "Cyber Threats", "cyber",
+      "threat-indicator", "point",
+      "layer:cyber|cat:cyber")
+
+LAYER("dns-web", "DNS / Web Infrastructure", "cyber",
+      "dns-web-record", "point",
+      "id:urlscan-jp|layer:urlscan-jp|id:wayback-jp|layer:wayback-jp|"
+      "id:virustotal-jp|layer:virustotal-jp|id:crtsh")
+
+LAYER("telecom", "Telecom Infrastructure", "telecom",
+      "telecom-infrastructure", "point",
+      "layer:telecom|cat:telecom")
+
+/* ── Infrastructure / energy ─────────────────────────────────────────── */
+
+LAYER("energy", "Energy Infrastructure", "infrastructure",
+      "energy-infrastructure", "point",
+      "layer:energy|cat:energy")
+
+LAYER("infrastructure", "Infrastructure", "infrastructure",
+      "infrastructure-asset", NULL,
+      "layer:infrastructure|cat:infrastructure")
+
+/* ── Statistics / society / government ───────────────────────────────── */
+
+/* Mesh/choropleth demographic surfaces — polygons by publication format. */
+LAYER("population", "Population & Demographics", "statistics",
+      "demographic-statistic", "polygon",
+      "layer:population")
+
+LAYER("health", "Public Health", "health",
+      "health-statistic", NULL,
+      "layer:health|cat:health")
+
+LAYER("economy", "Economy", "economy",
+      "economic-statistic", NULL,
+      "layer:economy|cat:economy|cat:property")
+
+LAYER("defense", "Defense & Security", "defense",
+      "defense-data", NULL,
+      "cat:defence|cat:security")
+
+LAYER("government-data", "Government Open Data", "government",
+      "open-dataset", NULL,
+      "cat:gov|cat:government|cat:opendata|cat:local-gov|cat:permits|"
+      "cat:public-works|cat:gazette|cat:education")
+
+LAYER("geodata", "Geospatial Reference", "geospatial",
+      "geospatial-reference", NULL,
+      "cat:geo|cat:geodata|cat:geospatial|cat:geology")

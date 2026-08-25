@@ -345,7 +345,7 @@ VRSS(geo_nsw_rfs_rss, "geo-nsw-rfs-rss", "NSW Rural Fire Service — major incid
 
 VJSON(geo_nve_flood_warning, "geo-nve-flood-warning", "NVE Norway — flood and landslide warnings", "ノルウェーNVE — 洪水・地すべり警報",
   "disaster", "flood",
-  "https://api01.nve.no/hydrology/forecast/flood/v1.0.8/api/Warning/All/1/2026-08-01/2026-08-09",
+  "https://api01.nve.no/hydrology/forecast/flood/v1.0.8/api/Warning/All/1",
   "",
   "en", "[\"norway\",\"flood\",\"landslide\",\"warning\"]", 3600,
   "Norwegian flood warning levels by warning region.");

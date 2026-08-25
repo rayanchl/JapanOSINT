@@ -161,6 +161,16 @@ typedef struct hp_source {
   int max_items;
   int free_tier;              /* 1 = usable without payment                 */
   int interval;               /* 0 = on-demand pivot (the norm here)        */
+
+  /* Map layer id (core/layers.def taxonomy), passed straight through to
+   * source_def.layer. OPTIONAL AND APPENDED LAST ON PURPOSE: thousands of
+   * existing rows initialize this struct with designated initializers and
+   * must keep compiling unchanged, so the field defaults to NULL — which
+   * means what it always meant: not a map layer (right for an entity-pivot
+   * service). Declare it only on a row whose records belong on the map AND
+   * whose layer's modality is known; core/layertab.c can also assign a
+   * source by id/category match without any change here. */
+  const char *layer;
 } hp_source;
 
 /* Register `n` rows. `defs` must be static storage of at least n entries owned

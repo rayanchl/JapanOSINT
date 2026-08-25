@@ -29,11 +29,11 @@ RSSX(cb_boc_press, "boc-press", "Bank of Canada Press", "Bank of Canada Press", 
   "Bank of Canada Press — central-bank press and policy feed");
 
 RSSX(cb_bis_press, "bis-press", "Bank for Intl Settlements", "Bank for Intl Settlements", "economy", "economy",
-  "https://www.bis.org/list/press_releases/rss.xml", "en", "[\"economy\",\"central-bank\",\"monetary-policy\"]", 7200,
+  "https://www.bis.org/doclist/all_pressrels.rss", "en", "[\"economy\",\"central-bank\",\"monetary-policy\"]", 7200,
   "Bank for Intl Settlements — central-bank press and policy feed");
 
 RSSX(cb_rbi_press, "rbi-press", "Reserve Bank of India", "Reserve Bank of India", "economy", "economy",
-  "https://www.rbi.org.in/Scripts/Rss.aspx?Id=2", "en", "[\"economy\",\"central-bank\",\"monetary-policy\"]", 7200,
+  "https://rbi.org.in/pressreleases_rss.xml", "en", "[\"economy\",\"central-bank\",\"monetary-policy\"]", 7200,
   "Reserve Bank of India — central-bank press and policy feed");
 
 RSSX(cb_snb_press, "snb-press", "Swiss National Bank", "Swiss National Bank", "economy", "economy",

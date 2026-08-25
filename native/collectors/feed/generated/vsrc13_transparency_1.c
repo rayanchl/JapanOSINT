@@ -50,7 +50,7 @@ VJSON(cyb_contractsfinder_ocds_award, "cyb-contractsfinder-ocds-award", "UK Cont
 
 VJSON(cyb_datagouv_fr_marches, "cyb-datagouv-fr-marches", "data.gouv.fr — French public procurement datasets", "data.gouv.fr 公共調達データセット",
   "transparency", "procurement",
-  "https://www.data.gouv.fr/api/1/datasets/?q=marches%20publics&page_size=50",
+  "https://www.data.gouv.fr/api/1/datasets/?q=marches%20publics&page_size=50&sort=created",
   "data",
   "fr", "[\"fra\",\"procurement\",\"opendata\",\"contracts\"]", 86400,
   "French open-data catalogue entries for public procurement, the index to national and local DECP publications.");

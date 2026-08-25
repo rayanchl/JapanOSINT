@@ -164,8 +164,8 @@ VJSON(eco_elia_ods032, "eco-elia-ods032", "Elia Belgium generation by fuel", "�
 
 VJSON(eco_elia_ods086, "eco-elia-ods086", "Elia Belgium wind power", "エリア ベルギー風力発電",
   "energy", "energy-grid",
-  "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods086/records?limit=50",
-  "*",
+  "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods086/exports/json",
+  "",
   "en", "[\"belgium\",\"wind\",\"offshore\",\"tso\"]", 900,
   "Belgian onshore and offshore wind production and forecast.");
 

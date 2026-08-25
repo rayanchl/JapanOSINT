@@ -12,7 +12,7 @@
 #define SID "socrata-usdot-border-crossing"
 static const char *URL =
   "https://data.transportation.gov/resource/keg4-3bc2.json"
-  "?$limit=100&$order=date%20DESC";
+  "?$limit=100&$order=date%20DESC&$select=*,:id";
 static const char *const TITLE_KEYS[] = { "port_name", "port_code", NULL };
 static const char *const SUM_KEYS[] = { "measure", "border", NULL };
 
@@ -23,7 +23,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   sp.link = URL;
   sp.title_keys = TITLE_KEYS;
   sp.summary_keys = SUM_KEYS;
-  sp.id_key = "port_code";
+  sp.id_key = ":id";   /* rule 4b, measured: port_code recurs per measure/date (100 emitted, 84 stored); :id is Socrata's per-row identity, via $select=*,:id */
   sp.date_key = "date";
   sp.title_prefix = "Border crossings:";
   return od_rc(SID, od_fetch_rows(ctx, sink, URL, NULL, &sp));
