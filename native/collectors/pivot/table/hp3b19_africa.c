@@ -281,7 +281,6 @@ static const hp_source HP3B19_AFRICA[] = {
     .interval = 21600,
     .page_param = "page",
     .page_start = 0,
-    .page_zero_based = 1,
     .title_keys = "municipality.name,demarcation.label",
     .description = "Every South African municipality as the National Treasury "
       "identifies it for fiscal reporting, with the demarcation code, "
@@ -306,7 +305,6 @@ static const hp_source HP3B19_AFRICA[] = {
     .interval = 21600,
     .page_param = "page",
     .page_start = 0,
-    .page_zero_based = 1,
     .title_keys = "demarcation.label",
     .description = "The Auditor-General's opinion on every municipality for every "
       "financial year, 3,688 findings, each naming the municipality, "
@@ -330,7 +328,6 @@ static const hp_source HP3B19_AFRICA[] = {
     .interval = 21600,
     .page_param = "page",
     .page_start = 0,
-    .page_zero_based = 1,
     .title_keys = "contact_details.name",
     .description = "The named senior official in each role at each South African "
       "municipality — mayor, deputy mayor, municipal manager, chief "
@@ -355,7 +352,6 @@ static const hp_source HP3B19_AFRICA[] = {
     .interval = 21600,
     .page_param = "page",
     .page_start = 0,
-    .page_zero_based = 1,
     .title_keys = "item.label",
     .description = "The statement of financial performance for every South African "
       "municipality, 4.45 million facts, each giving the municipality, "
@@ -379,7 +375,6 @@ static const hp_source HP3B19_AFRICA[] = {
     .interval = 86400,
     .page_param = "page",
     .page_start = 0,
-    .page_zero_based = 1,
     .title_keys = "item.label",
     .description = "Municipal capital spending in South Africa broken down by asset "
       "class and funding source, 2.34 million facts covering budgeted "
@@ -402,7 +397,6 @@ static const hp_source HP3B19_AFRICA[] = {
     .interval = 21600,
     .page_param = "page",
     .page_start = 0,
-    .page_zero_based = 1,
     .title_keys = "item.label",
     .description = "The municipal cash flow statement cube, giving receipts, "
       "payments and net cash position per municipality per financial "
@@ -1102,7 +1096,6 @@ static const hp_source HP3B19_AFRICA[] = {
     .interval = 21600,
     .page_param = "page",
     .page_start = 0,
-    .page_zero_based = 1,
     .title_keys = "item.label",
     .description = "The aged debtor analysis for every South African municipality, "
       "showing what is owed to the municipality by customer group and "
