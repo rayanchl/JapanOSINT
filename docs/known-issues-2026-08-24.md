@@ -13,6 +13,48 @@ kept finding is a fix that silently regressed somewhere else.
 
 ---
 
+## UPDATE — 2026-08-28 (post multi-agent repair phase)
+
+The register below is kept as written on 08-24. This section records what the
+repair phase (agents A, B, S1–S5, M1, M2 and the follow-ups) changed about it.
+Same two rules: everything here was measured, and nothing moves to closed on
+an argument alone. Evidence: `docs/source-health-2026-08-25.{md,tsv}`,
+`docs/source-fix-2026-08-25-*.tsv`, `docs/verified-sources-batch22*.md`.
+
+### Closed, with the measurement that closes it
+
+| # | was | now |
+| --- | --- | --- |
+| 25 | 102 of 1,197 sampled sources emit zero | superseded by a **full** scheduled sweep: 11,891 rows measured, 9,980 OK. **438 sources repaired (+2,262,684 records/pass)**, stored per pass over the common set 11.50 M → 12.93 M |
+| 35 | no rule-4 tooling for the `vsrc*` fleet | `audit_registry_emit.py --scheduled` measures the whole registry, manifest or not — **10,070 of the 11,891 rows swept are non-hpengine rows**. The gap it names is closed |
+| 36 | `records=N` cannot see stored-row loss | `fetch_log.stored` exists and the run line prints both numbers (`core/schema.sql:142`, `core/intel.c`/`core/scheduler.c`). Rule 4b is enforceable and was enforced across this phase |
+| 55 | 37 rows declare `detail_url` with no `{v}` | **0** across every manifest (`grep 'detail_url=' … | grep -v '{v}'`) |
+| 15/16-family (per-row identity) | — | `id_keys` defects found and fixed by measurement, not inspection: 7 `ZA_MUNIMONEY_*` rows declared `page_zero_based=1` against an API whose page 0 **is** page 1 (700 records/pass duplicated), and `FCC_GEOGRAPHY_LOOKUP` keyed 254,335 Socrata rows on non-unique columns (84,024 collapsed) — fixed by selecting and keying on `:id` |
+
+### Changed, still open — the numbers moved
+
+| # | 08-24 | 08-28 |
+| --- | --- | --- |
+| 54 | 86 rows walk N pages that all return page 1 | **65** rows still show the `emitted == stored × N` signature. Worst: `JODI_OIL_PRIMARY_CURRENT` ×1200 (115,200 → 96), `geo-nve-flood-warning` ×1077, `jpx-tokyo-t131229-shisetsu` ×449 |
+| 39 | web client: 3 test files, `MapView.jsx` 4,926 lines untested | **8 test files / 56 tests**; the modality renderers, layer catalogue, paging and `LayerPanel` are covered. `MapView.jsx` itself is still mostly untested |
+| 41 | 118 `geo-precision` advisories | 116 |
+| 52 | dup-endpoint 484 | 484 (held at baseline; 5 new duplicates were found and removed during the phase rather than baselined up) |
+| 56 | 513 registry rows registered but unreachable | **not re-measured registry-wide** — 1,702 rows carry `interval=0`, but most are legitimate entity pivots and the tool that separates them only reads manifests. Manifest rows: 0 of 2,660 can never run (one real find, `RO_TEMPO_MATRIX`, removed as a dead duplicate of `RO_TEMPO_CONTEXT`'s `detail_url` hop) |
+
+### New, found this phase
+
+| # | Issue |
+| --- | --- |
+| 59 | **A parallel sweep manufactures false `EMITS_NOTHING`.** Under `--jobs 4` the sweep fires same-host rows together and the host answers empty or 429. Measured: of 158 sources the 08-25 sweep marked as regressed, **117 pass on a re-run** once `news.google.com` got a per-host gap; a 16-row serial sample passed 14/16. Any sweep verdict on a large same-host family is suspect until re-run alone. The remedy is the per-host gap table in `core/hostgate.c`, not a change to the source |
+| 60 | **`audit_registry_emit.py` reports a timed-out run as `NO_RUN_LINE`, not `SLOW`.** `RIPENCC_DELEGATED_STATS` reads as "the process died" in the sweep; run alone it emits and stores **260,357 of 260,357** in 304 s. A slow source and a dead source must not render identically — this is issue #38's shape in the other tool |
+| 61 | **Projected coordinates were stored as degrees.** Eight CWFIS WFS rows answered in Canada Lambert **metres**; the fire-danger polygons wrapped the whole map and ~4,000 hotspots pinned nowhere. Fixed per row with `srsName=EPSG:4326`, and `lib/geojson.c` now refuses any coordinate outside lon±180/lat±90 — stored without geometry, counted, and named on stderr. Same class as an upstream sentinel: p2pquake encodes "epicentre unknown" as `-200/-200` and 7 quakes were pinned there |
+| 62 | **The web map hid its own data.** The PLATEAU label effect called `setBasemapSymbolsHidden` on *every* symbol layer on each map move, including icon-sprite data layers: 821 earthquakes sat in the source with `visibility: none`. Found by screenshotting, not by a test. It now matches only layers carrying a `source-layer` (i.e. basemap vector tiles) |
+| 63 | **15 OSINT service collectors leaked their per-result `props` object** (one cJSON object per dispatched record). Found by ASan on the unit suite via `ip_geolocation.c`; the same shape existed in 14 siblings |
+| 64 | Two rows still emit nothing after a serial re-run and are upstream, not ours: `afr-ci-aip`, `sci-stac-inpe-modisa-ocsmart-poc-daily-1`. Two more (`PY_AIP_SOLICITUDES`, `TAGINFO_KEYS_ALL`) emit nothing only under load |
+| 65 | 24 sources collapse ≥1 % of their records onto an already-written uid. Seven were the `ZA_MUNIMONEY_*` paging bug (fixed); the rest are small and several are genuine upstream duplicates (an ArcGIS Hub catalogue lists a dataset under more than one collection). Each remaining one needs a per-row read, not a bulk change |
+
+---
+
 ## The theme
 
 Nearly every serious defect below is one shape: **work that reports success
