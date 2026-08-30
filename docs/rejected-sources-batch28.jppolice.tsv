@@ -1,0 +1,97 @@
+url	reason
+https://www.npa.go.jp/bureau/criminal/wanted/index.html	Navigation hub with only 3 internal links (to jyuyo1/jyuyo2/link.html) plus 2 static PDF posters; real content lives on the sub-pages, already assessed separately
+https://www.npa.go.jp/bureau/criminal/wanted/jyuyo1.html	Anchor text is the referring prefecture's name, not the suspect's identity (suspect details are inline prose); html-mode extraction would lose the actual record content
+https://www.npa.go.jp/bureau/criminal/wanted/jyuyo2.html	Same structural problem as jyuyo1.html: anchors point out to prefectural pages by name, not to per-suspect detail pages
+https://www.npa.go.jp/publications/statistics/safetylife/jousei.html	Per-year PDF releases exist but no literal href/anchor example could be confirmed; per-table CSV subpages were not directly verified either
+https://www.npa.go.jp/bureau/safetylife/sos47/index.html	Campaign/awareness homepage mixing narrative content, stats summary, videos and app promos with unrelated link types; no repeating per-item anchor structure, no data file
+https://www.npa.go.jp/toukei/seianki/hanzaiopendatalink.html	Directory of 47 prefectural pages but domains too heterogeneous (opendata portals, keishicho, police.pref mixed) — no single reliable href_must substring; only ~1/3 of sampled examples share any candidate substring
+https://www.npa.go.jp/bureau/cyber/index.html	Hybrid bureau homepage mixing narrative sections, a dated news list, and a static 15-item countermeasure menu — not one repeating record type
+https://www.npa.go.jp/goiken_index.html	Pure navigation menu mixing unrelated link types (external tip hotline, cross-references to other pages, administrative procedure pages)
+https://www.npa.go.jp/publications/statistics/koutsuu/index_jiko.html	Thin redirect/pointer page; the substantive statistical-release list lives on toukeihyo.html, already covered separately
+https://www.npa.go.jp/publications/statistics/koutsuu/menkyo.html	Fiscal-year archive of PDF/XLSX/zip releases but no literal anchor href example was confirmed; the "CSV" link is actually a zip archive, not a raw CSV
+https://www.npa.go.jp/publications/statistics/safetylife/dv.html	Linked CSV is a Shift_JIS multi-section pivot/summary table (age-bracket breakdowns), not per-record data; only one year's release present (thin)
+https://www.npa.go.jp/publications/statistics/safetylife/syonen.html	Only 2 year-entries observed (thin, non-accumulating), and linked CSV is pivot-style rather than per-record
+https://www.npa.go.jp/publications/statistics/safetylife/sounan.html	Only 2 years observed (thin); linked CSV is a cross-tab summary table (years as columns), not per-incident rows
+https://www.npa.go.jp/publications/statistics/shitai/shitaitoukei.html	All links are PDF reports with inconsistent per-period naming (~6 mixed-shape links, no common href pattern)
+https://www.npa.go.jp/publications/statistics/index.html	Static top-level navigation hub; every sub-page it links to is already assessed as its own row
+https://www.kaiho.mlit.go.jp/doc/tel118.html	Narrative page describing the 118 emergency phone service; only 1 statistics PDF linked, no per-record structure
+https://www6.kaiho.mlit.go.jp/info/marinesafety/jikotaisaku.html	Advisory/narrative safety-guidance content with a fixed set of PDF leaflets by activity type; no per-record data or feed
+https://www6.kaiho.mlit.go.jp/watersafety/index.html	Narrative water-safety portal with a fixed set of activity-guide cards; no tabular/per-incident data or feed
+https://www.kaiho.mlit.go.jp/info/kouhou/post-1278.html	Single already-published article inside the /info/kouhou/ archive, which is already covered as its own row; not itself a list
+https://www.fdma.go.jp/disaster/	Long narrative/status page; its anchors are same-page table-of-contents jumps (#anchor--01 etc.), not per-record hrefs to distinct targets
+https://www.fdma.go.jp/mission/prevention/rinyakasai/post.html	Static 47-row directory to distinct external prefectural domains (hokkaido.lg.jp, aomori.lg.jp, etc.) with no shared href substring at all
+https://www.fdma.go.jp/publication/hakusho/r6/chapter1/section1/para1/67983.html	Narrative/statistical white-paper chapter with prose and a chart figure; no per-record link list, no downloadable file
+https://www.police.pref.hokkaido.lg.jp/incident/08_wanted_criminal/wanted_criminal.html	Suspects displayed inline with photos/text on one page; no per-suspect detail-page anchors, no downloadable data
+https://www.police.pref.hokkaido.lg.jp/map/map.html	Interactive map hosted on an external JS-rendered app (map.police.hokkaido.dsvc.jp); no API/JSON endpoint visible in this page's own HTML
+https://www.police.pref.aomori.jp/keijibu/keiji_kikaku/tehai_kyoujo.html	Two embedded poster images only (click-to-enlarge); no per-suspect links, no downloadable data
+https://www.pref.iwate.jp/kenkei/anzen/joho/sousa/3000346.html	Single dedicated case page (one suspect, a 2008 case), not a repeating list; no downloadable data file
+https://www.pref.iwate.jp/kenkei/koho/opendata/3000711.html	Likely duplicate of already-registered Iwate open-data rows from a prior batch (this exact catalogue/file pair — iwate_2024buhinnerai.csv — matches this project's existing registered example)
+https://www.police.pref.miyagi.jp/keiso/tehai/index.html	General narrative appeal page with two embedded poster images; no linked per-suspect detail pages, no downloadable data
+https://www.police.pref.miyagi.jp/seian/gaitohanzai/securitymail/	Pure subscription/registration page for an opt-in email alert service; no archive of past alerts, no RSS/API feed
+https://www.police.pref.akita.lg.jp/kenkei/inform	Topic-based navigation menu mixing unrelated link types (wanted cooperation, missing-persons corner, election-violation reporting); stale, most recent visible date 2023
+https://www.police.pref.akita.lg.jp/kenkei/statistics	Heterogeneous library of one-off annual/topic PDF reports across five unrelated categories, not one repeating record type
+https://www.pref.yamagata.jp/800054/kensei/police/yamagatakenkeisatsu/profile/shimeitehai.html	Single narrative appeal page; suspect images are embedded, not linked to distinct per-case targets
+https://www.pref.ibaraki.jp/kenkei/a01_safety/map/crime.html	Descriptive page only; the actual map is an external JS app (map.police.ibaraki.dsvc.jp) with no JSON/CSV/API referenced in this page's source
+https://www.pref.ibaraki.jp/kenkei/a01_safety/map/fushinsha.html	Same pattern as the crime map page: description pointing to an external JS map app, no API/data endpoint visible
+https://www.pref.ibaraki.jp/kenkei/a04_jiken/open_criminal/index.html	Only a single case link present, not a repeating list; the rest of the page is category navigation
+https://www.pref.ibaraki.jp/kenkei/a01_safety/statistics/shichoson.html	All figures published only as PDF reports, no CSV/XLSX/JSON, no HTML table
+https://www.pref.tochigi.lg.jp/keisatu/n18/anzenanshin/hanzai_toukei.html	All statistics are PDF-only downloads (report-list page, not per-record data)
+https://map.police.tochigi.dsvc.jp/	JS-rendered SPA shell; fetch returned only a bare page title with no body, script, or discoverable API/tile endpoint
+https://www.police.pref.gunma.jp/site/police/list287-1502.html	Only 2 links total, both generic numeric-id pages shared sitewide with unrelated content; no repeating structure or isolating href substring
+https://www.police.pref.gunma.jp/site/police/28701.html	Navigation hub one hop removed from data — it links to 7 category index pages, and the actual CSVs live two hops away from this URL
+https://www.police.pref.saitama.lg.jp/a0040/kotsu/jikenjiko-map.html	Descriptive page pointing to an external JS map app (webmap.police.pref.saitama.lg.jp); no JSON/CSV/API in this page's source
+https://www.police.pref.saitama.lg.jp/c0011/kurashi/0pendata2019/opendate-2019.html	Index page linking to 8 yearly sub-pages, not to CSV files directly; one hop removed from actual data
+https://www.police.pref.saitama.lg.jp/e0010/kurashi/sousakyouryoku1.html	Not a per-record list — page defers entirely to the National Police Agency's external wanted-suspect site
+https://map.police.chiba.dsvc.jp/	JS-rendered SPA shell; fetch returned only a bare page title, no body/script/API content
+https://www.police.pref.chiba.jp/keisoka/safe-life_crime_statistics-02.html	Dead link — HTTP 404 confirmed on two independent fetch attempts
+https://www.police.pref.kanagawa.jp/sodan/jiko_tehai/wanted.html	Suspect profiles embedded directly as narrative/photo content on one page; no per-item detail-page hrefs
+https://www.pref.niigata.lg.jp/site/kenkei/onegai-hyousi1-tehai.html	Sparse appeal page — only one internal case link, one external YouTube link and one PDF poster; too mixed/thin for a repeating list
+https://police.pref.toyama.jp/6125/tehai/shimeitehai2025.html	Only two embedded poster images (JPG) and general appeal text; no individual case pages, no data file
+https://opendata.pref.toyama.jp/dataset/settou2024	Domain does not resolve (getaddrinfo ENOTFOUND) across repeated attempts, including the CKAN API path; could not verify content
+https://www2.police.pref.ishikawa.lg.jp/security/security18/security18_04/security01.html	Not a list — the page's only wanted-suspect link is a single outbound link to the NPA index page
+https://www2.police.pref.ishikawa.lg.jp/security/security24/	Given URL is a navigation index; real CSVs live one hop deeper (confirmed on a subpage) and are Shift_JIS-garbled — no directly usable href pattern at this exact URL
+https://www.pref.fukui.lg.jp/kenkei/doc/190044/simeitehainigokyouryokuwo.html	General nationwide-appeal narrative page (Echizen station); no individual suspect list, no per-item links, no data file
+https://www.pref.fukui.lg.jp/kenkei/information-provision/index.html	Navigation menu/hub mixing unrelated content types (missing persons, unidentified remains, anonymous-tip dial, drug info) — not a repeating list of same-type records
+https://map.police.fukui.dsvc.jp/	JS-rendered map app; fetch returned only a bare page title, no body/script/API content
+https://www.pref.yamanashi.jp/police/p_keiki/p_keiki/shimeitehai.html	Domain connection refused (ECONNREFUSED) across repeated https/http attempts, including at domain root — not accessible for verification
+https://www.pref.yamanashi.jp/police/p_anzen/hanzai_opendate.html	Same domain-wide connection failure as the Yamanashi wanted-suspects page — not accessible
+https://map.police.nagano.dsvc.jp/	JS-rendered map app; fetch returned only a bare page title, no body/script/API content
+http://www.pref.gifu.lg.jp/police/sosakyoryoku/	Domain connection refused (ECONNREFUSED) across repeated attempts, including at domain root — not accessible for verification
+https://www.police.pref.mie.jp/provide_info/kyokusa_hakken.html	Single static wanted-suspect profile (one person), not a repeating per-item list
+https://www.police.pref.mie.jp/provide_info/	Mixed navigation/intake hub (one PDF flyer, links to other already-covered pages, a YouTube link) — not a repeating same-type list
+https://www.pref.shiga.lg.jp/police/onegai/jikenzyouhou/104571.html	Narrative appeal page citing nationwide wanted-suspect counts; no per-suspect links, no data file
+https://www.pref.shiga.lg.jp/police/seikatu/seikatu/104407.html	Table titled "手配情報一覧" present but currently empty ("現在公開している行方不明者はありません") — no items to verify structure against
+https://www.police.pref.hyogo.lg.jp/mail/jikenindex.htm	Instructional signup page for an alert-mail service; explicitly redirects to the case list already covered separately (teikyo/sosa/index.htm)
+https://map.police.hyogo.dsvc.jp/	JS-rendered map SPA; fetched source contained only a page title, no scripts, no JSON/tile API endpoint
+https://www.police.pref.nara.jp/0000000308.html	Single narrative wanted-suspect writeup that redirects to NPA's national list; not a per-item link list
+https://www.police.pref.wakayama.lg.jp/01_anzen/index.html	Navigational hub mixing sub-page links and PDF guides; no consistent machine-readable data
+https://www.police.pref.wakayama.lg.jp/04_toukei/index.html	All actual statistics are PDF reports or further HTML index pages; no CSV/XLSX/JSON found
+https://www.pref.tottori.lg.jp/94934.htm	Referral page directing to NPA's national wanted-persons site; no local per-suspect links, no data file
+https://www.pref.shimane.lg.jp/police/01_safety_of_life/wanted_incident/	Single external link out to NPA's national wanted-suspects page; no local per-item list, no data file
+https://www.pref.okayama.jp/page/detail-80953.html	Pure gateway page — only a banner image plus two external links to npa.go.jp
+https://www.pref.hiroshima.lg.jp/site/police12/tehai.html	Navigation/gateway page (narrative block plus a category menu and two npa.go.jp links); no per-item repeating structure on this page itself
+https://www.pref.yamaguchi.lg.jp/site/police/10074.html	All suspects listed inline on one page with only same-page #section jump anchors, no per-suspect links
+https://www.pref.kagawa.lg.jp/police/kskeijikikaku/otazune/hannintehai/kfvn.html	Small heterogeneous navigation page (one subpage link plus two national-wanted PDF links); not a genuine repeating record list
+https://www.police.pref.kochi.lg.jp/docs/2026010900015/	Single wanted-suspect detail page (one person), not a list; only an embedded video, no per-item links
+https://www.police.pref.fukuoka.jp/tokei/index.html	Pure navigation hub; its one crime-open-data pointer leads through to a general 987-dataset catalog where no specific crime dataset could be located
+https://www.police.pref.nagasaki.jp/police/kurashi/joho-teikyo/shimei-tehai/	Unreachable — every fetch attempt (5 retries including the bare domain root) returned "Socket is closed"
+https://www.police.pref.nagasaki.jp/police/kurashi/kurashi-tokei/hanzainincti-top/	Unreachable — same domain-wide "Socket is closed" failure as the Nagasaki wanted-suspects page
+https://www.pref.kumamoto.jp/site/police/8603.html	General narrative appeal page (5 sections on reporting/cooperating); only one external link to npa.go.jp, no local per-item list
+https://www.pref.oita.jp/site/keisatu/simeitehaigekkan.html	Single featured-suspect narrative page (one photo + case text), no per-record anchor list, no data file
+http://www.pref.oita.jp/site/keisatu/seianki-toukei123.html	PDF-only statistics reports across several distinct report categories with no confirmed uniform per-item href pattern
+https://www.pref.miyazaki.lg.jp/police/invest/simeitehai.html	No local list — page is a single outbound link to the NPA national wanted-persons site
+http://www.pref.kagoshima.jp/ja13/police/onegai/simeitehai/shimeitehai.html	No local list — only two outbound links to NPA national databases (wanted persons, reward cases)
+https://www.police.pref.okinawa.jp/docs/2025103100028/	Static appeal page with only 2 fixed PDF links plus one narrative writeup; not a repeating chronological structure
+https://www.keishicho.metro.tokyo.jp/toukei/johomap/johomap.htm	Unreachable — DNS resolution failure (getaddrinfo ENOTFOUND) for the whole keishicho.metro.tokyo.jp host
+https://www.keishicho.metro.tokyo.jp/jiken_jiko/hassei/map_annai.html	Unreachable — DNS resolution failure, same host as the Tokyo information map
+https://www.keishicho.metro.tokyo.jp/about_mpd/jokyo_tokei/jokyo/ninchikensu.html	Unreachable — DNS resolution failure, same host as the Tokyo information map
+https://www.keishicho.metro.tokyo.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.html	Unreachable — DNS resolution failure, same host as the Tokyo information map
+https://www.keishicho.metro.tokyo.jp/about_mpd/jokyo_tokei/index.html	Unreachable — DNS resolution failure, same host as the Tokyo information map
+http://www.pref.aichi.jp/police/anzen/sousa/kouhou/index.html	Navigational hub mixing several unrelated link types and differing subpaths (rewards, wanted suspects, individual cases, body-search) — no single uniform href substring confirmed
+https://www.police.pref.osaka.lg.jp/ochikakunokeisatsusho/keisatsushobetsujoho/27/2/2/15346.html	Static table of suspect details inline (name/crime/reward); no per-record anchor links, no downloadable data file
+https://www.npa.go.jp/publications/statistics/sousa/sagi.html	Directly re-fetched and confirmed the linked hurikomesagi_toukei.csv is a pivot/cross-tab table: rows are fraud-type categories, columns are months/years, cells are aggregate counts and yen totals — not one row per fraud case, so csv mode would emit a handful of meaningless "records" rather than real incidents
+https://www.npa.go.jp/publications/statistics/safetylife/yukue.html	Directly re-fetched and confirmed the linked R07yukuefumeisha.csv is a pivot/cross-tab table: rows are demographic categories (male/female/age band), columns are multiple fiscal years, cells are counts and percentages — not one row per missing-person case
+https://www.police.pref.tokushima.jp/file/excel/28opendata/tokushima_2025hittakuri.csv	EMPTY_RESULTSET: file is a CSV header row only, zero incident rows — no snatch-theft (hittakuri) recorded for Tokushima in this file at probe time
+https://www.police.pref.kochi.lg.jp/docs/2026071600046/file_contents/kochi_2025hittakuri.csv	EMPTY_RESULTSET: file is a CSV header row only, zero incident rows — no snatch-theft (hittakuri) recorded for Kochi in this file at probe time
+https://shimane-opendata.jp/resource_download/74822	DUP_WITH_BATCH25
+https://www.kokusen.go.jp/kiken/index.html	DUP_WITHIN_BATCH: same endpoint kept as JO28_CAA_KIKEN in jpcourt

@@ -1,0 +1,57 @@
+url	reason
+https://d-infra.ier.hit-u.ac.jp/Japanese/govstat-database/statistical-yb/	year folders are bare numeric hrefs like "1882/" with no shared literal substring distinguishing them from other links; the site's xlsx summary files exist but are only 3-4 structured tables, not enumerable per-item records
+https://www.wul.waseda.ac.jp/kotenseki/	homepage is 8 thematic gallery banners not a flat item list; its resource-list subpage links only to call-number category folders, one more nesting level from actual per-manuscript pages, no flat item list found at either level checked
+https://www.dh-jac.net/db/nishikie/	pure search-portal page (links only to search forms/guide), zero default result listing
+https://rmda.kulib.kyoto-u.ac.jp/	homepage links only to ~40 collection categories; a sampled collection subpage yielded 1 item-detail link plus more subcollection links, no flat per-item list found within levels checked
+https://dcollections.lib.keio.ac.jp/	homepage lists ~24 collection categories, not items; a sampled collection page yielded only further subgroup category links, two levels deep with no flat item list found
+https://wwwap.hi.u-tokyo.ac.jp/ships/w24/search	plain empty search form (keyword/date/location filters), zero default results, zero item links
+https://www.hiroshimacci.or.jp/promotion/member-list/	static informational page with a single external gateway link to a separate member-list.hiroshimacci.or.jp domain; no per-item links on this page
+https://www.kyo.or.jp/kyoto/kyosho/m_search_index.html	search-form gateway routing to b-mall.ne.jp's company search, no default results on this page
+https://www.sapporo-cci.or.jp/web/purpose/01/e_search.html	search-form gateway routing to b-mall.ne.jp's company search, no default results on this page
+https://www.shokokai.or.jp/search/	search form requiring a submitted prefecture/name query, zero default results
+https://www.nagaokacci.or.jp/member/	only 5 random default "pickup" links (member/detail/id/N); the rest requires submitted search criteria
+https://hiratuka-cci.or.jp/kensaku/	search form (industry category or keyword required), zero default member links present
+https://www.kitakyushucci.or.jp/keiei/hanro-koho/web-pr/	informational page with a single gateway link to the external net.kitakyushucci.or.jp search network, no per-item links here
+https://www.shimonoseki.cci.or.jp/information/	search form requiring submitted criteria, zero default member profile links
+https://www.tca.or.jp/about_us/member.html	every member link (~57) is off-site to the member's own domain with no shared internal href substring
+https://www.jisa.or.jp/about_jisa/list/tabid/739/Default.aspx	all ~523 member links are off-site to each company's own domain with no shared internal href substring
+https://www.jasa.or.jp/members/	search form (branch/business-domain filters), zero default result links present
+https://www.jsim.or.jp/about/members-list/	all 187 member links are off-site to each manufacturer's own domain with no shared internal href substring
+https://www.kanrikyo.or.jp/cgi-bin/memsearch/memsearch.cgi	navigation hub only (region list + keyword search), no per-item record links present without a search submission
+https://www.nsouzai-kyoukai.or.jp/kaiinn_sei/index/	the 691-member roster is disclosed only via PDF downloads, no per-item HTML links
+https://registry.jicpa.or.jp/cpa_search/	search form (registration number/name/prefecture), zero default results
+https://www.gakushikai.or.jp/info/info_202103_01.html	confirmed login-gated at member.gakushikai.or.jp/e-gakushikai/, no public data on the announcement page
+https://www.shizuoka-takken.or.jp/search/	search form, zero default results
+https://www.zeirishikensaku.jp/	landing page routes to a /NzSearchTop search form, no default listing
+https://www.tokyosr.jp/entrance/search_index/	search form, zero default results
+https://osakasr.jp/search/	search form, zero default results; a static roster exists only as an external Google Drive PDF, outside html/csv scope
+https://www.sr-oita.or.jp/list/index.php	the member list is 6 branch links each pointing to a PDF, no HTML per-member links exist
+https://www.oaaf.or.jp/list/	hub page fanning out to two search subpages and an external kenchikugyousei-db.jp system, no default list found at any confirmed layer
+https://www.hyogo-aba.or.jp/general/list/	search UI is JS/template-driven with no static results; the full roster exists only as a static PDF
+https://www.aichishikai.or.jp/member/	a real paginated default list of 3,121 members exists, but architect names are plain text with no <a href> tags, so html anchor-mode cannot extract them
+https://www.saitama-vma.org/search/	search form (region/animal-type/hours filters), zero default hospital listing links
+https://e-fukujyu.com/	a default paginated listing exists (222 results/23 pages) but every sample href points to an external hospital's own domain with no shared internal substring
+https://hp.alumni.kyoto-u.ac.jp/alumni/	homepage links only to association-category pages (not individual associations); a sampled category page showed only 4 unrelated news-feed links, not the ~460-association listing itself
+https://www.kagoshima-cci.or.jp/meikan/	search form (keyword/industry/capital filters), zero default member links present
+https://www.e-bisc.go.jp/	portal/menu shell only; tenders are hosted on each participating agency's own site, no default listing on this page
+https://www.i-ppi.jp/Search/Web/Index.htm	page returned is a logo/copyright template fragment with a single homepage link, no tender listing content reachable via plain fetch (likely frame/JS loaded)
+https://mie.efftis.jp/24000/ppi/pub	tender links are javascript:openOption(...) pseudo-links, not real hrefs; page is a date-range search form with zero default results otherwise
+https://www.koubai.nta.go.jp/auctionx/public/hp001.php	only 3 example listings in a "new items" carousel; the full catalog (categorized by keyword/type) sits behind search forms
+https://kanpo-ad.com/kaisanitiran.html	the ~180-row table's links are a mix of internal same-page anchor fragments (#koueki etc, all pointing back to one companion page) and external e-Gov statute citations, not distinct per-entity-type item pages suitable for anchor extraction
+https://miyagi.efftis.jp/04000/PPI/Public/Server/	outer frameset's inner frame is itself another nested frameset (menu + pre_main JSP) with no default content reachable via plain fetch
+https://kyoto.efftis.jp/26000/CALS/PPI_P/	outer frameset's inner frame (ppi_p_main.vm) contains only a menu of search-type entry points, zero default tender results
+https://www.library.city.himeji.hyogo.jp/webmuseum/	item links are javascript:gotoPickUpDetail(...) pseudo-links, not real hrefs; a guessed /webmuseum/list browse endpoint 404s
+https://www.library.pref.gifu.lg.jp/find-books/digital-collection/	only 7 curated gallery links (musetheque.jp gallery pkeys); following one in a level deeper returned just a single link back to the archive home, no per-item list found
+https://www.knowledge.pref.nagano.lg.jp/collection/local/index.html	only 5 static PDF finding-aid links present, too thin to be a genuine record source
+https://da.plib.pref.aomori.lg.jp/archives/	featured items are javascript:gotoPickUpDetail(...) pseudo-links; a sampled theme page showed only 3-4 category-refinement links, not item records
+https://wwwap.hi.u-tokyo.ac.jp/ships/w10/search	empty search form, zero default results, same behavior as the sibling w24 database
+https://wwwa7.musetheque.jp/chiba_prefectural_archives/search?cls=archives3	confirmed pure search form despite the cls=archives3 parameter; a guessed /list?cls=archives3 variant also returned no per-record links, only a nav link home; the visible "386 collections" list is unlinked filter text, not records
+https://adeac.jp/meijigakuin-sch-arch/top/	pure hub page (person/building/history/collection category links); its /detailed-search subpage is a confirmed empty search form with zero default results
+https://www.city.okayama.jp/kurashi/0000070175.html	no archive/listing exists on this city domain at all; the page only points to an external adeac.jp page whose listing structure was not independently confirmed
+https://www.archives.kyoto.jp/websearchpe/	search form; its ~30 category links (cls=... group catalogs) each lead to more search forms, zero default results anywhere checked
+https://rekishikan-ibk.jp/	homepage links to a jmapps.ne.jp/ipahm/ materials search, confirmed to be a search form with zero default results
+https://www.city.kashiwa.lg.jp/bunka/rekishi/kashiwa_history_potalmain.html	homepage links to jmapps.ne.jp/kashiwa/; even its "list.html?search_type=recommend" recommend-list variant returned "0件" (zero results)
+http://www.archives.city.sakura.lg.jp/ja/	homepage links are only parameterized SearchResult category/era links, zero default item listing
+https://matsudo-digital-museum.jp/	homepage links to a collection-items.html search page; fetched bare (no keyword) it returns "該当する資料はございません" (zero results)
+https://jmapps.ne.jp/abiko/	only 2 static "pick up" items even with list_count=50 requested; too thin, the rest requires a submitted search with zero default results otherwise
+https://www.kanpo.go.jp/	DUP_EXISTING_TREE: already registered as collectors/sources/kanpo_gazette.c
