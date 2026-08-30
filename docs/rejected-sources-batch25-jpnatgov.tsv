@@ -1,0 +1,166 @@
+https://www.mofa.go.jp/mofaj/	BOT_WALL (403 to every UA tried, incl. browser UA)
+https://www.mofa.go.jp/mofaj/rss/index.xml	BOT_WALL (403)
+https://www.mofa.go.jp/mofaj/press/rss/index.xml	BOT_WALL (403)
+https://www.jpo.go.jp/	BOT_WALL (HTTP 202 empty body challenge)
+https://www.jpo.go.jp/rss/news.xml	BOT_WALL (403)
+https://www.jpo.go.jp/news/koho/press/index.html	BOT_WALL (202 empty)
+https://www.courts.go.jp/hanrei/search2/index.html?courtCaseType=1&filter[recent]=1	NOT_RECORDS (Vue client-rendered; 11 nav anchors only, no JSON endpoint exposed)
+https://www.courts.go.jp/app/hanrei_jp/list1?page=1	DEAD (404, old judgment list path)
+https://www.courts.go.jp/rss/index.xml	DEAD (404)
+https://e-koukoku.moj.go.jp/	NOT_RECORDS (landing page, 0 notice anchors; search is form-driven)
+https://rssystem.go.jp/api/projects/?search=…	FILTER_IGNORED (count 30239 same as unfiltered; q= works and is registered instead)
+https://rssystem.go.jp/api/projects/?name=…	FILTER_IGNORED (same count as unfiltered)
+https://rssystem.go.jp/api/projects/?keyword=…	FILTER_IGNORED (same count as unfiltered)
+https://rssystem.go.jp/api/projects/?ministry=meti	FILTER_IGNORED (same count as unfiltered)
+https://rssystem.go.jp/api/indicators/?page=1	DEAD (timeout 30s, 0 bytes)
+https://www.sangiin.go.jp/cgi-bin/search/search-gian.cgi?q=…	FILTER_IGNORED (338761 bytes for real term and for zzqxv9)
+https://www.sangiin.go.jp/japanese/rss/index.html	DEAD (404)
+https://www.sangiin.go.jp/rss/sangiin.rdf	DEAD (404)
+https://www.sangiin.go.jp/japanese/joho1/kousei/giin/kaiha/kaiha221.htm	NOT_RECORDS (table text, no per-record anchors)
+https://www.sangiin.go.jp/jpn/gianjoho/ketsugi/221/futai_ind.html	NOT_RECORDS (no per-record anchors)
+https://www.sangiin.go.jp/japanese/joho1/kaigirok/kaigirok.htm	DUPLICATE_HOST (links only into kokkai.ndl.go.jp, already in tree)
+https://global.jaxa.jp/rss/new.rdf	EMPTY_RESULTSET (0 items)
+https://jsite.mhlw.go.jp/osaka-roudoukyoku/rss/osaka-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/osaka-roudoukyoku/rss/osaka-roudoukyoku-news.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/aichi-roudoukyoku/rss/aichi-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/kanagawa-roudoukyoku/rss/kanagawa-roudoukyoku-houdou.xml	EMPTY_RESULTSET (1 item)
+https://jsite.mhlw.go.jp/hokkaido-roudoukyoku/rss/hokkaido-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/hokkaido-roudoukyoku/rss/hokkaido-roudoukyoku-news.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/hyogo-roudoukyoku/rss/hyogo-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/saitama-roudoukyoku/rss/saitama-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/saitama-roudoukyoku/rss/saitama-roudoukyoku-news.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/chiba-roudoukyoku/rss/chiba-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/miyagi-roudoukyoku/rss/miyagi-roudoukyoku-houdou.xml	DEAD (404)
+https://jsite.mhlw.go.jp/miyagi-roudoukyoku/rss/miyagi-roudoukyoku-news.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/kyoto-roudoukyoku/rss/kyoto-roudoukyoku-news.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/shizuoka-roudoukyoku/rss/shizuoka-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/okinawa-roudoukyoku/rss/okinawa-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/okinawa-roudoukyoku/rss/okinawa-roudoukyoku-news.xml	EMPTY_RESULTSET (1 item)
+https://jsite.mhlw.go.jp/niigata-roudoukyoku/rss/niigata-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/niigata-roudoukyoku/rss/niigata-roudoukyoku-news.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/aomori-roudoukyoku/rss/aomori-roudoukyoku-news.xml	EMPTY_RESULTSET (1 item)
+https://jsite.mhlw.go.jp/iwate-roudoukyoku/rss/iwate-roudoukyoku-news.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/iwate-roudoukyoku/rss/iwate-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/fukushima-roudoukyoku/rss/fukushima-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/ibaraki-roudoukyoku/rss/ibaraki-roudoukyoku-news.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/ibaraki-roudoukyoku/rss/ibaraki-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/tochigi-roudoukyoku/rss/tochigi-roudoukyoku-news.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/tochigi-roudoukyoku/rss/tochigi-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/toyama-roudoukyoku/rss/toyama-roudoukyoku-news.xml	EMPTY_RESULTSET (1 item)
+https://jsite.mhlw.go.jp/toyama-roudoukyoku/rss/toyama-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/fukui-roudoukyoku/rss/fukui-roudoukyoku-news.xml	EMPTY_RESULTSET (1 item)
+https://jsite.mhlw.go.jp/fukui-roudoukyoku/rss/fukui-roudoukyoku-houdou.xml	EMPTY_RESULTSET (1 item)
+https://jsite.mhlw.go.jp/nagano-roudoukyoku/rss/nagano-roudoukyoku-news.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/nagano-roudoukyoku/rss/nagano-roudoukyoku-houdou.xml	DEAD (404)
+https://jsite.mhlw.go.jp/gifu-roudoukyoku/rss/gifu-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/nara-roudoukyoku/rss/nara-roudoukyoku-houdou.xml	EMPTY_RESULTSET (1 item)
+https://jsite.mhlw.go.jp/wakayama-roudoukyoku/rss/wakayama-roudoukyoku-news.xml	EMPTY_RESULTSET (1 item)
+https://jsite.mhlw.go.jp/wakayama-roudoukyoku/rss/wakayama-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/tottori-roudoukyoku/rss/tottori-roudoukyoku-news.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/tottori-roudoukyoku/rss/tottori-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/okayama-roudoukyoku/rss/okayama-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/yamaguchi-roudoukyoku/rss/yamaguchi-roudoukyoku-news.xml	EMPTY_RESULTSET (1 item)
+https://jsite.mhlw.go.jp/kagawa-roudoukyoku/rss/kagawa-roudoukyoku-news.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/nagasaki-roudoukyoku/rss/nagasaki-roudoukyoku-news.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/nagasaki-roudoukyoku/rss/nagasaki-roudoukyoku-houdou.xml	EMPTY_RESULTSET
+https://jsite.mhlw.go.jp/oita-roudoukyoku/rss/oita-roudoukyoku-houdou.xml	EMPTY_RESULTSET (1 item)
+https://lfb.mof.go.jp/okinawa/information.xml	DEAD (404; Okinawa is under the Okinawa General Bureau, not a finance bureau)
+https://www.jeed.go.jp/general/rss/topix.xml	DEAD (404)
+https://www.jehdra.go.jp/rss/news.rss	EMPTY_RESULTSET (1 item; HTML notice list registered instead)
+https://www.johas.go.jp/wp-json/wp/v2/posts?per_page=100	EMPTY_RESULTSET ([] )
+https://www.johas.go.jp/feed/	EMPTY_RESULTSET (0 items)
+https://www.nich.go.jp/wp-json/wp/v2/posts?per_page=100	EMPTY_RESULTSET ([])
+https://www.nise.go.jp/feed/	DEAD (500; wp-json registered instead)
+https://www.jcho.go.jp/feed/	DUPLICATE (same posts as the wp-json row, 10 vs 100)
+https://www.jishin.go.jp/feed/	DUPLICATE (same posts as the wp-json row)
+https://www.hkd.meti.go.jp/rss/indexatom.xml	DUPLICATE (Atom form of the registered RSS)
+https://www.nims.go.jp/news/news.xml	DUPLICATE (subset of newsall.xml)
+https://www.mint.go.jp/wp-json/wp/v2/posts?per_page=100	LOGIN (401)
+https://www.nstac.go.jp/wp-json/wp/v2/posts?per_page=100	LOGIN (401)
+https://www.pa.thr.mlit.go.jp/rss2.xml	BOT_WALL (403)
+https://www.pa.cgr.mlit.go.jp/rss2.xml	BOT_WALL (403)
+https://www.pa.hrr.mlit.go.jp/rss2.xml	BOT_WALL (403)
+https://www.pa.skr.mlit.go.jp/rss2.xml	BOT_WALL (403)
+https://www.pa.ktr.mlit.go.jp/rss2.xml	BOT_WALL (403)
+https://www.pa.qsr.mlit.go.jp/rss2.xml	BOT_WALL (403)
+https://www.chubu.meti.go.jp/rss/news-list-all.html	NOT_RECORDS (RSS index page lists no feed files)
+https://www.chubu.meti.go.jp/rss/press-list-all.html	NOT_RECORDS
+https://www.kansai.meti.go.jp/	BOT_WALL (403 even with browser UA)
+https://www.tohoku.meti.go.jp/	BOT_WALL (403)
+https://www.chugoku.meti.go.jp/	BOT_WALL (403)
+https://www.shikoku.meti.go.jp/	BOT_WALL (403)
+https://www.kyushu.meti.go.jp/	BOT_WALL (403)
+https://www.enecho.meti.go.jp/	BOT_WALL (202 empty on second fetch)
+https://www.famic.go.jp/ffis/feed/sub1.html	NOT_RECORDS (HTML page, not a feed)
+https://www.famic.go.jp/ffis/feed/sub4_inspection.html	NOT_RECORDS
+https://www.famic.go.jp/public_information/supply_information/nyuusatsu/	EMPTY_RESULTSET (1 anchor)
+https://www.ffpri.affrc.go.jp/rss-jp.xml	DEAD (connection timeout)
+https://www.jcg.go.jp/	DEAD (timeout; kaiho.mlit.go.jp already in tree)
+https://www.mext.go.jp/b_menu/houdou/index.html	DEAD (404)
+https://www.moj.go.jp/hisho/kouhou/hodo_index.html	DEAD (404)
+https://www.moj.go.jp/rss/whatsnew.rdf	DEAD (404)
+https://www.jbaudit.go.jp/pr/kensa/index.html	DEAD (404)
+https://www.nedo.go.jp/news/press/index.html	DEAD (404)
+https://www.cas.go.jp/jp/houdou/index.html	EMPTY_RESULTSET (1 anchor)
+https://www.reconstruction.go.jp/topics/	DEAD (404 soft page)
+https://www.jil.go.jp/information/index.html	DEAD (404)
+https://www.kkr.mlit.go.jp/news/top/press/index.html	DEAD (redirects to err page)
+https://wwwtb.mlit.go.jp/chubu/press/	EMPTY_RESULTSET (0 press anchors)
+https://wwwtb.mlit.go.jp/kyushu/press/	DEAD (404)
+https://wwwtb.mlit.go.jp/tohoku/press/	DEAD (404)
+https://wwwtb.mlit.go.jp/hokushin/press/	DEAD (404)
+https://wwwtb.mlit.go.jp/chugoku/press/	DEAD (404)
+https://wwwtb.mlit.go.jp/shikoku/press/	DEAD (404)
+https://www.dbj.jp/news/	EMPTY_RESULTSET (4 anchors, JS-driven list)
+https://www.archives.go.jp/news/	BOT_WALL (403)
+https://www.kokusen.go.jp/news/	BOT_WALL (403)
+https://www.ur-net.go.jp/aboutus/press/	BOT_WALL (403)
+https://www.jasso.go.jp/about/press/index.html	EMPTY_RESULTSET (0 matching anchors; JS list)
+https://www.clb.go.jp/news/	EMPTY_RESULTSET (4 anchors)
+https://www.rinya.maff.go.jp/j/press/	EMPTY_RESULTSET (6 anchors, index of years only)
+https://www.jrtt.go.jp/corporate/public_relations/release/	EMPTY_RESULTSET (2 anchors)
+https://www.cyber.go.jp/news/index.html	EMPTY_RESULTSET (4 anchors)
+https://www.naltec.go.jp/news/	EMPTY_RESULTSET (0 matching anchors)
+https://www.mint.go.jp/shintyaku/topics/	EMPTY_RESULTSET (7 anchors, mostly nav)
+https://www.nich.go.jp/information/	EMPTY_RESULTSET (4 anchors)
+https://www.kensatsu.go.jp/kakuchou/supreme/index.html	DEAD (404; kensatsu.go.jp has no list pages)
+https://www.jinji.go.jp/press/index.html	DEAD (404)
+https://www.cfa.go.jp/press	EMPTY_RESULTSET (1 anchor; JS list)
+https://www.fsc.go.jp/osirase/	EMPTY_RESULTSET (0 anchors)
+https://www.nenkin.go.jp/oshirase/index.html	EMPTY_RESULTSET (4 anchors)
+https://www.water.go.jp/honsya/honsya/news/index.html	EMPTY_RESULTSET (0 anchors)
+https://www.alic.go.jp/topics/index.html	DEAD (404)
+https://www.ncc.go.jp/jp/information/pr_release/index.html	EMPTY_RESULTSET (837-byte redirect stub)
+https://www.jfc.go.jp/n/release/index.html	DEAD (404)
+https://www.thr.mlit.go.jp/nyusatsu.html	EMPTY_RESULTSET (2 anchors)
+https://www.cbr.mlit.go.jp/kisya/index.htm	EMPTY_RESULTSET (489-byte stub)
+https://www.thr.mlit.go.jp/Bumon/kisya/kisyah/index.html	DEAD (404)
+https://www.gyoukaku.go.jp/chotatsu/index.html	DEAD (404)
+https://www.ntsel.go.jp/chotatsu/	EMPTY_RESULTSET (1 KB stub)
+https://www.jisc.go.jp/newstopics/	EMPTY_RESULTSET (0 matching anchors)
+https://www.nasva.go.jp/wp-json/wp/v2/posts?per_page=100	NOT_RECORDS (HTML, not WordPress)
+https://www.jrtt.go.jp/wp-json/wp/v2/posts?per_page=100	NOT_RECORDS (HTML)
+https://www.jhf.go.jp/wp-json/wp/v2/posts?per_page=100	NOT_RECORDS (HTML)
+https://www.jpnsport.go.jp/wp-json/wp/v2/posts?per_page=100	NOT_RECORDS (HTML)
+https://www.nwec.go.jp/wp-json/wp/v2/posts?per_page=100	NOT_RECORDS (HTML)
+https://www.jasso.go.jp/wp-json/wp/v2/posts?per_page=100	NOT_RECORDS (HTML)
+https://www.enaa.or.jp/feed	OUT_OF_BEAT (industry association, not government)
+https://www.jaif.or.jp/wp-json/	OUT_OF_BEAT (industry forum, not government)
+https://www.pref.osaka.lg.jp/shinchaku/shinchaku.xml	OUT_OF_BEAT (prefecture; jpmuni beat)
+https://www.jnaa.go.jp/	DEAD (NXDOMAIN)
+https://www.jnes.go.jp/	DEAD (NXDOMAIN; merged into NRA)
+https://www.jpnaas.go.jp/	DEAD (NXDOMAIN)
+https://www.jsc.go.jp/	DEAD (NXDOMAIN)
+https://www.kanpou.npb.go.jp/	DEAD (NXDOMAIN)
+https://www.kids.go.jp/	DEAD (NXDOMAIN)
+https://www.mic.go.jp/	DEAD (NXDOMAIN)
+https://www.naa.go.jp/	DEAD (NXDOMAIN)
+https://www.nid.go.jp/	DEAD (NXDOMAIN)
+https://www.sesc.go.jp/	DEAD (NXDOMAIN; SESC lives under fsa.go.jp, in tree)
+https://www.jtsb.mlit.go.jp/	DEAD (NXDOMAIN; jtsb.mlit.go.jp without www is live and registered)
+https://www.niye.go.jp/	BOT_WALL (403)
+https://data.e-gov.go.jp/data/api/3/action/package_search?q={q}&rows=100	DUPLICATE (already JPL_EGOV_DATA_SEARCH_PIVOT in batch23.jplocal)
+https://global.jaxa.jp/rss/press.rdf	DUPLICATE_HOST (global.jaxa.jp in tree, vsrc_aviation_2.c)
+https://www.env.go.jp/press/	DUPLICATE (already in batch23.jpdeep)
+https://www.gpif.go.jp/rss.xml	DUPLICATE_ENDPOINT within batch 25 — same URL kept as JP25_JPFIN_GPIF_RSS
+https://www.jbic.go.jp/ja/information/press/index.html	DUPLICATE (same page as JP25_JPFIN_JBIC_PRESS https://www.jbic.go.jp/ja/information/press/ — dropped at lint dup-endpoint)
