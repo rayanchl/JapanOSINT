@@ -59,6 +59,16 @@ mkdir -p "$RUN"
 : "${LLAMA_SUGGEST_MODEL:=$REPO/models/qwen2.5-1.5b-instruct-q4_k_m.gguf}"
 : "${LLAMA_SUGGEST_PORT:=8081}"
 : "${LLAMA_SUGGEST_CTX:=4096}"
+# optional embedding pod (hybrid semantic search, core/embed_pod.c). The C
+# binary's pod is inert unless JO_EMBED_URL is set, and it is set below ONLY
+# when this pod actually starts — so a missing model means an honest
+# "disabled" in /api/intel/semantic's coverage block, never a pod retrying a
+# port nothing listens on. Model is NOT downloaded: drop bge-m3 (1024-d) or
+# multilingual-e5-small/-base (384/768-d) into models/ or point at it.
+: "${LLAMA_EMBED_MODEL:=$REPO/models/bge-m3-Q8_0.gguf}"
+: "${LLAMA_EMBED_PORT:=8082}"
+: "${LLAMA_EMBED_POOLING:=}"                        # cls|mean|last; empty = GGUF metadata
+: "${JO_EMBED_URL:=}"                               # set by cmd_llama_embed when the pod is up
 # Orchestrator behaviour
 # Expected `--list-sources` count. Empty => derive it from the source tree via
 # native/tools/lint_sources.py --count. It used to be hardcoded to 476, which
@@ -69,7 +79,7 @@ mkdir -p "$RUN"
 : "${LLAMA_WAIT:=240}"                              # s to wait for model load
 : "${SERVER_WAIT:=30}"                              # s to wait for httpd listen
 
-DO_BUILD=1 DO_SERVER=1 DO_LLAMA=1 DO_SUGGEST_LLAMA=1 DO_MAINT=0 REBUILD=0 FORCE=0
+DO_BUILD=1 DO_SERVER=1 DO_LLAMA=1 DO_SUGGEST_LLAMA=1 DO_EMBED_LLAMA=1 DO_MAINT=0 REBUILD=0 FORCE=0
 
 # ---- ui helpers ------------------------------------------------------------
 c(){ printf '\033[%sm' "$1"; }; NC=$(c 0); B=$(c '1;36'); G=$(c '1;32'); Y=$(c '1;33'); R=$(c '1;31')
@@ -85,6 +95,7 @@ while [ $# -gt 0 ]; do case "$1" in
   --no-server) DO_SERVER=0 ;;
   --no-llama)  DO_LLAMA=0 ;;
   --no-suggest-llama) DO_SUGGEST_LLAMA=0 ;;
+  --no-embed-llama) DO_EMBED_LLAMA=0 ;;
   --maint)     DO_MAINT=1 ;;
   --rebuild)   REBUILD=1 ;;
   --force)     FORCE=1 ;;
@@ -117,7 +128,8 @@ binenv(){ BINENV=( "PORT=$PORT" "JO_DB=$JO_DB" "JO_SCHEMA=$JO_SCHEMA"
   [ -n "${SUPABASE_URL:-}" ]       && BINENV+=( "SUPABASE_URL=$SUPABASE_URL" )
   [ -n "${SUPABASE_JWT_SECRET:-}" ]&& BINENV+=( "SUPABASE_JWT_SECRET=$SUPABASE_JWT_SECRET" )
   [ -n "${SUPABASE_AUD:-}" ]       && BINENV+=( "SUPABASE_AUD=$SUPABASE_AUD" )
-  [ -n "${LLM_MODEL:-}" ]          && BINENV+=( "LLM_MODEL=$LLM_MODEL" ); }
+  [ -n "${LLM_MODEL:-}" ]          && BINENV+=( "LLM_MODEL=$LLM_MODEL" );
+  [ -n "${JO_EMBED_URL:-}" ]       && BINENV+=( "JO_EMBED_URL=$JO_EMBED_URL" ); }
 
 # wait until $1 (a log file) contains regex $2, up to $3 seconds
 wait_log(){ local f="$1" re="$2" t="$3" e=$((SECONDS+$3))
@@ -143,6 +155,7 @@ ${G}POD SELECTION (./launch.sh up ...)${NC}
   --no-server        don't start the http+scheduler pod
   --no-llama         don't start llama-server (server still boots; LLM degrades)
   --no-suggest-llama don't start the suggest llama pod (suggest falls back to :8080)
+  --no-embed-llama   don't start the embedding llama pod (/api/intel/semantic → 503)
   --maint            after server is up, run llm-enricher once (warm graph)
   --rebuild          make clean && make (full)        --force  skip make-guard
   --port N  --db PATH  --env-file PATH  --model PATH
@@ -190,7 +203,7 @@ EOF
 # ---- freeze: stop OUR stale procs; guard a concurrent make ----------------
 cmd_freeze(){
   say "freeze: stopping anything we previously launched"
-  for p in server llama llama-suggest; do
+  for p in server llama llama-suggest llama-embed; do
     if alive "$p"; then kill "$(cat "$(pidfile "$p")")" 2>/dev/null && ok "stopped $p pod"; fi
     rm -f "$(pidfile "$p")"
   done
@@ -323,6 +336,33 @@ cmd_llama_suggest(){
   else tail -15 "$lg"; die "suggest-llama /health not ready in ${LLAMA_WAIT}s (see $lg)"; fi
 }
 
+# ---- embedding llama pod (optional; hybrid semantic search) ---------------
+# Skips (does not die) when the model file is absent: semantic search is an
+# addition to the stack, not a precondition of it. JO_EMBED_URL is exported
+# only on success so the server pod — which must start AFTER this one for the
+# variable to reach it; cmd_up orders it so — sees a URL that answers.
+cmd_llama_embed(){
+  alive llama-embed && { warn "embed-llama pod already running (pid $(cat "$(pidfile llama-embed)"))"; JO_EMBED_URL="http://$LLAMA_HOST:$LLAMA_EMBED_PORT"; return; }
+  [ -x "$LLAMA_BIN" ] || { warn "embed-llama skipped: llama-server missing ($LLAMA_BIN)"; return; }
+  [ -f "$LLAMA_EMBED_MODEL" ] || { warn "embed-llama skipped: no embedding model at $LLAMA_EMBED_MODEL (bge-m3 / multilingual-e5 GGUF; set LLAMA_EMBED_MODEL). /api/intel/semantic → 503"; return; }
+  local lg; lg="$(logfile llama-embed)"; : >"$lg"
+  say "embed-llama: $(basename "$LLAMA_BIN")  $(basename "$LLAMA_EMBED_MODEL")  :$LLAMA_EMBED_PORT (--embedding)"
+  local libdir; libdir="$(dirname "$LLAMA_BIN")"
+  local pool=(); [ -n "$LLAMA_EMBED_POOLING" ] && pool=( --pooling "$LLAMA_EMBED_POOLING" )
+  # --ubatch-size must hold the longest input (non-causal attention embeds the
+  # whole prompt in one micro-batch); JO_EMBED_MAX_CHARS default 1000 bytes fits.
+  ( cd "$libdir" && exec nohup env "DYLD_LIBRARY_PATH=$libdir:${DYLD_LIBRARY_PATH:-}" \
+      "$LLAMA_BIN" -m "$LLAMA_EMBED_MODEL" --port "$LLAMA_EMBED_PORT" --host "$LLAMA_HOST" \
+      --embedding --ctx-size 2048 --batch-size 2048 --ubatch-size 2048 "${pool[@]}" \
+      >>"$lg" 2>&1 ) &
+  echo $! >"$(pidfile llama-embed)"
+  say "embed-llama: loading model — waiting up to ${LLAMA_WAIT}s for /health"
+  if wait_http "http://$LLAMA_HOST:$LLAMA_EMBED_PORT/health" "$LLAMA_WAIT"; then
+    JO_EMBED_URL="http://$LLAMA_HOST:$LLAMA_EMBED_PORT"
+    ok "embed-llama /health → 200 (ready @ $JO_EMBED_URL; JO_EMBED_URL passed to the server pod)"
+  else tail -15 "$lg"; warn "embed-llama /health not ready in ${LLAMA_WAIT}s (see $lg); JO_EMBED_URL left unset"; fi
+}
+
 # ---- maintenance / enrich pod (one-shot) ----------------------------------
 cmd_maint(){
   [ -x "$BIN" ] || die "no bin/japanosint — build first"
@@ -337,13 +377,14 @@ cmd_maint(){
 # ---- status / down / logs --------------------------------------------------
 cmd_status(){
   say "status"
-  for p in server llama llama-suggest; do
+  for p in server llama llama-suggest llama-embed; do
     if alive "$p"; then ok "$p pod  RUNNING  pid=$(cat "$(pidfile "$p")")  log=$(logfile "$p")"
     else warn "$p pod  stopped"; fi
   done
   curl -fsS -m3 "http://127.0.0.1:$PORT/api/health"            2>/dev/null && echo "  ← :$PORT /api/health" || warn "server :$PORT not answering /api/health"
   curl -fsS -m3 "http://127.0.0.1:$LLAMA_PORT/health"          2>/dev/null && echo "  ← :$LLAMA_PORT llama /health" || warn "llama :$LLAMA_PORT not answering /health"
   curl -fsS -m3 "http://127.0.0.1:$LLAMA_SUGGEST_PORT/health"  2>/dev/null && echo "  ← :$LLAMA_SUGGEST_PORT suggest-llama /health" || warn "suggest-llama :$LLAMA_SUGGEST_PORT not answering /health"
+  curl -fsS -m3 "http://127.0.0.1:$LLAMA_EMBED_PORT/health"    2>/dev/null && echo "  ← :$LLAMA_EMBED_PORT embed-llama /health" || warn "embed-llama :$LLAMA_EMBED_PORT not answering /health (optional; /api/intel/semantic → 503)"
 }
 cmd_down(){ cmd_freeze; }
 cmd_logs(){ local w="${1:-server}"; tail -n 60 -f "$(logfile "$w")"; }
@@ -352,6 +393,8 @@ cmd_logs(){ local w="${1:-server}"; tail -n 60 -f "$(logfile "$w")"; }
 cmd_up(){
   cmd_freeze
   [ "$DO_BUILD"  = 1 ] && cmd_build  || say "build skipped (--no-build)"
+  # embed pod BEFORE the server: cmd_serve snapshots JO_EMBED_URL into BINENV.
+  [ "$DO_EMBED_LLAMA" = 1 ] && cmd_llama_embed || say "embed-llama skipped (--no-embed-llama)"
   [ "$DO_SERVER" = 1 ] && cmd_serve  || say "server skipped (--no-server)"
   [ "$DO_LLAMA"  = 1 ] && cmd_llama  || say "llama skipped (--no-llama)"
   [ "$DO_SUGGEST_LLAMA" = 1 ] && cmd_llama_suggest || say "suggest-llama skipped (--no-suggest-llama)"
@@ -366,6 +409,7 @@ case "$CMD" in
   serve|server) cmd_serve ;;
   llama)        cmd_llama ;;
   llama-suggest) cmd_llama_suggest ;;
+  llama-embed)  cmd_llama_embed ;;
   maint)        cmd_maint ;;
   status)       cmd_status ;;
   down|stop)    cmd_down ;;

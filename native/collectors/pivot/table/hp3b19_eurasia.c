@@ -270,23 +270,6 @@ static const hp_source HP3B19_EURASIA[] = {
       "series exist at all, and each matrix code resolves to the "
       "table's own dimension metadata and data" },
 
-  { .id = "RO_TEMPO_MATRIX", .name = "Romanian National Institute of Statistics — TEMPO matrix "
-      "metadata",
-    .name_ja = "ルーマニア国家統計院 TEMPO表メタデータ",
-    .category = "economy", .portal = "http://statistici.insse.ro",
-    .record_type = "statistical-table",
-    .tags = "\"romania\",\"statistics\",\"tempo\",\"insse\",\"economy\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "http://statistici.insse.ro:8077/tempo-ins/matrix/{v}",
-    .array_path = "dimensionsMap",
-    .id_keys = "dimCode",
-    .title_keys = "label",
-    .description = "The definition of one TEMPO statistical matrix: its dimensions, "
-      "each dimension's coded option list with labels, the periodicity, "
-      "the measurement unit and the data source note. This is the "
-      "record that tells a machine how to request the actual numbers "
-      "for a Romanian series" },
-
   { .id = "RO_DATAGOV_PACKAGE", .name = "Romanian national open data portal — dataset detail",
     .name_ja = "ルーマニア政府オープンデータ データセット詳細",
     .category = "reference", .portal = "https://data.gov.ro",

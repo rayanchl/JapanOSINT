@@ -1,0 +1,21 @@
+id	url	verdict	kind	items	http	bytes	note
+JSTAGE_ARTICLE_SEARCH	https://api.jstage.jst.go.jp/searchapi/do?service=3&article=%E9%98%B2%E7%81%BD&count=100	FILTER_IGNORED	atom	100	200	143920	filter ignored: an impossible entity returned 100 records vs 100 for the real one
+CKAN_TOKYO_SEARCH	https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_search?q=%E4%BA%8B%E6%A5%AD%E8%80%85&rows=100	FILTER_IGNORED	json:result.results	100	200	394860	filter ignored: an impossible entity returned 100 records vs 100 for the real one
+CKAN_TOKYO_RECENT	https://catalog.data.metro.tokyo.lg.jp/api/3/action/recently_changed_packages_activity_list?limit=100	HTTP_ERR		0	400	0	BAD REQUEST
+CKAN_SAPPORO_SEARCH	https://ckan.pf-sapporo.jp/api/3/action/package_search?q=%E6%96%BD%E8%A8%AD&rows=100	FILTER_IGNORED	json:result.results	34	200	327424	filter ignored: an impossible entity returned 88 records vs 34 for the real one
+MSTDNJP_TRENDING_LINKS	https://mstdn.jp/api/v1/trends/links	EMPTY	json-array	0	200	2	parsed but zero items
+PAWOO_TRENDING_TAGS	https://pawoo.net/api/v1/trends/tags	EMPTY	json-array	0	200	2	parsed but zero items
+
+id_or_family	verdict	hand-verification
+JSTAGE_ARTICLE_SEARCH	FILTER_IGNORED_CONFIRMED	service=3&article= AND service=3&text= both return 20 of 20 entries for an impossible term - the whole J-STAGE free-text family ignores its filter.
+JSTAGE_MATERIAL_SEARCH	HTTP200_REFUSAL	service=2 returns <result><status>ERR_001</status></result> inside an HTTP 200, with a single empty <entry>. Fetched 10, emitted 0.
+CKAN_TOKYO_SEARCH	FILTER_IGNORED_CONFIRMED	q=<impossible> returns 9660, the entire catalogue, against 1411 for a real term.
+CKAN_SAPPORO_SEARCH	FILTER_IGNORED_CONFIRMED	q=<impossible> returns 101, the entire catalogue, against 34 for a real term.
+CKAN_TOKYO_RECENT	HTTP_400	recently_changed_packages_activity_list answers 400 on this portal.
+DATAGOJP_ORG_x23	FILTER_IGNORED_CONFIRMED	www.data.go.jp returns 18141 - the whole catalogue - for fq=organization:<impossible>; all 23 candidate organisation rows dropped.
+BODIK_ORG_x255	HTTP_403	data.bodik.jp began answering 403 to every request from this host during discovery; 255 organisations holding datasets could not be verified and were cut.
+JMA_FORECAST_x56	ENGINE_CANNOT_ADDRESS	56 of 58 forecast offices are live, but hp_path() does not descend through an array and these documents are a top-level array of timeSeries[].areas[]; a declared array_path reaches one block and discards the rest.
+MACHI_TO_x15 / OPEN2CH_x3	ENCODING_UNSUPPORTED	live and parsing, but subject.txt is Shift_JIS and lib/hpengine.c has no transcode on its fetch path (lib/feedlib.c does, gated on a .jp host). Would store mojibake.
+FIVECH / SHITARABA	HTTP_403	5ch.net and jbbs.shitaraba.net refuse this host outright.
+NDL_SRU_SEARCH	UID_COLLISION	recordPacking=string returns the record as escaped text no XML path can address; 500 emitted, 1 stored. recordPacking=xml re-packs it but the dcndl payload carries its own record elements. Dropped - the three NDL OpenSearch rows cover the catalogue at 500/500.
+CKAN_GEOSPATIAL_SEARCH	FILTER_HONOURED (kept)	the same impossible-entity check on geospatial.jp returns 0 against 1307 - which is why that portal's 155 rows are kept and the three above are not.

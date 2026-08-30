@@ -127,6 +127,9 @@ static int attr_start(const char *s, const char *p) {
 static int html_attr_scan(const char *s, const char *attr, char *out, size_t n,
                           int allow_unquoted) {
   size_t al = strlen(attr);
+  /* The compare below is case-insensitive; the SCAN has to be too. It used
+   * strchr(p, attr[0]) — a lowercase 'h' — so `<BASE HREF="…">` (upper-case
+   * markup is common on older Japanese government pages) was never found. */
   for (const char *p = s; *p; p++) {
     if (!attr_start(s, p)) continue;
     if (strncasecmp(p, attr, al) != 0) continue;

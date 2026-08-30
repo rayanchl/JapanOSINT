@@ -57,6 +57,11 @@ static void cfg_init(void) {
 #define HG_MAX_OVERRIDES 32
 static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = {
   { "reddit.com", 30000 },
+  /* 615 gnews-* rows share news.google.com; under a 4-worker sweep they
+   * fire together and come back empty, alone every one emits (2026-08-25
+   * sweep: 7 marked dead, 5/5 sampled fine serially). 1.5 s keeps a full
+   * pass of the family at ~15 min. */
+  { "news.google.com", 1500 },
 };
 static int g_nover = 1;
 

@@ -1110,7 +1110,11 @@ def check_dup_endpoint():
     # this check 528 -> 559 without introducing a single duplicate request
     # (verified by recomputing over `.url` values alone, which gives 0). Strip
     # the portal assignment before harvesting URLs.
-    portal_re = re.compile(r'\.portal\s*=\s*"[^"]*"')
+    # `.base` is stripped for the same reason: it is the bare host that
+    # page-relative fetches are joined to, not itself a fetched endpoint. Two
+    # tables naming the same host in `.base` while fetching different pages
+    # were being reported as one duplicated request (batch 25, jc3.or.jp).
+    portal_re = re.compile(r'\.(?:portal|base)\s*=\s*"[^"]*"')
     by_url = {}
     for root, _dirs, names in os.walk(COLLECTORS):
         if os.sep + "obj" in root:

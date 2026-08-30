@@ -288,6 +288,13 @@ struct API: Sendable {
     func intelSources() async throws -> IntelSourcesEnvelope {
         try await get("/api/intel/sources")
     }
+    /// Server-side ordering of /api/intel/items. `.relevance` and `.trust`
+    /// require `q` (the server answers 400 otherwise), so callers pass them
+    /// only alongside a non-empty query.
+    enum IntelSort: String {
+        case date, relevance, trust
+    }
+
     /// `collapse` and `langView` are the two post-passes `core/httpd.c` runs
     /// over the envelope intelapi already built:
     ///
@@ -307,6 +314,8 @@ struct API: Sendable {
                     since: String? = nil,
                     limit: Int = 50,
                     cursor: String? = nil,
+                    sort: IntelSort? = nil,
+                    wantTotal: Bool = false,
                     collapse: Bool = false,
                     langView: String? = nil) async throws -> IntelItemsEnvelope {
         var qs: [URLQueryItem] = [URLQueryItem(name: "limit", value: String(limit))]
@@ -316,6 +325,14 @@ struct API: Sendable {
         if let lang { qs.append(URLQueryItem(name: "lang", value: lang)) }
         if let since { qs.append(URLQueryItem(name: "since", value: since)) }
         if let cursor { qs.append(URLQueryItem(name: "cursor", value: cursor)) }
+        // Only send sort when it changes the default AND there is a query to
+        // rank — a ranked sort without q is a 400, not a feed.
+        if let sort, sort != .date, let q, !q.isEmpty {
+            qs.append(URLQueryItem(name: "sort", value: sort.rawValue))
+        }
+        // The count is a second scan server-side; ask for it only when the
+        // view will actually render "N of M".
+        if wantTotal { qs.append(URLQueryItem(name: "total", value: "1")) }
         if collapse { qs.append(URLQueryItem(name: "collapse", value: "1")) }
         if let langView, !langView.isEmpty {
             qs.append(URLQueryItem(name: "lang_view", value: langView))

@@ -11,13 +11,15 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
+#include <math.h>
+#include "source_trust.h"
 
 /* explicit column order shared by item-by-uid and list-items so rows can be
  * read by fixed index (== rowToItem field access in intelStore.js). */
 #define ITEM_COLS \
   "uid,source_id,title,body,summary,link,author,language," \
   "published_at,fetched_at,tags,properties,keywords,lat,lon,geom_source," \
-  "geom_at,record_type,sub_source_id"
+  "geom_at,record_type,sub_source_id,cluster_id"
 
 /* Same columns, same order, table-qualified — for the FTS branch where the
  * join to intel_items_fts makes title/body/summary/keywords ambiguous. The
@@ -28,7 +30,7 @@
   "intel_items.language,intel_items.published_at,intel_items.fetched_at," \
   "intel_items.tags,intel_items.properties,intel_items.keywords," \
   "intel_items.lat,intel_items.lon,intel_items.geom_source," \
-  "intel_items.geom_at,intel_items.record_type,intel_items.sub_source_id"
+  "intel_items.geom_at,intel_items.record_type,intel_items.sub_source_id,"   "intel_items.cluster_id"
 
 /* JSON.parse(text) → cJSON, or fallback. Node does JSON.parse then the value
  * is re-serialized by JSON.stringify; cJSON parse+print round-trips
@@ -118,7 +120,7 @@ static cJSON *row_to_item(sqlite3_stmt *s, int full) {
     *c_author=ctext(s,6), *c_lang=ctext(s,7), *c_pub=ctext(s,8),
     *c_fetch=ctext(s,9), *c_tags=ctext(s,10), *c_props=ctext(s,11),
     *c_kw=ctext(s,12), *c_gsrc=ctext(s,15), *c_gat=ctext(s,16),
-    *c_rt=ctext(s,17), *c_sub=ctext(s,18);
+    *c_rt=ctext(s,17), *c_sub=ctext(s,18), *c_cl=ctext(s,19);
   int latnull = sqlite3_column_type(s,13)==SQLITE_NULL;
   int lonnull = sqlite3_column_type(s,14)==SQLITE_NULL;
   double lat = sqlite3_column_double(s,13), lon = sqlite3_column_double(s,14);
@@ -171,6 +173,11 @@ static cJSON *row_to_item(sqlite3_stmt *s, int full) {
   add_str_or_null(out,"geom_at", c_gat);
   add_str_or_null(out,"record_type", c_rt);
   add_str_or_null(out,"sub_source_id", c_sub);
+  /* cluster_id (simhash.c near-duplicate cluster; the uid of the cluster's
+   * earliest member) only when the row has been fingerprinted and clustered:
+   * a row that is not in any cluster carries no key rather than a null, so
+   * the pre-simhash contract fixtures stay byte-identical. */
+  if (c_cl && *c_cl) cJSON_AddStringToObject(out,"cluster_id", c_cl);
   cJSON_AddItemToObject(out,"provenance", pv);
   if (full) {
     /* getItem → full:true : body, properties, [keywords] */
@@ -223,12 +230,117 @@ char *intelapi_item_by_uid(db_handle *db, const char *uid) {
   return intelapi_item_by_uid_tenant(db, uid, NULL);
 }
 
+/* ── ranking support ──────────────────────────────────────────────────────
+ *
+ * bm25() weights, in intel_items_fts COLUMN ORDER (schema.sql:320 /
+ * fts_schema.h): uid(UNINDEXED)=0, title=10, body=1, summary=3, keywords=2,
+ * link=1, author=1, tags=2, props=1. A hit in the title outranks the same
+ * term buried in a 40 KB body; keywords/tags are curated so they count double.
+ * FTS5's bm25() is NEGATIVE for better matches, so ORDER BY rank ASC is
+ * best-first and -rank is the positive score the trust rerank multiplies. */
+#define BM25_EXPR "bm25(intel_items_fts,0,10,1,3,2,1,1,2,1)"
+#define SNIPPET_EXPR \
+  "snippet(intel_items_fts,-1,'<b>','</b>','\xE2\x80\xA6',24)"
+
+enum { SORT_DATE = 0, SORT_RELEVANCE, SORT_TRUST };
+
+static long env_long(const char *k, long dflt, long lo, long hi) {
+  const char *v = getenv(k);
+  if (!v || !*v) return dflt;
+  long x = atol(v);
+  if (x < lo) x = lo;
+  if (x > hi) x = hi;
+  return x;
+}
+static double env_double(const char *k, double dflt) {
+  const char *v = getenv(k);
+  if (!v || !*v) return dflt;
+  return atof(v);
+}
+
+/* Source-trust table, cached for JO_RERANK_TRUST_TTL seconds (default 300).
+ * source_trust_load() is two GROUP BYs over fetch_log — cheap per /api/status
+ * build, not cheap per search keystroke. Single-threaded httpd loop → a
+ * static is safe. Read-only use of source_trust.h. */
+static const source_trust *trust_table(db_handle *db, int *n_out) {
+  static source_trust *tbl = NULL;
+  static int n = 0;
+  static time_t at = 0;
+  time_t now = time(NULL);
+  long ttl = env_long("JO_RERANK_TRUST_TTL", 300, 0, 86400);
+  if (!tbl || now - at >= ttl) {
+    free(tbl); tbl = NULL; n = 0;
+    tbl = source_trust_load(db, &n);
+    if (!tbl) n = 0;
+    at = now;
+  }
+  *n_out = n;
+  return tbl;
+}
+
+/* ISO-8601 → epoch seconds (UTC), or -1 when the text is not a date we can
+ * read. Only the calendar part is required; a bare YYYY-MM-DD is midnight. */
+static time_t parse_iso(const char *s) {
+  if (!s || strlen(s) < 10) return -1;
+  int y, mo, d, h = 0, mi = 0, se = 0;
+  if (sscanf(s, "%4d-%2d-%2d", &y, &mo, &d) != 3) return -1;
+  if (s[10] == 'T' || s[10] == ' ') sscanf(s + 11, "%2d:%2d:%2d", &h, &mi, &se);
+  struct tm tm = {0};
+  tm.tm_year = y - 1900; tm.tm_mon = mo - 1; tm.tm_mday = d;
+  tm.tm_hour = h; tm.tm_min = mi; tm.tm_sec = se;
+  return timegm(&tm);
+}
+
+/* One candidate row of the trust rerank window. */
+typedef struct {
+  cJSON *item;
+  char   uid[512];
+  char   cluster[512];
+  double rank;      /* bm25, negative-is-better */
+  double trust;     /* f(reliability) */
+  double decay;     /* recency factor */
+  double score;     /* -rank * trust * decay, higher is better */
+} cand;
+
+static int cand_cmp(const void *a, const void *b) {
+  const cand *x = a, *y = b;
+  if (x->score > y->score) return -1;
+  if (x->score < y->score) return 1;
+  return strcmp(x->uid, y->uid);
+}
+
+/* Build an error envelope the route can ship as-is. The status travels via
+ * intelapi_list_items_st(); the body says the same thing in-band so a caller
+ * on the status-less entry point still sees WHY it got no rows. */
+static char *err_body(int *status, int code, const char *err, const char *detail) {
+  if (status) *status = code;
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddStringToObject(o, "error", err);
+  cJSON_AddStringToObject(o, "detail", detail);
+  char *js = cJSON_PrintUnformatted(o);
+  cJSON_Delete(o);
+  return js;
+}
+
 /* GET /api/intel/items — faithful port of intelStore.listItems({}):
  * structured WHERE (source/since/until/lang/tag/record_type/sub_source_id/
  * has_geom) + keyset cursor; ?q= goes through intel_items_fts (segmented
  * exactly like the write path, == entityapi_search / Node intelMirror.search,
  * caller-composed extra WHERE). ORDER/limit/cursor/envelope unchanged, so a
  * query with only `limit` set is byte-identical to the prior contract.
+ *
+ * SORTS. sort=date (default) is the port above. sort=relevance orders the FTS
+ * hits by BM25_EXPR and keys the cursor on (rank,uid), rank carried as %.17g
+ * so the decoded double compares equal to what SQLite computed. sort=trust
+ * fetches the top JO_RERANK_WINDOW (default 500) hits by bm25 and reranks them
+ * here by -bm25 x f(reliability) x decay(age), then pages by offset over that
+ * window. The window is a BOUNDED VIEW of the match set, so meta.rerank states
+ * the window size against the (capped) total — house rule 2.
+ *
+ * TOTALS. page.total is null unless want_total: the count is a second scan of
+ * the whole filter. It is capped at JO_TOTAL_CAP (default 10000) — exact
+ * below the cap, else page.total_gte=cap — so a broad query cannot turn the
+ * feed into a full-table count.
  *
  * TENANCY. This is the primary feed and it carried NO tenant predicate at all,
  * while /api/export (exportapi.c:461) and /api/intel/near (nearapi.c:162) —
@@ -248,7 +360,24 @@ char *intelapi_item_by_uid(db_handle *db, const char *uid) {
  *
  * The breach branch below takes no tenant: breach_items is a global catalog
  * with no tenant column, gated instead by httpd.c's breach_gate(). */
-char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
+char *intelapi_list_items_st(db_handle *db, const intel_items_query *Q,
+                             int *status) {
+  if (status) *status = 200;
+
+  /* Resolve the sort FIRST: a ranking request that cannot be honoured must
+   * not silently become the date feed. */
+  int sort = SORT_DATE;
+  if (Q && Q->sort && *Q->sort && strcmp(Q->sort, "date") != 0) {
+    if      (!strcmp(Q->sort, "relevance")) sort = SORT_RELEVANCE;
+    else if (!strcmp(Q->sort, "trust"))     sort = SORT_TRUST;
+    else return err_body(status, 400, "unknown_sort",
+             "sort must be one of date, relevance, trust");
+    if (!Q->q || !*Q->q)
+      return err_body(status, 400, "sort_requires_q",
+        "sort=relevance and sort=trust rank full-text hits; there is nothing "
+        "to rank without q. Omit sort (or sort=date) for the newest-first feed.");
+  }
+
   /* A source-filtered request for a breach source is served from breach_items
    * via the adapter (keyset over row id). Unfiltered / non-breach requests stay
    * on intel_items, so breach volume never enters the operational feed.
@@ -260,29 +389,51 @@ char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
    * alert inbox on behalf of the delivery worker, which has no auth_user at
    * all. If you add a fourth entry point to breach_adapter_*, gate it there
    * too — the whole finding was that one of four doors was locked. */
-  if (Q && Q->source && *Q->source && breach_meta_is_source(db, Q->source))
+  if (Q && Q->source && *Q->source && breach_meta_is_source(db, Q->source)) {
+    if (sort != SORT_DATE)
+      return err_body(status, 400, "sort_not_supported_for_breach_source",
+        "breach sources are served by the breach adapter, which orders by "
+        "record id only; drop sort= for this source");
     return breach_adapter_list(db, Q->source, Q->q, Q->cursor, Q->limit);
+  }
 
   int safe = Q && Q->limit > 0 ? Q->limit : 50;
   if (safe < 1) safe = 1;
   if (safe > 200) safe = 200;
 
-  /* decode keyset cursor {"p":pub_or_fetched,"u":uid}; bad cursor ignored */
-  char *cur_p = NULL, *cur_u = NULL; cJSON *curj = NULL;
-  if (Q && Q->cursor && *Q->cursor) {
+  /* decode keyset cursor. date: {"p":pub_or_fetched,"u":uid}; relevance:
+   * {"r":"%.17g bm25","u":uid}; trust: {"o":offset}. A cursor that does not
+   * carry the keys this sort needs is IGNORED and disclosed in meta.notes —
+   * a date cursor handed to sort=relevance would otherwise restart at page 1
+   * without a word. A bad (undecodable) cursor is ignored as before. */
+  char *cur_p = NULL, *cur_u = NULL, *cur_r = NULL; cJSON *curj = NULL;
+  double cur_rank = 0; long cur_off = 0;
+  int cursor_given = Q && Q->cursor && *Q->cursor, cursor_used = 0;
+  if (cursor_given) {
     char *dec = b64url_decode(Q->cursor);
     if (dec) {
       curj = cJSON_Parse(dec); free(dec);
       if (curj) {
         cJSON *jp = cJSON_GetObjectItem(curj, "p");
         cJSON *ju = cJSON_GetObjectItem(curj, "u");
-        if (cJSON_IsString(jp)) cur_p = jp->valuestring;
-        if (cJSON_IsString(ju)) cur_u = ju->valuestring;
+        cJSON *jr = cJSON_GetObjectItem(curj, "r");
+        cJSON *jo = cJSON_GetObjectItem(curj, "o");
+        if (sort == SORT_DATE && cJSON_IsString(jp) && cJSON_IsString(ju)) {
+          cur_p = jp->valuestring; cur_u = ju->valuestring; cursor_used = 1;
+        } else if (sort == SORT_RELEVANCE && cJSON_IsString(jr) && cJSON_IsString(ju)) {
+          cur_r = jr->valuestring; cur_u = ju->valuestring;
+          cur_rank = strtod(cur_r, NULL); cursor_used = 1;
+        } else if (sort == SORT_TRUST && cJSON_IsNumber(jo)) {
+          cur_off = (long)jo->valuedouble; if (cur_off < 0) cur_off = 0;
+          cursor_used = 1;
+        }
       }
     }
   }
 
-  /* WHERE fragments + ordered binds — Node listItems() order verbatim. */
+  /* WHERE fragments + ordered binds — Node listItems() order verbatim. The
+   * cursor predicate is kept in its OWN buffer so the total count can reuse
+   * wbuf without it (a total that shrank as you paged would be a lie). */
   char wbuf[4096]; size_t wl = 0; wbuf[0] = 0;
   const char *bnd[24]; int nb = 0;
 #define WPUSH(frag) do { int _n = snprintf(wbuf + wl, sizeof wbuf - wl, \
@@ -305,10 +456,13 @@ char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
   if (Q && Q->sub_source_id) { WPUSH("intel_items.sub_source_id = ?");     bnd[nb++] = Q->sub_source_id; }
   if (Q && Q->has_geom && !strcmp(Q->has_geom, "yes")) WPUSH("intel_items.lat IS NOT NULL");
   if (Q && Q->has_geom && !strcmp(Q->has_geom, "no"))  WPUSH("intel_items.lat IS NULL");
-  if (cur_p) { WPUSH("(COALESCE(intel_items.published_at,intel_items.fetched_at) < ? OR "
-                     "(COALESCE(intel_items.published_at,intel_items.fetched_at) = ? AND intel_items.uid > ?))");
-               bnd[nb++] = cur_p; bnd[nb++] = cur_p; bnd[nb++] = cur_u; }
 #undef WPUSH
+  const char *cursor_sql = "";
+  if (cur_p)
+    cursor_sql = " AND (COALESCE(intel_items.published_at,intel_items.fetched_at) < ? OR "
+                 "(COALESCE(intel_items.published_at,intel_items.fetched_at) = ? AND intel_items.uid > ?))";
+  else if (cur_r)
+    cursor_sql = " AND (f.r > ? OR (f.r = ? AND intel_items.uid > ?))";
 
   /* Build the MATCH expression. fts_query_expr() quotes every token, so no
    * character the user types can reach the FTS5 expression parser as syntax
@@ -342,26 +496,38 @@ char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
   int has_q = matchq != NULL;
   char *segq = matchq;
 
-  char sql[5600];
-  if (has_q) {
-    /* FTS branch: intel_items_fts.uid → intel_items.uid (== entityapi_search
-     * convention); MATCH is bind ?1, structured WHERE appended after. */
-    snprintf(sql, sizeof sql,
-      "SELECT " ITEM_COLS_Q " FROM intel_items "
-      "JOIN intel_items_fts ON intel_items_fts.uid = intel_items.uid "
-      "WHERE intel_items_fts MATCH ?%s "
-      "ORDER BY COALESCE(intel_items.published_at,intel_items.fetched_at) DESC, "
-      "intel_items.uid ASC LIMIT ?",
-      wbuf);                                       /* wbuf already " AND …"/"" */
-  } else {
-    char wclause[4200];
-    if (wl) snprintf(wclause, sizeof wclause, "WHERE%s", wbuf + 4); /* drop " AND" */
-    else    wclause[0] = 0;
-    snprintf(sql, sizeof sql,
-      "SELECT " ITEM_COLS " FROM intel_items %s "
-      "ORDER BY COALESCE(published_at,fetched_at) DESC, uid ASC LIMIT ?",
-      wclause);
+  /* ...except for a RANKED request: "rank the hits for a query that has no
+   * searchable token" has no honest answer other than refusing. */
+  if (sort != SORT_DATE && !has_q) {
+    if (curj) cJSON_Delete(curj);
+    return err_body(status, 400, "sort_requires_q",
+      "q contained no searchable token (only FTS metacharacters), so there "
+      "are no full-text hits to rank");
   }
+
+  long window = env_long("JO_RERANK_WINDOW", 500, 10, 5000);
+  long total_cap = env_long("JO_TOTAL_CAP", 10000, 100, 10000000);
+  int fetch_n = sort == SORT_TRUST ? (int)window : safe;
+
+  /* FROM clause. With q the FTS hits come from an inner query that also
+   * carries the rank, so ORDER BY / the keyset predicate can name `f.r`; the
+   * structured WHERE still binds after the MATCH (bind ?1), as before. */
+  char from[5200];
+  if (has_q)
+    snprintf(from, sizeof from,
+      "FROM (SELECT uid, " BM25_EXPR " AS r FROM intel_items_fts "
+      "WHERE intel_items_fts MATCH ?) f "
+      "JOIN intel_items ON intel_items.uid = f.uid WHERE 1=1%s", wbuf);
+  else
+    snprintf(from, sizeof from, "FROM intel_items WHERE 1=1%s", wbuf);
+
+  char sql[6400];
+  const char *order =
+    sort == SORT_DATE
+      ? "ORDER BY COALESCE(intel_items.published_at,intel_items.fetched_at) DESC, intel_items.uid ASC"
+      : "ORDER BY f.r ASC, intel_items.uid ASC";
+  snprintf(sql, sizeof sql, "SELECT " ITEM_COLS_Q "%s %s%s %s LIMIT ?",
+           has_q ? ", f.r" : ", NULL", from, cursor_sql, order);
 
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) {
@@ -370,27 +536,165 @@ char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
   int bi = 1;
   if (has_q) sqlite3_bind_text(s, bi++, segq, -1, SQLITE_TRANSIENT);
   for (int i = 0; i < nb; i++) sqlite3_bind_text(s, bi++, bnd[i], -1, SQLITE_TRANSIENT);
-  sqlite3_bind_int(s, bi++, safe);
+  if (cur_p) {
+    sqlite3_bind_text(s, bi++, cur_p, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, bi++, cur_p, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, bi++, cur_u, -1, SQLITE_TRANSIENT);
+  } else if (cur_r) {
+    sqlite3_bind_double(s, bi++, cur_rank);
+    sqlite3_bind_double(s, bi++, cur_rank);
+    sqlite3_bind_text(s, bi++, cur_u, -1, SQLITE_TRANSIENT);
+  }
+  sqlite3_bind_int(s, bi++, fetch_n + (sort == SORT_TRUST ? 1 : 0));
 
+  /* Per-row snippet, looked up by FTS rowid through intel_items_fts_uid_map
+   * (the alert_eval.c pattern): computing snippet() inside the ranked query
+   * would evaluate it for every match the sorter sees, not just the page. */
+  sqlite3_stmt *snip = NULL;
+  if (has_q &&
+      sqlite3_prepare_v2(db->h,
+        "SELECT " SNIPPET_EXPR " FROM intel_items_fts "
+        "WHERE intel_items_fts MATCH ?1 AND rowid = "
+        "(SELECT rowid FROM intel_items_fts_uid_map WHERE uid=?2)",
+        -1, &snip, NULL) != SQLITE_OK)
+    snip = NULL;                      /* map missing → items carry no snippet */
+
+  /* Trust rerank inputs, loaded once per call. */
+  int ntrust = 0;
+  const source_trust *ttab = sort == SORT_TRUST ? trust_table(db, &ntrust) : NULL;
+  double half_life = env_double("JO_RERANK_HALFLIFE_DAYS", 90.0);
+  double decay_floor = env_double("JO_RERANK_DECAY_FLOOR", 0.10);
+  double unrated = env_double("JO_RERANK_UNRATED_FACTOR", 0.75);
+  if (half_life <= 0) half_life = 90.0;
+  time_t now = time(NULL);
+
+  cand *cands = NULL; int nc = 0, ccap = 0;
   cJSON *data = cJSON_CreateArray();
-  int n = 0;
-  char last_pub[256] = {0}, last_uid[512] = {0};
+  int n = 0, collapsed = 0;
+  char last_pub[256] = {0}, last_uid[512] = {0}; double last_rank = 0;
+  /* collapse: cluster ids already shown on this page (page is rank-ordered, so
+   * the first member seen is the best-ranked one). */
+  char *seen_cl[5000]; int nseen = 0;     /* ≤ window entries, heap strings */
+#define CL_SEEN(cl) ({ int _d = 0; for (int _i = 0; _i < nseen; _i++)     if (!strcmp(seen_cl[_i], (cl))) { _d = 1; break; }     if (!_d && nseen < 5000) { char *_c = strdup(cl); if (_c) seen_cl[nseen++] = _c; }     _d; })
+
   while (sqlite3_step(s) == SQLITE_ROW) {
-    cJSON *it = row_to_item(s, 0);
-    cJSON_AddItemToArray(data, it);
-    /* track last row's cursor seed: published_at ?? fetched_at, uid */
+    n++;
+    const char *uid = ctext(s, 0) ? ctext(s, 0) : "";
+    const char *cl = ctext(s, 19);
     const char *p = ctext(s, 8); if (!p) p = ctext(s, 9);
     snprintf(last_pub, sizeof last_pub, "%s", p ? p : "");
-    snprintf(last_uid, sizeof last_uid, "%s", ctext(s, 0) ? ctext(s, 0) : "");
-    n++;
+    snprintf(last_uid, sizeof last_uid, "%s", uid);
+    last_rank = sqlite3_column_double(s, 20);
+
+    if (sort != SORT_TRUST && Q && Q->collapse && cl && *cl && CL_SEEN(cl)) {
+      collapsed++; continue;
+    }
+
+    cJSON *it = row_to_item(s, 0);
+    if (snip) {
+      sqlite3_reset(snip);
+      sqlite3_bind_text(snip, 1, segq, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(snip, 2, uid, -1, SQLITE_TRANSIENT);
+      const char *sn = sqlite3_step(snip) == SQLITE_ROW
+                         ? (const char *)sqlite3_column_text(snip, 0) : NULL;
+      add_str_or_null(it, "snippet", sn);
+    }
+    if (sort == SORT_RELEVANCE) cJSON_AddNumberToObject(it, "rank", -last_rank);
+
+    if (sort == SORT_TRUST) {
+      if (nc == ccap) {
+        int ncap = ccap ? ccap * 2 : 64;
+        cand *nw = realloc(cands, (size_t)ncap * sizeof *nw);
+        if (!nw) { cJSON_Delete(it); break; }
+        cands = nw; ccap = ncap;
+      }
+      cand *c = &cands[nc++];
+      memset(c, 0, sizeof *c);
+      c->item = it;
+      snprintf(c->uid, sizeof c->uid, "%s", uid);
+      snprintf(c->cluster, sizeof c->cluster, "%s", cl ? cl : "");
+      c->rank = last_rank;
+      const source_trust *t = source_trust_find(ttab, ntrust, ctext(s, 1));
+      /* f(reliability) = 0.5 + 0.5·r for a rated source (a grade-F source
+       * still keeps half its text score — trust re-orders, it does not
+       * censor); an UNRATED source gets the neutral midpoint, disclosed in
+       * meta.rerank.unrated_factor rather than a fabricated grade. */
+      c->trust = (t && t->rated) ? 0.5 + 0.5 * t->reliability : unrated;
+      time_t ts = parse_iso(p);
+      if (ts < 0) c->decay = 1.0;         /* no readable date: no evidence to decay on */
+      else {
+        double age_d = difftime(now, ts) / 86400.0;
+        if (age_d < 0) age_d = 0;
+        c->decay = pow(0.5, age_d / half_life);
+        if (c->decay < decay_floor) c->decay = decay_floor;
+      }
+      c->score = -c->rank * c->trust * c->decay;
+    } else {
+      cJSON_AddItemToArray(data, it);
+    }
   }
   sqlite3_finalize(s);
+  if (snip) sqlite3_finalize(snip);
+
+  /* Optional capped total, over the same filter WITHOUT the cursor. Exact
+   * below total_cap, otherwise reported as total_gte=total_cap. */
+  long total = -1;
+  if ((Q && Q->want_total) || sort == SORT_TRUST) {
+    char csql[6400];
+    snprintf(csql, sizeof csql, "SELECT COUNT(*) FROM (SELECT 1 %s LIMIT ?)", from);
+    sqlite3_stmt *cs;
+    if (sqlite3_prepare_v2(db->h, csql, -1, &cs, NULL) == SQLITE_OK) {
+      int ci = 1;
+      if (has_q) sqlite3_bind_text(cs, ci++, segq, -1, SQLITE_TRANSIENT);
+      for (int i = 0; i < nb; i++) sqlite3_bind_text(cs, ci++, bnd[i], -1, SQLITE_TRANSIENT);
+      sqlite3_bind_int64(cs, ci++, (sqlite3_int64)total_cap + 1);
+      if (sqlite3_step(cs) == SQLITE_ROW) total = (long)sqlite3_column_int64(cs, 0);
+      sqlite3_finalize(cs);
+    }
+  }
   free(segq);
 
   cJSON *page = cJSON_CreateObject();
-  if (n == safe) {
+  int more = 0;
+  if (sort == SORT_TRUST) {
+    /* Rerank the window, then page it by offset. The (window+1)th row, if it
+     * came back, is only evidence that the window is not the whole match set;
+     * it is dropped from the ranking so the window is exactly `window` wide. */
+    int in_window = nc > (int)window ? (int)window : nc;
+    for (int i = in_window; i < nc; i++) cJSON_Delete(cands[i].item);
+    qsort(cands, (size_t)in_window, sizeof *cands, cand_cmp);
+    int shown = 0; long pos = 0;
+    for (int i = 0; i < in_window; i++) {
+      cand *c = &cands[i];
+      if (Q && Q->collapse && c->cluster[0] && CL_SEEN(c->cluster)) {
+        collapsed++; cJSON_Delete(c->item); continue;
+      }
+      if (pos < cur_off) { pos++; cJSON_Delete(c->item); continue; }
+      if (shown >= safe) { more = 1; cJSON_Delete(c->item); continue; }
+      cJSON_AddNumberToObject(c->item, "rank", -c->rank);
+      cJSON *sc = cJSON_CreateObject();
+      cJSON_AddNumberToObject(sc, "bm25", -c->rank);
+      cJSON_AddNumberToObject(sc, "trust", c->trust);
+      cJSON_AddNumberToObject(sc, "decay", c->decay);
+      cJSON_AddNumberToObject(sc, "score", c->score);
+      cJSON_AddItemToObject(c->item, "rerank", sc);
+      cJSON_AddItemToArray(data, c->item);
+      shown++; pos++;
+    }
+    free(cands);
+    if (more) {
+      char cj[64]; snprintf(cj, sizeof cj, "{\"o\":%ld}", cur_off + shown);
+      char *enc = b64url(cj);
+      cJSON_AddStringToObject(page, "next_cursor", enc); free(enc);
+    } else cJSON_AddNullToObject(page, "next_cursor");
+  } else if (n == fetch_n) {
     cJSON *cur = cJSON_CreateObject();
-    cJSON_AddStringToObject(cur, "p", last_pub);
+    if (sort == SORT_RELEVANCE) {
+      char rb[40]; snprintf(rb, sizeof rb, "%.17g", last_rank);
+      cJSON_AddStringToObject(cur, "r", rb);
+    } else {
+      cJSON_AddStringToObject(cur, "p", last_pub);
+    }
     cJSON_AddStringToObject(cur, "u", last_uid);
     char *cj = cJSON_PrintUnformatted(cur);
     cJSON_Delete(cur);
@@ -400,8 +704,13 @@ char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
   } else {
     cJSON_AddNullToObject(page, "next_cursor");
   }
+  for (int i = 0; i < nseen; i++) free(seen_cl[i]);
+#undef CL_SEEN
   cJSON_AddNumberToObject(page, "limit", safe);
-  cJSON_AddNullToObject(page, "total");
+  if (total < 0)              cJSON_AddNullToObject(page, "total");
+  else if (total <= total_cap) cJSON_AddNumberToObject(page, "total", (double)total);
+  else { cJSON_AddNullToObject(page, "total");
+         cJSON_AddNumberToObject(page, "total_gte", (double)total_cap); }
 
   cJSON *filters = cJSON_CreateObject();   /* echo applied filters (Node route
    * meta.filters); all-NULL input → all null → byte-identical to old output */
@@ -417,6 +726,28 @@ char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddItemToObject(meta, "filters", filters);
+
+  /* Everything below is omitted for the plain feed so the
+   * /api/intel/items?limit=10 contract fixture stays byte-identical. */
+  if (sort != SORT_DATE)
+    cJSON_AddStringToObject(meta, "sort", sort == SORT_TRUST ? "trust" : "relevance");
+  if (sort == SORT_TRUST) {
+    cJSON *rr = cJSON_CreateObject();
+    cJSON_AddNumberToObject(rr, "window", (double)window);
+    cJSON_AddNumberToObject(rr, "candidates", (double)(nc > (int)window ? window : nc));
+    if (total >= 0 && total <= total_cap) cJSON_AddNumberToObject(rr, "of", (double)total);
+    else cJSON_AddNumberToObject(rr, "of_gte", (double)(total > total_cap ? total_cap : n));
+    cJSON_AddBoolToObject(rr, "bounded", total < 0 || total > window);
+    cJSON_AddStringToObject(rr, "formula",
+      "score = -bm25 * (rated ? 0.5+0.5*reliability : unrated_factor) "
+      "* max(decay_floor, 0.5^(age_days/half_life_days))");
+    cJSON_AddNumberToObject(rr, "half_life_days", half_life);
+    cJSON_AddNumberToObject(rr, "decay_floor", decay_floor);
+    cJSON_AddNumberToObject(rr, "unrated_factor", unrated);
+    cJSON_AddNumberToObject(rr, "trust_sources_rated", (double)ntrust);
+    cJSON_AddItemToObject(meta, "rerank", rr);
+  }
+  if (Q && Q->collapse) cJSON_AddNumberToObject(meta, "collapsed", (double)collapsed);
 
   /* DISCLOSE A DROPPED TEXT FILTER. Dropping it is deliberate (see the comment
    * on matchq above: an unparseable q degrades to "unfiltered" rather than to
@@ -438,15 +769,21 @@ char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
    * what keeps the /api/intel/items?limit=10 contract fixture byte-identical:
    * a request with no text filter has nothing to disclose. */
   { int asked = (Q && ((Q->q && *Q->q) || (Q->q_alt && *Q->q_alt)));
+    cJSON *notes = NULL;
     if (asked) {
       cJSON_AddBoolToObject(meta, "q_applied", has_q ? 1 : 0);
       if (!has_q) {
-        cJSON *notes = cJSON_CreateArray();
+        notes = cJSON_CreateArray();
         cJSON_AddItemToArray(notes,
           cJSON_CreateString("q_ignored_no_searchable_token"));
-        cJSON_AddItemToObject(meta, "notes", notes);
       }
-    } }
+    }
+    if (cursor_given && !cursor_used) {
+      if (!notes) notes = cJSON_CreateArray();
+      cJSON_AddItemToArray(notes, cJSON_CreateString("cursor_ignored"));
+    }
+    if (notes) cJSON_AddItemToObject(meta, "notes", notes);
+  }
 
   cJSON *env = cJSON_CreateObject();
   cJSON_AddItemToObject(env, "data", data);
@@ -456,6 +793,10 @@ char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
   cJSON_Delete(env);
   if (curj) cJSON_Delete(curj);
   return js;
+}
+
+char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
+  return intelapi_list_items_st(db, Q, NULL);
 }
 
 /* GET /api/sources — getAllSources(): SELECT * FROM sources

@@ -21,6 +21,7 @@
 #include "isochrone.h"
 #include "vocabapi.h"
 #include "nearapi.h"
+#include "semsearchapi.h"
 #include "camera_stills.h"
 #include "cameraproxy.h"
 #include "uploadapi.h"
@@ -712,10 +713,11 @@ static int qvar(struct mg_http_message *hm, const char *k, char *out,
   return n > 0;
 }
 
-static char *intel_items_run(struct mg_http_message *hm, int *too_long) {
+static char *intel_items_run(struct mg_http_message *hm, int *too_long,
+                             int *st) {
   char src[160]={0}, q[256]={0}, qalt[256]={0}, lang[16]={0}, since[40]={0},
        until[40]={0}, rt[48]={0}, ssid[120]={0}, hg[8]={0}, tag[120]={0},
-       cur[768]={0}, lim[16]={0};
+       cur[768]={0}, lim[16]={0}, sortv[16]={0}, tot[4]={0}, col[4]={0};
   int tl = 0;
   intel_items_query Q = {0};
   if (qvar(hm, "source",        src,  sizeof src,  &tl)) Q.source = src;
@@ -734,9 +736,12 @@ static char *intel_items_run(struct mg_http_message *hm, int *too_long) {
   if (qvar(hm, "tag",           tag,  sizeof tag,  &tl)) Q.tag = tag;
   if (qvar(hm, "cursor",        cur,  sizeof cur,  &tl)) Q.cursor = cur;
   if (qvar(hm, "limit",         lim,  sizeof lim,  &tl)) Q.limit = atoi(lim);
+  if (qvar(hm, "sort",          sortv,sizeof sortv,&tl)) Q.sort = sortv;
+  if (qvar(hm, "total",         tot,  sizeof tot,  &tl)) Q.want_total = tot[0] == '1';
+  if (qvar(hm, "collapse",      col,  sizeof col,  &tl)) Q.collapse = col[0] == '1';
   if (too_long) *too_long = tl;
   if (tl) return NULL;
-  return intelapi_list_items(g_db, &Q);
+  return intelapi_list_items_st(g_db, &Q, st);
 }
 
 /* ── breach corpus gate ────────────────────────────────────────────────────
@@ -1070,22 +1075,18 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           if (!nb) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
           reply_json(c, nst, nb); free(nb); return;
         } }
-      int qtl = 0;
-      char *body = intel_items_run(hm, &qtl);
+      int qtl = 0, ist = 200;
+      char *body = intel_items_run(hm, &qtl, &ist);
       if (qtl) { reply_json(c, 414,
         "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
         "its maximum length; half a filter set cannot be honoured\"}"); return; }
       if (!body) { reply_json(c, 500, "{\"error\":\"failed_to_list_intel_items\"}"); return; }
+      if (ist != 200) { reply_json(c, ist, body); free(body); return; }
       /* Post-passes over the envelope intelapi already built, so every filter,
        * the FTS branch and the keyset cursor keep working untouched. Both
        * return NULL for the default/no-op case, in which case the original
        * bytes ship unchanged — existing clients see no difference. */
-      { char cv[8] = {0};
-        if (mg_http_get_var(&hm->query, "collapse", cv, sizeof cv) > 0 &&
-            cv[0] == '1') {                                  /* roadmap 25 */
-          char *col = simhash_collapse(g_db, "legacy", body);
-          if (col) { free(body); body = col; }
-        } }
+      /* collapse=1 is now applied inside intelapi_list_items (rank-aware). */
       { char lv[16] = {0};
         if (mg_http_get_var(&hm->query, "lang_view", lv, sizeof lv) > 0) {
           translate_view tv = translate_view_parse(lv);      /* roadmap 29 */
@@ -1267,15 +1268,45 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 200, body); free(body); return;
     }
 
+    /* GET /api/intel/semantic?q=&mode=hybrid|vector&limit=&k= — vector /
+     * hybrid (RRF) search over the sqlite-vec index (core/semsearchapi.c).
+     * Tenant-resolved like the ?near= mode of /api/intel/items above, and for
+     * the same reason: the vector arm ranks over the whole index, so rows are
+     * filtered to `tenant_id IN (?,'legacy')` on the way out. */
+    if (eq(u, "/api/intel/semantic")) {
+      char sq[1024] = {0}, smode[16] = {0}, slim[16] = {0}, sk[16] = {0};
+      int stl = 0;
+      qvar(hm, "q", sq, sizeof sq, &stl);
+      qvar(hm, "mode", smode, sizeof smode, &stl);
+      qvar(hm, "limit", slim, sizeof slim, &stl);
+      qvar(hm, "k", sk, sizeof sk, &stl);
+      if (stl) { reply_json(c, 414,
+        "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
+        "its maximum length; half a query cannot be honoured\"}"); return; }
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      int sst = 500;
+      char *sb = semsearchapi_query(g_db, tc.tenant_id, sq, smode,
+                                    atoi(slim), atoi(sk), &sst);
+      if (!sb) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, sst, sb); free(sb); return;
+    }
+
     /* GET /api/intel/search — alias of /api/intel/items */
     if (eq(u, "/api/intel/search")) {
       if (intel_query_is_breach(hm) && breach_gate(c, &usr)) return;
-      int qtl = 0;
-      char *body = intel_items_run(hm, &qtl);
+      int qtl = 0, ist = 200;
+      char *body = intel_items_run(hm, &qtl, &ist);
       if (qtl) { reply_json(c, 414,
         "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
         "its maximum length; half a filter set cannot be honoured\"}"); return; }
       if (!body) { reply_json(c, 500, "{\"error\":\"failed_to_list_intel_items\"}"); return; }
+      if (ist != 200) { reply_json(c, ist, body); free(body); return; }
       reply_json(c, 200, body); free(body); return;
     }
 

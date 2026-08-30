@@ -4,16 +4,26 @@
  * search ingest (pipeline.c). Tables already in core/schema.sql; entities_fts
  * mirror mirrors core/intel.c's fts_write pattern with fts_segment().
  *
- * Tier-1 key is exact (NFKC* + ws-collapse + trim); sameness is the LLM
- * resolver's job (tier-2 es_record_merge/es_union_entities). *NFKC is a
- * documented pragmatic approximation (ws-collapse only; no ICU compat
- * decomposition) — parity abandoned, determinism is what matters; the
- * resolver adjudicates real sameness anyway. Same stance as linecolor/
- * normName elsewhere in the C port. */
+ * Tier-1 key is exact: jpnorm_fold() (lib/jpnorm.h — full/half width, kana
+ * script, Latin case, whitespace; kanji variants NOT folded). Sameness beyond
+ * that is the LLM resolver's job (tier-2 es_record_merge/es_union_entities).
+ *
+ * name_ja / name_romaji are DERIVED from the canonical, not copied from it:
+ * for a CJK canonical they hold the MeCab hiragana reading and its Hepburn
+ * romaji (one canonical macron-less form — see jpnorm_hepburn); both are in
+ * entities_fts, so `yamada` finds 山田 and `やまだ` finds ヤマダ. A person's
+ * two-token romaji is also indexed in swapped order (keywords column). */
 #ifndef JO_ENTITYSTORE_H
 #define JO_ENTITYSTORE_H
 #include "db.h"
 #include <stddef.h>
+
+/* Bump when es_norm_key() or the reading derivation changes. es_norm_migrate
+ * recomputes every entity once per bump and merges the rows that collapse.
+ *   1: jpnorm_fold keys + MeCab readings (was ws-collapse, canonical copied). */
+#define ENTITY_NORM_VERSION 1
+
+/* jpnorm_fold(value) into out (caller-sized; JPNORM_OUT_CAP bytes is safe). */
 
 /* ── the breach quarantine scope ───────────────────────────────────────────
  * A reserved value for entities.tenant_id / entity_mentions.tenant_id. It is
@@ -59,6 +69,12 @@ void  es_breach_scope_migrate(db_handle *db);
 
 /* nfkcCollapse(value): ws-collapse + trim into out (caller-sized). */
 void  es_norm_key(const char *value, char *out, size_t n);
+
+/* One-shot boot pass (see ENTITY_NORM_VERSION). Call from db_open() after
+ * schema.sql has run and before the server starts. Re-runnable: the version
+ * stamp is written last, so an interrupted pass repeats next boot. Returns
+ * the number of entity pairs merged (also logged); JO_ENTITY_REKEY=0 defers. */
+int   es_norm_migrate(db_handle *db);
 
 /* upsertEntity({type,value}). Returns a malloc'd entity_id (caller frees) or
  * NULL on empty value. Idempotent on UNIQUE(type,norm_key); appends new

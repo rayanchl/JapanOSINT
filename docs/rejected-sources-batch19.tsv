@@ -121,3 +121,4 @@ MKDCIRT_WP_POSTS	https://mkd-cirt.mk/wp-json/wp/v2/posts?per_page=50	DUP_ENDPOIN
 CERT_HR_WP_POSTS	https://www.cert.hr/wp-json/wp/v2/posts?per_page=50	DUP_ENDPOINT	same WordPress posts feed as the eurasia-beat *_ADVISORIES row (which now carries body_keys); one endpoint, one source
 GOVCERT_BG_WP_POSTS	https://www.govcert.bg/wp-json/wp/v2/posts?per_page=50	DUP_ENDPOINT	same WordPress posts feed as the eurasia-beat *_ADVISORIES row (which now carries body_keys); one endpoint, one source
 NGX_EQUITIES	https://doclib.ngxgroup.com/REST/api/statistics/equities/?market=&sector=&orderby=&pageSize=100	DUP_ENDPOINT	same NGX equities endpoint as africa-beat NGX_EQUITY_STATISTICS, which declares title/id/date keys
+RO_TEMPO_MATRIX	http://statistici.insse.ro:8077/tempo-ins/matrix/{v}	NEVER_RUNS	static URL with a {v} detail token and no interval — reached only as RO_TEMPO_CONTEXT's detail_url, which already walks every matrix; a standalone row can never execute (house rule 3)

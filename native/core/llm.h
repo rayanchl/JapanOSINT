@@ -85,4 +85,25 @@ char *llm_chat_ex(llm_client *c, const char *messages_json,
 
 int  llm_healthy(llm_client *c); /* GET /health */
 
+/* Embeddings — llama-server `/v1/embeddings` on a SEPARATE server.
+ *
+ * `c->base_url` is expected to be the embedding host (JO_EMBED_URL, :8082 by
+ * default in scripts/start-llama.sh), never the generation server: an
+ * embedding model is loaded with `--embedding` and cannot generate, and the
+ * generation model answers /v1/embeddings with 501. Because the worker in
+ * core/llm_worker.c is keyed on base_url, an embedding call gets its own
+ * thread and never queues behind (or in front of) a search-pipeline job.
+ *
+ * `texts[0..n)` are embedded in ONE request (llama-server accepts an array
+ * `input`). On success returns 0 and hands back a malloc'd float array of
+ * n*dim values, row-major, with *out_dim set from the response; the caller
+ * frees it. Returns non-zero on any failure, with *st (may be NULL) saying
+ * why in the same vocabulary as llm_chat_ex. A response whose vectors do not
+ * all share one dimension, or whose count differs from n, is reported as
+ * LLM_ERR_EMPTY — a partial answer would be silently attributed to the wrong
+ * rows, which is worse than none. */
+int llm_embed(llm_client *c, const char *const *texts, int n,
+              float **out_vecs, int *out_dim, int timeout_ms, llm_status *st);
+
+
 #endif

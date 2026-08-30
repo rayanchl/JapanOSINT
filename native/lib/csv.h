@@ -50,9 +50,30 @@ cJSON *csv_parse_d(const char *text, int headers, char delim);
 cJSON *csv_parse_dc(const char *text, int headers, char delim,
                     const char *comment);
 
+/* The general form the hpengine CSV mode uses. `delim` is a named or literal
+ * separator string rather than one character:
+ *   NULL / ""   comma (RFC 4180, byte-exact cells)
+ *   "x"         any single character, exactly as csv_parse_d
+ *   "ws"        a RUN of blanks is one separator — fixed-width text tables
+ *               (JPNIC's as-numbers.txt is `2497      IIJ          JP00006327`),
+ *               with leading alignment dropped and ruler lines (`-----`) skipped
+ *   "<>"        any longer literal, for the 2ch-family subject.txt whose cells
+ *               are separated by the two characters `<>`
+ * `skip_lines` drops that many PHYSICAL lines before anything is parsed — the
+ * "title line above the header" case (MEXT, Kawasaki, Saitama), which used to
+ * force csv_no_header=1 and emit the title and the header as two junk records.
+ * The skip is physical on purpose: the header and the records after it are
+ * still parsed with full quoting, so a quoted line break inside a header cell
+ * stays one cell. `comment` is as csv_parse_dc and is applied after the skip. */
+cJSON *csv_parse_x(const char *text, int headers, const char *delim,
+                   int skip_lines, const char *comment);
+
 /* Shift_JIS → UTF-8, malloc'd NUL-terminated (caller frees). On iconv error
  * returns a plain UTF-8 copy of the input (mirrors JS catch → utf8). */
 char *csv_decode_sjis(const char *buf, size_t len);
+/* Same, for any iconv source encoding ("SHIFT_JIS", "EUC-JP", ...).
+ * Fails closed: an undecodable body comes back as a verbatim copy. */
+char *csv_decode_charset(const char *buf, size_t len, const char *from);
 
 /* Strict UTF-8 validation. The cheap way to tell "already UTF-8" from "legacy
  * Japanese encoding" when the response carries no charset header — which is

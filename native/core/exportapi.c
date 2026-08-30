@@ -316,7 +316,7 @@ static void free_dyn_cols(ecol *c, int n) {
 
 /* ── parsed request ─────────────────────────────────────────────────────── */
 
-typedef struct { int is_int; const char *t; long long i; } bindv;
+typedef struct { int is_int; const char *t; long long i; double d; } bindv;
 
 typedef struct {
   /* raw param buffers — bind targets live here for the whole call */
@@ -325,6 +325,13 @@ typedef struct {
   char tenant[64];
   char cur_p[256], cur_u[512];          /* decoded intel keyset cursor */
   int  has_cursor;
+  /* intel ?sort= : 0 date (default), 1 relevance. Mirrors intelapi.c so a
+   * search page and its export list the same rows in the same order and the
+   * relevance cursor {"r","u"} the feed hands out resumes here too. */
+  int  sort_rel;
+  int  sort_bad;                        /* asked for a sort we cannot honour */
+  char sort[16], cur_r[40];
+  double cur_rank;
   long long cur_id;                     /* breach cursor (row id) */
   char *segq;                           /* malloc'd segmented FTS query */
   char mq[600];                         /* quoted FTS5 phrase (breach) */
@@ -360,6 +367,17 @@ static void parse_params(ekind k, const char *qs, const tenant_ctx *t,
     if (qs_var(qs, "has_geom",      p->hg,     sizeof p->hg    ) > 0) p->iq.has_geom      = p->hg;
     if (qs_var(qs, "tag",           p->tag,    sizeof p->tag   ) > 0) p->iq.tag           = p->tag;
     if (qs_var(qs, "cursor",        p->cursor, sizeof p->cursor) > 0) p->iq.cursor        = p->cursor;
+    if (qs_var(qs, "sort",          p->sort,   sizeof p->sort  ) > 0) {
+      p->iq.sort = p->sort;
+      ep_filter(p, "sort", p->sort);
+      if      (!strcmp(p->sort, "relevance")) p->sort_rel = 1;
+      else if (strcmp(p->sort, "date") != 0) p->sort_bad = 1;
+      /* sort=trust is a bounded in-memory rerank of a JO_RERANK_WINDOW slice
+       * (intelapi.c); an export is a full streamed scan and cannot promise
+       * the same order past that window, so it refuses rather than export a
+       * differently-ranked file under the same name. */
+      if (p->sort_rel && !p->iq.q) p->sort_bad = 1;
+    }
     /* `limit` is accepted (so the same URL works) and ignored: the plan row
      * cap is the only limit an export honours. */
 
@@ -382,7 +400,13 @@ static void parse_params(ekind k, const char *qs, const tenant_ctx *t,
         if (cj) {
           cJSON *jp = cJSON_GetObjectItem(cj, "p");
           cJSON *ju = cJSON_GetObjectItem(cj, "u");
-          if (cJSON_IsString(jp) && cJSON_IsString(ju)) {
+          cJSON *jr = cJSON_GetObjectItem(cj, "r");
+          if (p->sort_rel && cJSON_IsString(jr) && cJSON_IsString(ju)) {
+            snprintf(p->cur_r, sizeof p->cur_r, "%s", jr->valuestring);
+            snprintf(p->cur_u, sizeof p->cur_u, "%s", ju->valuestring);
+            p->cur_rank = strtod(p->cur_r, NULL);
+            p->has_cursor = 1;
+          } else if (!p->sort_rel && cJSON_IsString(jp) && cJSON_IsString(ju)) {
             snprintf(p->cur_p, sizeof p->cur_p, "%s", jp->valuestring);
             snprintf(p->cur_u, sizeof p->cur_u, "%s", ju->valuestring);
             p->has_cursor = 1;
@@ -435,6 +459,7 @@ static void parse_params(ekind k, const char *qs, const tenant_ctx *t,
 
 #define BT(v) do { b[nb].is_int = 0; b[nb].t = (v);  nb++; } while (0)
 #define BI(v) do { b[nb].is_int = 1; b[nb].i = (v);  nb++; } while (0)
+#define BD(v) do { b[nb].is_int = 2; b[nb].d = (v);  nb++; } while (0)
 
 /* Append a printf'd fragment to `w` at *wl, clamping. Every WHERE builder in
  * this file goes through it so no fragment can silently half-land. */
@@ -488,7 +513,10 @@ static void build_intel_sql(const eparams *p, char *sql, size_t cap,
     wapp(w, sizeof w, &wl, " AND %slat IS NOT NULL", T);
   if (p->iq.has_geom && !strcmp(p->iq.has_geom, "no"))
     wapp(w, sizeof w, &wl, " AND %slat IS NULL", T);
-  if (p->has_cursor) {                           /* same keyset token as the feed */
+  if (p->has_cursor && p->sort_rel) {            /* relevance keyset (rank,uid) */
+    wapp(w, sizeof w, &wl, " AND (f.r > ? OR (f.r = ? AND intel_items.uid > ?))");
+    BD(p->cur_rank); BD(p->cur_rank); BT(p->cur_u);
+  } else if (p->has_cursor) {                    /* same keyset token as the feed */
     wapp(w, sizeof w, &wl,
          " AND (COALESCE(%spublished_at,%sfetched_at) < ? OR "
          "(COALESCE(%spublished_at,%sfetched_at) = ? AND %suid > ?))",
@@ -508,12 +536,17 @@ static void build_intel_sql(const eparams *p, char *sql, size_t cap,
       "sub_source_id,geometry";
 
   if (has_q) {
+    /* Same shape as intelapi.c: the FTS hits come from an inner query that
+     * carries the bm25 rank (same column weights — see BM25 there), so the
+     * ORDER BY and the relevance cursor can name f.r. */
     snprintf(sql, cap,
-      "SELECT %s FROM intel_items "
-      "JOIN intel_items_fts ON intel_items_fts.uid = intel_items.uid "
-      "WHERE intel_items_fts MATCH ?%s "
-      "ORDER BY COALESCE(intel_items.published_at,intel_items.fetched_at) DESC,"
-      " intel_items.uid ASC LIMIT ?", sel, w);
+      "SELECT %s FROM (SELECT uid, bm25(intel_items_fts,0,10,1,3,2,1,1,2,1) AS r "
+      "FROM intel_items_fts WHERE intel_items_fts MATCH ?) f "
+      "JOIN intel_items ON intel_items.uid = f.uid WHERE 1=1%s %s LIMIT ?", sel, w,
+      p->sort_rel
+        ? "ORDER BY f.r ASC, intel_items.uid ASC"
+        : "ORDER BY COALESCE(intel_items.published_at,intel_items.fetched_at) DESC,"
+          " intel_items.uid ASC");
   } else {
     snprintf(sql, cap,
       "SELECT %s FROM intel_items WHERE%s "
@@ -840,6 +873,21 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
 
   eparams p;
   parse_params(k, query_string, t, &p);
+  /* A ranking the export cannot honour is refused, never quietly replaced by
+   * the date order: intelapi.c answers 400 for the same inputs. */
+  if (k == K_INTEL && p.sort_bad) {
+    /* httpd.c has already sent the 200/chunked header by the time we run, so
+     * the refusal has to be IN the file: an empty attachment would read as
+     * "no rows matched". */
+    static const char msg[] =
+      "{\"error\":\"sort_not_honoured\",\"detail\":\"sort must be date or "
+      "relevance, and relevance needs q; sort=trust is a bounded rerank served "
+      "only by /api/intel/items\"}\n";
+    write(write_ctx, msg, sizeof msg - 1);
+    ep_free(&p);
+    if (status) *status = 400;
+    return 1;
+  }
 
   /* columns: static per kind, or discovered for `case` */
   const ecol *cols = NULL; int ncol = 0;
@@ -880,8 +928,9 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
     return 1;
   }
   for (int i = 0; i < nb; i++) {
-    if (b[i].is_int) sqlite3_bind_int64(s, i + 1, b[i].i);
-    else             sqlite3_bind_text(s, i + 1, b[i].t, -1, SQLITE_TRANSIENT);
+    if (b[i].is_int == 2)   sqlite3_bind_double(s, i + 1, b[i].d);
+    else if (b[i].is_int)   sqlite3_bind_int64(s, i + 1, b[i].i);
+    else                    sqlite3_bind_text(s, i + 1, b[i].t, -1, SQLITE_TRANSIENT);
   }
   /* LIMIT cap+1: fetching one row past the cap is how truncation is *known*
    * rather than assumed. SQLite treats LIMIT -1 as unlimited (enterprise). */

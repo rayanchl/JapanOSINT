@@ -1,0 +1,79 @@
+url	stage	reason	detail
+https://www.mcafee.com/blogs/ja-jp/feed/	probe	TIMEOUT	pre-screen fetched the feed once in 3.6 s (5 items); probe_hp_batch.py timed out on three serial attempts spread over 25 minutes, so the row was dropped as unproven
+https://menu.5ch.net/bbsmenu.json	prescreen	HTTP_403	5ch answers 403 to every request from this host (menu, egg/mevius subject.txt, find.5ch.net search)
+https://jbbs.shitaraba.net/computer/42710/subject.txt	prescreen	HTTP_403	shitaraba (jbbs) 403 on subject.txt, rss.cgi, board index and search.cgi; rentalbbs.shitaraba.net does not resolve
+https://open2ch.net/menu/pc_menu.html	prescreen	HTTP_403	board menu blocked; individual board subject.txt files answer and were registered by board name
+https://uni.open2ch.net/hack/subject.txt	prescreen	ALREADY_REGISTERED	hack, linux, network, news, poverty, prog, sec boards are batch 25 jpdeep (HTML) and newsplus/news4vip/livejupiter are batch 24 jpbbs; uni and hayabusa serve byte-identical indexes for the same board so a second host is the same board
+https://uni.open2ch.net/bitcoin/subject.txt	prescreen	HTTP_404	board does not exist (also hangul)
+https://kaken.nii.ac.jp/opensearch/?qm={q}&format=json	prescreen	HTTP_403	KAKEN and NRID opensearch answer 403 from the build host on every parameter tried; the KAKEN qm pivot is registered anyway
+https://irdb.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	prescreen	NO_RECORDS	OAI-PMH answers badArgument to ListRecords with oai_dc and jpcoar_1.0, with and without from=; only ListSets/Identify work
+https://api.jstage.jst.go.jp/searchapi/do?service=2&material={q}	prescreen	FILTER_IGNORED	service=2 material search returns a single ERR_001 envelope for a real journal name and for an impossible one alike; only the six service=3 quoted-phrase fields were kept
+https://api.jstage.jst.go.jp/searchapi/do?service=3&article={q}	prescreen	FILTER_IGNORED	UNQUOTED form: J-STAGE ORs digit tokens, so the impossible entity zzqx9nonexistent7q matched 164,804 articles; re-pointed at the quoted-phrase form which returns zero entries for it and 20,022 for a real title word
+https://www.nicovideo.jp/tag/{q}?rss=2.0	prescreen	BOT_WALL	the rss=2.0 tag/search/ranking endpoints return an HTML shell with 0 anchors for every User-Agent tried; nvapi ranking 404; public.api.nicovideo.jp does not resolve; snapshot search is registered
+https://auctions.yahoo.co.jp/search/search?p={q}	prescreen	HTTP_403	Yahoo Auctions, Chiebukuro and PayPay Flea Market all 403
+https://www.jpo.go.jp/rss/	prescreen	HTTP_403	every JPO RSS path guessed answers 403; J-PlatPat has no open API
+https://www1.kaiho.mlit.go.jp/TUHO/	prescreen	HTTP_403	JCG navigational-warning (TUHO/NAVTEX) tree is 403 or 404 on every path tried; the JCG HQ Atom and umianzen RSS are batch 25
+https://www.jaxa.jp/rss/	prescreen	HTTP_403	rss directory 403, guessed rdf names 404 except press_j.rdf (registered); global.jaxa.jp/press/ is JS-rendered (857 bytes, 0 anchors)
+https://www.jal.co.jp/cms/other/ja/weather_info_dom.html	prescreen	NO_RECORDS	JAL and ANA flight-status pages are JS-rendered (23 and 17 nav anchors, no JSON endpoint found); Narita likewise; Centrair 403
+https://www.nisc.go.jp/rss/nisc-info.xml	prescreen	NO_RECORDS	every nisc.go.jp path returns the same 39-anchor placeholder page; NISC moved to cyber.go.jp, which is in the batch 25 review list
+https://www.npa.go.jp/bureau/cyber/koho/	prescreen	HTTP_404	cyber bureau koho subpages 404; the observation page is registered
+https://www.jnsa.org/rss/index.xml	prescreen	HTTP_404	JNSA rss.xml is batch 25 jpdeep; seminar/update pages carry no list
+https://www.nca.gr.jp/member/index.html	prescreen	NO_RECORDS	21 anchors, no member list; nca.jp corporate_list is batch 25
+https://www.tdb.co.jp/rss/tdb.rdf	prescreen	HTTP_400	tdb.rdf, watching.rdf, report.rdf answer 400; jouhou.rdf works and is registered here
+https://www.tsr-net.co.jp/rss/	prescreen	HTTP_403	Tokyo Shoko Research 403 on data/detail and rss paths
+https://www.jpcert.or.jp/english/vh/	prescreen	HTTP_403	english vh 403; english ics 404; english rss index 404
+https://raw.githubusercontent.com/JPCERTCC/phishurl-list/main/2026/202606.csv	prescreen	HTTP_404	2026 files exist for 202601-202605 only (contents API list[5]); a month's file goes live after the month closes
+https://www.ipa.go.jp/rss/index.html	prescreen	HTTP_404	IPA's feeds are alert-rss.rdf and press-rss.rdf (registered) and newsonly-rss.rdf (registered here)
+https://jvn.jp/ta/	prescreen	THIN	2 JVNTA anchors in the past 12 months; /report/ is the union of /vu/ and /ta/ and would duplicate the vu row
+https://jvn.jp/tr/	prescreen	SHIFT_JIS_HTML	Shift_JIS page whose anchors decode as mojibake in the pre-screen; the same series is served UTF-8 in jvnTR.rdf, registered instead
+https://www.jpcert.or.jp/pr/	prescreen	NO_RECORDS	pr, magazine, csirt_material, tips, ics, research, qr, vh pages carry navigation and PDFs, no dated entry list
+https://www.jpcert.or.jp/at/2026.html	prescreen	ALREADY_REGISTERED	/at/ index is in the batch 25 review list; the per-year page is the same series
+https://jpn.nec.com/security-info/index.html	prescreen	NO_RECORDS	NEC PSIRT page renders 2 advisory anchors server-side; the rest is JS. The blog RSS on the same host is registered here
+https://www.ricoh.com/products/security/vulnerabilities/	prescreen	NO_RECORDS	181 anchors, all corporate navigation; the advisory table has no links
+https://www.ia.omron.com/product/vulnerability/	prescreen	NO_RECORDS	13 JVN links inside 594 navigation anchors; no advisory list of its own
+https://www.iodata.jp/support/information/	prescreen	NO_RECORDS	365 anchors under /support/information are month index pages, not notices
+https://holdings.panasonic/jp/corporate/product-security/psirt/information.html	prescreen	NO_RECORDS	148 nav anchors, the advisory list is JS (same for /global/)
+https://www.hitachi.co.jp/hirt/security/index.html	prescreen	NO_RECORDS	431 anchors of hitachi.com navigation; hirt rss 404
+https://www.fujitsu.com/jp/products/software/resources/condition/security/index.html	prescreen	HTTP_429	429 on three attempts spaced over an hour
+https://www.global.toshiba/jp/security/psirt/advisory.html	prescreen	HTTP_404	Toshiba, Canon, Epson, Sharp, Kyocera, Sony, Brother, Konica Minolta, Kyocera Document Solutions and Buffalo security pages 404 at every path guessed
+https://www.aterm.jp/product/atermstation/info/info.xml	prescreen	HTTP_404	the feed the Aterm info page advertises is 404
+https://www.mitsubishielectric.co.jp/psirt/vulnerability/index.html	prescreen	NO_RECORDS	HTML has 12 nav anchors; its xml/info.xml feed was registered instead
+https://www.yokogawa.co.jp/library/resources/white-papers/yokogawa-security-advisory-report-list/	prescreen	NO_RECORDS	659 anchors of site navigation; the advisory table has no anchors
+https://cs.cybozu.co.jp/rss.xml	prescreen	HTTP_404	feeds live under /information/; five of them are registered here
+https://www.security-next.com/feed	prescreen	ALREADY_REGISTERED	batch 25 review list; likewise scan.netsecurity, piyolog, flatt, kaspersky blog, cisco jp, nri-secure, secure-sketch, macnica atom, lycorp, cybozu blog, codezine, cnet, impress, xtech, itmedia news_security, jc3, antiphishing, jprs whatsnew, lac watch, lanscope, trendmicro research, jvn en root
+https://blog.nicter.jp/feed/	prescreen	HTTP_404	no feed; the HTML index was registered
+https://jprs.jp/registration/list/	prescreen	NO_RECORDS	registrar list is behind redirect.html?key= anchors (11); the rest is site navigation
+https://www.jpnap.net/ix/customer.php	prescreen	NO_RECORDS	customer AS list is JS-rendered; vne-info.jpix.ad.jp/history is a table without anchors; customer.jpix.ad.jp is a Salesforce login; jpix.ad.jp/ix/customer 404; bbix customer page is navigation
+https://www.nic.ad.jp/ja/ip/member/	prescreen	NO_RECORDS	IP指定事業者 member page is navigation; list.html 404
+https://www.janog.gr.jp/meeting/	prescreen	THIN	3 meeting anchors plus an interop archive; feed 404
+https://www.jdcc.or.jp/news/	prescreen	THIN	7 member-notice anchors per page
+https://www.jpix.ad.jp/news/	prescreen	THIN	10 post.php anchors titled with dates only
+https://help.sakura.ad.jp/status/	prescreen	NO_RECORDS	status page and its rss/feed paths render an HTML shell; status.sakura.ad.jp does not resolve; sakura news rss 404
+https://www.xserver.ne.jp/news/	prescreen	HTTP_403	Xserver and ConoHa 403; Kagoya and GMO news are corporate navigation
+https://www.jpx.co.jp/listing/stocks/delisted/index.html	prescreen	NO_RECORDS	delisted and supervision pages are tables without per-company anchors; supervision's 62 anchors are category navigation
+https://www.jpx.co.jp/rss/alerts.xml	prescreen	EMPTY_RESULTSET	alerts.xml and derivatives-suspended.xml (ja and en) carry 0 items
+https://www.fsa.go.jp/en/newsletter/rss.xml	prescreen	HTTP_404
+https://www.jftc.go.jp/houdou/pressrelease/index.html	prescreen	ALREADY_REGISTERED	jftc houdou index registered; rss 404
+https://www.ppc.go.jp/news/press/	prescreen	ALREADY_REGISTERED	batch 25 review list
+https://www.peeringdb.com/api/ix?country=JP	prescreen	ALREADY_REGISTERED	ix and fac country=JP registered; the org and net population rows were added here
+https://stat.ripe.net/data/country-resource-list/data.json?resource=JP	prescreen	ALREADY_REGISTERED
+https://www.customs.go.jp/rss/index.xml	prescreen	HTTP_404	customs, FDMA rss, MOF, CAS, MEXT, MOE, JBA rss paths all 404
+https://www.moj.go.jp/isa/applications/ssw/nyuukokukanri07_00205.html	prescreen	NO_RECORDS	registered-support-organisation list is an Excel download, no HTML records; the policies path returns a 402-byte stub
+https://www.otit.go.jp/search_kanri/	prescreen	NO_RECORDS	supervising-organisation search is a form; the notices archive was registered instead
+https://etsuran2.mlit.go.jp/TAKKEN/	prescreen	NO_RECORDS	construction-licence search is a Windows-31J form; the takken search is registered
+https://query.wikidata.org/sparql?query=...P3225...	prescreen	TOO_LARGE_UNPAGED	86,677 items carry a Japanese corporate number (COUNT query); a LIMIT 3000 row would silently discard 96% and SPARQL cannot be walked through page_param; the TSE-listed set (2,271 < LIMIT) was registered instead
+https://www.wikidata.org/w/api.php?action=wbsearchentities&search={q}&language=ja	prescreen	NEAR_DUPLICATE	wbsearchentities search={q} is registered with language=en; only the language differs
+https://rss.itmedia.co.jp/rss/2.0/security.xml	prescreen	NEAR_DUPLICATE	news_security.xml is in the batch 25 review list
+https://gihyo.jp/feed/rss2	prescreen	OUT_OF_BEAT	816-item developer-publisher feed, not cyber/registers/infrastructure
+https://tech.nri-net.com/feed	prescreen	OUT_OF_BEAT	AWS engineering blog
+http://feeds.feedburner.com/elecom_news	prescreen	OUT_OF_BEAT	product-release feed; the security-notice page was registered instead
+https://togetter.com/rss/search?q={q}	prescreen	HTTP_404	the HTML search was registered instead; posfie.com search carries no /li/ anchors server-side
+https://jmty.jp/all/sale?keyword={q}	prescreen	ALREADY_REGISTERED
+https://ja.wikipedia.org/w/api.php?action=query&list=recentchanges	prescreen	ALREADY_REGISTERED	the ja recent-changes stream is registered; wikinews recentchanges is batch 25
+https://www.au.com/information/notice_mobile/	prescreen	NO_RECORDS	5 anchors; SoftBank, NTT East and Rakuten Mobile notice pages likewise navigation (4-14 anchors)
+https://www.kddi.com/important/	prescreen	HTTP_404	KDDI, SoftBank, docomo, NTT Com rss guesses 404; the carriers' real feeds are batch 25 jpinfra
+https://www.antiphishing.jp/news/event/	prescreen	OUT_OF_BEAT	event listings; the alert/info/database pages are batch 25
+https://www.recall.caa.go.jp/result/index.php?screenkbn=01	prescreen	NO_RECORDS	result pages carry image anchors only; the recall portal is in the review list
+https://kaken.nii.ac.jp/opensearch/?qb={q}	prescreen	HTTP_403	see KAKEN above
+https://jvndb.jvn.jp/myjvn?method=getVulnOverviewList&feed=hnd&severity=l&maxCountItem=50&lang=en	rule-4b	UID_COLLISION	the English low-severity edition holds 2 records; startItem past the end returns the same 2 records again (not the placeholder the Japanese edition returns), the engine walked all 20 pages and audit_registry_emit.py read emitted=20 stored=2. Dropped as thin and pathological; the Japanese low-severity row and the English high/medium rows stop correctly (2 pages)
+https://www.jpx.co.jp/rss/markets_news.xml	exclusions	ALREADY_REGISTERED	the four Japanese JPX feeds (markets_news, jpx-news, equities-suspended, site-updates) were probed PASS, emitted (25/4/6/49) and read back stored==emitted here, but batch_exclusions.py on the re-rsynced worktree reported DUP-ENDPOINT against collectors/pivot/table/hp3b23_jpnational.c, which a sibling session installed in the meantime; dropped, the English editions stay
