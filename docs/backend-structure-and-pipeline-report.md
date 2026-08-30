@@ -224,7 +224,7 @@ Eight distinct flows. **(b), (i) are sub-stages, not independent pipelines.**
 never loaded. `page_analysis` is **dead in both loaders** (drop it from `GRAMMAR_NAMES`
 `prompts.c:604` + delete files). `osint_analysis.gbnf` is dead (superseded by the dynamic
 schema). **Portability gap:** there is no `native/grammars/`; both loaders resolve against
-`JO_REPO_ROOT` (default `/Users/rayan/JapanOSINT`), so on any other checkout every
+`JO_REPO_ROOT` (default `/Users/rayan/OSINTsaas`), so on any other checkout every
 constrained-generation call silently falls back to ungrammared output — vendor the files
 into `native/grammars/` or log a one-time warning.
 

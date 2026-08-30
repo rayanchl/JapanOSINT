@@ -93,7 +93,7 @@
 #include <unistd.h>
 
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
 
 #define CAM_SOURCE_ID  "camera-discovery"   /* where camera rows live         */

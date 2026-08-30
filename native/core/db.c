@@ -25,7 +25,7 @@ int sqlite3_vec_init(sqlite3 *db, char **pzErrMsg, const sqlite3_api_routines *p
 /* JO_REPO_ROOT is -D'd by the Makefile to the JapanOSINT repo root so the
  * binary finds the DB + schema without args; JO_DB / JO_SCHEMA env override. */
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
 
 static char *slurp(const char *path) {

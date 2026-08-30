@@ -7,7 +7,7 @@
 #include <string.h>
 
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
 
 /* Exported (as breach_meta_corpus_path) as well as used locally: the path

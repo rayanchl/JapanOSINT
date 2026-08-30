@@ -17,7 +17,7 @@
 #include <openssl/rand.h>
 
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
 
 /* ── type helpers ─────────────────────────────────────────────────────── */

@@ -44,7 +44,7 @@
  * mechanism db.c/keysapi.c use); fallback keeps the file standalone. The JS
  * GRAMMAR_DIR is `../../grammars/` from server/src/utils/ -> server/grammars/. */
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
 
 /* ── tiny growable string buffer ──────────────────────────────────────── */

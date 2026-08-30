@@ -18,7 +18,7 @@
 #include <unistd.h>
 
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
 
 #define EV_DEFAULT_MAX_BYTES  2147483648LL   /* 2 GiB of blob bytes total   */

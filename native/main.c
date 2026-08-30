@@ -41,7 +41,7 @@
  * stripped; blank/`#` lines skipped. */
 static void load_dotenv(void) {
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
   const char *p = getenv("JO_ENV_FILE");
   char path[1024];

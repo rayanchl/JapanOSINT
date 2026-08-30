@@ -31,7 +31,7 @@
 #include <unistd.h>
 
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
 
 #define UP_DEF_MAX_BYTES   67108864LL   /* 64 MiB per file                    */

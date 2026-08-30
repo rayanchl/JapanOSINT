@@ -46,7 +46,7 @@ static void iso_now(char *buf, size_t n) {
  * getCredentialStatus then reads process.env. To match byte-for-byte we
  * resolve the same way: overlay non-empty string wins, else getenv. */
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
 static cJSON *g_overlay;     /* loaded once; NULL if absent/unparseable */
 static int g_overlay_done;

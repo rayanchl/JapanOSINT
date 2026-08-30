@@ -85,7 +85,7 @@
 #include <unistd.h>
 
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
 
 /* math.h only guarantees M_PI under _DEFAULT_SOURCE; the hash definition in
