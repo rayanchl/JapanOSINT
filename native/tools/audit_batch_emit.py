@@ -134,7 +134,10 @@ def run_one(args):
     ent = entity_of(r)
     cmd = [binpath, "--run", r["id"]] + ([ent] if ent else [])
     try:
-        p = subprocess.run(cmd, capture_output=True, text=True,
+        # JO_SHAPE_NOTICES=0: a collector-shape-notice is itself one emitted
+        # record; a row that stored only its own notice must still read as 0.
+        env = dict(os.environ, JO_SHAPE_NOTICES="0")
+        p = subprocess.run(cmd, capture_output=True, text=True, env=env,
                            timeout=timeout, stdin=subprocess.DEVNULL)
     except subprocess.TimeoutExpired as e:
         # Keep whatever it printed before the kill. TimeoutExpired carries the

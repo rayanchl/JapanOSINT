@@ -1,0 +1,4 @@
+{"error":"sort_requires_q","detail":"sort=relevance and sort=trust rank full-text hits; there is nothing to rank without q. Omit sort (or sort=date) for the newest-first feed."}
+{"error":"sort_requires_q","detail":"sort=relevance and sort=trust rank full-text hits; there is nothing to rank without q. Omit sort (or sort=date) for the newest-first feed."}
+{"error":"unknown_sort","detail":"sort must be one of date, relevance, trust"}
+{"error":"sort_requires_q","detail":"q contained no searchable token (only FTS metacharacters), so there are no full-text hits to rank"}

@@ -908,3 +908,22 @@ CREATE INDEX IF NOT EXISTS idx_uploads_tenant_status
   ON uploads(tenant_id, status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_uploads_status_created ON uploads(status, created_at);
 CREATE INDEX IF NOT EXISTS idx_upload_parts_upload ON upload_parts(upload_id, seq);
+
+-- Health-driven scheduling state (core/scheduler.c, sched_state_*). One row
+-- per scheduled source that has completed at least one run. Epoch-second
+-- integers rather than datetime text because the scheduler compares them
+-- against time(NULL) every second; NULL backoff_until = not backed off.
+-- `quarantined` here is the scheduler's own, self-clearing health quarantine
+-- and is deliberately NOT sources.quarantined_until (the repair pod's verdict
+-- on the collector code): /api/status reports both side by side.
+CREATE TABLE IF NOT EXISTS source_sched_state (
+  source_id            TEXT PRIMARY KEY,
+  consecutive_failures INTEGER NOT NULL DEFAULT 0,
+  consecutive_empties  INTEGER NOT NULL DEFAULT 0,
+  declared_interval    INTEGER NOT NULL DEFAULT 0,
+  effective_interval   INTEGER NOT NULL DEFAULT 0,
+  backoff_until        INTEGER,
+  quarantined          INTEGER NOT NULL DEFAULT 0,
+  quarantined_at       INTEGER,
+  last_probe           INTEGER,
+  updated_at           INTEGER);

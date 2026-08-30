@@ -568,7 +568,84 @@ typedef struct {
   cJSON *fields;                 /* rec, or the envelope the label came from */
   int    geo;
   double lat, lon;
+  /* 1 = the label came from a LAST-RESORT composition (measurement, id,
+   * first scalar) rather than from the title precedence list or an envelope
+   * descent. Read by the shape tally below: a page on which no record had a
+   * real label is the jsonlist form of "title_keys matched 0 of N". */
+  int    label_fallback;
 } row_view;
+
+/* ── schema drift, disclosed as data ─────────────────────────────────────
+ *
+ * The same disclosure lib/hpengine.c makes (hp_shape_notices), for the two
+ * conditions this engine can measure: a declared record path that resolved to
+ * nothing, and a page of records none of which carried a label the precedence
+ * list knows. Both are runs that "succeeded" while reading the wrong thing.
+ *
+ * _Thread_local for the same reason the scratch buffer at :207 is: this runs
+ * on 8 scheduler workers and 16 dispatch workers at once, and a shared tally
+ * would attribute one source's drift to another. jsonlist_emit() is called
+ * once per PAGE — directly by ~6,500 generated collectors (one page) and by
+ * jsonlist_emit_paged() in a loop — so the paged walk marks itself `paged`
+ * and flushes once at the end, while a direct caller flushes per call. */
+#include "osintemit.h"
+typedef struct {
+  int  paged;          /* inside jsonlist_emit_paged: accumulate, flush at end */
+  int  n;              /* records that resolved to a row                     */
+  int  labelled;       /* …of which the label came from the precedence list  */
+  int  dropped;        /* records that resolved to nothing at all             */
+  int  path_missing;   /* pages where the declared path resolved to nothing   */
+  char path_kind[48];  /* what it resolved to                                  */
+  int  pages;
+} jl_shape;
+static _Thread_local jl_shape g_jl_shape;
+
+static void jl_shape_reset(void) {
+  int paged = g_jl_shape.paged;
+  memset(&g_jl_shape, 0, sizeof g_jl_shape);
+  g_jl_shape.paged = paged;
+}
+
+static void jl_shape_flush(intel_sink *sink, const char *source_id,
+                           const char *path, int emitted) {
+  jl_shape *t = &g_jl_shape;
+  char title[512];
+  if (t->path_missing) {
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "declared_array_path", path ? path : "");
+    cJSON_AddStringToObject(p, "resolved_to", t->path_kind);
+    cJSON_AddNumberToObject(p, "pages_affected", t->path_missing);
+    cJSON_AddNumberToObject(p, "pages_read", t->pages);
+    cJSON_AddNumberToObject(p, "records_emitted", emitted);
+    cJSON_AddStringToObject(p, "remedy",
+      "the upstream's envelope changed: re-point the collector's record path "
+      "(tools/diagnose_emit_keys.py), or the row is not a record source");
+    snprintf(title, sizeof title,
+             "%s: declared record path \"%s\" resolved to %s on %d of %d page(s); "
+             "%d record(s) emitted",
+             source_id, path ? path : "", t->path_kind, t->path_missing,
+             t->pages, emitted);
+    jo_shape_notice(sink, source_id, "array-path-missing", title, p, NULL);
+  }
+  if ((t->n + t->dropped) > 0 && t->labelled == 0) {
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddNumberToObject(p, "records_seen", t->n + t->dropped);
+    cJSON_AddNumberToObject(p, "records_labelled", 0);
+    cJSON_AddNumberToObject(p, "records_emitted_under_fallback_label", t->n);
+    cJSON_AddNumberToObject(p, "records_dropped_unlabelled", t->dropped);
+    cJSON_AddNumberToObject(p, "pages_read", t->pages);
+    cJSON_AddStringToObject(p, "remedy",
+      "no record carried a field the title precedence list knows: add the "
+      "upstream's label key to K_TITLE in lib/jsonlist.c, or give the row a "
+      "hpengine table with title_keys");
+    snprintf(title, sizeof title,
+             "%s: label keys matched 0 of %d record(s) on %d page(s); %d emitted "
+             "under a fallback label, %d dropped as unlabelled",
+             source_id, t->n + t->dropped, t->pages, t->n, t->dropped);
+    jo_shape_notice(sink, source_id, "label-keys-unmatched", title, p, NULL);
+  }
+  jl_shape_reset();
+}
 
 static void row_view_free(row_view *v) {
   free(v->title); free(v->link); free(v->when); free(v->rid);
@@ -678,7 +755,7 @@ static int row_derive(cJSON *rec, const char *record_type, row_view *v) {
         snprintf(composed, sizeof composed, "%s %s %s=%s",
                  record_type ? record_type : "observation", when,
                  meas->string, num_brief(meas));
-      if (geo || meas) title = strdup(composed);
+      if (geo || meas) { title = strdup(composed); v->label_fallback = 1; }
     }
 
     /* id stays anchored to the OUTER record when it has one: JSON:API puts the
@@ -709,6 +786,7 @@ static int row_derive(cJSON *rec, const char *record_type, row_view *v) {
       snprintf(idtitle, sizeof idtitle, "%s %s",
                record_type ? record_type : "record", rid);
       title = strdup(idtitle);
+      v->label_fallback = 1;
     }
 
     /* Still nothing conventional — and "no CONVENTIONALLY NAMED field" is not
@@ -740,6 +818,7 @@ static int row_derive(cJSON *rec, const char *record_type, row_view *v) {
                  record_type ? record_type : "record", fs);
         free(fs);
         title = strdup(fstitle);
+        v->label_fallback = 1;
       }
     }
     if (!title) { free(when); free(rid); return 0; }  /* nothing real -> not a row (R1) */
@@ -782,6 +861,8 @@ static int emit_record(intel_sink *sink, const char *source_id, cJSON *rec,
                        const char *tags_json, int disambiguate) {
     row_view v;
     if (!row_derive(rec, record_type, &v)) return 0;
+    g_jl_shape.n++;
+    if (!v.label_fallback) g_jl_shape.labelled++;
 
     char *body  = scalar_dup(pick(v.fields, K_BODY));
     char *props = cJSON_PrintUnformatted(rec);
@@ -943,6 +1024,7 @@ static int emit_array(intel_sink *sink, const char *source_id, cJSON *arr,
     if (!got)
       got = emit_wrapped_list(sink, source_id, rec, record_type, lang,
                               tags_json, depth);
+    if (!got) g_jl_shape.dropped++;      /* no label, no id, no scalar: shape tally */
     n += got;
     i++;
   }
@@ -956,11 +1038,14 @@ int jsonlist_emit(intel_sink *sink, const char *source_id, cJSON *doc,
   /* A single-object document is one record, not a degenerate list. Several
    * public APIs return exactly this — a status or summary document — and
    * treating it as an empty list would silently drop the source. */
+  if (!g_jl_shape.paged) jl_shape_reset();   /* a direct caller: one page, one tally */
+  g_jl_shape.pages++;
   if (path && !strcmp(path, ".")) {
     int n = emit_record(sink, source_id, doc, record_type, lang, tags_json, 0);
     if (!n)
       n = emit_wrapped_list(sink, source_id, doc, record_type, lang,
                             tags_json, 0);
+    if (!g_jl_shape.paged) jl_shape_flush(sink, source_id, path, n);
     return n;
   }
 
@@ -976,12 +1061,28 @@ int jsonlist_emit(intel_sink *sink, const char *source_id, cJSON *doc,
     cJSON *node = jsonlist_node(doc, path);
     owned = parallel_arrays_objects(node);
     if (!owned) owned = scalar_map_objects(node);
-    if (!owned) return 0;
+    if (!owned) {
+      /* Shape notice: a DECLARED path ("" is a bare array and "*" is
+       * discovery — neither declares anything) that names nothing in this
+       * document, in no shape this engine knows. Said as data, not only as a
+       * clean zero. */
+      if (path && *path && strcmp(path, "*")) {
+        const char *kind = !node ? "absent"
+                         : cJSON_IsObject(node) ? "an object with no record array"
+                         : cJSON_IsString(node) ? "a string" : cJSON_IsNumber(node) ? "a number"
+                         : cJSON_IsNull(node)   ? "null" : "a node of another type";
+        g_jl_shape.path_missing++;
+        snprintf(g_jl_shape.path_kind, sizeof g_jl_shape.path_kind, "%s", kind);
+        if (!g_jl_shape.paged) jl_shape_flush(sink, source_id, path, 0);
+      }
+      return 0;
+    }
     arr = owned;
   }
 
   int n = emit_array(sink, source_id, arr, record_type, lang, tags_json, 0);
   cJSON_Delete(owned);
+  if (!g_jl_shape.paged) jl_shape_flush(sink, source_id, path, n);
   return n;
 }
 
@@ -1201,6 +1302,10 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
 
   char *page_url = strdup(url);
   if (!page_url) return -1;
+  /* One shape tally for the WHOLE walk: jsonlist_emit() accumulates per page
+   * and the flush below files one notice per condition per run. */
+  jl_shape_reset();
+  g_jl_shape.paged = 1;
 
   int total = 0, pages = 0, truncated = 0;
   long available = -1;
@@ -1214,7 +1319,7 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
        * an error. A failure mid-walk is different: we already have real
        * records, so we keep them and stop — but the walk ended early, which is
        * a shortfall and gets disclosed below. */
-      if (pages == 0) { free(page_url); return -1; }
+      if (pages == 0) { free(page_url); g_jl_shape.paged = 0; return -1; }
       truncated = 1;
       break;
     }
@@ -1323,6 +1428,11 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
     sink->emit(sink, &note);
     free(pj);
   }
+
+  /* Schema drift measured during the walk, one record per condition, in
+   * addition to the records above. Clears `paged` for the next caller. */
+  jl_shape_flush(sink, source_id, path, total);
+  g_jl_shape.paged = 0;
 
   if (pages > 1 || truncated)
     fprintf(stderr, "[%s] emitted %d across %d page(s)%s\n",

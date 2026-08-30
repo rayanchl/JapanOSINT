@@ -8,6 +8,12 @@ import SwiftUI
 /// both queries as `q` and `qAlt`. The server merges results and tags
 /// translation-only matches with `via_translation: true`. The header chip
 /// shows the user what we're also searching for.
+///
+/// Ranking + paging: a query is ranked by relevance (`sort=relevance`, bm25
+/// with title/summary boosted) and paged with the server's keyset cursor, the
+/// same way `IntelSourceItemsView` pages a single source. The first page also
+/// asks for the capped total so the header can say "N of M" instead of
+/// pretending the first 100 rows were the whole answer.
 struct CrossSourceSearchView: View {
     let bilingual: BilingualQuery
 
@@ -15,9 +21,16 @@ struct CrossSourceSearchView: View {
     @Environment(\.theme) private var theme
 
     @State private var items: [IntelItem] = []
+    @State private var nextCursor: String?
+    /// "31" / "10,000+" from page.total / page.total_gte; nil until the first
+    /// page answers.
+    @State private var totalLabel: String?
     @State private var loading = false
+    @State private var loadingMore = false
     @State private var error: String?
     @State private var lastKey: String?
+
+    private static let pageSize = 50
 
     /// Composite of (original, translated) so the search task re-fires when
     /// either side changes — e.g. when the translation resolves a beat after
@@ -66,6 +79,9 @@ struct CrossSourceSearchView: View {
                             }
                         }
                     }
+                    if nextCursor != nil {
+                        loadMoreRow
+                    }
                 } header: {
                     resultsCountHeader
                 }
@@ -77,13 +93,36 @@ struct CrossSourceSearchView: View {
         }
     }
 
-    /// "N results for "<query>"" — uses monospacedDigit so the count doesn't
-    /// shift as more results stream in.
+    /// Same affordance as `IntelSourceItemsView`: a visible "Load more" that
+    /// also fires on its own when it scrolls into view, so a long result set
+    /// streams in without the user having to tap for every page.
+    private var loadMoreRow: some View {
+        HStack {
+            Spacer()
+            if loadingMore { ProgressView() }
+            else {
+                Button("Load more") { Task { await loadMore() } }
+                    .buttonStyle(.bordered)
+            }
+            Spacer()
+        }
+        .onAppear { Task { await loadMore() } }
+    }
+
+    /// "N of M results for "<query>"" — uses monospacedDigit so the count
+    /// doesn't shift as more results stream in. M comes from the server's
+    /// page.total / total_gte; while it is unknown we say only what we hold.
     private var resultsCountHeader: some View {
         HStack(spacing: 6) {
-            Text("\(items.count) result\(items.count == 1 ? "" : "s")")
-                .font(.caption.bold().monospacedDigit())
-                .foregroundStyle(theme.text)
+            Group {
+                if let totalLabel {
+                    Text("\(items.count) of \(totalLabel) result\(totalLabel == "1" ? "" : "s")")
+                } else {
+                    Text("\(items.count) result\(items.count == 1 ? "" : "s")")
+                }
+            }
+            .font(.caption.bold().monospacedDigit())
+            .foregroundStyle(theme.text)
             Text("for")
                 .font(.caption)
                 .foregroundStyle(theme.textMuted)
@@ -93,6 +132,12 @@ struct CrossSourceSearchView: View {
                 .lineLimit(1)
                 .truncationMode(.middle)
             Spacer(minLength: 0)
+            if let error, !items.isEmpty {
+                Text(error)
+                    .font(.caption2)
+                    .foregroundStyle(theme.textMuted)
+                    .lineLimit(1)
+            }
         }
         .textCase(nil)
     }
@@ -124,6 +169,8 @@ struct CrossSourceSearchView: View {
         let trimmed = bilingual.original.trimmingCharacters(in: .whitespaces)
         if trimmed.isEmpty {
             items = []
+            nextCursor = nil
+            totalLabel = nil
             return
         }
         loading = true
@@ -134,12 +181,42 @@ struct CrossSourceSearchView: View {
             let env = try await apiClient.api.intelItems(
                 q: trimmed,
                 qAlt: bilingual.translated,
-                limit: 100
+                limit: Self.pageSize,
+                cursor: nil,
+                sort: .relevance,
+                wantTotal: true
             )
+            guard taskKey == lastKey else { return }      // superseded while in flight
             items = env.data
+            nextCursor = env.page?.next_cursor
+            totalLabel = env.page?.totalLabel
             error = nil
         } catch let err {
             error = err.localizedDescription
+        }
+    }
+
+    private func loadMore() async {
+        guard let cursor = nextCursor, !loading, !loadingMore else { return }
+        loadingMore = true
+        defer { loadingMore = false }
+        let trimmed = bilingual.original.trimmingCharacters(in: .whitespaces)
+        let key = taskKey
+        do {
+            let env = try await apiClient.api.intelItems(
+                q: trimmed,
+                qAlt: bilingual.translated,
+                limit: Self.pageSize,
+                cursor: cursor,
+                sort: .relevance
+            )
+            guard key == taskKey else { return }           // query changed meanwhile
+            items.append(contentsOf: env.data)
+            nextCursor = env.page?.next_cursor
+            error = nil
+        } catch {
+            // Keep the rows we have; say why the next page didn't come.
+            self.error = "Couldn’t load more: \(error.localizedDescription)"
         }
     }
 }

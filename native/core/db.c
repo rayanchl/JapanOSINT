@@ -1,10 +1,17 @@
 #include "db.h"
+/* sqlite3_vec_init is declared here rather than via third_party/sqlite-vec.h:
+ * that header pulls in sqlite3ext.h unless SQLITE_CORE is defined, and this
+ * TU is not the extension (the vendored object is built with -DSQLITE_CORE,
+ * see the Makefile). The signature is the standard loadable-extension entry. */
+int sqlite3_vec_init(sqlite3 *db, char **pzErrMsg, const sqlite3_api_routines *pApi);
+#include <pthread.h>
 #include "translate.h"         /* translate_migrate (owns its own index) */
 #include "simhash.h"           /* simhash_ensure_schema (owns its own index) */
 #include "content_change.h"    /* content_change_ensure_schema (same reason) */
 #include "media.h"             /* media_migrate (same reason) */
 #include "camera_stills.h"     /* camera_stills_migrate (same reason) */
 #include "fts_schema.h"        /* fts_schema_migrate (widens intel_items_fts) */
+#include "entitystore.h"       /* es_norm_migrate */
 #include "source_registry.h"   /* src_meta_get (merged metadata)        */
 #include "../source.h"         /* registry_all / registry_count (sources) */
 #include "../third_party/cJSON.h" /* live-id array for the stale-source prune */
@@ -233,6 +240,17 @@ static void db_seed_sources(db_handle *db) {
  *                        copying every page via pread. Advisory: SQLite
  *                        silently ignores it where mmap is unavailable.
  * Both are ceilings, not reservations. */
+/* sqlite-vec (third_party/sqlite-vec.c, v0.1.9) provides the vec0 virtual
+ * table behind /api/intel/semantic. sqlite3_auto_extension() registers it
+ * process-wide so EVERY connection — db_open's primary, db_attach's worker
+ * connections, the unit-test fixtures — sees vec0 and the vec_* functions.
+ * It must run before the first sqlite3_open_v2, hence pthread_once from both
+ * openers rather than a call site in main(). */
+static pthread_once_t vec_once = PTHREAD_ONCE_INIT;
+static void vec_register(void) {
+  sqlite3_auto_extension((void (*)(void))sqlite3_vec_init);
+}
+
 static void db_apply_pragmas(sqlite3 *h) {
   sqlite3_exec(h, "PRAGMA journal_mode=WAL;",  NULL, NULL, NULL);
   sqlite3_exec(h, "PRAGMA foreign_keys=ON;",   NULL, NULL, NULL);
@@ -250,6 +268,7 @@ int db_attach(db_handle *db, const char *db_path) {
   if (!db) return 1;
   const char *dbp = db_path ? db_path
     : (getenv("JO_DB") ? getenv("JO_DB") : JO_REPO_ROOT "/data/japanmap.db");
+  pthread_once(&vec_once, vec_register);
   int rc = sqlite3_open_v2(dbp, &db->h, SQLITE_OPEN_READWRITE, NULL);
   if (rc != SQLITE_OK) {
     fprintf(stderr, "[db] attach failed: %s\n", sqlite3_errmsg(db->h));
@@ -330,6 +349,7 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
 
   ensure_parent_dir(dbp);
 
+  pthread_once(&vec_once, vec_register);
   int rc = sqlite3_open_v2(dbp, &db->h,
                            SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
   if (rc != SQLITE_OK) {
@@ -443,6 +463,9 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * take minutes on a large corpus — everything cheap has already run, so a
    * JO_FTS_REBUILD=0 boot skips only this. */
   fts_schema_migrate(db);
+  /* Entity norm_key/readings re-key (ENTITY_NORM_VERSION); after the FTS
+   * migration so entities_fts is already at the shape it re-indexes into. */
+  es_norm_migrate(db);
 
   /* Every registered source gets a sources-table row (idempotent). */
   db_seed_sources(db);

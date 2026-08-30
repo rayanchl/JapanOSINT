@@ -1,6 +1,8 @@
 #include "fts.h"
 #include "../lib/utf8.h"      /* bounded decoder — the local one read past the
                                * allocation and stepped over the NUL; see utf8.h */
+#include "../lib/jpnorm.h"    /* the ONE definition of "the same text" — applied
+                               * here, before MeCab, on both write and query */
 #include <mecab.h>
 #include <pthread.h>
 #include <stdlib.h>
@@ -48,17 +50,32 @@ static mecab_t *get_mecab(void) {
   return g_mecab;
 }
 
-char *fts_segment(const char *text) {
+char *fts_segment(const char *raw) {
+  if (!raw) return strdup("");
+  /* Fold FIRST, so 「ＮＴＴドコモ㈱」, 「NTTドコモ株式会社」 and 「ｴﾇﾃｨｰﾃｨｰ
+   * ﾄﾞｺﾓ」 reach MeCab as one surface and come out as one token sequence —
+   * on the write path and on the query path alike (fts_query_expr calls
+   * this). Latin goes through the same fold: it only changes case and width,
+   * both of which unicode61 would have folded anyway, and it keeps the two
+   * paths byte-identical rather than "identical unless ASCII".
+   *
+   * Known cost, measured on IPADIC: hiragana-folded text segments WORSE than
+   * the katakana original (「ヤマダ タロウ」 stays two tokens as katakana and
+   * becomes 「や まだ たろ う」 once folded). Acceptable here because the index
+   * and the query see the same tokens, so matching is unaffected; readings
+   * (fts_reading) run on the compat-folded, kana-preserving text instead. */
+  char *text = jpnorm_fold_dup(raw);
   if (!text) return strdup("");
-  if (!fts_has_japanese(text)) return strdup(text); /* Latin passthrough */
+  if (!fts_has_japanese(text)) return text;          /* Latin passthrough */
 
   pthread_mutex_lock(&g_lock);
   mecab_t *m = get_mecab();
-  if (!m) { pthread_mutex_unlock(&g_lock); return strdup(text); } /* fail-open */
+  if (!m) { pthread_mutex_unlock(&g_lock); return text; } /* fail-open */
   const char *out = mecab_sparse_tostr(m, text);
   char *res = out ? strdup(out) : NULL;
   pthread_mutex_unlock(&g_lock);
-  if (!res) return strdup(text);
+  if (!res) return text;
+  free(text);
 
   /* `-O wakati` appends a trailing space + '\n'; kuromoji's join(' ') has
    * neither. Trim trailing whitespace/newlines for byte parity. */
@@ -66,6 +83,87 @@ char *fts_segment(const char *text) {
   while (n > 0 && (res[n - 1] == ' ' || res[n - 1] == '\n' || res[n - 1] == '\r'))
     res[--n] = '\0';
   return res;
+}
+
+/* --- readings ------------------------------------------------------------ */
+
+/* A second tagger, with the DEFAULT output format so node features are
+ * available; the wakati one above discards them. Same dictionary resolution
+ * as get_mecab(). Guarded by the same mutex (mecab_t is not thread-safe). */
+static mecab_t *g_mecab_feat = NULL;
+static int g_feat_failed = 0;
+
+static mecab_t *get_mecab_feat(void) {
+  if (g_mecab_feat) return g_mecab_feat;
+  if (g_feat_failed) return NULL;
+  const char *dic = getenv("MECAB_IPADIC");
+  char args[512];
+  if (dic && *dic) snprintf(args, sizeof args, "-d %s", dic);
+  else             args[0] = 0;
+  g_mecab_feat = mecab_new2(args);
+  if (!g_mecab_feat)
+    g_mecab_feat = mecab_new2("-d /opt/homebrew/lib/mecab/dic/ipadic");
+  if (!g_mecab_feat) {
+    g_feat_failed = 1;
+    fprintf(stderr, "[fts] MeCab (feature) init failed\n");
+  }
+  return g_mecab_feat;
+}
+
+/* IPADIC feature CSV: 品詞,細分類1,細分類2,細分類3,活用型,活用形,原形,読み,発音.
+ * Field 7 (0-based) is the reading, katakana. Unknown words carry only the
+ * first seven fields, so a missing field means "no reading known". */
+static const char *feature_field(const char *feat, int idx, size_t *len) {
+  const char *p = feat;
+  for (int i = 0; i < idx; i++) {
+    p = strchr(p, ',');
+    if (!p) return NULL;
+    p++;
+  }
+  const char *e = strchr(p, ',');
+  *len = e ? (size_t)(e - p) : strlen(p);
+  if (*len == 1 && *p == '*') return NULL;
+  return p;
+}
+
+char *fts_reading(const char *raw) {
+  if (!raw) return strdup("");
+  /* Compat fold only: IPADIC's entries are katakana (ドコモ), and width is
+   * the part that varies between spellings, so widths are normalised but
+   * kana are left as written. */
+  char *text = jpnorm_compat_dup(raw);
+  if (!text) return strdup("");
+  if (!fts_has_japanese(text)) return text;
+
+  pthread_mutex_lock(&g_lock);
+  mecab_t *m = get_mecab_feat();
+  const mecab_node_t *node = m ? mecab_sparse_tonode(m, text) : NULL;
+  if (!node) { pthread_mutex_unlock(&g_lock); return text; }   /* fail-open */
+
+  size_t cap = strlen(text) * 3 + 16, n = 0;
+  char *out = malloc(cap);
+  if (!out) { pthread_mutex_unlock(&g_lock); return text; }
+  for (; node; node = node->next) {
+    if (node->stat == MECAB_BOS_NODE || node->stat == MECAB_EOS_NODE) continue;
+    size_t rl = 0;
+    const char *r = node->feature ? feature_field(node->feature, 7, &rl) : NULL;
+    if (!r) { r = node->surface; rl = node->length; }   /* unknown: surface */
+    if (!rl) continue;
+    /* One space between morphemes, so a person name yields two romaji
+     * tokens downstream: 山田太郎 → ヤマダ タロウ. */
+    if (n + rl + 2 > cap) {
+      cap = (n + rl + 2) * 2;
+      char *np = realloc(out, cap);
+      if (!np) break;
+      out = np;
+    }
+    if (n) out[n++] = ' ';
+    memcpy(out + n, r, rl); n += rl;
+  }
+  pthread_mutex_unlock(&g_lock);
+  out[n] = 0;
+  free(text);
+  return out;
 }
 
 /* --- query builder (see fts.h for the rationale) --- */

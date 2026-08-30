@@ -90,7 +90,7 @@ SRC_SRC  := $(shell find collectors -name '*.c' | sort)
 SRCS     := main.c registry.c $(CORE_SRC) $(LIB_SRC) $(SRC_SRC)
 OBJS     := $(patsubst %.c,$(OBJ)/%.o,$(SRCS)) \
             $(OBJ)/third_party/cJSON.o $(OBJ)/third_party/sqlite3.o \
-            $(OBJ)/third_party/mongoose.o
+            $(OBJ)/third_party/mongoose.o $(OBJ)/third_party/sqlite-vec.o
 
 .PHONY: all clean selftest unit tsan tsan-test tsan-sched asan asan-test \
         lint-sources lint-baseline source-count
@@ -99,6 +99,15 @@ all: $(BIN)
 $(OBJ)/third_party/sqlite3.o: third_party/sqlite3.c
 	@mkdir -p $(dir $@)
 	$(CC) -O2 -g $(DEPFLAGS) $(SQLITE_DEFS) -c $< -o $@
+
+# sqlite-vec amalgamation (v0.1.9, MIT/Apache-2.0 — third_party/sqlite-vec.LICENSE-*).
+# -DSQLITE_CORE: statically linked next to sqlite3.o, so it calls the real
+# API instead of going through the sqlite3_api_routines loadable-extension
+# shim (and needs no sqlite3ext.h). Built with the same flags as sqlite3.o —
+# it is vendored code, not ours, so it is not held to -Wall -Wextra.
+$(OBJ)/third_party/sqlite-vec.o: third_party/sqlite-vec.c
+	@mkdir -p $(dir $@)
+	$(CC) -O2 -g $(DEPFLAGS) -DSQLITE_CORE -Ithird_party -c $< -o $@
 
 $(OBJ)/third_party/cJSON.o: third_party/cJSON.c
 	@mkdir -p $(dir $@)
@@ -164,8 +173,9 @@ regen-candidates:
 hptest:
 	@mkdir -p bin
 	$(CC) $(CFLAGS) -o bin/hpengine_test tests/hpengine_test.c lib/hpengine.c \
-	  lib/csv.c lib/htmlparse.c lib/seenset.c collectors/pivot/table/hp_uk_deep.c \
-	  third_party/cJSON.c $(ICONV_LIB)
+	  lib/csv.c lib/htmlparse.c lib/seenset.c lib/xlsx.c lib/zipread.c \
+	  collectors/pivot/table/hp_uk_deep.c \
+	  third_party/cJSON.c $(ICONV_LIB) -lz
 	./bin/hpengine_test
 
 # Unit/contract tests. Each test #includes the .c it exercises so it can reach

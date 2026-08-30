@@ -69,8 +69,26 @@
 #define JO_FTS_SCHEMA_H
 #include "db.h"
 
-/* Bumped whenever FTS_SCHEMA_COLUMNS changes. Recorded in _fts_meta.version. */
-#define FTS_SCHEMA_VERSION 2
+/* Bumped whenever FTS_SCHEMA_COLUMNS changes — OR whenever what goes INTO
+ * the columns changes. Recorded in _fts_meta.version, and a live index whose
+ * recorded version is lower than this is rebuilt at boot even when its column
+ * set already matches.
+ *
+ *   v2: widened to link/author/tags/props.
+ *   v3: same columns; every text now passes through jpnorm_fold() before
+ *       MeCab (lib/jpnorm.h — width, kana script, Latin case). The query path
+ *       folds the same way, so an index segmented the OLD way would not match
+ *       a query segmented the new way (「ドコモ」 stored as ドコモ, asked for
+ *       as どこも). The rebuild re-segments every row FROM intel_items, not
+ *       from the old index, so nothing is copied forward except `keywords`.
+ *
+ * COST of a v2→v3 boot: one MeCab pass over the corpus in a single
+ * transaction. Measured 2026-08-29 (WSL2, one core, 200-char Japanese
+ * bodies): 200,000 rows in 13.5 s ≈ 15k rows/s, so a 13M-row database is
+ * ~15 minutes with the process not yet serving — longer if bodies are
+ * bigger. Atomic, not resumable: an interrupted run rolls back to the v2
+ * index and retries next boot; JO_FTS_REBUILD=0 defers it for one boot. */
+#define FTS_SCHEMA_VERSION 3
 
 /* The single source of truth for the column set. schema.sql repeats it
  * verbatim for the fresh-database case (CREATE ... IF NOT EXISTS cannot widen

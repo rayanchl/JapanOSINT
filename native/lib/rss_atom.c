@@ -2,6 +2,7 @@
 #include "../core/httpclient.h"
 #include "feedlib.h"   /* feed_url_host_is_jp: the one .jp host gate */
 #include "csv.h"       /* csv_decode_sjis */
+#include "hpengine.h"  /* hp_xml_decode: the one XML text decoder */
 #include "../third_party/cJSON.h"
 #include <openssl/evp.h>
 #include <ctype.h>
@@ -62,27 +63,16 @@ static char *tag_text(const char *from, const char *end, const char *tag,
            * the wrapper at offset 0 missed every one of those, persisting the
            * literal "<![CDATA[ ... ]]>" as the title (and leaving links
            * unparseable). */
+          /* One decoder for the whole tree (lib/hpengine.c hp_xml_decode): every
+           * CDATA section unwrapped wherever it sits, the five entities and
+           * &#NNN; / &#xHHH; references decoded to UTF-8. This block used to
+           * strip only a CDATA wrapper at offset 0 and know five entities, so an
+           * NDL title arrived as literal `&#x6b74;...` on 14 live feeds. */
           char *s = raw;
-          while (*s == ' ' || *s == '\n' || *s == '\r' || *s == '\t') s++;
-          if (!strncmp(s, "<![CDATA[", 9)) {
-            char *e2 = strstr(s, "]]>");
-            if (e2) { *e2 = 0; memmove(s, s + 9, strlen(s + 9) + 1); }
-          }
-          /* trim ws again — the CDATA payload has its own padding */
+          hp_xml_decode(s);
           while (*s == ' ' || *s == '\n' || *s == '\r' || *s == '\t') s++;
           size_t L = strlen(s);
           while (L && (s[L-1]==' '||s[L-1]=='\n'||s[L-1]=='\r'||s[L-1]=='\t')) s[--L]=0;
-          /* decode minimal entities */
-          char *o = s;
-          for (char *r = s; *r; ) {
-            if (!strncmp(r,"&amp;",5)){*o++='&';r+=5;}
-            else if(!strncmp(r,"&lt;",4)){*o++='<';r+=4;}
-            else if(!strncmp(r,"&gt;",4)){*o++='>';r+=4;}
-            else if(!strncmp(r,"&quot;",6)){*o++='"';r+=6;}
-            else if(!strncmp(r,"&#39;",5)||!strncmp(r,"&apos;",6)){*o++='\'';r+=(r[2]=='3')?5:6;}
-            else *o++=*r++;
-          }
-          *o=0;
           char *res = strdup(s); free(raw); return res;
         }
       }

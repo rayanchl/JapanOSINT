@@ -226,3 +226,65 @@ int llm_healthy(llm_client *c) {
   http_response_free(&r);
   return ok;
 }
+
+int llm_embed(llm_client *c, const char *const *texts, int n,
+              float **out_vecs, int *out_dim, int timeout_ms, llm_status *st) {
+  if (st) *st = LLM_ERR_BAD_REQUEST;
+  if (out_vecs) *out_vecs = NULL;
+  if (out_dim) *out_dim = 0;
+  if (!c || !texts || n <= 0 || !out_vecs || !out_dim) return -1;
+  cJSON *b = cJSON_CreateObject();
+  cJSON *in = cJSON_CreateArray();
+  for (int i = 0; i < n; i++)
+    cJSON_AddItemToArray(in, cJSON_CreateString(texts[i] ? texts[i] : ""));
+  cJSON_AddItemToObject(b, "input", in);
+  const char *model = getenv("JO_EMBED_MODEL");
+  cJSON_AddStringToObject(b, "model", model && *model ? model : "embedding-model");
+  /* Anything the server returns is a float array we copy out, so we do not
+   * ask for base64 — the default `float` encoding keeps the parse trivial. */
+  char *raw = post_json(c, "/v1/embeddings", b, timeout_ms, st, NULL);
+  if (!raw) return -1;
+  cJSON *j = cJSON_Parse(raw);
+  free(raw);
+  if (!j) { if (st) *st = LLM_ERR_EMPTY; return -1; }
+  cJSON *data = cJSON_GetObjectItem(j, "data");
+  int rc = -1, dim = 0;
+  float *vecs = NULL;
+  if (cJSON_IsArray(data) && cJSON_GetArraySize(data) == n) {
+    rc = 0;
+    /* OpenAI shape: data[i].index says which input it answers; llama-server
+     * emits them in order but honouring `index` costs nothing and guards
+     * against a reordering server attributing vectors to the wrong rows. */
+    cJSON *e;
+    cJSON_ArrayForEach(e, data) {
+      cJSON *emb = cJSON_GetObjectItem(e, "embedding");
+      cJSON *idx = cJSON_GetObjectItem(e, "index");
+      int i = cJSON_IsNumber(idx) ? (int)idx->valuedouble : -1;
+      if (!cJSON_IsArray(emb) || i < 0 || i >= n) { rc = -1; break; }
+      int d = cJSON_GetArraySize(emb);
+      if (d <= 0 || (dim && d != dim)) { rc = -1; break; }
+      if (!dim) {
+        dim = d;
+        vecs = calloc((size_t)n * (size_t)dim, sizeof(float));
+        if (!vecs) { rc = -1; break; }
+      }
+      int k = 0;
+      cJSON *v;
+      cJSON_ArrayForEach(v, emb) {
+        if (!cJSON_IsNumber(v)) { rc = -1; break; }
+        vecs[(size_t)i * dim + k++] = (float)v->valuedouble;
+      }
+      if (rc) break;
+    }
+  }
+  cJSON_Delete(j);
+  if (rc != 0 || !vecs) {
+    free(vecs);
+    if (st) *st = LLM_ERR_EMPTY;
+    return -1;
+  }
+  *out_vecs = vecs;
+  *out_dim = dim;
+  if (st) *st = LLM_OK;
+  return 0;
+}

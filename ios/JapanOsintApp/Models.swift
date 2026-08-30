@@ -631,6 +631,19 @@ struct IntelItem: Codable, Identifiable, Hashable {
     /// "translated" badge on rows where this is true.
     let via_translation: Bool?
 
+    /// FTS5 snippet around the matched terms (`<b>`…`</b>` marks, `…` ellipsis),
+    /// present only when the request carried `q`. Show it instead of `summary`
+    /// on a search row so the user sees WHY the row matched.
+    let snippet: String?
+    /// Positive relevance score (negated bm25), present only for
+    /// `sort=relevance` / `sort=trust`. Higher is better; comparable within one
+    /// query only.
+    let rank: Double?
+    /// simhash.c near-duplicate cluster the row belongs to (uid of the
+    /// cluster's earliest member). Absent for a row that has not been
+    /// clustered. `collapse=1` folds rows sharing one onto the best-ranked.
+    let cluster_id: String?
+
     /// Near-duplicate corroboration, present only when the request asked for
     /// `?collapse=1` (roadmap 25). Optional so every existing call site and
     /// all cached JSON keep decoding unchanged.
@@ -822,7 +835,19 @@ struct IntelItemsEnvelope: Decodable {
 struct IntelPage: Decodable {
     let next_cursor: String?
     let limit: Int?
+    /// Exact match count, present only when the request asked `total=1` and
+    /// the count came in under the server's cap (intelapi.c JO_TOTAL_CAP).
     let total: Int?
+    /// Set instead of `total` when the count hit the cap: "at least this many".
+    let total_gte: Int?
+
+    /// Human "of M" for a results header: "31", "10,000+", or nil when the
+    /// server was not asked to count.
+    var totalLabel: String? {
+        if let t = total { return t.formatted() }
+        if let g = total_gte { return "\(g.formatted())+" }
+        return nil
+    }
 }
 
 struct IntelItemEnvelope: Decodable {

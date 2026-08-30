@@ -97,8 +97,33 @@ cJSON *csv_parse_dc(const char *text, int headers, char delim,
   return r;
 }
 
-cJSON *csv_parse_d(const char *text, int headers, char delim) {
-  const int trim = (delim != ',');   /* see the note in csv.h */
+/* Is this line a ruler — nothing but `-`, `=`, `+` and blanks? Fixed-width
+ * text tables draw one under their header (JPNIC's as-numbers.txt draws one
+ * above it as well), and a ruler split on whitespace is one cell of dashes:
+ * a record with no content that would be stored as a finding titled
+ * "----------". Only consulted in whitespace mode, where the table is by
+ * definition laid out for a human reader; a comma CSV whose first cell is a
+ * run of dashes is data and is left alone. */
+static int csv_is_ruler(const char *p, size_t len) {
+  int seen = 0;
+  for (size_t i = 0; i < len; i++) {
+    char c = p[i];
+    if (c == '-' || c == '=' || c == '+') seen = 1;
+    else if (c != ' ' && c != '\t' && c != '\r') return 0;
+  }
+  return seen;
+}
+
+/* The one tokenizer. `delim` is a literal separator of any length; `ws` makes
+ * every run of blanks the separator instead (and then `delim` is ignored).
+ * Quoting is RFC 4180 in every mode: a delimiter or newline inside "..." is
+ * content, which is what keeps a header cell with an embedded line break
+ * (MEXT's school-code header has `"設置\n区分"`) as one cell. Returns the
+ * positional rows; naming them after a header row is csv_name_rows(). */
+static cJSON *csv_rows(const char *text, const char *delim, int ws) {
+  const size_t dlen = (delim && *delim) ? strlen(delim) : 1;
+  const char dch = (delim && *delim) ? delim[0] : ',';
+  const int trim = ws || dch != ',';   /* see the note in csv.h */
   cJSON *rows = cJSON_CreateArray();
   if (!text || !*text) return rows;
 
@@ -106,6 +131,7 @@ cJSON *csv_parse_d(const char *text, int headers, char delim) {
   size_t cap = 64, fl = 0;
   char *field = malloc(cap);
   int in_q = 0, have = 0;        /* have: any field/cell started on this row */
+  int at_bol = 1;                /* ws mode: no cell has begun on this line  */
   /* An unchecked malloc here wrote through NULL on the very first cell, and
    * the realloc below did the same on any field past 64 bytes while leaking
    * the old buffer. Out of memory has to stop the parse, not corrupt it. */
@@ -131,17 +157,42 @@ cJSON *csv_parse_d(const char *text, int headers, char delim) {
         if (p[1] == '"') { PUSH_CHAR('"'); p++; }
         else in_q = 0;
       } else PUSH_CHAR(ch);
-    } else {
-      if (ch == '"') in_q = 1;
-      else if (ch == delim) { PUSH_FIELD(); }
-      else if (ch == '\n') {
-        PUSH_FIELD();
-        cJSON_AddItemToArray(rows, cur);
-        cur = cJSON_CreateArray();
-        have = 0;
-      } else if (ch == '\r') { /* ignore CR */ }
-      else PUSH_CHAR(ch);
+      continue;
     }
+    if (ws && at_bol) {
+      /* Line start: drop leading blanks (column alignment, not a cell), and
+       * drop a ruler line whole — it is layout, not a record. */
+      const char *eol = strchr(p, '\n');
+      size_t linelen = eol ? (size_t)(eol - p) : strlen(p);
+      if (csv_is_ruler(p, linelen)) {
+        if (!eol) break;
+        p = eol;                 /* the loop's p++ steps past the newline */
+        continue;
+      }
+      while (*p == ' ' || *p == '\t') p++;
+      ch = *p;
+      at_bol = 0;
+      if (!ch) break;
+    }
+    if (ch == '"') in_q = 1;
+    else if (ws && (ch == ' ' || ch == '\t')) {
+      /* A run of blanks is ONE separator; a run before the newline is none. */
+      while (p[1] == ' ' || p[1] == '\t') p++;
+      if (p[1] == '\n' || p[1] == '\r' || !p[1]) continue;
+      PUSH_FIELD();
+    }
+    else if (!ws && ch == dch && (dlen == 1 || !strncmp(p, delim, dlen))) {
+      PUSH_FIELD();
+      p += dlen - 1;
+    }
+    else if (ch == '\n') {
+      PUSH_FIELD();
+      cJSON_AddItemToArray(rows, cur);
+      cur = cJSON_CreateArray();
+      have = 0;
+      at_bol = 1;
+    } else if (ch == '\r') { /* ignore CR */ }
+    else PUSH_CHAR(ch);
   }
   /* JS: if (field.length>0 || cur.length>0) { cur.push(field); rows.push } */
   if (fl > 0 || cJSON_GetArraySize(cur) > 0 || have) {
@@ -151,9 +202,13 @@ cJSON *csv_parse_d(const char *text, int headers, char delim) {
     cJSON_Delete(cur);
   }
   free(field);
+#undef PUSH_FIELD
+#undef PUSH_CHAR
+  return rows;
+}
 
-  if (!headers) return rows;
-
+/* Row 0 names the columns; every later row becomes an object. Consumes `rows`. */
+static cJSON *csv_name_rows(cJSON *rows) {
   int nrows = cJSON_GetArraySize(rows);
   if (nrows == 0) { cJSON_Delete(rows); return cJSON_CreateArray(); }
   cJSON *head = cJSON_GetArrayItem(rows, 0);  /* exhaustive-ok: header row, not a record */
@@ -199,6 +254,41 @@ cJSON *csv_parse_d(const char *text, int headers, char delim) {
   return out;
 }
 
+cJSON *csv_parse_d(const char *text, int headers, char delim) {
+  char d[2] = { delim, 0 };
+  cJSON *rows = csv_rows(text, d, 0);
+  return headers ? csv_name_rows(rows) : rows;
+}
+
+cJSON *csv_parse_x(const char *text, int headers, const char *delim,
+                   int skip_lines, const char *comment) {
+  if (!text) text = "";
+  /* Physical lines, before anything else looks at the text: the title line
+   * sits ABOVE the header, so it has to go before header detection. A title
+   * is prose, not a row, so no quoting rule is applied to it — the quoted
+   * line breaks that matter are the header's and the records', and those are
+   * parsed below exactly as before. Running out of lines leaves an empty text,
+   * which parses to no rows — an honest empty, not a fabricated one. */
+  for (int i = 0; i < skip_lines && *text; i++) {
+    const char *eol = strchr(text, '\n');
+    text = eol ? eol + 1 : text + strlen(text);
+  }
+  int ws = delim && !strcmp(delim, "ws");
+  const char *lit = ws ? NULL : delim;
+  char *stripped = NULL;
+  if (comment && *comment) {
+    /* csv_strip_banner's arity test wants one delimiter character. In
+     * whitespace mode a blank is the honest answer; a multi-character literal
+     * is tested on its first byte, which only ever affects whether a banner
+     * line is promoted to the header — never what the data rows contain. */
+    char dc = ws ? ' ' : (lit && *lit ? lit[0] : ',');
+    stripped = csv_strip_banner(text, dc, comment, headers);
+  }
+  cJSON *rows = csv_rows(stripped ? stripped : text, lit, ws);
+  free(stripped);
+  return headers ? csv_name_rows(rows) : rows;
+}
+
 int csv_is_utf8(const char *s, size_t n) {
   const unsigned char *p = (const unsigned char *)s;
   for (size_t i = 0; i < n; ) {
@@ -217,9 +307,14 @@ int csv_is_utf8(const char *s, size_t n) {
   return 1;
 }
 
-char *csv_decode_sjis(const char *buf, size_t len) {
+/* Generalised out of csv_decode_sjis, which had the encoding baked into one
+ * string. hpengine can now be told a row's charset explicitly — the 2ch-family
+ * boards are Japanese sites on .to and .net, so the `.jp` host heuristic
+ * rightly refuses them — and EUC-JP is still served by older Japanese sites,
+ * so the source encoding is a parameter. */
+char *csv_decode_charset(const char *buf, size_t len, const char *from) {
   if (!buf) return NULL;
-  iconv_t cd = iconv_open("UTF-8", "SHIFT_JIS");
+  iconv_t cd = iconv_open("UTF-8", (from && from[0]) ? from : "SHIFT_JIS");
   if (cd == (iconv_t)-1) {
     char *c = malloc(len + 1);
     if (!c) return NULL;
@@ -253,4 +348,8 @@ char *csv_decode_sjis(const char *buf, size_t len) {
   }
   *out_p = 0;
   return out;
+}
+
+char *csv_decode_sjis(const char *buf, size_t len) {
+  return csv_decode_charset(buf, len, "SHIFT_JIS");
 }

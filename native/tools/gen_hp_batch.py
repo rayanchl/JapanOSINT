@@ -29,6 +29,55 @@ Manifest columns, pipe-delimited (a description may contain commas, never a pipe
   12 description   prose: what the record contains and why it is worth a request
   13 opts          k=v;k=v -- any other hp_source field
 
+Opts worth knowing, because each one closes a gap a batch hit for real
+(lib/hpengine.h documents every field; these are the ones that were added
+after a verified source could not be expressed):
+
+  id_keys=a,b,c           FIRST-MATCH per record: the engine takes the first
+                          listed key that resolves to a non-empty value and
+                          ignores the rest, so the order IS the identity. An
+                          RSS/RDF feed that points several items at one
+                          section page collides on `link` (IPA newsonly-rss:
+                          three items, one /about/ URL) and stores one of
+                          them — declare `guid` or `title` first and `link`
+                          last as the fallback. XML text is decoded before
+                          keying (CDATA unwrapped, &#x...; to UTF-8), so a
+                          `title` key on an NDL feed keys on the kanji, not
+                          on its escape sequence
+  csv_delim=ws            a run of blanks is the separator (fixed-width text
+                          tables — JPNIC as-numbers.txt); ruler lines skipped
+  csv_delim=lit:<>        any literal token, any length (2ch subject.txt)
+  csv_skip_lines=N        drop N physical lines before the header is read: the
+                          "title line above the header" files (MEXT school
+                          codes, Kawasaki 薬事, Saitama) no longer need
+                          csv_no_header=1 and no longer emit two junk records
+  base=URL                override for relative-href resolution in html mode.
+                          Without it every relative href (../x, ./x, x, //h/x,
+                          ?q, #f) is resolved RFC 3986-style against the page's
+                          <base href>, else the fetched URL — so it is only
+                          needed when the page lies about where it lives
+  {page} in the URL       path-segment paging (https://kanpou.ai/tosan/p/{page}):
+                          substituted with the page number, page_start /
+                          page_zero_based / page_max as for page_param, and the
+                          walk stops on an empty, missing or repeated page.
+                          MUTUALLY EXCLUSIVE with page_param — a row declaring
+                          both is rejected here
+  next_path + next_tmpl   OAI-PMH resumptionToken continuation. The token is an
+                          opaque cursor, not a URL, and the continuation request
+                          must NOT repeat metadataPrefix, so the row states
+                          both where the token is and how to spend it:
+
+    ...|https://repository.kulib.kyoto-u.ac.jp/dspace-oai/request?verb=ListRecords&metadataPrefix=oai_dc|...|
+    interval=86400;array_path=record;title_keys=metadata.oai_dc:dc.dc:title;
+    id_keys=header.identifier;date_keys=header.datestamp;
+    next_path=resumptionToken;
+    next_tmpl=https://repository.kulib.kyoto-u.ac.jp/dspace-oai/request?verb=ListRecords&resumptionToken={v};
+    page_max=2600;timeout_ms=60000
+
+                          An empty <resumptionToken/> ends the walk; page_max
+                          must cover completeListSize / 100 or the ceiling
+                          bites (stamped as a truncation notice, never silent).
+
 Usage:
   gen_hp_batch.py MANIFEST... --probe-out probes.tsv
   gen_hp_batch.py MANIFEST... --outdir DIR --pass-ids ids.txt --group G:blurb
@@ -47,20 +96,23 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from manifest import (COLS, split_opts, parse_opts,          # noqa: E402
                       load as _manifest_load)
 
-MODE = {"json": "HP_JSON", "csv": "HP_CSV", "html": "HP_HTML", "xml": "HP_XML"}
+MODE = {"json": "HP_JSON", "csv": "HP_CSV", "html": "HP_HTML", "xml": "HP_XML",
+        "xlsx": "HP_XLSX"}
 WANT = {"any": "HP_ANY", "domain": "HP_DOMAIN", "ip": "HP_IP",
         "email": "HP_EMAIL", "numeric": "HP_NUMERIC", "hash": "HP_HASH",
         "icao24": "HP_ICAO24", "eth": "HP_ETH", "btc": "HP_BTC",
         "asn": "HP_ASN"}
 
 STR_OPTS = {"array_path", "title_keys", "id_keys", "link_keys", "link_tmpl",
-            "csv_delim", "csv_comment",
+            "charset", "next_tmpl",
+            "csv_delim", "csv_comment", "xlsx_sheet",
             "date_keys", "body_keys", "lat_key", "lon_key", "href_must",
             "base", "detail_url", "detail_key", "detail_path", "next_path",
             "page_param", "post_body", "content_type", "key_env", "type",
             "collector"}
 INT_OPTS = {"detail_max", "page_start", "page_size", "page_max", "max_items",
-            "page_zero_based",
+            "timeout_ms",
+            "page_zero_based", "csv_skip_lines", "xlsx_sheet_index",
             "filter_query", "csv_no_header", "free_tier", "interval"}
 # hp_source.headers is `const char *headers[5]`, so it cannot be set by the
 # generic scalar path above. A row declares them as header1/header2/header3 and
@@ -141,6 +193,12 @@ def validate_opts(r):
         raise SystemExit("%s: %s: opts token %r has no '=' -- a mistyped "
                          "separator silently swallows the opt that follows it"
                          % (r["_src"], r["id"], tok))
+    # Two ways of saying "page N" on one row have no agreed meaning: the engine
+    # would let {page} win and warn on stderr, which is a log line nobody reads.
+    if "page_param" in parsed and "{page}" in r["url"]:
+        raise SystemExit("%s: %s: declares page_param AND a {page} token in the "
+                         "URL -- they are mutually exclusive; keep the one the "
+                         "upstream honours" % (r["_src"], r["id"]))
     for k, v in parsed.items():
         m = SWALLOWED.search(v) if k != "post_body" else None
         if m:

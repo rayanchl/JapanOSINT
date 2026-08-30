@@ -192,10 +192,83 @@ typedef struct {
   char src[256]; long ic, gc, uc, ag; char lf[64]; int has_lf;
 } agg_t;
 
+/* ── health-driven scheduling state (core/scheduler.c) ───────────────────
+ * Loaded once per build, like load_aggs(): one SELECT, not one per row. */
+typedef struct {
+  char src[256]; int failures, empties, quarantined; long effective; long long backoff_until;
+} sched_t;
+
+static sched_t *load_sched(db_handle *db, int *out_n) {
+  *out_n = 0;
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT source_id,consecutive_failures,consecutive_empties,quarantined,"
+        "effective_interval,backoff_until FROM source_sched_state",
+        -1, &s, NULL) != SQLITE_OK) return NULL;
+  int cap = 64, n = 0;
+  sched_t *S = malloc((size_t)cap * sizeof *S);
+  if (!S) { sqlite3_finalize(s); return NULL; }
+  while (sqlite3_step(s) == SQLITE_ROW) {
+    if (n == cap) {
+      sched_t *NS = realloc(S, (size_t)cap * 2 * sizeof *S);
+      if (!NS) break;
+      S = NS; cap *= 2;
+    }
+    sched_t *r = &S[n++];
+    snprintf(r->src, sizeof r->src, "%s", (const char *)sqlite3_column_text(s,0));
+    r->failures    = sqlite3_column_int(s,1);
+    r->empties     = sqlite3_column_int(s,2);
+    r->quarantined = sqlite3_column_int(s,3);
+    r->effective   = (long)sqlite3_column_int64(s,4);
+    r->backoff_until = sqlite3_column_type(s,5) == SQLITE_NULL
+                         ? 0 : sqlite3_column_int64(s,5);
+  }
+  sqlite3_finalize(s);
+  *out_n = n;
+  return S;
+}
+
+static void iso_epoch(long long t, char *buf, size_t n) {
+  time_t tt = (time_t)t; struct tm tm; gmtime_r(&tt, &tm);
+  strftime(buf, n, "%Y-%m-%dT%H:%M:%SZ", &tm);
+}
+
+/* The `sched` object on a status row. Two quarantines are reported side by
+ * side because they are two different claims: `quarantined` is the scheduler's
+ * own health verdict (N consecutive failed fetches; clears itself on the first
+ * good probe), `repairQuarantined` is the repair pod's breaker on the collector
+ * code (sources.quarantined_until; cleared by an operator or by time). A row
+ * with no state yet (never run since the table existed) says so with
+ * `tracked:false` and a null effectiveInterval rather than inventing zeros. */
+static cJSON *sched_obj(const sched_t *S, int ns, const char *id,
+                        const src_meta *m, int repair_q, time_t now) {
+  const sched_t *r = NULL;
+  for (int k = 0; k < ns; k++) if (strcmp(S[k].src, id) == 0) { r = &S[k]; break; }
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddBoolToObject(o, "tracked", r != NULL);
+  cJSON_AddItemToObject(o, "declaredInterval",
+    (m && m->update_interval > 0) ? cJSON_CreateNumber((double)m->update_interval)
+                                  : cJSON_CreateNull());
+  cJSON_AddItemToObject(o, "effectiveInterval",
+    r ? cJSON_CreateNumber((double)r->effective) : cJSON_CreateNull());
+  cJSON_AddNumberToObject(o, "consecutiveFailures", r ? r->failures : 0);
+  cJSON_AddNumberToObject(o, "consecutiveEmpties",  r ? r->empties  : 0);
+  int backed = r && r->backoff_until > (long long)now;
+  cJSON_AddBoolToObject(o, "backedOff", backed);
+  if (backed) {
+    char ts[32]; iso_epoch(r->backoff_until, ts, sizeof ts);
+    cJSON_AddStringToObject(o, "backoffUntil", ts);
+  } else cJSON_AddNullToObject(o, "backoffUntil");
+  cJSON_AddBoolToObject(o, "quarantined", r && r->quarantined);
+  cJSON_AddBoolToObject(o, "repairQuarantined", repair_q);
+  return o;
+}
+
 /* serializeRow(row,reg,creds,intelAgg) — `s` must be stepped to a row of the
  * 19-col sources query below; `A`/`na` the intel-aggregate table. */
 static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
-                         const source_trust *TT, int nt) {
+                         const source_trust *TT, int nt,
+                         const sched_t *S, int ns, time_t now) {
   const char *id = ctext(s,0);
   const src_meta *m = src_meta_get(id);
   const char *status = ctext(s,5);
@@ -271,6 +344,20 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
       cJSON_AddItemToObject(tr,"grade", cJSON_CreateNull());
     }
     cJSON_AddItemToObject(o,"trust", tr);
+    /* repair-pod quarantine is what trust already reads off sources.quarantined_until;
+     * an unrated source has no trust row, so fall back to the column itself. */
+    int repair_q = t ? t->quarantined : 0;
+    if (!t) {
+      sqlite3_stmt *qs;
+      if (sqlite3_prepare_v2(sqlite3_db_handle(s),
+            "SELECT 1 FROM sources WHERE id=?1 AND quarantined_until IS NOT NULL"
+            " AND quarantined_until>datetime('now') LIMIT 1", -1, &qs, NULL) == SQLITE_OK) {
+        sqlite3_bind_text(qs, 1, id, -1, SQLITE_TRANSIENT);
+        repair_q = sqlite3_step(qs) == SQLITE_ROW;
+        sqlite3_finalize(qs);
+      }
+    }
+    cJSON_AddItemToObject(o,"sched", sched_obj(S, ns, id, m, repair_q, now));
   }
 
   add_str_or_null(o,"probeRequestUrl", ctext(s,11));
@@ -336,6 +423,8 @@ static cJSON *breach_status_row(const breach_src_row *br) {
   cJSON_AddNullToObject(tr, "reliability");
   cJSON_AddNullToObject(tr, "grade");
   cJSON_AddItemToObject(o, "trust", tr);
+  /* not a scheduled collector: tracked:false, everything null/0 */
+  cJSON_AddItemToObject(o, "sched", sched_obj(NULL, 0, br->breach_id, NULL, 0, 0));
 
   cJSON_AddNullToObject(o, "probeRequestUrl");
   cJSON_AddNullToObject(o, "probeRequestMethod");
@@ -390,37 +479,43 @@ static agg_t *load_aggs(db_handle *db, int *out_n) {
 
 /* GET /api/status/:id — single serializeRow, or NULL if no such source. */
 char *statusapi_one(db_handle *db, const char *id) {
-  int na = 0, nt = 0;
+  int na = 0, nt = 0, ns = 0;
   agg_t *A = load_aggs(db, &na);
   source_trust *TT = source_trust_load(db, &nt);
+  sched_t *S = load_sched(db, &ns);
+  time_t now = time(NULL);
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h, STATUS_SRC_COLS " WHERE id=?1", -1, &s, NULL)
-      != SQLITE_OK) { free(A); free(TT); return NULL; }
+      != SQLITE_OK) { free(A); free(TT); free(S); return NULL; }
   sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
   char *js = NULL;
   if (sqlite3_step(s) == SQLITE_ROW) {
-    cJSON *o = status_row(s, A, na, TT, nt);
+    cJSON *o = status_row(s, A, na, TT, nt, S, ns, now);
     js = cJSON_PrintUnformatted(o);
     cJSON_Delete(o);
   }
   sqlite3_finalize(s);
   free(A);
   free(TT);
+  free(S);
   return js;
 }
 
 char *statusapi_build(db_handle *db, int include_breach) {
-  int na = 0, nt = 0;
+  int na = 0, nt = 0, ns = 0;
   agg_t *A = load_aggs(db, &na);
   source_trust *TT = source_trust_load(db, &nt);
+  sched_t *S = load_sched(db, &ns);
+  time_t now = time(NULL);
   sqlite3_stmt *s;
   /* getAllSources(): SELECT * FROM sources ORDER BY category, name */
   if (sqlite3_prepare_v2(db->h, STATUS_SRC_COLS " ORDER BY category, name",
-                         -1, &s, NULL) != SQLITE_OK) { free(A); free(TT); return NULL; }
+                         -1, &s, NULL) != SQLITE_OK) { free(A); free(TT); free(S); return NULL; }
 
   cJSON *apis = cJSON_CreateArray();
   int c_total=0,c_online=0,c_degraded=0,c_offline=0,c_pending=0,c_gated=0,
-      c_reqkey=0,c_configured=0,c_missing=0,c_working=0;
+      c_reqkey=0,c_configured=0,c_missing=0,c_working=0,
+      c_backed=0,c_hquar=0,c_rquar=0;
 
   while (sqlite3_step(s) == SQLITE_ROW) {
     const char *id = ctext(s,0);
@@ -428,8 +523,14 @@ char *statusapi_build(db_handle *db, int include_breach) {
     if (statusapi_strip_has(id)) continue;
     if (m && statusapi_strip_has(m->layer)) continue;
 
-    cJSON *o = status_row(s, A, na, TT, nt);
+    cJSON *o = status_row(s, A, na, TT, nt, S, ns, now);
     cJSON_AddItemToArray(apis, o);
+    {
+      cJSON *sc = cJSON_GetObjectItem(o,"sched");
+      if (cJSON_IsTrue(cJSON_GetObjectItem(sc,"quarantined")))      c_hquar++;
+      else if (cJSON_IsTrue(cJSON_GetObjectItem(sc,"backedOff")))   c_backed++;
+      if (cJSON_IsTrue(cJSON_GetObjectItem(sc,"repairQuarantined"))) c_rquar++;
+    }
 
     /* summary tallies (mirrors status.js filters) — read back from `o` */
     const char *status = ctext(s,5);
@@ -454,6 +555,7 @@ char *statusapi_build(db_handle *db, int include_breach) {
   sqlite3_finalize(s);
   free(A);
   free(TT);
+  free(S);
 
   /* Breach catalog rows, appended for operators only. They tally into the
    * ordinary status counters like any other row, plus their own two totals. */
@@ -490,6 +592,12 @@ char *statusapi_build(db_handle *db, int include_breach) {
    * them without treating absence as a distinct case. */
   cJSON_AddNumberToObject(summary,"breachTotal", c_breach);
   cJSON_AddNumberToObject(summary,"breachMaterialized", c_breach_mat);
+  /* Health-driven scheduling totals (core/scheduler.c). `schedQuarantined` is
+   * the scheduler's own quarantine, `repairQuarantined` the repair pod's; a
+   * source can be in both, so they are not summed. */
+  cJSON_AddNumberToObject(summary,"schedBackedOff", c_backed);
+  cJSON_AddNumberToObject(summary,"schedQuarantined", c_hquar);
+  cJSON_AddNumberToObject(summary,"repairQuarantined", c_rquar);
 
   char ts[40]; iso_now(ts, sizeof ts);
   cJSON *env = cJSON_CreateObject();

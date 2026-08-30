@@ -167,7 +167,10 @@ def run_one(a, tmpl, sid, slot):
         except OSError:
             pass
     shutil.copyfile(tmpl, db)
-    env = dict(os.environ, JO_DB=db, JO_FTS_REBUILD="0")
+    # JO_SHAPE_NOTICES=0: a collector-shape-notice is one emitted record, and
+    # this tool judges DROPS_EVERYTHING by that count — a row that stored only
+    # its own notice must still read as 0.
+    env = dict(os.environ, JO_DB=db, JO_FTS_REBUILD="0", JO_SHAPE_NOTICES="0")
     t0 = time.time()
     timed_out = False
     blob = ""

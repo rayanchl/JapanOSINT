@@ -12,6 +12,17 @@
 #   LLAMA_BIN        path to the llama-server binary
 #   OSINT_MODEL_PATH path to the .gguf model
 #   LLAMA_PORT       port (default 8080)
+#
+# Optional EMBEDDING pod (hybrid semantic search, core/embed_pod.c):
+#   LLAMA_EMBED_MODEL   path to a multilingual embedding .gguf
+#                       (default models/bge-m3-Q8_0.gguf; multilingual-e5-small
+#                       or -base also work, 384/768-d, cross-lingual JA<->EN).
+#                       The model is NOT downloaded here — if the file is
+#                       absent the pod is skipped with a message and the C
+#                       binary's embedding pod stays inert (JO_EMBED_URL unset).
+#   LLAMA_EMBED_PORT    port (default 8082)
+#   LLAMA_EMBED_POOLING --pooling override (cls|mean|last); unset = the GGUF's
+#                       own metadata, which is right for bge-m3 and e5.
 set -euo pipefail
 
 LLAMA_PORT="${LLAMA_PORT:-8080}"
@@ -63,6 +74,32 @@ fi
 # silently — the run is reported degraded with code `llm_http_error` and the
 # server log prints the prompt's byte size next to it — but it does fail.
 LLAMA_CTX="${LLAMA_CTX:-32768}"
+
+# ---- optional embedding server pod ---------------------------------------
+# A second llama-server on its own port with `--embedding`: an embedding model
+# cannot generate and the generation model cannot embed, so they are two
+# processes, and core/llm_worker.c gives each base_url its own worker thread
+# so the two never queue on each other. Backgrounded (the generation server
+# below is exec'd and stays the foreground process of this script).
+# --ubatch-size must hold the LONGEST input: embedding models run non-causal
+# attention over the whole prompt in one micro-batch; JO_EMBED_MAX_CHARS
+# (default 1000 bytes) is well inside 2048 tokens.
+LLAMA_EMBED_PORT="${LLAMA_EMBED_PORT:-8082}"
+LLAMA_EMBED_MODEL="${LLAMA_EMBED_MODEL:-$REPO_ROOT/models/bge-m3-Q8_0.gguf}"
+if curl -s "http://localhost:${LLAMA_EMBED_PORT}/health" >/dev/null 2>&1; then
+  echo "[start-llama] embedding llama-server already healthy on :${LLAMA_EMBED_PORT}"
+elif [ ! -f "$LLAMA_EMBED_MODEL" ]; then
+  echo "[start-llama] embedding pod skipped: no model at $LLAMA_EMBED_MODEL" >&2
+  echo "  Put a multilingual embedding GGUF there (bge-m3, multilingual-e5-small/-base)" >&2
+  echo "  or set LLAMA_EMBED_MODEL. /api/intel/semantic answers 503 until then." >&2
+else
+  EMBED_ARGS=( -m "$LLAMA_EMBED_MODEL" --port "$LLAMA_EMBED_PORT" --host 127.0.0.1
+               --embedding --ctx-size 2048 --batch-size 2048 --ubatch-size 2048 )
+  [ -n "${LLAMA_EMBED_POOLING:-}" ] && EMBED_ARGS+=( --pooling "$LLAMA_EMBED_POOLING" )
+  echo "[start-llama] launching embedding llama-server :${LLAMA_EMBED_PORT} (model: $LLAMA_EMBED_MODEL)"
+  echo "  export JO_EMBED_URL=http://127.0.0.1:${LLAMA_EMBED_PORT} for the C binary's embedding pod"
+  nohup "$LLAMA_BIN" "${EMBED_ARGS[@]}" >"${LLAMA_EMBED_LOG:-/tmp/llama-embed.log}" 2>&1 &
+fi
 
 echo "[start-llama] launching llama-server :${LLAMA_PORT} (model: $OSINT_MODEL_PATH, ctx: $LLAMA_CTX)"
 exec "$LLAMA_BIN" \
