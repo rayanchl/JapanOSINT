@@ -639,11 +639,6 @@ struct IntelItem: Codable, Identifiable, Hashable {
     /// `sort=relevance` / `sort=trust`. Higher is better; comparable within one
     /// query only.
     let rank: Double?
-    /// simhash.c near-duplicate cluster the row belongs to (uid of the
-    /// cluster's earliest member). Absent for a row that has not been
-    /// clustered. `collapse=1` folds rows sharing one onto the best-ranked.
-    let cluster_id: String?
-
     /// Near-duplicate corroboration, present only when the request asked for
     /// `?collapse=1` (roadmap 25).
     ///
@@ -655,6 +650,10 @@ struct IntelItem: Codable, Identifiable, Hashable {
     /// dropped at the decode seam, leaving `ClusterBadge` a view with no call
     /// sites. These stay stored-and-flat to match the wire; `cluster` below
     /// reassembles them so existing call sites read unchanged.
+    ///
+    /// `cluster_id` is the uid of the cluster's earliest member (simhash.c),
+    /// absent for a row that has never been clustered; `collapse=1` folds the
+    /// rows sharing one onto the best-ranked of them.
     let cluster_id: String?
     let cluster_size: Int?
     let cluster_source_count: Int?
