@@ -5,6 +5,7 @@
 #include "../source.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
+#include <signal.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
