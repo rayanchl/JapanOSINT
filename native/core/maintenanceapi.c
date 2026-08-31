@@ -423,7 +423,7 @@ char *maintenance_repair_action(db_handle *db, long repair_id, int approve,
     if (!ins_ok){
       fprintf(stderr,"[repair] APPROVAL FAILED %s: url override not written: %s\n",
               source_id,sqlite3_errmsg(h));
-      if (pj) cJSON_Delete(pj); free(patch);
+      if (pj) { cJSON_Delete(pj); } free(patch);
       *status=500; return err_json("url_override_write_failed");
     }
     url_override_reload(db);          /* activate the swap live, no restart */
@@ -447,7 +447,7 @@ char *maintenance_repair_action(db_handle *db, long repair_id, int approve,
               source_id,old_url,new_url,repair_id,
               merged_ok?"merged":"NOT-merged", anom_ok?"resolved":"NOT-resolved",
               sqlite3_errmsg(h));
-      if (pj) cJSON_Delete(pj); free(patch);
+      if (pj) { cJSON_Delete(pj); } free(patch);
       *status=500;
       return err_json(merged_ok ? "override_live_anomaly_not_resolved"
                                 : "override_live_repair_not_marked_merged");
@@ -550,7 +550,7 @@ char *maintenance_repair_revert(db_handle *db, long repair_id, int *status){
   const char *old_url=(ou&&cJSON_IsString(ou))?ou->valuestring:NULL;
   const char *new_url=(nu&&cJSON_IsString(nu))?nu->valuestring:NULL;
   if (!old_url||!*old_url){
-    if (pj) cJSON_Delete(pj); free(patch);
+    if (pj) { cJSON_Delete(pj); } free(patch);
     *status=422; return err_json("patch_missing_urls");
   }
 
@@ -585,7 +585,7 @@ char *maintenance_repair_revert(db_handle *db, long repair_id, int *status){
     fprintf(stderr,"[repair] PARTIAL REVERT %s: override for %s is REMOVED but "
                    "repair#%ld is still marked merged (%s)\n",
             source_id,old_url,repair_id,sqlite3_errmsg(h));
-    if (pj) cJSON_Delete(pj); free(patch);
+    if (pj) { cJSON_Delete(pj); } free(patch);
     *status=500; return err_json("override_removed_repair_not_unmarked");
   }
 
@@ -603,7 +603,7 @@ char *maintenance_repair_revert(db_handle *db, long repair_id, int *status){
    * the process may have been restarted since approval with the row already
    * gone — and it is not the same as "reverted 1", so it is reported. */
   cJSON_AddNumberToObject(o,"overrides_removed",(double)removed);
-  if (pj) cJSON_Delete(pj); free(patch);
+  if (pj) { cJSON_Delete(pj); } free(patch);
   char *j=cJSON_PrintUnformatted(o); cJSON_Delete(o);
   *status=200; return j;
 }

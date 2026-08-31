@@ -174,7 +174,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* search_google: 10 SERP pages */
   for (int page = 0; page < MAX_PAGES; page++) {
-    char url[1024];
+    char url[2048];
     snprintf(url, sizeof url,
       "https://www.google.com/search?q=site:%s+OR+@%s&start=%d",
       enc, enc, page * 10);
@@ -184,14 +184,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   /* search_crtsh */
   {
-    char url[1024];
+    char url[2048];
     snprintf(url, sizeof url, "https://crt.sh/?q=%%.%s&output=json", enc);
     char *b = fetch(ctx->http, url);
     if (b) { extract(b, spat, subs, &ns, "crt.sh"); free(b); }
   }
   /* search_github */
   {
-    char url[1024];
+    char url[2048];
     snprintf(url, sizeof url, "https://api.github.com/search/code?q=%s", enc);
     char *b = fetch(ctx->http, url);
     if (b) { extract(b, epat, emails, &ne, "GitHub");
@@ -199,7 +199,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   /* search_duckduckgo */
   {
-    char url[1024];
+    char url[2048];
     snprintf(url, sizeof url,
       "https://html.duckduckgo.com/html/?q=site:%s+OR+@%s", enc, enc);
     char *b = fetch(ctx->http, url);
