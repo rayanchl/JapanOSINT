@@ -143,7 +143,7 @@ static const char *ted_ml(const cJSON *o, const char *key) {
   if (!pick) return NULL;
   if (cJSON_IsString(pick)) return pick->valuestring[0] ? pick->valuestring : NULL;
   if (cJSON_IsArray(pick)) {
-    const cJSON *first = cJSON_GetArrayItem(pick, 0);
+    const cJSON *first = cJSON_GetArrayItem(pick, 0);  /* exhaustive-ok: picks one display label out of a multilingual value; this resolver returns a single string by contract */
     if (first && cJSON_IsString(first) && first->valuestring[0])
       return first->valuestring;
   }

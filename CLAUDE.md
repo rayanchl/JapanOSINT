@@ -69,9 +69,14 @@ Where the tree actually stands, as `make audit-sources` reports it:
 * **strict set — 0 findings across 159 files.** `collectors/pivot/table/hp*_*.c`
   plus the generated deep-record tables `collectors/feed/generated/hp1[0-9]_*.c`.
   This is the part the Makefile gates on, and it is held clean.
-* **the rest of the tree — 51 findings across 30 of 1,523 files**: 40
-  first-only, 11 single-page. `limit-one`, `dedupe-ring`, `loop-cap`,
-  `record-cap` and `loop-break` are now zero. These are heuristics and each needs
+* **the rest of the tree — 9 findings across 5 of 1,523 files**, all
+  `single-page`. Every other class — `first-only`, `record-cap`, `loop-break`,
+  `limit-one`, `dedupe-ring`, `loop-cap` — is at zero.
+
+  The nine are generated rows whose URL pins `?page=1` with no page size
+  anywhere in it. `lib/pager.c` walks exactly those **when the upstream declares
+  a total**, and whether a given one does cannot be known without asking it — so
+  they stay flagged rather than marked. One live response each settles them. These are heuristics and each needs
   a human read, but "zero audit findings" is true only of the strict set — do not
   read it as true of the tree.
 
@@ -99,7 +104,7 @@ Three traps in reading that number, all of which cost real coverage:
   both. They are pivots now (`collectors/pivot/table/hp18_us_openfda_ids.c`).
 
 Deliberate exceptions carry an inline `/* exhaustive-ok: <reason> */` marker
-(`grep -rn exhaustive-ok`, currently 215). The marker must sit on the flagged
+(`grep -rn exhaustive-ok`, currently 258). The marker must sit on the flagged
 line itself — the audit reads it per line, so one on the line above is ignored.
 
 ```sh

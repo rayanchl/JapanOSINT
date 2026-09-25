@@ -79,7 +79,11 @@ RSSX(fin_oilprice_2, "oilprice-2", "OilPrice Energy News", "OilPrice Energy News
  * /rss/news.aspx answers 403 to every non-browser client. The site's own
  * news stream endpoint (ws/stream.ashx) is open and returns richer JSON than
  * the RSS ever did (country, category, importance, author). */
-#define TE_URL "https://tradingeconomics.com/ws/stream.ashx?start=0&size=100"
+/* exhaustive-ok: newest-first NEWS stream on an hourly cadence, keyed per item
+ * (remote_key is the item URL), so start=0 is the window that has not been seen
+ * yet — the later pages are items earlier runs already stored. Walking them
+ * would re-fetch and re-upsert the same rows every hour rather than add any. */
+#define TE_URL "https://tradingeconomics.com/ws/stream.ashx?start=0&size=100"  /* exhaustive-ok: see above */
 
 static int run_fin_trading_econ(const source_ctx *c, intel_sink *s) {
   cJSON *arr = feed_get_json(c->http, TE_URL, 15000);

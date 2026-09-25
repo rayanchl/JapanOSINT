@@ -491,7 +491,7 @@ static int c2_tronscan(const source_ctx *ctx, intel_sink *sink, const char *addr
   if (!root) return 0;
 
   cJSON *arr = cJSON_GetObjectItem(root, "data");
-  cJSON *acc = (arr && cJSON_IsArray(arr)) ? cJSON_GetArrayItem(arr, 0) : NULL;
+  cJSON *acc = (arr && cJSON_IsArray(arr)) ? cJSON_GetArrayItem(arr, 0) : NULL;  /* exhaustive-ok: the account lookup is by a single address, so data[] holds that one account */
   if (!acc) {
     cJSON_Delete(root);
     fprintf(stderr, "[TRON_SCAN] no account\n");

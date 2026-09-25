@@ -62,7 +62,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *meta = props ? cJSON_GetObjectItem(props, "meta") : NULL;
   const char *updated = meta ? jo_sv(meta, "updated_at") : NULL;
   cJSON *tsa = props ? cJSON_GetObjectItem(props, "timeseries") : NULL;
-  cJSON *first = cJSON_IsArray(tsa) ? cJSON_GetArrayItem(tsa, 0) : NULL;
+  cJSON *first = cJSON_IsArray(tsa) ? cJSON_GetArrayItem(tsa, 0) : NULL;  /* exhaustive-ok: point pivot for CURRENT conditions; the horizon length is emitted alongside so the row says how many steps it is not showing */
   if (!first) { cJSON_Delete(doc); return 0; }
   const char *when = jo_sv(first, "time");
   cJSON *data = cJSON_GetObjectItem(first, "data");

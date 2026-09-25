@@ -98,9 +98,14 @@ data: hardcoded record caps, `break` in a record loop, first-element-only access
 single-page fetches of paged APIs, and fixed dedupe rings.
 
 **Where it actually stands: 0 findings in the strict gated set (159 files), and
-51 findings across 30 of 1,523 files in the rest of the tree** — 40
-`first-only` and 11 `single-page`. `limit-one`, `dedupe-ring`, `loop-cap`,
-`record-cap` and `loop-break` are at zero.
+9 across 5 of 1,523 files in the rest of the tree**, all `single-page`. Every
+other class — `first-only`, `record-cap`, `loop-break`, `limit-one`,
+`dedupe-ring`, `loop-cap` — is at zero.
+
+Those nine are generated rows pinning `?page=1` with no page size in the URL.
+lib/pager.c walks exactly that shape **when the upstream declares a total**, and
+whether any given one does cannot be known without asking it — so they stay
+flagged rather than waived. One live response each settles them.
 
 The caps that remain in the tree are *disclosed* caps: every one of them emits a
 `collector-truncation-notice` carrying the upstream's own count when it bites,

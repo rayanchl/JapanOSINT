@@ -712,7 +712,7 @@ static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
   const cJSON *serdims = cJSON_IsObject(dims)
                            ? cJSON_GetObjectItem(dims, "series") : NULL;
   const cJSON *obsvals = cJSON_IsArray(obsdims) && cJSON_GetArraySize(obsdims) > 0
-      ? cJSON_GetObjectItem(cJSON_GetArrayItem(obsdims, 0), "values") : NULL;
+      ? cJSON_GetObjectItem(cJSON_GetArrayItem(obsdims, 0), "values") : NULL;  /* exhaustive-ok: SDMX-JSON puts the time dimension at observation[0] by spec */
   if (!cJSON_IsArray(sets) || !cJSON_IsArray(obsvals)) {
     cJSON_Delete(doc);
     return -1;
@@ -764,7 +764,7 @@ static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
       cJSON_ArrayForEach(o, obs) {
         if (n >= max_rows) break;
         if (!o->string || !cJSON_IsArray(o)) continue;
-        const cJSON *first = cJSON_GetArrayItem(o, 0);
+        const cJSON *first = cJSON_GetArrayItem(o, 0);  /* exhaustive-ok: an SDMX observation is [value, attr-idx…] — [0] IS the value */
         double val;
         if (cJSON_IsNumber(first)) val = first->valuedouble;
         else if (cJSON_IsString(first) && first->valuestring[0]) {

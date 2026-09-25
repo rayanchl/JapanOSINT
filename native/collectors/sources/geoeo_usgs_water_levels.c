@@ -59,7 +59,7 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
     const char *scode = NULL;
     cJSON *codes = si ? cJSON_GetObjectItem(si, "siteCode") : NULL;
     if (cJSON_IsArray(codes))
-      scode = geoeo_str(cJSON_GetArrayItem(codes, 0), "value");
+      scode = geoeo_str(cJSON_GetArrayItem(codes, 0), "value");  /* exhaustive-ok: a site's canonical code, listed once per agency */
     if (!sname && !scode) continue;
 
     double lat = 0, lon = 0;
@@ -87,8 +87,11 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
     double reading = 0;
     int has_reading = 0;
     const char *when = NULL, *quals = NULL;
+    cJSON *qall = NULL;
     cJSON *vals = cJSON_GetObjectItem(ts, "values");
-    cJSON *v0 = cJSON_IsArray(vals) ? cJSON_GetArrayItem(vals, 0) : NULL;
+    /* values[] is one block per reporting METHOD; block 0 is the primary series
+     * and value_blocks on the row says how many there were. */
+    cJSON *v0 = cJSON_IsArray(vals) ? cJSON_GetArrayItem(vals, 0) : NULL;  /* exhaustive-ok: see value_blocks below */
     cJSON *plist = v0 ? cJSON_GetObjectItem(v0, "value") : NULL;
     if (cJSON_IsArray(plist)) {
       int pn = cJSON_GetArraySize(plist);
@@ -101,12 +104,20 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
         has_reading = 1;
         when = geoeo_str(pv, "dateTime");
         cJSON *q = cJSON_GetObjectItem(pv, "qualifiers");
-        if (cJSON_IsArray(q) && cJSON_IsString(cJSON_GetArrayItem(q, 0)))
-          quals = cJSON_GetArrayItem(q, 0)->valuestring;
+        /* A reading can carry several qualifier flags (P, e, Ice…). The first
+         * is shown; all of them go on the row below as qualifiers_all, because a
+         * dropped "Ice" or "estimated" flag changes what the number means. */
+        if (cJSON_IsArray(q) && cJSON_IsString(cJSON_GetArrayItem(q, 0)))  /* exhaustive-ok: display pick; qualifiers_all keeps every flag */
+          quals = cJSON_GetArrayItem(q, 0)->valuestring;  /* exhaustive-ok: display pick; qualifiers_all keeps every flag */
+        qall = q;
       }
     }
 
     cJSON *props = cJSON_CreateObject();
+    if (cJSON_IsArray(vals))
+      cJSON_AddNumberToObject(props, "value_blocks", cJSON_GetArraySize(vals));
+    if (cJSON_IsArray(qall) && cJSON_GetArraySize(qall) > 1)
+      cJSON_AddItemToObject(props, "qualifiers_all", cJSON_Duplicate(qall, 1));
     geoeo_add_str(props, "site_name", sname);
     geoeo_add_str(props, "site_code", scode);
     geoeo_add_str(props, "state", st);

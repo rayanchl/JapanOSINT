@@ -87,7 +87,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (!sname && meta) sname = geoeo_str(meta, "name");
 
     cJSON *data = cJSON_GetObjectItem(doc, "data");
-    cJSON *d0 = cJSON_IsArray(data) ? cJSON_GetArrayItem(data, 0) : NULL;
+    cJSON *d0 = cJSON_IsArray(data) ? cJSON_GetArrayItem(data, 0) : NULL;  /* exhaustive-ok: date=latest — data[] holds exactly one observation */
     double v = 0, sigma = 0;
     int has_v = d0 ? geoeo_numlax(d0, "v", &v) : 0;
     int has_s = d0 ? geoeo_numlax(d0, "s", &sigma) : 0;

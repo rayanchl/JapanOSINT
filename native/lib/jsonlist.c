@@ -214,7 +214,7 @@ static const char *num_brief(const cJSON *v) {
 
 static int array_of_objects(cJSON *a) {
   if (!cJSON_IsArray(a) || cJSON_GetArraySize(a) == 0) return 0;
-  cJSON *first = cJSON_GetArrayItem(a, 0);
+  cJSON *first = cJSON_GetArrayItem(a, 0);  /* exhaustive-ok: a SHAPE probe — "is this an array of objects?" — not a read of the data */
   return first && cJSON_IsObject(first);
 }
 

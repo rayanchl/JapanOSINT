@@ -121,8 +121,8 @@ Two honesty bugs fell out:
 
 ## 3. The audit was crying wolf, and hiding real findings behind the noise
 
-`make audit-sources` at HEAD: 168 findings across 99 files. Now **51 across
-30** — and that is after ADDING a check that surfaced 13 findings nobody could
+`make audit-sources` at HEAD: 168 findings across 99 files. Now **9 across
+5** — and that is after ADDING a check that surfaced 13 findings nobody could
 see before (§5). The strict gated set grew from 30 files to 159.
 
 Two thirds of the `single-page` findings were never real: `?page=1&per_page=100`
@@ -218,9 +218,11 @@ of several and misattributing the series.
 
 ## What is left, honestly
 
-* **51 audit findings** across 30 files: 40 `first-only` and 11 `single-page`.
-  `limit-one`, `dedupe-ring`, `loop-cap`, `record-cap` and `loop-break` are at
-  zero. Every cap still in the tree is a *disclosed* cap — see §6.
+* **9 audit findings** across 5 files, all `single-page` — generated rows that
+  pin `?page=1` with no page size in the URL. The engine walks that shape when
+  the upstream declares a total; whether these do needs one live response each.
+  Every other class is at zero, and every cap still in the tree is a *disclosed*
+  cap (§6).
 * **The 11 remaining `single-page` rows** are `?page=1` with no page size in the
   URL. The engine now walks them *if* the upstream declares a total, and the
   audit cannot know statically whether it does — so they stay flagged. Reading
@@ -244,7 +246,7 @@ of several and misattributing the series.
 ```
 make                 clean (-Wall -Wextra)
 make hptest          63 assertions, all passing (14 new)
-make audit-sources   tree-wide 168 findings across 99 files -> 51 across 30
+make audit-sources   tree-wide 168 findings across 99 files -> 9 across 5
 make audit-sources   strict set: 159 files, 0 findings
 make source-floor    11,170 >= 11,170
 tools/lint_sources.py  OK — dup-id 0, dup-endpoint at baseline
@@ -284,4 +286,32 @@ Two bounds were confirmed as by-design and marked rather than changed: APNIC's
 and Mercado Público's day-walk, which steps backwards until a day has tenders
 and emits all of that day's.
 
-What is left is 40 `first-only` and 11 `single-page`, in 30 files.
+## 7. first-only: 40 read one at a time, one real loss
+
+The last volume category was 40 `first-only` findings. Read individually rather
+than counted, they came to one genuine discard and 39 correct reads that nobody
+had written down.
+
+The real one: a plc.directory DID carries `alsoKnownAs[]` — every handle that DID
+has been known by — and only the first reached the row. For an identity lookup
+the aliases ARE the intelligence, since a handle someone used last year is
+exactly what resolves a search. All of them are now on the row.
+
+Three more where the row now says more than it did: ALOS PALSAR keeps every
+orbit and browse URL instead of one each; USGS NWIS and the USGS water-level
+collector stamp `value_blocks` (a site can report one variable from two sensors,
+and only the primary series is read) and `qualifiers_all` (a dropped "Ice" or
+"estimated" flag changes what the number means).
+
+The other 35 are marked with their reason on the line, so the next reader does
+not re-derive it: fixed-shape tuples where every element is read (GeoJSON
+`[lon,lat]`, STAC bbox, TfL `[SW,NE]`, IGS `[lat,lon,height]`, SWPC
+`[lon,lat,probability]`, SDMX `[value, attr…]`, a jCard 4-tuple); requests
+already scoped to one record (`date=latest` at NOAA CO-OPS,
+`latestmeasurement?parameterid=` at Rijkswaterstaat, a one-day pageviews query);
+display picks whose full array is already in properties; deps.dev's
+`releases[0]` paired with `releases[size-1]` on the next line; and a shape probe
+in `lib/jsonlist.c` that asks "is this an array of objects?" and reads no data at
+all.
+
+What is left is 9 `single-page` findings in 5 files.

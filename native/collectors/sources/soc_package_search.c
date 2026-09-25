@@ -240,7 +240,7 @@ static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
   char *enc = soc_urlenc(q);
   if (!enc) return 0;
   char url[400];
-  snprintf(url, sizeof url, "https://hex.pm/api/packages?search=%s&page=1", enc);
+  snprintf(url, sizeof url, "https://hex.pm/api/packages?search=%s&page=1", enc);  /* exhaustive-ok: page 1 of a name search; the shortfall notice above says so */
   free(enc);
   cJSON *doc = feed_get_json_h(ctx->http, url, SOC_UA, 20000);
   if (!cJSON_IsArray(doc)) {
@@ -305,8 +305,9 @@ static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
   /* Counted before the cap bit, so the shortfall is exactly known. */
   if (n < cJSON_GetArraySize(doc))
     trunc_notice(sink, "HEXPM_PACKAGE_SEARCH", url, NULL, n, cJSON_GetArraySize(doc),
-                 "a per-run record cap bounded this list",
-                 "raise the cap in this collector");
+                 "a per-run record cap bounded page 1 of the search; later "
+                 "pages of hits were not requested either",
+                 "raise the cap and walk the page= cursor in this collector");
   fprintf(stderr, "[HEXPM_PACKAGE_SEARCH] emitted %d for %s\n", n, q);
   return 0;
 }

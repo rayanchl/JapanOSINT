@@ -57,7 +57,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     /* first measurement entry carries the latest value for this point */
     const cJSON *ms = cJSON_GetObjectItem(pr, "measurements");
-    const cJSON *m0 = cJSON_IsArray(ms) ? cJSON_GetArrayItem(ms, 0) : NULL;
+    const cJSON *m0 = cJSON_IsArray(ms) ? cJSON_GetArrayItem(ms, 0) : NULL;  /* exhaustive-ok: endpoint is latestmeasurement?parameterid=waterhoogte — one parameter, one latest value */
     const cJSON *lv = m0 ? cJSON_GetObjectItem(m0, "latestValue") : NULL;
     const char *when = m0 ? jo_sv(m0, "dateTime") : NULL;
     const char *unit = m0 ? jo_sv(m0, "unitCode") : NULL;

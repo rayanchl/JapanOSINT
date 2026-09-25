@@ -52,12 +52,12 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
     const char *site_code = NULL;
     cJSON *sc = cJSON_GetObjectItem(si, "siteCode");
     if (cJSON_IsArray(sc) && cJSON_GetArraySize(sc) > 0)
-      site_code = jo_sv(cJSON_GetArrayItem(sc, 0), "value");
+      site_code = jo_sv(cJSON_GetArrayItem(sc, 0), "value");  /* exhaustive-ok: a site's canonical code; USGS lists it once per agency and the first is the USGS one */
 
     const char *pcode = NULL;
     cJSON *vc = cJSON_GetObjectItem(vr, "variableCode");
     if (cJSON_IsArray(vc) && cJSON_GetArraySize(vc) > 0)
-      pcode = jo_sv(cJSON_GetArrayItem(vc, 0), "value");
+      pcode = jo_sv(cJSON_GetArrayItem(vc, 0), "value");  /* exhaustive-ok: the variable's parameter code, one per variable */
     if (!pcode) continue;
 
     cJSON *un = cJSON_GetObjectItem(vr, "unit");
@@ -68,7 +68,11 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
     /* values[0].value[] — last element is the latest reading */
     cJSON *vals = cJSON_GetObjectItem(s, "values");
     if (!cJSON_IsArray(vals) || cJSON_GetArraySize(vals) == 0) continue;
-    cJSON *vlist = cJSON_GetObjectItem(cJSON_GetArrayItem(vals, 0), "value");
+      /* values[] is one block PER METHOD — a site can report the same variable
+     * from two sensors. Block 0 is the primary series; the count goes on the row
+     * so a reader can see there was another one rather than assume there was
+     * not. */
+    cJSON *vlist = cJSON_GetObjectItem(cJSON_GetArrayItem(vals, 0), "value");  /* exhaustive-ok: primary method block; value_blocks below says how many exist */
     if (!cJSON_IsArray(vlist)) continue;
     int nv = cJSON_GetArraySize(vlist);
     if (nv == 0) continue;
@@ -98,6 +102,7 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
     cJSON_AddStringToObject(p, "site_name", site);
     if (site_code) cJSON_AddStringToObject(p, "site_code", site_code);
     cJSON_AddStringToObject(p, "parameter_cd", pcode);
+    cJSON_AddNumberToObject(p, "value_blocks", cJSON_GetArraySize(vals));
     if (vname) cJSON_AddStringToObject(p, "parameter_name", vname);
     cJSON_AddNumberToObject(p, "value", v);
     cJSON_AddStringToObject(p, "unit", unit);
