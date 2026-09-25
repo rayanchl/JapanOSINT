@@ -149,7 +149,7 @@ USGS(gd_usgs_45, "usgs-quake-m45-week", "USGS M4.5+ Earthquakes (7d)",
  * — no coordinate is invented. */
 static void vertex_mean(cJSON *node, double *sx, double *sy, int *cnt) {
   if (!cJSON_IsArray(node)) return;
-  cJSON *a = cJSON_GetArrayItem(node, 0), *b = cJSON_GetArrayItem(node, 1);
+  cJSON *a = cJSON_GetArrayItem(node, 0), *b = cJSON_GetArrayItem(node, 1);  /* exhaustive-ok: fixed [x,y] vertex; deeper nesting recurses below */
   if (a && b && cJSON_IsNumber(a) && cJSON_IsNumber(b)) {
     *sx += a->valuedouble; *sy += b->valuedouble; (*cnt)++; return;
   }

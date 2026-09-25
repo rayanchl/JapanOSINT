@@ -170,7 +170,7 @@ static inline int od_geo_item(const cJSON *v, double *lat, double *lon) {
     return 0;
   }
   if (cJSON_IsArray(v) && cJSON_GetArraySize(v) >= 2) {
-    const cJSON *x = cJSON_GetArrayItem(v, 0), *y = cJSON_GetArrayItem(v, 1);
+    const cJSON *x = cJSON_GetArrayItem(v, 0), *y = cJSON_GetArrayItem(v, 1);  /* exhaustive-ok: fixed GeoJSON [lon,lat] pair */
     if (cJSON_IsNumber(x) && cJSON_IsNumber(y)) {
       lo = x->valuedouble; la = y->valuedouble;      /* GeoJSON order */
       if (od_ll_ok(la, lo)) { *lat = la; *lon = lo; return 1; }

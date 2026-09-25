@@ -278,7 +278,7 @@ static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
     /* releases[] gives a free first-published / last-published pair */
     const char *latest_ver = NULL, *latest_at = NULL, *first_at = NULL;
     if (cJSON_IsArray(rels)) {
-      const cJSON *r0 = cJSON_GetArrayItem(rels, 0);
+      const cJSON *r0 = cJSON_GetArrayItem(rels, 0);  /* exhaustive-ok: BOTH ends are read — r0 is newest, rn (next line) is oldest */
       int sz = cJSON_GetArraySize(rels);
       const cJSON *rn = sz > 0 ? cJSON_GetArrayItem(rels, sz - 1) : NULL;
       if (cJSON_IsObject(r0)) { latest_ver = jo_sv(r0, "version");

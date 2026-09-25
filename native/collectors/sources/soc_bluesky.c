@@ -229,7 +229,7 @@ static int run_author_feed(const source_ctx *ctx, intel_sink *sink) {
     if (cJSON_IsObject(rec)) {
       const cJSON *ls = cJSON_GetObjectItem(rec, "langs");
       if (cJSON_IsArray(ls)) {
-        const cJSON *l0 = cJSON_GetArrayItem(ls, 0);
+        const cJSON *l0 = cJSON_GetArrayItem(ls, 0);  /* exhaustive-ok: display pick; the whole langs[] is copied to properties above */
         if (cJSON_IsString(l0) && l0->valuestring && l0->valuestring[0])
           lang = l0->valuestring;
       }
@@ -272,7 +272,10 @@ static int plc_line(intel_sink *sink, const char *line) {
   if (!handle && cJSON_IsObject(op)) {
     const cJSON *aka = cJSON_GetObjectItem(op, "alsoKnownAs");
     if (cJSON_IsArray(aka)) {
-      const cJSON *a0 = cJSON_GetArrayItem(aka, 0);
+      /* A DID can be known by SEVERAL handles, and only the first reached the
+       * row — for an identity source the aliases ARE the intelligence, so the
+       * whole list is carried below as also_known_as. */
+      const cJSON *a0 = cJSON_GetArrayItem(aka, 0);  /* exhaustive-ok: display pick; every alias is kept in also_known_as */
       if (cJSON_IsString(a0) && a0->valuestring && a0->valuestring[0]) {
         handle = a0->valuestring;
         if (strncmp(handle, "at://", 5) == 0) handle += 5;
@@ -293,6 +296,11 @@ static int plc_line(intel_sink *sink, const char *line) {
   if (!p) { cJSON_Delete(o); return 0; }
   cJSON_AddStringToObject(p, "source", "plc.directory");
   cJSON_AddStringToObject(p, "did", did);
+  if (cJSON_IsObject(op)) {
+    const cJSON *akall = cJSON_GetObjectItem(op, "alsoKnownAs");
+    if (cJSON_IsArray(akall) && cJSON_GetArraySize(akall) > 0)
+      cJSON_AddItemToObject(p, "also_known_as", cJSON_Duplicate(akall, 1));
+  }
   jcopy(p, "cid", o, "cid");
   jcopy(p, "created_at", o, "createdAt");
   jcopy(p, "nullified", o, "nullified");

@@ -71,7 +71,7 @@ static int run_top_pageviews(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json_h(ctx->http, url, WM_UA, 25000);
   if (!doc) { fprintf(stderr, "[wikipedia-top-pageviews] fetch failed\n"); return -1; }
   const cJSON *items = cJSON_GetObjectItem(doc, "items");
-  const cJSON *it0 = cJSON_IsArray(items) ? cJSON_GetArrayItem(items, 0) : NULL;
+  const cJSON *it0 = cJSON_IsArray(items) ? cJSON_GetArrayItem(items, 0) : NULL;  /* exhaustive-ok: the pageviews API returns one items[] entry per day queried, and this queries one day */
   const cJSON *arts = cJSON_IsObject(it0) ? cJSON_GetObjectItem(it0, "articles") : NULL;
   if (!cJSON_IsArray(arts)) {
     fprintf(stderr, "[wikipedia-top-pageviews] unexpected shape\n");
@@ -176,7 +176,7 @@ static int run_featured(const source_ctx *ctx, intel_sink *sink) {
     char *txt = story ? html_strip(story) : NULL;
     if (!txt || !txt[0]) { free(txt); continue; }
     const cJSON *links = cJSON_GetObjectItem(ni, "links");
-    const cJSON *l0 = cJSON_IsArray(links) ? cJSON_GetArrayItem(links, 0) : NULL;
+    const cJSON *l0 = cJSON_IsArray(links) ? cJSON_GetArrayItem(links, 0) : NULL;  /* exhaustive-ok: display pick; every link is iterated into linked_articles/wikidata_qids below */
     cJSON *p = cJSON_CreateObject();
     if (!p) { free(txt); continue; }
     cJSON_AddStringToObject(p, "source", "api.wikimedia.org");

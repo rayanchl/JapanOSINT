@@ -593,7 +593,7 @@ static int run_invidious(const source_ctx *ctx, intel_sink *sink) {
   /* Array of [hostname, details] PAIRS, not objects. */
   cJSON_ArrayForEach(pair, doc) {
     if (!cJSON_IsArray(pair) || cJSON_GetArraySize(pair) < 2) continue;
-    const cJSON *hostv = cJSON_GetArrayItem(pair, 0);
+    const cJSON *hostv = cJSON_GetArrayItem(pair, 0);  /* exhaustive-ok: fixed [hostname,details] pair, both read */
     const cJSON *d     = cJSON_GetArrayItem(pair, 1);
     if (!cJSON_IsString(hostv) || !hostv->valuestring || !cJSON_IsObject(d)) continue;
     const char *host = hostv->valuestring;
