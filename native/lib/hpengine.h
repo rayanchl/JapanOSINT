@@ -42,6 +42,18 @@ typedef enum {
    * most repeated one. */
   HP_XML  = 3,
   HP_XLSX = 4,   /* one worksheet -> CSV via lib/xlsx.c, then the csv path */
+  /* "Record-jar": `Key: Value` lines, records separated by a line of `%%`,
+   * continuation lines indented. This is the format of the IANA registries —
+   * the language-subtag registry (RFC 5646 §3.1.2) above all — and it is not
+   * CSV, JSON or XML, so before this mode existed the only way to declare such
+   * a row was to lie about its shape. IANA_LANGUAGE_SUBTAGS was declared
+   * HP_CSV, which made every LINE a "record": 49,312 emitted, 19,461 stored,
+   * 29,851 lost per pass, and the rows it did store were fragments like
+   * `Description: Afar` rather than subtag records. The real file holds ~9,600
+   * subtags. A repeated key inside one record (IANA gives a subtag several
+   * `Description:` lines) is JOINED with "; " rather than overwritten, because
+   * dropping the later ones would discard real content. */
+  HP_RECJAR = 5,
 } hp_mode;
 
 /* Shape gate: a row that only makes sense for a domain must not burn a request
@@ -106,13 +118,37 @@ typedef struct hp_source {
    * one of them; declare `guid` or `title` FIRST in that case, and `link`
    * after as the fallback for items that carry neither. The collision guard
    * disambiguates records that merely share a key within one page, but a
-   * key that is not the identity is still the wrong key. */
+   * key that is not the identity is still the wrong key.
+   *
+   * `+` COMPOSES, `,` CHOOSES. `"a+b+c"` joins all three parts with '|' into
+   * one key; `"a,b,c"` picks whichever of the three appears first. They nest:
+   * `"a+b,c"` means "a+b, or else c". Use `+` whenever a record's identity is
+   * a TUPLE OF DIMENSIONS — one row per country x week x age group, per firm
+   * x period x tier — which is most statistical and regulatory tables.
+   *
+   * This distinction is the single easiest thing to get wrong here, and it
+   * fails silently: 26 rows written in the 2026-09 fix pass declared
+   * `"year,quarter,item"` MEANING a composite, and got "key on `year`". They
+   * looked correct because the in-page collision guard content-hashes rows
+   * that collide within ONE page — the same key recurring on a LATER page
+   * still collapsed at the sink. FINRA_OTC_BLOCKS emitted 2,000 and stored
+   * 476 (= its distinct first-token values) until it became `+`, then 2,000.
+   * A missing part joins as empty rather than failing the whole key (a
+   * dimension may legitimately be null); at least one part must be present;
+   * an over-long composite becomes its FNV hex rather than being truncated,
+   * because truncation would manufacture collisions in the very field meant
+   * to prevent them. */
   const char *id_keys;
   const char *link_keys;
   const char *link_tmpl;      /* {v} = link_keys value; else the raw value  */
   const char *date_keys;
   const char *body_keys;
   const char *lat_key, *lon_key;
+  /* One field holding both coordinates as "a,b" (or "a b"): `latlon_key`
+   * reads it as lat,lon; `lonlat_key` as lon,lat. CALIL's library directory
+   * ships `geocode: "139.69,35.68"` — 7,606 geocoded branches that
+   * lat_key/lon_key, which each name a whole field, could not place. */
+  const char *latlon_key, *lonlat_key;
 
   /* HTML mode */
   const char *href_must;      /* anchor href must contain this (NULL = any) */
@@ -240,6 +276,32 @@ typedef struct hp_source {
    * whose layer's modality is known; core/layertab.c can also assign a
    * source by id/category match without any change here. */
   const char *layer;
+  /* ── the data URL is published on an index PAGE, not fixed ────────────────
+   *
+   * Some publishers never serve a stable link: Kawasaki city puts its licence
+   * registers at `…/01riyoujo202608.csv` and rolls the stamp monthly (the
+   * pharmacy pages use a Japanese era stamp, `yakkyokuR8.8.csv`), and the page
+   * says so — "updated monthly", no undated path. A row with the stamp baked
+   * into `.url` therefore works until the next refresh and then 404s. Nine
+   * rows were repointed by hand on 2026-09-19; all nine had been dead, and one
+   * had not merely re-dated but been RENAMED (`03kuri-ninngu` → `03cleaning`),
+   * which no date arithmetic would have caught.
+   *
+   * With `index_url` set, the engine fetches that page FIRST, scans its
+   * anchors (lib/htmlparse.c — the one scanner), takes the first href
+   * containing `index_href_must`, resolves it against the index URL, and uses
+   * the result as the data URL. Everything after that — mode, delimiter,
+   * charset, paging, keys — is unchanged, so this is one extra request, not a
+   * new code path.
+   *
+   * `index_href_must` is required alongside it: without a discriminator the
+   * first link on a page of nine CSVs is not the one the row wants. If the
+   * index cannot be fetched, or no href matches, the row fails honestly (and
+   * says which pattern found nothing) rather than falling back to a URL that
+   * may be a year stale. Appended last, like `layer` above, so every existing
+   * initializer keeps compiling. */
+  const char *index_url;
+  const char *index_href_must;
   /* CSV mode: physical lines to drop before the header is read. The MEXT
    * school-code files, Kawasaki's pharmacy licences and Saitama's operator
    * lists all put a title line ABOVE the header; the only way to read them

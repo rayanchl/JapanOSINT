@@ -70,7 +70,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
           const cJSON *idv = cJSON_GetObjectItem(u, "id");
           if (idv && cJSON_IsNumber(idv)) {
             static char idb[32];
-            snprintf(idb, sizeof idb, "%g", idv->valuedouble);
+            /* %.0f, not %g: %g's 6-significant-digit default mangles note.com's
+             * large numeric user ids (e.g. 12345678 -> "1.23457e+07"), corrupting
+             * both the emitted urlname and the profile link built from it below. */
+            snprintf(idb, sizeof idb, "%.0f", idv->valuedouble);
             urlname = idb;
           }
         }

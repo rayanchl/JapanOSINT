@@ -12,6 +12,7 @@ import {
   MdClose,
 } from 'react-icons/md';
 import useCameraDiscoveryStream from '../../hooks/useCameraDiscoveryStream';
+import { isSafeUrl } from '../../utils/safeUrl.js';
 
 const FAV_STORAGE_KEY = 'japanosint.cameraFavorites';
 
@@ -413,7 +414,11 @@ function EventRow({ ev, isFavorite, onToggleFavorite, onCardClick }) {
         >
           <MdMyLocation size={14} />
         </IconButton>
-        {sourceUrl ? (
+        {/* sourceUrl is p.url / p.stream_url off a scraped camera record —
+          * externally-sourced, not something this client generated. Gate to
+          * http(s) so a malicious `javascript:` URI in a scraped page can't
+          * execute when this is clicked. */}
+        {sourceUrl && isSafeUrl(sourceUrl) ? (
           <IconButton title="Open source" href={sourceUrl}>
             <MdOpenInNew size={14} />
           </IconButton>

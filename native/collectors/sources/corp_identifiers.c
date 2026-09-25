@@ -16,59 +16,83 @@
 #include <ctype.h>
 
 /* ── LEI_SEARCH (GLEIF) ─────────────────────────────────────────────────── */
+#define LEI_PAGE_SIZE 200   /* GLEIF's own maximum page[size] */
+#define LEI_MAX_PAGES 25    /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
+
 static int lei_run(const source_ctx *ctx, intel_sink *sink) {
   const char *name = ctx->entity;
   if (!name || !*name) return 0;
   char enc[256]; jo_urlencode_buf(name, enc, sizeof enc);
-  char url[512];
-  snprintf(url, sizeof url,
-    "https://api.gleif.org/api/v1/lei-records?filter[entity.legalName]=%s&page[size]=5", enc);
-  http_response hr = {0};
-  if (http_request(ctx->http, "GET", url, NULL, NULL, 0, 12000, 2, &hr) != 0 ||
-      hr.status != 200 || !hr.body) { http_response_free(&hr); return 0; }
-  cJSON *j = cJSON_Parse(hr.body); http_response_free(&hr);
-  if (!j) return 0;
-  cJSON *data = cJSON_GetObjectItem(j, "data");
-  int emitted = 0, n = (data && cJSON_IsArray(data)) ? cJSON_GetArraySize(data) : 0;
-  for (int i = 0; i < n; i++) {
-    cJSON *rec = cJSON_GetArrayItem(data, i);
-    cJSON *attr = cJSON_GetObjectItem(rec, "attributes");
-    cJSON *ent = attr ? cJSON_GetObjectItem(attr, "entity") : NULL;
-    cJSON *ln = ent ? cJSON_GetObjectItem(ent, "legalName") : NULL;
-    const char *lei = attr ? jo_str(attr, "lei") : NULL;
-    const char *legal = ln ? jo_str(ln, "name") : NULL;
-    if (!lei) continue;
-
-    cJSON *out = cJSON_CreateObject();
-    cJSON_AddStringToObject(out, "source", "api.gleif.org");
-    cJSON_AddStringToObject(out, "lei", lei);
-    if (legal) cJSON_AddStringToObject(out, "legal_name", legal);
-    cJSON *addr = ent ? cJSON_GetObjectItem(ent, "legalAddress") : NULL;
-    if (addr) {
-      const char *country = jo_str(addr, "country"), *city = jo_str(addr, "city");
-      if (country) cJSON_AddStringToObject(out, "country", country);
-      if (city) cJSON_AddStringToObject(out, "city", city);
+  int emitted = 0, capped = 0;
+  long total_seen = 0;
+  for (int page = 1; page <= LEI_MAX_PAGES; page++) {
+    char url[576];
+    snprintf(url, sizeof url,
+      "https://api.gleif.org/api/v1/lei-records?filter[entity.legalName]=%s"
+      "&page[size]=%d&page[number]=%d", enc, LEI_PAGE_SIZE, page);
+    http_response hr = {0};
+    if (http_request(ctx->http, "GET", url, NULL, NULL, 0, 12000, 2, &hr) != 0 ||
+        hr.status != 200 || !hr.body) {
+      http_response_free(&hr);
+      /* a page beyond the first failing is treated as end-of-results, not a
+       * fresh error: GLEIF has been observed to 400 a page[number] past its
+       * own last page rather than returning an empty array. Page 1 failing
+       * is a real fetch error (R3). */
+      if (page == 1) return 0;
+      break;
     }
-    cJSON *reg = attr ? cJSON_GetObjectItem(attr, "registration") : NULL;
-    const char *status = reg ? jo_str(reg, "status") : NULL;
-    if (status) cJSON_AddStringToObject(out, "registration_status", status);
-    char *bj = cJSON_PrintUnformatted(out);
+    cJSON *j = cJSON_Parse(hr.body); http_response_free(&hr);
+    if (!j) { if (page == 1) return 0; break; }
+    cJSON *data = cJSON_GetObjectItem(j, "data");
+    int n = (data && cJSON_IsArray(data)) ? cJSON_GetArraySize(data) : 0;
+    total_seen += n;
+    for (int i = 0; i < n; i++) {
+      cJSON *rec = cJSON_GetArrayItem(data, i);
+      cJSON *attr = cJSON_GetObjectItem(rec, "attributes");
+      cJSON *ent = attr ? cJSON_GetObjectItem(attr, "entity") : NULL;
+      cJSON *ln = ent ? cJSON_GetObjectItem(ent, "legalName") : NULL;
+      const char *lei = attr ? jo_str(attr, "lei") : NULL;
+      const char *legal = ln ? jo_str(ln, "name") : NULL;
+      if (!lei) continue;
 
-    cJSON *props = cJSON_CreateObject();
-    cJSON_AddStringToObject(props, "service", "LEI_SEARCH");
-    cJSON_AddStringToObject(props, "entity", name);
-    char *pj = cJSON_PrintUnformatted(props);
-    char rk[128], title[256];
-    snprintf(rk, sizeof rk, "lei:%s", lei);
-    snprintf(title, sizeof title, "LEI %s — %s", lei, legal ? legal : name);
-    intel_item it = {0};
-    it.remote_key = rk; it.title = title; it.body = bj; it.summary = legal ? legal : "LEI record";
-    it.record_type = "osint_service_result"; it.properties_json = pj;
-    it.tags_json = "[\"osint-search\",\"LEI_SEARCH\"]";
-    if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(pj); cJSON_Delete(out); cJSON_Delete(props);
+      cJSON *out = cJSON_CreateObject();
+      cJSON_AddStringToObject(out, "source", "api.gleif.org");
+      cJSON_AddStringToObject(out, "lei", lei);
+      if (legal) cJSON_AddStringToObject(out, "legal_name", legal);
+      cJSON *addr = ent ? cJSON_GetObjectItem(ent, "legalAddress") : NULL;
+      if (addr) {
+        const char *country = jo_str(addr, "country"), *city = jo_str(addr, "city");
+        if (country) cJSON_AddStringToObject(out, "country", country);
+        if (city) cJSON_AddStringToObject(out, "city", city);
+      }
+      cJSON *reg = attr ? cJSON_GetObjectItem(attr, "registration") : NULL;
+      const char *status = reg ? jo_str(reg, "status") : NULL;
+      if (status) cJSON_AddStringToObject(out, "registration_status", status);
+      char *bj = cJSON_PrintUnformatted(out);
+
+      cJSON *props = cJSON_CreateObject();
+      cJSON_AddStringToObject(props, "service", "LEI_SEARCH");
+      cJSON_AddStringToObject(props, "entity", name);
+      char *pj = cJSON_PrintUnformatted(props);
+      char rk[128], title[256];
+      snprintf(rk, sizeof rk, "lei:%s", lei);
+      snprintf(title, sizeof title, "LEI %s — %s", lei, legal ? legal : name);
+      intel_item it = {0};
+      it.remote_key = rk; it.title = title; it.body = bj; it.summary = legal ? legal : "LEI record";
+      it.record_type = "osint_service_result"; it.properties_json = pj;
+      it.tags_json = "[\"osint-search\",\"LEI_SEARCH\"]";
+      if (sink->emit(sink, &it) >= 0) emitted++;
+      free(bj); free(pj); cJSON_Delete(out); cJSON_Delete(props);
+    }
+    cJSON_Delete(j);
+    if (n < LEI_PAGE_SIZE) break;                 /* short page: exhausted */
+    if (page == LEI_MAX_PAGES) capped = 1;        /* full last page: guard hit */
   }
-  cJSON_Delete(j);
+  if (capped)
+    jo_trunc_notice(sink, "LEI_SEARCH", name, total_seen, -1,
+                     "GLEIF name-search page-walk hit its runaway guard "
+                     "(LEI_MAX_PAGES) before a short page signalled the end",
+                     "raise LEI_MAX_PAGES in corp_identifiers.c");
   /* The ABI is rc==0 on success, <0 on failure — core/scheduler.c logs any
    * non-zero rc as status="error" and hands it to anomaly_detect(), which
    * quarantines the source. Returning the emitted COUNT (as this did) meant a

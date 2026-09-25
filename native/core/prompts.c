@@ -39,6 +39,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <pthread.h>
 
 /* JO_REPO_ROOT is -D'd by the Makefile to the JapanOSINT repo root (same
  * mechanism db.c/keysapi.c use); fallback keeps the file standalone. The JS
@@ -784,6 +785,18 @@ static const char *const GRAMMAR_NAMES[] = {
 };
 #define GRAMMAR_COUNT (int)(sizeof(GRAMMAR_NAMES) / sizeof(GRAMMAR_NAMES[0]))
 
+/* Guards both caches below. grammar_load()/schema_load() run on every
+ * dispatch/scheduler worker thread that builds a prompt — not just the
+ * mongoose event loop — so the unguarded check-then-fill-then-store on
+ * `cached[]` was a real data race (the same class TSan already caught in
+ * httpclient.c's curl_global_init flag and hostgate.c's cfg_init): two
+ * workers racing the first call for the same grammar could both fopen/malloc,
+ * and the pointer write itself has no ordering guarantee against a concurrent
+ * reader. The content each thread would produce is identical (same file), so
+ * this was benign in practice, but "benign race" is still undefined
+ * behaviour and worth closing the same way the rest of this tree does. */
+static pthread_mutex_t g_prompt_cache_mu = PTHREAD_MUTEX_INITIALIZER;
+
 const char *grammar_load(const char *name) {
   /* cached[i]: NULL = not yet read; otherwise the retained content (possibly
    * the empty string "" for a missing/unreadable file, cached like JS). */
@@ -794,7 +807,9 @@ const char *grammar_load(const char *name) {
   for (int i = 0; i < GRAMMAR_COUNT; i++)
     if (strcmp(GRAMMAR_NAMES[i], name) == 0) { idx = i; break; }
   if (idx < 0) return "";                 /* unknown name: '' like JS */
-  if (cached[idx]) return cached[idx];    /* cache hit (incl. cached "") */
+
+  pthread_mutex_lock(&g_prompt_cache_mu);
+  if (cached[idx]) { pthread_mutex_unlock(&g_prompt_cache_mu); return cached[idx]; }
 
   char path[1024];
   snprintf(path, sizeof path, "%s/grammars/%s.gbnf",
@@ -820,10 +835,11 @@ const char *grammar_load(const char *name) {
     /* missing/unreadable -> cache "" (own a private copy so the slot is
      * uniformly heap-allocated and stable for the process lifetime). */
     content = malloc(1);
-    if (!content) return "";              /* OOM: don't poison the cache */
+    if (!content) { pthread_mutex_unlock(&g_prompt_cache_mu); return ""; }  /* OOM: don't poison the cache */
     content[0] = '\0';
   }
   cached[idx] = content;
+  pthread_mutex_unlock(&g_prompt_cache_mu);
   return content;
 }
 
@@ -843,7 +859,12 @@ const char *schema_load(const char *name) {
   for (int i = 0; i < GRAMMAR_COUNT; i++)
     if (strcmp(GRAMMAR_NAMES[i], name) == 0) { idx = i; break; }
   if (idx < 0) return "";
-  if (cached[idx]) return cached[idx];
+
+  /* Same worker-thread race as grammar_load() above, guarded by the same
+   * lock — this cache is a separate array but the two are never touched
+   * together, so one mutex for both is simplest and costs nothing extra. */
+  pthread_mutex_lock(&g_prompt_cache_mu);
+  if (cached[idx]) { pthread_mutex_unlock(&g_prompt_cache_mu); return cached[idx]; }
 
   char path[1024];
   snprintf(path, sizeof path, "%s/grammars/%s.schema.json",
@@ -867,9 +888,10 @@ const char *schema_load(const char *name) {
   }
   if (!content) {
     content = malloc(1);
-    if (!content) return "";
+    if (!content) { pthread_mutex_unlock(&g_prompt_cache_mu); return ""; }
     content[0] = '\0';
   }
   cached[idx] = content;
+  pthread_mutex_unlock(&g_prompt_cache_mu);
   return content;
 }

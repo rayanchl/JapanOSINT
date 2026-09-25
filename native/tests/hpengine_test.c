@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 /* ── stub registry (the real one lives in registry.c) ────────────────────── */
 static const source_def *g_defs[2048];
@@ -68,7 +69,8 @@ void http_response_free(http_response *r) { if (r) { free(r->body); r->body = NU
 
 /* ── capturing sink ──────────────────────────────────────────────────────── */
 #define MAXCAP 64
-typedef struct { char title[256], key[256], props[8192], link[512], rtype[64]; } cap;
+typedef struct { char title[256], key[256], props[8192], link[512], rtype[64];
+                 int has_geo; double lat, lon; } cap;
 static cap g_cap[MAXCAP];
 static int g_ncap = 0;
 
@@ -81,6 +83,7 @@ static int cap_emit(struct intel_sink *s, const intel_item *it) {
   snprintf(c->props, sizeof c->props, "%s", it->properties_json ? it->properties_json : "");
   snprintf(c->link,  sizeof c->link,  "%s", it->link ? it->link : "");
   snprintf(c->rtype, sizeof c->rtype, "%s", it->record_type ? it->record_type : "");
+  c->has_geo = it->has_geo; c->lat = it->lat; c->lon = it->lon;
   return 1;
 }
 
@@ -101,6 +104,15 @@ static int run_source(const char *id, const char *entity) {
 
 /* ── the table under test ────────────────────────────────────────────────── */
 static const hp_source T[] = {
+  /* One "lon,lat" field (CALIL's geocode), and the lat,lon order for the
+   * other declaration. */
+  { .id = "T_GEO_PAIR", .name = "paired coords", .url = "https://x.test/geo?q={q}",
+    .array_path = "libs", .title_keys = "formal", .id_keys = "libid",
+    .lonlat_key = "geocode", .record_type = "t-lib", .free_tier = 1, .description = "d" },
+  { .id = "T_GEO_PAIR2", .name = "paired coords lat first", .url = "https://x.test/geo2?q={q}",
+    .array_path = "libs", .title_keys = "formal", .id_keys = "libid",
+    .latlon_key = "pos", .record_type = "t-lib", .free_tier = 1, .description = "d" },
+
   { .id = "T_JSON", .name = "json list", .url = "https://x.test/s?q={q}&d={qd}",
     .array_path = "results", .title_keys = "legalName", .id_keys = "orgno",
     .record_type = "t-company", .link_tmpl = "https://x.test/c/{v}", .link_keys = "orgno",
@@ -122,6 +134,25 @@ static const hp_source T[] = {
   { .id = "T_HTML", .name = "html anchors", .url = "https://x.test/h?q={q}",
     .mode = HP_HTML, .href_must = "/rec/", .base = "https://x.test",
     .record_type = "t-html", .free_tier = 1, .description = "d" },
+
+  /* The data URL is PUBLISHED on an index page, not fixed (hpengine.h
+   * index_url). Kawasaki city stamps its licence CSVs with the month and
+   * offers no stable path, so a baked-in URL works until the next refresh and
+   * then 404s — nine rows were dead that way, and one had been renamed rather
+   * than re-dated, which no date arithmetic would have caught. The declared
+   * .url stays as the endpoint of record; index_url overrides it at run time. */
+  { .id = "T_INDEX", .name = "data url found on an index page",
+    .url = "https://x.test/data/old202401.csv",
+    .index_url = "https://x.test/portal.html", .index_href_must = "riyoujo",
+    .mode = HP_CSV, .csv_no_header = 1, .interval = 3600,
+    .title_keys = "col1", .id_keys = "col0",
+    .record_type = "t-index", .free_tier = 1, .description = "d" },
+
+  { .id = "T_INDEX_MISS", .name = "index page holds no matching link",
+    .url = "https://x.test/data/old202401.csv",
+    .index_url = "https://x.test/portal.html", .index_href_must = "nosuchfile",
+    .mode = HP_CSV, .csv_no_header = 1, .interval = 3600,
+    .record_type = "t-index-miss", .free_tier = 1, .description = "d" },
 
   { .id = "T_KEYED", .name = "key gated", .url = "https://x.test/k?q={q}",
     .key_env = "HP_TEST_KEY", .headers = { "Authorization: Basic {keyb64}", NULL },
@@ -166,11 +197,41 @@ static const hp_source T[] = {
     .mode = HP_XML, .title_keys = "name",
     .record_type = "t-xml", .free_tier = 1, .description = "d" },
 
+  /* A row whose URL ALREADY binds its page parameter — the shape of every API
+   * that requires the parameter on the first request (PNCP answers 400 without
+   * `pagina`). The engine used to APPEND, producing `…&pagina=1&pagina=2`, and
+   * a server that reads the first occurrence then served page 1 for the whole
+   * walk: N pages emitted, one page stored, run rc=0. 103 rows in the tree are
+   * this shape. */
+  { .id = "T_PAGE_INURL", .name = "page param already in the url",
+    .url = "https://x.test/piu?q={q}&pagina=1",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "pagina", .page_start = 1,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+
   /* A 0-based page-numbered API. Without page_zero_based the engine coerces the
    * unset page_start to 1 and computes the first extra page as 2, skipping 1. */
   { .id = "T_PAGE_ZERO", .name = "zero-based paging", .url = "https://x.test/pz?q={q}",
     .array_path = "items", .title_keys = "name", .id_keys = "id",
     .page_param = "page", .page_zero_based = 1,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+
+  /* ArcGIS-shaped offset walk: the parameter is `resultOffset` (capital O) and
+   * the URL binds resultOffset=0 on the first request. The engine used to
+   * coerce page_start to 1 for any parameter without a lowercase "offset", so
+   * it asked for 0, then step+1, 2·step+1 — one record lost per page boundary. */
+  { .id = "T_PAGE_RESULTOFFSET", .name = "resultOffset walk",
+    .url = "https://x.test/ro?q={q}&resultOffset=0",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "resultOffset", .page_size = 2,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+
+  /* A 1-based offset API (OpenSearch `startIndex=1`): the walk must continue
+   * from the URL's own 1, i.e. 1, 3, 5 — reading the URL is right both ways. */
+  { .id = "T_PAGE_STARTINDEX1", .name = "1-based startIndex walk",
+    .url = "https://x.test/si?q={q}&startIndex=1",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "startIndex", .page_size = 2,
     .record_type = "t-page", .free_tier = 1, .description = "d" },
 
   { .id = "T_CAPPED", .name = "declared cap", .url = "https://x.test/cap?q={q}",
@@ -331,6 +392,12 @@ static const hp_source T[] = {
     .mode = HP_XML, .array_path = "hit", .interval = 3600,
     .title_keys = "url", .id_keys = "url",
     .record_type = "t-xmlcoll", .free_tier = 1, .description = "d" },
+  /* A dotted XML array_path, the way every other array_path in the engine is
+   * written and the way the probe resolves it. */
+  { .id = "T_XML_DOTTED", .name = "xml dotted path", .url = "https://x.test/rss.xml",
+    .mode = HP_XML, .array_path = "channel.item", .interval = 3600,
+    .title_keys = "title", .id_keys = "link",
+    .record_type = "t-xmldot", .free_tier = 1, .description = "d" },
 };
 HP_REGISTER_TABLE(T)
 
@@ -402,17 +469,62 @@ int main(void) {
   ok(rc == 0 && g_ncap == 1, "T_HTML kept one anchor (href filter + dedupe)");
   ok(!strcmp(g_cap[0].link, "https://x.test/rec/77"), "relative href resolved against base");
 
-  /* 6. credential gating: no key -> no request, no rows, not an error */
+  /* 6. credential gating: no key -> no request, not an error, and the empty is
+   * DISCLOSED rather than silent.
+   *
+   * This used to assert g_ncap == 0. A bare zero is exactly the invisible
+   * nothing CLAUDE.md rule 1 names: fetch_log status='ok' records=0, the run
+   * line green, and no way for a consumer to tell "gated, never asked" from
+   * "asked and the upstream had nothing". The twelve hand-written collectors
+   * were fixed by _credential_notice.inc (audit #29); the engine's own gate is
+   * the same defect in the other copy of the code, so it now emits that one
+   * shape too. What must stay true is that the row is an ACCOUNTING record and
+   * not a finding — constant remote_key, no observation in it — and that no
+   * request is made, which is what the rest of this case pins. */
   fx_reset();
   unsetenv("HP_TEST_KEY");
   fx_add("/k?q=", 200, "{\"a\":[{\"name\":\"n\"}]}");
   rc = run_source("T_KEYED", "acme");
-  ok(rc == 0 && g_ncap == 0 && g_ncalls == 0, "missing credential = honest empty, no call");
+  ok(rc == 0 && g_ncalls == 0, "missing credential = no call, not an error");
+  ok(g_ncap == 1, "missing credential is disclosed as one record, not silence");
+  ok(g_ncap == 1 && strstr(g_cap[0].props, "\"status\":\"needs_credential\"") != NULL,
+     "and that record is the status notice, carrying no observation");
   setenv("HP_TEST_KEY", "secret", 1);
   rc = run_source("T_KEYED", "acme");
   ok(g_ncalls == 1, "credential present = request made");
   ok(strstr(g_last_hdrs, "Authorization: Basic c2VjcmV0Og==") != NULL,
      "{keyb64} = base64(\"key:\") basic auth");
+
+  /* 6b. the data URL is published on an index page, not fixed.
+   *
+   * Two things have to hold, and the second is the one that matters. The row
+   * must fetch the link the index ACTUALLY carries today (a relative href,
+   * resolved against the index URL) — and when no link matches, it must fail
+   * honestly rather than fall back to the stale URL baked into .url. A
+   * fallback would re-fetch last year's file and report success, which is the
+   * exact silent staleness this opt exists to end. */
+  fx_reset();
+  fx_add("/portal.html", 200,
+    "<html><ul>"
+    "<li><a href=\"/data/02biyoujo202608.csv\">美容所</a></li>"
+    "<li><a href=\"/data/01riyoujo202608.csv\">理容所</a></li>"
+    "</ul></html>");
+  fx_add("/data/01riyoujo202608.csv", 200, "A001,Shop One\nA002,Shop Two\n");
+  fx_add("/data/old202401.csv", 200, "STALE,should never be fetched\n");
+  rc = run_source("T_INDEX", NULL);
+  ok(rc == 0 && g_ncap == 2, "T_INDEX read the CSV the index links to");
+  ok(strstr(g_last_url, "01riyoujo202608.csv") != NULL,
+     "the resolved href was fetched, not the declared .url");
+  ok(strstr(g_last_url, "old202401") == NULL, "the stale declared url was not used");
+  ok(g_ncalls == 2, "one index fetch + one data fetch");
+  ok(g_ncap == 2 && !strcmp(g_cap[0].title, "Shop One"), "records come from the linked file");
+
+  fx_reset();
+  fx_add("/portal.html", 200, "<html><a href=\"/data/02biyoujo202608.csv\">x</a></html>");
+  fx_add("/data/old202401.csv", 200, "STALE,should never be fetched\n");
+  rc = run_source("T_INDEX_MISS", NULL);
+  ok(rc == -1 && g_ncap == 0, "no matching href = honest failure, no records");
+  ok(g_ncalls == 1, "and NO fallback fetch of the stale declared url");
 
   /* 7. entity-shape gate */
   fx_reset();
@@ -615,6 +727,68 @@ int main(void) {
   rc = run_source("T_PAGE_PARAM", "x");
   ok(rc == 0 && g_ncap == 3, "offset pagination collects every page");
   ok(strstr(g_last_url, "offset=4") != NULL, "walk ends on the first empty page");
+
+  /* 9f-ter. an offset parameter not spelled "offset" starts at the URL's own
+   * value. The pre-fix engine coerced page_start to 1 and asked for
+   * resultOffset=3 — which no fixture below answers except the base page, so
+   * the walk re-read page 1, stopped on the repeat, and stored 2 of 3 records. */
+  fx_reset();
+  fx_add("resultOffset=2", 200, "{\"items\":[{\"name\":\"o3\",\"id\":\"3\"}]}");
+  fx_add("resultOffset=4", 200, "{\"items\":[]}");
+  fx_add("/ro?q=", 200,
+    "{\"items\":[{\"name\":\"o1\",\"id\":\"1\"},{\"name\":\"o2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_RESULTOFFSET", "x");
+  ok(rc == 0 && g_ncap == 3, "resultOffset=0 walk advances to 2, not 3");
+  ok(strstr(g_last_url, "resultOffset=4") != NULL,
+     "resultOffset walk ends on the first empty page");
+
+  /* 9f-quater. …and a 1-based offset keeps its 1: startIndex 1, 3, 5. */
+  fx_reset();
+  fx_add("startIndex=3", 200, "{\"items\":[{\"name\":\"s3\",\"id\":\"3\"}]}");
+  fx_add("startIndex=5", 200, "{\"items\":[]}");
+  fx_add("/si?q=", 200,
+    "{\"items\":[{\"name\":\"s1\",\"id\":\"1\"},{\"name\":\"s2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_STARTINDEX1", "x");
+  ok(rc == 0 && g_ncap == 3, "startIndex=1 walk advances to 3");
+  ok(strstr(g_last_url, "startIndex=5") != NULL,
+     "startIndex walk ends on the first empty page");
+
+  /* 9f-quinquies. a later page refused with 429 is a walk cut short, and says
+   * so. The pre-fix engine broke out of the loop in silence: two records, no
+   * notice, rc=0 — indistinguishable from a complete two-record collection. */
+  fx_reset();
+  fx_add("offset=2", 429, "{\"error\":\"rate limited\"}");
+  fx_add("/po?q=", 200,
+    "{\"items\":[{\"name\":\"q1\",\"id\":\"1\"},{\"name\":\"q2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_PARAM", "x");
+  {
+    int notice = 0;
+    for (int i = 0; i < g_ncap; i++)
+      if (!strcmp(g_cap[i].rtype, "collector-truncation-notice")) notice = 1;
+    ok(rc == 0 && notice, "a 429 on a later page emits a truncation notice");
+  }
+
+  /* 9f-bis. a row whose URL already binds its page parameter.
+   *
+   * The engine appended, so page 2 was requested as `…&pagina=1&pagina=2`.
+   * Servers that bind the FIRST occurrence (Spring, JAX-RS) then answer with
+   * page 1 again, forever: the walk emits N pages of the same records, the
+   * sink stores one page, and the run exits 0. BR_PNCP_CONTRATOS lost 4,499
+   * of 5,000 records that way with every gate in this repo green.
+   *
+   * The fixtures below are keyed on the WHOLE pagina= assignment, so a URL
+   * carrying two of them matches the page-1 fixture and this test fails the
+   * way the defect failed — a duplicated parameter cannot pass silently. */
+  fx_reset();
+  fx_add("pagina=2", 200, "{\"items\":[{\"name\":\"b2\",\"id\":\"2\"}]}");
+  fx_add("pagina=3", 200, "{\"items\":[]}");
+  fx_add("pagina=1", 200, "{\"items\":[{\"name\":\"b1\",\"id\":\"1\"}]}");
+  rc = run_source("T_PAGE_INURL", "x");
+  ok(rc == 0 && g_ncap == 2 && g_ncalls == 3,
+     "9f-bis: a page param already in the url is REPLACED, not appended");
+  ok(strstr(g_last_url, "pagina=3") != NULL &&
+     strstr(g_last_url, "pagina=1") == NULL,
+     "9f-bis: the last request carries exactly one pagina=, and it is the last page");
 
   /* 9g. the second hop now deepens EVERY record, not the first three */
   fx_reset();
@@ -1358,6 +1532,18 @@ int main(void) {
   rc = run_source("T_XML_COLL", NULL);
   ok(rc == 0 && g_ncap == 2 && !strcmp(g_cap[0].key, g_cap[1].key),
      "24e: byte-identical xml records share one key");
+  /* 24f. `array_path=channel.item` on an RSS row: the XML path is an element
+   *     name, so the literal "channel.item" repeats zero times. 30 batch-30
+   *     rows (bank and ward RSS feeds) probed PASS and emitted nothing. */
+  fx_reset();
+  fx_add("/rss.xml", 200,
+    "<?xml version=\"1.0\"?><rss><channel><title>Bank</title>"
+    "<item><title>Notice A</title><link>http://b.example/a</link></item>"
+    "<item><title>Notice B</title><link>http://b.example/b</link></item>"
+    "</channel></rss>");
+  rc = run_source("T_XML_DOTTED", NULL);
+  ok(rc == 0 && g_ncap == 2 && !strcmp(g_cap[1].title, "Notice B"),
+     "24f: a dotted xml array_path falls back to its last segment as the element name");
 
   /* 25. Card-style anchors: the label sits in nested children behind a
    *     leading <img>, or only in the image's alt. The parser's own text
@@ -1379,6 +1565,76 @@ int main(void) {
      "25b: an image-only anchor falls back to the img alt");
   ok(g_ncap >= 3 && !strcmp(g_cap[2].title, "Plain  text"),
      "25c: an anchor with direct text keeps exactly the text it had");
+
+  /* 25d-g. Camera-index layouts (batch 30, 2026-09-21): the anchor is an
+   *     image or a map pin with no text and no alt; its name is an attribute
+   *     of the anchor, or the text beside it — after it, in the next table
+   *     cell, or before it. Each used to be dropped. An image anchor with NO
+   *     neighbouring text is still dropped (rec/94), and a neighbour's text
+   *     is never borrowed across another anchor (rec/95 does not take
+   *     rec/96's label). */
+  fx_reset();
+  fx_add("/h?q=", 200,
+    "<html><ul>"
+    "<li><a href=\"/rec/c1\" title=\"Kamo Bridge\"><img src=\"1.jpg\"></a></li>"
+    "<li><a href=\"/rec/c2\"><img src=\"2.jpg\"></a> Sakura Weir<br></li>"
+    "</ul><table>"
+    "<tr><td><a href=\"/rec/c3\"><img src=\"3.jpg\"></a></td><td>Route 8 Tunnel</td></tr>"
+    "<tr><td>Harbour East</td><td><a href=\"/rec/c4\"><img src=\"4.jpg\"></a></td></tr>"
+    "<tr><td><a href=\"/rec/c94\"><img src=\"5.jpg\"></a></td></tr>"
+    "<tr><td><a href=\"/rec/c95\"><img src=\"6.jpg\"></a><a href=\"/rec/c96\">Named</a></td></tr>"
+    "</table></html>");
+  rc = run_source("T_HTML", "x");
+  ok(rc == 0 && g_ncap == 5, "25d: attribute and sibling-labelled image anchors emit; a bare one does not");
+  ok(g_ncap >= 1 && !strcmp(g_cap[0].title, "Kamo Bridge"),
+     "25d: the anchor's own title attribute labels it");
+  ok(g_ncap >= 2 && !strcmp(g_cap[1].title, "Sakura Weir"),
+     "25e: text following </a> labels an image anchor");
+  ok(g_ncap >= 3 && !strcmp(g_cap[2].title, "Route 8 Tunnel"),
+     "25f: the next table cell labels an icon cell");
+  ok(g_ncap >= 4 && !strcmp(g_cap[3].title, "Harbour East"),
+     "25g: text preceding <a> in the same row labels it");
+  ok(g_ncap >= 5 && !strcmp(g_cap[4].title, "Named"),
+     "25g: a bare anchor followed by another anchor borrows nothing");
+
+  /* 25h-i. Hokkaido keeps the camera name as data-title on the anchor's
+   *     PARENT div (the anchor holds empty spans); Hamada writes its hrefs
+   *     with a leading space inside the quotes. */
+  fx_reset();
+  fx_add("/h?q=", 200,
+    "<html>"
+    "<div class=\"cam\" data-title=\"Ishikari Weir\"><a href=\"/rec/c7\"><span></span></a></div>"
+    "<div><a href=\" ./rec/c8 \"><img src=\"8.jpg\"></a> Trim Me</div>"
+    "</html>");
+  rc = run_source("T_HTML", "x");
+  ok(rc == 0 && g_ncap == 2, "25h: parent-labelled and space-padded anchors both emit");
+  ok(g_ncap >= 1 && !strcmp(g_cap[0].title, "Ishikari Weir"),
+     "25h: data-title on the anchor's parent labels a first-child anchor");
+  ok(g_ncap >= 2 && !strcmp(g_cap[1].link, "https://x.test/rec/c8") &&
+     !strcmp(g_cap[1].title, "Trim Me"),
+     "25i: whitespace inside the href quotes is stripped before resolution");
+
+  /* 26. A single field carrying both coordinates. CALIL's library directory
+   *     has `geocode: "139.69,35.68"` (lon first); lat_key/lon_key each name a
+   *     whole field, so 7,606 geocoded branches landed without a position. */
+  fx_reset();
+  fx_add("/geo?q=", 200,
+    "{\"libs\":[{\"libid\":\"1\",\"formal\":\"Central Lib\",\"geocode\":\"139.6917,35.6895\"},"
+    "{\"libid\":\"2\",\"formal\":\"No Geo\",\"geocode\":\"\"},"
+    "{\"libid\":\"3\",\"formal\":\"Spaced\",\"geocode\":\"135.5 34.7\"}]}");
+  rc = run_source("T_GEO_PAIR", "x");
+  ok(rc == 0 && g_ncap == 3, "26: all three records emit regardless of geocode");
+  ok(g_ncap >= 1 && g_cap[0].has_geo && fabs(g_cap[0].lat - 35.6895) < 1e-6 &&
+     fabs(g_cap[0].lon - 139.6917) < 1e-6, "26a: lonlat_key splits \"lon,lat\" into lon then lat");
+  ok(g_ncap >= 2 && !g_cap[1].has_geo, "26b: an empty pair field carries no position");
+  ok(g_ncap >= 3 && g_cap[2].has_geo && fabs(g_cap[2].lat - 34.7) < 1e-6,
+     "26c: a space-separated pair is accepted too");
+  fx_reset();
+  fx_add("/geo2?q=", 200,
+    "{\"libs\":[{\"libid\":\"9\",\"formal\":\"Lat First\",\"pos\":\"35.0,139.0\"}]}");
+  rc = run_source("T_GEO_PAIR2", "x");
+  ok(rc == 0 && g_ncap == 1 && g_cap[0].has_geo && fabs(g_cap[0].lat - 35.0) < 1e-6 &&
+     fabs(g_cap[0].lon - 139.0) < 1e-6, "26d: latlon_key reads lat then lon");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

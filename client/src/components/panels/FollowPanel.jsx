@@ -49,7 +49,7 @@ const STATUS_TEXT = {
   '5xx': 'text-neon-red',
   err: 'text-neon-red',
   'in-flight': 'text-neon-cyan',
-  other: 'text-gray-300',
+  other: 'text-osint-text',
 };
 
 const FILTER_PILLS = [
@@ -73,7 +73,7 @@ function MethodChip({ method }) {
     PUT: 'bg-neon-orange/15 text-neon-orange',
     DELETE: 'bg-neon-red/15 text-neon-red',
   };
-  const c = colors[method] || 'bg-gray-700/40 text-gray-300';
+  const c = colors[method] || 'bg-osint-border/40 text-osint-text';
   return (
     <span className={`px-1 py-px rounded text-[9px] font-mono ${c}`}>
       {method}
@@ -129,49 +129,49 @@ const HitRow = memo(function HitRow({ hit, hitKey, expanded, setExpanded }) {
         <MethodChip method={hit.method} />
         <StatusCell hit={hit} />
         <span
-          className="text-[10px] text-gray-300 truncate font-mono"
+          className="text-[10px] text-osint-text truncate font-mono"
           title={hit.collector_key}
         >
           {hit.collector_key}
         </span>
         <span
-          className="text-[10px] text-gray-400 truncate font-mono"
+          className="text-[10px] text-osint-muted truncate font-mono"
           title={hit.host}
         >
           {hit.host}
         </span>
         <span
-          className="text-[10px] text-gray-500 truncate font-mono"
+          className="text-[10px] text-osint-muted truncate font-mono"
           title={hit.path}
         >
           {hit.path || '/'}
         </span>
-        <span className="text-[10px] text-gray-300 font-mono text-right">
+        <span className="text-[10px] text-osint-text font-mono text-right">
           {fmtLatency(hit.latency_ms)}
         </span>
-        <span className="text-[10px] text-gray-300 font-mono text-right">
+        <span className="text-[10px] text-osint-text font-mono text-right">
           {fmtBytes(hit.response_bytes)}
         </span>
         <span className="text-[10px] text-neon-green font-mono text-right">
           {hit.record_count ?? '—'}
         </span>
-        <span className="text-[10px] text-gray-500 font-mono text-right">
+        <span className="text-[10px] text-osint-muted font-mono text-right">
           {fmtTime(hit.start_ts)}
         </span>
       </button>
 
       {expanded && (
         <div className="px-3 py-2 bg-black/30 border-t border-osint-border/30 space-y-1.5 text-[10px]">
-          <div className="font-mono text-gray-300 break-all">
+          <div className="font-mono text-osint-text break-all">
             <span className={STATUS_TEXT[klass]}>{hit.method}</span>{' '}
-            <span className="text-gray-200">{hit.url}</span>
+            <span className="text-osint-text">{hit.url}</span>
           </div>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 font-mono text-gray-400">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 font-mono text-osint-muted">
             <div>
-              Collector: <span className="text-gray-200">{hit.collector_key}</span>
+              Collector: <span className="text-osint-text">{hit.collector_key}</span>
             </div>
             <div>
-              Source: <span className="text-gray-200">{hit.source_name}</span>
+              Source: <span className="text-osint-text">{hit.source_name}</span>
             </div>
             <div>
               Status:{' '}
@@ -180,19 +180,19 @@ const HitRow = memo(function HitRow({ hit, hitKey, expanded, setExpanded }) {
               </span>
             </div>
             <div>
-              Latency: <span className="text-gray-200">{fmtLatency(hit.latency_ms)}</span>
+              Latency: <span className="text-osint-text">{fmtLatency(hit.latency_ms)}</span>
             </div>
             <div>
-              Bytes: <span className="text-gray-200">{fmtBytes(hit.response_bytes)}</span>
+              Bytes: <span className="text-osint-text">{fmtBytes(hit.response_bytes)}</span>
             </div>
             <div>
-              Type: <span className="text-gray-200">{hit.data_type || '—'}</span>
+              Type: <span className="text-osint-text">{hit.data_type || '—'}</span>
             </div>
             <div>
               Records: <span className="text-neon-green">{hit.record_count ?? '—'}</span>
             </div>
             <div>
-              Run: <span className="text-gray-200">{hit.run_id?.slice(0, 8)}</span>
+              Run: <span className="text-osint-text">{hit.run_id?.slice(0, 8)}</span>
             </div>
           </div>
           {hit.error && (
@@ -207,7 +207,7 @@ const HitRow = memo(function HitRow({ hit, hitKey, expanded, setExpanded }) {
                 e.stopPropagation();
                 navigator.clipboard?.writeText(hit.url).catch(() => {});
               }}
-              className="px-1.5 py-0.5 rounded text-[9px] border border-osint-border/60 text-gray-400 hover:text-neon-cyan hover:border-neon-cyan/40 font-mono"
+              className="px-1.5 py-0.5 rounded text-[9px] border border-osint-border/60 text-osint-muted hover:text-neon-cyan hover:border-neon-cyan/40 font-mono"
             >
               copy URL
             </button>
@@ -216,7 +216,7 @@ const HitRow = memo(function HitRow({ hit, hitKey, expanded, setExpanded }) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="px-1.5 py-0.5 rounded text-[9px] border border-osint-border/60 text-gray-400 hover:text-neon-cyan hover:border-neon-cyan/40 font-mono"
+              className="px-1.5 py-0.5 rounded text-[9px] border border-osint-border/60 text-osint-muted hover:text-neon-cyan hover:border-neon-cyan/40 font-mono"
             >
               open ↗
             </a>
@@ -249,18 +249,18 @@ function RunBanner({ activeRuns, runs }) {
           {activeRuns.slice(0, 6).map((r) => (
             <div
               key={r.run_id}
-              className="flex items-center justify-between text-[10px] font-mono text-gray-400"
+              className="flex items-center justify-between text-[10px] font-mono text-osint-muted"
             >
-              <span className="truncate text-gray-300" title={r.collector_key}>
+              <span className="truncate text-osint-text" title={r.collector_key}>
                 {r.collector_key}
               </span>
-              <span className="text-gray-500 ml-2 shrink-0">
+              <span className="text-osint-muted ml-2 shrink-0">
                 {r.trigger} · {r.hit_count || 0} hit · {fmtElapsed(Date.now() - r.started_ms)}
               </span>
             </div>
           ))}
           {activeRuns.length > 6 && (
-            <div className="text-[9px] text-gray-500 italic">
+            <div className="text-[9px] text-osint-muted italic">
               +{activeRuns.length - 6} more…
             </div>
           )}
@@ -271,9 +271,9 @@ function RunBanner({ activeRuns, runs }) {
   const lastRun = runs[0];
   if (lastRun?.ended_ms) {
     return (
-      <div className="px-3 py-1.5 border-b border-osint-border/40 text-[10px] font-mono text-gray-400">
-        <span className="text-gray-500">Last run</span>{' '}
-        <span className="text-gray-200">{lastRun.collector_key}</span>{' '}
+      <div className="px-3 py-1.5 border-b border-osint-border/40 text-[10px] font-mono text-osint-muted">
+        <span className="text-osint-muted">Last run</span>{' '}
+        <span className="text-osint-text">{lastRun.collector_key}</span>{' '}
         <span className={lastRun.status === 'ok' ? 'text-status-online' : 'text-neon-red'}>
           {lastRun.status}
         </span>{' '}
@@ -282,7 +282,7 @@ function RunBanner({ activeRuns, runs }) {
     );
   }
   return (
-    <div className="px-3 py-1.5 border-b border-osint-border/40 text-[10px] text-gray-500 italic">
+    <div className="px-3 py-1.5 border-b border-osint-border/40 text-[10px] text-osint-muted italic">
       Waiting for first collector run…
     </div>
   );
@@ -305,7 +305,7 @@ function FilterStrip({
             className={`px-2 py-0.5 rounded text-[10px] border transition-colors font-mono ${
               statusFilter === p.key
                 ? 'bg-neon-cyan/15 text-neon-cyan border-neon-cyan/40'
-                : 'bg-osint-bg/40 text-gray-400 border-osint-border hover:text-gray-200'
+                : 'bg-osint-bg/40 text-osint-muted border-osint-border hover:text-osint-text'
             }`}
           >
             {p.label}
@@ -327,7 +327,7 @@ function FilterStrip({
             className={`px-1.5 py-0.5 rounded text-[9px] border font-mono transition-colors ${
               typeFilter.has(t)
                 ? 'bg-neon-green/15 text-neon-green border-neon-green/40'
-                : 'bg-osint-bg/40 text-gray-500 border-osint-border hover:text-gray-300'
+                : 'bg-osint-bg/40 text-osint-muted border-osint-border hover:text-osint-text'
             }`}
           >
             {t}
@@ -340,12 +340,12 @@ function FilterStrip({
           placeholder="filter host or path…"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="bg-osint-bg/60 border border-osint-border rounded px-2 py-1 text-[10px] text-gray-200 placeholder-gray-500 focus:outline-none focus:border-neon-cyan/50 font-mono"
+          className="bg-osint-bg/60 border border-osint-border rounded px-2 py-1 text-[10px] text-osint-text placeholder:text-osint-muted/70 focus:outline-none focus:border-neon-cyan/50 font-mono"
         />
         <select
           value={collectorFilter}
           onChange={(e) => setCollectorFilter(e.target.value)}
-          className="bg-osint-bg/60 border border-osint-border rounded px-2 py-1 text-[10px] text-gray-200 focus:outline-none focus:border-neon-cyan/50 font-mono"
+          className="bg-osint-bg/60 border border-osint-border rounded px-2 py-1 text-[10px] text-osint-text focus:outline-none focus:border-neon-cyan/50 font-mono"
         >
           <option value="">All collectors</option>
           {collectorChoices.map((c) => (
@@ -424,12 +424,12 @@ export default function FollowPanel({ onClose, embedded = false }) {
             }`}
           />
           <span className="text-sm font-bold text-neon-cyan">Collector Follow</span>
-          <span className="text-[10px] text-gray-400 font-mono">
+          <span className="text-[10px] text-osint-muted font-mono">
             {filtered.length}/{hits.length} hit{hits.length === 1 ? '' : 's'}
             {inFlightCount > 0 && (
               <span className="ml-2 text-neon-cyan">· {inFlightCount} live</span>
             )}
-            {!seeded && <span className="ml-2 text-gray-500">· loading</span>}
+            {!seeded && <span className="ml-2 text-osint-muted">· loading</span>}
           </span>
         </div>
         <div className="flex items-center gap-1">
@@ -439,7 +439,7 @@ export default function FollowPanel({ onClose, embedded = false }) {
             className={`px-2 py-0.5 rounded text-[10px] border font-mono transition-colors ${
               paused
                 ? 'bg-neon-orange/15 text-neon-orange border-neon-orange/40'
-                : 'bg-osint-bg/40 text-gray-400 border-osint-border hover:text-gray-200'
+                : 'bg-osint-bg/40 text-osint-muted border-osint-border hover:text-osint-text'
             }`}
             title={paused ? 'Resume stream' : 'Pause stream'}
           >
@@ -448,14 +448,14 @@ export default function FollowPanel({ onClose, embedded = false }) {
           <button
             type="button"
             onClick={clear}
-            className="px-2 py-0.5 rounded text-[10px] border border-osint-border bg-osint-bg/40 text-gray-400 hover:text-gray-200 font-mono"
+            className="px-2 py-0.5 rounded text-[10px] border border-osint-border bg-osint-bg/40 text-osint-muted hover:text-osint-text font-mono"
           >
             clear
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="ml-1 text-gray-400 hover:text-neon-cyan text-sm leading-none px-1"
+            className="ml-1 text-osint-muted hover:text-neon-cyan text-sm leading-none px-1"
             aria-label="Close"
           >
             ✕
@@ -466,7 +466,7 @@ export default function FollowPanel({ onClose, embedded = false }) {
       {/* Compact embedded toolbar */}
       {embedded && (
         <div className="flex items-center justify-between px-3 py-1 border-b border-osint-border/40 flex-shrink-0">
-          <span className="text-[10px] text-gray-400 font-mono">
+          <span className="text-[10px] text-osint-muted font-mono">
             {filtered.length}/{hits.length} hit{hits.length === 1 ? '' : 's'}
             {inFlightCount > 0 && (
               <span className="ml-2 text-neon-cyan">· {inFlightCount} live</span>
@@ -479,7 +479,7 @@ export default function FollowPanel({ onClose, embedded = false }) {
               className={`px-2 py-0.5 rounded text-[10px] border font-mono transition-colors ${
                 paused
                   ? 'bg-neon-orange/15 text-neon-orange border-neon-orange/40'
-                  : 'bg-osint-bg/40 text-gray-400 border-osint-border hover:text-gray-200'
+                  : 'bg-osint-bg/40 text-osint-muted border-osint-border hover:text-osint-text'
               }`}
             >
               {paused ? 'paused' : 'pause'}
@@ -487,7 +487,7 @@ export default function FollowPanel({ onClose, embedded = false }) {
             <button
               type="button"
               onClick={clear}
-              className="px-2 py-0.5 rounded text-[10px] border border-osint-border bg-osint-bg/40 text-gray-400 hover:text-gray-200 font-mono"
+              className="px-2 py-0.5 rounded text-[10px] border border-osint-border bg-osint-bg/40 text-osint-muted hover:text-osint-text font-mono"
             >
               clear
             </button>
@@ -511,7 +511,7 @@ export default function FollowPanel({ onClose, embedded = false }) {
 
       {/* Column header */}
       <div
-        className="grid items-center gap-2 px-2 py-1 text-[9px] uppercase tracking-wider text-gray-500 font-mono border-b border-osint-border/40 bg-osint-bg/40 flex-shrink-0"
+        className="grid items-center gap-2 px-2 py-1 text-[9px] uppercase tracking-wider text-osint-muted font-mono border-b border-osint-border/40 bg-osint-bg/40 flex-shrink-0"
         style={{ gridTemplateColumns: '44px 44px 132px 1fr 1.4fr 56px 60px 48px 56px' }}
       >
         <span>method</span>
@@ -532,7 +532,7 @@ export default function FollowPanel({ onClose, embedded = false }) {
         className="flex-1 overflow-y-auto min-h-0"
       >
         {filtered.length === 0 ? (
-          <div className="text-gray-500 text-xs px-3 py-6 text-center italic">
+          <div className="text-osint-muted text-xs px-3 py-6 text-center italic">
             {hits.length > 0
               ? 'No hits match the current filter.'
               : historyError?.notImplemented
@@ -559,7 +559,7 @@ export default function FollowPanel({ onClose, embedded = false }) {
       </div>
 
       {/* Footer */}
-      <div className="px-3 py-1 border-t border-osint-border/40 text-[10px] font-mono text-gray-500 flex items-center justify-between flex-shrink-0">
+      <div className="px-3 py-1 border-t border-osint-border/40 text-[10px] font-mono text-osint-muted flex items-center justify-between flex-shrink-0">
         <span>
           {connected ? 'streaming' : 'reconnecting…'}
           {!atTop && (

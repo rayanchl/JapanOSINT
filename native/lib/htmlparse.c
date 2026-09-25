@@ -235,9 +235,24 @@ const char *html_anchor_next(const char *from, html_anchor *out) {
       hlen = (size_t)(he - h);
       after = he;
     }
+    /* Whitespace inside the quotes is not part of the URL. Hamada city's
+     * camera index writes `href=" ./viewer.php?cid=1"`; stored verbatim, the
+     * resolved link became `r_view/ ./viewer.php` — a record whose url does
+     * not open. Browsers strip it; so does this. */
+    while (hlen && (*h == ' ' || *h == '\t' || *h == '\n' || *h == '\r')) { h++; hlen--; }
+    while (hlen && (h[hlen - 1] == ' ' || h[hlen - 1] == '\t' ||
+                    h[hlen - 1] == '\n' || h[hlen - 1] == '\r')) hlen--;
     if (!hlen || hlen > 800) continue;
     const char *atext = strchr(after, '>');
-    const char *aclose = atext ? strstr(atext, "</a>") : NULL;
+    /* Case-insensitive: everything else in this scanner (the opening `<a`
+     * test above, href's name match) is explicitly case-tolerant because
+     * upper-case markup is ordinary on older Japanese municipal/government
+     * pages (see the `<BASE HREF=` note on html_attr_scan). A literal
+     * strstr() here only ever matched a lowercase `</a>`, so any page whose
+     * anchors close `</A>` produced zero anchors — a silent, total discard
+     * for that whole class of source, not a partial one, since every anchor
+     * on such a page fails the same way. */
+    const char *aclose = atext ? strcasestr(atext, "</a>") : NULL;
     if (!atext || !aclose) continue;
     atext++;
 

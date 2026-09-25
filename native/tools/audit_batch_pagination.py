@@ -64,7 +64,13 @@ def rows(paths):
     out, bad = [], []
     for p in paths:
         for lno, line in enumerate(io.open(p, encoding="utf-8"), 1):
-            s = line.rstrip("\n")
+            # rstrip \r as well as \n, matching manifest.iter_lines(): a
+            # manifest .txt is not covered by .gitattributes' `eol=lf` (that
+            # only forces *.sh/*.py), so a Windows checkout with
+            # core.autocrlf=true can hand this CRLF lines. Without the \r
+            # strip it rides along on the last column (opts) into every
+            # downstream field.
+            s = line.rstrip("\n").rstrip("\r")
             if not s.strip() or s.lstrip().startswith("#"):
                 continue
             at = "%s:%d" % (p.rsplit("/", 1)[-1], lno)

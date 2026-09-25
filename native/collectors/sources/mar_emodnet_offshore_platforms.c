@@ -19,6 +19,7 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
+#include "lib/seenset.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,6 +38,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
   int n = 0;
+  seen_set key_seen = {0};
   cJSON *f;
   cJSON_ArrayForEach(f, feats) {
     cJSON *pr = cJSON_GetObjectItem(f, "properties");
@@ -94,7 +96,24 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              prod ? " · " : "", prod ? prod : "");
 
     intel_item it = {0};
-    it.remote_key      = key;
+    /* platformid is absent on 19 platforms (the key falls back to a name that
+     * other platforms share) and one platformid is published twice with a
+     * different status and remarks (live 2026-09-15: 1,617 features, 1,617
+     * byte-distinct, 1,596 platformids), so 3 platforms upserted over others.
+     * A key already seen this run gains a hash of the feature's own
+     * properties; first occurrences keep their plain key and stored uid. */
+    char keybuf[256];
+    const char *rk = key;
+    if (!seen_add(&key_seen, key)) {
+      char *raw = cJSON_PrintUnformatted(pr);
+      const char *parts[1] = { raw ? raw : "" };
+      char h[21];
+      feed_hash_key(h, parts, 1);
+      snprintf(keybuf, sizeof keybuf, "%.200s|%s", key, h);
+      free(raw);
+      rk = keybuf;
+    }
+    it.remote_key      = rk;
     it.title           = title;
     it.summary         = summary[0] ? summary : NULL;
     it.link            = "https://emodnet.ec.europa.eu/en/human-activities";
@@ -107,6 +126,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
+  seen_free(&key_seen);
   cJSON_Delete(doc);
   fprintf(stderr, "[emodnet-offshore-platforms] emitted %d\n", n);
   return 0;

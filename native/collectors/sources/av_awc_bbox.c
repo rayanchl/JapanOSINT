@@ -221,6 +221,20 @@ static int airport_tile(const source_ctx *ctx, intel_sink *sink, double a,
   return raw;
 }
 
+/* On `emitted` vs `stored` for both bbox sweeps in this file. av_bbox_sweep
+ * refines breadth-first: a tile that comes back FULL is queried again as four
+ * children covering the same ground, so every record the parent already
+ * emitted is emitted a second time by whichever child contains it. A run
+ * therefore reports far more emit() calls than distinct rows — measured
+ * 2026-09-07: airport-info 1605 emitted / 503 distinct, pirep 1686 / 886 —
+ * and that gap is the refinement working, not a uid defect. The identity is
+ * the upstream's own (icaoId/faaId for an airport; station|obsTime|rawOb for
+ * a PIREP), the same physical airport really is one row, and nothing the
+ * upstream handed over is dropped: the union of parent and child tiles is
+ * what lands. Do not "fix" this by keying a record on its tile — that would
+ * store one row per tile per airport and invent distinctions the data has
+ * not got. Coverage is bounded by the request budget and that bound is
+ * logged on every run. */
 static int run_airport(const source_ctx *ctx, intel_sink *sink) {
   awc_acc acc = { 0, "awc-airport-info" };
   int ok = 1;

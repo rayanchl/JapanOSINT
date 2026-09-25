@@ -16,6 +16,19 @@ bigfile *bigfile_open(const char *path);
  * the stripped length. Over-long lines are silently skipped and counted. */
 const char *bigfile_next(bigfile *bf, size_t *len);
 
+/* Lines dropped for exceeding BF_MAXLINE, and lines successfully returned.
+ * `struct bigfile` is opaque, so before these existed a caller had no way to
+ * read the skip count bigfile_next() was already keeping — the tally was
+ * real but unreachable, which is the same invisible discard house rule 2
+ * (docs/SOURCE_EXHAUSTIVENESS.md) forbids for a collector: a shortfall has to
+ * be reported as data, and it cannot be while nothing outside this file can
+ * even ask for the number. A caller streaming a breach dump should check
+ * bigfile_skipped() after the last bigfile_next() and, when it is non-zero,
+ * emit a collector-truncation-notice (or equivalent) rather than let the scan
+ * report a clean, silently incomplete pass. */
+unsigned long long bigfile_skipped(const bigfile *bf);
+unsigned long long bigfile_lines(const bigfile *bf);
+
 void bigfile_close(bigfile *bf);
 
 #endif

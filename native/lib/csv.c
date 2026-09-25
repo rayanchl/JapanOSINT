@@ -132,6 +132,7 @@ static cJSON *csv_rows(const char *text, const char *delim, int ws) {
   char *field = malloc(cap);
   int in_q = 0, have = 0;        /* have: any field/cell started on this row */
   int at_bol = 1;                /* ws mode: no cell has begun on this line  */
+  int fresh = 1;                 /* no non-blank content in this field yet   */
   /* An unchecked malloc here wrote through NULL on the very first cell, and
    * the realloc below did the same on any field past 64 bytes while leaking
    * the old buffer. Out of memory has to stop the parse, not corrupt it. */
@@ -145,6 +146,7 @@ static cJSON *csv_rows(const char *text, const char *delim, int ws) {
                 while (e_ && (v_[e_-1] == ' ' || v_[e_-1] == '\t')) e_--; \
                 field[(v_ - field) + e_] = 0; } \
     cJSON_AddItemToArray(cur, cJSON_CreateString(v_)); fl = 0; have = 1; \
+    fresh = 1; \
   } while (0)
 #define PUSH_CHAR(c) do { if (fl + 1 >= cap) { size_t nc_ = cap * 2; \
     char *nf_ = realloc(field, nc_); if (!nf_) break; field = nf_; cap = nc_; } \
@@ -174,7 +176,23 @@ static cJSON *csv_rows(const char *text, const char *delim, int ws) {
       at_bol = 0;
       if (!ch) break;
     }
-    if (ch == '"') in_q = 1;
+    /* RFC 4180, which the header above already claims for every mode: a quote
+     * OPENS a quoted field only at the START of that field. A quote anywhere
+     * else is an ordinary character. Toggling on every `"` made the parity of
+     * the whole file load-bearing, so one mid-field quote re-paired every quote
+     * after it and each following record was swallowed into its predecessor.
+     *
+     * ThreatView's Cobalt Strike C2 feed is the measured case (2026-09-16):
+     * 1,180 data lines, 2,353 quotes, five of them opening a host cell like
+     * `"qw.execsvct.com,/ms` that never closes on its own line. Toggle-anywhere
+     * yields 503 records and the run reports "503 of 503 available"; start-only
+     * yields 1,174 (Python's csv module reads the same bytes as 1,177 rows).
+     * That was 675 real C2 detections discarded with every gate green.
+     *
+     * With `trim` on, blanks before the quote are padding rather than content
+     * (csv.h's note), so they are dropped and the quote still opens the field —
+     * `a, "b"` keeps reading as `b`, exactly as it did before. */
+    if (ch == '"' && fresh) { in_q = 1; fresh = 0; if (trim) fl = 0; }
     else if (ws && (ch == ' ' || ch == '\t')) {
       /* A run of blanks is ONE separator; a run before the newline is none. */
       while (p[1] == ' ' || p[1] == '\t') p++;
@@ -192,7 +210,7 @@ static cJSON *csv_rows(const char *text, const char *delim, int ws) {
       have = 0;
       at_bol = 1;
     } else if (ch == '\r') { /* ignore CR */ }
-    else PUSH_CHAR(ch);
+    else { PUSH_CHAR(ch); if (!(trim && (ch == ' ' || ch == '\t'))) fresh = 0; }
   }
   /* JS: if (field.length>0 || cur.length>0) { cur.push(field); rows.push } */
   if (fl > 0 || cJSON_GetArraySize(cur) > 0 || have) {
@@ -260,9 +278,127 @@ cJSON *csv_parse_d(const char *text, int headers, char delim) {
   return headers ? csv_name_rows(rows) : rows;
 }
 
+/* ── unterminated-quote recovery ──────────────────────────────────────────
+ *
+ * RFC 4180 says a quoted field ends at its closing quote, so a line that opens
+ * one and never closes it swallows every following line until the next quote
+ * appears. That is correct by the letter and catastrophic in practice on a feed
+ * that publishes a few malformed rows.
+ *
+ * (A correction, because the first version of this note got it wrong: it cited
+ * ThreatView's C2 feed as the motivating case — 1,178 data lines parsed as 503.
+ * That turned out to be a different defect entirely, csv_rows opening a quoted
+ * field on ANY `"` so the file's whole quote parity became load-bearing. With
+ * that fixed ThreatView needs ZERO repairs and reads 1,173 records. This
+ * recovery is still worth having — DataPlane and the GCAT tables do carry
+ * genuinely unterminated fields — but it was never what rescued ThreatView.)
+ *
+ * A quoted field that spans more than `max_lines` physical lines is therefore
+ * treated as the malformed row it almost certainly is: the field is closed at
+ * the end of the line that opened it, and parsing continues from the next line.
+ * Genuine multi-line quoted cells are short (MEXT's header is `"設置\n区分"`),
+ * so the bound leaves them alone. Nothing is invented and nothing is dropped —
+ * the opening line keeps the rest of its own text as that field's value, and
+ * the lines that were being swallowed become the records they are. The number
+ * of repairs is reported through csv_quote_repairs() so the caller can disclose
+ * it rather than quietly parse a different file from the one served. */
+#define CSV_QUOTE_MAX_LINES 4
+#define CSV_QUOTE_MAX_FIXES 100000
+static _Thread_local int g_csv_repairs = 0;
+
+int csv_quote_repairs(void) { return g_csv_repairs; }
+
+static char *csv_repair_unterminated(const char *text, const char *delim,
+                                     int ws, int *repairs) {
+  if (!text || !*text) return NULL;
+  /* THIS SCAN MUST OPEN A QUOTE EXACTLY WHERE csv_rows OPENS ONE.
+   *
+   * It used to toggle on any `"`, which was correct while csv_rows did the
+   * same — and became wrong the moment csv_rows adopted the RFC rule that a
+   * quote opens a field only at that field's START. The two copies then paired
+   * the same file's quotes differently, and a pre-pass that disagrees with the
+   * parser it is protecting is worse than no pre-pass: it reports a repair
+   * count that reads as reassurance.
+   *
+   * Measured on CVM's fund register (2026-09-16), 97 quotes over 45 lines of
+   * 46,806: this scanner saw no over-long span and "repaired" one harmless
+   * spot, while csv_rows opened at a field-start quote and swallowed the next
+   * 54 lines into a single 59-field record. 46,806 rows parsed as 46,752, the
+   * run reported `records=46752 stored=46752` with no collision, and the
+   * shortfall was invisible to every count-based check. Two readers of one rule
+   * must read it the same way — CLAUDE.md 4c, in the small. */
+  const size_t dlen = (delim && *delim) ? strlen(delim) : 1;
+  const char  dch  = (delim && *delim) ? delim[0] : ',';
+  const int   trim = ws || dch != ',';
+  size_t n = strlen(text), *fix = NULL, nfix = 0, cap = 0, first_nl = 0;
+  int in_q = 0, lines = 0, fresh = 1;   /* fresh: at the start of a field */
+  for (size_t i = 0; i < n; i++) {
+    char c = text[i];
+    if (in_q) {
+      if (c == '"') {
+        if (i + 1 < n && text[i + 1] == '"') i++;
+        else { in_q = 0; lines = 0; }
+      } else if (c == '\n') {
+        if (lines == 0) first_nl = i;
+        if (++lines > CSV_QUOTE_MAX_LINES) {
+          if (nfix == cap) {
+            size_t nc = cap ? cap * 2 : 8;
+            size_t *t = realloc(fix, nc * sizeof *t);
+            if (!t) { free(fix); return NULL; }
+            fix = t; cap = nc;
+          }
+          fix[nfix++] = first_nl;
+          if (nfix >= CSV_QUOTE_MAX_FIXES) break;
+          /* Re-read from the repaired line's newline: the lines that were being
+           * swallowed have their own quoting and must be parsed, not assumed. */
+          i = first_nl;
+          in_q = 0; lines = 0; fresh = 1;
+        }
+      }
+    }
+    /* Field-start bookkeeping, mirroring csv_rows exactly. */
+    else if (c == '"' && fresh) { in_q = 1; lines = 0; fresh = 0; }
+    else if (c == '\n') fresh = 1;
+    else if (ws && (c == ' ' || c == '\t')) fresh = 1;  /* blanks ARE the separator */
+    else if (!ws && c == dch && (dlen == 1 || !strncmp(text + i, delim, dlen))) {
+      fresh = 1; i += dlen - 1;
+    }
+    else if (c == '\r') { /* ignored by csv_rows; must not clear field start */ }
+    else if (!(trim && (c == ' ' || c == '\t'))) fresh = 0;
+  }
+  if (!nfix) { free(fix); return NULL; }
+  char *out = malloc(n + nfix + 1);
+  if (!out) { free(fix); return NULL; }
+  size_t w = 0, src = 0;
+  for (size_t k = 0; k < nfix; k++) {
+    size_t len = fix[k] - src;
+    memcpy(out + w, text + src, len);
+    w += len;
+    out[w++] = '"';                    /* close the field at its own line end */
+    src = fix[k];
+  }
+  memcpy(out + w, text + src, n - src);
+  w += n - src;
+  out[w] = 0;
+  free(fix);
+  *repairs = (int)nfix;
+  return out;
+}
+
 cJSON *csv_parse_x(const char *text, int headers, const char *delim,
                    int skip_lines, const char *comment) {
   if (!text) text = "";
+  /* A UTF-8 BOM belongs to the FILE, not to its first column name. Kawasaki's
+   * licence registers open with EF BB BF, so the header parsed as
+   * "\xEF\xBB\xBF施設名称" and every record keyed that column under a name no
+   * row can declare: `title_keys = "施設名称"` finds nothing, and the miss is
+   * invisible because the column is plainly there in the stored properties.
+   * Measured 2026-09-19 across nine Kawasaki rows. Stripped here — before
+   * skip_lines, the banner strip and the quote repair — so every caller and
+   * every mode sees the same text. */
+  if ((unsigned char)text[0] == 0xEF && (unsigned char)text[1] == 0xBB &&
+      (unsigned char)text[2] == 0xBF)
+    text += 3;
   /* Physical lines, before anything else looks at the text: the title line
    * sits ABOVE the header, so it has to go before header detection. A title
    * is prose, not a row, so no quoting rule is applied to it — the quoted
@@ -284,7 +420,12 @@ cJSON *csv_parse_x(const char *text, int headers, const char *delim,
     char dc = ws ? ' ' : (lit && *lit ? lit[0] : ',');
     stripped = csv_strip_banner(text, dc, comment, headers);
   }
-  cJSON *rows = csv_rows(stripped ? stripped : text, lit, ws);
+  g_csv_repairs = 0;
+  char *repaired = csv_repair_unterminated(stripped ? stripped : text,
+                                           lit, ws, &g_csv_repairs);
+  cJSON *rows = csv_rows(repaired ? repaired : (stripped ? stripped : text),
+                         lit, ws);
+  free(repaired);
   free(stripped);
   return headers ? csv_name_rows(rows) : rows;
 }

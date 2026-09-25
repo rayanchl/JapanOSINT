@@ -34,7 +34,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 LLAMA_BIN="${LLAMA_BIN:-$REPO_ROOT/native/llama/llama-server}"
-OSINT_MODEL_PATH="${OSINT_MODEL_PATH:-$REPO_ROOT/models/gpt-oss-20b-Q4_K_M.gguf}"
+OSINT_MODEL_PATH="${OSINT_MODEL_PATH:-$REPO_ROOT/models/Qwen3.8-27B-Q8_0.gguf}"
 
 # Already up? llama.cpp exposes /health.
 if curl -s "http://localhost:${LLAMA_PORT}/health" >/dev/null 2>&1; then
@@ -49,7 +49,7 @@ if [ -z "$LLAMA_BIN" ] || [ ! -x "$LLAMA_BIN" ]; then
 fi
 if [ ! -f "$OSINT_MODEL_PATH" ]; then
   echo "[start-llama] ERROR: model not found at $OSINT_MODEL_PATH" >&2
-  echo "  Set OSINT_MODEL_PATH to the gpt-oss-20b .gguf. Search degrades gracefully without it." >&2
+  echo "  Set OSINT_MODEL_PATH to the Qwen3.8-27B .gguf. Search degrades gracefully without it." >&2
   exit 1
 fi
 

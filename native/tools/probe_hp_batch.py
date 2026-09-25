@@ -233,12 +233,23 @@ def is_enveloped_error(text):
 IMPOSSIBLE = {
     "q":  "zzqx9nonexistent7q",
     "qd": "99999999999999999",
+    "qc": "9999999999",
     "qh": "zzqx9nonexistent7q.invalid",
+    "qu": "zzqx9nonexistentuser7q",
     "ql": "zzqx9nonexistent7q",
     "qU": "ZZQX9NONEXISTENT7Q",
+    "qn": "Zzqx9NonexistentEntity7Q",
     "Q":  "zzqx9nonexistent7q",
 }
-TOKEN_RE = re.compile(r"\{(q[dhlU]?|Q)\}")
+# Every entity token hp_expand() (lib/hpengine.c) recognises: {q} {qd} {qc}
+# {qh} {qu} {ql} {qU} {qn} plus the raw POST form {Q} -- the same list
+# hp_uses_entity()'s comment gives. This used to be `q[dhlU]?|Q`, missing
+# {qc}, {qu} and {qn}: a row whose ONLY entity token was one of those (e.g.
+# WIKIPEDIA_PAGEVIEWS's {qn}) made impossible_probe_url() return None, so
+# --check-filter silently skipped the honoured-filter check for it entirely
+# -- a PASS that never actually asked the question, which is exactly the
+# failure class rule 4d exists to catch.
+TOKEN_RE = re.compile(r"\{(q[cdhlnuU]?|Q)\}")
 
 # Set from --check-filter. Off by default because it doubles the request count
 # for every pivot row; a batch should be run through it at least once.
@@ -255,6 +266,64 @@ def impossible_probe_url(r):
     return TOKEN_RE.sub(lambda m: IMPOSSIBLE.get(m.group(1), IMPOSSIBLE["q"]), tmpl)
 
 
+def _host_is_jp(url):
+    """lib/feedlib.c's feed_url_host_is_jp, including its userinfo guard:
+    "user.jp@evil.com" is evil.com, not a .jp host."""
+    h = url.split("://", 1)[-1]
+    h = h.split("/", 1)[0].split("?", 1)[0].split("#", 1)[0]
+    if "@" in h:
+        h = h.rsplit("@", 1)[1]
+    return h.split(":", 1)[0].rstrip(".").lower().endswith(".jp")
+
+
+# The spellings lib/hpengine.c accepts for `charset`, mapped to Python codecs.
+_CHARSETS = {"sjis": "cp932", "shift_jis": "cp932", "shift-jis": "cp932",
+             "cp932": "cp932", "ms932": "cp932", "windows-31j": "cp932",
+             "euc-jp": "euc_jp", "euc_jp": "euc_jp", "eucjp": "euc_jp"}
+
+
+def decode_body(raw, r=None, url=""):
+    """Decode a body the way the ENGINE will, so the gate judges what hp_run
+    actually parses. Three rules, each copied from the C rather than invented:
+
+      * a row that DECLARES `charset` is transcoded with it — the encoding is a
+        property of the endpoint, not of its TLD (lib/hpengine.h);
+      * otherwise lib/feedlib.c's gate: a .jp host whose body is not valid
+        UTF-8 is read as Shift_JIS, and that decode FAILS CLOSED, so a .jp host
+        serving something else is returned verbatim rather than turned to kanji;
+      * a leading UTF-8 BOM is stripped, as lib/csv.c does, because a BOM
+        welded to the first header name makes that column match nothing.
+
+    Until this existed the probe read every legacy-encoded Japanese body as
+    U+FFFD soup: `title_keys=市区町丁` could not match a cp932 header, so the
+    verdict said "key missing from header" when the truth was "the prober
+    cannot read this file". That is the checker-blind-to-its-input failure —
+    absence reported as a result — and it silently applied to the whole
+    Shift_JIS half of the JP registry.
+    """
+    enc = None
+    if r is not None:
+        declared = (opt(r, "charset") or "").strip().lower()
+        enc = _CHARSETS.get(declared, declared or None)
+    text = None
+    if enc:
+        try:
+            text = raw.decode(enc, "replace")
+        except LookupError:
+            text = None
+    if text is None and url and _host_is_jp(url):
+        try:
+            text = raw.decode("utf-8")
+        except UnicodeDecodeError:
+            try:
+                text = raw.decode("cp932")
+            except UnicodeDecodeError:
+                text = None
+    if text is None:
+        text = raw.decode("utf-8", "replace")
+    return text[1:] if text.startswith("﻿") else text
+
+
 def filter_is_honoured(r, real_items):
     """(ok, note). ok=False means the endpoint returned substantially the same
     result set for an impossible entity as for the real one."""
@@ -267,7 +336,7 @@ def filter_is_honoured(r, real_items):
         return True, ""          # a refusal here is not evidence either way
     if status < 200 or status >= 300:
         return True, ""
-    text = raw.decode("utf-8", "replace")
+    text = decode_body(raw, r, url)
     kind, items = VF.count_feed(text)
     if not kind:
         kind, items = VF.count_json(text)
@@ -282,6 +351,150 @@ def filter_is_honoured(r, real_items):
         return False, ("filter ignored: an impossible entity returned %d records "
                        "vs %d for the real one" % (items, real_items))
     return True, ""
+
+
+def _xlsx_rows(raw, sheet_name, sheet_index):
+    """The chosen worksheet as a list of rows of cell strings, following the
+    same reading lib/xlsx.c does: sharedStrings for t="s" cells, inline
+    strings, phonetic <rPh> runs skipped, sheet chosen by exact tab name else
+    0-based tab order (workbook.xml order resolved through the rels part).
+    Returns (tab_name, rows) or raises ValueError."""
+    import zipfile
+    import io
+    z = zipfile.ZipFile(io.BytesIO(raw))
+    names = set(z.namelist())
+    wb = z.read("xl/workbook.xml").decode("utf-8", "replace")
+    sheets = re.findall(r'<(?:\w+:)?sheet\b[^>]*?\bname="([^"]*)"[^>]*?\br:id="([^"]*)"', wb)
+    if not sheets:
+        sheets = [(n, "") for n in re.findall(r'<(?:\w+:)?sheet\b[^>]*?\bname="([^"]*)"', wb)]
+    rels = {}
+    if "xl/_rels/workbook.xml.rels" in names:
+        rx = z.read("xl/_rels/workbook.xml.rels").decode("utf-8", "replace")
+        for rid, tgt in re.findall(r'<Relationship\b[^>]*?\bId="([^"]*)"[^>]*?\bTarget="([^"]*)"', rx):
+            rels[rid] = tgt
+        for tgt, rid in re.findall(r'<Relationship\b[^>]*?\bTarget="([^"]*)"[^>]*?\bId="([^"]*)"', rx):
+            rels.setdefault(rid, tgt)
+    if not sheets:
+        raise ValueError("no worksheet in workbook.xml")
+    pick = None
+    if sheet_name:
+        for i, (nm, _) in enumerate(sheets):
+            if nm == sheet_name:
+                pick = i
+        if pick is None:
+            raise ValueError("no sheet named %r (have %s)" % (sheet_name, [s[0] for s in sheets]))
+    else:
+        pick = sheet_index or 0
+        if pick < 0 or pick >= len(sheets):
+            raise ValueError("sheet index %d out of range (%d sheets)" % (pick, len(sheets)))
+    tab, rid = sheets[pick]
+    part = rels.get(rid, "")
+    if part:
+        part = part.lstrip("/")
+        if not part.startswith("xl/"):
+            part = "xl/" + part
+    if not part or part not in names:
+        part = "xl/worksheets/sheet%d.xml" % (pick + 1)
+    if part not in names:
+        raise ValueError("worksheet part %s missing" % part)
+    ss = []
+    if "xl/sharedStrings.xml" in names:
+        sx = z.read("xl/sharedStrings.xml").decode("utf-8", "replace")
+        for si in re.findall(r"<si>(.*?)</si>", sx, re.S):
+            si = re.sub(r"<rPh\b.*?</rPh>", "", si, flags=re.S)
+            ss.append(_xml_unescape("".join(re.findall(r"<t\b[^>]*>(.*?)</t>", si, re.S))))
+    sx = z.read(part).decode("utf-8", "replace")
+    rows = []
+    for row in re.findall(r"<row\b[^>]*>(.*?)</row>", sx, re.S):
+        cells = []
+        for attrs, inner in re.findall(r"<c\b([^>]*)>(.*?)</c>", row, re.S):
+            v = re.search(r"<v>(.*?)</v>", inner, re.S)
+            t = re.search(r'\bt="(\w+)"', attrs)
+            if v is None:
+                inner = re.sub(r"<rPh\b.*?</rPh>", "", inner, flags=re.S)
+                cells.append(_xml_unescape("".join(re.findall(r"<t\b[^>]*>(.*?)</t>", inner, re.S))))
+            elif t and t.group(1) == "s":
+                try:
+                    cells.append(ss[int(v.group(1))])
+                except (ValueError, IndexError):
+                    cells.append("")
+            else:
+                cells.append(_xml_unescape(v.group(1)))
+        rows.append(cells)
+    return tab, rows
+
+
+def _xml_unescape(s):
+    return (s.replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", '"')
+             .replace("&apos;", "'").replace("&amp;", "&"))
+
+
+def verify_xlsx(r, sid, url, raw, status, nbytes):
+    """An .xlsx row is judged the way the engine reads it: the chosen sheet is
+    written out as CSV (cells with , \" or a line break quoted, so a multi-line
+    banner cell occupies several PHYSICAL lines), `csv_skip_lines` physical
+    lines are dropped, the next row is the header, and the rest are records.
+    Before this branch every xlsx row was UNPARSEABLE — a zip is not text — so
+    the whole modality was shipping on the author's word. The verdict also
+    checks that every name in title_keys / id_keys is a header cell, because a
+    wrong skip count reads a banner line as the header and the engine then
+    emits records titled after whatever came first."""
+    if raw[:8] == b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1":
+        return (sid, url, "UNPARSEABLE", "", 0, status, nbytes,
+                "OLE2 compound file (.xls), not an .xlsx")
+    if raw[:2] != b"PK":
+        return (sid, url, "UNPARSEABLE", "", 0, status, nbytes,
+                "not a zip: " + raw[:60].decode("utf-8", "replace").replace("\n", " "))
+    sheet = opt(r, "xlsx_sheet", "") or ""
+    try:
+        sidx = int(opt(r, "xlsx_sheet_index", "0") or 0)
+    except ValueError:
+        sidx = 0
+    try:
+        tab, rows = _xlsx_rows(raw, sheet, sidx)
+    except Exception as e:
+        return (sid, url, "UNPARSEABLE", "", 0, status, nbytes,
+                ("xlsx: %s" % e)[:80])
+    try:
+        skip = int(opt(r, "csv_skip_lines", "0") or 0)
+    except ValueError:
+        skip = 0
+    # The engine's CSV rendering, so the skip count means the same thing here.
+    out = []
+    for cells in rows:
+        line = []
+        for c in cells:
+            if any(ch in c for ch in ',"\r\n'):
+                c = '"' + c.replace('"', '""') + '"'
+            line.append(c)
+        out.append(",".join(line))
+    text = "\n".join(out) + "\n"
+    for _ in range(skip):
+        nl = text.find("\n")
+        text = text[nl + 1:] if nl >= 0 else ""
+    import io
+    rd = list(csv.reader(io.StringIO(text)))
+    rd = [row for row in rd]
+    if not rd:
+        return (sid, url, "EMPTY_RESULTSET", "xlsx:" + tab, 0, status, nbytes,
+                "no header row after csv_skip_lines=%d" % skip)
+    header = [h.strip() for h in rd[0]]
+    data = [row for row in rd[1:] if any(c.strip() for c in row)]
+    wanted = []
+    for k in ("title_keys", "id_keys", "date_keys"):
+        v = opt(r, k, "") or ""
+        for name in re.split(r"[,+]", v):
+            if name.strip():
+                wanted.append(name.strip())
+    missing = [w for w in wanted if w not in header]
+    if missing:
+        return (sid, url, "KEY_MISSING", "xlsx:" + tab, len(data), status, nbytes,
+                ("keys %s not in header %s" % (missing, header[:8]))[:120])
+    if not data:
+        return (sid, url, "EMPTY_RESULTSET", "xlsx:" + tab, 0, status, nbytes,
+                "header %s but no data rows" % header[:6])
+    return (sid, url, "PASS", "xlsx:" + tab, len(data), status, nbytes,
+            "header=" + "|".join(header[:8])[:100])
 
 
 def verify(r):
@@ -301,7 +514,9 @@ def verify(r):
     nbytes = len(raw)
     if nbytes > MAXBYTES:
         return (sid, url, "TOO_BIG", "", 0, status, nbytes, "over probe cap")
-    text = raw.decode("utf-8", "replace")
+    if r["mode"] == "xlsx":
+        return verify_xlsx(r, sid, url, raw, status, nbytes)
+    text = decode_body(raw, r, url)
 
     if is_enveloped_error(text):
         return (sid, url, "ERROR_BODY", "", 0, status, nbytes,
@@ -388,9 +603,12 @@ def verify(r):
     # Navigation chrome is excluded the same way hpengine excludes it, so a page
     # that renders but lists nothing scores 0 and is rejected.
     if not kind and r["mode"] == "html":
-        opts = dict(kv.split("=", 1) for kv in
-                    (x.strip() for x in r["opts"].split(";")) if "=" in kv)
-        must = opts.get("href_must", "")
+        # manifest.opt(), not a naive r["opts"].split(";") -- that ignores the
+        # `\;` escape (the exact defect manifest.py exists to remove; see its
+        # module docstring) and a header value containing an escaped semicolon
+        # would shift or truncate the parsed href_must, probing a filter the
+        # generated collector does not actually apply.
+        must = opt(r, "href_must", "")
         hrefs = re.findall(r'<a\b[^>]*\bhref\s*=\s*["\']([^"\'#]+)["\']',
                            text, re.I)
         hits = [h for h in hrefs if (not must or must in h)]

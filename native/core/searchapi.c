@@ -118,6 +118,14 @@ char *searchapi_analyze(db_handle *db, const char *query, int max_rounds,
   }
 
   run_arg *a = calloc(1, sizeof *a);
+  /* Unchecked calloc used to dereference NULL on the next line. This runs on
+   * every POST /api/search/analyze — a request an unauthenticated rate limit
+   * still lets through in bulk — so an allocation failure here must fail the
+   * request, not crash the server for every other in-flight investigation. */
+  if (!a) {
+    run_slot_release();
+    return NULL;
+  }
   a->db = db;
   snprintf(a->id, sizeof a->id, "%s", id);
   a->query = strdup(query);

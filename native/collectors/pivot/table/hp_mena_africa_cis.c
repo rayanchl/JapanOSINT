@@ -117,7 +117,7 @@ static const hp_source HP_MENA_AF_CIS[] = {
     .name_ja = "ケニア 企業・調達データ", .category = "government",
     .portal = "https://www.opendata.go.ke", .record_type = "ke-record",
     .tags = "\"ke\",\"registry\",\"procurement\"", .free_tier = 1,
-    .url = "https://africaopendata.org/api/3/action/package_search?q={q}&rows=25",
+    .url = "https://africaopendata.org/api/3/action/package_search?q={q}&rows=25&sort=id%20asc",
     .array_path = "result.results", .title_keys = "title", .id_keys = "name",
     .date_keys = "metadata_modified",
     .description = "Kenyan and pan-African open datasets matching an entity or "

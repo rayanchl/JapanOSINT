@@ -1263,10 +1263,14 @@ static void emit_change(db_handle *db, const char *sid, const char *key,
   it.properties_json = props ? props : "{}";
   it.tags_json = "[\"content_change\"]";
   if (sink.emit) sink.emit(&sink, &it);
-  /* sink_state is a flat calloc'd struct owning no pointers; core/intel.c
-   * exposes no destructor, and one leak per detected change is a real leak in
-   * a process that runs for months. */
-  free(sink.ctx);
+  /* NOT a bare free(sink.ctx). That was correct when this comment was written
+   * ("a flat calloc'd struct owning no pointers"), but house rule 4b's
+   * distinct-uid tracking (core/intel.c) gave sink_state an owned `seen` hash
+   * table that emit() lazily allocates on the first successful upsert — a
+   * bare free() of the outer struct leaks that table (>= 8 KB) on every
+   * detected content change. intel_sink_free() is the real destructor and
+   * frees both. */
+  intel_sink_free(&sink);
 
   free(excerpt);
   free(props);
@@ -1380,8 +1384,20 @@ static int capture_inner(db_handle *db, const char *source_id,
    * storage note in the header. It is a no-op unless the operator has set
    * sources.capture_evidence=1, it dedups against whatever evidence_http_hook()
    * already stored, and it can neither fail this call nor block on the network. */
+  /* HASH a long ref key rather than cutting it. `%.180s` meant two watched refs
+   * whose keys share a 180-character prefix — ordinary URLs differing only in a
+   * late query parameter — produced ONE evidence uid, and the second capture
+   * overwrote the first (known-issues-2026-08-24 #28a, same class as #15/#16a).
+   * Keys at or under the cut keep their exact old uid, so nothing already
+   * stored is re-keyed; only the ones that were colliding change. */
   char ev_uid[288];
-  snprintf(ev_uid, sizeof ev_uid, "cc:%.80s|%.180s", source_id, key);
+  if (strlen(key) > 180) {
+    char khash[65];
+    sha256_hex_bytes((const unsigned char *)key, strlen(key), khash);
+    snprintf(ev_uid, sizeof ev_uid, "cc:%.80s|h:%.32s", source_id, khash);
+  } else {
+    snprintf(ev_uid, sizeof ev_uid, "cc:%.80s|%.180s", source_id, key);
+  }
   evidence_capture(db, ev_uid, source_id, url, "GET", NULL, 200, NULL,
                    body, body_len, content_type);
 

@@ -163,6 +163,27 @@ static inline int vgeo_cat_emit(struct intel_sink *s, const intel_item *it) {
     .description = DESC, .layer = NULL, .free_tier = 1 };                     \
   REGISTER_SOURCE(SYM)
 
+/* As VJSON, but keys each record's uid on IDFIELD (a single top-level field
+ * name on each record) instead of the fixed id/uid/guid/... precedence list
+ * jsonlist_emit_paged uses. Use this only when a live response shows the
+ * plain VJSON row losing records to uid collisions AND the record's real
+ * unique field is confirmed present in that response under IDFIELD — never
+ * guess a field name that hasn't been seen in an actual fetch. */
+#define VJSON_KEYED(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, PATH, LANG, TAGS, IVAL, DESC, IDFIELD) \
+  static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
+    char *du = vsrc_url_dates(URL);                                           \
+    int n = jsonlist_emit_paged_keyed(c, s, ID, du ? du : URL, PATH, CAT,     \
+                                      LANG, TAGS, IDFIELD);                   \
+    free(du);                                                                 \
+    if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
+    return 0; }                                                               \
+  static const source_def SYM = {                                            \
+    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
+    .update_interval_sec = IVAL, .run = run_##SYM,                            \
+    .category = CAT, .type = "api", .url = URL,                               \
+    .description = DESC, .layer = NULL, .free_tier = 1 };                     \
+  REGISTER_SOURCE(SYM)
+
 /* Huge JSON array, streamed. Same arguments as VJSON.
  *
  * VJSON buffers the whole body and hands it to cJSON, which is fine for a

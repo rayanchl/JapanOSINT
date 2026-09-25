@@ -17,7 +17,7 @@ function StatusPill({ status }) {
       ? 'text-yellow-400 border-yellow-600/40 bg-yellow-700/10'
       : status === 'offline'
         ? 'text-status-offline border-status-offline/40 bg-status-offline/10'
-        : 'text-gray-400 border-gray-600/40 bg-gray-700/10';
+        : 'text-osint-muted border-osint-border/40 bg-osint-border/10';
   return (
     <span className={`inline-block px-1.5 py-0.5 rounded text-[9px] border font-mono uppercase ${color}`}>
       {status}
@@ -84,11 +84,11 @@ export default function DatabaseSchedulerTab() {
     <div className="flex flex-col h-full overflow-hidden">
       {/* Jobs */}
       <div className="p-3 border-b border-osint-border/50">
-        <div className="text-[9px] uppercase tracking-wider text-gray-500 mb-2">
+        <div className="text-[9px] uppercase tracking-wider text-osint-muted mb-2">
           Scheduled jobs
         </div>
         {loading && !state && (
-          <div className="text-[10px] text-gray-500">Loading…</div>
+          <div className="text-[10px] text-osint-muted">Loading…</div>
         )}
         {!loading && error && (
           <div className="text-[10px] text-status-offline">
@@ -104,21 +104,21 @@ export default function DatabaseSchedulerTab() {
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-mono text-[11px] text-neon-cyan">{j.id}</span>
-                  <code className="text-[9px] text-gray-500">{j.cron}</code>
+                  <code className="text-[9px] text-osint-muted">{j.cron}</code>
                 </div>
-                <div className="text-[9.5px] text-gray-400 leading-snug mb-1.5">
+                <div className="text-[9.5px] text-osint-muted leading-snug mb-1.5">
                   {j.description}
                 </div>
                 <div className="text-[10px] font-mono space-y-0.5">
                   <div>
-                    <span className="text-gray-500">Last:</span>{' '}
-                    <span className="text-gray-200">{relativeTime(j.last_run)}</span>
-                    <span className="text-gray-500"> · {fmtAbs(j.last_run)}</span>
+                    <span className="text-osint-muted">Last:</span>{' '}
+                    <span className="text-osint-text">{relativeTime(j.last_run)}</span>
+                    <span className="text-osint-muted"> · {fmtAbs(j.last_run)}</span>
                   </div>
                   <div>
-                    <span className="text-gray-500">Next:</span>{' '}
-                    <span className="text-gray-200">{relativeTime(j.next_run)}</span>
-                    <span className="text-gray-500"> · {fmtAbs(j.next_run)}</span>
+                    <span className="text-osint-muted">Next:</span>{' '}
+                    <span className="text-osint-text">{relativeTime(j.next_run)}</span>
+                    <span className="text-osint-muted"> · {fmtAbs(j.next_run)}</span>
                   </div>
                 </div>
               </div>
@@ -138,7 +138,7 @@ export default function DatabaseSchedulerTab() {
               className={`px-2 py-0.5 rounded text-[10px] border transition-colors ${
                 filter === f.id
                   ? 'bg-neon-cyan/15 text-neon-cyan border-neon-cyan/40'
-                  : 'bg-transparent text-gray-400 border-osint-border hover:text-neon-cyan'
+                  : 'bg-transparent text-osint-muted border-osint-border hover:text-neon-cyan'
               }`}
             >
               {f.label}
@@ -150,9 +150,9 @@ export default function DatabaseSchedulerTab() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Filter by id, name, category..."
-          className="flex-1 px-2 py-1 bg-osint-bg/60 border border-osint-border rounded text-[11px] text-gray-200 placeholder-gray-600 focus:outline-none focus:border-neon-cyan/40 font-mono"
+          className="flex-1 px-2 py-1 bg-osint-bg/60 border border-osint-border rounded text-[11px] text-osint-text placeholder:text-osint-muted/70 focus:outline-none focus:border-neon-cyan/40 font-mono"
         />
-        <span className="text-[10px] text-gray-500">
+        <span className="text-[10px] text-osint-muted">
           {state ? `${filteredSources.length}/${state.sources?.length ?? 0}` : '—'}
         </span>
       </div>
@@ -173,7 +173,7 @@ export default function DatabaseSchedulerTab() {
                 <th
                   key={key}
                   onClick={() => toggleSort(key)}
-                  className="text-left px-2 py-1 border-b border-osint-border/50 text-gray-400 uppercase tracking-wider font-normal cursor-pointer hover:text-neon-cyan"
+                  className="text-left px-2 py-1 border-b border-osint-border/50 text-osint-muted uppercase tracking-wider font-normal cursor-pointer hover:text-neon-cyan"
                 >
                   {label}
                   {sortBy === key && (
@@ -191,18 +191,18 @@ export default function DatabaseSchedulerTab() {
                 key={s.id}
                 className="border-b border-osint-border/20 hover:bg-white/5"
               >
-                <td className="px-2 py-1 text-gray-200">
-                  <div className="text-gray-200">{s.id}</div>
-                  <div className="text-[9px] text-gray-500 truncate max-w-[180px]">{s.name}</div>
+                <td className="px-2 py-1 text-osint-text">
+                  <div className="text-osint-text">{s.id}</div>
+                  <div className="text-[9px] text-osint-muted truncate max-w-[180px]">{s.name}</div>
                 </td>
-                <td className="px-2 py-1 text-gray-400">{s.category || '—'}</td>
+                <td className="px-2 py-1 text-osint-muted">{s.category || '—'}</td>
                 <td className="px-2 py-1"><StatusPill status={s.status} /></td>
-                <td className="px-2 py-1 text-gray-300">{relativeTime(s.last_check)}</td>
-                <td className="px-2 py-1 text-gray-300">{relativeTime(s.last_success)}</td>
-                <td className="px-2 py-1 text-right text-gray-300">
+                <td className="px-2 py-1 text-osint-text">{relativeTime(s.last_check)}</td>
+                <td className="px-2 py-1 text-osint-text">{relativeTime(s.last_success)}</td>
+                <td className="px-2 py-1 text-right text-osint-text">
                   {s.records_count != null ? s.records_count.toLocaleString() : '—'}
                 </td>
-                <td className="px-2 py-1 text-right text-gray-300">
+                <td className="px-2 py-1 text-right text-osint-text">
                   {s.response_time_ms != null ? s.response_time_ms : '—'}
                 </td>
               </tr>

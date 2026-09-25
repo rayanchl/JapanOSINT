@@ -54,6 +54,29 @@ SCRATCH="${TMPDIR:-/tmp}/jo-unit-$$"
 mkdir -p "$SCRATCH"
 trap 'rm -rf "$SCRATCH"' EXIT
 
+# ORPHAN OBJECTS ARE NOT PART OF THIS TREE.
+#
+# This used to link `find $OBJDIR -name '*.o'` — EVERY object, including ones
+# whose .c was renamed or moved months ago and which `make` itself never links
+# (it derives its object list from the current sources). A moved collector then
+# registers its ids TWICE and the binary reports `[registry] DUPLICATE id …`,
+# a phantom that does not exist in the repo: `grep` finds exactly one
+# definition and the real build is clean. Measured 2026-09-13 on a TSan tree:
+# `collectors/sources/anomaly_triage.o` beside `collectors/pod/anomaly_triage.o`
+# and twelve more like it, which made the service-index test see 1,846 pivots
+# where the source tree has 1,838 — read as a product regression, and it was a
+# stale directory. So: keep an object only if its source still exists.
+prune_orphans() {                       # stdin: object paths, stdout: the live ones
+  local o rel
+  while read -r o; do
+    rel=${o#"$OBJDIR"/}
+    rel=${rel%.o}.c
+    if [ -f "$rel" ]; then printf '%s\n' "$o"; else
+      printf 'stale object ignored (no %s): %s\n' "$rel" "$o" >&2
+    fi
+  done
+}
+
 fail=0
 for src in tests/unit/test_*.c; do
   name=$(basename "$src" .c)
@@ -61,7 +84,7 @@ for src in tests/unit/test_*.c; do
   under=$(grep -oE '#include "\.\./\.\./[a-z_/]+\.c"' "$src" |
           head -1 | sed 's|#include "../../||; s|"$||; s|\.c$|.o|')
   objs=$(find "$OBJDIR" -name '*.o' ! -name 'main.o' \
-         ${under:+! -path "$OBJDIR/$under"})
+         ${under:+! -path "$OBJDIR/$under"} | prune_orphans | sort -u)
 
   echo "--- $name ($OBJDIR, excludes ${under:-<none>}) ---"
   # shellcheck disable=SC2086

@@ -22,13 +22,24 @@
  * scheduler knows records_fetched for fetch_log/detection. Both a NEW row
  * (emit==1) and an UPDATE (emit==0) count; only errors (<0) don't. */
 typedef struct { intel_sink *inner; long n; long notices; } count_sink;
-/* A `*-notice` record (collector-truncation-notice, collector-shape-notice)
- * is data about the run, not a record OF the source: it is tallied apart so
- * a source that stored nothing but its own notice still reads records=0. */
+/* A `collector-*-notice` record (collector-truncation-notice,
+ * collector-shape-notice, collector-status-notice) is data about the run, not a
+ * record OF the source: it is tallied apart so a source that stored nothing but
+ * its own notice still reads records=0.
+ *
+ * The `collector-` prefix is required. This used to match ANY record_type
+ * ending in "-notice", and 806 table rows emit real upstream records typed
+ * municipal-notice (383), organisation-notice, procurement-notice,
+ * prefecture-notice, bank-notice, tender-notice, police-notice … Every one of
+ * those records was tallied as a notice, so a source that stored thousands of
+ * municipal announcements reported records=0 — to fetch_log, to anomaly
+ * detection (and so to the repair/quarantine chain below), and to every sweep
+ * tool that reads the run line as EMITS_NOTHING. Found 2026-09-15. */
 static int is_notice_record(const intel_item *it) {
   const char *rt = it ? it->record_type : NULL;
   size_t n = rt ? strlen(rt) : 0;
-  return n >= 7 && strcmp(rt + n - 7, "-notice") == 0;
+  return n >= 17 && strncmp(rt, "collector-", 10) == 0 &&
+         strcmp(rt + n - 7, "-notice") == 0;
 }
 static int count_emit(intel_sink *s, const intel_item *it) {
   count_sink *cs = (count_sink *)s->ctx;

@@ -177,7 +177,8 @@ def run_one(a, tmpl, sid, slot):
     rc = None
     try:
         p = subprocess.run(build_cmd(a, sid), capture_output=True,
-                           text=True, env=env, timeout=a.timeout,
+                           encoding="utf-8", errors="replace",
+                           env=env, timeout=a.timeout,
                            stdin=subprocess.DEVNULL)
         rc = p.returncode
         blob = (p.stdout or "") + (p.stderr or "")
@@ -294,7 +295,11 @@ def verdict_for(sid, blob, rc, rows, secs, timed_out):
         return (sid, "COLLISION", rc, sched_rc, emitted, stored, rows,
                 available, secs,
                 "%d of %d emitted records collapsed onto an already-written "
-                "uid (rule 4b): the row's identity is wrong"
+                "uid (rule 4b). EITHER the declared id is a dimension, not a "
+                "record key (real loss — fix id_keys) OR the upstream genuinely "
+                "repeats identical records (correct dedupe — not a bug). This "
+                "tool cannot tell which: fetch the url and compare distinct id "
+                "values to record count before treating it as a defect"
                 % (emitted - rows, emitted))
     return (sid, "OK", rc, sched_rc, emitted, stored, rows, available, secs,
             note)
@@ -419,7 +424,12 @@ def main():
 
         a.out_fh = None
         if a.out:
-            new = not (a.resume and os.path.exists(a.out))
+            exists = os.path.exists(a.out)
+            if exists and not a.resume:
+                sys.exit("refusing to overwrite existing --out %r without "
+                          "--resume (it already has results); pass --resume "
+                          "to append/skip, or choose a new --out path" % a.out)
+            new = not exists
             a.out_fh = io.open(a.out, "a" if not new else "w",
                                encoding="utf-8", newline="\n")
             if new:

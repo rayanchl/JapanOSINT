@@ -58,11 +58,24 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   hr.body = NULL;
   http_response_free(&hr);
 
-  const char *arr = strchr(body, '[');
+  char *arr = strchr(body, '[');
   if (!arr) {
     fprintf(stderr, "[kiwisdr-receivers] no JSON array in the JS body\n");
     free(body);
     return -1;
+  }
+  /* The generator always closes the array as "},\n];" — a trailing comma
+   * before the last '}' rejects the WHOLE array under strict JSON (cJSON is
+   * strict), so every run failed to parse and emitted nothing. Blank out any
+   * comma that is followed (modulo whitespace) only by ']' or '}': that is
+   * never a valid separator in JSON, at any nesting depth, so this cannot
+   * turn a legitimate comma into whitespace. In-place, same length, no
+   * realloc. */
+  for (char *c = arr; *c; c++) {
+    if (*c != ',') continue;
+    char *look = c + 1;
+    while (*look == ' ' || *look == '\t' || *look == '\r' || *look == '\n') look++;
+    if (*look == ']' || *look == '}') *c = ' ';
   }
   /* require_null_terminated = 0 -> stops at the end of the array, so the
    * trailing ';' after the JS assignment does not break the parse */

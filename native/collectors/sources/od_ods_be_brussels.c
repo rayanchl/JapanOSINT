@@ -12,7 +12,7 @@
 
 #define SID "ods-be-brussels"
 static const char *URL =
-  "https://opendata.brussels.be/api/explore/v2.1/catalog/datasets?limit=20";
+  "https://opendata.brussels.be/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_id";
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   return od_rc(SID, od_ods_catalog_collect(ctx, sink, URL,
@@ -25,7 +25,7 @@ static const source_def od_ods_be_brussels_def = {
   .name = "Brussels City open data (OpenDataSoft)",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://opendata.brussels.be/api/explore/v2.1/catalog/datasets?limit=20",
+  .url = "https://opendata.brussels.be/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_id",
   .description = "City of Brussels open-data catalogue (207 datasets) including municipal public-procurement award registers",
   .license = "Ville de Bruxelles open-data terms; reuse with attribution",
   .free_tier = 1,

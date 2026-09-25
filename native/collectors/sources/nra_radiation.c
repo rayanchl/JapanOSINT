@@ -14,6 +14,29 @@
 
 #define TIMEOUT_MS 10000
 
+/* Repair round 8, 2026-09-21 — every feed below is dead, and the run is left
+ * failing HONESTLY ("no live feed", rc=-1) rather than re-pointed at data
+ * that is not what this source claims to carry. Measured twice, by the
+ * batch-30 research pass and again by agent A, both 2026-09-21:
+ *
+ *   radioactivity.nra.go.jp/cont/json/dose_today.json   403 (S3 AccessDenied,
+ *   radioactivity.nra.go.jp/cont/json/MP/MP_today.json  403  application/xml)
+ *     The RAMDAS site relaunched as a Nuxt app. Its bundles name
+ *     /api/v1/get/{category-master,contents-master,maintenance-flag} and
+ *     /api/v1/search/meta-search; every one answers 401 {"message":
+ *     "Unauthorized"} to a plain GET, and the air-dose pages
+ *     (/en/results/land/air-dose/…/:date/:kintoneNumber) load through that
+ *     same authenticated API. No public air-dose station feed exists on the
+ *     new host. The one public file, /sea-data.json (200, 182 KB), is
+ *     sea-area monitoring: 1,428 {latitude, longitude, measuring_value}
+ *     markers grouped by month, no station, no dose rate, no timestamp —
+ *     a different dataset, a candidate for a NEW source, not a replacement.
+ *   www.kankyo-hoshano.go.jp/api/now_value.json          NXDOMAIN (curl 6)
+ *   emdb.jaea.go.jp/emdb/api/v1/monitoring_post/latest.json
+ *                                            302 -> /emdb/top -> 500 (Incapsula)
+ *
+ * The URLs stay so the next probe re-tests the same things; the evidence is
+ * in docs/source-repair-round8-A.tsv. */
 static const char *NRA_FEEDS[] = {
   "https://radioactivity.nra.go.jp/cont/json/dose_today.json",
   "https://radioactivity.nra.go.jp/cont/json/MP/MP_today.json",

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import apiUrl from '../../utils/apiUrl.js';
 import {
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip,
@@ -8,35 +9,36 @@ import StatusBadge from '../ui/StatusBadge';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { normalizeSources, typeLabel } from '../../utils/normalizeSource.js';
 import useLayerCatalog from '../../hooks/useLayerCatalog.js';
+import SourcesPanel from '../panels/SourcesPanel.jsx';
 
 // Keyed on the wire values (schema.sql constrains both columns to lowercase).
 const STATUS_COLORS = {
-  online: '#00ff88',
+  online: '#5be7a0',
   degraded: '#ffb74d',
-  offline: '#ff4444',
-  pending: '#9ca3af',
+  offline: '#ff4d5e',
+  pending: '#6e7e94',
 };
 
 const TYPE_COLORS = {
-  api: '#00f0ff',
+  api: '#5be7f1',
   dataset: '#3b82f6',
-  scraped: '#ff8c00',
+  scraped: '#ffb347',
   web_request: '#a855f7',
 };
 
 const CATEGORY_COLORS = [
-  '#00f0ff', '#00ff88', '#ff8c00', '#a855f7', '#f06292',
+  '#5be7f1', '#5be7a0', '#ffb347', '#a855f7', '#f06292',
   '#ffd600', '#42a5f5', '#ef5350', '#78909c', '#4dd0e1',
 ];
 
 function StatCard({ label, value, color, subtitle }) {
   return (
     <div className="glass-panel p-4 flex flex-col">
-      <span className="text-[10px] uppercase tracking-widest text-gray-500 mb-1">{label}</span>
-      <span className="text-2xl font-mono font-bold" style={{ color: color || '#00f0ff' }}>
+      <span className="text-[10px] uppercase tracking-widest text-osint-muted mb-1">{label}</span>
+      <span className="text-2xl font-mono font-bold" style={{ color: color || '#5be7f1' }}>
         {value ?? '-'}
       </span>
-      {subtitle && <span className="text-[10px] text-gray-600 mt-1">{subtitle}</span>}
+      {subtitle && <span className="text-[10px] text-osint-muted mt-1">{subtitle}</span>}
     </div>
   );
 }
@@ -45,9 +47,9 @@ function DarkTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   return (
     <div className="glass-panel px-3 py-2 text-xs">
-      <p className="text-gray-300 mb-1">{label || payload[0]?.name}</p>
+      <p className="text-osint-text mb-1">{label || payload[0]?.name}</p>
       {payload.map((p, i) => (
-        <p key={i} className="font-mono" style={{ color: p.color || '#00f0ff' }}>
+        <p key={i} className="font-mono" style={{ color: p.color || '#5be7f1' }}>
           {p.name}: {p.value}
         </p>
       ))}
@@ -69,10 +71,22 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
   const [filterStatus, setFilterStatus] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [expandedRow, setExpandedRow] = useState(null);
+  // /console/sources?source=<id> (from API keys "used by") opens that row.
+  const [params] = useSearchParams();
+  const wantedSource = params.get('source');
+  useEffect(() => {
+    if (!wantedSource) return;
+    setExpandedRow(wantedSource);
+    const t = setTimeout(() => {
+      document.getElementById(`source-row-${wantedSource}`)?.scrollIntoView({ block: 'center' });
+    }, 300);
+    return () => clearTimeout(t);
+  }, [wantedSource, sources.length]);
   const [fetchError, setFetchError] = useState(null);
   // Timestamp of the last fetch that actually returned rows, for the self-fetch
   // path. Null until one succeeds — never a render-time clock reading.
   const [fetchedAt, setFetchedAt] = useState(null);
+  const [showProbe, setShowProbe] = useState(false);
 
   // Fetch sources only when mounted without them — App.jsx's useDataSources
   // already polls /api/sources and passes the rows down as props.
@@ -207,14 +221,19 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
   }
 
   return (
-    <div className="h-full overflow-y-auto p-6 bg-osint-bg">
+    <div className="h-full overflow-y-auto p-4 md:p-6 bg-osint-bg relative">
+      {showProbe && (
+        <div className="absolute top-3 right-3 z-40"><SourcesPanel onClose={() => setShowProbe(false)} /></div>
+      )}
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold text-gray-100">
-            <span className="text-neon-cyan">Source</span> Monitor
-          </h1>
-          <div className="flex items-center gap-2 text-xs text-gray-500">
+          <div>
+            <h1 className="font-mono text-xl font-bold tracking-tight text-osint-text">Sources</h1>
+            <p className="text-xs text-osint-muted mt-0.5">Status, charts and collectors for every registered source.</p>
+          </div>
+          <div className="flex items-center gap-3 text-xs text-osint-muted">
+            <button type="button" onClick={() => setShowProbe((v) => !v)} className={`px-2.5 py-1 rounded-md border text-xs font-medium transition-colors ${showProbe ? "bg-accent/15 text-accent border-accent/40" : "text-osint-muted border-osint-border hover:text-accent hover:border-accent/40"}`} title="Live probe detail for every source">Probe detail</button>
             {/* The live dot is an assertion that this page is current. It must
               * not keep pulsing green while the last refresh failed. */}
             {loadError ? (
@@ -272,7 +291,7 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Sources by Type */}
           <div className="glass-panel p-4">
-            <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-3">Sources by Type</h3>
+            <h3 className="text-xs uppercase tracking-wider text-osint-muted mb-3">Sources by Type</h3>
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
@@ -291,7 +310,7 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
                 </Pie>
                 <Tooltip content={<DarkTooltip />} />
                 <Legend
-                  wrapperStyle={{ fontSize: '10px', color: '#9ca3af' }}
+                  wrapperStyle={{ fontSize: '10px', color: '#6e7e94' }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -299,7 +318,7 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
 
           {/* Sources by Status */}
           <div className="glass-panel p-4">
-            <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-3">Sources by Status</h3>
+            <h3 className="text-xs uppercase tracking-wider text-osint-muted mb-3">Sources by Status</h3>
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
@@ -317,18 +336,18 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
                   ))}
                 </Pie>
                 <Tooltip content={<DarkTooltip />} />
-                <Legend wrapperStyle={{ fontSize: '10px', color: '#9ca3af' }} />
+                <Legend wrapperStyle={{ fontSize: '10px', color: '#6e7e94' }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
 
           {/* Records by Category */}
           <div className="glass-panel p-4">
-            <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-3">Records by Category</h3>
+            <h3 className="text-xs uppercase tracking-wider text-osint-muted mb-3">Records by Category</h3>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={categoryRecords} layout="vertical">
                 <XAxis type="number" tick={{ fontSize: 10, fill: '#6b7280' }} />
-                <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: '#9ca3af' }} width={80} />
+                <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: '#6e7e94' }} width={80} />
                 <Tooltip content={<DarkTooltip />} />
                 <Bar dataKey="records" radius={[0, 4, 4, 0]}>
                   {categoryRecords.map((_, i) => (
@@ -342,26 +361,26 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
 
         {/* Data Flow Visualization */}
         <div className="glass-panel p-4">
-          <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-3">Data Pipeline</h3>
+          <h3 className="text-xs uppercase tracking-wider text-osint-muted mb-3">Data Pipeline</h3>
           <div className="flex items-center justify-center gap-3 text-xs flex-wrap">
             <div className="flex flex-col items-center gap-1 px-4 py-3 rounded border border-neon-cyan/20 bg-neon-cyan/5 min-w-[100px]">
               <span className="text-neon-cyan font-mono text-lg">{sources.length}</span>
-              <span className="text-gray-400">Sources</span>
+              <span className="text-osint-muted">Sources</span>
             </div>
-            <span className="text-gray-600 text-lg">\u2192</span>
+            <span className="text-osint-muted text-lg">\u2192</span>
             <div className="flex flex-col items-center gap-1 px-4 py-3 rounded border border-neon-orange/20 bg-neon-orange/5 min-w-[100px]">
               <span className="text-neon-orange font-mono text-lg">ETL</span>
-              <span className="text-gray-400">Processing</span>
+              <span className="text-osint-muted">Processing</span>
             </div>
-            <span className="text-gray-600 text-lg">\u2192</span>
+            <span className="text-osint-muted text-lg">\u2192</span>
             <div className="flex flex-col items-center gap-1 px-4 py-3 rounded border border-neon-green/20 bg-neon-green/5 min-w-[100px]">
               <span className="text-neon-green font-mono text-lg">{totalRecords.toLocaleString()}</span>
-              <span className="text-gray-400">Records</span>
+              <span className="text-osint-muted">Records</span>
             </div>
-            <span className="text-gray-600 text-lg">\u2192</span>
+            <span className="text-osint-muted text-lg">\u2192</span>
             <div className="flex flex-col items-center gap-1 px-4 py-3 rounded border border-neon-purple/20 bg-neon-purple/5 min-w-[100px]">
               <span className="text-neon-purple font-mono text-lg">{layerCatalogStatus === 'loading' ? `${mapLayerCount}+` : mapLayerCount}</span>
-              <span className="text-gray-400" title={layerCatalogStatus === 'ready' ? 'server catalogue + client-only layers' : (layerCatalogStatus === 'error' ? 'server catalogue not obtained; client table only' : 'client table; server catalogue still loading')}>Map Layers{layerCatalogStatus === 'error' ? ' (client table)' : ''}</span>
+              <span className="text-osint-muted" title={layerCatalogStatus === 'ready' ? 'server catalogue + client-only layers' : (layerCatalogStatus === 'error' ? 'server catalogue not obtained; client table only' : 'client table; server catalogue still loading')}>Map Layers{layerCatalogStatus === 'error' ? ' (client table)' : ''}</span>
             </div>
           </div>
         </div>
@@ -371,7 +390,7 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="bg-osint-surface border border-osint-border rounded px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-neon-cyan/40"
+            className="bg-osint-surface border border-osint-border rounded px-3 py-1.5 text-xs text-osint-text focus:outline-none focus:border-neon-cyan/40"
           >
             <option value="">All Status</option>
             <option value="online">Online</option>
@@ -383,7 +402,7 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="bg-osint-surface border border-osint-border rounded px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-neon-cyan/40"
+            className="bg-osint-surface border border-osint-border rounded px-3 py-1.5 text-xs text-osint-text focus:outline-none focus:border-neon-cyan/40"
           >
             <option value="">All Types</option>
             {uniqueTypes.map((t) => (
@@ -394,7 +413,7 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="bg-osint-surface border border-osint-border rounded px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-neon-cyan/40"
+            className="bg-osint-surface border border-osint-border rounded px-3 py-1.5 text-xs text-osint-text focus:outline-none focus:border-neon-cyan/40"
           >
             <option value="">All Categories</option>
             {uniqueCategories.map((c) => (
@@ -402,7 +421,7 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
             ))}
           </select>
 
-          <span className="text-xs text-gray-600 ml-auto">
+          <span className="text-xs text-osint-muted ml-auto">
             {filteredSources.length} of {sources.length} sources
           </span>
         </div>
@@ -412,7 +431,7 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-osint-border text-gray-500 uppercase tracking-wider">
+                <tr className="border-b border-osint-border text-osint-muted uppercase tracking-wider">
                   {[
                     { key: 'status', label: 'Status' },
                     { key: 'name', label: 'Name' },
@@ -441,29 +460,30 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
                   return (
                   <React.Fragment key={rowKey}>
                     <tr
-                      className="border-b border-osint-border/50 hover:bg-neon-cyan/5 transition-colors cursor-pointer"
+                      id={`source-row-${rowKey}`}
+                      className="border-b border-osint-border/50 hover:bg-accent/5 transition-colors cursor-pointer"
                       onClick={() => setExpandedRow(expandedRow === rowKey ? null : rowKey)}
                     >
                       <td className="px-3 py-2.5">
                         <StatusBadge type="status" value={src.status || 'offline'} />
                       </td>
-                      <td className="px-3 py-2.5 text-gray-200 font-medium">{src.name}</td>
+                      <td className="px-3 py-2.5 text-osint-text font-medium">{src.name}</td>
                       <td className="px-3 py-2.5">
                         <StatusBadge type="type" value={src.type} />
                       </td>
-                      <td className="px-3 py-2.5 text-gray-400">{src.category}</td>
+                      <td className="px-3 py-2.5 text-osint-muted">{src.category}</td>
                       <td className="px-3 py-2.5 font-mono text-neon-green">
                         {(src.records || 0).toLocaleString()}
                       </td>
-                      <td className="px-3 py-2.5 font-mono text-gray-400">
+                      <td className="px-3 py-2.5 font-mono text-osint-muted">
                         {src.responseTime ? `${src.responseTime}ms` : '-'}
                       </td>
-                      <td className="px-3 py-2.5 font-mono text-gray-500">
+                      <td className="px-3 py-2.5 font-mono text-osint-muted">
                         {src.lastCheck
                           ? new Date(src.lastCheck).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })
                           : '-'}
                       </td>
-                      <td className="px-3 py-2.5 font-mono text-gray-500">
+                      <td className="px-3 py-2.5 font-mono text-osint-muted">
                         {src.lastSuccess
                           ? new Date(src.lastSuccess).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })
                           : '-'}
@@ -474,9 +494,9 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
                     {expandedRow === rowKey && (
                       <tr>
                         <td colSpan={8} className="px-4 py-3 bg-osint-bg/50">
-                          <div className="text-[10px] text-gray-500 space-y-1">
+                          <div className="text-[10px] text-osint-muted space-y-1">
                             <div className="flex items-center gap-2 mb-2">
-                              <span className="text-gray-400 font-medium">Recent Fetch Logs</span>
+                              <span className="text-osint-muted font-medium">Recent Fetch Logs</span>
                               {src.endpoint && (
                                 <span className="font-mono text-neon-cyan/60">{src.endpoint}</span>
                               )}
@@ -484,20 +504,20 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
                             {(src.recentLogs || []).length > 0 ? (
                               src.recentLogs.map((log, j) => (
                                 <div key={j} className="flex items-center gap-3 font-mono">
-                                  <span className="text-gray-600">
+                                  <span className="text-osint-muted">
                                     {new Date(log.timestamp).toLocaleString('en-GB', { timeZone: 'Asia/Tokyo' })}
                                   </span>
                                   <span className={log.success ? 'text-neon-green' : 'text-neon-red'}>
                                     {log.success ? 'OK' : 'FAIL'}
                                   </span>
-                                  <span className="text-gray-500">{log.message || `${log.records || 0} records`}</span>
+                                  <span className="text-osint-muted">{log.message || `${log.records || 0} records`}</span>
                                 </div>
                               ))
                             ) : (
-                              <span className="text-gray-600 italic">No recent logs available</span>
+                              <span className="text-osint-muted italic">No recent logs available</span>
                             )}
                             {src.description && (
-                              <p className="text-gray-500 mt-2 pt-2 border-t border-osint-border/30">
+                              <p className="text-osint-muted mt-2 pt-2 border-t border-osint-border/30">
                                 {src.description}
                               </p>
                             )}
@@ -511,7 +531,7 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
 
                 {filteredSources.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="px-4 py-8 text-center text-gray-600">
+                    <td colSpan={8} className="px-4 py-8 text-center text-osint-muted">
                       No sources match the current filters
                     </td>
                   </tr>

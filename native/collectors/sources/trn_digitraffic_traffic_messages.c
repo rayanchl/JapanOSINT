@@ -22,9 +22,14 @@
 static const char *const DT_HDRS[] = {
   "Digitraffic-User: japanosint-native", NULL };
 
+/* The API renamed the enum ROADWORK to ROAD_WORK. With the old name every
+ * request answered HTTP 400 {"message":"No enum constant …SituationType.ROADWORK"}
+ * and the collector stored nothing; with ROAD_WORK the same four-type filter
+ * answers 200 with the full FeatureCollection (live 2026-09-15: 652 situations,
+ * 634 ROAD_WORK, identical to the unfiltered answer). */
 #define DT_MSG_URL \
   "https://tie.digitraffic.fi/api/traffic-message/v1/messages?inactiveHours=0" \
-  "&situationType=TRAFFIC_ANNOUNCEMENT&situationType=ROADWORK" \
+  "&situationType=TRAFFIC_ANNOUNCEMENT&situationType=ROAD_WORK" \
   "&situationType=WEIGHT_RESTRICTION&situationType=EXEMPTED_TRANSPORT"
 
 /* Pick the announcement published in `want`, else the first one. */

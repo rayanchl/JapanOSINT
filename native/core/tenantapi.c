@@ -373,7 +373,27 @@ char *tenantapi_audit_verify(db_handle *db, const char *tenant_id) {
                    long seq; } row_t;
   row_t *R = NULL; int n = 0, cap = 0;
   while (sqlite3_step(s) == SQLITE_ROW) {
-    if (n == cap) { cap = cap ? cap*2 : 64; R = realloc(R, cap*sizeof *R); }
+    if (n == cap) {
+      int ncap = cap ? cap*2 : 64;
+      row_t *nr = realloc(R, ncap*sizeof *nr);
+      /* Unchecked, a failed realloc here NULLs R (leaking the old block) and
+       * the next line writes through &R[n] anyway — a crash on the tamper-
+       * evidence audit-chain verifier is a worse failure than most, since it
+       * is the one path an operator reaches for specifically when something
+       * looks wrong. Stop short and report what was actually read, the same
+       * way the prepare-failure path above answers NULL rather than guessing. */
+      if (!nr) {
+        sqlite3_finalize(s);
+        for (int i = 0; i < n; i++) {
+          free(R[i].id); free(R[i].tid); free(R[i].uid); free(R[i].act);
+          free(R[i].tgt); free(R[i].pj); free(R[i].ts); free(R[i].ip);
+          free(R[i].ua); free(R[i].ph); free(R[i].rh);
+        }
+        free(R);
+        return NULL;
+      }
+      R = nr; cap = ncap;
+    }
     row_t *r = &R[n++];
     #define DUP(idx) (ctext(s,idx) ? strdup((const char*)sqlite3_column_text(s,idx)) : NULL)
     r->id=DUP(0); r->tid=DUP(1); r->uid=DUP(2); r->act=DUP(3); r->tgt=DUP(4);

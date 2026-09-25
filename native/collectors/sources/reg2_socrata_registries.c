@@ -37,6 +37,8 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
+#include "lib/seenset.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,6 +52,10 @@ typedef struct {
   const char *title_f;      /* primary title column                         */
   const char *title_alt_f;  /* fallback title column (may be NULL)          */
   const char *key_f;        /* natural record id column (may be NULL)       */
+  /* Column that tells apart rows sharing key_f (may be NULL). Applied only to
+   * a key_f value already seen in this run, so first occurrences keep the
+   * uid they were stored under. */
+  const char *key2_f;
   const char *date_f;       /* date column (may be NULL)                    */
   int   date_compact;       /* 1 => value is bare YYYYMMDD                  */
   int   geo_kind;           /* 0 none | 1 flat cols | 2 nested obj | 3 Point*/
@@ -84,14 +90,34 @@ static int soc_num(const cJSON *o, const char *k, double *out) {
   return 0;
 }
 
-static int soc_run(const soc_src *s, const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, s->url, 30000);
-  if (!doc) { fprintf(stderr, "[%s] fetch/parse failed\n", s->service); return -1; }
+/* Paging state that must outlive ONE page.
+ *
+ * `key_seen` is the whole-run record of key_f values already emitted, and it is
+ * what decides whether a repeat gets qualified by key2_f. A per-page copy would
+ * let the first row of every page keep an unqualified key and upsert over a row
+ * an earlier page had already stored — the rule 4b collision, reintroduced by
+ * the paging itself. pw_walk hands ONE userdata to every page of a walk, which
+ * is exactly the right lifetime, so it lives here rather than on the stack of a
+ * per-page function. */
+typedef struct { const soc_src *s; seen_set key_seen; } soc_walk;
+
+/* pw_emit_fn: emit one already-fetched page, reporting what it CONTAINED.
+ * `seen` is the array size, not the emitted count — pw_walk drives "did this
+ * page come back full", and therefore both continuation and disclosure, off
+ * `seen`, so reporting the emitted count here would make a full page holding a
+ * few untitled rows look short and stop the walk while claiming completeness. */
+static int soc_emit_page(const source_ctx *ctx, intel_sink *sink,
+                         const char *id, cJSON *doc, void *ud, int *seen) {
+  (void)ctx;
+  soc_walk *w = (soc_walk *)ud;
+  const soc_src *s = w->s;
+  seen_set *key_seen_p = &w->key_seen;
+  *seen = 0;
   if (!cJSON_IsArray(doc)) {
-    fprintf(stderr, "[%s] unexpected payload (not an array)\n", s->service);
-    cJSON_Delete(doc);
-    return -1;
+    fprintf(stderr, "[%s] unexpected payload (not an array)\n", id);
+    return 0;
   }
+  *seen = cJSON_GetArraySize(doc);
 
   int n = 0;
   const cJSON *row;
@@ -112,6 +138,12 @@ static int soc_run(const soc_src *s, const source_ctx *ctx, intel_sink *sink) {
       const char *parts[3] = { s->service, title, NULL };
       feed_hash_key(hashed, parts, 2);
       key = hashed;
+    }
+    char k2buf[64], kqual[160];
+    if (s->key2_f && key != hashed && !seen_add(key_seen_p, key)) {
+      const char *k2 = soc_field(row, s->key2_f, k2buf, sizeof k2buf);
+      snprintf(kqual, sizeof kqual, "%s|%s", key, k2 ? k2 : "");
+      key = kqual;
     }
 
     /* published_at strictly from the dataset's own date column. */
@@ -197,9 +229,29 @@ static int soc_run(const soc_src *s, const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
+  return n;
+}
 
-  cJSON_Delete(doc);
-  fprintf(stderr, "[%s] emitted %d\n", s->service, n);
+/* Walk the register to exhaustion where the upstream permits.
+ *
+ * Every URL below carries `$limit` and now also `$offset=0`: lib/pagewalk.c
+ * only ever ADVANCES a parameter the author already wrote, so seeding the
+ * offset is what makes the walk legal rather than an invented request. One page
+ * was a rounding error against these registers — measured 2026-09-19,
+ * data.texas.gov holds 3,463,622 franchise taxpayers and this collector kept
+ * 200 of them; data.colorado.gov 3,111,629; data.ct.gov 1,298,402;
+ * data.cityofchicago.org 1,207,156. The 20-page ceiling still bites at that
+ * size, and pw_walk states what it left behind as a
+ * collector-truncation-notice rather than stopping silently. */
+static int soc_run(const soc_src *s, const source_ctx *ctx, intel_sink *sink) {
+  soc_walk w = { s, {0} };
+  int n = pw_walk(ctx, sink, s->service, s->url, pw_fetch_json,
+                  soc_emit_page, &w);
+  seen_free(&w.key_seen);
+  if (n < 0) {
+    fprintf(stderr, "[%s] fetch/parse failed\n", s->service);
+    return -1;
+  }
   return 0;                                   /* fetched fine (R3) */
 }
 
@@ -219,7 +271,7 @@ static int soc_run(const soc_src *s, const source_ctx *ctx, intel_sink *sink) {
 /* --- Colorado Secretary of State business entities ---------------------- */
 SOC_SOURCE(co_biz, "us-co-business-entities",
   "Colorado Secretary of State business entities",
-  "https://data.colorado.gov/resource/4ykn-tg5h.json?$limit=200&$order=entityformdate%20DESC",
+  "https://data.colorado.gov/resource/4ykn-tg5h.json?$limit=200&$offset=0&$order=entityformdate%20DESC,:id",
   "economy", "economy", "Colorado open data, public record.",
   "Colorado SoS corporate register — entity name, id, status, type, principal "
   "and mailing address, registered agent name and address.",
@@ -231,7 +283,7 @@ SOC_SOURCE(co_biz, "us-co-business-entities",
 /* --- Texas franchise-tax registered entities ---------------------------- */
 SOC_SOURCE(tx_fran, "us-tx-franchise-taxpayers",
   "Texas active franchise-tax registered entities",
-  "https://data.texas.gov/resource/9cir-efmm.json?$limit=200",
+  "https://data.texas.gov/resource/9cir-efmm.json?$limit=200&$offset=0&$order=:id",
   "economy", "economy", "Texas open data, public record.",
   "Texas Comptroller register of entities holding a franchise-tax account, "
   "carrying the Secretary of State file number and right-to-transact-business "
@@ -245,7 +297,7 @@ SOC_SOURCE(tx_fran, "us-tx-franchise-taxpayers",
 /* --- Connecticut business registry -------------------------------------- */
 SOC_SOURCE(ct_biz, "us-ct-business-registry",
   "Connecticut business registry",
-  "https://data.ct.gov/resource/n7gp-d28j.json?$limit=200&$order=create_dt%20DESC",
+  "https://data.ct.gov/resource/n7gp-d28j.json?$limit=200&$offset=0&$order=create_dt%20DESC,:id",
   "economy", "economy", "Connecticut open data, public record.",
   "Connecticut SoS business register including ownership-designation flags "
   "(woman/veteran/minority owned) and registration status; ordered newest-first "
@@ -258,7 +310,7 @@ SOC_SOURCE(ct_biz, "us-ct-business-registry",
 /* --- NYC DCWP legally operating businesses ------------------------------ */
 SOC_SOURCE(nyc_lic, "us-nyc-business-licenses",
   "NYC DCWP legally operating businesses",
-  "https://data.cityofnewyork.us/resource/w7w3-xahh.json?$limit=200",
+  "https://data.cityofnewyork.us/resource/w7w3-xahh.json?$limit=200&$offset=0&$order=:id",
   "economy", "economy", "NYC Open Data, public record.",
   "Every business licensed to operate in New York City — legal name, DBA, "
   "licence category and status, with per-premises coordinates where the row "
@@ -272,7 +324,7 @@ SOC_SOURCE(nyc_lic, "us-nyc-business-licenses",
 /* --- NYC City Record procurement notices -------------------------------- */
 SOC_SOURCE(nyc_proc, "us-nyc-procurement-notices",
   "NYC City Record procurement notices and awards",
-  "https://data.cityofnewyork.us/resource/qyyg-4tf5.json?$limit=200&$order=start_date%20DESC",
+  "https://data.cityofnewyork.us/resource/qyyg-4tf5.json?$limit=200&$offset=0&$order=start_date%20DESC,:id",
   "government", "government", "NYC Open Data, public record.",
   "NYC City Record procurement section — solicitations and awards with agency, "
   "PIN, award amount, winning vendor and responsible contact officer "
@@ -285,26 +337,37 @@ SOC_SOURCE(nyc_proc, "us-nyc-procurement-notices",
 /* --- City of Chicago contracts ------------------------------------------ */
 SOC_SOURCE(chi_con, "us-chicago-contracts",
   "City of Chicago contracts",
-  "https://data.cityofchicago.org/resource/rsxa-ify5.json?$limit=200&$order=approval_date%20DESC",
+  "https://data.cityofchicago.org/resource/rsxa-ify5.json?$limit=200&$offset=0&$order=approval_date%20DESC,:id",
   "government", "government", "City of Chicago open data, public record.",
   "Every City of Chicago purchase order and contract with vendor name, stable "
   "vendor id, mailing address, department and award amount.",
   43200,
   .rtype = "procurement-contract", .title_f = "purchase_order_description",
+  /* A contract number recurs once per revision, the revisions differing in
+   * revision_number and award_amount (live 2026-09-15: 200 rows, 194 contract
+   * numbers, 200 number+revision) — so a repeat is qualified by its revision. */
   .title_alt_f = "vendor_name", .key_f = "purchase_order_contract_number",
+  .key2_f = "revision_number",
   .date_f = "approval_date",
   .sum1 = "vendor_name", .sum2 = "department", .sum3 = "award_amount")
 
 /* --- City of Chicago business licences ---------------------------------- */
 SOC_SOURCE(chi_lic, "us-chicago-business-licenses",
   "City of Chicago business licenses",
-  "https://data.cityofchicago.org/resource/r5kz-chrr.json?$limit=200",
+  "https://data.cityofchicago.org/resource/r5kz-chrr.json?$limit=200&$offset=0&$order=:id",
   "economy", "economy", "City of Chicago open data, public record.",
   "Chicago business licences with legal entity name, DBA, premises address, "
   "licence class and business activity — a usable corporate-alias source.",
   86400,
   .rtype = "us-business-licence", .title_f = "legal_name",
-  .title_alt_f = "doing_business_as_name", .key_f = "license_number",
+  /* `license_number` IS NOT A COLUMN of r5kz-chrr. Measured 2026-09-20 on a
+   * 4,000-record walk: the records carry `id` ("2791479-20230516"),
+   * `license_id`, `account_number` and `site_number` — no `license_number` at
+   * all — so the key resolved to nothing, fell back, and 126 of 4,000 records
+   * collapsed onto a uid already written. `id` is the dataset's own row id and
+   * is unique per licence-period row, which is the identity this register
+   * actually has (a licence recurs once per renewal term). */
+  .title_alt_f = "doing_business_as_name", .key_f = "id",
   .date_f = "license_start_date",
   .geo_kind = 1, .geo_a = "latitude", .geo_b = "longitude",
   .sum1 = "doing_business_as_name", .sum2 = "license_description", .sum3 = "address")
@@ -312,7 +375,7 @@ SOC_SOURCE(chi_lic, "us-chicago-business-licenses",
 /* --- Los Angeles active business tax registry --------------------------- */
 SOC_SOURCE(la_biz, "us-la-business-registry",
   "Los Angeles active business tax registry",
-  "https://data.lacity.org/resource/6rrh-rzua.json?$limit=200",
+  "https://data.lacity.org/resource/6rrh-rzua.json?$limit=200&$offset=0&$order=:id",
   "economy", "economy", "City of Los Angeles open data, public record.",
   "Every business holding an active LA city tax registration certificate with "
   "NAICS activity, premises address and — where the row carries location_1 — "
@@ -326,7 +389,7 @@ SOC_SOURCE(la_biz, "us-la-business-registry",
 /* --- San Francisco registered business locations ------------------------ */
 SOC_SOURCE(sf_biz, "us-sf-business-locations",
   "San Francisco registered business locations",
-  "https://data.sfgov.org/resource/g8m3-pdis.json?$limit=200",
+  "https://data.sfgov.org/resource/g8m3-pdis.json?$limit=200&$offset=0&$order=:id",
   "economy", "economy", "SF Open Data, public record.",
   "SF Treasurer register of every business location, linking the registered "
   "ownership name to the trading (DBA) name, address and GeoJSON point.",
@@ -339,7 +402,7 @@ SOC_SOURCE(sf_biz, "us-sf-business-locations",
 /* --- Seattle business licence tax certificates -------------------------- */
 SOC_SOURCE(sea_lic, "us-seattle-business-licenses",
   "Seattle active business licence tax certificates",
-  "https://data.seattle.gov/resource/wnbq-64tb.json?$limit=200",
+  "https://data.seattle.gov/resource/wnbq-64tb.json?$limit=200&$offset=0&$order=:id",
   "economy", "economy", "Seattle open data, public record.",
   "Seattle business licence tax certificates — legal name, trade name, "
   "ownership type and NAICS activity. No coordinates in this dataset, so rows "
@@ -353,7 +416,7 @@ SOC_SOURCE(sea_lic, "us-seattle-business-licenses",
 /* --- Colombia SECOP II electronic contracts ----------------------------- */
 SOC_SOURCE(co_secop, "co-secop-contracts",
   "Colombia SECOP II electronic contracts",
-  "https://www.datos.gov.co/resource/jbjy-vk9h.json?$limit=200&$order=fecha_de_firma%20DESC",
+  "https://www.datos.gov.co/resource/jbjy-vk9h.json?$limit=200&$offset=0&$order=fecha_de_firma%20DESC,:id",
   "government", "government",
   "Colombia datos abiertos, public record (Ley 1712 transparency law).",
   "Every contract executed through Colombia's SECOP II platform with buying "

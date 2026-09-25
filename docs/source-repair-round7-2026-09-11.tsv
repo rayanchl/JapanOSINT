@@ -1,0 +1,214 @@
+id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+sci-celestrak-analyst	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-beidou	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-amateur	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-argos	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-cubesat	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-cosmos2251	EMITS_NOTHING	1	-1	0	0	0	-1	62.7	no records reached intel_items
+sci-celestrak-engineering	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-fengyun1c	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-galileo	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-geo	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-glo-ops	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-globalstar	EMITS_NOTHING	1	-1	0	0	0	-1	62.4	no records reached intel_items
+sci-celestrak-gps-ops	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-iridium-next	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-gnss	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-iridium33	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-intelsat	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-last30	EMITS_NOTHING	1	-1	0	0	0	-1	62.7	no records reached intel_items
+sci-celestrak-nnss	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-military	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-orbcomm	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-oneweb	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-othercomm	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-planet	EMITS_NOTHING	1	-1	0	0	0	-1	62.4	no records reached intel_items
+sci-celestrak-satnogs	EMITS_NOTHING	1	-1	0	0	0	-1	62.4	no records reached intel_items
+sci-celestrak-sarsat	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-resource	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-sbas	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-science	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-ses	EMITS_NOTHING	1	-1	0	0	0	-1	62.4	no records reached intel_items
+sci-celestrak-stations	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-spire	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-tdrss	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-visual	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-weather	EMITS_NOTHING	1	-1	0	0	0	-1	62.5	no records reached intel_items
+sci-celestrak-xcomm	EMITS_NOTHING	1	-1	0	0	0	-1	62.4	no records reached intel_items
+us-arcgishub-airports	OK	0	0	2000	2001	2001	-1	14.9	
+us-arcgishub-floodplain	OK	0	0	2000	2001	2001	-1	16.7	
+us-arcgishub-bridges	OK	0	0	2000	2001	2001	-1	17.2	
+us-arcgishub-dams	OK	0	0	2000	2001	2001	-1	17.2	
+us-arcgishub-hospitals	OK	0	0	2000	2001	2001	-1	18.0	
+us-arcgishub-libraries	OK	0	0	2000	2001	2001	-1	18.0	
+us-arcgishub-parcels	OK	0	0	2000	2001	2001	-1	17.9	
+us-arcgishub-pipelines	COLLISION	0	0	2000	1999	1999	-1	16.5	1 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+us-arcgishub-railroads	OK	0	0	2000	2001	2001	-1	17.3	
+us-arcgishub-schools	OK	0	0	2000	2001	2001	-1	18.2	
+us-arcgishub-zoning	OK	0	0	2000	2001	2001	-1	18.6	
+us-socrata-metadata-cambridge	OK	0	0	447	447	447	-1	6.3	
+us-socrata-metadata-bts	OK	0	0	596	596	596	-1	8.2	
+us-socrata-metadata-chronicdata	OK	0	0	1473	1473	1473	-1	20.9	
+us-socrata-metadata-cdc	OK	0	0	1473	1473	1473	-1	23.4	
+us-socrata-metadata-connecticut	OK	0	0	1582	1582	1582	-1	22.3	
+us-socrata-metadata-chicago	OK	0	0	2016	2016	2016	-1	28.3	
+us-socrata-metadata-fcc	OK	0	0	100	100	100	-1	2.7	
+us-socrata-metadata-dallas	OK	0	0	1087	1087	1087	-1	13.5	
+us-socrata-metadata-illinois	OK	0	0	404	404	404	-1	5.6	
+us-socrata-metadata-colorado	OK	0	0	2122	2122	2122	-1	37.2	
+us-socrata-metadata-kansascity	OK	0	0	378	378	378	-1	5.8	
+us-socrata-metadata-kingcounty	OK	0	0	534	534	534	-1	7.8	
+us-socrata-metadata-austin	OK	0	0	3755	3755	3755	-1	65.7	
+us-socrata-metadata-michigan	OK	0	0	648	648	648	-1	5.9	
+us-socrata-metadata-dot	OK	0	0	1799	1799	1799	-1	28.6	
+us-socrata-metadata-newjersey	OK	0	0	619	619	619	-1	6.9	
+us-socrata-metadata-missouri	OK	0	0	707	707	707	-1	9.6	
+us-socrata-metadata-losangeles	OK	0	0	1278	1278	1278	-1	20.0	
+us-socrata-metadata-montgomery	OK	0	0	966	966	966	-1	13.1	
+us-socrata-metadata-nyhealth	OK	0	0	596	596	596	-1	7.3	
+us-socrata-metadata-oakland	OK	0	0	739	739	739	-1	7.7	
+us-socrata-metadata-pennsylvania	OK	0	0	831	831	831	-1	9.8	
+us-socrata-metadata-oregon	OK	0	0	1504	1504	1504	-1	18.6	
+us-socrata-metadata-seattle	OK	0	0	702	702	702	-1	9.2	
+us-socrata-metadata-nyc	OK	0	0	3017	3017	3017	-1	39.4	
+us-socrata-metadata-texas	OK	0	0	1473	1473	1473	-1	15.6	
+us-socrata-metadata-sfgov	OK	0	0	1224	1224	1224	-1	25.0	
+us-socrata-search-broadband-access	COLLISION	0	0	557	556	556	-1	6.3	1 of 557 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+us-socrata-metadata-maryland	OK	0	0	5181	5181	5181	-1	71.2	
+us-data-boston-gov-datasets	OK	0	0	235	235	235	-1	3.4	
+us-data-boston-gov-groups	OK	0	0	16	16	16	-1	2.1	
+us-socrata-search-building-permits	OK	0	0	1058	1058	1058	-1	9.2	
+us-data-boston-gov-org-assessing-department-org	OK	0	0	2	2	2	-1	1.9	
+us-data-boston-gov-org-archives-and-record-management-org	OK	0	0	5	5	5	-1	2.0	
+us-data-boston-gov-activity	OK	0	0	2000	2001	2001	-1	9.2	
+us-data-boston-gov-org-boston-311-org	OK	0	0	2	2	2	-1	1.6	
+us-data-boston-gov-org-boston-fire-department-org	OK	0	0	1	1	1	-1	1.6	
+us-data-boston-gov-org-boston-licensing-board	OK	0	0	4	4	4	-1	1.6	
+us-socrata-metadata-washington	OK	0	0	2307	2307	2307	-1	25.8	
+us-data-boston-gov-org-boston-planning-development-agency-org	OK	0	0	14	14	14	-1	1.7	
+us-data-boston-gov-org-boston-police-department-org	OK	0	0	9	9	9	-1	1.8	
+us-data-boston-gov-org-boston-maps	OK	0	0	123	123	123	-1	2.8	
+us-data-boston-gov-org-boston-public-library-org	OK	0	0	1	1	1	-1	1.6	
+us-data-boston-gov-org-boston-public-schools	OK	0	0	1	1	1	-1	1.6	
+us-data-boston-gov-org-boston-transportation-department-org	OK	0	0	7	7	7	-1	1.7	
+us-data-boston-gov-org-boston-water-and-sewer-commission-org	OK	0	0	1	1	1	-1	1.7	
+us-data-boston-gov-org-city-clerk	OK	0	0	2	2	2	-1	1.7	
+us-data-boston-gov-org-city-of-boston-archaeology-program-org	OK	0	0	1	1	1	-1	1.7	
+us-data-boston-gov-org-consumer-affairs-and-licensing-departmen	OK	0	0	4	4	4	-1	1.7	
+us-data-boston-gov-org-data-cityofboston-gov	OK	0	0	2	2	2	-1	1.7	
+us-data-boston-gov-org-department-of-innovation-and-technology-	OK	0	0	8	8	8	-1	1.8	
+us-data-boston-gov-org-doit-data-analytics-org	OK	0	0	5	5	5	-1	2.1	
+us-data-boston-gov-org-equity-inclusion	OK	0	0	1	1	1	-1	1.6	
+us-data-boston-gov-org-environment-department-org	OK	0	0	6	6	6	-1	2.0	
+us-data-boston-gov-org-inspectional-services-department-org	OK	0	0	6	6	6	-1	2.0	
+us-data-boston-gov-org-mayor-s-office-of-new-urban-mechanics	OK	0	0	2	2	2	-1	1.6	
+us-data-boston-gov-org-office-of-budget-management	OK	0	0	4	4	4	-1	1.6	
+us-data-boston-gov-org-mayors-office-of-housing	OK	0	0	2	2	2	-1	2.0	
+us-data-boston-gov-org-office-of-economic-development-org	OK	0	0	3	3	3	-1	1.7	
+us-data-boston-gov-org-office-of-human-resources-org	OK	0	0	1	1	1	-1	1.8	
+us-data-boston-gov-org-office-of-the-parking-clerk-org	OK	0	0	1	1	1	-1	1.8	
+us-data-boston-gov-org-parks-and-recreation	OK	0	0	3	3	3	-1	2.1	
+us-data-boston-gov-org-procurement-org	OK	0	0	2	2	2	-1	1.7	
+us-data-boston-gov-org-womens-advancement	OK	0	0	1	1	1	-1	1.7	
+us-data-boston-gov-orgs	OK	0	0	45	45	45	-1	2.3	
+us-data-boston-gov-tags	OK	0	0	991	991	991	-1	2.4	
+sci-chembl-atc-class	OK	0	0	2000	2001	2001	-1	6.3	
+sci-chembl-assay	OK	0	0	2000	2001	2001	-1	15.3	
+sci-chembl-binding-site	OK	0	0	2000	2001	2001	-1	10.3	
+sci-chembl-activity	OK	0	0	2000	2001	2001	-1	22.4	
+us-socrata-metadata-nystate	OK	0	0	5353	5353	5353	-1	96.6	
+sci-chembl-cell-line	OK	0	0	2000	2001	2001	-1	7.6	
+sci-chembl-compound-record	OK	0	0	2000	2001	2001	-1	11.6	
+gr-diavgeia-positions	COLLISION	0	0	25188	233	233	-1	36.7	24955 of 25188 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sci-chembl-drug-warning	OK	0	0	2000	2001	2001	-1	13.8	
+sci-chembl-mechanism	OK	0	0	2000	2001	2001	-1	19.7	
+sci-chembl-metabolism	OK	0	0	2000	2001	2001	-1	17.2	
+sci-chembl-molecule-form	OK	0	0	2000	2001	2001	-1	14.2	
+sci-chembl-drug	OK	0	0	2000	2001	2001	-1	33.8	
+sci-chembl-protein-classification	OK	0	0	905	905	905	-1	13.7	
+sci-chembl-organism	OK	0	0	2000	2001	2001	-1	17.1	
+sci-chembl-molecule	OK	0	0	2000	2001	2001	-1	45.5	
+sci-antares-loci	COLLISION	0	0	1000	992	992	-1	38.7	8 of 1000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sci-exoarchive-direct-imaging	OK	0	0	190	190	190	-1	5.7	
+us-socrata-metadata-healthdata	SLOW	-1	0	-1	-1	6500	-1	220.1	hit --timeout 220.1s; 6500 rows already stored
+sci-exoarchive-k2pandc	OK	0	0	4070	4070	4070	-1	10.7	
+sci-celestrak-education	EMITS_NOTHING	1	-1	0	0	0	-1	62.1	no records reached intel_items
+sci-exoarchive-microlensing	COLLISION	0	0	821	765	765	-1	10.0	56 of 821 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sci-chembl-target	OK	0	0	2000	2001	2001	-1	79.6	
+sci-exoarchive-tess-confirmed	OK	0	0	2397	2397	2397	-1	16.7	
+sci-celestrak-geodetic	EMITS_NOTHING	1	-1	0	0	0	-1	62.1	no records reached intel_items
+sci-chembl-target-component	OK	0	0	2000	2001	2001	-1	92.6	
+UA_OPENPROCUREMENT_AGREEMENTS	COLLISION	0	0	828	724	724	828	9.4	104 of 828 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+IE_CSO_COLLECTION	COLLISION	0	0	13008	12999	12999	13008	47.2	9 of 13008 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+SI_GURS_STREETS	OK	0	0	10000	10001	10001	10000	36.8	
+SI_GURS_SETTLEMENTS	OK	0	0	6034	6034	6034	6034	45.0	
+AM_OPENDATA_BULK	OK	0	0	823	823	823	823	5.4	
+HU_INSPIRE_ADMIN_UNITS	OK	0	0	1000	1001	1001	1000	10.8	
+sci-exoarchive-ps	COLLISION	0	0	40155	40095	40095	-1	96.0	60 of 40155 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+HU_INSPIRE_ORTHOIMAGERY	OK	0	0	1000	1001	1001	1000	4.5	
+SI_GURS_CADASTRAL_MUN	OK	0	0	2697	2697	2697	2697	26.7	
+MCC_MNC_TABLE	COLLISION	0	0	2599	2558	2558	2599	7.6	41 of 2599 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+BR_BCB_EXPECTATIVAS	OK	0	0	1000	1001	1001	1000	9.0	
+BR_SICONFI_RREO	OK	0	0	619	619	619	619	2.8	
+BR_SICONFI_DCA	OK	0	0	301	301	301	301	2.0	
+GR_OASA_LINES	EMITS_NOTHING	1	-1	0	0	0	-1	41.6	no records reached intel_items
+IANA_LANGUAGE_SUBTAGS	OK	0	0	9297	9297	9297	9297	20.5	
+JM_DATA_GOV_JM_CATALOG	EMITS_NOTHING	1	-1	0	0	0	-1	2.9	no records reached intel_items
+CZ_NKOD_SPARQL	OK	0	0	53382	53382	53382	53382	112.0	
+sci-exoarchive-stellarhosts	COLLISION	0	0	47903	44904	44904	-1	136.2	2999 of 47903 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+CO_UPME_PRECIOS_MINERALES	OK	0	0	5868	5868	5868	5868	16.5	
+CO_ANM_TITULOS_ANOTACIONES	OK	0	0	10000	10001	10001	10000	36.8	
+CO_ANI_CONCESIONES	OK	0	0	150	150	150	150	2.5	
+CO_SECOP_I_PROPONENTES	OK	0	0	10000	10001	10001	10000	16.6	
+CO_SECOP_II_OFERTAS	OK	0	0	10000	10001	10001	10000	27.2	
+CR_SNIT_DISTRITOS	OK	0	0	100	100	100	100	56.4	
+PA_PANAMACOMPRA_RUBROS	EMITS_NOTHING	1	-1	0	0	0	-1	2.6	no records reached intel_items
+PA_PANAMACOMPRA_TIPOS	EMITS_NOTHING	1	-1	0	0	0	-1	2.7	no records reached intel_items
+PR_PRSN_EARTHQUAKES	OK	0	0	4	4	4	4	1.9	
+JM_DKAN_NODES	EMITS_NOTHING	1	-1	0	0	0	-1	2.6	no records reached intel_items
+LC_STATISTICS_RELEASES	OK	0	0	232	232	232	232	12.2	
+BR_PNCP_CONTRATOS	OK	0	0	4937	4938	4938	4937	83.5	
+PY_VUE_REGISTRO_EMPRESAS	OK	0	0	1000	1001	1001	1000	12.6	
+CL_COORDINADOR_COSTO_MARGINAL	OK	0	0	192	192	192	192	3.7	
+CO_REGISTRADURIA_RESULTADOS_2018	OK	0	0	10000	10001	10001	10000	26.2	
+PISTAR_DMR_HOSTS	COLLISION	0	0	1254	1252	1252	1254	3.0	2 of 1254 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+PISTAR_YSF_HOSTS	OK	0	0	1492	1492	1492	1492	3.6	
+PISTAR_P25_HOSTS	OK	0	0	333	333	333	333	1.8	
+PISTAR_NXDN_HOSTS	OK	0	0	316	316	316	316	2.1	
+PISTAR_XLX_HOSTS	OK	0	0	890	890	890	890	4.4	
+BR_ANAC_AERONAVES	COLLISION	0	0	34848	34829	34829	34848	137.7	19 of 34848 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+PISTAR_M17_HOSTS	OK	0	0	107	107	107	107	1.6	
+ANFR_HANDSET_SAR	OK	0	0	1229	1229	1229	1229	6.8	
+BR_IBAMA_TERMO_EMBARGO_ITENS	COLLISION	0	0	48776	48591	48591	48776	104.2	185 of 48776 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+us-state-press	EMITS_NOTHING	1	-1	0	0	0	-1	2.1	no records reached intel_items
+us-dhs-news	EMITS_NOTHING	1	-1	0	0	0	-1	1.6	no records reached intel_items
+us-ftc-press	EMITS_NOTHING	1	-1	0	0	0	-1	2.1	no records reached intel_items
+CL_SNIFA_UNIDADES	OK	0	0	22351	22351	22351	22351	87.0	
+eeas-news	EMITS_NOTHING	1	-1	0	0	0	-1	1.7	no records reached intel_items
+enisa-news	EMITS_NOTHING	1	-1	0	0	0	-1	1.6	no records reached intel_items
+frontex-news	EMITS_NOTHING	1	-1	0	0	0	-1	1.6	no records reached intel_items
+europarl-news	EMITS_NOTHING	1	-1	0	0	0	-1	1.4	no records reached intel_items
+IT_FVG_MOBILE_SITES	OK	0	0	6120	6120	6120	6120	24.1	
+osce-news	EMITS_NOTHING	1	-1	0	0	0	-1	1.6	no records reached intel_items
+unhcr-news	EMITS_NOTHING	1	-1	0	0	0	-1	1.5	no records reached intel_items
+wfp-news	EMITS_NOTHING	1	-1	0	0	0	-1	2.1	no records reached intel_items
+iom-news	EMITS_NOTHING	1	-1	0	0	0	-1	2.1	no records reached intel_items
+unodc-news	EMITS_NOTHING	1	-1	0	0	0	-1	1.7	no records reached intel_items
+worldbank-news	EMITS_NOTHING	1	-1	0	0	0	-1	1.6	no records reached intel_items
+imf-news	EMITS_NOTHING	1	-1	0	0	0	-1	1.5	no records reached intel_items
+interpol-news	EMITS_NOTHING	1	-1	0	0	0	-1	1.5	no records reached intel_items
+cn-mofa	EMITS_NOTHING	0	0	0	0	0	-1	2.8	no records reached intel_items
+in-pib	OK	0	0	20	20	20	-1	2.8	
+GFZ_KP_INDEX	OK	0	0	34587	34587	34587	34587	64.8	
+au-dfat	EMITS_NOTHING	1	-1	0	0	0	-1	2.3	no records reached intel_items
+nato-opinions	EMITS_NOTHING	1	-1	0	0	0	-1	1.5	no records reached intel_items
+ca-gov-news	OK	0	0	500	500	500	-1	3.3	
+us-treasury-press	EMITS_NOTHING	1	-1	0	0	0	-1	26.1	no records reached intel_items
+cisa-blog	EMITS_NOTHING	1	-1	0	0	0	-1	1.5	no records reached intel_items
+fema-news	EMITS_NOTHING	1	-1	0	0	0	-1	1.5	no records reached intel_items
+epa-news	EMITS_NOTHING	1	-1	0	0	0	-1	1.7	no records reached intel_items
+ntsb-news	EMITS_NOTHING	0	0	0	0	0	-1	1.9	no records reached intel_items
+faa-news	EMITS_NOTHING	1	-1	0	0	0	-1	2.5	no records reached intel_items
+noaa-swpc	EMITS_NOTHING	1	-1	0	0	0	-1	2.7	no records reached intel_items
+DK_MASTEDB_ANTENNAS	COLLISION	0	0	69699	69659	69659	69699	121.0	40 of 69699 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+BR_PNCP_ATAS	SLOW	-1	0	-1	-1	3500	-1	220.1	hit --timeout 220.1s; 3500 rows already stored

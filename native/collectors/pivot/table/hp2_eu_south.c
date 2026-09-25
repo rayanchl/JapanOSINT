@@ -26,7 +26,7 @@ static const hp_source HP2_EU_SOUTH[] = {
     .name_ja = "イタリア 反汚職庁 契約オープンデータ", .category = "government",
     .portal = "https://dati.anticorruzione.it", .record_type = "it-contract-dataset",
     .tags = "\"it\",\"procurement\",\"contracts\",\"opendata\"", .free_tier = 1,
-    .url = "https://dati.anticorruzione.it/opendata/api/3/action/package_search?q={q}&rows=100",
+    .url = "https://dati.anticorruzione.it/opendata/api/3/action/package_search?q={q}&rows=100&sort=id%20asc",
     .array_path = "result.results", .title_keys = "title,name",
     .id_keys = "id", .date_keys = "metadata_modified",
     .link_keys = "name", .link_tmpl = "https://dati.anticorruzione.it/opendata/dataset/{v}",

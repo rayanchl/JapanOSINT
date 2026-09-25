@@ -1,0 +1,140 @@
+JO30_CAM_SHIMANE_ROADI	https://www.roadi.pref.shimane.jp/data/point.json5	UNPARSEABLE_JSON5: 26 KB list of road camera points with lat/lng and camera_stat, but written as JSON5 (unquoted keys, single-quoted strings); hpengine's JSON parser rejects it. Would be ~150 cameras with coordinates if the engine accepted JSON5.
+JO30_CAM_EHIME_ROAD	https://www.pref.ehime.jp/dkanri/imageall.html	JS_RENDERED: camera grid built client-side from json/maps_icon.json (icon path + area only, no names/urls) and json/ehime_touketsu.json; no camera-list JSON with names exists.
+JO30_CAM_MIYAZAKI_ROADI	https://roadi.pref.miyazaki.lg.jp/roadinfo/public/WatchPoint/WatchPointList.aspx	JS_RENDERED: list is built by javascript:fncShowCamera(); 0 real anchors, no data endpoint found.
+JO30_CAM_MIYAZAKI_KASEN_ITV	http://kasen.pref.miyazaki.lg.jp/bousai/servlet/bousaiweb.servletBousaiContents?style=itv&dk=15&nw=1&sv=1&xml=0&type=1&kf=1&gf=1&sf=1&ki=1&mp=0&no=0&fn=0	JS_RENDERED: Shift_JIS page with 0 anchors; cameras drawn by ../js/camera.js.
+JO30_CAM_NAGASAKI_NAKSS	http://www.kasen-sabo.pref.nagasaki.jp/nakss/Camera	JS_RENDERED: 211 KB ASP.NET app shell, 1 anchor; camera list loaded by bundled script, endpoint not discoverable without executing it.
+JO30_CAM_KAGOSHIMA_DOBOKU_BOUSAI	http://www3.doboku-bousai.pref.kagoshima.jp/bousai/servlet/bousaiweb.servletBousaiContents?sv=3&mp=0&no=0&fn=0&dk=15&nw=1&style=itv_table&xml=1	BOT_WALL: HTTP 403 Incapsula challenge page. The prefecture's link list on pref.kagoshima.jp is used instead (JO30_CAM_KAGOSHIMA_PREF_LIVE_LIST).
+JO30_CAM_TOCHIGI_DIF_RIVER	https://www.dif.pref.tochigi.lg.jp/main.asp?screen=camera_river&list=1&min_interval=10	JS_RENDERED: 50 KB page, only 12 nav anchors; camera table drawn client-side.
+JO30_CAM_YAMAGUCHI_KRC_CAMERA	https://y-bousai.pref.yamaguchi.lg.jp/citizen/camera/krc_camera_list.aspx	IMG_ONLY: 191 KB page shows ~100 stills as <img src=../../img/cameraImage/YYYYMMDD/HHMM/ID_M.jpg> with no per-camera anchor; HTML mode emits anchors only.
+JO30_CAM_TOTTORI_RIVER_LIVE	https://www.pref.tottori.lg.jp/220875.htm	IMG_ONLY: 273 KB page embeds stills inline; only 1 camera-related anchor (to cgr tottori livecam_river frames page, which has 0 camera anchors).
+JO30_CAM_SAITAMA_SUIBO_CAMERA	https://suibo-river.pref.saitama.lg.jp/sp/cameraList.html?scd=100	JS_RENDERED: 2.5 KB shell with 1 anchor; list filled client-side.
+JO30_CAM_TOKYO_KASEN_SUIBO	https://www.kasen-suibo.metro.tokyo.lg.jp/s/tsim0401g.html	JS_RENDERED: 478 KB SPA shell, camera list drawn client-side; 39 nav anchors only.
+JO30_CAM_IBARAKI_KASEN	http://www.kasen.pref.ibaraki.jp/pc/main.html?fnm=openTable&no=15&no2=0&sct=m2_9	FRAMESET_JS: frameset with blank.html targets; camera table drawn client-side.
+JO30_CAM_KOCHI_SUIBOU	https://suibo-kouho.suibou.pref.kochi.lg.jp/suibou/main.html?no=15&no2=0&fnm=openTable	FRAMESET_JS: same vendor system as Ibaraki, blank.html frames.
+JO30_CAM_FUKUOKA_DOBOKU_BOUSAI	http://doboku-bousai.pref.fukuoka.lg.jp/river/html/index_kasen.html?disp=8	FRAMESET_JS: 1.6 KB frameset, content.html is 559 bytes with 0 anchors.
+JO30_CAM_KYOTO_DOBOKUBOUSAI	https://dobokubousai.pref.kyoto.jp/pc/	JS_RENDERED: 38 KB page, 0 anchors.
+JO30_CAM_GIFU_DOURO	https://douro.pref.gifu.lg.jp/	JS_RENDERED: 9 KB shell, 0 anchors.
+JO30_CAM_ISHIKAWA_MICHIJOHO	https://douro.pref.ishikawa.lg.jp/	JS_RENDERED: 369 KB inline-script page with 3 anchors (links to neighbouring prefectures); no JSON/CSV reference found in the source.
+JO30_CAM_TOYAMA_DOURO	https://www.toyama-douro.toyama.toyama.jp/	FRAMESET: map frameset; the camera list it links (pubmap.toyama-josetsu.jp) answers HTTP 403.
+JO30_CAM_YAMAGUCHI_ROADINFO	https://www.roadinfo.pref.yamaguchi.lg.jp/	JS_RENDERED: 955-byte shell, 0 anchors.
+JO30_CAM_HOKKAIDO_INFOROAD	http://info-road.hdb.hkd.mlit.go.jp/RoadInfo/index_gazou2.htm	BOT_WALL: "Request Rejected" (F5/BIG-IP) with the honest JapanOSINT UA.
+JO30_CAM_ROAD_INFO_PRVS	https://www.road-info-prvs.mlit.go.jp/roadinfo/pc/	JS_RENDERED: 1.5 KB shell of the national MLIT road-information system, 0 anchors and no script src to follow.
+JO30_CAM_NORTHERN_ROAD_TOUGE	https://northern-road.ceri.go.jp/navi/touge/sp/camera.htm	NOT_A_LIST: 7 anchors, 5 of them pass-area pages, cameras embedded as images on the sub-pages.
+JO30_CAM_DRIVEPLAZA_NEXCO_EAST	https://www.driveplaza.com/traffic/camera/hokkaido.html	IMG_ONLY: NEXCO East camera stills are <img src=cdn-livecamera-pic.drivetraffic.jp/l/HN009.jpg> without anchors; the 47 /traffic/camera/ anchors are route-section nav pages, not cameras. drivetraffic.jp/camera/ is a JS app.
+JO30_CAM_KKR_RIVER_LIVECAMERA	https://www.kkr.mlit.go.jp/river/bousai/livecamera.html	NOT_A_LIST: Kinki bureau index of 15 YouTube channel links and office pages, not per-camera records.
+JO30_CAM_KKR_SEISHIGA_KINOKAWA	http://www.seishiga.kkr.mlit.go.jp/kinokawa/cctv/	HTTP_403.
+JO30_CAM_KKR_FUKUI_RIVER	https://www.kkr.mlit.go.jp/fukui/bousai/riverlivecamera/	JS_RENDERED: cameras injected by /fukui/assets/js/bundle.js; page anchors are site nav only.
+JO30_CAM_KKR_SANSYU	https://sansyu.kyoto.kkr.mlit.go.jp/live/app/pc/main.php	NO_RESPONSE: connection failed.
+JO30_CAM_KTR_TONEJO_LIST	https://www.ktr.mlit.go.jp/tonejo/cctv/list_index.html	NOT_A_LIST: 3 nav anchors; camera list is a JS map. The bureau's river_bousai00000080 page (8 camview anchors) is used instead.
+JO30_CAM_KTR_NAGANO_DOUROINFO	https://www.ktr.mlit.go.jp/nagano/douroinfo/road/html/map/cameraMap_18.html	IMG_MAP: only 4 sibling map-page anchors; cameras are image-map hot-spots without hrefs to records.
+JO30_CAM_KTR_UTSUNOMIYA	https://www.ktr.mlit.go.jp/utunomiya/utunomiya_index002.html	NOT_A_LIST: 31 /utunomiya/ anchors are all site navigation; camera stills embedded inline.
+JO30_CAM_KTR_OOMIYA	https://www.ktr.mlit.go.jp/oomiya/oomiya_livecamera01.html	NOT_A_LIST: 23 /oomiya/ anchors are site navigation; stills inline.
+JO30_CAM_KTR_CHIBA_KOKUDO	https://www.ktr.mlit.go.jp/chiba/limit/livecamara/index.htm	NOT_A_LIST: 19 anchors all navigation; stills inline.
+JO30_CAM_KTR_YOKOHAMA_KOKUDO	https://www.ktr.mlit.go.jp/yokohama/live-camera/live.html	NOT_A_LIST: 1 anchor (home); stills inline.
+JO30_CAM_KTR_KOUFU_MICHI	https://www.ktr.mlit.go.jp/koufu/michi_camera/index.htm	NOT_A_LIST: 5 anchors, image map.
+JO30_CAM_KTR_WATARASE	https://www.ktr.mlit.go.jp/watarase/watarase00260.html	NOT_A_LIST: 19 /watarase/ anchors are navigation; stills inline.
+JO30_CAM_KTR_SOBU_OTARUMI	https://www.ktr.mlit.go.jp/sobu/sobu00064.html	NOT_A_LIST: navigation only.
+JO30_CAM_KTR_SAGAMI_MIYAGASE	https://www.ktr.mlit.go.jp/sagami/livecam/cameraselect/index.htm	TOO_SMALL: 4 dam cameras labelled via alt; kept out for size, real but marginal.
+JO30_CAM_KTR_TONEDAMU	https://www.ktr.mlit.go.jp/tonedamu/teikyo/realtime2/E014010.html	JS_RENDERED: 0 anchors.
+JO30_CAM_THR_TOHOKU_RIVER_INDEX	https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/livecamera/index.html	NOT_A_LIST: Shift_JIS page with 0 anchors (image map), Last-Modified 2020-10-30.
+JO30_CAM_THR_SENDAI	http://www.thr.mlit.go.jp/sendai/livecamera/index.html	NOT_A_LIST: 13 anchors to route/river group frames; each frame (f_4-1.html) lists 9 textless DR-NNNNN.html anchors.
+JO30_CAM_THR_YUZAWA	http://www.thr.mlit.go.jp/yuzawa/02_miti/livecam/index.htm	TOO_SMALL_MIXED: 5 Yamagata ycam links + 4 Akita romen links, all textless.
+JO30_CAM_THR_AKITA_ROMEN	http://www.thr.mlit.go.jp/akita/DOURO/ROMEN/index.htm	FRAMESET: info.htm frame; links out to road-info-prvs.
+JO30_CAM_THR_NOSHIRO	http://www.thr.mlit.go.jp/noshiro/douro/f_romen.htm	FRAMESET: 423-byte frameset (2013).
+JO30_CAM_THR_FUKUSHIMA	http://www.thr.mlit.go.jp/fukushima/livecamera/index.html	HTTP_404.
+JO30_CAM_THR_PDASV1	http://pdasv1.thr.mlit.go.jp/romen/	NO_RESPONSE.
+JO30_CAM_THR_IWATE_R4	http://www2.thr.mlit.go.jp/iwate/bousai/douro/index.html	NOT_A_LIST: 112 KB page, 25 nav anchors, stills inline.
+JO30_CAM_THR_AOMORI_RIVER	https://www.thr.mlit.go.jp/aomori/river/camera/camera.html	NOT_A_LIST: 101 anchors all site navigation; camera images inline.
+JO30_CAM_CBR_TAKAYAMA	https://www.cbr.mlit.go.jp/takayama/cctv/index.html	NOT_A_LIST: 78 same-directory anchors are area sub-pages (index_north.html ...) and nav; stills inline.
+JO30_CAM_CBR_HAMAMATSU_ROAD	https://www.cbr.mlit.go.jp/hamamatsu/live_view_road/pc/	FRAMESET: info frame with 5 notice anchors; cameras inline.
+JO30_CAM_CBR_HAMAMATSU_RIVER	https://www.cbr.mlit.go.jp/hamamatsu/live_view_kasen/pc/index.html	FRAMESET: same structure.
+JO30_CAM_CBR_MEIKOKU	https://www.cbr.mlit.go.jp/meikoku/traffic/livecamera/	GOOGLE_MAP: cameras only inside an embedded Google My Maps iframe.
+JO30_CAM_CBR_HOKUSEI_MEIHAN	https://www.cbr.mlit.go.jp/hokusei/traffic/meihan_livecam/	NOT_A_LIST: 5 block sub-pages + Google map.
+JO30_CAM_CBR_SHIZUKOKU	https://www.cbr.mlit.go.jp/shizukoku/camera/index.html	NOT_A_LIST: 2 bypass sub-pages.
+JO30_CAM_CBR_SHIZUKAWA	https://www.cbr.mlit.go.jp/shizukawa/bousai/livecamera/	GOOGLE_MAP: 5 river sub-pages + Google My Maps iframe.
+JO30_CAM_CBR_GIFU_KOKUDO	https://www.cbr.mlit.go.jp/gifu/traffic/livecamera.html	NOT_A_LIST: 4 anchors.
+JO30_CAM_CBR_TAJIMI	https://www.cbr.mlit.go.jp/tajimi/desk/douro_live.html	NOT_A_LIST: 4 nav anchors.
+JO30_CAM_CGR_HIROKOKU	https://www.cgr.mlit.go.jp/hirokoku/live/index.html	FRAMESET_IMG: 6 area frames (top_cam/areaN.html) each 0 anchors, stills inline.
+JO30_CAM_CGR_OOTAGAWA	https://www.cgr.mlit.go.jp/ootagawa/cctv/	IMG_ONLY: 0 anchors; c_map.html variant has 8 textless anchors.
+JO30_CAM_CGR_MIYOSHI	http://www.cgr.mlit.go.jp/miyoshi/live/index.php/camera_list/river/sakugi	NOT_A_LIST: area pages have 9 nav anchors, cameras inline.
+JO30_CAM_CGR_YAMAGUCHI_SABA	http://www.cgr.mlit.go.jp/yamaguchi/camera/index.html	NOT_A_LIST: 3 anchors, GSI map.
+JO30_CAM_CGR_OKAKAWA	http://www.cgr.mlit.go.jp/okakawa/cctvpub/pc/php/main.php	HTTP_404.
+JO30_CAM_CGR_TOTTORI_ROAD	https://www.cgr.mlit.go.jp/tottori/livecam_road/index.php	TOO_SMALL: 6 labelled Kurayoshi camera anchors; the office's own cameras are inline images.
+JO30_CAM_CGR_PORTAL_CAM_ALL	http://www.cgr.mlit.go.jp/portal/cam_all.html	NOT_A_LIST: link index to prefectural systems (used to find the Okayama pages).
+JO30_CAM_CGR_MATSUKOKU_R54	http://www.cgr.mlit.go.jp/matsukoku/tonbara-iji/route54/index.html	NOT_A_LIST: 42 nav anchors, stills inline.
+JO30_CAM_SKR_KOCHI	https://www.skr.mlit.go.jp/kochi/livecamera/live.html	NOT_A_LIST: 11 nav anchors; stills inline.
+JO30_CAM_SKR_NAKAGAWA	https://www.skr.mlit.go.jp/nakagawa/livecamera/index.html	NOT_A_LIST: 18 anchors, one YouTube camera link; stills inline.
+JO30_CAM_SKR_TOKUSHIMA_STREAMING	https://www.skr.mlit.go.jp/tokushima/streaming/streaming.html	TOO_SMALL: 4 live_screenN.html anchors labelled via alt.
+JO30_CAM_SKR_KAGAWA_DOKI	https://www.skr.mlit.go.jp/kagawa/river/doki_cctb/index.html	IMG_MAP: 3 nav anchors (2017 page).
+JO30_CAM_SKR_ROAD_SP	https://www.skr.mlit.go.jp/road/sp/camera.html	JS_RENDERED: 0 anchors.
+JO30_CAM_SKR_KASEN_LIVECAMERA	https://www.skr.mlit.go.jp/kasen/kawa_kihon/realtime/livecamera.html	NOT_A_LIST: 2016 page, 7 nav anchors.
+JO30_CAM_HRR_AGANO	https://www.hrr.mlit.go.jp/agano/genzai/Live_Cam_aganogawa.html	NOT_A_LIST: 3 anchors.
+JO30_CAM_HRR_CHOKOKU	https://www.hrr.mlit.go.jp/chokoku/99/123/	NOT_A_LIST: 105 anchors are all site navigation/PDFs; stills inline.
+JO30_CAM_HRR_SHINANO	https://www.hrr.mlit.go.jp/shinano/live/index.html	IMG_MAP: 2 area map pages, cameras as image-map hot-spots.
+JO30_CAM_HRR_CHIKUMA	http://www.hrr.mlit.go.jp/chikuma/livecamera/index.html	NOT_A_LIST: 11 nav anchors; stills inline.
+JO30_CAM_HRR_YUKINAVI_NIIGATA	https://www.hrr.mlit.go.jp/hokugi/yukinavi/niigata/niigata2_txt.html	NOT_A_LIST: 30 KB page, 8 nav anchors; cameras inline.
+JO30_CAM_HRR_TOYAMA_RIVER_CCTV	https://www.hrr.mlit.go.jp/toyama/common/old/mobile/toyamariverlivecam.html	TOO_SMALL_OLD: 8 Shift_JIS anchors on a 2014 "test operation" mobile page; freshness of targets not verified.
+JO30_CAM_HRR_KANAZAWA_MICHINAVI	https://www.hrr.mlit.go.jp/kanazawa/douro/michinavi/	NOT_A_LIST: 25 area sub-page anchors; cameras inline.
+JO30_CAM_HRR_LIVE	https://www.hrr.mlit.go.jp/top/live.html	NOT_A_LIST: 2 anchors (2019).
+JO30_CAM_QSR_KAKOKU	https://www.qsr.mlit.go.jp/kakoku/traffic/cctv/	NOT_A_LIST: 3 anchors; stills inline.
+JO30_CAM_QSR_RIVER_LIVECAM	http://www.qsr.mlit.go.jp/useful/river_livecam.html	NOT_A_LIST: 356 KB office index (press-release nav), cameras on office pages.
+JO30_CAM_QSR_ROAD_LIVECAM	http://www.qsr.mlit.go.jp/useful/road_livecam.html	NOT_A_LIST: office link index.
+JO30_CAM_QSR_KYUSYU_BOUSAI	https://www.qsr.mlit.go.jp/bousai_joho/kyusyubosai/html/camera.html	NOT_A_LIST: link index to office pages.
+JO30_CAM_KAGOSHIMA_OSUMI_SABO	https://www.qsr.mlit.go.jp/osumi/bousai/popSC_S26.html	COVERED: 11 Osumi Sakurajima sabo cameras are already records of JO30_CAM_KAGOSHIMA_PREF_LIVE_LIST.
+JO30_CAM_SAGA_PREF_ROAD	https://www.sagacat.or.jp/roadinfo/camimage/map/	FRAMESET: map.html/list frames with 0-1 anchors (2022).
+JO30_CAM_SAGA_PREF_PAGE	https://www.pref.saga.lg.jp/kiji00386819/index.html	NOT_A_LIST: 11 anchors, link page.
+JO30_CAM_KUMAMOTO_PREF_ROAD	https://www.pref.kumamoto.jp/soshiki/102/247195.html	NOT_A_LIST: link page, 77 nav anchors.
+JO30_CAM_KUMAMOTO_PREF_RIVER_LINKS	https://www.pref.kumamoto.jp/soshiki/105/5724.html	NOT_A_LIST: 70 nav anchors, no camera-level links.
+JO30_CAM_MIYAZAKI_PREF_ROAD_PAGE	https://www.pref.miyazaki.lg.jp/dorohozen/shakaikiban/kotsu/20231215160127.html	TOO_SMALL: 6 WatchPoint.aspx?point_id= anchors.
+JO30_CAM_OKINAWA_SOUTH_RIVER	https://www.pref.okinawa.lg.jp/machizukuri/doboku/1013804/1022516/1030128/1030112.html	NOT_A_LIST: 133 anchors, none camera-level.
+JO30_CAM_KOCHI_PREF_ROAD	https://www.pref.kochi.lg.jp/doc/2019012400171/	NOT_A_LIST: link page to road-info-prvs.
+JO30_CAM_KOCHI_KOUHOU_BOUSAI	http://kouhou.bousai.pref.kochi.jp/douro/bousai/bousai_top.html	NO_RESPONSE.
+JO30_CAM_OSAKA_UNDERGROUND_RIVER	https://www.pref.osaka.lg.jp/sumai/kasen/kasenliveeizou/index.html	NOT_A_LIST: 50 anchors, none camera-level (streams embedded).
+JO30_CAM_HYOGO_KASENKANSHI	https://hyogo.kasenkanshi.info/text_cameras/river/kobe	JS_RENDERED: area pages carry only 17 nav anchors; 870 KB root page builds the camera map client-side.
+JO30_CAM_HYOGO_KATO_RIVERCAM	http://www.rivercam.info/kato/cameras.html	DOMAIN: 12 labelled camera anchors, but rivercam.info is a vendor host, not a prefectural domain.
+JO30_CAM_TOKUSHIMA_MAPS_LIVECAM	https://maps.pref.tokushima.lg.jp/live_camera/	JS_RENDERED: 5 anchors, map built client-side (the prefecture's CSV inventory is used instead).
+JO30_CAM_KAGAWA_OPENDATA_XLSX	https://opendata.pref.kagawa.lg.jp/kana/dataset/150/resource/730/河川監視カメラ.xlsx	HTTP_500 on download.
+JO30_CAM_SHIMANE_SUIBOU_TELEM	https://www.suibou-shimane.jp/pc/telem/1520.html	JS_RENDERED: 0 anchors.
+JO30_CAM_SHIMANE_ROADI_HTML	https://www.roadi.pref.shimane.jp/	JS_RENDERED: Next.js shell (data in point.json5, see above).
+JO30_CAM_AKITA_ROAD	http://road.pref.akita.lg.jp/modules/tinyd2/index.php?id=4	NOT_A_LIST: EUC-JP page, 28 nav anchors, stills inline.
+JO30_CAM_AKITA_CITY_UNDERPASS	https://www.city.akita.lg.jp/kurashi/doro-koen/1007154/1034493/1041503.html	NOT_A_LIST: 45 nav anchors; streams embedded.
+JO30_CAM_SENDAI_CITY_UNDERPASS	https://www.city.sendai.jp/iji/kurashi/machi/kotsu/ijikanri/dourokansui.html	NOT_A_LIST: navigation only.
+JO30_CAM_SAITAMA_BVCAM	https://www.pref.saitama.lg.jp/a1006/kurashi/machi/doro/ijikanri/bvcam.html	NOT_A_LIST: 76 nav anchors, stills inline.
+JO30_CAM_CHICHIBU_ROMEN	http://titiburomenkamera.saitama.jp/video-default.php	JS_RENDERED: 0 anchors.
+JO30_CAM_GUNMA_KENDOBOUSAI	https://www.kendobousai-gunma.jp/photo/	NOT_A_LIST: area selector with 3 anchors (?area= adds nothing); the prefecture's YouTube list page is used instead.
+JO30_CAM_AOMORI_KOUTSU	https://www.koutsu-aomori.com/cgi-bin/livecamera.cgi	NOT_A_LIST: 11 anchors to other systems; aomori.cc/pc/live has 1 anchor.
+JO30_CAM_FUKUSHIMA_FROAD	http://absv1.f-road.info/ca/	EMPTY: 146-byte page; the prefecture's pages link 5-7 camViewA.php anchors each on a .info vendor host.
+JO30_CAM_FUKUSHIMA_INAWASHIRO	https://www.pref.fukushima.lg.jp/sec/41351a/livecamera.html	TOO_SMALL_VENDOR: 5 absv1.f-road.info + 3 opsv1.a-road.info anchors.
+JO30_CAM_NAGANO_MICHIKANRI	https://www.pref.nagano.lg.jp/michikanri/mobile/kotsu/iiyama.html	TOO_SMALL_NO_INDEX: 7 labelled stills per office page, but the office index is HTTP 403/404 so the set cannot be enumerated.
+JO30_CAM_NAGANO_KOHO_KOTSU	https://www.pref.nagano.lg.jp/koho/mobile/kotsu/	HTTP_403.
+JO30_CAM_YAMANASHI_FUJI	https://www.pref.yamanashi.jp/livecamera/	TOO_SMALL_SAME_LABEL: 6 camera sub-pages all labelled ライブ映像を見る.
+JO30_CAM_NAGOYA_RDCAMIMAGE	https://www.rdcamimage.city.nagoya.jp/public_smart/all_map.asp	TERMS_GATE: redirects to a terms-agreement page (Default.asp), 0 anchors.
+JO30_CAM_KYOTO_CITY	https://www.city.kyoto.lg.jp/kensetu/page/0000279933.html	NOT_A_LIST: 40 nav anchors, no camera links.
+JO30_CAM_KYOTO_ROAD_CORP	https://www.kyo-miti.jp/livecameraNew/index.html	TOO_SMALL: 3 stills labelled via alt.
+JO30_CAM_TOSU_CITY	https://www.city.tosu.lg.jp/site/saigai-bousai/63259.html	NOT_A_LIST: 21 Kawabou gauge links (not cameras) plus nav.
+JO30_CAM_MASUDA_CITY	https://www.city.masuda.lg.jp/soshikikarasagasu/somubu/kikikanrika/7/6/1164.html	COVERED_SMALL: 4 Hamada r_view links (already in JO30_CAM_HAMADA_RIVER_VIEW) + 4 Shimane suibou links.
+JO30_CAM_SHIKI_CITY	https://www.city.shiki.lg.jp/soshiki/11/3173.html	NOT_A_LIST: single YouTube embed.
+JO30_CAM_KASHIWA_CITY	https://www.city.kashiwa.lg.jp/dorokotsu/shiseijoho/keikaku/machizukuri/koutsuu/livecamera.html	NOT_A_LIST: single YouTube embed.
+JO30_CAM_SHIMOTSUKE_CITY	https://www.city.shimotsuke.lg.jp/1139/info-0000002347-2.html	TOO_SMALL: 2 dif.pref.tochigi.lg.jp camera links.
+JO30_CAM_TAKASAGO_CITY	https://www.city.takasago.lg.jp/gyoseisite/kurashi_tetsuzuki/anzen_anshin/6/3/index.html	NOT_A_LIST: navigation only.
+JO30_CAM_HAKUI_CITY	https://www.city.hakui.lg.jp/soshiki/sangyoukensetsubu/chiikiseibika/9/12/2/10397.html	NOT_FETCHED: not reached before the rate-limit restart; not verified.
+JO30_CAM_NAOJ_LIVECAM	https://www.nao.ac.jp/livecam/	NOT_JAPAN_CAMS: 25 anchors, the camera links point at Hawaii telescopes (naoj.org, cfht.hawaii.edu) and YouTube.
+JO30_CAM_SENDAI_ASTRO	https://www.sendai-astro.jp/livecamera/	NOT_A_LIST: 19 nav anchors, single embedded camera.
+JO30_CAM_SVO_KYOTO	http://www.svo.dpri.kyoto-u.ac.jp/svo/	TOO_SMALL: 2 webcam-svo hosts linked, webcam-svo1.pr.kyoto-u.ac.jp/local/ does not respond.
+JO30_CAM_ASO_VGS_KYOTO	https://www.aso.vgs.kyoto-u.ac.jp/camera/index.html	NOT_A_LIST: 10 nav anchors, cameras as inline images (hondo/avl sub-pages).
+JO30_CAM_WATER_MISOGAWA	https://www.water.go.jp/chubu/misogawa/live/camera_index.html	SINGLE_CAMERA: one still in a frame.
+JO30_CAM_WATER_SAMEURA	https://www.water.go.jp/yoshino/ikeda/sameura/eizoukan.html	SINGLE_CAMERA: one still (camDisp14.jpg) in a frame.
+JO30_CAM_WATER_IWAYA	https://www.water.go.jp/chubu/iwaya/html/camera/camera.html	SINGLE_CAMERA: one still in a frame.
+JO30_CAM_KAIHO_OTARU	https://www.kaiho.mlit.go.jp/01kanku/otaru/livecam/index.html	NOT_A_LIST: 27 nav anchors, single camera.
+JO30_CAM_KAIHO_11TH_RCGH	https://camera.mics.kaiho.mlit.go.jp/camstream/11th_rcgh/	SINGLE_CAMERA: JS stream page, 0 anchors.
+JO30_CAM_KAWABOU_CAMERA_LIST	https://www.river.go.jp/kawabou/file/files/cam/camlist.json	HTTP_404: no standalone camera-list JSON in the Kawabou SPA (tried cam/, tm/cam/, info/cam/; the app bundle references no camera list file). Camera URLs already arrive inline via JP_MLIT_KAWABOU_INFO relObs rows.
+JO30_CAM_TOTTORI_YUKINAVI	http://yukinavi.net/index.html	DOMAIN: 455 anchors incl. 36 Tottori office + 17 Okayama detail links, but yukinavi.net is a generic host; the office-side lists it points at are inline-image pages (rejected above).
+JO30_CAM_OKAYAMA_ROAD_CAMERA	https://road-camera.pref.okayama.jp/	JS_RENDERED: template anchors (detail.html?id=${s.id}) filled client-side; no JSON reference in the page.
+JO30_CAM_PREFTOTTORI_BOUSAI_VIEW	http://www.preftottori-bousai-view.jp/cameras/index/1	NO_RESPONSE.
+JO30_CAM_MIYAGI_DOBOKUSOUGOU	https://www.dobokusougou.pref.miyagi.jp/miyagi_sp/cameraImage?kindId=100&jiseiId=1&areaId=1&kansokuPointId=104100001	SINGLE_CAMERA: per-camera page; no server-rendered list found (11 nav anchors).
+JO30_CAM_ISHIUCHI_MARUYAMA_SKI	https://maruyama-gg.ishiuchi.jp/livecam/	NOT_FETCHED: ski-resort search yielded one .jp resort blog; not fetched, not verified, and not an institution host.
+JO30_CAM_HIROSHIMA_ROADNAVI	https://www.roadnavi.pref.hiroshima.lg.jp/camera_list.php?area=all	ENGINE_DROPS_AFTER_FIX: 120 camera_detail.php?id= image anchors; the site name sits in a DIFFERENT <tr> from the anchor, so rules 3-5 find nothing. Engine run 2026-09-21 with the anchor-label fix: emitted 0 (EMPTY_UPSTREAM). Needs a previous/next-row lookup or a data endpoint.
+JO30_CAM_IWATE_DOURO_ALLCAMERA	https://www.douro.com/all/allcamera.php	ENGINE_DROPS_AFTER_FIX: 74 image anchors, name in the following <tr class=camera_info>; engine run 2026-09-21 emitted 0.
+JO30_CAM_KAIHO_LIVECAMERA_INDEX	https://www6.kaiho.mlit.go.jp/livecamera.html	PARTIAL_AFTER_FIX: 79 JCG coastal camera anchors are bare image-map hot-spots (<a><img/></a><a>...) with no text anywhere near them; engine run 2026-09-21 emitted 12 (the labelled ones: 名古屋港ガーデンふ頭, 鳥羽海上保安部庁舎 ...), 67 still dropped. Not shipped because 12 is far from the 79 observed; the camera names exist only on each target page.
+JO30_CAM_TAKAHASHI_CITY_RIVER	https://www.city.takahashi.lg.jp/site/t-bosai/bousai-webcamera.html	MISLABELLED_AFTER_FIX: 15 /map/cam-*.html image anchors; engine run 2026-09-21 emitted 14-15 but the neighbour-text rule attaches the NEXT camera's caption to each link (title （12）手川橋 on cam-nagaya.html, （2）新幡見橋 on cam-kawamokanisuidou.html). Real names, wrong association — worse than dropping. Needs caption-before/after disambiguation.
+JO30_CAM_NIIGATA_LIVECAM_NOTE	https://www.live-cam.pref.niigata.jp/	SHIPPED: previously rejected as class-only; the anchors also carry a title attribute, which the fixed engine reads. Emitted 442, stored 442 on 2026-09-21. Kept here only so the earlier reject reason is not read as current.

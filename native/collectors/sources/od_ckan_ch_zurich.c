@@ -8,7 +8,7 @@
 
 #define SID "ckan-ch-zurich"
 static const char *URL =
-  "https://data.stadt-zuerich.ch/api/3/action/package_search?rows=20";
+  "https://data.stadt-zuerich.ch/api/3/action/package_search?rows=20&sort=id%20asc";
 static const char *const EXTRA[] = { "notes", "dataQuality", "sszBemerkungen",
                                      "dateFirstPublished", "updateInterval",
                                      NULL };
@@ -24,7 +24,7 @@ static const source_def od_ckan_ch_zurich_def = {
   .name = "Stadt Zurich open-data CKAN",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://data.stadt-zuerich.ch/api/3/action/package_search?rows=20",
+  .url = "https://data.stadt-zuerich.ch/api/3/action/package_search?rows=20&sort=id%20asc",
   .description = "City of Zurich open-data catalogue (937 datasets) from the city statistics office",
   .license = "CC-BY / City of Zurich open-data terms",
   .free_tier = 1,

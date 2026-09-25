@@ -95,7 +95,15 @@ WAIVER = re.compile(r'exhaustive-ok:')
 # single-page read. Kept as a name list rather than inferred, because being
 # wrong in this direction hides a real discard — add a macro here only after
 # reading its body in collectors/sources/_verified_macros.inc.
-PAGED_MACROS = ('VJSON', 'VJSONBIG', 'VGEO')
+# VJSON_KEYED added 2026-09-11: its body is jsonlist_emit_paged_keyed
+# (_verified_macros.inc:175), the same walk VJSON uses with one named id field
+# instead of the precedence list — so a page-1 URL inside it is walked.
+# VJSON_IDKEYS / VGEO_IDKEYS / VJSON_PREP added 2026-09-15
+# (collectors/sources/_vjson_idkeys.inc): their bodies call jsonlist_emit_paged,
+# geojson_emit_paged and pw_walk respectively — the same walks as VJSON / VGEO,
+# behind a sink that only re-keys uids (and, for PREP, a page-shaping hook).
+PAGED_MACROS = ('VJSON', 'VJSONBIG', 'VGEO', 'VJSON_KEYED',
+                'VJSON_IDKEYS', 'VGEO_IDKEYS', 'VJSON_PREP')
 MACRO_OPEN = re.compile(r'^\s*([A-Z][A-Z0-9_]*)\s*\(')
 
 

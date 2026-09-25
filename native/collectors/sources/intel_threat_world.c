@@ -147,9 +147,12 @@ RSS(ti_rapid7, "rapid7-blog", "Rapid7 Blog",
   "[\"cyber\",\"vuln\",\"research\"]",
   "Rapid7 — vulnerability research, emergent threats and detection engineering");
 
+/* news.sophos.com/en-us/feed/ now 404s (Next.js app, no feed route); the
+ * site redirects to www.sophos.com/en-us/blog/, whose feed lives at
+ * /en-us/blog/feed (no trailing slash — that 308s). Verified live 2026-09-04. */
 RSS(ti_sophos, "sophos-news", "Sophos News",
   "Sophos News", "cyber",
-  "https://news.sophos.com/en-us/feed/", "en",
+  "https://www.sophos.com/en-us/blog/feed", "en",
   "[\"cyber\",\"malware\",\"threats\"]",
   "Sophos X-Ops threat research and security news");
 

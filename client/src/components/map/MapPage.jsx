@@ -1,12 +1,24 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { MdSearch } from 'react-icons/md';
+import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { LuX } from 'react-icons/lu';
 import MapView from './MapView';
 import LayerPanel from './LayerPanel';
 import MapPopup from './MapPopup';
+import MapTopBar from './overlays/MapTopBar.jsx';
+import AOIDrawOverlay, { AoiLayer } from './overlays/AOIDrawOverlay.jsx';
+import IsochroneOverlay from './overlays/IsochroneOverlay.jsx';
+import TimeSlider from './overlays/TimeSlider.jsx';
+import ShareSheet from './overlays/ShareSheet.jsx';
+import FeatureStats from './overlays/FeatureStats.jsx';
 import useMapLayers from '../../hooks/useMapLayers';
 import useMapProjection from '../../hooks/useMapProjection';
 import useCameraDiscoveryStream from '../../hooks/useCameraDiscoveryStream';
+import useTimeWindow, { applyTimeWindow } from '../../hooks/useTimeWindow.js';
+import useAoi from '../../hooks/useAoi.js';
+import usePermalink from '../../hooks/usePermalink.js';
 import apiUrl from '../../utils/apiUrl.js';
+import { api } from '../../api/client.js';
+import { CopyButton } from '../ui/kit.jsx';
 
 export default function MapPage() {
   const {
@@ -78,59 +90,123 @@ export default function MapPage() {
   }, [layers.cameras?.visible, toggleLayer]);
 
   const [popup, setPopup] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchError, setSearchError] = useState(null);
   const mapRef = useRef(null);
+  // A state counter so overlays that subscribe to the map instance re-run
+  // their effects once the map exists (a ref alone would not re-render).
+  const [mapReadyTick, setMapReadyTick] = useState(0);
+
+  // ── iOS Map-tab parity: time window, AOI drawing, isochrone, share, stats ──
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tw = useTimeWindow();
+  const [timeOpen, setTimeOpen] = useState(false);
+  const [timeCollapsed, setTimeCollapsed] = useState(true);
+  const [aoiDrawing, setAoiDrawing] = useState(false);
+  const [aoiLayerOn, setAoiLayerOn] = useState(false);
+  const aoi = useAoi({ enabled: aoiLayerOn });
+  const [isoOpen, setIsoOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [statsOpen, setStatsOpen] = useState(false);
+  const [reverse, setReverse] = useState(null); // { lat, lon, label?, source?, error?, busy }
+  const { resolve: resolvePermalink } = usePermalink();
+  const [permalinkError, setPermalinkError] = useState(null);
+  const aoiDrawingRef = useRef(false);
+  aoiDrawingRef.current = aoiDrawing;
 
   const handleMapReady = useCallback((map) => {
     mapRef.current = map;
+    setMapReadyTick((t) => t + 1);
   }, []);
 
   const handleFeatureClick = useCallback((feature, layerType, lngLat) => {
+    // While drawing an AOI, map clicks place vertices — not popups.
+    if (aoiDrawingRef.current) return;
     setPopup({ feature, layerType, lngLat });
   }, []);
 
   const popupPosition = useMapProjection(mapRef, popup?.lngLat);
+  const reversePosition = useMapProjection(mapRef, reverse ? [reverse.lon, reverse.lat] : null);
 
   const handleClosePopup = useCallback(() => {
     setPopup(null);
   }, []);
 
-  const handleSearch = useCallback(async (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-
-    setIsSearching(true);
-    setSearchError(null);
+  // Reverse geocode a point (right-click on the map, or the top-bar centre
+  // button). A failed lookup is shown as failed, not as an empty label.
+  const reverseGeocodeAt = useCallback(async (lat, lon) => {
+    setReverse({ lat, lon, busy: true });
     try {
-      // Backend chains Nominatim -> Photon -> GSI, with caching.
-      const res = await fetch(
-        apiUrl(`/api/geocode?q=${encodeURIComponent(searchQuery)}`)
-      );
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const { results } = await res.json();
-      // Normalise to the shape the dropdown already expects.
-      setSearchResults(
-        (results || []).map((r) => ({
-          display_name: r.display_name,
-          lat: r.lat,
-          lon: r.lon,
-          source: r.source,
-        }))
-      );
-    } catch (err) {
-      // A failed lookup used to leave the PREVIOUS query's hits sitting in the
-      // dropdown, under the new query — those places were then read as the
-      // answer to a question they never answered.
-      console.warn('[Search] Failed:', err.message);
-      setSearchResults([]);
-      setSearchError(err.message || 'geocode failed');
-    } finally {
-      setIsSearching(false);
+      const j = await api.get('/api/geocode/reverse', { query: { lat, lon } });
+      setReverse({ lat, lon, busy: false, label: j?.display_name || null, source: j?.source || null, empty: !j?.display_name });
+    } catch (e) {
+      setReverse({ lat, lon, busy: false, error: e });
     }
-  }, [searchQuery]);
+  }, []);
+
+  const reverseGeocodeCentre = useCallback(() => {
+    const c = mapRef.current?.getCenter?.();
+    if (c) reverseGeocodeAt(c.lat, c.lng);
+  }, [reverseGeocodeAt]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return undefined;
+    const onCtx = (e) => { e.preventDefault?.(); reverseGeocodeAt(e.lngLat.lat, e.lngLat.lng); };
+    map.on('contextmenu', onCtx);
+    return () => map.off('contextmenu', onCtx);
+  }, [mapReadyTick, reverseGeocodeAt]);
+
+  // `?aoi=new` (from Console → Areas of interest) starts drawing.
+  useEffect(() => {
+    if (searchParams.get('aoi') === 'new') {
+      setAoiDrawing(true);
+      const next = new URLSearchParams(searchParams);
+      next.delete('aoi');
+      setSearchParams(next, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
+  // `?p=<token>` restores a shared view: camera, layers, time window.
+  const permalinkApplied = useRef(false);
+  useEffect(() => {
+    const token = searchParams.get('p');
+    if (!token || permalinkApplied.current || !mapRef.current) return;
+    permalinkApplied.current = true;
+    (async () => {
+      try {
+        const st = await resolvePermalink(token);
+        if (!st) return;
+        if (Array.isArray(st.layers) && st.layers.length) {
+          const wanted = new Set(st.layers);
+          for (const id of Object.keys(layers)) {
+            const want = wanted.has(id);
+            if (want !== !!layers[id]?.visible) toggleLayer(id);
+          }
+        }
+        if (st.map && Number.isFinite(st.map.lat) && Number.isFinite(st.map.lon)) {
+          mapRef.current.jumpTo({ center: [st.map.lon, st.map.lat], zoom: st.map.zoom ?? 10, bearing: st.map.bearing ?? 0, pitch: st.map.pitch ?? 0 });
+        }
+        if (st.params?.at) {
+          const at = Date.parse(st.params.at);
+          if (Number.isFinite(at)) { tw.setAt(at); if (st.params.window) tw.setWindowSec(Number(st.params.window)); setTimeOpen(true); }
+        }
+      } catch (e) {
+        // A link that cannot be resolved is shown as such — not as the default view.
+        setPermalinkError(e);
+      } finally {
+        const next = new URLSearchParams(searchParams);
+        next.delete('p');
+        setSearchParams(next, { replace: true });
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, mapReadyTick]);
+
+  // The global window filters every visible time-coded layer; the report
+  // says which visible layers it could NOT be applied to.
+  const timed = useMemo(
+    () => applyTimeWindow(layerDataView, layers, catalog, { at: tw.at, windowSec: tw.windowSec }),
+    [layerDataView, layers, catalog, tw.at, tw.windowSec],
+  );
 
   // Layer collections carry the server's own `_meta` and the client's
   // `client_stored_at` (useMapLayers). The newest of those is the only honest
@@ -151,7 +227,7 @@ export default function MapPage() {
       {/* Map */}
       <MapView
         layers={layers}
-        layerData={layerDataView}
+        layerData={timed.view}
         catalog={catalog}
         onFeatureClick={handleFeatureClick}
         onMapReady={handleMapReady}
@@ -173,65 +249,79 @@ export default function MapPage() {
         cameraRunActive={!!cameraActiveRun}
       />
 
-      {/* Search Box */}
-      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 w-80">
-        <form onSubmit={handleSearch} className="relative">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search location in Japan..."
-            className="w-full px-4 py-2 bg-osint-surface/90 backdrop-blur-sm border border-osint-border rounded-lg text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-neon-cyan/40 focus:shadow-neon-cyan font-mono"
-          />
-          <button
-            type="submit"
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-neon-cyan text-sm"
-            aria-label="Search"
-          >
-            {isSearching ? '...' : <MdSearch size={16} />}
-          </button>
-        </form>
+      {/* Floating top bar: layers pill · geocode · reverse-geocode · more menu */}
+      <MapTopBar
+        mapRef={mapRef}
+        layers={layers}
+        layerDataView={timed.view}
+        catalog={catalog}
+        activeCount={activeCount}
+        onOpenIsochrone={() => { setIsoOpen(true); setStatsOpen(false); }}
+        onOpenShare={() => setShareOpen(true)}
+        onToggleStats={() => { setStatsOpen((v) => !v); setIsoOpen(false); }}
+        statsOpen={statsOpen}
+        onStartAoi={() => { setAoiDrawing(true); setPopup(null); }}
+        aoiLayerOn={aoiLayerOn}
+        onToggleAoiLayer={() => setAoiLayerOn((v) => !v)}
+        timeOpen={timeOpen}
+        onToggleTime={() => { setTimeOpen((v) => !v); setTimeCollapsed(false); }}
+        onReverseGeocode={reverseGeocodeCentre}
+      />
 
-        {searchError && (
-          <div className="mt-1 glass-panel px-3 py-2 text-xs text-status-offline">
-            Location search failed ({searchError}) — no results were obtained.
-          </div>
-        )}
+      {/* Saved areas of interest (optional layer) + drawing */}
+      <AoiLayer mapRef={mapRef} geojson={aoi.geojson} visible={aoiLayerOn && mapReadyTick > 0} />
+      {aoiLayerOn && aoi.error && (
+        <div className="absolute top-16 right-3 z-30 glass-panel px-3 py-2 text-xs text-neon-red max-w-xs">
+          Areas of interest could not be loaded ({aoi.error.message}). Nothing is drawn — this is not a statement that none exist.
+        </div>
+      )}
+      {aoiLayerOn && aoi.truncated && (
+        <div className="absolute top-16 right-3 z-30 glass-panel px-3 py-2 text-xs text-accent max-w-xs">Showing the first {aoi.rows.length} areas — the list has more pages.</div>
+      )}
+      <AOIDrawOverlay mapRef={mapRef} active={aoiDrawing && mapReadyTick > 0} onClose={() => setAoiDrawing(false)} onSave={aoi.create} />
 
-        {/* Search results dropdown */}
-        {searchResults.length > 0 && (
-          <div className="mt-1 glass-panel overflow-hidden">
-            {searchResults.map((r) => (
-              <button
-                key={`${r.lat},${r.lon}|${r.display_name}`}
-                className="w-full text-left px-3 py-2 text-xs text-gray-300 hover:bg-neon-cyan/10 hover:text-neon-cyan border-b border-osint-border/50 last:border-0 transition-colors"
-                onClick={() => {
-                  setSearchResults([]);
-                  setSearchError(null);
-                  setSearchQuery(r.display_name.split(',')[0]);
-                  // MapView listens for `japanosint:flyto` — same channel the
-                  // Camera Discovery panel uses to recenter the map.
-                  const lat = parseFloat(r.lat);
-                  const lon = parseFloat(r.lon);
-                  if (Number.isFinite(lat) && Number.isFinite(lon)) {
-                    window.dispatchEvent(new CustomEvent('japanosint:flyto', {
-                      detail: { lat, lon, zoom: 13 },
-                    }));
-                  }
-                }}
-              >
-                <div className="truncate">{r.display_name}</div>
-                <div className="text-[10px] font-mono text-gray-600 mt-0.5">
-                  {parseFloat(r.lat).toFixed(4)}, {parseFloat(r.lon).toFixed(4)}
-                </div>
-              </button>
-            ))}
+      {/* Travel-time reachability */}
+      <IsochroneOverlay mapRef={mapRef} open={isoOpen && mapReadyTick > 0} onClose={() => setIsoOpen(false)} />
+
+      {/* Feature stats */}
+      <FeatureStats mapRef={mapRef} layers={layers} view={timed.view} catalog={catalog} open={statsOpen} onClose={() => setStatsOpen(false)} />
+
+      {/* Share permalink */}
+      <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} mapRef={mapRef} layers={layers} timeWindow={tw} />
+
+      {/* Time window + playback */}
+      {timeOpen && (
+        <TimeSlider tw={tw} report={timed.report} view={timed.view} layers={layers} catalog={catalog} collapsed={timeCollapsed} onToggleCollapsed={() => setTimeCollapsed((v) => !v)} />
+      )}
+
+      {permalinkError && (
+        <div className="absolute top-16 left-1/2 -translate-x-1/2 z-40 glass-panel px-3 py-2 text-xs text-neon-red max-w-md flex items-start gap-2">
+          <span>Shared view could not be restored ({permalinkError.message}). The map is showing its default view, not the shared one.</span>
+          <button type="button" onClick={() => setPermalinkError(null)} className="text-osint-muted hover:text-osint-text" aria-label="Dismiss"><LuX size={13} /></button>
+        </div>
+      )}
+
+      {/* Reverse-geocode card (right-click / centre probe) */}
+      {reverse && reversePosition && (
+        <div className="absolute z-40 glass-panel map-popup-ridge p-3 min-w-[220px] max-w-[320px] shadow-lg" style={{ left: reversePosition.x, top: reversePosition.y, transform: 'translate(-50%, -110%)' }}>
+          <div className="flex items-center justify-between mb-1">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-accent">Reverse geocode</span>
+            <button type="button" onClick={() => setReverse(null)} className="text-osint-muted hover:text-osint-text" aria-label="Close"><LuX size={13} /></button>
           </div>
-        )}
-      </div>
+          {reverse.busy && <div className="text-xs text-osint-muted">Looking up…</div>}
+          {reverse.error && <div className="text-xs text-neon-red">Lookup failed ({reverse.error.message}) — no address was obtained.</div>}
+          {!reverse.busy && !reverse.error && (reverse.label
+            ? <div className="text-sm text-osint-text">{reverse.label}{reverse.source && <span className="ml-1 text-[10px] font-mono text-osint-muted">via {reverse.source}</span>}</div>
+            : <div className="text-xs text-osint-muted">The geocoder returned no address for this point.</div>)}
+          <div className="mt-1 flex items-center gap-2 font-mono text-[10px] text-osint-muted">
+            {reverse.lat.toFixed(5)}, {reverse.lon.toFixed(5)}
+            <CopyButton text={`${reverse.lat.toFixed(6)}, ${reverse.lon.toFixed(6)}`} />
+          </div>
+        </div>
+      )}
 
       {/* Feature popup */}
-      {popup && popupPosition && (
+      {popup && popupPosition && !aoiDrawing && (
         <MapPopup
           feature={popup.feature}
           layerType={popup.layerType}
@@ -242,7 +332,7 @@ export default function MapPage() {
       )}
 
       {/* Bottom info bar */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-between px-4 py-1.5 bg-osint-bg/85 backdrop-blur-sm border-t border-osint-border/50 text-[10px] font-mono text-gray-500">
+      <div className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-between px-4 py-1.5 bg-osint-bg/85 backdrop-blur-sm border-t border-osint-border/50 text-[10px] font-mono text-osint-muted">
         <div className="flex items-center gap-4">
           <span>Layers: <span className="text-neon-cyan">{activeCount}</span></span>
           <span>
@@ -256,7 +346,7 @@ export default function MapPage() {
         </div>
         <div>
           Last update:{' '}
-          <span className="text-gray-400">
+          <span className="text-osint-muted">
             {lastUpdate
               ? `${new Date(lastUpdate).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })} JST`
               : 'no layer loaded'}

@@ -1,5 +1,20 @@
 # OSINT Source Reality Report
 
+> **SCOPE — read this before citing the report below.** This audited the **61
+> hand-written entity-pivot collectors** that existed in
+> `native/collectors/sources/` when it was written. The tree has since grown to
+> **~1,551 collector files and 16,366 registered sources**, so the "all 61"
+> below is the whole of *what it examined*, not the whole of the registry —
+> roughly 0.4% of today's sources. Its per-source verdicts are still accurate
+> for the rows it names; it simply says nothing about the other ~16,300.
+>
+> For registry-wide behaviour, use the measurement instead of this document:
+> `python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint --all`
+> proves every registered source emits AND stores, and the most recent full
+> run is written up in `docs/systemwide-audit-2026-09-04.md` (16,366 sources
+> swept; verdict tallies, the collision/emits-nothing id lists, and the
+> engine-level causes found behind them).
+
 Audit of all 61 OSINT collectors in `native/collectors/sources/`. Method: full
 source read of each `run()` + what it emits into `intel_item`, validated by live
 `./bin/japanosint --run <ID> <entity>` spot-runs (latency + emitted DB body).

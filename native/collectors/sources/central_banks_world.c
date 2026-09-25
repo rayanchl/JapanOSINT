@@ -45,7 +45,7 @@ RSSX(cb_riksbank, "riksbank", "Sweden Riksbank", "Sweden Riksbank", "economy", "
   "Sweden Riksbank — central-bank press and policy feed");
 
 RSSX(cb_norgesbank, "norgesbank", "Norges Bank", "Norges Bank", "economy", "economy",
-  "https://www.norges-bank.no/en/rss/", "en", "[\"economy\",\"central-bank\",\"monetary-policy\"]", 7200,
+  "https://www.norges-bank.no/en/rss-feeds/Press-releases---Norges-Bank/", "en", "[\"economy\",\"central-bank\",\"monetary-policy\"]", 7200,
   "Norges Bank — central-bank press and policy feed");
 
 RSSX(cb_bcb_brazil, "bcb-brazil", "Banco Central do Brasil", "Banco Central do Brasil", "economy", "economy",

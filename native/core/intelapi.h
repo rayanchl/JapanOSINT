@@ -92,6 +92,18 @@ char *api_sources_list(db_handle *db);
  * rows that are in fact its own channels. */
 char *intelapi_intel_sources(db_handle *db);
 
+/* The same payload, bounded. `limit <= 0` with `summary_only == 0` is exactly
+ * intelapi_intel_sources() — the full list, which is still the default.
+ *
+ *   limit > 0        one page of data[], from `offset`, after the usual sort
+ *   summary_only     `meta` only; data[] empty and meta.note says why
+ *
+ * `meta` always carries total / shown / offset / limit / truncated / note, so
+ * a page can never be mistaken for the whole list. `total` counts every
+ * source regardless of the window. */
+char *intelapi_intel_sources_view(db_handle *db, int limit, int offset,
+                                  int summary_only);
+
 /* intelCatalog.js INTEL_SOURCE_SET membership — the source ids that emit
  * kind:'intel'. 0 for NULL.
  *

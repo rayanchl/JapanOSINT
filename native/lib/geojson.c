@@ -464,6 +464,21 @@ static unsigned long long gj_page_fp(cJSON *features) {
   return h;
 }
 
+/* The page size this URL declares, or -1. Socrata `$limit` and ArcGIS
+ * `resultRecordCount` are the common ones; the rest cover WFS and the generic
+ * REST spellings. Only used to recognise a FULL page — never to invent a
+ * cursor. */
+static long gj_declared_size(const char *url) {
+  static const char *const SIZE[] = { "$limit", "resultRecordCount", "limit",
+                                      "maxFeatures", "count", "per_page",
+                                      "page_size", "rows", NULL };
+  for (int i = 0; SIZE[i]; i++) {
+    long v = jsonlist_query_int(url, SIZE[i]);
+    if (v > 0) return v;
+  }
+  return -1;
+}
+
 int geojson_emit_paged(intel_sink *sink, const char *source_id,
                        http_client *http, const char *url, int timeout_ms) {
   int page_max = 20;   /* exhaustive-ok: page-walk ceiling; an early stop is disclosed as a collector-truncation-notice and $JO_GEOJSON_PAGE_MAX raises it */
@@ -478,6 +493,7 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
   if (!page_url) return -1;
 
   int total = 0, pages = 0, truncated = 0;
+  int full_unadvanced = 0;   /* last page full, and nothing lets us ask for more */
   long available = -1;
   unsigned long long prev_fp = 0;
   int repeated = 0;
@@ -526,8 +542,41 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
           next = jsonlist_query_set(page_url, CURSORS[i], cur + got);
         }
       }
+      /* 4. Socrata SODA: `$limit` declares the page size and `$offset` is the
+       *    cursor that goes with it. This is the case the disclosure below has
+       *    been NAMING since 2026-09-15 without being able to act on it — the
+       *    comment there cites Calgary air quality reading 400 of 3,725,365
+       *    rows. `$select=count(*)` on that dataset answered 3,752,809 when
+       *    this branch was written, so the shortfall is real and current.
+       *
+       *    Same reasoning as the `$limit`/`$offset` PAGERS entry in
+       *    lib/jsonlist.c, and it is here as well because this is the THIRD
+       *    record path: jsonlist, pagewalk and geojson each carry their own
+       *    copy of the paging rules, and fixing one has twice left the others
+       *    losing data. Gated on a FULL page, like every other advance here —
+       *    a short page is the upstream saying it is finished. */
+      if (!next) {
+        long size = jsonlist_query_int(page_url, "$limit");
+        if (size > 0 && got >= size) {
+          long cur = jsonlist_query_int(page_url, "$offset");
+          next = jsonlist_query_set(page_url, "$offset",
+                                    (cur >= 0 ? cur : 0) + size);
+        }
+      }
     }
     cJSON_Delete(doc);
+
+    /* A FULL page with no way to ask for the next one is not the end of the
+     * data. The walk above advances only ArcGIS `exceededTransferLimit`, a
+     * server link, or a cursor the URL already names, so a Socrata
+     * `.geojson?$limit=400` read one page and said nothing — Calgary air
+     * quality: 400 of 3,725,365 rows, no notice (measured 2026-09-15). The
+     * same disclosure jsonlist and pagewalk make; no cursor is guessed. */
+    {
+      long ds = gj_declared_size(page_url);
+      full_unadvanced = (!next && !repeated && got > 0 &&
+                         ((ds > 0 && got >= ds) || available > (long)total));
+    }
 
     if (got <= 0 || repeated) { free(next); break; }
     free(page_url);
@@ -536,7 +585,7 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
   }
   free(page_url);
 
-  if (truncated) {
+  if (truncated || full_unadvanced) {
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "source_id", source_id);
     cJSON_AddStringToObject(p, "endpoint", url);
@@ -547,19 +596,27 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
     cJSON_AddNumberToObject(p, "pages_read", pages);
     cJSON_AddNumberToObject(p, "page_ceiling", page_max);
     cJSON_AddBoolToObject(p, "more_pages_pending", 1);
-    cJSON_AddStringToObject(p, "reason",
-      "the page ceiling stopped the walk while the upstream still had features");
-    cJSON_AddStringToObject(p, "remedy",
-      "raise $JO_GEOJSON_PAGE_MAX — see docs/SOURCE_EXHAUSTIVENESS.md");
+    cJSON_AddStringToObject(p, "reason", truncated
+      ? "the page ceiling stopped the walk while the upstream still had features"
+      : "the last page came back full (or the upstream declared more than was "
+        "read) and neither the response nor this URL offers a way to ask for "
+        "the next page, so features may remain unread");
+    cJSON_AddStringToObject(p, "remedy", truncated
+      ? "raise $JO_GEOJSON_PAGE_MAX — see docs/SOURCE_EXHAUSTIVENESS.md"
+      : "give this source a cursor the walk can advance (for Socrata: $offset "
+        "with a stable $order=:id) — see docs/SOURCE_EXHAUSTIVENESS.md");
     char *pj = cJSON_PrintUnformatted(p);
     cJSON_Delete(p);
     char title[256];
     if (available >= 0)
       snprintf(title, sizeof title, "%s used %d of %ld available features",
                source_id, total, available);
-    else
+    else if (truncated)
       snprintf(title, sizeof title,
                "%s used %d features and stopped at the page ceiling", source_id, total);
+    else
+      snprintf(title, sizeof title, "%s used %d features; the last page was full "
+               "and this URL has no cursor to ask for more", source_id, total);
     intel_item note = {0};
     note.remote_key      = "truncation";
     note.title           = title;
@@ -571,8 +628,10 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
     free(pj);
   }
 
-  if (pages > 1 || truncated)
+  if (pages > 1 || truncated || full_unadvanced)
     fprintf(stderr, "[%s] emitted %d across %d page(s)%s\n",
-            source_id, total, pages, truncated ? " (TRUNCATED)" : "");
+            source_id, total, pages,
+            truncated ? " (TRUNCATED)"
+                      : full_unadvanced ? " (TRUNCATED: full last page, no cursor)" : "");
   return total;
 }

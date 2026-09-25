@@ -106,13 +106,24 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
      * alone upserted the channels onto each other: measured 2,385 emitted,
      * 1,763 stored. The sensor (and sensorid where present) completes the
      * upstream's own identity for the row. */
-    char key[128];
+    /* Re-measured 2026-09-06 (2,381 rows, 2,012 byte-distinct): the same
+     * code|sensor|sensorid still recurs — setp1/rad/1024 eight times — with
+     * the rows differing only in "updatedata"/"timestampdata" (a small
+     * integer channel code, 0-10 or null) and the per-channel observation
+     * counters. The channel code is the last upstream field that separates
+     * them, so it joins the key; rows identical in every field are the
+     * upstream's own repetition and are meant to collapse. */
+    char key[144];
     const cJSON *sidj = cJSON_GetObjectItem(s, "sensorid");
+    const cJSON *updj = cJSON_GetObjectItem(s, "updatedata");
+    char upd[24] = "";
+    if (cJSON_IsNumber(updj))
+      snprintf(upd, sizeof upd, "|%.0f", updj->valuedouble);
     if (cJSON_IsNumber(sidj))
-      snprintf(key, sizeof key, "%s|%s|%.0f", code, sensor ? sensor : "",
-               sidj->valuedouble);
+      snprintf(key, sizeof key, "%s|%s|%.0f%s", code, sensor ? sensor : "",
+               sidj->valuedouble, upd);
     else
-      snprintf(key, sizeof key, "%s|%s", code, sensor ? sensor : "");
+      snprintf(key, sizeof key, "%s|%s%s", code, sensor ? sensor : "", upd);
 
     intel_item it = {0};
     it.remote_key      = key;

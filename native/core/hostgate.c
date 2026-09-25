@@ -62,8 +62,17 @@ static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = 
    * sweep: 7 marked dead, 5/5 sampled fine serially). 1.5 s keeps a full
    * pass of the family at ~15 min. */
   { "news.google.com", 1500 },
+  /* NCBI E-utilities allow 3 requests/second per IP without an API key. The
+   * esearch → esummary hop rows (collectors/sources/_ncbi_esummary.inc) pass
+   * run one at a time and fail when a sweep runs several together (measured
+   * 2026-09-15); 400 ms keeps the whole family under the limit. */
+  { "eutils.ncbi.nlm.nih.gov", 400 },
 };
-static int g_nover = 1;
+/* The number of LIVE entries above. This was `1` while the table held two, so
+ * gap_for_host() — which scans only the first g_nover entries — never saw the
+ * news.google.com gap its comment describes: the 615 gnews-* rows kept firing
+ * together (found 2026-09-15). Keep it equal to the initialiser count. */
+static int g_nover = 3;
 
 static void override_set(const char *host, int gap_ms) {
   for (int i = 0; i < g_nover; i++)

@@ -125,6 +125,51 @@ jobs:
         working-directory: native
         run: make audit-sources
 
+      # THE SERVER MUST STAY ANSWERABLE WHILE IT IS BUSY.
+      #
+      # Twice now a route has been found holding the single mongoose event
+      # loop: a cold /api/data/castles froze /api/health for 20 s (2026-09-07),
+      # and three concurrent /api/status did it for 24.8 s (2026-09-11). Both
+      # were found by a human running a benchmark by hand, months apart, and
+      # both had been true since the code was written. This checks the property
+      # on every push: while three /api/status calls are in flight,
+      # /api/health must still answer inside a second. Post-fix it answers in
+      # 0.014 s, so the limit is not tight — a failure means a route went back
+      # on the loop, not that the runner was busy. No network: the scheduler is
+      # staggered out and the DB is a fresh schema.
+      - name: Event loop stays free under load
+        working-directory: native
+        run: tools/ci_concurrency_gate.sh ./bin/japanosint 1.0
+
+  # The race class this repo has already been bitten by — a strtok() cursor
+  # shared between 8 scheduler workers and the HTTP thread, and transactions
+  # crossing a shared SQLite handle — has never had a CI gate; `make tsan-sched`
+  # is what found those, run by hand. This runs the unit suite under
+  # ThreadSanitizer, which is the offline half (tsan-sched drives real
+  # collectors and would need network). Separate job because the TSan object
+  # tree is a second full build.
+  thread-sanitizer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libcurl4-openssl-dev libssl-dev libmecab-dev mecab zlib1g-dev \
+            mecab-ipadic-utf8 util-linux
+        # util-linux for setarch: TSan cannot map its shadow with the ASLR
+        # entropy current kernels default to, and `setarch -R` is how the
+        # Makefile's own tsan targets turn it off.
+
+      - name: Unit tests under ThreadSanitizer
+        working-directory: native
+        run: make tsan-test
+
   # 57 JS files, a tracked lockfile and a vitest block that was configured in
   # vite.config.js and never run by anything. A syntax error in the web client
   # merged green until this job existed.

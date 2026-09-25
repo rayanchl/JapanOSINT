@@ -22,7 +22,7 @@ export function ModalityBadge({ modality }) {
   const b = MODALITY_BADGE[modality] || { label: 'geom', title: 'modality: undeclared by server — rendered by feature geometry' };
   return (
     <span
-      className="text-[9px] font-mono px-1 rounded border border-osint-border-bright text-gray-500"
+      className="text-[9px] font-mono px-1 rounded border border-osint-border-bright text-osint-muted"
       title={b.title}
       data-testid="modality-badge"
     >
@@ -57,14 +57,14 @@ export function LayerStatusCell({ featureData, isActive, showSpinner }) {
   if (!isActive) return null;
   if (c.state === 'empty') {
     return (
-      <span className="text-[10px] font-mono text-gray-500" title="The server answered and holds zero records for this layer" data-testid="status-empty">
+      <span className="text-[10px] font-mono text-osint-muted" title="The server answered and holds zero records for this layer" data-testid="status-empty">
         0
       </span>
     );
   }
   if (c.state === 'loaded') {
     return (
-      <span className="text-[10px] font-mono text-gray-500" title={c.truncated ? `${c.count} of ${c.available} loaded` : `${c.count} records`} data-testid="status-count">
+      <span className="text-[10px] font-mono text-osint-muted" title={c.truncated ? `${c.count} of ${c.available} loaded` : `${c.count} records`} data-testid="status-count">
         {c.count}
       </span>
     );
@@ -119,7 +119,7 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
         >
           <Icon size={14} color={def.color} aria-hidden="true" />
           <span className="flex flex-col min-w-0">
-            <span className={`text-xs truncate ${isActive ? 'text-gray-200' : 'text-gray-500'}`}>
+            <span className={`text-xs truncate ${isActive ? 'text-osint-text' : 'text-osint-muted'}`}>
               {def.name}
             </span>
             {/* Server taxonomy: modality badge + data_type. `data_type` null
@@ -127,12 +127,12 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
             <span className="flex items-center gap-1 min-w-0">
               <ModalityBadge modality={def.modality ?? null} />
               {def.data_type && (
-                <span className="text-[9px] font-mono truncate text-gray-600" title={`data_type: ${def.data_type}`}>
+                <span className="text-[9px] font-mono truncate text-osint-muted" title={`data_type: ${def.data_type}`}>
                   {def.data_type}
                 </span>
               )}
               {def.clientOnly && (
-                <span className="text-[9px] font-mono text-gray-600" title="Not in the server's layer taxonomy; fetched from /api/data">
+                <span className="text-[9px] font-mono text-osint-muted" title="Not in the server's layer taxonomy; fetched from /api/data">
                   local
                 </span>
               )}
@@ -173,7 +173,7 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
       {/* Opacity slider */}
       {showOpacity && isActive && (
         <div className="mt-2 ml-10 flex items-center gap-2">
-          <span className="text-[10px] text-gray-500 w-8">Opacity</span>
+          <span className="text-[10px] text-osint-muted w-8">Opacity</span>
           <input
             type="range"
             min="0"
@@ -183,7 +183,7 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
             onChange={(e) => onOpacityChange(id, parseFloat(e.target.value))}
             className="flex-1 h-1 accent-neon-cyan bg-gray-700 rounded appearance-none cursor-pointer"
           />
-          <span className="text-[10px] font-mono text-gray-500 w-8 text-right">
+          <span className="text-[10px] font-mono text-osint-muted w-8 text-right">
             {Math.round(state.opacity * 100)}%
           </span>
         </div>
@@ -191,7 +191,7 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
 
       {/* Sources behind this layer, as the server declares them */}
       {showOpacity && isActive && def.sources && def.sources.length > 0 && (
-        <div className="mt-1 ml-10 text-[10px] text-gray-500">
+        <div className="mt-1 ml-10 text-[10px] text-osint-muted">
           {def.sources.length} source{def.sources.length === 1 ? '' : 's'}
           {def.kind ? ` · ${def.kind}` : ''}
           {Number.isFinite(def.records_geocoded) ? ` · ${def.records_geocoded.toLocaleString()} geocoded` : ''}
@@ -202,7 +202,7 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
       {showOpacity && isActive && temporalKey && months && months.length > 0 && (
         <div className="mt-2 ml-10">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] text-gray-500 w-8">Window</span>
+            <span className="text-[10px] text-osint-muted w-8">Window</span>
             <select
               value={window ? `${window[0]}|${window[1]}` : 'all'}
               onChange={(e) => {
@@ -213,7 +213,7 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
                   onTemporalChange?.(id, [s, e2]);
                 }
               }}
-              className="flex-1 text-[10px] bg-osint-surface border border-osint-border-bright rounded px-1 py-0.5 text-gray-300"
+              className="flex-1 text-[10px] bg-osint-surface border border-osint-border-bright rounded px-1 py-0.5 text-osint-text"
             >
               <option value="all">All ({months.length})</option>
               {months.map((m) => (
@@ -260,7 +260,9 @@ export default function LayerPanel({
   onSetAll,
   cameraRunActive = false,
 }) {
-  const [collapsed, setCollapsed] = useState(false);
+  // Phones start with the panel folded (the iOS Map opens layers from the
+  // bar); wide screens keep it open as before.
+  const [collapsed, setCollapsed] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
   const [collapsedCategories, setCollapsedCategories] = useState(() => new Set());
 
   const toggleCategory = (category) => {
@@ -294,13 +296,13 @@ export default function LayerPanel({
                 <h2 className="text-xs font-semibold uppercase tracking-wider text-neon-cyan">
                   Layers
                 </h2>
-                <span className="text-[10px] font-mono text-gray-500">{activeCount} active</span>
+                <span className="text-[10px] font-mono text-osint-muted">{activeCount} active</span>
               </div>
 
               {/* Where the taxonomy came from. The static table is not the
                 * server's catalogue and must not be presented as it. */}
               {catalogStatus === 'loading' && (
-                <div className="mt-1 text-[10px] text-gray-500" data-testid="catalog-status">
+                <div className="mt-1 text-[10px] text-osint-muted" data-testid="catalog-status">
                   Loading layer catalogue from server…
                 </div>
               )}
@@ -313,13 +315,13 @@ export default function LayerPanel({
               <div className="flex gap-2 mt-2">
                 <button
                   onClick={() => onSetAll(true)}
-                  className="text-[10px] px-2 py-0.5 rounded border border-osint-border-bright text-gray-400 hover:text-neon-cyan hover:border-neon-cyan/30 transition-colors"
+                  className="text-[10px] px-2 py-0.5 rounded border border-osint-border-bright text-osint-muted hover:text-accent hover:border-neon-cyan/30 transition-colors"
                 >
                   All On
                 </button>
                 <button
                   onClick={() => onSetAll(false)}
-                  className="text-[10px] px-2 py-0.5 rounded border border-osint-border-bright text-gray-400 hover:text-neon-red hover:border-neon-red/30 transition-colors"
+                  className="text-[10px] px-2 py-0.5 rounded border border-osint-border-bright text-osint-muted hover:text-neon-red hover:border-neon-red/30 transition-colors"
                 >
                   All Off
                 </button>
@@ -336,16 +338,16 @@ export default function LayerPanel({
                   <button
                     type="button"
                     onClick={() => toggleCategory(category)}
-                    className="w-full flex items-center justify-between px-3 py-1.5 text-[10px] uppercase tracking-widest text-gray-500 font-medium hover:bg-osint-surface/40 hover:text-gray-300 transition-colors"
+                    className="w-full flex items-center justify-between px-3 py-1.5 text-[10px] uppercase tracking-widest text-osint-muted font-medium hover:bg-osint-surface/40 hover:text-osint-text transition-colors"
                     aria-expanded={!isCollapsed}
                   >
                     <span className="flex items-center gap-1.5">
-                      <span className="inline-block w-3 text-gray-600">
+                      <span className="inline-block w-3 text-osint-muted">
                         {isCollapsed ? '▸' : '▾'}
                       </span>
                       {categoryLabel(category)}
                     </span>
-                    <span className="font-mono text-gray-600">
+                    <span className="font-mono text-osint-muted">
                       {activeInCat > 0 ? `${activeInCat}/${ids.length}` : ids.length}
                     </span>
                   </button>
@@ -373,7 +375,7 @@ export default function LayerPanel({
       {/* Toggle button */}
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="absolute top-3 bg-osint-surface border border-osint-border rounded-r px-1 py-2 text-gray-400 hover:text-neon-cyan transition-colors z-40"
+        className="absolute top-3 bg-osint-surface border border-osint-border rounded-r px-1 py-2 text-osint-muted hover:text-accent transition-colors z-40"
         style={{ left: collapsed ? 0 : '256px' }}
         aria-label={collapsed ? 'Expand layer panel' : 'Collapse layer panel'}
       >

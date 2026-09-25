@@ -16,6 +16,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/seenset.h"
 #include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <stdio.h>
@@ -55,6 +56,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int min_year = tmv.tm_year + 1900 - 1;      /* >= current-1, per parse notes */
 
   int n = 0;
+  seen_set urn_seen = {0};
   cJSON *d;
   cJSON_ArrayForEach(d, doc) {
     const char *urn = jo_sv(d, "device_urn");
@@ -96,7 +98,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(title, sizeof title, "Safecast %s: %.0f CPM (%s)", urn, cpm, tube);
 
     intel_item row = {0};
-    row.remote_key      = urn;
+    /* /devices lists one entry per device REPORT, and a busy device appears
+     * several times with different when_captured readings (live 2026-09-15:
+     * 2,074 entries, 2,058 urns; one urn 7 times with different capture time,
+     * temperature, particulate counts). Keyed on the urn alone, later reports
+     * upserted over earlier ones. A urn already seen this run is qualified by
+     * its capture time; a first occurrence keeps its plain urn and stored uid. */
+    char keybuf[224];
+    const char *rk = urn;
+    if (!seen_add(&urn_seen, urn)) {
+      snprintf(keybuf, sizeof keybuf, "%s|%s", urn, when ? when : "");
+      rk = keybuf;
+    }
+    row.remote_key      = rk;
     row.title           = title;
     row.summary         = title;
     row.published_at    = when;
@@ -110,6 +124,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &row) >= 0) n++;
     free(pj);
   }
+  seen_free(&urn_seen);
   cJSON_Delete(doc);
   fprintf(stderr, "[" SRC "] emitted %d\n", n);
   return 0;

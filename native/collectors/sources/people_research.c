@@ -26,9 +26,15 @@ static int run_places(const source_ctx *ctx, intel_sink *sink) {
     "https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&language=ja&key=%s", q, key);
   free(q);
   char *body = jo_get(ctx, url, NULL, "gplaces");
-  if (!body) return 0;
+  if (!body) { fprintf(stderr, "[gplaces] fetch failed (HTTP error/timeout)\n"); return -1; }
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) { fprintf(stderr, "[gplaces] malformed JSON response\n"); return -1; }
+  const char *status = jo_sv(root, "status");
+  if (status && strcmp(status, "OK") != 0 && strcmp(status, "ZERO_RESULTS") != 0) {
+    fprintf(stderr, "[gplaces] API error status=%s\n", status);
+    cJSON_Delete(root);
+    return -1;
+  }
   int emitted = 0;
   cJSON *results = cJSON_GetObjectItem(root, "results");
   cJSON *r = NULL;

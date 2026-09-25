@@ -148,9 +148,29 @@ python3 native/tools/audit_batch_reachable.py docs/candidate-sources-batch*.txt
 
 ## Batch tooling
 
-New sources are authored as a pipe-delimited manifest and generated, not
-hand-written. `docs/candidate-sources-batch<N>.<beat>.txt` is the source of
-truth; `collectors/pivot/table/hp3*_<beat>.c` is generated. Edit the manifest.
+New sources are AUTHORED as a pipe-delimited manifest and scaffolded, not
+hand-written: `docs/candidate-sources-batch<N>.<beat>.txt` goes through the
+probe/exclusion/reachability gates below and then through `gen_hp_batch.py`,
+which is how a beat of 100+ rows gets written at all.
+
+**After a beat ships, the C is the maintained copy and the manifest is the
+record of how it was probed.** That is a correction of what this file used to
+say ("the manifest is the source of truth; edit the manifest"), and it is a
+correction to match reality rather than a change of policy: measured
+2026-09-11 across every batch manifest, **48 of 79 beats already differ from
+what their manifest generates — 62,461 lines** — and the direction is always
+the same. The C holds `id_keys = "公司代號+姓名+職稱"` with the live counts
+that proved it (27,528 rows, 26,789 distinct triples); the manifest still says
+`公司代號`, the key that lost 97% of them. The manifest format has nowhere to
+put that evidence, and a repair without its evidence is unreviewable.
+
+So: **regenerating a shipped beat reverts verified repairs.** Both generators
+now refuse to overwrite an existing file and report how many lines would have
+changed; `--force` is for the case where the manifest really is the newer copy
+(a whole beat re-authored), and a `diff` is the answer every other time. Mirror
+an opts change back into the manifest when it is cheap — it keeps the probe
+gates honest for a future re-probe — but never at the cost of the comment that
+says why.
 
 | tool | what it enforces |
 | --- | --- |
@@ -159,6 +179,7 @@ truth; `collectors/pivot/table/hp3*_<beat>.c` is generated. Edit the manifest.
 | `tools/batch_exclusions.py` | no duplicate id or endpoint against the existing tree or within the batch (normalising `{q}` and `%s` to one form; `.portal` is documentation and is excluded). Sees **runtime-composed** endpoints too — it resolves string macros, joins adjacent literals, follows `#include "*.inc"`, and matches a `%s` URL family on its layer/dataset NAME. Pass **`--bin ./bin/japanosint`**: without it the id set is a regex approximation (4,754 of 13,193) and it says so |
 | `tools/audit_batch_pagination.py` | a paged endpoint declares `page_param` or `next_path` — read from the parsed opts, not as a substring of the whole field |
 | `tools/audit_batch_reachable.py` | rule 3 above. A row whose opts are ambiguous is reported UNVERIFIABLE, never "never runs" |
+| `tools/audit_page_param.py` | rows whose URL already binds their own `page_param`. The engine used to APPEND (`…&pagina=1&pagina=2`) and a server binding the first occurrence then served page 1 for the whole walk — N pages emitted, one stored, `rc=0`. Fixed in `hp_url_set_param` and pinned by `hptest` "9f-bis"; the lint stays because 103 of 1,431 paged rows are that shape and their paging depends on the replacement being right |
 | `tools/audit_batch_emit.py` | rule 4 below: runs each MANIFEST row through the real binary and reads back `emitted N of M`. `--timeout S` moves the kill line; a run that hits it is **`SLOW`**, carrying its partial counts — unmeasured, not failed |
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
@@ -212,6 +233,31 @@ a row, check that its `id_keys` is unique per record, not per group:
 ./bin/japanosint --run <ID>          # the run line now states BOTH numbers
 sqlite3 $JO_DB "select count(*) from intel_items where source_id='<ID>'"
 ```
+
+**In `id_keys`, `+` COMPOSES and `,` CHOOSES.** `year+quarter+item` joins all
+three into one key; `year,quarter,item` keys on `year` and never reads the
+rest. They nest: `a+b,c` = "a+b, or else c". Use `+` whenever identity is a
+tuple of dimensions, which is most statistical and regulatory tables.
+
+Getting this backwards fails SILENTLY, and it is the most repeated mistake in
+this file's history: 26 rows written in the 2026-09 fix pass used commas
+meaning composites. They looked right because the in-page collision guard
+content-hashes records that collide inside ONE page — the same key recurring
+on a LATER page still collapsed at the sink. `FINRA_OTC_BLOCKS` emitted 2,000
+and stored 476 (its distinct first-token values) until the commas became
+pluses, then stored 2,000. A single-page `--run` cannot see this; only the
+registry sweep can.
+
+The generated `VJSON` fleet has the same question and a smaller answer:
+`VJSON` keys on a fixed precedence list (`id`, `uid`, `guid`, `uuid`, `_id`,
+`identifier`, `code`, `key`), and **`VJSON_KEYED(..., IDFIELD)`** overrides it
+with ONE named top-level field. There is no composite form: when a generated
+row needs a two-field key, hand-write a `run()` — the worked example is
+`geo_tidesandcurrents_currents` at the top of
+`collectors/feed/generated/vsrc_environment_3.c` (`pw_walk` +
+`jsonlist_emit_ex`, composing the id from two fields the record already
+carries). Delete the `VJSON(...)` block you replace; leaving both defines the
+source twice and breaks the build.
 
 If the second number is smaller than the first, the row's identity is wrong.
 

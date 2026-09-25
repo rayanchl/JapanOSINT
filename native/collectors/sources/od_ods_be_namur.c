@@ -8,7 +8,7 @@
 
 #define SID "ods-be-namur"
 static const char *URL =
-  "https://data.namur.be/api/explore/v2.1/catalog/datasets?limit=20";
+  "https://data.namur.be/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_id";
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   return od_rc(SID, od_ods_catalog_collect(ctx, sink, URL,
@@ -21,7 +21,7 @@ static const source_def od_ods_be_namur_def = {
   .name = "Ville de Namur open data (OpenDataSoft)",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://data.namur.be/api/explore/v2.1/catalog/datasets?limit=20",
+  .url = "https://data.namur.be/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_id",
   .description = "City of Namur open-data catalogue (295 datasets) including republished Statbel income data",
   .license = "Ville de Namur / Statbel open data; reuse with attribution",
   .free_tier = 1,

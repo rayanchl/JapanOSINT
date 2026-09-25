@@ -978,6 +978,17 @@ static int cmp_sr(const void *A, const void *B) {
 }
 
 char *intelapi_intel_sources(db_handle *db) {
+  return intelapi_intel_sources_view(db, 0, 0, 0);
+}
+
+/* The bounded form — see intelapi.h. `limit <= 0` and `summary_only == 0` is
+ * the full payload, byte for byte what this route has always returned.
+ *
+ * Measured 2026-09-11: the full body is 10.1 MB and ~4 s to build, and three
+ * concurrent calls held the event loop for 7.8 s. The rows outside the window
+ * are freed rather than printed, which is where most of that goes. */
+char *intelapi_intel_sources_view(db_handle *db, int limit, int offset,
+                                  int summary_only) {
   /* 1. aggregates over intel_items (== listSources()) */
   static const char *AQ =
     "SELECT source_id,COUNT(*),"
@@ -1228,13 +1239,38 @@ char *intelapi_intel_sources(db_handle *db) {
 
   qsort(SR, nout, sizeof *SR, cmp_sr);
 
+  /* The window is applied AFTER the sort: a page of an unsorted list is not a
+   * page of anything. Rows outside it are deleted here rather than serialised —
+   * they were still built, because `meta.total` and the per-category rollups a
+   * caller may add later have to describe every source, not the page. */
+  if (offset < 0) offset = 0;
+  if (summary_only) limit = 0;
+  const int windowed = (summary_only || limit > 0);
   cJSON *data = cJSON_CreateArray();
-  for (int i = 0; i < nout; i++) cJSON_AddItemToArray(data, SR[i].obj);
+  int shown = 0;
+  for (int i = 0; i < nout; i++) {
+    int in_window = !windowed ||
+                    (!summary_only && i >= offset && shown < limit);
+    if (in_window) { cJSON_AddItemToArray(data, SR[i].obj); shown++; }
+    else cJSON_Delete(SR[i].obj);
+  }
 
   char ts[40]; iso_now(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddNumberToObject(meta, "total", nout);
+  /* What was actually returned, out of `total`. Always present, for the same
+   * reason /api/status carries `view`: an array length is not a disclosure. */
+  cJSON_AddNumberToObject(meta, "shown", windowed ? shown : nout);
+  cJSON_AddNumberToObject(meta, "offset", offset);
+  cJSON_AddNumberToObject(meta, "limit", limit);
+  cJSON_AddBoolToObject(meta, "truncated", windowed && shown < nout);
+  cJSON_AddStringToObject(meta, "note",
+    summary_only ? "summary only: `total` counts every source; data[] was not "
+                   "built (?summary=1)."
+    : windowed   ? "a page of the source list, sorted as usual; `total` counts "
+                   "every source. Use ?offset= to walk the rest."
+                 : "every source (no ?limit given)");
 
   cJSON *env = cJSON_CreateObject();
   cJSON_AddItemToObject(env, "data", data);

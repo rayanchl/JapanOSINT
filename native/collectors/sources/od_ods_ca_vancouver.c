@@ -11,7 +11,7 @@
 
 #define SID "ods-ca-vancouver"
 static const char *URL =
-  "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets?limit=20";
+  "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_id";
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   return od_rc(SID, od_ods_catalog_collect(ctx, sink, URL,
@@ -24,7 +24,7 @@ static const source_def od_ods_ca_vancouver_def = {
   .name = "City of Vancouver open data (OpenDataSoft)",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets?limit=20",
+  .url = "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_id",
   .description = "City of Vancouver open-data catalogue (197 datasets) with per-dataset row counts, licence and last-modified stamps",
   .license = "Open Government Licence - Vancouver",
   .free_tier = 1,

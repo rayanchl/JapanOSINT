@@ -13,9 +13,10 @@
  * but has NO coordinates at all, so it is not a substitute for this one.
  */
 #include "lib/jocore.h"
+#include "lib/seenset.h"
 #include "trn_common.inc"
 
-#define RDW_GARAGES "https://opendata.rdw.nl/resource/t5pc-eb34.json?$limit=1000"
+#define RDW_GARAGES "https://opendata.rdw.nl/resource/t5pc-eb34.json?$limit=1000&$order=:id"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, RDW_GARAGES, 30000);
@@ -26,6 +27,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   int n = 0;
+  seen_set aid_seen = {0};
   cJSON *g;
   cJSON_ArrayForEach(g, doc) {
     const char *aid = jo_sv(g, "areaid");
@@ -43,7 +45,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char *pj = cJSON_PrintUnformatted(pr);
 
     intel_item it = {0};
-    it.remote_key      = aid ? aid : desc;
+    /* areaid is unique only within an area manager: live 2026-09-15 the 237
+     * garages carry 236 areaids but 237 areamanagerid+areaid pairs, so one
+     * garage upserted over another manager's. A repeat is qualified by its
+     * manager id; a first occurrence keeps its plain areaid and stored uid. */
+    char keybuf[192];
+    const char *rk = aid ? aid : desc;
+    const char *mgr = jo_sv(g, "areamanagerid");
+    if (aid && !seen_add(&aid_seen, aid)) {
+      snprintf(keybuf, sizeof keybuf, "%s|%s", mgr ? mgr : "?", aid);
+      rk = keybuf;
+    }
+    it.remote_key      = rk;
     it.title           = desc ? desc : aid;
     it.summary         = jo_sv(g, "usageid");
     it.lang            = "nl";
@@ -61,6 +74,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
     cJSON_Delete(pr);
   }
+  seen_free(&aid_seen);
   cJSON_Delete(doc);
   fprintf(stderr, "[netherlands-rdw-parking-garages] emitted %d\n", n);
   return 0;

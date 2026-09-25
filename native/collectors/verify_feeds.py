@@ -139,10 +139,24 @@ def count_json(text):
     return None, 0
 
 def count_csv(text):
+    """Records in a CSV body. The DIALECT is sniffed from a small head — that
+    is what sniffing is for — but the COUNT is taken over the whole text.
+
+    It used to parse `text[:200000]` and report that as the record count, so
+    every CSV larger than 200,000 characters was under-reported in proportion
+    to how far past the cut it ran, and the number looked like a measurement.
+    Tokyo's chome offence table read 2,320 of its 5,156 rows; the Metropolitan
+    Police bicycle-theft files read ~2,500 of 19,000-28,000. The verdict
+    (PASS / EMPTY_RESULTSET) was usually still right, which is what kept it
+    invisible: only comparing the count against the file itself shows it.
+
+    The read is already bounded — fetch() stops at MAXBYTES — so parsing all of
+    it cannot be unbounded work, and a truthful count of a 64 MB worst case
+    costs a few seconds once per probe.
+    """
     try:
-        head = text[:200000]
-        sniff = csv.Sniffer().sniff(head[:4096])
-        rows = list(csv.reader(io.StringIO(head), sniff))
+        sniff = csv.Sniffer().sniff(text[:4096])
+        rows = list(csv.reader(io.StringIO(text), sniff))
         return ("csv", len(rows) - 1) if len(rows) > 1 else (None, 0)
     except Exception:
         return None, 0

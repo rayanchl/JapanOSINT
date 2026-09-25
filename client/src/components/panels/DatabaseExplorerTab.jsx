@@ -4,7 +4,7 @@ import apiUrl from '../../utils/apiUrl.js';
 const PAGE_SIZES = [25, 50, 100, 200];
 
 function fmtCell(v) {
-  if (v === null || v === undefined) return <span className="text-gray-600">—</span>;
+  if (v === null || v === undefined) return <span className="text-osint-muted">—</span>;
   if (typeof v === 'number') return String(v);
   if (typeof v === 'boolean') return v ? 'true' : 'false';
   const s = String(v);
@@ -116,11 +116,11 @@ export default function DatabaseExplorerTab() {
               setSelected(t.name);
             }}
             className={`w-full text-left px-3 py-1.5 text-[11px] font-mono border-b border-osint-border/30 hover:bg-white/5 transition-colors ${
-              selected === t.name ? 'bg-neon-cyan/10 text-neon-cyan' : 'text-gray-300'
+              selected === t.name ? 'bg-neon-cyan/10 text-neon-cyan' : 'text-osint-text'
             }`}
           >
             <div>{t.name}</div>
-            <div className="text-[9px] text-gray-500">{t.row_count.toLocaleString()} rows</div>
+            <div className="text-[9px] text-osint-muted">{t.row_count.toLocaleString()} rows</div>
           </button>
         ))}
       </div>
@@ -134,12 +134,12 @@ export default function DatabaseExplorerTab() {
             value={q}
             onChange={(e) => { setQ(e.target.value); setOffset(0); }}
             placeholder="Filter text columns..."
-            className="flex-1 px-2 py-1 bg-osint-bg/60 border border-osint-border rounded text-[11px] text-gray-200 placeholder-gray-600 focus:outline-none focus:border-neon-cyan/40 font-mono"
+            className="flex-1 px-2 py-1 bg-osint-bg/60 border border-osint-border rounded text-[11px] text-osint-text placeholder:text-osint-muted/70 focus:outline-none focus:border-neon-cyan/40 font-mono"
           />
           <select
             value={limit}
             onChange={(e) => { setLimit(parseInt(e.target.value, 10)); setOffset(0); }}
-            className="px-2 py-1 bg-osint-bg/60 border border-osint-border rounded text-[10px] text-gray-300"
+            className="px-2 py-1 bg-osint-bg/60 border border-osint-border rounded text-[10px] text-osint-text"
           >
             {PAGE_SIZES.map((n) => <option key={n} value={n}>{n}/page</option>)}
           </select>
@@ -148,7 +148,7 @@ export default function DatabaseExplorerTab() {
         {/* Data table */}
         <div className="flex-1 overflow-auto">
           {loading && (
-            <div className="px-3 py-2 text-[10px] text-gray-500">Loading…</div>
+            <div className="px-3 py-2 text-[10px] text-osint-muted">Loading…</div>
           )}
           {!loading && rowsError && (
             <div className="px-3 py-2 text-[10px] text-status-offline">
@@ -157,7 +157,7 @@ export default function DatabaseExplorerTab() {
             </div>
           )}
           {!loading && !rowsError && data && data.rows.length === 0 && (
-            <div className="px-3 py-2 text-[10px] text-gray-500">No rows.</div>
+            <div className="px-3 py-2 text-[10px] text-osint-muted">No rows.</div>
           )}
           {!loading && data && data.rows.length > 0 && selectedMeta && (
             <table className="w-full text-[10px] font-mono border-collapse">
@@ -167,7 +167,7 @@ export default function DatabaseExplorerTab() {
                     <th
                       key={c.name}
                       onClick={() => handleSort(c.name)}
-                      className="text-left px-2 py-1 border-b border-osint-border/50 text-gray-400 uppercase tracking-wider font-normal cursor-pointer hover:text-neon-cyan"
+                      className="text-left px-2 py-1 border-b border-osint-border/50 text-osint-muted uppercase tracking-wider font-normal cursor-pointer hover:text-neon-cyan"
                       title={`${c.name} · ${c.type}`}
                     >
                       {c.name}
@@ -194,7 +194,7 @@ export default function DatabaseExplorerTab() {
                         {selectedMeta.columns.map((c) => (
                           <td
                             key={c.name}
-                            className="px-2 py-1 text-gray-200 align-top"
+                            className="px-2 py-1 text-osint-text align-top"
                             title={row[c.name] != null ? String(row[c.name]) : ''}
                           >
                             {fmtCell(row[c.name])}
@@ -207,7 +207,7 @@ export default function DatabaseExplorerTab() {
                             colSpan={selectedMeta.columns.length}
                             className="px-2 py-2 bg-black/40 border-b border-osint-border/40"
                           >
-                            <pre className="text-[10px] text-gray-300 whitespace-pre-wrap break-all max-h-64 overflow-auto">
+                            <pre className="text-[10px] text-osint-text whitespace-pre-wrap break-all max-h-64 overflow-auto">
                               {JSON.stringify(row, null, 2)}
                             </pre>
                           </td>
@@ -223,10 +223,10 @@ export default function DatabaseExplorerTab() {
 
         {/* Pagination */}
         {data && data.total > 0 && (
-          <div className="flex items-center justify-between px-3 py-1.5 border-t border-osint-border/50 text-[10px] text-gray-400">
+          <div className="flex items-center justify-between px-3 py-1.5 border-t border-osint-border/50 text-[10px] text-osint-muted">
             <div>
               {offset + 1}–{Math.min(offset + data.rows.length, data.total)} of{' '}
-              <span className="text-gray-200">{data.total.toLocaleString()}</span>
+              <span className="text-osint-text">{data.total.toLocaleString()}</span>
             </div>
             <div className="flex items-center gap-2">
               <button

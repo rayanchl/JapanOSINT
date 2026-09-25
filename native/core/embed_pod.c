@@ -71,7 +71,16 @@ static char *record_types_json(void) {
   cJSON *a = cJSON_CreateArray();
   char *copy = strdup(v);
   if (!copy) { cJSON_Delete(a); return NULL; }
-  for (char *tok = strtok(copy, ","); tok; tok = strtok(NULL, ",")) {
+  /* strtok_r, not strtok: this pod runs on a scheduler worker thread, and
+   * strtok keeps its cursor in a single process-wide static. Another thread
+   * calling strtok between two of these iterations — the same race the
+   * 2026-08-16 audit found in lib/jsonlist.c and core/operatorgate.c — moves
+   * this loop's cursor into someone else's string. Low frequency here (a pod
+   * tick reading one env var) is a reason it had not bitten, not a reason for
+   * it to stay: this was the last bare strtok() in the tree. */
+  char *save = NULL;
+  for (char *tok = strtok_r(copy, ",", &save); tok;
+       tok = strtok_r(NULL, ",", &save)) {
     while (*tok == ' ') tok++;
     size_t n = strlen(tok);
     while (n && tok[n - 1] == ' ') tok[--n] = 0;

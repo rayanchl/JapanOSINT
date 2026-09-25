@@ -26,6 +26,7 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
+#include "lib/seenset.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -93,6 +94,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *arr = cJSON_GetObjectItem(doc, "ngalol");
   if (!cJSON_IsArray(arr) && cJSON_IsArray(doc)) arr = doc;
   int n = 0;
+  seen_set key_seen = {0};
   cJSON *a;
   cJSON_ArrayForEach(a, arr) {
     if (!cJSON_IsObject(a)) continue;
@@ -117,6 +119,23 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              feat ? feat : "?", name ? name : "?",
              jo_sv(a, "position") ? jo_sv(a, "position") : "");
     flatten(key);
+    /* Still not unique on its own: one structure can chart several lights
+     * under the same feature number, name and position that differ only in
+     * charNo / characteristic / height / range / remarks (live 2026-09-15:
+     * 4,917 entries, 4,916 byte-distinct, 4,906 distinct keys), and each such
+     * sibling upserted over the first. Only a key already seen in this run
+     * gains a hash of the entry's own bytes, so first occurrences keep the
+     * stable uid the note above protects, siblings stay rows of their own, and
+     * a byte-identical repeat still collapses. */
+    if (!seen_add(&key_seen, key)) {
+      char *raw = cJSON_PrintUnformatted(a);
+      const char *parts[1] = { raw ? raw : "" };
+      char h[21];
+      feed_hash_key(h, parts, 1);
+      size_t kl = strlen(key);
+      snprintf(key + kl, sizeof key - kl, "|%s", h);
+      free(raw);
+    }
 
     cJSON *p = cJSON_CreateObject();
     jo_copy_str(p, a, "volumeNumber");
@@ -172,6 +191,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
+  seen_free(&key_seen);
   cJSON_Delete(doc);
   fprintf(stderr, "[nga-list-of-lights] emitted %d\n", n);
   return 0;

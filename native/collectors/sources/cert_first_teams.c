@@ -93,7 +93,7 @@ static int run(const source_ctx *c, intel_sink *s) {
   const char *hdrs[] = { "accept: application/json", NULL };
   int total_rows = 0, pages_ok = 0;
   double total = -1;
-  int max_pages = FIRST_MAX_PAGES, hit_ceiling = 0, walked_out = 0;
+  int max_pages = FIRST_MAX_PAGES, hit_ceiling = 0, walked_out = 0, mid_fail = 0;
   const char *penv = getenv("JO_FIRST_MAX_PAGES");
   if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
   char url[160];
@@ -110,6 +110,7 @@ static int run(const source_ctx *c, intel_sink *s) {
       }
       fprintf(stderr, "[first-csirt-team-directory] page %d failed; stopping "
                       "with %d rows\n", page, total_rows);
+      mid_fail = 1;
       break;
     }
     pages_ok++;
@@ -138,6 +139,15 @@ static int run(const source_ctx *c, intel_sink *s) {
                     "the page-walk ceiling stopped the run before FIRST's team "
                     "directory was exhausted",
                     "raise $JO_FIRST_MAX_PAGES");
+  /* A mid-walk page fetch failure (network blip, upstream 5xx) also leaves the
+   * directory incomplete, and unlike the ceiling case above it is unpredictable
+   * — it can recur on later scheduled runs too, and the only trace of it was
+   * previously an stderr line nobody reads. Disclose it the same way. */
+  if (mid_fail)
+    jo_trunc_notice(s, "first-csirt-team-directory", url, total_rows, -1,
+                    "a page fetch failed mid-walk before FIRST's team "
+                    "directory was exhausted; the true total is unknown",
+                    "re-run; a transient upstream failure should clear on retry");
   return 0;                                 /* fetched fine; 0 rows is OK (R3) */
 }
 

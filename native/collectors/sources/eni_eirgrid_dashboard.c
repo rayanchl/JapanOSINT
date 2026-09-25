@@ -72,7 +72,11 @@ static int collect(const source_ctx *ctx, intel_sink *sink, const char *area,
     cJSON_Delete(p);
 
     char key[192], title[288];
-    snprintf(key, sizeof key, "%s|%s|%s", area, reg ? reg : region, when);
+    /* interconnection carries 2-3 distinct FieldName series (e.g. INTER_EWIC,
+     * INTER_GRNLK, INTER_NET_ROI) at the same EffectiveTime — omitting it from
+     * the key collapsed those distinct interconnector readings onto one uid. */
+    snprintf(key, sizeof key, "%s|%s|%s|%s", area, reg ? reg : region,
+             field ? field : "unknown", when);
     snprintf(title, sizeof title, "%s %s %s = %.1f %s",
              reg ? reg : region, label, when, val->valuedouble, unit);
 

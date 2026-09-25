@@ -28,6 +28,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/seenset.h"
 #include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -210,6 +211,7 @@ static int cna_dir_run(const source_ctx *c, intel_sink *s) {
   /* Bare JSON array at root, one object per CNA. */
   cJSON *arr = cJSON_IsArray(doc) ? doc : cJSON_GetObjectItem(doc, "data");
   int n = 0;
+  seen_set ids_seen = {0};
   if (cJSON_IsArray(arr)) {
     cJSON *e;
     cJSON_ArrayForEach(e, arr) {
@@ -248,7 +250,18 @@ static int cna_dir_run(const source_ctx *c, intel_sink *s) {
       cJSON_Delete(p);
 
       intel_item it = {0};
-      it.remote_key      = cna_id ? cna_id : shortname;
+      /* Keyed on cnaID — except that the CNA list reuses a cnaID for two
+       * distinct organisations (live 2026-09-15: 548 entries, 548 distinct
+       * shortNames and organisation names, 547 cnaIDs), so the second
+       * upserted over the first. A repeat is qualified by its own shortName;
+       * a first occurrence keeps its plain cnaID and its stored uid. */
+      char keybuf[256];
+      const char *rk = cna_id ? cna_id : shortname;
+      if (cna_id && shortname && !seen_add(&ids_seen, cna_id)) {
+        snprintf(keybuf, sizeof keybuf, "%s|%s", cna_id, shortname);
+        rk = keybuf;
+      }
+      it.remote_key      = rk;
       it.title           = title;
       it.body            = scope;
       it.summary         = scope;
@@ -261,6 +274,7 @@ static int cna_dir_run(const source_ctx *c, intel_sink *s) {
       free(pj);
     }
   }
+  seen_free(&ids_seen);
   cJSON_Delete(doc);
   fprintf(stderr, "[cve-cna-directory] emitted %d\n", n);
   return 0;                              /* fetched fine (R3) */

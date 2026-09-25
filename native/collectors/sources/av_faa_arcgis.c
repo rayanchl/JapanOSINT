@@ -423,7 +423,14 @@ AV_ARC_RUN(run_mtr,        "MTRSegment",                  AV_CAP_SMALL, dec_mtr,
 AV_ARC_RUN(run_dof,        "Digital_Obstacle_File",       AV_CAP_HUGE,  dec_dof,        "faa-obstacles-dof")
 AV_ARC_RUN(run_recsite,    "Recreational_Flyer_Fixed_Sites", AV_CAP_SMALL, dec_recsite, "faa-recreational-flyer-sites")
 AV_ARC_RUN(run_fria,       "FAA_Recognized_Identification_Areas", AV_CAP_SMALL, dec_fria, "faa-fria")
-AV_ARC_RUN(run_class,      "Class_Airspace",              AV_CAP_SMALL, dec_class,      "faa-class-airspace")
+/* Class_Airspace pages at 250 features with a 90 s budget: at the shared 1000
+ * the first page took 41-45 s to its first byte and every run died at 40 s
+ * (see av_arcgis_run_ex). */
+static int run_class(const source_ctx *ctx, intel_sink *sink) {
+  int n = av_arcgis_run_ex(ctx, sink, "Class_Airspace", AV_CAP_SMALL, dec_class,
+                           "faa-class-airspace", 250, 90000);
+  return n < 0 ? -1 : 0;
+}
 AV_ARC_RUN(run_navaid,     "NAVAIDSystem",                AV_CAP_SMALL, dec_navaid,     "faa-navaids")
 AV_ARC_RUN(run_adhp,       "ADHP",                        AV_CAP_LARGE, dec_adhp,       "faa-airports-heliports")
 AV_ARC_RUN(run_runway,     "RunwayLine",                  AV_CAP_LARGE, dec_runway,     "faa-runway-lines")

@@ -24,16 +24,23 @@ static const char *const CH_QUERIES[] = {
   "Winterthur", "St.Gallen", "Biel", "Chur", "Sion", "Fribourg", "Neuchatel",
   "Thun", "Zug", "Bellinzona", "Interlaken", "Brig", "Olten", NULL };
 
+/* Returns the emitted count (>=0) on a query that fetched fine (even if it
+ * matched no stops), or -1 if the fetch/parse itself failed — the caller uses
+ * this to tell a real failure apart from a genuine "no stops for this query"
+ * (house rule 1: these used to be indistinguishable, both just 0). */
 static int emit_query(const source_ctx *ctx, intel_sink *sink, const char *q) {
   char *enc = trn_urlencode(q);
-  if (!enc) return 0;
+  if (!enc) return -1;
   char url[320];
   snprintf(url, sizeof url,
            "https://transport.opendata.ch/v1/locations?query=%s", enc);
   free(enc);
 
   cJSON *doc = feed_get_json(ctx->http, url, 20000);
-  if (!doc) return 0;
+  if (!doc) {
+    fprintf(stderr, "[transport-opendata-ch-locations] fetch failed for query \"%s\"\n", q);
+    return -1;
+  }
   cJSON *stations = cJSON_GetObjectItem(doc, "stations");
 
   int n = 0;
@@ -78,19 +85,24 @@ static int emit_query(const source_ctx *ctx, intel_sink *sink, const char *q) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = 0, calls = 0;
+  int n = 0, calls = 0, failed = 0;
   if (ctx->entity && ctx->entity[0]) {
-    n += emit_query(ctx, sink, ctx->entity);
+    int r = emit_query(ctx, sink, ctx->entity);
+    if (r < 0) failed++; else n += r;
     calls++;
   } else {
     for (int i = 0; CH_QUERIES[i]; i++) {
-      n += emit_query(ctx, sink, CH_QUERIES[i]);
+      int r = emit_query(ctx, sink, CH_QUERIES[i]);
+      if (r < 0) failed++; else n += r;
       calls++;
     }
   }
   if (calls == 0) return 0;
-  fprintf(stderr, "[transport-opendata-ch-locations] emitted %d\n", n);
-  return 0;
+  fprintf(stderr, "[transport-opendata-ch-locations] emitted %d (%d/%d queries failed)\n",
+          n, failed, calls);
+  /* Every query failing is a real fetch failure across the run, not an honest
+   * "no Swiss transit stops matched" (house rule 1) — surface it. */
+  return (failed == calls) ? -1 : 0;
 }
 
 static const source_def trn_transport_opendata_ch_def = {

@@ -17,12 +17,19 @@
 
 void osint_result_free(osint_result *r) {
   if (!r) return;
-  free(r->data); free(r->error); free(r->sources_json);
-  r->data = r->error = r->sources_json = NULL;
+  free(r->data); free(r->error); free(r->sources_json); free(r->resolved_from);
+  r->data = r->error = r->sources_json = r->resolved_from = NULL;
 }
 
 int osint_canon(const char *name, char *out, size_t n) {
-  if (!name) { if (n) out[0] = 0; return 0; }
+  /* n==0 must be a safe no-op, not a write into a zero-capacity buffer: `size_t
+   * w < n - 1` below underflows n-1 to SIZE_MAX when n==0, and the loop would
+   * write past `out` for as long as `name` has bytes. Every current caller
+   * passes sizeof(a fixed local buffer), so this has never fired in practice,
+   * but the function is public API (osint_dispatch.h) and must not assume it
+   * always will. */
+  if (n == 0) return 0;
+  if (!name) { out[0] = 0; return 0; }
   while (*name == ' ' || *name == '\t' || *name == '\n' || *name == '\r') name++;
   size_t w = 0;
   for (; name[w] && w < n - 1; w++) out[w] = (char)toupper((unsigned char)name[w]);
@@ -35,6 +42,103 @@ int osint_canon(const char *name, char *out, size_t n) {
  * collector and an OSINTsaas service are indistinguishable here). */
 static const source_def *osint_lookup(const char *canon) {
   return registry_get(canon);
+}
+
+/* ---- resolving a name the registry does not have -------------------------
+ *
+ * The model picks service names from an enum built out of the live registry,
+ * so a miss should be impossible — and yet a miss was the one outcome this
+ * function had no answer for: `not_implemented`, end of story, for
+ * `DOMAIN_WHOIS_LOOKUP` as much as for `ASK_THE_ORACLE`. The static-schema
+ * fallback path (pipeline.c, when both dynamic schemas fail) can genuinely put
+ * a retired name in front of the model, and a client calling POST /api/search
+ * by hand can misspell anything.
+ *
+ * The rule this implements: resolve ONLY when there is exactly one obvious
+ * candidate, and always say that a substitution happened.
+ *
+ *   1. Structural normalisation — '-' and ' ' become '_', a trailing _LOOKUP,
+ *      _SEARCH, _CHECK, _API or _PIVOT is dropped, doubled underscores
+ *      collapse. `domain-whois` and `DOMAIN_WHOIS_LOOKUP` both land on
+ *      DOMAIN_WHOIS. This is spelling, not guessing.
+ *   2. Edit distance ≤ 2 over registered ids of similar length, accepted only
+ *      when the best candidate is strictly better than the second best. Two
+ *      equally-near names mean we do not know which was meant, and answering
+ *      would be a coin flip presented as a result.
+ *
+ * There is deliberately no fuzzy substring rule ("contains WHOIS"): it matches
+ * a dozen services and picks by registry order, which is precisely the bias
+ * service_vec.c exists to remove. An embedding-ranked variant belongs in the
+ * ROUTER (service_vec_catalogue), where the query is a question and ranking is
+ * the job; here the input is a name that was meant to be exact. */
+static void resolve_normalise(const char *in, char *out, size_t n) {
+  size_t w = 0;
+  for (size_t i = 0; in[i] && w + 1 < n; i++) {
+    char c = in[i];
+    if (c == '-' || c == ' ' || c == '.') c = '_';
+    if (c == '_' && (w == 0 || out[w-1] == '_')) continue;   /* collapse */
+    out[w++] = (char)toupper((unsigned char)c);
+  }
+  while (w && out[w-1] == '_') w--;
+  out[w] = 0;
+  static const char *const SUFFIX[] = { "_LOOKUP", "_SEARCH", "_CHECK",
+                                        "_API", "_PIVOT", "_QUERY", NULL };
+  for (int i = 0; SUFFIX[i]; i++) {
+    size_t sl = strlen(SUFFIX[i]);
+    if (w > sl + 2 && !strcmp(out + w - sl, SUFFIX[i])) { out[w - sl] = 0; break; }
+  }
+}
+
+/* Levenshtein, bounded: returns `max + 1` as soon as the whole row exceeds the
+ * bound, so a 16,000-id scan stays cheap. */
+static int resolve_edit(const char *a, const char *b, int max) {
+  int la = (int)strlen(a), lb = (int)strlen(b);
+  if (la - lb > max || lb - la > max) return max + 1;
+  if (lb > 96) return max + 1;
+  int prev[97], cur[97];
+  for (int j = 0; j <= lb; j++) prev[j] = j;
+  for (int i = 1; i <= la; i++) {
+    cur[0] = i;
+    int best = cur[0];
+    for (int j = 1; j <= lb; j++) {
+      int cost = (a[i-1] == b[j-1]) ? 0 : 1;
+      int v = prev[j] + 1;
+      if (cur[j-1] + 1 < v) v = cur[j-1] + 1;
+      if (prev[j-1] + cost < v) v = prev[j-1] + cost;
+      cur[j] = v;
+      if (v < best) best = v;
+    }
+    if (best > max) return max + 1;
+    for (int j = 0; j <= lb; j++) prev[j] = cur[j];
+  }
+  return prev[lb];
+}
+
+int osint_resolve_near(const char *canon, char *out, size_t n) {
+  if (!canon || !*canon || !out || n == 0) return 0;
+  char norm[128];
+  resolve_normalise(canon, norm, sizeof norm);
+  if (!*norm) return 0;
+
+  const source_def *hit = registry_get(norm);
+  if (hit && strcmp(hit->id, canon)) {              /* (1) spelling only */
+    snprintf(out, n, "%s", hit->id);
+    return 1;
+  }
+
+  const source_def **all = registry_all();          /* (2) one clear winner */
+  int cnt = registry_count(), best = 3, bestn = 0;
+  const char *bestid = NULL;
+  for (int i = 0; i < cnt; i++) {
+    if (!all[i] || !all[i]->id) continue;
+    int d = resolve_edit(norm, all[i]->id, 2);
+    if (d > 2) continue;
+    if (d < best) { best = d; bestid = all[i]->id; bestn = 1; }
+    else if (d == best) bestn++;
+  }
+  if (!bestid || bestn != 1) return 0;   /* nothing near, or a tie: say so */
+  snprintf(out, n, "%s", bestid);
+  return 1;
 }
 
 int osint_is_implemented(const char *name) {
@@ -121,13 +225,65 @@ static int is_entity_pivot(const source_def *d) {
  * services a person typically wants. Step 2 exists so that shrinking the
  * prompt does not have to mean shrinking the menu; prefer dropping
  * descriptions, and treat step 3 as the last resort it is. */
+/* The most the catalogue may spend and still leave a request the server can
+ * accept — measured from its real context (see osint_set_catalogue_budget).
+ * 0 = nobody measured. */
+static int g_budget_ceiling;
+
+void osint_set_catalogue_budget(int chars) {
+  g_budget_ceiling = chars > 0 ? chars : 0;
+}
+
 static int catalogue_budget_chars(void) {
   const char *e = getenv("JO_PROMPT_SERVICE_CATALOGUE_CHARS");
   int v = (e && *e) ? atoi(e) : 0;
-  /* 32 KB ≈ 8k tokens. With the ~9 KB few-shot preamble around it the analysis
-   * request lands near 11k tokens, inside the 16384 default context that
-   * scripts/start-llama.sh launches llama-server with. */
-  return v > 0 ? v : 32768;
+  if (v > 0) {
+    /* AN OPERATOR'S NUMBER IS RESPECTED UP TO WHAT THE SERVER CAN ACTUALLY
+     * ACCEPT, AND THE CLAMP IS ANNOUNCED.
+     *
+     * "Explicit config always wins" sounds like respect and is not: this repo's
+     * own .env carries JO_PROMPT_SERVICE_CATALOGUE_CHARS=32768, written when
+     * 32 KB was the default and the preamble was ~9 KB. The preamble is now
+     * ~32 KB, so honouring that line builds a 64,674-byte prompt against a
+     * 16,384-token context and llama-server answers 400 — EVERY search
+     * degrades. Obeying the number defeats the intent behind it, which was
+     * "show the model a big menu", not "fail".
+     *
+     * So the value is honoured until it would make the request impossible,
+     * then clamped — loudly, once, naming the line to edit. */
+    if (g_budget_ceiling > 0 && v > g_budget_ceiling) {
+      static int told;
+      if (!told) {
+        told = 1;
+        fprintf(stderr,
+          "[dispatch] JO_PROMPT_SERVICE_CATALOGUE_CHARS=%d exceeds what this "
+          "LLM server can accept (%d bytes once the prompt around the "
+          "catalogue is counted); using %d. The request would otherwise be "
+          "refused with HTTP 400 and the analysis stage would degrade. Lower "
+          "or remove that line in .env to silence this.\n",
+          v, g_budget_ceiling, g_budget_ceiling);
+      }
+      return g_budget_ceiling;
+    }
+    return v;
+  }
+  if (g_budget_ceiling > 0) return g_budget_ceiling;
+  /* THE DEFAULT IS A FLOOR, NOT AN ESTIMATE.
+   *
+   * This used to be 32768, justified as "≈ 8k tokens; with the ~9 KB few-shot
+   * preamble the request lands near 11k tokens, inside the 16384 default
+   * context". That was true when written and silently stopped being true as
+   * the preamble grew to ~32 KB: measured 2026-09-13 the finished prompt was
+   * 64,674 bytes against n_ctx 16,384 and llama-server answered HTTP 400,
+   * killing the analysis stage for EVERY query (the prompt size is dominated
+   * by the catalogue and the examples, not by what the user typed).
+   *
+   * So the number that matters is now computed per call from the server's own
+   * n_ctx minus the MEASURED preamble (core/pipeline.c), and this constant is
+   * only what remains when there is no server to ask. It is deliberately small
+   * enough to fit a 16k context alongside a 32 KB preamble rather than large
+   * enough to look generous. */
+  return 12288;
 }
 
 char *osint_services_list_bounded(osint_catalogue_note *note) {
@@ -238,13 +394,17 @@ char *osint_analysis_schema_dynamic(void) {
   return osint_analysis_schema_dynamic_limited(0);
 }
 
-char *osint_analysis_schema_dynamic_limited(int limit) {
+/* The enum builder both public entry points share. `ids` is the permitted
+ * vocabulary and is consumed here. Split out so the semantic router can pass
+ * the exact ids IT listed: the schema is what the model is ALLOWED to answer
+ * and the catalogue is what it was SHOWN, and those two sets diverging is a
+ * silent failure — the model would read about a service it cannot name. */
+static char *osint_schema_with_ids(cJSON *ids) {
   const char *base = schema_load("osint_analysis");
-  if (!base || !*base) return NULL;
+  if (!base || !*base) { cJSON_Delete(ids); return NULL; }
   cJSON *s = cJSON_Parse(base);
-  if (!s) return NULL;
+  if (!s) { cJSON_Delete(ids); return NULL; }
   cJSON *props = cJSON_GetObjectItem(s, "properties");
-  cJSON *ids = osint_service_id_array(limit);
 
   /* properties.recommended_services.items.enum */
   cJSON *rs = props ? cJSON_GetObjectItem(props, "recommended_services") : NULL;
@@ -268,6 +428,25 @@ char *osint_analysis_schema_dynamic_limited(int limit) {
   char *out = cJSON_PrintUnformatted(s);
   cJSON_Delete(s);
   return out;
+}
+
+char *osint_analysis_schema_dynamic_limited(int limit) {
+  return osint_schema_with_ids(osint_service_id_array(limit));
+}
+
+/* The semantic router's counterpart: the vocabulary is exactly the `n` ids it
+ * put in the catalogue, in the order it ranked them. An id that is not a
+ * registered entity pivot is skipped rather than trusted — the enum must never
+ * be able to name something the dispatcher cannot run. */
+char *osint_analysis_schema_dynamic_ids(const char *const *ids, int n) {
+  cJSON *a = cJSON_CreateArray();
+  for (int i = 0; i < n; i++) {
+    if (!ids[i]) continue;
+    const source_def *d = registry_get(ids[i]);
+    if (d && is_entity_pivot(d)) cJSON_AddItemToArray(a, cJSON_CreateString(ids[i]));
+  }
+  if (cJSON_GetArraySize(a) == 0) { cJSON_Delete(a); return NULL; }
+  return osint_schema_with_ids(a);
 }
 
 /* dual sink: persist through the real intel_sink (live intel_items) AND
@@ -370,6 +549,21 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
   snprintf(out->service, sizeof out->service, "%s", canon);
 
   const source_def *def = osint_lookup(canon);
+  if (!def && entity && *entity) {
+    /* One clear candidate, or nothing: see osint_resolve_near(). The name the
+     * caller used is kept so the answer can say what it actually ran. */
+    char near[128];
+    if (osint_resolve_near(canon, near, sizeof near)) {
+      const source_def *nd = osint_lookup(near);
+      if (nd) {
+        out->resolved_from = strdup(canon);
+        snprintf(out->service, sizeof out->service, "%s", nd->id);
+        fprintf(stderr, "[dispatch] \"%s\" is not registered; ran \"%s\" "
+                        "(reported as resolved_from)\n", canon, nd->id);
+        def = nd;
+      }
+    }
+  }
   if (!def || !entity || !*entity) {
     out->error = strdup("not_implemented");   /* graceful, == JS */
     return 0;

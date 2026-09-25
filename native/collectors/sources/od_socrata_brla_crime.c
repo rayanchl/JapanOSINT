@@ -12,9 +12,13 @@
 #include "od_shared.inc"
 
 #define SID "socrata-brla-crime"
+/* `$offset=0` seeds lib/pagewalk.c's offset walk — pw_walk only ever advances a
+ * parameter the URL already carries. `,:id` makes the sort TOTAL so an offset
+ * window cannot drift across a tie in offense_date. Measured 2026-09-19:
+ * 490,578 rows upstream, of which the single-page collector kept 100. */
 static const char *URL =
   "https://data.brla.gov/resource/fabb-cnnu.json"
-  "?$limit=100&$order=offense_date%20DESC&$select=*,:id";
+  "?$limit=100&$offset=0&$order=offense_date%20DESC,:id&$select=*,:id";
 static const char *const TITLE_KEYS[] = { "crime", "offense_desc", "offense",
                                           NULL };
 static const char *const SUM_KEYS[] = { "address", "district", NULL };
@@ -29,7 +33,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   sp.id_key = ":id";   /* rule 4b, measured: file_number recurs per offense of one incident (sweep: 99 emitted, 65 stored); :id is Socrata's own per-row identity, requested via $select=*,:id */
   sp.date_key = "offense_date";
   sp.title_prefix = "Baton Rouge PD:";
-  return od_rc(SID, od_fetch_rows(ctx, sink, URL, NULL, &sp));
+  return od_wrc(SID, od_walk_rows(ctx, sink, SID, URL, NULL, &sp));
 }
 
 static const source_def od_socrata_brla_crime_def = {

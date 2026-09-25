@@ -60,7 +60,30 @@ static char *pw_next_link(const cJSON *doc) {
     if (!cJSON_IsObject(o)) continue;
     const cJSON *v = cJSON_GetObjectItemCaseSensitive(o, "next");
     if (cJSON_IsObject(v)) v = cJSON_GetObjectItemCaseSensitive(v, "href");
+    /* `meta.nextLink` — OCHA FTS (api.hpc.tools); the top-level spelling is
+     * already in `direct` above, the nested one was not. */
+    if (!cJSON_IsString(v)) v = cJSON_GetObjectItemCaseSensitive(o, "nextLink");
     if (cJSON_IsString(v)) cand = v;
+  }
+  /* The ARRAY form: {"links":[{"rel":"self",…},{"rel":"next","href":…}]}, which
+   * Oracle ORDS, HAL and OGC API servers publish. The object form above cannot
+   * see it, so br-tcu-inabilitados (ORDS) stopped at its first 25 records of
+   * 766 (measured 2026-09-14). Selected by rel, never by position: a server is
+   * free to put "self" first. */
+  if (!cand) {
+    const cJSON *arr = cJSON_GetObjectItemCaseSensitive(doc, "links");
+    const cJSON *l;
+    if (cJSON_IsArray(arr)) {
+      cJSON_ArrayForEach(l, arr) {
+        const cJSON *rel  = cJSON_GetObjectItemCaseSensitive(l, "rel");
+        const cJSON *href = cJSON_GetObjectItemCaseSensitive(l, "href");
+        if (cJSON_IsString(rel) && rel->valuestring &&
+            strcasecmp(rel->valuestring, "next") == 0 && cJSON_IsString(href)) {
+          cand = href;
+          break;
+        }
+      }
+    }
   }
   if (!cand || !cand->valuestring) return NULL;
   const char *u = cand->valuestring;
@@ -186,9 +209,17 @@ static const char *const PW_SIZE_PARAMS[] = {
  * this source. `start` IS kept, because `start=0/1/100/200` are genuine
  * offsets here — but it is also spelled as a date by several sources, which is
  * what pw_offset_plausible() below exists to separate. */
-static const char *const PW_OFF_PARAMS[]  = { "offset", "$skip", "skip",
-                                              "resultOffset", "startIndex",
-                                              "start", NULL };
+/* `$offset` is Socrata SODA's record offset, and its absence here was the
+ * second copy of the same defect fixed in lib/jsonlist.c's PAGERS table: a
+ * VJSON_KEYED row reaches pw_walk, pw_walk only advances a parameter it can
+ * name, and `$offset` was not a name it knew — so the 13 keyed Socrata rows
+ * read one page even after jl_seed_cursor wrote `$offset=0` into their URL for
+ * them. The spelling is distinct from `offset` at the parser level (the scan
+ * compares from the parameter boundary, so `$offset=0` never matches `offset`),
+ * which is exactly why the bare spelling did not cover it. */
+static const char *const PW_OFF_PARAMS[]  = { "offset", "$offset", "$skip",
+                                              "skip", "resultOffset",
+                                              "startIndex", "start", NULL };
 
 /* A record offset is a small number. Anything above this is a timestamp that
  * happens to be wholly numeric — `start=1754697600` parses as a valid integer

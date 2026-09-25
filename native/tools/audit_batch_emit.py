@@ -50,7 +50,12 @@ from concurrent.futures import ThreadPoolExecutor
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from manifest import COLS, iter_lines                       # noqa: E402
 
-TOKEN = re.compile(r"\{q[a-zA-Z]*\}")
+# Every entity token hp_uses_entity() recognises starts "{q" EXCEPT the raw
+# POST form "{Q}" -- see lib/hpengine.c. Without it, entity_of() cannot find
+# the token on a row whose only entity reference is {Q}, so this tool invokes
+# `--run <id>` with no entity at all and the row comes back NO_ENTITY_RECOVERED
+# (unmeasured, not a false pass) instead of actually being exercised.
+TOKEN = re.compile(r"\{q[a-zA-Z]*\}|\{Q\}")
 EMITTED = re.compile(r"\[hp:([^\]]+)\] emitted (\d+) of (\d+) available")
 
 # When the engine prints no `emitted` line it has still said WHY, and the first

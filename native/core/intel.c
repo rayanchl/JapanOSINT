@@ -400,9 +400,28 @@ static int emit(struct intel_sink *self, const intel_item *it) {
   return (changes && is_new) ? 1 : 0;
 }
 
+/* emit() for a sink that failed to allocate its state. This runs on every
+ * collector/dispatch worker thread once per source per cycle — under real
+ * memory pressure an unchecked calloc here would take down the whole run on
+ * a NULL sink_state dereference. Refusing every emit is the same "degrade,
+ * don't crash" contract intel_sink_stored()/intel_sink_rebind() already give
+ * a non-intel-sink ctx (their `k->emit != emit` check makes this sink fail
+ * both the same way): the source's records are lost for this run, reported
+ * as refused rather than losing the process. */
+static int emit_oom(struct intel_sink *self, const intel_item *it) {
+  (void)self; (void)it;
+  return -1;
+}
+
 intel_sink intel_sink_make(db_handle *db, const char *source_id,
                            const char *tenant_id) {
   sink_state *st = calloc(1, sizeof *st);
+  if (!st) {
+    fprintf(stderr, "[intel] %s: OOM allocating sink state; every emit this "
+                    "run will be refused\n", source_id ? source_id : "unknown");
+    intel_sink k; k.ctx = NULL; k.emit = emit_oom;
+    return k;
+  }
   st->magic = SINK_MAGIC;
   st->db = db;
   st->seen_exact = 1;

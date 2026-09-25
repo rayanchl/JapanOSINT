@@ -8,7 +8,7 @@
 
 #define SID "ckan-au-qld"
 static const char *URL =
-  "https://www.data.qld.gov.au/api/3/action/package_search?rows=20";
+  "https://www.data.qld.gov.au/api/3/action/package_search?rows=20&sort=id%20asc";
 static const char *const EXTRA[] = { "notes", "data_last_updated",
                                      "de_identified_data",
                                      "data_driven_application",
@@ -25,7 +25,7 @@ static const source_def od_ckan_au_qld_def = {
   .name = "Queensland (Australia) data.qld.gov.au CKAN",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://www.data.qld.gov.au/api/3/action/package_search?rows=20",
+  .url = "https://www.data.qld.gov.au/api/3/action/package_search?rows=20&sort=id%20asc",
   .description = "Queensland state open-data catalogue (188,836 packages) with departmental contact emails and per-dataset last-updated stamps",
   .license = "Queensland Government open data, mostly CC-BY 4.0",
   .free_tier = 1,

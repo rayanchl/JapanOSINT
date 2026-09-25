@@ -13,17 +13,35 @@
 
 #define SID "stats-ca-statcan-releases"
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  char day[16], url[160];
-  od_today_utc(day, sizeof day);
+/* One date's release list. Returns records emitted, 0 for an honest empty and
+ * -1 for a failed exchange.
+ *
+ * StatCan answers HTTP 409 {"message":"The product is not released yet"} for a
+ * date whose releases have not gone out (they go out at 08:30 ET), and the
+ * collector used to fetch through feed_get_json, which turns every non-2xx into
+ * NULL — so each run before the day's release was reported as a fetch failure
+ * (measured 2026-09-15: today 409, 2026-09-14 200 with the day's tables). A 409
+ * is now the not-yet-released empty it is. */
+static int statcan_day(const source_ctx *ctx, intel_sink *sink, const char *day) {
+  char url[160];
   snprintf(url, sizeof url,
            "https://www150.statcan.gc.ca/t1/wds/rest/getChangedCubeList/%s",
            day);
-
-  cJSON *doc = feed_get_json(ctx->http, url, 30000);
-  if (!doc) return od_rc(SID, -1);
+  http_response resp = {0};
+  if (http_request(ctx->http, "GET", url, NULL, NULL, 0, 30000, 2, &resp) != 0) {
+    http_response_free(&resp);
+    return -1;
+  }
+  if (resp.status == 409) { http_response_free(&resp); return 0; }
+  if (resp.status < 200 || resp.status >= 300 || !resp.body) {
+    http_response_free(&resp);
+    return -1;
+  }
+  cJSON *doc = cJSON_Parse(resp.body);
+  http_response_free(&resp);
+  if (!doc) return -1;
   const cJSON *arr = cJSON_GetObjectItem(doc, "object");
-  if (!cJSON_IsArray(arr)) { cJSON_Delete(doc); return od_rc(SID, -1); }
+  if (!cJSON_IsArray(arr)) { cJSON_Delete(doc); return -1; }
 
   int n = 0;
   const cJSON *r;
@@ -43,9 +61,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     od_copy_scalars(props, r);
     cJSON_AddStringToObject(props, "queried_date", day);
 
+    /* A table released on consecutive days is two releases. */
+    char key[96];
+    snprintf(key, sizeof key, "%s|%s", pid, rel ? rel : day);
+
     intel_item it = {0};
     it.title = title;
-    it.remote_key = pid;
+    it.remote_key = key;
     it.published_at = rel;
     it.link = url;
     it.record_type = "statistics-release";
@@ -53,7 +75,23 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     n += od_emit(sink, &it, props);
   }
   cJSON_Delete(doc);
-  return od_rc(SID, n);
+  return n;
+}
+
+/* Yesterday and today (UTC): a run before today's 08:30 ET release still
+ * carries the most recent completed release day instead of nothing. */
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  char today[16], yesterday[16];
+  od_today_utc(today, sizeof today);
+  time_t t = time(NULL) - 86400;
+  struct tm g;
+  if (gmtime_r(&t, &g)) strftime(yesterday, sizeof yesterday, "%Y-%m-%d", &g);
+  else snprintf(yesterday, sizeof yesterday, "%s", today);
+
+  int a = statcan_day(ctx, sink, yesterday);
+  int b = strcmp(yesterday, today) ? statcan_day(ctx, sink, today) : 0;
+  if (a < 0 && b < 0) return od_rc(SID, -1);
+  return od_rc(SID, (a > 0 ? a : 0) + (b > 0 ? b : 0));
 }
 
 static const source_def od_stats_ca_statcan_def = {

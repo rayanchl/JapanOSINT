@@ -88,6 +88,19 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
                         const char *path, const char *record_type,
                         const char *lang, const char *tags_json);
 
+/* As jsonlist_emit_paged, but keys each record's uid on the value of
+ * `id_field` (a single top-level field name on the record) instead of the
+ * fixed id/uid/guid/... precedence list. For a source whose real unique
+ * field the precedence list doesn't know — see the definition in
+ * jsonlist.c for why gr-diavgeia-positions needed this. Requires the
+ * source_ctx pw_walk() needs for its own fetch, so callers use this from a
+ * hand-written run() (or the VJSON_KEYED macro), not the plain VJSON one. */
+int jsonlist_emit_paged_keyed(const source_ctx *c, intel_sink *s,
+                              const char *source_id, const char *url,
+                              const char *path, const char *record_type,
+                              const char *lang, const char *tags_json,
+                              const char *id_field);
+
 /* Query-string cursor arithmetic, shared so that the GeoJSON walk in
  * lib/geojson.c advances a page the same way this one does rather than growing
  * a second, subtly different copy.

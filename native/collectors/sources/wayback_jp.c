@@ -5,6 +5,7 @@
  * <target>|<timestamp>|<flatIdx>>. WAYBACK_TARGETS env override not ported. */
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/seenset.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,6 +36,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { "accept: application/json", NULL };
   int n = 0;
   int flat = 0;                                     /* .flat() index */
+  seen_set dig_seen = {0};
   for (int ti = 0; ti < NT; ti++) {
     const char *host = TARGETS[ti];
     char url[384];
@@ -75,6 +77,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       const char *rk;
       if (dig) {
         rk = dig;
+        /* `collapse=digest` makes a digest unique within ONE host's query,
+         * not across the ten: identical content (a shared error page, a
+         * common asset) captured on two hosts carries one digest, and the
+         * second host's capture — a different original URL and timestamp —
+         * upserted over the first (200 emitted, 194 stored). A digest already
+         * seen this run is qualified by its host and timestamp; a first
+         * occurrence keeps the plain digest and its stored uid. */
+        if (!seen_add(&dig_seen, dig)) {
+          snprintf(fb, sizeof fb, "%.60s|%s|%s", dig, host, ts ? ts : "");
+          rk = fb;
+        }
       } else {
         snprintf(fb, sizeof fb, "%s|%s|%d", host, ts ? ts : "", flat);
         rk = fb;
@@ -143,6 +156,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     cJSON_Delete(rows);
   }
+  seen_free(&dig_seen);
   fprintf(stderr, "[wayback-jp] emitted %d\n", n);
   return n >= 0 ? 0 : -1;
 }

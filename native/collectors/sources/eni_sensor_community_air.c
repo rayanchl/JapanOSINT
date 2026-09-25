@@ -74,6 +74,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *p = cJSON_CreateObject();
     int have = 0, suspect = 0;
     double pm10 = 0; int have_pm10 = 0;
+    /* Signature of the measurement types THIS record carried, in the order
+     * they were read. It is part of the uid below — see the note there. */
+    char sig[64]; size_t siglen = 0; sig[0] = 0;
     cJSON *v;
     cJSON_ArrayForEach(v, vals) {
       const char *vt = jo_sv(v, "value_type");
@@ -90,6 +93,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       else if (strcmp(vt, "pressure") == 0)    { field = "pressure";    unit = "Pa"; }
       else continue;
       cJSON_AddNumberToObject(p, field, d);
+      {
+        size_t fl = strlen(field);
+        if (siglen + fl + 2 < sizeof sig) {
+          if (siglen) sig[siglen++] = '-';
+          memcpy(sig + siglen, field, fl);
+          siglen += fl;
+          sig[siglen] = 0;
+        }
+      }
       if (!have) cJSON_AddStringToObject(p, "pm_unit", "ug/m3");
       (void)unit;
       if (strcmp(vt, "P1") == 0) { pm10 = d; have_pm10 = 1; }
@@ -118,8 +130,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     long long sid = 0;
     cJSON *sidj = sen ? cJSON_GetObjectItem(sen, "id") : NULL;
     if (cJSON_IsNumber(sidj)) sid = (long long)sidj->valuedouble;
-    char key[64], title[224];
-    snprintf(key, sizeof key, "sensor:%lld", sid);
+    /* One sensor id posts SEVERAL records in the same pull, one per group of
+     * measurement types it carries — verified live 2026-09-07 against
+     * data.sensor.community: 18,045 records for 17,897 distinct sensor ids,
+     * and sensor 72130 alone appears as {counts, counts_per_minute}, then
+     * {humidity}, then {hv_pulses}, all at the same timestamp. Keyed on the
+     * sensor alone those records overwrote one another, so whichever group
+     * happened to come last was the only one stored: measured 17,564 emitted
+     * / 17,433 stored. The uid therefore names the measurement STREAM — the
+     * sensor plus the field set that record carried — which is stable from
+     * run to run (a sensor keeps reporting the same fields) and keeps the
+     * PM row and the temperature/humidity row of one node apart instead of
+     * having them fight over one uid. */
+    char key[128], title[224];
+    snprintf(key, sizeof key, "sensor:%lld:%s", sid, sig);
     if (have_pm10)
       snprintf(title, sizeof title, "Sensor.Community %lld: PM10 %.1f ug/m3%s",
                sid, pm10, suspect ? " (suspect)" : "");

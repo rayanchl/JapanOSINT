@@ -1,0 +1,124 @@
+id	url	verdict	kind	items	http	bytes	note
+JO30_BANK_FSA_BANKS_CITY	https://www.fsa.go.jp/menkyo/menkyoj/ginkou.xlsx	PASS	xlsx:都市銀行・信託銀行・その他	35	200	60744	header=業態|所管|銀行名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_BANKS_FOREIGN	https://www.fsa.go.jp/menkyo/menkyoj/ginkou.xlsx	PASS	xlsx:外国銀行支店	57	200	60744	header=業態|所管|本店所在地|銀行名|法人番号|郵便番号|在日支店（在日代表店）所在地|代表等電話番号
+JO30_BANK_FSA_BANKS_REGIONAL	https://www.fsa.go.jp/menkyo/menkyoj/ginkou.xlsx	PASS	xlsx:地方銀行	61	200	60744	header=業態|所管|都道府県|銀行名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_BANKS_REGIONAL2	https://www.fsa.go.jp/menkyo/menkyoj/ginkou.xlsx	PASS	xlsx:第二地方銀行	35	200	60744	header=業態|所管|都道府県|銀行名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_BANK_HOLDING	https://www.fsa.go.jp/menkyo/menkyoj/ginkoumochikabu.xlsx	PASS	xlsx:銀行持株会社免許一覧	31	200	33756	header=管轄|業態|銀行持株会社名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_SHINKIN_LIST	https://www.fsa.go.jp/menkyo/menkyoj/shinkin.xlsx	PASS	xlsx:信用金庫	255	200	40757	header=業態|所管|都道府県|名称|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_ROKIN_LIST	https://www.fsa.go.jp/menkyo/menkyoj/rokin.xlsx	PASS	xlsx:労働金庫	14	200	15972	header=業態|所管|都道府県名|名称|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_SHINKUMI_LIST	https://www.fsa.go.jp/menkyo/menkyoj/shinkumi.xlsx	PASS	xlsx:信用組合	144	200	33707	header=業態|所管|都道府県名|名称|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_KEITO_LIST	https://www.fsa.go.jp/menkyo/menkyoj/keito.xlsx	PASS	xlsx:系統金融機関	40	200	19173	header=0|都道府県名|名称|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_TRUST_BANKS	https://www.fsa.go.jp/menkyo/menkyoj/kenei.xlsx	PASS	xlsx:信託兼営金融機関	61	200	22661	header=管轄|業態|兼営信託金融機関名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_BANK_AGENTS	https://www.fsa.go.jp/menkyo/menkyoj/dairi_a.xlsx	PASS	xlsx:銀行代理業者	141	200	39740	header=所管|許可番号|許可年月日|銀行代理業者名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_POSTOFFICE_AGENTS	https://www.fsa.go.jp/menkyo/menkyoj/dairi_e.xlsx	PASS	xlsx:郵便局銀行代理業者	3344	200	783978	header=所管|許可番号|許可年月日|郵便局名|銀行代理業者名|法人番号|郵便番号|本店等所在地
+JO30_BANK_FSA_SHINKIN_AGENTS	https://www.fsa.go.jp/menkyo/menkyoj/dairi_b.xlsx	PASS	xlsx:信用金庫代理業者	258	200	41998	header=所管|許可番号|許可年月日|信用金庫代理業者名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_SHINKUMI_AGENTS	https://www.fsa.go.jp/menkyo/menkyoj/dairi_c.xlsx	PASS	xlsx:信用組合代理業者	125	200	29135	header=所管|許可番号|許可年月日|信用組合代理業者名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_FOREIGN_BANK_AGENTS	https://www.fsa.go.jp/menkyo/dairi_g.xlsx	PASS	xlsx:外国銀行代理銀行	147	200	54348	header=所管|認可番号|認可・届出年月日|外国銀行代理銀行名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_EPSP_DENDAI	https://www.fsa.go.jp/menkyo/menkyoj/dendai.xlsx	PASS	xlsx:電子決済等代行業者登録一覧	126	200	81569	header=所管|登録番号|登録年月日|電子決済等代行業者名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_SHINKIN_EPSP	https://www.fsa.go.jp/menkyo/menkyoj/shinkindendai.xlsx	PASS	xlsx:信用金庫電子決済等代行業者等届出一覧	35	200	70367	header=所管|登録番号|登録年月日|電子決済等代行業者名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_KINSA	https://www.fsa.go.jp/menkyo/menkyoj/02_1kinsa.xlsx	PASS	xlsx:金融サービス仲介業者登録一覧	35	200	94429	header=所管|登録番号|登録年月日|金融サービス仲介業者名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_KINYUSHOHIN	https://www.fsa.go.jp/menkyo/menkyoj/kinyushohin.xlsx	PASS	xlsx:日本語	1952	200	394727	header=所管|登録番号|登録年月日|金融商品取引業者名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_REGISTERED_FI	https://www.fsa.go.jp/menkyo/menkyoj/touroku.xlsx	PASS	xlsx:日本語	891	200	129447	header=所管|登録番号|登録年月日|登録金融機関名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_CHUUKAI	https://www.fsa.go.jp/menkyo/menkyoj/chuukai.xlsx	PASS	xlsx:日本語	679	200	154853	header=所管|登録番号|登録年月日|金融商品仲介業者名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_TOUSHIHOUJIN	https://www.fsa.go.jp/menkyo/menkyoj/toushihoujin.xlsx	PASS	xlsx:登録投資法人登録一覧	131	200	33410	header=所管|登録番号|登録年月日|登録投資法人名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_RATING_AGENCIES	https://www.fsa.go.jp/menkyo/menkyoj/shinyoukakuduke.xlsx	PASS	xlsx:信用格付業者登録一覧	7	200	11564	header=登録番号|登録年月日|業者名|法人番号|郵便番号|本店所在地|代表等電話番号
+JO30_BANK_FSA_HFT	https://www.fsa.go.jp/menkyo/menkyoj/kousoku.xlsx	PASS	xlsx:高速取引行為者	53	200	20551	header=2|登録年月日|高速取引行為者名|法人番号|本店所在地
+JO30_BANK_FSA_LIFE_INSURERS	https://www.fsa.go.jp/menkyo/hoken.xlsx	PASS	xlsx:生命保険会社	41	200	21235	header=業態|所管|生命保険会社名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_NONLIFE_INSURERS	https://www.fsa.go.jp/menkyo/menkyoj/songai.xlsx	PASS	xlsx:損害保険会社	57	200	21209	header=業態|所管|損害保険会社名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_INSURANCE_HOLDING	https://www.fsa.go.jp/menkyo/menkyoj/hokenmochikabu.xlsx	PASS	xlsx:保険持株会社	15	200	15534	header=所管|保険持株会社名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_INSURANCE_BROKERS	https://www.fsa.go.jp/menkyo/menkyoj/nakadachi.xlsx	PASS	xlsx:保険仲立人	64	200	23415	header=所管|登録番号|登録年月日|保険仲立人名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_TRUST_COMPANIES	https://www.fsa.go.jp/menkyo/menkyoj/sintaku01.xlsx	PASS	xlsx:信託会社	37	200	17962	header=所管|登録番号|免許（登録）年月日|信託会社名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_SELF_TRUST	https://www.fsa.go.jp/menkyo/menkyoj/sintaku02.xlsx	PASS	xlsx:自己信託会社	4	200	13027	header=所管|登録番号|登録年月日|自己信託会社名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_TRUST_AGENTS	https://www.fsa.go.jp/menkyo/menkyoj/sintaku_a.xlsx	PASS	xlsx:信託契約代理店	350	200	77490	header=所管|登録番号|登録年月日|信託契約代理店名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_MONEYLENDERS	https://www.fsa.go.jp/menkyo/menkyoj/kasi.xlsx	PASS	xlsx:貸金業者登録一覧	246	200	50739	header=所管|登録番号|登録年月日|貸金業者名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_TOKUTEI_KINYU	https://www.fsa.go.jp/menkyo/menkyoj/tokuteikinyuu.xlsx	PASS	xlsx:特定金融	60	200	23368	header=所管|登録番号|登録年月日|特定金融会社名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_PREPAID_THIRDPARTY	https://www.fsa.go.jp/menkyo/menkyoj/daisan.xlsx	PASS	xlsx:前払式支払手段（第三者型）発行者登録一覧	792	200	120306	"header=所管|登録番号|登録年月日|前払式支払手段（第三者型）
+発行者名|法人番号|郵便番号|本店等所在地|代表等電話番号"
+JO30_BANK_FSA_PREPAID_SELF	https://www.fsa.go.jp/menkyo/menkyoj/jika.xlsx	PASS	xlsx:前払式支払手段（自家型）発行者届出一覧	1228	200	166976	header=所管|届出年月日|前払式支払手段（自家型）発行者名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_FUND_TRANSFER	https://www.fsa.go.jp/menkyo/menkyoj/shikin_idou.xlsx	PASS	xlsx:資金移動	86	200	35884	header=所管|登録番号|登録年月日|資金移動業者名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_TMK_SPC	https://www.fsa.go.jp/menkyo/menkyoj/tokutei_todokede.xlsx	PASS	xlsx:SPC（届出）	1217	200	122014	header=所管|届出番号|特定目的会社名|法人番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_DENSHISAIKEN	https://www.fsa.go.jp/menkyo/menkyoj/denshisaiken.xlsx	PASS	xlsx:電子債権記録機関指定一覧	5	200	26491	header=指定日|電子債権記録機関名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_FSA_CRYPTO_EXCHANGES	https://www.fsa.go.jp/menkyo/menkyoj/kasoutuka.xlsx	PASS	xlsx:Sheet1	28	200	39536	header=所管|登録番号|登録年月日|暗号資産交換業者名|法人番号|郵便番号|本店等所在地|代表電話番号
+JO30_BANK_FSA_STABLECOIN_EPI	https://www.fsa.go.jp/menkyo/menkyoj/denshikessaisyudan.xlsx	PASS	xlsx:Sheet1	2	200	31425	header=所管|登録番号|登録年月日|電子決済手段等取引業者名|法人番号|郵便番号|本店等所在地|代表電話番号
+JO30_BANK_FSA_FX_ANALYSIS	https://www.fsa.go.jp/menkyo/menkyoj/kawasebunseki.xlsx	PASS	xlsx:為替取引分析業者	3	200	13761	header=所管|許可番号|許可年月日|為替取引分析業者名|法人番号|郵便番号|本店等所在地|代表等電話番号
+JO30_BANK_BOJ_META_IR02	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=IR02	PASS	json:RESULTSET	119	200	53119	
+JO30_BANK_BOJ_META_IR03	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=IR03	PASS	json:RESULTSET	117	200	58617	
+JO30_BANK_BOJ_META_IR04	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=IR04	PASS	json:RESULTSET	66	200	28988	
+JO30_BANK_BOJ_META_FM01	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=FM01	PASS	json:RESULTSET	6	200	2346	
+JO30_BANK_BOJ_META_FM02	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=FM02	PASS	json:RESULTSET	52	200	23435	
+JO30_BANK_BOJ_META_FM03	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=FM03	PASS	json:RESULTSET	13	200	5433	
+JO30_BANK_BOJ_META_FM08	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=FM08	PASS	json:RESULTSET	62	200	25555	
+JO30_BANK_BOJ_META_FM09	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=FM09	PASS	json:RESULTSET	5	200	1925	
+JO30_BANK_BOJ_META_MD01	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=MD01	PASS	json:RESULTSET	15	200	6082	
+JO30_BANK_BOJ_META_MD02	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=MD02	PASS	json:RESULTSET	158	200	70973	
+JO30_BANK_BOJ_META_MD10	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=MD10	PASS	json:RESULTSET	1233	200	608996	
+JO30_BANK_BOJ_META_MD11	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=MD11	PASS	json:RESULTSET	792	200	399164	
+JO30_BANK_BOJ_META_BS01	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=BS01	PASS	json:RESULTSET	39	200	16250	
+JO30_BANK_BOJ_META_BS02	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=BS02	PASS	json:RESULTSET	1436	200	681578	
+JO30_BANK_BOJ_META_PR01	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=PR01	PASS	json:RESULTSET	32086	200	14233406	
+JO30_BANK_BOJ_META_PR02	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=PR02	PASS	json:RESULTSET	3160	200	1332843	
+JO30_BANK_BOJ_META_BP01	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=BP01	PASS	json:RESULTSET	18307	200	8675089	
+JO30_BANK_BOJ_META_FF	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=FF	PASS	json:RESULTSET	34708	200	16814231	
+JO30_BANK_BOJ_META_PS01	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=PS01	PASS	json:RESULTSET	10	200	4021	
+JO30_BANK_BOJ_META_PS02	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=PS02	PASS	json:RESULTSET	8	200	3127	
+JO30_BANK_TERAREN_BANKS	https://bank.teraren.com/banks.json	PASS	json-array	50	200	21849	
+JO30_BANK_TERAREN_BR_MIZUHO	https://bank.teraren.com/banks/0001/branches.json	PASS	json-array	50	200	20026	
+JO30_BANK_TERAREN_BR_MUFG	https://bank.teraren.com/banks/0005/branches.json	PASS	json-array	50	200	18835	
+JO30_BANK_TERAREN_BR_SMBC	https://bank.teraren.com/banks/0009/branches.json	PASS	json-array	50	200	18802	
+JO30_BANK_TERAREN_BR_RESONA	https://bank.teraren.com/banks/0010/branches.json	PASS	json-array	50	200	19130	
+JO30_BANK_TERAREN_BR_SAITAMA_RESONA	https://bank.teraren.com/banks/0017/branches.json	PASS	json-array	50	200	18941	
+JO30_BANK_TERAREN_BR_YUCHO	https://bank.teraren.com/banks/9900/branches.json	PASS	json-array	50	200	19859	
+JO30_BANK_TERAREN_BR_PAYPAY	https://bank.teraren.com/banks/0033/branches.json	PASS	json-array	50	200	18919	
+JO30_BANK_TERAREN_BR_RAKUTEN	https://bank.teraren.com/banks/0036/branches.json	PASS	json-array	50	200	17308	
+JO30_BANK_TERAREN_BR_HOKKAIDO	https://bank.teraren.com/banks/0116/branches.json	PASS	json-array	50	200	19659	
+JO30_BANK_TERAREN_BR_JOYO	https://bank.teraren.com/banks/0130/branches.json	PASS	json-array	50	200	17939	
+JO30_BANK_TERAREN_BR_CHIBA	https://bank.teraren.com/banks/0134/branches.json	PASS	json-array	50	200	18915	
+JO30_BANK_TERAREN_BR_YOKOHAMA	https://bank.teraren.com/banks/0138/branches.json	PASS	json-array	50	200	19573	
+JO30_BANK_TERAREN_BR_SHIZUOKA	https://bank.teraren.com/banks/0149/branches.json	PASS	json-array	50	200	18188	
+JO30_BANK_TERAREN_BR_KYOTO	https://bank.teraren.com/banks/0158/branches.json	PASS	json-array	50	200	19224	
+JO30_BANK_TERAREN_BR_CHUGOKU	https://bank.teraren.com/banks/0168/branches.json	PASS	json-array	50	200	18349	
+JO30_BANK_TERAREN_BR_HIROSHIMA	https://bank.teraren.com/banks/0169/branches.json	PASS	json-array	50	200	18565	
+JO30_BANK_TERAREN_BR_FUKUOKA	https://bank.teraren.com/banks/0177/branches.json	PASS	json-array	50	200	18629	
+JO30_BANK_YUCHO_NEWS_RSS	https://www.jp-bank.japanpost.jp/rss/news.xml	PASS	rss	15	200	6035	
+JO30_BANK_JAPANPOST_HD_PRESS_RSS	https://www.japanpost.jp/rss/pressrelease.xml	PASS	rss	5	200	2531	
+JO30_BANK_JAPANPOST_HD_INFO_RSS	https://www.japanpost.jp/rss/information.xml	PASS	rss	5	200	2464	
+JO30_BANK_JAPANPOST_NOTICE_RSS	https://www.post.japanpost.jp/rss/notice.xml	PASS	rss	30	200	10476	
+JO30_BANK_JAPANPOST_NEWS_RSS	https://www.post.japanpost.jp/rss/news.xml	PASS	rss	30	200	11497	
+JO30_BANK_KANPO_NEWS_RSS	https://www.jp-life.japanpost.jp/news/news_index.xml	PASS	rss	20	200	10139	
+JO30_BANK_KANPO_PRESS_RSS	https://www.jp-life.japanpost.jp/aboutus/press/abt_prs_index.xml	PASS	rss	20	200	11328	
+JO30_BANK_FUKUOKA_BANK_RSS	https://www.fukuokabank.co.jp/rss/newsrelease.xml	PASS	rss	178	200	65244	
+JO30_BANK_KUMAMOTO_BANK_RSS	https://www.kumamotobank.co.jp/rss/newsrelease.xml	PASS	rss	141	200	52632	
+JO30_BANK_18SHINWA_BANK_RSS	https://www.18shinwabank.co.jp/rss/newsrelease.xml	PASS	rss	111	200	43910	
+JO30_BANK_FFG_RSS	https://www.fukuoka-fg.com/rss/newsrelease.xml	PASS	rss	119	200	45017	
+JO30_BANK_HOKUHOKU_FG_ATOM	https://www.hokuhoku-fg.co.jp/atom.xml	PASS	atom	22	200	14255	
+JO30_BANK_DAITO_BANK_ATOM	https://www.daitobank.co.jp/atom.xml	PASS	atom	15	200	27203	
+JO30_BANK_RAKUTEN_BANK_PRESS_RSS	https://www.rakuten-bank.co.jp/press/rss/press_release.xml	PASS	rss	40	200	17127	
+JO30_BANK_MUFG_SECURITIES_RSS	https://www.sc.mufg.jp/rss/release.xml	PASS	rss	67	200	23819	
+JO30_BANK_KABUCOM_RSS	https://www.kabu.com/rss.xml	PASS	rss	50	200	16757	
+JO30_BANK_IWAICOSMO_RSS	https://www.iwaicosmo.co.jp/rss/news.xml	PASS	rss	248	200	97853	
+JO30_BANK_SMTH_NEWS_RSS	https://www.smth.jp/news/rss	PASS	rss	50	200	20760	
+JO30_BANK_SMTH_IR_RSS	https://www.smth.jp/investors/news/rss	PASS	rss	50	200	23407	
+JO30_BANK_MSINS_NEWS_RDF	https://www.ms-ins.com/rss/news.rdf	PASS	rss	5	200	3125	
+JO30_BANK_SOMPO_JAPAN_NEWS_RSS	https://www.sompo-japan.co.jp/rss/news/	PASS	rss	26	200	14930	
+JO30_BANK_SOMPO_HD_GROUP_RSS	https://www.sompo-hd.com/news/group/?rss=1	PASS	rss	10	200	7231	
+JO30_BANK_SOMPO_HD_TOPICS_RSS	https://www.sompo-hd.com/news/topics/?rss=1	PASS	rss	10	200	6858	
+JO30_BANK_SOMPO_HD_UPDATE_RSS	https://www.sompo-hd.com/news/update/?rss=1	PASS	rss	10	200	6223	
+JO30_BANK_SEIHO_ATOM	https://www.seiho.or.jp/atom.xml	PASS	atom	15	200	21409	
+JO30_BANK_SEIHO_INFO_RSS	https://www.seiho.or.jp/info/feed/rss.xml	PASS	rss	10	200	25045	
+JO30_BANK_ZENROSAI_HQ_RSS	https://www.zenrosai.coop/rss/head.xml	PASS	rss	248	200	99893	
+JO30_BANK_ZENROSAI_TOKYO_RSS	https://www.zenrosai.coop/rss/tokyo.xml	PASS	rss	109	200	44233	
+JO30_BANK_RCC_RSS	https://www.kaisyukikou.co.jp/rss.xml	PASS	rss	20	200	8766	
+JO30_BANK_FINMAC_NEWS_RSS	https://www.finmac.or.jp/news/rss/	PASS	rss	10	200	5593	
+JO30_BANK_JABANK_NEWS_RDF	https://www.jabank.org/news/rss/	PASS	rss	30	200	19545	
+JO30_BANK_SHINYOKUMIAI_ATOM	https://www.shinyokumiai.or.jp/atom.xml	PASS	atom	15	200	11470	
+JO30_BANK_JAPANPOST_OFFICE_COUNTS	https://www.post.japanpost.jp/newsrelease/storeinformation/index02.html	PASS	html-anchors	115	200	49280	
+JO30_BANK_SHINKIN_DIR_HOKKAIDO	http://www.shinkin.co.jp/tikubetu/hokkaido.htm	PASS	html-anchors	21	200	8603	
+JO30_BANK_SHINKIN_DIR_TOHOKU	http://www.shinkin.co.jp/tikubetu/tohoku.htm	PASS	html-anchors	28	200	11906	
+JO30_BANK_SHINKIN_DIR_KANTO	http://www.shinkin.co.jp/tikubetu/kantou.htm	PASS	html-anchors	56	200	17341	
+JO30_BANK_SHINKIN_DIR_KOSHINETSU	http://www.shinkin.co.jp/tikubetu/kosinetu.htm	PASS	html-anchors	18	200	8980	
+JO30_BANK_SHINKIN_DIR_HOKURIKU	http://www.shinkin.co.jp/tikubetu/hokuriku.htm	PASS	html-anchors	17	200	7898	
+JO30_BANK_SHINKIN_DIR_TOKAI	http://www.shinkin.co.jp/tikubetu/tokai.htm	PASS	html-anchors	35	200	10731	
+JO30_BANK_SHINKIN_DIR_KINKI	http://www.shinkin.co.jp/tikubetu/kinki.htm	PASS	html-anchors	30	200	10786	
+JO30_BANK_SHINKIN_DIR_CHUGOKU	http://www.shinkin.co.jp/tikubetu/cyugoku.htm	PASS	html-anchors	22	200	9000	
+JO30_BANK_SHINKIN_DIR_SHIKOKU	http://www.shinkin.co.jp/tikubetu/sikoku.htm	PASS	html-anchors	11	200	7306	
+JO30_BANK_SHINKIN_DIR_KYUSHU	http://www.shinkin.co.jp/tikubetu/kyusyu.htm	PASS	html-anchors	29	200	11342	

@@ -11,7 +11,7 @@
 #include <string.h>
 
 #define API_URL \
-  "https://www.geospatial.jp/ckan/api/3/action/package_search?rows=50"
+  "https://www.geospatial.jp/ckan/api/3/action/package_search?rows=50&sort=id%20asc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *data = feed_get_json(ctx->http, API_URL, 10000);

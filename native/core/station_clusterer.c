@@ -1699,6 +1699,13 @@ int station_snap_stations(db_handle *db, const char *mode) {
             U[un].uid = dup_or_null(sta[s].uid);
             U[un].color = dup_or_null(bestColor);
             U[un].colors = malloc((size_t)(keep > 0 ? keep : 1) * sizeof(char *));
+            /* Unchecked, this was a NULL deref one line down: the loop writes
+             * into U[un].colors[i] unconditionally, and un has not been
+             * incremented yet, so this slot's uid/color would never reach the
+             * station_oom cleanup loop (which only walks i < un) — free them
+             * here before bailing. */
+            if (!U[un].colors) { free(U[un].uid); free(U[un].color);
+                                  free(CB); goto station_oom; }
             U[un].ncolors = keep;
             for (int i = 0; i < keep; i++) U[un].colors[i] = dup_or_null(CB[i].c);
             un++;

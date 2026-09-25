@@ -31,6 +31,30 @@ void llm_init_suggest(llm_client *c, http_client *http);
 char *llm_complete(llm_client *c, const char *prompt, const char *grammar,
                    int max_tokens, double temperature, int timeout_ms);
 
+/* HOW MANY PROMPT BYTES THIS SERVER WILL ACTUALLY ACCEPT.
+ *
+ * Asks llama-server's /props for the per-slot context (n_ctx) once and caches
+ * it, converting tokens to a byte budget and reserving room for the answer.
+ * Returns 0 when the server cannot be asked — callers must then keep whatever
+ * conservative default they had, never assume "unlimited".
+ *
+ * WHY THIS EXISTS. Every prompt budget in this tree was a BYTE CONSTANT with
+ * no relationship to the server's real limit, justified by arithmetic in a
+ * comment that went stale as the prompt grew around it. Measured 2026-09-13:
+ * the analysis prompt was 64,674 bytes against an n_ctx of 16,384 tokens
+ * (~16.2k tokens — over the limit before the answer is even reserved), so
+ * llama-server answered 400 and the entire analysis stage degraded. Its
+ * catalogue budget's own comment claimed "32 KB ≈ 8k tokens ... lands near 11k
+ * tokens, inside the 16384 default context" — true when written, and the
+ * few-shot preamble it assumed to be ~9 KB is now ~32 KB. A budget that is
+ * derived from the server cannot drift like that.
+ *
+ * BYTES PER TOKEN is deliberately pessimistic (3, not the ~4 English averages):
+ * this prompt carries ids, JSON and Japanese, all of which tokenize worse than
+ * prose, and the cost of underestimating is a 400 that kills the stage while
+ * the cost of overestimating is a slightly shorter menu. */
+size_t llm_ctx_chars(llm_client *c, int reserve_tokens);
+
 /* WHY A FAILED CALL NOW HAS A NAME.
  *
  * Every generation entry point here returns NULL on failure and returned NULL

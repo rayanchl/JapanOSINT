@@ -4,6 +4,10 @@ import apiUrl from '../../utils/apiUrl.js';
 import { entityVisual } from '../../utils/entityVisuals.js';
 import { useEntity, MENTION_LIMIT } from '../../hooks/useSearch.js';
 import EntityGraph from './EntityGraph.jsx';
+import { isSafeUrl } from '../../utils/safeUrl.js';
+import EntityBreaches from './EntityBreaches.jsx';
+import SaveStarButton from '../saved/SaveStarButton.jsx';
+import PinToCaseButton from '../cases/CasePickerSheet.jsx';
 
 /** Resolve a /:type/lookup?q=value chip link to a concrete entity_id. */
 function useResolvedId(type, id) {
@@ -62,6 +66,10 @@ function Loaded({ type, entityId, tab, setTab, navigate }) {
               {profile.mention_count} mention{profile.mention_count === 1 ? '' : 's'}
             </span>
           )}
+          <span className="ml-auto flex items-center gap-1">
+            <SaveStarButton size="sm" item={{ kind: 'entity', refId: entityId, displayName: profile?.value || entityId, properties: { type } }} />
+            <PinToCaseButton refType="entity" refId={entityId} label={profile?.value || entityId} />
+          </span>
         </div>
 
         {errors.profile && (
@@ -75,14 +83,14 @@ function Loaded({ type, entityId, tab, setTab, navigate }) {
         )}
 
         <div className="flex gap-1 border-b border-osint-border">
-          {['graph', 'timeline', 'raw'].map((t) => (
+          {['graph', 'timeline', 'breaches', 'raw'].map((t) => (
             <button
               key={t}
               type="button"
               onClick={() => setTab(t)}
               className={`px-3 py-1.5 text-sm ${tab === t ? 'text-neon-cyan border-b-2 border-neon-cyan' : 'text-gray-500 hover:text-gray-300'}`}
             >
-              {t === 'graph' ? 'Relationships' : t === 'timeline' ? 'Timeline' : 'Raw'}
+              {t === 'graph' ? 'Relationships' : t === 'timeline' ? 'Timeline' : t === 'breaches' ? 'Breaches' : 'Raw'}
             </button>
           ))}
         </div>
@@ -148,7 +156,11 @@ function Loaded({ type, entityId, tab, setTab, navigate }) {
                 </div>
                 <div className="text-sm text-gray-200">{m.title || m.surface || '(untitled)'}</div>
                 {m.summary && <div className="text-xs text-gray-400 mt-0.5">{m.summary}</div>}
-                {m.link && (
+                {/* m.link is the mention's source URL, extracted from ingested
+                  * collector data across every source — not a value this
+                  * client generated. Gate to http(s) so a `javascript:` URI
+                  * in an ingested record can't execute when clicked. */}
+                {m.link && isSafeUrl(m.link) && (
                   <a href={m.link} target="_blank" rel="noreferrer" className="text-xs text-neon-cyan hover:underline">
                     source ↗
                   </a>
@@ -157,6 +169,8 @@ function Loaded({ type, entityId, tab, setTab, navigate }) {
             ))}
           </ul>
         )}
+
+        {tab === 'breaches' && <EntityBreaches type={type} entityId={entityId} />}
 
         {tab === 'raw' && (
           <pre className="text-xs text-gray-400 bg-black/20 rounded p-3 overflow-auto">

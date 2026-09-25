@@ -68,6 +68,15 @@ cJSON *csv_parse_dc(const char *text, int headers, char delim,
 cJSON *csv_parse_x(const char *text, int headers, const char *delim,
                    int skip_lines, const char *comment);
 
+/* How many unterminated quoted fields the LAST csv_parse_x() on this thread had
+ * to close at their own line end (0 in the ordinary case). A field that spans
+ * more than a few physical lines is a malformed row, not a multi-line cell: left
+ * alone it swallows every following line until the next quote — ThreatView's C2
+ * feed turned 1,178 data lines into 503 records that way. The count is exposed
+ * so a caller can DISCLOSE the repair instead of silently parsing a different
+ * file from the one the upstream served. */
+int csv_quote_repairs(void);
+
 /* Shift_JIS → UTF-8, malloc'd NUL-terminated (caller frees). On iconv error
  * returns a plain UTF-8 copy of the input (mirrors JS catch → utf8). */
 char *csv_decode_sjis(const char *buf, size_t len);

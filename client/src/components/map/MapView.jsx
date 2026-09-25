@@ -4905,7 +4905,7 @@ export default function MapView({ layers, layerData, catalog, onFeatureClick, on
       <div ref={mapContainerRef} className="map-wrapper" />
 
       {/* Style switcher */}
-      <div className="absolute top-3 right-14 z-20 flex gap-1">
+      <div className="absolute top-16 md:top-3 right-14 z-20 flex flex-wrap justify-end gap-1 max-w-[70vw] md:max-w-none">
         {Object.entries(MAP_STYLES).map(([key, style]) => (
           <button
             key={key}

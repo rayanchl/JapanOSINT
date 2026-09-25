@@ -1,12 +1,26 @@
 import { useState, useEffect, useCallback } from 'react';
-import { subscribe, startSearch, fetchSuggestions } from '../store/searchStore.js';
+import { subscribe, startSearch, fetchSuggestions, attachRun, getRun } from '../store/searchStore.js';
 import apiUrl from '../utils/apiUrl.js';
 
 /** Subscribe to the live search store (active + completed runs). */
 export function useSearchStore() {
-  const [s, setS] = useState({ active: [], completed: [] });
+  const [s, setS] = useState({ active: [], completed: [], lastError: null });
   useEffect(() => subscribe(setS), []);
-  return { ...s, startSearch, fetchSuggestions };
+  return { ...s, startSearch, fetchSuggestions, attachRun };
+}
+
+/** One run by request id, live-updated; re-attaches through the results
+ *  endpoint when the tab does not already hold it. */
+export function useRun(requestId) {
+  const [run, setRun] = useState(() => getRun(requestId));
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    setError(null);
+    if (!requestId) return undefined;
+    if (!getRun(requestId)) attachRun(requestId).catch((e) => setError(e));
+    return subscribe(() => setRun(getRun(requestId)));
+  }, [requestId]);
+  return { run, error };
 }
 
 /** Entity FTS autocomplete / search.

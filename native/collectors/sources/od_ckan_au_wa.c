@@ -8,7 +8,7 @@
 
 #define SID "ckan-au-wa"
 static const char *URL =
-  "https://catalogue.data.wa.gov.au/api/3/action/package_search?rows=20";
+  "https://catalogue.data.wa.gov.au/api/3/action/package_search?rows=20&sort=id%20asc";
 static const char *const EXTRA[] = { "notes", "custom_license_url",
                                      "custom_license_title", "access_level",
                                      "contact_point", NULL };
@@ -24,7 +24,7 @@ static const source_def od_ckan_au_wa_def = {
   .name = "Western Australia catalogue.data.wa.gov.au CKAN",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://catalogue.data.wa.gov.au/api/3/action/package_search?rows=20",
+  .url = "https://catalogue.data.wa.gov.au/api/3/action/package_search?rows=20&sort=id%20asc",
   .description = "Western Australian government data catalogue (2,882 datasets: cadastre, mining tenements, environment) with agency contacts",
   .license = "Per-dataset; custom_license_url (Landgate terms) emitted verbatim",
   .free_tier = 1,

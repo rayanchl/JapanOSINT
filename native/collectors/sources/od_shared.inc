@@ -16,6 +16,7 @@
 
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -248,6 +249,19 @@ typedef struct {
   const char *const *title_keys;    /* preference list, NULL-terminated */
   const char *const *summary_keys;
   const char *id_key;               /* → remote_key */
+  /* Optional EXTRA components of the identity, joined with '|'. All NULL (the
+   * default) keeps the single-field behaviour every existing row relies on.
+   *
+   * Why this exists: `socrata-cdc-places` keyed on `locationid` and CDC PLACES
+   * publishes one row per location × measure × year × value-type, so a 2,000
+   * record walk held 32 distinct locationids and the sink collapsed 1,968 of
+   * them (measured 2026-09-20). That is rule 4b's "id_keys is a DECLARATION,
+   * not the upstream's identity" in the od_* family, where — unlike hpengine's
+   * `a+b` — there was no way to spell a tuple at all. A missing component joins
+   * as empty rather than failing the whole key, exactly as hp_pick_s does. */
+  const char *id_key2;
+  const char *id_key3;
+  const char *id_key4;
   const char *date_key;             /* → published_at (string field) */
   const char *const *geom_keys;     /* full-geometry fields (the_geom, geom) */
   const char *title_prefix;         /* prepended to the chosen title */
@@ -262,12 +276,34 @@ static inline int od_emit_rows(intel_sink *sink, const cJSON *arr,
   cJSON_ArrayForEach(r, arr) {
     if (!cJSON_IsObject(r)) continue;
     char tb[256], ib[160], sb[256], title[420];
+    /* Sized so the join below cannot truncate and GCC can prove it:
+     * ib(160) + 3 x ib2(96) + 3 separators + NUL = 452 <= 512. An unprovable
+     * bound is a -Wformat-truncation warning in every TU that includes this
+     * header, and this tree builds at zero warnings. */
+    char ib2[96], ib3[96], ib4[96], idcomp[512];
     const char *t   = od_pick(r, sp->title_keys, tb, sizeof tb);
     const char *idv = sp->id_key ? od_scalar(r, sp->id_key, ib, sizeof ib)
                                  : NULL;
+    /* The PRIMARY id, kept for the title fallback below. A composite key is
+     * the record's identity, not its name: letting the joined tuple reach the
+     * title made records read "5301255|Vision disability|2023|Crude", and it
+     * also let a 512-byte key flow into title[420] — which GCC correctly
+     * flagged as a possible truncation in every TU including this header. */
+    const char *idbase = idv;
+    /* Compose the tuple when the row declares one — see od_rowspec.id_key2. */
+    if (idv && (sp->id_key2 || sp->id_key3 || sp->id_key4)) {
+      const char *p2 = sp->id_key2 ? od_scalar(r, sp->id_key2, ib2, sizeof ib2) : NULL;
+      const char *p3 = sp->id_key3 ? od_scalar(r, sp->id_key3, ib3, sizeof ib3) : NULL;
+      const char *p4 = sp->id_key4 ? od_scalar(r, sp->id_key4, ib4, sizeof ib4) : NULL;
+      if (p2 || p3 || p4) {
+        snprintf(idcomp, sizeof idcomp, "%s|%s|%s|%s",
+                 idv, p2 ? p2 : "", p3 ? p3 : "", p4 ? p4 : "");
+        idv = idcomp;
+      }
+    }
     const char *sum = od_pick(r, sp->summary_keys, sb, sizeof sb);
     const char *date = sp->date_key ? od_s(r, sp->date_key) : NULL;
-    if (!t) t = idv;
+    if (!t) t = idbase;
     if (!t) t = date;
     if (!t) continue;                       /* nothing identifying → no row */
     if (sp->title_prefix) {
@@ -310,6 +346,51 @@ static inline int od_fetch_rows(const source_ctx *ctx, intel_sink *sink,
   int n = od_emit_rows(sink, arr, sp);
   cJSON_Delete(doc);
   return n;
+}
+
+/* ------------------------------------------------- the paged twin of the above
+ *
+ * od_fetch_rows() above takes ONE page and stops, which is right only when the
+ * upstream's whole table fits in the collector's `$limit`. Measured 2026-09-19
+ * against the live Socrata endpoints this family points at, it almost never
+ * does: data.calgary.ca holds 7,488,797 311 requests and the collector kept
+ * 100 of them; data.brla.gov 490,578; chronicdata.cdc.gov 2,150,438. The
+ * discard was invisible to `make audit-sources`, because its `single-page`
+ * pattern looks for `[?&]offset=0` and SODA spells it `$offset=0` — the `$`
+ * means the scanner never matched a single one of these URLs.
+ *
+ * This is the JSON-rows-shaped ENTRY POINT to lib/pagewalk.c, not a second walk
+ * loop: continuation rules, the repeat-page guards, the seen-vs-emitted
+ * accounting, the 20-page ceiling and the truncation disclosure all stay in
+ * pw_walk(). The caller's URL must carry `$offset=0` — pw_walk only ever
+ * advances a parameter the author already wrote, and never invents one. */
+typedef struct { const char *path; const od_rowspec *sp; } od_walk_ctx;
+
+/* pw_emit_fn: emit one already-fetched page and report what it CONTAINED.
+ * `seen` is the array size, not the emitted count — od_emit_rows drops a record
+ * with nothing identifying, and pw_walk drives "did this page come back full"
+ * (and therefore both continuation and disclosure) off `seen`. Reporting the
+ * emitted count here would make a full page holding two unlabelled rows look
+ * short, stopping the walk AND suppressing its own truncation notice. */
+static inline int od_walk_emit_page(const source_ctx *ctx, intel_sink *sink,
+                                    const char *id, cJSON *doc, void *ud,
+                                    int *seen) {
+  (void)ctx; (void)id;
+  const od_walk_ctx *w = (const od_walk_ctx *)ud;
+  const cJSON *arr = w->path ? cJSON_GetObjectItem(doc, w->path) : doc;
+  if (!cJSON_IsArray(arr)) { *seen = 0; return 0; }
+  *seen = cJSON_GetArraySize(arr);
+  return od_emit_rows(sink, arr, w->sp);
+}
+
+/* Walk `url` to exhaustion where the upstream permits and emit every row.
+ * Returns total emitted, or -1 if the FIRST fetch failed (R3). */
+static inline int od_walk_rows(const source_ctx *ctx, intel_sink *sink,
+                               const char *source_id, const char *url,
+                               const char *path, const od_rowspec *sp) {
+  od_walk_ctx w = { path, sp };
+  return pw_walk(ctx, sink, source_id, url, pw_fetch_json,
+                 od_walk_emit_page, &w);
 }
 
 /* ---------------------------------------------------------- CKAN / udata  */
@@ -939,6 +1020,15 @@ static inline int od_sdmx_collect(const source_ctx *ctx, intel_sink *sink,
 static inline int od_rc(const char *sid, int n) {
   if (n < 0) { fprintf(stderr, "[%s] fetch/parse failed\n", sid); return -1; }
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
+  return 0;
+}
+
+/* The same tail for a WALKED collector. pw_walk has already printed the
+ * per-walk accounting ("emitted N across P page(s)") and emitted the
+ * truncation disclosure, so this only maps its return onto the R3 rc rather
+ * than printing a second, smaller-looking count beside it. */
+static inline int od_wrc(const char *sid, int n) {
+  if (n < 0) { fprintf(stderr, "[%s] fetch/parse failed\n", sid); return -1; }
   return 0;
 }
 

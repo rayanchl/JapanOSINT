@@ -35,6 +35,7 @@
 #include "lib/feedlib.h"
 #include "lib/htmlparse.h"
 #include "geoeo_common.inc"
+#include "lib/seenset.h"
 #include <strings.h>
 
 #define MA_BASE "https://feeds.meteoalarm.org/feeds/meteoalarm-legacy-atom-"
@@ -68,7 +69,7 @@ static int entry_emma(const char *blk, char *out, size_t n) {
 }
 
 static int ma_country(const source_ctx *ctx, intel_sink *sink,
-                      const char *country, int *emitted) {
+                      const char *country, int *emitted, seen_set *key_seen) {
   char url[256];
   snprintf(url, sizeof url, "%s%s", MA_BASE, country);
   char *body = feed_get_text(ctx->http, url, 30000);
@@ -124,8 +125,25 @@ static int ma_country(const source_ctx *ctx, intel_sink *sink,
              (sev[0] && area[0]) ? " · " : "", area[0] ? area : "",
              onset[0] ? " · from " : "", onset[0] ? onset : "");
 
+    /* One CAP alert area can be published as several Atom entries, one per
+     * polygon: live 2026-09-15 the Norway feed carried three identifier+area
+     * pairs twice, identical in every CAP field and differing only in
+     * <cap:polygon> and in the entry's own <id> (…&index_polygon=0 / =1), and
+     * the second polygon upserted over the first (218 emitted, 213 stored). A
+     * key already seen this run is qualified by that entry id; first
+     * occurrences keep their plain key and stored uid. */
+    char rkbuf[900];
+    const char *rk = key;
+    if (!seen_add(key_seen, key)) {
+      char atomid[480];
+      if (!geoeo_xml_text(blk, "id", atomid, sizeof atomid))
+        snprintf(atomid, sizeof atomid, "entry-%d", entries);
+      snprintf(rkbuf, sizeof rkbuf, "%s|%s", key, atomid);
+      rk = rkbuf;
+    }
+
     intel_item it = {0};
-    it.remote_key = key;
+    it.remote_key = rk;
     it.title = has_title ? title : ident;
     it.summary = summary[0] ? summary : NULL;
     it.link = "https://meteoalarm.org/";     /* licence: link back required */
@@ -147,13 +165,16 @@ static int ma_country(const source_ctx *ctx, intel_sink *sink,
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
-  int primary = ma_country(ctx, sink, MA_COUNTRIES[0], &n);
+  seen_set key_seen = {0};
+  int primary = ma_country(ctx, sink, MA_COUNTRIES[0], &n, &key_seen);
   if (primary < 0) {
+    seen_free(&key_seen);
     fprintf(stderr, "[meteoalarm-cap] %s feed fetch failed\n", MA_COUNTRIES[0]);
     return -1;
   }
   for (int i = 1; MA_COUNTRIES[i]; i++)
-    ma_country(ctx, sink, MA_COUNTRIES[i], &n);   /* best-effort siblings */
+    ma_country(ctx, sink, MA_COUNTRIES[i], &n, &key_seen);   /* best-effort siblings */
+  seen_free(&key_seen);
 
   fprintf(stderr, "[meteoalarm-cap] emitted %d warning/region rows\n", n);
   return 0;                                  /* calm weather → 0 is honest */

@@ -31,6 +31,14 @@ typedef struct {
   char *data;
   int   records;         /* how many records `data` carries                  */
   char *error;           /* malloc'd; "not_implemented" when no such source */
+  /* malloc'd, NULL in the ordinary case: the name the CALLER asked for, when
+   * it did not resolve and was matched to a registered service by
+   * osint_resolve_near(). The substitution is never silent — the pipeline puts
+   * it in the per-service result as `resolved_from`, because answering a
+   * question about DOMAIN_WHOIS_LOOKUP with DOMAIN_WHOIS's data and saying
+   * nothing is a confident wrong attribution, which house rule 1 forbids even
+   * when the guess is right. */
+  char *resolved_from;
   /* malloc'd JSON array of the underlying sources/providers the service hit,
    * one entry per distinct attribution: [{ "name", "status", "records",
    * ["requests"], ["detail"] }]. Derived from each emit's sub_source_id /
@@ -48,6 +56,13 @@ typedef struct {
 } osint_result;
 
 void osint_result_free(osint_result *r);
+
+/* Best registered id for a name the registry does not have, or 0 when there
+ * is none or when two candidates are equally near (a tie is "we do not know",
+ * not "pick one"). `canon` is expected upper-cased by osint_canon(). Writes
+ * the resolved id into `out`. Callers MUST report the substitution — see
+ * osint_result.resolved_from. */
+int osint_resolve_near(const char *canon, char *out, size_t n);
 
 /* Canonical service name: trimmed, upper-cased into out (or 0 if empty). */
 int  osint_canon(const char *name, char *out, size_t n);
@@ -79,6 +94,16 @@ typedef struct {
  * analysis request outright — see the long comment in osint_dispatch.c. */
 char *osint_services_list_bounded(osint_catalogue_note *note);
 
+/* Tell the next osint_services_list_bounded() how many bytes it may spend,
+ * computed from the LLM server's real context minus the measured preamble
+ * (core/pipeline.c). 0 clears it. JO_PROMPT_SERVICE_CATALOGUE_CHARS still
+ * wins — an operator who names a number means it.
+ *
+ * Exists because a byte constant cannot know what the prompt around it costs:
+ * the previous default, 32 KB, was justified against a preamble that has since
+ * tripled, and the result was an HTTP 400 that degraded every search. */
+void osint_set_catalogue_budget(int chars);
+
 /* osint_services_list_bounded(NULL). */
 char *osint_services_list(void);
 
@@ -93,6 +118,13 @@ char *osint_analysis_schema_dynamic(void);
  * pass osint_catalogue_note.shown so what the model is ALLOWED to answer is
  * exactly what it was SHOWN. `limit` <= 0 means no limit. */
 char *osint_analysis_schema_dynamic_limited(int limit);
+
+/* Same, but the enums hold exactly these ids — the counterpart to the semantic
+ * router (core/service_vec.h), which chooses services by relevance rather than
+ * registry order. Pair it with the ids service_vec_catalogue() returned, so
+ * what the model may ANSWER is what it was SHOWN. Ids that are not registered
+ * entity pivots are dropped. NULL when none survive; caller falls back. */
+char *osint_analysis_schema_dynamic_ids(const char *const *ids, int n);
 
 /* Handler-dedup key (== JS handlerKey). Unified model: the canonical id IS
  * the key (distinct source_def per service); alias-grouping is an additive

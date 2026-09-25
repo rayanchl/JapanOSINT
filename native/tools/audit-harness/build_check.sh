@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Does the tree still build? Prints PASS/FAIL plus any hard errors.
 cd "$(dirname "$0")/../.." || exit 1
-LOG=tests/audit/build_check.log
+LOG=tools/audit-harness/build_check.log
 make -j8 >"$LOG" 2>&1
 rc=$?
 echo "make exit=$rc"

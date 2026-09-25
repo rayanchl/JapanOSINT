@@ -111,10 +111,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_Delete(p);
 
       char rk[160], title[260], summary[240];
-      if (nms > 1)
-        snprintf(rk, sizeof rk, "%s|%s", key, param ? param : "");
-      else
+      /* Several measurements on one point can share a parameterId too: live
+       * 2026-09-15 oosterschelde.4 carries two waterhoogte readings that differ
+       * only in sampleHeight (-280 cm and null), and "code|parameterId" folded
+       * the second onto the first (310 emitted, 309 stored). The sample height
+       * is part of what the measurement IS, so it joins the key. */
+      if (nms > 1) {
+        const cJSON *sh = cJSON_GetObjectItem(m, "sampleHeight");
+        char shb[40] = "";
+        if (cJSON_IsNumber(sh)) snprintf(shb, sizeof shb, "%g", sh->valuedouble);
+        snprintf(rk, sizeof rk, "%s|%s|%s", key, param ? param : "", shb);
+      } else {
         snprintf(rk, sizeof rk, "%s", key);
+      }
       if (nms > 1 && param)
         snprintf(title, sizeof title, "%s — %s", name ? name : key, param);
       else

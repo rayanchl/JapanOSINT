@@ -41,8 +41,15 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # which runs daily, as a row that can never run. See tools/manifest.py.
 from manifest import COLS, parse_opts                      # noqa: E402
 
-# mirrors hp_uses_entity(): every entity token starts "{q"
-ENTITY_TOKEN = re.compile(r"\{q")
+# mirrors hp_uses_entity() exactly: every entity token starts "{q" (case
+# sensitive) EXCEPT the raw POST form "{Q}", which hp_uses_entity() checks
+# separately (lib/hpengine.c: `strstr(tmpl, "{q") || strstr(tmpl, "{Q}")`).
+# A regex of just `\{q` misses a row whose only entity reference is `{Q}`,
+# which this tool would then flag "never runs" -- and --fix would bolt a
+# bogus interval onto a row that is already reachable as a pivot, while the
+# scheduler skips it every tick because hp_uses_entity() still sees the
+# entity token it needs and was never given.
+ENTITY_TOKEN = re.compile(r"\{q|\{Q\}")
 
 
 def rows(path):
@@ -51,7 +58,12 @@ def rows(path):
     comment, because "skipped" and "checked and clean" are not the same
     answer and this file used to give the second one for both."""
     for lno, line in enumerate(io.open(path, encoding="utf-8"), 1):
-        s = line.rstrip("\n")
+        # rstrip \r too, matching manifest.iter_lines(): manifest .txt files
+        # are not covered by .gitattributes' `eol=lf`, so a CRLF checkout
+        # leaves \r riding on the last column (opts). --fix below rewrites
+        # rows from these fields, so an un-stripped \r would get baked into
+        # the file as data at the join point.
+        s = line.rstrip("\n").rstrip("\r")
         if not s.strip() or s.lstrip().startswith("#"):
             yield lno, s, None, False
             continue

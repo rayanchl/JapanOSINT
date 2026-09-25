@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MdClose } from 'react-icons/md';
+import SaveStarButton from '../saved/SaveStarButton.jsx';
+import PinToCaseButton from '../cases/CasePickerSheet.jsx';
 import { getLayerIcon } from '../../utils/layerIcons';
 import apiUrl from '../../utils/apiUrl.js';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
@@ -448,7 +450,12 @@ function CameraDetail({ properties }) {
       {properties.location && (
         <p className="text-xs text-gray-400">{properties.location}</p>
       )}
-      {streamUrl && (
+      {/* streamUrl comes from scraped camera-discovery data (dorks, webcam
+        * directories, insecam) — not a value we generated. Handing it to
+        * href unchecked would let a malicious `javascript:` URI in a scraped
+        * record execute on click. Same http(s)-only gate as PropertyTable's
+        * isUrl() below. */}
+      {streamUrl && isUrl(streamUrl) && (
         <a
           href={streamUrl}
           target="_blank"
@@ -847,7 +854,10 @@ function TwitterGeoDetail({ properties }) {
         </p>
       )}
 
-      {url ? (
+      {/* url is the scraped post's own link (twitter/mastodon scraping) — same
+        * http(s)-only gate as streamUrl above; an ingested record is not a
+        * trusted href source. */}
+      {url && isUrl(url) ? (
         <a
           href={url}
           target="_blank"
@@ -1158,6 +1168,16 @@ export default function MapPopup({ feature, layerType, layerDef: catalogDef, onC
   const layerDef = catalogDef || (layerType ? LAYER_DEFINITIONS[layerType] : null);
   const LayerIcon = layerType ? getLayerIcon(layerType) : null;
   const iconColor = layerDef?.color || '#22d3ee';
+  // Identity for Save / Pin-to-case: the record's own id when it has one,
+  // else its layer + coordinates (stable for a static feature, honest for a
+  // moving one — a vehicle's ref is the position it was pinned at).
+  const fid = properties.id ?? properties.camera_uid ?? properties.camera_id ?? properties.uid ?? properties.scene_id ?? properties.norad_id ?? properties.gs_id ?? feature.id;
+  const coords = Array.isArray(feature.geometry?.coordinates) && typeof feature.geometry.coordinates[0] === 'number' ? feature.geometry.coordinates : null;
+  const refLon = coords ? coords[0] : (Number.isFinite(Number(properties.lon ?? properties.lng)) ? Number(properties.lon ?? properties.lng) : undefined);
+  const refLat = coords ? coords[1] : (Number.isFinite(Number(properties.lat)) ? Number(properties.lat) : undefined);
+  const refId = `${layerType || 'feature'}:${fid ?? (coords ? `${refLat.toFixed(5)},${refLon.toFixed(5)}` : 'unknown')}`;
+  const refKind = /camera/i.test(String(layerType || '')) ? 'camera' : 'feature';
+  const refTitle = String(properties.name || properties.title || properties.station_name || properties.place || properties.callsign || properties.mmsi || fid || layerType || 'feature');
   const layerLabel = layerDef?.name
     || (layerType
       ? layerType.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase())
@@ -1179,13 +1199,21 @@ export default function MapPopup({ feature, layerType, layerDef: catalogDef, onC
           )}
           {layerLabel}
         </span>
-        <button
-          onClick={onClose}
-          className="text-gray-500 hover:text-gray-200 ml-2 p-0.5 rounded hover:bg-osint-border/40"
-          aria-label="Close popup"
-        >
-          <MdClose size={14} aria-hidden="true" />
-        </button>
+        <span className="flex items-center gap-1 ml-2">
+          {/* Save / pin — the same actions the iOS popup carries. ref_type is
+            * 'camera' for camera features and 'feature' for everything else;
+            * the server keeps feature/camera refs without a canonical row
+            * (casesapi.c build_snapshot), so the label is what a case shows. */}
+          <SaveStarButton size="sm" item={{ kind: refKind, refId, layerId: layerType, displayName: refTitle, lat: refLat, lon: refLon, properties }} />
+          <PinToCaseButton refType={refKind} refId={refId} label={refTitle}>Pin</PinToCaseButton>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-200 p-0.5 rounded hover:bg-osint-border/40"
+            aria-label="Close popup"
+          >
+            <MdClose size={14} aria-hidden="true" />
+          </button>
+        </span>
       </div>
       <Renderer
         key={properties.id || properties.scene_id || properties.norad_id || properties.gs_id}

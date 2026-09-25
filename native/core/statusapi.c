@@ -519,7 +519,29 @@ char *statusapi_one(db_handle *db, const char *id) {
 }
 
 char *statusapi_build(db_handle *db, int include_breach) {
+  return statusapi_build_view(db, include_breach, 0, 0, 0);
+}
+
+/* The bounded form. `limit <= 0` means "every row", which is what
+ * statusapi_build() asks for and what both clients still get by default.
+ *
+ * The rows outside the window are still BUILT — the summary tallies are read
+ * back off each row object, so skipping construction would change the numbers —
+ * and then freed instead of printed. That is the half worth skipping: measured
+ * 2026-09-11, this payload is 20.5 MB and ~8 s, and serialising it is most of
+ * both. A caller that wants the counters and not the catalogue (`summary_only`)
+ * pays neither.
+ *
+ * Whatever is left out is stated in `view`, never silently dropped: total,
+ * shown, offset, limit, truncated. House rule 2 — a bounded view that does not
+ * announce its bound is the violation. */
+char *statusapi_build_view(db_handle *db, int include_breach,
+                           int limit, int offset, int summary_only) {
   int na = 0, nt = 0, ns = 0;
+  if (offset < 0) offset = 0;
+  if (summary_only) limit = 0;            /* nothing kept; `view` says so */
+  int row_idx = 0, kept = 0;
+  const int windowed = (summary_only || limit > 0);
   agg_t *A = load_aggs(db, &na);
   source_trust *TT = source_trust_load(db, &nt);
   sched_t *S = load_sched(db, &ns);
@@ -541,7 +563,10 @@ char *statusapi_build(db_handle *db, int include_breach) {
     if (m && statusapi_strip_has(m->layer)) continue;
 
     cJSON *o = status_row(s, A, na, TT, nt, S, ns, now);
-    cJSON_AddItemToArray(apis, o);
+    int in_window = !windowed ||
+                    (!summary_only && row_idx >= offset && kept < limit);
+    row_idx++;
+    if (in_window) { cJSON_AddItemToArray(apis, o); kept++; }
     {
       cJSON *sc = cJSON_GetObjectItem(o,"sched");
       if (cJSON_IsTrue(cJSON_GetObjectItem(sc,"quarantined")))      c_hquar++;
@@ -568,6 +593,9 @@ char *statusapi_build(db_handle *db, int include_breach) {
     if (requiresKey && configured) c_configured++;
     if (requiresKey && !configured) c_missing++;
     if (!gated && isOnline && (!requiresKey || configured)) c_working++;
+    /* Outside the window the row has done its job (the tallies above read it)
+     * and is dropped here rather than serialised. */
+    if (!in_window) cJSON_Delete(o);
   }
   sqlite3_finalize(s);
   free(A);
@@ -585,7 +613,12 @@ char *statusapi_build(db_handle *db, int include_breach) {
        * the same guard intelapi_intel_sources() applies. */
       if (src_meta_get(B[k].breach_id)) continue;
 
-      cJSON_AddItemToArray(apis, breach_status_row(&B[k]));
+      {
+        int in_window = !windowed ||
+                        (!summary_only && row_idx >= offset && kept < limit);
+        row_idx++;
+        if (in_window) { cJSON_AddItemToArray(apis, breach_status_row(&B[k])); kept++; }
+      }
       c_total++;
       c_breach++;
       if (B[k].item_count > 0) { c_online++; c_working++; c_breach_mat++; }
@@ -620,6 +653,25 @@ char *statusapi_build(db_handle *db, int include_breach) {
   cJSON *env = cJSON_CreateObject();
   cJSON_AddItemToObject(env,"summary", summary);
   cJSON_AddItemToObject(env,"apis", apis);
+  /* What this response is showing, out of what exists. Always present — a
+   * client must not have to infer from an array length whether it received the
+   * whole catalogue, and `summary.total` counts rows the window may have
+   * excluded, so the two numbers genuinely differ. */
+  {
+    cJSON *view = cJSON_CreateObject();
+    cJSON_AddNumberToObject(view, "total", row_idx);
+    cJSON_AddNumberToObject(view, "shown", windowed ? kept : row_idx);
+    cJSON_AddNumberToObject(view, "offset", offset);
+    cJSON_AddNumberToObject(view, "limit", limit);
+    cJSON_AddBoolToObject(view, "truncated", windowed && kept < row_idx);
+    cJSON_AddStringToObject(view, "note",
+      summary_only ? "summary only: counters describe every source; apis[] was "
+                     "not built (?summary=1). Drop the parameter for the rows."
+      : windowed   ? "a page of the source catalogue; summary counters still "
+                     "describe every source. Use ?offset= to walk the rest."
+                   : "every registered source (no ?limit given)");
+    cJSON_AddItemToObject(env, "view", view);
+  }
   cJSON_AddStringToObject(env,"timestamp", ts);
   char *js = cJSON_PrintUnformatted(env);
   cJSON_Delete(env);

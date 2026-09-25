@@ -3,6 +3,7 @@
 #include "prompts.h"
 #include "progress.h"
 #include "osint_dispatch.h"
+#include "service_vec.h"
 #include "intel.h"
 #include "entitystore.h"
 #include "../source.h"
@@ -288,7 +289,16 @@ static void dispatch_one(disp_pool *p, disp_job *job, db_handle *db,
   osint_dispatch(db, llm, t->service, t->entity, t->type, sink, &r);
 
   cJSON *sr = cJSON_CreateObject();
-  cJSON_AddStringToObject(sr, "name", t->service);
+  /* `name` is what actually RAN. When the dispatcher resolved a name the
+   * registry does not have (a retired or misspelled service) onto a registered
+   * one, the name asked for rides alongside as `resolved_from` — an answer
+   * attributed to a service that was never run is a confident wrong
+   * attribution even when the guess was right. One key, set once: a second
+   * cJSON_AddStringToObject with the same name would emit a DUPLICATE key,
+   * which is the defect class that broke the iOS build twice. */
+  cJSON_AddStringToObject(sr, "name", r.resolved_from ? r.service : t->service);
+  if (r.resolved_from)
+    cJSON_AddStringToObject(sr, "resolved_from", r.resolved_from);
   cJSON_AddStringToObject(sr, "entity", t->entity);
   cJSON_AddBoolToObject(sr, "success", r.success);
   cJSON_AddNumberToObject(sr, "confidence", r.confidence);
@@ -462,7 +472,50 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   /* ── Phase 1: analysis ─────────────────────────────────────────────── */
   progress_set_phase(rp, "gpt_analyzing", 15);
   osint_catalogue_note cat = {0};
-  char *svcs = osint_services_list_bounded(&cat);
+  /* Route by RELEVANCE when an embedding index is available, else by registry
+   * order as before. The registry-order path has to truncate at the prompt
+   * budget, and registry order is link order — so it drops the hand-written
+   * entity services (DNS_RECORDS, DOMAIN_WHOIS, IP_GEOLOCATION) that register
+   * last and are usually the ones wanted. The semantic path lists the K
+   * closest services WITH their descriptions instead. It returns NULL whenever
+   * it cannot do that honestly (no JO_EMBED_URL, no index, embed failure, dim
+   * mismatch), and this falls straight back. See core/service_vec.h. */
+  char **sem_ids = NULL; int sem_n = 0;
+  char *svcs = service_vec_catalogue(db, query, 0, &cat, &sem_ids, &sem_n);
+  if (!svcs) {
+    sem_n = 0;
+    /* BUDGET THE CATALOGUE AGAINST THE SERVER, AND MEASURE THE REST.
+     *
+     * osint_services_list_bounded()'s own budget is a byte constant whose
+     * justifying arithmetic went stale: it assumes a "~9 KB few-shot preamble"
+     * that is now ~32 KB, so the finished prompt reached 64,674 bytes against
+     * an n_ctx of 16,384 tokens and llama-server answered 400 — the failure
+     * the user sees as "Degraded investigation ... no entities extracted".
+     *
+     * Rather than replace one guess with another, this MEASURES: build the
+     * prompt once with an EMPTY catalogue to learn what the preamble actually
+     * costs today, then hand the catalogue whatever the server's real context
+     * leaves over. The measurement is done on every call, so the preamble can
+     * grow again without anyone having to remember this comment exists. */
+    size_t ctx_chars = llm_ctx_chars(llm, 2048);   /* 2048 reserved for the answer */
+    if (ctx_chars > 0) {
+      char *probe = prompt_analysis(query, "");
+      size_t preamble = probe ? strlen(probe) : 0;
+      free(probe);
+      /* 90% of what is left, so a tokenizer that does slightly worse than the
+       * pessimistic bytes-per-token estimate still fits. */
+      long room = (long)ctx_chars - (long)preamble;
+      long allow = room > 0 ? (room * 9) / 10 : 0;
+      if (allow < 2048) allow = 2048;              /* a menu this short is
+                                                    * useless, but the notice
+                                                    * below says so honestly */
+      osint_set_catalogue_budget((int)allow);
+      fprintf(stderr, "[pipeline] %s catalogue budget %ld bytes "
+                      "(server ctx ~%zu bytes, preamble %zu measured)\n",
+              request_id, allow, ctx_chars, preamble);
+    }
+    svcs = osint_services_list_bounded(&cat);
+  }
   char *p1 = prompt_analysis(query, svcs ? svcs : "");
   /* The size of the request we are about to make, on the record. The analysis
    * call failed for months with "request (207353 tokens) exceeds the available
@@ -481,13 +534,25 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
    * that it was bounded — reporting "shown 0 of 0 services" would be a
    * confident statement about a measurement that never happened. */
   if (cat.total > 0 && (cat.truncated || !cat.descriptions)) {
-    char d[256];
-    snprintf(d, sizeof d,
-      "the analysis model was shown %d of %d registered entity-pivot services%s "
-      "(prompt budget, JO_PROMPT_SERVICE_CATALOGUE_CHARS); routing was chosen "
-      "from that subset",
-      cat.shown, cat.total,
-      cat.descriptions ? "" : " as bare ids, descriptions omitted");
+    char d[320];
+    if (sem_n > 0)
+      /* Still a subset, so still disclosed — but say HOW it was chosen. "the
+       * 60 closest to your query" and "the first 60 in registry order" are
+       * both bounded views and a reader must not have to guess which one
+       * produced the answer. */
+      snprintf(d, sizeof d,
+        "the analysis model was shown %d of %d registered entity-pivot "
+        "services, selected by embedding similarity to this query (not "
+        "registry order) and listed with their descriptions; routing was "
+        "chosen from that subset",
+        cat.shown, cat.total);
+    else
+      snprintf(d, sizeof d,
+        "the analysis model was shown %d of %d registered entity-pivot services%s "
+        "(prompt budget, JO_PROMPT_SERVICE_CATALOGUE_CHARS); routing was chosen "
+        "from that subset",
+        cat.shown, cat.total,
+        cat.descriptions ? "" : " as bare ids, descriptions omitted");
     progress_stage_note(rp, "analysis", "service_catalogue_bounded", d);
   }
   char *m1 = prompt_to_messages(p1);
@@ -500,7 +565,13 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
    * and the catalogue is its briefing; if the budget trimmed the briefing, the
    * vocabulary is trimmed with it rather than inviting a name we never
    * explained. */
-  char *dynschema = osint_analysis_schema_dynamic_limited(cat.shown);
+  /* The vocabulary must be the set that was BRIEFED, whichever path produced
+   * it — an enum of the first `cat.shown` in registry order would not overlap
+   * the semantically-chosen menu at all. */
+  char *dynschema = sem_n > 0
+      ? osint_analysis_schema_dynamic_ids((const char *const *)sem_ids, sem_n)
+      : NULL;
+  if (!dynschema) dynschema = osint_analysis_schema_dynamic_limited(cat.shown);
   const char *aschema = dynschema ? dynschema : schema_load("osint_analysis");
   llm_status ast = LLM_ERR_BAD_REQUEST;
   long ahttp = 0;
@@ -663,6 +734,7 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
     cJSON_Delete(ph2);
   }
   free(svcs);
+  service_vec_free_ids(sem_ids, sem_n);   /* no-op when the fallback path ran */
 
   /* ── Aggregate + complete ──────────────────────────────────────────── */
   progress_set_phase(rp, "aggregating", 90);

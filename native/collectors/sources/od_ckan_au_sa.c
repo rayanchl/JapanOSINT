@@ -8,7 +8,7 @@
 
 #define SID "ckan-au-sa"
 static const char *URL =
-  "https://data.sa.gov.au/data/api/3/action/package_search?rows=20";
+  "https://data.sa.gov.au/data/api/3/action/package_search?rows=20&sort=id%20asc";
 static const char *const EXTRA[] = { "notes", "contact_point", "data_state",
                                      "update_frequency", NULL };
 
@@ -23,7 +23,7 @@ static const source_def od_ckan_au_sa_def = {
   .name = "South Australia data.sa.gov.au CKAN",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://data.sa.gov.au/data/api/3/action/package_search?rows=20",
+  .url = "https://data.sa.gov.au/data/api/3/action/package_search?rows=20&sort=id%20asc",
   .description = "South Australian government open-data catalogue (1,915 datasets) with departmental contact points",
   .license = "CC-BY 4.0 for most datasets",
   .free_tier = 1,

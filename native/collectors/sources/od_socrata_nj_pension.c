@@ -13,12 +13,22 @@
 #include "od_shared.inc"
 
 #define SID "socrata-nj-pension-members"
-static const char *URL = "https://data.nj.gov/resource/44xg-bswk.json?$limit=100";
+/* `$offset=0` seeds lib/pagewalk.c's offset walk — pw_walk only ever advances a
+ * parameter the URL already carries, and never invents one. `$order=:id` makes
+ * the sequence total. Measured 2026-09-19: 401,000 members upstream, of which
+ * the single-page collector kept 100. */
+static const char *URL =
+  "https://data.nj.gov/resource/44xg-bswk.json"
+  "?$limit=100&$offset=0&$order=:id";
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, URL, 30000);
-  if (!doc) return od_rc(SID, -1);
-  if (!cJSON_IsArray(doc)) { cJSON_Delete(doc); return od_rc(SID, -1); }
+/* pw_emit_fn: one page, reporting what it CONTAINED in `seen` — pw_walk drives
+ * both continuation and disclosure off that, never off the emitted count. */
+static int emit_page(const source_ctx *ctx, intel_sink *sink, const char *id,
+                     cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)id; (void)ud;
+  *seen = 0;
+  if (!cJSON_IsArray(doc)) return 0;
+  *seen = cJSON_GetArraySize(doc);
 
   int n = 0;
   const cJSON *r;
@@ -58,8 +68,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     it.tags_json = "[\"opendata\",\"person\",\"us\"]";
     n += od_emit(sink, &it, props);
   }
-  cJSON_Delete(doc);
-  return od_rc(SID, n);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  return od_wrc(SID, pw_walk(ctx, sink, SID, URL, pw_fetch_json,
+                             emit_page, NULL));
 }
 
 static const source_def od_socrata_nj_pension_def = {
@@ -67,7 +81,7 @@ static const source_def od_socrata_nj_pension_def = {
   .name = "New Jersey YourMoney active pension members (Socrata)",
   .update_interval_sec = 604800, .run = run,
   .category = "government", .type = "api",
-  .url = "https://data.nj.gov/resource/44xg-bswk.json?$limit=100",
+  .url = "https://data.nj.gov/resource/44xg-bswk.json?$limit=100&$order=:id",
   .description = "NJ Treasury transparency register of active public-employee pension members: name, employer, retirement system and enrollment date",
   .license = "New Jersey YourMoney transparency portal, public record (contains named public employees)",
   .free_tier = 1,

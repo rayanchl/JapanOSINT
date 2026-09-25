@@ -11,7 +11,7 @@
 #include "od_shared.inc"
 
 #define SID "arcgis-hub-datasets"
-static const char *URL = "https://hub.arcgis.com/api/v3/datasets?page%5Bsize%5D=20";
+static const char *URL = "https://hub.arcgis.com/api/v3/datasets?page%5Bsize%5D=20&sort=name";
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, URL, 30000);
@@ -64,7 +64,7 @@ static const source_def od_arcgis_hub_datasets_def = {
   .name = "ArcGIS Hub dataset search API",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://hub.arcgis.com/api/v3/datasets?page%5Bsize%5D=20",
+  .url = "https://hub.arcgis.com/api/v3/datasets?page%5Bsize%5D=20&sort=name",
   .description = "Esri ArcGIS Hub federated search across public ArcGIS Open Data sites worldwide, with each hit carrying its queryable service URL",
   .license = "Public keyless search API; per-dataset licence read from the record",
   .free_tier = 1,

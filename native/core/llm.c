@@ -1,10 +1,18 @@
 #include "llm.h"
 #include "llm_worker.h"
+#include "httpclient.h"
 #include "../third_party/cJSON.h"
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
+/* Pessimistic on purpose — see llm_ctx_chars() in llm.h. Ids, JSON and
+ * Japanese all tokenize worse than the ~4 bytes/token English average, and
+ * underestimating costs the whole stage while overestimating costs a few menu
+ * entries. */
+#define LLM_BYTES_PER_TOKEN 3
 
 /* Generation calls are serialized per llama-server by the global LLM worker
  * (core/llm_worker.c): each base_url has one dedicated thread, so concurrent
@@ -132,6 +140,50 @@ static void add_sampler_defaults(cJSON *b) {
   cJSON_AddNumberToObject(b, "top_k", env_double("LLM_TOP_K", 40));
   cJSON_AddNumberToObject(b, "top_p", env_double("LLM_TOP_P", 0.95));
   cJSON_AddNumberToObject(b, "min_p", env_double("LLM_MIN_P", 0.05));
+}
+
+/* See llm.h. Cached per process: n_ctx is fixed for the life of a
+ * llama-server, and this is called on a request path. */
+size_t llm_ctx_chars(llm_client *c, int reserve_tokens) {
+  static int cached_ctx = -1;                 /* -1 = not asked, 0 = unknown */
+  static pthread_mutex_t mu = PTHREAD_MUTEX_INITIALIZER;
+  pthread_mutex_lock(&mu);
+  if (cached_ctx < 0) {
+    cached_ctx = 0;
+    char url[512];
+    snprintf(url, sizeof url, "%s/props",
+             c && c->base_url ? c->base_url : "http://127.0.0.1:8080");
+    http_response r = {0};
+    /* Short timeout and no retry: this is a hint, not the work. A server that
+     * will not answer /props in two seconds leaves the caller on its default. */
+    if (http_request(c ? c->http : NULL, "GET", url, NULL, NULL, 0, 2000, 0, &r) == 0
+        && r.status >= 200 && r.status < 300 && r.body) {
+      cJSON *j = cJSON_Parse(r.body);
+      if (j) {
+        /* llama-server reports the PER-SLOT context here, which is the number
+         * that actually applies to one request — not the --ctx-size it was
+         * started with, which it may divide across parallel slots. */
+        const cJSON *g = cJSON_GetObjectItem(j, "default_generation_settings");
+        const cJSON *n = g ? cJSON_GetObjectItem(g, "n_ctx") : NULL;
+        if (cJSON_IsNumber(n) && n->valueint > 0) cached_ctx = n->valueint;
+        cJSON_Delete(j);
+      }
+    }
+    http_response_free(&r);
+    if (cached_ctx > 0)
+      fprintf(stderr, "[llm] %s reports n_ctx=%d tokens per slot\n",
+              c && c->base_url ? c->base_url : "(default)", cached_ctx);
+    else
+      fprintf(stderr, "[llm] could not read n_ctx from /props — prompt budgets "
+                      "stay on their built-in defaults\n");
+  }
+  int ctx = cached_ctx;
+  pthread_mutex_unlock(&mu);
+  if (ctx <= 0) return 0;                     /* unknown: caller keeps its own */
+  if (reserve_tokens < 0) reserve_tokens = 0;
+  int usable = ctx - reserve_tokens;
+  if (usable < 256) usable = 256;             /* never return a useless budget */
+  return (size_t)usable * LLM_BYTES_PER_TOKEN;
 }
 
 char *llm_complete(llm_client *c, const char *prompt, const char *grammar,

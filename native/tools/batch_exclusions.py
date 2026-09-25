@@ -127,7 +127,7 @@ user-agent content-type authorization bearer token key apikey
 def norm(u):
     u = u.strip().rstrip(TRAIL)
     u = re.sub(r"^https?://", "", u)
-    u = re.sub(r"\{q[a-zA-Z]*\}|%s|%d|\{v\}|\{key\}", "{}", u)
+    u = re.sub(r"\{q[a-zA-Z]*\}|\{Q\}|%s|%d|\{v\}|\{key\}", "{}", u)
     return u.rstrip("/").lower()
 
 

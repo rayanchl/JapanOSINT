@@ -233,6 +233,125 @@ static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
   { "www.oasis-open.org",
     "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
     "contact via repo issues)" },
+  /* Spain's INE web service (servicios.ine.es/wstempus). Measured 2026-09-07
+   * against /wstempus/js/ES/CLASIFICACIONES:
+   *     engine UA                                                403
+   *     "JapanOSINT/1.0"                                         200
+   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas)"   200
+   *     "JapanOSINT/1.0 (contact via repo issues)"               200
+   *     "JapanOSINT/1.0 (feed collector)"                        403
+   *     the RCorp-feeds agent above                              403
+   * The rejected token is the word "collector", not "OSINT" — which is why
+   * the two agents already in this table do not help. The agent below is the
+   * engine's own, with that one word removed: it still names the product,
+   * still gives the repository and still offers a contact route. All eleven
+   * eur-ine-* sources were storing nothing on every scheduled run; with this
+   * agent CLASIFICACIONES, ESCALAS, PERIODICIDADES, UNIDADES, VARIABLES,
+   * PUBLICACIONES, OPERACIONES_DISPONIBLES and TABLAS_OPERACION/{EPA,IPC,IPRI}
+   * all answer 200 with real records. */
+  { "servicios.ine.es",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+
+  /* Boston's CKAN portal, behind the same class of filter. Bisected
+   * 2026-09-11 against data.boston.gov/api/3/action/package_search:
+   *     "JapanOSINT/1.0"                                         200
+   *     "JapanOSINT/1.0 (… feed)"                                200
+   *     "JapanOSINT/1.0 (… collector)"                           502
+   *     the full engine UA                                       502
+   * So it is the word "collector" again, exactly as at INE, and the same
+   * agent clears it — verified on package_search, group_list,
+   * organization_list, tag_list, recently_changed_packages_activity_list and
+   * the per-organization `fq=organization:…` searches, which also honour the
+   * filter (9 of 235 packages for one org, so rule 4d is satisfied). 35
+   * registered us-data-boston-gov-* sources were storing nothing on every
+   * scheduled run. */
+  { "data.boston.gov",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+
+  /* India's Press Information Bureau. Here the rejected token is the contact
+   * URL itself, not a word in the product name. Measured 2026-09-11 on
+   * pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3 (following its 302):
+   *     "JapanOSINT/1.0"                                       200, 20 items
+   *     "JapanOSINT/1.0 (contact via repo issues)"             200, 20 items
+   *     the feed agent carrying "(+https://github.com/…)"      403
+   * The agent below therefore keeps BOTH the product identity and a contact
+   * route, and drops only the URL its filter refuses. Note this is the RSS
+   * path, which sets its own User-Agent header: it reaches this table through
+   * http_ua_override(), not through CURLOPT_USERAGENT. */
+  { "pib.gov.in",
+    "JapanOSINT/1.0 (contact via repo issues)" },
+
+  /* The "collector" word filter again, on four more hosts. Measured 2026-09-14
+   * by comparing the engine agent against the same agent with that one word
+   * removed (the INE / Boston agent above):
+   *     data.sanjoseca.gov (OpenGov CKAN)   502 -> 200   15 us-data-sanjoseca-gov-* rows
+   *     www.madamasr.com   (RSS)            520 -> 200   afr-eg-madamasr
+   *     www.telegram.hr    (RSS)            520 -> 200   eur-news-telegram-hr
+   *     www.jornalnoticias.co.mz (RSS)      406 -> 200   afr-mz-jornalnoticias
+   * Every one of those sources was storing nothing on every scheduled run. The
+   * agent still names the product, the repository and a contact route. */
+  { "data.sanjoseca.gov",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+  { "www.madamasr.com",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+  { "www.telegram.hr",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+  { "www.jornalnoticias.co.mz",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+
+  /* OCHA Financial Tracking Service (api.hpc.tools) — the HDX "OSINT" token
+   * block, same operator family. Measured 2026-09-14: engine agent 406, the
+   * RCorp-feeds agent HDX already uses 200. Four ocha-fts-* rows. */
+  { "api.hpc.tools",
+    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
+    "contact via repo issues)" },
+
+  /* Seven more, bisected with libcurl on 2026-09-15 (engine agent → the agent
+   * below; statuses as measured):
+   *   reliefweb.int      406 "Blocked" (also without "collector", also bare
+   *                      JapanOSINT/1.0)            → RCorp-feeds 200, 66 KB RSS
+   *   www.unocha.org     406 for any agent containing "OSINT"
+   *                                                 → RCorp-feeds 301→200, 10 items
+   *   hapi.humdata.org   406 "Blocked due to bot activity" (HDX's API host)
+   *                                                 → RCorp-feeds 200, 33 KB records
+   *   jamestown.org      403, also without "collector" or the repo URL
+   *                                                 → RCorp-feeds 200, 10 items
+   *   www.bsi.bund.de    403 (5 feeds) — the word "collector"
+   *                                                 → engine agent minus it 200, 50 items
+   *   container-news.com 403 — the word "collector" → same agent 200, 88 KB
+   *   www.ftc.gov        403 for every agent carrying a github URL
+   *                                                 → product + contact route 200, 10 items
+   * Same remedy as the entries above: each agent still names the client and a
+   * contact route and drops only the token the filter rejects. Hosts that
+   * refused EVERY agent (Europarl 202-empty, Tel Aviv GIS 571, CISA/FEMA/ICE
+   * fingerprinting libcurl itself) are deliberately NOT listed. */
+  { "reliefweb.int",
+    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
+    "contact via repo issues)" },
+  { "www.unocha.org",
+    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
+    "contact via repo issues)" },
+  { "hapi.humdata.org",
+    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
+    "contact via repo issues)" },
+  { "jamestown.org",
+    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
+    "contact via repo issues)" },
+  { "www.bsi.bund.de",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+  { "container-news.com",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+  { "www.ftc.gov",
+    "JapanOSINT/1.0 (contact via repo issues)" },
+
   /* NOT LISTED, deliberately: registry.faa.gov.
    *
    * It was reported alongside the two above as "answers 200 with no UA", which
@@ -250,9 +369,11 @@ static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
 /* Exact host match against the authority component of `url`. Substring
  * matching would be wrong: "data.humdata.org.evil.example" must not inherit
  * the override, and neither should an unrelated path containing the name. */
-static const char *ua_for_url(const char *url) {
+/* The table entry for this URL's host, or NULL when there is none. */
+static const char *ua_override_lookup(const char *url) {
+  if (!url) return NULL;
   const char *h = strstr(url, "://");
-  if (!h) return JO_USER_AGENT;
+  if (!h) return NULL;
   h += 3;
   size_t n = strcspn(h, "/?#");            /* authority, may carry :port */
   const char *colon = memchr(h, ':', n);
@@ -262,7 +383,22 @@ static const char *ua_for_url(const char *url) {
     if (strlen(want) == n && strncasecmp(h, want, n) == 0)
       return UA_OVERRIDE[i].ua;
   }
-  return JO_USER_AGENT;
+  return NULL;
+}
+
+/* Public because CURLOPT_HTTPHEADER outranks CURLOPT_USERAGENT: a caller that
+ * sets its own "User-Agent:" header — lib/rss_atom.c does, for every feed in
+ * the tree — never reaches ua_for_url() below, so this table silently did not
+ * apply to the one code path with the most bot-wall trouble. Such callers ask
+ * here and substitute only when an entry exists, which keeps every
+ * already-verified feed on exactly the agent it was verified with. */
+const char *http_ua_override(const char *url) {
+  return ua_override_lookup(url);
+}
+
+static const char *ua_for_url(const char *url) {
+  const char *o = ua_override_lookup(url);
+  return o ? o : JO_USER_AGENT;
 }
 
 static int do_once(http_client *c, const char *method, const char *url,

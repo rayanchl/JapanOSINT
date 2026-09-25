@@ -810,15 +810,34 @@ char *entityapi_graph_scoped(db_handle *db, const char *type, const char *id,
   char **visited = NULL; int nv = 0, vcap = 0;
   char **frontier = NULL; int nf = 0, fcap = 0;
 
+  /* `val` is captured into `_v` before the grow, and the grow's result is
+   * checked, before the previous shape of this macro assigned unconditionally:
+   * `(arr) = realloc(...)` followed by `(arr)[(cnt)++] = (val)` on the next
+   * line writes through NULL the moment realloc fails (and leaks the old
+   * block), exactly the pattern entity_enrich.c documents fixing in its own
+   * candidate-pair and entity-id arrays. Every value pushed here is a
+   * strdup(), so on OOM the safe answer is to free it and drop this one node
+   * id from the walk rather than crash the request thread. */
   #define PUSH(arr, cap, cnt, val) do { \
-    if ((cnt) == (cap)) { (cap) = (cap) ? (cap)*2 : 16; \
-      (arr) = realloc((arr), (cap)*sizeof(*(arr))); } \
-    (arr)[(cnt)++] = (val); } while (0)
+    char *_v = (val); \
+    if ((cnt) == (cap)) { \
+      int _nc = (cap) ? (cap)*2 : 16; \
+      void *_p = realloc((arr), (size_t)_nc*sizeof(*(arr))); \
+      if (_p) { (arr) = _p; (cap) = _nc; } \
+    } \
+    if ((cnt) < (cap)) (arr)[(cnt)++] = _v; else free(_v); } while (0)
 
   gnode root;
   if (fetch_node(db, id, tenant, is_operator, &root)) {
-    if (nn == ncap) { ncap = 16; nodes = realloc(nodes, ncap*sizeof *nodes); }
-    nodes[nn++] = root;
+    /* Same unchecked-realloc shape as PUSH, guarded the same way: on OOM the
+     * root node is simply not added rather than writing through a NULL
+     * `nodes`. */
+    if (nn == ncap) {
+      gnode *np = realloc(nodes, 16*sizeof *nodes);
+      if (np) { nodes = np; ncap = 16; }
+    }
+    if (nn < ncap) nodes[nn++] = root;
+    else { free(root.id); free(root.type); free(root.canon); }
   }
   PUSH(visited, vcap, nv, strdup(id));
   PUSH(frontier, fcap, nf, strdup(id));
@@ -894,9 +913,16 @@ char *entityapi_graph_scoped(db_handle *db, const char *type, const char *id,
           } else {
             gnode g;
             if (fetch_node(db, other, tenant, is_operator, &g)) {
-              if (nn == ncap) { ncap = ncap ? ncap*2 : 16;
-                nodes = realloc(nodes, ncap*sizeof *nodes); }
-              nodes[nn++] = g;
+              /* Unchecked realloc here writes through NULL on OOM (same shape
+               * as the PUSH macro above); guard it the same way and simply
+               * drop this node from the walk rather than crash. */
+              if (nn == ncap) {
+                int _nc = ncap ? ncap*2 : 16;
+                gnode *np = realloc(nodes, (size_t)_nc*sizeof *nodes);
+                if (np) { nodes = np; ncap = _nc; }
+              }
+              if (nn < ncap) nodes[nn++] = g;
+              else { free(g.id); free(g.type); free(g.canon); }
             }
           }
         }

@@ -371,6 +371,30 @@ int main(void) {
        "resultcount is read as the upstream's own total");
   }
 
+  printf("Socrata's $limit/$offset advances like any other offset family\n");
+  {
+    /* `$offset` was missing from PW_OFF_PARAMS, and it is spelled distinctly
+     * enough that the bare `offset` entry never covered it: the parser compares
+     * from the parameter boundary, so `$offset=0` does not match `offset`. The
+     * effect was that a keyed Socrata row read one page even after its cursor
+     * had been seeded for it. */
+    script_t sc = { .body = { P3_of3, P3_of3, P2_of3 }, .n_body = 3 };
+    cap_t cap; int n = run("https://x/resource/ab12-cd34.json?$limit=3&$offset=0",
+                           &sc, &cap);
+    ok(sc.calls == 3, "walked $offset=0 -> 3 -> 6");
+    ok(strstr(sc.seen[1], "$offset=3") != NULL, "advanced by the declared $limit");
+    ok(n == 8, "every page collected");
+  }
+  {
+    /* And the module's own rule still holds on the way in: a URL that declares
+     * only a size carries no cursor pw_walk is entitled to invent. That one is
+     * seeded before the walk starts (jl_seed_cursor), not guessed here. */
+    script_t sc = { .body = { P3_of3, P3_of3 }, .n_body = 2 };
+    cap_t cap; run("https://x/resource/ab12-cd34.json?$limit=3", &sc, &cap);
+    ok(sc.calls == 1, "a bare $limit carries no cursor pw_walk may invent");
+    ok(cap.notices == 1, "so the bound is disclosed instead");
+  }
+
   /* Distinct full pages. The fixtures above model "a full page" with one
    * canonical constant, which is right for tests about paging control flow —
    * but the inferred-size walk below also compares response bodies, so it needs

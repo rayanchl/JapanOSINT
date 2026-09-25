@@ -8,7 +8,7 @@
 
 #define SID "ckan-de-berlin"
 static const char *URL =
-  "https://datenregister.berlin.de/api/3/action/package_search?rows=20";
+  "https://datenregister.berlin.de/api/3/action/package_search?rows=20&sort=id%20asc";
 static const char *const EXTRA[] = { "notes", "berlin_type", "berlin_source",
                                      "geographical_granularity",
                                      "temporal_granularity", NULL };
@@ -24,7 +24,7 @@ static const source_def od_ckan_de_berlin_def = {
   .name = "Berlin Datenregister CKAN",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://datenregister.berlin.de/api/3/action/package_search?rows=20",
+  .url = "https://datenregister.berlin.de/api/3/action/package_search?rows=20&sort=id%20asc",
   .description = "Berlin municipal open-data register (2,619 datasets) with publishing authority and berlin_type/berlin_source provenance",
   .license = "Datenlizenz Deutschland / CC-BY (per dataset)",
   .free_tier = 1,

@@ -23,11 +23,13 @@
  * 231k-row dataset in one run.
  */
 #include "lib/jocore.h"
+#include "lib/seenset.h"
 #include "trn_common.inc"
 
 #define IRVE_BASE "https://odre.opendatasoft.com/api/explore/v2.1/catalog/" \
                   "datasets/bornes-irve/records?limit=100&offset="
 #define IRVE_MAX_OFFSET 9900
+#define IRVE_ID "france-irve-charging-stations"
 
 /* Read the coordinate honouring the documented key swap. Returns 1 on success. */
 static int irve_coords(const cJSON *rec, double *lat, double *lon) {
@@ -55,13 +57,14 @@ static int irve_coords(const cJSON *rec, double *lat, double *lon) {
   return 1;
 }
 
-static int emit_page(intel_sink *sink, cJSON *doc) {
+static int emit_page(intel_sink *sink, cJSON *doc, seen_set *pdc_seen) {
   int n = 0;
   cJSON *r;
   cJSON_ArrayForEach(r, cJSON_GetObjectItem(doc, "results")) {
     const char *pdc = jo_sv(r, "id_pdc_itinerance");
     const char *sta = jo_sv(r, "id_station_itinerance");
     const char *nom = jo_sv(r, "nom_station");
+    const char *res = jo_sv(r, "datagouv_resource_id");
     if (!pdc && !sta && !nom) continue;
 
     cJSON *pr = cJSON_CreateObject();
@@ -70,6 +73,7 @@ static int emit_page(intel_sink *sink, cJSON *doc) {
     trn_put_str(pr, "site_owner", jo_sv(r, "nom_amenageur"));
     trn_put_str(pr, "station_roaming_id", sta);
     trn_put_str(pr, "charge_point_roaming_id", pdc);
+    trn_put_str(pr, "datagouv_resource_id", res);
     trn_put_str(pr, "address", jo_sv(r, "adresse_station"));
     trn_put_str(pr, "insee_commune", jo_sv(r, "code_insee_commune"));
     trn_put_str(pr, "implantation", jo_sv(r, "implantation_station"));
@@ -88,14 +92,34 @@ static int emit_page(intel_sink *sink, cJSON *doc) {
     else summary[0] = 0;
 
     intel_item it = {0};
-    /* Keyed on the upstream's OWN charge-point roaming id. The national IRVE
-     * file carries duplicate id_pdc_itinerance rows (operators re-submit the
-     * same point; sweep 2026-08-24: emitted 10,000, stored 9,418). Two records
-     * sharing the upstream's id are the upstream saying "same charge point",
-     * so collapsing them on upsert is correct — the newest submission wins.
-     * Not a rule-4b loss; second-guessing the registry's identity would
-     * fabricate a distinction. */
-    it.remote_key      = pdc ? pdc : (sta ? sta : nom);
+    /* Identity: the upstream's own charge-point roaming id — EXCEPT when that id
+     * already appeared earlier in this run. The consolidated national file is a
+     * union of per-submitter data.gouv resources, and one id_pdc_itinerance
+     * recurs across resources as DIFFERENT rows. Measured 2026-09-15 on the
+     * 10,000 records this walk reads: 10,000 byte-distinct rows but 9,463
+     * distinct pdc ids; the worst id's three rows differ in operator, site
+     * owner, station id and station name; id_pdc_itinerance +
+     * datagouv_resource_id is unique on all 10,000. Keying on the pdc id alone
+     * (emitted 10,000, stored 9,463) kept one submitter's row and silently
+     * discarded the rest. A first occurrence keeps its plain id, so rows already
+     * stored keep their uid; a repeat is qualified by its data.gouv resource
+     * (or, lacking one, by a hash of the row's own bytes). */
+    char keybuf[256];
+    const char *rk = pdc ? pdc : (sta ? sta : nom);
+    if (pdc && !seen_add(pdc_seen, pdc)) {
+      if (res) {
+        snprintf(keybuf, sizeof keybuf, "%s|%s", pdc, res);
+      } else {
+        char *raw = cJSON_PrintUnformatted(r);
+        const char *parts[1] = { raw ? raw : "" };
+        char h[21];
+        feed_hash_key(h, parts, 1);
+        snprintf(keybuf, sizeof keybuf, "%s|%s", pdc, h);
+        free(raw);
+      }
+      rk = keybuf;
+    }
+    it.remote_key      = rk;
     it.title           = title;
     it.summary         = summary[0] ? summary : NULL;
     it.lang            = "fr";
@@ -112,23 +136,41 @@ static int emit_page(intel_sink *sink, cJSON *doc) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = 0, ok = 0;
-  for (int off = 0; off <= IRVE_MAX_OFFSET; off += 100) {
+  int n = 0, ok = 0, rows = 0, last_full = 0;
+  long available = -1;
+  seen_set pdc_seen = {0};
+  for (int off = 0; off <= IRVE_MAX_OFFSET; off += 100) { /* exhaustive-ok: ODS refuses offset+limit > 10000; the unread remainder of total_count is disclosed below */
     char url[320];
     snprintf(url, sizeof url, "%s%d", IRVE_BASE, off);
     cJSON *doc = feed_get_json(ctx->http, url, 30000);
     if (!doc) break;
     ok = 1;
+    const cJSON *tc = cJSON_GetObjectItem(doc, "total_count");
+    if (cJSON_IsNumber(tc)) available = (long)tc->valuedouble;
     int got = cJSON_GetArraySize(cJSON_GetObjectItem(doc, "results"));
-    n += emit_page(sink, doc);
+    rows += got;
+    n += emit_page(sink, doc, &pdc_seen);
     cJSON_Delete(doc);
+    last_full = (got >= 100);
     if (got < 100) break;                    /* last page */
   }
+  seen_free(&pdc_seen);
   if (!ok) {
-    fprintf(stderr, "[france-irve-charging-stations] fetch/parse failed\n");
+    fprintf(stderr, "[" IRVE_ID "] fetch/parse failed\n");
     return -1;
   }
-  fprintf(stderr, "[france-irve-charging-stations] emitted %d\n", n);
+  /* The records endpoint cannot page past offset 10,000, and the registry is
+   * ~227,000 charge points (total_count, 2026-09-15). Say so in-band rather than
+   * letting 10,000 read as the whole registry. */
+  if (available > rows && (last_full || rows > 0)) {
+    jo_truncation_notice_ex(sink, IRVE_ID, NULL, rows, available,
+      "Opendatasoft's records API refuses offset+limit above 10,000, so the "
+      "weekly walk reads the first 10,000 charge points of total_count",
+      "the dataset's bulk export (/exports/json or /exports/csv on the same "
+      "dataset) carries every row in one request", NULL);
+  }
+  fprintf(stderr, "[" IRVE_ID "] emitted %d of %d rows read (%ld declared)\n",
+          n, rows, available);
   return 0;
 }
 

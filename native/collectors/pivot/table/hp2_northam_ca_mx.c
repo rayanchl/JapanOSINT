@@ -289,7 +289,7 @@ static const hp_source HP2_NORTHAM_CA_MX[] = {
     .name_ja = "メキシコ オープンデータ", .category = "government",
     .portal = "https://datos.gob.mx", .record_type = "mx-dataset",
     .tags = "\"mx\",\"opendata\"", .free_tier = 1,
-    .url = "https://datos.gob.mx/busca/api/3/action/package_search?q={q}&rows=100",
+    .url = "https://datos.gob.mx/busca/api/3/action/package_search?q={q}&rows=100&sort=id%20asc",
     .array_path = "result.results", .title_keys = "title,name",
     .id_keys = "id", .date_keys = "metadata_modified",
     .link_keys = "name", .link_tmpl = "https://datos.gob.mx/busca/dataset/{v}",

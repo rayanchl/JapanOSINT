@@ -5,8 +5,8 @@ const STATUS_STYLES = {
   online: 'bg-status-online/20 text-status-online border-status-online/30',
   degraded: 'bg-status-degraded/20 text-status-degraded border-status-degraded/30',
   offline: 'bg-status-offline/20 text-status-offline border-status-offline/30',
-  pending: 'bg-gray-600/20 text-gray-400 border-gray-500/30',
-  gated: 'bg-gray-700/30 text-gray-400 border-gray-600/30',
+  pending: 'bg-gray-600/20 text-osint-muted border-gray-500/30',
+  gated: 'bg-osint-border/30 text-osint-muted border-osint-border/30',
 };
 
 // Keyed on the wire values — schema.sql constrains `type` to lowercase
@@ -25,13 +25,13 @@ export default function StatusBadge({ type, value }) {
 
   if (type === 'status') {
     const key = (value || '').toLowerCase();
-    className += STATUS_STYLES[key] || 'bg-gray-700/50 text-gray-400 border-gray-600/30';
+    className += STATUS_STYLES[key] || 'bg-osint-border/50 text-osint-muted border-osint-border/30';
   } else if (type === 'type') {
     const key = (value || '').toLowerCase();
-    className += TYPE_STYLES[key] || 'bg-gray-700/50 text-gray-400 border-gray-600/30';
+    className += TYPE_STYLES[key] || 'bg-osint-border/50 text-osint-muted border-osint-border/30';
     label = typeLabel(value);
   } else {
-    className += 'bg-gray-700/50 text-gray-400 border-gray-600/30';
+    className += 'bg-osint-border/50 text-osint-muted border-osint-border/30';
   }
 
   return (

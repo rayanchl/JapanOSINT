@@ -415,6 +415,12 @@ auth_result auth_check(const char *hdr, auth_user *out) {
   unsigned char *pl = b64url_decode(d1 + 1, (size_t)(d2 - d1 - 1), &plen);
   if (!pl) return AUTH_401_INVALID;
   char *pjson = malloc(plen + 1);
+  /* Unchecked malloc here was a NULL-pointer memcpy: this runs on the
+   * Authorization header of every request, before authentication succeeds, so
+   * plen is attacker-influenced (bounded only by the token they send). An
+   * allocation failure must degrade to "reject this token", not crash the
+   * server that every other request is also relying on. */
+  if (!pjson) { free(pl); return AUTH_401_INVALID; }
   memcpy(pjson, pl, plen); pjson[plen] = 0; free(pl);
   cJSON *j = cJSON_Parse(pjson); free(pjson);
   if (!j) return AUTH_401_INVALID;

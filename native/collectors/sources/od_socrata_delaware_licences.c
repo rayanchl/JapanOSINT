@@ -10,7 +10,13 @@
 #include "od_shared.inc"
 
 #define SID "socrata-delaware-business-licences"
-static const char *URL = "https://data.delaware.gov/resource/5zy2-grhr.json?$limit=100&$select=*,:id";
+/* `$offset=0` seeds lib/pagewalk.c's offset walk — pw_walk only ever advances a
+ * parameter the URL already carries, and never invents one. `$order=:id` (also
+ * this row's remote_key below) makes the sequence total. Measured 2026-09-19:
+ * 68,718 rows upstream, of which the single-page collector kept 100. */
+static const char *URL =
+  "https://data.delaware.gov/resource/5zy2-grhr.json"
+  "?$limit=100&$offset=0&$select=*,:id&$order=:id";
 static const char *const TITLE_KEYS[] = { "business_name", "trade_name", NULL };
 static const char *const SUM_KEYS[] = { "category", "city", NULL };
 
@@ -23,7 +29,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   sp.summary_keys = SUM_KEYS;
   sp.id_key = ":id";   /* rule 4b, measured: business_name recurs (100 emitted, 94 stored); :id is Socrata's per-row identity, via $select=*,:id */
   sp.date_key = "current_license_valid_from";
-  return od_rc(SID, od_fetch_rows(ctx, sink, URL, NULL, &sp));
+  return od_wrc(SID, od_walk_rows(ctx, sink, SID, URL, NULL, &sp));
 }
 
 static const source_def od_socrata_delaware_licences_def = {
@@ -31,7 +37,7 @@ static const source_def od_socrata_delaware_licences_def = {
   .name = "Delaware active business licences (Socrata)",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "api",
-  .url = "https://data.delaware.gov/resource/5zy2-grhr.json?$limit=100",
+  .url = "https://data.delaware.gov/resource/5zy2-grhr.json?$limit=100&$order=:id",
   .description = "Delaware state business licence register: legal and trade names, licence category, validity window and address",
   .license = "State of Delaware open data, public record",
   .free_tier = 1,

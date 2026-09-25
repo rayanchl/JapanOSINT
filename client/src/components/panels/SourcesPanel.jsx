@@ -31,7 +31,7 @@ function prettyJson(str) {
 function KeyPills({ api }) {
   if (!api.requiresKey) {
     return (
-      <span className="px-1.5 py-0.5 rounded text-[9px] bg-gray-700/40 text-gray-400 border border-gray-600/30">
+      <span className="px-1.5 py-0.5 rounded text-[9px] bg-osint-border/40 text-osint-muted border border-osint-border/30">
         No key
       </span>
     );
@@ -59,7 +59,7 @@ function KeyPills({ api }) {
 function ProbeDetail({ api }) {
   if (api.status === 'pending') {
     return (
-      <div className="mt-2 px-2 py-1.5 rounded border border-osint-border/40 bg-osint-bg/40 text-[10px] text-gray-400 italic">
+      <div className="mt-2 px-2 py-1.5 rounded border border-osint-border/40 bg-osint-bg/40 text-[10px] text-osint-muted italic">
         Awaiting first probe…
       </div>
     );
@@ -80,14 +80,14 @@ function ProbeDetail({ api }) {
           <div className="text-[9px] uppercase tracking-wider text-neon-cyan mb-1">
             Request
           </div>
-          <div className="font-mono text-[10px] text-gray-300 break-all">
+          <div className="font-mono text-[10px] text-osint-text break-all">
             <span className="text-neon-green">
               {api.probeRequestMethod || 'GET'}
             </span>{' '}
             {api.probeRequestUrl}
           </div>
           {api.probeRequestHeaders && (
-            <pre className="mt-1 font-mono text-[9.5px] text-gray-400 whitespace-pre-wrap break-all">
+            <pre className="mt-1 font-mono text-[9.5px] text-osint-muted whitespace-pre-wrap break-all">
               {prettyJson(api.probeRequestHeaders)}
             </pre>
           )}
@@ -112,12 +112,12 @@ function ProbeDetail({ api }) {
             )}
           </div>
           {api.probeResponseHeaders && (
-            <pre className="font-mono text-[9.5px] text-gray-400 whitespace-pre-wrap break-all max-h-32 overflow-y-auto">
+            <pre className="font-mono text-[9.5px] text-osint-muted whitespace-pre-wrap break-all max-h-32 overflow-y-auto">
               {prettyJson(api.probeResponseHeaders)}
             </pre>
           )}
           {api.probeResponseBody && (
-            <pre className="mt-1 font-mono text-[9.5px] text-gray-200 whitespace-pre-wrap break-all max-h-64 overflow-y-auto border-t border-osint-border/30 pt-1">
+            <pre className="mt-1 font-mono text-[9.5px] text-osint-text whitespace-pre-wrap break-all max-h-64 overflow-y-auto border-t border-osint-border/30 pt-1">
               {api.probeResponseBody}
             </pre>
           )}
@@ -178,11 +178,11 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
         className="w-full grid grid-cols-12 gap-2 items-center px-2 py-1.5 text-left hover:bg-white/5 transition-colors"
       >
         <div className="col-span-5 truncate">
-          <div className="text-[11px] text-gray-200 font-medium truncate">
+          <div className="text-[11px] text-osint-text font-medium truncate">
             {api.name}
           </div>
           {api.nameJa && (
-            <div className="text-[9px] text-gray-500 truncate">{api.nameJa}</div>
+            <div className="text-[9px] text-osint-muted truncate">{api.nameJa}</div>
           )}
           {api.gated && (
             <div className="mt-0.5">
@@ -201,55 +201,55 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
         <div className="col-span-3 flex justify-end">
           <KeyPills api={api} />
         </div>
-        <div className="col-span-1 text-gray-500 text-xs text-right">
+        <div className="col-span-1 text-osint-muted text-xs text-right">
           {expanded ? '▾' : '▸'}
         </div>
       </button>
 
       {expanded && (
-        <div className="px-3 pb-2 pt-1 text-[10px] text-gray-400 border-t border-osint-border/40 space-y-1">
+        <div className="px-3 pb-2 pt-1 text-[10px] text-osint-muted border-t border-osint-border/40 space-y-1">
           {api.description && (
-            <div className="text-gray-300">{api.description}</div>
+            <div className="text-osint-text">{api.description}</div>
           )}
           <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 font-mono">
             <div>
-              Category: <span className="text-gray-200">{api.category}</span>
+              Category: <span className="text-osint-text">{api.category}</span>
             </div>
             <div>
-              Type: <span className="text-gray-200">{api.type}</span>
+              Type: <span className="text-osint-text">{api.type}</span>
             </div>
             <div>
               Last check:{' '}
-              <span className="text-gray-200">{relativeTime(api.lastCheck)}</span>
+              <span className="text-osint-text">{relativeTime(api.lastCheck)}</span>
             </div>
             <div>
               Last success:{' '}
-              <span className="text-gray-200">
+              <span className="text-osint-text">
                 {relativeTime(api.lastSuccess)}
               </span>
             </div>
             {api.responseTimeMs != null && (
               <div>
                 Response:{' '}
-                <span className="text-gray-200">{api.responseTimeMs} ms</span>
+                <span className="text-osint-text">{api.responseTimeMs} ms</span>
               </div>
             )}
             {api.recordsCount != null && (
               <div>
                 Records:{' '}
-                <span className="text-gray-200">{api.recordsCount}</span>
+                <span className="text-osint-text">{api.recordsCount}</span>
               </div>
             )}
             {(api.intelTotal ?? 0) > 0 && (
               <div className="col-span-2 pt-0.5 mt-0.5 border-t border-osint-border/30">
-                <span className="text-gray-500">Intel master:</span>{' '}
-                <span className="text-gray-200">{api.intelTotal.toLocaleString()}</span>
+                <span className="text-osint-muted">Intel master:</span>{' '}
+                <span className="text-osint-text">{api.intelTotal.toLocaleString()}</span>
                 {' · '}
                 <span className="text-status-online">{api.intelGeocoded.toLocaleString()} geocoded</span>
                 {api.intelUngeocoded > 0 && (
                   <>
                     {' · '}
-                    <span className="text-gray-400">
+                    <span className="text-osint-muted">
                       {api.intelUngeocoded.toLocaleString()} ungeocoded
                     </span>
                   </>
@@ -272,7 +272,7 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
           )}
           {api.envVars && api.envVars.length > 0 && (
             <div className="pt-1">
-              <div className="text-gray-500 uppercase tracking-wider text-[9px] mb-0.5">
+              <div className="text-osint-muted uppercase tracking-wider text-[9px] mb-0.5">
                 Environment variables
               </div>
               <div className="flex flex-wrap gap-1">
@@ -283,7 +283,7 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
                       v.set
                         ? 'bg-status-online/10 text-status-online border-status-online/30'
                         : v.role === 'optional'
-                        ? 'bg-gray-700/40 text-gray-400 border-gray-600/30'
+                        ? 'bg-osint-border/40 text-osint-muted border-osint-border/30'
                         : 'bg-status-offline/10 text-status-offline border-status-offline/30'
                     }`}
                     title={`${v.role}${v.set ? ' · set' : ' · not set'}`}
@@ -320,7 +320,7 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
                 className={`px-2 py-0.5 rounded text-[10px] border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
                   api.probeConsent
                     ? 'bg-status-online/10 text-status-online border-status-online/40 hover:bg-status-online/20'
-                    : 'bg-gray-700/40 text-gray-300 border-gray-600/40 hover:bg-gray-600/40'
+                    : 'bg-osint-border/40 text-osint-text border-osint-border/40 hover:bg-gray-600/40'
                 }`}
               >
                 {consentBusy
@@ -445,14 +445,14 @@ export default function SourcesPanel({ onClose }) {
               type="button"
               onClick={() => setTab(t.id)}
               className={`text-sm font-bold transition-colors ${
-                tab === t.id ? 'text-neon-cyan' : 'text-gray-500 hover:text-gray-300'
+                tab === t.id ? 'text-neon-cyan' : 'text-osint-muted hover:text-osint-text'
               }`}
             >
               {t.label}
             </button>
           ))}
           {tab === 'sources' && summary && (
-            <span className="text-[10px] text-gray-400 font-mono">
+            <span className="text-[10px] text-osint-muted font-mono">
               {summary.working}/{summary.total} working
             </span>
           )}
@@ -460,7 +460,7 @@ export default function SourcesPanel({ onClose }) {
         <button
           type="button"
           onClick={onClose}
-          className="text-gray-400 hover:text-neon-cyan text-sm leading-none"
+          className="text-osint-muted hover:text-neon-cyan text-sm leading-none"
           aria-label="Close"
         >
           ✕
@@ -498,35 +498,35 @@ export default function SourcesPanel({ onClose }) {
       {summary && (
         <div className="grid grid-cols-6 gap-2 px-4 py-2 text-[10px] border-b border-osint-border/40 flex-shrink-0">
           <div>
-            <div className="text-gray-500">Online</div>
+            <div className="text-osint-muted">Online</div>
             <div className="font-mono text-status-online">{summary.online}</div>
           </div>
           <div>
-            <div className="text-gray-500">Degraded</div>
+            <div className="text-osint-muted">Degraded</div>
             <div className="font-mono text-status-degraded">
               {summary.degraded}
             </div>
           </div>
           <div>
-            <div className="text-gray-500">Offline</div>
+            <div className="text-osint-muted">Offline</div>
             <div className="font-mono text-status-offline">
               {summary.offline}
             </div>
           </div>
           <div>
-            <div className="text-gray-500">Pending</div>
-            <div className="font-mono text-gray-400">
+            <div className="text-osint-muted">Pending</div>
+            <div className="font-mono text-osint-muted">
               {summary.pending ?? 0}
             </div>
           </div>
           <div>
-            <div className="text-gray-500">Gated</div>
-            <div className="font-mono text-gray-300">
+            <div className="text-osint-muted">Gated</div>
+            <div className="font-mono text-osint-text">
               {summary.gated ?? 0}
             </div>
           </div>
           <div>
-            <div className="text-gray-500">Keys set</div>
+            <div className="text-osint-muted">Keys set</div>
             <div className="font-mono text-neon-cyan">
               {summary.configured}/{summary.requiresKey}
             </div>
@@ -540,7 +540,7 @@ export default function SourcesPanel({ onClose }) {
           placeholder="Search sources…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full bg-osint-bg/60 border border-osint-border rounded px-2 py-1 text-xs text-gray-200 placeholder-gray-500 focus:outline-none focus:border-neon-cyan/50"
+          className="w-full bg-osint-bg/60 border border-osint-border rounded px-2 py-1 text-xs text-osint-text placeholder:text-osint-muted/70 focus:outline-none focus:border-neon-cyan/50"
         />
         <div className="flex flex-wrap gap-1">
           {FILTERS.map((f) => (
@@ -551,7 +551,7 @@ export default function SourcesPanel({ onClose }) {
               className={`px-2 py-0.5 rounded text-[10px] border transition-colors ${
                 filter === f.key
                   ? 'bg-neon-cyan/15 text-neon-cyan border-neon-cyan/40'
-                  : 'bg-osint-bg/40 text-gray-400 border-osint-border hover:text-gray-200'
+                  : 'bg-osint-bg/40 text-osint-muted border-osint-border hover:text-osint-text'
               }`}
             >
               {f.label}
@@ -576,7 +576,7 @@ export default function SourcesPanel({ onClose }) {
           </div>
         )}
         {data && filtered.length === 0 && (
-          <div className="text-gray-500 text-xs px-2 py-4 text-center">
+          <div className="text-osint-muted text-xs px-2 py-4 text-center">
             No sources match the current filter.
           </div>
         )}
@@ -604,7 +604,7 @@ export default function SourcesPanel({ onClose }) {
       </div>
 
       {data && (
-        <div className="px-3 py-1.5 border-t border-osint-border/40 text-[10px] text-gray-500 flex items-center justify-between flex-shrink-0">
+        <div className="px-3 py-1.5 border-t border-osint-border/40 text-[10px] text-osint-muted flex items-center justify-between flex-shrink-0">
           <span>Auto-refresh 30s</span>
           <span className="font-mono">
             Updated {relativeTime(data.timestamp)}

@@ -259,6 +259,27 @@ static void db_apply_pragmas(sqlite3 *h) {
   sqlite3_exec(h, "PRAGMA synchronous=NORMAL;", NULL, NULL, NULL);
   sqlite3_exec(h, "PRAGMA cache_size=-65536;", NULL, NULL, NULL);
   sqlite3_exec(h, "PRAGMA mmap_size=268435456;", NULL, NULL, NULL);
+  /* CAP THE WAL, OR IT BECOMES THE BIGGEST FILE ON THE DISK.
+   *
+   * WAL mode was set above and nothing bounded the journal. SQLite's automatic
+   * checkpoint fires at 1000 pages, but a checkpoint cannot reset a WAL while
+   * ANY connection still holds an older snapshot — and this process runs 8
+   * scheduler workers plus dispatch workers plus the event loop, each on its
+   * own connection, reading continuously. There is almost never a quiet moment,
+   * so the WAL only grows. Measured 2026-09-15, twenty minutes after a restart:
+   * a 32 GB database with a 9.75 GB -wal beside it.
+   *
+   * That is not just disk. The database and its WAL live on the same volume,
+   * and a volume that fills while SQLite is writing is exactly what corrupted
+   * intel_items_fts — a repair that cost a full rebuild of 4.3M rows.
+   *
+   * journal_size_limit makes a checkpoint TRUNCATE the file back to this size
+   * instead of leaving it at its high-water mark. It changes no durability
+   * guarantee: the limit applies after the checkpoint has already committed
+   * those frames into the database. 256 MB is generous for the biggest single
+   * transaction this tree runs (the FTS rebuild's per-batch commits) while
+   * keeping the steady-state footprint bounded. */
+  sqlite3_exec(h, "PRAGMA journal_size_limit=268435456;", NULL, NULL, NULL);
 }
 
 /* Secondary connection — see db_attach() in db.h. Deliberately does NOT apply

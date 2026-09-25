@@ -7,7 +7,8 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:4000',
+        // launch.sh's web pod sets this to the server pod's $PORT.
+        target: process.env.JO_API_TARGET || 'http://localhost:4000',
         changeOrigin: true,
         // Camera discovery fans out across ~17 external channels; cold runs
         // can take 30–60s before the SQLite cache warms. Give the proxy a

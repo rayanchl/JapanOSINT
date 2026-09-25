@@ -218,7 +218,7 @@ static const hp_source HP2_BRAZIL[] = {
     .name_ja = "ブラジル 発電事業許可(ANEEL)", .category = "infrastructure",
     .portal = "https://dadosabertos.aneel.gov.br", .record_type = "br-power-plant",
     .tags = "\"br\",\"energy\",\"critical-infrastructure\"", .free_tier = 1,
-    .url = "https://dadosabertos.aneel.gov.br/api/3/action/package_search?q={q}&rows=100",
+    .url = "https://dadosabertos.aneel.gov.br/api/3/action/package_search?q={q}&rows=100&sort=id%20asc",
     .array_path = "result.results", .title_keys = "title", .id_keys = "name",
     .date_keys = "metadata_modified",
     .page_param = "start", .page_size = 100, .page_start = 0,

@@ -84,7 +84,7 @@ static const hp_source HP_APAC[] = {
     .name_ja = "香港 オープンデータ 免許検索", .category = "government",
     .portal = "https://data.gov.hk", .record_type = "hk-licence",
     .tags = "\"hk\",\"licences\"", .free_tier = 1,
-    .url = "https://data.gov.hk/en-data/api/3/action/package_search?q={q}&rows=25",
+    .url = "https://data.gov.hk/en-data/api/3/action/package_search?q={q}&rows=25&sort=id%20asc",
     .array_path = "result.results", .title_keys = "title", .id_keys = "name",
     .date_keys = "metadata_modified",
     .description = "Hong Kong government datasets and registers matching an entity "
@@ -213,7 +213,7 @@ static const hp_source HP_APAC[] = {
     .name_ja = "オーストラリア ASIC 登記データ", .category = "government",
     .portal = "https://data.gov.au", .record_type = "au-dataset",
     .tags = "\"au\",\"registry\"", .free_tier = 1,
-    .url = "https://data.gov.au/data/api/3/action/package_search?q={q}&rows=25",
+    .url = "https://data.gov.au/data/api/3/action/package_search?q={q}&rows=25&sort=id%20asc",
     .array_path = "result.results", .title_keys = "title", .id_keys = "name",
     .date_keys = "metadata_modified",
     .description = "Australian open-data catalogue hits — ASIC company, banned-and-"

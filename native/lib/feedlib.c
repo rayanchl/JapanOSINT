@@ -99,8 +99,24 @@ cJSON *feed_get_json_h(http_client *http, const char *url,
   int rc = http_request(http, "GET", url, headers, NULL, 0,
                         timeout_ms > 0 ? timeout_ms : 20000, 2, &r);
   cJSON *j = NULL;
-  if (rc == 0 && r.status >= 200 && r.status < 300 && r.body)
-    j = cJSON_Parse(r.body);
+  if (rc == 0 && r.status >= 200 && r.status < 300 && r.body) {
+    /* Same gate feed_get_text() and jo_get() apply, missing here until now: a
+     * .jp host answering with a body that is not valid UTF-8 is read as
+     * Shift_JIS BEFORE the parse. Without it, a JSON document served as raw
+     * SJIS either fails to parse outright (an SJIS lead byte can land on
+     * 0x5C, which cJSON then reads as an escape) or parses with mojibake
+     * strings baked into it — this function is called from ~390 collector
+     * files plus lib/pagewalk.c, lib/jsonlist.c and lib/geojson.c's page
+     * walkers, so it is the one JSON entry point that had never carried the
+     * guard every other body reader in the tree does. csv_decode_sjis fails
+     * closed to a verbatim copy, so a .jp host serving something else, or an
+     * already-valid-UTF-8 body, is untouched. */
+    char *conv = NULL;
+    if (r.body_len && feed_url_host_is_jp(url) && !csv_is_utf8(r.body, r.body_len))
+      conv = csv_decode_sjis(r.body, r.body_len);
+    j = cJSON_Parse(conv ? conv : r.body);
+    free(conv);
+  }
   http_response_free(&r);
   if (own) http_client_free(http);
   return j;
@@ -119,8 +135,14 @@ cJSON *feed_post_json(http_client *http, const char *url, const char *body,
                         body, body ? strlen(body) : 0,
                         timeout_ms > 0 ? timeout_ms : 20000, 2, &r);
   cJSON *j = NULL;
-  if (rc == 0 && r.status >= 200 && r.status < 300 && r.body)
-    j = cJSON_Parse(r.body);
+  if (rc == 0 && r.status >= 200 && r.status < 300 && r.body) {
+    /* Same .jp/Shift_JIS gate as feed_get_json_h() above — see there. */
+    char *conv = NULL;
+    if (r.body_len && feed_url_host_is_jp(url) && !csv_is_utf8(r.body, r.body_len))
+      conv = csv_decode_sjis(r.body, r.body_len);
+    j = cJSON_Parse(conv ? conv : r.body);
+    free(conv);
+  }
   http_response_free(&r);
   if (own) http_client_free(http);
   return j;

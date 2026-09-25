@@ -10,7 +10,14 @@
 #include "od_shared.inc"
 
 #define SID "socrata-winnipeg-assessment"
-static const char *URL = "https://data.winnipeg.ca/resource/d4mq-wa44.json?$limit=100";
+/* `$offset=0` seeds lib/pagewalk.c's offset walk — pw_walk only ever advances a
+ * parameter the URL already carries, and never invents one. The file header
+ * above already said "paging is via $offset"; nothing in the code ever did it.
+ * Measured 2026-09-19: 245,299 parcels upstream, of which the single-page
+ * collector kept 100. */
+static const char *URL =
+  "https://data.winnipeg.ca/resource/d4mq-wa44.json"
+  "?$limit=100&$offset=0&$order=:id";
 static const char *const TITLE_KEYS[] = { "full_address", "roll_number", NULL };
 static const char *const SUM_KEYS[] = { "neighbourhood_area", "market_region",
                                         NULL };
@@ -24,7 +31,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   sp.summary_keys = SUM_KEYS;
   sp.id_key = "roll_number";
   sp.title_prefix = "Winnipeg parcel:";
-  return od_rc(SID, od_fetch_rows(ctx, sink, URL, NULL, &sp));
+  return od_wrc(SID, od_walk_rows(ctx, sink, SID, URL, NULL, &sp));
 }
 
 static const source_def od_socrata_winnipeg_assessment_def = {
@@ -32,7 +39,7 @@ static const source_def od_socrata_winnipeg_assessment_def = {
   .name = "City of Winnipeg assessment parcels (Socrata)",
   .update_interval_sec = 604800, .run = run,
   .category = "government", .type = "api",
-  .url = "https://data.winnipeg.ca/resource/d4mq-wa44.json?$limit=100",
+  .url = "https://data.winnipeg.ca/resource/d4mq-wa44.json?$limit=100&$order=:id",
   .description = "Winnipeg property assessment roll: address, neighbourhood, property use code and assessed value",
   .license = "Open Government Licence - City of Winnipeg",
   .free_tier = 1,

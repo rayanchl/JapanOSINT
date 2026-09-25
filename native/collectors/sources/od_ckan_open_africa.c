@@ -10,7 +10,7 @@
 
 #define SID "ckan-open-africa"
 static const char *URL =
-  "https://open.africa/api/3/action/package_search?rows=20";
+  "https://open.africa/api/3/action/package_search?rows=20&sort=id%20asc";
 static const char *const EXTRA[] = { "notes", "tags", "groups", NULL };
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -24,7 +24,7 @@ static const source_def od_ckan_open_africa_def = {
   .name = "open.africa (africaopendata.org) CKAN",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://open.africa/api/3/action/package_search?rows=20",
+  .url = "https://open.africa/api/3/action/package_search?rows=20&sort=id%20asc",
   .description = "Pan-African open-data catalogue (6,981 datasets) from Code for Africa: national statistics, budgets, health and infrastructure",
   .license = "Code for Africa portal; datasets predominantly CC-BY",
   .free_tier = 1,

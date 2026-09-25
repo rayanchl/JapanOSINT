@@ -68,8 +68,26 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                free_total, cap_total);
     else summary[0] = 0;
 
+    /* carpark_number alone is not the record: the feed lists one carpark
+     * several times, one entry per lot-type group with its own update time
+     * (BMVM: {C,H} at 07:09 and {Y} at 07:03). Measured 2026-09-15: 2,026
+     * entries, 2,003 distinct numbers, 2,026 distinct number + lot-type set.
+     * Keying on the number kept one group and overwrote the rest every run.
+     * The lot-type set is the stable half of that pair (update times change
+     * every minute), so a re-run still updates rather than accumulates. */
+    char rkey[128];
+    size_t rk = (size_t)snprintf(rkey, sizeof rkey, "%s|", num);
+    cJSON *lt;
+    cJSON_ArrayForEach(lt, cJSON_GetObjectItem(cp, "carpark_info")) {
+      const char *t = jo_sv(lt, "lot_type");
+      if (!t || rk >= sizeof rkey) continue;
+      int k = snprintf(rkey + rk, sizeof rkey - rk, "%s", t);
+      if (k < 0 || (size_t)k >= sizeof rkey - rk) break;
+      rk += (size_t)k;
+    }
+
     intel_item it = {0};
-    it.remote_key      = num;
+    it.remote_key      = rkey;
     it.title           = title;
     it.summary         = summary[0] ? summary : NULL;
     it.lang            = "en";

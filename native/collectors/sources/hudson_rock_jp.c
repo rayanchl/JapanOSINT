@@ -77,10 +77,16 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
     long long emp = num(data, "employees"), usr = num(data, "users");
     long long tot = num(data, "total");
     char title[192];
-    if (tot >= 0)
+    if (tot >= 0 && emp >= 0 && usr >= 0)
       snprintf(title, sizeof title,
                "%s — %lld compromised credentials (%lld employee, %lld user)",
-               domain, tot, emp < 0 ? 0 : emp, usr < 0 ? 0 : usr);
+               domain, tot, emp, usr);
+    else if (tot >= 0)
+      /* employees/users not reported by this response — do NOT coerce the
+       * absent breakdown to 0, which would falsely read as "checked, found
+       * none" rather than "not reported" (2026-09-03 audit). */
+      snprintf(title, sizeof title,
+               "%s — %lld compromised credentials", domain, tot);
     else
       snprintf(title, sizeof title, "%s — infostealer exposure", domain);
     cJSON_AddStringToObject(p, "title", title);

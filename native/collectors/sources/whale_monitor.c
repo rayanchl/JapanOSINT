@@ -22,6 +22,7 @@
  * from the live endpoints; nothing is fabricated. Nothing fetched → NOTHING
  * emitted and run() returns 0. */
 #include "source.h"
+#include "lib/jocore.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include <string.h>
@@ -308,11 +309,21 @@ static int emit_addr_balance(intel_sink *sink, http_client *http, const char *ad
  *
  * This used to request offset=5 and then re-cap the loop at 5 — a whale wallet
  * with thousands of transfers reported five of them. Full pages are requested
- * and walked until the upstream runs short (docs/SOURCE_EXHAUSTIVENESS.md). */
+ * and walked until the upstream runs short (docs/SOURCE_EXHAUSTIVENESS.md).
+ *
+ * The page <= 20 walk is itself a page-walk runaway guard (2,000 tx), not an
+ * editorial bound — a wallet with more history than that (exactly the
+ * exchange-hot-wallet / big-collector case this source targets) hits it
+ * without the "short page" signal ever firing, so that case is now disclosed
+ * as a collector-truncation-notice rather than silently dropped
+ * (2026-09-03 audit). */
+#define WHALE_ETH_MAX_PAGES 20   /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
+
 static int emit_eth_txs(intel_sink *sink, http_client *http, const char *addr) {
   const char *ek = getenv("ETHERSCAN_API_KEY");
-  int emitted = 0;
-  for (int page = 1; page <= 20; page++) {
+  int emitted = 0, capped = 0;
+  int page;
+  for (page = 1; page <= WHALE_ETH_MAX_PAGES; page++) {
     char url[600];
     if (ek && *ek)
       snprintf(url, sizeof url,
@@ -332,6 +343,16 @@ static int emit_eth_txs(intel_sink *sink, http_client *http, const char *addr) {
       emitted += emit_eth_tx(sink, addr, cJSON_GetArrayItem(txs, i));
     cJSON_Delete(j);
     if (n < 100) break;               /* short page = upstream exhausted */
+    if (page == WHALE_ETH_MAX_PAGES) capped = 1;
+  }
+  if (capped) {
+    char scope[96];
+    snprintf(scope, sizeof scope, "eth-txlist:%s", addr);
+    jo_trunc_notice_scoped(sink, "WHALE_ALERT", scope,
+                     "api.etherscan.io/api?module=account&action=txlist", emitted, -1,
+                     "Etherscan txlist page-walk hit its runaway guard "
+                     "(WHALE_ETH_MAX_PAGES) before a short page signalled the end",
+                     "raise WHALE_ETH_MAX_PAGES in whale_monitor.c");
   }
   return emitted;
 }
@@ -379,6 +400,8 @@ static int emit_btc_stats(intel_sink *sink, http_client *http) {
 }
 
 /* Emit Whale Alert feed txs (key required). Returns count emitted. */
+#define WHALE_WA_FEED_MAX 50   /* exhaustive-ok: display bound on a single feed call; a full page emits a collector-truncation-notice */
+
 static int emit_whale_alert_feed(intel_sink *sink, http_client *http,
                                  long minv, time_t since) {
   const char *key = getenv("WHALE_ALERT_API_KEY");
@@ -393,20 +416,55 @@ static int emit_whale_alert_feed(intel_sink *sink, http_client *http,
   const cJSON *txs = cJSON_GetObjectItem(j, "transactions");
   if (txs && cJSON_IsArray(txs)) {
     int n = cJSON_GetArraySize(txs);
-    for (int i = 0; i < n && i < 50; i++)
+    int cap = n < WHALE_WA_FEED_MAX ? n : WHALE_WA_FEED_MAX;
+    for (int i = 0; i < cap; i++)
       emitted += emit_wa_tx(sink, cJSON_GetArrayItem(txs, i));
+    /* A day with >50 whale-scale (>=min_value) transactions is plausible on
+     * an active day; the excess used to be dropped with no trace. */
+    if (n > WHALE_WA_FEED_MAX)
+      jo_trunc_notice(sink, "WHALE_ALERT",
+                       "api.whale-alert.io/v1/transactions", emitted, n,
+                       "the 24h whale-alert feed returned more transactions "
+                       "than the per-call display bound",
+                       "raise WHALE_WA_FEED_MAX in whale_monitor.c");
   }
   cJSON_Delete(j);
   return emitted;
 }
 
-/* Emit top-20 DeFiLlama protocols. Returns count emitted. */
+/* Emit DeFiLlama protocols, sorted by TVL descending so "top" is actually
+ * true — the feed's own field order is not documented as TVL-sorted, and
+ * taking index order unsorted would silently mislabel an arbitrary 20 as
+ * "top" (2026-09-03 audit). Returns count emitted. */
+#define WHALE_DEFI_TOP_N 20   /* exhaustive-ok: display bound ("top N"); a longer list emits a collector-truncation-notice */
+
+static int defi_tvl_desc(const void *a, const void *b) {
+  cJSON *const *pa = (cJSON *const *)a, *const *pb = (cJSON *const *)b;
+  const cJSON *ta = cJSON_GetObjectItem(*pa, "tvl");
+  const cJSON *tb = cJSON_GetObjectItem(*pb, "tvl");
+  double va = (ta && cJSON_IsNumber(ta)) ? ta->valuedouble : -1;
+  double vb = (tb && cJSON_IsNumber(tb)) ? tb->valuedouble : -1;
+  return (va < vb) - (va > vb);
+}
+
 static int emit_defi_protocols(intel_sink *sink, http_client *http) {
   cJSON *p = get_json(http, "https://api.llama.fi/protocols");
   if (!p || !cJSON_IsArray(p)) { if (p) cJSON_Delete(p); return 0; }
-  int emitted = 0, n = cJSON_GetArraySize(p);
-  for (int i = 0; i < n && i < 20; i++)
-    emitted += emit_defi(sink, cJSON_GetArrayItem(p, i));
+  int n = cJSON_GetArraySize(p);
+  cJSON **items = malloc((n > 0 ? (size_t)n : 1) * sizeof *items);
+  int i = 0;
+  cJSON *it;
+  cJSON_ArrayForEach(it, p) items[i++] = it;
+  qsort(items, (size_t)n, sizeof *items, defi_tvl_desc);
+
+  int emitted = 0, cap = n < WHALE_DEFI_TOP_N ? n : WHALE_DEFI_TOP_N;
+  for (i = 0; i < cap; i++) emitted += emit_defi(sink, items[i]);
+  free(items);
+  if (n > WHALE_DEFI_TOP_N)
+    jo_trunc_notice(sink, "WHALE_ALERT", "api.llama.fi/protocols", emitted, n,
+                     "DeFiLlama's protocol list is longer than the \"top N\" "
+                     "display bound (now sorted by tvl before truncating)",
+                     "raise WHALE_DEFI_TOP_N in whale_monitor.c");
   cJSON_Delete(p);
   return emitted;
 }

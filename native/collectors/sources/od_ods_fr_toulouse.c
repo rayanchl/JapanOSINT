@@ -11,7 +11,7 @@
 
 #define SID "ods-fr-toulouse"
 static const char *URL =
-  "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets?limit=20";
+  "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_id";
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   return od_rc(SID, od_ods_catalog_collect(ctx, sink, URL,
@@ -24,7 +24,7 @@ static const source_def od_ods_fr_toulouse_def = {
   .name = "Toulouse Metropole open data (OpenDataSoft)",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets?limit=20",
+  .url = "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_id",
   .description = "Toulouse Metropole open-data catalogue (842 datasets) including subsidy registers with SIRET identifiers",
   .license = "Licence Ouverte (Etalab)",
   .free_tier = 1,

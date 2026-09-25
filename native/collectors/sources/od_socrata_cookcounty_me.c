@@ -12,9 +12,13 @@
 #include "od_shared.inc"
 
 #define SID "socrata-cookcounty-medical-examiner"
+/* `$offset=0` seeds lib/pagewalk.c's offset walk — pw_walk only ever advances a
+ * parameter the URL already carries. `,:id` makes the sort TOTAL so an offset
+ * window cannot drift across a tie in incident_date. Measured 2026-09-19:
+ * 98,732 rows upstream, of which the single-page collector kept 100. */
 static const char *URL =
   "https://datacatalog.cookcountyil.gov/resource/cjeq-bs86.json"
-  "?$limit=100&$order=incident_date%20DESC";
+  "?$limit=100&$offset=0&$order=incident_date%20DESC,:id";
 static const char *const TITLE_KEYS[] = { "primarycause", "casenumber", NULL };
 static const char *const SUM_KEYS[] = { "incident_address", "gender", NULL };
 
@@ -28,7 +32,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   sp.id_key = "casenumber";
   sp.date_key = "incident_date";
   sp.title_prefix = "Cook County ME:";
-  return od_rc(SID, od_fetch_rows(ctx, sink, URL, NULL, &sp));
+  return od_wrc(SID, od_walk_rows(ctx, sink, SID, URL, NULL, &sp));
 }
 
 static const source_def od_socrata_cookcounty_me_def = {

@@ -7,7 +7,9 @@
 #include "hpengine.h"
 #include "csv.h"
 #include "xlsx.h"
+#include "zipread.h"     /* a body that arrives as a ZIP — see the page loop */
 #include "osintemit.h"   /* jo_shape_notice(): schema drift reported as data */
+#include "_credential_notice.inc"  /* jo_needs_credential — the key_env gate below */
 #include "htmlparse.h"   /* the one anchor scanner + dedupe set */
 #include "../core/httpclient.h"
 #include "../third_party/cJSON.h"
@@ -181,6 +183,63 @@ static void hp_vars_build(hp_vars *v, const char *entity, const char *key) {
   char *U = hp_case_of(entity, 1); if (U) { v->upper = hp_urlenc(U); free(U); }
   char *ns = hp_nospace_of(entity); if (ns) { v->nospace = hp_urlenc(ns); free(ns); }
   if (key) { v->key = hp_urlenc(key); v->keyb64 = hp_b64_userpass(key); }
+}
+
+/* Set `key=value` in a URL's query string: REPLACE an existing occurrence,
+ * append only when there is none. Returns malloc'd, or NULL on OOM.
+ *
+ * WHY THIS IS NOT A snprintf("%s&%s=%ld"). It was, and a row whose URL already
+ * named its own page parameter got `…&pagina=1&pagina=2` — and a server that
+ * binds the FIRST occurrence of a repeated parameter (Spring and JAX-RS both
+ * do) then served page 1 for every page of the walk. The engine emitted N
+ * pages, the sink stored one, and the run exited 0: BR_PNCP_CONTRATOS lost
+ * 4,499 of 5,000 records with every gate in this repository green. The URL is
+ * also where the parameter is REQUIRED to be for some upstreams (PNCP answers
+ * 400 without `pagina`), so "just leave it out of the url" is not available.
+ *
+ * Matching is on a real parameter boundary — `?key=` or `&key=` — so a row
+ * paging on `page` does not rewrite `?homepage=x` or `?page_size=100`. */
+static char *hp_url_set_param(const char *url, const char *key, long value) {
+  if (!url || !key || !*key) return NULL;
+  size_t kl = strlen(key);
+  const char *q = strchr(url, '?');
+  const char *found = NULL;
+  for (const char *p = q; p; p = strchr(p + 1, '&')) {
+    const char *cand = p + 1;                     /* just past '?' or '&' */
+    if (strncmp(cand, key, kl) == 0 && cand[kl] == '=') { found = cand; break; }
+  }
+  size_t n = strlen(url) + kl + 48;
+  char *out = malloc(n);
+  if (!out) return NULL;
+  if (!found) {
+    snprintf(out, n, "%s%c%s=%ld", url, q ? '&' : '?', key, value);
+    return out;
+  }
+  const char *val_end = found + kl + 1;
+  while (*val_end && *val_end != '&' && *val_end != '#') val_end++;
+  size_t head = (size_t)(found - url);
+  snprintf(out, n, "%.*s%s=%ld%s", (int)head, url, key, value, val_end);
+  return out;
+}
+
+/* Read the integer the URL already binds to `key`, on the same `?key=` /
+ * `&key=` boundary hp_url_set_param replaces. Returns 1 and sets *out only
+ * when the WHOLE value is an integer (a date or a composite is not an offset);
+ * 0 otherwise, leaving *out untouched. */
+static int hp_url_num_param(const char *url, const char *key, long *out) {
+  if (!url || !key || !*key || !out) return 0;
+  size_t kl = strlen(key);
+  for (const char *p = strchr(url, '?'); p; p = strchr(p + 1, '&')) {
+    const char *cand = p + 1;
+    if (strncmp(cand, key, kl) != 0 || cand[kl] != '=') continue;
+    const char *d = cand + kl + 1, *e = d;
+    if (!isdigit((unsigned char)*e)) return 0;
+    while (isdigit((unsigned char)*e)) e++;
+    if (*e && *e != '&' && *e != '#') return 0;
+    *out = strtol(d, NULL, 10);
+    return 1;
+  }
+  return 0;
 }
 
 /* {token} expansion. An unknown token is left verbatim so a typo shows up in
@@ -719,6 +778,11 @@ static const char *hp_first_scalar(const cJSON *flat, char *buf, size_t cap) {
 /* First candidate from a comma-separated list that resolves to a non-empty
  * scalar in the flattened record. `scratch` receives the text of a numeric or
  * boolean hit and must outlive the returned pointer. */
+static void hp_fnv_hex(const char *s, char out[17]);   /* defined below; the
+                                                          composite path in
+                                                          hp_pick_s hashes an
+                                                          over-long key */
+
 static const char *hp_pick_s(const cJSON *flat, const char *csv_keys,
                              const char *const *fallback,
                              char *scratch, size_t cap) {
@@ -731,6 +795,44 @@ static const char *hp_pick_s(const cJSON *flat, const char *csv_keys,
     for (char *tok = strtok_r(buf, ",", &save); tok;
          tok = strtok_r(NULL, ",", &save)) {
       while (*tok == ' ') tok++;
+      /* `a+b+c` is a COMPOSITE: every named part joined with '|', in order.
+       * `,` remains a PRECEDENCE list (first present wins) because ~existing
+       * rows rely on it as a fallback chain (`id,uid,code`), so the two
+       * cannot share one separator. They combine: `a+b,c` = try a+b, else c.
+       *
+       * Why this exists: 26 rows written in the 2026-09 fix pass declared
+       * dimension tuples — `year,quarter,item`, `mcc,mnc`,
+       * `COUNTRY_CODE,ISO_YEAR,ISO_WEEK,AGEGROUP_CODE` — as commas, believing
+       * that meant a composite. It meant "key on `year`". They only appeared
+       * to work because the in-page collision guard content-hashes rows that
+       * collide within ONE page; the same key recurring across pages still
+       * collapsed at the sink (FINRA_OTC_BLOCKS: 476 stored = distinct
+       * crdFirmName, the first token). A missing part joins as "" rather than
+       * failing the whole key, because a dimension may legitimately be null
+       * (an "all ages" row); at least one part must be present. A composite
+       * longer than the caller's scratch is replaced by its FNV hex — fixed
+       * width and still unique per content — never truncated, which would
+       * manufacture collisions in the very field meant to prevent them. */
+      if (strchr(tok, '+')) {
+        char joined[1024]; size_t jl = 0; int present = 0;
+        char *save2 = NULL;
+        for (char *part = strtok_r(tok, "+", &save2); part;
+             part = strtok_r(NULL, "+", &save2)) {
+          while (*part == ' ') part++;
+          char ps[64];
+          const char *v = hp_scalar_str(hp_flat_get(flat, part), ps, sizeof ps);
+          if (v) present++;
+          int n = snprintf(joined + jl, sizeof joined - jl, "%s%s",
+                           jl ? "|" : "", v ? v : "");
+          if (n < 0 || (size_t)n >= sizeof joined - jl) { jl = sizeof joined - 1; break; }
+          jl += (size_t)n;
+        }
+        if (!present) continue;
+        if (jl < cap) { memcpy(scratch, joined, jl + 1); return scratch; }
+        char hx[17]; hp_fnv_hex(joined, hx);
+        snprintf(scratch, cap, "%s", hx);
+        return scratch;
+      }
       const char *r = hp_scalar_str(hp_flat_get(flat, tok), scratch, cap);
       if (r) return r;
     }
@@ -827,6 +929,23 @@ typedef struct {
   int   pg_n, pg_title, pg_id;   /* THIS page: records seen / declared key hits */
   int   sh_title_pages, sh_title_n;  /* pages where title_keys matched 0 of N   */
   int   sh_id_pages,    sh_id_n;     /* same for id_keys                        */
+  /* Records whose DECLARED id_keys resolved to nothing AND whose flatten hit
+   * a memory guard (HP_MAX_PROPS / the array bound). These are not "the field
+   * is gone" — the field may be sitting just past where hp_flatten stopped —
+   * so they do not belong in sh_id_pages, which reports a schema change. They
+   * matter because the record then falls back to the generic id list and, at
+   * the end of that list, to its first scalar: for a statistical document
+   * that first scalar is a DIMENSION LABEL, identical across every record, so
+   * a handful of oversized records key onto one string and collapse at the
+   * sink. Found on IE_CSO_COLLECTION (2026-09-11): 13,008 records, 13,008
+   * distinct declared keys, 9 lost — the declaration was right and the run
+   * reported an ordinary uid collision. */
+  int   sh_id_trunc;
+  /* CSV rows the parser had to repair because a quoted field ran past the end
+   * of its line (lib/csv.c csv_quote_repairs). Each repair is a malformed
+   * upstream row that would otherwise have swallowed the lines after it. */
+  int   sh_csv_repairs;
+  int   sh_zip_extra;       /* the ZIP body held more than the one entry we read */
   int   sh_repeat_page;     /* 1-based page whose bytes equalled the previous page's */
   int   sh_repeat_skipped;  /* pages the walk would still have requested       */
 } hp_run_state;
@@ -997,12 +1116,56 @@ static int hp_keyed_cmp(const void *a, const void *b) {
  * emitter derives — the pre-pass cannot drift from the pass it guards. */
 typedef cJSON *(*hp_flat_fn)(const hp_source *s, cJSON *rec);
 
+/* Put the keys this ROW declares into `flat` when the flatten budget did not
+ * reach them.
+ *
+ * hp_flatten walks a record in document order and stops at HP_MAX_PROPS. That
+ * bound is a memory guard, and a record that hits it is stamped — but the id is
+ * resolved from the flattened map afterwards, so when one huge unrelated field
+ * exhausts the budget first, the DECLARED key is simply absent and the record
+ * falls back to its first scalar. Measured on IE_CSO_COLLECTION: twelve PxStat
+ * items carry 140-280 KB of `dimension` categories before `extension.matrix`,
+ * so all twelve keyed on the literal "STATISTIC" and collapsed into three rows
+ * (13,008 items, 13,008 distinct matrices upstream — nothing collided there).
+ *
+ * The declared keys are a handful of dotted paths. Resolving them straight from
+ * the record costs one lookup each, adds no field the upstream did not send,
+ * and cannot overflow the guard. `+` composites and `,` fallback lists are
+ * split the same way hp_pick_s splits them. */
+static void hp_seed_declared_keys(const hp_source *s, cJSON *rec, cJSON *flat) {
+  if (!s || !rec || !flat || !cJSON_IsObject(rec)) return;
+  const char *lists[] = { s->id_keys, s->title_keys, s->date_keys,
+                          s->link_keys, s->detail_key };
+  for (size_t li = 0; li < sizeof lists / sizeof lists[0]; li++) {
+    if (!lists[li] || !*lists[li]) continue;
+    char buf[512];
+    snprintf(buf, sizeof buf, "%s", lists[li]);
+    for (char *tok = buf; tok && *tok; ) {
+      char *end = tok + strcspn(tok, ",+");
+      char saved = *end;
+      *end = 0;
+      while (*tok == ' ') tok++;
+      if (*tok && !cJSON_GetObjectItemCaseSensitive(flat, tok)) {
+        const cJSON *v = hp_path(rec, tok);
+        if (cJSON_IsString(v) && v->valuestring && v->valuestring[0])
+          cJSON_AddStringToObject(flat, tok, v->valuestring);
+        else if (cJSON_IsNumber(v))
+          cJSON_AddNumberToObject(flat, tok, v->valuedouble);
+        else if (cJSON_IsBool(v))
+          cJSON_AddBoolToObject(flat, tok, cJSON_IsTrue(v));
+      }
+      tok = saved ? end + 1 : NULL;
+    }
+  }
+}
+
 static cJSON *hp_json_flat(const hp_source *s, cJSON *rec) {
-  (void)s;
   cJSON *flat = cJSON_CreateObject();
   if (!flat) return NULL;
-  if (cJSON_IsObject(rec) || cJSON_IsArray(rec)) hp_flatten(rec, "", flat, 0);
-  else if (cJSON_IsString(rec) && rec->valuestring[0])
+  if (cJSON_IsObject(rec) || cJSON_IsArray(rec)) {
+    hp_flatten(rec, "", flat, 0);
+    hp_seed_declared_keys(s, rec, flat);
+  } else if (cJSON_IsString(rec) && rec->valuestring[0])
     cJSON_AddStringToObject(flat, "value", rec->valuestring);
   return flat;
 }
@@ -1125,6 +1288,11 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
   st->pg_n++;
   if (title) st->pg_title++;
   if (rkey)  st->pg_id++;
+  /* The declared key missed on a record we did not finish flattening: count it
+   * separately (see sh_id_trunc) so the fallback that follows is disclosed
+   * rather than silently changing this record's identity. */
+  if (!rkey && s->id_keys && *s->id_keys && (g_flat_drops || g_flat_trunc))
+    st->sh_id_trunc++;
   if (!title) title = hp_pick_s(flat, NULL, TITLE_FALLBACK, sc_t, sizeof sc_t);
   if (!rkey)  rkey  = hp_pick_s(flat, NULL, ID_FALLBACK,    sc_r, sizeof sc_r);
   const char *date  = hp_pick_s(flat, s->date_keys,  DATE_FALLBACK,  sc_d, sizeof sc_d);
@@ -1209,6 +1377,26 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
            s->tags ? "," : "", s->tags ? s->tags : "");
 
   double lat = hp_num(flat, s->lat_key), lon = hp_num(flat, s->lon_key);
+  int geo_named = s->lat_key && s->lon_key;
+  /* A single "a,b" field: split it here rather than asking every row to
+   * pre-process upstream data it cannot touch. Either order, declared. */
+  if (!geo_named && (s->latlon_key || s->lonlat_key)) {
+    const cJSON *pv = hp_flat_get(flat, s->latlon_key ? s->latlon_key : s->lonlat_key);
+    if (pv && cJSON_IsString(pv) && pv->valuestring) {
+      const char *sp = pv->valuestring;
+      char *endp = NULL;
+      double a = strtod(sp, &endp);
+      if (endp && endp != sp) {
+        while (*endp == ',' || *endp == ' ' || *endp == '\t') endp++;
+        char *endq = NULL;
+        double b = strtod(endp, &endq);
+        if (endq && endq != endp) {
+          if (s->latlon_key) { lat = a; lon = b; } else { lon = a; lat = b; }
+          geo_named = 1;
+        }
+      }
+    }
+  }
 
   intel_item it = {0};
   it.remote_key      = keybuf;
@@ -1221,7 +1409,7 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
   it.record_type     = s->record_type ? s->record_type : "record";
   it.properties_json = props ? props : "{}";
   it.tags_json       = tags;
-  if (s->lat_key && s->lon_key && (lat != 0.0 || lon != 0.0)) {
+  if (geo_named && (lat != 0.0 || lon != 0.0)) {
     it.has_geo = 1; it.lat = lat; it.lon = lon;
   }
   /* A record the SINK refused is a discard too, and it was invisible: the run
@@ -1516,6 +1704,11 @@ static int hp_run_csv(hp_run_state *st, const char *body) {
     }
   }
   cJSON *rows = csv_parse_x(body, s->csv_no_header ? 0 : 1, delim, 0, NULL);
+  /* Malformed rows the parser had to close at their own line end. Counted here
+   * and disclosed once per run by hp_shape_notices: without it a file whose
+   * quoting is broken parses to a different set of records than the upstream
+   * served, and the run reports that smaller number as the whole truth. */
+  st->sh_csv_repairs += csv_quote_repairs();
   free(stripped);
   if (!rows) return 0;
   int max = hp_record_cap(s);
@@ -1832,8 +2025,19 @@ static int hp_xml_record_tag(const char *body, char *out, size_t cap) {
 static int hp_run_xml(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
   char tag[96];
-  if (s->array_path && *s->array_path) snprintf(tag, sizeof tag, "%s", s->array_path);
-  else if (!hp_xml_record_tag(body, tag, sizeof tag)) {
+  if (s->array_path && *s->array_path) {
+    snprintf(tag, sizeof tag, "%s", s->array_path);
+    /* array_path here is an ELEMENT NAME, not a path — but every other
+     * array_path in this engine is dotted, tools/probe_hp_batch.py resolves a
+     * dotted XML path, and so 30 batch-30 rows declared `channel.item`,
+     * probed PASS, and emitted nothing (a tag literally named "channel.item"
+     * repeats zero times). When the declared name does not occur as a tag and
+     * carries a dot, its last segment is what was meant. */
+    char open[100];
+    snprintf(open, sizeof open, "<%s", tag);
+    const char *dot = strrchr(tag, '.');
+    if (dot && dot[1] && !strstr(body, open)) memmove(tag, dot + 1, strlen(dot + 1) + 1);
+  } else if (!hp_xml_record_tag(body, tag, sizeof tag)) {
     fprintf(stderr, "[hp:%s] XML with no repeated element\n", s->id);
     return 0;
   }
@@ -1925,6 +2129,119 @@ static int hp_run_xml(hp_run_state *st, const char *body) {
     }
   }
   st->page_records = found;
+  return st->emitted;
+}
+
+/* ── record-jar (IANA registry) ───────────────────────────────────────────
+ *
+ * `Key: Value` lines; a line of exactly `%%` separates records; a line
+ * beginning with whitespace CONTINUES the previous field. See hpengine.h
+ * (HP_RECJAR) for why this exists rather than being forced through HP_CSV.
+ *
+ * Everything after the parse is the shared path: one flat cJSON object per
+ * record, the same collision guard the JSON/CSV/XML paths use (with a NULL
+ * flat_fn, since these objects are already flat), and hp_emit_record. So
+ * title_keys/id_keys, the `+` composite, geo, dedupe and the availability
+ * tally behave exactly as they do everywhere else. */
+static void hp_recjar_put(cJSON *rec, const char *key, const char *val) {
+  if (!*key) return;
+  cJSON *ex = cJSON_GetObjectItemCaseSensitive(rec, key);
+  if (ex && cJSON_IsString(ex) && ex->valuestring) {
+    /* Repeated key: join, never overwrite — the later values are real content
+     * (a subtag with three Description lines has three names). */
+    size_t n = strlen(ex->valuestring) + 2 + strlen(val) + 1;
+    char *j = malloc(n);
+    if (!j) return;
+    snprintf(j, n, "%s; %s", ex->valuestring, val);
+    cJSON_SetValuestring(ex, j);
+    free(j);
+    return;
+  }
+  cJSON_AddStringToObject(rec, key, val);
+}
+
+static int hp_run_recjar(hp_run_state *st, const char *body) {
+  cJSON *flats = cJSON_CreateArray();
+  if (!flats) return st->emitted;
+  cJSON *rec = cJSON_CreateObject();
+  char key[128] = {0};
+  char *val = NULL; size_t vlen = 0;
+
+  const char *p = body;
+  int records = 0;
+  while (1) {
+    const char *nl = strchr(p, '\n');
+    size_t llen = nl ? (size_t)(nl - p) : strlen(p);
+    while (llen && (p[llen-1] == '\r')) llen--;
+
+    int is_sep  = (llen == 2 && p[0] == '%' && p[1] == '%');
+    int is_cont = (llen > 0 && (p[0] == ' ' || p[0] == '\t'));
+
+    if (is_sep || !nl) {
+      if (!is_sep && llen && !is_cont) {
+        /* final line, no trailing newline: fall through to normal handling */
+      }
+    }
+
+    if (is_cont && key[0]) {
+      /* Continuation: append with a single space, per the record-jar rule. */
+      const char *q = p; size_t qn = llen;
+      while (qn && (*q == ' ' || *q == '\t')) { q++; qn--; }
+      size_t add = 1 + qn;
+      char *nv = realloc(val, vlen + add + 1);
+      if (nv) { val = nv; val[vlen] = ' '; memcpy(val + vlen + 1, q, qn);
+                vlen += add; val[vlen] = 0; }
+    } else if (is_sep) {
+      if (key[0] && val) hp_recjar_put(rec, key, val);
+      key[0] = 0; free(val); val = NULL; vlen = 0;
+      if (cJSON_GetArraySize(rec) > 0) { cJSON_AddItemToArray(flats, rec); records++; }
+      else cJSON_Delete(rec);
+      rec = cJSON_CreateObject();
+      if (!rec) break;
+    } else if (llen) {
+      const char *colon = memchr(p, ':', llen);
+      if (colon) {
+        if (key[0] && val) hp_recjar_put(rec, key, val);
+        free(val); val = NULL; vlen = 0;
+        size_t kn = (size_t)(colon - p);
+        if (kn >= sizeof key) kn = sizeof key - 1;
+        memcpy(key, p, kn); key[kn] = 0;
+        const char *v = colon + 1; size_t vn = llen - (size_t)(colon - p) - 1;
+        while (vn && (*v == ' ' || *v == '\t')) { v++; vn--; }
+        val = malloc(vn + 1);
+        if (val) { memcpy(val, v, vn); val[vn] = 0; vlen = vn; }
+      }
+    }
+
+    if (!nl) break;
+    p = nl + 1;
+  }
+  /* The last record: the file ends without a trailing `%%`. */
+  if (key[0] && val) hp_recjar_put(rec, key, val);
+  free(val);
+  if (rec) {
+    if (cJSON_GetArraySize(rec) > 0) { cJSON_AddItemToArray(flats, rec); records++; }
+    else cJSON_Delete(rec);
+  }
+
+  st->available += records;
+  int flats_n = cJSON_GetArraySize(flats);
+  unsigned char *dupmap = hp_collision_map(st, flats, flats_n, NULL);
+  st->dup_map = dupmap;
+  cJSON *flat; int ri = 0;
+  int max = hp_record_cap(st->s);
+  cJSON_ArrayForEach(flat, flats) {
+    if (max && st->emitted >= max) { st->truncated = 1; break; }
+    if (st->ctx->cancel && *st->ctx->cancel) { st->truncated = 1; break; }
+    st->rec_idx = ri;
+    hp_emit_record(st, flat, st->deep_left > 0);
+    ri++;
+  }
+  st->dup_map = NULL;
+  st->rec_idx = 0;
+  free(dupmap);
+  cJSON_Delete(flats);
+  st->page_records = records;
   return st->emitted;
 }
 
@@ -2102,6 +2419,112 @@ static size_t hp_anchor_label(const char *inner, const char *end, char *out, siz
   return 0;
 }
 
+/* Collapse the text (tags stripped) of markup `from`..`to` into `out`.
+ * Returns the length, 0 if under three characters. */
+static size_t hp_text_collapse(const char *from, const char *to, char *out, size_t cap) {
+  size_t n = 0;
+  int intag = 0, pend = 0;
+  for (const char *q = from; q < to && n + 1 < cap; q++) {
+    if (*q == '<') { intag = 1; continue; }
+    if (*q == '>') { intag = 0; continue; }
+    if (intag) continue;
+    if (isspace((unsigned char)*q)) { pend = n > 0; continue; }
+    if (pend) { out[n++] = ' '; pend = 0; if (n + 1 >= cap) break; }
+    out[n++] = *q;
+  }
+  out[n] = 0;
+  if (n < 3) { out[0] = 0; return 0; }
+  return n;
+}
+
+/* Where a run of sibling text stops: the next anchor, or the end of the list
+ * item / table row / definition that holds this one. `</td>` is deliberately
+ * NOT a stop — an icon in one cell and the name in the next is the commonest
+ * camera-table layout. */
+static int hp_sibling_stop(const char *q) {
+  static const char *const stops[] = { "<a", "<A", "</tr", "</TR", "</li", "</LI",
+    "</ul", "</ol", "</table", "</dl", "</TABLE", "</nav", NULL };
+  for (int i = 0; stops[i]; i++)
+    if (!strncmp(q, stops[i], strlen(stops[i]))) return 1;
+  return 0;
+}
+
+/* Label for an anchor that has none of its own — no text, no <img alt>.
+ *
+ * Measured 2026-09-21 while authoring batch 30's Japanese camera rows: seven
+ * prefectural camera indexes probe PASS with hundreds of anchors each and
+ * would emit zero, because every camera link is an image or a map pin and its
+ * name lives beside the anchor rather than inside it — Niigata 442 cameras,
+ * Mie 141, Hiroshima 120, Iwate 74, the Coast Guard's coastal index 67. About
+ * 900 cameras behind rows that were, until this, silent-nothing.
+ *
+ * Tried in order, only after hp_anchor_label() came up short:
+ *
+ *   3. the anchor's own attributes: title, aria-label, data-name, data-title;
+ *   4. the text that FOLLOWS `</a>` up to the next anchor or the end of the
+ *      enclosing row/item (`<a><img></a> 加茂川橋<br>`, or an icon cell
+ *      followed by a name cell);
+ *   5. the text that PRECEDES `<a` back to the previous anchor or the start of
+ *      the enclosing row/item (`加茂川橋 <a><img></a>`).
+ *
+ * A neighbour's text is context, not a guarantee, so a page can still label an
+ * icon with the wrong caption when its layout puts unrelated text between two
+ * anchors — the record keeps its resolved URL as identity either way, and a
+ * label that is merely imperfect is better than a record that does not exist.
+ * `tag` is the start tag `<a …>`; `after` is just past `</a>`; `html` is the
+ * page start (the backward scan must not run off it). */
+static size_t hp_anchor_context_label(const char *tag, size_t taglen, const char *after,
+                                      const char *html, char *out, size_t cap) {
+  char tbuf[2048];
+  if (taglen < sizeof tbuf) {
+    memcpy(tbuf, tag, taglen); tbuf[taglen] = 0;
+    static const char *const attrs[] = { "title", "aria-label", "data-name", "data-title", NULL };
+    for (int i = 0; attrs[i]; i++)
+      if (html_attr(tbuf, attrs[i], out, cap) && strlen(out) >= 3) return strlen(out);
+  }
+  /* 3b: the anchor's PARENT, when the anchor is its first child — Hokkaido's
+   * river-camera pages keep the name as `data-title` on the wrapping <div>
+   * and give the anchor only empty spans (25 of 50 cameras per page). Only
+   * whitespace may sit between the parent's `>` and our `<a`, so a stray
+   * earlier sibling is never mistaken for a parent. */
+  {
+    const char *b = tag;
+    while (b > html && isspace((unsigned char)b[-1])) b--;
+    if (b > html && b[-1] == '>') {
+      const char *lt = b - 1;
+      while (lt > html && *lt != '<') lt--;
+      size_t plen = (size_t)(b - lt);
+      if (*lt == '<' && lt[1] != '/' && lt[1] != 'a' && lt[1] != 'A' && plen < sizeof tbuf) {
+        memcpy(tbuf, lt, plen); tbuf[plen] = 0;
+        static const char *const pattrs[] = { "title", "aria-label", "data-name", "data-title", NULL };
+        for (int i = 0; pattrs[i]; i++)
+          if (html_attr(tbuf, pattrs[i], out, cap) && strlen(out) >= 3) return strlen(out);
+      }
+    }
+  }
+  /* 4: following siblings, at most 600 bytes of markup. */
+  const char *q = after, *lim = after + 600;
+  while (*q && q < lim && !hp_sibling_stop(q)) q++;
+  if (hp_text_collapse(after, q, out, cap)) return strlen(out);
+  /* 5: preceding siblings — walk back to the previous `</a>` or a row/item
+   * open tag, bounded the same way. */
+  const char *b = tag, *floor_ = tag - 600 < html ? html : tag - 600;
+  while (b > floor_) {
+    b--;
+    if (*b == '<' && (!strncasecmp(b, "</a", 3) || !strncasecmp(b, "<tr", 3) ||
+                      !strncasecmp(b, "<li", 3) || !strncasecmp(b, "<ul", 3) ||
+                      !strncasecmp(b, "<ol", 3) || !strncasecmp(b, "<table", 6) ||
+                      !strncasecmp(b, "<dl", 3) || !strncasecmp(b, "<nav", 4))) {
+      const char *gt = strchr(b, '>');
+      b = gt && gt < tag ? gt + 1 : tag;
+      break;
+    }
+  }
+  if (b < tag && hp_text_collapse(b, tag, out, cap)) return strlen(out);
+  out[0] = 0;
+  return 0;
+}
+
 /* Real anchors out of a real listing page. JS-rendered or anti-bot pages
  * simply yield nothing. */
 static int hp_run_html(hp_run_state *st, const char *html) {
@@ -2127,7 +2550,18 @@ static int hp_run_html(hp_run_state *st, const char *html) {
   while ((!max || st->emitted < max) && (p = html_anchor_next(p, &a)) != NULL) {
     char href[820];
     snprintf(href, sizeof href, "%.*s", (int)a.href_len, a.href);
-    if (s->href_must && !strstr(href, s->href_must)) continue;
+    /* `href_must` is tested against the raw href AND the resolved link. It used
+     * to see the raw href only, so a pattern written as the absolute URL a
+     * reader sees ("https://www.caa.go.jp/notice/…") never matched a page that
+     * links relatively ("/notice/…"): the row fetched a live index and emitted
+     * nothing, run green. Seven batch-28 rows were in that state (fixed per row
+     * 2026-09-15; this stops the next one). Resolving first is cheap and the
+     * same resolution the record's uid uses below. */
+    char link[2048];
+    if (!strncmp(href, "http", 4)) snprintf(link, sizeof link, "%s", href);
+    else hp_url_resolve(base_url, href, link, sizeof link);
+    if (s->href_must && !strstr(href, s->href_must) && !strstr(link, s->href_must))
+      continue;
     if (a.text_len < 3) {
       /* `p` is the resume point, just past `</a>`; the start tag's `>` is the
        * first one after the href value (the parser located `</a>` the same
@@ -2135,22 +2569,36 @@ static int hp_run_html(hp_run_state *st, const char *html) {
       const char *inner = strchr(a.href + a.href_len, '>');
       if (!inner || inner >= p - 4) continue;
       a.text_len = hp_anchor_label(inner + 1, p - 4, a.text, sizeof a.text);
+      if (a.text_len < 3) {
+        /* Nothing inside the anchor names it. Its own attributes, then the
+         * text beside it. See hp_anchor_context_label(). The start tag begins
+         * at the `<` before the href — walk back to it. */
+        const char *tag = a.href;
+        while (tag > html && *tag != '<') tag--;
+        a.text_len = hp_anchor_context_label(tag, (size_t)(inner + 1 - tag), p,
+                                             html, a.text, sizeof a.text);
+      }
       if (a.text_len < 3) continue;
     }
     if (s->filter_query && st->vars->raw &&
         !hp_icontains(a.text, st->vars->raw) && !hp_icontains(href, st->vars->raw))
       continue;
     st->available++;
+
+    /* `link` was resolved above, before the href_must test. */
+
     /* The same href twice on one page is one record, not a discard. Listings
      * routinely link each item from both an icon and its title, which made
      * ECMA's standards index report "emitted 295 of 590" and ITLOS "36 of 72" —
-     * a perfect 50% shortfall that was really a perfect 2x duplication. */
-    if (!html_seen_add(&st->hseen, href)) { st->duplicate++; continue; }
+     * a perfect 50% shortfall that was really a perfect 2x duplication.
+     * Dedupe on the RESOLVED link, not the raw href: the uid below is the
+     * resolved link, and a page that links one item as both
+     * "/x-roudoukyoku/home.html" and "https://jsite.mhlw.go.jp/x-roudoukyoku/home.html"
+     * (all 47 MHLW prefectural labour-bureau homepages do) passed a raw-href
+     * dedupe and then collided at the sink — 2-19 records per bureau reported
+     * as UID-COLLISION that were really one record linked in two spellings. */
+    if (!html_seen_add(&st->hseen, link)) { st->duplicate++; continue; }
     page_hits++;
-
-    char link[2048];
-    if (!strncmp(href, "http", 4)) snprintf(link, sizeof link, "%s", href);
-    else hp_url_resolve(base_url, href, link, sizeof link);
 
     cJSON *flat = cJSON_CreateObject();
     cJSON_AddStringToObject(flat, "title", a.text);
@@ -2284,6 +2732,29 @@ static void hp_shape_notices(hp_run_state *st, intel_sink *sink,
     jo_shape_notice(sink, s->id, "id-keys-unmatched", title, p, TAGS);
   }
 
+  if (st->sh_id_trunc) {                                       /* (c2) */
+    p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "query", q);
+    cJSON_AddStringToObject(p, "declared_id_keys", s->id_keys ? s->id_keys : "");
+    cJSON_AddNumberToObject(p, "records_affected", st->sh_id_trunc);
+    cJSON_AddNumberToObject(p, "flatten_property_cap", HP_MAX_PROPS);
+    cJSON_AddNumberToObject(p, "pages_read", st->page);
+    cJSON_AddNumberToObject(p, "records_emitted", emitted);
+    cJSON_AddStringToObject(p, "remedy",
+      "these records are large enough that flattening stopped before reaching "
+      "the declared key, so they were keyed on the fallback list instead — for "
+      "a statistical document that is a dimension label shared by every "
+      "record, and the sink then collapses them onto one row. Declare a "
+      "shorter id_keys that appears early in the record, or split the source "
+      "so single records stay under the property cap");
+    snprintf(title, sizeof title,
+             "%s: id_keys \"%s\" was unreachable on %d record(s) whose flatten "
+             "hit the %d-property cap — those records were keyed on the "
+             "fallback, not on the declaration",
+             s->id, s->id_keys ? s->id_keys : "", st->sh_id_trunc, HP_MAX_PROPS);
+    jo_shape_notice(sink, s->id, "id-keys-truncated", title, p, TAGS);
+  }
+
   if (st->sh_repeat_page) {                                    /* (d) */
     p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "query", q);
@@ -2304,6 +2775,41 @@ static void hp_shape_notices(hp_run_state *st, intel_sink *sink,
              s->id, st->sh_repeat_page, st->sh_repeat_page - 1,
              st->sh_repeat_skipped, page_max, emitted);
     jo_shape_notice(sink, s->id, "page-param-ignored", title, p, TAGS);
+  }
+
+  if (st->sh_csv_repairs) {                                    /* (e) */
+    p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "query", q);
+    cJSON_AddNumberToObject(p, "rows_repaired", st->sh_csv_repairs);
+    cJSON_AddNumberToObject(p, "pages_read", st->page);
+    cJSON_AddNumberToObject(p, "records_emitted", emitted);
+    cJSON_AddStringToObject(p, "remedy",
+      "the upstream published rows with an unterminated quoted field; the "
+      "parser closed each at its own line end so the lines after it are read as "
+      "the records they are (lib/csv.c). Report it upstream — until then the "
+      "repaired rows keep the rest of their own line as that field's value");
+    snprintf(title, sizeof title,
+             "%s: %d malformed row(s) had an unterminated quoted field and were "
+             "closed at their line end; %d record(s) emitted",
+             s->id, st->sh_csv_repairs, emitted);
+    jo_shape_notice(sink, s->id, "csv-quote-repaired", title, p, TAGS);
+  }
+
+  if (st->sh_zip_extra) {                                      /* (f) */
+    p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "query", q);
+    cJSON_AddStringToObject(p, "entries_read", "1 (the first)");
+    cJSON_AddStringToObject(p, "reason",
+      "the upstream body is a ZIP holding more than one entry and the engine "
+      "reads only the first (lib/zipread.c zip_first_entry)");
+    cJSON_AddStringToObject(p, "remedy",
+      "if the other members carry records too, this row needs a named-entry "
+      "read (zip_find_entry) or one row per member");
+    cJSON_AddNumberToObject(p, "records_used", emitted);
+    snprintf(title, sizeof title,
+             "%s: the ZIP body holds more than one entry; only the first was "
+             "read (%d record(s) emitted from it)", s->id, emitted);
+    jo_shape_notice(sink, s->id, "zip-extra-entries", title, p, TAGS);
   }
 }
 
@@ -2341,8 +2847,17 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   if (s->key_env) {
     key = getenv(s->key_env);
     if (!key || !*key) {
-      fprintf(stderr, "[hp:%s] %s unset — honest empty\n", s->id, s->key_env);
-      return 0;
+      /* NOT a bare `return 0` with a log line. That is the invisible nothing
+       * house rule 1 names: fetch_log status='ok' records=0, /api/status green,
+       * indistinguishable from a source that spent a request and found nothing.
+       * The twelve hand-written collectors were fixed by _credential_notice.inc
+       * (audit item #29); the engine's own gate is the SAME defect in the other
+       * copy of the code, which is the argument rule 4b makes about looking for
+       * the other copies of any bug you fix. Constant remote_key, so a row
+       * gated for a year holds one notice however often it ticks. */
+      return jo_needs_credential(sink, s->id, s->name ? s->name : s->id,
+                                 (const char *[]){ s->key_env, NULL },
+                                 s->url, NULL);
     }
   }
 
@@ -2367,10 +2882,78 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     hdr_store[nh] = hp_expand(s->headers[i], &vars, NULL, NULL);
     if (hdr_store[nh]) { hdrs[nh] = hdr_store[nh]; nh++; }
   }
-  if (s->mode == HP_JSON && nh < 7) hdrs[nh++] = "Accept: application/json";
-  if (body && nh < 7)
+  /* The forced Accept / Content-Type are DEFAULTS, not overrides: only add
+   * one when the row has not already declared that header itself. This used
+   * to append unconditionally, so a row that declared its own
+   * `Accept: application/json` sent the header TWICE — and FINRA's gateway
+   * answers a duplicated Accept with HTTP 400 (measured 2026-09-06:
+   * FINRA_ATS_WEEKLY / FINRA_OTC_BLOCKS emitted 0 on two consecutive sweeps
+   * for exactly that reason). It also meant a row could never send a
+   * DIFFERENT Accept — application/geo+json, application/vnd.api+json —
+   * without the JSON one riding along beside it. */
+  int has_accept = 0, has_ctype = 0;
+  for (int i = 0; i < nh; i++) {
+    if (!strncasecmp(hdrs[i], "Accept:", 7)) has_accept = 1;
+    if (!strncasecmp(hdrs[i], "Content-Type:", 13)) has_ctype = 1;
+  }
+  if (s->mode == HP_JSON && !has_accept && nh < 7)
+    hdrs[nh++] = "Accept: application/json";
+  if (body && !has_ctype && nh < 7)
     hdrs[nh++] = s->content_type ? s->content_type : "Content-Type: application/json";
   hdrs[nh] = NULL;
+
+  /* ── the data URL may be PUBLISHED, not fixed ───────────────────────────
+   *
+   * See `index_url` in hpengine.h. Resolved here, before `st` is built and
+   * before the walk, so everything downstream — including st.url, which the
+   * shape notices quote — sees the URL actually fetched. One extra request.
+   *
+   * The row's own headers go with it: the index lives on the same host as the
+   * data, so whatever the row needs to be served (a UA, an Accept-Language)
+   * applies to both. */
+  if (s->index_url && s->index_url[0] && s->index_href_must && s->index_href_must[0]) {
+    http_response ir = {0};
+    int irc = http_request(ctx->http, "GET", s->index_url, hdrs, NULL, 0,
+                           s->timeout_ms > 0 ? s->timeout_ms : HP_HTTP_TIMEOUT,
+                           1, &ir);
+    char *found = NULL;
+    if (irc == 0 && ir.status == 200 && ir.body) {
+      html_anchor a;
+      for (const char *p = html_anchor_next(ir.body, &a); p;
+           p = html_anchor_next(p, &a)) {
+        if (!a.href || !a.href_len) continue;
+        char href[2048];
+        size_t hn = a.href_len < sizeof href - 1 ? a.href_len : sizeof href - 1;
+        memcpy(href, a.href, hn);
+        href[hn] = 0;
+        if (!strstr(href, s->index_href_must)) continue;
+        char abs[2048];
+        hp_url_resolve(s->index_url, href, abs, sizeof abs);  /* RFC 3986 §5.2 */
+        found = hp_dup(abs);
+        break;
+      }
+    } else {
+      fprintf(stderr, "[hp:%s] index %s: rc=%d status=%ld\n",
+              s->id, s->index_url, irc, ir.status);
+    }
+    http_response_free(&ir);
+    if (!found) {
+      /* Honest failure, naming the pattern that matched nothing. Falling back
+       * to the declared `url` would re-fetch a stamp that is already stale —
+       * exactly the silent staleness this opt exists to end. Unwound the same
+       * way the normal exit below does. */
+      fprintf(stderr, "[hp:%s] index %s: no href containing \"%s\" — no data "
+                      "URL to fetch\n", s->id, s->index_url, s->index_href_must);
+      for (int i = 0; i < nh; i++) free(hdr_store[i]);
+      free(url);
+      free(body);
+      hp_vars_free(&vars);
+      return -1;
+    }
+    fprintf(stderr, "[hp:%s] index %s -> %s\n", s->id, s->index_url, found);
+    free(url);
+    url = found;
+  }
 
   /* ── the page walk ──────────────────────────────────────────────────────
    * A paged endpoint read once has silently discarded every page after the
@@ -2379,6 +2962,11 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * producing records (or the page ceiling bites, which is stamped, not
    * silent). Rows that declare no paging do exactly one request, as before. */
   int out = 0, hard_error = 0;
+  /* A LATER page failing in a way that cannot mean "no more data": transport
+   * failure, HTTP 429, HTTP 5xx (or an in-body error carrying those codes).
+   * Plain 4xx past the last page is a common end-of-data signal and stays one. */
+  int failed_midwalk = 0;
+  long failed_status = 0;           /* -1 = transport failure */
   int page_max = s->page_max > 0 ? s->page_max : HP_PAGE_MAX_DEF;
   /* A `{page}` token left in the URL after entity expansion is path-segment
    * paging: the upstream numbers its pages in the path (kanpou.ai's
@@ -2395,14 +2983,41 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
                       .url = url, .emitted = 0,
                       .deep_left = hp_detail_budget(s) };
   int page_start = s->page_start;
-  /* Coerce an unset page_start to 1 for page-numbered APIs — but not when the
-   * row has declared the API is 0-based. Without that exemption a 0-based API
-   * gets its first extra page computed as page_start(1) + 0 + 1 = 2, and page 1
-   * is never fetched: a silent one-page hole in every paged read, invisible
-   * because the pages either side arrive normally. */
-  if (!page_start && !s->page_zero_based &&
-      ((s->page_param && !strstr(s->page_param, "offset")) || path_paged))
+  /* Is the page parameter a RECORD OFFSET? Matched case-insensitively: this
+   * used to be strstr(…, "offset"), so ArcGIS's `resultOffset` (126 rows) and
+   * `Start` (48) were not recognised as offsets at all. */
+  int offset_named = s->page_param &&
+                     (hp_icontains(s->page_param, "offset") ||
+                      hp_icontains(s->page_param, "start") ||
+                      hp_icontains(s->page_param, "skip"));
+  /* An unset page_start (0) is resolved here, two different ways.
+   *
+   * OFFSET parameters start where the URL itself starts. The first request is
+   * the URL verbatim, so if it binds `resultOffset=0` the walk is at record 0,
+   * and the next page must be 0 + step. This used to coerce page_start to 1 for
+   * every offset parameter not spelled with a lowercase "offset" — `start`,
+   * `$skip`, `startIndex`, `resultOffset` — so a 0-based walk asked for 0, then
+   * step+1, 2·step+1 …: ONE RECORD LOST AT EVERY PAGE BOUNDARY, every page
+   * otherwise full, the run green. Found 2026-09-14 by replaying an ArcGIS
+   * row's offsets (0, 1001, 2001) against its upstream. Reading the URL's own
+   * value is right for 0-based APIs AND for 1-based ones (`startIndex=1` still
+   * starts at 1), and a URL that binds no value starts at 0: at worst one
+   * byte-identical overlap on a 1-based API, which the sink dedupes, never a
+   * hole.
+   *
+   * PAGE-NUMBER parameters keep the old rule: coerce to 1 unless the row
+   * declared the API 0-based. Without that exemption a 0-based API gets its
+   * first extra page computed as page_start(1) + 0 + 1 = 2, and page 1 is never
+   * fetched. (Page numbers are NOT read from the URL: many 1-based servers
+   * answer page=0 as page 1, and the repeat detector would then stop the walk.) */
+  if (!page_start && !s->page_zero_based && !path_paged && offset_named) {
+    long v0 = 0;
+    if (hp_url_num_param(url, s->page_param, &v0) && v0 > 0 && v0 < 100000000L)
+      page_start = (int)v0;
+  } else if (!page_start && !s->page_zero_based &&
+             (s->page_param || path_paged)) {
     page_start = 1;
+  }
 
   char *page_url = strdup(url);
   if (path_paged) {
@@ -2425,12 +3040,21 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     if (rc != 0) {
       fprintf(stderr, "[hp:%s] transport failure %s\n", s->id, page_url);
       if (page == 0) hard_error = 1;
+      else { failed_midwalk = 1; failed_status = -1; }
       http_response_free(&hr);
       break;
     }
     if (hr.status != 200 || !hr.body) {
       fprintf(stderr, "[hp:%s] status=%ld %s\n", s->id, hr.status, page_url);
       if (hr.status >= 500 && page == 0) hard_error = 1;
+      /* A later page refused with 429 or 5xx is a walk cut short, not the end
+       * of the collection. It used to break here in silence: the Democracy
+       * Club rows met 429 after a few pages and kept 2-14% of their records
+       * with no notice (measured by batch-29 agent B, 2026-09-15). */
+      if (page > 0 && (hr.status == 429 || hr.status >= 500)) {
+        failed_midwalk = 1;
+        failed_status = hr.status;
+      }
       http_response_free(&hr);
       break;
     }
@@ -2455,14 +3079,44 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
      * from, and the record would be stored as mojibake. */
     /* An .xlsx is a zip, not text: it must bypass the transcode and be handed
      * to the converter with its byte length, never strlen. */
+    /* A ZIP body is inflated BEFORE anything reads it as text. Feeds do
+     * distribute a single CSV inside an archive — the IRS Publication 78 file
+     * moved to .zip and its old .txt path now 404s — and §6 of
+     * docs/sweep-and-repair-2026-09-15.md lists "zip-only distributions
+     * unreachable" as a standing engine limit. lib/zipread.c already exists for
+     * gdelt-events; this is the same call one layer up, so any HP_CSV / HP_JSON
+     * / HP_XML row can read one.
+     *
+     * HP_XLSX is excluded deliberately: an .xlsx IS a zip, and xlsx_to_csv
+     * wants the archive itself, not its first member.
+     *
+     * Only the FIRST entry is read. An archive holding more is a discard, so a
+     * second local-file-header signature is recorded and disclosed as a shape
+     * notice rather than passed over in silence (house rule 2). */
+    char *unz = NULL;
+    const char *rawb = hr.body; size_t rawlen = hr.body_len;
+    if (s->mode != HP_XLSX && hr.body_len >= 4 &&
+        memcmp(hr.body, "PK\x03\x04", 4) == 0) {
+      size_t unz_len = 0;
+      unz = zip_first_entry(hr.body, hr.body_len, &unz_len);
+      if (unz) {
+        rawb = unz; rawlen = unz_len;
+        for (size_t z = 4; z + 4 <= hr.body_len; z++)
+          if (memcmp(hr.body + z, "PK\x03\x04", 4) == 0) { st.sh_zip_extra = 1; break; }
+      } else {
+        fprintf(stderr, "[hp:%s] body is a ZIP but its first entry could not be "
+                        "inflated (unsupported compression or malformed)\n", s->id);
+      }
+    }
     char *utf8 = s->mode == HP_XLSX ? NULL
-               : hp_body_to_utf8(s, page_url, hr.body, hr.body_len);
-    const char *pbody = utf8 ? utf8 : hr.body;
+               : hp_body_to_utf8(s, page_url, rawb, rawlen);
+    const char *pbody = utf8 ? utf8 : rawb;
     char *xcsv = NULL;
     switch (s->mode) {
       case HP_HTML: out = hp_run_html(&st, pbody); break;
       case HP_CSV:  out = hp_run_csv(&st, pbody);  break;
       case HP_XML:  out = hp_run_xml(&st, pbody);  break;
+      case HP_RECJAR: out = hp_run_recjar(&st, pbody); break;
       case HP_XLSX: {
         char xerr[256]; size_t xn = 0;
         if (xlsx_to_csv(hr.body, hr.body_len, s->xlsx_sheet_index, s->xlsx_sheet,
@@ -2514,6 +3168,10 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
      * about. Either way nothing is STORED, which is the part that matters. */
     if (st.upstream_error) {
       if (page == 0 && (st.err_code < 0 || st.err_code >= 500)) hard_error = 1;
+      if (page > 0 && (st.err_code == 429 || st.err_code >= 500)) {
+        failed_midwalk = 1;
+        failed_status = st.err_code;
+      }
       break;
     }
 
@@ -2544,15 +3202,10 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
       /* Offset-style when the row declares page_size (or the param is named
        * like an offset); page-number style otherwise. */
       int step = s->page_size > 0 ? s->page_size : st.page_records;
-      int offset_style = (s->page_size > 0) || strstr(s->page_param, "offset") ||
-                         strstr(s->page_param, "start") || strstr(s->page_param, "skip");
+      int offset_style = (s->page_size > 0) || offset_named;
       long value = offset_style ? (long)(page_start + (page + 1) * step)
                                 : (long)(page_start + page + 1);
-      size_t n = strlen(url) + 64;
-      nextp = malloc(n);
-      if (nextp)
-        snprintf(nextp, n, "%s%c%s=%ld", url, strchr(url, '?') ? '&' : '?',
-                 s->page_param, value);
+      nextp = hp_url_set_param(url, s->page_param, value);
     }
     free(page_url);
     page_url = nextp;
@@ -2574,7 +3227,9 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
                st.empty, st.duplicate, st.filtered, st.refused);
     fprintf(stderr, "[hp:%s] emitted %d of %d available across %d page(s)%s%s\n",
             s->id, out, real_available, st.page,
-            st.truncated ? " (TRUNCATED)" : "", emptynote);
+            st.truncated ? " (TRUNCATED)"
+                         : failed_midwalk ? " (TRUNCATED: a later page failed)" : "",
+            emptynote);
   }
 
   /* If anything WAS left on the table, say so in the data itself — a log line
@@ -2584,7 +3239,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   /* Note the condition: a page-ceiling stop leaves an UNKNOWN remainder (we
    * never fetched those pages), so `available == out` there. Disclose whenever
    * the walk stopped early, not only when we can count what was missed. */
-  if (st.truncated) {
+  if (st.truncated || failed_midwalk) {
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "source_id", s->id);
     cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
@@ -2593,15 +3248,30 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     if (st.empty > 0)
       cJSON_AddNumberToObject(p, "empty_slots_skipped", st.empty);
     cJSON_AddNumberToObject(p, "pages_read", st.page);
-    cJSON_AddBoolToObject(p, "more_pages_pending", real_available <= out);
+    cJSON_AddBoolToObject(p, "more_pages_pending",
+                          failed_midwalk || real_available <= out);
     cJSON_AddNumberToObject(p, "declared_max_items", s->max_items);
+    if (failed_midwalk)
+      cJSON_AddNumberToObject(p, "failed_page_status", (double)failed_status);
     cJSON_AddStringToObject(p, "reason",
-      (s->max_items > 0 && out >= s->max_items)
+      failed_midwalk
+        ? (failed_status == 429
+             ? "a later page was refused with HTTP 429 (rate limited), so the "
+               "walk stopped before the upstream ran out"
+             : failed_status < 0
+               ? "a later page failed at the transport level, so the walk "
+                 "stopped before the upstream ran out"
+               : "a later page answered a server error, so the walk stopped "
+                 "before the upstream ran out")
+      : (s->max_items > 0 && out >= s->max_items)
         ? "the row declares max_items and the upstream offered more"
         : "the page ceiling or a cancel stopped the walk");
     cJSON_AddStringToObject(p, "remedy",
-      "raise max_items/page_max on this row (lib/hpengine.h) — see "
-      "docs/SOURCE_EXHAUSTIVENESS.md");
+      failed_midwalk
+        ? "re-run; a rate-limited host needs a per-host minimum gap "
+          "(core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
+        : "raise max_items/page_max on this row (lib/hpengine.h) — see "
+          "docs/SOURCE_EXHAUSTIVENESS.md");
     char *pj = cJSON_PrintUnformatted(p);
     cJSON_Delete(p);
     char key[320], title[256];

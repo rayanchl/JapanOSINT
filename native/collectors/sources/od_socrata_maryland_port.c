@@ -10,9 +10,15 @@
 #include "od_shared.inc"
 
 #define SID "socrata-maryland-port-cargo"
+/* `$offset=0` seeds lib/pagewalk.c's offset walk — pw_walk only ever advances a
+ * parameter the URL already carries. `,:id` makes the sort TOTAL so an offset
+ * window cannot drift across a tie in `month` (this table is one row per month
+ * per commodity set, so ties are the norm rather than the exception). The
+ * upstream row count could not be read: opendata.maryland.gov answered a
+ * `$select=count(1)` probe with a Cloudflare interstitial on 2026-09-19. */
 static const char *URL =
   "https://opendata.maryland.gov/resource/2ir4-626w.json"
-  "?$limit=100&$order=month%20DESC";
+  "?$limit=100&$offset=0&$order=month%20DESC,:id";
 static const char *const TITLE_KEYS[] = { "month", NULL };
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -24,7 +30,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   sp.id_key = "month";
   sp.date_key = "month";
   sp.title_prefix = "Port of Baltimore cargo";
-  return od_rc(SID, od_fetch_rows(ctx, sink, URL, NULL, &sp));
+  return od_wrc(SID, od_walk_rows(ctx, sink, SID, URL, NULL, &sp));
 }
 
 static const source_def od_socrata_maryland_port_def = {

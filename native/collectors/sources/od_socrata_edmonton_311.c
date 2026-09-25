@@ -10,9 +10,14 @@
 #include "od_shared.inc"
 
 #define SID "socrata-edmonton-311"
+/* `$offset=0` seeds lib/pagewalk.c's offset walk — pw_walk only ever advances a
+ * parameter the URL already carries, and never invents one. `,:id` makes the
+ * sort TOTAL so an offset window cannot drift across a tie in date_created.
+ * Measured 2026-09-19: 3,428,239 rows upstream, of which the single-page
+ * collector kept 100. */
 static const char *URL =
   "https://data.edmonton.ca/resource/q7ua-agfg.json"
-  "?$limit=100&$order=date_created%20DESC";
+  "?$limit=100&$offset=0&$order=date_created%20DESC,:id";
 static const char *const TITLE_KEYS[] = { "service_category", "description",
                                           "row_id", NULL };
 static const char *const SUM_KEYS[] = { "request_status", NULL };
@@ -27,7 +32,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   sp.id_key = "row_id";
   sp.date_key = "date_created";
   sp.title_prefix = "Edmonton 311:";
-  return od_rc(SID, od_fetch_rows(ctx, sink, URL, NULL, &sp));
+  return od_wrc(SID, od_walk_rows(ctx, sink, SID, URL, NULL, &sp));
 }
 
 static const source_def od_socrata_edmonton_311_def = {

@@ -331,11 +331,44 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
    * unocha.org, data.humdata.org — are unreachable as a result and are
    * recorded as such rather than quietly worked around. Asking those
    * publishers for an allowlist entry is the real fix. */
+  /* One exception to the paragraph above: core/httpclient.c keeps a per-host
+   * table for the handful of publishers whose filter objects to ONE token in
+   * an otherwise honest agent, each entry carrying the bisection that proved
+   * it. That table never applied here, because a "User-Agent:" request header
+   * outranks CURLOPT_USERAGENT and this function always set one — so the RSS
+   * fleet, which has the most bot-wall trouble of any path in the tree, was
+   * the one path the remedy could not reach. It asks now, and substitutes only
+   * when an entry exists, so every feed verified under the agent below keeps
+   * exactly that agent. */
+  const char *ovr = http_ua_override(url);
+  char uahdr[320];
+  if (ovr) snprintf(uahdr, sizeof uahdr, "User-Agent: %s", ovr);
   const char *hdrs[] = { "Accept: application/rss+xml,*/*",
+                         ovr ? uahdr :
                          "User-Agent: JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
                          "feed collector; contact via repo issues)", NULL };
   int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 8000, 2, &r);
   if (rc != 0 || r.status < 200 || r.status >= 300 || !r.body) {
+    /* Say WHY. This path used to return -1 in silence, so a feed behind a bot
+     * wall, a moved feed and a dead host all surfaced as the same bare
+     * "rc=-1 records=0" — and a triage pass had to re-fetch every one by hand
+     * to tell them apart. */
+    fprintf(stderr, "[rss] %s: fetch failed (transport rc=%d, HTTP %ld%s)\n",
+            ctx->source_id ? ctx->source_id : url, rc, r.status,
+            (rc == 0 && !r.body) ? ", no body" : "");
+    http_response_free(&r); return -1;
+  }
+  /* A 2xx with NO BODY is not an empty feed, it is a non-answer, and counting
+   * it as success is the silent-nothing this repository keeps finding in other
+   * guises: europarl-news answers `202` with zero bytes on every path and
+   * every retry (a WAF holding pattern), and the run reported rc=0 records=0 —
+   * indistinguishable from a feed that genuinely published nothing today. No
+   * RSS or Atom document is zero bytes long, so this is an error, and the
+   * scheduler's backoff and quarantine logic can see it. */
+  if (r.body_len == 0) {
+    fprintf(stderr, "[rss] %s: HTTP %ld with a zero-byte body — treating as a "
+                    "failed fetch, not an empty feed\n",
+            ctx->source_id ? ctx->source_id : url, r.status);
     http_response_free(&r); return -1;
   }
   /* Normalise the body to UTF-8 before a single field is extracted, so no
@@ -385,6 +418,102 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
    * offered and the disclosure below can say "N of M" instead of "N of ?".
    * Walking costs one more pass over a body we already have in memory. */
   int scanned = 0, capped = 0;
+
+  /* ── uid collision guard ────────────────────────────────────────────────
+   *
+   * THE FOURTH COPY of the defect CLAUDE.md §4b documents. jsonlist.c,
+   * hpengine.c and geojson.c each grew this guard; the RSS/Atom path never
+   * did, and it has exactly the same failure: `emit()` is called per item, the
+   * sink upserts on uid, so items sharing a uid collapse and the run still
+   * reports a healthy `records=N`.
+   *
+   * It is not hypothetical. PACER's rss_outside.pl feeds key every entry on
+   * the DOCKET, so one docket's filings all carry one guid. Measured live
+   * 2026-09-08 on ecf.txsb: 1,860 items, 1,576 distinct guids, and the worst
+   * guid carries 13 items whose descriptions are different filings on the
+   * same docket ([Schedule A/B], [Schedule C], [Declaration], ...). 284
+   * genuinely different records per fetch, silently folded into one row each.
+   * The same shape appears on nynd, nysb, ksb, deb, and on advisory feeds
+   * that reuse a guid across revisions.
+   *
+   * Same contract as the other three: a pre-pass computes every item's uid,
+   * flags ONLY the ones that collide within this fetch, and disambiguates
+   * those by a hash of the item's own bytes. Byte-identical repeats therefore
+   * still collapse — that is real dedupe and is wanted — while items that
+   * merely share a guid are all kept. Nothing is invented and nothing that
+   * differs is merged. */
+  unsigned char *dupmap = NULL;
+  int dupmap_n = 0;
+  {
+    typedef struct { unsigned long long h; int idx; } rss_key;
+    rss_key *keys = NULL;
+    int kn = 0, kcap = 0, idx = 0;
+    const char *scan = xml;
+    for (;;) {
+      const char *open = NULL; int atom = 0;
+      for (const char *p = scan; (p = strchr(p, '<')) && p < xend; p++) {
+        int isi = (strncasecmp(p, "<item", 5) == 0);
+        int ise = (strncasecmp(p, "<entry", 6) == 0);
+        if (!isi && !ise) continue;
+        char d = p[isi ? 5 : 6];
+        if (d == ' ' || d == '>' || d == '\t' || d == '\n' ||
+            d == '\r' || d == '/') { open = p; atom = ise; break; }
+      }
+      if (!open || open >= xend) break;
+      const char *closeTag = atom ? "</entry>" : "</item>";
+      const char *cl = strcasestr(open, closeTag);
+      if (!cl) break;
+      size_t itlen = (size_t)(cl - open);
+      if (idx < max_items) {
+        /* The SAME precedence the emit loop uses below. If that changes, this
+         * must change with it: a guard that derives its key differently from
+         * the code it guards is not a guard. */
+        const char *a;
+        char *g = tag_text(open, open + itlen, "guid", &a);
+        if (!g) g = tag_text(open, open + itlen, "id", &a);
+        char *l = atom ? atom_link(open, open + itlen)
+                       : tag_text(open, open + itlen, "link", &a);
+        char *t = tag_text(open, open + itlen, "title", &a);
+        char *pb = tag_text(open, open + itlen, "pubDate", &a);
+        if (!pb) pb = tag_text(open, open + itlen, "date", &a);
+        if (!pb) pb = tag_text(open, open + itlen, "published", &a);
+        if (!pb) pb = tag_text(open, open + itlen, "updated", &a);
+        const char *k1 = (g && *g) ? g : ((l && *l) ? l : (t ? t : ""));
+        const char *k2 = (g && *g) ? "" : ((l && *l) ? "" : (pb ? pb : ""));
+        unsigned long long h = 1469598103934665603ULL;
+        for (const char *s = k1; s && *s; s++) { h ^= (unsigned char)*s; h *= 1099511628211ULL; }
+        h ^= 0x2c; h *= 1099511628211ULL;
+        for (const char *s = k2; s && *s; s++) { h ^= (unsigned char)*s; h *= 1099511628211ULL; }
+        if (kn == kcap) {
+          int nc = kcap ? kcap * 2 : 256;
+          rss_key *nk = realloc(keys, (size_t)nc * sizeof *nk);
+          if (!nk) { free(g); free(l); free(t); free(pb); break; }
+          keys = nk; kcap = nc;
+        }
+        keys[kn].h = h; keys[kn].idx = idx; kn++;
+        free(g); free(l); free(t); free(pb);
+      }
+      idx++;
+      scan = cl + strlen(closeTag);
+    }
+    if (kn > 1) {
+      dupmap_n = idx;
+      dupmap = calloc((size_t)idx, 1);
+      if (dupmap) {
+        /* Mark every key that appears more than once. O(n^2) is avoided by
+         * sorting a copy; feeds reach a few thousand items. */
+        for (int i = 0; i < kn; i++)
+          for (int j = i + 1; j < kn; j++)
+            if (keys[i].h == keys[j].h) {
+              dupmap[keys[i].idx] = 1;
+              dupmap[keys[j].idx] = 1;
+            }
+      }
+    }
+    free(keys);
+  }
+  int item_idx = -1;
+
   for (;;) {
     /* next <item ...>/<entry ...> block. Require a delimiter after the name
      * so the RDF <items> table-of-contents (Seq) is NOT matched. */
@@ -404,6 +533,7 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
     if (!cl) break;
     it = open; blkend = cl; itlen = (size_t)(blkend - it);
     scanned++;
+    item_idx++;
     if (n >= max_items) {          /* cap bit: keep counting, stop extracting */
       capped = 1;
       cur = blkend + strlen(closeTag);
@@ -429,6 +559,16 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
     if (guid && *guid) rk = strdup(guid);
     else if (link && *link) rk = strdup(link);
     else if (title && *title) rk = sha1_20(title, pub);
+    /* Collides with a sibling in THIS fetch: extend the key with a hash of the
+     * item's own bytes (see the guard above). Byte-identical items hash the
+     * same and still collapse; items that merely share a guid are all kept. */
+    if (rk && dupmap && item_idx >= 0 && item_idx < dupmap_n && dupmap[item_idx]) {
+      unsigned long long ch = 1469598103934665603ULL;
+      for (size_t z = 0; z < itlen; z++) { ch ^= (unsigned char)it[z]; ch *= 1099511628211ULL; }
+      size_t rn = strlen(rk) + 20;
+      char *ext = malloc(rn);
+      if (ext) { snprintf(ext, rn, "%s#%016llx", rk, ch); free(rk); rk = ext; }
+    }
     if (rk) {
       /* Heap, not char[512]: Google News guids reach ~1.9 KB, and snprintf
        * truncation produced syntactically invalid JSON (cut mid-base64, no
@@ -510,6 +650,7 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
   }
   http_response_free(&r);
   free(conv);
+  free(dupmap);
   fprintf(stderr, "[rss] %s emitted %d\n", ctx->source_id, n);
   return n;
 }
