@@ -116,7 +116,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (dat >= 0) prev_dat = dat;
 
     if (strcmp(date, cutoff) < 0) continue;
-    if (n >= MAX_ROWS) break;
+    if (n >= MAX_ROWS) break;  /* exhaustive-ok: the cap is disclosed as a collector-truncation-notice below */
 
     const char *typ = tsp_cell(f, nf, i_typ);
     const char *ut1 = tsp_cell(f, nf, i_ut1);

@@ -18,6 +18,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,7 +38,7 @@ static int numish(const cJSON *o, const char *k, double *out) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int cap = 3000;
+  int cap = 3000;  /* exhaustive-ok: disclosed as a record below */
   const char *capenv = getenv("JO_SENSORCOMMUNITY_MAX");
   if (capenv && *capenv) { int c = atoi(capenv); if (c > 0) cap = c; }
 
@@ -132,6 +133,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
   cJSON_Delete(doc);
+  /* A bounded run says so as a record, not only to stderr (rule 7). */
+  if (n >= cap)
+    trunc_notice(sink, SRC, "https://data.sensor.community/static/v2/data.json",
+                 NULL, n, -1,
+                 "the row cap bounded a multi-MB payload; sensor.community "
+                 "returned more measurements",
+                 "raise $JO_SENSORCOMMUNITY_MAX");
   fprintf(stderr, "[" SRC "] emitted %d\n", n);
   return 0;
 }

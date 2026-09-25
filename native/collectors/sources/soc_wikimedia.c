@@ -33,6 +33,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/htmlparse.h"
+#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -79,7 +80,7 @@ static int run_top_pageviews(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   const cJSON *a;
   cJSON_ArrayForEach(a, arts) {
-    if (n >= 200) break;                       /* top 200 of the 1,000 rows */
+    if (n >= 200) break;  /* exhaustive-ok: disclosed as a collector-truncation-notice below */
     const char *article = jo_sv(a, "article");
     if (!article) continue;
     const cJSON *vw = cJSON_GetObjectItem(a, "views");
@@ -104,6 +105,13 @@ static int run_top_pageviews(const source_ctx *ctx, intel_sink *sink) {
                   remote, article, summary, link, NULL, "en");
   }
   cJSON_Delete(doc);
+  /* The array was fetched, parsed and counted before the cap bit, so the
+   * shortfall is exactly known — say it rather than leave a clipped result
+   * looking complete. */
+  if (n < cJSON_GetArraySize(arts))
+    trunc_notice(sink, "wikipedia-top-pageviews", "https://wikimedia.org/api/rest_v1/metrics/pageviews/top", NULL, n, cJSON_GetArraySize(arts),
+                 "the ranked list is bounded to its top rows",
+                 "raise the cap in this collector");
   fprintf(stderr, "[wikipedia-top-pageviews] emitted %d for %s\n", n, daystr);
   return 0;
 }

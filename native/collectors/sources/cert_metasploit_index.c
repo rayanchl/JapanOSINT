@@ -61,7 +61,7 @@ static int run(const source_ctx *c, intel_sink *s) {
   cJSON *m;
   /* cJSON_ArrayForEach walks an object's children too; m->string is the key. */
   cJSON_ArrayForEach(m, doc) {
-    if (n >= MSF_MAX_ROWS) break;
+    if (n >= MSF_MAX_ROWS) break;  /* exhaustive-ok: the cap is disclosed as a collector-truncation-notice below */
     if (!cJSON_IsObject(m)) continue;
     seen++;
     const char *full = jo_sv(m, "fullname");

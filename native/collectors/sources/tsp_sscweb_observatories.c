@@ -20,12 +20,13 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "lib/truncnotice.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define SSC_URL "https://sscweb.gsfc.nasa.gov/WS/sscr/2/observatories"
-#define MAX_ROWS 2000
+#define MAX_ROWS 2000  /* exhaustive-ok: disclosed as a record below */
 
 /* Inner text of <tag>…</tag> inside [blk, blkend). Returns length written. */
 static size_t xml_field(const char *blk, const char *blkend, const char *tag,
@@ -121,6 +122,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
+  /* A bounded run says so as a record, not only to stderr (rule 7). */
+  if (n >= MAX_ROWS)
+    trunc_notice(sink, "sscweb-observatories", SSC_URL, NULL, n, -1,
+                 "the record cap bounded the observatory list; SSCWeb listed more",
+                 "raise MAX_ROWS in this collector");
   fprintf(stderr, "[sscweb-observatories] emitted %d\n", n);
   return 0;
 }

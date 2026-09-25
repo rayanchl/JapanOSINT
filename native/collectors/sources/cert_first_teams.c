@@ -22,13 +22,14 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define FIRST_PAGE_SIZE 100
-#define FIRST_MAX_PAGES 12          /* 1,200 teams — comfortably above total */
+#define FIRST_MAX_PAGES 12  /* exhaustive-ok: disclosed as a record below */          /* 1,200 teams — comfortably above total */
 
 static void put(cJSON *p, const char *out_key, cJSON *rec, const char *in_key) {
   const char *v = jo_sv(rec, in_key);
@@ -117,6 +118,12 @@ static int run(const source_ctx *c, intel_sink *s) {
     if (here == 0) break;                       /* ran off the end of the set */
     if (total > 0 && (page + 1) * FIRST_PAGE_SIZE >= total) break;
   }
+  /* A bounded run says so as a record, not only to stderr (rule 7). */
+  if (pages_ok >= FIRST_MAX_PAGES)
+    trunc_notice(s, "first-csirt-team-directory",
+                 "https://api.first.org/data/v1/teams", NULL, total_rows, (long)total,
+                 "the page ceiling stopped the walk before the directory ran out",
+                 "raise FIRST_MAX_PAGES in this collector");
   fprintf(stderr, "[first-csirt-team-directory] emitted %d over %d pages\n",
           total_rows, pages_ok);
   return 0;                                 /* fetched fine; 0 rows is OK (R3) */

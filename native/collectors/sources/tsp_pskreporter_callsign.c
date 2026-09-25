@@ -32,13 +32,14 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "lib/truncnotice.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define PSK_WINDOW_SEC 900
-#define MAX_ROWS 800
+#define MAX_ROWS 800  /* exhaustive-ok: disclosed as a record below */
 
 /* Amateur callsigns: alnum plus '/' and '-', 3..16 chars, must contain a digit
  * and a letter. Anything else is not a callsign — honest miss. */
@@ -246,6 +247,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
+  /* A bounded run says so as a record, not only to stderr (rule 7). */
+  if (n >= MAX_ROWS)
+    trunc_notice(sink, "PSKREPORTER_CALLSIGN", url, NULL, n, -1,
+                 "the per-pivot record cap bounded this reception-report read; PSKReporter had more reports for this callsign",
+                 "raise MAX_ROWS in this collector");
   fprintf(stderr, "[PSKREPORTER_CALLSIGN] emitted %d for %s\n", n, call);
   return 0;              /* nobody heard them in the window is not an error */
 }

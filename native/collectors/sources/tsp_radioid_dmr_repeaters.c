@@ -62,7 +62,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *r;
   cJSON_ArrayForEach(r, arr) {
     seen++;
-    if (n >= MAX_ROWS) break;
+    if (n >= MAX_ROWS) break;  /* exhaustive-ok: the cap is disclosed as a collector-truncation-notice below */
     double id = 0;
     int has_id = jo_num(r, "id", &id);
     if (!has_id) has_id = jo_num(r, "locator", &id);

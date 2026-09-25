@@ -203,7 +203,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   while ((line = jo_next_line_cr(&p)) != NULL) {
     if (!*line) continue;
     seen++;
-    if (n >= MAX_ROWS) break;
+    if (n >= MAX_ROWS) break;  /* exhaustive-ok: the cap is disclosed as a collector-truncation-notice below */
     char *f[MAXCOL];
     int nf = semi_split(line, f, MAXCOL);
     for (int i = 0; i < nf; i++) f[i] = trim(f[i]);

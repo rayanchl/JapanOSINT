@@ -47,6 +47,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -398,7 +399,7 @@ static int run_lemmyverse(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   const cJSON *it;
   cJSON_ArrayForEach(it, doc) {
-    if (n >= 600) break;
+    if (n >= 600) break;  /* exhaustive-ok: disclosed as a collector-truncation-notice below */
     const char *base = jo_sv(it, "base");
     if (!base) continue;
     const char *name = jo_sv(it, "name");
@@ -418,6 +419,11 @@ static int run_lemmyverse(const source_ctx *ctx, intel_sink *sink) {
                   base, name ? name : base, summary, link, NULL, NULL);
   }
   cJSON_Delete(doc);
+  /* Counted before the cap bit, so the shortfall is exactly known. */
+  if (n < cJSON_GetArraySize(doc))
+    trunc_notice(sink, "lemmyverse-instances", "https://lemmyverse.net/data/instance.full.json", NULL, n, cJSON_GetArraySize(doc),
+                 "a per-run record cap bounded this list",
+                 "raise the cap in this collector");
   fprintf(stderr, "[lemmyverse-instances] emitted %d\n", n);
   return 0;
 }
@@ -450,7 +456,7 @@ static int run_misskey_dir(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   const cJSON *it;
   cJSON_ArrayForEach(it, arr) {
-    if (n >= 600) break;
+    if (n >= 600) break;  /* exhaustive-ok: disclosed as a collector-truncation-notice below */
     const char *host = jo_sv(it, "url");
     if (!host) continue;
     /* Some entries carry a null meta — guard before touching it. */
@@ -489,6 +495,11 @@ static int run_misskey_dir(const source_ctx *ctx, intel_sink *sink) {
                   host, iname ? iname : host, summary, link, NULL, NULL);
   }
   cJSON_Delete(doc);
+  /* Counted before the cap bit, so the shortfall is exactly known. */
+  if (n < cJSON_GetArraySize(arr))
+    trunc_notice(sink, "misskey-instance-directory", "https://instanceapp.misskey.page/instances.json", NULL, n, cJSON_GetArraySize(arr),
+                 "a per-run record cap bounded this list",
+                 "raise the cap in this collector");
   fprintf(stderr, "[misskey-instance-directory] emitted %d\n", n);
   return 0;
 }

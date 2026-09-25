@@ -144,7 +144,10 @@ static int cl_run(const source_ctx *ctx, intel_sink *sink) {
     char fecha[16];
     strftime(fecha, sizeof fecha, "%d%m%Y", &g);
     n += cl_fetch_day(ctx, sink, fecha, ticket, from_env, &parsed);
-    if (n > 0) break;                    /* got a day's worth; stop polling */
+    /* exhaustive-ok: not a record cap — this walks BACKWARDS day by day until a
+     * day has tenders, and stops on the first day that does. Every tender of
+     * that day is emitted. */
+    if (n > 0) break;  /* exhaustive-ok: walks backwards day by day and stops at the first day with tenders; every tender of that day is emitted */
   }
 
   fprintf(stderr, "[cl-mercadopublico-tenders] emitted %d%s\n",

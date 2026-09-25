@@ -69,9 +69,9 @@ Where the tree actually stands, as `make audit-sources` reports it:
 * **strict set — 0 findings across 159 files.** `collectors/pivot/table/hp*_*.c`
   plus the generated deep-record tables `collectors/feed/generated/hp1[0-9]_*.c`.
   This is the part the Makefile gates on, and it is held clean.
-* **the rest of the tree — 109 findings across 68 of 1,523 files**: 40
-  first-only, 32 record-cap, 26 loop-break, 11 single-page. `limit-one`,
-  `dedupe-ring` and `loop-cap` are now zero. These are heuristics and each needs
+* **the rest of the tree — 51 findings across 30 of 1,523 files**: 40
+  first-only, 11 single-page. `limit-one`, `dedupe-ring`, `loop-cap`,
+  `record-cap` and `loop-break` are now zero. These are heuristics and each needs
   a human read, but "zero audit findings" is true only of the strict set — do not
   read it as true of the tree.
 
@@ -99,7 +99,7 @@ Three traps in reading that number, all of which cost real coverage:
   both. They are pivots now (`collectors/pivot/table/hp18_us_openfda_ids.c`).
 
 Deliberate exceptions carry an inline `/* exhaustive-ok: <reason> */` marker
-(`grep -rn exhaustive-ok`, currently 156). The marker must sit on the flagged
+(`grep -rn exhaustive-ok`, currently 215). The marker must sit on the flagged
 line itself — the audit reads it per line, so one on the line above is ignored.
 
 ```sh

@@ -24,6 +24,7 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/csv.h"
+#include "lib/truncnotice.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,7 +62,7 @@ static int irs_run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   const cJSON *row;
   cJSON_ArrayForEach(row, rows) {
-    if (n >= IRS_MAX) break;
+    if (n >= IRS_MAX) break;  /* exhaustive-ok: disclosed as a collector-truncation-notice below */
     if (!cJSON_IsObject(row)) continue;
     const char *name = jo_sv(row, "NAME");
     const char *ein  = jo_sv(row, "EIN");
@@ -107,6 +108,13 @@ static int irs_run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON_Delete(rows);
+  /* The array was fetched, parsed and counted before the cap bit, so the
+   * shortfall is exactly known — say it rather than leave a clipped result
+   * looking complete. */
+  if (n < cJSON_GetArraySize(rows))
+    trunc_notice(sink, "us-irs-exempt-orgs", IRS_URL, NULL, n, cJSON_GetArraySize(rows),
+                 "IRS_MAX bounded the rows emitted from the leading IRS_BYTES slice",
+                 "raise the cap in this collector");
   fprintf(stderr, "[us-irs-exempt-orgs] emitted %d\n", n);
   return 0;
 }

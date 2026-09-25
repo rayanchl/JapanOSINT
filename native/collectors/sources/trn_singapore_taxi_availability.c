@@ -18,6 +18,7 @@
  * (5 to 10 decimals), so rows are tagged geo_precision="vehicle-gps".
  */
 #include "lib/jocore.h"
+#include "lib/truncnotice.h"
 #include "trn_common.inc"
 
 #define SG_TAXI_URL "https://api.data.gov.sg/v1/transport/taxi-availability"
@@ -46,7 +47,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0, idx = 0;
   cJSON *p;
   cJSON_ArrayForEach(p, coords) {
-    if (n >= SG_TAXI_CAP) break;
+    if (n >= SG_TAXI_CAP) break;  /* exhaustive-ok: disclosed as a collector-truncation-notice below */
     cJSON *x = cJSON_GetArrayItem(p, 0), *y = cJSON_GetArrayItem(p, 1);
     double lo, la;
     if (!trn_numv(x, &lo) || !trn_numv(y, &la)) { idx++; continue; }
@@ -79,6 +80,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     idx++;
   }
   cJSON_Delete(doc);
+  /* The array was fetched, parsed and counted before the cap bit, so the
+   * shortfall is exactly known — say it rather than leave a clipped result
+   * looking complete. */
+  if (n < cJSON_GetArraySize(coords))
+    trunc_notice(sink, "singapore-taxi-availability", SG_TAXI_URL, NULL, n, cJSON_GetArraySize(coords),
+                 "the row cap bounded the position list",
+                 "raise the cap in this collector");
   fprintf(stderr, "[singapore-taxi-availability] emitted %d\n", n);
   return 0;
 }

@@ -42,7 +42,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   cJSON *st;
   cJSON_ArrayForEach(st, doc) {
-    if (n >= MAX_ROWS) break;
+    if (n >= MAX_ROWS) break;  /* exhaustive-ok: the cap is disclosed as a collector-truncation-notice below */
     double sid;
     if (!jo_num(st, "id", &sid)) continue;
     const char *name = jo_sv(st, "name");

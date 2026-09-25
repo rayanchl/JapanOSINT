@@ -137,7 +137,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     int recent = (launch && strcmp(launch, cutoff) >= 0) ||
                  (decay  && strcmp(decay,  cutoff) >= 0);
     if (!recent) continue;
-    if (n >= MAX_ROWS) break;
+    if (n >= MAX_ROWS) break;  /* exhaustive-ok: the cap is disclosed as a collector-truncation-notice below */
 
     const char *owner = tsp_cell(f, nf, i_own);
     const char *otype = tsp_cell(f, nf, i_type);

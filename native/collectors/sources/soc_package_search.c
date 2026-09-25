@@ -52,6 +52,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -249,7 +250,7 @@ static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   const cJSON *d;
   cJSON_ArrayForEach(d, doc) {
-    if (n >= 50) break;
+    if (n >= 50) break;  /* exhaustive-ok: disclosed as a collector-truncation-notice below */
     const char *name = jo_sv(d, "name");
     if (!name) continue;
     const cJSON *meta = cJSON_GetObjectItem(d, "meta");
@@ -301,6 +302,11 @@ static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
                   name, title, summary, link, jo_sv(d, "inserted_at"), NULL);
   }
   cJSON_Delete(doc);
+  /* Counted before the cap bit, so the shortfall is exactly known. */
+  if (n < cJSON_GetArraySize(doc))
+    trunc_notice(sink, "HEXPM_PACKAGE_SEARCH", url, NULL, n, cJSON_GetArraySize(doc),
+                 "a per-run record cap bounded this list",
+                 "raise the cap in this collector");
   fprintf(stderr, "[HEXPM_PACKAGE_SEARCH] emitted %d for %s\n", n, q);
   return 0;
 }
@@ -334,7 +340,7 @@ static int run_aur(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   const cJSON *d;
   if (cJSON_IsArray(res)) cJSON_ArrayForEach(d, res) {
-    if (n >= 60) break;
+    if (n >= 60) break;  /* exhaustive-ok: disclosed as a collector-truncation-notice below */
     const char *name = jo_sv(d, "Name");
     if (!name) continue;
     const cJSON *fs = cJSON_GetObjectItem(d, "FirstSubmitted");
@@ -385,6 +391,11 @@ static int run_aur(const source_ctx *ctx, intel_sink *sink) {
                   name, title, summary, link, first[0] ? first : NULL, NULL);
   }
   cJSON_Delete(doc);
+  /* Counted before the cap bit, so the shortfall is exactly known. */
+  if (n < cJSON_GetArraySize(doc))
+    trunc_notice(sink, "AUR_PACKAGE_SEARCH", url, NULL, n, cJSON_GetArraySize(doc),
+                 "a per-run record cap bounded this list",
+                 "raise the cap in this collector");
   fprintf(stderr, "[AUR_PACKAGE_SEARCH] emitted %d for %s\n", n, q);
   return 0;
 }

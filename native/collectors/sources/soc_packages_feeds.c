@@ -38,6 +38,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/rss_atom.h"
+#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -252,7 +253,7 @@ static int run_brew_analytics(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   const cJSON *i;
   cJSON_ArrayForEach(i, items) {
-    if (n >= 300) break;                     /* top 300 of ~25,000 formulae */
+    if (n >= 300) break;  /* exhaustive-ok: disclosed as a collector-truncation-notice below */
     const char *formula = jo_sv(i, "formula");
     if (!formula) continue;
     double cnt = strip_commas_num(cJSON_GetObjectItem(i, "count"));
@@ -278,6 +279,13 @@ static int run_brew_analytics(const source_ctx *ctx, intel_sink *sink) {
                   rk, formula, summary, link, NULL, NULL);
   }
   cJSON_Delete(doc);
+  /* The array was fetched, parsed and counted before the cap bit, so the
+   * shortfall is exactly known — say it rather than leave a clipped result
+   * looking complete. */
+  if (n < cJSON_GetArraySize(items))
+    trunc_notice(sink, "homebrew-install-analytics", "https://formulae.brew.sh/api/analytics/install/30d.json", NULL, n, cJSON_GetArraySize(items),
+                 "the ranked list is bounded to its top rows",
+                 "raise the cap in this collector");
   fprintf(stderr, "[homebrew-install-analytics] emitted %d\n", n);
   return 0;
 }

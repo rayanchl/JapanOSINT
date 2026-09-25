@@ -32,6 +32,7 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "lib/truncnotice.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,7 +40,7 @@
 
 #define WSPR_HOST "https://db1.wspr.live/?query="
 #define WINDOW_MIN 10
-#define ROW_LIMIT 500
+#define ROW_LIMIT 500  /* exhaustive-ok: disclosed as a record below */
 
 static const char *WSPR_SQL =
   "SELECT time,band,tx_sign,tx_loc,rx_sign,rx_loc,frequency,snr,power,drift,"
@@ -181,6 +182,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
+  /* A bounded run says so as a record, not only to stderr (rule 7). */
+  if (lines >= ROW_LIMIT)
+    trunc_notice(sink, "wspr-live", WSPR_HOST, NULL, n, -1,
+                 "the query itself carries LIMIT ROW_LIMIT, so wspr.live never offered the rest of the window",
+                 "raise ROW_LIMIT in this collector");
   fprintf(stderr, "[wspr-live] emitted %d of %d NDJSON lines (last %d min)\n",
           n, lines, WINDOW_MIN);
   return 0;                     /* a quiet band is not an error (R3) */

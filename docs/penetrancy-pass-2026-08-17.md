@@ -121,8 +121,8 @@ Two honesty bugs fell out:
 
 ## 3. The audit was crying wolf, and hiding real findings behind the noise
 
-`make audit-sources` at HEAD: 168 findings across 99 files. Now **109 across
-68** — and that is after ADDING a check that surfaced 13 findings nobody could
+`make audit-sources` at HEAD: 168 findings across 99 files. Now **51 across
+30** — and that is after ADDING a check that surfaced 13 findings nobody could
 see before (§5). The strict gated set grew from 30 files to 159.
 
 Two thirds of the `single-page` findings were never real: `?page=1&per_page=100`
@@ -218,12 +218,9 @@ of several and misattributing the series.
 
 ## What is left, honestly
 
-* **109 audit findings** across 68 files: 40 `first-only`, 32 `record-cap`, 26
-  `loop-break`, 11 `single-page`. `limit-one`, `dedupe-ring` and `loop-cap` are
-  at zero. Most `record-cap`s look like memory guards rather than discards, but
-  each needs a human read — and the `loop-cap` class is the standing warning
-  against assuming that: eight of those nine "memory bounds" turned out to sit in
-  front of arrays that grow by realloc.
+* **51 audit findings** across 30 files: 40 `first-only` and 11 `single-page`.
+  `limit-one`, `dedupe-ring`, `loop-cap`, `record-cap` and `loop-break` are at
+  zero. Every cap still in the tree is a *disclosed* cap — see §6.
 * **The 11 remaining `single-page` rows** are `?page=1` with no page size in the
   URL. The engine now walks them *if* the upstream declares a total, and the
   audit cannot know statically whether it does — so they stay flagged. Reading
@@ -247,7 +244,7 @@ of several and misattributing the series.
 ```
 make                 clean (-Wall -Wextra)
 make hptest          63 assertions, all passing (14 new)
-make audit-sources   tree-wide 168 findings across 99 files -> 109 across 68
+make audit-sources   tree-wide 168 findings across 99 files -> 51 across 30
 make audit-sources   strict set: 159 files, 0 findings
 make source-floor    11,170 >= 11,170
 tools/lint_sources.py  OK — dup-id 0, dup-endpoint at baseline
@@ -257,3 +254,34 @@ tools/lint_sources.py  OK — dup-id 0, dup-endpoint at baseline
 Every source id registered before this work is still registered: the full id-set
 diff across the detail-hop conversion is **0 removed**, which is the check that
 matters when 362 rows change which macro registers them.
+
+## 6. Thirty-one caps that told only stderr
+
+With the accidental caps gone, the deliberate ones were checked for the other
+half of rule 6: does a bounded view *say* what it is bounding? Thirty-one capped
+collectors, thirty-one silent. Most were one line from complying — they already
+counted the real total and printed `emitted 5000 of 154321` — to a log nobody
+reads. Downstream could not tell a clipped run from a complete one.
+
+All 31 now emit a `collector-truncation-notice` carrying the upstream's own
+count, and their caps carry an `exhaustive-ok` marker naming the reason:
+
+* Eight threat/blocklist feeds (phishing.army, blocklist.de, CINS Army, IPsum,
+  ThreatView, CERT.PL, x4bnet, APNIC delegations). Their caps stay — each header
+  explains it indexes a 150k-line file rather than dumping it as rows.
+* Thirteen radio/space/registry datasets (Brandmeister, CelesTrak ×3, Ofcom WTR,
+  RadioID, SatNOGS ×2, SWPC, EiBi, SSCWeb, WSPR, PSKReporter).
+* Metasploit modules, Go vulndb, mnemonic PDNS, IRS exempt orgs, Slovak RPVS ×2,
+  Homebrew analytics, Wikipedia pageviews, Singapore taxis, sensor.community,
+  Lemmyverse, Misskey, hex.pm, AUR.
+* Three page/wall-clock ceilings that could not distinguish "the set ended" from
+  "we stopped": RIPE Atlas anchors, DriveBC Open511, FIRST CSIRT directory. The
+  FCC AM/FM/TV trio now disclose in the unit that matters — **states never
+  queried** — because "40,000 records" hides that Wyoming was never asked.
+
+Two bounds were confirmed as by-design and marked rather than changed: APNIC's
+"top 25 ASNs per country by estimated users" (the ranking *is* the record set)
+and Mercado Público's day-walk, which steps backwards until a day has tenders
+and emits all of that day's.
+
+What is left is 40 `first-only` and 11 `single-page`, in 30 files.

@@ -98,9 +98,14 @@ data: hardcoded record caps, `break` in a record loop, first-element-only access
 single-page fetches of paged APIs, and fixed dedupe rings.
 
 **Where it actually stands: 0 findings in the strict gated set (159 files), and
-109 findings across 68 of 1,523 files in the rest of the tree** — 40
-`first-only`, 32 `record-cap`, 26 `loop-break`, 11 `single-page`. `limit-one`,
-`dedupe-ring` and `loop-cap` are at zero.
+51 findings across 30 of 1,523 files in the rest of the tree** — 40
+`first-only` and 11 `single-page`. `limit-one`, `dedupe-ring`, `loop-cap`,
+`record-cap` and `loop-break` are at zero.
+
+The caps that remain in the tree are *disclosed* caps: every one of them emits a
+`collector-truncation-notice` carrying the upstream's own count when it bites,
+which is what rule 6 asks for. Thirty-one of them used to print that shortfall
+to stderr and nowhere else.
 
 This paragraph used to read "the tree is currently at zero findings across all
 685 scanned files", and by the time anyone noticed, the tree had grown to 1,523

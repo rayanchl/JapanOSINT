@@ -57,7 +57,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       continue;
     }
     if (!looks_like_host(line)) continue;
-    if (n >= MAX_ROWS) break;
+    if (n >= MAX_ROWS) break;  /* exhaustive-ok: the cap is disclosed as a collector-truncation-notice below */
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "domain", line);

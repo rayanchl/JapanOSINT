@@ -96,7 +96,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   const cJSON *d;
   cJSON_ArrayForEach(d, cJSON_GetObjectItem(root, "data")) {
-    if (n >= MAX_ROWS) break;
+    if (n >= MAX_ROWS) break;  /* exhaustive-ok: the cap is disclosed as a collector-truncation-notice below */
     const char *answer = jo_sv(d, "answer");
     if (!answer) continue;
     const char *query = jo_sv(d, "query");

@@ -58,7 +58,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *dv;
   cJSON_ArrayForEach(dv, doc) {
     seen++;
-    if (n >= MAX_ROWS) break;
+    if (n >= MAX_ROWS) break;  /* exhaustive-ok: the cap is disclosed as a collector-truncation-notice below */
     double id;
     if (!jo_num(dv, "id", &id)) continue;
     const char *call = jo_sv(dv, "callsign");

@@ -32,6 +32,7 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "lib/truncnotice.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -104,7 +105,7 @@ static int rpvs_partners_run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   const cJSON *row;
   cJSON_ArrayForEach(row, arr) {
-    if (n >= RPVS_MAX) break;
+    if (n >= RPVS_MAX) break;  /* exhaustive-ok: disclosed as a collector-truncation-notice below */
     if (!cJSON_IsObject(row)) continue;
     const char *name = jo_sv(row, "ObchodneMeno");
     if (!name) continue;                         /* no real name -> no row */
@@ -156,6 +157,11 @@ static int rpvs_partners_run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON_Delete(doc);
+  /* Counted before the cap bit, so the shortfall is exactly known. */
+  if (n < cJSON_GetArraySize(arr))
+    trunc_notice(sink, "SK_RPVS_PARTNERS", url, NULL, n, cJSON_GetArraySize(arr),
+                 "a per-run record cap bounded this list",
+                 "raise the cap in this collector");
   fprintf(stderr, "[sk_rpvs_partners] emitted %d\n", n);
   return 0;
 }
@@ -190,7 +196,7 @@ static int rpvs_ubo_run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   const cJSON *row;
   cJSON_ArrayForEach(row, arr) {
-    if (n >= RPVS_MAX) break;
+    if (n >= RPVS_MAX) break;  /* exhaustive-ok: disclosed as a collector-truncation-notice below */
     if (!cJSON_IsObject(row)) continue;
     const char *meno = jo_sv(row, "Meno");
     const char *prie = jo_sv(row, "Priezvisko");
@@ -256,6 +262,11 @@ static int rpvs_ubo_run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON_Delete(doc);
+  /* Counted before the cap bit, so the shortfall is exactly known. */
+  if (n < cJSON_GetArraySize(arr))
+    trunc_notice(sink, "SK_RPVS_UBO", url, NULL, n, cJSON_GetArraySize(arr),
+                 "a per-run record cap bounded this list",
+                 "raise the cap in this collector");
   fprintf(stderr, "[sk_rpvs_ubo] emitted %d\n", n);
   return 0;
 }

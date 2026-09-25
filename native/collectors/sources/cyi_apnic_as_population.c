@@ -36,7 +36,7 @@ static int emit_cc(const source_ctx *ctx, intel_sink *sink, const char *cc) {
   int n = 0;
   const cJSON *r;
   cJSON_ArrayForEach(r, data) {
-    if (n >= PER_CC) break;                /* bounded: top of the list */
+    if (n >= PER_CC) break;  /* exhaustive-ok: "top 25 ASNs per country by estimated users" IS this source\'s definition — APNIC ranks the list, so the rank is the record set */
     const char *as = jo_sv(r, "AS");
     double asnum = 0;
     char asbuf[24] = "";

@@ -35,6 +35,7 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "lib/truncnotice.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -45,7 +46,7 @@
   "&vac=&freq=88.0&fre2=108.0&facid=&class=&dkt=&list=4&dist=&dlat2=&mlat2=" \
   "&slat2=&NS=N&dlon2=&mlon2=&slon2=&EW=W&size=9"
 #define MAXF 64
-#define MAX_ROWS 40000
+#define MAX_ROWS 40000  /* exhaustive-ok: disclosed as a record below */
 #define BUDGET_SEC 240
 
 static const char *const STATES[] = {
@@ -229,6 +230,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[fcc-fm-query] no state query succeeded\n");
     return -1;
   }
+  /* Two bounds can stop this early — MAX_ROWS and the wall-clock budget — and
+   * either leaves whole STATES unqueried. The unit that matters here is states,
+   * not rows: "40,000 records" hides that Wyoming was never asked. Also carried:
+   * the records FCC returned that were dropped for having no site coordinates,
+   * which is a discard of fetched data and belongs in the open. */
+  if (ok_states < NSTATES)
+    trunc_notice(sink, "fcc-fm-query", "https://transition.fcc.gov/fcc-bin/fmq", NULL,
+                 total, -1,
+                 total >= MAX_ROWS
+                   ? "the MAX_ROWS cap stopped the state walk; the remaining "
+                     "states were never queried"
+                   : "the wall-clock budget stopped the state walk; the "
+                     "remaining states were never queried",
+                 "raise MAX_ROWS or BUDGET_SEC in this collector");
   fprintf(stderr, "[fcc-fm-query] emitted %d over %d/%d states "
                   "(%d records skipped: no site DMS)\n",
           total, ok_states, NSTATES, nodms);

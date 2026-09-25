@@ -126,7 +126,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     int nf = tsp_split(line, f, MAXCOL);
     const char *date = tsp_cell(f, nf, i_date);
     if (!date || strcmp(date, cutoff) < 0) continue;
-    if (n >= MAX_ROWS) break;
+    if (n >= MAX_ROWS) break;  /* exhaustive-ok: the cap is disclosed as a collector-truncation-notice below */
 
     const char *dtype = tsp_cell(f, nf, i_ftyp);
     const char *apavg = tsp_cell(f, nf, i_apavg);
