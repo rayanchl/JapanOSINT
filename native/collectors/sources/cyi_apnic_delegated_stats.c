@@ -17,6 +17,7 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "lib/truncnotice.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,7 +25,7 @@
 
 #define CYI_URL "https://ftp.apnic.net/stats/apnic/delegated-apnic-extended-latest"
 #define WINDOW_DAYS 90
-#define MAX_ROWS 5000
+#define MAX_ROWS 5000  /* exhaustive-ok: breadth-layer bound, disclosed as a record below */
 
 /* In-place line splitter; returns the next line (trimmed of CR), advances *p. */
 static char *next_line(char **p) {
@@ -131,6 +132,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
+  /* The cap is deliberate — the whole file is parsed and counted, and only
+   * MAX_ROWS entries are materialised so this stays the breadth layer behind
+   * the smaller high-precision feeds. What was missing is the other half of
+   * rule 6: the shortfall was a log line, and a log line nobody reads is not a
+   * disclosure. It is a record now. */
+  if (n >= MAX_ROWS)
+    trunc_notice(sink, "apnic-delegated-stats", CYI_URL, NULL, n, seen,
+                 "a deliberate breadth-layer cap: the feed was parsed and "
+                 "counted in full, and MAX_ROWS of its delegations were materialised "
+                 "as rows",
+                 "raise MAX_ROWS in this collector to materialise more");
   fprintf(stderr, "[apnic-delegated-stats] emitted %d of %d delegations (>= %s)\n",
           n, seen, cutoff);
   return 0;                        /* a quiet 90 days is not an error (R3) */

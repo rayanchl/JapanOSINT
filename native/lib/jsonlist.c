@@ -457,7 +457,7 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
                         http_client *http, const char *url, int timeout_ms,
                         const char *path, const char *record_type,
                         const char *lang, const char *tags_json) {
-  int page_max = 20;
+  int page_max = 20;  /* exhaustive-ok: page ceiling, raised by $JO_JSONLIST_PAGE_MAX and disclosed as a collector-truncation-notice when it bites */
   const char *env = getenv("JO_JSONLIST_PAGE_MAX");
   if (env && *env) {
     int v = atoi(env);

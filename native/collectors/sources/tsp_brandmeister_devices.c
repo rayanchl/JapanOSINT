@@ -29,6 +29,7 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
+#include "lib/truncnotice.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,7 +37,7 @@
 
 #define BM_URL "https://api.brandmeister.network/v2/device"
 #define RECENT_DAYS 3
-#define MAX_ROWS 12000
+#define MAX_ROWS 12000  /* exhaustive-ok: disclosed as a record below */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, BM_URL, 120000);
@@ -137,6 +138,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON_Delete(doc);
+  /* The cap kept one run bounded; what it did not do is say so. A shortfall
+   * reported only to stderr is not a disclosure (docs/SOURCE_EXHAUSTIVENESS.md
+   * rule 7) — downstream cannot tell a complete run from a clipped one. */
+  if (n >= MAX_ROWS)
+    trunc_notice(sink, "brandmeister-devices", BM_URL, NULL, n, seen,
+                 "MAX_ROWS bounded this run; the upstream offered more registered devices",
+                 "raise MAX_ROWS in this collector");
   fprintf(stderr, "[brandmeister-devices] emitted %d of %d devices "
                   "(last seen since %s; %d without usable coordinates)\n",
           n, seen, cutoff, nogeo);

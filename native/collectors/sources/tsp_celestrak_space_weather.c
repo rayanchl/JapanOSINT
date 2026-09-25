@@ -27,6 +27,7 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "lib/truncnotice.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,7 +35,7 @@
 
 #define SW_URL "https://celestrak.org/SpaceData/SW-Last5Years.csv"
 #define WINDOW_DAYS 30
-#define MAX_ROWS 120
+#define MAX_ROWS 120  /* exhaustive-ok: disclosed as a record below */
 #define MAXCOL 48
 
 static int tsp_split(char *line, char **out, int max) {
@@ -199,6 +200,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
+  /* The cap kept one run bounded; what it did not do is say so. A shortfall
+   * reported only to stderr is not a disclosure (docs/SOURCE_EXHAUSTIVENESS.md
+   * rule 7) — downstream cannot tell a complete run from a clipped one. */
+  if (n >= MAX_ROWS)
+    trunc_notice(sink, "celestrak-space-weather", SW_URL, NULL, n, seen,
+                 "MAX_ROWS bounded this run; the upstream offered more daily rows",
+                 "raise MAX_ROWS in this collector");
   fprintf(stderr, "[celestrak-space-weather] emitted %d of %d daily rows (>= %s)\n",
           n, seen, cutoff);
   return 0;

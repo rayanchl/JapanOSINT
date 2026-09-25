@@ -16,9 +16,10 @@
  * via meta/pagination.next_url, which is followed up to a bounded page count.
  */
 #include "lib/jocore.h"
+#include "lib/truncnotice.h"
 #include "trn_common.inc"
 
-#define BC_MAX_PAGES 20
+#define BC_MAX_PAGES 20  /* exhaustive-ok: page ceiling, disclosed as a record below */
 
 static int emit_page(intel_sink *sink, cJSON *doc) {
   int n = 0;
@@ -81,6 +82,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(url, sizeof url, "https://api.open511.gov.bc.ca/events?format=json");
 
   int n = 0, pages = 0, ok = 0;
+  int more = 0;
   while (pages < BC_MAX_PAGES) {
     cJSON *doc = feed_get_json(ctx->http, url, 30000);
     if (!doc) break;
@@ -91,6 +93,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON_GetObjectItem(doc, "meta"), "pagination");
     const char *next = pg ? jo_sv(pg, "next_url") : NULL;
     if (!next) { cJSON_Delete(doc); break; }
+    more = 1;                   /* Open511 still has pages after this one */
     snprintf(url, sizeof url, "%s", next);
     cJSON_Delete(doc);
   }
@@ -98,6 +101,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[drivebc-open511-events] fetch/parse failed\n");
     return -1;
   }
+  if (more && pages >= BC_MAX_PAGES)
+    trunc_notice(sink, "drivebc-open511-events",
+                 "https://api.open511.gov.bc.ca/events?format=json", NULL, n, -1,
+                 "the page ceiling stopped the walk while Open511 was still "
+                 "publishing a next_url",
+                 "raise BC_MAX_PAGES in this collector");
   fprintf(stderr, "[drivebc-open511-events] emitted %d over %d page(s)\n",
           n, pages);
   return 0;

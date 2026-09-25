@@ -27,12 +27,13 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
+#include "lib/truncnotice.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define RADIOID_URL "https://radioid.net/static/rptrs.json"
-#define MAX_ROWS 15000
+#define MAX_ROWS 15000  /* exhaustive-ok: disclosed as a record below */
 
 static void add_strlist(cJSON *dst, const char *key, const cJSON *src) {
   if (!cJSON_IsArray(src)) return;
@@ -135,6 +136,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON_Delete(doc);
+  /* The cap kept one run bounded; what it did not do is say so. A shortfall
+   * reported only to stderr is not a disclosure (docs/SOURCE_EXHAUSTIVENESS.md
+   * rule 7) — downstream cannot tell a complete run from a clipped one. */
+  if (n >= MAX_ROWS)
+    trunc_notice(sink, "radioid-dmr-repeaters", RADIOID_URL, NULL, n, seen,
+                 "MAX_ROWS bounded this run; the upstream offered more registered repeaters",
+                 "raise MAX_ROWS in this collector");
   fprintf(stderr, "[radioid-dmr-repeaters] emitted %d ACTIVE of %d registered\n",
           n, seen);
   return 0;

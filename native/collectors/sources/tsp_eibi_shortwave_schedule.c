@@ -34,12 +34,13 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "lib/truncnotice.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-#define MAX_ROWS 12000
+#define MAX_ROWS 12000  /* exhaustive-ok: disclosed as a record below */
 #define MAXCOL 24
 
 static int semi_split(char *line, char **out, int max) {
@@ -265,6 +266,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
+  /* Bounded run, now SAID so. A cap reported only to stderr leaves a clipped
+   * result indistinguishable from a complete one downstream (rule 7). */
+  if (n >= MAX_ROWS)
+    trunc_notice(sink, "eibi-shortwave-schedule", url, NULL, n, seen,
+                 "a per-run record cap bounded this collector; the upstream "
+                 "offered more schedule rows",
+                 "raise the cap in this collector");
   fprintf(stderr, "[eibi-shortwave-schedule] emitted %d of %d rows (season %s)\n",
           n, seen, season);
   return 0;

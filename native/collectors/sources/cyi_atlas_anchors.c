@@ -13,13 +13,14 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define FIRST_URL "https://atlas.ripe.net/api/v2/anchors/?format=json&page_size=500"
-#define MAX_PAGES 5
+#define MAX_PAGES 5  /* exhaustive-ok: page ceiling, disclosed as a record below */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char url[512];
@@ -114,6 +115,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(doc);
   }
 
+  /* url still holds a next link, so RIPE Atlas had more anchors to give and the
+   * page ceiling is what stopped us — not the end of the set. Say which. */
+  if (url[0])
+    trunc_notice(sink, "atlas-anchors", FIRST_URL, NULL, n, -1,
+                 "the page ceiling stopped the walk while RIPE Atlas was still "
+                 "publishing a next link",
+                 "raise MAX_PAGES in this collector");
   fprintf(stderr, "[atlas-anchors] emitted %d over %d page(s)\n", n, pages);
   return 0;
 }

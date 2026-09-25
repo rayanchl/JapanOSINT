@@ -26,6 +26,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -34,7 +35,7 @@
 
 #define MSF_URL "https://raw.githubusercontent.com/rapid7/metasploit-framework/" \
                 "master/db/modules_metadata_base.json"
-#define MSF_MAX_ROWS 6000
+#define MSF_MAX_ROWS 6000  /* exhaustive-ok: disclosed as a record below */
 
 /* Metasploit's own reliability scale, as documented in the framework. Decoding
  * a fetched numeric field, not inventing one. */
@@ -140,6 +141,13 @@ static int run(const source_ctx *c, intel_sink *s) {
     free(pj);
   }
   cJSON_Delete(doc);
+  /* Bounded run, now SAID so. A cap reported only to stderr leaves a clipped
+   * result indistinguishable from a complete one downstream (rule 7). */
+  if (n >= MSF_MAX_ROWS)
+    trunc_notice(s, "metasploit-module-index", MSF_URL, NULL, n, seen,
+                 "a per-run record cap bounded this collector; the upstream "
+                 "offered more modules",
+                 "raise the cap in this collector");
   fprintf(stderr, "[metasploit-module-index] emitted %d of %d modules "
                   "(CVE-referencing subset)\n", n, seen);
   return 0;                                     /* fetched fine (R3) */

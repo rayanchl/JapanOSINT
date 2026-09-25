@@ -39,13 +39,14 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "lib/truncnotice.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define WTR_URL "https://static.ofcom.org.uk/static/radiolicensing/html/register/WTR.csv"
 #define RANGE_BYTES (16 * 1024 * 1024)   /* stated prefix bound, see header */
-#define MAX_ROWS 12000
+#define MAX_ROWS 12000  /* exhaustive-ok: disclosed as a record below */
 #define MAXCOL 64
 
 /* RFC4180 splitter, in place (licensee company names contain commas). */
@@ -271,6 +272,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
+  /* The cap kept one run bounded; what it did not do is say so. A shortfall
+   * reported only to stderr is not a disclosure (docs/SOURCE_EXHAUSTIVENESS.md
+   * rule 7) — downstream cannot tell a complete run from a clipped one. */
+  if (n >= MAX_ROWS)
+    trunc_notice(sink, "ofcom-wtr", WTR_URL, NULL, n, seen,
+                 "MAX_ROWS bounded this run; the upstream offered more rows read",
+                 "raise MAX_ROWS in this collector");
   fprintf(stderr, "[ofcom-wtr] emitted %d of %d rows read (%s prefix, cap %d, "
                   "%d rows without site coordinates)\n",
           n, seen, bounded ? "byte-bounded" : "full-file", MAX_ROWS, nogeo);

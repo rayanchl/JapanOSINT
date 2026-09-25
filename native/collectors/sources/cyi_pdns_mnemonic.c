@@ -17,6 +17,7 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "lib/truncnotice.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +25,7 @@
 #include <time.h>
 #include "_jp_osint.inc"
 
-#define MAX_ROWS 50
+#define MAX_ROWS 50  /* exhaustive-ok: disclosed as a record below */
 
 static int looks_like_domain(const char *s) {
   if (!s || !*s) return 0;
@@ -148,6 +149,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON_Delete(root);
+  /* Bounded run, now SAID so. A cap reported only to stderr leaves a clipped
+   * result indistinguishable from a complete one downstream (rule 7). */
+  if (n >= MAX_ROWS)
+    trunc_notice(sink, "PDNS_MNEMONIC", url, NULL, n, (long)total,
+                 "a per-run record cap bounded this collector; the upstream "
+                 "offered more known answers",
+                 "raise the cap in this collector");
   fprintf(stderr, "[PDNS_MNEMONIC] emitted %d of %.0f known answers (%s)\n", n, total, q);
   return 0;                       /* no passive DNS history is not an error */
 }

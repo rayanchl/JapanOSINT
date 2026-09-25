@@ -20,13 +20,14 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
+#include "lib/truncnotice.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define ALERTS_URL "https://services.swpc.noaa.gov/products/alerts.json"
-#define MAX_ROWS 200
+#define MAX_ROWS 200  /* exhaustive-ok: disclosed as a record below */
 
 /* Copy the value that follows `label` in the CRLF-delimited message block.
  * Returns 1 on success. Stops at CR or LF, trims surrounding spaces. */
@@ -132,6 +133,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON_Delete(doc);
+  /* The cap kept one run bounded; what it did not do is say so. A shortfall
+   * reported only to stderr is not a disclosure (docs/SOURCE_EXHAUSTIVENESS.md
+   * rule 7) — downstream cannot tell a complete run from a clipped one. */
+  if (n >= MAX_ROWS)
+    trunc_notice(sink, "swpc-alerts", ALERTS_URL, NULL, n, -1,
+                 "MAX_ROWS bounded this run; the upstream offered more alerts",
+                 "raise MAX_ROWS in this collector");
   fprintf(stderr, "[swpc-alerts] emitted %d\n", n);
   return 0;
 }

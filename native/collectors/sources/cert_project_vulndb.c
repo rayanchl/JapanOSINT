@@ -36,6 +36,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -46,7 +47,7 @@
 #define CURL_URL "https://curl.se/docs/vuln.json"
 #define GO_URL   "https://vuln.go.dev/index/vulns.json"
 
-#define GO_MAX_ROWS 5000
+#define GO_MAX_ROWS 5000  /* exhaustive-ok: disclosed as a record below */
 
 static void join_strings(cJSON *arr, char *out, size_t n) {
   out[0] = 0;
@@ -263,6 +264,13 @@ static int go_run(const source_ctx *c, intel_sink *s) {
     }
   }
   cJSON_Delete(doc);
+  /* Bounded run, now SAID so. A cap reported only to stderr leaves a clipped
+   * result indistinguishable from a complete one downstream (rule 7). */
+  if (n >= GO_MAX_ROWS)
+    trunc_notice(s, "go-vulndb-index", GO_URL, NULL, n, -1,
+                 "a per-run record cap bounded this collector; the upstream "
+                 "offered more advisories",
+                 "raise the cap in this collector");
   fprintf(stderr, "[go-vulndb-index] emitted %d\n", n);
   return 0;
 }

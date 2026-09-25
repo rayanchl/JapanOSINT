@@ -15,6 +15,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -22,7 +23,7 @@
 #include <string.h>
 
 #define CYI_URL "https://phishing.army/download/phishing_army_blocklist.txt"
-#define MAX_ROWS 5000
+#define MAX_ROWS 5000  /* exhaustive-ok: breadth-layer bound, disclosed as a record below */
 
 static int looks_like_host(const char *s) {
   size_t n = strlen(s);
@@ -80,6 +81,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
+  /* The cap is deliberate — the whole file is parsed and counted, and only
+   * MAX_ROWS entries are materialised so this stays the breadth layer behind
+   * the smaller high-precision feeds. What was missing is the other half of
+   * rule 6: the shortfall was a log line, and a log line nobody reads is not a
+   * disclosure. It is a record now. */
+  if (n >= MAX_ROWS)
+    trunc_notice(sink, "phishing-army-blocklist", CYI_URL, NULL, n, total,
+                 "a deliberate breadth-layer cap: the feed was parsed and "
+                 "counted in full, and MAX_ROWS of its domains were materialised "
+                 "as rows",
+                 "raise MAX_ROWS in this collector to materialise more");
   fprintf(stderr, "[phishing-army-blocklist] emitted %d of ~%d domains (updated %s)\n",
           n, total, updated[0] ? updated : "n/a");
   return 0;
