@@ -457,5 +457,6 @@ static const source_def cam_worldcam_eu_def = {
   .name = "Camera discovery — WorldCam.eu",
   .name_ja = "カメラ探索 — WorldCam.eu",
    .layer = "cameras",
-   .update_interval_sec = 3600, .run = run };
+   .update_interval_sec = 3600, .run = run,
+   .category = "infrastructure" };
 REGISTER_SOURCE(cam_worldcam_eu_def)

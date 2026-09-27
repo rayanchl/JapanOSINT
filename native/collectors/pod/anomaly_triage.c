@@ -293,5 +293,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 static const source_def anomaly_triage_def = {
   .id = "anomaly-triage", .collector = "_maint",
   .name = "Collector Anomaly Triage", .name_ja = "異常トリアージ",
-  .update_interval_sec = 60, .run = run };
+  .update_interval_sec = 60, .run = run,
+  .category = "maintenance" };
 REGISTER_SOURCE(anomaly_triage_def)

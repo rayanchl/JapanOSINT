@@ -96,7 +96,15 @@ typedef struct source_def {
    * /api/layers. Emit nothing rather than a plausible default: a NULL url or
    * description is serialized as JSON null, which a client can tell apart from
    * a guess. */
-  const char *category;       /* NULL → "investigation" when synthesized   */
+  /* Category. NULL still degrades to "investigation" when synthesized, but
+   * that fallback is a safety net for new code, not a resting state: every
+   * source carries an explicit category (the curated overlay's where it has
+   * one, this field otherwise), because an unset one silently mislabels the
+   * source as an investigation service in /api/sources, the dashboards and
+   * the iOS category filter. Internal pipeline pods use "maintenance"
+   * (collector "_maint"), "enrichment" ("_enrich") and "test" ("_test") so
+   * they stop masquerading as data sources. */
+  const char *category;
   const char *type;           /* api|dataset|scraped|web_request; NULL→"api" */
   const char *url;            /* canonical/base or internal:// sentinel      */
   const char *description;
