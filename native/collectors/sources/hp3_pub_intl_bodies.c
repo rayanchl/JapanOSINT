@@ -105,21 +105,6 @@ static const hp_source HP3_PUB_INTL[] = {
       "list so the full project record is returned rather than the four-field "
       "summary the API defaults to" },
 
-  { .id = "WORLDBANK_DEBARRED_FIRMS", .name = "World Bank — debarred & cross-debarred firms",
-    .name_ja = "世界銀行 制裁企業リスト", .category = "government",
-    .portal = "https://www.worldbank.org", .record_type = "mdb-debarment",
-    .tags = "\"mdb\",\"debarment\",\"sanctions\"", .free_tier = 1,
-    .url = "https://apigwext.worldbank.org/dvsvc/v1.0/json/APPLICATION/"
-      "ADOBE_EXPERIENCE_MANAGER/FIRM/SANCTIONED_FIRM",
-    .array_path = "response.ZPROCSUPP", .filter_query = 1,
-    .title_keys = "SUPP_NAME,COUNTRY_NAME", .id_keys = "SUPP_ID",
-    .date_keys = "DEBAR_FROM_DATE",
-    .interval = 86400,
-    .description = "Firms and individuals barred from World Bank-financed "
-      "contracts — the ineligibility period, the grounds, the country and the "
-      "affiliates covered. Cross-debarment makes this list binding at the "
-      "AfDB, ADB, EBRD and IDB simultaneously" },
-
   { .id = "WORLDBANK_CONTRACT_AWARDS", .name = "World Bank — major contract awards",
     .name_ja = "世界銀行 主要契約落札", .category = "government",
     .portal = "https://finances.worldbank.org", .record_type = "mdb-contract",

@@ -61,19 +61,6 @@ static const hp_source HP3_GOV_US_FED[] = {
       "lobbyists and their firms to federal candidates, leadership PACs and "
       "presidential libraries — the money that runs alongside the lobbying" },
 
-  { .id = "US_FARA_FOREIGN_PRINCIPALS", .name = "US FARA — foreign principals represented",
-    .name_ja = "米国FARA 外国本人一覧", .category = "government",
-    .portal = "https://efile.fara.gov", .record_type = "us-foreign-principal",
-    .tags = "\"us\",\"foreign-influence\"", .free_tier = 1,
-    .url = "https://efile.fara.gov/api/v1/ForeignPrincipals/json/Active",
-    .array_path = "FOREIGNPRINCIPALS_ACTIVE.ROW", .filter_query = 1,
-    .title_keys = "Foreign_principal,Registrant_name",
-    .id_keys = "Registration_number", .date_keys = "Foreign_principal_registration_date",
-    .interval = 86400,
-    .description = "The other end of the FARA relationship — which foreign "
-      "government, party or state enterprise each US registrant works for, with "
-      "the country and the date the representation began" },
-
   /* ── Campaign finance ─────────────────────────────────────────────────── */
   { .id = "US_FEC_CANDIDATE_SEARCH", .name = "FEC — federal candidate records",
     .name_ja = "米国FEC 連邦候補者", .category = "government",

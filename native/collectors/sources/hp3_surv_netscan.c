@@ -167,20 +167,6 @@ static const hp_source HP3_SURV_NETSCAN[] = {
       "blocked, per country and per day. Turns individual measurements into a "
       "blocking timeline" },
 
-  { .id = "IODA_OUTAGE_ALERTS", .name = "IODA — internet outage detection & analysis",
-    .name_ja = "IODA インターネット障害検知", .category = "surveillance",
-    .portal = "https://ioda.inetintel.cc.gatech.edu", .record_type = "network-outage",
-    .tags = "\"network\",\"outage\",\"measurement\"", .free_tier = 1,
-    .url = "https://api.ioda.inetintel.cc.gatech.edu/v2/outages/alerts?limit=1000",
-    .array_path = "data", .filter_query = 1,
-    .title_keys = "entity.name,datasource", .id_keys = "entity.code",
-    .date_keys = "time",
-    .interval = 3600,
-    .description = "Detected internet outages by country, region and ASN, "
-      "corroborated across BGP withdrawals, active probing and darknet traffic. "
-      "Deliberate national shutdowns and infrastructure damage both show here "
-      "before either is announced" },
-
   { .id = "GRIP_BGP_HIJACKS", .name = "GRIP — BGP hijack & routing anomaly events",
     .name_ja = "BGPハイジャック検知", .category = "surveillance",
     .portal = "https://grip.inetintel.cc.gatech.edu", .record_type = "bgp-event",

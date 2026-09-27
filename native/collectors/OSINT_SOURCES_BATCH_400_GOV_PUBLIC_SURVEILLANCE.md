@@ -23,23 +23,23 @@ Three layers, in order of how far they sit from a company register:
 
 | File | Rows | Coverage |
 |---|---:|---|
-| `sources/hp3_gov_us_federal.c` | 25 | US federal: lobbying, FARA, campaign finance, rulemaking, research funding, banking, exclusions |
+| `sources/hp3_gov_us_federal.c` | 24 | US federal: lobbying, FARA, campaign finance, rulemaking, research funding, banking, exclusions |
 | `sources/hp3_gov_us_states.c` | 27 | 17 more Secretary of State registers + municipal record datasets (NYC, Chicago, SF, LA, Seattle) |
 | `sources/hp3_gov_uk_ie_public.c` | 25 | UK procurement, Parliament APIs, regulators, land, FOI + Ireland (Oireachtas, lobbying, charities) |
 | `sources/hp3_gov_eu_transparency.c` | 25 | EU expert groups, comitology, lobby meetings, document registers, Parliament open data, cohesion money |
 | `sources/hp3_gov_europe_national.c` | 25 | DE/AT/CH/FR/NL/BE/SE/NO/DK/FI/ES/PT/IT/PL/CZ parliaments, procurement, gazettes |
 | `sources/hp3_gov_japan_public.c` | 26 | JP: corporate-number spine, gBizINFO five-hop, e-Gov law, kanpō, courts, licensing, procurement |
 | `sources/hp3_gov_asiapac_public.c` | 26 | AU/NZ/KR/TW/HK/ID/TH/MY/PH/IN + Pacific islands |
-| `sources/hp3_gov_africa_public.c` | 25 | ZA/NG/GH/SN/CI/KE/TZ/UG/RW/ET/ZM/BW/NA + AfricanLII, SAFLII, extractives |
+| `sources/hp3_gov_africa_public.c` | 24 | ZA/NG/GH/SN/CI/KE/TZ/UG/RW/ET/ZM/BW/NA + AfricanLII, SAFLII, extractives |
 | `sources/hp3_gov_latam_public.c` | 25 | BR legislature & municipal gazettes, CL lobbying act, CO/AR/PE/MX + Central America & Caribbean |
 | `sources/hp3_gov_mena_cis_public.c` | 26 | Gulf procurement, IL/TR/MA/TN/EG/JO + RU/UA/BY/AM/GE/UZ |
-| `sources/hp3_pub_intl_bodies.c` | 23 | UN, MDB projects & debarment, arbitration, FATF-style bodies, IAEA, OPCW |
+| `sources/hp3_pub_intl_bodies.c` | 22 | UN, MDB projects & debarment, arbitration, FATF-style bodies, IAEA, OPCW |
 | `sources/hp3_pub_asset_registers.c` | 23 | Cadastre, vehicles, vessels, aircraft, spectrum, minerals, concessions |
-| `sources/hp3_surv_cameras.c` | 19 | State-operated road camera inventories, NA/EU/APAC |
+| `sources/hp3_surv_cameras.c` | 17 | State-operated road camera inventories, NA/EU/APAC |
 | `sources/hp3_surv_sensors.c` | 14 | Air, radiation, seismic, water, weather, space, fire, GNSS networks |
-| `sources/hp3_surv_transport.c` | 17 | Rail telemetry, coastal AIS, ADS-B, transit operator registries |
-| `sources/hp3_surv_netscan.c` | 16 | Host exposure, certificate transparency, censorship & outage measurement, wireless mapping |
-| **total** | **367** | 400 authored; 33 dropped at merge, see below |
+| `sources/hp3_surv_transport.c` | 16 | Rail telemetry, coastal AIS, ADS-B, transit operator registries |
+| `sources/hp3_surv_netscan.c` | 15 | Host exposure, certificate transparency, censorship & outage measurement, wireless mapping |
+| **total** | **360** | 400 authored; 40 dropped at merge, see below |
 
 Registry before: 2803 sources. After: **3203**. Verified by diffing
 `--list-sources` on a fresh database before and after: exactly +400, and no id
@@ -156,3 +156,28 @@ entity token and no schedule. That meant they were registered and would
 never run (house rule 3). Live feeds (road cameras, AIS, outages, BGP
 hijacks, fire, disaster and sensor feeds) run hourly. Registers,
 parliament, transit and debarment lists run daily.
+
+**7 more were dropped as dead.** Once scheduled, each was run through the
+real binary (`tools/audit_registry_emit.py`, 2026-09-27). Every run was
+refused, and they stored nothing:
+
+| id | answer |
+|---|---|
+| `ZA_ETENDERS_OCDS` | HTTP 400 |
+| `US_FARA_FOREIGN_PRINCIPALS` | HTTP 404 |
+| `WORLDBANK_DEBARRED_FIRMS` | HTTP 401 |
+| `CAM_511ON_ONTARIO` | HTTP 400 |
+| `CAM_511AB_ALBERTA` | HTTP 400 |
+| `IODA_OUTAGE_ALERTS` | HTTP 400 |
+| `JP_GTFS_DATA_REPOSITORY` | HTTP 404 |
+
+Of the other 26 scheduled rows, 10 stored real records (FDSN alone stored
+151,228). `UK_LORDS_REGISTER_INTERESTS` and `SAFECAST_MEASUREMENTS` were
+still storing at the 150 s kill line. 14 need an API key and store the
+explicit "needs credential" note.
+
+**Not yet verified: the pivot rows.** The other rows in this batch are
+entity pivots. A scheduled sweep cannot exercise them, and they have not
+been run against a real entity or `--check-filter`ed (house rules 4 and
+4d). Until that is done, count them as registered, not as proven.
+

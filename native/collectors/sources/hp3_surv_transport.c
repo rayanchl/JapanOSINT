@@ -44,20 +44,6 @@ static const hp_source HP3_SURV_TRANSPORT[] = {
       "history. Where a jurisdiction's live vehicle positions can actually be "
       "obtained, and under what conditions" },
 
-  { .id = "JP_GTFS_DATA_REPOSITORY", .name = "Japan — public transport GTFS data repository",
-    .name_ja = "GTFSデータリポジトリ 事業者一覧", .category = "transport",
-    .portal = "https://api.gtfs-data.jp", .record_type = "jp-transit-operator",
-    .tags = "\"jp\",\"transit\",\"gtfs\",\"registry\"", .free_tier = 1,
-    .url = "https://api.gtfs-data.jp/v2/organizations",
-    .array_path = "body", .filter_query = 1,
-    .title_keys = "organization_name,organization_name_kana",
-    .id_keys = "organization_id",
-    .interval = 86400,
-    .description = "The Japanese GTFS repository's operator list — every bus "
-      "and rail operator publishing schedule data, with its official name, "
-      "reading, prefecture and the feeds it maintains. The directory of "
-      "Japanese transport operators as data publishers" },
-
   { .id = "JP_ODPT_TRANSPORT", .name = "Japan ODPT — public transport open data",
     .name_ja = "公共交通オープンデータ", .category = "transport",
     .portal = "https://api.odpt.org", .record_type = "jp-transit-record",

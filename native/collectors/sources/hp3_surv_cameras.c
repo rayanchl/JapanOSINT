@@ -77,30 +77,6 @@ static const hp_source HP3_SURV_CAMERAS[] = {
       "URL, in a state where the camera network doubles as the avalanche and "
       "closure monitoring system" },
 
-  { .id = "CAM_511ON_ONTARIO", .name = "Ontario 511 — provincial road cameras",
-    .name_ja = "オンタリオ州道路カメラ", .category = "surveillance",
-    .portal = "https://511on.ca", .record_type = "road-camera",
-    .tags = "\"ca\",\"camera\",\"traffic\",\"surveillance\"", .free_tier = 1,
-    .url = "https://511on.ca/api/v2/get/cameras?format=json&lang=en",
-    .filter_query = 1, .title_keys = "Name,Roadway", .id_keys = "Id",
-    .lat_key = "Latitude", .lon_key = "Longitude",
-    .interval = 3600,
-    .description = "Ontario's provincial camera inventory, open without a key "
-      "— device ID, roadway, direction, coordinates and image URL for the "
-      "400-series highways and the northern Ontario network" },
-
-  { .id = "CAM_511AB_ALBERTA", .name = "Alberta 511 — provincial road cameras",
-    .name_ja = "アルバータ州道路カメラ", .category = "surveillance",
-    .portal = "https://511.alberta.ca", .record_type = "road-camera",
-    .tags = "\"ca\",\"camera\",\"traffic\",\"surveillance\"", .free_tier = 1,
-    .url = "https://511.alberta.ca/api/v2/get/cameras?format=json&lang=en",
-    .filter_query = 1, .title_keys = "Name,Roadway", .id_keys = "Id",
-    .lat_key = "Latitude", .lon_key = "Longitude",
-    .interval = 3600,
-    .description = "Alberta's open camera inventory across the provincial "
-      "highway network, including the remote northern corridors serving the oil "
-      "sands where no other imagery is routinely available" },
-
   { .id = "CAM_DRIVEBC_BC", .name = "DriveBC — British Columbia highway cameras",
     .name_ja = "BC州道路カメラ", .category = "surveillance",
     .portal = "https://www.drivebc.ca", .record_type = "road-camera",
