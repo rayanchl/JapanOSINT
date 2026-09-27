@@ -1255,6 +1255,9 @@ static long declared_total(cJSON *doc) {
 }
 
 /* Read `name=<int>` out of a query string. Returns -1 if absent/unparseable. */
+/* declared_total(), exported for hpengine's page_walk rows (jsonlist.h). */
+long jsonlist_declared_total(cJSON *doc) { return declared_total(doc); }
+
 long jsonlist_query_int(const char *url, const char *name) {
   const char *q = strchr(url, '?');
   if (!q) return -1;
@@ -1372,16 +1375,92 @@ static long jl_declared_size(const char *url) {
   return -1;
 }
 
-int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
-                        http_client *http, const char *url, int timeout_ms,
-                        const char *path, const char *record_type,
-                        const char *lang, const char *tags_json) {
+int jsonlist_page_max(void) {
   int page_max = 20;   /* exhaustive-ok: page-walk ceiling; an early stop is disclosed as a collector-truncation-notice and $JO_JSONLIST_PAGE_MAX raises it */
   const char *env = getenv("JO_JSONLIST_PAGE_MAX");
   if (env && *env) {
     int v = atoi(env);
     if (v > 0) page_max = v;
   }
+  return page_max;
+}
+
+/* The continuation decision this walk makes after every page, exported so
+ * lib/hpengine.c's `page_walk` rows make exactly the same one. Those rows are
+ * VJSON collectors moved onto hpengine to walk their detail hop, and the move
+ * must not change how far they page: two copies of this decision is how a row
+ * silently loses every page after the first while both engines report success.
+ *
+ *   doc        the page just read (not consumed)
+ *   page_url   the URL it was read from — the OVERRIDDEN one, see below
+ *   got        records the page's array held
+ *   available  the upstream's declared total, or -1
+ *   total      records emitted so far across the walk, this page included
+ *
+ * Returns the next URL (caller frees) or NULL, and reports through
+ * `full_unadvanced` whether the walk is stopping at a page that looked full —
+ * the condition the truncation notice discloses. */
+char *jsonlist_next_page(cJSON *doc, const char *page_url, int got,
+                         long available, int total, int *full_unadvanced) {
+  char *next = next_link(doc, page_url);
+  if (!next && got > 0) {
+    /* No server link. Advance a cursor only when the URL declares a page
+     * size AND this page came back exactly full — a short page is the
+     * upstream saying it is finished, and following it would be us
+     * inventing a page that was never offered. */
+    for (int i = 0; PAGERS[i].size_param && !next; i++) {
+      long size = jsonlist_query_int(page_url, PAGERS[i].size_param);
+      if (size <= 0 || got < size) continue;
+      /* Move the cursor this URL already names, when the family has two
+       * spellings; otherwise the canonical one. */
+      const char *cursor = PAGERS[i].cursor_param;
+      if (PAGERS[i].alt_cursor && jsonlist_query_int(page_url, PAGERS[i].alt_cursor) >= 0)
+        cursor = PAGERS[i].alt_cursor;
+      long cur = jsonlist_query_int(page_url, cursor);
+      long nextval = PAGERS[i].page_numbered
+                       ? (cur > 0 ? cur + 1 : 2)
+                       : (cur >= 0 ? cur + size : size);
+      next = jsonlist_query_set(page_url, cursor, nextval);
+    }
+  }
+  /* Last resort, and the only one that needs no page-size sibling: the
+   * upstream published a total BIGGER than what it has handed us, and the
+   * URL already carries a page number. ROR says `number_of_results: 108000`
+   * and hands over 20; retsinformation.dk says `totalResultCount` and hands
+   * over a screenful. There is no guessing here — the remainder is the
+   * upstream's own arithmetic — and the cursor is one this URL already
+   * declares, so we are turning a dial the caller wrote, not inventing one.
+   * A server that ignores it re-serves page 1 and the no-progress guard
+   * ends the walk on the next turn. */
+  if (!next && got > 0 && available > (long)(total)) {
+    static const char *const PAGE_CURSORS[] = { "page", "p", "pageNumber",
+                                                "pagina", "pageNum", NULL };
+    for (int i = 0; PAGE_CURSORS[i] && !next; i++) {
+      long cur = jsonlist_query_int(page_url, PAGE_CURSORS[i]);
+      if (cur < 1) continue;               /* must already be declared */
+      next = jsonlist_query_set(page_url, PAGE_CURSORS[i], cur + 1);
+    }
+  }
+  /* A FULL page with no link and no cursor this walk can move is not the end
+   * of the data; it is the end of what this URL lets us ask for. That was
+   * never disclosed: Socrata's `$limit` has no sibling in PAGERS, so 472 such
+   * URLs read one page, filed no notice and reported success — measured
+   * 2026-09-15, 28 of 38 sampled hold more than one page (up to 17.6 M rows).
+   * Say so. Guessing a cursor is not done here: it would change what these
+   * rows fetch, which is a data-volume decision, not a disclosure. */
+  if (full_unadvanced) {
+    long ds = jl_declared_size(page_url);
+    *full_unadvanced = (!next && got > 0 &&
+                        ((ds > 0 && got >= ds) || available > (long)total));
+  }
+  return next;
+}
+
+int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
+                        http_client *http, const char *url, int timeout_ms,
+                        const char *path, const char *record_type,
+                        const char *lang, const char *tags_json) {
+  int page_max = jsonlist_page_max();
 
   /* Plan against the URL that will ACTUALLY be fetched. http_request applies
    * url_override_apply() on the way out, so a source whose offset parameter an
@@ -1444,59 +1523,12 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
                                      lang, tags_json);
     total += n;
 
-    char *next = repeated ? NULL : next_link(doc, page_url);
-    if (!next && got > 0 && !repeated) {
-      /* No server link. Advance a cursor only when the URL declares a page
-       * size AND this page came back exactly full — a short page is the
-       * upstream saying it is finished, and following it would be us
-       * inventing a page that was never offered. */
-      for (int i = 0; PAGERS[i].size_param && !next; i++) {
-        long size = jsonlist_query_int(page_url, PAGERS[i].size_param);
-        if (size <= 0 || got < size) continue;
-        /* Move the cursor this URL already names, when the family has two
-         * spellings; otherwise the canonical one. */
-        const char *cursor = PAGERS[i].cursor_param;
-        if (PAGERS[i].alt_cursor && jsonlist_query_int(page_url, PAGERS[i].alt_cursor) >= 0)
-          cursor = PAGERS[i].alt_cursor;
-        long cur = jsonlist_query_int(page_url, cursor);
-        long nextval = PAGERS[i].page_numbered
-                         ? (cur > 0 ? cur + 1 : 2)
-                         : (cur >= 0 ? cur + size : size);
-        next = jsonlist_query_set(page_url, cursor, nextval);
-      }
-    }
-    /* Last resort, and the only one that needs no page-size sibling: the
-     * upstream published a total BIGGER than what it has handed us, and the
-     * URL already carries a page number. ROR says `number_of_results: 108000`
-     * and hands over 20; retsinformation.dk says `totalResultCount` and hands
-     * over a screenful. There is no guessing here — the remainder is the
-     * upstream's own arithmetic — and the cursor is one this URL already
-     * declares, so we are turning a dial the caller wrote, not inventing one.
-     * A server that ignores it re-serves page 1 and the no-progress guard
-     * above ends the walk on the next turn. */
-    if (!next && got > 0 && !repeated && available > (long)(total)) {
-      static const char *const PAGE_CURSORS[] = { "page", "p", "pageNumber",
-                                                  "pagina", "pageNum", NULL };
-      for (int i = 0; PAGE_CURSORS[i] && !next; i++) {
-        long cur = jsonlist_query_int(page_url, PAGE_CURSORS[i]);
-        if (cur < 1) continue;               /* must already be declared */
-        next = jsonlist_query_set(page_url, PAGE_CURSORS[i], cur + 1);
-      }
-    }
+    int fu = 0;
+    char *next = repeated ? NULL
+                          : jsonlist_next_page(doc, page_url, got, available,
+                                               total, &fu);
     cJSON_Delete(doc);
-
-    /* A FULL page with no link and no cursor this walk can move is not the end
-     * of the data; it is the end of what this URL lets us ask for. That was
-     * never disclosed: Socrata's `$limit` has no sibling in PAGERS, so 472 such
-     * URLs read one page, filed no notice and reported success — measured
-     * 2026-09-15, 28 of 38 sampled hold more than one page (up to 17.6 M rows).
-     * Say so. Guessing a cursor is not done here: it would change what these
-     * rows fetch, which is a data-volume decision, not a disclosure. */
-    {
-      long ds = jl_declared_size(page_url);
-      full_unadvanced = (!next && !repeated && got > 0 &&
-                         ((ds > 0 && got >= ds) || available > (long)total));
-    }
+    full_unadvanced = fu;
 
     if (got <= 0 || repeated) { free(next); break; }   /* upstream is exhausted */
     free(page_url);

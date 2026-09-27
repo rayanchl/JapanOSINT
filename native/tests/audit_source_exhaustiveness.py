@@ -60,6 +60,23 @@ CHECKS = [
                 r'page_size|resultPerPage)=1\b'),
      "request the full page size and paginate"),
 
+    # Found the hard way: sanc_ofac_consolidated.c bounded a SANCTIONS entry's
+    # alias list with `while (cJSON_GetArraySize(akas) < 24 && …)`. On a
+    # sanctions list an alias is the thing screening matches on, so a dropped
+    # one is a silent false negative on a designated person — and neither
+    # `record-cap` (which wants a #define) nor `loop-break` (which wants a
+    # `break`) could see it, because the bound was in the loop CONDITION.
+    #
+    # Only counter-ish names are flagged: `chars < 280` bounding a UTF-8 buffer
+    # is a byte guard, not a record cap.
+    ("loop-cap",
+     "record loop bounded in its own condition — records past it never happen",
+     re.compile(r'\b(?:while|for)\s*\([^;{]*\b'
+                r'(?:count|counted|considered|emitted|n|nf|nrec|nrows|nitems|'
+                r'nseen|rows|items|recs|records|found|hits|GetArraySize\s*\([^)]*\))'
+                r'\s*<=?\s*\d{2,}\s*&&'),
+     "drop the bound, or bound it and emit a collector-truncation-notice"),
+
     ("dedupe-ring",
      "fixed-size seen[] ring — entries past it are mis-deduped or dropped",
      re.compile(r'\*\s*seen\s*\[\s*\d+\s*\]|char\s+\*\s*seen\s*\[\s*\d+\s*\]'),
@@ -124,6 +141,31 @@ def _paged_macro_at(lines, n):
     return False
 
 
+
+def _hp_page_walk_row(lines, n):
+    """Is line `n` inside an hp_source row that declares `.page_walk = 1`?
+
+    Such a row is walked by lib/jsonlist.c's jsonlist_next_page() — the same
+    decision a VJSON row gets — so a page-1 URL in it is not a single-page read.
+    The row is the brace block from its `{ .id =` to the closing `},`."""
+    start = None
+    for i in range(n, max(0, n - 30), -1):
+        line = lines[i - 1] if i - 1 < len(lines) else ''
+        if re.match(r'\s*\{\s*\.id\s*=', line):
+            start = i
+            break
+        if re.match(r'\s*\},?\s*$', line) and i != n:
+            return False
+    if start is None:
+        return False
+    for i in range(start, min(len(lines), start + 40) + 1):
+        line = lines[i - 1]
+        if re.search(r'\.page_walk\s*=\s*1\b', line):
+            return True
+        if i > start and re.match(r'\s*\{\s*\.id\s*=', line):
+            return False
+    return False
+
 def audit(path, verbose=False):
     findings = []
     try:
@@ -162,7 +204,7 @@ def audit(path, verbose=False):
                 # which is the exact URL jsonlist.h cites as the case the paged
                 # walk was written to fix. 44 findings that were all already
                 # fixed is not a backlog, it is noise that hides the real ones.
-                if _paged_macro_at(lines, n):
+                if _paged_macro_at(lines, n) or _hp_page_walk_row(lines, n):
                     continue
             findings.append((cid, n, line.strip()[:120], desc, hint))
     return findings
@@ -172,8 +214,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--file', action='append', default=[],
                     help='audit these files instead of the default glob set')
-    ap.add_argument('--strict', default=None,
-                    help='glob whose findings make the exit code non-zero')
+    # Repeatable. It was a single glob, and the gated set has since grown to
+    # two directories (the pivot tables and the generated deep-record tables) —
+    # passing --strict twice silently kept only the last one, which is the
+    # failure mode where a gate reports "0 findings" for a set it never scanned.
+    ap.add_argument('--strict', action='append', default=[],
+                    help='glob whose findings make the exit code non-zero; '
+                         'repeatable')
     ap.add_argument('-v', '--verbose', action='store_true',
                     help='print every finding, not just per-file counts')
     args = ap.parse_args()
@@ -186,7 +233,9 @@ def main():
     paths = args.file or sorted(
         glob.glob('collectors/**/*.c', recursive=True) + glob.glob('lib/*.c') +
         glob.glob('core/pipeline.c') + glob.glob('core/osint_dispatch.c'))
-    strict_paths = set(glob.glob(args.strict)) if args.strict else set()
+    strict_paths = set()
+    for g in args.strict:
+        strict_paths |= set(glob.glob(g))
 
     total = 0
     per_check = {}
@@ -226,7 +275,8 @@ def main():
     print('used exhaustively. Findings are heuristics; each needs a human read.')
 
     if strict_paths:
-        print(f'\nstrict set ({args.strict}): {strict_hits} finding(s)')
+        print(f'\nstrict set ({", ".join(args.strict)}): '
+              f'{len(strict_paths)} files, {strict_hits} finding(s)')
         return 1 if strict_hits else 0
     return 0
 

@@ -13,6 +13,7 @@
  * are covered too. */
 #include "../lib/hpengine.h"
 #include "../core/httpclient.h"
+#include "../third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -66,6 +67,18 @@ int http_request(http_client *c, const char *method, const char *url,
   return 0;                     /* completed exchange, 404 */
 }
 void http_response_free(http_response *r) { if (r) { free(r->body); r->body = NULL; } }
+/* lib/jsonlist.c is linked for jsonlist_next_page(), the paging decision the
+ * page_walk rows share with every VJSON collector (and lib/pagewalk.c because
+ * jsonlist.c calls into it). Their own fetchers, the operator URL override and
+ * the feed key hash are not exercised here, so they are stubbed: every fetch
+ * in this test goes through http_request() above. */
+cJSON *feed_get_json(http_client *h, const char *url, int t) {
+  (void)h; (void)url; (void)t; return NULL;
+}
+const char *url_override_apply(const char *url) { return url; }
+void feed_hash_key(char *out21, const char *const *parts, int n) {
+  (void)parts; (void)n; if (out21) out21[0] = 0;
+}
 
 /* ── capturing sink ──────────────────────────────────────────────────────── */
 #define MAXCAP 64
@@ -242,6 +255,69 @@ static const hp_source T[] = {
     .array_path = "items", .title_keys = "name", .id_keys = "num",
     .detail_url = "https://x.test/d2/{v}", .detail_key = "num",
     .record_type = "t-deepall", .free_tier = 1, .description = "d" },
+
+  /* The rows below declare NO paging of their own and opt into page_walk:
+   * walk on the upstream's own evidence, by the decision every VJSON collector
+   * makes (jsonlist_next_page). A row moved from VJSON onto this engine to walk
+   * its detail hop must not lose its later pages. */
+  { .id = "T_PAGE_AUTO", .name = "undeclared paging, server next link",
+    .url = "https://x.test/pa?q={q}", .array_path = "items",
+    .title_keys = "name", .id_keys = "id",
+    .page_walk = 1,
+    .record_type = "t-auto-page", .free_tier = 1, .description = "d" },
+
+  { .id = "T_PAGE_CURSOR", .name = "undeclared paging, declared page size",
+    .url = "https://x.test/pc?limit=2&offset=0", .array_path = "items",
+    .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .page_walk = 1,
+    .record_type = "t-auto-cursor", .free_tier = 1, .description = "d" },
+
+  { .id = "T_PAGE_SHORT", .name = "undeclared paging, short first page",
+    .url = "https://x.test/ps?limit=5", .array_path = "items",
+    .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .page_walk = 1,
+    .record_type = "t-auto-short", .free_tier = 1, .description = "d" },
+
+  /* A full page, no next link, and a page size with no cursor sibling the
+   * walk knows (`maxFeatures`): the walk stops — and says so in-band, because
+   * a full page is evidence that more exists. */
+  { .id = "T_PAGE_STUCK", .name = "full page, nothing to advance",
+    .url = "https://x.test/pk?maxFeatures=2", .array_path = "items",
+    .title_keys = "name", .id_keys = "id", .interval = 3600, .page_walk = 1,
+    .record_type = "t-auto-stuck", .free_tier = 1, .description = "d" },
+
+  /* `rp` is flexigrid's page size (taginfo), paired with a `page` cursor. */
+  { .id = "T_PAGE_PROVEN", .name = "page size proven by the response",
+    .url = "https://x.test/pp?page=1&rp=3", .array_path = "items",
+    .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .page_walk = 1,
+    .record_type = "t-proven", .free_tier = 1, .description = "d" },
+
+  /* Same shape, but nothing in the URL is a page size and the upstream
+   * declares no total, so there is no evidence of more and no page 2. */
+  { .id = "T_PAGE_NOPROOF", .name = "no provable page size",
+    .url = "https://x.test/np?page=1&order_by=name", .array_path = "items",
+    .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .page_walk = 1,
+    .record_type = "t-noproof", .free_tier = 1, .description = "d" },
+
+  /* `?page=1` with no page size anywhere — ROR's and bio.tools' shape. Only the
+   * upstream's declared total can say whether more remains. */
+  { .id = "T_PAGE_TOTAL", .name = "cursor advanced on the declared total",
+    .url = "https://x.test/pt?page=1", .array_path = "items",
+    .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .page_walk = 1,
+    .record_type = "t-total-page", .free_tier = 1, .description = "d" },
+
+  { .id = "T_PAGE_SET", .name = "page_param replaces, never appends",
+    .url = "https://x.test/pset?page=1&per=2", .array_path = "items",
+    .title_keys = "name", .id_keys = "id", .page_param = "page", .interval = 3600,
+    .record_type = "t-page-set", .free_tier = 1, .description = "d" },
+
+  { .id = "T_TOTAL", .name = "upstream declares its own total",
+    .url = "https://x.test/tot?q={q}", .array_path = "items",
+    .title_keys = "name", .id_keys = "id", .max_items = 2,
+    .record_type = "t-total", .free_tier = 1, .description = "d" },
 
   { .id = "T_ERR", .name = "upstream error", .url = "https://x.test/err?q={q}",
     .record_type = "t-err", .free_tier = 1, .description = "d" },
@@ -803,6 +879,117 @@ int main(void) {
   for (int i = 0; i < 5; i++)
     if (!strstr(g_cap[i].props, "\"detail.role\":\"member\"")) deep_all = 0;
   ok(deep_all, "all five records carry their detail block");
+
+  /* 9h. a row that declares NO paging still follows a next link the server
+   * published. This is the regression that mattered: moving a verified source
+   * onto this engine to wire its detail hop must not cost it its later pages. */
+  fx_reset();
+  fx_add("/pa?q=", 200,
+    "{\"items\":[{\"name\":\"a1\",\"id\":\"1\"}],"
+    "\"links\":{\"next\":\"https://x.test/pa-2\"}}");
+  fx_add("/pa-2", 200, "{\"items\":[{\"name\":\"a2\",\"id\":\"2\"}],\"links\":{\"next\":null}}");
+  rc = run_source("T_PAGE_AUTO", "x");
+  ok(rc == 0 && g_ncap == 2 && g_ncalls == 2,
+     "undeclared paging follows links.next instead of dropping page 2");
+
+  /* 9i. and advances the URL's own offset by its own declared page size while
+   * pages come back exactly that full. */
+  fx_reset();
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c3\",\"id\":\"3\"}]}");
+  fx_add("/pc?limit=2", 200,
+    "{\"items\":[{\"name\":\"c1\",\"id\":\"1\"},{\"name\":\"c2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_CURSOR", "");
+  ok(rc == 0 && g_ncap == 3 && g_ncalls == 2,
+     "undeclared paging advances limit/offset while pages come back full");
+  ok(strstr(g_last_url, "offset=2") != NULL, "cursor advanced by the declared page size");
+
+  /* 9i2. a full page with nothing the walk can advance is not followed with a
+   * guessed parameter; the shortfall is stated as a truncation-notice record. */
+  fx_reset();
+  fx_add("/pk?maxFeatures=2", 200,
+    "{\"items\":[{\"name\":\"k1\",\"id\":\"1\"},{\"name\":\"k2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_STUCK", "");
+  ok(rc == 0 && g_ncalls == 1 && g_ncap == 3,
+     "full page with no cursor sibling: one request, no guessed cursor");
+  ok(g_ncap == 3 && strcmp(g_cap[2].rtype, "collector-truncation-notice") == 0 &&
+     strstr(g_cap[2].props, "came back full") != NULL,
+     "…and the full last page is disclosed in-band");
+
+  /* 9j. a SHORT first page is the upstream saying it is finished. Following it
+   * would be inventing a page that was never offered. */
+  fx_reset();
+  fx_add("/ps?limit=5", 200, "{\"items\":[{\"name\":\"s1\",\"id\":\"1\"}]}");
+  rc = run_source("T_PAGE_SHORT", "");
+  ok(rc == 0 && g_ncap == 1 && g_ncalls == 1,
+     "a short page stops the walk — no guessed second request");
+
+  /* 9j2. `rp=3` is the page size and `page` its cursor: 3 back, page 2 is
+   * asked for, and its 1 record is a short page that ends the walk. */
+  fx_reset();
+  fx_add("page=2", 200, "{\"items\":[{\"name\":\"r4\",\"id\":\"4\"}]}");
+  fx_add("/pp?page=1&rp=3", 200,
+    "{\"items\":[{\"name\":\"r1\",\"id\":\"1\"},{\"name\":\"r2\",\"id\":\"2\"},"
+    "{\"name\":\"r3\",\"id\":\"3\"}]}");
+  rc = run_source("T_PAGE_PROVEN", "");
+  ok(rc == 0 && g_ncap == 4 && g_ncalls == 2,
+     "a flexigrid rp/page walk advances while pages come back full");
+  ok(strstr(g_last_url, "page=2") != NULL && strstr(g_last_url, "rp=3") != NULL,
+     "the cursor advanced and the proven page size was left alone");
+
+  /* 9j3. no page size and no declared total: no evidence of a page 2. */
+  fx_reset();
+  fx_add("/np?page=1", 200,
+    "{\"items\":[{\"name\":\"n1\",\"id\":\"1\"},{\"name\":\"n2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_NOPROOF", "");
+  ok(rc == 0 && g_ncap == 2 && g_ncalls == 1,
+     "no page size and no total = one request, not a guessed page 2");
+
+  /* 9j4. `?page=1` with no page size at all (ROR's shape): the upstream
+   * declares 3 and hands over 2, so it has said itself that more remains. */
+  fx_reset();
+  fx_add("page=2", 200,
+    "{\"number_of_results\":3,\"items\":[{\"name\":\"t3\",\"id\":\"3\"}]}");
+  fx_add("/pt?page=1", 200,
+    "{\"number_of_results\":3,\"items\":[{\"name\":\"t1\",\"id\":\"1\"},"
+    "{\"name\":\"t2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_TOTAL", "");
+  ok(rc == 0 && g_ncap == 3 && g_ncalls == 2,
+     "a declared total moves a page cursor the URL gives no page size for");
+  ok(strstr(g_last_url, "page=2") != NULL, "page cursor advanced to 2");
+
+  /* 9j5. and once the declared total is reached the walk stops — the upstream
+   * has handed over everything it said it had. */
+  fx_reset();
+  fx_add("/pt?page=1", 200,
+    "{\"number_of_results\":2,\"items\":[{\"name\":\"u1\",\"id\":\"1\"},"
+    "{\"name\":\"u2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_TOTAL", "");
+  ok(rc == 0 && g_ncap == 2 && g_ncalls == 1,
+     "walk stops when the declared total has been delivered");
+
+  /* 9k. page_param SETS its parameter. Appending built page=1&page=2&page=3 and
+   * left the winner to the server. */
+  fx_reset();
+  fx_add("page=2", 200, "{\"items\":[{\"name\":\"g2\",\"id\":\"2\"}]}");
+  fx_add("page=3", 200, "{\"items\":[]}");
+  fx_add("/pset?page=1", 200, "{\"items\":[{\"name\":\"g1\",\"id\":\"1\"}]}");
+  rc = run_source("T_PAGE_SET", "");
+  ok(rc == 0 && g_ncap == 2, "page_param walk collects both pages");
+  ok(strstr(g_last_url, "page=3") != NULL && strstr(g_last_url, "page=1") == NULL,
+     "page_param replaced the existing page= rather than appending a second one");
+
+  /* 9l. when the upstream declares a total, the shortfall notice reports THAT,
+   * not just the records we happened to count. */
+  fx_reset();
+  fx_add("/tot?q=", 200,
+    "{\"total_count\":97,\"items\":[{\"name\":\"t1\",\"id\":\"1\"},"
+    "{\"name\":\"t2\",\"id\":\"2\"},{\"name\":\"t3\",\"id\":\"3\"}]}");
+  rc = run_source("T_TOTAL", "x");
+  ok(rc == 0 && g_ncap == 3, "capped row emits 2 records + 1 notice");
+  ok(strstr(g_cap[2].props, "\"records_available\":97") != NULL,
+     "notice reports the upstream's declared total, not the page it saw");
+  ok(strstr(g_cap[2].props, "upstream declared this total") != NULL,
+     "notice states where that total came from");
 
   /* 10. a real shipped row: Companies House PSC (from hp_uk_deep.c) */
   fx_reset();

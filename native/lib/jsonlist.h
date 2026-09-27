@@ -83,6 +83,20 @@ int jsonlist_emit_ex(intel_sink *sink, const char *source_id, cJSON *doc,
  *
  * Returns total records emitted (>= 0), or -1 if the FIRST fetch failed (so
  * the caller can still distinguish a dead endpoint from an honest empty, R3). */
+/* The per-page "is there more, and where?" decision jsonlist_emit_paged makes,
+ * exported so hpengine's `page_walk` rows (VJSON rows moved onto hpengine for
+ * their detail hop) page exactly as they did. Returns the next URL (caller
+ * frees) or NULL; `*full_unadvanced` (may be NULL) is set when the walk stops
+ * at a page that looked full. `total` counts records emitted so far, this page
+ * included; `available` is the upstream's declared total or -1. */
+char *jsonlist_next_page(cJSON *doc, const char *page_url, int got,
+                         long available, int total, int *full_unadvanced);
+/* The upstream's own count of the whole match set, as that walk reads it; -1
+ * when it did not say. */
+long jsonlist_declared_total(cJSON *doc);
+/* $JO_JSONLIST_PAGE_MAX, default 20 — the page ceiling of that walk. */
+int jsonlist_page_max(void);
+
 int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
                         http_client *http, const char *url, int timeout_ms,
                         const char *path, const char *record_type,

@@ -1,0 +1,39 @@
+# Rows with a proven detail hop that were NOT moved onto hpengine, because
+# running both forms through the real binary (tools/audit_registry_emit.py,
+# fresh DB per run, 2026-09-27) showed the hpengine form storing FEWER
+# records than the VJSON form ships today. A deeper record is not worth a
+# lost one. collectors/gen_detail_hop_upgrade.py --keep-on-vjson reads this.
+id	vjson_verdict	vjson_stored	hp_verdict	hp_stored	why
+af-pmg-committee-meetings	COLLISION	994	COLLISION	992	hpengine reads fewer records
+au-acnc-annual-information-statement-2024	OK	2001	COLLISION	1977	records collide onto one uid on hpengine
+au-acnc-charity-register	OK	2001	COLLISION	1976	records collide onto one uid on hpengine
+au-apvma-pubcris-products	OK	2001	COLLISION	99	records collide onto one uid on hpengine
+au-asic-company-register	OK	2001	COLLISION	1976	records collide onto one uid on hpengine
+au-gov-contracts-historical	OK	2001	COLLISION	1799	records collide onto one uid on hpengine
+au-ndis-commission-compliance-actions	OK	2001	COLLISION	1975	records collide onto one uid on hpengine
+au-qld-contracts-awarded	OK	2001	COLLISION	1967	records collide onto one uid on hpengine
+au-qld-environmental-authorities	OK	2001	COLLISION	1977	records collide onto one uid on hpengine
+au-qld-environmental-enforcement-actions	OK	1808	COLLISION	1764	records collide onto one uid on hpengine
+au-qld-health-grant-recipients	OK	2001	COLLISION	508	records collide onto one uid on hpengine
+au-qld-resource-authority-name-changes	OK	14	COLLISION	13	records collide onto one uid on hpengine
+au-qld-supplier-arrangements	OK	250	COLLISION	226	records collide onto one uid on hpengine
+au-qld-water-service-providers	OK	211	COLLISION	187	records collide onto one uid on hpengine
+au-vic-building-practitioner-register	OK	2001	COLLISION	1981	records collide onto one uid on hpengine
+cordis-search-results-query	COLLISION	91	COLLISION	76	hpengine reads fewer records
+dk-erst-offentliggoerelser	OK	4	OK	1	hpengine reads fewer records
+gleif-lei-filter-lapsed	OK	201	OK	181	hpengine reads fewer records
+gleif-lei-filter-nonconforming	OK	201	OK	141	hpengine reads fewer records
+gleif-lei-ultimate-children	OK	301	OK	16	hpengine reads fewer records
+global-ooni-measurements-jp	COLLISION	56	COLLISION	43	hpengine reads fewer records
+global-peeringdb-ixfac-by-ix	OK	5	EMITS_NOTHING	0	emits nothing on hpengine
+global-peeringdb-ixlan-by-ix	OK	1	EMITS_NOTHING	0	emits nothing on hpengine
+global-peeringdb-netfac-by-fac	OK	5	EMITS_NOTHING	0	emits nothing on hpengine
+global-peeringdb-netixlan-by-ix	OK	5	EMITS_NOTHING	0	emits nothing on hpengine
+il-ica-company-changes	OK	2001	COLLISION	1934	records collide onto one uid on hpengine
+il-moj-amutot-registered	OK	2001	COLLISION	1977	records collide onto one uid on hpengine
+mx-dof-sidof-notas	OK	74	EMITS_NOTHING	0	emits nothing on hpengine
+sk-rpo-by-ico	OK	1	EMITS_NOTHING	0	emits nothing on hpengine
+us-courtlistener-search-people	OK	401	OK	61	hpengine reads fewer records
+us-courtlistener-search-recap-dockets	COLLISION	383	COLLISION	97	hpengine reads fewer records
+us-ma-ocpf-municipalities	OK	351	COLLISION	343	records collide onto one uid on hpengine
+us-ma-ocpf-nonfilers	OK	5	COLLISION	4	records collide onto one uid on hpengine

@@ -94,6 +94,12 @@ typedef struct hp_source {
   const char *description;
   const char *record_type;    /* stamped on every emitted item             */
   const char *tags;           /* extra JSON array members, e.g. "\"uk\""   */
+  /* BCP-47-ish language of the upstream's own text. NULL → "en", which is the
+   * only value this engine used to emit: every row was stamped English no
+   * matter what it fetched. That is a claim about the content, and it was wrong
+   * for a Brazilian transparency portal or a Korean disclosure filing — the
+   * translate and search paths downstream read it. */
+  const char *lang;
 
   hp_mode mode;
   hp_want want;
@@ -217,6 +223,14 @@ typedef struct hp_source {
   int         page_zero_based;/* 1 = the first page is numbered 0, not 1      */
   int         page_size;      /* records per page, for offset-style paging    */
   int         page_max;       /* max pages to walk (default 10)              */
+  /* Walk pages the way a VJSON collector is walked, for a row that declares
+   * none of next_path / page_param / {page}: the server's own next link, else
+   * the cursor its declared page size pairs with, advanced only while pages
+   * come back full (jsonlist_next_page — one decision for both engines).
+   * Opt-in, and HP_JSON only: it exists so a verified list collector moved onto
+   * this engine to walk its detail hop does not lose every page after the
+   * first. The ceiling is page_max when set, else $JO_JSONLIST_PAGE_MAX (20). */
+  int         page_walk;
 
   int csv_no_header;          /* CSV mode: file has no header row → col0..colN */
   /* CSV mode: field delimiter, if not a comma. DataPlane.org's feeds are

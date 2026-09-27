@@ -7,20 +7,6 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
-VJSON(au_asic_banned_disqualified_organisations, "au-asic-banned-disqualified-organisations", "ASIC — banned and disqualified organisations", "ASIC — banned and disqualified organisations",
-  "au_enforcement", "enforcement",
-  "https://data.gov.au/data/api/3/action/datastore_search?resource_id=ced03961-e6f7-4263-895a-0fd1d7996043&limit=100",
-  "result.records",
-  "en", "[\"au\",\"enforcement\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Corporate entities banned by ASIC: BD_ORG_ACN, BD_ORG_NAME, BD_ORG_TYPE, ban start and end dates, an ASIC reference URL and comments. Small register but it names companies, and the ACN pivots straight into the 4.4M-row company register.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
-VJSON(au_asic_banned_disqualified_persons, "au-asic-banned-disqualified-persons", "ASIC — banned and disqualified persons", "ASIC — banned and disqualified persons",
-  "au_enforcement", "enforcement",
-  "https://data.gov.au/data/api/3/action/datastore_search?resource_id=741da9e3-7e0c-458e-830c-c518698e1788&limit=100",
-  "result.records",
-  "en", "[\"au\",\"enforcement\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Named individuals banned by ASIC: BD_PER_NAME, BD_PER_TYPE (Banned Securities / AFS banning / Credit banning / director disqualification), BD_PER_DOC_NUM, start and end dates of the ban, suburb, state, postcode, country and ASIC's comments.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
 VJSON(au_ndis_commission_compliance_actions, "au-ndis-commission-compliance-actions", "NDIS Quality and Safeguards Commission — compliance actions", "NDIS Quality and Safeguards Commission — compliance actions",
   "au_enforcement", "enforcement",
   "https://data.gov.au/data/api/3/action/datastore_search?resource_id=7e08bcc8-d3a0-403b-bac7-936ec4d48694&limit=100",

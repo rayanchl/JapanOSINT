@@ -85,10 +85,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!html || strlen(html) < 50) { free(html); fprintf(stderr, "[sakura-front] unavailable\n"); return -1; }
 
   cJSON *features = cJSON_CreateArray();
-  int considered = 0;
+  /* The bound was `considered < 60`, on a cJSON array that grows anyway — a
+   * number, not a memory limit. The page is one table of observation rows and it
+   * is already fetched; every row on it is read. */
   const char *cur = html;
   const char *tr_in; int tr_len;
-  while (considered < 60 && (cur = html_block(cur, "tr", &tr_in, &tr_len)) != NULL) {
+  while ((cur = html_block(cur, "tr", &tr_in, &tr_len)) != NULL) {
     char *row = strndup(tr_in, (size_t)tr_len);
     if (!row) continue;
 
@@ -117,8 +119,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (is_date_cell(x)) { date = x; break; }
     }
     if (!date) { cJSON_Delete(cells); free(row); continue; }
-
-    considered++;
 
     /* geocode via GSI: top hit coords or skip (no fabrication) */
     char q[512], url[640];

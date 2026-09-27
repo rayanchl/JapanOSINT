@@ -23,7 +23,11 @@ static int run_ufocatch(const source_ctx *ctx, intel_sink *sink) {
   int emitted = 0;
   char *p = body;
   char *e;
-  while (emitted < 25 && (e = strstr(p, "<entry")) != NULL) {
+  /* The bound was `emitted < 25`. This is EDINET-x, the Japanese securities
+   * filing feed, and the document is already fetched and in memory — capping the
+   * parse at 25 entries drops filings we paid for, in a loop condition where the
+   * audit's #define and break patterns could not see it. */
+  while ((e = strstr(p, "<entry")) != NULL) {
     char *end = strstr(e, "</entry>");
     if (!end) break;
     char saved = *end; *end = 0;            /* bound parsing to this entry */

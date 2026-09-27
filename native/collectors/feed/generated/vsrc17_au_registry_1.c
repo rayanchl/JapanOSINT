@@ -14,33 +14,12 @@ VJSON(au_acnc_charity_register, "au-acnc-charity-register", "ACNC — Australian
   "en", "[\"au\",\"registry\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
   "Every registered Australian charity: ABN, Charity_Legal_Name, Other_Organisation_Names, full street address, Charity_Website, Registration_Date, Date_Organisation_Established, Charity_Size, Number_of_Responsible_Persons, financial year end and per-state operating flags.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
 
-VJSON(au_asic_business_names, "au-asic-business-names", "ASIC — Australian business names register", "ASIC — Australian business names register",
-  "au_registry", "registry",
-  "https://data.gov.au/data/api/3/action/datastore_search?resource_id=55ad4b1c-5eeb-44ea-8b29-d410da431be3&limit=100",
-  "result.records",
-  "en", "[\"au\",\"registry\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Every registered Australian trading name with BN_NAME, BN_STATUS, BN_REG_DT, BN_CANCEL_DT, BN_STATE_NUM, BN_STATE_OF_REG and — the pivot that matters — BN_ABN linking the trading name to the legal entity behind it.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
 VJSON(au_asic_company_register, "au-asic-company-register", "ASIC — Australian company register (full)", "ASIC — Australian company register (full)",
   "au_registry", "registry",
   "https://data.gov.au/data/api/3/action/datastore_search?resource_id=5c3914e6-413e-4a2c-b890-bf8efe3eabf2&limit=100",
   "result.records",
   "en", "[\"au\",\"registry\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
   "Every company ever registered in Australia: Company Name, ACN, Type, Class, Sub Class, Status (REGD/DRGD), Date of Registration, Date of Deregistration, Previous State of Registration, State Registration number, ABN, Current Name and Current Name Start Date. 4.4M rows, and &q=<name> full-text searches it server-side.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
-VJSON(au_asic_liquidators, "au-asic-liquidators", "ASIC — registered liquidators", "ASIC — registered liquidators",
-  "au_registry", "registry",
-  "https://data.gov.au/data/api/3/action/datastore_search?resource_id=02388d87-3f0b-48fd-bffa-c4a661962fc3&limit=100",
-  "result.records",
-  "en", "[\"au\",\"registry\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Every registered and official liquidator in Australia: LIQ_NAME, LIQ_NUM, OFF_LIQ_NUM, registration start dates, LIQ_STATUS, suspension date, locality/state/postcode and LIQ_FIRM — the insolvency practitioner behind a collapse, tied to their firm.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
-
-VJSON(au_asic_registered_auditors, "au-asic-registered-auditors", "ASIC — registered company auditors", "ASIC — registered company auditors",
-  "au_registry", "registry",
-  "https://data.gov.au/data/api/3/action/datastore_search?resource_id=0f2e41ec-6f49-4d35-8e6d-ebcd4a0e3e27&limit=100",
-  "result.records",
-  "en", "[\"au\",\"registry\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Registered auditors and audit firms: REG_AUD_NAME, REG_AUD_NUM, REG_AUD_ACN, registration date, status, suspension date and address. The ACN links an audit firm to its own company record.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
 
 VJSON(au_qld_resource_authority_name_changes, "au-qld-resource-authority-name-changes", "Queensland — resource authority holder name changes", "Queensland — resource authority holder name changes",
   "au_registry", "registry",

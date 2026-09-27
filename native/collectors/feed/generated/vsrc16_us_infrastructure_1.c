@@ -14,20 +14,6 @@ VJSON(global_peeringdb_campus_detail, "global-peeringdb-campus-detail", "Peering
   "en", "[\"us\",\"infrastructure\",\"batch16\",\"high-penetrancy\"]", 86400,
   "One campus with owning org inlined including net_set/fac_set/ix_set id lists and the org's free-text notes (which often name the merged operators behind the campus).");
 
-VJSON(global_peeringdb_campus_list, "global-peeringdb-campus-list", "PeeringDB campuses", "PeeringDB campuses",
-  "us_infrastructure", "infrastructure",
-  "https://www.peeringdb.com/api/campus?limit=3",
-  "data",
-  "en", "[\"us\",\"infrastructure\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Multi-building datacentre campuses: id, org_id, org_name, name, aka, website, social_media, country/city/state/zipcode.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(global_peeringdb_carrierfac, "global-peeringdb-carrierfac", "PeeringDB carrier facility presence", "PeeringDB carrier facility presence",
-  "us_infrastructure", "infrastructure",
-  "https://www.peeringdb.com/api/carrierfac?carrier_id=1",
-  "data",
-  "en", "[\"us\",\"infrastructure\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Which datacentres a carrier fabric reaches: carrier_id, fac_id, facility name, created/updated. Carrier -> building hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(global_peeringdb_fac_detail, "global-peeringdb-fac-detail", "PeeringDB facility detail (depth=2)", "PeeringDB facility detail (depth=2)",
   "us_infrastructure", "infrastructure",
   "https://www.peeringdb.com/api/fac/1?depth=2",
@@ -77,16 +63,3 @@ VJSON(global_peeringdb_netixlan_by_ix, "global-peeringdb-netixlan-by-ix", "Peeri
   "en", "[\"us\",\"infrastructure\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
   "Per-port membership rows joining a network to an exchange LAN: net_id, ix_id, ixlan_id, asn, ipaddr4, ipaddr6, port speed (Mbit), is_rs_peer, bfd_support, operational flag. The IX -> member-ASN -> peering IP hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
-VJSON(us_arin_rdap_autnum, "us-arin-rdap-autnum", "ARIN RDAP autnum", "ARIN RDAP autnum",
-  "us_infrastructure", "infrastructure",
-  "https://rdap.arin.net/registry/autnum/15169",
-  "notices",
-  "en", "[\"us\",\"infrastructure\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "ASN RDAP object: start/endAutnum, name, status, events, and nested entities carrying abuse/tech/admin POC handles with vCard (org, address, phone, email) and links back to whois.arin.net.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(us_arin_rdap_entity, "us-arin-rdap-entity", "ARIN RDAP entity (org) with autnums + networks", "ARIN RDAP entity (org) with autnums + networks",
-  "us_infrastructure", "infrastructure",
-  "https://rdap.arin.net/registry/entity/GOGL",
-  "networks",
-  "en", "[\"us\",\"infrastructure\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "RDAP entity for an org handle: full autnums[] array (each with handle, start/endAutnum, name, events for registration and last-changed) and networks[], plus nested entities with vCard contact blocks. 95 KB for GOGL.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

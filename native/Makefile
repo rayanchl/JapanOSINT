@@ -146,7 +146,9 @@ print-ldlibs:
 
 .PHONY: audit-sources
 audit-sources:
-	@python3 tests/audit_source_exhaustiveness.py --strict 'collectors/pivot/table/hp*_*.c'
+	@python3 tests/audit_source_exhaustiveness.py \
+	  --strict 'collectors/pivot/table/hp*_*.c' \
+	  --strict 'collectors/feed/generated/hp1[0-9]_*.c'
 
 # Batch 14 candidate lifecycle (docs/candidate-sources-batch14.tsv). These rows
 # were authored without egress, so they are registered as UNVERIFIED csrc14_*
@@ -185,7 +187,7 @@ regen-candidates:
 hptest:
 	@mkdir -p bin
 	$(CC) $(CFLAGS) -o bin/hpengine_test tests/hpengine_test.c lib/hpengine.c \
-	  lib/csv.c lib/htmlparse.c lib/seenset.c lib/xlsx.c lib/zipread.c \
+	  lib/csv.c lib/htmlparse.c lib/seenset.c lib/xlsx.c lib/zipread.c lib/jsonlist.c lib/pagewalk.c \
 	  collectors/pivot/table/hp_uk_deep.c \
 	  third_party/cJSON.c $(ICONV_LIB) -lz
 	./bin/hpengine_test
