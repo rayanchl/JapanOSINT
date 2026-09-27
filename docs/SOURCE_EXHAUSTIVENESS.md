@@ -124,16 +124,15 @@ make hptest            # engine-level guarantees, offline
 data: hardcoded record caps, `break` in a record loop, first-element-only access,
 single-page fetches of paged APIs, and fixed dedupe rings.
 
-**`make audit-sources` gates the `hp*_*.c` engine rows strictly, and those are at
-zero findings.** The wider tree is not: the same run scans 1,211 files and
-reports 66 heuristic findings across 50 of them. They are heuristics that each
-need a human read, not proven violations — but do not read a passing
-`audit-sources` as "nothing is being discarded". Note also what the scan cannot
-see: it greps C control flow, so a discard expressed as a *string literal* — a
-URL with `limit=20` and no pagination — is invisible to it. That class was 2,727
-generated sources until `lib/pagewalk.c` (above) took it on.
+**`make audit-sources` gates the `hp*_*.c` engine rows strictly, and the whole
+tree is at zero findings** — 0 across all 1,585 scanned files (measured
+2026-09-27). Findings are heuristics that each need a human read, so a new one
+is a regression to read, not a number to baseline. Note also what the scan
+cannot see: it greps C control flow, so a discard expressed as a *string
+literal* — a URL with `limit=20` and no pagination — is invisible to it. That
+class was 2,727 generated sources until `lib/pagewalk.c` (above) took it on.
 
-The progress that has been made was by fixing, not by silencing: arbitrary per-loop emit caps were deleted,
+The tree got there by fixing, not by silencing: arbitrary per-loop emit caps were deleted,
 paged endpoints (OpenPLZ, Etherscan, grep.app, arXiv, NZ Companies Office, UK
 Electoral Commission) now walk their pages, fixed dedupe rings became growable
 sets, and multi-valued fields that were cut to their first element now carry the
