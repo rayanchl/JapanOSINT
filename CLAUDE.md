@@ -19,11 +19,18 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 11,170**, and `tools/lint_sources.py` is the only
-thing that counts it. It used to say 10,564, because hp rows register through
-`hp_register()` rather than `REGISTER_SOURCE` and it could not see a single one
-of them — 30 shipped tables' worth. `make source-floor`, whose entire job is to
-fail when a source stops registering, was therefore blind to every hp row.
+**The registered count is 17,829** (2026-09-27): `make lint-sources` prints
+it, counting hp_source table rows as well as `REGISTER_SOURCE`, and
+`./bin/japanosint --list-sources` agrees.
+
+**One exception to "every source is proof-of-life verified":** the batch-400
+tables (`collectors/sources/hp3_{gov,pub,surv}_*.c`, merged 2026-09-27) hold
+360 rows, and 334 of them are entity pivots that have not been run against a
+real entity, nor `--check-filter`ed (rules 4 and 4d). The 26 scheduled rows
+were run: 7 dead endpoints were dropped, 14 need an API key and say so, and
+the rest store real records. See
+`native/collectors/OSINT_SOURCES_BATCH_400_GOV_PUBLIC_SURVEILLANCE.md`. Treat
+those pivots as registered, not proven, until they are verified.
 
 Three verifier/engine traps that pass exposed — check for them before trusting
 any "verified" number:
@@ -66,14 +73,14 @@ hpengine pages exactly as it did. Without that (or an explicit `next_path` /
 
 Where the tree actually stands, as `make audit-sources` reports it:
 
-* **strict set — 0 findings across 261 files** (2026-09-27):
+* **strict set — 0 findings across 256 files** (2026-09-27):
   `collectors/pivot/table/hp*_*.c` plus the generated deep-record tables
   `collectors/feed/generated/hp1[0-9]_*.c`. This is the part the Makefile
   gates on, and it is held clean. Run `make audit-sources`
   after adding a table: batch 18 introduced two `single-page` findings here (a
   paged endpoint declared without `page_param`) and they had to be fixed before
   the gate would pass again.
-* **the rest of the tree — 0 findings** (1,640 files scanned, 2026-09-27; it
+* **the rest of the tree — 0 findings** (1,642 files scanned, 2026-09-27; it
   first reached zero on 2026-08-24, from ~127 across ~74 files). Every first-only, single-page, record-cap, loop-break,
   limit-one and dedupe-ring finding has been read and closed one of three ways:
   the discard was real and was fixed, the line carries an `exhaustive-ok`

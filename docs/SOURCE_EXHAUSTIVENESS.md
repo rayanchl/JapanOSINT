@@ -127,7 +127,7 @@ single-page fetches of paged APIs, and fixed dedupe rings.
 
 **`make audit-sources` gates the `hp*_*.c` engine rows and the generated
 deep-record tables (`collectors/feed/generated/hp1[0-9]_*.c`) strictly, and the
-whole tree is at zero findings** — 0 across all 1,640 scanned files, 261 of
+whole tree is at zero findings** — 0 across all 1,642 scanned files, 256 of
 them in the strict set (measured 2026-09-27). A number in a document is a
 claim with a date on it: `make audit-sources` prints the current figures in
 seconds, and a new finding is a regression to read, not a number to baseline.
