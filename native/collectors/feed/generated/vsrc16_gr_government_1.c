@@ -22,13 +22,6 @@
  * 16.8s. The walk still stops at 100 and files a collector-truncation-notice
  * saying so; pushing the reach past 100 is a separate paging question and is
  * NOT settled here, so do not read this change as making the row deeper. */
-VJSON_KEYED(gr_diavgeia_decision_search, "gr-diavgeia-decision-search", "Diavgeia (Greece) — government decision search", "Diavgeia (Greece) — government decision search",
-  "gr_government", "government",
-  "https://diavgeia.gov.gr/opendata/search.json?q=organizationUid:%2215168%22&size=100",
-  "decisions",
-  "el", "[\"gr\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Every published act of every Greek public body, including expenditure approvals, procurement awards and payment orders. Each row gives the ADA (unique decision id), protocol number, full Greek subject line, decision type, issuing organisation and unit, signer, and thematic categories. Queryable by organizationUid, decision type, date and free text — this is the single deepest 'who was paid by whom' feed in Greece.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.",
-  "ada");
 
 /* emitted 25,165 / stored 233 is CORRECT dedupe, and the 25,134 in the old
  * description was a count of repeats, not of posts. Measured 2026-09-11: the

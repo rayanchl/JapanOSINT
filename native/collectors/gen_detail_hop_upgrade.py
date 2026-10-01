@@ -51,6 +51,19 @@ CONVERTIBLE = {
     "VJSON":    "HP_JSON",
     "VJSONBIG": "HP_JSON",
     "VCSV":     "HP_CSV",
+    # Both of these are a VJSON row plus a declared record identity, and that
+    # identity translates exactly: _vjson_idkeys.inc says of its IDKEYS field
+    # "`+` composes, as in hpengine id_keys", and VJSON_KEYED's IDFIELD is one
+    # top-level field, which is the same string with no separator. So the extra
+    # argument becomes .id_keys and nothing is invented.
+    #
+    # NOT here, and deliberately: VJSON_PREP, whose 14th argument is a C
+    # function that reshapes each page before emit. A row cannot express
+    # arbitrary code, so converting one would quietly drop the hook that makes
+    # its records labellable. VRSS and VGEO stay out for the older reason —
+    # hpengine has no RSS or FeatureCollection mode.
+    "VJSON_KEYED":  "HP_JSON",
+    "VJSON_IDKEYS": "HP_JSON",
 }
 # Argument order of each macro, so a parsed call becomes a named dict. Mirrors
 # collectors/sources/_verified_macros.inc — if that file's signatures change,
@@ -58,6 +71,12 @@ CONVERTIBLE = {
 SIGNATURES = {
     "VJSON":    ["sym", "id", "name", "name_ja", "collector", "category",
                  "url", "path", "lang", "tags", "interval", "description"],
+    "VJSON_KEYED":  ["sym", "id", "name", "name_ja", "collector", "category",
+                     "url", "path", "lang", "tags", "interval", "description",
+                     "id_keys"],
+    "VJSON_IDKEYS": ["sym", "id", "name", "name_ja", "collector", "category",
+                     "url", "path", "lang", "tags", "interval", "description",
+                     "id_keys"],
     "VJSONBIG": ["sym", "id", "name", "name_ja", "collector", "category",
                  "url", "path", "lang", "tags", "interval", "description"],
     "VCSV":     ["sym", "id", "name", "name_ja", "collector", "category",
@@ -370,6 +389,12 @@ def render_table(rows, collector, batch, part, total_parts):
         out.append("    .url = \"%s\",\n" % r["url"])
         if r["array_path"]:
             out.append("    .array_path = \"%s\",\n" % r["array_path"])
+        if r.get("id_keys"):
+            # Carried verbatim from the row's own macro argument. Getting this
+            # wrong fails SILENTLY — the records collapse onto one uid at the
+            # sink and the run still reports success — so it is copied, never
+            # re-derived.
+            out.append("    .id_keys = \"%s\",\n" % r["id_keys"])
         out.append("    .detail_url = \"%s\", .detail_key = \"%s\",\n"
                    % (r["detail_url"], r["detail_key"]))
         if r["page_param"]:
@@ -397,13 +422,24 @@ def main():
     hops = load_detail_hops(args.detail_hops)
     print("detail hops loaded: %d" % len(hops))
 
-    ids_before = set()       # every id registered in the generated dir, before
+    # Every id registered in the generated dir before this run — from the vsrc
+    # MACROS *and* from any hp table already there.
+    #
+    # The hp half is not decoration. This script writes one table per
+    # (batch, collector) group of the CURRENT run, so running it twice with
+    # different row sets rewrites a group's file with only the second run's
+    # rows and drops the first run's. That cost 53 sources, and the earlier
+    # version of this check could not see it: it read ids_before from vsrc
+    # macros only, and rows converted by the first run are no longer in a vsrc
+    # file, so they were outside the set being protected.
+    ids_before = set()
     for fname in os.listdir(args.generated):
-        if fname.endswith(".c"):
-            ids_before |= set(re.findall(
-                r'^V[A-Z][A-Z0-9_]*\(\s*\w+\s*,\s*"([^"]+)"',
-                open(os.path.join(args.generated, fname),
-                     encoding="utf-8").read(), re.M))
+        if not fname.endswith(".c"):
+            continue
+        txt = open(os.path.join(args.generated, fname), encoding="utf-8").read()
+        ids_before |= set(re.findall(
+            r'^V[A-Z][A-Z0-9_]*\(\s*\w+\s*,\s*"([^"]+)"', txt, re.M))
+        ids_before |= set(re.findall(r'^\s*\{ \.id = "([^"]+)"', txt, re.M))
 
     converted = []           # rows that become hp_source entries
     skipped_shape = []       # has a hop, but the macro has no hpengine mode
@@ -461,6 +497,7 @@ def main():
                 "detail_url": detail_url,
                 "detail_key": detail_key,
                 "mode": CONVERTIBLE[macro],
+                "id_keys": c_str_value(a["id_keys"]) if "id_keys" in a else "",
                 "page_param": _pg[0] or "",
                 "page_size": _pg[1],
                 "page_start": _pg[2],

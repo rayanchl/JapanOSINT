@@ -1,4 +1,4 @@
-/* Deep-record ng_aid sources (1), part 1 of 1.
+/* Deep-record ng_aid sources (2), part 1 of 1.
  *
  * Batch 17 verified each of these endpoints live AND separately probed the
  * per-record detail endpoint below it with a real id. The list half shipped as
@@ -12,6 +12,17 @@
 #include "lib/hpengine.h"
 
 static const hp_source T[] = {
+  { .id = "af-dportal-act-ng",
+    .name = "d-portal (IATI) — aid activities in Nigeria",
+    .collector = "ng_aid", .category = "aid",
+    .description = "Every IATI-published aid activity with Nigeria as recipient. Row: aid (activity identifier), reporting org name, reporting_ref, funder_ref, title, slug, status_code, day_start/day_end/day_length, description, commitment and spend in USD/EUR/GBP/CAD, flags. Detail by aid returns the single activity; the same aid also drives ?from=trans&aid= for individual transactions.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
+    .record_type = "aid-record", .tags = "\"ng\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .url = "https://d-portal.org/q?from=act&country_code=NG&limit=5000&form=json",
+    .array_path = "rows",
+    .id_keys = "aid",
+    .detail_url = "https://d-portal.org/q?from=act&aid={v}&form=json", .detail_key = "aid",
+    .interval = 86400, .free_tier = 1 },
+
   { .id = "af-dportal-trans-ng",
     .name = "d-portal (IATI) — aid transactions in Nigeria",
     .collector = "ng_aid", .category = "aid",

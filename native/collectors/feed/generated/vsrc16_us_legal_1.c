@@ -91,13 +91,6 @@ VJSON(us_courtlistener_search_oral_argument, "us-courtlistener-search-oral-argum
  * pages: 240 rows, 231 docket_ids, 208 caseNames; the 9 repeated docket_ids are
  * the same docket re-served on the next cursor page, differing only in
  * meta.score.bm25 (148.71298 vs 148.7121). */
-VJSON_IDKEYS(us_courtlistener_search_recap_dockets, "us-courtlistener-search-recap-dockets", "CourtListener RECAP — federal docket search (anonymous-accessible)", "CourtListener RECAP — federal docket search (anonymous-accessible)",
-  "us_legal", "legal",
-  "https://www.courtlistener.com/api/rest/v4/search/?q=Google&type=r",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Federal PACER/RECAP dockets. count 98124 dockets / document_count 520436 for one query. Each row carries docketNumber, caseName, court, assignedTo judge name + assigned_to_id, referredTo, dateFiled, dateTerminated, cause, natureOfSuit, juryDemand, and a nested recap_documents[] array with entry_number, description, is_available, filepath_local and page_count. This is the deep RECAP hop that works WITHOUT a token (the REST /dockets/ endpoint is 401 anonymously).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.",
-  "docket_id");
 
 VJSON(us_courtlistener_search_recap_documents, "us-courtlistener-search-recap-documents", "CourtListener RECAP — docket-entry/document search", "CourtListener RECAP — docket-entry/document search",
   "us_legal", "legal",
@@ -154,14 +147,6 @@ VCSV(us_fed_enforcement_actions_csv, "us-fed-enforcement-actions-csv", "Federal 
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "455 KB CSV, columns: Effective Date, Termination Date, Individual (the NAMED person barred or fined), Individual Affiliation (their bank and city/state), Banking Organization (for entity actions), Action (Prohibition from Banking, Written Agreement, Cease and Desist, Civil Money Penalty), URL to the press release, Name, Note. Both the institution-level and the named-individual-level enforcement record of the Federal Reserve, in one file, no scraping.");
 
-VJSON_KEYED(us_federalregister_by_cfr, "us-federalregister-by-cfr", "Federal Register — documents affecting a CFR part", "Federal Register — documents affecting a CFR part",
-  "us_legal", "legal",
-  "https://www.federalregister.gov/api/v1/documents.json?conditions%5Bcfr%5D%5Btitle%5D=40&conditions%5Bcfr%5D%5Bpart%5D=63&per_page=5",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Every FR document that amends a given CFR title/part (count 1,532 for 40 CFR 63). Gives the rulemaking history of a specific regulation, with next_page_url cursor. Joins directly to the eCFR endpoints above.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.",
-  "document_number");
-
 VJSON(us_federalregister_document_detail, "us-federalregister-document-detail", "Federal Register — document detail record", "Federal Register — document detail record",
   "us_legal", "legal",
   "https://www.federalregister.gov/api/v1/documents/2024-01234.json",
@@ -175,13 +160,6 @@ VJSON(us_federalregister_document_detail, "us-federalregister-document-detail", 
  * Minimis Treatment for All Countries"): 100 emitted, 99 stored. per_page=5 also
  * read 100 of 1,563 at the page ceiling. Measured 2026-09-15: per_page=1000
  * following next_page_url returns all 1,563, 1,563 distinct document_numbers. */
-VJSON_IDKEYS(us_federalregister_executive_orders, "us-federalregister-executive-orders", "Federal Register — presidential documents / executive orders", "Federal Register — presidential documents / executive orders",
-  "us_legal", "legal",
-  "https://www.federalregister.gov/api/v1/documents.json?conditions%5Bpresidential_document_type%5D%5B%5D=executive_order&per_page=1000&order=newest",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Executive orders, proclamations, memoranda and notices (count 1,556 EOs). Each row: title, executive_order_number, signing_date, publication_date, president, document_number, html_url, pdf_url, disposition_notes. Swap presidential_document_type for proclamation/memorandum/notice/determination.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.",
-  "document_number");
 
 VJSON(us_federalregister_public_inspection_detail, "us-federalregister-public-inspection-detail", "Federal Register — public inspection document detail", "Federal Register — public inspection document detail",
   "us_legal", "legal",
@@ -306,14 +284,6 @@ VJSON(us_legistar_seattle_bodies, "us-legistar-seattle-bodies", "Legistar — le
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Council, committees, boards and commissions: BodyId, BodyGuid, BodyName, BodyTypeId/Name, BodyMeetFlag, BodyActiveFlag, BodyDescription, BodyContactNameId, BodyLastModifiedUtc. The org chart above matters and events.");
 
-VJSON_KEYED(us_legistar_seattle_events, "us-legistar-seattle-events", "Legistar — council/committee meetings", "Legistar — council/committee meetings",
-  "us_legal", "legal",
-  "https://webapi.legistar.com/v1/seattle/events?$top=1",
-  "",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Meetings: EventId, EventGuid, EventBodyId, EventBodyName (e.g. 'Parks, Seattle Center, Libraries, and Gender Pay Equity Committee'), EventDate, EventTime, EventLocation, EventAgendaFile, EventMinutesFile, EventVideoPath, EventInSiteURL, EventLastModifiedUtc. EventId opens the agenda-item hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.",
-  "EventId");
-
 VJSON(us_legistar_seattle_matter_attachments, "us-legistar-seattle-matter-attachments", "Legistar — documents attached to a matter", "Legistar — documents attached to a matter",
   "us_legal", "legal",
   "https://webapi.legistar.com/v1/seattle/matters/17258/attachments",
@@ -341,14 +311,6 @@ VJSON(us_legistar_seattle_matter_versions, "us-legistar-seattle-matter-versions"
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Key/Value pairs mapping each internal text id to its version number ([{\"Key\":\"18624\",\"Value\":\"1\"},...]), letting you retrieve every successive draft of an ordinance and diff what changed between readings.");
-
-VJSON_KEYED(us_legistar_seattle_matters, "us-legistar-seattle-matters", "Legistar — Seattle City Council legislation (matters)", "Legistar — Seattle City Council legislation (matters)",
-  "us_legal", "legal",
-  "https://webapi.legistar.com/v1/seattle/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
-  "",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Granicus Legistar municipal-legislature API, keyless, OData-queryable ($top/$skip/$filter/$orderby). Each matter: MatterId, MatterGuid, MatterFile (e.g. 'CB 121253'), MatterName, MatterTitle (the full ordinance text summary), MatterTypeName, MatterStatusName, MatterBodyId/Name, MatterIntroDate, MatterAgendaDate, MatterPassedDate, MatterEnactmentDate, MatterEnactmentNumber, MatterRequester, MatterNotes, MatterVersion, MatterLastModifiedUtc. MatterId opens four verified sub-resources (sponsors, histories, attachments, versions).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.",
-  "MatterId");
 
 VJSON_KEYED(us_legistar_seattle_persons, "us-legistar-seattle-persons", "Legistar — council members and filers", "Legistar — council members and filers",
   "us_legal", "legal",

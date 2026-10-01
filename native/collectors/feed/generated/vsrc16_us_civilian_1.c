@@ -34,11 +34,4 @@ VJSON_KEYED(us_phl_carto_shootings, "us-phl-carto-shootings", "Philadelphia shoo
 /* Open311 records identify themselves by "service_request_id" (live
  * 2026-09-06), which is not on the fixed id precedence list; the hash
  * fallback collapsed same-titled cases (sweep: 100 emitted, 97 stored). */
-VJSON_KEYED(us_sf_311_open311_requests, "us-sf-311-open311-requests", "San Francisco 311 - Open311 GeoReport v2 requests", "San Francisco 311 - Open311 GeoReport v2 requests",
-  "us_civilian", "civilian",
-  "https://mobile311.sfgov.org/open311/v2/requests.json?page_size=5",
-  "",
-  "en", "[\"us\",\"civilian\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 21600,
-  "Live 311 case feed: service_request_id, status, status_notes, service_name, service_code, description (free text, frequently contains licence plates, vehicle descriptions and named complaints), requested_datetime, updated_datetime, address, lat/long, media_url. Supports &service_code=, &start_date=, &end_date=, &status= filters. One of the only surviving Open311 GeoReport servers in the US.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.",
-  "service_request_id");
 

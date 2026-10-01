@@ -1,4 +1,4 @@
-/* Deep-record sn_aid sources (1), part 1 of 1.
+/* Deep-record sn_aid sources (2), part 1 of 1.
  *
  * Batch 17 verified each of these endpoints live AND separately probed the
  * per-record detail endpoint below it with a real id. The list half shipped as
@@ -12,6 +12,17 @@
 #include "lib/hpengine.h"
 
 static const hp_source T[] = {
+  { .id = "dportal-iati-sn",
+    .name = "d-portal IATI activities - Senegal",
+    .collector = "sn_aid", .category = "aid",
+    .description = "Aid activities in Senegal: IATI activity id, reporting org and ref, funder ref, title, full description, commitment/spend in USD and EUR, status and dates. Detail hop lists the activity's transactions.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
+    .record_type = "aid-record", .tags = "\"sn\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .url = "https://d-portal.org/q?country_code=SN&limit=5000&form=json",
+    .array_path = "rows",
+    .id_keys = "aid",
+    .detail_url = "https://d-portal.org/q?from=act%2Ctrans&aid={v}&form=json&limit=100", .detail_key = "aid",
+    .interval = 86400, .free_tier = 1 },
+
   { .id = "undp-projects-sn",
     .name = "UNDP Open Data projects - Senegal",
     .collector = "sn_aid", .category = "aid",
