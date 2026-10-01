@@ -1,6 +1,6 @@
 # 200 SaaS concepts across OSINT, cyber, health and AI — with market studies
 
-_Research date: 2026-08-10 · all figures retrieved 2026-08-10 · author: Claude (Opus 5)_
+_Research date: 2026-10-01 · all figures retrieved 2026-10-01 · author: Claude (Opus 5)_
 
 ---
 
@@ -13,7 +13,7 @@ honest version of "200 market studies" is not 200 independent primary research
 projects. It is this:
 
 **What is real and sourced.** 49 market anchors (§1) were retrieved by live web
-search on 2026-08-10. Every one carries a figure, the firm that published it,
+search on 2026-10-01. Every one carries a figure, the firm that published it,
 and a URL. Every one of the 200 studies names the anchor it rests on. Where two
 firms disagree — and they disagree constantly — both numbers are shown.
 
@@ -91,7 +91,7 @@ what it considered is not a survey.
 
 ## 1. Market anchors — the sourced base
 
-Every study below cites one of these by ID. Retrieved 2026-08-10.
+Every study below cites one of these by ID. Retrieved 2026-10-01.
 
 | ID | Market | Figure | Source |
 |---|---|---|---|
@@ -493,11 +493,13 @@ Every study below cites one of these by ID. Retrieved 2026-08-10.
 ## Part B — Cybersecurity (035–092)
 
 > Six of the first eight entries in this section rest on `A11` — Japan's Active
-> Cyber Defense Law, whose main provisions take effect **2026-10-01**, seven
-> weeks after this document was written. A dated statutory obligation is the
-> single most reliable source of enterprise software demand that exists. It is
-> also a wasting asset: by 2028 these will be commodity compliance features
-> inside the incumbent SIer bundles. The window is now, and it is short.
+> Cyber Defense Law, whose main provisions take effect **2026-10-01, the day
+> this document was written**. The obligation is live now, not pending. A dated
+> statutory obligation is the single most reliable source of enterprise software
+> demand that exists, and these ones have stopped being a forecast. It is also a
+> wasting asset: full effect is 2027, and by 2028 these will be commodity
+> compliance features inside the incumbent SIer bundles. The window is open
+> today and it is short.
 
 #### 035 · Todoke — ACD Law incident reporting automation
 **Pitch.** Turn a security incident into a compliant regulator notification under the Active Cyber Defense Law: scope determination, deadline tracking, sector-specific form generation, evidence attachment, submission log.
@@ -2265,5 +2267,5 @@ This research is desk research, and the honest failure modes are:
   this document says a rival is "strong", that is inference from market
   presence, not a product evaluation.
 
-_All market figures retrieved 2026-08-10 and sourced in §1. SAM derivations,
+_All market figures retrieved 2026-10-01 and sourced in §1. SAM derivations,
 wedges, pricing, risks and verdicts are analysis, not sourced fact._
