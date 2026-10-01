@@ -5,8 +5,8 @@
  * PER-RECORD EMIT: emits ONE intel_item per resolved address
  * (remote_key="dns:<domain>:<ip>"), body {domain,address,family:"A"|"AAAA"}.
  * If nothing resolves, emits nothing, returns 0 (honest empty). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "third_party/cJSON.h"
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <string.h>

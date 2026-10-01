@@ -3,10 +3,11 @@
  * Graph API place search around Tokyo; gated on FACEBOOK_ACCESS_TOKEN
  * (JS: no token / failure → empty FeatureCollection → 0 rows).
  * Feature props order: id, platform, place_name, checkins, source. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,8 +15,10 @@
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *tok = getenv("FACEBOOK_ACCESS_TOKEN");
   if (!tok || !*tok) {
-    fprintf(stderr, "[facebook-geo] gated (no FACEBOOK_ACCESS_TOKEN)\n");
-    return 0;
+    static const char *const envs[] = { "FACEBOOK_ACCESS_TOKEN", NULL };
+    return jo_needs_credential(sink, "facebook-geo", "Facebook Graph place search",
+        envs, "https://graph.facebook.com/v18.0/search?type=place",
+        "a Graph API access token with the places permission");
   }
 
   char url[512];

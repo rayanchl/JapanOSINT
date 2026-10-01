@@ -18,9 +18,9 @@
  * HONESTY: every branch REAL-fetches and emits only parsed API/response data,
  * or honest-empty (return 0) on failure/no-match, or gated (stderr + 0). No
  * constructed URLs, names or counts are ever emitted as records. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,8 +49,8 @@ static int cs_emit(intel_sink *sink, const char *domain, const cJSON *iss) {
       if (need > cap) { cap = need * 2; char *t = realloc(san, cap); if (!t) break; san = t; }
       if (n) { strcpy(san + len, ", "); len += 2; }
       strcpy(san + len, s); len += strlen(s);
-      /* (cap removed: every record of the fetched array is emitted —
-       * docs/SOURCE_EXHAUSTIVENESS.md) */
+      n++;  /* the count IS the separator/emptiness flag — the cap that used
+              * to increment it was removed, this must not go with it. */
     }
   }
   if (!id && !n) { free(san); return 0; }

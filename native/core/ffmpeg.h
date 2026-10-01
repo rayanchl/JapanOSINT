@@ -164,13 +164,16 @@
  * degrades cleanly when ffmpeg is absent. What is OPTIONAL and worth doing:
  *
  * 1. core/httpd.c — one ops route, so "why is every video field NULL" is
- *    answerable without an SSH session. Same shape and same stance as the
- *    existing /api/media/capabilities route:
+ *    answerable without an SSH session. DONE, and it is registered under the
+ *    platform-operator prefix rather than the bare path this note first
+ *    proposed:
  *
- *      GET /api/ffmpeg/capabilities        (operator/admin)
- *        char *body = ffmpeg_capabilities();
- *        if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
- *        reply_json(c, 200, body); free(body); return;
+ *      GET /api/admin/ffmpeg/capabilities  → ffmpeg_capabilities()
+ *
+ *    Same shape and same stance as GET /api/media/capabilities, which is now
+ *    registered too (httpd.c, media_capabilities(), operator-gated). That
+ *    route was described here as "existing" while nothing had ever registered
+ *    it; it exists as of the change that added this sentence.
  *
  * 2. core/camera_stills.c — ALREADY DONE as part of this change. Its private
  *    find_ffmpeg()/run_argv()/ffmpeg_grab() are deleted and it calls

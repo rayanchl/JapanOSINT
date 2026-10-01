@@ -586,18 +586,6 @@ static char *pl_token(cJSON *canon, int *too_big) {
   return tok;
 }
 
-char *permalink_encode(const char *state_json) {
-  if (!state_json || !*state_json) return NULL;
-  cJSON *in = cJSON_Parse(state_json);
-  cJSON *canon = pl_normalize(in);
-  if (in) cJSON_Delete(in);
-  if (!canon) return NULL;
-  int tb = 0;
-  char *tok = pl_token(canon, &tb);
-  cJSON_Delete(canon);
-  return tok;
-}
-
 char *permalink_decode(const char *token) {
   if (!token || !*token) return NULL;
   size_t tl = strlen(token);
@@ -803,8 +791,11 @@ static char *to_alert(db_handle *db, const tenant_ctx *t, const char *id,
   if (!rbj) { cJSON_Delete(dropped); return err(st, 500, "server_error"); }
 
   int rst = 200;
+  /* 0/NULL = the /:id/events paging parameters, which a rule CREATE does not
+   * use. `ev_cursor` was appended to the published signature when that route's
+   * silent 500-row cap was fixed; see alertsapi.h. */
   char *rout = alertsapi(db, t->tenant_id, t->user_id, "POST", "", "", rbj, 0,
-                         &rst);
+                         NULL, &rst);
   free(rbj);
   if (rst != 201) {
     /* Propagate alertsapi's own 400 verbatim — its wording IS the contract for
@@ -873,7 +864,16 @@ static char *run_saved(db_handle *db, const tenant_ctx *t, const char *id,
 
   /* Counter bump and history row are one unit: a run that is counted but not
    * recorded (or the reverse) makes "last_run_at" and the trail disagree. */
-  sqlite3_exec(db->h, "BEGIN", 0, 0, 0);
+  /* db->h is the shared event-loop handle: BEGIN can come back SQLITE_BUSY
+   * behind a collector write, and unchecked it would leave the bump and the
+   * history row as two independent autocommits — exactly the disagreement the
+   * transaction exists to prevent. */
+  if (sqlite3_exec(db->h, "BEGIN", 0, 0, 0) != SQLITE_OK) {
+    fprintf(stderr, "[savedsearch] run BEGIN failed: %s\n", sqlite3_errmsg(db->h));
+    free(pcopy);
+    return err(st, 500, "server_error");
+  }
+  int ok = 0;
   if (sqlite3_prepare_v2(db->h,
         "UPDATE saved_searches SET last_run_at=datetime('now'), "
         "run_count=run_count+1 WHERE id=?1 AND tenant_id=?2 AND user_id=?3",
@@ -881,12 +881,29 @@ static char *run_saved(db_handle *db, const tenant_ctx *t, const char *id,
     sqlite3_bind_text(s,1,id,-1,SQLITE_TRANSIENT);
     sqlite3_bind_text(s,2,t->tenant_id,-1,SQLITE_TRANSIENT);
     sqlite3_bind_text(s,3,t->user_id,-1,SQLITE_TRANSIENT);
-    sqlite3_step(s);
+    ok = sqlite3_step(s) == SQLITE_DONE;
   }
   sqlite3_finalize(s);
-  search_history_record(db, t->tenant_id, t->user_id, kbuf, pcopy, rcount);
-  sqlite3_exec(db->h, "COMMIT", 0, 0, 0);
+  /* Returns void, so its outcome is only visible through the COMMIT below —
+   * which is the other reason that rc has to be looked at. */
+  if (ok) search_history_record(db, t->tenant_id, t->user_id, kbuf, pcopy, rcount);
   free(pcopy);
+  /* The COMMIT return is NOT optional. On SQLITE_BUSY or SQLITE_FULL the
+   * transaction stays OPEN, and discarding the rc had three consequences at
+   * once: this handler answered 200 with a run_count and last_run_at that were
+   * never durable; one_ss() below read them back from inside the uncommitted
+   * transaction and echoed them to the client as fact; and the NEXT request's
+   * BEGIN on this shared handle failed silently, so its writes joined this
+   * stale transaction and a later ROLLBACK discarded them too. */
+  if (!ok) {
+    sqlite3_exec(db->h, "ROLLBACK", 0, 0, 0);
+    return err(st, 500, "server_error");
+  }
+  if (sqlite3_exec(db->h, "COMMIT", 0, 0, 0) != SQLITE_OK) {
+    fprintf(stderr, "[savedsearch] run COMMIT failed: %s\n", sqlite3_errmsg(db->h));
+    sqlite3_exec(db->h, "ROLLBACK", 0, 0, 0);
+    return err(st, 500, "server_error");
+  }
 
   char *row = one_ss(db, t, id, 200, st);
   if (*st != 200) return row;

@@ -3,9 +3,10 @@
  * (HelloCycling, DOCOMO Cycle Tokyo): discovery → station_information +
  * station_status → one intel row per station (slice 0..500). The
  * intelEnvelope wrapper/_meta is dropped (rule 7); only the live rows. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "_timefmt.inc"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,9 +30,7 @@ static cJSON *nullish(const cJSON *v) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char iso[32];
-  time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
-  strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S", &g);
-  size_t L = strlen(iso); snprintf(iso + L, sizeof iso - L, ".000Z");
+  const char *pub = jo_now_iso_ms(iso, sizeof iso);   /* NULL if unrenderable */
 
   int n = 0;
   for (int oi = 0; oi < 2; oi++) {
@@ -150,9 +149,23 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         it.title = title;
         it.summary = summary;
         it.lang = "ja";
-        it.published_at = iso;
+        it.published_at = pub;   /* absent, never a date built from stack */
         it.tags_json = tj;
         it.properties_json = pj;
+        it.record_type = "bike-share-station";
+        /* A dock is a physical place: GBFS station_information already gives
+         * us lat/lon (we were only stuffing it into properties, so every one
+         * of the ~1000 stations was unpinnable). Promote it to the row. */
+        {
+          const cJSON *slat = get(s, "lat"), *slon = get(s, "lon");
+          if (cJSON_IsNumber(slat) && cJSON_IsNumber(slon)) {
+            double la = cJSON_GetNumberValue(slat), lo = cJSON_GetNumberValue(slon);
+            if (la >= -90 && la <= 90 && lo >= -180 && lo <= 180 &&
+                !(la == 0 && lo == 0)) {
+              it.has_geo = 1; it.lat = la; it.lon = lo;
+            }
+          }
+        }
         if (sink->emit(sink, &it) >= 0) n++;
 
         free(tj); free(pj);
@@ -164,7 +177,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (root) cJSON_Delete(root);
   }
   fprintf(stderr, "[bike-share-gbfs] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  return 0;                 /* an empty upstream is an honest 0, not an error */
 }
 
 static const source_def bike_share_gbfs_def = {

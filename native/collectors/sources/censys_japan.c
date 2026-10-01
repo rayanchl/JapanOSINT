@@ -2,10 +2,10 @@
  * Port of server/src/collectors/censysJapan.js (createThreatIntelCollector).
  * env CENSYS_API_ID (gate) + CENSYS_API_SECRET → Basic auth, POST hosts/search
  * q="location.country_code: JP" per_page 100. geom = coords or null. */
-#include "../../source.h"
-#include "../../lib/threatintel.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/threatintel.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

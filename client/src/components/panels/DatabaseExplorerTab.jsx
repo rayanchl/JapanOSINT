@@ -4,7 +4,7 @@ import apiUrl from '../../utils/apiUrl.js';
 const PAGE_SIZES = [25, 50, 100, 200];
 
 function fmtCell(v) {
-  if (v === null || v === undefined) return <span className="text-gray-600">—</span>;
+  if (v === null || v === undefined) return <span className="text-osint-muted">—</span>;
   if (typeof v === 'number') return String(v);
   if (typeof v === 'boolean') return v ? 'true' : 'false';
   const s = String(v);
@@ -23,24 +23,36 @@ export default function DatabaseExplorerTab() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [expandedRow, setExpandedRow] = useState(null);
+  // /api/db/* sits behind the operator gate (native/core/httpd.c opgate_check)
+  // and the web client sends no Authorization header, so these calls 401.
+  // Swallowing that rendered "no tables"/"No rows." — an assertion that the
+  // database is empty, manufactured out of a request we were refused.
+  const [tablesError, setTablesError] = useState(null);
+  const [rowsError, setRowsError] = useState(null);
 
   // Load the table list once.
   useEffect(() => {
     fetch(apiUrl('/api/db/tables'))
-      .then((r) => r.ok ? r.json() : [])
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
       .then((j) => {
         // Server returns a bare array; older code returned { tables: [...] }.
         const list = Array.isArray(j) ? j : (j.tables || []);
         setTables(list);
+        setTablesError(null);
         if (list.length && !selected) setSelected(list[0].name);
       })
-      .catch(() => setTables([]));
+      .catch((err) => { setTables([]); setTablesError(err.message || 'request failed'); });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Reload rows whenever the query changes.
+  // Reload rows whenever the query changes. An in-flight request is dropped
+  // on cleanup so a slow response can't overwrite a newer table's rows.
   useEffect(() => {
-    if (!selected) return;
+    if (!selected) return undefined;
+    let ignore = false;
     const params = new URLSearchParams();
     params.set('limit', String(limit));
     params.set('offset', String(offset));
@@ -51,19 +63,15 @@ export default function DatabaseExplorerTab() {
     }
     setLoading(true);
     fetch(apiUrl(`/api/db/tables/${encodeURIComponent(selected)}?${params}`))
-      .then((r) => r.ok ? r.json() : null)
-      .then((j) => setData(j))
-      .catch(() => setData(null))
-      .finally(() => setLoading(false));
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((j) => { if (!ignore) { setData(j); setRowsError(null); } })
+      .catch((err) => { if (!ignore) { setData(null); setRowsError(err.message || 'request failed'); } })
+      .finally(() => { if (!ignore) setLoading(false); });
+    return () => { ignore = true; };
   }, [selected, q, limit, offset, orderBy, orderDir]);
-
-  // Reset pagination/filter when switching tables.
-  useEffect(() => {
-    setQ('');
-    setOffset(0);
-    setOrderBy(null);
-    setExpandedRow(null);
-  }, [selected]);
 
   const pageCount = data && data.total > 0 ? Math.ceil(data.total / limit) : 1;
   const pageIndex = Math.floor(offset / limit) + 1;
@@ -87,17 +95,32 @@ export default function DatabaseExplorerTab() {
     <div className="flex h-full">
       {/* Left: table list */}
       <div className="w-40 flex-shrink-0 border-r border-osint-border overflow-y-auto">
+        {tablesError && (
+          <div className="px-3 py-2 text-[9.5px] text-status-offline leading-snug">
+            Could not load the table list ({tablesError}). This endpoint is
+            operator-gated — the list below is not a statement about the database.
+          </div>
+        )}
         {tables.map((t) => (
           <button
             key={t.name}
             type="button"
-            onClick={() => setSelected(t.name)}
+            onClick={() => {
+              if (selected === t.name) return;
+              // Reset filter/pagination synchronously with the switch so the
+              // rows effect only ever fires once, with the new table's params.
+              setQ('');
+              setOffset(0);
+              setOrderBy(null);
+              setExpandedRow(null);
+              setSelected(t.name);
+            }}
             className={`w-full text-left px-3 py-1.5 text-[11px] font-mono border-b border-osint-border/30 hover:bg-white/5 transition-colors ${
-              selected === t.name ? 'bg-neon-cyan/10 text-neon-cyan' : 'text-gray-300'
+              selected === t.name ? 'bg-neon-cyan/10 text-neon-cyan' : 'text-osint-text'
             }`}
           >
             <div>{t.name}</div>
-            <div className="text-[9px] text-gray-500">{t.row_count.toLocaleString()} rows</div>
+            <div className="text-[9px] text-osint-muted">{t.row_count.toLocaleString()} rows</div>
           </button>
         ))}
       </div>
@@ -111,12 +134,12 @@ export default function DatabaseExplorerTab() {
             value={q}
             onChange={(e) => { setQ(e.target.value); setOffset(0); }}
             placeholder="Filter text columns..."
-            className="flex-1 px-2 py-1 bg-osint-bg/60 border border-osint-border rounded text-[11px] text-gray-200 placeholder-gray-600 focus:outline-none focus:border-neon-cyan/40 font-mono"
+            className="flex-1 px-2 py-1 bg-osint-bg/60 border border-osint-border rounded text-[11px] text-osint-text placeholder:text-osint-muted/70 focus:outline-none focus:border-neon-cyan/40 font-mono"
           />
           <select
             value={limit}
             onChange={(e) => { setLimit(parseInt(e.target.value, 10)); setOffset(0); }}
-            className="px-2 py-1 bg-osint-bg/60 border border-osint-border rounded text-[10px] text-gray-300"
+            className="px-2 py-1 bg-osint-bg/60 border border-osint-border rounded text-[10px] text-osint-text"
           >
             {PAGE_SIZES.map((n) => <option key={n} value={n}>{n}/page</option>)}
           </select>
@@ -125,10 +148,16 @@ export default function DatabaseExplorerTab() {
         {/* Data table */}
         <div className="flex-1 overflow-auto">
           {loading && (
-            <div className="px-3 py-2 text-[10px] text-gray-500">Loading…</div>
+            <div className="px-3 py-2 text-[10px] text-osint-muted">Loading…</div>
           )}
-          {!loading && data && data.rows.length === 0 && (
-            <div className="px-3 py-2 text-[10px] text-gray-500">No rows.</div>
+          {!loading && rowsError && (
+            <div className="px-3 py-2 text-[10px] text-status-offline">
+              Could not read {selected} ({rowsError}). No rows were obtained — this
+              is a failed request, not an empty table.
+            </div>
+          )}
+          {!loading && !rowsError && data && data.rows.length === 0 && (
+            <div className="px-3 py-2 text-[10px] text-osint-muted">No rows.</div>
           )}
           {!loading && data && data.rows.length > 0 && selectedMeta && (
             <table className="w-full text-[10px] font-mono border-collapse">
@@ -138,7 +167,7 @@ export default function DatabaseExplorerTab() {
                     <th
                       key={c.name}
                       onClick={() => handleSort(c.name)}
-                      className="text-left px-2 py-1 border-b border-osint-border/50 text-gray-400 uppercase tracking-wider font-normal cursor-pointer hover:text-neon-cyan"
+                      className="text-left px-2 py-1 border-b border-osint-border/50 text-osint-muted uppercase tracking-wider font-normal cursor-pointer hover:text-neon-cyan"
                       title={`${c.name} · ${c.type}`}
                     >
                       {c.name}
@@ -165,7 +194,7 @@ export default function DatabaseExplorerTab() {
                         {selectedMeta.columns.map((c) => (
                           <td
                             key={c.name}
-                            className="px-2 py-1 text-gray-200 align-top"
+                            className="px-2 py-1 text-osint-text align-top"
                             title={row[c.name] != null ? String(row[c.name]) : ''}
                           >
                             {fmtCell(row[c.name])}
@@ -178,7 +207,7 @@ export default function DatabaseExplorerTab() {
                             colSpan={selectedMeta.columns.length}
                             className="px-2 py-2 bg-black/40 border-b border-osint-border/40"
                           >
-                            <pre className="text-[10px] text-gray-300 whitespace-pre-wrap break-all max-h-64 overflow-auto">
+                            <pre className="text-[10px] text-osint-text whitespace-pre-wrap break-all max-h-64 overflow-auto">
                               {JSON.stringify(row, null, 2)}
                             </pre>
                           </td>
@@ -194,10 +223,10 @@ export default function DatabaseExplorerTab() {
 
         {/* Pagination */}
         {data && data.total > 0 && (
-          <div className="flex items-center justify-between px-3 py-1.5 border-t border-osint-border/50 text-[10px] text-gray-400">
+          <div className="flex items-center justify-between px-3 py-1.5 border-t border-osint-border/50 text-[10px] text-osint-muted">
             <div>
               {offset + 1}–{Math.min(offset + data.rows.length, data.total)} of{' '}
-              <span className="text-gray-200">{data.total.toLocaleString()}</span>
+              <span className="text-osint-text">{data.total.toLocaleString()}</span>
             </div>
             <div className="flex items-center gap-2">
               <button

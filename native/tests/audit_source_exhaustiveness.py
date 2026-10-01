@@ -91,6 +91,39 @@ SKIP_LINE = re.compile(r'^\s*(\*|//|/\*)')
 WAIVER = re.compile(r'exhaustive-ok:')
 
 
+# Macros whose body walks pages, so a page-1 URL passed to one is not a
+# single-page read. Kept as a name list rather than inferred, because being
+# wrong in this direction hides a real discard — add a macro here only after
+# reading its body in collectors/sources/_verified_macros.inc.
+# VJSON_KEYED added 2026-09-11: its body is jsonlist_emit_paged_keyed
+# (_verified_macros.inc:175), the same walk VJSON uses with one named id field
+# instead of the precedence list — so a page-1 URL inside it is walked.
+# VJSON_IDKEYS / VGEO_IDKEYS / VJSON_PREP added 2026-09-15
+# (collectors/sources/_vjson_idkeys.inc): their bodies call jsonlist_emit_paged,
+# geojson_emit_paged and pw_walk respectively — the same walks as VJSON / VGEO,
+# behind a sink that only re-keys uids (and, for PREP, a page-shaping hook).
+PAGED_MACROS = ('VJSON', 'VJSONBIG', 'VGEO', 'VJSON_KEYED',
+                'VJSON_IDKEYS', 'VGEO_IDKEYS', 'VJSON_PREP')
+MACRO_OPEN = re.compile(r'^\s*([A-Z][A-Z0-9_]*)\s*\(')
+
+
+def _paged_macro_at(lines, n):
+    """Is line `n` inside a call to a macro that pages?
+
+    Walks back to the nearest macro invocation at the start of a line; a vsrc
+    row is one such call spanning a handful of lines. Stops at a blank line so
+    the previous row's macro is never credited to this one.
+    """
+    for i in range(n - 1, max(0, n - 25), -1):
+        line = lines[i - 1] if i - 1 < len(lines) else ''
+        if not line.strip():
+            break
+        m = MACRO_OPEN.match(line)
+        if m:
+            return m.group(1) in PAGED_MACROS
+    return False
+
+
 def audit(path, verbose=False):
     findings = []
     try:
@@ -120,6 +153,17 @@ def audit(path, verbose=False):
                 if re.search(r'page_param|next_path|page\+\+|\+\+page|'
                              r'for\s*\(\s*int\s+page|while\s*\([^)]*page', ctx):
                     continue
+                # The walk may not be anywhere near the URL. A vsrc row is one
+                # macro call, and the paging lives inside the macro:
+                # VJSON -> jsonlist_emit_paged, VGEO -> geojson_emit_paged,
+                # VJSONBIG -> jsonstream_emit. Reading only the surrounding
+                # lines, this check reported every one of them as a discard —
+                # including `api.dane.gov.pl/1.4/datasets?page=1&per_page=100`,
+                # which is the exact URL jsonlist.h cites as the case the paged
+                # walk was written to fix. 44 findings that were all already
+                # fixed is not a backlog, it is noise that hides the real ones.
+                if _paged_macro_at(lines, n):
+                    continue
             findings.append((cid, n, line.strip()[:120], desc, hint))
     return findings
 
@@ -134,8 +178,13 @@ def main():
                     help='print every finding, not just per-file counts')
     args = ap.parse_args()
 
+    # recursive: a collector that moved into a subdirectory must still be
+    # scanned. A flat 'collectors/sources/*.c' silently stopped seeing 221
+    # moved files and reported 121 findings instead of 146 — an audit that
+    # under-reports because of a glob is worse than no audit, because the
+    # smaller number reads as progress.
     paths = args.file or sorted(
-        glob.glob('collectors/sources/*.c') + glob.glob('lib/*.c') +
+        glob.glob('collectors/**/*.c', recursive=True) + glob.glob('lib/*.c') +
         glob.glob('core/pipeline.c') + glob.glob('core/osint_dispatch.c'))
     strict_paths = set(glob.glob(args.strict)) if args.strict else set()
 

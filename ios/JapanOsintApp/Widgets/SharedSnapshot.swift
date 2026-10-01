@@ -26,10 +26,37 @@ enum AppGroup {
     /// checking first when something is empty.
     static let identifier = "group.com.rayanchl.japanosint"
 
+    /// Log-once diagnostic. A `static let` initialiser runs exactly once per
+    /// process and is thread-safe, which is precisely the semantics we want:
+    /// the container is queried on every scene activation and every background
+    /// task, and a per-call log would drown the console.
+    private static let warnUnavailable: Void = {
+        print("""
+        [AppGroup] "\(AppGroup.identifier)" is not available to this process. \
+        The App Groups capability is not wired into the Xcode project yet \
+        (CODE_SIGN_ENTITLEMENTS appears nowhere in project.pbxproj), so the \
+        widget snapshot, the share queue and background refresh are all \
+        disabled rather than writing into a nil container. \
+        See ios/EXTENSION_TARGETS_TODO.md.
+        """)
+    }()
+
     static var containerURL: URL? {
-        FileManager.default.containerURL(
-            forSecurityApplicationGroupIdentifier: identifier)
+        guard let url = FileManager.default.containerURL(
+            forSecurityApplicationGroupIdentifier: identifier) else {
+            _ = warnUnavailable
+            return nil
+        }
+        return url
     }
+
+    /// Whether the App Group is actually reachable from this process.
+    ///
+    /// Every consumer gates on this instead of discovering nil deep inside a
+    /// write path. Until the capability is added in Xcode this is `false` on
+    /// every device, and the widget/share/background features must no-op
+    /// rather than run work whose only possible outcome is a dropped write.
+    static var isConfigured: Bool { containerURL != nil }
 
     static var snapshotURL: URL? {
         containerURL?.appendingPathComponent("widget-snapshot.json")
@@ -87,10 +114,10 @@ enum SharedSnapshot {
     static func write(_ snapshot: WidgetSnapshot) {
         guard let url = AppGroup.snapshotURL else {
             // Nil means the App Group is not configured for this target.
-            // Fail loudly in debug — silently shipping this produces widgets
-            // that are permanently empty for no visible reason.
-            assertionFailure("App Group \(AppGroup.identifier) unavailable — "
-                             + "check the capability on this target")
+            // `AppGroup.containerURL` has already logged that, once, with the
+            // remedy. This used to `assertionFailure`, which trapped every
+            // debug launch for a condition that is currently the *expected*
+            // state of the project — see ios/EXTENSION_TARGETS_TODO.md.
             return
         }
         do {

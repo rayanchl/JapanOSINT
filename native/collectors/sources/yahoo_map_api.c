@@ -2,9 +2,9 @@
  * Port of server/src/collectors/yahooMapApi.js.
  * Yahoo! Japan Local Search API over metro centroids → FeatureCollection.
  * Gated on YAHOO_APP_ID. No seed. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -47,15 +47,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         lat = strtod(e + 1, NULL);
         if (lon != lon || lat != lat) continue;   /* NaN guard */
 
-        cJSON *of = cJSON_CreateObject();
-        cJSON_AddStringToObject(of, "type", "Feature");
-        cJSON *g = cJSON_CreateObject();
-        cJSON_AddStringToObject(g, "type", "Point");
-        cJSON *co = cJSON_CreateArray();
-        cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-        cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-        cJSON_AddItemToObject(g, "coordinates", co);
-        cJSON_AddItemToObject(of, "geometry", g);
+        cJSON *of = gj_point_feature(lon, lat);
 
         cJSON *p = cJSON_CreateObject();           /* EXACT JS key order */
         cJSON *idv = cJSON_GetObjectItem(f, "Id");

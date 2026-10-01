@@ -212,7 +212,7 @@ final class GraphCanvasModel: ObservableObject {
         let token = loadToken
         loading = true
         do {
-            let graph = try await api.entityGraph(
+            let graph = try await api.entityEgoGraph(
                 type: rootType, id: rootId, depth: depth,
                 relTypes: relTypesParam,
                 excludeHubs: excludeHubsParam,
@@ -250,7 +250,7 @@ final class GraphCanvasModel: ObservableObject {
         let token = loadToken
         expanding = nodeId
         do {
-            let ego = try await api.entityGraph(
+            let ego = try await api.entityEgoGraph(
                 // `type` is passed through verbatim: the server validates it
                 // against the stored entities.type, so normalising the case
                 // here would turn a valid id into a 404.

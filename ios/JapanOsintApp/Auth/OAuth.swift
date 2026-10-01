@@ -90,7 +90,10 @@ struct PKCEPair: Sendable {
 
     init() {
         var bytes = [UInt8](repeating: 0, count: 32)
-        _ = SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes)
+        // Discarding the result left the verifier as 32 zero bytes — a fixed,
+        // publicly derivable value — if the CSPRNG ever failed.
+        precondition(SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes) == errSecSuccess,
+                     "CSPRNG unavailable: cannot generate a PKCE verifier")
         verifier = Data(bytes).base64URLEncodedString()
         let digest = SHA256.hash(data: Data(verifier.utf8))
         challenge = Data(digest).base64URLEncodedString()

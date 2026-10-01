@@ -1,0 +1,57 @@
+id	url	reason
+JO30_ICS_KEPCO_JUYO	https://www.kansai-td.co.jp/yamasou/juyo1_kansai.csv	live CSV (2025-12-25 UPDATE header) but the endpoint is already registered (existing_urls has yamasou/juyo1_kansai.csv and juyo_06_{}.csv)
+JO30_ICS_KEPCO_JUYO_OLD	https://www.kansai-td.co.jp/denkiyoho/csv/juyo1_kansai.csv	stale copy frozen at 2020/4/1 14:15 UPDATE; superseded by the yamasou path
+JO30_ICS_TEPCO_JUYO_TODAY	https://www.tepco.co.jp/forecast/html/images/juyo-j.csv	404 (HTML error page, 31,963 bytes) with both the default and JapanOSINT/1.0 UA; juyo-d-j.csv answers 404 the same way, so the registered TEPCO row is also dead as of 2026-09-21
+JO30_ICS_JEPX_BID_CURVES	https://www.jepx.jp/js/csv_read.php?dir=spot_bid_curves&file=spot_bid_curves_2026.csv	HTTP 200 with a 0-byte body for 2025 and 2026 files (same for spot_splitting_areas and nfc_summary); only spot_summary/intraday (already registered) are served
+JO30_ICS_RIVER_DAM_SEARCH	http://www1.river.go.jp/cgi-bin/SrchDamData.exe?ID=0&KIND=1&PAGE=0	EUC-JP HTML saying the parameters are wrong; the CGI needs a station id and the dam list page is already registered (dspdamdata.exe)
+JO30_ICS_RIVER_10MIN_LEVEL	https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303011283322030	live 10-minute water levels but as an EUC-JP HTML table with no anchors and per-station only; html mode emits anchors, not table cells
+JO30_ICS_KAWABOU_TM_LIVE	https://www.river.go.jp/kawabou/file/files/obslist/tm/twnlist/YYYYMMDD/HHmm/<twnCd>.json	the nationwide live telemetry (tm, rw, damdsch, overobs, stg/dam geojson) is addressed by YYYYMMDD/HHmm/ path segments; the engine has no date/time URL token (only {q}-family, {page}, {v}), so it cannot be scheduled. rdtime.json/tmCrntTime give the current stamp — a {now:FORMAT} token would unlock it
+JO30_ICS_KAWABOU_EMG	https://www.river.go.jp/kawabou/file/files/info/emergency/kwb/emginfolist.json	{"info":[]} — empty result set at fetch time (optinfolist.json likewise); would verify as EMPTY_RESULTSET
+JO30_ICS_KAWABOU_PREFAREA	https://www.river.go.jp/kawabou/file/files/map/pref/prefarea.json	51 prefecture centroids — a trivial master already implied by twnarea.json; not worth a scheduled slot
+JO30_ICS_KAWABOU_RADAR_CRD	https://www.river.go.jp/kawabou/file/files/master/radar/crd	403 Forbidden
+JO30_ICS_KNET_STATIONS	https://www.kyoshin.bosai.go.jp/ja/stationlist/	station-list download is a POST behind a username/password form with a CSRF token; the old /kyoshin/db/ CSV paths are 404
+JO30_ICS_HINET_STATIONS	https://www.hinet.bosai.go.jp/st_info/detail/?LANG=ja	754-byte EUC-JP stub; station detail/download requires NIED registration
+JO30_ICS_NRA_MP_TODAY	https://radioactivity.nra.go.jp/cont/json/mp/mp_today.json	403 AccessDenied (S3 XML) — the registered mp_today.json / dose_today.json rows are dead since the RAMDAS relaunch; the new /api/v1/get/* endpoints answer 401 Unauthorized
+JO30_ICS_NRA_ERMS	https://www.erms.nsr.go.jp/nra-ramis-webg/	Next.js SPA; no unauthenticated data path found in its chunks
+JO30_ICS_CHUDEN_HAMAOKA_MP	https://www.chuden.co.jp/hamaokastate1/RealMonitorPost.html	the live readings (e.g. "33nGy/h", "2026/09/20 20:30") are embedded in RealMonitorPost.js as JavaScript string literals, not in a JSON/CSV/XML/HTML-anchor body the engine can parse
+JO30_ICS_ENERGIA_KYOKAI_MP	https://www.energia.co.jp/atom/real_time/kyokai/index.html	readings are rendered as images (../sys/image00.png) — no data file
+JO30_ICS_TOHOKU_ONAGAWA_MP	https://www.tohoku-epco.co.jp/electr/genshi/onagawa/mp.html	cp932 HTML with no data file or anchor list behind it
+JO30_ICS_TEPCO_KK_MP	https://www.tepco.co.jp/kk-np/monitoring/mp-j.html	403 Forbidden (as are niigata_hq realtime and decommission monitoring_post pages) for a non-browser UA; not bypassed
+JO30_ICS_FUKUI_MP_CSV	https://www.houshasen.tsuruga.fukui.jp/monitoring/ppNewList.html	fileGetter.js names pp.csv / stations.csv / weather.csv under a "public/dynamic/" base, but every path tried (monitoring/, public/dynamic/, data/, csv/) is 404
+JO30_ICS_SHIZUOKA_RADIATION	http://www.hoshasen.pref.shizuoka.jp/radiation/map/index.html	data delivered as JavaScript (data/Telop.js, comment.js) and per-station .geojson names built at runtime; no fixed list URL found
+JO30_ICS_ENV_FUKUSHIMA_RTM	https://fukushima-haikibutsushorishisetsu.rtm.env.go.jp/csv.html	CSV download is an ExtJS form post; no static file URL exposed in app.js/init.js
+JO30_ICS_TEPCO_TEIDEN	https://teideninfo.tepco.co.jp/html/00000000000.html	403 Access Denied for a non-browser UA; not bypassed
+JO30_ICS_CHUDEN_TEIDEN	https://teiden.powergrid.chuden.co.jp/	403 (the azurewebsites origin answers "Ip Forbidden")
+JO30_ICS_RIKUDEN_TEIDEN	https://www.rikuden.co.jp/nw/teiden/otj010.html	live outage list but as an HTML table with no anchors per row; html mode cannot take it
+JO30_ICS_KANSAI_TEIDEN	https://www.kansai-td.co.jp/teiden-info/index.php	Vue app; the data JSON it loads is not referenced by a static path in the page
+JO30_ICS_KYUDEN_TEIDEN	https://www.kyuden.co.jp/td_teiden/rireki.html	config.js names csv/ and xml/ data directories but no file names; csv/ is 403 and guessed names 404
+JO30_ICS_JCG_TIDE_GAUGE	https://www1.kaiho.mlit.go.jp/TIDE/gauge/gauge.php?s=0053	live hourly tide values (24 columns for 0921) but as an HTML table plus PNG curves; no anchors, no text/CSV endpoint on the page
+JO30_ICS_JCG_TIDE_INDEX	https://www1.kaiho.mlit.go.jp/TIDE/gauge/index.php	station index of gauge.php?s= anchors — usable only as a link list; the gauge pages themselves are not parseable, so the index alone is not a record source
+JO30_ICS_JMA_TIDE_TIME	https://www.jma.go.jp/bosai/tidelevel/data/tide/tide_time.json	{"time": …} single timestamp, not a record list; the tide data files it stamps are dated paths
+JO30_ICS_JMA_AMEDAS_LATEST	https://www.jma.go.jp/bosai/amedas/data/latest_time.txt	a single ISO timestamp; the map/<ts>.json and point/<station>/<date>_<hh>.json files it points at need a time token the engine lacks
+JO30_ICS_JMA_MDRR_OTHER	https://www.data.jma.go.jp/stats/data/mdrr/snc_rct/alltable/snc00_rct.csv	404 — snow-depth, hourly temperature/wind/humidity and 10-minute precipitation alltable CSVs do not exist under the guessed names; only the pre*/mxwsp/mxtemsadext/mntemsadext family is served
+JO30_ICS_KEIHAN_INFO	https://www.keihan.co.jp/tinfo/06-app/info.json	single object {"title":"","body":"","emergency":0}, not a record list
+JO30_ICS_KEIHAN_TRAININFO	https://www.keihan.co.jp/tinfo/05-flist/FileList.xml	one-record pointer to a dated traininfo<timestamp>.xml; the status XML itself carries flag counters, not records
+JO30_ICS_JR_EAST_TRAININFO	https://traininfo.jreast.co.jp/train_info/kanto.aspx	403 for a non-browser UA; no public JSON
+JO30_ICS_JR_HOKKAIDO_UNKOU	https://www3.jrhokkaido.co.jp/webunkou/area.html	Incapsula-protected; status is rendered client-side
+JO30_ICS_JR_CENTRAL_ZAIRAISEN	https://traininfo.jr-central.co.jp/zairaisen/index.html	status.js/const.js reference no data file; content is scripted HTML
+JO30_ICS_TOKYO_METRO_UNKOU	https://www.tokyometro.jp/unkou/index.html	403; the Metro/ODPT API needs a key
+JO30_ICS_PRIVATE_RAIL_STATUS	https://www.keio.co.jp/unkou/unkou_pc.html	Keio, Odakyu (emergency_bbs.pl), Seibu, Toei subway status pages are plain HTML text with no feed; Nankai/Hanshin/Tobu/Meitetsu/Nishitetsu paths tried were 404
+JO30_ICS_WESTJR_404_LINES	https://www.train-guide.westjr.co.jp/api/v3/hiroshima.json	hiroshima, kinki, okayama, sanin, hanwa, biwako, sanyo, wakayama answer 404 (5,828-byte HTML); only the 28 names probed 200 are used
+JO30_ICS_JARTIC_OPEN_TRAFFIC	https://api.jartic-open-traffic.org/geoserver?service=WFS&version=2.0.0&request=GetFeature&typeNames=t_travospublic_measure_5m&outputFormat=application/json	400 "Missing required request parameters: [cql_filter]" — the 5-minute traffic-volume layer must be filtered on a time code, which needs a date token
+JO30_ICS_MLIT_ROAD_INFO_PRVS	https://www.road-info-prvs.mlit.go.jp/roadinfo/pc/pcTukokisei_81_1.html	closure data is loaded from ../backup/<YYYYMMDDHHMMSS>/<random>/<random>.js — timestamped, random path, JavaScript
+JO30_ICS_DRIVETRAFFIC	https://www.drivetraffic.jp/realtime-blocked	map data comes through the ZENRIN its-mo API with an embedded key; no open JSON
+JO30_ICS_IHIGHWAY	https://ihighway.jp/pcsite/	road_list.fcgi / ic_list.fcgi are CGI behind the map session; only banner.json is static
+JO30_ICS_AIRPORTS	https://www.narita-airport.jp/ja/flight/	Narita and New Chitose flight pages expose no JSON path; Centrair, Fukuoka and Kansai answer 403 to a non-browser UA
+JO30_ICS_JWA_CHUBU_DAM	https://www.water.go.jp/mizu/chubu/realtime/p020201_60/301_1.html	dam flow table as cp932 HTML <table>; no CSV/JSON
+JO30_ICS_FUKUOKA_DAM_RT	https://data.bodik.jp/dataset/d54fb22e-5b64-485c-8816-69f27ed1aaf1/resource/1e5c7a5f-5bbc-48ce-877f-4b531db5d238/download	the "CSV" resource is an HTML page (福岡市水道局 ダム貯水状況リアルタイム表示) with a styled table, no anchors
+JO30_ICS_KAGOSHIMA_SUII	https://data.bodik.jp/dataset/460001_suii	resources are yearly ZIP archives (suii2026_1-8.zip), not a live file
+JO30_ICS_TOKYO_WATER_TODAY	https://www.waterworks.metro.tokyo.lg.jp/suigen/data/today	131-point daily residual-chlorine/turbidity table as HTML; the opendata catalogue path is 404 and catalog.data.metro.tokyo.lg.jp has no 残留塩素 dataset
+JO30_ICS_TOHOGAS_RSS	https://www.tohogas.co.jp/rss/oshirase.xml	live RSS (20 items) but general notices (exhibitions, reports), not supply/outage status; www3.tohogas.co.jp/emergency/ redirects to the same feed
+JO30_ICS_SAIBUGAS_RSS	https://www.saibugas.co.jp/rss/important_rss.xml	answers HTML (cp932 page), not XML, for every rss path tried
+JO30_ICS_OSAKAGAS_RSS	https://www.osakagas.co.jp/rss/press.xml	host did not resolve from the probe network (curl exit 6) on three attempts
+JO30_ICS_HJKS	https://hjks.jepx.jp/hjks/	host did not resolve from the probe network (curl exit 6)
+JO30_ICS_PREF_AIR_REALTIME	https://www.pref.kanagawa.jp/sys/taikikanshi/kanshi/realtime/index.html	Kanagawa, Chiba, Tokyo and Shizuoka real-time air pages are HTML tables; Chiba downloads are ZIP; Aichi/Hyogo/Hiroshima/Osaka hosts tried did not resolve
+JO30_ICS_PREF_RIVER_SYSTEMS	https://sipos.pref.shizuoka.jp/	Shizuoka SIPOS, Gifu, Chiba portal, Osaka bousai-net, Hokkaido kasenbousai, Tokyo kasen-suibo are map SPAs whose data paths are session/timestamp-bound or not exposed; Saitama/Gunma/Tochigi/Ibaraki hosts did not resolve
+JO30_ICS_NOWPHAS_PASTDATA	https://nowphas.mlit.go.jp/pastdata	historical download is a form; the live XML files are taken instead
+JO30_ICS_KAWABOU_RAIN_KOBE	https://www.river.go.jp/kawabou/file/files/obslist/obs/twnlist/2801100.json	obsList.obsRn (53 gauges; likewise Hiroshima 52, Shizuoka 40, Kagoshima 33) verified live, but it is the same URL as the city's obsStg row and batch_exclusions flags a second array_path on one endpoint as DUP-ENDPOINT; dropped rather than disguised with a query string — an engine that takes several array_paths from one fetch would recover these without a second request

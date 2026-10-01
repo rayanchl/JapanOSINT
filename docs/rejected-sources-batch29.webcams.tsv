@@ -1,0 +1,98 @@
+https://511ga.org/List/GetData/Cameras	IBI 511 DataTables list (4,331 cameras) answers without a key but caps length at 100 (length=-1 gives HTTP 500) and takes start only inside a URL-encoded JSON query; a start at or past the end silently re-serves page 1 with HTTP 200, so no walk can terminate cleanly (engine only detects a repeat of the PREVIOUS page) — PAGE_WRAPS_NO_END, rejected rather than shipped as a row that re-emits page 1 onto its own uids
+https://fl511.com/List/GetData/Cameras	IBI 511 list, 4,955 cameras — PAGE_WRAPS_NO_END (measured: start=4900 -> 55 rows, start=4955 and start=5000 -> the first 100 rows again, byte-identical to start=0)
+https://www.nvroads.com/List/GetData/Cameras	IBI 511 list, 640 cameras — PAGE_WRAPS_NO_END (same platform behaviour as fl511)
+https://511.alaska.gov/List/GetData/Cameras	IBI 511 list, 129 camera sites — PAGE_WRAPS_NO_END
+https://www.511la.org/List/GetData/Cameras	IBI 511 list, 336 cameras — PAGE_WRAPS_NO_END
+https://www.az511.gov/List/GetData/Cameras	IBI 511 list, 644 cameras — PAGE_WRAPS_NO_END
+https://ctroads.org/List/GetData/Cameras	IBI 511 list, 347 cameras — PAGE_WRAPS_NO_END
+https://newengland511.org/List/GetData/Cameras	IBI 511 list, 406 cameras — PAGE_WRAPS_NO_END
+https://www.511pa.com/List/GetData/Cameras	IBI 511 list, 1,543 cameras — PAGE_WRAPS_NO_END
+https://511.idaho.gov/List/GetData/Cameras	IBI 511 list, 457 cameras — PAGE_WRAPS_NO_END (Idaho shipped via the State of Idaho and ITD ArcGIS layers instead)
+https://511yukon.ca/List/GetData/Cameras	IBI 511 list, 15 cameras — PAGE_WRAPS_NO_END
+https://511.gnb.ca/List/GetData/Cameras	IBI 511 list, 57 cameras — PAGE_WRAPS_NO_END
+https://511.novascotia.ca/List/GetData/Cameras	IBI 511 list, 57 cameras — PAGE_WRAPS_NO_END
+https://www.manitoba511.ca/List/GetData/Cameras	IBI 511 list, 49 cameras — PAGE_WRAPS_NO_END
+https://hotline.gov.sk.ca/List/GetData/Cameras	IBI 511 list, 56 cameras — PAGE_WRAPS_NO_END
+https://511nl.ca/List/GetData/Cameras	IBI 511 list, 48 cameras — PAGE_WRAPS_NO_END
+https://511.gov.pe.ca/List/GetData/Cameras	IBI 511 list, 7 cameras — PAGE_WRAPS_NO_END (fits one page today, but the endpoint gives no end signal once it grows past 100)
+https://511ny.org/List/GetData/Cameras	IBI 511 list — PAGE_WRAPS_NO_END; New York shipped via 511ny.org/api/getcameras, which returns all 2,933 cameras in one array
+https://511on.ca/List/GetData/Cameras	IBI 511 list — duplicate of the tree's existing 511on.ca/api/v2/get/cameras collector
+https://511wi.gov/List/GetData/Cameras	HTTP 403 to both the list and api/v2 endpoints
+https://www.udottraffic.utah.gov/List/GetData/Cameras	HTTP 403 to both the list and api/v2 endpoints
+https://oktraffic.org/List/GetData/Cameras	HTTP 403
+https://api.algotraffic.com/v3.0/Cameras	HTTP 403 even with a browser User-Agent
+https://traveler.modot.org/timconfig/feed/desktop/StreetCams.json	HTTP 403 even with a browser User-Agent
+https://chartexp1.sha.maryland.gov/CHARTExportClientService/getCameraMapDataJSON.do	HTTP 403 even with a browser User-Agent; chartimap1 ArcGIS layer also 403 — Maryland shipped via the opendata.maryland.gov CHART table
+https://opendata.maryland.gov/resource/hua3-qc8n.json	byte-identical copy of 4z3c-43ce (same 451 rows, same 234,158 bytes) — shipping both would store every camera twice
+https://eapps.ncdot.gov/services/traffic-prod/v1/cameras	endpoint retired: returns only a notice that API data moved to drivenc.gov/help/endpoint/event (an HTML page)
+https://webcams.nyctmc.org/api/cameras	timed out on three attempts from the build host
+https://api.qldtraffic.qld.gov.au/v1/webcams	HTTP 429 on every attempt with the published public key; Queensland shipped via the OpenDataSoft republication
+https://weathercams.faa.gov/api/sites	HTTP 401 — needs credentials
+https://publicapi.ohgo.com/api/v1/cameras	HTTP 401 — OHGO API key required
+https://www.tdot.tn.gov/opendata/api/public/RoadwayCameras	TLS handshake timed out; the documented API also requires an apikey header
+https://www.promet.si/dc/b2b.kamere.geojson.sl_SI	HTTP 403 — B2B credentials required
+https://www.utic.go.kr/guide/cctvOpenData.do	answers with resultCode 02 "open data KEY required"
+https://developer.nps.gov/api/v1/webcams	works only with an api_key; not shipped against DEMO_KEY
+https://datex-server-get-v3-1.atlas.vegvesen.no/datexapi/GetCCTVSiteTable/pullsnapshotdata	HTTP 401 — DATEX account required
+https://its.txdot.gov/its/DistrictIts/GetCctvStatusListByDistrict?districtCode=AUS	real per-district CCTV status JSON, but cameras sit under roadwayCctvStatuses.<roadway name>[] — one array per dynamically named key, which array_path cannot address without dropping every roadway but one
+https://images.geonet.org.nz/volcano/cameras/all.json	array of per-volcano FeatureCollections (6 groups, about a dozen cameras) — nested two levels, and keying each group as one record would merge distinct cameras
+https://verkehr.autobahn.de/o/autobahn/A1/services/webcam	Autobahn GmbH webcam service returns {"webcam":[]} for A1, A3 and A99 — EMPTY_RESULTSET
+https://www.geospatial.jp/ckan/dataset/fce81148-dcc4-482d-bd81-acf9d4e36b29/resource/309f0c07-d6a5-4d76-b928-c87d1911ea6b/download/kurelivecamera.txt	Kure City live cameras: the link is a redirect to a short-lived presigned S3 URL, and the file is a #-annotated RDF-style text table rather than a CSV
+https://www2.wagmap.jp/suginami/OpenDataDetail?lid=40&mids=3	Suginami river camera resource listed on the Tokyo catalogue answers HTTP 404
+https://services2.arcgis.com/qvkbeam7Wirps6zC/arcgis/rest/services/Detroit_Street_View_CCTV_Cameras/FeatureServer/0	7,977 Mapillary machine-detected "object--cctv-camera" points: derived detections with no camera identity or name, every record titled identically
+https://services.arcgis.com/NummVBqZSIJKUeVR/arcgis/rest/services/Trantar_Camera_Locations/FeatureServer/0	Houston TranStar camera locations re-uploaded by an individual ArcGIS user, not by TranStar — provenance and freshness unverifiable
+https://services1.arcgis.com/g2TonOxuRkIqSOFx/arcgis/rest/services/Kansas_City_Traffic_Camera_Locations/FeatureServer/0	KC Scout camera locations uploaded by a non-agency account — provenance unverifiable
+https://kygisserver.ky.gov/arcgis/rest/services/WGS84WM_Services/Ky_WebCams_WGS84WM/MapServer/0	older copy of the KYTC camera layer (226 rows, update timestamps from 2021) — duplicate of the shipped trafficCamerasCur_Prd layer
+https://services.arcgis.com/uUvqNMGPm7axC2dD/arcgis/rest/services/TripCheck_Cameras/FeatureServer/0	Oregon OEM re-upload of the TripCheck inventory — duplicate of the shipped tripcheck.com cctvinventory
+https://web.seattle.gov/Travelers/api/Map/Data?zoomId=13&type=2	overlaps the shipped Seattle City GIS camera layer; groups cameras per map point
+https://services3.arcgis.com/42Dx6OWonqK9LoEE/arcgis/rest/services/cctvStatusD04/FeatureServer	third-party mirror of Caltrans cwwp2 District 4 CCTV, which the tree already collects
+https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/Beach_Webcams/FeatureServer/0	Esri sample/demo data (esri_observations account), not a maintained public register
+https://services.arcgis.com/XTtANUDT8Va4DLwI/arcgis/rest/services/VolcanoWebCamTest/FeatureServer/0	test layer copying 10 GeoNet camera links
+https://services3.arcgis.com/v5RzLI7nHYeFImL4/arcgis/rest/services/SouthlandWebCameras/FeatureServer/0	8 features carrying only a site name — no camera URL or id
+https://services6.arcgis.com/tVfesLETUHNU9Vna/arcgis/rest/services/CCTV_Cameras/FeatureServer/0	Darwin CCTV: 37 features with only an asset id and camera count
+https://services.arcgis.com/FKrJWv8CWiYT6Rsn/arcgis/rest/services/Traffic_Cameras/FeatureServer/0	5 features, location text only, last edited 2018
+https://data.nola.gov/resource/te2d-4txp.json	school-zone speed ENFORCEMENT cameras, not viewable camera feeds — out of this beat's scope
+https://www.data.act.gov.au/resource/426s-vdu4.json	traffic ENFORCEMENT camera locations/offences — out of this beat's scope
+https://maps.co.monterey.ca.us/server/rest/services/Locations/Traffic_Cameras/FeatureServer/0	HTTP 500 "No Layer or Table was initialized"
+http://vtransmap01.aot.state.vt.us/arcgis/rest/services/VTrans511/511Live/MapServer	timed out
+https://geodata.md.gov/imap/rest/services/Transportation/MD_TrafficCameras/FeatureServer/0	HTTP 503
+https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=traffic-cameras	catalogue metadata only on probe; the datastore resource id guessed for it answered 404 and no record endpoint was confirmed
+https://maps.brla.gov/gis/rest/services/Transportation/Traffic_Camera/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ID&resultRecordCount=1000	DUPLICATE_OF_ADOPTED: JO29A_CAM_US_LA_BATON_ROUGE (data.brla.gov Socrata 6z6u-ts44) covers the same traffic cameras (JO29A_CAM_BATONROUGE_TRAFFIC_CAMERAS)
+https://services-eu1.arcgis.com/rUbRXKPCxUBrndx0/arcgis/rest/services/Traffic_Cams_Nov2024/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID&resultRecordCount=2000	DUPLICATE_OF_ADOPTED: JO29A_CAM_UK_PLYMOUTH_TRAFFIC (council data-place CSV) covers the same Plymouth traffic cameras (JO29A_CAM_PLYMOUTH_TRAFFIC_CAMERAS)
+https://services.arcgis.com/0L95CJ0VTaxqcmED/arcgis/rest/services/TRANSPORTATION_traffic_cameras/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000	DUPLICATE_OF_ADOPTED: JO29A_CAM_US_TX_AUSTIN (City of Austin Socrata b4k4-adkb) covers the same camera inventory (JO29A_CAM_AUSTIN_TRAFFIC_CAMERAS)
+https://services.arcgis.com/uUvqNMGPm7axC2dD/arcgis/rest/services/TripCheck_Cameras/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000	DUPLICATE_OF_ADOPTED: JO29A_CAM_US_OR_TRIPCHECK (ODOT primary cctvinventory) covers the same TripCheck camera set (JO29A_CAM_ODOT_TRIPCHECK_CAMERAS)
+https://services2.arcgis.com/67lKNkQ2TO1I3lhR/arcgis/rest/services/MiDrive%20Cameras/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=2000	DUPLICATE_OF_ADOPTED: JO29A_CAM_US_MI_MIDRIVE (MDOT primary MiDrive camera API) covers the same MiDrive camera set (JO29A_CAM_MDOT_MIDRIVE_CAMERAS)
+https://services3.arcgis.com/qrcTTRTwUoS8N47o/arcgis/rest/services/WebCameras/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=2000	DUPLICATE_OF_ADOPTED: JO29A_CAM_CA_BC_VANCOUVER (City of Vancouver ODS web-cam-url-links) covers the same web cameras (JO29A_CAM_VANCOUVER_WEB_CAMERAS)
+https://services8.arcgis.com/X84q166Srnyl4JMV/ArcGIS/rest/services/ALERTCalifornia_Camera_Feed/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=2000	DUPLICATE_OF_ADOPTED: JO29A_CAM_US_CA_ALERTCALIFORNIA (ALERTCalifornia primary all_cameras feed) covers the NIFC republication (JO29A_CAM_NIFC_ALERTCALIFORNIA_CAMERAS)
+https://511ny.org/map/mapIcons/Cameras	DUPLICATE_OF_ADOPTED: JO29A_CAM_US_NY_511NY_CAMERAS (511NY getcameras, with names/roadway/URLs) covers the same 1872 cameras (JO29A_CAM_511NY_MAPICONS)
+https://tmc.deldot.gov/json/videocamera.json	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_DELDOT_VIDEO_CAMERAS (JO29_CAM_US_DE_DELDOT_VIDEO)
+https://services2.arcgis.com/CcI36Pduqd0OR4W9/arcgis/rest/services/trafficCamerasCur_Prd/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_KYTC_TRAFFIC_CAMERAS (JO29_CAM_US_KY_KYTC_TRAFFIC)
+https://services2.arcgis.com/aIrBD8yn1TDTEXoz/ArcGIS/rest/services/TrafficCamerasTM_Public/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_IDOT_TRAFFIC_CAMERAS (JO29_CAM_US_IL_TRAVELMIDWEST)
+https://services.arcgis.com/8lRhdTsQyJpO52F1/arcgis/rest/services/Traffic_Cameras_View/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_IOWA_DOT_TRAFFIC_CAMERAS (JO29_CAM_US_IA_IOWADOT)
+https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Transportation_Sensors_WebMercator/MapServer/93/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_DC_TRAFFIC_CAMERAS (JO29_CAM_US_DC_DDOT_TRAFFIC)
+https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Traffic_Cameras_CDL/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_SEATTLE_TRAFFIC_CAMERAS (JO29_CAM_US_WA_SEATTLE_SDOT)
+https://services2.arcgis.com/loGMwowmR0OPlOQb/arcgis/rest/services/TRN_TrafficCams_10032022/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_KIRKLAND_TRAFFIC_CAMERAS (JO29_CAM_US_WA_KIRKLAND)
+https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/RegionalHazeWebcamSites2023/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_EPA_REGIONAL_HAZE_WEBCAMS (JO29_CAM_US_EPA_HAZE_WEBCAMS)
+https://services.arcgis.com/BLN4oKB0N1YSgvY8/arcgis/rest/services/CalOES_California_Webcams/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_CALOES_CALIFORNIA_WEBCAMS (JO29_CAM_US_CA_CALOES_WEBCAMS)
+https://www.ndbc.noaa.gov/buoycams.php	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_NOAA_NDBC_BUOYCAMS (JO29_CAM_US_NOAA_NDBC_BUOYCAMS)
+https://services1.arcgis.com/CNPdEkvnGl65jCX8/arcgis/rest/services/Webcams/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_IDAHO_STATE_WEBCAMS (JO29_CAM_US_ID_STATE_WEBCAMS)
+https://utility.arcgis.com/usrsvcs/servers/bf4012e0a0894bbabac081cce39455b1/rest/services/Fachdaten/wg_Verkehr_Infrastruktur/MapServer/78/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_UPPER_AUSTRIA_ASFINAG_WEBCAMS (JO29_CAM_AT_ASFINAG_WEBCAMS_DORIS)
+https://utility.arcgis.com/usrsvcs/servers/d0eefc284e3e48568eb3e7b8be02ae35/rest/services/Fachdaten/wg_Verkehr_Infrastruktur/MapServer/77/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_UPPER_AUSTRIA_WEBCAMS (JO29_CAM_AT_LANDOOE_ROADWEATHER)
+https://services.arcgis.com/hkQNLKNeDVYBjvFE/arcgis/rest/services/webcam/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_LAPALMA_CABILDO_WEBCAMS (JO29_CAM_ES_LA_PALMA_WEBCAMS)
+https://ww8.yorkmaps.ca/arcgis/rest/services/OpenData/Traffic/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_YORK_REGION_TRAFFIC_CAMERAS (JO29_CAM_CA_ON_YORK_REGION)
+https://services5.arcgis.com/YRpe0VKTJytZSSIB/arcgis/rest/services/Traffic%20Cameras/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_SURREY_TRAFFIC_CAMERAS (JO29_CAM_CA_BC_SURREY)
+https://maps2.bristol.gov.uk/server2/rest/services/ext/ll_community_and_safety/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_BRISTOL_COUNCIL_CCTV (JO29_CAM_UK_BRISTOL_COUNCIL_CCTV)
+https://services7.arcgis.com/wMvCpnbQEKXZsPSQ/arcgis/rest/services/Rochester_Cameras/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_ROCHESTER_PD_CAMERAS (JO29_CAM_US_NY_ROCHESTER_BLUELIGHT)
+https://services2.arcgis.com/Zzhtlau4ccHkQgTu/arcgis/rest/services/Traffic_Camera_October_2023/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=1000	DUPLICATE: same City of Gainesville camera layer as JO29A_CAM_GAINESVILLE_TRAFFIC_CAMERAS (identical 118 records, published twice) (JO29_CAM_US_FL_GAINESVILLE)
+https://www.drivebc.ca/api/webcams/	DUPLICATE: same BC MoT webcam inventory as JO29A_CAM_DRIVEBC_WEBCAMS (images.drivebc.ca webcam API, richer record) (JO29_CAM_CA_BC_DRIVEBC)
+https://static.data.gov.hk/td/traffic-snapshot-images/code/Traffic_Camera_Locations_En.xml	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_HK_TD_TRAFFIC_SNAPSHOTS (JO29_CAM_HK_TD_TRAFFIC_SNAPSHOT)
+https://gagnaveita.vegagerdin.is/api/vefmyndavelar2014_1	DUPLICATE_ENDPOINT: same layer/endpoint as JO29A_CAM_ICELAND_VEGAGERDIN_WEBCAMS (JO29_CAM_IS_VEGAGERDIN_WEBCAMS)
+JO29A_CAM_TW_TDX_FREEWAY_CCTV	NEEDS_CREDENTIAL	probe HTTP 401 "Valid API Key Required" for the engine UA and for JapanOSINT/1.0; only a browser UA was served, and faking one to avoid the key requirement is not done
+JO29A_CAM_TW_TDX_HIGHWAY_CCTV	NEEDS_CREDENTIAL	probe HTTP 401 "Valid API Key Required" for the engine UA and for JapanOSINT/1.0; only a browser UA was served, and faking one to avoid the key requirement is not done
+JO29A_CAM_TW_TDX_TAIPEI_CCTV	NEEDS_CREDENTIAL	probe HTTP 401 "Valid API Key Required" for the engine UA and for JapanOSINT/1.0; only a browser UA was served, and faking one to avoid the key requirement is not done
+JO29A_CAM_TW_TDX_NEWTAIPEI_CCTV	NEEDS_CREDENTIAL	probe HTTP 401 "Valid API Key Required" for the engine UA and for JapanOSINT/1.0; only a browser UA was served, and faking one to avoid the key requirement is not done
+JO29A_CAM_TW_TDX_TAICHUNG_CCTV	NEEDS_CREDENTIAL	probe HTTP 401 "Valid API Key Required" for the engine UA and for JapanOSINT/1.0; only a browser UA was served, and faking one to avoid the key requirement is not done
+JO29A_CAM_TW_TDX_KAOHSIUNG_CCTV	NEEDS_CREDENTIAL	probe HTTP 401 "Valid API Key Required" for the engine UA and for JapanOSINT/1.0; only a browser UA was served, and faking one to avoid the key requirement is not done
+JO29A_CAM_TW_TDX_TAOYUAN_CCTV	NEEDS_CREDENTIAL	probe HTTP 401 "Valid API Key Required" for the engine UA and for JapanOSINT/1.0; only a browser UA was served, and faking one to avoid the key requirement is not done
+JO29A_CAM_TW_TDX_TAINAN_CCTV	NEEDS_CREDENTIAL	probe HTTP 401 "Valid API Key Required" for the engine UA and for JapanOSINT/1.0; only a browser UA was served, and faking one to avoid the key requirement is not done
+JO29A_FGT_BUENOSAIRES_PROVINCE_CKAN	UPSTREAM_TRUNCATES	probe twice UNPARSEABLE: HTTP 200 body cut at 97306 and 80922 bytes of a 761461-byte JSON page

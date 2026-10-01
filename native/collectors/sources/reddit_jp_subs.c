@@ -2,36 +2,19 @@
  * Port of server/src/collectors/redditJpSubs.js (intelEnvelope).
  * 5 fixed subs, one /new.json?limit=25 GET each, slice(0,25) → intel rows.
  * uid = reddit-jp-subs|<p.id> (intelUid first non-empty). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 static const char *SUBS[] = { "japan", "japanlife", "Tokyo",
                               "newsokur", "JapanFinance" };
 #define NSUB ((int)(sizeof(SUBS) / sizeof(SUBS[0])))
-
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
-           ? v->valuestring : NULL;
-}
-
-/* new Date(sec*1000).toISOString() → YYYY-MM-DDTHH:MM:SS.mmmZ */
-static void epoch_iso(double sec, char *o, size_t n) {
-  double ms = (sec - (double)(long long)sec) * 1000.0;
-  int msi = (int)(ms + 0.5);
-  time_t t = (time_t)(long long)sec;
-  if (msi >= 1000) { msi -= 1000; t += 1; }
-  struct tm tm;
-  gmtime_r(&t, &tm);
-  char base[32];
-  strftime(base, sizeof base, "%Y-%m-%dT%H:%M:%S", &tm);
-  snprintf(o, n, "%s.%03dZ", base, msi);
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { "User-Agent: JapanOSINT/1.0 (research)", NULL };
@@ -51,10 +34,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cJSON *p = cJSON_GetObjectItem(c, "data");
         if (!p) continue;
 
-        const char *pid = sv(p, "id");
+        const char *pid = jo_sv(p, "id");
         if (!pid) continue;                          /* intelUid → key */
 
-        const char *ptitle = sv(p, "title");
+        const char *ptitle = jo_sv(p, "title");
         char titbuf[64];
         const char *title = ptitle;
         if (!title) {
@@ -64,7 +47,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
         /* summary = (p.selftext||'').slice(0,240) || null */
         char *summary = NULL;
-        const char *st = sv(p, "selftext");
+        const char *st = jo_sv(p, "selftext");
         if (st) {
           size_t L = strlen(st);
           if (L > 240) L = 240;
@@ -76,7 +59,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
         /* link = p.url || `https://www.reddit.com${p.permalink}` */
         char *link = NULL;
-        const char *purl = sv(p, "url");
+        const char *purl = jo_sv(p, "url");
         if (purl) {
           link = strdup(purl);
         } else {
@@ -92,8 +75,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         const char *pub = NULL;
         const cJSON *cu = cJSON_GetObjectItem(p, "created_utc");
         if (cu && cJSON_IsNumber(cu) && cu->valuedouble) {
-          epoch_iso(cu->valuedouble, isobuf, sizeof isobuf);
-          pub = isobuf;
+          /* new Date(sec*1000).toISOString() → YYYY-MM-DDTHH:MM:SS.mmmZ.
+           * `created_utc` is whatever number Reddit put in the JSON, so both
+           * halves of the render can fail on a wild value and BOTH used to be
+           * ignored here: gmtime_r returns NULL when the year will not fit an
+           * int, and strftime returns 0 on overflow leaving its buffer
+           * INDETERMINATE — which was then formatted into a published_at. A
+           * timestamp assembled from stack contents is invented data. That
+           * incident is why _timefmt.inc exists; jo_epoch_iso_frac empties the
+           * buffer on either failure, so the test below still holds. */
+          jo_epoch_iso_frac(cu->valuedouble, isobuf, sizeof isobuf);
+          /* empty = the value could not be rendered as a date; leave
+           * published_at NULL rather than store a half-formed timestamp */
+          if (isobuf[0]) pub = isobuf;
         }
 
         /* properties — EXACT JS key order */

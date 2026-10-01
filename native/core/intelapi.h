@@ -6,7 +6,18 @@
 #include "db.h"
 
 /* GET /api/intel/items/:uid body. Returns malloc'd `{"data":{...}}` (200) or
- * NULL if the uid doesn't exist (caller → 404 {"error":"not_found"}). */
+ * NULL if the uid doesn't exist (caller → 404 {"error":"not_found"}).
+ *
+ * TENANCY. `tenant` NULL or "" means UNSCOPED and is a deliberate contract, not
+ * an oversight: three of the four callers hold a row they have already
+ * authorised by other means — alert_deliver.c renders an item for the delivery
+ * worker, which has no auth_user at all; nearapi.c already selected the uid
+ * with this very predicate before rendering it; casesapi.c resolves a ref off a
+ * case row it fetched tenant-scoped. Only a request that arrives with a caller
+ * identity can pass a tenant, and for it `tenant` is matched as
+ * `tenant_id IN (?,'legacy')` — see the note on intel_items_query::tenant. */
+char *intelapi_item_by_uid_tenant(db_handle *db, const char *uid,
+                                  const char *tenant);
 char *intelapi_item_by_uid(db_handle *db, const char *uid);
 
 /* GET /api/intel/items filter set — faithful port of intelStore.listItems({})
@@ -14,7 +25,10 @@ char *intelapi_item_by_uid(db_handle *db, const char *uid);
  * `cursor` = base64url JSON {"p":pub_or_fetched,"u":uid} keyset token. */
 typedef struct {
   const char *source;          /* intel_items.source_id = ?               */
-  const char *q;               /* FTS over intel_items_fts (segmented)     */
+  const char *q;               /* FTS over intel_items_fts (fts_query_expr)*/
+  const char *q_alt;           /* second query OR'd with q — the client's
+                                * translated counterpart of `q` (?qAlt=).
+                                * Ignored unless `q` is also set.          */
   const char *lang;            /* intel_items.language = ?                 */
   const char *since;           /* COALESCE(published_at,fetched_at) >= ?   */
   const char *until;           /* COALESCE(published_at,fetched_at) <= ?   */
@@ -23,18 +37,82 @@ typedef struct {
   const char *sub_source_id;   /* intel_items.sub_source_id = ?           */
   const char *has_geom;        /* "yes" → lat NOT NULL; "no" → lat NULL    */
   const char *cursor;          /* base64url {"p":..,"u":..} keyset page    */
+  /* Active tenant_ctx.tenant_id, or NULL/"" for an unscoped read.
+   *
+   * Matched as `tenant_id IN (?,'legacy')`, NOT as `tenant_id IS NULL OR
+   * tenant_id=?`: schema.sql declares intel_items.tenant_id NOT NULL DEFAULT
+   * 'legacy', so the shared pre-tenancy corpus is the literal string 'legacy'
+   * and the IS NULL form (correct for `entities`, whose column IS nullable)
+   * would match no row on this table at all. exportapi.c:461 and nearapi.c:162
+   * spell it the same way over the same table. */
+  const char *tenant;
   int         limit;
+  /* ?sort= — NULL/"date" is the default and unchanged: newest first, keyset on
+   * (published_at??fetched_at, uid). "relevance" orders by FTS5 bm25() with
+   * title/summary/keywords/tags boosted and keys the cursor on (rank, uid);
+   * "trust" takes the top JO_RERANK_WINDOW hits by bm25 and reranks them in C
+   * by bm25 x f(source reliability) x recency decay, paging by offset over
+   * that bounded window and stating the bound in meta.rerank. Both text sorts
+   * REQUIRE q; without it the call answers a 400 envelope (status via
+   * intelapi_list_items_st). Unknown values are a 400 too, never silently
+   * "date" — a client that asked for ranking must not get a feed in reply. */
+  const char *sort;
+  /* ?total=1 — run the capped COUNT(*) and fill page.total (exact when below
+   * JO_TOTAL_CAP, else page.total_gte). Off by default: the count is a second
+   * full scan of the filter and the web feed does not render it. */
+  int         want_total;
+  /* ?collapse=1 — fold rows sharing a non-null cluster_id (simhash.c) onto the
+   * best-ranked one within the page; meta.collapsed says how many were hidden.
+   * The cursor still belongs to the underlying scan, so paging stays lossless. */
+  int         collapse;
 } intel_items_query;
 
 /* GET /api/intel/items — malloc'd envelope {data,page,meta}. A query with
- * only limit set (all filters NULL) is byte-identical to the old behaviour. */
+ * only limit set (all filters NULL) is byte-identical to the old behaviour.
+ *
+ * intelapi_list_items_st() also reports the HTTP status the body deserves:
+ * 200, or 400 with an {"error":…,"detail":…} body for a request that cannot
+ * be honoured as asked (sort=relevance without q, an unknown sort). The
+ * status-less form returns the same body for the 400 case — the error is
+ * in-band either way, only the status line is lost. NULL = server error. */
+char *intelapi_list_items_st(db_handle *db, const intel_items_query *q,
+                             int *status);
 char *intelapi_list_items(db_handle *db, const intel_items_query *q);
 
 /* GET /api/sources — malloc'd JSON array of all `sources` rows. */
 char *api_sources_list(db_handle *db);
 
 /* GET /api/intel/sources — malloc'd envelope {data,meta}: registry joined
- * with per-source intel_items aggregates, ttl + is_intel, freshness-sorted. */
+ * with per-source intel_items aggregates, ttl + is_intel, freshness-sorted.
+ *
+ * Each row also carries `parent_id`: non-null only on the camera discovery
+ * channels (registry layer "cameras"), whose item counts are rolled up into
+ * the `camera-discovery` row they belong to. See the rollup comment in
+ * intelapi.c — without it the parent reports 0 items next to a dozen sibling
+ * rows that are in fact its own channels. */
 char *intelapi_intel_sources(db_handle *db);
+
+/* The same payload, bounded. `limit <= 0` with `summary_only == 0` is exactly
+ * intelapi_intel_sources() — the full list, which is still the default.
+ *
+ *   limit > 0        one page of data[], from `offset`, after the usual sort
+ *   summary_only     `meta` only; data[] empty and meta.note says why
+ *
+ * `meta` always carries total / shown / offset / limit / truncated / note, so
+ * a page can never be mistaken for the whole list. `total` counts every
+ * source regardless of the window. */
+char *intelapi_intel_sources_view(db_handle *db, int limit, int offset,
+                                  int summary_only);
+
+/* intelCatalog.js INTEL_SOURCE_SET membership — the source ids that emit
+ * kind:'intel'. 0 for NULL.
+ *
+ * Defined ONCE, in intelapi.c. statusapi.c used to carry a byte-identical
+ * 34-entry copy appended to its STRIP_LAYER_IDS array (Node imported the same
+ * set into both modules, and the port copied it twice). Two copies meant two
+ * places to update, and both had already drifted the same way: three of the
+ * ids — boj-stats, jcg-navarea, nict-atlas — name collectors that were deleted
+ * in the 66-source removal sweep and no longer exist in either registry. */
+int intelapi_is_intel_id(const char *id);
 
 #endif

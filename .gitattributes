@@ -1,0 +1,10 @@
+# Shell and Python files must check out with LF, on every platform.
+#
+# Without this, core.autocrlf=true rewrites them to CRLF on a Windows checkout.
+# The file still runs on Windows, but the moment the tree is copied to the Linux
+# build host the kernel reads `#!/bin/bash\r` as the interpreter path and execve
+# fails with ENOENT. The error names the script -- which is sitting right there,
+# executable -- so it reads as "the script is missing" rather than "the shebang
+# has a carriage return in it". That is what made `make unit` exit 127.
+*.sh   text eol=lf
+*.py   text eol=lf

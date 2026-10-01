@@ -7,9 +7,9 @@
  * detection contract maigret.c uses). Real probes only — no synthesized rows;
  * if nothing matches, emits nothing (honest empty). LIVE but heavy, so the site
  * count is hard-capped. Free / keyless. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

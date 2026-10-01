@@ -208,19 +208,38 @@ int station_footprints_link_clusters_tx(db_handle *db, cJSON *clusters) {
   int linked = 0;
   if (clusters && cJSON_IsArray(clusters) &&
       cJSON_GetArraySize(clusters) > 0) {
-    /* stmtFootprintsContaining: bind(lon,lon,lat,lat). */
+    /* A footprint's bbox can contain several cluster points (adjacent or
+     * stacked stations), and the old code issued an unconditional UPDATE per
+     * candidate inside the per-cluster loop — so the footprint kept whichever
+     * cluster happened to be processed LAST, an arbitrary choice driven by
+     * array order. Stage the candidates instead and keep the NEAREST one, which
+     * is deterministic and is what the link is supposed to mean.
+     *
+     * Still a bbox test, not point-in-polygon: the box comes from the outer
+     * ring only, so a concave footprint can admit a point that is outside the
+     * actual geometry. Nearest-wins bounds the damage; a real ring test is the
+     * follow-up. */
+    sqlite3_exec(h, "CREATE TEMP TABLE IF NOT EXISTS fp_link("
+                    "footprint_id TEXT PRIMARY KEY, cluster_uid TEXT, d REAL)",
+                 NULL, NULL, NULL);
+    sqlite3_exec(h, "DELETE FROM fp_link", NULL, NULL, NULL);
+
+    /* stmtFootprintsContaining: bind(lon,lat); also returns the box centre so
+     * the caller can rank candidates by distance. */
     static const char *QF =
-      "SELECT footprint_id FROM station_footprints "
+      "SELECT footprint_id,(bbox_min_lon+bbox_max_lon)/2.0,"
+      "       (bbox_min_lat+bbox_max_lat)/2.0 FROM station_footprints "
       "WHERE bbox_min_lon <= ?1 AND bbox_max_lon >= ?1 "
       "  AND bbox_min_lat <= ?2 AND bbox_max_lat >= ?2";
-    static const char *QL =
-      "UPDATE station_footprints SET cluster_uid = ?1 "
-      "WHERE footprint_id = ?2";
-    sqlite3_stmt *sf = NULL, *sl = NULL;
+    static const char *QS =
+      "INSERT INTO fp_link(footprint_id,cluster_uid,d) VALUES(?1,?2,?3) "
+      "ON CONFLICT(footprint_id) DO UPDATE SET "
+      "cluster_uid=excluded.cluster_uid, d=excluded.d WHERE excluded.d < fp_link.d";
+    sqlite3_stmt *sf = NULL, *ss = NULL;
     if (sqlite3_prepare_v2(h, QF, -1, &sf, NULL) != SQLITE_OK ||
-        sqlite3_prepare_v2(h, QL, -1, &sl, NULL) != SQLITE_OK) {
+        sqlite3_prepare_v2(h, QS, -1, &ss, NULL) != SQLITE_OK) {
       if (sf) sqlite3_finalize(sf);
-      if (sl) sqlite3_finalize(sl);
+      if (ss) sqlite3_finalize(ss);
       sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
       return -1;
     }
@@ -240,22 +259,40 @@ int station_footprints_link_clusters_tx(db_handle *db, cJSON *clusters) {
       sqlite3_bind_double(sf, 2, lat);
       while (sqlite3_step(sf) == SQLITE_ROW) {
         const char *fid = (const char *)sqlite3_column_text(sf, 0);
-        sqlite3_reset(sl);
-        sqlite3_clear_bindings(sl);
-        if (cluid) sqlite3_bind_text(sl, 1, cluid, -1, SQLITE_TRANSIENT);
-        else       sqlite3_bind_null(sl, 1);
-        sqlite3_bind_text(sl, 2, fid, -1, SQLITE_TRANSIENT);
-        if (sqlite3_step(sl) != SQLITE_DONE) {
+        double flon = sqlite3_column_double(sf, 1);
+        double flat = sqlite3_column_double(sf, 2);
+        /* Squared planar distance with a cos(lat) longitude correction — only
+         * used for ranking, so no need for a true geodesic. */
+        double coslat = cos(lat * 3.14159265358979323846 / 180.0);
+        double dx = (flon - lon) * coslat, dy = flat - lat;
+        double d2 = dx * dx + dy * dy;
+
+        sqlite3_reset(ss);
+        sqlite3_clear_bindings(ss);
+        sqlite3_bind_text(ss, 1, fid, -1, SQLITE_TRANSIENT);
+        if (cluid) sqlite3_bind_text(ss, 2, cluid, -1, SQLITE_TRANSIENT);
+        else       sqlite3_bind_null(ss, 2);
+        sqlite3_bind_double(ss, 3, d2);
+        if (sqlite3_step(ss) != SQLITE_DONE) {
           sqlite3_finalize(sf);
-          sqlite3_finalize(sl);
+          sqlite3_finalize(ss);
           sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
           return -1;
         }
-        linked++;
       }
     }
     sqlite3_finalize(sf);
-    sqlite3_finalize(sl);
+    sqlite3_finalize(ss);
+
+    /* Apply the winners in one pass. */
+    sqlite3_exec(h,
+      "UPDATE station_footprints SET cluster_uid = "
+      "  (SELECT cluster_uid FROM fp_link WHERE fp_link.footprint_id = "
+      "   station_footprints.footprint_id) "
+      "WHERE footprint_id IN (SELECT footprint_id FROM fp_link)",
+      NULL, NULL, NULL);
+    linked = sqlite3_changes(h);
+    sqlite3_exec(h, "DROP TABLE IF EXISTS fp_link", NULL, NULL, NULL);
   }
 
   if (sqlite3_exec(h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {

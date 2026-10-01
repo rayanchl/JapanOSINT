@@ -2,9 +2,9 @@
  * OSINT services — administrative transparency & licensing registries.
  * Server-rendered listing pages → real anchor scrape; one run() dispatches on
  * ctx->source_id. Entity (when given) filters anchors by keyword. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,12 +39,7 @@ static int run_scrape(const source_ctx *ctx, intel_sink *sink) {
   return -1;
 }
 
-#define DEF(SYM, ID, NAME, NAMEJA, CAT, URL, DESC) \
-  static const source_def SYM = { .id = ID, .collector = "osint", .name = NAME, \
-    .name_ja = NAMEJA, .update_interval_sec = 0, .run = run_scrape, \
-    .category = CAT, .type = "scraped", .url = URL, .description = DESC, \
-    .layer = NULL, .free_tier = 1 }; \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 DEF(egov_pc_def, "EGOV_PUBLIC_COMMENT", "e-Gov Public Comment", "e-Gov パブリックコメント",
     "government", "https://public-comment.e-gov.go.jp/", "Policy consultations & organizational submitters");

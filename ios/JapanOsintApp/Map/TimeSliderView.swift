@@ -18,11 +18,40 @@ struct TimeSliderView: View {
 
     /// Slider range — 7 days back from now to now. Updated when availability
     /// data lands; until then we use the static 7-day default.
-    private var lowerBound: Date {
+    private var rawLowerBound: Date {
         playback.availableMin ?? Date().addingTimeInterval(-7 * 86400)
     }
-    private var upperBound: Date {
+    private var rawUpperBound: Date {
         playback.availableMax ?? Date()
+    }
+
+    /// The one range every control reads.
+    ///
+    /// `availableMin` and `availableMax` are published independently, and each
+    /// falls back to a *different* default — so `lower > upper` is routine, not
+    /// exotic: the moment the newest ingested data is older than 7 days,
+    /// `availableMax` is in the past while the 7-day fallback for the lower
+    /// bound is not. `lower ... upper` traps on that, and this is the map's
+    /// most prominent control. Degenerate windows collapse to a one-hour band
+    /// ending at the upper bound instead of crashing.
+    private var selectableRange: ClosedRange<Date> {
+        let lo = rawLowerBound
+        let hi = rawUpperBound
+        guard lo < hi else { return hi.addingTimeInterval(-3600) ... hi }
+        return lo ... hi
+    }
+
+    private var lowerBound: Date { selectableRange.lowerBound }
+    private var upperBound: Date { selectableRange.upperBound }
+
+    /// Keep a date inside the selectable range — `playback.at` is set from the
+    /// LIVE pill, the step buttons and the picker, any of which can land
+    /// outside a range that shifted underneath them.
+    private func clampToRange(_ d: Date) -> Date {
+        let r = selectableRange
+        if d < r.lowerBound { return r.lowerBound }
+        if d > r.upperBound { return r.upperBound }
+        return d
     }
 
     var body: some View {
@@ -84,7 +113,7 @@ struct TimeSliderView: View {
                     Image(systemName: expanded ? "chevron.down" : "chevron.up")
                         .font(.footnote.weight(.semibold))
                         .frame(width: 28, height: 28)
-                        .background(.thinMaterial, in: Circle())
+                        .mapBarSurface(in: Circle())
                         // Visual circle stays 28pt; the transparent 44pt frame
                         // gives it Apple's minimum tap target.
                         .frame(width: 44, height: 44)
@@ -132,7 +161,7 @@ struct TimeSliderView: View {
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
-            .background(.thinMaterial, in: Capsule())
+            .mapBarSurface(in: Capsule())
             // Red border in LIVE state matches the pulsing red dot; secondary
             // gray during replay so it visually steps back while the replay
             // window indicator (the outer card glow) carries the accent.
@@ -231,7 +260,7 @@ struct TimeSliderView: View {
                 .fixedSize(horizontal: true, vertical: false)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
-                .background(.thinMaterial, in: Capsule())
+                .mapBarSurface(in: Capsule())
                 .overlay(
                     Capsule().stroke(Color.secondary.opacity(0.25), lineWidth: 1)
                 )
@@ -295,10 +324,10 @@ struct TimeSliderView: View {
             DatePicker(
                 "",
                 selection: Binding(
-                    get: { playback.at ?? Date() },
-                    set: { playback.at = $0 }
+                    get: { clampToRange(playback.at ?? Date()) },
+                    set: { playback.at = clampToRange($0) }
                 ),
-                in: lowerBound ... upperBound,
+                in: selectableRange,
                 displayedComponents: [.date, .hourAndMinute]
             )
             .labelsHidden()
@@ -332,7 +361,7 @@ struct TimeSliderView: View {
                 .fixedSize(horizontal: true, vertical: false)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(.thinMaterial, in: Capsule())
+                .mapBarSurface(in: Capsule())
         }
         .buttonStyle(.plain)
     }
@@ -454,7 +483,7 @@ private struct TimeScrubber: View {
             .font(.caption2.weight(.semibold).monospacedDigit())
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(.thickMaterial, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .mapBarSurface(in: RoundedRectangle(cornerRadius: 8, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                     .stroke(tint.opacity(0.4), lineWidth: 0.5)

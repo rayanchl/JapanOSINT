@@ -5,9 +5,9 @@
  *   UK_POLICE_CRIME  data.police.uk/api/crimes-street/all-crime?lat=&lng= (lat,lon)
  *   UK_POSTCODES     api.postcodes.io/postcodes/<postcode>
  *   UK_FSA_RATINGS   api.ratings.food.gov.uk/Establishments?name= */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,7 +51,12 @@ static int run_police(const source_ctx *ctx, intel_sink *sink, const char *raw) 
     cJSON_AddBoolToObject(p, "success", 1);
     char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
     char title[200]; snprintf(title, sizeof title, "%s%s%s", cat, stname ? " · " : "", stname ? stname : "");
-    char rk[128]; snprintf(rk, sizeof rk, "ukcrime:%s", pid ? pid : title);
+    /* 224, not 128: the fallback substituted here is `title`, which is 200
+     * bytes of "<category> · <street>". This is the REMOTE KEY — truncating it
+     * does not shorten a display string, it makes two different crimes on the
+     * same long street name collide onto one row and silently dedupe each
+     * other away. 8 + 199 + NUL = 208. */
+    char rk[224]; snprintf(rk, sizeof rk, "ukcrime:%s", pid ? pid : title);
     intel_item it = {0};
     it.remote_key = rk; it.title = title; it.summary = month; it.body = bj; it.lang = "en";
     it.has_geo = hg; it.lat = clat; it.lon = clon;

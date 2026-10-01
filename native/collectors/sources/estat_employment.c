@@ -3,8 +3,10 @@
  * getStatsData (労働力調査), gated on ESTAT_APP_ID. Honest empty without
  * key / on failure / empty VALUE — no seed. uid key mirrors JS
  * `${area}-${cat}-${time}` (always non-empty → JS `|| i` is dead). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,13 +14,14 @@
 #define API_BASE "https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData"
 #define DEFAULT_STATS_DATA_ID "0003109741"
 
-static const char *s_or_null(cJSON *v) {
-  return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
-}
-
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *appId = getenv("ESTAT_APP_ID");
-  if (!appId || !*appId) { fprintf(stderr, "[estat-employment] gated (ESTAT_APP_ID)\n"); return 0; }
+  if (!appId || !*appId) {
+    static const char *const envs[] = { "ESTAT_APP_ID", NULL };
+    return jo_needs_credential(sink, "estat-employment",
+        "e-Stat \xe5\x8a\xb4\xe5\x83\x8d\xe5\x8a\x9b\xe8\xaa\xbf\xe6\x9f\xbb (Labour Force Survey)",
+        envs, API_BASE, "free appId at e-stat.go.jp/api");
+  }
   const char *sdi = getenv("ESTAT_EMPLOYMENT_STATS_DATA_ID");
   if (!sdi || !*sdi) sdi = DEFAULT_STATS_DATA_ID;
 
@@ -42,10 +45,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *v;
   cJSON_ArrayForEach(v, values) {
     if (i++ >= 2000) break;
-    const char *area = s_or_null(cJSON_GetObjectItem(v, "@area"));
-    const char *cat  = s_or_null(cJSON_GetObjectItem(v, "@cat01"));
-    const char *time = s_or_null(cJSON_GetObjectItem(v, "@time"));
-    const char *val  = s_or_null(cJSON_GetObjectItem(v, "$"));
+    const char *area = jo_vstr(cJSON_GetObjectItem(v, "@area"));
+    const char *cat  = jo_vstr(cJSON_GetObjectItem(v, "@cat01"));
+    const char *time = jo_vstr(cJSON_GetObjectItem(v, "@time"));
+    const char *val  = jo_vstr(cJSON_GetObjectItem(v, "$"));
 
     char rk[160], title[160], summary[160], body[320];
     snprintf(rk, sizeof rk, "%s-%s-%s",
@@ -90,7 +93,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(root);
   fprintf(stderr, "[estat-employment] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def estat_employment_def = {

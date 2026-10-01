@@ -34,20 +34,27 @@ export default function useCameraDiscoveryStream() {
   const [lastRun, setLastRun] = useState(null);
   const [cursor, setCursor] = useState(null);
   const [loadingMore, setLoadingMore] = useState(false);
+  // FollowPanel already learned this lesson: a backfill that could not be
+  // fetched must not be presented as an empty corpus. Without it the thread
+  // stated "No discoveries yet. The next run is scheduled hourly" — a claim
+  // about the server's schedule built out of a failed request.
+  const [seedError, setSeedError] = useState(null);
+  const [loadMoreError, setLoadMoreError] = useState(null);
   const seededRef = useRef(false);
 
   // Seed from the backfill endpoint on mount — runs once even under React
-  // strict-mode double-invoke thanks to the ref guard.
+  // strict-mode double-invoke thanks to the ref guard. There is deliberately
+  // no `cancelled` flag: strict-mode's first cleanup would otherwise discard
+  // the only seed response (the remount is a no-op behind seededRef) and the
+  // thread would stay permanently empty.
   useEffect(() => {
     if (seededRef.current) return;
     seededRef.current = true;
-    let cancelled = false;
     (async () => {
       try {
         const res = await fetch(apiUrl(`/api/data/cameras/discovery-feed?limit=${SEED_LIMIT}`));
-        if (!res.ok) return;
+        if (!res.ok) { setSeedError(`HTTP ${res.status}`); return; }
         const data = await res.json();
-        if (cancelled) return;
         const seed = (data.events || []).map((ev) => ({ ...ev, isLive: false }));
         setEvents((prev) => {
           // If WS events landed before the seed finished, dedup them against
@@ -64,9 +71,12 @@ export default function useCameraDiscoveryStream() {
           return merged.slice(0, MAX_EVENTS);
         });
         setCursor(data.cursor || null);
-      } catch { /* network error: leave the thread WS-only */ }
+        setSeedError(null);
+      } catch (e) {
+        // Network error: the thread is WS-only from here, and says so.
+        setSeedError(e?.message || 'request failed');
+      }
     })();
-    return () => { cancelled = true; };
   }, []);
 
   // Tick `activeRun.elapsed_ms` once per second while a run is active.
@@ -143,9 +153,10 @@ export default function useCameraDiscoveryStream() {
   const loadMore = useCallback(async () => {
     if (!cursor || loadingMore) return;
     setLoadingMore(true);
+    setLoadMoreError(null);
     try {
       const res = await fetch(apiUrl(`/api/data/cameras/discovery-feed?limit=${SEED_LIMIT}&cursor=${encodeURIComponent(cursor)}`));
-      if (!res.ok) return;
+      if (!res.ok) { setLoadMoreError(`HTTP ${res.status}`); return; }
       const data = await res.json();
       const older = (data.events || []).map((ev) => ({ ...ev, isLive: false }));
       setEvents((prev) => {
@@ -158,14 +169,27 @@ export default function useCameraDiscoveryStream() {
           if (uid) seen.add(uid);
         }
         merged.sort((a, b) => (b.ts || '').localeCompare(a.ts || ''));
-        return merged.slice(0, MAX_EVENTS);
+        // "Load more" walks *backwards* in time, so when the buffer overflows
+        // trim from the newest end — trimming the tail would throw away the
+        // page we just fetched while the cursor still advanced past it,
+        // permanently skipping those events.
+        return merged.length > MAX_EVENTS
+          ? merged.slice(merged.length - MAX_EVENTS)
+          : merged;
       });
       setCursor(data.cursor || null);
+    } catch (e) {
+      // Without this the rejection escaped the onClick handler entirely and
+      // the button just did nothing, twice, forever.
+      setLoadMoreError(e?.message || 'request failed');
     } finally {
       setLoadingMore(false);
     }
   }, [cursor, loadingMore]);
 
   const clearEvents = () => setEvents([]);
-  return { events, activeRun, lastRun, connected, clearEvents, loadMore, hasMore: !!cursor, loadingMore };
+  return {
+    events, activeRun, lastRun, connected, clearEvents, loadMore,
+    hasMore: !!cursor, loadingMore, seedError, loadMoreError,
+  };
 }

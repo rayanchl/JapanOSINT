@@ -6,9 +6,9 @@
  *   NL_ADDRESS      api.pdok.nl/bzk/locatieserver/search/v3_1/free?q=
  *   DE_POLITICIANS  abgeordnetenwatch.de/api/v2/politicians?politician[label][cn]=
  *   CA_PARLIAMENT   api.openparliament.ca/politicians/?q= */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

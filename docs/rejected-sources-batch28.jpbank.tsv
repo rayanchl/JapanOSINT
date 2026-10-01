@@ -1,0 +1,112 @@
+url	reason
+https://www.stat-search.boj.or.jp/	hub/index page for interactive time-series search; data access is via session-based CGI (famecgi2), no static file at this URL
+https://www.stat-search.boj.or.jp/info/dload.html	linked bulk files are mostly ZIP archives (contents unopened, schema unverified); the 4 standalone CSVs (cgpilink1/2.csv, sppilink.csv, sppilink_q.csv) are wide date-indexed matrices with blank/unlabeled id columns before ~700 monthly date columns start — could not confirm real title/id field names without fabricating, and csv_no_header risks the header row itself being read as a spurious record
+https://www.boj.or.jp/statistics/money/index.htm	pure hub page, only links to 4 sub-pages not in this batch, no direct data file
+https://www.boj.or.jp/statistics/asli_fi/index.htm	hub page; real data behind an interactive session-based stat-search CGI, only direct link found is a PDF comparison table
+https://www.boj.or.jp/statistics/dl/index.htm	pure hub page listing sub-topics, no direct CSV/XLS/PDF link on the page itself
+https://www.boj.or.jp/statistics/sj/index.htm	real data (sjlong.xlsx etc.) is xlsx binary — not a supported manifest mode (json/csv/xml/html only)
+https://www.boj.or.jp/statistics/bis/index.htm	pure hub page, 4 sub-page links only, no direct data file
+https://www.boj.or.jp/statistics/set/index.htm	pure hub page, 3 sub-page links only, no direct data file
+https://www.boj.or.jp/statistics/set/kess/index.htm	PDF-only monthly release reports, no CSV/XLS alternate found
+https://www.boj.or.jp/statistics/other/index.htm	pure hub page, 2 sub-page links only, no direct data file
+https://www.boj.or.jp/statistics/br/index.htm	pure hub page, 2 sub-page links only, no direct data file
+https://www.boj.or.jp/statistics/tk/index.htm	data (tka*.zip) is a ZIP archive, contents not opened/verified — cannot confirm CSV/XLSX schema inside without fabricating
+https://www.boj.or.jp/statistics/boj/index.htm	hub page; category sub-page hrefs were not captured in prose-only fetch, no direct data file on this page
+https://www.boj.or.jp/finsys/fsr/index.htm	index of narrative Financial System Report htm/PDF pages, not structured/tabular data
+https://www.boj.or.jp/finsys/	pure index/hub of hub-sections, no direct data
+https://www.boj.or.jp/research/brp/psr/index.htm	index of narrative Payment System Report PDFs, no CSV/XLS/JSON
+https://www.boj.or.jp/research/brp/index.htm	pure index/hub aggregating other report indexes, PDF narrative only
+https://www.boj.or.jp/statistics/market/forex/index.htm	pure hub page, 2 sub-page links only
+https://www.boj.or.jp/statistics/market/forex/fxdaily/index.htm	PDF-only daily releases, no CSV/JSON
+https://www.boj.or.jp/statistics/market/forex/fxdaily/fxlist/index.htm	genuine dated link-list pattern but targets are PDF, not per-item HTML pages or CSV/JSON/XML — html mode cannot parse PDF content
+https://www.boj.or.jp/statistics/market/forex/jikko/index.htm	hub page; real data behind session-based stat-search CGI, only direct link is an old 2010 PDF notice
+https://www.boj.or.jp/about/services/tame/tame_rate/kijun/	genuine monthly HTML link-list but each detail page is a single-value snapshot (one prose rate + a 2-column table), not a bulk table/CSV/JSON
+https://www.fsa.go.jp/menkyo/menkyo.html	pure navigation/index page linking to the category pages below, not itself a table or link-list of entities
+https://www.fsa.go.jp/menkyo/menkyoj/ginkou.pdf	PDF; a live xlsx sibling (ginkou.xlsx) exists but xlsx is binary and not a supported manifest mode (json/csv/xml/html only)
+https://www.fsa.go.jp/menkyo/menkyoj/ginkoumochikabu.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/shinkin.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/rokin.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/shinkumi.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/keito.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/kenei.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/kinyushohin.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/touroku.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/chuukai.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/toushihoujin.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/shinyoukakuduke.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/hoken.pdf	PDF; live xlsx sibling (hoken.xlsx) exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/songai.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/nakadachi.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/shougaku.html	page itself is only a download-link pair, not a table; real data (shougaku.xlsx) is xlsx, an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/ninkatokutei.html	page itself is only a download-link pair, not a table; real data (ninkatokutei.xlsx) is xlsx, an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/kasi.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/kasoutuka.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/shikin_idou.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://www.fsa.go.jp/menkyo/menkyoj/daisan.pdf	PDF; live xlsx sibling exists but xlsx is an unsupported binary format
+https://clearing.fsa.go.jp/kashikin/index.php	search form confirmed POST-only via raw HTML fetch (no GET query-string support) — cannot be expressed as a {q}-in-URL entity pivot under this manifest's model
+https://www.fsa.go.jp/ordinary/kensaku/	pure landing/informational page pointing to the search tool above, no table or downloadable file
+https://www.fsa.go.jp/koueki/koueki10e.html	genuine HTML table but only 1 row (single hardcoded association) — too small to be a useful registry source
+https://www.fsa.go.jp/koueki/koueki10b.html	genuine HTML table but only 5 rows, each linking out to an external org homepage rather than a per-item FSA detail page
+https://www.fsa.go.jp/status/kasikin/index.html	navigational hub linking to dated report-collection pages, no direct CSV/Excel/JSON on this page
+https://www.fsa.go.jp/status/	pure navigation/link hub to further FSA sub-portals, no direct data files
+https://www.fsa.go.jp/common/noact/index.html	navigational hub aggregating the law-category pages; the FIEA/insurance/moneylending sub-indexes are separately accepted
+https://www.fsa.go.jp/common/noact/kaitou_2/kinsyou.html	one hop short of the real list; accepted instead at the deeper .../kaitou_2/kinsyou/index.html (see candidate manifest)
+https://www.fsa.go.jp/common/noact/kaitou_2/hoken.html	one hop short of the real list; accepted instead at the deeper .../kaitou_2/hoken/index.html (see candidate manifest)
+https://www.fsa.go.jp/ordinary/chuui/mutouroku.html	page itself is a link/table hub; the 3 underlying registries (01/02/03.xlsx) are xlsx, an unsupported binary format, and the 4th sub-page (04.html) is a genuine HTML data table with no per-row links, which html mode cannot parse
+https://www.fsa.go.jp/policy/virtual_currency02/index.html	pure navigation/link hub; underlying crypto-operator registries are xlsx, an unsupported binary format
+https://www.fsa.go.jp/policy/chusho/link/03.html	curated external-link directory; targets are navigation portals to other sites' statistics pages, not direct data files or per-item detail pages
+https://www.zenginkyo.or.jp/stats/	pure navigational hub, ~14 links to further report/index sub-pages, no data on the page itself
+https://www.zenginkyo.or.jp/stats/month1-01/	year-index hub page; a sampled leaf page offers only 3 PDF downloads, no CSV/XLS
+https://www.zenginkyo.or.jp/stats/year1-01/	year-index hub page only, no data/files visible, no CSV found
+https://www.zenginkyo.or.jp/stats/year2-02/	year-index hub page only, no CSV/XLS visible on the page
+https://www.zenginkyo.or.jp/stats/year4-01/	real cdab.csv file exists but is a multi-row-merged, Shift_JIS-encoded wide quarterly matrix — could not confirm real column field names for title_keys/id_keys without fabricating them
+https://www.zenginkyo.or.jp/pcic/data/	on-page HTML stat table plus 3 PNG graph images only, no downloadable CSV/XLS/JSON
+https://www.zenginkyo.or.jp/abstract/efforts/system/zengin-system/	narrative descriptive text and one diagram image, no data or files
+https://www.zengin-net.jp/	corporate navigational hub; referenced statistics links not resolved to actual downloadable files on this page
+https://www.jpx.co.jp/equities/listing/disclosure/tdnet/	HTTP 403 Forbidden on repeated attempts, content could not be verified
+https://www.jpx.co.jp/jscc/	HTTP 403 Forbidden on repeated attempts, content could not be verified
+https://www.jasdec.com/statistics/	real data (data.xls, cp_hw.xls, etc.) is xls binary, an unsupported manifest mode
+https://www.jasdec.com/about/action/finance/index.html	PDF-only disclosure archive (management plans, financial statements), no CSV/XLS
+https://www.jasdec.com/about/jdcc/	corporate/subsidiary description page, no data files present
+https://www.jsda.or.jp/shiryoshitsu/toukei/kaiinsu.html	real data is a single xlsx workbook, an unsupported binary format
+https://www.jsda.or.jp/shiryoshitsu/toukei/data/	directory of links to individual survey-year report pages, not raw data itself; the one xlsx present is a data-usage application form, not the dataset
+https://www.shinkin.org/shinkin/toukei/	3-link hub pointing to external sites (scbri.jp, fsa.go.jp), no files on the page itself
+https://www.shinkin-central-bank.jp/	corporate homepage/navigational hub, no data downloads
+https://www.shinkin-central-bank.jp/about/profile/company.html	single-entity fact sheet (definition list), not a dataset or multi-item list
+https://www.scbri.jp/publication/toukei/	real data is 10 separate xls workbooks, an unsupported binary format
+https://www.nochubank.or.jp/ir/disclosure/	HTTP 403 Forbidden on repeated attempts, content could not be verified
+https://www.jabank.org/	corporate marketing/product homepage, no data downloads
+https://all.rokin.or.jp/	corporate navigational hub; referenced monthly PDF reports and directory link not independently confirmed as machine-readable
+https://www.shokochukin.co.jp/share/library/materials/	PDF-only disclosure archive by fiscal year, no CSV/XLS
+https://www.shokochukin.co.jp/share/library/capitalratio/	index-of-years hub page, no files on the hub page itself
+https://www.tfx.co.jp/historical/	data only accessible via dropdown-selected PDF reports; both the monthly (2010-2021) and annual (1998-2015) series have ended publication; no CSV/XLS found
+https://www.jsf.co.jp/	corporate homepage/IR news hub; only PDF disclosure notices and an external stock-price link
+https://www.jp-bank.japanpost.jp/ir/financial/ir_fnc_disclosure.html	PDF-only integrated report/disclosure archive by fiscal year, no CSV/XLS
+https://www.jp-bank.japanpost.jp/ir/policy/ir_plc_disclosure.html	narrative disclosure-policy text plus a flowchart image, no files hosted on this page
+https://www.jp-life.japanpost.jp/IR/disclosure/	PDF-only integrated report archive, no CSV/XLS/JSON
+https://jvcea.or.jp/	navigational hub (org overview, news, menus); no data table or download-link list. Accepted instead: /about/rule/ sub-page
+https://www.toushin.or.jp/statistics/	real download links (xlsx, under /tws/toukei_dw/) exist but anchor text is only a file-size label ("58 K", "18 K") — html mode uses anchor text as the record title, and no meaningful title could be derived without fabricating one; xlsx target format is also unsupported
+https://www.seiho.or.jp/data/statistics/	unreachable — ECONNREFUSED on every attempt (3 retries), could not observe any content
+https://www.seiho.or.jp/data/statistics/trend/	unreachable — ECONNREFUSED on every attempt, could not observe any content
+https://www.j-fsa.or.jp/association/money_lending/you_know/statistics.php	statistics shown only as embedded chart images; no downloadable CSV/Excel/PDF and no link list
+https://www.tsr-net.co.jp/news/data_analysis/	landing page for a JS-driven interactive filter tool; no static data, no download links, no visible table in the fetched HTML
+https://www.shinyokumiai.or.jp/	navigational hub, no data files on the homepage itself; accepted instead: /credit_cooperative/outline.html
+https://www.shinyokumiai.or.jp/list/	top-level page is a region hub only (links to /list/<region>/index.html); regional leaf pages ARE a genuine per-cooperative link list, but the target hrefs point to many different external domains with no common substring, so href_must-based extraction cannot cleanly separate cooperative links from navigation
+https://www.zenshinkumiren.jp/	navigational hub, no data files (only fraud-alert PDFs)
+https://www.chiginkyo.or.jp/	navigational hub itself; see /data/result/ for the sub-page assessment
+https://www.chiginkyo.or.jp/data/result/	only ~3 links total (1 PDF + 2 xlsx) — too few for a link-list pattern, and xlsx is an unsupported binary format
+https://www.dainichiginkyo.or.jp/	navigational hub, no data files on the homepage itself; accepted instead: /membership/statistical.html
+https://www.zenshinhoren.or.jp/	navigational hub; monthly guarantee-performance data referenced only via news announcements, no catalog of downloadable files on this page
+https://www.zenshinhoren.or.jp/document/riyo_jyokyo.pdf	PDF only, not a link-list page and not CSV/XML/JSON
+https://www.zenshinhoren.or.jp/document/hosho_jisseki.pdf	PDF only, not a link-list page and not CSV/XML/JSON
+https://www.jfc.go.jp/n/findings/data.html	landing page with exactly one PDF link — too few links for a link-list pattern, and not raw CSV/XML/JSON
+https://www.dbj.jp/investigate/list/	JS search/filter interface showing 0 results with no query applied, not a static link list
+https://www.dbj.jp/investigate/equip/	itself only a 3-link landing hub with no direct report links; accepted instead: the /investigate/equip/national/ sub-page
+https://www.dic.go.jp/katsudo/page_001084.html	HTTP 403 Forbidden on every attempt, content could not be verified
+https://www.dic.go.jp/yokinsha/hatan.html	HTTP 403 Forbidden on every attempt, content could not be verified
+https://www.toushin.or.jp/statistics/factbook/index.html	301-redirects to https://www.imaj.or.jp/statistics/factbook/ (org renamed Investment Trusts Assoc. to Investment Management Assoc. of Japan) — covered by accepted row JO28_IMAJ_FACTBOOK at the redirected URL
+https://www.dainichiginkyo.or.jp/membership/statistical.html	DUP_WITH_BATCH25
+https://www.shintaku-kyokai.or.jp/data/statistics_list/	DUP_WITH_BATCH25
+https://www.sonpo.or.jp/report/statistics/syumoku/index.html	DUP_WITH_BATCH25
+https://www.tsr-net.co.jp/news/status/	DUP_WITH_BATCH25
+https://www.tdb.co.jp/report/bankruptcy/	ANCHOR_NESTED_TEXT: still emits 0 after html-mode's descendant/alt-text fallback landed (JFSA's identical-class row now works, 8/8 stored) — re-tested twice, real link still present in the page (1 match on latest fetch, down from 7 earlier) but engine returns 0 records in 66ms, too fast to be a real fetch; possibly content-unchanged caching from repeated testing rather than a genuine failure, left rejected pending a clean re-test

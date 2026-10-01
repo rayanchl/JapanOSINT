@@ -1,5 +1,10 @@
 import Foundation
-#if canImport(ActivityKit)
+// `canImport(ActivityKit)` alone is NOT a sufficient guard, and that is why the
+// macOS destination of this shared target did not compile. ActivityKit DOES
+// import on macOS — the framework is present — so the check passed and then
+// `ActivityAttributes` failed as unavailable. The guard read as protection and
+// provided none. Live Activities are iOS-only, so test the platform too.
+#if canImport(ActivityKit) && os(iOS)
 import ActivityKit
 #endif
 
@@ -20,7 +25,7 @@ import ActivityKit
 // real device — Live Activities do not render in the simulator.
 // ─────────────────────────────────────────────────────────────────────────────
 
-#if canImport(ActivityKit)
+#if canImport(ActivityKit) && os(iOS)
 struct SearchActivityAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         var phase: String          // analyzing | dispatching | pivoting | done

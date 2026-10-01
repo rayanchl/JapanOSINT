@@ -5,11 +5,11 @@
  * Header-indexed columns; Number() coercion → NaN becomes JSON null for the
  * numeric props (bright/frp); geometry null when lon/lat not finite.
  * Props order: bright, acq_date, acq_time, confidence, frp, satellite, source. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../lib/csv.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "lib/csv.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -8,9 +8,9 @@
  * i.e. base64("<key>:"). The key is FREE (self-service registration), so this
  * stays free_tier=1; gated on COMPANIES_HOUSE_API_KEY (no key → honest empty,
  * exactly like gbizinfo.c). No matches / fetch failure → emits nothing. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

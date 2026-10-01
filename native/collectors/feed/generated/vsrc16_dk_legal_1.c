@@ -1,0 +1,15 @@
+/* Verified-live dk_legal sources (1), part 1.
+ * Every endpoint in this file returned 2xx and parsed to at
+ * least one record at generation time; see
+ * docs/verified-sources-manifest.tsv for the recorded proof.
+ * Scaffolded once by collectors/gen_verified_sources.py; HAND-MAINTAINED
+ * since — this file, not the manifest, is the current copy. The
+ * generator refuses to overwrite it without --force. */
+#include "_verified_macros.inc"
+
+VJSON(dk_retsinformation_documentsearch, "dk-retsinformation-documentsearch", "Retsinformation Denmark - legal document search API", "Retsinformation Denmark - legal document search API",
+  "dk_legal", "legal",
+  "https://www.retsinformation.dk/api/documentsearch?dt=10&page=1",
+  "documents",
+  "da", "[\"dk\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
+  "Keyless JSON search over the Danish official legal information system; this filter (dt=10, Acts) returns 2,472 documents across 248 pages. Per document: numeric id, shortName (LOV nr 1618 af 16/12/2025), full title, popular title, RESSORT MINISTRY, document type + ELI type code, ELI retsinfoLink (/eli/lta/2025/1618), classification id, publication date and history flag. Changing dt selects other document types (ordinances, circulars, administrative guidance). I could not find a JSON detail endpoint - the /eli/ page is a client-rendered shell - so no detail hop is claimed.");

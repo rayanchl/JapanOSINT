@@ -15,9 +15,9 @@
  * Google Patents has no keyless public API; a Wikidata fallback would only yield
  * link cards, so it is deliberately honest-empty (documented, emits nothing).
  * Every path REAL-fetches or is honest-empty; nothing is fabricated. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -69,6 +69,17 @@ static int pv_emit(intel_sink *sink, const cJSON *p) {
   return rc >= 0 ? 1 : 0;
 }
 
+/* DEAD UPSTREAM (audit 2026-07, slot a9). PatentsView has been retired and
+ * folded into USPTO's Open Data Portal:
+ *   - search.patentsview.org  → NXDOMAIN (Cloudflare DoH "Status":3, SOA from
+ *     patentsview.org's own nameserver). The apex still resolves.
+ *   - api.patentsview.org/... → HTTP 301 to
+ *     https://data.uspto.gov/support/transition-guide/patentsview
+ * so this collector's every request now fails at DNS and jo_get logs
+ * "http status=0". The successor (data.uspto.gov / api.uspto.gov) requires a
+ * registered API key, i.e. migrating this source turns it from keyless into
+ * key-gated and needs a credential this host does not have. Left as an
+ * honest permanent empty rather than repointed blind — see report_a9.md. */
 static int run_patentsview(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!q || !*q) return -1;
@@ -197,10 +208,27 @@ static int run_lens(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[lens_patents] gated (no LENS_TOKEN)\n");
     return 0;
   }
-  /* Lens patent search: POST a JSON query to /patent/search. */
+  /* Lens patent search: POST a JSON query to /patent/search.
+   *
+   * The entity used to be spliced in raw. It is analyst-supplied text, so a
+   * single `"` in it closed the JSON string and everything after became
+   * sibling keys of the request object — a malformed body at best, and at
+   * worst a query that silently searches for something other than what was
+   * asked while still returning 200 and emitting rows. Escape it the way
+   * grants_world.c's nih_run() already does (quote, backslash, and the three
+   * control characters that are illegal bare inside a JSON string). */
+  char esc[512]; size_t ej = 0;
+  for (size_t i = 0; q[i] && ej < sizeof esc - 2; i++) {
+    unsigned char c = (unsigned char)q[i];
+    if (c == '"' || c == '\\') { esc[ej++] = '\\'; esc[ej++] = (char)c; }
+    else if (c == '\n' || c == '\r' || c == '\t') esc[ej++] = ' ';
+    else esc[ej++] = (char)c;
+  }
+  esc[ej] = 0;
+
   char post[1024];
   snprintf(post, sizeof post,
-    "{\"query\":{\"match\":{\"invention_title\":\"%s\"}},\"size\":20}", q);
+    "{\"query\":{\"match\":{\"invention_title\":\"%s\"}},\"size\":20}", esc);
   char auth[600];
   snprintf(auth, sizeof auth, "Authorization: Bearer %s", token);
   const char *hdrs[] = { auth, "Content-Type: application/json",

@@ -5,9 +5,9 @@
  * uid = edinet-filings|<d.docID || idx_<i>> (intelUid first non-empty).
  * published_at mirrors d.submitDateTime (source string passthrough; JS does
  * new Date(x).toISOString() — server-tz-coupled, not in uid/props). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,12 +27,21 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return 0;
   }
 
-  /* today() = new Date().toISOString().slice(0,10) (UTC date) */
+  /* today() = new Date().toISOString().slice(0,10) (UTC date).
+   * strftime rather than snprintf("%04d-%02d-%02d", tm_year + 1900, …): tm_year
+   * is an int the compiler cannot bound, so that form can emit up to 33 bytes
+   * into this 11-byte buffer and -Wformat-truncation says so. strftime is
+   * bounded by construction — it writes nothing and returns 0 rather than
+   * cutting a date in half. The rendering is identical for every year this can
+   * see. gmtime_r's NULL return is checked too; it was not before, and reading
+   * an unset `struct tm` would have queried EDINET for a garbage date. */
   time_t now = time(NULL);
-  struct tm g; gmtime_r(&now, &g);
+  struct tm g;
   char day[11];
-  snprintf(day, sizeof day, "%04d-%02d-%02d",
-           g.tm_year + 1900, g.tm_mon + 1, g.tm_mday);
+  if (!gmtime_r(&now, &g) || !strftime(day, sizeof day, "%Y-%m-%d", &g)) {
+    fprintf(stderr, "[edinet-filings] cannot render today as a date\n");
+    return -1;
+  }
 
   char url[512];
   snprintf(url, sizeof url,
@@ -132,7 +141,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(data);
   fprintf(stderr, "[edinet-filings] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* Every failure path already returned before here: no key → 0 (gated), and
+   * a failed/unparseable fetch → -1 at `if (!data)`. Reaching this line means
+   * EDINET answered and listed nothing for today — which is the normal state
+   * every weekend and public holiday, since filings land on business days.
+   * The old `n > 0 ? 0 : -1` reported that as a failure, so the scheduler
+   * recorded an error and anomaly_detect quarantined a source that had just
+   * told the truth. */
+  return 0;      /* honest empty is not an error */
 }
 
 static const source_def edinet_filings_def = {

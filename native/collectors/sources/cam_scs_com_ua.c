@@ -33,15 +33,18 @@
  * Every feature → camera_upsert(channel="scs_com_ua").  makeFeature parity
  * byte-identical to camera_discovery.c.
  */
-#include "../../source.h"
-#include "../../core/camera_store.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "core/camera_store.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+#include "cam_centroids.inc"
 
 #define BROWSER_UA \
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
@@ -51,17 +54,6 @@
 
 typedef struct { const char *k; const char *sv; int is_num; double nv;
                  int is_null; int is_bool; int bv; } kv;
-static double round4(double v) { return floor(v * 1e4 + 0.5) / 1e4; }
-static void uid_tail(const char *url, const char *name, char *out,
-                     size_t outsz) {
-  const char *src = (url && *url) ? url : (name ? name : "");
-  size_t i = 0;
-  for (; src[i] && i < 60 && i + 1 < outsz; i++) {
-    unsigned char c = (unsigned char)src[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
 static cJSON *make_feature(double lat, double lon, const char *name,
                            const char *camera_type,
                            const char *discovery_channel,
@@ -72,19 +64,11 @@ static cJSON *make_feature(double lat, double lon, const char *name,
       url = extra[i].sv; break;
     }
   char lats[32], lons[32], tail[80], uid[160];
-  snprintf(lats, sizeof lats, "%.4f", round4(lat));
-  snprintf(lons, sizeof lons, "%.4f", round4(lon));
-  uid_tail(url, name, tail, sizeof tail);
+  snprintf(lats, sizeof lats, "%.4f", jo_round4(lat));
+  snprintf(lons, sizeof lons, "%.4f", jo_round4(lon));
+  jo_uid_tail(url, name, tail, sizeof tail);
   snprintf(uid, sizeof uid, "%s:%s:%s", lats, lons, tail);
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "camera_uid", uid);
   cJSON_AddStringToObject(p, "name", (name && *name) ? name : "Unknown camera");
@@ -105,62 +89,6 @@ static cJSON *make_feature(double lat, double lon, const char *name,
   return f;
 }
 
-typedef struct { const char *key; double lat, lon; const char *prec; } centroid;
-static const centroid PREF_CENTROIDS[] = {
-  {"hokkaido",43.2203,142.8635,"prefecture"},{"aomori",40.7644,140.7400,"prefecture"},
-  {"iwate",39.7036,141.1527,"prefecture"},{"miyagi",38.2688,140.8719,"prefecture"},
-  {"akita",39.7186,140.1024,"prefecture"},{"yamagata",38.2404,140.3636,"prefecture"},
-  {"fukushima",37.7503,140.4677,"prefecture"},{"ibaraki",36.3418,140.4468,"prefecture"},
-  {"tochigi",36.5657,139.8836,"prefecture"},{"gunma",36.3906,139.0604,"prefecture"},
-  {"saitama",35.8572,139.6489,"prefecture"},{"chiba",35.6050,140.1234,"prefecture"},
-  {"tokyo",35.6762,139.6503,"prefecture"},{"kanagawa",35.4478,139.6425,"prefecture"},
-  {"niigata",37.9161,139.0364,"prefecture"},{"toyama",36.6953,137.2113,"prefecture"},
-  {"ishikawa",36.5946,136.6256,"prefecture"},{"fukui",36.0652,136.2216,"prefecture"},
-  {"yamanashi",35.6639,138.5684,"prefecture"},{"nagano",36.6513,138.1810,"prefecture"},
-  {"gifu",35.3911,136.7222,"prefecture"},{"shizuoka",34.9769,138.3831,"prefecture"},
-  {"aichi",35.1802,136.9066,"prefecture"},{"mie",34.7303,136.5086,"prefecture"},
-  {"shiga",35.0045,135.8686,"prefecture"},{"kyoto",35.0116,135.7681,"prefecture"},
-  {"osaka",34.6937,135.5023,"prefecture"},{"hyogo",34.6913,135.1830,"prefecture"},
-  {"nara",34.6851,135.8050,"prefecture"},{"wakayama",34.2261,135.1675,"prefecture"},
-  {"tottori",35.5036,134.2383,"prefecture"},{"shimane",35.4723,133.0505,"prefecture"},
-  {"okayama",34.6618,133.9344,"prefecture"},{"hiroshima",34.3966,132.4596,"prefecture"},
-  {"yamaguchi",34.1859,131.4706,"prefecture"},{"tokushima",34.0658,134.5593,"prefecture"},
-  {"kagawa",34.3401,134.0434,"prefecture"},{"ehime",33.8416,132.7657,"prefecture"},
-  {"kochi",33.5597,133.5311,"prefecture"},{"fukuoka",33.5902,130.4017,"prefecture"},
-  {"saga",33.2494,130.2988,"prefecture"},{"nagasaki",32.7448,129.8737,"prefecture"},
-  {"kumamoto",32.7898,130.7417,"prefecture"},{"oita",33.2382,131.6126,"prefecture"},
-  {"miyazaki",31.9111,131.4239,"prefecture"},{"kagoshima",31.5602,130.5581,"prefecture"},
-  {"okinawa",26.3344,127.8056,"prefecture"},{"sapporo",43.0642,141.3469,"city"},
-  {"yokohama",35.4437,139.6380,"city"},{"nagoya",35.1815,136.9066,"city"},
-  {"kobe",34.6901,135.1955,"city"},{"sendai",38.2682,140.8694,"city"},
-  {"nara_city",34.6851,135.8050,"city"},{"nikko",36.7581,139.6117,"city"},
-  {"nagasaki_city",32.7448,129.8737,"city"},{"fuji",35.3606,138.7274,"city"},
-  {"hakone",35.2323,139.1069,"city"},{"asakusa",35.7148,139.7967,"city"},
-  {"shibuya",35.6580,139.7016,"city"},{"shinjuku",35.6938,139.7034,"city"},
-};
-static char lc(char c) { return (c>='A'&&c<='Z')?(char)(c+32):c; }
-static int guess_centroid(const char *text, double *olat, double *olon,
-                          const char **oprec) {
-  if (!text || !*text) return 0;
-  size_t tl = strlen(text);
-  char *low = malloc(tl + 1);
-  if (!low) return 0;
-  for (size_t i = 0; i <= tl; i++) low[i] = lc(text[i]);
-  for (size_t i = 0; i < sizeof PREF_CENTROIDS / sizeof *PREF_CENTROIDS; i++) {
-    const char *k = PREF_CENTROIDS[i].key;
-    char kb[32]; size_t kl = strlen(k);
-    if (kl > 5 && strcmp(k + kl - 5, "_city") == 0) kl -= 5;
-    if (kl >= sizeof kb) kl = sizeof kb - 1;
-    memcpy(kb, k, kl); kb[kl] = 0;
-    if (strstr(low, kb)) {
-      *olat = PREF_CENTROIDS[i].lat; *olon = PREF_CENTROIDS[i].lon;
-      *oprec = PREF_CENTROIDS[i].prec;
-      free(low); return 1;
-    }
-  }
-  free(low);
-  return 0;
-}
 /* absUrl(href, baseRoot): href rooted "/en/asia/japan/..."; origin
  * "https://webcam.scs.com.ua". */
 static void abs_url(const char *href, char *out, size_t n) {
@@ -302,7 +230,7 @@ static int has_sort_filter(const char *h) {
         return 1;
       /* case-insensitive: also check upper */
       char b[7]; int bl = 0;
-      for (; bl < 6 && r[bl]; bl++) b[bl] = lc(r[bl]);
+      for (; bl < 6 && r[bl]; bl++) b[bl] = jo_lc(r[bl]);
       b[bl] = 0;
       if ((strncmp(b,"sort",4)==0 &&
            !(isalnum((unsigned char)r[4])||r[4]=='_')) ||
@@ -393,13 +321,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
        * have no honest location → skip (never plant a default point). The
        * emitted point is an area centroid, flagged approximate. */
       double lat, lon; const char *prec = NULL;
-      if (!guess_centroid(label, &lat, &lon, &prec)) { p = altend; continue; }
-      char aurl[512];
+      if (!cam_centroid_find(label, 0, &lat, &lon, &prec)) { p = altend; continue; }
+      /* 576, not 512: abs_url() prepends up to 26 bytes of origin to an href
+       * that hbuf already sizes at 512, so an equal-sized destination could
+       * only ever chop the tail off a camera URL — and this string is stored
+       * as the row's "url", i.e. a link that would silently be wrong rather
+       * than absent. 26 + 511 + NUL = 538. */
+      char aurl[576];
       abs_url(hbuf, aurl, sizeof aurl);
       kv ex[3] = {0};
       ex[0].k="url"; ex[0].sv=aurl;
-      ex[1].k="location_precision"; ex[1].sv=prec;
-      ex[2].k="location_approximate"; ex[2].is_bool=1; ex[2].bv=1;
+      ex[1].k="geo_precision"; ex[1].sv=prec;
+      ex[2].k="geo_uncertain"; ex[2].is_bool=1; ex[2].bv=1;
       const char *nm = label[0] ? label : "scs webcam"; /* label||'scs webcam' */
       if (nf >= capf) {
         capf = capf ? capf * 2 : 64;
@@ -441,9 +374,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_scs_com_ua_def = {
-  .id = "cam-scs_com_ua", .collector = "infrastructure",
+  .id = "cam-scs_com_ua", .collector = "camera-discovery",
   .name = "Camera discovery — scs.com.ua",
   .name_ja = "カメラ探索 — scs.com.ua",
-   .update_interval_sec = 21600, .run = run,
-  .category = "infrastructure" };
+   .layer = "cameras",
+   .update_interval_sec = 3600, .run = run,
+  .category = "cyber" };
 REGISTER_SOURCE(cam_scs_com_ua_def)

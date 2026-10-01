@@ -91,6 +91,7 @@ struct AnnotationsSection: View {
             Image(systemName: "note.text")
                 .font(.subheadline)
                 .foregroundStyle(theme.accentAlt)
+                .accessibilityHidden(true)   // the section title follows
             Text(title)
                 .font(.headline)
                 .foregroundStyle(theme.text)
@@ -178,7 +179,7 @@ struct AnnotationsSection: View {
                     .foregroundStyle(theme.textMuted)
                 if a.updated_at != nil, a.updated_at != a.created_at, !a.isDeleted {
                     Text("(edited)")
-                        .font(.system(size: 9))
+                        .font(.caption2)
                         .foregroundStyle(theme.textMuted)
                 }
                 Spacer(minLength: 0)
@@ -203,7 +204,7 @@ struct AnnotationsSection: View {
                     .fixedSize(horizontal: false, vertical: true)
                 if !canEdit(a) {
                     Text("Only the author can edit or delete this note.")
-                        .font(.system(size: 10))
+                        .font(.caption2)
                         .foregroundStyle(theme.textMuted)
                 }
             }
@@ -251,6 +252,7 @@ struct AnnotationsSection: View {
                 Text("No notes yet").foregroundStyle(theme.text)
             } icon: {
                 Image(systemName: "note.text").foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // "No notes yet" is the label
             }
         } description: {
             Text("Notes you add here stay attached to this record and are kept — including after deletion — as an audit trail.")
@@ -263,6 +265,7 @@ struct AnnotationsSection: View {
             Image(systemName: "exclamationmark.triangle.fill")
                 .font(.caption)
                 .foregroundStyle(theme.danger)
+                .accessibilityHidden(true)   // the message follows
             Text(message)
                 .font(.caption)
                 .foregroundStyle(theme.text)

@@ -20,9 +20,9 @@
  * honest-empty (return 0) on fetch failure / no match. Nothing is fabricated.
  *
  * One run() dispatches on ctx->source_id. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,11 +31,16 @@
 
 /* GLEIF JSON:API attribute helpers -------------------------------------- */
 
-/* nested attribute: obj->attributes->...->key (single level under attributes) */
-static const char *bo_attr(const cJSON *rec, const char *key) {
-  const cJSON *at = cJSON_GetObjectItem(rec, "attributes");
-  return at ? jo_sv(at, key) : NULL;
-}
+/* A bo_attr(rec, key) — `rec->attributes->key` in one call — lived here and had
+ * no callers. Both GLEIF emitters below already hold the `attributes` object in
+ * a local (they need it for the nested entity{} / registration{} sub-objects
+ * regardless) and read their scalars straight off it, which is the identical
+ * lookup. Checked before deleting rather than wiring it in, since an unused
+ * accessor can mean a field is going unread: it is not. Everything GLEIF
+ * publishes at attributes level is consumed — lei, entity.legalName.name,
+ * entity.jurisdiction, entity.status, entity.legalAddress.{city,country},
+ * registration.status and registration.initialRegistrationDate. OpenOwnership's
+ * search.json is flat rather than JSON:API, so it never wanted this helper. */
 
 /* ---- GLEIF LEI records (L1 reference data) ----------------------------- *
  * GET api.gleif.org/api/v1/lei-records?filter[entity.legalName]=<name>

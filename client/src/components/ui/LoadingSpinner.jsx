@@ -11,7 +11,7 @@ export default function LoadingSpinner({ size = 'md', color = 'cyan' }) {
     cyan: 'border-neon-cyan/30 border-t-neon-cyan',
     green: 'border-neon-green/30 border-t-neon-green',
     orange: 'border-neon-orange/30 border-t-neon-orange',
-    white: 'border-gray-600 border-t-gray-200',
+    white: 'border-osint-border border-t-gray-200',
   };
 
   return (

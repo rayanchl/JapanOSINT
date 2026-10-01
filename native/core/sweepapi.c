@@ -16,9 +16,16 @@
 static void iso_now(char *o, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
   struct tm g; gmtime_r(&tv.tv_sec, &g);
-  snprintf(o, n, "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-           g.tm_year+1900, g.tm_mon+1, g.tm_mday, g.tm_hour, g.tm_min,
-           g.tm_sec, (int)(tv.tv_usec/1000));
+  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
+   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
+   * fixed 24-char stamp "may be truncated". The modulos are identity for
+   * every value gmtime_r can return and make the 24 provable, not merely
+   * true. */
+  snprintf(o, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(g.tm_year+1900) % 10000u, (unsigned)(g.tm_mon+1) % 100u,
+           (unsigned)g.tm_mday % 100u, (unsigned)g.tm_hour % 100u,
+           (unsigned)g.tm_min % 100u, (unsigned)g.tm_sec % 100u,
+           (unsigned)(tv.tv_usec/1000) % 1000u);
 }
 
 static int is_unified_mode(const char *id) {
@@ -196,9 +203,31 @@ static char *cold_points_fc(db_handle *db, const char *id) {
   return out;
 }
 
-/* INSTANT read path: prebuilt FC from collector_cache, else bounded cold
- * FC. No stitch/smooth/full-scan ever happens here. */
+/* INSTANT read path: prebuilt FC from collector_cache, else the layer's own
+ * store, else a bounded cold FC from intel_items.
+ *
+ * This used to be an unconditional `return cold_points_fc(db, id)`, i.e. the
+ * collector_cache branch the header promises did not exist and the three
+ * store-backed layers were served by a query that cannot find their rows:
+ * cold_points_fc filters `intel_items WHERE source_id = <layer id>`, but
+ * "cameras", "unified-stations" and "unified-station-footprints" are LAYER ids
+ * whose records live in camera_store / the clusterer / the footprints table
+ * under different source ids. /api/data/cameras therefore always returned an
+ * empty FeatureCollection.
+ *
+ * Those three builders read purpose-built, already-bounded tables (not a
+ * nationwide intel_items scan), so serving them here is safe; the unified-*
+ * modes keep the bounded cold path, which is what their comment describes. */
 char *sweepapi_data(db_handle *db, const char *id) {
   if (!sweepapi_is_sweep(id)) return NULL;
+
+  long long age = 0;
+  char *cached = collcache_get(db, id, &age);
+  if (cached) return cached;
+
+  if (!strcmp(id, "cameras"))                    return camera_fc_json(db);
+  if (!strcmp(id, "unified-station-footprints")) return station_footprints_fc_json(db);
+  if (!strcmp(id, "unified-stations"))           return station_clusterer_linedots_fc_json(db);
+
   return cold_points_fc(db, id);
 }

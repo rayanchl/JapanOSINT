@@ -2,8 +2,8 @@
  * Port of server/src/collectors/mlitN07BusRoutes.js (createMlitKsjCollector).
  * Primary live path only (env → mirror); OSM fallback + _meta dropped per
  * HARD RULE 8. N07 geometry='preserve' (full LineStrings kept). */
-#include "../../source.h"
-#include "../../lib/mlit_ksj.h"
+#include "source.h"
+#include "lib/mlit_ksj.h"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   static const char *const mirrors[] = {

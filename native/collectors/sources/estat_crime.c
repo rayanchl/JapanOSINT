@@ -5,10 +5,11 @@
  * also emits one map feature per (prefecture, year). The _meta envelope is
  * dropped (rule 7) — the baseIntel directory row is the intel-status row
  * the collector exists to publish, so it is kept. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "_timefmt.inc"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -150,9 +151,7 @@ static const char *map_get(cJSON *maps, const char *id, const char *code) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char now[32];
-  time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
-  strftime(now, sizeof now, "%Y-%m-%dT%H:%M:%S", &g);
-  size_t nl = strlen(now); snprintf(now + nl, sizeof now - nl, ".000Z");
+  const char *nowp = jo_now_iso_ms(now, sizeof now);  /* NULL if unrenderable */
 
   const char *id = getenv("ESTAT_APP_ID");
   int configured = id && *id;
@@ -180,7 +179,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   bi.summary      = "Government Statistics portal — per-prefecture annual crime totals from NPA. Requires free ESTAT_APP_ID.";
   bi.link         = PORTAL_URL;
   bi.lang         = "ja";
-  bi.published_at = now;
+  bi.published_at = nowp;   /* absent, never a date built from stack */
   bi.tags_json    = btj;
   bi.properties_json = bpj;
   sink->emit(sink, &bi);
@@ -293,15 +292,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const cJSON *cle = cJSON_GetObjectItem(ind, "検挙件数");
     const cJSON *arr = cJSON_GetObjectItem(ind, "検挙人員");
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *gm = cJSON_CreateObject();
-    cJSON_AddStringToObject(gm, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(p->lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(p->lat));
-    cJSON_AddItemToObject(gm, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", gm);
+    cJSON *f = gj_point_feature(p->lon, p->lat);
 
     cJSON *pr = cJSON_CreateObject();
     char fid[48]; snprintf(fid, sizeof fid, "ESTAT_%s_%s", p->code, ym);

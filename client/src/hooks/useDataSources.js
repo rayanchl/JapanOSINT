@@ -1,11 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import useWebSocket from './useWebSocket.js';
 import apiUrl from '../utils/apiUrl.js';
+import { normalizeSource, normalizeSources } from '../utils/normalizeSource.js';
 
 export default function useDataSources() {
   const [sources, setSources] = useState([]);
   const [stats, setStats] = useState(null);
   const [lastUpdate, setLastUpdate] = useState(null);
+  // What actually happened on the last poll. Everything downstream (the nav
+  // bar's "active sources" figure, the Source Monitor's health dot) reads a
+  // number that is only meaningful if the request behind it succeeded, and a
+  // silent console.warn left those numbers looking freshly obtained.
+  const [error, setError] = useState(null);
 
   const fetchSources = useCallback(async () => {
     try {
@@ -14,19 +20,30 @@ export default function useDataSources() {
         fetch(apiUrl('/api/sources/stats')),
       ]);
 
+      const failures = [];
+
       if (sourcesRes.ok) {
         const data = await sourcesRes.json();
-        setSources(Array.isArray(data) ? data : data.sources || []);
+        // /api/sources emits raw sqlite column names — normalise on entry.
+        setSources(normalizeSources(Array.isArray(data) ? data : data.sources || []));
+      } else {
+        failures.push(`/api/sources HTTP ${sourcesRes.status}`);
       }
 
       if (statsRes.ok) {
         const data = await statsRes.json();
         setStats(data);
+      } else {
+        failures.push(`/api/sources/stats HTTP ${statsRes.status}`);
       }
 
-      setLastUpdate(new Date().toISOString());
+      setError(failures.length ? failures.join(', ') : null);
+      // lastUpdate is the timestamp of data we actually hold. Stamping it on a
+      // failed poll dated stale rows to "now".
+      if (failures.length < 2) setLastUpdate(new Date().toISOString());
     } catch (err) {
       console.warn('[useDataSources] Failed to fetch sources:', err.message);
+      setError(err.message || 'request failed');
     }
   }, []);
 
@@ -37,7 +54,7 @@ export default function useDataSources() {
           const idx = prev.findIndex((s) => s.id === message.data?.id);
           if (idx >= 0) {
             const updated = [...prev];
-            updated[idx] = { ...updated[idx], ...message.data };
+            updated[idx] = { ...updated[idx], ...normalizeSource(message.data) };
             return updated;
           }
           return prev;
@@ -51,7 +68,7 @@ export default function useDataSources() {
 
       case 'sources_refresh':
         if (Array.isArray(message.data)) {
-          setSources(message.data);
+          setSources(normalizeSources(message.data));
         }
         setLastUpdate(new Date().toISOString());
         break;
@@ -74,5 +91,5 @@ export default function useDataSources() {
     return () => clearInterval(pollInterval);
   }, [fetchSources]);
 
-  return { sources, stats, isConnected: connected, lastUpdate };
+  return { sources, stats, isConnected: connected, lastUpdate, error };
 }

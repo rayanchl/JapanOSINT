@@ -24,6 +24,10 @@ struct IntelTab: View {
     @State private var showFilters = false
     @State private var selectedCategories: Set<String> = []
     @State private var itemPresence: ItemPresence = .all
+    /// Parent source ids whose nested channel list is open. Empty = all
+    /// collapsed, which is the point: the camera channels were showing up as a
+    /// dozen sibling rows next to the parent whose counts they belong to.
+    @State private var expandedParents: Set<String> = []
 
     /// "data feed or no" for non-spatial sources: a source can be catalogued
     /// yet have ingested zero items, so filtering on presence is the intel
@@ -88,6 +92,12 @@ struct IntelTab: View {
                 }
             }
             .sheet(isPresented: $showFilters) { filtersSheet }
+            // Changing the filter changes which parents exist, so every open
+            // disclosure is stale — collapse them instead of letting the set
+            // accumulate ids for rows that are no longer rendered.
+            .onChange(of: filterSignature) { _, _ in
+                expandedParents.removeAll()
+            }
         }
         .task {
             if sources.isEmpty {
@@ -108,45 +118,87 @@ struct IntelTab: View {
         if !searchText.isEmpty {
             CrossSourceSearchView(bilingual: bilingual)
         } else {
-            List {
-                if !sources.isEmpty && filteredSources.isEmpty {
-                    Section {
-                        Text("No sources match the current filters.")
-                            .font(.caption)
+            catalogueList
+        }
+    }
+
+    /// The catalogue list.
+    ///
+    /// `filtered` and `split` are bound ONCE per body pass, deliberately.
+    /// Reading the `filteredSources` / `topLevelSources` / `childSources`
+    /// computed properties from inside the `ForEach` re-ran the whole filter
+    /// (plus a Set build) for every materialised row — at ~2,000 sources that
+    /// is thousands of array passes per scroll frame, on the main actor.
+    /// `SourceDashboardTab.statusChart` documents and avoids the same trap.
+    private var catalogueList: some View {
+        let filtered = filteredSources
+        let split = partition(filtered)
+        return List {
+            if !sources.isEmpty && filtered.isEmpty {
+                Section {
+                    Text("No sources match the current filters.")
+                        .font(.caption)
+                        .foregroundStyle(theme.textMuted)
+                }
+            } else if filtered.allSatisfy({ $0.item_count == 0 }) {
+                Section {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Label("No items collected yet", systemImage: "info.circle")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(theme.textMuted)
+                        Text("Tap the play button on any source to fetch its data, or use Run all in the top bar.")
+                            .font(.caption2)
                             .foregroundStyle(theme.textMuted)
                     }
-                } else if filteredSources.allSatisfy({ $0.item_count == 0 }) {
-                    Section {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Label("No items collected yet", systemImage: "info.circle")
-                                .font(.caption.weight(.semibold))
-                                .foregroundStyle(theme.textMuted)
-                            Text("Tap the play button on any source to fetch its data, or use Run all in the top bar.")
-                                .font(.caption2)
-                                .foregroundStyle(theme.textMuted)
-                        }
-                        .padding(.vertical, 4)
-                    }
-                }
-                Section {
-                    ForEach(filteredSources) { src in
-                        ZStack {
-                            // Tap-to-drill: NavigationLink wraps the row (with no
-                            // visible chevron via opacity 0) — separate hit-target
-                            // from the Run button which uses .buttonStyle(.plain).
-                            NavigationLink(value: src) { EmptyView() }.opacity(0)
-                            IntelSourceRow(source: src, onRunComplete: {
-                                Task { await reload() }
-                            })
-                        }
-                    }
+                    .padding(.vertical, 4)
                 }
             }
-            .compatInsetGroupedListStyle()
-            .navigationDestination(for: IntelSource.self) { src in
-                IntelSourceItemsView(source: src)
+            Section {
+                ForEach(split.top) { src in
+                    sourceRow(src)
+                    // Camera discovery channels are collectors in their own
+                    // right — own schedule, own Run button — but they are
+                    // this row's channels, not its siblings, and their item
+                    // counts are already summed into it. Collapsed by
+                    // default so the catalogue reads as one camera source.
+                    if let kids = split.children[src.id], !kids.isEmpty {
+                        DisclosureGroup(isExpanded: expansionBinding(for: src.id)) {
+                            ForEach(kids) { kid in sourceRow(kid) }
+                        } label: {
+                            Text("\(kids.count) discovery channels")
+                                .font(.caption)
+                                .foregroundStyle(theme.textMuted)
+                        }
+                    }
+                }
             }
         }
+        .compatInsetGroupedListStyle()
+        .navigationDestination(for: IntelSource.self) { src in
+            IntelSourceItemsView(source: src)
+        }
+    }
+
+    /// One catalogue row. Tap-to-drill: NavigationLink wraps the row (with no
+    /// visible chevron via opacity 0) — separate hit-target from the Run button
+    /// which uses .buttonStyle(.plain).
+    private func sourceRow(_ src: IntelSource) -> some View {
+        ZStack {
+            NavigationLink(value: src) { EmptyView() }.opacity(0)
+            IntelSourceRow(source: src, onRunComplete: {
+                Task { await reload() }
+            })
+        }
+    }
+
+    private func expansionBinding(for id: String) -> Binding<Bool> {
+        Binding(
+            get: { expandedParents.contains(id) },
+            set: { open in
+                if open { expandedParents.insert(id) }
+                else    { expandedParents.remove(id) }
+            }
+        )
     }
 
     // ── Filtering ───────────────────────────────────────────────────────────
@@ -169,6 +221,39 @@ struct IntelTab: View {
             }
             return true
         }
+    }
+
+    /// Split the filtered catalogue into top-level rows and their children in
+    /// ONE pass. Called exactly once per body pass by `catalogueList`.
+    ///
+    /// A source the API stamped with a `parent_id` belongs under that parent —
+    /// unless the parent itself was filtered out, in which case the child is
+    /// promoted rather than silently dropped (its parent's category is not
+    /// necessarily its own: bosai-volcano-cam is a camera channel filed under
+    /// "seismic"). The two buckets are complementary, so one loop produces
+    /// both. Order follows the server's freshness sort.
+    private func partition(
+        _ filtered: [IntelSource]
+    ) -> (top: [IntelSource], children: [String: [IntelSource]]) {
+        let shown = Set(filtered.map(\.id))
+        var top: [IntelSource] = []
+        var children: [String: [IntelSource]] = [:]
+        top.reserveCapacity(filtered.count)
+        for src in filtered {
+            if let parent = src.parent_id, shown.contains(parent) {
+                children[parent, default: []].append(src)
+            } else {
+                top.append(src)
+            }
+        }
+        return (top, children)
+    }
+
+    /// Comparable summary of the active filters. Drives the `expandedParents`
+    /// prune: a parent id that is no longer on screen must not stay in the set
+    /// (it grew for the app's lifetime and was never cleared).
+    private var filterSignature: String {
+        selectedCategories.sorted().joined(separator: ",") + "|" + itemPresence.rawValue
     }
 
     /// Categories present in the catalogue, by descending source count then
@@ -223,6 +308,8 @@ struct IntelTab: View {
         do {
             let env = try await apiClient.api.intelSources()
             sources = env.data
+            // Drop expansion state for parents the server no longer returns.
+            expandedParents.formIntersection(Set(env.data.map(\.id)))
             intelCache.cacheSources(env.data)
             error = nil
         } catch let err {

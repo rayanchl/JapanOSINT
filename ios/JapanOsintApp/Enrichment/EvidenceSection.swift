@@ -80,6 +80,7 @@ struct EvidenceSection: View {
             Image(systemName: "checkmark.shield")
                 .font(.subheadline)
                 .foregroundStyle(theme.accentAlt)
+                .accessibilityHidden(true)   // the section title follows
             Text(title)
                 .font(.headline)
                 .foregroundStyle(theme.text)
@@ -104,7 +105,7 @@ struct EvidenceSection: View {
                          icon: "exclamationmark.triangle.fill", maxWidth: 170)
                 }
                 Text(chainDetail(v))
-                    .font(.system(size: 9).monospacedDigit())
+                    .font(.caption2.monospacedDigit())
                     .foregroundStyle(v.ok ? theme.textMuted : theme.danger)
                     .lineLimit(2)
                     .multilineTextAlignment(.trailing)
@@ -182,7 +183,7 @@ struct EvidenceSection: View {
     private func hashRow(_ r: EvidenceRecord) -> some View {
         HStack(spacing: Space.sm) {
             Text("sha256")
-                .font(.system(size: 9).monospaced())
+                .font(.caption2.monospaced())
                 .foregroundStyle(theme.textMuted)
             Text(evidenceShortHash(r.content_sha256))
                 .font(.caption2.monospaced())
@@ -215,7 +216,7 @@ struct EvidenceSection: View {
                 Pill(text: "EVICTED", tone: .warning, icon: "clock.arrow.circlepath",
                      maxWidth: 110)
                 Text("Stored bytes were evicted by retention. The record and its hash remain, so the chain is still intact and still verifiable — this is not missing evidence.")
-                    .font(.system(size: 10))
+                    .font(.caption2)
                     .foregroundStyle(theme.textMuted)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -236,7 +237,7 @@ struct EvidenceSection: View {
                 .controlSize(.small)
                 .disabled(downloadingId != nil)
                 Text("Untrusted bytes — saved as a file, never rendered in the app.")
-                    .font(.system(size: 10))
+                    .font(.caption2)
                     .foregroundStyle(theme.textMuted)
                     .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 0)
@@ -253,6 +254,7 @@ struct EvidenceSection: View {
                 Text("No captures").foregroundStyle(theme.text)
             } icon: {
                 Image(systemName: "shield.slash").foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // "No captures" is the label
             }
         } description: {
             Text("This item has no evidence capture. Only sources with capture enabled record the raw response and enter the hash chain.")
@@ -266,6 +268,7 @@ struct EvidenceSection: View {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.caption)
                     .foregroundStyle(theme.danger)
+                    .accessibilityHidden(true)   // the message follows
                 Text(message)
                     .font(.caption)
                     .foregroundStyle(theme.text)
@@ -372,6 +375,7 @@ private struct EvidenceDownloadSheet: View {
                 HStack(alignment: .top, spacing: Space.sm) {
                     Image(systemName: "exclamationmark.shield.fill")
                         .foregroundStyle(theme.warning)
+                        .accessibilityHidden(true)   // the warning text follows
                     Text("This is raw third-party content captured from the network. It is untrusted: open it only in a tool you would trust with a hostile file.")
                         .font(.callout)
                         .foregroundStyle(theme.text)

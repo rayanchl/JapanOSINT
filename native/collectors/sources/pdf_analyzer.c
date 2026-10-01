@@ -5,9 +5,9 @@
  * /Producer, /Creator, /CreationDate, /ModDate — plus an approximate page
  * count, by scanning the raw bytes (Info-dict values are plaintext in most
  * PDFs). No external parser. Honest-empty for non-PDF / no metadata. */
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -89,7 +89,13 @@ static int pdf_run(const source_ctx *ctx, intel_sink *sink) {
   it.tags_json = "[\"osint-search\",\"PDF_ANALYZER\"]";
   int rc = sink->emit(sink, &it);
   free(bj); free(pj); cJSON_Delete(data); cJSON_Delete(props);
-  return rc >= 0 ? 1 : 0;
+  /* AUDIT NOTE (slice a3): this was `return rc >= 0 ? 1 : 0`, i.e. it returned
+   * 1 on SUCCESS and 0 on emit failure — exactly inverted. core/scheduler.c:70
+   * treats any non-zero rc as status='error', so every successful PDF analysis
+   * logged an error and opened a collector_anomaly (verified: rc=1 records=1
+   * → "anomaly opened: PDF_ANALYZER verdict=status_bad"), while a failed emit
+   * looked healthy. run() returns a STATUS: 0 ok, -1 failure. */
+  return rc >= 0 ? 0 : -1;
 }
 
 static const source_def pdf_def = {

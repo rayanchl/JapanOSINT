@@ -78,6 +78,7 @@ struct LayersTab: View {
                             HStack {
                                 Image(systemName: collapsed.contains(group.category)
                                       ? "chevron.right" : "chevron.down")
+                                    .accessibilityHidden(true)   // state is the button's value
                                 Text(group.category)
                                     .font(.subheadline.bold())
                                 Spacer()
@@ -88,6 +89,9 @@ struct LayersTab: View {
                             .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
+                        .accessibilityLabel("\(group.category), \(group.layers.count) layers")
+                        .accessibilityValue(collapsed.contains(group.category) ? "Collapsed" : "Expanded")
+                        .accessibilityHint("Double tap to \(collapsed.contains(group.category) ? "expand" : "collapse")")
                     }
                 }
             }
@@ -277,6 +281,7 @@ struct LayerRow: View {
                 .font(.title3)
                 .foregroundStyle(registry.color(for: layer.id))
                 .frame(width: 28, height: 28)
+                .accessibilityHidden(true)   // the layer name follows
 
             HStack(spacing: 4) {
                 Text(registry.displayName(for: layer))
@@ -293,6 +298,28 @@ struct LayerRow: View {
                     Text("\(count.formatted())")
                         .font(.caption2.monospacedDigit())
                         .foregroundStyle(theme.textMuted)
+                } else if let n = layer.recordsGeocoded {
+                    // Not fetched yet: show the server's own measured count
+                    // of geocoded rows (nil from the server = not measured,
+                    // and then nothing is shown — never a made-up 0).
+                    Text("·").font(.caption2).foregroundStyle(theme.textMuted)
+                    Text("\(n.formatted())")
+                        .font(.caption2.monospacedDigit())
+                        .foregroundStyle(theme.textMuted)
+                }
+                // v2 taxonomy badge: the declared modality. Absent when the
+                // server sent null — an undeclared layer shows no badge
+                // rather than a guessed one.
+                if let m = layer.renderModality.label {
+                    Label(m, systemImage: layer.renderModality.symbol)
+                        .font(.caption2.weight(.medium))
+                        .labelStyle(.titleAndIcon)
+                        .foregroundStyle(theme.textMuted)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(theme.surfaceElevated, in: Capsule())
+                        .accessibilityLabel(
+                            layer.dataType.map { "\(m), \($0)" } ?? m)
                 }
                 if layer.isLiveOnly && playback.isReplaying {
                     Text("Live only · hidden")
@@ -310,6 +337,9 @@ struct LayerRow: View {
                 set: { _ in settings.toggleLayer(layer.id) }
             ))
             .labelsHidden()
+            // `.labelsHidden()` strips the label from VoiceOver too, so without
+            // this the switch announces itself as an unnamed "switch button".
+            .accessibilityLabel("Show \(registry.displayName(for: layer)) on the map")
         }
         .contentShape(Rectangle())
         .onTapGesture {
@@ -328,6 +358,15 @@ struct LayerRow: View {
             .frame(width: 24, height: 24)
             .contentTransition(.symbolEffect(.replace))
             .animation(.easeInOut(duration: 0.2), value: chevronToken)
+            // The row's disclosure lives on an `.onTapGesture`, which VoiceOver
+            // cannot reach. Publishing the chevron as a button with an action
+            // makes expanding a layer possible without sighted tapping.
+            .accessibilityLabel(isExpanded ? "Hide layer details" : "Show layer details")
+            .accessibilityAddTraits(.isButton)
+            .accessibilityAction {
+                isExpanded.toggle()
+                chevronToken += 1
+            }
     }
 
     /// Order: sources first (always useful, even when layer is off), then
@@ -360,6 +399,7 @@ struct LayerRow: View {
                 Image(systemName: "circle.lefthalf.filled")
                     .font(.caption2)
                     .foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // decorative slider affordance
                 Slider(
                     value: Binding(
                         get: { settings.opacity(for: layer.id) },
@@ -367,6 +407,8 @@ struct LayerRow: View {
                     ),
                     in: 0...1
                 )
+                .accessibilityLabel("Layer opacity")
+                .accessibilityValue("\(Int(settings.opacity(for: layer.id) * 100)) percent")
                 Text("\(Int(settings.opacity(for: layer.id) * 100))%")
                     .font(.caption2)
                     .foregroundStyle(theme.textMuted)
@@ -389,6 +431,7 @@ struct LayerRow: View {
                             .font(.caption)
                             .foregroundStyle(theme.accent)
                             .frame(width: 18)
+                            .accessibilityHidden(true)   // toggle title follows
                         Text("Show \(LayerRegistry.displayName(forId: followerId).lowercased())")
                             .font(.caption)
                     }
@@ -435,6 +478,7 @@ struct LayerRow: View {
                     .font(.caption)
                     .foregroundStyle(theme.accent)
                     .frame(width: 18)
+                    .accessibilityHidden(true)   // toggle title follows
                 Text(title).font(.caption)
             }
         }
@@ -474,10 +518,14 @@ struct LayerRow: View {
                                 Image(systemName: "key.fill")
                                     .font(.caption2)
                                     .foregroundStyle(theme.warning)
+                                    // The key glyph is the ONLY thing marking a
+                                    // paid/keyed source, so it needs a label.
+                                    .accessibilityLabel("Requires an API key")
                             }
                             Image(systemName: "chevron.right")
                                 .font(.caption2)
                                 .foregroundStyle(theme.textMuted)
+                                .accessibilityHidden(true)   // navigation affordance
                         }
                         .padding(.vertical, 6)
                         .padding(.horizontal, 8)
@@ -517,6 +565,7 @@ struct LayerRow: View {
                             ProgressView().controlSize(.mini)
                         } else {
                             Image(systemName: "arrow.triangle.2.circlepath")
+                                .accessibilityHidden(true)   // button title follows
                         }
                         Text(triggering ? "Discovering…" : "Run discovery")
                     }
@@ -576,16 +625,21 @@ struct LiveVehiclesRow: View {
                 Image(systemName: "tram.fill")
                     .font(.caption)
                     .foregroundStyle(.white)
+                    .accessibilityHidden(true)   // "Live carriages" label follows
             }
 
             VStack(alignment: .leading, spacing: 1) {
                 Text("Live carriages")
                     .font(.subheadline)
+                // Not-connected is muted rather than red: the realtime channel
+                // is an enhancement, and `WebSocketClient.statusLabel` says
+                // which of "off / idle / connecting / unavailable" it is
+                // instead of the blanket "offline" this used to claim.
                 HStack(spacing: 4) {
                     Circle()
-                        .fill(ws.isConnected ? theme.success : theme.danger)
+                        .fill(ws.isConnected ? theme.success : theme.textMuted)
                         .frame(width: 6, height: 6)
-                    Text(ws.isConnected ? "WebSocket connected" : "WebSocket offline")
+                    Text(ws.statusLabel)
                         .font(.caption2)
                         .foregroundStyle(theme.textMuted)
                 }

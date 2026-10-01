@@ -439,6 +439,22 @@ static void set_fingerprint(sqlite3 *h, const char *uid, uint64_t fp,
   sqlite3_finalize(s);
 }
 
+/* Close a transaction this module opened.
+ *
+ * The COMMIT return is NOT optional. On SQLITE_BUSY or SQLITE_FULL the
+ * transaction stays OPEN, and discarding the rc had three consequences at
+ * once: the fingerprint and band rows this call reported as written were not
+ * durable; the ingest hook that called us runs on the SHARED event-loop
+ * handle, so the next handler's BEGIN failed silently against this stale
+ * transaction; and that handler's error-path ROLLBACK then discarded both its
+ * work and ours. Rolling back keeps simhash NULL, which is precisely the
+ * backfill's "not done yet" predicate — the row is simply picked up again. */
+static void sh_commit(sqlite3 *h, const char *uid) {
+  if (sqlite3_exec(h, "COMMIT", NULL, NULL, NULL) == SQLITE_OK) return;
+  fprintf(stderr, "[simhash] COMMIT failed for %s: %s\n", uid, sqlite3_errmsg(h));
+  sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
+}
+
 static void sh_store(db_handle *db, const char *tenant_hint, const char *uid,
                      uint64_t fp, int ntok) {
   sqlite3 *h = db->h;
@@ -481,10 +497,13 @@ static void sh_store(db_handle *db, const char *tenant_hint, const char *uid,
      * "not done yet" predicate, and a permanently-NULL row would be re-read on
      * every sweep forever. */
     if (have_sh && cur == 0 && !have_cluster) return;
-    if (own_txn) sqlite3_exec(h, "BEGIN IMMEDIATE", NULL, NULL, NULL);
+    if (own_txn && sqlite3_exec(h, "BEGIN IMMEDIATE", NULL, NULL, NULL) != SQLITE_OK) {
+      fprintf(stderr, "[simhash] BEGIN failed for %s: %s\n", uid, sqlite3_errmsg(h));
+      return;                         /* simhash stays NULL; backfill retries */
+    }
     bands_write(h, uid, 0);
     set_fingerprint(h, uid, 0, 1);
-    if (own_txn) sqlite3_exec(h, "COMMIT", NULL, NULL, NULL);
+    if (own_txn) sh_commit(h, uid);
     return;
   }
 
@@ -492,7 +511,10 @@ static void sh_store(db_handle *db, const char *tenant_hint, const char *uid,
    * is the common case — collectors re-emit their whole window every tick. */
   if (have_sh && cur == fp && have_cluster) return;
 
-  if (own_txn) sqlite3_exec(h, "BEGIN IMMEDIATE", NULL, NULL, NULL);
+  if (own_txn && sqlite3_exec(h, "BEGIN IMMEDIATE", NULL, NULL, NULL) != SQLITE_OK) {
+    fprintf(stderr, "[simhash] BEGIN failed for %s: %s\n", uid, sqlite3_errmsg(h));
+    return;                           /* simhash stays NULL; backfill retries */
+  }
   bands_write(h, uid, fp);
   set_fingerprint(h, uid, fp, 0);
   /* A FOLLOWER (cluster_id set and not its own uid) keeps its membership: see
@@ -500,7 +522,7 @@ static void sh_store(db_handle *db, const char *tenant_hint, const char *uid,
    * it remains findable by future items. */
   if (!(have_cluster && strcmp(cluster, uid) != 0))
     join_cluster(h, uid, tenant, fp);
-  if (own_txn) sqlite3_exec(h, "COMMIT", NULL, NULL, NULL);
+  if (own_txn) sh_commit(h, uid);
 }
 
 /* ── public ingest hooks ──────────────────────────────────────────────────*/
@@ -618,10 +640,29 @@ long simhash_backfill(db_handle *db, int limit, volatile int *cancel) {
 
     /* Phase 3 — one short transaction holding only the writes. */
     if (hashed > 0) {
-      sqlite3_exec(db->h, "BEGIN IMMEDIATE", NULL, NULL, NULL);
+      /* Unchecked, a failed BEGIN would drop the batch into autocommit — one
+       * write lock acquisition per row instead of one for the batch, which is
+       * the cost this phase exists to avoid. */
+      if (sqlite3_exec(db->h, "BEGIN IMMEDIATE", NULL, NULL, NULL) != SQLITE_OK) {
+        fprintf(stderr, "[simhash] backfill BEGIN failed: %s\n",
+                sqlite3_errmsg(db->h));
+        free(rows);
+        break;
+      }
       for (int i = 0; i < hashed; i++)
         sh_store(db, rows[i].tenant, rows[i].uid, rows[i].fp, rows[i].ntok);
-      sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL);
+      /* The COMMIT return is NOT optional. Discarding it counted the whole
+       * batch into `done` — the number this sweep reports as fingerprinted —
+       * for rows that were never durable, and left the transaction open over
+       * the next batch too. On failure stop and return only what committed;
+       * the rows keep simhash IS NULL and a later sweep re-reads them. */
+      if (sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
+        fprintf(stderr, "[simhash] backfill COMMIT failed: %s\n",
+                sqlite3_errmsg(db->h));
+        sqlite3_exec(db->h, "ROLLBACK", NULL, NULL, NULL);
+        free(rows);
+        break;
+      }
       done += hashed;
     }
     free(rows);

@@ -1,0 +1,236 @@
+url	reason
+https://agi.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (215 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://akita.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (1095 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://cross.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (12 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://fmu.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (415 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://jpcoar.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (172 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://kyoritsu.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (393 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://momat.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (166 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://nact.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (22 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://niad.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (506 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://nig.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (1 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://nmwa.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (171 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://primaff.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (149 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://scu.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (175 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://socu.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (21 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://spu.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (149 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://tokyo-ondai.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (613 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://usp.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (602 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://ycu-history.repo.nii.ac.jp/api/records/?q={q}&size=100	LOW_YIELD_TRIMMED alive and filter honoured (670 hits for 研究, 0 for zzqxv9) but trimmed to keep the batch near target
+https://irdb.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	DEAD badArgument on every ListRecords form tried (oai_dc, jpcoar, jpcoar_1.0, with and without from=)
+https://irdb.nii.ac.jp/api/v1/search?q={q}	DEAD 404
+https://irdb.nii.ac.jp/search?q={q}	BOT_WALL 403 Server Error
+https://tsukuba.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	SLOW bare ListRecords exceeds 30 s; with from= 43 s; engine budget is 20 s (jpacademic registered this form; the JSON API row here is the reachable one)
+https://waseda.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	SLOW 70 s for 100 records
+https://tohoku.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	SLOW timed out at 30 s
+https://nagoya.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	SLOW timed out at 30 s
+https://kanazawa-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	SLOW timed out at 30 s
+https://niigata-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	SLOW timed out at 30 s
+https://soar-ir.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	SLOW timed out at 30 s
+https://repository.lib.tottori-u.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	SLOW 40 s (JSON API of the same host kept)
+https://dspace.jaist.ac.jp/dspace-oai/request?verb=ListRecords&metadataPrefix=oai_dc	SLOW 18.6 s on a 20 s engine budget; too close to register
+https://dspace.jaist.ac.jp/server/api/discover/search/objects?query={q}	DEAD 404 (DSpace 6, no REST discover)
+https://library.naist.jp/dspace/server/api/discover/search/objects?query={q}	DEAD 404
+https://eprints.lib.hokudai.ac.jp/dspace-oai/request?verb=ListRecords&metadataPrefix=oai_dc	DEAD 404 (HUSCAP moved platforms; /rest and /server/api also 404)
+https://ir.library.osaka-u.ac.jp/api/records/?q={q}	DEAD 404 not WEKO3
+https://ir.lib.hiroshima-u.ac.jp/api/records/?q={q}	DEAD 404 not WEKO3
+https://ousar.lib.okayama-u.ac.jp/api/records/?q={q}	DEAD 404 not WEKO3
+https://hermes-ir.lib.hit-u.ac.jp/hermes/ir/api/records/?q={q}	DEAD timeout
+https://naosite.lb.nagasaki-u.ac.jp/api/records/?q={q}	DEAD timeout
+https://koara.lib.keio.ac.jp/xoonips/modules/xoonips/search.php?search={q}	DEAD 404
+https://catalog.lib.kyushu-u.ac.jp/opac_search/?q={q}&format=json	NOT_RECORDS HTML OPAC page with no item anchors
+https://t2r2.star.titech.ac.jp/cgi-bin/publicationlist.cgi?q={q}	NOT_RECORDS 566-byte redirect stub
+https://ir.ide.go.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	DEAD timeout; /rest and /server/api 404
+https://nied-ir.bosai.go.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	DEAD redirects to a moved-host notice page
+https://opac.ll.chiba-u.jp/da/curator/?q={q}	FILTER_IGNORED identical 80 item links for a real and an impossible term; front page mixes item and search-form anchors so it was not kept as bulk either
+https://da.lib.kobe-u.ac.jp/da/kernel/?q={q}	FILTER_IGNORED identical 186 handle links for a real and an impossible term (kept as a bulk recent-items row instead)
+https://colbase.nich.go.jp/collection_items?locale=ja&q={q}&format=json	NOT_RECORDS Nuxt SPA shell; no server-rendered records and no JSON route
+https://cultural.jp/api/search?keyword={q}	DEAD 404 (the live API is api.cultural.jp, kept)
+https://api.cultural.jp/spec/openapi.json	NOT_RECORDS Swagger UI shell only
+https://bunka.nii.ac.jp/api/v1/search?q={q}	DEAD redirects to online.bunka.go.jp 404
+https://bunka.nii.ac.jp/db/search?keyword={q}	DEAD 404 after redirect
+https://khirin-ld.rekihaku.ac.jp/sparql	DEAD connection timeout
+https://khirin-a.rekihaku.ac.jp/api/search?q={q}	DEAD 404
+https://khirin-a.rekihaku.ac.jp/search?q={q}	NOT_RECORDS 760 KB page whose anchors are date facets, results rendered client-side
+https://www.aozorahack.net/api/v0.1/books	DEAD host does not resolve
+https://geoshape.ex.nii.ac.jp/city/geolod/api/v1/search?q={q}	DEAD 404
+https://geolod.ex.nii.ac.jp/api/v1/search?q={q}	DEAD 404 URL is not found
+https://kokusho.nijl.ac.jp/api/search?q={q}	NOT_RECORDS SPA shell 4.9 KB
+https://kokusho.nijl.ac.jp/biblio/?q={q}	NOT_RECORDS SPA shell 4.9 KB
+https://codh.rois.ac.jp/pmjt/api/search?q={q}	DEAD 404
+https://codh.rois.ac.jp/bukan/api/person?q={q}	DEAD 404
+https://codh.rois.ac.jp/pmjt/iiif/collection.json	DEAD 404
+https://api.japanlinkcenter.org/dois?from=2024-01-01&until=2024-01-02	DEAD 404 Route not found (list form)
+https://api.japanlinkcenter.org/dois/10.11501/3054379	NOT_RECORDS single-DOI lookup, one object per call
+https://seika.nedo.go.jp/pmg/api/search?q={q}	NOT_RECORDS 302 into a jsessionid-bound session flow
+https://amedfind.amed.go.jp/amed/api/search?q={q}	DEAD 404
+https://amedfind.amed.go.jp/amed/search?keyword={q}	DEAD 404
+https://warp.da.ndl.go.jp/search/WarpSearch?q={q}&output=json	DEAD 404
+https://warp.da.ndl.go.jp/api/search?q={q}	BOT_WALL 403
+https://warp.ndl.go.jp/rss/new.xml	DEAD 404
+https://warp.ndl.go.jp/opensearch?keyword={q}	DEAD 404
+https://www.digital.archives.go.jp/api/v1/search?keyword={q}	DEAD 404
+https://www.digital.archives.go.jp/DAS/meta/result?KEYWORD={q}	DEAD 404 (old DAS paths gone; new site is a JS form POST to /search)
+https://science-net.kahaku.go.jp/api/v1/occurrence/search?q=Homo	BOT_WALL 403
+https://db.kahaku.go.jp/webmuseum/api/search?q={q}	DEAD 404
+https://db.kahaku.go.jp/webmuseum/list?keyword={q}	NOT_RECORDS 3 KB shell with javascript:void anchors
+https://adeac.jp/adeac/api/search?keyword={q}	DEAD 404
+https://adeac.jp/cross-search?mode=catalog&keyword={q}	NOT_RECORDS results rendered client-side; only chrome anchors in HTML
+https://adeac.jp/organization/all	NOT_RECORDS institution list rendered client-side
+https://adeac.jp/taito-lib/catalog/	DEAD 404
+https://webarchives.tnm.jp/imgsearch/api?q={q}	DEAD 404
+https://emuseum.nich.go.jp/api/search?q={q}	DEAD 404
+https://emuseum.nich.go.jp/search?keyword={q}	NOT_RECORDS search form page, results client-side
+https://rnavi.ndl.go.jp/jp/search?keyword={q}	DUPLICATE_HOST redirects to ndlsearch.ndl.go.jp which is already in the tree
+https://wwwap.hi.u-tokyo.ac.jp/ships/w01/search?query={q}	NOT_RECORDS Nuxt SSR shell 896 KB with no result anchors
+https://nrid.nii.ac.jp/ja/search/?qm={q}	FILTER_IGNORED identical 10,462-byte page for a real and an impossible name (client-side rendering)
+https://projectdb.jst.go.jp/search?q={q}	FILTER_IGNORED identical 110,037-byte page with the same 23 grant links for 水素, zzqxv9 and page=2
+https://grants.jst.go.jp/search?keyword={q}	FILTER_IGNORED identical 98,584-byte page with the same 20 KAKEN links for a real and an impossible term
+https://myoji-yurai.net/searchResult.htm?myojiKanji={q}	BOT_WALL 403
+https://archive.library.metro.tokyo.lg.jp/da/search?keyword={q}	NOT_RECORDS javascript:void anchors only
+https://kyouindb.iimc.kyoto-u.ac.jp/j/search?keyword={q}	NOT_RECORDS 1.3 KB redirect shell
+https://rd.iai.osaka-u.ac.jp/search?keyword={q}	BOT_WALL 403 AccessDenied
+https://hyoka.ofc.kyushu-u.ac.jp/search/index.html?keyword={q}	NOT_RECORDS redirects to home page; anchors are affiliation facets
+https://researchers.general.hokudai.ac.jp/search?keyword={q}	NOT_RECORDS search form only, results client-side
+https://profs.provost.nagoya-u.ac.jp/html/search?keyword={q}	DEAD 404
+https://trios.tsukuba.ac.jp/ja/search?keyword={q}	DEAD 404
+https://researchers.waseda.jp/search?q={q}	DEAD timeout
+https://k-ris.keio.ac.jp/search?q={q}	DEAD 404
+https://seeds.office.hiroshima-u.ac.jp/search?keyword={q}	NOT_RECORDS Wicket stateful links, no stable record URLs
+https://kuid-rm-web.ofc.kobe-u.ac.jp/search?keyword={q}	NOT_RECORDS results client-side
+https://researcher.tohoku.ac.jp/search?keyword={q}	DEAD timeout
+https://htq.minpaku.ac.jp/databases/	BOT_WALL Request Rejected
+https://knmdb.kyohaku.go.jp/list.html?keyword={q}	NOT_RECORDS item rows are onclick handlers, no item anchors
+https://www.jacar.go.jp/rss/	DEAD 404
+https://www.nichibun.ac.jp/cgi-bin/YoukaiDB3/search.cgi?word={q}	DEAD 404
+https://mimizun.com/search/?q={q}	NOT_RECORDS Shift_JIS landing form; CDX row registered instead
+https://find.5ch.net/search?q={q}	BOT_WALL 403 on find.5ch.io
+https://lib-extopc.kek.jp/preprints/PDF/	BOT_WALL Request Rejected
+https://ja.dbpedia.org/sparql?query=...FILTER(CONTAINS(?l,"{q}"))	SLOW impossible-term query exceeded 60 s twice; bif:contains prefix form kept instead
+https://web.archive.org/cdx/search/cdx?url=hoops.ne.jp/*&output=json	EMPTY_RESULTSET 503 then 0 rows
+https://web.archive.org/cdx/search/cdx?url=daily.nifty.com/*&output=json	EMPTY_RESULTSET 0 rows
+https://web.archive.org/cdx/search/cdx?url=snowbrand-foods.co.jp/*&output=json	EMPTY_RESULTSET 0 rows
+https://web.archive.org/cdx/search/cdx?url=hokutaku.co.jp/*&output=json	EMPTY_RESULTSET 1 row
+https://web.archive.org/cdx/search/cdx?url=isweb.ne.jp/*&output=json	EMPTY_RESULTSET 1 row (the *.isweb.ne.jp form returned 12; hp.infoseek.co.jp kept instead)
+https://web.archive.org/cdx/search/cdx?url=sfcg.co.jp/*&output=json	EMPTY_RESULTSET 1 row
+https://web.archive.org/cdx/search/cdx?url=homepage2.nifty.com/*&output=json	SLOW timed out twice (30 s, 60 s)
+https://web.archive.org/cdx/search/cdx?url=archive.mag2.com/*&output=json	SLOW timed out twice
+https://web.archive.org/cdx/search/cdx?url=*.ne.jp/&matchType=domain	NOT_RECORDS 17 rows for the whole .ne.jp space; too broad to name honestly
+https://web.archive.org/cdx/search/cdx?url=*.cool.ne.jp/*	LOW_YIELD_TRIMMED alive (200 rows) but trimmed with lycos.co.jp, freeml.com, hi-ho, ocn, plala, dion, so-net, hoops, tripod, jcom, mixi, gree, mbga, exblog, seesaa, mot, nla, mol, kanebo, daiei, nova, enron.co.jp, lehman.co.jp, jas.co.jp, futaba, ncb, sanyo-sec, mri-inc, sogo, tellmeclub to keep the CDX family to 40 rows
+https://gair.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://hosei.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://nihon.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://aoyama.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://nims.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://ibaraki.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://rose-ibaraki.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://utsunomiya.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://iwate.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://fukushima.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://tottori-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://shimane-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://yamaguchi-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://oita-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://kagoshima.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://jamstec.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://naro.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://ffpri.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://ocu.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://kitakyu-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://tokai.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://komazawa.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://senshu.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://teikyo.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://kokugakuin.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://tku.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 403 (guessed JAIRO Cloud subdomain)
+https://musashi.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://nanzan.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://meijo-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 403 (guessed JAIRO Cloud subdomain)
+https://ryukoku.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://bukkyo-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://konan.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://kurume-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://taisho.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://kyoto-wu.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://dwc.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://keio.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://hokudai.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://kyoto-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://osaka-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://kyushu-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://hiroshima-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://kobe-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://okayama-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://chiba-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://tit.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://tokyo-med.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://juntendo.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://jikei.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://nagoya-cu.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://yokohama-cu.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://tmd.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://tokyo-geidai.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://taiiku.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://sophia-u.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 000 (guessed JAIRO Cloud subdomain)
+https://dsc.repo.nii.ac.jp/api/records/?q={q}	DEAD HTTP 404 (guessed JAIRO Cloud subdomain)
+https://tsukuba.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://tohoku.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://kanazawa-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://niigata-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://meiji.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://rikkyo.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://chuo-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://doshisha.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://kansai-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://kwansei.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://u-gakugei.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://kyutech.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://hirosaki.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://yamanashi.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://gifu-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://shizuoka.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://mie-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://shiga-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://nara-edu.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://wakayama-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://kagawa-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://ehime-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://tokushima-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://saga-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://miyazaki-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://muroran-it.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://kitami-it.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://obihiro.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://asahikawa-med.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://tokyo-kasei.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://nagasaki-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://toyo.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://seikei.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://seijo.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://kanagawa-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://chukyo-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://kindai.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://otani.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://kobegakuin.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://fukuoka-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://rissho.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://jissen.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://otsuma.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://tsuda.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://sophia.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://nara-wu.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://tuat.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://uec.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://gunma-u.repo.nii.ac.jp/api/records/?q={q}	DUPLICATE_BATCH host registered by candidate-sources-batch25.jpacademic (OAI form)
+https://web.archive.org/cdx/search/cdx?url=geocities.yahoo.co.jp/*&output=json&limit=200&filter=statuscode:200&collapse=urlkey	SLOW/UNAVAILABLE (archive.org CDX answers 503/504 for this wildcard even serially with a 6 s gap and a 90 s limit, 2026-08-29; the engine has a 20 s budget)
+https://web.archive.org/cdx/search/cdx?url=hp.infoseek.co.jp/*&output=json&limit=200&filter=statuscode:200&collapse=urlkey	SLOW/UNAVAILABLE (archive.org CDX answers 503/504 for this wildcard even serially with a 6 s gap and a 90 s limit, 2026-08-29; the engine has a 20 s budget)
+https://web.archive.org/cdx/search/cdx?url=matome.naver.jp/*&output=json&limit=200&filter=statuscode:200&collapse=urlkey	SLOW/UNAVAILABLE (archive.org CDX answers 503/504 for this wildcard even serially with a 6 s gap and a 90 s limit, 2026-08-29; the engine has a 20 s budget)
+https://web.archive.org/cdx/search/cdx?url=yaplog.jp/*&output=json&limit=200&filter=statuscode:200&collapse=urlkey	SLOW/UNAVAILABLE (archive.org CDX answers 503/504 for this wildcard even serially with a 6 s gap and a 90 s limit, 2026-08-29; the engine has a 20 s budget)
+https://web.archive.org/cdx/search/cdx?url=*.teacup.com/*&output=json&limit=200&filter=statuscode:200&collapse=urlkey	SLOW/UNAVAILABLE (archive.org CDX answers 503/504 for this wildcard even serially with a 6 s gap and a 90 s limit, 2026-08-29; the engine has a 20 s budget)
+https://web.archive.org/cdx/search/cdx?url=*.2ch.net/*&output=json&limit=200&filter=statuscode:200&collapse=urlkey	SLOW/UNAVAILABLE (archive.org CDX answers 503/504 for this wildcard even serially with a 6 s gap and a 90 s limit, 2026-08-29; the engine has a 20 s budget)
+https://web.archive.org/cdx/search/cdx?url=*.tok2.com/*&output=json&limit=200&filter=statuscode:200&collapse=urlkey	SLOW/UNAVAILABLE (archive.org CDX answers 503/504 for this wildcard even serially with a 6 s gap and a 90 s limit, 2026-08-29; the engine has a 20 s budget)
+https://web.archive.org/cdx/search/cdx?url=*.freett.com/*&output=json&limit=200&filter=statuscode:200&collapse=urlkey	SLOW/UNAVAILABLE (archive.org CDX answers 503/504 for this wildcard even serially with a 6 s gap and a 90 s limit, 2026-08-29; the engine has a 20 s budget)
+https://web.archive.org/cdx/search/cdx?url=www2.biglobe.ne.jp/*&output=json&limit=200&filter=statuscode:200&collapse=urlkey	SLOW/UNAVAILABLE (archive.org CDX answers 503/504 for this wildcard even serially with a 6 s gap and a 90 s limit, 2026-08-29; the engine has a 20 s budget)
+https://web.archive.org/cdx/search/cdx?url=mpt.go.jp/*&output=json&limit=200&filter=statuscode:200&collapse=urlkey	SLOW/UNAVAILABLE (archive.org CDX answers 503/504 for this wildcard even serially with a 6 s gap and a 90 s limit, 2026-08-29; the engine has a 20 s budget)
+https://web.archive.org/cdx/search/cdx?url=mycal.co.jp/*&output=json&limit=200&filter=statuscode:200&collapse=urlkey	SLOW/UNAVAILABLE (archive.org CDX answers 503/504 for this wildcard even serially with a 6 s gap and a 90 s limit, 2026-08-29; the engine has a 20 s budget)
+https://web.archive.org/cdx/search/cdx?url=livedoor.com/*&output=json&limit=200&filter=statuscode:200&collapse=urlkey&to=2006	SLOW/UNAVAILABLE (archive.org CDX answers 503/504 for this wildcard even serially with a 6 s gap and a 90 s limit, 2026-08-29; the engine has a 20 s budget)

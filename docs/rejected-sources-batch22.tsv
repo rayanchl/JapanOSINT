@@ -1,0 +1,32 @@
+id	url	probe_verdict	emit_verdict	note
+LEMMY_COMMUNITIES_FEDDIT_ORG	https://feddit.org/api/v3/community/list?type_=Local&limit=50&page=1	HTTP_ERR	HTTP_403	Forbidden
+LEMMY_COMMUNITIES_FEDDIT_UK	https://feddit.uk/api/v3/community/list?type_=Local&limit=50&page=1	ERR	TRANSPORT_FAIL	RemoteDisconnected: Remote end closed connection without res
+LEMMY_COMMUNITIES_INFOSEC_PUB	https://infosec.pub/api/v3/community/list?type_=Local&limit=50&page=1	HTTP_ERR	HTTP_400	Bad Request
+LEMMY_COMMUNITIES_AUSSIE_ZONE	https://aussie.zone/api/v3/community/list?type_=Local&limit=50&page=1	HTTP_ERR	HTTP_403	Forbidden
+LEMMY_COMMUNITIES_LEMMY_CAFE	https://lemmy.cafe/api/v3/community/list?type_=Local&limit=50&page=1	ERR	TRANSPORT_FAIL	RemoteDisconnected: Remote end closed connection without res
+PEERTUBE_CHANNELS_TUBE_HINOX_DE	https://tube.hinox.de/api/v1/video-channels?start=0&count=50&sort=createdAt	HTTP_ERR	HTTP_502	Bad Gateway
+PEERTUBE_CHANNELS_VIDEO_MENTALLYINTERRUPTEDPLUS_COM_AU	https://video.mentallyinterruptedplus.com.au/api/v1/video-channels?start=0&count=50&sort=createdAt	NET_ERR	TRANSPORT_FAIL	[Errno -2] Name or service not known
+PEERTUBE_CHANNELS_PEERTUBE_KITSUN_GAY	https://peertube.kitsun.gay/api/v1/video-channels?start=0&count=50&sort=createdAt	HTTP_ERR	HTTP_502	Bad Gateway
+DISCOURSE_CATEGORIES_COMMUNITY_CLOUDFLARE_COM	https://community.cloudflare.com/categories.json	HTTP_ERR	HTTP_403	Forbidden
+DISCOURSE_CATEGORIES_COMMUNITY_RENDER_COM	https://community.render.com/categories.json	NET_ERR	TRANSPORT_FAIL	[Errno -2] Name or service not known
+DISCOURSE_CATEGORIES_DISCOURSE_PARADOXPLAZA_COM	https://discourse.paradoxplaza.com/categories.json	NET_ERR	TRANSPORT_FAIL	[Errno -2] Name or service not known
+NOSTR_RELAY_RELAY_NOSTR_BAND	https://relay.nostr.band/	NET_ERR	TRANSPORT_FAIL	timed out
+NOSTR_RELAY_RELAY_NOSTR_BG	https://relay.nostr.bg/	NET_ERR	TRANSPORT_FAIL	[Errno -2] Name or service not known
+NOSTR_RELAY_EDEN_NOSTR_LAND	https://eden.nostr.land/	EMPTY_RESULTSET	OK	NIP-11 info document only; identical across atlas/eden/nostr.land (same operator), no record set
+NOSTR_RELAY_RELAY_NOSTRICH_DE	https://relay.nostrich.de/	NET_ERR	TRANSPORT_FAIL	[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
+NOSTR_RELAY_NOSTR_FMT_WIZ_BIZ	https://nostr.fmt.wiz.biz/	NET_ERR	TRANSPORT_FAIL	timed out
+NOSTR_RELAY_NOSTR_RELAY_NOKOTARO_COM	https://nostr-relay.nokotaro.com/	HTTP_ERR	HTTP_530	<none>
+NOSTR_RELAY_R_KOJIRA_IO	https://r.kojira.io/	HTTP_ERR	HTTP_403	Forbidden
+NOSTR_RELAY_NOSTR_LAND	https://nostr.land/	EMPTY_RESULTSET	OK	NIP-11 info document only; identical across atlas/eden/nostr.land (same operator), no record set
+NOSTR_RELAY_RELAYABLE_ORG	https://relayable.org/	NET_ERR	TRANSPORT_FAIL	[Errno 111] Connection refused
+NOSTR_RELAY_ATLAS_NOSTR_LAND	https://atlas.nostr.land/	EMPTY_RESULTSET	OK	NIP-11 info document only; identical across atlas/eden/nostr.land (same operator), no record set
+NOSTR_RELAY_RELAY_NOSTR_COM_AU	https://relay.nostr.com.au/	HTTP_ERR	HTTP_525	<none>
+MATRIX_PUBLICROOMS_MATRIX_ENVS_NET	https://matrix.envs.net/_matrix/client/v3/publicRooms?limit=100	HTTP_ERR	HTTP_404	Not Found
+MATRIX_PUBLICROOMS_MATRIX_KDE_ORG	https://matrix.kde.org/_matrix/client/v3/publicRooms?limit=100	NET_ERR	TRANSPORT_FAIL	[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
+MATRIX_PUBLICROOMS_MATRIX_GNOME_ORG	https://matrix.gnome.org/_matrix/client/v3/publicRooms?limit=100	NET_ERR	TRANSPORT_FAIL	[Errno -5] No address associated with hostname
+MATRIX_PUBLICROOMS_MATRIX_THISISJOES_SITE	https://matrix.thisisjoes.site/_matrix/client/v3/publicRooms?limit=100	HTTP_ERR	HTTP_401	Unauthorized
+MATRIX_PUBLICROOMS_CONVERSER_EU	https://converser.eu/_matrix/client/v3/publicRooms?limit=100	HTTP_ERR	HTTP_401	Unauthorized
+MATRIX_PUBLICROOMS_NITRO_CHAT	https://nitro.chat/_matrix/client/v3/publicRooms?limit=100	HTTP_ERR	HTTP_401	Unauthorized
+MATRIX_PUBLICROOMS_CATGIRL_CLOUD	https://catgirl.cloud/_matrix/client/v3/publicRooms?limit=100	HTTP_ERR	HTTP_404	Not Found
+MATRIX_PUBLICROOMS_FENEAS_ORG	https://feneas.org/_matrix/client/v3/publicRooms?limit=100	NET_ERR	TRANSPORT_FAIL	[Errno -3] Temporary failure in name resolution
+MASTODON_ACTIVITY_DET_SOCIAL	https://det.social/api/v1/instance/activity	PASS	HTTP_429	instance answers the probe but returns 429 to the engine on every attempt, including a serial re-run; a source that always 429s emits nothing

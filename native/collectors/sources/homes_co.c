@@ -5,13 +5,14 @@
  * total as a rental-market-size proxy. Pref with no count is OMITTED
  * (honest, possibly empty). Never fabricated. Non-spatial intel_item.
  * uid = homes-co|<slug> (mirrors intelUid). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 struct pe { const char *ja, *slug; };
 
@@ -59,17 +60,17 @@ static int parse_count(const char *html, long *out) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  char now[32];
-  { time_t t = time(NULL); struct tm tm; gmtime_r(&t, &tm);
-    strftime(now, sizeof now, "%Y-%m-%dT%H:%M:%S.000Z", &tm); }
+  char now[32] = {0};
+  jo_now_iso_ms(now, sizeof now);      /* empty ⇒ published_at stays NULL */
 
-  int n = 0;
+  int n = 0, nofetch = 0;
   for (int i = 0; i < NPREF; i++) {
     char url[128];
     snprintf(url, sizeof url, "https://www.homes.co.jp/chintai/%s/", PREFS[i].slug);
     char *html = feed_get_text(ctx->http, url, 15000);
     long count = 0; int have = 0;
     if (html) { have = parse_count(html, &count); free(html); }
+    else nofetch++;
     if (!have) continue;                 /* omit pref — honest empty */
 
     char title[160];
@@ -100,7 +101,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     it.body         = body;
     it.link         = url;
     it.lang         = "ja";
-    it.published_at = now;
+    it.published_at = now[0] ? now : NULL;
     it.record_type  = "homes-co";
     it.tags_json    = tj;
     it.properties_json = pj;
@@ -110,8 +111,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(p); cJSON_Delete(tags);
   }
 
-  fprintf(stderr, "[homes-co] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  fprintf(stderr, "[homes-co] emitted %d — %d/%d prefecture pages unreachable\n",
+          n, nofetch, NPREF);
+  if (nofetch == NPREF)
+    fprintf(stderr, "[homes-co] every page blocked: www.homes.co.jp answers "
+                    "HTTP 403 from its CloudFront WAF for this client\n");
+  /* A page that loads but has no 件 count is an honest empty; only a total
+   * fetch failure is a real fault worth quarantining the source over. */
+  return nofetch == NPREF ? -1 : 0;
 }
 
 static const source_def homes_co_def = {

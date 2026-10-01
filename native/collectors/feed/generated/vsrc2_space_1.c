@@ -1,0 +1,522 @@
+/* Verified-live space sources (60), part 1.
+ * Every endpoint in this file returned 2xx and parsed to at
+ * least one record at generation time; see
+ * docs/verified-sources-manifest.tsv for the recorded proof.
+ * Scaffolded once by collectors/gen_verified_sources.py; HAND-MAINTAINED
+ * since — this file, not the manifest, is the current copy. The
+ * generator refuses to overwrite it without --force. */
+#include "_verified_macros.inc"
+#include "lib/pagewalk.h"
+
+/* GWOSC event catalogues are a MAP of records, not a list:
+ * {"events": {"GW150914-v3": {commonName, version, GPS, mass_1_source, …},
+ *             "GW151012-v3": {…}, …}} — 671 events in allevents/, live
+ * 2026-09-06. jsonlist has no shape for an object whose VALUES are the
+ * records (its nested-map projection wants all-scalar leaves, and every
+ * event carries nulls), so under path "." the document was one record with
+ * no scalar of its own and all five GWOSC rows emitted 0. This page emitter
+ * turns the map into an array — each value duplicated as-is, with the map
+ * key it sat under added as `id` (the upstream's own event name+version,
+ * nothing invented) — and hands it to the shared jsonlist_emit_ex so title
+ * derivation, the collision guard and the disclosure stay the engine's. */
+typedef struct { const char *record_type, *lang, *tags_json; } gw_map_opts;
+
+static int gw_emit_events_map(const source_ctx *c, intel_sink *s,
+                              const char *id, cJSON *doc, void *ud, int *seen) {
+  (void)c;
+  gw_map_opts *o = (gw_map_opts *)ud;
+  cJSON *arr = cJSON_CreateArray();
+  if (!arr) { if (seen) *seen = 0; return 0; }
+  cJSON *events = cJSON_GetObjectItemCaseSensitive(doc, "events");
+  if (events && cJSON_IsObject(events)) {
+    for (cJSON *k = events->child; k; k = k->next) {
+      if (!cJSON_IsObject(k) || !k->string) continue;
+      cJSON *rec = cJSON_Duplicate(k, 1);
+      if (!rec) continue;
+      if (!cJSON_GetObjectItemCaseSensitive(rec, "id"))
+        cJSON_AddStringToObject(rec, "id", k->string);
+      cJSON_AddItemToArray(arr, rec);
+    }
+  }
+  int n = jsonlist_emit_ex(s, id, arr, "", o->record_type, o->lang,
+                           o->tags_json, seen);
+  cJSON_Delete(arr);
+  return n;
+}
+
+#define VJSON_GWOSC_MAP(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC) \
+  static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
+    gw_map_opts o = { CAT, LANG, TAGS };                                      \
+    int n = pw_walk(c, s, ID, URL, pw_fetch_json, gw_emit_events_map, &o);    \
+    if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
+    return 0; }                                                               \
+  static const source_def SYM = {                                            \
+    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
+    .update_interval_sec = IVAL, .run = run_##SYM,                            \
+    .category = CAT, .type = "api", .url = URL,                               \
+    .description = DESC, .layer = NULL, .free_tier = 1 };                     \
+  REGISTER_SOURCE(SYM)
+
+VRSS(sci_aas_nova, "sci-aas-nova", "AAS Nova research highlights", "AAS Nova 研究ハイライト",
+  "space", "astronomy",
+  "https://aasnova.org/feed/",
+  "en", "[\"astronomy\",\"aas\",\"research-highlights\"]", 21600,
+  "American Astronomical Society digests of notable new astronomy papers.");
+
+VJSON(sci_antares_catalogs, "sci-antares-catalogs", "ANTARES cross-match catalogues", "ANTARES 相互照合カタログ",
+  "space", "astronomy",
+  "https://api.antares.noirlab.edu/v1/catalogs?page[limit]=50",
+  "data",
+  "en", "[\"transient\",\"catalogue\",\"broker\"]", 86400,
+  "Reference catalogues ANTARES cross-matches alerts against.");
+
+/* The measured emitted=1000 / stored=982 here is CORRECT dedupe, not a bad key.
+ * Each record carries its own `id` (ANT2018hd3bc, ...) and page 1 holds 50
+ * records with 50 distinct ids; the collisions are ACROSS pages, because the
+ * feed is offset-paged over a live stream sorted by newest_alert_observation_time
+ * — a locus updated mid-walk moves to the front and reappears at a later
+ * offset. The repeat is the same locus, and storing it once is right.
+ * Re-keying would fabricate a distinction; re-sorting on a stable column would
+ * destroy the recency ordering that makes this a monitoring feed. Left as is.
+ * (Separately, meta.count says 10,000 available against ~1,000 walked, which is
+ * the page ceiling's business and is disclosed by pw_walk, not a uid problem.) */
+VJSON(sci_antares_loci, "sci-antares-loci", "ANTARES alert broker loci", "ANTARES アラートブローカー（天体軌跡）",
+  "space", "transient",
+  "https://api.antares.noirlab.edu/v1/loci?sort=-properties.newest_alert_observation_time&page[limit]=50",
+  "data",
+  "en", "[\"transient\",\"ztf\",\"broker\",\"alert\"]", 900,
+  "NOIRLab ANTARES broker stream of recently updated transient alert loci.");
+
+VRSS(sci_asi_news, "sci-asi-news", "Italian Space Agency news", "イタリア宇宙機関 ニュース",
+  "space", "spaceflight",
+  "https://www.asi.it/feed/",
+  "it", "[\"asi\",\"italy\",\"spaceflight\"]", 21600,
+  "Agenzia Spaziale Italiana programme announcements.");
+
+VRSS(sci_atel_latest, "sci-atel-latest", "The Astronomer's Telegram", "アストロノマーズ・テレグラム",
+  "space", "transient",
+  "https://www.astronomerstelegram.org/?rss",
+  "en", "[\"transient\",\"astronomy\",\"alert\"]", 900,
+  "Rapid astronomical transient notices posted by observers worldwide.");
+
+/* 2026-09-11: celestrak.org (104.168.149.178) does not complete a TCP handshake
+ * from this host on :443 or :80 — DNS resolves correctly, every other endpoint
+ * in this file answers, and the connection simply times out, from WSL and from
+ * Windows alike. That is why these two rows and the 35 in vsrc13_space_sci_1.c
+ * measured EMITS_NOTHING. Nothing about the row shape is wrong (GP JSON is an
+ * array of objects keyed on OBJECT_NAME/NORAD_CAT_ID), so there is nothing to
+ * fix here; the fetch failure degrades to rc=-1, which is the honest outcome.
+ * Re-check reachability before touching these rows. */
+VJSON(sci_celestrak_education, "sci-celestrak-education", "CelesTrak education satellites", "CelesTrak 教育衛星",
+  "space", "spaceflight",
+  "https://celestrak.org/NORAD/elements/gp.php?GROUP=education&FORMAT=json",
+  "",
+  "en", "[\"satellite\",\"education\",\"tle\"]", 86400,
+  "Orbital elements for university and education satellites.");
+
+VJSON(sci_celestrak_geodetic, "sci-celestrak-geodetic", "CelesTrak geodetic satellites", "CelesTrak 測地衛星",
+  "space", "spaceflight",
+  "https://celestrak.org/NORAD/elements/gp.php?GROUP=geodetic&FORMAT=json",
+  "",
+  "en", "[\"satellite\",\"geodesy\",\"tle\"]", 86400,
+  "Orbital elements for geodetic and laser-ranging satellites.");
+
+VRSS(sci_cnes_news, "sci-cnes-news", "CNES news", "フランス国立宇宙研究センター ニュース",
+  "space", "spaceflight",
+  "https://cnes.fr/en/rss.xml",
+  "en", "[\"cnes\",\"france\",\"spaceflight\"]", 21600,
+  "French space agency mission and programme news.");
+
+VRSS(sci_csa_news, "sci-csa-news", "Canadian Space Agency news", "カナダ宇宙庁 ニュース",
+  "space", "spaceflight",
+  "https://api.io.canada.ca/io-server/gc/news/en/v2?dept=spaceagency&sort=publishedDate&orderBy=desc&pick=100&format=atom",
+  "en", "[\"csa\",\"canada\",\"spaceflight\"]", 21600,
+  "Canadian Space Agency announcements and mission participation.");
+
+VJSON(sci_donki_cme, "sci-donki-cme", "DONKI coronal mass ejections", "DONKI コロナ質量放出",
+  "space", "physics",
+  "https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/CME",
+  "",
+  "en", "[\"space-weather\",\"cme\",\"heliophysics\"]", 3600,
+  "Catalogued CMEs with speed, direction and arrival analyses from NASA CCMC.");
+
+VJSON(sci_donki_cmeanalysis, "sci-donki-cmeanalysis", "DONKI CME analyses", "DONKI CME 解析",
+  "space", "physics",
+  "https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/CMEAnalysis",
+  "",
+  "en", "[\"space-weather\",\"cme\",\"analysis\"]", 3600,
+  "Measured CME kinematics from the CCMC analysis pipeline.");
+
+VJSON(sci_donki_flr, "sci-donki-flr", "DONKI solar flares", "DONKI 太陽フレア",
+  "space", "physics",
+  "https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/FLR",
+  "",
+  "en", "[\"space-weather\",\"solar-flare\"]", 3600,
+  "Solar flare events with class, peak time and source active region.");
+
+VJSON(sci_donki_gst, "sci-donki-gst", "DONKI geomagnetic storms", "DONKI 地磁気嵐",
+  "space", "physics",
+  "https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/GST",
+  "",
+  "en", "[\"space-weather\",\"geomagnetic-storm\"]", 3600,
+  "Geomagnetic storm events with Kp index progression.");
+
+VJSON(sci_donki_hss, "sci-donki-hss", "DONKI high-speed streams", "DONKI 高速太陽風",
+  "space", "physics",
+  "https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/HSS",
+  "",
+  "en", "[\"space-weather\",\"solar-wind\"]", 3600,
+  "Coronal-hole high-speed solar wind stream arrivals.");
+
+VJSON(sci_donki_ips, "sci-donki-ips", "DONKI interplanetary shocks", "DONKI 惑星間衝撃波",
+  "space", "physics",
+  "https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/IPS",
+  "",
+  "en", "[\"space-weather\",\"shock\"]", 3600,
+  "Interplanetary shock detections across heliospheric spacecraft.");
+
+VJSON(sci_donki_mpc, "sci-donki-mpc", "DONKI magnetopause crossings", "DONKI 磁気圏界面通過",
+  "space", "physics",
+  "https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/MPC",
+  "",
+  "en", "[\"space-weather\",\"magnetosphere\"]", 3600,
+  "Magnetopause compression events.");
+
+VJSON(sci_donki_notifications, "sci-donki-notifications", "DONKI space weather notifications", "DONKI 宇宙天気通知",
+  "space", "physics",
+  "https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/notifications?type=all",
+  "",
+  "en", "[\"space-weather\",\"alert\"]", 3600,
+  "Human-readable space weather notifications issued by the Moon to Mars Space Weather Office.");
+
+VJSON(sci_donki_rbe, "sci-donki-rbe", "DONKI radiation belt enhancements", "DONKI 放射線帯増強",
+  "space", "physics",
+  "https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/RBE",
+  "",
+  "en", "[\"space-weather\",\"radiation-belt\"]", 3600,
+  "Radiation belt electron enhancement events affecting satellites.");
+
+VJSON(sci_donki_sep, "sci-donki-sep", "DONKI solar energetic particle events", "DONKI 太陽高エネルギー粒子現象",
+  "space", "physics",
+  "https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/SEP",
+  "",
+  "en", "[\"space-weather\",\"sep\",\"radiation\"]", 3600,
+  "Solar energetic particle events relevant to satellite and aviation radiation risk.");
+
+VJSON(sci_donki_wsaenlilsimulations, "sci-donki-wsaenlilsimulations", "DONKI WSA-ENLIL heliosphere simulations", "DONKI WSA-ENLIL 太陽圏シミュレーション",
+  "space", "physics",
+  "https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/WSAEnlilSimulations",
+  "",
+  "en", "[\"space-weather\",\"simulation\",\"enlil\"]", 7200,
+  "Modelled CME propagation runs with predicted Earth and spacecraft arrival times.");
+
+VRSS(sci_esa_human_and_robotic_exploration, "sci-esa-human-and-robotic-exploration", "ESA — Human And Robotic Exploration", "欧州宇宙機関（ESA）— 有人・ロボット探査",
+  "space", "spaceflight",
+  "https://www.esa.int/rssfeed/Our_Activities/Human_and_Robotic_Exploration",
+  "en", "[\"esa\",\"europe\",\"spaceflight\",\"human-and-robotic-exploration\"]", 21600,
+  "European Space Agency news channel: human and robotic exploration.");
+
+VRSS(sci_esa_navigation, "sci-esa-navigation", "ESA — Navigation", "欧州宇宙機関（ESA）— 測位・航法",
+  "space", "spaceflight",
+  "https://www.esa.int/rssfeed/Our_Activities/Navigation",
+  "en", "[\"esa\",\"europe\",\"spaceflight\",\"navigation\"]", 21600,
+  "European Space Agency news channel: navigation.");
+
+VRSS(sci_esa_operations, "sci-esa-operations", "ESA — Operations", "欧州宇宙機関（ESA）— 運用",
+  "space", "spaceflight",
+  "https://www.esa.int/rssfeed/Our_Activities/Operations",
+  "en", "[\"esa\",\"europe\",\"spaceflight\",\"operations\"]", 21600,
+  "European Space Agency news channel: operations.");
+
+VRSS(sci_esa_preparing_for_the_future, "sci-esa-preparing-for-the-future", "ESA — Preparing For The Future", "欧州宇宙機関（ESA）— 将来計画",
+  "space", "spaceflight",
+  "https://www.esa.int/rssfeed/Our_Activities/Preparing_for_the_Future",
+  "en", "[\"esa\",\"europe\",\"spaceflight\",\"preparing-for-the-future\"]", 21600,
+  "European Space Agency news channel: preparing for the future.");
+
+VRSS(sci_esa_space_engineering_technology, "sci-esa-space-engineering-technology", "ESA — Space Engineering Technology", "欧州宇宙機関（ESA）— 宇宙工学・技術",
+  "space", "spaceflight",
+  "https://www.esa.int/rssfeed/Our_Activities/Space_Engineering_Technology",
+  "en", "[\"esa\",\"europe\",\"spaceflight\",\"space-engineering-technology\"]", 21600,
+  "European Space Agency news channel: space engineering technology.");
+
+VRSS(sci_esa_space_safety_security, "sci-esa-space-safety-security", "ESA — Space Safety Security", "欧州宇宙機関（ESA）— 宇宙安全保障",
+  "space", "spaceflight",
+  "https://www.esa.int/rssfeed/Our_Activities/Space_Safety_Security",
+  "en", "[\"esa\",\"europe\",\"spaceflight\",\"space-safety-security\"]", 21600,
+  "European Space Agency news channel: space safety security.");
+
+VRSS(sci_esa_space_science, "sci-esa-space-science", "ESA — Space Science", "欧州宇宙機関（ESA）— 宇宙科学",
+  "space", "spaceflight",
+  "https://www.esa.int/rssfeed/Our_Activities/Space_Science",
+  "en", "[\"esa\",\"europe\",\"spaceflight\",\"space-science\"]", 21600,
+  "European Space Agency news channel: space science.");
+
+VRSS(sci_esa_telecommunications_integrated_applications, "sci-esa-telecommunications-integrated-applications", "ESA — Telecommunications Integrated Applications", "欧州宇宙機関（ESA）— 通信・統合応用",
+  "space", "spaceflight",
+  "https://www.esa.int/rssfeed/Our_Activities/Telecommunications_Integrated_Applications",
+  "en", "[\"esa\",\"europe\",\"spaceflight\",\"telecommunications-integrated-applications\"]", 21600,
+  "European Space Agency news channel: telecommunications integrated applications.");
+
+VRSS(sci_eso_announcements, "sci-eso-announcements", "ESO announcements", "ヨーロッパ南天天文台 お知らせ",
+  "space", "astronomy",
+  "https://feeds.feedburner.com/EsoAnnouncements",
+  "en", "[\"eso\",\"astronomy\"]", 21600,
+  "ESO organisational and observatory announcements.");
+
+VRSS(sci_eso_blog, "sci-eso-blog", "ESOblog", "ESOブログ",
+  "space", "astronomy",
+  "https://www.eso.org/public/blog/feed/",
+  "en", "[\"eso\",\"astronomy\",\"blog\"]", 86400,
+  "Behind-the-scenes ESO observatory and instrumentation posts.");
+
+VRSS(sci_eso_esocast, "sci-eso-esocast", "ESOcast", "ESOキャスト（映像）",
+  "space", "astronomy",
+  "https://feeds.feedburner.com/ESOcast",
+  "en", "[\"eso\",\"astronomy\",\"video\"]", 86400,
+  "ESO video release series.");
+
+VRSS(sci_eso_top_news, "sci-eso-top-news", "ESO top news", "ヨーロッパ南天天文台 主要ニュース",
+  "space", "astronomy",
+  "https://feeds.feedburner.com/EsoTopNews",
+  "en", "[\"eso\",\"astronomy\",\"vlt\"]", 21600,
+  "European Southern Observatory science releases from VLT, ALMA and ELT.");
+
+/* `select *`, not a six-column projection. The narrow projection made rows that
+ * differ in the table byte-identical in the response, so the uid fell together
+ * and the sink stored one of each group: measured 190 records / 187 distinct.
+ * With every column asked for, 190 records / 190 distinct (2026-09-11 fetch,
+ * 1.76 MB, 10.2 s — comfortably inside the macro's 25 s budget), and rule 2's
+ * "every field" is satisfied rather than approximated. pl_name is the table's
+ * first column, so the engine's title fallback is unchanged. */
+VJSON(sci_exoarchive_direct_imaging, "sci-exoarchive-direct-imaging", "Directly imaged exoplanets", "直接撮像された系外惑星",
+  "space", "astronomy",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+*+from+ps+where+discoverymethod+like+%27%25Imaging%25%27&format=json",
+  "",
+  "en", "[\"exoplanet\",\"imaging\"]", 86400,
+  "Planets detected by direct imaging, with the full planetary-systems row (all 355 columns) behind each reference.");
+
+/* Widened projection. The five-column version collapsed two distinct k2pandc
+ * rows onto one uid (4,070 records / 4,069 distinct) because the columns that
+ * separate them were never requested. Asking for the orbital/stellar parameters
+ * and the release dates as well gives 4,070 records / 4,070 distinct
+ * (2026-09-11 fetch, 2.2 MB, 4.6 s). `select *` would also work but costs
+ * 40 MB / 21 s against a 25 s macro timeout — too close to a total loss. */
+VJSON(sci_exoarchive_k2pandc, "sci-exoarchive-k2pandc", "K2 planets and candidates", "K2 惑星・候補天体",
+  "space", "astronomy",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,k2_name,disposition,pl_refname,default_flag,hostname,discoverymethod,pl_orbper,pl_orbsmax,pl_rade,pl_bmassj,pl_orbeccen,st_teff,st_rad,st_mass,sy_dist,releasedate,rowupdate+from+k2pandc&format=json",
+  "",
+  "en", "[\"exoplanet\",\"k2\"]", 86400,
+  "K2 mission confirmed planets and candidates, with orbital and stellar parameters and the archive release/update dates for each reference row.");
+
+VJSON(sci_exoarchive_keplernames, "sci-exoarchive-keplernames", "Kepler confirmed planet names", "ケプラー確定惑星名称表",
+  "space", "astronomy",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+kepid,kepler_name,koi_name+from+keplernames&format=json",
+  "",
+  "en", "[\"exoplanet\",\"kepler\"]", 86400,
+  "Mapping between Kepler IDs, KOI numbers and confirmed planet names.");
+
+VJSON(sci_exoarchive_koi_cumulative, "sci-exoarchive-koi-cumulative", "Kepler Objects of Interest cumulative table", "ケプラー注目天体 累積表",
+  "space", "astronomy",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+kepid,kepoi_name,koi_disposition,ra,dec+from+cumulative&format=json",
+  "",
+  "en", "[\"exoplanet\",\"kepler\"]", 86400,
+  "Cumulative Kepler candidate dispositions.");
+
+/* The worst of the projection collapses: microlensing papers publish several
+ * degenerate solutions per planet under ONE reference, so the six requested
+ * columns were identical across them and 821 records stored as 511. `select *`
+ * — the mass, separation and release-date columns that actually differ are then
+ * present — gives 821 records / 765 distinct (2026-09-11 fetch, 7.2 MB, 7.4 s).
+ * The remaining 56 are exact duplicate rows in `ps` itself: 765 is also the
+ * distinct count of the full 355-column table for this filter, so the dedupe
+ * that is left is real dedupe. */
+VJSON(sci_exoarchive_microlensing, "sci-exoarchive-microlensing", "Microlensing-discovered exoplanets", "重力マイクロレンズ発見の系外惑星",
+  "space", "astronomy",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+*+from+ps+where+discoverymethod+like+%27%25Microlensing%25%27&format=json",
+  "",
+  "en", "[\"exoplanet\",\"microlensing\"]", 86400,
+  "Planets found by gravitational microlensing surveys, with the full planetary-systems row (all 355 columns) for every published solution.");
+
+/* Five columns added for identity, not for decoration: with the original eight
+ * the whole table read 40,155 records / 39,768 distinct, and the 387 lost rows
+ * were separate `ps` entries whose distinguishing values (companion mass,
+ * semi-major axis, host mass/distance, release date) simply were not requested.
+ * Now 40,155 / 40,095 (2026-09-11 fetch, 17.4 MB, 10.1 s). `select *` is not an
+ * option at this row count — 355 columns over 40 k rows; the same experiment on
+ * the 136-column stellarhosts table already cost 157 MB and 108 s against the
+ * macro's 25 s timeout, i.e. it would lose the source entirely. A 20-column
+ * variant was measured at 40,096 distinct for 24.2 MB, six more records for
+ * 7 MB more payload; this 13-column form is the better trade. */
+VJSON(sci_exoarchive_ps, "sci-exoarchive-ps", "NASA Exoplanet Archive planetary systems", "NASA系外惑星アーカイブ 惑星系表",
+  "space", "astronomy",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,hostname,disc_year,discoverymethod,pl_refname,default_flag,ra,dec,pl_bmassj,pl_orbsmax,st_mass,sy_dist,releasedate+from+ps&format=json",
+  "",
+  "en", "[\"exoplanet\",\"catalogue\",\"nasa\"]", 86400,
+  "Every confirmed exoplanet with discovery method, year, host star coordinates, companion mass, orbital separation and the archive release date of each published reference.");
+
+VJSON(sci_exoarchive_pscomppars, "sci-exoarchive-pscomppars", "NASA Exoplanet Archive composite parameters", "NASA系外惑星アーカイブ 統合パラメータ",
+  "space", "astronomy",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,hostname,pl_orbper,pl_rade,sy_dist+from+pscomppars&format=json",
+  "",
+  "en", "[\"exoplanet\",\"catalogue\"]", 86400,
+  "One best-estimate parameter row per confirmed planet.");
+
+/* stellarhosts is one row per (star, stellar-parameter reference), and the six
+ * columns originally requested carry NOTHING that varies between references —
+ * distance, magnitude and coordinates are system-level. 47,903 records stored
+ * as 40,982. Adding the six parameters that a reference actually reports
+ * (Teff, log g, mass, radius, density, age) gives 47,903 / 44,904 (2026-09-11
+ * fetch, 18.0 MB, 14.0 s), recovering ~3,900 rows per pass.
+ *
+ * The residual 2,999 are duplicate rows in the upstream table itself: `select *`
+ * over all 136 columns returns 47,903 rows and 44,929 distinct ones, so the
+ * dedupe that remains is real dedupe, not a projection artefact. `select *` is
+ * not usable here anyway — measured at 157 MB and 108 s against the macro's
+ * 25 s timeout, which would turn the whole source into a fetch failure. */
+VJSON(sci_exoarchive_stellarhosts, "sci-exoarchive-stellarhosts", "Exoplanet host star catalogue", "系外惑星 主星カタログ",
+  "space", "astronomy",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,st_refname,sy_dist,sy_vmag,ra,dec,st_teff,st_logg,st_mass,st_rad,st_dens,st_age+from+stellarhosts&format=json",
+  "",
+  "en", "[\"exoplanet\",\"stars\"]", 86400,
+  "Host stars of known planetary systems with distance, magnitude and the effective temperature, surface gravity, mass, radius, density and age reported by each published reference.");
+
+/* Same projection collapse, smaller: 2,397 records / 2,389 distinct, the eight
+ * lost rows being separate `ps` entries that differ only in columns the seven
+ * requested ones did not include. With the orbital/stellar parameters and the
+ * release dates: 2,397 / 2,397 (2026-09-11 fetch, 1.5 MB, 6.6 s). `select *`
+ * also reaches 2,397 but costs 23.9 MB / 14.4 s, uncomfortably near the 25 s
+ * macro timeout for eight records. */
+VJSON(sci_exoarchive_tess_confirmed, "sci-exoarchive-tess-confirmed", "TESS-discovered confirmed planets", "TESS発見の確定惑星",
+  "space", "astronomy",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,disc_facility,disc_year,pl_refname,default_flag,ra,dec,hostname,discoverymethod,pl_orbper,pl_orbsmax,pl_rade,pl_bmassj,pl_orbeccen,st_teff,st_rad,st_mass,sy_dist,releasedate,rowupdate+from+ps+where+disc_facility+like+%27%25TESS%25%27&format=json",
+  "",
+  "en", "[\"exoplanet\",\"tess\"]", 86400,
+  "Confirmed planets whose discovery facility was TESS, with orbital and stellar parameters and the archive release/update dates of each published reference.");
+
+VJSON(sci_exoarchive_toi, "sci-exoarchive-toi", "TESS Objects of Interest", "TESS 注目天体（TOI）",
+  "space", "astronomy",
+  "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+toi,tid,ra,dec,tfopwg_disp,toi_created+from+toi&format=json",
+  "",
+  "en", "[\"exoplanet\",\"tess\",\"candidate\"]", 21600,
+  "TESS planet candidates with disposition, updated as vetting progresses.");
+
+VRSS(sci_gcn_circulars, "sci-gcn-circulars", "GCN Circulars (multimessenger alerts)", "GCN サーキュラー（マルチメッセンジャー速報）",
+  "space", "transient",
+  "https://gcn.nasa.gov/circulars.atom",
+  "en", "[\"grb\",\"gcn\",\"multimessenger\",\"alert\"]", 900,
+  "Gamma-ray burst and multimessenger follow-up circulars from the worldwide alert network.");
+
+/* GFZ moved to kp.gfz.de (kp.gfz-potsdam.de now 301s). The document is
+ * parallel arrays — {"Hp30":[…],"datetime":[…],"status":[…],"meta":{}} — so
+ * the record list is the document itself (path ""), which jsonlist projects
+ * row-by-index; the old path named the bare number array and emitted 0. */
+VJSON(sci_gfz_hpo_index, "sci-gfz-hpo-index", "GFZ Potsdam Hp30 high-cadence index", "GFZポツダム Hp30 高頻度指数",
+  "space", "physics",
+  "https://kp.gfz.de/app/json/?start=2026-01-01T00:00:00Z&end=2030-01-01T00:00:00Z&index=Hp30",
+  "",
+  "en", "[\"space-weather\",\"hp30\",\"geomagnetic\"]", 3600,
+  "30-minute cadence geomagnetic activity index for fast-moving storms.");
+
+VJSON(sci_gfz_kp_index, "sci-gfz-kp-index", "GFZ Potsdam Kp geomagnetic index", "GFZポツダム Kp地磁気指数",
+  "space", "physics",
+  "https://kp.gfz.de/app/json/?start=2026-01-01T00:00:00Z&end=2030-01-01T00:00:00Z&index=Kp",
+  "",
+  "en", "[\"space-weather\",\"kp\",\"geomagnetic\"]", 3600,
+  "Authoritative Kp planetary geomagnetic activity index series from GFZ Potsdam.");
+
+VJSON(sci_gracedb_latest, "sci-gracedb-latest", "GraceDB latest superevents", "GraceDB 最新スーパーイベント",
+  "space", "transient",
+  "https://gracedb.ligo.org/api/superevents/?format=json&count=50",
+  "superevents",
+  "en", "[\"gravitational-wave\",\"alert\",\"gracedb\"]", 900,
+  "Most recent gravitational-wave candidate superevents with FAR and pipeline.");
+
+VJSON(sci_gracedb_superevents, "sci-gracedb-superevents", "GraceDB gravitational-wave superevents", "GraceDB 重力波スーパーイベント",
+  "space", "transient",
+  "https://gracedb.ligo.org/api/superevents/?format=json",
+  "superevents",
+  "en", "[\"gravitational-wave\",\"alert\",\"gracedb\"]", 900,
+  "Live LIGO-Virgo-KAGRA candidate alerts — the fastest public GW trigger stream.");
+
+VJSON_GWOSC_MAP(sci_gwosc_allevents, "sci-gwosc-allevents", "GWOSC all gravitational-wave events", "GWOSC 重力波イベント全件",
+  "space", "physics",
+  "https://gwosc.org/eventapi/json/allevents/",
+  "en", "[\"gravitational-wave\",\"ligo\",\"virgo\",\"kagra\"]", 21600,
+  "Every catalogued LIGO-Virgo-KAGRA gravitational-wave event with masses, distance and significance.");
+
+VJSON_GWOSC_MAP(sci_gwosc_gwtc, "sci-gwosc-gwtc", "GWOSC GWTC cumulative catalogue", "GWOSC GWTC 累積カタログ",
+  "space", "physics",
+  "https://gwosc.org/eventapi/json/GWTC/",
+  "en", "[\"gravitational-wave\",\"catalogue\",\"gwtc\"]", 86400,
+  "Cumulative Gravitational-Wave Transient Catalogue entries.");
+
+VJSON_GWOSC_MAP(sci_gwosc_gwtc2_1_confident, "sci-gwosc-gwtc2-1-confident", "GWOSC GWTC-2.1 confident detections", "GWOSC GWTC-2.1 確度の高い検出",
+  "space", "physics",
+  "https://gwosc.org/eventapi/json/GWTC-2.1-confident/",
+  "en", "[\"gravitational-wave\",\"gwtc2\"]", 86400,
+  "Confident-detection subset of GWTC-2.1.");
+
+VJSON_GWOSC_MAP(sci_gwosc_gwtc3_confident, "sci-gwosc-gwtc3-confident", "GWOSC GWTC-3 confident detections", "GWOSC GWTC-3 確度の高い検出",
+  "space", "physics",
+  "https://gwosc.org/eventapi/json/GWTC-3-confident/",
+  "en", "[\"gravitational-wave\",\"gwtc3\"]", 86400,
+  "Confident-detection subset of GWTC-3.");
+
+VJSON_GWOSC_MAP(sci_gwosc_o3_discovery, "sci-gwosc-o3-discovery", "GWOSC O3 discovery papers", "GWOSC O3 発見論文イベント",
+  "space", "physics",
+  "https://gwosc.org/eventapi/json/O3_Discovery_Papers/",
+  "en", "[\"gravitational-wave\",\"o3\"]", 86400,
+  "Events published as individual O3 discovery papers.");
+
+VRSS(sci_jaxa_press_jp, "sci-jaxa-press-jp", "JAXA press releases (Japanese)", "JAXA プレスリリース（日本語）",
+  "space", "spaceflight",
+  "https://www.jaxa.jp/rss/press_j.rdf",
+  "ja", "[\"jaxa\",\"japan\",\"spaceflight\"]", 3600,
+  "JAXA official press releases in Japanese covering launches, satellites and missions.");
+
+VRSS(sci_ligo_lsc_news, "sci-ligo-lsc-news", "LIGO Scientific Collaboration news", "LIGO科学コラボレーション ニュース",
+  "space", "physics",
+  "https://ligo.org/feed/",
+  "en", "[\"ligo\",\"gravitational-wave\"]", 21600,
+  "LIGO Scientific Collaboration announcements and detector status notes.");
+
+VJSON(sci_lldev_launches_upcoming, "sci-lldev-launches-upcoming", "Launch Library upcoming launches", "ローンチライブラリ 打上げ予定",
+  "space", "spaceflight",
+  "https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=50",
+  "results",
+  "en", "[\"launch\",\"spaceflight\",\"schedule\"]", 3600,
+  "Upcoming orbital launches worldwide with provider, vehicle, pad and window.");
+
+VJSON(sci_mpc_cometels, "sci-mpc-cometels", "MPC comet orbital elements", "MPC 彗星軌道要素",
+  "space", "astronomy",
+  "https://www.minorplanetcenter.net/Extended_Files/cometels.json",
+  "",
+  "en", "[\"comet\",\"mpc\",\"orbit\"]", 86400,
+  "Orbital elements for all catalogued comets.");
+
+VJSON(sci_mpc_neocp, "sci-mpc-neocp", "MPC Near-Earth Object Confirmation Page", "MPC 地球近傍天体確認ページ",
+  "space", "astronomy",
+  "https://www.minorplanetcenter.net/Extended_Files/neocp.json",
+  "",
+  "en", "[\"neo\",\"asteroid\",\"mpc\"]", 3600,
+  "Unconfirmed near-Earth object candidates awaiting follow-up astrometry.");
+
+VRSS(sci_naoj_news, "sci-naoj-news", "NAOJ National Astronomical Observatory of Japan", "国立天文台 ニュース",
+  "space", "astronomy",
+  "https://www.nao.ac.jp/atom.xml",
+  "ja", "[\"naoj\",\"japan\",\"astronomy\",\"subaru\"]", 7200,
+  "National Astronomical Observatory of Japan results from Subaru, ALMA and Hyper Suprime-Cam.");
+
+VRSS(sci_nasa_blogs_index, "sci-nasa-blogs-index", "NASA blogs (all)", "NASA ブログ（全体）",
+  "space", "spaceflight",
+  "https://www.nasa.gov/blogs/feed/",
+  "en", "[\"nasa\",\"blogs\",\"operations\"]", 3600,
+  "Aggregated NASA mission blogs including live launch and ISS operations commentary.");
+
+VJSON(sci_nasa_cmr_services, "sci-nasa-cmr-services", "NASA CMR service registry", "NASA CMR サービスレジストリ",
+  "space", "repository",
+  "https://cmr.earthdata.nasa.gov/search/services.json?page_size=100",
+  "items",
+  "en", "[\"nasa\",\"earthdata\",\"ogc\"]", 86400,
+  "Registered data services (WMS, OPeNDAP, subsetters) for NASA collections.");

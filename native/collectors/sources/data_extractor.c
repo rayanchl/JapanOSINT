@@ -11,9 +11,9 @@
  * (remote_key="ioc:<type>:<value>"), deduped within the run across all types.
  * Each row's body is {type,value}; title "<type>: <value>"; summary=type.
  * Nothing extracted → emits nothing, returns 0 (honest empty). */
-#include "../../source.h"
-#include "../../lib/seenset.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/seenset.h"
+#include "third_party/cJSON.h"
 #include <ctype.h>
 #include <regex.h>
 #include <string.h>
@@ -31,7 +31,13 @@ static const xp_t PATTERNS[] = {
   {"email",       "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"},
   {"ipv4",        "[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}"},
   {"url",         "https?://[a-zA-Z0-9./?=_&%-]+"},
-  {"domain",      "[a-zA-Z0-9][a-zA-Z0-9-]*\\.[a-zA-Z]{2,}"},
+  /* AUDIT NOTE (slice a3): this was "[a-zA-Z0-9][a-zA-Z0-9-]*\\.[a-zA-Z]{2,}",
+   * which matches exactly ONE label plus a TLD. Every multi-label domain came
+   * out truncated: "ir@toyota.co.jp" yielded the indicator "toyota.co" — a
+   * different, real, unrelated domain. An IOC that is silently wrong is worse
+   * than a missing one. Allow interior labels so the match is leftmost-longest
+   * over the whole name. */
+  {"domain",      "[a-zA-Z0-9][a-zA-Z0-9-]*(\\.[a-zA-Z0-9][a-zA-Z0-9-]*)*\\.[a-zA-Z]{2,}"},
   {"md5",         "[a-fA-F0-9]{32}"},
   {"sha1",        "[a-fA-F0-9]{40}"},
   {"sha256",      "[a-fA-F0-9]{64}"},
@@ -75,7 +81,6 @@ static cJSON *extract_pattern(const char *text, const char *pat,
   if (regcomp(&re, pat, REG_EXTENDED | REG_ICASE) != 0) return matches;
   regmatch_t m;
   const char *cur = text;
-  int mc = 0;
   seen_set seen = {0};
   while (regexec(&re, cur, 1, &m, 0) == 0) {
     int len = (int)(m.rm_eo - m.rm_so);
@@ -91,7 +96,6 @@ static cJSON *extract_pattern(const char *text, const char *pat,
     }
     cur += m.rm_eo;
     if (*cur == 0) break;
-    mc++;
   }
   regfree(&re);
   seen_free(&seen);

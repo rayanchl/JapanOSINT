@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import apiUrl from '../../utils/apiUrl.js';
 import {
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip,
@@ -6,30 +7,38 @@ import {
 } from 'recharts';
 import StatusBadge from '../ui/StatusBadge';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import { normalizeSources, typeLabel } from '../../utils/normalizeSource.js';
+import useLayerCatalog from '../../hooks/useLayerCatalog.js';
+import SourcesPanel from '../panels/SourcesPanel.jsx';
 
-const COLORS = {
-  online: '#00ff88',
+// Keyed on the wire values (schema.sql constrains both columns to lowercase).
+const STATUS_COLORS = {
+  online: '#5be7a0',
   degraded: '#ffb74d',
-  offline: '#ff4444',
-  API: '#00f0ff',
-  Dataset: '#3b82f6',
-  Scraped: '#ff8c00',
-  'Web Request': '#a855f7',
+  offline: '#ff4d5e',
+  pending: '#6e7e94',
+};
+
+const TYPE_COLORS = {
+  api: '#5be7f1',
+  dataset: '#3b82f6',
+  scraped: '#ffb347',
+  web_request: '#a855f7',
 };
 
 const CATEGORY_COLORS = [
-  '#00f0ff', '#00ff88', '#ff8c00', '#a855f7', '#f06292',
+  '#5be7f1', '#5be7a0', '#ffb347', '#a855f7', '#f06292',
   '#ffd600', '#42a5f5', '#ef5350', '#78909c', '#4dd0e1',
 ];
 
 function StatCard({ label, value, color, subtitle }) {
   return (
     <div className="glass-panel p-4 flex flex-col">
-      <span className="text-[10px] uppercase tracking-widest text-gray-500 mb-1">{label}</span>
-      <span className="text-2xl font-mono font-bold" style={{ color: color || '#00f0ff' }}>
+      <span className="text-[10px] uppercase tracking-widest text-osint-muted mb-1">{label}</span>
+      <span className="text-2xl font-mono font-bold" style={{ color: color || '#5be7f1' }}>
         {value ?? '-'}
       </span>
-      {subtitle && <span className="text-[10px] text-gray-600 mt-1">{subtitle}</span>}
+      {subtitle && <span className="text-[10px] text-osint-muted mt-1">{subtitle}</span>}
     </div>
   );
 }
@@ -38,9 +47,9 @@ function DarkTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   return (
     <div className="glass-panel px-3 py-2 text-xs">
-      <p className="text-gray-300 mb-1">{label || payload[0]?.name}</p>
+      <p className="text-osint-text mb-1">{label || payload[0]?.name}</p>
       {payload.map((p, i) => (
-        <p key={i} className="font-mono" style={{ color: p.color || '#00f0ff' }}>
+        <p key={i} className="font-mono" style={{ color: p.color || '#5be7f1' }}>
           {p.name}: {p.value}
         </p>
       ))}
@@ -48,9 +57,13 @@ function DarkTooltip({ active, payload, label }) {
   );
 }
 
-export default function SourceDashboard({ sources: propSources, stats: propStats }) {
+export default function SourceDashboard({ sources: propSources, pollError, lastUpdate: propLastUpdate }) {
   const [sources, setSources] = useState(propSources || []);
-  const [stats, setStats] = useState(propStats || null);
+  // The pipeline strip printed a hardcoded `12` in the same type as the two
+  // figures beside it, which are counted from real rows. Count the server's
+  // catalogue (plus the client-only layers), and say so while it is loading.
+  const { catalog: layerCatalog, status: layerCatalogStatus } = useLayerCatalog();
+  const mapLayerCount = Object.keys(layerCatalog).length;
   const [loading, setLoading] = useState(!propSources?.length);
   const [sortField, setSortField] = useState('name');
   const [sortDir, setSortDir] = useState('asc');
@@ -58,50 +71,75 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
   const [filterStatus, setFilterStatus] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [expandedRow, setExpandedRow] = useState(null);
+  // /console/sources?source=<id> (from API keys "used by") opens that row.
+  const [params] = useSearchParams();
+  const wantedSource = params.get('source');
+  useEffect(() => {
+    if (!wantedSource) return;
+    setExpandedRow(wantedSource);
+    const t = setTimeout(() => {
+      document.getElementById(`source-row-${wantedSource}`)?.scrollIntoView({ block: 'center' });
+    }, 300);
+    return () => clearTimeout(t);
+  }, [wantedSource, sources.length]);
+  const [fetchError, setFetchError] = useState(null);
+  // Timestamp of the last fetch that actually returned rows, for the self-fetch
+  // path. Null until one succeeds — never a render-time clock reading.
+  const [fetchedAt, setFetchedAt] = useState(null);
+  const [showProbe, setShowProbe] = useState(false);
 
-  // Fetch sources if not provided via props
+  // Fetch sources only when mounted without them — App.jsx's useDataSources
+  // already polls /api/sources and passes the rows down as props.
+  const selfFetch = !propSources?.length;
+
+  // A failed fetch has to be VISIBLE here, not just in the console. This
+  // screen's entire job is to answer "is collection healthy", and with no
+  // error state a 503 rendered as a settled, finished page: Total Sources 0,
+  // Online 0, Total Records 0, three empty charts, "No sources match the
+  // current filters", and a pulsing green live dot next to "Auto-refresh 30s".
+  // Every one of those is a fabricated fact -- the client obtained nothing and
+  // displayed a specific, actionable operational picture.
   const fetchData = useCallback(async () => {
     try {
-      const [srcRes, stRes] = await Promise.all([
-        fetch(apiUrl('/api/sources')),
-        fetch(apiUrl('/api/sources/stats')),
-      ]);
-      if (srcRes.ok) {
-        const data = await srcRes.json();
-        setSources(Array.isArray(data) ? data : data.sources || []);
-      }
-      if (stRes.ok) {
-        setStats(await stRes.json());
-      }
+      const res = await fetch(apiUrl('/api/sources'));
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setSources(normalizeSources(Array.isArray(data) ? data : data.sources || []));
+      setFetchError(null);
+      setFetchedAt(new Date().toISOString());
     } catch (err) {
       console.warn('[SourceDashboard] fetch error:', err.message);
+      setFetchError(err.message || 'request failed');
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
+    if (!selfFetch) return undefined;
     fetchData();
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
-  }, [fetchData]);
+  }, [selfFetch, fetchData]);
 
   useEffect(() => {
     if (propSources?.length) setSources(propSources);
   }, [propSources]);
 
-  useEffect(() => {
-    if (propStats) setStats(propStats);
-  }, [propStats]);
+  // On the props path this component never fetches, so `fetchError` stays null
+  // forever and the health dot kept pulsing green over rows of unknown age
+  // while App's poller was failing. The poller's own verdict is the one that
+  // matters there, so combine them.
+  const loadError = selfFetch ? fetchError : (pollError || null);
+  // The age of the data on screen, from whichever path supplied it. Null means
+  // "we have never successfully loaded", which is what gets displayed.
+  const lastSuccess = selfFetch ? fetchedAt : (propLastUpdate || null);
 
-  // Derived data
+  // Derived data. `pending` is the schema default for a freshly-seeded source,
+  // so it has to be in the seed or those rows vanish from the cards + pie.
   const statusCounts = useMemo(() => {
-    const counts = { online: 0, degraded: 0, offline: 0, gated: 0 };
+    const counts = { online: 0, degraded: 0, offline: 0, pending: 0 };
     sources.forEach((s) => {
-      if (s.gated) {
-        counts.gated++;
-        return;
-      }
       const st = (s.status || 'offline').toLowerCase();
       if (counts[st] !== undefined) counts[st]++;
     });
@@ -111,10 +149,14 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
   const typeCounts = useMemo(() => {
     const map = {};
     sources.forEach((s) => {
-      const t = s.type || 'Unknown';
+      const t = s.type || 'unknown';
       map[t] = (map[t] || 0) + 1;
     });
-    return Object.entries(map).map(([name, value]) => ({ name, value }));
+    return Object.entries(map).map(([type, value]) => ({
+      type,
+      name: typeLabel(type) || 'Unknown',
+      value,
+    }));
   }, [sources]);
 
   const statusChartData = useMemo(() => {
@@ -125,7 +167,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
     const map = {};
     sources.forEach((s) => {
       const cat = s.category || 'Other';
-      map[cat] = (map[cat] || 0) + (s.records || s.recordCount || 0);
+      map[cat] = (map[cat] || 0) + (s.records || 0);
     });
     return Object.entries(map)
       .map(([name, records]) => ({ name, records }))
@@ -163,7 +205,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
 
   const uniqueTypes = useMemo(() => [...new Set(sources.map((s) => s.type).filter(Boolean))], [sources]);
   const uniqueCategories = useMemo(() => [...new Set(sources.map((s) => s.category).filter(Boolean))], [sources]);
-  const totalRecords = useMemo(() => sources.reduce((sum, s) => sum + (s.records || s.recordCount || 0), 0), [sources]);
+  const totalRecords = useMemo(() => sources.reduce((sum, s) => sum + (s.records || 0), 0), [sources]);
 
   const sortIcon = (field) => {
     if (sortField !== field) return '';
@@ -179,18 +221,51 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
   }
 
   return (
-    <div className="h-full overflow-y-auto p-6 bg-osint-bg">
+    <div className="h-full overflow-y-auto p-4 md:p-6 bg-osint-bg relative">
+      {showProbe && (
+        <div className="absolute top-3 right-3 z-40"><SourcesPanel onClose={() => setShowProbe(false)} /></div>
+      )}
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold text-gray-100">
-            <span className="text-neon-cyan">Source</span> Monitor
-          </h1>
-          <div className="flex items-center gap-2 text-xs text-gray-500">
-            <span className="pulse-live w-2 h-2 rounded-full bg-neon-green inline-block" />
-            Auto-refresh 30s
+          <div>
+            <h1 className="font-mono text-xl font-bold tracking-tight text-osint-text">Sources</h1>
+            <p className="text-xs text-osint-muted mt-0.5">Status, charts and collectors for every registered source.</p>
+          </div>
+          <div className="flex items-center gap-3 text-xs text-osint-muted">
+            <button type="button" onClick={() => setShowProbe((v) => !v)} className={`px-2.5 py-1 rounded-md border text-xs font-medium transition-colors ${showProbe ? "bg-accent/15 text-accent border-accent/40" : "text-osint-muted border-osint-border hover:text-accent hover:border-accent/40"}`} title="Live probe detail for every source">Probe detail</button>
+            {/* The live dot is an assertion that this page is current. It must
+              * not keep pulsing green while the last refresh failed. */}
+            {loadError ? (
+              <>
+                <span className="w-2 h-2 rounded-full bg-red-500 inline-block" />
+                <span className="text-red-300">Refresh failing</span>
+              </>
+            ) : (
+              <>
+                <span className="pulse-live w-2 h-2 rounded-full bg-neon-green inline-block" />
+                Auto-refresh 30s
+              </>
+            )}
           </div>
         </div>
+
+        {/* A failed load is stated, not rendered as a healthy screen of zeros.
+          * Whether any rows are on screen decides the wording: with none, every
+          * number below would be a fabrication; with stale rows, they are real
+          * but no longer current, and saying which is the point. */}
+        {loadError && (
+          <div className="rounded border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm">
+            <div className="font-medium text-red-300">
+              Could not load /api/sources ({loadError})
+            </div>
+            <div className="mt-1 text-xs text-red-200/80">
+              {sources.length
+                ? `Showing ${sources.length} source${sources.length === 1 ? '' : 's'} from the last successful refresh — these figures are stale, not live.`
+                : 'No source data was obtained, so the figures below are not a picture of the fleet. They are zeros because nothing was returned.'}
+            </div>
+          </div>
+        )}
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3">
@@ -198,13 +273,17 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
           <StatCard label="Online" value={statusCounts.online} color="#00ff88" />
           <StatCard label="Degraded" value={statusCounts.degraded} color="#ffb74d" />
           <StatCard label="Offline" value={statusCounts.offline} color="#ff4444" />
-          <StatCard label="Gated" value={statusCounts.gated} color="#9ca3af" />
+          <StatCard label="Pending" value={statusCounts.pending} color="#9ca3af" />
           <StatCard label="Total Records" value={totalRecords.toLocaleString()} color="#a855f7" />
+          {/* `new Date()` here was the render clock, not the data's age: every
+            * refresh, successful or not, stamped the rows "just now". */}
           <StatCard
             label="Last Update"
-            value={new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })}
+            value={lastSuccess
+              ? new Date(lastSuccess).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })
+              : '—'}
             color="#3b82f6"
-            subtitle="JST"
+            subtitle={lastSuccess ? 'JST · last successful fetch' : 'never loaded'}
           />
         </div>
 
@@ -212,7 +291,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Sources by Type */}
           <div className="glass-panel p-4">
-            <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-3">Sources by Type</h3>
+            <h3 className="text-xs uppercase tracking-wider text-osint-muted mb-3">Sources by Type</h3>
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
@@ -226,12 +305,12 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
                   strokeWidth={2}
                 >
                   {typeCounts.map((entry, i) => (
-                    <Cell key={i} fill={COLORS[entry.name] || CATEGORY_COLORS[i % CATEGORY_COLORS.length]} />
+                    <Cell key={i} fill={TYPE_COLORS[entry.type] || CATEGORY_COLORS[i % CATEGORY_COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip content={<DarkTooltip />} />
                 <Legend
-                  wrapperStyle={{ fontSize: '10px', color: '#9ca3af' }}
+                  wrapperStyle={{ fontSize: '10px', color: '#6e7e94' }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -239,7 +318,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
 
           {/* Sources by Status */}
           <div className="glass-panel p-4">
-            <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-3">Sources by Status</h3>
+            <h3 className="text-xs uppercase tracking-wider text-osint-muted mb-3">Sources by Status</h3>
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
@@ -253,22 +332,22 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
                   strokeWidth={2}
                 >
                   {statusChartData.map((entry, i) => (
-                    <Cell key={i} fill={COLORS[entry.name] || '#666'} />
+                    <Cell key={i} fill={STATUS_COLORS[entry.name] || '#666'} />
                   ))}
                 </Pie>
                 <Tooltip content={<DarkTooltip />} />
-                <Legend wrapperStyle={{ fontSize: '10px', color: '#9ca3af' }} />
+                <Legend wrapperStyle={{ fontSize: '10px', color: '#6e7e94' }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
 
           {/* Records by Category */}
           <div className="glass-panel p-4">
-            <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-3">Records by Category</h3>
+            <h3 className="text-xs uppercase tracking-wider text-osint-muted mb-3">Records by Category</h3>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={categoryRecords} layout="vertical">
                 <XAxis type="number" tick={{ fontSize: 10, fill: '#6b7280' }} />
-                <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: '#9ca3af' }} width={80} />
+                <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: '#6e7e94' }} width={80} />
                 <Tooltip content={<DarkTooltip />} />
                 <Bar dataKey="records" radius={[0, 4, 4, 0]}>
                   {categoryRecords.map((_, i) => (
@@ -282,26 +361,26 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
 
         {/* Data Flow Visualization */}
         <div className="glass-panel p-4">
-          <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-3">Data Pipeline</h3>
+          <h3 className="text-xs uppercase tracking-wider text-osint-muted mb-3">Data Pipeline</h3>
           <div className="flex items-center justify-center gap-3 text-xs flex-wrap">
             <div className="flex flex-col items-center gap-1 px-4 py-3 rounded border border-neon-cyan/20 bg-neon-cyan/5 min-w-[100px]">
               <span className="text-neon-cyan font-mono text-lg">{sources.length}</span>
-              <span className="text-gray-400">Sources</span>
+              <span className="text-osint-muted">Sources</span>
             </div>
-            <span className="text-gray-600 text-lg">\u2192</span>
+            <span className="text-osint-muted text-lg">\u2192</span>
             <div className="flex flex-col items-center gap-1 px-4 py-3 rounded border border-neon-orange/20 bg-neon-orange/5 min-w-[100px]">
               <span className="text-neon-orange font-mono text-lg">ETL</span>
-              <span className="text-gray-400">Processing</span>
+              <span className="text-osint-muted">Processing</span>
             </div>
-            <span className="text-gray-600 text-lg">\u2192</span>
+            <span className="text-osint-muted text-lg">\u2192</span>
             <div className="flex flex-col items-center gap-1 px-4 py-3 rounded border border-neon-green/20 bg-neon-green/5 min-w-[100px]">
               <span className="text-neon-green font-mono text-lg">{totalRecords.toLocaleString()}</span>
-              <span className="text-gray-400">Records</span>
+              <span className="text-osint-muted">Records</span>
             </div>
-            <span className="text-gray-600 text-lg">\u2192</span>
+            <span className="text-osint-muted text-lg">\u2192</span>
             <div className="flex flex-col items-center gap-1 px-4 py-3 rounded border border-neon-purple/20 bg-neon-purple/5 min-w-[100px]">
-              <span className="text-neon-purple font-mono text-lg">12</span>
-              <span className="text-gray-400">Map Layers</span>
+              <span className="text-neon-purple font-mono text-lg">{layerCatalogStatus === 'loading' ? `${mapLayerCount}+` : mapLayerCount}</span>
+              <span className="text-osint-muted" title={layerCatalogStatus === 'ready' ? 'server catalogue + client-only layers' : (layerCatalogStatus === 'error' ? 'server catalogue not obtained; client table only' : 'client table; server catalogue still loading')}>Map Layers{layerCatalogStatus === 'error' ? ' (client table)' : ''}</span>
             </div>
           </div>
         </div>
@@ -311,29 +390,30 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="bg-osint-surface border border-osint-border rounded px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-neon-cyan/40"
+            className="bg-osint-surface border border-osint-border rounded px-3 py-1.5 text-xs text-osint-text focus:outline-none focus:border-neon-cyan/40"
           >
             <option value="">All Status</option>
             <option value="online">Online</option>
             <option value="degraded">Degraded</option>
             <option value="offline">Offline</option>
+            <option value="pending">Pending</option>
           </select>
 
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="bg-osint-surface border border-osint-border rounded px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-neon-cyan/40"
+            className="bg-osint-surface border border-osint-border rounded px-3 py-1.5 text-xs text-osint-text focus:outline-none focus:border-neon-cyan/40"
           >
             <option value="">All Types</option>
             {uniqueTypes.map((t) => (
-              <option key={t} value={t}>{t}</option>
+              <option key={t} value={t}>{typeLabel(t)}</option>
             ))}
           </select>
 
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="bg-osint-surface border border-osint-border rounded px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-neon-cyan/40"
+            className="bg-osint-surface border border-osint-border rounded px-3 py-1.5 text-xs text-osint-text focus:outline-none focus:border-neon-cyan/40"
           >
             <option value="">All Categories</option>
             {uniqueCategories.map((c) => (
@@ -341,7 +421,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
             ))}
           </select>
 
-          <span className="text-xs text-gray-600 ml-auto">
+          <span className="text-xs text-osint-muted ml-auto">
             {filteredSources.length} of {sources.length} sources
           </span>
         </div>
@@ -351,7 +431,7 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-osint-border text-gray-500 uppercase tracking-wider">
+                <tr className="border-b border-osint-border text-osint-muted uppercase tracking-wider">
                   {[
                     { key: 'status', label: 'Status' },
                     { key: 'name', label: 'Name' },
@@ -373,32 +453,37 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
                 </tr>
               </thead>
               <tbody>
-                {filteredSources.map((src, i) => (
-                  <React.Fragment key={src.id || i}>
+                {filteredSources.map((src, i) => {
+                  // Key on the source id, not the array index — filteredSources
+                  // is re-sorted/re-filtered and replaced wholesale on refresh.
+                  const rowKey = src.id ?? i;
+                  return (
+                  <React.Fragment key={rowKey}>
                     <tr
-                      className="border-b border-osint-border/50 hover:bg-neon-cyan/5 transition-colors cursor-pointer"
-                      onClick={() => setExpandedRow(expandedRow === i ? null : i)}
+                      id={`source-row-${rowKey}`}
+                      className="border-b border-osint-border/50 hover:bg-accent/5 transition-colors cursor-pointer"
+                      onClick={() => setExpandedRow(expandedRow === rowKey ? null : rowKey)}
                     >
                       <td className="px-3 py-2.5">
                         <StatusBadge type="status" value={src.status || 'offline'} />
                       </td>
-                      <td className="px-3 py-2.5 text-gray-200 font-medium">{src.name}</td>
+                      <td className="px-3 py-2.5 text-osint-text font-medium">{src.name}</td>
                       <td className="px-3 py-2.5">
                         <StatusBadge type="type" value={src.type} />
                       </td>
-                      <td className="px-3 py-2.5 text-gray-400">{src.category}</td>
+                      <td className="px-3 py-2.5 text-osint-muted">{src.category}</td>
                       <td className="px-3 py-2.5 font-mono text-neon-green">
-                        {(src.records || src.recordCount || 0).toLocaleString()}
+                        {(src.records || 0).toLocaleString()}
                       </td>
-                      <td className="px-3 py-2.5 font-mono text-gray-400">
+                      <td className="px-3 py-2.5 font-mono text-osint-muted">
                         {src.responseTime ? `${src.responseTime}ms` : '-'}
                       </td>
-                      <td className="px-3 py-2.5 font-mono text-gray-500">
+                      <td className="px-3 py-2.5 font-mono text-osint-muted">
                         {src.lastCheck
                           ? new Date(src.lastCheck).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })
                           : '-'}
                       </td>
-                      <td className="px-3 py-2.5 font-mono text-gray-500">
+                      <td className="px-3 py-2.5 font-mono text-osint-muted">
                         {src.lastSuccess
                           ? new Date(src.lastSuccess).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })
                           : '-'}
@@ -406,12 +491,12 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
                     </tr>
 
                     {/* Expanded row - fetch logs */}
-                    {expandedRow === i && (
+                    {expandedRow === rowKey && (
                       <tr>
                         <td colSpan={8} className="px-4 py-3 bg-osint-bg/50">
-                          <div className="text-[10px] text-gray-500 space-y-1">
+                          <div className="text-[10px] text-osint-muted space-y-1">
                             <div className="flex items-center gap-2 mb-2">
-                              <span className="text-gray-400 font-medium">Recent Fetch Logs</span>
+                              <span className="text-osint-muted font-medium">Recent Fetch Logs</span>
                               {src.endpoint && (
                                 <span className="font-mono text-neon-cyan/60">{src.endpoint}</span>
                               )}
@@ -419,20 +504,20 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
                             {(src.recentLogs || []).length > 0 ? (
                               src.recentLogs.map((log, j) => (
                                 <div key={j} className="flex items-center gap-3 font-mono">
-                                  <span className="text-gray-600">
+                                  <span className="text-osint-muted">
                                     {new Date(log.timestamp).toLocaleString('en-GB', { timeZone: 'Asia/Tokyo' })}
                                   </span>
                                   <span className={log.success ? 'text-neon-green' : 'text-neon-red'}>
                                     {log.success ? 'OK' : 'FAIL'}
                                   </span>
-                                  <span className="text-gray-500">{log.message || `${log.records || 0} records`}</span>
+                                  <span className="text-osint-muted">{log.message || `${log.records || 0} records`}</span>
                                 </div>
                               ))
                             ) : (
-                              <span className="text-gray-600 italic">No recent logs available</span>
+                              <span className="text-osint-muted italic">No recent logs available</span>
                             )}
                             {src.description && (
-                              <p className="text-gray-500 mt-2 pt-2 border-t border-osint-border/30">
+                              <p className="text-osint-muted mt-2 pt-2 border-t border-osint-border/30">
                                 {src.description}
                               </p>
                             )}
@@ -441,11 +526,12 @@ export default function SourceDashboard({ sources: propSources, stats: propStats
                       </tr>
                     )}
                   </React.Fragment>
-                ))}
+                  );
+                })}
 
                 {filteredSources.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="px-4 py-8 text-center text-gray-600">
+                    <td colSpan={8} className="px-4 py-8 text-center text-osint-muted">
                       No sources match the current filters
                     </td>
                   </tr>

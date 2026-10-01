@@ -14,12 +14,24 @@ struct CameraDiscoveryView: View {
     @State private var events: [CameraEvent] = []
     @State private var liveIds: Set<String> = []
     @State private var feedCursor: String? = nil
+    /// How many events this tab keeps in memory. The live-push path trims the
+    /// oldest rows past this cap; "Load older" raises it by exactly what the
+    /// page returned, so a page the user just spent a request on can never be
+    /// trimmed straight back off (see `loadMore`).
+    @State private var retentionCap = 2000
+    /// Oldest events the cap has dropped. Surfaced in `retentionNotice` — a
+    /// bounded view has to say how much of how much it is showing, and rows
+    /// must not just quietly vanish off the old end.
+    @State private var trimmedByCap = 0
     @State private var loadingMore = false
     @State private var triggering = false
     @State private var triggerError: String?
     @State private var loadMoreError: String?
     @State private var subscription: AnyCancellable?
     @State private var seeded = false
+    /// The REST backfill threw. This — not the WebSocket — is what "offline"
+    /// means on this tab.
+    @State private var seedFailed = false
     @State private var selectedFeature: GeoFeature?
     @State private var searchText = ""
 
@@ -57,10 +69,12 @@ struct CameraDiscoveryView: View {
 
     var body: some View {
         Group {
-            // WS down + no events → unified offline state. WS up + no events
-            // is just a pre-discovery state (instructive empty), keep custom.
-            if events.isEmpty && !ws.isConnected {
-                OfflineStateView(retry: { Task { await trigger() } })
+            // Offline means the REST backfill FAILED — not "the push socket
+            // isn't up". The discovery feed is seeded and paged over REST, so
+            // a down/disabled WebSocket is irrelevant here; keying off it made
+            // the tab claim the backend was unreachable while it was answering.
+            if events.isEmpty && seedFailed {
+                OfflineStateView(retry: { Task { await reseed() } })
             } else {
                 contentView
             }
@@ -97,7 +111,7 @@ struct CameraDiscoveryView: View {
             }
             if !events.isEmpty {
                 ToolbarItem(placement: .compatPrimary) {
-                    Button("Clear") { events.removeAll() }
+                    Button("Clear") { events.removeAll(); trimmedByCap = 0 }
                 }
             }
         }
@@ -171,7 +185,7 @@ struct CameraDiscoveryView: View {
                 ForEach(filteredEvents.reversed()) { ev in
                     listCard(ev)
                 }
-                loadMoreButton
+                feedFooter
             }
             .padding(.horizontal)
             .padding(.bottom)
@@ -197,14 +211,39 @@ struct CameraDiscoveryView: View {
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 10)
-                    loadMoreButton
+                    feedFooter
                 }
             }
         }
     }
 
+    /// What this tab is actually showing, said out loud: how many events are
+    /// on screen out of how many are loaded, how many the retention cap has
+    /// dropped, and whether the server still has older pages. The window is
+    /// allowed to be bounded; it is not allowed to be bounded silently.
+    private var retentionNotice: String {
+        var parts: [String] = []
+        let shown = filteredEvents.count
+        if shown != events.count { parts.append("\(shown) shown") }
+        parts.append("\(events.count) loaded")
+        if trimmedByCap > 0 {
+            parts.append("\(trimmedByCap) oldest dropped at the \(retentionCap)-row cap")
+        }
+        if feedCursor != nil { parts.append("more history available") }
+        return parts.joined(separator: " · ")
+    }
+
     @ViewBuilder
-    private var loadMoreButton: some View {
+    private var feedFooter: some View {
+        if !events.isEmpty {
+            Text(retentionNotice)
+                .font(.caption2)
+                .foregroundStyle(theme.textMuted)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+                .padding(.top, 6)
+                .accessibilityLabel("Camera feed window: \(retentionNotice)")
+        }
         if feedCursor != nil {
             Button {
                 Task { await loadMore() }
@@ -244,23 +283,12 @@ struct CameraDiscoveryView: View {
     @ViewBuilder
     private var mapView: some View {
         Map(position: $cameraPosition) {
-            ForEach(filteredEvents) { ev in
-                if let lat = ev.lat, let lon = ev.lon {
-                    Annotation(
-                        ev.title ?? ev.id,
-                        coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon),
-                        anchor: .bottom
-                    ) {
-                        Button {
-                            selectedFeature = feature(from: ev)
-                        } label: {
-                            mapPinView(
-                                symbol: registry.symbol(for: "cameras"),
-                                color: registry.color(for: "cameras")
-                            )
-                        }
-                    }
-                }
+            // Pre-filtered to placeable events + a @MapContentBuilder helper so
+            // the content resolves unambiguously as `some MapContent` (mirrors
+            // MapTab). An inline `if let` here makes the content optional and
+            // collapses Map's initializer resolution onto its no-content overload.
+            ForEach(mappableEvents, id: \.id) { ev in
+                cameraAnnotation(ev)
             }
         }
         .mapStyle(.standard(elevation: .realistic))
@@ -487,6 +515,40 @@ struct CameraDiscoveryView: View {
         !selectedChannels.isEmpty || feedAvailability != .all
     }
 
+    /// Filtered events that actually carry a coordinate — the only ones the map
+    /// can place. Keeps the map ForEach content unconditional (see `mapView`).
+    private var mappableEvents: [CameraEvent] {
+        filteredEvents.filter { $0.lat != nil && $0.lon != nil }
+    }
+
+    /// One camera pin. Extracted as `@MapContentBuilder` so its return type is
+    /// concretely `some MapContent` — the same shape MapTab uses.
+    @MapContentBuilder
+    private func cameraAnnotation(_ ev: CameraEvent) -> some MapContent {
+        // Fully qualified: the app defines its own `Annotation` (the analyst
+        // note DTO in Models+Roadmap), which shadows MapKit's here and makes the
+        // content fail to conform to MapContent.
+        MapKit.Annotation(
+            ev.title ?? ev.id,
+            coordinate: CLLocationCoordinate2D(latitude: ev.lat ?? 0,
+                                               longitude: ev.lon ?? 0),
+            anchor: .bottom
+        ) {
+            Button {
+                selectedFeature = feature(from: ev)
+            } label: {
+                mapPinView(
+                    symbol: registry.symbol(for: "cameras"),
+                    color: registry.color(for: "cameras")
+                )
+            }
+            // The pin glyph is `.accessibilityHidden` (it is the same camera
+            // symbol on every pin), so the button needs its own name.
+            .accessibilityLabel(ev.title ?? ev.id)
+            .accessibilityHint("Double tap to open this camera")
+        }
+    }
+
     /// Apply search + source-channel + feed-availability filters. Search hay
     /// includes channel + title + URL so users can pivot from the filter
     /// chips back to a free-text query without losing matches.
@@ -516,7 +578,12 @@ struct CameraDiscoveryView: View {
     /// Mirrors `CameraFeedView`'s render decision so the "Has feed" filter
     /// agrees with what the cards will actually show. Calls the same resolver
     /// the view uses; `.linkOnly` is the only mode that produces the "No
-    /// feed" placeholder.
+    /// in-app feed" card.
+    ///
+    /// The eight embed-blocked discovery channels (skylinewebcams, earthcam,
+    /// webcamtaxi, …) now land in `.linkOnly` rather than pointing at a
+    /// backend snapshot route that does not exist, so they correctly count as
+    /// "No feed" here instead of claiming a feed that never rendered.
     private func eventHasFeed(_ ev: CameraEvent) -> Bool {
         let m = CameraFeedResolver.resolve(
             directHint: ev.snapshot_url,
@@ -640,8 +707,10 @@ struct CameraDiscoveryView: View {
                 // Mark the camera as "live" for this session so the NEW
                 // badge survives even if the user reorders / filters.
                 liveIds.insert(ev.id)
-                if events.count > 2000 {
-                    events.removeFirst(events.count - 2000)
+                if events.count > retentionCap {
+                    let drop = events.count - retentionCap
+                    events.removeFirst(drop)
+                    trimmedByCap += drop
                 }
             }
         }
@@ -662,13 +731,23 @@ struct CameraDiscoveryView: View {
                 // precedence — dedup the backfill against them by id.
                 let already = Set(events.map(\.id))
                 let merged = result.events.filter { !already.contains($0.id) } + events
-                let trimmed = merged.suffix(2000)
+                let trimmed = merged.suffix(retentionCap)
+                trimmedByCap += merged.count - trimmed.count
                 events = Array(trimmed)
                 feedCursor = result.cursor
+                seedFailed = false
             }
         } catch {
             seeded = false
+            seedFailed = true
         }
+    }
+
+    /// Retry entry point for `OfflineStateView` — re-runs the REST backfill
+    /// that failed, rather than kicking off a discovery run.
+    private func reseed() async {
+        seeded = false
+        await seed()
     }
 
     /// Page older history when the user scrolls past the seeded window.
@@ -682,9 +761,17 @@ struct CameraDiscoveryView: View {
             await MainActor.run {
                 let already = Set(events.map(\.id))
                 let older = result.events.filter { !already.contains($0.id) }
-                let merged = older + events
-                let trimmed = merged.suffix(2000)
-                events = Array(trimmed)
+                // This used to be `(older + events).suffix(2000)`. `suffix`
+                // keeps the NEWEST rows, and `older` is prepended — so once
+                // `events` had reached the cap, every page the user asked for
+                // was fetched and then sliced straight back off, while
+                // `feedCursor` still advanced. The button stayed tappable and
+                // each press spent a request for nothing. History the user
+                // explicitly paged for is now never trimmed: raise the cap by
+                // exactly what this page added, so the cap keeps bounding
+                // live push growth and stops eating what it just paid for.
+                retentionCap += older.count
+                events = older + events
                 feedCursor = result.cursor
                 loadMoreError = nil
             }

@@ -7,10 +7,11 @@
  * (rule 8 — no fabricated sighting points). Property key order
  * (sighting_id, date, place, species, note, source) mirrors JS.
  * (No native wildlife/ dir — filed under agriculture per task rule.) */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -46,8 +47,22 @@ static int prop_num(cJSON *p, const char *const *keys, int nk, double *out) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *url = getenv("BEAR_ENCOUNTERS_GEOJSON_URL");
   if (!url || !*url) {
-    fprintf(stderr, "[bear-encounters] no source (BEAR_ENCOUNTERS_GEOJSON_URL unset)\n");
-    return -1;
+    /* Unconfigured is not a failure. Returning -1 makes scheduler_run_source
+     * write fetch_log status='error' AND open a collector_anomaly every single
+     * tick, so a source nobody configured shows up as permanently broken and
+     * buries real breakages in the anomaly table — so this still returns 0.
+     *
+     * What changed: it used to return 0 having emitted NOTHING, which in
+     * fetch_log, /api/status and anomaly triage is indistinguishable from a
+     * configured source that ran and found no bear sightings. The state is now
+     * reported as one upserting status record (_credential_notice.inc), which
+     * is the honest-empty the house rule asks for rather than a log line
+     * nobody reads. */
+    static const char *const envs[] = { "BEAR_ENCOUNTERS_GEOJSON_URL", NULL };
+    return jo_needs_credential(sink, "bear-encounters",
+        "\xe3\x82\xaf\xe3\x83\x9e\xe5\x87\xba\xe6\xb2\xa1\xe6\x83\x85\xe5\xa0\xb1 (prefectural bear sightings)",
+        envs, NULL,
+        "there is no national feed; point this at a prefecture's GeoJSON export");
   }
   cJSON *data = feed_get_json(ctx->http, url, 20000);
   cJSON *src = data ? cJSON_GetObjectItem(data, "features") : NULL;
@@ -106,15 +121,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const char *spc = prop(p, SP_K, 3);
     const char *nt  = prop(p, NT_K, 3);
 
-    cJSON *nf = cJSON_CreateObject();
-    cJSON_AddStringToObject(nf, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(nf, "geometry", g);
+    cJSON *nf = gj_point_feature(lon, lat);
 
     cJSON *np = cJSON_CreateObject();             /* EXACT JS key order */
     cJSON_AddStringToObject(np, "sighting_id", sid);
@@ -136,7 +143,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[bear-encounters] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def bear_encounters_def = {

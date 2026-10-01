@@ -8,7 +8,6 @@
  *                          `db.transaction` wrapper is just a perf envelope;
  *                          the camera runner / discovery source loops here)
  *   getAllCameras       -> camera_fc_json
- *   cameraStats         -> camera_stats_json
  *   getRecentCameras    -> camera_recent_json (kept internal-linkage-free for
  *                          the runner; same SELECT … ORDER BY fetched_at)
  * applyGeocodeOk/Fail, getCameraByUid, getDiscoveryFeed are LLM-enricher /
@@ -26,13 +25,36 @@
 
 #define CAMERA_SOURCE_ID "camera-discovery"
 
+/* The uid keyspace camera_upsert owns: every camera row is keyed
+ * "camera-discovery|<camera_uid>" regardless of which collector emitted it.
+ *
+ * Reads MUST key off this, not off intel_items.source_id. The JS had a single
+ * `camera-discovery` collector, so sourceId and the uid prefix were the same
+ * string; the C port split that one collector into 14 registered sources
+ * (cam-camscape, cam-insecam-scrape, …) and intel.c binds source_id from the
+ * RUNNING source's id — so the rows land under source_id='cam-camscape' etc.
+ * while keeping the camera-discovery uid prefix. Filtering on
+ * source_id='camera-discovery' therefore matched zero rows and the map served
+ * an empty FeatureCollection while ~1k geocoded cameras sat in the table.
+ * record_type='camera' is written only by camera_upsert (below) and is indexed
+ * (idx_intel_items_type); the uid guard keeps us inside this store's keyspace
+ * if anything else ever adopts that record_type. */
+#define CAMERA_UID_LIKE CAMERA_SOURCE_ID "|%"
+
 /* Node `new Date().toISOString()` — YYYY-MM-DDTHH:MM:SS.mmmZ. */
 static void iso_now(char *b, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
   struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(b, n, "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-           tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-           tm.tm_hour, tm.tm_min, tm.tm_sec, (int)(tv.tv_usec / 1000));
+  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
+   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
+   * fixed 24-char stamp "may be truncated". The modulos are identity for
+   * every value gmtime_r can return and make the 24 provable, not merely
+   * true. */
+  snprintf(b, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 
 /* prevProps.<k> as a non-empty STRING, else NULL (=== JS `||` truthiness for
@@ -180,10 +202,34 @@ int camera_upsert(db_handle *db, intel_sink *sink, cJSON *feature,
   if (psc && cJSON_IsNumber(psc)) seen = psc->valuedouble;
   seen += 1;
 
+  /* geo_precision is DERIVED, not ACCUMULATED — and that distinction is the
+   * whole reason it needs naming here.
+   *
+   * The spread below is `{ ...p, ...prevProps }`, so the STORED value wins for
+   * every key not named in the overrides. That is right for anything the row
+   * accumulates (first_seen_at, seen_count, discovery_channels — all named
+   * below). It is wrong for a value the collector RECOMPUTES from its own
+   * tables on every run, because then a correction can never reach a camera
+   * that is already in the database.
+   *
+   * That is not hypothetical: unifying the ten `cam_*` centroid tables found
+   * that cam_camscape conflated the "_city" substring strip with the precision
+   * label and reported eleven city-level anchors as "prefecture". The collector
+   * was fixed — and the fix would have been inert for every camera already
+   * stored, forever, while the GEOMETRY beside it was being rebuilt from fresh
+   * coordinates on the same run. Two halves of one record merged by opposite
+   * rules is worse than either rule on its own.
+   *
+   * Fresh wins, stored is the fallback for a collector that does not compute
+   * one. */
+  const char *m_prec = str_or_null(p, "geo_precision");
+  if (!m_prec) m_prec = str_or_null(pp, "geo_precision");
+
   /* mergedProps = { ...p, ...prevProps, <named overrides> } */
   cJSON *m = cJSON_CreateObject();
   spread_into(m, p);
   spread_into(m, pp);
+  set_str_or_null(m, "geo_precision", m_prec);
   set_str_or_null(m, "camera_uid", camera_uid);
   set_str_or_null(m, "name", m_name);
   set_str_or_null(m, "camera_type", m_type);
@@ -215,6 +261,12 @@ int camera_upsert(db_handle *db, intel_sink *sink, cJSON *feature,
   intel_item it = {0};
   it.uid = master_uid;
   it.title = m_name;
+  /* The camera page URL is right here (and goes into properties.url below), but
+   * it was never put on the item — so every camera row in the product was a
+   * camera you could not open. published_at is first-seen, not now: last-seen
+   * would re-date the row on every poll and churn the timeline. */
+  it.link = m_url;
+  it.published_at = m_first;
   it.has_geo = 1;
   it.lat = lat;
   it.lon = lon;
@@ -315,16 +367,17 @@ static cJSON *row_to_feature(sqlite3_stmt *s) {
 }
 
 char *camera_fc_json(db_handle *db) {
-  /* selectGeoFeatures default: where source_id=? AND lat IS NOT NULL. */
+  /* selectGeoFeatures, keyed on the camera keyspace rather than on source_id
+   * (see CAMERA_UID_LIKE) so every cam-* collector's output is served. */
   static const char *Q =
     "SELECT uid, source_id, sub_source_id, record_type, lat, lon, geometry,"
     "       title, summary, link, language, published_at, fetched_at,"
     "       properties, tags"
     "  FROM intel_items"
-    " WHERE source_id = ?1 AND lat IS NOT NULL";
+    " WHERE record_type = 'camera' AND uid LIKE ?1 AND lat IS NOT NULL";
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h, Q, -1, &s, NULL) != SQLITE_OK) return NULL;
-  sqlite3_bind_text(s, 1, CAMERA_SOURCE_ID, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 1, CAMERA_UID_LIKE, -1, SQLITE_STATIC);
 
   cJSON *features = cJSON_CreateArray();
   while (sqlite3_step(s) == SQLITE_ROW)
@@ -345,53 +398,6 @@ char *camera_fc_json(db_handle *db) {
 
   char *js = cJSON_PrintUnformatted(fc);
   cJSON_Delete(fc);
-  return js;
-}
-
-char *camera_stats_json(db_handle *db) {
-  /* total + new24h (fetched_at >= datetime('now','-24 hours')). */
-  long total = 0, new24h = 0;
-  sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(db->h,
-        "SELECT COUNT(*),"
-        " SUM(CASE WHEN fetched_at >= datetime('now','-24 hours')"
-        "          THEN 1 ELSE 0 END)"
-        " FROM intel_items WHERE source_id=?1", -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_text(s, 1, CAMERA_SOURCE_ID, -1, SQLITE_TRANSIENT);
-    if (sqlite3_step(s) == SQLITE_ROW) {
-      total  = (long)sqlite3_column_int64(s, 0);
-      new24h = (long)sqlite3_column_int64(s, 1);
-    }
-    sqlite3_finalize(s);
-  }
-
-  cJSON *by_type = cJSON_CreateArray();
-  if (sqlite3_prepare_v2(db->h,
-        "SELECT json_extract(properties,'$.camera_type') AS camera_type,"
-        "       COUNT(*) AS c"
-        "  FROM intel_items WHERE source_id=?1"
-        " GROUP BY json_extract(properties,'$.camera_type')",
-        -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_text(s, 1, CAMERA_SOURCE_ID, -1, SQLITE_TRANSIENT);
-    while (sqlite3_step(s) == SQLITE_ROW) {
-      cJSON *r = cJSON_CreateObject();
-      if (sqlite3_column_type(s, 0) == SQLITE_NULL)
-        cJSON_AddNullToObject(r, "camera_type");
-      else
-        cJSON_AddStringToObject(r, "camera_type",
-          (const char *)sqlite3_column_text(s, 0));
-      cJSON_AddNumberToObject(r, "c", (double)sqlite3_column_int64(s, 1));
-      cJSON_AddItemToArray(by_type, r);
-    }
-    sqlite3_finalize(s);
-  }
-
-  cJSON *o = cJSON_CreateObject();
-  cJSON_AddNumberToObject(o, "total", (double)total);
-  cJSON_AddNumberToObject(o, "new24h", (double)new24h);
-  cJSON_AddItemToObject(o, "byType", by_type);
-  char *js = cJSON_PrintUnformatted(o);
-  cJSON_Delete(o);
   return js;
 }
 
@@ -461,7 +467,7 @@ char *camera_discovery_feed(db_handle *db, int limit,
    * Reused ?N indices bind once; indices stay contiguous from ?1. */
   char w[1200]; size_t wl = 0;
   wl += snprintf(w + wl, sizeof w - wl,
-    "source_id=?1 AND record_type IN ('camera','camera-discovery') "
+    "record_type IN ('camera','camera-discovery') AND uid LIKE ?1 "
     "AND lat IS NOT NULL");
   int bi = 2, ch_i = 0, cts_i = 0, cuid_i = 0;
   if (channel && *channel) {
@@ -491,7 +497,7 @@ char *camera_discovery_feed(db_handle *db, int limit,
   if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) {
     free(cur_dec); return NULL;
   }
-  sqlite3_bind_text(s, 1, CAMERA_SOURCE_ID, -1, SQLITE_STATIC);
+  sqlite3_bind_text(s, 1, CAMERA_UID_LIKE, -1, SQLITE_STATIC);
   if (ch_i)  sqlite3_bind_text(s, ch_i, channel, -1, SQLITE_TRANSIENT);
   if (cts_i) {
     sqlite3_bind_text(s, cts_i,  cur_ts,  -1, SQLITE_TRANSIENT);

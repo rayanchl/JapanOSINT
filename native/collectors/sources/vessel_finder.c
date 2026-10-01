@@ -3,9 +3,9 @@
  * VesselFinder Master REST API, gated on VESSELFINDER_API_KEY (0 rows when
  * unset). The OSM ferry-terminal fallback and the curated SEED_HUBS are
  * intentionally not ported (correctness-neutral). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,7 +27,12 @@ static void passthru(cJSON *p, const char *outk, cJSON *r, const char *ink) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("VESSELFINDER_API_KEY");
-  if (!key || !*key) { fprintf(stderr, "[vessel-finder] no API key\n"); return -1; }
+  /* Gated, not failed: -1 would log fetch_log status='error' and open a
+   * collector_anomaly on every tick for a source that simply has no key. */
+  if (!key || !*key) {
+    fprintf(stderr, "[vessel-finder] gated (no VESSELFINDER_API_KEY)\n");
+    return 0;
+  }
 
   char url[256];
   snprintf(url, sizeof url,
@@ -37,29 +42,37 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!arr || !cJSON_IsArray(arr)) { if (arr) cJSON_Delete(arr); return -1; }
 
   cJSON *features = cJSON_CreateArray();
-  int i = 0;
   cJSON *v;
   cJSON_ArrayForEach(v, arr) {
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(pf(v, "LONGITUDE")));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(pf(v, "LATITUDE")));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(pf(v, "LONGITUDE"), pf(v, "LATITUDE"));
 
     cJSON *p = cJSON_CreateObject();                 /* EXACT JS key order */
+    /* MMSI first — it is the vessel's own identifier and `id` is a
+     * NATIVE_ID_KEY, so this is the row's uid. The remaining `VF_<index>`
+     * fallback was the one path where the uid described the vessel's position
+     * in this poll's array instead of the vessel: an AIS list reorders on
+     * every poll, so those rows changed identity each run and orphaned their
+     * predecessors. IMO is the other real identifier; with neither, there is
+     * nothing to key on and we say so. */
     cJSON *mmsi = cJSON_GetObjectItem(v, "MMSI");
+    cJSON *imo  = cJSON_GetObjectItem(v, "IMO");
     char id[64];
+    id[0] = 0;
     if (mmsi && cJSON_IsNumber(mmsi))
       snprintf(id, sizeof id, "VF_%lld", (long long)mmsi->valuedouble);
     else if (mmsi && cJSON_IsString(mmsi) && *mmsi->valuestring)
       snprintf(id, sizeof id, "VF_%s", mmsi->valuestring);
-    else
-      snprintf(id, sizeof id, "VF_%d", i);
-    cJSON_AddStringToObject(p, "id", id);
+    else if (imo && cJSON_IsNumber(imo))
+      snprintf(id, sizeof id, "VF_IMO_%lld", (long long)imo->valuedouble);
+    else if (imo && cJSON_IsString(imo) && *imo->valuestring)
+      snprintf(id, sizeof id, "VF_IMO_%s", imo->valuestring);
+    if (id[0]) {
+      cJSON_AddStringToObject(p, "id", id);
+    } else {
+      cJSON_AddStringToObject(p, "id_basis",
+        "none: this VesselFinder record carried neither MMSI nor IMO, so the "
+        "row is uid'd by content hash rather than a positional id");
+    }
 
     passthru(p, "mmsi", v, "MMSI");
     passthru(p, "imo", v, "IMO");
@@ -90,14 +103,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(p, "source", "vesselfinder_api");
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);
-    i++;
   }
   cJSON_Delete(arr);
 
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[vessel-finder] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def vessel_finder_def = {

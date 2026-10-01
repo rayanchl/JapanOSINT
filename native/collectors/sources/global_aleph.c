@@ -8,9 +8,9 @@
  * sent as "Authorization: ApiKey <key>" to widen access to private collections.
  * One intel_item per matched entity: name, schema, collection, countries.
  * Non-200 / no matches → honest empty (return 0). Never synthesizes records. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -127,7 +127,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(authhdr, sizeof authhdr, "Authorization: ApiKey %s", key);
     hdrs = hdrs_key;
   } else {
-    hdrs = hdrs_pub;   /* public collections searchable without a key */
+    /* Aleph closed anonymous API access: /api/2/entities now answers
+     * 401 {"message":"You are not authorized to do this."} without a key, so
+     * this is a gated source, not an empty one. Say so — otherwise it reads as
+     * "searched and found nothing". */
+    fprintf(stderr, "[aleph] gated (no ALEPH_API_KEY)\n");
+    hdrs = hdrs_pub;
   }
 
   char *body = jo_get(ctx, url, hdrs, "aleph");

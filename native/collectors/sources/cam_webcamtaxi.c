@@ -24,31 +24,21 @@
  *
  * Each Feature → camera_upsert(...,"webcamtaxi").
  */
-#include "../../source.h"
-#include "../../core/camera_store.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../third_party/cJSON.h"
+#include "lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "core/camera_store.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "cam_centroids.inc"
 
 typedef struct { const char *k; const char *sv; int is_num; double nv;
                  int is_null; int is_bool; int bv; } kv;
-
-static double round4(double v) { return floor(v * 1e4 + 0.5) / 1e4; }
-
-static void uid_tail(const char *url, const char *name, char *out,
-                     size_t outsz) {
-  const char *src = (url && *url) ? url : (name ? name : "");
-  size_t i = 0;
-  for (; src[i] && i < 60 && i + 1 < outsz; i++) {
-    unsigned char c = (unsigned char)src[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
 
 static cJSON *make_feature(double lat, double lon, const char *name,
                            const char *camera_type,
@@ -60,20 +50,12 @@ static cJSON *make_feature(double lat, double lon, const char *name,
       url = extra[i].sv; break;
     }
   char lats[32], lons[32], tail[80], uid[160];
-  snprintf(lats, sizeof lats, "%.4f", round4(lat));
-  snprintf(lons, sizeof lons, "%.4f", round4(lon));
-  uid_tail(url, name, tail, sizeof tail);
+  snprintf(lats, sizeof lats, "%.4f", jo_round4(lat));
+  snprintf(lons, sizeof lons, "%.4f", jo_round4(lon));
+  jo_uid_tail(url, name, tail, sizeof tail);
   snprintf(uid, sizeof uid, "%s:%s:%s", lats, lons, tail);
 
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "camera_uid", uid);
@@ -95,106 +77,6 @@ static cJSON *make_feature(double lat, double lon, const char *name,
   return f;
 }
 
-typedef struct { const char *key; double lat, lon; } centroid;
-static const centroid PREFECTURE_CENTROIDS[] = {
-  {"hokkaido",43.2203,142.8635},{"aomori",40.7644,140.7400},
-  {"iwate",39.7036,141.1527},{"miyagi",38.2688,140.8719},
-  {"akita",39.7186,140.1024},{"yamagata",38.2404,140.3636},
-  {"fukushima",37.7503,140.4677},{"ibaraki",36.3418,140.4468},
-  {"tochigi",36.5657,139.8836},{"gunma",36.3906,139.0604},
-  {"saitama",35.8572,139.6489},{"chiba",35.6050,140.1234},
-  {"tokyo",35.6762,139.6503},{"kanagawa",35.4478,139.6425},
-  {"niigata",37.9161,139.0364},{"toyama",36.6953,137.2113},
-  {"ishikawa",36.5946,136.6256},{"fukui",36.0652,136.2216},
-  {"yamanashi",35.6639,138.5684},{"nagano",36.6513,138.1810},
-  {"gifu",35.3911,136.7222},{"shizuoka",34.9769,138.3831},
-  {"aichi",35.1802,136.9066},{"mie",34.7303,136.5086},
-  {"shiga",35.0045,135.8686},{"kyoto",35.0116,135.7681},
-  {"osaka",34.6937,135.5023},{"hyogo",34.6913,135.1830},
-  {"nara",34.6851,135.8050},{"wakayama",34.2261,135.1675},
-  {"tottori",35.5036,134.2383},{"shimane",35.4723,133.0505},
-  {"okayama",34.6618,133.9344},{"hiroshima",34.3966,132.4596},
-  {"yamaguchi",34.1859,131.4706},{"tokushima",34.0658,134.5593},
-  {"kagawa",34.3401,134.0434},{"ehime",33.8416,132.7657},
-  {"kochi",33.5597,133.5311},{"fukuoka",33.5902,130.4017},
-  {"saga",33.2494,130.2988},{"nagasaki",32.7448,129.8737},
-  {"kumamoto",32.7898,130.7417},{"oita",33.2382,131.6126},
-  {"miyazaki",31.9111,131.4239},{"kagoshima",31.5602,130.5581},
-  {"okinawa",26.3344,127.8056},
-  {"sapporo",43.0642,141.3469},{"yokohama",35.4437,139.6380},
-  {"nagoya",35.1815,136.9066},{"kobe",34.6901,135.1955},
-  {"sendai",38.2682,140.8694},{"nara_city",34.6851,135.8050},
-  {"nikko",36.7581,139.6117},{"nagasaki_city",32.7448,129.8737},
-  {"fuji",35.3606,138.7274},{"hakone",35.2323,139.1069},
-  {"asakusa",35.7148,139.7967},{"shibuya",35.6580,139.7016},
-  {"shinjuku",35.6938,139.7034},
-};
-#define N_CENTROIDS (sizeof PREFECTURE_CENTROIDS / sizeof *PREFECTURE_CENTROIDS)
-/* Index of the first city-level entry (entries before this are prefectures). */
-#define FIRST_CITY_IDX 47
-
-static void to_lower_buf(const char *in, char *out, size_t n) {
-  size_t i = 0;
-  for (; in && in[i] && i + 1 < n; i++) {
-    unsigned char c = (unsigned char)in[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
-
-/* On match, sets *lat/*lon to the centroid and *prec to "city" or
- * "prefecture" depending on which table entry matched. Returns 1/0. */
-static int centroid_exact(const char *key, double *lat, double *lon,
-                          const char **prec) {
-  if (!key || !*key) return 0;
-  for (size_t i = 0; i < N_CENTROIDS; i++)
-    if (strcmp(PREFECTURE_CENTROIDS[i].key, key) == 0) {
-      *lat = PREFECTURE_CENTROIDS[i].lat;
-      *lon = PREFECTURE_CENTROIDS[i].lon;
-      *prec = (i >= FIRST_CITY_IDX) ? "city" : "prefecture";
-      return 1;
-    }
-  return 0;
-}
-
-static int guess_centroid(const char *text, double *lat, double *lon,
-                          const char **prec) {
-  if (!text || !*text) return 0;
-  char low[1024];
-  to_lower_buf(text, low, sizeof low);
-  for (size_t i = 0; i < N_CENTROIDS; i++) {
-    const char *k = PREFECTURE_CENTROIDS[i].key;
-    char kb[64];
-    size_t j = 0;
-    for (; k[j] && j + 1 < sizeof kb; j++) kb[j] = k[j];
-    kb[j] = 0;
-    size_t kl = strlen(kb);
-    if (kl > 5 && strcmp(kb + kl - 5, "_city") == 0) kb[kl - 5] = 0;
-    if (strstr(low, kb)) {
-      *lat = PREFECTURE_CENTROIDS[i].lat;
-      *lon = PREFECTURE_CENTROIDS[i].lon;
-      *prec = (i >= FIRST_CITY_IDX) ? "city" : "prefecture";
-      return 1;
-    }
-  }
-  return 0;
-}
-
-static void abs_url(const char *href, const char *base, char *out, size_t n) {
-  if (href && (strncmp(href, "http://", 7) == 0 ||
-                strncmp(href, "https://", 8) == 0)) {
-    snprintf(out, n, "%s", href);
-    return;
-  }
-  const char *p = base;
-  int slashes = 0;
-  while (*p) { if (*p == '/') { slashes++; if (slashes == 3) break; } p++; }
-  size_t hostlen = (size_t)(p - base);
-  if (href && href[0] == '/')
-    snprintf(out, n, "%.*s%s", (int)hostlen, base, href);
-  else
-    snprintf(out, n, "%.*s/%s", (int)hostlen, base, href ? href : "");
-}
 
 static const char *next_anchor(const char *from, char *href, size_t hn,
                                char **inner_out) {
@@ -301,21 +183,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
      * so if no centroid matches we have no honest location → skip. */
     double lat, lon;
     const char *prec = NULL;
-    if (!centroid_exact(slug, &lat, &lon, &prec) &&
-        !guess_centroid(label ? label : "", &lat, &lon, &prec)) {
+    if (!cam_centroid_exact(slug, &lat, &lon, &prec) &&
+        !cam_centroid_find(label ? label : "", CAM_CENTROID_SCAN_1K,
+                           &lat, &lon, &prec)) {
       free(label);
       continue;
     }
 
     char fullurl[640];
-    abs_url(href, WCT_BASE, fullurl, sizeof fullurl);
+    jo_abs_url(href, WCT_BASE, fullurl, sizeof fullurl);
 
     const char *nm = (label && label[0]) ? label : "Webcamtaxi feed";
     kv ex[4] = {0};
     ex[0].k = "url"; ex[0].sv = fullurl;
     ex[1].k = "city"; ex[1].sv = slug;
-    ex[2].k = "location_precision"; ex[2].sv = prec;
-    ex[3].k = "location_approximate"; ex[3].is_bool = 1; ex[3].bv = 1;
+    ex[2].k = "geo_precision"; ex[2].sv = prec;
+    ex[3].k = "geo_uncertain"; ex[3].is_bool = 1; ex[3].bv = 1;
     cJSON *f = make_feature(lat, lon, nm, "aggregator_webcamtaxi",
                             "webcamtaxi", ex, 4);
     if (camera_upsert(ctx->db, sink, f, "webcamtaxi") >= 0) count++;
@@ -331,9 +214,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_webcamtaxi_def = {
-  .id = "cam-webcamtaxi", .collector = "infrastructure",
+  .id = "cam-webcamtaxi", .collector = "camera-discovery",
   .name = "Camera Discovery: WebcamTaxi",
   .name_ja = "カメラ探索: WebcamTaxi",
-   .update_interval_sec = 21600, .run = run,
-  .category = "infrastructure" };
+   .layer = "cameras",
+   .update_interval_sec = 3600, .run = run,
+  .category = "cyber" };
 REGISTER_SOURCE(cam_webcamtaxi_def)

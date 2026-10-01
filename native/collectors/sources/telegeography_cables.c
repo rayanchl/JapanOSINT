@@ -3,9 +3,10 @@
  * endpoints (landing points + cables), JP-bbox filter, intel rows.
  * uid = telegeography-cables|landing|<id||name>  /  |cable|<id||name>
  * (== intelUid(SOURCE_ID, "landing|"+...)). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../core/intel.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/seenset.h"
+#include "core/intel.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,12 +22,23 @@ static const char *pstr(cJSON *p, const char *k) {
   return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
 }
 
-static int emit_one(intel_sink *s, const char *prefix, cJSON *props,
-                    double lat, double lon, int have_ll) {
+static int emit_one(intel_sink *s, seen_set *seen, const char *prefix, cJSON *props,
+                    double lat, double lon, int have_ll, cJSON *geom) {
   const char *id = pstr(props, "id");
   const char *nm = pstr(props, "name");
   if (!id && !nm) return 0;
   char rk[400]; snprintf(rk, sizeof rk, "%s|%s", prefix, id ? id : nm);
+  /* cable-geo.json can carry one cable as several features — separate
+   * geometries with their own feature_id (live 2026-09-15: 728 features, 707
+   * cable ids; rising-8 twice, differing in feature_id and coordinates) — and
+   * the second upserted over the first. A key already seen this run is
+   * qualified by the feature's own feature_id; a first occurrence keeps its
+   * plain key and stored uid. */
+  if (!seen_add(seen, rk)) {
+    const char *fid = pstr(props, "feature_id");
+    size_t kl = strlen(rk);
+    snprintf(rk + kl, sizeof rk - kl, "|%s", fid ? fid : "feature");
+  }
   char title[300], summ[360];
   if (nm) snprintf(title, sizeof title, "%s", nm);
   else snprintf(title, sizeof title, "%s %s",
@@ -49,27 +61,51 @@ static int emit_one(intel_sink *s, const char *prefix, cJSON *props,
     cJSON_AddNumberToObject(pj, "lon", lon);
   }
   char *pjs = cJSON_PrintUnformatted(pj);
+
+  /* A cable is a ROUTE. The upstream feature carries the full
+   * MultiLineString, but only its first vertex was kept (as lat/lon), so the
+   * map could never draw the cable — 142 rows, 0 with geometry. Carry the
+   * real geometry through. */
+  char *gjs = NULL;
+  if (geom && cJSON_GetObjectItem(geom, "coordinates"))
+    gjs = cJSON_PrintUnformatted(geom);
+
+  /* The API exposes no "url" key, so every row persisted with link=NULL and
+   * no way back to the source. submarinecablemap.com routes both record kinds
+   * by the very id we already have (verified 200 for both patterns). */
+  char lk[512];
+  const char *link = pstr(props, "url");
+  if (!link && id) {
+    snprintf(lk, sizeof lk, "https://www.submarinecablemap.com/%s/%s",
+             strcmp(prefix, "landing") == 0 ? "landing-point" : "submarine-cable",
+             id);
+    link = lk;
+  }
+
   intel_item it = {0};
   it.remote_key = rk;
   it.title = title;
   it.summary = summ;
-  it.link = pstr(props, "url");
+  it.link = link;
   it.lang = "en";
   it.record_type = "telegeography-cables";
   it.has_geo = have_ll; it.lat = lat; it.lon = lon;
+  it.geometry_geojson = gjs;
   it.properties_json = pjs;
   it.tags_json = strcmp(prefix,"landing")==0
     ? "[\"submarine-cable\",\"landing\",\"telegeography\"]"
     : "[\"submarine-cable\",\"cable\",\"telegeography\"]";
   int rc = s->emit(s, &it);
-  free(pjs); cJSON_Delete(pj);
+  free(pjs); free(gjs); cJSON_Delete(pj);
   return rc >= 0 ? 1 : 0;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = 0;
+  int n = 0, fetched = 0;
+  seen_set seen = {0};
   cJSON *L = feed_get_json(ctx->http, LANDING_URL, 12000);
   if (L) {
+    fetched++;
     cJSON *fs = cJSON_GetObjectItem(L, "features"), *f;
     cJSON_ArrayForEach(f, fs) {
       cJSON *g = cJSON_GetObjectItem(f, "geometry");
@@ -78,13 +114,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON *y = c ? cJSON_GetArrayItem(c, 1) : NULL;
       if (!x || !y || !cJSON_IsNumber(x) || !cJSON_IsNumber(y)) continue;
       if (!in_jp(x->valuedouble, y->valuedouble)) continue;
-      n += emit_one(sink, "landing", cJSON_GetObjectItem(f, "properties"),
-                    y->valuedouble, x->valuedouble, 1);
+      n += emit_one(sink, &seen, "landing", cJSON_GetObjectItem(f, "properties"),
+                    y->valuedouble, x->valuedouble, 1, NULL);
     }
     cJSON_Delete(L);
   }
   cJSON *C = feed_get_json(ctx->http, CABLE_URL, 12000);
   if (C) {
+    fetched++;
     cJSON *fs = cJSON_GetObjectItem(C, "features"), *f;
     cJSON_ArrayForEach(f, fs) {
       cJSON *g = cJSON_GetObjectItem(f, "geometry");
@@ -106,13 +143,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       else { SCAN(co); }
       #undef SCAN
       if (!touches) continue;
-      n += emit_one(sink, "cable", cJSON_GetObjectItem(f, "properties"),
-                    f0lat, f0lon, got0);
+      n += emit_one(sink, &seen, "cable", cJSON_GetObjectItem(f, "properties"),
+                    f0lat, f0lon, got0, g);
     }
     cJSON_Delete(C);
   }
-  fprintf(stderr, "[telegeography-cables] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  seen_free(&seen);
+  fprintf(stderr, "[telegeography-cables] emitted %d (endpoints ok %d/2)\n",
+          n, fetched);
+  /* Only a total fetch failure is an error; "both files fetched, nothing
+   * inside the JP bbox" must be an honest empty or the scheduler's anomaly
+   * detector quarantines the source. */
+  return fetched ? 0 : -1;
 }
 
 static const source_def telegeography_cables_def = {

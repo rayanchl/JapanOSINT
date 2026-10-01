@@ -4,9 +4,9 @@
  *
  *   ALPHAVANTAGE_SEARCH  alphavantage.co/query?function=SYMBOL_SEARCH  ALPHAVANTAGE_KEY
  *   FINNHUB_SEARCH       finnhub.io/api/v1/search?q=                   FINNHUB_KEY */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

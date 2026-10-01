@@ -3,9 +3,9 @@
  * TikTok discover/place endpoint, keyed on TIKTOK_MS_TOKEN (msToken
  * querystring). No key-free path -> honest empty when absent.
  * Emits a Point Feature per place via geojson toolkit. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -47,15 +47,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
           !num_of(cJSON_GetObjectItem(geo, "lon"), &lon) ||
           !num_of(cJSON_GetObjectItem(geo, "lat"), &lat)) { i++; continue; }
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(lon, lat);
 
       cJSON *pr = cJSON_CreateObject();
       cJSON *cid = cJSON_GetObjectItem(card, "id");

@@ -4,9 +4,9 @@
  *
  *   WHAT3WORDS_CONVERT  api.what3words.com/v3/convert-to-coordinates  W3W_API_KEY
  *   OPENCAGE_GEOCODE    api.opencagedata.com/geocode/v1/json          OPENCAGE_KEY */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

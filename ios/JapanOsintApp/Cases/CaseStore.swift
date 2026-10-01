@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Combine
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Cases (roadmap item 14) — the shared list store plus the vocabulary helpers
@@ -258,7 +259,10 @@ final class CaseStore: ObservableObject {
                     created_by: nil,
                     created_at: d.created_at,
                     updated_at: d.updated_at,
-                    closed_at: d.closed_at)
+                    closed_at: d.closed_at,
+                    // Detail carries per-ref-type counts; the summary shows the
+                    // total (nil stays nil so "unknown" isn't rendered as 0).
+                    item_count: d.item_counts?.values.reduce(0, +))
     }
 
     private static func sorted(_ rows: [CaseSummary]) -> [CaseSummary] {
@@ -283,7 +287,8 @@ extension CaseSummary {
                     created_by: created_by,
                     created_at: created_at,
                     updated_at: updated_at,
-                    closed_at: closed_at)
+                    closed_at: closed_at,
+                    item_count: item_count)
     }
 }
 
@@ -349,9 +354,19 @@ enum CasePriority {
 }
 
 /// ref_type: intel_item | entity | breach_item | feature | camera | search_run
+/// | attachment
+///
+/// This list must stay identical to `REF_TYPES` in `native/core/annotationsapi.c`
+/// — that array is the single vocabulary for the whole codebase, and
+/// `annotations_ref_type_valid()` rejects anything absent from it with a 400.
+/// `attachment` was missing here, which is exactly the drift
+/// `annotationsapi.h`'s "add new types HERE and nowhere else" note exists to
+/// prevent: an attachment pinned to a case was counted as an unknown type and
+/// `CasePickerSheet` warned the backend would refuse it.
 enum CaseRefType {
     static let all: [String] = ["intel_item", "entity", "breach_item",
-                                "feature", "camera", "search_run"]
+                                "feature", "camera", "search_run",
+                                "attachment"]
 
     static func label(_ t: String) -> String {
         switch t {
@@ -361,6 +376,7 @@ enum CaseRefType {
         case "feature":     return "Map features"
         case "camera":      return "Cameras"
         case "search_run":  return "Search runs"
+        case "attachment":  return "Attachments"
         default:            return t
         }
     }
@@ -373,6 +389,7 @@ enum CaseRefType {
         case "feature":     return "features"
         case "camera":      return "cameras"
         case "search_run":  return "searches"
+        case "attachment":  return "files"
         default:            return t
         }
     }
@@ -385,6 +402,7 @@ enum CaseRefType {
         case "feature":     return "mappin.and.ellipse"
         case "camera":      return "video.fill"
         case "search_run":  return "magnifyingglass"
+        case "attachment":  return "paperclip"
         default:            return "doc.text"
         }
     }

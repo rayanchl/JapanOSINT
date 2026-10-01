@@ -1,0 +1,14 @@
+/* Verified-live int_legal sources (1), part 1.
+ * Every endpoint in this file returned 2xx and parsed to at
+ * least one record at generation time; see
+ * docs/verified-sources-manifest.tsv for the recorded proof.
+ * Scaffolded once by collectors/gen_verified_sources.py; HAND-MAINTAINED
+ * since — this file, not the manifest, is the current copy. The
+ * generator refuses to overwrite it without --force. */
+#include "_verified_macros.inc"
+
+VRSS(ohada_rss, "ohada-rss", "OHADA organisation announcements", "OHADA organisation announcements",
+  "int_legal", "legal",
+  "https://www.ohada.org/feed/",
+  "fr", "[\"int\",\"legal\",\"batch17\",\"high-penetrancy\"]", 43200,
+  "Official feed of OHADA, the 17-state African business-law harmonisation organisation whose Uniform Acts govern company law, security interests and insolvency across francophone Africa. Items carry title (e.g. 'L'Echo de l'OHADA N°001 avril-juin 2026'), link, author, pubDate and full content.");

@@ -1,14 +1,15 @@
 /* collectors/osint/sources/satellite_tracker.c
- * OSINT service — SATELLITE_TRACKER. On-demand (interval 0); entity ignored
- * (N2YO satellites overhead a fixed observer). Key-gated: N2YO_API_KEY.
+ * OSINT service — SATELLITE_TRACKER. On-demand (interval 0). The entity is the
+ * observer: pass "lat,lon" (or set SATELLITE_OBSERVER); with neither the run
+ * emits nothing. Key-gated: N2YO_API_KEY.
  *
  * PER-RECORD EMIT (only with N2YO_API_KEY): emit ONE item per satellite above
  * (remote_key="sat:<norad_id>", body=real norad_id/name/intl_designator/
  * latitude/longitude/altitude_km, has_geo + lat/lon). WITHOUT the key: emit
  * NOTHING (no note row). Empty feed: emit nothing. Never fabricate. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,6 +44,13 @@ static int emit_satellite(intel_sink *sink, cJSON *s,
   cJSON *props = cJSON_CreateObject();
   cJSON_AddStringToObject(props, "service", "SATELLITE_TRACKER");
   cJSON_AddNumberToObject(props, "norad_id", norad);
+  /* This is a statement about the FETCH, not a score: emit_satellite() is only
+   * reached with an N2YO record that carried a satid, so `success` is true by
+   * construction and never varies. Deliberately NOT paired with a confidence
+   * number — flight_tracker.c and dark_web_monitor.c both carried a constant
+   * `confidence` here that nothing measured, and both have dropped it. The
+   * satellite's position below is N2YO's own propagation output; we have no
+   * independent measure of its accuracy and do not claim one. */
   cJSON_AddBoolToObject(props, "success", 1);
   char *pj = cJSON_PrintUnformatted(props);
 
@@ -76,7 +84,30 @@ static int run_satellite(const source_ctx *ctx, intel_sink *sink) {
     return 0;                              /* key-gated: emit nothing */
   }
 
-  double lat = 40.7128, lon = -74.0060;    /* NYC, == upstream observer */
+  /* The observer used to be hardcoded to 40.7128,-74.0060 (New York) while
+   * ctx->entity — the coordinate the analyst actually pivoted on — was never
+   * read. Every row then carried observer_lat/observer_lon for a city nobody
+   * asked about, and "above" meant above New York. Read the pivot; fall back
+   * to an explicitly configured observer; otherwise emit nothing rather than
+   * answer a different question than the one asked. */
+  double lat, lon;
+  int have_obs = 0;
+  if (ctx->entity && *ctx->entity &&
+      sscanf(ctx->entity, "%lf , %lf", &lat, &lon) == 2 &&
+      lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180)
+    have_obs = 1;
+  if (!have_obs) {
+    const char *o = getenv("SATELLITE_OBSERVER");   /* "lat,lon" */
+    if (o && sscanf(o, "%lf , %lf", &lat, &lon) == 2 &&
+        lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180)
+      have_obs = 1;
+  }
+  if (!have_obs) {
+    fprintf(stderr, "[SATELLITE_TRACKER] no observer: pass the pivot as "
+                    "\"lat,lon\" or set SATELLITE_OBSERVER; emitting nothing "
+                    "rather than reporting satellites above a made-up point\n");
+    return 0;
+  }
   char url[512];
   snprintf(url, sizeof url,
     "https://api.n2yo.com/rest/v1/satellite/above/%f/%f/0/90/18&apiKey=%s",

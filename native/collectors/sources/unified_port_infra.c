@@ -5,10 +5,10 @@
  * but only when globally qualified (MLIT_C02_ / OSM_ / PORT_ prefix);
  * coordPrecision 4. No filter, no postProcess. The `_meta` envelope is
  * dropped per RULE 8 (same as every other port). */
-#include "../../source.h"
-#include "../../lib/unified.h"
-#include "../../lib/linecolor.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/unified.h"
+#include "lib/linecolor.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>

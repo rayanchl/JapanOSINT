@@ -12,10 +12,10 @@
  * asname, isp, org, query/ip) — NOT a {success,confidence,data} envelope.
  * remote_key = "asn:<ip>". On HTTP failure / status!=success → emit NOTHING
  * and return 0 (honest empty). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -106,6 +106,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (as_str[0])  cJSON_AddStringToObject(props, "as", as_str);
   if (asn_str[0]) cJSON_AddStringToObject(props, "asname", asn_str);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   char rk[300];
   snprintf(rk, sizeof rk, "asn:%s", ip_str);

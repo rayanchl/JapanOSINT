@@ -9,12 +9,15 @@
  *               (×10000 if 万円, ×100000000 if 億円)
  * skip if no incidents && no damage. Feature props (exact order):
  *   ward_id, ward, prefecture, incidents_yr, damage_yen, source_url,
- *   country, source.  ward_id="LIVE_SCAM_<idx>" (1-based over matched rows).
- * properties has no NATIVE_ID key → uid = sha1(JSON.stringify{g,p})[:16]. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+ *   country, source.  ward_id="LIVE_SCAM_<PAGES[] slot>" (1-based, fixed).
+ * properties now carries a stable `uid` (the page's own host+path) — it used
+ * to carry no NATIVE_ID key at all, so the row was uid'd by
+ * sha1(JSON.stringify{g,p})[:16], i.e. by a hash that included the changing
+ * incident/damage figures. See the comment on ward_id below. */
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -84,23 +87,35 @@ static int match_after_label(const char *html, const char *label,
   return 0;
 }
 
+/* NPA gate page. The old /bureau/criminal/souni/tokushusagi/ path 404s (and
+ * the tokusyusagi spelling 403s) since the NPA site restructure, so the gate
+ * fetch returned NULL and the source returned -1 on every run without ever
+ * reaching the prefectural pages. SOS47 is the live 特殊詐欺 landing page. */
+#define NPA_GATE_URL "https://www.npa.go.jp/bureau/safetylife/sos47/"
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  char *idx_html = feed_get_text(ctx->http,
-    "https://www.npa.go.jp/bureau/criminal/souni/tokushusagi/", 8000);
-  if (!idx_html) return -1;
+  char *idx_html = feed_get_text(ctx->http, NPA_GATE_URL, 8000);
+  if (!idx_html) {
+    fprintf(stderr, "[phone-scam-hotspots] NPA gate fetch failed: %s\n",
+            NPA_GATE_URL);
+    return -1;
+  }
   if (!strstr(idx_html, "特殊詐欺") && !strstr(idx_html, "tokushusagi")
       && !strstr(idx_html, "振り込め")) { free(idx_html); return 0; }
   free(idx_html);
 
   cJSON *features = cJSON_CreateArray();
-  int idx = 0;
   for (int i = 0; i < NPAGES; i++) {
     char url[256];
     snprintf(url, sizeof url, "https://%s%s", PAGES[i].host, PAGES[i].path);
     char *html = feed_get_text(ctx->http, url, 10000);
-    if (!html) continue;
+    if (!html) { fprintf(stderr, "[phone-scam-hotspots] unreachable: %s\n", url);
+                 continue; }
     if (!strstr(html, "特殊詐欺") && !strstr(html, "被害")
-        && !strstr(html, "認知件数")) { free(html); continue; }
+        && !strstr(html, "認知件数")) {
+      fprintf(stderr, "[phone-scam-hotspots] no scam content: %s\n", url);
+      free(html); continue;
+    }
 
     /* incidents: /認知件数[^<>]{0,40}?([0-9,]+)\s*件/ */
     long incidents = -1; int iu = 0;
@@ -123,21 +138,26 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
 
     if (!has_inc && !has_dmg) { free(html); continue; }
-    idx++;
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(PAGES[i].lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(PAGES[i].lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(PAGES[i].lon, PAGES[i].lat);
 
+    /* `ward_id` was a counter of the pages that happened to parse this run, so
+     * a single prefectural site being down or changing its wording renumbered
+     * every ward after it. ward_id is not one of lib/geojson.c's
+     * NATIVE_ID_KEYS, so it is not the uid directly — but the uid for these
+     * rows is a hash of the whole properties bag, which ward_id is part of, so
+     * the renumbering re-keyed the rows all the same. Key it on the fixed
+     * PAGES[] slot, which identifies the police force whose page this is and
+     * does not move when a sibling page fails. `uid` (a real NATIVE_ID_KEY)
+     * pins it explicitly to the page's own URL, so the yearly incident/damage
+     * figures can change without minting a new row every run. */
     cJSON *p = cJSON_CreateObject();   /* EXACT JS key order */
-    char wid[32]; snprintf(wid, sizeof wid, "LIVE_SCAM_%d", idx);
+    char wid[32]; snprintf(wid, sizeof wid, "LIVE_SCAM_%d", i + 1);
     cJSON_AddStringToObject(p, "ward_id", wid);
+    char uidb[320];
+    snprintf(uidb, sizeof uidb, "phone-scam:%.128s%.160s",
+             PAGES[i].host, PAGES[i].path);
+    cJSON_AddStringToObject(p, "uid", uidb);
     cJSON_AddStringToObject(p, "ward", PAGES[i].name);
     cJSON_AddStringToObject(p, "prefecture", PAGES[i].pref);
     cJSON_AddItemToObject(p, "incidents_yr",

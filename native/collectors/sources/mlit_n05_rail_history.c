@@ -3,8 +3,8 @@
  * Primary live path only (env → mirrors); _meta dropped per HARD RULE 8.
  * filter:(f)=>f.properties.status==='abolished' → abolished_only=1
  * (surfaced in-app as "Abandoned Rail"; active rail = unified-trains). */
-#include "../../source.h"
-#include "../../lib/mlit_ksj.h"
+#include "source.h"
+#include "lib/mlit_ksj.h"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   static const char *const mirrors[] = {

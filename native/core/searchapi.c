@@ -37,22 +37,36 @@ typedef struct {
  * collector in one run no longer stalls another run's analysis. Each thread
  * keeps its own http_client (== scheduler) so a slow collector's connection
  * pool stays isolated to that run. */
-/* In-flight run accounting. Each analyze spawns a detached thread that holds a
- * pipeline, an http_client and an LLM lane for minutes; without a cap, N
- * unauthenticated-adjacent POSTs = N threads. Cap it and answer 429 instead. */
-static pthread_mutex_t g_inflight_mu = PTHREAD_MUTEX_INITIALIZER;
-static int g_inflight = 0;
+/* Runs are detached threads, each holding a collector connection pool and a
+ * slot in the LLM queue, so an unbounded fan-out of them is how the box falls
+ * over: N pipelines all fetching while all but one block on the single-slot
+ * llama-server. Cap the number in flight and tell the client to retry (429)
+ * rather than accepting work we cannot start. */
+static pthread_mutex_t g_run_lock = PTHREAD_MUTEX_INITIALIZER;
+static int             g_runs_live = 0;
 
-static int max_concurrent(void) {
-  const char *e = getenv("JO_SEARCH_MAX_CONCURRENT");
-  int v = (e && *e) ? atoi(e) : 0;
-  return v > 0 ? v : 4;
+static int max_concurrent_runs(void) {
+  const char *e = getenv("JO_MAX_CONCURRENT_SEARCHES");
+  if (e && *e) {
+    int n = atoi(e);
+    if (n > 0) return n;
+  }
+  return 4;
 }
 
-static void inflight_release(void) {
-  pthread_mutex_lock(&g_inflight_mu);
-  if (g_inflight > 0) g_inflight--;
-  pthread_mutex_unlock(&g_inflight_mu);
+/* Returns 1 if a slot was taken. */
+static int run_slot_acquire(void) {
+  int ok = 0;
+  pthread_mutex_lock(&g_run_lock);
+  if (g_runs_live < max_concurrent_runs()) { g_runs_live++; ok = 1; }
+  pthread_mutex_unlock(&g_run_lock);
+  return ok;
+}
+
+static void run_slot_release(void) {
+  pthread_mutex_lock(&g_run_lock);
+  if (g_runs_live > 0) g_runs_live--;
+  pthread_mutex_unlock(&g_run_lock);
 }
 
 static void *run_thread(void *vp) {
@@ -64,34 +78,54 @@ static void *run_thread(void *vp) {
   http_client_free(http);
   free(a->query);
   free(a);
-  inflight_release();
+  run_slot_release();
   return NULL;
 }
 
 char *searchapi_analyze(db_handle *db, const char *query, int max_rounds,
-                        int *status_out) {
-  if (status_out) *status_out = 400;
+                        int *out_status) {
+  if (out_status) *out_status = 400;
   if (!query) return NULL;
   while (*query == ' ' || *query == '\t' || *query == '\n' || *query == '\r') query++;
   if (!*query) return NULL;
 
-  pthread_mutex_lock(&g_inflight_mu);
-  int full = g_inflight >= max_concurrent();
-  if (!full) g_inflight++;
-  pthread_mutex_unlock(&g_inflight_mu);
-  if (full) {
-    if (status_out) *status_out = 429;
+  /* max_rounds was guarded only by "> 0", so {"max_rounds":2147483647} was
+   * accepted verbatim: pipeline.c's phase-2 loop (`while (need_more && round <
+   * max_rounds)`) would keep spawning entity-pivot rounds, each one a full
+   * collector fan-out plus an LLM call, holding one of the four concurrent-run
+   * slots for as long as the caller liked. One request, unbounded work.
+   *
+   * Clamped here rather than in pipeline.c so that the number the client is
+   * TOLD (progress.c stamps max_rounds into the /api/search/results payload)
+   * is the number that will actually run — clamping deeper would have left the
+   * progress record advertising 2147483647 rounds it was never going to do.
+   * Ceiling and floor are applied the way every other numeric parameter in
+   * this tree is clamped (intelapi's limit 1..200, timelineapi's 1..500):
+   * silently to the bound, not as a 400. */
+  if (max_rounds > SEARCH_MAX_ROUNDS_CEILING) max_rounds = SEARCH_MAX_ROUNDS_CEILING;
+  if (max_rounds < 0) max_rounds = 0;   /* 0 still means "use the default 5" */
+
+  if (!run_slot_acquire()) {
+    if (out_status) *out_status = 429;
     return NULL;
   }
 
   char id[40];
   gen_id(id);
   if (!progress_create(id, query, max_rounds > 0 ? max_rounds : 5)) {
-    inflight_release();
+    run_slot_release();
     return NULL;
   }
 
   run_arg *a = calloc(1, sizeof *a);
+  /* Unchecked calloc used to dereference NULL on the next line. This runs on
+   * every POST /api/search/analyze — a request an unauthenticated rate limit
+   * still lets through in bulk — so an allocation failure here must fail the
+   * request, not crash the server for every other in-flight investigation. */
+  if (!a) {
+    run_slot_release();
+    return NULL;
+  }
   a->db = db;
   snprintf(a->id, sizeof a->id, "%s", id);
   a->query = strdup(query);
@@ -101,11 +135,11 @@ char *searchapi_analyze(db_handle *db, const char *query, int max_rounds,
     pthread_detach(t);
   } else {
     free(a->query); free(a);
-    inflight_release();
+    run_slot_release();
     return NULL;
   }
+  if (out_status) *out_status = 200;
 
-  if (status_out) *status_out = 200;
   cJSON *o = cJSON_CreateObject();
   cJSON_AddStringToObject(o, "request_id", id);
   cJSON_AddStringToObject(o, "status", "processing");
@@ -137,8 +171,11 @@ char *searchapi_suggest(const char *q) {
 
 char *searchapi_results(db_handle *db, const char *id) {
   if (!id || !*id) return NULL;
-  osint_request *rp = progress_get(id);
-  if (rp) return progress_to_json(rp);
+  /* Find + serialise under one lock: progress_create() frees the oldest
+   * FINISHED request past 200, and a pointer taken from progress_get() and
+   * used after the unlock can be that entry. */
+  char *live = progress_snapshot_by_id(id, NULL);
+  if (live) return live;
 
   /* Server restarted: reconstruct from the persisted run row (== JS else). */
   char uid[128];
@@ -169,8 +206,25 @@ char *searchapi_results(db_handle *db, const char *id) {
       cJSON *ps = p ? cJSON_GetObjectItem(p, "stats") : NULL;
       cJSON_AddItemToObject(o, "stats",
         ps ? cJSON_Duplicate(ps, 1) : cJSON_CreateObject());
+      /* Carry the degradation verdict across the restart. The live progress
+       * record is gone by definition on this path, so if the flag were not
+       * persisted with the run row (pipeline.c writes it into `properties`) a
+       * reload of a run whose analysis stage never happened would come back
+       * looking like a clean completed investigation — the same silent success
+       * one restart later. Absent from an OLD row => absent here, rather than
+       * a fabricated `false`. */
+      cJSON *pd = p ? cJSON_GetObjectItem(p, "degraded") : NULL;
+      cJSON *pse = p ? cJSON_GetObjectItem(p, "stage_errors") : NULL;
       cJSON *r = cJSON_CreateObject();
       cJSON_AddStringToObject(r, "synthesis", summary ? summary : "");
+      if (pd) {
+        cJSON_AddBoolToObject(o, "degraded", cJSON_IsTrue(pd));
+        cJSON_AddBoolToObject(r, "degraded", cJSON_IsTrue(pd));
+      }
+      if (pse) {
+        cJSON_AddItemToObject(o, "stage_errors", cJSON_Duplicate(pse, 1));
+        cJSON_AddItemToObject(r, "stage_errors", cJSON_Duplicate(pse, 1));
+      }
       cJSON_AddItemToObject(o, "results", r);
       cJSON_AddBoolToObject(o, "from_store", 1);
       out = cJSON_PrintUnformatted(o);

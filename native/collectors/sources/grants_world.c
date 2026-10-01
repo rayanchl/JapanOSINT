@@ -14,21 +14,14 @@
  *
  * All keyless. Only real, parsed API fields are emitted; fetch failure / no
  * matches → honest empty (return 0). Nothing is fabricated. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
-
-/* cJSON number field as double with presence flag. */
-static int jo_num(const cJSON *o, const char *k, double *out) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  if (v && cJSON_IsNumber(v)) { if (out) *out = v->valuedouble; return 1; }
-  return 0;
-}
 
 /* ---- NIH RePORTER --------------------------------------------------------- */
 /* one project → one intel_item. Returns 1 if emitted. */
@@ -60,8 +53,8 @@ static int nih_emit(intel_sink *sink, const cJSON *p) {
       if (need > cap) { cap = need * 2; char *t = realloc(pis, cap); if (!t) break; pis = t; }
       if (n) { strcpy(pis + len, ", "); len += 2; }
       strcpy(pis + len, nm); len += strlen(nm);
-      /* (cap removed: every record of the fetched array is emitted —
-       * docs/SOURCE_EXHAUSTIVENESS.md) */
+      n++;  /* the count IS the separator/emptiness flag — the cap that used
+              * to increment it was removed, this must not go with it. */
     }
     if (!n && pis) { free(pis); pis = NULL; }
   }

@@ -187,9 +187,10 @@ void search_history_record(db_handle *db, const char *tenant_id,
 char *permalinkapi(const char *method, const char *token, const char *body,
                    int *status);
 
-/* The codec itself, exported so any other module (export links, alert
- * notification deep-links, the iOS bridge) mints tokens the same way instead
- * of inventing a second format.
+/* The decoder, exported so any other module (export links, alert
+ * notification deep-links, the iOS bridge) reads tokens the same way instead
+ * of inventing a second format. Encoding is done by permalinkapi() (POST),
+ * which is the only mint point.
  *
  * Canonical state object (all keys optional; decode always emits all of them,
  * using null / [] for absent, so clients get one stable shape):
@@ -205,13 +206,11 @@ char *permalinkapi(const char *method, const char *token, const char *body,
  * Wire form is "v1." + base64url(compact JSON with one-letter keys). The
  * version prefix is what lets v2 add fields without a v1 link decoding into
  * a plausible-but-wrong view; an unknown prefix is rejected outright rather
- * than best-effort parsed. Both functions accept either the long keys above
- * or the short wire keys as input, so a token round-trips byte-stably.
+ * than best-effort parsed. The decoder accepts either the long keys above or
+ * the short wire keys as input, so a token round-trips byte-stably.
  *
- * permalink_encode: NULL if the input is not a JSON object or the compact
- * state exceeds PL_STATE_MAX. permalink_decode: NULL for any malformed,
- * over-long, wrong-version or non-object token. Both malloc'd; caller frees. */
-char *permalink_encode(const char *state_json);
+ * permalink_decode: NULL for any malformed, over-long, wrong-version or
+ * non-object token. malloc'd; caller frees. */
 char *permalink_decode(const char *token);
 
 #endif

@@ -59,6 +59,7 @@ struct CasesTab: View {
                         Image(systemName: "arrow.clockwise")
                     }
                     .disabled(store.loading)
+                    .accessibilityLabel("Reload cases")
                 }
             }
             .navigationDestination(for: CaseSummary.self) { summary in
@@ -158,6 +159,7 @@ struct CasesTab: View {
                 Image(systemName: "arrow.down.circle")
                     .font(.caption)
                     .foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // the label follows
             }
             Text(store.loadingMore ? "Loading more…" : "Load more cases")
                 .font(.caption)
@@ -300,12 +302,14 @@ struct CaseRow: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: Space.md) {
+            // Open/closed is carried by this glyph and its tint alone.
             Image(systemName: CaseStatus.icon(summary.status))
                 .font(.body)
                 .foregroundStyle(iconColor)
                 .frame(width: 26, height: 26)
                 .background(iconColor.opacity(0.14),
                             in: RoundedRectangle(cornerRadius: Radius.sm))
+                .accessibilityLabel(summary.isOpen ? "Open case" : "Closed case")
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(summary.name)

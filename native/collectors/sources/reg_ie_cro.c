@@ -8,9 +8,9 @@
  * sent as "Authorization: Basic <base64(CRO_API_KEY)>". Gated on CRO_API_KEY
  * (no key → honest empty, exactly like gbizinfo.c). No matches / fetch failure
  * → emits nothing. Only real, parsed API fields are emitted. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

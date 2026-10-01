@@ -12,7 +12,6 @@
 #include "annotationsapi.h"   /* the one ref_type vocabulary */
 #include "audit.h"
 #include "intelapi.h"
-#include "breach_adapter.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <openssl/rand.h>
@@ -53,9 +52,16 @@ static void add_str_or_null(cJSON *o, const char *k, const char *v) {
 static void iso_now(char *buf, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
   struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-           tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-           tm.tm_hour, tm.tm_min, tm.tm_sec, (int)(tv.tv_usec / 1000));
+  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
+   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
+   * fixed 24-char stamp "may be truncated". The modulos are identity for
+   * every value gmtime_r can return and make the 24 provable, not merely
+   * true. */
+  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 /* Buffer.from(str,'utf8').toString('base64url') — no padding, +/ → -_ */
 static char *b64url(const char *in) {
@@ -185,6 +191,40 @@ static const char *jstr(cJSON *o, const char *k) {
   return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
 }
 
+/* ── transaction control ────────────────────────────────────────────────── */
+
+/* Open a multi-statement transaction. 0 when one is actually open.
+ *
+ * db->h is the shared event-loop handle, so BEGIN can come back SQLITE_BUSY
+ * behind a collector write. Unchecked, the statements that follow run in
+ * autocommit and the error-path ROLLBACK undoes nothing — the all-or-nothing
+ * property these handlers depend on would silently not hold. */
+static int txn_begin(sqlite3 *h) {
+  if (sqlite3_exec(h, "BEGIN", NULL, NULL, NULL) == SQLITE_OK) return 0;
+  fprintf(stderr, "[cases] BEGIN failed: %s\n", sqlite3_errmsg(h));
+  return -1;
+}
+
+/* Close it: COMMIT when ok, ROLLBACK otherwise. Returns 0 only when the work
+ * is durable.
+ *
+ * The COMMIT return is NOT optional. On SQLITE_BUSY or SQLITE_FULL the
+ * transaction stays OPEN, and discarding the rc had three consequences at
+ * once: the handler answered 200/204 for writes that were never durable; the
+ * activity/audit rows written after it recorded a change that did not happen;
+ * and the NEXT request's BEGIN on this shared handle failed silently, so its
+ * writes joined this stale transaction and a later ROLLBACK discarded them
+ * too. Fail loudly and leave the connection usable. */
+static int txn_end(sqlite3 *h, int ok) {
+  if (!ok) { sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL); return -1; }
+  if (sqlite3_exec(h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
+    fprintf(stderr, "[cases] COMMIT failed: %s\n", sqlite3_errmsg(h));
+    sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
+    return -1;
+  }
+  return 0;
+}
+
 /* ── tenancy + authorization ────────────────────────────────────────────── */
 
 /* THE tenant gate. Every child-table access in this file is downstream of a
@@ -266,16 +306,21 @@ static int is_tenant_member(db_handle *db, const char *tid, const char *uid) {
 
 /* ── server-written history + housekeeping ──────────────────────────────── */
 
-/* Append a case_activity row. Silent on failure, like audit_write(): a history
- * write must not abort the mutation it describes. */
-static void activity_add(db_handle *db, const char *case_id, const char *actor,
+/* Append a case_activity row. Returns 0 only when the row was actually
+ * written. Still silent to the callers that merely log a side effect — a
+ * history write must not abort the mutation it describes — but
+ * POST /api/cases/:id/activity reads back the row it claims to have created,
+ * and sqlite3_last_insert_rowid() is per-CONNECTION and is NOT reset by a
+ * failed insert. Swallowing the failure there made the endpoint answer 201
+ * with some EARLIER activity row echoed as the new comment. */
+static int activity_add(db_handle *db, const char *case_id, const char *actor,
                          const char *kind, const char *body,
                          const char *target_ref, const char *mentions_json) {
   sqlite3_stmt *s = NULL;
   if (sqlite3_prepare_v2(db->h,
         "INSERT INTO case_activity (case_id,actor_id,kind,body,target_ref,"
         "mentions_json,ts) VALUES (?1,?2,?3,?4,?5,?6,datetime('now'))",
-        -1, &s, NULL) != SQLITE_OK) { sqlite3_finalize(s); return; }
+        -1, &s, NULL) != SQLITE_OK) { sqlite3_finalize(s); return -1; }
   sqlite3_bind_text(s, 1, case_id, -1, SQLITE_TRANSIENT);
   if (actor && *actor) sqlite3_bind_text(s, 2, actor, -1, SQLITE_TRANSIENT);
   else                 sqlite3_bind_null(s, 2);
@@ -285,8 +330,9 @@ static void activity_add(db_handle *db, const char *case_id, const char *actor,
   if (target_ref) sqlite3_bind_text(s, 5, target_ref, -1, SQLITE_TRANSIENT);
   else            sqlite3_bind_null(s, 5);
   sqlite3_bind_text(s, 6, mentions_json ? mentions_json : "[]", -1, SQLITE_TRANSIENT);
-  sqlite3_step(s);
+  int ok = sqlite3_step(s) == SQLITE_DONE;
   sqlite3_finalize(s);
+  return ok ? 0 : -1;
 }
 /* Bump updated_at so the tenant list ("most recently worked on") reflects pins,
  * comments and roster edits, not only field edits. Tenant-filtered like
@@ -383,15 +429,22 @@ static char *build_snapshot(db_handle *db, const tenant_ctx *t,
   } else if (!strcmp(ref_type, "entity")) {
     data = entity_snapshot(db, t, ref_id);
   } else if (!strcmp(ref_type, "breach_item")) {
-    /* breach uids are "breach:<keyid>"; accept either form from the client and
-     * always go through the adapter, which is what redacts the secret. */
-    if (!strncmp(ref_id, "breach:", 7)) {
-      data = unwrap_data(breach_adapter_item_by_uid(db, ref_id));
-    } else {
-      char uid[600];
-      snprintf(uid, sizeof uid, "breach:%s", ref_id);
-      data = unwrap_data(breach_adapter_item_by_uid(db, uid));
-    }
+    /* NO server-side fetch for breach rows. The adapter redacts the leaked
+     * SECRET, but properties.value is the breached IDENTIFIER itself, and that
+     * is the corpus data every other door keeps behind breach_gate()
+     * (httpd.c:786, :883, :943, :1573 — all opgate_check). This function runs
+     * with a tenant_ctx and no auth_user, so it cannot evaluate that gate; a
+     * fetch here would have handed a plain tenant analyst a breached
+     * identifier and then persisted it into case_items.snapshot_json, which is
+     * exactly the "a gate on one of N doors is not a gate" failure
+     * intelapi.c:214-218 documents.
+     *
+     * The reference still attaches: ref_type/ref_id are stored either way, so
+     * a case can cite a breach hit. Only the server-side CONTENT copy is
+     * refused. An operator who legitimately read the item can still attach its
+     * content through the `supplied` client-snapshot path above, which is
+     * gated by their having been able to read it in the first place. */
+    data = NULL;
   }
   /* feature / camera / search_run: no canonical row reachable from here. */
   return snapshot_wrap(ref_type, ref_id, "server", data);
@@ -602,8 +655,14 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
       cJSON *jpri = cJSON_GetObjectItem(jb, "priority");
       long long pri = 0;
       if (jpri && !cJSON_IsNull(jpri)) {
-        if (!cJSON_IsNumber(jpri) || jpri->valuedouble != (double)(long long)jpri->valuedouble ||
-            jpri->valuedouble < 0 || jpri->valuedouble > 5) {
+        /* Range FIRST, integrality second. (long long)d is undefined when d
+         * is outside long long's range, so testing integrality first made
+         * {"priority":1e308} — a body anyone authenticated can POST — UB
+         * before the 0..5 check could reject it. The positive form also
+         * rejects NaN, which fails every comparison. */
+        if (!cJSON_IsNumber(jpri) ||
+            !(jpri->valuedouble >= 0 && jpri->valuedouble <= 5) ||
+            jpri->valuedouble != (double)(long long)jpri->valuedouble) {
           out = err(st, 400, "priority must be an integer 0..5"); goto done;
         }
         pri = (long long)jpri->valuedouble;
@@ -728,8 +787,11 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
       }
       cJSON *jpri = cJSON_GetObjectItem(jb, "priority");
       if (jpri && !cJSON_IsNull(jpri)) {
-        if (!cJSON_IsNumber(jpri) || jpri->valuedouble != (double)(long long)jpri->valuedouble ||
-            jpri->valuedouble < 0 || jpri->valuedouble > 5) {
+        /* Same ordering fix as the POST path above: bound the value before
+         * the double->long long cast, which is UB outside that range. */
+        if (!cJSON_IsNumber(jpri) ||
+            !(jpri->valuedouble >= 0 && jpri->valuedouble <= 5) ||
+            jpri->valuedouble != (double)(long long)jpri->valuedouble) {
           out = err(st, 400, "priority must be an integer 0..5"); goto done;
         }
         new_pri = (long long)jpri->valuedouble;
@@ -802,7 +864,7 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
         "DELETE FROM case_items    WHERE case_id=?1",
         "DELETE FROM case_members  WHERE case_id=?1"
       };
-      sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL);
+      if (txn_begin(db->h) != 0) { out = err(st, 500, "server_error"); goto done; }
       int ok = 1;
       for (int i = 0; i < 3 && ok; i++) {
         sqlite3_stmt *s = NULL;
@@ -824,8 +886,7 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
         }
         sqlite3_finalize(s);
       }
-      sqlite3_exec(db->h, ok ? "COMMIT" : "ROLLBACK", NULL, NULL, NULL);
-      if (!ok) { out = err(st, 500, "server_error"); goto done; }
+      if (txn_end(db->h, ok) != 0) { out = err(st, 500, "server_error"); goto done; }
       audit_write(db, t->tenant_id, t->user_id, "case.delete", seg, NULL);
       *st = 204; out = NULL; goto done;
     }
@@ -1071,9 +1132,10 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
       }
       char *mj = cJSON_PrintUnformatted(ment);
       cJSON_Delete(ment);
-      activity_add(db, seg, t->user_id, "comment", text, NULL, mj);
+      int arc = activity_add(db, seg, t->user_id, "comment", text, NULL, mj);
       sqlite3_int64 nid = sqlite3_last_insert_rowid(db->h);
       free(mj);
+      if (arc != 0) { out = err(st, 500, "server_error"); goto done; }
       touch_case(db, t->tenant_id, seg);
       audit_write(db, t->tenant_id, t->user_id, "case.activity.create", seg, NULL);
 
@@ -1143,7 +1205,7 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
         }
       }
 
-      sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL);
+      if (txn_begin(db->h) != 0) { out = err(st, 500, "server_error"); goto done; }
       int ok = 1;
       {
         sqlite3_stmt *s = NULL;
@@ -1174,8 +1236,9 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
         }
         sqlite3_finalize(s);
       }
-      sqlite3_exec(db->h, ok ? "COMMIT" : "ROLLBACK", NULL, NULL, NULL);
-      if (!ok) { out = err(st, 500, "server_error"); goto done; }
+      /* A roster that did not commit must not produce a members_changed
+       * activity row or an audit entry claiming it did — both run below. */
+      if (txn_end(db->h, ok) != 0) { out = err(st, 500, "server_error"); goto done; }
 
       char msg[64];
       snprintf(msg, sizeof msg, "roster set to %d member(s)", count);

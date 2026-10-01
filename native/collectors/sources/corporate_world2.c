@@ -2,9 +2,9 @@
  * OSINT service — OpenCorporates global company search (key-gated), pivot on
  * ctx->entity (a company name). Honest-empty when OPENCORPORATES_API_KEY unset.
  *   OPENCORPORATES  api.opencorporates.com/v0.4/companies/search?q=&api_token= */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

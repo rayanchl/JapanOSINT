@@ -10,9 +10,9 @@
  *
  * Only real, parsed API fields are emitted; fetch failure / no matches →
  * honest empty (return 0). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,8 +38,8 @@ static char *oa_author_list(const cJSON *work) {
     if (need > cap) { cap = need * 2; char *t = realloc(out, cap); if (!t) break; out = t; }
     if (n) { strcpy(out + len, ", "); len += 2; }
     strcpy(out + len, nm); len += strlen(nm);
-    /* (cap removed: every record of the fetched array is emitted —
-     * docs/SOURCE_EXHAUSTIVENESS.md) */
+    n++;  /* the count IS the separator/emptiness flag — the cap that used
+            * to increment it was removed, this must not go with it. */
   }
   if (!n) { free(out); return NULL; }
   return out;

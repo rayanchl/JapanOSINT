@@ -1,0 +1,47 @@
+https://www.kanpo.go.jp/20260828/20260828h01778/20260828h017780009f.html	dated snapshot URL (path is date-coded per issue), no stable alias exists (checked fullcontents.html w/o date -> 404); would 404 within a day, not implementable as a static manifest row; stable entry point captured instead via JO28_GAZ_INDEX
+https://www.kanpo.go.jp/20260828/20260828h01778/20260828h017780018f.html	dated snapshot URL, same staleness issue as above; not independently re-fetchable
+https://www.kanpo.go.jp/20260828/20260828h01778/20260828h017780017f.html	dated snapshot URL, same staleness issue as above; not independently re-fetchable
+https://www.kanpo.go.jp/20260828/20260828t00047/20260828t000470000f.html	dated snapshot URL, same staleness issue as above; not independently re-fetchable
+https://www.kanpo.go.jp/faq.html	FAQ prose page with JS-expandable Q&A sections (javascript:void(0) links), no repeating per-item content links
+https://www.kanpo.go.jp/sc.html	static 47-prefecture reference table (address/hours/phone as inline text); html mode can only capture anchor href+text, which would only yield external company website links, losing all the actual structured data
+https://www.moj.go.jp/MINJI/kyoutaku.html	hub page with a fixed set of ~7 static navigation links (Q&A, office directory, a few notices), not a chronological/growing list of records
+https://www.moj.go.jp/MINJI/minji06_00055.html	single consolidated prose page with 62 in-page anchor sections (#01..#62), not 62 separate linkable records
+https://www.moj.go.jp/MINJI/minji06_00222.html	no per-office links or table; the entire directory exists only inside one downloadable PDF attachment
+https://e-koukoku.moj.go.jp	client-side JS search interface, no discoverable server-side GET query URL or form action in the fetched HTML; cannot be probed without inventing a URL
+https://www.bit.courts.go.jp/help/index.html	static nav hub, 9 fixed help-topic links duplicated in footer, not a content record list
+https://www.bit.courts.go.jp/guidance/index.html	static nav hub, 4 fixed procedure-guide links duplicated in footer, not a content record list
+https://www.bit.courts.go.jp/guidance/guidance03/index.html	static bidding-procedure prose page; only 3 generic downloadable form templates (not per-court/per-case records)
+https://www.bit.courts.go.jp/help/help01/index.html	static instructional guide (numbered tutorial steps), no real data links
+https://www.bit.courts.go.jp/help/help02/index.html	static instructional guide for block-search feature, no actual geographic block/area links present on the page itself
+https://www.bit.courts.go.jp/help/help04/index.html	static instructional guide (5 tutorial steps), no actual sale-result records
+https://www.bit.courts.go.jp/help/help05/index.html	static instructional guide (5 tutorial steps), no actual historical-data records
+https://www.bit.courts.go.jp/help/help07/index.html	static instructional guide (3 tutorial steps), no actual sale-schedule records
+https://www.bit.courts.go.jp/help/help09/index.html	static instructional guide (6 tutorial steps), duplicate of the guidance hub's own nav
+https://www.bit.courts.go.jp/backnumber/202608.html	dated monthly snapshot URL, no reusable alias; covered instead by the growing backnumber index (JO28_BIT_BACKNUMBER)
+https://www.j-platpat.inpit.go.jp/?uri=/a0100	JS-rendered SPA (page returns only "Loading..."), no discoverable GET query URL or form action reachable from static HTML
+https://www.mhlw.go.jp/churoi/meirei/	repeating year links exist (h19.html..r07.html) but they appear relative with no distinguishing directory prefix; could not confirm a safe href_must without risking site-wide nav pollution — real recent-order content covered instead by JO28_LRC_MHLW_RECENT
+https://www.pref.chiba.lg.jp/chiroui/meireisyo.html	page currently shows only a single case entry, not a verified repeating list pattern
+https://jha-adr.org/record/	chronological log is plain bulleted text with no anchor tags at all; nothing for html-anchor mode to extract
+https://www.kokusen.go.jp/category/jirei.html	thin gateway hub (~4 static nav links, garbled non-UTF8 text observed); real consultation-case content lives one hop deeper and is covered instead by JO28_CAA_SOUDAN_TOPICS
+https://www.nichibenren.or.jp/legal_advice/petition/chokai.html	prose explainer page about the four-tier disciplinary system, no repeating case-entry links
+https://www.toben.or.jp/message/seimei/post-795.html	single standalone notice page; real content covered instead by JO28_BAR_TOKYO_INDEX (the durable year-archive index this page lives under)
+https://www.ichiben.or.jp/news/oshirase/news/2026030530374.html	single standalone notice page; real content covered instead by JO28_BAR_ICHIBEN (the parent /news/ listing)
+https://www.chiba-ben.or.jp/news/2026/000924.html	single standalone notice page; real content covered instead by JO28_BAR_CHIBA (the parent /news/ listing)
+https://senben.org/archives/12234	single standalone post; real content covered instead by JO28_BAR_SENDAI (the homepage listing)
+https://www.fben.jp/whatsnew/2026/01/1591/	single standalone notice page; real content covered instead by JO28_BAR_FUKUOKA (the parent /whatsnew/ listing)
+https://www.wakaben.or.jp/news/n_20260323.html	single standalone notice page with no linked parent archive/listing page found anywhere in its navigation
+https://www.hiroben.or.jp/4186/	single standalone notice page; real content covered instead by JO28_BAR_HIROSHIMA (the parent /news/ listing)
+https://www.kben.jp/1309/	single standalone notice page; real content covered instead by JO28_BAR_KAGOSHIMA (the parent /category/news/ listing)
+https://www.okaben.or.jp/news/275/	single standalone notice page; real content covered instead by JO28_BAR_OKAYAMA (the parent /category/news/ listing)
+https://kaben.jp/archives/2196	single standalone post; real content covered instead by JO28_BAR_KAGAWA (the parent /archives/category/news-list listing)
+https://okiben.org/trouble12/	prose explainer page about the citizen consultation window, no repeating case-entry links
+https://www.osakaben.or.jp/01-aboutus/claim/chokai/index.php	prose/procedure explainer page for filing a disciplinary request, no case listing
+https://www.naben.or.jp/home/other/会員の懲戒処分歴の開示について/	prose explainer page about the disclosure-request procedure, no actual case entries listed
+https://shyster.sakura.ne.jp/	encoding-corrupted response made the search form/query URL undeterminable, and the homepage shows no reliable repeating case-entry list; declining to guess a query pattern
+https://www.fsa.go.jp/cpaaob/	hub/navigation page with only two document links (pamphlet, monitoring report); real content covered instead by JO28_PROF_CPAAOB_KANKOKU and JO28_PROF_CPAAOB_KOUHYOU
+http://www.shiho-hiro.jp/info/joho	single case entry page ("2025.12.25 法務大臣（広島）"), not a verified repeating list; actual case detail is hosted externally on the national federation's site
+https://www.pref.aichi.jp/soshiki/rodoi/meireigaiyou.html	PROBE_FAIL: server issues an infinite self-redirect (302 to same URL) — WAF cookie challenge, unfetchable without a browser/JS
+https://www.jftc.go.jp/houdou/pressrelease/index.html	PROBE_FAIL: HTTP 403 even with a real browser User-Agent — jftc.go.jp bot-walled at the network/WAF level, not fixable via headers
+https://jicpa.or.jp/news/information/	DUP_WITH_BATCH25
+https://www.bit.courts.go.jp/backnumber/index.html	DUP_WITH_BATCH25
+https://www.aeha.or.jp/plc/jirei/assen.html	EMIT_FAIL: live fetch (200, 13KB) contains zero PDF or case-detail links — page structure does not match what was claimed during authoring

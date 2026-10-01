@@ -1,0 +1,199 @@
+# Phase 1 — Multi-tenancy + Auth foundation
+
+> **DELIVERED IN C — every `server/…` path below is gone. Do not read this
+> file as a description of the tree.** The Node backend (`server/`) was
+> deleted on **2026-05-17**; the C backend under `native/core/` replaced it.
+> The *substance* of Phase 1 landed — the tenancy schema, the auth gate,
+> tenant resolution, audit, break-glass, platform and per-tenant keys are all
+> live — but this is the last document that still tables eight `server/…`
+> JavaScript files as "already in the tree", two of them ticked `[x]`, and
+> every one of those files has not existed for months. The section below maps
+> each claim onto what actually implements it, so the file stays readable as
+> the design record it is (the locked decisions and the risk list are still
+> correct) without being mistaken for a file inventory.
+>
+> **Where each tabled file actually lives now**
+>
+> | Doc says (deleted) | Actually implemented in |
+> | --- | --- |
+> | `server/src/utils/tenancyMigration.js` | `native/core/schema.sql` — `tenants`, `users`, `memberships`, `audit_events`, `tenant_secrets`, `tenant_quotas`, `tenant_api_keys`, `tenant_idp_connections`, `sso_group_role_map` are all `CREATE TABLE IF NOT EXISTS` there, applied at boot by `core/db.c` `db_open()`. No separate migration module. |
+> | `server/src/middleware/auth.js` | `native/core/auth.{c,h}` — the `requireSupabaseAuth` gate, HS256 via OpenSSL HMAC plus the JWKS/RS256 path. |
+> | `server/src/middleware/tenant.js` | `native/core/tenantapi.{c,h}` — `tenant_ctx` + first-seen provisioning (user, personal tenant, owner membership) and active-tenant selection. |
+> | `server/src/utils/tenancy.js` | No direct equivalent, and deliberately: the `tenantDb` SQL-string guard was a JS runtime trick. Tenant scoping in C is per-statement binding in the api modules. **This is the one item where the mechanism did not carry over — risk 1 below still stands and has no automated enforcement.** |
+> | `server/src/utils/credentials.js` | `native/core/keysapi.{c,h}` — HKDF + AES-256-GCM over `tenant_secrets`, plus `core/credtab.{c,h}` for the CREDENTIALS var table. |
+> | `server/src/routes/breakGlass.js` | `native/core/keysapi.c`, routed from `core/httpd.c:767` — `/admin/break-glass/login`, mounted outside the `/api` auth gate, TOTP → HS256 JWT, throttled by `core/ratelimit.c` (`RL_BREAKGLASS`, 5/60s). |
+> | `server/src/middleware/audit.js` (ticked `[x]`) | `native/core/audit.{c,h}` — `audit_write()`, the one shared audit-row writer; read side is `/api/audit` and `/api/audit/verify` (`tenantapi_audit_list` / `tenantapi_audit_verify`, `core/httpd.c:2346`). |
+> | `server/src/middleware/rateLimit.js` (ticked `[x]`) | `native/core/ratelimit.{c,h}` — **partial.** A fixed-window throttle exists, but it is applied at two call sites (break-glass login, isochrone), not as the per-`(tenant_id, route_class)` token bucket with plan multipliers this doc describes. Treat that `[x]` as unfinished in C. |
+>
+> **Routes that exist today** (`native/core/httpd.c`): `/admin/break-glass/login`,
+> `/api/me`, `/api/audit`, `/api/audit/verify`, `/api/members`,
+> `/api/tenant-keys`, `/api/keys`.
+>
+> **Also not carried over:** the Week 5 Stripe item is ticked `[x]` here and
+> there is **no billing code in `native/`** — only a `stripe_customer_id`
+> column on `tenants` (`core/schema.sql:549`). No checkout, portal or webhook
+> route exists. The "Quick smoke test" at the bottom of this file invokes
+> deleted JavaScript and cannot run.
+
+Tracking doc for the multi-tenant cutover. Captures the locked tech
+decisions, the files that are already in the tree, and what still needs to
+land before the system goes live.
+
+## Locked tech decisions
+
+| Decision | Pick | Why |
+| --- | --- | --- |
+| Tenant isolation | Shared DB, `tenant_id` everywhere | Same model 99% of vertical SaaS uses; defer physical isolation to the first on-prem deal. |
+| Primary auth | Supabase Auth | Free to 50k MAU; handles email + OAuth + magic link. |
+| Auth gateway pattern | Supabase JWT for normal users; backend verifies HS256 with `SUPABASE_JWT_SECRET`. SSO provider TBD. | Single issuer for now; pluggable later. |
+| Org / membership | Custom (`tenants`, `memberships`, `tenant_idp_connections`) | Built once, reused by every auth path. |
+| API key resolution | `tenant_secrets` → `process.env` → `null`. BYOK is opt-in; platform keys are the default. | Matches the "DB keeps its own keys, user can override" call. |
+| Billing | Stripe Billing (Phase 1 / Week 5). | Webhook flips `tenants.plan`; plan drives rate-limit + quota slice. |
+| Break-glass | Env-gated TOTP admin path. Off by default. | Supabase outage must not lock the platform out of itself. |
+
+## Already in the tree
+
+| File | Role |
+| --- | --- |
+| `server/src/utils/tenancyMigration.js` | Additive DB migration. Creates `tenants`, `users`, `memberships`, `audit_events`, `tenant_secrets`, `tenant_quotas`, `tenant_api_keys`, `tenant_idp_connections`, `sso_group_role_map`. Seeds `legacy` tenant. Idempotent; runs every boot from `src/index.js`. |
+| `server/src/middleware/auth.js` | Verifies Supabase HS256 JWT via `jose`. Bypassed entirely unless `MULTI_TENANT_ENABLED=1`. Attaches `req.supabaseUser`. |
+| `server/src/middleware/tenant.js` | Materialises `users` + `tenants` + `memberships` rows on first sign-in. Picks active tenant from `X-Tenant-Id` or first membership. Attaches `req.user`, `req.tenant`, `req.role`. |
+| `server/src/utils/tenancy.js` | `tenantDb(tenantId).prepare(sql)` wrapper. Refuses SQL that does not mention `tenant_id` (throws in dev, errors in prod). Use the exported `t` symbol as the placeholder for the active tenant id when binding. |
+| `server/src/utils/credentials.js` | `resolveCredential(tenantId, varName)` returns `{value, source}` or `null`. AES-256-GCM with per-tenant key derived via HKDF-SHA256 from `SECRETS_MASTER_KEY`. `fallback_to_platform` flag honoured. |
+| `server/src/routes/breakGlass.js` | `POST /admin/break-glass/login` mounts when `BREAK_GLASS_ENABLED=1`. Verifies TOTP from `ADMIN_TOTP_SECRET`, issues a 1h HS256 JWT signed with `BREAK_GLASS_JWT_SECRET`. Audited loudly. |
+
+## Required env vars
+
+| Var | Where it's used | Notes |
+| --- | --- | --- |
+| `MULTI_TENANT_ENABLED` | `middleware/auth.js`, `middleware/tenant.js` | Set to `1` to turn on auth + tenant resolution. Leave unset for the legacy single-tenant boot. |
+| `SUPABASE_JWT_SECRET` | `middleware/auth.js` | HS256 shared secret from Supabase project settings. Required when `MULTI_TENANT_ENABLED=1`. |
+| `SECRETS_MASTER_KEY` | `utils/credentials.js` | Base64 or hex, ≥32 bytes. Master from which per-tenant keys are derived. Rotate quarterly. |
+| `BREAK_GLASS_ENABLED` | `routes/breakGlass.js` | Set to `1` only during an incident. The router 404s when off. |
+| `ADMIN_TOTP_SECRET` | `routes/breakGlass.js` | Base32 TOTP secret. Use the standard authenticator-app format. |
+| `BREAK_GLASS_JWT_SECRET` | `routes/breakGlass.js` | HS256 secret for the synthetic admin JWT. Independent from Supabase's. |
+
+A sample lives in `.env.example`.
+
+## Still to do (Phase 1, in order)
+
+### Week 2 — DONE ✓
+
+* [x] `apiCredentials.js` swept through `getEnv(tenantId, name)`. Both
+  `getCredentialStatus` and `getProbeAuthHeaders` accept an optional
+  `tenantId`; null passes through to env (legacy / scheduler paths).
+* [x] Audit log writer middleware (`server/src/middleware/audit.js`).
+  Mutations always logged; 10% sample of reads. Body fields matching
+  `password|secret|token|api[_-]?key|authorization` redacted.
+* [x] Rate limiter middleware (`server/src/middleware/rateLimit.js`).
+  Token bucket per `(tenant_id, route_class)`. Classes: `read` 60 rpm,
+  `search` 30 rpm, `mutate` 10 rpm. Plan multipliers: free 0.25×, pro 1×,
+  team 4×, enterprise unlimited. `Retry-After` + `X-RateLimit-*` headers.
+* [x] `tenant_id` columns added to `intel_items` (and `app_preferences` is
+  iOS-side / SwiftData so no-op). Indexes:
+  `idx_intel_items_tenant_fetched(tenant_id, fetched_at DESC)`,
+  `idx_intel_items_tenant_source(tenant_id, source_id)`.
+* [x] Middleware wired into `/api/*` behind `MULTI_TENANT_ENABLED`. Order:
+  `requireSupabaseAuth → resolveTenant → rateLimit → auditWriter`. Health
+  check (`/api/health`) is mounted BEFORE the auth stack so monitoring
+  works during an outage.
+
+### Remaining Week 2 (collector-side, deferred to its own session)
+
+* [ ] Sweep direct `process.env.X` reads inside individual collectors
+  (~25-30 sites under `server/src/collectors/`). The hub
+  (`apiCredentials.js`) already routes through `getEnv`, but module-load
+  top-level captures like `const KEY = process.env.X` need to be moved
+  inside their function bodies and threaded through with a tenantId. The
+  scheduler/cron paths can pass `null` as the tenantId (platform-only).
+  Hot sites: `cameraDiscovery.js` (Windy, Shodan, YouTube), `censysJapan.js`,
+  `flightAdsb.js`, `marineTraffic.js`, `edinetFilings.js`, `fofaJp.js`,
+  `quake360Jp.js`, `greynoiseJp.js`, `grayhatBuckets.js`,
+  `wifiNetworksShodan.js`, `shodanIot.js`, `nasaFirmsJp.js`,
+  `houjinBangou.js`, `dehashedBreach.js`, the OPENSKY / AERODATABOX pair.
+  Mechanical but high blast-radius — split across at least two PRs.
+
+### Week 3
+
+* [ ] Add `tenant_id` columns to existing user-data tables (`intel_items`,
+  `app_preferences`, `fetch_log` if user-scoped). Use
+  `ADD COLUMN tenant_id TEXT NOT NULL DEFAULT 'legacy'` so existing rows
+  backfill. Add `(tenant_id, fetched_at DESC)` + `(tenant_id, source_id)`
+  indexes.
+* [ ] Roles enforcement: `requires('admin')` decorator on routes that
+  mutate billing / integrations / memberships.
+* [ ] Invites: `POST /tenants/:id/invites` issues a magic-link via Supabase
+  Admin SDK; webhook sync writes the membership with the chosen role.
+* [ ] REST API keys: `tenant_api_keys` CRUD endpoints + bearer-token auth
+  middleware that recognises `Authorization: Bearer sk_live_…`.
+* [ ] Web: Settings → Team page, Settings → API keys page, Settings →
+  Integrations page (platform-key vs BYOK toggle per source with live quota
+  display).
+
+### Week 4 — SSO + SCIM (deferred — provider TBD)
+
+Originally planned with BoxyHQ Jackson; that's been removed pending a
+deal that requires enterprise SSO. When it lands, evaluate Supabase Pro
+SAML, Jackson again, or a custom adapter — the `tenant_idp_connections`
+and `sso_group_role_map` tables are already in the schema with
+provider-agnostic columns, so no migration is needed when this resumes.
+
+* [ ] Pick an SSO/SCIM provider (re-evaluate on first enterprise deal).
+* [ ] Backend accepts a second JWT issuer alongside Supabase.
+* [ ] SCIM webhook → `memberships` sync via `sso_group_role_map`.
+* [ ] Web: Settings → SSO connection wizard.
+* [ ] Conflict resolution for IdP-deprovisioned users (BYOK secrets +
+  API keys transferred to tenant owner; audit-logged).
+
+### Week 5 — Stripe + hardening
+
+* [x] Stripe Billing: checkout + portal + webhook. Plan drives the
+  rate-limit slice (live). `utils/billing.js` + `routes/billing.js`;
+  schema cols on `tenants` (subscription_status, stripe_subscription_id,
+  plan_period_end). Subscription gate (402 on lapsed paid plans) wired
+  into the /api chain. Quota slice + Enterprise `require_sso` still TODO.
+* [ ] Secret rotation worker: re-wrap every `tenant_secrets.encrypted_value`
+  against a new master every 90 days.
+* [ ] Data export endpoint: streams tenant's `intel_items` + `cameras` as
+  JSONL. GDPR / Japan APPI freebie.
+* [ ] `tenants.require_sso` enforcement: reject non-SSO logins to a tenant
+  when set. Closes the shadow-account compliance gap.
+
+## Risks to watch
+
+1. **Tenant-id leakage** — any direct `db.prepare(...)` against a
+   user-data table that omits `tenant_id` is a data-leak vector. The
+   `tenantDb` wrapper enforces this for new code; existing code paths
+   need a separate sweep tracked in Week 3.
+2. **Two JWT issuers (post-SSO)** — when an SSO provider lands, middleware
+   will need to handle two issuers cleanly. Test matrix: (Supabase user,
+   SSO user) × (free tenant, enterprise SSO-required tenant).
+3. **SCIM event storms (Week 4)** — a new customer onboarding can fire
+   thousands of SCIM creates in minutes. Queue + worker on our side.
+4. **Encryption master key rotation** — `SECRETS_MASTER_KEY` rotation
+   must re-wrap every `tenant_secrets` row before the old key is
+   discarded. Worker stub in Week 5.
+
+## Quick smoke test
+
+Run from the server directory:
+
+```bash
+node -e "
+import('./src/utils/tenancyMigration.js').then(m => m.runTenancyMigration());
+"
+```
+
+Re-running is safe — every `CREATE TABLE` is `IF NOT EXISTS` and the
+`legacy` tenant seed is `INSERT OR IGNORE`.
+
+For the credential round-trip:
+
+```bash
+SECRETS_MASTER_KEY=$(openssl rand -base64 32) node -e "
+import('./src/utils/credentials.js').then(({setTenantSecret, resolveCredential}) => {
+  setTenantSecret('legacy', 'EXAMPLE_KEY', 'sk_test_123');
+  console.log(resolveCredential('legacy', 'EXAMPLE_KEY'));
+});
+"
+```

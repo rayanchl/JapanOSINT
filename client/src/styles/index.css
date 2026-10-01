@@ -11,25 +11,32 @@
  * fully-composed tokens. */
 :root,
 :root[data-theme='dark'] {
-  --osint-bg: 10 10 10;
-  --osint-surface: 20 20 20;
-  --osint-panel: 28 28 28;
-  --osint-border: 38 38 38;
-  --osint-border-bright: 53 53 53;
-  --osint-text: 229 231 235;
-  --osint-text-muted: 156 163 175;
-  --osint-scroll-thumb: #2d3a52;
-  --osint-scroll-thumb-hover: #3b4f6e;
-  --osint-popup-bg: rgba(17, 24, 39, 0.95);
-  --osint-popup-border: rgba(0, 240, 255, 0.3);
-  --osint-ctrl-bg: rgba(17, 24, 39, 0.9);
-  --osint-panel-glass: rgba(6, 10, 18, 0.95);
-  --osint-toggle-off: #374151;
-  --osint-toggle-knob: #9ca3af;
-  --neon-cyan: #00f0ff;
-  --neon-green: #00ff88;
-  --neon-orange: #ff8c00;
-  --neon-red: #ff4444;
+  /* Situation-room palette — the iOS app's `ThemePalette.cyberpunk`:
+   * carbon surface, amber primary, cyan secondary, paper text, slate muted. */
+  --osint-bg: 11 15 20;
+  --osint-surface: 16 22 29;
+  --osint-panel: 21 27 35;
+  --osint-border: 33 42 54;
+  --osint-border-bright: 52 66 86;
+  --osint-text: 232 238 245;
+  --osint-text-muted: 110 126 148;
+  --osint-scroll-thumb: #223044;
+  --osint-scroll-thumb-hover: #34506e;
+  --osint-popup-bg: rgba(16, 22, 29, 0.96);
+  --osint-popup-border: rgba(91, 231, 241, 0.3);
+  --osint-ctrl-bg: rgba(16, 22, 29, 0.9);
+  --osint-panel-glass: rgba(11, 15, 20, 0.94);
+  --osint-toggle-off: #2a3546;
+  --osint-toggle-knob: #8fa1b8;
+  --accent: 255 179 71;          /* amber — brand = signal */
+  --accent-alt: 91 231 241;      /* cyan */
+  --neon-cyan-rgb: 91 231 241;
+  --neon-green-rgb: 91 231 160;
+  --neon-red-rgb: 255 77 94;
+  --neon-cyan: #5be7f1;
+  --neon-green: #5be7a0;
+  --neon-orange: #ffb347;
+  --neon-red: #ff4d5e;
   color-scheme: dark;
 }
 
@@ -49,7 +56,12 @@
   --osint-panel-glass: rgba(255, 255, 255, 0.9);
   --osint-toggle-off: #c7cdd8;
   --osint-toggle-knob: #ffffff;
-  /* Darker accents so neon stays readable on white */
+  /* Darker accents so amber/cyan stay readable on white */
+  --accent: 196 112 0;
+  --accent-alt: 0 135 179;
+  --neon-cyan-rgb: 0 135 179;
+  --neon-green-rgb: 13 159 96;
+  --neon-red-rgb: 192 57 43;
   --neon-cyan: #0087b3;
   --neon-green: #0d9f60;
   --neon-orange: #c96500;
@@ -126,30 +138,30 @@ body {
    ======================================== */
 
 .neon-glow-cyan {
-  box-shadow: 0 0 8px rgba(0, 240, 255, 0.4), 0 0 20px rgba(0, 240, 255, 0.1);
+  box-shadow: 0 0 8px rgb(var(--neon-cyan-rgb) / 0.4), 0 0 20px rgb(var(--neon-cyan-rgb) / 0.1);
 }
 
 .neon-glow-green {
-  box-shadow: 0 0 8px rgba(0, 255, 136, 0.4), 0 0 20px rgba(0, 255, 136, 0.1);
+  box-shadow: 0 0 8px rgb(var(--neon-green-rgb) / 0.4), 0 0 20px rgb(var(--neon-green-rgb) / 0.1);
 }
 
 .neon-glow-red {
-  box-shadow: 0 0 8px rgba(255, 68, 68, 0.4), 0 0 20px rgba(255, 68, 68, 0.1);
+  box-shadow: 0 0 8px rgb(var(--neon-red-rgb) / 0.4), 0 0 20px rgb(var(--neon-red-rgb) / 0.1);
 }
 
 .neon-border {
-  border: 1px solid rgba(0, 240, 255, 0.3);
+  border: 1px solid rgb(var(--neon-cyan-rgb) / 0.3);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .neon-border:hover {
-  border-color: rgba(0, 240, 255, 0.6);
-  box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+  border-color: rgb(var(--neon-cyan-rgb) / 0.6);
+  box-shadow: 0 0 12px rgb(var(--neon-cyan-rgb) / 0.2);
 }
 
 .neon-text {
   color: var(--neon-cyan);
-  text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+  text-shadow: 0 0 8px rgb(var(--neon-cyan-rgb) / 0.5);
 }
 
 /* ========================================
@@ -213,7 +225,7 @@ body {
   border: 1px solid var(--osint-popup-border) !important;
   border-radius: 8px !important;
   padding: 12px 16px !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 240, 255, 0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgb(var(--neon-cyan-rgb) / 0.1) !important;
   font-family: 'Inter', sans-serif !important;
   max-width: 320px !important;
 }
@@ -246,7 +258,7 @@ body {
 }
 
 .maplibregl-ctrl-group button:hover {
-  background-color: rgba(0, 240, 255, 0.1) !important;
+  background-color: rgb(var(--neon-cyan-rgb) / 0.1) !important;
 }
 
 .maplibregl-ctrl-group button + button {
@@ -272,7 +284,7 @@ body {
 .layer-panel {
   background: var(--osint-panel-glass);
   backdrop-filter: blur(12px);
-  border-right: 1px solid rgba(0, 240, 255, 0.15);
+  border-right: 1px solid rgb(var(--neon-cyan-rgb) / 0.15);
 }
 
 .layer-toggle {
@@ -280,11 +292,11 @@ body {
 }
 
 .layer-toggle:hover {
-  background: rgba(0, 240, 255, 0.05);
+  background: rgb(var(--neon-cyan-rgb) / 0.05);
 }
 
 .layer-toggle.active {
-  background: rgba(0, 240, 255, 0.08);
+  background: rgb(var(--neon-cyan-rgb) / 0.08);
   border-left: 2px solid var(--neon-cyan);
 }
 
@@ -300,7 +312,7 @@ body {
 }
 
 .toggle-switch.on {
-  background: rgba(0, 240, 255, 0.4);
+  background: rgb(var(--neon-cyan-rgb) / 0.4);
 }
 
 .toggle-switch::after {
@@ -318,7 +330,7 @@ body {
 .toggle-switch.on::after {
   transform: translateX(16px);
   background: var(--neon-cyan);
-  box-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
+  box-shadow: 0 0 6px rgb(var(--neon-cyan-rgb) / 0.5);
 }
 
 /* ========================================
@@ -334,7 +346,7 @@ body {
 
 .status-online {
   background: var(--neon-green);
-  box-shadow: 0 0 6px rgba(0, 255, 136, 0.6);
+  box-shadow: 0 0 6px rgb(var(--neon-green-rgb) / 0.6);
 }
 
 .status-degraded {
@@ -344,7 +356,7 @@ body {
 
 .status-offline {
   background: var(--neon-red);
-  box-shadow: 0 0 6px rgba(255, 68, 68, 0.6);
+  box-shadow: 0 0 6px rgb(var(--neon-red-rgb) / 0.6);
 }
 
 .status-pending {
@@ -364,7 +376,7 @@ body {
 .glass-panel {
   background: var(--osint-panel-glass);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 240, 255, 0.15);
+  border: 1px solid rgb(var(--neon-cyan-rgb) / 0.15);
   border-radius: 8px;
 }
 
@@ -410,7 +422,7 @@ body {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgb(var(--neon-cyan-rgb) / 0.3), transparent);
   animation: scanline 4s linear infinite;
   pointer-events: none;
-}
+}

@@ -42,6 +42,7 @@ struct AlertEventsView: View {
                     Button { Task { await reload() } } label: {
                         Image(systemName: "arrow.clockwise")
                     }.disabled(loading)
+                    .accessibilityLabel("Reload firings")
                 }
             }
             .navigationDestination(for: String.self) { uid in
@@ -68,9 +69,11 @@ struct AlertEventsView: View {
         let hasItem = ev.item_title != nil || !ev.item_uid.isEmpty
         let content = VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 6) {
+                // Suppressed-vs-delivered is carried by this glyph alone.
                 Image(systemName: ev.suppressed == 1 ? "bell.slash.fill" : "bell.fill")
                     .font(.caption2)
                     .foregroundStyle(ev.suppressed == 1 ? theme.warning : theme.success)
+                    .accessibilityLabel(ev.suppressed == 1 ? "Suppressed" : "Delivered")
                 Text(ev.item_title ?? ev.item_uid)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(theme.text)
@@ -120,6 +123,7 @@ struct AlertEventsView: View {
         VStack(spacing: Space.md) {
             Image(systemName: "clock.badge.questionmark")
                 .font(.largeTitle).foregroundStyle(theme.textMuted)
+                .accessibilityHidden(true)   // decorative empty-state mark
             Text("No firings yet")
                 .font(.headline).foregroundStyle(theme.text)
             Text("This rule hasn't matched any new intel items. Use the Test action on the rule to send a synthetic event.")

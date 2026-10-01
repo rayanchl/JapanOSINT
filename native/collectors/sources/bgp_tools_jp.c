@@ -4,11 +4,11 @@
  * the RIPEstat JP-country ASN set. SEED/_meta dropped (rule 7); the JS
  * `ua_required` branch yields 0 features so we likewise emit 0 when no UA.
  * Features pinned at Tokyo; props order: idx, asn, name, url, source. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../core/httpclient.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "core/httpclient.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -131,13 +131,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(139.6917));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(35.6895));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      /* NO GEOMETRY. Every row here used to be emitted at Tokyo Station
+       * (35.6895, 139.6917). What this source reports has no location,
+       * and stacking every row on one pin is the fabrication the
+       * 2026-07-31 audit deleted from cisa-kev-jp, poc-in-github and
+       * peeringdb-jp. Confirmed live by tests/contract/source_contract.py.
+       * lib/geojson.c handles an absent geometry correctly — do NOT
+       * reintroduce a fallback coordinate. */
       cJSON *pr = cJSON_CreateObject();
       cJSON_AddNumberToObject(pr, "idx", idx);
       cJSON_AddNumberToObject(pr, "asn", (double)asn);

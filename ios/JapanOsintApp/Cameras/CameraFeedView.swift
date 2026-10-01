@@ -2,10 +2,14 @@ import SwiftUI
 
 /// Shared camera feed renderer used by both the map's `CameraPopup` and the
 /// `CameraDiscoveryView` list cards. Resolves the appropriate render mode via
-/// `CameraFeedResolver` and dispatches to AsyncImage (direct image / snapshot
-/// endpoint / proxy), `CameraWebView` (YouTube / iframeable hosts), or
+/// `CameraFeedResolver` and dispatches to AsyncImage (direct image / backend
+/// proxy), `CameraWebView` (YouTube / iframeable hosts), or
 /// `CameraVideoPlayer` (HLS m3u8). Auto-refreshes image-based feeds at the
 /// user-chosen cadence.
+///
+/// When no mode can render — `.linkOnly` — the card says so and offers the
+/// source page. It never fakes a feed and never dresses a permanent absence up
+/// as a load failure.
 struct CameraFeedView: View {
     enum Style { case full, compact }
 
@@ -17,8 +21,8 @@ struct CameraFeedView: View {
     var cameraUID: String? = nil
     /// Original aggregator page URL (e.g. `webcam.scs.com.ua/...`) for cases
     /// where `pageURLString` was upgraded to a YouTube channel-live embed.
-    /// Used as the snapshot target when the YouTube iframe fails to render
-    /// (channel currently offline / embedding blocked / 4xx).
+    /// Offered as the "open the source" link when the YouTube iframe fails to
+    /// render (channel currently offline / embedding blocked / 4xx).
     var originalPageURLString: String? = nil
     var style: Style = .full
     var showsHeader: Bool = true
@@ -33,7 +37,8 @@ struct CameraFeedView: View {
     @State private var lastRefresh: Date = Date()
     @State private var pulse: Bool = false
     /// Set when `CameraWebView` reports a load failure on a YouTube channel-live
-    /// iframe; flips this view into the snapshot-of-`original_page_url` path.
+    /// iframe; flips this view to the "no in-app feed, open `original_page_url`"
+    /// state.
     @State private var iframeDidFail: Bool = false
 
     private var refreshSeconds: TimeInterval {
@@ -49,25 +54,27 @@ struct CameraFeedView: View {
             discoveryChannel: discoveryChannel,
             cameraUID: cameraUID
         )
-        // YouTube-first / snapshot-fallback for channels whose YouTube iframe
-        // can fail to render (e.g. scs.com.ua channel-live URLs when the
-        // channel isn't broadcasting). Switches to the original aggregator
-        // page snapshot once `CameraWebView` reports a load failure.
+        // YouTube-first fallback for channels whose YouTube iframe can fail to
+        // render (e.g. scs.com.ua channel-live URLs when the channel isn't
+        // broadcasting). There is no snapshot service to fall back *to* — see
+        // `CameraFeedResolver.embedBlockedChannels` — so the fallback is the
+        // honest "no in-app feed, here is the source page" state pointed at the
+        // original aggregator URL, not a request to a route that 404s.
         if iframeDidFail,
            case .iframe = resolved,
            let original = originalPageURLString, !original.isEmpty {
-            return .snapshotEndpoint(pageURL: original)
+            return .linkOnly(pageURL: original, reason: .embedBlocked)
         }
         return resolved
     }
 
     /// Image-based modes get the LIVE header + auto-refresh cadence. Iframe /
     /// YouTube / HLS embeds have their own players, so the LIVE chrome would
-    /// just be redundant there.
+    /// just be redundant there — and `.linkOnly` has nothing to refresh.
     private var isImageBased: Bool {
         switch mode {
-        case .directImage, .snapshotEndpoint, .proxiedImage: return true
-        case .youtube, .iframe, .hls, .linkOnly:             return false
+        case .directImage, .proxiedImage:         return true
+        case .youtube, .iframe, .hls, .linkOnly:  return false
         }
     }
 
@@ -127,28 +134,69 @@ struct CameraFeedView: View {
     private var feedView: some View {
         switch mode {
         case .youtube(let id):
-            embed(URL(string: "https://www.youtube.com/embed/\(id)?autoplay=1&mute=1&playsinline=1")!)
+            // `id` originates from scraped page HTML, so it is NOT trusted to
+            // be URL-safe — a stray space or quote makes URL(string:) nil and
+            // the old force-unwrap crashed the whole app on a bad scrape.
+            if let url = Self.youtubeEmbedURL(id) {
+                embed(url)
+            } else {
+                noInAppFeed(pageURL: pageURLString, reason: .noFeedURL)
+            }
         case .iframe(let url):
             embed(url)
         case .hls(let url):
             videoPlayer(url)
         case .directImage(let url):
             asyncImage(at: cacheBust(url))
-        case .snapshotEndpoint(let pageURL):
-            if let url = snapshotEndpointURL(pageURL) {
-                asyncImage(at: url)
-            } else {
-                placeholder(showing: statusStack(icon: "video.fill", text: "No feed"))
-            }
         case .proxiedImage(let uid):
             if let url = proxyEndpointURL(uid) {
                 asyncImage(at: url)
             } else {
-                placeholder(showing: statusStack(icon: "video.fill", text: "No feed"))
+                noInAppFeed(pageURL: pageURLString, reason: .noFeedURL)
             }
-        case .linkOnly:
-            placeholder(showing: statusStack(icon: "video.fill", text: "No feed"))
+        case .linkOnly(let pageURL, let reason):
+            noInAppFeed(pageURL: pageURL, reason: reason)
         }
+    }
+
+    /// The honest "there is no picture to show you" state.
+    ///
+    /// Deliberately worded and shaped so it cannot be mistaken for the
+    /// `AsyncImage` `.failure` case below ("Couldn't load", which really does
+    /// mean a fetch failed and may work on the next refresh). This one is a
+    /// statement about the source, not about the network, so it never spins,
+    /// never retries, and offers the one thing that does work: the source page.
+    @ViewBuilder
+    private func noInAppFeed(pageURL: String?,
+                             reason: FeedMode.LinkOnlyReason) -> some View {
+        let link = pageURL.flatMap { URL(string: $0) }
+        placeholder(showing:
+            VStack(spacing: 6) {
+                Image(systemName: "rectangle.slash")
+                    .font(.title3)
+                    .foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // the text below says it
+                Text("No in-app feed")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(theme.text)
+                Text(reason == .embedBlocked
+                     ? "This source doesn't allow embedding."
+                     : "This camera published no viewable feed.")
+                    .font(.caption2)
+                    .foregroundStyle(theme.textMuted)
+                    .multilineTextAlignment(.center)
+                if let link {
+                    Link(destination: link) {
+                        Label("Open source page", systemImage: "safari")
+                            .font(.caption2.weight(.semibold))
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                    .padding(.top, 2)
+                }
+            }
+            .padding(.horizontal, 8)
+        )
     }
 
     private func asyncImage(at url: URL) -> some View {
@@ -185,7 +233,11 @@ struct CameraFeedView: View {
                     }
                 }
             case .failure:
-                placeholder(showing: statusStack(icon: "video.slash", text: "Couldn't load"))
+                // Transient: the fetch failed and the refresh loop will try
+                // again. Deliberately worded differently from `noInAppFeed`,
+                // which is permanent.
+                placeholder(showing: statusStack(icon: "exclamationmark.arrow.circlepath",
+                                                 text: "Couldn't load — retrying"))
             @unknown default: EmptyView()
             }
         }
@@ -195,7 +247,7 @@ struct CameraFeedView: View {
     private func embed(_ url: URL) -> some View {
         // Only attach a fallback handler when we actually have somewhere to
         // fall back to. Keeps the failure state from latching for hosts where
-        // a snapshot route doesn't exist (Windy, river.go.jp, …).
+        // we have no alternative page to offer (Windy, river.go.jp, …).
         let canFallback = (originalPageURLString?.isEmpty == false)
         return CameraWebView(
             url: url,
@@ -218,9 +270,11 @@ struct CameraFeedView: View {
             Image(systemName: icon)
                 .font(.title3)
                 .foregroundStyle(theme.textMuted)
+                .accessibilityHidden(true)   // the text below says it
             Text(text)
                 .font(.caption2)
                 .foregroundStyle(theme.textMuted)
+                .multilineTextAlignment(.center)
         }
     }
 
@@ -257,6 +311,20 @@ struct CameraFeedView: View {
 
     // MARK: - URL builders
 
+    /// Characters a YouTube video id may legally contain. Anything else means
+    /// the collector handed us junk (or an attacker-controlled page did), so we
+    /// refuse to build a URL from it rather than trusting `URL(string:)`.
+    private static let youtubeIDAllowed = CharacterSet(
+        charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-")
+
+    static func youtubeEmbedURL(_ id: String) -> URL? {
+        guard !id.isEmpty, id.count <= 24,
+              id.unicodeScalars.allSatisfy({ youtubeIDAllowed.contains($0) })
+        else { return nil }
+        return URL(string:
+            "https://www.youtube.com/embed/\(id)?autoplay=1&mute=1&playsinline=1")
+    }
+
     private var bustQuery: String {
         "_t=\(Int(lastRefresh.timeIntervalSince1970))"
     }
@@ -267,14 +335,12 @@ struct CameraFeedView: View {
         return URL(string: raw + sep + bustQuery) ?? url
     }
 
-    private func snapshotEndpointURL(_ pageURL: String) -> URL? {
-        guard !pageURL.isEmpty,
-              let encoded = pageURL.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
-            return nil
-        }
-        let base = settings.backendBaseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-        return URL(string: "\(base)/api/data/cameras/snapshot?url=\(encoded)&\(bustQuery)")
-    }
+    // There is deliberately no `snapshotEndpointURL` here any more. It used to
+    // build `\(base)/api/data/cameras/snapshot?url=…`, which the backend has
+    // never served and cannot serve — see
+    // `CameraFeedResolver.embedBlockedChannels`. Every camera that reached it
+    // rendered `AsyncImage` → `.failure` → "Couldn't load" forever, which
+    // presented a permanent absence as a transient network error.
 
     private func proxyEndpointURL(_ uid: String) -> URL? {
         guard !uid.isEmpty,

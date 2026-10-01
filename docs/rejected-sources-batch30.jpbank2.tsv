@@ -1,0 +1,50 @@
+JO30_BANK_DICJ_HOME	https://www.dic.go.jp/	HTTP 403 for both WebFetch and curl with an honest JapanOSINT/1.0 UA; no feed reachable
+JO30_BANK_SHINKIN_ORG_MEMBERS	https://www.shinkin.org/members/	HTTP 404; the association has no member list page, the directory lives at shinkin.co.jp (added as 10 regional html rows)
+JO30_BANK_JABANK_HOME	https://www.jabank.org/	homepage has no machine-readable branch data; map.jabank.org is a Mapion-backed JS map with no public JSON endpoint found
+JO30_BANK_JFMB	https://www.jfmb.jp/	DNS does not resolve
+JO30_BANK_SCBRI_FEED	https://www.scbri.jp/feed/	HTTP 404; scbri.jp exposes no feed
+JO30_BANK_SCBRI_TOUKEI	https://www.scbri.jp/publication/toukei/	the 10 statistics files (01tenpo.xls … 11gyoutaibetukasikin.xls) are legacy OLE2 .xls; lib/xlsx.c reads .xlsx only
+JO30_BANK_SCBRI_REPORTS	https://www.scbri.jp/reports/newstopics/	only 10 report anchors per category page; not worth 8 rows
+JO30_BANK_BOJ_RSS_INDEX	https://www.boj.or.jp/rss/index.htm	HTTP 404; the two live BOJ feeds (whatsnew.xml, statistics.xml) are already registered
+JO30_BANK_BOJ_META_CO	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=CO	fetched OK (168,120 Tankan series nodes) but the single response is 99 MB, above the 64 MB JO_HTTP_MAX_BODY default
+JO30_BANK_BOJ_META_IR01	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=IR01	only 3 nodes (2 series)
+JO30_BANK_BOJ_META_BP02	https://www.stat-search.boj.or.jp/api/v1/getMetadata?format=json&lang=en&db=BP02	1 node, 0 series
+JO30_BANK_BOJ_DATALAYER	https://www.stat-search.boj.or.jp/api/v1/getDataLayer?format=json&lang=en&db=CO&frequency=M&layer1=*	400 "Specify layer information" for every layer parameter tried; the manual is a PDF that could not be read here
+JO30_BANK_BOJ_DATACODE	https://www.stat-search.boj.or.jp/api/v1/getDataCode?format=json&lang=en&db=CO&startDate=202401&endDate=202609&code=TK99F1000601GCQ01000	400 "Invalid frequency (end period)" — period format is per-frequency and undocumented outside the PDF; not verified
+JO30_BANK_TERAREN_BRANCHES_ALL	https://bank.teraren.com/branches.json	HTTP 404; branches exist only per bank
+JO30_BANK_DAIWA_UPDATE_RSS	https://www.daiwa-grp.jp/update/update.rss	only 3 items and titles are mojibake (undeclared encoding)
+JO30_BANK_NAGANO_BANK_RSS	https://www.naganobank.co.jp/rss/news.xml	linked from the homepage but serves text/html with 0 items
+JO30_BANK_NAGANO_BANK_RELEASE_RSS	https://www.naganobank.co.jp/rss/release.xml	linked from the homepage but serves text/html with 0 items
+JO30_BANK_FINMAC_FEED	https://www.finmac.or.jp/feed/	served as application/rss+xml but 0 items (empty feed); /news/rss/ added instead
+JO30_BANK_DENSAI_FEED	https://www.densai.net/feed/	served as RSS but 0 items
+JO30_BANK_JCSA_FEED	https://jcsa.or.jp/feed/	jcsa.or.jp is 日本キャビアソムリエ協会, not a credit association
+JO30_BANK_JFSA_RSS	https://www.jfsa.or.jp/rss.xml	jfsa.or.jp is not the moneylenders' association (that is j-fsa.or.jp, which has no feed); content is medical lectures
+JO30_BANK_JIBA_RSS	https://www.jiba.or.jp/rss.xml	jiba.or.jp is not a financial body; 7 unrelated items
+JO30_BANK_JBA_ATOM	https://www.jba.or.jp/jba_info/atom.xml	jba.or.jp is not the Japanese Bankers Association (zenginkyo.or.jp)
+JO30_BANK_JAPANPOST_DISCLOSURE	http://www.xj-storage.jp/public-list/GetList.aspx?company=AS06651&output=rss&len=20	third-party disclosure host, not a Japanese institution endpoint
+JO30_BANK_HOKUHOKU_IRPOCKET	https://xml.irpocket.com/8377/XML/release-info-latest-9.rdf	third-party IR host; the bank's own atom.xml is added instead
+JO30_BANK_MARKETSPEED_RSS	https://marketspeed.jp/ms2_rss/	HTML page, 0 items
+JO30_BANK_JAPANPOST_GROUP_RSS_INDEX	https://www.japanpost.jp/rss/	index page (HTML); the two feeds it lists are added
+JO30_BANK_YUCHO_RSS_INDEX	https://www.jp-bank.japanpost.jp/rss/	error page "ご覧になろうとしているページの閲覧は出来ません"; news.xml under it is live and added
+JO30_BANK_JPX_RSS_INDEX	https://www.jpx.co.jp/rss/index.html	HTTP 403 to WebFetch; the four JPX feeds are already registered
+JO30_BANK_SHINYOKUMIAI_LIST_KANTO	https://www.shinyokumiai.or.jp/list/kanto/index.html	28 cooperative links but the page's navigation is also absolute (https://www.shinyokumiai.or.jp/...), so href_must cannot separate them; the FSA shinkumi.xlsx roster covers the same institutions
+JO30_BANK_SHINYOKUMIAI_LIST	https://www.shinyokumiai.or.jp/list/index.html	region index only, no cooperative links
+JO30_BANK_DAINICHIGINKYO_MONTHLY	https://www.dainichiginkyo.or.jp/dcms_media/other/2026.07.xlsx	monthly file whose URL changes every month; the index page that lists them (membership/statistical.html) is already registered
+JO30_BANK_FSA_DAIRI_D	https://www.fsa.go.jp/menkyo/menkyoj/dairi_d.xlsx	fetched OK but only 2 labour-bank agents (3 rows)
+JO30_BANK_FSA_MUJIN	https://www.fsa.go.jp/menkyo/menkyoj/mujin.xlsx	1 record (無尽業者)
+JO30_BANK_FSA_SHOUKENKINYU	https://www.fsa.go.jp/menkyo/menkyoj/shoukenkinyu.xlsx	1 record (日本証券金融)
+JO30_BANK_FSA_TORIHIKIKYOKA	https://www.fsa.go.jp/menkyo/menkyoj/torihikikyoka.xlsx	2 records
+JO30_BANK_FSA_TOKUTEIKINYUSHIHYOU	https://www.fsa.go.jp/menkyo/tokuteikinyushihyou.xlsx	2 records
+JO30_BANK_FSA_CCP	https://www.fsa.go.jp/menkyo/menkyoj/kinyuusyouhintorihikiseisan.xlsx	2 records
+JO30_BANK_FSA_FOREIGN_CCP	https://www.fsa.go.jp/menkyo/menkyoj/foreign_ccp.xlsx	3 records
+JO30_BANK_FSA_SHIKINSEISAN	https://www.fsa.go.jp/menkyo/menkyoj/shikinseisan.xlsx	1 record
+JO30_BANK_FSA_FURIKAE	https://www.fsa.go.jp/menkyo/menkyoj/furikae.xlsx	2 records
+JO30_BANK_FSA_TR	https://www.fsa.go.jp/menkyo/menkyoj/tr.xlsx	1 record
+JO30_BANK_FSA_SHITEIOYAGAISHA	https://www.fsa.go.jp/menkyo/menkyoj/shiteioyagaisha.xlsx	2 records
+JO30_BANK_FSA_SHINKIN_DENDAI_TOUROKU	https://www.fsa.go.jp/menkyo/menkyoj/shinkindendaitouroku.xlsx	1 registrant
+JO30_BANK_FSA_FAFIA	https://www.fsa.go.jp/menkyo/menkyoj/fafia.xlsx	no single header row (bilingual multi-line headers); 104 foreign audit firms unreadable as a table
+JO30_BANK_FSA_IMRS	https://www.fsa.go.jp/menkyo/menkyoj/imrs.xlsx	bilingual multi-line header cells (登録番号\nRegistration number); 9 rows
+JO30_BANK_FSA_KANSAHOUJIN	https://www.fsa.go.jp/menkyo/menkyoj/kansahoujin.xlsx	audit firms, out of scope for a financial-institution beat
+JO30_BANK_TOKIOMARINE_HD_NEWS_RSS	https://www.tokiomarinehd.com/feed/news.xml	endpoint already registered in collectors/pivot/table/hp3b25_jpbiz2.c (batch_exclusions DUP-ENDPOINT)
+JO30_BANK_TOKIOMARINE_HD_RELEASE_RSS	https://www.tokiomarinehd.com/feed/release.xml	endpoint already registered in hp3b25_jpbiz2.c
+JO30_BANK_TOKIOMARINE_HD_IR_RSS	https://www.tokiomarinehd.com/feed/ir_release.xml	endpoint already registered in hp3b25_jpbiz2.c

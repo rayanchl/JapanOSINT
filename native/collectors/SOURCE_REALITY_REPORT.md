@@ -1,6 +1,21 @@
 # OSINT Source Reality Report
 
-Audit of all 61 collectors in `native/collectors/osint/sources/`. Method: full
+> **SCOPE — read this before citing the report below.** This audited the **61
+> hand-written entity-pivot collectors** that existed in
+> `native/collectors/sources/` when it was written. The tree has since grown to
+> **~1,551 collector files and 16,366 registered sources**, so the "all 61"
+> below is the whole of *what it examined*, not the whole of the registry —
+> roughly 0.4% of today's sources. Its per-source verdicts are still accurate
+> for the rows it names; it simply says nothing about the other ~16,300.
+>
+> For registry-wide behaviour, use the measurement instead of this document:
+> `python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint --all`
+> proves every registered source emits AND stores, and the most recent full
+> run is written up in `docs/systemwide-audit-2026-09-04.md` (16,366 sources
+> swept; verdict tallies, the collision/emits-nothing id lists, and the
+> engine-level causes found behind them).
+
+Audit of all 61 OSINT collectors in `native/collectors/sources/`. Method: full
 source read of each `run()` + what it emits into `intel_item`, validated by live
 `./bin/japanosint --run <ID> <entity>` spot-runs (latency + emitted DB body).
 
@@ -77,7 +92,11 @@ Legend:
 | SATELLITE_TRACKER | note "Set N2YO_API_KEY", found=0, no positions | `N2YO_API_KEY` | ✅ ran: 0ms, no fetch |
 | IP_REPUTATION | still emits a verdict, but computed over **zero** external signals | `ABUSEIPDB_API_KEY` / `IPQS_API_KEY` | — |
 
-## ⚠️ PARTIAL — real fetch + hardcoded "names not data" padding (21)
+## ⚠️ PARTIAL — real fetch + hardcoded "names not data" padding (19)
+
+> **Updated 2026-08-10.** DARK_WEB_MONITOR and DEHASHED_SEARCH were rewritten to
+> real-fetch / honest-empty and are **no longer PARTIAL** (struck through below);
+> PASSWORD_CHECKER's fabricated `security_tips` were removed. Count 21 → 19.
 
 The core fetch is real; the flagged half emits fixed **source/registry names +
 built lookup URLs** (often tagged `real_data:true`), inflating "sources found"
@@ -87,15 +106,15 @@ counts without any actual fetched values — exactly the pattern you described.
 |---|---|---|
 | ACADEMIC_SEARCH | PubMed, arXiv, CrossRef, Semantic Scholar, ORCID, CiNii papers | 3 stub entries: J-STAGE / KAKEN / researchmap — label + search URL only |
 | COMPANY_LOOKUP | OpenCorporates company record | **7** hardcoded registry stubs (ZaubaCorp, MCA India, Touki Japan, 法人番号, EDINET, NIKKEI, Baseconnect) marked `found:1`, no fetch |
-| DARK_WEB_MONITOR | live Ahmia onion scrape, Pastebin `/raw/` counts | Ghostbin presence-only label; fixed disclaimer; onion-input branch reformats URL only |
-| DEHASHED_SEARCH | LeakCheck breaches (real) | Dehashed sub-source is a **permanent stub note** — never authenticates even with keys set |
+| ~~DARK_WEB_MONITOR~~ | **now LIVE (2026-08-10):** per-record emit — one item per real Ahmia `.onion` hit + **one item per distinct Pastebin paste** (the `/raw/` keys are surfaced, no longer discarded to a count) + key-gated IntelX search id | ~~Ghostbin label / fixed disclaimer / onion-reformat branch~~ — all removed; nothing fabricated |
+| ~~DEHASHED_SEARCH~~ | **now LIVE (2026-08-10):** real HTTP Basic-auth DeHashed fetch + keyless LeakCheck, one item per real breach source | ~~Dehashed permanent stub~~ — removed; `query_dehashed` sends real Basic auth, returns NULL without keys |
 | EMAIL_REPUTATION | EmailRep.io + live MX (getaddrinfo) | hardcoded `DISPOSABLE_DOMAINS[]` list for the disposable flag |
 | EMAIL_VALIDATOR | live MX (DoH), SMTP RCPT probe, RDAP age | Hunter.io key-gated; hardcoded disposable/free/role lists |
 | FLIGHT_TRACKER | ICAO24 → live OpenSky state vector | **flight-number branch: no fetch** — hardcoded airline table + tracking-site links |
 | HASH_LOOKUP | MalwareBazaar file intel | VT key-gated; fixed 3-URL "analysis_resources" list |
 | NEWS_AGGREGATOR | GDELT articles + computed sentiment/tallies | NewsAPI key-gated; hardcoded `osint_tips` |
 | NEWS_ARCHIVE | *(dup of aggregator)* hits **live GDELT, not an archive** | same hardcoded tips; mislabeled as archival |
-| PASSWORD_CHECKER | real hashes, entropy, HIBP k-anonymity range check | hardcoded `security_tips` + top-20 `COMMON_PASSWORDS` (scoring input) |
+| PASSWORD_CHECKER | real entropy/strength, HIBP k-anonymity range check | ~~hardcoded `security_tips`~~ removed; top-20 `COMMON_PASSWORDS` kept as a **scoring input only** (not emitted as a finding). *Privacy fixed 2026-08-10: the full SHA-1/SHA-256/MD5 of the submitted password are no longer emitted — only the 5-char SHA-1 k-anon prefix, per `breach-check-pipeline.md` §7.* |
 | TRADEMARK_SEARCH | WIPO + EUIPO marks (often 403 → `api_unavailable`) | USPTO "manual_search_required" + Nice classification hardcoded labels |
 | VEHICLE_LOOKUP | VIN → NHTSA vPIC decode + recalls (real) | **~16** hardcoded source descriptors (CARFAX, FaxVin, Parivahan, Goo-net…) tagged `real_data:true`, no fetch; plate branch local-only |
 | WAYBACK_MACHINE | Internet Archive availability + CDX snapshots | **6** hardcoded "additional_archives" (Archive.is, GhostArchive, Google Cache…) tagged `real_data:true`, built URLs only |
@@ -115,5 +134,5 @@ counts without any actual fetched values — exactly the pattern you described.
 
 - **Real measured/fetched data, works now:** the 29 LIVE + 7 LOCAL collectors (36). Spot-verified GEOCODING, IP_GEOLOCATION, ASN, WHOIS, SHODAN, SANCTIONS, EARTHQUAKE returned real values.
 - **Real data only after you add a key:** BREACH_CHECKER, CENSYS, SATELLITE_TRACKER, IP_REPUTATION (4). Without keys they return an honest empty/note — not fake data.
-- **Real core + "names not data" padding:** the 21 PARTIAL collectors. The genuinely-fake-looking part is the registry-name/lookup-URL stubs (most blatant in COMPANY_LOOKUP, VEHICLE_LOOKUP, WAYBACK_MACHINE, ACADEMIC_SEARCH, FLIGHT_TRACKER's flight-number path, DEHASHED's Dehashed half, NEWS_ARCHIVE being a non-archive). These list sources/labels with `real_data:true` but fetch nothing for that entry.
+- **Real core + "names not data" padding:** the 19 PARTIAL collectors (was 21; DARK_WEB_MONITOR and DEHASHED_SEARCH have since been rewritten to real-fetch/honest-empty — see the 2026-08-10 note above). The genuinely-fake-looking part is the registry-name/lookup-URL stubs (most blatant in COMPANY_LOOKUP, VEHICLE_LOOKUP, WAYBACK_MACHINE, ACADEMIC_SEARCH, FLIGHT_TRACKER's flight-number path, NEWS_ARCHIVE being a non-archive). These list sources/labels with `real_data:true` but fetch nothing for that entry.
 - **Pure fabricated/stub data (fake numbers):** none found.

@@ -1,19 +1,31 @@
 #include "db.h"
+#include "entitystore.h"
+/* sqlite3_vec_init is declared here rather than via third_party/sqlite-vec.h:
+ * that header pulls in sqlite3ext.h unless SQLITE_CORE is defined, and this
+ * TU is not the extension (the vendored object is built with -DSQLITE_CORE,
+ * see the Makefile). The signature is the standard loadable-extension entry. */
+int sqlite3_vec_init(sqlite3 *db, char **pzErrMsg, const sqlite3_api_routines *pApi);
+#include <pthread.h>
 #include "translate.h"         /* translate_migrate (owns its own index) */
 #include "simhash.h"           /* simhash_ensure_schema (owns its own index) */
 #include "content_change.h"    /* content_change_ensure_schema (same reason) */
 #include "media.h"             /* media_migrate (same reason) */
 #include "camera_stills.h"     /* camera_stills_migrate (same reason) */
+#include "fts_schema.h"        /* fts_schema_migrate (widens intel_items_fts) */
+#include "entitystore.h"       /* es_norm_migrate */
 #include "source_registry.h"   /* src_meta_get (merged metadata)        */
 #include "../source.h"         /* registry_all / registry_count (sources) */
+#include "../third_party/cJSON.h" /* live-id array for the stale-source prune */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 /* JO_REPO_ROOT is -D'd by the Makefile to the JapanOSINT repo root so the
  * binary finds the DB + schema without args; JO_DB / JO_SCHEMA env override. */
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
 
 static char *slurp(const char *path) {
@@ -22,7 +34,12 @@ static char *slurp(const char *path) {
   fseek(f, 0, SEEK_END);
   long n = ftell(f);
   fseek(f, 0, SEEK_SET);
-  char *buf = malloc(n + 1);
+  /* ftell returns -1 on a non-seekable stream (a FIFO, /dev/stdin, a process
+   * substitution — all of which fopen happily). Unchecked, that became
+   * malloc(0) followed by fread(buf, 1, SIZE_MAX, f): an unbounded heap
+   * overflow at boot, and a one-byte overwrite even when the read is empty. */
+  if (n < 0) { fclose(f); return NULL; }
+  char *buf = malloc((size_t)n + 1);
   if (!buf) { fclose(f); return NULL; }
   size_t rd = fread(buf, 1, (size_t)n, f);
   fclose(f);
@@ -81,39 +98,39 @@ void ensure_column(db_handle *db, const char *table, const char *col,
  * (Japan map collector and OSINT-SaaS service alike) has a row and therefore
  * appears in /api/status, /api/sources, /api/keys with full metadata. Pulls
  * type/category/url/name from the merged src_meta_get() (curated table, else
- * synthesized from the source_def). Idempotent: on conflict it refreshes ONLY
- * the four registry-derived metadata columns and leaves every runtime column
- * (status, probe_*, records_count, quarantine_*, schedule_mode, …) untouched.
+ * synthesized from the source_def). Runs after the REGISTER_SOURCE
+ * constructors (which fire before main), so the registry is fully populated.
  *
- * The refresh matters because nothing else ever writes those four columns: a
- * source whose category/name/url is corrected in the registry would otherwise
- * keep serving the value that was seeded the first time the DB was created,
- * i.e. the API would report metadata the code no longer says. Runs after the
- * REGISTER_SOURCE constructors (which fire before main), so the registry is
- * fully populated. */
+ * Idempotent, and on conflict it REFRESHES the four registry-derived columns
+ * (name/type/category/url) while leaving every operational column —
+ * status, last_check/last_success, probe_consent, schedule_mode — untouched.
+ * It used to be ON CONFLICT DO NOTHING, which meant a row seeded once was
+ * frozen forever: correcting a source's metadata in the curated table changed
+ * nothing on any existing install. That bit us with the camera collectors,
+ * whose rows had been seeded from synthesized defaults (category
+ * "investigation", url NULL) and stayed that way after the curated rows were
+ * re-pointed onto their real ids. Those four columns have exactly one author —
+ * this function — so refreshing them can't clobber user state. `url` is
+ * COALESCEd so a metadata row without a url never blanks a seeded one. */
 static void db_seed_sources(db_handle *db) {
   const source_def **a = registry_all();
   int n = registry_count();
   static const char *SQL =
     "INSERT INTO sources (id,name,type,category,url,status) "
-    "VALUES (?1,?2,?3,?4,?5,'pending') ON CONFLICT(id) DO UPDATE SET "
-    "name=excluded.name, type=excluded.type, "
-    "category=excluded.category, url=excluded.url "
-    /* Only when something actually differs, so the tally below counts rows
-     * that changed rather than every row we looked at. */
-    "WHERE sources.name     IS NOT excluded.name "
-    "   OR sources.type     IS NOT excluded.type "
-    "   OR sources.category IS NOT excluded.category "
-    "   OR sources.url      IS NOT excluded.url";
-  /* Probe first so the tally below reports what actually happened: the upsert's
-   * sqlite3_changes() is 1 for an insert AND for a metadata refresh, so without
-   * this the two would be indistinguishable (the same trap core/intel.c's emit()
-   * had). Primary-key lookup inside the seed transaction — 1 extra step per
-   * source, no scan. */
-  static const char *PROBE = "SELECT 1 FROM sources WHERE id=?1";
-  sqlite3_stmt *s, *p;
+    "VALUES (?1,?2,?3,?4,?5,'pending') "
+    "ON CONFLICT(id) DO UPDATE SET "
+    "  name=excluded.name, type=excluded.type, category=excluded.category, "
+    "  url=COALESCE(excluded.url, sources.url) "
+    " WHERE sources.name     IS NOT excluded.name "
+    "    OR sources.type     IS NOT excluded.type "
+    "    OR sources.category IS NOT excluded.category "
+    "    OR sources.url      IS NOT COALESCE(excluded.url, sources.url)";
+  /* Counting inserts separately from refreshes: sqlite3_changes() reports 1
+   * for both, so ask the table whether the row existed before the step. */
+  static const char *EXISTS_SQL = "SELECT 1 FROM sources WHERE id=?1";
+  sqlite3_stmt *s, *ex;
   if (sqlite3_prepare_v2(db->h, SQL, -1, &s, NULL) != SQLITE_OK) return;
-  if (sqlite3_prepare_v2(db->h, PROBE, -1, &p, NULL) != SQLITE_OK) {
+  if (sqlite3_prepare_v2(db->h, EXISTS_SQL, -1, &ex, NULL) != SQLITE_OK) {
     sqlite3_finalize(s); return;
   }
   sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL);
@@ -126,10 +143,11 @@ static void db_seed_sources(db_handle *db) {
     const char *url  = (m && m->url)      ? m->url      : NULL;
     const char *name = (m && m->name)     ? m->name
                        : (d->name ? d->name : d->id);
-    sqlite3_bind_text(p, 1, d->id, -1, SQLITE_TRANSIENT);
-    int existed = sqlite3_step(p) == SQLITE_ROW;
-    sqlite3_reset(p);
-    sqlite3_clear_bindings(p);
+    sqlite3_reset(ex);
+    sqlite3_bind_text(ex, 1, d->id, -1, SQLITE_TRANSIENT);
+    int existed = sqlite3_step(ex) == SQLITE_ROW;
+    sqlite3_reset(ex);
+
     sqlite3_bind_text(s, 1, d->id, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 2, name,  -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 3, type,  -1, SQLITE_TRANSIENT);
@@ -137,29 +155,142 @@ static void db_seed_sources(db_handle *db) {
     if (url) sqlite3_bind_text(s, 5, url, -1, SQLITE_TRANSIENT);
     else     sqlite3_bind_null(s, 5);
     if (sqlite3_step(s) == SQLITE_DONE) {
-      if (existed) refreshed += sqlite3_changes(db->h);
-      else         added     += sqlite3_changes(db->h);
+      int ch = sqlite3_changes(db->h);
+      if (ch) { if (existed) refreshed++; else added++; }
     }
     sqlite3_reset(s);
     sqlite3_clear_bindings(s);
   }
   sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL);
   sqlite3_finalize(s);
-  sqlite3_finalize(p);
-  fprintf(stderr, "[db] seeded sources from registry (%d new rows, "
-                  "%d existing rows refreshed from registry metadata)\n",
+  sqlite3_finalize(ex);
+
+  /* Prune rows for sources that no longer exist.
+   *
+   * This only ever inserted and refreshed, so a database seeded before a
+   * collector was retired keeps that collector's row forever. Once the
+   * curated metadata row goes too, the API serves it with a null nameJa /
+   * description / free / layer — a source that cannot be run, cannot be
+   * explained, and is indistinguishable from a live one in the dashboard.
+   *
+   * Deletion is guarded rather than unconditional. `foreign_keys=ON` and four
+   * tables reference sources(id) with no ON DELETE clause, so a row with
+   * history would abort the statement; more importantly that history is worth
+   * keeping — a retired source's fetch_log is still the record of what it did.
+   * So: drop only the rows nothing refers to, and report the rest rather than
+   * failing silently. */
+  static const char *PRUNE_SQL =
+    "DELETE FROM sources WHERE id NOT IN (SELECT value FROM json_each(?1)) "
+    "  AND NOT EXISTS (SELECT 1 FROM fetch_log            f WHERE f.source_id = sources.id) "
+    "  AND NOT EXISTS (SELECT 1 FROM collector_anomaly    c WHERE c.source_id = sources.id) "
+    "  AND NOT EXISTS (SELECT 1 FROM collector_repair     r WHERE r.source_id = sources.id) "
+    "  AND NOT EXISTS (SELECT 1 FROM collector_url_overrides o WHERE o.source_id = sources.id)";
+  static const char *KEPT_SQL =
+    "SELECT COUNT(*) FROM sources WHERE id NOT IN (SELECT value FROM json_each(?1))";
+
+  /* An empty registry is never evidence that every source was retired — it is
+   * evidence that this BINARY does not link the collectors (a unit-test or
+   * sanitiser build, which resolves JO_DB to the same default path as the
+   * server). With n == 0 the live-id array is `[]` and the DELETE below matches
+   * every history-free row, i.e. it would silently empty `sources` on a freshly
+   * seeded install. Prune only when we actually know what is live. */
+  if (n <= 0) return;
+
+  cJSON *ids = cJSON_CreateArray();
+  for (int i = 0; i < n; i++)
+    cJSON_AddItemToArray(ids, cJSON_CreateString(a[i]->id));
+  char *ids_json = cJSON_PrintUnformatted(ids);
+  cJSON_Delete(ids);
+  if (!ids_json) return;
+
+  int pruned = 0, kept = 0;
+  sqlite3_stmt *p = NULL;
+  if (sqlite3_prepare_v2(db->h, PRUNE_SQL, -1, &p, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(p, 1, ids_json, -1, SQLITE_STATIC);
+    if (sqlite3_step(p) == SQLITE_DONE) pruned = sqlite3_changes(db->h);
+    sqlite3_finalize(p);
+  }
+  if (sqlite3_prepare_v2(db->h, KEPT_SQL, -1, &p, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(p, 1, ids_json, -1, SQLITE_STATIC);
+    if (sqlite3_step(p) == SQLITE_ROW) kept = sqlite3_column_int(p, 0);
+    sqlite3_finalize(p);
+  }
+  free(ids_json);
+
+  fprintf(stderr,
+          "[db] seeded sources from registry (%d new, %d metadata-refreshed",
           added, refreshed);
+  if (pruned || kept)
+    fprintf(stderr, ", %d stale pruned, %d stale kept for their history",
+            pruned, kept);
+  fprintf(stderr, ")\n");
 }
 
-/* Second connection to an already-migrated database (no schema apply, no boot
- * migrations, no source seeding) — for a background thread that owns its own
- * transactions. A transaction belongs to a connection, not to a thread, so a
- * worker sharing the event loop's handle would silently join whatever
- * transaction is open there. Same file + same pragmas, that is all. */
+/* The pragmas every connection to this database must carry.
+ *
+ * cache_size/mmap_size are here and not only on the primary handle because
+ * they are per-CONNECTION, and the connections that do the heavy reading are
+ * the attached ones (scheduler workers, dispatch pool, the background pods).
+ * The measured effect on /api/intel/items was 35.1 s -> 0.002 s together with
+ * idx_intel_items_pub (schema.sql): the index removes the sort, these remove
+ * the page churn underneath it.
+ *
+ *   cache_size=-65536  → 64 MiB of page cache (negative = KiB, not pages, so
+ *                        it does not change meaning with the page size).
+ *   mmap_size=256MiB   → read the DB through the page cache instead of
+ *                        copying every page via pread. Advisory: SQLite
+ *                        silently ignores it where mmap is unavailable.
+ * Both are ceilings, not reservations. */
+/* sqlite-vec (third_party/sqlite-vec.c, v0.1.9) provides the vec0 virtual
+ * table behind /api/intel/semantic. sqlite3_auto_extension() registers it
+ * process-wide so EVERY connection — db_open's primary, db_attach's worker
+ * connections, the unit-test fixtures — sees vec0 and the vec_* functions.
+ * It must run before the first sqlite3_open_v2, hence pthread_once from both
+ * openers rather than a call site in main(). */
+static pthread_once_t vec_once = PTHREAD_ONCE_INIT;
+static void vec_register(void) {
+  sqlite3_auto_extension((void (*)(void))sqlite3_vec_init);
+}
+
+static void db_apply_pragmas(sqlite3 *h) {
+  sqlite3_exec(h, "PRAGMA journal_mode=WAL;",  NULL, NULL, NULL);
+  sqlite3_exec(h, "PRAGMA foreign_keys=ON;",   NULL, NULL, NULL);
+  sqlite3_exec(h, "PRAGMA busy_timeout=5000;", NULL, NULL, NULL);
+  sqlite3_exec(h, "PRAGMA synchronous=NORMAL;", NULL, NULL, NULL);
+  sqlite3_exec(h, "PRAGMA cache_size=-65536;", NULL, NULL, NULL);
+  sqlite3_exec(h, "PRAGMA mmap_size=268435456;", NULL, NULL, NULL);
+  /* CAP THE WAL, OR IT BECOMES THE BIGGEST FILE ON THE DISK.
+   *
+   * WAL mode was set above and nothing bounded the journal. SQLite's automatic
+   * checkpoint fires at 1000 pages, but a checkpoint cannot reset a WAL while
+   * ANY connection still holds an older snapshot — and this process runs 8
+   * scheduler workers plus dispatch workers plus the event loop, each on its
+   * own connection, reading continuously. There is almost never a quiet moment,
+   * so the WAL only grows. Measured 2026-09-15, twenty minutes after a restart:
+   * a 32 GB database with a 9.75 GB -wal beside it.
+   *
+   * That is not just disk. The database and its WAL live on the same volume,
+   * and a volume that fills while SQLite is writing is exactly what corrupted
+   * intel_items_fts — a repair that cost a full rebuild of 4.3M rows.
+   *
+   * journal_size_limit makes a checkpoint TRUNCATE the file back to this size
+   * instead of leaving it at its high-water mark. It changes no durability
+   * guarantee: the limit applies after the checkpoint has already committed
+   * those frames into the database. 256 MB is generous for the biggest single
+   * transaction this tree runs (the FTS rebuild's per-batch commits) while
+   * keeping the steady-state footprint bounded. */
+  sqlite3_exec(h, "PRAGMA journal_size_limit=268435456;", NULL, NULL, NULL);
+}
+
+/* Secondary connection — see db_attach() in db.h. Deliberately does NOT apply
+ * schema.sql or the boot migrations: those ran on the primary handle at boot,
+ * and re-running them from a worker thread while the event loop is serving
+ * requests means concurrent DDL on a live WAL database for no gain. */
 int db_attach(db_handle *db, const char *db_path) {
   if (!db) return 1;
   const char *dbp = db_path ? db_path
     : (getenv("JO_DB") ? getenv("JO_DB") : JO_REPO_ROOT "/data/japanmap.db");
+  pthread_once(&vec_once, vec_register);
   int rc = sqlite3_open_v2(dbp, &db->h, SQLITE_OPEN_READWRITE, NULL);
   if (rc != SQLITE_OK) {
     fprintf(stderr, "[db] attach failed: %s\n", sqlite3_errmsg(db->h));
@@ -167,10 +298,69 @@ int db_attach(db_handle *db, const char *db_path) {
     db->h = NULL;
     return 1;
   }
-  sqlite3_exec(db->h, "PRAGMA foreign_keys=ON;",   NULL, NULL, NULL);
-  sqlite3_exec(db->h, "PRAGMA busy_timeout=5000;", NULL, NULL, NULL);
-  sqlite3_exec(db->h, "PRAGMA synchronous=NORMAL;", NULL, NULL, NULL);
+  /* The same set as the primary handle — these are per-connection, and this
+   * is the connection kind that does the bulk of the reading. */
+  db_apply_pragmas(db->h);
   return 0;
+}
+
+/* See db.h. Deliberately falls back rather than failing: an off-loop pod that
+ * cannot get its own connection should run slightly unsafely and log it, not
+ * silently do nothing (which is what a hard failure would look like from the
+ * outside — an investigation that "found nothing"). */
+db_handle *db_worker_open(db_handle *own, db_handle *fallback) {
+  if (!own) return fallback;
+  own->h = NULL;
+  if (db_attach(own, NULL) == 0) return own;
+  fprintf(stderr, "[db] worker connection failed; falling back to the shared "
+                  "handle (its transactions can now interleave)\n");
+  return fallback;
+}
+
+void db_worker_close(db_handle *own) {
+  if (own && own->h) db_close(own);
+}
+
+/* Create the parent directory of `path`, one level, best effort.
+ *
+ * SQLITE_OPEN_CREATE creates the FILE, never the DIRECTORY, and data/ is
+ * gitignored — so on a fresh clone the very first run died with
+ * "[db] open failed: unable to open database file" and nothing worked,
+ * including read-only commands like --list-sources and --selftest, because
+ * main() opens the DB before it parses argv. A clone that cannot start is a
+ * bad first impression for a defect that is one mkdir. */
+static void ensure_parent_dir(const char *path) {
+  char buf[1024];
+  snprintf(buf, sizeof buf, "%s", path);
+  char *slash = strrchr(buf, '/');
+#ifdef _WIN32
+  char *bs = strrchr(buf, '\\');
+  if (bs && (!slash || bs > slash)) slash = bs;
+#endif
+  if (!slash || slash == buf) return;
+  *slash = 0;                                 /* buf is now the parent dir */
+  if (!*buf) return;
+  struct stat st;
+  if (stat(buf, &st) == 0) return;            /* already there */
+
+  /* Every missing level, not just the last one: mkdir() creates ONE
+   * directory, so a JO_DB pointing somewhere two levels deep would still fail
+   * with the same unhelpful "unable to open database file". Walk the path and
+   * create each component; errors stay silent here because the real diagnosis
+   * is sqlite's own message a few lines below, which the caller already
+   * prints. */
+  for (char *p = buf + 1; *p; p++) {
+    if (*p != '/'
+#ifdef _WIN32
+        && *p != '\\'
+#endif
+       ) continue;
+    char sep = *p;
+    *p = 0;
+    if (stat(buf, &st) != 0) mkdir(buf, 0755);
+    *p = sep;
+  }
+  mkdir(buf, 0755);
 }
 
 int db_open(db_handle *db, const char *db_path, const char *schema_path) {
@@ -179,6 +369,9 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   const char *scp = schema_path ? schema_path
     : (getenv("JO_SCHEMA") ? getenv("JO_SCHEMA") : JO_REPO_ROOT "/native/core/schema.sql");
 
+  ensure_parent_dir(dbp);
+
+  pthread_once(&vec_once, vec_register);
   int rc = sqlite3_open_v2(dbp, &db->h,
                            SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
   if (rc != SQLITE_OK) {
@@ -186,10 +379,7 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
     return 1;
   }
   /* Mirror database.js: WAL + sane pragmas. */
-  sqlite3_exec(db->h, "PRAGMA journal_mode=WAL;", NULL, NULL, NULL);
-  sqlite3_exec(db->h, "PRAGMA foreign_keys=ON;", NULL, NULL, NULL);
-  sqlite3_exec(db->h, "PRAGMA busy_timeout=5000;", NULL, NULL, NULL);
-  sqlite3_exec(db->h, "PRAGMA synchronous=NORMAL;", NULL, NULL, NULL);
+  db_apply_pragmas(db->h);
 
   char *schema = slurp(scp);
   if (!schema) {
@@ -236,6 +426,21 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * block, so it would reference a column that does not exist yet. */
   ensure_column(db, "breach_items", "value_domain", "TEXT");
 
+  /* House rule 4b, "emitting is not storing either". fetch_log.records_fetched
+   * counts emit() CALLS; this counts the DISTINCT rows those calls left
+   * behind. They differ whenever a source's records key onto each other in the
+   * sink's uid — ECDC_RESPIRATORY emitted 12,648 and stored 31 — and until
+   * this column existed there was nowhere to see that except by eye, in one
+   * run, on stderr.
+   *
+   * NO DEFAULT, deliberately. Every fetch_log row written before this
+   * migration is NULL here, and NULL is the truth about them: the number was
+   * not measured. A `DEFAULT 0` would backfill the entire history with a
+   * measurement nobody took and make every archived run look like total loss.
+   * A NEGATIVE value is a floor, not a count — see fetch_log_set_stored() in
+   * core/scheduler.c. */
+  ensure_column(db, "fetch_log", "stored", "INTEGER");
+
   /* Evidence capture (roadmap 17) is per-source OPT-IN and defaults OFF. 415
    * sources on schedules down to 60s would fill a disk in days otherwise, and
    * the hot-path check fails closed if this column is missing. */
@@ -247,6 +452,18 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * schema.sql (which executes above this block) would fail with "no such
    * column", abandon the rest of the script, and brick first boot. */
   translate_migrate(db);
+
+  /* Breach-derived entity/mention quarantine. Breach ingest used to write the
+   * cleartext identifier into the SHARED entity graph (tenant_id NULL) and
+   * into entities_fts, where /api/entities/... — which has no role check — served
+   * it to any authenticated viewer, bypassing the platform-operator gate that
+   * every other door onto the corpus carries. Those rows now carry a reserved
+   * tenant sentinel so they fall out of the ordinary shared-graph predicate by
+   * construction. This runs the one-time backfill for rows earlier ingests
+   * already wrote; entitystore.c self-heals if it is ever missed, but doing it
+   * at boot means the first entity request after a deploy is not the one that
+   * pays for a corpus-sized UPDATE. */
+  es_breach_scope_migrate(db);
 
   /* Near-duplicate clustering (roadmap 25) likewise owns its own migration:
    * idx_intel_items_cluster and its partial backfill index both reference
@@ -272,8 +489,27 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   ensure_column(db, "intel_items", "capture_stills", "INTEGER NOT NULL DEFAULT 0");
   camera_stills_migrate(db);
 
+  /* Widen intel_items_fts to also index link/author/tags/properties. No-op
+   * unless the live index is still the old column set. Deliberately LAST of
+   * the migrations: it rewinds translate.c's FTS watermark (so translate_state
+   * must already exist) and recreates the uid_map rowid index that
+   * translate_migrate() created. It is also the only migration here that can
+   * take minutes on a large corpus — everything cheap has already run, so a
+   * JO_FTS_REBUILD=0 boot skips only this. */
+  fts_schema_migrate(db);
+  /* Entity norm_key/readings re-key (ENTITY_NORM_VERSION); after the FTS
+   * migration so entities_fts is already at the shape it re-indexes into. */
+  es_norm_migrate(db);
+
   /* Every registered source gets a sources-table row (idempotent). */
   db_seed_sources(db);
+
+  /* Give the planner statistics to choose between the intel_items indexes.
+   * PRAGMA optimize, not a bare ANALYZE: it re-analyses only tables whose
+   * stats are actually stale, and analysis_limit caps the scan per index so
+   * boot cost stays bounded on a large corpus instead of growing with it. */
+  sqlite3_exec(db->h, "PRAGMA analysis_limit=1000;", NULL, NULL, NULL);
+  sqlite3_exec(db->h, "PRAGMA optimize;", NULL, NULL, NULL);
 
   fprintf(stderr, "[db] opened %s, schema applied (%d objects)\n",
           dbp, db_object_count(db));

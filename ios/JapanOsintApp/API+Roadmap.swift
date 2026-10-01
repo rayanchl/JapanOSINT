@@ -209,12 +209,16 @@ extension API {
 
     // ── Item 11: alert inbox ───────────────────────────────────────────────
 
+    /// Returns the rows AND how many exist server-side, so the inbox can say
+    /// "showing 200 of 700" instead of presenting a capped page as the whole.
+    /// `total` is nil when the server could not count (it sends null rather
+    /// than a plausible 0) or when talking to a pre-envelope server.
     func alertInbox(unreadOnly: Bool = false,
-                    limit: Int = 100) async throws -> [AlertInboxEvent] {
+                    limit: Int = 100) async throws -> (events: [AlertInboxEvent], total: Int?) {
         var q = [URLQueryItem(name: "limit", value: String(limit))]
         if unreadOnly { q.append(URLQueryItem(name: "unread", value: "1")) }
         let env: AlertInboxEnvelope = try await get("/api/alert-events", query: q)
-        return env.data
+        return (env.data, env.page?.total)
     }
 
     func alertUnreadCount() async throws -> Int {
@@ -257,6 +261,23 @@ extension API {
         return env.data
     }
 
+    /// `PATCH /api/aoi/:id`. The server MERGES: any field left out keeps its
+    /// stored value, and the merged document is re-validated as a whole (so a
+    /// kind change re-checks the geometry it now claims to be). Passing only
+    /// `name` therefore renames without touching the shape — which is what
+    /// makes `AOIDrawOverlay`'s "saved areas … stay editable" true.
+    @discardableResult
+    func aoiUpdate(_ id: String, name: String? = nil, kind: String? = nil,
+                   geometry: Any? = nil) async throws -> AreaOfInterest {
+        var body: [String: Any] = [:]
+        if let name { body["name"] = name }
+        if let kind { body["kind"] = kind }
+        if let geometry { body["geometry"] = geometry }
+        let env: AOIOneEnvelope = try await patch("/api/aoi/\(esc(id))",
+                                                  body: try enc(body))
+        return env.data
+    }
+
     func aoiDelete(_ id: String) async throws {
         try await delete("/api/aoi/\(esc(id))")
     }
@@ -275,6 +296,25 @@ extension API {
         struct One: Decodable { let data: Watchlist }
         let env: One = try await post("/api/watchlists",
             body: try enc(["name": name, "entity_ids": entityIds]), timeout: 20)
+        return env.data
+    }
+
+    /// `PATCH /api/watchlists/:id` — rename, re-point at a different entity
+    /// set, or enable/disable the rule behind it. Merging server-side: omit
+    /// `entityIds` and the stored list stands. An EMPTY list is refused rather
+    /// than accepted, because a watchlist with no entity term is not a narrower
+    /// watchlist, it is a firehose.
+    @discardableResult
+    func watchlistUpdate(_ id: String, name: String? = nil,
+                         entityIds: [String]? = nil,
+                         enabled: Bool? = nil) async throws -> Watchlist {
+        var body: [String: Any] = [:]
+        if let name { body["name"] = name }
+        if let entityIds { body["entity_ids"] = entityIds }
+        if let enabled { body["enabled"] = enabled }
+        struct One: Decodable { let data: Watchlist }
+        let env: One = try await patch("/api/watchlists/\(esc(id))",
+                                        body: try enc(body))
         return env.data
     }
 
@@ -444,6 +484,96 @@ extension API {
     func cameraStillRaw(_ stillId: String) async throws -> Data {
         let url = try makeURL("/api/camera-stills/\(esc(stillId))/raw")
         return try await request(url, timeout: 60)
+    }
+
+    // ── Roadmap 17 / 28: the capture opt-ins ───────────────────────────────
+    //
+    // `sources.capture_evidence` and `intel_items.capture_stills` both default
+    // to 0 and both capture hooks fail closed, so with no client method the two
+    // features were permanently off: the evidence VIEWER was wired and could
+    // only ever render an empty chain of custody. Both routes are operator-
+    // gated and audited server-side (httpd.c's opgate block) — the switch here
+    // adds no authority, it just makes the existing one reachable.
+
+    /// `POST` (on) / `DELETE` (off) `/api/admin/sources/:id/capture-evidence`.
+    /// Turning this on starts writing third-party content to the server's disk.
+    @discardableResult
+    func setSourceCaptureEvidence(_ sourceId: String,
+                                  enabled: Bool) async throws -> Bool {
+        struct Reply: Decodable { let ok: Bool?; let capture_evidence: Bool? }
+        let url = try makeURL("/api/admin/sources/\(esc(sourceId))/capture-evidence")
+        let data = try await request(url, method: enabled ? "POST" : "DELETE",
+                                     timeout: 20)
+        let r = try? JSONDecoder().decode(Reply.self, from: data)
+        return r?.capture_evidence ?? enabled
+    }
+
+    /// `POST` (on) / `DELETE` (off) `/api/admin/cameras/:uid/capture-stills`.
+    /// The reply's `note` is load-bearing: frames are only PRESERVED when the
+    /// `camera-stills` source is itself opted into evidence capture, so the
+    /// caller must show it rather than report a bare success.
+    @discardableResult
+    func setCameraCaptureStills(_ cameraUID: String,
+                                enabled: Bool) async throws -> (on: Bool, note: String?) {
+        struct Reply: Decodable {
+            let ok: Bool?; let capture_stills: Bool?; let note: String?
+        }
+        let url = try makeURL("/api/admin/cameras/\(esc(cameraUID))/capture-stills")
+        let data = try await request(url, method: enabled ? "POST" : "DELETE",
+                                     timeout: 20)
+        let r = try? JSONDecoder().decode(Reply.self, from: data)
+        return (r?.capture_stills ?? enabled, r?.note)
+    }
+
+    // ── Item 32: GTFS travel-time reachability ─────────────────────────────
+
+    /// `GET /api/isochrone` — where can you actually get to from here, on the
+    /// real timetable, within `maxMin` minutes.
+    ///
+    /// Deliberately no client-side timeout (the inherited `get()` default): a
+    /// cold origin is seconds of server CPU over ~1500 timetable queries, and
+    /// the server answers on a worker thread. Capping it here would abandon a
+    /// request that is about to succeed — and, worse, burn one of the twelve
+    /// per-minute slots for nothing.
+    ///
+    /// Only `lat`/`lon` are required. Every other parameter is omitted when
+    /// nil so the SERVER's documented default applies; sending a client-side
+    /// guess of the default would mean the UI has to be kept in sync with
+    /// isochrone.h forever. All of them come back echoed (and clamped) in
+    /// `meta.params`, which is what the UI displays.
+    func isochrone(lat: Double,
+                   lon: Double,
+                   maxMin: Int? = nil,
+                   bands: [Int]? = nil,
+                   departAt: String? = nil,
+                   maxWalkM: Int? = nil,
+                   walkKmh: Double? = nil,
+                   maxTransfers: Int? = nil) async throws -> Isochrone {
+        var q = [URLQueryItem(name: "lat", value: String(lat)),
+                 URLQueryItem(name: "lon", value: String(lon))]
+        if let v = maxMin       { q.append(.init(name: "max_min", value: String(v))) }
+        if let v = bands, !v.isEmpty {
+            q.append(.init(name: "bands", value: v.map(String.init).joined(separator: ",")))
+        }
+        if let v = departAt, !v.isEmpty { q.append(.init(name: "depart_at", value: v)) }
+        if let v = maxWalkM     { q.append(.init(name: "max_walk_m", value: String(v))) }
+        if let v = walkKmh      { q.append(.init(name: "walk_kmh", value: String(format: "%.1f", v))) }
+        if let v = maxTransfers { q.append(.init(name: "max_transfers", value: String(v))) }
+        let raw: IsochroneResponse = try await get("/api/isochrone", query: q)
+        return raw.decoded()
+    }
+
+    /// Seconds to wait after a 429 from `/api/isochrone`, read out of the
+    /// server's `{"error":"too_many_requests","retry_after_sec":N}` body.
+    /// Returns nil for any other error, so a caller can branch on "throttled"
+    /// without string-matching an error message.
+    static func isochroneRetryAfter(_ error: Error) -> Int? {
+        guard case APIError.http(429, let body) = error,
+              let data = body.data(using: .utf8),
+              let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        else { return nil }
+        return (obj["retry_after_sec"] as? Int)
+            ?? (obj["retry_after_sec"] as? NSNumber)?.intValue
     }
 
     // ── helpers ────────────────────────────────────────────────────────────

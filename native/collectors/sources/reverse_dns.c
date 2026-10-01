@@ -9,8 +9,8 @@
  * "ptr:<ip>:<hostname>". No PTR record / resolver failure / invalid IP →
  * emit NOTHING and return 0 (honest empty). No {success,confidence,data}
  * envelope. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "third_party/cJSON.h"
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -31,6 +31,7 @@ static int emit_ptr(intel_sink *sink, const char *ip, const char *hostname) {
   cJSON_AddStringToObject(props, "entity", ip);
   cJSON_AddStringToObject(props, "hostname", hostname);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   char rk[400];
   snprintf(rk, sizeof rk, "ptr:%s:%s", ip, hostname);

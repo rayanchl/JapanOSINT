@@ -44,13 +44,14 @@
  * pointers, so peak memory is one decompressed member.
  *
  *   props order (map layer): stop_id, name, operator, feed_id, source */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../lib/zipread.h"
-#include "../../core/db.h"
-#include "../../third_party/sqlite3.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "lib/zipread.h"
+#include "core/db.h"
+#include "third_party/sqlite3.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -260,7 +261,7 @@ static double snap_dist(const shpt *p, int n, int *from, double lat, double lon)
 
 /* ── per-feed ingest state ───────────────────────────────────────────────*/
 typedef struct {
-  sqlite3_stmt *stop, *route, *trip, *st, *shape, *cal;
+  sqlite3_stmt *stop, *route, *trip, *st, *shape, *cal, *caldate;
 } stmts;
 
 typedef struct {
@@ -478,12 +479,21 @@ static int prep_all(sqlite3 *h, stmts *s) {
         "wed,thu,fri,sat,sun,start_date,end_date)"
         " VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12)",
         -1, &s->cal, NULL) != SQLITE_OK) return -1;
+  /* calendar_dates.txt — service EXCEPTIONS. Without this the exception table
+   * stays empty forever, and core/isochrone.c + core/transitapi.c degrade to
+   * the plain weekly pattern: a Japanese public holiday silently returns the
+   * ordinary weekday timetable. */
+  if (sqlite3_prepare_v2(h,
+        "INSERT OR REPLACE INTO gtfs_calendar_dates(org_id,feed_id,service_id,"
+        "date,exception_type) VALUES(?1,?2,?3,?4,?5)",
+        -1, &s->caldate, NULL) != SQLITE_OK) return -1;
   return 0;
 }
 static void fin_all(stmts *s) {
   sqlite3_finalize(s->stop);  sqlite3_finalize(s->route);
   sqlite3_finalize(s->trip);  sqlite3_finalize(s->st);
   sqlite3_finalize(s->shape); sqlite3_finalize(s->cal);
+  sqlite3_finalize(s->caldate);
 }
 
 static char *member(const char *zip, size_t zl, const char *name) {
@@ -529,15 +539,7 @@ static void load_stops(feedctx *c, const char *zip, size_t zl,
     c->fs->stops++;
 
     if (features && *budget > 0) {
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(c->slon[c->ns]));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(c->slat[c->ns]));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(c->slon[c->ns], c->slat[c->ns]);
       cJSON *pr = cJSON_CreateObject();
       cJSON_AddStringToObject(pr, "stop_id", id);
       const char *nm = csv_at(&it, c_nm);
@@ -802,6 +804,37 @@ static void load_calendar(feedctx *c, const char *zip, size_t zl) {
   csv_close(&ci);
 }
 
+/* calendar_dates.txt: service_id,date,exception_type.
+ * exception_type 1 = service ADDED on that date, 2 = REMOVED. Japanese holiday
+ * timetables are expressed almost entirely this way, which is why the readers
+ * cannot be correct on a holiday without it. Absent file = no exceptions, which
+ * is a legitimate feed shape and must stay silent. */
+static void load_calendar_dates(feedctx *c, const char *zip, size_t zl) {
+  char *txt = member(zip, zl, "calendar_dates.txt");
+  if (!txt) return;
+  csvit ci;
+  if (csv_open(&ci, txt) != 0) return;
+  int k_s = csv_col(&ci, "service_id"), k_d = csv_col(&ci, "date"),
+      k_e = csv_col(&ci, "exception_type");
+  long n = 0;
+  while (csv_row(&ci)) {
+    const char *id = csv_at(&ci, k_s), *d = csv_at(&ci, k_d),
+               *e = csv_at(&ci, k_e);
+    if (!*id || !*d) continue;
+    int ex = *e ? atoi(e) : 0;
+    if (ex != 1 && ex != 2) continue;      /* only the two GTFS-defined values */
+    sqlite3_reset(c->s->caldate); sqlite3_clear_bindings(c->s->caldate);
+    bind_txt(c->s->caldate, 1, c->org); bind_txt(c->s->caldate, 2, c->feed);
+    bind_txt(c->s->caldate, 3, id);       bind_txt(c->s->caldate, 4, d);
+    sqlite3_bind_int(c->s->caldate, 5, ex);
+    sqlite3_step(c->s->caldate);
+    n++;
+  }
+  csv_close(&ci);
+  if (n) fprintf(stderr, "[gtfs] %s/%s: %ld calendar exception(s)\n",
+                 c->org, c->feed, n);
+}
+
 static void ctx_free(feedctx *c) {
   for (int i = 0; i < c->ns; i++) free(c->sid[i]);
   free(c->sid); free(c->slat); free(c->slon); smap_free(&c->sidmap);
@@ -838,6 +871,7 @@ static void ingest_feed(sqlite3 *h, stmts *s, const char *org, const char *feed,
   save_trips(&c);
   load_routes(&c, zip, zl);
   load_calendar(&c, zip, zl);
+  load_calendar_dates(&c, zip, zl);
 
   ctx_free(&c);
 }
@@ -851,11 +885,6 @@ static char *http_bytes(http_client *hc, const char *url, size_t *len) {
   r.body = NULL;                      /* transferred to caller */
   http_response_free(&r);
   return out;
-}
-
-static const char *jstr(cJSON *o, const char *k) {
-  cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -911,12 +940,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (feed_limit > 0 && done >= feed_limit) break;
     if (ctx->cancel && *ctx->cancel) break;
 
-    const char *org = jstr(row, "organization_id");
-    const char *feed = jstr(row, "feed_id");
-    const char *url = jstr(row, "file_url");
+    const char *org = jo_sv(row, "organization_id");
+    const char *feed = jo_sv(row, "feed_id");
+    const char *url = jo_sv(row, "file_url");
     if (!org || !feed || !url) continue;
-    const char *org_name = jstr(row, "organization_name");
-    const char *feed_name = jstr(row, "feed_name");
+    const char *org_name = jo_sv(row, "organization_name");
+    const char *feed_name = jo_sv(row, "feed_name");
 
     size_t zl = 0;
     char *zip = http_bytes(ctx->http, url, &zl);
@@ -935,6 +964,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       "DELETE FROM gtfs_routes     WHERE org_id=?1 AND feed_id=?2",
       "DELETE FROM gtfs_stops      WHERE org_id=?1 AND feed_id=?2",
       "DELETE FROM gtfs_calendar   WHERE org_id=?1 AND feed_id=?2",
+      /* Without this a reissued feed keeps exceptions the new one dropped —
+       * a removed holiday closure would go on suppressing service forever. */
+      "DELETE FROM gtfs_calendar_dates WHERE org_id=?1 AND feed_id=?2",
     };
     for (size_t i = 0; i < sizeof DEL / sizeof *DEL; i++) {
       sqlite3_stmt *d = NULL;
@@ -970,9 +1002,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       } else sqlite3_bind_null(sfeed, 4);
       bind_txt(sfeed, 5, feed_name);
       bind_txt(sfeed, 6, url);
-      bind_txt(sfeed, 7, jstr(row, "feed_license_id"));
-      bind_txt(sfeed, 8, jstr(row, "feed_license_url"));
-      bind_txt(sfeed, 9, jstr(row, "file_to_date"));
+      bind_txt(sfeed, 7, jo_sv(row, "feed_license_id"));
+      bind_txt(sfeed, 8, jo_sv(row, "feed_license_url"));
+      bind_txt(sfeed, 9, jo_sv(row, "file_to_date"));
       sqlite3_step(sfeed);
     }
     if (sop) {

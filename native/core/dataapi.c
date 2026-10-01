@@ -60,6 +60,8 @@
  *    this generic endpoint. The general collector path is ported.
  */
 #include "dataapi.h"
+#include "collcache.h"
+#include "layertab.h"           /* curated taxonomy + source→layer resolver */
 #include "../source.h"
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
@@ -71,27 +73,27 @@
 
 /* ── collectorCache.js constants (verbatim) ─────────────────────────────── */
 #define DEFAULT_TTL_MS (15LL * 60 * 1000)        /* 15 min */
-#define MIN_TTL_MS     (60LL * 1000)             /* 1 min floor */
-#define MAX_TTL_MS     (24LL * 60 * 60 * 1000)   /* 24 h ceiling */
 
-static long long clamp_ttl(long long ms) {       /* == clampTtl() */
-  if (ms <= 0) return DEFAULT_TTL_MS;
-  if (ms < MIN_TTL_MS) return MIN_TTL_MS;
-  if (ms > MAX_TTL_MS) return MAX_TTL_MS;
-  return ms;
-}
-
-static long long now_ms(void) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  return (long long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
-}
+/* The collector_cache get/set/clampTtl port lives in core/collcache.c
+ * (collcache_get / collcache_set) and is shared with sweepapi.c and
+ * scheduler.c. This file used to carry a byte-identical private copy — same
+ * SQL, same [1min,24h] clamp with the same 15-min default, same
+ * `age <= ttl_ms` freshness test — which has been removed in favour of the
+ * shared one. Behaviour is unchanged. */
 
 static void iso_now(char *o, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
   struct tm g; gmtime_r(&tv.tv_sec, &g);
-  snprintf(o, n, "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-           g.tm_year + 1900, g.tm_mon + 1, g.tm_mday, g.tm_hour, g.tm_min,
-           g.tm_sec, (int)(tv.tv_usec / 1000));
+  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
+   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
+   * fixed 24-char stamp "may be truncated". The modulos are identity for
+   * every value gmtime_r can return and make the 24 provable, not merely
+   * true. */
+  snprintf(o, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(g.tm_year + 1900) % 10000u, (unsigned)(g.tm_mon + 1) % 100u,
+           (unsigned)g.tm_mday % 100u, (unsigned)g.tm_hour % 100u,
+           (unsigned)g.tm_min % 100u, (unsigned)g.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 
 /* getTtlMs(key): collector_ttls row else DEFAULT_TTL_MS. The table is
@@ -110,53 +112,6 @@ static long long get_ttl_ms(db_handle *db, const char *key) {
   }
   sqlite3_finalize(s);
   return ttl;
-}
-
-/* getCached(key): the cached FC JSON if fresh (ageMs <= ttl_ms), with its
- * stored age. Returns malloc'd JSON or NULL; *age_out set on hit. Mirrors
- * collectorCache.getCached exactly (age = now - fetched_at; expire when
- * age > ttl_ms). Missing table → NULL (miss). */
-static char *cache_get(db_handle *db, const char *key, long long *age_out) {
-  sqlite3_stmt *s = NULL;
-  char *out = NULL;
-  if (sqlite3_prepare_v2(db->h,
-        "SELECT fc_json, fetched_at, ttl_ms FROM collector_cache "
-        "WHERE key=?1", -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_text(s, 1, key, -1, SQLITE_TRANSIENT);
-    if (sqlite3_step(s) == SQLITE_ROW) {
-      const char *fc = (const char *)sqlite3_column_text(s, 0);
-      long long fetched = sqlite3_column_int64(s, 1);
-      long long ttl = sqlite3_column_int64(s, 2);
-      long long age = now_ms() - fetched;
-      if (fc && age <= ttl) {
-        out = strdup(fc);
-        if (age_out) *age_out = age;
-      }
-    }
-  }
-  sqlite3_finalize(s);
-  return out;
-}
-
-/* setCached(key, fc, ttlMs): INSERT … ON CONFLICT upsert, clamped TTL. Best
- * effort — a missing collector_cache table (C-only DB) is silently skipped,
- * exactly like collectorCache catching a stringify failure. */
-static void cache_set(db_handle *db, const char *key, const char *fc_json,
-                      long long ttl_ms) {
-  sqlite3_stmt *s = NULL;
-  if (sqlite3_prepare_v2(db->h,
-        "INSERT INTO collector_cache (key, fc_json, fetched_at, ttl_ms) "
-        "VALUES (?1,?2,?3,?4) "
-        "ON CONFLICT(key) DO UPDATE SET "
-        "  fc_json=excluded.fc_json, fetched_at=excluded.fetched_at, "
-        "  ttl_ms=excluded.ttl_ms", -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_text(s, 1, key, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(s, 2, fc_json, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int64(s, 3, now_ms());
-    sqlite3_bind_int64(s, 4, clamp_ttl(ttl_ms));
-    sqlite3_step(s);
-  }
-  sqlite3_finalize(s);
 }
 
 /* layer_work_* telemetry — DOCUMENTED NO-OP (see header). Call sites are
@@ -314,6 +269,215 @@ static cJSON *intel_fc_features(db_handle *db, const char *source_id) {
   return feats;
 }
 
+/* ── LAYER FeatureCollections (v2 — /api/layers/:id/geojson, /api/data) ───
+ *
+ * intel_fc_features() above serves ONE source. A layer (core/layers.def) is a
+ * SET of sources fused by data_type+modality, or a generated catch-all over
+ * every geocoded row whose source resolves to no layer at all. The predicate
+ * is spliced as a trusted, quote-escaped IN (...) fragment built by
+ * layertab.c — no user input reaches the SQL text (the layer id is only ever
+ * COMPARED against known ids, never spliced).
+ *
+ * BOUNDED, IN-BAND (house rule 2): one crime layer measured ~300 MB as an
+ * unbounded FC, which no client survives — so the FC takes LIMIT/OFFSET over
+ * a total order (rowid) and states records_available vs records_used and the
+ * offset to resume from in _meta. Every row stays reachable by paging;
+ * nothing is silently sliced. */
+
+#define LAYER_FC_DEFAULT_LIMIT 10000
+#define LAYER_FC_MAX_LIMIT     50000
+
+/* COUNT(*) over `where` (a complete WHERE-clause tail). -1 if the count could
+ * not be taken — rule 1: never report a number we did not obtain. */
+static long long count_where(db_handle *db, const char *where) {
+  char *q = sqlite3_mprintf("SELECT COUNT(*) FROM intel_items WHERE %s", where);
+  if (!q) return -1;
+  sqlite3_stmt *s = NULL;
+  long long n = -1;
+  if (sqlite3_prepare_v2(db->h, q, -1, &s, NULL) == SQLITE_OK &&
+      sqlite3_step(s) == SQLITE_ROW)
+    n = sqlite3_column_int64(s, 0);
+  sqlite3_finalize(s);
+  sqlite3_free(q);
+  return n;
+}
+
+/* Features for `where`, ORDER BY rowid (the INTEGER PRIMARY KEY — a total
+ * order, so paging across a boundary cannot repeat or drop a row), bounded.
+ * Same column set + row shaping as intel_fc_features. */
+static cJSON *fc_features_where(db_handle *db, const char *where,
+                                int limit, int offset) {
+  char *q = sqlite3_mprintf(
+    "SELECT uid, source_id, sub_source_id, record_type, lat, lon, geometry,"
+    "       title, summary, link, language, published_at, fetched_at,"
+    "       properties, tags"
+    "  FROM intel_items WHERE %s ORDER BY rowid LIMIT %d OFFSET %d",
+    where, limit, offset);
+  if (!q) return NULL;
+  cJSON *feats = cJSON_CreateArray();
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h, q, -1, &s, NULL) == SQLITE_OK)
+    while (sqlite3_step(s) == SQLITE_ROW)
+      cJSON_AddItemToArray(feats, row_to_feature(s));
+  sqlite3_finalize(s);
+  sqlite3_free(q);
+  return feats;
+}
+
+/* WHERE-clause tail for a layer id, malloc'd, or NULL when `layer_id` names
+ * no layer this server knows (caller → 404). Handles all three kinds:
+ *   curated/declared:  source_id IN (<members>)
+ *   rt-<slug>:         unassigned sources AND record_type slugs to <slug>
+ *   unassigned-geocoded: unassigned sources AND record_type NULL/empty
+ * `member_count`/`is_generated` report shape for _meta. */
+static char *layer_where(db_handle *db, const char *layer_id,
+                         int *member_count, int *is_generated) {
+  *member_count = 0;
+  *is_generated = 0;
+
+  int nmem = 0;
+  char *members = layertab_members_in(layer_id, &nmem);
+  if (members) {
+    char *w = sqlite3_mprintf("lat IS NOT NULL AND source_id IN (%s)", members);
+    free(members);
+    *member_count = nmem;
+    if (!w) return NULL;
+    char *out = strdup(w);         /* strdup: callers free() uniformly */
+    sqlite3_free(w);
+    return out;
+  }
+  /* A curated layer whose match set is empty today still EXISTS — it serves
+   * an honest empty FC, not a 404 (the taxonomy is a promise). */
+  if (layertab_get(layer_id)) return strdup("lat IS NOT NULL AND 0");
+
+  /* Generated ids. The unassigned population is "every geocoded row whose
+   * source id is NOT in the assigned set" — computed as NOT IN over the same
+   * escaped fragment, so the partition is the exact complement of the
+   * curated/declared side and the totals add up. */
+  int is_unassigned = strcmp(layer_id, "unassigned-geocoded") == 0;
+  int is_rt = strncmp(layer_id, "rt-", 3) == 0;
+  if (!is_unassigned && !is_rt) return NULL;
+
+  int nas = 0;
+  char *assigned = layertab_assigned_in(&nas);
+  const char *not_in_pre = assigned ? " AND source_id NOT IN (" : "";
+  const char *not_in_post = assigned ? ")" : "";
+
+  char *w = NULL;
+  if (is_unassigned) {
+    w = sqlite3_mprintf(
+      "lat IS NOT NULL%s%s%s AND (record_type IS NULL OR record_type='')",
+      not_in_pre, assigned ? assigned : "", not_in_post);
+  } else {
+    /* rt-<slug>: find the actual record_type strings that slug to it among
+     * the unassigned geocoded rows (several may collide onto one slug — they
+     * are then the same layer, which keeps the partition exact). */
+    char *rts = NULL; size_t rtlen = 0, rtcap = 0; int nrt = 0;
+    char *dq = sqlite3_mprintf(
+      "SELECT DISTINCT record_type FROM intel_items"
+      " WHERE lat IS NOT NULL AND record_type IS NOT NULL AND record_type<>''"
+      "%s%s%s", not_in_pre, assigned ? assigned : "", not_in_post);
+    if (dq) {
+      sqlite3_stmt *s = NULL;
+      if (sqlite3_prepare_v2(db->h, dq, -1, &s, NULL) == SQLITE_OK) {
+        while (sqlite3_step(s) == SQLITE_ROW) {
+          const char *rt = (const char *)sqlite3_column_text(s, 0);
+          if (!rt) continue;
+          char slug[128]; layertab_rt_slug(rt, slug, sizeof slug);
+          if (!slug[0] || strcmp(layer_id + 3, slug) != 0) continue;
+          /* grow "'a','b'" — same escaping discipline as layertab */
+          size_t need = strlen(rt) * 2 + 4;
+          if (rtlen + need + 1 > rtcap) {
+            size_t nc = rtcap ? rtcap * 2 : 512;
+            while (nc < rtlen + need + 1) nc *= 2;
+            char *nb = realloc(rts, nc);
+            if (!nb) { free(rts); rts = NULL; break; }
+            rts = nb; rtcap = nc;
+          }
+          char *wp = rts + rtlen;
+          if (nrt) *wp++ = ',';
+          *wp++ = '\'';
+          for (const char *p = rt; *p; p++) {
+            if (*p == '\'') *wp++ = '\'';
+            *wp++ = *p;
+          }
+          *wp++ = '\''; *wp = 0;
+          rtlen = (size_t)(wp - rts);
+          nrt++;
+        }
+      }
+      sqlite3_finalize(s);
+      sqlite3_free(dq);
+    }
+    if (rts && nrt > 0) {
+      w = sqlite3_mprintf(
+        "lat IS NOT NULL%s%s%s AND record_type IN (%s)",
+        not_in_pre, assigned ? assigned : "", not_in_post, rts);
+    }
+    free(rts);
+  }
+  free(assigned);
+  if (!w) return NULL;
+  char *out = strdup(w);
+  sqlite3_free(w);
+  *is_generated = 1;
+  return out;
+}
+
+char *dataapi_layer_fc(db_handle *db, const char *layer_id,
+                       int limit, int offset) {
+  if (!db || !layer_id || !*layer_id) return NULL;
+
+  int member_count = 0, is_generated = 0;
+  char *where = layer_where(db, layer_id, &member_count, &is_generated);
+  if (!where) return NULL;                                /* unknown → 404 */
+
+  int lim = limit > 0 ? limit : LAYER_FC_DEFAULT_LIMIT;
+  if (lim > LAYER_FC_MAX_LIMIT) lim = LAYER_FC_MAX_LIMIT;
+  int off = offset > 0 ? offset : 0;
+
+  long long available = count_where(db, where);
+  cJSON *feats = fc_features_where(db, where, lim, off);
+  free(where);
+  if (!feats) return NULL;
+  int used = cJSON_GetArraySize(feats);
+
+  cJSON *fc = cJSON_CreateObject();
+  cJSON_AddStringToObject(fc, "type", "FeatureCollection");
+  cJSON_AddItemToObject(fc, "features", feats);
+
+  const layer_row *row = layertab_get(layer_id);
+  cJSON *m = cJSON_AddObjectToObject(fc, "_meta");
+  cJSON_AddStringToObject(m, "layer", layer_id);
+  cJSON_AddStringToObject(m, "kind",
+    row ? "curated" : (is_generated ? "generated" : "declared"));
+  cJSON_AddItemToObject(m, "data_type",
+    (row && row->data_type) ? cJSON_CreateString(row->data_type)
+                            : cJSON_CreateNull());
+  cJSON_AddItemToObject(m, "modality",
+    (row && row->modality) ? cJSON_CreateString(row->modality)
+                           : cJSON_CreateNull());
+  cJSON_AddNumberToObject(m, "member_count", member_count);
+  char ts[40]; iso_now(ts, sizeof ts);
+  cJSON_AddStringToObject(m, "fetchedAt", ts);
+  /* Rule 2, in-band: the bound and how much lies beyond it. `truncated` is
+   * false only when this page really is the whole predicate. */
+  if (available < 0) cJSON_AddNullToObject(m, "records_available");
+  else cJSON_AddNumberToObject(m, "records_available", (double)available);
+  cJSON_AddNumberToObject(m, "records_used", used);
+  cJSON_AddNumberToObject(m, "limit", lim);
+  cJSON_AddNumberToObject(m, "offset", off);
+  int truncated = available >= 0 && (long long)off + used < available;
+  cJSON_AddBoolToObject(m, "truncated", truncated);
+  if (truncated)
+    cJSON_AddNumberToObject(m, "next_offset", (double)(off + used));
+  cJSON_AddStringToObject(m, "served_from", "intel_items");
+
+  char *js = cJSON_PrintUnformatted(fc);
+  cJSON_Delete(fc);
+  return js;
+}
+
 /* Does intel_items have ANY row for this source_id? (Used to decide the
  * graceful-empty-FC vs genuine-NULL fall-through for an unregistered id —
  * mirrors data.js serving intel rows that arrived via another path.) */
@@ -369,21 +533,44 @@ static void add_meta(cJSON *fc, const char *source, int record_count,
   if (served_from) cJSON_AddStringToObject(m, "served_from", served_from);
 }
 
+/* A collector run that FAILED must not be reported in the same shape as a run
+ * that succeeded and found nothing. `live:false` cannot carry the difference —
+ * an empty successful run is live:false too — and `recordCount:0` with a null
+ * description reads as "this layer has no data", which is a claim we did not
+ * earn. Stamp the failure into _meta so the client can tell the two apart.
+ * `collector_rc` is def->run()'s own return value, kept verbatim. */
+static void meta_mark_run_failed(cJSON *m, int rc) {
+  if (!m || rc >= 0) return;
+  cJSON_AddStringToObject(m, "collector_status", "error");
+  cJSON_AddNumberToObject(m, "collector_rc", rc);
+  cJSON_AddBoolToObject(m, "complete", 0);
+}
+static const char *run_failed_note(int rc) {
+  return rc < 0 ? "collector run failed; an empty result here is a FAILURE, "
+                  "not a statement that this source has no data"
+                : NULL;
+}
+
 /* Build the FeatureCollection from the intel_items reconstruction. Returns
  * malloc'd JSON, or NULL if there are zero geocoded rows (== buildFcFromIntel
- * returning null so the caller can fall back). */
+ * returning null so the caller can fall back). `collector_rc` is <0 only when
+ * this call is standing in for a run that failed: the stored rows are still
+ * served (they are real), but the envelope says the refresh did not happen, so
+ * they must not be read as current. */
 static char *fc_from_intel(db_handle *db, const char *source_id,
                            const char *cache_status, long long age_ms,
-                           long long ttl_ms, int *count_out) {
+                           long long ttl_ms, int *count_out, int collector_rc) {
   cJSON *feats = intel_fc_features(db, source_id);
   int n = cJSON_GetArraySize(feats);
   if (n == 0) { cJSON_Delete(feats); return NULL; }
   cJSON *fc = cJSON_CreateObject();
   cJSON_AddStringToObject(fc, "type", "FeatureCollection");
   cJSON_AddItemToObject(fc, "features", feats);
-  /* buildFcFromIntel: live = (at == null) → always true on the live path. */
-  add_meta(fc, source_id, n, 1, NULL, cache_status, age_ms, ttl_ms,
-           "intel_items");
+  /* buildFcFromIntel: live = (at == null) → always true on the live path.
+   * Not live when the run that was supposed to refresh these rows failed. */
+  add_meta(fc, source_id, n, collector_rc >= 0, run_failed_note(collector_rc),
+           cache_status, age_ms, ttl_ms, "intel_items");
+  meta_mark_run_failed(cJSON_GetObjectItem(fc, "_meta"), collector_rc);
   if (count_out) *count_out = n;
   char *js = cJSON_PrintUnformatted(fc);
   cJSON_Delete(fc);
@@ -404,9 +591,19 @@ char *dataapi_layer(db_handle *db, const char *id) {
    * unknown AND has no rows — that's the dataapi.h contract and the closest
    * faithful analog given the C caller already tried sweepapi. */
   if (!def || !def->run) {
+    /* v2: an id that is not a registered source may be a LAYER (curated in
+     * core/layers.def, declared by its member sources, or a generated
+     * catch-all). Serve the fused, bounded FeatureCollection — this is what
+     * makes /api/data/<layerId> real for multi-source layers that previously
+     * fell through to the empty-FC path. A NULL here means the id names no
+     * layer either, and the source-shaped fallbacks below still apply. */
+    {
+      char *lfc = dataapi_layer_fc(db, id, 0, 0);
+      if (lfc) return lfc;
+    }
     long long ttl = get_ttl_ms(db, id);
     int n = 0;
-    char *fc = fc_from_intel(db, id, "miss", 0, ttl, &n);
+    char *fc = fc_from_intel(db, id, "miss", 0, ttl, &n, 0);
     if (fc) return fc;
     if (!intel_has_source(db, id)) return NULL;   /* genuinely unknown */
     /* Known source id but zero geocoded rows → explicit empty FC. */
@@ -439,10 +636,10 @@ char *dataapi_layer(db_handle *db, const char *id) {
    * cached FC for sources not yet mirrored. */
   {
     long long age = 0;
-    char *cached_raw = cache_get(db, id, &age);
+    char *cached_raw = collcache_get(db, id, &age);
     if (cached_raw) {
       int n = 0;
-      char *ifc = fc_from_intel(db, id, "hit", age, ttl, &n);
+      char *ifc = fc_from_intel(db, id, "hit", age, ttl, &n, 0);
       if (ifc) {
         free(cached_raw);
         lw_finished(id, n, "hit");
@@ -501,7 +698,10 @@ char *dataapi_layer(db_handle *db, const char *id) {
    * data.js's collector throw → 500; here the unified ABI returns rc<0 and
    * the faithful, more-graceful analog is the canonical empty FC (the same
    * shape data.js's no-data path produces) rather than surfacing a 500 from
-   * a read endpoint. Documented choice. */
+   * a read endpoint. Documented choice — but the SHAPE being the same must not
+   * make the two OUTCOMES indistinguishable: the rc<0 envelope now carries
+   * _meta.collector_status="error", collector_rc and complete:false, and is
+   * not written to collector_cache. See meta_mark_run_failed(). */
   cJSON *feats = cJSON_CreateArray();
   int emitted = 0;
   if (rc >= 0) {
@@ -528,7 +728,7 @@ char *dataapi_layer(db_handle *db, const char *id) {
       /* Prefer the intel_items reconstruction (some rows may be geocoded by
        * a prior/concurrent real run); else the migrated-to-intel empty FC. */
       int n = 0;
-      char *ifc = fc_from_intel(db, id, "miss", 0, ttl, &n);
+      char *ifc = fc_from_intel(db, id, "miss", 0, ttl, &n, 0);  /* rc>=0 here */
       if (ifc) { cJSON_Delete(feats); lw_finished(id, n, "miss"); return ifc; }
 
       cJSON *fc = cJSON_CreateObject();
@@ -563,14 +763,22 @@ char *dataapi_layer(db_handle *db, const char *id) {
     cJSON *fc = cJSON_CreateObject();
     cJSON_AddStringToObject(fc, "type", "FeatureCollection");
     cJSON_AddItemToObject(fc, "features", feats);    /* ownership moves */
-    add_meta(fc, id, emitted, emitted > 0, NULL, NULL, -1, -1, NULL);
-    char *raw = cJSON_PrintUnformatted(fc);
-    if (raw) { cache_set(db, id, raw, ttl); free(raw); }
+    add_meta(fc, id, emitted, emitted > 0, run_failed_note(rc),
+             NULL, -1, -1, NULL);
+    meta_mark_run_failed(cJSON_GetObjectItem(fc, "_meta"), rc);
+    /* Never cache a failed run. Writing the empty envelope to collector_cache
+     * would turn one transient upstream failure into TTL-worth of responses
+     * that additionally claim `cache_status:"hit"` — i.e. the failure would
+     * stop being visible at all after the first request. */
+    if (rc >= 0) {
+      char *raw = cJSON_PrintUnformatted(fc);
+      if (raw) { collcache_set(db, id, raw, ttl); free(raw); }
+    }
 
     /* Prefer intel_items reconstruction (carries record_type/sub_source_id/
      * geom_source the cached FC lacks); fall back to the normalised FC. */
     int n = 0;
-    char *ifc = fc_from_intel(db, id, "miss", 0, ttl, &n);
+    char *ifc = fc_from_intel(db, id, "miss", 0, ttl, &n, rc);
     if (ifc) { cJSON_Delete(fc); lw_finished(id, n, "miss"); return ifc; }
 
     /* Fallback path: re-stamp _meta with cache fields + served_from. */

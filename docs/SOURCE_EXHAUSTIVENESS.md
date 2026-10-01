@@ -39,6 +39,32 @@ plausible-looking result that is missing the record that mattered.
    nobody reads is not a disclosure. The engine emits a
    `collector-truncation-notice` record naming the source, the query, records
    used, records available and why.
+8. **"Available" counts records, not array slots — and a skipped slot says why.**
+   A disclosure that reports a shortfall which did not happen is worse than no
+   disclosure, because it teaches everyone to ignore the real ones. Measured on
+   batch 19 before this was fixed: 95 rows reported a shortfall and essentially
+   none had lost anything. 87 were short by exactly one — the trailing newline
+   at the end of a CSV. `ECMA_PUBLISHED_STANDARDS` reported 295 of 590, a
+   perfect 50% loss that was a perfect 2x duplication (each item linked from
+   both its icon and its title). `MALTRAIL_COBALTSTRIKE` reported 22,954 of
+   36,002 against a feed with 13,048 comment lines.
+
+   So `hp_run` now subtracts, and names, the four reasons a slot never becomes a
+   record — and one of them was previously invisible in every sense:
+
+   | counter | meaning |
+   | --- | --- |
+   | `empty` | nothing survived flattening (a blank CSV line, a `null` element) |
+   | `duplicate` | the same href twice on one page — one record, not a discard |
+   | `filtered out` | the row's own `filter_query` excluded it, as asked |
+   | `refused by sink` | the store declined it. **A real discard**, and it used to show only as a smaller number with no cause |
+
+   ```
+   [hp:ECMA_PUBLISHED_STANDARDS] emitted 295 of 295 available across 1 page(s)
+                                 [0 empty, 295 duplicate, 0 filtered out, 0 refused by sink]
+   ```
+
+   A non-zero `refused by sink` is the one to chase. The others are accounting.
 
 ## What a violation looks like
 
@@ -81,6 +107,9 @@ cJSON_ArrayForEach(rec, arr) {
 | `native/core/pipeline.c` | Stores and serves all records; the LLM prompt gets a labelled view via `results_view_for_prompt()` — `records_shown`, `record_count`, `prompt_truncated` and a note that the rest are persisted. Bound size: `$JO_PROMPT_RECORDS_PER_SERVICE` (default 8) |
 | `native/core/intel.c` | Upserts every emitted item; `properties` is stored verbatim |
 | `native/lib/htmlparse.c` | `html_anchor_next()` + the growable `seen_set` are THE anchor scanner and dedupe for the whole tree (both `jo_emit_anchors` and the engine's HP_HTML rows). `jo_emit_anchors(max<=0)` means every matching anchor; a caller-imposed cap logs both numbers and emits a truncation notice |
+| `native/lib/pagewalk.c` | The paging + disclosure engine behind the generated `VJSON`/`VGEO`/`VCSV` collectors. Continues a walk ONLY where the upstream said how — a next link in the response envelope, or an offset/page parameter the collector's own URL already carries — and never invents a query parameter. Whatever it cannot legitimately reach is emitted as a `collector-truncation-notice`. Bounds: `$JO_PAGE_MAX` (default 20 pages); `JO_PAGE_WALK=0` restores single-fetch behaviour and **keeps** the disclosure. **It is the only page walk in the tree** — `jsonlist_emit_paged()` is an adapter onto it, not a second implementation, because two engines answering "is there more?" differently is how a truncation notice becomes a false claim |
+| `native/lib/jsonlist.c` | The JSON-array-of-records emitter, and the jsonlist-shaped door onto the walk above. `jsonlist_emit_ex()` reports records **seen** as well as emitted, which is what the walk's "did this page come back full" test reads: driving that off the emitted count meant a full page holding two unlabelled records looked short, so the walk stopped AND suppressed its own notice. A shortfall no caller claimed is disclosed here instead |
+| `native/lib/jocore.h` | `jo_truncation_notice()` / `jo_truncation_notice_ex()` — **the** builder for `collector-truncation-notice`, used by every emitter in the tree (hand-written collectors, `lib/hpengine.c`, `lib/pagewalk.c`, `_jp_osint.inc`, `diet_records.c`), so the record has one record_type, one uid convention (`<source_id>\|truncation:<query>`), one tag set (`["truncation-notice"]`) and one shape. Base properties: `source_id`, `query`, `records_used`, `records_available`, `reason`, `remedy`. Pass `available = -1` when the upstream did not state a total — it publishes as `"records_available": null`, never 0 and never a missing key; a guessed total is a rule-1 violation. The `_ex` form takes an `extra` object whose members are merged alongside the base six, for facts only one caller can know (`url`, `pages_read`, `records_dropped`, `more_pages_pending`, `declared_max_items`, `declared_max_pages`, `next_record_position`, `window_from`/`window_until`); a member colliding with a base key is ignored, so the stable half cannot be redefined |
 | `native/lib/seenset.c` | One growable "already seen" set. Fixed-size dedupe rings were a recurring violation: `char *seen[500]` stops collecting once full, so a domain with 600 certificates silently lost 100 |
 
 ## Checking your work
@@ -95,8 +124,16 @@ make hptest            # engine-level guarantees, offline
 data: hardcoded record caps, `break` in a record loop, first-element-only access,
 single-page fetches of paged APIs, and fixed dedupe rings.
 
-**The tree is currently at zero findings** across all 685 scanned files. It got
-there by fixing, not by silencing: arbitrary per-loop emit caps were deleted,
+**`make audit-sources` gates the `hp*_*.c` engine rows strictly, and those are at
+zero findings.** The wider tree is not: the same run scans 1,211 files and
+reports 66 heuristic findings across 50 of them. They are heuristics that each
+need a human read, not proven violations — but do not read a passing
+`audit-sources` as "nothing is being discarded". Note also what the scan cannot
+see: it greps C control flow, so a discard expressed as a *string literal* — a
+URL with `limit=20` and no pagination — is invisible to it. That class was 2,727
+generated sources until `lib/pagewalk.c` (above) took it on.
+
+The progress that has been made was by fixing, not by silencing: arbitrary per-loop emit caps were deleted,
 paged endpoints (OpenPLZ, Etherscan, grep.app, arXiv, NZ Companies Office, UK
 Electoral Commission) now walk their pages, fixed dedupe rings became growable
 sets, and multi-valued fields that were cut to their first element now carry the
@@ -123,3 +160,27 @@ Say so, in the data:
 
 The test is simple: **could a reader of the output tell that something was left
 out?** If not, it is a violation.
+
+## Four shapes the manifest could not express (batch 25)
+
+Each of these was a live, verified source that the engine could only take a
+slice of — or not at all — because no opt said what the upstream was doing.
+Rejecting them was honest; expressing them is better. All four are declarable
+now, generated by `tools/gen_hp_batch.py`, and covered by
+`tests/hpengine_test.c` (tests 20–22; OAI is test 19). A row that declares none
+of them behaves byte-for-byte as before.
+
+| gap | opt | what it takes now |
+| --- | --- | --- |
+| fixed-width text table (JPNIC `as-numbers.txt`) | `csv_delim=ws` | every column; ruler lines are layout and are skipped |
+| `<>`-delimited text (2ch `subject.txt`) | `csv_delim=lit:<>` | every cell, split on the literal token only |
+| title line above the CSV header (MEXT, Kawasaki, Saitama) | `csv_skip_lines=N` | the header names the columns; the title and header are no longer two junk records per file |
+| directory-relative hrefs (`../profile/x.htm`, `./meisai/y.htm`, `y.htm`) | none — automatic; `base=` is now an override | RFC 3986 resolution against `<base href>` or the fetched page URL; every anchor form resolves |
+| page number in the path (`/tosan/p/N`) | `{page}` in the URL | the whole walk, with the same start/ceiling/stop rules as `page_param` |
+| OAI-PMH `resumptionToken` | `next_path=resumptionToken;next_tmpl=…{v}` | the whole set; `page_max` must cover `completeListSize / page` |
+
+The rule these serve is the one at the top of this file: if a request is spent,
+everything it returned is used. A text table read as one blob per line, a
+listing whose links point nowhere, and a paged collection read to page 1 were
+all silent partials. The rows that were rejected for these reasons in batch 25
+are recovered in `docs/candidate-sources-batch25.jprecovered.txt`.

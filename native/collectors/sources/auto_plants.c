@@ -1,21 +1,14 @@
 /* collectors/industry/sources/auto_plants.c — port of
  * server/src/collectors/autoPlants.js (fetchOverpass single area.jp).
  * SEED_AUTO_PLANTS offline fallback intentionally not ported (rule 8). */
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)i; (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON *id = cJSON_GetObjectItem(el, "id");
@@ -29,7 +22,8 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
 
   const char *brand = ov_tag(el, "operator");
   if (!brand) brand = ov_tag(el, "brand");
-  cJSON_AddStringToObject(p, "brand", brand ? brand : "unknown");
+  if (brand) cJSON_AddStringToObject(p, "brand", brand);
+  else cJSON_AddItemToObject(p, "brand", cJSON_CreateNull());
 
   cJSON_AddStringToObject(p, "source", "osm_overpass");
   cJSON_AddItemToObject(f, "properties", p);

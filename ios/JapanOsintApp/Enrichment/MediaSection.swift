@@ -63,6 +63,7 @@ struct MediaSection: View {
             Image(systemName: "photo.on.rectangle.angled")
                 .font(.subheadline)
                 .foregroundStyle(theme.accentAlt)
+                .accessibilityHidden(true)   // the section title follows
             Text(title)
                 .font(.headline)
                 .foregroundStyle(theme.text)
@@ -144,9 +145,11 @@ struct MediaSection: View {
             case .failure:
                 ZStack {
                     theme.surface
+                    // The only indication the thumbnail failed to load.
                     Image(systemName: "photo.badge.exclamationmark")
                         .font(.title3)
                         .foregroundStyle(theme.textMuted)
+                        .accessibilityLabel("Image failed to load")
                 }
             case .empty:
                 ZStack {
@@ -179,9 +182,11 @@ struct MediaSection: View {
                 if let camera {
                     HStack(spacing: Space.xs) {
                         Image(systemName: "camera")
-                            .font(.system(size: 9))
+                            .font(.caption2)
                             .foregroundStyle(theme.textMuted)
+                            .accessibilityHidden(true)   // decorative EXIF mark
                         Text(camera)
+                            .accessibilityLabel("Camera: \(camera)")
                             .font(.caption2)
                             .foregroundStyle(theme.text)
                             .lineLimit(1)
@@ -190,9 +195,11 @@ struct MediaSection: View {
                 if let captured {
                     HStack(spacing: Space.xs) {
                         Image(systemName: "clock")
-                            .font(.system(size: 9))
+                            .font(.caption2)
                             .foregroundStyle(theme.textMuted)
+                            .accessibilityHidden(true)   // decorative EXIF mark
                         Text(captured)
+                            .accessibilityLabel("Captured: \(captured)")
                             .font(.caption2.monospacedDigit())
                             .foregroundStyle(theme.text)
                             .lineLimit(1)
@@ -201,7 +208,7 @@ struct MediaSection: View {
             }
         } else if a.exif == nil || a.exif?.isEmpty == true {
             Text("No EXIF metadata")
-                .font(.system(size: 10))
+                .font(.caption2)
                 .foregroundStyle(theme.textMuted)
         }
     }
@@ -212,6 +219,7 @@ struct MediaSection: View {
             Image(systemName: "mappin.and.ellipse")
                 .font(.subheadline)
                 .foregroundStyle(theme.accentAlt)
+                .accessibilityHidden(true)   // "EXIF location" follows
             VStack(alignment: .leading, spacing: Space.xs) {
                 Text("EXIF location")
                     .font(.caption.weight(.semibold))
@@ -272,7 +280,7 @@ struct MediaSection: View {
                     .textSelection(.enabled)
                     .fixedSize(horizontal: false, vertical: true)
                 Text("Text extracted from the image by OCR. It is a program's reading of pixels, not asserted content — check it against the image before quoting it.")
-                    .font(.system(size: 10))
+                    .font(.caption2)
                     .foregroundStyle(theme.textMuted)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -291,6 +299,7 @@ struct MediaSection: View {
                 Text("No media").foregroundStyle(theme.text)
             } icon: {
                 Image(systemName: "photo.on.rectangle").foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // "No media" is the label
             }
         } description: {
             Text("No images were attached to this item, or the media pipeline has not analyzed it yet.")
@@ -304,6 +313,7 @@ struct MediaSection: View {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.caption)
                     .foregroundStyle(theme.danger)
+                    .accessibilityHidden(true)   // the message follows
                 Text(message)
                     .font(.caption)
                     .foregroundStyle(theme.text)

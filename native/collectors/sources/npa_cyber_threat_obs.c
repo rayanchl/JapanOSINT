@@ -8,16 +8,17 @@
  * When fetch fails JS emits 0 features + 0 intel; we emit nothing.
  * Feature uid/title derived by the geojson sink; intel item uid =
  * intelUid(SOURCE_ID,'dashboard') -> remote_key 'dashboard'. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define URL_PAGE "https://www.npa.go.jp/bureau/cyber/koho/observation.html"
 #define NPA_HQ_LON 139.7531
@@ -107,10 +108,8 @@ static void extract_graphs(const char *html, cJSON *arr) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  char iso[32];
-  time_t now = time(NULL);
-  struct tm tmv; gmtime_r(&now, &tmv);
-  strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &tmv);
+  char iso[32] = {0};
+  jo_now_iso_ms(iso, sizeof iso);      /* empty ⇒ published_at stays NULL */
 
   char *html = feed_get_text(ctx->http, URL_PAGE, 8000);
   if (!html) return -1;             /* JS: 0 features + 0 intel */
@@ -124,15 +123,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* ---- feature (geojson sink derives uid/title) ---- */
   cJSON *features = cJSON_CreateArray();
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *co = cJSON_CreateArray();
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(NPA_HQ_LON));
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(NPA_HQ_LAT));
-  cJSON_AddItemToObject(g, "coordinates", co);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(NPA_HQ_LON, NPA_HQ_LAT);
   cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
   cJSON_AddStringToObject(p, "id", "CYBER_OBS_NPA");
   cJSON_AddStringToObject(p, "name", "NPA Cyber Threat Observation");
@@ -162,7 +153,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     : "Live darknet / honeypot scan traffic into Japan, refreshed hourly.";
   it.link = URL_PAGE;
   it.lang = "ja";
-  it.published_at = iso;
+  it.published_at = iso[0] ? iso : NULL;
   it.tags_json = "[\"cyber\",\"observation\",\"npa\",\"live\"]";
   it.properties_json = ipj;
   if (sink->emit(sink, &it) >= 0 && n >= 0) n++;

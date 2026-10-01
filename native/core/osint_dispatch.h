@@ -31,14 +31,38 @@ typedef struct {
   char *data;
   int   records;         /* how many records `data` carries                  */
   char *error;           /* malloc'd; "not_implemented" when no such source */
+  /* malloc'd, NULL in the ordinary case: the name the CALLER asked for, when
+   * it did not resolve and was matched to a registered service by
+   * osint_resolve_near(). The substitution is never silent — the pipeline puts
+   * it in the per-service result as `resolved_from`, because answering a
+   * question about DOMAIN_WHOIS_LOOKUP with DOMAIN_WHOIS's data and saying
+   * nothing is a confident wrong attribution, which house rule 1 forbids even
+   * when the guess is right. */
+  char *resolved_from;
   /* malloc'd JSON array of the underlying sources/providers the service hit,
    * one entry per distinct attribution: [{ "name", "status", "records",
-   * ["detail"] }]. Derived from each emit's sub_source_id / body "source" /
-   * the service name. Surfaced as results.services[i].sources. */
+   * ["requests"], ["detail"] }]. Derived from each emit's sub_source_id /
+   * the real HTTP hosts contacted / the service name. Surfaced as
+   * results.services[i].sources.
+   *
+   * `records` is a NUMBER only when the rows were actually attributable to
+   * that source (the collector labelled its emits with sub_source_id). When
+   * attribution came from the HTTP host log it is NULL and `requests` carries
+   * what was really measured — the host log counts requests, not records, and
+   * writing the service total into each host row claimed 11,220 records out of
+   * 187 for one 60-host service. A consumer must treat null as "not measured",
+   * never as zero. */
   char *sources_json;
 } osint_result;
 
 void osint_result_free(osint_result *r);
+
+/* Best registered id for a name the registry does not have, or 0 when there
+ * is none or when two candidates are equally near (a tie is "we do not know",
+ * not "pick one"). `canon` is expected upper-cased by osint_canon(). Writes
+ * the resolved id into `out`. Callers MUST report the substitution — see
+ * osint_result.resolved_from. */
+int osint_resolve_near(const char *canon, char *out, size_t n);
 
 /* Canonical service name: trimmed, upper-cased into out (or 0 if empty). */
 int  osint_canon(const char *name, char *out, size_t n);
@@ -46,9 +70,41 @@ int  osint_canon(const char *name, char *out, size_t n);
 /* True if a source with this (canonical) id is registered (any source). */
 int  osint_is_implemented(const char *name);
 
-/* Comma-separated list of ALL registered source ids — every source is
- * eligible, fed verbatim into the analysis/phase2 prompts (== JS
- * getServicesList(), now the full registry). Caller frees. */
+/* What osint_services_list_bounded() actually put in the prompt. `total` is
+ * how many entity-pivot services are registered, `shown` how many are listed,
+ * `descriptions` whether each line carries its description or is a bare id,
+ * `truncated` == (shown < total). The pipeline reports these to the client, so
+ * a routing decision made from a partial menu is never presented as one made
+ * from the whole registry. */
+typedef struct {
+  int total;
+  int shown;
+  int descriptions;
+  int truncated;
+} osint_catalogue_note;
+
+/* The service catalogue fed to the analysis / phase-2 prompts: one ON-DEMAND
+ * entity-pivot service per line (collector=="osint" AND
+ * update_interval_sec==0 — scheduled bulk feeds cannot pivot on an entity and
+ * are excluded), bounded to a character budget
+ * (JO_PROMPT_SERVICE_CATALOGUE_CHARS, default 32768) with the bound STATED
+ * in-band at the end of the text. `note` may be NULL. Caller frees.
+ *
+ * Unbounded, this text was 207,353 tokens and llama-server rejected every
+ * analysis request outright — see the long comment in osint_dispatch.c. */
+char *osint_services_list_bounded(osint_catalogue_note *note);
+
+/* Tell the next osint_services_list_bounded() how many bytes it may spend,
+ * computed from the LLM server's real context minus the measured preamble
+ * (core/pipeline.c). 0 clears it. JO_PROMPT_SERVICE_CATALOGUE_CHARS still
+ * wins — an operator who names a number means it.
+ *
+ * Exists because a byte constant cannot know what the prompt around it costs:
+ * the previous default, 32 KB, was justified against a preamble that has since
+ * tripled, and the result was an HTTP 400 that degraded every search. */
+void osint_set_catalogue_budget(int chars);
+
+/* osint_services_list_bounded(NULL). */
 char *osint_services_list(void);
 
 /* The osint_analysis JSON schema with its service-name enums (recommended_
@@ -57,6 +113,18 @@ char *osint_services_list(void);
  * maintenance on registry changes. malloc'd; caller frees. NULL → fall back to
  * the static schema_load("osint_analysis"). */
 char *osint_analysis_schema_dynamic(void);
+
+/* Same, but the enums hold only the first `limit` entity-pivot services —
+ * pass osint_catalogue_note.shown so what the model is ALLOWED to answer is
+ * exactly what it was SHOWN. `limit` <= 0 means no limit. */
+char *osint_analysis_schema_dynamic_limited(int limit);
+
+/* Same, but the enums hold exactly these ids — the counterpart to the semantic
+ * router (core/service_vec.h), which chooses services by relevance rather than
+ * registry order. Pair it with the ids service_vec_catalogue() returned, so
+ * what the model may ANSWER is what it was SHOWN. Ids that are not registered
+ * entity pivots are dropped. NULL when none survive; caller falls back. */
+char *osint_analysis_schema_dynamic_ids(const char *const *ids, int n);
 
 /* Handler-dedup key (== JS handlerKey). Unified model: the canonical id IS
  * the key (distinct source_def per service); alias-grouping is an additive

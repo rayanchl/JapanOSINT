@@ -3,10 +3,10 @@
  * pointinfo.json (stations) → per-station swjp/<number>.json hourly series →
  * latest finite-height reading → one Feature/station. Seed buoy fallback
  * (rule 7) dropped. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

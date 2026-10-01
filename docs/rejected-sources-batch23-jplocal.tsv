@@ -1,0 +1,43 @@
+id	url	stage	verdict	note
+BODIK_ODCS_PACKAGE_SEARCH	https://data.bodik.jp/api/3/action/package_search?rows=2	prescreen	HTTP_403	nginx 403 on every request from this host, including with a browser User-Agent and over IPv4; the Kyushu/Kansai prefectural catalogues (odcs.bodik.jp/<code>/) are views on this same API and fall with it. Host also already present in the tree (data.bodik.jp/api/3/action/)
+SAITAMA_PREF_OPENDATA_PORTAL	https://opendata.pref.saitama.lg.jp/api/3/action/package_search?rows=2	prescreen	NO_API	the portal is a Laravel site; /api/3/action/*, /api/package_search and /dataset.rss all return the HTML home page (200)
+SABAE_DATA_CITY_API	https://data.city.sabae.lg.jp/api/3/action/package_search?rows=2	prescreen	NO_API	answers JSON {"status":"error","error":"Uknown method"} for every CKAN-style method tried (action/package_search, package_search, package_list)
+OTSU_OD_CITY_CKAN	https://od.city.otsu.lg.jp/api/3/action/package_search?rows=2	prescreen	TIMEOUT	connect timeout on three attempts spaced over 15 minutes
+OSAKA_CITY_DATA_CKAN	https://data.city.osaka.lg.jp/api/3/action/package_search?rows=2	prescreen	TIMEOUT	connect timeout on three attempts (host www.city.osaka is in the tree; this catalogue host is not reachable from here)
+OPENDATASTACK_JP	https://opendatastack.jp/api/3/action/package_search?rows=2	prescreen	TIMEOUT	connect timeout twice
+ODP_JIG_JP	https://odp.jig.jp/api/3/action/package_search?rows=2	prescreen	HTTP_403	jig.jp open data platform refuses the API path
+KOBE_DATA_CITY_CKAN	https://data.city.kobe.lg.jp/api/3/action/package_search?rows=2	prescreen	HTTP_404	no CKAN action API on this host
+KYOTO_DATA_CITY_CKAN	https://data.city.kyoto.lg.jp/api/3/action/package_search?rows=2	prescreen	HTTP_404	no CKAN action API on this host
+KANAGAWA_PREF_OPENDATA_API	https://opendata.pref.kanagawa.jp/api/3/action/package_search?rows=2	prescreen	HTTP_404	the documented API page exists but the CKAN action path 404s
+SAPPORO_DATA_PF	https://data.pf-sapporo.jp/api/3/action/package_search?rows=2	prescreen	HTTP_404	the Sapporo data platform front has no API; ckan.pf-sapporo.jp (registered) is the API host
+HOKKAIDO_HODA_PF	https://pf.hoda.jp/api/3/action/package_search?rows=2	prescreen	HTTP_404	no CKAN API
+TAKAMATSU_SMARTCITY_PORTAL	https://opendata-portal.smartcity-takamatsu.jp/api/3/action/package_search?rows=2	prescreen	HTTP_404	no CKAN API
+IBARAKI_OPENDATA_JP	https://www.ibaraki-opendata.jp/api/3/action/package_search?rows=2	prescreen	HTTP_404	no CKAN API
+MIYAGI_DATAEYE	https://miyagi.dataeye.jp/api/3/action/package_search?rows=2	prescreen	HTTP_404	dataeye platform exposes no CKAN-compatible API path
+SHIMANE_DATAEYE	https://shimane-opendata.jp/api/3/action/package_search?rows=2	prescreen	HTTP_404	dataeye platform; /db/api/3 also 404
+OKAYAMA_DATAEYE	https://www.okayama-opendata.jp/api/3/action/package_search?rows=2	prescreen	HTTP_404	dataeye platform
+HIROSHIMA_DATAEYE	https://hiroshima-opendata.dataeye.jp/api/3/action/package_search?rows=2	prescreen	HTTP_404	dataeye platform; ckan-hiroshima-opendata.dataeye.jp does not resolve
+TOYAMA_PREF_OPENDATA	https://opendata.pref.toyama.jp/api/3/action/package_search?rows=2	prescreen	DNS_FAIL	opendata.pref.toyama.jp no longer resolves (http and https)
+FUKUOKA_OPEN_GOVERNMENTDATA	https://www.open-governmentdata.org/api/3/action/package_search?rows=2	prescreen	DNS_FAIL	open-governmentdata.org (Fukuoka pref/city CKAN) no longer resolves; ckan.open-governmentdata.org likewise
+REGISTRY_CATALOG_DIGITAL	https://catalog.registries.digital.go.jp/api/3/action/package_search?rows=2	prescreen	DNS_FAIL	catalog.registries.digital.go.jp does not resolve
+GIFU_DATA_SUBDOMAIN	https://data.gifu-opendata.pref.gifu.lg.jp/api/3/action/package_search?rows=2	prescreen	DNS_FAIL	wrong host; the live CKAN is gifu-opendata.pref.gifu.lg.jp (shipped)
+GUNMA_BUS_JCLD	https://gma.jcld.jp/gma_opendata/	prescreen	DNS_FAIL	Gunma bus open-data host does not resolve
+NAGANO_SHINSHU_GIS_OPENDATA	https://wwwgis.pref.nagano.lg.jp/pref-nagano/OpenData	prescreen	TLS_FAIL	server offers a DH key too small for OpenSSL 3 (SSL: DH_KEY_TOO_SMALL); would need a weakened TLS policy
+IWATE_OPENDATA_CGI	https://www.pref.iwate.jp/cgi-opd/opendata.cgi?mode=search&q=AED	prescreen	NOT_A_RECORD_SOURCE	the legacy CGI renders a search form and site chrome; the result links are not present in the HTML without a POST, so no href list can be declared
+YAMANASHI_OPENDATA_DEV	https://opendata.yamanashi.dev/api/	prescreen	HTTP_404	the API project landing page lists no live endpoint (/api/ 404)
+OTTOP_OKINAWA_TRANSIT	https://www.ottop.databed.org/	prescreen	NOT_A_RECORD_SOURCE	936 KB single-page application shell, no feed or JSON endpoint discoverable
+SEARCH_CKAN_JP	https://search.ckan.jp/api/3/action/package_search?rows=2	prescreen	HTTP_404	the cross-search system documents an API page but the action path 404s
+NAGAREYAMA_HUB_DCAT	https://nagareyama-opendata.hub.arcgis.com/api/feed/dcat-us/1.1.json	prescreen	HTTP_404	guessed Hub slug does not exist
+MURORAN_HUB_DCAT	https://muroran-opendata.hub.arcgis.com/api/feed/dcat-us/1.1.json	prescreen	HTTP_404	guessed Hub slug does not exist
+SHIZUOKA_PREF_HUB_DCAT	https://opendata-shizuoka-pref.hub.arcgis.com/api/feed/dcat-us/1.1.json	prescreen	HTTP_404	guessed Hub slug does not exist
+ESRIJ_GOV_HUB_SEARCH_PIVOT	https://esrij-gov-japan.hub.arcgis.com/api/search/v1/collections/dataset/items?limit=100	prescreen	HTTP_404	this Hub site serves the DCAT feed (shipped) but not the search API
+HARP_DATASET_RSS	https://www.harp.lg.jp/opendata/dataset.rss	prescreen	HTTP_404	SHIRASAGI opendata has no dataset RSS; the package_search API is shipped instead
+PREF_CMS_RSS_GUESSES	https://www.pref.{hokkaido,aomori,iwate,miyagi,akita,ibaraki,tochigi,toyama,ishikawa,fukui,mie,kyoto,osaka,wakayama,tokushima,kagawa,kochi,saga,nagasaki,okinawa,shiga,nagano}.lg.jp/rss/10/list1.xml	prescreen	HTTP_404	the Fujitsu-CMS feed path used by the registered prefectures does not exist on these 22 prefectural hosts (also tried /news.rss); www.pref.nara.jp answers 403
+YAMANASHI_PREF_RSS	https://www.pref.yamanashi.jp/rss/10/list1.xml	prescreen	TIMEOUT	www.pref.yamanashi.jp timed out on every request (also /dourokisei/ road-regulation page)
+PREF_CKAN_HOST_GUESSES	https://{ckan,opendata,data}.pref.<47 prefectures>.{lg.jp,jp}/api/3/action/package_search	prescreen	DNS_FAIL	470 host/path guesses across all 47 prefectures; only ckan.pref.akita.lg.jp and ckan.pref.miyazaki.lg.jp resolved to a live CKAN (both shipped), the SHIRASAGI portals answered only on /api/package_search (shipped)
+CITY_CKAN_HOST_GUESSES	https://{opendata,data,ckan}.city.<17 cities>.lg.jp/api/3/action/package_search	prescreen	DNS_FAIL	51 host guesses for Sendai, Niigata, Shizuoka, Hamamatsu, Nagoya, Kobe, Hiroshima, Fukuoka, Kitakyushu, Kumamoto, Naha, Chiba, Kawasaki, Saitama, Sagamihara, Sakai, Okayama; none resolved to a CKAN
+JPL_GUNMA_PREF_RSS_LIST6	https://www.pref.gunma.jp/rss/10/list6.xml	probe	UNPARSEABLE	RSS 1.0 (rdf:RDF) document carrying a single item; the prober cannot parse it and one item is not worth a row
+JPL_MIYAZAKI_CKAN_SEARCH_PIVOT	https://ckan.pref.miyazaki.lg.jp/api/3/action/package_search?q={q}&rows=100	prescreen	FILTER_IGNORED	an impossible keyword returns 544 of 4,937 datasets (Solr fuzzy/OR matching); a pivot would attribute unrelated datasets to the entity. The full listing and the bosai-data organisation rows are shipped instead
+JPL_*_CKAN_GROUP_*	https://<ckan>/api/3/action/package_search?fq=groups:<group>&rows=100	authoring	SAME_DATASET	group (theme) slices re-partition the same datasets already fetched exhaustively through the per-organisation rows and the full listing; not authored
+JPL_SHIBUYA_HUB_ITEMS / JPL_AIZUWAKAMATSU_HUB_ITEMS	https://<hub>/api/search/v1/collections/dataset/items?limit=100	authoring	SAME_DATASET	the Hub search collection without a query is the same dataset set as the DCAT feed already shipped; kept only as the {q} pivot
+JPL_KAGAWA_ODP_SEARCH_PIVOT / others with q=AED	(SHIRASAGI portals)	probe	PASS	kept; noted only because AED returned few hits on the smaller portals and every one still returned at least one record

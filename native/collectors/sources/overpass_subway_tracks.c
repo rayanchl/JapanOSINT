@@ -4,9 +4,9 @@
  * OSM subway / tram / monorail tracks → LineString for the unified-subways
  * layer. No source_registry.gen.c row — internal layer feed.
  * No SEED / _meta envelope. */
-#include "../../source.h"
-#include "../../lib/overpass.h"
-#include "../../lib/linecolor.h"
+#include "source.h"
+#include "lib/overpass.h"
+#include "lib/linecolor.h"
 #include <stdio.h>
 
 static void body(const char *bbox, char *o, size_t n, void *ud) {

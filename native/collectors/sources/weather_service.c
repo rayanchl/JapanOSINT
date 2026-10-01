@@ -9,31 +9,16 @@
  * verbatim. success=true; weather confidence 85. Emits ONE
  * osint_service_result row; body = {success,confidence,data} envelope, like
  * ip_geolocation.c. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
+#include <strings.h>            /* strcasecmp */
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <time.h>
-
-static char *url_encode(const char *s) {
-  static const char *unres = "-_.~";
-  size_t n = strlen(s);
-  char *out = malloc(n * 3 + 1);
-  if (!out) return NULL;
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)s; *p; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(unres, c))
-      out[w++] = (char)c;
-    else { sprintf(out + w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
-  return out;
-}
 
 static int is_valid_ip(const char *s) {
   /* lightweight: dotted quad or contains ':' */
@@ -49,7 +34,7 @@ static int is_valid_ip(const char *s) {
 /* geocode_location: Nominatim search → first lat/lon. */
 static int geocode_location(http_client *http, const char *loc,
                             double *lat, double *lon) {
-  char *enc = url_encode(loc);
+  char *enc = jo_urlencode(loc);
   if (!enc) return 0;
   char url[512];
   snprintf(url, sizeof url,
@@ -84,7 +69,7 @@ static int geocode_location(http_client *http, const char *loc,
 static cJSON *get_weather_wttr(http_client *http, const char *loc) {
   cJSON *result = cJSON_CreateObject();
   cJSON_AddStringToObject(result, "source", "wttr.in");
-  char *enc = url_encode(loc);
+  char *enc = jo_urlencode(loc);
   if (!enc) { cJSON_AddStringToObject(result, "status", "error"); return result; }
   char url[512];
   snprintf(url, sizeof url, "https://wttr.in/%s?format=j1", enc);
@@ -221,7 +206,7 @@ static cJSON *get_weather_owm(http_client *http, const char *loc,
   cJSON *result = cJSON_CreateObject();
   cJSON_AddStringToObject(result, "source", "openweathermap");
   if (!key || !*key) { cJSON_AddStringToObject(result, "status", "no_api_key"); return result; }
-  char *enc = url_encode(loc);
+  char *enc = jo_urlencode(loc);
   if (!enc) return result;
   char url[512];
   snprintf(url, sizeof url,
@@ -295,7 +280,7 @@ static int emit_weather(intel_sink *sink, const char *loc, const char *rk,
                         double lat, double lon, cJSON *data) {
   cJSON *env = cJSON_CreateObject();
   cJSON_AddBoolToObject(env, "success", 1);
-  cJSON_AddNumberToObject(env, "confidence", 85);
+  cJSON_AddItemToObject(env, "confidence", cJSON_CreateNull());
   cJSON_AddItemToObject(env, "data", cJSON_Duplicate(data, 1));
   char *bj = cJSON_PrintUnformatted(env);
 
@@ -303,8 +288,9 @@ static int emit_weather(intel_sink *sink, const char *loc, const char *rk,
   cJSON_AddStringToObject(props, "service", "WEATHER_SERVICE");
   cJSON_AddStringToObject(props, "entity", loc);
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 85);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   intel_item it = {0};
   it.remote_key      = rk;
@@ -373,8 +359,24 @@ static int run_weather(const source_ctx *ctx, intel_sink *sink) {
     if (cla && clo && cJSON_IsNumber(cla) && cJSON_IsNumber(clo)) {
       clat = cla->valuedouble; clon = clo->valuedouble; cg = 1;
     }
+    /* AUDIT NOTE (slice a3): the row used to be titled with the REQUESTED
+     * location while both the reading and the pin came from whatever station
+     * wttr.in resolved to — for entity "Tokyo" that is Shikinejima, an island
+     * ~150 km south, so the row read "Weather — Tokyo" over a measurement
+     * taken somewhere else. The reading and the coordinate are real and belong
+     * together; it is the label that was wrong. Name the resolved place when
+     * it differs from what was asked for. */
+    const char *resolved = NULL;
+    cJSON *rv = cJSON_GetObjectItem(current, "location");
+    if (rv && cJSON_IsString(rv) && rv->valuestring[0]) resolved = rv->valuestring;
+
     char rk[320]; snprintf(rk, sizeof rk, "weather:%s:current", loc);
-    char title[360]; snprintf(title, sizeof title, "Weather — %s (current)", loc);
+    char title[420];
+    if (resolved && strcasecmp(resolved, loc) != 0)
+      snprintf(title, sizeof title, "Weather — %s [nearest station: %s] (current)",
+               loc, resolved);
+    else
+      snprintf(title, sizeof title, "Weather — %s (current)", loc);
     emitted += emit_weather(sink, loc, rk, title, "current conditions",
                             NULL, cg, clat, clon, current);
   }

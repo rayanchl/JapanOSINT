@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
+#include <pthread.h>
 
 /* Parse "YYYY-MM-DD HH:MM:SS" or ISO-8601 "YYYY-MM-DDTHH:MM:SS[.mmm][Z]" into
  * epoch seconds (UTC). Both spellings occur: SQLite datetime('now') writes the
@@ -206,4 +207,34 @@ const source_trust *source_trust_find(const source_trust *tbl, int n,
   for (int i = 0; i < n; i++)
     if (strcmp(tbl[i].source_id, source_id) == 0) return &tbl[i];
   return NULL;
+}
+
+/* ── cached scalar for the scheduler ─────────────────────────────────────
+ * One table for the process, rebuilt lazily when older than the TTL. The
+ * lookup is the same linear find as above; at ~2k rated sources that is a
+ * few µs per due source, which is nothing next to the second the dispatcher
+ * sleeps between walks. A failed load keeps the previous table (stale is
+ * better than unrated-for-everyone) and retries on the next call after TTL. */
+static pthread_mutex_t g_score_mu = PTHREAD_MUTEX_INITIALIZER;
+static source_trust   *g_score_tbl;
+static int             g_score_n;
+static time_t          g_score_at;
+
+double source_trust_score(db_handle *db, const char *source_id) {
+  if (!source_id) return -1.0;
+  long ttl = 300;
+  const char *e = getenv("JO_TRUST_CACHE_SEC");
+  if (e && *e) { ttl = atol(e); if (ttl < 1) ttl = 1; }
+  time_t now = time(NULL);
+  pthread_mutex_lock(&g_score_mu);
+  if (!g_score_tbl || now - g_score_at >= ttl) {
+    int n = 0;
+    source_trust *t = source_trust_load(db, &n);
+    if (t) { free(g_score_tbl); g_score_tbl = t; g_score_n = n; }
+    g_score_at = now;                 /* also throttles retries after a failure */
+  }
+  const source_trust *t = source_trust_find(g_score_tbl, g_score_n, source_id);
+  double r = (t && t->rated) ? t->reliability : -1.0;
+  pthread_mutex_unlock(&g_score_mu);
+  return r;
 }

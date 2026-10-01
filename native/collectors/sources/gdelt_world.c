@@ -10,9 +10,9 @@
  *
  * Both share one run() switching on ctx->source_id. Only real, parsed API
  * fields are emitted; fetch failure / no matches → honest empty (return 0). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

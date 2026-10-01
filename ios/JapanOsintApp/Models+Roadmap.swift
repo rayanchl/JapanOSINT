@@ -194,7 +194,25 @@ struct AlertInboxEvent: Codable, Identifiable, Hashable {
     let item_source_id: String?
     let item_link: String?
 }
-struct AlertInboxEnvelope: Decodable { let data: [AlertInboxEvent] }
+/// `/api/alert-events` answers the same envelope `/api/intel/items` does —
+/// `{"data":[…],"page":{"next_cursor","limit","total"},"meta":…}` — with a
+/// MEASURED `total`. It used to answer a bare `{"data":[…]}` capped at 500 with
+/// no total, so a 500-row reply over a 700-row inbox looked complete. The app
+/// decoded exactly that bare shape and would have kept looking complete after
+/// the server started telling the truth; house rule 2 — a bounded view states
+/// how much it is showing out of how much exists — is the client's obligation
+/// as much as the server's. `page` is optional so a pre-envelope server still
+/// decodes.
+struct AlertInboxPage: Decodable {
+    let next_cursor: String?
+    let limit: Int?
+    /// null when the server's COUNT failed — never a plausible 0.
+    let total: Int?
+}
+struct AlertInboxEnvelope: Decodable {
+    let data: [AlertInboxEvent]
+    let page: AlertInboxPage?
+}
 struct UnreadCount: Decodable { let unread: Int }
 
 // ── Item 10: rule preview / backtest ───────────────────────────────────────
@@ -241,10 +259,12 @@ struct AreaOfInterest: Codable, Identifiable, Hashable {
     let name: String
     let kind: String              // bbox | polygon | circle
     let geometry: AnyCodable?
-    let bbox_w: Double?
-    let bbox_s: Double?
-    let bbox_e: Double?
-    let bbox_n: Double?
+    /// `[w, s, e, n]` — the server emits the bounding box as a single ARRAY
+    /// under the key `bbox` (core/aoiapi.c:243-250), computed for EVERY kind,
+    /// not as four scalars. The four `bbox_w/s/e/n` members this replaced
+    /// therefore decoded to nil on every row. Null only if the stored columns
+    /// are.
+    let bbox: [Double]?
     let created_at: String
 
     /// Ring for a polygon AOI, in CLLocationCoordinate2D order.
@@ -341,9 +361,9 @@ struct GraphMeta: Codable, Hashable {
 }
 
 /// NOTE the name: `EntityGraph` is already taken by `Search/SearchModels.swift`
-/// (a different shape, built on `EntityNode`, used by the existing
-/// `EntityGraphCanvas`). Two same-named types in one module is a hard compile
-/// error, so the richer roadmap-19 payload is `EntityEgoGraph`.
+/// (a different, poorer shape built on `EntityNode` and carrying no `meta`).
+/// Two same-named types in one module is a hard compile error, so the richer
+/// roadmap-19 payload — the one `GraphCanvasView` renders — is `EntityEgoGraph`.
 struct EntityEgoGraph: Decodable {
     let nodes: [GraphNode]
     let edges: [GraphEdge]
@@ -466,6 +486,17 @@ struct EvidenceVerifyResult: Decodable {
     let checked: Int?
     let broken_at: Int?
     let reason: String?
+
+    /// The server spells these `count` and `brokenAt` (core/evidence.c).
+    /// Because `ok` and `reason` did match, the decode SUCCEEDED and only the
+    /// two numbers silently vanished — so "N records checked" and "broken at
+    /// seq N" could never render, with no error to explain why.
+    private enum CodingKeys: String, CodingKey {
+        case ok
+        case checked   = "count"
+        case broken_at = "brokenAt"
+        case reason
+    }
 }
 
 // ── Item 27: media assets ──────────────────────────────────────────────────

@@ -8,9 +8,9 @@
  *   GENDERIZE       api.genderize.io/?name=                    (name→gender)
  *   REST_COUNTRIES  restcountries.com/v3.1/name/<name>         (country facts)
  *   FRANKFURTER_FX  api.frankfurter.app/latest?from=<CUR>      (FX rates) */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,7 +32,8 @@ static int mi_emit(intel_sink *sink, const char *service, const char *rtype,
   it.record_type = rtype; it.properties_json = pj; it.tags_json = tags;
   int rc = sink->emit(sink, &it);
   free(bj); free(pj);
-  if (body) cJSON_Delete(body); if (props) cJSON_Delete(props);
+  if (body) cJSON_Delete(body);
+  if (props) cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -48,8 +49,8 @@ static char *dblp_authors(const cJSON *info) {
       const char *t = jo_sv(e, "text"); if (!t) continue;
       size_t need = len + strlen(t) + 3; if (need > cap) { cap = need * 2; char *x = realloc(out, cap); if (!x) break; out = x; }
       if (n) { strcpy(out + len, ", "); len += 2; } strcpy(out + len, t); len += strlen(t);
-      /* (cap removed: every record of the fetched array is emitted —
-       * docs/SOURCE_EXHAUSTIVENESS.md) */
+      n++;  /* the count IS the separator/emptiness flag — the cap that used
+              * to increment it was removed, this must not go with it. */
     }
   } else {
     const char *t = jo_sv(a, "text"); if (t) { strncpy(out, t, cap - 1); out[cap-1]=0; n = 1; }

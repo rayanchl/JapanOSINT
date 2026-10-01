@@ -37,10 +37,45 @@ struct AlertEditor: View {
     private let ruleId: String
     private let isCreate: Bool
 
+    /// What the server substitutes for a stored webhook secret on reads
+    /// (`core/alertsapi.c`, `one_rule`). Four U+2022 bullets — 12 UTF-8 bytes,
+    /// which is *below* the server's 16-byte minimum, so echoing it back on a
+    /// PATCH is an unconditional 400 and renaming a webhook rule was
+    /// impossible.
+    ///
+    /// Dropping the `secret` key alone does NOT fix that: `validate_rule`
+    /// requires a real ≥16-char secret on every webhook channel in whatever
+    /// `channels` array the PATCH ends up merging, so an absent secret is
+    /// rejected exactly like a short one. The merge is top-level, which means
+    /// the only way to keep a stored secret is to omit `channels` entirely —
+    /// see `API.alertUpdate(_:omittingChannels:)` and `channelsWereEdited`.
+    private static let maskedSecret = "••••"
+
+    /// The channel list as it arrived from the server, so `save()` can tell
+    /// "the user left the channels alone" (safe to omit from the PATCH and let
+    /// the stored secrets stand) from "the user edited them" (the whole array
+    /// is replaced server-side, so every webhook in it needs a real secret).
+    private let loadedChannels: [AlertChannel]
+
+    /// The predicate exactly as it arrived. `save()` starts from THIS and
+    /// overwrites only the five terms the form owns.
+    ///
+    /// The server replaces the predicate wholesale — `core/alertsapi.c` does
+    /// `cJSON_Duplicate(bp,1)` whenever the PATCH body carries one — so building
+    /// a fresh `AlertPredicate()` here silently deleted every term this editor
+    /// has no control for: `bbox`, `polygon`, `circle`, `aoi_id`, `tags_all`,
+    /// `entity_ids`, `entity_types`, `record_types`. Renaming a geofenced rule
+    /// un-geofenced it, and nothing said so. Keeping the loaded value also lets
+    /// a caller PREFILL a spatial term (see `AlertRule.blank(geofencedBy:)`) and
+    /// have it survive Create.
+    private let loadedPredicate: AlertPredicate
+
     init(rule: AlertRule, onSave: @escaping (AlertRule) -> Void) {
         self.onSave = onSave
         self.ruleId = rule.id
         self.isCreate = rule.id.isEmpty
+        self.loadedChannels = rule.channels
+        self.loadedPredicate = rule.predicate
         _name = State(initialValue: rule.name)
         _enabled = State(initialValue: rule.enabled)
         _mode = State(initialValue: rule.predicate.mode ?? "fts")
@@ -106,6 +141,21 @@ struct AlertEditor: View {
                         .font(.caption2)
                 }
 
+                if !preservedTerms.isEmpty {
+                    Section {
+                        ForEach(preservedTerms, id: \.self) { term in
+                            Label(term, systemImage: "lock")
+                                .font(.caption)
+                                .foregroundStyle(theme.textMuted)
+                        }
+                    } header: {
+                        Text("Also matching")
+                    } footer: {
+                        Text("This rule carries terms this form has no control for. They are kept exactly as they are when you save — they are listed here so \"save\" never looks like it dropped them.")
+                            .font(.caption2)
+                    }
+                }
+
                 Section {
                     ForEach(Array(channels.enumerated()), id: \.offset) { idx, _ in
                         channelEditor(at: idx)
@@ -123,7 +173,9 @@ struct AlertEditor: View {
                 } header: {
                     Text("Deliver to")
                 } footer: {
-                    Text("Webhook receivers can verify each call's HMAC-SHA256 signature using the secret you paste below. Min 16 characters.")
+                    Text(isCreate
+                         ? "Webhook receivers can verify each call's HMAC-SHA256 signature using the secret you paste below. Min 16 characters."
+                         : "Webhook receivers can verify each call's HMAC-SHA256 signature. Min 16 characters. Leave the channels untouched to keep the stored secret; if you change any channel you must re-enter the secret, because the server replaces the whole channel list.")
                         .font(.caption2)
                 }
 
@@ -146,6 +198,13 @@ struct AlertEditor: View {
                                 .foregroundStyle(theme.textMuted)
                         }
                     }
+                }
+
+                // Roadmap 10 — live backtest: "would have matched N items in
+                // the last 7 days". Only once the draft has real criteria, so an
+                // empty new rule doesn't kick off a full-corpus scan.
+                if hasPreviewableCriteria {
+                    RulePreviewSection(predicate: previewPredicate)
                 }
 
                 if let error {
@@ -182,6 +241,7 @@ struct AlertEditor: View {
             HStack(spacing: Space.sm) {
                 Image(systemName: ch.type == .email ? "envelope.fill" : "link")
                     .foregroundStyle(theme.accent)
+                    .accessibilityHidden(true)   // the channel type follows
                 Text(ch.type.label.uppercased())
                     .font(.caption2.bold())
                     .tracking(0.6)
@@ -223,6 +283,72 @@ struct AlertEditor: View {
         .padding(.vertical, 2)
     }
 
+    // MARK: - Preserved (uneditable) predicate terms
+
+    /// Human names for every loaded predicate term the form cannot edit. Shown
+    /// read-only so the analyst can see the rule is more than what is on screen.
+    private var preservedTerms: [String] {
+        let p = loadedPredicate
+        var out: [String] = []
+        if let b = p.bbox, b.count == 4 {
+            out.append(String(format: "Inside bbox %.3f, %.3f → %.3f, %.3f",
+                              b[0], b[1], b[2], b[3]))
+        }
+        if let ring = p.polygon, !ring.isEmpty {
+            out.append("Inside a \(ring.count)-point polygon")
+        }
+        if let c = p.circle {
+            out.append(String(format: "Within %@ of lat %.3f, lon %.3f",
+                              DrawnAOI.formatRadius(c.radius_m), c.lat, c.lon))
+        }
+        if let id = p.aoi_id, !id.isEmpty { out.append("Inside saved area \(id)") }
+        if let t = p.tags_all, !t.isEmpty {
+            out.append("All of these tags: \(t.joined(separator: ", "))")
+        }
+        if let e = p.entity_ids, !e.isEmpty {
+            out.append("\(e.count) watched entit\(e.count == 1 ? "y" : "ies")")
+        }
+        if let t = p.entity_types, !t.isEmpty {
+            out.append("Entity types: \(t.joined(separator: ", "))")
+        }
+        // `record_types` is deliberately included even though the C matcher
+        // ignores it (see Models.swift): it round-trips, and hiding a stored key
+        // would make "save" look lossy the next time someone diffs the rule.
+        if let t = p.record_types, !t.isEmpty {
+            out.append("Record types (not enforced by the server): \(t.joined(separator: ", "))")
+        }
+        return out
+    }
+
+    // MARK: - Backtest preview (roadmap 10)
+
+    /// The draft predicate as a plain dict, the same shape `alertPreview` and
+    /// the saved rule use. Mirrors the assembly in `save()` so the preview
+    /// matches exactly what would be persisted.
+    private var previewPredicate: [String: Any] {
+        var p: [String: Any] = ["mode": mode]
+        let trimQ = q.trimmingCharacters(in: .whitespaces)
+        if !trimQ.isEmpty { p["q"] = trimQ }
+        let srcs = splitCSV(sourcesCSV)
+        if !srcs.isEmpty { p["source_ids"] = srcs }
+        let tags = splitCSV(tagsCSV)
+        if !tags.isEmpty { p["tags_any"] = tags }
+        if mode == "llm" {
+            let nl = nlQuery.trimmingCharacters(in: .whitespaces)
+            if !nl.isEmpty { p["nl_query"] = nl }
+        }
+        return p
+    }
+
+    /// True once the draft has at least one real matching term — avoids firing a
+    /// full-corpus backtest for an empty new rule.
+    private var hasPreviewableCriteria: Bool {
+        !q.trimmingCharacters(in: .whitespaces).isEmpty
+            || !splitCSV(sourcesCSV).isEmpty
+            || !splitCSV(tagsCSV).isEmpty
+            || (mode == "llm" && !nlQuery.trimmingCharacters(in: .whitespaces).isEmpty)
+    }
+
     // MARK: - Save
 
     private func save() async {
@@ -232,32 +358,57 @@ struct AlertEditor: View {
         let trimmedName = name.trimmingCharacters(in: .whitespaces)
         if trimmedName.isEmpty { error = "Name is required"; return }
         if channels.isEmpty { error = "Add at least one channel"; return }
+        // "Untouched" = still carrying the server's mask (or blank). Only an
+        // *edit* can leave that state behind, so on create it is always a
+        // validation failure.
+        let channelsWereEdited = isCreate || channels != loadedChannels
+        var anyUntouchedWebhook = false
         for (i, ch) in channels.enumerated() {
             if ch.target.trimmingCharacters(in: .whitespaces).isEmpty {
                 error = "Channel \(i + 1) is missing a target"; return
             }
             if ch.type == .webhook {
                 let secret = (ch.secret ?? "").trimmingCharacters(in: .whitespaces)
-                // Server preserves "••••" placeholder when updating without
-                // re-entering the secret. Accept that as "unchanged".
-                if secret.count < 16 && secret != "••••" {
+                let untouched = !isCreate
+                    && (secret == Self.maskedSecret || secret.isEmpty)
+                if untouched {
+                    anyUntouchedWebhook = true
+                    // The whole array is replaced when `channels` is sent, and
+                    // the server cannot merge a stored secret into it. Say so
+                    // here rather than shipping a request that can only 400.
+                    if channelsWereEdited {
+                        error = "Re-enter the webhook secret for channel \(i + 1) — "
+                              + "editing the channel list replaces the stored secret."
+                        return
+                    }
+                } else if secret.count < 16 {
                     error = "Webhook secret must be at least 16 characters"; return
                 }
             }
         }
 
-        var predicate = AlertPredicate()
+        // Nothing about the channels changed and at least one webhook is still
+        // on its mask ⇒ omit `channels` from the PATCH so the stored secrets
+        // survive. Anything else sends the array as authored.
+        let omitChannels = !isCreate && !channelsWereEdited && anyUntouchedWebhook
+
+        // Start from what was loaded, not from a blank — see `loadedPredicate`.
+        // Every field below is assigned unconditionally (nil when the control is
+        // empty) so clearing a box in the form still clears the term; every
+        // field NOT named here is carried through untouched.
+        var predicate = loadedPredicate
         predicate.mode = mode
         let trimQ = q.trimmingCharacters(in: .whitespaces)
-        if !trimQ.isEmpty { predicate.q = trimQ }
+        predicate.q = trimQ.isEmpty ? nil : trimQ
         let srcs = splitCSV(sourcesCSV)
-        if !srcs.isEmpty { predicate.source_ids = srcs }
+        predicate.source_ids = srcs.isEmpty ? nil : srcs
         let tags = splitCSV(tagsCSV)
-        if !tags.isEmpty { predicate.tags_any = tags }
-        if mode == "llm" {
-            let nl = nlQuery.trimmingCharacters(in: .whitespaces)
-            if !nl.isEmpty { predicate.nl_query = nl }
-        }
+        predicate.tags_any = tags.isEmpty ? nil : tags
+        let nl = nlQuery.trimmingCharacters(in: .whitespaces)
+        // `nl_query` only means anything in llm mode, but it is preserved rather
+        // than dropped when the user switches back to fts — switching modes is
+        // not a request to throw the prompt away.
+        predicate.nl_query = nl.isEmpty ? nil : nl
 
         let rule = AlertRule(
             id: ruleId, name: trimmedName, enabled: enabled,
@@ -271,7 +422,9 @@ struct AlertEditor: View {
 
         do {
             let api = apiClient.api
-            let saved = isCreate ? try await api.alertCreate(rule) : try await api.alertUpdate(rule)
+            let saved = isCreate
+                ? try await api.alertCreate(rule)
+                : try await api.alertUpdate(rule, omittingChannels: omitChannels)
             onSave(saved)
             Haptics.success()
             dismiss()

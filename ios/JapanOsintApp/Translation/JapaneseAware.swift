@@ -123,7 +123,7 @@ struct JapaneseAware: View {
     private func tagLabel(systemImage: String, title: String) -> some View {
         HStack(spacing: 3) {
             Image(systemName: systemImage)
-                .font(.system(size: 9, weight: .semibold))
+                .font(.caption2.weight(.semibold))
             Text(title)
                 .font(.caption2)
         }

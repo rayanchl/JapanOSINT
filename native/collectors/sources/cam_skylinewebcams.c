@@ -30,30 +30,48 @@
  *
  * Each Feature → camera_upsert(...,"skylinewebcams").
  */
-#include "../../source.h"
-#include "../../core/camera_store.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../third_party/cJSON.h"
+#include "lib/geojson.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "core/camera_store.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "cam_centroids.inc"
 
 typedef struct { const char *k; const char *sv; int is_num; double nv;
                  int is_null; } kv;
 
-static double round4(double v) { return floor(v * 1e4 + 0.5) / 1e4; }
-
+/* camera_uid = "<lat>:<lon>:<tail>". The tail used to be a bare 60-char
+ * prefix of the URL — but every Skyline camera in a city shares far more than
+ * 60 characters of path
+ *   https://www.skylinewebcams.com/fr/webcam/japan/kanto/tokyo/kabukicho.html
+ *   https://www.skylinewebcams.com/fr/webcam/japan/kanto/tokyo/shinjuku-…
+ * so they all collapsed onto ".../tokyo/k" and ".../tokyo/s" and overwrote
+ * each other in the camera keyspace: 101 cameras scraped, 36 stored. Keep a
+ * readable prefix but append a hash of the FULL source string so distinct
+ * cameras stay distinct. (The same 60-char truncation is copy-pasted into 13
+ * other cam_*.c collectors — see the audit report.) */
 static void uid_tail(const char *url, const char *name, char *out,
                      size_t outsz) {
   const char *src = (url && *url) ? url : (name ? name : "");
+  /* FNV-1a over the whole source string — deterministic across runs. */
+  unsigned long long h = 1469598103934665603ULL;
+  for (const char *p = src; *p; p++) {
+    h ^= (unsigned char)*p;
+    h *= 1099511628211ULL;
+  }
   size_t i = 0;
-  for (; src[i] && i < 60 && i + 1 < outsz; i++) {
+  for (; src[i] && i < 44 && i + 18 < outsz; i++) {
     unsigned char c = (unsigned char)src[i];
     out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
   }
   out[i] = 0;
+  snprintf(out + i, outsz - i, "#%016llx", h);
 }
 
 static cJSON *make_feature(double lat, double lon, const char *name,
@@ -66,20 +84,12 @@ static cJSON *make_feature(double lat, double lon, const char *name,
       url = extra[i].sv; break;
     }
   char lats[32], lons[32], tail[80], uid[160];
-  snprintf(lats, sizeof lats, "%.4f", round4(lat));
-  snprintf(lons, sizeof lons, "%.4f", round4(lon));
+  snprintf(lats, sizeof lats, "%.4f", jo_round4(lat));
+  snprintf(lons, sizeof lons, "%.4f", jo_round4(lon));
   uid_tail(url, name, tail, sizeof tail);
   snprintf(uid, sizeof uid, "%s:%s:%s", lats, lons, tail);
 
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "camera_uid", uid);
@@ -100,89 +110,6 @@ static cJSON *make_feature(double lat, double lon, const char *name,
   return f;
 }
 
-/* prec: "prefecture" for the 47 prefecture rows, "city" for the named
- * city/landmark anchors below them — emitted so the centroid point is
- * honestly flagged as an area, not the camera's GPS. */
-typedef struct { const char *key; double lat, lon; const char *prec; } centroid;
-static const centroid PREFECTURE_CENTROIDS[] = {
-  {"hokkaido",43.2203,142.8635,"prefecture"},{"aomori",40.7644,140.7400,"prefecture"},
-  {"iwate",39.7036,141.1527,"prefecture"},{"miyagi",38.2688,140.8719,"prefecture"},
-  {"akita",39.7186,140.1024,"prefecture"},{"yamagata",38.2404,140.3636,"prefecture"},
-  {"fukushima",37.7503,140.4677,"prefecture"},{"ibaraki",36.3418,140.4468,"prefecture"},
-  {"tochigi",36.5657,139.8836,"prefecture"},{"gunma",36.3906,139.0604,"prefecture"},
-  {"saitama",35.8572,139.6489,"prefecture"},{"chiba",35.6050,140.1234,"prefecture"},
-  {"tokyo",35.6762,139.6503,"prefecture"},{"kanagawa",35.4478,139.6425,"prefecture"},
-  {"niigata",37.9161,139.0364,"prefecture"},{"toyama",36.6953,137.2113,"prefecture"},
-  {"ishikawa",36.5946,136.6256,"prefecture"},{"fukui",36.0652,136.2216,"prefecture"},
-  {"yamanashi",35.6639,138.5684,"prefecture"},{"nagano",36.6513,138.1810,"prefecture"},
-  {"gifu",35.3911,136.7222,"prefecture"},{"shizuoka",34.9769,138.3831,"prefecture"},
-  {"aichi",35.1802,136.9066,"prefecture"},{"mie",34.7303,136.5086,"prefecture"},
-  {"shiga",35.0045,135.8686,"prefecture"},{"kyoto",35.0116,135.7681,"prefecture"},
-  {"osaka",34.6937,135.5023,"prefecture"},{"hyogo",34.6913,135.1830,"prefecture"},
-  {"nara",34.6851,135.8050,"prefecture"},{"wakayama",34.2261,135.1675,"prefecture"},
-  {"tottori",35.5036,134.2383,"prefecture"},{"shimane",35.4723,133.0505,"prefecture"},
-  {"okayama",34.6618,133.9344,"prefecture"},{"hiroshima",34.3966,132.4596,"prefecture"},
-  {"yamaguchi",34.1859,131.4706,"prefecture"},{"tokushima",34.0658,134.5593,"prefecture"},
-  {"kagawa",34.3401,134.0434,"prefecture"},{"ehime",33.8416,132.7657,"prefecture"},
-  {"kochi",33.5597,133.5311,"prefecture"},{"fukuoka",33.5902,130.4017,"prefecture"},
-  {"saga",33.2494,130.2988,"prefecture"},{"nagasaki",32.7448,129.8737,"prefecture"},
-  {"kumamoto",32.7898,130.7417,"prefecture"},{"oita",33.2382,131.6126,"prefecture"},
-  {"miyazaki",31.9111,131.4239,"prefecture"},{"kagoshima",31.5602,130.5581,"prefecture"},
-  {"okinawa",26.3344,127.8056,"prefecture"},
-  {"sapporo",43.0642,141.3469,"city"},{"yokohama",35.4437,139.6380,"city"},
-  {"nagoya",35.1815,136.9066,"city"},{"kobe",34.6901,135.1955,"city"},
-  {"sendai",38.2682,140.8694,"city"},{"nara_city",34.6851,135.8050,"city"},
-  {"nikko",36.7581,139.6117,"city"},{"nagasaki_city",32.7448,129.8737,"city"},
-  {"fuji",35.3606,138.7274,"city"},{"hakone",35.2323,139.1069,"city"},
-  {"asakusa",35.7148,139.7967,"city"},{"shibuya",35.6580,139.7016,"city"},
-  {"shinjuku",35.6938,139.7034,"city"},
-};
-#define N_CENTROIDS (sizeof PREFECTURE_CENTROIDS / sizeof *PREFECTURE_CENTROIDS)
-
-static void to_lower_buf(const char *in, char *out, size_t n) {
-  size_t i = 0;
-  for (; in && in[i] && i + 1 < n; i++) {
-    unsigned char c = (unsigned char)in[i];
-    out[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : (char)c;
-  }
-  out[i] = 0;
-}
-
-static int centroid_exact(const char *key, double *lat, double *lon,
-                          const char **prec) {
-  if (!key || !*key) return 0;
-  for (size_t i = 0; i < N_CENTROIDS; i++)
-    if (strcmp(PREFECTURE_CENTROIDS[i].key, key) == 0) {
-      *lat = PREFECTURE_CENTROIDS[i].lat;
-      *lon = PREFECTURE_CENTROIDS[i].lon;
-      *prec = PREFECTURE_CENTROIDS[i].prec;
-      return 1;
-    }
-  return 0;
-}
-
-static int guess_centroid(const char *text, double *lat, double *lon,
-                          const char **prec) {
-  if (!text || !*text) return 0;
-  char low[1024];
-  to_lower_buf(text, low, sizeof low);
-  for (size_t i = 0; i < N_CENTROIDS; i++) {
-    const char *k = PREFECTURE_CENTROIDS[i].key;
-    char kb[64];
-    size_t j = 0;
-    for (; k[j] && j + 1 < sizeof kb; j++) kb[j] = k[j];
-    kb[j] = 0;
-    size_t kl = strlen(kb);
-    if (kl > 5 && strcmp(kb + kl - 5, "_city") == 0) kb[kl - 5] = 0;
-    if (strstr(low, kb)) {
-      *lat = PREFECTURE_CENTROIDS[i].lat;
-      *lon = PREFECTURE_CENTROIDS[i].lon;
-      *prec = PREFECTURE_CENTROIDS[i].prec;
-      return 1;
-    }
-  }
-  return 0;
-}
 
 /* path-pattern gate for the JS capture group 1:
  *   (?:\/|)?fr\/webcam\/japan\/[^"#?\s]+\.html
@@ -327,8 +254,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
      * Tokyo fallback — that would fabricate a location). */
     double lat, lon;
     const char *prec = NULL;
-    if (!centroid_exact(cs2, &lat, &lon, &prec) &&
-        !guess_centroid(label ? label : "", &lat, &lon, &prec)) {
+    if (!cam_centroid_exact(cs2, &lat, &lon, &prec) &&
+        !cam_centroid_find(label ? label : "", CAM_CENTROID_SCAN_1K,
+                           &lat, &lon, &prec)) {
       free(label);
       continue;
     }
@@ -345,9 +273,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       ex[0].sv = fullurl; ex[0].nv = 0;
     ex[1].k = "city"; ex[1].is_num = 0; ex[1].is_null = 0;
       ex[1].sv = cs2; ex[1].nv = 0;
-    ex[2].k = "location_precision"; ex[2].is_num = 0; ex[2].is_null = 0;
+    ex[2].k = "geo_precision"; ex[2].is_num = 0; ex[2].is_null = 0;
       ex[2].sv = prec ? prec : "prefecture"; ex[2].nv = 0;
-    ex[3].k = "location_approximate"; ex[3].is_num = 1; ex[3].is_null = 0;
+    ex[3].k = "geo_uncertain"; ex[3].is_num = 1; ex[3].is_null = 0;
       ex[3].sv = NULL; ex[3].nv = 1;
     cJSON *f = make_feature(lat, lon, nm, "aggregator_skyline",
                             "skylinewebcams", ex, 4);
@@ -364,9 +292,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cam_skylinewebcams_def = {
-  .id = "cam-skylinewebcams", .collector = "infrastructure",
+  .id = "cam-skylinewebcams", .collector = "camera-discovery",
   .name = "Camera Discovery: SkylineWebcams",
   .name_ja = "カメラ探索: SkylineWebcams",
-   .update_interval_sec = 21600, .run = run,
-  .category = "infrastructure" };
+   .layer = "cameras",
+   .update_interval_sec = 3600, .run = run,
+  .category = "cyber" };
 REGISTER_SOURCE(cam_skylinewebcams_def)

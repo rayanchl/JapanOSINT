@@ -148,6 +148,56 @@ struct ResultsBlob: Codable, Hashable, Sendable {
     }
 }
 
+/// One failure or notice from a named pipeline stage.
+///
+/// The backend (native/core/progress.c) records these whenever an LLM call
+/// returns nothing usable — analysis, each follow-up round, synthesis — and
+/// whenever it falls back to a degraded path. Before this existed, a search
+/// whose LLM never fired walked every phase to `completed` at 100% and was
+/// indistinguishable from one that worked: the synthesis read "Investigated
+/// … 0 returned data" with nothing anywhere saying *why*. That is the same
+/// silent-success failure the house rules forbid on the collector side, and
+/// rendering it faithfully is the client's half of the fix.
+///
+/// `severity` is `"error"` or `"notice"`. A notice is informational (the
+/// service catalogue was bounded to fit the prompt); an error means a stage
+/// produced no output and the run continued on a fallback.
+struct StageError: Codable, Hashable, Sendable, Identifiable {
+    let stage: String
+    let code: String
+    let detail: String?
+    let severity: String?
+    let timestamp: Double?
+
+    var id: String { "\(stage)|\(code)|\(timestamp ?? 0)" }
+    var isError: Bool { (severity ?? "error") == "error" }
+
+    /// Human wording for the codes pipeline.c emits. Unknown codes fall back
+    /// to the raw code so a new one is never hidden behind a blank.
+    var headline: String {
+        switch code {
+        case "llm_unreachable":        return "The analysis model was unreachable"
+        case "llm_timeout":            return "The analysis model timed out"
+        case "llm_bad_request":        return "The analysis model rejected the request"
+        case "llm_empty":              return "The analysis model returned nothing usable"
+        case "no_entities_extracted":  return "No entities could be extracted"
+        case "service_catalogue_bounded": return "Service catalogue was trimmed to fit"
+        default:                       return code.replacingOccurrences(of: "_", with: " ")
+        }
+    }
+
+    var stageLabel: String {
+        switch stage {
+        case "analysis":          return "Analysis"
+        case "services_assigned": return "Service assignment"
+        case "synthesis":         return "Synthesis"
+        default:
+            if stage.hasPrefix("round_") { return "Follow-up " + stage.dropFirst(6) }
+            return stage.replacingOccurrences(of: "_", with: " ").capitalized
+        }
+    }
+}
+
 struct SearchSnapshot: Codable, Hashable, Sendable {
     let request_id: String
     let query: String?
@@ -161,6 +211,15 @@ struct SearchSnapshot: Codable, Hashable, Sendable {
     let max_rounds: Int?
     let results: ResultsBlob?
     let done: Bool?
+    /// True when any stage errored and the run finished on a fallback. A
+    /// degraded `completed` run must never be presented as a completed
+    /// investigation — see `StageError`.
+    let degraded: Bool?
+    let stage_errors: [StageError]?
+
+    /// Errors only — the notices are context, not a verdict.
+    var stageFailures: [StageError] { (stage_errors ?? []).filter(\.isError) }
+    var isDegraded: Bool { degraded == true || !stageFailures.isEmpty }
 }
 
 struct EntityHit: Codable, Hashable, Sendable, Identifiable {
@@ -170,7 +229,19 @@ struct EntityHit: Codable, Hashable, Sendable, Identifiable {
     let mention_count: Int?
     var id: String { entity_id }
 }
-struct EntitySearchEnvelope: Codable, Sendable { let results: [EntityHit] }
+/// `/api/entities/search` keeps its row array under `results` and now adds a
+/// `page` block with a MEASURED `total`, the same envelope the intel and
+/// timeline routes use. The cap is 100; before the envelope existed, "100
+/// results" and "the first 100 of 4,000" were the same reply. Optional so a
+/// pre-envelope server still decodes.
+struct EntitySearchPage: Codable, Sendable {
+    let limit: Int?
+    let total: Int?
+}
+struct EntitySearchEnvelope: Codable, Sendable {
+    let results: [EntityHit]
+    let page: EntitySearchPage?
+}
 
 struct EntityProfile: Codable, Hashable, Sendable {
     let entity_id: String

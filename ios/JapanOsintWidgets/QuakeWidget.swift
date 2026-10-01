@@ -41,17 +41,25 @@ struct QuakeWidgetView: View {
                     .font(.caption)
                     .lineLimit(2)
                     .foregroundStyle(WidgetTheme.text)
+                // Was a hardcoded 9 pt — below the 11 pt legibility floor and
+                // blind to Dynamic Type. `.caption2` is 11 pt at the default
+                // setting and scales. (`Typography` lives in the app target,
+                // which this extension does not link, so the built-in text
+                // style is the equivalent here.)
                 Text(q.at, style: .relative)
-                    .font(.system(size: 9))
+                    .font(.caption2)
                     .foregroundStyle(WidgetTheme.muted)
 
                 if family == .systemMedium, !entry.snapshot.activeWarnings.isEmpty {
                     Divider().opacity(0.3)
                     ForEach(entry.snapshot.activeWarnings.prefix(2), id: \.self) { w in
                         HStack(spacing: 4) {
+                            // Was 8 pt; matched to the `.caption2` label beside
+                            // it so both sit on the Dynamic Type ramp.
                             Image(systemName: "exclamationmark.triangle.fill")
-                                .font(.system(size: 8))
+                                .font(.caption2)
                                 .foregroundStyle(WidgetTheme.danger)
+                                .accessibilityHidden(true)   // "warning" is the text
                             Text(w).font(.caption2).lineLimit(1)
                                 .foregroundStyle(WidgetTheme.text)
                         }
@@ -64,6 +72,7 @@ struct QuakeWidgetView: View {
             VStack(spacing: 3) {
                 Image(systemName: "waveform.path.ecg")
                     .foregroundStyle(WidgetTheme.muted)
+                    .accessibilityHidden(true)   // decorative; label follows
                 Text("No recent quake").font(.caption2)
                     .foregroundStyle(WidgetTheme.muted)
             }

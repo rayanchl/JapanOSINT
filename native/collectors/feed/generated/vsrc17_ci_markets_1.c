@@ -1,0 +1,14 @@
+/* Verified-live ci_markets sources (1), part 1.
+ * Every endpoint in this file returned 2xx and parsed to at
+ * least one record at generation time; see
+ * docs/verified-sources-manifest.tsv for the recorded proof.
+ * Scaffolded once by collectors/gen_verified_sources.py; HAND-MAINTAINED
+ * since — this file, not the manifest, is the current copy. The
+ * generator refuses to overwrite it without --force. */
+#include "_verified_macros.inc"
+
+VRSS(brvm_rss, "brvm-rss", "BRVM regional stock exchange announcements", "BRVM regional stock exchange announcements",
+  "ci_markets", "markets",
+  "https://www.brvm.org/fr/rss.xml",
+  "fr", "[\"ci\",\"markets\",\"batch17\",\"high-penetrancy\"]", 86400,
+  "Bourse Regionale des Valeurs Mobilieres (the shared exchange for the 8 UEMOA states: CI, SN, BF, BJ, ML, NE, TG, GW) news feed - listing admissions and bond issues by named issuers (e.g. SENELEC obligations liees au developpement durable), notices and dated links back to the full announcement.");

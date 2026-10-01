@@ -8,9 +8,9 @@
  *   BSCSCAN_BALANCE    api.bscscan.com       BSCSCAN_API_KEY       (BNB)
  *   POLYGONSCAN_BALANCE api.polygonscan.com  POLYGONSCAN_API_KEY   (MATIC)
  *   ARBISCAN_BALANCE   api.arbiscan.io       ARBISCAN_API_KEY      (ETH/Arb) */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

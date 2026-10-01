@@ -1,7 +1,11 @@
 #include "rss_atom.h"
 #include "../core/httpclient.h"
+#include "feedlib.h"   /* feed_url_host_is_jp: the one .jp host gate */
+#include "csv.h"       /* csv_decode_sjis */
+#include "hpengine.h"  /* hp_xml_decode: the one XML text decoder */
 #include "../third_party/cJSON.h"
-#include <openssl/sha.h>
+#include <openssl/evp.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -54,27 +58,21 @@ static char *tag_text(const char *from, const char *end, const char *tag,
           size_t len = (size_t)(lt - content);
           char *raw = dup_n(content, len);
           if (after) *after = ce + 1;
-          /* strip CDATA wrapper */
+          /* Trim BEFORE looking for the CDATA wrapper: publishers commonly
+           * pretty-print `<title>\n  <![CDATA[ ... ]]>\n</title>`, and matching
+           * the wrapper at offset 0 missed every one of those, persisting the
+           * literal "<![CDATA[ ... ]]>" as the title (and leaving links
+           * unparseable). */
+          /* One decoder for the whole tree (lib/hpengine.c hp_xml_decode): every
+           * CDATA section unwrapped wherever it sits, the five entities and
+           * &#NNN; / &#xHHH; references decoded to UTF-8. This block used to
+           * strip only a CDATA wrapper at offset 0 and know five entities, so an
+           * NDL title arrived as literal `&#x6b74;...` on 14 live feeds. */
           char *s = raw;
-          if (!strncmp(s, "<![CDATA[", 9)) {
-            char *e2 = strstr(s, "]]>");
-            if (e2) { *e2 = 0; memmove(s, s + 9, strlen(s + 9) + 1); }
-          }
-          /* trim ws */
+          hp_xml_decode(s);
           while (*s == ' ' || *s == '\n' || *s == '\r' || *s == '\t') s++;
           size_t L = strlen(s);
           while (L && (s[L-1]==' '||s[L-1]=='\n'||s[L-1]=='\r'||s[L-1]=='\t')) s[--L]=0;
-          /* decode minimal entities */
-          char *o = s;
-          for (char *r = s; *r; ) {
-            if (!strncmp(r,"&amp;",5)){*o++='&';r+=5;}
-            else if(!strncmp(r,"&lt;",4)){*o++='<';r+=4;}
-            else if(!strncmp(r,"&gt;",4)){*o++='>';r+=4;}
-            else if(!strncmp(r,"&quot;",6)){*o++='"';r+=6;}
-            else if(!strncmp(r,"&#39;",5)||!strncmp(r,"&apos;",6)){*o++='\'';r+=(r[2]=='3')?5:6;}
-            else *o++=*r++;
-          }
-          *o=0;
           char *res = strdup(s); free(raw); return res;
         }
       }
@@ -85,28 +83,219 @@ static char *tag_text(const char *from, const char *end, const char *tag,
   return NULL;
 }
 
-/* Atom <link href="..."/> */
-static char *atom_link(const char *from, const char *end) {
-  for (const char *p = from; p < end; p++) {
-    if (strncasecmp(p, "<link", 5) != 0) continue;
-    const char *gt = memchr(p, '>', (size_t)(end - p)); if (!gt) return NULL;
-    const char *h = NULL;
-    for (const char *c = p; c < gt - 4; c++)
-      if (strncasecmp(c, "href=", 5) == 0) { h = c + 5; break; }
-    if (!h) return NULL;
-    char quote = *h; if (quote != '"' && quote != '\'') return NULL;
-    const char *e2 = memchr(h + 1, quote, (size_t)(gt - h));
-    return e2 ? dup_n(h + 1, (size_t)(e2 - h - 1)) : NULL;
+/* An attribute value inside the tag [p,gt): whitespace-anchored so `hreflang=`
+ * or a `rel=` sitting inside somebody's query string is not mistaken for the
+ * attribute itself. Returns a pointer to the value's first byte, or NULL. */
+static const char *tag_attr_val(const char *p, const char *gt, const char *name,
+                                size_t nlen) {
+  for (const char *c = p; c + nlen + 1 <= gt; c++) {
+    if (*c != ' ' && *c != '\t' && *c != '\n' && *c != '\r') continue;
+    if (strncasecmp(c + 1, name, nlen) != 0) continue;
+    const char *e = c + 1 + nlen;
+    while (*e == ' ' || *e == '\t') e++;
+    if (*e != '=') continue;
+    e++;
+    while (*e == ' ' || *e == '\t') e++;
+    return e;
   }
   return NULL;
 }
 
+/* Atom <link href="..."/>.
+ *
+ * An entry carries SEVERAL <link>s and only the one with rel="alternate" (or
+ * no rel at all) is the entry itself. Taking the first one blindly is wrong on
+ * every Blogger/Atom entry, which lists rel="replies" — the item's comment
+ * feed — ahead of the alternate, so `link` pointed at the comment stream for
+ * the whole of that fleet. A <link> with no usable href no longer aborts the
+ * hunt either; it just is not the one. */
+static char *atom_link(const char *from, const char *end) {
+  char *first = NULL;
+  for (const char *p = from; p < end; p++) {
+    if (strncasecmp(p, "<link", 5) != 0) continue;
+    const char *gt = memchr(p, '>', (size_t)(end - p));
+    if (!gt) break;
+    const char *h = tag_attr_val(p, gt, "href", 4);
+    if (!h) { p = gt; continue; }
+    char quote = *h;
+    if (quote != '"' && quote != '\'') { p = gt; continue; }
+    const char *e2 = memchr(h + 1, quote, (size_t)(gt - h));
+    if (!e2) { p = gt; continue; }
+    char *val = dup_n(h + 1, (size_t)(e2 - h - 1));
+    if (!val) { p = gt; continue; }
+    const char *rel = tag_attr_val(p, gt, "rel", 3);
+    if (rel && (*rel == '"' || *rel == '\'')) rel++;
+    if (!rel || strncasecmp(rel, "alternate", 9) == 0) return val;
+    if (!first) first = val; else free(val);
+    p = gt;
+  }
+  return first;      /* no alternate: the first href seen is the best we have */
+}
+
+/* Atom's <author> is a container: <author><name>X</name><uri>…</uri></author>.
+ * tag_text() returns its raw inner XML, so author was persisted as the literal
+ * "<name>/u/AutoModerator</name><uri>…</uri>". If the text still looks like
+ * markup, pull the <name> (or <email>) out of it. Returns a fresh string. */
+static char *unwrap_person(char *s) {
+  if (!s || !strchr(s, '<')) return s;
+  const char *end = s + strlen(s);
+  char *inner = tag_text(s, end, "name", NULL);
+  if (!inner || !*inner) { free(inner); inner = tag_text(s, end, "email", NULL); }
+  if (inner && *inner) { free(s); return inner; }
+  free(inner);
+  return s;
+}
+
+/* --- RFC-822 -> ISO-8601 ---------------------------------------------------
+ * Feeds date items as "Fri, 31 Jul 2026 16:16:00 +0900"; every other collector
+ * writes ISO-8601. They share one `published_at` column that core/intelapi.c,
+ * core/exportapi.c and core/simhash.c all ORDER BY as TEXT — and since 'F' > '2',
+ * every RSS row sorted ahead of every ISO row regardless of date, with RSS rows
+ * ordered among themselves by weekday name. Normalise on the way in.
+ * Returns a malloc'd ISO-8601 UTC string, or NULL if the input isn't RFC-822
+ * (already-ISO input is returned as a copy). */
+static const char *const RFC822_MON[12] = {
+  "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"
+};
+
+static int tz_offset_minutes(const char *tz) {
+  if (!tz || !*tz) return 0;
+  if (*tz == '+' || *tz == '-') {
+    int sign = (*tz == '-') ? -1 : 1;
+    int hh = 0, mm = 0;
+    if (sscanf(tz + 1, "%2d%2d", &hh, &mm) >= 1) return sign * (hh * 60 + mm);
+    return 0;
+  }
+  /* the obsolete alphabetic zones RFC 822 still permits */
+  if (!strcasecmp(tz, "GMT") || !strcasecmp(tz, "UT") || !strcasecmp(tz, "Z")) return 0;
+  if (!strcasecmp(tz, "EDT")) return -4 * 60;
+  if (!strcasecmp(tz, "EST") || !strcasecmp(tz, "CDT")) return -5 * 60;
+  if (!strcasecmp(tz, "CST") || !strcasecmp(tz, "MDT")) return -6 * 60;
+  if (!strcasecmp(tz, "MST") || !strcasecmp(tz, "PDT")) return -7 * 60;
+  if (!strcasecmp(tz, "PST")) return -8 * 60;
+  if (!strcasecmp(tz, "JST")) return  9 * 60;
+  return 0;
+}
+
+/* days since 1970-01-01 for a civil date (Howard Hinnant's algorithm) */
+static long days_from_civil(int y, int m, int d) {
+  y -= m <= 2;
+  long era = (y >= 0 ? y : y - 399) / 400;
+  unsigned yoe = (unsigned)(y - era * 400);
+  unsigned doy = (unsigned)((153 * (m + (m > 2 ? -3 : 9)) + 2) / 5 + d - 1);
+  unsigned doe = yoe * 365 + yoe / 4 - yoe / 100 + doy;
+  return era * 146097 + (long)doe - 719468;
+}
+
+static char *rfc822_to_iso(const char *in) {
+  if (!in || !*in) return NULL;
+  while (*in == ' ' || *in == '\t') in++;
+  /* Already ISO-8601 (starts with 4 digits then '-')? Keep as-is. */
+  if (strlen(in) >= 5 && isdigit((unsigned char)in[0]) && isdigit((unsigned char)in[1]) &&
+      isdigit((unsigned char)in[2]) && isdigit((unsigned char)in[3]) && in[4] == '-')
+    return strdup(in);
+
+  const char *p = in;
+  const char *comma = strchr(p, ',');       /* skip the optional "Fri, " */
+  if (comma && comma - p <= 4) p = comma + 1;
+  while (*p == ' ') p++;
+
+  int day = 0, year = 0, hh = 0, mi = 0, ss = 0;
+  char mon[4] = {0}, tz[8] = {0};
+  int got = sscanf(p, "%2d %3s %4d %2d:%2d:%2d %7s",
+                   &day, mon, &year, &hh, &mi, &ss, tz);
+  if (got < 5) {                             /* seconds are optional in RFC 822 */
+    ss = 0;
+    got = sscanf(p, "%2d %3s %4d %2d:%2d %7s", &day, mon, &year, &hh, &mi, tz);
+    if (got < 5) return NULL;
+  }
+  int m = 0;
+  for (int i = 0; i < 12; i++) if (!strcasecmp(mon, RFC822_MON[i])) { m = i + 1; break; }
+  if (!m || day < 1 || day > 31 || year < 1000) return NULL;
+  if (year < 100) year += (year < 70) ? 2000 : 1900;   /* 2-digit years */
+
+  /* shift to UTC */
+  long total = (long)hh * 60 + mi - tz_offset_minutes(tz);
+  long dayadj = 0;
+  while (total < 0)     { total += 1440; dayadj -= 1; }
+  while (total >= 1440) { total -= 1440; dayadj += 1; }
+
+  long days = days_from_civil(year, m, day) + dayadj;
+  /* back to a civil date */
+  long z = days + 719468;
+  long era = (z >= 0 ? z : z - 146096) / 146097;
+  unsigned doe = (unsigned)(z - era * 146097);
+  unsigned yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365;
+  long y2 = (long)yoe + era * 400;
+  unsigned doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+  unsigned mp = (5 * doy + 2) / 153;
+  unsigned d2 = doy - (153 * mp + 2) / 5 + 1;
+  unsigned m2 = mp + (mp < 10 ? 3 : -9);
+  y2 += (m2 <= 2);
+
+  char *out = malloc(32);
+  if (!out) return NULL;
+  snprintf(out, 32, "%04ld-%02u-%02uT%02ld:%02ld:%02dZ",
+           y2, m2, d2, total / 60, total % 60, ss);
+  return out;
+}
+
+/* --- charset normalisation ------------------------------------------------
+ * Feeds still ship legacy encodings with no usable header: folha-br serves
+ * ISO-8859-1, so "Fundação" arrives as bytes that are not valid UTF-8 and land
+ * in `title` verbatim — the row then fails to decode on every read, which is
+ * the DB_ERROR verdict. Fixing the 240-byte truncation stopped us CREATING bad
+ * UTF-8; this stops us STORING what upstream already sent. */
+static int is_utf8(const char *s, size_t n) {
+  const unsigned char *p = (const unsigned char *)s;
+  for (size_t i = 0; i < n; ) {
+    unsigned char c = p[i];
+    size_t need;
+    if (c < 0x80) { i++; continue; }
+    else if ((c & 0xE0) == 0xC0) need = 1;
+    else if ((c & 0xF0) == 0xE0) need = 2;
+    else if ((c & 0xF8) == 0xF0) need = 3;
+    else return 0;
+    if (i + need >= n) return 0;
+    for (size_t k = 1; k <= need; k++)
+      if ((p[i + k] & 0xC0) != 0x80) return 0;
+    i += need + 1;
+  }
+  return 1;
+}
+
+/* Latin-1 → UTF-8. Every byte maps to a code point, so this cannot fail; it is
+ * the correct fallback for a Western feed that is not valid UTF-8. */
+static char *latin1_to_utf8(const char *s, size_t n, size_t *out_len) {
+  char *o = malloc(n * 2 + 1);
+  if (!o) return NULL;
+  size_t j = 0;
+  for (size_t i = 0; i < n; i++) {
+    unsigned char c = (unsigned char)s[i];
+    if (c < 0x80) o[j++] = (char)c;
+    else { o[j++] = (char)(0xC0 | (c >> 6)); o[j++] = (char)(0x80 | (c & 0x3F)); }
+  }
+  o[j] = 0;
+  if (out_len) *out_len = j;
+  return o;
+}
+
+/* EVP rather than the deprecated (OpenSSL 3.0) SHA1_* calls. Byte-identical
+ * digest: this is the item uid for feeds that carry no guid and no link, so a
+ * changed digest would re-emit every such item as new. NULL on failure, which
+ * the caller already treats as "no uid" (`if (rk)`). */
 static char *sha1_20(const char *a, const char *b) {
-  unsigned char d[20]; SHA_CTX c; SHA1_Init(&c);
-  if (a) { SHA1_Update(&c, a, strlen(a)); SHA1_Update(&c, "|", 1); }
-  if (b) { SHA1_Update(&c, b, strlen(b)); SHA1_Update(&c, "|", 1); }
-  SHA1_Final(d, &c);
+  EVP_MD_CTX *c = EVP_MD_CTX_new();
+  if (!c) return NULL;
+  unsigned char d[EVP_MAX_MD_SIZE]; unsigned int dl = 0;
+  int ok = EVP_DigestInit_ex(c, EVP_sha1(), NULL) == 1;
+  if (ok && a) { EVP_DigestUpdate(c, a, strlen(a)); EVP_DigestUpdate(c, "|", 1); }
+  if (ok && b) { EVP_DigestUpdate(c, b, strlen(b)); EVP_DigestUpdate(c, "|", 1); }
+  ok = ok && EVP_DigestFinal_ex(c, d, &dl) == 1;
+  EVP_MD_CTX_free(c);
+  if (!ok) return NULL;
   char *h = malloc(41);
+  if (!h) return NULL;
   for (int i = 0; i < 20; i++) sprintf(h + i*2, "%02x", d[i]);
   h[40] = 0; h[20] = 0;            /* intelHashKey slices to 20 hex chars */
   return h;
@@ -115,15 +304,216 @@ static char *sha1_20(const char *a, const char *b) {
 int rss_collect(const source_ctx *ctx, intel_sink *sink,
                 const char *url, const char *lang, const char *tags_json) {
   http_response r = {0};
+  /* A bare token identifies the bot but gives a publisher nothing to contact,
+   * so a descriptive UA with a contact URL is the right default, and spoofing
+   * a browser to evade a publisher's block is not something we do.
+   *
+   * CORRECTION (2026-08-09, measured). This comment used to claim the contact
+   * URL was "the standard remedy" for ReliefWeb's 406. It is not, and for
+   * ReliefWeb it actively makes things worse. Measured against
+   * https://reliefweb.int/updates/rss.xml, one request each, spaced:
+   *
+   *   curl/8.5.0                                    -> 200
+   *   feedbot/1.0                                   -> 200
+   *   JapanOSINT/1.0                                -> 406
+   *   JapanOSINT/1.0 (contact: repo issues)         -> 406
+   *   JapanOSINT/1.0 +https://example.org           -> 406
+   *   feedbot/1.0 (+https://github.com/RCorp/OSINTsaas) -> 406
+   *
+   * The discriminator is the substring "osint", not the shape of the UA: the
+   * last line carries no "japanosint" token and is still refused, purely
+   * because the contact URL names the repo. So the remedy as written adds a
+   * SECOND matching token rather than removing one.
+   *
+   * This is left as-is deliberately. Honest identification is the policy, and
+   * the alternatives are to drop the identifying token (defeating the point of
+   * the UA) or to spoof (refused). ~10 humanitarian feeds — reliefweb.int,
+   * unocha.org, data.humdata.org — are unreachable as a result and are
+   * recorded as such rather than quietly worked around. Asking those
+   * publishers for an allowlist entry is the real fix. */
+  /* One exception to the paragraph above: core/httpclient.c keeps a per-host
+   * table for the handful of publishers whose filter objects to ONE token in
+   * an otherwise honest agent, each entry carrying the bisection that proved
+   * it. That table never applied here, because a "User-Agent:" request header
+   * outranks CURLOPT_USERAGENT and this function always set one — so the RSS
+   * fleet, which has the most bot-wall trouble of any path in the tree, was
+   * the one path the remedy could not reach. It asks now, and substitutes only
+   * when an entry exists, so every feed verified under the agent below keeps
+   * exactly that agent. */
+  const char *ovr = http_ua_override(url);
+  char uahdr[320];
+  if (ovr) snprintf(uahdr, sizeof uahdr, "User-Agent: %s", ovr);
   const char *hdrs[] = { "Accept: application/rss+xml,*/*",
-                         "User-Agent: japanosint-collector", NULL };
+                         ovr ? uahdr :
+                         "User-Agent: JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+                         "feed collector; contact via repo issues)", NULL };
   int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 8000, 2, &r);
   if (rc != 0 || r.status < 200 || r.status >= 300 || !r.body) {
+    /* Say WHY. This path used to return -1 in silence, so a feed behind a bot
+     * wall, a moved feed and a dead host all surfaced as the same bare
+     * "rc=-1 records=0" — and a triage pass had to re-fetch every one by hand
+     * to tell them apart. */
+    fprintf(stderr, "[rss] %s: fetch failed (transport rc=%d, HTTP %ld%s)\n",
+            ctx->source_id ? ctx->source_id : url, rc, r.status,
+            (rc == 0 && !r.body) ? ", no body" : "");
     http_response_free(&r); return -1;
   }
-  const char *xml = r.body, *xend = r.body + r.body_len;
+  /* A 2xx with NO BODY is not an empty feed, it is a non-answer, and counting
+   * it as success is the silent-nothing this repository keeps finding in other
+   * guises: europarl-news answers `202` with zero bytes on every path and
+   * every retry (a WAF holding pattern), and the run reported rc=0 records=0 —
+   * indistinguishable from a feed that genuinely published nothing today. No
+   * RSS or Atom document is zero bytes long, so this is an error, and the
+   * scheduler's backoff and quarantine logic can see it. */
+  if (r.body_len == 0) {
+    fprintf(stderr, "[rss] %s: HTTP %ld with a zero-byte body — treating as a "
+                    "failed fetch, not an empty feed\n",
+            ctx->source_id ? ctx->source_id : url, r.status);
+    http_response_free(&r); return -1;
+  }
+  /* Normalise the body to UTF-8 before a single field is extracted, so no
+   * downstream copy can carry undecodable bytes into the DB or its FTS mirror. */
+  char *conv = NULL;
+  size_t body_len = r.body_len;
+  if (r.body && body_len && !is_utf8(r.body, body_len)) {
+    size_t cl = 0;
+    /* WHICH legacy encoding is not a guess we get to make blind. A .jp
+     * publisher serving no charset is serving Shift_JIS (customs.go.jp,
+     * soumu.go.jp), and running those bytes through the Latin-1 path produced
+     * valid-but-wrong UTF-8 — mojibake that no read path can detect, which is
+     * worse than the undecodable bytes this transcode exists to prevent. Gate
+     * on the same host test feed_get_text() uses (feedlib.h), so the two
+     * answers cannot drift; csv_decode_sjis fails closed to a verbatim copy,
+     * so a .jp host serving something else is not made worse. */
+    if (feed_url_host_is_jp(url)) {
+      conv = csv_decode_sjis(r.body, body_len);
+      if (conv) {
+        cl = strlen(conv);
+        fprintf(stderr, "[rss] %s body was not UTF-8; transcoded from Shift_JIS "
+                        "(%zu -> %zu bytes)\n", ctx->source_id, body_len, cl);
+        body_len = cl;
+      }
+    } else {
+      conv = latin1_to_utf8(r.body, body_len, &cl);
+      if (conv) {
+        fprintf(stderr, "[rss] %s body was not UTF-8; transcoded from Latin-1 "
+                        "(%zu -> %zu bytes)\n", ctx->source_id, body_len, cl);
+        body_len = cl;
+      }
+    }
+  }
+  const char *xml = conv ? conv : r.body;
+  const char *xend = xml + body_len;
   int n = 0;
   const char *cur = xml;
+  /* Some feeds serve their whole archive rather than a window — msrc-blog ships
+   * 4,995 items (3,539 rows, 10 s) on every poll, which is a duration_outlier
+   * every hour for data that changed by a handful of entries. Cap the per-run
+   * item count; feeds are newest-first, so this keeps the fresh end. */
+  const char *cap_env = getenv("JO_RSS_MAX_ITEMS");
+  int max_items = cap_env ? atoi(cap_env) : 500;
+  if (max_items <= 0) max_items = 500;
+  /* When the cap bites we keep WALKING the feed — only the per-item field
+   * extraction is skipped — so `scanned` is the real count of items the feed
+   * offered and the disclosure below can say "N of M" instead of "N of ?".
+   * Walking costs one more pass over a body we already have in memory. */
+  int scanned = 0, capped = 0;
+
+  /* ── uid collision guard ────────────────────────────────────────────────
+   *
+   * THE FOURTH COPY of the defect CLAUDE.md §4b documents. jsonlist.c,
+   * hpengine.c and geojson.c each grew this guard; the RSS/Atom path never
+   * did, and it has exactly the same failure: `emit()` is called per item, the
+   * sink upserts on uid, so items sharing a uid collapse and the run still
+   * reports a healthy `records=N`.
+   *
+   * It is not hypothetical. PACER's rss_outside.pl feeds key every entry on
+   * the DOCKET, so one docket's filings all carry one guid. Measured live
+   * 2026-09-08 on ecf.txsb: 1,860 items, 1,576 distinct guids, and the worst
+   * guid carries 13 items whose descriptions are different filings on the
+   * same docket ([Schedule A/B], [Schedule C], [Declaration], ...). 284
+   * genuinely different records per fetch, silently folded into one row each.
+   * The same shape appears on nynd, nysb, ksb, deb, and on advisory feeds
+   * that reuse a guid across revisions.
+   *
+   * Same contract as the other three: a pre-pass computes every item's uid,
+   * flags ONLY the ones that collide within this fetch, and disambiguates
+   * those by a hash of the item's own bytes. Byte-identical repeats therefore
+   * still collapse — that is real dedupe and is wanted — while items that
+   * merely share a guid are all kept. Nothing is invented and nothing that
+   * differs is merged. */
+  unsigned char *dupmap = NULL;
+  int dupmap_n = 0;
+  {
+    typedef struct { unsigned long long h; int idx; } rss_key;
+    rss_key *keys = NULL;
+    int kn = 0, kcap = 0, idx = 0;
+    const char *scan = xml;
+    for (;;) {
+      const char *open = NULL; int atom = 0;
+      for (const char *p = scan; (p = strchr(p, '<')) && p < xend; p++) {
+        int isi = (strncasecmp(p, "<item", 5) == 0);
+        int ise = (strncasecmp(p, "<entry", 6) == 0);
+        if (!isi && !ise) continue;
+        char d = p[isi ? 5 : 6];
+        if (d == ' ' || d == '>' || d == '\t' || d == '\n' ||
+            d == '\r' || d == '/') { open = p; atom = ise; break; }
+      }
+      if (!open || open >= xend) break;
+      const char *closeTag = atom ? "</entry>" : "</item>";
+      const char *cl = strcasestr(open, closeTag);
+      if (!cl) break;
+      size_t itlen = (size_t)(cl - open);
+      if (idx < max_items) {
+        /* The SAME precedence the emit loop uses below. If that changes, this
+         * must change with it: a guard that derives its key differently from
+         * the code it guards is not a guard. */
+        const char *a;
+        char *g = tag_text(open, open + itlen, "guid", &a);
+        if (!g) g = tag_text(open, open + itlen, "id", &a);
+        char *l = atom ? atom_link(open, open + itlen)
+                       : tag_text(open, open + itlen, "link", &a);
+        char *t = tag_text(open, open + itlen, "title", &a);
+        char *pb = tag_text(open, open + itlen, "pubDate", &a);
+        if (!pb) pb = tag_text(open, open + itlen, "date", &a);
+        if (!pb) pb = tag_text(open, open + itlen, "published", &a);
+        if (!pb) pb = tag_text(open, open + itlen, "updated", &a);
+        const char *k1 = (g && *g) ? g : ((l && *l) ? l : (t ? t : ""));
+        const char *k2 = (g && *g) ? "" : ((l && *l) ? "" : (pb ? pb : ""));
+        unsigned long long h = 1469598103934665603ULL;
+        for (const char *s = k1; s && *s; s++) { h ^= (unsigned char)*s; h *= 1099511628211ULL; }
+        h ^= 0x2c; h *= 1099511628211ULL;
+        for (const char *s = k2; s && *s; s++) { h ^= (unsigned char)*s; h *= 1099511628211ULL; }
+        if (kn == kcap) {
+          int nc = kcap ? kcap * 2 : 256;
+          rss_key *nk = realloc(keys, (size_t)nc * sizeof *nk);
+          if (!nk) { free(g); free(l); free(t); free(pb); break; }
+          keys = nk; kcap = nc;
+        }
+        keys[kn].h = h; keys[kn].idx = idx; kn++;
+        free(g); free(l); free(t); free(pb);
+      }
+      idx++;
+      scan = cl + strlen(closeTag);
+    }
+    if (kn > 1) {
+      dupmap_n = idx;
+      dupmap = calloc((size_t)idx, 1);
+      if (dupmap) {
+        /* Mark every key that appears more than once. O(n^2) is avoided by
+         * sorting a copy; feeds reach a few thousand items. */
+        for (int i = 0; i < kn; i++)
+          for (int j = i + 1; j < kn; j++)
+            if (keys[i].h == keys[j].h) {
+              dupmap[keys[i].idx] = 1;
+              dupmap[keys[j].idx] = 1;
+            }
+      }
+    }
+    free(keys);
+  }
+  int item_idx = -1;
+
   for (;;) {
     /* next <item ...>/<entry ...> block. Require a delimiter after the name
      * so the RDF <items> table-of-contents (Seq) is NOT matched. */
@@ -142,6 +532,13 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
     const char *cl = strcasestr(open, closeTag);
     if (!cl) break;
     it = open; blkend = cl; itlen = (size_t)(blkend - it);
+    scanned++;
+    item_idx++;
+    if (n >= max_items) {          /* cap bit: keep counting, stop extracting */
+      capped = 1;
+      cur = blkend + strlen(closeTag);
+      continue;
+    }
     const char *a;
     char *title = tag_text(it, it + itlen, "title", &a);
     char *desc  = tag_text(it, it + itlen, atom ? "summary" : "description", &a);
@@ -155,39 +552,105 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
     char *guid  = tag_text(it, it + itlen, "guid", &a);
     if (!guid) guid = tag_text(it, it + itlen, "id", &a);
     char *author= tag_text(it, it + itlen, "author", &a);
+    author = unwrap_person(author);   /* Atom <author><name>…</name></author> */
 
     /* uid precedence: guid → link → sha1(title|pubDate) (== intelUid) */
     char *rk = NULL;
     if (guid && *guid) rk = strdup(guid);
     else if (link && *link) rk = strdup(link);
     else if (title && *title) rk = sha1_20(title, pub);
+    /* Collides with a sibling in THIS fetch: extend the key with a hash of the
+     * item's own bytes (see the guard above). Byte-identical items hash the
+     * same and still collapse; items that merely share a guid are all kept. */
+    if (rk && dupmap && item_idx >= 0 && item_idx < dupmap_n && dupmap[item_idx]) {
+      unsigned long long ch = 1469598103934665603ULL;
+      for (size_t z = 0; z < itlen; z++) { ch ^= (unsigned char)it[z]; ch *= 1099511628211ULL; }
+      size_t rn = strlen(rk) + 20;
+      char *ext = malloc(rn);
+      if (ext) { snprintf(ext, rn, "%s#%016llx", rk, ch); free(rk); rk = ext; }
+    }
     if (rk) {
-      char props[512] = "{}";
+      /* Heap, not char[512]: Google News guids reach ~1.9 KB, and snprintf
+       * truncation produced syntactically invalid JSON (cut mid-base64, no
+       * closing quote/brace) that no consumer could cJSON_Parse. */
+      char *props = NULL;
       if (guid && *guid) {
         cJSON *pj = cJSON_CreateObject();
         cJSON_AddStringToObject(pj, "guid", guid);
-        char *s = cJSON_PrintUnformatted(pj);
-        snprintf(props, sizeof props, "%s", s); free(s); cJSON_Delete(pj);
+        props = cJSON_PrintUnformatted(pj);
+        cJSON_Delete(pj);
       }
+      /* Truncate on a CHARACTER boundary. The old strncpy(summ, desc, 240) cut
+       * at 240 BYTES, splitting multi-byte UTF-8 and persisting invalid text
+       * into `summary` and its FTS mirror — every non-Latin feed eventually
+       * tripped "Could not decode to UTF-8" on read. */
       char summ[256] = {0};
-      if (desc) { strncpy(summ, desc, 240); summ[240] = 0; }
+      if (desc) {
+        size_t L = strlen(desc);
+        if (L > 240) {
+          L = 240;
+          while (L > 0 && ((unsigned char)desc[L] & 0xC0) == 0x80) L--;
+        }
+        memcpy(summ, desc, L); summ[L] = 0;
+      }
+      char *pub_iso = pub ? rfc822_to_iso(pub) : NULL;
       intel_item item = {0};
       item.remote_key = rk;
       item.title = title; item.body = desc;
       item.summary = desc ? summ : NULL;
       item.link = link; item.author = author;
       item.lang = lang ? lang : "ja";
-      item.published_at = pub;                 /* RFC822→ISO norm: P5 refine */
+      /* normalised to ISO-8601 UTC so this column sorts as one format */
+      item.published_at = pub_iso ? pub_iso : pub;
       item.record_type = "article";
-      item.properties_json = props;
+      item.properties_json = props ? props : "{}";
       item.tags_json = tags_json;
       if (sink->emit(sink, &item) >= 0) n++;
+      free(pub_iso);
+      free(props);
       free(rk);
     }
     free(title); free(desc); free(link); free(pub); free(guid); free(author);
     cur = blkend + strlen(closeTag);
   }
+  /* The cap left real items on the table. Per docs/SOURCE_EXHAUSTIVENESS.md a
+   * shortfall is reported as DATA — the stderr line this used to be is not a
+   * disclosure, and a consumer reading the rows had no way to tell 500 items
+   * from a feed of 500 apart from 500 items out of msrc-blog's 4,995. Same
+   * record_type and shape as lib/hpengine.c and lib/jsonlist.c emit, so one
+   * check finds a partial result from any of the three engines. */
+  if (capped) {
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "source_id", ctx->source_id);
+    cJSON_AddStringToObject(p, "endpoint", url);
+    cJSON_AddNumberToObject(p, "records_used", n);
+    cJSON_AddNumberToObject(p, "records_available", scanned);
+    cJSON_AddNumberToObject(p, "declared_max_items", max_items);
+    cJSON_AddBoolToObject(p, "more_pages_pending", 0);
+    cJSON_AddStringToObject(p, "reason",
+      "the per-run item cap stopped the walk while the feed had more items");
+    cJSON_AddStringToObject(p, "remedy",
+      "raise $JO_RSS_MAX_ITEMS — see docs/SOURCE_EXHAUSTIVENESS.md");
+    char *pj = cJSON_PrintUnformatted(p);
+    cJSON_Delete(p);
+    char title[256];
+    snprintf(title, sizeof title, "%s used %d of %d available items",
+             ctx->source_id, n, scanned);
+    intel_item note = {0};
+    note.remote_key      = "truncation";
+    note.title           = title;
+    note.lang            = "en";
+    note.record_type     = "collector-truncation-notice";
+    note.properties_json = pj ? pj : "{}";
+    note.tags_json       = "[\"truncation-notice\"]";
+    sink->emit(sink, &note);
+    free(pj);
+    fprintf(stderr, "[rss] %s capped at %d of %d items (disclosed)\n",
+            ctx->source_id, max_items, scanned);
+  }
   http_response_free(&r);
+  free(conv);
+  free(dupmap);
   fprintf(stderr, "[rss] %s emitted %d\n", ctx->source_id, n);
   return n;
 }

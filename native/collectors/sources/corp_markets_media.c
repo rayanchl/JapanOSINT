@@ -7,9 +7,9 @@
  *   • FSA registry— anchor scrape of the licensed financial-business list.
  *   • iTownpage   — anchor scrape of the business directory search.
  * Real fetch or honest empty. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

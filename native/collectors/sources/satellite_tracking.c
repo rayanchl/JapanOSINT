@@ -5,11 +5,11 @@
  * (0 rows when CelesTrak is unreachable / nothing over Japan, same contract
  * as every other live port). Deep-space objects are skipped (sgp4 near-Earth
  * scope) — documented post-parity vs satellite.js's bundled SDP4. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/sgp4.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/sgp4.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -55,7 +55,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     /* parseTleBlock: trimmed non-empty lines, name/l1/l2 triples. */
     char **ln = NULL; int nl = 0, cap = 0;
-    for (char *p = strtok(body, "\n"); p; p = strtok(NULL, "\n")) {
+    char *save = NULL;            /* strtok_r: concurrent workers, see jsonlist.c */
+    for (char *p = strtok_r(body, "\n", &save); p;
+         p = strtok_r(NULL, "\n", &save)) {
       char *t = trim(p);
       if (!*t) continue;
       if (nl == cap) { cap = cap ? cap * 2 : 256; ln = realloc(ln, cap * sizeof *ln); }
@@ -64,6 +66,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     for (int i = 0; i + 2 < nl; i += 3) {
       const char *name = ln[i], *l1 = ln[i+1], *l2 = ln[i+2];
       if (strncmp(l1, "1 ", 2) || strncmp(l2, "2 ", 2)) continue;
+      /* The strncmp above proves only that l1 starts "1 " — two bytes. The
+       * NORAD field is l1[2..6], so memcpy(nb, l1+2, 5) read up to five bytes
+       * past the end of a truncated line and strtol'd whatever followed it in
+       * the response buffer into a satellite id. A real TLE line 1 is 69
+       * columns; require at least the NORAD field before reading it. */
+      if (strlen(l1) < 7 || strlen(l2) < 7) continue;
       char nb[8] = {0};
       memcpy(nb, l1 + 2, 5);
       long norad = strtol(nb, NULL, 10);
@@ -81,15 +89,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       double vmag = sqrt(vel[0]*vel[0] + vel[1]*vel[1] + vel[2]*vel[2]);
       double inc_deg = r.inclo * 180.0 / 3.14159265358979323846;
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(lon, lat);
 
       cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
       char idb[24]; snprintf(idb, sizeof idb, "SAT_%ld", norad);
